@@ -1,96 +1,96 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AF8B2638BC;
-	Thu, 22 May 2025 09:23:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07DFB70814;
+	Thu, 22 May 2025 09:25:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747905839; cv=none; b=N6t2O252RAgVkNZ1MK8CmG1D5cx8MB2H/P4BawrgZuXGX9PeHGcf4ysH6VhxkpkQzxPyn2mcOHFnag5w3/cB8jDJdBC1MSzG0iva88Ri4wCvJ7x1U+LxywK0fhfEeQ3+DeFe034KgENyCS3yNQSaaxcP1OMro+SnQ/N7lJp+fAY=
+	t=1747905945; cv=none; b=dH3+NooyCFbcrcy5DET5GrTfL5cKU5HkHWnCnIzJ3Gtheez7vf2+y5J16vF4xRfbOkQIfkSmIzPMvRds4lk9QAIZJXKBcHnTX5DxVrC50EJ5NWUKuR0sYjW/7nQ2GrvJtBzNjEMMv0reGR73hbheGsZfWqGh4HnSS9GLDxf7TI4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747905839; c=relaxed/simple;
-	bh=eXAlb49JkCb+TQz9exx3hf5fNZb3kP86w2z33zlM7Wc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Is/g2edGqgO5TDwFDDn5ttoElmw3o/ZuYcyRhuJIhiOJ/s+rU5Lq1LFvao8L+gz0eIwZKVTPCKHgrGhngHQ7j1qvxg35EZE8k5+tTzTIM+N/9peD/lYlO+XwAa1pY6cDdoHpVYQ+8zzQ9AIM7O7CFaPkX+/mJb0DS2aFEUh5/UI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nQ3wMS6T; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747905945; c=relaxed/simple;
+	bh=p53SfCe7muDgtvQFHMIVqvkowaeuQ3Tx7It7jszYKD4=;
+	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=W/rJ2baNPFjdqLCTfk2qEh4GsNepGzQQJJB9JOmGgdIpFCrS9UVPALJOnzqA4r16lg67NaAevp1ygJolIa8tDxOTMoAT6mFSXZIT3cigTnuerHFFPnhNOfbmeoIFHCWu1p3ghKAqU50K8N/E32Jz9yMYvykBU4+kcmJ5jI/oAVE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CO9mh0dY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nQ3wMS6T"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4CB9BC4CEE4;
-	Thu, 22 May 2025 09:23:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CO9mh0dY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34187C4CEE4;
+	Thu, 22 May 2025 09:25:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747905838;
-	bh=eXAlb49JkCb+TQz9exx3hf5fNZb3kP86w2z33zlM7Wc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=nQ3wMS6T0pfisADnNRP2uPa31VU+qtbXzfiwWoygKXDQliDo35SJyyoKHXV7oyt0O
-	 MJ9xlgSXX5R9dfkDq/Hq3QjbBrxJ4wGDuQVHw9dJpMpRrw1HTU+w2Xszb/xtWWf+F6
-	 fREJkAQEUuSo72YJTNzVs5z4G+tv/LrHNZiVFTYVlWgRPAkYE5q3+R0zZxUx41okBf
-	 tKp2e3Q8Fjsl4VEWRe7PjcpYUvp8fw8fB2yl+WEIT3OVLpIp44Xn9hnAylgvG3ahbI
-	 CpOA8SD8w4FvpQ0MN+EbZC8gI7nWu8TopVaV6dMOPVQpwlrTnxvmuqr3ogvrlmy3xB
-	 8IUB+8qbaS78Q==
-Date: Thu, 22 May 2025 10:23:54 +0100
-From: Mark Brown <broonie@kernel.org>
-To: David Hildenbrand <david@redhat.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Shuah Khan <shuah@kernel.org>, linux-mm@kvack.org,
-	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] selftests/mm: Fix test result reporting in gup_longterm
-Message-ID: <0f0622f7-2630-40f4-8556-99bd479d1aff@sirena.org.uk>
-References: <20250515-selftests-mm-gup-longterm-dups-v1-1-05f8f731cf63@kernel.org>
- <f924f789-5269-4046-99a4-2991f9a3ab3c@redhat.com>
- <aCcvxaFc6DE_Mhr1@finisterre.sirena.org.uk>
- <58dbef73-6e37-46de-9092-365456306b27@redhat.com>
- <aCc5E-wB4nBwrKEP@finisterre.sirena.org.uk>
- <46d151d7-c04b-4538-9725-dc4f46ac8ac1@redhat.com>
- <aCd-8kEyDm2f2w0z@finisterre.sirena.org.uk>
- <8131ce62-0cee-455f-9eeb-e2bbed244402@redhat.com>
- <e7cb18c4-fed3-4fa5-bb51-228f2b018ce9@sirena.org.uk>
- <f6cf8a99-48b0-46f7-b11b-574d1544fa24@redhat.com>
+	s=k20201202; t=1747905942;
+	bh=p53SfCe7muDgtvQFHMIVqvkowaeuQ3Tx7It7jszYKD4=;
+	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
+	b=CO9mh0dYYJ6S4syWXHaQCopevlhaqGAYO5iqcLaWHMlY00lVp9y+W4/oG4MnnBP4/
+	 tr+s3pHewoNQEBg1NNcnx3voyBJHMTfpOzB+48AgrF4gMYvM/+/dkDnqj9oUDN6D4+
+	 Cd1x7EZ8bzOpZvmQVk0+QhRzIyf2h+4mYCnu/ILvzt4ucD1XT6EMrpItDesYc8MZrK
+	 3xeM2zdbF2zBeiW6drS2KAe8uMiwbLrK55SzE6/qzNQeC23AFvjE3Vd1i1wV0BdXHA
+	 yiO+mEI+J3ejMfzo58Vj+tJb1V7ynQZO1dCjTIzeK1T7CB6Hp/OQcJAxodLqFZjjkn
+	 P35doFcmKnAvw==
+Date: Thu, 22 May 2025 04:25:40 -0500
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="1STrL/W39KMKSBxv"
-Content-Disposition: inline
-In-Reply-To: <f6cf8a99-48b0-46f7-b11b-574d1544fa24@redhat.com>
-X-Cookie: Beware of dog.
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: linux-kernel@vger.kernel.org, krzk+dt@kernel.org, cl@rock-chips.com, 
+ mkl@pengutronix.de, conor+dt@kernel.org, linux-can@vger.kernel.org, 
+ mailhol.vincent@wanadoo.fr, kever.yang@rock-chips.com, 
+ kernel@pengutronix.de, linux-rockchip@lists.infradead.org, heiko@sntech.de, 
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Elaine Zhang <zhangqing@rock-chips.com>
+In-Reply-To: <20250522074616.3115348-2-zhangqing@rock-chips.com>
+References: <20250522074616.3115348-1-zhangqing@rock-chips.com>
+ <20250522074616.3115348-2-zhangqing@rock-chips.com>
+Message-Id: <174790594029.1733292.2362448733539179713.robh@kernel.org>
+Subject: Re: [PATCH v4 1/3] dt-bindings: can: rockchip_canfd: add rk3576
+ CAN-FD controller
 
 
---1STrL/W39KMKSBxv
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Thu, 22 May 2025 15:46:14 +0800, Elaine Zhang wrote:
+> Add documentation for the rockchip rk3576 CAN-FD controller.
+> 
+> Signed-off-by: Elaine Zhang <zhangqing@rock-chips.com>
+> ---
+>  .../net/can/rockchip,rk3576-canfd.yaml        | 86 +++++++++++++++++++
+>  1 file changed, 86 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/can/rockchip,rk3576-canfd.yaml
+> 
 
-On Thu, May 22, 2025 at 10:42:50AM +0200, David Hildenbrand wrote:
+My bot found errors running 'make dt_binding_check' on your patch:
 
-> Probably, one might be able to revert the logic: instead of running each
-> test for each size, run each size for each test: then, the tests are fixed
-> and would be covering all available sizes in a single logical test.
+yamllint warnings/errors:
+./Documentation/devicetree/bindings/net/can/rockchip,rk3576-canfd.yaml:51:111: [warning] line too long (153 > 110 characters) (line-length)
+./Documentation/devicetree/bindings/net/can/rockchip,rk3576-canfd.yaml:55:111: [warning] line too long (159 > 110 characters) (line-length)
 
-Yeah, that should work - it'd lose a bit of resolution in the test
-results for automation but I'm not sure how often that's likely to be
-relevant and the information would still be there for humans. =20
+dtschema/dtc warnings/errors:
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/net/can/rockchip,rk3576-canfd.yaml: properties:compatible:oneOf: [{'const': 'rockchip,rk3576-canfd'}] should not be valid under {'items': {'propertyNames': {'const': 'const'}, 'required': ['const']}}
+	hint: Use 'enum' rather than 'oneOf' + 'const' entries
+	from schema $id: http://devicetree.org/meta-schemas/keywords.yaml#
+Error: Documentation/devicetree/bindings/net/can/rockchip,rk3576-canfd.example.dts:36.44-45 syntax error
+FATAL ERROR: Unable to parse input tree
+make[2]: *** [scripts/Makefile.dtbs:131: Documentation/devicetree/bindings/net/can/rockchip,rk3576-canfd.example.dtb] Error 1
+make[2]: *** Waiting for unfinished jobs....
+make[1]: *** [/builds/robherring/dt-review-ci/linux/Makefile:1524: dt_binding_check] Error 2
+make: *** [Makefile:248: __sub-make] Error 2
 
-> I agree that that really is a bigger rework. Let me take a look at your
-> original patch later (fairly busy today, please poke me if I forget).
+doc reference errors (make refcheckdocs):
 
-Thanks.  I'll take a look at the other similar tests like cow using the
-same approach I've used here.
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250522074616.3115348-2-zhangqing@rock-chips.com
 
---1STrL/W39KMKSBxv
-Content-Type: application/pgp-signature; name="signature.asc"
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
 
------BEGIN PGP SIGNATURE-----
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmgu7SkACgkQJNaLcl1U
-h9ASlQf/cRLMEkBxUlfbfTgzQ+8TLtGOObYAhPQyrMYAQOdor65OEzy35eYR94iV
-d5T1hf0KzpFeZ9eGyZlpIJx7SeUWlAHsj486xpc+kDhmj0HOBrw9aPjseaOuVmNp
-bfnzh8jpNOBpQ95Y/7oXvC8iQTjbB452hrUtF0UMdV7dYzYdEumg/zMAKZZdlDi7
-TTOEDfdMqcRQUDlhHVLnPcBNydzGsZbAmaJofT8+L20pRPrDuVthuPM67/XFDN4P
-HVbDn+2PGwz189ms892GBoaYc9Bq5eJKiqNTGzywL62AZMfCIVESFndjfzrAxK0l
-yhWcd/A+J45cI+ASY+FlwqRB5qXJpw==
-=Wtd4
------END PGP SIGNATURE-----
+pip3 install dtschema --upgrade
 
---1STrL/W39KMKSBxv--
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
+
