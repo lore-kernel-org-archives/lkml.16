@@ -1,101 +1,239 @@
-Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03C3C27A457
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 22:33:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0153119F11E;
+	Thu, 22 May 2025 22:36:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747953196; cv=none; b=O+ntA1b0rlIs27V2aiYczwaZCgPsYptksMVBwY3UMS8w3ttU3Qmsioz95I8bY8trg3YVIkIlc6BViU8qBxg5YJbZ1lFGplh2Ek3RPEMqydoBJHhS28U1q4xXE8tKlYvuhSSIMDnsKu9QAfYbgMg40rC0rppUm3BkkSEIk/Ppyts=
+	t=1747953391; cv=none; b=TQX8Pz6OfMJ4J/c5eTiofYvWC0UqAA/IyiK2z+OEZva3wV2JWDM18rd0otbr9hms1LTNCu+BN0uJ0TGvCtfDO1gVrfC7C46kloZJy1YdF5B/461ksh4HlkOH4cO9oIropd3hnp7FJ5cdY60P7zWucApapQSVaPKiOjjimXDo2wg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747953196; c=relaxed/simple;
-	bh=QSwh9e7eyWFctLzZF+Bc13eVUv8DWHOVQbdS0U2r/GY=;
+	s=arc-20240116; t=1747953391; c=relaxed/simple;
+	bh=Qvg4iUTtm4zd6EbKirV0GTSeIMaJ01ei9nusT4CHZuc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uPmJvzrbIwUMLANsHH+X1VPRs0Ux95Lo25MWA/loYYgy7Jw1pyo4MmovylBKUZJr0XKUHcyug27aRbkbYR2YOz8zWTR68WoNRazBqE+uaXlJhpmqpfNvc+JZ3IIsbyJ9v35PeDANOJLObEfUF5KnbOxi9qpJwvJbKaVmuocqJmc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pdp7.com; spf=none smtp.mailfrom=pdp7.com; dkim=pass (2048-bit key) header.d=pdp7-com.20230601.gappssmtp.com header.i=@pdp7-com.20230601.gappssmtp.com header.b=UiRtJXNc; arc=none smtp.client-ip=209.85.210.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pdp7.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=pdp7.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=KS+Qltrg+SHPpV9AV0KM1EMDfSXSjM4aEAJJKaVECbu2YMJA/NwD0atCltZS5li1+o0pzlC/xLPxOJcp9xCXpbCdU4cAlkYIVZlbMn0TfkUWHL0dBvIfLYTiPiHduSGRBDeH+0Q9G1wo7SwSPwX8yOuauhdv8rrB0DdVzF0lltk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y+PqnprK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=pdp7-com.20230601.gappssmtp.com header.i=@pdp7-com.20230601.gappssmtp.com header.b="UiRtJXNc"
-Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-742c3d06de3so6475534b3a.0
-        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 15:33:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=pdp7-com.20230601.gappssmtp.com; s=20230601; t=1747953193; x=1748557993; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=lIPDnA54KHM+aahxuVehx28jJr1eOYyr6Lt8SFqaFv4=;
-        b=UiRtJXNc6h8Y/AgORrb7rtqvClgTNNJVTeYyKOYvC8WbJUxz+SiZi2Gilt3w2ZQnAF
-         6G5baRUBQ5LadKo9ERHfMSCQ2UC8ApOBeoXhMcixFParis5OVJdWjO6X/4le66E5O/fE
-         WFStNWcuLGJHKaqMXwl6DfXhPjDu/EULZlQ62iy0KXqkUa6ytAr3EHI0RbyHdigJ5KFd
-         QFFnrzbPctGzgSCVoEmKAF7rrpPWJfaaXNIkDUHEM3irJdA+JWmH5Kkxm5jHsZ3xJpI/
-         NaZatw2ySZMeL3MSOZGABhDdaKbE0Btm1aaG7BfHaI79kvpg+ZhJeoQQU3q4NPTYhaXN
-         quOg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747953193; x=1748557993;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=lIPDnA54KHM+aahxuVehx28jJr1eOYyr6Lt8SFqaFv4=;
-        b=vvHoO0feQGErz5jnOVFz6FqMGyM8VgF3E5nNz+1wrtGuOrvo2aCM/mPkHLHWHHi7Jt
-         EJ6zu+pTkrB2uJ/wvfLiJ/+/egvVqw/2cOA9j5vMqRiGMPz4jv/30hO/Ps0Ey0he8W4V
-         bFota9UiMcIaEiCwZbZcgYFeIe2NQsmIQqFcXGMAEH+D6sln+vsadLKZhFYMcszxoMmh
-         To5DiEaBTJmzUfPJohgOIF6peEV2eZ+1lM1t6w9imm4QVLe0hRGz7XKpdeax8lt6Ef/e
-         2DU2nvDmp9bkRZGFaQA+KYtOHuNb6Xi3MAuUpjj9y/BtlxIfyrH5EkGcD/FX+SgN60DZ
-         0UlA==
-X-Forwarded-Encrypted: i=1; AJvYcCVioEhcLKoh6KITfqE4FTjsfPbmZa7fR0dAtM2/hAsLhb8fBKYmCH++g9HF+G1ROJ/BN4/P/yCjsMNx+vw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzcfqDQWp/ZRpJYggQ1AWjmPG1+aPkfg+04fMmwqtNCHpPOkhe7
-	HYeLUcNQz7+loyedhcXG/EumAz7E8C3V4JFPoFRmp9tx/UqGPK4ZaFUbqQGhU9UVIoU=
-X-Gm-Gg: ASbGncvRYZnTapgWTEycw+oVj8YoN1P8Wei+dXoymDCiUYeD/gFrqCHqwjGKmTzJEHz
-	SN39zWo8/xloXLu/ak25AsIrsldBRFT8dnaY3f8SlYRekU009+bQqc4w802ipEOjIerSS4qQTcD
-	BlxdG33Y+qeGxrZ/tVXrKNa+/8jhHQ9eXiw0aZC/xaF/EFXQopgzwOeMVNZIMxQ6ulRyOdj/LTS
-	sa7SIFRcSbhr8grjPRosOM2q2I+7mAJPDDDfphFBFaFJqwGZMI83GXNxAb4DC5azQ/9b9BMeSXw
-	Mqp+gJe/hiKk69GsZnRk3t9s6who1jH6sczy7AH+fWuZ3KS9+SuHSNiGnikzD1o=
-X-Google-Smtp-Source: AGHT+IEXf8P4jUBPRl9v3R75tHy0ox53KdngEfSQ/zTdV0vLhoyMGDNzZ3PqCSjMLrrOP4fvai8dMg==
-X-Received: by 2002:a05:6a00:3492:b0:742:9bd3:cd1f with SMTP id d2e1a72fcca58-742acd728eamr34873087b3a.23.1747953192946;
-        Thu, 22 May 2025 15:33:12 -0700 (PDT)
-Received: from x1 (97-120-251-212.ptld.qwest.net. [97.120.251.212])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-742a970c6b1sm12137965b3a.59.2025.05.22.15.33.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 May 2025 15:33:12 -0700 (PDT)
-Date: Thu, 22 May 2025 15:33:11 -0700
-From: Drew Fustini <drew@pdp7.com>
-To: Stephen Boyd <sboyd@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
-	Michael Turquette <mturquette@baylibre.com>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Rob Herring <robh@kernel.org>, Fu Wei <wefu@redhat.com>,
-	Guo Ren <guoren@kernel.org>, Jisheng Zhang <jszhang@kernel.org>,
-	Palmer Dabbelt <palmer@rivosinc.com>,
-	Michal Wilczynski <m.wilczynski@samsung.com>
-Subject: Re: [GIT PULL] clk: thead: Updates for v6.16
-Message-ID: <aC+mJ560HbscG38R@x1>
-References: <aBus+Yc7kf/H2HE5@x1>
- <018214f410632eb3dc6c6bd6ab58cba1@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y+PqnprK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 833ADC4CEE4;
+	Thu, 22 May 2025 22:36:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747953390;
+	bh=Qvg4iUTtm4zd6EbKirV0GTSeIMaJ01ei9nusT4CHZuc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Y+PqnprK2ewLx5zHhgVG/xaG4JcO23Bo2VoV2JnXId6j4x25KGGR2ZgEnaCNeZyM4
+	 xcThQv0eVMxcKQtu50q5/M/ULZEJTTYtfWo/ROPPVUHfTKMeUPLQ9V+4ZNS5nT8X6f
+	 +IZhQ1I2D0z5c+L2MXtmPV3iP3EiLR0YQg98AeEAsOpO/jkr0YZd+53Cn7enIvKcix
+	 MbWWfp16onQKA3KpOH5aXMirQMgZP0qy/EwGNiXfkQbfoqwdJzSR3zpZyz0agkJwsz
+	 EWtoKcMoV3ci/bsHGLxbe+qkF1BNDa7d5JJmtumaBqd4OVfqEFwW04ROamqOuAPZ7Y
+	 yUP/RsZvHaZww==
+Date: Thu, 22 May 2025 19:36:28 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Gautam Menghani <gautam@linux.ibm.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Howard Chu <howardchu95@gmail.com>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, maddy@linux.ibm.com
+Subject: Re: [PATCH v3 4/7] perf python: Add support for perf_counts_values
+ to return counter data
+Message-ID: <aC-m7G-AVJP6sDD3@x1>
+References: <20250519195148.1708988-1-irogers@google.com>
+ <20250519195148.1708988-5-irogers@google.com>
+ <aC-jR0b3mji4oJ7Q@x1>
+ <CAP-5=fXdpT3-=e4cqZN4fBJK1c4TnYC1ZVV5Q5zTjmf7T7Fffg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <018214f410632eb3dc6c6bd6ab58cba1@kernel.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fXdpT3-=e4cqZN4fBJK1c4TnYC1ZVV5Q5zTjmf7T7Fffg@mail.gmail.com>
 
-On Thu, May 22, 2025 at 03:24:02PM -0700, Stephen Boyd wrote:
-> Quoting Drew Fustini (2025-05-07 11:56:57)
-> > The following changes since commit 0af2f6be1b4281385b618cb86ad946eded089ac8:
-> > 
-> >   Linux 6.15-rc1 (2025-04-06 13:11:33 -0700)
-> > 
-> > are available in the Git repository at:
-> > 
-> >   git@github.com:pdp7/linux.git tags/thead-clk-for-v6.16
+On Thu, May 22, 2025 at 03:32:44PM -0700, Ian Rogers wrote:
+> On Thu, May 22, 2025 at 3:20 PM Arnaldo Carvalho de Melo
+> <acme@kernel.org> wrote:
+> >
+> > On Mon, May 19, 2025 at 12:51:41PM -0700, Ian Rogers wrote:
+> > > From: Gautam Menghani <gautam@linux.ibm.com>
+> > >
+> > > Add support for perf_counts_values struct to enable the python
+> > > bindings to read and return the counter data.
+> > >
+> > > Signed-off-by: Gautam Menghani <gautam@linux.ibm.com>
+> > > ---
+> > >  tools/perf/util/python.c | 92 +++++++++++++++++++++++++++++++++++++++-
+> > >  1 file changed, 91 insertions(+), 1 deletion(-)
+> > >
+> > > diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
+> > > index ead3afd2d996..1cbddfe77c7c 100644
+> > > --- a/tools/perf/util/python.c
+> > > +++ b/tools/perf/util/python.c
+> > > @@ -626,6 +626,92 @@ static int pyrf_thread_map__setup_types(void)
+> > >       return PyType_Ready(&pyrf_thread_map__type);
+> > >  }
+> > >
+> > > +struct pyrf_counts_values {
+> > > +     PyObject_HEAD
+> > > +
+> > > +     struct perf_counts_values values;
+> > > +};
+> > > +
+> > > +static const char pyrf_counts_values__doc[] = PyDoc_STR("perf counts values object.");
+> > > +
+> > > +static void pyrf_counts_values__delete(struct pyrf_counts_values *pcounts_values)
+> > > +{
+> > > +     Py_TYPE(pcounts_values)->tp_free((PyObject *)pcounts_values);
+> > > +}
+> > > +
+> > > +#define counts_values_member_def(member, ptype, help) \
+> > > +     { #member, ptype, \
+> > > +       offsetof(struct pyrf_counts_values, values.member), \
+> > > +       0, help }
+> > > +
+> > > +static PyMemberDef pyrf_counts_values_members[] = {
+> > > +     counts_values_member_def(val, Py_T_ULONG, "Value of event"),
+> > > +     counts_values_member_def(ena, Py_T_ULONG, "Time for which enabled"),
+> > > +     counts_values_member_def(run, Py_T_ULONG, "Time for which running"),
+> > > +     counts_values_member_def(id, Py_T_ULONG, "Unique ID for an event"),
+> > > +     counts_values_member_def(lost, Py_T_ULONG, "Num of lost samples"),
+> > > +     {NULL}
+> > > +};
+> >
+> > So the above is failing on a aarch64 debian (rpi5):
+> >
+> > acme@raspberrypi:~/git/perf-tools-next $ dpkg -S /usr/include/python3.11/structmember.h
+> > libpython3.11-dev:arm64: /usr/include/python3.11/structmember.h
+> > acme@raspberrypi:~/git/perf-tools-next $
+> >
+> > Where it only has:
+> >
+> > acme@raspberrypi:~/git/perf-tools-next $ grep -r Py_T_ULONG /usr/include/
+> > acme@raspberrypi:~/git/perf-tools-next $ grep -rw Py_T_ULONG /usr/include/
+> > acme@raspberrypi:~/git/perf-tools-next $ grep -rw T_ULONG /usr/include/
+> > /usr/include/python3.11/structmember.h:#define T_ULONG     12
+> > acme@raspberrypi:~/git/perf-tools-next $
+> >
+> > while on fedora 42 x86_64:
+> >
+> > ⬢ [acme@toolbx perf-tools-next]$ grep -rw Py_T_ULONG /usr/include/
+> > /usr/include/python3.13/descrobject.h:#define Py_T_ULONG     12
+> > /usr/include/python3.13/structmember.h:#define T_ULONG     Py_T_ULONG
+> > ⬢ [acme@toolbx perf-tools-next]$
+> >
+> > So I'm making it use the T_ULONG and others as all the other PyMemberDef
+> > arrays in tools/perf/util/python.c, ok?
 > 
-> I changed this to https://github.com/pdp7/linux.git but please fix it
-> next time.
+> The fix makes sense to me. Checking the documentation it seems
+> Py_T_ULONG is preferred:
+> https://docs.python.org/3/c-api/structures.html#member-types
+> perhaps we can add:
+> ```
+> #ifndef Py_T_ULONG
+> #define Py_T_ULONG T_ULONG
+> #endif
+> ```
+> so that we use the approach matching the documentation while fixing
+> the RaspberryPi issue.
 
-Sorry about that. I'll use https in the future.
+That can be done as a followup, as there are lots of preexisting usage
+for struct method definitions.
 
-Thanks,
-Drew
+- Arnaldo
+ 
+> Thanks,
+> Ian
+> 
+> > - Arnaldo
+> >
+> > > +static PyObject *pyrf_counts_values_get_values(struct pyrf_counts_values *self, void *closure)
+> > > +{
+> > > +     PyObject *vals = PyList_New(5);
+> > > +
+> > > +     if (!vals)
+> > > +             return NULL;
+> > > +     for (int i = 0; i < 5; i++)
+> > > +             PyList_SetItem(vals, i, PyLong_FromLong(self->values.values[i]));
+> > > +
+> > > +     return vals;
+> > > +}
+> > > +
+> > > +static int pyrf_counts_values_set_values(struct pyrf_counts_values *self, PyObject *list,
+> > > +                                      void *closure)
+> > > +{
+> > > +     Py_ssize_t size;
+> > > +     PyObject *item = NULL;
+> > > +
+> > > +     if (!PyList_Check(list)) {
+> > > +             PyErr_SetString(PyExc_TypeError, "Value assigned must be a list");
+> > > +             return -1;
+> > > +     }
+> > > +
+> > > +     size = PyList_Size(list);
+> > > +     for (Py_ssize_t i = 0; i < size; i++) {
+> > > +             item = PyList_GetItem(list, i);
+> > > +             if (!PyLong_Check(item)) {
+> > > +                     PyErr_SetString(PyExc_TypeError, "List members should be numbers");
+> > > +                     return -1;
+> > > +             }
+> > > +             self->values.values[i] = PyLong_AsLong(item);
+> > > +     }
+> > > +
+> > > +     return 0;
+> > > +}
+> > > +
+> > > +static PyGetSetDef pyrf_counts_values_getset[] = {
+> > > +     {"values", (getter)pyrf_counts_values_get_values, (setter)pyrf_counts_values_set_values,
+> > > +             "Name field", NULL},
+> > > +     {NULL}
+> > > +};
+> > > +
+> > > +static PyTypeObject pyrf_counts_values__type = {
+> > > +     PyVarObject_HEAD_INIT(NULL, 0)
+> > > +     .tp_name        = "perf.counts_values",
+> > > +     .tp_basicsize   = sizeof(struct pyrf_counts_values),
+> > > +     .tp_dealloc     = (destructor)pyrf_counts_values__delete,
+> > > +     .tp_flags       = Py_TPFLAGS_DEFAULT|Py_TPFLAGS_BASETYPE,
+> > > +     .tp_doc         = pyrf_counts_values__doc,
+> > > +     .tp_members     = pyrf_counts_values_members,
+> > > +     .tp_getset      = pyrf_counts_values_getset,
+> > > +};
+> > > +
+> > > +static int pyrf_counts_values__setup_types(void)
+> > > +{
+> > > +     pyrf_counts_values__type.tp_new = PyType_GenericNew;
+> > > +     return PyType_Ready(&pyrf_counts_values__type);
+> > > +}
+> > > +
+> > >  struct pyrf_evsel {
+> > >       PyObject_HEAD
+> > >
+> > > @@ -1475,7 +1561,8 @@ PyMODINIT_FUNC PyInit_perf(void)
+> > >           pyrf_evlist__setup_types() < 0 ||
+> > >           pyrf_evsel__setup_types() < 0 ||
+> > >           pyrf_thread_map__setup_types() < 0 ||
+> > > -         pyrf_cpu_map__setup_types() < 0)
+> > > +         pyrf_cpu_map__setup_types() < 0 ||
+> > > +         pyrf_counts_values__setup_types() < 0)
+> > >               return module;
+> > >
+> > >       /* The page_size is placed in util object. */
+> > > @@ -1520,6 +1607,9 @@ PyMODINIT_FUNC PyInit_perf(void)
+> > >       Py_INCREF(&pyrf_cpu_map__type);
+> > >       PyModule_AddObject(module, "cpu_map", (PyObject*)&pyrf_cpu_map__type);
+> > >
+> > > +     Py_INCREF(&pyrf_counts_values__type);
+> > > +     PyModule_AddObject(module, "counts_values", (PyObject *)&pyrf_counts_values__type);
+> > > +
+> > >       dict = PyModule_GetDict(module);
+> > >       if (dict == NULL)
+> > >               goto error;
+> > > --
+> > > 2.49.0.1101.gccaa498523-goog
