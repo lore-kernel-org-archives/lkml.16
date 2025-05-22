@@ -1,135 +1,163 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94089269CFA;
-	Thu, 22 May 2025 22:11:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB1AB26B958;
+	Thu, 22 May 2025 22:13:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747951904; cv=none; b=sca8UREPt+Wi1jP6whsNMAqTYIaA0XIZhFRSaDMKsJMlaBt5oVDSHUU6tOIJYWVHzy+1IIsHAMgkvBE9HjyaRL41947dVMVy6U8azDNOiAqE44WY3F/azNkrleSctJpcZbtMbKrK1w2jn2CTyvsuvdasoXk7frtTLgvJ47smOPs=
+	t=1747952028; cv=none; b=fgAeXkW/d/fvm02n9eQXtTMQYiMxtiUYQIJccxumeHidg9CunjR+p78GNflc07EF7essnFP/I2ZngtPSkmMT72Fb4qpcp9ucgYd1w4yy4GJ8AxTvT+IuvDz0WHstKxsowOipAhRTySaI2TsUeUB4mv4E/fGq49bxF8LqFxxZyNk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747951904; c=relaxed/simple;
-	bh=KZiFQSdib5SAC4/JvoIWXS6NRECRieWGZ7Tfu3oNlvs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Tg68xcNu/KpCyE+H+IKCWyEO09JPmNKvV5QmMx5Oq4vBi2K3w8EBCmCyHFLfGx6Mr2W1hx883C107xKIH3UQw54d9rpORBf7AvBUD3K4Ljz0A4RdmanmAiNRlUaLxlE/bpARkGftL5Aw7i2tAwamgEKttw2OgBHgwxjsKP2alIA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k5M1xSyC; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747952028; c=relaxed/simple;
+	bh=5dENeOLtnJGFObbzdDXN0f5y5BtraJcblhTQRAod3S8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=AuW06mELLhPVFcyjxN9m1hizufhBPdkfcGbUyOomk8+jTapJq7qiR1eSuEFmaNBhsJ+FBkuy/wjlc/gZHsP9ZBt4a0zgBqnPfTxIbGlUCif594TyttqMhsL6EfZxqqANIunza3p/KY6auwcV7ayuxgpOs9jS84bm/EjJ//bfAMA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TGRESWor; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k5M1xSyC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04787C4CEE4;
-	Thu, 22 May 2025 22:11:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747951904;
-	bh=KZiFQSdib5SAC4/JvoIWXS6NRECRieWGZ7Tfu3oNlvs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=k5M1xSyCLAaTzrGsViDJk/UZITks+AuMEgusboQ3J3QPmFPax50ttimc4GWI6nWFn
-	 pBlXxxgBEZCKHNlYz1Y1OFZaB5hwRlzqTqIEHYCSCkeWC9a2KvYZJjyoN0ldcK4bUF
-	 Uo1rkZSDzRH+B01crReH2jA7snhqYbC5THBZT0R0lJRPhy6WVyd2dtFc8E+zi5A0tg
-	 BNkXlYNsvyR2eLYuUqb1izVqaKvar50bauW2DxBbOCBp3yX4oXNsMWCjkXP6v8Sjsl
-	 J5nQhrJ2LcezDcr0VPJa7JEMeakduAbqrrYqarinIggJl79zecVg16VypxOB4y5TFq
-	 W6f2QhbIqMrmg==
-Date: Thu, 22 May 2025 19:11:41 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>, Howard Chu <howardchu95@gmail.com>
-Cc: Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH] perf test: Add cgroup summary test case for perf trace
-Message-ID: <aC-hHTgArwlF_zu9@x1>
-References: <20250522142551.1062417-1-namhyung@kernel.org>
- <CAH0uvoiZ2difXdPsjkdLikHTRwYROYUeuCdZ+gQ5uRfQ2rzwGQ@mail.gmail.com>
- <aC9VoTL_Cv4R7J-j@x1>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TGRESWor"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-231c38c9d9eso6917505ad.3;
+        Thu, 22 May 2025 15:13:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747952026; x=1748556826; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=AMhz1MVSg+20hErSHEivJDb3RiqjMCis/42ObFUBGKI=;
+        b=TGRESWorsWj5QhsVEHLZVj2gEKzxRvoD3P+7nakYG0kz2YN4TJS19EwfKDhaQ2+JKa
+         Og1SwQIaUQDgRFYpCuQ9VtkgAvUOLVn5z7D13Ij6tcCNhtKNnmOj6xmUfYwOM1mmf+Y5
+         ioAN4anUvMLyMXdRyhGa1ataHWnux9xmbINLnYX0ffGvsRqL/+dctEfFHJe+ecw0a1ZR
+         lCakiOjv/JQjahO/ejf0H+UJY+cKTo6KdDfbpGjCwegL9R2dLufFEQ6/Q0qU7ZLnpICw
+         DcwvCg0Gbcv4Lgm81wfnmaCNqP9j9dC9pIAbbFCQ+1S4ZyXkUdHaEBwRqw8Q2qG0+Twx
+         hWSQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747952026; x=1748556826;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=AMhz1MVSg+20hErSHEivJDb3RiqjMCis/42ObFUBGKI=;
+        b=LoSEq5ez/f270c4nbdr2uL+To+LfJJkUDHWQFIY7q8lU91k4AyuUppTLkxZuKXHrr0
+         9CAKUv4mLgEEVsVjQmHlLsO4XaPxNpFCPkkFEqufDo2rmaL8JrfedDf41K5v9ZUJ2ycP
+         aLPyxn3h7iX+34K8uUgserojDm2TyQbcKSl1tpU25GMt/cT3IOo//kusIHI0NB7pbmU6
+         WzsIGguQldUpbfSxF99BM2LwFSQNAn6tu5WnQlxJDh1r/0r8snwqOo0BYanmpHmgadw6
+         tGCNCtfRczu/1Df8q3xcLxgNWRxWfDSC7uzgfKqP4WfyLpOwn+6sTm4s0WaKWV9o4TBV
+         Aatg==
+X-Forwarded-Encrypted: i=1; AJvYcCWWbNlP3gpR4uCl4oP2cGqEFhTUq4ZkybkFMhNEVMp7deZ8nYG0QVZWbo7/85iSDwBgqfyaOjIaPZUsjjw=@vger.kernel.org, AJvYcCWpff++l8M+LHoCqi+SbA8oEMXJaHePXN8mlXc3RuTCYUhVm4H1vOlCZg7fnwd58wY9QYunVxmLVZDgRkPdsgw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyi7dDAy7PjEZxaUziaLz+9VEUAI7tmFr/IrCHiZYhH5uRirAxp
+	atoEg1NUYuLpbtWLlA9zI4ujg4w9Dg+HyvaXOqgOf+yxnccRzV1frrCGsvG1a66vNARD4LLVcLJ
+	FRx1kMxyzCHjP/mFPFhhmUaSMlo45XtQ=
+X-Gm-Gg: ASbGncsDD8/thdVtgiHOpuUFfoY6fVzIyEX8TqBkOJTs4ZidXcanRcchQXlb82+ObsV
+	ilkiE3Uc8oB+vfhGJM4ioNkPFwiPUQMTWCxMI/QvymqSb57zo4drwfHp74CRvy63alM8As4f/PV
+	33Pp7P03CUMm3DDEl7lygazAPf0BomOSzuafrBCvV1D50=
+X-Google-Smtp-Source: AGHT+IFTyjvX9iO5arSB+Hrj2K8L6YOfX+CN4mhTlBRVV8gnFAIiCtQe8lkHwIlvRc1U3Eaocj5eWFvoqT3N1A2+8ZQ=
+X-Received: by 2002:a17:902:d4cd:b0:231:c9bb:6105 with SMTP id
+ d9443c01a7336-231d334d214mr141617365ad.0.1747952025723; Thu, 22 May 2025
+ 15:13:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aC9VoTL_Cv4R7J-j@x1>
+References: <20250522-rust-mno-fdpic-arm-fix-v2-1-a6f691d9c198@gmail.com>
+In-Reply-To: <20250522-rust-mno-fdpic-arm-fix-v2-1-a6f691d9c198@gmail.com>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Fri, 23 May 2025 00:13:32 +0200
+X-Gm-Features: AX0GCFtr6WgCm1ku7z1BrqoxOWC4SJPyclrOJsw4oTJrTJaoW2ki_s3m3SE0AGg
+Message-ID: <CANiq72kHh9e-gB-b1udjJn07=ampsy+4dkTFgEeQ3VNUUw_7+A@mail.gmail.com>
+Subject: Re: [PATCH v2] arm: Fix rustgcc unknown argument '-mno-fdpic'
+To: Rudraksha Gupta <guptarud@gmail.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
+	Danilo Krummrich <dakr@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, 
+	Justin Stitt <justinstitt@google.com>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, llvm@lists.linux.dev, 
+	torvalds@linux-foundation.org, Ben Wolsieffer <ben.wolsieffer@hefring.com>, 
+	Naresh Kamboju <naresh.kamboju@linaro.org>, Christian Schrrefl <chrisi.schrefl@gmail.com>, 
+	Russell King <rmk+kernel@armlinux.org.uk>, Ard Biesheuvel <ardb@kernel.org>, anders.roxell@linaro.org, 
+	arnd@arndb.de, dan.carpenter@linaro.org, laura.nao@collabora.com, 
+	lkft-triage@lists.linaro.org, regressions@lists.linux.dev, 
+	Nick Clifton <nickc@redhat.com>, Richard Earnshaw <richard.earnshaw@arm.com>, 
+	Ramana Radhakrishnan <ramanara@nvidia.com>, Linux Kernel Functional Testing <lkft@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, May 22, 2025 at 01:49:37PM -0300, Arnaldo Carvalho de Melo wrote:
-> On Thu, May 22, 2025 at 08:33:16AM -0700, Howard Chu wrote:
-> > $ sudo /tmp/perf/perf test -vv 112
-> > 112: perf trace summary:
-> > 112: perf trace summary
-> > --- start ---
-> > test child forked, pid 1574993
-> > testing: perf trace -s -- true
-> > testing: perf trace -S -- true
-> > testing: perf trace -s --summary-mode=thread -- true
-> > testing: perf trace -S --summary-mode=total -- true
-> > testing: perf trace -as --summary-mode=thread --no-bpf-summary -- true
-> > testing: perf trace -as --summary-mode=total --no-bpf-summary -- true
-> > testing: perf trace -as --summary-mode=thread --bpf-summary -- true
-> > testing: perf trace -as --summary-mode=total --bpf-summary -- true
-> > testing: perf trace -aS --summary-mode=total --bpf-summary -- true
-> > testing: perf trace -as --summary-mode=cgroup --bpf-summary -- true
-> > testing: perf trace -aS --summary-mode=cgroup --bpf-summary -- true
-> > ---- end(0) ----
-> > 112: perf trace summary                                              : Ok
- 
-> Thanks, tested and applied to perf-tools-next,
+On Thu, May 22, 2025 at 2:02=E2=80=AFPM Rudraksha Gupta <guptarud@gmail.com=
+> wrote:
+>
+> Currently rust on arm fails to compile due to '-mno-fdpic'. This flag
+> disables a GCC feature that we don't want for kernel builds, so let's
+> skip it as it doesn't apply to Clang.
+>
+>     UPD     include/generated/asm-offsets.h
+>     CALL    scripts/checksyscalls.sh
+>     RUSTC L rust/core.o
+>     BINDGEN rust/bindings/bindings_generated.rs
+>     BINDGEN rust/bindings/bindings_helpers_generated.rs
+>     CC      rust/helpers/helpers.o
+>     Unable to generate bindings: clang diagnosed error: error: unknown ar=
+gument: '-mno-fdpic'
+>     make[2]: *** [rust/Makefile:369: rust/bindings/bindings_helpers_gener=
+ated.rs] Error 1
+>     make[2]: *** Deleting file 'rust/bindings/bindings_helpers_generated.=
+rs'
+>     make[2]: *** Waiting for unfinished jobs....
+>     Unable to generate bindings: clang diagnosed error: error: unknown ar=
+gument: '-mno-fdpic'
+>     make[2]: *** [rust/Makefile:349: rust/bindings/bindings_generated.rs]=
+ Error 1
+>     make[2]: *** Deleting file 'rust/bindings/bindings_generated.rs'
+>     make[1]: *** [/home/pmos/build/src/linux-next-next-20250521/Makefile:=
+1285: prepare] Error 2
+>     make: *** [Makefile:248: __sub-make] Error 2
+>
+> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+> Closes: https://lore.kernel.org/all/CA+G9fYvOanQBYXKSg7C6EU30k8sTRC0JRPJX=
+Yu7wWK51w38QUQ@mail.gmail.com/
+> Suggested-by: Miguel Ojeda <ojeda@kernel.org>
+> Tested-by: Rudraksha Gupta <guptarud@gmail.com>
+> Acked-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+> Signed-off-by: Rudraksha Gupta <guptarud@gmail.com>
 
-But then when running all the tests, since this does system wide
-tracing, it fails:
+Applied to `rust-next` -- thanks everyone!
 
-112: perf trace summary                                              : FAILED!
+    [ Naresh provided the draft diff [1].
 
-It works with the following patch applied, please check and ack/review:
+      Ben explained [2]:
 
-From 8c868979d886e2e88aa89f4e3d884e1b6450a7b2 Mon Sep 17 00:00:00 2001
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
-Date: Thu, 22 May 2025 19:01:47 -0300
-Subject: [PATCH 1/1] perf tests trace_summary.sh: Run in exclusive mode
+        FDPIC is only relevant with no-MMU targets, and then only for users=
+pace.
+        When configured for the arm-*-uclinuxfdpiceabi target, GCC enables =
+FDPIC
+        by default to facilitate compiling userspace programs. FDPIC is nev=
+er
+        used for the kernel, and we pass -mno-fdpic when building the kerne=
+l to
+        override the default and make sure FDPIC is disabled.
 
-And it is being successfull only when running alone, probably because
-there are some tests that add the vfs_getname probe that gets used by
-'perf trace' and alter how it does syscall arg pathname resolution.
+      and [3]:
 
-This should be removed or made a fallback to the preferred BPF mode of
-getting syscall parameters, but till then, run this in exclusive mode.
+        -mno-fdpic disables a GCC feature that we don't want for kernel bui=
+lds.
+        clang does not support this feature, so it always behaves as though
+        -mno-fdpic is passed. Therefore, it should be fine to mix the two, =
+at
+        least as far as FDPIC is concerned.
 
-For reference, here are some of the tests that run close to this one:
+      [1] https://lore.kernel.org/rust-for-linux/CA+G9fYt4otQK4pHv8pJBW9e28=
+yHSGCDncKquwuJiJ_1ou0pq0w@mail.gmail.com/
+      [2] https://lore.kernel.org/rust-for-linux/aAKrq2InExQk7f_k@dell-prec=
+ision-5540/
+      [3] https://lore.kernel.org/rust-for-linux/aAo_F_UP1Gd4jHlZ@dell-prec=
+ision-5540/
 
-  127: perf record offcpu profiling tests                              : Ok
-  128: perf all PMU test                                               : Ok
-  129: perf stat --bpf-counters test                                   : Ok
-  130: Check Arm CoreSight trace data recording and synthesized samples: Skip
-  131: Check Arm CoreSight disassembly script completes without errors : Skip
-  132: Check Arm SPE trace data recording and synthesized samples      : Skip
-  133: Test data symbol                                                : Ok
-  134: Miscellaneous Intel PT testing                                  : Skip
-  135: test Intel TPEBS counting mode                                  : Skip
-  136: perf script task-analyzer tests                                 : Ok
-  137: Check open filename arg using perf trace + vfs_getname          : Ok
-  138: perf trace summary                                              : Ok
+        - Miguel ]
 
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Howard Chu <howardchu95@gmail.com>
-Cc: Ian Rogers <irogers@google.com>
-Cc: James Clark <james.clark@linaro.org>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/tests/shell/trace_summary.sh | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+    [ Reworded title. - Miguel ]
 
-diff --git a/tools/perf/tests/shell/trace_summary.sh b/tools/perf/tests/shell/trace_summary.sh
-index bb350dfabdc2bf5e..49766524dc21b534 100755
---- a/tools/perf/tests/shell/trace_summary.sh
-+++ b/tools/perf/tests/shell/trace_summary.sh
-@@ -1,5 +1,5 @@
- #!/bin/sh
--# perf trace summary
-+# perf trace summary (exclusive)
- # SPDX-License-Identifier: GPL-2.0
- 
- # Check that perf trace works with various summary mode
--- 
-2.49.0
-
+Cheers,
+Miguel
