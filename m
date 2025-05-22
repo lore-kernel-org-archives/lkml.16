@@ -1,147 +1,132 @@
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF54F29ACCE
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 17:41:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D848229B77E
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 17:41:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747935673; cv=none; b=bf//+A6iip6vNVmeRAPbp/768yThf+qRFQO2PCP/Zkz3mHmPVMgkrSVeFdU4KqGycMuOEOQtjFUwNMsrDB/t5P4eD4eVzmQ2+LRHJ9r5XuefZpGasrpAEEPDhsJMaCsGrUuEZXmbw2EM8CWvZxx3mNtKyGSWz2riF9iBydBtznQ=
+	t=1747935674; cv=none; b=D0PH6+4oCe+YBfSaHLSwbOXQmXeQJRRxf9/oH/BsPTttsE9FKbJxi15R+F8gpoopSDEBC5Dp/HJxO/gXghdEphdwSy9r0v990oJoRkqJWfJbonTxpeY3zBcajKtERbA0g/S28NskX3ef+nfHB7/Q5VfcSqTuCAAK3Z1U4Tex9Yk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747935673; c=relaxed/simple;
-	bh=KEPTMakCA32PkhOCrneqwQED+KPaxi3ID2lG6vlGRmg=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=d7b4ZOURyq1qCItcYmChhN2OG2F8ALz/9o66rpdAistI1/kexRy+JCcMXQEJAfurwt8tw7pCUPBZPxHP3Wt+7XESusUxiJ/ljNb9VZKAtIn/SmrJGKVaE5mln9qYp1q+2twFBupOCWy4dkAeQNdb5SXYjGt9Xg2DxJGlB8Tj7aI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=vh6eOja6; arc=none smtp.client-ip=209.85.221.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1747935674; c=relaxed/simple;
+	bh=lGBxI9OCtZJuGAq0zcPwd74EgaIQAmyhF8n7m1xT4V8=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=WypOZD2KXf8Qz97Smi3BlWVQK34kQN8YJOb9mE3iI+pP5EVPGLCnTAPR0J4OA5fvWwZKpiMLDW9B4nFanhuYKkoXU8aLEBgFLttKu5qI2c+rqVvYhaP8iX90F3qYs4CrROG+xxk7FJiCYxn1NfPj1I5hgIN3xQtad82aC+pw69Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=VLBksaEP; arc=none smtp.client-ip=209.85.214.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vh6eOja6"
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-3a35c894313so5636081f8f.2
-        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 10:41:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VLBksaEP"
+Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-23222fdb4f2so83622255ad.3
+        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 10:41:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1747935665; x=1748540465; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=b6zBILNgMTTruPAKW6TCbU3LqqO81pSI/MBmJZg4XxA=;
-        b=vh6eOja6Pyx0N1mL7J5ArhNCbPg6RCcMCYbJEoiyyjvPI9cheM9vyZ2jmrBvBqKikP
-         4zssXMDJ+pe4wiqXvYAws8tfKAix/8J23/l/urxF8Zf/Darxu+wQH6rpNkhzJy/buiZu
-         PKndfdpYUHmCf42fQ1Za8OQ3eWbmc99/aDe1j1P/lTfYy5HS5GFC8lIkxafRw/RKX6ox
-         h20bB29XG58Qy7LSzhzOaw4PVY1FpOPODj5AfYxzMo6hPTstKZEDP1ODIQ3f5CJy1tf8
-         D4snMholPimtH+GOu8+BKka2vI8iDtkW9XR5hwd83+GD+a8siEEO2MR9KzHKxDNdQSGa
-         ueeA==
+        d=google.com; s=20230601; t=1747935670; x=1748540470; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ag38dhq4dXm3ibKh0H63wetUkYvwY754FjJDUuyvy8Q=;
+        b=VLBksaEPFPWUMDjP440wnNuiAT2JeUKgmWO2BfVPekPUE6NqAZK6KVmzi44n3ksQnz
+         MVRiMgWENUZu5OrZKREok6T6LuGUrMABqU97ZCX8pTNCr+xGFCgG+WFpeK0L1nogFn3i
+         wg/M/gS9AU6wMbL1yLn+bCoUxlyD2G2g35YSKjrZ1E2ICSeUEByduTvkr5PF/gUoaL97
+         opZyxuRkcw0FYCj3DEy4ze2G0wLA0cPj7W0+GqXQMv/wRlTR+RbUJ5ehlL88val4Bb70
+         Dj/jOhpoHAdRWW+ELA9AAd8qER4tcYi9ZlFDYaSBo3IzWM621DlFQJHenXHyWbIvWpj6
+         AqLg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747935665; x=1748540465;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=b6zBILNgMTTruPAKW6TCbU3LqqO81pSI/MBmJZg4XxA=;
-        b=IiCW+S92lfUakKUPfaqrscKiB35COk/XpwUQ3G0e3KF2FYNJShsFzUW8R+ZtMeJnjr
-         HmI/psA378POyamK5g8OyohN846M5bZd1fxkWaRHOW6axIyG/nDG9AYBqwhzOwY+tFq7
-         3fMlOGE1ukMRKOljQ3MKbf1aFpGtlfxkf3L9M20xLpx/hiWlfahI1s0BgOpyRlyaJNZJ
-         v7vWAGs1VPSBQZcrbtgJ9vLcgNsf8es4hRdEA237BSz/L/uinbc/rvKhEfpClXiKd5fk
-         v4ouwYoBe1e9fD36Hgn//bHDqegRb3ccIdGJiU3hPCpPPNdpB9Y3eeNx0rMLhP2QIdxd
-         KFPw==
-X-Forwarded-Encrypted: i=1; AJvYcCWZ2ptrGeRstsV0W8rG7O1Qtnc9pDxDjXv3IxxtH8GCMXiVVcvvkAdf2C+HUTMvcHGXEdaSD8bqxv9LDIE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw0l9cdC9sylokTC1oQD0VHMrDiFAfvr81t805Mhh8ByikNjBn8
-	2L6DfYBM6FS1sHQMtF4YHMkWSN24BmypKegXPCaAr9K7nO0lYtNuU73B6mZpQDGZpds=
-X-Gm-Gg: ASbGncumHSbQnojtt4HNNrBVDnExirkePDSH4ltox0mGSJ3pNqjWNV3qG+Om0zPVJ2/
-	bHflWJPEobdlOxhpKehLl8GtYzq17UHZWwj9p9kuMni2EMI9AIqWq6PiEs4A57FDFIWUTRpg4kV
-	9h1DiExOFWPC+5MfzI+htLdJD9+R0J8UYtgBwQ+63OghET7s2jJKtvUCd0t8eQlA5ZOf77LzM+C
-	UpMRcjjngvuEqiHGXaJvfUb77kwIG219qNcZceMtBZv9wnQei5CRHQYiediSXQhd5NgabKhrpYs
-	Mkd//x/YHWPRb9qYL/4oyFY5xAuBcA6drzjlSNmv3muorPG8Frn+byB9bl+k8JJcglzQMQ==
-X-Google-Smtp-Source: AGHT+IEF5HaUFQwCelNdRVlj1OZcIfPLTd/t+FpobYKsjTVhFlb/PhZuoCsEx3xvOKWYBUnoGfdrcw==
-X-Received: by 2002:a05:6000:184d:b0:3a0:b84c:52b4 with SMTP id ffacd0b85a97d-3a35c809250mr25368671f8f.10.1747935665397;
-        Thu, 22 May 2025 10:41:05 -0700 (PDT)
-Received: from orion.home ([2a02:c7c:7213:c700:6c33:c245:91e5:a9f4])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-447f7bae847sm109563195e9.36.2025.05.22.10.41.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 May 2025 10:41:04 -0700 (PDT)
-From: Alexey Klimov <alexey.klimov@linaro.org>
-Date: Thu, 22 May 2025 18:41:00 +0100
-Subject: [PATCH v3 10/12] arm64: dts: qcom: qrb4210-rb2: enable wsa881x
- amplifier
+        d=1e100.net; s=20230601; t=1747935670; x=1748540470;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ag38dhq4dXm3ibKh0H63wetUkYvwY754FjJDUuyvy8Q=;
+        b=thDrSsc1XBqJLiwPBLm5zNwnG6B+8C8IkxhGstbcRhIzV7J14orx02u54gKSRRRJFO
+         pf6ENd44rWTzSW3PWvsb5+1YSIoDAPrNtao6AS1g8jqqW9t1zWK2GuCq5xl6AtwgnoWr
+         bHMWQGPgeAK0qEh3r7VkUpTlDoKLY2qMCP0EESZgcZGIRYqjntGEhCyJOP7yjHAEUt2M
+         o7XcZwjq717fdRSLW21zOKZzoCXOVHiqhbC5/CnAbfeAt+RgHOIq8eepnLzMGQb5gwYJ
+         jHpn47Rq8TpdNrVPZy2Tk4eQR1XKYxbnxXOD6wmLYWOuh3Lx/GRibvh+WN0YrjdlChEx
+         +UGg==
+X-Forwarded-Encrypted: i=1; AJvYcCUBuufODQ0nKcX+0UsxGeYaZvNM06f7nkkBCmzNrhZziJLiquOhrhdbKsvWQbC8UhBMLM6uRtiV9kTxXkc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzGZWydRXyPFkraUco5H0OGfRRNH5GKutTHCSQGzzG8cshUoKW7
+	MHSjfvHh9V0oBheNiZ0S91t+qNOE8arkF1sulzHcUzrBWwSfPm+YK1FvEiObxhsXpRs1HMbRdPz
+	P8nkwTw==
+X-Google-Smtp-Source: AGHT+IEKYo9T1skkKALkOQM3lragb0fX9j4mssklDqAQEruq37vmejRfGQO+eTiLY330Ywwe86rho3P8czE=
+X-Received: from pjbsn4.prod.google.com ([2002:a17:90b:2e84:b0:2fc:aac:e580])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:483:b0:22e:634b:14cd
+ with SMTP id d9443c01a7336-231de3ae56emr253780405ad.39.1747935670297; Thu, 22
+ May 2025 10:41:10 -0700 (PDT)
+Date: Thu, 22 May 2025 10:41:08 -0700
+In-Reply-To: <20250522005555.55705-2-mlevitsk@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250522-rb2_audio_v3-v3-10-9eeb08cab9dc@linaro.org>
-References: <20250522-rb2_audio_v3-v3-0-9eeb08cab9dc@linaro.org>
-In-Reply-To: <20250522-rb2_audio_v3-v3-0-9eeb08cab9dc@linaro.org>
-To: Srinivas Kandagatla <srini@kernel.org>, Mark Brown <broonie@kernel.org>, 
- linux-sound@vger.kernel.org
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
- Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
- Dmitry Baryshkov <lumag@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
- Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, 
- Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
- linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
- Srinivas Kandagatla <srini@kernel.org>
-X-Mailer: b4 0.14.2
+Mime-Version: 1.0
+References: <20250522005555.55705-1-mlevitsk@redhat.com> <20250522005555.55705-2-mlevitsk@redhat.com>
+Message-ID: <aC9htBtwpBGaPoeu@google.com>
+Subject: Re: [PATCH v5 1/5] KVM: x86: Convert vcpu_run()'s immediate exit
+ param into a generic bitmap
+From: Sean Christopherson <seanjc@google.com>
+To: Maxim Levitsky <mlevitsk@redhat.com>
+Cc: kvm@vger.kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
+	Thomas Gleixner <tglx@linutronix.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
+	Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org, 
+	x86@kernel.org, Paolo Bonzini <pbonzini@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
 
-One WSA881X amplifier is connected on QRB4210 RB2 board
-hence only mono speaker is supported. This amplifier is set
-to work in analog mode only. Also add required powerdown
-pin/gpio.
+On Wed, May 21, 2025, Maxim Levitsky wrote:
+> ---
+> diff --git a/arch/x86/kvm/vmx/tdx.c b/arch/x86/kvm/vmx/tdx.c
+> index b952bc673271..7dbfad28debc 100644
+> --- a/arch/x86/kvm/vmx/tdx.c
+> +++ b/arch/x86/kvm/vmx/tdx.c
+> @@ -1020,8 +1020,9 @@ static void tdx_load_host_xsave_state(struct kvm_vcpu *vcpu)
+>  				DEBUGCTLMSR_FREEZE_PERFMON_ON_PMI | \
+>  				DEBUGCTLMSR_FREEZE_IN_SMM)
+>  
+> -fastpath_t tdx_vcpu_run(struct kvm_vcpu *vcpu, bool force_immediate_exit)
+> +fastpath_t tdx_vcpu_run(struct kvm_vcpu *vcpu, u64 run_flags)
+>  {
+> +	bool force_immediate_exit = run_flags & KVM_RUN_FORCE_IMMEDIATE_EXIT;
 
-Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Signed-off-by: Alexey Klimov <alexey.klimov@linaro.org>
----
- arch/arm64/boot/dts/qcom/qrb4210-rb2.dts | 26 ++++++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
+Talking to myself, but I think it makes sense to drop the local force_immediate_exit
+entirely, specifically so that the WARN_ON_ONCE() can just yell on run_flags being
+non-zero.  All immediate usage of run_flags is mutually exclusive with TDX.
 
-diff --git a/arch/arm64/boot/dts/qcom/qrb4210-rb2.dts b/arch/arm64/boot/dts/qcom/qrb4210-rb2.dts
-index 6bce63720cfffd8e0e619937fb1f365cbbbcb283..4b878e585227ee6b3b362108be96aad99acba21d 100644
---- a/arch/arm64/boot/dts/qcom/qrb4210-rb2.dts
-+++ b/arch/arm64/boot/dts/qcom/qrb4210-rb2.dts
-@@ -270,6 +270,24 @@ zap-shader {
- 	};
- };
+diff --git a/arch/x86/kvm/vmx/tdx.c b/arch/x86/kvm/vmx/tdx.c
+index 3cfe89aad68e..9a758d8b38ea 100644
+--- a/arch/x86/kvm/vmx/tdx.c
++++ b/arch/x86/kvm/vmx/tdx.c
+@@ -1018,20 +1018,20 @@ static void tdx_load_host_xsave_state(struct kvm_vcpu *vcpu)
+                                DEBUGCTLMSR_FREEZE_PERFMON_ON_PMI | \
+                                DEBUGCTLMSR_FREEZE_IN_SMM)
  
-+&i2c1 {
-+	clock-frequency = <400000>;
-+	status = "okay";
-+
-+	wsa881x: amplifier@f {
-+		compatible = "qcom,wsa8815";
-+		reg = <0x0f>;
-+		pinctrl-0 = <&wsa_en_active>;
-+		pinctrl-names = "default";
-+		clocks = <&q6afecc LPASS_CLK_ID_MCLK_2 LPASS_CLK_ATTRIBUTE_COUPLE_NO>;
-+		powerdown-gpios = <&lpass_tlmm 16 GPIO_ACTIVE_LOW>;
-+		mclk-gpios = <&lpass_tlmm 18 GPIO_ACTIVE_HIGH>;
-+		sound-name-prefix = "SpkrMono";
-+		#sound-dai-cells = <0>;
-+		#thermal-sensor-cells = <0>;
-+	};
-+};
-+
- &i2c2_gpio {
- 	clock-frequency = <400000>;
- 	status = "okay";
-@@ -736,6 +754,14 @@ wcd_reset_n: wcd-reset-n-state {
- 		drive-strength = <16>;
- 		output-high;
- 	};
-+
-+	wsa_en_active: wsa-en-active-state {
-+		pins = "gpio106";
-+		function = "gpio";
-+		drive-strength = <16>;
-+		bias-disable;
-+		output-high;
-+	};
- };
+-fastpath_t tdx_vcpu_run(struct kvm_vcpu *vcpu, bool force_immediate_exit)
++fastpath_t tdx_vcpu_run(struct kvm_vcpu *vcpu, u64 run_flags)
+ {
+        struct vcpu_tdx *tdx = to_tdx(vcpu);
+        struct vcpu_vt *vt = to_vt(vcpu);
  
- &uart3 {
-
--- 
-2.47.2
-
+        /*
+-        * force_immediate_exit requires vCPU entering for events injection with
+-        * an immediately exit followed. But The TDX module doesn't guarantee
+-        * entry, it's already possible for KVM to _think_ it completely entry
+-        * to the guest without actually having done so.
+-        * Since KVM never needs to force an immediate exit for TDX, and can't
+-        * do direct injection, just warn on force_immediate_exit.
++        * WARN if KVM wants to force an immediate exit, as the TDX module does
++        * not guarantee entry into the guest, i.e. it's possible for KVM to
++        * _think_ it completed entry to the guest and forced an immediate exit
++        * without actually having done so.  Luckily, KVM never needs to force
++        * an immediate exit for TDX (KVM can't do direct event injection, so
++        * just WARN and continue on.
+         */
+-       WARN_ON_ONCE(force_immediate_exit);
++       WARN_ON_ONCE(run_flags);
+ 
+        /*
+         * Wait until retry of SEPT-zap-related SEAMCALL completes before
+@@ -1041,7 +1041,7 @@ fastpath_t tdx_vcpu_run(struct kvm_vcpu *vcpu, bool force_immediate_exit)
+        if (unlikely(READ_ONCE(to_kvm_tdx(vcpu->kvm)->wait_for_sept_zap)))
+                return EXIT_FASTPATH_EXIT_HANDLED;
+ 
+-       trace_kvm_entry(vcpu, force_immediate_exit);
++       trace_kvm_entry(vcpu, run_flags & KVM_RUN_FORCE_IMMEDIATE_EXIT);
+ 
+        if (pi_test_on(&vt->pi_desc)) {
+                apic->send_IPI_self(POSTED_INTR_VECTOR);
