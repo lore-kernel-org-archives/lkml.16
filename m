@@ -1,75 +1,138 @@
-Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAC3B28C877
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 14:50:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50A1A28D8C1;
+	Thu, 22 May 2025 14:50:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747925405; cv=none; b=bfz7wkJPa+hnmK1Hiogzc2luradFYDTtiz/4pWumbWXVJgfB93MEzCb+cYdbExtobhWS4gVv2rG8hfVH3533l6fZkRIOzZgE3wY1KrcJ79+cADLj8cQ1GgEBlDRVl9boWweeiWn2gsuAVLp5HXfBP8bLxKR5P8e1ofjmtkhXQp8=
+	t=1747925404; cv=none; b=FToVrGzloxL7NQBXB+qHpf/Cg15kM9SHrr3iTF4ls7FFcY+CWOH/VfacaUmcYz3yyWoe2FTNyic41ix9WVrWDGngPipWhFAtRvdfOtOxdt4iBltFmUaT5a0K+odzDAZZ/9Mq7djVD1qQw88XUKLjpLZgOdC33pbanvhtEORODzI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747925405; c=relaxed/simple;
-	bh=vFTPfpdHnk3QKU9YLPXt6wuFleG9fFe7xqpUBDcFWYI=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=oVdS01L7SfLddxm3IcP/LI7q6+JHjmLfIsfVtxEl9YF+SIe8a8m2D7dx6QhRiZB5ztJ2Lk1G+u+j9hexXpkjp4/5mR6D7CgyXg2IodeUmuHyO/pzYYMEzoJrcdJLkXZFH454vD0kM0GyVk13vj29HLrN3bRVD5l1Bsz+GM5IUJQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-3dc88ab5cd6so31370755ab.3
-        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 07:50:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747925403; x=1748530203;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=3XKyhVdbSfq1GVQnRsMUSXccIj0eKoxymcjUTDDnExA=;
-        b=U9cEx7tw02ES/08v2zp71K0iOEbULnHPziNOOpH62z6qGWtG1djn3uJ37SPK0GBJ3m
-         aqoETfIBobBCOe8b4Vthsp5li0zYTmKQb3GIMgQc52oZtYs83/bUtaXsysz+CB2PHvaR
-         HfrZu+4OYOAnYCDpGjQZw8JP7NB4W3wivgfJt525IFCLSshBdMkpHPiWxBxyfx1latQf
-         S9xFgE/Q9kzasmqIPBmA9giryLbi6YbRQA4PYMOYtpdi3jrNLnbJgrGqIQYgeKsnpWYE
-         fHU2+J/tka4WjuzSCdPPtYR/MRzNvB7WwYsxVEdk00AjdP/+TnjlC/5S7eL03UI/Saa2
-         MDqw==
-X-Forwarded-Encrypted: i=1; AJvYcCV39OwbaV7Dih62PK5MwP7RBGrzXoUs2lB0SOjL3FovDCzf5JsGtslcgD0XjaSjEQfDBLXLAE7vOG+8Ti4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyV7trhD59HOV3Elz9tFFwiR+GyCGFypMeMD8FZg0P8Hz6DfWW1
-	8TZ+x8fx8CDAjG4g1vswYe0OodA4M2px/ZzJbUYyX7Xk3Ee85Lw/msP5NVc/dVv4wVNq5K3CYUk
-	Tls6gPo8HjESOYnCD5UuhzJsea3h689yGh8hO68PbZI2SbIZXBDBHurOu8X4=
-X-Google-Smtp-Source: AGHT+IENNhb92IFd/L0jtflhq3EzLulYZl29FwGP0sf86rRTQCYYxHOozVvNa8GCpbewmeptdlrYXjnVOB6V95sZ+w71FiOQZmif
+	s=arc-20240116; t=1747925404; c=relaxed/simple;
+	bh=6r62Mqd/YPbA2PQW6RZiBXcJUx8hGxcJTqL9xwKx9vo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=HZiWtj9kZ0ThaBmsXky0Mvrm5tstzsuJIEQGIMP70uVAlk15sYXRgGek24pov9MgQBf7memTPN1KF/6dqRHvu/dnCe4u6amUiQa5DhFn+NrmFQYVlHyS2gTYb8NvwG3Im8dOgnY5h5rIc+Q/B7rIfIPKLD+rT5Q80lsMr1KfSBk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Fsz72wDo; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Fsz72wDo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6AC59C4CEE4;
+	Thu, 22 May 2025 14:49:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747925403;
+	bh=6r62Mqd/YPbA2PQW6RZiBXcJUx8hGxcJTqL9xwKx9vo=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Fsz72wDoCC3Fl2E3rGDqbsZhGB1uzKlcElswbXmaMcyHVow2pjgAnDc/kv5d1Gdn9
+	 sw+r/dvwGz4qsKV/gMakNK3srikER/bOHRI0KI3fhhNrSBqnKwig3K1rld0K6Ag76t
+	 dTyw9cBsc9ykhIVBFBE/ufCSi+oS04oO/4noB2wfJvBBZzogo8XDD2AheIlUP3IHq7
+	 sGvtm6NqeoBANooWnpG9y4JnvaadmpAbbhZ+1G8tcdiKnbo/HtQHiS3DSYJ71PqlcC
+	 kbgexouOFrs87gy0EaowsU1HgVXbwhSlzR+yzKUo5CcTNCW6I9UHtKCdK4Z8+3Yzng
+	 HVm/KZghQlneA==
+Message-ID: <bb7e9828-a19d-4f45-b405-66aac85e3bcd@kernel.org>
+Date: Thu, 22 May 2025 16:49:57 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1d9c:b0:3dc:80e6:381a with SMTP id
- e9e14a558f8ab-3dc80e6390fmr86411815ab.16.1747925402751; Thu, 22 May 2025
- 07:50:02 -0700 (PDT)
-Date: Thu, 22 May 2025 07:50:02 -0700
-In-Reply-To: <CAMj1kXEn_fx6=X4ixhmWST1scUH4kY0SXBt1sXT=-5_ctcKGoA@mail.gmail.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <682f399a.a70a0220.253bc2.0058.GAE@google.com>
-Subject: Re: [syzbot] [fs?] [efi?] BUG: unable to handle kernel paging request
- in alloc_fs_context
-From: syzbot <syzbot+52cd651546d11d2af06b@syzkaller.appspotmail.com>
-To: ardb@kernel.org, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 05/12] dt-bindings: phy: renesas,usb2-phy: Add
+ renesas,sysc-signals
+To: Claudiu Beznea <claudiu.beznea@tuxon.dev>
+Cc: vkoul@kernel.org, kishon@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
+ conor+dt@kernel.org, p.zabel@pengutronix.de, geert+renesas@glider.be,
+ magnus.damm@gmail.com, yoshihiro.shimoda.uh@renesas.com, kees@kernel.org,
+ gustavoars@kernel.org, biju.das.jz@bp.renesas.com,
+ linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+ linux-hardening@vger.kernel.org, john.madieu.xa@bp.renesas.com,
+ Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+References: <20250521140943.3830195-1-claudiu.beznea.uj@bp.renesas.com>
+ <20250521140943.3830195-6-claudiu.beznea.uj@bp.renesas.com>
+ <20250522-evasive-unyielding-quoll-dbc9b2@kuoka>
+ <b22e7a46-7e35-4840-aae3-a855c97fbde4@tuxon.dev>
+ <4a07048a-c55a-4fd3-b4e5-7f9d218de76f@kernel.org>
+ <68d83aaf-280a-4c19-becf-c6e1d9c2432b@kernel.org>
+ <797611e1-3786-45c4-9103-3ee8f96cec6d@tuxon.dev>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <797611e1-3786-45c4-9103-3ee8f96cec6d@tuxon.dev>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hello,
+On 22/05/2025 16:39, Claudiu Beznea wrote:
+> 
+> 
+> On 22.05.2025 15:48, Krzysztof Kozlowski wrote:
+>> On 22/05/2025 14:46, Krzysztof Kozlowski wrote:
+>>>>>>  
+>>>>>> +  - if:
+>>>>>> +      properties:
+>>>>>> +        compatible:
+>>>>>> +          contains:
+>>>>>> +            const: renesas,usb2-phy-r9a08g045
+>>>>>> +    then:
+>>>>>> +      required:
+>>>>>> +        - renesas,sysc-signals
+>>>>>
+>>>>> That's ABI break.
+>>>>
+>>>> There is no in kernel device tree users of "renesas,usb2-phy-r9a08g045"
+>>>> compatible. It is introduced in patch 11/12 from this series. With this do
+>>>> you still consider it ABI break?
+>>>
+>>> Then this patch cannot be split from binding introducing the user. Don't
+>>> add unused/undocumented compatibles.
+>>>
+>> Or you meant DTS?
+> 
+> Yes, I meant in tree DTS.
 
-syzbot has tested the proposed patch but the reproducer is still triggering an issue:
-unregister_netdevice: waiting for DEV to become free
+Rhetorical question (because we talked about this on mailing list many
+times enough): what would be the point of any ABI if you can break it
+and adjust in-tree DTS in the next patch?
 
-unregister_netdevice: waiting for batadv0 to become free. Usage count = 3
-unregister_netdevice: waiting for batadv0 to become free. Usage count = 3
-
-
-Tested on:
-
-commit:         1afe9e7d f2fs: fix freezing filesystem during resize
-git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git vfs-6.16.super
-console output: https://syzkaller.appspot.com/x/log.txt?x=102105f4580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=bcb473848aa62842
-dashboard link: https://syzkaller.appspot.com/bug?extid=52cd651546d11d2af06b
-compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
-userspace arch: arm64
-
-Note: no patches were applied.
+Best regards,
+Krzysztof
