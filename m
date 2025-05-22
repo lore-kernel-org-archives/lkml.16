@@ -1,65 +1,64 @@
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF64F18A6A9
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 18:34:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CE4618A6A9
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 18:35:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747938864; cv=none; b=DsBrZm2hJ1OrZD1tJbWa4Sj0VeIfVMSBmuaWf6SAEH/XN5V54Q+6zpE4oLYqSaTItyJHI/cLmU7tIc2WKS0RBMGYVr+a5cJ38Xt9MJtmb8XPoyfDZ/ak8RHlvsZ+mU34QLIAE0byLb+aj28OuciX3IUK7l+AFsnlNSSgkxrV5bg=
+	t=1747938911; cv=none; b=LUbzgZiUfSRCo0CNGs95ydlmg59sNHea42g+00Ihn5sJZMQlakC56LCXCd5UAdiLxneAPbnJsYlQuhbVSMp0W8WU3j6VbmbXnGvDliGCSr523JkmK3qJL3tffIncTFlSng2S35UgEOK2SDIvL2YRGTiHUdCvMPdc5B+SIKQl2Ds=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747938864; c=relaxed/simple;
-	bh=8jNEoO2bZW65ROC8gWgbA0OrrFn/suY1XO9xMfVDh9w=;
+	s=arc-20240116; t=1747938911; c=relaxed/simple;
+	bh=f1D9BovMo8iqrKm/nDHPg06l6bXZxkHNmPPS65XcYBU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=LHOa0oLFZgD3u+BnZayVvEfjxP+cK2p2kk3Oi2hO0fHJeGH0+fYsEgi1k81ZjzZI0c0vQ+r6Cbt+NTXZF3/lOj5Z5LkuD1HVBU9kv6oOKaEJc8FPC2t9/rLNORTNOvsJGq7RNtb0RG7wCymFC16W0/6lI+fFJtfI8umSa8qbnc4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=b2bgwvYI; arc=none smtp.client-ip=209.85.221.42
+	 In-Reply-To:Content-Type; b=m4+nNrbGbUPg0QUB42KfPiIxqDgIr5XooAemVmhqXNT/t9W9DJBYyX/8dm10k6u4w7gi3N2pQlwqKE1hFLLINPMIuQpYSj/waP7beac0gnbd96EmATn/AlHqmlTF/NzfRoueQ2jR6jtxbyrZRm+kQYZjVUTDPSPUi++RzRge6CA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=N5OBIZQT; arc=none smtp.client-ip=209.85.221.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="b2bgwvYI"
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-3a36561d25cso836260f8f.1
-        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 11:34:22 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="N5OBIZQT"
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-3a361c8a830so1057878f8f.0
+        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 11:35:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1747938861; x=1748543661; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1747938908; x=1748543708; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:autocrypt:content-language
          :from:references:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=w1CTkcCN4mgvmc4O+/bwLsfd/yX/UppF+CPol8YE2Rk=;
-        b=b2bgwvYIhhzmRBGN/VhhIR/dzVcZaLp1DaOoTaH+mjXZZcdD5CpPVwBA41HCzm4mI5
-         FBFnd2iAVWUf+Y2rCycYYjAJmuQxuaoWHcHHEJlf6V9zB2Toy+EiTukBmC+10Nr0w60p
-         y7H/eENsvh09UGA89e4L1tzUb8uuHUjY/sgex+iNbmu5O6H0roGqEaATOqFX8NP9BPeI
-         W/DrWq7y2I8MGldSMQD1UqWOUoCP5MUmoWPxRak0wCK8qWtYrunupNgVozFFolUO0clg
-         3SAM4Q+V+bK0BAuYSv0KskOF0wHNxFly+x+uAel5I1BY1lmU2+oEov/rFZU33hzyUX0m
-         Tqyg==
+        bh=63yYAU1/zCZjwoovQdKacafDUnTaZ3CpcA6v5mzZ3T8=;
+        b=N5OBIZQTP11W2XLCX0Jbk8GCqDhTYKEL6B2ekCTHUsdxYvcb3TiOQCVwQ5aLhW0fxj
+         fUHFCxmPI2zFeUELb6clbAiSPtqEqsE89UKTvz4vPura1rK0HcTof9DpjZ2ip6t80wuF
+         1hYn5V7bvy7ccohWZ92t5kGhBJsbVkEIsKTyb+tV8KBxyrlHHzLzUd0eQb3Ei36Rnw0n
+         W62I8ksm3cY5rTLdsScALT+gOp38LsGkPTKGmKXJHm/aYWj5bI0P0yZ0tP1wzNj68Cih
+         hIWxskUo7F+OpGLPZtkUTkoBenIbSfNQ8Kvd1AUafLvLY551ujW6DL8DQGgn7/m/CQ+q
+         gKUg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747938861; x=1748543661;
+        d=1e100.net; s=20230601; t=1747938908; x=1748543708;
         h=content-transfer-encoding:in-reply-to:autocrypt:content-language
          :from:references:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=w1CTkcCN4mgvmc4O+/bwLsfd/yX/UppF+CPol8YE2Rk=;
-        b=sb3AlvUJYojAorpdIzGPQJhvoIdDVSla5Xd5phS9C1vLnRhlC/bqgM9P+vJbm901dh
-         9XvhUE0VaaN7lGjmjYgjbSACQVDd0MrCFI+HjcWM8vIaJPsHnEUB9nUckeWnfa6G0FcC
-         rsTaIp9ciD7UPEW5fuGSVDm+sR2fjBT4F7J9xXahyDKVZQdSG9NFYNpNOy9puPj/Wr9i
-         thW+Q0HdNHaW8BzWdgFxHZMmZHuZemovwQVdVe7WzLcKeRTZYdOKFamCr/WSkTp8h7OD
-         Tx6ve2zrh8HqhZx8hXcAcEjLdTnX++DKrmnMBgpxeTPJ1q/ihndOgIhunWV2cODbYAeO
-         ubrg==
-X-Forwarded-Encrypted: i=1; AJvYcCXWyWDNeZ0XT81yoWhnAyuD9kaz5jMWFNP3skEhM9RcE0ZkQyfv+VBxiGrCWSRraJaDSLGBug1RCYckpN4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YynmrGjwOpb/DbieLgOWrUBNN1agZSUK3VYXjmXYg1sp8nmWm0S
-	rMa2raLA56F30eHgjpP7WPZjcTmVs+vcGOLitvLrenhQnawW8dTWhntvbYvtH91gmk0=
-X-Gm-Gg: ASbGncvilCMHRToxvKOfrmwt90F0MHA7GiIV6eSSY7DYjj5bv1iEvUMPpaclUCdbM2c
-	8yHLpuJPygBArA8NYSltFtoCwdFa3QOwW4vNua95YkfrlFb1cWgcqMt1f5dfhFqTzFOfOF15bYx
-	kj3LH4YVVzIl0+38kXRdFtk8mjlIvpOKHbdAia1baEN0A1lrCqI/f0qY+0hFS+OLoPm10gnk3K3
-	V+f5D2y+wokpmuMD9unwi/1oB8u+FcrvmA6y8RnieWnmR/jpo+TgTp5MdMxRgyF3BLBbs50FEvg
-	Q3+XmGzX8dyljLaFU8pVn47QM+jw8OaxBJ6mC4KARRZKDQXym3etM7w2xugZBgwECR0xFNCradF
-	R36Aj4Q==
-X-Google-Smtp-Source: AGHT+IFynnkis2LoFrPbbKd6EFHmR3CK/Wwm2NAwfY4u2siqRPzXLtZHj+YFawT3eXyBiVwktliX4w==
-X-Received: by 2002:a05:600c:198d:b0:439:9a40:aa27 with SMTP id 5b1f17b1804b1-442fd66dea4mr98494735e9.5.1747938861256;
-        Thu, 22 May 2025 11:34:21 -0700 (PDT)
+        bh=63yYAU1/zCZjwoovQdKacafDUnTaZ3CpcA6v5mzZ3T8=;
+        b=d1eq2gL384aWw/OjwiO5LOV6AfAAvzMeliWijFy+xLnu+RY+MkemVcSKHPa/qNaNoo
+         B7h3ef2oqPQ8ppoumIDhihghAjoJetIM+aK38D49kS9vKN3ONlgyhww2mPEaARtlnF3w
+         CXU7dEL5xma7PBPfMJ/OmDvAE75iaR+84Eu6R6u81hfafLBQT93U4YCPSfBF7yTapp6G
+         67jhS4l6ldkSDR4KKjyB1Nb1lZZeB/58bTYjZDNdpJ4T9upqF5glmj/f/LYowadgnqAt
+         hxmGdKo7RIcZ1XF8hMQAVHqRGrS6jdtHRfDUTXBn/q3LyHLl7usVEy1ExfF1XJDEdbZ3
+         N8hg==
+X-Forwarded-Encrypted: i=1; AJvYcCX4NKVFCWYo1jdr9vqBuzikWCWqwPSvGu1HqqXieP0NMXYetoyGB7Hz0gizirZ9i96swFufsIzWoNG1gu4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yww83il5MkB2+JEbiR42LxGK3776FlrDGTKk8EYwTeMGucHfNlc
+	5btI4T+L/FwnRzsR8dj7cej84GYKvpRpsdn1Eqt1j562scxGF/a7TLMGixMBYSfQGDU=
+X-Gm-Gg: ASbGncs0BUhcn7DxGSuKgB83AfS7jJ4eNq8K6W1ugUnmvhPJJzyAOneq+LZ2H+1qKHc
+	yeBM1lLRhv3i21P3j7HmkL6z5KXq71gtQZw3yM4Tfzd3FnTkqQRigXRfI6OX0jvQWSZOiCVFAdu
+	3KXNj1iTHaTIIfX3PERxm0NRjJsLVajzh4FBEQa7P1g3bVXrXR1Fk78C4yB/IBLBiY9ZIpWYTFE
+	+cV/6Lqsw6VPlUB/u0bi1YUZ6QiEsCln1MOteoyGTtD8uq4WbDQ9wf0ij7EThmsoYGZcTtYFVGX
+	94n82EUBxdKiQC3GOp66cZniJKiaeaEvxHiletnLi6Vbkc0g6EkUQlfmM4E4fggsNgnc0Kk=
+X-Google-Smtp-Source: AGHT+IEl3vOLOf2Qp9jRpcgL9PTta/D5XWSZ3M7PgmDofFcyAjPs7Cu8q5oB0FbiriHmg1z/1qWxrw==
+X-Received: by 2002:a5d:5f46:0:b0:3a0:b807:742c with SMTP id ffacd0b85a97d-3a35c826936mr9382361f8f.6.1747938907879;
+        Thu, 22 May 2025 11:35:07 -0700 (PDT)
 Received: from [192.168.1.29] ([178.197.223.125])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a3699a9bf3sm19018332f8f.54.2025.05.22.11.34.19
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a36c6eeaf8sm16352368f8f.48.2025.05.22.11.35.06
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 22 May 2025 11:34:20 -0700 (PDT)
-Message-ID: <5ebc399d-88f4-4d90-adcc-8c9b31efbd95@linaro.org>
-Date: Thu, 22 May 2025 20:34:19 +0200
+        Thu, 22 May 2025 11:35:06 -0700 (PDT)
+Message-ID: <2932ac8c-7248-4056-8b9e-4f5702d597ab@linaro.org>
+Date: Thu, 22 May 2025 20:35:06 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,13 +66,11 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] soc: mediatek: Do not enable MTK_SOCINFO by default
+Subject: Re: [PATCH 1/2] dmaengine: sh: Do not enable SH_DMAE_BASE by default
  during compile testing
-To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- Matthias Brugger <matthias.bgg@gmail.com>, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
-References: <20250404112359.255053-1-krzysztof.kozlowski@linaro.org>
- <3e10ed93-dadb-4d0b-b419-28ea492a1603@collabora.com>
+To: Vinod Koul <vkoul@kernel.org>, Peter Ujfalusi <peter.ujfalusi@gmail.com>,
+ dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250404122114.359087-1-krzysztof.kozlowski@linaro.org>
 From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Content-Language: en-US
 Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
@@ -120,25 +117,19 @@ Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  h0At/TN/618e/QVlZPbMeNSp3S3ieMP9Q6y4gw5CfgiDRJ2K9g99m6Rvlx1qwom6QbU06ltb
  vJE2K9oKd9nPp1NrBfBdEhX8oOwdCLJXEq83vdtOEqE42RxfYta4P3by0BHpcwzYbmi/Et7T
  2+47PN9NZAOyb771QoVr8A==
-In-Reply-To: <3e10ed93-dadb-4d0b-b419-28ea492a1603@collabora.com>
+In-Reply-To: <20250404122114.359087-1-krzysztof.kozlowski@linaro.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 04/04/2025 13:29, AngeloGioacchino Del Regno wrote:
-> Il 04/04/25 13:23, Krzysztof Kozlowski ha scritto:
->> Enabling the compile test should not cause automatic enabling of such
->> drivers.
->>
->> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+On 04/04/2025 14:21, Krzysztof Kozlowski wrote:
+> Enabling the compile test should not cause automatic enabling of all
+> drivers.
 > 
-> Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-> 
->> ---
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> ---
+>  drivers/dma/sh/Kconfig | 2 +-
 
-Ping
-
-This was almost two months ago. I would assume that with maintainer
-review, this should be applied fast. What is here needed?
+Ping, can this be applied?
 
 Best regards,
 Krzysztof
