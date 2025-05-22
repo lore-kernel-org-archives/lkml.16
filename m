@@ -1,127 +1,127 @@
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D22592F41;
-	Thu, 22 May 2025 15:46:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 103362F41;
+	Thu, 22 May 2025 15:48:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747928770; cv=none; b=h1s/d4cMo10h4ZxGZC5egXPR5T/f6SnrG8DLm1WJc1CwTwgI6iIgtDnRe+U2maM07lUJn7lx7Dg4+tVD+cka2uUCDb54T4bscpT8wSQGdSwx42g1T2kfryt4vACW0E1BW7fbIumFvolYjE+XTEdwwnnm9gI+FI1GTPGm+7twUik=
+	t=1747928881; cv=none; b=JVk8uN5uAw5zOVBXhJtYfwn1axUO/Xq14Msk4xOp0qnWbJX/ansDNRYzKuDobAzaRD2KvJljNVz4//573RvvF1/3QBA5qnaEM0mBieBw+hyVPQQ0mMXUNu9EAqd5wcjR0vG/uQqrf2OQrlzcBEiu59b9yEiuUH8/OWPFj3IaipQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747928770; c=relaxed/simple;
-	bh=HHFfb8zt1W7b7687wsmntPJNHJRczR0BfGUhfr1rO0I=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=u5l5rjrabkk8z5yXrJTKr7AG1p70YI9S+Rexp2jb5GH7E66lIWy0S5cPloAEnzRcVjo10+9yCEY4LAhYFr6W6Dp/Xj5dX/EXJ2N9hWKZ5hhiH3CEIGVF+HaGe+aLMGMWIEvgs/+XnGjnxe1k0ToHXITRch2q8MQjmG1cCyxuLyM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nR4I8zlA; arc=none smtp.client-ip=209.85.208.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747928881; c=relaxed/simple;
+	bh=wbxc4JwRzpP3kx5hp10mJ7GeRgcNbH5lUjtcxhlkZ0w=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=laW52qVBn3JrrTv9WmnYYQwn7nXvOy/4r2t6L9oYP68bWNbtPqmMOT61inUC7eXL/6BnzUo0Poo3P7xwO9Abx5av6BWeQLaJqux+RzCwxRT00ltLa62o7m2zd8NCOR6BCMv84Cdf7xQwmvDY/87Q+YK8o/5hcxCNMI978nkw/nY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KkhS5PYY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nR4I8zlA"
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-601dfef6a8dso8242936a12.1;
-        Thu, 22 May 2025 08:46:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747928766; x=1748533566; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fgiMoj0zBLI77kFJsTbxWoQIzqomQqgDgEkdUW1inN8=;
-        b=nR4I8zlATON7G7djPMbVEPEP2Tv+1guLLF3GoEjemHndALHVllUFNzwA9TPCBZ/8O4
-         Zlv5dgs1fTb3L0kRtpHvtZaaAbNX7ZQBnltDHCKoZsg89Dc64GgKkbUlyz7s0sBdfwJe
-         I/dP4b2Nh0I05f8FBVvToCkkmD5/YuwyXJBes4MNqTd74QHzVVhhllOy+VVrAUdOENEG
-         nCEd10Q+AEuBBv2jH+k2ZWC83L4aAFXR/rTlM1vp6gK2PU3AEHik2tP9mKXhOupLjarH
-         TmLIv1OCkX/ngurevIf0OqSBA9lU5XvEXSWzoPOcSLCewnDFaNdqc7v4I+31iJRxvW1B
-         oCpA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747928766; x=1748533566;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=fgiMoj0zBLI77kFJsTbxWoQIzqomQqgDgEkdUW1inN8=;
-        b=qQYEAoV/OLnV1Q29URM8MBT11F2OGzDXXuHEok8ygI3Jx9CBCcPoZlcs+F3ghrXCBh
-         +pBgMjgXZiSCpbnhM+1t4utiDfWuQINiEjmqMRMlvH09nomQhc1tCvUgE3qbBwiZ9ik7
-         GKV1Hg8jkwr14kYSEfmLotJj0RSV6jNlomz0bGywgj68PefnkReXjaxQtg1bKgTMwKmi
-         X4Rm4mcJx9RAGgtNfL6uNUa3xVcY6mQ+5fikh50ggqX5ToUXWc2C2KxM7jVmqJlKZiJO
-         O7laah7/yBj7e57qn05efe5l/PNUW7emIUY7sgEBGvtbAgAdJfZZo9lMZnc4t97nfGKN
-         oSmw==
-X-Forwarded-Encrypted: i=1; AJvYcCUuvMxQdPZ6jFhUT85Gy2TPzt3K970u7AlFsj94/bxX/ja7qM7CtbtKKJPVO4xZYYUgvFChxLCfPxSr0hivyA==@vger.kernel.org, AJvYcCV5F6JgKpuL0u30nsqcKXfMs6VQGmLGvIRDw8DnL5MTH+T25GiNXZOePPs3LF3GC7/HFekcPk/t5ctWUVpR@vger.kernel.org, AJvYcCWN3UVwRTNsFbRjyZQnoxnTggGuKsNUlBccIvTVFG0nocglS5Ke5EnEBfykeQKZnSvbG+5pSo5qb44=@vger.kernel.org, AJvYcCWpwV0t6VRY162+EkI9JKBW5PiaZcb4wpMp6Ia0dOPjitjOxJbZIMMAMtHOuofW9hKBjltawU4cw6+o@vger.kernel.org
-X-Gm-Message-State: AOJu0YyI3clqHUj/H/GkaUYDKuJuWkyoVhIIx9KWMY7/rEdQNHxLWSlx
-	RmDs4s2VheXr87AMd2fJEIxoViJDnN4z65mUgAIWvrSUy+9r0lqnB0y+TLuG8Q/tbTcb4XPrlLU
-	jWzHR2pdRmjlDI/3+jgBepUFGEPKDDb8=
-X-Gm-Gg: ASbGncux20VyprPbNovNl6lRnS1wqx3SNP/yWluISrr0KcfIvL7LlOyNDPX1aferlO1
-	P+x6tp6f6vFTykay5N13AXaG+cDNGa2cl4Z+r+TY+zIs4yAe7TnltgSLghS0vWoSuQnmTjg1cna
-	zyBY+gDHv/1pf/gxfZvuht/DuBFR1mP33RcFaUUhYOKVo=
-X-Google-Smtp-Source: AGHT+IFCqHZ4nii59QrK+Jhw+rDrywqjWTrMjDZMLq2ull6eKrj9OenDertsGsb8tK4eBZqLTUn9pP38DriMvIz7YVc=
-X-Received: by 2002:a17:906:6a19:b0:ace:9d35:6987 with SMTP id
- a640c23a62f3a-ad52d441f89mr2374003266b.3.1747928765733; Thu, 22 May 2025
- 08:46:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KkhS5PYY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F31EC4CEE4;
+	Thu, 22 May 2025 15:48:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747928880;
+	bh=wbxc4JwRzpP3kx5hp10mJ7GeRgcNbH5lUjtcxhlkZ0w=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=KkhS5PYYz27fI9lOOd8NHWR9ZnWyeYmfbfNCrhulJUeDY0LREXpRPkr/NBKrhfPfz
+	 paqhqkA/Zstn4KCbHxupKK3uuohpy3pY1hdNFy9kvtgxgav4HASArfLyJRyoH9lAxQ
+	 52PFay8xee8FuyuM4mnKJJE3VV9XRQ6tmnGynNFGc5MI/ecfgrE6D5ShJdKW2fO+lw
+	 6vOlH+//qTVoXPlhr2ehwsowng+4kxVnsf05rRTFpBl6uwMwArbHpU1oG/8BEUcPEn
+	 lg9q5/WbSnjYxB6pFiGVtwSjdmOjGDvQa3ob2xKFcKVtgQy2N2Osd+zX+i9giwBR0B
+	 cz9p2SSLarZqg==
+Date: Thu, 22 May 2025 08:47:59 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: "dongchenchen (A)" <dongchenchen2@huawei.com>
+Cc: Mina Almasry <almasrymina@google.com>, <hawk@kernel.org>,
+ <ilias.apalodimas@linaro.org>, <davem@davemloft.net>,
+ <edumazet@google.com>, <pabeni@redhat.com>, <horms@kernel.org>,
+ <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <zhangchangzhong@huawei.com>
+Subject: Re: [BUG Report] KASAN: slab-use-after-free in
+ page_pool_recycle_in_ring
+Message-ID: <20250522084759.6cfe3f6d@kernel.org>
+In-Reply-To: <29d3e8fa-8cd0-4c93-a685-619758ab5af4@huawei.com>
+References: <20250513083123.3514193-1-dongchenchen2@huawei.com>
+	<CAHS8izOio0bnLp3+Vzt44NVgoJpmPTJTACGjWvOXvxVqFKPSwQ@mail.gmail.com>
+	<34f06847-f0d8-4ff3-b8a1-0b1484e27ba8@huawei.com>
+	<CAHS8izPh5Z-CAJpQzDjhLVN5ye=5i1zaDqb2xQOU3QP08f+Y0Q@mail.gmail.com>
+	<20250519154723.4b2243d2@kernel.org>
+	<CAHS8izMenFPVAv=OT-PiZ-hLw899JwVpB-8xu+XF+_Onh_4KEw@mail.gmail.com>
+	<20250520110625.60455f42@kernel.org>
+	<29d3e8fa-8cd0-4c93-a685-619758ab5af4@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250421013346.32530-1-john@groves.net> <20250421013346.32530-13-john@groves.net>
- <CAJnrk1ZRSoMN+jan5D9d3UYWnTVxc_5KVaBtP7JV2b+0skrBfg@mail.gmail.com> <xhekfz652u3dla26aj4ge45zr4tk76b2jgkcb22jfo46gvf6ry@zze73cprkx6g>
-In-Reply-To: <xhekfz652u3dla26aj4ge45zr4tk76b2jgkcb22jfo46gvf6ry@zze73cprkx6g>
-From: Amir Goldstein <amir73il@gmail.com>
-Date: Thu, 22 May 2025 17:45:54 +0200
-X-Gm-Features: AX0GCFtyU3N_Zhefral0ZnR18iMPx5aO1xlmLEfo3wUu9EslWmr6-Y8DzN_FaFM
-Message-ID: <CAOQ4uxj73Z8Hee1U7LxABYKoHbowA4ARBFDv434yDq+qn5iMZw@mail.gmail.com>
-Subject: Re: [RFC PATCH 12/19] famfs_fuse: Plumb the GET_FMAP message/response
-To: John Groves <John@groves.net>
-Cc: Joanne Koong <joannelkoong@gmail.com>, Dan Williams <dan.j.williams@intel.com>, 
-	Miklos Szeredi <miklos@szeredi.hu>, Bernd Schubert <bschubert@ddn.com>, John Groves <jgroves@micron.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Vishal Verma <vishal.l.verma@intel.com>, 
-	Dave Jiang <dave.jiang@intel.com>, Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, 
-	"Darrick J . Wong" <djwong@kernel.org>, Luis Henriques <luis@igalia.com>, 
-	Randy Dunlap <rdunlap@infradead.org>, Jeff Layton <jlayton@kernel.org>, 
-	Kent Overstreet <kent.overstreet@linux.dev>, Petr Vorel <pvorel@suse.cz>, 
-	Brian Foster <bfoster@redhat.com>, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev, 
-	linux-cxl@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>, Stefan Hajnoczi <shajnocz@redhat.com>, 
-	Josef Bacik <josef@toxicpanda.com>, Aravind Ramesh <arramesh@micron.com>, 
-	Ajay Joshi <ajayjoshi@micron.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Mon, May 12, 2025 at 6:28=E2=80=AFPM John Groves <John@groves.net> wrote=
-:
->
-> On 25/05/01 10:48PM, Joanne Koong wrote:
-> > On Sun, Apr 20, 2025 at 6:34=E2=80=AFPM John Groves <John@groves.net> w=
-rote:
-> > >
-> > > Upon completion of a LOOKUP, if we're in famfs-mode we do a GET_FMAP =
-to
-> > > retrieve and cache up the file-to-dax map in the kernel. If this
-> > > succeeds, read/write/mmap are resolved direct-to-dax with no upcalls.
-> > >
-> > > Signed-off-by: John Groves <john@groves.net>
-> > > ---
-...
-> > > diff --git a/fs/fuse/inode.c b/fs/fuse/inode.c
-> > > index 7f4b73e739cb..848c8818e6f7 100644
-> > > --- a/fs/fuse/inode.c
-> > > +++ b/fs/fuse/inode.c
-> > > @@ -117,6 +117,9 @@ static struct inode *fuse_alloc_inode(struct supe=
-r_block *sb)
-> > >         if (IS_ENABLED(CONFIG_FUSE_PASSTHROUGH))
-> > >                 fuse_inode_backing_set(fi, NULL);
-> > >
-> > > +       if (IS_ENABLED(CONFIG_FUSE_FAMFS_DAX))
-> > > +               famfs_meta_set(fi, NULL);
-> >
-> > "fi->famfs_meta =3D NULL;" looks simpler here
->
-> I toootally agree here, but I was following the passthrough pattern
-> just above.  @miklos or @Amir, got a preference here?
->
+On Thu, 22 May 2025 23:17:32 +0800 dongchenchen (A) wrote:
+> Hi, Jakub
+> Maybe we can fix the problem as follow:
 
-It's not about preference, this fails build.
-Even though compiler (or pre-processor whatever) should be able to skip
-"fi->famfs_meta =3D NULL;" if CONFIG_FUSE_FAMFS_DAX is not defined
-IIRC it does not. Feel free to try. Maybe I do not remember correctly.
+Yes! a couple of minor nit picks below..
 
-Thanks,
-Amir.
+> diff --git a/net/core/page_pool.c b/net/core/page_pool.c
+> index 7745ad924ae2..de3fa33d6775 100644
+> --- a/net/core/page_pool.c
+> +++ b/net/core/page_pool.c
+> @@ -707,19 +707,18 @@ void page_pool_return_page(struct page_pool *pool, netmem_ref netmem)
+>   
+>   static bool page_pool_recycle_in_ring(struct page_pool *pool, netmem_ref netmem)
+>   {
+> +	bool in_softirq;
+>   	int ret;
+> -	/* BH protection not needed if current is softirq */
+> -	if (in_softirq())
+> -		ret = ptr_ring_produce(&pool->ring, (__force void *)netmem);
+> -	else
+> -		ret = ptr_ring_produce_bh(&pool->ring, (__force void *)netmem);
+>   
+> -	if (!ret) {
+> +	/* BH protection not needed if current is softirq */
+> +	in_softirq = page_pool_producer_lock(pool);
+> +	ret = __ptr_ring_produce(&pool->ring, (__force void *)netmem);
+
+Maybe we can flip the return value here we won't have to negate it below
+and at return? Like this:
+
+	ret = !__ptr_ring_produce(&pool->ring, (__force void *)netmem);
+
+and adjust subsequent code
+
+> +	if (!ret)
+>   		recycle_stat_inc(pool, ring);
+> -		return true;
+> -	}
+>   
+> -	return false;
+> +	page_pool_producer_unlock(pool, in_softirq);
+> +
+> +	return ret ? false : true;
+>   }
+>   
+>   /* Only allow direct recycling in special circumstances, into the
+> 
+> @@ -1091,10 +1090,16 @@ static void page_pool_scrub(struct page_pool *pool)
+>   
+>   static int page_pool_release(struct page_pool *pool)
+>   {
+> +	bool in_softirq;
+>   	int inflight;
+>   
+> +	/* Acquire producer lock to make sure we don't race with another thread
+> +	 * returning a netmem to the ptr_ring.
+> +	 */
+> +	in_softirq = page_pool_producer_lock(pool);
+>   	page_pool_scrub(pool);
+>   	inflight = page_pool_inflight(pool, true);
+> +	page_pool_producer_unlock(pool, in_softirq);
+
+As I suggested earlier we don't have to lock the consumer, taking both
+locks has lock ordering implications. My preference would be:
+
+  	page_pool_scrub(pool);
+  	inflight = page_pool_inflight(pool, true);
++	/* Acquire producer lock to make sure producers have exited. */
++	in_softirq = page_pool_producer_lock(pool);
++	page_pool_producer_unlock(pool, in_softirq);
