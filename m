@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB2E117B506;
-	Thu, 22 May 2025 03:50:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80B2818FDBE;
+	Thu, 22 May 2025 03:50:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747885810; cv=none; b=u/JDHz912yp9X+kAvIGcWIHPXv2Q5R3DLuEBA/kEqZ386pbhhNDGZSK1J3hlg0ApsIzm9GWesA7rWzJ/bSofvPo8mm9Tx8Iofth6CeoYbn0I7GNRfTuwheOpLRrDTSruUS2ylQ//SUv2w6ZEIAmmIt9tmC83Y5FZA/l4Ttwapzc=
+	t=1747885813; cv=none; b=p7oegy2bDnB44cix6hq+eA4ThaTn4zGQhwMfIeZT3A9+d6Esf2Lc5/xhW1cNa08OAUAIy9SG1hpgjf5c5RaBz8GMLKD4Zv1OmOIxOxzwPBJfss+yVqQ+93zQmSZngMr/R2JH6CUcWtYWmUudVhDV6oEiw0BMT3Fgiu5ZubfTwGg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747885810; c=relaxed/simple;
-	bh=H5AedyMsGok87edc8NcohXrKHX1CUMasg3G1qzFoYAA=;
+	s=arc-20240116; t=1747885813; c=relaxed/simple;
+	bh=5bmRQ5FWNcUrlmbzVqI8v3MehweThc2e0m1Ovg3RPZs=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=c5Cqq5+Qg+ulTDUO/xhr2Q7qyzdkTr/4I3U6QzJQlCdeUBCJSJLYWz4P6Y/Wcr5GhkAJzc7eXPfRgizAOc3qGRTz7/71fam3BOzYP08BQ4IboiyKDMUael74oaTCLNjU0OwGpYg/qWLqZm7r3t1TJviJzLDg5qQy6Ao144YTz0I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ClIP3Dli; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=dxVqribmwLSOx/1CKUEkH5xpgT/x8QMebpT5lZP/U4urE7i8GXS9dcO8ii7qCd6BQiDDv2Fub2pywparjysdkQw1o/GJcMJsPQFxCqmr0iiON8moiF9aNpq+WojlQd8C/vK50cpJpbTyKK86oUSxUwug23OROA6ixXaka6KTRdc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DHoOGTSH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ClIP3Dli"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9F690C4CEEF;
-	Thu, 22 May 2025 03:50:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DHoOGTSH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B127C4CEEB;
+	Thu, 22 May 2025 03:50:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747885810;
-	bh=H5AedyMsGok87edc8NcohXrKHX1CUMasg3G1qzFoYAA=;
+	s=k20201202; t=1747885813;
+	bh=5bmRQ5FWNcUrlmbzVqI8v3MehweThc2e0m1Ovg3RPZs=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=ClIP3DlivxhtZGNTwtbFBSmZktU5VuGiQBf4xr/kVufjgHeeuff5JG21OWpApv4tD
-	 OsF2QMs1iF6dg7LnvAdzkPgciVXp2E+W+AqtFsj82nuuvqYfxJsA5oxyriaEgXHUcE
-	 RzXcgNHJ+QQVoHfIL1T96DdQL+8qemR4j91nT+OGRylxc0OIBRmk1iPLDAPc4IDacV
-	 UYiWhfqd/qxPOP1sYgkjQjIbFkBZWv6AgOzMTBwy36SQ615gLG378jug6gDbr9uA3C
-	 ajStzPCcdiUeF8tQzUQxP30X1mHxQa6YknVNzv1g6sNHW+9S075ccOipUBrjxheP+w
-	 AIic+62BLFz1Q==
+	b=DHoOGTSH9vaMJSq1yh6/IBTgib7TuOaJXeKERupx0OBwsBBbFUcR1zHNaXvSkKqqt
+	 XQvqGerceT0EE3F9T4/JC2lMNt1Ps5ooP9W4CY9hU+YDWw0XdYYukpf5F4akirDmp+
+	 dkTFcbKsG9+oOe6nyjyaQovAUGg2ZDGiyYfgrTch7OoX9teFTbb39E4eFnbsSWKRkO
+	 hDeFVzVFlXSSR8gKYBpn3mD/ET6Q77NIFRx3h0MtJ26gGAAZkKpyU5lfTEWIXzHS3t
+	 J/IzsRmAqWxlZcnY6YrqQZ3RNa3sHzCSbW6j/06QdYeTBksUNKzIKx6plRQUXg2g02
+	 lK+FkStTgiqeg==
 Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70FFF380AA7C;
-	Thu, 22 May 2025 03:50:47 +0000 (UTC)
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33FFC380AA7C;
+	Thu, 22 May 2025 03:50:50 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -37,47 +37,43 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next 0/4] net/mlx5: HWS, set of fixes and adjustments
+Subject: Re: [PATCH net-next v17 0/1] net: hinic3: Add a driver for Huawei 3rd gen
+ NIC
 From: patchwork-bot+netdevbpf@kernel.org
 Message-Id: 
- <174788584599.2369658.11689090741333424954.git-patchwork-notify@kernel.org>
-Date: Thu, 22 May 2025 03:50:45 +0000
-References: <1747766802-958178-1-git-send-email-tariqt@nvidia.com>
-In-Reply-To: <1747766802-958178-1-git-send-email-tariqt@nvidia.com>
-To: Tariq Toukan <tariqt@nvidia.com>
-Cc: davem@davemloft.net, kuba@kernel.org, pabeni@redhat.com,
- edumazet@google.com, andrew+netdev@lunn.ch, saeedm@nvidia.com,
- leon@kernel.org, netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
- linux-kernel@vger.kernel.org, moshe@nvidia.com, mbloch@nvidia.com,
- vdogaru@nvidia.com, kliteyn@nvidia.com, gal@nvidia.com
+ <174788584899.2369658.3358222992773503494.git-patchwork-notify@kernel.org>
+Date: Thu, 22 May 2025 03:50:48 +0000
+References: <cover.1747736586.git.gur.stavi@huawei.com>
+In-Reply-To: <cover.1747736586.git.gur.stavi@huawei.com>
+To: Gur Stavi <gur.stavi@huawei.com>
+Cc: gongfan1@huawei.com, netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ horms@kernel.org, andrew+netdev@lunn.ch, linux-doc@vger.kernel.org,
+ corbet@lwn.net, helgaas@kernel.org, luosifu@huawei.com, guoxin09@huawei.com,
+ shenchenyang1@hisilicon.com, zhoushuai28@huawei.com, wulike1@huawei.com,
+ shijing34@huawei.com, meny.yossefi@huawei.com, lee@trager.us,
+ mpe@ellerman.id.au, sumang@marvell.com, przemyslaw.kitszel@intel.com,
+ jdamato@fastly.com, christophe.jaillet@wanadoo.fr
 
 Hello:
 
-This series was applied to netdev/net-next.git (main)
+This patch was applied to netdev/net-next.git (main)
 by Jakub Kicinski <kuba@kernel.org>:
 
-On Tue, 20 May 2025 21:46:38 +0300 you wrote:
-> This patch series by Yevgeny and Vlad introduces a set of steering fixes
-> and adjustments.
+On Tue, 20 May 2025 13:26:58 +0300 you wrote:
+> This is the 1/3 patch of the patch-set described below.
 > 
-> Regards,
-> Tariq
+> The patch-set contains driver for Huawei's 3rd generation HiNIC
+> Ethernet device that will be available in the future.
 > 
-> Vlad Dogaru (2):
->   net/mlx5: SWS, fix reformat id error handling
->   net/mlx5: HWS, register reformat actions with fw
+> This is an SRIOV device, designed for data centers.
+> Initially, the driver only supports VFs.
 > 
 > [...]
 
 Here is the summary with links:
-  - [net-next,1/4] net/mlx5: SWS, fix reformat id error handling
-    https://git.kernel.org/netdev/net-next/c/ca7690dae126
-  - [net-next,2/4] net/mlx5: HWS, register reformat actions with fw
-    https://git.kernel.org/netdev/net-next/c/b206d9ec19df
-  - [net-next,3/4] net/mlx5: HWS, fix typo - 'nope' to 'nop'
-    https://git.kernel.org/netdev/net-next/c/0b6e452caf03
-  - [net-next,4/4] net/mlx5: HWS, handle modify header actions dependency
-    https://git.kernel.org/netdev/net-next/c/01e035fd0380
+  - [net-next,v17,1/1] hinic3: module initialization and tx/rx logic
+    https://git.kernel.org/netdev/net-next/c/17fcb3dc12bb
 
 You are awesome, thank you!
 -- 
