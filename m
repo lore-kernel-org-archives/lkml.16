@@ -1,168 +1,204 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3B4C12F5A5;
-	Thu, 22 May 2025 06:46:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C35E1F0E49
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 06:49:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747896415; cv=none; b=MGEgzyJyFj+doHHVFHrdmBPWo/wAWhHAFraripTHeDcc1EUD69uWJ1ocZMGqyN8+7/ICKhdeWoVeKcLaA9vglMYWZ3IekL4Omjp4B6sEsBh+VIsxTwTkhS8ppsTrQmc7BOPozNKvM2ovU39FXWG9/suK8F9s2ZHV3ZOroP7Q4XQ=
+	t=1747896589; cv=none; b=ZYtznyPOJ3heXAW6OyzJW0QKFDv42/nMiaRo4E9hamqChKn638UgBzs/VFbe2s3NrEcFR0aG425acRHZUkeXVi3l/qt0pKtzislB/s0MdHO2zrg9Gaj1iZvbxj+2hB40CXhHBE4xtSfwA0fN/5w9YxOfIX9Lh+qpWDTpj09LkoU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747896415; c=relaxed/simple;
-	bh=GntJ46Pe7OL9GI/++GGxztMdl1ZF1FnVhVklUpvl2HI=;
-	h=Subject:To:References:CC:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=bT1Ql+amdqV99jbx0qH1wAdnNW2lnvCHaecLO1mA6+ODiSbnty6Ui8hBcAddDuNBm6bXf6q2BZZUOvRJqUM08d6OoFP6RweRmDG/sAiWkVGuGD2nUi2dFnja0wKqOscy2wdfa3fo97r42NIQWMTWEWAnZr/2Zv/dvWSZmDEPZFk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=fZ9CViOj; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1747896589; c=relaxed/simple;
+	bh=NN18PvERwtDdoTCnb8dTOMXJOoITZnwSQBbXNQA7a0Q=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=plDDkCbu+UC7SXju/iULJuvOqchSuz4UOhZ2R2Bjl1Mhc9gW5VAOxFsRhn5s+MSpYZ1qvdzEYgj6eZWo3OzD446clpAhYRC3/9M/YLG5Rtz8JctRRYTFgADr7hFGriPSolujmvRdIpbBO9I3mP8UPbM7gdqR2WaUfC3RMExSN4A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=h2yatspl; arc=none smtp.client-ip=209.85.128.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="fZ9CViOj"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54LIUrH9029931;
-	Thu, 22 May 2025 06:46:50 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	DYC0rzIdZxlJJeGf6OrdPUKmgETi+Xr2+QL01aSGH5k=; b=fZ9CViOjuH82jasi
-	Qi4jh6zpb8Xg0dIvHlLpXAiL2zDTWOD1L4vDVe1JHpxaG7Qmr2etVfuvxHxJwBsH
-	ZNebRTYt71YcXqjKCbqH7ikAnWJNo7n/WHZXXxs5AP3kvWQ+t/QRkqQzgho4A5IR
-	qpd80hSjHsl7JHXMJIYYGa4cSviiF92PO5TUYWcivXT2fmiqTviY15L89xWmfF9x
-	+MyH0QCRTsTwe/6Q5D+DvxB/oHTGB6YamMs2oN23VMqt0sTTG2Me6N06Vm2K6n09
-	4jSSh10lPpn47DMbPWMSaXSIpZG7QYwvbebP0umx+ju+oQBcHiRMJtdyVwE7a+mJ
-	3O8LCA==
-Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46rwf45c2e-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 22 May 2025 06:46:50 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54M6knnK016781
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 22 May 2025 06:46:49 GMT
-Received: from [10.218.49.64] (10.80.80.8) by nasanex01a.na.qualcomm.com
- (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 21 May
- 2025 23:46:47 -0700
-Subject: Re: [PATCH v5] remoteproc: Add device awake calls in rproc boot and
- shutdown path
-To: Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Bjorn Andersson
-	<andersson@kernel.org>,
-        <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20250408104317.926833-1-quic_schowdhu@quicinc.com>
- <91d8efa0-c61c-eb17-b6f4-cb9804e5fff9@quicinc.com>
- <cf3fffda-8d88-b962-398d-d038cd10b981@quicinc.com>
-CC: Mukesh Ojha <mukesh.ojha@oss.qualcomm.com>
-From: Souradeep Chowdhury <quic_schowdhu@quicinc.com>
-Message-ID: <fde458da-5f44-7947-f746-270b9ecf2991@quicinc.com>
-Date: Thu, 22 May 2025 12:16:41 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.1.1
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="h2yatspl"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-43d0618746bso61772385e9.2
+        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 23:49:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1747896584; x=1748501384; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=mSfZsD4God9Ts/HLONlfHOWEtM7BhkFonFKtAqIE5Mk=;
+        b=h2yatspl14MsY6LqiXygHE0cZu/D0s7+Fwtp37NKiq43zLuVrS7EyQrIpZdKrEwA5Z
+         3OkjgQ8uFHAA16JzoSAM2WpHJ/vTXryyIsdHmW/dujtGIgcwXcOU0LAh2r8DcqaIg65o
+         O37E4sGvn3nNFoBLMYtZM69dk49IFsU2rFp6CJ/P4GaNUEgtebOV4LfuvWtV/EsuNKcl
+         tIRpk0OWE1pgkYRpOzufx69hWN6WWUIFfux/5KB9pyv2HP4cRWD3B0HCPAH9zkbk6892
+         0Eulj5wmVyX/UeCTt9zWBZ3lFUrlwr4VSvesTMJz6WrY7y6rJzqgP63Aya+jjE1DPKxv
+         OqmQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747896584; x=1748501384;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=mSfZsD4God9Ts/HLONlfHOWEtM7BhkFonFKtAqIE5Mk=;
+        b=t+fuAvkBX3TPC9ljMad86aembLM56QO6ZGR5vjGd5Ad1IrccVfxjY3XdulUypnj3n/
+         eqpP5C34eBzZIQ4/6hhDTxBvVRXXw9lNXMMrr4EcWWPzIIYZWD014oUZ8oAfKAwGRF0L
+         o1N99cv0CvfX+wIyerlTkjTOWNzwt2bUXNczsuxqr5laQQWkWuAZ5CY1QD1YcVOT/DzQ
+         usQiaC+MroeZVOGlASEl43GWbmCYdcFTWBksw3/McJFEbXO+yeW0zDD5rLjWXhOKNzHd
+         upQ5OkZKjqNmlCIJwz2xpXTraKt98CftBA/ts7xVXxZR9v4qjqVSEQyfwl2uMl6Ou2cc
+         IiWQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXu1tmSLOLJl75m17SEn9I5YPCsx2xPBvDkMTG2DhxLmW8q5nv2nnpYkv/Npd0XxKea7zqupnLfKDuqYvo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyu161rrWhzrlh8XonPU0oS931WHvIu2hhcFgmik6fKoWoq/V5C
+	c0nfvu3VyCGR/0D3NOkPdHZa1PAZGkVi60MmwROO3+FBIqIYn+VmzGbxttfim1UzqdU=
+X-Gm-Gg: ASbGncsiU+P3bcPYVsfNDqt54xyHlstZ/lvIl4B2z7MGbY8MpWQ8knbF2M2Ci3gjpzC
+	Jx+L+A5wciZRnyP0XDLUTcWJOJxgM4tN1kzZYiSP4hINaczZD/im6XehLwR0Uq9kylYhcqpGjzy
+	F9cNwO7lEAz1WwwcZFnJ8UyXCmoF9dbbkcLaq0dtBhqVe2P10wjDbpBxLvUlw89fb0F8gaEb2e/
+	nOHrL53p/oheJhjX63TCqy/+T6iRPn8t8V1+XvZPSThn6inhkHJc7iRkM+IvzM3zHS7gbwIgYZS
+	M3Bjro9RiDrWXM09GIIPQdfxo5UWS0MeOO2uCDbGqgPI0XYbxz9vdczVENUB/5jx7ZfwshK5N6/
+	02XuZhA9FULW8dFNK2sNH
+X-Google-Smtp-Source: AGHT+IHcBrXU/Fz3UA3Men54JBGMvR7rPmgEKbKc+z1Guu78ah8GEwVQySPOphDeLouhsLRO/zwPHg==
+X-Received: by 2002:a05:600c:3c87:b0:442:d9f2:c6ef with SMTP id 5b1f17b1804b1-442fefd5f98mr249592835e9.2.1747896583771;
+        Wed, 21 May 2025 23:49:43 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:e17:9700:16d2:7456:6634:9626? ([2a01:e0a:e17:9700:16d2:7456:6634:9626])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-447f78b2f19sm90646175e9.32.2025.05.21.23.49.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 21 May 2025 23:49:43 -0700 (PDT)
+Message-ID: <957c479e-6233-4294-ac03-ac20b87dfacd@rivosinc.com>
+Date: Thu, 22 May 2025 08:49:42 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <cf3fffda-8d88-b962-398d-d038cd10b981@quicinc.com>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIyMDA2NiBTYWx0ZWRfX8zewmwTo5zBy
- 3McAB7WnZg6WNjjoBvctL4hHXvguDA0VBwyE4ysMb+/426u1eQhflwSzUX6Ldc8S7n/2xTOK16M
- vGaqgCjny/0I36vAWsR7L2JVCbs5woKbnWMx9pUT6W6rL5Pfmvnoh4nDog0PKBPhXegDFdnmNIT
- Dw5dyH2eZn686cM+/CeziThJtUyfSKoivJLtsjKyFEbZr/Us5+J+cysFn5c6SmvcmMtjN/buhHW
- rFWxMwJ5hHuesrATjaXfIKkqiWjkYYny3CjRx7MshnIZUMHRbqo3rh1/qnZNkkw7SitiqZQGH3p
- cYIjCDO1WU9LnHZZZ2nmxeinRVjvpMV5IjlVEGAXr7C3mF5m29q7Hen/EqO9EnjI3E9Y7sREAr0
- yejpyHRqt4MC+vgC9O003IPb6KQUlJMnpUx8xxawhgFLHT7wTMO+6NgSblANWKa8az2vRtEQ
-X-Proofpoint-GUID: UPjDAgniazdh4w5HozastPh2DpawPt81
-X-Authority-Analysis: v=2.4 cv=Ws8rMcfv c=1 sm=1 tr=0 ts=682ec85a cx=c_pps
- a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
- a=GEpy-HfZoHoA:10 a=N659UExz7-8A:10 a=dt9VzEwgFbYA:10 a=COk6AnOGAAAA:8
- a=EUspDBNiAAAA:8 a=Q4YDo1DU0dsJeT-W-eMA:9 a=pILNOxqGKmIA:10
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-ORIG-GUID: UPjDAgniazdh4w5HozastPh2DpawPt81
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-22_03,2025-05-20_03,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- spamscore=0 malwarescore=0 clxscore=1015 suspectscore=0 mlxscore=0
- bulkscore=0 phishscore=0 priorityscore=1501 impostorscore=0
- lowpriorityscore=0 mlxlogscore=999 adultscore=0 classifier=spam authscore=0
- authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505160000 definitions=main-2505220066
-
-Gentle Reminder
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 09/14] riscv: misaligned: move emulated access
+ uniformity check in a function
+To: Charlie Jenkins <charlie@rivosinc.com>
+Cc: Paul Walmsley <paul.walmsley@sifive.com>,
+ Palmer Dabbelt <palmer@dabbelt.com>, Anup Patel <anup@brainfault.org>,
+ Atish Patra <atishp@atishpatra.org>, Shuah Khan <shuah@kernel.org>,
+ Jonathan Corbet <corbet@lwn.net>, linux-riscv@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ kvm@vger.kernel.org, kvm-riscv@lists.infradead.org,
+ linux-kselftest@vger.kernel.org, Samuel Holland <samuel.holland@sifive.com>,
+ Andrew Jones <ajones@ventanamicro.com>, Deepak Gupta <debug@rivosinc.com>
+References: <20250515082217.433227-1-cleger@rivosinc.com>
+ <20250515082217.433227-10-cleger@rivosinc.com> <aCu_ce-kVQsyjrh5@ghost>
+ <126762fc-17ca-4e9d-94d0-3aed1ae321ff@rivosinc.com> <aCy3A6uUbnWoO9uC@ghost>
+Content-Language: en-US
+From: =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>
+In-Reply-To: <aCy3A6uUbnWoO9uC@ghost>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
 
-On 5/19/2025 10:54 AM, Souradeep Chowdhury wrote:
-> Gentle Reminder
->
->
-> On 5/14/2025 1:03 PM, Souradeep Chowdhury wrote:
->> Gentle Reminder
+
+On 20/05/2025 19:08, Charlie Jenkins wrote:
+> On Tue, May 20, 2025 at 10:19:47AM +0200, Clément Léger wrote:
 >>
 >>
->> On 4/8/2025 4:13 PM, Souradeep Chowdhury wrote:
->>> Add device awake calls in case of rproc boot and rproc shutdown path.
->>> Currently, device awake call is only present in the recovery path
->>> of remoteproc. If an user stops and starts rproc by using the sysfs
->>> interface, then on pm suspension the firmware fails to load as the
->>> request_firmware call under adsp_load relies on usermodehelper
->>> process which gets freezed on pm suspension. Add device awake calls
->>> to fix this.
+>> On 20/05/2025 01:32, Charlie Jenkins wrote:
+>>> On Thu, May 15, 2025 at 10:22:10AM +0200, Clément Léger wrote:
+>>>> Split the code that check for the uniformity of misaligned accesses
+>>>> performance on all cpus from check_unaligned_access_emulated_all_cpus()
+>>>> to its own function which will be used for delegation check. No
+>>>> functional changes intended.
+>>>>
+>>>> Signed-off-by: Clément Léger <cleger@rivosinc.com>
+>>>> Reviewed-by: Andrew Jones <ajones@ventanamicro.com>
+>>>> ---
+>>>>  arch/riscv/kernel/traps_misaligned.c | 20 ++++++++++++++------
+>>>>  1 file changed, 14 insertions(+), 6 deletions(-)
+>>>>
+>>>> diff --git a/arch/riscv/kernel/traps_misaligned.c b/arch/riscv/kernel/traps_misaligned.c
+>>>> index e551ba17f557..287ec37021c8 100644
+>>>> --- a/arch/riscv/kernel/traps_misaligned.c
+>>>> +++ b/arch/riscv/kernel/traps_misaligned.c
+>>>> @@ -647,6 +647,18 @@ bool __init check_vector_unaligned_access_emulated_all_cpus(void)
+>>>>  }
+>>>>  #endif
+>>>>  
+>>>> +static bool all_cpus_unaligned_scalar_access_emulated(void)
+>>>> +{
+>>>> +	int cpu;
+>>>> +
+>>>> +	for_each_online_cpu(cpu)
+>>>> +		if (per_cpu(misaligned_access_speed, cpu) !=
 >>>
->>> Signed-off-by: Souradeep Chowdhury <quic_schowdhu@quicinc.com>
->>> Reviewed-by: Mukesh Ojha <mukesh.ojha@oss.qualcomm.com>
->>> ---
->>> Changes in v5
->>>
->>> *Added more details to commit description
->>>
->>> Changes in v4
->>>
->>> *Remove stability from mailing list
->>> *Remove the extra tab in v3
->>> *Change the commit description
->>>
->>>   drivers/remoteproc/remoteproc_core.c | 4 ++++
->>>   1 file changed, 4 insertions(+)
->>>
->>> diff --git a/drivers/remoteproc/remoteproc_core.c 
->>> b/drivers/remoteproc/remoteproc_core.c
->>> index c2cf0d277729..5d6c4e694b4c 100644
->>> --- a/drivers/remoteproc/remoteproc_core.c
->>> +++ b/drivers/remoteproc/remoteproc_core.c
->>> @@ -1917,6 +1917,7 @@ int rproc_boot(struct rproc *rproc)
->>>           return -EINVAL;
->>>       }
->>>   +    pm_stay_awake(rproc->dev.parent);
->>>       dev = &rproc->dev;
->>>         ret = mutex_lock_interruptible(&rproc->lock);
->>> @@ -1961,6 +1962,7 @@ int rproc_boot(struct rproc *rproc)
->>>           atomic_dec(&rproc->power);
->>>   unlock_mutex:
->>>       mutex_unlock(&rproc->lock);
->>> +    pm_relax(rproc->dev.parent);
->>>       return ret;
->>>   }
->>>   EXPORT_SYMBOL(rproc_boot);
->>> @@ -1991,6 +1993,7 @@ int rproc_shutdown(struct rproc *rproc)
->>>       struct device *dev = &rproc->dev;
->>>       int ret = 0;
->>>   +    pm_stay_awake(rproc->dev.parent);
->>>       ret = mutex_lock_interruptible(&rproc->lock);
->>>       if (ret) {
->>>           dev_err(dev, "can't lock rproc %s: %d\n", rproc->name, ret);
->>> @@ -2027,6 +2030,7 @@ int rproc_shutdown(struct rproc *rproc)
->>>       rproc->table_ptr = NULL;
->>>   out:
->>>       mutex_unlock(&rproc->lock);
->>> +    pm_relax(rproc->dev.parent);
->>>       return ret;
->>>   }
->>>   EXPORT_SYMBOL(rproc_shutdown);
+>>> misaligned_access_speed is only defined when
+>>> CONFIG_RISCV_SCALAR_MISALIGNED. This function should return false when
+>>> !CONFIG_RISCV_SCALAR_MISALIGNED and only use this logic otherwise.
 >>
->
+>> Hi Charlie,
+>>
+>> misaligned_access_speed is defined in unaligned_access_speed.c which is
+>> compiled based on CONFIG_RISCV_MISALIGNED (ditto for trap_misaligned.c)
+>>
+>> obj-$(CONFIG_RISCV_MISALIGNED)	+= unaligned_access_speed.o
+>>
+>> However, the declaration for it in the header cpu-feature.h however is
+>> under a CONFIG_RISCV_SCALAR_MISALIGNED ifdef. So either the declaration
+>> or the definition is wrong but the ifdefery soup makes it quite
+>> difficult to understand what's going on.
+>>
+>> I would suggest to move the DECLARE_PER_CPU under
+>> CONFIG_RISCV_MISALIGNED so that it reduces ifdef in traps_misaligned as
+>> well.
+> 
+> Here is the patch I am using locally for testing purposes, but if there
+> is a way to reduce the number of ifdefs that is probably the better way to go:
+> 
+
+Hi Charlie,
+
+I have another way to do so which indeed reduces the number of
+ifdef/duplicated functions. I'll submit that.
+
+Thanks,
+
+Clément
+
+> From 18f9a056d3b597934c931abdf72fb6e775ccb714 Mon Sep 17 00:00:00 2001
+> From: Charlie Jenkins <charlie@rivosinc.com>
+> Date: Mon, 19 May 2025 16:35:51 -0700
+> Subject: [PATCH] fixup! riscv: misaligned: move emulated access uniformity
+>  check in a function
+> 
+> ---
+>  arch/riscv/kernel/traps_misaligned.c | 12 ++++++++----
+>  1 file changed, 8 insertions(+), 4 deletions(-)
+> 
+> diff --git a/arch/riscv/kernel/traps_misaligned.c b/arch/riscv/kernel/traps_misaligned.c
+> index f3ab84bc4632..1449c6a4ac21 100644
+> --- a/arch/riscv/kernel/traps_misaligned.c
+> +++ b/arch/riscv/kernel/traps_misaligned.c
+> @@ -647,6 +647,10 @@ bool __init check_vector_unaligned_access_emulated_all_cpus(void)
+>  }
+>  #endif
+>  
+> +#ifdef CONFIG_RISCV_SCALAR_MISALIGNED
+> +
+> +static bool unaligned_ctl __read_mostly;
+> +
+>  static bool all_cpus_unaligned_scalar_access_emulated(void)
+>  {
+>  	int cpu;
+> @@ -659,10 +663,6 @@ static bool all_cpus_unaligned_scalar_access_emulated(void)
+>  	return true;
+>  }
+>  
+> -#ifdef CONFIG_RISCV_SCALAR_MISALIGNED
+> -
+> -static bool unaligned_ctl __read_mostly;
+> -
+>  static void check_unaligned_access_emulated(void *arg __always_unused)
+>  {
+>  	int cpu = smp_processor_id();
+> @@ -716,6 +716,10 @@ bool unaligned_ctl_available(void)
+>  	return unaligned_ctl;
+>  }
+>  #else
+> +static bool all_cpus_unaligned_scalar_access_emulated(void)
+> +{
+> +	return false;
+> +}
+>  bool __init check_unaligned_access_emulated_all_cpus(void)
+>  {
+>  	return false;
 
