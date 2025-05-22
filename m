@@ -1,158 +1,146 @@
-Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [80.241.56.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2147525D1EA;
-	Thu, 22 May 2025 13:16:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AE5C2F85B
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 13:16:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747919795; cv=none; b=rhd/Ao0CK6WlA99aXugBpwIVIALHJdPFoE8mvcY8fTDHDl15pARVSgXHdgkk4prHnErnWC7/gwp75h3j5g+QZVvL6ZA4qwkzHAOnJmsFUUAEe7jmzUd81t9hksPpH0MKOBMWz+5R4ldxmkan9Jrd8yVEYHF7brdTlSJE0uTgU14=
+	t=1747919817; cv=none; b=E1UHuvkIf11LRs8MkTOyAVmFbLsVGoxGOp2zyIoyP2fmTOJzN0rfsurj1B69ORUnjrfDL3xm2QgR2cTsneeNISddMPf7nwQlt5AcFg88D/GO66j1NrG5ZRMDm2CxBIHgKRDCgqkBiI0WfnRQmsIYHLcIPQHa9ZBLS+JSNd/xGLM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747919795; c=relaxed/simple;
-	bh=o1q8MF80lAMyrF/FBQByQE6lclFDIVpCW719GKbPmek=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=RdBz/r2X5T8kHnBglJ5zh0GIi3bn7+EqZ/68VvjPtjxOxu8SMLBIIBQvD1hIRfFi1mrYXPyogbZ7LFd+0nFbzlMKYLsDlr8D2/7njtCQfJB1iASGpbc6sMSN5R9UXYd4gewSszPjQdD74V6+JHkZAAdVlwM41Y0oUC3X+q59tfg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=ubolpMVR; arc=none smtp.client-ip=80.241.56.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
+	s=arc-20240116; t=1747919817; c=relaxed/simple;
+	bh=tcc4n387UsvLPQusjBltHNLaXRJtBPQIACDLMGtq97o=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=d33RWYchuIG/lSW8myEqX99k0j4zT6PerCpv2+Gij7zrG68qleyLVPPhbh/iM0Nd2heZzGeEcLiIJYcLrpjnwdodaL9BZp8BzcRxWjFS5TyHI0dtMZkVI7Bh/Rpm6JEDiu2L/QE0uaEPnzy7V2QkCwtGtgHgMPlJTk1WcR1r74M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=MXr1ipGH; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=aw5+wuRn; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=MXr1ipGH; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=aw5+wuRn; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="ubolpMVR"
-Received: from smtp102.mailbox.org (smtp102.mailbox.org [IPv6:2001:67c:2050:b231:465::102])
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="MXr1ipGH";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="aw5+wuRn";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="MXr1ipGH";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="aw5+wuRn"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4b38251lNrz9tFZ;
-	Thu, 22 May 2025 15:16:29 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1747919789; h=from:from:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 902051F766;
+	Thu, 22 May 2025 13:16:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1747919812; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=2xY0ojqhuGBcKzHDlcpTqdk5F5P4zkhEB59bIyA/OVQ=;
-	b=ubolpMVRg9ftBOJo2ByE6Gh0CtGNWIU4Uc0Aux6mIvl+Ze97x5YLo+34A6nlB5rooQNWYi
-	JDko441+ZvW+EzSmD24mnxify0M592Iv9mKgemWy3Ka/pCUJys0YcuUJjzZopzPyC6NPoC
-	xR5Bv/pfwQVMqsd9f589+MrozWiDiwio5xtwnvuKAxQiNnFvIds+nHCj2PUlNff0ywI+e4
-	xX48IjaBDGJimuAdkaeoCQ4uKHfieEWjolVdXKTe/2cogNLO+IaP+IHK3xrv6RXmaKbUe6
-	IpdTon4GXxpoyK8nE+zElOZBoLOmvSVAzrOmgyTpy5ezlsZYeReOl8g9yUt/+g==
-Message-ID: <282de2b9251e3a1b793e02ef23675dace248725b.camel@mailbox.org>
-Subject: Re: [PATCH 2/2] drm/nouveau: Don't signal when killing the fence
- context
-From: Philipp Stanner <phasta@mailbox.org>
-Reply-To: phasta@kernel.org
-To: Christian =?ISO-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>, Danilo
- Krummrich <dakr@kernel.org>
-Cc: phasta@kernel.org, Lyude Paul <lyude@redhat.com>, David Airlie
-	 <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Sumit Semwal
-	 <sumit.semwal@linaro.org>, dri-devel@lists.freedesktop.org, 
-	nouveau@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
-	linux-media@vger.kernel.org
-Date: Thu, 22 May 2025 15:16:25 +0200
-In-Reply-To: <ebedece4-9758-47e9-b621-37b40e3f0fc3@amd.com>
-References: <20250522112540.161411-2-phasta@kernel.org>
-	 <20250522112540.161411-3-phasta@kernel.org>
-	 <af03b541-0b69-4b3d-b498-b68e0beb3dcb@amd.com>
-	 <06210b9dc5e5ea8365295b77942c3ca030f02729.camel@mailbox.org>
-	 <eae0ff0f-31a6-433a-b255-9bdb4727a940@amd.com> <aC8fpEXYWZ9Oy41J@pollux>
-	 <ebedece4-9758-47e9-b621-37b40e3f0fc3@amd.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+	bh=nwGR3WBG0Y3P3ClNI6DJYTqQ4ZoDuJNCVhvLlaFe27E=;
+	b=MXr1ipGHQ9dSvix6ZvK1Ygj52Ihz8Y/qqkRQ2rWJz3QdMcD89CUnnd0ekpVgOk4cVTbHHU
+	8LuN+AgkjmC04FXe55RZJeRhk6FkfxDtRe6kTQ10XPdd9RKFn1Q3/jIClVpoFTPFXkSVdi
+	lsM4RNYxYA6oxJqOn4GwakrE6AUO860=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1747919812;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=nwGR3WBG0Y3P3ClNI6DJYTqQ4ZoDuJNCVhvLlaFe27E=;
+	b=aw5+wuRn7eOj+bqx5UDMxKSYaR7u+D2RiBXvEQPt+d51JhhMhmqBXRcqmp6M02nFRr9Fkk
+	FDScakePI8jevpDw==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=MXr1ipGH;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=aw5+wuRn
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1747919812; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=nwGR3WBG0Y3P3ClNI6DJYTqQ4ZoDuJNCVhvLlaFe27E=;
+	b=MXr1ipGHQ9dSvix6ZvK1Ygj52Ihz8Y/qqkRQ2rWJz3QdMcD89CUnnd0ekpVgOk4cVTbHHU
+	8LuN+AgkjmC04FXe55RZJeRhk6FkfxDtRe6kTQ10XPdd9RKFn1Q3/jIClVpoFTPFXkSVdi
+	lsM4RNYxYA6oxJqOn4GwakrE6AUO860=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1747919812;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=nwGR3WBG0Y3P3ClNI6DJYTqQ4ZoDuJNCVhvLlaFe27E=;
+	b=aw5+wuRn7eOj+bqx5UDMxKSYaR7u+D2RiBXvEQPt+d51JhhMhmqBXRcqmp6M02nFRr9Fkk
+	FDScakePI8jevpDw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 6891713433;
+	Thu, 22 May 2025 13:16:52 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id UQ+7GMQjL2iSfQAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Thu, 22 May 2025 13:16:52 +0000
+Date: Thu, 22 May 2025 15:16:51 +0200
+Message-ID: <87frgw9458.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-sound@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>
+Subject: Re: [PATCH] ALSA: core: fix up bus match const issues.
+In-Reply-To: <2025052204-hyphen-thermal-3e72@gregkh>
+References: <2025052204-hyphen-thermal-3e72@gregkh>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-MBO-RS-ID: 3c2590ebf42a25dd418
-X-MBO-RS-META: rtwsdkhdwdcmpueph13z64fnzp4ku9sf
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-Spam-Level: 
+X-Spamd-Bar: /
+X-Spam-Flag: NO
+X-Spam-Score: -0.51
+X-Rspamd-Action: no action
+X-Rspamd-Queue-Id: 902051F766
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Spamd-Result: default: False [-0.51 / 50.00];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	TO_DN_SOME(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	RCPT_COUNT_FIVE(0.00)[5];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[linuxfoundation.org:email,suse.de:mid,suse.de:dkim,suse.com:email];
+	URIBL_BLOCKED(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,suse.com:email,suse.de:mid,suse.de:dkim,linuxfoundation.org:email,perex.cz:email];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	DKIM_TRACE(0.00)[suse.de:+]
 
-On Thu, 2025-05-22 at 15:09 +0200, Christian K=C3=B6nig wrote:
-> On 5/22/25 14:59, Danilo Krummrich wrote:
-> > On Thu, May 22, 2025 at 02:34:33PM +0200, Christian K=C3=B6nig wrote:
-> > > See all the functions inside include/linux/dma-fence.h can be
-> > > used by everybody. It's basically the public interface of the
-> > > dma_fence object.
-> >=20
-> > As you write below, in certain cases it is valid to call this from
-> > drivers, so
-> > it's not unreasonable to have it as part of the public API.
->=20
-> The question is from which drivers?
->=20
-> > > So testing if a fence is signaled without calling the callback is
-> > > only allowed by whoever implemented the fence.
-> > >=20
-> > > In other words nouveau can test nouveau fences, i915 can test
-> > > i915 fences, amdgpu can test amdgpu fences etc... But if you have
-> > > the wrapper that makes it officially allowed that nouveau starts
-> > > testing i915 fences and that would be problematic.
-> >=20
-> > In general, I like the=C2=A0 __dma_fence_is_signaled() helper, because
-> > this way we
-> > can document in which cases it is allowed to be used, i.e. the ones
-> > you descibe
-> > above.
-> >=20
-> > test_bit() can be called by anyone and there is no documentation
-> > comment
-> > explaining that it is only allowed under certain conditions.
->=20
-> That's a rather good argument.
->=20
-> > Having the __dma_fence_is_signaled() helper properly documented
-> > could get you
-> > rid of having to explain in which case the test_bit() dance is
-> > allowed to do
-> > over and over again. :-)
->=20
-> That's an even better argument.=20
->=20
-> > I also think the name is good, since the '__' prefix already
-> > implies that there
-> > are some restrictions on the use of this helper.
->=20
-> I'm still hesitating. Adding something to the API always made it
-> usable by everybody.
->=20
-> Now suddenly saying we add that to the include/linux/dma-fence.h
-> header but only certainly code can use it still sounds questionable
-> to me.
+On Thu, 22 May 2025 12:08:05 +0200,
+Greg Kroah-Hartman wrote:
+> 
+> In commit d69d80484598 ("driver core: have match() callback in struct
+> bus_type take a const *"), the match bus callback was changed to have
+> the driver be a const pointer.  Unfortunately that const attribute was
+> thrown away when container_of() is called, which is not correct and was
+> not caught by the compiler due to how container_of() is implemented.
+> Fix this up by correctly preserving the const attribute of the driver
+> passed to the bus match function which requires the hdac_driver match
+> function to also take a const pointer for the driver structure.
+> 
+> Cc: Jaroslav Kysela <perex@perex.cz>
+> Cc: Takashi Iwai <tiwai@suse.com>
+> Fixes: d69d80484598 ("driver core: have match() callback in struct bus_type take a const *")
+> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-If I understand the current code correctly, the documentation state and
-the question "which driver is allowed to do it?" is the same, because
-the documentation for the signaled callback doesn't specify that:
+Applied now.  Thanks.
 
 
-	/**
-	 * @signaled:
-	 *
-	 * Peek whether the fence is signaled, as a fastpath optimization for
-	 * e.g. dma_fence_wait() or dma_fence_add_callback(). Note that this
-	 * callback does not need to make any guarantees beyond that a fence
-	 * once indicates as signalled must always return true from this
-	 * callback. This callback may return false even if the fence has
-	 * completed already, in this case information hasn't propogated throug
-	 * the system yet. See also dma_fence_is_signaled().
-	 *
-	 * May set &dma_fence.error if returning true.
-	 *
-	 * This callback is optional.
-	 */
-	bool (*signaled)(struct dma_fence *fence);
-
-
-"optional". What if I don't ipmlement it? Who should implement it?
-
-If the callback is optional, then dma_fence_is_signaled() is the same
-as __dma_fence_is_signaled().
-
-IOW, it already needs to be better documented who needs to implement
-the callback and who doesn't. If we get clarity on that, we also get
-clarity on who may use __dma_fence_is_signaled().
-
-
-P.
-
->=20
-> Regards,
-> Christian.
-
+Takashi
