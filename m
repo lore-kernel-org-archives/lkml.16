@@ -1,153 +1,202 @@
-Received: from mail-qv1-f53.google.com (mail-qv1-f53.google.com [209.85.219.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from lithops.sigma-star.at (mailout.nod.at [116.203.167.152])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C571288C03
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 19:06:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B975288C1B
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 19:06:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.203.167.152
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747940765; cv=none; b=HWVMfEmFlMx2EdO26u354Z6DZ/y+tkUcA3KQ6VzaJC7sKb5sg9rb3Gxea/Wm2lgXIs/Y//uFXi3JqRwG1yabL1fp9dKHiZ5ecq3eJF2OJG6iTQWTTg4pyP3xFmlyAHIcRM7B4NQNN76w/OzC4z/7voQb2ezl2FFdJqXnfuaz8LA=
+	t=1747940812; cv=none; b=AcmwRC9/DljsJ1m8ggWpaHBwhrB2T9/8/+9M63YQvEgkByv64Lq1rObBP5inHyy7mCdYC2rkoHgfa6CijyUgqBAowP1fdsCy4G7SZFOnBfC/PKQPTdZWRxyTJqKCr3JH7u/XPzVfplKEjVsTah1/6hgVtkMAF4U10dOuYmT3UDo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747940765; c=relaxed/simple;
-	bh=fFa+XHgjPqFLyF5EjVk/o8grCR8OeDIEJejOPFDEFq4=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=LYIe0TMz1tWXJNcu3Wv9hFpYa3Gz0RQBQgjBs+oAmjXBAs9z6vEyiVQLipgEObdrnVwUA5oWArhx3NT3vVUd0rxCm/7aCe73MD7V6VaZtSIAr8xmd02Y72DgJK1i1K2qaOOZUAOqOfg1QLRCU5x3mHbe3+Np1Jz0NDtTPaCTB88=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ndufresne.ca; spf=none smtp.mailfrom=ndufresne.ca; dkim=pass (2048-bit key) header.d=ndufresne-ca.20230601.gappssmtp.com header.i=@ndufresne-ca.20230601.gappssmtp.com header.b=2lEjZDcL; arc=none smtp.client-ip=209.85.219.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ndufresne.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ndufresne.ca
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ndufresne-ca.20230601.gappssmtp.com header.i=@ndufresne-ca.20230601.gappssmtp.com header.b="2lEjZDcL"
-Received: by mail-qv1-f53.google.com with SMTP id 6a1803df08f44-6f8cb6b3340so87008186d6.1
-        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 12:06:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ndufresne-ca.20230601.gappssmtp.com; s=20230601; t=1747940762; x=1748545562; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=uAfLd2+eW+OIWxtnxvjxahlHfrrw/biV9Jvjs+l5fkc=;
-        b=2lEjZDcLkiLKhRiFUnSvh3+Dl98+uNd/w2q6wNNLa7iO9w6TeTe9ogaM3jt9voEjVB
-         JDZxApy/mj/nQEJ+BH7v6ELSD1XMi1rGcLgqP9KlF0O0tCwZ7/f39N+QwBHLoIc4FczP
-         AyGEx71RoL5u4f0oQoDPM8CffylA/d8Df6KyssmNtQAXty1THMX1N73UXWJu8Nt2uA6W
-         0sTOmO/BEeDZXz8VXp3r3sFDetqsU3cuO8RbFQuRWAwoCkOHaeg7hI/+UJJHUmgD9c6P
-         cEnGWcmVuoF0RGLOuO1+vKMxLRMkcg2bpQ87c9rFC3yV/COEe4idjoZhly7jZB0s4xuf
-         otqw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747940762; x=1748545562;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=uAfLd2+eW+OIWxtnxvjxahlHfrrw/biV9Jvjs+l5fkc=;
-        b=NLdC1S5ZZJwgLOqbXOhQDimumtjq38ARrIlTX7EfvYwAqw6ejq2us2FYrw4tMSfwfb
-         a+0S/xKwjRpVxG2m9Ik2qmcxi6jZk3MTECEJbhG6WSSoVauoOiwO53MxXhJjoYwKOxNX
-         QftV0KWEg9/hd7kXI158R+hEZSJ+6Y2AnhjmHHKabwWsbwkOFYmaGIBqZ1ADtit7qzf+
-         C1838YGllh3WVuPojmznaaZnLwvGnaHp+VFlHjakAV132iMPx+sH/+Rh4N/wl6597PGt
-         JYgbv8K2hUCf02rREQavPLCgMwNUFg1/xEjbzGojqFtNKzE9/zKISHpwFfYnzIsVjIQO
-         WFTw==
-X-Forwarded-Encrypted: i=1; AJvYcCWQQJY6e3Cy1aqYaPuv8uJdb4nLXQ+mdSwkRV2fmsUmgBjGRKGtqNbA+/Uf6MDaXL8fsvJPFIwpaBb/1k4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyspqQ5ELfAS8MZ9ShXX99pqd/0bPmGz774aWRLGnTR7K9FbF4B
-	4U4+AOsdbIltWRBXjpik5BDF2rgBN0wmmo7vgdYpHB78rCK9zIx1aHj7KaCmyUIKxKA=
-X-Gm-Gg: ASbGncsYBuh7mz+4UW+ElyfcD9YqhAsjN6LkuGr464o0N+51uN4Lvfn+V3r3+sH1kR2
-	eKkVprRb2T0WKS1zqI/5ZG3xsxLIIb+jm6DpaW9YUzGoJw8pKUcpfBD0nKkW0aKJcpM0Cf4UFxs
-	cprm/EJW4ZTIm4gXj5SzVKRMTccwc0pXezTVJ7w/brBTlBiBG9i0o19eoBibCUeQRnNRmF/gOAj
-	8ZfdIVjN4JkSnliEX4Ihr/BIX4rGvJvCrTNwgj/2wOh4i2mQFsuVuYDbVZ73VlvZM16Jm2reYNT
-	674LQUfu7IA9x91lWOmM+rDGx59nbSUyBXOvY6JfwQCSWXC0RGHnQPuX
-X-Google-Smtp-Source: AGHT+IFMHoWCgYSKrp77j14dN4ezA6lfoJ+4Q+N0FgBs+1y4jyW6o9IHP3m48s9bZ43HqbDB/3wpZw==
-X-Received: by 2002:a05:6214:402:b0:6f2:c7b0:3b16 with SMTP id 6a1803df08f44-6f8b2c32addmr375505626d6.6.1747940762274;
-        Thu, 22 May 2025 12:06:02 -0700 (PDT)
-Received: from ?IPv6:2606:6d00:17:b2fc::5ac? ([2606:6d00:17:b2fc::5ac])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f8b096dda9sm102909986d6.71.2025.05.22.12.06.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 May 2025 12:06:01 -0700 (PDT)
-Message-ID: <8b18533170e7ba395c574de69768dcc27f718767.camel@ndufresne.ca>
-Subject: Re: [PATCH 1/1] dt-bindings: media: convert fsl-vdoa.txt to yaml
- format
-From: Nicolas Dufresne <nicolas@ndufresne.ca>
-To: Frank Li <Frank.li@nxp.com>, "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Conor Dooley <conor+dt@kernel.org>, linux-media@vger.kernel.org, Mauro
- Carvalho Chehab <mchehab@kernel.org>, Pengutronix Kernel Team
- <kernel@pengutronix.de>, Shawn Guo	 <shawnguo@kernel.org>, Fabio Estevam
- <festevam@gmail.com>, Krzysztof Kozlowski	 <krzk+dt@kernel.org>,
- linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, Sascha Hauer <s.hauer@pengutronix.de>, 
-	devicetree@vger.kernel.org
-Date: Thu, 22 May 2025 15:06:01 -0400
-In-Reply-To: <b97c254c5169acb32b9f65f71b363a3eb1cfc8a2.camel@ndufresne.ca>
-References: <20250411213601.3273670-1-Frank.Li@nxp.com>
-		 <174448105342.1415739.9619142538994119426.robh@kernel.org>
-		 <aC9xv08a5k5Pz1t+@lizhi-Precision-Tower-5810>
-	 <b97c254c5169acb32b9f65f71b363a3eb1cfc8a2.camel@ndufresne.ca>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.1 (3.56.1-1.fc42) 
+	s=arc-20240116; t=1747940812; c=relaxed/simple;
+	bh=bBhYpBnnlJ48DquQjyTd36KeKeZQQqR3HpYL5/M82Ew=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 MIME-Version:Content-Type; b=f9qcZVwlxlLu5Ygi26otRzm81iNFMBbphzKh2ieGD5wvrQFwzW1r1I7Zr9JCiK7ycl9bREHsgApvfs3jQNZ3MHJCbDTOoumjs+VmaTJ62viGpSBRdEwApr8N3beajh2e/q5eLU2YyvNNIG+hDPsb9B6SuvGUI1MwyFbBwxLNVY0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nod.at; spf=fail smtp.mailfrom=nod.at; arc=none smtp.client-ip=116.203.167.152
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nod.at
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nod.at
+Received: from localhost (localhost [127.0.0.1])
+	by lithops.sigma-star.at (Postfix) with ESMTP id 58C6C298562;
+	Thu, 22 May 2025 20:58:53 +0200 (CEST)
+Received: from lithops.sigma-star.at ([127.0.0.1])
+	by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10032)
+	with ESMTP id UZefIIiQruAo; Thu, 22 May 2025 20:58:52 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+	by lithops.sigma-star.at (Postfix) with ESMTP id 6F172298565;
+	Thu, 22 May 2025 20:58:52 +0200 (CEST)
+Received: from lithops.sigma-star.at ([127.0.0.1])
+	by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id tlJbsa5qzCRX; Thu, 22 May 2025 20:58:52 +0200 (CEST)
+Received: from lithops.sigma-star.at (lithops.sigma-star.at [195.201.40.130])
+	by lithops.sigma-star.at (Postfix) with ESMTP id 4049F298562;
+	Thu, 22 May 2025 20:58:52 +0200 (CEST)
+Date: Thu, 22 May 2025 20:58:52 +0200 (CEST)
+From: Richard Weinberger <richard@nod.at>
+To: Ilya Shchipletsov <rabbelkin@mail.ru>
+Cc: linux-mtd <linux-mtd@lists.infradead.org>, 
+	David Woodhouse <dwmw2@infradead.org>, 
+	chengzhihao1 <chengzhihao1@huawei.com>, 
+	Nikita Marushkin <hfggklm@gmail.com>, 
+	linux-kernel <linux-kernel@vger.kernel.org>, 
+	lvc-project <lvc-project@linuxtesting.org>
+Message-ID: <1348351513.83509530.1747940332116.JavaMail.zimbra@nod.at>
+In-Reply-To: <20250404080018.2472-3-rabbelkin@mail.ru>
+References: <20250404080018.2472-3-rabbelkin@mail.ru>
+Subject: Re: [PATCH] jffs2: silence lockdep warning on evict path
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: Zimbra 8.8.12_GA_3807 (ZimbraWebClient - FF138 (Linux)/8.8.12_GA_3809)
+Thread-Topic: jffs2: silence lockdep warning on evict path
+Thread-Index: 5mFHifbun1qI6cUBHTj3Qjf8FXuhog==
 
-Hi again,
+----- Urspr=C3=BCngliche Mail -----
+> Von: "Ilya Shchipletsov" <rabbelkin@mail.ru>
+> An: "linux-mtd" <linux-mtd@lists.infradead.org>
+> CC: "Ilya Shchipletsov" <rabbelkin@mail.ru>, "David Woodhouse" <dwmw2@inf=
+radead.org>, "richard" <richard@nod.at>,
+> "chengzhihao1" <chengzhihao1@huawei.com>, "Nikita Marushkin" <hfggklm@gma=
+il.com>, "linux-kernel"
+> <linux-kernel@vger.kernel.org>, "lvc-project" <lvc-project@linuxtesting.o=
+rg>
+> Gesendet: Freitag, 4. April 2025 10:00:18
+> Betreff: [PATCH] jffs2: silence lockdep warning on evict path
 
-Le jeudi 22 mai 2025 =C3=A0 14:57 -0400, Nicolas Dufresne a =C3=A9crit=C2=
-=A0:
-> Hi Frank,
+> Syzkaller detected a possible deadlock in jffs2_do_clear_inode that happe=
+ns
+> in kswapd's evict path. This is however a false positive because in
+> jffs2_evict_inode we are the only holder of inode and nobody else should =
+be
+> touching any locks of such inode.
 >=20
-> Le jeudi 22 mai 2025 =C3=A0 14:49 -0400, Frank Li a =C3=A9crit=C2=A0:
-> > On Sat, Apr 12, 2025 at 01:04:14PM -0500, Rob Herring (Arm) wrote:
-> > >=20
-> > > On Fri, 11 Apr 2025 17:36:00 -0400, Frank Li wrote:
-> > > > Convert fsl-vdoa.txt to yaml format.
-> > > >=20
-> > > > Additional changes:
-> > > > - Add irq.h and imx6qdl-clock.h in example.
-> > > >=20
-> > > > Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> > > > ---
-> > > > =C2=A0.../bindings/media/fsl,imx6q-vdoa.yaml=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 | 42 +++++++++++++++++++
-> > > > =C2=A0.../devicetree/bindings/media/fsl-vdoa.txt=C2=A0=C2=A0=C2=A0 =
-| 21 ----------
-> > > > =C2=A02 files changed, 42 insertions(+), 21 deletions(-)
-> > > > =C2=A0create mode 100644 Documentation/devicetree/bindings/media/fs=
-l,imx6q-vdoa.yaml
-> > > > =C2=A0delete mode 100644 Documentation/devicetree/bindings/media/fs=
-l-vdoa.txt
-> > > >=20
-> > >=20
-> > > Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
-> >=20
-> > All:
-> > 	Anyone pick this patch?
+> WARNING: possible circular locking dependency detected
+> 6.1.128-syzkaller-00157-gf31f96bd278e #0 Not tainted
+> ------------------------------------------------------
+> kswapd0/72 is trying to acquire lock:
+> ffff8880945d6998 (&f->sem){+.+.}-{3:3}, at: jffs2_do_clear_inode+0x56/0x5=
+70
+> fs/jffs2/readinode.c:1419
 >=20
-> Thanks for the highlight, this is stuff from before my time and I had not=
- associated it
-> with CODA initially. I've picked it now.
-
-Actually, before I do so, any of the following warnings should be addressed=
- ? I effectively don't
-see a clear entry for that bindings, but could have miss-read and there is =
-a second warning,
-which based on having Rb is likely false positive ?
-
----
-[[ATTACHMENT|junit/./0001-dt-bindings-media-convert-fsl-vdoa.txt-to-yaml-fo=
-rma.patch checkpatch.err.txt]]
-WARNING: added, moved or deleted file(s), does MAINTAINERS need updating?
-#21:=20
-new file mode 100644
-
-WARNING: DT binding docs and includes should be a separate patch. See: Docu=
-mentation/devicetree/bindings/submitting-
-patches.rst
-
-total: 0 errors, 2 warnings, 0 checks, 42 lines checked
----
-
-Nicolas
-
+> but task is already holding lock:
+> ffffffff8a68b100 (fs_reclaim){+.+.}-{0:0}, at: balance_pgdat+0xa15/0x1510
+> mm/vmscan.c:7173
 >=20
-> regards,
-> Nicolas
+> which lock already depends on the new lock.
 >=20
-> >=20
-> > Frank
-> > >=20
+>=20
+> the existing dependency chain (in reverse order) is:
+>=20
+> -> #1 (fs_reclaim){+.+.}-{0:0}:
+>       __fs_reclaim_acquire mm/page_alloc.c:4719 [inline]
+>       fs_reclaim_acquire+0x100/0x150 mm/page_alloc.c:4733
+>       might_alloc include/linux/sched/mm.h:271 [inline]
+>       slab_pre_alloc_hook mm/slab.h:710 [inline]
+>       slab_alloc_node mm/slub.c:3318 [inline]
+>       slab_alloc mm/slub.c:3406 [inline]
+>       __kmem_cache_alloc_lru mm/slub.c:3413 [inline]
+>       kmem_cache_alloc+0x43/0x360 mm/slub.c:3422
+>       jffs2_do_read_inode+0x300/0x510 fs/jffs2/readinode.c:1372
+>       jffs2_iget+0x1bb/0xcb0 fs/jffs2/fs.c:276
+>       jffs2_do_fill_super+0x449/0xa60 fs/jffs2/fs.c:575
+>       jffs2_fill_super+0x27e/0x370 fs/jffs2/super.c:290
+>       mtd_get_sb+0x16f/0x220 drivers/mtd/mtdsuper.c:80
+>       mtd_get_sb_by_nr drivers/mtd/mtdsuper.c:111 [inline]
+>       get_tree_mtd+0x5ff/0x750 drivers/mtd/mtdsuper.c:164
+>       vfs_get_tree+0x8e/0x300 fs/super.c:1573
+>       do_new_mount fs/namespace.c:3056 [inline]
+>       path_mount+0x6a6/0x1e90 fs/namespace.c:3386
+>       do_mount fs/namespace.c:3399 [inline]
+>       __do_sys_mount fs/namespace.c:3607 [inline]
+>       __se_sys_mount fs/namespace.c:3584 [inline]
+>       __x64_sys_mount+0x283/0x300 fs/namespace.c:3584
+>       do_syscall_x64 arch/x86/entry/common.c:51 [inline]
+>       do_syscall_64+0x35/0x80 arch/x86/entry/common.c:81
+>       entry_SYSCALL_64_after_hwframe+0x6e/0xd8
+>=20
+> -> #0 (&f->sem){+.+.}-{3:3}:
+>       check_prev_add kernel/locking/lockdep.c:3090 [inline]
+>       check_prevs_add kernel/locking/lockdep.c:3209 [inline]
+>       validate_chain kernel/locking/lockdep.c:3825 [inline]
+>       __lock_acquire+0x2a29/0x5320 kernel/locking/lockdep.c:5049
+>       lock_acquire kernel/locking/lockdep.c:5662 [inline]
+>       lock_acquire+0x194/0x4b0 kernel/locking/lockdep.c:5627
+>       __mutex_lock_common kernel/locking/mutex.c:603 [inline]
+>       __mutex_lock+0x14c/0x19f0 kernel/locking/mutex.c:747
+>       jffs2_do_clear_inode+0x56/0x570 fs/jffs2/readinode.c:1419
+>       evict+0x32c/0x810 fs/inode.c:705
+>       dispose_list+0xd7/0x1a0 fs/inode.c:738
+>       prune_icache_sb+0xe7/0x150 fs/inode.c:941
+>       super_cache_scan+0x38a/0x590 fs/super.c:106
+>       do_shrink_slab+0x412/0xa00 mm/vmscan.c:853
+>       shrink_slab+0x178/0x670 mm/vmscan.c:1013
+>       shrink_node_memcgs mm/vmscan.c:6147 [inline]
+>       shrink_node+0x957/0x1fb0 mm/vmscan.c:6176
+>       kswapd_shrink_node mm/vmscan.c:6968 [inline]
+>       balance_pgdat+0x8ed/0x1510 mm/vmscan.c:7158
+>       kswapd+0x5d4/0xb80 mm/vmscan.c:7418
+>       kthread+0x2e1/0x3a0 kernel/kthread.c:376
+>       ret_from_fork+0x22/0x30 arch/x86/entry/entry_64.S:295
+>=20
+> other info that might help us debug this:
+>=20
+> Possible unsafe locking scenario:
+>=20
+>       CPU0                    CPU1
+>       ----                    ----
+>  lock(fs_reclaim);
+>                               lock(&f->sem);
+>                               lock(fs_reclaim);
+>  lock(&f->sem);
+>=20
+> *** DEADLOCK ***
+>=20
+> Fix this false positive by using mutex_trylock instead of mutex_lock to
+> avoid creating a false locking dependency.
+>=20
+> jffs2_do_crccheck_inode also calls this function, with local mutex,
+> which should be safe, but to be extremely sure and to make code more
+> future-proof WARN_ON_ONCE was used.
+>=20
+> Found by Linux Verification Center (linuxtesting.org) with Syzkaller.
+>=20
+> Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+> Co-developed-by: Nikita Marushkin <hfggklm@gmail.com>
+> Signed-off-by: Nikita Marushkin <hfggklm@gmail.com>
+> Signed-off-by: Ilya Shchipletsov <rabbelkin@mail.ru>
+> ---
+> fs/jffs2/readinode.c | 12 +++++++++++-
+> 1 file changed, 11 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/fs/jffs2/readinode.c b/fs/jffs2/readinode.c
+> index 03b4f99614be..3d2b2e5fc2c5 100644
+> --- a/fs/jffs2/readinode.c
+> +++ b/fs/jffs2/readinode.c
+> @@ -1416,7 +1416,17 @@ void jffs2_do_clear_inode(struct jffs2_sb_info *c,=
+ struct
+> jffs2_inode_info *f)
+> =09int deleted;
+>=20
+> =09jffs2_xattr_delete_inode(c, f->inocache);
+> -=09mutex_lock(&f->sem);
+> +
+> +=09/*
+> +=09 * We should be the only ones having a reference to this struct
+> +=09 * jffs2_inode_info. So the locking is actually unnecessary. Besides,
+> +=09 * lockdep triggers a false-positive warning on &f->sem here about
+> +=09 * reclaim circular dependency. Play it safe and bump a warning if
+> +=09 * this doesn't hold true.
+> +=09 */
+> +=09if (WARN_ON_ONCE(!mutex_trylock(&f->sem)))
+> +=09=09return;
+> +
+
+Hmm, I thought we have lockdep classes or other annotations to fix such iss=
+ues?
+Adding a mutex_trylock/return here feels odd.
+
+Thanks,
+//richard
