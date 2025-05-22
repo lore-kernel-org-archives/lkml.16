@@ -1,214 +1,259 @@
-Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on2040.outbound.protection.outlook.com [40.107.21.40])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 957171E51E7;
-	Thu, 22 May 2025 18:45:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747939528; cv=none; b=jxBgAq1ROmbR33pvJMLIhsDzLl+5iFXsqKRw5N+Qzz9azLdYfoX1UjrT1IlRtd9dyVwio1TyJnzQpH1ehoZi9kTm+9lkv5XXX7ihLtSqE353AUa4lY8Le6zl8pYvqBkrtAhkRt0DVBzacMpv2Rft7cwSt3OUv9rZ8g2hqNO9Ojs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747939528; c=relaxed/simple;
-	bh=BFRbGoEc5W5rLHmZZkvGIPUXgbuPDlOSs8WMuYfd1aI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=aJjjAn4Bms5Qf2JTL1PmFc5LfX2FozA9LZ3Xme7cN36eHE2Fy7/9iufJ9b8lw7UFeodgRhGyv/qtBxqjXkEONZOe/lCTV0RC12uy7x5wYzN+0F6F/GjAZM/FepYeywgi9LpsXDRQ5/pcYhtFO/zTUXbqDpjA3R1MbyzH6Eq0P8s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HI4aHLJX; arc=none smtp.client-ip=209.85.210.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05DA91A2564;
+	Thu, 22 May 2025 18:46:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.21.40
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747939617; cv=fail; b=SnCZQgqOK/yZD/kosk7rWiBvQiofpbpgcwei3WP01qBlo+ALQvuzIoRZgeGBNKs+YFehmc6X6uhJgazdB4AYujmHfAW0KsSY2dOqNY6v//gxwX7ro5TWdY1Ok1RC501LrV58+N0xNX9w/ANmRNoDXo1+L1eRXGquTKyXmeOj0lo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747939617; c=relaxed/simple;
+	bh=+UagWKKmvLTfAXoITnprg4jf9yPhmbN6SefuthkjktU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=Ton0Hv/x4Ag+3YL2T9ketGoRD+cdPl6vh5w98rZD2axozNDzmjPxuf8QyOr9EI2KJyOSI8kXBPe374BnH0s1rkEY6HeuuJpZwxkFw3QLUveSUWsMx4kfygVX/WcIA6IIk7BCgYkowjvosrLn60N7YdiHJe0GA/gb6cHdIpCZzJU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=FC5TjwW7; arc=fail smtp.client-ip=40.107.21.40
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HI4aHLJX"
-Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-742c035f2afso3746603b3a.2;
-        Thu, 22 May 2025 11:45:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747939526; x=1748544326; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=eyt9uwHd4+RYMzj8npffGoqsAHc2tpibuqss5RIQiwc=;
-        b=HI4aHLJXj7qZ/dkoq7Yihzd7fHIHsVQDAYV7q0qSVxTjbj/E4YdqwCCf9Q9bQrp6Gq
-         lID26HWFMSbbimeZy/GrapMJiRljEFRJFeehbejsUXfUzjVx8EqhqedfBrRUKVjWN9Dh
-         sAOZlwhKNDXs64suRYCR/xV+bqpybz1l02qeb7qZ61HjtDZyqWNYrEQ1i+J5TdgeP9BZ
-         dOMDReZCtf9Ca6ZWTDGhOwTw+Rr+rdDVe7+sju4vDp9pSXD9bQRR2h3Ioo1/xu6Ea7Nh
-         /Hd8lY9olYLRE5tu1CeL3qwS4Ba9A7nduD7Q0RtPvJ79yJEEI2/gt3GJjo+KFbukMDA0
-         Kwbw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747939526; x=1748544326;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=eyt9uwHd4+RYMzj8npffGoqsAHc2tpibuqss5RIQiwc=;
-        b=TryRh9IUnAp4MRSiNdsxo/UJqkTqT6a6JUR20xkiaK/8iZ4ipfcHesYbVBDnFydKJZ
-         gf2Q7kkivLKe5T5c4ksQ5I1hFbxCVviHzBEz3iGkLk335ijVuSTi/F7PmNny62UW1Ca8
-         BmshO9v3vKxcZY3PmNAN2SbNFc7Zp436o+ox79uErIkPTKYZlWHD5lFZ7RUmlomqq1jk
-         FGOZGA0J0h+Zo0zVlXyHQl357HGyP2O8TEy77Ngo9lsSSZNloOcCgK8xvbeV1GwBp6nE
-         VPW3RHkaYimTMgUyM+mbsfnvfwTeljQj2XeMDyk+4+Hm9IE6qlSjGbmAuDWcA4AVbMpU
-         MzbQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUOw7nt93fWlmwMhHpQHg2vOW1AsbD+Yn/AY2OkAOd/lQu/8WicBahAiveNDWvZ+KCCtFmWIHWLxPUqi/NA@vger.kernel.org, AJvYcCV1Ud/wRh/9XoyJAHUJ4mZ+q0gfb82P1RUns157S9vReBW7bm96WWWSkgQm4mCq9O94/S+v/4X+fpsnQw==@vger.kernel.org, AJvYcCWbZdtPPpcATD/YyrsDKuCiFhHRCYFYiS7/kz17QyQR5iRYVUQ1MoRt2NQQoObNoV+k7iGAocRUc/xB@vger.kernel.org
-X-Gm-Message-State: AOJu0YwhHzQ71lBpghoA91Zt9NoARBphVWDlE1GC/HqWxvYFp9agjo7o
-	j1vjlCgt7jcsWheWN02D8/Gg6+mv41PCyOUEA24yzAM9VPOiAMXKWE0FZDzemw==
-X-Gm-Gg: ASbGncvDeY5vfMaOd+i29U2h7KRzz9FU0U9Vvp2Sw0+ypcUaRVaFdNdg8mKUs3j/kIz
-	g4OkgKR9t/O6XBmgps1vhZsg5g675Klg7XuTdjwNyQeA+Rqz1chBesaanmxxJF1P3IQgXvKCG/X
-	GPzsH2NvXswzU1RYCJVxJfTFeZ4TfAgcIJZJTsuC2w6AQPug3NB53aaKlyt21nAvL6LtzoIOT+7
-	gjR7U5mMdPATljF5V+D3TBUZzzqpOHoxfwtzMYu9nwOkdLNkYXyh6UxqWuuYuAzFZnFAWK401kR
-	HBQzXGf0lFDlAgvnY534RHRRJwWPwCdSfs0ZmQ==
-X-Google-Smtp-Source: AGHT+IHlRfUeJFXKT8VPz4SbS6Ht4Q1UlP58AjhLNNeH1/56VeLcQfpbUrSMG0l0fyciuG7qANDqQw==
-X-Received: by 2002:a05:6a20:d50c:b0:1f5:8a1d:38f3 with SMTP id adf61e73a8af0-21621873f17mr44054155637.2.1747939525664;
-        Thu, 22 May 2025 11:45:25 -0700 (PDT)
-Received: from ryzen.lan ([2601:644:8200:dab8::a86])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b26eaf6fd3bsm11502424a12.23.2025.05.22.11.45.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 May 2025 11:45:25 -0700 (PDT)
-From: Rosen Penev <rosenp@gmail.com>
-To: linux-wireless@vger.kernel.org
-Cc: =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@toke.dk>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS),
-	linux-kernel@vger.kernel.org (open list),
-	linux-mips@vger.kernel.org (open list:MIPS)
-Subject: [PATCHv2 5/5] mips: dts: qca: add wmac support
-Date: Thu, 22 May 2025 11:45:16 -0700
-Message-ID: <20250522184516.13176-6-rosenp@gmail.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250522184516.13176-1-rosenp@gmail.com>
-References: <20250522184516.13176-1-rosenp@gmail.com>
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="FC5TjwW7"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Nbs336zWFstE+Sj0t+EAMLuH+sdYJ4SCi5xuVQAOj0XTkabmOJPuKQDvgsTYi0BZ6mupRyfgTNg/M7WtNlnkV7U0ClhIzzAPlJjv87Gq+T69vhhokUUZFVsvh2BTZ83dqaf56P+tCcotuF+Ldz6p86eRDDQbFtY6jB+5qIhePA8+nKVfB2dSF9/acXtsgoNUD8RewKqe7GKZ73/FQff/Sn8BHoGsOAROuozHDxBGMFcsEyu6pFqRYYf7A0s+/7ciOrd+xaLXMvfVJAw/mxZH9X1GU9i3QbfawUHgnV3xdNkk4JgLgbgQ3gb/n7ClB5KQIM9V6onxga+6JVE5JRHYJw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=QbfhFnFJbzcScYd+5+U8udh4BulQUkGtdnRaJVgiW20=;
+ b=gquUvmOMjQhgL0nZG4fDHHEVqrdLBEZN/OQjK6neO5KRAzew9WceS448HDPaCu0MSozSfKp9i8ZbdZX1W54aKWVLsiOA5rFLgL6xKWwTpFOEAxTZvAE6sgLPdcDEQF9fKzCSk5jeKsOOOfvNSeIe37DBf6HrDJAJBHDr+OZl0Kb1FKGC8otNIotbN+qX9XHsNdCcSDU6+UqqpfyTLm/Ws9HuDp1iNEu+iqboX6vju4kLGWT+m/SMP4TEA+sUgjJq542I0M0yGfBl4Hz5d6ItytQSpcizFKw+V9i3rLdaMyVGniv1vHluVdPBd5V9vEpSllea6bqbQzkmjC8kdav3zw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=QbfhFnFJbzcScYd+5+U8udh4BulQUkGtdnRaJVgiW20=;
+ b=FC5TjwW77poY9O5TP7IHA84y7stb8GmufGAdSyh4BpTJjab4WxxUplcOlNfUUQ7O6yKXJIoByet+p6COzGmphSSh2xot7sgEWs2+SR4JDLN6D96CDQbPHD782nkxjiQ1w5tsSC5cerltdPurwOgfm8kbKm22T4jN+h7LXX/fPpA2E7eOZKYOxCnNvKsomFTr16C1mvZUIRZ5HOXHKkaIfM6XbihBqi6oZPPF4aSUaIhZAhBKou9jrtmo4EmTLXVTMCGTAiqNlktuqVRF5InhFrAi6+qQNkt0xsW/d7Nyu6dKP1Iu9Nhigz6SKAYJLVezp0+OQFEtp1zi6M2UlufaVQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
+ by GV1PR04MB10197.eurprd04.prod.outlook.com (2603:10a6:150:1a4::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.21; Thu, 22 May
+ 2025 18:46:50 +0000
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06%2]) with mapi id 15.20.8746.030; Thu, 22 May 2025
+ 18:46:49 +0000
+Date: Thu, 22 May 2025 14:46:44 -0400
+From: Frank Li <Frank.li@nxp.com>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Aman Kumar Pandey <aman.kumarpandey@nxp.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-i3c@lists.infradead.org" <linux-i3c@lists.infradead.org>,
+	"alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+	"krzk+dt@kernel.org" <krzk+dt@kernel.org>,
+	"robh@kernel.org" <robh@kernel.org>,
+	"conor+dt@kernel.org" <conor+dt@kernel.org>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	Vikash Bansal <vikash.bansal@nxp.com>,
+	Priyanka Jain <priyanka.jain@nxp.com>,
+	Shashank Rebbapragada <shashank.rebbapragada@nxp.com>
+Subject: Re: [EXT] Re: [PATCH v2 1/2] dt-bindings: i3c: Add NXP P3H2x4x
+ i3c-hub support
+Message-ID: <aC9xFMKG88OOH2xV@lizhi-Precision-Tower-5810>
+References: <20250508045711.2810207-1-aman.kumarpandey@nxp.com>
+ <17145d2f-5d07-4939-8381-74e27cde303c@kernel.org>
+ <GVXPR04MB9778335A5DFAB37CC8D011FC9997A@GVXPR04MB9778.eurprd04.prod.outlook.com>
+ <ef92c390-d136-46b4-8219-294c449e4092@kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ef92c390-d136-46b4-8219-294c449e4092@kernel.org>
+X-ClientProxiedBy: AM0PR02CA0035.eurprd02.prod.outlook.com
+ (2603:10a6:208:3e::48) To PAXPR04MB9642.eurprd04.prod.outlook.com
+ (2603:10a6:102:240::14)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|GV1PR04MB10197:EE_
+X-MS-Office365-Filtering-Correlation-Id: b53d907d-d765-458a-a5f0-08dd996102d8
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|366016|52116014|376014|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?cmNrWkyn9f0Lh8olF2y+HliTVrHkBhAkzwjQWSG3cuQfAg11xp4aSctQ3Azf?=
+ =?us-ascii?Q?Yx2Mn1i90qdiHzlxnFL7YuN3iAiGl+Q93jFpyvhbISgqIrEjR1AL2xRR0grc?=
+ =?us-ascii?Q?2oDTkau8l4ZcI+UiMQDYCoWtdFLMpIQEUKbSJKi9GRbA9uWrJs2EaSSPBWnI?=
+ =?us-ascii?Q?CU07HaVc7jEyNz9Pj4eMWodjnd6sJ+gpZw4tWOOTjz7VInZzvlya2yyYWNkq?=
+ =?us-ascii?Q?vN540a+wRd7Fl65rXTZaO03THYFhrO1ynNYyssBJjmTqrcJUjiHb9Jv+JUIu?=
+ =?us-ascii?Q?RJyeJQm+9d7IjwGcxB8keChv4dAOMva0LJAc+PMkHWU/uJ1nIJEiqYbzZ5ik?=
+ =?us-ascii?Q?4VRElAUMh8RQVU/3RAcHp/rsQDf4BCT1/zykQJq++a+tpCLlTH8IsR1l3UDZ?=
+ =?us-ascii?Q?uNjtuvwEhPUdCxHQM1pc/ZW93iOyIi5GQJnvbHXI0326jh0qbTz1+y/WgdVN?=
+ =?us-ascii?Q?NrZRdKLLea0yislXgYLXxHCZ0MB8itX5uMf6tvzMTOM+7Hav6vFxg4dQvD+K?=
+ =?us-ascii?Q?WN9WX8pPiGpI8MXhTF4Y+1cn4HycPtnRXcVmQEKzCFkOmm/dzzlPcwpkhweW?=
+ =?us-ascii?Q?zGRqeVkRc00jrF9KefGuvUpw+xjs7sdnNoYZ0afseCD+wgmDSk2XFcGdl/qM?=
+ =?us-ascii?Q?tGs3brRrxGGKMTCroRKQ0lhcMGJFENju7tr/mNjJb2ZjnoultsmFZtUK3p22?=
+ =?us-ascii?Q?E+Wkabs7DCt9dPWyHeQB6maqWlDwPTxbQyRxn7r+gdc4640MuSyLrY1XoxNx?=
+ =?us-ascii?Q?uivoPaIvmiFsrpqja3j9SAAzyg2B4dWCS7Yy60kwmewPj4zbuh2jBmwIk+pp?=
+ =?us-ascii?Q?V5j8r+ZjbH6yU1SlZdr9q7lAaHG2g4kdaavpZfz5gZMhGR2m+Eqn+MiVHCW+?=
+ =?us-ascii?Q?Eg3HE0aRKpD+wG4RUtbZw2RDVdDW2TI3AZdkfPDbqEtoPmYVVvFqhwlr9c9R?=
+ =?us-ascii?Q?fhAoa7jH309A4QQsPhvWhAjkABFy4EwecDnTrzx7lDE2k9jGSBWJSs9NGffi?=
+ =?us-ascii?Q?RaLRAG1hwXCfDHw74sWXwJXXujft4QzB9n8YvDGAeH1o2cV8T2Bah6gtM21p?=
+ =?us-ascii?Q?UTDMwca9ee3a/v+J7llErPbG6IWK4aCx+9zNrrTmCGVaUGZp/izo+QFufpDZ?=
+ =?us-ascii?Q?Io8fkDysTgMQu172PBy1VgSbJmdIVaZx/iCxq+yShzJcLf1yh2OYevfFojC1?=
+ =?us-ascii?Q?whgRVmv8WO5TFoPi/zEUsiN3XYpIrDmM98kCLVVqT3Lxkkl5RMaXIMB/zeOS?=
+ =?us-ascii?Q?hp24ofMAaz2EuxH/W93rMMP8MDKIjS9Vbqj/l5rdZVEP73l/NIuTZSD5IWEz?=
+ =?us-ascii?Q?KDA9R1/mHQrm8ExKSnFMWQRe33WZAYE0ZgKnKguvBZnn3DhGpcRyvNNKIv6T?=
+ =?us-ascii?Q?qiCcAYqTPI2zLWJmLyWFH52qWT1A+GUGwWxL6cC0X+qOlsAS39Q2VWjRmEHQ?=
+ =?us-ascii?Q?ryuQgjji/dUuO6nrOzAtYvUxJSl3g5S6vbfuzEbzJ5M/m2x7CY1DMQ=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(52116014)(376014)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?4AFadT9JgNQs/6aYCKxGZrqWhy1vcUs4OmzX80jeTguPGvMDAasn21Ef7hMT?=
+ =?us-ascii?Q?idy6rMenchsN6+fc5J7fjDmpkkR3R7lRkQlJ3aurPnQF5L9yTNFhNCNSIZ8Z?=
+ =?us-ascii?Q?wNYDRVd8jCFb/SbMsClUVDB2IgrhEnf8NopAUhwoRSyOy83t6EEK/d92fZR6?=
+ =?us-ascii?Q?fF2VI1hq4gMmotO9X2wnUrMFiEM/UekJhFWX2/++kMzfGY66xJdBsKcnpWE8?=
+ =?us-ascii?Q?IGVmyvFAcSfTR3imVwZ5PGz11hdOOHJ1cBJvt8BcGe9kgmxy1OF0EdJNIxmJ?=
+ =?us-ascii?Q?HFR8+CLD/OBxLgJY9iOt+S0OeysUwc/+CPBf7CNgg7OSr990OP9565YBZ6e4?=
+ =?us-ascii?Q?iL3ukQh4XZ9RYWIiyGRBhNTbL7b2Qox+4pUE+vBPHTuOyKD9lk3HamF4A7Eu?=
+ =?us-ascii?Q?B+KU2q/NiU7KHlQyFI+q/i3kAOTC97gYY3MDElnHOfQiSmd4C1GtuGBAeewQ?=
+ =?us-ascii?Q?o3/hzyxBaPmo5FmPNYn9iQPo4+NiGs+SiREF+MMKx0qXr3kFfUYf5Kww4ICP?=
+ =?us-ascii?Q?jgd0LyjAAVzwzEgnS4yQn3E5W7v4ikmvttNLGbqSQ2FQJp5HMLJdcF1tFo9S?=
+ =?us-ascii?Q?LfqDzbWjJ/1H6UgnxeJGVhfUd8jIAGVOgmt94nxSTgYP5x6iQ62XtdOt1PDl?=
+ =?us-ascii?Q?QDLKHh4g3eqPN0TFJykZgRQp+iZI9I5JF2AduFjrB+tFTEKBwBG01Zlx96KX?=
+ =?us-ascii?Q?OPBSoB+WXCrhAxtkN8l6odTSLVNjv7SEnOP7fxJnJwEj4FiIDjSU/T4do9uO?=
+ =?us-ascii?Q?lWz/zxQENuj5Gh3oi5Q4Uyiwj2Nb0Yxdw2ViqDHdR6etwBHOY9TmickJ/Sl5?=
+ =?us-ascii?Q?pOM/E8xVqKLpIlu7ysT8soO42uvtC7zj4Bll3qPLGCpNtJGGjKnHaXZ3RjF1?=
+ =?us-ascii?Q?Zqt2M7DEjZzZNdqk2ZJxg4HcFgv07cYFcIxuFXTQ8zn1j0ZZAkN7TudIK+2c?=
+ =?us-ascii?Q?ICHk+IdtihhTOBtQLdFBDN9yWHRmPOvVBcXv93ugH5GrWkqgEzOfX95inRle?=
+ =?us-ascii?Q?uT9CJ0SIWf1jSpmH8/yI7oGYyFEnkZ6s73WhTojxSzLudv5nuKfs9hHoC4Sb?=
+ =?us-ascii?Q?6slo7sJE/iq028p2JQawkwSgRtFrntdN7FzJT8gzIFTqdQJmeF8N0me0EjPv?=
+ =?us-ascii?Q?rQ/jemHan9jPWZDM8NLyIF/YouEYnBbBwXxwTFFkFTDWeFvtTpbtPgVLzsEW?=
+ =?us-ascii?Q?eeh1r7ztgTyfOn0Bw1H12blxvy6P+/8+Yni+c7FqxUQ4oVvnnG2scjGChmGB?=
+ =?us-ascii?Q?FJPnI2bowofdqgotD/rg1XvRroirnio8j7PLCb9oix+kXSBtpn/RxrwPrTye?=
+ =?us-ascii?Q?XHMT8/H5atpWBIq+DHUw2XgsNvFhbie5I3VLZk83e/7ZFJAyol9rgDp2iF10?=
+ =?us-ascii?Q?8UxromtRRpa6UkQHeAqNxCdQF1CvR5KKIm8cQF0+0D+VN1LdKZfTlk0+UEgP?=
+ =?us-ascii?Q?dWkuJjqLK89KInIGLo4UmIrK+hOsHKicJsbcymrK5VmVygOJHVQIbf9PtCyy?=
+ =?us-ascii?Q?tM18bsmknvihqIYdWtijtDhjXwHORKuNMxJuzq4eb14WocZfxzvOF+n7Mga1?=
+ =?us-ascii?Q?nHSj6NM0PtmtzWYfGk9k6pSBWgI3nWzLACcxRzCa?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b53d907d-d765-458a-a5f0-08dd996102d8
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 May 2025 18:46:49.6644
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: hh7G0pRxnLYpxcJ2XyEzQIj9zUvwITcbDwpt9PiK4AIBN/w2KfvOZ4zM66+rPOn+AHWO+PWzYVVk2QjdJxgJ9w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: GV1PR04MB10197
 
-Now that OF ahb support was added to the ath9k driver, we can use it to
-enable and use the SoC wireless found in these chipsets.
+On Wed, May 14, 2025 at 12:10:11PM +0200, Krzysztof Kozlowski wrote:
+> On 12/05/2025 13:45, Aman Kumar Pandey wrote:
+> >>>
+> >>> Signed-off-by: Aman Kumar Pandey <aman.kumarpandey@nxp.com>
+> >>> Signed-off-by: Vikash Bansal <vikash.bansal@nxp.com>
+> >>> ---
+> >>> V1 -> V2: Cleaned up coding style and addressed review comments
+> >>> ---
+> >>>  .../bindings/i3c/p3h2840-i3c-hub.yaml         | 332 ++++++++++++++++++
+> >>
+> >> Not much improved. I have doubts that you really looked at other bindings.
+> >>
+> >> Filename matching compatible.
+> >>
+> >>
+> >
+> > Thanks for reviewing the patch.
+> > There is no existing entry like this one. It is the first device tree entry for any i3c target device being added to Linux upstream.
+> > For I3C target device, compatible is not required as per i3c.yml. I am adding compatible for backward compatibility with i2c binding ( i3c target device have backward compatibility).
+> > Should I use compatible matching filename in this case ?
+>
+> Do you have compatible here? Yes, you have, so I do not get what is
+> unclear in my comment. Rename the binding to match the compatible, which
+> you have here.
+>
+>
+> >
+> >>>  MAINTAINERS                                   |   8 +
+> >>>  2 files changed, 340 insertions(+)
+> >
+> >
+> >>> +
+> >>> +properties:
+> >>> +  $nodename:
+> >>> +    pattern: "^hub@[@.*]+,[0-9a-f]+$"
+> >>
+> >> Drop
+> >>
+> >
+> > Sorry, did not understand your point. Could you please give some clarification ?
+>
+> Drop this nodename. Remove it.
+>
+> >
+> >>> +
+> >
+> >>> +
+> >>> +  cp0-ldo-enable:
+> >>> +    type: boolean
+> >>> +    description:
+> >>> +      Enables the on-die LDO for controller Port 0.
+> >>> +
+> >>> +  cp1-ldo-enable:
+> >>> +    type: boolean
+> >>> +    description:
+> >>> +      Enables the on-die LDO for controller Port 1.
+> >>> +
+> >>> +  tp0145-ldo-enable:
+> >>> +    type: boolean
+> >>> +    description:
+> >>> +      Enables the on-die LDO for target ports 0/1/4/5.
+> >>> +
+> >>> +  tp2367-ldo-enable:
+> >>> +    type: boolean
+> >>> +    description:
+> >>> +      Enables the on-die LDO for target ports 2/3/6/7.
+> >>> +
+> >>
+> >> NAK for all above properties.
+> >>
+> >
+> > These are not vender specific properties. all these properties are as per i3c hub specification.
+> >  What should I change for above properties ?
+>
+>
+> What do they represent? Regulators? Why would you add custom properties
+> for controlling regulators? Why would you enable LDOs for ports which
+> have nothing connected? Why would you not enable LDOs for ports which
+> have something there? Why these are not properties of the ports?
+>
 
-Signed-off-by: Rosen Penev <rosenp@gmail.com>
----
- arch/mips/boot/dts/qca/ar9132.dtsi                       | 9 +++++++++
- arch/mips/boot/dts/qca/ar9132_tl_wr1043nd_v1.dts         | 4 ++++
- arch/mips/boot/dts/qca/ar9331.dtsi                       | 9 +++++++++
- arch/mips/boot/dts/qca/ar9331_dpt_module.dts             | 4 ++++
- arch/mips/boot/dts/qca/ar9331_dragino_ms14.dts           | 4 ++++
- arch/mips/boot/dts/qca/ar9331_omega.dts                  | 4 ++++
- .../mips/boot/dts/qca/ar9331_openembed_som9331_board.dts | 4 ++++
- arch/mips/boot/dts/qca/ar9331_tl_mr3020.dts              | 4 ++++
- 8 files changed, 42 insertions(+)
+power supply cp[0,1] has two options: one from internal ldo, the other from the
+other regulator.
 
-diff --git a/arch/mips/boot/dts/qca/ar9132.dtsi b/arch/mips/boot/dts/qca/ar9132.dtsi
-index aa148d51ab68..27462dc97fc5 100644
---- a/arch/mips/boot/dts/qca/ar9132.dtsi
-+++ b/arch/mips/boot/dts/qca/ar9132.dtsi
-@@ -155,6 +155,15 @@ spi: spi@1f000000 {
- 			#address-cells = <1>;
- 			#size-cells = <0>;
- 		};
-+
-+		wmac: wifi@180c0000 {
-+			compatible = "qca,ar9130-wmac";
-+			reg = <0x180c0000 0x230000>;
-+
-+			interrupts = <2>;
-+
-+			status = "disabled";
-+		};
- 	};
- 
- 	usb_phy: usb-phy {
-diff --git a/arch/mips/boot/dts/qca/ar9132_tl_wr1043nd_v1.dts b/arch/mips/boot/dts/qca/ar9132_tl_wr1043nd_v1.dts
-index f894fe17816b..7df518fdc515 100644
---- a/arch/mips/boot/dts/qca/ar9132_tl_wr1043nd_v1.dts
-+++ b/arch/mips/boot/dts/qca/ar9132_tl_wr1043nd_v1.dts
-@@ -108,3 +108,7 @@ partition@2 {
- 		};
- 	};
- };
-+
-+&wmac {
-+	status = "okay";
-+};
-diff --git a/arch/mips/boot/dts/qca/ar9331.dtsi b/arch/mips/boot/dts/qca/ar9331.dtsi
-index 768ac0f869b1..bce4dcac3d54 100644
---- a/arch/mips/boot/dts/qca/ar9331.dtsi
-+++ b/arch/mips/boot/dts/qca/ar9331.dtsi
-@@ -285,6 +285,15 @@ spi: spi@1f000000 {
- 
- 			status = "disabled";
- 		};
-+
-+		wmac: wifi@18100000 {
-+			compatible = "qca,ar9330-wmac";
-+			reg = <0x18100000 0x20000>;
-+
-+			interrupts = <2>;
-+
-+			status = "disabled";
-+		};
- 	};
- 
- 	usb_phy: usb-phy {
-diff --git a/arch/mips/boot/dts/qca/ar9331_dpt_module.dts b/arch/mips/boot/dts/qca/ar9331_dpt_module.dts
-index c857cd22f7db..d855dfe118e6 100644
---- a/arch/mips/boot/dts/qca/ar9331_dpt_module.dts
-+++ b/arch/mips/boot/dts/qca/ar9331_dpt_module.dts
-@@ -97,3 +97,7 @@ &phy_port0 {
- &phy_port4 {
- 	status = "okay";
- };
-+
-+&wmac {
-+	status = "okay";
-+};
-diff --git a/arch/mips/boot/dts/qca/ar9331_dragino_ms14.dts b/arch/mips/boot/dts/qca/ar9331_dragino_ms14.dts
-index 7affa58d4fa6..679e793e9f55 100644
---- a/arch/mips/boot/dts/qca/ar9331_dragino_ms14.dts
-+++ b/arch/mips/boot/dts/qca/ar9331_dragino_ms14.dts
-@@ -98,3 +98,7 @@ spiflash: w25q128@0 {
- 		reg = <0>;
- 	};
- };
-+
-+&wmac {
-+	status = "okay";
-+};
-diff --git a/arch/mips/boot/dts/qca/ar9331_omega.dts b/arch/mips/boot/dts/qca/ar9331_omega.dts
-index 8904aa917a6e..093142bf3ed6 100644
---- a/arch/mips/boot/dts/qca/ar9331_omega.dts
-+++ b/arch/mips/boot/dts/qca/ar9331_omega.dts
-@@ -74,3 +74,7 @@ spiflash: w25q128@0 {
- 		reg = <0>;
- 	};
- };
-+
-+&wmac {
-+	status = "okay";
-+};
-diff --git a/arch/mips/boot/dts/qca/ar9331_openembed_som9331_board.dts b/arch/mips/boot/dts/qca/ar9331_openembed_som9331_board.dts
-index dc65ebd60bbc..22e05d9c283a 100644
---- a/arch/mips/boot/dts/qca/ar9331_openembed_som9331_board.dts
-+++ b/arch/mips/boot/dts/qca/ar9331_openembed_som9331_board.dts
-@@ -106,3 +106,7 @@ &phy_port2 {
- &phy_port4 {
- 	status = "okay";
- };
-+
-+&wmac {
-+	status = "okay";
-+};
-diff --git a/arch/mips/boot/dts/qca/ar9331_tl_mr3020.dts b/arch/mips/boot/dts/qca/ar9331_tl_mr3020.dts
-index 10b9759228b7..b740f1a91162 100644
---- a/arch/mips/boot/dts/qca/ar9331_tl_mr3020.dts
-+++ b/arch/mips/boot/dts/qca/ar9331_tl_mr3020.dts
-@@ -114,3 +114,7 @@ spiflash: s25sl032p@0 {
- 		reg = <0>;
- 	};
- };
-+
-+&wmac {
-+	status = "okay";
-+};
--- 
-2.49.0
+So I think it should be *-supply
 
+cp0-supply:
+  description: phandle to cp0 power supply.
+
+because internal ldo can provide difference voltage, I suggest export as
+standard regulator
+
+regulators:
+  properties:
+    cp0:
+      type: object
+      $ref: /schemas/regulator/regulator.yaml#
+      unevaluatedProperties: false
+
+Frank
+
+
+> So many questions.
+>
+>
+> Best regards,
+> Krzysztof
