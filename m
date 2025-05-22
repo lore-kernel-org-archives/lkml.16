@@ -1,184 +1,124 @@
-Received: from mta20.hihonor.com (mta20.hihonor.com [81.70.206.69])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0C1225B66D;
-	Thu, 22 May 2025 08:02:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=81.70.206.69
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E544A25E476;
+	Thu, 22 May 2025 08:02:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747900955; cv=none; b=XX1EByB1GBAW1zNqFrUK66Ax2JRYhV3SqOaZDVirOP+DoEGUAyDXaV8yBFxsGwXIf1dD/60JbyyjVjNZ1a5ZlUbberE6as11D4lzc1F0VMFwZlJaUpDpMGLjFHyxQaItXY32jCpZRvFIIqXZ8YbOSDQJfONzF6Y57cc67RHd2qs=
+	t=1747900968; cv=none; b=I0++evu3pwfh6lJADnMdzhKCNA5C4/j9hz++jc5XAfyNjTmuNvcQpxSjEKQIthzBdrJml4rADRdG0fs97WBQmGnJ6dYcAfjP/IAKqav6NmqtG3wWFHyRs2U6BPAf2gghA9SD9inpWbGAFiUJd0E22LnEf6mzlKLFGdMlQYLXACM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747900955; c=relaxed/simple;
-	bh=GXavc1lwcR7AO19G9lxohWKsBYSttfqSZ4V9wHo+K+Q=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=BZsecHHvH0M9g4ROTIuev5/khpFWumVcgSWuoNqQnkFk/vvraB69v7563yFkMpS8SEAzrZBVaZgskLz5b0S6MGCFtMWYb+I2HIxKv3YB9+nD0CNtcuLW+0+GXzK+cXlj5MLrvrqZj8cBBu0ZRSkB/Pe3BZRivHBH3rUVyXQccMo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=honor.com; spf=pass smtp.mailfrom=honor.com; arc=none smtp.client-ip=81.70.206.69
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=honor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=honor.com
-Received: from w003.hihonor.com (unknown [10.68.17.88])
-	by mta20.hihonor.com (SkyGuard) with ESMTPS id 4b310s5WNjzYlF61;
-	Thu, 22 May 2025 15:59:57 +0800 (CST)
-Received: from a002.hihonor.com (10.68.31.193) by w003.hihonor.com
- (10.68.17.88) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Thu, 22 May
- 2025 16:02:06 +0800
-Received: from a010.hihonor.com (10.68.16.52) by a002.hihonor.com
- (10.68.31.193) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Thu, 22 May
- 2025 16:02:06 +0800
-Received: from a010.hihonor.com ([fe80::7127:3946:32c7:6e]) by
- a010.hihonor.com ([fe80::7127:3946:32c7:6e%14]) with mapi id 15.02.1544.011;
- Thu, 22 May 2025 16:02:06 +0800
-From: wangtao <tao.wangtao@honor.com>
-To: =?utf-8?B?Q2hyaXN0aWFuIEvDtm5pZw==?= <christian.koenig@amd.com>, "T.J.
- Mercier" <tjmercier@google.com>
-CC: "sumit.semwal@linaro.org" <sumit.semwal@linaro.org>,
-	"benjamin.gaignard@collabora.com" <benjamin.gaignard@collabora.com>,
-	"Brian.Starkey@arm.com" <Brian.Starkey@arm.com>, "jstultz@google.com"
-	<jstultz@google.com>, "linux-media@vger.kernel.org"
-	<linux-media@vger.kernel.org>, "dri-devel@lists.freedesktop.org"
-	<dri-devel@lists.freedesktop.org>, "linaro-mm-sig@lists.linaro.org"
-	<linaro-mm-sig@lists.linaro.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "wangbintian(BintianWang)"
-	<bintian.wang@honor.com>, yipengxiang <yipengxiang@honor.com>, liulu 00013167
-	<liulu.liu@honor.com>, hanfeng 00012985 <feng.han@honor.com>,
-	"amir73il@gmail.com" <amir73il@gmail.com>
-Subject: RE: [PATCH 2/2] dmabuf/heaps: implement DMA_BUF_IOCTL_RW_FILE for
- system_heap
-Thread-Topic: [PATCH 2/2] dmabuf/heaps: implement DMA_BUF_IOCTL_RW_FILE for
- system_heap
-Thread-Index: AQHbw+qMldEo/aUx7kiLwLLmDDhXfrPP52GAgACTfSD//4oVgIAB7nTg//+OJQCAAiukIP//j3cAADMZG0D//5fGgIAAp/oA//s1a9D/9XOJ4IAWHEIA//9iivAAH1/SAP//V55A//8OowD//GU0UA==
-Date: Thu, 22 May 2025 08:02:06 +0000
-Message-ID: <068cca07bc5a4e68be5355c884843b8a@honor.com>
-References: <20250513092803.2096-1-tao.wangtao@honor.com>
- <fdc8f0a2-5b2f-4898-8090-0d7b888c15d8@amd.com>
- <5b68b2a50d48444b93d97f5d342f37c8@honor.com>
- <ef978301-6a63-451d-9ae6-171968b26a55@amd.com>
- <9f732ac8b90e4e819e0a6a5511ac3f6d@honor.com>
- <50092362-4644-4e47-9c63-fc82ba24e516@amd.com>
- <2755aae2f1674b239569bf1acad765dc@honor.com>
- <2487bad4-81d6-4ea2-96a7-a6ac741c9d9c@amd.com>
- <a3f57102bc6e4588bc7659485feadbc1@honor.com>
- <5c11b50c-2e36-4fd5-943c-086f55adffa8@amd.com>
- <CABdmKX30c_5N34FYMre6Qx5LLLWicsi_XdUdu0QtsOmQ=RcYxQ@mail.gmail.com>
- <375f6aac8c2f4b84814251c5025ae6eb@honor.com>
- <38aa6cf19ce245578264aaa9062aa6dd@honor.com>
- <CABdmKX0nAYDdgq-PHv0HxucfYQzvvTAJjVCo7nQ0UtjwcF02aQ@mail.gmail.com>
- <7198873a044143c7be12f727b469649b@honor.com>
- <fdd7a11b-140c-40bd-a1c1-334d69256b92@amd.com>
- <e61fcdbf71ba4f9dbfef2f521d1b2fc1@honor.com>
- <d786ff9f-9bf0-42e1-987f-f2091fd90279@amd.com>
-In-Reply-To: <d786ff9f-9bf0-42e1-987f-f2091fd90279@amd.com>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	s=arc-20240116; t=1747900968; c=relaxed/simple;
+	bh=oA0vm5pDkCgw+4gBq+C//APdjwOF+bXuymjsHbQI/Rs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=oCiTj1KsT5KAv5GQ8r5rppHd2weYbaz3dIDUx6NdZWbH2bNE+7Xkdy83wWlcrO4AambKw8cZRxnP+W+AtkpUoslKGxjMy0Hcaz14l3id+XR6Vz3Bz1SwSsOfMe2U1678zlXCeuthsjLdsL7qlkXTL+ED3NM6M1KqggHmpLFvo3Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4b313W4FN8z4f3lCf;
+	Thu, 22 May 2025 16:02:15 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.112])
+	by mail.maildlp.com (Postfix) with ESMTP id 2AF2A1A17CB;
+	Thu, 22 May 2025 16:02:42 +0800 (CST)
+Received: from [10.174.176.88] (unknown [10.174.176.88])
+	by APP1 (Coremail) with SMTP id cCh0CgCH7Hwg2i5o5m3JMw--.13902S3;
+	Thu, 22 May 2025 16:02:42 +0800 (CST)
+Message-ID: <8822d84d-eedc-4b3b-a6c0-4ccef4c0cecc@huaweicloud.com>
+Date: Thu, 22 May 2025 16:02:39 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] fs: Rename the parameter of mnt_get_write_access()
+To: Amir Goldstein <amir73il@gmail.com>, Zizhi Wo <wozizhi@huaweicloud.com>
+Cc: viro@zeniv.linux.org.uk, brauner@kernel.org, jack@suse.cz,
+ linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+ yangerkun@huawei.com
+References: <20250516032147.3350598-1-wozizhi@huaweicloud.com>
+ <f6a9c6ef-1fd8-41d2-8f6a-396b6b191f97@huaweicloud.com>
+ <CAOQ4uxiT=v9JKS39ii-em0XFNkWyskW_Ed3kxS5PE5Q2Rs+NMQ@mail.gmail.com>
+From: Zizhi Wo <wozizhi@huaweicloud.com>
+In-Reply-To: <CAOQ4uxiT=v9JKS39ii-em0XFNkWyskW_Ed3kxS5PE5Q2Rs+NMQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:cCh0CgCH7Hwg2i5o5m3JMw--.13902S3
+X-Coremail-Antispam: 1UD129KBjvJXoW7tF4DKrykJF1fAryxGrWkXrb_yoW8Cw1rpF
+	WFk3ZYkw4rJa1fAr1Iva12qFyYyryrXrW7JF15Gw1rAr98CryfKw10gF4Ygr18Wrs7uw4I
+	vF42qryDC3Z8Z3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUkm14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc7CjxVAaw2AFwI0_JF0_
+	Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxV
+	WUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI
+	7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r
+	1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI
+	42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfUYCJmUUUUU
+X-CM-SenderInfo: pzr2x6tkl6x35dzhxuhorxvhhfrp/
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogQ2hyaXN0aWFuIEvDtm5p
-ZyA8Y2hyaXN0aWFuLmtvZW5pZ0BhbWQuY29tPg0KPiBTZW50OiBXZWRuZXNkYXksIE1heSAyMSwg
-MjAyNSA3OjU3IFBNDQo+IFRvOiB3YW5ndGFvIDx0YW8ud2FuZ3Rhb0Bob25vci5jb20+OyBULkou
-IE1lcmNpZXINCj4gPHRqbWVyY2llckBnb29nbGUuY29tPg0KPiBDYzogc3VtaXQuc2Vtd2FsQGxp
-bmFyby5vcmc7IGJlbmphbWluLmdhaWduYXJkQGNvbGxhYm9yYS5jb207DQo+IEJyaWFuLlN0YXJr
-ZXlAYXJtLmNvbTsganN0dWx0ekBnb29nbGUuY29tOyBsaW51eC1tZWRpYUB2Z2VyLmtlcm5lbC5v
-cmc7DQo+IGRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmc7IGxpbmFyby1tbS1zaWdAbGlz
-dHMubGluYXJvLm9yZzsgbGludXgtDQo+IGtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IHdhbmdiaW50
-aWFuKEJpbnRpYW5XYW5nKQ0KPiA8YmludGlhbi53YW5nQGhvbm9yLmNvbT47IHlpcGVuZ3hpYW5n
-IDx5aXBlbmd4aWFuZ0Bob25vci5jb20+OyBsaXVsdQ0KPiAwMDAxMzE2NyA8bGl1bHUubGl1QGhv
-bm9yLmNvbT47IGhhbmZlbmcgMDAwMTI5ODUgPGZlbmcuaGFuQGhvbm9yLmNvbT47DQo+IGFtaXI3
-M2lsQGdtYWlsLmNvbQ0KPiBTdWJqZWN0OiBSZTogW1BBVENIIDIvMl0gZG1hYnVmL2hlYXBzOiBp
-bXBsZW1lbnQNCj4gRE1BX0JVRl9JT0NUTF9SV19GSUxFIGZvciBzeXN0ZW1faGVhcA0KPiANCj4g
-T24gNS8yMS8yNSAxMjoyNSwgd2FuZ3RhbyB3cm90ZToNCj4gPiBbd2FuZ3Rhb10gSSBwcmV2aW91
-c2x5IGV4cGxhaW5lZCB0aGF0DQo+ID4gcmVhZC9zZW5kZmlsZS9zcGxpY2UvY29weV9maWxlX3Jh
-bmdlDQo+ID4gc3lzY2FsbHMgY2FuJ3QgYWNoaWV2ZSBkbWFidWYgZGlyZWN0IElPIHplcm8tY29w
-eS4NCj4gDQo+IEFuZCB3aHkgY2FuJ3QgeW91IHdvcmsgb24gaW1wcm92aW5nIHRob3NlIHN5c2Nh
-bGxzIGluc3RlYWQgb2YgY3JlYXRpbmcgYSBuZXcNCj4gSU9DVEw/DQo+IA0KW3dhbmd0YW9dIEFz
-IEkgbWVudGlvbmVkIGluIHByZXZpb3VzIGVtYWlscywgdGhlc2Ugc3lzY2FsbHMgY2Fubm90DQph
-Y2hpZXZlIGRtYWJ1ZiB6ZXJvLWNvcHkgZHVlIHRvIHRlY2huaWNhbCBjb25zdHJhaW50cy4gQ291
-bGQgeW91DQpzcGVjaWZ5IHRoZSB0ZWNobmljYWwgcG9pbnRzLCBjb2RlLCBvciBwcmluY2lwbGVz
-IHRoYXQgbmVlZA0Kb3B0aW1pemF0aW9uPyANCg0KTGV0IG1lIGV4cGxhaW4gYWdhaW4gd2h5IHRo
-ZXNlIHN5c2NhbGxzIGNhbid0IHdvcms6DQoxLiByZWFkKCkgc3lzY2FsbA0KICAgLSBkbWFidWYg
-Zm9wcyBsYWNrcyByZWFkIGNhbGxiYWNrIGltcGxlbWVudGF0aW9uLiBFdmVuIGlmIGltcGxlbWVu
-dGVkLA0KICAgICBmaWxlX2ZkIGluZm8gY2Fubm90IGJlIHRyYW5zZmVycmVkDQogICAtIHJlYWQo
-ZmlsZV9mZCwgZG1hYnVmX3B0ciwgbGVuKSB3aXRoIHJlbWFwX3Bmbl9yYW5nZS1iYXNlZCBtbWFw
-DQogICAgIGNhbm5vdCBhY2Nlc3MgZG1hYnVmX2J1ZiBwYWdlcywgZm9yY2luZyBidWZmZXItbW9k
-ZSByZWFkcw0KDQoyLiBzZW5kZmlsZSgpIHN5c2NhbGwNCiAgIC0gUmVxdWlyZXMgQ1BVIGNvcHkg
-ZnJvbSBwYWdlIGNhY2hlIHRvIG1lbW9yeSBmaWxlKHRtcGZzL3NobWVtKToNCiAgICAgW0RJU0td
-IC0tRE1BLS0+IFtwYWdlIGNhY2hlXSAtLUNQVSBjb3B5LS0+IFtNRU1PUlkgZmlsZV0NCiAgIC0g
-Q1BVIG92ZXJoZWFkIChib3RoIGJ1ZmZlci9kaXJlY3QgbW9kZXMgaW52b2x2ZSBjb3BpZXMpOg0K
-ICAgICA1NS4wOCUgZG9fc2VuZGZpbGUNCiAgICB8LSA1NS4wOCUgZG9fc3BsaWNlX2RpcmVjdA0K
-ICAgIHwtfC0gNTUuMDglIHNwbGljZV9kaXJlY3RfdG9fYWN0b3INCiAgICB8LXwtfC0gMjIuNTEl
-IGNvcHlfc3BsaWNlX3JlYWQNCiAgICB8LXwtfC18LSAxNi41NyUgZjJmc19maWxlX3JlYWRfaXRl
-cg0KICAgIHwtfC18LXwtfC0gMTUuMTIlIF9faW9tYXBfZGlvX3J3DQogICAgfC18LXwtIDMyLjMz
-JSBkaXJlY3Rfc3BsaWNlX2FjdG9yDQogICAgfC18LXwtfC0gMzIuMTElIGl0ZXJfZmlsZV9zcGxp
-Y2Vfd3JpdGUNCiAgICB8LXwtfC18LXwtIDI4LjQyJSB2ZnNfaXRlcl93cml0ZQ0KICAgIHwtfC18
-LXwtfC18LSAyOC40MiUgZG9faXRlcl93cml0ZQ0KICAgIHwtfC18LXwtfC18LXwtIDI4LjM5JSBz
-aG1lbV9maWxlX3dyaXRlX2l0ZXINCiAgICB8LXwtfC18LXwtfC18LXwtIDI0LjYyJSBnZW5lcmlj
-X3BlcmZvcm1fd3JpdGUNCiAgICB8LXwtfC18LXwtfC18LXwtfC0gMTguNzUlIF9fcGlfbWVtbW92
-ZQ0KDQozLiBzcGxpY2UoKSByZXF1aXJlcyBvbmUgZW5kIHRvIGJlIGEgcGlwZSwgaW5jb21wYXRp
-YmxlIHdpdGggcmVndWxhciBmaWxlcyBvciBkbWFidWYuDQoNCjQuIGNvcHlfZmlsZV9yYW5nZSgp
-DQogICAtIEJsb2NrZWQgYnkgY3Jvc3MtRlMgcmVzdHJpY3Rpb25zIChBbWlyJ3MgY29tbWl0IDg2
-OGY5ZjJmOGUwMCkNCiAgIC0gRXZlbiB3aXRob3V0IHRoaXMgcmVzdHJpY3Rpb24sIEV2ZW4gd2l0
-aG91dCByZXN0cmljdGlvbnMsIGltcGxlbWVudGluZw0KICAgICB0aGUgY29weV9maWxlX3Jhbmdl
-IGNhbGxiYWNrIGluIGRtYWJ1ZiBmb3BzIHdvdWxkIG9ubHkgYWxsb3cgZG1hYnVmIHJlYWQNCgkg
-ZnJvbSByZWd1bGFyIGZpbGVzLiBUaGlzIGlzIGJlY2F1c2UgY29weV9maWxlX3JhbmdlIHJlbGll
-cyBvbg0KCSBmaWxlX291dC0+Zl9vcC0+Y29weV9maWxlX3JhbmdlLCB3aGljaCBjYW5ub3Qgc3Vw
-cG9ydCBkbWFidWYgd3JpdGUNCgkgb3BlcmF0aW9ucyB0byByZWd1bGFyIGZpbGVzLg0KDQpUZXN0
-IHJlc3VsdHMgY29uZmlybSB0aGVzZSBsaW1pdGF0aW9uczoNClQuSi4gTWVyY2llcidzIDFHIGZy
-b20gZXh0NCBvbiA2LjEyLjIwIHwgcmVhZC9zZW5kZmlsZSAobXMpIHcvIDMgPiBkcm9wX2NhY2hl
-cw0KLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tfC0tLS0tLS0tLS0tLS0tLS0tLS0NCnVkbWFidWYg
-YnVmZmVyIHJlYWQgICAgIHwgMTIxMA0KdWRtYWJ1ZiBkaXJlY3QgcmVhZCAgICAgfCA2NzENCnVk
-bWFidWYgYnVmZmVyIHNlbmRmaWxlIHwgMTA5Ng0KdWRtYWJ1ZiBkaXJlY3Qgc2VuZGZpbGUgfCAy
-MzQwDQoNCk15IDNHSHogQ1BVIHRlc3RzIChjYWNoZSBjbGVhcmVkKToNCk1ldGhvZCAgICAgICAg
-ICAgICAgICB8IGFsbG9jIHwgcmVhZCAgfCB2cy4gKCUpDQotLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KdWRtYWJ1ZiBidWZmZXIgcmVhZCAgIHwgMTM1ICAg
-fCA1NDYgICB8IDE4MCUNCnVkbWFidWYgZGlyZWN0IHJlYWQgICB8IDE1OSAgIHwgMzAwICAgfCA5
-OSUNCnVkbWFidWYgYnVmZmVyIHNlbmRmaWxlIHwgMTM0IHwgMzAzICAgfCAxMDAlDQp1ZG1hYnVm
-IGRpcmVjdCBzZW5kZmlsZSB8IDE0MSB8IDkxMiAgIHwgMzAxJQ0KZG1hYnVmIGJ1ZmZlciByZWFk
-ICAgIHwgMjIgICAgfCAzNjIgICB8IDExOSUNCm15IHBhdGNoIGRpcmVjdCByZWFkICB8IDI5ICAg
-IHwgMjY1ICAgfCA4NyUNCg0KTXkgMUdIeiBDUFUgdGVzdHMgKGNhY2hlIGNsZWFyZWQpOg0KTWV0
-aG9kICAgICAgICAgICAgICAgIHwgYWxsb2MgfCByZWFkICB8IHZzLiAoJSkNCi0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tDQp1ZG1hYnVmIGJ1ZmZlciByZWFk
-ICAgfCA1NTIgICB8IDIwNjcgIHwgMTk4JQ0KdWRtYWJ1ZiBkaXJlY3QgcmVhZCAgIHwgNTQwICAg
-fCA2MjcgICB8IDYwJQ0KdWRtYWJ1ZiBidWZmZXIgc2VuZGZpbGUgfCA0OTcgfCAxMDQ1ICB8IDEw
-MCUNCnVkbWFidWYgZGlyZWN0IHNlbmRmaWxlIHwgNTI3IHwgMjMzMCAgfCAyMjMlDQpkbWFidWYg
-YnVmZmVyIHJlYWQgICAgfCA0MCAgICB8IDExMTEgIHwgMTA2JQ0KcGF0Y2ggZGlyZWN0IHJlYWQg
-ICAgIHwgNDQgICAgfCAzMTAgICB8IDMwJQ0KDQpUZXN0IG9ic2VydmF0aW9ucyBhbGlnbiB3aXRo
-IGV4cGVjdGF0aW9uczoNCjEuIGRtYWJ1ZiBidWZmZXIgcmVhZCByZXF1aXJlcyBzbG93IENQVSBj
-b3BpZXMNCjIuIHVkbWFidWYgZGlyZWN0IHJlYWQgYWNoaWV2ZXMgemVyby1jb3B5IGJ1dCBoYXMg
-cGFnZSByZXRyaWV2YWwNCiAgIGxhdGVuY3kgZnJvbSB2YWRkcg0KMy4gdWRtYWJ1ZiBidWZmZXIg
-c2VuZGZpbGUgc3VmZmVycyBDUFUgY29weSBvdmVyaGVhZA0KNC4gdWRtYWJ1ZiBkaXJlY3Qgc2Vu
-ZGZpbGUgY29tYmluZXMgQ1BVIGNvcGllcyB3aXRoIGZyZXF1ZW50IERNQQ0KICAgb3BlcmF0aW9u
-cyBkdWUgdG8gc21hbGwgcGlwZSBidWZmZXJzDQo1LiBkbWFidWYgYnVmZmVyIHJlYWQgYWxzbyBy
-ZXF1aXJlcyBDUFUgY29waWVzDQo2LiBNeSBkaXJlY3QgcmVhZCBwYXRjaCBlbmFibGVzIHplcm8t
-Y29weSB3aXRoIGJldHRlciBwZXJmb3JtYW5jZQ0KICAgb24gbG93LXBvd2VyIENQVXMNCjcuIHVk
-bWFidWYgY3JlYXRpb24gdGltZSByZW1haW5zIHByb2JsZW1hdGljIChhcyB5b3XigJl2ZSBub3Rl
-ZCkuDQoNCj4gPiBNeSBmb2N1cyBpcyBlbmFibGluZyBkbWFidWYgZGlyZWN0IEkvTyBmb3IgW3Jl
-Z3VsYXIgZmlsZV0gPC0tRE1BLS0+DQo+ID4gW2RtYWJ1Zl0gemVyby1jb3B5Lg0KPiANCj4gWWVh
-aCBhbmQgdGhhdCBmb2N1cyBpcyB3cm9uZy4gWW91IG5lZWQgdG8gd29yayBvbiBhIGdlbmVyYWwg
-c29sdXRpb24gdG8gdGhlDQo+IGlzc3VlIGFuZCBub3Qgc3BlY2lmaWMgdG8geW91ciBwcm9ibGVt
-Lg0KPiANCj4gPiBBbnkgQVBJIGFjaGlldmluZyB0aGlzIHdvdWxkIHdvcmsuIEFyZSB0aGVyZSBv
-dGhlciB1QVBJcyB5b3UgdGhpbmsNCj4gPiBjb3VsZCBoZWxwPyBDb3VsZCB5b3UgcmVjb21tZW5k
-IGV4cGVydHMgd2hvIG1pZ2h0IG9mZmVyIHN1Z2dlc3Rpb25zPw0KPiANCj4gV2VsbCBvbmNlIG1v
-cmU6IEVpdGhlciB3b3JrIG9uIHNlbmRmaWxlIG9yIGNvcHlfZmlsZV9yYW5nZSBvciBldmVudHVh
-bGx5DQo+IHNwbGljZSB0byBtYWtlIGl0IHdoYXQgeW91IHdhbnQgdG8gZG8uDQo+IA0KPiBXaGVu
-IHRoYXQgaXMgZG9uZSB3ZSBjYW4gZGlzY3VzcyB3aXRoIHRoZSBWRlMgcGVvcGxlIGlmIHRoYXQg
-YXBwcm9hY2ggaXMNCj4gZmVhc2libGUuDQo+IA0KPiBCdXQganVzdCBieXBhc3NpbmcgdGhlIFZG
-UyByZXZpZXcgYnkgaW1wbGVtZW50aW5nIGEgRE1BLWJ1ZiBzcGVjaWZpYyBJT0NUTA0KPiBpcyBh
-IE5PLUdPLiBUaGF0IGlzIGNsZWFybHkgbm90IHNvbWV0aGluZyB5b3UgY2FuIGRvIGluIGFueSB3
-YXkuDQpbd2FuZ3Rhb10gVGhlIGlzc3VlIGlzIHRoYXQgb25seSBkbWFidWYgbGFja3MgRGlyZWN0
-IEkvTyB6ZXJvLWNvcHkgc3VwcG9ydC4gVG1wZnMvc2htZW0NCmFscmVhZHkgd29yayB3aXRoIERp
-cmVjdCBJL08gemVyby1jb3B5LiBBcyBleHBsYWluZWQsIGV4aXN0aW5nIHN5c2NhbGxzIG9yDQpn
-ZW5lcmljIG1ldGhvZHMgY2FuJ3QgZW5hYmxlIGRtYWJ1ZiBkaXJlY3QgSS9PIHplcm8tY29weSwg
-d2hpY2ggaXMgd2h5IEkNCnByb3Bvc2UgYWRkaW5nIGFuIElPQ1RMIGNvbW1hbmQuDQoNCkkgcmVz
-cGVjdCB5b3VyIHBlcnNwZWN0aXZlLiBDb3VsZCB5b3UgY2xhcmlmeSBzcGVjaWZpYyB0ZWNobmlj
-YWwgYXNwZWN0cywNCmNvZGUgcmVxdWlyZW1lbnRzLCBvciBpbXBsZW1lbnRhdGlvbiBwcmluY2lw
-bGVzIGZvciBtb2RpZnlpbmcgc2VuZGZpbGUoKQ0Kb3IgY29weV9maWxlX3JhbmdlKCk/IFRoaXMg
-d291bGQgaGVscCBhZHZhbmNlIG91ciBkaXNjdXNzaW9uLg0KDQpUaGFuayB5b3UgZm9yIGVuZ2Fn
-aW5nIGluIHRoaXMgZGlhbG9ndWUuDQoNCj4gDQo+IFJlZ2FyZHMsDQo+IENocmlzdGlhbi4NCg==
+
+
+在 2025/5/22 15:41, Amir Goldstein 写道:
+> On Thu, May 22, 2025 at 3:02 AM Zizhi Wo <wozizhi@huaweicloud.com> wrote:
+>>
+>> Hello!
+>>
+>> There are currently two possible approaches to this patch.
+>> The first is to directly change the declaration, which would be
+>> straightforward and involve minimal modifications.
+>>
+>> However, per Al Viro's suggestion — that "mnt for vfsmount, m for mount"
+>> is an informal convention. This is in line with what the current
+>> patch does, although I understand Jan Kara might feel that the scope of
+>> the changes is a bit large.
+>>
+>> I would appreciate any suggestions or guidance on how to proceed. So
+>> friendly ping...
+> 
+> Hi Zizhi,
+> 
+> I guess you are not familiar with kernel lingo so I will translate:
+> "...so I'd say go for it if there had been any change in the function
+> in question.  Same as with coding style, really...
+> 
+> It means that your change is correct, but maintainers are
+> not interested in taking "style only" changes because it
+> creates undesired git history noise called "churn".
+
+Thank you for your patient explanation! I'm indeed a newcomer to the
+Linux kernel. Now I understand what everyone means.
+
+> 
+> Should anyone be going to make logic changes in
+> mnt_get_write_access() in the future, the style change
+> can be applied along in the same patch.
+> 
+> One observation I have is -
+> If this was the only case that deviates from the standard
+> the change might have been justified.
+>>From a quick grep, I see that the reality in the code is very far
+> from this standard.
+
+Yes, I noticed that as well. However, for consistency with the later use
+of mnt_put_write_access(), I chose to go with the modification in this
+patch...
+
+Thanks,
+Zizhi Wo
+
+> 
+> FWIW, wholeheartedly I agree that the ambiguity of the type of
+> an 'mnt' arg is annoying, but IMO 'm' is not making that very clear.
+> To me, 'mount' arg is very clear when it appears in the code
+
+> 
+> Thanks,
+> Amir.
+> 
+
