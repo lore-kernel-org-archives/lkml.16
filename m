@@ -1,116 +1,175 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A621D944F;
-	Thu, 22 May 2025 17:17:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3207117ADF8;
+	Thu, 22 May 2025 17:18:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747934279; cv=none; b=WoOlHo0hoB0ydxGntUeXylLHYmHC5jtZEwE/6NYrVK17+YFG1q0LZKjC4fNh0YTgvEUHcm9K6D+l2crSePYn6KxROOyd7rLqPl+oiOq0+EomD+2zTKhvZ3SV+is7ohcfedO6veSf56Wflayu0UCiHh3bCTJ+88BHGczhiKziWmw=
+	t=1747934307; cv=none; b=mlSm6Svidhn2Qi/YWQdDI+deB4jlOx77YoxR9hZsuwkSljHCZinZXNKwYx77mwQMBkIQQPxpRn8i5327TMbn+lRFtn28A0VmadAwpuhUjY15Gucb4fMgFh5Gq+LzlGv/L1UoI9ISIr4nzYVD64yf/3LWb9YGhnPWh1RYf4HP4dA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747934279; c=relaxed/simple;
-	bh=zt7+l4oSZuD0/9FmyoQM5JpiKAJhKIgjL/L3nrauO30=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=GwtxqBF2OnY5tHPXIlMdcIADCnU/nOx/Y9i3oqxkjkZCTWPYbQAXl7MBQBUPS+15Q9/g4l1+ywImC7yf4UkGN2YzYgUYfgmGdhqcbg8xtcq0apqAbnvN36/f6dMQ5qoa7nvKSTpXAeXhmTTFJQ2zizaN0BIIRZVgwKsB9txIFT0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WcmhuwsH; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747934307; c=relaxed/simple;
+	bh=zoiPNzQG3XUrn235BOv7NIfR26hN61HtRaFbLnKy1Vc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kN3PJCvqZGeW6SPWxMhHbgjv/ATugTlVdKFl4f/XFarw7z4Fsg1ZNmBBgQybrd+WOeTAfJtWrn0TzferpwAVIIa91XVX8SoRBO73fWMbGnAk7uqfDxzNMqaj1tHrYzaX2zkE+xKrCgq2vjh2TlUEVFMuaLGR/1bkisc6wL5b5K4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=Qj42CTTA; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WcmhuwsH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE42FC4CEE4;
-	Thu, 22 May 2025 17:17:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747934279;
-	bh=zt7+l4oSZuD0/9FmyoQM5JpiKAJhKIgjL/L3nrauO30=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=WcmhuwsH+v34k/Mb7xq3B1A/GA8v8cea0e0pzwWPS7qTdcydrzxYM03u5sfH9edMn
-	 RwANKtFAmlRZQ1NmnRjLlMGqrCcpBYxNrfcIGo8Ofxon593uorq8EhP29v9lr2vrRC
-	 IZVVm5xfWLP9Us1raF693tWH8sGzc6XB+Mo8cSUicgh331lSowInY+jt67j1+fi51h
-	 w6OUim4hdydsjtdnNSIwEq/P+hQQCPf3IO8+2AETOrwxM9UrOaSnQpNk0R1SKzbthq
-	 KmcsLtX9RIKrBMFSCkvWbUw98p3F1L5XAMXGhfupduroYkw1DEg3ToEaFvxYWiwM9G
-	 GxsrYe+5kCe6A==
-From: Mark Brown <broonie@kernel.org>
-To: Vladimir Oltean <olteanv@gmail.com>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Matti Vaittinen <mazziesaccount@gmail.com>, 
- James Clark <james.clark@linaro.org>
-Cc: Conor Dooley <conor+dt@kernel.org>, Frank Li <Frank.Li@nxp.com>, 
- Chester Lin <chester62515@gmail.com>, Matthias Brugger <mbrugger@suse.com>, 
- Ghennadi Procopciuc <ghennadi.procopciuc@oss.nxp.com>, 
- NXP S32 Linux Team <s32@nxp.com>, Shawn Guo <shawnguo@kernel.org>, 
- Sascha Hauer <s.hauer@pengutronix.de>, 
- Pengutronix Kernel Team <kernel@pengutronix.de>, 
- Fabio Estevam <festevam@gmail.com>, Chao Fu <B44548@freescale.com>, 
- Xiubo Li <Li.Xiubo@freescale.com>, Lukasz Majewski <lukma@denx.de>, 
- linux-spi@vger.kernel.org, imx@lists.linux.dev, 
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, 
- Vladimir Oltean <vladimir.oltean@nxp.com>, 
- Dan Carpenter <dan.carpenter@linaro.org>, 
- Larisa Grigore <larisa.grigore@nxp.com>, 
- Xulin Sun <xulin.sun@windriver.com>, 
- Bogdan-Gabriel Roman <bogdan-gabriel.roman@nxp.com>, 
- Marius Trifu <marius.trifu@nxp.com>, 
- Ciprian Marian Costea <ciprianmarian.costea@nxp.com>, 
- Andra-Teodora Ilie <andra.ilie@nxp.com>, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
- Stoica Cosmin-Stefan <cosmin.stoica@nxp.com>, Dan Nica <dan.nica@nxp.com>, 
- Larisa Grigore <Larisa.Grigore@nxp.com>, 
- Stefan-Gabriel Mirea <stefan-gabriel.mirea@nxp.com>, 
- "Radu Pirea (NXP OSS)" <radu-nicolae.pirea@oss.nxp.com>
-In-Reply-To: <20250522-james-nxp-spi-v2-0-bea884630cfb@linaro.org>
-References: <20250522-james-nxp-spi-v2-0-bea884630cfb@linaro.org>
-Subject: Re: (subset) [PATCH v2 00/14] spi: spi-fsl-dspi: DSPI support for
- NXP S32G platforms
-Message-Id: <174793427263.150041.3711005972084134023.b4-ty@kernel.org>
-Date: Thu, 22 May 2025 18:17:52 +0100
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="Qj42CTTA"
+Received: from terminus.zytor.com (terminus.zytor.com [IPv6:2607:7c80:54:3:0:0:0:136])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 54MHHsud3082071
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+	Thu, 22 May 2025 10:17:58 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 54MHHsud3082071
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025042001; t=1747934278;
+	bh=OLqzFsjMhr8qRTsT8xIWPFDJF2Vi1TEdICQS1PuOJeI=;
+	h=From:To:Cc:Subject:Date:From;
+	b=Qj42CTTAr3kJj6rTFUWTp9BH7/b2b/DgOWxFGo82TMO34VvamZaW3ztazkQ8k4ebu
+	 qN4/P/G09vL3FKaDJ0WW7KsuViKKGfbcL+vtQ+daqDtkgnwf4IxUTYZbFgrdxFRv42
+	 Js3OIxM1GAxvqFah78Y9i/OQru/oNC7hLcICiDnY701mDbfJLaewx8oZCOlY8nBou3
+	 QpFLgSy+0jm/ckVMxjRwPAPjlrIYBPoMGtKUgUtZq3GSb7Fax9MpFQFHeNO4Mraabq
+	 2TwMcyg6tezTQdSAK8GqeGKXcZbtmgaSiZyVuCOCVCovUygG4z4ow2dYOD+TLVaQeQ
+	 VWM+ctFFhyfkw==
+From: "Xin Li (Intel)" <xin@zytor.com>
+To: linux-kernel@vger.kernel.org
+Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        peterz@infradead.org, andrew.cooper3@citrix.com,
+        stable@vger.kernel.org
+Subject: [PATCH v2 1/1] x86/fred/signal: Prevent single-step upon ERETU completion
+Date: Thu, 22 May 2025 10:17:54 -0700
+Message-ID: <20250522171754.3082061-1-xin@zytor.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.15-dev-c25d1
+Content-Transfer-Encoding: 8bit
 
-On Thu, 22 May 2025 15:51:29 +0100, James Clark wrote:
-> DT and driver changes for DSPI on S32G platforms. First 3 commits are
-> fixes for various edge cases which also apply to other platforms.
-> Remaining commits add new S32G registers and device settings, some S32G
-> specific fixes and then finally add the DT compatibles and binding docs.
-> 
-> Tested in both host and target mode on S32G-VNP-RDB3 by transferring to
-> an external device over spi1 using spidev_test.c
-> 
-> [...]
+From: Xin Li <xin@zytor.com>
 
-Applied to
+Clear the software event flag in the augmented SS to prevent infinite
+SIGTRAP handler loop if TF is used without an external debugger.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
+Following is a typical single-stepping flow for a user process:
 
-Thanks!
+1) The user process is prepared for single-stepping by setting
+   RFLAGS.TF = 1.
+2) When any instruction in user space completes, a #DB is triggered.
+3) The kernel handles the #DB and returns to user space, invoking the
+   SIGTRAP handler with RFLAGS.TF = 0.
+4) After the SIGTRAP handler finishes, the user process performs a
+   sigreturn syscall, restoring the original state, including
+   RFLAGS.TF = 1.
+5) Goto step 2.
 
-[01/14] spi: spi-fsl-dspi: restrict register range for regmap access
-        commit: 283ae0c65e9c592f4a1ba4f31917f5e766da7f31
-[02/14] spi: spi-fsl-dspi: Halt the module after a new message transfer
-        commit: 8a30a6d35a11ff5ccdede7d6740765685385a917
-[03/14] spi: spi-fsl-dspi: Reset SR flags before sending a new message
-        commit: 7aba292eb15389073c7f3bd7847e3862dfdf604d
+According to the FRED specification:
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
+A) Bit 17 in the augmented SS is designated as the software event
+   flag, which is set to 1 for FRED event delivery of SYSCALL,
+   SYSENTER, or INT n.
+B) If bit 17 of the augmented SS is 1 and ERETU would result in
+   RFLAGS.TF = 1, a single-step trap will be pending upon completion
+   of ERETU.
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+In step 4) above, the software event flag is set upon the sigreturn
+syscall, and its corresponding ERETU would restore RFLAGS.TF = 1.
+This combination causes a pending single-step trap upon completion of
+ERETU.  Therefore, another #DB is triggered before any user space
+instruction is executed, which leads to an infinite loop in which the
+SIGTRAP handler keeps being invoked on the same user space IP.
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+Suggested-by: H. Peter Anvin (Intel) <hpa@zytor.com>
+Signed-off-by: Xin Li (Intel) <xin@zytor.com>
+Cc: stable@vger.kernel.org
+---
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+Change in v2:
+*) Remove the check cpu_feature_enabled(X86_FEATURE_FRED), because
+   regs->fred_ss.swevent will always be 0 otherwise (H. Peter Anvin).
+---
+ arch/x86/include/asm/sighandling.h | 19 +++++++++++++++++++
+ arch/x86/kernel/signal_32.c        |  4 ++++
+ arch/x86/kernel/signal_64.c        |  4 ++++
+ 3 files changed, 27 insertions(+)
 
-Thanks,
-Mark
+diff --git a/arch/x86/include/asm/sighandling.h b/arch/x86/include/asm/sighandling.h
+index e770c4fc47f4..637f7705f0b2 100644
+--- a/arch/x86/include/asm/sighandling.h
++++ b/arch/x86/include/asm/sighandling.h
+@@ -24,4 +24,23 @@ int ia32_setup_rt_frame(struct ksignal *ksig, struct pt_regs *regs);
+ int x64_setup_rt_frame(struct ksignal *ksig, struct pt_regs *regs);
+ int x32_setup_rt_frame(struct ksignal *ksig, struct pt_regs *regs);
+ 
++/*
++ * To prevent infinite SIGTRAP handler loop if TF is used without an external
++ * debugger, clear the software event flag in the augmented SS, ensuring no
++ * single-step trap is pending upon ERETU completion.
++ *
++ * Note, this function should be called in sigreturn() before the original state
++ * is restored to make sure the TF is read from the entry frame.
++ */
++static __always_inline void prevent_single_step_upon_eretu(struct pt_regs *regs)
++{
++	/*
++	 * If the trap flag (TF) is set, i.e., the sigreturn() SYSCALL instruction
++	 * is being single-stepped, do not clear the software event flag in the
++	 * augmented SS, thus a debugger won't skip over the following instruction.
++	 */
++	if (IS_ENABLED(CONFIG_X86_FRED) && !(regs->flags & X86_EFLAGS_TF))
++		regs->fred_ss.swevent = 0;
++}
++
+ #endif /* _ASM_X86_SIGHANDLING_H */
+diff --git a/arch/x86/kernel/signal_32.c b/arch/x86/kernel/signal_32.c
+index 98123ff10506..42bbc42bd350 100644
+--- a/arch/x86/kernel/signal_32.c
++++ b/arch/x86/kernel/signal_32.c
+@@ -152,6 +152,8 @@ SYSCALL32_DEFINE0(sigreturn)
+ 	struct sigframe_ia32 __user *frame = (struct sigframe_ia32 __user *)(regs->sp-8);
+ 	sigset_t set;
+ 
++	prevent_single_step_upon_eretu(regs);
++
+ 	if (!access_ok(frame, sizeof(*frame)))
+ 		goto badframe;
+ 	if (__get_user(set.sig[0], &frame->sc.oldmask)
+@@ -175,6 +177,8 @@ SYSCALL32_DEFINE0(rt_sigreturn)
+ 	struct rt_sigframe_ia32 __user *frame;
+ 	sigset_t set;
+ 
++	prevent_single_step_upon_eretu(regs);
++
+ 	frame = (struct rt_sigframe_ia32 __user *)(regs->sp - 4);
+ 
+ 	if (!access_ok(frame, sizeof(*frame)))
+diff --git a/arch/x86/kernel/signal_64.c b/arch/x86/kernel/signal_64.c
+index ee9453891901..d483b585c6c6 100644
+--- a/arch/x86/kernel/signal_64.c
++++ b/arch/x86/kernel/signal_64.c
+@@ -250,6 +250,8 @@ SYSCALL_DEFINE0(rt_sigreturn)
+ 	sigset_t set;
+ 	unsigned long uc_flags;
+ 
++	prevent_single_step_upon_eretu(regs);
++
+ 	frame = (struct rt_sigframe __user *)(regs->sp - sizeof(long));
+ 	if (!access_ok(frame, sizeof(*frame)))
+ 		goto badframe;
+@@ -366,6 +368,8 @@ COMPAT_SYSCALL_DEFINE0(x32_rt_sigreturn)
+ 	sigset_t set;
+ 	unsigned long uc_flags;
+ 
++	prevent_single_step_upon_eretu(regs);
++
+ 	frame = (struct rt_sigframe_x32 __user *)(regs->sp - 8);
+ 
+ 	if (!access_ok(frame, sizeof(*frame)))
+
+base-commit: 6a7c3c2606105a41dde81002c0037420bc1ddf00
+-- 
+2.49.0
 
