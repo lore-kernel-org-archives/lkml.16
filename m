@@ -1,64 +1,66 @@
-Received: from mail-qv1-f50.google.com (mail-qv1-f50.google.com [209.85.219.50])
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59EEC221F0A;
-	Thu, 22 May 2025 11:15:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBC0A28A1F1
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 11:15:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747912537; cv=none; b=ZIx/BFlTaNaTe6VxkC58Rh+t0WUxJir2NzCRhxPsX5dbz4OWEN4wv/DhB6Xoj8QyjhKywsE6ct/rrdo1TdxeYOWel7VpMgx9d3og/6GAnfvMkPhnisHzQ1vcwoeOKsHnR/9NJkwTm3IJZQkHHbkbNaQHRACcGWUjRNskfbQmAKM=
+	t=1747912542; cv=none; b=JLyvisZgEXnGhW9z2hxKJ6bYURM3yeKur6ZwSmdri1j4WBnamWgkI8Ip7/8E3tsecKY27aiI580ImgrCUWDP8vHOFtdejKOZI6Q4L2it1OrbWvjm8FRL/PIdB1zlxaDITH/zCcK4g/L+Hjlx8soVdgp4xzZsigYpIEttBpA4EI4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747912537; c=relaxed/simple;
-	bh=ebDvpO1OwZKUNS75vF6+7bj47Ss2QdeMnQQ7n4rYyuc=;
+	s=arc-20240116; t=1747912542; c=relaxed/simple;
+	bh=qAZ3wReonIU7oPkaSE0XX2IT5YtSABsZ4iI3ywy0h1o=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=W4q1ZS/mScPT6QREQv6jnChH7sNJx7erW/kuWJk8KwsGZJC7pUyu7ipgEU6Sraiok6xRJ3I+uQJUzT9gl4SbSrQ619wcXkDONQqydTZVzek5ooZ7qYN/wr5HX6XWUYKWc5dS8rrT4vKVAttw3ppKJ3bWvD30xD+mp4jXm991jiA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=g2Kd1sci; arc=none smtp.client-ip=209.85.219.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 In-Reply-To:Content-Type; b=jvCxeGSjbO9zmaDvWZtcmKHrJKmLItbZp5iHXvVlnQgAb4VKV4P9wk9ymRp2hnROTqKceP78N0k8SCIT7W5xbeQ4CEHXvzDbXf7SGMr4CJ1UkbXcz3JmfsPKdz4a4ROKKBN0yRda7vPRAdpBKnOtIoAJyRJnGwPtP/X6VXqC5FU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=MidEdvCI; arc=none smtp.client-ip=209.85.208.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g2Kd1sci"
-Received: by mail-qv1-f50.google.com with SMTP id 6a1803df08f44-6f8c53aeedbso110985416d6.2;
-        Thu, 22 May 2025 04:15:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="MidEdvCI"
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-60119cd50b6so10299583a12.0
+        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 04:15:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747912535; x=1748517335; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ruiAoqc5x+2/FUk28JhfABxTDDi+jme412UvmRvsGUA=;
-        b=g2Kd1sciXmks+mgRV/pfWhQMQyqX5ND98UJ4L2cbKSudrJsW9xB/p2+VN8mnlv5Bws
-         ARJLbN9FWJm6l4PUpReg3DBhXD9CKpRW89JpPG2MCGuHGWNr04fBQQC0xBmHN7BvRvmK
-         9vYVKwqpO2OAzJAjXFwGrjxE1HYvCyF89M2ALkr7//+bSO+z4RD14KDa3POjkn9/aiPa
-         rpLJik8P1veV3lwD5bg5GcnEayIUpQChQxR45RFDYFD1t8BG3eXcZYVlQfTK00Sj3k8t
-         Jn5GZyUEh2xJQJfQgGuZuUsJIETHNIoLwvq9ropTeHb2FfnktQ+sXjZHetj0lKRYpgZ/
-         xHgg==
+        d=suse.com; s=google; t=1747912538; x=1748517338; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=2iFvK+w2n6OOD6jVQ8j6XjQKlm5YYL7eH9iLQ2jyUeg=;
+        b=MidEdvCI40CZbtpoMr5N+lh8an14mbQQ+Alr6N4ZBoWtiL2xxDUY93M1zGmkzKubtE
+         RJrYy32jYOh2+cYKxiHOwu37iELOhLamoO4k7/UBKSIDkeYNnPzq4kIS2Pw+BKrPhl6o
+         +T61z+OsgTzNEBN/9ddvOzXrD8+YBNsVyT31ZmREouqZsQqer2aQc2kuEVdHTTgWziEZ
+         6YMPKKMGNcOEkA4KwUlBhta4sC/sIOH7zhjvzRne7BuhbYLZAVk9stgNpsxdiFZ3wZOE
+         1JghF99AEksW/Fwt0LBoyPxolb00mW4aMK9I5cztcsMENSNXDRa+bFiP9MdehNi3DNNy
+         6Ywg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747912535; x=1748517335;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ruiAoqc5x+2/FUk28JhfABxTDDi+jme412UvmRvsGUA=;
-        b=qM4imJT5S6JuO7dpuIv3j7WGHao73sfqFAcwdbqnNwPnGLsrAv5CZgPHcnCaLA18/C
-         kiS+CwDpHpPK9JuLGkTdCOf136+/xYQKZivhhQY8tXClsIj9h4QJQZKg8XHmbp/MNl84
-         9xcyuru2F7fNidDSLEmjV1ne144PNSNHfrT2qdqYZA+Ar0lD+h8K39TtfVP8HT/wyzqi
-         j9vMIX9dvkZW97F4LzjT9gcTHWcLmKixRmcZDYEkqhEjzYDI6w+mzZIGyteEyE8LI4x/
-         cjvgX4rvb1nH4yOetKPeU+NYaT1WNZvYDWW62MCOOYzfjcWZcMtaWoGCD8wzCzePuE2M
-         cQkA==
-X-Forwarded-Encrypted: i=1; AJvYcCUJp+cWBpmXPrp5154f8QXInPNHgSZJsl803PGdInFInaAyKtTTAzQqIIMvwaZ5SoMyAi4EicAcZNQ=@vger.kernel.org, AJvYcCVWusVCOb2UxBz6BmR4f6dqwmgqzW0gpjZsBdwoq6zaFN7jJfon60PIAcrbKf3vKKeZFeUaN0t8Qe8=@vger.kernel.org, AJvYcCXizqsa20+tJCUYMM4Jv7QzFtk7rSjGsj7k9KIphKh2qbi8PU1iXXUKdJ0tGcyeHZl6KsyT13UYDdx686Cf@vger.kernel.org
-X-Gm-Message-State: AOJu0YxVD4FKl0FRQU5+biImGucqD9UX401eKqrGF8CDxKt6i+dmWOTc
-	LWmyENgXwzWEibaY3WlH2lgS8GtP5A+exV55xLXXcnRDTNj3fssECuHj
-X-Gm-Gg: ASbGncteLNwfMNg143NDDuEy//STbOI5zvPuYifsWncH1GuUVyzR8p5C4TgzuVKLz8B
-	8WU1PvUEdZ7OTxJH5zvb6kYp5e0Qnou9yg9PqGrgTKNmbVngEPYe4jeODx+VuKfnCpHFut8Zbc6
-	B0hLszFfn/wxk14Rq0y4AJil2u3WUjwxvt8oUq23jaXFVvCS9AV7JXUa/8Ew3v9ez6k9KLHraF4
-	0H4yA/EnzVDA5Yr+Zq6NBVXvxa0+4DDlBdWcVDAmpMeF211U/BcrOY7Q2MJVz1/nFw7WOA11aDM
-	DzuRYisDQLVJwZqXvC43tvRlvDb2Oc+NG97t5BfdP0Y9oO1tqQxzq2xFBOLleYE8Cr8=
-X-Google-Smtp-Source: AGHT+IETHQOvQBgH6nIedb4pwNDnjs6C8JqC3hD4bVE8Zvo1pWISsIt/wBo148kg00t9t5mrY1pdDA==
-X-Received: by 2002:a05:6214:20ec:b0:6f8:e52:ef81 with SMTP id 6a1803df08f44-6f8b2d2e23emr421101566d6.36.1747912535137;
-        Thu, 22 May 2025 04:15:35 -0700 (PDT)
-Received: from ?IPV6:2600:6c56:7d00:582f::64e? ([2600:6c56:7d00:582f::64e])
-        by smtp.googlemail.com with ESMTPSA id 6a1803df08f44-6f8b08ac4bcsm97291486d6.40.2025.05.22.04.15.34
+        d=1e100.net; s=20230601; t=1747912538; x=1748517338;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=2iFvK+w2n6OOD6jVQ8j6XjQKlm5YYL7eH9iLQ2jyUeg=;
+        b=RVT/9LrMVYF2Dxig7Isgcf0cbm6TohKFBuDFLDBM3aReh1obCTy/kJ1tkRovcZZTXE
+         4IUeTZtEw/Smju/ynzeBwJQkizFPJJPlPqu81yNIsesHi2s3XvbT8BFj4SFKBh804g15
+         qcBRVL3xE51IxB3CC3B2kT0aMFJCsVS2pKpVWE+YsHfHUxZn8GyEYPZdCz4+rkwmUki0
+         uO4AnrBrRGtChO5Od6zfjGBsMxtWjaHSfh1d/38fuwZklty9NmAXDplqvp5Dveff/nRE
+         O+I7q8jzqalklXFw70/7ZgBmoYtfj0vT/q4oxGN1+2Cs8DayJyJpoUI1jjwtoolaY7B5
+         3u2w==
+X-Forwarded-Encrypted: i=1; AJvYcCV5q/Z9UMhTnUTMlqysv0KkhOwSJG/BVKSu5yv6/gad77hYaWoZhzViOBs6isTcyKTRlvvFF2YazXGiA28=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxa0juQf1JGHI3v86isUUVXLmm6+Ea3JAwLAn3hV7wTVA7/+InC
+	whmm5qwGq0MbMrHuJmBrZlJzcS+rQYd9OQNG85oVXlKwMN/kAiRvJf08tDR3eqgrM5NREw2PerZ
+	XPaNB
+X-Gm-Gg: ASbGnctzmwsID6sbbA0vYXgzzuNZJjjJMpi1Sc07RHNyAd4+Ps8PeCA8XUsbfqUNEOk
+	PjrF4wmdnYQ56wyfGg8cNLyVnMfHo5KslNfSqDzhHX2trGga1F83ssFajmSPrh3K7IyQ5d2ZYvv
+	KRq7a+l3/TjBOjoLLZHLZyrw0iSATQZQgdmEFcjUS1L7F17VxSwsWYr5Ai0xTVomWbTOItdecF9
+	6Byxl28VNf5yAC5IATvwiXTPzqycw8pdiz9wTX0UHzwIsTpuSwh8DUUubM4EodibO7ge6S7qYUU
+	gJPChghesWq3bV1ScJFMrTC9StYg207dLaBXtS+VSd6D4AfVp7Wobm65
+X-Google-Smtp-Source: AGHT+IGSu62TjEUrRumrj32Y/mck1fCn/p0MjgxhUh16S+FHi1yAxCDPAy+DTuHCT2K5QNNiejfMpw==
+X-Received: by 2002:a05:6402:13d2:b0:601:fb61:a0dc with SMTP id 4fb4d7f45d1cf-601fb61a890mr11364156a12.4.1747912538060;
+        Thu, 22 May 2025 04:15:38 -0700 (PDT)
+Received: from [192.168.0.20] ([212.21.159.167])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6005ae39175sm10407692a12.69.2025.05.22.04.15.37
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 22 May 2025 04:15:34 -0700 (PDT)
-Message-ID: <8c9fc3d2-991d-4caa-8773-418bea0fdf21@gmail.com>
-Date: Thu, 22 May 2025 06:15:32 -0500
+        Thu, 22 May 2025 04:15:37 -0700 (PDT)
+Message-ID: <fdcf3b14-2a9b-4f47-a574-7716d9b38eb2@suse.com>
+Date: Thu, 22 May 2025 14:15:36 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,40 +68,69 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] cpufreq, docs: (userspace governor) add that actual freq
- is >= scaling_setspeed
-To: Shashank Balaji <shashank.mahadasyam@sony.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
- Viresh Kumar <viresh.kumar@linaro.org>, Jonathan Corbet <corbet@lwn.net>,
- linux-pm@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, Shinya Takumi <shinya.takumi@sony.com>
-References: <20250522-userspace-governor-doc-v1-1-c8a038e39084@sony.com>
- <15871c67-0d18-430f-935e-261b2cda855b@gmail.com>
- <aC7yeQvKVQ1No9EW@JPC00244420>
+Subject: Re: [PATCH v2 4/7] x86/its: Use switch/case to apply mitigation
+To: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, x86@kernel.org
+Cc: David Kaplan <david.kaplan@amd.com>, linux-kernel@vger.kernel.org,
+ "H. Peter Anvin" <hpa@zytor.com>
+References: <20250521-eibrs-fix-v2-0-70e2598e932c@linux.intel.com>
+ <20250521-eibrs-fix-v2-4-70e2598e932c@linux.intel.com>
+From: Nikolay Borisov <nik.borisov@suse.com>
 Content-Language: en-US
-From: Russell Haley <yumpusamongus@gmail.com>
-In-Reply-To: <aC7yeQvKVQ1No9EW@JPC00244420>
-Content-Type: text/plain; charset=UTF-8
+Autocrypt: addr=nik.borisov@suse.com; keydata=
+ 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
+In-Reply-To: <20250521-eibrs-fix-v2-4-70e2598e932c@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 
 
-On 5/22/25 4:46 AM, Shashank Balaji wrote:
-> Hi Russell,
+On 5/22/25 05:45, Pawan Gupta wrote:
+> Prepare to apply stuffing mitigation in its_apply_mitigation(). This is
+> currently only done via retbleed mitigation. Also using switch/case makes
+> it evident that mitigation mode like VMEXIT_ONLY doesn't need any special
+> handling.
 > 
-> If intel_pstate is left in "active" mode, then userspace can't use any
-> of the other governors. Moreover, intel_pstate's min and max frequencies
-> apply to all the cpus. Whereas, the userspace governor can be set on a
-> per-cpu basis.
+> Signed-off-by: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
 
-If setting frequencies on a per-CPU basis is how you discovered this,
-you may find it to be a source of more automagic. There are a lot of
-client processors that cannot (usefully) have different frequency
-targets for each CPU, because there is only one voltage regulator. In
-that case, slowing any CPU down would only harm its performance (and
-efficiency, because race-to-sleep). So, the global frequency target is
-taken as the maximum of the per-CPU targets.
-
-Cheers,
-Russell
-
+Reviewed-by: Nikolay Borisov <nik.borisov@suse.com>
