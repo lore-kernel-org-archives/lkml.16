@@ -1,107 +1,126 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0ADA517A2F3;
-	Thu, 22 May 2025 17:27:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02BDA191F89
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 17:27:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747934842; cv=none; b=MAgWx5I+Mdp25ZK1Q6q7GEMZSGZnsqV4Z83X5xyWfPYJ1iu5q939+eo08Lv7IPvMycGK56wwaeipKzmJ3iAC4niMX9UGbq17YR31TLXoyrBcpg8Qib0yWbV0qeWYrPB8+WEQQhsmNNXz9lXjDtE7bFG6whybsnudzzAFu8uMy+0=
+	t=1747934855; cv=none; b=LWnlla8iQW1ePx0MG7ovpfnvkdC17t92G07HFJkpx5FxsaFiJoIVQR4vSd/W2FZk0QErWZaJD6xZQtC4AuR7kso/RCE0P5tDf1B/4iClr2B9s7qvZGHGfJ+XUvDSniZlrolWPTjKENZLW7kIW+ghR1F4/hEqJaJzGgQltAYlLS8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747934842; c=relaxed/simple;
-	bh=5m+1dswdpMSCZHEkGiGlZuYL9sPQHZZiMkcUPBPJhxE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=koXPnh0HtvPa3uMT5I7YEONqPyuNTHbY09oFV/uc+xzsBJxf1bH0CMHd7tqDO7hd1c9onPfbjDuGTH/D4juYoCM32MSp27yk/nuPbziSwxaPaTpHx1FiOb32iM10p2YQirW5lvaOmHLJpsrnJpidRv+oEaRmp6iBuIJBxz8rPu4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=WPyHj2sa; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1747934855; c=relaxed/simple;
+	bh=yW9gsHpWkfMK1ZcNHbBKCRZKeOGiHGCk9YfoEUGeKqc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=VGrudbIvpFIr6N4CFv40xGvUwREzWxpUU8eAZ7ZKoak2G4DFonA0grDwNq6MV8XyTXp4WIQ6/abLfZApmQM9HK7vjL2a3HjYc4GxFTolhFkUnQtO6m/ZsK8oWGXeF9VrtEbUoL2dhccYhC9OTr2q2OJjjDLh4Zrr5x1Tf5cWX0s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UjY/is0t; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="WPyHj2sa"
-Received: from [192.168.7.202] ([71.202.166.45])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 54MHQqkR3086342
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Thu, 22 May 2025 10:26:53 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 54MHQqkR3086342
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025042001; t=1747934814;
-	bh=A+5nsgssQpSKaHKmYY2mOkTz8tks1M64J8VdfMIlj9k=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=WPyHj2sa0JjXbqK2SzXu3+JHgwsxLcIsMfyvFhve4yTFjWMiOXScxZIFVzCNCgAK4
-	 hUNBa/Vo7E0c/m1DIuj022yHk0R7+WXKz8+pTi8Ipmgs8kANu9TTSyAk6UBFIWgGLH
-	 qRzCNFCBDX9M1XEHAUZIWPCwbevV3GEWh0zEQJN8bVewnaaxSO/VFzF8Ac9/O3xGWm
-	 1vo1ZkQzYdJrdw7uvdRVPh6hd+3wTRcxXZbEIK11j+LpyUOyYv3Bm/h0lIzFhMkgHC
-	 KsINiEWRRBYdqEmoJam++cv/VGHGsyJSz8/KS3JN90Iu3b65jqx6VFAe+wAWQ36/kd
-	 15vdc4fzJ3SeA==
-Message-ID: <037c6541-a50b-445f-a82d-1cbcc94a3244@zytor.com>
-Date: Thu, 22 May 2025 10:26:52 -0700
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UjY/is0t"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-22e033a3a07so82136355ad.0
+        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 10:27:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747934852; x=1748539652; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=/ztGTHofDD0QlJWRuLcr8IoncE0qHTx6dcK54AezMcs=;
+        b=UjY/is0tjBjMxcHtTSywva4NxzkKOz6WQ0M0o9Qqw58rApXR8672XHZZW+3dWGCf1c
+         MqqCEIHx4/HhMKoW8vg8pSKgjf1wCshLCFlM8YmqOWeAZMlaaqUPiVMxT9o0ipmZqk+a
+         5IjIxA0xMU0I0K9f9WfvbfD8CeA2sa5E3OWnhRDNUFyzEvde6StiidB9BEiTJ4YWuIpf
+         fKOM1l2FiTPu3LDp91kWCH5pqf1Dc33/6U1ZI7SRvxCBsDIsyvo+r8/CQCuxqSo1exD3
+         /VGsJJxVwVB2gyg2l1IvA6wiU9dSn7I12L5NuBJgCxFITVbJpLzxSZPcxu2RAgB6+hkh
+         uZqw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747934852; x=1748539652;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=/ztGTHofDD0QlJWRuLcr8IoncE0qHTx6dcK54AezMcs=;
+        b=uayyySuIaQUu/8bvh/D5ZWpQ52Iqry9XjbJ0JeqUfSy5Stnraj3Ea2YS5nj64I5I4y
+         I7VvmKBE9jDci1Ruuc5+8/LGAeDAIX3cNKAjwKxfhBYijhYswmlTPHdNmqiZ86tOp1JB
+         psTv77j+fjQubzyxLCK4mGSaz4xgBzitLmOn91S7h78c78K/hkyu/hg4tgHH8xiBzRL+
+         64eeOK1p26EEgFzPMDkNxdcm6jNiNLAYDCFBdlIC8dTBAKOvoXITJ1UvCaoETdP0ezOH
+         44sI2hqJwNbQJyRQK1Ln/6+mvaWqdJ3S1YpE8McbOGRA3IZvEg9C+sWLIyXXunbH3tfa
+         1RhA==
+X-Forwarded-Encrypted: i=1; AJvYcCV74/3HqSse16A/umKvsEWhGCHC5SVELUCRb+ojAp6XxTH6Xt8zD5y85E4mMnq3P/BK60GiQvSamJ2dg+A=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzbU8YZsCwxB/C5R2MAktTymgOlYxD8W5ptCUU12VvEyak2nvC7
+	Hkyn5yMMHiIqp9TSZP9ZiCux/lw91zf5pHbnRwc4NJEf9jX/7wsmasYm
+X-Gm-Gg: ASbGnct5r7RM+KGLimzO62YSPjM1dFGnREijYcJJqA59TZNSq26i47dP19U0FLIqwR3
+	g/JpJF7hmrzGHJuA2+OyN8RbEmgzNZVYgMADLmhMmE9uU74lvuudnZyAbxNEgohOCsVpDIn1VCK
+	49e20+pI55F8N9tnCyS0qYzQRg48XJZpgpl0PhM8ngX9t+4o914i9CnHGW2V2q2Vgd5mMTKcA3b
+	8wcCO1N8A9SOvDPnZN/3pWjw8ZxHG2aj9O4f2T9GTVS+22rF4D504UkQDKDeL2hMbapANqx7C6e
+	a2nhmRwymykRgCsahNpNtPVLAhw8kBSGRA2xdyZa/jy50sr6JMBm68xKeyfz1Q==
+X-Google-Smtp-Source: AGHT+IG7bPR8dyYr5GWSAWbH798rbSA8VE+03g42gPIXsWNEbWya72hArENXMGWvl9e7aXzqPUj+WA==
+X-Received: by 2002:a17:902:f645:b0:223:4d7e:e52c with SMTP id d9443c01a7336-231d43d9a3amr401362305ad.5.1747934851951;
+        Thu, 22 May 2025 10:27:31 -0700 (PDT)
+Received: from localhost.localdomain ([119.8.44.69])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-231d4e97227sm110993875ad.109.2025.05.22.10.27.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 May 2025 10:27:31 -0700 (PDT)
+From: Han Gao <rabenda.cn@gmail.com>
+To: linux-riscv@lists.infradead.org,
+	Han Gao <rabenda.cn@gmail.com>
+Cc: Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Alexandre Ghiti <alex@ghiti.fr>,
+	Charlie Jenkins <charlie@rivosinc.com>,
+	Jesse Taube <jesse@rivosinc.com>,
+	Andy Chiu <andybnac@gmail.com>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] riscv: vector: fix xtheadvector save/restore
+Date: Fri, 23 May 2025 01:27:01 +0800
+Message-ID: <c221c98dc2369ea691e3eb664bf084dc909496f6.1747934680.git.rabenda.cn@gmail.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/1] x86/fred/signal: Prevent single-step upon ERETU
- completion
-To: Dave Hansen <dave.hansen@intel.com>, linux-kernel@vger.kernel.org
-Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        peterz@infradead.org, andrew.cooper3@citrix.com,
-        stable@vger.kernel.org
-References: <20250522171754.3082061-1-xin@zytor.com>
- <e4f1120b-0bff-4f01-8fe7-5e394a254020@intel.com>
-Content-Language: en-US
-From: Xin Li <xin@zytor.com>
-Autocrypt: addr=xin@zytor.com; keydata=
- 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
- l75w1xInsg==
-In-Reply-To: <e4f1120b-0bff-4f01-8fe7-5e394a254020@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 5/22/2025 10:22 AM, Dave Hansen wrote:
-> On 5/22/25 10:17, Xin Li (Intel) wrote:
->> Clear the software event flag in the augmented SS to prevent infinite
->> SIGTRAP handler loop if TF is used without an external debugger.
-> 
-> Do you have a test case for this? It seems like the kind of thing we'd
-> want in selftests/.
+Fix [1] save/restore vector register error
 
-Ah, good point!
+Link: https://lore.kernel.org/all/20241113-xtheadvector-v11-9-236c22791ef9@rivosinc.com/ [1]
 
-The issue was found during an internal LASS test, I will convert it to a
-selftest.
+Signed-off-by: Han Gao <rabenda.cn@gmail.com>
+---
+ arch/riscv/include/asm/vector.h | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-Thanks!
-     Xin
+diff --git a/arch/riscv/include/asm/vector.h b/arch/riscv/include/asm/vector.h
+index e8a83f55be2b..7df6355023a3 100644
+--- a/arch/riscv/include/asm/vector.h
++++ b/arch/riscv/include/asm/vector.h
+@@ -200,11 +200,11 @@ static inline void __riscv_v_vstate_save(struct __riscv_v_ext_state *save_to,
+ 			THEAD_VSETVLI_T4X0E8M8D1
+ 			THEAD_VSB_V_V0T0
+ 			"add		t0, t0, t4\n\t"
+-			THEAD_VSB_V_V0T0
++			THEAD_VSB_V_V8T0
+ 			"add		t0, t0, t4\n\t"
+-			THEAD_VSB_V_V0T0
++			THEAD_VSB_V_V16T0
+ 			"add		t0, t0, t4\n\t"
+-			THEAD_VSB_V_V0T0
++			THEAD_VSB_V_V24T0
+ 			: : "r" (datap) : "memory", "t0", "t4");
+ 	} else {
+ 		asm volatile (
+@@ -236,11 +236,11 @@ static inline void __riscv_v_vstate_restore(struct __riscv_v_ext_state *restore_
+ 			THEAD_VSETVLI_T4X0E8M8D1
+ 			THEAD_VLB_V_V0T0
+ 			"add		t0, t0, t4\n\t"
+-			THEAD_VLB_V_V0T0
++			THEAD_VLB_V_V8T0
+ 			"add		t0, t0, t4\n\t"
+-			THEAD_VLB_V_V0T0
++			THEAD_VLB_V_V16T0
+ 			"add		t0, t0, t4\n\t"
+-			THEAD_VLB_V_V0T0
++			THEAD_VLB_V_V24T0
+ 			: : "r" (datap) : "memory", "t0", "t4");
+ 	} else {
+ 		asm volatile (
+-- 
+2.47.2
+
