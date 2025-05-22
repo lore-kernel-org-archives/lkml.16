@@ -1,66 +1,33 @@
-Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 271F88634F
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 15:18:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D97741C4609;
+	Thu, 22 May 2025 15:18:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747927091; cv=none; b=OolqPq/Nb/rxCC9LgQhmw7POuCpEZqngbL53pt3exNHlB47LFDAakSNTf781bLrcJqVdIMuIbqCE2JRWkktgiYBR8bu8JAf6MExQSVsfwTfS7jeQN6k7Pl/aprBZ7xFiVsN2Tnd+lFfuXKrdAuk9hF1cpWzcDUUbqXMD0p0vPss=
+	t=1747927137; cv=none; b=R7fQshMVHuTlm2C8gjXTF5JzcTIbCV7l47Z3WboIi+MBmAj/DFJtZMIrNwQuw2ZrgbpW4kYRZ+YPl0eE5JdWjMNsXdL9Ivy/Ba2ZJps22qRhzVyw3pmbY3F08JWTjtObxAj1Ye0JyMck8f1lMbAWd5Irk48ZC4cShNLhnKpUwoQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747927091; c=relaxed/simple;
-	bh=n3WzFJZrJyJy3TRd5omO9YN7XI0Mkwu2gw8e8lrvv2Q=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tGoe0vwXceFZ8e/GCRLMIeA0gtRpENzTdNSu8LgknhHzDXbohSuWonMIeYzj/K3119f7t5qON5Z7WtYtHe42WdkFJxA/QC+JE71hz/5VG+5CXykKWh+sSPcwq3biKYyN6tW8wnNzr1lowDe2sh0OlibEdBNtwfpnupA11VrvG60=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=s+CKhy5C; arc=none smtp.client-ip=209.85.222.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1747927137; c=relaxed/simple;
+	bh=5L58+Tu2chRzAN5OWtY0WKHcRc5vFU8rORSgK4V0vcs=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=Lqhsf6Gsd3SDEQSTJdQpLNB1xY62BVpXqVoUJ6cee5uPjvjTEC6/yz8eyn6hwOIuN3RVqzwX6BWpLf+I8IT/ipoylVOapQzS0w1Wi+qE4gRjhrQ6AQnL0hdIDtwPGImlC0uceL9jmY1oO+iijjIL8hESjglak2V1q5jD8ZIw7i8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LqNDR519; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="s+CKhy5C"
-Received: by mail-qk1-f182.google.com with SMTP id af79cd13be357-7c54f67db99so928622685a.1
-        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 08:18:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1747927088; x=1748531888; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=wG8eMfbS1Z2h99L0XVTgKxECmu1kCXg6XXKVFHh4NHw=;
-        b=s+CKhy5CcIK902m8CfdzFw2LphNNt//rzxkIkEzjX00qD3UzrXMvFHfSM9cTeZzHNS
-         CXSPtmgUNojzXz5zNu5SoLq0L/v3OZ6wWcQXDFKF7QRvV/KFrcfRacXo65KbjyJeSwv/
-         7TPBuR4pgeJV80YMPdlCbU9fpafhMG+haVrPHofOPP/h8W+YsuQFnv2L8JhAjs6xfjkF
-         bt7YZDplaYc1Bkfl9N0bkpup8DgbDhj3QTS4MkAay6IYlCzbAoHNuPVL8seqXXoDAfoo
-         1HK0tgjWfk04m1DHI7b9GA170GWmxZ+j3/Mvfp7MxW90P6634pAe6MhrCvk+7VV06OeK
-         DKLA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747927088; x=1748531888;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=wG8eMfbS1Z2h99L0XVTgKxECmu1kCXg6XXKVFHh4NHw=;
-        b=nRE+e2HT2XZUUN2kEmhfAigqct8D2zAhm3hQuldLeoH+IGmzN0+pfSVt0SsA6n/wqY
-         BuKcLgdq3VmQDQMKJ8ELPZ4IC2b+KNL20zYcfRwac3rjAqwEaMQYNEidwIqX7X/4SQoB
-         GvEXnAGgojTEg9eDVatr1uUjQ0JKb692S10vuvAyeUJd6DZaBfzBkChROWd7jUa5XPRf
-         o3rP6bVXFF5emdmkqdJT7IIYfQA0c4cSXZWQ/2UmHOBcv6scRl3Zva1Iuvy1guSbafXb
-         NfW0HdhkOZwn7s/OCRyoPKfOj4TFg5yVnBE+ByqhKZkvC14XSssb2YER48qeexC4PJFi
-         1UvA==
-X-Forwarded-Encrypted: i=1; AJvYcCWEGcfBbqb5Ntvr2vgvu5p5LdhaXpzvQu3LxreD3DldoxyQEvz7vOqVaOqd4ywzFn3dYz0Zg9UFMwkPH4Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxDwbgTuWZ8hnmPoK0G2rhIipviw+Du+QNreLh8hlpOZlKF6F59
-	sE2AbUaO7ekfFCZ+agk5wPZbScyYOaIzCSzSkaqqt1FuyFZVmE9JMYbRwChIGRpHx90jyOz5Uri
-	3U6pm
-X-Gm-Gg: ASbGncuihaOpRG3VHlqVCUu2mk50liGSel6zFcw1JMvpkzWZNK+smC7BoaIynk2oFaq
-	BDEm1SXNzgFO/I67ocn31t0UmhtoqUu4xLrqgPxXAscPbMvyXJL7v/CSU+Lt9O31a4m7RArBIc/
-	eJVkxIidnVg/fBDbohtv1oNGheWamut4ivX9simu/v10FMosiXTLaNEYGxMY0Sgjdgd/JeiDEXo
-	zvySP7YAyAzOx/4UZF0plEspTP9gjyMH8/pvyY8nUcJeerNxGlQ4RQaq+CYVlOhDlRTqQ0xRXll
-	wbQ8fMX8y4MaL2na1TWUXh3krbO382XmNcDW7jfswXcTX9J241x29cDxrWwXRuzfOQ6rV+udIKT
-	k8dyrXvpaF0sGAxFs17aL7ReFzElu
-X-Google-Smtp-Source: AGHT+IG4cmOcmx7gmFRPhK4CoG7looRWEaWGa32WYscTOU9GGWS+L94+fsjsZe/U24v6RyYPVb5H1Q==
-X-Received: by 2002:a05:6871:781:b0:2da:87a2:f223 with SMTP id 586e51a60fabf-2e3c28935c4mr15226304fac.11.1747927077489;
-        Thu, 22 May 2025 08:17:57 -0700 (PDT)
-Received: from ?IPV6:2600:8803:e7e4:1d00:3407:53d5:68cd:400d? ([2600:8803:e7e4:1d00:3407:53d5:68cd:400d])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2e3c0b21e70sm3073148fac.41.2025.05.22.08.17.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 22 May 2025 08:17:57 -0700 (PDT)
-Message-ID: <a364f588-03aa-4fac-a35e-d1cf201e924f@baylibre.com>
-Date: Thu, 22 May 2025 10:17:56 -0500
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LqNDR519"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81EB0C4CEE4;
+	Thu, 22 May 2025 15:18:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747927136;
+	bh=5L58+Tu2chRzAN5OWtY0WKHcRc5vFU8rORSgK4V0vcs=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=LqNDR519/RLauVT/laSrjf8blh+FNPwiu3FNRYhStQ5YV7VbAur/V+c7zzTbBBL56
+	 HTulrb9RnEg1bxs2iRdKV+YylpgGTSvg8IIzwhHTQlsE/iHTX4BESB6rMaSgax1BFn
+	 gz4Dj/gMYEpaVWVHgtzzx21eYYirc6calMDZ8VydkwxpVuszPvDMUJuDI+5mPSnJtH
+	 MOajw4+kM9XfjvSwydQo5aYyOBXUGOdkuajxIlyomDE3d4KmIfQF7BrQyiEga+0waU
+	 3QI3Sgg7Qg2m7/VA0N4ZwREMbKSSZt4OfHMFmVGsE3CvTsHUgctW+mrlNE8F2ktW19
+	 DKIKqYB9CpQhg==
+Message-ID: <42a7222b-43be-490a-95ed-fb506c55fbcb@kernel.org>
+Date: Thu, 22 May 2025 17:18:50 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,65 +35,93 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/3] dt-bindings: pwm: adi,axi-pwmgen: fix clocks
-To: Krzysztof Kozlowski <krzk@kernel.org>,
- Michael Hennerich <michael.hennerich@analog.com>,
- =?UTF-8?Q?Nuno_S=C3=A1?= <nuno.sa@analog.com>,
- Trevor Gamblin <tgamblin@baylibre.com>,
- =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>
-Cc: linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250522-pwm-axi-pwmgen-add-external-clock-v2-0-086ea9e6ecf0@baylibre.com>
- <20250522-pwm-axi-pwmgen-add-external-clock-v2-2-086ea9e6ecf0@baylibre.com>
- <4ed39a7f-bfca-4095-98ea-56b3c183b8f1@kernel.org>
+Subject: Re: [PATCH 1/2] dt-bindings: regulator: mediatek: Add MT8196 vmm
+ controller
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: "Nancy.Lin" <nancy.lin@mediatek.com>,
+ Chun-Kuang Hu <chunkuang.hu@kernel.org>, Liam Girdwood
+ <lgirdwood@gmail.com>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Matthias Brugger <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: Mark Brown <broonie@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
+ Project_Global_Chrome_Upstream_Group@mediatek.com,
+ jason-jh.lin@mediatek.com, singo.chang@mediatek.com,
+ paul-pl.chen@mediatek.com
+References: <20250522150426.3418225-1-nancy.lin@mediatek.com>
+ <20250522150426.3418225-2-nancy.lin@mediatek.com>
+ <d21e1775-d5d4-4f58-865e-0cb33d14f371@kernel.org>
 Content-Language: en-US
-From: David Lechner <dlechner@baylibre.com>
-In-Reply-To: <4ed39a7f-bfca-4095-98ea-56b3c183b8f1@kernel.org>
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <d21e1775-d5d4-4f58-865e-0cb33d14f371@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 5/22/25 10:00 AM, Krzysztof Kozlowski wrote:
-> On 22/05/2025 16:49, David Lechner wrote:
->> Fix a shortcoming in the bindings that doesn't allow for a separate
->> external clock.
+On 22/05/2025 17:09, Krzysztof Kozlowski wrote:
+> On 22/05/2025 17:03, Nancy.Lin wrote:
+>> From: Nancy Lin <nancy.lin@mediatek.com>
 >>
->> The AXI PWMGEN IP block has a compile option ASYNC_CLK_EN that allows
->> the use of an external clock for the PWM output separate from the AXI
->> clock that runs the peripheral.
->>
->> This was missed in the original bindings and so users were writing dts
->> files where the one and only clock specified would be the external
->> clock, if there was one, incorrectly missing the separate AXI clock.
->>
->> The correct bindings are that the AXI clock is always required and the
->> external clock is optional (must be given only when HDL compile option
->> ASYNC_CLK_EN=1).
->>
->> Fixes: 1edf2c2a2841 ("dt-bindings: pwm: Add AXI PWM generator")
->> Signed-off-by: David Lechner <dlechner@baylibre.com>
->> ---
->>  Documentation/devicetree/bindings/pwm/adi,axi-pwmgen.yaml | 14 ++++++++++++--
->>  1 file changed, 12 insertions(+), 2 deletions(-)
+>> Add a device tree binding document for the MediaTek MT8196 VMM (Vcore
+>> for MultiMedia) regulator controller. The VMM controller acts as the
+>> main power supplier for multimedia power domains, such as those used
+>> by display, video encode and decode subsystems. It provides virtual
+>> regulators that serve as the power sources for various multimedia IPs,
 > 
-> Please test your patches. This does not pass build (binding_check). :/
+> Virtual regulators do not sound real, so feels like you want some sort
+> of power domains?
 > 
+> A nit, subject: drop second/last, redundant "bindings". The
+> "dt-bindings" prefix is already stating that these are bindings.
+> See also:
+> https://elixir.bootlin.com/linux/v6.7-rc8/source/Documentation/devicetree/bindings/submitting-patches.rst#L18
+Wrong keyword... Please fix the subject prefixes:
 
-Oh no, I knew I was forgetting something. :-(
+For bindings, the preferred subjects are explained here:
+https://www.kernel.org/doc/html/latest/devicetree/bindings/submitting-patches.html#i-for-patch-submitters
 
-Maybe time to see about building this into b4 prep --check so it won't
-be so easy to forget.
-
-The correct will be:
-
-
-  clock-names:
-    oneOf:
-      - const: axi
-      - items:
-          - const: axi
-          - const: ext
-
-
-
+Best regards,
+Krzysztof
