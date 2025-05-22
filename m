@@ -1,47 +1,47 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85B2813774D
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 00:56:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 012D6155A4D
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 00:56:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747875372; cv=none; b=aZgWp8Q6ZdMoiyB/DlyKmtroHp9XT0lk+9q78XAtc8sBcbusbw5pl/npdzyDmVJsB3B3OKU4vUK9P6zWATuo3vNi0ZRMuERb5bZy2ujTrZ5lFipq3reEMMGhc1ADMI9v8grwB2Yty2Dv/XmsBCGtDithSU0kLwfdLE8cDUIHxSc=
+	t=1747875376; cv=none; b=aNK04ADgrZrL8KKDqgVCl2Jp8+1xG/GrjyqMGMq6agRIg8Cxk7ro+3RV/2QoMiw1C0cFdDq0Bb7mS7XA14+AlSqqZkd3F+wb+ToKz4qWGafhgEAcYGxRChgZ9Visb9FEKtjjdncJo9eeiwaUA728XuGwFEJrbayHV+/4p7tn/4I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747875372; c=relaxed/simple;
-	bh=fGNP6SsyTt8OPgAbSjlCTnWQeNrQ/ijnj/9DTo/rvAQ=;
+	s=arc-20240116; t=1747875376; c=relaxed/simple;
+	bh=SBcTFOWblvTRZV0ciy3LajIn+btKaXHcFRkSjK2ep3Y=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=oq8EOwmYOauDWu6UFMq/irPAm851toYjAAUsDviZ//L0hKsx2XYZOeIe2+jzlqnl++EbwT/uKAW/MXrlGGFVl2CUWcQvaEuab08FCdPHcv2nNe0RDktrDcCCMv0kCdQ4HOgl640GIFcdCb22MEmIAeOupyQJFKQHdqV6jQ4gG+U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=M6F7b/gb; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version; b=CcLvcWtpjAXvz0e4g3/N6FxS+uE6/DVCwIc/r93cpB35rhcOKbzEJXBrk8IqCddW7V88Wj7uo8RZGc0kennTNDuy/6uZ6C4sV+6lvp9oSLd6T6jvJhi1yqiPrxC4b+tjsf/RhcY4f10j/dXKLNXOTEiqcLi+uud3TCk/T8koGLQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PDZMj1DJ; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="M6F7b/gb"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PDZMj1DJ"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747875369;
+	s=mimecast20190719; t=1747875374;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=PDNmaVDcWXodOwzMrApEksITYRc+Beiuyl2aSYUu6vk=;
-	b=M6F7b/gblTKY/yLR8yeoUUMGZlgE2Sg14iZxSc73EuyfjCtlSgOc68GUh+zqzKGXloWbFA
-	iVf+ZdXfEE0IA89XVkbnunF/FmknFbbrWa+WE6box7bZG0j8FdEDyfBBInTfzrt59rh/2W
-	55qkLG18cv6gvQOH/b84yazBILX83os=
-Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+	bh=RSF3Pw04XxAwlf8ujRRM/pIVlPZ9S+nu3dIi3wffJjI=;
+	b=PDZMj1DJhXWPKSHIMK5X67jLFRjvbvm7QUK5D0K7WH052CtARkOjOjDWpYdv1+khw7w1Dp
+	ghpfB8kb+qxFFe9ruq4mN5D8GwD9gyYcRc9DZuEfMR05sNn6jLkU+rYbc4z02nPVLu/RNK
+	glc3cgBzTapW4FZVZSCfCMb/Za6SRBc=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-682-gihpJDTIMmqmlJtti2DKPw-1; Wed,
- 21 May 2025 20:56:05 -0400
-X-MC-Unique: gihpJDTIMmqmlJtti2DKPw-1
-X-Mimecast-MFC-AGG-ID: gihpJDTIMmqmlJtti2DKPw_1747875364
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-396-YvDoV24LNX-atWdyhcQ15g-1; Wed,
+ 21 May 2025 20:56:08 -0400
+X-MC-Unique: YvDoV24LNX-atWdyhcQ15g-1
+X-Mimecast-MFC-AGG-ID: YvDoV24LNX-atWdyhcQ15g_1747875367
 Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 321A81955DAB;
-	Thu, 22 May 2025 00:56:04 +0000 (UTC)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 9E30C180098C;
+	Thu, 22 May 2025 00:56:06 +0000 (UTC)
 Received: from intellaptop.lan (unknown [10.22.80.5])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id C188A1956066;
-	Thu, 22 May 2025 00:56:01 +0000 (UTC)
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 765DA19560B7;
+	Thu, 22 May 2025 00:56:04 +0000 (UTC)
 From: Maxim Levitsky <mlevitsk@redhat.com>
 To: kvm@vger.kernel.org
 Cc: "H. Peter Anvin" <hpa@zytor.com>,
@@ -53,10 +53,11 @@ Cc: "H. Peter Anvin" <hpa@zytor.com>,
 	linux-kernel@vger.kernel.org,
 	x86@kernel.org,
 	Paolo Bonzini <pbonzini@redhat.com>,
-	Maxim Levitsky <mlevitsk@redhat.com>
-Subject: [PATCH v5 2/5] KVM: x86: Drop kvm_x86_ops.set_dr6() in favor of a new KVM_RUN flag
-Date: Wed, 21 May 2025 20:55:52 -0400
-Message-ID: <20250522005555.55705-3-mlevitsk@redhat.com>
+	Maxim Levitsky <mlevitsk@redhat.com>,
+	Chao Gao <chao.gao@intel.com>
+Subject: [PATCH v5 3/5] KVM: nVMX: check vmcs12->guest_ia32_debugctl value given by L2
+Date: Wed, 21 May 2025 20:55:53 -0400
+Message-ID: <20250522005555.55705-4-mlevitsk@redhat.com>
 In-Reply-To: <20250522005555.55705-1-mlevitsk@redhat.com>
 References: <20250522005555.55705-1-mlevitsk@redhat.com>
 Precedence: bulk
@@ -68,151 +69,56 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
-From: Sean Christopherson <seanjc@google.com>
+Check the vmcs12 guest_ia32_debugctl value before loading it, to avoid L2
+being able to load arbitrary values to hardware IA32_DEBUGCTL.
 
-Instruct vendor code to load the guest's DR6 into hardware via a new
-KVM_RUN flag, and remove kvm_x86_ops.set_dr6(), whose sole purpose was to
-load vcpu->arch.dr6 into hardware when DR6 can be read/written directly
-by the guest.
-
-Signed-off-by: Sean Christopherson <seanjc@google.com>
+Reviewed-by: Chao Gao <chao.gao@intel.com>
+Signed-off-by: Maxim Levitsky <mlevitsk@redhat.com>
 ---
- arch/x86/include/asm/kvm-x86-ops.h |  1 -
- arch/x86/include/asm/kvm_host.h    |  2 +-
- arch/x86/kvm/svm/svm.c             | 10 ++++++----
- arch/x86/kvm/vmx/main.c            |  9 ---------
- arch/x86/kvm/vmx/vmx.c             |  9 +++------
- arch/x86/kvm/x86.c                 |  2 +-
- 6 files changed, 11 insertions(+), 22 deletions(-)
+ arch/x86/kvm/vmx/nested.c | 3 ++-
+ arch/x86/kvm/vmx/vmx.c    | 2 +-
+ arch/x86/kvm/vmx/vmx.h    | 1 +
+ 3 files changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/include/asm/kvm-x86-ops.h b/arch/x86/include/asm/kvm-x86-ops.h
-index 79406bf07a1c..a2248817470c 100644
---- a/arch/x86/include/asm/kvm-x86-ops.h
-+++ b/arch/x86/include/asm/kvm-x86-ops.h
-@@ -49,7 +49,6 @@ KVM_X86_OP(set_idt)
- KVM_X86_OP(get_gdt)
- KVM_X86_OP(set_gdt)
- KVM_X86_OP(sync_dirty_debug_regs)
--KVM_X86_OP(set_dr6)
- KVM_X86_OP(set_dr7)
- KVM_X86_OP(cache_reg)
- KVM_X86_OP(get_rflags)
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index 72e7bb48e7ac..32ed568babcf 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -1673,6 +1673,7 @@ static inline u16 kvm_lapic_irq_dest_mode(bool dest_mode_logical)
+diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
+index e073e3008b16..00f2b762710c 100644
+--- a/arch/x86/kvm/vmx/nested.c
++++ b/arch/x86/kvm/vmx/nested.c
+@@ -3146,7 +3146,8 @@ static int nested_vmx_check_guest_state(struct kvm_vcpu *vcpu,
+ 		return -EINVAL;
  
- enum kvm_x86_run_flags {
- 	KVM_RUN_FORCE_IMMEDIATE_EXIT	= BIT(0),
-+	KVM_RUN_LOAD_GUEST_DR6		= BIT(1),
- };
+ 	if ((vmcs12->vm_entry_controls & VM_ENTRY_LOAD_DEBUG_CONTROLS) &&
+-	    CC(!kvm_dr7_valid(vmcs12->guest_dr7)))
++	    (CC(!kvm_dr7_valid(vmcs12->guest_dr7)) ||
++	     CC(vmcs12->guest_ia32_debugctl & ~vmx_get_supported_debugctl(vcpu, false))))
+ 		return -EINVAL;
  
- struct kvm_x86_ops {
-@@ -1725,7 +1726,6 @@ struct kvm_x86_ops {
- 	void (*get_gdt)(struct kvm_vcpu *vcpu, struct desc_ptr *dt);
- 	void (*set_gdt)(struct kvm_vcpu *vcpu, struct desc_ptr *dt);
- 	void (*sync_dirty_debug_regs)(struct kvm_vcpu *vcpu);
--	void (*set_dr6)(struct kvm_vcpu *vcpu, unsigned long value);
- 	void (*set_dr7)(struct kvm_vcpu *vcpu, unsigned long value);
- 	void (*cache_reg)(struct kvm_vcpu *vcpu, enum kvm_reg reg);
- 	unsigned long (*get_rflags)(struct kvm_vcpu *vcpu);
-diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-index c8b8a9947057..026b28051fff 100644
---- a/arch/x86/kvm/svm/svm.c
-+++ b/arch/x86/kvm/svm/svm.c
-@@ -4308,10 +4308,13 @@ static __no_kcsan fastpath_t svm_vcpu_run(struct kvm_vcpu *vcpu, u64 run_flags)
- 	svm_hv_update_vp_id(svm->vmcb, vcpu);
- 
- 	/*
--	 * Run with all-zero DR6 unless needed, so that we can get the exact cause
--	 * of a #DB.
-+	 * Run with all-zero DR6 unless the guest can write DR6 freely, so that
-+	 * KVM can get the exact cause of a #DB.  Note, loading guest DR6 from
-+	 * KVM's snapshot is only necessary when DR accesses won't exit.
- 	 */
--	if (likely(!(vcpu->arch.switch_db_regs & KVM_DEBUGREG_WONT_EXIT)))
-+	if (unlikely(run_flags & KVM_RUN_LOAD_GUEST_DR6))
-+		svm_set_dr6(vcpu, vcpu->arch.dr6);
-+	else if (likely(!(vcpu->arch.switch_db_regs & KVM_DEBUGREG_WONT_EXIT)))
- 		svm_set_dr6(vcpu, DR6_ACTIVE_LOW);
- 
- 	clgi();
-@@ -5119,7 +5122,6 @@ static struct kvm_x86_ops svm_x86_ops __initdata = {
- 	.set_idt = svm_set_idt,
- 	.get_gdt = svm_get_gdt,
- 	.set_gdt = svm_set_gdt,
--	.set_dr6 = svm_set_dr6,
- 	.set_dr7 = svm_set_dr7,
- 	.sync_dirty_debug_regs = svm_sync_dirty_debug_regs,
- 	.cache_reg = svm_cache_reg,
-diff --git a/arch/x86/kvm/vmx/main.c b/arch/x86/kvm/vmx/main.c
-index a8e80d66e77a..28f854055e2c 100644
---- a/arch/x86/kvm/vmx/main.c
-+++ b/arch/x86/kvm/vmx/main.c
-@@ -498,14 +498,6 @@ static void vt_set_gdt(struct kvm_vcpu *vcpu, struct desc_ptr *dt)
- 	vmx_set_gdt(vcpu, dt);
- }
- 
--static void vt_set_dr6(struct kvm_vcpu *vcpu, unsigned long val)
--{
--	if (is_td_vcpu(vcpu))
--		return;
--
--	vmx_set_dr6(vcpu, val);
--}
--
- static void vt_set_dr7(struct kvm_vcpu *vcpu, unsigned long val)
- {
- 	if (is_td_vcpu(vcpu))
-@@ -945,7 +937,6 @@ struct kvm_x86_ops vt_x86_ops __initdata = {
- 	.set_idt = vt_set_idt,
- 	.get_gdt = vt_get_gdt,
- 	.set_gdt = vt_set_gdt,
--	.set_dr6 = vt_set_dr6,
- 	.set_dr7 = vt_set_dr7,
- 	.sync_dirty_debug_regs = vt_sync_dirty_debug_regs,
- 	.cache_reg = vt_cache_reg,
+ 	if ((vmcs12->vm_entry_controls & VM_ENTRY_LOAD_IA32_PAT) &&
 diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 609563da270c..9953de0cb32a 100644
+index 9953de0cb32a..9046ee2e9a04 100644
 --- a/arch/x86/kvm/vmx/vmx.c
 +++ b/arch/x86/kvm/vmx/vmx.c
-@@ -5611,12 +5611,6 @@ void vmx_sync_dirty_debug_regs(struct kvm_vcpu *vcpu)
- 	set_debugreg(DR6_RESERVED, 6);
+@@ -2179,7 +2179,7 @@ static u64 nested_vmx_truncate_sysenter_addr(struct kvm_vcpu *vcpu,
+ 	return (unsigned long)data;
  }
  
--void vmx_set_dr6(struct kvm_vcpu *vcpu, unsigned long val)
--{
--	lockdep_assert_irqs_disabled();
--	set_debugreg(vcpu->arch.dr6, 6);
--}
--
- void vmx_set_dr7(struct kvm_vcpu *vcpu, unsigned long val)
+-static u64 vmx_get_supported_debugctl(struct kvm_vcpu *vcpu, bool host_initiated)
++u64 vmx_get_supported_debugctl(struct kvm_vcpu *vcpu, bool host_initiated)
  {
- 	vmcs_writel(GUEST_DR7, val);
-@@ -7371,6 +7365,9 @@ fastpath_t vmx_vcpu_run(struct kvm_vcpu *vcpu, u64 run_flags)
- 		vmcs_writel(GUEST_RIP, vcpu->arch.regs[VCPU_REGS_RIP]);
- 	vcpu->arch.regs_dirty = 0;
+ 	u64 debugctl = 0;
  
-+	if (run_flags & KVM_RUN_LOAD_GUEST_DR6)
-+		set_debugreg(vcpu->arch.dr6, 6);
-+
- 	/*
- 	 * Refresh vmcs.HOST_CR3 if necessary.  This must be done immediately
- 	 * prior to VM-Enter, as the kernel may load a new ASID (PCID) any time
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 45e8a9eb438a..38875a38be52 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -11019,7 +11019,7 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
- 		set_debugreg(vcpu->arch.eff_db[3], 3);
- 		/* When KVM_DEBUGREG_WONT_EXIT, dr6 is accessible in guest. */
- 		if (unlikely(vcpu->arch.switch_db_regs & KVM_DEBUGREG_WONT_EXIT))
--			kvm_x86_call(set_dr6)(vcpu, vcpu->arch.dr6);
-+			run_flags |= KVM_RUN_LOAD_GUEST_DR6;
- 	} else if (unlikely(hw_breakpoint_active())) {
- 		set_debugreg(0, 7);
- 	}
+diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
+index 6d1e40ecc024..eb924c2acfd0 100644
+--- a/arch/x86/kvm/vmx/vmx.h
++++ b/arch/x86/kvm/vmx/vmx.h
+@@ -414,6 +414,7 @@ static inline void vmx_set_intercept_for_msr(struct kvm_vcpu *vcpu, u32 msr,
+ }
+ 
+ void vmx_update_cpu_dirty_logging(struct kvm_vcpu *vcpu);
++u64 vmx_get_supported_debugctl(struct kvm_vcpu *vcpu, bool host_initiated);
+ 
+ /*
+  * Note, early Intel manuals have the write-low and read-high bitmap offsets
 -- 
 2.46.0
 
