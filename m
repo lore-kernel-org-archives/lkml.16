@@ -1,172 +1,172 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B4683FBA7
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 01:35:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9A8C2F3E;
+	Thu, 22 May 2025 01:37:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747877722; cv=none; b=ceVlM4w6kcwVoojdQiPKRjExchWgx3oiM4AlaiRzOQfP8i7Wg6ocAtPX6jORmKNGlRfBvMcOLA4OFvO4+8MHwp9xChTuYbBtZ2b8bIoximAWy+1S238ROWoFUaVZBacN4+NbMsZWeOBNC/8mj+ntYK+dQC+7PK8tpfDhPUzrHfs=
+	t=1747877828; cv=none; b=F1oJsqntpgLhZbMBhTI8EW1zmI9UHET0gaqGnF7cBmA3mzn/G4J5sOmEOHxLGWHIkq9Jhe0YKf/OLKUz+6MvYbZHCuwIMx+RTEvDqi2I8InMcCayWAZOOFOov79gcIsuM13/DP464I3sTWVjVOrRiX9wZIzmoBlxC7ZRxeenmRc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747877722; c=relaxed/simple;
-	bh=BHu2XS8Lf9dBTW7KUh/kM30+gqkNIrKSXMPHJWMCmHk=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=OsQqqNgxcCK8RL39H4BvlWKEKPJ9t/c6pqelXDOroQJglDmEgq72cA9LvvAcqnrUstjK/WRx91AjK4NrjsheD4W1kCpic9X/0sKMK+HHs+cD81jsyPodQPSPWSuA8+/3mEgkIvhDbripAKWMV3a/x2yjv+XSleLLgYYTczKdstg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=l5gzgfnA; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1747877828; c=relaxed/simple;
+	bh=il8bkfvjDGki95nEhszu8/+jTMJsPVEjXY92QWq+E2c=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Xd5Ct/jm1Z66hl+8zGLPGxPTyBYPHd6YxIQ0/1Yq29hGEHYEQxnDjB0qZMfn0bwajiekbUzyj45KRrExHFr+/7UkOcevvG5sweyY7jRHBAJvQrR2tbefMVYgU3xLTtfWcu8M9w3QFpcRbYbrw8IaW9ObWX9mQ94QmmSlyUSrsx8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=j9qKkD0E; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="l5gzgfnA"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54LIC0t6016660
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 01:35:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=qcppdkim1; bh=0H/cVOIUNpw
-	OrSLOFwCw7lBPYVeMWU0kmPUgQl1LAeQ=; b=l5gzgfnANzrKADxGGtEb8waxTgo
-	GysetOkI9QJ82PDIrqKKw2P5NgS2FYwdB2DP6uMk+DoYFZsDowkiF3wcBffg3mZi
-	jIedsCfAdOHhnuh5T7NIJJ977ZKJyDhFlWI3I2SdtEJF62KrllE2C+/V/PJIZmT9
-	xxVt0M+kfMKDaqGHCpskZvh8pVdji+1Hlkqj2Hsnmobtc3mkR/FlD/ycAQwG/mSZ
-	+2L4pDg7Dj8B1T1ULGE+oP9EAp3LUXyh3LsH3I2HaluMGpv7wW30jJ1xJ+LiPYof
-	mCDb2hlReqKySPvwhV2eo0KElPHDk2gyhiCZOzP4cb17tvU13vDejEBvCGg==
-Received: from mail-pg1-f197.google.com (mail-pg1-f197.google.com [209.85.215.197])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46rwf9vnj3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 01:35:18 +0000 (GMT)
-Received: by mail-pg1-f197.google.com with SMTP id 41be03b00d2f7-b240fdc9c20so7548124a12.3
-        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 18:35:18 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747877718; x=1748482518;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=0H/cVOIUNpwOrSLOFwCw7lBPYVeMWU0kmPUgQl1LAeQ=;
-        b=GPzD81CcCKRpRKxgcjf58mq/yQ7FRjHwWdftgkGDjvq4SSaAus1iqVfsels86TA7Ru
-         c9edbM4aRKhA9G2myJZ+elA+Z5KLRU/z3Scc9ZC+KnxO7514lv37iQgvoM0X8TVAF94K
-         BEX9PpwZjZkvXOuMI+RkWvEcB9jFQLc3QMh1cY9aGEqfa+fHxEsFYtgoNaswJ+qDVxbw
-         ShtSprlmSgUa+5Dit8vO5Wk+88AStLJR/PEPEVtSMo1VR0/yglrxgyhCQmEsS+M4rQLZ
-         OWBvII1dYoTDh+RGl3lEzf5zI/BVexgSJI/FsvPS38JKNCgXdtNRNxhq3ldEXNFApDlW
-         U+JQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXWLOCiJnSBFme6ruwnbaOaiH5DJrqZnbK0AXJ4DeeHFsrTbZmPhlKTZ/gcwXHL3yGZ8q0PSzNM2AoZOjM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzSpOCEqahhprebpILd1xyj0SmdtlJWfKeCNfrKpxiY5/Yuirnf
-	huQg1ZAey3OufVGQjaH+GvmgmB9x5mJTbMx6BtpSm5WgqyM3MwiUdlte7+ov95leaoSUV9WRUVM
-	NgM432JB8ujwCV3AmvRuncUgqfA13e5EEohWoJU1azMVooniwrGVTlXgDm7YZBlgw9wY=
-X-Gm-Gg: ASbGncs4rhdZ2F60EY2ZmmexMrWEs25rDGBPVMlM4Ym8OlOuQMPO8U0NbSF1cFI65ED
-	/3HYc0VeZiNJuEZbNwneHIcjELjPZO7vycMSgbUYkt2k/mIfANKI3C/yF8i0wKCpQOBYZzMjq+Q
-	7DGxmnhOXXyQ9/r6nGQROCK45quxMQ21DTXiiLwaBlKti8dvHz42nDkEVTCQJbMX+E3gezz7SxC
-	B3K8MEf8IcAC6a1A7Z8qnN42mwfo5EA9CiTXTBOqxdUlsoHUpblMDapuuUV0OoRBGXGKmNAo7Vk
-	EmHjse0DB8TsJqE3RQLdBvrbHX+3VpdWaE3/zhjMXJZdScXJpMD6XliPdZDKEIXtHl+GAQ8=
-X-Received: by 2002:a17:90b:48c3:b0:30e:8c5d:8e4 with SMTP id 98e67ed59e1d1-30e8c5d0945mr40642077a91.16.1747877717690;
-        Wed, 21 May 2025 18:35:17 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGbuUE9/ZskXFCWiI6dbO621KmEQBhp02PqxKIAGf7sPxeTpyZYhpy777m3MSdwOFa0Q247xg==
-X-Received: by 2002:a17:90b:48c3:b0:30e:8c5d:8e4 with SMTP id 98e67ed59e1d1-30e8c5d0945mr40642040a91.16.1747877717338;
-        Wed, 21 May 2025 18:35:17 -0700 (PDT)
-Received: from Z2-SFF-G9-MQ.ap.qualcomm.com (i-global052.qualcomm.com. [199.106.103.52])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30f365d45b2sm4341488a91.26.2025.05.21.18.35.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 May 2025 18:35:17 -0700 (PDT)
-From: Miaoqing Pan <miaoqing.pan@oss.qualcomm.com>
-To: jjohnson@kernel.org, johannes@sipsolutions.net, robh@kernel.org,
-        krzk+dt@kernel.org, conor+dt@kernel.org
-Cc: ath11k@lists.infradead.org, linux-wireless@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Miaoqing Pan <miaoqing.pan@oss.qualcomm.com>
-Subject: [PATCH ath-next 2/2] wifi: ath11k: support usercase-specific firmware overrides
-Date: Thu, 22 May 2025 09:34:44 +0800
-Message-Id: <20250522013444.1301330-3-miaoqing.pan@oss.qualcomm.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250522013444.1301330-1-miaoqing.pan@oss.qualcomm.com>
-References: <20250522013444.1301330-1-miaoqing.pan@oss.qualcomm.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="j9qKkD0E"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747877827; x=1779413827;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=il8bkfvjDGki95nEhszu8/+jTMJsPVEjXY92QWq+E2c=;
+  b=j9qKkD0ER66xklUP046L6dHQfR4INVuZRsaVPNOjGu+UvQSt+yi+Suhw
+   CvG9ptfw2rUt0BwpfgNKkgpqzqLGl8UpkeU6RlDfW3q34W3VmYPYOVNng
+   GOAE4okyFj5LWCXI3p3brKMyD6iSgzy4G9ljOszOUvzBOkeS9t97qF/IT
+   n+8RKCFVBhuKQDgTYPo+NYTbKwp7b4zGFOMSBztieZM15aGgd9YYpp4Jw
+   /UEfWibICIQ/HNMD/lnOs284TKvHTbWanzieb64Vr6EzzPXu4ucy1TK+y
+   dZYV/1hPy82z2TPPNkW8yRsk3LjxS1eYZ37j4/LjOhk5pyfoA3w2X4UCb
+   w==;
+X-CSE-ConnectionGUID: ZUTzSXpeTgaAA69GWi6Zrw==
+X-CSE-MsgGUID: Y3/PJWctQpaIb1QxOh8Yzg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11440"; a="60932147"
+X-IronPort-AV: E=Sophos;i="6.15,304,1739865600"; 
+   d="scan'208";a="60932147"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2025 18:37:06 -0700
+X-CSE-ConnectionGUID: hTO/8/4JRweAIlDGpCaZKw==
+X-CSE-MsgGUID: OndiVDn1RQyRZW1/vkilgg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,304,1739865600"; 
+   d="scan'208";a="171331916"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.245.128]) ([10.124.245.128])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2025 18:36:58 -0700
+Message-ID: <2e227e09-b8aa-4f94-abd3-8c31d46f7e3e@linux.intel.com>
+Date: Thu, 22 May 2025 09:36:55 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 14/38] KVM: x86/pmu: Introduce enable_mediated_pmu
+ global parameter
+To: Sean Christopherson <seanjc@google.com>
+Cc: Mingwei Zhang <mizhang@google.com>, Peter Zijlstra
+ <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>, Liang@google.com,
+ Kan <kan.liang@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ kvm@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ Yongwei Ma <yongwei.ma@intel.com>,
+ Xiong Zhang <xiong.y.zhang@linux.intel.com>,
+ Jim Mattson <jmattson@google.com>, Sandipan Das <sandipan.das@amd.com>,
+ Zide Chen <zide.chen@intel.com>, Eranian Stephane <eranian@google.com>,
+ Shukla Manali <Manali.Shukla@amd.com>,
+ Nikunj Dadhania <nikunj.dadhania@amd.com>
+References: <20250324173121.1275209-1-mizhang@google.com>
+ <20250324173121.1275209-15-mizhang@google.com> <aCUwvXPKD0ANKFb7@google.com>
+ <1d024d71-0b02-4481-a0d4-f1786313c1e7@linux.intel.com>
+ <aC4ezRH8msD6yUhC@google.com>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <aC4ezRH8msD6yUhC@google.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Authority-Analysis: v=2.4 cv=V9990fni c=1 sm=1 tr=0 ts=682e7f56 cx=c_pps
- a=rz3CxIlbcmazkYymdCej/Q==:117 a=b9+bayejhc3NMeqCNyeLQQ==:17
- a=dt9VzEwgFbYA:10 a=EUspDBNiAAAA:8 a=jX1nYg6MY8bSXAgjlsoA:9
- a=bFCP_H2QrGi7Okbo017w:22
-X-Proofpoint-ORIG-GUID: n1bRyU9zH6j4LAU3f6GdJaPzP_d78iec
-X-Proofpoint-GUID: n1bRyU9zH6j4LAU3f6GdJaPzP_d78iec
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIyMDAxMyBTYWx0ZWRfX0rHGlafCOM0Q
- cbCFcitGB2n2EOYnQ0cE2Nq8/GUG1lKqBp0Sv0tgqwBjl8HxpW1RTfVnp/8F3MfyvXGa+iTfuYb
- gFDb3XpGPgEjaRkAnlLPox4SbyzLol8vekmK6FNkoyYsgDxUiFiVbkUcZFkVn9KiyyQdxIk8yO5
- XQexDOf9b52CcThMVxxISN9os+pbmrJAB8JvPPaK15JdltUzpV8RghQcCznJMs2+l4A5nStwmFB
- 6zwLDcsQIQNtL29rd+UfeMtAC3rl3yFMuyPegZpO9Y92d8ioktyipssJXINTpLln9CxVohrREtJ
- WExTBKfw/CcYVYx850tXcjz3Wq33X087YIWlAgb0C53zXfhNS2jy40gSIPgAqwOMVtOhfwNSxwJ
- TNx64Hd23VJmSnlh4WUvH04A7a1J2aTE+5rkkHattm5zT1Oq71EH6a9AaNCLa9vqAJlwLI5P
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-22_01,2025-05-20_03,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- mlxlogscore=845 bulkscore=0 impostorscore=0 clxscore=1011 priorityscore=1501
- lowpriorityscore=0 mlxscore=0 spamscore=0 phishscore=0 suspectscore=0
- adultscore=0 malwarescore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
- definitions=main-2505220013
 
-Introduce 'firmware-name' property to allow end-users and/or integrators to
-decide which usecase-specific firmware to run on the WCN6855. This is
-necessary due to resource limitations such as memory capacity and CPU
-capability, or performance and power optimization for different application
-scenarios.
 
-Currently, there are two firmwares, both files can be executed
-interchangeably.
-For example:
+On 5/22/2025 2:43 AM, Sean Christopherson wrote:
+> On Thu, May 15, 2025, Dapeng Mi wrote:
+>> On 5/15/2025 8:09 AM, Sean Christopherson wrote:
+>>> On Mon, Mar 24, 2025, Mingwei Zhang wrote:
+>>>> +	return vcpu->kvm->arch.enable_pmu &&
+>>> This is superfluous, pmu->version should never be non-zero without the PMU being
+>>> enabled at the VM level.
+>> Strictly speaking, "arch.enable_pmu" and pmu->version doesn't indicates
+>> fully same thing.  "arch.enable_pmu" indicates whether PMU function is
+>> enabled in KVM, but the "pmu->version" comes from user space configuration.
+>> In theory user space could configure a "0"  PMU version just like
+>> pmu_counters_test does. Currently I'm not sure if the check for
+>> "pmu->version" can be removed, let me have a double check.
+> Gah, sorry, my comment was vague and confusing.  What I was trying to say is that
+> the vcpu->kvm->arch.enable_pmu check is superfluous and can be dropped.
 
-- ath11k/WCN6855/hw2.0/amss.bin,
-  ath11k/WCN6855/hw2.0/m3.bin
-  ath11k/WCN6855/hw2.0/board-2.bin
+Hmm, yes.  "pmu->version > 0" implies that arch.enable_pmu must be true
+(kvm_pmu_refresh() checks if arch.enable_pmu is true before setting
+pmu->verison).
 
-- ath11k/WCN6855/hw2.0/nfa765/amss.bin,
-  ath11k/WCN6855/hw2.0/nfa765/m3.bin
-  ath11k/WCN6855/hw2.0/board-2.bin
 
-The former is the default firmware, suitable for most WiFi 6 STA functions.
-The latter adds support for commercial-quality SAP and optimizes power
-consumption for IoT applications. And both use the same BDF/regdb data
-within the main board-2.bin.
+>
+>>>> +	kvm->arch.enable_pmu = enable_pmu && !enable_mediated_pmu;
+>>> So I tried to run a QEMU with this and it failed, because QEMU expected the PMU
+>>> to be enabled and tried to write to PMU MSRs.  I haven't dug through the QEMU
+>>> code, but I assume that QEMU rightly expects that passing in PMU in CPUID when
+>>> KVM_GET_SUPPORTED_CPUID says its supported will result in the VM having a PMU.
+>> As long as the module parameter "enable_mediated_pmu" is enabled, qemu
+>> needs below extra code to enable mediated vPMU, otherwise PMU is disabled
+>> in KVM.
+>>
+>> https://lore.kernel.org/all/20250324123712.34096-1-dapeng1.mi@linux.intel.com/
+>>
+>>> I.e. by trying to get cute with backwards compatibility, I think we broke backwards
+>>> compatiblity.  At this point, I'm leaning toward making the module param off-by-default,
+>>> but otherwise not messing with the behavior of kvm->arch.enable_pmu.  Not sure if
+>>> that has implications for KVM_PMU_CAP_DISABLE though.
+>> I'm not sure if it's a kind of break for backwards compatibility.  As long
+>> as "enable_mediated_pmu" is not enabled, the qemu doesn't need any changes,
+>> the legacy vPMU can still be enabled by old qemu version. But if user want
+>> to enable mediated vPMU, so they should use the new version qemu which has
+>> the capability to enable mediated vPMU, it sounds reasonable for me.
+> I agree it's reasonable to require a userspace update to take advantage of new
+> features, what I don't like is what happens if userspace _hasn't_ been updated.
+> I also don't love that forcing a userspace update in this case is more than a bit
+> contrived.  It's very doable to let existing userspace utilize the mediated PMU,
+> forcing KVM_CAP_PMU_CAPABILITY is essentially KVM punting a problem to userspace.
+>
+> And the complications with the mediated PMU don't really have anything to do with
+> the VMM, they're more about all the other tasks and daemons running on the system,
+> e.g. that might be using perf.
+>
+> Thinking more about this, the problem isn't so much that enabling mediated PMUs
+> by default is undesirable, it's that giving userspace a binary choise doesn't
+> provide enough flexibility.  E.g. for single-user QEMU-based use cases (including
+> my use of QEMU), requiring a new QEMU is painful and annoying, and so having an
+> on-by-default option would be nice.
+>
+> But for use cases that already utilize KVM_CAP_PMU_CAPABILITY, e.g. to explicitly
+> disable PMUs for a subset of VMs, on-by-default is very undesirable, e.g. would
+> require KVM to support KVM_PMU_CAP_DISABLE, and would generate unnecessary noise
+> and contention in perf.
+>
+> So, what if we simply make enable_mediated_pmu a tri-state of sorts?
+>
+>   0   == disabled
+>   > 0 == enabled for all VMs (no opt-in or opt-out supported)
+>   < 0 == enabled, but off by default (requires opt-in)
+>
+> Then use cases like my personal usage of QEMU can run with enable_mediated_pmu=1,
+> while use cases like Google Cloud can run with enable_mediated_pmu=-1, and everyone
+> is happy (hopefully), without too much added complexity in KVM.
 
-Tested-on: WCN6855 hw2.1 PCI WLAN.HSP.1.1-04479-QCAHSPSWPL_V1_V2_SILICONZ_IOE-1
+Hmm, I agree. a tri-state "enable_mediated_pmu" is much flexible, but we
+need to a good document to describe it, maybe like this.
 
-Signed-off-by: Miaoqing Pan <miaoqing.pan@oss.qualcomm.com>
----
- drivers/net/wireless/ath/ath11k/core.h | 13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
+enable_mediated_pmu
 
-diff --git a/drivers/net/wireless/ath/ath11k/core.h b/drivers/net/wireless/ath/ath11k/core.h
-index 339d4fca1ed5..67b3b6d898fa 100644
---- a/drivers/net/wireless/ath/ath11k/core.h
-+++ b/drivers/net/wireless/ath/ath11k/core.h
-@@ -17,6 +17,7 @@
- #include <linux/average.h>
- #include <linux/firmware.h>
- #include <linux/suspend.h>
-+#include <linux/of.h>
- 
- #include "qmi.h"
- #include "htc.h"
-@@ -1320,8 +1321,16 @@ static inline void ath11k_core_create_firmware_path(struct ath11k_base *ab,
- 						    const char *filename,
- 						    void *buf, size_t buf_len)
- {
--	snprintf(buf, buf_len, "%s/%s/%s", ATH11K_FW_DIR,
--		 ab->hw_params.fw.dir, filename);
-+	const char *fw_name = NULL;
-+
-+	of_property_read_string(ab->dev->of_node, "firmware-name", &fw_name);
-+
-+	if (fw_name && strncmp(filename, "board", 5))
-+		snprintf(buf, buf_len, "%s/%s/%s/%s", ATH11K_FW_DIR,
-+			 ab->hw_params.fw.dir, fw_name, filename);
-+	else
-+		snprintf(buf, buf_len, "%s/%s/%s", ATH11K_FW_DIR,
-+			 ab->hw_params.fw.dir, filename);
- }
- 
- static inline const char *ath11k_bus_str(enum ath11k_bus bus)
--- 
-2.34.1
+0       ==  globally disabled for all VMs
+
+> 0    ==  globally enabled for all VMs
+
+< 0    ==  VM-scoped disabled, need VMM explicitly enables by
+KVM_CAP_PMU_CAPABILITY ioctl.
+
+
 
