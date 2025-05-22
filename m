@@ -1,96 +1,123 @@
-Received: from mail-vk1-f179.google.com (mail-vk1-f179.google.com [209.85.221.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 622EB286895;
-	Thu, 22 May 2025 09:20:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 158F024E4C6;
+	Thu, 22 May 2025 09:20:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747905654; cv=none; b=ppL8wZYnJuHMznx2Q6AtkzMyalZ4Pwqbj8roxBpHDlSPILxH7mDo4GyvCtqpD1ukEev7Fxqi1bWxfoeXbXdryHRsx1odQu9PJsSbUvn3TzEDa0qfgel43GYsnhr0HBNO1/He4g/vQWFbGHGH3imHBYoEXZaiM8MzLUK2Nufs5No=
+	t=1747905660; cv=none; b=n/fC9lPfJTWaFLFoCsy0BUjWeYhfgZ7hrV8T6kPnXDN5m0pdWDvgzE/Za9HgkBETGODAai86QCBdeJdGgRagO6dq2cHfDPFz5rE1jR+0OKksk9nmtqGGFXkYSQywFBacpBEx2qldepjZ1r/ZC4cY262hGBBF4xr3LXO2QcCpv+A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747905654; c=relaxed/simple;
-	bh=8hjrQ4o99phj5n8LXNouI7NQKRxGtSxPnWReZhMKRWk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=OGJW8ceLUe7G69vYKTQmnvf/Sq5TBxwOq5sAPfwGt18rfcsSG6wy2adp8QxcokueNropgYzv53IrAnw5V48MMXMTkM1dBj8gVjS8FnYtUFgH6MHFRAsaNK1gceSRuD70pQYV7qltHwFD4q/vX40wo0eiZ2qjrjPdmPk5fCz4Vs4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vk1-f179.google.com with SMTP id 71dfb90a1353d-52e728960c3so1734556e0c.2;
-        Thu, 22 May 2025 02:20:52 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747905650; x=1748510450;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=T9FyqBtIcUriSr6/yzV0Dp4PFK+1KKR8JLNCAZ04quo=;
-        b=nweERMDJo8gLWRFQIaDt2RRwmrlRa2QBpE18kTwi71xWXs4mywo96j1aEvFuh/FZ/f
-         Pg98q7qSMjjhOgVbx8GOPdi2aDjGYIRvpMNLLTf79v2yv5Z3HVT8q+RLygacyv0vP1jE
-         SpDiLrOq9zqfFciUIlU+MIB1nHvSj8K3ChHZFoa4n534lQjY9qSXdCVUkUOAYrfZvA8u
-         8wWm/F42QHp6XL6f+bfLn6/AIP/qFOBNAmlnBdZ9BmwsxsbYhH2D9N8x3Egv/CAS5dO2
-         aAOMruyIfNBDBauxQH9xvXpkCYeuW/GqOnuzwJh2e0nba0s7ejf1a2Ak83P7J5CUk9Bg
-         OzCA==
-X-Forwarded-Encrypted: i=1; AJvYcCVDFYJ7NI+cwbB64SirQ1OEsjN/bkrT6o6OqmumBjxd+Ri83KyVS4zk+eQYNmyVKQ6kd3/6p9IBIcG9@vger.kernel.org, AJvYcCVMIGhbxCbkttt5PbwwxPK87MmEg1VQdYOAsw2iMpnKengv/sVfYv+tMvl5JVIbjGI9eP1NYM3hOcZXBk/+6o9jtzM=@vger.kernel.org, AJvYcCVSLV35EaWKLOUiRcREXyst5qw6tiLDEi/pEGmV3xxP4IhQvSAdG3wD8Y7wM1+nLCURQg++5+BYPRtnK1J2@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz9GT15Pcjbth4RtBuEO4rhtYbNrebCcNV2Tbw3ZT4NyZr3aENI
-	ciTC3d/qp9mSLubztycSoC+3uSdISSapWEpNs4JJ/j/B5UcJDx6lb/GUVW3ZQQ4D
-X-Gm-Gg: ASbGncsukrHip8oyufvmnH4gmp9RLR0HrsJNCSMVhqvrPI07Q1hoLBelpUjQ6SCxwBE
-	9gEVB+1S18BR51T6OKK5Kytr+6TLFUU7yxA7h/ahtf0xLzChtvmqkEPyDzhMPfUfUl6SOCFBbIL
-	K8XulM2d2KCblODoRwir/NxseXUHrIpGhyOFcMhX3SoiNlstmZlPNmIxvuniNf+6zu54FHcn/Sc
-	8iclS7Hp8AdXw3kOOnLkPmFG1jTFF8Z8H5kWDRONb0yWIWf/MGxVDt97fLnr9EyCoBrs3EVqVhF
-	Ab6q7ll+RnmVXWJTP3nrh48PvNga53/WMqMzn4wzqrVm5ZGQ24swFlePiobgq5zI/hbnVwAir04
-	YFg4/gpB9d58XIA==
-X-Google-Smtp-Source: AGHT+IHgxN4cXqvTw5PI54D6ZeCMIasqPA0qVj9E8911qaFnzm9YvOYGy52bYNjNlvs/iMBU69vYxw==
-X-Received: by 2002:a05:6122:3bd5:b0:520:5185:1c31 with SMTP id 71dfb90a1353d-52dba94ac39mr22402586e0c.9.1747905650132;
-        Thu, 22 May 2025 02:20:50 -0700 (PDT)
-Received: from mail-ua1-f54.google.com (mail-ua1-f54.google.com. [209.85.222.54])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-52dbab4e983sm11464661e0c.31.2025.05.22.02.20.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 22 May 2025 02:20:49 -0700 (PDT)
-Received: by mail-ua1-f54.google.com with SMTP id a1e0cc1a2514c-87beb9976e5so1217552241.3;
-        Thu, 22 May 2025 02:20:49 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWe31s86yzK+oLSvnWfJcQ/eB2NbZi+d1oQFJFNJtJVmshD6+MJKAQKs1UzWyI9f510WmVP84SGXrb50FuxxJ287HQ=@vger.kernel.org, AJvYcCWsTeS4DBOEhHZBLtq6A62L2b8T+jS3pZRZXXpmPnJ1vTDqhE6WKYgEgT1bd526TWY++TBQze6Yx/64ocin@vger.kernel.org, AJvYcCXgsgsF/WpGdD4QqZ1x8G9/4/VajwbLlrQz7OIOiJ0ihWgA9aNcc062wgRFC6yovdaHOeQrscV5l4wx@vger.kernel.org
-X-Received: by 2002:a05:6102:105c:b0:4e2:83c4:92a0 with SMTP id
- ada2fe7eead31-4e283c495b7mr11218776137.16.1747905649098; Thu, 22 May 2025
- 02:20:49 -0700 (PDT)
+	s=arc-20240116; t=1747905660; c=relaxed/simple;
+	bh=OHuTzozB28U0rVjjpAMS47dCePezCM3FiUHABLCIx34=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=OV/Au7otI604NYfAzzr50QkU8o0l6w77WXkCzUAtDGv3LLFuNTvoLwYrdz9nGWa3O8qvx+snHjQwlVc2Sl5IaCMjOjiS4xBA11UnDJmp74lmxxh3TKgLjHW5a5HZiXe9h8rZZnbXzc8sJEJqi9GWNk75NjnDLIw3zvd3L7D6uHE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Mtebbu5b; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Mtebbu5b"
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54M8J27M011346;
+	Thu, 22 May 2025 09:20:55 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	hFT9iB//ZHy0uI5WBf1CwIGoaJWxrUUBWcV/HfJXa3g=; b=Mtebbu5bMHzFlIJT
+	qomMl2XLov1kL3m4Q5dNdXyJFmkiA4Qr4eIuLBxt6qoPS2myYtvxCb/DS5fyNreU
+	43o8R+cteGU7YFdhL/iSXpSWCMX47AytydHAjKd4tTT9nDL8pjLwgXjYgky+oyrA
+	qQy8Ych5zAjbTQNmzvd1JO/8CuFIho1cCMG80FVxUtcd4Udi+zEQBhlwXN8YW3VU
+	I0L+Y/uzAZYt3GUXjTjuuPcG9r98caAml6G2vPCoVtGimTmJqU5I/6Q807HiTUlH
+	FX2qYRuZcG4SjpX8kfFRQje9sqNpgn6cEGxOivAQDiL7vD6Yo+28o1AgRCjUSmu0
+	3dw8VA==
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46rwfb5qey-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 22 May 2025 09:20:55 +0000 (GMT)
+Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
+	by NALASPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54M9KsXg014630
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 22 May 2025 09:20:54 GMT
+Received: from [10.152.207.135] (10.80.80.8) by nalasex01b.na.qualcomm.com
+ (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 22 May
+ 2025 02:20:52 -0700
+Message-ID: <d2fa7aba-b038-4d5b-877e-30362336016b@quicinc.com>
+Date: Thu, 22 May 2025 14:50:40 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250514101528.41663-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20250514101528.41663-10-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20250514101528.41663-10-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Thu, 22 May 2025 11:20:36 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdWaZaScRihVk5d7cAzFTh-730MwZf84MEdFFBFNzzhw1w@mail.gmail.com>
-X-Gm-Features: AX0GCFuTLnS3jBwXIku3alhVwmphmPKcurd-weN5o7EoVvqwjDFOcpVZOtoW8hk
-Message-ID: <CAMuHMdWaZaScRihVk5d7cAzFTh-730MwZf84MEdFFBFNzzhw1w@mail.gmail.com>
-Subject: Re: [PATCH 09/10] arm64: dts: renesas: r9a09g056: Add Mali-G31 GPU node
-To: Prabhakar <prabhakar.csengg@gmail.com>
-Cc: Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH wireless-next 1/3] wifi: cfg80211: Add utility API to get
+ radio index from channel
+To: Johannes Berg <johannes@sipsolutions.net>
+CC: <linux-wireless@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Vasanthakumar Thiagarajan <vasanthakumar.thiagarajan@oss.qualcomm.com>
+References: <20250514-mlo-dfs-acs-v1-0-74e42a5583c6@quicinc.com>
+ <20250514-mlo-dfs-acs-v1-1-74e42a5583c6@quicinc.com>
+ <37f00d636e1ffb68e383e0784b30e7e5cf48b4dd.camel@sipsolutions.net>
+Content-Language: en-US
+From: Raj Kumar Bhagat <quic_rajkbhag@quicinc.com>
+In-Reply-To: <37f00d636e1ffb68e383e0784b30e7e5cf48b4dd.camel@sipsolutions.net>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01b.na.qualcomm.com (10.47.209.197)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: yGvZ9AaIKHuMzu6FJlluQlh6WcBB8bJV
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIyMDA5MyBTYWx0ZWRfXzFuZ/NushvvK
+ So4H3dJOpg6RB8VS4mR3AViq6aAbSzHSXk6yBgoA5egduBHLDgQzqvxP5Mi3IQxatfN92aiTZI0
+ pwib43IUtC0sRSSdPrpyuNe7UnvxpL52Qkf52iibvhmTcDa/ljZgCkOi6aigu/0c2bdg4tI9YV+
+ w4yp1eRa+Dgt3SlwLIK2JYyxYJdJaqpACPNUGtuLSy9NCUJkceS8hqgNGzlnvmcup1LThR0+iPd
+ BgvPrwrYYVD83qReAh3UPsiN9r3uA9CeyFZJi/ujvtDZZygk/OPMfxqXYkJOgCw3SOOf14nIIGI
+ Z+89uw8nbMtz74OA7yEEb/gfGqmpOBDSb9IXe+AivbtLr8UNgUuOodIjoZ45YUqc9bK63SRJQEC
+ sdjmZ1nTh/xCyZ1afwe0VIUVhqx01ZhqSAJ8h/81XNfgRZZ3m/S6C9RcpGv19AlpdQdiaWUC
+X-Proofpoint-GUID: yGvZ9AaIKHuMzu6FJlluQlh6WcBB8bJV
+X-Authority-Analysis: v=2.4 cv=dLCmmPZb c=1 sm=1 tr=0 ts=682eec77 cx=c_pps
+ a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10
+ a=j3GVlB5bJCIp35TESxEA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-22_04,2025-05-22_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ mlxscore=0 clxscore=1015 adultscore=0 bulkscore=0 phishscore=0 suspectscore=0
+ impostorscore=0 malwarescore=0 lowpriorityscore=0 mlxlogscore=999 spamscore=0
+ priorityscore=1501 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
+ definitions=main-2505220093
 
-On Wed, 14 May 2025 at 12:15, Prabhakar <prabhakar.csengg@gmail.com> wrote:
-> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->
-> Add the device tree node for the ARM Mali-G31 GPU found on selected
-> variants of the Renesas RZ/V2N (R9A09G056) SoC.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+On 5/16/2025 1:21 PM, Johannes Berg wrote:
+> On Wed, 2025-05-14 at 16:58 +0530, Raj Kumar Bhagat wrote:
+>>
+>> +int cfg80211_get_radio_idx_by_chan(struct wiphy *wiphy,
+>> +				   const struct ieee80211_channel *chan)
+>> +{
+>> +	const struct wiphy_radio *radio;
+>> +	int i, j;
+>> +	u32 freq;
+>> +
+>> +	if (!chan)
+>> +		return -EINVAL;
+>> +
+>> +	freq = ieee80211_channel_to_khz(chan);
+>> +	for (i = 0; i < wiphy->n_radio; i++) {
+>> +		radio = &wiphy->radio[i];
+>> +		for (j = 0; j < radio->n_freq_range; j++) {
+>> +			if (freq >= radio->freq_range[j].start_freq &&
+>> +			    freq <= radio->freq_range[j].end_freq)
+>> +				return i;
+>>
+> 
+> I believe we also discussed this in the past elsewhere, but I don't
+> think the the >= and <= can simultaneously be wrong. If the frequency
+> ranges for radios are adjacent, then the intervals here need to be half
+> open. I _think_ it should be < instead of <=, and therefore a half-open
+> interval of "[start, end[" (or "[start, end)" depending on your
+> preferred notation.)
+> 
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in renesas-devel for v6.17.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Sure, will use half-open interval ([start, end[) in next version.
