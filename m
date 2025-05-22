@@ -1,101 +1,148 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BEF2D17A2E1;
-	Thu, 22 May 2025 08:19:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D68972638BA
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 08:20:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747901991; cv=none; b=OSmUWm304gVvceoJO/SFJt6WnIHT6OYzTgV7ViUy54B2VXYE1IMjZCVjjPSCjVgGz0YHBvOK+/eb9PMHdtP42HnD2Tq5EyEI2Nh3yhlX1CaQHh6P1V9w6ZreXFOyl8hVxha8858MBtcQZXXhy5EPUCB0Iz/yg1jOd91XxXs39/s=
+	t=1747902020; cv=none; b=CYE5iqeXU4cBIScDbRJutxeCf9XfZAZwNo11/21vFsnonIAO4igRh5wu1fyfeWGpLL6U51djKHdB6iKruD4jRAoiz96bw13eHpKVA13l+W+z38+3soHL0skuxkB58UOOES1Px32Ftua4ZOnxDcEk9QtC2KcHdghl2f/5HGSUGXQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747901991; c=relaxed/simple;
-	bh=c/iwD65h6KHaqI/Yxo+GId26LdbQ9yJq+PIvnjY5tdU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=M+F8cTo3OQejXGU53Dd1c6Y3etGguCrBahiAJZ8R68DKmmw7r7PiRIr1SzmoFpv4DutBREe9Uv4X3aYMWL1gvANCRr4wnda5MdevHfBrctF1jebMfCFXFC+WZc4YX+oue5YswUIKxHDbEz3AKPZi5I46sM8xhd0/Q+VioBA7zSY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 06D6E1A32;
-	Thu, 22 May 2025 01:19:35 -0700 (PDT)
-Received: from [10.57.46.113] (unknown [10.57.46.113])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 78F073F5A1;
-	Thu, 22 May 2025 01:19:47 -0700 (PDT)
-Message-ID: <96b4ae67-b9a8-47d3-a951-a880848e6719@arm.com>
-Date: Thu, 22 May 2025 09:19:52 +0100
+	s=arc-20240116; t=1747902020; c=relaxed/simple;
+	bh=H5WO4l0lMwPhufkFAFJJF+7x6CoP4lT7Mp9z3TVrCvk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MrRQY0jfT3CDZ1auP79b17+h2tDGKM+7ukecDIZYZXV3x3oSP9RGdqjZJZu73T5A+X4H2TROWN1k6F0igi6W/cqPWqCxNQa5yL9xkYHdceQHftZaK5eiFXaO3PVtzhPqXzQPRUSXkMRTQjvJZRsSCBC8Szuxf62ye8B2gBdHxjg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=Ozt5v6zl; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="Ozt5v6zl"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-231f6af929eso62104795ad.2
+        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 01:20:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google; t=1747902018; x=1748506818; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=RcuFGqMF/ZgB6n2L9RXkll3Uqc1w8n3CtfrWdVWfP90=;
+        b=Ozt5v6zlO/Sv87cmdyRoZXc2xsMAAXaw3oQcM3xMR31eisU4VCrEXCgLngL5qUCi4A
+         4tzwrFrIIZMrUNt54iwAWtL52et+16H1mYeRnijwTzIRv1W9LMdOYEqbGzd7rfyiwqkA
+         LJCz7zNPWWKBV67Mi0scgx4joex3sfeFYAfuSEmx8Gp3a2sxB41ako3RNyvdgjLbYJNf
+         i7VyM6LgOTKhabSPnXDOJIVw7zGyxOBF5WIpeiEBzRfOZOPuwUa7supdF7KdlqKh5FUB
+         /AsS31PWJQ5Wr5nlWg2o07cOS0xxKkHRZ7US3UTEqBf93D1XutWupNPBIoQluDqkw8HA
+         OfuQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747902018; x=1748506818;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RcuFGqMF/ZgB6n2L9RXkll3Uqc1w8n3CtfrWdVWfP90=;
+        b=ka29Ne3kyYPsuzdHQP9Z+0n4hIISMtoqQPLkppZBv5p56SbZu7yIY2qNEeg4a457og
+         CPbW4TKxf8MnC6gK0us1R/2zRQYDNdxWIUvK6Gd9MT9iDZQzhxn6er/NHaXNhoA6Kb6G
+         l/zTax1ewfU/ig1HJqLT/3EtzijJoJFUIzwu174VNNDfpA1LQqWRSdK4DD+VJxmYLoaz
+         bdn2bb4nyPk+CbAYtEsWw2WrWdb+N3/cf+YokS4lpPOJdwyDdZ8FFgk6wt532V06oka6
+         xbPefQXhtlYieGyiJnpicgLcFDMZx7APsdhYjPJncCflfPiwrAGFj+qLsGGOCBu7FOld
+         UJJQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUCIMdi2R0qxUY3bZKbVlL+80Y8JXDseWHkBjlIqBPMRm4RrgPmW7Eps3I96BNDUmLn7VzIM9t9xk0D/w4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzg8AQtFgpmDT16qEwM/c+FHU222EfEKrYbVGEd0YBrLi399ull
+	nClBtw/g8VFp7027jklXLClMVP5+QxoeaaGgQSnxLOkgecCzEla+bCrQBR1XLIxH6NM=
+X-Gm-Gg: ASbGncuIOUMwMBMVq0DwKip3UpgITcTokPlSuPQOqIwdEO1wf+YykQ8/MXXOGP3wE9l
+	Jw4rMupN08iAopyl7xXsl3HRB/zsu+RMpHUmzVzCO8NNNn9gKdKMSsZFDAm7EBp/SE5Dn/+Yiip
+	v3Deb1ZG/s8jklCo248H6SwwhLRxUGmkElw0ZRCirHpyNTEpyLBeGfIiZ1GcHuPugfogLjP9yLz
+	RZU+zVI/CNwp2j5s40SnSXX80SAFbNg8KP9usDbII+5jl5Lsoikgk8mxY+cdyoZmsFel5I9/dGz
+	rQlxt+Lq2F7yERgBYNd2M9CnzRimCW7mhs6qV+Ox4L10gl1S2928LA8EpPi8
+X-Google-Smtp-Source: AGHT+IGWUWoZ8nlB1v4QhGuyYjXUJIGpjeTdY9aoCLZrIG7jsg9/EnwS5AkAfpjE8UnXzW0/hfZx3Q==
+X-Received: by 2002:a17:903:19c4:b0:220:e655:d77 with SMTP id d9443c01a7336-231d452d0e3mr353009895ad.36.1747902018137;
+        Thu, 22 May 2025 01:20:18 -0700 (PDT)
+Received: from cyan-mbp ([136.226.240.168])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-231d4adca4asm104828005ad.78.2025.05.22.01.20.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 May 2025 01:20:17 -0700 (PDT)
+Date: Thu, 22 May 2025 16:20:13 +0800
+From: Cyan Yang <cyan.yang@sifive.com>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+	corbet@lwn.net, paul.walmsley@sifive.com, palmer@dabbelt.com,
+	aou@eecs.berkeley.edu, alex@ghiti.fr, samuel.holland@sifive.com,
+	linux-doc@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 02/12] riscv: Add SiFive xsfvqmaccdod and xsfvqmaccqoq
+ vendor extensions
+Message-ID: <aC7ePdD0bNhi48kz@cyan-mbp>
+References: <20250516030310.16950-1-cyan.yang@sifive.com>
+ <20250516030310.16950-3-cyan.yang@sifive.com>
+ <CAMuHMdVoUx99rK3bZZnpTh699fQouVfmTfzvuM_UfGS=PAvW2Q@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] PM: EM: Add inotify support when the energy model is
- updated.
-To: Changwoo Min <changwoo@igalia.com>
-Cc: christian.loehle@arm.com, tj@kernel.org, pavel@kernel.org,
- kernel-dev@igalia.com, linux-pm@vger.kernel.org,
- linux-kernel@vger.kernel.org, len.brown@intel.com,
- "Rafael J. Wysocki" <rafael@kernel.org>
-References: <20250507014728.6094-1-changwoo@igalia.com>
- <a82423bc-8c38-4d57-93da-c4f20011cc92@arm.com>
- <CAJZ5v0ixh=ra-TDbC59rpZoGn0pRWmAMchHqoOb_XwB2XUzA7Q@mail.gmail.com>
- <90834b07-9261-4be6-a10b-88d3f5308e1e@igalia.com>
- <CAJZ5v0jiAHHLP2O_0ZkXPPCXq9tFTxqrap1mFXOJtKuBo-gJfw@mail.gmail.com>
-Content-Language: en-US
-From: Lukasz Luba <lukasz.luba@arm.com>
-In-Reply-To: <CAJZ5v0jiAHHLP2O_0ZkXPPCXq9tFTxqrap1mFXOJtKuBo-gJfw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdVoUx99rK3bZZnpTh699fQouVfmTfzvuM_UfGS=PAvW2Q@mail.gmail.com>
 
-
-
-On 5/10/25 12:34, Rafael J. Wysocki wrote:
-> On Sat, May 10, 2025 at 7:07 AM Changwoo Min <changwoo@igalia.com> wrote:
->>
->> Thank you, Rafael, for the pointer.
->>
->> On 5/10/25 01:41, Rafael J. Wysocki wrote:
->>>>
->>>> I have discussed that with Rafael and we have similar view.
->>>> The EM debugfs is not the right interface for this purpose.
->>>>
->>>> A better design and mechanism for your purpose would be the netlink
->>>> notification. It is present in the kernel in thermal framework
->>>> and e.g. is used by Intel HFI
->>>> - drivers/thermal/intel/intel_hfi.c
->>>> - drivers/thermal/thermal_netlink.c
->>>> It's able to send to the user space the information from FW about
->>>> the CPUs' efficiency changes, which is similar to this EM modification.
->>>
->>> In addition, after this patch
->>>
->>> https://lore.kernel.org/linux-pm/3637203.iIbC2pHGDl@rjwysocki.net/
->>>
->>> which is about to get into linux-next, em_dev_update_perf_domain()
->>> will not be the only place where the Energy Model can be updated.
->>
->> I am curious about whether the energy mode is likely to be updated more
->> often with this change. How often the energy model is likely to be
->> updated is the factor to be considered for the interface and the model
->> to post-processing the eneergy model (in the BPF schedulers).
+On Tue, May 20, 2025 at 11:26:39AM +0200, Geert Uytterhoeven wrote:
+> Hi Cyan,
 > 
-> It really is hard to say precisely because eventually this will depend
-> on the platform firmware.  Hopefully, this is not going to happen too
-> often, but if the thermal envelope of the platform is tight, for
-> instance, it may not be the case.
+> On Fri, 16 May 2025 at 05:07, Cyan Yang <cyan.yang@sifive.com> wrote:
+> > Add SiFive vendor extension support to the kernel with the target of
+> > "xsfvqmaccdod" and "xsfvqmaccqoq".
+> >
+> > Signed-off-by: Cyan Yang <cyan.yang@sifive.com>
+> 
+> Thanks for your patch, which is now commit 2d147d77ae6e96c1 ("riscv:
+> Add SiFive xsfvqmaccdod and xsfvqmaccqoq vendor extensions")
+> in riscv/for-next.
+> 
+> > --- a/arch/riscv/Kconfig.vendor
+> > +++ b/arch/riscv/Kconfig.vendor
+> > @@ -16,6 +16,19 @@ config RISCV_ISA_VENDOR_EXT_ANDES
+> >           If you don't know what to do here, say Y.
+> >  endmenu
+> >
+> > +menu "SiFive"
+> > +config RISCV_ISA_VENDOR_EXT_SIFIVE
+> > +       bool "SiFive vendor extension support"
+> > +       select RISCV_ISA_VENDOR_EXT
+> > +       default y
+> 
+> I guess this has no dependency on ARCH_SIFIVE and does not default
+> to ARCH_SIFIVE because this extension can be present on non-Sifive
+> SoCs, too?
+> 
+> Probably I should have asked this when the other RISCV_ISA_VENDOR_EXT_*
+> were introduced, but at least for ANDES I already know the answer.
+> 
 
-It's hard to say for all use cases, but there are some easy to measure
-and understand:
+Yes, you are right.
 
-1. Long scenarios with heavy GPU usage (e.g. gaming). Power on CPUs
-    built from High-Performance cells can be affected by +20% and after
-    ~1min
-2. Longer recording with heavy ISP usage, similar to above
+ARCH_SIFIVE enables support for SiFive SoC platform.
 
-In those two, it's sufficient to update the EM every 1-3sec to reach
-this +20% after 60sec. Although, at the beginning when the GPU starts
-heating the updates should happen a bit more often.
+RISCV_ISA_VENDOR_EXT_SIFIVE enables support for SiFive vendor
+extensions, which are not limited to the SiFive SoC platform.
 
-There are some more complex cases, e.g. when more than 1 Big CPU does
-heavy computations and the heat is higher than normal EM model of
-single CPU (even for that scenario profile). Then the updates to EM
-can go a bit more often (it depends what the platform would like
-to leverage and achieve w/ SW).
+> > +       help
+> > +         Say N here if you want to disable all SiFive vendor extension
+> > +         support. This will cause any SiFive vendor extensions that are
+> > +         requested by hardware probing to be ignored.
+> > +
+> > +         If you don't know what to do here, say Y.
+> > +endmenu
+> > +
+> >  menu "T-Head"
+> >  config RISCV_ISA_VENDOR_EXT_THEAD
+> >         bool "T-Head vendor extension support"
+> 
+> Gr{oetje,eeting}s,
+> 
+>                         Geert
+> 
+> -- 
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+> 
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
+
+Regards,
+Cyan
+
