@@ -1,108 +1,132 @@
-Received: from out-172.mta1.migadu.com (out-172.mta1.migadu.com [95.215.58.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f177.google.com (mail-il1-f177.google.com [209.85.166.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9640529290A
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 15:15:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A1EB2980C7
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 15:17:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747926914; cv=none; b=tBBkjNcF53qNE+0V5CmSCPatSyfQZUP1fR2k1MjZG8Fx8LNTiV0qnM7E99GpvcIs4IsvQ6bNv430Q2ovZ4GBnAk9l5IilUPvH676QGjdAheWFOZeuC8XOScJf/9drfxKFijxxpRzuV2X3x5mwuka5xTyuVGYuvz1HR5g+I+N+10=
+	t=1747927050; cv=none; b=C33DvALSJNRvKWygkE9aZmWRf3lavGCE7HSOZEg7eRzTXfNVI+Pdw97vMx7ZuoUcfatTvWRhsT3jSWXgJTFbXD8rFgjc5ea4I/VpWcH7RFAC6ctdmo2enPoX6lO6Lw8PuCutx1Khb+/GllbPUKSWa2U+FWDE4RUplv5BgKXPYxc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747926914; c=relaxed/simple;
-	bh=khJ1ubnsgvo0EosL9A0wrR2WR+Qc+Yx33YoDRTYZ1JU=;
+	s=arc-20240116; t=1747927050; c=relaxed/simple;
+	bh=yECD6ZktgTjXDSCFgMyFUoroNATnVYVOCITlOnNEHpc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nCwz5N9rSuAdi59XUWIblVrvl6aVruiX7sJWrfSjhJUtYwF2AZGmu3KUmQ8baeMqM0GIt9xOgoZwvJtjJaU/UZXoWK/BNL6mZqDgyjlJPrKSSBUCQfkB+FvqYi+ifaTLTYbN6emeeBVICNo+jJnoaEE73TzAwihSfojNqlq89+0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=S8unWojt; arc=none smtp.client-ip=95.215.58.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	 In-Reply-To:Content-Type; b=fI4VgsRE6YezUcIcQh9xxziXlE8BdxLWZmsOGqvXDb47vf9kdsuwyG9OpO8GsBupxs1Y7NZNfTdnGOg/CA+sJ0pXJXWRkRP+nT09goPDhM4Z7EbGLoam1gH3R30sohBzPYUe9HpoUaQxW4UnEv516ME5DPQeypYqAlF0GewoPi0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=XLPHO6rK; arc=none smtp.client-ip=209.85.166.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="S8unWojt"
-Message-ID: <6d9955ea-29c2-4df1-9618-b10e9185230b@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1747926900;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=gfohxjPLWw+GeQ2Ofcf4RstTAbZNyvuhU8/jKxg1jEM=;
-	b=S8unWojtKLgbJlR84BmKzFDvYTvvVe5pRqzPppRCgHJqXBtSaM1iQskTqv+bay9zU8M9T+
-	1YR2eNOht6A6eNbQWY3IM7a3hq5absbugNXPuRGC2Gf1Z3oePO16jYQ8xrGay+hr5zh+pW
-	YctQH0QY6jy5iRfq/i+KWtNgEalC/8Q=
-Date: Thu, 22 May 2025 11:14:53 -0400
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="XLPHO6rK"
+Received: by mail-il1-f177.google.com with SMTP id e9e14a558f8ab-3d80bbf3aefso21003825ab.1
+        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 08:17:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google; t=1747927047; x=1748531847; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=IETGeB30Ud5t90dKFtz7PPdKbD88fIhHcL4tZXb4WTs=;
+        b=XLPHO6rKWko+sw+IZXc/CqddPJL2u1YVjas/lQyH6No6tywCoJ7tXRSOTQxrtLDOVH
+         LNnjbQDtVPx+89YwKtWJQHrYaKnKaB2ScLHuG13vC8AwOKipjeQg3aQt1ryQnI8tvACg
+         V3CIVdUvzcmWqoCUHxCjnID5DGrM0g0GvBXRw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747927047; x=1748531847;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=IETGeB30Ud5t90dKFtz7PPdKbD88fIhHcL4tZXb4WTs=;
+        b=hFTsuXK1YP5nmm5quhhtL8VTMEarTNzQatW7U4BOsL8pnr6+stiP1M3zoWaOJcvn7U
+         NBYBlLozxZsu2N9eZq9HsXuyijbzn0WGAAxnzNl7cuurAllN4dCuUIN24bwmLhndJfiy
+         PbE9etvj4c/mXAGFx0kGsNNGEHMWhQaUbWycdcZh97tk5/KERzYfuAEZ/11izdSiKqts
+         5azMy3yt+u2wZ/Wp0OPRlILIN/7UL63PvPmMlt00+PwB0eXnQWzGy80cktDhWEYC9AHw
+         s821JjmsitIuA49N7KRZN2r3nNB24zDPRDVxixyZMchL+0lLB3NIvfXl2gC03aX+Bhkx
+         kNqw==
+X-Forwarded-Encrypted: i=1; AJvYcCUYL6WAtN67qAMM0t7qrQPzYLlaHrhR9mlyEfC1kidU6NPhmELTcy5wmf3lQpun2pONfjAH/ByCzDPXsow=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwXjSoEGlQWXNJqLm9Lz8Zh3Xd9M8a/tVsD8gm7XSw6k/15kBdw
+	RdEVtOl6ueUpzE8Q/QmqTV59nNQTGbrQkJY3bjcl6RRsEs5cyCo3BPwyHrMVUqmUY24=
+X-Gm-Gg: ASbGnctZKrVrGZnEt1qOnBOBFqBpcf5V8nE2ua/JHiIXkaN2/OI1LKWbJClAazMVNs0
+	q4OcheMK+OX3Ng9lFMb4nDR+a+6ijZ3FNniCbL4zpEZ1qTo+vZqWbRasBQlfrmYn8ayomk2Qc8s
+	3CHktISAWLN6QkpwmveSefU/bBUAVTijn4GgWOJNEgjMyjhJ/L73HFTq36KS8yyrGWChYpTb46n
+	o6BwUI72zWNhV5QjdIiaRjERLAv2xwpmEd9m46UOmROY4UFH8Nt5271EFeCh7+BGuuiHP+4dXuS
+	ZVhLQZJchNrh2YR7oqQGXvxf8ptsBWAtEGZOrsEEDh4Zx6gf8Inzw58WzlMgzQ==
+X-Google-Smtp-Source: AGHT+IE4miy92v8IzzM9z3nzWIqMhYC4PYeZ/1gnpzPA+Nm1GpEEXc0VF3cDp3wCEis+0MsO80e57g==
+X-Received: by 2002:a05:6e02:3e06:b0:3d5:893a:93ea with SMTP id e9e14a558f8ab-3db843046c6mr236224255ab.13.1747927047461;
+        Thu, 22 May 2025 08:17:27 -0700 (PDT)
+Received: from [192.168.1.14] ([38.175.170.29])
+        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-3dc8ad89ecfsm5792365ab.26.2025.05.22.08.17.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 22 May 2025 08:17:26 -0700 (PDT)
+Message-ID: <2b7acb5f-65c7-4787-aac5-ebcec83c8ac0@linuxfoundation.org>
+Date: Thu, 22 May 2025 09:17:26 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [net-next PATCH v4 03/11] net: pcs: Add subsystem
-To: Lei Wei <quic_leiwei@quicinc.com>, netdev@vger.kernel.org,
- Andrew Lunn <andrew+netdev@lunn.ch>, "David S . Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Russell King <linux@armlinux.org.uk>
-Cc: upstream@airoha.com, Kory Maincent <kory.maincent@bootlin.com>,
- Simon Horman <horms@kernel.org>, Christian Marangi <ansuelsmth@gmail.com>,
- linux-kernel@vger.kernel.org, Heiner Kallweit <hkallweit1@gmail.com>,
- Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org
-References: <20250512161013.731955-1-sean.anderson@linux.dev>
- <20250512161013.731955-4-sean.anderson@linux.dev>
- <e92c87cf-2645-493c-b9d3-ce92249116d1@quicinc.com>
- <4556e55b-2360-4780-a282-b2f04f5cc994@linux.dev>
- <a7edb7e8-37ac-45ae-b5c7-2c9034dce4d7@quicinc.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] selftests/cpufreq: Fix cpufreq basic read and update
+ testcases
+To: Viresh Kumar <viresh.kumar@linaro.org>,
+ Swapnil Sapkal <swapnil.sapkal@amd.com>
+Cc: rafael@kernel.org, shuah@kernel.org, gautham.shenoy@amd.com,
+ narasimhan.v@amd.com, linux-pm@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Shuah Khan <skhan@linuxfoundation.org>
+References: <20250430171433.10866-1-swapnil.sapkal@amd.com>
+ <20250519075854.opnlhjlbybrkvd2k@vireshk-i7>
 Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Sean Anderson <sean.anderson@linux.dev>
-In-Reply-To: <a7edb7e8-37ac-45ae-b5c7-2c9034dce4d7@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+From: Shuah Khan <skhan@linuxfoundation.org>
+In-Reply-To: <20250519075854.opnlhjlbybrkvd2k@vireshk-i7>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On 5/21/25 08:50, Lei Wei wrote:
-> 
-> 
-> On 5/20/2025 1:43 AM, Sean Anderson wrote:
->> On 5/14/25 12:22, Lei Wei wrote:
->>>
->>>
->>> On 5/13/2025 12:10 AM, Sean Anderson wrote:
->>>> +/**
->>>> + * pcs_register_full() - register a new PCS
->>>> + * @dev: The device requesting the PCS
->>>> + * @fwnode: The PCS's firmware node; typically @dev.fwnode
->>>> + * @pcs: The PCS to register
->>>> + *
->>>> + * Registers a new PCS which can be attached to a phylink.
->>>> + *
->>>> + * Return: 0 on success, or -errno on error
->>>> + */
->>>> +int pcs_register_full(struct device *dev, struct fwnode_handle *fwnode,
->>>> +              struct phylink_pcs *pcs)
->>>> +{
->>>> +    struct pcs_wrapper *wrapper;
->>>> +
->>>> +    if (!dev || !pcs->ops)
->>>> +        return -EINVAL;
->>>> +
->>>> +    if (!pcs->ops->pcs_an_restart || !pcs->ops->pcs_config ||
->>>> +        !pcs->ops->pcs_get_state)
->>>> +        return -EINVAL;
->>>> +
->>>> +    wrapper = kzalloc(sizeof(*wrapper), GFP_KERNEL);
->>>> +    if (!wrapper)
->>>> +        return -ENOMEM;
->>>
->>> How about the case where pcs is removed and then comes back again? Should we find the original wrapper and attach it to pcs again instead of creating a new wrapper?
+On 5/19/25 01:58, Viresh Kumar wrote:
+> On 30-04-25, 17:14, Swapnil Sapkal wrote:
+>> In cpufreq basic selftests, one of the testcases is to read all cpufreq
+>> sysfs files and print the values. This testcase assumes all the cpufreq
+>> sysfs files have read permissions. However certain cpufreq sysfs files
+>> (eg. stats/reset) are write only files and this testcase errors out
+>> when it is not able to read the file.
+>> Similarily, there is one more testcase which reads the cpufreq sysfs
+>> file data and write it back to same file. This testcase also errors out
+>> for sysfs files without read permission.
+>> Fix these testcases by adding proper read permission checks.
+
+Can you share how you ran the test?
+
 >>
->> When the PCS is removed the old wrapper is removed from pcs_wrappers, so
->> it can no longer be looked up any more. I think trying to save/restore
->> the wrapper would be much more trouble than it's worth.
+>> Reported-by: Narasimhan V <narasimhan.v@amd.com>
+>> Signed-off-by: Swapnil Sapkal <swapnil.sapkal@amd.com>
+>> ---
+>>   tools/testing/selftests/cpufreq/cpufreq.sh | 15 +++++++++++----
+>>   1 file changed, 11 insertions(+), 4 deletions(-)
 >>
+>> diff --git a/tools/testing/selftests/cpufreq/cpufreq.sh b/tools/testing/selftests/cpufreq/cpufreq.sh
+>> index e350c521b467..3484fa34e8d8 100755
+>> --- a/tools/testing/selftests/cpufreq/cpufreq.sh
+>> +++ b/tools/testing/selftests/cpufreq/cpufreq.sh
+>> @@ -52,7 +52,14 @@ read_cpufreq_files_in_dir()
+>>   	for file in $files; do
+>>   		if [ -f $1/$file ]; then
+>>   			printf "$file:"
+>> -			cat $1/$file
+>> +			#file is readable ?
+>> +			local rfile=$(ls -l $1/$file | awk '$1 ~ /^.*r.*/ { print $NF; }')
+>> +
+>> +			if [ ! -z $rfile ]; then
+>> +				cat $1/$file
+>> +			else
+>> +				printf "$file is not readable\n"
+>> +			fi
 > 
-> In the case where Ethernet is not removed but PCS is removed and then
-> comes back (when the sysfs unbind followed by bind method is used),
-> it will not work because the Ethernet probe will not be initiated again, to call "pcs_get" again to obtain the new wrapper, it would still hold the old wrapper.
+> What about:
+> 
+> if [ -r $1/$file ]; then
+>      cat $1/$file
+> else
+>      printf "$file is not readable\n"
+> fi
+> 
+> 
 
-Correct. You must then unbind/bind the MAC.
-
---Sean
-
+thanks,
+-- Shuah
