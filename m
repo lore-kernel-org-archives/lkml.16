@@ -1,234 +1,212 @@
-Received: from mail-pg1-f194.google.com (mail-pg1-f194.google.com [209.85.215.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from OS0P286CU011.outbound.protection.outlook.com (mail-japanwestazon11010053.outbound.protection.outlook.com [52.101.228.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 014BF33F7
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 01:11:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.194
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747876274; cv=none; b=gXAiYXurnPMYL1VfTm8OoLb9u8KV8uRf6JR/ojT8U3VuY9kGz9M+PQ+fO+IJY3TyvjFi6R8LGyQw7vTh8wYLvP5xZg9nCnF3LCS/NQ5aNXQua5QCgk0yVLuN3MM/uf+XuwlDKsPhNiWiKWTMwRjoUWtRpioy2fnU59ScJjbWOQQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747876274; c=relaxed/simple;
-	bh=Ad3zrYI4XRg0xONw2y6z1U06jffb0/tt3RcAun2pks8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=S9D0IniX8FGeuYOR5vlNEFSNC+4AsP6kA89b4Bwd7B+/KsUyO8nI9bbgEy9V75Nn/x1FarHqSd/9OxIQEbB2kLBo9nV22fbcyf0X1NTSHml7lzdaUtgvOgk16EVR165lbRhOD316A8sWgzqJUsGMIPYxf6nqBamJ2+l6M/Gw2TQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=KeJelZdq; arc=none smtp.client-ip=209.85.215.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F990139D;
+	Thu, 22 May 2025 01:19:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.228.53
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747876800; cv=fail; b=JhnfYWAl7yS6+h8JzkX5ISFm/LrVHGOkViQo8sqC3d6euZCOf5vI4GPphCJlWle0kKy4mlr9mTY96x2+SAk5EXvbgiFlqoNGC0cO3Nad+WvIcm7/xHYtc1RZT/QJmtEiIx07WsIfmoirEA0qwJeF6Ix7D07ZRaIs9ZFWAecB54w=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747876800; c=relaxed/simple;
+	bh=heu1SFJXPA8KpD4bFwd05Qy2h2py0NgBI0TffPT/sv8=;
+	h=Message-ID:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
+	 Date:MIME-Version; b=BlO/Lzl+sQiwIXkEu/Esyb9d5q0hNTOh8suCXFyIvSC9paxV2Jzgm4UbiGlxoOTz2a8XCyHDJ/LdoDWj9v1mbPepD7ClFDcY9vz2en64VIzCGFR0m4LeqPDIUJcCvqwJp2Pcgpycs9NDn3+/VcHPPE0vpwgUVpFJh+/vPi2ey1Q=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com; spf=pass smtp.mailfrom=renesas.com; dkim=pass (1024-bit key) header.d=renesas.com header.i=@renesas.com header.b=IvMy0yZU; arc=fail smtp.client-ip=52.101.228.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=renesas.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KeJelZdq"
-Received: by mail-pg1-f194.google.com with SMTP id 41be03b00d2f7-afc857702d1so6439254a12.3
-        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 18:11:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1747876272; x=1748481072; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3BXu5AhU668DeVMQXwhRYtvbb/ldwfvRhDhf9vXtb6o=;
-        b=KeJelZdqgAgdoLMjSz0Yv3TiYTN5/r4CH7oqD+t1tUOJGh/o+oBnBXenPlbT7CbaVG
-         bg67jPRrqjVXOYRFRCpXXUD6jJYb/KMIcSgGNkkF8HUE+oowfXDssjHGm60wPofiDyDq
-         96FxGVlHcp7/axRoRd1rINhwdPDCG8Z6zWGmw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747876272; x=1748481072;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3BXu5AhU668DeVMQXwhRYtvbb/ldwfvRhDhf9vXtb6o=;
-        b=d64R/szYv0k/EmkCczOwawNKHTomPZsnLOjsOdGqga/He9nDqjavfmkpg0pvmQP3eQ
-         vHlSO29jXrFDlrvwfxpTnsynjA6VRNSr/SbH2VuNXPdI2WoX8effL++9pt8427eqjsSl
-         LM/vXpRJJg9twwoKeqD2ZIKRWB683BKVV/OY9SHLUlc+qg1yMykvKo5zPjijBXYuZKDF
-         U0BM3ox1Xtoczfif21nysp4iwNL0Bg4oEFqr/AGo2pEKA7UfwwFahyb88UwGxPGMWrHI
-         IawliirP92H9UlH00L+g6gI7dA84kbg5cunjeKZBScXQtnMo2hmh596MRwdoVaVrDNh0
-         PQbw==
-X-Forwarded-Encrypted: i=1; AJvYcCXDgvu4bVXYgI52aV133/1eas4ZEFMIYOHFsjtYo0aqELfTTxYrWmGyzszLgzJW6r464N2r+zr62ia4Imk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwbblyQFIC+xBqOTtQcIInaZsRpI6u18gIB8r5xyv+Xc8SVclNX
-	wlOPVHwPqeDahGN2WE2v9efbkLKbQqSVIAh3gTlcgVWPAJSw5ZZKNPpG3lYONSvwAc59+knvSDM
-	troSr+Q==
-X-Gm-Gg: ASbGncv0vr3o7M3xgHaPQiXBSD6sjY+2YYM4HAd33qYYoL1UFA13ojInQN69pDyNDrN
-	zhtfwT71q4X+IwR4hOxtzQy0OCudgEBZpH9TUUxctnT0FbsZW0YO059deCE4Xb0pDml3vS7dreD
-	QjV11I0zac4v2IGhuZkvpH3CXJw7T2GBAChG94kgfgmt0rhBcXQvuGB4QwZbQZcULb7IdBimKrW
-	9UgM/uFzc7e1sq4mi4Hcj4uH43fJCSU8lnUK3RPiRqQ681JcfoQrPgazebvVnH4j2cD4A+sLtDv
-	1oiOAVerBQo8VGdGtmJ6TNCyNnyuHh0QiPgJQsuSyDNxaqsP6vYwONcG4Qi6j/w0FTQ+R9anZVT
-	1iC9yd916c/meEYXVGXJ2JZQv8ivtmQ==
-X-Google-Smtp-Source: AGHT+IHlJ5Ha/0Fu208Al9cH56BvC5RVk20CDgd8TUY2eu7GgFVT4sl+mEM3eyZKeEkZSBnqpsi6ng==
-X-Received: by 2002:a17:902:e5d1:b0:224:8bf:6d81 with SMTP id d9443c01a7336-231d45ac8ffmr312804665ad.46.1747876272229;
-        Wed, 21 May 2025 18:11:12 -0700 (PDT)
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com. [209.85.214.176])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-231d4ac944esm98717585ad.49.2025.05.21.18.11.11
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 21 May 2025 18:11:12 -0700 (PDT)
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-231e011edfaso64595145ad.0
-        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 18:11:11 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUpSVfARC9BYhv8v8DjkWn1PTS3JBm96S/KlSd67u41Rtiio2tsXaY9zLEohs8K/i4WzRwr3IvxhaA4Fh4=@vger.kernel.org
-X-Received: by 2002:a17:902:c94f:b0:223:5ca8:5ecb with SMTP id
- d9443c01a7336-231d45ab485mr292944705ad.42.1747876271067; Wed, 21 May 2025
- 18:11:11 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=renesas.com header.i=@renesas.com header.b="IvMy0yZU"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=DX4QjGiPj4JBZoopBBEOQ7W+lqcGt7s0z/M1EMYxxE/DmP66MKm3Y5bsGF+jbS4ll1KQxmby50Bht6JFaHeYHNSiTHZuKnc58723Do+IVLrOX+xtLiIg7kE2Lon6dEQkj2Z/kaThCyUxTieVarM61+MHt9PKuf1p8cvJrQbP11UUTrAJNOXHKmc2V3xDCrIKYtIoJyRfLZrchLy2dysq/cTn525K7pg+z2G6S3owIXqLyXGZN1Awjf8/18dszpBSoeOEvygPgSWvAE33pXyKfBNFPjsq6dmg72olxn4HXfMT7GlZZTh8TX9RKjFaA8IpPRO4P/CEQqxRC1HQqNX/Hg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=tTfbdHWPHf+MMaBvC7wg24TAwTLeVepHhHvAG2Zt8Og=;
+ b=DUZVRGdVojjWbxfOyGM8ZIoSQBjBB052PTPDC0JdNMEzaHo0qYZKG06e7V+Sfm3tk/uEZEvz9QJgayqSMyLzIF1N2PviYJyplMg6A1dT6dUoyP+9kNebCzGqO9WDMKGgZi4ge5tZJJtMgFF/i3eylLz0pmn9t88d3kO7S70ngliHjoarKZsniMMm9Wx4ckHwa2pQLP+wef2s0tMIRLys36gjhWUYgTWRXqdppB7kDu+qV0Zue/osOvce7f9xo/QdRvxqvQ2YerNIChdjqneU3unTYL1+8RdrCrASl4YyToYHMTf68XpI+862zbQKH507jfk43P4bvyZTvjRTaFki4A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
+ dkim=pass header.d=renesas.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=renesas.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=tTfbdHWPHf+MMaBvC7wg24TAwTLeVepHhHvAG2Zt8Og=;
+ b=IvMy0yZUviApf9zkQMtqE3d/iSajYrJWvhLXyDidy6y0f9k/wyiDmgbCBcNchBevWMLn+aefekGTM8Rn9Ltv5ajTYOAQlmUMuhlbGAnr/Y80YYeO+tUPEWijZ/TPkBipy1cft/kuWUs1esMXs/GdUhX/S9hkdWaj10KqvyxYARQ=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=renesas.com;
+Received: from TYCPR01MB10914.jpnprd01.prod.outlook.com
+ (2603:1096:400:3a9::11) by OSZPR01MB7018.jpnprd01.prod.outlook.com
+ (2603:1096:604:13a::5) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.21; Thu, 22 May
+ 2025 01:19:55 +0000
+Received: from TYCPR01MB10914.jpnprd01.prod.outlook.com
+ ([fe80::c568:1028:2fd1:6e11]) by TYCPR01MB10914.jpnprd01.prod.outlook.com
+ ([fe80::c568:1028:2fd1:6e11%6]) with mapi id 15.20.8769.019; Thu, 22 May 2025
+ 01:19:55 +0000
+Message-ID: <87a575o30l.wl-kuninori.morimoto.gx@renesas.com>
+From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+To: Mihalcea Laurentiu <laurentiumihalcea111@gmail.com>
+Cc: Mark Brown <broonie@kernel.org>,
+	Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	linux-kernel@vger.kernel.org,
+	linux-sound@vger.kernel.org
+Subject: Re: [PATCH RFC 2/3] ASoC: audio-graph-card2: support explicitly disabled links
+In-Reply-To: <fc2cbb54-58aa-4362-9b84-20df510b9038@gmail.com>
+References: <20250515153128.147457-1-laurentiumihalcea111@gmail.com>
+	<20250515153128.147457-3-laurentiumihalcea111@gmail.com>
+	<874ixltjzw.wl-kuninori.morimoto.gx@renesas.com>
+	<0aa11ef6-4166-41d8-98bc-6c7687d10b11@gmail.com>
+	<871psls8nw.wl-kuninori.morimoto.gx@renesas.com>
+	<e6d88cbc-accb-4423-80e4-3972766047f4@gmail.com>
+	<87o6vonmjw.wl-kuninori.morimoto.gx@renesas.com>
+	<fc2cbb54-58aa-4362-9b84-20df510b9038@gmail.com>
+User-Agent: Wanderlust/2.15.9 Emacs/29.3 Mule/6.0
+Content-Type: text/plain; charset=US-ASCII
+Date: Thu, 22 May 2025 01:19:55 +0000
+X-ClientProxiedBy: TYWPR01CA0040.jpnprd01.prod.outlook.com
+ (2603:1096:400:17f::9) To TYCPR01MB10914.jpnprd01.prod.outlook.com
+ (2603:1096:400:3a9::11)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250508115433.449102-1-j-choudhary@ti.com>
-In-Reply-To: <20250508115433.449102-1-j-choudhary@ti.com>
-From: Doug Anderson <dianders@chromium.org>
-Date: Wed, 21 May 2025 18:10:59 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=V1mNX-WidTAaENH66-2ExN=F_ovuX818uQGfc+Gsym1Q@mail.gmail.com>
-X-Gm-Features: AX0GCFsfqtRg5gds9Yg2OcCBHplls8kkmTCilAH-BAWcG36UzmUn4pE-4UwIYNQ
-Message-ID: <CAD=FV=V1mNX-WidTAaENH66-2ExN=F_ovuX818uQGfc+Gsym1Q@mail.gmail.com>
-Subject: Re: [PATCH v2] drm/bridge: ti-sn65dsi86: Add HPD for DisplayPort
- connector type
-To: Jayesh Choudhary <j-choudhary@ti.com>
-Cc: andrzej.hajda@intel.com, neil.armstrong@linaro.org, rfoss@kernel.org, 
-	Laurent.pinchart@ideasonboard.com, dri-devel@lists.freedesktop.org, 
-	tomi.valkeinen@ideasonboard.com, max.krummenacher@toradex.com, 
-	jonas@kwiboo.se, jernej.skrabec@gmail.com, maarten.lankhorst@linux.intel.com, 
-	mripard@kernel.org, tzimmermann@suse.de, airlied@gmail.com, simona@ffwll.ch, 
-	kieran.bingham+renesas@ideasonboard.com, linux-kernel@vger.kernel.org, 
-	max.oss.09@gmail.com, devarsht@ti.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-Hi,
-
-On Thu, May 8, 2025 at 4:54=E2=80=AFAM Jayesh Choudhary <j-choudhary@ti.com=
-> wrote:
->
-> By default, HPD was disabled on SN65DSI86 bridge. When the driver was
-> added (commit "a095f15c00e27"), the HPD_DISABLE bit was set in pre-enable
-> call which was moved to other function calls subsequently.
-> Later on, commit "c312b0df3b13" added detect utility for DP mode. But wit=
-h
-> HPD_DISABLE bit set, all the HPD events are disabled[0] and the debounced
-> state always return 1 (always connected state)
->
-> Also, with the suspend and resume calls before every register access, the
-> bridge starts with disconnected state and the HPD state is reflected
-> correctly only after debounce time (400ms). However, adding this delay
-> in the detect function causes frame drop and visible glitch in display.
->
-> So to get the detect utility working properly for DP mode without any
-> performance issues in display, instead of reading HPD state from the
-> register, rely on aux communication. Use 'drm_dp_dpcd_read_link_status'
-> to find if we have something connected at the sink.
->
-> [0]: <https://www.ti.com/lit/gpn/SN65DSI86> (Pg. 32)
->
-> Fixes: c312b0df3b13 ("drm/bridge: ti-sn65dsi86: Implement bridge connecto=
-r operations for DP")
-> Cc: Max Krummenacher <max.krummenacher@toradex.com>
-> Signed-off-by: Jayesh Choudhary <j-choudhary@ti.com>
-> ---
->
-> v1 patch link which was sent as RFC:
-> <https://patchwork.kernel.org/project/dri-devel/patch/20250424105432.2553=
-09-1-j-choudhary@ti.com/>
->
-> Changelog v1->v2:
-> - Drop additional property in bindings and use conditional.
-> - Instead of register read for HPD state, use dpcd read which returns 0
->   for success and error codes for no connection
-> - Add relevant history for the required change in commit message
-> - Drop RFC subject-prefix in v2 as v2 is in better state after discussion
->   in v1 and Max's mail thread
-> - Add "Cc:" tag
->
-> This approach does not make suspend/resume no-op and no additional
-> delay needs to be added in the detect hook which causes frame drops.
->
-> Here, I am adding conditional to HPD_DISABLE bit even when we are
-> not using the register read to get HPD state. This is to prevent
-> unnecessary register updates in every resume call.
-> (It was adding to latency and leading to ~2-3 frame drop every 10 sec)
->
-> Tested and verified on TI's J784S4-EVM platform:
-> - Display comes up
-> - Detect utility works with a couple of seconds latency.
->   But I guess without interrupt support, this is acceptable.
-> - No frame-drop observed
->
-> Discussion thread for Max's patch:
-> <https://patchwork.kernel.org/project/dri-devel/patch/20250501074805.3069=
-311-1-max.oss.09@gmail.com/>
->
->  drivers/gpu/drm/bridge/ti-sn65dsi86.c | 17 ++++++++++-------
->  1 file changed, 10 insertions(+), 7 deletions(-)
-
-Sorry for the delay in responding. Things got a little crazy over the
-last few weeks.
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: TYCPR01MB10914:EE_|OSZPR01MB7018:EE_
+X-MS-Office365-Filtering-Correlation-Id: 794ccd0b-289e-4651-fe69-08dd98cec28b
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|366016|52116014|376014|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?M74t7snH/SDawREzLiMy2eWMqtqWstUGIv/XAqIP0XQitU9Su8friSjakfr0?=
+ =?us-ascii?Q?a5pSu5q27ZgOQHsVkBJajDd0Vb/+yFKBI1oA8Uj+usy2w4fs4z0wJn5BSXQc?=
+ =?us-ascii?Q?DGtQV6dhrkN/RV/lGjZavF8A1nF/6siAWnndb06cfwrptzgdIRJSK+hWB75Y?=
+ =?us-ascii?Q?/aWShMpPNFe/O+1S7e4NrVo/zjBMG+F8HwtFPD5y8GsTR+hvYrgU21NyOgF1?=
+ =?us-ascii?Q?bVV10ZnUHb7Bgbn/iBUqtrmG1Tt7C+ooSBJBgStqv21JjY5PliNZDLXRc/yB?=
+ =?us-ascii?Q?2lAaai7LRA+DthKrr3k88TQJ+37Qw9Ey8I/1bDgW7xOh/yuvVBgFMz5XUvRf?=
+ =?us-ascii?Q?c/XH/gV8slxPbDQs+u7UcfO/ENIZ/kvTL5i6lmWU7Ks1v4NrqgAoboyYqAOC?=
+ =?us-ascii?Q?BglmKF34GNi2ulQWQXASciiYA76qkhILJtikG8Uay4NlvoXKinHdDC8WZwVv?=
+ =?us-ascii?Q?gmHFNRY532UV62DKpjtQ4JvSrXZZOhpyofSYWpK9KohHVQtXqx2WOevIffuc?=
+ =?us-ascii?Q?E9CabUPuu3TuC3n8ZXcDnyZvVbh643kJ+8ehPbCm0fdzcVYsP4f7tgVM7MyY?=
+ =?us-ascii?Q?G3ACthRmtkooETTc4uUETkZL6h+UWYtDgqowFcB7+gXGVF4fXUfHWA1JHUAz?=
+ =?us-ascii?Q?35x69X3K9+OaH3ntI4npUlRzP7tg3KFg3/rUrkW5FVMO2xln1LVd4HosAnry?=
+ =?us-ascii?Q?pX8mBlFyll7dClQHVXxlBtBQNzkct+uWrzRmFLdjPFwYA9v/4kSmRyKCZvff?=
+ =?us-ascii?Q?h+dzmtWPXGf7LWI08hbkl7bLlpBDMleu/w+emvAMdw1BjFqKnhHIwu0usytP?=
+ =?us-ascii?Q?K+bAOAU09prXdtyy3tCyAvnTSze1Iv/wr97FQRcg4gEZQxFYo8noDu9ytZMF?=
+ =?us-ascii?Q?BxDNKg9yxc1aMeYmAbNIr6Rk9c6ffxOmnKZd7bnzf5IUlIk4B+/ygYcjtAsY?=
+ =?us-ascii?Q?YspswCDJyFpRpbo5O8VSotw/AtYSkwQmbAT/ccIkWn/+i5WdWRisKovl/Af2?=
+ =?us-ascii?Q?CJFYgll8LfqVEQGYlsSDqOx3hnu1t156LQLZ66AwRVz5iNDsKjh9ykSKhg8N?=
+ =?us-ascii?Q?gEs2sQzI41q3S5FsOOR/prXYEaaksjk1ahbyjKARTQLIH5r/Q9WhpeBeER9b?=
+ =?us-ascii?Q?liTT8n85WhY9UEIFxdi0qBKlWCswDkOh3YS3gNaqOegwQL4p0EKj3yuPQxj8?=
+ =?us-ascii?Q?y3qSVvfvju5tJenES8KGxYBWdOuhEyBzZLMAx+Yq88C1SkUKAZ1/yFmnV9kJ?=
+ =?us-ascii?Q?lm50HDGtFBPxlu2pSUPDakbit56iixAG45nlwuyWegc1kaK2fwNoB2wY09qt?=
+ =?us-ascii?Q?79D02Xv1kEsB90zrbt7OOV1VcsdIZLgnHYWk+TOYMXGD9YejVIBe4MM5iNqC?=
+ =?us-ascii?Q?ggdfsWIkdN2e7TDVRcyxYLxjPTuUF38B3xtlBPj2uLWLtVZmAkOoptPUjIjc?=
+ =?us-ascii?Q?g/lehk/y3eBcQdywuHgTqgWClNgnwRNvHzuAHRKW5HCsk7bJhMABgw=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYCPR01MB10914.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(52116014)(376014)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?7wEcHA/qc/GTW/46WlOFqC4OtvNuD0hBVjaLBIWTLkwt/YHdpfUdnNJk5OzS?=
+ =?us-ascii?Q?GLIFcJIQ4tGSbCm8s+fUsjSnSXFmTizH/3FqtmMFCPN0aGETsaWvxJHT1Ibi?=
+ =?us-ascii?Q?ORv4BEei1imdmUUvYIamNbGmTUIo8fzMy8YR7CqbhOf9Il6iSJZU5+dD0PtG?=
+ =?us-ascii?Q?ZuADBU5aWfRmvSFiFtb396+CgEsHp4hh3gJJNA+pVKfJMHKjzACjxisBeRUF?=
+ =?us-ascii?Q?ErJpY3wnJe7CEbmXziPSqz3keolMeB25g+15GXVFVohEyqemjUq4Y03Bk0Cs?=
+ =?us-ascii?Q?oDJBO14BfNKmmIEHVBZoKuF18ucs1mQGcCWNii55+7zm9lTV0NqCw0fQHSce?=
+ =?us-ascii?Q?EDPOYJefGak7YAjuqxiv80LJO5geUC2+zwDRD38Us5zWT8cvykdr+W5/e20l?=
+ =?us-ascii?Q?+c0T8XJYeli+XXRZZlUt9/1gdvqk0ZvuVpxC3Yu8y2rVINJR+iw2MWinLQJr?=
+ =?us-ascii?Q?5wKqermZw8zE/Hif4ZXsmPqsPmoqJtFJFRVoe0qL9bMCPD+3RQzGzRq3yeZQ?=
+ =?us-ascii?Q?bDlws6d9KR3iIF74JwGt5vk2lop+jEup2N2ub3xC5kjZd4BDY/GClOrEa/XZ?=
+ =?us-ascii?Q?bBra4bkESzDTCw3U183qeF8VAZVxgfaeB9vvvRR45wq9h+4ceuiw92yp/Bdc?=
+ =?us-ascii?Q?ZqKxzEQN1/SoWbz87lRKobo/qQVPFBWCV6IYKXKYxJGS2LKW/AYn+l4VE/Ll?=
+ =?us-ascii?Q?vT7VjCUjh80FK2Fs1XC4rUg06XrAGae09uHE8rsjK59icq7jqvxyInaPUSW7?=
+ =?us-ascii?Q?6oGDGV2lL1gKhhi4yLZ1yBUI4m+eW+c0pTPKyW1LSrl8JynWqFCX8p0FEgk2?=
+ =?us-ascii?Q?d0B+EcDGXj25AgpEo2OZ0FvD2N8XLHacDplrtfj61lOmj/51WZIwzjaKsPZu?=
+ =?us-ascii?Q?aiPNpe45zWKvmZLqw9F77zWU9HT/M/3EivcqFXe0dHz5Lg6XLjs9jEJP54S4?=
+ =?us-ascii?Q?rNIaM43CCHshv5bmAqCKO4445a+srAZPybmqXuTOcvkCO/nUOSVsqRHBGBp/?=
+ =?us-ascii?Q?bxgKpVvA10+ZH2gRYRIFTHupbv4HbYVRnUZ4n3rEoL9u0w1w/5M2soetQbWm?=
+ =?us-ascii?Q?2Hp2pClGTYrmMSUI1Q0LJrpYxn907pUt0oWyOnpxrGVUQoNkYKVhbvT1LKmv?=
+ =?us-ascii?Q?Dv86t63fnj9eNU1TJo86v6/tSJOg5o3rjN+wzJKVe8n2KXKzdRiGJruOOM99?=
+ =?us-ascii?Q?0/XXPu9gJ5Z/z2q0c9JX4e2F4PKeEK5QFVgd6z5sZdyhn3Vmt2VN9HvfeiRN?=
+ =?us-ascii?Q?O+n81kTCJ9cEWR/2WQVxUq7IlV9gt7Vw2FovvctW2lKt+hT3BggAv9B05URW?=
+ =?us-ascii?Q?NlvUSRN0k2Os4u79651xrURr9RmoMghR+TT9pw2DbkWR9sDrW0fLAKblH0WY?=
+ =?us-ascii?Q?h1KBg/ZQxp/wDVU2Kp/Tj0XYIUlGHrHWUMxY1cToeL/934XXR8A/fEUAB0W+?=
+ =?us-ascii?Q?FUXoyBqLPY/Kbbx1BHC79oWC74L/gP9shkMuLoEpE87JyI7cqmlbt/4gZhgL?=
+ =?us-ascii?Q?q0Y5wO8nneknr3k24RiAA8LpIlGyDm5J/xZmxdpYI/YzefasIqvbjLeW0QY2?=
+ =?us-ascii?Q?ek8B/mix7VmJQ1BenLqob1GsF4bXx8be78I+/L/AIDzO9E+OQ5Rog2tMs2eM?=
+ =?us-ascii?Q?DpvTUZjUj13v+JzeOcwXMKY=3D?=
+X-OriginatorOrg: renesas.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 794ccd0b-289e-4651-fe69-08dd98cec28b
+X-MS-Exchange-CrossTenant-AuthSource: TYCPR01MB10914.jpnprd01.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 May 2025 01:19:55.2888
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: bCmOyKHzOuz0mFceE07szwGme7//0Z5IsYbel9MaLWFvhk3cAuY7OLFyrQhnnl8/t3O1lrsJLHF7Amvqf0xARywUZV76gljO3QskrKCEMSMByY6mNu3wT+Hg3u8QmPyN
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: OSZPR01MB7018
 
 
-> diff --git a/drivers/gpu/drm/bridge/ti-sn65dsi86.c b/drivers/gpu/drm/brid=
-ge/ti-sn65dsi86.c
-> index 60224f476e1d..9489e78b6da3 100644
-> --- a/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-> +++ b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-> @@ -352,8 +352,10 @@ static void ti_sn65dsi86_enable_comms(struct ti_sn65=
-dsi86 *pdata,
->          * change this to be conditional on someone specifying that HPD s=
-hould
->          * be used.
->          */
-> -       regmap_update_bits(pdata->regmap, SN_HPD_DISABLE_REG, HPD_DISABLE=
-,
-> -                          HPD_DISABLE);
-> +
-> +       if (pdata->bridge.type =3D=3D DRM_MODE_CONNECTOR_eDP)
-> +               regmap_update_bits(pdata->regmap, SN_HPD_DISABLE_REG, HPD=
-_DISABLE,
-> +                                  HPD_DISABLE);
+Hi Mihalcea
 
-Given your an Max's testing, I'm totally on-board with the above.
+Thank you for rhw the reply
 
->
->         pdata->comms_enabled =3D true;
->
-> @@ -1194,13 +1196,14 @@ static enum drm_connector_status ti_sn_bridge_det=
-ect(struct drm_bridge *bridge)
->  {
->         struct ti_sn65dsi86 *pdata =3D bridge_to_ti_sn65dsi86(bridge);
->         int val =3D 0;
-> +       u8 link_status[DP_LINK_STATUS_SIZE];
->
-> -       pm_runtime_get_sync(pdata->dev);
-> -       regmap_read(pdata->regmap, SN_HPD_DISABLE_REG, &val);
-> -       pm_runtime_put_autosuspend(pdata->dev);
-> +       val =3D drm_dp_dpcd_read_link_status(&pdata->aux, link_status);
->
-> -       return val & HPD_DEBOUNCED_STATE ? connector_status_connected
-> -                                        : connector_status_disconnected;
-> +       if (val < 0)
-> +               return connector_status_disconnected;
-> +       else
-> +               return connector_status_connected;
+> >> 	BASE0			  PLUGIN
+> >> 	+-----------------+
+> >> 	| CPU0 <-> Codec0 |     +--------+
+> >> 	| CPU1		  | <-> | Codec1 |
+> >> 	+-----------------+     +--------+
+> >>
+> >>
+> >> 	BASE1			  PLUGIN
+> >> 	+-----------------+
+> >> 	| CPU0 <-> Codec3 |     +--------+
+> >> 	| CPU1		  | <-> | Codec1 |
+> >> 	+-----------------+     +--------+
+(snip)
+> > BASE
+> > 	my_card: card {
+> > 		links = <&cpu0>;
+> > 		routing = "Headphone0", "Codec0"; /* for CPU0-Codec0 */
+> > 	};
+> >
+> > PLUGIN
+> > 	&my_card {
+> > 		plugin-links = <&cpu1>, <&cpu2>
+> > 		plugin-routing = "Headphone1", "Codec1", /* for CPU1-Codec1 */
+> > 		^^^^^^		 "Headphone2", "Codec2"; /* for CPU2-Codec2 */
+> > 	};
+(snip)
+> hm, I believe this _should_ work.
 
-I'd really rather not do this. It took me a little while to realize
-why this was working and also not being slow like your 400ms delay
-was. I believe that each time you do the AUX transfer it grabs a
-pm_runtime reference and then puts it with "autosuspend". Then you're
-relying on the fact that detect is called often enough so that the
-autosuspend doesn't actually hit so the next time your function runs
-then it's fast. Is that accurate?
+I hope so.
 
-I'd rather see something like this in the bridge's probe (untested)
+>  I also think that we can just drop the whole
+> "ignore_route_check" flag idea
+(snip)
+> also, I believe we can drop the whole "explicitly disabled links" idea
+> since IMO, links passed via the "plugin-links" property _must_ exist.
 
-  if (pdata->bridge.type =3D=3D DRM_MODE_CONNECTOR_DisplayPort) {
-    pdata->bridge.ops =3D DRM_BRIDGE_OP_EDID | DRM_BRIDGE_OP_DETECT;
+Yes, agree. It is no longer needed on new plugin-xxx idea.
 
-    /*
-     * In order for DRM_BRIDGE_OP_DETECT to work in a reasonable
-     * way we need to keep the bridge powered on all the time.
-     * The bridge takes hundreds of milliseconds to debounce HPD
-     * and we simply can't wait that amount of time in every call
-     * to detect.
-     */
-    pm_runtime_get_sync(pdata->dev);
-  }
+> if we go for this though I think we need to clarify the usage of the
+> "plugin-links" and "plugin-routing" properties.
 
-...obviously you'd also need to find the right times to undo this in
-error handling and in remove.
+Yes. I think you need to confirm or persuade to DT maintainer that whether
+it can be accepted idea or not.
 
-Nicely, this would be the same type of solution needed for if we ever
-enabled interrupts.
+> Thank you very much for this discussion! It was really, really
+> helpful!
 
--Doug
+Same here. I'm very happy could do that
+
+
+Thank you for your help !!
+
+Best regards
+---
+Kuninori Morimoto
