@@ -1,596 +1,352 @@
-Received: from mx0a-0016f401.pphosted.com (mx0a-0016f401.pphosted.com [67.231.148.174])
+Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on2048.outbound.protection.outlook.com [40.107.20.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD6201993B9
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 05:45:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.148.174
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747892710; cv=none; b=L7euFRApdC1DtmlMNHEEmxsMDxgjLazUvy8Ad8l/MGDCySj72mfzwV1Sgr8VYs+Vm3Xfyj0J/vBATlDCwMFsAV8NmByDDT8s1zjxPttqyMW6Kzd59qZ4LFpSSwieMxzKzP7Vc8m6F9NFCIZQjM5lF65YbmTUh2QIcEyRUfAxW1g=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747892710; c=relaxed/simple;
-	bh=Nwjn3MXj3E+CC5a+T4MfkZ9QJgLXAQI32waAIWrDL44=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=sUmZJlhA0hMV1z/f1z26TymddoCWlNtZEOUjH1vxn9Yaf3+tY2//Iv1GNP9qxLO9x6xudKyYf8ryvaG5TEeAu/61upO4RnVCRD2hwfTqepzB0t16gc9MBocp9Uul88o7tMku3MIQLE3XsMCbNiJFqn9l55k+Cd/tjhrVp3yQtFY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=JJzKlaQw; arc=none smtp.client-ip=67.231.148.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 180A0EC5
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 05:46:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.20.48
+ARC-Seal:i=3; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747892796; cv=fail; b=aspC64SWlN+jXXUKHV45kiB0j3eFOPEYglyUBgUms8Wtca2sEeuWUC2YOcTXhWuql+JMO7KxqF3Yz8RRW6HxIIF1suMmp3w6oljZpMhJQP1fTAJgFU0htSiMKzBpf/sR659pDGpzV8ShedYDDLQq59yqevsb0GJNViTcEN35qV4=
+ARC-Message-Signature:i=3; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747892796; c=relaxed/simple;
+	bh=2ifpS9q+J9+dnkPqovBTquyTCcIUGWhIomKC1grFTts=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=P5o8+ly3TAWLxH8UufdwtPeKAI5Nj6KopLe1/ACKuYE3eycquuMAn9tVO66Mj1WsSTYj/gRDiLY90r4cdefeG52UJ0Y5VrNWbrpIc2NADb5fgUZPVLrcn2/OV43QaVO2c35V+Bzg+RoKdalecK3h1rDz32L3e1ugChCppcIXecc=
+ARC-Authentication-Results:i=3; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=YcXFPl0T; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=YcXFPl0T; arc=fail smtp.client-ip=40.107.20.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="JJzKlaQw"
-Received: from pps.filterd (m0431384.ppops.net [127.0.0.1])
-	by mx0a-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54M0H9Ii018805;
-	Wed, 21 May 2025 22:44:46 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pfpt0220; bh=I
-	7w3K2LTowUITLEg84pFbQH0qRaB1re8Rok62FYBrUs=; b=JJzKlaQwPXPTEen7d
-	SW5q/cjbFuS9r5KJd62vVhPH26Lo930IqND6T/rwzSIR7+wdpOutmaXXpjIHEJmx
-	cHQRovXsc4hBIXjW8aEWLIF8nD1Sau4xPzyDwAxYszO4hW0lhZM5MLdAQfUrSTG5
-	4qatn1X7hMRm2r6OykOUyMuX9UAj9gPsVNZ7VRB+8ireyw8UFezdViHyf50JfYQt
-	NhUQ3TSN4YhBHK+e2ad5VWYbKRYt38FjanCVYcnJafh4G9VIDjD3r0aykBCpGazo
-	BifuOPPPMkBZpwRgltMWmY6uTgMEMQDL9tBkVrW2j+9JbgWaCuboRTpdTw6OeAfV
-	v0UFA==
-Received: from dc5-exch05.marvell.com ([199.233.59.128])
-	by mx0a-0016f401.pphosted.com (PPS) with ESMTPS id 46sqap8nyb-2
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 21 May 2025 22:44:46 -0700 (PDT)
-Received: from DC5-EXCH05.marvell.com (10.69.176.209) by
- DC5-EXCH05.marvell.com (10.69.176.209) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.4; Wed, 21 May 2025 22:44:45 -0700
-Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH05.marvell.com
- (10.69.176.209) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
- Transport; Wed, 21 May 2025 22:44:45 -0700
-Received: from tx2-sever.caveonetworks.com (unknown [10.110.141.15])
-	by maili.marvell.com (Postfix) with ESMTP id 0DFC75B694A;
-	Wed, 21 May 2025 22:44:45 -0700 (PDT)
-From: George Cherian <george.cherian@marvell.com>
-To: <arnd@arndb.de>, <alexander.sverdlin@gmail.com>, <agaur@marvell.com>,
-        <nikita.shubin@maquefel.me>, <vkoul@kernel.org>
-CC: <linux-kernel@vger.kernel.org>, <gcherian@marvell.com>
-Subject: [PATCH v6 3/4] soc: marvell: rvu-pf: Add mailbox communication btw RVU VFs and PF.
-Date: Thu, 22 May 2025 05:44:43 +0000
-Message-ID: <20250522054444.3531124-4-george.cherian@marvell.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250522054444.3531124-1-george.cherian@marvell.com>
-References: <20250522054444.3531124-1-george.cherian@marvell.com>
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="YcXFPl0T";
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="YcXFPl0T"
+ARC-Seal: i=2; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=pass;
+ b=D4WXKom6c1+9rYUdvfm3xom3sbJszNHwy3NM2hhKehgjnmbdm+Wy8w7/YMAVTNM+QYC1dYI4AVs+zlLkJCkIjpk1HVNfVKVcpmb9twQ25DJPFL0mC3xMEUUYKkW/nPrBiKnnZrdpuNhVAgkZAAz6I7aJGVs/d/JmJgPqjj1b5Eb01JaGTzATBZkNEt6FeUhInQ8LhOnyIHJlcvM6AxAJrBjeZAuNpLTLXBWSOLFaAps1tn1NOKJ0YfWtzN4mRQKfza6g8IvFpTlT4B9pVyC36KZTmn7C87HtNM5z4MzuefrNqamuN7rfxnUcLWKz86O36aUA88y5LFXi34ogLp19zw==
+ARC-Message-Signature: i=2; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=t+1rD17r6usVRYbxYwCzJtc/RhPFi0kZH+3HZ3Zw0WM=;
+ b=eaMHDQMYNkyEifH/244yiuZYqZQzMnFKERFT8UPGwmGxhBB7rRjEHPxGQpX3SMTK87p1aOri3tjAcSTq5ZNhzgYD1Q7v4u1vv6yPG6vrshAwQTpKwJiTKWtyuKz7WNZokYapDZu7LEqIpycKDenXbXmYYlYnEXvcZI6v7iGRTz/G5OxcCq5hqHykMBqvv5g5C2q+sGzFw1WnEgwXw6tDoJ5MNYjsUoOrAK1noaIDzBgnXfEDR4zyAOW2U8tHAd8BrNv0/2erh+su6NirSi24jxA/zmgBA4Jmz9cvtyoA5oE+iGr7efcEJYhPK8aCVB8c9XGQMudPI3a/hEF0qGwOcA==
+ARC-Authentication-Results: i=2; mx.microsoft.com 1; spf=pass (sender ip is
+ 4.158.2.129) smtp.rcpttodomain=linux-foundation.org smtp.mailfrom=arm.com;
+ dmarc=pass (p=none sp=none pct=100) action=none header.from=arm.com;
+ dkim=pass (signature was verified) header.d=arm.com; arc=pass (0 oda=1 ltdi=1
+ spf=[1,1,smtp.mailfrom=arm.com] dkim=[1,1,header.d=arm.com]
+ dmarc=[1,1,header.from=arm.com])
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=t+1rD17r6usVRYbxYwCzJtc/RhPFi0kZH+3HZ3Zw0WM=;
+ b=YcXFPl0TKaddg8jBOzFsZm9EdrMxM8NxAqm32dzTsDQBB9dho5TsBpZI9YZ8U6kQXtiSDl5XM2ixJz5+xgcm89zkUKPNnHlyt4F2OALAR2Pmb39kns/izfkE8E9f4e+kHnpK3s4ZgD83cBXOI+93D6qUR8jLUR2xEnMKqS0kuYQ=
+Received: from AM6P195CA0012.EURP195.PROD.OUTLOOK.COM (2603:10a6:209:81::25)
+ by AM0PR08MB5409.eurprd08.prod.outlook.com (2603:10a6:208:183::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.21; Thu, 22 May
+ 2025 05:46:30 +0000
+Received: from AM3PEPF0000A79A.eurprd04.prod.outlook.com
+ (2603:10a6:209:81:cafe::7) by AM6P195CA0012.outlook.office365.com
+ (2603:10a6:209:81::25) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8746.30 via Frontend Transport; Thu,
+ 22 May 2025 05:46:30 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 4.158.2.129)
+ smtp.mailfrom=arm.com; dkim=pass (signature was verified)
+ header.d=arm.com;dmarc=pass action=none header.from=arm.com;
+Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
+ 4.158.2.129 as permitted sender) receiver=protection.outlook.com;
+ client-ip=4.158.2.129; helo=outbound-uk1.az.dlp.m.darktrace.com; pr=C
+Received: from outbound-uk1.az.dlp.m.darktrace.com (4.158.2.129) by
+ AM3PEPF0000A79A.mail.protection.outlook.com (10.167.16.105) with Microsoft
+ SMTP Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.20.8769.18
+ via Frontend Transport; Thu, 22 May 2025 05:46:30 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=k2/0KBTG2M3hgfbcfYWR3QSQ2Nc0qsoFR8ON5VY4ZBCpEJYyiXh1zcFjjJ70miEiBvSuYyEYIcaduYcBg/ZbhZzmk73WmVzJdq3ZSQN3ZLyxBvhzzGoiTiof5C1N2N2cyn6yEWhnRthI5KFmNcDok+e7ksP9nOHr5mUI2O7Hys8xa4sbWVHiXwePtoD8SjHkSd0BudpfqOE7C1y6KnfRFaCitiMX6GWn7myNMCtAxlljS5bkXPLH5WjGd/IhY9qA3bGS41EKZSdO0CmhxiN5NmPohGHTM1kQcL5uOTXr0TLi6eZXM4/QWRbewHkq2BCrKJMdfEhrREP9+Et1rmNvXA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=t+1rD17r6usVRYbxYwCzJtc/RhPFi0kZH+3HZ3Zw0WM=;
+ b=pHASNYuEA2iZWjIBkuAn5p9Iok8pmko4kUirN+7xMYo+65EDTPBuJFmc+9mjE1uuJcyeUjr5k/KBwtnSxxSFFc6zd4mSTT8OxDsU8a7GpSqXHAMjVu5rIViaxgxDeZi7G+IchpBLGWpnLECY7PPwoVDiqTCx/KhhoAhSociDm04KXLaRSHbBi+41ytwpQ3z8Xih55tEx2YxTOUSkm98EZ4gxRL/7K7vrh3YfqfyL9uSbSvCFJMSg3xWwFkyMFPne0k7F9loiF9DZXyf/El+jsvzNF+A9j8ykaQWMD45QdOPY4/0gTJEGov87CnVYQ0kKw+1VPZhGbA0NVzAIVGHtxg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
+ header.d=arm.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=t+1rD17r6usVRYbxYwCzJtc/RhPFi0kZH+3HZ3Zw0WM=;
+ b=YcXFPl0TKaddg8jBOzFsZm9EdrMxM8NxAqm32dzTsDQBB9dho5TsBpZI9YZ8U6kQXtiSDl5XM2ixJz5+xgcm89zkUKPNnHlyt4F2OALAR2Pmb39kns/izfkE8E9f4e+kHnpK3s4ZgD83cBXOI+93D6qUR8jLUR2xEnMKqS0kuYQ=
+Authentication-Results-Original: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=arm.com;
+Received: from AM9PR08MB7120.eurprd08.prod.outlook.com (2603:10a6:20b:3dc::22)
+ by DU4PR08MB11101.eurprd08.prod.outlook.com (2603:10a6:10:576::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.32; Thu, 22 May
+ 2025 05:45:56 +0000
+Received: from AM9PR08MB7120.eurprd08.prod.outlook.com
+ ([fe80::2933:29aa:2693:d12e]) by AM9PR08MB7120.eurprd08.prod.outlook.com
+ ([fe80::2933:29aa:2693:d12e%2]) with mapi id 15.20.8769.019; Thu, 22 May 2025
+ 05:45:56 +0000
+Message-ID: <7244e009-97fb-4f91-8d51-8bd66b367ef4@arm.com>
+Date: Thu, 22 May 2025 11:15:48 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/5] mm: Optimize mprotect() by batch-skipping PTEs
+To: Ryan Roberts <ryan.roberts@arm.com>, akpm@linux-foundation.org
+Cc: david@redhat.com, willy@infradead.org, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, catalin.marinas@arm.com, will@kernel.org,
+ Liam.Howlett@oracle.com, lorenzo.stoakes@oracle.com, vbabka@suse.cz,
+ jannh@google.com, anshuman.khandual@arm.com, peterx@redhat.com,
+ joey.gouly@arm.com, ioworker0@gmail.com, baohua@kernel.org,
+ kevin.brodsky@arm.com, quic_zhenhuah@quicinc.com,
+ christophe.leroy@csgroup.eu, yangyicong@hisilicon.com,
+ linux-arm-kernel@lists.infradead.org, hughd@google.com,
+ yang@os.amperecomputing.com, ziy@nvidia.com
+References: <20250519074824.42909-1-dev.jain@arm.com>
+ <20250519074824.42909-2-dev.jain@arm.com>
+ <00555927-bfa1-4df0-8107-7080447acaa6@arm.com>
+Content-Language: en-US
+From: Dev Jain <dev.jain@arm.com>
+In-Reply-To: <00555927-bfa1-4df0-8107-7080447acaa6@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: MA0PR01CA0005.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:a01:80::22) To AM9PR08MB7120.eurprd08.prod.outlook.com
+ (2603:10a6:20b:3dc::22)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-GUID: SXFaJLuTSf1x4k3t5aIUD4pKmSkI6Ssg
-X-Authority-Analysis: v=2.4 cv=HfgUTjE8 c=1 sm=1 tr=0 ts=682eb9ce cx=c_pps a=rEv8fa4AjpPjGxpoe8rlIQ==:117 a=rEv8fa4AjpPjGxpoe8rlIQ==:17 a=dt9VzEwgFbYA:10 a=M5GUcnROAAAA:8 a=pGLkceISAAAA:8 a=rdbOFzbLXYbVr61zThgA:9 a=OBjm3rFKGHvpk9ecZwUJ:22
-X-Proofpoint-ORIG-GUID: SXFaJLuTSf1x4k3t5aIUD4pKmSkI6Ssg
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIyMDA1NiBTYWx0ZWRfX2stQT1skBGJZ p2E0Tjoim+bRg0ENvrxbHpBz06ZXwIXqaIKdkktzbRhPhFXD6aTOmJPi4i6ei5I/+IySX1juA80 hw1lhDapwYKn1KcnkBCJaK9SiYF/w4UMpZ4/Nous0cVz0YHWGOxL+gzBftIq/xVm+fYQvo8oqPg
- jHYhP5sVmATS1y1AcoBeYHLROjed/RoxBMeRddDolFVO4Ntl/PrbqQht3u1PqJoeUhlVxpWdw8T rc23wSje7vf+8b9HBmRWMdmixDacTB5CQh1ArNuZFlAL6+rdCe7/U3aNhCe2cPunIleVNj5nFwe brZJNsYNL5yiIeeN1UQglnv6maGztgsnpEKBTPAbZ8oOR77kKh3FCZA9SmhYP26cyuHVMwvd8Rx
- 4LhsH3cKTvf5zZB25e9t84QSaAJrF+4Hn6ekivCKXvRCMK9NuHqCR5Bg1enGHoYg1V+gMYgI
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-22_03,2025-05-20_03,2025-03-28_01
+X-MS-TrafficTypeDiagnostic:
+	AM9PR08MB7120:EE_|DU4PR08MB11101:EE_|AM3PEPF0000A79A:EE_|AM0PR08MB5409:EE_
+X-MS-Office365-Filtering-Correlation-Id: 27d24d24-0976-4f7b-19e0-08dd98f40083
+x-checkrecipientrouted: true
+NoDisclaimer: true
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam-Untrusted:
+ BCL:0;ARA:13230040|1800799024|376014|7416014|366016;
+X-Microsoft-Antispam-Message-Info-Original:
+ =?utf-8?B?aVAxOVhhVW1BTVZnSEM4Ulc0S3Q1N2t1SWZFd0hCYXROZnZnQjJYekltZm42?=
+ =?utf-8?B?MU05TEE2c2poY0E0THlUcFhySm1DVWY0Znl4U0ZaZXVSUVhTTXNkTmJ5VzR5?=
+ =?utf-8?B?YVZVTzFoRXpWVGpBTU9iRWUyakZOaERZWWtVQ09zYm1EK1dtenJiLzFMdEMv?=
+ =?utf-8?B?TGxUU1lDbXNiRC9kS2RuRkxUVGFuNlA4TlM3WW45OFJadm5JaGdaZThjNlho?=
+ =?utf-8?B?dVdvMjljZHpQOGdBRDFGYi9UTU80ZlAwblI4c0x0N05ocEUvdUt4a2NFanFT?=
+ =?utf-8?B?aEE0ZTMvRmRxUWFWaDhvUldiaktab2ZtMmZnYzVqN3IxMHRaTFRrY2dRdXpM?=
+ =?utf-8?B?QUN4blJRT2l0cXdZdW1YV0RuOHpFNm54eW5GOG44TW84Rmx4QnoySVR4ck45?=
+ =?utf-8?B?U0pzaEVhRDZROFFlYnlocyt0bEdWNlhPVG1NQXZJRkJuRFVFYllobTFKbzNa?=
+ =?utf-8?B?Z1FBeXBQbDArandYZEFuTmlqZnZuYXlpeUlpdi9pelRzT2liYmxBVWE1elQ0?=
+ =?utf-8?B?YU1CY0lEOFdpdFNsWG5HNXZsbm1VSFdENUJnZ0hocjhBZnZxb0U2OVVIa0dE?=
+ =?utf-8?B?OHBZdTFaV3dXMWNhNm56R1U2UExVRUlQaURJbzFsZ1pmdk44N1BRTmUvUTBN?=
+ =?utf-8?B?ODltTnBLM1hPK25WNFc2WVlkdjJMd0dTSk1NQTJXTmszclVabUx1QlEzN2Ns?=
+ =?utf-8?B?Vk5GUmlob2xQQXRib2s0TEZEWUhmZmkxZ3N2TGJuM3Y0MGdmVXRIK2grYmdQ?=
+ =?utf-8?B?YmdCU1VYZHBZUkpZdUwyYTBHdWV4M0ZGSkZLNVlwQ01taTVjeFFsaXNuMHZB?=
+ =?utf-8?B?THIxZnNaRVlOb1FURkQ5dmUwcjhxYXEwK3hWNXF4TzNid0V2dzIyVldieldP?=
+ =?utf-8?B?T1VYQ0g5K21BdUFCaXdLOXIrYWpIS20vSk55SGxXM2V2VkZaT2k2V1NZaU1q?=
+ =?utf-8?B?U3JZMXU0eUs5WkMwUjBPR0szR3Z1T2dzNmcxNHlXbHZoaXJUclQvT0JKZ0Jo?=
+ =?utf-8?B?YU51eTU5SUF6T2I5WVNYdTRMUytOZUFMVE0wNWIydldRcjVZaklxQ3VKWVB4?=
+ =?utf-8?B?WHdGeVZoTnRYbUMwc1Rmc0JjRTRTRTNqK2l4cU9wZTVJSGhCb0xDN2Rqa3Rq?=
+ =?utf-8?B?bUwzUE42SjV2cmZSNEZMQUxuQWxoTngyRjZFVlNKZ0VTcXp5d2hsWWtZNVJi?=
+ =?utf-8?B?ZFRkYmlIdndrZDdRekJKK1pmM3NFMjgrSDRwR2hVQ0Nsc2ltUU1MendIbzJR?=
+ =?utf-8?B?UmNZZUo1b0Y2WlFLSXhid3h2N00wNXhDYkM2L2pZY2xGM2RqTHlyY2RSOC9G?=
+ =?utf-8?B?NFpYRm5rRkdRR2U2dzJFUEF1TE5jUUxaczlXTDE0OWtZV0lkNVl4RE9yeGMy?=
+ =?utf-8?B?SjR4bkwwaFNTRkxQa2FpTlpiQmI5Tlg3ajc3VTRyblhBMXdkZmdlYkEyVFBk?=
+ =?utf-8?B?NXlKdFVlQlRsSXZYY2xQdkVEdVNick1BeXVKMzJ1M1EvZzV3S1BGUHNLNE4y?=
+ =?utf-8?B?MTFiMEpsQk9WblpEV0JvWmw2Kzg5SHdPNENWeS9aVFNtTjZ3RzFublNYeldZ?=
+ =?utf-8?B?bGtkTlRvdkZBSEwvVVNWRHM3cjNxSUw0WGkrRUdReVcwTGcrckpDbXhiTndZ?=
+ =?utf-8?B?dVpJRjdaQlFvZ1hXSTFBZllXTjUrZXVabGhqMEVvMTM5R0lBVmxQNVJvVURt?=
+ =?utf-8?B?Q1lQeFVvV28rdG1jakxlVHJQN3V5NlViSi96ZWlicHY4cE14SElaclc0cnJL?=
+ =?utf-8?B?cjd0ZG14TkFqNGgrRXpSVlFEc2c5THRVZmlEMHVwSEVpWk5zSU41WnlNUHJn?=
+ =?utf-8?B?VndRUEtGTXlYb2xzZDFRWVQ4UzZKWnhIN0U2MWpES1psYlU5aTFNWWx0WDc5?=
+ =?utf-8?B?bDh5Y014MzFiWWJ1eElkR0pYUnN0YzFpV2Y3RTRjQVQ5WkE9PQ==?=
+X-Forefront-Antispam-Report-Untrusted:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM9PR08MB7120.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU4PR08MB11101
+X-EOPAttributedMessage: 0
+X-MS-Exchange-Transport-CrossTenantHeadersStripped:
+ AM3PEPF0000A79A.eurprd04.prod.outlook.com
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id-Prvs:
+	433b08de-d0ed-4f19-048a-08dd98f3ec16
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700013|7416014|376014|82310400026|14060799003|1800799024|35042699022;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?a3BvZ3YxL0hqcE1OclFVOEFFM3JtekludDVuRkU3cXV0TXcxVU5jU2pYL003?=
+ =?utf-8?B?TGRBcWJlU08vcUp3V3pjdUYzRVJDUlNtLzhEZitnNVE3Rkh3cjFVc1hIaWJR?=
+ =?utf-8?B?aGdvbmJaUDFQbE1yZmZBQnBWeFVNYlFuQW95dVlja1FsS0hIckVWa0ViWmFT?=
+ =?utf-8?B?VUdXWURyZWNSaTJ1OG9pMDExK29OYm4wOFZtS1gzS0k1VVpiL0MzVWI0OWRI?=
+ =?utf-8?B?N0QvT2VqTmwxUDVFTjZCYU1oVm5WTElPMmZMejRwS3FWZWovMkJjVFlvaHUw?=
+ =?utf-8?B?OSsyTE1FVlN3QzM5bi9CUkdQMTRXa3ZLNVJxSlk1RzJLem1CVDd1cW9rTHBv?=
+ =?utf-8?B?bEVDdlZkTXFuT0VMVFZrTDlWL284UTRoNXdpN0RBT3puSlZhQ09PVGlDN3Fm?=
+ =?utf-8?B?dy96MDVsbG1jS25oQWVPcTNOZTdGNEI2cktKRzU5UG5TL3k3Q2QrVUNha2Fa?=
+ =?utf-8?B?ZXEyMFY5MGN4Q3l6U3lQbEVhV1c3dS9mQmpIc25ZM1pXRHVPWlNBTWVHKytI?=
+ =?utf-8?B?YlR3cWZIWUVoSmprdHRwSkdvOGlPUDFINHRoK1JRdlFMNkN2ZzVsWS80WWxC?=
+ =?utf-8?B?dnNCMk9BdUhXaE1Id0dZSjIwLzZXMnNqcUVwMGFLMkJZOW1jWTU0Qy9GWDBR?=
+ =?utf-8?B?L0oyUTZ6TVR6ZzNaejFSS1dGUTkvQ0NjVzVCcCsxZ0NidWRkLzRWV21EUUFh?=
+ =?utf-8?B?RGtXSFdFcTFkS0hIK1BHS1MwZEZGSmNOSUkrdzFCS0k4Z2tRZ0FDeTJ1bG80?=
+ =?utf-8?B?R2JhK1REb0JxMGFXKzg0YnZRaW1yNmlubko4d2lIQ0lxVUNOQ295dEwyYnhC?=
+ =?utf-8?B?dCt3TUI0RytieUF1N2VUV29aam1OaDdCK3FVVHZuUnBjL3N6VU9pamxEdVNH?=
+ =?utf-8?B?dWN2eE9lS2E0WjZYMlN6TWVuTC9TSTIzU1IvYWFuaEdLK0JSdndWK3RlMVIv?=
+ =?utf-8?B?L2Q1WVdrc0p1aFU1ZndMZ0NIZDNrZGFxY05TYmpNVWVzcWhUcDYrL2lkdy9W?=
+ =?utf-8?B?bDE2ODJXMEszM1NVek1KWnFqTmJ1NWlzV2RPakVHOG1leEhSMld6YmZEeS9q?=
+ =?utf-8?B?WDk4TnV3Rk9zTVk5KzJsY2daYTEyK0JobmtWdXlHdmh0U3Ftdm5SUmpQKzYx?=
+ =?utf-8?B?bzJXM0RZSkFiNlMvZEh6eE02YjNwSHNBQTY5VnlVdEoyeGRDai9jWjRPTit3?=
+ =?utf-8?B?bk9ZdEFrOGFtMkFsSmFNYmJMblNqdTBGeFJqTlVXbG9RYjhlLzlheHFlODJ4?=
+ =?utf-8?B?bjROSDBNay9ZOWYrS1JRY25hKzRaYWs0a29LNGVqZEFWK1ZPKzFFdFJFUnU3?=
+ =?utf-8?B?UWlFYWx1MjRDMzRKNkY1Tms3Vllod1ZwSlpjNThDU3cvK0NQYzJGOUdxc2Vu?=
+ =?utf-8?B?QTRnQ09mS3Zoa2pwMkJGdzNiQnZYMjRKSmtzVS93aTI5a21YRGNITGducXVl?=
+ =?utf-8?B?ZmhpQTFFZXlJdUIvSk9yVUMvOGg5bXRMcWtMbHpualp1YWFxUUY4a1RERXpY?=
+ =?utf-8?B?TEVLRU9jTXlsMHl3bWNyZ2VqTTJueVhHdTBnQ2I0RzJvU3ZmdEZmL0U3MFNv?=
+ =?utf-8?B?ZExFU2NVRXk2S25HdVREYlNCdVdOTDh1WkV6OUhwZDZzZ2VOVXFaQ0wyMTZu?=
+ =?utf-8?B?dzBsUE1HRy85T0p3cDY0UStELzd3MUE5VUdyeUx1TUhSMEk3RW4xaHBBclJQ?=
+ =?utf-8?B?ak1jUWJHaThDU3k3R0RnSXRxbU1PUWhsTG0wN3JPUUhWYVJiM05kY0VZRHAy?=
+ =?utf-8?B?UWdhSzJSZUxiUWJvS0RZWWFwalNFMmIzNG13cFl0dHdyWUd4UEJlQ09Qc0hS?=
+ =?utf-8?B?OXpGNndhU2RuRGFDd1l3UG1hVmR3QVdqc2hycCtNeDlCc2krRDlWTmRXNXJz?=
+ =?utf-8?B?ckU3bmNDZDZwWWJIRnRpWjNaY2ZEejVTbkZXSEpLL1JxNXp5eWRxKzhpWE81?=
+ =?utf-8?B?T3Q1VngrWDh4M2dROGkyVHZRellqcU5yY3Yvc2dCcjZzUmZ2bUhNU0lFbVcz?=
+ =?utf-8?B?RndRSlhTc3BRRVB0ckErOXVDQ1VFektCWVhzNGowMnpOSVh5MGJ3TkJwWFhY?=
+ =?utf-8?Q?O4Z4Ts?=
+X-Forefront-Antispam-Report:
+	CIP:4.158.2.129;CTRY:GB;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:outbound-uk1.az.dlp.m.darktrace.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(7416014)(376014)(82310400026)(14060799003)(1800799024)(35042699022);DIR:OUT;SFP:1101;
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 May 2025 05:46:30.3557
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 27d24d24-0976-4f7b-19e0-08dd98f40083
+X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[4.158.2.129];Helo=[outbound-uk1.az.dlp.m.darktrace.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	AM3PEPF0000A79A.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR08MB5409
 
-From: Anshumali Gaur <agaur@marvell.com>
 
-RVU PF shares a dedicated memory region with each of it's VFs.
-This memory region is used to establish communication between them.
-Since Admin function (AF) handles resource management, PF doesn't
-process the messages sent by VFs. It acts as an intermediary device
-process the messages sent by VFs. It acts as an intermediary device.
-Hardware doesn't support direct communication between AF and VFs.
+On 21/05/25 5:28 pm, Ryan Roberts wrote:
+> On 19/05/2025 08:48, Dev Jain wrote:
+>> In case of prot_numa, there are various cases in which we can skip to the
+>> next iteration. Since the skip condition is based on the folio and not
+>> the PTEs, we can skip a PTE batch.
+>>
+>> Signed-off-by: Dev Jain <dev.jain@arm.com>
+>> ---
+>>   mm/mprotect.c | 36 +++++++++++++++++++++++++++++-------
+>>   1 file changed, 29 insertions(+), 7 deletions(-)
+>>
+>> diff --git a/mm/mprotect.c b/mm/mprotect.c
+>> index 88608d0dc2c2..1ee160ed0b14 100644
+>> --- a/mm/mprotect.c
+>> +++ b/mm/mprotect.c
+>> @@ -83,6 +83,18 @@ bool can_change_pte_writable(struct vm_area_struct *vma, unsigned long addr,
+>>   	return pte_dirty(pte);
+>>   }
+>>   
+>> +static int mprotect_batch(struct folio *folio, unsigned long addr, pte_t *ptep,
+> Perhaps it should be called mprotect_folio_pte_batch() to match the existing
+> madvise_folio_pte_batch()?
 
-Signed-off-by: Anshumali Gaur <agaur@marvell.com>
-Signed-off-by: George Cherian <gcherian@marvell.com>
-Reviewed-by: Alexander Sverdlin <alexander.sverdlin@gmail.com>
----
- drivers/soc/marvell/rvu_gen_pf/gen_pf.c | 437 ++++++++++++++++++++++++
- drivers/soc/marvell/rvu_gen_pf/gen_pf.h |   2 +
- 2 files changed, 439 insertions(+)
 
-diff --git a/drivers/soc/marvell/rvu_gen_pf/gen_pf.c b/drivers/soc/marvell/rvu_gen_pf/gen_pf.c
-index a03fc3f16c69..d7f96b9994cb 100644
---- a/drivers/soc/marvell/rvu_gen_pf/gen_pf.c
-+++ b/drivers/soc/marvell/rvu_gen_pf/gen_pf.c
-@@ -50,6 +50,120 @@ static int rvu_gen_pf_check_pf_usable(struct gen_pf_dev *pfdev)
- 	return 0;
- }
- 
-+static void rvu_gen_pf_forward_msg_pfvf(struct otx2_mbox_dev *mdev,
-+					struct otx2_mbox *pfvf_mbox, void *bbuf_base,
-+					int devid)
-+{
-+	struct otx2_mbox_dev *src_mdev = mdev;
-+	int offset;
-+
-+	/* Msgs are already copied, trigger VF's mbox irq */
-+	smp_wmb();
-+
-+	otx2_mbox_wait_for_zero(pfvf_mbox, devid);
-+	offset = pfvf_mbox->trigger | (devid << pfvf_mbox->tr_shift);
-+	writeq(MBOX_DOWN_MSG, (void __iomem *)pfvf_mbox->reg_base + offset);
-+
-+	/* Restore VF's mbox bounce buffer region address */
-+	src_mdev->mbase = bbuf_base;
-+}
-+
-+static int rvu_gen_pf_forward_vf_mbox_msgs(struct gen_pf_dev *pfdev,
-+					   struct otx2_mbox *src_mbox,
-+					   int dir, int vf, int num_msgs)
-+{
-+	struct otx2_mbox_dev *src_mdev, *dst_mdev;
-+	struct mbox_hdr *mbox_hdr;
-+	struct mbox_hdr *req_hdr;
-+	struct mbox *dst_mbox;
-+	int dst_size, err;
-+
-+	if (dir == MBOX_DIR_PFAF) {
-+		/*
-+		 * Set VF's mailbox memory as PF's bounce buffer memory, so
-+		 * that explicit copying of VF's msgs to PF=>AF mbox region
-+		 * and AF=>PF responses to VF's mbox region can be avoided.
-+		 */
-+		src_mdev = &src_mbox->dev[vf];
-+		mbox_hdr = src_mbox->hwbase +
-+				src_mbox->rx_start + (vf * MBOX_SIZE);
-+
-+		dst_mbox = &pfdev->mbox;
-+		dst_size = dst_mbox->mbox.tx_size -
-+				ALIGN(sizeof(*mbox_hdr), MBOX_MSG_ALIGN);
-+		/* Check if msgs fit into destination area and has valid size */
-+		if (mbox_hdr->msg_size > dst_size || !mbox_hdr->msg_size)
-+			return -EINVAL;
-+
-+		dst_mdev = &dst_mbox->mbox.dev[0];
-+
-+		mutex_lock(&pfdev->mbox.lock);
-+		dst_mdev->mbase = src_mdev->mbase;
-+		dst_mdev->msg_size = mbox_hdr->msg_size;
-+		dst_mdev->num_msgs = num_msgs;
-+		err = rvu_gen_pf_sync_mbox_msg(dst_mbox);
-+		/*
-+		 * Error code -EIO indicate there is a communication failure
-+		 * to the AF. Rest of the error codes indicate that AF processed
-+		 * VF messages and set the error codes in response messages
-+		 * (if any) so simply forward responses to VF.
-+		 */
-+		if (err == -EIO) {
-+			dev_warn(pfdev->dev,
-+				 "AF not responding to VF%d messages\n", vf);
-+			/* restore PF mbase and exit */
-+			dst_mdev->mbase = pfdev->mbox.bbuf_base;
-+			mutex_unlock(&pfdev->mbox.lock);
-+			return err;
-+		}
-+		/*
-+		 * At this point, all the VF messages sent to AF are acked
-+		 * with proper responses and responses are copied to VF
-+		 * mailbox hence raise interrupt to VF.
-+		 */
-+		req_hdr = (struct mbox_hdr *)(dst_mdev->mbase +
-+					      dst_mbox->mbox.rx_start);
-+		req_hdr->num_msgs = num_msgs;
-+
-+		rvu_gen_pf_forward_msg_pfvf(dst_mdev, &pfdev->mbox_pfvf[0].mbox,
-+					    pfdev->mbox.bbuf_base, vf);
-+		mutex_unlock(&pfdev->mbox.lock);
-+	} else if (dir == MBOX_DIR_PFVF_UP) {
-+		src_mdev = &src_mbox->dev[0];
-+		mbox_hdr = src_mbox->hwbase + src_mbox->rx_start;
-+		req_hdr = (struct mbox_hdr *)(src_mdev->mbase +
-+					      src_mbox->rx_start);
-+		req_hdr->num_msgs = num_msgs;
-+
-+		dst_mbox = &pfdev->mbox_pfvf[0];
-+		dst_size = dst_mbox->mbox_up.tx_size -
-+				ALIGN(sizeof(*mbox_hdr), MBOX_MSG_ALIGN);
-+		/* Check if msgs fit into destination area */
-+		if (mbox_hdr->msg_size > dst_size)
-+			return -EINVAL;
-+		dst_mdev = &dst_mbox->mbox_up.dev[vf];
-+		dst_mdev->mbase = src_mdev->mbase;
-+		dst_mdev->msg_size = mbox_hdr->msg_size;
-+		dst_mdev->num_msgs = mbox_hdr->num_msgs;
-+		err = rvu_gen_pf_sync_mbox_up_msg(dst_mbox, vf);
-+		if (err) {
-+			dev_warn(pfdev->dev,
-+				 "VF%d is not responding to mailbox\n", vf);
-+			return err;
-+		}
-+	} else if (dir == MBOX_DIR_VFPF_UP) {
-+		req_hdr = (struct mbox_hdr *)(src_mbox->dev[0].mbase +
-+					      src_mbox->rx_start);
-+		req_hdr->num_msgs = num_msgs;
-+		rvu_gen_pf_forward_msg_pfvf(&pfdev->mbox_pfvf->mbox_up.dev[vf],
-+					    &pfdev->mbox.mbox_up,
-+					    pfdev->mbox_pfvf[vf].bbuf_base,
-+					    0);
-+	}
-+
-+	return 0;
-+}
-+
- static irqreturn_t rvu_gen_pf_pfaf_mbox_intr_handler(int irq, void *pf_irq)
- {
- 	struct gen_pf_dev *pfdev = (struct gen_pf_dev *)pf_irq;
-@@ -192,6 +306,39 @@ static void rvu_gen_pf_process_pfaf_mbox_msg(struct gen_pf_dev *pfdev,
- 	}
- }
- 
-+static void rvu_gen_pf_pfaf_mbox_up_handler(struct work_struct *work)
-+{
-+	struct mbox *af_mbox = container_of(work, struct mbox, mbox_up_wrk);
-+	struct otx2_mbox *mbox = &af_mbox->mbox_up;
-+	struct otx2_mbox_dev *mdev = &mbox->dev[0];
-+	struct gen_pf_dev *pfdev = af_mbox->pfvf;
-+	int offset, id, devid = 0;
-+	struct mbox_hdr *rsp_hdr;
-+	struct mbox_msghdr *msg;
-+	u16 num_msgs;
-+
-+	rsp_hdr = (struct mbox_hdr *)(mdev->mbase + mbox->rx_start);
-+	num_msgs = rsp_hdr->num_msgs;
-+
-+	offset = mbox->rx_start + ALIGN(sizeof(*rsp_hdr), MBOX_MSG_ALIGN);
-+
-+	for (id = 0; id < num_msgs; id++) {
-+		msg = (struct mbox_msghdr *)(mdev->mbase + offset);
-+
-+		devid = msg->pcifunc & RVU_PFVF_FUNC_MASK;
-+		offset = mbox->rx_start + msg->next_msgoff;
-+	}
-+	/* Forward to VF iff VFs are really present */
-+	if (devid && pci_num_vf(pfdev->pdev)) {
-+		rvu_gen_pf_forward_vf_mbox_msgs(pfdev, &pfdev->mbox.mbox_up,
-+						MBOX_DIR_PFVF_UP, devid - 1,
-+						num_msgs);
-+		return;
-+	}
-+
-+	otx2_mbox_msg_send(mbox, 0);
-+}
-+
- static void rvu_gen_pf_pfaf_mbox_handler(struct work_struct *work)
- {
- 	struct otx2_mbox_dev *mdev;
-@@ -266,6 +413,7 @@ static int rvu_gen_pf_pfaf_mbox_init(struct gen_pf_dev *pfdev)
- 		goto exit;
- 
- 	INIT_WORK(&mbox->mbox_wrk, rvu_gen_pf_pfaf_mbox_handler);
-+	INIT_WORK(&mbox->mbox_up_wrk, rvu_gen_pf_pfaf_mbox_up_handler);
- 	mutex_init(&mbox->lock);
- 
- 	return 0;
-@@ -274,19 +422,305 @@ static int rvu_gen_pf_pfaf_mbox_init(struct gen_pf_dev *pfdev)
- 	return err;
- }
- 
-+static void rvu_gen_pf_pfvf_mbox_handler(struct work_struct *work)
-+{
-+	struct mbox_msghdr *msg = NULL;
-+	int offset, vf_idx, id, err;
-+	struct otx2_mbox_dev *mdev;
-+	struct gen_pf_dev *pfdev;
-+	struct mbox_hdr *req_hdr;
-+	struct otx2_mbox *mbox;
-+	struct mbox *vf_mbox;
-+
-+	vf_mbox = container_of(work, struct mbox, mbox_wrk);
-+	pfdev = vf_mbox->pfvf;
-+	vf_idx = vf_mbox - pfdev->mbox_pfvf;
-+
-+	mbox = &pfdev->mbox_pfvf[0].mbox;
-+	mdev = &mbox->dev[vf_idx];
-+	req_hdr = (struct mbox_hdr *)(mdev->mbase + mbox->rx_start);
-+
-+	offset = ALIGN(sizeof(*req_hdr), MBOX_MSG_ALIGN);
-+
-+	for (id = 0; id < vf_mbox->num_msgs; id++) {
-+		msg = (struct mbox_msghdr *)(mdev->mbase + mbox->rx_start +
-+					     offset);
-+
-+		if (msg->sig != OTX2_MBOX_REQ_SIG)
-+			goto inval_msg;
-+
-+		/* Set VF's number in each of the msg */
-+		msg->pcifunc &= ~RVU_PFVF_FUNC_MASK;
-+		msg->pcifunc |= (vf_idx + 1) & RVU_PFVF_FUNC_MASK;
-+		offset = msg->next_msgoff;
-+	}
-+	err = rvu_gen_pf_forward_vf_mbox_msgs(pfdev, mbox, MBOX_DIR_PFAF, vf_idx,
-+					      vf_mbox->num_msgs);
-+	if (err)
-+		goto inval_msg;
-+	return;
-+
-+inval_msg:
-+	if (!msg)
-+		return;
-+
-+	otx2_reply_invalid_msg(mbox, vf_idx, 0, msg->id);
-+	otx2_mbox_msg_send(mbox, vf_idx);
-+}
-+
-+static int rvu_gen_pf_pfvf_mbox_init(struct gen_pf_dev *pfdev, int numvfs)
-+{
-+	void __iomem *hwbase;
-+	struct mbox *mbox;
-+	int err, vf;
-+	u64 base;
-+
-+	if (!numvfs)
-+		return -EINVAL;
-+
-+	pfdev->mbox_pfvf = devm_kcalloc(&pfdev->pdev->dev, numvfs,
-+					sizeof(struct mbox), GFP_KERNEL);
-+
-+	if (!pfdev->mbox_pfvf)
-+		return -ENOMEM;
-+
-+	pfdev->mbox_pfvf_wq = alloc_workqueue("otx2_pfvf_mailbox",
-+					      WQ_UNBOUND | WQ_HIGHPRI |
-+					      WQ_MEM_RECLAIM, 0);
-+	if (!pfdev->mbox_pfvf_wq)
-+		return -ENOMEM;
-+
-+	/*
-+	 * PF <-> VF mailbox region follows after
-+	 * PF <-> AF mailbox region.
-+	 */
-+	base = pci_resource_start(pfdev->pdev, PCI_MBOX_BAR_NUM) + MBOX_SIZE;
-+
-+	hwbase = ioremap_wc(base, MBOX_SIZE * pfdev->total_vfs);
-+	if (!hwbase) {
-+		err = -ENOMEM;
-+		goto free_wq;
-+	}
-+
-+	mbox = &pfdev->mbox_pfvf[0];
-+	err = otx2_mbox_init(&mbox->mbox, hwbase, pfdev->pdev, pfdev->reg_base,
-+			     MBOX_DIR_PFVF, numvfs);
-+	if (err)
-+		goto free_iomem;
-+
-+	err = otx2_mbox_init(&mbox->mbox_up, hwbase, pfdev->pdev, pfdev->reg_base,
-+			     MBOX_DIR_PFVF_UP, numvfs);
-+	if (err)
-+		goto free_iomem;
-+
-+	for (vf = 0; vf < numvfs; vf++) {
-+		mbox->pfvf = pfdev;
-+		INIT_WORK(&mbox->mbox_wrk, rvu_gen_pf_pfvf_mbox_handler);
-+		mbox++;
-+	}
-+
-+	return 0;
-+
-+free_iomem:
-+	if (hwbase)
-+		iounmap(hwbase);
-+free_wq:
-+	destroy_workqueue(pfdev->mbox_pfvf_wq);
-+	return err;
-+}
-+
-+static void rvu_gen_pf_pfvf_mbox_destroy(struct gen_pf_dev *pfdev)
-+{
-+	struct mbox *mbox = &pfdev->mbox_pfvf[0];
-+
-+	if (!mbox)
-+		return;
-+
-+	if (pfdev->mbox_pfvf_wq) {
-+		destroy_workqueue(pfdev->mbox_pfvf_wq);
-+		pfdev->mbox_pfvf_wq = NULL;
-+	}
-+
-+	if (mbox->mbox.hwbase)
-+		iounmap((void __iomem *)mbox->mbox.hwbase);
-+
-+	otx2_mbox_destroy(&mbox->mbox);
-+}
-+
-+static void rvu_gen_pf_enable_pfvf_mbox_intr(struct gen_pf_dev *pfdev, int numvfs)
-+{
-+	/* Clear PF <=> VF mailbox IRQ */
-+	writeq(~0ull, pfdev->reg_base + RVU_PF_VFPF_MBOX_INTX(0));
-+	writeq(~0ull, pfdev->reg_base + RVU_PF_VFPF_MBOX_INTX(1));
-+
-+	/* Enable PF <=> VF mailbox IRQ */
-+	writeq(INTR_MASK(numvfs), pfdev->reg_base + RVU_PF_VFPF_MBOX_INT_ENA_W1SX(0));
-+	if (numvfs > 64) {
-+		numvfs -= 64;
-+		writeq(INTR_MASK(numvfs), pfdev->reg_base + RVU_PF_VFPF_MBOX_INT_ENA_W1SX(1));
-+	}
-+}
-+
-+static void rvu_gen_pf_disable_pfvf_mbox_intr(struct gen_pf_dev *pfdev, int numvfs)
-+{
-+	int vector;
-+
-+	/* Disable PF <=> VF mailbox IRQ */
-+	writeq(~0ull, pfdev->reg_base + RVU_PF_VFPF_MBOX_INT_ENA_W1CX(0));
-+	writeq(~0ull, pfdev->reg_base + RVU_PF_VFPF_MBOX_INT_ENA_W1CX(1));
-+
-+	writeq(~0ull, pfdev->reg_base + RVU_PF_VFPF_MBOX_INTX(0));
-+	vector = pci_irq_vector(pfdev->pdev, RVU_PF_INT_VEC_VFPF_MBOX0);
-+	free_irq(vector, pfdev);
-+
-+	if (numvfs > 64) {
-+		writeq(~0ull, pfdev->reg_base + RVU_PF_VFPF_MBOX_INTX(1));
-+		vector = pci_irq_vector(pfdev->pdev, RVU_PF_INT_VEC_VFPF_MBOX1);
-+		free_irq(vector, pfdev);
-+	}
-+}
-+
-+static void rvu_gen_pf_queue_vf_work(struct mbox *mw, struct workqueue_struct *mbox_wq,
-+				     int first, int mdevs, u64 intr)
-+{
-+	struct otx2_mbox_dev *mdev;
-+	struct otx2_mbox *mbox;
-+	struct mbox_hdr *hdr;
-+	int i;
-+
-+	for (i = first; i < mdevs; i++) {
-+		/* start from 0 */
-+		if (!(intr & BIT_ULL(i - first)))
-+			continue;
-+
-+		mbox = &mw->mbox;
-+		mdev = &mbox->dev[i];
-+		hdr = mdev->mbase + mbox->rx_start;
-+		/*
-+		 * The hdr->num_msgs is set to zero immediately in the interrupt
-+		 * handler to ensure that it holds a correct value next time
-+		 * when the interrupt handler is called. pf->mw[i].num_msgs
-+		 * holds the data for use in otx2_pfvf_mbox_handler and
-+		 * pf->mw[i].up_num_msgs holds the data for use in
-+		 * otx2_pfvf_mbox_up_handler.
-+		 */
-+		if (hdr->num_msgs) {
-+			mw[i].num_msgs = hdr->num_msgs;
-+			hdr->num_msgs = 0;
-+			queue_work(mbox_wq, &mw[i].mbox_wrk);
-+		}
-+
-+		mbox = &mw->mbox_up;
-+		mdev = &mbox->dev[i];
-+		hdr = mdev->mbase + mbox->rx_start;
-+		if (hdr->num_msgs) {
-+			mw[i].up_num_msgs = hdr->num_msgs;
-+			hdr->num_msgs = 0;
-+			queue_work(mbox_wq, &mw[i].mbox_up_wrk);
-+		}
-+	}
-+}
-+
-+static irqreturn_t rvu_gen_pf_pfvf_mbox_intr_handler(int irq, void *pf_irq)
-+{
-+	struct gen_pf_dev *pfdev = (struct gen_pf_dev *)(pf_irq);
-+	int vfs = pfdev->total_vfs;
-+	struct mbox *mbox;
-+	u64 intr;
-+
-+	mbox = pfdev->mbox_pfvf;
-+	/* Handle VF interrupts */
-+	if (vfs > 64) {
-+		intr = readq(pfdev->reg_base + RVU_PF_VFPF_MBOX_INTX(1));
-+		writeq(intr, pfdev->reg_base + RVU_PF_VFPF_MBOX_INTX(1));
-+		rvu_gen_pf_queue_vf_work(mbox, pfdev->mbox_pfvf_wq, 64, vfs, intr);
-+		if (intr)
-+			trace_otx2_msg_interrupt(mbox->mbox.pdev, "VF(s) to PF", intr);
-+		vfs = 64;
-+	}
-+
-+	intr = readq(pfdev->reg_base + RVU_PF_VFPF_MBOX_INTX(0));
-+	writeq(intr, pfdev->reg_base + RVU_PF_VFPF_MBOX_INTX(0));
-+
-+	rvu_gen_pf_queue_vf_work(mbox, pfdev->mbox_pfvf_wq, 0, vfs, intr);
-+
-+	if (intr)
-+		trace_otx2_msg_interrupt(mbox->mbox.pdev, "VF(s) to PF", intr);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static int rvu_gen_pf_register_pfvf_mbox_intr(struct gen_pf_dev *pfdev, int numvfs)
-+{
-+	char *irq_name;
-+	int err;
-+
-+	/* Register MBOX0 interrupt handler */
-+	irq_name = &pfdev->irq_name[RVU_PF_INT_VEC_VFPF_MBOX0 * NAME_SIZE];
-+	if (pfdev->pcifunc)
-+		snprintf(irq_name, NAME_SIZE,
-+			 "Generic RVUPF%d_VF Mbox0", rvu_get_pf(pfdev->pcifunc));
-+	else
-+		snprintf(irq_name, NAME_SIZE, "Generic RVUPF_VF Mbox0");
-+	err = request_irq(pci_irq_vector(pfdev->pdev, RVU_PF_INT_VEC_VFPF_MBOX0),
-+			  rvu_gen_pf_pfvf_mbox_intr_handler, 0, irq_name, pfdev);
-+	if (err) {
-+		dev_err(pfdev->dev,
-+			"RVUPF: IRQ registration failed for PFVF mbox0 irq\n");
-+		return err;
-+	}
-+
-+	if (numvfs > 64) {
-+		/* Register MBOX1 interrupt handler */
-+		irq_name = &pfdev->irq_name[RVU_PF_INT_VEC_VFPF_MBOX1 * NAME_SIZE];
-+		if (pfdev->pcifunc)
-+			snprintf(irq_name, NAME_SIZE,
-+				 "Generic RVUPF%d_VF Mbox1", rvu_get_pf(pfdev->pcifunc));
-+		else
-+			snprintf(irq_name, NAME_SIZE, "Generic RVUPF_VF Mbox1");
-+		err = request_irq(pci_irq_vector(pfdev->pdev,
-+						 RVU_PF_INT_VEC_VFPF_MBOX1),
-+						 rvu_gen_pf_pfvf_mbox_intr_handler,
-+						 0, irq_name, pfdev);
-+		if (err) {
-+			dev_err(pfdev->dev,
-+				"RVUPF: IRQ registration failed for PFVF mbox1 irq\n");
-+			return err;
-+		}
-+	}
-+
-+	rvu_gen_pf_enable_pfvf_mbox_intr(pfdev, numvfs);
-+
-+	return 0;
-+}
-+
- static int rvu_gen_pf_sriov_enable(struct pci_dev *pdev, int numvfs)
- {
-+	struct gen_pf_dev *pfdev = pci_get_drvdata(pdev);
- 	int ret;
- 
-+	/* Init PF <=> VF mailbox stuff */
-+	ret = rvu_gen_pf_pfvf_mbox_init(pfdev, numvfs);
-+	if (ret)
-+		return ret;
-+
-+	ret = rvu_gen_pf_register_pfvf_mbox_intr(pfdev, numvfs);
-+	if (ret)
-+		goto free_mbox;
-+
- 	ret = pci_enable_sriov(pdev, numvfs);
- 	if (ret)
- 		return ret;
- 
- 	return numvfs;
-+free_mbox:
-+	rvu_gen_pf_pfvf_mbox_destroy(pfdev);
-+	return ret;
- }
- 
- static int rvu_gen_pf_sriov_disable(struct pci_dev *pdev)
- {
-+	struct gen_pf_dev *pfdev = pci_get_drvdata(pdev);
- 	int numvfs = pci_num_vf(pdev);
- 
- 	if (!numvfs)
-@@ -294,6 +728,9 @@ static int rvu_gen_pf_sriov_disable(struct pci_dev *pdev)
- 
- 	pci_disable_sriov(pdev);
- 
-+	rvu_gen_pf_disable_pfvf_mbox_intr(pfdev, numvfs);
-+	rvu_gen_pf_pfvf_mbox_destroy(pfdev);
-+
- 	return 0;
- }
- 
-diff --git a/drivers/soc/marvell/rvu_gen_pf/gen_pf.h b/drivers/soc/marvell/rvu_gen_pf/gen_pf.h
-index 2019bea10ad0..ad651b97b661 100644
---- a/drivers/soc/marvell/rvu_gen_pf/gen_pf.h
-+++ b/drivers/soc/marvell/rvu_gen_pf/gen_pf.h
-@@ -38,7 +38,9 @@ struct gen_pf_dev {
- 
- 	/* Mbox */
- 	struct mbox		mbox;
-+	struct mbox		*mbox_pfvf;
- 	struct workqueue_struct *mbox_wq;
-+	struct workqueue_struct *mbox_pfvf_wq;
- 
- 	int			pf;
- 	u16			pcifunc; /* RVU PF_FUNC */
--- 
-2.34.1
+Thanks, this is better.
 
+
+>
+>> +		pte_t pte, int max_nr_ptes)
+>> +{
+>> +	const fpb_t flags = FPB_IGNORE_DIRTY | FPB_IGNORE_SOFT_DIRTY;
+>> +
+>> +	if (!folio_test_large(folio) || (max_nr_ptes == 1))
+>> +		return 1;
+>> +
+>> +	return folio_pte_batch(folio, addr, ptep, pte, max_nr_ptes, flags,
+>> +			       NULL, NULL, NULL);
+>> +}
+>> +
+>>   static long change_pte_range(struct mmu_gather *tlb,
+>>   		struct vm_area_struct *vma, pmd_t *pmd, unsigned long addr,
+>>   		unsigned long end, pgprot_t newprot, unsigned long cp_flags)
+>> @@ -94,6 +106,7 @@ static long change_pte_range(struct mmu_gather *tlb,
+>>   	bool prot_numa = cp_flags & MM_CP_PROT_NUMA;
+>>   	bool uffd_wp = cp_flags & MM_CP_UFFD_WP;
+>>   	bool uffd_wp_resolve = cp_flags & MM_CP_UFFD_WP_RESOLVE;
+>> +	int nr_ptes;
+>>   
+>>   	tlb_change_page_size(tlb, PAGE_SIZE);
+>>   	pte = pte_offset_map_lock(vma->vm_mm, pmd, addr, &ptl);
+>> @@ -108,8 +121,10 @@ static long change_pte_range(struct mmu_gather *tlb,
+>>   	flush_tlb_batched_pending(vma->vm_mm);
+>>   	arch_enter_lazy_mmu_mode();
+>>   	do {
+>> +		nr_ptes = 1;
+>>   		oldpte = ptep_get(pte);
+>>   		if (pte_present(oldpte)) {
+>> +			int max_nr_ptes = (end - addr) >> PAGE_SHIFT;
+>>   			pte_t ptent;
+>>   
+>>   			/*
+>> @@ -126,15 +141,18 @@ static long change_pte_range(struct mmu_gather *tlb,
+>>   					continue;
+>>   
+>>   				folio = vm_normal_folio(vma, addr, oldpte);
+>> -				if (!folio || folio_is_zone_device(folio) ||
+>> -				    folio_test_ksm(folio))
+>> +				if (!folio)
+>>   					continue;
+> You modify mprotect_batch() to handle folio == NULL later, perhaps just add that
+> here, then you don't need to unpick this conditional and can just goto
+> skip_branch, even for the !folio case.
+
+
+I'll check this.
+
+
+>
+> Thanks,
+> Ryan
+>
+>>   
+>> +				if (folio_is_zone_device(folio) ||
+>> +				    folio_test_ksm(folio))
+>> +					goto skip_batch;
+>> +
+>>   				/* Also skip shared copy-on-write pages */
+>>   				if (is_cow_mapping(vma->vm_flags) &&
+>>   				    (folio_maybe_dma_pinned(folio) ||
+>>   				     folio_maybe_mapped_shared(folio)))
+>> -					continue;
+>> +					goto skip_batch;
+>>   
+>>   				/*
+>>   				 * While migration can move some dirty pages,
+>> @@ -143,7 +161,7 @@ static long change_pte_range(struct mmu_gather *tlb,
+>>   				 */
+>>   				if (folio_is_file_lru(folio) &&
+>>   				    folio_test_dirty(folio))
+>> -					continue;
+>> +					goto skip_batch;
+>>   
+>>   				/*
+>>   				 * Don't mess with PTEs if page is already on the node
+>> @@ -151,7 +169,7 @@ static long change_pte_range(struct mmu_gather *tlb,
+>>   				 */
+>>   				nid = folio_nid(folio);
+>>   				if (target_node == nid)
+>> -					continue;
+>> +					goto skip_batch;
+>>   				toptier = node_is_toptier(nid);
+>>   
+>>   				/*
+>> @@ -159,8 +177,12 @@ static long change_pte_range(struct mmu_gather *tlb,
+>>   				 * balancing is disabled
+>>   				 */
+>>   				if (!(sysctl_numa_balancing_mode & NUMA_BALANCING_NORMAL) &&
+>> -				    toptier)
+>> +				    toptier) {
+>> +skip_batch:
+>> +					nr_ptes = mprotect_batch(folio, addr, pte,
+>> +								 oldpte, max_nr_ptes);
+>>   					continue;
+>> +				}
+>>   				if (folio_use_access_time(folio))
+>>   					folio_xchg_access_time(folio,
+>>   						jiffies_to_msecs(jiffies));
+>> @@ -280,7 +302,7 @@ static long change_pte_range(struct mmu_gather *tlb,
+>>   				pages++;
+>>   			}
+>>   		}
+>> -	} while (pte++, addr += PAGE_SIZE, addr != end);
+>> +	} while (pte += nr_ptes, addr += nr_ptes * PAGE_SIZE, addr != end);
+>>   	arch_leave_lazy_mmu_mode();
+>>   	pte_unmap_unlock(pte - 1, ptl);
+>>   
