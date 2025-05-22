@@ -1,201 +1,111 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com [209.85.219.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C0C21A0731
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 17:40:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F1D228D854
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 17:41:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747935662; cv=none; b=ezrpJWCvUGXam7qcdPnBWg6GS+50f3UHRvM8nnlC3HjQf87T7nMsotXHZE3PfpGFbc//rJuDILs6lo56soMZcgrVgIQVK4dLIi+HnPTbWrRyY4BWNoY965myhOXKBxLx5lp5kDQFswBHF/Fe/TJjiBpnqoAnLTQOI3/7z1NEcrc=
+	t=1747935667; cv=none; b=iDnAW9MvxRzEL3zkmbHGmknGK0vHJBHiREMjFpYXbV8SB+zovX1Ag8gcTI2GkxeopWUo4b5Pe3G1qH0oEdrsf4YqT3FYT7Y2zYr1KTwmI84j+QLeFyVlXyGi9Ln7wUoG93rkdroje9RqOZjTYE0tRxavbYfpakHQqrt0ESOO+2E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747935662; c=relaxed/simple;
-	bh=rpsqCVq7VP7V/ZiMOKAAYLcouhxitWaKRIaoGe3WXLQ=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=MKqMEC8sqGcexIGSl0IVCC4PT8HVqJK3yy2npWtlY2vO5T8k+d7cXwK7++zKQZF7+9kB2F07oN6lJZkU2AotcWuaxSgDiaEkQxpKM4yC6kl2ZgohG7NhhZj3WeJyOoXuzKLb83rmgfa+o4bbOpWESm2wRh/vM2W6muTTpWKEWNM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=poGRJIOo; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1747935667; c=relaxed/simple;
+	bh=Sj853nWirJZ6QksDX60oAkFJsOu2lKgUIMCdKND2jLQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gEQtbKfmKWROjUVlrJLhZ8i4AUT8IEbAA9GGxszrcCqTeBH9DC4B3xbX4r0haVbYVTc7ojWfmbjv7djERQGBoc1734sgzsWJ32PDHfKdBG/5Rc4PQF7BZ5ZH52nE3S00L97c9h2To7dxepBUpkl8fh+06jHAq9wjIHtLFrYb9JU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=pL0UsExS; arc=none smtp.client-ip=209.85.219.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="poGRJIOo"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-442e9c00bf4so61597955e9.3
-        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 10:40:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="pL0UsExS"
+Received: by mail-qv1-f47.google.com with SMTP id 6a1803df08f44-6f0ad74483fso88022596d6.1
+        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 10:41:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1747935657; x=1748540457; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=igl4C5n1V3kSpKRSnre7+wY5FZ4wjT5bm40mamAmyxY=;
-        b=poGRJIOoSX4V2zXKxmFvJNO5fXModrvNMhiYhDm9hKfIoO0ZOA7yBtnG/J5/V6jEkh
-         +JW3lJjXG0tHNO0hMkojCD40uoQJ6x62nrmYje0ckLsm7jkDX4ycStBgaE9OxKTEVCfJ
-         psjszQelOXrW4HKqRVv603Iqbm55hFljydaeT+zV2Nh3MAafflgbQec1Qmd5gy24A4ok
-         gMwHYPvD9rXIuq+umtj0RCULwb5QiDr5D+LKfxn6v1qFjQzonFtledT5oOwmzd/k2bQm
-         L6ffgM1/EgAh18LjXBxMnpdpMII8YtA/v99THB97MpRwHt3VgaFta5Nk7B2J4tDLl+zV
-         tl7Q==
+        d=gourry.net; s=google; t=1747935661; x=1748540461; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=gMhkBzyGTXMRs1OF9XX7AjgWmru1ajwfU7z5aXIlDss=;
+        b=pL0UsExSp4eh/fFepZLUTLujyVU0626liwAKsS+pn6wDXNdemz0Qga7MtzDDogcVdG
+         VQ1ZPokZkFm2hwUSnNwfX/BpMmAZQ/tJFiGfJ3JOawMtRGEqBpPVBUsfjJJiaE7Fm2Lu
+         LDZAjqCTUDCX/XgxfudqWT1+aFxQAy0VXskgdbu1po92vAtp9KEKN4nt9y02T/fl5cTH
+         Bn5ZunLXpDWLg1sToNKBnnwRCQNvCHB3j8wdbP2buCQ7iKuFUe2/SfLk2gleUOxKQAKJ
+         m0+5nu34gUkDR5ROUo+Am1PCmYdDdMcfBBJY6obsP3WAhjf0PjzzoEudQfvjW4zx+lRS
+         pwGQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747935657; x=1748540457;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=igl4C5n1V3kSpKRSnre7+wY5FZ4wjT5bm40mamAmyxY=;
-        b=oJv/O/bH9cuZCxieTz7umcMSsWTWgM+TQtRT8hyjvUStB9wWHEg56VwPGZ5aoqWJYn
-         1BF2PgCD60jzClMxBYEwBIm6X+2c2BwTVLF5SavS2d7tCf+T6S3ADQrAiRD8+/+501w9
-         t3Hn9gipQqEB66hb2nJ9OZO5DY/xM1J1h7iTdO5fJ2LkejBZxgxSTi414gSh+1ln8oVJ
-         2mk8G6v2E06dKVVjEoqhYPmJH9J4cNoYV4qRCD2/wlowPOEbn7Ly+pojxwkKjRpGR3kd
-         MWnYwQNCltl+ptLvttpRAr2WYEmC5LahSIP0WRTkSyqQUgoK62o08h6yXboNLeeMzO6v
-         CjgA==
-X-Forwarded-Encrypted: i=1; AJvYcCXcXGgxaMnQcU+E7n3HUmVSnbrSByhHDjKCSDfURR5wAhqpArVB6Vu0fXD5SwLtz9zusFTTOnS/fv6n/7A=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzzbt+InUrzYy3/GGSE54FACHztt0g6Bb5hxusdoZwj0aDNb5Ew
-	/p8Unj+Q4xnDTM/IFEr9E0Qg2U0xys7dFo3rlB61JeUBmSTXKdHZixx4uKEYJIIMBiA=
-X-Gm-Gg: ASbGncsIOcgRXoB6JuEsGbtvmLUl5vvQTpsIwcxGjWQRJSnoSd8wZSo1wUAUaRn7x75
-	cBQ13PgKV4scn87LUE6Fu7klVRFfuV98V0+UKL75vT2Al1TxNG66s0NXepfHE8+iA0lmKocFCix
-	+c8WQIFniPlqNg1t8JapN0MrhmeF6MBQ3NCJkOQK2ZnuaIMdFc9FF6QPR5VxlDvRHJVwQER2EZi
-	qiaCK2M4Y02TcAsnV0jaaNxBesiIzVYyWlGkT9e98pWS4vn90H6spjDAhVXPjCDTooKpPm/jwjc
-	Gf0spls3fh+SlBKmVSIlZkjCEPN7f8G0QfKEjkRqKvyFSdF370WWmG0PWtA=
-X-Google-Smtp-Source: AGHT+IE0OKfhp+kIa/ZAYDcixA4XAmMDVXBsJz/sOmX77omH4NylPuG7drJ6v1RuKyyGP3ilU9meVg==
-X-Received: by 2002:a05:600c:3b21:b0:441:b3eb:5720 with SMTP id 5b1f17b1804b1-442ff0396b5mr240458235e9.29.1747935657302;
-        Thu, 22 May 2025 10:40:57 -0700 (PDT)
-Received: from orion.home ([2a02:c7c:7213:c700:6c33:c245:91e5:a9f4])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-447f7bae847sm109563195e9.36.2025.05.22.10.40.56
+        d=1e100.net; s=20230601; t=1747935661; x=1748540461;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gMhkBzyGTXMRs1OF9XX7AjgWmru1ajwfU7z5aXIlDss=;
+        b=anVw4emriqJUa3fBIhn6QEFGf/6zEBB2upCsbDId/ezYe2XK+5BJSqKqnjQ1KcvrhL
+         z0xqeg/5yE1OcEQ0s1HQGFMr8xHhheEl1xg5T/tsm/0sZI/YqtP6ZK4cQ3/a8C+tJ/cj
+         pFJsE6Op1moiKEUGUuGwkokfnZX8469aWsbnQ6QAb2mJlmkkh117HwHwsWi7Sf1riYju
+         W5paKbA+qlOdVhl2e5/6d2w61zguVKVhUryEMa6FqWr9fPHhpjqtgh5VXRG87ZuVvh8O
+         1JKRKFXTRvDYmYLfya0BVgsCkxOHnhwghGVe+MtoR3lUPDs40UGvWQ8HzVpVkOFbE/sb
+         ZX7g==
+X-Forwarded-Encrypted: i=1; AJvYcCUupmoYPw5S5oCbthN/Buxd+WD0Kbwk7+ZxeKnvbtWkuctseHtcjyH6aXzLP7jxNzk2/APY0xkbCuFUXY8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YylRNO/33r0TMfHGBye27WVH437w6LCq6OCXXGCJ1cz7MaXapv7
+	oCd4h64grwO9GWKnZjOpmsnOUnsF3hTQfWa989xGf0cYAfTwevrCIPMRBdUbB7bjOPQ=
+X-Gm-Gg: ASbGnctTAk1NISJy+WMR718H+e+xFFdbPVbfgN63TtSk3RfKXaPXtiJn18fFga1GSzf
+	Re9g6RQg2/kfbjwTyIVhUG0PayHD4gLaTwIWQCQ5a3MBhSTiKATIBkacq85JO9SWKaGTwwhsDG8
+	+IsGLqQDM9aaCJZbdBHnSrll7c3udWHwpOF2zR8/E4SrMXbeJGzThZjLgONmnE5ysZemaZTg+09
+	mAa4E574rQOW7C6fQ89LhewhnxwW9GJy2t4SEyMzxUI+BYiUN4ywlh6yJDISKq+iHevBlf6iWr3
+	1tWZsgfjPJCKBjm0Q6aDVm/9R7tSI9nYerKE1XcYUUsbpBiumTcwOosNrTl8IQo3tYwmp6EQF05
+	oWs+Cdb4lTR9B4g0EAi8ejie9ifUl0xI=
+X-Google-Smtp-Source: AGHT+IGOPh8mYT+pu5QrJ65CJWX1L4aK/pTlGD+97CE773zsGlMIhAiXIygW0qdlDm7sog2z09vBFg==
+X-Received: by 2002:a05:6214:e85:b0:6ed:15ce:e33e with SMTP id 6a1803df08f44-6f8b082e9a0mr449807006d6.27.1747935661275;
+        Thu, 22 May 2025 10:41:01 -0700 (PDT)
+Received: from gourry-fedora-PF4VCD3F (pool-96-255-20-42.washdc.ftas.verizon.net. [96.255.20.42])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f8b3f29120sm97782246d6.89.2025.05.22.10.41.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 May 2025 10:40:56 -0700 (PDT)
-From: Alexey Klimov <alexey.klimov@linaro.org>
-Date: Thu, 22 May 2025 18:40:53 +0100
-Subject: [PATCH v3 03/12] ASoC: dt-bindings: qcom,wsa881x: extend
- description to analog mode
+        Thu, 22 May 2025 10:41:00 -0700 (PDT)
+Date: Thu, 22 May 2025 13:40:59 -0400
+From: Gregory Price <gourry@gourry.net>
+To: SeongJae Park <sj@kernel.org>
+Cc: Bharata B Rao <bharata@amd.com>, linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org, Jonathan.Cameron@huawei.com,
+	dave.hansen@intel.com, hannes@cmpxchg.org,
+	mgorman@techsingularity.net, mingo@redhat.com, peterz@infradead.org,
+	raghavendra.kt@amd.com, riel@surriel.com, rientjes@google.com,
+	weixugc@google.com, willy@infradead.org,
+	ying.huang@linux.alibaba.com, ziy@nvidia.com, dave@stgolabs.net,
+	nifan.cxl@gmail.com, joshua.hahnjy@gmail.com,
+	xuezhengchu@huawei.com, yiannis@zptcorp.com,
+	akpm@linux-foundation.org, david@redhat.com
+Subject: Re: [RFC PATCH v0 0/2] Batch migration for NUMA balancing
+Message-ID: <aC9hqyuqeGB457Cq@gourry-fedora-PF4VCD3F>
+References: <aC6VIG7GPnqr3ug-@gourry-fedora-PF4VCD3F>
+ <20250522163024.56592-1-sj@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250522-rb2_audio_v3-v3-3-9eeb08cab9dc@linaro.org>
-References: <20250522-rb2_audio_v3-v3-0-9eeb08cab9dc@linaro.org>
-In-Reply-To: <20250522-rb2_audio_v3-v3-0-9eeb08cab9dc@linaro.org>
-To: Srinivas Kandagatla <srini@kernel.org>, Mark Brown <broonie@kernel.org>, 
- linux-sound@vger.kernel.org
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
- Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
- Dmitry Baryshkov <lumag@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
- Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, 
- Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
- linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
-X-Mailer: b4 0.14.2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250522163024.56592-1-sj@kernel.org>
 
-WSA881X also supports analog mode when device is configured via i2c
-only. Document it, add properties, new compatibles and example.
+On Thu, May 22, 2025 at 09:30:23AM -0700, SeongJae Park wrote:
+> On Wed, 21 May 2025 23:08:16 -0400 Gregory Price <gourry@gourry.net> wrote:
+> 
+> > 
+> > It seems to me that DAMON might make use of the batch migration
+> > interface, so if you need any changes or extensions, it might be good
+> > for you (SJ) to take a look at that for us.
+> 
+> For batch migration interface, though, to be honest I don't find very clear
+> DAMON's usage of it, since DAMON does region-based sort of batched migration.
+> Again, I took only a glance on migration batching part and gonna take more time
+> to the details.
+> 
 
-Cc: Srinivas Kandagatla <srini@kernel.org>
-Signed-off-by: Alexey Klimov <alexey.klimov@linaro.org>
----
- .../devicetree/bindings/sound/qcom,wsa881x.yaml    | 66 +++++++++++++++++++---
- 1 file changed, 58 insertions(+), 8 deletions(-)
+DAMON would identify a set of PFNs or Folios to migrate, at some point,
+wouldn't it be beneficial to DAMON to simply re-use:
 
-diff --git a/Documentation/devicetree/bindings/sound/qcom,wsa881x.yaml b/Documentation/devicetree/bindings/sound/qcom,wsa881x.yaml
-index ac03672ebf6de1df862ce282f955ac91bdd9167d..a33e2754ec6159dbcaf5b6fcacf89eb2a6056899 100644
---- a/Documentation/devicetree/bindings/sound/qcom,wsa881x.yaml
-+++ b/Documentation/devicetree/bindings/sound/qcom,wsa881x.yaml
-@@ -12,15 +12,17 @@ maintainers:
- description: |
-   WSA8810 is a class-D smart speaker amplifier and WSA8815
-   is a high-output power class-D smart speaker amplifier.
--  Their primary operating mode uses a SoundWire digital audio
--  interface. This binding is for SoundWire interface.
--
--allOf:
--  - $ref: dai-common.yaml#
-+  This family of amplifiers support two operating modes:
-+  SoundWire digital audio interface which is a primary mode
-+  and analog mode when device is configured via i2c only.
-+  This binding describes both modes.
- 
- properties:
-   compatible:
--    const: sdw10217201000
-+    enum:
-+      - qcom,wsa8810
-+      - qcom,wsa8815
-+      - sdw10217201000
- 
-   reg:
-     maxItems: 1
-@@ -35,17 +37,51 @@ properties:
-   '#sound-dai-cells':
-     const: 0
- 
-+  clocks:
-+    maxItems: 1
-+
-+  mclk-gpios:
-+    description: GPIO spec for control signal to the clock gating circuit
-+    maxItems: 1
-+
- required:
-   - compatible
-   - reg
-   - powerdown-gpios
--  - "#thermal-sensor-cells"
--  - "#sound-dai-cells"
-+  - '#thermal-sensor-cells'
-+  - '#sound-dai-cells'
-+
-+allOf:
-+  - $ref: dai-common.yaml#
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            enum:
-+              - qcom,wsa8810
-+              - qcom,wsa8815
-+    then:
-+      properties:
-+        reg:
-+          description:
-+            In case of analog mode this should be I2C address of the digital
-+            part of the device. The I2C address of analog part of an amplifier
-+            is expected to be located at the fixed offset.
-+          maxItems: 1
-+          items:
-+            minimum: 0x0e
-+            maximum: 0x0f
-+      required:
-+        - clocks
-+        - mclk-gpios
- 
- unevaluatedProperties: false
- 
- examples:
-   - |
-+    #include <dt-bindings/gpio/gpio.h>
-+    #include <dt-bindings/sound/qcom,q6afe.h>
-+
-     soundwire@c2d0000 {
-         #address-cells = <2>;
-         #size-cells = <0>;
-@@ -68,4 +104,18 @@ examples:
-         };
-     };
- 
-+    i2c {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        amplifier@e {
-+            compatible = "qcom,wsa8810";
-+            reg = <0x0e>;
-+            clocks = <&q6afecc LPASS_CLK_ID_MCLK_3 LPASS_CLK_ATTRIBUTE_COUPLE_NO>;
-+            powerdown-gpios = <&lpass_tlmm 16 GPIO_ACTIVE_LOW>;
-+            mclk-gpios = <&lpass_tlmm 18 GPIO_ACTIVE_HIGH>;
-+            #sound-dai-cells = <0>;
-+            #thermal-sensor-cells = <0>;
-+       };
-+    };
- ...
+int migrate_misplaced_folio_batch(struct list_head *folio_list, int node)
 
--- 
-2.47.2
+If not, then why?
 
+That's why I mean by what would DAMON want out of such an interface.
+Not the async part, but the underlying migration functions.
+
+~Gregory
