@@ -1,97 +1,113 @@
-Received: from cpanel.siel.si (cpanel.siel.si [46.19.9.99])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3CF6279792;
-	Thu, 22 May 2025 08:39:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.19.9.99
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42B3527A927
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 08:39:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747903159; cv=none; b=u9c3U/cgrcH+OORilw8gZEucGxph0LvA9tiW5b9Nn7W0/rWMz61qnmkvUs7ZysiHWurCPJK1ve6UfYWrgb4IWbfR2fWDsioAzEGjVduemD+6H9DziXitsjvxliHbk6tj5J7bbpDqcW3MDJY+o6pfJoneygTRIXSmwXd6ZlB1uz0=
+	t=1747903160; cv=none; b=u9yNjUoKzlDUlEaKgiCScSxtECAs27luITPFkZeT6fEclsC8xYu1L6m3pp2p+6PW5JufKJ9jDRWvH9mByD6lTgAyfPgYwV6Av4CQVpaqgKyrdM/Z2lXeWADZ4QsBwJ8NpOeAe8IxtN9ywObkwUlxeaAF/M1k7yNHVi6DTHwYXGI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747903159; c=relaxed/simple;
-	bh=QTy1k3Ew/RqSP8xX7rFD4GrhuViSyGVepDKk8lzTijU=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=WTjD+mA00XHXxRvQc0gS6P5meAm4gi/Kz0oBWmjQ9SKCU8dek1su6lrtVviYUt/vbwC8ol5IX6a4jls+lf+vTZX1OkTMI7CeW4Er8ujCwmhVJQ55gUg6uoK85EIN0WRSq+tBO/SjL4TZ5NSSWoufEwQil4C2aUcbV9eH4ISMWrY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=norik.com; spf=pass smtp.mailfrom=norik.com; dkim=pass (2048-bit key) header.d=norik.com header.i=@norik.com header.b=GKUe9g1D; arc=none smtp.client-ip=46.19.9.99
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=norik.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=norik.com
+	s=arc-20240116; t=1747903160; c=relaxed/simple;
+	bh=tznesHqeZytUQBxsCKufL4tsD5eNcOjqiXA4b3qJMvg=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=CHFpBlJcikWgakyxvreswuqq0mKU1FmcqV3NJZqRFAWwxvoxm0e5+BlnRW4AQnoUzZRD+4++KUQRnm1VUe1CyF5wtIBliyFCMqSBFg7ZPBc87lQE2+POJWw6dEtNPIqjySfpQRr3/mI4XQ0WGWGdUGh8wzfekvrCAyNbYHNlPNY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=rR5McHqp; arc=none smtp.client-ip=209.85.208.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=norik.com header.i=@norik.com header.b="GKUe9g1D"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=norik.com;
-	s=default; h=Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:
-	Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=VLjIX7nSKhkcnuApiD0KRwJJujcGBBsiXxOFrQ/KWTc=; b=GKUe9g1D9ayAnusFpEJP2ZdXcM
-	Cfs3ZLh9fZTVemOy7zdZcDDn9+PbQ3IKNf92Rfp5QWlI6ixHQXx9qBiMHucmbv2i8a8pmy6nU6c4l
-	Is2KZ3EysWeWNqqiTFbK0Ppwaz5HZR4TZr4mZ/J3VBfPOMzv9Uryo4Zm9VthDqfFFnc8zbEz2YdLW
-	Q7ZJQ+QhMncTk+w3NFsA10GHFxS7Ea69UBCPzNKJZRqdutyVRTBjD24L5BfsyeO7o199iieOozBLK
-	sUys5gk0Fx4kMUl+De7QtbZLMq9pGctcF9uQ1+1Ve0Vj7gg7D26XPdWEaPNlp0oQBE3jaKV30bas9
-	1q+qCR4Q==;
-Received: from [89.212.21.243] (port=51574 helo=localhost.localdomain)
-	by cpanel.siel.si with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96.2)
-	(envelope-from <primoz.fiser@norik.com>)
-	id 1uI1SI-002sBQ-1V;
-	Thu, 22 May 2025 10:39:10 +0200
-From: Primoz Fiser <primoz.fiser@norik.com>
-To: Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>
-Cc: devicetree@vger.kernel.org,
-	imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	upstream@lists.phytec.de
-Subject: [PATCH 2/2] arm64: dts: freescale: imx93-phyboard-segin: Set ethernet1 alias
-Date: Thu, 22 May 2025 10:39:09 +0200
-Message-Id: <20250522083909.533567-2-primoz.fiser@norik.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250522083909.533567-1-primoz.fiser@norik.com>
-References: <20250522083909.533567-1-primoz.fiser@norik.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rR5McHqp"
+Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-3106217268dso72454681fa.1
+        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 01:39:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1747903154; x=1748507954; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=qMhmNskADhrsN3v1DxlLOqwp8G2YfbYOwBOnwBv83D8=;
+        b=rR5McHqpJlrqkKpCbfJ2WNyKVzJbKo2Z1YP+ZMfzasgn5bdjOEnbZu5KIuSWbB8fc4
+         ye4QCP0TX/hHHJSKl4gbHz0+pOr4SIAhiUWELNsAyheofhhfcK0QLFMwmJSDlIoihXuK
+         eCnNDqYh/jiTc9nVoLXqNHeONZ+UJt7jFJMDn6QHYdDzQSRP4zivT1gv3V/5K1MsIjz3
+         0X30bi8BPhEUQyaZQO6/O3EJagp3u1LntYqZypbtwy9zJWJ4apVL4trNb366VjZB+8YT
+         upKQa9PKWf9b1K77p3hHW8Xld3zm102iIQ1Nyzx1W+kZT6/SAqrs8cIbtSEGvm8bOcoT
+         sy3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747903154; x=1748507954;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=qMhmNskADhrsN3v1DxlLOqwp8G2YfbYOwBOnwBv83D8=;
+        b=etNn7Qu5WBLe9zd/ynGeVM1A8U3lHPbbn6mkpOcjA8+gpdij2akiCFDpVG+Xq9RC15
+         Ie2aVeyNMiViioeJi+ihQkSHQgK8LO5mFEwz7CIv6h9WbRozYPudD/JRUWea3aZTiXcZ
+         xpqwcDMLxBtIquPnV+nXFOObX85GOKnAAzZlTgLcQzg3+5HDxy8uzpyshPx+w73DhZ7k
+         dMZTyYS4GyKpbRU1rd+HNb7ZZgoZs8M/zvXgUWrD8tsvACFLuZ9Cd2N06xvSbKJCVLuJ
+         1bhtGJr8uz4R6kKJMb40QxtTt0B+FFj3f2c7QQMqCsUCdAo1GDFoAIsvJDJ8qjZYRhju
+         xaWg==
+X-Gm-Message-State: AOJu0YwiuZqEV5oaibaX5/dSctEHTQMn5yFV7t1q39FNIPJi0KPgre+j
+	ggxonconVQGQY8x1Ab9xG91RN8AXJ2sQ60mnA2WLMVWI7bvEHVKh/aBVcD0T0zh8TXhEktm/pw8
+	ybLsIK4NLVRv3c4OzPDxkoLlcNwbBs+PfbUX0tO1cnQ==
+X-Gm-Gg: ASbGncsyc1IvYRvR/o9/rO1737J9M+Wi55TfqtIAaL+qs/ILcwI6lVt2WBcFl501TL3
+	0P++Y/xa7UtGhxOVU+4c/jqArFHxw+DB8lTrP0HJNVrw0eJsqjzu1sSIpTnVbpe7FBBo6yBGgvG
+	xvnTjFgzbx1/Oa2eEM/eSBrb11z8Ji3A6Tqr8jpe6Iczk=
+X-Google-Smtp-Source: AGHT+IF5P3YyhMqZP4RT6l7E1iz5hMh6P8bMERqdor0RMnNXGUnxHB4+ImovRLcw/3knetHVFpP+GFf1niTI9bRIZUk=
+X-Received: by 2002:a05:651c:2229:b0:30b:ee44:b692 with SMTP id
+ 38308e7fff4ca-328077b2d17mr98326021fa.33.1747903154140; Thu, 22 May 2025
+ 01:39:14 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - cpanel.siel.si
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - norik.com
-X-Get-Message-Sender-Via: cpanel.siel.si: authenticated_id: primoz.fiser@norik.com
-X-Authenticated-Sender: cpanel.siel.si: primoz.fiser@norik.com
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Thu, 22 May 2025 10:39:03 +0200
+X-Gm-Features: AX0GCFu1eG7CL_G1brUAj9AgP9YxI-nCFQ5opBOZ9pyczqf7w8M-DcNU6bcW4UI
+Message-ID: <CACRpkdaEmKn_0QObo9kFrgm2TajepUFjcgK8CVn-u_zMmoEO8g@mail.gmail.com>
+Subject: [GIT PULL] pin control late fixes
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-kernel <linux-kernel@vger.kernel.org>, 
+	"open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, 
+	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, Bartosz Golaszewski <brgl@bgdev.pl>
+Content-Type: text/plain; charset="UTF-8"
 
-Set ethernet1 alias to EQOS interface on phyBOARD-Segin-i.MX93 marking
-it the secondary networking interface. The primary ethernet0 interface
-is already set by the SoM include file (imx93-phycore-som.dtsi).
+Hi Linus,
 
-Signed-off-by: Primoz Fiser <primoz.fiser@norik.com>
----
- arch/arm64/boot/dts/freescale/imx93-phyboard-segin.dts | 1 +
- 1 file changed, 1 insertion(+)
+these are two patches to the Qualcomm pin control driver that
+fixes a late discovered problem.
 
-diff --git a/arch/arm64/boot/dts/freescale/imx93-phyboard-segin.dts b/arch/arm64/boot/dts/freescale/imx93-phyboard-segin.dts
-index 0c55b749c834..6f1374f5757f 100644
---- a/arch/arm64/boot/dts/freescale/imx93-phyboard-segin.dts
-+++ b/arch/arm64/boot/dts/freescale/imx93-phyboard-segin.dts
-@@ -18,6 +18,7 @@ /{
- 		     "fsl,imx93";
- 
- 	aliases {
-+		ethernet1 = &eqos;
- 		rtc0 = &i2c_rtc;
- 		rtc1 = &bbnsm_rtc;
- 	};
--- 
-2.34.1
+I first tagged a version with an additional cleanup patch on top
+but realized I can't send that this late so this is the diet version
+of the fix.
 
+Please pull them in!
+
+Yours,
+Linus Walleij
+
+The following changes since commit 82f2b0b97b36ee3fcddf0f0780a9a0825d52fec3:
+
+  Linux 6.15-rc6 (2025-05-11 14:54:11 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git
+tags/pinctrl-v6.15-4
+
+for you to fetch changes up to 41e452e6933d14146381ea25cff5e4d1ac2abea1:
+
+  pinctrl: qcom: switch to devm_register_sys_off_handler() (2025-05-20
+23:41:29 +0200)
+
+----------------------------------------------------------------
+This concerns a crash in the Qualcomm pin controller GPIO
+portions when using hogs.
+
+First patch hits into the gpiolib making gpiochip_line_is_valid()
+NULL-tolerant.
+
+Second patch fixes the actual problem.
+
+----------------------------------------------------------------
+Dmitry Baryshkov (2):
+      gpiolib: don't crash on enabling GPIO HOG pins
+      pinctrl: qcom: switch to devm_register_sys_off_handler()
+
+ drivers/gpio/gpiolib.c             |  6 ++++++
+ drivers/pinctrl/qcom/pinctrl-msm.c | 23 ++++++++++++-----------
+ 2 files changed, 18 insertions(+), 11 deletions(-)
