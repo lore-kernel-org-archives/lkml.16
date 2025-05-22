@@ -1,142 +1,144 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.5])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 06C1F221D9B;
-	Thu, 22 May 2025 07:11:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.5
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 029311714B4
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 07:11:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747897866; cv=none; b=O+sTC0G/pc08nSL817ytuhQUIYmiRky47zQm2AyqwPGIBzdxyeIju8ye0YzTquFV4gxAX2dObWaRRM6dvy3BhYnwuoSnexvTUG8sOiByOjGX4wRaueHKv6d2dskaltPi9uFFlnT8rv60O8KU77qrYd1wrSTCV5ylXKURDvYoFfg=
+	t=1747897890; cv=none; b=s6U+pXegoivVmx21BVUSGqx03A74CBRbJ28PZKlRabXGeo6uNHcHzKgoIqITY3sxq5YVLGxlCbmj95EEgrHDBM2gkHUYkHmXhFZFb/sYL3Q7IxOqoqDBQ9i94xk7J2atecGrWmfcFsNRztKtnEw4+PgTYaeE7xa5jr9FvaWTkUQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747897866; c=relaxed/simple;
-	bh=1f60hXuzMX3Q12cENE42Cqcu5aJ9RJJaRYBKm42RIsQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=snXhVcY/nxAvYwsJA+MKdQNPOWpUu4r5tDR/MqRTK9ZanKiReJ3q/ynSivgcHRPW4OpJ/Tk9hmr4hjidGloae0MSU2saSH8P3qoC6Yyb1Q7aNFfhzjDPu6XR+0VCyby0IWtJe1P52zmhzTweULBlWPSjPVwkk/xpAGy7/saD1sE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=Gqu7tFqf; arc=none smtp.client-ip=220.197.31.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1747897890; c=relaxed/simple;
+	bh=IxVcX9HAZDAVXLWQOfYITQ7JI6BdE+h8bpaoqjA7gg8=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=jgMkpnrC5UWtFF6pueeu9oXGzd/Tr82FI5RMuCBwL905yaH4etPgvR3vKFPYZXw/UgJs7NSUDyRf4JxuvIgpUvtTqrVfsqBuVQ4nUFHiSSo49AFtNayjrrHkyQe5FJrjabTeSDH3UxG5zRO+E5LBOLbz/U1OAT9yzNpUElLu2VU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=xSnonLeg; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=UZjJFHgq; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=koxIp/ic; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=ku5C2E9w; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="Gqu7tFqf"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=uc
-	LITgF9VnGp5x0QXfM6YRhE6tyeArA6Sg9rqFsFqWE=; b=Gqu7tFqfxsfGTYeFVH
-	cy4RsIV2phONbWpUdRKVpjIHl2EOtbwKIK+JQ5GldaCmnEbnTDCVS+mYqM/Cqjyp
-	ga9k0FcBN7lNmkFw2adjo11IXlR8z9lHjSLIIJPTxQVlxcHre2+j4F3eFEaHCl1U
-	V5IfguGkV+aoPsT69s0Dki9Bo=
-Received: from localhost.localdomain (unknown [])
-	by gzsmtp4 (Coremail) with SMTP id PygvCgAHa9_TzS5o7LFrAQ--.37799S4;
-	Thu, 22 May 2025 15:10:15 +0800 (CST)
-From: David Wang <00107082@163.com>
-To: gregkh@linuxfoundation.org,
-	mathias.nyman@intel.com
-Cc: oneukum@suse.com,
-	stern@rowland.harvard.edu,
-	hminas@synopsys.com,
-	rui.silva@linaro.org,
-	jgross@suse.com,
-	linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	David Wang <00107082@163.com>
-Subject: [PATCH v4 2/2] USB: xhci: use urb hcpriv mempool for private data
-Date: Thu, 22 May 2025 15:10:10 +0800
-Message-Id: <5f14d11e4c651f9e856d760bc8b45ea7ac863b2f.1747897366.git.00107082@163.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <a235e322e270942dc3d607d4b46ff7db29abeb2d.1747897366.git.00107082@163.com>
-References: <a235e322e270942dc3d607d4b46ff7db29abeb2d.1747897366.git.00107082@163.com>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="xSnonLeg";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="UZjJFHgq";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="koxIp/ic";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="ku5C2E9w"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id E7F4D22475;
+	Thu, 22 May 2025 07:11:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1747897887; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Qf0+/c0ivuvI5IZj8NYoK+iuFx23I/xdZAXK+xWly14=;
+	b=xSnonLegHQfJA2BiOniv6NIBTGOjvKT+PREc4bwtuVt4hyKl74bMEeKiy/t+46rjwmhZ77
+	lcZRyDqwMFMI0SKmJ+iHBBMF2GrgR/0VSF2o71eX1A5NCYKMdcRriKZEiJv4lGbSs7FJnz
+	dEWCEmWE1VF8+ABcJUYX1/8n6c8UwRU=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1747897887;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Qf0+/c0ivuvI5IZj8NYoK+iuFx23I/xdZAXK+xWly14=;
+	b=UZjJFHgqVVZMevkcCh4PuOeo/VmhnD7K8BkXq2txLL5YOdTKr07zFZn+J7toK9Ddp3qsk8
+	0IDu95R9O9RNoQBw==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b="koxIp/ic";
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=ku5C2E9w
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1747897886; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Qf0+/c0ivuvI5IZj8NYoK+iuFx23I/xdZAXK+xWly14=;
+	b=koxIp/icmX3WpaD7nDbVNuIyWQCbow/JExCec2UQ6QOSgxwjKDMKZgrVGtB/fIVvipKmhn
+	gcACNv25f33Kf+VgTP1n3vUHvU7jJa52kTkjv4tDiioN/VhQ3gHZfXIBASQGNOAR7+WDBK
+	ou4LraumyCdvixGztN1Xo+tiHRaZmt4=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1747897886;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Qf0+/c0ivuvI5IZj8NYoK+iuFx23I/xdZAXK+xWly14=;
+	b=ku5C2E9wpUhRxWAJUxlCNwFh+RtGn4nvZRsnB91/LAbhB8v9EK4YBq213dxl1NfdFpeV9L
+	zxzMfTaRLMMno2Ag==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id B860913433;
+	Thu, 22 May 2025 07:11:26 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id FF0uLB7OLmgOCAAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Thu, 22 May 2025 07:11:26 +0000
+Date: Thu, 22 May 2025 09:11:26 +0200
+Message-ID: <87tt5d86ht.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: Shenghao Ding <shenghao-ding@ti.com>
+Cc: <broonie@kernel.org>,
+	<andriy.shevchenko@linux.intel.com>,
+	<13564923607@139.com>,
+	<13916275206@139.com>,
+	<alsa-devel@alsa-project.org>,
+	<linux-kernel@vger.kernel.org>,
+	<baojun.xu@ti.com>,
+	<Baojun.Xu@fpt.com>,
+	<jesse-ji@ti.com>
+Subject: Re: [PATCH v1] ALSA: hda/tas2781: Move and unified the calibrated-data getting function for SPI and I2C into the tas2781_hda lib.
+In-Reply-To: <20250522014347.1163-1-shenghao-ding@ti.com>
+References: <20250522014347.1163-1-shenghao-ding@ti.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:PygvCgAHa9_TzS5o7LFrAQ--.37799S4
-X-Coremail-Antispam: 1Uf129KBjvJXoWxCry5WF13Kw43tryUAF48tFb_yoW5CFWfpF
-	4rXa40kr1rtr4xXFZ8Jw1DAa4fJw4vgF92gFWxu345ursFy3srG342yFWF9rnxXryDCrnI
-	qF1qqrWrGw1UGFDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0piL0ePUUUUU=
-X-CM-SenderInfo: qqqrilqqysqiywtou0bp/1tbiqBdVqmgux8vUGgAAsE
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-Spamd-Result: default: False [-3.51 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[139.com];
+	FREEMAIL_CC(0.00)[kernel.org,linux.intel.com,139.com,alsa-project.org,vger.kernel.org,ti.com,fpt.com];
+	RCVD_TLS_ALL(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCVD_COUNT_TWO(0.00)[2];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[10];
+	DKIM_TRACE(0.00)[suse.de:+];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:mid,suse.de:dkim,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo]
+X-Rspamd-Action: no action
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Score: -3.51
+X-Rspamd-Queue-Id: E7F4D22475
+X-Spam-Level: 
+X-Spam-Flag: NO
 
-xhci keeps alloc/free private data for each enqueue/dequeue cycles,
-when using a USB webcam, allocation rate is ~250/s;
-when using a USB mic, allocation rate reaches ~1k/s;
-The more usb device in use, the higher allocation rate.
+On Thu, 22 May 2025 03:43:47 +0200,
+Shenghao Ding wrote:
+> 
+> Calibration data getting function for SPI and I2C HDA drivers are almost
+> same, which read the calibration data from UEFI. To put them into
+> tas2781_hda lib for code cleanup is more reasonable than to still keep
+> them in the codec driver. For tas2781 codec driver, there're two different
+> sources for calibrated data, one is from bin file, generated in factory
+> test, requested and read in codec driver side; the other is from user
+> space during device bootup.
+> 
+> Signed-off-by: Shenghao Ding <shenghao-ding@ti.com>
 
-URB objects have longer lifespan than private data, hand over ownership
-of private data to urb can save lots of memory allocations over time.
-With this change, no extra memory allocation is needed during usages of
-USB webcam/mic.
+Applied now.  Thanks.
 
-Signed-off-by: David Wang <00107082@163.com>
----
- drivers/usb/host/xhci-mem.c  | 1 +
- drivers/usb/host/xhci-ring.c | 3 +--
- drivers/usb/host/xhci.c      | 8 +++-----
- 3 files changed, 5 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/usb/host/xhci-mem.c b/drivers/usb/host/xhci-mem.c
-index d698095fc88d..b19e41cf1c4c 100644
---- a/drivers/usb/host/xhci-mem.c
-+++ b/drivers/usb/host/xhci-mem.c
-@@ -1745,6 +1745,7 @@ struct xhci_command *xhci_alloc_command_with_ctx(struct xhci_hcd *xhci,
- 
- void xhci_urb_free_priv(struct urb_priv *urb_priv)
- {
-+	WARN_ONCE(1, "xhci private data should be managed by urb");
- 	kfree(urb_priv);
- }
- 
-diff --git a/drivers/usb/host/xhci-ring.c b/drivers/usb/host/xhci-ring.c
-index 423bf3649570..8fa3f71fdb29 100644
---- a/drivers/usb/host/xhci-ring.c
-+++ b/drivers/usb/host/xhci-ring.c
-@@ -821,7 +821,6 @@ static void xhci_giveback_urb_in_irq(struct xhci_hcd *xhci,
- 				     struct xhci_td *cur_td, int status)
- {
- 	struct urb	*urb		= cur_td->urb;
--	struct urb_priv	*urb_priv	= urb->hcpriv;
- 	struct usb_hcd	*hcd		= bus_to_hcd(urb->dev->bus);
- 
- 	if (usb_pipetype(urb->pipe) == PIPE_ISOCHRONOUS) {
-@@ -831,7 +830,7 @@ static void xhci_giveback_urb_in_irq(struct xhci_hcd *xhci,
- 				usb_amd_quirk_pll_enable();
- 		}
- 	}
--	xhci_urb_free_priv(urb_priv);
-+	urb_free_hcpriv(urb);
- 	usb_hcd_unlink_urb_from_ep(hcd, urb);
- 	trace_xhci_urb_giveback(urb);
- 	usb_hcd_giveback_urb(hcd, urb, status);
-diff --git a/drivers/usb/host/xhci.c b/drivers/usb/host/xhci.c
-index 90eb491267b5..071a7680b36e 100644
---- a/drivers/usb/host/xhci.c
-+++ b/drivers/usb/host/xhci.c
-@@ -1552,7 +1552,7 @@ static int xhci_urb_enqueue(struct usb_hcd *hcd, struct urb *urb, gfp_t mem_flag
- 	else
- 		num_tds = 1;
- 
--	urb_priv = kzalloc(struct_size(urb_priv, td, num_tds), mem_flags);
-+	urb_priv = urb_hcpriv_mempool_zalloc(urb, struct_size(urb_priv, td, num_tds), mem_flags);
- 	if (!urb_priv)
- 		return -ENOMEM;
- 
-@@ -1626,8 +1626,7 @@ static int xhci_urb_enqueue(struct usb_hcd *hcd, struct urb *urb, gfp_t mem_flag
- 
- 	if (ret) {
- free_priv:
--		xhci_urb_free_priv(urb_priv);
--		urb->hcpriv = NULL;
-+		urb_free_hcpriv(urb);
- 	}
- 	spin_unlock_irqrestore(&xhci->lock, flags);
- 	return ret;
-@@ -1789,8 +1788,7 @@ static int xhci_urb_dequeue(struct usb_hcd *hcd, struct urb *urb, int status)
- 	return ret;
- 
- err_giveback:
--	if (urb_priv)
--		xhci_urb_free_priv(urb_priv);
-+	urb_free_hcpriv(urb);
- 	usb_hcd_unlink_urb_from_ep(hcd, urb);
- 	spin_unlock_irqrestore(&xhci->lock, flags);
- 	usb_hcd_giveback_urb(hcd, urb, -ESHUTDOWN);
--- 
-2.39.2
-
+Takashi
