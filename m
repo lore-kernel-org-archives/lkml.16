@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAF093010C;
-	Thu, 22 May 2025 13:37:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F054274FD3;
+	Thu, 22 May 2025 13:38:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747921069; cv=none; b=KUft6oxESodkucclcLqqTjR8OE7CobniaY8ylMGqtlM+D4Rl17lF4n5cSTf4OMSYSFgyOY+vqTsWHz/MgX2bXHzC8zsECgV09xbu+3xO0pLg2RyeT/eu4iBG9Mj0VAOGwyFa4wKFUf62Hg4RNKOhYZrP/G62l7gagEQMqsJrVnw=
+	t=1747921082; cv=none; b=oP2R5u8bdBRErRZDGCn1KBRrRpQTF/UxhItla91Dn5CDGRy9qVUchkToLHjIUxmHNHAvobDAJMxiksgpS3xZwBRDrLUS+AprvwZUEaGxzOu3JbzSuCIhm3QAirsI4knFbgumC2bjnXVq8+ZrZGBS5SXfCT1IKn+NhuPwsnYyXPE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747921069; c=relaxed/simple;
-	bh=O5IayrBokl5BHsWRWLoEYER4M1qM4RaD1n/YXy1JPlo=;
+	s=arc-20240116; t=1747921082; c=relaxed/simple;
+	bh=i0zCLDEorMpihVbLEn/vRMO+410NHtKppIyVbVEV7u8=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=ZbbWQH+UP/YPtWlz/RtwFWR5PnQsaTMcSNTGGlPWTQiHEKM/m4Dwn+fPs6R3UU+3BlP5qHod9gY/V54hjA8szHVwcT/fFU5IPeywfHj6wUWnIVL1wSJBbKSrXMK6G9ZoVSSkuJdgtcKeHoeuYudXVeeSo0AuTkjASuLb/1J666M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ufnRlrlI; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=YxWf52Rf8Hz8eQ19bYt/7MUhMrDVtGz4b8SEXNtPyuY0mu0p5FebyZF6/rNNHEr+37meX08pQ20NiHFMZOLRvyJjJ8XNFM5NE7VjkHVaaSjvqZ3EDJooirL7zlOIpLafR0GYvP9hVrdhizUzVHkTvrPfiygmux9uplAaU7sOVeg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U4/5bUbk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ufnRlrlI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6207CC4CEEB;
-	Thu, 22 May 2025 13:37:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U4/5bUbk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 463A2C4CEE4;
+	Thu, 22 May 2025 13:38:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747921069;
-	bh=O5IayrBokl5BHsWRWLoEYER4M1qM4RaD1n/YXy1JPlo=;
+	s=k20201202; t=1747921081;
+	bh=i0zCLDEorMpihVbLEn/vRMO+410NHtKppIyVbVEV7u8=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=ufnRlrlI+WGrlVfJmnUwZzSh4CuegJqXHfUT1UxCSOsPW+KHuf5vk6JL3yWMym/OL
-	 VGpTF+amRwiDq+bsXz1lyHhX4UdM4WJX3ZfR4M2z8gOjBxgZQ2k1K1jvorfqor/AHJ
-	 Z+1DoXqifVSGmIlQSfzi7KrFLQngM+dSIfklVlopBWL09lfOtQHNp36dLeGDqu6ouO
-	 jmd1vbaf+QANWxcSDApMRevDEPL7+LJYWCsUyqQIVee/FFtQbfiANL3jENEmqfD2OK
-	 /5pE2ocFwN0A28hYnVnLFeR+RYpkmtunomRGL3oIqKNCIajuGx0nRPVf0haAj5YFsj
-	 IYFzflJpzEW4Q==
+	b=U4/5bUbkxft8uaoJllAghhICE7Dbv82AEXDNWzLlohMY6bRnETCj2yGoU50ltP5r2
+	 mV1lBWobvTdWclCS7xo9nGomYTKCy1iBLBbQI3x16GTC2S80B9D6VrHmrvWf8fc0yY
+	 fcZ4Oc1I6HAGTtQKnfkfW2g5+FQEcPDkcVgcRRnNHllYC3kaNnAN/AMT7CfuBzHSth
+	 lvd8WYgoYxMjVz6DBVvTbwBJ9GXls/Jz+sIl9vaxOSK/QeQwHn2dUkFe9bPp10tY2a
+	 wM50toyRPEomJdSjYgmCmCfqXbvVa6+cLQNG4iGh5YEVva2rO3NW6ghmamZKjm7ieC
+	 n0Ks+bX3OlR2w==
 From: Mark Brown <broonie@kernel.org>
-To: Richard Fitzgerald <rf@opensource.cirrus.com>
-Cc: linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org, 
- patches@opensource.cirrus.com
-In-Reply-To: <20250522103816.543919-1-rf@opensource.cirrus.com>
-References: <20250522103816.543919-1-rf@opensource.cirrus.com>
-Subject: Re: [PATCH] ASoC: wm_adsp: Make cirrus_dir const
-Message-Id: <174792106813.84332.11770588156901299671.b4-ty@kernel.org>
-Date: Thu, 22 May 2025 14:37:48 +0100
+To: linux-spi@vger.kernel.org, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-kernel@vger.kernel.org
+In-Reply-To: <2025052225-scallion-ritzy-dbbd@gregkh>
+References: <2025052225-scallion-ritzy-dbbd@gregkh>
+Subject: Re: [PATCH] spi: gpio: fix const issue in spi_to_spi_gpio()
+Message-Id: <174792108102.84499.9131453777647011628.b4-ty@kernel.org>
+Date: Thu, 22 May 2025 14:38:01 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -45,24 +45,24 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15-dev-c25d1
 
-On Thu, 22 May 2025 11:38:16 +0100, Richard Fitzgerald wrote:
-> The cirrus_dir pointer should be const data but was missing the second
-> const needed to achieve this.
-> 
-> I haven't marked this as a 'Fixes' because it isn't causing any bugs,
-> it's only a code improvement.
-> 
+On Thu, 22 May 2025 12:57:26 +0200, Greg Kroah-Hartman wrote:
+> While the struct spi_device * passed into spi_to_spi_gpio() is a const
+> one, the struct spi_bitbang * that is retrieved from the controller
+> field in the spi_device is NOT a const pointer, as it is coming from the
+> spi_controller_get_devdata() call, and then passed to container_of()
+> which would strip off the const attribute for no good reason (i.e. if a
+> const pointer is passed to container_of() it still is const coming out).
 > 
 > [...]
 
 Applied to
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
 
 Thanks!
 
-[1/1] ASoC: wm_adsp: Make cirrus_dir const
-      commit: fd4b6c0fdf71d71f2bbc2f9aceb6f0814b4d93e2
+[1/1] spi: gpio: fix const issue in spi_to_spi_gpio()
+      commit: 2712a7d362904d0c4283ae91fac8cea6ecd6f9c2
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
