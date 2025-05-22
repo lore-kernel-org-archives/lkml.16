@@ -1,138 +1,80 @@
-Received: from mail-oa1-f53.google.com (mail-oa1-f53.google.com [209.85.160.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from forwardcorp1a.mail.yandex.net (forwardcorp1a.mail.yandex.net [178.154.239.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3206A1F09B3
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 14:26:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A0ED1F09B3;
+	Thu, 22 May 2025 14:29:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747924000; cv=none; b=DNIn8WdHBh6xZwWs8mP5XHaKQIayu6zrFBncyQJQ5vfGF65j1jsOss4kUdhY/ROguOK/iKoN2vq1g+SV8fDp0bt+UAK0gLA4jCEvx+0a2/Zx02Hzw4+0fAR1B2hW/XfhNHmgIeVMe19RMpB6hiH0xdiAtNGQDXGL2Mupoc8D+8w=
+	t=1747924147; cv=none; b=QDOVqMsGL2iOIXY3RKmfW5hrJhL/JtvjVXVfvWheXuPcjLe4BvLyjdgrQ1i7TJnJNtc4KnhPPWpOFKZRaujgY54rWdHo9gx9pRJ8j62z8hY+msaMAFxEqSp4pBMcaBmaajEHWtgHh/LaRpYTBIbp4AEEBznVDrTgv+LVceEgmhg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747924000; c=relaxed/simple;
-	bh=pFm2zIvgiBGcCdXpksFzoUZ8o0UGo7b59ZsWH8nK9Og=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=adrpsEtpZj0Zqg8vCd+EvzlrPmXa8R96sFZj1uJTvm2njFWnTCMHY5LrgN9/bAu893slb5w3K1bHSsBMC1TMi4YWub0zKFNqIvFb6p1ayYqbz2qlPmPCIapE/ImcZRu7GIyS5qMVT6rF3kyCYnTPaWwFzaTKpFtHMLYr2spGG94=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GYe6PKLP; arc=none smtp.client-ip=209.85.160.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747924147; c=relaxed/simple;
+	bh=0xdoVZSHqQNJL8DyRyMKO1Xb1BzCSnmhrjE9JK1DF9w=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=IxwcWOe+S05MnnA1KCliQCr2P2K4cS/C0+olrvtChHlmHKd0CVIUQVXD32juEL81YsoqqHPlzY2BV42FhVQbfTjdcYHGCNk95LR/YX//fdurnaKl8c2dCtxyZBDcuJfA/csQMlc9zhp9ihS5DUYGl6MDRzfTjgRx495FR+3OIa8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex-team.ru; spf=pass smtp.mailfrom=yandex-team.ru; dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b=HKj4qv6A; arc=none smtp.client-ip=178.154.239.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex-team.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yandex-team.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GYe6PKLP"
-Received: by mail-oa1-f53.google.com with SMTP id 586e51a60fabf-2d54b936ad9so2887905fac.1
-        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 07:26:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747923998; x=1748528798; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=V/A33PMiQZi7B+yBG25G8T9Mv2qAG7AQkcIksX5iQLc=;
-        b=GYe6PKLPbjM/rZAB07UKobEsI/dYaEf5hSxlEQpiR97jrMFQCDAEhyDfsB9Tvs4dyu
-         UoEv5mbpxYmLmMDfhg/ezdR827THbNeZc4cxslMe+aDV0JjZrWPmBvhgy5lUzwE9CpcJ
-         7oQX07Qt1GhfifqwT6bnucOWCAzHHi7oNZ4+U2KkNX1VHg474z+kXjl/zownaC96qqq/
-         yzU1WgtvgRA11UEGExSldIRYpzrqeRlZpk/ySzk7T1U6m5rlWSU8/74GsR8IsiV/DTH+
-         rRigdxa8XX6yJ1PUHvmK1h8iKLOMs724Xhlj564Xu/0cxdOYheVEQEM6KhQpohukl8c8
-         3jiA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747923998; x=1748528798;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=V/A33PMiQZi7B+yBG25G8T9Mv2qAG7AQkcIksX5iQLc=;
-        b=NfZMxD8uyiez0wuSR82kLIlKF5ygnJwrusyNMuJb7dsMTVV7vdrGu4iXiq41mPf2jH
-         lfu71tHP3q+ei6DHza85hGCLiJPzWaRiA5uTgFr54dHPLQTVwdfVk/X0pFQyzq2EP6In
-         +ymuh61gQaMrxVU2v5XrCXsSO3LrG7xkdplcy+jnQhNzxQBrVrTO8Jea3AsZcJpoV5mP
-         1YS7zfmE18A7m/fEexQq9tMw7V3U2bP8bcyebWGDNWhIDi7JyznasuoKoan/iApbO7jy
-         z5221vGXj6nzO9XXwqVnsi86MG/DL+cOMsjA9HD5O5kPepMBZp0hNYpX3L9XtF6NJRf5
-         E4HA==
-X-Forwarded-Encrypted: i=1; AJvYcCVcgNb4TZ7Rn4BS74+nbwbsX+aG5Hqqg6br/IFWSpvuG2cuW4lf5nuH84pOzRxcO4+PLzZFE5rLT0AYtcc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyrI7kxv1HvNn4Xo6QNIi503X9T2hqhhBxy+LjAUV7dqoLK3eWY
-	GjCEYriWOZxtknynSKNg8k/HYMHahbeeAcuIBTknxLMj1QZWxJ9DYxXOCZhBX3eGLYAdzq/yIDu
-	lKsyBO28+FTWUhddgJaOjc+0hwuTSll8=
-X-Gm-Gg: ASbGncv5jTxnhsxZfLsiVMI8X6vx6vNM2iIwdWto1w93Yat33CUz/Yy0PTQ/tjLayZj
-	HSpnr5oCp6nDmuQahOTl6pG1S+JRFm+SvSzNLC4Rhd3EjDNf+Enqnn5fs49orHlzDHpaQhgM1OB
-	wIOYDmjPj/FXL4Mtv4uEJMcpu0TFUpuu7+jA==
-X-Google-Smtp-Source: AGHT+IFasGXYJwj7OJUMsTUB4kivLSdn/44D8WhpmTf+mhlWsPkahY4qS13v4kKGGOknI5Fo1nq5EbXL83EaOftSvd0=
-X-Received: by 2002:a05:6870:9e0d:b0:2c2:5b08:8e42 with SMTP id
- 586e51a60fabf-2e3c1ed9f7emr16579212fac.27.1747923998032; Thu, 22 May 2025
- 07:26:38 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="HKj4qv6A"
+Received: from mail-nwsmtp-smtp-corp-main-83.vla.yp-c.yandex.net (mail-nwsmtp-smtp-corp-main-83.vla.yp-c.yandex.net [IPv6:2a02:6b8:c15:2b89:0:640:9815:0])
+	by forwardcorp1a.mail.yandex.net (Yandex) with ESMTPS id 6A45C6236F;
+	Thu, 22 May 2025 17:27:29 +0300 (MSK)
+Received: from alex-shalimov-osx.yandex.net (unknown [2a02:6b8:b081:6420::1:13])
+	by mail-nwsmtp-smtp-corp-main-83.vla.yp-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id NRQ6W30FciE0-dzt0lpPU;
+	Thu, 22 May 2025 17:27:28 +0300
+X-Yandex-Fwd: 1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru;
+	s=default; t=1747924048;
+	bh=7MNz74RTEhR3rcKWJ8ZtJcPNJ/4oo/fxpgPe3AC8HcE=;
+	h=Message-Id:Date:In-Reply-To:Cc:Subject:References:To:From;
+	b=HKj4qv6AvW+P/pYhVduCAddBNSl9OprCcckmFNXdIQiIBtM1LKTkk8QsopKZQzL2R
+	 uxTtO1T88zbiJo5E6rwTGWcppKFCyYxFy0Zvcu8C/Hr+c8MtheiUqx1ncX6iK4vxQj
+	 GckvJaDDLehLsgwwpjMjGJuARUrtAZALEiJVFwhE=
+Authentication-Results: mail-nwsmtp-smtp-corp-main-83.vla.yp-c.yandex.net; dkim=pass header.i=@yandex-team.ru
+From: Alexander Shalimov <alex-shalimov@yandex-team.ru>
+To: dxu@dxuuu.xyz
+Cc: alex-shalimov@yandex-team.ru,
+	andrew@lunn.ch,
+	bpf@vger.kernel.org,
+	davem@davemloft.net,
+	edumazet@google.com,
+	jacob.e.keller@intel.com,
+	jasowang@redhat.com,
+	kuba@kernel.org,
+	linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org,
+	pabeni@redhat.com,
+	willemdebruijn.kernel@gmail.com
+Subject: Re: [PATCH] net/tun: expose queue utilization stats via ethtool
+Date: Thu, 22 May 2025 17:26:54 +0300
+Message-Id: <20250522142654.96438-1-alex-shalimov@yandex-team.ru>
+X-Mailer: git-send-email 2.39.5 (Apple Git-154)
+In-Reply-To: <81d6fb01-e914-4c04-875a-58e61b433a80@app.fastmail.com>
+References: <81d6fb01-e914-4c04-875a-58e61b433a80@app.fastmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250425014937.3812976-1-peng.fan@oss.nxp.com>
-In-Reply-To: <20250425014937.3812976-1-peng.fan@oss.nxp.com>
-From: Jassi Brar <jassisinghbrar@gmail.com>
-Date: Thu, 22 May 2025 09:26:26 -0500
-X-Gm-Features: AX0GCFtasETiZuNGdlMvkRCVQ4E8fN8ZJu-KkF_A9xx8QyFPXNOI67oep8lmyZo
-Message-ID: <CABb+yY0dqgPhe5_p+=cyRAbSwSL+qCZXV1G+QQ2kQh7Axh_7Tw@mail.gmail.com>
-Subject: Re: [PATCH] mailbox: imx: Fix TXDB_V2 sending
-To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
-Cc: shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, 
-	festevam@gmail.com, linux-kernel@vger.kernel.org, imx@lists.linux.dev, 
-	linux-arm-kernel@lists.infradead.org, mailbox@lists.linux.dev, 
-	Peng Fan <peng.fan@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Thu, Apr 24, 2025 at 8:51=E2=80=AFPM Peng Fan (OSS) <peng.fan@oss.nxp.co=
-m> wrote:
+>> Thanks a lot for your response, Daniel. Good to know that we can get
+>> this information without kernel changes. And I learned something new
+>> :) Replicated your examples.
 >
-> From: Peng Fan <peng.fan@nxp.com>
->
-> i.MX95 features several processing domains, Cortex-M7, Cortex-A55
-> secure, Cortex-A55 non-secure. Each domain could communicate with
-> SCMI firmware with a dedicated MU. But the current NXP SCMI firmware
-> is not a RTOS, all processing logic codes are in interrupt context.
-> So if high priority Cortex-M7 is communicating with SCMI firmware and
-> requires a bit more time to handle the SCMI call, Linux MU TXDB_V2
-> will be timeout with high possiblity in 1000us(the current value in
-> imx-mailbox.c). Per NXP SCMI firmware design, if timeout, there is
-> no recover logic, so SCMI agents should never timeout and always
-> wait until the check condition met.
->
-> Based on the upper reason, enlarge the timeout value to 10ms which
-> is less chance to timeout, and retry if timeout really happends.
->
-> Fixes: 5bfe4067d350 ("mailbox: imx: support channel type tx doorbell v2")
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> ---
->  drivers/mailbox/imx-mailbox.c | 21 +++++++++++++++------
->  1 file changed, 15 insertions(+), 6 deletions(-)
->
-> diff --git a/drivers/mailbox/imx-mailbox.c b/drivers/mailbox/imx-mailbox.=
-c
-> index 6ef8338add0d..aef8d572a27c 100644
-> --- a/drivers/mailbox/imx-mailbox.c
-> +++ b/drivers/mailbox/imx-mailbox.c
-> @@ -226,7 +226,7 @@ static int imx_mu_generic_tx(struct imx_mu_priv *priv=
-,
->  {
->         u32 *arg =3D data;
->         u32 val;
-> -       int ret;
-> +       int ret, count;
->
->         switch (cp->type) {
->         case IMX_MU_TYPE_TX:
-> @@ -240,11 +240,20 @@ static int imx_mu_generic_tx(struct imx_mu_priv *pr=
-iv,
->         case IMX_MU_TYPE_TXDB_V2:
->                 imx_mu_write(priv, IMX_MU_xCR_GIRn(priv->dcfg->type, cp->=
-idx),
->                              priv->dcfg->xCR[IMX_MU_GCR]);
-> -               ret =3D readl_poll_timeout(priv->base + priv->dcfg->xCR[I=
-MX_MU_GCR], val,
-> -                                        !(val & IMX_MU_xCR_GIRn(priv->dc=
-fg->type, cp->idx)),
-> -                                        0, 1000);
-> -               if (ret)
-> -                       dev_warn_ratelimited(priv->dev, "channel type: %d=
- failure\n", cp->type);
-> +               ret =3D -ETIMEDOUT;
-> +               count =3D 0;
-> +               while (ret) {
+> Nice! Feel free to CC me if you have other stuff in the future.
+> 
+> Bug fix for parsing implicit module BTF up here:
+> https://github.com/bpftrace/bpftrace/pull/4137
 
-Maybe    while (ret && count < N)  ... esp when you already increase
-the timeout from 1 to 10ms.
+Daniel and Willem, I appreciate you help!
 
-cheers.
+My mistake was that we had tun configured as a module (CONFIG_TUN=m), and I
+didn't explicitly specify the module name in the kprobe. Also, thank you for
+pointing out that recent kernels have added the 'priv' field to net_device.
+As a result, the script has now become much more universal and simpler.
+
+Now we will think about how to efficiently implement monitoring on top of
+our bpftrace script, which dynamically reports queue utilization.
+
