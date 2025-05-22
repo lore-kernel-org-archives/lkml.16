@@ -1,125 +1,103 @@
-Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A12771AF0B5;
-	Thu, 22 May 2025 06:20:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2185D221723;
+	Thu, 22 May 2025 06:21:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747894834; cv=none; b=eC9CIdFezi2eViWxgRcw78CaP3jQhAEgXz//PP77dch8mnyeM9s/R0cUyWAZmG2hiCV7luqz3E6G3p052CbQWxpRK7WnI0uJ69rEc+OgwSpHqetnSymWIh9OT8E5gd/87j0yMXq3qI1qNA0NwUgkesam5EBzJnJEWujzsAwS0zk=
+	t=1747894862; cv=none; b=By7bd7LJtTiKdg0bS4B9o+lmG7g6pkB0fLHBKaKisNuKnyLcg/kDMvjwlNPuuENMu9absanqSJJuKnN1PH8aCJCYG9vXOa54T4E15eX5NzhslRKHgfNhsQ3iUQFv8u5WSgJxfkcQjvSNv18tCvp4cbVT3WIw2SYZfeEA0hmSFsc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747894834; c=relaxed/simple;
-	bh=3sWViiZaf9RhENi7473FExg7j1NIW1+ICKGOTV5yJyc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YlZprFZL1rIlYZrBNC+ERiGM8dInq/TDrJedcGUEhlgHMQ8mihdyC0dC7sHHKYelIyXVQgW+grlqdS7vPtJHKN7NBcAOXnAwbqvKIzLRwibhSUsVaGqaEidtBQ5OuwT0lWPpMEkV/Untw1l0R97k5QVn7kKxJJZJK+6ISPQfcu8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=bAQsoRJ8; arc=none smtp.client-ip=213.97.179.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	s=arc-20240116; t=1747894862; c=relaxed/simple;
+	bh=8Gf9CvcRiX0QDzOZJoLJ0kQ8Rhrd0PQeVZLFhyDeOQU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Tcsccu3dUdfY0Oj7/51YDI+71br96HCCl2/DuS7T/UULD+3yKbmG3YRuQXGfjDZK40JKe12fuJsp9JY06WpZd5QZYsH8WRsE7+XFE5I1IBg4oF4PslucnzRnzZTjOjcPHWCjHyz6aDBzjqYVmQU464f9xZ9NlchikjKnw2zY4fs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YF9ByEW4; arc=none smtp.client-ip=209.85.210.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="bAQsoRJ8"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=kiRPMbGvX4N7MDqUbh2hwhW3nBE5n+0fzxaK4sfzW48=; b=bAQsoRJ8pQBUwCHUnq9KRGF2t5
-	5bf6INLPShE6UWjyx2uyzRMiNLzm1PhRq55ap8xTB5zaLFusTGFKuZYIkKDF7jiUe1YSVknf1JASf
-	bR1RHPx4Mmq+FlT65YOBlXAdsWsr/p84ni/wUribMo1E7+E+d1KQOu6ArDgyFDKxdKjzqkjQr0O9N
-	K99FUQi4aIfYUdhE6P3d+VBU1zniOtycYNixTxTOLmG162yPiZpMFkdWBnJkHTm5voomI8+0PGrwj
-	dH5UgV3CoQRowl8o0X8ACcKGPvRoK975x5ujao6DHDEPffnqeTGLEQp/ovaeMmcN/7gjtAYRGDjAV
-	fhT45Ixg==;
-Received: from [191.204.192.64] (helo=[192.168.15.100])
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-	id 1uHzI3-00BZzW-Kh; Thu, 22 May 2025 08:20:27 +0200
-Message-ID: <32f30f6d-e995-4f00-a8ec-31100a634a38@igalia.com>
-Date: Thu, 22 May 2025 03:20:23 -0300
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YF9ByEW4"
+Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-73712952e1cso7074976b3a.1;
+        Wed, 21 May 2025 23:21:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747894860; x=1748499660; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=8Gf9CvcRiX0QDzOZJoLJ0kQ8Rhrd0PQeVZLFhyDeOQU=;
+        b=YF9ByEW4e0P/m+v5qP7dyIJn2nb1wa7Rw8z0l4npSQ+Ln9mFn98XgNHKcoAWfPbYe4
+         wkDUSK2H5GfuRtUn8JXWpHfHqKKyRI0xkPzUHg7ziYFql/TGMskYDDzlgPZWX4cc1lta
+         yiaKWmKdSvG6Imd3pdIWTeNfRSUaYlRoim7QFMAeZ2WIJaXPh+1BjTYvxRNZ+p+CahHm
+         ogA0Su986KCvbnGsx6WbCiASdJLxXawj00Ttpei20ps2h/kFaw1WDP9YMkPLfhN6AE6F
+         7XiorLAOb1Z2q87eQe/RmpnfclmYDmg3gxoRgjGqadRywgqHXLlkJTO6yGXfydeoNrPD
+         WQGA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747894860; x=1748499660;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8Gf9CvcRiX0QDzOZJoLJ0kQ8Rhrd0PQeVZLFhyDeOQU=;
+        b=mZorxcb1LenDEFdioDdog9lrqNRgpCpmB93azRdF3hn7qRJQE4Q7jvYfs123S75S3t
+         44DGQvaMOrGMItgETd0j+jKHl/tFYzQDhyHE84onGmAxMylUezBwoH8Nt45RjBQX1ydO
+         5RYsT/6Y0Fog6i1BWBOLahTQM2gmULcHeKDk31NbcCRoW1ztupl2abiLDrsMDdMjWGMU
+         6omgmubJUVq0QrmflCWHar1Fn9rRxImPAuLaAxgKAOTjechPLMh7U3NLZ1YfWDwLyG+C
+         aF/p3573v/+Lf9hUSkQtfi9TbzpFDUo+iJQ0FhOjhTGyp2y7mE3ZuWhsM3iZZGkF1uj6
+         fGSw==
+X-Forwarded-Encrypted: i=1; AJvYcCUWT0anbX6Qus426spUrK9DYqKvT9G1xhSC7Iq22zTXbvVxPC+TBka+JXMO6PGr4x5oBie8dDnm@vger.kernel.org, AJvYcCWE2haACsDi09alccgw7z6VjjPZFVMJrXW7ntxyC3PW5LauOL+SYEK2GFWkfPSALSSwX2Mf/1fwJdSKZDc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzbUzfm3xKp71qjFfYSAyuH0chnYOMg4O1Guqmz/TX1SO1WOG4v
+	i8dTa6nshcqQZ/NuXUHG6xfpjhXnzUxvwKSvD1eDBI3qhQqmhqBbvgFX
+X-Gm-Gg: ASbGncvV8OmWtOubNNutXemXtrfxGQhyI+5K0xIEfzfWm2M43Fr4+MUzHfwYoGN1qMR
+	hhFOxENrJW6K0Jf5B1qk8osu9U6xFgHFEMZ82Qdpy1UNobElk8AnTKW0IdVeK1BbQ3TYGqhfV1q
+	Vn/rn8sfhuCX93rB6OOeLbl6fgjwaIPJvyvrx3fc/K7psVVBmYpD48z62MYBZplspJXGFYHnZJs
+	MdGS+Z1xqHjqXKd3wnpywx8fmPbbtm+zAdUyF+SrJ3EnrcMQUn6LDORHIcqBxSzOZaMX5mZcGsO
+	B0giAKkyuyRZIaxIMJlflG6NPzyq5RPCaDd26oRT/tFvj9chdg==
+X-Google-Smtp-Source: AGHT+IFApv0QadyLlnFK7Jc8zTrCRT6Mn794aYfBhT+1fh5yci/dZulqyuNRKTH4wK4czcH2IicG/w==
+X-Received: by 2002:a05:6a20:6a28:b0:215:f6ab:cf78 with SMTP id adf61e73a8af0-2170cdf123amr35822445637.28.1747894860095;
+        Wed, 21 May 2025 23:21:00 -0700 (PDT)
+Received: from mythos-cloud ([125.138.201.7])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b26eaf8a199sm9181408a12.33.2025.05.21.23.20.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 21 May 2025 23:20:59 -0700 (PDT)
+Date: Thu, 22 May 2025 15:20:55 +0900
+From: Moon Yeounsu <yyyynoom@gmail.com>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next] net: dlink: add Kconfig option for RMON
+ registers
+Message-ID: <aC7CR1ZTaJ7m_Dna@mythos-cloud>
+References: <20250519214046.47856-2-yyyynoom@gmail.com>
+ <20250519165758.58157a0b@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] ovl: Allow mount options to be parsed on remount
-To: Christian Brauner <brauner@kernel.org>,
- Amir Goldstein <amir73il@gmail.com>
-Cc: Miklos Szeredi <miklos@szeredi.hu>, linux-unionfs@vger.kernel.org,
- linux-kernel@vger.kernel.org, kernel-dev@igalia.com,
- linux-fsdevel@vger.kernel.org
-References: <20250521-ovl_ro-v1-1-2350b1493d94@igalia.com>
- <CAOQ4uxgXP8WrgLvtR6ar+OncP6Fh0JLVO0+K+NtDX1tGa2TVxA@mail.gmail.com>
- <20250521-blusen-bequem-4857e2ce9155@brauner>
-Content-Language: en-US
-From: =?UTF-8?Q?Andr=C3=A9_Almeida?= <andrealmeid@igalia.com>
-In-Reply-To: <20250521-blusen-bequem-4857e2ce9155@brauner>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250519165758.58157a0b@kernel.org>
 
-Hi Christian, Amir,
+On Mon, May 19, 2025 at 04:57:58PM -0700, Jakub Kicinski wrote:
+> On Tue, 20 May 2025 06:40:45 +0900 Moon Yeounsu wrote:
+> Kconfig is not a great choice for chip specific logic.
+> You should check some sort of chip ID register or PCI ID
+> to match the chip version at runtime. Most users don't compile
+> their own kernels.
 
-Thanks for the feedback :)
+Just to confirm. are you suggesting that RMON MMIO should be enabled
+only on hardware known to support it correctly, instaed of exposing it
+via Kconfig?
 
-Em 21/05/2025 08:20, Christian Brauner escreveu:
-> On Wed, May 21, 2025 at 12:35:57PM +0200, Amir Goldstein wrote:
->> On Wed, May 21, 2025 at 8:45 AM André Almeida <andrealmeid@igalia.com> wrote:
->>>
+Then, I'll drop the Kconfig option and enable RMON MMIO only for
+known-good devices via a runtime check. Currently, that's limited to
+DGE-550T (`0x4000`) with revision A3 (`0x0c`).
 
-[...]
+The `dw32(RmonStatMask, 0x0007ffff);` line will also be skipped
+accordingly.
 
->>
->> I see the test generic/623 failure - this test needs to be fixed for overlay
->> or not run on overlayfs.
->>
->> I do not see those other 5 failures although before running the test I did:
->> export LIBMOUNT_FORCE_MOUNT2=always
->>
->> Not sure what I am doing differently.
->>
+Let me know if you have any concerns. Otherwise, I'll send a revisied
+patch.
 
-I have created a smaller reproducer for this, have a look:
-
-  mkdir -p ovl/lower ovl/upper ovl/merge ovl/work ovl/mnt
-  sudo mount -t overlay overlay -o lowerdir=ovl/lower,upperdir=ovl/ 
-upper,workdir=ovl/work ovl/mnt
-  sudo mount ovl/mnt -o remount,ro
-
-And this returns:
-
-  mount: /tmp/ovl/mnt: fsconfig() failed: overlay: No changes allowed in 
-  reconfigure.
-        dmesg(1) may have more information after failed mount system call.
-
-However, when I use mount like this:
-
-  sudo mount -t overlay overlay -o remount,ro ovl/mnt
-
-mount succeeds. Having a look at strace, I found out that the first 
-mount command tries to set lowerdir to "ovl/lower" again, which will to 
-return -EINVAL from ovl_parse_param():
-
-    fspick(3, "", FSPICK_NO_AUTOMOUNT|FSPICK_EMPTY_PATH) = 4
-    fsconfig(4, FSCONFIG_SET_STRING, "lowerdir", "/tmp/ovl/lower", 0) = 
--1 EINVAL (Invalid argument)
-
-Now, the second mount command sets just the "ro" flag, which will return 
-after vfs_parse_sb_flag(), before getting to ovl_parse_param():
-
-    fspick(3, "", FSPICK_NO_AUTOMOUNT|FSPICK_EMPTY_PATH) = 4
-    fsconfig(4, FSCONFIG_SET_FLAG, "ro", NULL, 0) = 0
-
-After applying my patch and running the first mount command again, we 
-can set that this flag is set only after setting all the strings:
-
-    fsconfig(4, FSCONFIG_SET_STRING, "lowerdir", "/tmp/ovl/lower", 0) = 0
-    fsconfig(4, FSCONFIG_SET_STRING, "upperdir", "/tmp/ovl/upper", 0) = 0
-    fsconfig(4, FSCONFIG_SET_STRING, "workdir", "/tmp/ovl/work", 0) = 0
-    fsconfig(4, FSCONFIG_SET_STRING, "uuid", "on", 0) = 0
-    fsconfig(4, FSCONFIG_SET_FLAG, "ro", NULL, 0) = 0
-
-I understood that the patch that I proposed is wrong, and now I wonder 
-if the kernel needs to be fixed at all, or if the bug is how mount is 
-using fsconfig() in the first mount command?
-
-Thanks,
-	André
+Thank you for reviewing,
+Yeounsu
