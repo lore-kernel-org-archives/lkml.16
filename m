@@ -1,75 +1,116 @@
-Received: from jpms-ob02.noc.sony.co.jp (jpms-ob02.noc.sony.co.jp [211.125.140.165])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 193041854;
-	Thu, 22 May 2025 02:16:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.125.140.165
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB7307405A;
+	Thu, 22 May 2025 02:17:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747880220; cv=none; b=NRuY/u8nOqoh+swj3nklNOd/IdqRrY+c0A1fsk/3ulgu6uiUiBDMxQ354oq2i/7h/pv3gtfSdq8S5UbZIfZZlogHE45D0JgGX9GubjBWqM/wIRcVTn9rWpj9Bl0WGGRbiM4gr+0S9iP92Ow7Aatb1vD5HyKHZbRl+l55uFVtfWk=
+	t=1747880252; cv=none; b=FNgYcbNKpcG3FjxyCgIhiAanClzH3z5EXNg2HMF4aMyGKqOwZvNuML7s27Gk2e+P1sHPaZQmaoXaaXJTPROkS4QvyD23l5JYrgK7Sjn08fLYdontr+0ARh5whEEWSJ1ZkG6oJkOCAZRulD1OhoEh1lNLDgFECCAruAS8IaaG5wo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747880220; c=relaxed/simple;
-	bh=yLUmlP7DaNAVtrWCSbOK7YUSTa1ul9w87aAbB+oebN0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gT0G0bG0bQQCtZCJv1BbzXBwRjga1w6gLAr5WfTQvrRUunyQrWlejt19qSY+uGsoGWM2Bqn3Dcea5PNDPlcOwOC4MLRv1SogILpsiaaWIXp07BxP2ORM3av9WqivW3vRkc5wNKsl3o0Ou0EBjqILUnCJEGWRq6xmlJFAMoLP2Bk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sony.com; spf=pass smtp.mailfrom=sony.com; dkim=pass (2048-bit key) header.d=sony.com header.i=@sony.com header.b=Q4C3+Lhr; arc=none smtp.client-ip=211.125.140.165
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sony.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sony.com
+	s=arc-20240116; t=1747880252; c=relaxed/simple;
+	bh=6HdDLuN69jRgrnD6X3PhDtFnyX7WEPxz9kgdJWxvpxE=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=fmyUkgMOuCTLxcKfNZDTzeWgrsgojA+dOndOAokSsp0phVUgYVpEe9cd69OLOb0Z4Scb3QxS5yQe2hzSFRDvGDMtdTn9UPBducyazKqlRlaDc4TpOZTFRp0crxZSOYZ3DcP4p5BfWnk/KvbH5QETcw3h2CPvVQTD/b2cWhcvbQo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=QXUmmB2X; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sony.com header.i=@sony.com header.b="Q4C3+Lhr"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=sony.com; s=s1jp; t=1747880218; x=1779416218;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=qyFEWQvfFcI7M33d2V0gAbJnT7bAeiGW1d15NiaUM58=;
-  b=Q4C3+LhrGZHZtKVj/ayX7N5hwsLYGQIyuCAwZqXfzSwTYQDYVkpGwVC2
-   MlQJ+ChDnek6PjecFPx2Vm75enFZb5epVErsYAPhuxZN0XeHF7DG+nQSU
-   sZLxVpj+pBX3+eT0x/D3md4HiHRke63glDR2EvygNBH6mk/866Q0WNRmY
-   t5SEc/Lq1i09Lu7jOOGZLZkjAAmmWsa0zYwGS7fc2jF6NeYxQ3kfXCJk8
-   6oTJXRE21JajSlpm+9aeY2ZIJGj9IyppX8lfJbQ5HCR00/KHh4Y0CHrxZ
-   bszTXf7ec+dXiNKX4MUtiSeTqWfO5hlxEARiyrJgQRjRWldn3DEBZaN+V
-   w==;
-Received: from unknown (HELO jpmta-ob02.noc.sony.co.jp) ([IPv6:2001:cf8:0:6e7::7])
-  by jpms-ob02.noc.sony.co.jp with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2025 11:16:55 +0900
-X-IronPort-AV: E=Sophos;i="6.15,304,1739804400"; 
-   d="scan'208";a="532597744"
-Received: from unknown (HELO JPC00244420) ([IPv6:2001:cf8:1:573:0:dddd:6b3e:119e])
-  by jpmta-ob02.noc.sony.co.jp with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2025 11:16:56 +0900
-Date: Thu, 22 May 2025 11:16:52 +0900
-From: Shashank Balaji <shashank.mahadasyam@sony.com>
-To: Tejun Heo <tj@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>,
-	Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>,
-	Jonathan Corbet <corbet@lwn.net>
-Cc: cgroups@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Shinya Takumi <shinya.takumi@sony.com>
-Subject: Re: [PATCH v3 3/3] cgroup, docs: cpu controller's interaction with
- various scheduling policies
-Message-ID: <aC6JFEBfMzsUrChn@JPC00244420>
-References: <20250522-rt-and-cpu-controller-doc-v3-0-483fc9cca591@sony.com>
- <20250522-rt-and-cpu-controller-doc-v3-3-483fc9cca591@sony.com>
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="QXUmmB2X"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1747880247;
+	bh=lVRHaQ6XE1w3gYaKM7tq0RnLKSJmxtnmat2fqFD1SWA=;
+	h=Date:From:To:Cc:Subject:From;
+	b=QXUmmB2XWeQ6P8EIdCcMbkSiVZ65Pfh7kiFRbPOA53D8pIfjvdGMD8o4m5+6++L61
+	 mXLuH+5S9f/x10JsGOMlOpR/qsZ2Pf7WvFEsHZR5SRS9nEcujc064YYK7g2bqGh20X
+	 WfzfQ3NJzJoNrm/nfqY5MdPYafmGzQLcYh2wy68X0V0kWlgshSOmczsqI3nlW72HY1
+	 FGKuy96tEpl6DdtoZTY+ZLElGvc3yi/0u/+6t4GKl4Aov4/kW0uv6aNDtBhioHvvHU
+	 xOd9RYAiEG5AFsD1IlbDeHClB6EZcoz8CUQpMlin3l6BrvV804S6XIq9ykITj+Qaa5
+	 rZz5XOD4R4l8g==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4b2sPg3vFqz4xD9;
+	Thu, 22 May 2025 12:17:27 +1000 (AEST)
+Date: Thu, 22 May 2025 12:17:26 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Andi Shyti <andi.shyti@kernel.org>, Arnd Bergmann <arnd@arndb.de>
+Cc: Alexey Charkov <alchark@gmail.com>, Andi Shyti <andi@smida.it>,
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, ARM
+ <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>
+Subject: linux-next: manual merge of the i2c-host tree with the arm-soc tree
+Message-ID: <20250522121726.0a4350fc@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250522-rt-and-cpu-controller-doc-v3-3-483fc9cca591@sony.com>
+Content-Type: multipart/signed; boundary="Sig_/gABvDSz61vTa7_NFTstHl5E";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-Hi,
+--Sig_/gABvDSz61vTa7_NFTstHl5E
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, May 22, 2025 at 11:08:14AM +0900, Shashank Balaji wrote:
-> +* Processes under the fair-class scheduler
-> +* Processes under a BPF scheduler with the ``cgroup_set_weight`` callback
-> +* Everything else: ``SCHED_{FIFO,RR,DEADLINE}`` and processes under a BPF scheduler
-> +  without the ``cgroup_set_weight`` callback
+Hi all,
 
-Though `cgroup_set_weight` is referred to here, CONFIG_EXT_GROUP_SCHED
-is not yet documented in sched-ext.rst. But I don't understand it well
-enough to add that documentation myself.
+Today's linux-next merge of the i2c-host tree got a conflict in:
 
-Thanks
+  MAINTAINERS
 
-Regards,
-Shashank
+between commit:
+
+  47cbd5d8693d ("ARM: vt8500: MAINTAINERS: Include vt8500 soc driver in mai=
+ntainers entry")
+
+from the arm-soc tree and commit:
+
+  3887d3f64260 ("dt-bindings: i2c: i2c-wmt: Convert to YAML")
+
+from the i2c-host tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc MAINTAINERS
+index 3ca100bf2c02,bc13b87e85c0..000000000000
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@@ -3435,8 -3434,7 +3435,8 @@@ M:	Alexey Charkov <alchark@gmail.com
+  M:	Krzysztof Kozlowski <krzk@kernel.org>
+  L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
+  S:	Odd Fixes
+ +F:	Documentation/devicetree/bindings/hwinfo/via,vt8500-scc-id.yaml
+- F:	Documentation/devicetree/bindings/i2c/i2c-wmt.txt
++ F:	Documentation/devicetree/bindings/i2c/wm,wm8505-i2c.yaml
+  F:	arch/arm/boot/dts/vt8500/
+  F:	arch/arm/mach-vt8500/
+  F:	drivers/clocksource/timer-vt8500.c
+
+--Sig_/gABvDSz61vTa7_NFTstHl5E
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmguiTYACgkQAVBC80lX
+0GxcSQf5AVj6pKtp7El2+p8J6aena1evSsaeXwc8DmwmSczjfyF+yY1VNvOUgZBb
+MBoDs18CxrWjsRRGKew9V3LLyDNey5CgJVeRkGfN+C2bezzTmwU5McJeOCzEXL/1
+U92o/Zo+h1G8ZuWkhXlEX64js68XJa6Mn4lcwhCJ6h/svsrVQWMT1qBUuZgpcK5U
+sBQL2HODi5ubMCp9SCMxw/2ZYuk49bvSG0YtG68yUzeYj67/ClBpzcDqEMiR2xkK
+VPBHfP5hEOMdFIDIHcMhjbSveDuvQ8fO4ygeOz17V16tCyupsLuNylnhwDdmbP/u
+hwqC+uA1KwCCe35Bb/btPagwet2ieQ==
+=2A8b
+-----END PGP SIGNATURE-----
+
+--Sig_/gABvDSz61vTa7_NFTstHl5E--
