@@ -1,98 +1,107 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-188.mta1.migadu.com (out-188.mta1.migadu.com [95.215.58.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E9241F94D
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 13:57:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B4BA28C2B1
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 13:59:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747922278; cv=none; b=FkOebi6BnCVifq5radDhs2TCG2r2EPp5A+ejACEydKZGe2QQ9uCWGQsYhvr+x6T5r5R6F1iUJkg1qQD4R7yLFKEth1kCZMhxUuy5bWRR6dezZJ1zfbvACLOMLxOzU3Af2pJzOkfE3LX6pPxYwZga3lmx6XU/7dew/uJL8k1HEoE=
+	t=1747922355; cv=none; b=LFOO0zlsQws5Zp3nonFHsgygnSMN6EMxyFRi1XMx5ow4Q/l+sydBiyBs43AYBptRb2VjhgsRvZqkFMxOMjID+Uz5W+l0q/92g7bei0bg9RKNrBIimTxFvbjFL03/SpeB0QfvnlHOHCd/RqELW6ZPcbd1bYz5O6U8Qz+WvyUf72k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747922278; c=relaxed/simple;
-	bh=HooZtgA0GXfLrsEzQyuwTezmlNya06buDn/rvsVgz/A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=icVd2qEFAtQbszUtx74ElSONQnclRRcB22ZpVwYZ2FTZjD/ipKjV2IlPmAv7POiEysskEbmcBE/TYCTP8jq6f8T1rfdm6sioybp/fZHzzzFFxGOtrUaYPV4nWcKGQsdqbpDIiMXn7PAZmr33h3z8wA5evjDwQO6ZCQB7omEAhuM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rIqE4FsP; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747922355; c=relaxed/simple;
+	bh=VgVZFlJbbO8gVWDD6POpyMTYahmpyFKPPKnI3MI5cv0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dXyOdUxWfn0O+PQjrQWKaxrLPwRVtJG7hq9eSm0P6D9Lvs6Ij0dcnP9WNMq2DietmwlARoFWEENJhbXwncXAMQ0oWNoAY9RZtafD0clWm3x6glzpWyeL0U5XQCKhfVgrwkOMBXPMK4Lh1FFnlCsdu1/hgzNeOuJB2b8CYXNG+9k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=aluGZemL; arc=none smtp.client-ip=95.215.58.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rIqE4FsP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75CB5C4CEF1;
-	Thu, 22 May 2025 13:57:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747922277;
-	bh=HooZtgA0GXfLrsEzQyuwTezmlNya06buDn/rvsVgz/A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=rIqE4FsPeocARzXZvFtzi55Zdxf89qXdNvy4cal5n/cYTfbQ8YiKb81N+XL45Se90
-	 XTfSB58d2Qd3G3HJv/U+/N/g3iuRju+f25QwEyUA+aFgK4a1mn0qQ1QBrLQKa7xBan
-	 uCKnhhUG1Ak3Q6gBrmO/HFD6xxi7UtNaZSOp+qJmd4TSpnQG0DCICtYs8kmTflfk0P
-	 wF6IZwuzjJO2yWizHBArT35qhGjzC2t10iXQTm1QrpiKwKhn64/7bmtsVvW6U+FjQ2
-	 kt7PpuQ+WsfD76VYvy7aLPss2s+fqcapJpcXdSWXPtBKQCu30UQiHyDaVIutCTwYu3
-	 WPjjIaxlb/+6g==
-Date: Thu, 22 May 2025 21:57:51 +0800
-From: Gao Xiang <xiang@kernel.org>
-To: Bo Liu <liubo03@inspur.com>
-Cc: xiang@kernel.org, chao@kernel.org, linux-erofs@lists.ozlabs.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v9] erofs: support deflate decompress by using Intel QAT
-Message-ID: <aC8tX4u/EFe8XsVP@debian>
-Mail-Followup-To: Bo Liu <liubo03@inspur.com>, xiang@kernel.org,
-	chao@kernel.org, linux-erofs@lists.ozlabs.org,
-	linux-kernel@vger.kernel.org
-References: <20250522094931.28956-1-liubo03@inspur.com>
- <2f0e05c0-fe6b-4e84-9ef5-c33ecc43d81c@linux.alibaba.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="aluGZemL"
+Message-ID: <85c18336-f029-457c-ad75-ab15e05050ee@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1747922340;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=JfrNA2h8hoGkFc6ifKeWxZfX62Ca0zc75XtAmNAQVYc=;
+	b=aluGZemLvtjhu5NzJhDxB1gLzpUuYUkED7TS83WodjXzigil4zgly0i3wZAE0Vyo3857Bb
+	1HfsO0l3tyFU7EIcFjVSwP7kcKjnyZlrEu2yCzTmc9fz7BkShJlmvxzMN3hqzyv1SsnlsD
+	FodZEs9hKRLdC6XPoc+Y3sZgosxGaCM=
+Date: Thu, 22 May 2025 21:58:41 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <2f0e05c0-fe6b-4e84-9ef5-c33ecc43d81c@linux.alibaba.com>
+Subject: Re: [RESEND PATCH 1/1] netfilter: load nf_log_syslog on enabling
+ nf_conntrack_log_invalid
+Content-Language: en-US
+To: Florian Westphal <fw@strlen.de>
+Cc: Pablo Neira Ayuso <pablo@netfilter.org>, Lance Yang
+ <ioworker0@gmail.com>, kadlec@netfilter.org, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, horms@kernel.org,
+ coreteam@netfilter.org, linux-kernel@vger.kernel.org,
+ netfilter-devel@vger.kernel.org, Zi Li <zi.li@linux.dev>
+References: <20250514053751.2271-1-lance.yang@linux.dev>
+ <aC2lyYN72raND8S0@calendula> <aC23TW08pieLxpsf@strlen.de>
+ <6f35a7af-bae7-472d-8db6-7d33fb3e5a96@linux.dev> <aC4aNCpZMoYJ7R02@strlen.de>
+ <1c21a452-e1f4-42e0-93c0-0c49e4612dcd@linux.dev> <aC7Fg0KGari3NQ3Z@strlen.de>
+ <ac51507e-28ca-404d-a784-7cc3721ee624@linux.dev>
+ <0e89bc09-c0ee-49d0-bbde-430cca361fd6@linux.dev> <aC8keoPd6oj4-zIV@strlen.de>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Lance Yang <lance.yang@linux.dev>
+In-Reply-To: <aC8keoPd6oj4-zIV@strlen.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-On Thu, May 22, 2025 at 05:52:32PM +0800, Gao Xiang wrote:
+
+
+On 2025/5/22 21:19, Florian Westphal wrote:
+> Lance Yang <lance.yang@linux.dev> wrote:
+>> Does this helper look correct?
 > 
+> Yes, but ...
+>> /**
+>>    * nf_log_is_registered - Check if NF_LOG is registered for a protocol
+>>    * family
+>>    *
+>>    * @pf: protocol family (e.g., NFPROTO_IPV4)
+>>    *
+>>    * Returns true if NF_LOG is registered, false otherwise.
+>>    */
+>> bool nf_log_is_registered(int pf)
+>> {
+>>           struct nf_logger *logger;
+>>
+>>           logger = nf_logger_find_get(pf, NF_LOG_TYPE_LOG);
+>>           if (logger) {
+>>                   nf_logger_put(pf, NF_LOG_TYPE_LOG);
+>>                   return true;
+>>           }
+>>
+>>           logger = nf_logger_find_get(pf, NF_LOG_TYPE_ULOG);
+>>           if (logger) {
+>>                   nf_logger_put(pf, NF_LOG_TYPE_ULOG);
+>>                   return true;
+>>           }
+>>
+>>           return false;
+>> }
 > 
-> On 2025/5/22 17:49, Bo Liu wrote:
-> > This patch introdueces the use of the Intel QAT to decompress compressed
-> > data in the EROFS filesystem, aiming to improve the decompression speed
-> > of compressed datea.
-> > 
-> > We created a 285MiB compressed file and then used the following command to
-> > create EROFS images with different cluster size.
-> >       # mkfs.erofs -zdeflate,level=9 -C16384
-> > 
-> > fio command was used to test random read and small random read(~5%) and
-> > sequential read performance.
-> >       # fio -filename=testfile  -bs=4k -rw=read -name=job1
-> >       # fio -filename=testfile  -bs=4k -rw=randread -name=job1
-> >       # fio -filename=testfile  -bs=4k -rw=randread --io_size=14m -name=job1
-> > 
-> > Here are some performance numbers for reference:
-> > 
-> > Processors: Intel(R) Xeon(R) 6766E(144 core)
-> > Memory:     521 GiB
-> > 
-> > |-----------------------------------------------------------------------------|
-> > |           | Cluster size | sequential read | randread  | small randread(5%) |
-> > |-----------|--------------|-----------------|-----------|--------------------|
-> > | Intel QAT |    4096      |    538  MiB/s   | 112 MiB/s |     20.76 MiB/s    |
-> > | Intel QAT |    16384     |    699  MiB/s   | 158 MiB/s |     21.02 MiB/s    |
-> > | Intel QAT |    65536     |    917  MiB/s   | 278 MiB/s |     20.90 MiB/s    |
-> > | Intel QAT |    131072    |    1056 MiB/s   | 351 MiB/s |     23.36 MiB/s    |
-> > | Intel QAT |    262144    |    1145 MiB/s   | 431 MiB/s |     26.66 MiB/s    |
-> > | deflate   |    4096      |    499  MiB/s   | 108 MiB/s |     21.50 MiB/s    |
-> > | deflate   |    16384     |    422  MiB/s   | 125 MiB/s |     18.94 MiB/s    |
-> > | deflate   |    65536     |    452  MiB/s   | 159 MiB/s |     13.02 MiB/s    |
-> > | deflate   |    131072    |    452  MiB/s   | 177 MiB/s |     11.44 MiB/s    |
-> > | deflate   |    262144    |    466  MiB/s   | 194 MiB/s |     10.60 MiB/s    |
-> > 
-> > Signed-off-by: Bo Liu <liubo03@inspur.com>
-> Reviewed-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+> Why not simply do:
 > 
+> bool nf_log_is_registered(int pf)
+> {
+> 	int i;
+> 
+> 	for (i = 0; i < NF_LOG_TYPE_MAX; i++) {
+> 		if (rcu_access_pointer(loggers[pf][i]))
+> 			return true;
+> 	}
+> 
+> 	return false;
+> }
 
-BTW, the commit message has been updated to v4 version to
-fix some typos:
-
-https://lore.kernel.org/r/20250521100326.2867828-1-hsiangkao@linux.alibaba.com
-
-Thanks,
-Gao Xiang
+Yeah, it's simpler and better. Thanks!
