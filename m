@@ -1,166 +1,144 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E817423771C;
-	Thu, 22 May 2025 12:12:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2EB51EF387
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 12:14:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747915934; cv=none; b=UW0vUcw61nO4jAiIGia48/S2XsZNOY5QTwMqdP89z7cox3OIkJ6F6/SsYMW09ljdq2XmIgFoegSOvveq6hbgVfjjvYwi5NIWbGWrEDeYvTXxrpbxur/VanwH6ilanLtDFV5v3s8NlIdRAU+pobrmohjQS1/e/d9HFbc0Y0yInvM=
+	t=1747916042; cv=none; b=VQHWK5OIT9S159QhSiK8hi+FRT0clPpQsSRpxXWezqnDR1OQDVDdVYyViSDqrpo4O8N2CM+ukmcoze3Z2V7PPaRpprjQ+l2n8A6PP1J11w8wVuojvuo1i7MSi54L8+zuYSv+33TE+GBBt2rJG8QJ0DPuZkbNEggyZZuBDh1VK10=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747915934; c=relaxed/simple;
-	bh=StgdFeaMD6HJ9Me6GTfwzhiv4ow8/NpvUc+y4NUni2E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pfmFtGhT908SmHbjXIjk2kwhobkSmEm+UsPSijFEIV+cxLH/GtftxvuPy1tJxwjfjwB19AaCTOZUNjDfoPok5K1zOb/GnGPrOgeQYqJiuCcAriDZkOzlLe9kwoNH5z1HyrOdkzh6tUS/P5tDOUhYlw7uRoeZcxEynpJn8JFCGys=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ebuxk8DE; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747916042; c=relaxed/simple;
+	bh=s/P0VUHg69bQtnPWt2qfePIP7AEdB5qdnUIHt98wVBc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Ch/Z/lQ1PcNFV97B0n2Z6f7suNWL+KmY81dE3WfJd+u4xdleQ8vOCDIxAnzMMin+D8zVFicvKX7c7OHuYUedaJ9qFsZ8fgLnokucRNvks/vsJfKfScro/wSXv0sEMTrzLspyehy4hYInOJb4bcMxie7+4FJeX5f6M87kQjhuSBs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=GYukeLYT; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ebuxk8DE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20577C4CEE4;
-	Thu, 22 May 2025 12:12:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747915933;
-	bh=StgdFeaMD6HJ9Me6GTfwzhiv4ow8/NpvUc+y4NUni2E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Ebuxk8DElK2tjp5ZvQk37kLGix2yfChyW3I8J7FaPYbTLnjfLorYdKkX+7JjgSqgl
-	 LY5N5YuC/VI1iHjtA8x39j2I5hf52LIGXT+m6csvpWdIx/AuCTHq5Md2yu1gfQcfoH
-	 YQnRPECrpFToWi9CiW2CUoy1kaCr5lcz9r0UNC+ql9WEcasfbFweM5E/h5jhl1C23y
-	 zUYk/oiHGTD2iNYap4ZuSBn7FBR7jllob9uHds31/Q4MKcCGD5K2SHdX8Vt5oShScH
-	 61P8SWTu0oAQ3/REBM85O1ghJY686cDchWGnVILgvEbFYcTF6BiEDn7lOAe3Q2h4qr
-	 mnnenoduIsqMA==
-Date: Thu, 22 May 2025 15:12:05 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	"Liam R . Howlett" <Liam.Howlett@oracle.com>,
-	David Hildenbrand <david@redhat.com>,
-	Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Christian Brauner <brauner@kernel.org>, linux-mm@kvack.org,
-	linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
-	SeongJae Park <sj@kernel.org>, Usama Arif <usamaarif642@gmail.com>,
-	linux-api@vger.kernel.org
-Subject: Re: [RFC PATCH 0/5] add process_madvise() flags to modify behaviour
-Message-ID: <aC8UlSupN7_YXfma@kernel.org>
-References: <cover.1747686021.git.lorenzo.stoakes@oracle.com>
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="GYukeLYT"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54M7UACL000720
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 12:13:59 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=5E1zkxcDnkBmMlF1lOS5cPZi
+	XEh90TLOJgiaJfuSCt4=; b=GYukeLYTJ867gY27ytWcZZqWKLcsz8BQoYjfO6dY
+	2WI52UWqH6Xvpdjgj7ux30GLpNwxdQHSi6Wyw3wvaqzk5N6oFfji7IpI97uCxboN
+	LtrabJn8UQPZmMCJtlcob5/KBO2lWjwazzKvl8St4Y/RZYSuu1kuDdL8qdLXHBx5
+	iOpRwmHL+EL2taXN/57sxsHTOMzpNl+MPaYSDKG4jJ8nq3txWGPgAt9xdKZ45XW4
+	Kl1AL98Rt/x4TFhEwN2HfTXDbUG44OmAXZFwYVpUOS0+pChz121DZ0MyZBo7edfG
+	suqbyRIVSrPYTeJMFyxdzYmMG1+Va4ZA6uQVygveqLJViQ==
+Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com [209.85.214.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46s95tmm2s-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 12:13:59 +0000 (GMT)
+Received: by mail-pl1-f199.google.com with SMTP id d9443c01a7336-2321207ff20so74528185ad.0
+        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 05:13:59 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747916038; x=1748520838;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=5E1zkxcDnkBmMlF1lOS5cPZiXEh90TLOJgiaJfuSCt4=;
+        b=XAkKEUaT/GvBvuu3Zy+KaPyUhS0rLT/d40p61CnXqg4Ds6AVssGFInxsx9mUs1j3KE
+         a8RTItVSNGqhwtGCoWSpiBsmkbegX39UnzCXwh0bJxlN7cWCuD1Qll7e6vewMmSMBMMa
+         VemxYFYMmDEHFeyaHFnCybpSpdq0n6GqNBsdpvi+lkCjK6sFLJoF809on/hYBbcFe9J6
+         0B14XdaeuGWr2oauku9OFtENg/uZrXEkf0+59QBeMjX0CCV0PEspKVqNUKZUSBOEwlN0
+         4zFdPaexQPJjr3JfDZNbjTPSQgrdZjDxN26mdqIgeUVsdhIasXPpp6Hs4ULHhPVrVBQ7
+         yGog==
+X-Forwarded-Encrypted: i=1; AJvYcCUf6n9VSzyopkW5A24ISxcxpV7RZ0AHF5gYQFke/h/LKDsXFD+Mw3bz1GjBFfEXIp6MIy5czuL/hkWdnVs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywk6kbnNircVLcAHhN2mPZI8tL+7eY8T1MWmu1o/kh68lg2TVcW
+	suSueVBIDQr62O5wx245D/1nh0aF9yG7eNImfDhp62wgUALOrkrVnvMtorWIkm4QwjcgSq8wHo7
+	v8x/yFy4Kx4Cx5viTrdRd/YRhGJl7OY4nUE6RsDoR0YKoJY6/SsxzJXUC5buIuB4e1EqhxyR6Cm
+	wkJRcOt9asU2xT1PPJaN7iGdBEsQqAKiatgZicS0rbDQ==
+X-Gm-Gg: ASbGncv2yXRSHKYgQMhWDhQWiKWKb4fdpl9Al/3gQOFax3U/b/pS1iUnvOJCcSI8vGt
+	lUmu9M9PjaM43i153xbq3bBCeNl++jPv9IYVS3NFBqWhCU1zKJAddvu0vsVX0S1kDL0B3nEbQgb
+	RbFpx+FjQ=
+X-Received: by 2002:a17:903:3d07:b0:224:a96:e39 with SMTP id d9443c01a7336-231d438b420mr365147265ad.9.1747916038402;
+        Thu, 22 May 2025 05:13:58 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFJ5VEoVz3hCcxXDIMg7e7/ldmBcjWGXTHC2i7Ve7pS+CwS16G0aa/76B8J7xj+tTqcxPyl5jGE/2dZG9ipeR8=
+X-Received: by 2002:a17:903:3d07:b0:224:a96:e39 with SMTP id
+ d9443c01a7336-231d438b420mr365146915ad.9.1747916038028; Thu, 22 May 2025
+ 05:13:58 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1747686021.git.lorenzo.stoakes@oracle.com>
+References: <20250513042825.2147985-1-ekansh.gupta@oss.qualcomm.com>
+ <20250513042825.2147985-6-ekansh.gupta@oss.qualcomm.com> <22uccyp5m2szry7bpitqcav5nlvwch5eqh4mdacfedidgrnyhx@vsjobngwdkmb>
+ <dc67df54-2a19-4318-acd4-b96b8549b64d@oss.qualcomm.com> <7ogkoxsowpd2x5qmjog4qx5eu4eiinvtnyjz5hfufgna2hz7na@oxzmowlnelxb>
+ <61dd2c3f-20ac-484e-8a45-f42fd5f42b86@oss.qualcomm.com>
+In-Reply-To: <61dd2c3f-20ac-484e-8a45-f42fd5f42b86@oss.qualcomm.com>
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Date: Thu, 22 May 2025 15:13:45 +0300
+X-Gm-Features: AX0GCFtWixz9LfvZ3e0FxkpEf3O0Wt5ZYxeW1nkn2H642fUOmtSlAQNXYBwPcWM
+Message-ID: <CAO9ioeX1uE3ty5oSezYOLJKqf8G5dLYAS5nRiNvryWTk0RPdEQ@mail.gmail.com>
+Subject: Re: [PATCH v1 5/5] misc: fastrpc: Add missing unmapping
+ user-requested remote heap
+To: Ekansh Gupta <ekansh.gupta@oss.qualcomm.com>
+Cc: srinivas.kandagatla@oss.qualcomm.com, linux-arm-msm@vger.kernel.org,
+        gregkh@linuxfoundation.org, quic_bkumar@quicinc.com,
+        linux-kernel@vger.kernel.org, quic_chennak@quicinc.com,
+        dri-devel@lists.freedesktop.org, arnd@arndb.de, stable@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-Authority-Analysis: v=2.4 cv=QKBoRhLL c=1 sm=1 tr=0 ts=682f1507 cx=c_pps
+ a=JL+w9abYAAE89/QcEU+0QA==:117 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10
+ a=EUspDBNiAAAA:8 a=kP8C-QOurGtaE5Th5NMA:9 a=QEXdDO2ut3YA:10
+ a=324X-CrmTo6CU4MGRt3R:22
+X-Proofpoint-ORIG-GUID: O4OGR-hQbqdEAiCJ7d4zV44rq3flgnip
+X-Proofpoint-GUID: O4OGR-hQbqdEAiCJ7d4zV44rq3flgnip
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIyMDEyNCBTYWx0ZWRfX1+zPHAn3ZLv3
+ K/d7/3exCcOKco8oRuY2kt7EmG8y3Oh4Il0mad3AOqwHbKmlSRqR2N+tNLJOsM0QXmdWXQZpcyx
+ Mv7otL8xT4m+kbtm4MaQukuIXOjhRlQ08AcqwlOEZCs4cLySS/Rj40wg4YYo55/71ksxr7x/s7k
+ gPOZU+HSRtJ2eUoTKdAtb77SBSGevMbW1tZP0nHKg8nVLwtqGaRJ8e+N65fv7XLqsgTuNnF6u4k
+ 2Rr+x1Ip+3TQv+Z9sX1Pne+KtTUz3/zQEevN4sYl6U9jA7KEUcGOnKATimEGbu6BaSKFQBVmkQj
+ UNhVySuQ0Q1EZzqVrvs9mIIjOCuUdX6WXJbisE8UOk5UHwGtheOPG3ODpZy1wcnqe7a6XgJMsX1
+ kMC83CBKTvIhmYta75XyCPkBT49qq8RbPmrMBWLZONgFr337VaMmN1NZf/VoL0mS5v1Vai98
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-22_06,2025-05-22_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ mlxscore=0 spamscore=0 clxscore=1015 phishscore=0 lowpriorityscore=0
+ adultscore=0 mlxlogscore=999 suspectscore=0 bulkscore=0 impostorscore=0
+ priorityscore=1501 malwarescore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505160000 definitions=main-2505220124
 
-(cc'ing linux-api)
+On Thu, 22 May 2025 at 08:01, Ekansh Gupta
+<ekansh.gupta@oss.qualcomm.com> wrote:
+>
+>
+>
+> On 5/19/2025 7:04 PM, Dmitry Baryshkov wrote:
+> > On Mon, May 19, 2025 at 04:28:34PM +0530, Ekansh Gupta wrote:
+> >>
+> >> On 5/19/2025 4:22 PM, Dmitry Baryshkov wrote:
+> >>> On Tue, May 13, 2025 at 09:58:25AM +0530, Ekansh Gupta wrote:
+> >>>> User request for remote heap allocation is supported using ioctl
+> >>>> interface but support for unmap is missing. This could result in
+> >>>> memory leak issues. Add unmap user request support for remote heap.
+> >>> Can this memory be in use by the remote proc?
+> >> Remote heap allocation request is only intended for audioPD. Other PDs
+> >> running on DSP are not intended to use this request.
+> > 'Intended'. That's fine. I asked a different question: _can_ it be in
+> > use? What happens if userspace by mistake tries to unmap memory too
+> > early? Or if it happens intentionally, at some specific time during
+> > work.
+>
+> If the unmap is restricted to audio daemon, then the unmap will only
+> happen if the remoteproc is no longer using this memory.
+>
+> But without this restriction, yes it possible that some userspace process
+> calls unmap which tries to move the ownership back to HLOS which the
+> remoteproc is still using the memory. This might lead to memory access
+> problems.
 
-On Mon, May 19, 2025 at 09:52:37PM +0100, Lorenzo Stoakes wrote:
-> REVIEWERS NOTES:
-> ================
-> 
-> This is a VERY EARLY version of the idea, it's relatively untested, and I'm
-> 'putting it out there' for feedback. Any serious version of this will add a
-> bunch of self-tests to assert correct behaviour and I will more carefully
-> confirm everything's working.
-> 
-> This is based on discussion arising from Usama's series [0], SJ's input on
-> the thread around process_madvise() behaviour [1] (and a subsequent
-> response by me [2]) and prior discussion about a new madvise() interface
-> [3].
-> 
-> [0]: https://lore.kernel.org/linux-mm/20250515133519.2779639-1-usamaarif642@gmail.com/
-> [1]: https://lore.kernel.org/linux-mm/20250517162048.36347-1-sj@kernel.org/
-> [2]: https://lore.kernel.org/linux-mm/e3ba284c-3cb1-42c1-a0ba-9c59374d0541@lucifer.local/
-> [3]: https://lore.kernel.org/linux-mm/c390dd7e-0770-4d29-bb0e-f410ff6678e3@lucifer.local/
-> 
-> ================
-> 
-> Currently, we are rather restricted in how madvise() operations
-> proceed. While effort has been put in to expanding what process_madvise()
-> can do (that is - unrestricted application of advice to the local process
-> alongside recent improvements on the efficiency of TLB operations over
-> these batvches), we are still constrained by existing madvise() limitations
-> and default behaviours.
-> 
-> This series makes use of the currently unused flags field in
-> process_madvise() to provide more flexiblity.
-> 
-> It introduces four flags:
-> 
-> 1. PMADV_SKIP_ERRORS
-> 
-> Currently, when an error arises applying advice in any individual VMA
-> (keeping in mind that a range specified to madvise() or as part of the
-> iovec passed to process_madvise()), the operation stops where it is and
-> returns an error.
-> 
-> This might not be the desired behaviour of the user, who may wish instead
-> for the operation to be 'best effort'. By setting this flag, that behaviour
-> is obtained.
-> 
-> Since process_madvise() would trivially, if skipping errors, simply return
-> the input vector size, we instead return the number of entries in the
-> vector which completed successfully without error.
-> 
-> The PMADV_SKIP_ERRORS flag implicitly implies PMADV_NO_ERROR_ON_UNMAPPED.
-> 
-> 2. PMADV_NO_ERROR_ON_UNMAPPED
-> 
-> Currently madvise() has the peculiar behaviour of, if the range specified
-> to it contains unmapped range(s), completing the full operation, but
-> ultimately returning -ENOMEM.
-> 
-> In the case of process_madvise(), this is fatal, as the operation will stop
-> immediately upon this occurring.
-> 
-> By setting PMADV_NO_ERROR_ON_UNMAPPED, the user can indicate that it wishes
-> unmapped areas to simply be entirely ignored.
-> 
-> 3. PMADV_SET_FORK_EXEC_DEFAULT
-> 
-> It may be desirable for a user to specify that all VMAs mapped in a process
-> address space default to having an madvise() behaviour established by
-> default, in such a fashion as that this persists across fork/exec.
-> 
-> Since this is a very powerful option that would make no sense for many
-> advice modes, we explicitly only permit known-safe flags here (currently
-> MADV_HUGEPAGE and MADV_NOHUGEPAGE only).
-> 
-> 4. PMADV_ENTIRE_ADDRESS_SPACE
-> 
-> It can be annoying, should a user wish to apply madvise() to all VMAs in an
-> address space, to have to add a singular large entry to the input iovec.
-> 
-> So provide sugar to permit this - PMADV_ENTIRE_ADDRESS_SPACE. If specified,
-> we expect the user to pass NULL and -1 to the vec and vlen parameters
-> respectively so they explicitly acknowledge that these will be ignored,
-> e.g.:
-> 
-> 	process_madvise(PIDFD_SELF, NULL, -1, MADV_HUGEPAGE,
-> 			PMADV_ENTIRE_ADDRESS_SPACE | PMADV_SKIP_ERRORS);
-> 
-> Usually a user ought to prefer setting PMADV_SKIP_ERRORS here as it may
-> well be the case that incompatible VMAs will be encountered that ought to
-> be skipped.
-> 
-> If this is not set, the PMADV_NO_ERROR_ON_UNMAPPED (which was otherwise
-> implicitly implied by PMADV_SKIP_ERRORS) ought to be set as of course, the
-> entire address space spans at least some gaps.
-> 
-> Lorenzo Stoakes (5):
->   mm: madvise: refactor madvise_populate()
->   mm/madvise: add PMADV_SKIP_ERRORS process_madvise() flag
->   mm/madvise: add PMADV_NO_ERROR_ON_UNMAPPED process_madvise() flag
->   mm/madvise: add PMADV_SET_FORK_EXEC_DEFAULT process_madvise() flag
->   mm/madvise: add PMADV_ENTIRE_ADDRESS_SPACE process_madvise() flag
-> 
->  include/uapi/asm-generic/mman-common.h |   6 +
->  mm/madvise.c                           | 206 +++++++++++++++++++------
->  2 files changed, 168 insertions(+), 44 deletions(-)
-> 
-> --
-> 2.49.0
-> 
+This needs to be fixed in the driver. We need to track which memory is
+being used by the remoteproc and unmap it once remoteproc stops using
+it, without additional userspace intervention.
 
 -- 
-Sincerely yours,
-Mike.
+With best wishes
+Dmitry
