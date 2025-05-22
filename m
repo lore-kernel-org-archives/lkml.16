@@ -1,48 +1,65 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 760BF3BBC9;
-	Thu, 22 May 2025 06:58:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 775D1221D9B
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 06:59:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747897103; cv=none; b=GDSsck4XUTf7Ghp23Pskaa7P519XVHkTSTFmNJBmcyG8J2GHV/frK3drKNWUGcXCdSSc8lM8dJkJ+DzQYU0SRzC+gB1+uJ8F18KWSNcRb2giFK9BAqD468Ef6lugz/mOnXQJDat9fEq6RQ6hoNvcogxfbwCWeTL9ZLO1v03Nosc=
+	t=1747897147; cv=none; b=Oukxczo+bYc5ju97VDV4x6XsxSVXbzI71X96s0DKgJs4f/VPn0P/nsx1OIGZEPEC7N858t0wa/PApmGKs6bTmOoOxjnCBJH8p+Q9RVR0+Cok5ZgwPGaoeWbY6LS9nzl7vIPyimuX0OdabOkC1ujlfQmyQ/gKU+24nixZXJPMETI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747897103; c=relaxed/simple;
-	bh=/Lg3si8gVwOqnameydaJqJb5vxdiX8my8fGYMgU+abM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=OmuweK1HpUYSln2Dek3xZQUKJfWD9SG9ukQUhAkDAFJE8F+DfstZ0nirYzbu/dqadGdSkyNgFGD96NOBj+1IhUnPW+/sBlDbXyRqc47BloJKARD2F2tj2YPU06gE56ybs5AFvMLyhMO3FDOnUEx1k/1ADoi2P39y5HwNQ+/onB0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=n8Vi2Knm; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1747897147; c=relaxed/simple;
+	bh=hEdJFkIO3gkYUCi5+RF2B0lQFqmJC8q8XaO56pIBmIY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=lpB0dkpPVmT4vER9NFgNh66xDmPoouundS6VcQIMBB2CVm/D4yW6l4V1BaEPGaeib3x7vHy7esaIX6N/GheyXVFdlBtkLTNdpJiQLhMuzuZv/R4Ioo+8aiVc8o6E4+QNP4docQq+m2QjMpUF6wfCFDeqbnH554YuiY8ej7hf0P0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=SCp9qdHP; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="n8Vi2Knm"
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54LILvRm020952;
-	Thu, 22 May 2025 06:58:16 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	EF4kaG9PLnD3XpqPRg88hhQWtvSeHYMCzJ0iyi62kto=; b=n8Vi2KnmCa5kW/Pf
-	T3riJW+m7FD6mFaoxjzWqmCOs+KCtaXojKbKQs9i1eR9u+GJbIFiY9qUQPqaXUWf
-	3SRXscFcj60dtVkSCHOWOujCGPZiF6YkBBk616rWqu5GaAryJtChiqLcqSzw2GAc
-	G23p2LfnabqIyFi6Hlmcpj66pVNAUv9Q9m1t3NuFIusi0OkLI0jfEZzxtR2iNiTS
-	W3pCQsnwEKJLdotlSkqz/epHut3vVXAGdHRr0ez46NsNqu/95TGjSQNu4g8mvikt
-	NxbZplU7OXPTNjgSh2h0thF8+6xUjvC5X0NlONZYYmD3Ysb+yE1tJZRHbhzXezMa
-	GcEIVA==
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46rwf05eus-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 22 May 2025 06:58:15 +0000 (GMT)
-Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
-	by NALASPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54M6wFCC011711
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 22 May 2025 06:58:15 GMT
-Received: from [10.253.12.55] (10.80.80.8) by nalasex01c.na.qualcomm.com
- (10.47.97.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 21 May
- 2025 23:58:11 -0700
-Message-ID: <c7497f1e-96a3-43e1-b552-64b5811dfc5d@quicinc.com>
-Date: Thu, 22 May 2025 14:58:01 +0800
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="SCp9qdHP"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-2322bace4ceso41170315ad.2
+        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 23:59:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1747897144; x=1748501944; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=S4LjFz6mOQNEL7zonDklRPi1DtpqOZPfCamZxqL1Q0c=;
+        b=SCp9qdHPVi74ClZvLPhcx2IPz+xvcQdFSbkbn1KdIndwhkm7uq7W8zz66fkj6iO+Nv
+         FmPDeuFpRdDZLeKRD4KrwQERS3pPBQNzlp5JzSNx9BmzLSEM2GcOVZaSAijpqQWRNgh4
+         OrMWg5TwVmsaMCZd9vxAUp6ShUpBX4l+7ezbjpjkUGscnOXRo9nXiMWyTLz9inS2oUmm
+         XzDa4fF+rhN8kzAAwoFw7o3KRduAOmUWuOqWor+M1ASDOfXsKe4dmHvl5zY9+qMbKV9M
+         Ew56qLHiim39W0AV5kn1P680KzFGwoHpBv4RXaNhB8bdLwH9QbOBPeuVM1wiKlZnUtL+
+         N1OQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747897144; x=1748501944;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=S4LjFz6mOQNEL7zonDklRPi1DtpqOZPfCamZxqL1Q0c=;
+        b=UHKSDc/lW2pIJmP2GULWFxHZW/tSIvcdp9KCkJBLSU4rTqvJhdzaWUvmFuVOs6YyI6
+         YYI6zEXr5pflTrEFP+Yw4gXNVYcTKAwYS5eMj8i2OrPtSZdHorfo2FEsIWgsIor2Rktc
+         1MbDTIuTbJRtzp7hiWeVX0hUEL6Jq9Sy/s7eh2sr00p60txRKeW40cAR84YbhY8JwFVa
+         RP+KTEFw3KwLwRCRMrhiTPeZYx6SPnOSQbnfBQ7v4yHG4YdrbFBS3cs1fkFfsHL6vC+U
+         5a2jCIvVT8Bwyjxswc4i18aNB39ZZomjOM6WF2BbKcWsG4wwIggb2ursKnY+jlm3MAdk
+         FXxw==
+X-Forwarded-Encrypted: i=1; AJvYcCUq+ex6gCyZHHbEhehaMrfaIo3QT003j2Tgb2tf6PsHrGpQkU2qXf2sscdKqjqFZhenisI2DIx410pGlN8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yym0NEgEqWJGdgDnw+U+jVvmScR21hTGRwqzBZNYsBrUcKid6+t
+	p6o0snaiarIov7FjCHoklYacKa02x3nb/p6qj3M7Cnqp+6MghaORdRtUQYGa6C/AMwE=
+X-Gm-Gg: ASbGncvwj9bJxD/nmKbcf9K03lUWWEEgxCEtlPN94O1NlbVaFBEqkWxx1kiJIs6J+eh
+	YWdDWVfRwzYOjbJp7v++0mv7Kd7/rxO8NqeeevpabKKX9win9xQi1v7uoUY9D6VBH/IYvX7lAxL
+	lrB0ohk6j0v8joC3N1mD6ogsO2SUymeJxQPWzbLkOJr8/3dUvRIdVwq+HwHpO75O1zKw4krYwd8
+	o2wpwbIx2VdBiBYgPQOD64962cSEjNZjSmo+QXp8/baI2RQgx56kUg6KDOs3Fx5YZ8M6XOY5H36
+	qMnm/RMx2lermcS4njlwiNMEkF/8TXHQz0Hju3MYmG5VSPeG7GHsybWjFy1NQ0UlZtmo8DP/560
+	=
+X-Google-Smtp-Source: AGHT+IGp1JwsZ8Ui4zlhII3RRPZ52m9mG0aZy1A/wKlXOSBG5FU1K00VJkoLeuCiJsLgcvYVGZMmxw==
+X-Received: by 2002:a17:903:1ca:b0:223:2630:6b82 with SMTP id d9443c01a7336-231d43899c1mr346475295ad.10.1747897144452;
+        Wed, 21 May 2025 23:59:04 -0700 (PDT)
+Received: from [10.68.122.90] ([63.216.146.178])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-231d4ebb0d4sm102734715ad.195.2025.05.21.23.59.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 21 May 2025 23:59:03 -0700 (PDT)
+Message-ID: <53518ee0-d5fc-472e-bd67-0be5208b5b77@bytedance.com>
+Date: Thu, 22 May 2025 14:58:57 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,119 +67,60 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] arm64: dts: qcom: qcs615: Enable camss for
- qcs615-adp-air
-To: Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-        Bjorn Andersson
-	<andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring
-	<robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>, <todor.too@gmail.com>,
-        <rfoss@kernel.org>
-CC: <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-media@vger.kernel.org>
-References: <20250520-qcs615-adp-air-camss-v1-0-ac25ca137d34@quicinc.com>
- <20250520-qcs615-adp-air-camss-v1-2-ac25ca137d34@quicinc.com>
- <b2cf41af-756d-4e78-8df0-0350198d357d@linaro.org>
-Content-Language: en-US
-From: Wenmeng Liu <quic_wenmliu@quicinc.com>
-In-Reply-To: <b2cf41af-756d-4e78-8df0-0350198d357d@linaro.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01c.na.qualcomm.com (10.47.97.35)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: x3W53ueNS4uAOt32x48xwF31_I7VWQgj
-X-Proofpoint-ORIG-GUID: x3W53ueNS4uAOt32x48xwF31_I7VWQgj
-X-Authority-Analysis: v=2.4 cv=ZP3XmW7b c=1 sm=1 tr=0 ts=682ecb07 cx=c_pps
- a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=COk6AnOGAAAA:8
- a=enoOy_T-X7bchgmFXmcA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIyMDA2NyBTYWx0ZWRfXxQfw2ho2BEKq
- 80JZOPNrqWLzU4K/bd1OuXWJppT+ubHVsC9K2Q2PYkajPgvm7vkSPBCfiwqTc397GoGQ6VowQPb
- +UsoApnZ3euhMQb7doQ3K6R/dGdL/IrJyDw4HzhpnW/x8mpukvdDeoY74B/Cr2HCjlR1DTAflsZ
- EvBmDKrCKdiV0TJ1IoayxtXVwyyBw1oXw5gb4oVrNlgo0PheAMjxXDtIRebLdDUd/sPe0M+abYm
- QhiIb41KZqRzipQfY9qeRiXS04x8qXA1rCzOO8AfVU5yOEXv+gGmvltQtzEfbb+/xaql+z8tIuQ
- WLm+TiZBEJhmmJXtJj/tGSEEBXgWNXFemrji8Ex+vqkahfRrwxhGu3heE48mqJZsoEpdPv6DV80
- vlanZha8CoKCMGhKQ4jsD92/f2vYMnZJz/fhFlbdlG2mbOfe/XaO7vH/cUo9qPtU/eOrLy1o
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-22_03,2025-05-20_03,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- priorityscore=1501 adultscore=0 mlxlogscore=961 suspectscore=0 bulkscore=0
- impostorscore=0 phishscore=0 spamscore=0 mlxscore=0 lowpriorityscore=0
- clxscore=1015 malwarescore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
- definitions=main-2505220067
+Subject: Re: [PATCH] mm: fix potential NULL pointer dereference in
+ pagetable_alloc_noprof
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Ye Chey <yechey@ai-sast.com>
+Cc: akpm@linux-foundation.org, david@redhat.com, Liam.Howlett@oracle.com,
+ vbabka@suse.cz, rppt@kernel.org, surenb@google.com, mhocko@suse.com,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <20250521124008.36139-1-yechey@ai-sast.com>
+ <206c6dc2-792b-4c73-a922-eebd03864d2c@lucifer.local>
+ <257c094c-522c-48c8-9bc2-70571dfb276f@lucifer.local>
+From: Qi Zheng <zhengqi.arch@bytedance.com>
+In-Reply-To: <257c094c-522c-48c8-9bc2-70571dfb276f@lucifer.local>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
 
 
-On 2025/5/21 21:07, Bryan O'Donoghue wrote:
-> On 20/05/2025 09:56, Wenmeng Liu wrote:
->> This change enables camera driver for QCS615 ADP AIR board.
+On 5/21/25 8:48 PM, Lorenzo Stoakes wrote:
+> +cc mailing lists
+> 
+> Please ensure you always cc these when submitting patches by the way :)
+> 
+> On Wed, May 21, 2025 at 01:46:48PM +0100, Lorenzo Stoakes wrote:
+>> On Wed, May 21, 2025 at 08:40:08PM +0800, Ye Chey wrote:
+>>> The pagetable_alloc_noprof function does not check the return value of
+>>> alloc_pages_noprof, which could lead to a NULL pointer dereference when
+>>> memory allocation fails. Add a NULL check to prevent this issue.
+>>>
+>>> Signed-off-by: Ye Chey <yechey@ai-sast.com>
+>>> ---
+>>>   include/linux/mm.h | 3 ++-
+>>>   1 file changed, 2 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/include/linux/mm.h b/include/linux/mm.h
+>>> index bf5520693..9052bb531 100644
+>>> --- a/include/linux/mm.h
+>>> +++ b/include/linux/mm.h
+>>> @@ -3000,7 +3000,8 @@ static inline bool pagetable_is_reserved(struct ptdesc *pt)
+>>>   static inline struct ptdesc *pagetable_alloc_noprof(gfp_t gfp, unsigned int order)
+>>>   {
+>>>   	struct page *page = alloc_pages_noprof(gfp | __GFP_COMP, order);
+>>> -
+>>> +	if (!page)
+>>> +		return NULL;
+>>>   	return page_ptdesc(page);
 >>
->> Signed-off-by: Wenmeng Liu <quic_wenmliu@quicinc.com>
->> ---
->>   arch/arm64/boot/dts/qcom/qcs615-ride.dts | 7 +++++++
->>   1 file changed, 7 insertions(+)
+>> Doesn't page_ptdesc() just cast the page to the appropriate type? And thus can
+>> handle it being NULL?
+
+Right, no NULL check is needed here.
+
 >>
->> diff --git a/arch/arm64/boot/dts/qcom/qcs615-ride.dts b/arch/arm64/ 
->> boot/dts/qcom/qcs615-ride.dts
->> index 
->> 2b5aa3c66867676bda59ff82b902b6e4974126f8..be8b829ec508d7de7a4cd6be6d1d4e83b09734bb 100644
->> --- a/arch/arm64/boot/dts/qcom/qcs615-ride.dts
->> +++ b/arch/arm64/boot/dts/qcom/qcs615-ride.dts
->> @@ -211,6 +211,13 @@ vreg_l17a: ldo17 {
->>       };
->>   };
->> +&camss {
->> +    vdda-phy-supply = <&vreg_l5a>;
->> +    vdda-pll-supply = <&vreg_l12a>;
->> +
->> +    status = "ok";
->> +};
->> +
->>   &gcc {
->>       clocks = <&rpmhcc RPMH_CXO_CLK>,
->>            <&rpmhcc RPMH_CXO_CLK_A>,
->>
-> 
-> I think there's some confusion.
-> 
-> I'm willing to accept CSID and VFE changes with the minimum proof of TPG 
-> driving it.
-> 
-> But - CSIPHY in CAMSS which is only proven by TPG is obviously not a 
-> proof and again I agree with the consensus here - there's little value 
-> to an end-user in just having the TPG for a camera.
-> 
-> No sensor:
-> CAMSS::CSID
-> CAMSS::VFE
-> 
-> Just about acceptable
-> 
-> No sensor:
-> CAMSS::CSIPHY
-> DTS::CAMSS enable
-> 
-> Is too much of an ask.
-> 
-> Just publish your sensor code ! We need more sensor enablement upstream 
-> anyway.
-> 
-> ---
-> bod
-
-
-Hi bryan,
-
-I will upload the sensor code together in the next version.
-
-Thanks,
-Wenmeng
+>>>   }
+>>>   #define pagetable_alloc(...)	alloc_hooks(pagetable_alloc_noprof(__VA_ARGS__))
+>>> --
+>>> 2.44.0
+>>>
 
