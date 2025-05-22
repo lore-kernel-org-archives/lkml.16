@@ -1,100 +1,128 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39F49281519;
-	Thu, 22 May 2025 08:45:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDAAA27A927
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 08:45:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747903504; cv=none; b=fKtJDqlKMVOAh1lWIX/ZS98qvKl7jh5AiDlfh1HcRe4Fi0gcwv9Q+SZeQVBOqgNEYL66GOWjfpyhV+cFlC8vw7YnLJo2ibQvir5fFOFyjyKrRA+jDhuf9k+tVkjvRaajNiWr6Yc2jIEf9bwv0hHaQwYJvfml/P5QU/emfzQ+h/U=
+	t=1747903514; cv=none; b=gwyQtp7Sv6zi1Ggh9yM8ZAwgOCwQcpxr65Z0CdSnq0LmXtmB7soPcM4OK/1FZpm11EQOADrmdpgAnoDvTVIpcyCdl970/+pXrKTZMkLsO9rTrdj/UZgf3Ya/NJ6QWw6U1SgH4GENYd4Y80qNZv+NIWgjfmc6NV01ll8PZKqskik=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747903504; c=relaxed/simple;
-	bh=e9dormL9HrrIAVH/MkapwqpUc/OQw/GWiqS4n86n8Ls=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=h1/IJYmM2BOCB6FzRAP92i/8Qvu0vwGFqCJjF07PeDj60QJgMoU+HdbQm9f6+A+GjXtNRPe7OLH6owP7L9RUn02v1wFLRXQEXUcZsXlQ0XdIMBGmmBZtZ5F9HkWYTKQ0vUQgDkkXREBfLxVltdALJm4FgMrJO4kPCw/X1QgOKCE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bbmSFQgt; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747903514; c=relaxed/simple;
+	bh=dAKIS/SyGO4EUUI+9Ar6dI0ohAdSrKLFtebg+y8Y55o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=df6wqTOEvOI7R8nPb1DvwQMKMhxsRhXaFt4UACKuco35+hDU9XR5ZW7iVq8R0dwwS/yUdz5gz+37MCCfV0LROkD8iFtzhu7frie6SnBDku/Ah5obaC+Zg93IZ4ZnWcZRSduEHQkLrqZWbPhTHG20SXGU/eg1ve/g+KyOMq1giW8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IPehpjNq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bbmSFQgt"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-231ba912ba1so7726035ad.2;
-        Thu, 22 May 2025 01:45:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747903502; x=1748508302; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=e9dormL9HrrIAVH/MkapwqpUc/OQw/GWiqS4n86n8Ls=;
-        b=bbmSFQgtaHusxpP79l1qV+v+FDQdYyOnPMHOAIjs6t7mvqGiO0FzX+TrgkDN3kOsYN
-         A0T6zS7XolAQYSzqVVm8Pgc3KmR7p69LZDHmcfDNNf0jg27sDHAG1xSAANmPeSZho9L6
-         2/MGL3IiNJLyftJb34HIZGx/J3xSH9dyXJEWmHUFJHvF4pNCL5NE9bFg4ChPpxrEo3FI
-         TbvRvwSDsxrc6zO/SzqHBpz/NvvvS3kkK2Jt9TzUsoaGVDaz3ajWw0QKEmvObvFe7AFf
-         bfzOH5OwwAz0li089w+w1iA3qoiMT2ZZNJ0Ch0GKI4X4hs7C62k1X5pUnFL20n+SIrvD
-         f+4Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747903502; x=1748508302;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=e9dormL9HrrIAVH/MkapwqpUc/OQw/GWiqS4n86n8Ls=;
-        b=tVQ/b6fRGoe8jSj3VljA82ebxLGJScdAUeFSl8YD35PYj/XfxWjuwOnmiCNtKFTRdT
-         Hb9hwZYsUZo/PIh+m04iFBxUIgW3FUlMJINgl6wcc6/sOGvobWRjZ7hJfR/W1fvrLIAt
-         aRopRtdAtMZb7xzPGzAdKRRfIXiqNqkYu8bxwalHj9PlhLsTqcJL0R1eH5/xL86f1k7R
-         QPBN664pvfX1ZuuLVelIEr6e5zXV8PCroZub1odKukJzkdc4b/1OfGu4oMQUB+nyo6wi
-         LZOWLMTYhBHgSmD0tEPlZj1GFX7xkkM0pTNJzojw3rH5uJTLmXlt7tItWo2yxYBirMJa
-         fFxQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVfWkHV75Hw+UP8EWqpocDDyUPternQznfDob08/2uJK2JOWylr002qU4NUTe0Gzx3eDglXYrJKR4fQL6g=@vger.kernel.org, AJvYcCXl2q0+rzSAQ0S1P36ody4hequ8Xy/HoYE4rTp6+pyyf1GKm43jPDy3n6etHl2eoGY1AzjOGUS4e6rfYWyO2Vk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzEoDOuKzbNxPzXgJ0RQ1ExUzM9JyNlAspXdpfNFcjS5aTz/TNh
-	pD34dQbvzDiKWI/gZDZ25qrXueJI5KQPxYEEDAQMcpG/wdCouEgJjcqA5zZ3IqQQFUqGIWhEZh/
-	ksMeMSZ7X6ar77WpJZRRxG6bHH52UUmw=
-X-Gm-Gg: ASbGnctKefhIzE5LTbsfv+mRm/X2Qtlc9Z6iVqE/muWklMdSYuk44DUFMoVrzAXauTv
-	/avqwGWwOIhVZV/yDQK12rFaFZyeDer2gGghcBApzF7di2/15PvqCq5+uNH12ajr4b6mhlx2EQL
-	GZN89obzRbwwyiIIEAKIHH7xmapdg3M9Zt4DICSGma+Cs=
-X-Google-Smtp-Source: AGHT+IHcDoEYiYNfDCdUkacNcMEAOzs+8U1TP1/BcHDhQFdNfXEeXQOFjK7ijS68XWJepFQkaZKUMIQQVff3hXBYuFc=
-X-Received: by 2002:a17:902:eccd:b0:22e:50d1:b8d1 with SMTP id
- d9443c01a7336-231d437f0e7mr141804895ad.3.1747903502395; Thu, 22 May 2025
- 01:45:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IPehpjNq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3374C4CEE4;
+	Thu, 22 May 2025 08:45:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747903514;
+	bh=dAKIS/SyGO4EUUI+9Ar6dI0ohAdSrKLFtebg+y8Y55o=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=IPehpjNqislBnS8rCMtBcA2ukVRx3gtn9llVd4hUzKwww4LWcg0Q+ubqahO1cC27M
+	 M2KJNHpcv+3bjRrQAhRgSbYzRR7ixFSMc9imuDpg2PAyVMywHRA9/ErWzGklj57uqU
+	 XuzLBNVuin36TjgIgx7vajurHIC8wn6x1kdD2+pqmMuwSrt9epjwNtUBkqaa9mRKqk
+	 EPLGBabBTt4hT+NmsmCs2tRmrmiFyTcHfhR0horPsKRef8EAzN1yatQUjdhB00oRyC
+	 kc9JldCLEoWjddZSxLE+a1HG+OP37GN5sJ8rEIjVMMzlJKR3Wtpz6d8CBvU5A7LHb/
+	 zGS5qSHSfqK/A==
+Message-ID: <ba9a49d5-132f-4be8-9f64-4904c91e26be@kernel.org>
+Date: Thu, 22 May 2025 10:45:08 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250521-nova-frts-v4-0-05dfd4f39479@nvidia.com>
- <20250521-nova-frts-v4-4-05dfd4f39479@nvidia.com> <DA2E1BNC668R.MMCARZ3K2NTS@nvidia.com>
-In-Reply-To: <DA2E1BNC668R.MMCARZ3K2NTS@nvidia.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Thu, 22 May 2025 10:44:49 +0200
-X-Gm-Features: AX0GCFvCHoNK_pM6k7TEPjfKCmoWB02CvdL9c9h6ygApOUg3uOuHv8pwBTVxdiI
-Message-ID: <CANiq72nQwxqeRGWBW2WSHijUKLs4c26UGQvJFjt-_SpnJJaaYQ@mail.gmail.com>
-Subject: Re: [PATCH v4 04/20] rust: add new `num` module with useful integer operations
-To: Alexandre Courbot <acourbot@nvidia.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-	Danilo Krummrich <dakr@kernel.org>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, Daniel Almeida <daniel.almeida@collabora.com>, 
-	John Hubbard <jhubbard@nvidia.com>, Ben Skeggs <bskeggs@nvidia.com>, 
-	Joel Fernandes <joelagnelf@nvidia.com>, Timur Tabi <ttabi@nvidia.com>, 
-	Alistair Popple <apopple@nvidia.com>, linux-kernel@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org, nouveau@lists.freedesktop.org, 
-	dri-devel@lists.freedesktop.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] drm/rockchip: Use dev_err_probe() to simplify code
+To: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>,
+ long.yunjian@zte.com.cn, hjc@rock-chips.com
+Cc: andy.yan@rock-chips.com, maarten.lankhorst@linux.intel.com,
+ mripard@kernel.org, tzimmermann@suse.de, airlied@gmail.com, simona@ffwll.ch,
+ dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org,
+ linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+ fang.yumeng@zte.com.cn, mou.yi@zte.com.cn, xu.lifeng1@zte.com.cn,
+ ouyang.maochun@zte.com.cn
+References: <20250515203554564-j1jBXUXR6bdiN6zARicC@zte.com.cn>
+ <94e0951b-46e1-439b-9dbc-c2009a78b04b@kernel.org> <2022996.jZfb76A358@diego>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <2022996.jZfb76A358@diego>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Thu, May 22, 2025 at 6:01=E2=80=AFAM Alexandre Courbot <acourbot@nvidia.=
-com> wrote:
->
-> Either that, or we enable `#![feature(const_trait_impl)]`. I just tried
-> and with it we could indeed define and implement `NumExt` as const,
-> which looks like the cleanest way to do this to me.
+On 16/05/2025 11:58, Heiko Stübner wrote:
+> Am Donnerstag, 15. Mai 2025, 17:54:20 Mitteleuropäische Sommerzeit schrieb Krzysztof Kozlowski:
+>> On 15/05/2025 14:35, long.yunjian@zte.com.cn wrote:
+>>> From: Yumeng Fang <fang.yumeng@zte.com.cn>
+>>>
+>>> In the probe path, dev_err() can be replaced with dev_err_probe()
+>>
+>> That's not probe path. I am not sure if you really understand this code.
+> 
+> I think that is somewhat debateable.
+> 
+> dw_hdmi_rockchip_bind() is part of the rockchip-drm component device,
+> so part of its probe-path. Also I think just the presence of EPROBE_DEFER
+> which causes the device to re-try probing later is a nice indicator that the
 
-Hmm... I think that one is actively being worked on, with a possible
-syntax change in the works. We would need to speak to upstream Rust to
-see when we could reasonably stat to use it, and consider the older
-compilers (e.g. if the syntax changes).
+No, that's not true. You can call every API like regulator_get from any
+context and you will get EPROBE_DEFER. This will not be a probe path.
+There are multiple cases of such drivers, I saw such patch even day ago.
 
-Cheers,
-Miguel
+> code in question is _a_ probe path. (and usage of EPROBE_DEFER is an
+> established pattern to make that component device re-try probing later)
+> 
+> And the parse_dt function itself is part of that path too.
+
+I quickly glanced and this was not obvious. The commit msg is poor here
+and does not explain that component_bind is ALWAYS probe path (unless it
+is clear for DRM folks).
+
+
+Best regards,
+Krzysztof
