@@ -1,124 +1,149 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B0B133F3;
-	Thu, 22 May 2025 18:09:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9703833F3;
+	Thu, 22 May 2025 18:10:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747937349; cv=none; b=Lc9VVrzdOGCxNpiXvbG2tuHusPMsKCVJ+4icidUMeduCsoDIqRR7aL/1/QCbTVgBhLwtFeI9mExTJTGI9VamqtqDjDQ9dxb7e9uSTrhxCHi0HbfHm7fmzXsHqj5w4WzKfUCZ6HrFu4Yg6ojGluNd6AgVV76hBFRimA74ddggFTQ=
+	t=1747937405; cv=none; b=icMyqO9Xl94iu9Buyks8JCEmy62cf3QWihgRgnHpGY63gyri/6T7PwR25o90jr/HcbKpBtxYeMupLsFrhjvAsTapa16RrinrrUgu1m8f8XHXHMdTfA3NixSSr8UwrRUwLs5kAK0kKc+peHCaUMzOcWlQBW1ecK3+zvuZdP8tHvE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747937349; c=relaxed/simple;
-	bh=yx8wirbv3GmgI2hwWldT11GYkYT7cmgzIiTZzNPfXaQ=;
-	h=Mime-Version:Content-Type:Date:Message-Id:From:Cc:To:Subject:
-	 References:In-Reply-To; b=Q3ueacnVBx1oWvKNsYTYf0PXOKsUO+JmG3BP6zXJ+/etIapZaf5Ndk0dQ7Vw6rE9OvtCkfBGIRDrwIVKfkNuhETuHgNAecMQSZWRw7tvelLY5EvuAnIlARRR2kR6cQXfoKmVkG24uoTbIWPIyNoIrvtwAtFZ2yIahdhvPkLtWQA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=qyXKv5K9; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1747937405; c=relaxed/simple;
+	bh=MD5KJq3xPJPOvEt1jbGXI8dTkIRIaaOxZdxZhx34yjY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PHFCmez2Nkakal+x1sEknc2gUd8t4csky1dLgYqDWmn7qAiDJEpjp77xRSmvB7XXEVmKkegKIfXDPc+yG0+wNmj7Fq4UODml47J2xI/WHShdDLWYG8IeItP0Sx2mcCXlT+fc0cV40FYeqlNxCdvNyGUEZt2ZEyVkxebh8S28yYE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=oH1DSp/F; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="qyXKv5K9"
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54MGP7ob002078;
-	Thu, 22 May 2025 18:09:06 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=QMm4Lz
-	PhZaEwABNl/ln9PbBfJIcFMIQwImJ2MjSmi3E=; b=qyXKv5K9CwBV1pPrXPLOBD
-	8RUAtJVFvK7mjD+es8SVm1gZLy3bgJtOMEeMc/0+MI3CTODGEXL7XS+iEhORd1yc
-	eqlNVId4cKPnfQA0b3QSSp6r9XiXC4MEvNd3zp+YNjYAhnHDm6o+DhhpgSswkac/
-	EK9fmSjnH2jAzRTA5Ypi7qzSfIYBxTPM2pdtcyPt6M1xERx9efE428bir4y9rJPW
-	NwwKvIh2ipd8GZsPUFnHf1kb5yID6cOKVhvsg/cPjYAD8peX24K/rOx0p3SaybZz
-	i90ZLwLD8Iix4e81loUbQraDJDiJd/0asGwvYwFEn0NQOkqBh/FeYl3XTTwcCAag
-	==
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46smh75qww-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 22 May 2025 18:09:05 +0000 (GMT)
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 54MI3jZk015431;
-	Thu, 22 May 2025 18:09:05 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 46rwnnjmp4-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 22 May 2025 18:09:04 +0000
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 54MI91mQ34144990
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 22 May 2025 18:09:01 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 3A17020049;
-	Thu, 22 May 2025 18:09:01 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 01F8720040;
-	Thu, 22 May 2025 18:09:01 +0000 (GMT)
-Received: from darkmoore (unknown [9.111.55.188])
-	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Thu, 22 May 2025 18:09:00 +0000 (GMT)
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="oH1DSp/F"
+Received: from skinsburskii. (unknown [20.236.10.129])
+	by linux.microsoft.com (Postfix) with ESMTPSA id D3833211CFAC;
+	Thu, 22 May 2025 11:10:02 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com D3833211CFAC
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1747937403;
+	bh=idVisYYe/w991BM/hJuvBP6Q3CZkk9VCPKdJIOFknD4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=oH1DSp/FutoWNwGNHtqpGL//4xt1b5If34PQM9zqCl59E4csloLyqfvSV/e0YcFdJ
+	 NVt6ZvWx/4ZJzdm3tu8aDFEhtuO0Qd3buWV8evnmZMpKUl7QlRQtVZotmKdRSQ35W8
+	 becguvbl3u+YqMvlrzfHfjOwPRbRflH1PvIZNfhg=
+Date: Thu, 22 May 2025 11:10:00 -0700
+From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
+To: Naman Jain <namjain@linux.microsoft.com>
+Cc: "K . Y . Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+	Roman Kisel <romank@linux.microsoft.com>,
+	Anirudh Rayabharam <anrayabh@linux.microsoft.com>,
+	Saurabh Sengar <ssengar@linux.microsoft.com>,
+	Nuno Das Neves <nunodasneves@linux.microsoft.com>,
+	ALOK TIWARI <alok.a.tiwari@oracle.com>,
+	linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org
+Subject: Re: [PATCH v3 2/2] Drivers: hv: Introduce mshv_vtl driver
+Message-ID: <aC9oeJPFynyYg9pU@skinsburskii.>
+References: <20250519045642.50609-1-namjain@linux.microsoft.com>
+ <20250519045642.50609-3-namjain@linux.microsoft.com>
+ <aCzQMuwQZ1Lkk7eH@skinsburskii.>
+ <80853cdb-fd34-4a5e-99a0-1a71b8ce8226@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Thu, 22 May 2025 20:04:20 +0200
-Message-Id: <DA2VZ43MN9WS.I6PHR04W4WKV@linux.ibm.com>
-From: "Christoph Schlameuss" <schlameuss@linux.ibm.com>
-Cc: <kvm@vger.kernel.org>, <linux-s390@vger.kernel.org>,
-        <frankja@linux.ibm.com>, <borntraeger@de.ibm.com>,
-        <seiden@linux.ibm.com>, <nsg@linux.ibm.com>, <nrb@linux.ibm.com>,
-        <david@redhat.com>, <hca@linux.ibm.com>, <agordeev@linux.ibm.com>,
-        <svens@linux.ibm.com>, <gor@linux.ibm.com>
-To: "Claudio Imbrenda" <imbrenda@linux.ibm.com>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 3/4] KVM: s390: refactor and split some gmap helpers
-X-Mailer: aerc 0.20.1
-References: <20250522132259.167708-1-imbrenda@linux.ibm.com>
- <20250522132259.167708-4-imbrenda@linux.ibm.com>
-In-Reply-To: <20250522132259.167708-4-imbrenda@linux.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIyMDE4MiBTYWx0ZWRfXxV4QAwtMj3t2 WzZkdQQSPGxOv40kbORXLgd8Tcxv6NG8MHzo9DPwxppF5C2w0f042QwC9TeC82q3OD3sv97QDIv dPUNDCzlNnZRJLI6Hbt0ZDycBwxiMXEBtiyZtrhmz6Ny2rMKqh1uywbk58Ql674PnuycRE9bahX
- QZEBfluw14C8Mtq1QabJbJi0QPlfj95HtmZyUaR160Ov2yS9tzr4L1RZhhKYLz+VawmeHUxhMHw OM0YRP5CFdqB/494XHzjr2enp6hrhXAV2fLnFJr3Fo6f42ApWHZFkDa5to38Zj7XGmWG5N/dnQ5 zan2NeQPvaVqEa9GklvlxtWBBomYVxtgqzV85bJV/oMpCRxFjR41r6Kfu8IgxsqXrfcpERqwd78
- r0ffZG5PqIMGrMix1Lcinv+npVGjau+VBCXU8OFbCg8PIhCnHyjO37EwP3yKwoZQf8NbVzzx
-X-Proofpoint-GUID: yezTXriS3D2-VcHpTiOr0eHA7hdw9ktY
-X-Proofpoint-ORIG-GUID: yezTXriS3D2-VcHpTiOr0eHA7hdw9ktY
-X-Authority-Analysis: v=2.4 cv=EdfIQOmC c=1 sm=1 tr=0 ts=682f6841 cx=c_pps a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VnNF1IyMAAAA:8 a=fDxGR4FE8qlWS1JHXvMA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-22_08,2025-05-22_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- suspectscore=0 adultscore=0 mlxscore=0 lowpriorityscore=0 malwarescore=0
- phishscore=0 priorityscore=1501 bulkscore=0 clxscore=1015 mlxlogscore=781
- spamscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
- definitions=main-2505220182
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <80853cdb-fd34-4a5e-99a0-1a71b8ce8226@linux.microsoft.com>
 
-On Thu May 22, 2025 at 3:22 PM CEST, Claudio Imbrenda wrote:
-> Refactor some gmap functions; move the implementation into a separate
-> file with only helper functions. The new helper functions work on vm
-> addresses, leaving all gmap logic in the gmap functions, which mostly
-> become just wrappers.
->
-> The whole gmap handling is going to be moved inside KVM soon, but the
-> helper functions need to touch core mm functions, and thus need to
-> stay in the core of kernel.
->
+On Wed, May 21, 2025 at 11:33:29AM +0530, Naman Jain wrote:
+> 
+> 
+> On 5/21/2025 12:25 AM, Stanislav Kinsburskii wrote:
+> > On Mon, May 19, 2025 at 10:26:42AM +0530, Naman Jain wrote:
+> > > Provide an interface for Virtual Machine Monitor like OpenVMM and its
+> > > use as OpenHCL paravisor to control VTL0 (Virtual trust Level).
+> > > Expose devices and support IOCTLs for features like VTL creation,
+> > > VTL0 memory management, context switch, making hypercalls,
+> > > mapping VTL0 address space to VTL2 userspace, getting new VMBus
+> > > messages and channel events in VTL2 etc.
+> > > 
+> > > Co-developed-by: Roman Kisel <romank@linux.microsoft.com>
+> > > Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
+> > > Co-developed-by: Saurabh Sengar <ssengar@linux.microsoft.com>
+> > > Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
+> > > Reviewed-by: Roman Kisel <romank@linux.microsoft.com>
+> > > Reviewed-by: Alok Tiwari <alok.a.tiwari@oracle.com>
+> > > Message-ID: <20250512140432.2387503-3-namjain@linux.microsoft.com>
+> > > Signed-off-by: Naman Jain <namjain@linux.microsoft.com>
+> > > ---
+> > >   drivers/hv/Kconfig          |   20 +
+> > >   drivers/hv/Makefile         |    7 +-
+> > >   drivers/hv/mshv_vtl.h       |   52 +
+> > >   drivers/hv/mshv_vtl_main.c  | 1783 +++++++++++++++++++++++++++++++++++
+> > >   include/hyperv/hvgdk_mini.h |   81 ++
+> > >   include/hyperv/hvhdk.h      |    1 +
+> > >   include/uapi/linux/mshv.h   |   82 ++
+> > >   7 files changed, 2025 insertions(+), 1 deletion(-)
+> > >   create mode 100644 drivers/hv/mshv_vtl.h
+> > >   create mode 100644 drivers/hv/mshv_vtl_main.c
+> > > 
+> > > diff --git a/drivers/hv/Kconfig b/drivers/hv/Kconfig
+> > > index eefa0b559b73..21cee5564d70 100644
+> > > --- a/drivers/hv/Kconfig
+> > > +++ b/drivers/hv/Kconfig
+> > > @@ -72,4 +72,24 @@ config MSHV_ROOT
+> > >   	  If unsure, say N.
+> > > +config MSHV_VTL
+> > > +	tristate "Microsoft Hyper-V VTL driver"
+> > > +	depends on HYPERV && X86_64
+> > > +	depends on TRANSPARENT_HUGEPAGE
+> > 
+> > Why does it depend on TRANSPARENT_HUGEPAGE?
+> > 
+> 
 
-Reviewed-by: Christoph Schlameuss <schlameuss@linux.ibm.com>
+Let me rephrase: can this driver work without transparent huge pages?
+If yes, then it shouldn't depend on the option and rather select it.
+If not, then it should be either fixed to be able to or have an
+expalanation why this dependecy was introduced.
 
-> Signed-off-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
-> ---
->  MAINTAINERS                          |   2 +
->  arch/s390/include/asm/gmap.h         |   2 -
->  arch/s390/include/asm/gmap_helpers.h |  15 ++
->  arch/s390/kvm/diag.c                 |  13 +-
->  arch/s390/kvm/kvm-s390.c             |   5 +-
->  arch/s390/mm/Makefile                |   2 +
->  arch/s390/mm/gmap.c                  | 157 +------------------
->  arch/s390/mm/gmap_helpers.c          | 223 +++++++++++++++++++++++++++
->  8 files changed, 259 insertions(+), 160 deletions(-)
->  create mode 100644 arch/s390/include/asm/gmap_helpers.h
->  create mode 100644 arch/s390/mm/gmap_helpers.c
+> > > +
+> > > +/* vtl device */
+> > > +#define MSHV_CREATE_VTL			_IOR(MSHV_IOCTL, 0x1D, char)
+> > > +#define MSHV_VTL_ADD_VTL0_MEMORY	_IOW(MSHV_IOCTL, 0x21, struct mshv_vtl_ram_disposition)
+> > > +#define MSHV_VTL_SET_POLL_FILE		_IOW(MSHV_IOCTL, 0x25, struct mshv_vtl_set_poll_file)
+> > > +#define MSHV_VTL_RETURN_TO_LOWER_VTL	_IO(MSHV_IOCTL, 0x27)
+> > > +#define MSHV_GET_VP_REGISTERS		_IOWR(MSHV_IOCTL, 0x05, struct mshv_vp_registers)
+> > > +#define MSHV_SET_VP_REGISTERS		_IOW(MSHV_IOCTL, 0x06, struct mshv_vp_registers)
+> > > +
+> > > +/* VMBus device IOCTLs */
+> > > +#define MSHV_SINT_SIGNAL_EVENT    _IOW(MSHV_IOCTL, 0x22, struct mshv_vtl_signal_event)
+> > > +#define MSHV_SINT_POST_MESSAGE    _IOW(MSHV_IOCTL, 0x23, struct mshv_vtl_sint_post_msg)
+> > > +#define MSHV_SINT_SET_EVENTFD     _IOW(MSHV_IOCTL, 0x24, struct mshv_vtl_set_eventfd)
+> > > +#define MSHV_SINT_PAUSE_MESSAGE_STREAM     _IOW(MSHV_IOCTL, 0x25, struct mshv_sint_mask)
+> > > +
+> > > +/* hv_hvcall device */
+> > > +#define MSHV_HVCALL_SETUP        _IOW(MSHV_IOCTL, 0x1E, struct mshv_vtl_hvcall_setup)
+> > > +#define MSHV_HVCALL              _IOWR(MSHV_IOCTL, 0x1F, struct mshv_vtl_hvcall)
+> > 
+> > How many of these ioctls are actually used by the mshv root driver?
+> > Should those which are VTl-specific be named as such (like MSHV_VTL_SET_POLL_FILE)?
+> > Another option would be to keep all the names generic.
+> > 
+> > Thanks,
+> > Stanislav
+> 
+> None of the IOCTLs in mshv_vtl section, introduced in this patch is used
+> by mshv_root driver. Since IOCTLs of mshv_root does not have MSHV_ROOT
+> prefix, I am OK with removing MSHV_VTL_* prefix from these IOCTL names.
+> You can let me know if you want me to prefix them with MSHV_VTL.
+> 
+> Thanks again for reviewing.
+> 
+> Regards,
+> Naman
+> 
 
-[...]
+As these ioctls share the same "namespace" (MSHV_IOCTL), removal os the
+VTL suffix looks a better optio to me.
 
+Thanks,
+Stanislav.
