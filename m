@@ -1,119 +1,176 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20D5A184E;
-	Thu, 22 May 2025 04:02:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CEBB2914
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 04:13:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747886529; cv=none; b=pkCxAt9fAfBg8YuNj/xgO2iTpynkG2OUcG0bOhBhh/k9V+0OvtiVXAqyLKiuOTK5sw4bS2cxActRjWu/zJQpVrVe+/3W8/mkzEVw6uq3MM6rZGx5Djd3NLlLI0MWZJuY9yN7kRTgbrmns8Cf+6ui9ly6UkZ6vrGqf6oKx43NotU=
+	t=1747887240; cv=none; b=mTcjlpP3FuiqRR4aZ006OqpN3sR9Bmsm1v3jBRLqE3ceDpZKnMCDYHHwuDvxC4jwYEBPIDep+kMVaLxxskmzXmkbulPMpEdf2aRRd9FZpFXVFHjZkv9JrcdKT1xQZs1/F/jE8g0Xb4kL+z95aM3SVIVKc9tfvRv+s3kycBYU3Ns=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747886529; c=relaxed/simple;
-	bh=VaCm9odT9ZRMdbNFJ0psuY8WZxzOUA90QWzgpSQSWew=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=guuI8wuJcogsNXZWauDeyed6NOiiwhG0c5nAfWrXDH8VZSCkG1CsyY+WoFokIgogBU7OTC+nvX8Xm60/U++c0NK2NM+OF2RUkHgUJHoi4GbcfCQSZajxCdOmpMw7prxFaxXiBC7MQK7G2pjZsHS63RJkkKT5c49w/+CRKNZfSt8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=grjSF6bL; arc=none smtp.client-ip=209.85.214.181
+	s=arc-20240116; t=1747887240; c=relaxed/simple;
+	bh=Bte9CFdj+wrGfjA+R6p82brPFpWF/WUa3+uYva1Cp1I=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=rqyiviEV07YKA188huham2e3CvJTMvOuLbO6+b2dlyxh0lqK8/hM7PNmh+0/GJZbadtB0HrafQPo21y9RWQucU5wFwMPJrPiqo3+Z4z73u0xTLy22ZSJWa+X6buHB07obK0E4cM2TAPDMaNsSZoTHHXFv6R3UA2pbKZ1Gp16Gqc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YE7iz9Zq; arc=none smtp.client-ip=209.85.167.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="grjSF6bL"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-23211e62204so36694975ad.3;
-        Wed, 21 May 2025 21:02:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YE7iz9Zq"
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-551f00720cfso5549335e87.0
+        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 21:13:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747886526; x=1748491326; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=PZhUzfOUEweTXHf5T0hPVYO2QZbak8VcGiB8Zx0TkCQ=;
-        b=grjSF6bLDdJl0xSQUo/0exCd/+roUR2k+yClevT11Ce1OEgqGYE6Lf9mhveAVCVi4q
-         Hmb5tt97JyvojuvWK4NKx8lI7+/ME3xq4q1i6B7IXLy/tUPau7NtRXYhvVXxefljNAYU
-         mtkGQGux1poMOz+4yuZHeT3MI2QdBj31/q6CtlWd+bS+W8zgVfxJHyi7Q/HNByvIPKbT
-         l+qwSH8Bpi9LnTayJU882noMqurQVGC3/6O4rhhcXm/7M7DOPkPRYzIlbH9g/wmcUHa1
-         G69UWG2xjyx/tUfw23P20QgOyV8Sufd/xUM45ibqKLs6xqHzhff1jUVfSE0qRzsQyYYV
-         i6fw==
+        d=gmail.com; s=20230601; t=1747887237; x=1748492037; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Bte9CFdj+wrGfjA+R6p82brPFpWF/WUa3+uYva1Cp1I=;
+        b=YE7iz9Zq/ddkLSbiHbKYONyF6aCP86RJS60NdPQYAh5nfI1Muvwqw3P7YRzVuTgtyK
+         th8AO1AZoz8cbnp/xlDqA4VYPOlhKrQea4J1nYRfMTLa0SvE91bxQZb9852lfuQFnU2a
+         ELaVlbtSagSXMJrDUWFkcAtSdPfjwNnUz0gTC450TGNVbrXHykPDwBMKejuPaN6OFLt8
+         uqpOBulXQ94cb5FjnmW8ggLrFGD0x3HSN1SR9ne6zJOpgHqDEE5xcHVrlFYrUTKVfJ6k
+         zFFdbdMa0RbW8NRnq6a+HxfzyfwmTnW4cu7zicIf+Iq4owIYEfDQN+VoYb9rctkGzNt8
+         NeSA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747886526; x=1748491326;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=PZhUzfOUEweTXHf5T0hPVYO2QZbak8VcGiB8Zx0TkCQ=;
-        b=XYafQb/0BVWDgRgfLMEDJ6/nzVznQ0M4nvw0OaCjEn9E/TdnvKY2+fQSUQ4Kxh7STR
-         wRFqLliePcG1ksv/RbXFZjKBzYPKe51jQak2/bYqCzhzJA7CRLnB9r0lDM6ATW54if0D
-         P93AsGWKG/mlFHLCSm3bhxoAgP56U3WALKJXOyMXYEgHxZE2ANmxAqwfwH4aLPBGdYXP
-         O1UXD/9rFgVO6PCRvUKP1UWJ4L+joK8k3pvXe9maVE/pkYzBSGwWBPHgQ2qPIuDJD7RB
-         V1YTbCg68Wpk1wcW9We8NUisHRptLOx3ztPSSMYIlRWxI76Q/b40lgM8zRCrmPP1YoVd
-         CeJw==
-X-Forwarded-Encrypted: i=1; AJvYcCUsxyG46gZ8sOsBseIH0UN1TBq7hq01BrocFeaw7Vn1eMWCGR4DFPXcbvwB2jy2ANkB7kQ=@vger.kernel.org, AJvYcCVg8DU5q/n86XM3Ee2AxOiuG4nud1tE018T144TI/F6+NpVm9uFRGhkYBOIA3q4EkezCFFMvT+AHtJMG5Xf@vger.kernel.org
-X-Gm-Message-State: AOJu0YxCfEETt+Jc6bIHPeGE4RThFEtd883GDUzu1nlee6Ofd5bPLT/D
-	u1BpI8Asc9NS6sKM9w+OMPOSa8ISyPLBlQzgCXAJ/gbK86jtYmXdqPsBv7nGCQ==
-X-Gm-Gg: ASbGnctybxOCYGdlcDaazO/Pxa8MIzoPyR7YQcUOsSHk5kJymjbTJa6GB3QknOizZBN
-	XseHibN9od61UAOkTIDpQwxCEJohTixAS2eCbxI1LTK580uHA/KZ+dGilcpwg7PrSQemmKxTFYK
-	KrP6djho307JwIGcKyrC9qXSyTloXz3KHUSCPF3mWvnDNlQ7dmyrMEXIgpE0HHBt5LB8zXVptA/
-	UeHikpfbee1hV3nGT7vG50qgkeXyBrfxpGkEC7b0sVG855HlBr5VDy6iW9sH/U+heX8mxDjqs+a
-	iBwvEcJtitBeKS0bLhTTBhGqiAy9y4uxHuUAvbOcw+kR+AlLkTuAYw8mLawcZPNRfNM9Ld65EGd
-	g
-X-Google-Smtp-Source: AGHT+IHN4e8t0B8D9y55dtrTUEzkuMGlnFb8gkeKQPNLgOGCM3vx8v2UVamtSCZqaJLxtwmhUS6DIA==
-X-Received: by 2002:a17:902:e74c:b0:231:d0c4:e806 with SMTP id d9443c01a7336-231d459a971mr360062605ad.32.1747886526384;
-        Wed, 21 May 2025 21:02:06 -0700 (PDT)
-Received: from minh.192.168.1.1 ([2001:ee0:4f0e:fb30:e79e:1a85:fe3:abe2])
-        by smtp.googlemail.com with ESMTPSA id 98e67ed59e1d1-30f36364f9asm4532890a91.4.2025.05.21.21.02.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 May 2025 21:02:05 -0700 (PDT)
-From: Bui Quang Minh <minhquangbui99@gmail.com>
-To: netdev@vger.kernel.org
-Cc: Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	"David S. Miller" <davem@davemloft.net>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Jesper Dangaard Brouer <hawk@kernel.org>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Eric Dumazet <edumazet@google.com>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
-	Alexander Lobakin <aleksander.lobakin@intel.com>,
-	bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Bui Quang Minh <minhquangbui99@gmail.com>
-Subject: [PATCH v2 net-next] xsk: add missing virtual address conversion for page
-Date: Thu, 22 May 2025 11:01:15 +0700
-Message-ID: <20250522040115.5057-1-minhquangbui99@gmail.com>
-X-Mailer: git-send-email 2.43.0
+        d=1e100.net; s=20230601; t=1747887237; x=1748492037;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Bte9CFdj+wrGfjA+R6p82brPFpWF/WUa3+uYva1Cp1I=;
+        b=CYNVRCaZZjGrhp9cx4tf6TEJNuu6jhK38oFoOkz75qYvU2YzbEfuaaOtGC/0Czw72L
+         qFi1acg8e+A51IobOpzmZkYGb7o3DgjB8tD1hxPoGloGNn70vIdi6dzuKmVQBn8GOGfp
+         105O7bW/WFZY0Eacp/GHdOvk5REsraJV9UNkv0F+2xxbGq0hkcl7LCaqRXvaaQI1At/h
+         iL3xaNvNN1iznH4o8mbbrdip6BjwQdONsqoj1A/rzlA8R6LeK8HQxvujc+ctlcy3g/BL
+         zCNVK9WiWWNMOqDYa8EV4KnmDKqHIrmMeGo0FUE4iDfNeIre665B1moPT91HpY7zBeSK
+         xOBw==
+X-Forwarded-Encrypted: i=1; AJvYcCVMjl2QgBdbt5XuI8FRGQQT0TilPqAVi+pPXcDDduWIoRVVy1qMvXx0tx+7TAwd6j3lnunC8rXosTbYW9U=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyYEgCNfAWBeE1iJgfksce8x7/rn1mhRcfxmqALazPYeo2N+vHM
+	S3IHWIQKhfB/O+I0U/w5QhErNS++7gi8FVEc6ryKYSCAU14odTYP/FfFBimNUTI+EKkozPCGw21
+	aIxldQxxeLhclR3Lsz2WzZaKxgDy6GvA=
+X-Gm-Gg: ASbGnctQdqD6a1w0vw2lHg9PnUpTQ/3tKnmlhGI2e/OU6m3/GkW/s+F1Gz50gI6/zX5
+	md92/PkKP/ohZkaOscASvWOqP4/rbGGofYKeImO5EjQxX+wNUeQ6fyGPBSjr2fEuCZfBf5GDIgF
+	Tmjlew9RTqjHhOVzP8xvNRp490BubP15u5LEonsHnk20c=
+X-Google-Smtp-Source: AGHT+IHT28IBBwTi8/+xS4G/RjJiiVmRxQ0cf/TimQs9dpEiYDfpdr93GdWkjVmnq0QPAXPpzqIXR8XBFXD9AfS6Sk0=
+X-Received: by 2002:a05:6512:671c:b0:54b:117b:b54b with SMTP id
+ 2adb3069b0e04-550e725bb73mr6915713e87.54.1747887236454; Wed, 21 May 2025
+ 21:13:56 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250514201729.48420-1-ryncsn@gmail.com> <20250514201729.48420-29-ryncsn@gmail.com>
+ <CAKEwX=MmD___ukRrx=hLo7d_m1J_uG_Ke+us7RQgFUV2OSg38w@mail.gmail.com>
+In-Reply-To: <CAKEwX=MmD___ukRrx=hLo7d_m1J_uG_Ke+us7RQgFUV2OSg38w@mail.gmail.com>
+From: Kairui Song <ryncsn@gmail.com>
+Date: Thu, 22 May 2025 12:13:37 +0800
+X-Gm-Features: AX0GCFuXRYMgoPNwD3rP7zPji66BkOaor9fW7saRZdo0olNBGsFnKTY6nd02tFc
+Message-ID: <CAMgjq7CM8-ZyQ5E-6Qwky5uwx+w=nrc4_nMX0oWHzv3Q3xz=Lg@mail.gmail.com>
+Subject: Re: [PATCH 28/28] mm, swap: implement dynamic allocation of swap table
+To: Nhat Pham <nphamcs@gmail.com>
+Cc: linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>, 
+	Matthew Wilcox <willy@infradead.org>, Hugh Dickins <hughd@google.com>, Chris Li <chrisl@kernel.org>, 
+	David Hildenbrand <david@redhat.com>, Yosry Ahmed <yosryahmed@google.com>, 
+	"Huang, Ying" <ying.huang@linux.alibaba.com>, Johannes Weiner <hannes@cmpxchg.org>, 
+	Baolin Wang <baolin.wang@linux.alibaba.com>, Baoquan He <bhe@redhat.com>, 
+	Barry Song <baohua@kernel.org>, Kalesh Singh <kaleshsingh@google.com>, 
+	Kemeng Shi <shikemeng@huaweicloud.com>, Tim Chen <tim.c.chen@linux.intel.com>, 
+	Ryan Roberts <ryan.roberts@arm.com>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-In commit 7ead4405e06f ("xsk: convert xdp_copy_frags_from_zc() to use
-page_pool_dev_alloc()"), when converting from netmem to page, I missed a
-call to page_address() around skb_frag_page(frag) to get the virtual
-address of the page. This commit uses skb_frag_address() helper to fix
-the issue.
+On Thu, May 22, 2025 at 3:38=E2=80=AFAM Nhat Pham <nphamcs@gmail.com> wrote=
+:
+>
+> On Wed, May 14, 2025 at 1:20=E2=80=AFPM Kairui Song <ryncsn@gmail.com> wr=
+ote:
+> >
+> > From: Kairui Song <kasong@tencent.com>
+> >
+> > Now swap table is cluster based, which means free clusters can free its
+> > table since no one should modify it.
+> >
+> > There could be speculative readers, like swap cache look up, protect
+> > them by making them RCU safe. All swap table should be filled with null
+> > entries before free, so such readers will either see a NULL pointer or
+> > a null filled table being lazy freed.
+> >
+> > On allocation, allocate the table when a cluster is used by any order.
+> >
+> > This way, we can reduce the memory usage of large swap device
+> > significantly.
+> >
+> > This idea to dynamically release unused swap cluster data was initially
+> > suggested by Chris Li while proposing the cluster swap allocator and
+> > I found it suits the swap table idea very well.
+> >
+> > Suggested-by: Chris Li <chrisl@kernel.org>
+> > Signed-off-by: Kairui Song <kasong@tencent.com>
+>
+> Nice optimization!
 
-Fixes: 7ead4405e06f ("xsk: convert xdp_copy_frags_from_zc() to use page_pool_dev_alloc()")
-Reviewed-by: Alexander Lobakin <aleksander.lobakin@intel.com>
-Signed-off-by: Bui Quang Minh <minhquangbui99@gmail.com>
----
-Changes in v2:
-- Add Fixes tag
+Thanks!
 
- net/core/xdp.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+>
+> However, please correct me if I'm wrong - but we are only dynamically
+> allocating the swap table with this patch. What we are getting here is
+> the dynamic allocation of the swap entries' metadata (through the swap
+> table), which my virtual swap prototype already provides. The cluster
+> metadata struct (struct swap_cluster_info) itself is statically
+> allocated still (at swapon time), correct?
 
-diff --git a/net/core/xdp.c b/net/core/xdp.c
-index e6f22ba61c1e..491334b9b8be 100644
---- a/net/core/xdp.c
-+++ b/net/core/xdp.c
-@@ -709,8 +709,7 @@ static noinline bool xdp_copy_frags_from_zc(struct sk_buff *skb,
- 			return false;
- 		}
- 
--		memcpy(page_address(page) + offset,
--		       skb_frag_page(frag) + skb_frag_off(frag),
-+		memcpy(page_address(page) + offset, skb_frag_address(frag),
- 		       LARGEST_ALIGN(len));
- 		__skb_fill_page_desc_noacc(sinfo, i, page, offset, len);
- 
--- 
-2.43.0
+That's true for now, but noticing the static data is much smaller and unifi=
+ed
+now, and that enables more work in the following ways:
+(I didn't include it in the series because it is getting too long already..=
+)
 
+The static data is only 48 bytes per 2M swap space, so
+for example if you have a 1TB swap device / space, it's only 20M
+in total, previously it would be at least 768M (could be much higher
+as I'm only counting swap_map and cgroup array here).
+Now the memory overhead is 0.0019% of the swap space.
+
+And the static data is now only an intermediate cluster table, and only
+used in one place (si->cluster_info), so reallocating is doable now:
+Readers of the actual swap table are protected by RCU and won't
+modifying the cluster metadata, the only updater of cluster metadata
+is allocation/freeing, and they can be organized in better ways to
+allow the cluster data to be reallocated.
+
+And due to the low memory overhead of cluster metadata, it's totally
+acceptable to preallocate a much larger space now, for example we can
+always preallocate a 4TB space on boot, tha't 80M in total. Might
+seems not that trivial, but there is another planned series to make
+the vmalloc space dynamic too, leverage the page table directly, so
+the 20M per TB overhead can be avoided too. Not sure if it will be
+needed though, the overhead is so tiny already.
+
+So in summary what I have in mind is we can either:
+- Extend the cluster data when it's not enough (or getting fragmented),
+since the table data is still accessible during the reallocate and copied
+data is minimal, so it shouldn't be a heavy lifting operation.
+- Preallocate a larger amount of cluster data on swapon, the
+overhead is still very controllable.
+- (Once we have a dynamic vmalloc) preallocate a super large space
+for swap and allocate each page when needed.
+
+These ideas can be somehow combined, or related to each other.
+
+> That will not work for a
+> large virtual swap space :( So unfortunately, even with this swap
+> table series, swap virtualization is still not trivial - definitely
+> not as trivial as a new swap device type...
+>
+> Reading your physical swapfile allocator gives me some ideas though -
+> let me build it into my prototype :) I'll send it out once it's ready.
+>
+
+Yeah, a virtual swap is definitely not trivial, instead it's
+challenging and very important, just like you have demonstrated.
+It requires quite some work other than just metadata level things,
+I never expected it to be just as simple as a "just another swap
+table entry type" :)
+What I meant is that to be done with minimal overhead and better
+flexibility, swap needs better infrastructures, which this series is workin=
+g on.
