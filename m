@@ -1,206 +1,222 @@
-Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B76502F41
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 12:49:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A6A228A700
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 12:50:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747918193; cv=none; b=Op9ktjN7tExAQwBmNJRhSVgkcniA16DqwMsnmJ5zmAqd8IRObd6eR7KHuN7qLfpyRxCg0qhoNlV9T0CMQX/M3dXZR6o63MXRYa6x6HxHhOE/sc2ExWurhMPCfkuqJiOV5Pk40uZ/caM/YEUvwO10PpsTU2XI0R1EMH9EqPd/z2o=
+	t=1747918227; cv=none; b=N3hG11o+WggYwa0Fw2oIZFmqacMuC7qB/bGEv5gp/gXxkcLV2dfIylj63rAug8YKaIgqwcjSWneDg5JA9zwv/rAu5aCCLHKTLJrcO/0nnbF3y8pFjyUe6pdr4dIzrZFwTtB8UO2lCqLtLtVUhjvQDR7lKXXJMsD3KzFwXEYXXFM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747918193; c=relaxed/simple;
-	bh=PYX+dVJcWZx+zQj1QHCPErd0fdRHN69TrPRza5KIvJA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Dhi/WZ9W55tf0EeDVp0aHeHjTYzGHTvC3ZExR+FlrQVA8gm5NtJcgDSzgE+NjyctmYb563/es61Km//ONwByfl5KfiP4dyvgmPDme/eVma9kur31TEJRRQwmkWNNKbTw3IpG/1Pin6ARL1f7BjwB3KgBu7iiL2HnN6mJ2t91xPE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=hmAoEcqe; arc=none smtp.client-ip=209.85.216.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	s=arc-20240116; t=1747918227; c=relaxed/simple;
+	bh=QpkY9r1mt0Qh6PDkfZqElFxquznfMB6ymlK6B2iiEu4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bJIFruKXTzFmnOM8XjkEms5jovD8Wi1FqouhmWNtw6S/UfGGGdTyGm8crc5UcH2sPh6S/v3Er6P8QyWmmGSZWHtZJJ+lRYvi/Lrk0JfarZoQh4ifZav/BSGCacMnut8/ofFrp8Iw7U1Y2VTDbBz+nQPD6fe4P2TUlcXCtlWdGe4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KDIuJ2G8; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="hmAoEcqe"
-Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-30e57a373c9so7857273a91.2
-        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 05:49:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1747918191; x=1748522991; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=QEDH++8Bg2qV5SBpixsiMotVHmG//CzEmqGTuEGtq5o=;
-        b=hmAoEcqeVrJxzF8uQwG8j8dO32BCqqSehLhcrwENFKRbSv1r+l4UVKhgLcglc9U03P
-         g7abQ0+0OUyh3KmYmx7uNgyDQ2JJ7X/NZTXhka9isHpG/+NeJNXOKHAh2ENddlMKWME7
-         QiZxhTut49cb032FdQ9iv33TuujwKaFWWc3KDLjRD0dHH1Dqm4GOZJL43PUCCyyZWa5I
-         cFX9BWUQKMDaSg5jgo0HL1Y7E87YaVHBVh3UpwCWj6kK3wZnLnuEPHkZ2c4l5jcBH9b5
-         YIjXtqaEMaUU8Lnyko6gELdaS44VydN6OvPVVDDcAnW1glftI1exIBsD23UYPZXnroxO
-         Ho6Q==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KDIuJ2G8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1747918225;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=fx6oiSpfXxbM5W7Ps+W13NostgzfLtcsszzWV/K4XTM=;
+	b=KDIuJ2G8cJN2AcfXnyCHNa5oEKoVKfj5qWrbpObAMH4KF0Z1bMxY+IS5l6lq2mdIjCxO1v
+	vyxlEkPd7HAwtYsx9Qb/pNR23V51OZ+Y6/bEPcEQHqlgajvUQhYENiK55nl8V1Yv1GK7Zt
+	3vgl3boMZFDaEIkStnYNfW0N6dxCwHg=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-642-62JWVTnqOeCvaD5O5f0LBA-1; Thu, 22 May 2025 08:50:23 -0400
+X-MC-Unique: 62JWVTnqOeCvaD5O5f0LBA-1
+X-Mimecast-MFC-AGG-ID: 62JWVTnqOeCvaD5O5f0LBA_1747918223
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-3a379218f6cso1528708f8f.0
+        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 05:50:23 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747918191; x=1748522991;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QEDH++8Bg2qV5SBpixsiMotVHmG//CzEmqGTuEGtq5o=;
-        b=loEa3Sano46Nk2gVlNHu/1ITkc219F4wTs4gRRytdo5bRQOec1Prbn9SC/hdq1xg53
-         StcGVoj/PNO9S/4rHLt/Ps2vZ0z12jJszdCUmK77PZK0g/B2mB/Zph6PdIVqS/zXnzp2
-         MPv9Qn26ECaHLQE8THzJi274tbZ7VE3HuC0lTKf18dHNn6FHUmDi2/S/5XjOvTCKEX6P
-         0iH36NRAlYCI5cp88kZrktCT1+k87SmG1qiwDKSa+LyxWeVvoi0Q6LUmA4xhne0Mv5VK
-         Gg7Tr/TrP6f59Kzg2tsyOTjbHuU5VYPbUFuHunrw5hDQMcsJZnkWpTw2zMCxIflAQCdr
-         5FJA==
-X-Forwarded-Encrypted: i=1; AJvYcCUsnbzFDVDmqPuZdRkQDinf7d6I6g8/GlVSwmtTmvCOOj6t0F5WMtEX1F8n+GCpR7wn7p02tnG21hOxK/4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz9SQbLxAC9Z20FG9lE/AG3HbhzbCsT0u1mAtcdB4RNAA2p+rme
-	aIuKTsRPTh1is5Uz/1dYW9k9ZmX3cn6VHEYDKhv8iOno5RYVXZFZF1zGTIW3/faTqYNBv7+07bT
-	doRE=
-X-Gm-Gg: ASbGncvcIY2ZoAz5IhzpSLQdVvBaC/pCw29E6Ztz0nEQlGO8nL2u7liJBWff+xis9/O
-	zCJXAp8yYZkv0HfDpSaXQXvXSgqNGTH9o+ZfgF4U9r5+o37Y37t4Ur1wOT2K2qEp0r/MIkCvjUJ
-	U34y4yK/e9R8w+8OT+lTpuQHfX4bWqDTUKY5E0+xFRpoRiRLS0unV4ayVamTBQmN2wcMQpO0dOQ
-	2Wikbm5AyMMgdqe+aGEwMFAq6LsxbXB3Ep0FETXdKYgStLU7+rm64xsd41u9wk1mg1EaaCjbbje
-	eTTk5WRbjL7MjKYne/RdIkJg1L3f2iTM67E4dfwKgDyH1l8AJK8=
-X-Google-Smtp-Source: AGHT+IFjmFKcHEpZiCZ5G7FxDzrLrOnL7yzQPC0M0dW3WNoGWhBZLad2wM/Ot9Ry6oG3kgiEuIJo8w==
-X-Received: by 2002:a17:90b:1f8c:b0:2fc:3264:3666 with SMTP id 98e67ed59e1d1-30e7d5be34bmr37779578a91.30.1747918190755;
-        Thu, 22 May 2025 05:49:50 -0700 (PDT)
-Received: from bytedance ([115.190.40.15])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30f365c4e77sm5470998a91.12.2025.05.22.05.49.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 May 2025 05:49:50 -0700 (PDT)
-Date: Thu, 22 May 2025 20:49:43 +0800
-From: Aaron Lu <ziqianlu@bytedance.com>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Valentin Schneider <vschneid@redhat.com>,
-	Ben Segall <bsegall@google.com>,
-	K Prateek Nayak <kprateek.nayak@amd.com>,
-	Josh Don <joshdon@google.com>, Ingo Molnar <mingo@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Xi Wang <xii@google.com>, linux-kernel@vger.kernel.org,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>, Mel Gorman <mgorman@suse.de>,
-	Chengming Zhou <chengming.zhou@linux.dev>,
-	Chuyi Zhou <zhouchuyi@bytedance.com>,
-	Jan Kiszka <jan.kiszka@siemens.com>,
-	Florian Bezdeka <florian.bezdeka@siemens.com>
-Subject: Re: [PATCH 4/7] sched/fair: Take care of group/affinity/sched_class
- change for throttled task
-Message-ID: <20250522124840.GC672414@bytedance>
-References: <20250520104110.3673059-1-ziqianlu@bytedance.com>
- <20250520104110.3673059-5-ziqianlu@bytedance.com>
- <20250522120336.GI39944@noisy.programming.kicks-ass.net>
+        d=1e100.net; s=20230601; t=1747918222; x=1748523022;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=fx6oiSpfXxbM5W7Ps+W13NostgzfLtcsszzWV/K4XTM=;
+        b=ObbJoUAZsePgaCNDXZ+WobhmoCnrS5zvnjJZkYiUhSHwTGCPbKWscFepHcIrFLAu04
+         BLs9tJTpiws+Ah8tAgxofBgYQKtluN3TZHYFxMGxnj9neQ7ugajITJFglmL9nLt9NbzK
+         eIKyrV+jhZUieBLmynTHNmAbWqe8p+F6V7eDLunJl91WA/NetxSwAPgndA9PQgeU9j6/
+         7EpeKnYovSblMYyS3nnHDxAL2K4Mc2BCYnIPj9kMC+2IU03jx+rMHTzfGFVTb++YlSav
+         5ADvrwxfMlmu+VUBub+07goSU5ruJnj1wQ1iCvD+/8t3W2K00sJim2xMPHxeBzYYnz6D
+         1yhQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVFLWSHe9v1je4SSCQLOqrL7KLr0617CgFegT8LbFDtoBJqXT0r7/wcAeL/LTdcxYMi6Q+gCGy/Ge+BqtI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzBL2PgIXwf9feM1x4cwJAfObzqv8B968pfh+wmTiR+KFmu15Sz
+	V4deUn6wj+PF5tvJ0Lu7w1QgmsW2NxAG8XHwV+LipcWsirrtI6jNo0vwfhlM3gxmKBl7vAk7ypI
+	h4/qPdoIwuF3yOPfspLY9nov88lW1lzOsXZj0LCcTBvo9MUxROKr9f3+Q7v7FRGwrww==
+X-Gm-Gg: ASbGnctRWR5rCp65vT3FQwESbidwcWczrmdDjPVTBNCuE1CPJjNINBxLOv8KsfXflWk
+	hmTHBBKzY4/FW/TbFs/sKc5aS0ZzH7FGCii6G+vM3Kh2tHLip2opevfZJ5guM2Aj7zp+Hy0KcZn
+	Or2ITFZlbIgIWRikNjgnB8KC18ccgFcQh0eDyLm+nOH5zFd1noLGKFWmYdVVE/xOOLXKMV5bVou
+	5K7b5rFHWnsJY2+PxGo1OyuV8RJLkPgG7KLjuSQjm9eWmTdlsbtHx6S8atN9Piu54/M5fxtO2W0
+	BCHgNquAqxxinhkG6YoYjssKf3lBxfCvuzaP5RtClhDcz2YH8berAamWPRX5W6JdWwN+ekVENHK
+	NvGqJkSD6YQ9aWG4FSSvx4SLdlcuA/DmXwn2W5Ac=
+X-Received: by 2002:a05:6000:2282:b0:3a3:7bbc:d940 with SMTP id ffacd0b85a97d-3a37bbcdbe0mr11775961f8f.39.1747918222498;
+        Thu, 22 May 2025 05:50:22 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IE+kyGLojq8h/T8VO4XZrWF8YZH8eZH2PYErLG2heEckxcUG749bgICqDS3VcMXObIs6BDDSw==
+X-Received: by 2002:a05:6000:2282:b0:3a3:7bbc:d940 with SMTP id ffacd0b85a97d-3a37bbcdbe0mr11775923f8f.39.1747918222139;
+        Thu, 22 May 2025 05:50:22 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f22:2e00:6e71:238a:de9f:e396? (p200300d82f222e006e71238ade9fe396.dip0.t-ipconnect.de. [2003:d8:2f22:2e00:6e71:238a:de9f:e396])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-447f7bae847sm100971515e9.36.2025.05.22.05.50.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 22 May 2025 05:50:21 -0700 (PDT)
+Message-ID: <eab4b461-9717-47df-8d56-c303c3f6012d@redhat.com>
+Date: Thu, 22 May 2025 14:50:20 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250522120336.GI39944@noisy.programming.kicks-ass.net>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC v2 0/2] add THP_HUGE_ZERO_PAGE_ALWAYS config option
+To: "Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>
+Cc: Mike Rapoport <rppt@kernel.org>, Pankaj Raghav <p.raghav@samsung.com>,
+ Suren Baghdasaryan <surenb@google.com>, Vlastimil Babka <vbabka@suse.cz>,
+ Ryan Roberts <ryan.roberts@arm.com>, Michal Hocko <mhocko@suse.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Nico Pache <npache@redhat.com>,
+ Dev Jain <dev.jain@arm.com>, Baolin Wang <baolin.wang@linux.alibaba.com>,
+ Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>,
+ "H . Peter Anvin" <hpa@zytor.com>, Zi Yan <ziy@nvidia.com>,
+ Dave Hansen <dave.hansen@linux.intel.com>,
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ "Liam R . Howlett" <Liam.Howlett@oracle.com>, Jens Axboe <axboe@kernel.dk>,
+ linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ "Darrick J . Wong" <djwong@kernel.org>, gost.dev@samsung.com, hch@lst.de,
+ linux-kernel@vger.kernel.org, linux-mm@kvack.org, willy@infradead.org,
+ x86@kernel.org, mcgrof@kernel.org
+References: <20250522090243.758943-1-p.raghav@samsung.com>
+ <aC8LGDwJXvlDl866@kernel.org>
+ <6lhepdol4nlnht7elb7jx7ot5hhckiegyyl6zeap2hmltdwb5t@ywsaklwnakuh>
+ <6894a8b1-a1a7-4a35-8193-68df3340f0ad@redhat.com>
+ <625s5hffr3iz35uv4hts4sxpprwwuxxpbsmbvasy24cthlsj6x@tg2zqm6v2wqm>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <625s5hffr3iz35uv4hts4sxpprwwuxxpbsmbvasy24cthlsj6x@tg2zqm6v2wqm>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, May 22, 2025 at 02:03:36PM +0200, Peter Zijlstra wrote:
-> On Tue, May 20, 2025 at 06:41:07PM +0800, Aaron Lu wrote:
-> > On task group change, for tasks whose on_rq equals to TASK_ON_RQ_QUEUED,
-> > core will dequeue it and then requeued it.
-> > 
-> > The throttled task is still considered as queued by core because p->on_rq
-> > is still set so core will dequeue it, but since the task is already
-> > dequeued on throttle in fair, handle this case properly.
-> > 
-> > Affinity and sched class change is similar.
-> > 
-> > Signed-off-by: Aaron Lu <ziqianlu@bytedance.com>
-> > ---
-> >  kernel/sched/fair.c | 24 ++++++++++++++++++++++++
-> >  1 file changed, 24 insertions(+)
-> > 
-> > diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> > index 74bc320cbc238..4c66fd8d24389 100644
-> > --- a/kernel/sched/fair.c
-> > +++ b/kernel/sched/fair.c
-> > @@ -5866,6 +5866,10 @@ static void throttle_cfs_rq_work(struct callback_head *work)
-> >  		update_rq_clock(rq);
-> >  		WARN_ON_ONCE(!list_empty(&p->throttle_node));
-> >  		dequeue_task_fair(rq, p, DEQUEUE_SLEEP | DEQUEUE_SPECIAL);
-> > +		/*
-> > +		 * Must not add it to limbo list before dequeue or dequeue will
-> > +		 * mistakenly regard this task as an already throttled one.
-> > +		 */
-> >  		list_add(&p->throttle_node, &cfs_rq->throttled_limbo_list);
-> >  		resched_curr(rq);
-> >  	}
-> > @@ -5881,6 +5885,20 @@ void init_cfs_throttle_work(struct task_struct *p)
-> >  	INIT_LIST_HEAD(&p->throttle_node);
-> >  }
-> >  
-> > +static void dequeue_throttled_task(struct task_struct *p, int flags)
-> > +{
-> > +	/*
-> > +	 * Task is throttled and someone wants to dequeue it again:
-> > +	 * it must be sched/core when core needs to do things like
-> > +	 * task affinity change, task group change, task sched class
-> > +	 * change etc.
-> > +	 */
-> > +	WARN_ON_ONCE(p->se.on_rq);
-> > +	WARN_ON_ONCE(flags & DEQUEUE_SLEEP);
-> > +
-> > +	list_del_init(&p->throttle_node);
-> > +}
-> > +
-> >  static void enqueue_task_fair(struct rq *rq, struct task_struct *p, int flags);
-> >  static int tg_unthrottle_up(struct task_group *tg, void *data)
-> >  {
-> > @@ -6834,6 +6852,7 @@ static inline void sync_throttle(struct task_group *tg, int cpu) {}
-> >  static __always_inline void return_cfs_rq_runtime(struct cfs_rq *cfs_rq) {}
-> >  static void task_throttle_setup_work(struct task_struct *p) {}
-> >  static bool task_is_throttled(struct task_struct *p) { return false; }
-> > +static void dequeue_throttled_task(struct task_struct *p, int flags) {}
-> >  
-> >  static inline int cfs_rq_throttled(struct cfs_rq *cfs_rq)
-> >  {
-> > @@ -7281,6 +7300,11 @@ static int dequeue_entities(struct rq *rq, struct sched_entity *se, int flags)
-> >   */
-> >  static bool dequeue_task_fair(struct rq *rq, struct task_struct *p, int flags)
-> >  {
-> > +	if (unlikely(task_is_throttled(p))) {
-> > +		dequeue_throttled_task(p, flags);
-> > +		return true;
-> > +	}
-> > +
-> >  	if (!(p->se.sched_delayed && (task_on_rq_migrating(p) || (flags & DEQUEUE_SAVE))))
-> >  		util_est_dequeue(&rq->cfs, p);
+On 22.05.25 14:34, Pankaj Raghav (Samsung) wrote:
+> Hi David,
 > 
-> This is asymmetric -- dequeue removes it from that throttle list, but
-> the corresponding enqueue will not add it back, what gives?
+>>>    config ARCH_WANTS_THP_SWAP
+>>>           def_bool n
+>>> -config ARCH_WANTS_THP_ZERO_PAGE_ALWAYS
+>>> +config ARCH_WANTS_HUGE_ZERO_PAGE_ALWAYS
+>>>           def_bool n
+>>> +config HUGE_ZERO_PAGE_ALWAYS
+>>
+>> Likely something like
+>>
+>> PMD_ZERO_PAGE
+>>
+>> Will be a lot clearer.
 > 
-> Because now we have:
-> 
->  p->on_rq=1
->  p->throttle_node on list
-> 
-> move_queued_task()
->   deactivate_task()
->     dequeue_task_fair()
->       list_del_init(throttle_node)
->     p->on_rq = 2
-> 
->   activate_task()
->     enqueue_task_fair()
->       // nothing special, makes the thing runnable
->     p->on_rq = 1;
-> 
-> and we exit with a task that is on-rq and not throttled ?!?
->
-> Why is this? Are we relying on pick_task_fair() to dequeue it again and
-> fix up our inconsistencies? If so, that had better have a comment on.
+> Sounds much better :)
 
-Correct.
+And maybe something like
 
-Does the following comment look OK?
+"STATIC_PMD_ZERO_PAGE"
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 89afa472299b7..4f4d64cf31fb1 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -7147,6 +7147,10 @@ static int dequeue_entities(struct rq *rq, struct sched_entity *se, int flags)
- static bool dequeue_task_fair(struct rq *rq, struct task_struct *p, int flags)
- {
- 	if (unlikely(task_is_throttled(p))) {
-+		/*
-+		 * Task migrated to new rq will have its throttle work
-+		 * added if necessary in pick time.
-+		 */
- 		dequeue_throttled_task(p, flags);
- 		return true;
- 	}
+would be even clearer.
+
+The other one would be the dynamic one.
+
+> 
+>>
+>>> +       def_bool y> +       depends on HUGETLB_PAGE &&
+>> ARCH_WANTS_HUGE_ZERO_PAGE_ALWAYS
+>>
+>> I suspect it should then also be independent of HUGETLB_PAGE?
+> 
+> You are right. So we don't depend on any of these features.
+> 
+>>
+>>> +       help
+>>> +         Typically huge_zero_folio, which is a huge page of zeroes, is allocated
+>>> +         on demand and deallocated when not in use. This option will always
+>>> +         allocate huge_zero_folio for zeroing and it is never deallocated.
+>>> +         Not suitable for memory constrained systems.
+>>
+>> I assume that code then has to live in mm/memory.c ?
+> 
+> Hmm, then huge_zero_folio should have always been in mm/memory.c to
+> begin with?
+> 
+
+It's complicated. Only do_huge_pmd_anonymous_page() (and fsdax) really 
+uses it, and it may only get mapped into a process under certain 
+conditions (related to THP / PMD handling).
+
+> I assume probably this was placed in mm/huge_memory.c because the users
+> of this huge_zero_folio has been a part of mm/huge_memory.c?
+
+Yes.
+
+> 
+> So IIUC your comment, we should move the huge_zero_page_init() in the
+> first patch to mm/memory.c and the existing shrinker code can be a part
+> where they already are?
+
+Good question. At least the "static" part can easily be moved over. 
+Maybe the dynamic part as well.
+
+Worth trying it out and seeing how it looks :)
+
+-- 
+Cheers,
+
+David / dhildenb
+
