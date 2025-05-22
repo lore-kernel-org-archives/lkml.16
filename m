@@ -1,96 +1,85 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07DFB70814;
-	Thu, 22 May 2025 09:25:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 008D870814;
+	Thu, 22 May 2025 09:27:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747905945; cv=none; b=dH3+NooyCFbcrcy5DET5GrTfL5cKU5HkHWnCnIzJ3Gtheez7vf2+y5J16vF4xRfbOkQIfkSmIzPMvRds4lk9QAIZJXKBcHnTX5DxVrC50EJ5NWUKuR0sYjW/7nQ2GrvJtBzNjEMMv0reGR73hbheGsZfWqGh4HnSS9GLDxf7TI4=
+	t=1747906057; cv=none; b=svmC/8OxwQffUfT/zkONCM5VGa8iiWy4+Jy1VE0hRohTFC1vE5JNFGolgc33F3iv+ZqGHklrvWs1cZC679dTMwgQIjY1Aa/Mn20JLElx5f4cuEGg8ryJruIforL4tHfXQqmryjE+JKkgX729upP/TkhY0dylZsyPkSPdtAqfJJ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747905945; c=relaxed/simple;
-	bh=p53SfCe7muDgtvQFHMIVqvkowaeuQ3Tx7It7jszYKD4=;
-	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=W/rJ2baNPFjdqLCTfk2qEh4GsNepGzQQJJB9JOmGgdIpFCrS9UVPALJOnzqA4r16lg67NaAevp1ygJolIa8tDxOTMoAT6mFSXZIT3cigTnuerHFFPnhNOfbmeoIFHCWu1p3ghKAqU50K8N/E32Jz9yMYvykBU4+kcmJ5jI/oAVE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CO9mh0dY; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747906057; c=relaxed/simple;
+	bh=sAftpgTXoshRrtSj+br63QRHVO9ufA/GYUeV/EcMd8w=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=dsPc63QNo0Ozq34eozh9kP3HLO50MGJxaOdMGB7b3UUPiy1TNZO1odEHJMnOHp16gaHrSHKcLU5W/A4aaWjQ6aejz/4l7KhntcWu4m1uSx2s+ThmFPis67lQJdiRUhZruAJSQvNnUSkvKJJ4a46pKSlUZbe94zCAxQnR0inidDc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hJsEhVNj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CO9mh0dY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34187C4CEE4;
-	Thu, 22 May 2025 09:25:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hJsEhVNj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0871C4CEE4;
+	Thu, 22 May 2025 09:27:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747905942;
-	bh=p53SfCe7muDgtvQFHMIVqvkowaeuQ3Tx7It7jszYKD4=;
-	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=CO9mh0dYYJ6S4syWXHaQCopevlhaqGAYO5iqcLaWHMlY00lVp9y+W4/oG4MnnBP4/
-	 tr+s3pHewoNQEBg1NNcnx3voyBJHMTfpOzB+48AgrF4gMYvM/+/dkDnqj9oUDN6D4+
-	 Cd1x7EZ8bzOpZvmQVk0+QhRzIyf2h+4mYCnu/ILvzt4ucD1XT6EMrpItDesYc8MZrK
-	 3xeM2zdbF2zBeiW6drS2KAe8uMiwbLrK55SzE6/qzNQeC23AFvjE3Vd1i1wV0BdXHA
-	 yiO+mEI+J3ejMfzo58Vj+tJb1V7ynQZO1dCjTIzeK1T7CB6Hp/OQcJAxodLqFZjjkn
-	 P35doFcmKnAvw==
-Date: Thu, 22 May 2025 04:25:40 -0500
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	s=k20201202; t=1747906056;
+	bh=sAftpgTXoshRrtSj+br63QRHVO9ufA/GYUeV/EcMd8w=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=hJsEhVNjsNef0ES3kvNB09lKggIkq3qKblVH+eA7i88ZxKscu1xg9YIexPxRq643g
+	 NJ/DH8p/x73VDufrJ1yoiCZ8NyQ3WMgeaKmQDHaQ7W8NIOYDOKZ790/7SjBHpDv7zS
+	 navPrxzWpMj6zd7uAvzy/IfJhSVbdpl0rtqcQ1HNn5ehUP266NGxsDhCOtqQ5zZOvD
+	 Jb+9WOpUy5qxeawG5dIHRpvrO4U5irInczIHUe+bCKCAOE3dxl4233HlSYwZ+hyaUu
+	 KVEP0L+3JPgg2s/JIOuoDpax45WuOoJi5tAjOLDXNvLGgmWhHopwX/gnbsN124ae+R
+	 mkmnz72FWHOtQ==
+From: Mark Brown <broonie@kernel.org>
+To: andi.shyti@kernel.org, tudor.ambarus@linaro.org, robh@kernel.org, 
+ krzk+dt@kernel.org, conor+dt@kernel.org, Faraz Ata <faraz.ata@samsung.com>
+Cc: linux-spi@vger.kernel.org, linux-samsung-soc@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ alim.akhtar@samsung.com, rosa.pila@samsung.com, dev.tailor@samsung.com
+In-Reply-To: <20250521084324.2759530-1-faraz.ata@samsung.com>
+References: <CGME20250521083341epcas5p243dac11e4c5f2221473b8df8c3d7f060@epcas5p2.samsung.com>
+ <20250521084324.2759530-1-faraz.ata@samsung.com>
+Subject: Re: [PATCH v1] dt-bindings: spi: samsung: add exynosautov920-spi
+ compatible
+Message-Id: <174790605339.30110.2721459135664956247.b4-ty@kernel.org>
+Date: Thu, 22 May 2025 10:27:33 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: linux-kernel@vger.kernel.org, krzk+dt@kernel.org, cl@rock-chips.com, 
- mkl@pengutronix.de, conor+dt@kernel.org, linux-can@vger.kernel.org, 
- mailhol.vincent@wanadoo.fr, kever.yang@rock-chips.com, 
- kernel@pengutronix.de, linux-rockchip@lists.infradead.org, heiko@sntech.de, 
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-To: Elaine Zhang <zhangqing@rock-chips.com>
-In-Reply-To: <20250522074616.3115348-2-zhangqing@rock-chips.com>
-References: <20250522074616.3115348-1-zhangqing@rock-chips.com>
- <20250522074616.3115348-2-zhangqing@rock-chips.com>
-Message-Id: <174790594029.1733292.2362448733539179713.robh@kernel.org>
-Subject: Re: [PATCH v4 1/3] dt-bindings: can: rockchip_canfd: add rk3576
- CAN-FD controller
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.15-dev-c25d1
 
-
-On Thu, 22 May 2025 15:46:14 +0800, Elaine Zhang wrote:
-> Add documentation for the rockchip rk3576 CAN-FD controller.
+On Wed, 21 May 2025 14:13:24 +0530, Faraz Ata wrote:
+> Add "samsung,exynosautov920-spi" dedicated compatible for
+> SPI found in ExynosAutov920 SoC.
 > 
-> Signed-off-by: Elaine Zhang <zhangqing@rock-chips.com>
-> ---
->  .../net/can/rockchip,rk3576-canfd.yaml        | 86 +++++++++++++++++++
->  1 file changed, 86 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/can/rockchip,rk3576-canfd.yaml
 > 
 
-My bot found errors running 'make dt_binding_check' on your patch:
+Applied to
 
-yamllint warnings/errors:
-./Documentation/devicetree/bindings/net/can/rockchip,rk3576-canfd.yaml:51:111: [warning] line too long (153 > 110 characters) (line-length)
-./Documentation/devicetree/bindings/net/can/rockchip,rk3576-canfd.yaml:55:111: [warning] line too long (159 > 110 characters) (line-length)
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
 
-dtschema/dtc warnings/errors:
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/net/can/rockchip,rk3576-canfd.yaml: properties:compatible:oneOf: [{'const': 'rockchip,rk3576-canfd'}] should not be valid under {'items': {'propertyNames': {'const': 'const'}, 'required': ['const']}}
-	hint: Use 'enum' rather than 'oneOf' + 'const' entries
-	from schema $id: http://devicetree.org/meta-schemas/keywords.yaml#
-Error: Documentation/devicetree/bindings/net/can/rockchip,rk3576-canfd.example.dts:36.44-45 syntax error
-FATAL ERROR: Unable to parse input tree
-make[2]: *** [scripts/Makefile.dtbs:131: Documentation/devicetree/bindings/net/can/rockchip,rk3576-canfd.example.dtb] Error 1
-make[2]: *** Waiting for unfinished jobs....
-make[1]: *** [/builds/robherring/dt-review-ci/linux/Makefile:1524: dt_binding_check] Error 2
-make: *** [Makefile:248: __sub-make] Error 2
+Thanks!
 
-doc reference errors (make refcheckdocs):
+[1/1] dt-bindings: spi: samsung: add exynosautov920-spi compatible
+      commit: 477d16c0919e82a7f5f673a6e3ae39a17c773037
 
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250522074616.3115348-2-zhangqing@rock-chips.com
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
 
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
-pip3 install dtschema --upgrade
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
+Thanks,
+Mark
 
