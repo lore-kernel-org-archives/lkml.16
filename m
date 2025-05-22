@@ -1,104 +1,89 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E5222C1785;
-	Thu, 22 May 2025 23:08:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B4D52BE7AE;
+	Thu, 22 May 2025 23:09:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747955329; cv=none; b=YYuF8AJSNVHcyB/2CR9tNvZDadUpSHpGuuc8pN8neuainFVDj4ba8aXp0J+fJ66rdZ0Pe9KGWC6EABdKBgExqihWUekogtboeF3ZNOGH3gMMeRerh0cG/A28GI1zVqRSG8YvPEzw52aP2LaNfBJe4AigpFCuu0XdUgiNWjn/WkM=
+	t=1747955384; cv=none; b=KKsrNVU+NvH4XRTFz+1TodIjg+RuuKLuYmlrNT4NlssbNHlf2JZeti3Go9su0VJrZ7hiWbsbWaeYJIFqHRwT1eoZML8a9IcRaW9AGsm1B7JdkrfvEWcKEclLbo+J1wfQ5yGQyJiruII+ejEgX0CcDAz8MkoEzLLcd0hZVyIbpQE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747955329; c=relaxed/simple;
-	bh=QEfzR85v3/zt/zSaAzV3QJxBJhSb+tSKSnYDT1H9gRU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ftIZHjudpWMRxZOnMVy+TqZu/6RvzSsks9nBBzp+m1OsHtML4FwKZaCPuQ+iGrz6d+WOCFsaA+igtQmoDhTunzUkjW9/rWBe/iTkE0kLgN9hfhj5brkJLhd+43KVyKQL5dwLw+/cwAb59W0Vncks7FQwQXMoyaQZBR04iLjVhiI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mmHiDINk; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747955384; c=relaxed/simple;
+	bh=EOZN61vPcPoZmjiOrDRCNtzl/DMqpv2ZH9hIlf0Lvd4=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=CAn1UJpaP0Qz8BwTEGj0I2BnvG/mqEZG/6aieyg2+djyR24n5sHAW/PifKI64ioVmnCTDDPhKV6qEx9NYCSSHRpFf9azZQ5dWxlqg49XE0YURPGOpD7bwxBhYOqBzSwFWPzuyThzdIHDSza7CHkv2iCy6O5Z6ZvcXuErn0GAWoo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rx+OgsWO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mmHiDINk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C3F9C4CEE4;
-	Thu, 22 May 2025 23:08:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rx+OgsWO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6EC5CC4CEE4;
+	Thu, 22 May 2025 23:09:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747955329;
-	bh=QEfzR85v3/zt/zSaAzV3QJxBJhSb+tSKSnYDT1H9gRU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=mmHiDINk5eItvcBw97SzWVJ8AsXlYnNR5JAnDXvufgHF4fyJRSk7jz7TvBR6UULWk
-	 /dEEt0XggvxEPutVz7brT58vUiiS1pZSienyjNXd0mpspgZ80rwl+N8Sn2LqGh7wTp
-	 FuO9pRw5ZpMRbzBP/sJGcVRJbheY4zWTzhI3t7rG1C6l9UdyS1OdZPCYrviVqNwuWe
-	 1kxdLD2tbzUqUOCgLnOWQ66gYNyWgxIxaDX87rvW7+CNksz1PG4cGkZ7VGsvALx8x4
-	 JQ3dQ5OLDnVDmm+Etxp6tAX94j6p0d+YE5cSfRWSTlocJSxk1o1YnHLNMjD6/qe8qz
-	 aRjzdVvDTKSEw==
-Date: Thu, 22 May 2025 16:08:48 -0700
-From: Saeed Mahameed <saeed@kernel.org>
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: Tariq Toukan <tariqt@nvidia.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Paolo Abeni <pabeni@redhat.com>, Eric Dumazet <edumazet@google.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	Saeed Mahameed <saeedm@nvidia.com>,
-	Leon Romanovsky <leon@kernel.org>,
-	Richard Cochran <richardcochran@gmail.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Jesper Dangaard Brouer <hawk@kernel.org>,
-	John Fastabend <john.fastabend@gmail.com>, netdev@vger.kernel.org,
-	linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
-	bpf@vger.kernel.org, Moshe Shemesh <moshe@nvidia.com>,
-	Mark Bloch <mbloch@nvidia.com>, Gal Pressman <gal@nvidia.com>,
-	Cosmin Ratiu <cratiu@nvidia.com>,
-	Dragos Tatulea <dtatulea@nvidia.com>
-Subject: Re: [PATCH net-next V2 06/11] net/mlx5e: SHAMPO: Separate pool for
- headers
-Message-ID: <aC-ugDzGHB_WqKew@x130>
-References: <1747950086-1246773-1-git-send-email-tariqt@nvidia.com>
- <1747950086-1246773-7-git-send-email-tariqt@nvidia.com>
- <20250522153013.62ac43be@kernel.org>
+	s=k20201202; t=1747955384;
+	bh=EOZN61vPcPoZmjiOrDRCNtzl/DMqpv2ZH9hIlf0Lvd4=;
+	h=From:Subject:Date:To:Cc:From;
+	b=rx+OgsWOi8tvcBUQqH2n4xLAL3TOwSzFuCVCNw/subjrBHhZx3btY83b4oL9PPama
+	 hnYhfGUTTAC8GdZ5UL+VkKr0TOcolcvnE8ijYaKllUuEBnghby+R07xg1huKEdAsew
+	 0uCFoKQR7Y2+FNpP4PD9+oNluVhsPX/h8RD2kiiZN7PQXZv0KQnSBJDNVdWC/bZrhx
+	 +xmWdwZJGEfjwr2qwAhFrtIRnXt53llbWkkhz2Jgvbreq0LGf6OqfnXtg1iJn1G/37
+	 WO2myPJ1jhEr0LzRAGRpXwLuEltFPPOyJqVOjlL0qKOXDlO9uSWo70YpRFkam3TxMo
+	 2Imzh/houWQ0w==
+From: Konrad Dybcio <konradybcio@kernel.org>
+Subject: [PATCH 0/3] Grab IPA IMEM slice through DT
+Date: Fri, 23 May 2025 01:08:31 +0200
+Message-Id: <20250523-topic-ipa_imem-v1-0-b5d536291c7f@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20250522153013.62ac43be@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAG+uL2gC/x3MQQqAIBRF0a3EHyeYYURbiQjRZ/2BJRoRSHtPG
+ p7BvYUyEiPT1BRKuDnzeVR0bUN2N8cGwa6alFRaatWL64xsBUezckAQDn4YrDXjCE01igmen38
+ 4L+/7Af3Il89gAAAA
+X-Change-ID: 20250523-topic-ipa_imem-def66cca88e5
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
+ Andrew Lunn <andrew+netdev@lunn.ch>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Alex Elder <elder@kernel.org>
+Cc: Marijn Suijten <marijn.suijten@somainline.org>, 
+ linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
+ Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1747955379; l=1070;
+ i=konrad.dybcio@oss.qualcomm.com; s=20230215; h=from:subject:message-id;
+ bh=EOZN61vPcPoZmjiOrDRCNtzl/DMqpv2ZH9hIlf0Lvd4=;
+ b=Mtf+Kz8MxA/zVqIaYonOARh9viF2dKwgikqBSquPF/O+6W6vKZ4YFJT1/oRxZ3/IrwGB4EAYT
+ S1LE0vA2+xpB4kE6OJpndTOkpRzOwUrvf4RUk0RqBwdMs8ho9RGlR5Q
+X-Developer-Key: i=konrad.dybcio@oss.qualcomm.com; a=ed25519;
+ pk=iclgkYvtl2w05SSXO5EjjSYlhFKsJ+5OSZBjOkQuEms=
 
-On 22 May 15:30, Jakub Kicinski wrote:
->On Fri, 23 May 2025 00:41:21 +0300 Tariq Toukan wrote:
->> Allocate a separate page pool for headers when SHAMPO is enabled.
->> This will be useful for adding support to zc page pool, which has to be
->> different from the headers page pool.
->
->Could you explain why always allocate a separate pool?
+This adds the necessary driver change to migrate over from
+hardcoded-per-IPA-version-but-varying-per-implementation numbers, while
+unfortunately keeping them in there for backwards compatibility.
 
-Better flow management, 0 conditional code on data path to alloc/return
-header buffers, since in mlx5 we already have separate paths to handle
-header, we don't have/need bnxt_separate_head_pool() and
-rxr->need_head_pool spread across the code.. 
+The DT changes will be submitted in a separate series, this one is OK
+to merge independently.
 
-Since we alloc and return pages in bulks, it makes more sense to manage
-headers and data in separate pools if we are going to do it anyway for 
-"undreadable_pools", and when there's no performance impact.
+Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+---
+Konrad Dybcio (3):
+      dt-bindings: sram: qcom,imem: Allow modem-tables
+      dt-bindings: net: qcom,ipa: Add sram property for describing IMEM slice
+      net: ipa: Grab IMEM slice base/size from DTS
 
->For bnxt we do it only if ZC is enabled (or system pages are large),
->see bnxt_separate_head_pool() and page_pool_is_unreadable().
->
->Not sure if page_pool_is_unreadable() existed when this code
->was written.
->
->> -	wq_size = BIT(MLX5_GET(wq, wqc, log_wq_sz));
->> -	*pool_size += (rq->mpwqe.shampo->hd_per_wqe * wq_size) /
->> -		     MLX5E_SHAMPO_WQ_HEADER_PER_PAGE;
->> +
->> +	/* separate page pool for shampo headers */
->> +	{
->> +		int wq_size = BIT(MLX5_GET(wq, wqc, log_wq_sz));
->> +		struct page_pool_params pp_params = { };
->> +		u32 pool_size;
->
->A free standing code block? I this it's universally understood
->to be very poor coding style..
->
+ Documentation/devicetree/bindings/net/qcom,ipa.yaml   |  7 +++++++
+ Documentation/devicetree/bindings/sram/qcom,imem.yaml |  3 +++
+ drivers/net/ipa/ipa_data.h                            |  3 +++
+ drivers/net/ipa/ipa_mem.c                             | 18 ++++++++++++++++++
+ 4 files changed, 31 insertions(+)
+---
+base-commit: 460178e842c7a1e48a06df684c66eb5fd630bcf7
+change-id: 20250523-topic-ipa_imem-def66cca88e5
 
-Sure if used excessively and incorrectly. Here it's only used for temporary
-variable scoping. I don't think there is anything wrong with free-standing
-blocks when used in the proper situations.
+Best regards,
+-- 
+Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 
