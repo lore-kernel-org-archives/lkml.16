@@ -1,108 +1,156 @@
-Received: from mail-vs1-f53.google.com (mail-vs1-f53.google.com [209.85.217.53])
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A56B91A3A80;
-	Thu, 22 May 2025 07:21:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B97AA1A3A80
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 07:22:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747898494; cv=none; b=tJqL4bJVfRvsYPmYwbCsca5QHK0WtwtzZbEk6Vmu34GC/Dms8ebK7kn3TqtAjPkLfY4/uHxTlhofLwm3jOL/JTbxYoQeH+O+a4DERXTNPj66NdDSYxAl+PaxCyNjoGF5RHGijPYJ5KolNvTqPa8XRFpoKx/NK4m8vQpUPc+ELCI=
+	t=1747898531; cv=none; b=JqAW9qkYdSKrhXxWv9F/xeBIYNtPo03uiYyp15n7lSLAZvH6plBt/npGBSf8nKyNcGBycxDJ2TGcHmijBReMV5Tbjtwnzz+Jo0fU+N89a+2R+9VIWYXWpUpFxm3uCJquqhrZXnbU9gMLEQkwNhUE2u9rpHDHu0EGQ9gW2apmMtY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747898494; c=relaxed/simple;
-	bh=PimKZV/vvpya6qk4QcsOlAInmmFkcQUXGB3xQOYFJ9A=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=EQQtAdR2RAJ6bEIBEw62gdfPtiI55V8pBxBeN7ouYe+K3VQ4IBnsh74sqMCZgj4QwnyumjDNp4dVcNWYO+VijYVPApQjQdWV52GGYbjn0thiwThCRypAvEirrDYfB8wo+M1GoQUN64Tir0sbIDhMvY5OcLzbYB642jZ8eiiTRXU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.217.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vs1-f53.google.com with SMTP id ada2fe7eead31-4e1382f2b24so4333716137.1;
-        Thu, 22 May 2025 00:21:31 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747898489; x=1748503289;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+	s=arc-20240116; t=1747898531; c=relaxed/simple;
+	bh=5nOa+dAbTc5Ycm10lURR5yv4ZOoJaW7taXYg/Gy14n0=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=lroJECh7fOibzdMsw0Zq0zjLQIY1RRCaqdkCRQ6Oa059bdgiuyNm2G9rFKE1hSHKZRGCJNkShUjG7LFly6Wl4XG/KTN2/79TlkquZntqKSz4iwfuN1vjmo7++YjL6+to0usU3bg1RD4HI1u+R/r5M86x50W7b9a7DhhxbrUKR0s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=C9d//wAP; arc=none smtp.client-ip=209.85.221.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="C9d//wAP"
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-3a36efcadb8so3550745f8f.0
+        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 00:22:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1747898528; x=1748503328; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=3Pm7W9V2mmyzuHBQiDodlGveixXiKksfY8Pj8Y9T4Ts=;
-        b=OI9Gd3MvmSjf5JtkWqTyMnbEGYY+DdbaIB64nSKULLLk5SOoS4QcIn0XgsCtFV+zdZ
-         yTg0qJWs67B212dEfsMKVySPBYPMxLX38u9QD5mC5h9wRM7aqfjhG4LtXQWndHGzGa+g
-         wVczdMV1v+4bc+IunFrIeQiruzos/Do+deGbkM8PxMER5FnIOSpKQJ4M7EVasaGUip/+
-         wxkgb354WevV50Rvz8rpFpW0RhNXN0Knx4/BzRM8zxMNaX5yZ/gP3KqaUHMaq15IyJWx
-         kkSlY/OnvRULoAD1A+WhkSTpbaBFP8caLTF/eicrjWHcIE2sgt6j+D6666zYR7ZukqLQ
-         xQuw==
-X-Forwarded-Encrypted: i=1; AJvYcCUieKsWWZ4L3np1e1S/khVjBaKEMgSFJWYaOuYEZ3ywvf1YK+ErobiaW3dYmg93K24+uPPL+aBDdEpjKg==@vger.kernel.org, AJvYcCVtjxUeCe5v/zKw9RjdvLmClTJ2RHuvK1emrJKIliartVsTZ6Pxo1XSf5a1XsqH5JlN+BJhxa4LY0rvmake@vger.kernel.org, AJvYcCWDvZAI91E+c5dZukNWrt4N/R3XmsDcaZUc+YsfVYCc7yiYL3r7KuLnMIk3RZiQ9VP5bp6FxYjHXdJeQA==@vger.kernel.org, AJvYcCWE7hLDEBN59ohyiRbZV95NL9pL8qtoZz6ZOd6jf8ogVtyILQXUBIVWAc1/zYnXlesf31v3VWk7/PJ85w==@vger.kernel.org, AJvYcCWbHq7SJf8oC2SqzDy70LTzNSRz9Y/PX2ghhd3LdOrv5ifZ9QdBP5wqAfYrZzTz1rgRRa2LcCfM3IOdNcht@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy+cLJL5t02nqiI2cmKRUUCTjzg8jmcDyINapwliBFu7lk00ieD
-	vgw0pHYLk2iG9I6RUyAqIJ3UEe7deWfCDVo9V2gz7+evWxrMWv2jjqySs7YasLUo
-X-Gm-Gg: ASbGncscwhKINlYHr2EVljtXTauxWSFFHJsAMYBMH6fAyiuydAWelQeF5R73tzzcDOE
-	STHDPTqRKuYarH9yzbTpZje0yKlnk4xldF9J7Z/GrO79F90++V4POcj6AtRT5FMvdduX3XMyZ6E
-	YBB4yWWGz66tKKZaYU3Ct+49Nico7dZQnTSgGpJfa70KFFVW2aFsdaNvBd3pviAMmDAtrp/RYdg
-	oFbltgSz2W364oeebPrpRltbWv55/gmerbpYzVXVfuh3SZlWU730ZRU8YxYhuardMrok6nAsPFS
-	URzyR5cPdIIEcJFm9oRSzK05A69H7cSr5pTOCWTpx7ICzQz/9DtVrDdr3G6p2Xp/yjNNx87oxnJ
-	HBovBW4RYzd0OcA==
-X-Google-Smtp-Source: AGHT+IGe9hmMMlui2/8ywXvpwEV0kAauzMYRasYjY7VGENvtBGXDOj9IiPeWqWSQqJjzZ2gaDWjQzQ==
-X-Received: by 2002:a05:6102:15a2:b0:4df:9e8b:8cad with SMTP id ada2fe7eead31-4dfa6c1dc1emr23187816137.22.1747898489103;
-        Thu, 22 May 2025 00:21:29 -0700 (PDT)
-Received: from mail-vs1-f43.google.com (mail-vs1-f43.google.com. [209.85.217.43])
-        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4dfa66bf405sm10947499137.9.2025.05.22.00.21.26
+        bh=yKU1imWgjnCI3avar2mUIPQzX7TLviFQtJlqfZ793SY=;
+        b=C9d//wAPcS7hINGN5bZbagwq7RfUoOIYY1smlmP4VFgYQz77dcCcmVm+OS78OEpXwc
+         liUfchLX04R1NRX8eFF8DoWvp+QZZjoPNa3ueV7KfERkCw/8VvaDMOb4mRIQAqre+sq6
+         MycUwMbaOqtClfVijjQ4zcW6paqPMaLc017OpB6AvtgUwCGPR7lCEIiFM+pc8FZIEH5G
+         sgnM47LIgZ8JPcw0K6n6+PqmlYwJLRUkDgayRt4HF2VP5C4qBhtcimxF446cNc4aK3OR
+         QqfL24DNIR8Jz/FlKVK62t+D9wiGLIEEbjK3SJSKhIzS/3TettKUP+eC3gaRT2rFuwXV
+         sBgw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747898528; x=1748503328;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=yKU1imWgjnCI3avar2mUIPQzX7TLviFQtJlqfZ793SY=;
+        b=HpRMKDCAZ2F6hjRbjSg1GJo6ei0rxuPajmIYD4o8I9oWZDCtia3C/jFMjwgg+txBcB
+         OLhix3WPtqrggcbCDuwnZrCRECuN6RX/QN3bcHrzXGpcHXvoqrfeMjYESNrMiPFQMfWM
+         9RBZ4a7EHulATsdoWQPLRF8aez/W3G572DcKqIb+XHXh66HUVT3H+gtXVjBZcRUrfczf
+         3VXVc/Dz2EftPEBSe3MFZQVXbwhQZorc6gA9DfqgiKCJZ9IkSQarRIV3YQZQWIUheGzE
+         8piICkc9/KPTcLvgCMeOwJgWrj/kKm7YUHBZrXziTpVjBRJVbmYFSkQ0eMlPSxw2Y6Xq
+         9QRA==
+X-Forwarded-Encrypted: i=1; AJvYcCVY1qbGlom3InfwH3bU9lky9pHJgYbuCikDOuXaLWdE2bCTYHGJasWHezrtuOZ/VeNQP/menLxjPYoJ2Tc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxQLjPl26L2RyrhowSEI8tPqbA+HaSW2mLpfDf/9AJtzhXx1/Za
+	DukgK2dhzOMqieKd55/U/AD9GNUNFXC3fLCzRvTri304aNAj73t9J3/wh0GV2K8+PWk=
+X-Gm-Gg: ASbGncvqhn81we9NNP/r024BQlSV98cFfOCHseN/NswlBf5bS9EEXqfebmrjFeAzaD6
+	6FKHRn3wOsiK5iqGTacxhN0ijTTuMWrW9/QclTvKGRLzyd1bOdnxY7ayvn8+fP4XBPCljW3k9Bd
+	vNQ7qNXdAA68XXlXmAwJCvhjh3RCBVEvZG3QQ+TRftfiyzDW9aZxWvEoj10qJP7Yszh8yc/8T5q
+	oRBc0fKXxyfUcgVkN933zj77/ucvprOPanXZyDdXYGVlsNIyFCpokQ2c3schptYpG9uaMy/3ASs
+	K9boHK/xrIBn7JOkNfF4y614hSVqtzsasxZsm077d0gi4BJ318OgvGf9MtOVpffRGfUbvshzq0W
+	5utOVUjPd8218NGI94OzhZwF+/CCR
+X-Google-Smtp-Source: AGHT+IE3G6efsN69U61nJWH6Wm1uz9RoCxH2Y5mDFgiyh9RV68lG2Ng8GLSEqrPwcUEbVLsLRT5P9w==
+X-Received: by 2002:adf:e385:0:b0:3a3:6282:693a with SMTP id ffacd0b85a97d-3a362826998mr17022969f8f.44.1747898528052;
+        Thu, 22 May 2025 00:22:08 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:3d9:2080:ca6a:4d93:cd32:83a5? ([2a01:e0a:3d9:2080:ca6a:4d93:cd32:83a5])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a35ca6210asm21904363f8f.41.2025.05.22.00.22.07
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 22 May 2025 00:21:26 -0700 (PDT)
-Received: by mail-vs1-f43.google.com with SMTP id ada2fe7eead31-4e150f1ba9aso3933424137.2;
-        Thu, 22 May 2025 00:21:26 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUJrYVQ/yyjR7RpXuEHQzBmXHI6g5DMr63zzidJQjaHseMbUm90rJeP/dwbrGlVK3bt/GCLveDwprUldQ==@vger.kernel.org, AJvYcCV0N0dRZSr2pWmxyh2tf7rGUCnCtS25ZfBRWu4QIId1h754Pnm9/ky2ZEgqcK0EQLO0F+Jq9wvKGEITwl57@vger.kernel.org, AJvYcCV1FHon2dnh/AwJY2IvZH5dZd9SObIGAoK7JdNaTEvlIEfGVgnXdpfCqphcegUoJrgfyAv7Xizop0wtew==@vger.kernel.org, AJvYcCVOi/wruGQLx+xQQbMhX9UYEM8InCnhvLxrkpdJUIyTf6Zh9dOXpSom5ijWCB0emfrBkiFw902FE8TkK8y0@vger.kernel.org, AJvYcCXBfgBP9NKQ6jy9ymsoizwrxm68/pjkSr7urVLyl6Ujgaypz20axdRecYPHVIRYiKiZOldoDGBS+Xy3GA==@vger.kernel.org
-X-Received: by 2002:a05:6102:14a1:b0:4df:a58d:9db2 with SMTP id
- ada2fe7eead31-4dfa6b586f8mr25153206137.9.1747898486254; Thu, 22 May 2025
- 00:21:26 -0700 (PDT)
+        Thu, 22 May 2025 00:22:07 -0700 (PDT)
+Message-ID: <09533aad-fbec-477d-a088-5ecbe181368b@linaro.org>
+Date: Thu, 22 May 2025 09:22:06 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250521174152.1339379-1-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20250521174152.1339379-1-andriy.shevchenko@linux.intel.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Thu, 22 May 2025 09:21:14 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdUgb92D5Vp0NpfboAW6YJnmkFTtWj0wCL7QDM55xkzGEA@mail.gmail.com>
-X-Gm-Features: AX0GCFsqKFm6qJMA3hsMqbJWzZuzklg0ynX2aADj_Q8qeZ9nB2XXIFQN5G6rIkM
-Message-ID: <CAMuHMdUgb92D5Vp0NpfboAW6YJnmkFTtWj0wCL7QDM55xkzGEA@mail.gmail.com>
-Subject: Re: [PATCH v1 1/1] floppy: Remove unused CROSS_64K() macro from arch/ code
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Andreas Larsson <andreas@gaisler.com>, linux-alpha@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org, 
-	linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
-	sparclinux@vger.kernel.org, Richard Henderson <richard.henderson@linaro.org>, 
-	Matt Turner <mattst88@gmail.com>, Ian Molton <spyro@f2s.com>, Russell King <linux@armlinux.org.uk>, 
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>, 
-	Madhavan Srinivasan <maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, 
-	Nicholas Piggin <npiggin@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, 
-	Naveen N Rao <naveen@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, Denis Efremov <efremov@linux.com>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+From: Neil Armstrong <neil.armstrong@linaro.org>
+Reply-To: Neil Armstrong <neil.armstrong@linaro.org>
+Subject: Re: [PATCH v2 2/2] phy: exyons5-usbdrd: support HS phy for
+ ExynosAutov920
+To: Krzysztof Kozlowski <krzk@kernel.org>,
+ Pritam Manohar Sutar <pritam.sutar@samsung.com>, vkoul@kernel.org,
+ kishon@kernel.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+ alim.akhtar@samsung.com, andre.draszik@linaro.org, peter.griffin@linaro.org,
+ kauschluss@disroot.org, m.szyprowski@samsung.com, s.nawrocki@samsung.com
+Cc: linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-samsung-soc@vger.kernel.org, rosa.pila@samsung.com,
+ dev.tailor@samsung.com, faraz.ata@samsung.com, muhammed.ali@samsung.com,
+ selvarasu.g@samsung.com
+References: <20250516102650.2144487-1-pritam.sutar@samsung.com>
+ <CGME20250516101803epcas5p2d9403d89d840dcad88a03d437a48aceb@epcas5p2.samsung.com>
+ <20250516102650.2144487-3-pritam.sutar@samsung.com>
+ <a5c1a064-d760-4140-9e78-d74823b400a8@linaro.org>
+ <000101dbca1d$78ca5570$6a5f0050$@samsung.com>
+ <42ddb5c6-0f17-41ed-8bd4-ab58880515b1@linaro.org>
+ <bd9ab640-2469-4455-bd69-302dd3898c7b@kernel.org>
+Content-Language: en-US, fr
+Autocrypt: addr=neil.armstrong@linaro.org; keydata=
+ xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
+ OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
+ Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
+ YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
+ GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
+ UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
+ GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
+ yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
+ QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
+ SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
+ 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
+ Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
+ oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
+ M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
+ 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
+ KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
+ 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
+ QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
+Organization: Linaro
+In-Reply-To: <bd9ab640-2469-4455-bd69-302dd3898c7b@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Andy,
+On 21/05/2025 14:58, Krzysztof Kozlowski wrote:
+> On 21/05/2025 14:56, 'Neil Armstrong' wrote:
+>>>> <snip>
+>>>>
+>>>>> +	}, {
+>>>>> +		.compatible = "samsung,exynosautov920-usb31drd-phy",
+>>>>> +		.data = &exynosautov920_usb31drd_phy
+>>>>
+>>>> All those new ops are only called when matching this compatible, it it really
+>>>> necessary to check the version ? is there "samsung,exynosautov920-usb31drd-
+>>>> phy" PHYs with version different from 3 in the wild ?
+>>>>
+>>>
+>>> This SoC has a single USB 3.1 DRD combo phy of version v400 (major : minor versions) and three USB2.0
+>>> DRD phy v303 (major : minor versions) controllers those only support the UTMI+ interface. Currently,
+>>> supporting only v303 phys in this patch-set, and planning v400 phy later (soon).
+>>>
+>>> Yes, there's v400 phy version that is different from v303 phy. Hence, phy version check is needed to support both the phys for same compatible.
+>>
+>> OK so add 2 compatibles, one for the usb31drd and one for the usb2drd since those are 2 difference hardware.
+> 
+> ...unless this is fully detectable hardware, then use fallbacks and only
+> one compatible in the driver.
 
-Thanks for your patch!
+But use proper compatible like "samsung,exynosautov92-usb-phy", but still those are
+2 very different PHYs connected to different HW blocks, I won't mix USB3.1 and USB2 PHY
+compatibles.
 
-On Wed, 21 May 2025 at 19:42, Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
-> Since the commit 3d86739c6343 ("floppy: always use the track buffer")
-> the CROSS_64K() is not used by the driver, remove the leftovers.
+Neil
 
-"CROSS_64KB" (also in the subject; "git grep" found no users at all ;-)
+> 
+> Best regards,
+> Krzysztof
 
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-
-Acked-by: Geert Uytterhoeven <geert@linux-m68k.org> # m68k
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
