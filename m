@@ -1,127 +1,106 @@
-Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8277028C5CA
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 14:47:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB20528C025;
+	Thu, 22 May 2025 14:48:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747925277; cv=none; b=JCS+6l7wDz+Uv3OSQHweAEKzQbGKvokdSFnk8mOAEFDzTcaURVddhX8H+xTHn0+lC7557BYZjqsr8UBPkR3mSyqc98+SXZLHr8vBcdg8weC34NjEMKWuzH1MFWKqQeAcghDUA8xBmNCXwLNR6OUEYY3iq1Alq7CVkI5zkf64zrA=
+	t=1747925306; cv=none; b=I+2idnITqNkLxBf5GHECWkWxVNBs3ma/WbmpUAatdtpRgBTGKWecb8oKfm9JANlUCQ2PuaUnBP5hO3wRwEIwrZlIfgFbCikDil8vomFHLkC0wl6CQOQ/ju2/aRrbD7Mg9aMuUfpoYVxf9Me0t6yZf4A/QQnKUlDm8lzxvTO4LpA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747925277; c=relaxed/simple;
-	bh=CSsSHfl39dvzw3cAIhZcsGAqNS/b3pZ0v69mn2DAeOo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VPQ07XwhX6a/tJZ52r3rnUmzOb/NBpZaKRoETQS2g+qixNw+P6701fc3zehJrOwKrcDjKjXn6aRWJPgvrvzWHC1FOMBOg8ACJdoanJj1M4AKq9nMCjepn2fpIh/YjX6jUXfogs5/+Vj7gyFtJVbZy3wuZvqWE3YI1QcvGkr42f0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=wBCU4rzY; arc=none smtp.client-ip=209.85.215.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1747925306; c=relaxed/simple;
+	bh=q562ioAQjNzU7zWjd6PzrCCNFWSDVCXaC01c3hhCs00=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=IHAAcltKxJ1aHtpA4zsBmsXF00TmdmyiMgtEGl3Mj736H9J7w4KFKNWsqeS4CUik2PWmTPATP2HluLKQZe//S4n2n3Elw633Wro9Y8uk/dLVwjS5MKO7gYZVsITfQhrXEZd/iK4Yoqdcgu0zo6g6nOaarFKbz3xOLuGSEXK15ZM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d3vviLUA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wBCU4rzY"
-Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-b26f7d2c1f1so6008412a12.0
-        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 07:47:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1747925275; x=1748530075; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=0Z1fJZAnO5gbEdE9pm7QO/Ig7e59PsYGFh5eZL9ezsU=;
-        b=wBCU4rzY8FAyQcxLPAi+lZkNEPsfzQAEdI6CXToqa5fMegOxAI70MMHULs4H9p1YGR
-         746qSOuJejwR1suwG3gph9THZ2KWGr14xnzt9zFEk6cOTEuyChnFY1TqeKRYerfqEzcH
-         2TdlcB3rLGkPgeWmMyeDofdw0CUvA9lYsSoXmvZ7flFaTBTtQ73VAJN+gbfiJZB5MbW0
-         vGcc2m1rYrmM8gLcyoXm4eNf2l7Ftu3uuScKOx6cC+GEpW5GWsfQxByH3tyFKa2rEEK0
-         8AVxKcFOIO4zU5qoT7QtA3TqHjwjDp28tBmEtmezm+FcD0chVKVxHsC4U5hXSwGI8UYx
-         6Spw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747925275; x=1748530075;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0Z1fJZAnO5gbEdE9pm7QO/Ig7e59PsYGFh5eZL9ezsU=;
-        b=Wvt58eyEov4MreL71eRN9jbJekMkT4b693s9k8e66e8cKHWQAOGYkdtpW+F/4svdCU
-         WIuYuJgjH7GfhksbxunENR6zsJVBuZGJK9B0tDVmHPk5sMEWkYeWjnp8nHuJqsQ560NQ
-         LjSgOCk/2oZIUtac5CRdkW2AXJYh3slAbrMlCxnpXzfyjYfZZ93VN4fSEcQ9h79tDNvo
-         O8gBY6OKW9v8iVxUSUCw/HkkyOHU6M56w0og1e2r76jpWFV5sHoS5fovv5KeKStOhX0m
-         rNByrHkBNx6FjZJi+REWlWeUZqnuTSxCtF0sVG0P04Ay/ISmwGVqBe/002ZYRMFEGGiq
-         6AKA==
-X-Forwarded-Encrypted: i=1; AJvYcCWNicdb+9Aw7ySB9g38lkAHbx/fVcbdJUvka5r4u5g+YBhk6azRNWaUPLFKTyQEw6KVyGxcAsmdbWF7+I0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxsnW/59N+EvbsGiI994gGZdZOxUb7Hahhvvc4ezjLc5YwIi0Rp
-	JqfaCvTx/ug7wrDS8psQengYvt7lLqVAy1rtMv5PBPUj362CWrLdqlA5m6Nmbvda3v4=
-X-Gm-Gg: ASbGncseDdVEXxGajk11E5VlnbnPzSlhRABIUnWQyCOd2VRVWXVc7TbMiqvwwcZs7GE
-	Mxdj+vkp3druasp9V00VEnuaRyKBTyN53Q/VfQQwcw8In5b9KdjMBT7oKNMLtNeD1KYwF2RrTJB
-	cLP0XkWx3DsABh0ttfioBKXU54FTpkjYzLjkX+aLdN4atlKNJ0QpM5SP1sO/UNzEvv7Dtw6YbAq
-	TvMO1qobvSWG8INpwLJ//p8Ao/AK2H+1s2KUQrGXkpao+E1w/Q9Cvv0c8bhKSf4qK/DtZAt3eKH
-	Q6jwKOErtMlc2pT6X0eLoX55Bqg/fX2JBgO3odkrEPl+cg3fprJll58=
-X-Google-Smtp-Source: AGHT+IG5YDZqJMGCNUR1bl3lh55nwJynldcZarNJfaMbRBZQnBUy0qDHzLUmT4VJ7H8G0EhPmNRC+w==
-X-Received: by 2002:a17:90b:33c2:b0:2ff:58b8:5c46 with SMTP id 98e67ed59e1d1-30e830f7b18mr38271134a91.8.1747925273816;
-        Thu, 22 May 2025 07:47:53 -0700 (PDT)
-Received: from p14s ([2604:3d09:148c:c800:adb8:3fc6:e0a3:9f52])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30f36365d9esm5641713a91.7.2025.05.22.07.47.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 May 2025 07:47:53 -0700 (PDT)
-Date: Thu, 22 May 2025 08:47:51 -0600
-From: Mathieu Poirier <mathieu.poirier@linaro.org>
-To: Wentao Liang <vulab@iscas.ac.cn>
-Cc: andersson@kernel.org, matthias.bgg@gmail.com,
-	angelogioacchino.delregno@collabora.com,
-	linux-remoteproc@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: Re: [PATCH] remoteproc: mediatek: Add SCP watchdog handler in IRQ
- processing
-Message-ID: <aC85F1Rua2dn_qTY@p14s>
-References: <20250521142404.1077-1-vulab@iscas.ac.cn>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d3vviLUA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CFC2BC4CEE4;
+	Thu, 22 May 2025 14:48:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747925306;
+	bh=q562ioAQjNzU7zWjd6PzrCCNFWSDVCXaC01c3hhCs00=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=d3vviLUAHJIuaNZc9yUbQOspBl1InXIQP0G2z+DGnonuhIbgqKWN60bpBvWTIrXqU
+	 /Tj3nhmo5mHbyasZ9aY+je1xy/0mN3kNFbS2rGE7FfGNmwmMzl2/kCa0TQuLyxWM0F
+	 QHZJTydvRSSH3nJkaDj1G7kOhNiBegKyno7L1GaWVJTAcVxzCko30XmZ6NoDaroO7P
+	 aCLnkl4ZwUNR3THLddzzh3IT0vKMc1qwpnhwcRzta6Howm6thLq38Hs1tCVQEzY6sF
+	 D9ehtQMdXOO0UY3+3T3ItDX89H/63qvCPzVr/MUPSVwf0sZigsejyJuuX2S0QhoryT
+	 oGOF4k8RJF4kw==
+Date: Thu, 22 May 2025 23:48:22 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Oleg Nesterov <oleg@redhat.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
+ Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ x86@kernel.org, Song Liu <songliubraving@fb.com>, Yonghong Song
+ <yhs@fb.com>, John Fastabend <john.fastabend@gmail.com>, Hao Luo
+ <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>, Alan Maguire
+ <alan.maguire@oracle.com>, David Laight <David.Laight@ACULAB.COM>, Thomas
+ =?UTF-8?B?V2Vpw59zY2h1aA==?= <thomas@t-8ch.de>, Ingo Molnar
+ <mingo@kernel.org>
+Subject: Re: [PATCHv2 perf/core 01/22] uprobes: Remove breakpoint in
+ unapply_uprobe under mmap_write_lock
+Message-Id: <20250522234822.0410cabbbbfb58ef327805a9@kernel.org>
+In-Reply-To: <20250520141925.GA14203@redhat.com>
+References: <20250515121121.2332905-1-jolsa@kernel.org>
+	<20250515121121.2332905-2-jolsa@kernel.org>
+	<20250520084845.6388479dd18658d2c2598953@kernel.org>
+	<20250520141925.GA14203@redhat.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250521142404.1077-1-vulab@iscas.ac.cn>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Good day,
+On Tue, 20 May 2025 16:19:26 +0200
+Oleg Nesterov <oleg@redhat.com> wrote:
 
-On Wed, May 21, 2025 at 10:24:03PM +0800, Wentao Liang wrote:
-> In mt8195_scp_c1_irq_handler(), only the IPC interrupt bit
-> (MT8192_SCP_IPC_INT_BIT) was checked., but does not handle
-> when this bit is not set. This could lead to unhandled watchdog
-> events. This could lead to unhandled watchdog events. A proper
-> implementation can be found in mt8183_scp_irq_handler().
->
-
-As pointed out by Markus, this changelog needs work.
-
-> Add a new branch to handle SCP watchdog events when the IPC
-> interrupt bit is not set.
+> On 05/20, Masami Hiramatsu wrote:
+> >
+> > On Thu, 15 May 2025 14:10:58 +0200
+> > Jiri Olsa <jolsa@kernel.org> wrote:
+> >
+> > > Currently unapply_uprobe takes mmap_read_lock, but it might call
+> > > remove_breakpoint which eventually changes user pages.
+> > >
+> > > Current code writes either breakpoint or original instruction, so
+> > > it can probably go away with that, but with the upcoming change that
+> > > writes multiple instructions on the probed address we need to ensure
+> > > that any update to mm's pages is exclusive.
+> > >
+> >
+> > So, this is a bugfix, right?
 > 
-> Fixes: 6a1c9aaf04eb ("remoteproc: mediatek: Add MT8195 SCP core 1 operations")
-> Cc: stable@vger.kernel.org # v6.7
-> Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
-> ---
->  drivers/remoteproc/mtk_scp.c | 2 ++
->  1 file changed, 2 insertions(+)
+> No, mmap_read_lock() is fine.
 > 
-> diff --git a/drivers/remoteproc/mtk_scp.c b/drivers/remoteproc/mtk_scp.c
-> index 0f4a7065d0bd..316e8c98a503 100644
-> --- a/drivers/remoteproc/mtk_scp.c
-> +++ b/drivers/remoteproc/mtk_scp.c
-> @@ -273,6 +273,8 @@ static void mt8195_scp_c1_irq_handler(struct mtk_scp *scp)
->  
->  	if (scp_to_host & MT8192_SCP_IPC_INT_BIT)
->  		scp_ipi_handler(scp);
-> +	else
-> +		scp_wdt_handler(scp, scp_to_host);
-
-I would much rather see a test for the watchdog bit than just assuming it is
-a watchdog interrupt.  And while at it, please refactor the bit definition to be
-platform agnostic rather than reusing 8192 definitions on an 8195 platform.
-
-Thanks,
-Mathieu
-
->  
->  	writel(scp_to_host, scp->cluster->reg_base + MT8195_SSHUB2APMCU_IPC_CLR);
->  }
-> -- 
-> 2.42.0.windows.2
+> To remind, this was already discussed with you, see
+> [PATCH 02/12] uprobes: grab write mmap lock in unapply_uprobe()
+> https://lore.kernel.org/all/20240625002144.3485799-3-andrii@kernel.org/
 > 
+> And you even reviewed this patch
+> [PATCH 1/2] uprobes: document the usage of mm->mmap_lock
+> https://lore.kernel.org/all/20240710140045.GA1084@redhat.com/
+> 
+> But, as the changelog explains, this patch is needed for the upcoming changes.
+
+Oops, OK. So current code is good with either mmap_read_lock() or mmap_write_lock().
+But the patch description is a bit confusing. If the point is an atomic (byte?)
+update or not, it should describe it.
+
+Thank you,
+
+> 
+> --------------------------------------------------------------------------
+> Just in case... I'll try to read this series tomorrow, but at first glance
+> this version addresses all my concerns.
+> 
+> Oleg.
+> 
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
