@@ -1,214 +1,167 @@
-Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 803B014C5AF;
-	Thu, 22 May 2025 19:46:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1BFA13BAF1
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 19:47:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747943207; cv=none; b=UMq+HAncRb5vZYSatvYO6/AJXPNGMxBzxl+Xdb91/LiwuqmuvIc1YMT61Ec+7K/+r+lgFHBCU2fJ3wz/GwvS8q1fpLzsvab/KPylLqRZuO7p8ReMzcPeRqlCXEXx9ijo8yophP6Nix/lAns4ygenTVypuq6qzqbSYfgiy5Z930o=
+	t=1747943262; cv=none; b=AMubgqeCotRDIhs8ZqQ2ih/dsep3wGSxlQNGN5eKRratHMtNfkFDNtCCpObz9qddgpIWLMXf9dBs4IN2INu+sofHzznqN7/ffohVP+IQGTKuHRlBObYhc2kIQsgRrKEOVDS2WCy6Ty3fQscHwmv+9ONZxwM7D1o1jElPErLAloA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747943207; c=relaxed/simple;
-	bh=5VIQ59seO6MMcA2e64dfxzNyomkj44DCQXxI//+MMs0=;
+	s=arc-20240116; t=1747943262; c=relaxed/simple;
+	bh=vtWv97QQmcdVkvJfd3Kq/jWab4iQxT2PxNipdne2hkg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QWKt4zLRZfBbRx6pRFFfaTYOq2PXcPzfQ+WEwEt/QYjlAA6+vSIrzdqaHOZc0Uaf8mivKOkNCTTbHcZL2nWoamWvphPf6a4eRHwOdD1Hywmv9GDAaXJkHuBf29oLgXhVK7G9MD0mxMaeuWR2kFowZQPsv5KWzdZSBMKQ4j3iQNg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=Cll4vntr; arc=none smtp.client-ip=213.97.179.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	 In-Reply-To:Content-Type; b=rGa6rxGWmVafej5+Y7+xkJ4E5z4a5UmTBq0UUKBzDgAl5xFiz7cnnRzShgxqTV7UaFNTTB9VPfAuiXN/RkZRhs6HAcD42PyO8ggTQ7fK+GPcNep81QEiAukOwlusQb+6/idnGvhZqLAZw/0nboIAf+GuFCCXN8qiC6zcp0BzrRI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=UoGLnYTG; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="Cll4vntr"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=qeZlnXYF3mBRhpPdC9Jj7FrmO4B5jYVsug5/mB2ATrk=; b=Cll4vntrWxDQHGd06wM/5/FPon
-	d/xHRk/fvEtuUYRc6hg8+jQOGB/wQa4NEPh8TtKTEEnD8JI8UKykDQkvNNqg9Ar01RtAFWBHlmHRd
-	o69Saiy5TK1TRu77be7AvDco+WSd5iszqybMsZU6wMcJil9CpM+F4RJvOrZh8vdAeSm1nPbuNrJG/
-	nMfJTosrIPc45cS5N2xeGCNE/JDUeq6Hyo0BiVtO2sPbcN3SwdOw+6qlhAVB9LN6q0ww43EK1DoBF
-	SJ4Ltp7uoeVb3MPzhJp/wcfm9jI0G8wMiHg5EEzMLu79hdRHvG/5fpl4Pj30Ej2FFCwr2xUD/CMfw
-	HP1hjY0A==;
-Received: from [223.233.76.245] (helo=[192.168.1.12])
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-	id 1uIBsF-00Bryb-K6; Thu, 22 May 2025 21:46:39 +0200
-Message-ID: <24840570-913e-1603-eb92-baefd4758784@igalia.com>
-Date: Fri, 23 May 2025 01:16:31 +0530
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="UoGLnYTG"
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54MF02Xf031715
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 19:47:40 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	Vlwo72v/3bz8ukRxIg/7653/lvkTs/m7haGuKIkzqFg=; b=UoGLnYTGaNmYvuq7
+	eE2J0gxG0S3YNIhjbSQccHzQgEIbpoeKQZv0g7XSMGnC0nMS7amSb47jOBQgK/6h
+	rNwxe9lOiWDO8OgOPaZMLG/60THhD6EcYn/MkAx7hOmVhB6EfUyrFHniFrZKgbqW
+	05qSlkHFrERLV3spqf5FKgxIlMB97ffP79mw5g+PQ40g4Uutt8xmMao0ImYvezSr
+	VOQFJmQfPcbDU6Jx/AGWzlt0Yy3ksNawJj4tKnoIiuvbwFxntIKAkc6cmYUCJIo+
+	+gfLLK7ZNl5uqfgHPeZnNmjVrP7eW5qVkI6BdpPQ5HjNn3am9ld2yxB/u+bsLMv3
+	kmJyPw==
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46s8c267af-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 19:47:39 +0000 (GMT)
+Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7c5ad42d6bcso227351485a.2
+        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 12:47:39 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747943258; x=1748548058;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Vlwo72v/3bz8ukRxIg/7653/lvkTs/m7haGuKIkzqFg=;
+        b=owPv5saWjw79X+P3ao4gek3ytTgnSXv7c6s32n01ybxWLcKU4QsfQJGBkp5Xj9LtZD
+         B7qiDgGpfIizCOEc1vRzfesuT0LP18DkrxvU8XUZIncRNOiD3XEWQp3yH397hF3iEr4B
+         pRoNB+ENCWBt5xx/JK/THcLZ2i7NlomNR5DqqyueQf+8H9Wxn5mrs7kn9vkY/Jb/zyBQ
+         4N7lAUDloB4r1VIzZp4nU6smk7w8aCW1Gw/DJPqJDmngsmV1DDng/NwwUnG1m/0xjx4U
+         MkBPgu5ySmSTMWo72HtPtNwX6bTTeVM03dSUMZRTviNTclULtXdeMEa3ehpmv5sYiAWP
+         4GTA==
+X-Forwarded-Encrypted: i=1; AJvYcCWuy8xmxDTLT96EriUa77zL4Q6Uj2n5Xs4fF8SrDyheM0HhlyRdE6hB04C5KwjEfKUGBrBnjwPfRZivjyI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxGOArUAhR6l5dLk2QcRcTEUSyLJiXghbZSaR/lcB4GLiEJoUmV
+	qHXxEIX10SmkTv+6/VIDg6zEy78raSDq17+gq/gpOUCnf8a4s/yQnXs2xrxJxtvef1eAK0BT2jf
+	79DHRgESGLI2cznHkH0yU43UrOBkG+yz5bhox7PfrAljJ8wzbxgLi7bf28CWyWs4IhOE=
+X-Gm-Gg: ASbGncu+wGbTCy3r0ILu+pfgLVkd9QLNbYmtmd02h3diaUggEUie0lgMQY4TmCqdqRL
+	eNCORhXLMe/4RkKN+6unBtZffCZoA32e0OsXc8iPbk/jwDtGCwkYSB0QxpWgwegfTd/CrjETAbZ
+	u7QCuse2HksZ/X8sGhmDGIivd1jEFVdduKJO6ochY9I9WrdkhrS/cVYcNAGUnRBtUEkL2bUG/eD
+	pMYHwx5v2/qLNuznolq/JyDeyRPQ/w0twsMGudwHHc3XSSCuhVKi/HY1f9lWjOHhiXB0GB4k31I
+	PZQ5ICtS64G2Mokv0vGN9jITXkjzRe8Ae+DKNt68GEZQtt7enFG4WOLWeRvI2GdawA==
+X-Received: by 2002:ac8:57d0:0:b0:49b:8831:a061 with SMTP id d75a77b69052e-49b8831a1a9mr44716671cf.12.1747943258341;
+        Thu, 22 May 2025 12:47:38 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IF5VwqiEcm7K7nKCO+tiTFsUqyeBFclAgcgCdlXI/RUXoUd668SeE5MQMoMDNGnA4rB+aCLyQ==
+X-Received: by 2002:ac8:57d0:0:b0:49b:8831:a061 with SMTP id d75a77b69052e-49b8831a1a9mr44716491cf.12.1747943257894;
+        Thu, 22 May 2025 12:47:37 -0700 (PDT)
+Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad52d04af40sm1123435566b.34.2025.05.22.12.47.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 22 May 2025 12:47:37 -0700 (PDT)
+Message-ID: <16fd590e-7a00-4e71-a003-d6aafa83567d@oss.qualcomm.com>
+Date: Thu, 22 May 2025 21:47:35 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.5.0
-Subject: Re: [PATCH v4 2/3] treewide: Switch memcpy() users of 'task->comm' to
- a more safer implementation
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] clk: Warn (and therefore taint the kernel) on
+ clk_ignore_unused
+To: Stephen Boyd <sboyd@kernel.org>,
+        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        Florian Fainelli <florian.fainelli@broadcom.com>
+Cc: Konrad Dybcio <konradybcio@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Marijn Suijten <marijn.suijten@somainline.org>,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>,
+        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+References: <20250201-topic-ignore_unused_warn-v1-1-f29db78cea3a@oss.qualcomm.com>
+ <93b5004dacfe1151ca3abbb0fa31eaa6.sboyd@kernel.org>
+ <87241686-90b5-44fe-b4e9-1a59451e3575@broadcom.com>
+ <CAA8EJppgU7_BoVCDfTuKVveBnnhtHUN6jEzkUaAou7=aypD-Dw@mail.gmail.com>
+ <efd38edbed2743a258bbec7e80ff2238.sboyd@kernel.org>
 Content-Language: en-US
-To: kernel test robot <lkp@intel.com>, Bhupesh <bhupesh@igalia.com>,
- akpm@linux-foundation.org
-Cc: oe-kbuild-all@lists.linux.dev, kernel-dev@igalia.com,
- linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
- linux-perf-users@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- linux-mm@kvack.org, oliver.sang@intel.com, laoar.shao@gmail.com,
- pmladek@suse.com, rostedt@goodmis.org, mathieu.desnoyers@efficios.com,
- arnaldo.melo@gmail.com, alexei.starovoitov@gmail.com,
- andrii.nakryiko@gmail.com, mirq-linux@rere.qmqm.pl, peterz@infradead.org,
- willy@infradead.org, david@redhat.com, viro@zeniv.linux.org.uk,
- keescook@chromium.org, ebiederm@xmission.com, brauner@kernel.org,
- jack@suse.cz, mingo@redhat.com, juri.lelli@redhat.com, bsegall@google.com,
- mgorman@suse.de
-References: <20250521062337.53262-3-bhupesh@igalia.com>
- <202505220326.5yDQHjnt-lkp@intel.com>
-From: Bhupesh Sharma <bhsharma@igalia.com>
-In-Reply-To: <202505220326.5yDQHjnt-lkp@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <efd38edbed2743a258bbec7e80ff2238.sboyd@kernel.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIyMDE5OSBTYWx0ZWRfX9tfd49/R9o4/
+ F5cCkS59ckSQMheBNtu1eu02QFTS59a55Sxvvm4jDUXkLvVzyBQ0FR5OrgRCVJI3sG8BM095YIi
+ CG/ZNIrL0NINks3txDJajfh8ot8BTjQ0K2nw7jhnfCG+hxlozOiE3E/UCRyOFGvFObqSIKZcGCJ
+ kHkmeGl3VY4+FhOIuVq4L/JkwHtVIVIHnkTE/0rxtnJFflhxq8dxxSm2Rm44Cp8CXGejLiMP9KJ
+ YAAaIf5cig8ALompQOtLE2VDKaFv/SELA132pFGHTy1CCGungpbjBoPS21ewmbUdPD7u6OFdmxJ
+ JKPwWGavAAdQXcISgRhsYc/qoERFKYuCRzqD/jNFJb3fm7x7lcxolwY5t5lAMuqlCTGTB3zvMye
+ /iG3PmyKlRG9AkpiMjPA3YZlp+MK8HEPZ6aJ7BOZqR5HIBY2r7WNGsqkAc01aMC2jyjNMkpP
+X-Authority-Analysis: v=2.4 cv=RIuzH5i+ c=1 sm=1 tr=0 ts=682f7f5b cx=c_pps
+ a=qKBjSQ1v91RyAK45QCPf5w==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
+ a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=Q-fNiiVtAAAA:8 a=Yj5yA7lCVocwFOeKnIsA:9
+ a=QEXdDO2ut3YA:10 a=NFOGd7dJGGMPyQGDc5-O:22
+X-Proofpoint-ORIG-GUID: Aru0pSrivWs9TVxs9BWI5pa4U_tMca9v
+X-Proofpoint-GUID: Aru0pSrivWs9TVxs9BWI5pa4U_tMca9v
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-22_09,2025-05-22_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ clxscore=1015 phishscore=0 suspectscore=0 malwarescore=0 bulkscore=0
+ mlxlogscore=999 spamscore=0 lowpriorityscore=0 mlxscore=0 priorityscore=1501
+ adultscore=0 impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
+ definitions=main-2505220199
 
-Hi,
+On 3/4/25 8:34 PM, Stephen Boyd wrote:
+> Quoting Dmitry Baryshkov (2025-03-03 15:17:21)
+>> On Tue, 4 Mar 2025 at 00:16, Florian Fainelli
+>> <florian.fainelli@broadcom.com> wrote:
+>>>
+>>> On 3/3/25 14:48, Stephen Boyd wrote:
+>>>> Quoting Konrad Dybcio (2025-02-01 08:52:30)
+> [...]
+>>>>>
+>>>>> The clock subsystem plays a crucial part in this quest, as even if
+>>>>> the clock controllers themselves don't draw a lot of power when on
+>>>>> (comparatively), improper description of clock requirements has been
+>>>>> the #1 cause of incomplete/incorrect devicetree bindings in my
+>>>>> experience.
+>>>>
+>>>> What is a user supposed to do about this warning stack? We already print
+>>>> a warning. I don't see us dumping the stack when a driver is unfinished
+>>>> and doesn't implement runtime PM to save power.
+>>>>
+>>>
+>>> Agreed, I don't think this is tremendously helpful given that it does
+>>> not even tell you what part is incomplete, it's just a broad warning for
+>>> the entire system.
+>>>
+>>> Assuming you have a clock provided that can be used to turn clocks off,
+>>> and you did not boot with 'clk_ignore_unused' set on the kernel command
+>>> line, then you should discover pretty quickly which driver is not
+>>> managing the clocks as it should no?
+>>
+>> Unfortunately it's sometimes not that easy. And some developers
+>> pretend that 'clk_ignore_unused' is a viable way to run the system.
+>>
+> 
+> Maybe we would be better off with a config option that removes the clk
+> ignore unused ability entirely. Then you can have a kernel config check
+> somewhere in the build process that verifies that a user can't even set
+> the kernel commandline to change the behavior.
 
-On 5/22/25 1:32 AM, kernel test robot wrote:
-> Hi Bhupesh,
->
-> kernel test robot noticed the following build warnings:
->
-> [auto build test WARNING on trace/for-next]
-> [also build test WARNING on tip/sched/core akpm-mm/mm-everything linus/master v6.15-rc7 next-20250521]
-> [If your patch is applied to the wrong git tree, kindly drop us a note.
-> And when submitting patch, we suggest to use '--base' as documented in
-> https://git-scm.com/docs/git-format-patch#_base_tree_information]
->
-> url:    https://github.com/intel-lab-lkp/linux/commits/Bhupesh/exec-Remove-obsolete-comments/20250521-142443
-> base:   https://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace for-next
-> patch link:    https://lore.kernel.org/r/20250521062337.53262-3-bhupesh%40igalia.com
-> patch subject: [PATCH v4 2/3] treewide: Switch memcpy() users of 'task->comm' to a more safer implementation
-> config: arc-randconfig-002-20250522 (https://download.01.org/0day-ci/archive/20250522/202505220326.5yDQHjnt-lkp@intel.com/config)
-> compiler: arc-linux-gcc (GCC) 8.5.0
-> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250522/202505220326.5yDQHjnt-lkp@intel.com/reproduce)
->
-> If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> the same patch/commit), kindly add following tags
-> | Reported-by: kernel test robot <lkp@intel.com>
-> | Closes: https://lore.kernel.org/oe-kbuild-all/202505220326.5yDQHjnt-lkp@intel.com/
->
-> All warnings (new ones prefixed by >>):
->
->     In file included from fs/coredump.c:20:
->     fs/coredump.c: In function 'do_coredump':
->>> include/linux/coredump.h:57:7: warning: array subscript 16 is above array bounds of 'char[16]' [-Warray-bounds]
->        comm[TASK_COMM_LEN] = '\0'; \
->        ~~~~^~~~~~~~~~~~~~~
->     include/linux/coredump.h:63:43: note: in expansion of macro '__COREDUMP_PRINTK'
->      #define coredump_report_failure(fmt, ...) __COREDUMP_PRINTK(KERN_WARNING, fmt, ##__VA_ARGS__)
->                                                ^~~~~~~~~~~~~~~~~
->     fs/coredump.c:655:4: note: in expansion of macro 'coredump_report_failure'
->         coredump_report_failure(
->         ^~~~~~~~~~~~~~~~~~~~~~~
->>> include/linux/coredump.h:57:7: warning: array subscript 16 is above array bounds of 'char[16]' [-Warray-bounds]
->        comm[TASK_COMM_LEN] = '\0'; \
->        ~~~~^~~~~~~~~~~~~~~
->     include/linux/coredump.h:63:43: note: in expansion of macro '__COREDUMP_PRINTK'
->      #define coredump_report_failure(fmt, ...) __COREDUMP_PRINTK(KERN_WARNING, fmt, ##__VA_ARGS__)
->                                                ^~~~~~~~~~~~~~~~~
->     fs/coredump.c:730:4: note: in expansion of macro 'coredump_report_failure'
->         coredump_report_failure("Core dump to %s aborted: "
->         ^~~~~~~~~~~~~~~~~~~~~~~
->>> include/linux/coredump.h:57:7: warning: array subscript 16 is above array bounds of 'char[16]' [-Warray-bounds]
->        comm[TASK_COMM_LEN] = '\0'; \
->        ~~~~^~~~~~~~~~~~~~~
->     include/linux/coredump.h:63:43: note: in expansion of macro '__COREDUMP_PRINTK'
->      #define coredump_report_failure(fmt, ...) __COREDUMP_PRINTK(KERN_WARNING, fmt, ##__VA_ARGS__)
->                                                ^~~~~~~~~~~~~~~~~
->     fs/coredump.c:725:4: note: in expansion of macro 'coredump_report_failure'
->         coredump_report_failure("Core dump to %s aborted: "
->         ^~~~~~~~~~~~~~~~~~~~~~~
->>> include/linux/coredump.h:57:7: warning: array subscript 16 is above array bounds of 'char[16]' [-Warray-bounds]
->        comm[TASK_COMM_LEN] = '\0'; \
->        ~~~~^~~~~~~~~~~~~~~
->     include/linux/coredump.h:63:43: note: in expansion of macro '__COREDUMP_PRINTK'
->      #define coredump_report_failure(fmt, ...) __COREDUMP_PRINTK(KERN_WARNING, fmt, ##__VA_ARGS__)
->                                                ^~~~~~~~~~~~~~~~~
->     fs/coredump.c:618:4: note: in expansion of macro 'coredump_report_failure'
->         coredump_report_failure("over core_pipe_limit, skipping core dump");
->         ^~~~~~~~~~~~~~~~~~~~~~~
->>> include/linux/coredump.h:57:7: warning: array subscript 16 is above array bounds of 'char[16]' [-Warray-bounds]
->        comm[TASK_COMM_LEN] = '\0'; \
->        ~~~~^~~~~~~~~~~~~~~
->     include/linux/coredump.h:63:43: note: in expansion of macro '__COREDUMP_PRINTK'
->      #define coredump_report_failure(fmt, ...) __COREDUMP_PRINTK(KERN_WARNING, fmt, ##__VA_ARGS__)
->                                                ^~~~~~~~~~~~~~~~~
->     fs/coredump.c:642:4: note: in expansion of macro 'coredump_report_failure'
->         coredump_report_failure("|%s pipe failed", cn.corename);
->         ^~~~~~~~~~~~~~~~~~~~~~~
->>> include/linux/coredump.h:57:7: warning: array subscript 16 is above array bounds of 'char[16]' [-Warray-bounds]
->        comm[TASK_COMM_LEN] = '\0'; \
->        ~~~~^~~~~~~~~~~~~~~
->     include/linux/coredump.h:63:43: note: in expansion of macro '__COREDUMP_PRINTK'
->      #define coredump_report_failure(fmt, ...) __COREDUMP_PRINTK(KERN_WARNING, fmt, ##__VA_ARGS__)
->                                                ^~~~~~~~~~~~~~~~~
->     fs/coredump.c:625:4: note: in expansion of macro 'coredump_report_failure'
->         coredump_report_failure("%s failed to allocate memory", __func__);
->         ^~~~~~~~~~~~~~~~~~~~~~~
->>> include/linux/coredump.h:57:7: warning: array subscript 16 is above array bounds of 'char[16]' [-Warray-bounds]
->        comm[TASK_COMM_LEN] = '\0'; \
->        ~~~~^~~~~~~~~~~~~~~
->     include/linux/coredump.h:63:43: note: in expansion of macro '__COREDUMP_PRINTK'
->      #define coredump_report_failure(fmt, ...) __COREDUMP_PRINTK(KERN_WARNING, fmt, ##__VA_ARGS__)
->                                                ^~~~~~~~~~~~~~~~~
->     fs/coredump.c:611:4: note: in expansion of macro 'coredump_report_failure'
->         coredump_report_failure("RLIMIT_CORE is set to 1, aborting core");
->         ^~~~~~~~~~~~~~~~~~~~~~~
->>> include/linux/coredump.h:57:7: warning: array subscript 16 is above array bounds of 'char[16]' [-Warray-bounds]
->        comm[TASK_COMM_LEN] = '\0'; \
->        ~~~~^~~~~~~~~~~~~~~
->     include/linux/coredump.h:63:43: note: in expansion of macro '__COREDUMP_PRINTK'
->      #define coredump_report_failure(fmt, ...) __COREDUMP_PRINTK(KERN_WARNING, fmt, ##__VA_ARGS__)
->                                                ^~~~~~~~~~~~~~~~~
->     fs/coredump.c:591:4: note: in expansion of macro 'coredump_report_failure'
->         coredump_report_failure("format_corename failed, aborting core");
->         ^~~~~~~~~~~~~~~~~~~~~~~
->>> include/linux/coredump.h:57:7: warning: array subscript 16 is above array bounds of 'char[16]' [-Warray-bounds]
->        comm[TASK_COMM_LEN] = '\0'; \
->        ~~~~^~~~~~~~~~~~~~~
->     include/linux/coredump.h:63:43: note: in expansion of macro '__COREDUMP_PRINTK'
->      #define coredump_report_failure(fmt, ...) __COREDUMP_PRINTK(KERN_WARNING, fmt, ##__VA_ARGS__)
->                                                ^~~~~~~~~~~~~~~~~
->     fs/coredump.c:752:4: note: in expansion of macro 'coredump_report_failure'
->         coredump_report_failure("Core dump to |%s disabled", cn.corename);
->         ^~~~~~~~~~~~~~~~~~~~~~~
->     fs/coredump.c: In function 'validate_coredump_safety':
->>> include/linux/coredump.h:57:7: warning: array subscript 16 is above array bounds of 'char[16]' [-Warray-bounds]
->        comm[TASK_COMM_LEN] = '\0'; \
->        ~~~~^~~~~~~~~~~~~~~
->     include/linux/coredump.h:63:43: note: in expansion of macro '__COREDUMP_PRINTK'
->      #define coredump_report_failure(fmt, ...) __COREDUMP_PRINTK(KERN_WARNING, fmt, ##__VA_ARGS__)
->                                                ^~~~~~~~~~~~~~~~~
->     fs/coredump.c:1006:3: note: in expansion of macro 'coredump_report_failure'
->        coredump_report_failure("Unsafe core_pattern used with fs.suid_dumpable=2: "
->        ^~~~~~~~~~~~~~~~~~~~~~~
->
->
-> vim +57 include/linux/coredump.h
->
->      46	
->      47	/*
->      48	 * Logging for the coredump code, ratelimited.
->      49	 * The TGID and comm fields are added to the message.
->      50	 */
->      51	
->      52	#define __COREDUMP_PRINTK(Level, Format, ...) \
->      53		do {	\
->      54			char comm[TASK_COMM_LEN];	\
->      55			/* This will always be NUL terminated. */ \
->      56			memcpy(comm, current->comm, TASK_COMM_LEN); \
->    > 57			comm[TASK_COMM_LEN] = '\0'; \
->      58			printk_ratelimited(Level "coredump: %d(%*pE): " Format "\n",	\
->      59				task_tgid_vnr(current), (int)strlen(comm), comm, ##__VA_ARGS__);	\
->      60		} while (0)	\
->      61	
->
+I used WARN specifically to taint the kernel (which would in turn throw off
+any reasonable CI checks). Perhaps we could add a Kconfig entry (unless
+there already is one) that would do the same, and clk_ignore_unused could
+be gated behind it.
 
-Thanks, I will fix these in v5.
+But then, it would make it harder to debug production kernels with that
+parameter, which could potentially come in handy too
 
-Regards,
-Bhupesh
+Konrad
