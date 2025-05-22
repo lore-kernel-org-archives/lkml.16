@@ -1,128 +1,143 @@
-Received: from smtp134-102.sina.com.cn (smtp134-102.sina.com.cn [180.149.134.102])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A13E2AD2D
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 05:47:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=180.149.134.102
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AB7D1A23B7;
+	Thu, 22 May 2025 05:47:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747892828; cv=none; b=ZXs/xmbhV2hZpRIqtgKqu3EslhodtlFj9CFp7Q5pKPfiKCBIWtqO1Kxcse8iL18M7AX8vRpf0VHkVEvbvg0Ifm0uZMOVii3KUYKNg2o0WpdPlBssFGixwHaRizBgGwH1uAV6zeAEaU57HDdiJhA0f4a6qD3SEOJm67tYO9Y9vEI=
+	t=1747892839; cv=none; b=HmLdlzw6KFlHy+TVAizcSM1dVjunXf78UjxsdU0btius3J5cdSqCaW2HWxHGm9Yt3PdLc8/jUzrcj6WVpm4tpO3yDSemeZA34iC5IOgfl7a7fwwfVZwW2/JGjyCrxx3dvqjmtxMoABCxOv9YC+ANqdNGLMkyDkcSyVvCbl9aHLo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747892828; c=relaxed/simple;
-	bh=8IySV+zjl4Q3PabWEsSWbmjUJYYPs2ADwVyy8nojSUk=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=d/IfhLGr26IPcdMjI9LcaCtrUix8/2FBikqvnPNqLPGC+KMNbtIG1eYi6JDDRIZF3ls+t2X6U65i63Xx8jo/0GboXr/Pp3tH/3r9ua65HdOTmcb+ugZ7oMdUyJ+/TJuYNPXXyAjozETLWSs1BhLYrahpI4Z7F4uGxRmdeNWIMFo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=everest-semi.com; spf=pass smtp.mailfrom=everest-semi.com; arc=none smtp.client-ip=180.149.134.102
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=everest-semi.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=everest-semi.com
-Received: from unknown (HELO zy-virtual-machine.localdomain)([180.172.39.205])
-	by sina.net (10.185.250.32) with ESMTP
-	id 682EBA2B000069DF; Thu, 22 May 2025 13:46:21 +0800 (CST)
-X-Sender: zhangyi@everest-semi.com
-X-Auth-ID: zhangyi@everest-semi.com
-Authentication-Results: sina.net;
-	 spf=none smtp.mailfrom=zhangyi@everest-semi.com;
-	 dkim=none header.i=none;
-	 dmarc=none action=none header.from=zhangyi@everest-semi.com
-X-SMAIL-MID: 594AF7BC60AB456B903CEEEC1929F436
-X-SMAIL-UIID: 594AF7BC60AB456B903CEEEC1929F436-20250522-134621
-From: Zhang Yi <zhangyi@everest-semi.com>
-To: broonie@kernel.org
-Cc: robh@kernel.org,
-	tiwai@suse.com,
-	devicetree@vger.kernel.org,
-	conor+dt@kernel.org,
-	lgirdwood@gmail.com,
-	linux-kernel@vger.kernel.org,
-	linux-sound@vger.kernel.org,
-	perex@perex.cz,
-	krzk+dt@kernel.org,
-	amadeuszx.slawinski@linux.intel.com,
-	krzk@kernel.org
-Subject: RE: [PATCH 2/2] ASoC: codecs: add support for ES8375
-Date: Thu, 22 May 2025 13:46:19 +0800
-Message-Id: <20250522054619.9574-1-zhangyi@everest-semi.com>
-X-Mailer: git-send-email 2.17.1
+	s=arc-20240116; t=1747892839; c=relaxed/simple;
+	bh=OvBJFUTeD1fn/6i4rvUVGu2s79IT+JY7hcjKDidl78k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qxQ45a2yfzwimtRy20vI+B+fN0wmxo/9sAY/vR+DAA4VdOEegA8ww6jeeD3IIribcVCJuF/n3KMTTZlUVeELmyzlwN0nDVDNlml1Djn8O/yF+NCfmOlQD4PLOGkX9PDLt5W0/ek9cyAsrb3Kp4mpCx3S5nRT/0Jl/xB/N+gH+HQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gRgC3Pub; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gRgC3Pub"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3FFA1C4CEE4;
+	Thu, 22 May 2025 05:47:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747892838;
+	bh=OvBJFUTeD1fn/6i4rvUVGu2s79IT+JY7hcjKDidl78k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=gRgC3PubJEkYoFhk5/eL7JHJQ7kcr4piLda2/KZE0wC5u1GNbNXOoDfNDuP4CJexB
+	 nrsA1uFHr6s2dcPyL6CBqxCTJgXdk7hav/FK/rGg9ZL9SkYeJf1tOTHKSvNqYLAVUN
+	 U1IJgMakr4Qxbgu/PNI17xVgbTjs3OqT8/Br+Hlfn3opp6WAbpeYuL+XVkniVak8ei
+	 mscrNq+ENG1imDXTLG3yZ8Gg42u+BTY2JPZFivWAM3tlXNIWc3Wm1xnTLq5wdfSyMA
+	 AmZg7qnEER1Q2Y4vazlDBDD70HSLraOFa2TSzgSFyAWbYJ8cAmvJ6d9pgBPh2+QkVB
+	 vCyb5oPO/sdWw==
+Date: Thu, 22 May 2025 07:47:12 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Remo Senekowitsch <remo@buenzli.dev>, Rob Herring <robh@kernel.org>,
+	Saravana Kannan <saravanak@google.com>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Dirk Behme <dirk.behme@de.bosch.com>, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org, rust-for-linux@vger.kernel.org
+Subject: Re: [PATCH v5 4/9] rust: device: Enable printing fwnode name and path
+Message-ID: <aC66YD55QD8fH6Wh@pollux>
+References: <20250520200024.268655-1-remo@buenzli.dev>
+ <20250520200024.268655-5-remo@buenzli.dev>
+ <2025052153-steadier-bargraph-e81a@gregkh>
+ <DA1UXY2O47Y2.1ND9MC6L01217@buenzli.dev>
+ <2025052116-gem-blend-2585@gregkh>
+ <DA220Y73P1NR.192OYSQH3UD7A@buenzli.dev>
+ <aC4lxKwYKRkcTNtD@cassiopeiae>
+ <2025052244-untaken-spied-868b@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2025052244-untaken-spied-868b@gregkh>
 
-> > +static int es8375_dmic_set(struct snd_kcontrol *kcontrol,
-> > +	struct snd_ctl_elem_value *ucontrol)
-> > +{
+On Thu, May 22, 2025 at 06:49:15AM +0200, Greg Kroah-Hartman wrote:
+> On Wed, May 21, 2025 at 09:13:08PM +0200, Danilo Krummrich wrote:
+> > On Wed, May 21, 2025 at 08:36:10PM +0200, Remo Senekowitsch wrote:
+> > > On Wed May 21, 2025 at 6:58 PM CEST, Greg Kroah-Hartman wrote:
+> > > > On Wed, May 21, 2025 at 03:03:07PM +0200, Remo Senekowitsch wrote:
+> > > >> On Wed May 21, 2025 at 2:02 PM CEST, Greg Kroah-Hartman wrote:
+> > > >> > On Tue, May 20, 2025 at 10:00:19PM +0200, Remo Senekowitsch wrote:
+> > > >> >> Add two new public methods `display_name` and `display_path` to
+> > > >> >> `FwNode`. They can be used by driver authors for logging purposes. In
+> > > >> >> addition, they will be used by core property abstractions for automatic
+> > > >> >> logging, for example when a driver attempts to read a required but
+> > > >> >> missing property.
+> > > >> >> 
+> > > >> >> Signed-off-by: Remo Senekowitsch <remo@buenzli.dev>
+> > > >> >> ---
+> > > >> >>  rust/kernel/device/property.rs | 72 ++++++++++++++++++++++++++++++++++
+> > > >> >>  1 file changed, 72 insertions(+)
+> > > >> >> 
+> > > >> >> diff --git a/rust/kernel/device/property.rs b/rust/kernel/device/property.rs
+> > > >> >> index 70593343bd811..6ccc7947f9c31 100644
+> > > >> >> --- a/rust/kernel/device/property.rs
+> > > >> >> +++ b/rust/kernel/device/property.rs
+> > > >> >> @@ -32,6 +32,78 @@ pub(crate) fn as_raw(&self) -> *mut bindings::fwnode_handle {
+> > > >> >>          self.0.get()
+> > > >> >>      }
+> > > >> >>  
+> > > >> >> +    /// Returns an object that implements [`Display`](core::fmt::Display) for
+> > > >> >> +    /// printing the name of a node.
+> > > >> >> +    pub fn display_name(&self) -> impl core::fmt::Display + '_ {
+> > > >> >> +        struct FwNodeDisplayName<'a>(&'a FwNode);
+> > > >> >> +
+> > > >> >> +        impl core::fmt::Display for FwNodeDisplayName<'_> {
+> > > >> >> +            fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+> > > >> >> +                // SAFETY: self is valid by its type invariant
+> > > >> >> +                let name = unsafe { bindings::fwnode_get_name(self.0.as_raw()) };
+> > > >> >> +                if name.is_null() {
+> > > >> >> +                    return Ok(());
+> > > >> >
+> > > >> > So if there is no name, you are returning Ok()?  Are you sure that's ok
+> > > >> > to do?  What will the result of the string look like then?
+> > > >> 
+> > > >> In that case we're not writing anything to the formatter, which is
+> > > >> equivalent to an empty string. `Ok(())` means that writing succeeded.
+> > > >> 
+> > > >> I assumed that a valid node would always have a name. And we're
+> > > >> guaranteed to have a valid node. So I assumed this case would never
+> > > >> happen and didn't think too hard about it. But even if a valid node has
+> > > >> not name, empty string is probably the correct thing, right?
+> > > >
+> > > > I don't know what this "name" is used for.  An empty string might not be
+> > > > what you want to use here, given that you could be naming something
+> > > > based on it, right?  fwnode_get_name() is used for many things,
+> > > > including the detection if a name is not present at all, and if not,
+> > > > then the code needs to clean up and abort.
+> > > >
+> > > > So what exactly are you going to be using this for?
+> > > 
+> > > Valid question... I'm not using it for anything.
+> > 
+> > You're using this in PropertyGuard::required_by(), where you use display_path()
+> > and hence display_name() to print the node path in the error case.
+> > 
+> > So, currently, this is only used in the error case when a property of a given
+> > node that is required by a driver can't be found.
 > 
-> > +	if (val) {
-> > +		regmap_update_bits_check(es8375->regmap, ES8375_ADC1, 0x80, 0x80, &changed1);
-> > +		es8375->dmic_enable = 0x01;
-> > +	} else {
-> > +		regmap_update_bits_check(es8375->regmap, ES8375_ADC1, 0x80, 0x00, &changed1);
-> > +		es8375->dmic_enable = 0x00;
-> > +	}
-> 
-> Instead of overriding this you could just read the register value when
-> you need it, you've got a register cache so it should be fast enough and
-> it's a lot less code.
+> And in that case, the "normal" dev_err() output should be all that is
+> needed here, not a "pretty printer" that might fail to document it at
+> all :)
 
-I'll read the ES8375_ADC1 when I need the dmic_enable.
-So I can replace SOC_DAPM_ENUM_EXT with SOC_DAPM_ENUM
-which is used for ADC MUX.
+That's what the code does; PropertyGuard::required_by() uses dev_err!() to print
+the string.
 
-> > +static const struct snd_kcontrol_new es8375_snd_controls[] = {
-> > +	/* Capture Path */
-> > +	SOC_SINGLE_TLV("ADC OSR GAIN", ES8375_ADC_OSR_GAIN,
-> > +			ADC_OSR_GAIN_SHIFT_0, ES8375_ADC_OSR_GAIN_MAX, 0,
-> > +			es8375_adc_osr_gain_tlv),
-> 
-> Gain/volume controls should end in Volume as covered in control-names.rst.
-> 
-> > +	SOC_SINGLE("ADC Invert", ES8375_ADC1, ADC_INV_SHIFT_6, 1, 0),
-> 
-> On/off switches should end in Switch.
+It's just that the functions from the C side that provide the strings are
+abstracted in an implementation of core::fmt::Display for the FwNode, which is
+the idiomatic way to abstract a string representations of a type.
 
-Thanks for reminding. I'll modify it.
-
-> > +	ret = regulator_get_voltage(es8375->core_supply[0].consumer);
-> 
-> Might be nicer to have something better than a magic number to ensure
-> that the supplies are in order, or use a specific variable.
-
-I think I got your point.
-
-> > +	case SND_SOC_DAIFMT_CBC_CFP:    /* MASTER MODE */
-> > +		es8375->mastermode = 1;
-> > +		regmap_update_bits(es8375->regmap, ES8375_RESET1,
-> > +				0x80, 0x80);
-> > +		break;
-> > +	case SND_SOC_DAIFMT_CBC_CFC:    /* SLAVE MODE */
-> 
-> Please avoid using outdated terminologoy for clock provider and
-> consumer.
-
-I'll delete it.
-
-> > +static void es8375_init(struct snd_soc_component *component)
-> > +{
-> 
-> > +	regmap_write(es8375->regmap, ES8375_ADC_VOLUME, 0xBF);
-> > +	regmap_write(es8375->regmap, ES8375_DAC_VOLUME, 0xBF);
-> 
-> Some of these settings look like they are (or should be) user
-> controllable and should be left at the chip defaults, the volumes above
-> really stand out.  We use chip defaults to avoid having to decide which
-> use cases to configure for.
-
-Because the default value of the chip's volume register is 0x00,
-initializing the device without setting it to 0xbf will
-cause the device to mute until the customer sets the volume.
-
-> > +static struct regmap_config es8375_regmap_config = {
-> > +	.reg_bits = 8,
-> > +	.val_bits = 8,
-> > +	.max_register = ES8375_REG_MAX,
-> > +	.cache_type = REGCACHE_RBTREE,
-> 
-> Unless you've got a really strong reason for using _RBTREE new drivers
-> should use _MAPLE, it's a more modern underlying data structure and
-> makes choices more suitable for current systems.
-
-ok
+And since Display::fmt() is fallible, we need to decide if NULL is a valid value
+for fwnode_get_name() to return. The interface, i.e. struct fwnode_operations,
+does not document this, but to me it seems that fwnode_get_name() returning a
+NULL pointer is an error case.
