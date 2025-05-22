@@ -1,133 +1,158 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fout-a2-smtp.messagingengine.com (fout-a2-smtp.messagingengine.com [103.168.172.145])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 745CF28A1DC;
-	Thu, 22 May 2025 11:54:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C30B28A1DC;
+	Thu, 22 May 2025 11:54:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.145
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747914888; cv=none; b=faaey8VwI52yuRl4vSTHy/AKmZk/HZNhwH1VwiVED95mi9qyffbOORFxDxDR89MyfK5gn8XsOw2LUJGxCnjXliF1zeTisX9vUWmxpOlyz8v5TXNSilmERYo96qwVsBGHuE1XcLAXQkuRNmvLP+mK0yFBg3ZfntpvXSUlf7FnvVk=
+	t=1747914902; cv=none; b=lzCvS1/NWzADigAJIfAxC+YWNmJ3Q8zgc+J99zAoXaia7dN5bhwBuYEcuxdrtMgZuQDAGqGAvSaWa/5ZVos+P1hsPLJKQJet2RrnlqjUCPswrWa2AXwgNoFXUn+KR+Dy7cMDubJ8irO/pNTG85Ey8zTsMqifjVWMRwlu5U6wzKI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747914888; c=relaxed/simple;
-	bh=Nryi9QMkPLKZdjBmO37cvNvIiUIaiZZgJ1/+v4pk0d8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VikqW7HMGNG1+jChKdOwvo+tpwsWWrIE2ozNA06N5F8Le21dtG8BWjKWs02EpTKIAOPyF65riF2KzXaboM7JkprPXIUxkvbgORQ18Tz70k1sHMsrqVGBJG1/+Fd5fO2c7lOXcWt16CmJWvFOhQcje/H4Gy+ECrUMHWXkRJdtnGo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PIa/Wk9C; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747914902; c=relaxed/simple;
+	bh=1oUAEHIBXvG86Y2/ajgNwtB/pPqecUR8H0IlQw9KriE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ml7RHi/fEH9mgA/9HOpJAvIH0nLctCmzW3ErJbZh4uQXW0deeJadTWsJE7b/ZGrmX88e3SMvLS4ICJu0ZJZdl/B/pvygto5sSzBEitoTT4ytYYUrYTm0vndK2fBsdVJSMgq1XNyRSDkId1pamMuex5s1q2km7nOTD14vFGDSZEw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=queasysnail.net; spf=pass smtp.mailfrom=queasysnail.net; dkim=pass (2048-bit key) header.d=queasysnail.net header.i=@queasysnail.net header.b=Ol49exO8; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=pMSFP0TS; arc=none smtp.client-ip=103.168.172.145
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=queasysnail.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=queasysnail.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PIa/Wk9C"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D776FC4CEE4;
-	Thu, 22 May 2025 11:54:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747914887;
-	bh=Nryi9QMkPLKZdjBmO37cvNvIiUIaiZZgJ1/+v4pk0d8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=PIa/Wk9CjnaF3EyPtT2yfVbpH2Z65JH/9xkgqm3jEDkoVpf2g9r/U3uxEG1CRexGf
-	 tqRaswH6pXE7VkAw1TQvDMT/r8tykf2aoDwDZ5elmKuH7thq2BUG+U+HMguiaAc99S
-	 rmKpu4r0e6PPKhLX04ttwL03pzdht8uE+/egbj6ny9xxgoZPKWqBl0kysTaZsTTD5C
-	 7tndUIt/j0Pri+Eq3WEvFj2YNJ/GahAPWb5wyE+35tw35laWkimPfsjjndZ1OLchoG
-	 k8XL3DOWYhItT2unOcmqehajtBxcOfSre/HIhAxwKCFWJNSzZbFJDA2xbR7RN1dPNW
-	 hzeg4uOK0z5Lw==
-Received: by mail-oo1-f53.google.com with SMTP id 006d021491bc7-606440d92eeso3811771eaf.2;
-        Thu, 22 May 2025 04:54:47 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVgjJArXxEkv5oiYqAMjXijZQEAM3rTavDv5ZkZY+MZmzzuPptVsmJDf6meTIfySLg8tRybz5sVWUJk4c1O@vger.kernel.org, AJvYcCW+RCRQF9BJKGgdRIz5LgUT4wA9eEvYdv4aWEjgeZrGvZds0T/41QS9+fd5uB3+pGXp/pSHYemNFlU=@vger.kernel.org, AJvYcCWGZgvjepXr1X5JuDLl3mB4+NmzYHM0DgCwhVOx2IEbsvT7XsOf5MohTlTwwU1lv0WklIxmWwzIeR8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YywVPATnezHyGbFaVFsslU9sON+biia7x/mFSmFlfZzTyAtNsXW
-	b1Vn7vvBTOuBA3aSDK2c6fxPkLcyabX7QL+2D3yAAb7oqq1r8l67iEy/T2x8ofwn4Lz33Iz2+ob
-	pubK2T/dwPM9yxwVKUYf6najWHOareLk=
-X-Google-Smtp-Source: AGHT+IG+KzzlVR5WjMP68KLNL7UutmcZ1GBLYAe3Zls3GG+S92wBlVefQFR7vROwlcJ9qGU+spgYeWgkBLpmk6P7mOw=
-X-Received: by 2002:a05:6820:2705:b0:606:26bd:7208 with SMTP id
- 006d021491bc7-609f37bc37dmr15131315eaf.7.1747914887086; Thu, 22 May 2025
- 04:54:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=queasysnail.net header.i=@queasysnail.net header.b="Ol49exO8";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="pMSFP0TS"
+Received: from phl-compute-01.internal (phl-compute-01.phl.internal [10.202.2.41])
+	by mailfout.phl.internal (Postfix) with ESMTP id 514391380E24;
+	Thu, 22 May 2025 07:54:58 -0400 (EDT)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-01.internal (MEProxy); Thu, 22 May 2025 07:54:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=queasysnail.net;
+	 h=cc:cc:content-type:content-type:date:date:from:from
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to; s=fm1; t=1747914898; x=
+	1748001298; bh=sT00/m+xL7PLDSZNZbFcPlDDH7hp7b4f1md34HqAqfk=; b=O
+	l49exO8eFpMxzAiQzK+gUoo1WlbcGlmSC5gKOLCUZT+4RDMFZ9PlEHZJgcEwteqI
+	8Bk9fyeqH4xDH3KJh5nOCNHDBEJqbYHiPuYpJuEtzLgxb++96C9LAJaArqdhUGne
+	WQaWVwZo/J/Qyh6dwVMFNDnpAngE1pFmhFqKyzlk10qbwiXaABMsWQa/EKRrC9d3
+	2b/BkmvrHFu21eiO5UO/NFBrxGFMaOUwWDPXMhQO+twJY8LYns1zz7qmJYMi6k7u
+	wE4urf7nSnl72/W9bbbVCsvHqwIiLxJm0ntNlmqpiHQFxJI5lqz2EmNF0Q8dEtAg
+	u+uRHdJm28LlT91Aa7amA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
+	1747914898; x=1748001298; bh=sT00/m+xL7PLDSZNZbFcPlDDH7hp7b4f1md
+	34HqAqfk=; b=pMSFP0TSSZKxVhFn936/7H04PwDYj/J+rNUmyZd+S6PtOorWJdK
+	Bc8T1qx95O0YFlOpWI4NZ+rmiBgGbedoi4odOOxGlY2hdDRob829hDvbue2Pgd4/
+	cLp76phwmMI7/NyYVlSztKrZZSWubW/UNppeT9qPAgGb3DTr77QKuauOjraVaAgw
+	mKcB49U7KWSNCERTCd94F4fo2ZNGWxv4VuyoWNxHaDucV78r+9glqoMyhAXq9F/r
+	AS5szFsprP+WBhNIIxvLQVstA9sVh+lUbhjOrmcB3oXD3/aRnfRQ9BjayCAGoW5H
+	XkBECTrHCvONmbrRRbZDd0RMGzXu3AunvZw==
+X-ME-Sender: <xms:kRAvaH0aa2kSeVhNp71Rr3uQoPER5eHJm7f8oijk2yXQYwePumfUqw>
+    <xme:kRAvaGGxmDWCLdRe6mQWKnw5kYme-Hgmc9aFSycLip8mph7ozUtgXDmj7OdxoOG1u
+    tbXi5N7lIdFkhn5nBk>
+X-ME-Received: <xmr:kRAvaH4ELZw8rgIXkAddFXs_vH_XPDV9EAkSVcBFk5n5FMa-LU_i0EyXTutTsA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgdehkeelucdltddurdegfedvrddttd
+    dmucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgf
+    nhhsuhgsshgtrhhisggvpdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttd
+    enucgoufhushhpvggtthffohhmrghinhculdegledmnecujfgurhepfffhvfevuffkfhgg
+    tggujgesthdtredttddtjeenucfhrhhomhepufgrsghrihhnrgcuffhusghrohgtrgcuoe
+    hsugesqhhuvggrshihshhnrghilhdrnhgvtheqnecuggftrfgrthhtvghrnhepveekhffg
+    tddvveejvedvgffffeeftedtfefhtdfgueetgeevuefftdffhfduhedvnecuffhomhgrih
+    hnpehshiiikhgrlhhlvghrrdgrphhpshhpohhtrdgtohhmpdhgohhoghhlvggrphhishdr
+    tghomhenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
+    hsugesqhhuvggrshihshhnrghilhdrnhgvthdpnhgspghrtghpthhtohepuddupdhmohgu
+    vgepshhmthhpohhuthdprhgtphhtthhopehshiiisghothdojegvugelugegjegvudehvg
+    ekkeehkeduuggthegssehshiiikhgrlhhlvghrrdgrphhpshhpohhtmhgrihhlrdgtohhm
+    pdhrtghpthhtohepuggrvhgvmhesuggrvhgvmhhlohhfthdrnhgvthdprhgtphhtthhope
+    gvughumhgriigvthesghhoohhglhgvrdgtohhmpdhrtghpthhtohephhgvrhgsvghrthes
+    ghhonhguohhrrdgrphgrnhgrrdhorhhgrdgruhdprhgtphhtthhopehhohhrmhhssehkvg
+    hrnhgvlhdrohhrghdprhgtphhtthhopehkuhgsrgeskhgvrhhnvghlrdhorhhgpdhrtghp
+    thhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtg
+    hpthhtohepnhgvthguvghvsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohep
+    phgrsggvnhhisehrvgguhhgrthdrtghomh
+X-ME-Proxy: <xmx:kRAvaM2JP55Mch0m1AdrWlyPu7_0hzBnFiJ3lhYVd4eBv8Cio2mYLQ>
+    <xmx:kRAvaKGeG4J5yBgdsRH8Yd8vXX41KflM589tTPIaludz6JI76ZcBVQ>
+    <xmx:kRAvaN_MmZELoB6pO9yuzL4eyyQ5sRdUoP6mZjud0rMFGhbLa2AWAg>
+    <xmx:kRAvaHkmvt6WupqDNI2rid8oR8XUK3Mx0YQFB895p1qkGgk9jahzcQ>
+    <xmx:khAvaPoa_8Q-G_kEYzZUKO0QmErXfiDLtzufhq1vF173IC4UFfMIH3SV>
+Feedback-ID: i934648bf:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 22 May 2025 07:54:56 -0400 (EDT)
+Date: Thu, 22 May 2025 13:54:55 +0200
+From: Sabrina Dubroca <sd@queasysnail.net>
+To: syzbot <syzbot+7ed9d47e15e88581dc5b@syzkaller.appspotmail.com>
+Cc: davem@davemloft.net, edumazet@google.com, herbert@gondor.apana.org.au,
+	horms@kernel.org, kuba@kernel.org, linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org, pabeni@redhat.com,
+	steffen.klassert@secunet.com, syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [net?] KMSAN: uninit-value in xfrm_state_find (4)
+Message-ID: <aC8Qj-_vg_WnXXsO@krikkit>
+References: <682e2613.a00a0220.2a3337.0003.GAE@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250522-userspace-governor-doc-v1-1-c8a038e39084@sony.com>
- <15871c67-0d18-430f-935e-261b2cda855b@gmail.com> <CAJZ5v0gz3Y+RGqBf9E1hzq9rwfrryd98Xpk51DtLd-uck5y-rw@mail.gmail.com>
- <b62c0462-8185-4eb8-8ac6-7f2abc387768@gmail.com>
-In-Reply-To: <b62c0462-8185-4eb8-8ac6-7f2abc387768@gmail.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Thu, 22 May 2025 13:54:36 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0jrwDJ-TQuay_OkwfsWr2z9COg=oDY7q0FqRBC-3_br2Q@mail.gmail.com>
-X-Gm-Features: AX0GCFvq_DNusbqq8SXDC-zaNsRp6E6EsPke3RrXzEnZGLbMYlcVyN8Q9_5afVs
-Message-ID: <CAJZ5v0jrwDJ-TQuay_OkwfsWr2z9COg=oDY7q0FqRBC-3_br2Q@mail.gmail.com>
-Subject: Re: [PATCH] cpufreq, docs: (userspace governor) add that actual freq
- is >= scaling_setspeed
-To: Russell Haley <yumpusamongus@gmail.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Shashank Balaji <shashank.mahadasyam@sony.com>, 
-	Viresh Kumar <viresh.kumar@linaro.org>, Jonathan Corbet <corbet@lwn.net>, linux-pm@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Shinya Takumi <shinya.takumi@sony.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <682e2613.a00a0220.2a3337.0003.GAE@google.com>
 
-On Thu, May 22, 2025 at 1:15=E2=80=AFPM Russell Haley <yumpusamongus@gmail.=
-com> wrote:
->
->
->
-> On 5/22/25 4:47 AM, Rafael J. Wysocki wrote:
-> > On Thu, May 22, 2025 at 10:51=E2=80=AFAM Russell Haley <yumpusamongus@g=
-mail.com> wrote:
-> >>
-> >>
-> >> On 5/22/25 3:05 AM, Shashank Balaji wrote:
-> >>> The userspace governor does not have the CPUFREQ_GOV_STRICT_TARGET fl=
-ag, which
-> >>> means the requested frequency may not strictly be followed. This is t=
-rue in the
-> >>> case of the intel_pstate driver with HWP enabled. When programming th=
-e
-> >>> HWP_REQUEST MSR, the min_perf is set to `scaling_setspeed`, and the m=
-ax_perf
-> >>> is set to the policy's max. So, the hardware is free to increase the =
-frequency
-> >>> beyond the requested frequency.
-> >>>
-> >>> This behaviour can be slightly surprising, given the current wording =
-"allows
-> >>> userspace to set the CPU frequency". Hence, document this.
-> >>>
-> >>
-> >> In my opinion, the documentation is correct, and it is the
-> >> implementation in intel_pstate that is wrong. If the user wanted two
-> >> separate knobs that control the minimum and maximum frequencies, they
-> >> could leave intel_pstate in "active" mode and change scaling_min_freq
-> >> and scaling_max_freq.
-> >>
-> >> If the user asks for the frequency to be set from userspace, the
-> >> frequency had damn well better be set from userspace.
-> >
-> > The userspace governor requests a frequency between policy->min and
-> > policy->max on behalf of user space.  In intel_pstate this translates
-> > to setting DESIRED_PERF to the requested value which is also the case
-> > for the other governors.
->
-> Huh.  On this Skylake box with kernel 6.14.6, it seems to be setting
-> Minimum_Performance, and leaving desired at 0.
->
-> > echo userspace | sudo tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_=
-governor
-> userspace
-> > echo 1400000 | sudo tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_se=
-tspeed
-> 1400000
-> > sudo x86_energy_perf_policy &| grep REQ
-> cpu0: HWP_REQ: min 14 max 40 des 0 epp 128 window 0x0 (0*10^0us) use_pkg =
-0
-> cpu1: HWP_REQ: min 14 max 40 des 0 epp 128 window 0x0 (0*10^0us) use_pkg =
-0
-> cpu2: HWP_REQ: min 14 max 40 des 0 epp 128 window 0x0 (0*10^0us) use_pkg =
-0
-> cpu3: HWP_REQ: min 14 max 40 des 0 epp 128 window 0x0 (0*10^0us) use_pkg =
-0
-> cpu4: HWP_REQ: min 14 max 40 des 0 epp 128 window 0x0 (0*10^0us) use_pkg =
-0
-> cpu5: HWP_REQ: min 14 max 40 des 0 epp 128 window 0x0 (0*10^0us) use_pkg =
-0
-> cpu6: HWP_REQ: min 14 max 40 des 0 epp 128 window 0x0 (0*10^0us) use_pkg =
-0
-> cpu7: HWP_REQ: min 14 max 40 des 0 epp 128 window 0x0 (0*10^0us) use_pkg =
-0
+2025-05-21, 12:14:27 -0700, syzbot wrote:
+> Hello,
+> 
+> syzbot found the following issue on:
+> 
+> HEAD commit:    172a9d94339c Merge tag '6.15-rc6-smb3-client-fixes' of git..
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=17b062d4580000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=56e29fa09e87dea7
+> dashboard link: https://syzkaller.appspot.com/bug?extid=7ed9d47e15e88581dc5b
+> compiler:       Debian clang version 20.1.2 (++20250402124445+58df0ef89dd6-1~exp1~20250402004600.97), Debian LLD 20.1.2
+> 
+> Unfortunately, I don't have any reproducer for this issue yet.
+> 
+> Downloadable assets:
+> disk image: https://storage.googleapis.com/syzbot-assets/da9615d2ee0b/disk-172a9d94.raw.xz
+> vmlinux: https://storage.googleapis.com/syzbot-assets/997b6c928374/vmlinux-172a9d94.xz
+> kernel image: https://storage.googleapis.com/syzbot-assets/30f01bdce820/bzImage-172a9d94.xz
+> 
+> IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> Reported-by: syzbot+7ed9d47e15e88581dc5b@syzkaller.appspotmail.com
+> 
+> =====================================================
+> BUG: KMSAN: uninit-value in xfrm_state_find+0x2423/0xaae0 net/xfrm/xfrm_state.c:1438
 
-OK, let me double check the code.
+I was looking into possible uninitialized uses of state_ptrs a while
+ago, this report probably is the same thing. I'll post the patch later
+today.
+
+>  xfrm_state_find+0x2423/0xaae0 net/xfrm/xfrm_state.c:1438
+>  xfrm_tmpl_resolve_one net/xfrm/xfrm_policy.c:2519 [inline]
+>  xfrm_tmpl_resolve net/xfrm/xfrm_policy.c:2570 [inline]
+>  xfrm_resolve_and_create_bundle+0xabc/0x58b0 net/xfrm/xfrm_policy.c:2868
+>  xfrm_lookup_with_ifid+0x48c/0x3ac0 net/xfrm/xfrm_policy.c:3202
+>  xfrm_lookup net/xfrm/xfrm_policy.c:3333 [inline]
+>  xfrm_lookup_route+0x63/0x2b0 net/xfrm/xfrm_policy.c:3344
+>  ip_route_output_flow+0x20d/0x2b0 net/ipv4/route.c:2918
+>  ip_route_connect include/net/route.h:352 [inline]
+>  tcp_v4_connect+0xa43/0x1cd0 net/ipv4/tcp_ipv4.c:252
+>  tcp_v6_connect+0x134a/0x1d40 net/ipv6/tcp_ipv6.c:240
+>  __inet_stream_connect+0x2d3/0x1760 net/ipv4/af_inet.c:677
+>  inet_stream_connect+0x69/0xd0 net/ipv4/af_inet.c:748
+>  __sys_connect_file net/socket.c:2038 [inline]
+>  __sys_connect+0x523/0x680 net/socket.c:2057
+>  __do_sys_connect net/socket.c:2063 [inline]
+>  __se_sys_connect net/socket.c:2060 [inline]
+>  __x64_sys_connect+0x95/0x100 net/socket.c:2060
+>  x64_sys_call+0x23bb/0x3db0 arch/x86/include/generated/asm/syscalls_64.h:43
+>  do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+>  do_syscall_64+0xd9/0x1b0 arch/x86/entry/syscall_64.c:94
+>  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+>
+> Local variable tmp.i.i created at:
+>  xfrm_tmpl_resolve_one net/xfrm/xfrm_policy.c:2491 [inline]
+>  xfrm_tmpl_resolve net/xfrm/xfrm_policy.c:2570 [inline]
+>  xfrm_resolve_and_create_bundle+0x3a7/0x58b0 net/xfrm/xfrm_policy.c:2868
+>  xfrm_lookup_with_ifid+0x48c/0x3ac0 net/xfrm/xfrm_policy.c:3202
+
+-- 
+Sabrina
