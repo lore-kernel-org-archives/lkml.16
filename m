@@ -1,164 +1,221 @@
-Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF3A9279902
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 08:53:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C9B0280309
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 08:54:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747904005; cv=none; b=QheltrnoCE2bKsSay33yc/AA0z/kwUKC9fpHRiFNh5PihI688WH+23RwA/BpaI3Fg8ayVs9q/8KCKqyA4RXuSKstEpB2UkfVEcctgQ74ikOf6KTvn7YeuuS33pXzb+pf2sdZ/AwhpUThhAV5kYRskYDcH5PgppetzLTM0pGR3QI=
+	t=1747904085; cv=none; b=OjWrqys5+ZHg2XlxvLXkIpbGbJymLGfrZdOW/YRasptB+SG2D2lTS0RnRFPuveSn82HHVCIZ4ciwfLcfqqptj+oLxdF2dbNSs3l35CcGfpvaznoYXbrtWaXKEP8U2sQSAko5OxKsDY6HECp+hFvPNkLe1hVCLs4iqcU/jJPL6Rg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747904005; c=relaxed/simple;
-	bh=zU/z3bLOlzuSQkcMtTCVJsX995ruiIR5eHpPKYALmb8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nZBXYEw7zTqZII9kGNjXXuzZ+an968h8tm5m+BEbjTLOiQqtBaoRuniqbZBjWEJoKXinhwT3FLdjXOhUcCYS6TBFh+WeuQh8D/Lwqco19WuRkYLJ/KgMOT9kYgdS7mNtLaqU/7YNG3dIRlV43NTUFIz8WDZsk+neRWyKhvUiZ7c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=RnuX/zGR; arc=none smtp.client-ip=209.85.210.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1747904085; c=relaxed/simple;
+	bh=XGY7bRpKuqSKCjQY2t97jZQAr3DDbprX8SpMJ4ZUYv8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=PIp6E1xmr4wIWQvVobtehvcetNb6l3L4dAf3cfo4XVneLvMrn96e8azGAKba94Amv/9RzLSF6sRZXJ1rlVAA0X0E6OjNxZEcIFiyEuDSUFAANAsmPYJOLm1wRD0rDNRkU3c6OL+AcrVpO1PQsstgINnRIzi3s8v8IAextbkpvcE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OrTaClTK; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RnuX/zGR"
-Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-73712952e1cso7172549b3a.1
-        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 01:53:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1747904003; x=1748508803; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=wE/Nk3n7Qj543anMoi03EY1HELsp/mGZ1M/Gx4pgSIs=;
-        b=RnuX/zGRB42yAzoOnJoC9hdHdh+bsle5+JSaKcpc2ibo+JJMx9xPSbBjo7nrpIzpQc
-         U/4wrr29Xqbb/Eh5aIfwAIR4+CKP8YeWRVbx+SNaqvBoSRkPaZZ+XhmJ76Z1HY9vohx8
-         etjvMKtG6Pzrou0QopWMHprnOih2psTbhlWbnaE1O6jUfOchpt+WikIFQDJHhH1Wwdqj
-         qkIM1cfDz2WMVl2B8LduEdfOpsmlaf0kmAzVjYtpBRyl7QfIpmDDuTu2aT2w8aJUtemD
-         Iln4cfv8nqW2DHJcdbnEwX/wgqgPmHkhFdzRGbETKIpzKZAlbzI2fLhFqSM4plgjCKos
-         +BCQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747904003; x=1748508803;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=wE/Nk3n7Qj543anMoi03EY1HELsp/mGZ1M/Gx4pgSIs=;
-        b=LPPKH7HGfYyMQ2S7aCU/QbNCerrXbE92fM1j5PNYh+7Mi/Qfm1lpyjSv+2gLEdhets
-         MkbVrgY+9LEA6s2mPtA6t0WZWR9Kxs0HQt4twBxdD5jXuJXziDQLkRjeMUnH62JQUyme
-         d5QaXKmBMBHFqsxmF+QM+y0QdNGpL3LwDDG+Q/DLLZIj9thZsnGVaczNgYxLtZMLP7+u
-         3TccfYjT//+zCb8L8In/9c9UyxQXypHmLW4gK4BNthECJNa038jaPPpxn5ZrUXE5sH0z
-         RHw5TzigQoa9gWpFd2+r3lDJprAto2aoMJ+ZvXh519Rk0hXecilyOt/eCjhe97s0miJo
-         si9A==
-X-Forwarded-Encrypted: i=1; AJvYcCVcxCi/tHK8e59CHZk622zvcIzV/Yhrm3EBuXAieFBu7JcLFeptFRobCk9QyGsxdI0IY6rMD2SkYv002ms=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxrDpIKqA5r/oLV0WBl5cvW0wM3ZVSuabVQrk/qaG4MgtflbKYX
-	Px2uFeuMyCI07Bv3FlAe89VLv/uOocKHSUeUUwYgrRx+Gj/kTdW+FRIBz38lEWL3lw==
-X-Gm-Gg: ASbGnctx6MpmIpa1qlqPAPKamqk/51GK163BXt7h0/L8epdGQGZNo3ctD+AWpuVW9zu
-	eNGCpI4u2l19TkJrHxOVgSyBdpM58PBvbMKKihUalvs2Y8Ir5NJ78rRlerWdHtGlLnP5fPjC2Aj
-	Qdwzrw6rQCqfBfim6HTmHVQxrLPEqv6KXkfq4tKzg3Lw9f7kpTUYyvoY11qiHCoRUX39rXXE5dc
-	ZbtGGvbXQoEWJvhk6fOebV1jj66FVj0s1W4ctBxl8Tnf2emkXwLl6ROYlqB/p7M6990DPpCs9fy
-	a9pEV5eKF/jo1pJ4qZLr7QfBUqzpIp/bfBDa+28L+5+5XpnnY7kXB3VUwUtf/g==
-X-Google-Smtp-Source: AGHT+IF5uWmk4PnvIThnJSvV0zNx6s2lAIFa7Qq/vftR90Qhtr6lQ7tpJ/xet55CCmVXUt9jRfsojQ==
-X-Received: by 2002:a05:6a21:3385:b0:20d:df67:4921 with SMTP id adf61e73a8af0-2170cafa33dmr33994739637.4.1747904003020;
-        Thu, 22 May 2025 01:53:23 -0700 (PDT)
-Received: from thinkpad ([120.60.130.60])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-742a96e589esm10810267b3a.9.2025.05.22.01.53.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 May 2025 01:53:22 -0700 (PDT)
-Date: Thu, 22 May 2025 14:23:16 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Nitin Rawat <quic_nitirawa@quicinc.com>
-Cc: vkoul@kernel.org, kishon@kernel.org, 
-	James.Bottomley@hansenpartnership.com, martin.petersen@oracle.com, bvanassche@acm.org, 
-	andersson@kernel.org, neil.armstrong@linaro.org, dmitry.baryshkov@oss.qualcomm.com, 
-	konrad.dybcio@oss.qualcomm.com, quic_rdwivedi@quicinc.com, quic_cang@quicinc.com, 
-	linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	linux-scsi@vger.kernel.org
-Subject: Re: [PATCH V5 07/11] phy: qcom-qmp-ufs: Remove qmp_ufs_exit() and
- Inline qmp_ufs_com_exit()
-Message-ID: <qrope222shpeqvhe2dnh4p4jmznuu7tr3jh2zujwbbd3khg4yo@wm2epj5ydefc>
-References: <20250515162722.6933-1-quic_nitirawa@quicinc.com>
- <20250515162722.6933-8-quic_nitirawa@quicinc.com>
- <untqxy76skl53c55bdjz5usk4seuypjqbxkfub2qeqz42mewqr@r4cutmkvy235>
- <79d2f373-ee53-4cd2-b228-171daf3adcb7@quicinc.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OrTaClTK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1747904080;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=HYjqurzjOiMJwJxxjOh2KGddt6/eXpa9P707bAF4j6s=;
+	b=OrTaClTK1h9/5OUcwD14uGNNb59oXK++E5hMLdY6BmFTkkSNXXKk+eeqK1540nSwlMFo9W
+	OKJZU0xll7c3cLwa3WT5bTmVk6rOg2brVe6YIUTNfbO4Tu2jqY+Zk5+Bm/qG1g/TTCYBgB
+	ikLSLzH9Xkc4eOA5TRKeWBBMCwFHfkI=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-466-zL1AcpgsMvm9ZO0IKBnGNw-1; Thu,
+ 22 May 2025 04:54:34 -0400
+X-MC-Unique: zL1AcpgsMvm9ZO0IKBnGNw-1
+X-Mimecast-MFC-AGG-ID: zL1AcpgsMvm9ZO0IKBnGNw_1747904072
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D3A2E1956086;
+	Thu, 22 May 2025 08:54:31 +0000 (UTC)
+Received: from [10.44.33.212] (unknown [10.44.33.212])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 0CFBB180035C;
+	Thu, 22 May 2025 08:54:25 +0000 (UTC)
+Message-ID: <7421647b-ae85-4f34-843c-02f1fb21d7f3@redhat.com>
+Date: Thu, 22 May 2025 10:54:23 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v7 8/8] mfd: zl3073x: Register DPLL sub-device
+ during init
+To: Lee Jones <lee@kernel.org>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, netdev@vger.kernel.org,
+ Vadim Fedorenko <vadim.fedorenko@linux.dev>,
+ Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
+ Jiri Pirko <jiri@resnulli.us>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Prathosh Satish <Prathosh.Satish@microchip.com>,
+ "David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
+ Michal Schmidt <mschmidt@redhat.com>, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+References: <20250507124358.48776-1-ivecera@redhat.com>
+ <20250507124358.48776-9-ivecera@redhat.com>
+ <CAHp75Ven0i05QhKz2djYx0UU9E9nipb7Qw3mm4e+UN+ZSF_enA@mail.gmail.com>
+ <2e3eb9e3-151d-42ef-9043-998e762d3ba6@redhat.com>
+ <aBt1N6TcSckYj23A@smile.fi.intel.com> <20250507152609.GK3865826@google.com>
+ <b095ffb9-c274-4520-a45e-96861268500b@redhat.com>
+ <20250513094126.GF2936510@google.com>
+ <6f693bb5-da3c-4363-895f-58a267e52a18@redhat.com>
+ <20250522073902.GC8794@google.com>
+Content-Language: en-US
+From: Ivan Vecera <ivecera@redhat.com>
+In-Reply-To: <20250522073902.GC8794@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <79d2f373-ee53-4cd2-b228-171daf3adcb7@quicinc.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-On Thu, May 22, 2025 at 03:49:12AM +0530, Nitin Rawat wrote:
-> 
-> 
-> On 5/21/2025 7:19 PM, Manivannan Sadhasivam wrote:
-> > On Thu, May 15, 2025 at 09:57:18PM +0530, Nitin Rawat wrote:
-> > > qmp_ufs_exit() is a wrapper function. It only calls qmp_ufs_com_exit().
-> > > Remove it to simplify the ufs phy driver.
-> > > 
-> > 
-> > Okay, so you are doing it now...
-> 
-> Yes
-> 
-> > 
-> > > Additonally partial Inline(dropping the reset assert) qmp_ufs_com_exit
-> > > into qmp_ufs_power_off function to avoid unnecessary function call.
-> > > 
-> > 
-> > Why are you dropping the reset_assert()?
-> 
-> This was not aligning to Phy programming guide .
-> 
 
-You should mention it in the description.
 
+On 22. 05. 25 9:39 dop., Lee Jones wrote:
+> On Tue, 13 May 2025, Ivan Vecera wrote:
 > 
-> > 
-> > > Signed-off-by: Nitin Rawat <quic_nitirawa@quicinc.com>
-> > > Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-> > > ---
-> > >   drivers/phy/qualcomm/phy-qcom-qmp-ufs.c | 19 +++++--------------
-> > >   1 file changed, 5 insertions(+), 14 deletions(-)
-> > > 
-> > > diff --git a/drivers/phy/qualcomm/phy-qcom-qmp-ufs.c b/drivers/phy/qualcomm/phy-qcom-qmp-ufs.c
-> > > index a5974a1fb5bb..fca47e5e8bf0 100644
-> > > --- a/drivers/phy/qualcomm/phy-qcom-qmp-ufs.c
-> > > +++ b/drivers/phy/qualcomm/phy-qcom-qmp-ufs.c
-> > > @@ -1758,19 +1758,6 @@ static void qmp_ufs_init_registers(struct qmp_ufs *qmp, const struct qmp_phy_cfg
-> > >   		qmp_ufs_init_all(qmp, &cfg->tbls_hs_b);
-> > >   }
-> > > -static int qmp_ufs_com_exit(struct qmp_ufs *qmp)
-> > > -{
-> > > -	const struct qmp_phy_cfg *cfg = qmp->cfg;
-> > > -
-> > > -	reset_control_assert(qmp->ufs_reset);
-> > > -
-> > > -	clk_bulk_disable_unprepare(qmp->num_clks, qmp->clks);
-> > > -
-> > > -	regulator_bulk_disable(cfg->num_vregs, qmp->vregs);
-> > > -
-> > > -	return 0;
-> > > -}
-> > > -
-> > >   static int qmp_ufs_power_on(struct phy *phy)
-> > >   {
-> > >   	struct qmp_ufs *qmp = phy_get_drvdata(phy);
-> > > @@ -1851,7 +1838,11 @@ static int qmp_ufs_power_off(struct phy *phy)
-> > >   	qphy_clrbits(qmp->pcs, cfg->regs[QPHY_PCS_POWER_DOWN_CONTROL],
-> > >   			SW_PWRDN);
-> > > -	qmp_ufs_com_exit(qmp);
-> > > +	/* Turn off all the phy clocks */
-> > 
-> > You should drop this and below comment. They add no value.
+>> On 13. 05. 25 11:41 dop., Lee Jones wrote:
+>>> On Mon, 12 May 2025, Ivan Vecera wrote:
+>>>
+>>>> On 07. 05. 25 5:26 odp., Lee Jones wrote:
+>>>>> On Wed, 07 May 2025, Andy Shevchenko wrote:
+>>>>>
+>>>>>> On Wed, May 07, 2025 at 03:56:37PM +0200, Ivan Vecera wrote:
+>>>>>>> On 07. 05. 25 3:41 odp., Andy Shevchenko wrote:
+>>>>>>>> On Wed, May 7, 2025 at 3:45 PM Ivan Vecera <ivecera@redhat.com> wrote:
+>>>>>>
+>>>>>> ...
+>>>>>>
+>>>>>>>>> +static const struct zl3073x_pdata zl3073x_pdata[ZL3073X_MAX_CHANNELS] = {
+>>>>>>>>> +       { .channel = 0, },
+>>>>>>>>> +       { .channel = 1, },
+>>>>>>>>> +       { .channel = 2, },
+>>>>>>>>> +       { .channel = 3, },
+>>>>>>>>> +       { .channel = 4, },
+>>>>>>>>> +};
+>>>>>>>>
+>>>>>>>>> +static const struct mfd_cell zl3073x_devs[] = {
+>>>>>>>>> +       ZL3073X_CELL("zl3073x-dpll", 0),
+>>>>>>>>> +       ZL3073X_CELL("zl3073x-dpll", 1),
+>>>>>>>>> +       ZL3073X_CELL("zl3073x-dpll", 2),
+>>>>>>>>> +       ZL3073X_CELL("zl3073x-dpll", 3),
+>>>>>>>>> +       ZL3073X_CELL("zl3073x-dpll", 4),
+>>>>>>>>> +};
+>>>>>>>>
+>>>>>>>>> +#define ZL3073X_MAX_CHANNELS   5
+>>>>>>>>
+>>>>>>>> Btw, wouldn't be better to keep the above lists synchronised like
+>>>>>>>>
+>>>>>>>> 1. Make ZL3073X_CELL() to use indexed variant
+>>>>>>>>
+>>>>>>>> [idx] = ...
+>>>>>>>>
+>>>>>>>> 2. Define the channel numbers
+>>>>>>>>
+>>>>>>>> and use them in both data structures.
+>>>>>>>>
+>>>>>>>> ...
+>>>>>>>
+>>>>>>> WDYM?
+>>>>>>>
+>>>>>>>> OTOH, I'm not sure why we even need this. If this is going to be
+>>>>>>>> sequential, can't we make a core to decide which cell will be given
+>>>>>>>> which id?
+>>>>>>>
+>>>>>>> Just a note that after introduction of PHC sub-driver the array will look
+>>>>>>> like:
+>>>>>>> static const struct mfd_cell zl3073x_devs[] = {
+>>>>>>>           ZL3073X_CELL("zl3073x-dpll", 0),  // DPLL sub-dev for chan 0
+>>>>>>>           ZL3073X_CELL("zl3073x-phc", 0),   // PHC sub-dev for chan 0
+>>>>>>>           ZL3073X_CELL("zl3073x-dpll", 1),  // ...
+>>>>>>>           ZL3073X_CELL("zl3073x-phc", 1),
+>>>>>>>           ZL3073X_CELL("zl3073x-dpll", 2),
+>>>>>>>           ZL3073X_CELL("zl3073x-phc", 2),
+>>>>>>>           ZL3073X_CELL("zl3073x-dpll", 3),
+>>>>>>>           ZL3073X_CELL("zl3073x-phc", 3),
+>>>>>>>           ZL3073X_CELL("zl3073x-dpll", 4),
+>>>>>>>           ZL3073X_CELL("zl3073x-phc", 4),   // PHC sub-dev for chan 4
+>>>>>>> };
+>>>>>>
+>>>>>> Ah, this is very important piece. Then I mean only this kind of change
+>>>>>>
+>>>>>> enum {
+>>>>>> 	// this or whatever meaningful names
+>>>>>> 	..._CH_0	0
+>>>>>> 	..._CH_1	1
+>>>>>> 	...
+>>>>>> };
+>>>>>>
+>>>>>> static const struct zl3073x_pdata zl3073x_pdata[ZL3073X_MAX_CHANNELS] = {
+>>>>>>           { .channel = ..._CH_0, },
+>>>>>>           ...
+>>>>>> };
+>>>>>>
+>>>>>> static const struct mfd_cell zl3073x_devs[] = {
+>>>>>>           ZL3073X_CELL("zl3073x-dpll", ..._CH_0),
+>>>>>>           ZL3073X_CELL("zl3073x-phc", ..._CH_0),
+>>>>>>           ...
+>>>>>> };
+>>>>>
+>>>>> This is getting hectic.  All for a sequential enumeration.  Seeing as
+>>>>> there are no other differentiations, why not use IDA in the child
+>>>>> instead?
+>>>>
+>>>> For that, there have to be two IDAs, one for DPLLs and one for PHCs...
+>>>
+>>> Sorry, can you explain a bit more.  Why is this a problem?
+>>>
+>>> The IDA API is very simple.
+>>>
+>>> Much better than building your own bespoke MACROs.
+>>
+>> I will try to explain this in more detail... This MFD driver handles
+>> chip family ZL3073x where the x == number of DPLL channels and can
+>> be from <1, 5>.
+>>
+>> The driver creates 'x' DPLL sub-devices during probe and has to pass
+>> channel number that should this sub-device use. Here can be used IDA
+>> in DPLL sub-driver:
+>> e.g. ida_alloc_max(zldev->channels, zldev->max_channels, GFP_KERNEL);
+>>
+>> This way the DPLL sub-device get its own unique channel ID to use.
+>>
+>> The situation is getting more complicated with PHC sub-devices because
+>> the chip can provide UP TO 'x' PHC sub-devices depending on HW
+>> configuration. To handle this the MFD driver has to check this HW config
+>> for particular channel if it is capable to provide PHC functionality.
+>>
+>> E.g. ZL30735 chip has 5 channels, in this case the MFD driver should
+>> create 5 DPLL sub-devices. And then lets say channel 0, 2 and 4 are
+>> PHC capable. Then the MFD driver should create 3 PHC sub-devices and
+>> pass 0, 2 resp. 4 for them.
 > 
-> Comments are actually provided for each operation within qmp_ufs_power_off
-> which actually facilitate understanding of all actions performed by the
-> function which may not be fully clear by code. Hence
-> I thought to keep the comments. But If you insist i'll remove.
-> 
+> Where is the code that determines which channels are PHC capable?
 
-For complex code, comment should be added indeed. But for
-clk_bulk_disable_unprepare() and regulator_bulk_disable(), NO. It is obvious
-that they turn off clock and regulators.
+It is not included in this series and will be added once the PTP driver
+will be added. But the code looks like:
 
-- Mani
+for (i = 0; i < ZL3073X_MAX_CHANNELS; i++) {
+	if (channel_is_in_nco_mode(..., i)) {
+		struct mfd_cell phc_dev = ZL3073X_CELL("zl3073x-phc", i);
+		rc = devm_mfd_add_devices(zldev->dev,
+					  PLATFORM_DEVID_AUTO, &phc_dev,
+					  1, NULL, 0, NULL);
+		...
+	}
+}
 
--- 
-மணிவண்ணன் சதாசிவம்
+Thanks,
+Ivan
+
