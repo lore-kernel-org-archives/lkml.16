@@ -1,144 +1,118 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B7101C3C04
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 09:55:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACE181C3C04;
+	Thu, 22 May 2025 09:56:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747907734; cv=none; b=kJH/O5jAHIxdHxDdq6h62wYr/+ssLKj5Ste8b4Eak/XyqXgkatA9fCXxurUtX3G+32zF0Xn6p7tIKNq4xnMo/RbtBSzfHH8nXn/JQTOSsLrmZKDnhTLScw4b/wksKJ/DqxyvVAUZs1o6PgXSdO09mnX0kTac+CVODDItlg6wyoI=
+	t=1747907762; cv=none; b=Vv5d9aT8nJ8L9lc8BtXbfFxx10xT0UPrJh78E0XQ4gUzutoIeFVwa4I4yDp9JR3hb8oE90jrwjIOEAu77mV4B2ZOe3Dk39BobPNn3vVitAElvbxsJs4Iet8cImbXPYwy4+cGS1MjsgBEUkzq9VI4yH/dHsH4gt2LCAytnLXq0QM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747907734; c=relaxed/simple;
-	bh=xV4GN8NTZQGrbOHhBmyR7WDzmGB3WcFfShC5kOWX+yY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bYD0SwhzCRTxaYHrEs942dwWRpF1ZFIYP+iu70ix3N0gwTYyFF/r4tKqk1O6fELqTQxkNCww7FBRbmFDK8F0zbT4K3Rh663IIXGAm0mN8bL399Ck3vjt4D2LBN5Llshkmw2rfZhyiXicwXnMbxJEdj1UAl+Lnoz9Nat3s5FOlMg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=r3FV7THt; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1747907762; c=relaxed/simple;
+	bh=zZQDvy6Qo42/2W4QwFrXPUZcYGV2s/FRajduLAvDQCw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=J+Lfgf7f+44C4TVVhp4Xw/vWDZdcDqaZht+lUnUSxf0IEDHBup5gh3sA7xFzuCufKkrkvr2fp1v/kMDMoWTyuYRrLa9FckJuGzgdfB+SekWcTmPgcg3tLcnHlVfa0IxiL8lbiw4D54nB2u3NrBydgY/hXqSVFQY3eSRGtnSUji0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=T+D+mimX; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="r3FV7THt"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-44a57d08bbfso5150655e9.2
-        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 02:55:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T+D+mimX"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-23179999d4aso7267805ad.1;
+        Thu, 22 May 2025 02:56:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1747907730; x=1748512530; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=N85CK9sWp6+mFnqAqGxmA0vF6xRLZ1OY4Jq5uN3nns0=;
-        b=r3FV7THtMNcC5TFiMQ2vFMXj+1NExc1EGxMJx7GLdw3cnbQn/H0Kmd5I8fRKh9yV3c
-         NqIpdZENt/6HQKLk2UABo1ZQ3mvMahq2UykniiK5dLMFaPeuUwl5X4F7eltuyvvuJrBQ
-         zYAS0be6tQ4hs8ovV53mW+6+bSLcN8dLq+hp5hm2nqnv3PCioYQSa/YinfOtydMynY6E
-         Is73Zf3eEcm5l4fVbeR1u3mtf8FqWf/jR6JWY9JFzIiuuCePjDiaE0sSsZ40wyyr9Obd
-         aetKzIvf57rrzFxkG+FP6gl/0IhIz6PMs+JWJH983FLY9B5MX9hwcZOkSuS/AKB7qcm5
-         O04g==
+        d=gmail.com; s=20230601; t=1747907760; x=1748512560; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=G09KB2onuKyHVmfE50lXFfjm4aLc9EdRitHUC4rY5fE=;
+        b=T+D+mimXQ46By4fAZkutHRPKovk9gCqPHKQto/nypip1KEu2bvlhtaQwQ0s+Icz/do
+         mQjSAbdXsOflzFt4QL73H5lA03x4MYJ8GChmX0D8p4vRrC1eyZ0W0zNjYBgSCYmFo2EJ
+         Bu5Yc00O/Y72nN+aGZFxs2QZq0TDOZbcVC5sjk0dKysdhErTP5zshz0LGHk3oRZ1lqv3
+         C4sAufye0lSEgHL7PdZwXn6PKvbKyBypX67v4svSpiyL7g3vStdjdxdQIxgWbaJYxEfw
+         bPphNio599WbK09AsRV0IhhrmQgk0lXGHYjAyQGDDJ03F5QL3EYMXq9EXqZJD1C9jx8O
+         Ky+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747907730; x=1748512530;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=N85CK9sWp6+mFnqAqGxmA0vF6xRLZ1OY4Jq5uN3nns0=;
-        b=coDmOJ1X0Tyn22JXElHEZhQdAz+QmZKgGva7gwpm+KU92neqHYIK1sjZr9dnv72jaf
-         oWVM9DSlULT3vkJNa6VaOfvbHz+mlWgRqLWrJU3bpF6VLDTtOe4VoPsB/m7ABys+FmJ9
-         1fUDH90BBUf++koKWo3WVuqR8OFLtmCtKbfPzrGqbbQ9YEFWp5C5AkLewwv/dskgLiwa
-         DlWwAYdu0ijU++3opF48pgmFVh1t9SHex00qm1DUdv9cVY+ikMx4c5mWB096FinFRVYO
-         Pgmzd4u+QPvx9Ocr9+eeojEiylxMjjsGVsPnMMqdme+rTZUFCtexyXYlgVH5kQgBvgez
-         37PA==
-X-Forwarded-Encrypted: i=1; AJvYcCXm59bBtla434Y45PZ0i4zoQ1N8Hrnm4G6HGAn8aA9inMMbHiovDhl6FO8Ofe2hVKMOGFtJTjWsElGYICk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw2gyz6eUle7QnB5nzIY+XvjK/H5eSe09Fx1hc0GiHNkYD/B5+v
-	VJ3Itlced1iT2jj/vDWHORaLYhj9ksdX55euN83PGGE8TOSCjeaKL74sWdUnepwSW34=
-X-Gm-Gg: ASbGncvXkkZXdIONyM8TzXbRYqDduL+rO92kPyK66ggExbb2Gl9HmZrJN0jgp0fEPep
-	SmcmGXvKYad1Qy3svqxhJtVLle0LNvf1Jk7s4s/zExesNRAtV8+HncoS2MgvA1ezXTEebRxCMie
-	VPhTGq0ZNscmxXa7jPSk6iJx59ZDvznPLv7A7oGeOYJhcCUvjRhGWFoLNCUKngnwxgpcUdZ19ea
-	OmwHnsZYfBY5T2lDoM3pGr0fN1gfANZmbu5lyjQKO87hZv7ZuBNCFK2DQn6h71lJfLJGYeShIGB
-	pvHuzA9bnS+CfBiKrmsL9iM+IxKCKL3WA1sNR2UfDBwJwGfwinEIsfhB7j1qceWp8+R/TGYgGyI
-	FC7/xe19i6B0a8kc91A9+
-X-Google-Smtp-Source: AGHT+IGlBdPQ4Ket+t0Pzwh3J2o3hjvlvuhgKqsoA4ERFUZXVz8H96bSIMPAXq+HQL+iX73vE7/+8w==
-X-Received: by 2002:a05:600c:c059:20b0:43c:fb95:c752 with SMTP id 5b1f17b1804b1-442ffc60edemr147130325e9.3.1747907730316;
-        Thu, 22 May 2025 02:55:30 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:e17:9700:16d2:7456:6634:9626? ([2a01:e0a:e17:9700:16d2:7456:6634:9626])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-447f23bfdd9sm96314495e9.18.2025.05.22.02.55.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 22 May 2025 02:55:29 -0700 (PDT)
-Message-ID: <3c8474fb-75fd-4ea1-887a-53f625e4eadf@rivosinc.com>
-Date: Thu, 22 May 2025 11:55:29 +0200
+        d=1e100.net; s=20230601; t=1747907760; x=1748512560;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=G09KB2onuKyHVmfE50lXFfjm4aLc9EdRitHUC4rY5fE=;
+        b=r7loNg5bKTSHA2YiPiTtu+zvmy7jPC2j+mXYzFRnGBUf13NuqHK/fmLkqYBpum50O7
+         DtwdeYtI5LFiM7XhylwEFVsQToviR2XH1+NuDracaWCAzKyimrEHMtWV/m6tugCjXKJf
+         2aZxsMpW9JSGnU51I9AcsQyOsyo9iSSq/mJwgbTSwAU09lc5z1x5fj4qvwL48nO1tPDu
+         bCG8DsQMQd0/luz9EvaFunlzE+Pg7v7h4H4cDqJCTwj9uPOHY0iXnX8z0EL0UE5IQBcU
+         EswDELAW7+J1oXNSav3wGhpEkimSunEKWEme9nK4D3jycYtSWcf6PM7RNVTvyXaOPf2W
+         kplw==
+X-Forwarded-Encrypted: i=1; AJvYcCV76uNjzKErdG2y3L9Xwxh0kVptu3vvU8+GQW/5TeXsnHc0XNliyf/GBM8L7Mr1LwHeG2iKP1FUuXPo13pG4A8=@vger.kernel.org, AJvYcCVev0TBH15CS65D1FdHkCcklitwgDHiWZi0q2/HWYnYyXoDzjrkpHO0E6bMIT2fG5aVMa+V5VZ07PsnzhQ=@vger.kernel.org, AJvYcCXAAE4xFgPCCUPQ8YW+Iu5PRofMmUwawi1aelOQW4nNsoYSaOpRlUfxPr0g/HhcviiZ1eQaNbAg@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz9TiuonZZzRH5IC1/llKRUSawtWpE4GR9Xqsu5CfVnZRSmTD3I
+	b3o/hXGugEQuFWR8MViLXavfE3fonuCm0+uvFUKDjQfG15fHBG/kaASUqTvCCnjg/Sb+1ZUGXlg
+	D/Io2kvGvuP4h/Ui8xGkVh+xuIQmRzUA=
+X-Gm-Gg: ASbGncshv4oM9h7V4pvwppUa7WK1qD0StpaPvqTa7cdfLYlUkF9QiyU7RbrWfNBUhoj
+	C7OQ9yKKVuJFDN6RnFCxWjM9nzVi0iOQ5oMIvTZa7Pwvi5m1pFdHgtE8I5xQEdcJnRp8jT8WStP
+	JpFc6jrdAOgNFgFMzAnGJHOp1GD2OBavcZ
+X-Google-Smtp-Source: AGHT+IFYIWC+n60Jh+NK0oH7ocg0CH8rKVpjvpng/mDoRMQvt9OfeYljH/Z2woY7cuOpizBcWnXFwX5FdQwCp7RVY2c=
+X-Received: by 2002:a17:902:fc48:b0:224:88c:9255 with SMTP id
+ d9443c01a7336-231d438c7f1mr136853785ad.3.1747907759865; Thu, 22 May 2025
+ 02:55:59 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 3/4] drivers: firmware: add riscv SSE support
-To: Qingfang Deng <dqfext@gmail.com>, Paul Walmsley
- <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>,
- linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org
-Cc: Himanshu Chauhan <hchauhan@ventanamicro.com>,
- Anup Patel <apatel@ventanamicro.com>, Xu Lu <luxu.kernel@bytedance.com>,
- Atish Patra <atishp@atishpatra.org>,
- Conor Dooley <conor.dooley@microchip.com>
-References: <20250516152355.560448-4-cleger@rivosinc.com>
- <20250516152355.560448-1-cleger@rivosinc.com>
- <20250521074627.4042832-1-dqfext@gmail.com>
-Content-Language: en-US
-From: =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>
-In-Reply-To: <20250521074627.4042832-1-dqfext@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20250520185555.825242-1-ojeda@kernel.org>
+In-Reply-To: <20250520185555.825242-1-ojeda@kernel.org>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Thu, 22 May 2025 11:55:46 +0200
+X-Gm-Features: AX0GCFt5zXlczwrJWYedrmHdatCH6TtH7LDmwwL7WwbulsfmTEouK13Fcs43C90
+Message-ID: <CANiq72mPJDA55t=TGz3wFBBch9iPxjQ0V_CV30XR6XijWnh3dw@mail.gmail.com>
+Subject: Re: [PATCH] objtool/rust: relax slice condition to cover more
+ `noreturn` Rust functions
+To: Miguel Ojeda <ojeda@kernel.org>
+Cc: Alex Gaynor <alex.gaynor@gmail.com>, Josh Poimboeuf <jpoimboe@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
+	Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, patches@lists.linux.dev, stable@vger.kernel.org, 
+	John Hubbard <jhubbard@nvidia.com>, Timur Tabi <ttabi@nvidia.com>, Kane York <kanepyork@gmail.com>, 
+	Joel Fernandes <joelagnelf@nvidia.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Tue, May 20, 2025 at 8:56=E2=80=AFPM Miguel Ojeda <ojeda@kernel.org> wro=
+te:
+>
+> Developers are indeed hitting other of the `noreturn` slice symbols in
+> Nova [1], thus relax the last check in the list so that we catch all of
+> them, i.e.
+>
+>     *_4core5slice5index22slice_index_order_fail
+>     *_4core5slice5index24slice_end_index_len_fail
+>     *_4core5slice5index26slice_start_index_len_fail
+>     *_4core5slice5index29slice_end_index_overflow_fail
+>     *_4core5slice5index31slice_start_index_overflow_fail
+>
+> These all exist since at least Rust 1.78.0, thus backport it too.
+>
+> See commit 56d680dd23c3 ("objtool/rust: list `noreturn` Rust functions")
+> for more details.
+>
+> Cc: stable@vger.kernel.org # Needed in 6.12.y and later.
+> Cc: John Hubbard <jhubbard@nvidia.com>
+> Cc: Timur Tabi <ttabi@nvidia.com>
+> Cc: Kane York <kanepyork@gmail.com>
+> Cc: Josh Poimboeuf <jpoimboe@kernel.org>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Reported-by: Joel Fernandes <joelagnelf@nvidia.com>
+> Link: https://lore.kernel.org/rust-for-linux/20250513180757.GA1295002@joe=
+lnvbox/ [1]
+> Signed-off-by: Miguel Ojeda <ojeda@kernel.org>
 
+Applied to `rust-next` early so that others can benefit on -next --
+thanks everyone!
 
-On 21/05/2025 09:46, Qingfang Deng wrote:
-> Hi Clément,
-> 
-> On Fri, 16 May 2025 17:23:41 +0200, Clément Léger wrote:
->> +static struct sse_event *sse_event_get(u32 evt)
->> +{
->> +	struct sse_event *event = NULL, *tmp;
->> +
->> +	scoped_guard(spinlock, &events_list_lock) {
->> +		list_for_each_entry(tmp, &events, list) {
->> +			if (tmp->evt_id == evt)
->> +				return event;
-> 
-> `event` is not being updated by the loop and therefore is always NULL.
-> Did you mean to return `tmp`?
+    Fixes: 56d680dd23c3 ("objtool/rust: list `noreturn` Rust functions")
 
-Hi Qingfang,
-
-Indeed, that's a mistake I made while renaming the evt/event stuff. I
-didn't saw that since it is only used to check that we don't register an
-event twice. Good catch.
-
-> 
->> +		}
->> +	}
->> +
->> +	return NULL;
->> +}
-> 
-> <snip>
-> 
->> +static int __init sse_init(void)
->> +{
->> +	int cpu, ret;
->> +
->> +	if (sbi_probe_extension(SBI_EXT_SSE) <= 0) {
->> +		pr_err("Missing SBI SSE extension\n");
->> +		return -EOPNOTSUPP;
->> +	}
->> +	pr_info("SBI SSE extension detected\n");
->> +
->> +	for_each_possible_cpu(cpu)
->> +		INIT_LIST_HEAD(&events);
-> 
-> `events` is already initialized.
-
-Yes indeed,
-
-Thanks,
-
-Clément
-
-> 
-> Qingfang
-
+Cheers,
+Miguel
