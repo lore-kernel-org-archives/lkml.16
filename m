@@ -1,111 +1,97 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5639148FE6
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 18:52:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B5831DE8B3;
+	Thu, 22 May 2025 18:53:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747939942; cv=none; b=dP2trh7aA8yjaFpNzR5OgnlYxT3a6NxpS0r6JL5sE2PlQ217pETQP0o8NFhHQ39AZexGtiGUSFjOC2Rbql/sD/ATXN4HGJz4zsxJT3dJ6fgqmJoXNykn2T8SttKmxaH7YwsopHncLzP7XqNYSfOyjx00eHbfyim5asCGWUAxzhA=
+	t=1747940000; cv=none; b=jhJVhxAU9hPAicCw9EVHYQmTT7/NDCDr6/8ud+R8/MfJaiiW8iXUZFbg6wDRvRvZCqKo3/7R2NzoF3ebRNzVZHLBxKUYYvSo92c07lipGLMhn4IL3UquwDmMr5MB34VOonfIeGT+ReGhuEp8xhO8tM0b14pjXPFDHM2FcV3VOjs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747939942; c=relaxed/simple;
-	bh=OmcJmFrYMF/uIfDhZxz9R89CVIAO7GUP6Rp+QMQA4Cw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=oioIEKOtKe03R1SQuTVhWQHgjq/q3q1nNELZS0m8i5a588yn3o1hs9YscGSi7it31cDLChzeFu6fOHP79NsZ9UWBkYjXp9L/tEeT7eKAX78peZ14dgw1rG7c+iBf0iaZMKuaAUKhQszSZOVFYm8UB/K3VthY4AkCjLh/4PQS7fA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uNcP9Ilh; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747940000; c=relaxed/simple;
+	bh=KJbnwLO9PnKS+o/OspihaxX0IQGxbr3s73qXik1soWQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JkSPgIdOL+SGF7As6xRmSmLPzcJJA60CND5KSzH8sXGplerw2CqnoxSie3PYg7fTcZ9qW2MIfyC1dMBnzRiklvz244U9pl+xGL+DfNSVYz9AR0KhMkaAhE4l9XKw7fuXheTQRQCT0bf72cCpph+gdfdecTd63ZO5FZFzgazULns=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=StS0NVZc; arc=none smtp.client-ip=209.85.210.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uNcP9Ilh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0010CC4CEE4;
-	Thu, 22 May 2025 18:52:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747939942;
-	bh=OmcJmFrYMF/uIfDhZxz9R89CVIAO7GUP6Rp+QMQA4Cw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=uNcP9IlhXC5J2lvLG54o8CBqlzhqljYSbdFmEnk80/85KX5Us+Z6YPriz9YkVqSmV
-	 paTl4YyF1Ii8Q1Y001w/K4UjAY17Af/hsZioZNpVZqvXwRIr2Or/3p9tKHymba4Nvp
-	 GKo74E0RBNrgK8zeR/i3vKf4DepexjLefIaFArWRuxgRenRV2z3zfG35anngKawvYk
-	 FZXpST/BPwlqJV5c8qEWbWHjcA9IL3Tmd+cFxrBkujDt15HvJYVYzNlT6xfcjqv1m9
-	 ET/3apfObjR9ffxUYAcxEvb0OezpeGEea5LO4JKjqpybkK7/sJrnXY/ZrAbFAA7xc8
-	 EJI0QJRchzbfA==
-From: SeongJae Park <sj@kernel.org>
-To: Gregory Price <gourry@gourry.net>
-Cc: SeongJae Park <sj@kernel.org>,
-	Bharata B Rao <bharata@amd.com>,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	Jonathan.Cameron@huawei.com,
-	dave.hansen@intel.com,
-	hannes@cmpxchg.org,
-	mgorman@techsingularity.net,
-	mingo@redhat.com,
-	peterz@infradead.org,
-	raghavendra.kt@amd.com,
-	riel@surriel.com,
-	rientjes@google.com,
-	weixugc@google.com,
-	willy@infradead.org,
-	ying.huang@linux.alibaba.com,
-	ziy@nvidia.com,
-	dave@stgolabs.net,
-	nifan.cxl@gmail.com,
-	joshua.hahnjy@gmail.com,
-	xuezhengchu@huawei.com,
-	yiannis@zptcorp.com,
-	akpm@linux-foundation.org,
-	david@redhat.com
-Subject: Re: [RFC PATCH v0 0/2] Batch migration for NUMA balancing
-Date: Thu, 22 May 2025 11:52:19 -0700
-Message-Id: <20250522185219.57843-1-sj@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <aC9hqyuqeGB457Cq@gourry-fedora-PF4VCD3F>
-References: 
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="StS0NVZc"
+Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-7390d21bb1cso7183536b3a.2;
+        Thu, 22 May 2025 11:53:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747939997; x=1748544797; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=XBANE17upGJtSfo2ziwlQRYaEyGo/7aP/0TWDN69oCo=;
+        b=StS0NVZcoeRM6d84IDFgACUGwgZYMH8jwI7DM352jnDvLLFNbV9Xr0/9G1CZ3QpRGt
+         ixBSuET1mZklQGVsxVHXkW8eRmdOxsNOG/MciYmALkKwb66cQAbvER9jt82Q3fRzj0po
+         /GIK5lBQ5ErU8bRXT2cOhiE040kRHp2+Fb2qMKtMsSFEpBTmFAt4AS3pxQbzNEcP6mNo
+         XMOZvqLGn4c/n+TwXkwDOtYr14T4OsUUXt/4pmVk34qJxfH1wiZmDEYaYLBt8AIq1UFA
+         RmT2uh1ixo8+JUtrXv8zNfxDIBGRFEXjJAODeD3hqIL1IiGhWe3tfLPSR0KzvsAf6FHd
+         ItMQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747939997; x=1748544797;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=XBANE17upGJtSfo2ziwlQRYaEyGo/7aP/0TWDN69oCo=;
+        b=QO/jQdTPjyoJESeG2FKIvrDYoT/FD9DSYm9x0LU959HXIetUdE0TMk/77hwX/kVIbR
+         i6bWMS95VyIjkXEoQ40+mriYpVvIUMYVt7KDwPPI3u7Zy1PB4HDkRCFXJNetZR7dcjVn
+         6/0F1NAvs/UAibwpe7NmFyke7rmY3xDlx550zUtgc3xPCVXjBXPgKqMqnryAsRaO7r1T
+         paGHZy3+Vym28dWGUBVkKTSKoI0HPGcAlNAt8/1JxNEriWTHPNDfsFxr6j12TGtRbHYs
+         C2fQfwZyzHVfzQHoX/ElORr32e8Hy/B4HUoo59Ju2bFY8jWcKhx8+6drUVRe/Oaz71HN
+         Y+TQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWLkQpzDudcYPBZvR/HX7KoaPi6KWmVlgKef8xIa4PVv59V/J8cnQagJPlh5RlmLgY0Of21JsmnINbv95KQ@vger.kernel.org, AJvYcCX5rRaznROk5kLpt3dwT1lTRWIuoFJ6sxyWJDX6jzDM5wdWGeDlT01A46vkNP2LRfTge4fNfSwKq/7wlBgv@vger.kernel.org
+X-Gm-Message-State: AOJu0YxSofdaK1cfA23vh889iEkjC6FroS/oJWTfZTd/6bKWUBrVWSUB
+	/UmOhahNH+5iF+pBx6R/VNqdXT5p6es2sv31BpMAyrSYuTh9SinVvaxz
+X-Gm-Gg: ASbGncto2h3gBg2Woa0P0uBgM2dv8WI70yEOuI656tQNvpdjEjhej9sC48ZlkrxMrFo
+	lPDCrzdpX/2OSizJkwvP7MUEf4MfY1FkUISQtVf8Ot6L4hsFbV00+8jWiQn1dNCDcJu8sBhX5c1
+	3PGaaHnzRNDKIiXS0xx5vgodBOAA15mgDY4ksPCi+ttG5Cz6AlFzo1/y74FOxr7UvsCSxdER1NA
+	zUv06o9fkaV1jbv4OyzQxuCSylBrR1w/zeSFx/AZqWWKOh9l71Pwa4RVBzU3K+T4kjEqBoUaVEb
+	7UGzI21OffK8AcoxJlj+vJMlr6bKLrjGbuF3UeGNvX4ubTBwO4iPfZFt1mURVETS
+X-Google-Smtp-Source: AGHT+IH4FHr6TKK37LSw/N7pyVC03rjqy4ufLuDp4wUmG7w6e/+v49oWOzOCGRwFlYTZKsMryyJI9w==
+X-Received: by 2002:a05:6a00:3985:b0:742:a334:466a with SMTP id d2e1a72fcca58-742a97eb677mr36355117b3a.12.1747939997420;
+        Thu, 22 May 2025 11:53:17 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b26eaf6e609sm11622477a12.19.2025.05.22.11.53.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 May 2025 11:53:16 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Date: Thu, 22 May 2025 11:53:15 -0700
+From: Guenter Roeck <linux@roeck-us.net>
+To: Kees Cook <kees@kernel.org>
+Cc: Joel Granados <joel.granados@kernel.org>, linux-kernel@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, Wen Yang <wen.yang@linux.dev>
+Subject: Re: [PATCH] kernel/sysctl-test: Unregister sysctl table after test
+ completion
+Message-ID: <ce50a353-e501-4a22-9742-188edfa2a7b2@roeck-us.net>
+References: <20250522013211.3341273-1-linux@roeck-us.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250522013211.3341273-1-linux@roeck-us.net>
 
-On Thu, 22 May 2025 13:40:59 -0400 Gregory Price <gourry@gourry.net> wrote:
-
-> On Thu, May 22, 2025 at 09:30:23AM -0700, SeongJae Park wrote:
-> > On Wed, 21 May 2025 23:08:16 -0400 Gregory Price <gourry@gourry.net> wrote:
-> > 
-> > > 
-> > > It seems to me that DAMON might make use of the batch migration
-> > > interface, so if you need any changes or extensions, it might be good
-> > > for you (SJ) to take a look at that for us.
-> > 
-> > For batch migration interface, though, to be honest I don't find very clear
-> > DAMON's usage of it, since DAMON does region-based sort of batched migration.
-> > Again, I took only a glance on migration batching part and gonna take more time
-> > to the details.
-> > 
+On Wed, May 21, 2025 at 06:32:11PM -0700, Guenter Roeck wrote:
+> One of the sysctl tests registers a valid sysctl table. This operation
+> is expected to succeed. However, it does not unregister the table after
+> executing the test. If the code is built as module and the module is
+> unloaded after the test, the next operation trying to access the table
+> (such as 'sysctl -a') will trigger a crash.
 > 
-> DAMON would identify a set of PFNs or Folios to migrate, at some point,
-> wouldn't it be beneficial to DAMON to simply re-use:
+> Unregister the registered table after test completiion to solve the
+> problem.
 > 
-> int migrate_misplaced_folio_batch(struct list_head *folio_list, int node)
 
-Good idea.  Actually we implemnted DAMOS_MIGRATE_HOT and DAMOS_MIGRATE_COLD
-instead of DAMOS_PROMOTE and DAMOS_DEMOTE since we didn't sure the promotion
-path logic is somewhat everyone agreed upon.  FYI, I'm planning to revisit the
-promotion path logic later (don't wait for me though ;) ).
+Never mind, I just learned that a very similar patch has been submitted
+last December or so but was rejected, and that the acceptable (?) fix seems
+to be stalled.
 
-> 
-> If not, then why?
+Sorry for the noise.
 
-I'll need to look into the detail, but from a high level glance I think it is a
-good idea.
-
-> 
-> That's why I mean by what would DAMON want out of such an interface.
-> Not the async part, but the underlying migration functions.
-
-Makes sense, thank you!
-
-
-Thanks,
-SJ
-
-[...]
+Guenter
