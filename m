@@ -1,182 +1,161 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA2711DF965;
-	Thu, 22 May 2025 12:02:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C2DC2135CB;
+	Thu, 22 May 2025 12:02:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747915357; cv=none; b=E4WBoE9xMv0itVC0gE/FQ/wjwfT7IiTn21PUSJyz75qlahLrEKsGRY5otmAi9fFBhs2kY4mZB6quOwivag7IPZhfrq9ZsNf8QnE3LsfFKZir8gi2Kco24T6UDgjwXGfgdJnXlliidk2FX3Hw0E9CWeITvr1gOcRAxdtNewM5R88=
+	t=1747915357; cv=none; b=AuEIOeO0jGpzKnmqNHj4+wOgA0g470jvpa5b+J2qYF8GqJaH2fJ85XDVvI/OzHsljXTfN8bhqXCw5aoyCJDNEhQSn8a4q6tQ3OM7ZmWaqTYY2loV/xAaxkwb9xtHhsWC2VQ6UorkOI8od9n412Atx13SvwIJng6a381jZKDZFaY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1747915357; c=relaxed/simple;
-	bh=3EqVS0mPt9FHYeHpJEN9TOubD2eRleBP0208eEeLR2s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ez5Xm7yCNPhzV6kMGu7NT1a6XZFfJeEIjJNo9GyfnfC6Jabn+n3rP56dZsOl9K4y4j/Zn/9S0w2xfM95xX7iy/XtO+RlwyqKYXvFKfqosg9AUduj9XjbbBYnuwHisCCTIQkhQY+PVstt9Neuzht+SwGG/1L6wRBfHE5leUy5Lfc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kKWf7UZr; arc=none smtp.client-ip=10.30.226.201
+	bh=/vn8DZJJrQxpSvPyCXIYRYluHXY05MJLF9VTkT2YuLQ=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=vEIL7q5CRCo2drTSRjmrD9jT8lf4n+06YoKq1s/kZySCm2fxrDLxMPJhOfuX3ptXCWaT+eQGS0Piy7XM0AS2ibOInC8uKYj1gVtNyNnpBry5EKtwcFHojOxcPGSlA5u0+VEoHnFP+2QRcVIrYyo6kbDkPMs6cOtRYTNpwWgiuSo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JkPTXyfk; arc=none smtp.client-ip=209.85.210.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kKWf7UZr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69DEDC4CEE4;
-	Thu, 22 May 2025 12:02:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747915356;
-	bh=3EqVS0mPt9FHYeHpJEN9TOubD2eRleBP0208eEeLR2s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=kKWf7UZrSMObWEDDrmj8yJWq72sycQWbfYl/ymYM0KUSgFVtxmkEpwe/FlC3P/OwE
-	 qzXFvINcYYRcrGh3W9CuA9GkAoNONfTY/SHelsuth3KzWoCR2EdwuCJsvYLMi3IaVZ
-	 MR3Fusi7rfKC+65QQby5DmodHWCKvm3jsZ/VMu6gOlU2d4S17MiZm1aMXFKJp5gYmE
-	 kJ3sMJid/uUoabCzppg6t2zcoFaMb32nRGFA9z5I5Kl9ZkybaaH14v98w1JLm9mkEC
-	 drvWNVpQBbCzawLA+U0xgnbmN+33Kvn/rpgi2Tx+aYUSksSfPObedGeRUfmpcXDFcA
-	 V6mZid1e6fccw==
-Date: Thu, 22 May 2025 13:02:29 +0100
-From: Simon Horman <horms@kernel.org>
-To: Haiyang Zhang <haiyangz@microsoft.com>
-Cc: "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-	Dexuan Cui <decui@microsoft.com>,
-	"stephen@networkplumber.org" <stephen@networkplumber.org>,
-	KY Srinivasan <kys@microsoft.com>,
-	Paul Rosswurm <paulros@microsoft.com>,
-	"olaf@aepfle.de" <olaf@aepfle.de>,
-	"vkuznets@redhat.com" <vkuznets@redhat.com>,
-	"davem@davemloft.net" <davem@davemloft.net>,
-	"wei.liu@kernel.org" <wei.liu@kernel.org>,
-	"edumazet@google.com" <edumazet@google.com>,
-	"kuba@kernel.org" <kuba@kernel.org>,
-	"pabeni@redhat.com" <pabeni@redhat.com>,
-	"leon@kernel.org" <leon@kernel.org>, Long Li <longli@microsoft.com>,
-	"ssengar@linux.microsoft.com" <ssengar@linux.microsoft.com>,
-	"linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-	"daniel@iogearbox.net" <daniel@iogearbox.net>,
-	"john.fastabend@gmail.com" <john.fastabend@gmail.com>,
-	"bpf@vger.kernel.org" <bpf@vger.kernel.org>,
-	"ast@kernel.org" <ast@kernel.org>,
-	"hawk@kernel.org" <hawk@kernel.org>,
-	"tglx@linutronix.de" <tglx@linutronix.de>,
-	"shradhagupta@linux.microsoft.com" <shradhagupta@linux.microsoft.com>,
-	"andrew+netdev@lunn.ch" <andrew+netdev@lunn.ch>,
-	Konstantin Taranov <kotaranov@microsoft.com>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [EXTERNAL] Re: [PATCH net-next,v2] net: mana: Add support for
- Multi Vports on Bare metal
-Message-ID: <20250522120229.GX365796@horms.kernel.org>
-References: <1747671636-5810-1-git-send-email-haiyangz@microsoft.com>
- <20250521140231.GW365796@horms.kernel.org>
- <MN0PR21MB34373B1A0162D8452018ABAACA9EA@MN0PR21MB3437.namprd21.prod.outlook.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JkPTXyfk"
+Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-7424ccbef4eso7641670b3a.2;
+        Thu, 22 May 2025 05:02:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747915354; x=1748520154; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Js+VfP2B7Z0Aw6YScxCHyKm02Nvx6oGOp/8rmQrjYsE=;
+        b=JkPTXyfkpeF5OxrI90hDu+MDZ67Nz83cvPOOgvY/1EkBq/o6pwMrgU7hP93D7N3pVb
+         vbhFurTstS9OJ8x2gD0NIHvB7awKbLQ7NJxlX8oOKQ0T0mVAJV3/wy7gxIBtl7g5swY5
+         y6MjOc048mClxh7qFwrsjk8MAYRkrAFjdjdXmP86uYZhjSHwVVm1L4koLYz0BNBrkBF0
+         ea22d1uDScgxvw/koIr7o9lTz3dEWCFDPIYRUMPMRvVm+JCLge0ZGU19CLd0ztlkLSRW
+         aEoGKfEsbXEnseONrTWNlxDVxZULs2PiO/tMQXSx33/kt+qtlb0rEyBhLqnw0RhOZjJH
+         WSfw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747915354; x=1748520154;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Js+VfP2B7Z0Aw6YScxCHyKm02Nvx6oGOp/8rmQrjYsE=;
+        b=Y1SVP14RN35v6H0WEAqDqpxJepDVpADTA5JinX2texqvIFB3a6SrG8ShTADnqlGOiR
+         PJD6k6cvWbjfERJIp7ALVYS7TViGWdRUOraUjLA/PdZx+5UfPZX2D7IaCtTcHQWcuz6X
+         /HZQmjufej6vtQg8/NYOKb/gURDoVXPsIWBcd679l4KJsoMfDO3aSwVpHAliBDqlRf85
+         GKkkDj9q4tpDQuOP7LGScb8xfYME7tIdbyMiT7s1xaZ9A56GKHnDvt8WqGCDXfj6XQfG
+         aLEGn38IjvhD3DNNJFwws0Kid+6api1enD5lcHky7FyFXMHb6b9H9xIcEQneaH8FCLhu
+         5LOw==
+X-Forwarded-Encrypted: i=1; AJvYcCVsxkQik0mGD2iYHjgwC8NFUqPwIQir4yhb5GSv3g11z3GaHIPPaFbXIcnZnuexyytf/g2ltkZlpndour8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxBL9vQT9J/PHbuNZHwTEMMbpa/fYM+polme22yRSb9l5j0c83Q
+	GuFYUfZI/HrfZdP13hudV0MF7BptfiDVD40alKdpjtvDh6i1W4w4OjjQ
+X-Gm-Gg: ASbGncvxogxR3//NaZa+4NVoszT4QjUBAXT4g3mfDAJ5AWkurIZok/8CAHg0lp10JLQ
+	Vk8OSUQYu4R1uusE3LI+VWW8k9wZp8CsxXIvVgFH5lMxzyj/Om+EDw71qRKS8UX4XIMB82DSpH7
+	Th66yEbZYPMUtGXKh5iZf2WP7eLOLOSk0VsSm/ClKu0Ft2yB0w6hPCKzKsoOYFUYtBtXnQEDgaq
+	Q6rEHS8Zlkr+azvtKrEUTUCGetsPzfn6BTm/A40CkwTAh4r7YvaeUKHMTf1xyVJ/08ioifhuLei
+	S29+/9G/h+FAGU1skAV1luwfzahSq8P1x0tlhfBepVSBipMDW/1S
+X-Google-Smtp-Source: AGHT+IHL8lmwQMoIeewqAqmlRmPfaWEsz3sA9er2qdYUbDlBxZKAUMcpIg2/Hhh0Gm2uwtTFyFkVfA==
+X-Received: by 2002:a05:6a21:8cc1:b0:216:1ea0:a516 with SMTP id adf61e73a8af0-21621a0a546mr39814230637.41.1747915354092;
+        Thu, 22 May 2025 05:02:34 -0700 (PDT)
+Received: from [127.0.1.1] ([2601:644:8500:5dd0:5e58:eb16:57b7:87fc])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-742a987af30sm11038961b3a.156.2025.05.22.05.02.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 May 2025 05:02:33 -0700 (PDT)
+From: Rudraksha Gupta <guptarud@gmail.com>
+Date: Thu, 22 May 2025 05:02:31 -0700
+Subject: [PATCH v2] arm: Fix rustgcc unknown argument '-mno-fdpic'
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <MN0PR21MB34373B1A0162D8452018ABAACA9EA@MN0PR21MB3437.namprd21.prod.outlook.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250522-rust-mno-fdpic-arm-fix-v2-1-a6f691d9c198@gmail.com>
+X-B4-Tracking: v=1; b=H4sIAFYSL2gC/4WNQQ6CMBBFr0Jm7Zi2FBFX3sOwKDCFSSwlLRIN6
+ d2tXMDle8l/f4dIgSnCrdgh0MaR/ZxBnQroJzOPhDxkBiVUJSolMLziim72aIeFezTBoeU3Nlq
+ Y6trZRpcl5PESKOsj/GgzTxxXHz7HzyZ/9m9ykyhRa6prS5dOGXkfneHnufcO2pTSF/E2hL+8A
+ AAA
+X-Change-ID: 20250520-rust-mno-fdpic-arm-fix-940a58bf9433
+To: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+ Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+ Benno Lossin <benno.lossin@proton.me>, 
+ Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+ Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
+ Nathan Chancellor <nathan@kernel.org>, 
+ Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
+ Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>
+Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ llvm@lists.linux.dev, torvalds@linux-foundation.org, 
+ Ben Wolsieffer <ben.wolsieffer@hefring.com>, 
+ Naresh Kamboju <naresh.kamboju@linaro.org>, 
+ Christian Schrrefl <chrisi.schrefl@gmail.com>, 
+ Russell King <rmk+kernel@armlinux.org.uk>, 
+ Rudraksha Gupta <guptarud@gmail.com>, Ard Biesheuvel <ardb@kernel.org>, 
+ anders.roxell@linaro.org, arnd@arndb.de, dan.carpenter@linaro.org, 
+ laura.nao@collabora.com, lkft-triage@lists.linaro.org, 
+ regressions@lists.linux.dev, Nick Clifton <nickc@redhat.com>, 
+ Richard Earnshaw <richard.earnshaw@arm.com>, 
+ Ramana Radhakrishnan <ramanara@nvidia.com>, Miguel Ojeda <ojeda@kernel.org>, 
+ Linux Kernel Functional Testing <lkft@linaro.org>
+X-Mailer: b4 0.15-dev-8865a
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1747915351; l=2475;
+ i=guptarud@gmail.com; s=20250208; h=from:subject:message-id;
+ bh=/vn8DZJJrQxpSvPyCXIYRYluHXY05MJLF9VTkT2YuLQ=;
+ b=coR/zdEQa58AEoBLC80nMQKdtdLpLDptVLzgORI6Pao8YL65d8bAiz1dhRWoZnT7pBD+vubuX
+ JaNZHBfjNLmBnc7cWcCagHcM1Hd30mRKdEDdvl+T6f4oE5TXdfemizZ
+X-Developer-Key: i=guptarud@gmail.com; a=ed25519;
+ pk=5lJNaiR/Bu7edToWFLriO5zXOrVqSQWrBKbAKwuEw04=
 
-On Wed, May 21, 2025 at 05:28:33PM +0000, Haiyang Zhang wrote:
-> 
-> 
-> > -----Original Message-----
-> > From: Simon Horman <horms@kernel.org>
-> > Sent: Wednesday, May 21, 2025 10:03 AM
-> > To: Haiyang Zhang <haiyangz@microsoft.com>
-> > Cc: linux-hyperv@vger.kernel.org; netdev@vger.kernel.org; Dexuan Cui
-> > <decui@microsoft.com>; stephen@networkplumber.org; KY Srinivasan
-> > <kys@microsoft.com>; Paul Rosswurm <paulros@microsoft.com>;
-> > olaf@aepfle.de; vkuznets@redhat.com; davem@davemloft.net;
-> > wei.liu@kernel.org; edumazet@google.com; kuba@kernel.org;
-> > pabeni@redhat.com; leon@kernel.org; Long Li <longli@microsoft.com>;
-> > ssengar@linux.microsoft.com; linux-rdma@vger.kernel.org;
-> > daniel@iogearbox.net; john.fastabend@gmail.com; bpf@vger.kernel.org;
-> > ast@kernel.org; hawk@kernel.org; tglx@linutronix.de;
-> > shradhagupta@linux.microsoft.com; andrew+netdev@lunn.ch; Konstantin
-> > Taranov <kotaranov@microsoft.com>; linux-kernel@vger.kernel.org
-> > Subject: [EXTERNAL] Re: [PATCH net-next,v2] net: mana: Add support for
-> > Multi Vports on Bare metal
-> > 
-> > On Mon, May 19, 2025 at 09:20:36AM -0700, Haiyang Zhang wrote:
-> > > To support Multi Vports on Bare metal, increase the device config
-> > response
-> > > version. And, skip the register HW vport, and register filter steps,
-> > when
-> > > the Bare metal hostmode is set.
-> > >
-> > > Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
-> > > ---
-> > > v2:
-> > >   Updated comments as suggested by ALOK TIWARI.
-> > >   Fixed the version check.
-> > >
-> > > ---
-> > >  drivers/net/ethernet/microsoft/mana/mana_en.c | 24 ++++++++++++-------
-> > >  include/net/mana/mana.h                       |  4 +++-
-> > >  2 files changed, 19 insertions(+), 9 deletions(-)
-> > >
-> > > diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c
-> > b/drivers/net/ethernet/microsoft/mana/mana_en.c
-> > > index 2bac6be8f6a0..9c58d9e0bbb5 100644
-> > > --- a/drivers/net/ethernet/microsoft/mana/mana_en.c
-> > > +++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
-> > > @@ -921,7 +921,7 @@ static void mana_pf_deregister_filter(struct
-> > mana_port_context *apc)
-> > >
-> > >  static int mana_query_device_cfg(struct mana_context *ac, u32
-> > proto_major_ver,
-> > >  				 u32 proto_minor_ver, u32 proto_micro_ver,
-> > > -				 u16 *max_num_vports)
-> > > +				 u16 *max_num_vports, u8 *bm_hostmode)
-> > >  {
-> > >  	struct gdma_context *gc = ac->gdma_dev->gdma_context;
-> > >  	struct mana_query_device_cfg_resp resp = {};
-> > > @@ -932,7 +932,7 @@ static int mana_query_device_cfg(struct mana_context
-> > *ac, u32 proto_major_ver,
-> > >  	mana_gd_init_req_hdr(&req.hdr, MANA_QUERY_DEV_CONFIG,
-> > >  			     sizeof(req), sizeof(resp));
-> > >
-> > > -	req.hdr.resp.msg_version = GDMA_MESSAGE_V2;
-> > > +	req.hdr.resp.msg_version = GDMA_MESSAGE_V3;
-> > >
-> > >  	req.proto_major_ver = proto_major_ver;
-> > >  	req.proto_minor_ver = proto_minor_ver;
-> > 
-> > > @@ -956,11 +956,16 @@ static int mana_query_device_cfg(struct
-> > mana_context *ac, u32 proto_major_ver,
-> > >
-> > >  	*max_num_vports = resp.max_num_vports;
-> > >
-> > > -	if (resp.hdr.response.msg_version == GDMA_MESSAGE_V2)
-> > > +	if (resp.hdr.response.msg_version >= GDMA_MESSAGE_V2)
-> > >  		gc->adapter_mtu = resp.adapter_mtu;
-> > >  	else
-> > >  		gc->adapter_mtu = ETH_FRAME_LEN;
-> > >
-> > > +	if (resp.hdr.response.msg_version >= GDMA_MESSAGE_V3)
-> > > +		*bm_hostmode = resp.bm_hostmode;
-> > > +	else
-> > > +		*bm_hostmode = 0;
-> > 
-> > Hi,
-> > 
-> > Perhaps not strictly related to this patch, but I see
-> > that mana_verify_resp_hdr() is called a few lines above.
-> > And that verifies a minimum msg_version. But I do not see
-> > any verification of the maximum msg_version supported by the code.
-> > 
-> > I am concerned about a hypothetical scenario where, say the as yet unknown
-> > version 5 is sent as the version, and the above behaviour is used, while
-> > not being correct.
-> > 
-> > Could you shed some light on this?
-> > 
-> 
-> In driver, we specify the expected reply msg version is v3 here:
-> req.hdr.resp.msg_version = GDMA_MESSAGE_V3;
-> 
-> If the HW side is upgraded, it won't send reply msg version higher
-> than expected, which may break the driver.
+Currently rust on arm fails to compile due to '-mno-fdpic'. This flag
+disables a GCC feature that we don't want for kernel builds, so let's
+skip it as it doesn't apply to Clang.
 
-Thanks,
+    UPD     include/generated/asm-offsets.h
+    CALL    scripts/checksyscalls.sh
+    RUSTC L rust/core.o
+    BINDGEN rust/bindings/bindings_generated.rs
+    BINDGEN rust/bindings/bindings_helpers_generated.rs
+    CC      rust/helpers/helpers.o
+    Unable to generate bindings: clang diagnosed error: error: unknown argument: '-mno-fdpic'
+    make[2]: *** [rust/Makefile:369: rust/bindings/bindings_helpers_generated.rs] Error 1
+    make[2]: *** Deleting file 'rust/bindings/bindings_helpers_generated.rs'
+    make[2]: *** Waiting for unfinished jobs....
+    Unable to generate bindings: clang diagnosed error: error: unknown argument: '-mno-fdpic'
+    make[2]: *** [rust/Makefile:349: rust/bindings/bindings_generated.rs] Error 1
+    make[2]: *** Deleting file 'rust/bindings/bindings_generated.rs'
+    make[1]: *** [/home/pmos/build/src/linux-next-next-20250521/Makefile:1285: prepare] Error 2
+    make: *** [Makefile:248: __sub-make] Error 2
 
-If I understand things correctly the HW side will honour the
-req.hdr.resp.msg_version and thus the SW won't receive anything
-it doesn't expect. Is that right?
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+Closes: https://lore.kernel.org/all/CA+G9fYvOanQBYXKSg7C6EU30k8sTRC0JRPJXYu7wWK51w38QUQ@mail.gmail.com/
+Suggested-by: Miguel Ojeda <ojeda@kernel.org>
+Tested-by: Rudraksha Gupta <guptarud@gmail.com>
+Acked-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+Signed-off-by: Rudraksha Gupta <guptarud@gmail.com>
+---
+Changes in v2:
+- Fixed patch formatting issues
+- Link to v1: https://lore.kernel.org/r/20250520-rust-mno-fdpic-arm-fix-v1-1-44e77fe6b2a1@gmail.com
+---
+ rust/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/rust/Makefile b/rust/Makefile
+index 3aca903a7d08..f207ba0ed466 100644
+--- a/rust/Makefile
++++ b/rust/Makefile
+@@ -273,7 +273,7 @@ bindgen_skip_c_flags := -mno-fp-ret-in-387 -mpreferred-stack-boundary=% \
+ 	-fzero-call-used-regs=% -fno-stack-clash-protection \
+ 	-fno-inline-functions-called-once -fsanitize=bounds-strict \
+ 	-fstrict-flex-arrays=% -fmin-function-alignment=% \
+-	-fzero-init-padding-bits=% \
++	-fzero-init-padding-bits=% -mno-fdpic \
+ 	--param=% --param asan-%
+ 
+ # Derived from `scripts/Makefile.clang`.
+
+---
+base-commit: a5806cd506af5a7c19bcd596e4708b5c464bfd21
+change-id: 20250520-rust-mno-fdpic-arm-fix-940a58bf9433
+
+Best regards,
+-- 
+Rudraksha Gupta <guptarud@gmail.com>
 
