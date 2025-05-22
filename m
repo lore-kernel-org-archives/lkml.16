@@ -1,431 +1,107 @@
-Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C95871DDC11
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 18:43:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78BF42AE7F;
+	Thu, 22 May 2025 18:45:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747939425; cv=none; b=T+kNx2L9/i5PcYaM7kaaxSlWGNbtVET/kPMqtwf5gxgLnlR/Y7pzMt2b09SVaH6nJNHJ89Q/MNHluGY4NQCm1TFNWPJEizaCRebXlmeE2jCAlnGcV6BkDDD7253PYyzF/Lu45LMxu4KpePVXmQ69Q/S+lYHRHPVFCD1aq0BncsM=
+	t=1747939520; cv=none; b=ZhLjpAG/KXPNJzCt1q8SBk0QHeb2AItMMjEuDc7TUsZCX5sEq5EB648ghT1yFeKFwR8+AiWDdu+hKFFRxAouBd7+EcFEwfgN/wFz8Slu8NggACZ3tRox0/wBDLQfRcumDhmwDqyB5gAf5BLnLJnxe0J7WulOdVlbpn4BVi8NW7w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747939425; c=relaxed/simple;
-	bh=mZA7tnEOkDYHgMSIPNL1qU6+JQMYb74gHi16I3y2xBY=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=HTyPhzgpsbjdyZ5A8HIbRO3KDffltHfYhsbMihClHmqyX30NIDfV+nrr7r2qB61EshPounGyX16UJSOCefz84V/fZuJHSXBjDdcPrTF/GG1C0A9asOieLH3PKDENhsDpEfIWBxl8OAcuD+AHH5QHp8LMH4OSgZOWimMDry2qKTA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--dylanbhatch.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=gQqwq8Eb; arc=none smtp.client-ip=209.85.210.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--dylanbhatch.bounces.google.com
+	s=arc-20240116; t=1747939520; c=relaxed/simple;
+	bh=wP7ZgUCLjfdfBFrCeaXuLW218dXqDVe2vcNavUuWQJk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ityz6iFQLMsfG5dETnJboXHJ6AKnH+JWYY7xm6ONTqBNIbfBWnNl7EK3ZOg1xbC0MFAYl1ItjZwMlbPQdl9vX5sSBQdHEZpmbLVd7ePOFSsnnr3yk5JBBlmJb7UyyUkAgxsS1QjxcYZ0O3PWj0jxye6XZx5nqgQnznpNGot9go4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XdKMqfbf; arc=none smtp.client-ip=209.85.210.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gQqwq8Eb"
-Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-73e0094706bso11524636b3a.3
-        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 11:43:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XdKMqfbf"
+Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-7376e311086so9744874b3a.3;
+        Thu, 22 May 2025 11:45:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747939423; x=1748544223; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=a1GVm5gp8JVusG0oEPGh9OhuMZTc/+zYVHuhtgJP/E4=;
-        b=gQqwq8Ebzd0xmLcVHmt8/wgthxKP9Pxb5XI1Fo+ANILRjjCwUk9+Uon6klzOl0Lg7n
-         aBB1PQETOrRZU7WZoVCY9iEo6WnniqJgzUfjELRVIodFqpjhEJuFiKqFGuv5xxB2ngWz
-         Td3qjkYDR5MlHSPswiOLniEggMNREvAbSDIGtyIuot5phaE6vYN7SGKALnhCBQNLQJvA
-         Ck9GX/UlxpSHR9vRRrK4CQhInUIjTnWs0iTM6OrE+pYo5CQhlhv3rL5Ooz9klBpbZmxN
-         AUSDihCle5tvFFl3c7w49ugp3uYiZ3qzMlOflAwqiKKH8bmMUHsR6QVLzIcHZv3qe/RB
-         8deQ==
+        d=gmail.com; s=20230601; t=1747939518; x=1748544318; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=nHrtgk3cilwDlkLgJATNxCKVWDqyvDZFwi6EiNKD/0M=;
+        b=XdKMqfbfrdBLfA682g2Ekd1A19s/UGqhuzf1PUUqQAg+Ccx/HLgA+KhF0uqapgRJLL
+         mV6eIf6rHYZ6l3ZNrqTZhZjP7uSgPtjmCQL+ZEGOzPTzGPgOmDqdFz6mJ3yGBXK+kOKU
+         DzXEMEBmqFA/ZxFEjYlpend1FUn2wqJxoSuGvYgSLhP0MPX918NJQ5mtZydCmllORe08
+         Ty58cCarzRi9Tu0ltqbjB1w912Vvu/2dHMoiMfsr64FNj2PnlYV75o8ZjMG9QupNosH1
+         siJtSNj2/8kzzSPIPpSCajcnazROWXnGSl5HQpOKlPWH1jTWcXCaNVb3TTBiaH9vsUFy
+         lzDA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747939423; x=1748544223;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=a1GVm5gp8JVusG0oEPGh9OhuMZTc/+zYVHuhtgJP/E4=;
-        b=EqcixlSesMTOjYutiZh6sJPXXjrtnYQORt3627a91zOeImBxv7GMTR/vbizQYBaX9Q
-         4kvoD4nlUiaUCs/M7o75lsKYRHmVYg8yFXJyWXbYfYj/GB/axMxALWkDRwo1BH83W2v9
-         +sP0PKr0esmB5FxOK0wrVvFor2n5tbSch6ZjO1gOhFpsJbVEXCNkhCR6+71C/VeoA6ph
-         kWl6OUD1rVxuQkalwnRDBtjXPppHtZ3G2daFyg6Ow6hZYupTSUnIsbbQpa4w+VAUnSQC
-         xBkHfNiuU7/BRJhSYmyrayovPINvzRibXop42/CfeQbBuo5z1wn4rwm4wWcbStK9j+FC
-         /3aA==
-X-Forwarded-Encrypted: i=1; AJvYcCW+O++HEUk1QMzzuC28zE9ZfBHWU/BAUr8Q0gX7bp6AhUnwYSq0nnub2DVz/fXKCcaNzyTSw2sPwaY5C0A=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwDOFvotcfrrqpO/O1sFIdNZLWIp6PyfE2AnLvMgPolvhJcIrNY
-	tSSUGUC/IRkGmzYa1GZnBYAukFCfz8oP7Xu3rXN9qEs+94iefMmUwWyQ7yim7oanptP4QpG6GXE
-	wHd7HBWG4CeBJa1teYt+CE8uX8A==
-X-Google-Smtp-Source: AGHT+IHbNm+TninJktNZpzwaXfuIBRH5eT3H1NLmcV5Z4O9vJRiWr//Giqt7sU3SNHnVrTB9x9+e0hZO2mSDaVWgmA==
-X-Received: from pfcg20.prod.google.com ([2002:a05:6a00:23d4:b0:740:63b6:1826])
- (user=dylanbhatch job=prod-delivery.src-stubby-dispatcher) by
- 2002:aa7:8890:0:b0:736:5e6f:295b with SMTP id d2e1a72fcca58-745ed883fb9mr241345b3a.12.1747939422724;
- Thu, 22 May 2025 11:43:42 -0700 (PDT)
-Date: Thu, 22 May 2025 18:42:49 +0000
-In-Reply-To: <20250522184249.3137187-1-dylanbhatch@google.com>
+        d=1e100.net; s=20230601; t=1747939518; x=1748544318;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=nHrtgk3cilwDlkLgJATNxCKVWDqyvDZFwi6EiNKD/0M=;
+        b=jCGFQxP4Pvyamke/DqwuBTeHusfJEftci/pxgqd6gF6VvHjVpvZ8Et3JXYSJqv9+2d
+         749gXd5SdsuSHzky7DsaNl0JauNNXx7JyO4YA/RZRIxLXOeW4dIN/ncRsyU6PpnObQw7
+         VtYMaFuNXxX38wsjbehfeQFs3EWY/Zx1LYXYRAVC80tSm8loZQA3Y6hVtbeCiKBKLTZo
+         /beBLcxexZ2pZAZmSYLLpS2rQcs7NN0rSPHu2bJ0nn8v34AYRU0fS/Q+bEYcdLLrVO7e
+         L4zkP3lUngJT5i3y8QMa6TNOoDZdIQKyuNOmuZkEVbWKOYLsL+XQX6L3DD7t/rE9CKH+
+         8kYw==
+X-Forwarded-Encrypted: i=1; AJvYcCVskp82umhzIG6npLftdeE1fnLUTs7Z9owyFpMks0lGL8tAUAxSULaVVnYJAlLnLbNizAeB4vQJhKLMTQ==@vger.kernel.org, AJvYcCWFlaupUoHQ9Apfs2VPdpaGHfSGSTHJoXyIvz3C+7THt6oZTeBgFWN5h6HZ485dDl8ozGAeUVDd/WvOlrB2@vger.kernel.org, AJvYcCXs3d5JwFs/kbem70QFhC/ovxX1U3CEjvHjP5bGRUEK+FJAgPiU8S0dhGc0r9mU30/ak9p/sMK+30X0@vger.kernel.org
+X-Gm-Message-State: AOJu0YzuRJbEOwoBFh0NcHX8wX5nrOht2a1Trss4ePejvIOiDqjASXq2
+	ny5bh8sDOVrnbRfTiKFbM95l6VrDcggjlIz/RfMFcDq0r8XQfBJRTkWoePMZbQ==
+X-Gm-Gg: ASbGncsnSb0cf3FrCngHAvKuzWhXllV5kJliorh5sm2w2Ihr+8E2sqxZFtSnZQD+U7o
+	rInBLl0DHTuiYoOlktL/5IbGD2l7jIS02piBuszA4fOn6Irw/yLsqKeLGDfTiSbBLEusXjbXrqY
+	Nudd7EdSaOwylOoMc4BKvfdquufKLRVXFpVq5lC+bO99qMAIrqEcrxXzu/7RbLTzXC3AnGoNJ3Q
+	oIMAqhxcd/lUJk25adtOb6bm2QP4oLnQijYhj4fCrzaWOdQtlwMgokwK3EnEfQaaCAztLpE2YME
+	rJZ7O1XK43enYFHxzVCos+ap1EY=
+X-Google-Smtp-Source: AGHT+IGSdjFB7Jabutdy6tfoYdoTwoUWKiWnrBMyjM2b7Ojmp9Vl71heLBXDgO88JqD+QaVZcTzlCQ==
+X-Received: by 2002:a05:6a21:9012:b0:1fa:9819:c0a5 with SMTP id adf61e73a8af0-216218c0554mr37375687637.11.1747939518433;
+        Thu, 22 May 2025 11:45:18 -0700 (PDT)
+Received: from ryzen.lan ([2601:644:8200:dab8::a86])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b26eaf6fd3bsm11502424a12.23.2025.05.22.11.45.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 May 2025 11:45:17 -0700 (PDT)
+From: Rosen Penev <rosenp@gmail.com>
+To: linux-wireless@vger.kernel.org
+Cc: =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@toke.dk>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS),
+	linux-kernel@vger.kernel.org (open list),
+	linux-mips@vger.kernel.org (open list:MIPS)
+Subject: [PATCHv2 0/5] wifi: ath9k: add ahb OF support
+Date: Thu, 22 May 2025 11:45:11 -0700
+Message-ID: <20250522184516.13176-1-rosenp@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250522184249.3137187-1-dylanbhatch@google.com>
-X-Mailer: git-send-email 2.49.0.1151.ga128411c76-goog
-Message-ID: <20250522184249.3137187-3-dylanbhatch@google.com>
-Subject: [PATCH v3 2/2] arm64/module: Use text-poke API for late relocations.
-From: Dylan Hatch <dylanbhatch@google.com>
-To: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, Josh Poimboeuf <jpoimboe@kernel.org>, Jiri Kosina <jikos@kernel.org>, 
-	Miroslav Benes <mbenes@suse.cz>, Petr Mladek <pmladek@suse.com>, 
-	Joe Lawrence <joe.lawrence@redhat.com>
-Cc: Dylan Hatch <dylanbhatch@google.com>, Song Liu <song@kernel.org>, 
-	Ard Biesheuvel <ardb@kernel.org>, Sami Tolvanen <samitolvanen@google.com>, 
-	Peter Zijlstra <peterz@infradead.org>, "Mike Rapoport (Microsoft)" <rppt@kernel.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, Dan Carpenter <dan.carpenter@linaro.org>, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	live-patching@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-To enable late module patching, livepatch modules need to be able to
-apply some of their relocations well after being loaded. In this
-scenario, use the text-poking API to allow this, even with
-STRICT_MODULE_RWX.
+First two commits are small cleanups to make the changes of the third
+simpler. The fourth actually adds dts definitions to use ahb.
 
-This patch is partially based off commit 88fc078a7a8f6 ("x86/module: Use
-text_poke() for late relocations").
+v2: Add documentation, use kernel_ulong_t, and of_device_get_match_data
 
-Signed-off-by: Dylan Hatch <dylanbhatch@google.com>
-Acked-by: Song Liu <song@kernel.org>
----
- arch/arm64/kernel/module.c | 114 ++++++++++++++++++++++---------------
- 1 file changed, 69 insertions(+), 45 deletions(-)
+Rosen Penev (5):
+  wifi: ath9k: ahb: reorder declarations
+  wifi: ath9k: ahb: reorder includes
+  wifi: ath9k: ahb: replace id_table with of
+  dt-bindings: net: wireless: ath9k: add OF bindings
+  mips: dts: qca: add wmac support
 
-diff --git a/arch/arm64/kernel/module.c b/arch/arm64/kernel/module.c
-index 06bb680bfe975..3998fb3322b73 100644
---- a/arch/arm64/kernel/module.c
-+++ b/arch/arm64/kernel/module.c
-@@ -18,11 +18,13 @@
- #include <linux/moduleloader.h>
- #include <linux/random.h>
- #include <linux/scs.h>
-+#include <linux/memory.h>
- 
- #include <asm/alternative.h>
- #include <asm/insn.h>
- #include <asm/scs.h>
- #include <asm/sections.h>
-+#include <asm/text-patching.h>
- 
- enum aarch64_reloc_op {
- 	RELOC_OP_NONE,
-@@ -48,7 +50,8 @@ static u64 do_reloc(enum aarch64_reloc_op reloc_op, __le32 *place, u64 val)
- 	return 0;
- }
- 
--static int reloc_data(enum aarch64_reloc_op op, void *place, u64 val, int len)
-+static int reloc_data(enum aarch64_reloc_op op, void *place, u64 val, int len,
-+		      struct module *me)
- {
- 	s64 sval = do_reloc(op, place, val);
- 
-@@ -66,7 +69,11 @@ static int reloc_data(enum aarch64_reloc_op op, void *place, u64 val, int len)
- 
- 	switch (len) {
- 	case 16:
--		*(s16 *)place = sval;
-+		if (me->state != MODULE_STATE_UNFORMED)
-+			aarch64_insn_set(place, sval, sizeof(s16));
-+		else
-+			*(s16 *)place = sval;
-+
- 		switch (op) {
- 		case RELOC_OP_ABS:
- 			if (sval < 0 || sval > U16_MAX)
-@@ -82,7 +89,11 @@ static int reloc_data(enum aarch64_reloc_op op, void *place, u64 val, int len)
- 		}
- 		break;
- 	case 32:
--		*(s32 *)place = sval;
-+		if (me->state != MODULE_STATE_UNFORMED)
-+			aarch64_insn_set(place, sval, sizeof(s32));
-+		else
-+			*(s32 *)place = sval;
-+
- 		switch (op) {
- 		case RELOC_OP_ABS:
- 			if (sval < 0 || sval > U32_MAX)
-@@ -98,8 +109,10 @@ static int reloc_data(enum aarch64_reloc_op op, void *place, u64 val, int len)
- 		}
- 		break;
- 	case 64:
--		*(s64 *)place = sval;
--		break;
-+		if (me->state != MODULE_STATE_UNFORMED)
-+			aarch64_insn_set(place, sval, sizeof(s64));
-+		else
-+			*(s64 *)place = sval;		break;
- 	default:
- 		pr_err("Invalid length (%d) for data relocation\n", len);
- 		return 0;
-@@ -113,7 +126,8 @@ enum aarch64_insn_movw_imm_type {
- };
- 
- static int reloc_insn_movw(enum aarch64_reloc_op op, __le32 *place, u64 val,
--			   int lsb, enum aarch64_insn_movw_imm_type imm_type)
-+			   int lsb, enum aarch64_insn_movw_imm_type imm_type,
-+			   struct module *me)
- {
- 	u64 imm;
- 	s64 sval;
-@@ -145,7 +159,10 @@ static int reloc_insn_movw(enum aarch64_reloc_op op, __le32 *place, u64 val,
- 
- 	/* Update the instruction with the new encoding. */
- 	insn = aarch64_insn_encode_immediate(AARCH64_INSN_IMM_16, insn, imm);
--	*place = cpu_to_le32(insn);
-+	if (me->state != MODULE_STATE_UNFORMED)
-+		aarch64_insn_set(place, cpu_to_le32(insn), sizeof(insn));
-+	else
-+		*place = cpu_to_le32(insn);
- 
- 	if (imm > U16_MAX)
- 		return -ERANGE;
-@@ -154,7 +171,8 @@ static int reloc_insn_movw(enum aarch64_reloc_op op, __le32 *place, u64 val,
- }
- 
- static int reloc_insn_imm(enum aarch64_reloc_op op, __le32 *place, u64 val,
--			  int lsb, int len, enum aarch64_insn_imm_type imm_type)
-+			  int lsb, int len, enum aarch64_insn_imm_type imm_type,
-+			  struct module *me)
- {
- 	u64 imm, imm_mask;
- 	s64 sval;
-@@ -170,7 +188,10 @@ static int reloc_insn_imm(enum aarch64_reloc_op op, __le32 *place, u64 val,
- 
- 	/* Update the instruction's immediate field. */
- 	insn = aarch64_insn_encode_immediate(imm_type, insn, imm);
--	*place = cpu_to_le32(insn);
-+	if (me->state != MODULE_STATE_UNFORMED)
-+		aarch64_insn_set(place, cpu_to_le32(insn), sizeof(insn));
-+	else
-+		*place = cpu_to_le32(insn);
- 
- 	/*
- 	 * Extract the upper value bits (including the sign bit) and
-@@ -189,17 +210,17 @@ static int reloc_insn_imm(enum aarch64_reloc_op op, __le32 *place, u64 val,
- }
- 
- static int reloc_insn_adrp(struct module *mod, Elf64_Shdr *sechdrs,
--			   __le32 *place, u64 val)
-+			   __le32 *place, u64 val, struct module *me)
- {
- 	u32 insn;
- 
- 	if (!is_forbidden_offset_for_adrp(place))
- 		return reloc_insn_imm(RELOC_OP_PAGE, place, val, 12, 21,
--				      AARCH64_INSN_IMM_ADR);
-+				      AARCH64_INSN_IMM_ADR, me);
- 
- 	/* patch ADRP to ADR if it is in range */
- 	if (!reloc_insn_imm(RELOC_OP_PREL, place, val & ~0xfff, 0, 21,
--			    AARCH64_INSN_IMM_ADR)) {
-+			    AARCH64_INSN_IMM_ADR, me)) {
- 		insn = le32_to_cpu(*place);
- 		insn &= ~BIT(31);
- 	} else {
-@@ -211,7 +232,10 @@ static int reloc_insn_adrp(struct module *mod, Elf64_Shdr *sechdrs,
- 						   AARCH64_INSN_BRANCH_NOLINK);
- 	}
- 
--	*place = cpu_to_le32(insn);
-+	if (me->state != MODULE_STATE_UNFORMED)
-+		aarch64_insn_set(place, cpu_to_le32(insn), sizeof(insn));
-+	else
-+		*place = cpu_to_le32(insn);
- 	return 0;
- }
- 
-@@ -255,23 +279,23 @@ int apply_relocate_add(Elf64_Shdr *sechdrs,
- 		/* Data relocations. */
- 		case R_AARCH64_ABS64:
- 			overflow_check = false;
--			ovf = reloc_data(RELOC_OP_ABS, loc, val, 64);
-+			ovf = reloc_data(RELOC_OP_ABS, loc, val, 64, me);
- 			break;
- 		case R_AARCH64_ABS32:
--			ovf = reloc_data(RELOC_OP_ABS, loc, val, 32);
-+			ovf = reloc_data(RELOC_OP_ABS, loc, val, 32, me);
- 			break;
- 		case R_AARCH64_ABS16:
--			ovf = reloc_data(RELOC_OP_ABS, loc, val, 16);
-+			ovf = reloc_data(RELOC_OP_ABS, loc, val, 16, me);
- 			break;
- 		case R_AARCH64_PREL64:
- 			overflow_check = false;
--			ovf = reloc_data(RELOC_OP_PREL, loc, val, 64);
-+			ovf = reloc_data(RELOC_OP_PREL, loc, val, 64, me);
- 			break;
- 		case R_AARCH64_PREL32:
--			ovf = reloc_data(RELOC_OP_PREL, loc, val, 32);
-+			ovf = reloc_data(RELOC_OP_PREL, loc, val, 32, me);
- 			break;
- 		case R_AARCH64_PREL16:
--			ovf = reloc_data(RELOC_OP_PREL, loc, val, 16);
-+			ovf = reloc_data(RELOC_OP_PREL, loc, val, 16, me);
- 			break;
- 
- 		/* MOVW instruction relocations. */
-@@ -280,88 +304,88 @@ int apply_relocate_add(Elf64_Shdr *sechdrs,
- 			fallthrough;
- 		case R_AARCH64_MOVW_UABS_G0:
- 			ovf = reloc_insn_movw(RELOC_OP_ABS, loc, val, 0,
--					      AARCH64_INSN_IMM_MOVKZ);
-+					      AARCH64_INSN_IMM_MOVKZ, me);
- 			break;
- 		case R_AARCH64_MOVW_UABS_G1_NC:
- 			overflow_check = false;
- 			fallthrough;
- 		case R_AARCH64_MOVW_UABS_G1:
- 			ovf = reloc_insn_movw(RELOC_OP_ABS, loc, val, 16,
--					      AARCH64_INSN_IMM_MOVKZ);
-+					      AARCH64_INSN_IMM_MOVKZ, me);
- 			break;
- 		case R_AARCH64_MOVW_UABS_G2_NC:
- 			overflow_check = false;
- 			fallthrough;
- 		case R_AARCH64_MOVW_UABS_G2:
- 			ovf = reloc_insn_movw(RELOC_OP_ABS, loc, val, 32,
--					      AARCH64_INSN_IMM_MOVKZ);
-+					      AARCH64_INSN_IMM_MOVKZ, me);
- 			break;
- 		case R_AARCH64_MOVW_UABS_G3:
- 			/* We're using the top bits so we can't overflow. */
- 			overflow_check = false;
- 			ovf = reloc_insn_movw(RELOC_OP_ABS, loc, val, 48,
--					      AARCH64_INSN_IMM_MOVKZ);
-+					      AARCH64_INSN_IMM_MOVKZ, me);
- 			break;
- 		case R_AARCH64_MOVW_SABS_G0:
- 			ovf = reloc_insn_movw(RELOC_OP_ABS, loc, val, 0,
--					      AARCH64_INSN_IMM_MOVNZ);
-+					      AARCH64_INSN_IMM_MOVNZ, me);
- 			break;
- 		case R_AARCH64_MOVW_SABS_G1:
- 			ovf = reloc_insn_movw(RELOC_OP_ABS, loc, val, 16,
--					      AARCH64_INSN_IMM_MOVNZ);
-+					      AARCH64_INSN_IMM_MOVNZ, me);
- 			break;
- 		case R_AARCH64_MOVW_SABS_G2:
- 			ovf = reloc_insn_movw(RELOC_OP_ABS, loc, val, 32,
--					      AARCH64_INSN_IMM_MOVNZ);
-+					      AARCH64_INSN_IMM_MOVNZ, me);
- 			break;
- 		case R_AARCH64_MOVW_PREL_G0_NC:
- 			overflow_check = false;
- 			ovf = reloc_insn_movw(RELOC_OP_PREL, loc, val, 0,
--					      AARCH64_INSN_IMM_MOVKZ);
-+					      AARCH64_INSN_IMM_MOVKZ, me);
- 			break;
- 		case R_AARCH64_MOVW_PREL_G0:
- 			ovf = reloc_insn_movw(RELOC_OP_PREL, loc, val, 0,
--					      AARCH64_INSN_IMM_MOVNZ);
-+					      AARCH64_INSN_IMM_MOVNZ, me);
- 			break;
- 		case R_AARCH64_MOVW_PREL_G1_NC:
- 			overflow_check = false;
- 			ovf = reloc_insn_movw(RELOC_OP_PREL, loc, val, 16,
--					      AARCH64_INSN_IMM_MOVKZ);
-+					      AARCH64_INSN_IMM_MOVKZ, me);
- 			break;
- 		case R_AARCH64_MOVW_PREL_G1:
- 			ovf = reloc_insn_movw(RELOC_OP_PREL, loc, val, 16,
--					      AARCH64_INSN_IMM_MOVNZ);
-+					      AARCH64_INSN_IMM_MOVNZ, me);
- 			break;
- 		case R_AARCH64_MOVW_PREL_G2_NC:
- 			overflow_check = false;
- 			ovf = reloc_insn_movw(RELOC_OP_PREL, loc, val, 32,
--					      AARCH64_INSN_IMM_MOVKZ);
-+					      AARCH64_INSN_IMM_MOVKZ, me);
- 			break;
- 		case R_AARCH64_MOVW_PREL_G2:
- 			ovf = reloc_insn_movw(RELOC_OP_PREL, loc, val, 32,
--					      AARCH64_INSN_IMM_MOVNZ);
-+					      AARCH64_INSN_IMM_MOVNZ, me);
- 			break;
- 		case R_AARCH64_MOVW_PREL_G3:
- 			/* We're using the top bits so we can't overflow. */
- 			overflow_check = false;
- 			ovf = reloc_insn_movw(RELOC_OP_PREL, loc, val, 48,
--					      AARCH64_INSN_IMM_MOVNZ);
-+					      AARCH64_INSN_IMM_MOVNZ, me);
- 			break;
- 
- 		/* Immediate instruction relocations. */
- 		case R_AARCH64_LD_PREL_LO19:
- 			ovf = reloc_insn_imm(RELOC_OP_PREL, loc, val, 2, 19,
--					     AARCH64_INSN_IMM_19);
-+					     AARCH64_INSN_IMM_19, me);
- 			break;
- 		case R_AARCH64_ADR_PREL_LO21:
- 			ovf = reloc_insn_imm(RELOC_OP_PREL, loc, val, 0, 21,
--					     AARCH64_INSN_IMM_ADR);
-+					     AARCH64_INSN_IMM_ADR, me);
- 			break;
- 		case R_AARCH64_ADR_PREL_PG_HI21_NC:
- 			overflow_check = false;
- 			fallthrough;
- 		case R_AARCH64_ADR_PREL_PG_HI21:
--			ovf = reloc_insn_adrp(me, sechdrs, loc, val);
-+			ovf = reloc_insn_adrp(me, sechdrs, loc, val, me);
- 			if (ovf && ovf != -ERANGE)
- 				return ovf;
- 			break;
-@@ -369,46 +393,46 @@ int apply_relocate_add(Elf64_Shdr *sechdrs,
- 		case R_AARCH64_LDST8_ABS_LO12_NC:
- 			overflow_check = false;
- 			ovf = reloc_insn_imm(RELOC_OP_ABS, loc, val, 0, 12,
--					     AARCH64_INSN_IMM_12);
-+					     AARCH64_INSN_IMM_12, me);
- 			break;
- 		case R_AARCH64_LDST16_ABS_LO12_NC:
- 			overflow_check = false;
- 			ovf = reloc_insn_imm(RELOC_OP_ABS, loc, val, 1, 11,
--					     AARCH64_INSN_IMM_12);
-+					     AARCH64_INSN_IMM_12, me);
- 			break;
- 		case R_AARCH64_LDST32_ABS_LO12_NC:
- 			overflow_check = false;
- 			ovf = reloc_insn_imm(RELOC_OP_ABS, loc, val, 2, 10,
--					     AARCH64_INSN_IMM_12);
-+					     AARCH64_INSN_IMM_12, me);
- 			break;
- 		case R_AARCH64_LDST64_ABS_LO12_NC:
- 			overflow_check = false;
- 			ovf = reloc_insn_imm(RELOC_OP_ABS, loc, val, 3, 9,
--					     AARCH64_INSN_IMM_12);
-+					     AARCH64_INSN_IMM_12, me);
- 			break;
- 		case R_AARCH64_LDST128_ABS_LO12_NC:
- 			overflow_check = false;
- 			ovf = reloc_insn_imm(RELOC_OP_ABS, loc, val, 4, 8,
--					     AARCH64_INSN_IMM_12);
-+					     AARCH64_INSN_IMM_12, me);
- 			break;
- 		case R_AARCH64_TSTBR14:
- 			ovf = reloc_insn_imm(RELOC_OP_PREL, loc, val, 2, 14,
--					     AARCH64_INSN_IMM_14);
-+					     AARCH64_INSN_IMM_14, me);
- 			break;
- 		case R_AARCH64_CONDBR19:
- 			ovf = reloc_insn_imm(RELOC_OP_PREL, loc, val, 2, 19,
--					     AARCH64_INSN_IMM_19);
-+					     AARCH64_INSN_IMM_19, me);
- 			break;
- 		case R_AARCH64_JUMP26:
- 		case R_AARCH64_CALL26:
- 			ovf = reloc_insn_imm(RELOC_OP_PREL, loc, val, 2, 26,
--					     AARCH64_INSN_IMM_26);
-+					     AARCH64_INSN_IMM_26, me);
- 			if (ovf == -ERANGE) {
- 				val = module_emit_plt_entry(me, sechdrs, loc, &rel[i], sym);
- 				if (!val)
- 					return -ENOEXEC;
- 				ovf = reloc_insn_imm(RELOC_OP_PREL, loc, val, 2,
--						     26, AARCH64_INSN_IMM_26);
-+						     26, AARCH64_INSN_IMM_26, me);
- 			}
- 			break;
- 
+ .../bindings/net/wireless/qca,ath9k.yaml      | 23 ++++++-
+ arch/mips/boot/dts/qca/ar9132.dtsi            |  9 +++
+ .../boot/dts/qca/ar9132_tl_wr1043nd_v1.dts    |  4 ++
+ arch/mips/boot/dts/qca/ar9331.dtsi            |  9 +++
+ arch/mips/boot/dts/qca/ar9331_dpt_module.dts  |  4 ++
+ .../mips/boot/dts/qca/ar9331_dragino_ms14.dts |  4 ++
+ arch/mips/boot/dts/qca/ar9331_omega.dts       |  4 ++
+ .../qca/ar9331_openembed_som9331_board.dts    |  4 ++
+ arch/mips/boot/dts/qca/ar9331_tl_mr3020.dts   |  4 ++
+ drivers/net/wireless/ath/ath9k/ahb.c          | 60 +++++++------------
+ 10 files changed, 84 insertions(+), 41 deletions(-)
+
 -- 
-2.49.0.1151.ga128411c76-goog
+2.49.0
 
