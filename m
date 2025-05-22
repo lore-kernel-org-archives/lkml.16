@@ -1,65 +1,65 @@
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F8C41917F9
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 18:32:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF64F18A6A9
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 18:34:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747938774; cv=none; b=oSLVl12M+SkbX/yJE7wqUWpxtsGT0ld8LN4yUW8s4piI8yY4xrvL4a8oZCUTN5T8mM3JIme1irAEnIcVL6nMNRRk+4iuwdoKuN9mtIpnXd0iCt3EdKGAnsl2QxDZg6sWVUtpyNM45AyxWDTOQPgzpPkftuH2tdLwgYVwYOVP8/w=
+	t=1747938864; cv=none; b=DsBrZm2hJ1OrZD1tJbWa4Sj0VeIfVMSBmuaWf6SAEH/XN5V54Q+6zpE4oLYqSaTItyJHI/cLmU7tIc2WKS0RBMGYVr+a5cJ38Xt9MJtmb8XPoyfDZ/ak8RHlvsZ+mU34QLIAE0byLb+aj28OuciX3IUK7l+AFsnlNSSgkxrV5bg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747938774; c=relaxed/simple;
-	bh=lMJ6tHz4tOW1eWeTG1Uc6/k5VF7JF9zmg/OfZNm2H1M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qwzsT6lG2jy+NDlWqGqGCUd03+j0odwHrtzslrUa8oN0VFJtZCJ0Z+Lv5PDhkgBLG0UP/Y13E6lx1ALJtc8SGMrQPEZau2hizLk57Pe+/En8Z8Eo6mFrp9QYcdywNkCA4XvehRMF1+xLGD964q+PCnTZhAFfRkWzzmNhg9IC5dw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=KL3HxUfQ; arc=none smtp.client-ip=209.85.221.41
+	s=arc-20240116; t=1747938864; c=relaxed/simple;
+	bh=8jNEoO2bZW65ROC8gWgbA0OrrFn/suY1XO9xMfVDh9w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=LHOa0oLFZgD3u+BnZayVvEfjxP+cK2p2kk3Oi2hO0fHJeGH0+fYsEgi1k81ZjzZI0c0vQ+r6Cbt+NTXZF3/lOj5Z5LkuD1HVBU9kv6oOKaEJc8FPC2t9/rLNORTNOvsJGq7RNtb0RG7wCymFC16W0/6lI+fFJtfI8umSa8qbnc4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=b2bgwvYI; arc=none smtp.client-ip=209.85.221.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KL3HxUfQ"
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-3a35ae46214so820929f8f.2
-        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 11:32:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="b2bgwvYI"
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-3a36561d25cso836260f8f.1
+        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 11:34:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1747938771; x=1748543571; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1747938861; x=1748543661; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=cJY9vehP2g7EGxYhkgZzcqCJWvR4zDkNLhtdKYt0bgU=;
-        b=KL3HxUfQz5TBpNNfi9O71BW9phF3C+egioOQ67fgwuXJ/oZw9qhtav+7iaEN3DN26y
-         LsyeIFwshFcYJZujWPAgdIhUoHnrGcDrPFyAxAA8oKHFVZitzyZL27G6lqy1oyrzcvJU
-         Kww5Hnhc6tITl0QH5xUVVLzMlzzxdCl8ihbZ8ckC7kOntY1jQ9anCBMQg2JhpD92+Wg4
-         0j2gQs7EfRschDmUkWX2YrA+Z+JEF/TMPxEu6/0PP54Ladm6lMyFHiKP0lota/8Z69ig
-         U4dTbg4DLYNNcTE2WeQSzAYReSd5vSBlCU9QJ0QGlx5gPHJnnB8dTYyvF6/s1707egQ7
-         iV1g==
+         :from:references:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=w1CTkcCN4mgvmc4O+/bwLsfd/yX/UppF+CPol8YE2Rk=;
+        b=b2bgwvYIhhzmRBGN/VhhIR/dzVcZaLp1DaOoTaH+mjXZZcdD5CpPVwBA41HCzm4mI5
+         FBFnd2iAVWUf+Y2rCycYYjAJmuQxuaoWHcHHEJlf6V9zB2Toy+EiTukBmC+10Nr0w60p
+         y7H/eENsvh09UGA89e4L1tzUb8uuHUjY/sgex+iNbmu5O6H0roGqEaATOqFX8NP9BPeI
+         W/DrWq7y2I8MGldSMQD1UqWOUoCP5MUmoWPxRak0wCK8qWtYrunupNgVozFFolUO0clg
+         3SAM4Q+V+bK0BAuYSv0KskOF0wHNxFly+x+uAel5I1BY1lmU2+oEov/rFZU33hzyUX0m
+         Tqyg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747938771; x=1748543571;
+        d=1e100.net; s=20230601; t=1747938861; x=1748543661;
         h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=cJY9vehP2g7EGxYhkgZzcqCJWvR4zDkNLhtdKYt0bgU=;
-        b=TzlgGnozjcEubjCl9Vi/Bp2M33o5p0iIQtcuajYydc/74ZSbgZ4Lf+SViP8ofnlwOr
-         AyAXjmhCol0MPPd5hnHLOEWXEyEPv4Rf+tZNz0RLekaYsriekbHyzzL4Pyr9dEAZLwyB
-         YfLDK8os0KY7ykcsCze+fIj3CXC1GFrTY193CUvoLBTnX55DGOhoaXVaryF3cHJFqQJs
-         yswpdfO+Za6qpiv6iF2b8hpR5g4euekz74eeOkkOHv4s1GIRxpH3I88sbsmR1RZ3V4Wl
-         31pHYYy8pFau1VOp8u/Dliai9phBhjsR3K5ccH2CUM8/b/tPICifCgLr2dIp2k6WpfLz
-         oMTw==
-X-Forwarded-Encrypted: i=1; AJvYcCW74p0cGcv9lh+wKSM9cCu7t6U+36xnMnmuLFzfx8Pf1GrmNReXKlNCE7n6TUAsxOSXjNE+4k6sT42WGxI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywt+iPYSZWtuP22BitQQPkCnRW7UFm/ZWNbILqJSG6Y2K91n+42
-	NUO/N3OSt2t35Rs2zCPnnQ3vOOx7fM7OBwgxJdUwWL2ScQ8clambVpoj2FmtvLpJeGs=
-X-Gm-Gg: ASbGnctqAPXKCPWoYUY/CBbeHtTNnR9M/iY+n+ou58SO0nThxyM+oDrWQgpASKy02hQ
-	yyZeOLdxGIe50EzqzpTmMYXfLLsOzpaHtZGRxpBDyCoVlyn2zSbUarwoWRhGn4WTQiw8YA2mB+p
-	WvHoIrUcPfQSIM+ccNXyOTgQU7xqajMRymVV4TXp/xcUVs9Hl1Aca5ucwUdRBxM5wiFlWKHZO1F
-	fISEduaNoIO/SzeUyohxhREa+PQZWqaPJSyXCrhP8+TMqdhqqzF6nElfxhRxQjS571dDVHL3VE5
-	AFU+nRuVE9Qm4eJVM0d+FQ7ofDC/+htQ42tQzKa4LmqOX1lnrClRktG9adWsLviwTbHAWsg=
-X-Google-Smtp-Source: AGHT+IGLyHoeTc4HSvaXyg3+PQJQKiImY3KCxwct5wGRCFTjBfvCwUsuGdayZtCuy6sdlhDOtQDFIQ==
-X-Received: by 2002:a05:600c:3587:b0:439:9a1f:d73d with SMTP id 5b1f17b1804b1-442fd68257fmr90763505e9.8.1747938771266;
-        Thu, 22 May 2025 11:32:51 -0700 (PDT)
+         :from:references:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=w1CTkcCN4mgvmc4O+/bwLsfd/yX/UppF+CPol8YE2Rk=;
+        b=sb3AlvUJYojAorpdIzGPQJhvoIdDVSla5Xd5phS9C1vLnRhlC/bqgM9P+vJbm901dh
+         9XvhUE0VaaN7lGjmjYgjbSACQVDd0MrCFI+HjcWM8vIaJPsHnEUB9nUckeWnfa6G0FcC
+         rsTaIp9ciD7UPEW5fuGSVDm+sR2fjBT4F7J9xXahyDKVZQdSG9NFYNpNOy9puPj/Wr9i
+         thW+Q0HdNHaW8BzWdgFxHZMmZHuZemovwQVdVe7WzLcKeRTZYdOKFamCr/WSkTp8h7OD
+         Tx6ve2zrh8HqhZx8hXcAcEjLdTnX++DKrmnMBgpxeTPJ1q/ihndOgIhunWV2cODbYAeO
+         ubrg==
+X-Forwarded-Encrypted: i=1; AJvYcCXWyWDNeZ0XT81yoWhnAyuD9kaz5jMWFNP3skEhM9RcE0ZkQyfv+VBxiGrCWSRraJaDSLGBug1RCYckpN4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YynmrGjwOpb/DbieLgOWrUBNN1agZSUK3VYXjmXYg1sp8nmWm0S
+	rMa2raLA56F30eHgjpP7WPZjcTmVs+vcGOLitvLrenhQnawW8dTWhntvbYvtH91gmk0=
+X-Gm-Gg: ASbGncvilCMHRToxvKOfrmwt90F0MHA7GiIV6eSSY7DYjj5bv1iEvUMPpaclUCdbM2c
+	8yHLpuJPygBArA8NYSltFtoCwdFa3QOwW4vNua95YkfrlFb1cWgcqMt1f5dfhFqTzFOfOF15bYx
+	kj3LH4YVVzIl0+38kXRdFtk8mjlIvpOKHbdAia1baEN0A1lrCqI/f0qY+0hFS+OLoPm10gnk3K3
+	V+f5D2y+wokpmuMD9unwi/1oB8u+FcrvmA6y8RnieWnmR/jpo+TgTp5MdMxRgyF3BLBbs50FEvg
+	Q3+XmGzX8dyljLaFU8pVn47QM+jw8OaxBJ6mC4KARRZKDQXym3etM7w2xugZBgwECR0xFNCradF
+	R36Aj4Q==
+X-Google-Smtp-Source: AGHT+IFynnkis2LoFrPbbKd6EFHmR3CK/Wwm2NAwfY4u2siqRPzXLtZHj+YFawT3eXyBiVwktliX4w==
+X-Received: by 2002:a05:600c:198d:b0:439:9a40:aa27 with SMTP id 5b1f17b1804b1-442fd66dea4mr98494735e9.5.1747938861256;
+        Thu, 22 May 2025 11:34:21 -0700 (PDT)
 Received: from [192.168.1.29] ([178.197.223.125])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-447f3ce483bsm113545715e9.33.2025.05.22.11.32.49
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a3699a9bf3sm19018332f8f.54.2025.05.22.11.34.19
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 22 May 2025 11:32:50 -0700 (PDT)
-Message-ID: <f3f2b57c-d745-40b4-8317-5f123e2ab018@linaro.org>
-Date: Thu, 22 May 2025 20:32:49 +0200
+        Thu, 22 May 2025 11:34:20 -0700 (PDT)
+Message-ID: <5ebc399d-88f4-4d90-adcc-8c9b31efbd95@linaro.org>
+Date: Thu, 22 May 2025 20:34:19 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,23 +67,13 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/5] clk: stm32: Do not enable by default during compile
- testing
-To: Neil Armstrong <neil.armstrong@linaro.org>,
- Jerome Brunet <jbrunet@baylibre.com>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Kevin Hilman <khilman@baylibre.com>,
- Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
- Maxime Coquelin <mcoquelin.stm32@gmail.com>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>, Chen-Yu Tsai
- <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>,
- Samuel Holland <samuel@sholland.org>, =?UTF-8?Q?Emilio_L=C3=B3pez?=
- <emilio@elopez.com.ar>
-Cc: linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-stm32@st-md-mailman.stormreply.com, linux-sunxi@lists.linux.dev
-References: <20250404-kconfig-defaults-clk-v1-0-4d2df5603332@linaro.org>
- <20250404-kconfig-defaults-clk-v1-3-4d2df5603332@linaro.org>
+Subject: Re: [PATCH] soc: mediatek: Do not enable MTK_SOCINFO by default
+ during compile testing
+To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ Matthias Brugger <matthias.bgg@gmail.com>, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+References: <20250404112359.255053-1-krzysztof.kozlowski@linaro.org>
+ <3e10ed93-dadb-4d0b-b419-28ea492a1603@collabora.com>
 From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Content-Language: en-US
 Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
@@ -130,24 +120,25 @@ Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  h0At/TN/618e/QVlZPbMeNSp3S3ieMP9Q6y4gw5CfgiDRJ2K9g99m6Rvlx1qwom6QbU06ltb
  vJE2K9oKd9nPp1NrBfBdEhX8oOwdCLJXEq83vdtOEqE42RxfYta4P3by0BHpcwzYbmi/Et7T
  2+47PN9NZAOyb771QoVr8A==
-In-Reply-To: <20250404-kconfig-defaults-clk-v1-3-4d2df5603332@linaro.org>
+In-Reply-To: <3e10ed93-dadb-4d0b-b419-28ea492a1603@collabora.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 04/04/2025 13:56, Krzysztof Kozlowski wrote:
-> Enabling the compile test should not cause automatic enabling of all
-> drivers.  Restrict the default to ARCH also for individual driver, even
-> though its choice is not visible without selecting parent Kconfig
-> symbol, because otherwise selecting parent would select the child during
-> compile testing.
+On 04/04/2025 13:29, AngeloGioacchino Del Regno wrote:
+> Il 04/04/25 13:23, Krzysztof Kozlowski ha scritto:
+>> Enabling the compile test should not cause automatic enabling of such
+>> drivers.
+>>
+>> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 > 
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> ---
->  drivers/clk/stm32/Kconfig | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
+> Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+> 
+>> ---
 
-Ping. Any feedback from maintainers? Stephen, are you picking up this
-directly?
+Ping
+
+This was almost two months ago. I would assume that with maintainer
+review, this should be applied fast. What is here needed?
 
 Best regards,
 Krzysztof
