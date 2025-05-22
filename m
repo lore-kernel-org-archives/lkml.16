@@ -1,125 +1,97 @@
-Received: from mail-io1-f49.google.com (mail-io1-f49.google.com [209.85.166.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEC9118DB3D;
-	Thu, 22 May 2025 23:42:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 534DD18DB3D;
+	Thu, 22 May 2025 23:43:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747957376; cv=none; b=fwbvEKAP9EJWlqCNVQPMx1In0PDZIxYqwDreg/I0KzX4VltjrP2rFYmTnlZzHP5k1JdRWX3WrWxlQj/y7k7iD3MYocMK3fPQk6x/JlI2tF/hCokNuCmPawmVubmSM5pHcxnStAn3WVXJG8pLvtL/sh9UazkNbIfop7SrBrR915Q=
+	t=1747957411; cv=none; b=gOjk4KnfA3yyplbqEUVuquLwHkTHOVqP1gBNnLA6tdFzrD0I+74oAUDwG0c+UchKuSEA3eG+c0mbLFsiaPy/aTeDQxmaX/aDfY+A1RiihOHC5wgno9xKrj84mbk9ET7Mwap/LygaJJe/N05y7ElwV9fpXUVgeGxC+s5CFmnuufM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747957376; c=relaxed/simple;
-	bh=bOHBqddXS1gSodftBBdQ0VpvTwtlCZ545QEQJ4w2T2c=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fRsI+F3KhwcyJLzB4Id5rXyY5Vv33VBZqptH/voX7vdCyZbLiNvaQSry9ThgYsRJZQh/UMj4IPBzLclRBhnR5KgXPuOIJgePVldGf3Tg1sBSv9fBDJcFvfEtiGWPqYqI7u/AaqL4XjmJWR6E73bKhyx0RHwrzNYuum0LW/hEXlY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ua96R7sW; arc=none smtp.client-ip=209.85.166.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747957411; c=relaxed/simple;
+	bh=7Gb32f9bYDWi1Og1ZY2jtns/XFCPsjEPQI+QrgJnOts=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UA91rByxH35lrxd/9T40Omq8z4kNMEXzKsafwRMEuEIIPqZRK6e3QfbCMEHugRYS3d9wfaKpLTYTDdfzsgBg2NQ/pFpzzTPlsWqlQU4GY+scf5DlGY8lJXgjGU393vbOmkIv9a1iIuZUHs3A6qrliS1xfXS3MY0pDn61D69pna8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gWuWDToP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ua96R7sW"
-Received: by mail-io1-f49.google.com with SMTP id ca18e2360f4ac-85e46f5c50fso739496039f.3;
-        Thu, 22 May 2025 16:42:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747957374; x=1748562174; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8IxofwsL8T9ReOdXYX7tCLo1899Q9oCBZNmKLml4xN4=;
-        b=Ua96R7sWrWY0I55Pct1BtOyQiMrT6AzWMtC/EAzrMcZRbXDsM3fqgZDdmqBuQp3SxR
-         St3S2XEq34huSeEeRinwkZSX3Sj3h5aCEVfWyfWvJIgBYVXmnRbAfp1xmEd7pAv0jI/I
-         CJNQpfshuf1J4eY8Q5LwzfBsUJDfSzTYUx9Rx8dZEkhaYVvh3GEcn/7DFs0PIejUHJ7f
-         TKBjMcysUxNbj1kHY8jvZKwt8Byv4/K4trLIHdewjLB1G+dZPPkemnzTRXIBigiNjdlc
-         Dy0xuAollRrTinftTbqzLNtbiXBsTPfiWjs1u/WpLaDREVEFOZrPZHUk/CYLsXYgX+db
-         9JAw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747957374; x=1748562174;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=8IxofwsL8T9ReOdXYX7tCLo1899Q9oCBZNmKLml4xN4=;
-        b=tbAiuO8Jg8DLarjTyeII3f2bvvuqIfs9KGdx/HOAXjGjE+e+sjA+jlcid6/Raa7OmI
-         w/ClapvATF6bKeeoRWMmNBCcVekfHsjCztY1f8zrikPLtfuMmzjCotI6ZhH1OC31n71a
-         LWjyVAq+4bjTJxvxPy8LDdzV2KNOU0V1BRjXc8dFTfgbJ1yBd2owxFN28MT+2mOyTVrX
-         w9bN+SwEW/CdgTxu2Euyl81JmTVfPshd+l3zpEGpniYKgaPtT/nKzHQ5Kbaw4q3io9hU
-         SAgOFVdUU0iIwxHsZ1kezedlzICuujLf5v3sVBYNPEODEN6KFwZsVJj1QAn3X0z9SjCP
-         iHqg==
-X-Forwarded-Encrypted: i=1; AJvYcCX6/xTSZflvhLvn0V7bzWtPEq/7zD2x+2KW+0XEITDKFGIRSWrXvg1phsV/khGWAV5wBrYTA2Ar0BtKEzaB@vger.kernel.org, AJvYcCXTcqRxH/cvePIJSKXmYoXTXQ6EM60huTM/H80GsJ3A1qDhiPMt3NkKlsJIdSAh+EipfTcHvpB712n30JyuA5MM6WF5@vger.kernel.org, AJvYcCXuVJWIwIsRzNqoUEJ3zskx0s1He7rxz3dN4uvhHjfwvE6YN1f8PGFbd4lEec+Qph+nolS0jo/lKlpR3g==@vger.kernel.org
-X-Gm-Message-State: AOJu0YyRam5CAzJY4r/YquTsWOejYJmixUHFrB+TES0XeHpdSjgNuQRU
-	pcH+JyE0y/ObptFx8aOCK7JatpsAHhubk2zGheGDj3Pect+rhRvTHLziDEplVr2nKw03jyoed79
-	lH4WmNPHCcWdUuxeBqFHVHtgw240BSjE=
-X-Gm-Gg: ASbGncvXOMgvgfZk0WKUaOWXcTKU/rAr2CZgf/zZEFyUqUJ3YmKieYpO+MpmJfj2Os7
-	EFOo+9b50oaT75s/5ASqYEtqSJTnVolTbp88nrWpbDsv3hoZSgp9db0IsqYaFW457uzWJrHOm/k
-	Ft3H0Kzwo3ph5QdCFtWePo1VarN4kn2frD
-X-Google-Smtp-Source: AGHT+IEinbq6VshxzPfx2TAWHoFrFLw2NkVMJD03BeJ5ym1VzfGxKEexCFrXM8zc0aSeCDGViEDkg3148C1WU35WcPs=
-X-Received: by 2002:a05:6e02:1a4d:b0:3da:7cb7:79c with SMTP id
- e9e14a558f8ab-3dc932879bdmr9785845ab.13.1747957373671; Thu, 22 May 2025
- 16:42:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gWuWDToP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29B6CC4CEE4;
+	Thu, 22 May 2025 23:43:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747957411;
+	bh=7Gb32f9bYDWi1Og1ZY2jtns/XFCPsjEPQI+QrgJnOts=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=gWuWDToP0rDCUNe9++IHIlNdhY1b3/q9m0R2Rn7wZVQfCq10lqbrSgHZptYNqZruS
+	 Iz47lKjyKR5o1nri1fcHZM9nGHGrFWd+xB2GuRS6bmLtCYRxNcQRcNMWewb69nydKO
+	 jWdcb4WA34A+pTCmJ1J1ApJbT7HdKJdkncilb4ztb0eqSzTne2w+Yby+wiuk/lqNcD
+	 H5ip+6ogWqkAdJZ8iIgvumRTkEr4pnIqSM+IgmL0VvSDYwvnOGrtNDXofrzkRkTWdV
+	 L3z5SoFBCDb0aC7f/lFM8sjQipLCeU1j6X/zYrCvfP/cL1xmOFG63H0V3EIM5mp8SC
+	 5aEO2Rt6bUvUg==
+Date: Thu, 22 May 2025 16:43:30 -0700
+From: Saeed Mahameed <saeed@kernel.org>
+To: Mina Almasry <almasrymina@google.com>
+Cc: Jakub Kicinski <kuba@kernel.org>, Tariq Toukan <tariqt@nvidia.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Paolo Abeni <pabeni@redhat.com>, Eric Dumazet <edumazet@google.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	Saeed Mahameed <saeedm@nvidia.com>,
+	Leon Romanovsky <leon@kernel.org>,
+	Richard Cochran <richardcochran@gmail.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Jesper Dangaard Brouer <hawk@kernel.org>,
+	John Fastabend <john.fastabend@gmail.com>, netdev@vger.kernel.org,
+	linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+	bpf@vger.kernel.org, Moshe Shemesh <moshe@nvidia.com>,
+	Mark Bloch <mbloch@nvidia.com>, Gal Pressman <gal@nvidia.com>,
+	Cosmin Ratiu <cratiu@nvidia.com>,
+	Dragos Tatulea <dtatulea@nvidia.com>
+Subject: Re: [PATCH net-next V2 06/11] net/mlx5e: SHAMPO: Separate pool for
+ headers
+Message-ID: <aC-2ol2jMkHxV3RM@x130>
+References: <1747950086-1246773-1-git-send-email-tariqt@nvidia.com>
+ <1747950086-1246773-7-git-send-email-tariqt@nvidia.com>
+ <20250522153013.62ac43be@kernel.org>
+ <aC-ugDzGHB_WqKew@x130>
+ <CAHS8izNPJjAwbVwDnVQwHmjTKfxSqbt-jEnNzcWzTfQNGr9Lag@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250518025734.61479-1-kerneljasonxing@gmail.com>
- <CAL+tcoCD5ORW=JqvZg7=uJXkLi-WTG-Szj1k8ya9sX6LcR41jQ@mail.gmail.com> <20250522163418.f14da5eea065296d42ee3497@linux-foundation.org>
-In-Reply-To: <20250522163418.f14da5eea065296d42ee3497@linux-foundation.org>
-From: Jason Xing <kerneljasonxing@gmail.com>
-Date: Fri, 23 May 2025 07:42:17 +0800
-X-Gm-Features: AX0GCFsrufe-PZ6eOiw3-7s_nUfw5rP0iRMlS5z0ArMQRp0iBeyfFG6iZA-Fzvc
-Message-ID: <CAL+tcoBUEpcyt3Vq8_f8Jyo3+1mLtdEH2QEf6nVAOYzRHitfNA@mail.gmail.com>
-Subject: Re: [PATCH v3 0/4] relayfs: misc changes
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: axboe@kernel.dk, rostedt@goodmis.org, mhiramat@kernel.org, 
-	mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org, 
-	linux-block@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	Jason Xing <kernelxing@tencent.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHS8izNPJjAwbVwDnVQwHmjTKfxSqbt-jEnNzcWzTfQNGr9Lag@mail.gmail.com>
 
-On Fri, May 23, 2025 at 7:34=E2=80=AFAM Andrew Morton <akpm@linux-foundatio=
-n.org> wrote:
+On 22 May 16:24, Mina Almasry wrote:
+>On Thu, May 22, 2025 at 4:09 PM Saeed Mahameed <saeed@kernel.org> wrote:
+>>
+>> On 22 May 15:30, Jakub Kicinski wrote:
+>> >On Fri, 23 May 2025 00:41:21 +0300 Tariq Toukan wrote:
+>> >> Allocate a separate page pool for headers when SHAMPO is enabled.
+>> >> This will be useful for adding support to zc page pool, which has to be
+>> >> different from the headers page pool.
+>> >
+>> >Could you explain why always allocate a separate pool?
+>>
+>> Better flow management, 0 conditional code on data path to alloc/return
+>> header buffers, since in mlx5 we already have separate paths to handle
+>> header, we don't have/need bnxt_separate_head_pool() and
+>> rxr->need_head_pool spread across the code..
+>>
+>> Since we alloc and return pages in bulks, it makes more sense to manage
+>> headers and data in separate pools if we are going to do it anyway for
+>> "undreadable_pools", and when there's no performance impact.
+>>
 >
-> On Fri, 23 May 2025 07:16:35 +0800 Jason Xing <kerneljasonxing@gmail.com>=
- wrote:
+>Are you allocating full pages for each incoming header (which is much
+>smaller than a page)? Or are you reusing the same PAGE_SIZE from the
+>page_pool to store multiple headers?
 >
-> > On Sun, May 18, 2025 at 10:57=E2=80=AFAM Jason Xing <kerneljasonxing@gm=
-ail.com> wrote:
-> > >
-> > > From: Jason Xing <kernelxing@tencent.com>
-> > >
-> > > The series mostly focuses on the error counters which helps every use=
-r
-> > > debug their own kernel module.
-> > >
-> > > ---
-> > > Note: this series is made on top of this cleanup[1] and unmerged comm=
-it[2]
-> > > [1]: https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git/log/=
-?h=3Dmm-nonmm-unstable
-> > > [2]: https://lore.kernel.org/all/20250507134225.63248-1-kerneljasonxi=
-ng@gmail.com/
-> > >
-> > > Jason Xing (4):
-> > >   relayfs: support a counter tracking if per-cpu buffers is full
-> > >   relayfs: introduce getting relayfs statistics function
-> > >   blktrace: use rbuf->stats.full as a drop indicator in relayfs
-> > >   relayfs: support a counter tracking if data is too big to write
-> > >
-> > >  include/linux/relay.h   | 19 ++++++++++++++-
-> > >  kernel/relay.c          | 52 +++++++++++++++++++++++++++++++++++----=
---
-> > >  kernel/trace/blktrace.c | 22 ++---------------
-> > >  3 files changed, 65 insertions(+), 28 deletions(-)
-> >
-> > Hi Andrew,
-> >
-> > Any comments on the series?
-> >
->
-> We're at -rc7 now, so I'll park this for consideration for -rc1.
 
-Okay. IIUC, it seems probably two or three weeks later. I think I'll
-keep track of the series and remind you at that time just in case you
-might forget it :)
+Multiple headers MLX5E_SHAMPO_WQ_HEADER_PER_PAGE;
 
-Thanks,
-Jason
+>-- 
+>Thanks,
+>Mina
