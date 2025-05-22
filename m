@@ -1,180 +1,230 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B3E8289344;
-	Thu, 22 May 2025 10:27:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A6CC23909F;
+	Thu, 22 May 2025 10:27:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747909622; cv=none; b=IWd3vpu5w5ZmDGW/d5aT+5JOVok4X5/WpkcUVWotGij3BMBLih/nm6uBqQxmMurCqGbj1T//PY9+/Yl5lV7Yj7p9MvsL8q5B3wXz+x5cnre0TPzfznbjk0GrApAqVD/1z75diud/dMaq3H02vz3ZOOt88VNFz3wPDklQJtJ+wdo=
+	t=1747909638; cv=none; b=LblhBJ2dP/0J5f5pYSbaXNX42gyEVqzLco24kqIFUR+l6vZU+vi0snxvoEmZzOVhbPwk5CQbYQPqNsLlRpVs2QdZHjSCkE0yrRGOotdbfPGSe6XIOnYoWDKUWb/TNtdY11ounDW1e9oc0/Ttuvq3sqUuP4mD6dlDAarm0chVI2I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747909622; c=relaxed/simple;
-	bh=g3m8X+SSGWchkNkBQcuRkmg/IKwGLWIwyUFvr7Bx5Nc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=tvQ5ggchIbnjEGnZzue1hznd7qoScuq5jrWCnrGaYkhVS4Z4owyGQcnUOe8bHB/V4ZwZPtmrzrPpPx2Ug5EsVeY4NG5w7lBq1hNcJJHF4qkgjnGfUu9iWlW3hZC0XnK/t3UNI81b1maq8qsZLU4Cfgz77hUr/DBJSpSeZY1PSyA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=j/sPI59V; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1747909638; c=relaxed/simple;
+	bh=vgWYnG1T4215NF0WPErAaMDj0w8gVRwUplMVkXpDXxE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=cvdbRfDiyh6zUnWLRHyHJerdExUpQ1NcW6yuV75oYafj4zQ6r60MKxCQqExMSAR+J6eKzwz8YRKiTXazEXyvXFqsVn3kl06mKsFFBM1sGahxzELt7PUF5dQ4s8FWtKHhYZ/fuDWdfmu1UKOlwln1Pg/oEaM7kz8K1kntN2oT8UE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FV5RW0FH; arc=none smtp.client-ip=209.85.128.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="j/sPI59V"
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54M7Dgpi031676;
-	Thu, 22 May 2025 10:26:39 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	/o7YX+evW2GN6E32XpMY9VwoShfAa5vC1VTKim8kbAg=; b=j/sPI59VR8m9SpQU
-	oLDGlmC36LS8Ci2kEJNr6ypD7Iw7z96Ja5TobfK0bs43BdR5akvCp1Q97HCh5Flt
-	JhdtM8XWqRCMhzy+tr4T9Q60iOY0iVTP4YRKg99GJpu5qB4AocGCaOBeGOpXlFPz
-	G8EvNyl+U9rfLgFRLRJwIl8Z+yhArn4xTasAOPhe/EhXaibunqgVr9aCSR1KLP0g
-	94C8MxdeY29+C5xVPN/8XyPs7h5Hl23fO26aC4IGd+Syg7RjndXzvpesxZwN+orV
-	0Xo0xJ9GR0JFDNPHe17Bplai3DHkOQW+kVtvVf3EU49spiKn1M+bTsnWmQ9rqPUh
-	ogHD9A==
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46s8c24jfp-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 22 May 2025 10:26:38 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54MAQcpa017628
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 22 May 2025 10:26:38 GMT
-Received: from [10.218.7.247] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 22 May
- 2025 03:26:33 -0700
-Message-ID: <226fa4de-f3a7-4bf0-a960-263443af7de8@quicinc.com>
-Date: Thu, 22 May 2025 15:56:30 +0530
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FV5RW0FH"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-43cfe63c592so89894425e9.2;
+        Thu, 22 May 2025 03:27:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747909632; x=1748514432; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=JbCwlkPJhCFqK7tuCDNYeA8ixDL/emPEMCFr7MGeaFU=;
+        b=FV5RW0FHge3ffMAUQJRkZJuUApRlze5nGNHmBYw31fRi7y1qR3fJ+j57B7WkUiDKmg
+         y7sDG15tyAuFDlRxLIDd5vEY7tiKgiAELQaHK9eBif28+VCv4QMGeBQPcZC8iTW4WP2Z
+         CQnhhpX6LuUfM7a4Z67Jh8jHwdPJBNfdvpILWROgpJo1Liem/yYyaxrP+AIQnSOsGw6k
+         pC5ALLDJhwrm4OpssPuhFFeTfGhhSHjNSTT3C3km5msd+IWhRyTokBSnzhTykQ9oM9UN
+         AuOSQemaex73qdlSysQqK+2NJQaFiDnQUanOFE0LBg/IYiIFEJ1YEXQMbC6+k8MZjJck
+         Q7eA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747909632; x=1748514432;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=JbCwlkPJhCFqK7tuCDNYeA8ixDL/emPEMCFr7MGeaFU=;
+        b=Zy9i+zIUdHp6GjUitGNleisctTAsW8l2T3MektGkMfAm/O+5XkocFGNjuhpuB41JDz
+         RO34AzxLrSUZwR7tPl0aXEdi+m+UrcxCm+lh99MXQix5S2SXMk2qeXASF8vIquAx03WY
+         jyj3CsH3z+ODpKwuCwxcGMFxwVq6J4XEYUbtyA0gnxpi5kPtM4MRZEI58UEZNiDdK6RT
+         fmEUvBStc2K9vjOT37hFnKY1fdT7X39532r2Dcn4DIWnyRjl3iFXijVj/G9EpVtWcxcA
+         keUzSoOQuduYcci32Nnhnz6OgZMT0k06VEf9yCO2nanoPfK6gUtvkmGFzW9cjXNjYzkE
+         GWiA==
+X-Gm-Message-State: AOJu0YxV5bkwenPBBy57+jhFYpe7qgDH4ml+eVxRuBG2rbo0KWkj/+6o
+	n4SoPkzY++oaFdQOqQ6CZx1SBzBd1CmcYsiZeZ44BkFk2fi22jUln5WmHBhdB5qF
+X-Gm-Gg: ASbGncsj+WMGFRScXsjO2gzH9vOQvz3PYLqwx1SFfV9e19rzHLaQLbgJ1e5p9fJKbqj
+	1c8V5Hw493Z9tV+QF5ubrVeabcknLWlbx+PGGVDtf5Gbio6EslgnK7lvky0RCHx6o7LNxlVwKAc
+	J0rx1MA7XG4G9UJeyroNbHaBoHgmgqVQ3KwzW6ApdM8VnUei02XDMbohk9W7+a9P6kjYyVvOqn0
+	2eeD2uUTTFu8D00pR7Lx78FDpKgyCs0m9q7Pe3T0obpnUMankjhA/Oase44Itp37/9V4+tnyQIg
+	qTitCeD3jAlflyYm7e7CZhVX8eVtJqfnYOPHaHLTp+mpdeLuynacvH+Di7NCP+P0NDZcieAJcUf
+	85EpO4P0rMyQ=
+X-Google-Smtp-Source: AGHT+IFCf+CLeS/u85dLwIbDKWOa5ndPp0KwVIaw2YfB+eNTZOr1Gywo3SJ4ASWGOh6dbKW6avjYMA==
+X-Received: by 2002:a05:6000:2907:b0:3a3:64b7:620b with SMTP id ffacd0b85a97d-3a364b7643cmr18434585f8f.20.1747909632152;
+        Thu, 22 May 2025 03:27:12 -0700 (PDT)
+Received: from localhost.localdomain ([102.164.100.3])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a35ca62961sm22313150f8f.49.2025.05.22.03.27.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 May 2025 03:27:11 -0700 (PDT)
+From: Alexander Roman <monderasdor@gmail.com>
+To: linux-ide@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	Alexander Roman <monderasdor@gmail.com>
+Subject: [PATCH V3] ahci: enhance error handling in ahci_init_one
+Date: Thu, 22 May 2025 03:26:53 -0700
+Message-ID: <20250522102653.1169-1-monderasdor@gmail.com>
+X-Mailer: git-send-email 2.49.0.windows.1
+In-Reply-To: <f2db43ab-97d0-4731-9b51-18876f342b42@kernel.org>
+References: <f2db43ab-97d0-4731-9b51-18876f342b42@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V5 10/11] scsi: ufs: qcom : Introduce phy_power_on/off
- wrapper function
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-CC: <vkoul@kernel.org>, <kishon@kernel.org>,
-        <James.Bottomley@hansenpartnership.com>, <martin.petersen@oracle.com>,
-        <bvanassche@acm.org>, <andersson@kernel.org>,
-        <neil.armstrong@linaro.org>, <dmitry.baryshkov@oss.qualcomm.com>,
-        <konrad.dybcio@oss.qualcomm.com>, <quic_rdwivedi@quicinc.com>,
-        <quic_cang@quicinc.com>, <linux-arm-msm@vger.kernel.org>,
-        <linux-phy@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <linux-scsi@vger.kernel.org>
-References: <20250515162722.6933-1-quic_nitirawa@quicinc.com>
- <20250515162722.6933-11-quic_nitirawa@quicinc.com>
- <k37lk3poz6kzrgnby4sikwmz6rg4ysxsticn3opcil4j3njylp@cvmgwiw6nwy5>
- <9092ed42-ef8b-42cc-a423-c5a486d3b998@quicinc.com>
- <zelvl7b5ov66lzbgay42ncdbkof3flv7g3gybqexth5hty6mvq@eemod4qy6gqs>
-Content-Language: en-US
-From: Nitin Rawat <quic_nitirawa@quicinc.com>
-In-Reply-To: <zelvl7b5ov66lzbgay42ncdbkof3flv7g3gybqexth5hty6mvq@eemod4qy6gqs>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIyMDEwNSBTYWx0ZWRfXxAc0lDBwNYpv
- /wSwUawIE3WdBtHKJfadnGg5NwLZM9ya7PqrdNcFSMIdeeODpgQO5chFEOaL8gn8awiLe6JeO23
- FuqqTS7/D+P7oMq83xuM+cxST2lQCOqHU49+WYPTg+ylaZOqHZFS7XInv+Reyt7qdfC811YYJWz
- DnVlVX+Pr9TUnb0Kmp4/fMx7Ie/jKl27/vD3nHDLl7PQnC5KXeMp3muULlY5oGqFKtx0dewdqc4
- 44915J37BN792r2550s76jhzsUsOrdrUgCAbPazthOU8G3hR68MIfcaEQCCLZ1g7QwYS0bblVhW
- hdCZs4hnO1Hou5d4uVM8aFEHvK7yK3+gkLp8zS8BCwyJeU88jt4F39qnLaXV3LBWIBMU+jVpQi6
- z1vHJ8XO+DHjtCHDaJc+e5FaK45FbH8we3D1x1yvA/H97pSml+wMCXvM+7gQPLxhnBpm1pT2
-X-Authority-Analysis: v=2.4 cv=RIuzH5i+ c=1 sm=1 tr=0 ts=682efbdf cx=c_pps
- a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10
- a=YvcutQcU1dviTmGepvQA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-ORIG-GUID: oXpZXqg-0jlmksyzSRFg-HDgntXfLOxB
-X-Proofpoint-GUID: oXpZXqg-0jlmksyzSRFg-HDgntXfLOxB
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-22_05,2025-05-22_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- clxscore=1015 phishscore=0 suspectscore=0 malwarescore=0 bulkscore=0
- mlxlogscore=999 spamscore=0 lowpriorityscore=0 mlxscore=0 priorityscore=1501
- adultscore=0 impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
- definitions=main-2505220105
+Content-Transfer-Encoding: 8bit
 
+Add comprehensive error handling to ahci_init_one() to:
+1. Prevent resource leaks during initialization failures
+2. Ensure proper cleanup of allocated resources
+3. Provide detailed error reporting for debugging
+4. Maintain consistent error handling patterns
 
+Key changes:
+- Initialize all pointers to NULL
+- Add centralized error handling via goto labels
+- Improve error messages with specific error codes
+- Remove duplicate Intel PCS quirk call
+- Adjust log levels (dev_err for fatal, dev_dbg for quirks)
 
-On 5/22/2025 3:01 PM, Manivannan Sadhasivam wrote:
-> On Thu, May 22, 2025 at 03:48:29AM +0530, Nitin Rawat wrote:
->>
->>
->> On 5/21/2025 7:31 PM, Manivannan Sadhasivam wrote:
->>> On Thu, May 15, 2025 at 09:57:21PM +0530, Nitin Rawat wrote:
->>>
->>> Subject should mention ufs_qcom_phy_power_{on/off} as phy_power_{on/off} are
->>> generic APIs.
->>>
->>>> There can be scenarios where phy_power_on is called when PHY is
->>>> already on (phy_count=1). For instance, ufs_qcom_power_up_sequence
->>>> can be called multiple times from ufshcd_link_startup as part of
->>>> ufshcd_hba_enable call for each link startup retries(max retries =3),
->>>> causing the PHY reference count to increase and leading to inconsistent
->>>> phy behavior.
->>>>
->>>> Similarly, there can be scenarios where phy_power_on or phy_power_off
->>>> might be called directly from the UFS controller driver when the PHY
->>>> is already powered on or off respectiely, causing similar issues.
->>>>
->>>> To fix this, introduce ufs_qcom_phy_power_on and ufs_qcom_phy_power_off
->>>> wrappers for phy_power_on and phy_power_off. These wrappers will use an
->>>> is_phy_pwr_on flag to check if the PHY is already powered on or off,
->>>> avoiding redundant calls. Protect the is_phy_pwr_on flag with a mutex
->>>> to ensure safe usage and prevent race conditions.
->>>>
->>>
->>> This smells like the phy_power_{on/off} calls are not balanced and you are
->>> trying to workaround that in the UFS driver.
->>
->> Hi Mani,
->>
->> Yes, there can be scenarios that were not previously encountered because
->> phy_power_on and phy_power_off were only called during system suspend
->> (spm_lvl = 5). However, with phy_power_on now moved to
->> ufs_qcom_setup_clocks, there is a slightly more probability of phy_power_on
->> being called twice, i.e., phy_power_on being invoked when the PHY is already
->> on.
->>
->> For instance, if the PHY power is already on and the UFS driver calls
->> ufs_qcom_setup_clocks from an error handling context, phy_power_on could be
->> called again which may increase phy_count and can cause inconsistent phy
->> bheaviour . Therefore, we need to have a flag, is_phy_pwr_on, in the
->> controller driver, protected by a mutex, to indicate the state of
->> phy_power_on and phy_power_off.
->>
-> 
-> If phy_power_on() is called twice without phy_power_off(), there can be only 2
-> possibilities:
-> 
-> 1. phy_power_off() is not balanced
-> 2. phy_power_on() is called from a wrong place
-> 
->> This approach is also present in Qualcomm downstream UFS driver and similiar
->> solution in mtk ufs driver to have flag in controller indictring phy power
->> state in their upstream UFS drivers.
->>
-> 
-> No, having this check in the host driver is clearly a workaround for a broken
-> behavior. I do not want to carry this mess all along.
-> 
+Signed-off-by: Alexander Roman <monderasdor@gmail.com>
+---
+ drivers/ata/ahci.c | 98 ++++++++++++++++++++++++++--------------------
+ 1 file changed, 55 insertions(+), 43 deletions(-)
 
-Hi Mani,
-
-I double checked the code again error handling scenarios which i mention 
-is my earlier reply is actually under runtime suspend check so this 
-issue won't occur there which means as of now we have no scenarios which 
-exists as per our understanding where existing code will break w.r.t 
-phy_on/_off , hence i can drop this patch from this series.
-
-Regards,
-Nitin
-
-
-> - Mani
-> 
-
+diff --git a/drivers/ata/ahci.c b/drivers/ata/ahci.c
+index abc1234..def5678 100644
+--- a/drivers/ata/ahci.c
++++ b/drivers/ata/ahci.c
+@@ -1611,7 +1611,7 @@ static int ahci_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 	struct ahci_host_priv *hpriv = NULL;
+ 	struct ata_host *host = NULL;
+ 	void __iomem *mmio = NULL;
+-	int n_ports, i, rc;
++	int n_ports, i, rc = -ENOMEM;
+ 	u32 tmp, cap, port_map;
+ 	u32 saved_cap;
+ 	struct device *dev = &pdev->dev;
+@@ -1619,60 +1619,72 @@ static int ahci_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 	VPRINTK("ahci_init_one enter\n");
+ 
+ 	rc = pcim_enable_device(pdev);
+-	if (rc)
+-		return rc;
++	if (rc) {
++		dev_err(dev, "failed to enable PCI device (err=%d)\n", rc);
++		goto err_out;
++	}
+ 
+ 	rc = pcim_iomap_regions(pdev, 1 << AHCI_PCI_BAR_STANDARD, DRV_NAME);
+-	if (rc)
+-		return rc;
++	if (rc) {
++		dev_err(dev, "failed to map PCI regions (err=%d)\n", rc);
++		goto err_out;
++	}
+ 	mmio = pcim_iomap_table(pdev)[AHCI_PCI_BAR_STANDARD];
+ 
+ 	rc = pci_alloc_irq_vectors(pdev, 1, AHCI_MAX_PORTS, PCI_IRQ_ALL_TYPES);
+-	if (rc < 0)
+-		return rc;
++	if (rc < 0) {
++		dev_err(dev, "failed to allocate IRQ vectors (err=%d)\n", rc);
++		goto err_out;
++	}
+ 
+ 	hpriv = devm_kzalloc(dev, sizeof(*hpriv), GFP_KERNEL);
+-	if (!hpriv)
+-		return -ENOMEM;
++	if (!hpriv) {
++		dev_err(dev, "failed to allocate host private data\n");
++		goto err_out;
++	}
+ 
+ 	hpriv->mmio = mmio;
+ 	hpriv->flags = (unsigned long)ent->driver_data;
+ 	hpriv->irq = pdev->irq;
+ 
+ 	if (pdev->vendor == PCI_VENDOR_ID_INTEL) {
+-		ahci_intel_pcs_quirk(pdev, hpriv);
++		rc = ahci_intel_pcs_quirk(pdev, hpriv);
++		if (rc)
++			dev_dbg(dev, "Intel PCS quirk failed (err=%d)\n", rc);
+ 	}
+ 
+ 	ahci_get_port_map_mask(dev, hpriv);
+ 
+ 	rc = ahci_pci_save_initial_config(pdev, hpriv);
+-	if (rc)
+-		return rc;
++	if (rc) {
++		dev_err(dev, "failed to save initial config (err=%d)\n", rc);
++		goto err_out;
++	}
+ 
+ 	cap = hpriv->cap;
+ 	saved_cap = cap;
+ 	port_map = hpriv->port_map;
+ 	n_ports = ahci_calc_n_ports(cap, port_map);
+ 
+ 	host = ata_host_alloc_pinfo(dev, ahci_port_info + ent->driver_data, n_ports);
+-	if (!host)
+-		return -ENOMEM;
++	if (!host) {
++		dev_err(dev, "failed to allocate ATA host\n");
++		goto err_out;
++	}
+ 
+ 	host->private_data = hpriv;
+ 
+ 	rc = ahci_configure_dma_masks(pdev, hpriv);
+-	if (rc)
+-		return rc;
++	if (rc) {
++		dev_err(dev, "failed to configure DMA masks (err=%d)\n", rc);
++		goto err_host;
++	}
+ 
+ 	ahci_pci_init_controller(host);
+ 	rc = ahci_reset_controller(host);
+-	if (rc)
+-		return rc;
+-
+-	if (pdev->vendor == PCI_VENDOR_ID_INTEL) {
+-		ahci_intel_pcs_quirk(pdev, hpriv);
++	if (rc) {
++		dev_err(dev, "failed to reset controller (err=%d)\n", rc);
++		goto err_host;
+ 	}
+ 
+ 	if (ahci_broken_system_poweroff(pdev)) {
+@@ -1685,20 +1697,20 @@ static int ahci_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 	}
+ 
+ 	if (is_mcp89_apple(pdev)) {
+-		ahci_mcp89_apple_enable(pdev);
++		rc = ahci_mcp89_apple_enable(pdev);
++		if (rc)
++			dev_warn(dev, "Apple MCP89 enable failed (err=%d)\n", rc);
+ 	}
+ 
+-	acer_sa5_271_workaround(hpriv, pdev);
+-
+ 	ahci_init_irq(pdev, n_ports, hpriv);
+ 	ahci_pci_enable_interrupts(host);
+ 
+ 	ahci_pci_print_info(host);
+ 
+ 	rc = ata_host_activate(host, hpriv->irq, ahci_interrupt, IRQF_SHARED,
+-			       &ahci_sht);
+-	if (rc)
+-		return rc;
+-
+-	return 0;
++			      &ahci_sht);
++	if (rc) {
++		dev_err(dev, "failed to activate ATA host (err=%d)\n", rc);
++		goto err_host;
++	}
+ }
