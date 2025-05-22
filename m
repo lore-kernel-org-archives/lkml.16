@@ -1,277 +1,159 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6922A290F
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 15:00:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80E9728D8C8
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 15:00:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747926043; cv=none; b=Vye1jPrQiVAn4PCxpRqSvEfwSLfRG+O2tdR3+8/ccZcJSvDuuS++KqIek0hLHEJFejQplNh22SK8Z4xU9CnNDDtPhITWbFY3q/68T8KVHm/Yffb0pkSO6vLD3J3x7/gsmCw3DkhKlYW2gPRhxDHFJNSVMYt4UXCeVkdtrX6Nxeg=
+	t=1747926047; cv=none; b=lXjNqZw9OIPBentZs7VIWns2ymYOcI08ye5nhrbq0XiGT4gwpXhFbGkrb+xtxJb6rn44/cJ1M37iMVYDfnXaBfl3G1kVGgsyCecEhUPj0cM8NXWAMk5QXWGWew46T2wS1YmLqqEzqOpust1L0wgvZhsBlWap3vFU13It8+e4Mo8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747926043; c=relaxed/simple;
-	bh=MZkcoZ0XmdiG8RsEqiU8qe9pvemXpcg/q1rozPcwjaI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LKPduqdCvRIkWMtLc6TvF0iLXVzIYQvPr62skTOaGFVBAwLUOw57j7tYOT4T7IR7LmCmb5JOYwGuBUMBdwVUnLgkJgVyHKw1H78kCDklFKUdQIUoyTa6b6Aun8fzKiGjAVvIi9d5LACwoyebEU9mSzXUJ7tql8A2wdAW/h3DIXk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4b3BKg6Skqz4f3lCf
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 23:00:07 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 784D81A018D
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 23:00:34 +0800 (CST)
-Received: from [10.67.109.184] (unknown [10.67.109.184])
-	by APP4 (Coremail) with SMTP id gCh0CgBnFlsOPC9ofZC9NA--.62282S2;
-	Thu, 22 May 2025 23:00:32 +0800 (CST)
-Message-ID: <d0b9208e-755f-46f5-928d-77b7e120d74e@huaweicloud.com>
-Date: Thu, 22 May 2025 23:00:30 +0800
+	s=arc-20240116; t=1747926047; c=relaxed/simple;
+	bh=INqSYwIkBzquXHjZjpFokyd/V+TNZVV2+cCBbLXvxuA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UU4vOaZE13SwY+KaE8YmbwioW2r5oItW36jJh5PJApqHK2UPZ9hpv0y99rttuYQjNSgg1gMbBWRYobasREkxYwsi3SXaydszh1WEVagvdIUPrwW+ZUpiiCsP/zWlH7vjpxywPmhEGEfXlTqRGcvaw7UFulHGlvOgko/wodyJQo0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b=angnlFix; arc=none smtp.client-ip=209.85.222.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="angnlFix"
+Received: by mail-qk1-f169.google.com with SMTP id af79cd13be357-7c5e1b40f68so959587785a.1
+        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 08:00:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1747926043; x=1748530843; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=RntcQFrhCFAacTrxQLWTJkPF8ANO7nKuaZmsqGHxdlg=;
+        b=angnlFix9LPmMZd4MBvOzfHsyFfXotcTH4a2eCRWkyiFJvISnTHcm7n0uhIZlHSRss
+         vtPy4xRwiEaeEAa5MxMto1WJFYZFForStysRXjuXngjf715qu+lPiKACZ9xqI1fw25yL
+         IxkfJZWczUEK/9qj5U4keFLp2L+xNV3OO+yEKBInwMc372SEzfdAtt1JQUMe+dkGHwT9
+         +cAVTVQHF4yqjzSn/LEXR2Cbmt01l0l6F4D+AdqWPame3f8iusb6HtZybHijGT0d7e/Z
+         C+I3xpj9UyW+YsE96s3cXaioYF/tOh7PlaZJzpzybLkqNnbXvMUsvudA17H9gDGhab6t
+         7qGQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747926043; x=1748530843;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RntcQFrhCFAacTrxQLWTJkPF8ANO7nKuaZmsqGHxdlg=;
+        b=lWBA2st18t8gKkQCGuZfpjp3Y6AlAwtGvcLIsz02dRFe5zSjUkb7os2o0ZmyrARoeG
+         FFQFnIRQG49iATIIL/FozqnhwWXJr4hDluDr0vrl/m84FE/soohvkwxtTh4atL9rDAYn
+         ertqB6pWQysduHuTrZDJruyHSzIkAgyzz29VIXBBBusQFfaxVXfaKIZodvlaMzk3jz9C
+         RP69Kk9tw6BRTVo/lYK5MRB4mAhfKMW5/Nt5DYvIl0KFAVM9cQn561FOdnoWlGmgnObA
+         pIox70KZ1MqqQyZz+bJc2DVXsR6FoZW8wa0Gi4WKOIiQnODu1W7ATxGEhzxj8SHjpk5e
+         JSew==
+X-Forwarded-Encrypted: i=1; AJvYcCV8DZDMJAUfclw3z/aCnWXatcr62Kn+jmkxvgOrr2qraoLgY5+VQLcakeIYVjX8WDClOeyYa6dxJ5ndxlY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YztyKI6Vp5/Z6Z0XQfrZ3OjxdLjEME2YSlSL/lrSUg4WoThRQB5
+	fZ6s+zB06OzxqK+V617nGpBjqUiUB1Ihh2R4v4+20jV+wXiaXz0nMuhNAJKlFy7HJXg=
+X-Gm-Gg: ASbGnctGZViMJfuqW49goSoaqD2T3obJ5Ch4Q9e7apP9HXIBctcQx6eOO7MVz0wKTBi
+	UDqERWeV7LQdBjmXvCWsA6zkFd+/LbEVDQWudpanGOHoS5Qh9XXsoCwm8yBOkrEoX7QapHqZ56J
+	tBLJNFYqqKjKVDeYvLdGWitnj6MnVfGvwBFMWqLwpY9jfNQ3xPM782Ah2SqbePiM3TtfU5PgLdo
+	ONytKclkmZ6Np2roEUi2dkf6IWqp8MfbzfNOTC53XuYvceIhPQlg7PMFv2jD8yWsbVSU461nBAO
+	tF7/jiVyL28OSgPrFSoTbwCX0DDeD+dlIIqZBtPwKHQJ9rMt7w==
+X-Google-Smtp-Source: AGHT+IEnJzZ79njSENk+JeuZPwPZwL2+OpjoVsTKNGaJ/y+nMe65TH53vU6mRb8uFnxwB48phhewPQ==
+X-Received: by 2002:a05:620a:2845:b0:7c5:61b2:b7c with SMTP id af79cd13be357-7cd467bec25mr4234754385a.47.1747926040353;
+        Thu, 22 May 2025 08:00:40 -0700 (PDT)
+Received: from localhost ([2603:7000:c01:2716:365a:60ff:fe62:ff29])
+        by smtp.gmail.com with UTF8SMTPSA id af79cd13be357-7cd468e5c38sm1030602085a.115.2025.05.22.08.00.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 May 2025 08:00:39 -0700 (PDT)
+Date: Thu, 22 May 2025 11:00:35 -0400
+From: Johannes Weiner <hannes@cmpxchg.org>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>, Chris Mason <clm@meta.com>,
+	linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
+	vschneid@redhat.com, Juri Lelli <juri.lelli@gmail.com>,
+	Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: scheduler performance regression since v6.11
+Message-ID: <20250522150035.GB1065351@cmpxchg.org>
+References: <1e3c711f-8c96-4c39-bbe2-7742940d1d31@meta.com>
+ <20250509194955.GA25798@noisy.programming.kicks-ass.net>
+ <20250512180846.GA25891@noisy.programming.kicks-ass.net>
+ <2f394a01-1cd9-4719-9394-647d8731cf3f@meta.com>
+ <d3c8527f-ffaf-4463-a305-17ca21a06ce8@meta.com>
+ <20250516101822.GC16434@noisy.programming.kicks-ass.net>
+ <2084b7d9-bb4f-4a5e-aaec-98e07b3edc2e@arm.com>
+ <20250520193831.GB39944@noisy.programming.kicks-ass.net>
+ <20250521145447.GA31726@noisy.programming.kicks-ass.net>
+ <20250522084844.GC31726@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH] mm/mmap: Fix uprobe anon page be overwritten when
- expanding vma during mremap
-Content-Language: en-US
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: mhiramat@kernel.org, oleg@redhat.com, peterz@infradead.org,
- akpm@linux-foundation.org, Liam.Howlett@oracle.com, vbabka@suse.cz,
- jannh@google.com, pfalcato@suse.de, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, pulehui@huawei.com
-References: <20250521092503.3116340-1-pulehui@huaweicloud.com>
- <a55fd3c0-cd53-43d9-a200-290d64dcf04f@lucifer.local>
-From: Pu Lehui <pulehui@huaweicloud.com>
-In-Reply-To: <a55fd3c0-cd53-43d9-a200-290d64dcf04f@lucifer.local>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:gCh0CgBnFlsOPC9ofZC9NA--.62282S2
-X-Coremail-Antispam: 1UD129KBjvJXoW3Xr4xAr4kZryrZr4xZw15CFg_yoWxuF1kpF
-	Wvvan8KF48Ja1qgr1jvw1qvFyftws3tr4UAryfXa4Y9r9Iqr43tFs7CFW5Cry5AFZ2gF1I
-	yr4UKr9ayFW2va7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
-	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxkF7I0En4kS
-	14v26r1q6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I
-	8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8
-	ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x
-	0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_
-	Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU1
-	7KsUUUUUU==
-X-CM-SenderInfo: psxovxtxl6x35dzhxuhorxvhhfrp/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250522084844.GC31726@noisy.programming.kicks-ass.net>
 
+On Thu, May 22, 2025 at 10:48:44AM +0200, Peter Zijlstra wrote:
+> On Wed, May 21, 2025 at 04:54:47PM +0200, Peter Zijlstra wrote:
+> > On Tue, May 20, 2025 at 09:38:31PM +0200, Peter Zijlstra wrote:
+> > > On Tue, May 20, 2025 at 04:38:09PM +0200, Dietmar Eggemann wrote:
+> > > 
+> > > > 3840cbe24cf0 - sched: psi: fix bogus pressure spikes from aggregation race
+> > > > 
+> > > > With CONFIG_PSI enabled we call cpu_clock(cpu) now multiple times (up to
+> > > > 4 times per task switch in my setup) in:
+> > > > 
+> > > > __schedule() -> psi_sched_switch() -> psi_task_switch() ->
+> > > > psi_group_change().
+> > > > 
+> > > > There seems to be another/other v6.12 related patch(es) later which
+> > > > cause(s) another 4% regression I yet have to discover.
+> > > 
+> > > Urgh, let me add this to the pile to look at. Thanks!
+> > 
+> > Does something like the compile tested only hackery below work?
+> 
+> possibly better hackery :-)
+> 
+> ---
+> diff --git a/kernel/sched/psi.c b/kernel/sched/psi.c
+> index 1396674fa722..8fb9d28f2bc8 100644
+> --- a/kernel/sched/psi.c
+> +++ b/kernel/sched/psi.c
+> @@ -136,6 +136,10 @@
+>   * cost-wise, yet way more sensitive and accurate than periodic
+>   * sampling of the aggregate task states would be.
+>   */
+> +#include <linux/sched/clock.h>
+> +#include <linux/workqueue.h>
+> +#include <linux/psi.h>
+> +#include "sched.h"
+>  
+>  static int psi_bug __read_mostly;
+>  
+> @@ -172,6 +176,30 @@ struct psi_group psi_system = {
+>  	.pcpu = &system_group_pcpu,
+>  };
+>  
+> +static inline void psi_write_begin(int cpu)
+> +{
+> +	struct psi_group_cpu *groupc = per_cpu_ptr(&system_group_pcpu, cpu);
+> +	write_seqcount_begin(&groupc->seq);
 
-On 2025/5/21 21:13, Lorenzo Stoakes wrote:
-> Overall need to dig into this a bit before we come up with a final fix.
-> 
-> Has this _always_ been the case? Or could you bisect this to a particular kernel
-> commit?
-> 
-> If you haven't dug into that, could you do so?
+Ah right, since all the ancestor walks would ultimately end up at the
+system's seq anyway. And always have, really.
 
-Thanks for your review. The directly related commit is 78a320542e6c 
-("uprobes: Change valid_vma() to demand VM_MAYEXEC rather than VM_EXEC") 
-# v3.7-rc3, but in fact, I think the issue was introduced in the 
-original commit 2b1444983508 ("uprobes, mm, x86: Add the ability to 
-install and remove uprobes breakpoints") # v3.5-rc1. This issue is quite 
-old, but the mremap code differs a lot between linux versions. Perhaps 
-we need to fix it in multiple versions separately.
+It does stretch the critical section, of course. I ran perf bench
+sched messaging to saturate all CPUs in state changes and then read a
+pressure file 1000x. This is on a 32-way machine:
 
-> 
-> Thanks!
-> 
-> On Wed, May 21, 2025 at 09:25:03AM +0000, Pu Lehui wrote:
->> From: Pu Lehui <pulehui@huawei.com>
->>
->> We encountered a BUG alert triggered by Syzkaller as follows:
->>     BUG: Bad rss-counter state mm:00000000b4a60fca type:MM_ANONPAGES val:1
->>
->> And we can reproduce it with the following steps:
->> 1. register uprobe on file at zero offset
->> 2. mmap the file at zero offset:
->>     addr1 = mmap(NULL, 2 * 4096, PROT_NONE, MAP_PRIVATE, fd, 0);
->> 3. mremap part of vma1 to new vma2:
->>     addr2 = mremap(addr1, 4096, 2 * 4096, MREMAP_MAYMOVE);
->> 4. mremap back to orig addr1:
->>     mremap(addr2, 4096, 4096, MREMAP_MAYMOVE | MREMAP_FIXED, addr1);
->>
->> In the step 3, the vma1 range [addr1, addr1 + 4096] will be remap to new
->> vma2 with range [addr2, addr2 + 8192], and remap uprobe anon page from
->> the vma1 to vma2, then unmap the vma1 range [addr1, addr1 + 4096].
->> In tht step 4, the vma2 range [addr2, addr2 + 4096] will be remap back
->> to the addr range [addr1, addr1 + 4096]. Since the addr range [addr1 +
->> 4096, addr1 + 8192] still maps the file, it will take
->> vma_merge_new_range to merge these two addr ranges, and then do
->> uprobe_mmap in vma_complete. Since the merged vma pgoff is also zero
->> offset, it will install uprobe anon page to the merged vma. However, the
->> upcomming move_page_tables step, which use set_pte_at to remap the vma2
->> uprobe anon page to the merged vma, will over map the old uprobe anon
->> page in the merged vma, and lead the old uprobe anon page to be orphan.
->>
->> Since the uprobe anon page will be remapped to the merged vma, we can
->> remove the unnecessary uprobe_mmap at merged vma, that is, do not
->> perform uprobe_mmap when there is no vma in the addr range to be
->> expaned.
-> 
-> Good spot... lord.
-> 
->>
->> This problem was first find in linux-6.6.y and also exists in the
->> community syzkaller:
->> https://lore.kernel.org/all/000000000000ada39605a5e71711@google.com/T/
->>
->> The complete Syzkaller C reproduction program is as follows:
->>
->> #define _GNU_SOURCE
->> #include <sys/mman.h>
->> #include <linux/perf_event.h>
->> #include <linux/hw_breakpoint.h>
->>
->> #include <fcntl.h>
->> #include <stdio.h>
->> #include <stdint.h>
->> #include <string.h>
->> #include <syscall.h>
->> #include <unistd.h>
->>
->> int main(int argc, char *argv[])
->> {
->>      // Find out what type id we need for uprobes
->>      int perf_type_pmu_uprobe;
->>      {
->>          FILE *fp = fopen("/sys/bus/event_source/devices/uprobe/type", "r");
->>          fscanf(fp, "%d", &perf_type_pmu_uprobe);
->>          fclose(fp);
->>      }
->>
->>      const char *filename = "./bus";
->>
->>      int fd = open(filename, O_RDWR|O_CREAT, 0600);
->>      write(fd, "x", 1);
->>
->>      void *addr = mmap(NULL, 4096, PROT_READ | PROT_WRITE | PROT_EXEC,
->>                        MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
->>
->>      // Register a perf uprobe on "./bus"
->>      struct perf_event_attr attr = {};
->>      attr.type = perf_type_pmu_uprobe;
->>      attr.uprobe_path = (unsigned long) filename;
->>      syscall(__NR_perf_event_open, &attr, 0, 0, -1, 0);
->>
->>      void *addr2 = mmap(NULL, 2 * 4096, PROT_NONE, MAP_PRIVATE, fd, 0);
->>      void *addr3 = mremap((void *) addr2, 4096, 2 * 4096, MREMAP_MAYMOVE);
->>      mremap(addr3, 4096, 4096, MREMAP_MAYMOVE | MREMAP_FIXED, (void *) addr2);
->>
->>      return 0;
->> }
-> 
-> Thanks for including this.
-> 
-> We can probably refine this down a bit though (let me have a tinker around).
-> 
->>
->> Signed-off-by: Pu Lehui <pulehui@huawei.com>
->> ---
->>   mm/vma.c | 12 +++++++-----
->>   1 file changed, 7 insertions(+), 5 deletions(-)
->>
->> diff --git a/mm/vma.c b/mm/vma.c
->> index 3ff6cfbe3338..9a8d84b12918 100644
->> --- a/mm/vma.c
->> +++ b/mm/vma.c
->> @@ -325,7 +325,7 @@ static void vma_prepare(struct vma_prepare *vp)
->>    * @mm: The mm_struct
->>    */
->>   static void vma_complete(struct vma_prepare *vp, struct vma_iterator *vmi,
->> -			 struct mm_struct *mm)
->> +			 struct mm_struct *mm, bool handle_vma_uprobe)
-> 
-> Nity, but please do not add a field here, add it to the vma_prepare struct.
+     0.18%     +1.34%  [kernel.kallsyms]     [k] collect_percpu_times
 
-ok
+and annotation shows it's indeed retrying on the seq-read a bit more.
 
-> 
->>   {
->>   	if (vp->file) {
->>   		if (vp->adj_next)
->> @@ -358,7 +358,8 @@ static void vma_complete(struct vma_prepare *vp, struct vma_iterator *vmi,
->>
->>   	if (vp->file) {
->>   		i_mmap_unlock_write(vp->mapping);
->> -		uprobe_mmap(vp->vma);
->> +		if (handle_vma_uprobe)
->> +			uprobe_mmap(vp->vma);
-> 
-> You could perhaps make this simpler by making uprobe_mmap() take a vma_prepare *
-> parameter, where you can check this?
+But that seems well within tolerance, and obviously worth it assuming
+it fixes the cpu_clock() regression on the sched side.
 
-got it
+At that point, though, it probably makes sense to move seq out of
+psi_group_cpu altogether? More for clarity, really - it won't save
+much right away given that deliberate 2-cacheline-layout.
 
-> 
->>
->>   		if (vp->adj_next)
->>   			uprobe_mmap(vp->adj_next);
->> @@ -549,7 +550,7 @@ __split_vma(struct vma_iterator *vmi, struct vm_area_struct *vma,
->>   	}
->>
->>   	/* vma_complete stores the new vma */
->> -	vma_complete(&vp, vmi, vma->vm_mm);
->> +	vma_complete(&vp, vmi, vma->vm_mm, true);
->>   	validate_mm(vma->vm_mm);
->>
->>   	/* Success. */
->> @@ -715,6 +716,7 @@ static int commit_merge(struct vma_merge_struct *vmg)
->>   {
->>   	struct vm_area_struct *vma;
->>   	struct vma_prepare vp;
->> +	bool handle_vma_uprobe = !!vma_lookup(vmg->mm, vmg->start);
-> 
-> This is really inefficient. We can't be doing a maple tree search on every
-> commit_merge(), especially not just for the sake of uprobe.
-> 
-> Let me have a tinker around with this and see how we can do this more sensibly,
-> I'd say as part of the vmg.
+/* Serializes task state changes against aggregation runs */
+static DEFINE_PER_CPU(seqcount_t, psi_seq);
 
-so, we can add `bool handle_vma_uprobe` member in vmg, then set true 
-before enter vma_merge_new_range in copy_vma, and then pass it to vp 
-struct. wdyt?
+Otherwise, the patch looks great to me. Thanks for including a couple
+of cleanups as well.
 
-But this may not suit for other version, such as linux-6.6.y.
-
-> 
->>
->>   	if (vmg->__adjust_next_start) {
->>   		/* We manipulate middle and adjust next, which is the target. */
->> @@ -748,7 +750,7 @@ static int commit_merge(struct vma_merge_struct *vmg)
->>   	vmg_adjust_set_range(vmg);
->>   	vma_iter_store_overwrite(vmg->vmi, vmg->target);
->>
->> -	vma_complete(&vp, vmg->vmi, vma->vm_mm);
->> +	vma_complete(&vp, vmg->vmi, vma->vm_mm, handle_vma_uprobe);
-> 
-> Again, having fields means we can drop this and the below changes.
-
-ok
-
-> 
->>
->>   	return 0;
->>   }
->> @@ -1201,7 +1203,7 @@ int vma_shrink(struct vma_iterator *vmi, struct vm_area_struct *vma,
->>
->>   	vma_iter_clear(vmi);
->>   	vma_set_range(vma, start, end, pgoff);
->> -	vma_complete(&vp, vmi, vma->vm_mm);
->> +	vma_complete(&vp, vmi, vma->vm_mm, true);
->>   	validate_mm(vma->vm_mm);
->>   	return 0;
->>   }
->> --
->> 2.34.1
->>
-
+Acked-by: Johannes Weiner <hannes@cmpxchg.org>
