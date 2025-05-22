@@ -1,43 +1,46 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.5])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 04B82320F
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 07:08:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.5
+Received: from mail-m3279.qiye.163.com (mail-m3279.qiye.163.com [220.197.32.79])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F5BF221D8F;
+	Thu, 22 May 2025 07:08:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.32.79
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747897692; cv=none; b=uF9BNfp2FYF0jGFn2uBXnhOAEfzIxn4Qegm3Dut2ct8kyza4tJ/KMK8hIMifNRbe0h0OqlJ8TDVx0OyiTcN5WbuPiLAIS67k3zVjtBzyKlHTCLL9uovVufgBSH3xcymCj/O8otrS8QFwsZ+Hrf+afHS6MRWGswgYGNYTaJ19go8=
+	t=1747897694; cv=none; b=q4WUyuwwSe+9OA55YNIVZf+2laEX5S/zxjvrcS9hP1lWgDHDZed75htyveL90aCpeJOv9a9OUzs7E3fYHGpUoYpsnwe8F92p1Whhy5MmDVpYg8MBDKsCnGh6h0KqNolzltgWtDJdiPdQJpphbYq1PFx6abCyp9Q1tsKgK2ErD4o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747897692; c=relaxed/simple;
-	bh=LPw2HOuGWOtaEQtY8Q/dIcXVuDx9xTolb+0SbY9H/Is=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=R7FeOY1+53Tg7S4XXkVDdFepK3HUs1BM1x8AmubxxhcYmo95vJvFlQkLPMe8PdoL8JVnuJIb0gBRzxyYtXYQ/zU8Ywo8qW5mHJf+2auXNF2bSLj4qtXOlrbuNJ3gc3cQaypjYfLZFVSv40vima/T5rTvHjvAgW+OmnxHn6saUrk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=OsUIBpAo; arc=none smtp.client-ip=117.135.210.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1747897694; c=relaxed/simple;
+	bh=k89P5n3vG1Bm60U8ry2B6uMqPmDuDbKuMvquhY1bQ+A=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=jjkJHs0vrd9AnwILaS+JjWKXSvbv9GuKXB+y877zVcsMwqv0wxscHltmCgWmgEwuRV4+n0TVOn/mczxqg2CFwHzlU4CglqRqcgTeGQueVlHSHAk5VYuG+izL0F+0+CSC5NVZjFDrnhuy3AmrsvmyKm9cioEa5666mwZyTI2zOIA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=Bd4QCM0t; arc=none smtp.client-ip=220.197.32.79
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="OsUIBpAo"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=ZZ
-	Ttms7TBRD0y7cEZYRdqCrECvVlyVPosONMUJm1U7I=; b=OsUIBpAo90uSGG57xJ
-	dzJBpwBQs8Rss8sHnv6TUEmQ6jd3DCmS8iUpvjmOHUBVqDw4mJVtTlmhCDMtTjTn
-	jDGqM/KHpratEFRYDvvqOB+2z3J7hEZrw+RMTC14GTOcuhmPaTWqkshwtJ3H8iv1
-	5ETbsgaWuWamw41vUjuiRitDU=
-Received: from localhost.localdomain (unknown [])
-	by gzga-smtp-mtada-g0-3 (Coremail) with SMTP id _____wC3TPQpzS5oHcJjDA--.17971S2;
-	Thu, 22 May 2025 15:07:23 +0800 (CST)
-From: oushixiong1025@163.com
-To: =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Sean Paul <sean@poorly.run>,
-	Jocelyn Falempe <jfalempe@redhat.com>,
-	dri-devel@lists.freedesktop.org,
+	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="Bd4QCM0t"
+Received: from rockchip.. (unknown [58.22.7.114])
+	by smtp.qiye.163.com (Hmail) with ESMTP id 1602d1566;
+	Thu, 22 May 2025 14:32:35 +0800 (GMT+08:00)
+From: Elaine Zhang <zhangqing@rock-chips.com>
+To: zhangqing@rock-chips.com,
+	mkl@pengutronix.de,
+	kernel@pengutronix.de,
+	mailhol.vincent@wanadoo.fr,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	heiko@sntech.de,
+	cl@rock-chips.com,
+	kever.yang@rock-chips.com
+Cc: linux-can@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
-	Shixiong Ou <oushixiong@kylinos.cn>
-Subject: [PATCH v5 RESEND 1/3] drm/shmem-helper: Import dmabuf without mapping its sg_table
-Date: Thu, 22 May 2025 15:07:12 +0800
-Message-Id: <20250522070714.439824-1-oushixiong1025@163.com>
-X-Mailer: git-send-email 2.25.1
+	devicetree@vger.kernel.org
+Subject: [PATCH v3 1/3] dt-bindings: can: rockchip_canfd: add rk3576 CAN-FD controller
+Date: Thu, 22 May 2025 14:32:30 +0800
+Message-Id: <20250522063232.2197432-2-zhangqing@rock-chips.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250522063232.2197432-1-zhangqing@rock-chips.com>
+References: <20250522063232.2197432-1-zhangqing@rock-chips.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -45,222 +48,116 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wC3TPQpzS5oHcJjDA--.17971S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxtryrGFW8uF1kJw4rKF18uFg_yoWxKF45pF
-	sxAryUKrW5tFWqg3s3Awn7Zas09w409F4Iq3yfJw4Y93WktF1qkFn5Ar90vFy7AryDJFyS
-	qFWDAFyrCryjkF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jn2-5UUUUU=
-X-CM-SenderInfo: xrxvxxx0lr0wirqskqqrwthudrp/1tbiXBtTD2gsLiHUmAACse
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZQ0sYTFZIT0lIS0odQhkeHkNWFRQJFh
+	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSU9PT0
+	hVSktLVUpCS0tZBg++
+X-HM-Tid: 0a96f6b1957f03a3kunme211611210aaa93
+X-HM-MType: 1
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6OAw6Agw5FDE3LhIRDEMiEA42
+	PzhPCwJVSlVKTE9MQ0JOTk5NQkNNVTMWGhIXVQETGhUcChIVHDsJFBgQVhgTEgsIVRgUFkVZV1kS
+	C1lBWU5DVUlJVUxVSkpPWVdZCAFZQUhJSkk3Bg++
+DKIM-Signature:a=rsa-sha256;
+	b=Bd4QCM0tbtFm/iaCR7PjOLmCNQ33/qZch0gsrcXS3HtGqur50gDoSrvbtUwjXXY+tJB4WraKl5tRU/AI28lrCt6FpukbMn2n8S075AyswZgA3eDE+WZdmg3Rbo6camrfta3sujShGHb+tHNxTNSRHc9YhtcgyonOb9Fba9OPQMc=; c=relaxed/relaxed; s=default; d=rock-chips.com; v=1;
+	bh=YrD/3cMaELrj0WxecR8TGpVQ/1vDEVc4Rj278Y6+gmg=;
+	h=date:mime-version:subject:message-id:from;
 
-From: Shixiong Ou <oushixiong@kylinos.cn>
+Add documentation for the rockchip rk3576 CAN-FD controller.
 
-[WHY]
-1. Drivers using DRM_GEM_SHADOW_PLANE_HELPER_FUNCS and
-   DRM_GEM_SHMEM_DRIVER_OPS (e.g., udl, ast) do not require
-   sg_table import.
-   They only need dma_buf_vmap() to access the shared buffer's
-   kernel virtual address.
-
-2. On certain Aspeed-based boards, a dma_mask of 0xffff_ffff may
-   trigger SWIOTLB during dmabuf import. However, IO_TLB_SEGSIZE
-   restricts the maximum DMA streaming mapping memory, resulting in
-   errors like:
-
-   ast 0000:07:00.0: swiotlb buffer is full (sz: 3145728 bytes), total 32768 (slots), used 0 (slots)
-
-[HOW]
-Provide a gem_prime_import implementation without sg_table mapping
-to avoid issues (e.g., "swiotlb buffer is full"). Drivers that do not
-require sg_table can adopt this.
-
-Signed-off-by: Shixiong Ou <oushixiong@kylinos.cn>
+Signed-off-by: Elaine Zhang <zhangqing@rock-chips.com>
 ---
-v1->v2:
-	Patch rebase.
-v2->v3:
-	Rename the import callback function.
-	Remove drm_gem_shmem_prime_export() and separate some codes
-	to drm_gem_prime_import_self(). 
-v3->v4:
-	Separate the test from the policy.
-	Rename the macro.
-v4->v5:
-	Rename some functions.
+ .../net/can/rockchip,rk3576-canfd.yaml        | 82 +++++++++++++++++++
+ 1 file changed, 82 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/can/rockchip,rk3576-canfd.yaml
 
- drivers/gpu/drm/drm_gem_shmem_helper.c | 57 ++++++++++++++++++++++++++
- drivers/gpu/drm/drm_prime.c            | 36 ++++++++++++----
- include/drm/drm_gem_shmem_helper.h     | 15 +++++++
- include/drm/drm_prime.h                |  3 ++
- 4 files changed, 102 insertions(+), 9 deletions(-)
-
-diff --git a/drivers/gpu/drm/drm_gem_shmem_helper.c b/drivers/gpu/drm/drm_gem_shmem_helper.c
-index aa43265f4f4f..126aa79042ad 100644
---- a/drivers/gpu/drm/drm_gem_shmem_helper.c
-+++ b/drivers/gpu/drm/drm_gem_shmem_helper.c
-@@ -800,6 +800,63 @@ drm_gem_shmem_prime_import_sg_table(struct drm_device *dev,
- }
- EXPORT_SYMBOL_GPL(drm_gem_shmem_prime_import_sg_table);
- 
-+/**
-+ * drm_gem_shmem_prime_import_no_map - Import dmabuf without mapping its sg_table
-+ * @dev: Device to import into
-+ * @dma_buf: dma-buf object to import
-+ *
-+ * Drivers that use the shmem helpers but also wants to import dmabuf without
-+ * mapping its sg_table can use this as their &drm_driver.gem_prime_import
-+ * implementation.
-+ */
-+struct drm_gem_object *drm_gem_shmem_prime_import_no_map(struct drm_device *dev,
-+							 struct dma_buf *dma_buf)
-+{
-+	struct dma_buf_attachment *attach;
-+	struct drm_gem_shmem_object *shmem;
-+	struct drm_gem_object *obj;
-+	size_t size;
-+	int ret;
+diff --git a/Documentation/devicetree/bindings/net/can/rockchip,rk3576-canfd.yaml b/Documentation/devicetree/bindings/net/can/rockchip,rk3576-canfd.yaml
+new file mode 100644
+index 000000000000..85caf6d19607
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/can/rockchip,rk3576-canfd.yaml
+@@ -0,0 +1,82 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/net/can/rockchip,rk3568v2-canfd.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+	if (drm_gem_is_prime_exported_dma_buf(dev, dma_buf)) {
-+		/*
-+		 * Importing dmabuf exported from our own gem increases
-+		 * refcount on gem itself instead of f_count of dmabuf.
-+		 */
-+		obj = dma_buf->priv;
-+		drm_gem_object_get(obj);
-+		return obj;
-+	}
++title:
++  Rk3576 CAN-FD controller
 +
-+	attach = dma_buf_attach(dma_buf, dev->dev);
-+	if (IS_ERR(attach))
-+		return ERR_CAST(attach);
++maintainers:
++  - Elaine Zhang <zhangqing@rock-chips.com>
 +
-+	get_dma_buf(dma_buf);
++allOf:
++  - $ref: can-controller.yaml#
 +
-+	size = PAGE_ALIGN(attach->dmabuf->size);
++properties:
++  compatible:
++    oneOf:
++      - const: rockchip,rk3576-canfd
 +
-+	shmem = __drm_gem_shmem_create(dev, size, true, NULL);
-+	if (IS_ERR(shmem)) {
-+		ret = PTR_ERR(shmem);
-+		goto fail_detach;
-+	}
++  reg:
++    maxItems: 1
 +
-+	drm_dbg_prime(dev, "size = %zu\n", size);
++  interrupts:
++    maxItems: 1
 +
-+	shmem->base.import_attach = attach;
-+	shmem->base.resv = dma_buf->resv;
++  clocks:
++    maxItems: 2
 +
-+	return &shmem->base;
++  clock-names:
++    items:
++      - const: baud
++      - const: pclk
 +
-+fail_detach:
-+	dma_buf_detach(dma_buf, attach);
-+	dma_buf_put(dma_buf);
++  resets:
++    maxItems: 2
 +
-+	return ERR_PTR(ret);
-+}
-+EXPORT_SYMBOL_GPL(drm_gem_shmem_prime_import_no_map);
++  reset-names:
++    items:
++      - const: core
++      - const: apb
 +
- MODULE_DESCRIPTION("DRM SHMEM memory-management helpers");
- MODULE_IMPORT_NS("DMA_BUF");
- MODULE_LICENSE("GPL v2");
-diff --git a/drivers/gpu/drm/drm_prime.c b/drivers/gpu/drm/drm_prime.c
-index d828502268b8..b825b71038d6 100644
---- a/drivers/gpu/drm/drm_prime.c
-+++ b/drivers/gpu/drm/drm_prime.c
-@@ -910,6 +910,26 @@ struct dma_buf *drm_gem_prime_export(struct drm_gem_object *obj,
- }
- EXPORT_SYMBOL(drm_gem_prime_export);
- 
++  dmas:
++    maxItems: 1
 +
-+/**
-+ * drm_gem_is_prime_exported_dma_buf -
-+ * checks if the DMA-BUF was exported from a GEM object belonging to @dev.
-+ * @dev: drm_device to check against
-+ * @dma_buf: dma-buf object to import
-+ *
-+ * Return: true if the DMA-BUF was exported from a GEM object belonging
-+ * to @dev, false otherwise.
-+ */
++  dma-names:
++    items:
++      - const: rx
 +
-+bool drm_gem_is_prime_exported_dma_buf(struct drm_device *dev,
-+				       struct dma_buf *dma_buf)
-+{
-+	struct drm_gem_object *obj = dma_buf->priv;
++required:
++  - compatible
++  - reg
++  - interrupts
++  - clocks
++  - resets
++  - dmas
 +
-+	return (dma_buf->ops == &drm_gem_prime_dmabuf_ops) && (obj->dev == dev);
-+}
-+EXPORT_SYMBOL(drm_gem_is_prime_exported_dma_buf);
++additionalProperties: false
 +
- /**
-  * drm_gem_prime_import_dev - core implementation of the import callback
-  * @dev: drm_device to import into
-@@ -933,16 +953,14 @@ struct drm_gem_object *drm_gem_prime_import_dev(struct drm_device *dev,
- 	struct drm_gem_object *obj;
- 	int ret;
- 
--	if (dma_buf->ops == &drm_gem_prime_dmabuf_ops) {
-+	if (drm_gem_is_prime_exported_dma_buf(dev, dma_buf)) {
-+		/*
-+		 * Importing dmabuf exported from our own gem increases
-+		 * refcount on gem itself instead of f_count of dmabuf.
-+		 */
- 		obj = dma_buf->priv;
--		if (obj->dev == dev) {
--			/*
--			 * Importing dmabuf exported from our own gem increases
--			 * refcount on gem itself instead of f_count of dmabuf.
--			 */
--			drm_gem_object_get(obj);
--			return obj;
--		}
-+		drm_gem_object_get(obj);
-+		return obj;
- 	}
- 
- 	if (!dev->driver->gem_prime_import_sg_table)
-diff --git a/include/drm/drm_gem_shmem_helper.h b/include/drm/drm_gem_shmem_helper.h
-index b4f993da3cae..35f7466dca84 100644
---- a/include/drm/drm_gem_shmem_helper.h
-+++ b/include/drm/drm_gem_shmem_helper.h
-@@ -287,6 +287,8 @@ drm_gem_shmem_prime_import_sg_table(struct drm_device *dev,
- 				    struct sg_table *sgt);
- int drm_gem_shmem_dumb_create(struct drm_file *file, struct drm_device *dev,
- 			      struct drm_mode_create_dumb *args);
-+struct drm_gem_object *drm_gem_shmem_prime_import_no_map(struct drm_device *dev,
-+							 struct dma_buf *buf);
- 
- /**
-  * DRM_GEM_SHMEM_DRIVER_OPS - Default shmem GEM operations
-@@ -298,4 +300,17 @@ int drm_gem_shmem_dumb_create(struct drm_file *file, struct drm_device *dev,
- 	.gem_prime_import_sg_table = drm_gem_shmem_prime_import_sg_table, \
- 	.dumb_create		   = drm_gem_shmem_dumb_create
- 
-+/**
-+ * DRM_GEM_SHMEM_DRIVER_OPS_NO_MAP_SGT - shmem GEM operations
-+ *                                       without mapping sg_table on
-+ *                                       imported buffer.
-+ *
-+ * This macro provides a shortcut for setting the shmem GEM operations in
-+ * the &drm_driver structure for drivers that do not require a sg_table on
-+ * imported buffers.
-+ */
-+#define DRM_GEM_SHMEM_DRIVER_OPS_NO_MAP_SGT \
-+	.gem_prime_import       = drm_gem_shmem_prime_import_no_map, \
-+	.dumb_create            = drm_gem_shmem_dumb_create
++examples:
++  - |
++    #include <dt-bindings/clock/rockchip,rk3576-cru.h>
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    #include <dt-bindings/interrupt-controller/irq.h>
 +
- #endif /* __DRM_GEM_SHMEM_HELPER_H__ */
-diff --git a/include/drm/drm_prime.h b/include/drm/drm_prime.h
-index fa085c44d4ca..f50f862f0d8b 100644
---- a/include/drm/drm_prime.h
-+++ b/include/drm/drm_prime.h
-@@ -100,6 +100,9 @@ struct dma_buf *drm_gem_prime_export(struct drm_gem_object *obj,
- unsigned long drm_prime_get_contiguous_size(struct sg_table *sgt);
- 
- /* helper functions for importing */
-+bool drm_gem_is_prime_exported_dma_buf(struct drm_device *dev,
-+				       struct dma_buf *dma_buf);
++    soc {
++        #address-cells = <2>;
++        #size-cells = <2>;
 +
- struct drm_gem_object *drm_gem_prime_import_dev(struct drm_device *dev,
- 						struct dma_buf *dma_buf,
- 						struct device *attach_dev);
++        can0: can@2ac00000 {
++            compatible = "rockchip,rk3576-canfd";
++	    reg = <0x0 0x2ac00000 0x0 0x1000>;
++	    interrupts = <GIC_SPI 121 IRQ_TYPE_LEVEL_HIGH>;
++	    clocks = <&cru CLK_CAN0>, <&cru HCLK_CAN0>;
++	    clock-names = "baud", "pclk";
++	    resets = <&cru SRST_CAN0>, <&cru SRST_H_CAN0>;
++	    reset-names = "can", "can-apb";
++	    dmas = <&dmac0 20>;
++	    dma-names = "rx";
++	    status = "disabled";
++	};
++    };
 -- 
-2.17.1
+2.34.1
 
