@@ -1,102 +1,121 @@
-Received: from m16.mail.126.com (m16.mail.126.com [220.197.31.6])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2FFCC1EEA28;
-	Thu, 22 May 2025 11:50:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.6
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08A4723C8D5;
+	Thu, 22 May 2025 11:51:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747914652; cv=none; b=sPWMqTM0lcLxY3FzfqmSQQT7FZryOTV0pc0urOMzfP89OY9uIJuk3u9Kpoq6q2EDm8ahEj9/QH6VLya1o35ThNqsQhETjXutm5FECZzEWfdwaxbgwhC7iRKEphR5zy0g3EzbFLuzQdhOQqI2Hwzv9LBf5yOoPwZPwtBCuCV/EOk=
+	t=1747914698; cv=none; b=jRDv5HxkQgxFWduFW06bj963pS+VXMAJMe0+nlbN5Lm/GAINHPvYIUgFGbLBKxzwh93OTOaV47P7pAFIwiHWWtm7V9xiVVaN3JKL/hxDp1YQ2tst6MTcKWvvmwMqQHzjdivtajN0XrWETHyrl+4pLjK6d9aOE0o4tTtFYpqdcXA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747914652; c=relaxed/simple;
-	bh=m1aYqpnYR3p47ZZC7i88pquhuOJRKBIaUCM/8zSDaLM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PUTyCcQZKudyAuicr9HqAoG5xPHL6SWi8lhIebeE3egUhatWTAyD2iGzqJi4actGFvFbIgJQKem6kBUHafi1G4uoWRNvipDvtiotla/+i3g0YKZPvf0oqwy9wDpHSaf3m1MauVeRAp6iypbcv4FEK9MnSAB8/ngptyM6afCqCK0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com; spf=pass smtp.mailfrom=126.com; dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b=TP1WDE6e; arc=none smtp.client-ip=220.197.31.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=126.com
+	s=arc-20240116; t=1747914698; c=relaxed/simple;
+	bh=0U3v25q4LYmjTERjsFbxxd4cfwi0Qtk29weCjU8YEso=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JhdYSOQUK/OHGMad1bhgBour7AC0m3XR1qESEYAvUlwSjbj6aIpfmIv6btYwmNd41NPo7wNZm1AvjyfeCwbIsLPjxbtJ6+RgV/J5Hexfdge0OCw+8tYozvxdZ18bq7mONvMZXHDmb2WzhVM3mccfBBLF5szaaFCZBz/TewixGZg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=xGWCn1+/; arc=none smtp.client-ip=68.232.153.233
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="TP1WDE6e"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
-	s=s110527; h=Message-ID:Date:MIME-Version:Subject:To:From:
-	Content-Type; bh=+2YR3SBQV4q9Lx7C2ALD+oH2dckWuf9RbQ/n1pINFmI=;
-	b=TP1WDE6e5efu4PqMX/PdpVITZahk/W7M6eIoxd2qOJybqRliUO7zGy77BHQR9k
-	uCXjhdX7wWnS/HJVhDPkuC7JGrq/iAYyrk5X7gOt+6q4cKB0/3hjTV8H4PDYr953
-	ngZNEsMf7WplyzT+zZmwEs2txoK8QOtyg2um5GjdkGHl8=
-Received: from [172.19.20.199] (unknown [])
-	by gzsmtp2 (Coremail) with SMTP id PSkvCgD3R1vgCy9o0ZusAQ--.12490S2;
-	Thu, 22 May 2025 19:34:57 +0800 (CST)
-Message-ID: <ff6bd560-d249-418f-81f4-7cbe055a25ec@126.com>
-Date: Thu, 22 May 2025 19:34:56 +0800
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="xGWCn1+/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1747914697; x=1779450697;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=0U3v25q4LYmjTERjsFbxxd4cfwi0Qtk29weCjU8YEso=;
+  b=xGWCn1+/4nQyr6wTEO6uFTH8iu7QEj05gh66dnX9GjeZpUsPuvqS6jO8
+   hppMJQoUVk0c4gEAvdq5nRAVFYOtEmvOi9gyWGAZ7vU78yrXWL56PLg8c
+   TpD9O69JTXEe71ekRI/awFKYFjDoY2ODVnyLSDM15qqHVALrqly8X6QSX
+   kZAmQEIK5cdczTZLeyCgUHK/E5gUxIT+LIGggOTSs8i2sm4HRCus9qvEg
+   tUnDjiJib/P1Iqr5fqn2suFTbNclIepeamW2gbvpw6DIqu6KxycNs0118
+   PdVibAeZW4qALNV7FZZP94/FII5X8BON5Xg3SeazhEDX7+FiLcSIdDtqp
+   g==;
+X-CSE-ConnectionGUID: TB3IYo0uQ0aw54PPV9dDGQ==
+X-CSE-MsgGUID: stAIOwUBQzSuubJx+5BY8A==
+X-IronPort-AV: E=Sophos;i="6.15,306,1739862000"; 
+   d="scan'208";a="273317319"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa5.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 22 May 2025 04:51:36 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.44; Thu, 22 May 2025 04:51:05 -0700
+Received: from localhost (10.10.85.11) by chn-vm-ex04.mchp-main.com
+ (10.10.85.152) with Microsoft SMTP Server id 15.1.2507.44 via Frontend
+ Transport; Thu, 22 May 2025 04:51:05 -0700
+Date: Thu, 22 May 2025 13:49:26 +0200
+From: Horatiu Vultur <horatiu.vultur@microchip.com>
+To: Antoine Tenart <atenart@kernel.org>
+CC: <andrew@lunn.ch>, <hkallweit1@gmail.com>, <linux@armlinux.org.uk>,
+	<davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
+	<pabeni@redhat.com>, <richardcochran@gmail.com>, <kory.maincent@bootlin.com>,
+	<shannon.nelson@amd.com>, <viro@zeniv.linux.org.uk>,
+	<netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH net] net: phy: mscc: Fix memory leak when using one step
+ timestamping
+Message-ID: <20250522114926.oavrusoaqnj6e77q@DEN-DL-M31836.microchip.com>
+References: <20250521131114.2719084-1-horatiu.vultur@microchip.com>
+ <vmtli7u7fnsj56xhih7eqtzt6w3v4yp7dviyssqyyybvsioznj@lzwdr5dpo5wg>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] mm/hugetlb: fix kernel NULL pointer dereference when
- replacing free hugetlb folios
-To: Oscar Salvador <osalvador@suse.de>, Muchun Song <muchun.song@linux.dev>
-Cc: akpm@linux-foundation.org, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, stable@vger.kernel.org, 21cnbao@gmail.com,
- david@redhat.com, baolin.wang@linux.alibaba.com, liuzixing@hygon.cn
-References: <1747884137-26685-1-git-send-email-yangge1116@126.com>
- <644FF836-9DC7-42B4-BACE-C433E637B885@linux.dev>
- <aC63fmFKK84K7YiZ@localhost.localdomain>
-From: Ge Yang <yangge1116@126.com>
-In-Reply-To: <aC63fmFKK84K7YiZ@localhost.localdomain>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:PSkvCgD3R1vgCy9o0ZusAQ--.12490S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW7uF15AFyruFWUZr4UZrW3trb_yoW8AF1kpF
-	W7KrnxXF4DJas8ur4Iyw1kJr15ArWUXa45GFWxGr43ZF43XasrKr1jqws0qayfCrn3Ja1I
-	vF4IgF4vgF1qkaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jbmiiUUUUU=
-X-CM-SenderInfo: 51dqwwjhrrila6rslhhfrp/1tbiih9VG2gvBbqcNwAAsI
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+In-Reply-To: <vmtli7u7fnsj56xhih7eqtzt6w3v4yp7dviyssqyyybvsioznj@lzwdr5dpo5wg>
 
+The 05/21/2025 17:34, Antoine Tenart wrote:
 
+Hi Antoine,
 
-在 2025/5/22 13:34, Oscar Salvador 写道:
-> On Thu, May 22, 2025 at 11:47:05AM +0800, Muchun Song wrote:
->> Thanks for fixing this problem. BTW, in order to catch future similar problem,
->> it is better to add WARN_ON into folio_hstate() to assert if hugetlb_lock
->> is not held when folio's reference count is zero. For this fix, LGTM.
 > 
-> Why cannot we put all the burden in alloc_and_dissolve_hugetlb_folio(),
-> which will again check things under the lock?
-> I mean, I would be ok to save cycles and check upfront in
-> replace_free_hugepage_folios(), but the latter has only one user which
-> is alloc_contig_range(), which is not really an expected-to-be optimized
-> function.
+> On Wed, May 21, 2025 at 03:11:14PM +0200, Horatiu Vultur wrote:
+> > Fix memory leak when running one-step timestamping. When running
+> > one-step sync timestamping, the HW is configured to insert the TX time
+> > into the frame, so there is no reason to keep the skb anymore. As in
+> > this case the HW will never generate an interrupt to say that the frame
+> > was timestamped, then the frame will never released.
+> > Fix this by freeing the frame in case of one-step timestamping.
+> >
+> > Fixes: 7d272e63e0979d ("net: phy: mscc: timestamping and PHC support")
+> > Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
+> > ---
+> >  drivers/net/phy/mscc/mscc_ptp.c | 7 +++++++
+> >  1 file changed, 7 insertions(+)
+> >
+> > diff --git a/drivers/net/phy/mscc/mscc_ptp.c b/drivers/net/phy/mscc/mscc_ptp.c
+> > index ed8fb14a7f215..db8ca1dfd5322 100644
+> > --- a/drivers/net/phy/mscc/mscc_ptp.c
+> > +++ b/drivers/net/phy/mscc/mscc_ptp.c
+> > @@ -1173,6 +1173,13 @@ static void vsc85xx_txtstamp(struct mii_timestamper *mii_ts,
+> >               return;
+> >       }
+> >
+> > +     if (vsc8531->ptp->tx_type == HWTSTAMP_TX_ONESTEP_SYNC) {
+> > +             if (ptp_msg_is_sync(skb, type)) {
+> > +                     kfree_skb(skb);
+> > +                     return;
+> > +             }
+> > +     }
 > 
->   diff --git a/mm/hugetlb.c b/mm/hugetlb.c
->   index bd8971388236..b4d937732256 100644
->   --- a/mm/hugetlb.c
->   +++ b/mm/hugetlb.c
->   @@ -2924,13 +2924,6 @@ int replace_free_hugepage_folios(unsigned long start_pfn, unsigned long end_pfn)
->   
->    	while (start_pfn < end_pfn) {
->    		folio = pfn_folio(start_pfn);
->   -		if (folio_test_hugetlb(folio)) {
->   -			h = folio_hstate(folio);
->   -		} else {
->   -			start_pfn++;
->   -			continue;
->   -		}
->   -
->    		if (!folio_ref_count(folio)) {
->    			ret = alloc_and_dissolve_hugetlb_folio(h, folio,
->    							       &isolate_list);
+> I don't remember everything about TS but I think the above is fine. Also
+> while looking at this I saw this function is doing the following too:
 > 
->   
+>   if (!vsc8531->ptp->configured)
+>         return;
 > 
-It seems that we cannot simply remove the folio_test_hugetlb() check. 
-The reasons are as follows:
+> I guess we should free the skb for all paths not putting it in the tx
+> queue. As there would be 3 paths freeing the skb + returning, you might
+> as well use a label for easier maintenance.
 
-1）If we remove it, we will be unable to obtain the hstat corresponding 
-to the folio, and consequently, we won't be able to call 
-alloc_and_dissolve_hugetlb_folio().
+Yes, you are correct we should free the skb also in this case.
+I will fix this in the next version.
 
-2）The alloc_and_dissolve_hugetlb_folio() function is also called within 
-the isolate_or_dissolve_huge_folio() function. However, the 
-folio_test_hugetlb() check within the isolate_or_dissolve_huge_folio() 
-function cannot be removed.
+> 
+> Thanks,
+> Antoine
 
+-- 
+/Horatiu
