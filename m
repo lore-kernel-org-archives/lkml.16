@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C29722331E;
-	Thu, 22 May 2025 11:13:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 117AC17BB6;
+	Thu, 22 May 2025 11:14:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747912426; cv=none; b=vE3rEA12XgBgrSVTKYG6lU4jlyU0Y6UQJquFZkNI//Gj1lEhUT6zQd/IlJZ0hkPr9l/skh4o4IBUGHmIVd/rpvBjQiPHZTaWwrX0Rn+4XqW760OPBAu5wknROM/UCApasRBanCfABCUyVJjQeHOpLYkII3tr0/TlcJ0Qagic6J4=
+	t=1747912476; cv=none; b=k5wSmQiAyjL6if4tYfn4/Z6QC9dG10vE5z9U2UbjRvuVq7FixOS4+1hv9IaYzD4XLr5Me+xnJy9qixZH/zBlNUuM8Fb7u3mV0ttEWeVeDSYAFwyzrO2hugbBPYwsgYJ8nRdZh6ra8hYA3L6VfZ4inS15xfcnEwPDpOEAPet2qtE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747912426; c=relaxed/simple;
-	bh=AaDvihIPSnhl/h909oHjXJweNpnqkBOW4ugw5LGT4l8=;
+	s=arc-20240116; t=1747912476; c=relaxed/simple;
+	bh=eW2QelSQB/EKZ9gl1bUD03UjRnPqi7z3lwjkjCqNWec=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Rah3AnRwpRMUDNIdIcdoOSC36xygKdKdtg6GWN/CEZURc6CYkzg9EhFvfjq8qMFu5fNu8ldXUx24l/VRrlnJfI7e9vf44ivkqm5oVVPdL4uKiCeFbIEwmEAF6WZH5DtLYYlBXox2918cW8qmjeTus19rbKvKoCkMd4vdP+5iJhw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WgAYlpCe; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=H0JLiIQPLmMQ2RVtwWYa0RH9f8ghJkalg5J66WZiXONvcLJJ6QGQigbxIlCJ38p2mJ57IKgZpxRP7wXMuYUhvU1uWS1j/uYdUTa+fuEhoVY8xPQfJFehMPy2JuDb4XuQYlNfpCyfz+KrPnkrl2J0AE8H+q4rHKwMM6bYHUpW+M0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WqGM6UQW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WgAYlpCe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7139C4CEE4;
-	Thu, 22 May 2025 11:13:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WqGM6UQW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7ED2C4CEE4;
+	Thu, 22 May 2025 11:14:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747912425;
-	bh=AaDvihIPSnhl/h909oHjXJweNpnqkBOW4ugw5LGT4l8=;
+	s=k20201202; t=1747912475;
+	bh=eW2QelSQB/EKZ9gl1bUD03UjRnPqi7z3lwjkjCqNWec=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=WgAYlpCeIgSmcluxcAR9LdjeKXyCs0qr5BytGkGgGljKC59Zn6PHLv35ibslVE8IH
-	 ZRyYG6Cl5CuszlZBZv5om89BiDB3bbz0TlaVZW+iV+sQPv+1rCq5zf+OJMf6l+L7Qo
-	 bBF5IK3lT+oq3N4W1YZermj79vdNZi+SsTSqxYx0lcIp16B773DLhpcPmboPbPzc1h
-	 z0/pWU+tYa57bB03bMKO83AF6tUZt9cs5WwtCHsBhRRaYdRPAq+uaRkI6slXbWqEpY
-	 F1sm3SNkyBpTcT9Yb+akkwmMnF7ZwBei/196GHGUcvZqbLfnnDkokH7/VzejvL+Osg
-	 hb9zHr0LzjGTg==
-Message-ID: <ea058a32-e0a2-4c22-84d9-08b550f0f81e@kernel.org>
-Date: Thu, 22 May 2025 13:13:40 +0200
+	b=WqGM6UQWqapQ+edwdyH8NlKwvcY4lw4IbDAhwqKuDDtpqHNJdMfkv0RpWurcScsbW
+	 xwVG6czfLo10TxQ4BLUFCkUjcvbXmfJecQVVBcTUndC05ciCtZfJaX7qLNek/kU8R3
+	 6CmF3m70+Kd3pXR70gnBIjPxLmDX91RguJobub0+8rDYkwNoOj5oUzQIvkpieOJ+ra
+	 MCYytlzIVVKKNoZCwPUCf9RD8WI0VjUXpY2lhzNeoyAiUFX4Lz7PWppDSzXVhDXnp3
+	 UR59iLksMih1Cn14mMqidLYJkBbtTL2ALxDZUS3WfFNbNyeqx6UqFC3BqjzD3wFpeQ
+	 xQM0CvJ7CbSiQ==
+Message-ID: <1cfe31c9-7586-4abc-bac1-96fd9a5eb365@kernel.org>
+Date: Thu, 22 May 2025 13:14:30 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,13 +35,14 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 0/2] ASoC: codecs: add support for ES8375
+Subject: Re: [PATCH v1 1/2] ASoC: dt-bindings: Add Everest ES8375 audio CODEC
 To: Zhang Yi <zhangyi@everest-semi.com>, broonie@kernel.org, robh@kernel.org,
  tiwai@suse.com, devicetree@vger.kernel.org, conor+dt@kernel.org,
  lgirdwood@gmail.com, linux-kernel@vger.kernel.org,
  linux-sound@vger.kernel.org, perex@perex.cz, krzk+dt@kernel.org
 Cc: amadeuszx.slawinski@linux.intel.com
 References: <20250522103548.20134-1-zhangyi@everest-semi.com>
+ <20250522103548.20134-2-zhangyi@everest-semi.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -87,19 +88,19 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <20250522103548.20134-1-zhangyi@everest-semi.com>
+In-Reply-To: <20250522103548.20134-2-zhangyi@everest-semi.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 22/05/2025 12:35, Zhang Yi wrote:
-> The driver is for codec ES8375 of everest-semi.
+> Add device tree binding documentation for Everest ES8375
 > 
-> v1 -> v0:
->           - Add the description of everest,mclk-src in the yaml file
+> Signed-off-by: Zhang Yi <zhangyi@everest-semi.com>
+> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-Version your patches correctly - that's v2. Or just start using b4.
+No.
 
-
+This never happened.
 
 Best regards,
 Krzysztof
