@@ -1,252 +1,164 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-fw-52003.amazon.com (smtp-fw-52003.amazon.com [52.119.213.152])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34B7028C032
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 13:30:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECBDD35949;
+	Thu, 22 May 2025 13:31:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.119.213.152
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747920618; cv=none; b=c5lmaeFGpfoCf5jvUFUbMfTcOaUey7B3yTov7Nwf1LBzt9DVGU1WQXAwDjHjoYRBbyDe39pxI6HZEUCFLULy6GioyPlTwN20UqSNtSsPjoki0poz2t+JKdPHawfVgbOrOsu8GVn84WhWB8ABzdt4r77jq8XTnmYnPWIMZwvoC5U=
+	t=1747920686; cv=none; b=YXmOtQtCYoJGKkSxLLHYUyza9TPwgU0y8qjqg3bJAF4aArNVM37zgtjkeDTsiwxG+CXJDmzJjV1XxtNtjNSc8iTUpwNWBzTKz4usbJzxp74Bj2PSzKH2acUF370YOMYU/sJ7dpQBKZrubYp4ZhQUtfCKI7ghHl+YOttt/vKK9tU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747920618; c=relaxed/simple;
-	bh=uzcxmVJ06dfQ2tREYWZUQmzhuz1HLysXNqnIbo0pevY=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Gq0IPtz+KlnMnNCLRXKp0JfLl1cVLULNGJGuPcyqqfIgjOjsm1y281mdj/FtBQhVmJTPBf8DQlHVv+hvpFd/jtQkDjZeZ+L3gslgTlhPyUZ8ifpg+SgZ7fkwoIo9l46a1qfMbT0PJ7Yg1It/DoMWszTjj+luxS5pYyWYNNdtF5E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=mO3n5S/+; arc=none smtp.client-ip=209.85.221.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1747920686; c=relaxed/simple;
+	bh=jwWiLe42S9SsbU+ebldx8V794Mu/3hXTJRdX5N3/+X0=;
+	h=From:To:CC:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=FCuYQKRCeSe9/QwA+ILOYZAdjTL9eyQaemx6N3H+PU1W6P5AyXqoXAJtXg9PkSJjsEk94X3/eCEW5iPSzTYXWxG4tduR8bqM5W8+AiIouD3BuvH1u1NGb7lDAV3l1zM+khBnJUkRw0R3IwM/YMamW+DmQFbT6HgQ6pHcxu+3Jmg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.de; spf=pass smtp.mailfrom=amazon.de; dkim=pass (2048-bit key) header.d=amazon.de header.i=@amazon.de header.b=jQd4bDjC; arc=none smtp.client-ip=52.119.213.152
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="mO3n5S/+"
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-3a36efcadb8so3909706f8f.0
-        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 06:30:15 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=amazon.de header.i=@amazon.de header.b="jQd4bDjC"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1747920614; x=1748525414; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=lT1TbXWqbLY6oC/7pDfmnvkR13CB+3JHqRPljDvsco4=;
-        b=mO3n5S/+Iw4bDGbrDCFbV+e/m1IzMeKWC320XgQCY94KEvff3Lf6Z1wxUv8aErrNxL
-         BDdSE7Thf6eytYmW8JyyomM9miJ2sz4qes66Mi0uj2VHAPju1+7Z+Y8eNZeV6nBpRrai
-         oDA99nRw3xfgHvOjeVAj60R6VwMTGodjE90+9h4gbDpE7m0flIx4Li3sCRP0dUJQNFTv
-         vmC9c+0H6kHCE9Ue7EhWjIQXAgm2sO0/LsJgT37k/SJBaz7EO3j4DlYgaUuopDlU5EGp
-         hVQnbUlgkkugGzvpbiQUxVtDvkwA1EwmAX8p3uIz92aCZ4vOy1/orQA7P6zFd+FPl8xi
-         xdWA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747920614; x=1748525414;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=lT1TbXWqbLY6oC/7pDfmnvkR13CB+3JHqRPljDvsco4=;
-        b=Fu4SrcCqDJENjGUzchequHMHTlmxTAdVk+RxQ+XdsVpTOQEGMyOrtO9S8jmRpEEJxT
-         jqa0Mj+viZzIOH32aWaoOI3HhUouWKB7Cs6335W4GMn3xLpuIHjagd63CoOm8fxebZed
-         FMvs/JgsH3nQnSd/0kMuGfaMBb0c0Y44EqE8LJ9TNnMN3tElqq7Na0PmA4a+l9ok3HZw
-         vB6NmRLT68hmtR20w5srfKJdcm2v1sTWJJ6Ia3+kuiuYqyj0agNpZAYQD/ZWUMW2T/xc
-         ePNpsAvZqkLgmHUKyVIM2AD90rFBo9XMbflqd3OrH72ATOFFytEbAHum6N5lTDH2qX9G
-         zj3A==
-X-Forwarded-Encrypted: i=1; AJvYcCWFTq+J46H3eNF3/eQnVDDpFytPFODoKwuVvyiEmCRhbRraTf6ooReNagjbGkbCl7DNOiJv21/fq0A22dg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyinSpgC8nPhAc1hqD+gS04f0WwRaJAmQbKo8k+1xYMfG2s9Uvl
-	gSZiThE2WZ4qqk7UkeFl6neocoPIQ1lri/uv7CvxkoamKcUJdVTO61joqQ02CCTyHeY=
-X-Gm-Gg: ASbGncs9VXc8FV2tUQZ7bDc/vwj52ek3jMP+7Rb3hyCGxKJKezYmGXofwoDE/wbj86M
-	H/W2KUJnq/IBrg4nZxOKyqXELZGeCukCy885gJzIDpTTEyvhTo/QZr7S2SuXXi6rV9hWfWyafUl
-	GMIrVb0dKHkZwYGcvg2hF3cniBNJALveQi2y+X65Bo8ds9ekylRgGbo/msMdPFmV62XLQ9FmQah
-	GzSBAy9RhIWg422OFqoym8Mz2whxtTf3CP00rSJFqSgVnauNr0GrJFzdaQ5t6FtA85OU0Kj5/Le
-	ixSZkfNdgMU63LC9SX6jeuXSaDAZeUZjoZEDJ96lcH7r5g6Kb8WtFUL8yC6ermnsY6/MsIsl1xF
-	XBHwSAvyYB7Xfhu+XMxjM17BiUMLOuFo=
-X-Google-Smtp-Source: AGHT+IHF+eVyJCrCz5tU9KpKqSdb8Eipd/fwiZwG9eYHrDNqidXh8VyAPfDGcs0PivpsP5TYxl6OqQ==
-X-Received: by 2002:a05:6000:2282:b0:3a3:7bbc:d958 with SMTP id ffacd0b85a97d-3a37bbcdc3bmr9963373f8f.1.1747920614411;
-        Thu, 22 May 2025 06:30:14 -0700 (PDT)
-Received: from [192.168.0.2] (host-80-116-51-117.retail.telecomitalia.it. [80.116.51.117])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-447f1ef0b20sm109837585e9.14.2025.05.22.06.30.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 May 2025 06:30:13 -0700 (PDT)
-From: Angelo Dureghello <adureghello@baylibre.com>
-X-Google-Original-From: Angelo Dureghello <adureghello@baylibre.org>
-Date: Thu, 22 May 2025 15:27:07 +0200
-Subject: [PATCH v6 6/6] iio: adc: ad7606: add gain calibration support
+  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazoncorp2;
+  t=1747920684; x=1779456684;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=OlB+2OtTrJazNk0kELLux61Y/VPnAYDjFX1pVaDScWs=;
+  b=jQd4bDjCZHBGVyAA+NHskUIFRN2g0yQZxBNRmkzrfNnTZjvJsDOgpUM7
+   WRkDj+3KNR4zT2AyWQQXhMIbx/7NmF7Wv+1gWwz/v1oDFO51NJstP1/74
+   Gs6lw0YuD9jXNNNBFowt7GrS9itvPeopRy2n5xRqsi9OfuN0cmSfoTaog
+   fvBx6/o9HZWGYaEVKvOCsjoLbQ13ZxEu5U3+qob3DXh+yOlLhMIZAUZS5
+   sARD4myrD9E0JyoQCVL98tEn2OzdYG1loi1E7moS9kJmlvB/2Uez0YFLG
+   NChyTiza0BGT38LFDYLizEXl4YjTY4oKROXqFIsW/FteJvpLc+FusMP37
+   Q==;
+X-IronPort-AV: E=Sophos;i="6.15,306,1739836800"; 
+   d="scan'208";a="96236152"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.6])
+  by smtp-border-fw-52003.iad7.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2025 13:31:16 +0000
+Received: from EX19MTAUWB001.ant.amazon.com [10.0.38.20:64371]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.18.109:2525] with esmtp (Farcaster)
+ id befc10d2-e35f-4a55-9b8d-6a66acedb4c3; Thu, 22 May 2025 13:31:15 +0000 (UTC)
+X-Farcaster-Flow-ID: befc10d2-e35f-4a55-9b8d-6a66acedb4c3
+Received: from EX19EXOUWC001.ant.amazon.com (10.250.64.135) by
+ EX19MTAUWB001.ant.amazon.com (10.250.64.248) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Thu, 22 May 2025 13:31:14 +0000
+Received: from EX19MTAUWA002.ant.amazon.com (10.250.64.202) by
+ EX19EXOUWC001.ant.amazon.com (10.250.64.135) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Thu, 22 May 2025 13:31:13 +0000
+Received: from email-imr-corp-prod-pdx-all-2b-c1559d0e.us-west-2.amazon.com
+ (10.25.36.210) by mail-relay.amazon.com (10.250.64.203) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id
+ 15.2.1544.14 via Frontend Transport; Thu, 22 May 2025 13:31:13 +0000
+Received: from dev-dsk-ptyadav-1c-43206220.eu-west-1.amazon.com (dev-dsk-ptyadav-1c-43206220.eu-west-1.amazon.com [172.19.91.144])
+	by email-imr-corp-prod-pdx-all-2b-c1559d0e.us-west-2.amazon.com (Postfix) with ESMTP id 59D7B4080E;
+	Thu, 22 May 2025 13:31:13 +0000 (UTC)
+Received: by dev-dsk-ptyadav-1c-43206220.eu-west-1.amazon.com (Postfix, from userid 23027615)
+	id E490B157A; Thu, 22 May 2025 15:31:12 +0200 (CEST)
+From: Pratyush Yadav <ptyadav@amazon.de>
+To: Mike Rapoport <rppt@kernel.org>
+CC: Andrew Morton <akpm@linux-foundation.org>, Alexandre Ghiti
+	<alexghiti@rivosinc.com>, <linux-arch@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>
+Subject: Re: [PATCH] mm/cma: make detection of highmem_start more robust
+In-Reply-To: <aCwW70QKGFtXVxEH@kernel.org>
+References: <20250519171805.1288393-1-rppt@kernel.org>
+	<mafs0plg4tgee.fsf@amazon.de> <aCwW70QKGFtXVxEH@kernel.org>
+Date: Thu, 22 May 2025 15:31:12 +0200
+Message-ID: <mafs04ixcu5zz.fsf_-_@amazon.de>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20250522-wip-bl-ad7606-calibration-v6-6-487b90433da0@baylibre.com>
-References: <20250522-wip-bl-ad7606-calibration-v6-0-487b90433da0@baylibre.com>
-In-Reply-To: <20250522-wip-bl-ad7606-calibration-v6-0-487b90433da0@baylibre.com>
-To: Jonathan Cameron <jic23@kernel.org>, 
- David Lechner <dlechner@baylibre.com>, 
- =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>, 
- Andy Shevchenko <andy@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, 
- Michael Hennerich <Michael.Hennerich@analog.com>, 
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>
-Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Michael Hennerich <michael.hennerich@analog.com>, 
- devicetree@vger.kernel.org, Angelo Dureghello <adureghello@baylibre.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5640;
- i=adureghello@baylibre.com; h=from:subject:message-id;
- bh=FrnFIjXjnkaraAHZa2fhT+4HMZyAF9OoYi/BTOJJXJg=;
- b=owGbwMvMwCXGf3bn1e/btlsznlZLYsjQV8v78li42GqufW23yOvw1coBLr+UY7ac2syQvermz
- /NRZ5lmdpSyMIhxMciKKbLUJUaYhN4OlVJewDgbZg4rE8gQBi5OAZjIljeMDO9WyH9/IRf6rDfy
- ufT3DzN+6Cnf71TqEH5fPPHVCw+V2suMDL9EXj8+68E9ffN/qfztqdYXrTal3Um2ncbafma+7EV
- xXk4A
-X-Developer-Key: i=adureghello@baylibre.com; a=openpgp;
- fpr=703CDFAD8B573EB00850E38366D1CB9419AF3953
+Content-Type: text/plain
 
-From: Angelo Dureghello <adureghello@baylibre.com>
+Hi Mike,
 
-Add gain calibration support, using resistor values set on devicetree,
-values to be set accordingly with ADC external RFilter, as explained in
-the ad7606c-16 datasheet, rev0, page 37.
+On Tue, May 20 2025, Mike Rapoport wrote:
 
-Usage example in the fdt yaml documentation.
+> On Mon, May 19, 2025 at 11:55:05PM +0200, Pratyush Yadav wrote:
+>> Hi Mike,
+>>
+>> On Mon, May 19 2025, Mike Rapoport wrote:
+>>
+>> > From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+>> >
+>> > Pratyush Yadav reports the following crash:
+>> >
+>> >     ------------[ cut here ]------------
+>> >     kernel BUG at arch/x86/mm/physaddr.c:23!
+>> >     ception 0x06 IP 10:ffffffff812ebbf8 error 0 cr2 0xffff88903ffff000
+>> >     CPU: 0 UID: 0 PID: 0 Comm: swapper Not tainted 6.15.0-rc6+ #231 PREEMPT(undef)
+>> >     Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS Arch Linux 1.16.3-1-1 04/01/2014
+>> >     RIP: 0010:__phys_addr+0x58/0x60
+>> >     Code: 01 48 89 c2 48 d3 ea 48 85 d2 75 05 e9 91 52 cf 00 0f 0b 48 3d ff ff ff 1f 77 0f 48 8b 05 20 54 55 01 48 01 d0 e9 78 52 cf 00 <0f> 0b 90 0f 1f 44 00 00 90 90 90 90 90 90 90 90 90 90 90 90 90 90
+>> >     RSP: 0000:ffffffff82803dd8 EFLAGS: 00010006 ORIG_RAX: 0000000000000000
+>> >     RAX: 000000007fffffff RBX: 00000000ffffffff RCX: 0000000000000000
+>> >     RDX: 000000007fffffff RSI: 0000000280000000 RDI: ffffffffffffffff
+>> >     RBP: ffffffff82803e68 R08: 0000000000000000 R09: 0000000000000000
+>> >     R10: ffffffff83153180 R11: ffffffff82803e48 R12: ffffffff83c9aed0
+>> >     R13: 0000000000000000 R14: 0000001040000000 R15: 0000000000000000
+>> >     FS:  0000000000000000(0000) GS:0000000000000000(0000) knlGS:0000000000000000
+>> >     CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>> >     CR2: ffff88903ffff000 CR3: 0000000002838000 CR4: 00000000000000b0
+>> >     Call Trace:
+>> >      <TASK>
+>> >      ? __cma_declare_contiguous_nid+0x6e/0x340
+>> >      ? cma_declare_contiguous_nid+0x33/0x70
+>> >      ? dma_contiguous_reserve_area+0x2f/0x70
+>> >      ? setup_arch+0x6f1/0x870
+>> >      ? start_kernel+0x52/0x4b0
+>> >      ? x86_64_start_reservations+0x29/0x30
+>> >      ? x86_64_start_kernel+0x7c/0x80
+>> >      ? common_startup_64+0x13e/0x141
+>> >
+>> >   The reason is that __cma_declare_contiguous_nid() does:
+>> >
+>> >           highmem_start = __pa(high_memory - 1) + 1;
+>> >
+>> >   If dma_contiguous_reserve_area() (or any other CMA declaration) is
+>> >   called before free_area_init(), high_memory is uninitialized. Without
+>> >   CONFIG_DEBUG_VIRTUAL, it will likely work but use the wrong value for
+>> >   highmem_start.
+>> >
+>> > The issue occurs because commit e120d1bc12da ("arch, mm: set high_memory in
+>> > free_area_init()") moved initialization of high_memory after the call to
+>> > dma_contiguous_reserve() -> __cma_declare_contiguous_nid() on several
+>> > architectures.
+>> >
+>> > In the case CONFIG_HIGHMEM is enabled, some architectures that actually
+>> > support HIGHMEM (arm, powerpc and x86) have initialization of high_memory
+>> > before a possible call to __cma_declare_contiguous_nid() and some
+>> > initialized high_memory late anyway (arc, csky, microblase, mips, sparc,
+>> > xtensa) even before the commit e120d1bc12da so they are fine with using
+>> > uninitialized value of high_memory.
+>>
+>> I don't know if they are fine or they haven't realized this is a bug
+>> yet.
+>
+> For those that initialized high_memory in their mem_init() it would have
+> been a bug quite some time.
 
-Tested-by: David Lechner <dlechner@baylibre.com>
-Reviewed-by: Nuno Sá <nuno.sa@analog.com>
-Signed-off-by: Angelo Dureghello <adureghello@baylibre.com>
----
- drivers/iio/adc/ad7606.c | 55 ++++++++++++++++++++++++++++++++++++++++++++++++
- drivers/iio/adc/ad7606.h |  3 +++
- 2 files changed, 58 insertions(+)
+Agreed. This patch fixes the regression caused by e120d1bc12da5 ("arch,
+mm: set high_memory in free_area_init()"). I don't think you need to go
+around fixing long standing bugs. I was just thinking out loud with this
+comment.
 
-diff --git a/drivers/iio/adc/ad7606.c b/drivers/iio/adc/ad7606.c
-index f832fd0daf50a69a892636018bda2e43f73d1570..00c498afd942724c9241a8c59080f61a3075bca1 100644
---- a/drivers/iio/adc/ad7606.c
-+++ b/drivers/iio/adc/ad7606.c
-@@ -33,6 +33,10 @@
- 
- #include "ad7606.h"
- 
-+#define AD7606_CALIB_GAIN_MIN	0
-+#define AD7606_CALIB_GAIN_STEP	1024
-+#define AD7606_CALIB_GAIN_MAX	(63 * AD7606_CALIB_GAIN_STEP)
-+
- /*
-  * Scales are computed as 5000/32768 and 10000/32768 respectively,
-  * so that when applied to the raw values they provide mV values.
-@@ -125,6 +129,7 @@ static int ad7609_chan_scale_setup(struct iio_dev *indio_dev,
- 				   struct iio_chan_spec *chan);
- static int ad7616_sw_mode_setup(struct iio_dev *indio_dev);
- static int ad7606b_sw_mode_setup(struct iio_dev *indio_dev);
-+static int ad7606_chan_calib_gain_setup(struct iio_dev *indio_dev);
- 
- const struct ad7606_chip_info ad7605_4_info = {
- 	.max_samplerate = 300 * KILO,
-@@ -180,6 +185,7 @@ const struct ad7606_chip_info ad7606b_info = {
- 	.scale_setup_cb = ad7606_16bit_chan_scale_setup,
- 	.sw_setup_cb = ad7606b_sw_mode_setup,
- 	.offload_storagebits = 32,
-+	.calib_gain_setup_cb = ad7606_chan_calib_gain_setup,
- 	.calib_offset_avail = ad7606_calib_offset_avail,
- 	.calib_phase_avail = ad7606b_calib_phase_avail,
- };
-@@ -195,6 +201,7 @@ const struct ad7606_chip_info ad7606c_16_info = {
- 	.scale_setup_cb = ad7606c_16bit_chan_scale_setup,
- 	.sw_setup_cb = ad7606b_sw_mode_setup,
- 	.offload_storagebits = 32,
-+	.calib_gain_setup_cb = ad7606_chan_calib_gain_setup,
- 	.calib_offset_avail = ad7606_calib_offset_avail,
- 	.calib_phase_avail = ad7606c_calib_phase_avail,
- };
-@@ -246,6 +253,7 @@ const struct ad7606_chip_info ad7606c_18_info = {
- 	.scale_setup_cb = ad7606c_18bit_chan_scale_setup,
- 	.sw_setup_cb = ad7606b_sw_mode_setup,
- 	.offload_storagebits = 32,
-+	.calib_gain_setup_cb = ad7606_chan_calib_gain_setup,
- 	.calib_offset_avail = ad7606c_18bit_calib_offset_avail,
- 	.calib_phase_avail = ad7606c_calib_phase_avail,
- };
-@@ -355,6 +363,46 @@ static int ad7606_get_chan_config(struct iio_dev *indio_dev, int ch,
- 	return 0;
- }
- 
-+static int ad7606_chan_calib_gain_setup(struct iio_dev *indio_dev)
-+{
-+	struct ad7606_state *st = iio_priv(indio_dev);
-+	unsigned int num_channels = st->chip_info->num_adc_channels;
-+	struct device *dev = st->dev;
-+	int ret;
-+
-+	/*
-+	 * This function is called once, and parses all the channel nodes,
-+	 * so continuing on next channel node on errors, informing of them.
-+	 */
-+	device_for_each_child_node_scoped(dev, child) {
-+		u32 reg, r_gain;
-+
-+		ret = fwnode_property_read_u32(child, "reg", &reg);
-+		if (ret)
-+			return ret;
-+
-+		/* Chan reg is a 1-based index. */
-+		if (reg < 1 || reg > num_channels)
-+			return ret;
-+
-+		ret = fwnode_property_read_u32(child, "adi,rfilter-ohms",
-+					       &r_gain);
-+		if (ret)
-+			/* Keep the default register value. */
-+			continue;
-+
-+		if (r_gain > AD7606_CALIB_GAIN_MAX)
-+			return -EINVAL;
-+
-+		ret = st->bops->reg_write(st, AD7606_CALIB_GAIN(reg - 1),
-+			DIV_ROUND_CLOSEST(r_gain, AD7606_CALIB_GAIN_STEP));
-+		if (ret)
-+			return ret;
-+	}
-+
-+	return 0;
-+}
-+
- static int ad7606c_18bit_chan_scale_setup(struct iio_dev *indio_dev,
- 					  struct iio_chan_spec *chan)
- {
-@@ -1446,6 +1494,13 @@ static int ad7606_probe_channels(struct iio_dev *indio_dev)
- 	if (slow_bus)
- 		channels[i] = (struct iio_chan_spec)IIO_CHAN_SOFT_TIMESTAMP(i);
- 
-+	/* Setting up gain calibration for all channels. */
-+	if (st->sw_mode_en && st->chip_info->calib_offset_avail) {
-+		ret = st->chip_info->calib_gain_setup_cb(indio_dev);
-+		if (ret)
-+			return ret;
-+	}
-+
- 	indio_dev->channels = channels;
- 
- 	return 0;
-diff --git a/drivers/iio/adc/ad7606.h b/drivers/iio/adc/ad7606.h
-index f613583a7fa4095115b0b28e3f8e51cd32b93524..6313eea2bd0ccf97222a50dc26d8ec65042d0db7 100644
---- a/drivers/iio/adc/ad7606.h
-+++ b/drivers/iio/adc/ad7606.h
-@@ -50,6 +50,7 @@ struct ad7606_state;
- typedef int (*ad7606_scale_setup_cb_t)(struct iio_dev *indio_dev,
- 				       struct iio_chan_spec *chan);
- typedef int (*ad7606_sw_setup_cb_t)(struct iio_dev *indio_dev);
-+typedef int (*ad7606_calib_gain_setup_cb_t)(struct iio_dev *indio_dev);
- 
- /**
-  * struct ad7606_chip_info - chip specific information
-@@ -66,6 +67,7 @@ typedef int (*ad7606_sw_setup_cb_t)(struct iio_dev *indio_dev);
-  * @init_delay_ms:	required delay in milliseconds for initialization
-  *			after a restart
-  * @offload_storagebits: storage bits used by the offload hw implementation
-+ * @calib_gain_setup_cb: callback to setup of gain calibration
-  * @calib_offset_avail: pointer to offset calibration range/limits array
-  * @calib_phase_avail:  pointer to phase calibration range/limits array
-  */
-@@ -81,6 +83,7 @@ struct ad7606_chip_info {
- 	bool				os_req_reset;
- 	unsigned long			init_delay_ms;
- 	u8				offload_storagebits;
-+	ad7606_calib_gain_setup_cb_t	calib_gain_setup_cb;
- 	const int			*calib_offset_avail;
- 	const int			(*calib_phase_avail)[2];
- };
+[...]
 
 -- 
-2.49.0
+Regards,
+Pratyush Yadav
+
+
+
+Amazon Web Services Development Center Germany GmbH
+Tamara-Danz-Str. 13
+10243 Berlin
+Geschaeftsfuehrung: Christian Schlaeger, Jonathan Weiss
+Eingetragen am Amtsgericht Charlottenburg unter HRB 257764 B
+Sitz: Berlin
+Ust-ID: DE 365 538 597
 
