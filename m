@@ -1,134 +1,97 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F3E3238C3D;
-	Thu, 22 May 2025 11:21:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEA8D286425;
+	Thu, 22 May 2025 11:21:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747912880; cv=none; b=Tj+to6+2Z+7+N4d/E2Jhu3nkZCpOQbaPplMzq1mvw8hw7WBGmENx4/FzAYm/kdyos9BfVUrvbswjLDR/e9EDmUtU6V9U+UccpHHp52nmH8hL4uZc4qCHjWw9upHlvXun5SPuCrU1D57gwqB6brrKGjEuDN5dSUMQ2yvg/PoGYSI=
+	t=1747912915; cv=none; b=SyuY8pfg2LALJdO2TvhiZ8dSdA8KipF8dtn2/SIAKjTr8RPOZycDesWzKH2FiOsKqYfhphWAHfggGghoyKF/xhCejG1trgXR22C3oVMPoV4tn8EwXmXn9ZdUsfXfgGRIbRVFCO8fVa3KYVlVhZLRPUk38rOT5Njj9GvX+NadTeQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747912880; c=relaxed/simple;
-	bh=sNrvtk1BUA4pyk8WW5vjsyMF2BGrf0flGH/whATon1k=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=iUNvYUbxdgx7aQSF0jb7xFtKqSFyIdFDYcbjcj7M7fcvbw98yp9G5o7mZUluEfhJNDqbh1N7GmI2yeDOTY2vYGXT4fNk/8z4g+8PnRXpVjWAnItkiyHJOpsSmyxwppTW7tMJua+rTs7Vojkrpir6bkSmGYaWyeAVTY1HRCj4Pdk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4b35S43W3Nz6GD5w;
-	Thu, 22 May 2025 19:20:20 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 3C409140142;
-	Thu, 22 May 2025 19:21:16 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 22 May
- 2025 13:21:15 +0200
-Date: Thu, 22 May 2025 12:21:13 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-CC: <linux-pci@vger.kernel.org>, Jon Pan-Doh <pandoh@google.com>, "Karolina
- Stolarek" <karolina.stolarek@oracle.com>, Weinan Liu <wnliu@google.com>,
-	Martin Petersen <martin.petersen@oracle.com>, Ben Fuller
-	<ben.fuller@oracle.com>, Drew Walton <drewwalton@microsoft.com>, "Anil
- Agrawal" <anilagrawal@meta.com>, Tony Luck <tony.luck@intel.com>, Ilpo
- =?UTF-8?Q?J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, "Sathyanarayanan
- Kuppuswamy" <sathyanarayanan.kuppuswamy@linux.intel.com>, Lukas Wunner
-	<lukas@wunner.de>, Sargun Dhillon <sargun@meta.com>, "Paul E . McKenney"
-	<paulmck@kernel.org>, Mahesh J Salgaonkar <mahesh@linux.ibm.com>, "Oliver
- O'Halloran" <oohall@gmail.com>, Kai-Heng Feng <kaihengf@nvidia.com>, "Keith
- Busch" <kbusch@kernel.org>, Robert Richter <rrichter@amd.com>, Terry Bowman
-	<terry.bowman@amd.com>, Shiju Jose <shiju.jose@huawei.com>, Dave Jiang
-	<dave.jiang@intel.com>, <linux-kernel@vger.kernel.org>,
-	<linuxppc-dev@lists.ozlabs.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Krzysztof =?UTF-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>
-Subject: Re: [PATCH v7 17/17] PCI/AER: Add sysfs attributes for log
- ratelimits
-Message-ID: <20250522122113.000030c0@huawei.com>
-In-Reply-To: <20250521225942.GA1452275@bhelgaas>
-References: <20250521114600.00007010@huawei.com>
-	<20250521225942.GA1452275@bhelgaas>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1747912915; c=relaxed/simple;
+	bh=GCD+itmTe0b/J+qM5d/v9KELzW7ui94Qc8QFqpcbKRU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DpM7q3h0PXUrJ/6emdB/LrHb25vmq8Nso8VT3PJBKzeaPZethEt7/LcVBOq+coGEyETcFJpK8qsr+0Fj8RmCm+S94aNwmDv9Ize3LgJNfTVCG6ArzIo6SsCVGdqjjWnzuHGd/MxWU706pd7HuWjLVucEKA69zp9FqoBf/+qrnLA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=X2UF6ukk; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="X2UF6ukk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8CB5C4CEE4;
+	Thu, 22 May 2025 11:21:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1747912914;
+	bh=GCD+itmTe0b/J+qM5d/v9KELzW7ui94Qc8QFqpcbKRU=;
+	h=From:To:Cc:Subject:Date:From;
+	b=X2UF6ukk+tKDTt0kPLw/7GhH+/e7aKlEhp97dDHCPLmB5yeIHdByPelphTX4hh0Zs
+	 p7pdo+v+5HoR4wQc4uxD4Chrl0aItfyGalhUTTqwbtblQnW+EhcroRTIfyd1Y5/yp3
+	 ydDrXXADhUJML9MjTBwAZaLIBYEda7aQgZUA4lpM=
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: netdev@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Alexander Lobakin <alobakin@pm.me>,
+	Andrew Lunn <andrew@lunn.ch>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>
+Subject: [PATCH net-next] net: phy: fix up const issues in to_mdio_device() and to_phy_device()
+Date: Thu, 22 May 2025 13:21:47 +0200
+Message-ID: <2025052246-conduit-glory-8fc9@gregkh>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100004.china.huawei.com (7.191.162.219) To
- frapeml500008.china.huawei.com (7.182.85.71)
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1872; i=gregkh@linuxfoundation.org; h=from:subject:message-id; bh=GCD+itmTe0b/J+qM5d/v9KELzW7ui94Qc8QFqpcbKRU=; b=owGbwMvMwCRo6H6F97bub03G02pJDBn6HKdmMJrd3yc0ewrXk/0MpXzXFie97J75PVmRu6jv7 tvDD2LYOmJZGASZGGTFFFm+bOM5ur/ikKKXoe1pmDmsTCBDGLg4BWAizwUYFswO3Xj21hmN8/Eq zNsDX0isiOE3sGZYcILp8+Tsnn6HzHXbbif6/zkh/FrjGAA=
+X-Developer-Key: i=gregkh@linuxfoundation.org; a=openpgp; fpr=F4B60CC5BF78C2214A313DCB3147D40DDB2DFB29
+Content-Transfer-Encoding: 8bit
 
-On Wed, 21 May 2025 17:59:42 -0500
-Bjorn Helgaas <helgaas@kernel.org> wrote:
+Both to_mdio_device() and to_phy_device() "throw away" the const pointer
+attribute passed to them and return a non-const pointer, which generally
+is not a good thing overall.  Fix this up by using container_of_const()
+which was designed for this very problem.
 
-> On Wed, May 21, 2025 at 11:46:00AM +0100, Jonathan Cameron wrote:
-> > On Tue, 20 May 2025 16:50:34 -0500
-> > Bjorn Helgaas <helgaas@kernel.org> wrote:
-> >   
-> > > From: Jon Pan-Doh <pandoh@google.com>
-> > > 
-> > > Allow userspace to read/write log ratelimits per device (including
-> > > enable/disable). Create aer/ sysfs directory to store them and any
-> > > future aer configs.  
-> > ...  
-> 
-> > There is some relatively new SYSFS infra that I think will help
-> > make this slightly nicer by getting rid of the extra directory when
-> > there is nothing to be done with it.  
-> 
-> > > +#define aer_ratelimit_burst_attr(name, ratelimit)			\
-> > > +	static ssize_t							\
-> > > +	name##_show(struct device *dev, struct device_attribute *attr,	\
-> > > +		    char *buf)						\
-> > > +{									\  
-> > 
-> > A little odd looking to indent this less than the line above.  
-> 
-> Yep, fixed.
-> 
-> > > +const struct attribute_group aer_attr_group = {
-> > > +	.name = "aer",
-> > > +	.attrs = aer_attrs,
-> > > +	.is_visible = aer_attrs_are_visible,
-> > > +};  
-> > 
-> > There are a bunch of macros to simplify cases where
-> > a whole group is either enabled or not and make the group
-> > itself go away if there is nothing to be shown.
-> > 
-> > DEFINE_SIMPLE_SYSFS_GROUP_VISIBLE() combined with
-> > SYSFS_GROUP_VISIBLE() around the assignment does what we
-> > want here I think.
-> > 
-> > Whilst we can't retrofit that stuff onto existing ABI
-> > as someone may be assuming directory presence, we can
-> > make sysfs less cluttered for new stuff.
-> > 
-> > Maybe I'm missing why that doesn't work here though!  
-> 
-> Is this something we can fix later, or are we locking ourselves into
-> user-visible ABI that's hard to change?  I'm kind of against the wall
-> relative to the v6.16 merge window and haven't had time to dig into
-> this part.
+Cc: Alexander Lobakin <alobakin@pm.me>
+Cc: Andrew Lunn <andrew@lunn.ch>
+Cc: Heiner Kallweit <hkallweit1@gmail.com>
+Cc: Russell King <linux@armlinux.org.uk>
+Fixes: 7eab14de73a8 ("mdio, phy: fix -Wshadow warnings triggered by nested container_of()")
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ include/linux/mdio.h | 5 +----
+ include/linux/phy.h  | 5 +----
+ 2 files changed, 2 insertions(+), 8 deletions(-)
 
-That comes down to Ilpo's question of whether empty directories
-are ABI (specifically if anyone notices us removing them).
-It seems unlikely anyone will code against requirement for an empty
-dir, but you never know.
-
-Given we probably have a bunch of these in PCI anyway that predate
-that magic, one more isn't a problem even if we decide we can't
-tidy it up later.
-
-So I'm fine with not bothering to hide the dir for now (and maybe for
-ever).
-
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-
-
-Jonathan
-
-> 
+diff --git a/include/linux/mdio.h b/include/linux/mdio.h
+index 3c3deac57894..e43ff9f980a4 100644
+--- a/include/linux/mdio.h
++++ b/include/linux/mdio.h
+@@ -45,10 +45,7 @@ struct mdio_device {
+ 	unsigned int reset_deassert_delay;
+ };
+ 
+-static inline struct mdio_device *to_mdio_device(const struct device *dev)
+-{
+-	return container_of(dev, struct mdio_device, dev);
+-}
++#define to_mdio_device(__dev)	container_of_const(__dev, struct mdio_device, dev)
+ 
+ /* struct mdio_driver_common: Common to all MDIO drivers */
+ struct mdio_driver_common {
+diff --git a/include/linux/phy.h b/include/linux/phy.h
+index a2bfae80c449..bef68f6af99a 100644
+--- a/include/linux/phy.h
++++ b/include/linux/phy.h
+@@ -744,10 +744,7 @@ struct phy_device {
+ #define PHY_F_NO_IRQ		0x80000000
+ #define PHY_F_RXC_ALWAYS_ON	0x40000000
+ 
+-static inline struct phy_device *to_phy_device(const struct device *dev)
+-{
+-	return container_of(to_mdio_device(dev), struct phy_device, mdio);
+-}
++#define to_phy_device(__dev)	container_of_const(to_mdio_device(__dev), struct phy_device, mdio)
+ 
+ /**
+  * struct phy_tdr_config - Configuration of a TDR raw test
+-- 
+2.49.0
 
