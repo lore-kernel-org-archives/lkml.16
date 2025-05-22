@@ -1,89 +1,140 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C57623C510;
-	Thu, 22 May 2025 16:30:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F00C23814C;
+	Thu, 22 May 2025 16:30:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747931402; cv=none; b=ucjagqH4u6pgM5msf9vjbmEFWvpjuH+RTCP8Y6NzhEO5wXeX68cypzWO6hnb68WyTv8uTF5b65+cScOZeiMS0020/ufFfX1etuqEjmoyW4gc9yE+fj0ARv6oN16gg207rUq5+tsFyEEIC6TqL80PRJt4Kyzc+nogwZhUzO1UI70=
+	t=1747931421; cv=none; b=jyoY7sl7aksGjApc0im9YuK6MVdGfIqRUtMK4l4TNrp9tf6zh6nMKJhgQ6JUEXVS8lQgIYomdl+n+Y3ZbamZrrzAfuhMgGEmoUe+fowqDEKg1fiOHiV8YWWeFhGaF1GxX4yvwPLcruaHFYJzveiigrWgCApgwnp97X7qABw/r+M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747931402; c=relaxed/simple;
-	bh=QauHD26f0xVLSJ2R78w8tIAsbID5M+Dr2BROMlraE/c=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=iabQ4+ySi5TZsBb7Nc/FW/abgMtYRAvsw14wzyDzSuSBqyz5hiNt6PnC/MnD/yxedbLh4WhWKDQPMvbD3lUji5w4w3n9CnfjPS1JxpkAWP/g1E2GcttU4UCZ7jHP8FUjCus67gUWX3vi4l+jHk7AfY+ipOtqrnOgrD+6lM6s7gQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V6TVzgvA; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747931421; c=relaxed/simple;
+	bh=VvYoIAPws8oKWrSzmwyl5I2kVoNn7TSdR7yt+32hlHw=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=Lqh0TVTKq+qpbJ8EEzaxuPfXY0Mf+osvI/7u/2j+9LVlxhumLEfbLbnoRWfAC9DtS4DLa6XrrOaewLcZVLgo3WbWVFFN199bvWdSIcc8ZCjkdMPxjeFk32jR6gyPwCq5WiXQAR6a+BQ+2UIIRJ9COPKJHaoJ39aVJ2lq/rlQt2Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a+6PMrVG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V6TVzgvA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0B38C4CEE4;
-	Thu, 22 May 2025 16:30:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a+6PMrVG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18942C4CEE4;
+	Thu, 22 May 2025 16:30:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747931401;
-	bh=QauHD26f0xVLSJ2R78w8tIAsbID5M+Dr2BROMlraE/c=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=V6TVzgvAVW7k4qchP56bP0HtsYvO1J/m4eA/vIA4PFum5z/HSdgPM3XVJ6STN88Hc
-	 GlLM6ZcGcyajLLz6y11aG7bsuTyodV7xQzYkZE37WbovUNUAp3tqWBfm70FWcaFe3Q
-	 BSs68FjZcJSyc5w9DLLjW7dEwRZyQWyaxttMG0VENubzpfnq1sPWublTirIaORJBVA
-	 gJjaF7p1MhwetcY9S+gAIu/1fGzUQhKhiUVPKQmS0G9zcS8ypFWzs9Xl2AwqYjIFLU
-	 vw+m/5HeIhR+fyi5qaOHiU5SjMZylvqYzHqnBKZ4x+0wbLvVtIWMrbb9VuR0zkt6nC
-	 1dY/RtsftCopQ==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 710DD3805D89;
-	Thu, 22 May 2025 16:30:38 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=k20201202; t=1747931420;
+	bh=VvYoIAPws8oKWrSzmwyl5I2kVoNn7TSdR7yt+32hlHw=;
+	h=From:Date:Subject:To:Cc:From;
+	b=a+6PMrVGQUrDneoBqo7DpWq3C22wqZjSn0oPDNex12hEXE6P4jNg9TL+coc9VhPv3
+	 v3H9whzPkI1a66RrzKo8eVKrvAn1vzrZPvXCSgm9vQT2vt1FkePpF7Mm6+zcf/zgd+
+	 vrbpV2fwolsZffJQ8ROfywhL/8TNw8BbBq7dOYvzdYz32LDiqpsxsdKBVaN3GXPyHP
+	 HyeFuJN5AWGXicgR03nnbHlg023X8N7Pt9VSPc+l4LrEa7RjbLObAXAOpwuz1ho0IJ
+	 9ERA+94SSEf+KX/VQGZLKC1tlKO1pPAqQPCyWEhS6hnvJzK/upDQsCeLYCgMsogeye
+	 ndC7CquUbPedQ==
+From: Mark Brown <broonie@kernel.org>
+Date: Thu, 22 May 2025 17:29:00 +0100
+Subject: [PATCH] selftests/mm: Deduplicate test names in madv_populate
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next 0/5] net/mlx5: Convert mlx5 to netdev instance
- locking
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <174793143726.2938999.16490486121028128951.git-patchwork-notify@kernel.org>
-Date: Thu, 22 May 2025 16:30:37 +0000
-References: <1747829342-1018757-1-git-send-email-tariqt@nvidia.com>
-In-Reply-To: <1747829342-1018757-1-git-send-email-tariqt@nvidia.com>
-To: Tariq Toukan <tariqt@nvidia.com>
-Cc: davem@davemloft.net, kuba@kernel.org, pabeni@redhat.com,
- edumazet@google.com, andrew+netdev@lunn.ch, jgg@ziepe.ca, leon@kernel.org,
- saeedm@nvidia.com, richardcochran@gmail.com, ast@kernel.org,
- daniel@iogearbox.net, hawk@kernel.org, john.fastabend@gmail.com,
- linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
- netdev@vger.kernel.org, bpf@vger.kernel.org, moshe@nvidia.com,
- mbloch@nvidia.com, gal@nvidia.com, cratiu@nvidia.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250522-selftests-mm-madv-populate-dedupe-v1-1-fd1dedd79b4b@kernel.org>
+X-B4-Tracking: v=1; b=H4sIAMtQL2gC/x3NQQrCMBBG4auUWTvQRCLqVcRFSP7RQNOGTFoKp
+ Xc3uPw27x2kqAlKz+Ggii1pWuYOcxkofP38AafYTXa0bnTWsGKSBm3KOXP2ceOylHXyDRwR1wJ
+ +OPFibuEa7kK9Uyok7f/H632eP7/4p4BzAAAA
+X-Change-ID: 20250521-selftests-mm-madv-populate-dedupe-95faf16c3c8f
+To: Andrew Morton <akpm@linux-foundation.org>, 
+ Shuah Khan <shuah@kernel.org>, David Hildenbrand <david@redhat.com>
+Cc: linux-mm@kvack.org, linux-kselftest@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
+X-Mailer: b4 0.15-dev-c25d1
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3082; i=broonie@kernel.org;
+ h=from:subject:message-id; bh=VvYoIAPws8oKWrSzmwyl5I2kVoNn7TSdR7yt+32hlHw=;
+ b=owEBbQGS/pANAwAKASTWi3JdVIfQAcsmYgBoL1EaPKKO67XVukLC02kQQKb86S1XJSrhZcwTGdkT
+ d3uiRGGJATMEAAEKAB0WIQSt5miqZ1cYtZ/in+ok1otyXVSH0AUCaC9RGgAKCRAk1otyXVSH0KUEB/
+ 9nHnsZi6fuK8Z2Egd5gNc+gg3Dv5KcnWZDd4FCa5MoUrj2Js/x0OfjS9yujvOqaksSwIkyaaNdn5cN
+ Y3lHvmHA+U8CV2bkF2baU/2/E2yb8FHdOtxt/GORbzgtou0sCubqI9/7oOL5D8nIqaBQC5qEdnoPKs
+ 9U0RR0i5WBYfnlu6ZJwzwProVavVofRyOrSNTUFmPkR6C4IGU9EsXlJuTtdtCt1NV+LjBWwFw0voyN
+ S2EjvNxlsO60xMlFqkjuaHGKm6HcqcvhDatX1ZYGvYb8iix4Jw9FZNE6Hzy1/xQCZsS2DJi1FQruXZ
+ Y7Ji+ehGYg8SmjkFoiAOE3PYzOq4da
+X-Developer-Key: i=broonie@kernel.org; a=openpgp;
+ fpr=3F2568AAC26998F9E813A1C5C3F436CA30F5D8EB
 
-Hello:
+The madv_populate selftest has some repetitive code for several different
+cases that it covers, included repeated test names used in ksft_test_result()
+reports. This causes problems for automation, the test name is used to both
+track the test between runs and distinguish between multiple tests within
+the same run. Fix this by tweaking the messages with duplication to be more
+specific about the contexts they're in.
 
-This series was applied to netdev/net-next.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ tools/testing/selftests/mm/madv_populate.c | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
-On Wed, 21 May 2025 15:08:57 +0300 you wrote:
-> Hi,
-> 
-> This series by Cosmin converts mlx5 to use the recently added netdev
-> instance locking scheme.
-> 
-> Find detailed description by Cosmin below [1].
-> 
-> [...]
+diff --git a/tools/testing/selftests/mm/madv_populate.c b/tools/testing/selftests/mm/madv_populate.c
+index ef7d911da13e..b6fabd5c27ed 100644
+--- a/tools/testing/selftests/mm/madv_populate.c
++++ b/tools/testing/selftests/mm/madv_populate.c
+@@ -172,12 +172,12 @@ static void test_populate_read(void)
+ 	if (addr == MAP_FAILED)
+ 		ksft_exit_fail_msg("mmap failed\n");
+ 	ksft_test_result(range_is_not_populated(addr, SIZE),
+-			 "range initially not populated\n");
++			 "read range initially not populated\n");
+ 
+ 	ret = madvise(addr, SIZE, MADV_POPULATE_READ);
+ 	ksft_test_result(!ret, "MADV_POPULATE_READ\n");
+ 	ksft_test_result(range_is_populated(addr, SIZE),
+-			 "range is populated\n");
++			 "read range is populated\n");
+ 
+ 	munmap(addr, SIZE);
+ }
+@@ -194,12 +194,12 @@ static void test_populate_write(void)
+ 	if (addr == MAP_FAILED)
+ 		ksft_exit_fail_msg("mmap failed\n");
+ 	ksft_test_result(range_is_not_populated(addr, SIZE),
+-			 "range initially not populated\n");
++			 "write range initially not populated\n");
+ 
+ 	ret = madvise(addr, SIZE, MADV_POPULATE_WRITE);
+ 	ksft_test_result(!ret, "MADV_POPULATE_WRITE\n");
+ 	ksft_test_result(range_is_populated(addr, SIZE),
+-			 "range is populated\n");
++			 "write range is populated\n");
+ 
+ 	munmap(addr, SIZE);
+ }
+@@ -247,19 +247,19 @@ static void test_softdirty(void)
+ 	/* Clear any softdirty bits. */
+ 	clear_softdirty();
+ 	ksft_test_result(range_is_not_softdirty(addr, SIZE),
+-			 "range is not softdirty\n");
++			 "cleared range is not softdirty\n");
+ 
+ 	/* Populating READ should set softdirty. */
+ 	ret = madvise(addr, SIZE, MADV_POPULATE_READ);
+-	ksft_test_result(!ret, "MADV_POPULATE_READ\n");
++	ksft_test_result(!ret, "softdirty MADV_POPULATE_READ\n");
+ 	ksft_test_result(range_is_not_softdirty(addr, SIZE),
+-			 "range is not softdirty\n");
++			 "range is not softdirty after MADV_POPULATE_READ\n");
+ 
+ 	/* Populating WRITE should set softdirty. */
+ 	ret = madvise(addr, SIZE, MADV_POPULATE_WRITE);
+-	ksft_test_result(!ret, "MADV_POPULATE_WRITE\n");
++	ksft_test_result(!ret, "softdirty MADV_POPULATE_WRITE\n");
+ 	ksft_test_result(range_is_softdirty(addr, SIZE),
+-			 "range is softdirty\n");
++			 "range is softdirty after MADV_POPULATE_WRITE \n");
+ 
+ 	munmap(addr, SIZE);
+ }
 
-Here is the summary with links:
-  - [net-next,1/5] IB/IPoIB: Enqueue separate work_structs for each flushed interface
-    https://git.kernel.org/netdev/net-next/c/5f85120e7462
-  - [net-next,2/5] IB/IPoIB: Replace vlan_rwsem with the netdev instance lock
-    https://git.kernel.org/netdev/net-next/c/463e51769697
-  - [net-next,3/5] IB/IPoIB: Allow using netdevs that require the instance lock
-    https://git.kernel.org/netdev/net-next/c/fd07ba1680ba
-  - [net-next,4/5] net/mlx5e: Don't drop RTNL during firmware flash
-    https://git.kernel.org/netdev/net-next/c/d7d4f9f7365a
-  - [net-next,5/5] net/mlx5e: Convert mlx5 netdevs to instance locking
-    https://git.kernel.org/netdev/net-next/c/8f7b00307bf1
+---
+base-commit: a5806cd506af5a7c19bcd596e4708b5c464bfd21
+change-id: 20250521-selftests-mm-madv-populate-dedupe-95faf16c3c8f
 
-You are awesome, thank you!
+Best regards,
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+Mark Brown <broonie@kernel.org>
 
