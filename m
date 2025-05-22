@@ -1,30 +1,64 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DC1628D821
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 14:37:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AA3A28C841
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 14:38:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747924650; cv=none; b=ahiuEDLeIGpj6q67KEqh43MOgscZ6KjY6hE+npj1bwyGsmylXbBNz74o8p/g6Ra9wtesVdWIeLJrtP6I9bK3bWiye5fj0bqR/RBLQzezL7fMMsdf9xqBcqAxuF/0+m9XBEPxiVPfKHFNJB0AShTprQRjfkqNs+itQSd4769KpP8=
+	t=1747924707; cv=none; b=Cd/4pfXNpz812bFKQsb1NbjdWDifMdnAb4/jpbl+zG++Jd4e8ExmgWu38D60UM5SjZlieqX4AASf0X+0sZQvTfK1X2hk480U13R6sZbx4h78eHSF/fB6fXnQnXkgFYUkjqvGuOc2JHAp3znBvETgo0ab9FVAzIDoP5lbplWb5EI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747924650; c=relaxed/simple;
-	bh=9t+GvHdpjvZ3RIifDl9fUcLrgFV7Rqcwo+0Hpa3FCjw=;
+	s=arc-20240116; t=1747924707; c=relaxed/simple;
+	bh=tSFOd0ob9YqFivKamN62b7ff1HRgQHWdM4cS+PZ7hGM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hgPN4NzqlhzWSww4o6MSQdQfyRWu3Pxkhz4NM71nvowq61m8uN/C/gQFa/5l72mjGh3i1cE6DsI+1xPY0wqoSvRSwEr8roXkPVjwvVA8zzHAk748Rj0SEkPA/MkO8m5OsMdLPzQcUO+E5rYp/jZAE2hzXTvEqXwIuCnbkx8hGH4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4b39qS6kszzYQv66
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 22:37:24 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 22E871A0359
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 22:37:24 +0800 (CST)
-Received: from [10.67.109.184] (unknown [10.67.109.184])
-	by APP4 (Coremail) with SMTP id gCh0CgAniFyiNi9osPK7NA--.57898S2;
-	Thu, 22 May 2025 22:37:23 +0800 (CST)
-Message-ID: <afe53868-5542-47d6-8005-71c1b3bec840@huaweicloud.com>
-Date: Thu, 22 May 2025 22:37:22 +0800
+	 In-Reply-To:Content-Type; b=oqZKMNGJkmOTVD50M3efS1i7SAe5ZMsCKvE7dSPGP+9qx+DOtwkUso6ovEeErOGCpTfvjun/XOckugTyS2Gp1Vk4VKrgjqCqf6ZzOE1F/FPzXZCtePSzRyxpmj893u/IJfj2qwT/QRYqdWkuSZEimToc/qNk7db0LDY+WlWMw5U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=G8IEigfM; arc=none smtp.client-ip=209.85.218.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="G8IEigfM"
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-ad551342f08so58550566b.2
+        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 07:38:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tuxon.dev; s=google; t=1747924702; x=1748529502; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=o1xKktQ42UkJnkq9jbHipgrEK5NcK05/3GPTCixG9Do=;
+        b=G8IEigfMQxwQs7FwttfbWKAOT/AMNt8pVgHQMGDa/xJhyFlHta2Yfa1tSN+yFae0on
+         xm9P6MJvAUWHrQduidusttp+4QBwd4oTfApW6gAY2wIHwTC4LEcV1yn2+w518lyYD9/M
+         9to6lQ7E9xgdbpS/vVmZzvPDUNMXl9OSTKiEb22ePqxIKe2OOGtnC9lKe6/ccvCNS6rw
+         Ao4ZLjWVnm74RnMkRy2vWQ4IS45Im1M0QxsshB9/J9x531zy7m8qDJe/N3Ghl1TUijqy
+         SQEgyeNk7ER7QvojQksDmehQftNRMZppDh4kDEkNakKMrLUwFPNHZPsc8a+j+OlPMWr6
+         HiiQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747924702; x=1748529502;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=o1xKktQ42UkJnkq9jbHipgrEK5NcK05/3GPTCixG9Do=;
+        b=UvJE4VRD7SWy5puOiaSE0bRJ0/7y5q4ZGPLfMMxLGOeNIrK+LfNWy1K503tE0UZlQB
+         lpJX4xCcomDt9+WOKVK9EqYnFNT/JMqc1/5KEThNsfYE7sFlIKQOLFKqBiEWGINZkgmr
+         tk3QdyOVNSi+AwvkkqwuRUNJY1hfmwJ5xByxmRTiqJ3e6qyhv614lh0YgtqO99Jgw1y+
+         g0meTjmk4ckqTjyHh11oZfPWv8aO2WvgADaDTcvPnLVkCHvuSVqc1TVYvllVrN9KugTi
+         VxYlGUKSdJPuuN01u87TQbt5UuakJLUcNDCTiUtqCKOXfdgdc9VODlxB11tZFRiGOA2m
+         XI2w==
+X-Forwarded-Encrypted: i=1; AJvYcCVPHGrbp+E8A88Q8/KuQKOGXuMSqI6QyZtzxBca3id9KmrSuWrHsm2X5r4z5jbjCQ4ZnGC20trRa8B0pxk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxAlumbnKpOLos3+kfIodadMaCYTvApFzrZBEXhRGxfQ0NtkFhx
+	M9GsGpIj5mT3U2ZS7zyZEe8HCYVl8Pf+A5RGU8H8ZvnaWhC47cS6vmNGIXqmC5NoU8I=
+X-Gm-Gg: ASbGncsw3LIZh/McgOR8g+v+hHvt4pgsH/rXorTl8wnsekuhhVGg+CR+3a8DXCIUAnl
+	QVEabTiV/LAZERM2Xjhcy6obKRX51wGuea91cjbpiJvMgkX6oT0p1ngpaS5tkccm4a2LVxGCWZp
+	O/6YERGoWr1NFljJ+onQoCnBzIIUAlLFXrjJh5KGqXhBWCDR5D7hHzr7qpIfQaGmZ2NEpcUdzUG
+	7wQZm+NH0qvAtL9dEtr71k8Fue3QIWzwRgbbFxO2BljymZ/nIuOgJ714kYUNrU6amJNk3DKIHdu
+	ymDjqe0u8Dj7YMerddpF+lCHJB5TLLNb1AYupYOCMP6ehKqmVBvK3V8n8A4=
+X-Google-Smtp-Source: AGHT+IEBMGy/caB/YGy4M4swW5helGIU87znZK31jj9gb2P5heCvBRIIdKeIeqDBJ6ZvmzSBH3j+6w==
+X-Received: by 2002:a17:907:2d1f:b0:ad2:425c:27ce with SMTP id a640c23a62f3a-ad536b57a4bmr2090211066b.2.1747924701738;
+        Thu, 22 May 2025 07:38:21 -0700 (PDT)
+Received: from [192.168.50.4] ([82.78.167.58])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad52d4d27e8sm1092538966b.174.2025.05.22.07.38.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 22 May 2025 07:38:20 -0700 (PDT)
+Message-ID: <a83317dc-093d-4b7f-b22e-1ccb74ed2350@tuxon.dev>
+Date: Thu, 22 May 2025 17:38:19 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -32,99 +66,201 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH] mm/mmap: Fix uprobe anon page be overwritten when
- expanding vma during mremap
-To: David Hildenbrand <david@redhat.com>, mhiramat@kernel.org,
- oleg@redhat.com, peterz@infradead.org, akpm@linux-foundation.org,
- Liam.Howlett@oracle.com, lorenzo.stoakes@oracle.com, vbabka@suse.cz,
- jannh@google.com, pfalcato@suse.de
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, pulehui@huawei.com
-References: <20250521092503.3116340-1-pulehui@huaweicloud.com>
- <62b5ccf5-f1cd-43c2-b0bc-f542f40c5bdf@redhat.com>
+Subject: Re: [PATCH v3 05/12] dt-bindings: phy: renesas,usb2-phy: Add
+ renesas,sysc-signals
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: vkoul@kernel.org, kishon@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
+ conor+dt@kernel.org, p.zabel@pengutronix.de, geert+renesas@glider.be,
+ magnus.damm@gmail.com, yoshihiro.shimoda.uh@renesas.com, kees@kernel.org,
+ gustavoars@kernel.org, biju.das.jz@bp.renesas.com,
+ linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+ linux-hardening@vger.kernel.org, john.madieu.xa@bp.renesas.com,
+ Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+References: <20250521140943.3830195-1-claudiu.beznea.uj@bp.renesas.com>
+ <20250521140943.3830195-6-claudiu.beznea.uj@bp.renesas.com>
+ <20250522-evasive-unyielding-quoll-dbc9b2@kuoka>
+ <b22e7a46-7e35-4840-aae3-a855c97fbde4@tuxon.dev>
+ <4a07048a-c55a-4fd3-b4e5-7f9d218de76f@kernel.org>
+From: Claudiu Beznea <claudiu.beznea@tuxon.dev>
 Content-Language: en-US
-From: Pu Lehui <pulehui@huaweicloud.com>
-In-Reply-To: <62b5ccf5-f1cd-43c2-b0bc-f542f40c5bdf@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+In-Reply-To: <4a07048a-c55a-4fd3-b4e5-7f9d218de76f@kernel.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgAniFyiNi9osPK7NA--.57898S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7CrWrZF1rGr1fCw1xAF48Crg_yoW8tryxpa
-	yIqas8KF97JFZ5Ary3A34DXry8twsYy345Ar1fXFya934rWr1aqFW7AFW2kFyfGFZ7tF4r
-	tr4Fqry3tF9rJaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
-	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxkF7I0En4kS
-	14v26r1q6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I
-	8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8
-	ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x
-	0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_
-	Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU1
-	7KsUUUUUU==
-X-CM-SenderInfo: psxovxtxl6x35dzhxuhorxvhhfrp/
 
 
 
-On 2025/5/21 18:25, David Hildenbrand wrote:
-> On 21.05.25 11:25, Pu Lehui wrote:
->> From: Pu Lehui <pulehui@huawei.com>
+On 22.05.2025 15:46, Krzysztof Kozlowski wrote:
+> On 22/05/2025 12:26, Claudiu Beznea wrote:
+>> Hi, Krzysztof,
 >>
->> We encountered a BUG alert triggered by Syzkaller as follows:
->>     BUG: Bad rss-counter state mm:00000000b4a60fca type:MM_ANONPAGES 
->> val:1
+>> On 22.05.2025 10:03, Krzysztof Kozlowski wrote:
+>>> On Wed, May 21, 2025 at 05:09:36PM GMT, Claudiu wrote:
+>>>>  .../bindings/phy/renesas,usb2-phy.yaml        | 22 +++++++++++++++++++
+>>>>  1 file changed, 22 insertions(+)
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/phy/renesas,usb2-phy.yaml b/Documentation/devicetree/bindings/phy/renesas,usb2-phy.yaml
+>>>> index 12f8d5d8af55..e1e773cba847 100644
+>>>> --- a/Documentation/devicetree/bindings/phy/renesas,usb2-phy.yaml
+>>>> +++ b/Documentation/devicetree/bindings/phy/renesas,usb2-phy.yaml
+>>>> @@ -86,6 +86,16 @@ properties:
+>>>>  
+>>>>    dr_mode: true
+>>>>  
+>>>> +  renesas,sysc-signals:
+>>>> +    description: System controller phandle, specifying the register
+>>>> +      offset and bitmask associated with a specific system controller signal
+>>>
+>>> This is 100% redundant information. system controller specifying system
+>>> controller signal.
+>>>
+>>> Drop.
+>>>
+>>>
+>>>> +    $ref: /schemas/types.yaml#/definitions/phandle-array
+>>>> +    items:
+>>>> +      - items:
+>>>> +          - description: system controller phandle
+>>>
+>>> What for? Explain the usage. How is ut used by this hardware.
 >>
->> And we can reproduce it with the following steps:
->> 1. register uprobe on file at zero offset
->> 2. mmap the file at zero offset:
->>     addr1 = mmap(NULL, 2 * 4096, PROT_NONE, MAP_PRIVATE, fd, 0);
+>> OK, I though I've explained in the renesas,sysc-signals description
+>> section. I'll adjust it and move it here.
 > 
-> So, here we will install a uprobe.
-> 
->> 3. mremap part of vma1 to new vma2:
->>     addr2 = mremap(addr1, 4096, 2 * 4096, MREMAP_MAYMOVE);
-> 
-> Okay, so we'll essentially move the uprobe as we mremap.
-> 
-> 
->> 4. mremap back to orig addr1:
->>     mremap(addr2, 4096, 4096, MREMAP_MAYMOVE | MREMAP_FIXED, addr1);
-> 
-> And here, we would expect to move the uprobe again.
-> 
->>
->> In the step 3, the vma1 range [addr1, addr1 + 4096] will be remap to new
->> vma2 with range [addr2, addr2 + 8192], and remap uprobe anon page from
->> the vma1 to vma2, then unmap the vma1 range [addr1, addr1 + 4096].
->> In tht step 4, the vma2 range [addr2, addr2 + 4096] will be remap back
->> to the addr range [addr1, addr1 + 4096]. Since the addr range [addr1 +
->> 4096, addr1 + 8192] still maps the file, it will take
->> vma_merge_new_range to merge these two addr ranges, and then do
->> uprobe_mmap in vma_complete. Since the merged vma pgoff is also zero
->> offset, it will install uprobe anon page to the merged vma.
-> 
-> Oh, so we're installing the uprobe into the extended VMA before moving 
-> the page tables.
-Yep!
-> 
-> Gah.
-> 
->> However, the
->> upcomming move_page_tables step, which use set_pte_at to remap the vma2
->> uprobe anon page to the merged vma, will over map the old uprobe anon
->> page in the merged vma, and lead the old uprobe anon page to be orphan.
-> 
-> Right, when moving page tables we don't expect there to already be 
-> something from the uprobe code.
-> 
->>
->> Since the uprobe anon page will be remapped to the merged vma, we can
->> remove the unnecessary uprobe_mmap at merged vma, that is, do not
->> perform uprobe_mmap when there is no vma in the addr range to be
->> expaned.
-> 
-> Hmmm, I'll have to think about other corner cases ....
-> 
-looking forward to it
+> That description did not explain me at all. I mean really, which parts
+> explains the usage by hardware?
 
+OK, I'll detail it.
+
+> 
+> 
+>>
+>>>
+>>>> +          - description: register offset associated with a signal
+>>>
+>>> What signal? That's a phy.
+>>
+>> Would you like me to specify here exactly the signal name? I tried to made
+>> it generic as the system controller provides other signals to other IPs,
+>> the intention was to use the same property for other IPs, if any. And kept
+>> it generic in the idea it could be used in future, if any, for other
+>> signals provided by the system controller to the USB PHY.
+> 
+> Bindings are not generic, so yes, you must explain here what hardware
+> aspect this is relevant to. What signal? Between whom?
+
+OK
+
+> 
+>>
+>> As explained in the commit description, on the Renesas RZ/G3S SoC, the USB
+>> PHY receives a signal from the system controller that need to be
+> 
+> Interrupt? Some pin changes state? What is a signal? This property is in
+> the USB PHY device, not system controller.
+
+It's just a generic signal (a line b/w 2 HW blocks, internal to the SoC)
+that need to be controlled before/after power to the USB PHY block was
+turned on/off.
+
+The above schema is from cover letter a bit simplified. It details the
+relation b/w USB blocks (USB CH0 uses PHY0 from USB PHY, USB CH1, uses PHY1
+from USB PHY, SYSC controls and provides the PWRRDY signal that is
+connected to the USB PHY):
+
+                                   ┌──────────────────────────────┐
+                                   │                              │
+                                   │     USB CH0                  │
+    ┌──────────────────────────┐   │┌───────────────────────────┐ │
+    │                 ┌────────┐   ││host controller registers  │ │
+    │                 │        │   ││function controller registers│
+    │                 │ PHY0   │◄──┤└───────────────────────────┘ │
+    │     USB PHY     │        │   └──────────────────────────────┘
+    │                 └────────┘
+    │                          │
+    │┌──────────────┐ ┌────────┐
+    ││USBPHY control│ │        │
+    ││  registers   │ │ PHY1   │   ┌──────────────────────────────┐
+    │└──────────────┘ │        │◄──┤     USB CH1                  │
+    │                 └────────┘   │┌───────────────────────────┐ │
+    └─▲────────────────────────┘   ││ host controller registers │ │
+      │                            │└───────────────────────────┘ │
+      │                            └──────────────────────────────┘
+      │
+      │
+      │PWRRDY
+      │
+      │
+      │
+      │
+    ┌────┐
+    │SYSC│
+    └────┘
+
+Setting the bits at address specified by the renesas,sysc-signals allows
+the SYSC to assert/de-assert the PWRRDY signal. Any settings on USB PHY
+need to be done after this signal was de-asserted. It's like a reset signal
+(in previous versions it was modeled as such but it wasn't accepted:
+https://lore.kernel.org/all/20240822152801.602318-5-claudiu.beznea.uj@bp.renesas.com/).
+
+I'll detailed in the next version. Do you prefer to have the above diagram
+in the schema itself? Or maybe in patch description?
+
+> 
+>> de-asserted/asserted when power is turned on/off. This signal, called
+>> PWRRDY, is controlled through a specific register in the system controller
+>> memory space.
+>>
+>> With this property the intention is to specify to the USB PHY driver the
+>> phandle to the SYSC, register offset within SYSC address space in charge of
+> 
+> This is obvious from the schema and I asked to drop redundant parts.
+> 
+>> controlling the USB PWRRDY signal and the bitmask within this register.
+> 
+> So basically this last piece describes what this hardware needs to do
+> with system controller? Change some register?
+
+Yes
+
+> 
+>>
+>> The PHY driver parse this information and set the signal at proper moments.
+>>
+>>
+>>>
+>>>> +          - description: register bitmask associated with a signal
+>>>> +
+>>>>  if:
+>>>>    properties:
+>>>>      compatible:
+>>>> @@ -117,6 +127,18 @@ allOf:
+>>>>        required:
+>>>>          - resets
+>>>>  
+>>>> +  - if:
+>>>> +      properties:
+>>>> +        compatible:
+>>>> +          contains:
+>>>> +            const: renesas,usb2-phy-r9a08g045
+>>>> +    then:
+>>>> +      required:
+>>>> +        - renesas,sysc-signals
+>>>
+>>> That's ABI break.
+>>
+>> There is no in kernel device tree users of "renesas,usb2-phy-r9a08g045"
+>> compatible. It is introduced in patch 11/12 from this series. With this do
+>> you still consider it ABI break?
+> 
+> Then this patch cannot be split from binding introducing the user. Don't
+> add unused/undocumented compatibles.
+
+The initial documentation patch was accepted from previous iterations (from
+v1 [1]). At that time we didn't know the full picture above.
+
+Thank you,
+Claudiu
+
+[1]
+https://lore.kernel.org/all/20240822152801.602318-1-claudiu.beznea.uj@bp.renesas.com/
