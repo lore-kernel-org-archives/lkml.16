@@ -1,79 +1,65 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6CBF1E5202
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 22:45:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63C8C1E5202;
+	Thu, 22 May 2025 22:47:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747953948; cv=none; b=VEAwIZafZURHpsalfB+bmxIE/LqW9vYUoDvDLU1YwcLgQMP2feojW3RHy3PsD25KYqMPnuUjN/V5XRORu3HPn8LKmCu24e3mvYgBnsPzmnaoPAWihuuNBXASrPPDknY/eYQQQmAgVoHo0DlhITBOpVZG+ZG/LkpNTQ/ePiLvLM0=
+	t=1747954062; cv=none; b=P0NSCqYroxvuflOdv/op8fNjw3y0YldeBzzdFvUinuTrIL8q4yNqtdlNZYZhr1STBRoSJqdHNCcvHsqWIOlMv1gAbo3QJLRHpLinkaQQysG4hO3EdRowWjKZyFbtM/dcu3DizvfABEbYJHbqpSw9VmlBO6OWmPyvoMWIrn7HWVo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747953948; c=relaxed/simple;
-	bh=/4BQCi3jvtdajWus3hg8cgl7J4SS003mjq0vewuYalU=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=eUKd9Be3T+F7XOeXDD/RSemsTNSLLt1vD6h5UnLXOmuW7oORU+uc1OOMckzSgf6/vsg5/Gigk6JdTmHzg1Tmoyw6A1VfUyjJfBZqd2xvjQaPHAntCORRc6szZgj5efFgpbSFx7fl4NSR1dO4S1V9WzyTrnRtHdYDe4M4EmTpSug=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=v+mAW5sB; arc=none smtp.client-ip=209.85.216.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1747954062; c=relaxed/simple;
+	bh=Kqb87YqrH7GgbRIjtu3CSrvC/nfpw9kj2G/CS9u5zDI=;
+	h=Message-ID:Content-Type:MIME-Version:In-Reply-To:References:
+	 Subject:From:Cc:To:Date; b=mBCeRVsAvSRC/jRlZPffsiUwwsoJ1GKf1EF/PA90f+hvTzFP5IZOlYYebsLJZvknTwv5ARgUc5kCualkk7LMUwF5lnpIHveM1rdmh/AZmnrJMq892zhq728DYOo4T1OrCgtJUgfzsBznjWa/LmCkrkCZMoimFjo2CvQ3Y4aG+8M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H9SBvD25; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="v+mAW5sB"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-30ed6bd1b4cso7313308a91.0
-        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 15:45:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747953946; x=1748558746; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=3AxTb6qkauANJSLdkn2Rljd6hCnTnUjzlT97QXyndHU=;
-        b=v+mAW5sB08j8mcvPFv1etBdGmFTXF+tdNSqKzpIpP5PjfLhbNj4ayMDx3u1XwERfEo
-         exB629+dvS3UypmzpkZL5FNmBu4ucDdrTYOdk+ODGw53ba0S6hBN2PV+bkqRen0o/MrB
-         xILTh5r2U40UKdvarjrYe4orlNKiFMdMc7+n2+PbstsVI1DTOh234Ak4Zfdsi5nzmrTD
-         UIEhVLYo9K57Ht1yqfdaOq8oLfuuYuSGtzQahHI7soJrXKqgf3tWOoqJ3OUXK4jkAFpT
-         Zq7ao+GnLdyalnA05grjWnIPHQdK7hocRgf+/YE7mNpWPiPCfKUwLB6bR7XBN65XU+hP
-         PN8g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747953946; x=1748558746;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=3AxTb6qkauANJSLdkn2Rljd6hCnTnUjzlT97QXyndHU=;
-        b=r62Cvx49uN6vJVvK56z9dN34sCHK4/RSDON/dvndUffBU5kVuw5E9/88IlCRri6VeS
-         hVvKKZuM3tKFhPkQI+IUHMGx4PdcJoO8JdR/25P4AKx9eOMxIJ1HmDYjA2ed3GELiBIn
-         W2zi8TAdmCEUnVpv+8Kg5aAuiS0Wd3I4uri4pH9mrvbyiLyEZ8w/nTewToNRJm4VNsVs
-         N1xX9GBiur7xqb+ixIlYNWv+/Vm5JaHyZhJkxFlf5gzZ3LGu166kho7iT+iLPBzy5zdb
-         VvxwkWPnx3iI5e+IOXtQ46X07l1QB9Cth80mmwPkJUH7XD6xVFzOmsRUZsbsTE9HvDFM
-         Up0Q==
-X-Forwarded-Encrypted: i=1; AJvYcCX9qeEuOyY3H7peJ2EUUBTnhhiPwyHYuKh11bkOfWLLcSAFB4DQJfF9i2IhgVcXCvM2imU2xcvWkDB2ZmU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx7qbZmUmEpjvdOp2YgrTvro8jXOohA5rgSpnmrNBSsMkS2NWC6
-	G2+bUL+2TnosyZWUjGrNJKtt7hpQ68U2Kjd2JxKdNj6RLGXrdFCZulgx9/Z23QUeVD33rnyaGS0
-	qDsHVHA==
-X-Google-Smtp-Source: AGHT+IFNKqqHdblFbUk9DQFGyS5wY/y/pndJWF/GWniPdnZ6giU/V86VRHJVAeoJpjay+iWJes8jG/Z7ph0=
-X-Received: from pjbpm9.prod.google.com ([2002:a17:90b:3c49:b0:308:64af:7bb9])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:3c90:b0:2ff:6af3:b5fa
- with SMTP id 98e67ed59e1d1-30e8322592emr33592948a91.22.1747953946139; Thu, 22
- May 2025 15:45:46 -0700 (PDT)
-Date: Thu, 22 May 2025 15:45:44 -0700
-In-Reply-To: <aC9npqQAAdowxfsn@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H9SBvD25"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C6CEC4CEE4;
+	Thu, 22 May 2025 22:47:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747954062;
+	bh=Kqb87YqrH7GgbRIjtu3CSrvC/nfpw9kj2G/CS9u5zDI=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+	b=H9SBvD25Q2PU4UflB41Gd97nlaKsoI8SbBuXLVrsWgQJPn08cEjwwG4+hn50kJ/mF
+	 +Z3oRbYBMY03HCGgKutmjHhfiUkuBI/7FY5lGlF6yzUk4kYDCEzMUyQRG2+xGQRh6I
+	 ypc76/fUP4HHZcvpaE3jJebn/F+jehfq3+LJdpWrHwTCSN1E+9Iyk07a+qUqA/GIEs
+	 9bCbllTUz/giCzT9FLWPNXCMP7WArMCddkmI8VxxxEBrH6Rj95veyfF1C+WK+9XgWL
+	 auPisFZjm08OSeq5/vytZDsxymD08ImPmYr3Qkmqh/dhSGlOBCg4UIdrZ8sEXu5aMd
+	 WzE6SNvlg7bXQ==
+Message-ID: <4932d11de93098b86e3f18e858930388@kernel.org>
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250522005555.55705-1-mlevitsk@redhat.com> <aC9npqQAAdowxfsn@google.com>
-Message-ID: <aC-pGA3Xv3O6STuJ@google.com>
-Subject: Re: [PATCH v5 0/5] KVM: x86: allow DEBUGCTL.DEBUGCTLMSR_FREEZE_IN_SMM passthrough
-From: Sean Christopherson <seanjc@google.com>
-To: Maxim Levitsky <mlevitsk@redhat.com>
-Cc: kvm@vger.kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
-	Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org, 
-	x86@kernel.org, Paolo Bonzini <pbonzini@redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20250513101407.22233-2-krzysztof.kozlowski@linaro.org>
+References: <20250513101407.22233-2-krzysztof.kozlowski@linaro.org>
+Subject: Re: [GIT PULL] clk: samsung: drivers for v6.16
+From: Stephen Boyd <sboyd@kernel.org>
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, Chanwoo Choi <cw00.choi@samsung.com>, linux-clk@vger.kernel.org, Sylwester Nawrocki <snawrocki@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>, Peter Griffin <peter.griffin@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, Michael Turquette <mturquette@baylibre.com>
+Date: Thu, 22 May 2025 15:47:40 -0700
+User-Agent: alot/0.12.dev8+g17a99a841c4b
 
-On Thu, May 22, 2025, Sean Christopherson wrote:
-> On Wed, May 21, 2025, Maxim Levitsky wrote:
-> > V5: addressed the review feedback. Thanks.
-> 
-> I'll send v6 later today.
+Quoting Krzysztof Kozlowski (2025-05-13 03:14:08)
+> The following changes since commit 0af2f6be1b4281385b618cb86ad946eded089a=
+c8:
+>=20
+>   Linux 6.15-rc1 (2025-04-06 13:11:33 -0700)
+>=20
+> are available in the Git repository at:
+>=20
+>   https://git.kernel.org/pub/scm/linux/kernel/git/krzk/linux.git tags/sam=
+sung-clk-6.16
+>=20
+> for you to fetch changes up to 81214185e7e1fc6dfc8661a574c457accaf9a5a4:
+>=20
+>   clk: samsung: correct clock summary for hsi1 block (2025-05-12 08:30:06=
+ +0200)
+>=20
+> ----------------------------------------------------------------
 
-This ain't happening.  See the conversation I'm having with myself in patch 3.
-I do have a refreshed and tested (ignoring the nested mess) series prepped, i.e.
-no need for you to work on a v6, I just won't get it posted today.
+Thanks. Pulled into clk-next
