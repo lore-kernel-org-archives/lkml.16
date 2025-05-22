@@ -1,125 +1,139 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF37580B;
-	Thu, 22 May 2025 16:03:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B78181F94C;
+	Thu, 22 May 2025 16:05:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747929828; cv=none; b=nATPWemjQd+rAGdZL86P7sIdhbv4Zg4BJhrH1e13DRb3l7JWoGYq6dw74/fc8G2D3N2X0LeE7gjZXZvb0WwrHgy8wwn6ISOehL01H8O+2jQS+hSAWoj4XaIXZXL1aaoz2UY79ESjZ8saolY461vMnPRaJQQYhgsrjoL4waAYO0A=
+	t=1747929931; cv=none; b=TJuEQhHGqpYjj37lWaWaQnmCFY3DIdByo7plQe857oZU+zSxJI3oJWDNehL80EE1qxp/FjCESKTQb7CP2o6Z2z48sbnVgBrZH5VXYJXdb6L1aR0gOqoEId64y1QUCEB0YcuDpWZgCg8bkBTgCO9Cw0dW/c3QfHJA79cAhwXP27g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747929828; c=relaxed/simple;
-	bh=HUH0RE34oNU0RQxQXjHa25P4cj8iY+R/hhIkpLqzuK0=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=RMHx7iDvkZKwbC+Btw2uDU1QcXbxmFkqWft0uFxUo3mwiWs+/7+2wFhmVy2rBia4iPuu087ZALVp6MIMs0qx+tt2Ope/D0no9HlV7bPl26k3WEvqAJA9yJyduteLbF3trrg5Syyq50fQYXA7/hFZR4RWDlvRDnjexACp3ZYKfOM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CICX/f7/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747929931; c=relaxed/simple;
+	bh=lXcZo/Pm+/t88dRoboEWB2Dhb1AAlhDP0aV2NXjyjVk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ksGZV7kVvNyfkmuMdPMvLOEKvanzGlIaK/PXJwjhwkr2fPAmXldMmDZYfyBZOXuAc8hFBnNmvy3n1d8HsslYCHZ6Qcz3nzcwJXYn6Oef58hJSWUPxITRLm7suSabsBSSiFr31ryvmLLlH9EMiO+TRI12O3BufnPwZP9nlEJ5F20=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=ynU8/xW4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CICX/f7/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8ACF9C4CEEA;
-	Thu, 22 May 2025 16:03:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747929828;
-	bh=HUH0RE34oNU0RQxQXjHa25P4cj8iY+R/hhIkpLqzuK0=;
-	h=From:To:Cc:Subject:Date:From;
-	b=CICX/f7/sYLCTkMY2c3FCwbW8kA2sy33klFoF897s7tYU7DNjeX/Iyi6ixz50mYFd
-	 ggRRsFUJIcAc93crjhGtrRZruJ9fRNm8bUlrGHJiS6JJltY5tUghExhdQyjCeomB8Q
-	 8by+rZfPn1QMUPPjQVuPR9MRxE71yLrUjOPTtO7RUdN6mySd4gaag7I85Hn1gZcTCi
-	 dXfbcu/OYbcNi2XFBVF0zb/rxZHaLhI+fkYpAVTpTWoSlVJeEWobqu179THB5/FtbO
-	 bHY2RtXuXF54L5K3l1a67e/n1fiTml9Cx0sAGjeyjo4FE+PPSMcIZPFh3/swBDcG+0
-	 iMw0PlNwMW+0w==
-From: Georgi Djakov <djakov@kernel.org>
-To: gregkh@linuxfoundation.org
-Cc: linux-pm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	djakov@kernel.org
-Subject: [GIT PULL] interconnect changes for 6.16
-Date: Thu, 22 May 2025 19:03:31 +0300
-Message-Id: <20250522160331.2666873-1-djakov@kernel.org>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="ynU8/xW4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 623F6C4CEE4;
+	Thu, 22 May 2025 16:05:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1747929931;
+	bh=lXcZo/Pm+/t88dRoboEWB2Dhb1AAlhDP0aV2NXjyjVk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ynU8/xW4jYhimq8ZQZJXx3PAr/speS4llL7jGk7Zw810zunMth1fyw+YThm476U/W
+	 hRKKHArAJCXspS6S4OnpFbvhLP8o/s9nle4Q/iNBcNt1drSFpdCVuxtHPh/tjAZMbQ
+	 mQR09Ma6W+Er9cS/pjqFFwaP2EtreRmNLq8enKgs=
+Date: Thu, 22 May 2025 16:15:46 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Alice Ryhl <aliceryhl@google.com>
+Cc: Danilo Krummrich <dakr@kernel.org>, Benno Lossin <lossin@kernel.org>,
+	Matthew Maurer <mmaurer@google.com>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Trevor Gross <tmgross@umich.edu>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Timur Tabi <ttabi@nvidia.com>, linux-kernel@vger.kernel.org,
+	rust-for-linux@vger.kernel.org
+Subject: Re: [PATCH v5 4/4] rust: samples: Add debugfs sample
+Message-ID: <2025052201-return-reprogram-add9@gregkh>
+References: <D9VPA1M45WBK.1TB4KOUXD24BD@kernel.org>
+ <aCRdNJ2oq-REBotd@pollux>
+ <CAGSQo0204_Dz65G33pAN3_iY=ejPXJRdAiB4ioM-nvMkAh0YXQ@mail.gmail.com>
+ <D9WM0BP5446N.1NVNDCZ4Y2QN1@kernel.org>
+ <2025051524-festival-afterglow-8483@gregkh>
+ <aCzzBT96ktapP03e@google.com>
+ <aC2HacSU7j5d9bzu@pollux>
+ <aC5XDi7SaDJeUaAC@google.com>
+ <aC7DVewqqWIKetmk@pollux>
+ <aC8uNmrLUSS8sxHU@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aC8uNmrLUSS8sxHU@google.com>
 
-Hello Greg,
+On Thu, May 22, 2025 at 02:01:26PM +0000, Alice Ryhl wrote:
+> On Thu, May 22, 2025 at 08:25:25AM +0200, Danilo Krummrich wrote:
+> > On Wed, May 21, 2025 at 10:43:26PM +0000, Alice Ryhl wrote:
+> > > > > * Possibly we have a way to drop a Rust object without removing it from
+> > > > >   the file system. In this case, it can never be accessed from Rust
+> > > > >   again, and the only way to remove it is to drop its parent directory.
+> > > > 
+> > > > I'm not sure about this one.
+> > > > 
+> > > > IIUC, this basically brings back the "keep() logic", which I still think is a
+> > > > footgun and should be avoided.
+> > > > 
+> > > > Also, we only needed this, since due to the borrowing design we couldn't store
+> > > > parent and child nodes in the same structure. With reference counting (or the
+> > > > logic above) this goes away.
+> > > > 
+> > > > I wrote the following in a previous conversation [1].
+> > > > 
+> > > > --
+> > > > 
+> > > > What I see more likely to happen is a situation where the "root" directory
+> > > > (almost) lives forever, and hence subsequent calls, such as
+> > > > 
+> > > > 	root.subdir("foo").keep()
+> > > > 
+> > > > effectively are leaks.
+> > > > 
+> > > > One specific example for that would be usb_debug_root, which is created in the
+> > > > module scope of usb-common and is used by USB host / gadget / phy drivers.
+> > > > 
+> > > > The same is true for other cases where the debugfs "root" is created in the
+> > > > module scope, but subsequent entries are created by driver instances. If a
+> > > > driver would use keep() in such a case, we'd effectively leak memory everytime a
+> > > > device is unplugged (or unbound in general).
+> > > 
+> > > Where is the leak? If the file is still visible in the file system, then
+> > > it's not a leak to still have the memory. If the file got removed by
+> > > removing its parent, then my intent is that this should free the memory
+> > > of the child object.
+> > 
+> > Well, take the case I described above, where the debugfs "root" is created in
+> > the module scope, but subsequent entries are created by driver instances. If a
+> > driver would use keep() in such a case, we'd effectively the file / directory
+> > (and subsequently also the corresponding memory) everytime a device is unplugged
+> > (or unbound in general)."
+> > 
+> > If the module is built-in the directory from the module scope is *never*
+> > removed, but the entries the driver e.g. creates in probe() for a particular
+> > device with keep() will pile up endlessly, especially for hot-pluggable devices.
+> > 
+> > (It's getting even worse when there's data bound to such a leaked file, that
+> > might even contain a vtable that is entered from any of the fops of the file.)
+> > 
+> > That'd be clearly a bug, but for the driver author calling keep() seems like a
+> > valid thing to do -- to me that's clearly a built-in footgun.
+> 
+> I mean, for cases such as this, I could imagine that you use `keep()` on
+> the files stored inside of the driver directory, but don't use it on the
+> directory. That way, you only have to keep a single reference to an
+> entire directory around, which may be more convenient.
 
-This is the pull request with interconnect changes for the v6.16-rc1 merge
-window. It contains core and driver changes. As always, the summary is in
-the signed tag.
+No, sorry, but debugfs files are "create and forget" type of things.
+The caller has NO reference back to the file at all in the C version,
+let's not add that functionality back to the rust side after I spent a
+long time removing it from the C code :)
 
-All patches have been in linux-next for a while. There are currently no
-reported issues. Please pull into char-misc-next when possible.
+If you really want to delete a debugfs file that you have created in the
+past, then look it up and delete it with the call that is present for
+that.
 
-Thanks,
-Georgi
+The only thing I think that might be worth "keeping" in some form, as an
+object reference as discussed, is a debugfs directory.
 
+thanks,
 
-The following changes since commit 0af2f6be1b4281385b618cb86ad946eded089ac8:
-
-  Linux 6.15-rc1 (2025-04-06 13:11:33 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/djakov/icc.git tags/icc-6.16-rc1
-
-for you to fetch changes up to 5fed7fe33c2cd7104fc87b7bc699a7be892befa2:
-
-  Merge branch 'icc-sa8775p' into icc-next (2025-05-19 17:09:50 +0300)
-
-----------------------------------------------------------------
-interconnect changes for 6.16
-
-This pull request contains the interconnect changes for the 6.16-rc1
-merge window. The core and driver changes are listed below.
-
-Core changes:
-- Add support for dynamic id allocation, that allows creating
-  multiple instances of the same provider
-
-Driver changes:
-- Add driver for the EPSS L3 instances on SA8775P SoC
-- Add QoS support for SM8650 SoC
-- Add some missing nodes for SM8650
-- Misc dt-binding style and indentation fixes
-
-Signed-off-by: Georgi Djakov <djakov@kernel.org>
-
-----------------------------------------------------------------
-Georgi Djakov (1):
-      Merge branch 'icc-sa8775p' into icc-next
-
-Krzysztof Kozlowski (1):
-      dt-bindings: interconnect: Correct indentation and style in DTS example
-
-Neil Armstrong (4):
-      interconnect: qcom: sm8650: enable QoS configuration
-      dt-bindings: interconnect: sm8650: document the MASTER_APSS_NOC
-      interconnect: qcom: sm8650: add the MASTER_APSS_NOC
-      interconnect: qcom: sm8650: remove regmap config for mc_virt & clk_virt
-
-Raviteja Laggyshetty (5):
-      dt-bindings: interconnect: Add EPSS L3 compatible for SA8775P
-      interconnect: core: Add dynamic id allocation support
-      interconnect: qcom: Add multidev EPSS L3 support
-      interconnect: qcom: icc-rpmh: Add dynamic icc node id support
-      interconnect: qcom: sa8775p: Add dynamic icc node id support
-
- .../devicetree/bindings/interconnect/qcom,msm8939.yaml          |   8 +-
- .../devicetree/bindings/interconnect/qcom,msm8953.yaml          |  20 +-
- .../devicetree/bindings/interconnect/qcom,msm8974.yaml          |  20 +-
- Documentation/devicetree/bindings/interconnect/qcom,osm-l3.yaml |   1 +
- Documentation/devicetree/bindings/interconnect/qcom,rpm.yaml    |  12 +-
- Documentation/devicetree/bindings/interconnect/qcom,rpmh.yaml   |  28 +-
- .../devicetree/bindings/interconnect/qcom,sdx75-rpmh.yaml       |  16 +-
- drivers/interconnect/core.c                                     |  82 +-
- drivers/interconnect/qcom/icc-rpmh.c                            |  17 +-
- drivers/interconnect/qcom/icc-rpmh.h                            |   5 +
- drivers/interconnect/qcom/osm-l3.c                              |  38 +-
- drivers/interconnect/qcom/sa8775p.c                             | 952 +++-----
- drivers/interconnect/qcom/sm8650.c                              | 344 +++
- drivers/interconnect/qcom/sm8650.h                              |   1 +
- include/dt-bindings/interconnect/qcom,sm8650-rpmh.h             |   1 +
- include/linux/interconnect-provider.h                           |  12 +
- include/linux/interconnect.h                                    |   3 +
- 17 files changed, 873 insertions(+), 687 deletions(-)
+greg k-h
