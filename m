@@ -1,139 +1,96 @@
-Received: from mail117.out.titan.email (mail117.out.titan.email [107.21.18.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0736428A402
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 15:50:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=107.21.18.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF482126BF1;
+	Thu, 22 May 2025 15:50:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747929006; cv=none; b=kY0SWRV9SopOgVvEO70m3t762S73+d6Knja9L2LGSCsIr/VDBSk214BjOqTRWocUA5slWD39LmnIshoPHMCdJ2slvoEYg27Lxkee9oI/Gk2A5g9Z75XP+LVgm5Hm4nEsIW9VYRF6uXPyozwxA/3X0yO8AnPsmwVCoF6SkjvhiVw=
+	t=1747929048; cv=none; b=cnxO96KGblmY6KLcg86URHTEBoIhSorD6Rxh1LejmvxH18S24Fqy34XnErKwIkb96gv80POzFPDHWqfGLEinlKVSZV3uQnf2Wtd+75rAbigzHC4iGWmMT4k7aaQrHjF/L3p+nWhufKxdSBmzO+uA84bHFmOWv3wVFQ4B44kNhTw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747929006; c=relaxed/simple;
-	bh=Q0PYmNdAm+3Qf4fqBIwBC7PH0E4dHRftuI+OgdY3lXM=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=VRUp/cSZKEfp1aBCp2fdC2IW2Ak9I2YvVWKJ0d5lT6PxMIJWcffLk8Sz4lWIvSLOupAUNYosSubKjAhffNgZEMRYZN5JQuusYPUGaeVsBQDOzlxZAXZuynaLJ5LnRo1kztxbqJMTxHAMo4rfbEJwFeOyouDUzGUTpdtoArtIQP8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=coly.li; spf=pass smtp.mailfrom=coly.li; dkim=pass (1024-bit key) header.d=t12smtp-sign004.email header.i=@t12smtp-sign004.email header.b=W8ucw8tM; arc=none smtp.client-ip=107.21.18.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=coly.li
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=coly.li
+	s=arc-20240116; t=1747929048; c=relaxed/simple;
+	bh=HieFrw78viik/mNeGsiMtWSV8haZ6nV5KUbTQ/BctgI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=BjSCHZiFRZqe5HAJ4XLGnxuKtoW/4005W2x5+0CTw+HIC93Rq/Jx37bGeap9+z1lPnmIOTPAk/2+13ZRb7sBf0NZP1LCxrIqldZHAcO1H0b7B9iUlW1WXBeBvSP8Msqm+o23J48Ygo6yuNZ5yqNdcTz8kBK0nAfhQaVIm2AzM4g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aK6kKI9l; arc=none smtp.client-ip=209.85.210.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=t12smtp-sign004.email header.i=@t12smtp-sign004.email header.b="W8ucw8tM"
-Received: from localhost (localhost [127.0.0.1])
-	by smtp-out.flockmail.com (Postfix) with ESMTP id D1F65E0015;
-	Thu, 22 May 2025 15:14:27 +0000 (UTC)
-DKIM-Signature: a=rsa-sha256; bh=taO0LrTM+GjJ2q8d/yfaS+WGBoxT48m7W5053bW9Haw=;
-	c=relaxed/relaxed; d=t12smtp-sign004.email;
-	h=message-id:subject:from:in-reply-to:cc:date:mime-version:references:to:from:to:cc:subject:date:message-id:in-reply-to:references:reply-to;
-	q=dns/txt; s=titan1; t=1747926867; v=1;
-	b=W8ucw8tMezn3KIC4AFxXK1J6IzhuvZBneSaYRQmF7H49EF1xj6Vyjq/pTeUhLKtkG0KOOv/J
-	neFKoI1pJk5KbvpApEKtvNaBm/AqDNSXodeuZFiGCy9Hq0Zn6gRXAA+U+hRXpg5mMrt80j+TPJa
-	IIjy5ka6U6tuKVr75SFVsxSY=
-Received: from smtpclient.apple (n218103205009.netvigator.com [218.103.205.9])
-	by smtp-out.flockmail.com (Postfix) with ESMTPA id A39EAE006A;
-	Thu, 22 May 2025 15:14:24 +0000 (UTC)
-Content-Type: text/plain;
-	charset=utf-8
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aK6kKI9l"
+Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-742af848148so4869043b3a.1;
+        Thu, 22 May 2025 08:50:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747929046; x=1748533846; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=bXxDPs6mqD10etya1zY6US3+TrWhWmXHSYfy4AVSsyY=;
+        b=aK6kKI9lg4nCoWLvF5VvUDWy6Q2BjWofCIl8TKLS8lSHYdIfGxKANAtasla5qq7cmL
+         F63lMATNFRErOSpPKhB/8iJZjyuYbKgXUk0jSdFLcq19QZi5F05zaefnARrQsPsTuEYp
+         SLzMsscnaTgp4Qq0uTybWoukMWtk9hWPMSnSQXBFlzB2a29MdHSpFlfuYTRERKn0kRop
+         60AQNAqx22Meoimb1Q5gtT9gZoKinaacw7P8pabEj2EvDFihJ5FiWtjHq/VyvwsBBNV5
+         WF1oCQ9o/rmUAlS8+t1vUusfAo/VYlSLdOsqWqogP2v5sUysubFEw9sYWcIB/ixBsEaq
+         v3ew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747929046; x=1748533846;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=bXxDPs6mqD10etya1zY6US3+TrWhWmXHSYfy4AVSsyY=;
+        b=PFVLNl8zlpZl3BWu4bDFWK4r/eZCjcp+u1Ga0EOWDvkYeqlKjKSpCojQ3Jpu8qauEF
+         EmoNp/rqVpbI0ZD7g+8FDGdh6bzb4geGPIdAY6DzCIhwZmRMjM7/pM3ovtzI13U8H9AF
+         mBTDN/k3XbGpjqXGn/1Ne6TaAawnTBuzjfl2eSA9T3D5AGMPejORz5ytOO7dr+HPyA67
+         UmNkJ25aYu4ZqRVKm5SZdf8zlnCk/H5NbmcR3XM9nQb5ADWkkYuQW65vl1qVf/HMz2tl
+         n+r9I08+YkihLy5XIbIMr/i3oB4L1Vq2PBtNhZ+HcDuLtlBb/b19xVSMfwf4/ZAkRfSz
+         28Uw==
+X-Forwarded-Encrypted: i=1; AJvYcCU2207l18FyrVX1/+D1lwgPQYyG4sdDWCoPutoNDIodlnveVczMBbwXMwsXN5WH82ezISUCsE2ptMon@vger.kernel.org, AJvYcCW6REHUkeWB4cx5kUQ49w1rEVrGj+uyNUV7Ga4HvusRgK1Jf+IbU0Ogz7pZR6M5HesGUKCLv02sQxXNNjzg@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy4awVv/mGmyMl07LLaHn1Q2FkjDamzaBGxaKFOH1r6CRtrhfmi
+	c1f6/NZXVCw6FYVpBOk/SWTNew8eexfkAYpidq11fX3wDuW+aFeUEF6gvg4FfuQz
+X-Gm-Gg: ASbGncvDsILZ31lV3D26KWmD94anfyDle3jkH2bgbibHSLYIhX8Xp1VESc5z7robOTz
+	7/LGSVHZXvbAXoiWbPS7mFm6vJALQV9JilbbYZ5eezEjSTHigf/bueeTGZhXzn6jFskWK6JagxS
+	wDdZZRM0xXMj0ZaX2ECVtBuGcvBxhnsHhXR/N2+hEl6/WfMc5YPaUK/EOP4BpJM88KseJnYZzVh
+	iaZ/P7YiEqW6CBuoMtpIDAOtcnVm4xEfGdoZ2n7CtewimGzjO6/PgB/YCnOdOUzVKxN8gUHJXEp
+	0B7+fBQDuOcrBxxySE7jLWdsswQSRpRkV1cV9w6faPnxud9dxuBsXfyxw20exUjXdAk1GTeDY0I
+	ww/slnigRBI3XKb4p9kOx3YWipgWN+E0=
+X-Google-Smtp-Source: AGHT+IE/4uJlUKfJ1lBNm4F3zrP30ofOqjG0ZQIkuIfHT+6H0l21LQm7Iel/rOgyCw7xg+YRpixsLw==
+X-Received: by 2002:a05:6300:218b:b0:206:ad2b:aa9a with SMTP id adf61e73a8af0-21621a03161mr41708416637.36.1747929046032;
+        Thu, 22 May 2025 08:50:46 -0700 (PDT)
+Received: from wig-Precision-3660.. (125-227-154-99.hinet-ip.hinet.net. [125.227.154.99])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-742a9829c7asm11459919b3a.85.2025.05.22.08.50.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 May 2025 08:50:45 -0700 (PDT)
+From: Wig Cheng <onlywig@gmail.com>
+To: robh@kernel.org
+Cc: conor@kernel.org,
+	onlywig@gmail.com,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: vendor-prefixes: rename nutsboard to mayqueen
+Date: Thu, 22 May 2025 23:50:06 +0800
+Message-ID: <20250522155027.3412993-1-onlywig@gmail.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250522-difficult-yummy-84376495b270@spud>
+References: <20250522152220.3408999-1-onlywig@gmail.com> <20250522-difficult-yummy-84376495b270@spud>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.600.51.1.1\))
-Subject: Re: riscv gcc-13 allyesconfig error the frame size of 2064 bytes is
- larger than 2048 bytes [-Werror=frame-larger-than=]
-Feedback-ID: :i@coly.li:coly.li:flockmailId
-From: Coly Li <i@coly.li>
-In-Reply-To: <CA+G9fYv08Rbg4f8ZyoZC9qseKdRygy8y86qFvts5D=BoJg888g@mail.gmail.com>
-Date: Thu, 22 May 2025 23:14:11 +0800
-Cc: open list <linux-kernel@vger.kernel.org>,
- lkft-triage@lists.linaro.org,
- Linux Regressions <regressions@lists.linux.dev>,
- kent.overstreet@linux.dev,
- Arnd Bergmann <arnd@arndb.de>,
- Dan Carpenter <dan.carpenter@linaro.org>,
- Anders Roxell <anders.roxell@linaro.org>,
- linux-bcachefs@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <36D1F736-7E76-47F6-9E26-0E8E8F4E9B44@coly.li>
-References: <CA+G9fYv08Rbg4f8ZyoZC9qseKdRygy8y86qFvts5D=BoJg888g@mail.gmail.com>
-To: Naresh Kamboju <naresh.kamboju@linaro.org>
-X-Mailer: Apple Mail (2.3826.600.51.1.1)
-X-F-Verdict: SPFVALID
-X-Titan-Src-Out: 1747926867682161361.26132.8009154321890797791@prod-use1-smtp-out1004.
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.4 cv=U8BoDfru c=1 sm=1 tr=0 ts=682f3f53
-	a=eJNHGpZBYRW47XJYT+WeIA==:117 a=eJNHGpZBYRW47XJYT+WeIA==:17
-	a=IkcTkHD0fZMA:10 a=CEWIc4RMnpUA:10 a=Oh2cFVv5AAAA:8 a=KKAkSRfTAAAA:8
-	a=21D8NHQQAAAA:8 a=VwQbUJbxAAAA:8 a=uOdo12Paqm2KlJZ413YA:9
-	a=QEXdDO2ut3YA:10 a=7KeoIwV6GZqOttXkcoxL:22 a=cvBusfyB2V15izCimMoJ:22
-	a=aE7_2WBlPvBBVsBbSUWX:22
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hi Naresh,
+Hi Rob,
 
-Bcachefs has its own mailing list linux-bcachefs@vger.kernel.org =
-<mailto:linux-bcachefs@vger.kernel.org>, here I Cc this email to =
-bcachefs mailing list.
+Thanks for the clarification and guidance on the rules.
 
-Thanks.
+I believe the nutsboard prefix is no longer in use, as the related device tree files were removed from mainline starting from kernel 6.1. Additionally, we have informed all our customers to upgrade to the new hardware. However, I appreciate your explanation and will mark the old prefix as deprecated instead of removing it.
 
-Coly Li
+I also have a question regarding the new prefix. The reason for this change is that we’ve developed a DRM driver, and the platform device in the driver uses a compatible string referring to the device tree. Without a vendor prefix, I’m unable to upstream the DRM driver because it lacks a valid compatible string.
 
-> 2025=E5=B9=B45=E6=9C=8822=E6=97=A5 21:29=EF=BC=8CNaresh Kamboju =
-<naresh.kamboju@linaro.org> =E5=86=99=E9=81=93=EF=BC=9A
->=20
-> Regressions on riscv allyesconfig build failed with gcc-13 on the =
-Linux next
-> tag next-20250516 and next-20250522.
->=20
-> First seen on the next-20250516
-> Good: next-20250515
-> Bad:  next-20250516
->=20
-> Regressions found on riscv:
-> - build/gcc-13-allyesconfig
->=20
-> Regression Analysis:
-> - New regression? Yes
-> - Reproducible? Yes
->=20
-> Build regression: riscv gcc-13 allyesconfig error the frame size of
-> 2064 bytes is larger than 2048 bytes [-Werror=3Dframe-larger-than=3D]
->=20
-> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
->=20
-> ## Build log
-> fs/bcachefs/data_update.c: In function =
-'__bch2_data_update_index_update':
-> fs/bcachefs/data_update.c:464:1: error: the frame size of 2064 bytes
-> is larger than 2048 bytes [-Werror=3Dframe-larger-than=3D]
->  464 | }
->      | ^
-> cc1: all warnings being treated as errors
->=20
->=20
-> ## Source
-> * Kernel version: 6.15.0-rc7
-> * Git tree: =
-https://kernel.googlesource.com/pub/scm/linux/kernel/git/next/linux-next.g=
-it
-> * Git sha: 460178e842c7a1e48a06df684c66eb5fd630bcf7
-> * Git describe: next-20250522
->=20
-> ## Build
-> * Build log: =
-https://qa-reports.linaro.org/api/testruns/28521854/log_file/
-> * Build history:
-> =
-https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250522/t=
-estrun/28521854/suite/build/test/gcc-13-allyesconfig/history/
-> * Build link: =
-https://storage.tuxsuite.com/public/linaro/lkft/builds/2xRoAAw5dl69AvvHb8o=
-Z3pL1SFx/
-> * Kernel config:
-> =
-https://storage.tuxsuite.com/public/linaro/lkft/builds/2xRoAAw5dl69AvvHb8o=
-Z3pL1SFx/config
->=20
-> --
-> Linaro LKFT
-> https://lkft.linaro.org
->=20
+How should this situation be handled? Is it acceptable to introduce the new vendor prefix first for this purpose?
 
+Product page:
+https://github.com/MayQueenTechCommunity/PIXPAPER-213-C
+
+Best regards,  
+Wig
