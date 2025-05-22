@@ -1,109 +1,146 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C0532D190E;
-	Thu, 22 May 2025 23:19:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E30D32D0278;
+	Thu, 22 May 2025 23:19:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747955958; cv=none; b=UhxuYr71FxPvO3+KL4wZF9a+uyMusVmk/SVFNhOi9Rn3YzXcJBe7i2ZeWPd5BVonJ3izvIiXCUqWtAkIOoIg7NdE+s5l9fDGUXK62JUhmwnrdpPrmUkap5G3Nzc10VT0yaQoa5b0nCyMozJhx1sTLitVXp9stbA0dT1X7BibT4U=
+	t=1747955970; cv=none; b=cFUgoVn4itg/lowCM1/AXywu7CYk+8uw4KoLQF7ZkemvetoTbblnkIngiSYNPk7zEYjemcfmFn8E+MBKMUJeX1TBm0vSm2NjtYMMyk+qYOVP6FJC6v2KfipRoFhME9wOg3kz/3qEej9JjjVzdigHi34qXPQhyo92X8jKUKe8gqA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747955958; c=relaxed/simple;
-	bh=OB1VuDaJBkdgJNI4JrASaAj7S+zM8SqIbsYk5Ni8T70=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=b2xmhNo2dBEEYaTlSW4YUKZ7Xi0PiU2XxoOI4l2CdkqttVcPfEyR56cxaymcrQEsyvdc38BhD3WqKqqiSMqefG6M0zSNdGDPab7fwbJYrDPpWPdtI9Urn7fN+H6vf+DWIQgSzH6tddou0BjX617VoHFgpKFhrX4JK9cWlgjNtu8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t4xxBfse; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747955970; c=relaxed/simple;
+	bh=cjW9PVL0/Eq1a/hOUaEzc/Ua2x1NBZ3c6LCU6XFANY4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VGG9jmzJtre8e2ULbeEjLXgXshaLoY+pWi52DkAoecfLA1iVVWHhxLKZY38RnoCGFzsanbX9QO302g69UfOIKJuSCWvZM59Ow+xlTVkW7CNa1jS/xXuq7IXjjfpQicODUdytPVSNJk9YH72itolK+x/TiLY9zn+4JmfvIRLuh4Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ri7ME5py; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t4xxBfse"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3FD6C4CEE4;
-	Thu, 22 May 2025 23:19:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ri7ME5py"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA0DEC4CEEB;
+	Thu, 22 May 2025 23:19:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747955958;
-	bh=OB1VuDaJBkdgJNI4JrASaAj7S+zM8SqIbsYk5Ni8T70=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=t4xxBfseyHwvUieyVoiF79+KyunmoRgV6yuT36sWqWgUDUZxZpH5LqFfnHWQc89sc
-	 paFHYoMq1SsNAKUpEvvuq7W/mKqohmJuvKosw2ja792GePk6dVzVvkBqMs+aFqQI7x
-	 zjBVCD3zfo9JRMz+jAn2sS+j9HR9tlDPEobjTS7ZDz92ukgPmopJbflwATSTkPZFxG
-	 AMJs1Mt7ejeEB1TFGMupNN6Trz+2FBaZD6UsGfT8PTBgdL0Uu+1QWU4AlcAYAs0/aY
-	 H8O23BcODtg1LdvojuLLDA7ZfrW6pjkud2nVXqRr3ZK/kk2+JjAXl500xEDyt1GCB+
-	 8J1IuZAvUheVw==
-From: Konrad Dybcio <konradybcio@kernel.org>
-Date: Fri, 23 May 2025 01:18:25 +0200
-Subject: [PATCH 10/10] arm64: dts: qcom: sm8650: Explicitly describe the
- IPA IMEM slice
+	s=k20201202; t=1747955969;
+	bh=cjW9PVL0/Eq1a/hOUaEzc/Ua2x1NBZ3c6LCU6XFANY4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ri7ME5py8Wd8vPgE55M2cznFBRaWDAnh9A+NLgy6HDiyAWwxN7JyPN2BkDRZnJ4Sb
+	 0Cdoi2YVrDug1iwiDI/iSj9MlY3v2fSroUA/MkXxTExu4I16HxlyMtuQNw0haI9mlT
+	 cUljrxCmG6C303b3vY8V4J/UwFsxg/wKLzgljxoHLt0fg7Ue8y/7rBPn/4kNvDz1Lw
+	 5s70ZB+ykmQV3O/uLQwp8/Ndzc+GvA9ljB0JVfVhvznWzJAdl5Iq1bPZdojLIobFEF
+	 vVyzt9A8O6LVkTzMd4AQSoebTWCnNzNNHdPHsds0w3tFSsAGUI9FVorQWVGrlRPgPt
+	 gyRPrX2ZRU7TA==
+Date: Thu, 22 May 2025 16:19:28 -0700
+From: Saeed Mahameed <saeed@kernel.org>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: Tariq Toukan <tariqt@nvidia.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Paolo Abeni <pabeni@redhat.com>, Eric Dumazet <edumazet@google.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	Saeed Mahameed <saeedm@nvidia.com>,
+	Leon Romanovsky <leon@kernel.org>,
+	Richard Cochran <richardcochran@gmail.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Jesper Dangaard Brouer <hawk@kernel.org>,
+	John Fastabend <john.fastabend@gmail.com>, netdev@vger.kernel.org,
+	linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+	bpf@vger.kernel.org, Moshe Shemesh <moshe@nvidia.com>,
+	Mark Bloch <mbloch@nvidia.com>, Gal Pressman <gal@nvidia.com>,
+	Cosmin Ratiu <cratiu@nvidia.com>,
+	Dragos Tatulea <dtatulea@nvidia.com>
+Subject: Re: [PATCH net-next V2 11/11] net/mlx5e: Support ethtool
+ tcp-data-split settings
+Message-ID: <aC-xAK0Unw2XE-2T@x130>
+References: <1747950086-1246773-1-git-send-email-tariqt@nvidia.com>
+ <1747950086-1246773-12-git-send-email-tariqt@nvidia.com>
+ <20250522155518.47ab81d3@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250523-topic-ipa_mem_dts-v1-10-f7aa94fac1ab@oss.qualcomm.com>
-References: <20250523-topic-ipa_mem_dts-v1-0-f7aa94fac1ab@oss.qualcomm.com>
-In-Reply-To: <20250523-topic-ipa_mem_dts-v1-0-f7aa94fac1ab@oss.qualcomm.com>
-To: Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, cros-qcom-dts-watchers@chromium.org, 
- Sai Prakash Ranjan <quic_saipraka@quicinc.com>
-Cc: Marijn Suijten <marijn.suijten@somainline.org>, 
- linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, 
- Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1747955915; l=1343;
- i=konrad.dybcio@oss.qualcomm.com; s=20230215; h=from:subject:message-id;
- bh=aVHI2d0zLQRIn5qK1sGtQckKa0kt9KjADJcZ7be0yLY=;
- b=NQHkdR6B+n/xrRlRcUHqRG5khFL6IslSDVuQd5Z13IklUZ8MrpuNQG5d1LXnjU2MncjL49Vtc
- z4FYzUjmdbgDs2x6UVPWZSfqS9kyrQzcoTn3Cnc++tJn6av867tsEQd
-X-Developer-Key: i=konrad.dybcio@oss.qualcomm.com; a=ed25519;
- pk=iclgkYvtl2w05SSXO5EjjSYlhFKsJ+5OSZBjOkQuEms=
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20250522155518.47ab81d3@kernel.org>
 
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+On 22 May 15:55, Jakub Kicinski wrote:
+>On Fri, 23 May 2025 00:41:26 +0300 Tariq Toukan wrote:
+>> +	/* if HW GRO is not enabled due to external limitations but is wanted,
+>> +	 * report HDS state as unknown so it won't get turned off explicitly.
+>> +	 */
+>> +	if (kernel_param->tcp_data_split == ETHTOOL_TCP_DATA_SPLIT_DISABLED &&
+>> +	    priv->netdev->wanted_features & NETIF_F_GRO_HW)
+>> +		kernel_param->tcp_data_split = ETHTOOL_TCP_DATA_SPLIT_UNKNOWN;
+>
+>The kernel_param->tcp_data_split here is the user config, right?
+>It would be cleaner to not support setting SPLIT_DISABLED.
+>Nothing requires that, you can support just setting AUTO and ENABLED.
+>
 
-As part of stepping away from crazy hardcoding in the driver, move
-define the slice explicitly and pass it to the IPA node.
+I think I agree, AUTO might require some extra work on the driver side to
+figure out current internal mode, but it actually makes more sense than
+just doing "UNKNOWN", UKNOWN here means that HW GRO needs to be enabled
+when disabling TCP HDR split, and we still don't know if that will work..
 
-Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
----
- arch/arm64/boot/dts/qcom/sm8650.dtsi | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+Cosmin will you look into this ? 
 
-diff --git a/arch/arm64/boot/dts/qcom/sm8650.dtsi b/arch/arm64/boot/dts/qcom/sm8650.dtsi
-index 495ea9bfd008500dd2c9f46ceca94cf5f972beca..7b80d281cac4349ffc2adac0650e07329da461aa 100644
---- a/arch/arm64/boot/dts/qcom/sm8650.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sm8650.dtsi
-@@ -4344,6 +4344,8 @@ &mc_virt SLAVE_EBI1 QCOM_ICC_TAG_ALWAYS>,
- 			qcom,smem-state-names = "ipa-clock-enabled-valid",
- 						"ipa-clock-enabled";
- 
-+			sram = <&ipa_modem_tables>;
-+
- 			status = "disabled";
- 		};
- 
-@@ -6637,6 +6639,20 @@ funnel_apss_out_funnel_in1: endpoint {
- 			};
- 		};
- 
-+		sram@14680000 {
-+			compatible = "qcom,sm8350-imem", "syscon", "simple-mfd";
-+			reg = <0 0x14680000 0 0x2c000>;
-+
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+
-+			ranges = <0 0 0x14680000 0x2c000>;
-+
-+			ipa_modem_tables: modem-tables@8000 {
-+				reg = <0x8000 0x2000>;
-+			};
-+		};
-+
- 		apps_smmu: iommu@15000000 {
- 			compatible = "qcom,sm8650-smmu-500", "qcom,smmu-500", "arm,mmu-500";
- 			reg = <0 0x15000000 0 0x100000>;
+>> +
+>
+>nit: extra empty line, please run checkpatch
+>
+>>  }
+>>
+>>  static void mlx5e_get_ringparam(struct net_device *dev,
+>> @@ -383,6 +391,43 @@ static void mlx5e_get_ringparam(struct net_device *dev,
+>>  	mlx5e_ethtool_get_ringparam(priv, param, kernel_param);
+>>  }
+>>
+>> +static bool mlx5e_ethtool_set_tcp_data_split(struct mlx5e_priv *priv,
+>> +					     u8 tcp_data_split)
+>> +{
+>> +	bool enable = (tcp_data_split == ETHTOOL_TCP_DATA_SPLIT_ENABLED);
+>> +	struct net_device *dev = priv->netdev;
+>> +
+>> +	if (tcp_data_split == ETHTOOL_TCP_DATA_SPLIT_UNKNOWN)
+>> +		return true;
+>> +
+>> +	if (enable && !(dev->hw_features & NETIF_F_GRO_HW)) {
+>> +		netdev_warn(dev, "TCP-data-split is not supported when GRO HW is not supported\n");
+>> +		return false; /* GRO HW is not supported */
+>> +	}
+>> +
+>> +	if (enable && (dev->features & NETIF_F_GRO_HW)) {
+>> +		/* Already enabled */
+>> +		dev->wanted_features |= NETIF_F_GRO_HW;
+>> +		return true;
+>> +	}
+>> +
+>> +	if (!enable && !(dev->features & NETIF_F_GRO_HW)) {
+>> +		/* Already disabled */
+>> +		dev->wanted_features &= ~NETIF_F_GRO_HW;
+>> +		return true;
+>> +	}
+>> +
+>> +	/* Try enable or disable GRO HW */
+>> +	if (enable)
+>> +		dev->wanted_features |= NETIF_F_GRO_HW;
+>> +	else
+>> +		dev->wanted_features &= ~NETIF_F_GRO_HW;
+>
+>Why are you modifying wanted_features? wanted_features is what
+>*user space* wanted! You should probably operate on hw_features ?
+>Tho, may be cleaner to return an error and an extack if the user
+>tries to set HDS and GRO to conflicting values.
+>
 
--- 
-2.49.0
+hw_features is hw capabilities, it doesn't mean on/off.. so no we can't
+rely on that.
+
+To enable TCP_DATA_SPLIT we tie it to GRO_HW, so we enable GRO_HW when
+TCP_DATA_SPLIT is set to on and vise-versa. I agree not the cleanest.. 
+But it is good for user-visibility as you would see both ON if you query
+from user, which is the actual state. This is the only way to set HW_GRO
+to on by driver and not lose previous state when we turn the other bit
+on/off.
+
+Yes, I guess such logic should be in the stack, although I don't see
+anything wrong here in terms of correctness.
 
