@@ -1,165 +1,98 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 503A02BD582;
-	Thu, 22 May 2025 16:53:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F48929AB17;
+	Thu, 22 May 2025 16:54:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747932839; cv=none; b=KQipvo9+0Ok2y6EyyU0jnYG9SJFpBwR8jU9tf+DBcppuGcumukstURKTasC+Lf4ktPK0Q7B7rQmBWwM7ndubHVK+Bk04wVeFqmmDVYkdrLyWPjoYV+o+gwjYoOz6eP5rbobhbxIQFcfJh9eaR3qg39Zg9ZJ7mW11+mEerJsrQKI=
+	t=1747932864; cv=none; b=aSvZizB/Vpd+0gztvNQPi6wvGXFC04H/y+ORCihUbXe8f+Kd0LS6cuxa4a157qKHURDrER2p3ax3k25DT8FHvVaxxZNIBBDOYSXyhSl0LEc9M1HHwYcDzwrRfF6Ld5pDyhVZFXU6Xd9FIyFSnWEFXYAYzWLZRXo6CSd4Avnruao=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747932839; c=relaxed/simple;
-	bh=5Nx46qMP2LaiYn+e/vEsyqmYR8nE5nhIOWz5MvdtQsM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=pI0JSOyu7beLWARhAmGoRq9MYYrf0mkOry+IxDtbJmxqNV3+iKqoGdaDQ90rwadwQiN5s9VMAT09p8RQCeji62q1qZAeGirYd1XDiONg119TprhtTpCBIwqs7aacyb53UenaKcVhRa/9KfZGW05xHqQhI2Ioas9v6fxRGp5CAMU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kQ69163K; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kQ69163K"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-43d0618746bso67788305e9.2;
-        Thu, 22 May 2025 09:53:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747932835; x=1748537635; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bSfESP3eCTxh/lZuV155AcEe86QVGTg9cJglhVrSbYE=;
-        b=kQ69163KXUxrfpgPc3FHmueZZ8CIjjDnlAx35stWwv3nDv+3AJpuNSdwI4SNzhTAZJ
-         aAAsnJm88F+1uihtrZeI+OxffG+HXtNFRC7jcMhRh//QDRPEVN36mdOQhwu8/bMn7gJo
-         wLZrTcDm5waShTI+Dji7hHYR3kM7jbjOubCns8rY18MOxOYkJGfkNS5OkLtONCPuShVo
-         QhfwWuacNWKBBexl+v2+0yliYsZbx8v+if2UPfNanHw/1g4Q4hrNYc2uFcPSLO5F8yMm
-         8PtGnOoCDDG/i1RV7xAFFMEIKYF68pHJEfAKaT5fDJJYkH+qs+jKYvK67IHEKtNKl85f
-         1gTQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747932835; x=1748537635;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=bSfESP3eCTxh/lZuV155AcEe86QVGTg9cJglhVrSbYE=;
-        b=JlHfZq9v4BXZeEYpdng21PEAjrrpW28WMdBClxpXdn/w5HqeqF/psodAIFZKSGZgVo
-         DZZ/AwXr6ONDpAi+NqMx4MfnGobOGk48jtNFdnY7ic6kJFfgMWkD5r8+HuVf3l3mfJKO
-         QtsMqmrO8vLTYldHw7Ns5n3qAEr1VE4KawRYoDsg6Js/2vbJWbG/v+s/PFKb1cdUvM4s
-         9r1xbEtREznoGoF2+RwH5TrkUiHcmWLdUrCXDLmthC9YkoGUm29A7zfO86qOQ4jL9snU
-         teQ6R61yVaUt5MG6SxcqFg9Fhuhdz9svtq8PcH2lk+OhJN0+CexbuA808WSXhPxSxCSy
-         ftig==
-X-Forwarded-Encrypted: i=1; AJvYcCW8nISM8D2A+jyruI/yGOtUMEvDbJYIlus6q+RWQIc2vUmLYFLhjscfUnZboR8KMY1/1LnyjfrBbzCu@vger.kernel.org, AJvYcCWYUN4sxESxIF44rKVXuMv8bHzKpRPfutgquDO1U72jdmn941Y/03s8JKTJZstDUaFCO8ihpLE6@vger.kernel.org, AJvYcCXlGkIoaf0uCMSf8FQfU3w2QVLb3BAmngsTipxnzCD6oeB/cfuM10ETUj0h/cG4QaJyxyKR3eRnu9O9jpgF@vger.kernel.org
-X-Gm-Message-State: AOJu0YzYaPS6tY5Y27RqGJuHo36yeggginKRwD+M8NdKiAzmASrAvEVy
-	Qz8erB0UbeyjwG4kcqMbw53GxM2/9wau6TgpIh3MN2WT4fgXEqqHToqI
-X-Gm-Gg: ASbGncvcWJ/Bjq6+72//DwnnxSXlXeR9Wja+pyS+y8SKnMJmJmjUlXxTLKCIC9UZfjk
-	waLF7yl87pGbcNxOSTz2sUwkKTPPNN15yTiwysyPDoCkr9DQAhurafGJYrY/4x+L7xadvtamMH4
-	xBvsfWXhfLzYHaJeTx64qQAO+iss+M5jHm/PIUfaCBWvA6znWH5LYiCtDqDdQKPITLAjay+R/ud
-	Z6UHQwoXl5Rxrt/Xg5SWEgS7KLmpoygZk4OiQ+UAal1Lkyrw5UwipqP+PUCVxiaCT/YMvNe/lTM
-	h27XHgFYbYEZU3NSfYbsRfSHDMMWzWl9QpWwR3rgJmEj6W5yE1SNJ2NunKokxfoh7FZU22iWtII
-	p7+xnBLLD9BuOXG8s2CYZRBKTrRcnInc=
-X-Google-Smtp-Source: AGHT+IEzv6dDW2P+AO+sDCJeKnMjKX39Z0fgtVNTUSFY3hWWH8aZvhhzfZqCq/1J9bR4RY3rI7hlEQ==
-X-Received: by 2002:a05:600c:c1c8:20b0:43c:f3e4:d6f6 with SMTP id 5b1f17b1804b1-44302a1f0d5mr152421885e9.31.1747932835423;
-        Thu, 22 May 2025 09:53:55 -0700 (PDT)
-Received: from localhost.localdomain (93-34-88-225.ip49.fastwebnet.it. [93.34.88.225])
-        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-447f6b297easm118737525e9.6.2025.05.22.09.53.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 May 2025 09:53:54 -0700 (PDT)
-From: Christian Marangi <ansuelsmth@gmail.com>
-To: Andrew Lunn <andrew@lunn.ch>,
-	Vladimir Oltean <olteanv@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	"Chester A. Unal" <chester.a.unal@arinc9.com>,
-	Daniel Golle <daniel@makrotopia.org>,
-	DENG Qingfang <dqfext@gmail.com>,
-	Sean Wang <sean.wang@mediatek.com>,
-	SkyLake Huang <SkyLake.Huang@mediatek.com>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	=?UTF-8?q?Ar=C4=B1n=C3=A7=20=C3=9CNAL?= <arinc.unal@arinc9.com>,
-	Landen Chao <Landen.Chao@mediatek.com>,
-	netdev@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org
-Cc: Christian Marangi <ansuelsmth@gmail.com>
-Subject: [net-next PATCH 3/3] net: phy: mediatek: Add Airoha AN7583 PHY support
-Date: Thu, 22 May 2025 18:53:11 +0200
-Message-ID: <20250522165313.6411-4-ansuelsmth@gmail.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250522165313.6411-1-ansuelsmth@gmail.com>
-References: <20250522165313.6411-1-ansuelsmth@gmail.com>
+	s=arc-20240116; t=1747932864; c=relaxed/simple;
+	bh=MHE8elGOD3VOUv5LCmib7J4CnzJcr2ulHeMksQP+Izg=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=W8m29d2aDzs8jJMYJVEhGiG+qSl0vcrtu0D4TWYJj0QM++JSw/F67K38S47K+qHq9e+o2GOvcVkmR/jMLqjgW0IkOnTSfOQm6RKLKWQRtOxBQi3HyBRyxdEihPfqpnEpRoIcq0gCZePb8A0NyuFyplUpN/JC9QnUf+R8XjWr9OU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4b3Dln5JKZz6M4c0;
+	Fri, 23 May 2025 00:49:25 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id E51211402EF;
+	Fri, 23 May 2025 00:54:18 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 22 May
+ 2025 18:54:18 +0200
+Date: Thu, 22 May 2025 17:54:16 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Angelo Dureghello <adureghello@baylibre.com>
+CC: Nuno Sa <nuno.sa@analog.com>, Lars-Peter Clausen <lars@metafoo.de>,
+	Michael Hennerich <Michael.Hennerich@analog.com>, Jonathan Cameron
+	<jic23@kernel.org>, David Lechner <dlechner@baylibre.com>, Andy Shevchenko
+	<andy@kernel.org>, <linux-iio@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] iio: dac: adi-axi-dac: fix bus free check
+Message-ID: <20250522175416.000047cb@huawei.com>
+In-Reply-To: <20250522-iio-dac-adi-axi-dac-fix-bus-read-v1-1-26ec358c57bf@baylibre.com>
+References: <20250522-iio-dac-adi-axi-dac-fix-bus-read-v1-1-26ec358c57bf@baylibre.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500009.china.huawei.com (7.191.174.84) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-Add Airoha AN7583 PHY support based on Airoha AN7581 with the small
-difference that BMCR_PDOWN is enabled by default and needs to be cleared
-to make the internal PHY correctly work.
+On Thu, 22 May 2025 18:47:31 +0200
+Angelo Dureghello <adureghello@baylibre.com> wrote:
 
-Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
----
- drivers/net/phy/mediatek/mtk-ge-soc.c | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+> From: Angelo Dureghello <adureghello@baylibre.com>
+> 
+> This patch is intended to fix [1] that looks not yet accepted in any
+> upstream branch.
+> 
+> Poll function must check for a value equal to 0 (bus free condition).
+> 
+> [1] https://lore.kernel.org/linux-iio/l6vu54ltxd7pydkzl6xbbq55gedumzbsllfxnljyngwcg4c6zd@w6qxgn2vby75/
+> 
+> Signed-off-by: Angelo Dureghello <adureghello@baylibre.com>
+Hi Angelo.
 
-diff --git a/drivers/net/phy/mediatek/mtk-ge-soc.c b/drivers/net/phy/mediatek/mtk-ge-soc.c
-index a284e8435cb6..cd09fbf92ef2 100644
---- a/drivers/net/phy/mediatek/mtk-ge-soc.c
-+++ b/drivers/net/phy/mediatek/mtk-ge-soc.c
-@@ -17,6 +17,7 @@
- #define MTK_GPHY_ID_MT7981			0x03a29461
- #define MTK_GPHY_ID_MT7988			0x03a29481
- #define MTK_GPHY_ID_AN7581			0x03a294c1
-+#define MTK_GPHY_ID_AN7583			0xc0ff0420
- 
- #define MTK_EXT_PAGE_ACCESS			0x1f
- #define MTK_PHY_PAGE_STANDARD			0x0000
-@@ -1463,6 +1464,12 @@ static int an7581_phy_led_polarity_set(struct phy_device *phydev, int index,
- 			      MTK_PHY_LED_ON_POLARITY, val);
- }
- 
-+static int an7583_phy_config_init(struct phy_device *phydev)
-+{
-+	/* BMCR_PDOWN is enabled by default */
-+	return phy_clear_bits(phydev, MII_BMCR, BMCR_PDOWN);
-+}
-+
- static struct phy_driver mtk_socphy_driver[] = {
- 	{
- 		PHY_ID_MATCH_EXACT(MTK_GPHY_ID_MT7981),
-@@ -1509,6 +1516,18 @@ static struct phy_driver mtk_socphy_driver[] = {
- 		.led_hw_control_get = mt798x_phy_led_hw_control_get,
- 		.led_polarity_set = an7581_phy_led_polarity_set,
- 	},
-+	{
-+		PHY_ID_MATCH_EXACT(MTK_GPHY_ID_AN7583),
-+		.name		= "Airoha AN7583 PHY",
-+		.config_init	= an7583_phy_config_init,
-+		.probe		= an7581_phy_probe,
-+		.led_blink_set	= mt798x_phy_led_blink_set,
-+		.led_brightness_set = mt798x_phy_led_brightness_set,
-+		.led_hw_is_supported = mt798x_phy_led_hw_is_supported,
-+		.led_hw_control_set = mt798x_phy_led_hw_control_set,
-+		.led_hw_control_get = mt798x_phy_led_hw_control_get,
-+		.led_polarity_set = an7581_phy_led_polarity_set,
-+	},
- };
- 
- module_phy_driver(mtk_socphy_driver);
-@@ -1517,6 +1536,7 @@ static const struct mdio_device_id __maybe_unused mtk_socphy_tbl[] = {
- 	{ PHY_ID_MATCH_EXACT(MTK_GPHY_ID_MT7981) },
- 	{ PHY_ID_MATCH_EXACT(MTK_GPHY_ID_MT7988) },
- 	{ PHY_ID_MATCH_EXACT(MTK_GPHY_ID_AN7581) },
-+	{ PHY_ID_MATCH_EXACT(MTK_GPHY_ID_AN7583) },
- 	{ }
- };
- 
--- 
-2.48.1
+That was stalled due to tree shuffling.  Given as you
+observed it hasn't made it on to any tree yet, would you mind
+squashing this in and posting a new version of that patch?
+That will probably end up cleaner than me trying to remember to squash the two.
+
+Thanks!
+
+Jonathan
+
+> ---
+>  drivers/iio/dac/adi-axi-dac.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/iio/dac/adi-axi-dac.c b/drivers/iio/dac/adi-axi-dac.c
+> index b6cfe07701d47440df478f7b9b4c579434b99a25..a0e546dba3680371e00dc4c8973d4f450c18cf2d 100644
+> --- a/drivers/iio/dac/adi-axi-dac.c
+> +++ b/drivers/iio/dac/adi-axi-dac.c
+> @@ -641,7 +641,7 @@ static int axi_dac_wait_bus_free(struct axi_dac_state *st)
+>  	int ret;
+>  
+>  	ret = regmap_read_poll_timeout(st->regmap, AXI_DAC_UI_STATUS_REG, val,
+> -		FIELD_GET(AXI_DAC_UI_STATUS_IF_BUSY, val) == -1, 10,
+> +		FIELD_GET(AXI_DAC_UI_STATUS_IF_BUSY, val) == 0, 10,
+>  		100 * KILO);
+>  	if (ret == -ETIMEDOUT)
+>  		dev_err(st->dev, "AXI bus timeout\n");
+> 
+> ---
+> base-commit: 50b8b618e598468e35551003d7e5cc5db14ee113
+> change-id: 20250522-iio-dac-adi-axi-dac-fix-bus-read-244fbc07313c
+> 
+> Best regards,
 
