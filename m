@@ -1,104 +1,98 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6936128C2B4;
-	Thu, 22 May 2025 13:57:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E9241F94D
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 13:57:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747922264; cv=none; b=N+opHCecgwV4L9Yf3j0lKkqgNE8rowYISoS7yDQI3XUhK5+AFOV9a2ZHO37iktBPke+EuzOk7XgXZjRySLOeqh+TIkQOFQ8xQHbHQh6ufagpIAknAw/HSzh16yyLrrUXZ282tOKJVwMe9VnvBQpXu9grY1VYiPvn8ne1Ys9hx3I=
+	t=1747922278; cv=none; b=FkOebi6BnCVifq5radDhs2TCG2r2EPp5A+ejACEydKZGe2QQ9uCWGQsYhvr+x6T5r5R6F1iUJkg1qQD4R7yLFKEth1kCZMhxUuy5bWRR6dezZJ1zfbvACLOMLxOzU3Af2pJzOkfE3LX6pPxYwZga3lmx6XU/7dew/uJL8k1HEoE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747922264; c=relaxed/simple;
-	bh=QDsvT4Br3Ytep0nbIiWloWpBZUwzfyUEFrDj0b6mIYk=;
+	s=arc-20240116; t=1747922278; c=relaxed/simple;
+	bh=HooZtgA0GXfLrsEzQyuwTezmlNya06buDn/rvsVgz/A=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OhEpX1C3c1gbasRjbT1lpUJXhEYg/KVXtPI5Di9xZxok1swdXg8AB6FnCwUldl1JAQhmkrPEWzqdYaSQokoaf07W8xYGKY178r0Xab2AcacXhYEf1jIbFc4EFPP+XA2e6frVtuRBVfkpxk3uJ4zgt+oLHBivBm+f2e3zD/GT5tQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=VGBJS/rP; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=icVd2qEFAtQbszUtx74ElSONQnclRRcB22ZpVwYZ2FTZjD/ipKjV2IlPmAv7POiEysskEbmcBE/TYCTP8jq6f8T1rfdm6sioybp/fZHzzzFFxGOtrUaYPV4nWcKGQsdqbpDIiMXn7PAZmr33h3z8wA5evjDwQO6ZCQB7omEAhuM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rIqE4FsP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="VGBJS/rP"
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54M4EwpF002960;
-	Thu, 22 May 2025 13:57:40 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=pp1; bh=0bn2w97g0TtAtHIsIN9and4Wt7b7gt
-	d+pdghLBQ6Vj4=; b=VGBJS/rPB/M9GF9+/v/QcwPwHomHT2m/+E1Be+0rgD9V8s
-	OXU3qDZY7lVxYBP40cZ3mAasrV0iQJwpj/yiIn3kzVs0CZ9RNX1RvugqoxyYVrxZ
-	NcWlDkzoDKub04q0iqPP/Q2k6y73hvDot5cl2F2mblnQEo0HYhW/X9rsDHkhWMVe
-	bEIvVuFvQMZBC+zA4z6WTRsCsziAaz98dWrHIyQT1i26K4YC+RdMOh9oRAM8+39v
-	6SOxcQYYbO2co6rtBR0+VVTic78U2j3BMA/jT1fFSkF/8l6uj95Q33kdShOOHxwq
-	PR1fjJTOZf40qM3paKwwuNVcp241v144kbNuQ3tA==
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46smh74g9q-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 22 May 2025 13:57:38 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 54M9kCLH020713;
-	Thu, 22 May 2025 13:57:38 GMT
-Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 46rwkq1qs4-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 22 May 2025 13:57:38 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 54MDvYPV38404424
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 22 May 2025 13:57:34 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 7D17020043;
-	Thu, 22 May 2025 13:57:34 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 3C47220040;
-	Thu, 22 May 2025 13:57:34 +0000 (GMT)
-Received: from osiris (unknown [9.155.199.163])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Thu, 22 May 2025 13:57:34 +0000 (GMT)
-Date: Thu, 22 May 2025 15:57:33 +0200
-From: Steffen Eiden <seiden@linux.ibm.com>
-To: Claudio Imbrenda <imbrenda@linux.ibm.com>
-Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-s390@vger.kernel.org, frankja@linux.ibm.com,
-        borntraeger@de.ibm.com, nsg@linux.ibm.com, nrb@linux.ibm.com,
-        david@redhat.com, hca@linux.ibm.com, agordeev@linux.ibm.com,
-        svens@linux.ibm.com, gor@linux.ibm.com, schlameuss@linux.ibm.com
-Subject: Re: [PATCH v3 2/4] KVM: s390: remove unneeded srcu lock
-Message-ID: <20250522135733.311722-B-seiden@linux.ibm.com>
-References: <20250522132259.167708-1-imbrenda@linux.ibm.com>
- <20250522132259.167708-3-imbrenda@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rIqE4FsP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75CB5C4CEF1;
+	Thu, 22 May 2025 13:57:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747922277;
+	bh=HooZtgA0GXfLrsEzQyuwTezmlNya06buDn/rvsVgz/A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=rIqE4FsPeocARzXZvFtzi55Zdxf89qXdNvy4cal5n/cYTfbQ8YiKb81N+XL45Se90
+	 XTfSB58d2Qd3G3HJv/U+/N/g3iuRju+f25QwEyUA+aFgK4a1mn0qQ1QBrLQKa7xBan
+	 uCKnhhUG1Ak3Q6gBrmO/HFD6xxi7UtNaZSOp+qJmd4TSpnQG0DCICtYs8kmTflfk0P
+	 wF6IZwuzjJO2yWizHBArT35qhGjzC2t10iXQTm1QrpiKwKhn64/7bmtsVvW6U+FjQ2
+	 kt7PpuQ+WsfD76VYvy7aLPss2s+fqcapJpcXdSWXPtBKQCu30UQiHyDaVIutCTwYu3
+	 WPjjIaxlb/+6g==
+Date: Thu, 22 May 2025 21:57:51 +0800
+From: Gao Xiang <xiang@kernel.org>
+To: Bo Liu <liubo03@inspur.com>
+Cc: xiang@kernel.org, chao@kernel.org, linux-erofs@lists.ozlabs.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v9] erofs: support deflate decompress by using Intel QAT
+Message-ID: <aC8tX4u/EFe8XsVP@debian>
+Mail-Followup-To: Bo Liu <liubo03@inspur.com>, xiang@kernel.org,
+	chao@kernel.org, linux-erofs@lists.ozlabs.org,
+	linux-kernel@vger.kernel.org
+References: <20250522094931.28956-1-liubo03@inspur.com>
+ <2f0e05c0-fe6b-4e84-9ef5-c33ecc43d81c@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250522132259.167708-3-imbrenda@linux.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIyMDEzOCBTYWx0ZWRfXzYFptVQuL8qh bBwEDhh5pzrTlofGKLoLWoHAtnJOqedwz4uW3I2Hx+Yv1cgmEpToSRvA2+10EuWHPTdUMl/v21r 4oPtt2p1a0tOhLmdOzcbcKsehZsfDlGIu5tYhyG1LHwG3lI0eHKNPU1j1P/nbMdXHETp0eaKTEH
- trRl5I/PBHXLyWMYXxmFmDlihdN+KiIUipi/y5DJMlzMAF3hTPEZpXolf1OOv3qIfCKTIdq2BTz v/L0Gqnp9KSCoiTNaFfaW4q4QOu6y05FBUoOmH7EP+aLe08VLyHRrZd31tN1WXB0leYjHqhFQXN QsfjNJBQGDSmy627dN2UOF0L8YlqvAmkhfwYQZ8kTS1/JtSONzZ/yORVV+ogdAYQn8dz1zy/TSL
- 7Gr65LGaVHPtnV6ZAmhOLaYCtJhhJeRw0gtBNpcHPFPWf80vI+Xi3zZ4KLu/CclrBP2hu1mU
-X-Proofpoint-GUID: SUmfjF6-_7MOx3aNm6g_ssSa4LQ2mZaf
-X-Proofpoint-ORIG-GUID: SUmfjF6-_7MOx3aNm6g_ssSa4LQ2mZaf
-X-Authority-Analysis: v=2.4 cv=EdfIQOmC c=1 sm=1 tr=0 ts=682f2d52 cx=c_pps a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17 a=kj9zAlcOel0A:10 a=dt9VzEwgFbYA:10 a=VnNF1IyMAAAA:8 a=N-PgjwyHdwUcJUqC-LoA:9 a=CjuIK1q_8ugA:10 a=ZXulRonScM0A:10
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-22_06,2025-05-22_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_spam_definite policy=outbound score=100 impostorscore=0
- suspectscore=0 adultscore=0 mlxscore=100 lowpriorityscore=0 malwarescore=0
- phishscore=0 priorityscore=1501 bulkscore=0 clxscore=1015 mlxlogscore=-999
- spamscore=100 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
- definitions=main-2505220138
+In-Reply-To: <2f0e05c0-fe6b-4e84-9ef5-c33ecc43d81c@linux.alibaba.com>
 
-On Thu, May 22, 2025 at 03:22:57PM +0200, Claudio Imbrenda wrote:
-> All paths leading to handle_essa() already hold the kvm->srcu.
-> Remove unneeded srcu locking from handle_essa().
-> Add lockdep assertion to make sure we will always be holding kvm->srcu
-> when entering handle_essa().
+On Thu, May 22, 2025 at 05:52:32PM +0800, Gao Xiang wrote:
 > 
-> Signed-off-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
-> Reviewed-by: Nina Schoetterl-Glausch <nsg@linux.ibm.com>
-> Reviewed-by: Christian Borntraeger <borntraeger@linux.ibm.com>
+> 
+> On 2025/5/22 17:49, Bo Liu wrote:
+> > This patch introdueces the use of the Intel QAT to decompress compressed
+> > data in the EROFS filesystem, aiming to improve the decompression speed
+> > of compressed datea.
+> > 
+> > We created a 285MiB compressed file and then used the following command to
+> > create EROFS images with different cluster size.
+> >       # mkfs.erofs -zdeflate,level=9 -C16384
+> > 
+> > fio command was used to test random read and small random read(~5%) and
+> > sequential read performance.
+> >       # fio -filename=testfile  -bs=4k -rw=read -name=job1
+> >       # fio -filename=testfile  -bs=4k -rw=randread -name=job1
+> >       # fio -filename=testfile  -bs=4k -rw=randread --io_size=14m -name=job1
+> > 
+> > Here are some performance numbers for reference:
+> > 
+> > Processors: Intel(R) Xeon(R) 6766E(144 core)
+> > Memory:     521 GiB
+> > 
+> > |-----------------------------------------------------------------------------|
+> > |           | Cluster size | sequential read | randread  | small randread(5%) |
+> > |-----------|--------------|-----------------|-----------|--------------------|
+> > | Intel QAT |    4096      |    538  MiB/s   | 112 MiB/s |     20.76 MiB/s    |
+> > | Intel QAT |    16384     |    699  MiB/s   | 158 MiB/s |     21.02 MiB/s    |
+> > | Intel QAT |    65536     |    917  MiB/s   | 278 MiB/s |     20.90 MiB/s    |
+> > | Intel QAT |    131072    |    1056 MiB/s   | 351 MiB/s |     23.36 MiB/s    |
+> > | Intel QAT |    262144    |    1145 MiB/s   | 431 MiB/s |     26.66 MiB/s    |
+> > | deflate   |    4096      |    499  MiB/s   | 108 MiB/s |     21.50 MiB/s    |
+> > | deflate   |    16384     |    422  MiB/s   | 125 MiB/s |     18.94 MiB/s    |
+> > | deflate   |    65536     |    452  MiB/s   | 159 MiB/s |     13.02 MiB/s    |
+> > | deflate   |    131072    |    452  MiB/s   | 177 MiB/s |     11.44 MiB/s    |
+> > | deflate   |    262144    |    466  MiB/s   | 194 MiB/s |     10.60 MiB/s    |
+> > 
+> > Signed-off-by: Bo Liu <liubo03@inspur.com>
+> Reviewed-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+> 
 
-Reviewed-by: Steffen Eiden <seiden@linux.ibm.com>
+BTW, the commit message has been updated to v4 version to
+fix some typos:
 
+https://lore.kernel.org/r/20250521100326.2867828-1-hsiangkao@linux.alibaba.com
+
+Thanks,
+Gao Xiang
