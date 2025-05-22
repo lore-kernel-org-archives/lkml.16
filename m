@@ -1,175 +1,144 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37A642BF3D3;
-	Thu, 22 May 2025 20:04:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5812D148827;
+	Thu, 22 May 2025 20:05:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747944274; cv=none; b=AW0USGhUUE71IIIiE5fMOL7QA/omDdiPZY04IQPusWZ2bHG0cMf6csCBMnYy3akSm9q7B65tlO/AEeM75i8Z7X917SAwDE00ke21sZDWCRxCK6jbZV0KRtgUZo/6V6/Tmm1I7K1vHQbXyIouIKzInZY30zWuQ1E40O/WEhwQTlw=
+	t=1747944331; cv=none; b=C9XPeidSmTkIE/IUynrsH4agobrRQCoNQw99LDOa3Dkb/a2FN1epwLpo5ZU5RVqMsRSkroGpyBZ2XmGtqhze5Xh3FOOP2For95XHqmNIn8ukuqe60xEBJrNQsac2Ad+oyPjyrY+2SugkP65b9yNAnN/JV0X5z61MGhppsI5/Pzs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747944274; c=relaxed/simple;
-	bh=m/0j/7QIFLkrNbr6N8aGMwm8ESVLo60Xq7cdaPD0R5Q=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=SMnGBFl5ySCY1TdcuAHUCCXoPW2f2gL+qHr75WwbdP7kzKL26u3JijngO6nQWeZtveQ7ncUJv3X4Woy2VIpHPDODbjZ75keD5TWKpPDYizsr9Qo641ej2guTzrxXjOwuae/CYJ4Y5q1n89SCR0tdidtAjPHneKGUoIFUBgAT5iU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=BgNGH79U; arc=none smtp.client-ip=212.227.15.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1747944331; c=relaxed/simple;
+	bh=g62bCrkPGn4DhPfRt4BBU9rJEliO6Mnud/Cr8E48tFg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=TnM0JXE2oUA8VDkijaa7c8JFz05KnvmPACqYhTQ6AeBT1ZIwaK2NKWIDCpyyZlza06kZW22x5NuLYQ64ZKGLp1bRTmXpw2aqwG36abHS1E09iovdfUXY7Zm32VbOGlWgSvBk18FO/sf1REocURJmxuoyESOTX0RFbujqnJeqFCA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=D6TJCySC; arc=none smtp.client-ip=209.85.222.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="BgNGH79U"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1747944264; x=1748549064; i=w_armin@gmx.de;
-	bh=BfB9dL1BZc9EG3FvzEB/uXREN3ou+pmHQVviuUcsm4U=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=BgNGH79U55nM8zUb/q8drRAtlHqA3Lpf77U3IhV/F7VJAAEBZWDcHXccFMJgig/4
-	 dS+JFg8hcRCK/j24RCNP3UqoasBYhwIcLTREaawCxxcy/oJodZJ2ME+e6Q+naDgif
-	 26AUEY4IeJgHnXdxLH1BoYlnphFAYlmKq0M3aFH8DnsEtYpc1bWo8VQCrz8YX+G/J
-	 YnWehMlb2YRMfhxZJOa4qtbUoWq0WpXy3NAarnAaxM1a4UQ44QMsWeMEVvTw/m4VE
-	 RcoMqt4TfegbUI+uMs1xfd2k2EfvaRo6MLh28iLp/+WvxBmaTsAlPurLN4cOiq4ae
-	 P4OIzMaYTGGR7NjkGA==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.0.69] ([87.177.78.219]) by mail.gmx.net (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1N63Vi-1v2NrU2dQW-014x44; Thu, 22
- May 2025 22:04:24 +0200
-Message-ID: <91458376-dfc7-46fc-8523-aa176907d703@gmx.de>
-Date: Thu, 22 May 2025 22:04:22 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D6TJCySC"
+Received: by mail-qk1-f177.google.com with SMTP id af79cd13be357-7c53b9d66fdso1143422285a.3;
+        Thu, 22 May 2025 13:05:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747944329; x=1748549129; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=1wSVqz32Lg2dSnny/+XxgnMzOGKReyfgy7ECXHzhydg=;
+        b=D6TJCySC/eB3DE+tB0WW/5HE0IIxZUoqrnHPb6iKTEzqoSkD+Tx7y3Kh/6KrLg6KC3
+         dyV7nRa0iUaiFUC6uzOi0SHwiewOqjSJDCeSnerYKUAixZoY7JROrcstrDbhFPZG+E5v
+         8WzM2gcltOhMKvIGYe1mC4vq2U4hk84RT4A2OmB2hAYjsrl0jGnlfxo1WbtU+DgvxtK3
+         6WvSYOpPUE7PMJG0UMcuAL4jwukUo0AuLOPlqE9fM1BzfuLbP1rBDTchSlrlGV2Jf+6r
+         kmxBiqrZIyPI0L+fC9f/8wE4tA7yygR4Fps6Js7tNZX7hfjhaMg27dGn3cfxaxkW4yxV
+         6F5w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747944329; x=1748549129;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=1wSVqz32Lg2dSnny/+XxgnMzOGKReyfgy7ECXHzhydg=;
+        b=ByuQjuRv3mb0ZFw5sdzhzxQ7WQiGeSvOt2QHBznFxjm8KCd9zKDWd5+eOlIAcpVQ4I
+         9NmnLjbSANNWg9eq7hMb+T7ClzT/rGoF6G1LhW38QQL9c7f88DSN6i9SalnqUERYF/03
+         NHR9k5lTIBz5dk1Cr5OTuVU+AS28RIqbFlm+BJuIBEB6KCEJgVkCg9qInSPcveEruOJI
+         r4hnww7Zalc7sETh4OeOxDY71ND9eEydr22BhBceTjunlLjoYvS47mrekqX3tZgsnN21
+         FBBGy2W4zZWsIvZWkk39v03yp9FtExEDfix64qTADNK9Evh2+ALO2fBsWyVmXhoIVqdw
+         U29Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVjT5IxeBM4pnmlwTXtOd12sMwK6Zm9Pkqn3qcMpqjmGtB2Wl7hOpmJrX7lj1mZ1Usg1tDqDrVsRvSsols=@vger.kernel.org, AJvYcCXZHRkSfZ2FTgKzluLrS2n3kv7Ou3YXuxPWXG/bEdTXUsepfPcyTZK5719xArDPZeSDkCZSLcTi1T61+yADRJY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzluRFrPgHI1NOsATl0wMRnnkjZWy3cAcVivQmH8b6CLqpMoNFX
+	dtIOOE38rodB1eUbn62eZSwDDx9004GHOnJePadfQgIE8jR5w7rx8pXc
+X-Gm-Gg: ASbGncvwxNO293r6cATEINV4w/nsSbBBRg/xik8dd1427xgdd86tm2O4FabSjOJZk9Z
+	UUkMVYo7INBrpEPOR3OJm8F3leKfs1bNEfd1ao6cyZx0dHQPHTRaeEkcPP0+YVSSylu3NiRw11E
+	aDd7Cldec4W2fQue0uO/itPF/76o0tTzHXrIuTMXp/c+wmGBmdcXNYYfHiZkHfzLSfZ0tfDFJBI
+	Fuw3E9Vjv2DRWRThYG/XWil1R6qRrUv7YP1X4fgBRwFdkwZ6Xt7V3x81hnuVxeZlT0XVIJY3/iA
+	5vliblVL5yAbGhGR+oMt+wepPad9ajEn4qOkRDiEKD4cfdGSPQyeTJjQEGaqGzlof7m/o+ZcmEQ
+	=
+X-Google-Smtp-Source: AGHT+IG5nSWFEty9vCN6gC150pOJ2PmZw80Dh5SuO3c3/HPGrsLNCcHFR/yUs1nQe+u4ZesyOmiwHw==
+X-Received: by 2002:a05:620a:2903:b0:7c7:a5f5:5616 with SMTP id af79cd13be357-7cd47fae57amr2902555785a.42.1747944329026;
+        Thu, 22 May 2025 13:05:29 -0700 (PDT)
+Received: from localhost.localdomain ([2804:14d:4c64:81ec:7409:107a:a63b:a3da])
+        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-87bec228c01sm10867459241.33.2025.05.22.13.05.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 May 2025 13:05:28 -0700 (PDT)
+From: Rodrigo Gobbi <rodrigo.gobbi.7@gmail.com>
+To: jjohnson@kernel.org
+Cc: ~lkcamp/patches@lists.sr.ht,
+	linux-wireless@vger.kernel.org,
+	ath11k@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH ath-next v3] wifi: ath11k: validate ath11k_crypto_mode on top of ath11k_core_qmi_firmware_ready
+Date: Thu, 22 May 2025 17:01:12 -0300
+Message-ID: <20250522200519.16858-1-rodrigo.gobbi.7@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] drivers: acpi: Fix platform profile driver on !acpi
- platforms
-To: Alexandre Ghiti <alexghiti@rivosinc.com>,
- "Rafael J . Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Mario Limonciello <mario.limonciello@amd.com>,
- Mark Pearson <mpearson-lenovo@squebb.ca>, Arnd Bergmann <arnd@arndb.de>,
- linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-riscv@lists.infradead.org
-References: <20250522141410.31315-1-alexghiti@rivosinc.com>
-Content-Language: en-US
-From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <20250522141410.31315-1-alexghiti@rivosinc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:NTRHH5PMFLIutW5BfrfopU/f8rUa+sK5VihkqKAXFj9HjA48cg+
- wanM72DxYHMj+d1u7zgv4yQjFNFa0RkzGLJ106jEt9z7gnHIwb8qKvn5pCemK+yrFZQpGBB
- m0jpN0pLCFlPKvNcygasmRbju2aU6ak//8ePDjggBaP7prMssLuSNIWfxh/0ZPqWyk8wo6H
- I7jHEHpYqFwOUy8J5D+yA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:dKmvU3GXqqo=;z6HbBYWva0ByrtseS5PN6+K67Nw
- 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
+Content-Transfer-Encoding: 8bit
 
-Am 22.05.25 um 16:13 schrieb Alexandre Ghiti:
+if ath11k_crypto_mode is invalid (not ATH11K_CRYPT_MODE_SW/ATH11K_CRYPT_MODE_HW),
+ath11k_core_qmi_firmware_ready() will not undo some actions that was previously
+started/configured. Do the validation as soon as possible in order to avoid
+undoing actions in that case and also to fix the following smatch warning:
 
-> The platform profile driver is loaded even on platforms that do not have
-> acpi enabled. The initialization of the sysfs entries was recently moved
-> from platform_profile_register() to the module init call, and those
-> entries need acpi_kobj to be initialized which is not the case when acpi
-> is disabled.
->
-> This results in the following warning:
->
->   WARNING: CPU: 5 PID: 1 at fs/sysfs/group.c:131 internal_create_group+0=
-xa22/0xdd8
->   Modules linked in:
->   CPU: 5 UID: 0 PID: 1 Comm: swapper/0 Tainted: G        W           6.1=
-5.0-rc7-dirty #6 PREEMPT
->   Tainted: [W]=3DWARN
->   Hardware name: riscv-virtio,qemu (DT)
->   epc : internal_create_group+0xa22/0xdd8
->    ra : internal_create_group+0xa22/0xdd8
->
->   Call Trace:
->
->   internal_create_group+0xa22/0xdd8
->   sysfs_create_group+0x22/0x2e
->   platform_profile_init+0x74/0xb2
->   do_one_initcall+0x198/0xa9e
->   kernel_init_freeable+0x6d8/0x780
->   kernel_init+0x28/0x24c
->   ret_from_fork+0xe/0x18
->
-> Fix this by checking if acpi is enabled before trying to create sysfs
-> entries.
+drivers/net/wireless/ath/ath11k/core.c:2166 ath11k_core_qmi_firmware_ready()
+warn: missing unwind goto?
 
-I already submitted a patch for this problem (see https://lore.kernel.org/=
-linux-acpi/a6d92cdd-4dc3-4080-9ed9-5b1f02f247e0@gmx.de/T/)
-that only disables the legacy sysfs interface while keeping the class-base=
-d interface functional
-as it does not depend on ACPI at all.
+Signed-off-by: Rodrigo Gobbi <rodrigo.gobbi.7@gmail.com>
+---
+Changelog:
+v3: move validation to the beginning of the ath11k_core_qmi_firmware_ready(), so
+we do not need to clean-up things. A small change over the commit msg due that change.
+v2: https://lore.kernel.org/linux-wireless/20250515222520.4922-1-rodrigo.gobbi.7@gmail.com/#t
+v1: https://lore.kernel.org/linux-wireless/20250515004258.87234-1-rodrigo.gobbi.7@gmail.com/
+---
+ drivers/net/wireless/ath/ath11k/core.c | 28 +++++++++++++-------------
+ 1 file changed, 14 insertions(+), 14 deletions(-)
 
-Thank,
-Armin Wolf
+diff --git a/drivers/net/wireless/ath/ath11k/core.c b/drivers/net/wireless/ath/ath11k/core.c
+index 2e9f8a5e61e4..b894e27435da 100644
+--- a/drivers/net/wireless/ath/ath11k/core.c
++++ b/drivers/net/wireless/ath/ath11k/core.c
+@@ -2134,6 +2134,20 @@ int ath11k_core_qmi_firmware_ready(struct ath11k_base *ab)
+ {
+ 	int ret;
+ 
++	switch (ath11k_crypto_mode) {
++	case ATH11K_CRYPT_MODE_SW:
++		set_bit(ATH11K_FLAG_HW_CRYPTO_DISABLED, &ab->dev_flags);
++		set_bit(ATH11K_FLAG_RAW_MODE, &ab->dev_flags);
++		break;
++	case ATH11K_CRYPT_MODE_HW:
++		clear_bit(ATH11K_FLAG_HW_CRYPTO_DISABLED, &ab->dev_flags);
++		clear_bit(ATH11K_FLAG_RAW_MODE, &ab->dev_flags);
++		break;
++	default:
++		ath11k_info(ab, "invalid crypto_mode: %d\n", ath11k_crypto_mode);
++		return -EINVAL;
++	}
++
+ 	ret = ath11k_core_start_firmware(ab, ab->fw_mode);
+ 	if (ret) {
+ 		ath11k_err(ab, "failed to start firmware: %d\n", ret);
+@@ -2152,20 +2166,6 @@ int ath11k_core_qmi_firmware_ready(struct ath11k_base *ab)
+ 		goto err_firmware_stop;
+ 	}
+ 
+-	switch (ath11k_crypto_mode) {
+-	case ATH11K_CRYPT_MODE_SW:
+-		set_bit(ATH11K_FLAG_HW_CRYPTO_DISABLED, &ab->dev_flags);
+-		set_bit(ATH11K_FLAG_RAW_MODE, &ab->dev_flags);
+-		break;
+-	case ATH11K_CRYPT_MODE_HW:
+-		clear_bit(ATH11K_FLAG_HW_CRYPTO_DISABLED, &ab->dev_flags);
+-		clear_bit(ATH11K_FLAG_RAW_MODE, &ab->dev_flags);
+-		break;
+-	default:
+-		ath11k_info(ab, "invalid crypto_mode: %d\n", ath11k_crypto_mode);
+-		return -EINVAL;
+-	}
+-
+ 	if (ath11k_frame_mode == ATH11K_HW_TXRX_RAW)
+ 		set_bit(ATH11K_FLAG_RAW_MODE, &ab->dev_flags);
+ 
+-- 
+2.49.0
 
-> Fixes: 77be5cacb2c2 ("ACPI: platform_profile: Create class for ACPI plat=
-form profile")
-> Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
-> ---
->   drivers/acpi/platform_profile.c | 3 +++
->   1 file changed, 3 insertions(+)
->
-> diff --git a/drivers/acpi/platform_profile.c b/drivers/acpi/platform_pro=
-file.c
-> index ffbfd32f4cf1..b43f4459a4f6 100644
-> --- a/drivers/acpi/platform_profile.c
-> +++ b/drivers/acpi/platform_profile.c
-> @@ -688,6 +688,9 @@ static int __init platform_profile_init(void)
->   {
->   	int err;
->  =20
-> +	if (acpi_disabled)
-> +		return -EOPNOTSUPP;
-> +
->   	err =3D class_register(&platform_profile_class);
->   	if (err)
->   		return err;
