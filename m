@@ -1,242 +1,203 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCD09290BD2;
-	Thu, 22 May 2025 15:10:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E89528FAB8;
+	Thu, 22 May 2025 15:11:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747926649; cv=none; b=Gfh3kfRmS+PfNEj7k0JhDryOrjqe/vpghtdxEgSdTbs0+vai8X/ctElHpdOwvtYa1zHkkYHTiKh55IMSDAoio2MxT3moI0cJXZEiA914OsEb/rOWshxj4Dy8ebxFA4/PqNUR64FiMNWeBW1kqKkKl/VMqrSeRVsXWVmNorzQjkA=
+	t=1747926662; cv=none; b=iZcw+maxDXzVllfRNzK9J00akXzoqCgVSDQdsTHe37raCRiOhHnV+544+KAnFuC03BVQqEqmcVTdr6+7y8FHagDrHKDc/V2FYDzIJhHn9LB7t62LKfAZ2RGWIi31Ev91cYPMdjA5ScoKoz1fiiIYUJu6uS3yF9G+avzP2rp3zHo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747926649; c=relaxed/simple;
-	bh=t2m92IG+lESfSveuVAhyAr9qEmQos8t6zPYOu82WPfE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=TgkNkEhmIscG3d4toIwBUqHqZRD+Zlwe9nJoKfx493tkvQEvuu9Yjt4ND2B4D+frkfl+tEr68KJLaqcd4fpMCvWxGpgA+2NnP/J2cwNhBUTtu6QP3IV8BdAZAwjwiVtALxj3tbV9R3pyQqsgq34ZY0lDIn6YyFl5oEanlJkie5E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JvJipe03; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1747926662; c=relaxed/simple;
+	bh=uJG6Jesy9D0JDKrfcqVhvbfKdi/yDrnCTcz3eC5EWHc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=h5VGIVKHxATKV2EpdJ/JmMVezaaish4r9H0noCGRL48GnuQTyNMEnsYtZirOtIphN8rqYUsO44Pw337MZ6hexMjcJob3+wB0I8IiJ7m1yMMPqs9pKQFsIsHYRDkLb9UOwovk5orN3pkft0odP4QZmQZF1Px+H8jbnU2Mf+UE61U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fT79k9IZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JvJipe03"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747926648; x=1779462648;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=t2m92IG+lESfSveuVAhyAr9qEmQos8t6zPYOu82WPfE=;
-  b=JvJipe03Ubge9i+FuE6QbnGMRLdluSaBxy+9ecdyqXV6IgDzBN4NGLx6
-   DWK6E2CzUr8OugOCXohpFnr5XsNF7xGH9LQvkpuMigqR7TeCa8w0//i0b
-   bjFWFaCNC3yUXlzENkxTrMAuVerZIL1hfKu6+p+aMzUYMbQapZ+Ex57gu
-   GwtuAz2LQxZk+hqZ0am2VH6ZsOfSsKMSRTNWOkagAScbZCZ772N17Vl6M
-   gPJ0C73yVQQ9ACB+pKygqR7CIO/Q4DSY3fWHaVFvlQMt/OEB5njCHXtoo
-   LyPF9lLY+2D6W+qo/D9WFnYO7bWBks+EBkPfar5Fw2aB6S3gfq6a6vQUJ
-   w==;
-X-CSE-ConnectionGUID: RIcwb7g0TAWBMWFqoIS9Xw==
-X-CSE-MsgGUID: 8tyTZTHpTxWXZ5MVHtsVQw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11441"; a="61006718"
-X-IronPort-AV: E=Sophos;i="6.15,306,1739865600"; 
-   d="scan'208";a="61006718"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2025 08:10:48 -0700
-X-CSE-ConnectionGUID: r8jPIcKCQmqqvUc06U2Kyw==
-X-CSE-MsgGUID: tgsrSSyrSwe3KqWzyL+ogQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,306,1739865600"; 
-   d="scan'208";a="171627635"
-Received: from 984fee019967.jf.intel.com ([10.165.54.94])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2025 08:10:47 -0700
-From: Chao Gao <chao.gao@intel.com>
-To: x86@kernel.org,
-	linux-kernel@vger.kernel.org,
-	kvm@vger.kernel.org,
-	tglx@linutronix.de,
-	dave.hansen@intel.com,
-	seanjc@google.com,
-	pbonzini@redhat.com
-Cc: peterz@infradead.org,
-	rick.p.edgecombe@intel.com,
-	weijiang.yang@intel.com,
-	john.allen@amd.com,
-	bp@alien8.de,
-	chang.seok.bae@intel.com,
-	xin3.li@intel.com,
-	Chao Gao <chao.gao@intel.com>,
-	Maxim Levitsky <mlevitsk@redhat.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Mitchell Levy <levymitchell0@gmail.com>,
-	Vignesh Balasubramanian <vigbalas@amd.com>
-Subject: [PATCH v8 6/6] x86/fpu/xstate: Add CET supervisor xfeature support as a guest-only feature
-Date: Thu, 22 May 2025 08:10:09 -0700
-Message-ID: <20250522151031.426788-7-chao.gao@intel.com>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <20250522151031.426788-1-chao.gao@intel.com>
-References: <20250522151031.426788-1-chao.gao@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fT79k9IZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4E38C4CEE4;
+	Thu, 22 May 2025 15:10:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747926661;
+	bh=uJG6Jesy9D0JDKrfcqVhvbfKdi/yDrnCTcz3eC5EWHc=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=fT79k9IZmS41Fg9K74ACV1wFXdLWWeQDKL2DpebkYumi+rwUuXcKZQrLx8Xw/p/xM
+	 Mo7gnV8T6vH7T1Esp4yK8nmlzmzSOWeTrsyX+hGJJ5ZjUsZ4LFTK9XmeOmM+qFsJbN
+	 e/EJBtVrcYQoJUACAsxAgLD/W8d2BxdMKH3d0YWtosQIoRqIRF5azt/dqmmhwGTZOx
+	 dE879aJmNOmPbVUMyGlCULowe2BMPa6+GIqjMdckcyezdybuxZLXVa27F9LvYJz2fA
+	 0w9xfsY/sVWTZwNNukHngEEIoJvZzT0MFZa6BsN1BF2uI++Qn1HxWMCYGpdXrx6Q0e
+	 eNFf9BM+TeMEQ==
+Message-ID: <ea79d8fd-8134-4d14-92f6-f656be20cd9f@kernel.org>
+Date: Thu, 22 May 2025 17:10:56 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] soc: mediatek: Add MT8196 VMM driver support
+To: "Nancy.Lin" <nancy.lin@mediatek.com>,
+ Chun-Kuang Hu <chunkuang.hu@kernel.org>, Liam Girdwood
+ <lgirdwood@gmail.com>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Matthias Brugger <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: Mark Brown <broonie@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
+ Project_Global_Chrome_Upstream_Group@mediatek.com,
+ jason-jh.lin@mediatek.com, singo.chang@mediatek.com,
+ paul-pl.chen@mediatek.com
+References: <20250522150426.3418225-1-nancy.lin@mediatek.com>
+ <20250522150426.3418225-3-nancy.lin@mediatek.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <20250522150426.3418225-3-nancy.lin@mediatek.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Yang Weijiang <weijiang.yang@intel.com>
+On 22/05/2025 17:03, Nancy.Lin wrote:
+> From: Nancy Lin <nancy.lin@mediatek.com>
+> 
+> Add a driver for the MediaTek MT8196 VMM (Vcore for MultiMedia)
+> controller, which acts as the main power supplier for multimedia power
+> domains such as display, video encode, and video decode on MediaTek SoCs.
+> 
+> The VMM controller provides virtual regulators for multimedia IPs and
+> coordinates with the hardware common clock framework (hwccf) and the
+> Video Companioin Processor (VCP) to manage power domains. The driver
+> uses a hardware voter through HWCCF to notify the VCP to turn on or
+> off VMM-related bucks.
+> 
+> Signed-off-by: Nancy Lin <nancy.lin@mediatek.com>
+> ---
+>  drivers/soc/mediatek/Kconfig       |  12 +
+>  drivers/soc/mediatek/Makefile      |   1 +
+>  drivers/soc/mediatek/mtk-vmm-drv.c | 471 +++++++++++++++++++++++++++++
+>  3 files changed, 484 insertions(+)
+>  create mode 100644 drivers/soc/mediatek/mtk-vmm-drv.c
+> 
+> diff --git a/drivers/soc/mediatek/Kconfig b/drivers/soc/mediatek/Kconfig
+> index d7293977f06e..4db4a0876083 100644
+> --- a/drivers/soc/mediatek/Kconfig
+> +++ b/drivers/soc/mediatek/Kconfig
+> @@ -69,6 +69,18 @@ config MTK_MMSYS
+>  	  Say yes here to add support for the MediaTek Multimedia
+>  	  Subsystem (MMSYS).
+>  
+> +config MTK_VMM
+> +	tristate "MediaTek VMM driver"
+> +	help
+> +	  Say Y here to enable support for the MediaTek VMM (Vcore for
+> +	  MultiMedia) controller, which acts as the main power supplier
+> +	  for multimedia power domains such as display, video encode and
+> +	  decode on MediaTek SoCs. The VMM controller provides virtual
+> +	  regulators for multimedia IPs and coordinates with the hardware
+> +	  common clock framework (hwccf) and the Video Companion Processor
+> +	  (VCP) to manage power domains. The VMM driver uses hardware voter
+> +	  through hwccf to notify VCP to turn on/off VMM-related bucks.
+> +
+>  config MTK_SVS
+>  	tristate "MediaTek Smart Voltage Scaling(SVS)"
+>  	depends on NVMEM_MTK_EFUSE && NVMEM
+> diff --git a/drivers/soc/mediatek/Makefile b/drivers/soc/mediatek/Makefile
+> index 0665573e3c4b..2b2071614ac4 100644
+> --- a/drivers/soc/mediatek/Makefile
+> +++ b/drivers/soc/mediatek/Makefile
+> @@ -6,6 +6,7 @@ obj-$(CONFIG_MTK_INFRACFG) += mtk-infracfg.o
+>  obj-$(CONFIG_MTK_PMIC_WRAP) += mtk-pmic-wrap.o
+>  obj-$(CONFIG_MTK_REGULATOR_COUPLER) += mtk-regulator-coupler.o
+>  obj-$(CONFIG_MTK_MMSYS) += mtk-mmsys.o
+> +obj-$(CONFIG_MTK_VMM) += mtk-vmm-drv.o
+>  obj-$(CONFIG_MTK_MMSYS) += mtk-mutex.o
+>  obj-$(CONFIG_MTK_SVS) += mtk-svs.o
+>  obj-$(CONFIG_MTK_SOCINFO) += mtk-socinfo.o
+> diff --git a/drivers/soc/mediatek/mtk-vmm-drv.c b/drivers/soc/mediatek/mtk-vmm-drv.c
+> new file mode 100644
+> index 000000000000..de4ceb7d59fa
+> --- /dev/null
+> +++ b/drivers/soc/mediatek/mtk-vmm-drv.c
+> @@ -0,0 +1,471 @@
+> +// SPDX-License-Identifier: (GPL-2.0 OR MIT)
+> +/*
+> + * Copyright (c) 2025 MediaTek Inc.
+> + * Author: Yunfei Dong <yunfei.dong@mediatek.com>
+> + */
+> +
+> +#include <linux/clk.h>
+> +#include <linux/delay.h>
+> +#include <linux/device.h>
+> +#include <linux/kthread.h>
+> +#include <linux/mfd/syscon.h>
+> +#include <linux/module.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/pm_domain.h>
+> +#include <linux/pm_runtime.h>
+> +#include <linux/regmap.h>
+> +#include <linux/regulator/driver.h>
+> +#if IS_ENABLED(CONFIG_MTK_VCP_RPROC)
 
-== Background ==
+And that's the proof you send some sort of downstream code.
 
-CET defines two register states: CET user, which includes user-mode control
-registers, and CET supervisor, which consists of shadow-stack pointers for
-privilege levels 0-2.
+This does not exist.
 
-Current kernels disable shadow stacks in kernel mode, making the CET
-supervisor state unused and eliminating the need for context switching.
+> +#include <linux/remoteproc.h>
+> +#include <linux/remoteproc/mtk_vcp_public.h>
+> +#endif
+> +
+> +#define mtk_vmm_dbg(dev, fmt, args...) \
+> +	dev_dbg(dev, "[vmm] %s(%d): " fmt "\n", __func__, __LINE__, ##args)
 
-== Problem ==
+No, you do not get your own debug code.
 
-To virtualize CET for guests, KVM must accurately emulate hardware
-behavior. A key challenge arises because there is no CPUID flag to indicate
-that shadow stack is supported only in user mode. Therefore, KVM cannot
-assume guests will not enable shadow stacks in kernel mode and must
-preserve the CET supervisor state of vCPUs.
+NAK.
 
-== Solution ==
+This is nowhere close to upstream code. Don't send us downstream
+patterns please.
 
-An initial proposal to manually save and restore CET supervisor states
-using raw RDMSR/WRMSR in KVM was rejected due to performance concerns and
-its impact on KVM's ABI. Instead, leveraging the kernel's FPU
-infrastructure for context switching was favored [1].
-
-The main question then became whether to enable the CET supervisor state
-globally for all processes or restrict it to vCPU processes. This decision
-involves a trade-off between a 24-byte XSTATE buffer waste for all non-vCPU
-processes and approximately 100 lines of code complexity in the kernel [2].
-The agreed approach is to first try this optimal solution [3], i.e.,
-restricting the CET supervisor state to guest FPUs only and eliminating
-unnecessary space waste.
-
-The guest-only xfeature infrastructure has already been added. Now,
-introduce CET supervisor xstate support as the first guest-only feature
-to prepare for the upcoming CET virtualization in KVM.
-
-Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
-Signed-off-by: Chao Gao <chao.gao@intel.com>
-Reviewed-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
-Reviewed-by: Maxim Levitsky <mlevitsk@redhat.com>
-Link: https://lore.kernel.org/kvm/ZM1jV3UPL0AMpVDI@google.com/ [1]
-Link: https://lore.kernel.org/kvm/1c2fd06e-2e97-4724-80ab-8695aa4334e7@intel.com/ [2]
-Link: https://lore.kernel.org/kvm/2597a87b-1248-b8ce-ce60-94074bc67ea4@intel.com/ [3]
----
-v5:
-Introduce CET supervisor xfeature directly as a guest-only feature, rather
-than first introducing it in one patch and then converting it to guest-only
-in a subsequent patch. (Chang)
-Add new features after cleanups/bug fixes (Chang, Dave, Ingo)
-Improve the commit message to follow the suggested
-background-problem-solution pattern.
----
- arch/x86/include/asm/fpu/types.h  | 14 ++++++++++++--
- arch/x86/include/asm/fpu/xstate.h |  5 ++---
- arch/x86/kernel/fpu/xstate.c      |  5 ++++-
- 3 files changed, 18 insertions(+), 6 deletions(-)
-
-diff --git a/arch/x86/include/asm/fpu/types.h b/arch/x86/include/asm/fpu/types.h
-index 54ba567258d6..93e99d2583d6 100644
---- a/arch/x86/include/asm/fpu/types.h
-+++ b/arch/x86/include/asm/fpu/types.h
-@@ -118,7 +118,7 @@ enum xfeature {
- 	XFEATURE_PKRU,
- 	XFEATURE_PASID,
- 	XFEATURE_CET_USER,
--	XFEATURE_CET_KERNEL_UNUSED,
-+	XFEATURE_CET_KERNEL,
- 	XFEATURE_RSRVD_COMP_13,
- 	XFEATURE_RSRVD_COMP_14,
- 	XFEATURE_LBR,
-@@ -142,7 +142,7 @@ enum xfeature {
- #define XFEATURE_MASK_PKRU		(1 << XFEATURE_PKRU)
- #define XFEATURE_MASK_PASID		(1 << XFEATURE_PASID)
- #define XFEATURE_MASK_CET_USER		(1 << XFEATURE_CET_USER)
--#define XFEATURE_MASK_CET_KERNEL	(1 << XFEATURE_CET_KERNEL_UNUSED)
-+#define XFEATURE_MASK_CET_KERNEL	(1 << XFEATURE_CET_KERNEL)
- #define XFEATURE_MASK_LBR		(1 << XFEATURE_LBR)
- #define XFEATURE_MASK_XTILE_CFG		(1 << XFEATURE_XTILE_CFG)
- #define XFEATURE_MASK_XTILE_DATA	(1 << XFEATURE_XTILE_DATA)
-@@ -268,6 +268,16 @@ struct cet_user_state {
- 	u64 user_ssp;
- };
- 
-+/*
-+ * State component 12 is Control-flow Enforcement supervisor states.
-+ * This state includes SSP pointers for privilege levels 0 through 2.
-+ */
-+struct cet_supervisor_state {
-+	u64 pl0_ssp;
-+	u64 pl1_ssp;
-+	u64 pl2_ssp;
-+} __packed;
-+
- /*
-  * State component 15: Architectural LBR configuration state.
-  * The size of Arch LBR state depends on the number of LBRs (lbr_depth).
-diff --git a/arch/x86/include/asm/fpu/xstate.h b/arch/x86/include/asm/fpu/xstate.h
-index a3cd25453f94..7a7dc9d56027 100644
---- a/arch/x86/include/asm/fpu/xstate.h
-+++ b/arch/x86/include/asm/fpu/xstate.h
-@@ -47,7 +47,7 @@
- #define XFEATURE_MASK_USER_DYNAMIC	XFEATURE_MASK_XTILE_DATA
- 
- /* Supervisor features which are enabled only in guest FPUs */
--#define XFEATURE_MASK_GUEST_SUPERVISOR	0
-+#define XFEATURE_MASK_GUEST_SUPERVISOR	XFEATURE_MASK_CET_KERNEL
- 
- /* All currently supported supervisor features */
- #define XFEATURE_MASK_SUPERVISOR_SUPPORTED (XFEATURE_MASK_PASID | \
-@@ -79,8 +79,7 @@
-  * Unsupported supervisor features. When a supervisor feature in this mask is
-  * supported in the future, move it to the supported supervisor feature mask.
-  */
--#define XFEATURE_MASK_SUPERVISOR_UNSUPPORTED (XFEATURE_MASK_PT | \
--					      XFEATURE_MASK_CET_KERNEL)
-+#define XFEATURE_MASK_SUPERVISOR_UNSUPPORTED (XFEATURE_MASK_PT)
- 
- /* All supervisor states including supported and unsupported states. */
- #define XFEATURE_MASK_SUPERVISOR_ALL (XFEATURE_MASK_SUPERVISOR_SUPPORTED | \
-diff --git a/arch/x86/kernel/fpu/xstate.c b/arch/x86/kernel/fpu/xstate.c
-index f5eb3e84c3dc..bcccb0977809 100644
---- a/arch/x86/kernel/fpu/xstate.c
-+++ b/arch/x86/kernel/fpu/xstate.c
-@@ -56,7 +56,7 @@ static const char *xfeature_names[] =
- 	"Protection Keys User registers",
- 	"PASID state",
- 	"Control-flow User registers",
--	"Control-flow Kernel registers (unused)",
-+	"Control-flow Kernel registers (KVM only)",
- 	"unknown xstate feature",
- 	"unknown xstate feature",
- 	"unknown xstate feature",
-@@ -80,6 +80,7 @@ static unsigned short xsave_cpuid_features[] __initdata = {
- 	[XFEATURE_PKRU]				= X86_FEATURE_OSPKE,
- 	[XFEATURE_PASID]			= X86_FEATURE_ENQCMD,
- 	[XFEATURE_CET_USER]			= X86_FEATURE_SHSTK,
-+	[XFEATURE_CET_KERNEL]			= X86_FEATURE_SHSTK,
- 	[XFEATURE_XTILE_CFG]			= X86_FEATURE_AMX_TILE,
- 	[XFEATURE_XTILE_DATA]			= X86_FEATURE_AMX_TILE,
- 	[XFEATURE_APX]				= X86_FEATURE_APX,
-@@ -371,6 +372,7 @@ static __init void os_xrstor_booting(struct xregs_state *xstate)
- 	 XFEATURE_MASK_BNDCSR |			\
- 	 XFEATURE_MASK_PASID |			\
- 	 XFEATURE_MASK_CET_USER |		\
-+	 XFEATURE_MASK_CET_KERNEL |		\
- 	 XFEATURE_MASK_XTILE |			\
- 	 XFEATURE_MASK_APX)
- 
-@@ -572,6 +574,7 @@ static bool __init check_xstate_against_struct(int nr)
- 	case XFEATURE_PASID:	  return XCHECK_SZ(sz, nr, struct ia32_pasid_state);
- 	case XFEATURE_XTILE_CFG:  return XCHECK_SZ(sz, nr, struct xtile_cfg);
- 	case XFEATURE_CET_USER:	  return XCHECK_SZ(sz, nr, struct cet_user_state);
-+	case XFEATURE_CET_KERNEL: return XCHECK_SZ(sz, nr, struct cet_supervisor_state);
- 	case XFEATURE_APX:        return XCHECK_SZ(sz, nr, struct apx_state);
- 	case XFEATURE_XTILE_DATA: check_xtile_data_against_struct(sz); return true;
- 	default:
--- 
-2.47.1
-
+Best regards,
+Krzysztof
