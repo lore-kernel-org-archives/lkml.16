@@ -1,95 +1,132 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A384C7DA73;
-	Thu, 22 May 2025 16:19:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8689C29A33D;
+	Thu, 22 May 2025 16:19:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747930771; cv=none; b=NAaZaE+fScSAC/OXRVMwfBqF7zs6XOddsoYmlIILg5rZ/3k4yqVprqt1mPKj3nRgMMnRLiBW8FA6NMxkVyR9GzRnlN3D1snXTXHTrPK389SpzK6Iyi0Y7QP244f4VnldJfSM2m6UimWHRAR1rgiTJbxWRM9xqLEesktxE0UvmYU=
+	t=1747930773; cv=none; b=SF7W6BL/Ueq41R+I9dU7j/GNUvan5lnxN76xADveGuH81ReQ+PcbwcYMQVNo4SfXFsErE5WXtubLJoFUrZch7qw0otFJ6jPjs7fwsCrBFGfPI0mZa2v+ybh0nX7/r3mOYdkzoFp5MwntxkEphS4YzwJWrEA/JxuatZEK2BgfuI0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747930771; c=relaxed/simple;
-	bh=iBE7Lob++OOfoLrW8v5UQ4fc6DSc6z/13VLQ6i+h49Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PJ4vEijIG2SYI6w3fEyyQV98VbPkyYD3tdqguY4X6Mn1qQAABII5bn9WXtwrNDpSxRLsJD+SyikNetbRYEpmLt2Fc82UFD3jxQwEPrGuGXFWg6a/S4qO5LS711cO1OLW67dAWaJ4Sge4fuUciztmG8/KPhngBxXOLsbdtHkHJMU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=QSiK299A; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1747930773; c=relaxed/simple;
+	bh=5sGsWn9w8s+oMgEYou4FZnNBF76aTQSa8acdMWwrMmw=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=qQYGK8KRw41dcHqrlFIZsG/LVKVBJgGun0J6kV3BEOgM3lof0OXHrbOcKbr+AFFZuducm/+ft+hPRe5ZuRnTdYOkzu/BbrkXOmvFUaXz9EEdBm8ZJFtpWFQvMbRmNjI9ZqAyndsWZBx9ekM7t/7J95osxNSnZB5IuYQp7Jdth2s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y4evEDLK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="QSiK299A"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=xW2yJXrDkikvHHO+re2mbxIzKOAy7tNs68ZEuANiRbo=; b=QSiK299AFsqBJlUww7GUw0Xbav
-	DFIs2FP+PpruzGhrbynwbH4dpD8UNSvZZzuumJad5A4OK0SbjGSoNalO9pTsXp5Isa35noZ76C9UX
-	7T2t8YnDsfzQIqH1KeC4XDSkOtQdpKmQWG9Sqa+O2VHaCAFSYSS1EPgNy+V+HTDSFmr4=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1uI8dV-00DVwB-N0; Thu, 22 May 2025 18:19:13 +0200
-Date: Thu, 22 May 2025 18:19:13 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Wei Fang <wei.fang@nxp.com>
-Cc: "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
-	"linux@armlinux.org.uk" <linux@armlinux.org.uk>,
-	"davem@davemloft.net" <davem@davemloft.net>,
-	"edumazet@google.com" <edumazet@google.com>,
-	"kuba@kernel.org" <kuba@kernel.org>,
-	"pabeni@redhat.com" <pabeni@redhat.com>,
-	"f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-	"xiaolei.wang@windriver.com" <xiaolei.wang@windriver.com>,
-	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"imx@lists.linux.dev" <imx@lists.linux.dev>
-Subject: Re: [PATCH net] net: phy: clear phydev->devlink when the link is
- deleted
-Message-ID: <d8cb2a8f-af3d-4042-96a3-a762df1876a9@lunn.ch>
-References: <20250522064253.3653521-1-wei.fang@nxp.com>
- <f19659d4-444c-4f44-9bff-4c83a8c5a7e9@lunn.ch>
- <PAXPR04MB851054C5E1049B5361A46C108899A@PAXPR04MB8510.eurprd04.prod.outlook.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y4evEDLK"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id E7D17C4CEEA;
+	Thu, 22 May 2025 16:19:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747930773;
+	bh=5sGsWn9w8s+oMgEYou4FZnNBF76aTQSa8acdMWwrMmw=;
+	h=From:Date:Subject:To:Cc:Reply-To:From;
+	b=Y4evEDLKmUbymXxPSdPalM8Gh0KqQs+91ELJfJyzSyINWB0ZhZRytcCMW8LAAzHvU
+	 flD067BB/x2fAX9aiOvYWcSWunn4zR6khsZMYMlllDA0rTZTphzKx0QDrILP9e3VFn
+	 j2YzyVnpHUxEuAfKO4V08lfDz4w9WPNEWd/+UG4Ehiv2TXiZ/Q1zAwTip5/ieHJDU9
+	 hYDYkrk05vHxo+g0wWRCMSDSEAJ1be/whuvOKzWiGT4t9Qb1AO0uNpaQ79O9YZ9wJC
+	 c3a5YsU5/imkQeqysV52UP+UW2sgcIcDCr3urJj3f9nhv2w+Nep+T3KAKGypmCngJJ
+	 Vu1W6Bx9OoByA==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1B37C54E90;
+	Thu, 22 May 2025 16:19:32 +0000 (UTC)
+From: Alejandro Enrique via B4 Relay <devnull+alejandroe1.geotab.com@kernel.org>
+Date: Thu, 22 May 2025 18:18:53 +0200
+Subject: [PATCH v2] dt-bindings: gnss: add u-blox,neo-9m compatible
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <PAXPR04MB851054C5E1049B5361A46C108899A@PAXPR04MB8510.eurprd04.prod.outlook.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250522-ubx-m9-v2-1-6ecd470527bc@geotab.com>
+X-B4-Tracking: v=1; b=H4sIAGxOL2gC/2XMSw6DIBSF4a2YOy4NL6N05D4aB4AXZaA0YImNY
+ e+lTjv8T06+ExJGjwkezQkRs08+bDX4rQG76G1G4qfawClvacskeZuDrIp0dHLUTb2VvYF6fkV
+ 0/rig51h78WkP8XO5mf3WPyIzQglTQnVCSyesHmYMuzZ3G1YYSylfcOKvU50AAAA=
+X-Change-ID: 20250514-ubx-m9-70df0fd8c48b
+To: Johan Hovold <johan@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+ Alejandro Enrique <alejandroe1@geotab.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1747930772; l=2006;
+ i=alejandroe1@geotab.com; s=20250514; h=from:subject:message-id;
+ bh=t0h9nv36tZoG6bCZ31dIAWWzsXZFdgQLmDpUFpX3zjs=;
+ b=EhlRZpfjBQLxmdyD8lQdg6w8IHy+r4AlzNb+4MatuJ3P0EVtYYbxqRBPgFdJfFxnOxavcDWEH
+ hmJj0sr1djpDg9WMCqanO1aja/WbhQUJt7KJ4MT1i+xqUdV6lcE6w0l
+X-Developer-Key: i=alejandroe1@geotab.com; a=ed25519;
+ pk=xzHMPbqczL/tMsjXr26iLoHwIzLveHVnT+GIU4p1k38=
+X-Endpoint-Received: by B4 Relay for alejandroe1@geotab.com/20250514 with
+ auth_id=404
+X-Original-From: Alejandro Enrique <alejandroe1@geotab.com>
+Reply-To: alejandroe1@geotab.com
 
-On Thu, May 22, 2025 at 01:57:20PM +0000, Wei Fang wrote:
-> > On Thu, May 22, 2025 at 02:42:53PM +0800, Wei Fang wrote:
-> > > The phydev->devlink is not cleared when the link is deleted, so calling
-> > > phy_detach() again will cause a crash.
-> > 
-> > I would say crashing is correct. You have done something you should
-> > not do, and the crash helped you find it. phy_attach() and
-> > phy_detach() should always be in pairs.
-> > 
-> 
-> phy_attach() and phy_detach() are called in pairs in my case. When
-> re-enabling the network port, if an error occurs in the phy_attach_direct(),
-> For example, if phy_init_hw() returns an error, it will jump to the error
-> path and call phy_detach(). Because phy_detach() did not clear the
-> phydev->devlink pointer when the network port was disabled,
-> device_link_del() will access a NULL pointer and cause a crash. And this
-> crash may cause the CPU to hang. I don't think it is reasonable to cause
-> the CPU to hang.
+From: Alejandro Enrique <alejandroe1@geotab.com>
 
-Ah, now i get it...
+Add compatible for u-blox NEO-9M GPS module.
 
-phy_attach_direct() runs, but fails early, before the call to:
+Signed-off-by: Alejandro Enrique <alejandroe1@geotab.com>
+---
+This series just add the compatible string for u-blox NEO-9M module,
+using neo-m8 as fallback. I have tested the driver with such a module
+and it is working fine.
+---
+Changes in v2:
+- Modify the binding to allow falling back to neo-m8
+- Remove compatible string from u-blox driver
+- Link to v1: https://lore.kernel.org/r/20250514-ubx-m9-v1-0-193973a4f3ca@geotab.com
+---
+ Documentation/devicetree/bindings/gnss/u-blox,neo-6m.yaml | 25 +++++++++++++++++++++----
+ 1 file changed, 21 insertions(+), 4 deletions(-)
 
-phydev->devlink = device_link_add(dev->dev.parent, &phydev->mdio.dev,
-						  DL_FLAG_PM_RUNTIME | DL_FLAG_STATELESS);
-
-So it has its old value, from a previous attach/detach cycle. At the
-error: label, it calls phy_detach(phydev), which does a
-device_link_del(), using the old value...
-
-Please improve your changelog message, add more details.
-
-    Andrew
+diff --git a/Documentation/devicetree/bindings/gnss/u-blox,neo-6m.yaml b/Documentation/devicetree/bindings/gnss/u-blox,neo-6m.yaml
+index 7d4b6d49e5eea2201ac05ba6d54b1c1721172f26..215f8931ca08c1b0954fc2f70eabe3ec8d89edea 100644
+--- a/Documentation/devicetree/bindings/gnss/u-blox,neo-6m.yaml
++++ b/Documentation/devicetree/bindings/gnss/u-blox,neo-6m.yaml
+@@ -18,10 +18,16 @@ description: >
+ 
+ properties:
+   compatible:
+-    enum:
+-      - u-blox,neo-6m
+-      - u-blox,neo-8
+-      - u-blox,neo-m8
++    oneOf:
++      - items:
++          - enum:
++              - u-blox,neo-6m
++              - u-blox,neo-8
++              - u-blox,neo-m8
++
++      - items:
++          - const: u-blox,neo-m9
++          - const: u-blox,neo-m8
+ 
+   reg:
+     description: >
+@@ -63,3 +69,14 @@ examples:
+             reset-gpios = <&gpio 1 GPIO_ACTIVE_LOW>;
+         };
+     };
++  - |
++    #include <dt-bindings/gpio/gpio.h>
++
++    serial {
++        gnss {
++            compatible = "u-blox,neo-m9", "u-blox,neo-m8";
++            v-bckp-supply = <&gnss_v_bckp_reg>;
++            vcc-supply = <&gnss_vcc_reg>;
++            reset-gpios = <&gpio 1 GPIO_ACTIVE_LOW>;
++        };
++    };
 
 ---
-pw-bot: cr
+base-commit: 9c32cda43eb78f78c73aee4aa344b777714e259b
+change-id: 20250514-ubx-m9-70df0fd8c48b
+
+Best regards,
+-- 
+Alejandro Enrique <alejandroe1@geotab.com>
+
+
