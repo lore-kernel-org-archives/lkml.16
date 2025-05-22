@@ -1,33 +1,40 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86CAD186E40;
-	Thu, 22 May 2025 17:37:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42F9E18C002
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 17:37:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747935423; cv=none; b=GFp636fB6ylDEsGSv4d8pHMAxZZdNmlYzLBFTqpte3AVYNW/ka3nxQf3rHI7M/lpu8V9go/C8CmBpZEHXqYfj9feCSlxbJkbG8J3faZeIe/i6QbrNowvldeRY7f9U5CkcRBlMKgi/q1oos/12e8eHj83sMQRCr20HcTcCquNJfk=
+	t=1747935456; cv=none; b=kA5Ado0FBSkFqmvotvBYH9uvKFPTCHJ6JfbJH4lo1HAgAzXgy2OaWxxj4axP1GitkgV31sVYSiLVHbX7kdgsRIvdVTpFfiUW6T/1FgGjFmoeXxKKhpd15erxCgTciqS2UDWxTf3mLD/cJGyQK40Dps/mkYY7mZ85PJPt1rM3xKI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747935423; c=relaxed/simple;
-	bh=OxfIKO+QmYGDrLtTPvYdL9CdEMbwd0LFwi13XTcxGTU=;
+	s=arc-20240116; t=1747935456; c=relaxed/simple;
+	bh=krxuNyKUAU7m4MQbPEtQDu9z5gQvZzRePFIerYLoPe8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Drs7LR/n6odfrqXrCXTiO9Eu3JNLZaSS5KN1IHhp6tkbnPSRxvcmZSw9MDpV5ay5z0/fL53LNIHq5SKkQAbOxYg5npw63/tfsbvI/yMQkW3SeRkVgVXoHSVfglDF1P3LsS0nfar16ozl4Nl5FrGPc0lgdyp4g2QZvmS/oirOMRM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s001fONv; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=HqEqKC1U8r0j7cyFW++FI4BNkJxL8o5UO70mywsZIp0mOEuXWMS5nbnsonvPKQZoassChX/jesSZdZnn4QVAsUgGyR+905ec69TyQzxHK/YyId3JFzd54xZFQ9nKJm9HwYMPz2qSK9F8XsvEaX1/6zQuZsX9yUicVCjQMzj3a5I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=O0peat//; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s001fONv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21631C4CEE4;
-	Thu, 22 May 2025 17:37:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747935423;
-	bh=OxfIKO+QmYGDrLtTPvYdL9CdEMbwd0LFwi13XTcxGTU=;
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="O0peat//"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1747935452;
+	bh=krxuNyKUAU7m4MQbPEtQDu9z5gQvZzRePFIerYLoPe8=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=s001fONvFjucklurnjWWNgw5XVyeNWrJ8eQqZUxN/OFM+gBsAqGyFcPFFPUiR0MTe
-	 6N2QuErbR4zs9jg8Twq4zVYWi84tcMPEeszFNQFQb60BRhU7WqJjwhLQdkr4MkCu3q
-	 Id4Ss3CpA6erkcmQEqjBq/WQnlpp+uIpXB8jwe/NOLGx65AJ3bUVb/Uc3Win61c/GY
-	 BduMepQoCGpCVB04BNNag7dklrpF1YTJ4tKFzlVDTmhHP+G4cfeBUfchYydA8p7b3z
-	 FL2Sk+Abbmfc+5ZPAaw9QOqmz+Vb54MS4qsLnrNTzk+GDZLBMGUGn/Zv61VWenTj/w
-	 2JWvxjBXJCstg==
-Message-ID: <0ae08e9c-49a9-417d-b7e3-57383674b94d@kernel.org>
-Date: Thu, 22 May 2025 19:36:59 +0200
+	b=O0peat//tuaACDXb90elhk0XMExs5yzu984W7bcQoiQlKrjzqd7UBj6ysgqVa00oz
+	 PS3Udl5RTQ+8RSswTBk9d32IVNkzpdbDCUKkbAitoB7O7hyFXbhrcMDHulDcd3BAjP
+	 ZQmz1BFr24ooRaUzVoNr1PG/cKF/IEGE87ACI4CZL0WBYv8lcw1qmYd5Jx7q1uw43z
+	 vOR2mcVzFT5AC3w0eiZo5XN8MKEnjBI/3LGanEp2X6GB4MNL7bSwt6gnEe+KNQhUCh
+	 yZlAmGEZvyFbedGcf75FiWDZDgJrFezOU09CPwbrzZFpvx6m8FWV+MQZUCrwLqPUXD
+	 ehVF/rjmdY2jA==
+Received: from [192.168.1.90] (unknown [82.76.59.134])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
+	(No client certificate requested)
+	(Authenticated sender: cristicc)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id C32B717E157A;
+	Thu, 22 May 2025 19:37:31 +0200 (CEST)
+Message-ID: <2a8554af-5b5b-4402-a065-a3e765f9ca4f@collabora.com>
+Date: Thu, 22 May 2025 20:37:31 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,79 +42,124 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/2] dt-bindings: gnss: u-blox: add "safeboot-gpios"
- binding
-To: alejandroe1@geotab.com, Johan Hovold <johan@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250522-ubx-safeboot-v2-0-08c22378b8c9@geotab.com>
- <20250522-ubx-safeboot-v2-1-08c22378b8c9@geotab.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH v4 23/23] drm/tests: hdmi: Add test for unsupported
+ RGB/YUV420 mode
+To: Maxime Ripard <mripard@kernel.org>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>,
+ Dave Stevenson <dave.stevenson@raspberrypi.com>,
+ Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
+ Dmitry Baryshkov <lumag@kernel.org>, kernel@collabora.com,
+ dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+References: <20250425-hdmi-conn-yuv-v4-0-5e55e2aaa3fa@collabora.com>
+ <20250425-hdmi-conn-yuv-v4-23-5e55e2aaa3fa@collabora.com>
+ <20250519-classy-millipede-of-competence-4bb6ad@houat>
+ <a37b4045-0d94-4148-bb1e-fc08104e6173@collabora.com>
+ <20250522-mutant-emu-of-youth-ae70cd@houat>
 Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <20250522-ubx-safeboot-v2-1-08c22378b8c9@geotab.com>
+From: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
+In-Reply-To: <20250522-mutant-emu-of-youth-ae70cd@houat>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 22/05/2025 18:51, Alejandro Enrique via B4 Relay wrote:
-> From: Alejandro Enrique <alejandroe1@geotab.com>
+Hi Maxime,
+
+On 5/22/25 7:16 PM, Maxime Ripard wrote:
+> Hi,
 > 
-> U-Blox 8/M8/M9 chip have a pin to start it in safeboot mode, to be
-> used to recover from situations where the flash content has become
-> corrupted and needs to be restored. Introduce a binding to support
-> this safeboot pin.
+> On Mon, May 19, 2025 at 01:55:10PM +0300, Cristian Ciocaltea wrote:
+>> On 5/19/25 11:42 AM, Maxime Ripard wrote:
+>>> Hi,
+>>>
+>>> On Fri, Apr 25, 2025 at 01:27:14PM +0300, Cristian Ciocaltea wrote:
+>>>> Provide a test to verify that if both driver and screen support RGB and
+>>>> YUV420 formats, drm_atomic_helper_connector_hdmi_check() cannot succeed
+>>>> when trying to set a mode unsupported by the display.
+>>>>
+>>>> Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
+>>>> ---
+>>>>  drivers/gpu/drm/tests/drm_hdmi_state_helper_test.c | 66 ++++++++++++++++++++++
+>>>>  1 file changed, 66 insertions(+)
+>>>>
+>>>> diff --git a/drivers/gpu/drm/tests/drm_hdmi_state_helper_test.c b/drivers/gpu/drm/tests/drm_hdmi_state_helper_test.c
+>>>> index d79084cfb516b69c4244098c0767d604ad02f2c3..6337a1c52b86810c638f446c4995e7ee63dbc084 100644
+>>>> --- a/drivers/gpu/drm/tests/drm_hdmi_state_helper_test.c
+>>>> +++ b/drivers/gpu/drm/tests/drm_hdmi_state_helper_test.c
+>>>> @@ -1622,6 +1622,71 @@ static void drm_test_check_driver_unsupported_fallback_yuv420(struct kunit *test
+>>>>  	drm_modeset_acquire_fini(&ctx);
+>>>>  }
+>>>>  
+>>>> +/*
+>>>> + * Test that if a driver and screen supports RGB and YUV420 formats, but the
+>>>> + * chosen mode cannot be supported by the screen, we end up with unsuccessful
+>>>> + * fallback attempts.
+>>>> + */
+>>>> +static void drm_test_check_display_unsupported_fallback_rgb_yuv420(struct kunit *test)
+>>>> +{
+>>>> +	struct drm_atomic_helper_connector_hdmi_priv *priv;
+>>>> +	struct drm_modeset_acquire_ctx ctx;
+>>>> +	struct drm_crtc_state *crtc_state;
+>>>> +	struct drm_atomic_state *state;
+>>>> +	struct drm_display_info *info;
+>>>> +	struct drm_display_mode *preferred, *unsupported_mode;
+>>>> +	struct drm_connector *conn;
+>>>> +	struct drm_device *drm;
+>>>> +	struct drm_crtc *crtc;
+>>>> +	int ret;
+>>>> +
+>>>> +	priv = drm_kunit_helper_connector_hdmi_init_with_edid_funcs(test,
+>>>> +				BIT(HDMI_COLORSPACE_RGB) |
+>>>> +				BIT(HDMI_COLORSPACE_YUV420),
+>>>> +				10,
+>>>> +				&dummy_connector_hdmi_funcs,
+>>>> +				test_edid_hdmi_4k_rgb_yuv420_dc_max_340mhz);
+>>>> +	KUNIT_ASSERT_NOT_NULL(test, priv);
+>>>> +
+>>>> +	drm = &priv->drm;
+>>>> +	crtc = priv->crtc;
+>>>> +	conn = &priv->connector;
+>>>> +	info = &conn->display_info;
+>>>> +	KUNIT_ASSERT_TRUE(test, info->is_hdmi);
+>>>> +	KUNIT_ASSERT_TRUE(test, conn->ycbcr_420_allowed);
+>>>> +
+>>>> +	preferred = find_preferred_mode(conn);
+>>>> +	KUNIT_ASSERT_NOT_NULL(test, preferred);
+>>>> +
+>>>> +	unsupported_mode = drm_kunit_display_mode_from_cea_vic(test, drm, 96);
+>>>> +	KUNIT_ASSERT_NOT_NULL(test, unsupported_mode);
+>>>
+>>> I'm not sure what this one is supposed to test. If the mode is
+>>> unsupported by the screen, it will be for both YUV and RGB, right? So
+>>> what are we testing here?
+>>
+>> That would be the case suggested at [1]:
+>>
+>> "We still need to do the same with a driver that supports both, but the
+>> monitor doesn't."
+>>
+>> Should we drop it?
 > 
-> Signed-off-by: Alejandro Enrique <alejandroe1@geotab.com>
-> ---
->  Documentation/devicetree/bindings/gnss/u-blox,neo-6m.yaml | 20 +++++++++++++++
+> Ah, I see. I meant that we should normally end up with YUV420 (so mode
+> is supported by the monitor, but the resolution is too high for RGB and
+> we should pick YUV instead), but the monitor doesn't support it and thus
+> we fail.
 
+If I get it right, to verify this scenario we'd need a new test EDID
+that basically advertises an RGB mode which is not actually supported by
+the screen, i.e. the mode requires a TMDS rate which exceeds the maximum
+supported by the display for any of the available color depths.
 
+But that's not something we should encounter in practice, is it?  I mean
+the EDID would be wrong, as it doesn't match the hardware capabilities.
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Regardless, assuming this is solely for the purpose of testing the
+framework, I will try to come up with a test case.  The only problem
+is generating the EDID - which is a really annoying process, as I've
+already mentioned a while ago [1].  
 
+Hence I'm wondering if we could move on without it for the moment (I'll
+get back to it ASAP).
 
-Best regards,
-Krzysztof
+[1] https://lore.kernel.org/all/8b0a8a7a-456a-487f-853e-5ec3e11129d7@collabora.com/
+
