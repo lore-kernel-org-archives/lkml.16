@@ -1,72 +1,50 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A15228A402
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 15:45:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B11E3299A9F
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 15:45:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747928720; cv=none; b=tymfH7WqbbAAfV7nzaYfKvi/Z4gZGVSRVk/Ds9bj3ZmkzY1+uxWoYcP4/uwk85F2PIUbg3tSm1Pzmu8m+eRAAiJaQWJzAfqcGHVM9ju8XcAxpwpIr3Bpz/yWEf9bx3NSUOEXVrB1kJk0AHecbe1CF/VkvzDZb4/HHuhir5VoIJo=
+	t=1747928723; cv=none; b=Z84/mE5Ev+iogBZ6Ae1EfNJy4uAnlQGAdB40pb/C+0QnUinqDPBVX1Ep574MgkJRuvKWfP07VnN4dSsLFPJdfEUXrW9CRl10491+QkfdgEgYEpWFcBxiQZSi3y3CrfM+4DQ2xyU25VNgDEB0DmaMBqe91JffRCu2x9JV7GvyilY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747928720; c=relaxed/simple;
-	bh=2oo5AEuln8MnpRMZv0SN3H54uiodXBOSQCn4VTiIjJk=;
+	s=arc-20240116; t=1747928723; c=relaxed/simple;
+	bh=/qYcppRBpYfAMUQId28c4hSbMAktMgupaKy7DpXR1I0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qMZOplvJTsJ/HTxvCpRFwXXq6yEc3VFevKp4OHDCJA3y28mr6m5AHMQz+FUffoRH8Vqlvijg0u1h4lD+fEL+Nb5PdGDe8vfnrj9ZhPez9emLxFrRpkeMGQGvRrPFZs38kgr3h3ZU4vRXbRGXJn0Skza7WbHyTTlkH1ywb4OA1O4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=BKg64CKf; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	 In-Reply-To:Content-Type; b=KUVpQjyCM5DeY3LmJku3R8Xjq0GNwPa4ZTG1Xcq4ApmXGN0eZUglL8GQHcJ1Akiq6MSibDUVuys1m3ZAxsFCLfBwiidb50cxGz/+DC9ZzYciWZ7TNuFEvRBcjL+dBWUGcZOqEiudaFz82Wox1hdtY0qDriQ5nrbhb9tLVEQlfPA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=J+S41txV; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="BKg64CKf"
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54M7UlPw021413
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 15:45:18 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	gxqXkbYZFLp5W72JIXRZoPEyHZQry5w4rYue7BdQmmA=; b=BKg64CKfTd1PHlJX
-	BLs02zPUVePYRf8As9ciuR0j4DPlNxF5hlolx/Y7COfBsHTW7I9ky5q8If2ZBh69
-	9xELkVp9iFAzzfxCcVEh5r99L2INffSAikBbUnfCAFLUeqRrMgMx4fKZGmp+G1iV
-	tBxwHLccHwa91MIGGyc9pLe6NbGhr+fY6LRPm1idcLbYzGn/766un+H7fjXofFpE
-	sM4GNMOSkVCpFd7UzvVFZN1TJCfQ34u1oAkrv5DXN4eJbEePZErq8Rl63H6hWvvL
-	nW4VRuL/IeG5etrvIOaoQB7NzOv4yjrRCo8cmg7bx0t9rqNmCdNbYrA9P/uNP2QN
-	odSx+g==
-Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com [209.85.219.71])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46rwf0729w-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 15:45:17 +0000 (GMT)
-Received: by mail-qv1-f71.google.com with SMTP id 6a1803df08f44-6f8b297c78aso17428446d6.0
-        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 08:45:17 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747928716; x=1748533516;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=gxqXkbYZFLp5W72JIXRZoPEyHZQry5w4rYue7BdQmmA=;
-        b=htSagcHSsJp7DDuVo7l26opqWbOFo8a9nEAls6Y8yv5kQdJf0GpQLnV/vfCQT+B2XB
-         6lIxkVsVk+NeoOFsK3z5O0+r3SIQH07PfE6mJqLBI4Xdkwk7fA1rQZ/YBV3cQyPY5wL0
-         jc3cIKCjwgR27mGh5yReTwCX2H1aSpOtZ2bFIfNALyQpNC8GQjzZTxOE+cc/8zdQ2/ic
-         YjXRpCHdgKTnbaHasS/CM6VFG/bUydkYRxBAmWGRCrs7txWh4FObEoHIQvsSogklSlFL
-         CIolvkGVhHmeAkP/J8+M9NyLdoi1FXx2pLAIdDaSY+8WJR3Od+CZnydZRilhPTrQsF0S
-         zdNg==
-X-Forwarded-Encrypted: i=1; AJvYcCWh8d4o5OgkNSGqW99uOqZoSMFVes3hZbjDZmQT8luP3QpEYf5VZSCvS1nZFb8vasT7yYuleAx9FrE2BAU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwxNOVBtcgxvOwgXKuyotXwehQKUPHjg39GzG2/Mqfxq0PFRRye
-	nHg27rbcm/9/QjDvJDdeEA4powUSipvq77zGhO5KB/U/bIJWfgGArNKu/eis/ik7kYwjflm50iW
-	49kbLIlme6noPQRwcUeUkxS0BVMwz4r9A+B4Hu8N3ElpEMDcqYEQloyhrs+2/LvuJga8=
-X-Gm-Gg: ASbGncvhzGSQtLxbNXAZMWXGcc8WaM1ovWsrX8jqk5p9QnSI5cqbbFLUY7W/ILdL5/T
-	N/1/VPvzsyG6JIHwsosVMtiEedbqFfKDrlIZd5Uw698LmR/N0ZWlKkH4Ox5txaqiILTWagMfUM6
-	Y70t6Nn5Abi4i7efYO+LyY5teP9dSNS+21JL0Mp0WdghjAODRO3jh1DKg9JAR2RJRsf3P6RsYZk
-	+krBpbsrJ/RoLkxuF7EabONkNTxhhGxWHtow0RbuuVQ+htoZ94uKM6oVbIOP8nUmoHF8aBog3hI
-	vk/QE/vW7GKfxdcMhsqBtGmEAAnBc1GPSX2FM5xY8iZAFXmbQUS0VOxT8iI6UxBi4w==
-X-Received: by 2002:ad4:5941:0:b0:6f7:d0b9:793b with SMTP id 6a1803df08f44-6f8b0944b8emr130228506d6.8.1747928716283;
-        Thu, 22 May 2025 08:45:16 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEQNmrcRDS0TOey9X0Jcpi53g1AQj/TZ0iGbNkYLDXuyFaDcRqj+aik6BrMWX0FUjzxKOJjlw==
-X-Received: by 2002:ad4:5941:0:b0:6f7:d0b9:793b with SMTP id 6a1803df08f44-6f8b0944b8emr130228236d6.8.1747928715833;
-        Thu, 22 May 2025 08:45:15 -0700 (PDT)
-Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad52d4e8afdsm1101228966b.176.2025.05.22.08.45.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 22 May 2025 08:45:15 -0700 (PDT)
-Message-ID: <85e30c0c-ea77-47da-9fd9-4293c7a78c75@oss.qualcomm.com>
-Date: Thu, 22 May 2025 17:45:12 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="J+S41txV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747928721; x=1779464721;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=/qYcppRBpYfAMUQId28c4hSbMAktMgupaKy7DpXR1I0=;
+  b=J+S41txVVZqPY2iUvRZOs82B6jwM5zICWOeSR3acG9MkCEFLNrAFbHqi
+   jA/hGC2nkEE0l2IGlT63LBHc+L/A1aNthw7k2P78/xE02ltOmSlEg7b08
+   y8t2Xk2YW43bRcZ+GQreN45QOYy5VxKdu3sO/kNbMR8mHhzIJQH8BIl3w
+   AyrH/o9aPfyxoEeWYnL2X/sDga1fLk5a/MnFIipg3ljJvvw5DwGFG+ZMp
+   mqQuYe+by7XvLzXmn6H2y3qHIsNEdWPtJhqGcvCcJQBtknCEJJILJqJDf
+   pZuhk4iej4Q66ddHtVNt+EX9eStyikvyGmM/grmO4Fk7iOcpQ7lkTnQW5
+   Q==;
+X-CSE-ConnectionGUID: SNVCVVc9R1+UOV8RieoxPw==
+X-CSE-MsgGUID: nDCwampaQEy4iPnR+VOnJg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11441"; a="75360508"
+X-IronPort-AV: E=Sophos;i="6.15,306,1739865600"; 
+   d="scan'208";a="75360508"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2025 08:45:20 -0700
+X-CSE-ConnectionGUID: eHiovEBgTCexMMqBnq1gXg==
+X-CSE-MsgGUID: fVxCTN6fRSS0FzSWpoEUQQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,306,1739865600"; 
+   d="scan'208";a="140460059"
+Received: from msatwood-mobl.amr.corp.intel.com (HELO [10.125.109.120]) ([10.125.109.120])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2025 08:45:21 -0700
+Message-ID: <992e880b-0a42-4895-8e2d-0875f4dc1037@intel.com>
+Date: Thu, 22 May 2025 08:45:20 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,100 +52,85 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 3/5] dt-bindings: watchdog: qcom-wdt: Document
- qcom,imem property
-To: Krzysztof Kozlowski <krzk@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
-        Kathiravan Thirumoorthy <kathiravan.thirumoorthy@oss.qualcomm.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck
- <linux@roeck-us.net>,
-        Rajendra Nayak <quic_rjendra@quicinc.com>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org
-References: <20250519-wdt_reset_reason-v4-0-d59d21275c75@oss.qualcomm.com>
- <20250519-wdt_reset_reason-v4-3-d59d21275c75@oss.qualcomm.com>
- <20250520-portable-anteater-of-respect-c7be5c@kuoka>
- <37bd619d-242e-4488-8d45-c2c85612bee9@oss.qualcomm.com>
- <b8003fdf-66a1-47e1-8c78-069f0739ea37@kernel.org>
+Subject: Re: [Bug] "BUG: soft lockup in unwind_get_return_address" in Linux
+ kernel v6.15-rc5
+To: John <john.cs.hey@gmail.com>
+Cc: Josh Poimboeuf <jpoimboe@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>,
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+ "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org
+References: <CAP=Rh=OLo895nvSSXq5Z2Ubzs-eDtAfg6gHDineqF3NEap+rwQ@mail.gmail.com>
+ <8b61a0ec-3d39-43c4-b008-b2a09443773f@intel.com>
+ <CAP=Rh=MON8RSf7dAAFnYvjCgN703LMtEuDA+QU08Hwrf-snR0w@mail.gmail.com>
 Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <b8003fdf-66a1-47e1-8c78-069f0739ea37@kernel.org>
+From: Dave Hansen <dave.hansen@intel.com>
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <CAP=Rh=MON8RSf7dAAFnYvjCgN703LMtEuDA+QU08Hwrf-snR0w@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Proofpoint-GUID: 72KUNrcV1pV3LVb5AnnEvPknbaJEKxN7
-X-Proofpoint-ORIG-GUID: 72KUNrcV1pV3LVb5AnnEvPknbaJEKxN7
-X-Authority-Analysis: v=2.4 cv=ZP3XmW7b c=1 sm=1 tr=0 ts=682f468d cx=c_pps
- a=UgVkIMxJMSkC9lv97toC5g==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
- a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=EUspDBNiAAAA:8 a=3MHuiekdCO7yvOlYeq8A:9
- a=QEXdDO2ut3YA:10 a=1HOtulTD9v-eNWfpl4qZ:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIyMDE2MCBTYWx0ZWRfXwtvU2AGYXSvH
- EueXJsDSjY9xExdmMGELwT0u6nUc6LQNHDHvTYuB8AL9IcslA0QQnr6q0Pu49fY6n8qK55uQJXw
- dieU2WN139ADBNL1XF4wdRANfMJgYocdeFrGVYefPH1WciAsynYmReDlGojvQpvzwZVCjVIOp4C
- jqxO0eWGvnz/gcda/KZchzlZI9ehZwvJlRFnx8M/nAjSOKZVDKYxYgyLWhgmuvIj4/mLMAEe/md
- DJY4Ehg3/uAYY6h1I4WWzI2Xe/OTM0aVyFzfINO0rU5CBGz+w4ra4u9sXb7+ZN/u8mAABIbEkxA
- lQybDyfWGA4Bolk9NYG9no5tqDfw3qb53VKwRB0rnVdHxhoOLKZiqLv79k9sCy3jnc1DzMJOYac
- ORqyszev6uBWAtiKyVd8WZ2s5bo8vsjYbHK9R1yxJ9cml/17Hy5x95gyzkb0upR3W1PWDefI
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-22_07,2025-05-22_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- priorityscore=1501 adultscore=0 mlxlogscore=999 suspectscore=0 bulkscore=0
- impostorscore=0 phishscore=0 spamscore=0 mlxscore=0 lowpriorityscore=0
- clxscore=1015 malwarescore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
- definitions=main-2505220160
 
-On 5/21/25 8:53 AM, Krzysztof Kozlowski wrote:
-> On 20/05/2025 18:00, Konrad Dybcio wrote:
->> On 5/20/25 9:25 AM, Krzysztof Kozlowski wrote:
->>> On Mon, May 19, 2025 at 02:04:03PM GMT, Kathiravan Thirumoorthy wrote:
->>>> Document the "qcom,imem" property for the watchdog device on Qualcomm
->>>> IPQ platforms. Use this property to extract the restart reason from
->>>> IMEM, which is updated by XBL. Populate the watchdog's bootstatus sysFS
->>>> entry with this information, when the system reboots due to a watchdog
->>>> timeout.
->>>>
->>>> Describe this property for the IPQ5424 watchdog device and extend support
->>>> to other targets subsequently.
->>>>
->>>> Signed-off-by: Kathiravan Thirumoorthy <kathiravan.thirumoorthy@oss.qualcomm.com>
->>>> ---
->>>> Changes in v4:
->>>> 	- New patch
->>>> ---
->>>>  .../devicetree/bindings/watchdog/qcom-wdt.yaml       | 20 ++++++++++++++++++++
->>>>  1 file changed, 20 insertions(+)
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/watchdog/qcom-wdt.yaml b/Documentation/devicetree/bindings/watchdog/qcom-wdt.yaml
->>>> index 49e2b807db0bc9d3edfc93ec41ad0df0b74ed032..bbe9b68ff4c8b813744ffd86bb52303943366fa2 100644
->>>> --- a/Documentation/devicetree/bindings/watchdog/qcom-wdt.yaml
->>>> +++ b/Documentation/devicetree/bindings/watchdog/qcom-wdt.yaml
->>>> @@ -81,6 +81,16 @@ properties:
->>>>      minItems: 1
->>>>      maxItems: 5
->>>>  
->>>> +  qcom,imem:
->>>
->>> Shoouldn't this be existing 'sram' property? If IMEM is something
->>> similar to OCMEM, then we already use sram for that.
->>
->> We specifically want a handle to a predefined byte in IMEM, something akin
->> to qcom,4ln-config-sel in
->>
->> Documentation/devicetree/bindings/phy/qcom,sc8280xp-qmp-pcie-phy.yaml
+On 5/22/25 08:30, John wrote:
+> Thank you very much for your prompt reply and kind support. Based on
+> your analysis, I will disable KASAN and attempt to reproduce the crash
+> accordingly.
 > 
-> Nothing stops that with sram. Above example is poor, because it mentions
-> syscon. There is no hardware as syscon. Does not exist. What is IMEM
-> here, what is this relationship?
+> I will keep you updated with any progress. I truly appreciate your
+> time and assistance.
 
-IMEM is indeed a small block of on-die SRAM. In this context, another subsystem
-may write a magic value at a known offset that would correspond to the platform
-having been rebooted by the watchdog. Now why the wdt register is cleared in the
-first place, I have no clue.
+Hi John,
 
-Konrad
+We also tend not to top-post our replies on this mailing list. It's just
+one of out conventions. One way to show appreciation is to do your best
+to follow those conventions.
+
+Also I asked a few more questions:
+
+> Could you tell us a little more about the overall environment here? It
+> seems like you're running syzkaller and just reporting whenever you see
+> a splat. Is that about right? Could you tell us a little more about why
+> you are doing this? What is your goal?
+
+I'd really appreciate if you could speak to some of that as well.
