@@ -1,89 +1,114 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2832C18C932;
-	Thu, 22 May 2025 16:49:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBD5628B503;
+	Thu, 22 May 2025 16:50:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747932596; cv=none; b=bManV6Lw2h0oD/wORAmzxklVQhefw3pn1S4mUHVsBqqSRnKSDcZzSsMAvSyHG5YYDOaNmQZvpGlinBhZ4ADoE3AXC1L+UnzQxtV1lR7dfW23BXDdz4BzVaTxkQbzguuq6GLrmoQWzYO0MIRSm5+bBt0mkNkmKOV5viBwGz3JvDE=
+	t=1747932617; cv=none; b=IHqaI0XWxLofNLhoMcdeg6q2W+H/T+mTwsCqTFm0DUKGGrGtoU6ochIje6lK2IQzGNjZqzdfw3DkbKxRE1IsUFemmLFlxngLR78MYkE4EPwLrTAsUyG0R4+x2dFNdn3ItdzwRypUlY1kcxbELvvJf64kFLeLzHUqEoMZaTPR5cE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747932596; c=relaxed/simple;
-	bh=uSsuvsWmK9ORuTQBOXLOaS8S9bzS1b6Hm6DJ88zHHzQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=RaOHbJP2KJ/N1fSYjIMG40MKR30fk8Htq//zfNEqUSmMDoXsSCYdfLswhUKlqhBul5qMRm5YM2QKdrqmceMBEJmJMTyBPXYnB8GUTAxJ4Vm4dEy8ocvvQvunoVebKBUbSsdArZhE7I3TfSL6Hp7QNWt6U/5HrI85sYofTsUlh+A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gRKBwT+C; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747932617; c=relaxed/simple;
+	bh=WAQaKse2ihBxfu0TJ9aEs4/TLMUkglE0FPdyzXEACyg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ugn534+toqhQRuRAH06ap94NiJ2aBt+i6lXNX0o2265AptKfIFsN6MrSYvRiFrlbjqX3gdYNhPgbEAc86RQvr3R4wGF9yie9t72kcWbqKD4N79XEm8CmL788CtN2ag60tagtPtIhcKuzMbsN5oPhSwrlghXzZ5wLpzsoAUt6sN4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NDMhW3rA; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gRKBwT+C"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33FC5C4CEE4;
-	Thu, 22 May 2025 16:49:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747932595;
-	bh=uSsuvsWmK9ORuTQBOXLOaS8S9bzS1b6Hm6DJ88zHHzQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=gRKBwT+CdogkwLafnrr3J6BYgTdzfnjj+TjiJyNl/22BlxoEtjWRO1Av7IbO9mB+D
-	 nitVbkyeqeqgSORzDTdVCnDyO+E1XDVledNnosQIi4N4cawHKDxOy9nPZ32eErunwk
-	 oXd+MgpMqiko4i9CyK4mjYz2Dh4iNuDI08NFlis0UsBn3qXHsIHlt7YlOx8bxDmM9U
-	 nSO9es6arfRTGpvCWPXRw/BNlL5/Fd5F8Y/ij+a/2fCRXJJQqYZjb1jyumfBZceX/7
-	 n+E9BBaOKUYNsqTiND6Z2kz4GKWnirICmH5FDy+6Dn4fHncRxwHv/Hf3gtOF9fJzfI
-	 24v7BWmc9BsEA==
-Date: Thu, 22 May 2025 09:49:54 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Shiming Cheng <shiming.cheng@mediatek.com>
-Cc: <willemdebruijin.kernel@gmail.com>, <edumazet@google.com>,
- <davem@davemloft.net>, <pabeni@redhat.com>, <matthias.bgg@gmail.com>,
- <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
- <lena.wang@mediatek.com>
-Subject: Re: [PATCH] net: fix udp gso skb_segment after pull from frag_list
-Message-ID: <20250522094954.2f8090ce@kernel.org>
-In-Reply-To: <20250522031835.4395-1-shiming.cheng@mediatek.com>
-References: <20250522031835.4395-1-shiming.cheng@mediatek.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NDMhW3rA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747932615; x=1779468615;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=WAQaKse2ihBxfu0TJ9aEs4/TLMUkglE0FPdyzXEACyg=;
+  b=NDMhW3rAbFiuePF43ilafJA4YtWevh8/3hfTA/q0jyR9Br5ERanu+jeg
+   bb+T40cDLpB2CNLUB3aMz+Qfu/AgRJizyZZ29SlAHgvuR9VOaKnqnkiMs
+   HAK38Rqbq/Vj5yIF94k+35Bx6eke3c6Jp/GpafkMk6hurKz8klNimoedM
+   dWpJDpvZVQTaqlu/PwworLUCXibbKmRGb7GHCAWqyRJ+BzulZw9DBjWWL
+   sKGZF2W2jd2wwgSERNweRrrTBjDKkbisVMullrhxOIM9MR95qkoS+XaHx
+   OaK1x5gl3fIT8KCS3u/tI7YKDKoyepsBDrAcNLCverkf3zpy/o1rCv7RG
+   g==;
+X-CSE-ConnectionGUID: 9ZvJMLx/QLar4Xmhr/mrTA==
+X-CSE-MsgGUID: D3jOHAtBRA6jggFvzo4aag==
+X-IronPort-AV: E=McAfee;i="6700,10204,11441"; a="53783824"
+X-IronPort-AV: E=Sophos;i="6.15,306,1739865600"; 
+   d="scan'208";a="53783824"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2025 09:50:14 -0700
+X-CSE-ConnectionGUID: k2um+OxgQP2XgqQbU3n+og==
+X-CSE-MsgGUID: BSIuWrpQQNafNT2SQQcBPQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,306,1739865600"; 
+   d="scan'208";a="145550047"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by fmviesa005.fm.intel.com with ESMTP; 22 May 2025 09:50:05 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uI97L-000PWq-2Q;
+	Thu, 22 May 2025 16:50:03 +0000
+Date: Fri, 23 May 2025 00:49:07 +0800
+From: kernel test robot <lkp@intel.com>
+To: Jens Wiklander <jens.wiklander@linaro.org>,
+	linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+	dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
+	op-tee@lists.trustedfirmware.org,
+	linux-arm-kernel@lists.infradead.org
+Cc: oe-kbuild-all@lists.linux.dev, Olivier Masse <olivier.masse@nxp.com>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Yong Wu <yong.wu@mediatek.com>,
+	Sumit Semwal <sumit.semwal@linaro.org>,
+	Benjamin Gaignard <benjamin.gaignard@collabora.com>,
+	Brian Starkey <Brian.Starkey@arm.com>,
+	John Stultz <jstultz@google.com>,
+	"T . J . Mercier" <tjmercier@google.com>,
+	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+	Sumit Garg <sumit.garg@kernel.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	azarrabi@qti.qualcomm.com, Simona Vetter <simona.vetter@ffwll.ch>,
+	Daniel Stone <daniel@fooishbar.org>,
+	Rouven Czerwinski <rouven.czerwinski@linaro.org>,
+	Jens Wiklander <jens.wiklander@linaro.org>
+Subject: Re: [PATCH v9 6/9] tee: add tee_shm_alloc_dma_mem()
+Message-ID: <202505230242.8jtn9m5R-lkp@intel.com>
+References: <20250520152436.474778-7-jens.wiklander@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250520152436.474778-7-jens.wiklander@linaro.org>
 
-On Thu, 22 May 2025 11:18:04 +0800 Shiming Cheng wrote:
->     Detect invalid geometry due to pull from frag_list, and pass to
->     regular skb_segment. if only part of the fraglist payload is pulled
->     into head_skb, When splitting packets in the skb_segment function,
->     it will always cause exception as below.
-> 
->     Valid SKB_GSO_FRAGLIST skbs
->     - consist of two or more segments
->     - the head_skb holds the protocol headers plus first gso_size
->     - one or more frag_list skbs hold exactly one segment
->     - all but the last must be gso_size
-> 
->     Optional datapath hooks such as NAT and BPF (bpf_skb_pull_data) can
->     modify fraglist skbs, breaking these invariants.
-> 
->     In extreme cases they pull one part of data into skb linear. For UDP,
->     this  causes three payloads with lengths of (11,11,10) bytes were
->     pulled tail to become (12,10,10) bytes.
-> 
->     When splitting packets in the skb_segment function, the first two
->     packets of (11,11) bytes are split using skb_copy_bits. But when
->     the last packet of 10 bytes is split, because hsize becomes nagative,
->     it enters the skb_clone process instead of continuing to use
->     skb_copy_bits. In fact, the data for skb_clone has already been
->     copied into the second packet.
-> 
->     when hsize < 0,  the payload of the fraglist has already been copied
->     (with skb_copy_bits), so there is no need to enter skb_clone to
->     process this packet. Instead, continue using skb_copy_bits to process
->     the next packet.
+Hi Jens,
 
-nit: please un-indent the text, you can keep the stack trace indented
-but the commit message explanation should not be. And if you can
-run the stack trace thru decode_stacktrace to add source code
-references.
+kernel test robot noticed the following build errors:
 
-This patch seems to be causing regressions for SCTP, see:
-https://lore.kernel.org/all/aC82JEehNShMjW8-@strlen.de/
-If you send a v2 please make sure you add test cases to
-net/core/net_test.c for both the geometry you're trying to fix,
-and the geometry you got wrong in v1.
+[auto build test ERROR on b4432656b36e5cc1d50a1f2dc15357543add530e]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Jens-Wiklander/optee-sync-secure-world-ABI-headers/20250520-232546
+base:   b4432656b36e5cc1d50a1f2dc15357543add530e
+patch link:    https://lore.kernel.org/r/20250520152436.474778-7-jens.wiklander%40linaro.org
+patch subject: [PATCH v9 6/9] tee: add tee_shm_alloc_dma_mem()
+config: um-randconfig-r123-20250522 (https://download.01.org/0day-ci/archive/20250523/202505230242.8jtn9m5R-lkp@intel.com/config)
+compiler: clang version 16.0.6 (https://github.com/llvm/llvm-project 7cbf1a2591520c2491aa35339f227775f4d3adf6)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250523/202505230242.8jtn9m5R-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202505230242.8jtn9m5R-lkp@intel.com/
+
+All errors (new ones prefixed by >>, old ones prefixed by <<):
+
+ERROR: modpost: "memremap" [drivers/tee/tee.ko] undefined!
+ERROR: modpost: "memunmap" [drivers/tee/tee.ko] undefined!
+>> ERROR: modpost: "dma_alloc_pages" [drivers/tee/tee.ko] undefined!
+>> ERROR: modpost: "dma_free_pages" [drivers/tee/tee.ko] undefined!
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
