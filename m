@@ -1,99 +1,92 @@
-Received: from out-181.mta0.migadu.com (out-181.mta0.migadu.com [91.218.175.181])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E35319C554
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 18:02:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22B6319ADBF
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 18:02:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747936932; cv=none; b=aDqspSVXAeVgtku4cJzqLlV4D4i8AXlAMfZVtTvI9DVsTXfwUdj1XTGaYf2HmVW+mETy4oharBQYUWa3gUjAg8rOmZUP5m2hiNbdHtA2BdM5Ot5Q/rCv0CuPkuE6RaXNNyLb7F4MQ8G4V4xxq2W14Lsw58Z0lT5l7Bi+46uuOWk=
+	t=1747936953; cv=none; b=CPNpFjub7BmN6QXiKlF3C40owlkZTvkPG7FCQPbXir3Hke+Gs2ewGQ4gRf9+wBtSUffAHkIFaWbi+S8oi4RVXr6Crr2bA3pBn7s2/cwH0qeqOT0OAPbX0TMKsyTiv9z5oo1Kcgk6HXKt5ZZMXsmoOoMpKizBqAQAOZYIMGqyu5w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747936932; c=relaxed/simple;
-	bh=fU1TDpkM78sBqyAAn65xPosK5fVvZ7Y1pL9QFc9qna8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=oJA/hp19NqIWOTKGx0F5hXfiSPZYHyhmIfsKcTFzNF44j4VvLoufmLonYTMu0XtRkFnnrh4gWslSr+g3BvDkahCkvAcCaVn65BWeUGmJzQKVZUgdBWh3NoM8q1Q1QScOfKP4mYjS6BsMOInPI5cmNStcwV6ieMGjKa2P4v366dM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=qpSD4Ag2; arc=none smtp.client-ip=91.218.175.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1747936953; c=relaxed/simple;
+	bh=FtTssC8i/yaPBgn7kwcosA292EC7udhBOzS1vQS2/C4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gmzCtQQ603kVIMxqFQhf2oX96zYc2WiwbK/qt35TN4eznlIfNhebJuOtuP3aG0fuvSQBGc0kO8L+HMTv2O7VGkiFcamo5Rsg1vQxH+vuDl03kpO6CU7aNBzG8JsHjpRPHWeZALNrJvVh/6E3RbUXmMzRhKDfQNgV3WB9atwY1PE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=I/5JZMx2; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="qpSD4Ag2"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1747936926;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=ddo6/t51Ad7jbh1RDELKsmA+85tSYxxw1JYFqZMDRG0=;
-	b=qpSD4Ag252jeNzMrw9zTEucNN68Txb6+CBaeVOjfgNFG2daUT9aLpuQH5erDSoqWwAS8Nc
-	lsInP/dzY5RrdC+n88bNlQhps5A/JrTKMZmq0tKFIG7fAWgHvPdvpse16enUOtCv77qDPs
-	fRu+xVqhxafjsjyx6w8lCKmKC52J0f4=
-From: Thorsten Blum <thorsten.blum@linux.dev>
-To: Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>,
-	Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-Cc: Thorsten Blum <thorsten.blum@linux.dev>,
-	Takashi Iwai <tiwai@suse.de>,
-	linux-sound@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] ALSA: atmel: Replace deprecated strcpy() with strscpy()
-Date: Thu, 22 May 2025 20:01:09 +0200
-Message-ID: <20250522180111.12144-2-thorsten.blum@linux.dev>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="I/5JZMx2"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747936951; x=1779472951;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=FtTssC8i/yaPBgn7kwcosA292EC7udhBOzS1vQS2/C4=;
+  b=I/5JZMx2mnCuCXr3SUk0RJxdW1rcrzGOs9thVxyezzSLwvFm4SJRGz53
+   +vst0PStpAfzfwvfDU4fx3dZFzkZOmgAYgSMneHB54hpEyT5HHLUNtKQc
+   Yen3yKm+EkAE1PAx5zX1DIv94yBcpd8KwZrwbUCModa7HjJTOy6VFa/hH
+   phtplmjzHtVMT6juruuReyU2FLmAyqAD/qbAWBROLGTtWKAr6oRUBQ9AA
+   WkTbAd5gfc5nxRftTDKoFVuw78djKXtxLZpej5cttiHTUx7/GncChGQ5k
+   f75ZBm/QiFolSVPrvD7cFtyyWGHaq3HEKL6IEmULXzKeyJ6nMU07bY4kw
+   Q==;
+X-CSE-ConnectionGUID: +JBYerk7TGqycWWMyCFX9A==
+X-CSE-MsgGUID: bSDdhDiiTWu+MCMz/mwCpg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11441"; a="37606166"
+X-IronPort-AV: E=Sophos;i="6.15,306,1739865600"; 
+   d="scan'208";a="37606166"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2025 11:02:30 -0700
+X-CSE-ConnectionGUID: L2Q9JkShRpidd3nFlALb9g==
+X-CSE-MsgGUID: 0cexIM52SMmdUmPA8w74HQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,306,1739865600"; 
+   d="scan'208";a="145422261"
+Received: from lindenmc-mobl.amr.corp.intel.com (HELO desk) ([10.125.146.24])
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2025 11:02:30 -0700
+Date: Thu, 22 May 2025 11:02:24 -0700
+From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+To: Borislav Petkov <bp@alien8.de>
+Cc: x86@kernel.org, David Kaplan <david.kaplan@amd.com>,
+	linux-kernel@vger.kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+	Josh Poimboeuf <jpoimboe@kernel.org>
+Subject: Re: [PATCH v2 2/7] x86/retbleed: Simplify the =stuff checks
+Message-ID: <20250522180224.ux4uyexsolnxz47l@desk>
+References: <20250521-eibrs-fix-v2-0-70e2598e932c@linux.intel.com>
+ <20250521-eibrs-fix-v2-2-70e2598e932c@linux.intel.com>
+ <20250522114258.GGaC8NwmKyhKfJmyga@fat_crate.local>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250522114258.GGaC8NwmKyhKfJmyga@fat_crate.local>
 
-strcpy() is deprecated; use strscpy() instead. Use strscpy() to copy the
-long name because there's no string to format with sprintf().
+On Thu, May 22, 2025 at 01:42:58PM +0200, Borislav Petkov wrote:
+> On Wed, May 21, 2025 at 07:44:37PM -0700, Pawan Gupta wrote:
+> > +	if (retbleed_mitigation == RETBLEED_MITIGATION_STUFF &&
+> > +	    spectre_v2_enabled != SPECTRE_V2_RETPOLINE) {
+> > +		pr_err("WARNING: retbleed=stuff depends on spectre_v2=retpoline\n");
+> > +		retbleed_mitigation = RETBLEED_MITIGATION_AUTO;
+> 
+> What would be the next-best thing fallback for this, short of disabling the
+> mitigation?
+> 
+> UNRET, IBPB?
 
-No functional changes intended.
+Next best is IBRS/eIBRS, which also depends on spectre-v2 mitigation. So
+NONE is fine here because the next code block will take care of selecting
+the right mitigation.
 
-Link: https://github.com/KSPP/linux/issues/88
-Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
----
- sound/atmel/ac97c.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+> I would prefer if we look at STUFFing only when SPECTRE_V2_RETPOLINE - i.e.,
+> is it even possible.
 
-diff --git a/sound/atmel/ac97c.c b/sound/atmel/ac97c.c
-index 84e264f335ca..693d48f08b88 100644
---- a/sound/atmel/ac97c.c
-+++ b/sound/atmel/ac97c.c
-@@ -16,6 +16,7 @@
- #include <linux/module.h>
- #include <linux/platform_device.h>
- #include <linux/mutex.h>
-+#include <linux/string.h>
- #include <linux/types.h>
- #include <linux/io.h>
- 
-@@ -589,7 +590,7 @@ static int atmel_ac97c_pcm_new(struct atmel_ac97c *chip)
- 
- 	pcm->private_data = chip;
- 	pcm->info_flags = 0;
--	strcpy(pcm->name, chip->card->shortname);
-+	strscpy(pcm->name, chip->card->shortname);
- 	chip->pcm = pcm;
- 
- 	return 0;
-@@ -748,9 +749,9 @@ static int atmel_ac97c_probe(struct platform_device *pdev)
- 
- 	spin_lock_init(&chip->lock);
- 
--	strcpy(card->driver, "Atmel AC97C");
--	strcpy(card->shortname, "Atmel AC97C");
--	sprintf(card->longname, "Atmel AC97 controller");
-+	strscpy(card->driver, "Atmel AC97C");
-+	strscpy(card->shortname, "Atmel AC97C");
-+	strscpy(card->longname, "Atmel AC97 controller");
- 
- 	chip->card = card;
- 	chip->pclk = pclk;
--- 
-2.49.0
+retbleed_update_mitigation() is the earliest we know that stuffing is
+possible (when spectre-v2 has selected the mitigation).
 
+> If not, we fallback to another mitigation which is probably more expensive but
+> it is better than NONE...
+
+Covered above.
