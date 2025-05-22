@@ -1,184 +1,276 @@
-Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2152E28FABE;
-	Thu, 22 May 2025 15:22:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B98D2980AC;
+	Thu, 22 May 2025 15:23:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747927383; cv=none; b=O6wj/ESOmN2aV1rWFUsKs47W9LbcEfQ0e6JMTqT95WaVjIQ7kJO7wl2MMPoYDC0Y6xsHPKc6bEPEkI+4tf1WhATWijAlqdLTIzbePRx2ta0Bvd7EDNXWzlNv+/KpPcBaRB0V3Ydy6X3SK1wEk7gyQo9q7HKJn0SaIrRoz5OkQ/U=
+	t=1747927400; cv=none; b=ZwSG7VmnYAm7YFhawoYgr6bX6dAfv7B0swk2ui+SeiDtRP18kibJ3pkUChHdKFBsZgqm55CM6qz6WEQsECnOEDUJQ9Fknk3V3q2PbHbhAbVOgO+KDTEoW87b0+k2vVh/isDo0nxNA6uoG8U7QW/IKMkGEH2SVieNoOrlkXjaYS4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747927383; c=relaxed/simple;
-	bh=Z39mFiHe4FSHROfQltUU2PWVvOvcQNlcHdKF6TnEg6k=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uW3uG7U46PSNBz+7vZEpBG1VmHTYWl4FlLcTCbXzFt2z/KsxB5iSVevIIvXMOCkondSPY5/YugTLKiy3lk31pW8jU8cUmIW9dTa9YZRtWe2iJ4vW2MNEZWD+ILXO0JL40vt+fmmiFjXq/WOsxO4lNOCm0tRa9fZ6lypNrlYyzNg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=Nkpd+fdF; arc=none smtp.client-ip=213.97.179.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	s=arc-20240116; t=1747927400; c=relaxed/simple;
+	bh=ZcEAi8N7o1JrL4hd+5iMP2Mm6L5tIGlyNxSrj79fft8=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=M39PQ2PxCwoCVQkgOzYu0dNu5e5qRY5UhnlW8+ermXKV2lwVeP/Fl1XZwpqal6olVZlj5nGxkux5Z7Bvs4rfNarbFzqdwC0Z9yBo51/qa3SOOYtFaZoqvGm5mAFb+vDSkQyiofwgIn8q5+EXdFXjubzdpGw6JcywRVVi6bjGZMo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fFi/PAmm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="Nkpd+fdF"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=cy7weZmQcSspeMGvA0ENQABRH5GVirqaafkBbEHcF9c=; b=Nkpd+fdFke95SPQFZa+TRQp9p1
-	Lqf84nzLXv5bjDiKpiAnHPt3UMWS9Rf3r0DZ705NLivO3FzjcNp0oqfjWaaqH5jv8PqfJchCAfGtj
-	NJ63aumgjV0a1UbfmXfPzgqpe1Qnz7xKYSV+sTA0skJKQizxH43OfhneYQC4eRokeuhiMx+pMRWAG
-	iLUWM2ETM5UoTVQN2K9ohyz9E+KITpZ+Fz/LheMPSPeyPWdt089rttq1IPtcTHC5wsyGe5G62AvpO
-	8kFmDneiJBX/0sAnQDexbMvLbnh53Z4eREgrPTyMYspj+xGGGumgSIYbeWvHhzA2NL1M8gV9dLOOR
-	j+AtWpCw==;
-Received: from [191.204.192.64] (helo=[192.168.15.100])
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-	id 1uI7kv-00Bm7a-Ei; Thu, 22 May 2025 17:22:49 +0200
-Message-ID: <c555a382-fd74-4d9b-ab3e-995049d2947f@igalia.com>
-Date: Thu, 22 May 2025 12:22:44 -0300
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fFi/PAmm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15A21C4CEE4;
+	Thu, 22 May 2025 15:23:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747927399;
+	bh=ZcEAi8N7o1JrL4hd+5iMP2Mm6L5tIGlyNxSrj79fft8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=fFi/PAmm++2X+sP8ecDZdZ33Tc7fhCyH4T63JfARNbwieLU71Kuu1YjIzpsmO5Vvs
+	 8fEipaiM3oH6eZn+0KzQMDm6kzL1lPPF5yFdBj1cVGFjXSnBncF4A5aa/ZqmNBzRJK
+	 GX8ePMslOpmRDvheAD7cK9BQTFgp38pDAeGdVU4agy0qZG4H2DUnj10d7clPIlG6jz
+	 L6S1+Z5mHyUFPf1wFRnbueGAnjCrXqGkfeQQcIg8O/cIFUsftov5dlUnbmdb//hOtp
+	 lCS4t5uyX3F4m/b6kq5exRMF2zf2NNPuvuAtLq4EfCvouHLEGUpr91BoOn8OO0mzci
+	 SpGX0BAnCMIlg==
+Date: Fri, 23 May 2025 00:23:17 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] tracing: ring_buffer: Rewind persistent ring buffer
+ when reboot
+Message-Id: <20250523002317.b516bea02ab2712a84bc4370@kernel.org>
+In-Reply-To: <20250521191947.3f800c34@gandalf.local.home>
+References: <174730775661.3893490.10420015749079085314.stgit@mhiramat.tok.corp.google.com>
+	<20250521145128.3a776466@gandalf.local.home>
+	<20250521191947.3f800c34@gandalf.local.home>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] ovl: Allow mount options to be parsed on remount
-To: Amir Goldstein <amir73il@gmail.com>, Karel Zak <kzak@redhat.com>
-Cc: Christian Brauner <brauner@kernel.org>, Miklos Szeredi
- <miklos@szeredi.hu>, linux-unionfs@vger.kernel.org,
- linux-kernel@vger.kernel.org, kernel-dev@igalia.com,
- linux-fsdevel@vger.kernel.org
-References: <20250521-ovl_ro-v1-1-2350b1493d94@igalia.com>
- <CAOQ4uxgXP8WrgLvtR6ar+OncP6Fh0JLVO0+K+NtDX1tGa2TVxA@mail.gmail.com>
- <20250521-blusen-bequem-4857e2ce9155@brauner>
- <32f30f6d-e995-4f00-a8ec-31100a634a38@igalia.com>
- <CAOQ4uxg6RCJf6OBzKgaWbOKn3JhtgWhD6t=yOfufHuJ7jwxKmw@mail.gmail.com>
- <35eded72-c2a0-4bec-9b7f-a4e39f20030a@igalia.com>
- <CAOQ4uxihs3ORNu7aVijO0_GUKbacA65Y6btcrhdL_A-rH0TkAA@mail.gmail.com>
-Content-Language: en-US
-From: =?UTF-8?Q?Andr=C3=A9_Almeida?= <andrealmeid@igalia.com>
-In-Reply-To: <CAOQ4uxihs3ORNu7aVijO0_GUKbacA65Y6btcrhdL_A-rH0TkAA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Em 22/05/2025 12:13, Amir Goldstein escreveu:
-> cc libfuse maintainer
+On Wed, 21 May 2025 19:19:47 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
+
+> On Wed, 21 May 2025 14:51:28 -0400
+> Steven Rostedt <rostedt@goodmis.org> wrote:
 > 
-> On Thu, May 22, 2025 at 4:30 PM André Almeida <andrealmeid@igalia.com> wrote:
->>
->> Em 22/05/2025 06:52, Amir Goldstein escreveu:
->>> On Thu, May 22, 2025 at 8:20 AM André Almeida <andrealmeid@igalia.com> wrote:
->>>>
->>>> Hi Christian, Amir,
->>>>
->>>> Thanks for the feedback :)
->>>>
->>>> Em 21/05/2025 08:20, Christian Brauner escreveu:
->>>>> On Wed, May 21, 2025 at 12:35:57PM +0200, Amir Goldstein wrote:
->>>>>> On Wed, May 21, 2025 at 8:45 AM André Almeida <andrealmeid@igalia.com> wrote:
->>>>>>>
->>>>
->>>> [...]
->>>>
->>>>>>
->>>>>> I see the test generic/623 failure - this test needs to be fixed for overlay
->>>>>> or not run on overlayfs.
->>>>>>
->>>>>> I do not see those other 5 failures although before running the test I did:
->>>>>> export LIBMOUNT_FORCE_MOUNT2=always
->>>>>>
->>>>>> Not sure what I am doing differently.
->>>>>>
->>>>
->>>> I have created a smaller reproducer for this, have a look:
->>>>
->>>>     mkdir -p ovl/lower ovl/upper ovl/merge ovl/work ovl/mnt
->>>>     sudo mount -t overlay overlay -o lowerdir=ovl/lower,upperdir=ovl/
->>>> upper,workdir=ovl/work ovl/mnt
->>>>     sudo mount ovl/mnt -o remount,ro
->>>>
->>>
->>> Why would you use this command?
->>> Why would you want to re-specify the lower/upperdir when remounting ro?
->>> And more specifically, fstests does not use this command in the tests
->>> that you mention that they fail, so what am I missing?
->>>
->>
->> I've added "set -x" to tests/generic/294 to see exactly which mount
->> parameters were being used and I got this from the output:
->>
->> + _try_scratch_mount -o remount,ro
->> + local mount_ret
->> + '[' overlay == overlay ']'
->> + _overlay_scratch_mount -o remount,ro
->> + echo '-o remount,ro'
->> + grep -q remount
->> + /usr/bin/mount /tmp/dir2/ovl-mnt -o remount,ro
->> mount: /tmp/dir2/ovl-mnt: fsconfig() failed: ...
->>
->> So, from what I can see, fstests is using this command. Not sure if I
->> did something wrong when setting up fstests.
->>
+> > On Thu, 15 May 2025 20:15:56 +0900
+> > "Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+> > 
+> > > diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+> > > index 6859008ca34d..48f5f248eb4c 100644
+> > > --- a/kernel/trace/ring_buffer.c
+> > > +++ b/kernel/trace/ring_buffer.c
+> > > @@ -1358,6 +1358,13 @@ static inline void rb_inc_page(struct buffer_page **bpage)
+> > >  	*bpage = list_entry(p, struct buffer_page, list);
+> > >  }
+> > >  
+> > > +static inline void rb_dec_page(struct buffer_page **bpage)
+> > > +{
+> > > +	struct list_head *p = rb_list_head((*bpage)->list.prev);
+> > > +
+> > > +	*bpage = list_entry(p, struct buffer_page, list);
+> > > +}
+> > > +
+> > >  static struct buffer_page *
+> > >  rb_set_head_page(struct ring_buffer_per_cpu *cpu_buffer)
+> > >  {
+> > > @@ -1866,10 +1873,11 @@ static int rb_validate_buffer(struct buffer_data_page *dpage, int cpu)
+> > >  static void rb_meta_validate_events(struct ring_buffer_per_cpu *cpu_buffer)
+> > >  {
+> > >  	struct ring_buffer_cpu_meta *meta = cpu_buffer->ring_meta;
+> > > -	struct buffer_page *head_page;
+> > > +	struct buffer_page *head_page, *orig_head;
+> > >  	unsigned long entry_bytes = 0;
+> > >  	unsigned long entries = 0;
+> > >  	int ret;
+> > > +	u64 ts;
+> > >  	int i;
+> > >  
+> > >  	if (!meta || !meta->head_buffer)
+> > > @@ -1885,8 +1893,93 @@ static void rb_meta_validate_events(struct ring_buffer_per_cpu *cpu_buffer)
+> > >  	entry_bytes += local_read(&cpu_buffer->reader_page->page->commit);
+> > >  	local_set(&cpu_buffer->reader_page->entries, ret);
+> > >  
+> > > -	head_page = cpu_buffer->head_page;
+> > > +	orig_head = head_page = cpu_buffer->head_page;
+> > > +	ts = head_page->page->time_stamp;
+> > > +
+> > > +	/*
+> > > +	 * Try to rewind the head so that we can read the pages which already
+> > > +	 * read in the previous boot.
+> > > +	 */
+> > > +	if (head_page == cpu_buffer->tail_page)
+> > > +		goto rewound;  
+> > 
+> > Hmm, jumping to a label called "rewound" when you didn't do a rewind seems
+> > confusing.
+> > 
+> > Perhaps call the label "skip_rewind"?
+> > 
+> > > +
+> > > +	rb_dec_page(&head_page);
+> > > +	for (i = 0; i < meta->nr_subbufs + 1; i++, rb_dec_page(&head_page)) {
+> > > +
+> > > +		/* Rewind until tail (writer) page. */
+> > > +		if (head_page == cpu_buffer->tail_page)
+> > > +			break;
+> > > +
+> > > +		/* Ensure the page has older data than head. */
+> > > +		if (ts < head_page->page->time_stamp)
+> > > +			break;
+> > > +
+> > > +		ts = head_page->page->time_stamp;
+> > > +		/* Ensure the page has correct timestamp and some data. */
+> > > +		if (!ts || rb_page_commit(head_page) == 0)
+> > > +			break;
+> > > +
+> > > +		/* Stop rewind if the page is invalid. */
+> > > +		ret = rb_validate_buffer(head_page->page, cpu_buffer->cpu);
+> > > +		if (ret < 0)
+> > > +			break;
+> > > +
+> > > +		/* Recover the number of entries and update stats. */
+> > > +		local_set(&head_page->entries, ret);
+> > > +		if (ret)
+> > > +			local_inc(&cpu_buffer->pages_touched);
+> > > +		entries += ret;
+> > > +		entry_bytes += rb_page_commit(head_page);
+> > > +	}
+> > > +	pr_info("Rewound %d pages on cpu%d\n", i, cpu_buffer->cpu);  
+> > 
+> > Should state this is coming from the ring buffer and use "[%d]" for cpu
+> > number as the other pr_info()'s do. Also only print if it did a rewind:
+> > 
+> > 	if (i)
+> > 		pr_info("Ring buffer [%d] rewound %d pages\n", cpu_buffer->cpu, i);
+> > 
+> > 
+> > > +
+> > > +	/* The last rewound page must be skipped. */
+> > > +	if (head_page != orig_head)
+> > > +		rb_inc_page(&head_page);
+> > >  
+> > > +	/* If there are rewound pages, rewind the reader page too. */  
+> > 
+> > I would change the comment to:
+> > 
+> > 	/*
+> > 	 * If the ring buffer was rewound, then inject the reader page
+> > 	 * into the location just before the original head page.
+> > 	 */
+> > 
+> > > +	if (head_page != orig_head) {
+> > > +		struct buffer_page *bpage = orig_head;
+> > > +
+> > > +		rb_dec_page(&bpage);
+> > > +		/*
+> > > +		 * Insert the reader_page before the original head page.
+> > > +		 * Since the list encode RB_PAGE flags, general list
+> > > +		 * operations should be avoided.
+> > > +		 */
+> > > +		cpu_buffer->reader_page->list.next = &orig_head->list;
+> > > +		cpu_buffer->reader_page->list.prev = orig_head->list.prev;
+> > > +		orig_head->list.prev = &cpu_buffer->reader_page->list;
+> > > +		bpage->list.next = &cpu_buffer->reader_page->list;
+> > > +
+> > > +		/* Make the head_page tthe new read page */  
+> > 
+> > Typo "tthe" and call it "new reader page", not "read page".
+> > 
+> > > +		cpu_buffer->reader_page = head_page;
+> > > +		bpage = head_page;
+> > > +		rb_inc_page(&head_page);
+> > > +		head_page->list.prev = bpage->list.prev;
+> > > +		rb_dec_page(&bpage);
+> > > +		bpage->list.next = &head_page->list;
+> > > +		rb_set_list_to_head(&bpage->list);
 > 
-> No you are right, I misread your reproducer.
-> The problem is that my test machine has older libmount 2.38.1
-> without the new mount API.
+> When testing this patch, it kept crashing. I had to add this here:
+> 
+> 		cpu_buffer->pages = &head_page->list;
+> 
+> That's because my test would end up having cpu_buffer->pages pointing to
+> the reader page, and that will cause issues later. It has to point into the
+> writing portion of the buffer.
+
+Ah, good catch!
+
+> 
+> > > +
+> > > +		cpu_buffer->head_page = head_page;
+> > > +		meta->head_buffer = (unsigned long)head_page->page;
+> > > +
+> > > +		/* Reset all the indexes */
+> > > +		bpage = cpu_buffer->reader_page;
+> > > +		meta->buffers[0] = rb_meta_subbuf_idx(meta, bpage->page);
+> > > +		bpage->id = 0;
+> > > +
+> > > +		for (i = 0, bpage = head_page; i < meta->nr_subbufs;
+> > > +		     i++, rb_inc_page(&bpage)) {
+> > > +			meta->buffers[i + 1] = rb_meta_subbuf_idx(meta, bpage->page);
+> > > +			bpage->id = i + 1;
+> > > +		}
+> 
+> Can we convert the above to:
+> 
+> 		for (i = 1, bpage = head_page; i < meta->nr_subbufs;
+> 		     i++, rb_inc_page(&bpage)) {
+> 			meta->buffers[i] = rb_meta_subbuf_idx(meta, bpage->page);
+> 			bpage->id = i;
+> 		}
+> 
+> By starting i at one, we can remove the "+ 1" inside the loop. It's a bit
+> cleaner that way.
+
+Agreed. And maybe previous one is wrong because it writes
+'meta->buffers[meta->nr_subbufs]' (buffer overflow) and set wrong
+head_page->id.
+
+Thanks!
+
+> 
+> -- Steve
 > 
 > 
->>>> And this returns:
->>>>
->>>>     mount: /tmp/ovl/mnt: fsconfig() failed: overlay: No changes allowed in
->>>>     reconfigure.
->>>>           dmesg(1) may have more information after failed mount system call.
->>>>
->>>> However, when I use mount like this:
->>>>
->>>>     sudo mount -t overlay overlay -o remount,ro ovl/mnt
->>>>
->>>> mount succeeds. Having a look at strace, I found out that the first
->>>> mount command tries to set lowerdir to "ovl/lower" again, which will to
->>>> return -EINVAL from ovl_parse_param():
->>>>
->>>>       fspick(3, "", FSPICK_NO_AUTOMOUNT|FSPICK_EMPTY_PATH) = 4
->>>>       fsconfig(4, FSCONFIG_SET_STRING, "lowerdir", "/tmp/ovl/lower", 0) =
->>>> -1 EINVAL (Invalid argument)
->>>>
->>>> Now, the second mount command sets just the "ro" flag, which will return
->>>> after vfs_parse_sb_flag(), before getting to ovl_parse_param():
->>>>
->>>>       fspick(3, "", FSPICK_NO_AUTOMOUNT|FSPICK_EMPTY_PATH) = 4
->>>>       fsconfig(4, FSCONFIG_SET_FLAG, "ro", NULL, 0) = 0
->>>>
->>>> After applying my patch and running the first mount command again, we
->>>> can set that this flag is set only after setting all the strings:
->>>>
->>>>       fsconfig(4, FSCONFIG_SET_STRING, "lowerdir", "/tmp/ovl/lower", 0) = 0
->>>>       fsconfig(4, FSCONFIG_SET_STRING, "upperdir", "/tmp/ovl/upper", 0) = 0
->>>>       fsconfig(4, FSCONFIG_SET_STRING, "workdir", "/tmp/ovl/work", 0) = 0
->>>>       fsconfig(4, FSCONFIG_SET_STRING, "uuid", "on", 0) = 0
->>>>       fsconfig(4, FSCONFIG_SET_FLAG, "ro", NULL, 0) = 0
->>>>
->>>> I understood that the patch that I proposed is wrong, and now I wonder
->>>> if the kernel needs to be fixed at all, or if the bug is how mount is
->>>> using fsconfig() in the first mount command?
->>>
-> 
-> If you ask me, when a user does:
-> /usr/bin/mount /tmp/dir2/ovl-mnt -o remount,ro
-> 
-> The library only needs to do the FSCONFIG_SET_FLAG command and has no
-> business re-sending the other config commands, but that's just me.
+> > > +
+> > > +		/* We'll restart verifying from orig_head */
+> > > +		head_page = orig_head;
+> > > +	}
+> > > +
+> > > + rewound:  
+> > 
+> >  skip_rewind:
+> > 
+> > Also, I know other's don't like to do this, but I do add a space before
+> > labels. It makes patch diffs easier to see which functions they are,
+> > otherwise the patch shows the label and not the function.
+> > 
+> > -- Steve
+> > 
+> > 
+> > >  	/* If the commit_buffer is the reader page, update the commit page */
+> > >  	if (meta->commit_buffer == (unsigned long)cpu_buffer->reader_page->page) {
+> > >  		cpu_buffer->commit_page = cpu_buffer->reader_page;
+> > > @@ -5348,7 +5441,6 @@ rb_get_reader_page(struct ring_buffer_per_cpu *cpu_buffer)
+> > >  	 */
+> > >  	local_set(&cpu_buffer->reader_page->write, 0);
+> > >  	local_set(&cpu_buffer->reader_page->entries, 0);
+> > > -	local_set(&cpu_buffer->reader_page->page->commit, 0);
+> > >  	cpu_buffer->reader_page->real_end = 0;
+> > >  
+> > >   spin:
+> > > @@ -6642,7 +6734,6 @@ int ring_buffer_read_page(struct trace_buffer *buffer,
+> > >  		cpu_buffer->read_bytes += rb_page_size(reader);
+> > >  
+> > >  		/* swap the pages */
+> > > -		rb_init_page(bpage);
+> > >  		bpage = reader->page;
+> > >  		reader->page = data_page->data;
+> > >  		local_set(&reader->write, 0);  
+> > 
 > 
 
-Yes, this makes sense to me as well.
 
-> BTW, which version of libmount (mount --version) are you using?
-> I think there were a few problematic versions when the new mount api
-> was first introduced.
-> 
-
-mount from util-linux 2.41 (libmount 2.41.0: btrfs, verity, namespaces, 
-idmapping, fd-based-mount, statmount, assert, debug)
-
-> Thanks,
-> Amir.
-
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
