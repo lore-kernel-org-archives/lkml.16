@@ -1,298 +1,86 @@
-Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
+Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C9BF28FAA5
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 15:08:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37F3A28FAA4
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 15:08:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747926490; cv=none; b=c5S2iU/nLjBn8EQJur20DmiKyCIMZglxlZzycAuVs1GZlcmK5q9aObtmuYvLMGkzbrvp+jBwIJUZyhP/encrPHmK77QoXpJJ3yaO4oW1qv0aGhng0Sxzn1ieS3RnTO+Y+k9GeY6AJlgqQHt3auz3tIJK/9u/kSbwd/gYAPtYgaU=
+	t=1747926511; cv=none; b=aOotqLxmntIL4YnVvy3AaWdWjxB2Beugvbxwcoh9P+G4d5xAhiWKAxUi5mG/MApeODw5GIzrn/J7R/JPBAPT5Bv5c1mOb2zd2OCmnmKnnTDxkOiDBQRS7M7lYll/rtZU70yfiDmg4fgOLkdfptCczFvDe8rCK/oDJB2NKw7iVbc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747926490; c=relaxed/simple;
-	bh=mS5GgND8UuontDSj6ihHGCoTUwpMjYc0hUM5E0VMdiw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=H4+z0cNyt+oeMOsQwKyNJ+NMHy+KfFsKCHMGWDl6Ei9qu9O6/koXDNd2NNijHOYUBsq/CMI+aLtr3j9TU8zZTYbBtALMXNo4/qulLJniETwWiahBglFG2IMlvGKLmcambzXfm25v7ulhU8+N8+9kHVJk2hhU/SjWpsh6OmV63JE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=LrVyzu8H; arc=none smtp.client-ip=209.85.160.180
+	s=arc-20240116; t=1747926511; c=relaxed/simple;
+	bh=8Ri5WrICyPzPzRSsicf5C3pSlv1MhV9K/oJy5oyMHNI=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=Wb9QuwzKP0G9zaVitxKXgHl2BrdFWzZsgSOT5B9ddKeSmSYMxxRq7P7Pwjic0cSOYbVCqoYLZkkls277JMgCjULDnWBNPrYqRAE7QsAIDD7uogZfxq+IkdCifbYwwlTeGC7MFBmq1Sdq+WXdBVX/W+qOnwtJdpE3tMxcl5fUcvc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=B9DGfCRm; arc=none smtp.client-ip=209.85.215.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LrVyzu8H"
-Received: by mail-qt1-f180.google.com with SMTP id d75a77b69052e-47666573242so1886671cf.0
-        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 08:08:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="B9DGfCRm"
+Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-b0f807421c9so4982881a12.0
+        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 08:08:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747926487; x=1748531287; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qD45WleDxaKRfdFYJAyThj8STlU1fBlpeISFDoR8AxE=;
-        b=LrVyzu8HKZceJUPRGikNvFqLtgrq3CtpXTZOnut4Ti2CSlZ7AW8x8ceV6svNQ34NR7
-         Z5cK6UaaLQKvbCU/Va4oRUuK/9I0V5wfTvoS7AWWzRXBZF4QhNYYBumiLP2Khr9qIT2n
-         TWTVPg3ujukyWTNMCasiVYTy0vQ1WB4b/rck+m/h+su5q7tg/GeLk4BMNeb0WnNzCt5D
-         uccLY2HH+inF5bgXSWskxjX07U8UMegufT1dDEGwiXbridstBQO6gG43PaGGamqJakad
-         FkHzdf1ft+WpxeQrZakbYXDMODodNstm7D1f5+5qXRDKri7yuJycSHgit6DEsbUQeLBK
-         CT8A==
+        d=google.com; s=20230601; t=1747926509; x=1748531309; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=BEBLuBqQXhmi2BMHkf4ov7bmteqaGfMWaLVMUxnRkMw=;
+        b=B9DGfCRmYe8cE4pG1R9zlVTMVBBZ9hO17rJ7nyTmES7bSxCuElRt7PDOKQ9zJ0sD2b
+         0egua0qxIw8ug9me4ZjIa4rT1aT4tXkhHu5jAx5nY69d4nolQR3OVb6ZSF9cxImczEhi
+         vDABZY0B9rS5EYwP2Hxgm4qjD60QmYZi8N37yBdtIYXk12ZiHPLaIWxEtIsdrq23ssQl
+         qpDoLRHxoGZICyBLiJqnoXpn4Ewo6KsE6VPhY6sMbCYL/PFrCQMTKNpy3BaWW7QABq4J
+         vvTk+gsrkig8nDmrhEWoSru+iMlNnBXl5/n976TIKEeCRE2Eav05NJEPololMCWOlM1Y
+         bD8w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747926487; x=1748531287;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qD45WleDxaKRfdFYJAyThj8STlU1fBlpeISFDoR8AxE=;
-        b=vqKA3kvAhBmr/IfUT4bTcJn40Pedk3vmbbM5ZL8wZeEswUeMPXzJ3+TP7eQzJCbqCX
-         QrSZzZzRHQHB8R3Vcw54otrDl+fUq/2QQKFBppMcOUcbWSNVvR24+uiu1V1jAkv6BPED
-         70bw1eRhQpjzP5232PzCJBIYBsFeTq1GLHgXPAICLi3iVz42tYP0tBJsaec1QaPCLIVT
-         r8ccqW24Q67t0qu5xKPWIUNUtu3vwuIJwaMX47pF30KLXAPz2z28sFJotKBdp/DOyW+X
-         JVeG61oHXTILHm3n9VcBX0yAq8TpT8U33218nkoJ2ZYKkV1P7qW17ZAXQT3aBK4/Qo7F
-         5WGQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVhOw7Q+7lW68Lc1Mi2yYDgfgaAy81eUuEsxmWKtfnkVxwXWnNN74ioDcoKyxD7gpl2iPiCXSM+QhPkRII=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxwAb1vBpCBSwJwBjJNQY6rSYA2q0KtxD4i9u6UeYQ+J9u0efvp
-	BPgz98XnOaNCJNsDxKPlv8M1JWGytdeEvXXqaj41ZvYzjhBxpv60tnLIEuN1n6yup1s5bv3Vi4Z
-	HsoB9oqrasEYRSAyGzEtC0f6j0y3WjLwBTqrG9F76
-X-Gm-Gg: ASbGncusPc7FqyK0v3BMj+ybwmiMbVdBoywyUz+bW5LT+n8F4m5+CwuXbz+T38nYMrm
-	gBD+Fq+4Hw6sHxqtvxmoZezrTAoA02OGyi/HWsm5a8Zd8/iRLgdyFCj7tjm7j+MW2KYYiFgfYaf
-	5gZdClj9f4kECXctfkQQhVh3YmPcu+jbNaf1+aoh+kETM=
-X-Google-Smtp-Source: AGHT+IExWgZ/kprFJR2qUAmAvBSuiZQwIp3xVKHZZRhAngXGir6bXeq3t/Qwhx3C/I2QsXxLMQlJK+hvAoH5fIBVNiQ=
-X-Received: by 2002:a05:622a:1356:b0:497:2f60:4ca4 with SMTP id
- d75a77b69052e-49cf05d4f7cmr3910441cf.15.1747926486878; Thu, 22 May 2025
- 08:08:06 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1747926509; x=1748531309;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=BEBLuBqQXhmi2BMHkf4ov7bmteqaGfMWaLVMUxnRkMw=;
+        b=DHF9TTdDfaQbu6DmdBqtrw2RSSgIAbziCYB/p26jRZtQLPdh4jugTZtDQS+34/QQSz
+         U+/GKG8c5cWQWnWa+g+djDDOKeccrPlRQVLblWTd0s52v/Wti63GMR+20Jg5RGvM1Hej
+         YDdTzxZ1ptM9malRDmCczcvYITvHQTs/OKRj5a8kFKW3J5VXSt2zVL36LGjPGfG+L9gt
+         NYiAmFJPd5sQQt/xp5W+tOBXakaUPsK+/aqJJx5ALk6wdMCIj2EXN5LOPD6GnLAn/6VL
+         7ewDXqSo0QLETVApd8xM6+3QDQzY6n6K7I9YJu9vKRaX2A/1t5pLTuT5m5eo+30ryCZb
+         CNlA==
+X-Forwarded-Encrypted: i=1; AJvYcCWUF/5xdSoTDt5AmE3GVofIaPeXx7M+bFxWvdZyjQM4RmmQ4Ulohn4JCJ8wALXJM6bKHXv25ddFGteZSUk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz1zcJV63lxg3M21gfajdaBqLa6uitzKnXC8U+B5urK4USGckvw
+	Tj0SSU5ZcIeyMLoKzpQkAGgtHiDYmUwhcHgo9U3K8DlyJWv9rHFuTEbgnyFC3q0brnyC3/ibBMs
+	uBaH7XA==
+X-Google-Smtp-Source: AGHT+IHDy4N3kP+9w5FUQWlHqLiOT/W33iU0PkAntA2CZoYSEu1INy5wr5ahi5sgxuNbgy00fBvZ0NKZmd0=
+X-Received: from pjbsp7.prod.google.com ([2002:a17:90b:52c7:b0:2fe:7f7a:74b2])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:4ecb:b0:30e:823f:ef34
+ with SMTP id 98e67ed59e1d1-30e823ff066mr30586885a91.23.1747926509468; Thu, 22
+ May 2025 08:08:29 -0700 (PDT)
+Date: Thu, 22 May 2025 08:08:27 -0700
+In-Reply-To: <20250522075553.GG24938@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <CAGtprH_Evyc7tLhDB0t0fN+BUx5qeqWq8A2yZ5-ijbJ5UJ5f-g@mail.gmail.com>
- <CA+EHjTy7iBNBb9DRdtgq8oYmvgykhSNvZL3FrRV4XF90t3XgBg@mail.gmail.com>
- <CAGtprH_7jSpwF77j1GW8rjSrbtZZ2OW2iGck5=Wk67+VnF9vjQ@mail.gmail.com>
- <CA+EHjTzMhKCoftfJUuL0WUZW4DdqOHgVDcn0Cmf-0r--8rBdbg@mail.gmail.com>
- <diqzecwjnk95.fsf@ackerleytng-ctop.c.googlers.com> <CA+EHjTyY5C1QgkoAqvJ0kHM4nUvKc1e1nQ0Uq+BANtVEnZH90w@mail.gmail.com>
- <CAGtprH-fE=G923ctBAcq5zFna+2WULhmHDSbXUsZKUrin29b4g@mail.gmail.com>
- <CA+EHjTxvufYVA8LQWRKEX7zA0gWLQUHVO2LvwKc5JXVu-XAEEA@mail.gmail.com>
- <CAGtprH_TfKT3oRPCLbh-ojLGXSfOQ2XA39pVhr47gb3ikPtUkw@mail.gmail.com>
- <CA+EHjTxJZ_pb7+chRoZxvkxuib2YjbiHg=_+f4bpRt2xDFNCzQ@mail.gmail.com> <aC86OsU2HSFZkJP6@google.com>
-In-Reply-To: <aC86OsU2HSFZkJP6@google.com>
-From: Fuad Tabba <tabba@google.com>
-Date: Thu, 22 May 2025 16:07:29 +0100
-X-Gm-Features: AX0GCFtxE_5yf3JaUaANLr_bOaaQ7-YRdImpBrNEqDFWm2pmOqea-YH30YgPCtI
-Message-ID: <CA+EHjTxjt-mb_WbtVymaBvCb1EdJAVMV_uGb4xDs_ewg4k0C4g@mail.gmail.com>
-Subject: Re: [RFC PATCH v2 04/51] KVM: guest_memfd: Introduce
- KVM_GMEM_CONVERT_SHARED/PRIVATE ioctls
-To: Sean Christopherson <seanjc@google.com>
-Cc: Vishal Annapurve <vannapurve@google.com>, Ackerley Tng <ackerleytng@google.com>, kvm@vger.kernel.org, 
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org, x86@kernel.org, 
-	linux-fsdevel@vger.kernel.org, aik@amd.com, ajones@ventanamicro.com, 
-	akpm@linux-foundation.org, amoorthy@google.com, anthony.yznaga@oracle.com, 
-	anup@brainfault.org, aou@eecs.berkeley.edu, bfoster@redhat.com, 
-	binbin.wu@linux.intel.com, brauner@kernel.org, catalin.marinas@arm.com, 
-	chao.p.peng@intel.com, chenhuacai@kernel.org, dave.hansen@intel.com, 
-	david@redhat.com, dmatlack@google.com, dwmw@amazon.co.uk, 
-	erdemaktas@google.com, fan.du@intel.com, fvdl@google.com, graf@amazon.com, 
-	haibo1.xu@intel.com, hch@infradead.org, hughd@google.com, ira.weiny@intel.com, 
-	isaku.yamahata@intel.com, jack@suse.cz, james.morse@arm.com, 
-	jarkko@kernel.org, jgg@ziepe.ca, jgowans@amazon.com, jhubbard@nvidia.com, 
-	jroedel@suse.de, jthoughton@google.com, jun.miao@intel.com, 
-	kai.huang@intel.com, keirf@google.com, kent.overstreet@linux.dev, 
-	kirill.shutemov@intel.com, liam.merwick@oracle.com, 
-	maciej.wieczor-retman@intel.com, mail@maciej.szmigiero.name, maz@kernel.org, 
-	mic@digikod.net, michael.roth@amd.com, mpe@ellerman.id.au, 
-	muchun.song@linux.dev, nikunj@amd.com, nsaenz@amazon.es, 
-	oliver.upton@linux.dev, palmer@dabbelt.com, pankaj.gupta@amd.com, 
-	paul.walmsley@sifive.com, pbonzini@redhat.com, pdurrant@amazon.co.uk, 
-	peterx@redhat.com, pgonda@google.com, pvorel@suse.cz, qperret@google.com, 
-	quic_cvanscha@quicinc.com, quic_eberman@quicinc.com, 
-	quic_mnalajal@quicinc.com, quic_pderrin@quicinc.com, quic_pheragu@quicinc.com, 
-	quic_svaddagi@quicinc.com, quic_tsoni@quicinc.com, richard.weiyang@gmail.com, 
-	rick.p.edgecombe@intel.com, rientjes@google.com, roypat@amazon.co.uk, 
-	rppt@kernel.org, shuah@kernel.org, steven.price@arm.com, 
-	steven.sistare@oracle.com, suzuki.poulose@arm.com, thomas.lendacky@amd.com, 
-	usama.arif@bytedance.com, vbabka@suse.cz, viro@zeniv.linux.org.uk, 
-	vkuznets@redhat.com, wei.w.wang@intel.com, will@kernel.org, 
-	willy@infradead.org, xiaoyao.li@intel.com, yan.y.zhao@intel.com, 
-	yilun.xu@intel.com, yuzenghui@huawei.com, zhiquan1.li@intel.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+References: <20250517091639.3807875-8-ardb+git@google.com> <20250517091639.3807875-9-ardb+git@google.com>
+ <20250519094038.GIaCr8ltHvLBYjk8iI@fat_crate.local> <aCstaIBSfcHXpr8D@gmail.com>
+ <20250519131944.GCaCsv8A71vn21AB1W@fat_crate.local> <874ixernra.ffs@tglx> <20250522075553.GG24938@noisy.programming.kicks-ass.net>
+Message-ID: <aC896zTw_z7Bx6I2@google.com>
+Subject: Re: [PATCH v4 1/6] x86/cpu: Use a new feature flag for 5 level paging
+From: Sean Christopherson <seanjc@google.com>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@kernel.org>, 
+	"Ahmed S. Darwish" <darwi@linutronix.de>, Ard Biesheuvel <ardb+git@google.com>, linux-kernel@vger.kernel.org, 
+	x86@kernel.org, Ard Biesheuvel <ardb@kernel.org>, 
+	Linus Torvalds <torvalds@linux-foundation.org>, Brian Gerst <brgerst@gmail.com>, 
+	"Kirill A. Shutemov" <kirill@shutemov.name>
+Content-Type: text/plain; charset="us-ascii"
 
-Hi Sean,
+On Thu, May 22, 2025, Peter Zijlstra wrote:
+> On Wed, May 21, 2025 at 05:23:37PM +0200, Thomas Gleixner wrote:
+> 
+> >    4) Drivers having access to CPUID is just wrong. We've had issues
+> >       with that in the past because drivers evaluated CPUID themself and
+> >       missed that the core code had stuff disabled.
+> 
+> I had this patch that read the module instructions and failed loading if
+> they used 'fancy' instructions. Do you want me to revive that?
 
-On Thu, 22 May 2025 at 15:52, Sean Christopherson <seanjc@google.com> wrote=
-:
->
-> On Wed, May 21, 2025, Fuad Tabba wrote:
-> > On Wed, 21 May 2025 at 16:51, Vishal Annapurve <vannapurve@google.com> =
-wrote:
-> > > On Wed, May 21, 2025 at 8:22=E2=80=AFAM Fuad Tabba <tabba@google.com>=
- wrote:
-> > > > On Wed, 21 May 2025 at 15:42, Vishal Annapurve <vannapurve@google.c=
-om> wrote:
-> > > > > On Wed, May 21, 2025 at 5:36=E2=80=AFAM Fuad Tabba <tabba@google.=
-com> wrote:
-> > > > > There are a bunch of complexities here, reboot sequence on x86 ca=
-n be
-> > > > > triggered using multiple ways that I don't fully understand, but =
-few
-> > > > > of them include reading/writing to "reset register" in MMIO/PCI c=
-onfig
-> > > > > space that are emulated by the host userspace directly. Host has =
-to
-> > > > > know when the guest is shutting down to manage it's lifecycle.
-> > > >
-> > > > In that case, I think we need to fully understand these complexitie=
-s
-> > > > before adding new IOCTLs. It could be that once we understand these
-> > > > issues, we find that we don't need these IOCTLs. It's hard to justi=
-fy
-> > > > adding an IOCTL for something we don't understand.
-> > > >
-> > >
-> > > I don't understand all the ways x86 guest can trigger reboot but I do
-> > > know that x86 CoCo linux guest kernel triggers reset using MMIO/PCI
-> > > config register write that is emulated by host userspace.
-> > >
-> > > > > x86 CoCo VM firmwares don't support warm/soft reboot and even if =
-it
-> > > > > does in future, guest kernel can choose a different reboot mechan=
-ism.
-> > > > > So guest reboot needs to be emulated by always starting from scra=
-tch.
-> > > > > This sequence needs initial guest firmware payload to be installe=
-d
-> > > > > into private ranges of guest_memfd.
-> > > > >
-> > > > > >
-> > > > > > Either the host doesn't (or cannot even) know that the guest is
-> > > > > > rebooting, in which case I don't see how having an IOCTL would =
-help.
-> > > > >
-> > > > > Host does know that the guest is rebooting.
-> > > >
-> > > > In that case, that (i.e., the host finding out that the guest is
-> > > > rebooting) could trigger the conversion back to private. No need fo=
-r an
-> > > > IOCTL.
-> > >
-> > > In the reboot scenarios, it's the host userspace finding out that the=
- guest
-> > > kernel wants to reboot.
-> >
-> > How does the host userspace find that out? If the host userspace is cap=
-able
-> > of finding that out, then surely KVM is also capable of finding out the=
- same.
->
-> Nope, not on x86.  Well, not without userspace invoking a new ioctl, whic=
-h would
-> defeat the purpose of adding these ioctls.
->
-> KVM is only responsible for emulating/virtualizing the "CPU".  The chipse=
-t, e.g.
-> the PCI config space, is fully owned by userspace.  KVM doesn't even know=
- whether
-> or not PCI exists for the VM.  And reboot may be emulated by simply creat=
-ing a
-> new KVM instance, i.e. even if KVM was somehow aware of the reboot reques=
-t, the
-> change in state would happen in an entirely new struct kvm.
->
-> That said, Vishal and Ackerley, this patch is a bit lacking on the docume=
-ntation
-> front.  The changelog asserts that:
->
->   A guest_memfd ioctl is used because shareability is a property of the m=
-emory,
->   and this property should be modifiable independently of the attached st=
-ruct kvm
->
-> but then follows with a very weak and IMO largely irrelevant justificatio=
-n of:
->
->   This allows shareability to be modified even if the memory is not yet b=
-ound
->   using memslots.
->
-> Allowing userspace to change shareability without memslots is one relativ=
-ely minor
-> flow in one very specific use case.
->
-> The real justification for these ioctls is that fundamentally, shareabili=
-ty for
-> in-place conversions is a property of a guest_memfd instance and not a st=
-ruct kvm
-> instance, and so needs to owned by guest_memfd.
-
-Thanks for the clarification Sean. I have a couple of followup
-questions/comments that you might be able to help with:
-
-From a conceptual point of view, I understand that the in-place
-conversion is a property of guest_memfd. But that doesn't necessarily
-mean that the interface between kvm <-> guest_memfd is a userspace
-IOCTL. We already communicate directly between the two. Other, even
-less related subsystems within the kernel also interact without going
-through userspace. Why can't we do the same here? I'm not suggesting
-it not be owned by guest_memfd, but that we communicate directly.
-
-From a performance point of view, I would expect the common case to be
-that when KVM gets an unshare request from the guest, it would be able
-to unmap those pages from the (cooperative) host userspace, and return
-back to the guest. In this scenario, the host userspace wouldn't even
-need to be involved. Having a userspace IOCTL as part of this makes
-that trip unnecessarily longer for the common case.
-
-Cheers,
-/fuad
-
-> I.e. focus on justifying the change from a design and conceptual perspect=
-ive,
-> not from a mechanical perspective of a flow that likely's somewhat unique=
- to our
-> specific environment.  Y'all are getting deep into the weeds on a random =
-aspect
-> of x86 platform architecture, instead of focusing on the overall design.
->
-> The other issue that's likely making this more confusing than it needs to=
- be is
-> that this series is actually two completely different series bundled into=
- one,
-> with very little explanation.  Moving shared vs. private ownership into
-> guest_memfd isn't a requirement for 1GiB support, it's a requirement for =
-in-place
-> shared/private conversion in guest_memfd.
->
-> For the current guest_memfd implementation, shared vs. private is tracked=
- in the
-> VM via memory attributes, because a guest_memfd instance is *only* privat=
-e.  I.e.
-> shared vs. private is a property of the VM, not of the guest_memfd instan=
-ce.  But
-> when in-place conversion support comes along, ownership of that particula=
-r
-> attribute needs to shift to the guest_memfd instance.
->
-> I know I gave feedback on earlier posting about there being too series fl=
-ying
-> around, but shoving two distinct concepts into a single series is not the=
- answer.
-> My complaints about too much noise wasn't that there were multiple series=
-, it was
-> that there was very little coordination and lots of chaos.
->
-> If you split this series in two, which should be trivial since you've alr=
-eady
-> organized the patches as a split, then sans the selftests (thank you for =
-those!),
-> in-place conversion support will be its own (much smaller!) series that c=
-an focus
-> on that specific aspect of the design, and can provide a cover letter tha=
-t
-> expounds on the design goals and uAPI.
->
->   KVM: guest_memfd: Add CAP KVM_CAP_GMEM_CONVERSION
->   KVM: Query guest_memfd for private/shared status
->   KVM: guest_memfd: Skip LRU for guest_memfd folios
->   KVM: guest_memfd: Introduce KVM_GMEM_CONVERT_SHARED/PRIVATE ioctls
->   KVM: guest_memfd: Introduce and use shareability to guard faulting
->   KVM: guest_memfd: Make guest mem use guest mem inodes instead of anonym=
-ous inodes
->
-> And then you can post the 1GiB series separately.  So long as you provide=
- pointers
-> to dependencies along with a link to a repo+branch with the kitchen sink,=
- I won't
-> complain about things being too chaotic :-)
+Unless you want to grant exceptions, that's not going to fly for KVM.  KVM makes
+heavy use of CPUID, the consumption/output of which is firmly entrenched in KVM's
+ABI.
