@@ -1,116 +1,156 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BCA0D241693
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 07:51:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mx01.omp.ru (mx01.omp.ru [90.154.21.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D483524EAB2;
+	Thu, 22 May 2025 07:51:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.154.21.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747900292; cv=none; b=cXk3KPh5r7kW+M19teXKUhSbF7Pi5DMG4sjYWrrNgjlPmmo+37erCTdJthCeG8SrtpSbJgxNEfcavQV6OJ/3uQAa8CUa2bcXhYm0rPjuS5HLxr3avLCIZOyH5fPTlPWdpNXzD8cCGmHHiL4lZBDd7d2Wqq/LMOz6poH6HR5ivJA=
+	t=1747900297; cv=none; b=l7L4dDW7kdtDsoqySUGI4qZc43PMYQ8qrMKYp0dho/k/y/yg0TSG6cuNUQsW3C4dPmGr5UmaqHva917Yr1KrzHS+U+hZ4dJb+3zAeaWAHsj/y9Bv6TcZq5CSVqzC9970TJpHybJ+w3Sxj2N3NnVHdB8HF5quW02/RGTaycZznAc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747900292; c=relaxed/simple;
-	bh=5Er2Se0J/OYgKRlrGNVO3MlntzBG01vQWKegNQrLvfQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gcjfu4Y5s4rl70eQEcP9Pp2L64Oo3JWGSs/v8EpBOEjQMZOKwVMxbswUkjHD4FdTdbQBhr5jGouyLN5ec+EoFSD6tgDhyimVbpMcw7DjBZQG/UEPIQLE/MKMwoupC5hfln3EKwpVVk2xG263KdI9OhDuouVAznPzpBLbGzsyEDk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 78BDE1A2D;
-	Thu, 22 May 2025 00:51:15 -0700 (PDT)
-Received: from [10.57.94.227] (unknown [10.57.94.227])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AE2BD3F673;
-	Thu, 22 May 2025 00:51:25 -0700 (PDT)
-Message-ID: <1ab00224-cca4-4442-a346-eb8a6797e09e@arm.com>
-Date: Thu, 22 May 2025 08:51:24 +0100
+	s=arc-20240116; t=1747900297; c=relaxed/simple;
+	bh=W6VVxh2JpTxWEhh/uRyWVQH9raW6GeHBVsleuONtBUE=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=TQisnTnm/AxrTXms/9R/tkvbuGMYc9d3LOeLqlmT54oJidyN8s2wDfqk2VR0cjicIMpYnowecIzczXSvxFTwKIPqf+eJe+hYXhULxP1EhRlr/JarAvE7lTbhQFyw9TMGnudA2V959Xkimk6BpUt70i1+s87r9AuwtPHmsw+y+yg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru; spf=pass smtp.mailfrom=omp.ru; arc=none smtp.client-ip=90.154.21.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=omp.ru
+Received: from inp1wst086.omp.ru (81.22.207.138) by msexch01.omp.ru
+ (10.188.4.12) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.2.1258.12; Thu, 22 May
+ 2025 10:51:13 +0300
+From: Dmitriy Privalov <d.privalov@omp.ru>
+To: <stable@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC: Mark Fasheh <mark@fasheh.com>, Joel Becker <jlbec@evilplan.org>, Joseph Qi
+	<joseph.qi@linux.alibaba.com>, <ocfs2-devel@oss.oracle.com>,
+	<linux-kernel@vger.kernel.org>, <lvc-project@linuxtesting.org>, Mohammed
+ Anees <pvmohammedanees2003@gmail.com>,
+	<syzbot+e0055ea09f1f5e6fabdd@syzkaller.appspotmail.com>, Junxiao Bi
+	<junxiao.bi@oracle.com>, Changwei Ge <gechangwei@live.cn>, Gang He
+	<ghe@suse.com>, Jun Piao <piaojun@huawei.com>, Andrew Morton
+	<akpm@linux-foundation.org>, Dmitriy Privalov <d.privalov@omp.ru>
+Subject: [PATCH 5.10 1/1] ocfs2: fix deadlock in ocfs2_get_system_file_inode
+Date: Thu, 22 May 2025 10:50:46 +0300
+Message-ID: <20250522075046.2672852-1-d.privalov@omp.ru>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/5] mm: Add batched versions of
- ptep_modify_prot_start/commit
-Content-Language: en-GB
-To: Dev Jain <dev.jain@arm.com>, akpm@linux-foundation.org
-Cc: david@redhat.com, willy@infradead.org, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, catalin.marinas@arm.com, will@kernel.org,
- Liam.Howlett@oracle.com, lorenzo.stoakes@oracle.com, vbabka@suse.cz,
- jannh@google.com, anshuman.khandual@arm.com, peterx@redhat.com,
- joey.gouly@arm.com, ioworker0@gmail.com, baohua@kernel.org,
- kevin.brodsky@arm.com, quic_zhenhuah@quicinc.com,
- christophe.leroy@csgroup.eu, yangyicong@hisilicon.com,
- linux-arm-kernel@lists.infradead.org, hughd@google.com,
- yang@os.amperecomputing.com, ziy@nvidia.com
-References: <20250519074824.42909-1-dev.jain@arm.com>
- <20250519074824.42909-3-dev.jain@arm.com>
- <59242559-5e90-4422-82f7-179a44eb968a@arm.com>
- <7a1ae902-d97c-41ae-a3e7-5b6258ced1c5@arm.com>
- <fc219152-f771-41b0-8857-42de5e6dd35e@arm.com>
-From: Ryan Roberts <ryan.roberts@arm.com>
-In-Reply-To: <fc219152-f771-41b0-8857-42de5e6dd35e@arm.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: msexch01.omp.ru (10.188.4.12) To msexch01.omp.ru
+ (10.188.4.12)
+X-KSE-ServerInfo: msexch01.omp.ru, 9
+X-KSE-AntiSpam-Interceptor-Info: scan successful
+X-KSE-AntiSpam-Version: 6.1.1, Database issued on: 05/22/2025 07:40:56
+X-KSE-AntiSpam-Status: KAS_STATUS_NOT_DETECTED
+X-KSE-AntiSpam-Method: none
+X-KSE-AntiSpam-Rate: 19
+X-KSE-AntiSpam-Info: Lua profiles 193519 [May 22 2025]
+X-KSE-AntiSpam-Info: Version: 6.1.1.11
+X-KSE-AntiSpam-Info: Envelope from: d.privalov@omp.ru
+X-KSE-AntiSpam-Info: LuaCore: 59 0.3.59
+ 65f85e645735101144875e459092aa877af15aaa
+X-KSE-AntiSpam-Info: {rep_avail}
+X-KSE-AntiSpam-Info: {Tracking_uf_ne_domains}
+X-KSE-AntiSpam-Info: {Tracking_from_domain_doesnt_match_to}
+X-KSE-AntiSpam-Info: {SMTP from is not routable}
+X-KSE-AntiSpam-Info: {Found in DNSBL: 81.22.207.138 in (user)
+ b.barracudacentral.org}
+X-KSE-AntiSpam-Info:
+	d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;lkml.kernel.org:7.1.1;syzkaller.appspot.com:5.0.1,7.1.1;inp1wst086.omp.ru:7.1.1;omp.ru:7.1.1;127.0.0.199:7.1.2;81.22.207.138:7.1.2
+X-KSE-AntiSpam-Info: FromAlignment: s
+X-KSE-AntiSpam-Info: ApMailHostAddress: 81.22.207.138
+X-KSE-AntiSpam-Info: {DNS response errors}
+X-KSE-AntiSpam-Info: Rate: 19
+X-KSE-AntiSpam-Info: Status: not_detected
+X-KSE-AntiSpam-Info: Method: none
+X-KSE-AntiSpam-Info: Auth:dmarc=temperror header.from=omp.ru;spf=temperror
+ smtp.mailfrom=omp.ru;dkim=none
+X-KSE-Antiphishing-Info: Clean
+X-KSE-Antiphishing-ScanningType: Heuristic
+X-KSE-Antiphishing-Method: None
+X-KSE-Antiphishing-Bases: 05/22/2025 07:43:00
+X-KSE-Antivirus-Interceptor-Info: scan successful
+X-KSE-Antivirus-Info: Clean, bases: 5/22/2025 1:37:00 AM
+X-KSE-Attachment-Filter-Triggered-Rules: Clean
+X-KSE-Attachment-Filter-Triggered-Filters: Clean
+X-KSE-BulkMessagesFiltering-Scan-Result: InTheLimit
 
-On 22/05/2025 07:33, Dev Jain wrote:
-> 
-> On 21/05/25 5:15 pm, Ryan Roberts wrote:
->> On 21/05/2025 12:16, Ryan Roberts wrote:
->>> On 19/05/2025 08:48, Dev Jain wrote:
->>>> Batch ptep_modify_prot_start/commit in preparation for optimizing mprotect.
->>>> Architecture can override these helpers; in case not, they are implemented
->>>> as a simple loop over the corresponding single pte helpers.
->>>>
->>>> Signed-off-by: Dev Jain <dev.jain@arm.com>
->> [...]
->>
->>> I have some general concerns about the correctness of batching these functions.
->>> The support was originally added by Commit 1ea0704e0da6 ("mm: add a
->>> ptep_modify_prot transaction abstraction"), and the intent was to make it easier
->>> to defer the pte updates for XEN on x86.
->>>
->>> Your default implementations of the batched versions will match the number of
->>> ptep_modify_prot_start() calls with the same number of ptep_modify_prot_commit()
->>> calls, even if modify_prot_commit_ptes() is called incrementally for sub-batches
->>> of the batch used for modify_prot_start_ptes(). That's a requirement and you've
->>> met it. But in the batched case, there are 2 differences;
->>>
->>>    - You can now have multiple PTEs within a start-commit block at one time. I
->>> hope none of the specialized implementations care about that (i.e. XEN).
->> I had a look; this isn't a problem.
->>
->>>    - when calling ptep_modify_prot_commit(), old_pte may not be exactly what
->>> ptep_modify_prot_start() returned for that pte. You have collected the A/D bits,
->>> and according to your docs "PTE bits in the PTE range besides the PFN can
->>> differ" when calling modify_prot_start_ptes() so R/W and other things could
->>> differ here.
->> It looks like powerpc will break if you provide old_pte which has different
->> permissions to the "real" old_pte, see radix__ptep_modify_prot_commit(). So I
->> think you need to at least spec modify_prot_start_ptes() to require that all
->> bits of the PTE except the PFN, access and dirty are identical. And perhaps you
->> can VM_WARN if found to be otherwise? And perhaps modify
->> ptep_modify_prot_commit()'s documentation to explcitly allow old_pte's
->> access/dirty to be "upgraded" from what was actually read in
->> ptep_modify_prot_start()?
-> 
-> 
-> Got it, so we just need to document that, the permissions for all ptes must be
-> identical
+From: Mohammed Anees <pvmohammedanees2003@gmail.com>
 
-Not just permissions; all bits (inc SW bits) except PFN and A/D.
+commit 7bf1823e010e8db2fb649c790bd1b449a75f52d8 upstream.
 
-> 
-> when using modify_prot_start_ptes(). And that we may be smearing extra a/d bits in
-> 
-> modify_prot_commit_ptes().
-> 
-> 
->>
->> XEN/x86 and arm64 don't care about old_pte.
->>
->> Thanks,
->> Ryan
->>
->>> I'm not sure if these are problems in practice; they probably are not. But have
->>> you checked the XEN implementation (and any other specialized implementations)
->>> are definitely compatible with your batched semantics?
->>>
+syzbot has found a possible deadlock in ocfs2_get_system_file_inode [1].
+
+The scenario is depicted here,
+
+	CPU0					CPU1
+lock(&ocfs2_file_ip_alloc_sem_key);
+                               lock(&osb->system_file_mutex);
+                               lock(&ocfs2_file_ip_alloc_sem_key);
+lock(&osb->system_file_mutex);
+
+The function calls which could lead to this are:
+
+CPU0
+ocfs2_mknod - lock(&ocfs2_file_ip_alloc_sem_key);
+.
+.
+.
+ocfs2_get_system_file_inode - lock(&osb->system_file_mutex);
+
+CPU1 -
+ocfs2_fill_super - lock(&osb->system_file_mutex);
+.
+.
+.
+ocfs2_read_virt_blocks - lock(&ocfs2_file_ip_alloc_sem_key);
+
+This issue can be resolved by making the down_read -> down_read_try
+in the ocfs2_read_virt_blocks.
+
+[1] https://syzkaller.appspot.com/bug?extid=e0055ea09f1f5e6fabdd
+
+Link: https://lkml.kernel.org/r/20240924093257.7181-1-pvmohammedanees2003@gmail.com
+Signed-off-by: Mohammed Anees <pvmohammedanees2003@gmail.com>
+Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
+Reported-by: <syzbot+e0055ea09f1f5e6fabdd@syzkaller.appspotmail.com>
+Closes: https://syzkaller.appspot.com/bug?extid=e0055ea09f1f5e6fabdd
+Tested-by: syzbot+e0055ea09f1f5e6fabdd@syzkaller.appspotmail.com
+Cc: Mark Fasheh <mark@fasheh.com>
+Cc: Joel Becker <jlbec@evilplan.org>
+Cc: Junxiao Bi <junxiao.bi@oracle.com>
+Cc: Changwei Ge <gechangwei@live.cn>
+Cc: Gang He <ghe@suse.com>
+Cc: Jun Piao <piaojun@huawei.com>
+Cc:  <stable@vger.kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Dmitriy Privalov <d.privalov@omp.ru>
+---
+ fs/ocfs2/extent_map.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/fs/ocfs2/extent_map.c b/fs/ocfs2/extent_map.c
+index 70a768b623cf..f7672472fa82 100644
+--- a/fs/ocfs2/extent_map.c
++++ b/fs/ocfs2/extent_map.c
+@@ -973,7 +973,13 @@ int ocfs2_read_virt_blocks(struct inode *inode, u64 v_block, int nr,
+ 	}
+ 
+ 	while (done < nr) {
+-		down_read(&OCFS2_I(inode)->ip_alloc_sem);
++		if (!down_read_trylock(&OCFS2_I(inode)->ip_alloc_sem)) {
++			rc = -EAGAIN;
++			mlog(ML_ERROR,
++				 "Inode #%llu ip_alloc_sem is temporarily unavailable\n",
++				 (unsigned long long)OCFS2_I(inode)->ip_blkno);
++			break;
++		}
+ 		rc = ocfs2_extent_map_get_blocks(inode, v_block + done,
+ 						 &p_block, &p_count, NULL);
+ 		up_read(&OCFS2_I(inode)->ip_alloc_sem);
+-- 
+2.34.1
 
