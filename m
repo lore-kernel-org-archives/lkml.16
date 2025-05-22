@@ -1,115 +1,140 @@
-Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47D69223321;
-	Thu, 22 May 2025 07:34:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5FEF2222C0;
+	Thu, 22 May 2025 07:35:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747899298; cv=none; b=VBu/oeTDidWP50kUdj4ar7iFA6b2F608nq4+h5UZZ5Zi3Ig60SlMaWsmkQ8RpDXoB1rU1kFvc8hUjETqnJ3Y2OB0l1oD3+5rOc+SWPkj5kHIKHpp9afw2HYEkTgSCVPPnfNxbkhOG7/9BdnX9cdjG5MHOT+z7pPn+8e/IyXXfTs=
+	t=1747899327; cv=none; b=n2jTttgiLpeWHZNUyJ9rw4of5Q6MCmGl9ErTxkDn0oML55nBjZ3JOA9sC9vBPuy26E2r8sk3XjPJhRoyaOjnRizfYrD6Hl4Gn/n6xkhXv8+HhSSFD7ooWq94nFev0Xzg4J82OiUkmNmivbhqnu81pOPJnuPHMDZwIIrwOeB/AIE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747899298; c=relaxed/simple;
-	bh=qSJHHc8k5MfpKchCcNenRwbGYpCg2PCgp1X9efr60IA=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=U1Yj+pPVjCuTyOivd+IUnEFQsnrBJw9WhkqS3QclJD71NIYW5slpTG5Px+mT0xbxX6851fLANIrFth6J+p3alyDOPRMfrhtdCt38JXnr0B4zg43d/vZbcrmVd7OlEakstBi7Mmd49vXqTxNP371KmYFwJ6Y6cFHmmX9tMpUZLus=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=i+ZMt4Zy; arc=none smtp.client-ip=198.47.19.246
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1747899327; c=relaxed/simple;
+	bh=zOiIKPDu5GGuR/JA38cKv0rMyKIQRAkOPp5exaDW1uY=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=t5hOv6RRpvx2wksa3K+atrmi1oWRGKxESU4+Um4aB4Owwd5HTVLy9E07RwuLrzZLzqzGcpLHZ8Gsy4uJcbmWCfHivF4lD9XA8N0mY7Q8ti4mDI3g3NrdDdih580G+eskWhrPmGefS5rx12a0jAu+pkhXmMoyCjfekzp9lBeOTgQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=ZorswpZN; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="i+ZMt4Zy"
-Received: from lelvem-sh01.itg.ti.com ([10.180.77.71])
-	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTP id 54M7YaA1578086;
-	Thu, 22 May 2025 02:34:36 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1747899276;
-	bh=TFyX924fU1OUnTJNM9k4dpsAiJ/BmLU4EV8L8EYmGN0=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=i+ZMt4ZyOJSERcc+4hrX1KOs+GCM9MH4fA/2Ybir/7w7MdLPNXOHvhb0WRu1hgbEx
-	 XQLpFdG1COOaKABDzvXaxmLopJEdNmGUXEmTTKvgw/Z6bw1AmHEYofOZJdMUHb+U8V
-	 qNccdrErhKWyZByhVxsAzsk8fsvsU5Y4S5tXgu2w=
-Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
-	by lelvem-sh01.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 54M7Ya872794440
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
-	Thu, 22 May 2025 02:34:36 -0500
-Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 22
- May 2025 02:34:36 -0500
-Received: from lelvem-mr05.itg.ti.com (10.180.75.9) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Thu, 22 May 2025 02:34:36 -0500
-Received: from uda0510294.dhcp.ti.com (uda0510294.dhcp.ti.com [172.24.227.151])
-	by lelvem-mr05.itg.ti.com (8.18.1/8.18.1) with ESMTP id 54M7YQ4n475080;
-	Thu, 22 May 2025 02:34:32 -0500
-From: Beleswar Padhi <b-padhi@ti.com>
-To: <nm@ti.com>, <vigneshr@ti.com>, <kristo@kernel.org>, <robh@kernel.org>,
-        <krzk+dt@kernel.org>, <conor+dt@kernel.org>
-CC: <afd@ti.com>, <u-kumar1@ti.com>, <hnagalla@ti.com>, <jm@ti.com>,
-        <b-padhi@ti.com>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>
-Subject: [PATCH 1/2] arm64: dts: ti: k3-j742s2-mcu-wakeup: Override firmware-name for MCU R5F cores
-Date: Thu, 22 May 2025 13:04:25 +0530
-Message-ID: <20250522073426.329344-2-b-padhi@ti.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250522073426.329344-1-b-padhi@ti.com>
-References: <20250522073426.329344-1-b-padhi@ti.com>
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="ZorswpZN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1747899320;
+	bh=wUzRbwPG5veR38xd8T1OVRRRbHwgdMdIMBd9nL3Cfgc=;
+	h=Date:From:To:Cc:Subject:From;
+	b=ZorswpZNOdQTp33PE6jwlBEe9yWxZPGni5oZ8SH/Dwq4SxPe42oD70KXGGCem7qZM
+	 HhEp9BMNOVJcb5mcBTb3L48QOoTypp8rU6unZe5fEb4pgFt08agf1Nvoxqpz4t9pAH
+	 0Pz87T0CIIp47ibA6MzejzqmxYElxHj2d2NwMCGgMRdichu4x594pQnpFkTzJJxSlU
+	 k4hbB7IGQoVew1BQryocbqousZf5RfHRV0WbMQJUhC7esjKeTE29IEsbmfFSRXbm38
+	 IcQ6F1xzYUvSgNzibE5aij5EWrOp7Fk/ehcFOPAuICrg/E+fPCnKisnB8w7mm661xG
+	 0gSqm4zQ/MObw==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4b30SR6hyqz4xM1;
+	Thu, 22 May 2025 17:35:19 +1000 (AEST)
+Date: Thu, 22 May 2025 17:35:18 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Tejun Heo <tj@kernel.org>, Andrew Morton <akpm@linux-foundation.org>
+Cc: JP Kobryn <inwardvessel@gmail.com>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ Shakeel Butt <shakeel.butt@linux.dev>
+Subject: linux-next: manual merge of the cgroup tree with the mm-stable,
+ mm-unstable trees
+Message-ID: <20250522173518.68d11f41@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Type: multipart/signed; boundary="Sig_/Ys7k0AK0AmHU=BNRblVpYDB";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-The J742S2 SoC reuses the common k3-j784s4-j742s2-mcu-wakeup-common.dtsi
-for its MCU domain, but it does not override the firmware-name property
-for its R5F cores. This causes the wrong firmware binaries to be
-referenced.
+--Sig_/Ys7k0AK0AmHU=BNRblVpYDB
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Introduce a new k3-j742s2-mcu-wakeup.dtsi file to override the
-firmware-name property with correct names for J742s2.
+Hi all,
 
-Signed-off-by: Beleswar Padhi <b-padhi@ti.com>
----
- .../arm64/boot/dts/ti/k3-j742s2-mcu-wakeup.dtsi | 17 +++++++++++++++++
- arch/arm64/boot/dts/ti/k3-j742s2.dtsi           |  1 +
- 2 files changed, 18 insertions(+)
- create mode 100644 arch/arm64/boot/dts/ti/k3-j742s2-mcu-wakeup.dtsi
+Today's linux-next merge of the cgroup tree got a conflict in:
 
-diff --git a/arch/arm64/boot/dts/ti/k3-j742s2-mcu-wakeup.dtsi b/arch/arm64/boot/dts/ti/k3-j742s2-mcu-wakeup.dtsi
-new file mode 100644
-index 000000000000..61db2348d6a4
---- /dev/null
-+++ b/arch/arm64/boot/dts/ti/k3-j742s2-mcu-wakeup.dtsi
-@@ -0,0 +1,17 @@
-+// SPDX-License-Identifier: GPL-2.0-only OR MIT
-+/*
-+ * Device Tree Source for J742S2 SoC Family
-+ *
-+ * TRM: https://www.ti.com/lit/pdf/spruje3
-+ *
-+ * Copyright (C) 2025 Texas Instruments Incorporated - https://www.ti.com/
-+ *
-+ */
-+
-+&mcu_r5fss0_core0 {
-+	firmware-name = "j742s2-mcu-r5f0_0-fw";
-+};
-+
-+&mcu_r5fss0_core1 {
-+	firmware-name = "j742s2-mcu-r5f0_1-fw";
-+};
-diff --git a/arch/arm64/boot/dts/ti/k3-j742s2.dtsi b/arch/arm64/boot/dts/ti/k3-j742s2.dtsi
-index 7a72f82f56d6..d265df1abade 100644
---- a/arch/arm64/boot/dts/ti/k3-j742s2.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-j742s2.dtsi
-@@ -96,3 +96,4 @@ cpu3: cpu@3 {
- };
- 
- #include "k3-j742s2-main.dtsi"
-+#include "k3-j742s2-mcu-wakeup.dtsi"
--- 
-2.34.1
+  mm/memcontrol.c
 
+between commits:
+
+  60cada258dfe ("memcg: optimize memcg_rstat_updated")
+  ff9798e05d33 ("memcg: memcg_rstat_updated re-entrant safe against irqs")
+
+from the mm-stable tree,
+
+  dc1bc55490f4 ("memcg: make memcg_rstat_updated nmi safe")
+
+from the mm-unstable tree and commit:
+
+  a97915559f5c ("cgroup: change rstat function signatures from cgroup-based=
+ to css-based")
+
+from the cgroup tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc mm/memcontrol.c
+index 4e9771e6e340,fde0934e2837..000000000000
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@@ -573,22 -582,11 +573,22 @@@ static inline void memcg_rstat_updated(
+  	if (!val)
+  		return;
+ =20
+ -	css_rstat_updated(&memcg->css, cpu);
+ -	statc =3D this_cpu_ptr(memcg->vmstats_percpu);
+ -	for (; statc; statc =3D statc->parent) {
+ -		stats_updates =3D READ_ONCE(statc->stats_updates) + abs(val);
+ -		WRITE_ONCE(statc->stats_updates, stats_updates);
+ +	/* TODO: add to cgroup update tree once it is nmi-safe. */
+ +	if (!in_nmi())
+- 		cgroup_rstat_updated(memcg->css.cgroup, cpu);
+++		css_rstat_updated(&memcg->css, cpu);
+ +	statc_pcpu =3D memcg->vmstats_percpu;
+ +	for (; statc_pcpu; statc_pcpu =3D statc->parent_pcpu) {
+ +		statc =3D this_cpu_ptr(statc_pcpu);
+ +		/*
+ +		 * If @memcg is already flushable then all its ancestors are
+ +		 * flushable as well and also there is no need to increase
+ +		 * stats_updates.
+ +		 */
+ +		if (memcg_vmstats_needs_flush(statc->vmstats))
+ +			break;
+ +
+ +		stats_updates =3D this_cpu_add_return(statc_pcpu->stats_updates,
+ +						    abs(val));
+  		if (stats_updates < MEMCG_CHARGE_BATCH)
+  			continue;
+ =20
+
+--Sig_/Ys7k0AK0AmHU=BNRblVpYDB
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgu07YACgkQAVBC80lX
+0GypyQgAkzvzqjc4/6Iuhb/k0MTk/pYu7TrVRbQ4SCWPn60jlx/VfYvL3YihJUFF
+HjkGKnIQ7H3D/TpbGghEhupZ/zEDjB2qmxe9fP45aRscsrSSaZoiRQbREHS4U6Lz
+Zx4i/26yxxiHdS4cs81mpls9e9JQC4qWVe+NjKAR5T3/Rh6KxeNnbBRIEvYfmeC5
+LvzTmnJsK253+6mGh6oHJG73C7NfiZrhEAGGEW8bW4OczgWsd+EoB+D1tm6UlNhg
+70nITN9f1o3CwiGG+HWv47cuigTyhiv/E1fNBr/Tg19ThC0RwlnK+hJpC1uJsocj
+cWbAAOj3AtqkfKYdq2M7841rfBX2iA==
+=cQdU
+-----END PGP SIGNATURE-----
+
+--Sig_/Ys7k0AK0AmHU=BNRblVpYDB--
