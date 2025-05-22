@@ -1,229 +1,138 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f172.google.com (mail-il1-f172.google.com [209.85.166.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15004221701;
-	Thu, 22 May 2025 07:47:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.177.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41F76224256
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 07:47:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747900076; cv=none; b=VtsWoL1bEWbi0UdLQEnlMGrcrG/15erc+MLXZmk54Pvn5Os1RHRCSLIPWFv1/UQY2IuA/YdcO9I51Rxc7lfdRsxGUoF4NRnrCFneWTl5fNuiDodogV89qnd/D1zZuLrddWp63ZqSm5DACwv74kzhw7aM+tPsOkq0OxpU90WiPC8=
+	t=1747900080; cv=none; b=t1CjMdYMN5Nm709B6PKDIub/J62pht4bVDEJqhWlHUXjYhZZW0gHM0/D4J+6emJMysOXEaPnzkL1+K2nVBsLgvFDvgBKiTTRaGrj8/fKIsBmbpjd5EfFIUAEhgycL38r1ax/6Als56L4ZN0y0Z6pH8JpnQ/7XzC4H5RaydBXfOs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747900076; c=relaxed/simple;
-	bh=smdC8ntSuFz7RbikksRDtXxPHa88CKXItvJ63BI/zOY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=BcM/Yu5iFeHZruSY62IeT8nikOv/LxXRURBoKrXBiFepa0NZ5zrwrjmhB2u2/CKKdPPCDrRF4MEkP67ORZgiHzmMjekz9pk5558OOjzyp1OsZlac54ZWhBwZwf2RMcstO+sQi1DnrunpnNYm83QsAnel9O4FRmF6nxIviWSlUAw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=HWMWhS4E; arc=none smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	s=arc-20240116; t=1747900080; c=relaxed/simple;
+	bh=oawndc3u6OFeNXbkn8onoaiERrlvNEUPYPsJqnlMj3g=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:From:To:Cc:
+	 References:In-Reply-To; b=KRj0t9+gSqgWtHyicJddPGsyCGpyRQPnaQhx2kVaJ3zI45HgWS2R/DEazCPiDuFcdW9twxNg3jjBNuzC6g19Vy92gxwF+T2Y6OJ9CZU76u7v3yCQcAc3kBqnrSbPlLXRaum/KHMMGDfaAavObDIkZtyeVH3sX4BeJKIu/Kakr8M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=brighamcampbell.com; spf=pass smtp.mailfrom=brighamcampbell.com; dkim=fail (0-bit key) header.d=brighamcampbell.com header.i=@brighamcampbell.com header.b=Fojo3Oc3 reason="key not found in DNS"; arc=none smtp.client-ip=209.85.166.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=brighamcampbell.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=brighamcampbell.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="HWMWhS4E"
-Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54M7bKdm020411;
-	Thu, 22 May 2025 07:47:39 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=corp-2025-04-25; bh=7M0sfJKDDhqb/GaL/zQpAc5hzFTOs
-	OvUTCDnKGL48Ug=; b=HWMWhS4E1skoqYcrvlV/j07qNTrOxtXSzT1+ScUccxK5E
-	xcJXUELJ5fMEDPAVANUtDwPF6jS/mvuowKbdXLnJ5Wla0p3RXdt6NM2/7xOOPiTs
-	mtwl4MfyXFZCaQNAvSLiFH6HnW7kcqBD0eIzbKoBO5rGHHbi0W42hVUPEK4+Elku
-	6NoLyj38/wXJPGcRNJP+jUJGEI7LuHeosqkAKfoBTPuseSBfiHG+IVP2Y0cN5Tj4
-	VWEh57HZrk2g8NOr3wXvAtEMjz+Vmwdf5hvkOZROdyqVRvs7mIn4l0gy9CEOZIji
-	RULYYjX6Wn+blQw3vXFYB1bpAswhA+ix6JZ15ZqAg==
-Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 46syphr0dy-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 22 May 2025 07:47:39 +0000 (GMT)
-Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 54M66YIE011260;
-	Thu, 22 May 2025 07:47:38 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 46rwep3p4w-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 22 May 2025 07:47:38 +0000
-Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 54M7lcSC025608;
-	Thu, 22 May 2025 07:47:38 GMT
-Received: from ca-dev112.us.oracle.com (ca-dev112.us.oracle.com [10.129.136.47])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 46rwep3p4b-1;
-	Thu, 22 May 2025 07:47:38 +0000
-From: Alok Tiwari <alok.a.tiwari@oracle.com>
-To: anthony.l.nguyen@intel.com, przemyslaw.kitszel@intel.com,
-        andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
-        kuba@kernel.org, pabeni@redhat.com, intel-wired-lan@lists.osuosl.org
-Cc: alok.a.tiwari@oracle.com, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, darren.kenny@oracle.com
-Subject: [PATCH] ixgbe: Fix typos and clarify comments in X550 driver code
-Date: Thu, 22 May 2025 00:47:26 -0700
-Message-ID: <20250522074734.3634633-1-alok.a.tiwari@oracle.com>
-X-Mailer: git-send-email 2.47.1
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=brighamcampbell.com header.i=@brighamcampbell.com header.b="Fojo3Oc3"
+Received: by mail-il1-f172.google.com with SMTP id e9e14a558f8ab-3dc6f6530c5so30290965ab.3
+        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 00:47:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brighamcampbell.com; s=google; t=1747900076; x=1748504876; darn=vger.kernel.org;
+        h=in-reply-to:references:cc:to:from:subject:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qSRz3DaXBxnm8FuwtommREWFzr69OZg5+bKQaLg1jag=;
+        b=Fojo3Oc3H06coOR7chfBFvcK8GGYRppOZgKiv/ZZ32e5UXpuXTpVyrPl51ke3EaLOR
+         YZNThfr6NT2MUlQBaA+ZWtzd9Tj3HDt9LcL+b32QbWTvsUgG6mZnRYogFNpvf4wzeUdh
+         +4XJUG6bdEp4rEqNIAW3yJFgGB5lTgZo6KxJQZxSadJpu/z1AuidoVGEUfaHrgaLoifB
+         knYLGmxDduePn/EoEA6uUY2+wsLhfboXZtzC082v1tpMv2ZDOW8aEko181dp6snaL4xW
+         4w4Y5lr3xvAQeWmH10eYcZc1LS0dhrdkT9EA2yppPE+p+Z/KjZ2D9wF7WKZYUbMzLsVL
+         Vv1Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747900076; x=1748504876;
+        h=in-reply-to:references:cc:to:from:subject:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=qSRz3DaXBxnm8FuwtommREWFzr69OZg5+bKQaLg1jag=;
+        b=gofs4JpPIvHeWtYGCBZjPU4OaDw4s4zte3NOmVUfRnWsvWBcd4iv+wophVOhFYMs0a
+         JhTIej9OrMDnmLJI6mve1+sUXgM7zKyiOITqwpPUoBJ+rN8sMWw0KorG9Z/wggUNyq75
+         UjRY/S62Tb3eHhNNfW3yfdsAdQgMJRzpqnkrNWNOwlUmbUGPYItwdGkP9Av7go21bhHR
+         F7O9bbHw9VWlVtN8KXxUtYDokcAO91oa/WYBY/tQcea0YiLGnivDoyU/qyN41WGxfjuM
+         UQldiT6pfD+X4Mt0RINjfCZG8dxFWgeW8BfBbZb1Uh9eTMcwXI3BqshjVgsa65lv27Jt
+         Pr3g==
+X-Forwarded-Encrypted: i=1; AJvYcCXRHDzcEbmq7F96VK7udDIAidq9croWj3MZdXoufXNow4gYjPhau7psEk8TgyieDHu81+MuNxTFjQ7w6s4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxZPlZDE9MkjquqGkKpbCQurazS9D/F+T9YC1mSBrhHeds3Am1r
+	+7hNn27TjdKjwoCb00mGBXllfvbXKqG//EwskRi5aR4EsNTurT8caJ/YM8PLHNz5uHE=
+X-Gm-Gg: ASbGnctndMq+dCbnYNhgz7gvsaK9c/oH0SJWnkrvjNwJ6jnBvBEpwTOcWFdxJDVAC9x
+	VmDtPehuIO1W1kbezySeRz83ND8rmGmnpckrunkIE5V3y5D9FwAaKBhoi/Y9+LglQfqC21GXJTB
+	PsAaxYodMon73AdaqAGs6QzwTthIrN3u1tWGegeYA03oY9346kLmcTrlx/iGcGnxwxNYUMZzJdk
+	p1WxBfKj3WoNhbOMvIjnzt5AUQRPkS//eksuXSuEJA7GyKHimiVp290RyvxKuzeaT8t1Cc/PDec
+	KZ2ZLumtuXdbZ5uPaJkuI1DRtZRstFtGwB5PK6u4I6WXMG+2swnI5wOLeRo=
+X-Google-Smtp-Source: AGHT+IEG8W77MeONJnBqaY3Kk6tuHXRXvYrpqiOJH8hduazBrd/kiXsmtoZpvJrUizpMHw69vmC2bQ==
+X-Received: by 2002:a05:6e02:3784:b0:3d9:6cb5:3be4 with SMTP id e9e14a558f8ab-3db84322dfamr259928015ab.15.1747900076239;
+        Thu, 22 May 2025 00:47:56 -0700 (PDT)
+Received: from localhost ([64.71.154.6])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4fbcc38a5besm3021494173.13.2025.05.22.00.47.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 22 May 2025 00:47:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-22_04,2025-05-20_03,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 spamscore=0
- suspectscore=0 adultscore=0 phishscore=0 malwarescore=0 mlxscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2505160000 definitions=main-2505220077
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIyMDA3NyBTYWx0ZWRfXz6y3jFZ3aK2b XVoGHrGO1K3dtyjca2CYBeL5DPzy599thWzuSn0fz8QIbjJnZ2PRZLNzcLgVM0n57mzbwGmjKkL A5vZ2JHqr9GeyzsnTNgHk4k+dPi+e0WwtyCFa/rI52SNyoI+G2IS1ff4Qss/2oSjlJZtPnsc41E
- WZvH0oRoaLgvXi6x/VPkFdfvolpM5wmjZ0A+p7Z+o5dY5io4Je4Ud4GoGqnRyTjiaBwZD92ljgp p4TrILBuuVw4yz3jXsWizHkuQDN1P5VVLd20G/TPL0VJdGVFf+R1j4Fow+GQj9p0k3GZ/AieS1E hYH0JUuNfTEAo6HUXB31fqQSe/H/LKpsb8Sssvh78zBC1jx+CL1k1SCBS68n0kf109Tq0kWcJVx
- p6aARgUmH0Ivnrvl+WmBoxblUIyQzpGZez9N2vyJlNtU9aZdj5FOCr7yoOh6MaM5Rw2DEoIy
-X-Authority-Analysis: v=2.4 cv=aNTwqa9m c=1 sm=1 tr=0 ts=682ed69b b=1 cx=c_pps a=e1sVV491RgrpLwSTMOnk8w==:117 a=e1sVV491RgrpLwSTMOnk8w==:17 a=dt9VzEwgFbYA:10 a=yPCof4ZbAAAA:8 a=NBsIVx0fIra5UVodnlcA:9 cc=ntf awl=host:14714
-X-Proofpoint-ORIG-GUID: ZuEMEtUNLP6oWblbaPdDzloteqsQRbXO
-X-Proofpoint-GUID: ZuEMEtUNLP6oWblbaPdDzloteqsQRbXO
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Thu, 22 May 2025 01:47:54 -0600
+Message-Id: <DA2IV4ZGT2M8.3QXO3L57VXSA5@brighamcampbell.com>
+Subject: Re: [PATCH 1/1] usb: typec: tipd: fix typo in
+ TPS_STATUS_HIGH_VOLAGE_WARNING macro
+From: "Brigham Campbell" <me@brighamcampbell.com>
+To: "Jihed Chaibi" <jihed.chaibi.dev@gmail.com>,
+ <heikki.krogerus@linux.intel.com>, <gregkh@linuxfoundation.org>
+Cc: <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <linux-kernel-mentees@lists.linux.dev>, <skhan@linuxfoundation.org>
+X-Mailer: aerc 0.20.1-0-g2ecb8770224a
+References: <20250521214851.386796-1-jihed.chaibi.dev@gmail.com>
+In-Reply-To: <20250521214851.386796-1-jihed.chaibi.dev@gmail.com>
 
-Corrected spelling errors such as "simular" -> "similar",
-"excepted" -> "accepted", and "Determime" -> "Determine".
-Fixed including incorrect word usage ("to MAC" -> "two MAC")
-and improved awkward phrasing.
+On Wed May 21, 2025 at 3:48 PM MDT, Jihed Chaibi wrote:
+> "VOLAGE" should become "VOLTAGE"
+>
+> Signed-off-by: Jihed Chaibi <jihed.chaibi.dev@gmail.com>
 
-Aligned function header descriptions with their actual functionality
-(e.g., "Writes a value" -> "Reads a value").
-Corrected typo in error code from -ENIVAL to -EINVAL.
-Improved overall clarity and consistency in comment across various
-functions.
+Nice work! I was able to successfully compile this driver with your
+changes and I don't see any further references to the misspelled macro.
 
-These changes improve maintainability and readability of the code
-without affecting functionality.
+Patches which fix issues which were introduced in some previous commit
+typically indicate the offending commit via the "Fixes" tag. Admittedly,
+I don't know if the tag is reserved for technical bugs rather than typos
+such as the one you addressed, but such a tag would look like the
+following for this patch:
 
-Signed-off-by: Alok Tiwari <alok.a.tiwari@oracle.com>
----
- drivers/net/ethernet/intel/ixgbe/ixgbe_x550.c | 28 +++++++++----------
- 1 file changed, 14 insertions(+), 14 deletions(-)
+Fixes: e011178579b57c03 ("usb: typec: tipd: fix typo in TPS_STATUS_HIGH_VOL=
+AGE_WARNING macro")
 
-diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_x550.c b/drivers/net/ethernet/intel/ixgbe/ixgbe_x550.c
-index 277ceaf8a793..57f68a1addfe 100644
---- a/drivers/net/ethernet/intel/ixgbe/ixgbe_x550.c
-+++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_x550.c
-@@ -20,7 +20,7 @@ static int ixgbe_get_invariants_X550_x(struct ixgbe_hw *hw)
- 	struct ixgbe_phy_info *phy = &hw->phy;
- 	struct ixgbe_link_info *link = &hw->link;
- 
--	/* Start with X540 invariants, since so simular */
-+	/* Start with X540 invariants, since so similar */
- 	ixgbe_get_invariants_X540(hw);
- 
- 	if (mac->ops.get_media_type(hw) != ixgbe_media_type_copper)
-@@ -48,7 +48,7 @@ static int ixgbe_get_invariants_X550_a(struct ixgbe_hw *hw)
- 	struct ixgbe_mac_info *mac = &hw->mac;
- 	struct ixgbe_phy_info *phy = &hw->phy;
- 
--	/* Start with X540 invariants, since so simular */
-+	/* Start with X540 invariants, since so similar */
- 	ixgbe_get_invariants_X540(hw);
- 
- 	if (mac->ops.get_media_type(hw) != ixgbe_media_type_copper)
-@@ -685,7 +685,7 @@ static int ixgbe_iosf_wait(struct ixgbe_hw *hw, u32 *ctrl)
- 	return 0;
- }
- 
--/** ixgbe_read_iosf_sb_reg_x550 - Writes a value to specified register of the
-+/** ixgbe_read_iosf_sb_reg_x550 - Reads a value to specified register of the
-  *  IOSF device
-  *  @hw: pointer to hardware structure
-  *  @reg_addr: 32 bit PHY register to write
-@@ -847,7 +847,7 @@ static int ixgbe_read_iosf_sb_reg_x550a(struct ixgbe_hw *hw, u32 reg_addr,
- 
- /** ixgbe_read_ee_hostif_buffer_X550- Read EEPROM word(s) using hostif
-  *  @hw: pointer to hardware structure
-- *  @offset: offset of  word in the EEPROM to read
-+ *  @offset: offset of word in the EEPROM to read
-  *  @words: number of words
-  *  @data: word(s) read from the EEPROM
-  *
-@@ -1253,7 +1253,7 @@ static int ixgbe_get_bus_info_X550em(struct ixgbe_hw *hw)
- 
- /**
-  * ixgbe_fw_recovery_mode_X550 - Check FW NVM recovery mode
-- * @hw: pointer t hardware structure
-+ * @hw: pointer to hardware structure
-  *
-  * Returns true if in FW NVM recovery mode.
-  */
-@@ -1267,7 +1267,7 @@ static bool ixgbe_fw_recovery_mode_X550(struct ixgbe_hw *hw)
- 
- /** ixgbe_disable_rx_x550 - Disable RX unit
-  *
-- *  Enables the Rx DMA unit for x550
-+ *  Disables the Rx DMA unit for x550
-  **/
- static void ixgbe_disable_rx_x550(struct ixgbe_hw *hw)
- {
-@@ -1754,7 +1754,7 @@ ixgbe_setup_mac_link_sfp_n(struct ixgbe_hw *hw, ixgbe_link_speed speed,
- 	ret_val = ixgbe_supported_sfp_modules_X550em(hw, &setup_linear);
- 
- 	/* If no SFP module present, then return success. Return success since
--	 * SFP not present error is not excepted in the setup MAC link flow.
-+	 * SFP not present error is not accepted in the setup MAC link flow.
- 	 */
- 	if (ret_val == -ENOENT)
- 		return 0;
-@@ -1804,7 +1804,7 @@ ixgbe_setup_mac_link_sfp_x550a(struct ixgbe_hw *hw, ixgbe_link_speed speed,
- 	ret_val = ixgbe_supported_sfp_modules_X550em(hw, &setup_linear);
- 
- 	/* If no SFP module present, then return success. Return success since
--	 * SFP not present error is not excepted in the setup MAC link flow.
-+	 * SFP not present error is not accepted in the setup MAC link flow.
- 	 */
- 	if (ret_val == -ENOENT)
- 		return 0;
-@@ -2324,7 +2324,7 @@ static int ixgbe_get_link_capabilities_X550em(struct ixgbe_hw *hw,
-  *	 PHY interrupt is lsc
-  * @is_overtemp: indicate whether an overtemp event encountered
-  *
-- * Determime if external Base T PHY interrupt cause is high temperature
-+ * Determine if external Base T PHY interrupt cause is high temperature
-  * failure alarm or link status change.
-  **/
- static int ixgbe_get_lasi_ext_t_x550em(struct ixgbe_hw *hw, bool *lsc,
-@@ -2669,7 +2669,7 @@ static int ixgbe_setup_internal_phy_t_x550em(struct ixgbe_hw *hw)
- 	if (status)
- 		return status;
- 
--	/* If link is not still up, then no setup is necessary so return */
-+	/* If the link is still not up, no setup is necessary */
- 	status = ixgbe_ext_phy_t_x550em_get_link(hw, &link_up);
- 	if (status)
- 		return status;
-@@ -2768,7 +2768,7 @@ static int ixgbe_led_off_t_x550em(struct ixgbe_hw *hw, u32 led_idx)
-  *  Sends driver version number to firmware through the manageability
-  *  block.  On success return 0
-  *  else returns -EBUSY when encountering an error acquiring
-- *  semaphore, -EIO when command fails or -ENIVAL when incorrect
-+ *  semaphore, -EIO when command fails or -EINVAL when incorrect
-  *  params passed.
-  **/
- int ixgbe_set_fw_drv_ver_x550(struct ixgbe_hw *hw, u8 maj, u8 min,
-@@ -3175,7 +3175,7 @@ static void ixgbe_read_mng_if_sel_x550em(struct ixgbe_hw *hw)
- 	hw->phy.nw_mng_if_sel = IXGBE_READ_REG(hw, IXGBE_NW_MNG_IF_SEL);
- 
- 	/* If X552 (X550EM_a) and MDIO is connected to external PHY, then set
--	 * PHY address. This register field was has only been used for X552.
-+	 * PHY address. This register field has only been used for X552.
- 	 */
- 	if (hw->mac.type == ixgbe_mac_x550em_a &&
- 	    hw->phy.nw_mng_if_sel & IXGBE_NW_MNG_IF_SEL_MDIO_ACT) {
-@@ -3735,7 +3735,7 @@ static int ixgbe_acquire_swfw_sync_x550em_a(struct ixgbe_hw *hw, u32 mask)
-  * @hw: pointer to hardware structure
-  * @mask: Mask to specify which semaphore to release
-  *
-- * Release the SWFW semaphore and puts the shared PHY token as needed
-+ * Release the SWFW semaphore and puts back the shared PHY token as needed
-  */
- static void ixgbe_release_swfw_sync_x550em_a(struct ixgbe_hw *hw, u32 mask)
- {
-@@ -3756,7 +3756,7 @@ static void ixgbe_release_swfw_sync_x550em_a(struct ixgbe_hw *hw, u32 mask)
-  * @phy_data: Pointer to read data from PHY register
-  *
-  * Reads a value from a specified PHY register using the SWFW lock and PHY
-- * Token. The PHY Token is needed since the MDIO is shared between to MAC
-+ * Token. The PHY Token is needed since the MDIO is shared between two MAC
-  * instances.
-  */
- static int ixgbe_read_phy_reg_x550a(struct ixgbe_hw *hw, u32 reg_addr,
--- 
-2.47.1
+> ---
+>  drivers/usb/typec/tipd/tps6598x.h | 2 +-
+>  drivers/usb/typec/tipd/trace.h    | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/usb/typec/tipd/tps6598x.h b/drivers/usb/typec/tipd/t=
+ps6598x.h
+> index 9b23e9017..cecb8d11d 100644
+> --- a/drivers/usb/typec/tipd/tps6598x.h
+> +++ b/drivers/usb/typec/tipd/tps6598x.h
+> @@ -27,7 +27,7 @@
+>  #define TPS_STATUS_OVERCURRENT		BIT(16)
+>  #define TPS_STATUS_GOTO_MIN_ACTIVE	BIT(26)
+>  #define TPS_STATUS_BIST			BIT(27)
+> -#define TPS_STATUS_HIGH_VOLAGE_WARNING	BIT(28)
+> +#define TPS_STATUS_HIGH_VOLTAGE_WARNING	BIT(28)
+>  #define TPS_STATUS_HIGH_LOW_VOLTAGE_WARNING BIT(29)
+> =20
+>  #define TPS_STATUS_CONN_STATE_MASK		GENMASK(3, 1)
+> diff --git a/drivers/usb/typec/tipd/trace.h b/drivers/usb/typec/tipd/trac=
+e.h
+> index 0669cca12..bea383f2d 100644
+> --- a/drivers/usb/typec/tipd/trace.h
+> +++ b/drivers/usb/typec/tipd/trace.h
+> @@ -153,7 +153,7 @@
+>  		      { TPS_STATUS_OVERCURRENT,		"OVERCURRENT" }, \
+>  		      { TPS_STATUS_GOTO_MIN_ACTIVE,	"GOTO_MIN_ACTIVE" }, \
+>  		      { TPS_STATUS_BIST,		"BIST" }, \
+> -		      { TPS_STATUS_HIGH_VOLAGE_WARNING,	"HIGH_VOLAGE_WARNING" }, \
+> +		      { TPS_STATUS_HIGH_VOLTAGE_WARNING,	"HIGH_VOLTAGE_WARNING" }, \
+>  		      { TPS_STATUS_HIGH_LOW_VOLTAGE_WARNING, "HIGH_LOW_VOLTAGE_WARNING=
+" })
+
+Consider making "HIGH_LOW_VOLTAGE_WARNING" inline with
+"HIGH_VOLTAGE_WARNING", or vice versa.
+
+> =20
+>  #define show_tps25750_status_flags(flags) \
+
+Reviewed-by: Brigham Campbell <me@brighamcampbell.com>
 
