@@ -1,167 +1,138 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97734221FD6;
-	Thu, 22 May 2025 07:36:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C63061A3A80
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 07:36:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747899382; cv=none; b=GWs6NwhJ6N7l/FSzcg4aSITrf1Mp3o2jMFQ98l28eX61ZYKFQsIgFlpyppWIdg8Nh2Ray6dz/mNDqYCDnV9QYHQIX0WiUfbktX2jXr8+3jipg9iISgBmYqIQrSl1wiR7LnHt/XEzQot27elLeqZDO+3eIOBsHx59Ra+cXeXfkmI=
+	t=1747899419; cv=none; b=EnZCxg4XDsYdcEXGgCYzod8Uhu0bgJqzsxamFS+kG1W/8M2Jt40TnP81IlV6r1zGvLqWYV2p7gulunIJNQ153OGftrov8zm0CNkblHM0h5wfYqRja1qVVqLCT8bE53+pu1STbr6HTxLgQxqMsvAPAjzokpWapCoiVd+OOjwgfXw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747899382; c=relaxed/simple;
-	bh=x5lf94K85T1c12UO+DHZgoiMv99MGjTfUZfEFKZhDSI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uAHsU6M3swMoRdycGvERcln5LNjr/Q4E5tIVHl1VOGg7JfpkUtVxMZ30QtoF8mrg+QMGkcI3K6bLtV1PyIzPeSsho3JcKIyyCDsphNrOqy2ztSNt6CET+8Xzn/JzaXYHfEFKT6G7le0eFeBh4F1ruk+yV0946kbo5qGkKsYeuoI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ETH1usQb; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ETH1usQb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747899380; x=1779435380;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=x5lf94K85T1c12UO+DHZgoiMv99MGjTfUZfEFKZhDSI=;
-  b=ETH1usQbOHmrvU6XW9yFdUVHeYsX9ZymaNNKcnw3cs4SkrYOxzb1rqKr
-   CTl9aqo6gcgREDsyhqD5KHAyNciR+qaUQWkAsuHAkY0xJHHJBoiduKNtw
-   hHx+RzcVxNvUNthCeILEFezyzw2pJHiiNb1+KCr3SqgmAFmWPzGIEq88e
-   hIykWa47QMvYPE57KXt5xx8HfDnuwTEMXfuyKOz+0EF9wkSYLfnooJjVW
-   BWl4I/3vh6DuzV3rqIgTv/w8tsyUpx5p5/k5FGGV2d7NVAtI8wMCw6Drl
-   quwrnCibw/jjAEphBdRleFOCOhamMRy1LT8ljdzsf5o8bsqx0mAXP2/e+
-   Q==;
-X-CSE-ConnectionGUID: DMUbtiL2TdumnyeRqk8yjA==
-X-CSE-MsgGUID: kVnVCXjxRIKWnEvelHj2gw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11440"; a="60546172"
-X-IronPort-AV: E=Sophos;i="6.15,305,1739865600"; 
-   d="scan'208";a="60546172"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2025 00:36:19 -0700
-X-CSE-ConnectionGUID: EePMjDCiQnCjK5q4l9XQrw==
-X-CSE-MsgGUID: rA69khqeRGKnuwOE+HAByg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,305,1739865600"; 
-   d="scan'208";a="145613508"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by orviesa005.jf.intel.com with ESMTP; 22 May 2025 00:36:16 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uI0TN-000P32-26;
-	Thu, 22 May 2025 07:36:13 +0000
-Date: Thu, 22 May 2025 15:36:02 +0800
-From: kernel test robot <lkp@intel.com>
-To: Zhang Yi <zhangyi@everest-semi.com>, broonie@kernel.org,
-	robh@kernel.org, tiwai@suse.com, devicetree@vger.kernel.org,
-	conor+dt@kernel.org, lgirdwood@gmail.com,
-	linux-kernel@vger.kernel.org, linux-sound@vger.kernel.org,
-	perex@perex.cz, krzk+dt@kernel.org
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	amadeuszx.slawinski@linux.intel.com, krzk@kernel.org,
-	Zhang Yi <zhangyi@everest-semi.com>
-Subject: Re: [PATCH 2/2] ASoC: codecs: add support for ES8375
-Message-ID: <202505221528.nvWwf9kj-lkp@intel.com>
-References: <20250521104247.6595-3-zhangyi@everest-semi.com>
+	s=arc-20240116; t=1747899419; c=relaxed/simple;
+	bh=EpTuo3/eKYUqt/vcS6hzJUVm6+j2JcC5pE3YceV+xl4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ajWKuqcUYApxKYkLwI+3M0DEwqaejDBnXrhCjXqev1sdUdER4w1CzdPnRW1/kb4v8eQs9KW4bmxE3iXrQLQLmsKzhKIlxJEJZKIpbG8obcyD2U5pJ8X/irllXj4xm1/Q7c9b5ccKukqEwPpUvkEP5YnrjwpiOV5Ovo0rCnXXIhk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from ptz.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::77] helo=[127.0.0.1])
+	by metis.whiteo.stw.pengutronix.de with esmtp (Exim 4.92)
+	(envelope-from <a.fatoum@pengutronix.de>)
+	id 1uI0Ts-0008Bc-NL; Thu, 22 May 2025 09:36:44 +0200
+Message-ID: <5291df1a-d44f-493e-9655-0bf13a4a7a59@pengutronix.de>
+Date: Thu, 22 May 2025 09:36:42 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250521104247.6595-3-zhangyi@everest-semi.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 3/8] MAINTAINERS: add maintainer for the Ka-Ro
+ tx8p-ml81 COM module
+To: Krzysztof Kozlowski <krzk@kernel.org>,
+ Maud Spierings | GOcontroll <maudspierings@gocontroll.com>,
+ Shawn Guo <shawnguo2@yeah.net>, Rob Herring <robh@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+ Fabio Estevam <festevam@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "imx@lists.linux.dev" <imx@lists.linux.dev>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Shawn Guo <shawnguo@kernel.org>,
+ "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+References: <20250417-initial_display-v6-0-3c6f6d24c7af@gocontroll.com>
+ <20250417-initial_display-v6-3-3c6f6d24c7af@gocontroll.com>
+ <aB26FRq/Ets5fiRK@dragon>
+ <PA4PR04MB7630F5874577DA12FCBE1537C58AA@PA4PR04MB7630.eurprd04.prod.outlook.com>
+ <aB3DuZMBIwsFXrVz@dragon>
+ <PA4PR04MB76309AE2C6E2C774DF8FAE29C58AA@PA4PR04MB7630.eurprd04.prod.outlook.com>
+ <3ba28773-61ec-4e1e-949d-e8285525d1d2@pengutronix.de>
+ <650740e3-1a21-46b1-a297-f8d6b7df9ae9@kernel.org>
+Content-Language: en-US
+From: Ahmad Fatoum <a.fatoum@pengutronix.de>
+In-Reply-To: <650740e3-1a21-46b1-a297-f8d6b7df9ae9@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:900:1d::77
+X-SA-Exim-Mail-From: a.fatoum@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-Hi Zhang,
+Hi Krzysztof,
 
-kernel test robot noticed the following build errors:
+On 22.05.25 08:19, Krzysztof Kozlowski wrote:
+> On 21/05/2025 22:39, Ahmad Fatoum wrote:
+>> Dear Device Tree Maintainers,
+>> Dear Maud and Shawn,
+>>
+>> On 09.05.25 11:03, Maud Spierings | GOcontroll wrote:
+>>> On 5/9/25 10:58, Shawn Guo wrote:
+>>>>>>> +KA-RO TX8P COM MODULE
+>>>>>>> +M:	Maud Spierings <maudspierings@gocontroll.com>
+>>>>>>> +L:	imx@lists.linux.dev
+>>>>>>> +S:	Maintained
+>>>>>>> +F:	arch/arm64/boot/dts/freescale/imx8mp-tx8p-ml81.dtsi
+>>>>>>> +
+>>>>>>
+>>>>>> I'm not fond of such changes, as MAINTAINERS file could be bloated
+>>>>>> quickly by individual DTS.
+>>>>>
+>>>>> Is there some way you would prefer to see it? I don't really know of a better
+>>>>> way.
+>>>>
+>>>> There was some discussion about getting ./scripts/get_maintainer.pl pick
+>>>> up the Author: field (in DTS header area).  But I'm not sure where it
+>>>> ended.
+>>>
+>>> I feel like that would be wrong in this situation too, it would pull in
+>>> Lothar Wassmann, who has nothing to do with me upstreaming this. I have
+>>> seen him around on the mailing list but given that Ka-Ro are not
+>>> upstreaming these themselves, I feel it would be weird to pull him into
+>>> this.
+>>
+>> We can add multiple authors. Authors not wishing to receive mail can always
+>> remove their name or blackhole their mail address via the mailmap.
+>>
+>> I am not leaning strongly in favor of either way, but I am bothered a little
+>> by b4 nagging me about adding MAINTAINERS entry for device trees that I've
+>> added. It would be nice to have a guideline here.
+> 
+> Hm? That's not a warning anyone should fix. If any of these patches are
+> because of checkpatch, then obviously this should never be accepted.
 
-[auto build test ERROR on broonie-sound/for-next]
-[also build test ERROR on next-20250521]
-[cannot apply to tiwai-sound/for-next tiwai-sound/for-linus linus/master v6.15-rc7]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+If we come to an agreement that in the general case, MAINTAINER entries
+are not desired for device trees, we should fix the tooling to not mislead
+contributors.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Zhang-Yi/ASoC-dt-bindings-Add-Everest-ES8375-audio-CODEC/20250521-184427
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
-patch link:    https://lore.kernel.org/r/20250521104247.6595-3-zhangyi%40everest-semi.com
-patch subject: [PATCH 2/2] ASoC: codecs: add support for ES8375
-config: x86_64-buildonly-randconfig-001-20250522 (https://download.01.org/0day-ci/archive/20250522/202505221528.nvWwf9kj-lkp@intel.com/config)
-compiler: clang version 20.1.2 (https://github.com/llvm/llvm-project 58df0ef89dd64126512e4ee27b4ac3fd8ddf6247)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250522/202505221528.nvWwf9kj-lkp@intel.com/reproduce)
+> And that's true for every other change, every addition of C or H file.
+> You do not add maintainer entries for them.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505221528.nvWwf9kj-lkp@intel.com/
+I guess it's more of a nudge to make the contributor think about whether the
+change is adequately covered by existing MAINTAINERS entries or not.
+People have time and time again came to different conclusions for that
+regarding device trees though.
 
-All errors (new ones prefixed by >>):
+It would be nice if we could put that to rest by 1) documenting it
+and 2) fixing the tooling to not nag about it or to have a more suitable
+message concerning device trees.
 
->> sound/soc/codecs/es8375.c:706:7: error: use of undeclared identifier 'i'
-     706 |         for (i = 0; i < ARRAY_SIZE(es8375_core_supplies); i++)
-         |              ^
-   sound/soc/codecs/es8375.c:706:14: error: use of undeclared identifier 'i'
-     706 |         for (i = 0; i < ARRAY_SIZE(es8375_core_supplies); i++)
-         |                     ^
-   sound/soc/codecs/es8375.c:706:52: error: use of undeclared identifier 'i'
-     706 |         for (i = 0; i < ARRAY_SIZE(es8375_core_supplies); i++)
-         |                                                           ^
-   sound/soc/codecs/es8375.c:707:23: error: use of undeclared identifier 'i'
-     707 |                 es8375->core_supply[i].supply = es8375_core_supplies[i];
-         |                                     ^
-   sound/soc/codecs/es8375.c:707:56: error: use of undeclared identifier 'i'
-     707 |                 es8375->core_supply[i].supply = es8375_core_supplies[i];
-         |                                                                      ^
-   5 errors generated.
+I am happy to implement either thing into checkpatch.pl.
+Just let me know what way we should go.
 
+Thank you,
+Ahmad
 
-vim +/i +706 sound/soc/codecs/es8375.c
+> 
+>>
+> 
+> 
+> Best regards,
+> Krzysztof
+> 
 
-   691	
-   692	static int es8375_read_device_properities(struct device *dev, struct es8375_priv *es8375)
-   693	{
-   694		int ret;
-   695	
-   696		ret = device_property_read_u8(dev, "everest,mclk-src", &es8375->mclk_src);
-   697		if (ret != 0)
-   698			es8375->mclk_src = ES8375_MCLK_SOURCE;
-   699		dev_dbg(dev, "mclk-src %x", es8375->mclk_src);
-   700	
-   701		ret = device_property_read_u8(dev, "everest,dmic-pol", &es8375->dmic_pol);
-   702		if (ret != 0)
-   703			es8375->dmic_pol = DMIC_POL;
-   704		dev_dbg(dev, "dmic-pol %x", es8375->dmic_pol);
-   705	
- > 706		for (i = 0; i < ARRAY_SIZE(es8375_core_supplies); i++)
-   707			es8375->core_supply[i].supply = es8375_core_supplies[i];
-   708		ret = devm_regulator_bulk_get(dev, ARRAY_SIZE(es8375_core_supplies), es8375->core_supply);
-   709		if (ret) {
-   710			dev_err(dev, "Failed to request core supplies %d\n", ret);
-   711			return ret;
-   712		}
-   713	
-   714		es8375->mclk = devm_clk_get(dev, "mclk");
-   715		if (IS_ERR(es8375->mclk))
-   716			return dev_err_probe(dev, PTR_ERR(es8375->mclk), "unable to get mclk\n");
-   717	
-   718		if (!es8375->mclk)
-   719			dev_warn(dev, "assuming static mclk\n");
-   720	
-   721		ret = clk_prepare_enable(es8375->mclk);
-   722		if (ret) {
-   723			dev_err(dev, "unable to enable mclk\n");
-   724			return ret;
-   725		}
-   726		ret = regulator_bulk_enable(ARRAY_SIZE(es8375_core_supplies), es8375->core_supply);
-   727		if (ret) {
-   728			dev_err(dev, "Failed to enable core supplies: %d\n", ret);
-   729			clk_disable_unprepare(es8375->mclk);
-   730			return ret;
-   731		}
-   732	
-   733		return 0;
-   734	}
-   735	
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
