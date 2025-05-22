@@ -1,121 +1,222 @@
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD7D0299AA8;
-	Thu, 22 May 2025 15:56:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F04A286D65;
+	Thu, 22 May 2025 15:56:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747929364; cv=none; b=LLotqExZ+8CCmo2yp4krjatxv4sBpShJyyJwqjSF8ED7FBfwkqi/2TtGzzZ4UESHgmtaYYcCkhjtKS7ST6KHeirVmpnmc8Gq3WVooHYWarJmcv+pdp3RpG7e3MGWLAGU0paxB0XiCv/OQOAo1b//1sa3FdmI8RsaCNfK0O17ozk=
+	t=1747929403; cv=none; b=jW3mnjOosDauscpu6bGPQGfOdlSESdp6XDAwAuu10Ob6CNiNQ8A4gM51Bg2YsUTrZABC4eaMJmEN3FNf6QUUqoVkPCYFJQkQxGhOxMykrzACi8yvfgCXUIcN6jSqJXdFxLNE57vx7oir5Nb2rZCvJrK3vwWWewjapjnQZY4nfUs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747929364; c=relaxed/simple;
-	bh=A4J+qQeo8FojNZDrm8K6UkrhE2Rb/ECmA/pvJXKHIeg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ayD5lBDUem++L/42dU//e/z74qc4CANKt1VMo9IjZms4Sc0xS6k0r1puuJzjcX4kJezrNMalW32X6NNYehX6UjwWqHxyHNb4TZFZF+46mbi1AzTQCZOaohAYwgG2GsL4ucsdooyWy8AVLQzkaGeiSc2HZykIbYK3qhGJS+rGSx0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mcBRbc91; arc=none smtp.client-ip=209.85.218.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747929403; c=relaxed/simple;
+	bh=wQH70eo1sPSqO0FtIIJnBv1zebflYdHlHJdMqRCxIeI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=GcYacIB0HOxKMdHji5nEC93r3tn9zlsoaXHO5Uv2nRNC7+b6dCEBI7gWd+hZOAIl70M1IUWC9PaGLjsUe9BLi04QMRAp8N2g0QM8Ys79XsJVSwe8TzIHCHNmelCOa4sk3XlG7PZoInTdy+CPnhmN1x//oeQwbXOvpG/IuczM2bo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=LrOFkxjD; arc=none smtp.client-ip=217.70.183.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mcBRbc91"
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-ad53a96baf9so1025280466b.3;
-        Thu, 22 May 2025 08:56:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747929361; x=1748534161; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=A4J+qQeo8FojNZDrm8K6UkrhE2Rb/ECmA/pvJXKHIeg=;
-        b=mcBRbc91IPJbfIHD3/GQRq9UaxQF+0/Kp6yErbzv92rSFkKBEIgm+AD++hqoMQx6GF
-         FeZO3gnPWnkuqkp8lJWquaiNHbhEPC4oFiFwusBzFZErslOznoRgbNf6cRQsSO4Ew5OO
-         MHwP20nMO8rXy1l+6AbpTWaBnKLDykLgIzbY3x54XUePAkVp2Dw5OOeqUoVvXGYebC47
-         LDnBhug8KgrNMX1/Im4tamBuU733pS77MD2KrTWzq8ZXHsFW0cI2kvAvL8NvRT3fwcRf
-         ORLSKJnCE2w+TZ1T16sxvaaTE05hJTgccFXAOix1DMPJv2G0ylT+0fIWIpRUZy/5Ak9J
-         Owdg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747929361; x=1748534161;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=A4J+qQeo8FojNZDrm8K6UkrhE2Rb/ECmA/pvJXKHIeg=;
-        b=uC0SiBqatr10fBQJ5+tNj3hzSX1Z/Ff2mBOHZFP+2ApyX9EIrCHtmeBTHHBn0t1zTx
-         QIvfczWYazU3s/LPIck8Yn7LaxepSBd5q+xCpUSQTDp9+IQX1B0YrlWam3/NFYRN6DJE
-         HRNulr3IxuWdNsTnIfTclem3brZmZZdPSNtEvaKn3SMaM2PJM5okMStq0Q9pn71KISCJ
-         gBlyz46Ve/UYFCGK8KsWL4jsDAo1e3WsrCfxWdW8HGS+JfcFOL6HqVV1Y32dGwI7TdpT
-         0JhdJkiSnvXgclGNGtdGxclYKaXX+/tnT0jUF7cPskM3ktegp14L+wOz/iHK1Bx7GKlp
-         I41g==
-X-Forwarded-Encrypted: i=1; AJvYcCUcYZynevWKQmGbD04ZCpG+iUms5X4EqBAo3XMjzArHwH1FUrtz6DWRdK/BD8U3JrvD5jG2TQ0IRt7l@vger.kernel.org, AJvYcCV2j9C/Oy7pahQud8Zjm9BVoS4UmzkLIQUCpponNhyCxRoMXcZWbjJYPvIpA+18Fws0bqm4BCqeK1Y=@vger.kernel.org, AJvYcCVm2osReLqydd+pzRubxDDDxU7rddrx+5cOrA8Bt3b4EQvA5rEwSmx2NcAp+MWwMRgaDrAJgqaRMPOLDZ/Bhw==@vger.kernel.org, AJvYcCX3RD7nwUTHg9oyPbRkGvILv69/1DZeM32LxL7b3JScRbAj5GeZLl1+vm3RvPKzxsZNAGN9JasYdnL4Mvq/@vger.kernel.org
-X-Gm-Message-State: AOJu0YzIVJHYAQuLPP9x8Z34w4/eilhJWDns81ygOdBZNgHCDyDgYAya
-	LVqP25HnvR2c722EYZVKucuegiPdMzGjmpGqZcZxzBBzyMi237/Bekin7sSRPhhChYC6tuJQRMH
-	xXZrnANtb8roUJ5koKp7D5V5/1+rQdwI=
-X-Gm-Gg: ASbGnctcUhhF08o2zmB49Gv9hVadYD81jtZqQsfY/3ciWgGo16lmZrZmg+UCHwJHq8P
-	b3o+raUJEIKEcET1RR5+I1ZbpLzYs4AfKbWima2acOQxY5RMVRhLSNKObNoScI3wBW2+iXm+MrB
-	Lw+Qh8cx+0xIw+IVdjD3uhNAsLngb3wawI
-X-Google-Smtp-Source: AGHT+IH6QL3rTW5k/XBVsCAcYeUMdtDIv0Z5CTpmk9yXv5afLUYePNzV48MFbmXlyN3ijm1K7kXjZ0FhjF+aJ1p4y4w=
-X-Received: by 2002:a17:907:fdcb:b0:ad5:52a3:e358 with SMTP id
- a640c23a62f3a-ad552a3e5b3mr2046292766b.49.1747929360593; Thu, 22 May 2025
- 08:56:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="LrOFkxjD"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 62288439A5;
+	Thu, 22 May 2025 15:56:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1747929396;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=hDrRfxUh05bF14pzZXQ+mC3f/tIJuaPORyh0q5iuGpM=;
+	b=LrOFkxjDWfPYlaJ27v0bKylFL4XWO+4kvvgStRLZlUDRYZHdyChNIb2pfDuGENtsuftdv/
+	wGbOCWfZtxzREyaEFwnH82wXULSKdAdYw/PBXzq/zAP46MQh+2qKay6Pd/jwy3zwxJN8dw
+	rgJTGQYyYqHyrBnB5+bbAyyUPyuK4SQmrz1l5b6bKlFTJX3baN6Ej14byKnrUchMCQnb3+
+	vJDkRIAED2cQX+6NzREg8KVZNhwI6WQ0582mb8M9FYZVQz3yCa/TIqtPexDE/d9Fb/Krsm
+	aRFHR6fwOi/MpKAjV481sgJjj5EABYXpHVIjb+acU9Q+t95PRAEbZnkSC880OA==
+Date: Thu, 22 May 2025 17:56:23 +0200
+From: Luca Ceresoli <luca.ceresoli@bootlin.com>
+To: Maxime Ripard <mripard@kernel.org>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann
+ <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter
+ <simona@ffwll.ch>, Andrzej Hajda <andrzej.hajda@intel.com>, Neil Armstrong
+ <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, Laurent
+ Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman
+ <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, Jagan Teki
+ <jagan@amarulasolutions.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer
+ <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>, Douglas Anderson
+ <dianders@chromium.org>, Chun-Kuang Hu <chunkuang.hu@kernel.org>, Krzysztof
+ Kozlowski <krzk@kernel.org>, Liu Ying <victor.liu@nxp.com>, Anusha Srivatsa
+ <asrivats@redhat.com>, Paul Kocialkowski <paulk@sys-base.io>, Dmitry
+ Baryshkov <lumag@kernel.org>, Hui Pu <Hui.Pu@gehealthcare.com>, Thomas
+ Petazzoni <thomas.petazzoni@bootlin.com>, dri-devel@lists.freedesktop.org,
+ asahi@lists.linux.dev, linux-kernel@vger.kernel.org,
+ chrome-platform@lists.linux.dev, imx@lists.linux.dev,
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
+ linux-amlogic@lists.infradead.org, linux-renesas-soc@vger.kernel.org,
+ platform-driver-x86@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org,
+ linux-stm32@st-md-mailman.stormreply.com, Louis Chauvet
+ <louis.chauvet@bootlin.com>, Alim Akhtar <alim.akhtar@samsung.com>, Inki
+ Dae <inki.dae@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>,
+ Seung-Woo Kim <sw0312.kim@samsung.com>, Manikandan Muralidharan
+ <manikandan.m@microchip.com>, Adam Ford <aford173@gmail.com>, Adrien
+ Grassein <adrien.grassein@gmail.com>, Aleksandr Mishin
+ <amishin@t-argos.ru>, Andy Yan <andy.yan@rock-chips.com>, AngeloGioacchino
+ Del Regno <angelogioacchino.delregno@collabora.com>, Benson Leung
+ <bleung@chromium.org>, Biju Das <biju.das.jz@bp.renesas.com>, Christoph
+ Fritz <chf.fritz@googlemail.com>, Cristian Ciocaltea
+ <cristian.ciocaltea@collabora.com>, Detlev Casanova
+ <detlev.casanova@collabora.com>, Dharma Balasubiramani
+ <dharma.b@microchip.com>, Guenter Roeck <groeck@chromium.org>, Heiko
+ Stuebner <heiko@sntech.de>, Jani Nikula <jani.nikula@intel.com>, Janne
+ Grunau <j@jannau.net>, Jerome Brunet <jbrunet@baylibre.com>, Jesse Van
+ Gavere <jesseevg@gmail.com>, Kevin Hilman <khilman@baylibre.com>, Kieran
+ Bingham <kieran.bingham+renesas@ideasonboard.com>, Martin Blumenstingl
+ <martin.blumenstingl@googlemail.com>, Matthias Brugger
+ <matthias.bgg@gmail.com>, Philipp Zabel <p.zabel@pengutronix.de>, Phong LE
+ <ple@baylibre.com>, Sasha Finkelstein <fnkl.kernel@gmail.com>, Sugar Zhang
+ <sugar.zhang@rock-chips.com>, Sui Jingfeng <sui.jingfeng@linux.dev>, Tomi
+ Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>, Vitalii Mordan
+ <mordan@ispras.ru>, "Rob Herring (Arm)" <robh@kernel.org>, Hsin-Te Yuan
+ <yuanhsinte@chromium.org>, Pin-yen Lin <treapking@chromium.org>, Xin Ji
+ <xji@analogixsemi.com>, Aradhya Bhatia <a-bhatia1@ti.com>, Tomi Valkeinen
+ <tomi.valkeinen@ideasonboard.com>, Ian Ray <ian.ray@gehealthcare.com>,
+ Martyn Welch <martyn.welch@collabora.co.uk>, Peter Senna Tschudin
+ <peter.senna@gmail.com>, Helge Deller <deller@gmx.de>, Kuninori Morimoto
+ <kuninori.morimoto.gx@renesas.com>, Laurent Pinchart
+ <laurent.pinchart+renesas@ideasonboard.com>, Alexandre Torgue
+ <alexandre.torgue@foss.st.com>, Maxime Coquelin
+ <mcoquelin.stm32@gmail.com>, Philippe Cornu <philippe.cornu@foss.st.com>,
+ Raphael Gallais-Pou <raphael.gallais-pou@foss.st.com>, Yannick Fertre
+ <yannick.fertre@foss.st.com>, Alain Volmat <alain.volmat@foss.st.com>,
+ Raphael Gallais-Pou <rgallaispou@gmail.com>, Michal Simek
+ <michal.simek@amd.com>, Jonathan Corbet <corbet@lwn.net>,
+ linux-doc@vger.kernel.org
+Subject: Re: [PATCH v3 00/22] drm: convert all bridges to
+ devm_drm_bridge_alloc()
+Message-ID: <20250522175623.1a6d9b14@booty>
+In-Reply-To: <20250522-amphibian-shiny-chachalaca-cf05ba@houat>
+References: <20250509-drm-bridge-convert-to-alloc-api-v3-0-b8bc1f16d7aa@bootlin.com>
+	<20250521162216.79dd3290@booty>
+	<20250522-amphibian-shiny-chachalaca-cf05ba@houat>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250421013346.32530-1-john@groves.net> <hobxhwsn5ruaw42z4xuhc2prqnwmfnbouui44lru7lnwimmytj@fwga2crw2ych>
-In-Reply-To: <hobxhwsn5ruaw42z4xuhc2prqnwmfnbouui44lru7lnwimmytj@fwga2crw2ych>
-From: Amir Goldstein <amir73il@gmail.com>
-Date: Thu, 22 May 2025 17:55:48 +0200
-X-Gm-Features: AX0GCFsIIcsMi4HVgfhUZ-aKlbSmC6wfuBA3UyRPVDwUyb5pOFwqCosyJaGAPEw
-Message-ID: <CAOQ4uxiNPiT5=OLN_Pp695MPH=p7ffoLm8hEQ4S637RSYZz5gg@mail.gmail.com>
-Subject: Re: [RFC PATCH 00/19] famfs: port into fuse
-To: John Groves <John@groves.net>
-Cc: Dan Williams <dan.j.williams@intel.com>, Miklos Szeredi <miklos@szeredi.hu>, 
-	Bernd Schubert <bschubert@ddn.com>, John Groves <jgroves@micron.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, 
-	Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, 
-	"Darrick J . Wong" <djwong@kernel.org>, Luis Henriques <luis@igalia.com>, 
-	Randy Dunlap <rdunlap@infradead.org>, Jeff Layton <jlayton@kernel.org>, 
-	Kent Overstreet <kent.overstreet@linux.dev>, Petr Vorel <pvorel@suse.cz>, 
-	Brian Foster <bfoster@redhat.com>, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev, 
-	linux-cxl@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>, Stefan Hajnoczi <shajnocz@redhat.com>, 
-	Joanne Koong <joannelkoong@gmail.com>, Josef Bacik <josef@toxicpanda.com>, 
-	Aravind Ramesh <arramesh@micron.com>, Ajay Joshi <ajayjoshi@micron.com>, 
-	Alistair Popple <apopple@nvidia.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgdeifeejucdltddurdegfedvrddttddmucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtjeertdertddvnecuhfhrohhmpefnuhgtrgcuvegvrhgvshholhhiuceolhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepgfejhffgjeelkeeftdekfefgteekgefhleelueeijeffieekieeigefhledtffetnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghdpfhhrvggvuggvshhkthhophdrohhrghdpsghoohhtlhhinhdrtghomhenucfkphepvdgrtddvmeeijedtmedvtddvtdemvggrtddumegsvgegudemleehvgejmeefgeefmeeludefvgenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtvdemieejtdemvddtvddtmegvrgdtudemsggvgedumeelhegvjeemfeegfeemledufegvpdhhvghlohepsghoohhthidpmhgrihhlfhhrohhmpehluhgtrgdrtggvrhgvshholhhisegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeelhedprhgtphhtthhopehmrhhiphgrrhgusehkvghrnhgvlhdrohhrghdprhgtphhtthhopehmrggrrhhtvghnrdhlrghnkhhho
+ hhrshhtsehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtohepthiiihhmmhgvrhhmrghnnhesshhushgvrdguvgdprhgtphhtthhopegrihhrlhhivggusehgmhgrihhlrdgtohhmpdhrtghpthhtohepshhimhhonhgrsehffhiflhhlrdgthhdprhgtphhtthhopegrnhgurhiivghjrdhhrghjuggrsehinhhtvghlrdgtohhmpdhrtghpthhtohepnhgvihhlrdgrrhhmshhtrhhonhhgsehlihhnrghrohdrohhrghdprhgtphhtthhopehrfhhoshhssehkvghrnhgvlhdrohhrgh
+X-GND-Sasl: luca.ceresoli@bootlin.com
 
-On Thu, May 22, 2025 at 12:30=E2=80=AFAM John Groves <John@groves.net> wrot=
-e:
->
-> On 25/04/20 08:33PM, John Groves wrote:
-> > Subject: famfs: port into fuse
-> >
-> > <snip>
->
-> I'm planning to apply the review comments and send v2 of
-> this patch series soon - hopefully next week.
->
-> I asked a couple of specific questions for Miklos and
-> Amir at [1] that I hope they will answer in the next few
-> days.
+Hi Maxime,
 
-I missed this question.
-Feel free to ping me next time if I am not answering.
+On Thu, 22 May 2025 16:57:30 +0200
+Maxime Ripard <mripard@kernel.org> wrote:
 
-> Do you object to zeroing fuse_inodes when they're
-> allocated, and do I really need an xchg() to set the
-> fi->famfs_meta pointer during fuse_alloc_inode()? cmpxchg
-> would be good for avoiding stepping on an "already set"
-> pointer, but not useful if fi->famfs_meta has random
-> contents (which it does when allocated).
->
+[...]
 
-I don't have anything against zeroing the fuse inode fields
-but be careful not to step over fuse_inode_init_once().
+> > As the commit was a mistake, I'm applying the revert by the end of this
+> > week (i.e. on Friday) unless there are better instructions.  
+> 
+> Given the lack of answers, and that it looks correct to me, just leave
+> it there. We can always revert later on if things turned out to be
+> broken.
 
-The answer to the xchg() question is quite technically boring.
-At least in my case it was done to avoid an #ifdef in c file.
+OK, I'll leave the commit and drop the revert in v4.
 
-Thanks,
-Amir.
+> > >       drm: convert many bridge drivers from devm_kzalloc() to devm_drm_bridge_alloc() API  
+> > 
+> > This patch affects multiple drivers. Running get_maintainers.pl
+> > points at Shawn Guo's repository. After reviewing the MAINTAINERS file,
+> > this looks like due to the 'N:' line in:
+> > 
+> > ARM/FREESCALE IMX / MXC ARM ARCHITECTURE
+> > M:	Shawn Guo <shawnguo@kernel.org>
+> > M:	Sascha Hauer <s.hauer@pengutronix.de>
+> > R:	Pengutronix Kernel Team <kernel@pengutronix.de>
+> > ...
+> > T:	git git://git.kernel.org/pub/scm/linux/kernel/git/shawnguo/linux.git
+> > N:	imx
+> > ...
+> > 
+> > (https://gitlab.freedesktop.org/drm/misc/kernel/-/blob/drm-misc-next/MAINTAINERS?ref_type=heads#L2511-2528)
+> > 
+> > Here 'imx' matches the 'drivers/gpu/drm/bridge/imx/imx-legacy-bridge.c'
+> > file that is touched by the patch. That regexp appears overly generic to me.  
+> 
+> I agree, or at least, we shouldn't wait for Shawn or Sasha...
+> 
+> > Shawn, can it be fixed by making it less generic?
+> > 
+> > If not, can we at least add a band-aid 'X:' entry for
+> > drivers/gpu/drm/bridge/imx?
+> > 
+> > I think the other matching entry is the one to consider:
+> > 
+> > DRM DRIVERS FOR FREESCALE IMX BRIDGE
+> > M:	Liu Ying <victor.liu@nxp.com>
+> > L:	dri-devel@lists.freedesktop.org
+> > S:	Maintained
+> > F:	Documentation/devicetree/bindings/display/bridge/fsl,imx8qxp-ldb.yaml
+> > F:	Documentation/devicetree/bindings/display/bridge/fsl,imx8qxp-pixel-combiner.yaml
+> > F:	Documentation/devicetree/bindings/display/bridge/fsl,imx8qxp-pixel-link.yaml
+> > F:	Documentation/devicetree/bindings/display/bridge/fsl,imx8qxp-pxl2dpi.yaml
+> > F:	drivers/gpu/drm/bridge/imx/
+> > 
+> > (https://gitlab.freedesktop.org/drm/misc/kernel/-/blob/drm-misc-next/MAINTAINERS?ref_type=heads#L7940-7948)  
+> 
+> ... As long as Ying is fine with it, because it does look like they are
+> the actual maintainer.
+
+Ack, thanks for confirming this.
+
+Bottom line, given that large patch has your Acked-by, and given the
+shawnguo repo was ruled out, the conclusion is it can apply it to
+drm-misc-next.
+
+Having that large patch applied will be relieving me a lot! I think
+next time I'm going to split any imilar change in per-driver patches,
+even if it is spatch-automated.
+
+> > >       drm/todo: add entry to remove devm_drm_put_bridge()  
+> > 
+> > This involves documentation maintained on another tree. Where should it
+> > be applied? There are two matching entries in MAINTAINERS:
+> > 
+> >  * DRM DRIVERS -> the drm tree
+> >  * DRM DRIVERS AND MISC GPU PATCHES -> the drm-misc tree
+> > 
+> > To me it looks like the second is obviously the closest match as we are
+> > dealing with DRM bridges, so I'm applying this as well on Friday unless
+> > there are better instructions.  
+> 
+> Yes, they should be applied to drm-misc.
+
+OK, will do soon.
+
+> That being said, putting a two days timeout on *any* email is really
+> over-the-top. I doubt you reply to any of your mail in such a short
+> timeframe. We have rules for a reason, I'd expect you to follow them, no
+> matter how frustrating the lack of answers can be.
+
+Apologies if that was too much.
+
+I was indeed nervous about the revert. A patch got applied by mistake
+and I believe it should have been reverted very quickly, if need be.
+Both Louis and I didn't want to break the process again. So we asked,
+but not having answer after 2+ weeks I must admit I got a bit nervous
+about it.
+
+Sorry about that and thanks for the feedback about my questions.
+
+Luca
+
+-- 
+Luca Ceresoli, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
