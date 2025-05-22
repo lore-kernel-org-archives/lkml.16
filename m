@@ -1,174 +1,129 @@
-Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com [209.85.219.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B72093D76;
-	Thu, 22 May 2025 03:15:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.244.123.138
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E3CD3D76
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 03:15:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747883728; cv=none; b=tgPU5salpPBDE5o6l1dtDF+8mVq8NUWVMRQAhgq21OC85n3GCZGGFNhUIix22s+cYo7j17/uqhRoHn1bEa500gItX6u8mh4GMh9b6wO3Xd0TXJTzuewtB6M9pshvmVHDLKzrjjPtBg7mKNV/79Wcv7TKiC+P2X4sR1nElc1dsN4=
+	t=1747883748; cv=none; b=C2WNGVtxe2bgKzfCdwmwlqva2Qw+/hFHLjwZKKC93Lw/sglHjtc77Wov4uvTtPXgWxXPVjQHghP3YGOgOEPeggUDiNMXhJ01kUwmbukw+jP+0j8EmFzlbiyZPUZpimaUo4ZATFhVZ+grfatdQd/9REyGw+cb6S/EKQ5rPv2pUaY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747883728; c=relaxed/simple;
-	bh=VWhU4UvwDPru1UAF1FLx0jFIrFuFJ7TtaN5kZ8Ua9ik=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=jb02eb5Xw0rDNP1yxwZdxIZgVjlS8K7lOXA/DF61SoHsmGejTO5dc8MNzyBnMLFbAoUEBLNQpSKGYb9JmpdJuHpTVtJY+9ZmOJwogu+XBxcGU0bgh5xrBQLFWdm5oZSWYFENDcgWOHR49IY3FLZuwyR25+TRKCzWkOF0wESf4hs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=CQHulVJP; arc=none smtp.client-ip=60.244.123.138
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
+	s=arc-20240116; t=1747883748; c=relaxed/simple;
+	bh=SUfjdbOOyVcR4RT6XG8NltP9UmsXqUeVad+9E46ffYA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hf+HRAeGOotPGtRv6nyY+pSrdmy/sDOV+3v4rgIo1WFgoa5y0xmfFOU86cCbPdBT41dx10ukBoU0XvQ0dWvVDUpQA0cZX1+2KfAiTlDM4pCcW2kbG9cZNbSv3Dh+JezmcDAO1MONshhEu1SdF+/3Mw8OVl9oS0ekeBiSweuQm1M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jJ7jpyDp; arc=none smtp.client-ip=209.85.219.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="CQHulVJP"
-X-UUID: fdb8020036ba11f0813e4fe1310efc19-20250522
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=nG5yz4J8MR9NBO/9HQzZdDGATueiG2cUtXQFwsyHdA8=;
-	b=CQHulVJP5nQ6WPXhKZCuRNTID4wXDm1HULsE1PQOdZrxGCcOLM9lEQ5XYNi1HF6DvL8FOUcrsm397aAILs7xxP9JdIgm1iGD51oP7nsdGRdzyHI49EdFo6rK9sxwUoWXTZX3oe+c48ICJZQQtuaslQ4QB1u8FMsWEc8rTpe9XAM=;
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.2.1,REQID:20519bf7-a9b6-4c0b-a303-c9279130fb43,IP:0,UR
-	L:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:r
-	elease,TS:0
-X-CID-META: VersionHash:0ef645f,CLOUDID:5ca5fa58-eac4-4b21-88a4-d582445d304a,B
-	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0|50,EDM:-3,IP:ni
-	l,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES
-	:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0,NGT
-X-CID-BAS: 0,NGT,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-UUID: fdb8020036ba11f0813e4fe1310efc19-20250522
-Received: from mtkmbs09n2.mediatek.inc [(172.21.101.94)] by mailgw01.mediatek.com
-	(envelope-from <shiming.cheng@mediatek.com>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 113848368; Thu, 22 May 2025 11:15:19 +0800
-Received: from mtkmbs11n1.mediatek.inc (172.21.101.185) by
- mtkmbs13n2.mediatek.inc (172.21.101.108) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.39; Thu, 22 May 2025 11:15:18 +0800
-Received: from mbjsdccf07.gcn.mediatek.inc (10.15.20.246) by
- mtkmbs11n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1258.39 via Frontend Transport; Thu, 22 May 2025 11:15:17 +0800
-From: Shiming Cheng <shiming.cheng@mediatek.com>
-To: <willemdebruijin.kernel@gmail.com>, <edumazet@google.com>,
-	<davem@davemloft.net>, <kuba@kernel.org>, <pabeni@redhat.com>,
-	<matthias.bgg@gmail.com>
-CC: <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-	<shiming.cheng@mediatek.com>, <lena.wang@mediatek.com>
-Subject: [PATCH] net: fix udp gso skb_segment after pull from frag_list
-Date: Thu, 22 May 2025 11:18:04 +0800
-Message-ID: <20250522031835.4395-1-shiming.cheng@mediatek.com>
-X-Mailer: git-send-email 2.45.2
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jJ7jpyDp"
+Received: by mail-yb1-f174.google.com with SMTP id 3f1490d57ef6-e7569ccf04cso6660320276.0
+        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 20:15:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747883745; x=1748488545; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=FGZNJiwtsj+St33RUlNLlL6+NdGrdiDgOvYCISmR77M=;
+        b=jJ7jpyDpimW6oFJhWsPQ+zfqu3S4U3Ex/vwm0uO3LPffxp1eKuuX6R7Y85YZjJY9Kg
+         6+CzKWddq0szxRmPL3z4BFEVMsD5Yoeyze+v+igQKG4pHzSkGOWA0Cp3jPiBYct2KwYu
+         D4YiTnGai5CVfd3Z/YLeXzMc/SZRXUFs1Jjqf6+4qtVRFgd58uB3TKprGfkFe7EVkK/r
+         rA+AhQAz9D7ADO5XxhIrIAlFIDpNizhbfmbpLuKK7ST6PNiNAc1CuoA4BcU71yZbC7yh
+         LRgELZZt1PQpcmuN62ktOQ7vvoAsHc1phc4ZZYS2DvbtzUK+1B2eKobZFrGfzvPEq0U5
+         loFw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747883745; x=1748488545;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=FGZNJiwtsj+St33RUlNLlL6+NdGrdiDgOvYCISmR77M=;
+        b=f8mToonE9eAH7gs/BRYaERotkXY/chW87U+oGdkRyrBa7buuA+85SxGhI4sZMJdVad
+         dxvcrc0q2cclMpx0TIBTpfIQFEbn4G9hC99jLoNL8YN6/F9OQRHRc9ddfxnGLHYUC58Z
+         KnA9l7clo1TXEp0P0IfS8k3+IGp6DIp/sKv+axtJ/BA6YORUDu6S+NwVUvCGN/nKQVOF
+         7v+QuK7x9eV2Zxu29Pxa3Az0DRzH+rsOvmTuRi+CkqXn66XudtKiClnRz3+WrY+npbV+
+         d0kOtQbA3fGDbIiH3zfrzMM0tKZIKo6k/sqfiR59dmGEPveqMpkpLBAYCiHqbmLNiapZ
+         Aw+g==
+X-Forwarded-Encrypted: i=1; AJvYcCW2es3oS8Fy/p6OCncCUA6mHkYiRDaWXqRLdz0JcNEcRQ+KDNae3inQPIWepGyMUnYERPbZTBGxMsWpufE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxdfDKQOf6eddI4uFpGjFYB6q7u/UBMFsc06bqITdlalCqsBUfd
+	fh0e1mhGppV1eUU7bnbIztjPgFRjf2DfHgSuwMfg0/mWWtAEkuWMhxYj
+X-Gm-Gg: ASbGncsJXGteKe9kvzUI6ogGBdU/E2hMeg68b3085CIk4IM/kw7hCD1Y4JN/l+gR+xU
+	Uy04aYkAVQRNjeXnKizOijZ3alv6q8H0JKMwxsv96fCHKxrtrqUbsg/7cwuAiQchc4Z3Bbt7s5S
+	+YuhQf1kmoEC2k9D/ocSRpsXeczxAHRy25Vd7vyQrLcmu8YDvo+4t0ib1xA2yHvD32NeWyDpAM6
+	gg7u1h93E4tBaZGJpL7l1npHHsxBw2xDSwHZK5+bUCaVe9FksRH0slP+/Sg6ugf74ZJHMG0O5dG
+	m5hs7nzMgnauuR+7/nUQiCfOQS7yfyM8MSeLoYJwuQp92I3dV5DvyaMuoHUC8htCk1L6Nkp7Nvg
+	lgk8=
+X-Google-Smtp-Source: AGHT+IFVVnwZhpOTSDmkV0m0hG2I0u1vD/KKvPMtol6fatoQIdDOFd8FMRcVIz3FH1QEsqygJRPqjw==
+X-Received: by 2002:a05:690c:9a0a:b0:70d:ecdd:9bd3 with SMTP id 00721157ae682-70decdda059mr102568127b3.27.1747883745339;
+        Wed, 21 May 2025 20:15:45 -0700 (PDT)
+Received: from maquina-virtual-para-linux.. ([191.156.36.106])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-70e0dc97522sm7227b3.56.2025.05.21.20.15.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 21 May 2025 20:15:44 -0700 (PDT)
+From: Donny Turizo <donnyturizo13@gmail.com>
+To: gregkh@linuxfoundation.org
+Cc: linux-staging@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Donny-Dev <donnyturizo13@gmail.com>
+Subject: [PATCH] staging: rtl8723bs: rename _Read_EEPROM to _read_eeprom
+Date: Thu, 22 May 2025 03:15:38 +0000
+Message-ID: <20250522031538.30635-1-donnyturizo13@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-X-MTK: N
 
-    Detect invalid geometry due to pull from frag_list, and pass to
-    regular skb_segment. if only part of the fraglist payload is pulled
-    into head_skb, When splitting packets in the skb_segment function,
-    it will always cause exception as below.
+From: Donny-Dev <donnyturizo13@gmail.com>
 
-    Valid SKB_GSO_FRAGLIST skbs
-    - consist of two or more segments
-    - the head_skb holds the protocol headers plus first gso_size
-    - one or more frag_list skbs hold exactly one segment
-    - all but the last must be gso_size
+Fixes a checkpath warning by renaming the function
+_Read_EEPROM to follow the kernel coding style (snake_case).
 
-    Optional datapath hooks such as NAT and BPF (bpf_skb_pull_data) can
-    modify fraglist skbs, breaking these invariants.
-
-    In extreme cases they pull one part of data into skb linear. For UDP,
-    this  causes three payloads with lengths of (11,11,10) bytes were
-    pulled tail to become (12,10,10) bytes.
-
-    When splitting packets in the skb_segment function, the first two
-    packets of (11,11) bytes are split using skb_copy_bits. But when
-    the last packet of 10 bytes is split, because hsize becomes nagative,
-    it enters the skb_clone process instead of continuing to use
-    skb_copy_bits. In fact, the data for skb_clone has already been
-    copied into the second packet.
-
-    when hsize < 0,  the payload of the fraglist has already been copied
-    (with skb_copy_bits), so there is no need to enter skb_clone to
-    process this packet. Instead, continue using skb_copy_bits to process
-    the next packet.
-
-    el1h_64_sync_handler+0x3c/0x90
-    el1h_64_sync+0x68/0x6c
-    skb_segment+0xcd0/0xd14
-    __udp_gso_segment+0x334/0x5f4
-    udp4_ufo_fragment+0x118/0x15c
-    inet_gso_segment+0x164/0x338
-    skb_mac_gso_segment+0xc4/0x13c
-    __skb_gso_segment+0xc4/0x124
-    validate_xmit_skb+0x9c/0x2c0
-    validate_xmit_skb_list+0x4c/0x80
-    sch_direct_xmit+0x70/0x404
-    __dev_queue_xmit+0x64c/0xe5c
-    neigh_resolve_output+0x178/0x1c4
-    ip_finish_output2+0x37c/0x47c
-    __ip_finish_output+0x194/0x240
-    ip_finish_output+0x20/0xf4
-    ip_output+0x100/0x1a0
-    NF_HOOK+0xc4/0x16c
-    ip_forward+0x314/0x32c
-    ip_rcv+0x90/0x118
-    __netif_receive_skb+0x74/0x124
-    process_backlog+0xe8/0x1a4
-    __napi_poll+0x5c/0x1f8
-    net_rx_action+0x154/0x314
-    handle_softirqs+0x154/0x4b8
-    __do_softirq+0x14/0x20
-
-    [  118.376811] [C201134] dpmaif_rxq0_pus: [name:bug&]kernel BUG at net/core/skbuff.c:4278!
-    [  118.376829] [C201134] dpmaif_rxq0_pus: [name:traps&]Internal error: Oops - BUG: 00000000f2000800 [#1] PREEMPT SMP
-    [  118.376858] [C201134] dpmaif_rxq0_pus: [name:mediatek_cpufreq_hw&]cpufreq stop DVFS log done
-    [  118.470774] [C201134] dpmaif_rxq0_pus: [name:mrdump&]Kernel Offset: 0x178cc00000 from 0xffffffc008000000
-    [  118.470810] [C201134] dpmaif_rxq0_pus: [name:mrdump&]PHYS_OFFSET: 0x40000000
-    [  118.470827] [C201134] dpmaif_rxq0_pus: [name:mrdump&]pstate: 60400005 (nZCv daif +PAN -UAO)
-    [  118.470848] [C201134] dpmaif_rxq0_pus: [name:mrdump&]pc : [0xffffffd79598aefc] skb_segment+0xcd0/0xd14
-    [  118.470900] [C201134] dpmaif_rxq0_pus: [name:mrdump&]lr : [0xffffffd79598a5e8] skb_segment+0x3bc/0xd14
-    [  118.470928] [C201134] dpmaif_rxq0_pus: [name:mrdump&]sp : ffffffc008013770
-    [  118.470941] [C201134] dpmaif_rxq0_pus: [name:mrdump&]x29: ffffffc008013810 x28: 0000000000000040
-    [  118.470961] [C201134] dpmaif_rxq0_pus: [name:mrdump&]x27: 000000000000002a x26: faffff81338f5500
-    [  118.470976] [C201134] dpmaif_rxq0_pus: [name:mrdump&]x25: f9ffff800c87e000 x24: 0000000000000000
-    [  118.470991] [C201134] dpmaif_rxq0_pus: [name:mrdump&]x23: 000000000000004b x22: f4ffff81338f4c00
-    [  118.471005] [C201134] dpmaif_rxq0_pus: [name:mrdump&]x21: 000000000000000b x20: 0000000000000000
-    [  118.471019] [C201134] dpmaif_rxq0_pus: [name:mrdump&]x19: fdffff8077db5dc8 x18: 0000000000000000
-    [  118.471033] [C201134] dpmaif_rxq0_pus: [name:mrdump&]x17: 00000000ad6b63b6 x16: 00000000ad6b63b6
-    [  118.471047] [C201134] dpmaif_rxq0_pus: [name:mrdump&]x15: ffffffd795aa59d4 x14: ffffffd795aa7bc4
-    [  118.471061] [C201134] dpmaif_rxq0_pus: [name:mrdump&]x13: f4ffff806d40bc00 x12: 0000000100000000
-    [  118.471075] [C201134] dpmaif_rxq0_pus: [name:mrdump&]x11: 0054000800000000 x10: 0000000000000040
-    [  118.471089] [C201134] dpmaif_rxq0_pus: [name:mrdump&]x9 : 0000000000000040 x8 : 0000000000000055
-    [  118.471104] [C201134] dpmaif_rxq0_pus: [name:mrdump&]x7 : ffffffd7959b0868 x6 : ffffffd7959aeebc
-    [  118.471118] [C201134] dpmaif_rxq0_pus: [name:mrdump&]x5 : f8ffff8132ac5720 x4 : ffffffc0080134a8
-    [  118.471131] [C201134] dpmaif_rxq0_pus: [name:mrdump&]x3 : 0000000000000a20 x2 : 0000000000000001
-    [  118.471145] [C201134] dpmaif_rxq0_pus: [name:mrdump&]x1 : 000000000000000a x0 : faffff81338f5500
-
-    BUG_ON：
-         pos += skb_headlen(list_skb);
-         while (pos < offset + len) {
-            BUG_ON(i >= nfrags);
-            size = skb_frag_size(frag);
-
-Fixes: dbd50f238dec ("net: move the hsize check to the else block in skb_segment")
-Signed-off-by: Shiming Cheng <shiming.cheng@mediatek.com>
+Signed-off-by: Donny Turizo <donnyturizo13@gmail.com>
 ---
- net/core/skbuff.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/staging/rtl8723bs/core/rtw_cmd.c         | 2 +-
+ drivers/staging/rtl8723bs/include/rtw_cmd.h      | 2 +-
+ drivers/staging/rtl8723bs/include/rtw_mlme_ext.h | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/net/core/skbuff.c b/net/core/skbuff.c
-index 6841e61a6bd0..f9888f8dc3fa 100644
---- a/net/core/skbuff.c
-+++ b/net/core/skbuff.c
-@@ -4808,7 +4808,7 @@ struct sk_buff *skb_segment(struct sk_buff *head_skb,
- 
- 		hsize = skb_headlen(head_skb) - offset;
- 
--		if (hsize <= 0 && i >= nfrags && skb_headlen(list_skb) &&
-+		if (hsize == 0 && i >= nfrags && skb_headlen(list_skb) &&
- 		    (skb_headlen(list_skb) == len || sg)) {
- 			BUG_ON(skb_headlen(list_skb) > len);
- 
+diff --git a/drivers/staging/rtl8723bs/core/rtw_cmd.c b/drivers/staging/rtl8723bs/core/rtw_cmd.c
+index 49bcefb5e8d2..a0b85beffe5d 100644
+--- a/drivers/staging/rtl8723bs/core/rtw_cmd.c
++++ b/drivers/staging/rtl8723bs/core/rtw_cmd.c
+@@ -15,7 +15,7 @@ static struct _cmd_callback rtw_cmd_callback[] = {
+ 	{GEN_CMD_CODE(_Write_BBREG), NULL},
+ 	{GEN_CMD_CODE(_Read_RFREG), &rtw_getbbrfreg_cmdrsp_callback},
+ 	{GEN_CMD_CODE(_Write_RFREG), NULL}, /*5*/
+-	{GEN_CMD_CODE(_Read_EEPROM), NULL},
++	{GEN_CMD_CODE(_read_eeprom), NULL},
+ 	{GEN_CMD_CODE(_Write_EEPROM), NULL},
+ 	{GEN_CMD_CODE(_Read_EFUSE), NULL},
+ 	{GEN_CMD_CODE(_Write_EFUSE), NULL},
+diff --git a/drivers/staging/rtl8723bs/include/rtw_cmd.h b/drivers/staging/rtl8723bs/include/rtw_cmd.h
+index cb44119ce9a9..e4e7e350d0fc 100644
+--- a/drivers/staging/rtl8723bs/include/rtw_cmd.h
++++ b/drivers/staging/rtl8723bs/include/rtw_cmd.h
+@@ -636,7 +636,7 @@ enum {
+ 	GEN_CMD_CODE(_Write_BBREG),
+ 	GEN_CMD_CODE(_Read_RFREG),
+ 	GEN_CMD_CODE(_Write_RFREG), /*5*/
+-	GEN_CMD_CODE(_Read_EEPROM),
++	GEN_CMD_CODE(_read_eeprom),
+ 	GEN_CMD_CODE(_Write_EEPROM),
+ 	GEN_CMD_CODE(_Read_EFUSE),
+ 	GEN_CMD_CODE(_Write_EFUSE),
+diff --git a/drivers/staging/rtl8723bs/include/rtw_mlme_ext.h b/drivers/staging/rtl8723bs/include/rtw_mlme_ext.h
+index 2080408743ef..63373d665d4f 100644
+--- a/drivers/staging/rtl8723bs/include/rtw_mlme_ext.h
++++ b/drivers/staging/rtl8723bs/include/rtw_mlme_ext.h
+@@ -684,7 +684,7 @@ enum {
+ 	GEN_EVT_CODE(_Read_MACREG) = 0, /*0*/
+ 	GEN_EVT_CODE(_Read_BBREG),
+ 	GEN_EVT_CODE(_Read_RFREG),
+-	GEN_EVT_CODE(_Read_EEPROM),
++	GEN_EVT_CODE(_read_eeprom),
+ 	GEN_EVT_CODE(_Read_EFUSE),
+ 	GEN_EVT_CODE(_Read_CAM),			/*5*/
+ 	GEN_EVT_CODE(_Get_BasicRate),
 -- 
-2.45.2
+2.43.0
 
