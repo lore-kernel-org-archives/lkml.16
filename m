@@ -1,102 +1,74 @@
-Received: from mail-io1-f53.google.com (mail-io1-f53.google.com [209.85.166.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEBE42BEC51
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 22:58:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0867F255254;
+	Thu, 22 May 2025 22:58:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747954711; cv=none; b=BQ3G205ir5OgB3IrZGAgFu015pDimxZH2x+EX29kWI2Y05s03v4jprQ0cUX/47V8jn0ukLnIA0S7aRI6gG1MBeUT3d7Uvs24iQbCfGVqYAcjDLFf+43p/SziXSqk2cQJ5OteIZXL2ADGs6f8efJ3X6h7of9jrFij8B2QN4Nd3+o=
+	t=1747954723; cv=none; b=VWVEt1J9nILq/hkqwzHf0cPID8KSUoCyxyWB829JDADMCthFAnXKM/zH029otu9ZlUh7LxGH4A1ma1A2DqA4vpWYvkLbMwWTCLWJ79yiUOar+d5hBm1DhEfVj1uevXVsTQZ1judww7oRoq/MGufkQ8bwMKzroH8/Uf9k+TVP1OY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747954711; c=relaxed/simple;
-	bh=Hc0JPcPl68y6C0hdcL7gbZ8AMjRkQxPCg50ZfHFH9Zw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HS9m6eZesH06Vc/0JZ+8uPLZOvEODqcv2mYB7SzxQPgqK3CwOJovvO8t4H42Teg2rGqZIww79HoPmVquM1hMdJRJGVoQrrYWxSc4m2jVfxLsDi0l4Tq18GZPVNSgaLxqjc5+0p/0ReHFu/LMSMtXXAF2vKzXg6n9X0TvsrNhpno=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=FURSHTWL; arc=none smtp.client-ip=209.85.166.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1747954723; c=relaxed/simple;
+	bh=KTiV8wuINpXZm6lLxrZSb5n0npuwWT2t97gkmUDPrVU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HiUdLPdFj02RI7MCe66Py2qBdZXu/7H7RH0hR9u7HvGxlEyUNqyJDcd5ue5kQTaHcF2k2iQMCcU6DPl560mrlYcu5X1Ke19NwChpDfOpUCtzNtqqI6qbUCWZ2N7Oy4y6vQauTdTeksvxU4R8BB7JjONIL6YkrNF58YLHADcsJd4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WYr9wFya; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="FURSHTWL"
-Received: by mail-io1-f53.google.com with SMTP id ca18e2360f4ac-85b3f92c8f8so789931939f.1
-        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 15:58:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1747954707; x=1748559507; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=LifDm7A2s/glTLRHRleF9EaeJkLoBTqPk54K6bg46PY=;
-        b=FURSHTWLV58s1Xn2iH4rQQI8NFDxkL134WNpCyLPuv0Y3dS4Y2eK+n0/vr9NjrLWlV
-         Sr0RVDnhpZtlM59jIA1/kFskIA+jZX07cCKh7XQngeb3EEGyNQu4eifgMtH9djPDUUzi
-         FHcUQTt8HhqwINh5XgGPI1ZVMmbAArojD+Hpg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747954707; x=1748559507;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=LifDm7A2s/glTLRHRleF9EaeJkLoBTqPk54K6bg46PY=;
-        b=PdYJHzxh2xqVw8RuX15ujE3Uzro6ArLtuUlwauvbYK06nCJ84/MIrzllkZp2gro3li
-         FqDC6OYDlumOV0xeU/8HKXJJGInkqzEufcK39dfP1dBIqB+7RAOpyNKwN8VuCNbwZN6I
-         9qMlP40FoJHTc0owGuk5PnbcB6VvMOu7N8ihDSdDILSTF324TG080M1WZKzT+iJTIy1W
-         BF5/bM/louUmAit8og3Xwob6M4A3LwqD9+RCwWgyGbdpQrYJCDnxzV6OEvxmyhlwGXSk
-         8oKpqUY3QdUBgbaEmIc4mMEMic1shBclss3BWX7XpWy1JO/oGVV8D/fALch5K/UcSD57
-         6WtA==
-X-Gm-Message-State: AOJu0YyUg/SfVAMFAfUqwEgCK54YpTdE3XHdf9TKfJTPCoTLSBpLRkit
-	TnF3NLR3qlqfgHorWxEAuvpYrhqlxjxTY1rYkAAMhUo3pN01u7/pRxvzg8JtcCnHgNc=
-X-Gm-Gg: ASbGncvs5WONgHLfPrSElnasgjDWH4ZXrjxgYz6NK0MbzQiZT57/z4s3qqmeyO8wF/O
-	p+m0FFkJAEzHmmCuAiMAElfziggZTfvBwkbPcp3+b9pcpH14b++3IYetnqNjIsgfHj6MU3fQoQj
-	HRiDfO1ue+OxUDvFrRMeNz41yvRNCR2TckzP1fse9sRp0JG6LHGxyyyx+ORYC3/zffmP1bYKCJR
-	gTYZfHtkBl/HEb3dx2oM5SGXsb+KkSxbfjleXRvHQr0ZKRlIO3nWbE0cxzw+pHiBkRq3fV+RgNZ
-	hzh2dZ3Min7dh2HYAAdTup5IniJArxG0fQ4KZI5EjfN44ZI9Xkjgv8LhYbObEg==
-X-Google-Smtp-Source: AGHT+IHAGSdQbUlxXzwcnENTVeYrRQfzTmXk0ARVU7ftTHOp+/8ZyfmjGdb4tKBcU6VK1raUF+dbew==
-X-Received: by 2002:a05:6e02:b43:b0:3dc:7c44:cff9 with SMTP id e9e14a558f8ab-3dc7c44db95mr143962145ab.8.1747954707464;
-        Thu, 22 May 2025 15:58:27 -0700 (PDT)
-Received: from [192.168.1.14] ([38.175.170.29])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4fbcc4ea4d3sm3384858173.134.2025.05.22.15.58.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 22 May 2025 15:58:26 -0700 (PDT)
-Message-ID: <a0f5b68d-e321-4ed3-a22c-24f80f4d906f@linuxfoundation.org>
-Date: Thu, 22 May 2025 16:58:26 -0600
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WYr9wFya"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D700FC4CEE4;
+	Thu, 22 May 2025 22:58:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747954722;
+	bh=KTiV8wuINpXZm6lLxrZSb5n0npuwWT2t97gkmUDPrVU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=WYr9wFyawOzd/VX/wU0oMKV25Yrhy6EhoASVUZbXMM79r2IaIEV9iOexaCR52hCNL
+	 n4S7b3NJWp2facJ6V20XZDF+9A/K7t7BSUYHtH8U5NZzTUifLpUD0HCG8Q9XSm8Qnm
+	 u6e3tdRdERNZjtHxsP+oXyv0XsNLO1gYtBypJ0FMELzQJJiMghYHGVjCc0Mo/eufCb
+	 dJlvIaSMw8NFxR8xJCks8SXYZG1xdJi9DWiajLgzlmKC9hDf934iROpYOtEnUZyc7Y
+	 KKbaO8rsDuAunRLGE95O+cMZAEvrvPJxzna3Gr29gNzjnrbZ3GQmY1uXrd5L1ND2fK
+	 Xaqxndk1ZI59A==
+Date: Thu, 22 May 2025 15:58:41 -0700
+From: Saeed Mahameed <saeed@kernel.org>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: Tariq Toukan <tariqt@nvidia.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Paolo Abeni <pabeni@redhat.com>, Eric Dumazet <edumazet@google.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	Saeed Mahameed <saeedm@nvidia.com>,
+	Leon Romanovsky <leon@kernel.org>,
+	Richard Cochran <richardcochran@gmail.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Jesper Dangaard Brouer <hawk@kernel.org>,
+	John Fastabend <john.fastabend@gmail.com>, netdev@vger.kernel.org,
+	linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+	bpf@vger.kernel.org, Moshe Shemesh <moshe@nvidia.com>,
+	Mark Bloch <mbloch@nvidia.com>, Gal Pressman <gal@nvidia.com>,
+	Cosmin Ratiu <cratiu@nvidia.com>,
+	Dragos Tatulea <dtatulea@nvidia.com>
+Subject: Re: [PATCH net-next V2 07/11] net/mlx5e: SHAMPO: Headers page pool
+ stats
+Message-ID: <aC-sIWriYzWbQSxc@x130>
+References: <1747950086-1246773-1-git-send-email-tariqt@nvidia.com>
+ <1747950086-1246773-8-git-send-email-tariqt@nvidia.com>
+ <20250522153142.11f329d3@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] docs: ABI: Fix "diasble" to "disable"
-To: Sumanth Gavini <sumanth.gavini@yahoo.com>
-Cc: linux-kernel@vger.kernel.org
-References: <20250517091814.1263768-1-sumanth.gavini.ref@yahoo.com>
- <20250517091814.1263768-1-sumanth.gavini@yahoo.com>
-Content-Language: en-US
-From: Shuah Khan <skhan@linuxfoundation.org>
-In-Reply-To: <20250517091814.1263768-1-sumanth.gavini@yahoo.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20250522153142.11f329d3@kernel.org>
 
-On 5/17/25 03:18, Sumanth Gavini wrote:
->   Fix misspelling reported by codespell
-> 
-> Signed-off-by: Sumanth Gavini <sumanth.gavini@yahoo.com>
-> ---
->   Documentation/ABI/testing/sysfs-devices-power | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/ABI/testing/sysfs-devices-power b/Documentation/ABI/testing/sysfs-devices-power
-> index 54195530e97a..d3da88b26a53 100644
-> --- a/Documentation/ABI/testing/sysfs-devices-power
-> +++ b/Documentation/ABI/testing/sysfs-devices-power
-> @@ -56,7 +56,7 @@ Date:		January 2009
->   Contact:	Rafael J. Wysocki <rjw@rjwysocki.net>
->   Description:
->   		The /sys/devices/.../async attribute allows the user space to
-> -		enable or diasble the device's suspend and resume callbacks to
-> +		enable or disable the device's suspend and resume callbacks to
->   		be executed asynchronously (ie. in separate threads, in parallel
->   		with the main suspend/resume thread) during system-wide power
->   		transitions (eg. suspend to RAM, hibernation).
+On 22 May 15:31, Jakub Kicinski wrote:
+>On Fri, 23 May 2025 00:41:22 +0300 Tariq Toukan wrote:
+>> Expose the stats of the new headers page pool.
+>
+>Nope. We have a netlink API for page pool stats.
+>
 
-cc linux-pm, documentation list and PM maintainers on this patch. Looks like
-get_maintainers.pl doesn't give you the complete list.
+We already expose the stats of the main pool in ethtool.
+So it will be an inconvenience to keep exposing half of the stats.
+So either we delete both or keep both. Some of us rely on this for debug
 
-thanks,
--- Shuah
