@@ -1,156 +1,161 @@
-Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com [209.85.128.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from neil.brown.name (neil.brown.name [103.29.64.221])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA90819A;
-	Fri, 23 May 2025 00:04:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0AD419A;
+	Fri, 23 May 2025 00:05:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.29.64.221
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747958664; cv=none; b=K3N9qJoapkqAlquYG+aXOe9ngfpcHVhHd1FEjopsMQgv8htb6csNujwVDuGEyCVMaifra1hmdtldxPKk9WNt8Hu4TMkwpyP1FVq7oa+wfVmSRExtkCz7KPNmgk8Y1HWQeGmkOyQvBVO0wvEDqX2rpM2mItgzDXb1srgfr8Y0y1g=
+	t=1747958740; cv=none; b=PBeTV1ehs/Unx79Z/t/QWrkVKzBJayIF+lrli7tTP/bv1DEIGKfsYWoZ3Jx91fabed7yuvNF5XF0r+FxBYHF2zcj2u+Y15znLpjFRMlfwdGVkE3IKwwdoxGkzGmirWaBH3VFnYPwttJDfCE4mDQhcs9K7DFEQteChYEkrK2yplk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747958664; c=relaxed/simple;
-	bh=8RhF6JZexlYdbYojUlf+e9vDQ02xGsmYGEvzlJUi/uI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=SrAK9Pt4+q6Y0USU9kZhIz32wfIrjxL/ebUMVCcFWAgx7Y+gSIoGUKQWJOJ8uWinAxPEB5ey4fx/QeI0xn+du/jhqh3ZerW8rAyxyYD5W+BxmsNo04hHKf5CcefB30/uBd05F0jxweH9lyFd5dkbZNJgx5l53J72rK18YWyzs9A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Y3k0TdWD; arc=none smtp.client-ip=209.85.128.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y3k0TdWD"
-Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-70ccf9a4ab3so54334867b3.1;
-        Thu, 22 May 2025 17:04:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747958662; x=1748563462; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3DbirWf9hqjVJS04ntzyt2efU5MTrY9tFTzatS41oes=;
-        b=Y3k0TdWDSa6FjkUJyYee1WI+kHgql1SIc0ttdiKn5NjnZ9x7J839Z38l9Dle4W1XGe
-         BoTOyjdzljlH4zSS0H1yitOeHWYgfKhT1F0xM7kD72m5NliF+yVNfOIaLW9StRXBx7mM
-         f+qpB9G8U6m9NewaYrn1uZk3Nsfr5D9ZPlPR9CHalKBoYQeFQYfQ2NZ61Nhf2pA0UAe1
-         udOjtjNrF2KBxzplltcJFUgBUGxFRTmcQ/NtECIwNG4MQqDorrpn7g3zejTkp1XcVc8n
-         5sm4MloxJFdv3cM/L8FnLqrxy4YvPeDpR77z+MnKTuhu6agLN3DgRNZAHd/g5NqCtHom
-         5D3Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747958662; x=1748563462;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3DbirWf9hqjVJS04ntzyt2efU5MTrY9tFTzatS41oes=;
-        b=elYQVp7q1kAio/REFGwF2RGgvRP4xWwPtYtsF5xt6lb44qt/0BOuuM+sZJ5POneewW
-         NmEc5jPly5rRGP4GM+K1kw6v4zEDjeegmzeRad+FUl0NIJZZvn596mTlpnxp8u6eD9Bt
-         CmeicN/K6Ij1mhxNXL6R6fbrCxV/wp+PLUE8fxJb4aGaQQxuXTj3F4FK62RpVWaFj4kT
-         j3UT4Tn9lMiTsmWUjvW+moCjqqQ+JaqmwAH7hjSEkoqIuMqDMeuSWCYoYCcWRqJNEC8i
-         fVryZ1Qxo2WZVRKCEqOOKHbbdU5ZUlGl1Ggd130WZWuo0+tHlW9sRzccQi85VgI0wEWn
-         smlA==
-X-Forwarded-Encrypted: i=1; AJvYcCWeQe5s0CewUAcVN9xVdxkaJIzZr24HP91YkokkGVKZp3u6FH4azFIQiOm3GzsCxEV5obe0G2Dc96LphQ==@vger.kernel.org, AJvYcCXCROsgtx6eJVy6XLmaZpgNif4qnhgS4Cbs436ButBUXtihlhbEJxgOoJ3TfV8IHX/G+/DHDaSnDUSZRVmI@vger.kernel.org, AJvYcCXdR1N0kZgeirDimQ/QETkY6fMcOkeV96EWGKF+ycSxtVDu18/T7sCEba2VkfAuE8kvDqwZyHPE0WiG@vger.kernel.org
-X-Gm-Message-State: AOJu0YxAVWIASOnU9kqDEo6WtCFHICumYh/WRGZ0oXcIxA6lq0vXeWrK
-	Txg8ndKteKzUKQOmny3KhHjUzTOP4HvVwL+NB/PyxzgIqcPbHoVgKkuVlp34NxijO/mMfMbm1Z6
-	bK/OqhYQoorrOYSFvd7fHT+A1uiMUDbw=
-X-Gm-Gg: ASbGnctqYMNtHOBsNQI2JeqJht2mqfswIexmUKaduOErImNYhfK6HzRzPnHVxRPmlWA
-	DKNISJEdOgQL2ZJu9Oyqt7bN0YaqZnIXT0UQVXThUFdDJF5WfrFsHe3C30H069z8oZUQJPzIu7z
-	2rb5cBZNQKzZCpY5valic3Mpp7vowzxQmm5xbnwSXLw163lw==
-X-Google-Smtp-Source: AGHT+IHTXxoSqVb7sbfYhgZx6mT9anQoUuzw2F2mRsAkEI6I/89Y1Cs8fBtoTpZx5IVuzqRXUirhzSQOcfXbUd9vWtw=
-X-Received: by 2002:a05:690c:25c3:b0:70a:2675:70b3 with SMTP id
- 00721157ae682-70caafc9570mr379086027b3.17.1747958661782; Thu, 22 May 2025
- 17:04:21 -0700 (PDT)
+	s=arc-20240116; t=1747958740; c=relaxed/simple;
+	bh=FKJEwrRMLguey2BvAvV40YEjlFi9E5GX6RFzd6ghb0I=;
+	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
+	 References:Date:Message-id; b=XSwCzJhcO4iD2HzSTUS/5AOMPinvwfIwVrSCUW+27K8EHR8KK3UgYF5+JeXQ1sKMaH1IBwFOzZqVHUB7yqG8B/Yw91jv/0P6HfG/d/zv3EChNIuQaaRyaWRt2R5oWWaB4R2MOXEd5Sfw7DbDnyC9ZW/vE0s9UjLolVIdnL30WNU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name; spf=pass smtp.mailfrom=neil.brown.name; arc=none smtp.client-ip=103.29.64.221
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=neil.brown.name
+Received: from 196.186.233.220.static.exetel.com.au ([220.233.186.196] helo=home.neil.brown.name)
+	by neil.brown.name with esmtp (Exim 4.95)
+	(envelope-from <mr@neil.brown.name>)
+	id 1uIFDv-008Vm2-4u;
+	Thu, 22 May 2025 23:21:15 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250522184516.13176-1-rosenp@gmail.com> <20250522184516.13176-5-rosenp@gmail.com>
- <871d18ab-a696-4141-bc3a-7b6e968fc649@kernel.org>
-In-Reply-To: <871d18ab-a696-4141-bc3a-7b6e968fc649@kernel.org>
-From: Rosen Penev <rosenp@gmail.com>
-Date: Thu, 22 May 2025 17:04:10 -0700
-X-Gm-Features: AX0GCFtCVpL4KFllAHT33tYF2GaAmf7ddZXmxbZuuFhASNob8nA1pyCoyRnyntg
-Message-ID: <CAKxU2N8uZ+q1aE42+e65tVMr=ji0RTx5wZssFBnQN29OzsFXVA@mail.gmail.com>
-Subject: Re: [PATCHv2 4/5] dt-bindings: net: wireless: ath9k: add OF bindings
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: linux-wireless@vger.kernel.org, =?UTF-8?B?VG9rZSBIw7hpbGFuZC1Kw7hyZ2Vuc2Vu?= <toke@toke.dk>, 
-	Johannes Berg <johannes@sipsolutions.net>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, 
-	"open list:MIPS" <linux-mips@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+From: "NeilBrown" <neil@brown.name>
+To: "Haixiao Yan" <haixiao.yan.cn@windriver.com>
+Cc:
+ chuck.lever@oracle.com, stable@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: nfs mount failed with ipv6 addr
+In-reply-to: <faf777ea-3667-45c7-b7f2-111b9f789e73@windriver.com>
+References: <>, <faf777ea-3667-45c7-b7f2-111b9f789e73@windriver.com>
+Date: Fri, 23 May 2025 09:21:14 +1000
+Message-id: <174795607490.608730.5673295992775861610@noble.neil.brown.name>
 
-On Thu, May 22, 2025 at 12:54=E2=80=AFPM Krzysztof Kozlowski <krzk@kernel.o=
-rg> wrote:
->
-> On 22/05/2025 20:45, Rosen Penev wrote:
-> > Now that support was added to the driver, document it.
->
-> That's not appropriate commit msg. Binding must be before the user (see
-> submitting patches in DT directory). Describe the hardware, what are you
-> adding here.
->
-> Subject: OF bindings is redundant. It duplicates dt-bindings. Instead:
-> "Add Atheros AR9-foo-bar on AHB bus" or something similar
-At this point I wonder if my approach is wrong. The other ath drivers
-use a qcom, prefix and a -wifi suffix. Might make sense to do the same
-here to avoid typing qca twice.
+On Thu, 22 May 2025, Haixiao Yan wrote:
+> On 2025/5/22 07:32, NeilBrown wrote:
+> > CAUTION: This email comes from a non Wind River email account!
+> > Do not click links or open attachments unless you recognize the sender an=
+d know the content is safe.
+> >
+> > On Thu, 22 May 2025, Yan, Haixiao (CN) wrote:
+> >> On linux-5.10.y, my testcase run failed:
+> >>
+> >> root@intel-x86-64:/opt/wr-test/testcases/userspace/nfs-utils_v6# mount -=
+t nfs [::1]:/mnt/nfs_root /mnt/v6 -o nfsvers=3D3
+> >> mount.nfs: requested NFS version or transport protocol is not supported
+> >>
+> >> The first bad commit is:
+> >>
+> >> commit 7229200f68662660bb4d55f19247eaf3c79a4217
+> >> Author: Chuck Lever <chuck.lever@oracle.com>
+> >> Date:   Mon Jun 3 10:35:02 2024 -0400
+> >>
+> >>     nfsd: don't allow nfsd threads to be signalled.
+> >>
+> >>     [ Upstream commit 3903902401451b1cd9d797a8c79769eb26ac7fe5 ]
+> >>
+> >>
+> >> Here is the test log:
+> >>
+> >> root@intel-x86-64:/opt/wr-test/testcases/userspace/nfs-utils_v6# dd if=
+=3D/dev/zero of=3D/tmp/nfs.img bs=3D1M count=3D100
+> >> 100+0 records in
+> >> 100+0 records out
+> >> 104857600 bytes (105 MB, 100 MiB) copied, 0.0386658 s, 2.7 GB/s
+> >> root@intel-x86-64:/opt/wr-test/testcases/userspace/nfs-utils_v6# mkfs /t=
+mp/nfs.img
+> >> mke2fs 1.46.1 (9-Feb-2021)
+> >> Discarding device blocks:   1024/102400=08=08=08=08=08=08=08=08=08=08=08=
+=08=08             =08=08=08=08=08=08=08=08=08=08=08=08=08done
+> >> Creating filesystem with 102400 1k blocks and 25688 inodes
+> >> Filesystem UUID: 77e3bc56-46bb-4e5c-9619-d9a0c0999958
+> >> Superblock backups stored on blocks:
+> >>        8193, 24577, 40961, 57345, 73729
+> >>
+> >> Allocating group tables:  0/13=08=08=08=08=08     =08=08=08=08=08done
+> >> Writing inode tables:  0/13=08=08=08=08=08     =08=08=08=08=08done
+> >> Writing superblocks and filesystem accounting information:  0/13=08=08=
+=08=08=08     =08=08=08=08=08done
+> >> root@intel-x86-64:/opt/wr-test/testcases/userspace/nfs-utils_v6# mount /=
+tmp/nfs.img /mnt
+> >>
+> >> root@intel-x86-64:/opt/wr-test/testcases/userspace/nfs-utils_v6# mkdir /=
+mnt/nfs_root
+> >>
+> >> root@intel-x86-64:/opt/wr-test/testcases/userspace/nfs-utils_v6# touch /=
+etc/exports
+> >>
+> >> root@intel-x86-64:/opt/wr-test/testcases/userspace/nfs-utils_v6# echo '/=
+mnt/nfs_root *(insecure,rw,async,no_root_squash)' >> /etc/exports
+> >>
+> >> root@intel-x86-64:/opt/wr-test/testcases/userspace/nfs-utils_v6# /opt/wr=
+-test/bin/svcwp.sh nfsserver restart
+> >> stopping mountd: done
+> >> stopping nfsd: ..........failed
+> >>    using signal 9:
+> >> ..........failed
+> > What does your "nfsserver" script do to try to stop/restart the nfsd?
+> > For a very long time the approved way to stop nfsd has been to run
+> > "rpc.nfsd 0".  My guess is that whatever script you are using still
+> > trying to send a signal to nfsd.  That no longer works.
+> >
+> > Unfortunately the various sysv-init scripts for starting/stopping nfsd
+> > have never been part of nfs-utils so we were not able to update them.
+> > nfs-utils *does* contain systemd unit files for sites which use systemd.
+> >
+> > If you have a non-systemd way of starting/stopping nfsd, we would be
+> > happy to make the relevant scripts part of nfs-utils so that we can
+> > ensure they stay up to date.
+>=20
+> Actually, we use=C2=A0 service nfsserver restart=C2=A0 =3D>
+> /etc/init.d/nfsserver =3D>
+>=20
+> stop_nfsd(){
+>  =C2=A0=C2=A0 =C2=A0# WARNING: this kills any process with the executable
+>  =C2=A0=C2=A0 =C2=A0# name 'nfsd'.
+>  =C2=A0=C2=A0 =C2=A0echo -n 'stopping nfsd: '
+>  =C2=A0=C2=A0 =C2=A0start-stop-daemon --stop --quiet --signal 1 --name nfsd
+>  =C2=A0=C2=A0 =C2=A0if delay_nfsd || {
+>  =C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0 echo failed
+>  =C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0 echo ' using signal 9: '
+>  =C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0 start-stop-daemon --stop --quiet --s=
+ignal 9 --name nfsd
+>  =C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0 delay_nfsd
+>  =C2=A0=C2=A0 =C2=A0}
+>  =C2=A0=C2=A0 =C2=A0then
+>  =C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0 echo done
+>  =C2=A0=C2=A0 =C2=A0else
+>  =C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0 echo failed
+>  =C2=A0=C2=A0 =C2=A0fi
+The above should all be changed to
+   echo -n 'stopping nfsd: '
+   rpc.nfsd 0
+   echo done
 
->
-> Missing SoB.
->
-> Please run scripts/checkpatch.pl on the patches and fix reported
-> warnings. After that, run also 'scripts/checkpatch.pl --strict' on the
-> patches and (probably) fix more warnings. Some warnings can be ignored,
-> especially from --strict run, but the code here looks like it needs a
-> fix. Feel free to get in touch if the warning is not clear.
->
->
->
-> > ---
-> >  .../bindings/net/wireless/qca,ath9k.yaml      | 23 ++++++++++++++++++-
-> >  1 file changed, 22 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/Documentation/devicetree/bindings/net/wireless/qca,ath9k.y=
-aml b/Documentation/devicetree/bindings/net/wireless/qca,ath9k.yaml
-> > index 0e5412cff2bc..81d00f257922 100644
-> > --- a/Documentation/devicetree/bindings/net/wireless/qca,ath9k.yaml
-> > +++ b/Documentation/devicetree/bindings/net/wireless/qca,ath9k.yaml
-> > @@ -12,7 +12,7 @@ maintainers:
-> >  description: |
-> >    This node provides properties for configuring the ath9k wireless dev=
-ice.
-> >    The node is expected to be specified as a child node of the PCI cont=
-roller
-> > -  to which the wireless chip is connected.
-> > +  or AHB bus to which the wireless chip is connected.
-> >
-> >  allOf:
-> >    - $ref: ieee80211.yaml#
-> > @@ -35,6 +35,12 @@ properties:
-> >        - pci168c,0034  # AR9462
-> >        - pci168c,0036  # AR9565
-> >        - pci168c,0037  # AR1111 and AR9485
-> > +      - qca,ar9130-wmac
-> > +      - qca,ar9330-wmac
-> > +      - qca,ar9340-wmac
-> > +      - qca,qca9530-wmac
-> > +      - qca,qca9550-wmac
-> > +      - qca,qca9560-wmac
-> >
-> >    reg:
-> >      maxItems: 1
-> > @@ -88,3 +94,18 @@ examples:
-> >          nvmem-cell-names =3D "mac-address", "calibration";
-> >        };
-> >      };
-> > +  - |
-> > +    apb {
-> > +      compatible =3D "simple-bus";
-> > +      ranges;
-> > +
->
-> Drop these two.
->
-> > +      #address-cells =3D <1>;
-> > +      #size-cells =3D <1>;
->
-> Best regards,
-> Krzysztof
+or similar.  What distro are you using?
+
+I can't see how this would affect your problem with IPv6 but it would be
+nice if you could confirm that IPv6 still doesn't work even after
+changing the above.
+What version of nfs-utils are you using?
+Are you should that the kernel has IPv6 enabled?  Does "ping6 ::1" work?
+
+NeilBrown
+
+
+> }
+>=20
+> Thanks,
+>=20
+> Haixiao
+>=20
+> > Thanks,
+> > NeilBrown
+>=20
+
