@@ -1,222 +1,248 @@
-Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F04A286D65;
-	Thu, 22 May 2025 15:56:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83D582980C3;
+	Thu, 22 May 2025 15:56:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747929403; cv=none; b=jW3mnjOosDauscpu6bGPQGfOdlSESdp6XDAwAuu10Ob6CNiNQ8A4gM51Bg2YsUTrZABC4eaMJmEN3FNf6QUUqoVkPCYFJQkQxGhOxMykrzACi8yvfgCXUIcN6jSqJXdFxLNE57vx7oir5Nb2rZCvJrK3vwWWewjapjnQZY4nfUs=
+	t=1747929412; cv=none; b=INH0GXNc1yiWSJJ+Vqmf626+j5lShsPEVsh8oFkHw3xfefqlMP0c/73hJN99nNV8nhJsvb4NjEgfRxVXT583hCQACLatJjMlGhaKPQiLxPSSFpAvVGG0N2AD/QQJdmANfLu65RJMFT7Dn1qB1rS8RtW+frvY/DmxWpLjdtbejDI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747929403; c=relaxed/simple;
-	bh=wQH70eo1sPSqO0FtIIJnBv1zebflYdHlHJdMqRCxIeI=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=GcYacIB0HOxKMdHji5nEC93r3tn9zlsoaXHO5Uv2nRNC7+b6dCEBI7gWd+hZOAIl70M1IUWC9PaGLjsUe9BLi04QMRAp8N2g0QM8Ys79XsJVSwe8TzIHCHNmelCOa4sk3XlG7PZoInTdy+CPnhmN1x//oeQwbXOvpG/IuczM2bo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=LrOFkxjD; arc=none smtp.client-ip=217.70.183.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1747929412; c=relaxed/simple;
+	bh=b780aQpCLRpCOmLNeLkROM5sv2ZJNKVOY4HQDdMxrXw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sp8q6hnTmLtdwGVNP0FWQDE2RB/Fkg5Uo5BbHAbl5oAvqLQhKs/1Tc5iEI/jWLr464EfAkcdn7MrXf8lkPm4XC1NNQx5NQ5cuX3DI+r6MiMEyjGMzkdMDw3fB2dqlTZEKhT8HTuKE0LkjEDsKKrL12fGqP7AQQf2f3kHpsWIrg8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=gkuK0lqi; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="LrOFkxjD"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 62288439A5;
-	Thu, 22 May 2025 15:56:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1747929396;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hDrRfxUh05bF14pzZXQ+mC3f/tIJuaPORyh0q5iuGpM=;
-	b=LrOFkxjDWfPYlaJ27v0bKylFL4XWO+4kvvgStRLZlUDRYZHdyChNIb2pfDuGENtsuftdv/
-	wGbOCWfZtxzREyaEFwnH82wXULSKdAdYw/PBXzq/zAP46MQh+2qKay6Pd/jwy3zwxJN8dw
-	rgJTGQYyYqHyrBnB5+bbAyyUPyuK4SQmrz1l5b6bKlFTJX3baN6Ej14byKnrUchMCQnb3+
-	vJDkRIAED2cQX+6NzREg8KVZNhwI6WQ0582mb8M9FYZVQz3yCa/TIqtPexDE/d9Fb/Krsm
-	aRFHR6fwOi/MpKAjV481sgJjj5EABYXpHVIjb+acU9Q+t95PRAEbZnkSC880OA==
-Date: Thu, 22 May 2025 17:56:23 +0200
-From: Luca Ceresoli <luca.ceresoli@bootlin.com>
-To: Maxime Ripard <mripard@kernel.org>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann
- <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter
- <simona@ffwll.ch>, Andrzej Hajda <andrzej.hajda@intel.com>, Neil Armstrong
- <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, Laurent
- Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman
- <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, Jagan Teki
- <jagan@amarulasolutions.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer
- <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>, Douglas Anderson
- <dianders@chromium.org>, Chun-Kuang Hu <chunkuang.hu@kernel.org>, Krzysztof
- Kozlowski <krzk@kernel.org>, Liu Ying <victor.liu@nxp.com>, Anusha Srivatsa
- <asrivats@redhat.com>, Paul Kocialkowski <paulk@sys-base.io>, Dmitry
- Baryshkov <lumag@kernel.org>, Hui Pu <Hui.Pu@gehealthcare.com>, Thomas
- Petazzoni <thomas.petazzoni@bootlin.com>, dri-devel@lists.freedesktop.org,
- asahi@lists.linux.dev, linux-kernel@vger.kernel.org,
- chrome-platform@lists.linux.dev, imx@lists.linux.dev,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
- linux-amlogic@lists.infradead.org, linux-renesas-soc@vger.kernel.org,
- platform-driver-x86@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org,
- linux-stm32@st-md-mailman.stormreply.com, Louis Chauvet
- <louis.chauvet@bootlin.com>, Alim Akhtar <alim.akhtar@samsung.com>, Inki
- Dae <inki.dae@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>,
- Seung-Woo Kim <sw0312.kim@samsung.com>, Manikandan Muralidharan
- <manikandan.m@microchip.com>, Adam Ford <aford173@gmail.com>, Adrien
- Grassein <adrien.grassein@gmail.com>, Aleksandr Mishin
- <amishin@t-argos.ru>, Andy Yan <andy.yan@rock-chips.com>, AngeloGioacchino
- Del Regno <angelogioacchino.delregno@collabora.com>, Benson Leung
- <bleung@chromium.org>, Biju Das <biju.das.jz@bp.renesas.com>, Christoph
- Fritz <chf.fritz@googlemail.com>, Cristian Ciocaltea
- <cristian.ciocaltea@collabora.com>, Detlev Casanova
- <detlev.casanova@collabora.com>, Dharma Balasubiramani
- <dharma.b@microchip.com>, Guenter Roeck <groeck@chromium.org>, Heiko
- Stuebner <heiko@sntech.de>, Jani Nikula <jani.nikula@intel.com>, Janne
- Grunau <j@jannau.net>, Jerome Brunet <jbrunet@baylibre.com>, Jesse Van
- Gavere <jesseevg@gmail.com>, Kevin Hilman <khilman@baylibre.com>, Kieran
- Bingham <kieran.bingham+renesas@ideasonboard.com>, Martin Blumenstingl
- <martin.blumenstingl@googlemail.com>, Matthias Brugger
- <matthias.bgg@gmail.com>, Philipp Zabel <p.zabel@pengutronix.de>, Phong LE
- <ple@baylibre.com>, Sasha Finkelstein <fnkl.kernel@gmail.com>, Sugar Zhang
- <sugar.zhang@rock-chips.com>, Sui Jingfeng <sui.jingfeng@linux.dev>, Tomi
- Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>, Vitalii Mordan
- <mordan@ispras.ru>, "Rob Herring (Arm)" <robh@kernel.org>, Hsin-Te Yuan
- <yuanhsinte@chromium.org>, Pin-yen Lin <treapking@chromium.org>, Xin Ji
- <xji@analogixsemi.com>, Aradhya Bhatia <a-bhatia1@ti.com>, Tomi Valkeinen
- <tomi.valkeinen@ideasonboard.com>, Ian Ray <ian.ray@gehealthcare.com>,
- Martyn Welch <martyn.welch@collabora.co.uk>, Peter Senna Tschudin
- <peter.senna@gmail.com>, Helge Deller <deller@gmx.de>, Kuninori Morimoto
- <kuninori.morimoto.gx@renesas.com>, Laurent Pinchart
- <laurent.pinchart+renesas@ideasonboard.com>, Alexandre Torgue
- <alexandre.torgue@foss.st.com>, Maxime Coquelin
- <mcoquelin.stm32@gmail.com>, Philippe Cornu <philippe.cornu@foss.st.com>,
- Raphael Gallais-Pou <raphael.gallais-pou@foss.st.com>, Yannick Fertre
- <yannick.fertre@foss.st.com>, Alain Volmat <alain.volmat@foss.st.com>,
- Raphael Gallais-Pou <rgallaispou@gmail.com>, Michal Simek
- <michal.simek@amd.com>, Jonathan Corbet <corbet@lwn.net>,
- linux-doc@vger.kernel.org
-Subject: Re: [PATCH v3 00/22] drm: convert all bridges to
- devm_drm_bridge_alloc()
-Message-ID: <20250522175623.1a6d9b14@booty>
-In-Reply-To: <20250522-amphibian-shiny-chachalaca-cf05ba@houat>
-References: <20250509-drm-bridge-convert-to-alloc-api-v3-0-b8bc1f16d7aa@bootlin.com>
-	<20250521162216.79dd3290@booty>
-	<20250522-amphibian-shiny-chachalaca-cf05ba@houat>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="gkuK0lqi"
+Received: from pendragon.ideasonboard.com (179.218-130-109.adsl-dyn.isp.belgacom.be [109.130.218.179])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id A22DA8FA;
+	Thu, 22 May 2025 17:56:26 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1747929386;
+	bh=b780aQpCLRpCOmLNeLkROM5sv2ZJNKVOY4HQDdMxrXw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=gkuK0lqiuCBDnrAc4xt543RZcM9WlHCTLtuCyFKJ/zw/PvPsBBAd4QDc4jxiGsTj5
+	 kGzA7bcoAZWh5ZtKPQT694gX5O69Ttx+OJhmTSVtvOadBmLUZl7cZnlvxVozpRqlFY
+	 oc7GAyg6qTu7NjD6YL0sOQbLPfCfIV9dE15hd9GM=
+Date: Thu, 22 May 2025 17:56:41 +0200
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Stefan Klug <stefan.klug@ideasonboard.com>
+Cc: linux-media@vger.kernel.org, Dafna Hirschfeld <dafna@fastmail.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Heiko Stuebner <heiko@sntech.de>,
+	linux-rockchip@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	Hans Verkuil <hans@jjverkuil.nl>
+Subject: Re: [PATCH 2/3] media: rkisp1: Add
+ RKISP1_CID_SUPPORTED_PARAMS_BLOCKS control
+Message-ID: <20250522155641.GU12514@pendragon.ideasonboard.com>
+References: <20250522150944.400046-2-stefan.klug@ideasonboard.com>
+ <20250522150944.400046-4-stefan.klug@ideasonboard.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgdeifeejucdltddurdegfedvrddttddmucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtjeertdertddvnecuhfhrohhmpefnuhgtrgcuvegvrhgvshholhhiuceolhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepgfejhffgjeelkeeftdekfefgteekgefhleelueeijeffieekieeigefhledtffetnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghdpfhhrvggvuggvshhkthhophdrohhrghdpsghoohhtlhhinhdrtghomhenucfkphepvdgrtddvmeeijedtmedvtddvtdemvggrtddumegsvgegudemleehvgejmeefgeefmeeludefvgenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtvdemieejtdemvddtvddtmegvrgdtudemsggvgedumeelhegvjeemfeegfeemledufegvpdhhvghlohepsghoohhthidpmhgrihhlfhhrohhmpehluhgtrgdrtggvrhgvshholhhisegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeelhedprhgtphhtthhopehmrhhiphgrrhgusehkvghrnhgvlhdrohhrghdprhgtphhtthhopehmrggrrhhtvghnrdhlrghnkhhho
- hhrshhtsehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtohepthiiihhmmhgvrhhmrghnnhesshhushgvrdguvgdprhgtphhtthhopegrihhrlhhivggusehgmhgrihhlrdgtohhmpdhrtghpthhtohepshhimhhonhgrsehffhiflhhlrdgthhdprhgtphhtthhopegrnhgurhiivghjrdhhrghjuggrsehinhhtvghlrdgtohhmpdhrtghpthhtohepnhgvihhlrdgrrhhmshhtrhhonhhgsehlihhnrghrohdrohhrghdprhgtphhtthhopehrfhhoshhssehkvghrnhgvlhdrohhrgh
-X-GND-Sasl: luca.ceresoli@bootlin.com
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250522150944.400046-4-stefan.klug@ideasonboard.com>
 
-Hi Maxime,
+Hi Stefan,
 
-On Thu, 22 May 2025 16:57:30 +0200
-Maxime Ripard <mripard@kernel.org> wrote:
+Thank you for the patch.
 
-[...]
-
-> > As the commit was a mistake, I'm applying the revert by the end of this
-> > week (i.e. on Friday) unless there are better instructions.  
+On Thu, May 22, 2025 at 05:08:39PM +0200, Stefan Klug wrote:
+> Add a RKISP1_CID_SUPPORTED_PARAMS_BLOCKS V4L2 control to be able to
+> query the parameters blocks supported by the current kernel on the
+> current hardware from user space.
 > 
-> Given the lack of answers, and that it looks correct to me, just leave
-> it there. We can always revert later on if things turned out to be
-> broken.
-
-OK, I'll leave the commit and drop the revert in v4.
-
-> > >       drm: convert many bridge drivers from devm_kzalloc() to devm_drm_bridge_alloc() API  
-> > 
-> > This patch affects multiple drivers. Running get_maintainers.pl
-> > points at Shawn Guo's repository. After reviewing the MAINTAINERS file,
-> > this looks like due to the 'N:' line in:
-> > 
-> > ARM/FREESCALE IMX / MXC ARM ARCHITECTURE
-> > M:	Shawn Guo <shawnguo@kernel.org>
-> > M:	Sascha Hauer <s.hauer@pengutronix.de>
-> > R:	Pengutronix Kernel Team <kernel@pengutronix.de>
-> > ...
-> > T:	git git://git.kernel.org/pub/scm/linux/kernel/git/shawnguo/linux.git
-> > N:	imx
-> > ...
-> > 
-> > (https://gitlab.freedesktop.org/drm/misc/kernel/-/blob/drm-misc-next/MAINTAINERS?ref_type=heads#L2511-2528)
-> > 
-> > Here 'imx' matches the 'drivers/gpu/drm/bridge/imx/imx-legacy-bridge.c'
-> > file that is touched by the patch. That regexp appears overly generic to me.  
+> Signed-off-by: Stefan Klug <stefan.klug@ideasonboard.com>
+> ---
+>  .../platform/rockchip/rkisp1/rkisp1-common.h  |  2 +
+>  .../platform/rockchip/rkisp1/rkisp1-params.c  | 50 ++++++++++++++++++-
+>  include/uapi/linux/rkisp1-config.h            | 10 ++++
+>  include/uapi/linux/v4l2-controls.h            |  6 +++
+>  4 files changed, 67 insertions(+), 1 deletion(-)
 > 
-> I agree, or at least, we shouldn't wait for Shawn or Sasha...
-> 
-> > Shawn, can it be fixed by making it less generic?
-> > 
-> > If not, can we at least add a band-aid 'X:' entry for
-> > drivers/gpu/drm/bridge/imx?
-> > 
-> > I think the other matching entry is the one to consider:
-> > 
-> > DRM DRIVERS FOR FREESCALE IMX BRIDGE
-> > M:	Liu Ying <victor.liu@nxp.com>
-> > L:	dri-devel@lists.freedesktop.org
-> > S:	Maintained
-> > F:	Documentation/devicetree/bindings/display/bridge/fsl,imx8qxp-ldb.yaml
-> > F:	Documentation/devicetree/bindings/display/bridge/fsl,imx8qxp-pixel-combiner.yaml
-> > F:	Documentation/devicetree/bindings/display/bridge/fsl,imx8qxp-pixel-link.yaml
-> > F:	Documentation/devicetree/bindings/display/bridge/fsl,imx8qxp-pxl2dpi.yaml
-> > F:	drivers/gpu/drm/bridge/imx/
-> > 
-> > (https://gitlab.freedesktop.org/drm/misc/kernel/-/blob/drm-misc-next/MAINTAINERS?ref_type=heads#L7940-7948)  
-> 
-> ... As long as Ying is fine with it, because it does look like they are
-> the actual maintainer.
+> diff --git a/drivers/media/platform/rockchip/rkisp1/rkisp1-common.h b/drivers/media/platform/rockchip/rkisp1/rkisp1-common.h
+> index ca952fd0829b..5f187f9efc7b 100644
+> --- a/drivers/media/platform/rockchip/rkisp1/rkisp1-common.h
+> +++ b/drivers/media/platform/rockchip/rkisp1/rkisp1-common.h
+> @@ -415,6 +415,8 @@ struct rkisp1_params {
+>  	spinlock_t config_lock; /* locks the buffers list 'params' */
+>  	struct list_head params;
+>  
+> +	struct v4l2_ctrl_handler ctrls;
+> +
+>  	const struct v4l2_meta_format *metafmt;
+>  
+>  	enum v4l2_quantization quantization;
+> diff --git a/drivers/media/platform/rockchip/rkisp1/rkisp1-params.c b/drivers/media/platform/rockchip/rkisp1/rkisp1-params.c
+> index 918eb06c7465..60c9b3c46593 100644
+> --- a/drivers/media/platform/rockchip/rkisp1/rkisp1-params.c
+> +++ b/drivers/media/platform/rockchip/rkisp1/rkisp1-params.c
+> @@ -2736,6 +2736,45 @@ static int rkisp1_params_init_vb2_queue(struct vb2_queue *q,
+>  	return vb2_queue_init(q);
+>  }
+>  
+> +static int rkisp1_ctrl_init(struct rkisp1_params *params)
+> +{
+> +	int ret;
+> +
+> +	v4l2_ctrl_handler_init(&params->ctrls, 1);
+> +
+> +	struct v4l2_ctrl_config ctrl_config = {
+> +		.id = RKISP1_CID_SUPPORTED_PARAMS_BLOCKS,
+> +		.name = "Supported Params Blocks",
+> +		.type = V4L2_CTRL_TYPE_BITMASK,
+> +		.flags = V4L2_CTRL_FLAG_READ_ONLY,
+> +	};
 
-Ack, thanks for confirming this.
+	struct v4l2_ctrl_config ctrl_config = {
+		.id = RKISP1_CID_SUPPORTED_PARAMS_BLOCKS,
+		.name = "Supported Params Blocks",
+		.type = V4L2_CTRL_TYPE_BITMASK,
+		.flags = V4L2_CTRL_FLAG_READ_ONLY,
+	};
+	int ret;
 
-Bottom line, given that large patch has your Acked-by, and given the
-shawnguo repo was ruled out, the conclusion is it can apply it to
-drm-misc-next.
+	v4l2_ctrl_handler_init(&params->ctrls, 1);
 
-Having that large patch applied will be relieving me a lot! I think
-next time I'm going to split any imilar change in per-driver patches,
-even if it is spatch-automated.
+Mixing code and variable declarations is still usually frown upon in the
+kernel.
 
-> > >       drm/todo: add entry to remove devm_drm_put_bridge()  
-> > 
-> > This involves documentation maintained on another tree. Where should it
-> > be applied? There are two matching entries in MAINTAINERS:
-> > 
-> >  * DRM DRIVERS -> the drm tree
-> >  * DRM DRIVERS AND MISC GPU PATCHES -> the drm-misc tree
-> > 
-> > To me it looks like the second is obviously the closest match as we are
-> > dealing with DRM bridges, so I'm applying this as well on Friday unless
-> > there are better instructions.  
-> 
-> Yes, they should be applied to drm-misc.
+> +
+> +	for (unsigned int i = 0; i < ARRAY_SIZE(rkisp1_ext_params_handlers); i++) {
+> +		const struct rkisp1_ext_params_handler *block_handler;
+> +
+> +		block_handler = &rkisp1_ext_params_handlers[i];
+> +		ctrl_config.max |= BIT(i);
+> +
+> +		if ((params->rkisp1->info->features & block_handler->features) !=
+> +		    block_handler->features)
+> +			continue;
+> +
+> +		ctrl_config.def |= BIT(i);
+> +	}
+> +
+> +	v4l2_ctrl_new_custom(&params->ctrls, &ctrl_config, NULL);
+> +
+> +	params->vnode.vdev.ctrl_handler = &params->ctrls;
+> +
+> +	if (params->ctrls.error) {
+> +		ret = params->ctrls.error;
+> +		v4l2_ctrl_handler_free(&params->ctrls);
+> +		return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>  int rkisp1_params_register(struct rkisp1_device *rkisp1)
+>  {
+>  	struct rkisp1_params *params = &rkisp1->params;
+> @@ -2776,10 +2815,16 @@ int rkisp1_params_register(struct rkisp1_device *rkisp1)
+>  
+>  	video_set_drvdata(vdev, params);
+>  
+> +	ret = rkisp1_ctrl_init(params);
+> +	if (ret) {
+> +		dev_err(rkisp1->dev, "Control initialization error %d\n", ret);
+> +		goto err_mutex;
+> +	}
+> +
+>  	node->pad.flags = MEDIA_PAD_FL_SOURCE;
+>  	ret = media_entity_pads_init(&vdev->entity, 1, &node->pad);
+>  	if (ret)
+> -		goto err_mutex;
+> +		goto err_ctrl;
+>  
+>  	ret = video_register_device(vdev, VFL_TYPE_VIDEO, -1);
+>  	if (ret) {
+> @@ -2792,6 +2837,8 @@ int rkisp1_params_register(struct rkisp1_device *rkisp1)
+>  
+>  err_media:
+>  	media_entity_cleanup(&vdev->entity);
+> +err_ctrl:
+> +	v4l2_ctrl_handler_free(&params->ctrls);
+>  err_mutex:
+>  	mutex_destroy(&node->vlock);
+>  	return ret;
+> @@ -2808,5 +2855,6 @@ void rkisp1_params_unregister(struct rkisp1_device *rkisp1)
+>  
+>  	vb2_video_unregister_device(vdev);
+>  	media_entity_cleanup(&vdev->entity);
+> +	v4l2_ctrl_handler_free(&params->ctrls);
+>  	mutex_destroy(&node->vlock);
+>  }
+> diff --git a/include/uapi/linux/rkisp1-config.h b/include/uapi/linux/rkisp1-config.h
+> index 2d995f3c1ca3..4fc8f221d0c4 100644
+> --- a/include/uapi/linux/rkisp1-config.h
+> +++ b/include/uapi/linux/rkisp1-config.h
+> @@ -1086,6 +1086,9 @@ enum rkisp1_ext_params_block_type {
+>  #define RKISP1_EXT_PARAMS_FL_BLOCK_DISABLE	(1U << 0)
+>  #define RKISP1_EXT_PARAMS_FL_BLOCK_ENABLE	(1U << 1)
+>  
+> +/* A bitmask of parameters blocks supported on the current hardware. */
+> +#define RKISP1_CID_SUPPORTED_PARAMS_BLOCKS	(V4L2_CID_USER_RKISP1_BASE + 0x01)
+> +
+>  /**
+>   * struct rkisp1_ext_params_block_header - RkISP1 extensible parameters block
+>   *					   header
+> @@ -1520,6 +1523,13 @@ enum rksip1_ext_param_buffer_version {
+>   * V4L2 control. If such control is not available, userspace should assume only
+>   * RKISP1_EXT_PARAM_BUFFER_V1 is supported by the driver.
+>   *
+> + * The read-only V4L2 control ``RKISP1_CID_SUPPORTED_PARAMS_BLOCKS`` can be used
+> + * to query the blocks supported by the current hardware. It contains a bitmask
 
-OK, will do soon.
+s/current hardware/device/
 
-> That being said, putting a two days timeout on *any* email is really
-> over-the-top. I doubt you reply to any of your mail in such a short
-> timeframe. We have rules for a reason, I'd expect you to follow them, no
-> matter how frustrating the lack of answers can be.
+> + * where each bit represents the availability of the corresponding entry
+> + * from the :c:type:`rkisp1_ext_params_block_type` enum. The max value of the
+> + * control represents the blocks supported by the current kernel (independent of
+> + * the current hardware).
 
-Apologies if that was too much.
+ * from the :c:type:`rkisp1_ext_params_block_type` enum. The current and default
+ * values of the control represents the blocks supported by the device instance,
+ * while the maximum value represents the blocks supported by the kernel driver,
+ * independently of the device instance.
 
-I was indeed nervous about the revert. A patch got applied by mistake
-and I believe it should have been reverted very quickly, if need be.
-Both Louis and I didn't want to break the process again. So we asked,
-but not having answer after 2+ weeks I must admit I got a bit nervous
-about it.
+I was going to say that the control should be documented in
+Documentation/userspace-api/drivers/rkisp1.rst, but rkisp1-config.h is
+pulled in the documentation tree by
+Documentation/userspace-api/media/v4l/metafmt-rkisp1.rst, so I'm OK with
+this. Hans, Mauro, are you fine as well with documenting the control
+here ?
 
-Sorry about that and thanks for the feedback about my questions.
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
-Luca
+> + *
+>   * For each ISP block that userspace wants to configure, a block-specific
+>   * structure is appended to the @data buffer, one after the other without gaps
+>   * in between nor overlaps. Userspace shall populate the @data_size field with
+> diff --git a/include/uapi/linux/v4l2-controls.h b/include/uapi/linux/v4l2-controls.h
+> index 72e32814ea83..f836512e9deb 100644
+> --- a/include/uapi/linux/v4l2-controls.h
+> +++ b/include/uapi/linux/v4l2-controls.h
+> @@ -222,6 +222,12 @@ enum v4l2_colorfx {
+>   */
+>  #define V4L2_CID_USER_UVC_BASE			(V4L2_CID_USER_BASE + 0x11e0)
+>  
+> +/*
+> + * The base for Rockchip ISP1 driver controls.
+> + * We reserve 16 controls for this driver.
+> + */
+> +#define V4L2_CID_USER_RKISP1_BASE		(V4L2_CID_USER_BASE + 0x1220)
+> +
+>  /* MPEG-class control IDs */
+>  /* The MPEG controls are applicable to all codec controls
+>   * and the 'MPEG' part of the define is historical */
 
 -- 
-Luca Ceresoli, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Regards,
+
+Laurent Pinchart
