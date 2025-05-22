@@ -1,146 +1,107 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fhigh-b3-smtp.messagingengine.com (fhigh-b3-smtp.messagingengine.com [202.12.124.154])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECE3541AAC;
-	Thu, 22 May 2025 14:17:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 317231F09B3;
+	Thu, 22 May 2025 14:18:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.154
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747923438; cv=none; b=gwjnd5ZaoQ4jLwEct3lqgF9PHEAfaRHvYInh3IpIFHVYkb4yY+wBf8XXK6Dx7Hz8AkV1s5KBFz0kAm29aK6LEjFDl/igIV5HQTIUJ8HRLVJRGWM1dlBUt5l5oQdpgdWGhsIvhab4BVDlB8o9yfqwNWrzLyvrLye0NmBzkT45Sm0=
+	t=1747923523; cv=none; b=onY6aRLA0g9JqJ5oMYhvQYpzIcsa5bcZfV4Sv7cIhGgfXFNryXfLQlF5DfxZa9tPfR57JOfDGw5HBa09H3a2tiqonCSXvSWW3yUB091r6Tk3deQHU4V5jZJrQl/3HVnKx6+VLFa1iskOLX8XIoauSBHnSn+LMF43Iz8wa2umLVA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747923438; c=relaxed/simple;
-	bh=FIAP5ivOA9Tc52MccphjuWXYgFP4ivGn13zAzEuvEOg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YoxtbTphaPKeg2efVq/+PBilS6YS6zkF24vx88N/0vbN6YLdHQ+wX2MFpz6eLuPFXIm6s0oC4yv8LOpPZnj/id3F04VQlFGuQ1W+aU573rUhDUpJo5SNDbn5n0o1qDtpCCznHJJpqCs+BZ+2lsh3B6q4Qrdaz7Dvri7isis5huY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FpdkCoBE; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747923523; c=relaxed/simple;
+	bh=ydM9ptHlkLdvFWjUy5hhT6spfan/essBb3lzYMHeM6M=;
+	h=MIME-Version:Date:From:To:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=Ia3G0cJL/obNBQsY2K59CDTMZZZ9C2FOFDcEh2E8YIA1/ZbCkwQurLoHx2ntwmLqgsr4nM9sDFFGnf030MhDCK9SD+DUVvuDDC61ABFRHO+1UfpX+RVpJX5iucW626MU2BRUrn9WTKDeIYJ2YaRTY3WjcW4kWrvKrNbSoso/AYQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=LQgfpgg5; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=uHG8R7HM; arc=none smtp.client-ip=202.12.124.154
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FpdkCoBE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F4F2C4CEE4;
-	Thu, 22 May 2025 14:17:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747923436;
-	bh=FIAP5ivOA9Tc52MccphjuWXYgFP4ivGn13zAzEuvEOg=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=FpdkCoBEgERzSMO4wqrP46cxPcN7MTgEhi9c3w0XYPP3iOpAR+5Jn/e6iz4QQujOY
-	 37hQXKQs3dfh1b8mqu23o1LZOBNATvSG0HPkvJE25vu+tiQf04tli6W13ORP/RgY+b
-	 pee+yIJ+r+7cIB7fGiub5BwQcclB6ngvniO9xJCdwP+pbCWHqNx5t8tp3XzM7Rx1hn
-	 9XhwsTnsINcnew/jOlZxQBd+0vT7EspvsbFP6ewcxhQgtGzxw+epMbEZasiOhvHdtY
-	 v9Do9My08L3NdnoJs4WioUZbK/EgTvtfsonWrmKzOAumZXT26a7de4OXd+jH9fOZ59
-	 nP5wkVWDRcvhw==
-Message-ID: <2567dc7e-f88d-475e-9ae8-a454416251c2@kernel.org>
-Date: Thu, 22 May 2025 16:17:09 +0200
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="LQgfpgg5";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="uHG8R7HM"
+Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id CECC425401B5;
+	Thu, 22 May 2025 10:18:39 -0400 (EDT)
+Received: from phl-imap-12 ([10.202.2.86])
+  by phl-compute-05.internal (MEProxy); Thu, 22 May 2025 10:18:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:content-transfer-encoding:content-type:content-type:date:date
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm3; t=1747923519;
+	 x=1748009919; bh=hGvglmTdn2YYCq15UF3RYcVZFPJgASgYWxVBs5I74hw=; b=
+	LQgfpgg5qMN/n4ao5YaViMJaALSaiAMgZmMoJDHEwBdrbW1ug39JOk+6t+gTcutK
+	XUBb2TKbYTC5HvSUSPNfzJl4OJNuUhgGdB0G2T/vC4OfmStg/8/d5Isauiik95ma
+	YlOiL/TMDLaGNsnev0376hsL6ooAGPiX2+pg7z6qVvRikLJc0H7zHv9t/rj+ryEi
+	4X6p+jfy01WeLeeK9jxOcB/K/DuzJ8mvXVDGZ3TrnmapMMqx/TBxknUnNQYHgnVB
+	6zHLMNQE/vONcqoENWRCslS+HZqo3BFtfpk+oZDMFy3VPGmWIRL0saoB/4Z7y1ET
+	hCXEe2BznJopcHWknRzv8Q==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:content-transfer-encoding:content-type
+	:content-type:date:date:feedback-id:feedback-id:from:from
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to:x-me-proxy:x-me-sender
+	:x-me-sender:x-sasl-enc; s=fm3; t=1747923519; x=1748009919; bh=h
+	GvglmTdn2YYCq15UF3RYcVZFPJgASgYWxVBs5I74hw=; b=uHG8R7HMLD3IxgJFs
+	N6+NNHlwGn8+xveMDWBfEzut3IeV+k25hLZ3m3VASXtJJ/lt9gKYO1G2RoRM+w7C
+	LiPk+G3KLQeTS2i7g7lGoTBcHkmSJEiElBiIOD1hf4PRpakHC6+OpNiBUSfdbCQQ
+	Ofpo0b2dNL3qAyVRmjlUjIcKVxVMB/2SdvN5wc98Cfa4HY8KzovV2aJGjibevQkh
+	1So0WUu5zsydi0a5bVlgcDrZMJfSF5Os/Gd8B5HKks31lVeMu5hjxF+JgslI13nD
+	/0lOKEbIYOrnPf5h4t4UAIa4WsvCFcxye+EKvtT4rpkp/ps9T55pLB68K4JQaulF
+	aeo1w==
+X-ME-Sender: <xms:PzIvaJy09rgWubYH3fSbSTp49ffHcOxMnVs_DBBP9ZPINvfEEB-eIA>
+    <xme:PzIvaJQqFXcjHUC9ZziprMzDEBXxIUFBnqtfGD93FdjmbEqexw78qUAeMGBEV26BP
+    b8y2AQEy7pVk0mngws>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgdeiudekucdltddurdegfedvrddttd
+    dmucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgf
+    nhhsuhgsshgtrhhisggvpdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttd
+    enucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepofggfffhvffkjghf
+    ufgtgfesthejredtredttdenucfhrhhomhepfdetrhhnugcuuegvrhhgmhgrnhhnfdcuoe
+    grrhhnugesrghrnhgusgdruggvqeenucggtffrrghtthgvrhhnpefhkeeltdfffefhgffh
+    teetheeuhffgteeghfdtueefudeuleetgfehtdejieffhfenucevlhhushhtvghrufhiii
+    gvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrhhnugesrghrnhgusgdruggvpdhn
+    sggprhgtphhtthhopedutddpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepmhgrrh
+    hiohdrlhhimhhonhgtihgvlhhlohesrghmugdrtghomhdprhgtphhtthhopeifpggrrhhm
+    ihhnsehgmhigrdguvgdprhgtphhtthhopehlvghnsgeskhgvrhhnvghlrdhorhhgpdhrtg
+    hpthhtoheprhgrfhgrvghlsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehilhhpohdr
+    jhgrrhhvihhnvghnsehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtoheplhhinh
+    hugidqrhhishgtvheslhhishhtshdrihhnfhhrrgguvggrugdrohhrghdprhgtphhtthho
+    pegrlhgvgihghhhithhisehrihhvohhsihhntgdrtghomhdprhgtphhtthhopehmphgvrg
+    hrshhonhdqlhgvnhhovhhosehsqhhuvggssgdrtggrpdhrtghpthhtoheplhhinhhugidq
+    rggtphhisehvghgvrhdrkhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:PzIvaDVxFEjxhCEqUac1ABEGaVMpopwUpKvHYjrncgUFlYpttWUHdA>
+    <xmx:PzIvaLg9KaZ1PsspZX17NK01Aw-pqFO3RJeHK1oMfIamloa0Hv0JhQ>
+    <xmx:PzIvaLBb5n7RbR44iBPqhDtGAwly1A58kUXlIyq1QbAHbLg_h319Lg>
+    <xmx:PzIvaELGm6XpDr_41_996-BkkYQe8LDT6aUJ6DWocK3uqt4zYVx41w>
+    <xmx:PzIvaCUZrIkbbK9xg6J50_BaO79ZnKDxvOMHlAops5-Co0kVRvCxSStD>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 028A81060062; Thu, 22 May 2025 10:18:39 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 0/7] MT9M114 driver bugfix and improvements
-To: Mathis Foerst <mathis.foerst@mt.com>, linux-kernel@vger.kernel.org
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
- Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Sakari Ailus <sakari.ailus@linux.intel.com>,
- Steve Longerbeam <slongerbeam@gmail.com>,
- Philipp Zabel <p.zabel@pengutronix.de>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
- Pengutronix Kernel Team <kernel@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>, linux-media@vger.kernel.org,
- devicetree@vger.kernel.org, linux-staging@lists.linux.dev,
- imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- manuel.traut@mt.com, mathis.foerst@zuehlke.com
-References: <20250522140613.104963-1-mathis.foerst@mt.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <20250522140613.104963-1-mathis.foerst@mt.com>
-Content-Type: text/plain; charset=UTF-8
+X-ThreadId: Tdd7d737077c6d117
+Date: Thu, 22 May 2025 16:18:18 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Alexandre Ghiti" <alexghiti@rivosinc.com>,
+ "Rafael J . Wysocki" <rafael@kernel.org>, "Len Brown" <lenb@kernel.org>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ "Mario Limonciello" <mario.limonciello@amd.com>,
+ "Mark Pearson" <mpearson-lenovo@squebb.ca>, "Armin Wolf" <W_Armin@gmx.de>,
+ linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-riscv@lists.infradead.org
+Message-Id: <f6e5a993-2480-4d73-b866-81f9b7bc3dd8@app.fastmail.com>
+In-Reply-To: <20250522141410.31315-1-alexghiti@rivosinc.com>
+References: <20250522141410.31315-1-alexghiti@rivosinc.com>
+Subject: Re: [PATCH] drivers: acpi: Fix platform profile driver on !acpi platforms
+Content-Type: text/plain
 Content-Transfer-Encoding: 7bit
 
-On 22/05/2025 16:06, Mathis Foerst wrote:
-> Hi,
-> 
-> this patch series contains the following bugfix and improvements
-> for the MT9M114 camera driver:
-> 
-> Changelog:
-> 
-> v4 -> v5:
-> - Apply reformatings and small refactorings as suggested in review comments
-> - Split PATCH 4 into two parts: One for applying HFLIP / VFLIP while 
->   streaming, one for applying set_selection while streaming.
-> - Add condition to apply set_selection immediately only if the size of the
->   cropping rectangle does not change in PATCH 5
-> - Use device_property_read_u32 instead of of_property_read_u32 in PATCH 7
-> 
-> v3 -> v4:
-> - Rename DT binding from "onnn,slew-rate" to "slew-rate" in PATCH 1 and 6 as
->   requested in the review comment.
-> 
-> v2 -> v3:
-> - Dropped PATCH 2 ("media: mt9m114: Add get_mbus_config").
->   Based on the comments, this issure won't be fixed in the MT9M114
->   driver but in "imx-media-csi.c" in a separate patch.
-> - Renumbered patches accordingly.
-> - Fix the incomplete renaming of the DT property from 'pad-slew-rate'
->   to 'onnn,slew-rate' in PATCH 1 and 6.
-> - Fix checkpatch formatting suggestions in PATCH 2 and 6.
-> 
-> v1 -> v2:
-> - Fix the subjects of the patches
-> - Dropped PATCH 1 ("Add bypass-pll DT-binding") as it can be automatically
->   detected if the PLL should be bypassed.
-> - Renumbered patches accordingly
-> - Switch to uint32, add default value and clarify documentation in PATCH 1
-> - Add 'Fixes' and 'Cc' tags as suggested in PATCH 6
-> 
-I am looking at this changelog and cannot find:
+On Thu, May 22, 2025, at 16:13, Alexandre Ghiti wrote:
 
-Where did you mention and explain dropping two reviews which you
-received (see submitting patches)?
+> Fixes: 77be5cacb2c2 ("ACPI: platform_profile: Create class for ACPI 
+> platform profile")
+> Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
 
-Best regards,
-Krzysztof
+Reviewed-by: Arnd Bergmann <arnd@arndb.de>
