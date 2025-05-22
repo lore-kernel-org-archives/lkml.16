@@ -1,117 +1,103 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 584A2281531;
-	Thu, 22 May 2025 08:59:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DD2628688C
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 08:59:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747904353; cv=none; b=eE1JDRLzi7cZYjJj8sbOXxOwBnjU1gGiL4fu/nEPF7O+UQA5kB6TyWIgWk5KGav99sKc4Jo4VMM+VBhU2VSgYUNHQlxr7BM7gzWKNNyhRCMTF4Ae6lemEqtWW8ve5dJmUqWiEdTXIcgYI1YwfcJ0/o4Eq990IsrYo8n0CLWaVtY=
+	t=1747904387; cv=none; b=F2iwh9mHhx+ZCYdIypV+T9AmdMvUX+NcjmKJA0HN50ZK8VzLNuCwUUzrNtnlGGULuPNKkvP5bRCXCeZ/OyytBaT4JvPILsOG0AkpOQKa1sU0TPfiQhTYRHwrbLgyxDWzKSRSD8S/FqO53rXDC7Lq2Dfxhilwe8FWOkAQq3QjTrA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747904353; c=relaxed/simple;
-	bh=F+UaMKsaTaM23XM2k8ATYaf6ORfK+hGHKXw+SidOvP0=;
+	s=arc-20240116; t=1747904387; c=relaxed/simple;
+	bh=vKURFuIpdq/K/4MGm+TN1457AIiKfPHKolVqXUq2u90=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kaxJaPo0MSjVIdZluGzEs4uV4Unw7iBgGngsb9rfCdL00MVx3sF7uDRowbAoK33vgs7pu8yArElpaHKj6ZG09e2KyhqE2vNydgYGmLF/n0FAM4qOJbeLz5fSD14vt5aTdpIYfLE3iwmRelEsA1RVNRU9/VkV7qGRnBpVp9gyyS4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T7/ESCQo; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T7/ESCQo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43286C4CEE4;
-	Thu, 22 May 2025 08:59:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747904352;
-	bh=F+UaMKsaTaM23XM2k8ATYaf6ORfK+hGHKXw+SidOvP0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=T7/ESCQoDO8xpAYpb+TppNiGZuXD5kGBMkqEXzyjHKG58NZQ51X20EicgGsjmDVWf
-	 k4w9RLdbhirJCnP+M0h925cuPMimyMsxAWwOoiOJgNoctuAh0Dhxbt9qERxyNJionC
-	 PRiYKhMolbpRhCrnlNpWWy8fRRc8nRJT5ABEjOmKP+buMPt4qLkzijSFAiBXOCqiDP
-	 E9QzVu+v82JG7fylZCh6T5qq6Rqf8BPjIBhXB+2qGmJHyUiE6QHSjQDMkCAyyivlbq
-	 c9PraU0EWUzPy9MM4Dsr1b4BaQVdzc+qv8QHGxeFFfHW+pXEzxI803IAPDeGvO4LhV
-	 wFgOe8d2pMqGg==
-Date: Thu, 22 May 2025 09:59:06 +0100
-From: Lee Jones <lee@kernel.org>
-To: sven@svenpeter.dev
-Cc: Janne Grunau <j@jannau.net>, Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-	Neal Gompa <neal@gompa.dev>, Hector Martin <marcan@marcan.st>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Sebastian Reichel <sre@kernel.org>, Marc Zyngier <maz@kernel.org>,
-	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
-	asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
-Subject: Re: [PATCH v6 05/10] mfd: Add Apple Silicon System Management
- Controller
-Message-ID: <20250522085906.GA1199143@google.com>
-References: <20250515-smc-6-15-v6-0-c47b1ef4b0ae@svenpeter.dev>
- <20250515-smc-6-15-v6-5-c47b1ef4b0ae@svenpeter.dev>
+	 Content-Type:Content-Disposition:In-Reply-To; b=eac04U+8N3KcropJ9EcKi/5VqHhY0HgEiMYB3rKjX17tfHbwbmyS39XjL6JtcfSnFXMXTTqUOoBVE80xP+mmys+WRGOeHq7KsKkcQE9i3zdbsJgasvbYYg+cK5+rHhan7Vd0gzxbifiU5pVAmnbAZ3kqCoAmDcK6HjzAlxXvlYk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <mkl@pengutronix.de>)
+	id 1uI1lv-0002vJ-Hh; Thu, 22 May 2025 10:59:27 +0200
+Received: from moin.white.stw.pengutronix.de ([2a0a:edc0:0:b01:1d::7b] helo=bjornoya.blackshift.org)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <mkl@pengutronix.de>)
+	id 1uI1lu-000huF-01;
+	Thu, 22 May 2025 10:59:26 +0200
+Received: from pengutronix.de (unknown [IPv6:2a03:2260:2009:2000::])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange x25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	(Authenticated sender: mkl-all@blackshift.org)
+	by smtp.blackshift.org (Postfix) with ESMTPSA id 1844F4175DB;
+	Thu, 22 May 2025 08:59:25 +0000 (UTC)
+Date: Thu, 22 May 2025 10:59:22 +0200
+From: Marc Kleine-Budde <mkl@pengutronix.de>
+To: Elaine Zhang <zhangqing@rock-chips.com>
+Cc: kernel@pengutronix.de, mailhol.vincent@wanadoo.fr, robh@kernel.org, 
+	krzk+dt@kernel.org, conor+dt@kernel.org, heiko@sntech.de, cl@rock-chips.com, 
+	kever.yang@rock-chips.com, linux-can@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v4 0/3] rockchip: add can for RK3576 Soc
+Message-ID: <20250522-idealistic-khaki-tuna-91290d-mkl@pengutronix.de>
+References: <20250522074616.3115348-1-zhangqing@rock-chips.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="sa6ejazolcmnr6ge"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250515-smc-6-15-v6-5-c47b1ef4b0ae@svenpeter.dev>
+In-Reply-To: <20250522074616.3115348-1-zhangqing@rock-chips.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: mkl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-On Thu, 15 May 2025, Sven Peter via B4 Relay wrote:
 
-> From: Sven Peter <sven@svenpeter.dev>
-> 
-> The System Management Controller (SMC) on Apple Silicon machines is a
-> piece of hardware that exposes various functionalities such as
-> temperature sensors, voltage/power meters, shutdown/reboot handling,
-> GPIOs and more.
-> 
-> Communication happens via a shared mailbox using the RTKit protocol
-> which is also used for other co-processors. The SMC protocol then allows
-> reading and writing many different keys which implement the various
-> features. The MFD core device handles this protocol and exposes it
-> to the sub-devices.
-> 
-> Some of the sub-devices are potentially also useful on pre-M1 Apple
-> machines and support for SMCs on these machines can be added at a later
-> time.
-> 
-> Co-developed-by: Hector Martin <marcan@marcan.st>
-> Signed-off-by: Hector Martin <marcan@marcan.st>
-> Reviewed-by: Alyssa Rosenzweig <alyssa@rosenzweig.io>
-> Reviewed-by: Neal Gompa <neal@gompa.dev>
-> Signed-off-by: Sven Peter <sven@svenpeter.dev>
-> ---
->  MAINTAINERS                |   2 +
->  drivers/mfd/Kconfig        |  18 ++
->  drivers/mfd/Makefile       |   1 +
->  drivers/mfd/macsmc.c       | 498 +++++++++++++++++++++++++++++++++++++++++++++
->  include/linux/mfd/macsmc.h | 279 +++++++++++++++++++++++++
->  5 files changed, 798 insertions(+)
+--sa6ejazolcmnr6ge
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v4 0/3] rockchip: add can for RK3576 Soc
+MIME-Version: 1.0
 
-Arghhh, so close!
+On 22.05.2025 15:46:13, Elaine Zhang wrote:
+> rk3576 can is a new controller:
+> Support CAN and CANFD protocol.
+> Support Dma.
+>=20
+> There are major differences from the previous rk3568. All errata on the
+> rk3568 have been fixed and redesigned.
 
-[...]
+Which tree does this series apply to? Please rebase to
+linux-can-next-for-6.16-20250522
 
-> +static struct platform_driver apple_smc_driver = {
-> +	.driver = {
-> +		.name = "mfd-macsmc",
+regards,
+Marc
 
-Drop the 'mfd-' part please.
+--=20
+Pengutronix e.K.                 | Marc Kleine-Budde          |
+Embedded Linux                   | https://www.pengutronix.de |
+Vertretung N=C3=BCrnberg              | Phone: +49-5121-206917-129 |
+Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-9   |
 
-> +		.of_match_table = apple_smc_of_match,
-> +	},
-> +	.probe = apple_smc_probe,
-> +};
-> +module_platform_driver(apple_smc_driver);
-> +
-> +MODULE_AUTHOR("Hector Martin <marcan@marcan.st>");
-> +MODULE_AUTHOR("Sven Peter <sven@svenpeter.dev>");
-> +MODULE_LICENSE("Dual MIT/GPL");
-> +MODULE_DESCRIPTION("Apple SMC driver");
+--sa6ejazolcmnr6ge
+Content-Type: application/pgp-signature; name="signature.asc"
 
-I plan to apply this set after the merge-window.
+-----BEGIN PGP SIGNATURE-----
 
-What else are you waiting on?
+iQEzBAABCgAdFiEEn/sM2K9nqF/8FWzzDHRl3/mQkZwFAmgu52cACgkQDHRl3/mQ
+kZwdfgf/d8vv4Y+eCOIDpy04JenmxN8n8PZDriO0bTQAcrysrzSwWUfkouJA9sI5
+avJL3hLCOVrSRzmvh/lkkW4voCfIfki7FI/STC/LeEpri85JOxOQfYLw1FgZ1Oeu
+/b70nkM8d5A06HIVBB6WpUuj9B3B06p58KMlvSySaiK1EtfyIzZZ5O8LPmvzGLBZ
+Nn9dbaH7KmSHboVpsx21zOyAIu1yAeu1Shl62nWBuFCBT1RYIpOWAKUX7cLpH4Dd
+WTzeBnQxhzNKvLV91+pM/W0t89/tH5L7UfyhOHH3F1y4owdA2InWkOkYj22yTFiL
+rNz898AB9XRisrl8I6jjG3Xp/yVvMA==
+=7M2p
+-----END PGP SIGNATURE-----
 
--- 
-Lee Jones [李琼斯]
+--sa6ejazolcmnr6ge--
