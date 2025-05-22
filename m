@@ -1,100 +1,231 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 393883010C
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 13:43:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EDD328BAA5
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 13:43:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747921425; cv=none; b=RXFxJzMfB+iC2cZhZObNiZVWTCJ6Ooah1sjhguGpaRw0668c1uBRxzlbHyz2pbrNEQGi+qrhRs38/8w50S3czQOarYyzDy7Ipij4Eglt6yDuoBZ6sWTxtVL9fmLVCttJFFQNzgrTrkc9v0qPVxMUu+qjYB5VOG8UpX63Ru/QS5k=
+	t=1747921441; cv=none; b=bHw+TV+Fd3UMmJOvL675x+yve3eOb5/S215czVMMJAj9aAJjPLRQOq/sDoR1qQxUgXnfWiwOlg5bgnorWYadeKn1zhkqUPHoOiqm1nke7PTXuQVvEJcsR+9rlZI2C1bYcMYXY3ejhs7oY+23GlG8Q4XGm1JEsyrUGGk+Gykm5Sk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747921425; c=relaxed/simple;
-	bh=A+7j37YM8CLHuf4M8TE4bEC4Qqh65RglyR9XdNxjmCg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=QuSZHDNHIKfNeNjav/CoKt6bzMDTZ3ybZNE6rItbpmMcsvt6qxMdW5VlPaVBZVWrrZNCxloW5PGhYRJNI2dyigNtO1wE9dAgEx9pcRNrFzrykXXnj0DCZiZIVp6mNjWePSU68Cxl40hWujWR1g7smO+UCVR1lo8Z/w6QWAG2gME=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=X9yn/Ryx; arc=none smtp.client-ip=170.10.129.124
+	s=arc-20240116; t=1747921441; c=relaxed/simple;
+	bh=lOPj/8aEtz2b2Ko1osNQcdpCoFX+bMxSpLQVesnLlsc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=DzDpOS6uCxFbCkCLqJ5skwwLK4hmLti0ueEfyC0E3s6uTywmp5qBc35klEhtHKUIE8AkYUPpCjlJipSUEjQ9Bk2DRwyB2ZUKR28wuqibCagefD6c6mvQJpK/WUXpvPurYt6RTKhBXMjTYlw3WTYo0sdRFbH7rVybthdJcBlOjMA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QX7h1SuD; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="X9yn/Ryx"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QX7h1SuD"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747921423;
+	s=mimecast20190719; t=1747921438;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Ki4PGz9MoGwpt59sUdcbcs5elurUJNkygM0DwmzXjgk=;
-	b=X9yn/RyxSldV4tN6YPeDi0wWxqu13sfSzg2uc/zjY2nUmJx/syafFrRj6iGzTUZWzI2YON
-	RINhXSz6iRSDQTtne00DSGOrcYV0Ht28TWKQxdADW9fGSyloxTCNsUMP/yo+u9XuXTKjJz
-	eFWHXsPIFdJxJIWiHD5SxBnsqN6xE5E=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=7JgMDdO4BBC7QOqJWwaBEFuHvFQmR5tQPNMBjo6myTE=;
+	b=QX7h1SuDBuRz3Wz/hbEQ7Om4DrrWzgP/070F3kZIHHRGi78LUeTSRdB0yhnYEsOlfUZZKm
+	iZljFvE0VopFi7L3rEGYtfJFyKmKVI2SNZ9iHekVklyvli51WwYXwLCzZPwDvgSui43KMz
+	38FuAYQNg5uaTKlLdAmlnvM+FI02REI=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-125-GDpTC-M3PDaAAJiQhQ8krQ-1; Thu, 22 May 2025 09:43:42 -0400
-X-MC-Unique: GDpTC-M3PDaAAJiQhQ8krQ-1
-X-Mimecast-MFC-AGG-ID: GDpTC-M3PDaAAJiQhQ8krQ_1747921421
-Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-ac79e4764e5so757606266b.0
-        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 06:43:41 -0700 (PDT)
+ us-mta-248-Xn-nN6LcM2yZn3EjLBcFOA-1; Thu, 22 May 2025 09:43:57 -0400
+X-MC-Unique: Xn-nN6LcM2yZn3EjLBcFOA-1
+X-Mimecast-MFC-AGG-ID: Xn-nN6LcM2yZn3EjLBcFOA_1747921436
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-442e0e6eb84so50195335e9.0
+        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 06:43:56 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747921421; x=1748526221;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Ki4PGz9MoGwpt59sUdcbcs5elurUJNkygM0DwmzXjgk=;
-        b=QWzqzqKUoYY0V+MnWuDjIgvKjDGHvGcz3UIHV9ZzICFwzVOW33B/sXiJ0lVpCNfucz
-         GjsAveouyU0SIY7nn4kn+9/HyK8MIxIVbNAJ4l4tJSU64wHUNYgrPVN25e+jYqlU5ajc
-         lAi5MErLcpTS7rMrDzmfQ4qZsbNQQ8kO5NVEqEsIo1BK+HAR/RDMRJ3KzXq7WMkvUOCV
-         S809LBwHmCErlpiksheJeRuDP5/5WYpbs5KwUTQ4+ePhAzF9sl2QGOkf1VRR1LWNjFUh
-         j2Xf/dTVNQBVca9ZAB5z0irZNNNQYsbkPPr7/ayfoz7uxnLL6fMY/VLkiFF6OHi1+M59
-         33NA==
-X-Forwarded-Encrypted: i=1; AJvYcCW9gSrKG/w4KVDQc0mJnhPQ/mMbJZw5zny3X2nUFm9o+Tx9mAZIrBorcsjwBcKBZXLAKZNT2y/HY45H8O0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzvxc7K+mm8nE+Fk+mIdU9PDhgZL0qAdav118r3zbvgFskTHceR
-	9a73znvJKzMYO9+bmQXgIJHDArdmVpTMQOuCih0s2T4ukgtmSz+QKKaANWS1SJJBLGl7QwnS2wj
-	3JWIhs5VEaWcHur+M2XrrKuz2Y1QkQcikJ9v6Sn6+apDAz6dkikNRq3va3uA0dtIwJfbmrbFOst
-	KSdInBL0ksJyBFpF7Rr2Gdoi4M55xlrOtS4rFTNuzh
-X-Gm-Gg: ASbGncsV9KaXnlMw6680OpqtTPXwnRT1WWgGIkCjQTWmvjXvzb5kaZ6+NoI0UDu4wS0
-	dvuBgNiOqcZnbWGJJSQ/9PZalYqBKVzrTEFO6WITVxAupJcunpBtFatosUJ9qwIQU8AE=
-X-Received: by 2002:a17:907:d0c:b0:ad2:24e5:27c9 with SMTP id a640c23a62f3a-ad536dce79fmr1894668666b.44.1747921420841;
-        Thu, 22 May 2025 06:43:40 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFApJlcKWeBv+I/SZdgDY/l7/3GBrRjoB1/uHm1DvRsrdhnUNEd+PLOFGC7roeOx4o5yrW+a52CQxM2LWr2/4k=
-X-Received: by 2002:a17:907:d0c:b0:ad2:24e5:27c9 with SMTP id
- a640c23a62f3a-ad536dce79fmr1894667766b.44.1747921420478; Thu, 22 May 2025
- 06:43:40 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1747921435; x=1748526235;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=7JgMDdO4BBC7QOqJWwaBEFuHvFQmR5tQPNMBjo6myTE=;
+        b=j8gkh6dbm8Yl6GZ9Qtsc0+wI1TixqPfrlL8wpGkI26eHCTeOs7z/nKENv/vG5+rzQz
+         FRkoN9oQiaHuyODnf9rqjt/jIkfcUb7RCm3G7OYtJVHnqf2sJxVkTMKpCWuxNny0HLNu
+         sgWrkMEHrM2BdNZuXxV+/GLiVRSOEzefZyYKhoNbi0x3vteIZqDEBw4b0Tq7Y8BP82Fy
+         s8WDrN5n6PMrWV8nPfF301DYBk7U4+hOeSQRCdN3Ygk/OvmljPMkBrCOBJ69drTiznNZ
+         mRog7qj4YfOJLucXulY1SHeHcqpRi/4oHvUWg+UmOAKSneVMA42sqTgdjM3MHxhFue9R
+         VDNw==
+X-Forwarded-Encrypted: i=1; AJvYcCWGzaLaKLLaulqZrlTe/idGJ8QIatS/WyBZnGQA11+D8JynzwdjDZrjD60vKH07Uno4Xf0cgvvvhuBNeZU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwSPArlxl8cTg8riU9t1QTiH7x/DXDRIdppcyN6DBZ6gXgGSX6B
+	/7L5TzxdeKRK0Yff6gYm6A42pA+F7oogrAK2MQsckCnbDGwh+kJuKNAfJ90NZH1cMBQ87o900he
+	EpbgY4IT4EGC0Z1+JKSi5caHiiDCtaV8Qeq7sLQbDU5cKYqJKlcfGgb7OGXQx3USvjg==
+X-Gm-Gg: ASbGncuFTRjb+rtkBxgTQBicIUJ7Ab2tH8PDf66qx//BwmogyCcVN6ZEBjoWNK0IF9y
+	ZuWwQR72X4Y7mr2g0SoEX3M90iqxImyatvdssjrwkZvxiMOzYUqNOPJIrp7AGE4jOUjHUnadnb4
+	5eg8S3hkF4BwvR4f3yoXlDDXbPtsymiuLrIkbIaYLNIp6bgZ2qy8zmLqz79F5isiVCH4fPA4KO6
+	qSkDx8F4VFqhgIJES3wqc6WvMMel7OpTdSYDG5Vnr5IfKRsFZfq6FLqZIbZmPPaalZAFoSp1dS7
+	9YA0FfE2m2C66iFQ3/E=
+X-Received: by 2002:a05:600c:64cd:b0:43d:745a:5a50 with SMTP id 5b1f17b1804b1-442fd6313demr193274825e9.19.1747921435609;
+        Thu, 22 May 2025 06:43:55 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGSrKn8LA5eHA5OxHAPqACQvxGAtPFpq+CamWhPoSdiOYmSKeWiKQJ2+X7B9tot/wDyu9PvNA==
+X-Received: by 2002:a05:600c:64cd:b0:43d:745a:5a50 with SMTP id 5b1f17b1804b1-442fd6313demr193274635e9.19.1747921435208;
+        Thu, 22 May 2025 06:43:55 -0700 (PDT)
+Received: from ?IPV6:2a0d:3344:247a:1010::f39? ([2a0d:3344:247a:1010::f39])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-447f73d3d6csm109001055e9.19.2025.05.22.06.43.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 22 May 2025 06:43:54 -0700 (PDT)
+Message-ID: <5470f2d2-d3cb-4451-b8e8-5ee768ed9741@redhat.com>
+Date: Thu, 22 May 2025 15:43:52 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250515162133.29507-1-costa.shul@redhat.com>
-In-Reply-To: <20250515162133.29507-1-costa.shul@redhat.com>
-From: Tomas Glozar <tglozar@redhat.com>
-Date: Thu, 22 May 2025 15:43:28 +0200
-X-Gm-Features: AX0GCFt-etal4vUs3hVowp4ARgqzJUvnCHub4_m7VLxKDnkkY-r7AMpHp_xdrdw
-Message-ID: <CAP4=nvR06=j8WpNbHay60_f3bNtYD+0yHdvzEnm3O+7oT6BZww@mail.gmail.com>
-Subject: Re: [PATCH v3] rtla: Set distinctive exit value for failed tests
-To: Costa Shulyupin <costa.shul@redhat.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Jonathan Corbet <corbet@lwn.net>, John Kacur <jkacur@redhat.com>, 
-	Daniel Bristot de Oliveira <bristot@kernel.org>, "Luis Claudio R. Goncalves" <lgoncalv@redhat.com>, 
-	Eder Zulian <ezulian@redhat.com>, Dan Carpenter <dan.carpenter@linaro.org>, 
-	Gabriele Monaco <gmonaco@redhat.com>, Jan Stancek <jstancek@redhat.com>, 
-	linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [EXTERNAL] Re: [PATCH net-next,v2] net: mana: Add support for
+ Multi Vports on Bare metal
+To: Simon Horman <horms@kernel.org>, Haiyang Zhang <haiyangz@microsoft.com>
+Cc: "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+ "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+ Dexuan Cui <decui@microsoft.com>,
+ "stephen@networkplumber.org" <stephen@networkplumber.org>,
+ KY Srinivasan <kys@microsoft.com>, Paul Rosswurm <paulros@microsoft.com>,
+ "olaf@aepfle.de" <olaf@aepfle.de>, "vkuznets@redhat.com"
+ <vkuznets@redhat.com>, "davem@davemloft.net" <davem@davemloft.net>,
+ "wei.liu@kernel.org" <wei.liu@kernel.org>,
+ "edumazet@google.com" <edumazet@google.com>,
+ "kuba@kernel.org" <kuba@kernel.org>, "leon@kernel.org" <leon@kernel.org>,
+ Long Li <longli@microsoft.com>,
+ "ssengar@linux.microsoft.com" <ssengar@linux.microsoft.com>,
+ "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+ "daniel@iogearbox.net" <daniel@iogearbox.net>,
+ "john.fastabend@gmail.com" <john.fastabend@gmail.com>,
+ "bpf@vger.kernel.org" <bpf@vger.kernel.org>, "ast@kernel.org"
+ <ast@kernel.org>, "hawk@kernel.org" <hawk@kernel.org>,
+ "tglx@linutronix.de" <tglx@linutronix.de>,
+ "shradhagupta@linux.microsoft.com" <shradhagupta@linux.microsoft.com>,
+ "andrew+netdev@lunn.ch" <andrew+netdev@lunn.ch>,
+ Konstantin Taranov <kotaranov@microsoft.com>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <1747671636-5810-1-git-send-email-haiyangz@microsoft.com>
+ <20250521140231.GW365796@horms.kernel.org>
+ <MN0PR21MB34373B1A0162D8452018ABAACA9EA@MN0PR21MB3437.namprd21.prod.outlook.com>
+ <20250522120229.GX365796@horms.kernel.org>
+Content-Language: en-US
+From: Paolo Abeni <pabeni@redhat.com>
+In-Reply-To: <20250522120229.GX365796@horms.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-=C4=8Dt 15. 5. 2025 v 18:35 odes=C3=ADlatel Costa Shulyupin
-<costa.shul@redhat.com> napsal:
->
-> Add documentation
-> - update Documentation/tools/rtla/common_appendix.rst.
->   add SPDX-License-Identifier
->   add section 'EXIT STATUS'
-> - include common_appendix.rst into
->   Documentation/tools/rtla/rtla-timerlat-hist.rst - the only file of
->   rtla-*.rst still without common_appendix.rst.
+On 5/22/25 2:02 PM, Simon Horman wrote:
+> On Wed, May 21, 2025 at 05:28:33PM +0000, Haiyang Zhang wrote:
+>>> -----Original Message-----
+>>> From: Simon Horman <horms@kernel.org>
+>>> Sent: Wednesday, May 21, 2025 10:03 AM
+>>> To: Haiyang Zhang <haiyangz@microsoft.com>
+>>> Cc: linux-hyperv@vger.kernel.org; netdev@vger.kernel.org; Dexuan Cui
+>>> <decui@microsoft.com>; stephen@networkplumber.org; KY Srinivasan
+>>> <kys@microsoft.com>; Paul Rosswurm <paulros@microsoft.com>;
+>>> olaf@aepfle.de; vkuznets@redhat.com; davem@davemloft.net;
+>>> wei.liu@kernel.org; edumazet@google.com; kuba@kernel.org;
+>>> pabeni@redhat.com; leon@kernel.org; Long Li <longli@microsoft.com>;
+>>> ssengar@linux.microsoft.com; linux-rdma@vger.kernel.org;
+>>> daniel@iogearbox.net; john.fastabend@gmail.com; bpf@vger.kernel.org;
+>>> ast@kernel.org; hawk@kernel.org; tglx@linutronix.de;
+>>> shradhagupta@linux.microsoft.com; andrew+netdev@lunn.ch; Konstantin
+>>> Taranov <kotaranov@microsoft.com>; linux-kernel@vger.kernel.org
+>>> Subject: [EXTERNAL] Re: [PATCH net-next,v2] net: mana: Add support for
+>>> Multi Vports on Bare metal
+>>>
+>>> On Mon, May 19, 2025 at 09:20:36AM -0700, Haiyang Zhang wrote:
+>>>> To support Multi Vports on Bare metal, increase the device config
+>>> response
+>>>> version. And, skip the register HW vport, and register filter steps,
+>>> when
+>>>> the Bare metal hostmode is set.
+>>>>
+>>>> Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
+>>>> ---
+>>>> v2:
+>>>>   Updated comments as suggested by ALOK TIWARI.
+>>>>   Fixed the version check.
+>>>>
+>>>> ---
+>>>>  drivers/net/ethernet/microsoft/mana/mana_en.c | 24 ++++++++++++-------
+>>>>  include/net/mana/mana.h                       |  4 +++-
+>>>>  2 files changed, 19 insertions(+), 9 deletions(-)
+>>>>
+>>>> diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c
+>>> b/drivers/net/ethernet/microsoft/mana/mana_en.c
+>>>> index 2bac6be8f6a0..9c58d9e0bbb5 100644
+>>>> --- a/drivers/net/ethernet/microsoft/mana/mana_en.c
+>>>> +++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
+>>>> @@ -921,7 +921,7 @@ static void mana_pf_deregister_filter(struct
+>>> mana_port_context *apc)
+>>>>
+>>>>  static int mana_query_device_cfg(struct mana_context *ac, u32
+>>> proto_major_ver,
+>>>>  				 u32 proto_minor_ver, u32 proto_micro_ver,
+>>>> -				 u16 *max_num_vports)
+>>>> +				 u16 *max_num_vports, u8 *bm_hostmode)
+>>>>  {
+>>>>  	struct gdma_context *gc = ac->gdma_dev->gdma_context;
+>>>>  	struct mana_query_device_cfg_resp resp = {};
+>>>> @@ -932,7 +932,7 @@ static int mana_query_device_cfg(struct mana_context
+>>> *ac, u32 proto_major_ver,
+>>>>  	mana_gd_init_req_hdr(&req.hdr, MANA_QUERY_DEV_CONFIG,
+>>>>  			     sizeof(req), sizeof(resp));
+>>>>
+>>>> -	req.hdr.resp.msg_version = GDMA_MESSAGE_V2;
+>>>> +	req.hdr.resp.msg_version = GDMA_MESSAGE_V3;
+>>>>
+>>>>  	req.proto_major_ver = proto_major_ver;
+>>>>  	req.proto_minor_ver = proto_minor_ver;
+>>>
+>>>> @@ -956,11 +956,16 @@ static int mana_query_device_cfg(struct
+>>> mana_context *ac, u32 proto_major_ver,
+>>>>
+>>>>  	*max_num_vports = resp.max_num_vports;
+>>>>
+>>>> -	if (resp.hdr.response.msg_version == GDMA_MESSAGE_V2)
+>>>> +	if (resp.hdr.response.msg_version >= GDMA_MESSAGE_V2)
+>>>>  		gc->adapter_mtu = resp.adapter_mtu;
+>>>>  	else
+>>>>  		gc->adapter_mtu = ETH_FRAME_LEN;
+>>>>
+>>>> +	if (resp.hdr.response.msg_version >= GDMA_MESSAGE_V3)
+>>>> +		*bm_hostmode = resp.bm_hostmode;
+>>>> +	else
+>>>> +		*bm_hostmode = 0;
+>>>
+>>> Hi,
+>>>
+>>> Perhaps not strictly related to this patch, but I see
+>>> that mana_verify_resp_hdr() is called a few lines above.
+>>> And that verifies a minimum msg_version. But I do not see
+>>> any verification of the maximum msg_version supported by the code.
+>>>
+>>> I am concerned about a hypothetical scenario where, say the as yet unknown
+>>> version 5 is sent as the version, and the above behaviour is used, while
+>>> not being correct.
+>>>
+>>> Could you shed some light on this?
+>>>
+>>
+>> In driver, we specify the expected reply msg version is v3 here:
+>> req.hdr.resp.msg_version = GDMA_MESSAGE_V3;
+>>
+>> If the HW side is upgraded, it won't send reply msg version higher
+>> than expected, which may break the driver.
+> 
+> Thanks,
+> 
+> If I understand things correctly the HW side will honour the
+> req.hdr.resp.msg_version and thus the SW won't receive anything
+> it doesn't expect. Is that right?
 
-Those are three distinct changes that should be in three separate
-Documentation patches, and not together with the code change.
+@Haiyang, if Simon's interpretation is correct, please change the
+version checking in the driver from:
 
-Tomas
+	if (resp.hdr.response.msg_version >= GDMA_MESSAGE_V3)
+
+to
+	if (resp.hdr.response.msg_version == GDMA_MESSAGE_V3)
+
+As the current code is misleading.
+
+Thanks,
+
+Paolo
 
