@@ -1,138 +1,134 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f174.google.com (mail-oi1-f174.google.com [209.85.167.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50A1A28D8C1;
-	Thu, 22 May 2025 14:50:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B844E28D838
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 14:50:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747925404; cv=none; b=FToVrGzloxL7NQBXB+qHpf/Cg15kM9SHrr3iTF4ls7FFcY+CWOH/VfacaUmcYz3yyWoe2FTNyic41ix9WVrWDGngPipWhFAtRvdfOtOxdt4iBltFmUaT5a0K+odzDAZZ/9Mq7djVD1qQw88XUKLjpLZgOdC33pbanvhtEORODzI=
+	t=1747925415; cv=none; b=Y7DD7L68H0H6SFu9D0lvtCn/sjpPwHEhkIph6kC7H5RIeJoH120FFWracob2qN9u0kHkkD+pe51rUkxMGGzOJLULfHRoAHTKW39u++0RYJodAP2gLqkIo+KgNIyUAtbgifBqw1oEFntDWx9bqcHQRXUsi5E0vZhYhNKW4VUoS/g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747925404; c=relaxed/simple;
-	bh=6r62Mqd/YPbA2PQW6RZiBXcJUx8hGxcJTqL9xwKx9vo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HZiWtj9kZ0ThaBmsXky0Mvrm5tstzsuJIEQGIMP70uVAlk15sYXRgGek24pov9MgQBf7memTPN1KF/6dqRHvu/dnCe4u6amUiQa5DhFn+NrmFQYVlHyS2gTYb8NvwG3Im8dOgnY5h5rIc+Q/B7rIfIPKLD+rT5Q80lsMr1KfSBk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Fsz72wDo; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747925415; c=relaxed/simple;
+	bh=/EynnhopfbTRqZUx18La6mxqssjQJuoyYP67ASJw3dQ=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=SBl2jlYfIr/W9jgF4NBf58Mo+IIvVsO49Mvz6x0eoQ1jT0nlKouzI4vaLVJChPN3ZQTMz/68iUZBsPh4dh+oNAVRl+4n/p5B2qvLgZgPva+l11Rqb0zr/tHjyA8z/yOCTHbqt/v9vVEYwGINHIVb2ICpDBuc0pm/GPzQcdUCRzg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=txGIx7Z+; arc=none smtp.client-ip=209.85.167.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Fsz72wDo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6AC59C4CEE4;
-	Thu, 22 May 2025 14:49:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747925403;
-	bh=6r62Mqd/YPbA2PQW6RZiBXcJUx8hGxcJTqL9xwKx9vo=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Fsz72wDoCC3Fl2E3rGDqbsZhGB1uzKlcElswbXmaMcyHVow2pjgAnDc/kv5d1Gdn9
-	 sw+r/dvwGz4qsKV/gMakNK3srikER/bOHRI0KI3fhhNrSBqnKwig3K1rld0K6Ag76t
-	 dTyw9cBsc9ykhIVBFBE/ufCSi+oS04oO/4noB2wfJvBBZzogo8XDD2AheIlUP3IHq7
-	 sGvtm6NqeoBANooWnpG9y4JnvaadmpAbbhZ+1G8tcdiKnbo/HtQHiS3DSYJ71PqlcC
-	 kbgexouOFrs87gy0EaowsU1HgVXbwhSlzR+yzKUo5CcTNCW6I9UHtKCdK4Z8+3Yzng
-	 HVm/KZghQlneA==
-Message-ID: <bb7e9828-a19d-4f45-b405-66aac85e3bcd@kernel.org>
-Date: Thu, 22 May 2025 16:49:57 +0200
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="txGIx7Z+"
+Received: by mail-oi1-f174.google.com with SMTP id 5614622812f47-3feb3f54339so8372966b6e.1
+        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 07:50:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1747925412; x=1748530212; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ejTtGZf7vUHOXsjk+JkTm8wtREmvSS0UiwkyQWSFLcc=;
+        b=txGIx7Z+rLEl4yaSJCIv4QuVp1bcTfxFARD9iSFXLS9eOiunHDcgMzW/GlaghVLbDU
+         QVzuAzeBf4/IYp8tRbs2qiFULuX1SvuSeaN/pPhapv1CEuKAC1TxRLlsB+IrTp3VS6me
+         CvVsn6f/2n9hH7hTTN/IXuslsOA7E8SaDTNqaCq4n3kCYp949msySiiQrhBy5kn12Y4n
+         Abc8q+RXnHkdsBp9CKftuSM0iAartj4We/UKg0KB6YDZ0rKjcW2/uFXETBLWtq+UTaU4
+         rxPucju1rU8fFkcncEA1QHB7ott+GITIBOSv5xJb+Ag55+WYxx9VYbP6vXKa3UW3j/OD
+         S6xQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747925412; x=1748530212;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ejTtGZf7vUHOXsjk+JkTm8wtREmvSS0UiwkyQWSFLcc=;
+        b=PxGhlAO5bIu+xmONIb5UqcDOb450NF+JLpN2VGFywmxRtPylirehQFAxrEeTvMJNXx
+         miSF1whp+9Z4Qijs4swuq/clPqWk5oabkiXlCnckHfYbbR+d/RRFSymILq6c8xbSdN66
+         ujG9q/DcUgLMdlRCFvEDcJGND6ZW9Cs1CFlbeV0h5ewnG7QTLKE+vE8IMQykdOMYwkH5
+         pbnd0BS8mwqogAtrvmMyB6A9ma9Fq04/vdt+Xlke5WG5PJry+LTLDZAIDzbzaJujEcf/
+         XxukTAdnetFCseAfFAOxwzb78Dow5G7uYSYrzUI9dsu4uwyx776ab2hHHYh0awN+5Prg
+         RaJA==
+X-Forwarded-Encrypted: i=1; AJvYcCXRUM3NeBKUgZY/nf76qBFGvdt2JZyKwJHXPQ8qeRGfKOg9/LV4Gv8itQmbZcKFE6YaqyR8h06IxWgevOE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzUiMa+NDqmK2v9FjJ32EppN8RSNGbbWHheK10crtdEoP8XA+GY
+	hDSWlgPZKhePqDde5xPpSIdANMB3/Oej2491uEdFmnYemGRrHHRZQm+FpDmEW6sdTN8=
+X-Gm-Gg: ASbGncuLTb7ZrqitTdd60bqT8JzZeKST3454i2Ej0ffCw96icpUORs04EzgcpVnKNFs
+	ZWwjjF2zV6ask/b4AkYbKWhGLKwr4fOhqfd+AvdRnhXIbGMDH7+MRDhXuajJ3eSoRh39x1rB1C5
+	u/ca1vQzL6c09n3wurdU01HHcfeR4JVlKae5StZXXiVeBByUi9qVsbYdZfBdqtrUu57vYT7n1QK
+	Yg/5ehLf/cuKGdotKiCFGPn6czQUeKVTa4Ni+5W01Tl8zRocgpiKrjYLz0ydNCtNevfB1wOy34e
+	EnUBSHYO68sJ5AeBl12nloWJguJ/vwchUaQ9dycvkcIVM+2eZddNxcdEig==
+X-Google-Smtp-Source: AGHT+IH2N+y8pkPgaDi3tRswr18F+2IgYVvh+GwM6qOt21ptYCccNFRGv2rQ7CTXfqsQL6HJMQvEVA==
+X-Received: by 2002:a05:6808:83c8:b0:3fe:ab15:5ed6 with SMTP id 5614622812f47-404d86d8c97mr11952177b6e.12.1747925412599;
+        Thu, 22 May 2025 07:50:12 -0700 (PDT)
+Received: from [127.0.1.1] ([2600:8803:e7e4:1d00:3407:53d5:68cd:400d])
+        by smtp.gmail.com with ESMTPSA id 5614622812f47-404e303ffcasm2228234b6e.4.2025.05.22.07.50.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 May 2025 07:50:11 -0700 (PDT)
+From: David Lechner <dlechner@baylibre.com>
+Subject: [PATCH v2 0/3] pwm: axi-pwmgen: add external clock
+Date: Thu, 22 May 2025 09:49:38 -0500
+Message-Id: <20250522-pwm-axi-pwmgen-add-external-clock-v2-0-086ea9e6ecf0@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 05/12] dt-bindings: phy: renesas,usb2-phy: Add
- renesas,sysc-signals
-To: Claudiu Beznea <claudiu.beznea@tuxon.dev>
-Cc: vkoul@kernel.org, kishon@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
- conor+dt@kernel.org, p.zabel@pengutronix.de, geert+renesas@glider.be,
- magnus.damm@gmail.com, yoshihiro.shimoda.uh@renesas.com, kees@kernel.org,
- gustavoars@kernel.org, biju.das.jz@bp.renesas.com,
- linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
- linux-hardening@vger.kernel.org, john.madieu.xa@bp.renesas.com,
- Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-References: <20250521140943.3830195-1-claudiu.beznea.uj@bp.renesas.com>
- <20250521140943.3830195-6-claudiu.beznea.uj@bp.renesas.com>
- <20250522-evasive-unyielding-quoll-dbc9b2@kuoka>
- <b22e7a46-7e35-4840-aae3-a855c97fbde4@tuxon.dev>
- <4a07048a-c55a-4fd3-b4e5-7f9d218de76f@kernel.org>
- <68d83aaf-280a-4c19-becf-c6e1d9c2432b@kernel.org>
- <797611e1-3786-45c4-9103-3ee8f96cec6d@tuxon.dev>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <797611e1-3786-45c4-9103-3ee8f96cec6d@tuxon.dev>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAII5L2gC/42NSw6CMBRFt0I69pm2CEFH7sMw6OcBL0JLWoIQw
+ t4txAU4ujl3cM7GIgbCyB7ZxgLOFMm7BPKSMdMp1yKQTcwklwUvRAHjZwC10LEtOlDWAi4TBqd
+ 6ML03b+B5eWu0bSp+1yx5xoANLWfjVSfuKE4+rGdyFsf7s0v+h30WwKE0tsyN4VyY6qnV2pMOe
+ DV+YPW+71/0rloz1QAAAA==
+X-Change-ID: 20250515-pwm-axi-pwmgen-add-external-clock-0364fbdf809b
+To: Michael Hennerich <michael.hennerich@analog.com>, 
+ =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>, 
+ Trevor Gamblin <tgamblin@baylibre.com>, 
+ =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, David Lechner <dlechner@baylibre.com>
+Cc: linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1627; i=dlechner@baylibre.com;
+ h=from:subject:message-id; bh=/EynnhopfbTRqZUx18La6mxqssjQJuoyYP67ASJw3dQ=;
+ b=owEBbQGS/pANAwAKAcLMIAH/AY/AAcsmYgBoLzmFTW/ivzWssbER3tY1m2n9IU5m09Ey/Jm9U
+ 15+EL45EBuJATMEAAEKAB0WIQTsGNmeYg6D1pzYaJjCzCAB/wGPwAUCaC85hQAKCRDCzCAB/wGP
+ wDWzB/9IBW7j3w6siigBYnZVCoMwr8Vz3bO+m0cYpglLO5H4XSWcLfgDygzkOyhHaLVssxO/iQ2
+ fODAXNAq84Y6lNtwyJ9FVZFqjlfIJxbfVqRyYB/qXpkNxtouqHYowjCtlExAw1dwp0uQmDR3jid
+ ppnfglEgBPbbUb51qPHozIoFCzDnbB1EMS0+3IdkD5Jk6O4gEuzrzXxICX2FulW1p+lXh/MmJTA
+ abRwyonqfKbpDclhXnxkpbq6tyqppnSyDqfeFH5VUViEksV2nSxQH5F0fzke/RbfmTsQdhXLfNa
+ dcTH2mripYCZb+b5dTY6aT54Sr0l1U2UZwFSBMwXC3u9tRC6
+X-Developer-Key: i=dlechner@baylibre.com; a=openpgp;
+ fpr=8A73D82A6A1F509907F373881F8AF88C82F77C03
 
-On 22/05/2025 16:39, Claudiu Beznea wrote:
-> 
-> 
-> On 22.05.2025 15:48, Krzysztof Kozlowski wrote:
->> On 22/05/2025 14:46, Krzysztof Kozlowski wrote:
->>>>>>  
->>>>>> +  - if:
->>>>>> +      properties:
->>>>>> +        compatible:
->>>>>> +          contains:
->>>>>> +            const: renesas,usb2-phy-r9a08g045
->>>>>> +    then:
->>>>>> +      required:
->>>>>> +        - renesas,sysc-signals
->>>>>
->>>>> That's ABI break.
->>>>
->>>> There is no in kernel device tree users of "renesas,usb2-phy-r9a08g045"
->>>> compatible. It is introduced in patch 11/12 from this series. With this do
->>>> you still consider it ABI break?
->>>
->>> Then this patch cannot be split from binding introducing the user. Don't
->>> add unused/undocumented compatibles.
->>>
->> Or you meant DTS?
-> 
-> Yes, I meant in tree DTS.
+When we created the driver for the AXI PWMGEN IP block, we overlooked
+the fact that it can optionally be configured to use an external clock
+in addition to the AXI bus clock. This is easy to miss in testing
+because the bus clock is always on because it is driving other
+peripherals as well.
 
-Rhetorical question (because we talked about this on mailing list many
-times enough): what would be the point of any ABI if you can break it
-and adjust in-tree DTS in the next patch?
+Up to now, users were specifying the external clock if there was one and
+the AXI bus clock otherwise. But the proper way to do this is to would
+be to always specify the bus clock and only specify the external clock
+if the IP block has been configured to use it.
+
+To fix this, we add clock-names to the devicetree bindings and change
+clocks to allow 1 or 2 clocks.
+
+---
+Changes in v2:
+- Consider this a fix rather than a new feature.
+- Make clock-names required.
+- Simplify the logic in the pwm driver to avoid needing to test if
+  clock-names is present in old dtbs that used the broken binding.
+- Link to v1: https://lore.kernel.org/r/20250520-pwm-axi-pwmgen-add-external-clock-v1-0-6cd63cc001c8@baylibre.com
+
+---
+David Lechner (3):
+      dt-bindings: pwm: adi,axi-pwmgen: update documentation link
+      dt-bindings: pwm: adi,axi-pwmgen: fix clocks
+      pwm: axi-pwmgen: fix missing separate external clock
+
+ .../devicetree/bindings/pwm/adi,axi-pwmgen.yaml    | 16 ++++++++++++---
+ drivers/pwm/pwm-axi-pwmgen.c                       | 23 +++++++++++++++++++---
+ 2 files changed, 33 insertions(+), 6 deletions(-)
+---
+base-commit: 484803582c77061b470ac64a634f25f89715be3f
+change-id: 20250515-pwm-axi-pwmgen-add-external-clock-0364fbdf809b
 
 Best regards,
-Krzysztof
+-- 
+David Lechner <dlechner@baylibre.com>
+
