@@ -1,113 +1,127 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 09ED827718;
-	Thu, 22 May 2025 03:07:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mail-qv1-f48.google.com (mail-qv1-f48.google.com [209.85.219.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F3FE1172A
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 03:08:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747883235; cv=none; b=p0GNGCWF6/dX6l54xIfndYz0s1dPFdDuxQ5NIK7+zZoXJEyizf64ecg6cMvu5Iee4yQOzokxvzojkwGQkxLaIVDA7QtGwqOtr/UpgchvXNqua3L7jhYVBkHOU30OfwSWNFyCaAgR88yW2mjRD5cq2vwNwBV+BbcUW7+1vuZ48J0=
+	t=1747883304; cv=none; b=nEcJVpEWKAkj8FDITVicZo172epa3Oaeeejriq/LvXt5/Ij49BwcN6tK5EgM1M7rxQtiVDYrjJEZ6oR0sRzETz+TjXD6tTYaL6QoCSRB5Ub8z8MV7JFIiGT16M34ejNU5QDC8c1s7xSHRgL//4ez5hAHdVd3upPWgeR6uFhuhQg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747883235; c=relaxed/simple;
-	bh=/tFrh5QqKOL4ygIBBWFi3Vw9SPY03/r3IMgvMlztlNg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=He+0ocS8kcu9dQ3xzp3W3947suoo3a5aoAcKSQgZ0r2fxUL62hh2gpwTEEVICAylhx3EspFXzPjc5cf4ZR6ooG573AngrJQ978uwMTC3zsx8kIOC6HCjbEwH83+UyPs6dHNOExZIpcK7QIzjjVqQYXbnN/7n0K89PUC52eTid3A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [223.64.69.3])
-	by gateway (Coremail) with SMTP id _____8CxLGvWlC5oo9v1AA--.4475S3;
-	Thu, 22 May 2025 11:07:02 +0800 (CST)
-Received: from localhost.localdomain (unknown [223.64.69.3])
-	by front1 (Coremail) with SMTP id qMiowMDxesTIlC5orADnAA--.58454S2;
-	Thu, 22 May 2025 11:06:59 +0800 (CST)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Paolo Bonzini <pbonzini@redhat.com>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Tianrui Zhao <zhaotianrui@loongson.cn>,
-	Bibo Mao <maobibo@loongson.cn>
-Cc: kvm@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Xuerui Wang <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Huacai Chen <chenhuacai@loongson.cn>
-Subject: [GIT PULL] LoongArch KVM changes for v6.16
-Date: Thu, 22 May 2025 11:06:28 +0800
-Message-ID: <20250522030628.1924833-1-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.47.1
+	s=arc-20240116; t=1747883304; c=relaxed/simple;
+	bh=q2KZ86WaIx1gEeDCZnA2QS5Jz55c/igaAybUfOzqVeU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZIlZU1PwTx4Ezv9/F4ZukJvOSuE3s37QqYHEZiX+YlnKaz4WIVWCuPRhAxp6ib/5+vaSNtl0OKyimdJqvz1QYtI8GRnk8KalBuBm8jNm1iJBGgvTnFpLAT008HxLxdq1rEmAMcrtG/l/fB9bRcBC2joCdSxfWYEiapSkyt64TW8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=mVbWfFYi; arc=none smtp.client-ip=209.85.219.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="mVbWfFYi"
+Received: by mail-qv1-f48.google.com with SMTP id 6a1803df08f44-6f8b9c6b453so67578306d6.2
+        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 20:08:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1747883299; x=1748488099; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=AGVNczz6qr4dQlYUXeVEe2dNVe5Hjh6BmJ07Zb+P3ZI=;
+        b=mVbWfFYiJvJ1vGIBvB+JyR6zuvME0t1ge9qfJGgyqYREfat3LTNTG/LqjMHslIBl5V
+         AKhJDFif1RwZQS/hrZFK7/NEWWZvaWw8t4dzhzOulXIgWJFkgK/ZVsp9X5rbV32OVZwR
+         ojWQqgux8ay222z6DZLVQHtAk0CbhHS8oMxuosvQbUZWrV9VFV2l+VuNERHwwXaY6QMW
+         GQgRgO2BQjIlWKlG42AA4+hrC4UVKnytGzqmfQp0XCphLVBCJm2kbIGKTCiT7CUAW1tT
+         1V0sKUCo5BXEr9UHgVW/zFS/5Nov5mCCR984mByzEB6DfAH2Iz7rGKq6iGMUBJJBSZJ8
+         FJ5w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747883299; x=1748488099;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=AGVNczz6qr4dQlYUXeVEe2dNVe5Hjh6BmJ07Zb+P3ZI=;
+        b=J1swrWervWdotvf4fi5J9lvK3mKhnCTSF/UU1JIsa9hOKQ3AfeBdkPEJC1y0cI3KKx
+         E7OSq0oAT3XI58Do/na1IGDkBNGFhkacVLl4yH9aRXKK82+h5fWWXLtcKxEc15c5yM6w
+         aHN+x4xo/ZvZZd3IcEpU6FTf1fbtlDZh9f4wgfCXsS13L311fs3KyZo7xpqpFhgNMxTA
+         7Ndy3Xes1XdxCIpvgWcvJw1EnJdv7ofP2MTwv7wkmyyANEyXLiSD3/Th0KMAS3uCDLTy
+         NuAXtNayqlgtyqlVPCgIwU7vJ21rdnkHGBxtP5fZM0evfyU94NUB9zCdH6lF+IBJM/Gu
+         0n0Q==
+X-Forwarded-Encrypted: i=1; AJvYcCW00s3SiakVQlx2P6iRGth2dBbwUKOdbyEq9C2LWCJ/FcH8xYKXLt9nq/ZGEvDmBYOTserzzYQ5BaxNeGQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyPtLQpUx14wCIsuQDkW2uEUwJJDhJKTu/As78eVIOs2kLS8iL/
+	IZ9852mLkeHKhSZCa9umjkbNXdrvst3ze7FoOvDR7bdnwtkggvVfBamPsKq8sI3hihw=
+X-Gm-Gg: ASbGncvdPs0jhJ3P5LJ6AXm4DrSWe15b/442wy48iQRdgP46HGE3SC9TLedZcngC0w2
+	KtTBF7cpiIonTMHC6ZW1OaMnvsjcDhSjSEJde6CRQ4BwSZocz7KnWIP3v63Tef0lJqVPVHs2Uce
+	MkFAwgnFyLlm7gZzlJHw70X3PfUKBxSN658S3EyHnX/Dn+jCEP36NMZXmTED6r675OrBVzpGmWq
+	/Vdq5pS9t6SGQ6h43clrg5HbJSgNkxIALvHRTDS4aWJ5g5hY3xQBq7/poWy+JHiVBlQz/U9RJmP
+	WUtu7FmygT0v4gms8oxGWqYE9JgKnl5/7G1rouiJocAWyzmsBn2ekuItU9wSclxPnbSzFp4q1OC
+	TD1vcN1CoUu+L+rJh7IRDWSjx0gtD3Sc=
+X-Google-Smtp-Source: AGHT+IFSrnLEH05GG4SlQC5J9N13ka7pCoc3hDoinN3MroPbkQgIIeIPHyBXTSm1kxX304ReSIUJhg==
+X-Received: by 2002:a05:6214:da2:b0:6e8:89bd:2b50 with SMTP id 6a1803df08f44-6f8b2cb9a48mr380561136d6.7.1747883298782;
+        Wed, 21 May 2025 20:08:18 -0700 (PDT)
+Received: from gourry-fedora-PF4VCD3F (pool-96-255-20-42.washdc.ftas.verizon.net. [96.255.20.42])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f8b584bb4bsm86728866d6.68.2025.05.21.20.08.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 21 May 2025 20:08:18 -0700 (PDT)
+Date: Wed, 21 May 2025 23:08:16 -0400
+From: Gregory Price <gourry@gourry.net>
+To: SeongJae Park <sj@kernel.org>
+Cc: Bharata B Rao <bharata@amd.com>, linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org, Jonathan.Cameron@huawei.com,
+	dave.hansen@intel.com, hannes@cmpxchg.org,
+	mgorman@techsingularity.net, mingo@redhat.com, peterz@infradead.org,
+	raghavendra.kt@amd.com, riel@surriel.com, rientjes@google.com,
+	weixugc@google.com, willy@infradead.org,
+	ying.huang@linux.alibaba.com, ziy@nvidia.com, dave@stgolabs.net,
+	nifan.cxl@gmail.com, joshua.hahnjy@gmail.com,
+	xuezhengchu@huawei.com, yiannis@zptcorp.com,
+	akpm@linux-foundation.org, david@redhat.com
+Subject: Re: [RFC PATCH v0 0/2] Batch migration for NUMA balancing
+Message-ID: <aC6VIG7GPnqr3ug-@gourry-fedora-PF4VCD3F>
+References: <20250521080238.209678-1-bharata@amd.com>
+ <20250521184552.46414-1-sj@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMDxesTIlC5orADnAA--.58454S2
-X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj93XoWxAFy7Gr4rZr47Kr4kCFyrXwc_yoW5GrWUp3
-	WSvrn3Kr18KF17Ar97J34kXryft3WkGr4Iv3Waqry8Cr1jyry8Jr1xKF95Aa43Z395XryF
-	va4xGwn8WF1UJacCm3ZEXasCq-sJn29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUvKb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	GcCE3s1ln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2
-	x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r126r1D
-	McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr4
-	1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_Jrv_
-	JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17
-	CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0
-	I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I
-	8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU
-	0xZFpf9x07j5xhLUUUUU=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250521184552.46414-1-sj@kernel.org>
 
-The following changes since commit a5806cd506af5a7c19bcd596e4708b5c464bfd21:
+On Wed, May 21, 2025 at 11:45:52AM -0700, SeongJae Park wrote:
+> Hi Bharata,
+> 
+> On Wed, 21 May 2025 13:32:36 +0530 Bharata B Rao <bharata@amd.com> wrote:
+> 
+> > Hi,
+> > 
+> > This is an attempt to convert the NUMA balancing to do batched
+> > migration instead of migrating one folio at a time. The basic
+> > idea is to collect (from hint fault handler) the folios to be
+> > migrated in a list and batch-migrate them from task_work context.
+> > More details about the specifics are present in patch 2/2.
+> > 
+> > During LSFMM[1] and subsequent discussions in MM alignment calls[2],
+> > it was suggested that separate migration threads to handle migration
+> > or promotion request may be desirable. Existing NUMA balancing, hot
+> > page promotion and other future promotion techniques could off-load
+> > migration part to these threads. Or if we manage to have a single
+> > source of hotness truth like kpromoted[3], then that too can hand
+> > over migration requests to the migration threads. I am envisaging
+> > that different hotness sources like kmmscand[4], MGLRU[5], IBS[6]
+> > and CXL HMU would push hot page info to kpromoted, which would
+> > then isolate and push the folios to be promoted to the migrator
+> > thread.
+> 
+> I think (or, hope) it would also be not very worthless or rude to mention other
+> existing and ongoing works that have potentials to serve for similar purpose or
+> collaborate in future, here.
+> 
+> DAMON is designed for a sort of multi-source access information handling.  In
+> LSFMM, I proposed[1] damon_report_access() interface for making it easier to be
+> extended for more types of access information.  Currenlty damon_report_access()
+> is under early development.  I think this has a potential to serve something
+> similar to your single source goal.
+> 
 
-  Linux 6.15-rc7 (2025-05-18 13:57:29 -0700)
+It seems to me that DAMON might make use of the batch migration
+interface, so if you need any changes or extensions, it might be good
+for you (SJ) to take a look at that for us.
 
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-kvm-6.16
-
-for you to fetch changes up to a867688c8cbb1b83667a6665362d89e8c762e820:
-
-  KVM: selftests: Add supported test cases for LoongArch (2025-05-20 20:20:26 +0800)
-
-----------------------------------------------------------------
-LoongArch KVM changes for v6.16
-
-1. Don't flush tlb if HW PTW supported.
-2. Add LoongArch KVM selftests support.
-
-----------------------------------------------------------------
-Bibo Mao (7):
-      LoongArch: KVM: Add ecode parameter for exception handlers
-      LoongArch: KVM: Do not flush tlb if HW PTW supported
-      KVM: selftests: Add VM_MODE_P47V47_16K VM mode
-      KVM: selftests: Add KVM selftests header files for LoongArch
-      KVM: selftests: Add core KVM selftests support for LoongArch
-      KVM: selftests: Add ucall test support for LoongArch
-      KVM: selftests: Add supported test cases for LoongArch
-
- MAINTAINERS                                        |   2 +
- arch/loongarch/include/asm/kvm_host.h              |   2 +-
- arch/loongarch/include/asm/kvm_vcpu.h              |   2 +-
- arch/loongarch/kvm/exit.c                          |  37 +--
- arch/loongarch/kvm/mmu.c                           |  15 +-
- tools/testing/selftests/kvm/Makefile               |   2 +-
- tools/testing/selftests/kvm/Makefile.kvm           |  17 +
- tools/testing/selftests/kvm/include/kvm_util.h     |   6 +
- .../kvm/include/loongarch/kvm_util_arch.h          |   7 +
- .../selftests/kvm/include/loongarch/processor.h    | 141 +++++++++
- .../selftests/kvm/include/loongarch/ucall.h        |  20 ++
- tools/testing/selftests/kvm/lib/kvm_util.c         |   3 +
- .../selftests/kvm/lib/loongarch/exception.S        |  59 ++++
- .../selftests/kvm/lib/loongarch/processor.c        | 346 +++++++++++++++++++++
- tools/testing/selftests/kvm/lib/loongarch/ucall.c  |  38 +++
- .../testing/selftests/kvm/set_memory_region_test.c |   2 +-
- 16 files changed, 674 insertions(+), 25 deletions(-)
- create mode 100644 tools/testing/selftests/kvm/include/loongarch/kvm_util_arch.h
- create mode 100644 tools/testing/selftests/kvm/include/loongarch/processor.h
- create mode 100644 tools/testing/selftests/kvm/include/loongarch/ucall.h
- create mode 100644 tools/testing/selftests/kvm/lib/loongarch/exception.S
- create mode 100644 tools/testing/selftests/kvm/lib/loongarch/processor.c
- create mode 100644 tools/testing/selftests/kvm/lib/loongarch/ucall.c
-
+~Gregory
