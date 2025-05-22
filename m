@@ -1,145 +1,166 @@
-Received: from mail-oi1-f170.google.com (mail-oi1-f170.google.com [209.85.167.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 218B71AD3E0
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 06:56:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 414441AD3E0;
+	Thu, 22 May 2025 06:58:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747897006; cv=none; b=ZfVxg+1Osj1EomZ7YLsobbNzJPCv9bob7JlRCmwaCCwsMc7TvoEzWRlZafwk+4Aqkr/wXNz3NOkiPXzlM/dMuiQphO9Ym0glJprQU7xgF83uRRYHfJ1I+X71G0x3By/9FBQURAziOEMpmqayccegIAL0lfjf531KPz62/fWFiGA=
+	t=1747897102; cv=none; b=e/LWP+bJEWw72OE7KibnX0TeXKTAORLch7JO/pap6Uuy5pPWAOOV542SI5dSPEzxZ8+hq40f/5f1xZNQxdWn90Pedns0tstUjFZvO/rPijMzYy6MX2JyFHWu3ATjsHX1mYp2wrwmX1GifV+N64rvx2iXPSIur6otmGRCxlkC3QA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747897006; c=relaxed/simple;
-	bh=Kz9JL8AUUhRuVWZMu/WcSf6wS1Z8DinfpEJQ6LTfN3o=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CDZFGfTOUIe5NoJ/nXsIBFC8GHMdcZrkDk/mCUrP7a+NyFKJB77AsWCNc5pJ/uUmCwY/gFONegs9NIvxdHICx5YU/MgiY7FoYUmO/v3mSRcexu0X/d/3vJIdKoHDM44q2ubNZC6KxThTOtdhiR48DpiIbPAZ3L3BMbdpiHxPaio=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=n59AH3V7; arc=none smtp.client-ip=209.85.167.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1747897102; c=relaxed/simple;
+	bh=yIscN6qoA34z9Zb9F5xniTQYvJ4yyoyvTBX/f8DyTsA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=iTTa9QqRtRQ5RuYBGrZgA1GwwCdt70ALqw4A/EnMhmO9Nq7eS02VGwDENLuQmO3eiGoS1UW8CQEzJG91FZHgjkhFHdcntYpEs3tgsHrriXFMFdu4KXnRKzQzZG403zNyDy50dEWc/2ZVsScva1ItXT4yg6WKaLm2GQeMFpPIgb8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cZhkPiaF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="n59AH3V7"
-Received: by mail-oi1-f170.google.com with SMTP id 5614622812f47-3fa6c54cdb2so6278765b6e.3
-        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 23:56:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1747897003; x=1748501803; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WeKMC6ZBMvoz5mZGPjKGgi0Ohr2T8fh1E4A0BZHhyCM=;
-        b=n59AH3V7PJX9TvuA4qHYxM1uXa+y+0lcrIvNRSecj+1dDQljKtZF8UxqpaDdzvnOEP
-         YVpgVM4lDbOtdhTFNfH+6vBpsbSbE+a1SQJws/AiY7evsD5PUQbodGA1G8FE/iyXAlls
-         vg7wZtakWo034zGo+NTF2JTq8homl4z71fk2ddBLGFx8z2+lzGbIiPPgXsd8g0gbFnCk
-         BW+c7aF3ALWpjas2Mt1wKa+C18QlwDiTKbD4WJoimSI4XYnWO2AmUXFLBqV8vyX2BeeW
-         5qKxrWk7BVI2XuUmPTEEogdcXYlI7fK9YnYVYvIGYOrkpV+JGq4aRr0rlZPzdOQCsWx8
-         QWjA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747897003; x=1748501803;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=WeKMC6ZBMvoz5mZGPjKGgi0Ohr2T8fh1E4A0BZHhyCM=;
-        b=q8OmLNhr8NFckh52DAk8ypaD+e5ZB3pMfEWBb4A9ozH7UZBhO8UnV7GDArUpQuqdYh
-         vexeQQqPX2OyMEcmGZSSW8RGCaL0s9x60VbFtw6LGVpOViZry0+ZvzoYmdNT7iyG+mc+
-         5BNTQ9Q/WrqB0TWIrbksJkKZEIHyBuotiIrEqFvyDbZPj/9M3wmEqXm/KgKbl+hpseT+
-         wKZ+MRbaOIrPbkZj+OdVfi1bWYdcM+j9hPs9IgdUem/FyGYdsa1mvwNOBojxrKjwbijl
-         IL/Y8mViE+Ac7fZQuv9oA2kAvHZIKG4H9aSUuBcqdr5OL0hq0X3AVjZCGOL33ecTFxoW
-         T5Rg==
-X-Gm-Message-State: AOJu0YwY0A3BP/W7LOcqI+FuI0HWbOGkimEehbDY1gCTnQSn+AgOJ09D
-	+J2WFdFvuhmVN53InfGXW9yGOKKTnQydXTGy3KZDPQco6QahgKx9aBJ6SQ7AyUqawoPCvTDJNsw
-	lM/Lsm39k7kgd8DzoanvxMBm0Wi9Oh8ZTJBSpZxuseA==
-X-Gm-Gg: ASbGnctlb/ngfAt9ChITcVt2hMDi1pevr1jP6VsdxaPS00kkj2YQKVQYDK2CVviR0rV
-	st3pAIeNDiZ9Gw7kMiuMYY6NRDhPavA4DAJ6ZPAMzKcI7I5dgBIZ2B8hMCHuiB12Nk0WGP3NA3B
-	Y+EIqqHCT31jvYCKEK//fOBJo4WEu5T1+BMQ==
-X-Google-Smtp-Source: AGHT+IHkFUemf1YsBa7Ra5vRLLSyYkClMUJvfuEYqOo7C5Q/HY7RUEskcqp+LiC0Z8m9NvJveoTaK0UdZlaYOd03Who=
-X-Received: by 2002:a05:6808:6410:b0:3f7:ff67:1d8c with SMTP id
- 5614622812f47-404d88d532amr14478281b6e.36.1747897003075; Wed, 21 May 2025
- 23:56:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cZhkPiaF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58431C4CEE4;
+	Thu, 22 May 2025 06:58:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747897101;
+	bh=yIscN6qoA34z9Zb9F5xniTQYvJ4yyoyvTBX/f8DyTsA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=cZhkPiaFbr/c0GFkEk5V22r5SDKEkfiILkXBesGA2oi9agiR0P3H0T8Ur4RY9ZaFM
+	 jN7IbG4vFQpu9BZ5v5ia/PMjd/Dk68G0DvP4/oSEC+SRkc3s5Npz0o4tjXo0cKVbil
+	 v01z41UomFELdMH4sN6JlHdIrVWY0U97mf+wkvPsemeuwpVcxMQ00Iau43f4PlL2yW
+	 7mlg0AB3TNTDx9wZ4nWt9Oe6c6vOnp4jBw8cJBM1PqVAZHF+rBr+XsGNz0JtO+0PaR
+	 Jhu6/uHIp4gzMwuJe5VISPwOboL4CLLc02GkNa2ZgKp75vcOgQjgU1dRngd3iC4lJt
+	 BRKowddWz5DGw==
+Message-ID: <ed51c57a-35c4-43e4-9041-221026fb6273@kernel.org>
+Date: Thu, 22 May 2025 08:58:16 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250520152436.474778-1-jens.wiklander@linaro.org>
- <20250520152436.474778-3-jens.wiklander@linaro.org> <dffbd709-def0-47af-93ff-a48686f04153@amd.com>
-In-Reply-To: <dffbd709-def0-47af-93ff-a48686f04153@amd.com>
-From: Jens Wiklander <jens.wiklander@linaro.org>
-Date: Thu, 22 May 2025 08:56:31 +0200
-X-Gm-Features: AX0GCFsuHYqDh1JYpWH8r8xDir4J3V2XXHJjiARqLynYHFcDQxMIIZpQ5oYhZd4
-Message-ID: <CAHUa44Ec0+GPoDkcEG+Vg9_TY1NC=nh3yr0F=ezHMbaeX_A0Bg@mail.gmail.com>
-Subject: Re: [PATCH v9 2/9] dma-buf: dma-heap: export declared functions
-To: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
-Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org, 
-	op-tee@lists.trustedfirmware.org, linux-arm-kernel@lists.infradead.org, 
-	Olivier Masse <olivier.masse@nxp.com>, Thierry Reding <thierry.reding@gmail.com>, 
-	Yong Wu <yong.wu@mediatek.com>, Sumit Semwal <sumit.semwal@linaro.org>, 
-	Benjamin Gaignard <benjamin.gaignard@collabora.com>, Brian Starkey <Brian.Starkey@arm.com>, 
-	John Stultz <jstultz@google.com>, "T . J . Mercier" <tjmercier@google.com>, 
-	Sumit Garg <sumit.garg@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, azarrabi@qti.qualcomm.com, 
-	Simona Vetter <simona.vetter@ffwll.ch>, Daniel Stone <daniel@fooishbar.org>, 
-	Rouven Czerwinski <rouven.czerwinski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/3] dt-bindings: can: rockchip_canfd: add rk3576
+ CAN-FD controller
+To: Elaine Zhang <zhangqing@rock-chips.com>, mkl@pengutronix.de,
+ kernel@pengutronix.de, mailhol.vincent@wanadoo.fr, robh@kernel.org,
+ krzk+dt@kernel.org, conor+dt@kernel.org, heiko@sntech.de, cl@rock-chips.com,
+ kever.yang@rock-chips.com
+Cc: linux-can@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org
+References: <20250522063232.2197432-1-zhangqing@rock-chips.com>
+ <20250522063232.2197432-2-zhangqing@rock-chips.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
+ cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
+ JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
+ gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
+ J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
+ NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
+ BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
+ vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
+ Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
+ TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
+ S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
+ FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJoF1BKBQkWlnSaAAoJEBuTQ307
+ QWKbHukP/3t4tRp/bvDnxJfmNdNVn0gv9ep3L39IntPalBFwRKytqeQkzAju0whYWg+R/rwp
+ +r2I1Fzwt7+PTjsnMFlh1AZxGDmP5MFkzVsMnfX1lGiXhYSOMP97XL6R1QSXxaWOpGNCDaUl
+ ajorB0lJDcC0q3xAdwzRConxYVhlgmTrRiD8oLlSCD5baEAt5Zw17UTNDnDGmZQKR0fqLpWy
+ 786Lm5OScb7DjEgcA2PRm17st4UQ1kF0rQHokVaotxRM74PPDB8bCsunlghJl1DRK9s1aSuN
+ hL1Pv9VD8b4dFNvCo7b4hfAANPU67W40AaaGZ3UAfmw+1MYyo4QuAZGKzaP2ukbdCD/DYnqi
+ tJy88XqWtyb4UQWKNoQqGKzlYXdKsldYqrLHGoMvj1UN9XcRtXHST/IaLn72o7j7/h/Ac5EL
+ 8lSUVIG4TYn59NyxxAXa07Wi6zjVL1U11fTnFmE29ALYQEXKBI3KUO1A3p4sQWzU7uRmbuxn
+ naUmm8RbpMcOfa9JjlXCLmQ5IP7Rr5tYZUCkZz08LIfF8UMXwH7OOEX87Y++EkAB+pzKZNNd
+ hwoXulTAgjSy+OiaLtuCys9VdXLZ3Zy314azaCU3BoWgaMV0eAW/+gprWMXQM1lrlzvwlD/k
+ whyy9wGf0AEPpLssLVt9VVxNjo6BIkt6d1pMg6mHsUEVzsFNBFVDXDQBEADNkrQYSREUL4D3
+ Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
+ MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
+ OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
+ GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
+ 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
+ YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
+ 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
+ BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
+ JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
+ 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
+ YpsFAmgXUF8FCRaWWyoACgkQG5NDfTtBYptO0w//dlXJs5/42hAXKsk+PDg3wyEFb4NpyA1v
+ qmx7SfAzk9Hf6lWwU1O6AbqNMbh6PjEwadKUk1m04S7EjdQLsj/MBSgoQtCT3MDmWUUtHZd5
+ RYIPnPq3WVB47GtuO6/u375tsxhtf7vt95QSYJwCB+ZUgo4T+FV4hquZ4AsRkbgavtIzQisg
+ Dgv76tnEv3YHV8Jn9mi/Bu0FURF+5kpdMfgo1sq6RXNQ//TVf8yFgRtTUdXxW/qHjlYURrm2
+ H4kutobVEIxiyu6m05q3e9eZB/TaMMNVORx+1kM3j7f0rwtEYUFzY1ygQfpcMDPl7pRYoJjB
+ dSsm0ZuzDaCwaxg2t8hqQJBzJCezTOIkjHUsWAK+tEbU4Z4SnNpCyM3fBqsgYdJxjyC/tWVT
+ AQ18NRLtPw7tK1rdcwCl0GFQHwSwk5pDpz1NH40e6lU+NcXSeiqkDDRkHlftKPV/dV+lQXiu
+ jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
+ zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
+ XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
+In-Reply-To: <20250522063232.2197432-2-zhangqing@rock-chips.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, May 21, 2025 at 9:13=E2=80=AFAM Christian K=C3=B6nig
-<christian.koenig@amd.com> wrote:
->
-> On 5/20/25 17:16, Jens Wiklander wrote:
-> > Export the dma-buf heap functions declared in <linux/dma-heap.h>.
->
-> That is what this patch does and that should be obvious by looking at it.=
- You need to explain why you do this.
->
-> Looking at the rest of the series it's most likely ok, but this commit me=
-ssage should really be improved.
+On 22/05/2025 08:32, Elaine Zhang wrote:
+> Add documentation for the rockchip rk3576 CAN-FD controller.
+> 
+> Signed-off-by: Elaine Zhang <zhangqing@rock-chips.com>
+> ---
+>  .../net/can/rockchip,rk3576-canfd.yaml        | 82 +++++++++++++++++++
+>  1 file changed, 82 insertions(+)
 
-I'm considering something like this for the next version:
-Export the dma-buf heap functions declared in <linux/dma-heap.h> to allow
-them to be used by kernel modules. This will enable drivers like the OP-TEE
-driver, to utilize these interfaces for registering and managing their
-specific DMA heaps.
+There is no cover letter (maybe something got lost on the lists?), no
+changelog. What was happening with this patch?
 
-Thanks,
-Jens
 
->
-> Regards,
-> Christian.
->
-> >
-> > Signed-off-by: Jens Wiklander <jens.wiklander@linaro.org>
-> > ---
-> >  drivers/dma-buf/dma-heap.c | 3 +++
-> >  1 file changed, 3 insertions(+)
-> >
-> > diff --git a/drivers/dma-buf/dma-heap.c b/drivers/dma-buf/dma-heap.c
-> > index 3cbe87d4a464..cdddf0e24dce 100644
-> > --- a/drivers/dma-buf/dma-heap.c
-> > +++ b/drivers/dma-buf/dma-heap.c
-> > @@ -202,6 +202,7 @@ void *dma_heap_get_drvdata(struct dma_heap *heap)
-> >  {
-> >       return heap->priv;
-> >  }
-> > +EXPORT_SYMBOL(dma_heap_get_drvdata);
-> >
-> >  /**
-> >   * dma_heap_get_name - get heap name
-> > @@ -214,6 +215,7 @@ const char *dma_heap_get_name(struct dma_heap *heap=
-)
-> >  {
-> >       return heap->name;
-> >  }
-> > +EXPORT_SYMBOL(dma_heap_get_name);
-> >
-> >  /**
-> >   * dma_heap_add - adds a heap to dmabuf heaps
-> > @@ -303,6 +305,7 @@ struct dma_heap *dma_heap_add(const struct dma_heap=
-_export_info *exp_info)
-> >       kfree(heap);
-> >       return err_ret;
-> >  }
-> > +EXPORT_SYMBOL(dma_heap_add);
-> >
-> >  static char *dma_heap_devnode(const struct device *dev, umode_t *mode)
-> >  {
->
+>  create mode 100644 Documentation/devicetree/bindings/net/can/rockchip,rk3576-canfd.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/net/can/rockchip,rk3576-canfd.yaml b/Documentation/devicetree/bindings/net/can/rockchip,rk3576-canfd.yaml
+> new file mode 100644
+> index 000000000000..85caf6d19607
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/can/rockchip,rk3576-canfd.yaml
+> @@ -0,0 +1,82 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/net/can/rockchip,rk3568v2-canfd.yaml#
+
+Never tested, so just quick glance, not review.
+
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title:
+
+
+That's never a line break. Open existing files and look how it is done
+there.
+
+
+> +  Rk3576 CAN-FD controller
+
+
+...
+
+
+> +
+> +        can0: can@2ac00000 {
+
+Drop label
+
+> +            compatible = "rockchip,rk3576-canfd";
+
+Messed indentation
+
+> +	    reg = <0x0 0x2ac00000 0x0 0x1000>;
+> +	    interrupts = <GIC_SPI 121 IRQ_TYPE_LEVEL_HIGH>;
+> +	    clocks = <&cru CLK_CAN0>, <&cru HCLK_CAN0>;
+> +	    clock-names = "baud", "pclk";
+> +	    resets = <&cru SRST_CAN0>, <&cru SRST_H_CAN0>;
+> +	    reset-names = "can", "can-apb";
+> +	    dmas = <&dmac0 20>;
+> +	    dma-names = "rx";
+> +	    status = "disabled";
+
+No, it cannot be disabled. Drop. Look at other bindings or example-schema.
+
+> +	};
+> +    };
+
+
+Best regards,
+Krzysztof
