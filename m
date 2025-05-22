@@ -1,193 +1,115 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92EC928DB74;
-	Thu, 22 May 2025 15:53:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFD39299A99;
+	Thu, 22 May 2025 15:53:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747929232; cv=none; b=axzDTQVxUZwV+OF62ea5YTD7IXC9aVb54O697B2re3U7D8vaJmTHvVA0mQTybCA/68h+CElEjQP2g4NeaJiRZmTrypeLV4M2v9wDhE9YT51nU05Bb1ReTQKZZc8l2rY7oUhzjq2pfjCoy1v496LXeIoUiOA3DB7BfGNVeggrkXs=
+	t=1747929242; cv=none; b=oX+zi8ct2nbvKpqws2mTMXzLSkci1/SLPeZlCuycsOaGdDsb5ROWejaEZo3qKmJ7DbpW00YxG/dIhVFhNec9RSUJRck6hVOEBiExWS+Sgzv/iStOv2hGkDKEark8EBVk8brmxMng/Tw0T0HlPuZaPgNHR0xfdv4MZYIMJDGyX5s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747929232; c=relaxed/simple;
-	bh=j71Wtt6NGq/5NYiuM9Hwj8gMHucqRDMzopuT74X4AM4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=vBumC2YZxCEolMLd9efES7to2bUqWF4NHOkcfRDVwLK7ZWRuCPKpG6Q4OVmIxN4PzQlqR+lMfpUJ0mODLx5t8NbYtBRWrkLTyXm4BTFBq+VNnBoi+A6PIG2GTyMhAXkKOJwqINVSyHeWPeApZKz/hZO5OamJX7DZFnWCS7VgcGw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oH12sr3I; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747929242; c=relaxed/simple;
+	bh=tgpHzJFSP0rnDppwYe1l14XBM48ZnUDrZRXBK1lQJZE=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nF5eC2gwoluC3YpgfcGoNdXF58s7mlFX5C1OQu3poOej5hPVbk4ASVTEkwygW83k33jIEQuK+6U9akWbRWyk8XG15MzUrgaJb/2lpbvwClhhFSF5nnL/bapHw2aokl3mCONjOIdG6ZG8t/hJsSgehmrjVMUzkmkeidSTE1SiiiQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=W3i23DkB; arc=none smtp.client-ip=198.47.19.245
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oH12sr3I"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55FBEC4CEE4;
-	Thu, 22 May 2025 15:53:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747929232;
-	bh=j71Wtt6NGq/5NYiuM9Hwj8gMHucqRDMzopuT74X4AM4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=oH12sr3IaektTamfX3zPxeOpJwWe63tAxuGU5406UZJvL69MldB6nQlktq0/nN88K
-	 o9u2Swa4KI78b9LP2vEK6/LQ2748tCqV206mkbapEF4lM3cL/0nVoK1X9VKL//B0XE
-	 uTaJ3j8mgQu3nFOpnyL7VG/rUKsqrcYMtzxbYR9M6b4baHMQHfz0wYYGW5STWnep1X
-	 b3sNd9pk9AevMQ5gTCfjRhde8n7aP6T+jsZvg67TLTWQvpyHVlXiFcKUB2pDALjUcE
-	 Aa9Z+ZiOKxnZSketlExbSaiv4VoKs5dGNPNJhXztMxl8Innh+KiiNV60QJarei3Wv2
-	 Lqdm2Rn+NbwDg==
-Date: Thu, 22 May 2025 17:53:46 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Rob Clark <robdclark@gmail.com>
-Cc: Connor Abbott <cwabbott0@gmail.com>, Rob Clark <robdclark@chromium.org>,
-	phasta@kernel.org, dri-devel@lists.freedesktop.org,
-	freedreno@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
-	Matthew Brost <matthew.brost@intel.com>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <ckoenig.leichtzumerken@gmail.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	open list <linux-kernel@vger.kernel.org>,
-	Boris Brezillon <boris.brezillon@collabora.com>
-Subject: Re: [PATCH v4 04/40] drm/sched: Add enqueue credit limit
-Message-ID: <aC9Iih1KN6xb9LrK@cassiopeiae>
-References: <aCYkk4Y7feltfp79@pollux>
- <CAF6AEGsoG_W3A3+BHV4n5EKZQazFubrCyfrtxVUH7+H4-j7i5A@mail.gmail.com>
- <aCY42rgJC4sQ4tp4@pollux>
- <CAF6AEGubHkdhfJz=bAZvctO1aTKDLwRsRyPzkoVrQ7tA6dRbKw@mail.gmail.com>
- <aCwqAGLLCC2ZLSBK@pollux>
- <CAF6AEGspvuTHU0t9z__p_HkdRNi=cXir3t453AbR6DFNzDpgvw@mail.gmail.com>
- <aCyzyAPbQ1SYbo4q@pollux>
- <CAF6AEGs+WmTO_624A3Pek-1-SD6B4PFu4sDv3htko0ABhfHFzw@mail.gmail.com>
- <aC8Dzgufa9E2MD6t@pollux>
- <CAF6AEGvkrN8H1ZPzrCQF+d_Y_Y5kRdeQjohDqcgpNd-uDKo9yQ@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="W3i23DkB"
+Received: from lelvem-sh01.itg.ti.com ([10.180.77.71])
+	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTP id 54MFrcMV1855269;
+	Thu, 22 May 2025 10:53:38 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1747929218;
+	bh=jySRI/8bFMF3lqKUnU42PqyJe/L7FVdEHZlxB5NuuwI=;
+	h=Date:From:To:CC:Subject:References:In-Reply-To;
+	b=W3i23DkBWlVYARl6EhAZFr0Y45cTG7ZQVSO+Qo95JHu11xxtwnszehXoaeDHkiuOU
+	 fUgIE2MxKZ4Y3mMcim1JPH4bgRos4+YfUETWGsWjIrdhzdMfPCgzXk1qD3z8HgPtst
+	 FXjk+uOvdjnrLxy35TlHPzOAJO8oxDoW3up4hLOo=
+Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
+	by lelvem-sh01.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 54MFrcBs3103726
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
+	Thu, 22 May 2025 10:53:38 -0500
+Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 22
+ May 2025 10:53:38 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Thu, 22 May 2025 10:53:38 -0500
+Received: from localhost (uda0133052.dhcp.ti.com [128.247.81.232])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 54MFrccP111653;
+	Thu, 22 May 2025 10:53:38 -0500
+Date: Thu, 22 May 2025 10:53:38 -0500
+From: Nishanth Menon <nm@ti.com>
+To: Beleswar Padhi <b-padhi@ti.com>
+CC: <vigneshr@ti.com>, <kristo@kernel.org>, <robh@kernel.org>,
+        <krzk+dt@kernel.org>, <conor+dt@kernel.org>, <afd@ti.com>,
+        <u-kumar1@ti.com>, <hnagalla@ti.com>, <jm@ti.com>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH 0/2] TI: K3: Switch MCU R5F cluster into Split mode
+Message-ID: <20250522155338.gpbcubkvygtju3qc@bagpipe>
+References: <20250522073426.329344-1-b-padhi@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAF6AEGvkrN8H1ZPzrCQF+d_Y_Y5kRdeQjohDqcgpNd-uDKo9yQ@mail.gmail.com>
+In-Reply-To: <20250522073426.329344-1-b-padhi@ti.com>
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On Thu, May 22, 2025 at 07:47:17AM -0700, Rob Clark wrote:
-> On Thu, May 22, 2025 at 4:00 AM Danilo Krummrich <dakr@kernel.org> wrote:
-> > On Tue, May 20, 2025 at 10:22:54AM -0700, Rob Clark wrote:
-> > > On Tue, May 20, 2025 at 9:54 AM Danilo Krummrich <dakr@kernel.org> wrote:
-> > > > On Tue, May 20, 2025 at 09:07:05AM -0700, Rob Clark wrote:
-> > > > > On Tue, May 20, 2025 at 12:06 AM Danilo Krummrich <dakr@kernel.org> wrote:
-> > > > > > But let's assume we agree that we want to avoid that userspace can ever OOM itself
-> > > > > > through async VM_BIND, then the proposed solution seems wrong:
-> > > > > >
-> > > > > > Do we really want the driver developer to set an arbitrary boundary of a number
-> > > > > > of jobs that can be submitted before *async* VM_BIND blocks and becomes
-> > > > > > semi-sync?
-> > > > > >
-> > > > > > How do we choose this number of jobs? A very small number to be safe, which
-> > > > > > scales badly on powerful machines? A large number that scales well on powerful
-> > > > > > machines, but OOMs on weaker ones?
-> > > > >
-> > > > > The way I am using it in msm, the credit amount and limit are in units
-> > > > > of pre-allocated pages in-flight.  I set the enqueue_credit_limit to
-> > > > > 1024 pages, once there are jobs queued up exceeding that limit, they
-> > > > > start blocking.
-> > > > >
-> > > > > The number of _jobs_ is irrelevant, it is # of pre-alloc'd pages in flight.
-> > > >
-> > > > That doesn't make a difference for my question. How do you know 1024 pages is a
-> > > > good value? How do we scale for different machines with different capabilities?
-> > > >
-> > > > If you have a powerful machine with lots of memory, we might throttle userspace
-> > > > for no reason, no?
-> > > >
-> > > > If the machine has very limited resources, it might already be too much?
-> > >
-> > > It may be a bit arbitrary, but then again I'm not sure that userspace
-> > > is in any better position to pick an appropriate limit.
-> > >
-> > > 4MB of in-flight pages isn't going to be too much for anything that is
-> > > capable enough to run vk, but still allows for a lot of in-flight
-> > > maps.
-> >
-> > Ok, but what about the other way around? What's the performance impact if the
-> > limit is chosen rather small, but we're running on a very powerful machine?
-> >
-> > Since you already have the implementation for hardware you have access to, can
-> > you please check if and how performance degrades when you use a very small
-> > threshold?
+On 13:04-20250522, Beleswar Padhi wrote:
+> Several TI K3 SoCs like J7200, J721E, J721S2, J784S4 and J742S2 have a
+> R5F cluster in the MCU domain which is configured for LockStep mode at
+> the moment. Switch this R5F cluster to Split mode by default in all
+> corresponding board level DTs to maximize the number of R5F cores.
+
+Why? I can read the patch to understand what you are trying to do, but
+the rationale needs to be explained.
+
 > 
-> I mean, considering that some drivers (asahi, at least), _only_
-> implement synchronous VM_BIND, I guess blocking in extreme cases isn't
-> so bad.
-
-Which is not even upstream yet and eventually will support async VM_BIND too,
-AFAIK.
-
-> But I think you are overthinking this.  4MB of pagetables is
-> enough to map ~8GB of buffers.
+> Corresponding support to shutdown MCU R5F core 1 on SoC power on have
+> been posted in U-Boot:
+> https://lore.kernel.org/all/20250522071828.285462-1-b-padhi@ti.com/
 > 
-> Perhaps drivers would want to set their limit based on the amount of
-> memory the GPU could map, which might land them on a # larger than
-> 1024, but still not an order of magnitude more.
-
-Nouveau currently supports an address space width of 128TiB.
-
-In general, we have to cover the range of some small laptop or handheld devices
-to huge datacenter machines.
-
-> I don't really have a good setup for testing games that use this, atm,
-> fex-emu isn't working for me atm.  But I think Connor has a setup with
-> proton working?
-
-I just want to be sure that an arbitrary small limit doing the job for a small
-device to not fail VK CTS can't regress the performance on large machines.
-
-So, kindly try to prove that we're not prone to extreme performance regression
-with a static value as you propose.
-
-> > Also, I think we should probably put this throttle mechanism in a separate
-> > component, that just wraps a counter of bytes or rather pages that can be
-> > increased and decreased through an API and the increase just blocks at a certain
-> > threshold.
+> While at it, correct the firmware-name property for MCU R5F cores of
+> J742S2 SoC in [PATCH 1/2].
 > 
-> Maybe?  I don't see why we need to explicitly define the units for the
-> credit.  This wasn't done for the existing credit mechanism.. which,
-> seems like if you used some extra fences could also have been
-> implemented externally.
-
-If you are referring to the credit mechanism in the scheduler for ring buffers,
-that's a different case. Drivers know the size of their ring buffers exactly and
-the scheduler has the responsibility of when to submit tasks to the ring buffer.
-So the scheduler kind of owns the resource.
-
-However, the throttle mechanism you propose is independent from the scheduler,
-it depends on the available system memory, a resource the scheduler doesn't own.
-
-I'm fine to make the unit credits as well, but in this case we really care about
-the consumption of system memory, so we could just use an applicable unit.
-
-> > This component can then be called by a driver from the job submit IOCTL and the
-> > corresponding place where the pre-allocated memory is actually used / freed.
-> >
-> > Depending on the driver, this might not necessarily be in the scheduler's
-> > run_job() callback.
-> >
-> > We could call the component something like drm_throttle or drm_submit_throttle.
+> Testing Done:
+> 1. Tested that each patch does not generate any new warnings/errors.
+> 2. Build test on all existing TI K3 platforms.
+> 3. Tested U-Boot and Linux load of MCU R5F core in split mode on all
+> applicable boards (AM68-SK, AM69-SK, J7200-EVM, J721E-EVM, J721S2-EVM,
+> J784S4-evm, J742S2-EVM)
 > 
-> Maybe?  This still has the same complaint I had about just
-> implementing this in msm.. it would have to reach in and use the
-> scheduler's job_scheduled wait-queue.  Which, to me at least, seems
-> like more of an internal detail about how the scheduler works.
+> Test logs:
+> https://gist.github.com/3V3RYONE/ee8e3cb9aa5f4c5c00b059b9c14bfa98
+> 
+> Thanks,
+> Beleswar
+> 
+> Beleswar Padhi (2):
+>   arm64: dts: ti: k3-j742s2-mcu-wakeup: Override firmware-name for MCU
+>     R5F cores
+>   arm64: dts: ti: k3: Switch MCU R5F cluster to Split-mode
 
-Why? The component should use its own waitqueue. Subsequently, from your code
-that releases the pre-allocated memory, you can decrement the counter through
-the drm_throttle API, which automatically kicks its the waitqueue.
+NAK! We are once again churning downstream users again and for what
+reason - coverletter and the patch is vague on that!
 
-For instance from your VM_BIND IOCTL you can call
+I would prefer the entire remote proc dts stuff cleaned up once for all
+in a comprehensive series.
 
-	drm_throttle_inc(value)
+Let me be clear (once again): We DO NOT break backward compatibility.
+We do not break downstream users without a clear cut rationale. We do
+not break all other ecosystems depending on device tree without a very
+very solid reason.
 
-which blocks if the increment goes above the threshold. And when you release the
-pre-allocated memory you call
-
-	drm_throttle_dec(value)
-
-which wakes the waitqueue and unblocks the drm_throttle_inc() call from your
-VM_BIND IOCTL.
-
-Another advantage is that, if necessary, we can make drm_throttle
-(automatically) scale for the machines resources, which otherwise we'd need to
-pollute the scheduler with.
+-- 
+Regards,
+Nishanth Menon
+Key (0xDDB5849D1736249D) / Fingerprint: F8A2 8693 54EB 8232 17A3  1A34 DDB5 849D 1736 249D
