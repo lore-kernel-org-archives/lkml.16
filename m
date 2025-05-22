@@ -1,223 +1,150 @@
-Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out30-100.freemail.mail.aliyun.com (out30-100.freemail.mail.aliyun.com [115.124.30.100])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47FBB221FB3;
-	Thu, 22 May 2025 07:54:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 221FB24EF7B
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 07:54:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747900456; cv=none; b=dQiqfESgoyYrCRLDemJlc1oX9fT40Rx0cOW+Atm7IqM2/AeAUd+oxH10AIf8ojKG6eZogo8hQrHvkN6cDqURVHNq0B3+HajYEldQo358ylB56KyrsOBL+y+lbiI4ybhjRza0RF3x9hstAHYM8BnpOkx00bVXcikgJbZeANRUpVc=
+	t=1747900463; cv=none; b=OPX6jbBd/in67EiTxoO/lVrPjjyqfop1xfrW5rGTb6X/DN+awwWezoboiNFz87HkIV6VXydUjTgAk2dOjQol+LNIW8nxN0UuxFvI3502jsRLZSxqQtfOT5bLyABX0vvqyeCEGbA4/qkUTuPiSTsPsQ65DdMRZa6PkXTqNe49FDE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747900456; c=relaxed/simple;
-	bh=uU8nG00Q2stbTwE2Gh2fD6nuqa9pOcbvuOaudFx+OdA=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=gQoBCricegnD4cC9iCLGul1qdP+O4Lj4/ArbC60neD8i6JgJbEcDKI6rUq3PXtD+bnqdYW9vEf3wEvXPmsGirDTfeMX6czOcChKFvkJONQBfdvCX1u9bAO8E+XcccspLzbQPoton8a6SKxOVUjtU9ZA2ZSirfZRZ5hQOX8QKvWE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OPxbpUmX; arc=none smtp.client-ip=209.85.210.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747900463; c=relaxed/simple;
+	bh=VVUw3oKaAQ6tntNNkc8JKfCiK0UaAuJWGgZpck0qfbM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=U7iNzyyhuLk7pisNobszqOOjxmsz/08VL2WXyo3gtBr8Po3Zv5pyBRhQSaJmBWC5zWLk1X4mSszaIZ6lmYHXfgWjBmq7porXr3qgC+UmVgphEjcUBvOclXfjokSvJpdw/j88YmIJ5WmZyX27QRtcVKZI6dvAiNVnzJ46cPY/jtY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=TouSB+YR; arc=none smtp.client-ip=115.124.30.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OPxbpUmX"
-Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-742c9907967so4441664b3a.1;
-        Thu, 22 May 2025 00:54:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747900454; x=1748505254; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=LsrhGlQGDRsN50osPmG62nNMbsUeNwxrE0PRWOPkej4=;
-        b=OPxbpUmXwvIkubpv72ig3HRppNPjsmfEhlDH/IFR0+y1dBsTWMJ9wn03P1OhjHpyMb
-         uXcw+6v+zGVSXgMRCmqieMlOxbZDrENN0de4YdDROyY5BAmDLHauuEuJ7ck/RCIxacVR
-         oFDD7T/3PxSVd9Rzj+2xin8RS0dmu5591iSzoaV1uy0LNb4DlzZgxnLo/WvivtrUWvtY
-         XCA2EiCqW3puUqHY9FW221TGJ8CAgxT14jKK+51++T66dzMbwl1xFdn9Q19T1lLgQYlj
-         SkYPjeGBwQY+IoR9auEADa5fDVcA491/GWK4M6XgAmpp/Dsa7C5GTLKJJADwFWHSOzlb
-         eIhw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747900454; x=1748505254;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=LsrhGlQGDRsN50osPmG62nNMbsUeNwxrE0PRWOPkej4=;
-        b=cYjtqn9sepbVYpFHOohBwD2l8pXSVyV/dqpelBH+SGeGJEb5tzBwQhEzd4n1Z7LJRP
-         3o5I6Xfv6DbV8BGIOdr32Wr38QhT7AUAFjMkY4uxBS7AsA/mT7uJep8AV5V7UdRF03N9
-         SwPa08jp3iZgM/2ei8Vm/oSgWoDXK4P3PD7kQ3irtKihEzK4D6OPw9LxF39ZxX2X/I9s
-         Um+IC7GH6NZzIJGmFfrJMace8xRnP7cmETnIKsnZb6gQdqMlYAOo0yfaDxAqax4m686z
-         z/SNMJpOLaB7kpyEXWEJnGwfgTaVkruSvlBdCXcIvoPIi+wvugiWKHwBUv61mEBdEpcq
-         Ud6A==
-X-Forwarded-Encrypted: i=1; AJvYcCV57twAv2eqDuHu7yTPKwgyTFTCcashbMD38e5hnS5TCqk3z1NCs466FmSqtdENi8g5ejZcoNHBD8ml@vger.kernel.org, AJvYcCVe3Qfx4A6I76OXTqIZem9q1P45zRDu9bxW3ylbWIugs3E+GXV3BCqRhcQn+TdldsxBss8WDErDWGK6ASZN@vger.kernel.org
-X-Gm-Message-State: AOJu0YwBURsyVvwMGBThW28sxtyL01J9XvelJLreH2WRes4KqLxfusRQ
-	WiD3V3Wja+zSCsV9WEMvbvmZsxmpO7Ryfz8wUXISJgIhQrCMK5WlBQ/h+wkCZA==
-X-Gm-Gg: ASbGnctMY5DCJx5WbEnVZY2knQRmbQWswTE6+UpdM1gXrQlisIaP7mZfsxmKSeouOvp
-	Ti4tYU+OXRgL748lD98Ijj07OCAI99CcNL8TTW3N2gxVsisguu70SNtFcw5EA+e65oUpx4xT7m/
-	W7QjIyRQkuHOBj7rSysczgVrxdZ2fspBfec7nrh84GLXAY9MObtDnzYXhRWC7Xg6gXkSWXCi6vN
-	t0uy9FduAb/xCg8qZpzQFJUUpUoyFvNjbYUm+7LL80bqKwUIrZHDF3LlQfJDZE8fkqMmSHNjtyP
-	NSr6Y7UOFNrKb5CVlr/xWepDr2TuHdb8B1i9t8bl+ATwZDtPHusHF3dDs97T7niY/+AXsP/N
-X-Google-Smtp-Source: AGHT+IE6pv3MvDAHJqmt1doTPQEc7o8d+ZdNoLUOa96MB1SE5IZNE2q0Gy0vbHP6F7AbiuPNzlRZGg==
-X-Received: by 2002:a05:6a00:944e:b0:736:5b85:a911 with SMTP id d2e1a72fcca58-742a97dba4bmr37381909b3a.8.1747900454370;
-        Thu, 22 May 2025 00:54:14 -0700 (PDT)
-Received: from Black-Pearl. ([122.164.166.145])
-        by smtp.googlemail.com with ESMTPSA id d2e1a72fcca58-742a96def25sm10723661b3a.24.2025.05.22.00.54.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 May 2025 00:54:13 -0700 (PDT)
-From: Charan Pedumuru <charan.pedumuru@gmail.com>
-Date: Thu, 22 May 2025 07:54:01 +0000
-Subject: [PATCH v4] dt-bindings: mmc: ti-omap2420-mmc: convert text based
- binding to json schema
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="TouSB+YR"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1747900456; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=xmllp+0pYS+iGPE0L4g0um6TnAHmX6fzEycWTLONE68=;
+	b=TouSB+YR4V4n0ksdgH/KjQlJsDf7yulHOCf6bh7p+5QkxSTEwmdjerFMHJesLbR0WRvb+vdGO0P5OOzCg6N/Lgz4rux2G3VhdlmUoxwICq32bBG/I5T0245/GHUZ97YLlT+JgUgDAv5PQX9l30Il1yKVkxAnjv7oTB4ZYWe21os=
+Received: from 30.170.233.0(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WbV0ft-_1747900454 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Thu, 22 May 2025 15:54:15 +0800
+Message-ID: <49ca7ddc-4ea7-4081-84ee-609a23b815e4@linux.alibaba.com>
+Date: Thu, 22 May 2025 15:54:14 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250522-ti-omap-v4-1-5d261a661b05@gmail.com>
-X-B4-Tracking: v=1; b=H4sIABjYLmgC/13N0Q6CIBTG8VdxXEc7HKRhV71H6wIQlS3FgWM15
- 7uHrpV1+Z3x+zOTaIOzkZyLmQSbXHR+yKM8FMR0amgtdXXeBAEFCEA6Oep7NVKGJyEaVdWaW5J
- fj8E27rGVrre8OxcnH55bOLH1+m4w+DQSo4wKKTUYo5lEfml75e5H43uyNhLuXfV1mB0qqLUB2
- ejK/Du+c7j7j2enlCyF5sBM+eOWZXkBfuD0Tw4BAAA=
-X-Change-ID: 20250502-ti-omap-12655fa9db3e
-To: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Tony Lindgren <tony@atomide.com>
-Cc: linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Charan Pedumuru <charan.pedumuru@gmail.com>
-X-Mailer: b4 0.14.2
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5] erofs: support deflate decompress by using Intel QAT
+To: Bo Liu <liubo03@inspur.com>, xiang@kernel.org, chao@kernel.org
+Cc: linux-erofs@lists.ozlabs.org, linux-kernel@vger.kernel.org
+References: <20250522061611.7038-1-liubo03@inspur.com>
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+In-Reply-To: <20250522061611.7038-1-liubo03@inspur.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Convert TI MMC host controller binding to YAML format. Define ti,hwmods
-with $ref definition, description and a pattern under properties.
+Hi Bo,
 
-Signed-off-by: Charan Pedumuru <charan.pedumuru@gmail.com>
----
-Changes in v4:
-- Removed dma, dma-names from required as it is not necessary for all compatibles in DTS.
-- Changed the commit message.
-- Changed the description for ti,hwmods property.
-- Link to v3: https://lore.kernel.org/r/20250520-ti-omap-v3-1-aa845b301c4c@gmail.com
+On 2025/5/22 14:16, Bo Liu wrote:
+> This patch introdueces the use of the Intel QAT to decompress compressed
+> data in the EROFS filesystem, aiming to improve the decompression speed
+> of compressed datea.
+> 
+> We created a 285MiB compressed file and then used the following command to
+> create EROFS images with different cluster size.
+>       # mkfs.erofs -zdeflate,level=9 -C16384
+> 
+> fio command was used to test random read and small random read(~5%) and
+> sequential read performance.
+>       # fio -filename=testfile  -bs=4k -rw=read -name=job1
+>       # fio -filename=testfile  -bs=4k -rw=randread -name=job1
+>       # fio -filename=testfile  -bs=4k -rw=randread --io_size=14m -name=job1
+> 
+> Here are some performance numbers for reference:
+> 
+> Processors: Intel(R) Xeon(R) 6766E(144 core)
+> Memory:     521 GiB
+> 
+> |-----------------------------------------------------------------------------|
+> |           | Cluster size | sequential read | randread  | small randread(5%) |
+> |-----------|--------------|-----------------|-----------|--------------------|
+> | Intel QAT |    4096      |    538  MiB/s   | 112 MiB/s |     20.76 MiB/s    |
+> | Intel QAT |    16384     |    699  MiB/s   | 158 MiB/s |     21.02 MiB/s    |
+> | Intel QAT |    65536     |    917  MiB/s   | 278 MiB/s |     20.90 MiB/s    |
+> | Intel QAT |    131072    |    1056 MiB/s   | 351 MiB/s |     23.36 MiB/s    |
+> | Intel QAT |    262144    |    1145 MiB/s   | 431 MiB/s |     26.66 MiB/s    |
+> | deflate   |    4096      |    499  MiB/s   | 108 MiB/s |     21.50 MiB/s    |
+> | deflate   |    16384     |    422  MiB/s   | 125 MiB/s |     18.94 MiB/s    |
+> | deflate   |    65536     |    452  MiB/s   | 159 MiB/s |     13.02 MiB/s    |
+> | deflate   |    131072    |    452  MiB/s   | 177 MiB/s |     11.44 MiB/s    |
+> | deflate   |    262144    |    466  MiB/s   | 194 MiB/s |     10.60 MiB/s    |
+> 
+> Signed-off-by: Bo Liu <liubo03@inspur.com>
+> ---
+> v1: https://lore.kernel.org/linux-erofs/20250410042048.3044-1-liubo03@inspur.com/
+> v2: https://lore.kernel.org/linux-erofs/20250410042048.3044-1-liubo03@inspur.com/T/#t
+> v3: https://lore.kernel.org/linux-erofs/20250516082634.3801-1-liubo03@inspur.com/
+> v4: https://lore.kernel.org/linux-erofs/20250521100326.2867828-1-hsiangkao@linux.alibaba.com/
+> change since v4:
+>   - add sysfs documentation.
+> 
+>   Documentation/ABI/testing/sysfs-fs-erofs |  12 ++
+>   fs/erofs/Kconfig                         |  14 ++
+>   fs/erofs/Makefile                        |   1 +
+>   fs/erofs/compress.h                      |  10 ++
+>   fs/erofs/decompressor_crypto.c           | 186 +++++++++++++++++++++++
+>   fs/erofs/decompressor_deflate.c          |  17 ++-
+>   fs/erofs/sysfs.c                         |  34 ++++-
+>   fs/erofs/zdata.c                         |   1 +
+>   8 files changed, 272 insertions(+), 3 deletions(-)
+>   create mode 100644 fs/erofs/decompressor_crypto.c
+> 
+> diff --git a/Documentation/ABI/testing/sysfs-fs-erofs b/Documentation/ABI/testing/sysfs-fs-erofs
+> index b134146d735b..95201a62f704 100644
+> --- a/Documentation/ABI/testing/sysfs-fs-erofs
+> +++ b/Documentation/ABI/testing/sysfs-fs-erofs
+> @@ -27,3 +27,15 @@ Description:	Writing to this will drop compression-related caches,
+>   		- 1 : invalidate cached compressed folios
+>   		- 2 : drop in-memory pclusters
+>   		- 3 : drop in-memory pclusters and cached compressed folios
+> +
+> +What:		/sys/fs/erofs/accel
+> +Date:		May 2025
+> +Contact:	"Bo Liu" <liubo03@inspur.com>
+> +Description:	The accel file is read-write and allows to set or show
+> +		hardware decompression accelerators, and it supports writing
+> +		multiple accelerators separated by ‘\n’.
 
-Changes in v3:
-- Changed maintainer to Tony Lindgren.
-- Redefine 'ti,hwmods' with $ref under properties.
-- Modify subject prefix with ti,omap2420-mmc.
-- Link to v2: https://lore.kernel.org/r/20250519-ti-omap-v2-1-2a0dbc08fb9c@gmail.com
+		Used to set or show hardware accelerators in effect and multiple
+		accelerators are separated by '\n'.
 
-Changes in v2:
-- Added include statement for irq interrupt controller and
-  modified the interrupts under property to use header.
-- Changed maintainer to Rob Herring.
-- Defined two seperate phandles for 'dmas' under examples.
-- Rename the YAML file name to the compatible 'ti,omap2420-mmc'.
-- Added missing type and maxItems to 'ti,hwmods' under properties.
-- Link to v1: https://lore.kernel.org/r/20250510-ti-omap-v1-1-588b0ccb1823@gmail.com
----
- .../devicetree/bindings/mmc/ti,omap2420-mmc.yaml   | 64 ++++++++++++++++++++++
- Documentation/devicetree/bindings/mmc/ti-omap.txt  | 26 ---------
- 2 files changed, 64 insertions(+), 26 deletions(-)
+		Supported accelerator(s): qat_deflate
 
-diff --git a/Documentation/devicetree/bindings/mmc/ti,omap2420-mmc.yaml b/Documentation/devicetree/bindings/mmc/ti,omap2420-mmc.yaml
-new file mode 100644
-index 0000000000000000000000000000000000000000..705d388a1e64f64005c28b41cc27583fefeb2829
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mmc/ti,omap2420-mmc.yaml
-@@ -0,0 +1,64 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/mmc/ti,omap2420-mmc.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: TI MMC host controller for OMAP1 and 2420
-+
-+description:
-+  The MMC Host controller for TI OMAP1 and 2420 family provides
-+  an interface for MMC, SD and SDIO types of memory cards.
-+
-+allOf:
-+  - $ref: mmc-controller.yaml
-+
-+maintainers:
-+  - Tony Lindgren <tony@atomide.com>
-+
-+properties:
-+  compatible:
-+    const: ti,omap2420-mmc
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  dmas:
-+    maxItems: 2
-+
-+  dma-names:
-+    items:
-+      - const: tx
-+      - const: rx
-+
-+  ti,hwmods:
-+    $ref: /schemas/types.yaml#/definitions/string
-+    description:
-+      This field is used to fetch the information such as
-+      address range, irq lines, dma lines, interconnect, PRCM register,
-+      clock domain, input clocks associated with MMC.
-+    pattern: "^msdi[0-9]+$"
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - ti,hwmods
-+
-+unevaluatedProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    mmc@4809c000 {
-+        compatible = "ti,omap2420-mmc";
-+        ti,hwmods = "msdi1";
-+        reg = <0x4809c000 0x80>;
-+        interrupts = <83 IRQ_TYPE_LEVEL_HIGH>;
-+        dmas = <&sdma 61>, <&sdma 62>;
-+        dma-names = "tx", "rx";
-+    };
-+...
-diff --git a/Documentation/devicetree/bindings/mmc/ti-omap.txt b/Documentation/devicetree/bindings/mmc/ti-omap.txt
-deleted file mode 100644
-index 02fd31cf361d6ed893ec2f9eb8368b358ab2bae1..0000000000000000000000000000000000000000
---- a/Documentation/devicetree/bindings/mmc/ti-omap.txt
-+++ /dev/null
-@@ -1,26 +0,0 @@
--* TI MMC host controller for OMAP1 and 2420
--
--The MMC Host Controller on TI OMAP1 and 2420 family provides
--an interface for MMC, SD, and SDIO types of memory cards.
--
--This file documents differences between the core properties described
--by mmc.txt and the properties used by the omap mmc driver.
--
--Note that this driver will not work with omap2430 or later omaps,
--please see the omap hsmmc driver for the current omaps.
--
--Required properties:
--- compatible: Must be "ti,omap2420-mmc", for OMAP2420 controllers
--- ti,hwmods: For 2420, must be "msdi<n>", where n is controller
--  instance starting 1
--
--Examples:
--
--	msdi1: mmc@4809c000 {
--		compatible = "ti,omap2420-mmc";
--		ti,hwmods = "msdi1";
--		reg = <0x4809c000 0x80>;
--		interrupts = <83>;
--		dmas = <&sdma 61 &sdma 62>;
--		dma-names = "tx", "rx";
--	};
+		Disable all accelerators with an empty string (echo > accel).
 
----
-base-commit: 3e039dcc9c1320c0d33ddd51c372dcc91d3ea3c7
-change-id: 20250502-ti-omap-12655fa9db3e
+> +		Currently supported accelerators:
 
-Best regards,
--- 
-Charan Pedumuru <charan.pedumuru@gmail.com>
+...
 
+> +
+> +static int __z_erofs_crypto_decompress(struct z_erofs_decompress_req *rq,
+> +				struct crypto_acomp *tfm)
+> +{
+> +	struct sg_table st_src, st_dst;
+> +	struct acomp_req *req;
+> +	struct crypto_wait wait;
+> +	u8 *headpage;
+> +	int ret;
+> +
+> +	headpage = kmap_local_page(*rq->in);
+> +	ret = z_erofs_fixup_insize(rq, headpage + rq->pageofs_in,
+> +				min_t(unsigned int, rq->inputsize,
+> +							rq->sb->s_blocksize - rq->pageofs_in));
+
+	ret = z_erofs_fixup_insize(rq, headpage + rq->pageofs_in,
+				min_t(unsigned int, rq->inputsize,
+				      rq->sb->s_blocksize - rq->pageofs_in));
+
+Otherwise it looks good to me.
+
+Thanks,
+Gao Xiang
