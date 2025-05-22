@@ -1,160 +1,129 @@
-Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35CED28F3
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 06:08:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CD8B221291;
+	Thu, 22 May 2025 06:09:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747894095; cv=none; b=LbDXHe/VyZaw+wWyGJicsF/ZNtD/w84dLFVorWzVXy/E3iSKTCTQ4Dz8w59LHXKrOLiXSOxKRDvzfSA3w1EFnqifIKW5LH3bezEuz0kLroiFiETqZ/xRxUWbl2AKK3elswy9DM5Xn31tR2zQMS/j2sCC4xWAX7717Z4+6Sd3aag=
+	t=1747894176; cv=none; b=DqXj8yFErhDBzGL81uTl627tVicacHb+oM5DffjcFLfcZ6crnInZZX0grciGt52qdXSdLtzMcbdBbJn9y7pHUPyBYS4xLsX2T9wY8+87wR3kKSoTGzCrisMTBXoApD5Nn/+klyynzoXDHU+Fxtbk0LUh8YMv0YcjjUVTMUaQRE8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747894095; c=relaxed/simple;
-	bh=1E/r0oyI6fmkvpJ5TQ6+ch48sHttRVAa4ut8aFDXwPk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=t2RQwGhvmoN2Slq4d0PKwo7qSWIcDFhWFBktRXjomRUS3VrEHtA9K0Nb42dho/s9jHzL4AieIfuK1wbbrzjlPFV9zh82szSHEl/ZtBUOHCP9KY+LOq3h1p6w2JGPDKM0WvSR8Ou5xy/zZc6bZBEWos/SwrqWVTrHCrQVcNjinvU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=klZqbxmP; arc=none smtp.client-ip=209.85.215.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747894176; c=relaxed/simple;
+	bh=+tzwSkX1NHHPWQdz3cMIEKKutHSwiCsbVJI0XD2yf9I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=UatNQwZAJiI4JCL6HnOAXSHF64ljfyEHCL/jszC+d9T5b1AvWaTNcV17eKy7b5PoztFkvdBEkqdQjcAj1Ubj1NmW/Y2fAYjocl4X22yin1/udjja3B3OpJ6dwY5QdHdIqFj2Nt7kebq87n3ui9anKIZLONwg7dgZAqImDrGsYqo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y0F2qUBd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="klZqbxmP"
-Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-afc857702d1so6586677a12.3
-        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 23:08:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747894093; x=1748498893; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=U36H2wWEFauYEEMSa49AZxUwXKu8FeN0HzMSY10Qhpk=;
-        b=klZqbxmPWB7RgnyJ5I6kGjrgmrCY4bMVGPdsG+sKC46nvg094bd9kvzSExJwI9KI4B
-         VgKscs34hXoriIKeXBPtSVV2aaP63O3AP3zV9UcGkrbqPoEjAsTz5MbQJvgG88aK+B97
-         OjnsD82aXpkNTXv5dM38q+0iW7zYgj4cuEJjS4EGaxhMX4OhwB95GZtCv0Ke/znwXF4X
-         lmU+W6ZkumiRXH0JOZRqsBSCc/9HddWIRpOwPVV4f1jXN07+3ojZDwOx0eplPzZo1ZpJ
-         LG/mYUvFJnpJNhj0XHFASJTit5yMJ1LhkghN6sXXx6AZGSLP/GgX6fcVmr5XIQBvTYFw
-         XJFg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747894093; x=1748498893;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=U36H2wWEFauYEEMSa49AZxUwXKu8FeN0HzMSY10Qhpk=;
-        b=kOebSm7nH/+d/ON4g26mrwu3pu3jpNR4k+zOXqcDiHef9YyHhzSOjjMraammoiHpba
-         VU6DOWF5adG1Bs3h/NfrEgUOMBQ6KannBIjIAaY9HhiGbzwziuykIe3X4tqPCro/R/pD
-         IJC7PZRMRi4qCEcciyTjHHuo0NKtnIGWfzMwIyMzHMtwllgpv4chGInss2ObQGLIa+65
-         yskrOjpvRRjuLLqvdw8IptVk/dkTia8ed7sx61etcg65h4KM/dSXk+5BLSiAv1MTAWLO
-         kLzDciyWi1DlhjUeXinLHNK3P0Em/k/icpDzA/B+Ttt8yKCbzgM/f9MQ6AVi4M9qcCdK
-         8y0w==
-X-Forwarded-Encrypted: i=1; AJvYcCXEfj8EYkkE6PdUoIgVJ4Fmbyp5ktsea73gciKrcsabScSJ+O9qVpYi8AkhV/X2XjzNWsueldZ/jw5u9Ns=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxOPklThjg7YHsiWPXFY3kT12dYM6C8GTUIb62SbEKRAaCtaxyt
-	iT92WyRokKsG+lEswZeVWtMeloRho2wwLTTZdEPgpZ/nglgQ7dNKGRMpHzOFU+w/nkINpQKag2W
-	E2v3v6ZsI+ctrTx8MkGT8DjhJ30JY1q8Efw==
-X-Gm-Gg: ASbGncslK0dOr+A6cDPjqdukYRYpeBQnGfMdh2zQkiw+FPvTff3CojkkCrHSJo3hf/u
-	uhyQsAaNQCRdX/ZpXZgPmKEbPG3E9YIElBboESs7GBK5uiNVNMYFinhkIWH+GsoMlUYs0bfYtrn
-	+o5ZW+oSnHWSJILDjcAKuuou3hgo7ARw==
-X-Google-Smtp-Source: AGHT+IE9W3/67pyzzG5bsjEEBnH07y8AiipEu78C3cAPr2w5kuaSHv9IVxPhv/H5TnGO4GqzACkRex6QwdqPxvVJFyU=
-X-Received: by 2002:a17:902:ea08:b0:220:c067:7be0 with SMTP id
- d9443c01a7336-231d43dca32mr284472635ad.6.1747894093371; Wed, 21 May 2025
- 23:08:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y0F2qUBd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 460DEC4CEE4;
+	Thu, 22 May 2025 06:09:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747894175;
+	bh=+tzwSkX1NHHPWQdz3cMIEKKutHSwiCsbVJI0XD2yf9I=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Y0F2qUBdIT+T9VxIo5p84zjGaBdIWAQqzItB969kZMd5JJrYT/qN4nGFFv6uOuN0o
+	 vIKcHI9CPjciwj+vB5HQqgjX4IEPmfBZiiky/Y482qA1Og42J3JxCPc4BKwcJz5CYA
+	 /P+RPE0YOj4teV3Cr3gr4hYRDZ8m4WacFcr1h1cCMWTFH2jHGUZiWkCPCoTmh1ERBV
+	 xLkepfUL24NNqdewpPpvfcnqUrN5O4pwYIVNSXmWCJLn0hD0N2boQ0sZclwNQ39YRM
+	 MbnhSOISRHLKLgzHu9a2XJeRG5p3RELpLvYBSOMdIXcw5rewmPxKxmzuY1Xz7sYOkv
+	 QcrXGuQDiZazw==
+Message-ID: <7a8b8290-5ee4-447e-83e8-7be2e812a628@kernel.org>
+Date: Thu, 22 May 2025 08:09:31 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250425014937.3812976-1-peng.fan@oss.nxp.com>
-In-Reply-To: <20250425014937.3812976-1-peng.fan@oss.nxp.com>
-From: Daniel Baluta <daniel.baluta@gmail.com>
-Date: Thu, 22 May 2025 09:09:57 +0300
-X-Gm-Features: AX0GCFuVRNCfWGnfZ558VOZX_-jhCVuZC7ziACuj_BPkZuPzMGG-o1p_cqn-_zg
-Message-ID: <CAEnQRZDKUHfWMXC5oe+kSpLpR5manxx63cxDOMrFEqi6a4VxPg@mail.gmail.com>
-Subject: Re: [PATCH] mailbox: imx: Fix TXDB_V2 sending
-To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
-Cc: jassisinghbrar@gmail.com, shawnguo@kernel.org, s.hauer@pengutronix.de, 
-	kernel@pengutronix.de, festevam@gmail.com, linux-kernel@vger.kernel.org, 
-	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
-	mailbox@lists.linux.dev, Peng Fan <peng.fan@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/4] wifi: ath9k: ahb: replace id_table with of
+To: Rosen Penev <rosenp@gmail.com>
+Cc: linux-wireless@vger.kernel.org, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+ =?UTF-8?Q?Toke_H=C3=B8iland-J=C3=B8rgensen?= <toke@toke.dk>,
+ "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
+ <devicetree@vger.kernel.org>, "open list:MIPS" <linux-mips@vger.kernel.org>,
+ open list <linux-kernel@vger.kernel.org>
+References: <20250521021557.666611-1-rosenp@gmail.com>
+ <20250521021557.666611-4-rosenp@gmail.com>
+ <5de13266-d6d4-4497-8913-e442080702ed@kernel.org>
+ <CAKxU2N9LJcX2AbCipk9nzHQhx=AKT2gUV8-Bk91BLzrUwfkGYw@mail.gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <CAKxU2N9LJcX2AbCipk9nzHQhx=AKT2gUV8-Bk91BLzrUwfkGYw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, Apr 25, 2025 at 4:51=E2=80=AFAM Peng Fan (OSS) <peng.fan@oss.nxp.co=
-m> wrote:
->
-> From: Peng Fan <peng.fan@nxp.com>
->
-> i.MX95 features several processing domains, Cortex-M7, Cortex-A55
-> secure, Cortex-A55 non-secure. Each domain could communicate with
-> SCMI firmware with a dedicated MU. But the current NXP SCMI firmware
-> is not a RTOS, all processing logic codes are in interrupt context.
-> So if high priority Cortex-M7 is communicating with SCMI firmware and
-> requires a bit more time to handle the SCMI call, Linux MU TXDB_V2
-> will be timeout with high possiblity in 1000us(the current value in
-> imx-mailbox.c). Per NXP SCMI firmware design, if timeout, there is
-> no recover logic, so SCMI agents should never timeout and always
-> wait until the check condition met.
->
-> Based on the upper reason, enlarge the timeout value to 10ms which
-> is less chance to timeout, and retry if timeout really happends.
->
-> Fixes: 5bfe4067d350 ("mailbox: imx: support channel type tx doorbell v2")
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> ---
->  drivers/mailbox/imx-mailbox.c | 21 +++++++++++++++------
->  1 file changed, 15 insertions(+), 6 deletions(-)
->
-> diff --git a/drivers/mailbox/imx-mailbox.c b/drivers/mailbox/imx-mailbox.=
-c
-> index 6ef8338add0d..aef8d572a27c 100644
-> --- a/drivers/mailbox/imx-mailbox.c
-> +++ b/drivers/mailbox/imx-mailbox.c
-> @@ -226,7 +226,7 @@ static int imx_mu_generic_tx(struct imx_mu_priv *priv=
-,
->  {
->         u32 *arg =3D data;
->         u32 val;
-> -       int ret;
-> +       int ret, count;
->
->         switch (cp->type) {
->         case IMX_MU_TYPE_TX:
-> @@ -240,11 +240,20 @@ static int imx_mu_generic_tx(struct imx_mu_priv *pr=
-iv,
->         case IMX_MU_TYPE_TXDB_V2:
->                 imx_mu_write(priv, IMX_MU_xCR_GIRn(priv->dcfg->type, cp->=
-idx),
->                              priv->dcfg->xCR[IMX_MU_GCR]);
-> -               ret =3D readl_poll_timeout(priv->base + priv->dcfg->xCR[I=
-MX_MU_GCR], val,
-> -                                        !(val & IMX_MU_xCR_GIRn(priv->dc=
-fg->type, cp->idx)),
-> -                                        0, 1000);
-> -               if (ret)
-> -                       dev_warn_ratelimited(priv->dev, "channel type: %d=
- failure\n", cp->type);
-> +               ret =3D -ETIMEDOUT;
-> +               count =3D 0;
-> +               while (ret) {
-> +                       ret =3D
-> +                       readl_poll_timeout(priv->base + priv->dcfg->xCR[I=
-MX_MU_GCR], val,
-> +                                          !(val & IMX_MU_xCR_GIRn(priv->=
-dcfg->type, cp->idx)),
-> +                                          0, 10000);
-> +
-> +                       if (ret) {
-> +                               dev_warn_ratelimited(priv->dev,
-> +                                                    "channel type: %d ti=
-meout, %d times, retry\n",
-> +                                                    cp->type, ++count);
-> +                       }
-> +               }
+On 21/05/2025 22:43, Rosen Penev wrote:
+>>> -     if (!dev_get_platdata(&pdev->dev)) {
+>>> -             dev_err(&pdev->dev, "no platform data specified\n");
+>>> -             return -EINVAL;
+>>> -     }
+>>> -
+>>>       mem = devm_platform_ioremap_resource(pdev, 0);
+>>>       if (IS_ERR(mem)) {
+>>>               dev_err(&pdev->dev, "ioremap failed\n");
+>>> @@ -118,7 +97,9 @@ static int ath_ahb_probe(struct platform_device *pdev)
+>>>               goto err_free_hw;
+>>>       }
+>>>
+>>> -     ret = ath9k_init_device(id->driver_data, sc, &ath_ahb_bus_ops);
+>>> +     match = of_match_device(ath9k_of_match_table, &pdev->dev);
+>>
+>> There is a wrapper for getting data, use it.
+> I assume you mean of_device_get_match_data. Will do.
+>>
+>>> +     dev_id = (uintptr_t)match->data;
+>>
+>> And dev_id is enum? Then you want kernel_ulong_t.
+> The entries specified in data are macros in the form of 0xYYYY. This
+> is why I used u16. The ath9k_init_device takes an int here.
 
-This could result in a infinite loop. I would try only a fixed number
-of times then bail. Please use count to break the loop
-after let say 10 tries.
+You did not use u16, but uintptr_t. My comment was about the cast.
 
->                 break;
->         default:
->                 dev_warn_ratelimited(priv->dev, "Send data on wrong chann=
-el type: %d\n", cp->type);
-> --
-> 2.37.1
->
->
+
+Best regards,
+Krzysztof
