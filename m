@@ -1,92 +1,116 @@
-Received: from mail-oo1-f45.google.com (mail-oo1-f45.google.com [209.85.161.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3CB429A9E5
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 22:51:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA1CD29A9F9;
+	Thu, 22 May 2025 22:55:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747954274; cv=none; b=szMs3llbKZxD11r4UfzQ/CMjqVYEBh7Z7wP+tuSj3I8WVEB1GZ2DemhCD3PVoLpG/N3hA7FFIbw5NETkZ6In3cyxH3qKW+QTsHdLCYs0dRoeCQV6osl2TxLE/1ppu+h8dl8zGcBRVRmUhj5igrKcZMXqN7MMEZiAXZPtPen7LJ0=
+	t=1747954520; cv=none; b=j5Yb+B4G5VtKSreMHjte1CGzXJTNu8kCEM6j2fMCl6cNRKx+DhpRcJ+Z7OphhcLLHOSFeTXrMN3LnfA1BqTjWpLN+o4kBLSj4pwPb9hp/T96LnHaMb+K7IPOl81ZErUFlpd/atAs7w0HlRx/KUHuQ436U/BqeUsv5hOE9r5S9ww=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747954274; c=relaxed/simple;
-	bh=XJ27/xwWLz/W8KH2VMTPmg1fVqnXe1xQPj7iei/d3S4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fwp0TRapwqyHs4fZD/HaKB9E8Xb31bHGzQZLnfOPxscbbGIcGi6VXkxnUYnw2+CPpfwsjpKdZdv5PnBxy/VR4YtQmgiqFCpkclQOMsu3MNvV5fMgNllSqeGJRI2oOf6vZStM02OFMWU37p9hgpYGZ5DYmK9D0ShjWXoJ35IPTZs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=gE1CE75C; arc=none smtp.client-ip=209.85.161.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1747954520; c=relaxed/simple;
+	bh=20BxxCEe2TpJllJFUO+uu+ZTnDkvT1+Y6OoCQLuPVMo=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=EIbswz5AMhyZM7nkaM2oTEqOlkM4uPBQ24OjWys68Y5lNjQU4gq94kz8tWohjH9aNdrUduCVXpajMecqslFl5Kp5oGN/BxOyq/03/mi6HvJ5d/BFFmP5LCbjgIZVNOWAnxWQ3dNPItiQg92258Px2pJsYi8NZylYFXitGykHVtg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GwoqHKt4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="gE1CE75C"
-Received: by mail-oo1-f45.google.com with SMTP id 006d021491bc7-6062e41916dso4834760eaf.1
-        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 15:51:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1747954271; x=1748559071; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=zqOqsD9enrwocZN2XCXrFciGa3ZPBF1bqsvBC9V48ds=;
-        b=gE1CE75CcxONMlk5kg5jVtsNefbYKUGLDITmGAX3cRrNlgu7QCbiyGSmE5NQMIpdus
-         OPhFOWumImWGyzoahCjUNOc9GKkYOHhCs+Fz0M1wFRx7XQP3xN3pZtHN/Mn8ZZXZ3MQy
-         Wb2dMWLehrB+dA7cYKykr+2FA3lDv0IAuaPeM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747954271; x=1748559071;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=zqOqsD9enrwocZN2XCXrFciGa3ZPBF1bqsvBC9V48ds=;
-        b=xTcSx6fd6P8hh3fyNHaLpjiPbL+7837XQ6Je3Wx0y2Lgfv8C5NrTVQXrnPbsYs/YcN
-         m3N9/Fc2MtTYCRKQej0TZCP2IIL0H8BBB76KXlSGa2CpNZpp5i+iLqcGCb/LIt4cpL0h
-         G8Hg+po8rVOoBPlq5MZufhAfng/m5fRcEXegoB1NwgxSfe9rkNI2fRGyrR5LC66cyBQ6
-         KpjgcXjbUMWNFnN27XPSrdY72WPlPZNFKymv5IM/ZbHaV5zd+Ut/L4MA3dencnZHPHs3
-         LCZgLdlsIhobXozx/P2/3Gr5HdkhKBW/DsYV2FxlvBuurAl0lUiGLQYtxx7MkONqV6Jn
-         j1rw==
-X-Forwarded-Encrypted: i=1; AJvYcCV6aG/9EkKsuEvgRQAPBjNJ5hkxM+qf10Ua6dI8Ez0ompaMwroBI7lcS8l5gY4Jphm5hHShmWdKslcv7f4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx1SO2QnMpU8nHPVBK9OOfZH1qZbYLrWCE3TuR7ajeGEsPfHLyT
-	+XiJmqfvAsFBoITeJIBe02EofPARKlWCoEKf3Q6+ZGGs+vwhKMdnjFISwSWaw2GPc60qlaBO7tA
-	djPM9
-X-Gm-Gg: ASbGncsnoGkQ15oJtjMYM7Qr7NwGQwcPv7ninqjqZRJOHBZNb/GBcdkhk5bsPfLw5rz
-	0eK6HKsfgq9hyH45Fe/arsIHTZVUVCehLN6iDsRTPfd/+3aL57RTsl4PMxH79XL5JMJHtj38vdO
-	7N+BJoZHEeQeEZIycZ7I8dxZMe+eQR5bKVWZEQo5V27jZm5yOXD4ocJEU7GEgyxRtnTI7UPnmQL
-	dvlNrkfh/Nsu+wSHxDp1CarxzQrvXULAUF4auQ2yjtT0ZLPnHBj/6O2kkQdEwCboEAqoFmsei5h
-	iDgMgVggAhc8pWuH1uzCG28haTz+YF5PaIQF2c8rw0TJzFj3pVnc5Hyma5t+9Q==
-X-Google-Smtp-Source: AGHT+IFzOV554lWXzcF1YV5aYeLFpUIO3UBsBYGo8BFzCMTUpdmhgcxpCdf+r6HZsu3QdP1/3Sm1pg==
-X-Received: by 2002:a05:6e02:2164:b0:3db:6fb2:4b95 with SMTP id e9e14a558f8ab-3db857a6f7fmr318356595ab.18.1747954260746;
-        Thu, 22 May 2025 15:51:00 -0700 (PDT)
-Received: from [192.168.1.14] ([38.175.170.29])
-        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-3db843f72e0sm36708835ab.35.2025.05.22.15.50.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 22 May 2025 15:51:00 -0700 (PDT)
-Message-ID: <4f0d5c19-8358-4e5b-a8f0-3adcee34ffd4@linuxfoundation.org>
-Date: Thu, 22 May 2025 16:50:59 -0600
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GwoqHKt4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A67D3C4CEEB;
+	Thu, 22 May 2025 22:55:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747954520;
+	bh=20BxxCEe2TpJllJFUO+uu+ZTnDkvT1+Y6OoCQLuPVMo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=GwoqHKt42hmw6eeGh/JitXySF3qirPMlq5ZuQjnFUDszGVPmHgEymvysZOjKqSdbm
+	 bIR8hf1UwKSA+fXvWOy8THGqjELjqhKBlCfKTdhgj7l04iV85pctx9YrQC44daPcs/
+	 4kAWjWZMP4L/4Pw3OLXkqRwDmXonWewlVsbr/7zbS64C6MWvD6rjI9oWVVYCkLlZuy
+	 w/gMlKYqlGUSuluTvqu4UH3Of5M3HPCmgsb2+42usD4tiaAXh8nPv2HV39el576Nmp
+	 +kejM0i5ISMAE78ga9L/0X2NwS7bi1Um4n+g/8aZIFIYBWuiA2R420nxpJiKQaR7+s
+	 0hH3T16c+GImg==
+Date: Thu, 22 May 2025 15:55:18 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Tariq Toukan <tariqt@nvidia.com>
+Cc: "David S. Miller" <davem@davemloft.net>, Paolo Abeni
+ <pabeni@redhat.com>, Eric Dumazet <edumazet@google.com>, "Andrew Lunn"
+ <andrew+netdev@lunn.ch>, Saeed Mahameed <saeedm@nvidia.com>, Leon
+ Romanovsky <leon@kernel.org>, Richard Cochran <richardcochran@gmail.com>,
+ Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann
+ <daniel@iogearbox.net>, Jesper Dangaard Brouer <hawk@kernel.org>, John
+ Fastabend <john.fastabend@gmail.com>, <netdev@vger.kernel.org>,
+ <linux-rdma@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <bpf@vger.kernel.org>, Moshe Shemesh <moshe@nvidia.com>, Mark Bloch
+ <mbloch@nvidia.com>, Gal Pressman <gal@nvidia.com>, Cosmin Ratiu
+ <cratiu@nvidia.com>, Dragos Tatulea <dtatulea@nvidia.com>
+Subject: Re: [PATCH net-next V2 11/11] net/mlx5e: Support ethtool
+ tcp-data-split settings
+Message-ID: <20250522155518.47ab81d3@kernel.org>
+In-Reply-To: <1747950086-1246773-12-git-send-email-tariqt@nvidia.com>
+References: <1747950086-1246773-1-git-send-email-tariqt@nvidia.com>
+	<1747950086-1246773-12-git-send-email-tariqt@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] selftests: net: fix spelling and grammar mistakes
-To: Praveen Balakrishnan <praveen.balakrishnan@magd.ox.ac.uk>,
- shuah@kernel.org
-Cc: linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-kernel-mentees@lists.linux.dev
-References: <20250517015912.131187-1-praveen.balakrishnan@magd.ox.ac.uk>
-Content-Language: en-US
-From: Shuah Khan <skhan@linuxfoundation.org>
-In-Reply-To: <20250517015912.131187-1-praveen.balakrishnan@magd.ox.ac.uk>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On 5/16/25 19:59, Praveen Balakrishnan wrote:
-> Fix several spelling and grammatical mistakes in output messages from
-> the net selftests to improve readability.
-> 
-> Only the message strings for the test output have been modified. No
-> changes to the functional logic of the tests have been made.
-> 
-> Signed-off-by: Praveen Balakrishnan <praveen.balakrishnan@magd.ox.ac.uk>
+On Fri, 23 May 2025 00:41:26 +0300 Tariq Toukan wrote:
+> +	/* if HW GRO is not enabled due to external limitations but is wanted,
+> +	 * report HDS state as unknown so it won't get turned off explicitly.
+> +	 */
+> +	if (kernel_param->tcp_data_split == ETHTOOL_TCP_DATA_SPLIT_DISABLED &&
+> +	    priv->netdev->wanted_features & NETIF_F_GRO_HW)
+> +		kernel_param->tcp_data_split = ETHTOOL_TCP_DATA_SPLIT_UNKNOWN;
 
-This patch is missing net maintainers. RUn get_maintainers.pl for
-complete list recipients for this patch.
+The kernel_param->tcp_data_split here is the user config, right?
+It would be cleaner to not support setting SPLIT_DISABLED.
+Nothing requires that, you can support just setting AUTO and ENABLED.
 
-thanks,
--- Shuah
+> +
+
+nit: extra empty line, please run checkpatch
+
+>  }
+>  
+>  static void mlx5e_get_ringparam(struct net_device *dev,
+> @@ -383,6 +391,43 @@ static void mlx5e_get_ringparam(struct net_device *dev,
+>  	mlx5e_ethtool_get_ringparam(priv, param, kernel_param);
+>  }
+>  
+> +static bool mlx5e_ethtool_set_tcp_data_split(struct mlx5e_priv *priv,
+> +					     u8 tcp_data_split)
+> +{
+> +	bool enable = (tcp_data_split == ETHTOOL_TCP_DATA_SPLIT_ENABLED);
+> +	struct net_device *dev = priv->netdev;
+> +
+> +	if (tcp_data_split == ETHTOOL_TCP_DATA_SPLIT_UNKNOWN)
+> +		return true;
+> +
+> +	if (enable && !(dev->hw_features & NETIF_F_GRO_HW)) {
+> +		netdev_warn(dev, "TCP-data-split is not supported when GRO HW is not supported\n");
+> +		return false; /* GRO HW is not supported */
+> +	}
+> +
+> +	if (enable && (dev->features & NETIF_F_GRO_HW)) {
+> +		/* Already enabled */
+> +		dev->wanted_features |= NETIF_F_GRO_HW;
+> +		return true;
+> +	}
+> +
+> +	if (!enable && !(dev->features & NETIF_F_GRO_HW)) {
+> +		/* Already disabled */
+> +		dev->wanted_features &= ~NETIF_F_GRO_HW;
+> +		return true;
+> +	}
+> +
+> +	/* Try enable or disable GRO HW */
+> +	if (enable)
+> +		dev->wanted_features |= NETIF_F_GRO_HW;
+> +	else
+> +		dev->wanted_features &= ~NETIF_F_GRO_HW;
+
+Why are you modifying wanted_features? wanted_features is what
+*user space* wanted! You should probably operate on hw_features ?
+Tho, may be cleaner to return an error and an extack if the user
+tries to set HDS and GRO to conflicting values.
