@@ -1,135 +1,131 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E461C23BD06
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 16:30:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E10EA29AAEC;
+	Thu, 22 May 2025 16:30:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747931427; cv=none; b=L3q/a/67Bxe7xgnox88eM0Rtxh650BcjfptSmfHwFHoBV9lCjUhC9ePqY82eGcXr4LAZ1MZo/SLzK66c6Ji+T9vA+ERBDWKpzMigz7YQ72lKt8A7ZBqIM8/ch+ytm8sMfACxu2cFg+1UW9xgUkPz6/ajU8x5ij5M4D/I8UAk48g=
+	t=1747931431; cv=none; b=AI05TnJsaS9Z7YSTNx0b+GBw/u77lCt2WBvSdV8z9jfYuLGlFgxPYKSb4KnLPYdd7ujUUcagCDIdU2mSzrmYkPpLWHRADsg2Q/4joVk0c8LMKvm4IBjWc4dGSiordNeOo8gslQyAg5OgbwaIm8NSYhUMIjTbW45PjJ6EfhvTsgQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747931427; c=relaxed/simple;
-	bh=ErKNg1bZtjFKHE5owvEz7JuTEBOTcD3HzXcy1Gqq+jk=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=O93zMYdfWidRG3BCTuDvASt1250BlhD98n27aVagmoILDHBH848O5bC9U0m1ZApRHaQap2IqocOeQ+Yg+uueABoUM4S1swt+pqwOgPlBsC64riFZxO5CWsRBT+WwyZz3zMJM8ReTgxjRE5izdATDF9d2DTX7jjyvd/klELwVXt0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AHgxTcTm; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747931431; c=relaxed/simple;
+	bh=9w6AYxG86+ShRJPYPhJz6k6F0yijUzIA6kRpB5v/haw=;
+	h=Content-Type:MIME-Version:In-Reply-To:References:Subject:From:Cc:
+	 To:Date:Message-ID; b=fgAFpk+YVHUThDOi/2+62FAJA2+UlUXakWnGMt9lYVXw3y5hBhiZ4wcWpIY433bg61n5TKME2F2QESJwGoTIj8SjiGU/Z1rllAD1+F7Mt6QPuuyNPaiJ/o1Bo++2E53lurjdKIqAhPQcjuzrzELaC5l0F56JqP/yiw9OyPc33ls=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=LJoybMKE; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AHgxTcTm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 399C6C4CEEA;
-	Thu, 22 May 2025 16:30:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747931426;
-	bh=ErKNg1bZtjFKHE5owvEz7JuTEBOTcD3HzXcy1Gqq+jk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=AHgxTcTm17+aF8cZSJd1mab22/p1bbJ7/QX26FxtO7feOQKV0LktNGbBsRNfh93e9
-	 IKWj3mmuMyNBv6QIW5xh7W86nQQMRcVtvCvH7IYFmZO5VWFVCU4tNxUD9ZpCAV75zy
-	 c8XxudWYgz405jXNh3QagVTWoXRaSmeDxeVDp/Pe3xknWhgS76g082Hrye5z+QrjE4
-	 7zO86KrDh/XJYJ+SYBXd6rXLavIHBsCl+3dWcatkXL4/t4i9AlupMOjV/qyNVIeEBk
-	 qO1VolkmOSeCx6h5/lWe507ZZgNqcwaYvHtbhiDVbl+TkJvq9XZP7shvKTLmd+GWg3
-	 P9Uwo2+JzmNsQ==
-From: SeongJae Park <sj@kernel.org>
-To: Gregory Price <gourry@gourry.net>
-Cc: SeongJae Park <sj@kernel.org>,
-	Bharata B Rao <bharata@amd.com>,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	Jonathan.Cameron@huawei.com,
-	dave.hansen@intel.com,
-	hannes@cmpxchg.org,
-	mgorman@techsingularity.net,
-	mingo@redhat.com,
-	peterz@infradead.org,
-	raghavendra.kt@amd.com,
-	riel@surriel.com,
-	rientjes@google.com,
-	weixugc@google.com,
-	willy@infradead.org,
-	ying.huang@linux.alibaba.com,
-	ziy@nvidia.com,
-	dave@stgolabs.net,
-	nifan.cxl@gmail.com,
-	joshua.hahnjy@gmail.com,
-	xuezhengchu@huawei.com,
-	yiannis@zptcorp.com,
-	akpm@linux-foundation.org,
-	david@redhat.com
-Subject: Re: [RFC PATCH v0 0/2] Batch migration for NUMA balancing
-Date: Thu, 22 May 2025 09:30:23 -0700
-Message-Id: <20250522163024.56592-1-sj@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <aC6VIG7GPnqr3ug-@gourry-fedora-PF4VCD3F>
-References: 
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="LJoybMKE"
+Received: from ideasonboard.com (unknown [IPv6:2a00:6020:448c:6c00:30c3:8bbb:632f:b0c9])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 3A740165B;
+	Thu, 22 May 2025 18:30:05 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1747931405;
+	bh=9w6AYxG86+ShRJPYPhJz6k6F0yijUzIA6kRpB5v/haw=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+	b=LJoybMKE0uXs+gwjKFQvbLyn6wocyrg3eCl8WJTj/sXmpHKBUm+AM3k9a5zKRFdSS
+	 g5piWZPdx2GI3MLodcLSG5eI6ECcYbSPmoYoMlXJwF51Krs6c4Ju7n4+X65mlQ890g
+	 2eaoiPS9Yuhf3RDo+4YYHObk40iw7ZpnAoPXTFJw=
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20250522154210.GT12514@pendragon.ideasonboard.com>
+References: <20250522150944.400046-2-stefan.klug@ideasonboard.com> <20250522150944.400046-3-stefan.klug@ideasonboard.com> <20250522154210.GT12514@pendragon.ideasonboard.com>
+Subject: Re: [PATCH 1/3] media: rkisp1: Cleanup error handling
+From: Stefan Klug <stefan.klug@ideasonboard.com>
+Cc: linux-media@vger.kernel.org, Dafna Hirschfeld <dafna@fastmail.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Heiko Stuebner <heiko@sntech.de>, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Date: Thu, 22 May 2025 18:30:25 +0200
+Message-ID: <174793142530.244022.2578213319638259858@localhost>
+User-Agent: alot/0.12.dev16+g501a9541e2e6.d20250519
 
-On Wed, 21 May 2025 23:08:16 -0400 Gregory Price <gourry@gourry.net> wrote:
+Hi Laurent,
 
-> On Wed, May 21, 2025 at 11:45:52AM -0700, SeongJae Park wrote:
-> > Hi Bharata,
-> > 
-> > On Wed, 21 May 2025 13:32:36 +0530 Bharata B Rao <bharata@amd.com> wrote:
-> > 
-> > > Hi,
-> > > 
-> > > This is an attempt to convert the NUMA balancing to do batched
-> > > migration instead of migrating one folio at a time. The basic
-> > > idea is to collect (from hint fault handler) the folios to be
-> > > migrated in a list and batch-migrate them from task_work context.
-> > > More details about the specifics are present in patch 2/2.
-> > > 
-> > > During LSFMM[1] and subsequent discussions in MM alignment calls[2],
-> > > it was suggested that separate migration threads to handle migration
-> > > or promotion request may be desirable. Existing NUMA balancing, hot
-> > > page promotion and other future promotion techniques could off-load
-> > > migration part to these threads. Or if we manage to have a single
-> > > source of hotness truth like kpromoted[3], then that too can hand
-> > > over migration requests to the migration threads. I am envisaging
-> > > that different hotness sources like kmmscand[4], MGLRU[5], IBS[6]
-> > > and CXL HMU would push hot page info to kpromoted, which would
-> > > then isolate and push the folios to be promoted to the migrator
-> > > thread.
-> > 
-> > I think (or, hope) it would also be not very worthless or rude to mention other
-> > existing and ongoing works that have potentials to serve for similar purpose or
-> > collaborate in future, here.
-> > 
-> > DAMON is designed for a sort of multi-source access information handling.  In
-> > LSFMM, I proposed[1] damon_report_access() interface for making it easier to be
-> > extended for more types of access information.  Currenlty damon_report_access()
-> > is under early development.  I think this has a potential to serve something
-> > similar to your single source goal.
-> > 
-> 
-> It seems to me that DAMON might make use of the batch migration
-> interface, so if you need any changes or extensions, it might be good
-> for you (SJ) to take a look at that for us.
+Thank you for the review.
 
-I started this subthread not for batch migration but the long term goal.  I
-took only a glance on the migration batching part, and I'm still trying to find
-time to take more deep look on batch migration.
+Quoting Laurent Pinchart (2025-05-22 17:42:10)
+> Hi Stefan,
+>=20
+> Thank you for the patch.
+>=20
+> On Thu, May 22, 2025 at 05:08:38PM +0200, Stefan Klug wrote:
+> > Do not call media_entity_cleanup() when media_entity_pads_init() fails.
+>=20
+> Why is it an issue ? The media_entity_cleanup() documentation clearly
+> states
+>=20
+>  * Calling media_entity_cleanup() on a media_entity whose memory has been
+>  * zeroed but that has not been initialized with media_entity_pad_init() =
+is
+>  * valid and is a no-op.
+>=20
+> This is by design to simplify error handling in drivers.
 
-Nonetheless, yes, basically I believe DAMON and Bharata's works have great
-opportunities to collaborate and use each other in a very productive ways.  I'm
-especially very intersted in kpromoted's AMD IBS code, and trying to make DAMON
-easier to be used for Bharata's works.
+Oops. It was simple mechanical thing. I'll remove it in v2.
 
-For batch migration interface, though, to be honest I don't find very clear
-DAMON's usage of it, since DAMON does region-based sort of batched migration.
-Again, I took only a glance on migration batching part and gonna take more time
-to the details.
+Regrads,
+Stefan
 
-Meanwhile, if you saw some opportunities, and if you don't mind, it would be
-very helpful if you can share your detailed view of the opportunity (how DAMON
-could be better by using the migration batching in what way?).
-
-
-Thanks,
-SJ
-
-
-> 
-> ~Gregory
+>=20
+> > As a drive-by fix handle an (very unlikely) error in
+> > rkisp1_params_init_vb2_queue().
+> >=20
+> > Signed-off-by: Stefan Klug <stefan.klug@ideasonboard.com>
+> > ---
+> >  .../media/platform/rockchip/rkisp1/rkisp1-params.c    | 11 +++++++----
+> >  1 file changed, 7 insertions(+), 4 deletions(-)
+> >=20
+> > diff --git a/drivers/media/platform/rockchip/rkisp1/rkisp1-params.c b/d=
+rivers/media/platform/rockchip/rkisp1/rkisp1-params.c
+> > index b28f4140c8a3..918eb06c7465 100644
+> > --- a/drivers/media/platform/rockchip/rkisp1/rkisp1-params.c
+> > +++ b/drivers/media/platform/rockchip/rkisp1/rkisp1-params.c
+> > @@ -2763,7 +2763,9 @@ int rkisp1_params_register(struct rkisp1_device *=
+rkisp1)
+> >       vdev->queue =3D &node->buf_queue;
+> >       vdev->device_caps =3D V4L2_CAP_STREAMING | V4L2_CAP_META_OUTPUT;
+> >       vdev->vfl_dir =3D VFL_DIR_TX;
+> > -     rkisp1_params_init_vb2_queue(vdev->queue, params);
+> > +     ret =3D rkisp1_params_init_vb2_queue(vdev->queue, params);
+> > +     if (ret)
+> > +             goto err_mutex;
+> > =20
+> >       params->metafmt =3D &rkisp1_params_formats[RKISP1_PARAMS_FIXED];
+> > =20
+> > @@ -2777,19 +2779,20 @@ int rkisp1_params_register(struct rkisp1_device=
+ *rkisp1)
+> >       node->pad.flags =3D MEDIA_PAD_FL_SOURCE;
+> >       ret =3D media_entity_pads_init(&vdev->entity, 1, &node->pad);
+> >       if (ret)
+> > -             goto error;
+> > +             goto err_mutex;
+> > =20
+> >       ret =3D video_register_device(vdev, VFL_TYPE_VIDEO, -1);
+> >       if (ret) {
+> >               dev_err(rkisp1->dev,
+> >                       "failed to register %s, ret=3D%d\n", vdev->name, =
+ret);
+> > -             goto error;
+> > +             goto err_media;
+> >       }
+> > =20
+> >       return 0;
+> > =20
+> > -error:
+> > +err_media:
+> >       media_entity_cleanup(&vdev->entity);
+> > +err_mutex:
+> >       mutex_destroy(&node->vlock);
+> >       return ret;
+> >  }
+>=20
+> --=20
+> Regards,
+>=20
+> Laurent Pinchart
+>
