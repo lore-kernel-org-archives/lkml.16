@@ -1,243 +1,260 @@
-Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
+Received: from mail-qv1-f45.google.com (mail-qv1-f45.google.com [209.85.219.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA5EE28C2B6
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 15:11:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D14C28FFF0;
+	Thu, 22 May 2025 15:12:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747926709; cv=none; b=Us+fHMhM4O3gP6P+ccMQhr1YrKjnNAPyF3ysaGxf0ujy4W8pcvztDoS+d2R2k2YgFtzdXnh/QX2vd79gEMdgIYcrcbiGIZnjjiRGKqf0WSGtUCSi8Z5tklEzMmrTlLhye+XbiLpGlsJ8gcGsoXGUnMZsEPEbXYPpIDNquf1UNV8=
+	t=1747926726; cv=none; b=QB6oFhtsWplP5/ozl7GScEl9wWQj9ZvMuNsDCWmmtIyZghzwysdTUxllWOsjDVQl4kq6UAeBwwaKz+S2bqjr0iG9/Un/7TOytW/SZcCUwnog3s1BZlsc7+utQ22KqV6D6XQ5yKJZ/ykFdPIRQAK1lIEClez4ewE8jdQ/2xPQ0dY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747926709; c=relaxed/simple;
-	bh=z4fXzBUgIsErwyKGNpzT6v1rVL0xTsjOd7VTRE/toWY=;
+	s=arc-20240116; t=1747926726; c=relaxed/simple;
+	bh=QIS4unq5VDRUq2UCo4qnvc6+Jxb6VxValqCWbhaiJ1s=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=AMB4M+gVvVMl3yLoTvty/pRnBGY6mDpjzo10oqlUoS/5bcGdSeIKQ83APiqk49DKjYc3nTFmz5rvgvDnUuxf7A8wMIsCy/35aQ5iKIBCTBn0BEfZDV+jSfFv2XHQzYU3F69LT/4EpMVx9FwSZCK+OYcJQt7vRh2C8epEngPlMa0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=e+peWWNz; arc=none smtp.client-ip=209.85.160.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
+	 To:Cc:Content-Type; b=oPsqdDIkMDlre3BkKoZ6Vf26mJ1Nu6vIY3o1GEsa6TyJA3+p34ChYAFM3B33IPWdrCBg70HHLsb70gPK163Duklg883bWk4i6QFbYKzeofP5VRQUjNfrm9KMtDGWKZlFqkUobzNd9idgkJ2CYaqDXjVGaXuR5bP+JnN4+9m0wXI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QkYO2ZGx; arc=none smtp.client-ip=209.85.219.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="e+peWWNz"
-Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-477282401b3so87645561cf.1
-        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 08:11:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QkYO2ZGx"
+Received: by mail-qv1-f45.google.com with SMTP id 6a1803df08f44-6f5373067b3so102756806d6.2;
+        Thu, 22 May 2025 08:12:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1747926705; x=1748531505; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1747926722; x=1748531522; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=QkuVu6TLTcH1UO6MtsNK3yTXBjsaezcw9faGJub9wRA=;
-        b=e+peWWNz0FNKpccoCdFYZOejZIJMszNq4omBEIz9V3iWvx3Jy8g2xg0GdHAA3bb3XN
-         zaKnWL7xJwP2y6emks0ZUR5uuNohdTFx5zP4fvULPZorakTpsGqgoxPqV+25LGA6RBf2
-         XuGWeesP7d3lbcB8ZDYXSnAdXWvgzFGwpe05PSLbkWtTfg/jV7NfCDBxWNBasn7gE8Tb
-         RUqPPhHjjXVSz7DfcxFDU4qDs49ZH8QSOUTPVOs94FDvg6QVY1BcUXO+xYNgh0boBNGY
-         qIdoKW0voakfm//Sp6XHkaCwJ6tRTOg2AvaUvj348YX095KGA0fzZpIy5AxZmWc9TiiV
-         j+4A==
+        bh=zBpkT+X12qTj4ZXFWwDHYvuVR5JkpgqcjljjqtTRTxw=;
+        b=QkYO2ZGxaVsGt9kZ6pG9IlFEj+SpG75Pz54fxV7Pe+ZHOB5nmzSRtTSlDNTq8zmMTj
+         603h9zmNBKA0ik0A2x5WClb3YvvU7+C2ELzBxzxfF+881BxeP7HIemWHVV97vAI0oiKA
+         CEe90Pv/fSSO48affKFiK7ZNBiijOWnF1xG6yImnUxcFRLj6ed4QXb6ulOGOUuNxntxw
+         5TaKMGdIbUPQi2qtVYdMwIxrHIuD0kCjfdoAa+7q+SPt8338UxGY0m/w3vJiXXRuIa1g
+         cBekTNxRQ6Y7yKRDREt4Lt451cBPCi6HzL9xQ8vHWkPURuI0xdlav/uNkkLcz4ftCNzi
+         ey5A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747926705; x=1748531505;
+        d=1e100.net; s=20230601; t=1747926722; x=1748531522;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=QkuVu6TLTcH1UO6MtsNK3yTXBjsaezcw9faGJub9wRA=;
-        b=v76kscyCplkZqxF7LQ1F1W6puLBFv+xe07WuHlmUHO35Q5c8zSIMQs4BNrY33Zoos6
-         7nBlc0uJBFESHfvZButKulBYsucCaVeeJB0iRr3u55Cwjk+nhEoLQGfkqTkRxoqwGneR
-         hw5SZiWJp2YunjvYTeZMEqUrrAvmOQnTKKhaUnT32sEtljkKCa+a1fQz/0SNCc/u7MkX
-         xrDs5lwshDAICQ+bNPFHM1B9txnHaPsmb5pD5AN7lt9bbmeFaTEsuE5rPaTv2koWkfy6
-         BX/i7xLblqC8Kp0JiwxIVuY/dNvZd3Re1PukuFUlFF1R7ppU7lfUQUBINH05YgxRXFHS
-         Yx9A==
-X-Forwarded-Encrypted: i=1; AJvYcCUQz77PBYlRqbzM7N7ZE6Dbo/TNSWE/AvnGLMlR5oSBb7KiyZls8D4TMdL9zrMW922NHWQB9oBkA8bA5Ls=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx3W1yMzRnHQwHVweBqtUYzxEE3HDxwUxxN2baNBd66pTMogXCr
-	usJDvvYktIYLueSHPLL5Gt/cqO+oWu9pwyeVRQEpGE4n9PFrxgrCTLFft4utq7Lin9C79B1TH6z
-	y9k80QubHPlDNDd3PKp3twIQnUhvQhDhKoDQ0+vOBgw==
-X-Gm-Gg: ASbGncshdMWiXRh2xZs43XFBvwSbzoZgOFkqMgYcVIhfd1lyrxbA5Sc3wf6mYY9LJ+/
-	PM7r5nwRybxEHOUoxZ89CnelZLpo4A45i8wyY2yTX0L7Xb04YkDIipkA/Vn/3njSdpKjC1rrnPG
-	xbO6QhSGbYtU54miB+L3YL9e3M/nChe1ceEg==
-X-Google-Smtp-Source: AGHT+IFK4Yt+2cgSXArAeoi1XDZ64HrD1KARb24Tr3q9Foi+yx0/cRfeLxf+ZZaw0XgkdGlmSGMsnojlGKBoJ8/RNnQ=
-X-Received: by 2002:a05:622a:424d:b0:494:784a:ee41 with SMTP id
- d75a77b69052e-494ae445618mr415065331cf.42.1747926705384; Thu, 22 May 2025
- 08:11:45 -0700 (PDT)
+        bh=zBpkT+X12qTj4ZXFWwDHYvuVR5JkpgqcjljjqtTRTxw=;
+        b=HXV2HGTW3FJJ6r0z6BfayYLsP0SKrJh0LLjnz2cFFNpZhLP+CNkiPQXFeBHDoz3lDO
+         W/sTSpWCRqKhKwF6tmxbiviwm0vkzoKxZXIDQg+2n8nxnyEyQWAgVs5bTv+vltq6nabk
+         t8Qycqkmmo+AoXYz3Ig0W3UylrJOR4gVg2wdvVRwe6/+M2aHtou+I8VzMKqMxxiEl11b
+         dW8SGmoCCTMbSSYzd8oNe7NHEaUGwODIIF2S9pKo16R1Hs//axmWpsZKfaeqdfJCXfL2
+         S27BCTxaqsgza8aehjdsChgelH5l43z5/vai10oOJy9X912AFUFTIXSy54ftL4MHPqPE
+         t15g==
+X-Forwarded-Encrypted: i=1; AJvYcCUT3/LQs+qWwoKgaPlzehxb8HOVo3niWjr1bcdAMItjtphNaDLQOyvx481JZOKeYxou514eaxrDoqPf@vger.kernel.org, AJvYcCUpWCiqLn7fYpZOfUVSJOVyUI6fUzEO8sSIiAS4vP4JPMQ/7tWtNHZvOlY4TcdHv5QJidzkEiJOlrdke1J6@vger.kernel.org, AJvYcCV9CJhtyvUtH7cQOig1uX0Bz2f1dRm6UKO3eRd/G0oNccOvD76Ns94Q6cAJPjk0xTBEuwv2PvC0oYquUsL65duFPkg=@vger.kernel.org, AJvYcCVIQw1bibbAb2wU0icJ8RMan2YLnA+CGsNN9B23rLKrRbZNp0bpArztgGVCbhWdESN3dTA/kCIx7L9mrIOzGc/qvwU=@vger.kernel.org, AJvYcCVXcpZkTUtdNyj8CjWyFJmjVsJfLT3rOxTqvAAfpsNdLD+OZCrgOk/p4/ixdZRXgm3ZcbMzIsk7vrzms/AgpAEV9nQXOw==@vger.kernel.org, AJvYcCX0JeepdxWLQw06euqeXqheNFsqMyXlPWlEne5J4MyFtt9rk6OQWi+CulBSJJgsagq52+Br0T1zAAXad8nX@vger.kernel.org
+X-Gm-Message-State: AOJu0YzoDcrlwcV8gl4T8DZbW4tPJiU/HnEUKO/uJQksuihPap/GIjw2
+	x5BrqUx16pkQqWIYG5T7v97tR6x/XrhK6SeLYV3rjd7WvHfkHPimHVt1wrT2FopnwrHEBYrjzr7
+	g2xhEJBhnhU2bk4PrdS9wH7P/hGse3CA=
+X-Gm-Gg: ASbGncsvqTnl/7YhyXHUi9ISYroHXIzQZI/3tVW3oFCmHxos+5vNh9XPMY0RrpAtDKz
+	dJR7xnblPaMBHWgP9n4p4R3ZmSppMPd7ROV/Q/zGpKNpFC6X0a1prMV9IShmgjEOTuLZB3mRQtx
+	sULKBZPdzI9aZPiBRyTsmSifv+q4ZiEMQ=
+X-Google-Smtp-Source: AGHT+IFlBlVnRPEejI7uEQI0m4iJ7XD5elQtat++i3WnHxfOw553GLb37rOpDc90WmrXZut9Lu8B9Qiwq9FX49Bc1Ek=
+X-Received: by 2002:a05:6214:f0c:b0:6eb:28e4:8519 with SMTP id
+ 6a1803df08f44-6f8b2c7b1d5mr412061496d6.21.1747926722029; Thu, 22 May 2025
+ 08:12:02 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240702102637.9074-1-mchitale@ventanamicro.com>
- <mhng-38c26ef6-8d45-4dd1-9c3a-f71f34f1ef81@palmer-ri-x1c9>
- <CAN37VV6DMpsRWnH-1tN2AfT8HXbEFh2We4Yw0XYkuCNvF75o4w@mail.gmail.com> <8faad7be-d7a5-4f71-b020-960ea443f751@ghiti.fr>
-In-Reply-To: <8faad7be-d7a5-4f71-b020-960ea443f751@ghiti.fr>
-From: Mayuresh Chitale <mchitale@ventanamicro.com>
-Date: Thu, 22 May 2025 20:41:09 +0530
-X-Gm-Features: AX0GCFuj4FI4Iq8tzF2Vm8xgvRmc5GtroFmXxMR9iejG5iUtnCgIPoQ5G81Q79o
-Message-ID: <CAN37VV4ohoi48BAM1-OTdSGe9yD=2Eh84pKsHLsWQSaRadJ7tw@mail.gmail.com>
-Subject: Re: [PATCH v8] riscv: mm: Add support for Svinval extension
-To: Alexandre Ghiti <alex@ghiti.fr>, Palmer Dabbelt <palmer@dabbelt.com>
-Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	Paul Walmsley <paul.walmsley@sifive.com>, aou@eecs.berkeley.edu, alexghiti@rivosinc.com, 
-	samuel.holland@sifive.com, ajones@ventanamicro.com
+References: <20250509-drm-bridge-convert-to-alloc-api-v3-0-b8bc1f16d7aa@bootlin.com>
+ <20250521162216.79dd3290@booty>
+In-Reply-To: <20250521162216.79dd3290@booty>
+From: Inki Dae <daeinki@gmail.com>
+Date: Fri, 23 May 2025 00:11:24 +0900
+X-Gm-Features: AX0GCFtvRxj4ujyC4Z2jHUwkVIe890MFPlPN-fSj8wgEwb2IYi_zfj6mGd98q30
+Message-ID: <CAAQKjZPX3iQgNhEydDZXMyC9BRuep7kL-XYEsjnkCxSt_1UsQg@mail.gmail.com>
+Subject: Re: [PATCH v3 00/22] drm: convert all bridges to devm_drm_bridge_alloc()
+To: Luca Ceresoli <luca.ceresoli@bootlin.com>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Andrzej Hajda <andrzej.hajda@intel.com>, Neil Armstrong <neil.armstrong@linaro.org>, 
+	Robert Foss <rfoss@kernel.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
+	Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+	Jagan Teki <jagan@amarulasolutions.com>, Shawn Guo <shawnguo@kernel.org>, 
+	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
+	Fabio Estevam <festevam@gmail.com>, Douglas Anderson <dianders@chromium.org>, 
+	Chun-Kuang Hu <chunkuang.hu@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Liu Ying <victor.liu@nxp.com>, 
+	Anusha Srivatsa <asrivats@redhat.com>, Paul Kocialkowski <paulk@sys-base.io>, 
+	Dmitry Baryshkov <lumag@kernel.org>, Hui Pu <Hui.Pu@gehealthcare.com>, 
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>, dri-devel@lists.freedesktop.org, 
+	asahi@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	chrome-platform@lists.linux.dev, imx@lists.linux.dev, 
+	linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, 
+	linux-amlogic@lists.infradead.org, linux-renesas-soc@vger.kernel.org, 
+	platform-driver-x86@vger.kernel.org, linux-samsung-soc@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org, 
+	linux-stm32@st-md-mailman.stormreply.com, 
+	Louis Chauvet <louis.chauvet@bootlin.com>, Alim Akhtar <alim.akhtar@samsung.com>, 
+	Kyungmin Park <kyungmin.park@samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>, 
+	Manikandan Muralidharan <manikandan.m@microchip.com>, Adam Ford <aford173@gmail.com>, 
+	Adrien Grassein <adrien.grassein@gmail.com>, Aleksandr Mishin <amishin@t-argos.ru>, 
+	Andy Yan <andy.yan@rock-chips.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+	Benson Leung <bleung@chromium.org>, Biju Das <biju.das.jz@bp.renesas.com>, 
+	Christoph Fritz <chf.fritz@googlemail.com>, 
+	Cristian Ciocaltea <cristian.ciocaltea@collabora.com>, 
+	Detlev Casanova <detlev.casanova@collabora.com>, 
+	Dharma Balasubiramani <dharma.b@microchip.com>, Guenter Roeck <groeck@chromium.org>, 
+	Heiko Stuebner <heiko@sntech.de>, Jani Nikula <jani.nikula@intel.com>, Janne Grunau <j@jannau.net>, 
+	Jerome Brunet <jbrunet@baylibre.com>, Jesse Van Gavere <jesseevg@gmail.com>, 
+	Kevin Hilman <khilman@baylibre.com>, 
+	Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, 
+	Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
+	Matthias Brugger <matthias.bgg@gmail.com>, Philipp Zabel <p.zabel@pengutronix.de>, 
+	Phong LE <ple@baylibre.com>, Sasha Finkelstein <fnkl.kernel@gmail.com>, 
+	Sugar Zhang <sugar.zhang@rock-chips.com>, Sui Jingfeng <sui.jingfeng@linux.dev>, 
+	Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>, Vitalii Mordan <mordan@ispras.ru>, 
+	"Rob Herring (Arm)" <robh@kernel.org>, Hsin-Te Yuan <yuanhsinte@chromium.org>, 
+	Pin-yen Lin <treapking@chromium.org>, Xin Ji <xji@analogixsemi.com>, 
+	Aradhya Bhatia <a-bhatia1@ti.com>, Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>, 
+	Ian Ray <ian.ray@gehealthcare.com>, Martyn Welch <martyn.welch@collabora.co.uk>, 
+	Peter Senna Tschudin <peter.senna@gmail.com>, Helge Deller <deller@gmx.de>, 
+	Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, 
+	Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, 
+	Alexandre Torgue <alexandre.torgue@foss.st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
+	Philippe Cornu <philippe.cornu@foss.st.com>, 
+	Raphael Gallais-Pou <raphael.gallais-pou@foss.st.com>, 
+	Yannick Fertre <yannick.fertre@foss.st.com>, Alain Volmat <alain.volmat@foss.st.com>, 
+	Raphael Gallais-Pou <rgallaispou@gmail.com>, Michal Simek <michal.simek@amd.com>, 
+	Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Alex,
+Hello Luca Ceresoli,
 
-On Tue, May 20, 2025 at 10:25=E2=80=AFPM Alexandre Ghiti <alex@ghiti.fr> wr=
-ote:
+2025=EB=85=84 5=EC=9B=94 21=EC=9D=BC (=EC=88=98) =EC=98=A4=ED=9B=84 11:23, =
+Luca Ceresoli <luca.ceresoli@bootlin.com>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=
+=B1:
 >
-> Hi Mayuresh!
+> Hello Maxime, Shawn, Liu, all,
 >
-> On 7/30/24 10:43, Mayuresh Chitale wrote:
-> > On Wed, Jul 24, 2024 at 8:20=E2=80=AFPM Palmer Dabbelt <palmer@dabbelt.=
-com> wrote:
-> >> On Tue, 02 Jul 2024 03:26:37 PDT (-0700), mchitale@ventanamicro.com wr=
-ote:
-> >>> The Svinval extension splits SFENCE.VMA instruction into finer-graine=
-d
-> >>> invalidation and ordering operations and is mandatory for RVA23S64 pr=
-ofile.
-> >>> When Svinval is enabled the local_flush_tlb_range_threshold_asid func=
-tion
-> >>> should use the following sequence to optimize the tlb flushes instead=
- of
-> >> Do you have any performance numbers for the optimization?  As per here
-> >> <https://lore.kernel.org/all/mhng-f799bd2b-7f22-4c03-bdb2-903fa3b5d508=
-@palmer-ri-x1c9a/>.
-> > No, currently there are no numbers available for comparison but the
-> > rationale for the optimization is described in the spec. The extension
-> > is mandatory for the RVA23S64 profile but any platform that doesn't
-> > support this extension will not be impacted as the code executes only
-> > if the svinval extension is enabled at the boot up.
+> On Fri, 09 May 2025 15:53:26 +0200
+> Luca Ceresoli <luca.ceresoli@bootlin.com> wrote:
 >
+> > devm_drm_bridge_alloc() [0] is the new API to allocate and initialize a=
+ DRM
+> > bridge, and the only one supported from now on. It is the first milesto=
+ne
+> > towards removal of bridges from a still existing DRM pipeline without
+> > use-after-free.
 >
-> So I finally have some numbers! I tested this patchset on the BananaPi:
-> I measured the number of cycles when flushing 64 entries (which is our
-> current threshold) and I made sure to touch the entries beforehand.
+> I applied on drm-misc-next patches 3-17,20-21 as they match all the
+> criteria:
+>  - At least a Acked-by (or R-by maintainers)
+>  - patch is for drm-misc
 >
-> Here they are:
+> Being my very first commits to drm-misc, I tried to be careful, and
+> double checked all the patches with Louis (thanks!).
 >
-> * svinval:
+> Here are the pending questions and plan for the remaining patches.
 >
-> #cycles: 364920
-> #cycles: 365856
-> #cycles: 367993
+> >       Revert "drm/exynos: mic: convert to devm_drm_bridge_alloc() API"
 >
-> * !svinval:
+> This reverts the commit applied my mistake:
+> https://gitlab.freedesktop.org/drm/misc/kernel/-/commit/91c5c7b5bb2dd09b4=
+3b025bce6d790d3c79f4518
 >
-> #cycles: 663585
-> #cycles: 663105
-> #cycles: 664073
+> Neither the  original patch nor the revert has been reviewed/acked.
 >
+> As the commit was a mistake, I'm applying the revert by the end of this
+> week (i.e. on Friday) unless there are better instructions.
 
-That's awesome !! Thank you so much for getting the data.
+Really sorry for late. I was made aware of it later through a
+colleague's remark. There is no need to proceed with the revert.
+Acked-by : Inki Dae <inki.dae@samsung.com>
 
-> So that's roughly /2 using svinval. To me that's good enough to merge
-> that for 6.16 :)
+Thanks,
+Inki Dae
+
+
 >
-> Sorry for the very very long delay and thanks again for the multiple
-> revisions!
+> >       drm: convert many bridge drivers from devm_kzalloc() to devm_drm_=
+bridge_alloc() API
 >
-> Alex
+> This patch affects multiple drivers. Running get_maintainers.pl
+> points at Shawn Guo's repository. After reviewing the MAINTAINERS file,
+> this looks like due to the 'N:' line in:
 >
+> ARM/FREESCALE IMX / MXC ARM ARCHITECTURE
+> M:      Shawn Guo <shawnguo@kernel.org>
+> M:      Sascha Hauer <s.hauer@pengutronix.de>
+> R:      Pengutronix Kernel Team <kernel@pengutronix.de>
+> ...
+> T:      git git://git.kernel.org/pub/scm/linux/kernel/git/shawnguo/linux.=
+git
+> N:      imx
+> ...
 >
-> >>> a simple sfence.vma:
-> >>>
-> >>> sfence.w.inval
-> >>> svinval.vma
-> >>>    .
-> >>>    .
-> >>> svinval.vma
-> >>> sfence.inval.ir
-> >>>
-> >>> The maximum number of consecutive svinval.vma instructions that
-> >>> can be executed in local_flush_tlb_range_threshold_asid function
-> >>> is limited to 64. This is required to avoid soft lockups and the
-> >>> approach is similar to that used in arm64.
-> >>>
-> >>> Signed-off-by: Mayuresh Chitale <mchitale@ventanamicro.com>
-> >>> Reviewed-by: Andrew Jones <ajones@ventanamicro.com>
-> >>> ---
-> >>> Changes in v8:
-> >>> - Fix line wrap
-> >>> - Add RB tag
-> >>>
-> >>> Changes in v7:
-> >>> - Use existing svinval macros in the insn-def.h
-> >>> - Rename local_sinval_vma_asid to local_sinval_vma
-> >>>
-> >>> Changes in v6:
-> >>> - Rebase on latest torvalds/master
-> >>>
-> >>> Changes in v5:
-> >>> - Reduce tlb flush threshold to 64
-> >>> - Improve implementation of local_flush_tlb* functions
-> >>>
-> >>> Changes in v4:
-> >>> - Rebase and refactor as per latest changes on torvalds/master
-> >>> - Drop patch 1 in the series
-> >>>
-> >>> Changes in v3:
-> >>> - Fix incorrect vma used for sinval instructions
-> >>> - Use unified static key mechanism for svinval
-> >>> - Rebased on torvalds/master
-> >>>
-> >>> Changes in v2:
-> >>> - Rebased on 5.18-rc3
-> >>> - update riscv_fill_hwcap to probe Svinval extension
-> >>>
-> >>>   arch/riscv/mm/tlbflush.c | 32 ++++++++++++++++++++++++++++++++
-> >>>   1 file changed, 32 insertions(+)
-> >>>
-> >>> diff --git a/arch/riscv/mm/tlbflush.c b/arch/riscv/mm/tlbflush.c
-> >>> index 9b6e86ce3867..782147a63f3b 100644
-> >>> --- a/arch/riscv/mm/tlbflush.c
-> >>> +++ b/arch/riscv/mm/tlbflush.c
-> >>> @@ -6,6 +6,27 @@
-> >>>   #include <linux/hugetlb.h>
-> >>>   #include <asm/sbi.h>
-> >>>   #include <asm/mmu_context.h>
-> >>> +#include <asm/cpufeature.h>
-> >>> +
-> >>> +#define has_svinval()        riscv_has_extension_unlikely(RISCV_ISA_=
-EXT_SVINVAL)
-> >>> +
-> >>> +static inline void local_sfence_inval_ir(void)
-> >>> +{
-> >>> +     asm volatile(SFENCE_INVAL_IR() ::: "memory");
-> >>> +}
-> >>> +
-> >>> +static inline void local_sfence_w_inval(void)
-> >>> +{
-> >>> +     asm volatile(SFENCE_W_INVAL() ::: "memory");
-> >>> +}
-> >>> +
-> >>> +static inline void local_sinval_vma(unsigned long vma, unsigned long=
- asid)
-> >>> +{
-> >>> +     if (asid !=3D FLUSH_TLB_NO_ASID)
-> >>> +             asm volatile(SINVAL_VMA(%0, %1) : : "r" (vma), "r" (asi=
-d) : "memory");
-> >>> +     else
-> >>> +             asm volatile(SINVAL_VMA(%0, zero) : : "r" (vma) : "memo=
-ry");
-> >>> +}
-> >>>
-> >>>   /*
-> >>>    * Flush entire TLB if number of entries to be flushed is greater
-> >>> @@ -26,6 +47,16 @@ static void local_flush_tlb_range_threshold_asid(u=
-nsigned long start,
-> >>>                return;
-> >>>        }
-> >>>
-> >>> +     if (has_svinval()) {
-> >>> +             local_sfence_w_inval();
-> >>> +             for (i =3D 0; i < nr_ptes_in_range; ++i) {
-> >>> +                     local_sinval_vma(start, asid);
-> >>> +                     start +=3D stride;
-> >>> +             }
-> >>> +             local_sfence_inval_ir();
-> >>> +             return;
-> >>> +     }
-> >>> +
-> >>>        for (i =3D 0; i < nr_ptes_in_range; ++i) {
-> >>>                local_flush_tlb_page_asid(start, asid);
-> >>>                start +=3D stride;
-> > _______________________________________________
-> > linux-riscv mailing list
-> > linux-riscv@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/linux-riscv
+> (https://gitlab.freedesktop.org/drm/misc/kernel/-/blob/drm-misc-next/MAIN=
+TAINERS?ref_type=3Dheads#L2511-2528)
+>
+> Here 'imx' matches the 'drivers/gpu/drm/bridge/imx/imx-legacy-bridge.c'
+> file that is touched by the patch. That regexp appears overly generic to =
+me.
+>
+> Shawn, can it be fixed by making it less generic?
+>
+> If not, can we at least add a band-aid 'X:' entry for
+> drivers/gpu/drm/bridge/imx?
+>
+> I think the other matching entry is the one to consider:
+>
+> DRM DRIVERS FOR FREESCALE IMX BRIDGE
+> M:      Liu Ying <victor.liu@nxp.com>
+> L:      dri-devel@lists.freedesktop.org
+> S:      Maintained
+> F:      Documentation/devicetree/bindings/display/bridge/fsl,imx8qxp-ldb.=
+yaml
+> F:      Documentation/devicetree/bindings/display/bridge/fsl,imx8qxp-pixe=
+l-combiner.yaml
+> F:      Documentation/devicetree/bindings/display/bridge/fsl,imx8qxp-pixe=
+l-link.yaml
+> F:      Documentation/devicetree/bindings/display/bridge/fsl,imx8qxp-pxl2=
+dpi.yaml
+> F:      drivers/gpu/drm/bridge/imx/
+>
+> (https://gitlab.freedesktop.org/drm/misc/kernel/-/blob/drm-misc-next/MAIN=
+TAINERS?ref_type=3Dheads#L7940-7948)
+>
+> However it does not list any trees. I _guess_ drm-misc applies here as
+> a fallback as well as common sense.
+>
+> Liu, should this entry have a 'T:' line for drm/misc?
+>
+> >       drm/bridge: imx8qxp-pixel-combiner: convert to devm_drm_bridge_al=
+loc() API
+>
+> Not acked/reviewed, some discussion happened. I am resending it in v4,
+> possibly with updates based on the discussion.
+>
+> But it has the same issue discussed above, with get_maintiners.pl
+> pointing at Shawn Guo's tree, so in the future I'm assuming this goes
+> to drm-misc unless there are news about that.
+>
+> >       drm/bridge: tc358767: convert to devm_drm_bridge_alloc() API
+>
+> No feedback, resending in v4.
+>
+> >       drm/todo: add entry to remove devm_drm_put_bridge()
+>
+> This involves documentation maintained on another tree. Where should it
+> be applied? There are two matching entries in MAINTAINERS:
+>
+>  * DRM DRIVERS -> the drm tree
+>  * DRM DRIVERS AND MISC GPU PATCHES -> the drm-misc tree
+>
+> To me it looks like the second is obviously the closest match as we are
+> dealing with DRM bridges, so I'm applying this as well on Friday unless
+> there are better instructions.
+>
+> Best regards,
+> Luca
+>
+> --
+> Luca Ceresoli, Bootlin
+> Embedded Linux and Kernel engineering
+> https://bootlin.com
+>
