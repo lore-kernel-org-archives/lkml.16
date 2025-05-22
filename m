@@ -1,64 +1,44 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailtransmit04.runbox.com (mailtransmit04.runbox.com [185.226.149.37])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D39B02550BF
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 22:30:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABB692914;
+	Thu, 22 May 2025 22:31:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.226.149.37
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747953028; cv=none; b=PGZbVgg0I7AOA9ROK09FRLJ4EQa77sLRW6citi5ZLdH/IusL8HHebrfSd20V1ncOcXl6alMjxi95IMpZ3qs7M6EXIIb3ol+/S7JTDbXzZNpqs+d9VO/OVuqLLrb2VpIJlTJagB/pNs2pdGvm1ztPNpGauHjgxLfF9TR40nK91js=
+	t=1747953098; cv=none; b=HFsQ3pOV/MQknK/4cvKRnyas64YGgkWyvZYwdQJ3tDtR9Hc1oaCPpxhpRUugvR1ghoDS2yUduiziUm98NxzEchiBUVCyuN/0f32cQ9B6l82pLg28yC3/FionI2HS0NBBZuEw0Mc/9mHDE2ku/bk+/h9eTNk5i0UF7D+SWXxUfok=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747953028; c=relaxed/simple;
-	bh=an8fPGi94bYvyE1y8p6iS9mxJmsi4pDjOvkbFbfR8xI=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=Wbokua8ETZK0ofBv29vZPOt3Rdo/ZhNKCRCsAmLykaRVJ6sEzsTvcEwU0TYEc78D6wGDyvR685D3HGyjmsdGdkcCbAoWtcEcuah1w/uKzs8lsZo5DpdFiIwyxJHKoYA09Tm0+8NQpCqeCNXaecFQ6tfjiQz3RIYv8j7VnSXv4Mw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=P7pLor1Z; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1747953098; c=relaxed/simple;
+	bh=8jYgux2zyNhAr7RiTJU6scAIFsWzTW41T6SuCq8cTxs=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=d4kqOTEEAUN4X9OLO6hrsG9FLwxLCVEEnCOb9K1H+oib0zVp5N0kddc1ENvk2hb4JIh13dCvEKo1cxOHcmfbi7n0DNn+u+GLSDRahmm3/UfuD2XGxE83dMS9uL+I6oycrBHtMoNwO/UvGVN07+hh5osS6LMFMXYXtgal3c2/QtU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co; spf=pass smtp.mailfrom=rbox.co; dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b=ZO0mvMwz; arc=none smtp.client-ip=185.226.149.37
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rbox.co
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="P7pLor1Z"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-443d4bff5dfso12435e9.1
-        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 15:30:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747953025; x=1748557825; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ty+aRqD69J6N+JcORepKn7zTsLIxgBrk36Nne2pXGUg=;
-        b=P7pLor1ZziIkootUbJJvSz7XAf/NwDnBE2osuz6y9eNObUSwxHG+nchHRxK9NNvbjf
-         79SQ3DMhe+yCIoagVTFpM8DLk0gf4TB49H1dRtuA3mxsek/410GE2q0YkMobIwO59wvU
-         4i6BWDYqEJ/dXK1wQ1cn0XEld8LuIRrwXPEjDgYiYNOjrzm8mUOFU1qhkFfiyunmGDL8
-         1LMj9tp8wIJA5VB6VQ1Jc5y940NNqvH/3KdizjPz0SwCL7wYr+2gpzWIX+iXlPv+WGQc
-         DSuPxRoLgMsyALqDl+GIKS8SBNnrFwaxWPCoYFyJ6KkBoOV5VN7MWeiw6J1KrECUPQzF
-         kFQA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747953025; x=1748557825;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ty+aRqD69J6N+JcORepKn7zTsLIxgBrk36Nne2pXGUg=;
-        b=wl+BOj+WNPSZRW5U8uH6Pq3rYXrmURtESu9TmI+P5dtMRXN5gFU15KHG6+g/dTTktg
-         Y4ZuPbt7J7m3a/IavPFek1z1L1l3oDXqsb9gW/SoJ+CHRDnJF6UsHwzClCREXYfD9ARN
-         zWqEpOKUG0Fdl8exOILHRlxleL+7yz7GkP2o4co43q+swAzVwRDlqKG3M09vFDvyVwoN
-         nkrVFQaEGDeZiQdXfzvGfQl261RgMTQ5v4rmmodCpU2FIEBaBgWPcXQgy2iowNvhA237
-         wBXH8Sp3DUPuStfVA5FXzhAqytgM/1ojocw4+x5n3P3cWAv0Ls4S2Iw6z/nBqxxMJIzD
-         KlGw==
-X-Forwarded-Encrypted: i=1; AJvYcCXv8mTwh+VXOyQef2n3TW0lhzcn62HB3lTk/RbhGYeXrfB2G5Dp9M4Xt1tiyx23LvP6itF/WQwApHp6ATo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyWJUgvPhFA8OMCYsPndgP35hf6d35tVvibSFiqJcLT7xYr0GiY
-	rVMb0Ff41vclfps3XuDnW3QvXjbvEG8M0QkkqqUsId/TYJlqg5pRl3es833gKNJKEuv888SuvcX
-	Yf4ufOnTt
-X-Gm-Gg: ASbGnctEdrzh9ZSumwoDjBvKMXFSsAHlFfV08g9K3N+nnudkEpxIxES27u8I1ayLf27
-	WbZUjDtLNEgBXeBw5m07+CFTQJrfX5VvU8OCimxxgj/RW538++HFF///xL/iYLg8aDUZLjRFNHS
-	YkZ30yDTjoLUng7sN6MlfuY9VOxNf6gzQIPLiU3L3F7pCDsPkNt3gIJiQ7G8eKjv5kfUpe7lgcZ
-	l6B9XPh+2F0jFG4M+Vnf4IG4qOq/FWCPxoxRyegf8rsbiI9zXXPtFN5YAUTl2/RIg2QAaO3spla
-	r8OM0XA32EYgpRZhx+jhxn3lb+Pc3er0xlU+3BTOI9Du3i1IyGBDR88I5LOhnw==
-X-Google-Smtp-Source: AGHT+IFPlgqLSsJn0hFdkgXCDckIMyvribsgHCVZ7kCFHIgpVlh62Mq8zGUO3ZzO28SolV+amUUgkQ==
-X-Received: by 2002:a7b:cc95:0:b0:44a:4f96:181b with SMTP id 5b1f17b1804b1-44b85b0c213mr183645e9.4.1747953024675;
-        Thu, 22 May 2025 15:30:24 -0700 (PDT)
-Received: from localhost ([2a00:79e0:9d:4:1657:8509:a8cc:c0f0])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3a35ca62b47sm24897561f8f.58.2025.05.22.15.30.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 May 2025 15:30:24 -0700 (PDT)
-From: Jann Horn <jannh@google.com>
-Date: Fri, 23 May 2025 00:30:17 +0200
-Subject: [PATCH] mmu_notifiers: remove leftover stub macros
+	dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b="ZO0mvMwz"
+Received: from mailtransmit03.runbox ([10.9.9.163] helo=aibo.runbox.com)
+	by mailtransmit04.runbox.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.93)
+	(envelope-from <mhal@rbox.co>)
+	id 1uIERp-007GYa-EV; Fri, 23 May 2025 00:31:33 +0200
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=rbox.co;
+	s=selector2; h=Cc:To:Message-Id:Content-Transfer-Encoding:Content-Type:
+	MIME-Version:Subject:Date:From;
+	bh=EqLCIP2omh6G05kQeDPe8g5jcYP+8sXBvbnmWmz/eKA=; b=ZO0mvMwzf6cpPVbJ7klvJhME+G
+	qkbvz3mX51sog5NtzgjOiNXZOqq9QpqF8IANczk9bwo2W+Bq5YUG9MgPPuWwlgXNwTTu3WbloOrRU
+	D9V3xTVbAwy9IoIJq07A3Ycp4sh8c5PccgalCPYNlBJF9Vi0UN5vASYjfUVbsPWR2AlOq0Eyaezf4
+	+YipfIBL1xTWSFs2bnIhxOaUN4vgGhZ2H8qoouAQ0DsewKpra1CW3ZRs41nf9kjdsX7N92iBGO3hv
+	UOb8gvyu/cYIUT9kQP0QruxsZpXGL0EFp8v7csdCqLroeHtXmKg5ohiuKZewdCZ/Q3VSZNYztNuPA
+	ozlAPy8g==;
+Received: from [10.9.9.74] (helo=submission03.runbox)
+	by mailtransmit03.runbox with esmtp (Exim 4.86_2)
+	(envelope-from <mhal@rbox.co>)
+	id 1uIERm-0007Fn-UN; Fri, 23 May 2025 00:31:33 +0200
+Received: by submission03.runbox with esmtpsa  [Authenticated ID (604044)]  (TLS1.2:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.93)
+	id 1uIERj-0096Ef-7A; Fri, 23 May 2025 00:31:27 +0200
+From: Michal Luczaj <mhal@rbox.co>
+Date: Fri, 23 May 2025 00:31:16 +0200
+Subject: [PATCH net-next] vsock/test: Cover more CIDs in transport_uaf test
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,53 +47,214 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250523-mmu-notifier-cleanup-unused-v1-1-cc1f47ebec33@google.com>
-X-B4-Tracking: v=1; b=H4sIAHilL2gC/x3MQQqEMAwAwK9IzgZqil3xK+Kh1Lgb0CitFUH8u
- 2WPc5kbEkfhBH11Q+RTkmxa0NQVhJ/XL6NMxUCGWtOSxXXNqNshs3DEsLDXvGPWnHhCst3HkTX
- knYMy7JFnuf77MD7PC3V/MJ1tAAAA
-X-Change-ID: 20250523-mmu-notifier-cleanup-unused-238762302a66
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Alistair Popple <apopple@nvidia.com>, linux-mm@kvack.org, 
- linux-kernel@vger.kernel.org, Jason Gunthorpe <jgg@ziepe.ca>, 
- Jann Horn <jannh@google.com>
-X-Mailer: b4 0.15-dev
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1747953020; l=1255;
- i=jannh@google.com; s=20240730; h=from:subject:message-id;
- bh=an8fPGi94bYvyE1y8p6iS9mxJmsi4pDjOvkbFbfR8xI=;
- b=MS7DKpAJw5VzTdQyEoZXdreu+InUoIPHOYT+zVwwwU74tLxnVo9CLnmoQmzLwekovU8qtXfdf
- WCADs9xs0NLDfJlkCNy4kinLw/hOinwP3T21nsfzrWbYvd7zBmPqrmg
-X-Developer-Key: i=jannh@google.com; a=ed25519;
- pk=AljNtGOzXeF6khBXDJVVvwSEkVDGnnZZYqfWhP1V+C8=
+Message-Id: <20250523-vsock-test-inc-cov-v1-1-fa3507941bbd@rbox.co>
+X-B4-Tracking: v=1; b=H4sIALOlL2gC/x3MwQqDMAyA4VeRnA1oilvxVYYHW7MtDNLRlCKI7
+ 27x+B3+/wDjLGwwdwdkrmKStGHsO4jfVT+MsjUDDTQNjh5YLcUfFraCohFjqhg8OU8UtvD00MJ
+ /5rfs9/QFygWV9wLLeV7XPjrtbgAAAA==
+X-Change-ID: 20250326-vsock-test-inc-cov-b823822bdb78
+To: Stefano Garzarella <sgarzare@redhat.com>
+Cc: virtualization@lists.linux.dev, netdev@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Michal Luczaj <mhal@rbox.co>
+X-Mailer: b4 0.14.2
 
-Commit ec8832d007cb ("mmu_notifiers: don't invalidate secondary TLBs as
-part of mmu_notifier_invalidate_range_end()") removed the main definitions
-of {ptep,pmdp_huge,pudp_huge}_clear_flush_notify; just their
-!CONFIG_MMU_NOTIFIER stubs are left behind, remove them.
+Increase the coverage of test for UAF due to socket unbinding, and losing
+transport in general. It's a follow up to commit 301a62dfb0d0 ("vsock/test:
+Add test for UAF due to socket unbinding") and discussion in [1].
 
-Signed-off-by: Jann Horn <jannh@google.com>
+The idea remains the same: take an unconnected stream socket with a
+transport assigned and then attempt to switch the transport by trying (and
+failing) to connect to some other CID. Now do this iterating over all the
+well known CIDs (plus one).
+
+Note that having only a virtio transport loaded (without vhost_vsock) is
+unsupported; test will always pass. Depending on transports available, a
+variety of splats are possible on unpatched machines. After reverting
+commit fcdd2242c023 ("vsock: Keep the binding until socket destruction"):
+
+BUG: KASAN: slab-use-after-free in __vsock_bind+0x61f/0x720
+Read of size 4 at addr ffff88811ff46b54 by task vsock_test/1475
+Call Trace:
+ dump_stack_lvl+0x68/0x90
+ print_report+0x170/0x53d
+ kasan_report+0xc2/0x180
+ __vsock_bind+0x61f/0x720
+ vsock_connect+0x727/0xc40
+ __sys_connect+0xe8/0x100
+ __x64_sys_connect+0x6e/0xc0
+ do_syscall_64+0x92/0x1c0
+ entry_SYSCALL_64_after_hwframe+0x4b/0x53
+
+WARNING: CPU: 0 PID: 1475 at net/vmw_vsock/virtio_transport_common.c:37 virtio_transport_send_pkt_info+0xb2b/0x1160
+Call Trace:
+ virtio_transport_connect+0x90/0xb0
+ vsock_connect+0x782/0xc40
+ __sys_connect+0xe8/0x100
+ __x64_sys_connect+0x6e/0xc0
+ do_syscall_64+0x92/0x1c0
+ entry_SYSCALL_64_after_hwframe+0x4b/0x53
+
+KASAN: null-ptr-deref in range [0x0000000000000010-0x0000000000000017]
+RIP: 0010:sock_has_perm+0xa7/0x2a0
+Call Trace:
+ selinux_socket_connect_helper.isra.0+0xbc/0x450
+ selinux_socket_connect+0x3b/0x70
+ security_socket_connect+0x31/0xd0
+ __sys_connect_file+0x79/0x1f0
+ __sys_connect+0xe8/0x100
+ __x64_sys_connect+0x6e/0xc0
+ do_syscall_64+0x92/0x1c0
+ entry_SYSCALL_64_after_hwframe+0x4b/0x53
+
+refcount_t: addition on 0; use-after-free.
+WARNING: CPU: 7 PID: 1518 at lib/refcount.c:25 refcount_warn_saturate+0xdd/0x140
+RIP: 0010:refcount_warn_saturate+0xdd/0x140
+Call Trace:
+ __vsock_bind+0x65e/0x720
+ vsock_connect+0x727/0xc40
+ __sys_connect+0xe8/0x100
+ __x64_sys_connect+0x6e/0xc0
+ do_syscall_64+0x92/0x1c0
+ entry_SYSCALL_64_after_hwframe+0x4b/0x53
+
+refcount_t: underflow; use-after-free.
+WARNING: CPU: 0 PID: 1475 at lib/refcount.c:28 refcount_warn_saturate+0x12b/0x140
+RIP: 0010:refcount_warn_saturate+0x12b/0x140
+Call Trace:
+ vsock_remove_bound+0x18f/0x280
+ __vsock_release+0x371/0x480
+ vsock_release+0x88/0x120
+ __sock_release+0xaa/0x260
+ sock_close+0x14/0x20
+ __fput+0x35a/0xaa0
+ task_work_run+0xff/0x1c0
+ do_exit+0x849/0x24c0
+ make_task_dead+0xf3/0x110
+ rewind_stack_and_make_dead+0x16/0x20
+
+[1]: https://lore.kernel.org/netdev/CAGxU2F5zhfWymY8u0hrKksW8PumXAYz-9_qRmW==92oAx1BX3g@mail.gmail.com/
+
+Suggested-by: Stefano Garzarella <sgarzare@redhat.com>
+Signed-off-by: Michal Luczaj <mhal@rbox.co>
 ---
- include/linux/mmu_notifier.h | 3 ---
- 1 file changed, 3 deletions(-)
+ tools/testing/vsock/vsock_test.c | 72 +++++++++++++++++++++++++++++++---------
+ 1 file changed, 57 insertions(+), 15 deletions(-)
 
-diff --git a/include/linux/mmu_notifier.h b/include/linux/mmu_notifier.h
-index bc2402a45741..d1094c2d5fb6 100644
---- a/include/linux/mmu_notifier.h
-+++ b/include/linux/mmu_notifier.h
-@@ -654,9 +654,6 @@ static inline void mmu_notifier_subscriptions_destroy(struct mm_struct *mm)
- #define pmdp_clear_flush_young_notify pmdp_clear_flush_young
- #define ptep_clear_young_notify ptep_test_and_clear_young
- #define pmdp_clear_young_notify pmdp_test_and_clear_young
--#define	ptep_clear_flush_notify ptep_clear_flush
--#define pmdp_huge_clear_flush_notify pmdp_huge_clear_flush
--#define pudp_huge_clear_flush_notify pudp_huge_clear_flush
+diff --git a/tools/testing/vsock/vsock_test.c b/tools/testing/vsock/vsock_test.c
+index 9ea33b78b9fcb532f4f9616b38b4d2b627b04d31..460a8838e5e6a0f155e66e7720358208bab9520f 100644
+--- a/tools/testing/vsock/vsock_test.c
++++ b/tools/testing/vsock/vsock_test.c
+@@ -1729,16 +1729,32 @@ static void test_stream_msgzcopy_leak_zcskb_server(const struct test_opts *opts)
  
- static inline void mmu_notifier_synchronize(void)
+ #define MAX_PORT_RETRIES	24	/* net/vmw_vsock/af_vsock.c */
+ 
+-/* Test attempts to trigger a transport release for an unbound socket. This can
+- * lead to a reference count mishandling.
+- */
+-static void test_stream_transport_uaf_client(const struct test_opts *opts)
++static bool test_stream_transport_uaf(int cid)
  {
++	struct sockaddr_vm addr = {
++		.svm_family = AF_VSOCK,
++		.svm_cid = cid,
++		.svm_port = VMADDR_PORT_ANY
++	};
+ 	int sockets[MAX_PORT_RETRIES];
+-	struct sockaddr_vm addr;
+-	int fd, i, alen;
++	socklen_t alen;
++	int fd, i, c;
+ 
+-	fd = vsock_bind(VMADDR_CID_ANY, VMADDR_PORT_ANY, SOCK_STREAM);
++	fd = socket(AF_VSOCK, SOCK_STREAM, 0);
++	if (fd < 0) {
++		perror("socket");
++		exit(EXIT_FAILURE);
++	}
++
++	if (bind(fd, (struct sockaddr *)&addr, sizeof(addr))) {
++		if (errno != EADDRNOTAVAIL) {
++			perror("Unexpected bind() errno");
++			exit(EXIT_FAILURE);
++		}
++
++		close(fd);
++		return false;
++	}
+ 
+ 	alen = sizeof(addr);
+ 	if (getsockname(fd, (struct sockaddr *)&addr, &alen)) {
+@@ -1746,9 +1762,9 @@ static void test_stream_transport_uaf_client(const struct test_opts *opts)
+ 		exit(EXIT_FAILURE);
+ 	}
+ 
++	/* Drain the autobind pool; see __vsock_bind_connectible(). */
+ 	for (i = 0; i < MAX_PORT_RETRIES; ++i)
+-		sockets[i] = vsock_bind(VMADDR_CID_ANY, ++addr.svm_port,
+-					SOCK_STREAM);
++		sockets[i] = vsock_bind(cid, ++addr.svm_port, SOCK_STREAM);
+ 
+ 	close(fd);
+ 	fd = socket(AF_VSOCK, SOCK_STREAM, 0);
+@@ -1757,21 +1773,47 @@ static void test_stream_transport_uaf_client(const struct test_opts *opts)
+ 		exit(EXIT_FAILURE);
+ 	}
+ 
+-	if (!vsock_connect_fd(fd, addr.svm_cid, addr.svm_port)) {
+-		perror("Unexpected connect() #1 success");
++	/* Assign transport, while failing to autobind.
++	 * ENODEV indicates a missing transport.
++	 */
++	errno = 0;
++	if (!vsock_connect_fd(fd, cid, VMADDR_PORT_ANY) ||
++	    errno != EADDRNOTAVAIL) {
++		perror("Unexpected connect() result");
+ 		exit(EXIT_FAILURE);
+ 	}
+ 
+-	/* Vulnerable system may crash now. */
+-	if (!vsock_connect_fd(fd, VMADDR_CID_HOST, VMADDR_PORT_ANY)) {
+-		perror("Unexpected connect() #2 success");
+-		exit(EXIT_FAILURE);
++	/* Reassign transport, triggering old transport release and
++	 * (potentially) unbinding of an unbound socket.
++	 *
++	 * Vulnerable system may crash now.
++	 */
++	for (c = VMADDR_CID_HYPERVISOR; c <= VMADDR_CID_HOST + 1; ++c) {
++		if (c != cid)
++			(void)vsock_connect_fd(fd, c, VMADDR_PORT_ANY);
+ 	}
+ 
+ 	close(fd);
+ 	while (i--)
+ 		close(sockets[i]);
+ 
++	return true;
++}
++
++/* Test attempts to trigger a transport release for an unbound socket. This can
++ * lead to a reference count mishandling.
++ */
++static void test_stream_transport_uaf_client(const struct test_opts *opts)
++{
++	bool tested = false;
++	int cid;
++
++	for (cid = VMADDR_CID_HYPERVISOR; cid <= VMADDR_CID_HOST + 1; ++cid)
++		tested |= test_stream_transport_uaf(cid);
++
++	if (!tested)
++		fprintf(stderr, "No transport tested\n");
++
+ 	control_writeln("DONE");
+ }
+ 
 
 ---
-base-commit: e85dea591fbf900330c796579314bfb7cc399d31
-change-id: 20250523-mmu-notifier-cleanup-unused-238762302a66
+base-commit: 610c248178b38fac2b601cd9f0f8a5e8be7fd248
+change-id: 20250326-vsock-test-inc-cov-b823822bdb78
 
+Best regards,
 -- 
-Jann Horn <jannh@google.com>
+Michal Luczaj <mhal@rbox.co>
 
