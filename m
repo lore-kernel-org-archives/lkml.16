@@ -1,105 +1,131 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E51C27715;
-	Thu, 22 May 2025 19:37:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8ED8D27715
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 19:38:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747942652; cv=none; b=Q+y6XJReIlz21NAHhvwTfzybWs1Fw+EOlqEDD3yz9dOiwAmiIJztQwO2kn0kRcDILrZD4WitIRlEWgF/ZYBOuNQoGJqt4TFpfefcM66G2I4WhuDIAawCEINd7nwB7KbNFau3YthjR819MR5sx7XH52IpQsXMcgHr915xMpbp/zI=
+	t=1747942706; cv=none; b=I+j1dsTTMMs6TgAo+DcQyYZTlJUWckumKxiQy1mIUgLxjlzAD79BvpS4XMZ0JnPjpNIi3bI7oo4mB2x018WLsFgD/aPz3iyZ1j3ZxCo8t7ivd7NFnAZQ0/x9fvH3XD82GrJz1QKSUzNoK70zg5yXsOSmEu2xXGXCTzdksNJ7cI8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747942652; c=relaxed/simple;
-	bh=tQhN0Wlq5U9IF4ibaFAIEumKywaW+1/Fd4rXq0uGPyE=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=ldQuJ+g3MboGZSXRoUgmkyDb6zze3AatLuN4Bc+XlE6I0GU02Jub0WQfypkIgJZ32RXzK+F36xrQoiIeulezS+ZhDRjfAnMNbuDnFV7wwaDgxmQWN/kVsC3peHCxj5leJS9Kbu/+MarkGpMpYaHKEQ+YM4yeraVMr3L1g/bH8Bw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gwgLfahV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747942706; c=relaxed/simple;
+	bh=q7mqLfjENNgNP706ckkvIptpsi1F/7KGa9dgbFNqNAQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Vta3V/8TqZLSlLKwZG/T+GRx7frskwjThzFpZYf+78MEPnV9/m3Zd+QDiAMf1OPHZCBlIHmLSudEa6f1PF0grDQ17qdU82OqI+EYp8zcNyFRgbhjfByG6n0Bn1eSGxM8cDjMykUG5fVGERvsb6nKdBvXxX3cGFpbM7H52aIquus=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=Yl7DB/jz; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gwgLfahV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3DB70C4CEE4;
-	Thu, 22 May 2025 19:37:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747942651;
-	bh=tQhN0Wlq5U9IF4ibaFAIEumKywaW+1/Fd4rXq0uGPyE=;
-	h=From:Date:Subject:To:Cc:From;
-	b=gwgLfahV58B4AzMYeRQT00MdJCQ4kQgITPco0s364G9AMSF0yvSgrSsQicWHGo84I
-	 pdAQvGu1q6C7WpV7IjOP681misukPx8REhl2YJp3jjKzAB6ed2CtsnbO6zmlG5uONT
-	 jyLXZ5ChP0AslRvlyfv1+GNukXDkB4w6P4pc6Mf5o0V6jOGlF0pyhzmqdEDmNQd2aD
-	 YEsXvVBcwAdxiBLNws0kl5mdiDs9XcysOGQj7ADagvtfg0rB0bcdP0n0BZpeFYNGiI
-	 bM6M8iGPSnwgBQvvQ4iSf33abzrErAy2j1+5Vv1kh8fQo/eqzBnmlR8QuLfIG2waPB
-	 ClBYXjQwvVy2Q==
-From: Konrad Dybcio <konradybcio@kernel.org>
-Date: Thu, 22 May 2025 21:37:22 +0200
-Subject: [PATCH] media: qcom: camss: Fix SM8250 IFE0/1 max clock rate
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="Yl7DB/jz"
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54MFVr9H020601
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 19:38:24 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	nSVLbWs9WEhXD8F0quIy3d6Y384Oh4iaFb1o02G72Cc=; b=Yl7DB/jz0EzwSBp1
+	LqD9BO8Gf8Oe41PkxdLkvnWz71ywYoNrRJByZVuwQCZpbI0SCe+QXfnte0oFdzCy
+	LQ6Rv71FcJuZwHVsdCkcBCOwnM6JXUUWn2sInzckyHhlm7Cx5LB4ZiXhwBkDX+Bx
+	30dEFEjYktbBvPTDDAQSD/RJLmgR6LMgb0pT5SbEj5H41jadXGLJPl7FwAxwSPKj
+	dnV1tAoYU/R3iL9/bSzpLBQ9DuzkzgnzOT6ihjsklgxWs/xv6Vd12vygPyRu35Rn
+	0kVz7H2QAUGTs/NQJ3e3G3Ra52P1czVLB5TI4WO1tBqWaGdchtxoT3NxYGMWl/o9
+	6JF+9A==
+Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46s9pb5xg9-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 19:38:23 +0000 (GMT)
+Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-7c552802e9fso205804885a.0
+        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 12:38:23 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747942702; x=1748547502;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=nSVLbWs9WEhXD8F0quIy3d6Y384Oh4iaFb1o02G72Cc=;
+        b=Tu09dDBbOvOA6XUOcpGjxYsZfW++TKAlb6MoqVas/fcPzKqe/nW12yMNlVvXT0XijS
+         +3Gh+USHtF6dMbEQ/NhBjCPIwCUQzVyhRrzYmCTo5V+4Q6QaEm+GasxNq4wT4G+tEQX5
+         XmJkTC9g24Yi352zDft83TNyHM/0Vci8xg5eolhHkhufg+XGC3CxB59VrYbjIvoNXZik
+         Ths1k0ljVQ4KyfpAV7uwKcNW7sc2YeBWATWoQJ7GbhaiIVPjiapa82B7imR8Kfri107f
+         eJh+k+f2X+r913Dc1yA9saOcDTEkSstipXOtCEeiHEzZTr7MKv6r3apwkyraYlBBL0KI
+         6VZA==
+X-Forwarded-Encrypted: i=1; AJvYcCWj3JIvRubaofugo6Eu7u9Oyjrb4Av3fBCXxil4oMEptEFn3tE6axK0nT8Wi9hFI04f+luXJUENSOkhApM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyLzZCtlbTk/WL9ZjhgKOgEmOs2EX40dMHUgBxTIYWllnzBGgrd
+	94ypMsINfQISE9Fc1sMxPuyuPtFK7LfnaE8nMWws1JEY2+HTtVI9e7en0PhQg/whXafx/2UvYqN
+	41uKTHLuQ21d2oGLFFw2mnaM3poO9i6h5tvNQuJsRsTluPGz4xMPcMNdE6JQ3Lk3haxI=
+X-Gm-Gg: ASbGncsMSzAHo/oMspOiRC68fEGc7KfJ7OaQ0N/ytC4+Tltetqul8MtCUvppSob0owq
+	2YiDgV8/wwkodSVhQDc3QcdA5SO8gQPazhFbLwdBkYwNH9GcevrXG3OURAmlkDv5smXDI1Vt0fm
+	uTGVkQuAFmiN1+tFE8BjALHY/9Yl8E/Z4+Lh+qOoLKilrdFIafcW1iXwDiong9snczxIVa6sjU3
+	ZIk2+UrI79C7kTXOYqvTmZbJ894anviqRJMPfpaGgxujBfZt/ejwKiW/GnLoMFkScUPm4MKn6+1
+	mLDvujod6QE8ItVV73NYN9Cbdbe2gBJmJF44vgxeIKaBcR7DRFXk3tJJUwbyfl/8uA==
+X-Received: by 2002:a05:620a:8812:b0:7ca:d396:1460 with SMTP id af79cd13be357-7cd467aa279mr1659323085a.14.1747942702229;
+        Thu, 22 May 2025 12:38:22 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IF1KQbgFQvKgKzZOxfQl4P+o0nz/PMO7DCB/IkhNmAwt/2Mx+vUW+hul4ymo+fK/nT3VCXeEQ==
+X-Received: by 2002:a05:620a:8812:b0:7ca:d396:1460 with SMTP id af79cd13be357-7cd467aa279mr1659320485a.14.1747942701886;
+        Thu, 22 May 2025 12:38:21 -0700 (PDT)
+Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad52d278290sm1112380366b.78.2025.05.22.12.38.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 22 May 2025 12:38:21 -0700 (PDT)
+Message-ID: <be9a5e0a-1314-44ba-a8d0-f1071138c86b@oss.qualcomm.com>
+Date: Thu, 22 May 2025 21:38:18 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250522-topic-8250_camss_ifeclkfix-v1-1-349350d31238@oss.qualcomm.com>
-X-B4-Tracking: v=1; b=H4sIAPF8L2gC/x3MSwqAMAwA0atI1hZqoCheRUS0phr80ogIxbsbX
- L5ZTAKhyCRQZwki3Sx87Ioiz8DP/T6R4VENaNFZh2iu42RvKlXn+02k40B+XQI/hgYsSxxD4dC
- CDs5Imv95077vB5jB3w1sAAAA
-X-Change-ID: 20250522-topic-8250_camss_ifeclkfix-eb2772df1520
-To: Robert Foss <rfoss@kernel.org>, Todor Tomov <todor.too@gmail.com>, 
- Bryan O'Donoghue <bryan.odonoghue@linaro.org>, 
- Mauro Carvalho Chehab <mchehab@kernel.org>, 
- Hans Verkuil <hverkuil@xs4all.nl>, Jonathan Marek <jonathan@marek.ca>, 
- Julian Grahsl <jgrahsl@snap.com>
-Cc: Marijn Suijten <marijn.suijten@somainline.org>, 
- linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
- linux-kernel@vger.kernel.org, 
- Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1747942648; l=1524;
- i=konrad.dybcio@oss.qualcomm.com; s=20230215; h=from:subject:message-id;
- bh=+rl9kXV8XXJloQWBKyExK8MuwgoAL3jm+NqlxZwlAKI=;
- b=vd25Z5v/JH/GX4uuQKhTFyUS7UNKO6DGywicc1jZu7gHG6X/ObK0uWNWG3+T0Zom1iKs8hMe2
- M8siK1x0R1XBUjN8sTR4ovfdapdZyu49A7sgplg0DV102B02XPoP7L6
-X-Developer-Key: i=konrad.dybcio@oss.qualcomm.com; a=ed25519;
- pk=iclgkYvtl2w05SSXO5EjjSYlhFKsJ+5OSZBjOkQuEms=
-
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] media: qcom: camss: Fix SM8250 IFE0/1 max clock rate
+To: Konrad Dybcio <konradybcio@kernel.org>, Robert Foss <rfoss@kernel.org>,
+        Todor Tomov <todor.too@gmail.com>,
+        Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil
+ <hverkuil@xs4all.nl>, Jonathan Marek <jonathan@marek.ca>,
+        Julian Grahsl <jgrahsl@snap.com>
+Cc: Marijn Suijten <marijn.suijten@somainline.org>,
+        linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Jordan Crouse <jordan@cosmicpenguin.net>
+References: <20250522-topic-8250_camss_ifeclkfix-v1-1-349350d31238@oss.qualcomm.com>
+Content-Language: en-US
 From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <20250522-topic-8250_camss_ifeclkfix-v1-1-349350d31238@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Authority-Analysis: v=2.4 cv=WJl/XmsR c=1 sm=1 tr=0 ts=682f7d2f cx=c_pps
+ a=hnmNkyzTK/kJ09Xio7VxxA==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
+ a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=EUspDBNiAAAA:8 a=MmXTpdYTAAAA:8
+ a=TH8GZ54sAHZQbr7yu8oA:9 a=QEXdDO2ut3YA:10 a=PEH46H7Ffwr30OY-TuGO:22
+ a=7hoCnnChfAR1N-e-f1W3:22
+X-Proofpoint-ORIG-GUID: kuYi-oqWkyI5dS9POIa5a5QbW41HGRCn
+X-Proofpoint-GUID: kuYi-oqWkyI5dS9POIa5a5QbW41HGRCn
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIyMDE5NiBTYWx0ZWRfXw4TpIL4vp9Hn
+ c2psYM82+dpAU3OExMt84ta6/pGfwLFtBbMfYZ8P0tjVrW1LXj52+EWtcD+dCTg+u1VJZw5Q8or
+ EwbaU2qE0UBPxaisEhqq8VC4vjoKrYrEhgsGbSOB5+27oF+X5KYZqUeGMC7S2Kg1rrvNVn6Wd9G
+ KVOSptKFdhf2B2GCEgYC3m6b//8+ymrOneAaMBPEAcvxtSMvIVf1pycgbusosoVzyJV2FZObsGr
+ qHA57dS+JY4pK1RphID2gZvWNwTCRFokIx/v9UtGjqZg7kUK9jklFvXwslwM67xCXuxqPE6oBqB
+ 72KCxNfiB63PwvwEtDXYHYNjWR6KtsX7KMpShDj3dt5NCOtYGzz7L7kskafS+UAIw6I7MqsY836
+ YvPxGcSwolm8euphCoE9BY2TJBcRjUDbwCSLM8jo3KsVUd01+adzG/9Sy05RTBx6GGzfuciM
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-22_09,2025-05-22_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ spamscore=0 lowpriorityscore=0 clxscore=1015 suspectscore=0 bulkscore=0
+ malwarescore=0 impostorscore=0 mlxscore=0 adultscore=0 phishscore=0
+ mlxlogscore=999 priorityscore=1501 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505160000 definitions=main-2505220196
 
-720 MHz was used on the prototype revision (v1), use the 680 MHz that
-our clock driver expects.
+On 5/22/25 9:37 PM, Konrad Dybcio wrote:
+> From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+> 
+> 720 MHz was used on the prototype revision (v1), use the 680 MHz that
+> our clock driver expects.
+> 
+> Fixes: b4436a18eedb ("media: camss: add support for SM8250 camss")
+> Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+> ---
+> Jordan Crouse <jordan@cosmicpenguin.net>
 
-Fixes: b4436a18eedb ("media: camss: add support for SM8250 camss")
-Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
----
-Jordan Crouse <jordan@cosmicpenguin.net>
----
- drivers/media/platform/qcom/camss/camss.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+I meant to Cc him (re: irc discussion on #linux-msm).. oops!
 
-diff --git a/drivers/media/platform/qcom/camss/camss.c b/drivers/media/platform/qcom/camss/camss.c
-index 06f42875702f02f9d8d83d06ddaa972eacb593f8..4507131c651d392055d2f69c8ebcaf484c830c99 100644
---- a/drivers/media/platform/qcom/camss/camss.c
-+++ b/drivers/media/platform/qcom/camss/camss.c
-@@ -1355,7 +1355,7 @@ static const struct camss_subdev_resources vfe_res_8250[] = {
- 				{ 0 },
- 				{ 0 },
- 				{ 100000000, 200000000, 300000000, 400000000 },
--				{ 350000000, 475000000, 576000000, 720000000 },
-+				{ 350000000, 475000000, 576000000, 680000000 },
- 				{ 0 },
- 				{ 0 } },
- 		.reg = { "vfe0" },
-@@ -1381,7 +1381,7 @@ static const struct camss_subdev_resources vfe_res_8250[] = {
- 				{ 0 },
- 				{ 0 },
- 				{ 100000000, 200000000, 300000000, 400000000 },
--				{ 350000000, 475000000, 576000000, 720000000 },
-+				{ 350000000, 475000000, 576000000, 680000000 },
- 				{ 0 },
- 				{ 0 } },
- 		.reg = { "vfe1" },
-
----
-base-commit: 460178e842c7a1e48a06df684c66eb5fd630bcf7
-change-id: 20250522-topic-8250_camss_ifeclkfix-eb2772df1520
-
-Best regards,
--- 
-Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-
+Konrad
