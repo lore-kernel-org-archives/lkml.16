@@ -1,216 +1,203 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2076.outbound.protection.outlook.com [40.107.92.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9468E1DF965
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 12:04:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747915468; cv=none; b=ZU3ea3DM2Tldb6CZZ9Wv2raNeUftex55O4gplrwSQM4kdnGECSvsBUwGvI2TElc2H/YsdaI1MnDybLoB2fUS8IctdcYFWNpTzSRj9yhNcuQkz5eao7vZz4ehiWYYmFT59eRvtWSkRPBXPqLMKlkD/APyZqCDlBBrinbf+b5IETQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747915468; c=relaxed/simple;
-	bh=4wX/3Pa82sfG0nToWe9Rdgbq4x29T+ZV/w+SFWDYNZI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=o8mRT6FRjoD2BLM0B1quJkbclQsfcS+vidYSunx3EdxSK5vUc4FTALUkXrfvBHN3IaucSvXJ2Z+ueBdtM/Evj4obdpwlDrGVMEUQZlrg/XnDtnCRSvqPDeLOtBFqN4S+t6t2OCtJga7B0VDLD57neCUiEh6Rgm7ta7fM8yNfUFQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YPe3DAwi; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F2F433DB;
+	Thu, 22 May 2025 12:06:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.76
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747915577; cv=fail; b=avPnM2NIJAbEk+Hu3qG0DxXV0Kx64JrdWgQ13G45tLHYksC/GdTmBoighAsI93I1i6+IeY9nrwOX/Xnpaex6GlZJXvF4hMmhY87iD+Vk5GC2APf1AqLF50qHnqFu8mB+ncrTOxgi1bkwNAmU7USNAcMEghXnjcjsJS6nmRtzBl8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747915577; c=relaxed/simple;
+	bh=ZZ1Y+LQtMmwcRE5YOC8X39Y8+gLLim/DMOLYGnmrHjg=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=rYUzWbDy+nAcHjHw28wNGiAi3/vuygpvgKsbiPmXgx6CnA9O19DODYst0KOQVd58Ga3MoW+UKzFqDyduTC+NJVs76RiWyMVfApm+gQxFxFTqlTrNYvKz8XnnlYU8aSaT3SqY5Vpk/wZL/GHjoXxoQ3f1u2LtYYxHbl/u4IZaLH8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=cVyLveeb; arc=fail smtp.client-ip=40.107.92.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YPe3DAwi"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747915464;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=SE1l7LwOJdzhSNTpk1qJSyj60i+zwkLVGGrsHxlqMck=;
-	b=YPe3DAwigoGffLDS4GiL/TLKBfnhp/Yjde/tMppnZGAMT5XchVwQrYDGNsXjbTvBu5NeWG
-	sfOEXXCESEiKyN74G/TrFJPhbjVMrxg0cbwbFEKN79OK8oJtNFqflXr0T7i/1C0ymfUCTx
-	13wdN5/yUhvyDBeMbrPJjEsog48Qf/Y=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-498-UJd-vbWaO4Om9aelh8JJfQ-1; Thu, 22 May 2025 08:04:23 -0400
-X-MC-Unique: UJd-vbWaO4Om9aelh8JJfQ-1
-X-Mimecast-MFC-AGG-ID: UJd-vbWaO4Om9aelh8JJfQ_1747915462
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-442d472cf7fso61009755e9.3
-        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 05:04:23 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747915462; x=1748520262;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=SE1l7LwOJdzhSNTpk1qJSyj60i+zwkLVGGrsHxlqMck=;
-        b=qpl1HFFMupt5cBN6U20yLt2QQSe8uXYuLH1+ljhiOREFR8G0Gv3cdymHcNi96CqDFv
-         ZHNHSd9wR9fK3e9ORMwIlHGuEt9DBPVq8cRgfjWYRvpWRAoamX37ZwccSN9C/UoxUZzR
-         Nvk+qTl+uk2h10iopRFtgjLv8wuFRKQcCfPynqS9TCi2f4lBSe0MfKhmxwNksjuCh3Xs
-         s03MIs5G0ZGLAeY3A1jg6+uG0nAyU/tMepoWYFpu8Ju8YM5VaT4c63Xa/aQVayxVsy67
-         I5pJHK22ZWb8qG+iYUjbXvZsuVfjFu59eqqxOb6sOm35RAgFsgs2PvxlJOYJieBB28Js
-         dq8Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWXyqPQn4Bcb0c7GXnMHKDWlNpX0SSYfzIQDCDrjHXPMlNccM1Bx1huJ1FLx4LbeE57nx/O0caNdJfyE50=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywz8v4ipJH5O6DN+EygJRk01MoEjNz/J3WUpucBJs/VCXt4nOVI
-	4T4EYxbYnBf4Rs/Y8244xZfahS0Ny0iNczAm7myOTB0jbn/wnaXXMyF4FusiOzZ1sy04vLF9Q9s
-	W8sy6GU8TNCYHiVJR1VoRhca5R1slkjQZOyGCmo66RoQHoQVQnNjlG2pxr2PmzK0oWQ==
-X-Gm-Gg: ASbGncv+zFNpAbNbZcfnQhHABx6G7u4rvgl7NjinyS7H/3w2fpX3fgc13Rf+AM0u2k3
-	YIOCfC57DhoWZB1h60hBGLUNQlmDgIbFl54BflK+zBTGQ+4OKmt1jZ3blZKh1k28NG1LkhEXSbd
-	CGFiUWNMqfA0yD1QrHamiHg1g8JY2AzdWc0FV+1JdsIQW7TumLvXQnDtSPe26oldQensNqg4ZX3
-	1xXs4bXpZ38HX3maOzQAhZJ6gF+VjcCl6sHLmTpwJmLXw8j3dQeENq0666ipOhEUojBaUlv10Dz
-	VX8Bh8/lXvL8EM/mC55Z5sqbqDqUbHYl8lxwaulz4hQBaVXTdX0JPsNSKJMY8wIvbypRbvAU3Qs
-	bRz3BzUnfUVfuwYwhnJrhieonqlsil98QC0wABJk=
-X-Received: by 2002:a05:600c:6748:b0:442:e011:7eb with SMTP id 5b1f17b1804b1-442fd671befmr283747195e9.30.1747915461992;
-        Thu, 22 May 2025 05:04:21 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHBeNOf9p7XQMEo661VsP3lNb83xqKoazNsruCMHoqOB07PdLk122+DzoLdl3opzWhYkLxpDg==
-X-Received: by 2002:a05:600c:6748:b0:442:e011:7eb with SMTP id 5b1f17b1804b1-442fd671befmr283746665e9.30.1747915461561;
-        Thu, 22 May 2025 05:04:21 -0700 (PDT)
-Received: from ?IPV6:2003:d8:2f22:2e00:6e71:238a:de9f:e396? (p200300d82f222e006e71238ade9fe396.dip0.t-ipconnect.de. [2003:d8:2f22:2e00:6e71:238a:de9f:e396])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-447f24b6471sm103717145e9.24.2025.05.22.05.04.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 22 May 2025 05:04:21 -0700 (PDT)
-Message-ID: <6894a8b1-a1a7-4a35-8193-68df3340f0ad@redhat.com>
-Date: Thu, 22 May 2025 14:04:19 +0200
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="cVyLveeb"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=WBWcXReSGxokMawDNRJ7RvcOFqK/6nOB0f3Ub86/cTK65+n9pcdfzb8ifvhbmvvId1i7NhLdRRzi3JWeJYxwaZ8KaOYv7VenHuM4r6LiG3H8OGzLypILR4HD3FlnOQna9TZCwVfWw5Ke/Q/ie9SJKxqs0Dw1K13YhY1DBGd0pv05X5EAbe6cNjYF2nkAFlMUsRZkPEUtWBw2l539OIOVaSsonwOMtXKmu4aGdN1wgPgw+JDQHCQTlJBHO4nYD4p5gRStoLAWx7y2ZpSHaJdfwZYiQERIwAJqgkxd0QIOxUDD2cS5TRmXXnYEYvD7EErKAcM+2+TC+ArYXyr218vU5w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=1vw8V+WllNfpKnQS8hsDnauAE2OG/zRh+5luxeOQuvs=;
+ b=EFVclOHAemm8Q/MCnphOxd4YqdSJDZB1yTNXQpV77pKyea+8oqC58IDu2H0yOGYqclkOTmew8xEyeH0sijIzkB8IaddvZjFyVfw0PlOMQ0TYm7QCODyr7zRP63bjXmwYH/ygwD1fBCag2RJqNryn+37lL01n0QqoltI1aedjLip6bNqb6IfgT6fHHrRJ8FtLBimLjzegAim9beHYNxofb0OnLKV59a4QhmuJdoSz+bbSWxiCngeZJZ8oi1n4cLbFq+C2p6BEJCg4wsm9Wlit3oESc8QEDxK1yZbvfpOndPq3nmT/VsYc109lxBUqUCdHVPM2Mj4fRuJajOo4Yz3DFQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1vw8V+WllNfpKnQS8hsDnauAE2OG/zRh+5luxeOQuvs=;
+ b=cVyLveebGP/hAwOXNOXpKrdJwuqvuLMJaIYanYOT/WBs8T9Sp7Uvy3nZppMWGclFND5VDFqZuUO+elS9/tssqazcXFpdJfT8x/uhEuNPdTfqsyE5FzJ17H6hHhRaZ2HoKvuFHasyCgt+bFndZHBLynF4U50Ho4+bB896mSbzpS4=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from PH7PR12MB5685.namprd12.prod.outlook.com (2603:10b6:510:13c::22)
+ by CY8PR12MB8213.namprd12.prod.outlook.com (2603:10b6:930:71::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.20; Thu, 22 May
+ 2025 12:06:11 +0000
+Received: from PH7PR12MB5685.namprd12.prod.outlook.com
+ ([fe80::46fb:96f2:7667:7ca5]) by PH7PR12MB5685.namprd12.prod.outlook.com
+ ([fe80::46fb:96f2:7667:7ca5%7]) with mapi id 15.20.8722.031; Thu, 22 May 2025
+ 12:06:11 +0000
+Message-ID: <af03b541-0b69-4b3d-b498-b68e0beb3dcb@amd.com>
+Date: Thu, 22 May 2025 14:06:05 +0200
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] drm/nouveau: Don't signal when killing the fence
+ context
+To: Philipp Stanner <phasta@kernel.org>, Lyude Paul <lyude@redhat.com>,
+ Danilo Krummrich <dakr@kernel.org>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>, Sumit Semwal <sumit.semwal@linaro.org>
+Cc: dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org, linux-media@vger.kernel.org
+References: <20250522112540.161411-2-phasta@kernel.org>
+ <20250522112540.161411-3-phasta@kernel.org>
+Content-Language: en-US
+From: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
+In-Reply-To: <20250522112540.161411-3-phasta@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: MN2PR01CA0064.prod.exchangelabs.com (2603:10b6:208:23f::33)
+ To PH7PR12MB5685.namprd12.prod.outlook.com (2603:10b6:510:13c::22)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC v2 0/2] add THP_HUGE_ZERO_PAGE_ALWAYS config option
-To: "Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>,
- Mike Rapoport <rppt@kernel.org>
-Cc: Pankaj Raghav <p.raghav@samsung.com>,
- Suren Baghdasaryan <surenb@google.com>, Vlastimil Babka <vbabka@suse.cz>,
- Ryan Roberts <ryan.roberts@arm.com>, Michal Hocko <mhocko@suse.com>,
- Thomas Gleixner <tglx@linutronix.de>, Nico Pache <npache@redhat.com>,
- Dev Jain <dev.jain@arm.com>, Baolin Wang <baolin.wang@linux.alibaba.com>,
- Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>,
- "H . Peter Anvin" <hpa@zytor.com>, Zi Yan <ziy@nvidia.com>,
- Dave Hansen <dave.hansen@linux.intel.com>,
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- "Liam R . Howlett" <Liam.Howlett@oracle.com>, Jens Axboe <axboe@kernel.dk>,
- linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- "Darrick J . Wong" <djwong@kernel.org>, gost.dev@samsung.com, hch@lst.de,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org, willy@infradead.org,
- x86@kernel.org, mcgrof@kernel.org
-References: <20250522090243.758943-1-p.raghav@samsung.com>
- <aC8LGDwJXvlDl866@kernel.org>
- <6lhepdol4nlnht7elb7jx7ot5hhckiegyyl6zeap2hmltdwb5t@ywsaklwnakuh>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <6lhepdol4nlnht7elb7jx7ot5hhckiegyyl6zeap2hmltdwb5t@ywsaklwnakuh>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR12MB5685:EE_|CY8PR12MB8213:EE_
+X-MS-Office365-Filtering-Correlation-Id: 0dff931e-5302-4ea6-bf82-08dd99290ab4
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|366016|376014|7416014|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?WXdkeUgrV2pGdWNmY2x4cXZTTGVuTlhoK0lITTBCVGhmL2d2K0RoN1BJUHFs?=
+ =?utf-8?B?T2ZRRndlM3U5blpmYjZocThXSGo0VWZINkJ6bjVJVzFqNWM0RW1JSUt3aXBo?=
+ =?utf-8?B?R2M4WEs5UFpTUGgwTmJiU2lXYUpFWHJKT3lneU9YYkdaWU1BVG9VU2UxNnIx?=
+ =?utf-8?B?Ymh5SStHclNLOHloRWQyaUphUnpVVjZDaW5xRjdzRnduRmZFdlhjQmNsaGpk?=
+ =?utf-8?B?ek5jcUNSZFNBUEk0UU9td0tsQTFOblN6WjF3RndEWHkrdkNMYzBRV2lCTXZa?=
+ =?utf-8?B?ck1nSllYVzN3RHBXZEpXeHNqTFNLOUljNy9GQVpFQ1VWaHIxTWQxeWdlWVo4?=
+ =?utf-8?B?SUU2Umt3ekVQaE45b2k4ZzU4NVhYTUF6ZW5mQ2xKajNIQkJ5bkovaG91Lyta?=
+ =?utf-8?B?SzlYU2Q0NGtxMmczUU8waFhHVFVMRXFnN3paQ3NqY3RVVWI2UlVzdWUyWk84?=
+ =?utf-8?B?OVJiam9zbVJrYlJ2OFlYRG80dkxKNmpkNXRkSTR6SEtYU3ZZc2hvbEFDMjBt?=
+ =?utf-8?B?RzhHWjBOZzByek9VM3I3OGVZdm5jeHA2NUpIR0RYbnJ6cGpVbWRvV1czQ3R1?=
+ =?utf-8?B?QUMyYm5HTGNOMi9tejk0UG44cE1KaWN3RlFiWGtqY25BZW4vSWhoMEN0U1hO?=
+ =?utf-8?B?M25BOXAvSURreGJFbzV0N00vL3lSV0JkY0ZtZUU4U3dLNmRKeXk1WElaYmF6?=
+ =?utf-8?B?SHIyRlI2TFBSUWJwMEhSS0U3anRlblNVaGZwOTdRNnl6RHdTY2pUdklGMnVy?=
+ =?utf-8?B?c3FXK1VrcDdwUnRwTklOR0d1Vmt0dUdhZXhzYzBnaGtUSEI4b1p4U1Z4VVRB?=
+ =?utf-8?B?RXRTWDcvVTBsTFJvR1V6RWdoaWFtYWdCcmlkSmFRQUYxSEMzV1Z5L2Ryd3E2?=
+ =?utf-8?B?K0owR05zcVVwY1NtWXZxMFBRWTdKemwzTUVlK203OWtNamtMOCs4QXJnYlVs?=
+ =?utf-8?B?TmRndnJVVnpraTFRTExlMEhWamR0RGtYeEJKaTRkZ1hMYmlsMnpKejVDb0gv?=
+ =?utf-8?B?ano3L09wSVpsMmhYNmhtR1EvVkJWRDIwM0RMcEFFZyt1ZzlxLy8reXluWHk2?=
+ =?utf-8?B?SHRYcURxeU50WmdGN09CeU5HbWtWU0VvT1VqZlRmV0p3NHZnTWlmYm1MdUJF?=
+ =?utf-8?B?anpLUVNETUEwTS8zMlBCYkdZVXN5a2Q0d1F5UjdVVUJiMUE5K0ZGeFJVYklW?=
+ =?utf-8?B?UmpFMFpBQ2JxaXhqM3FxcjFoRm5VWitzZ2NhMEdJVkZzbUpxYTF1all5OFV6?=
+ =?utf-8?B?SmJKaE1MeEIwVTcweEpkVDVrNUpFK0tQZUlwRHJOT0h2SUNFbStydTVWeVNX?=
+ =?utf-8?B?cW45dzZ6WEtVOUJFTSs2MEtud2RycWIrazlwR2h3V2VncTkxaSt0S1N0YUZT?=
+ =?utf-8?B?dk9MUUJnUGJMN3dxL1Y4QUlNMUdGdDBjSlBTZG1GWWdheGFIUXRXeVV3NXE4?=
+ =?utf-8?B?TFplWGU4NmVEcXBEUkkybFdUcEMwVitjUHY2NFZDc2lBK3FGSEFvbFZGT0Ex?=
+ =?utf-8?B?aXIwQXNWZ0FnZHB0M0JjREpWRTcrL1NhYmVwb3dkamRQV0I2SVF1VWVtMGV6?=
+ =?utf-8?B?eXVrWnE2TjZYeFIzTHF4eGtYcTdsdGluSDRSZkw2cmt6WStIRkpJZlZSbG5o?=
+ =?utf-8?B?SmdaVXhCQU1KaWJqZ0NqR0cyNlRWMVQrSEc0RzZEeW1DWFk3b1hFZitrMW92?=
+ =?utf-8?B?SVFEcTM4SzFDRDkxTURPamc2ck5EcE51cEVvaVB2bVFGUDd5NFhrZDB6STJq?=
+ =?utf-8?B?OGVURnBSdkhwVzVMV1pWemlVRThzVFE1Zk9tWHNSOTRNRDY5RjM1dUFQWmtN?=
+ =?utf-8?B?aVZNU3cwaklUVVdDSVc5NFNxczg0YTJ5SEFzWVJsZkptOUtkVDgyRDJZb3Rj?=
+ =?utf-8?B?ZU9Calh4aVdqYW5GUjdTVVBqTENRZ2txakFKSVJ2Qmh3OUphVXp6SlhOVXdI?=
+ =?utf-8?Q?FWWo/nGrwfQ=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5685.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?dXlvZWQwem0yYVBvOW5EWDBCQUtDeGl3SWJrWlhEKzJoZnJtNVpFRDFGMkJB?=
+ =?utf-8?B?QWd5RjZhTDFEQlZ2SXQzdmxqdjdMNHB0TEtJalpqcExLSkR0OWdRZzhNbDZy?=
+ =?utf-8?B?NG0rTTFQdXVISlJWb21QZDBOVUtDNlZXU3o3Q3VZQ09hU2pFREp3bDV4eW5T?=
+ =?utf-8?B?eDhiV1grNm1YQTlJaTk4ZzBrOEFsUGdCQStWNWJoVkZWYXJjK29oc3htVUov?=
+ =?utf-8?B?c1lnTy8rTkdSWWZISDdJV3NzbDZhMmdXTkZXekZlOHJkd0xXbVl4VVBiOUpP?=
+ =?utf-8?B?MDI3SW1HZUVYMXIxNEhxVTFHMzdYWnpGVGp5L1lUdDY4M1B6QW85WTRDaVJa?=
+ =?utf-8?B?ODdRb05NYk9nbTIxV1Bpb0dBcG9PVFo3MExLQUxVenEyU0RxVzNsWGpMSkZV?=
+ =?utf-8?B?TDlTZHhkeTNKN1Z6WnE2N1M2RENTQmpHRTRaR3Bmb1RDNDV1b3JzS2s4bC9a?=
+ =?utf-8?B?WUdyV3YrUE9ZeTJtNzFrVmx4SU9FdnFwL2RWdDNSQkJETzB2RHppQTF4Rkoy?=
+ =?utf-8?B?NE81U0txdmFWSXFxSEwxeCtLZFliRkgxcEtXNk5ZMEs5eXQ3eVVFODJ6TWU2?=
+ =?utf-8?B?dTRrUlJ4V1gwbHdQR2NMTkN5czBpTDVxQVl0TGhnU2Faa05hUVhkRm1pUCt1?=
+ =?utf-8?B?NDdTNEtBYm9kNlk1ekEwa0MvaTcvSFMvSWUxZnVqNCtuc1FjbzlHQyszUWZ4?=
+ =?utf-8?B?NEY0b3QzNFlDMkJXNklZcWtvbWxkU1hGMXlsY0VnWFdCbG03akhnL0dBNkpO?=
+ =?utf-8?B?MEdLWDR5THIxUGptR2YvdjduV243L2pVbFNINGxZMWxjbkFZc3dzUGN3MHVa?=
+ =?utf-8?B?VWMyaitHY1M1ZzBCK2ZXY3M4c3kxZm9mYzlQZlJ0UTkwMFIrOHRWTjdMb2RF?=
+ =?utf-8?B?S0RvL0NmdHJVeTRBQ2I5OTI4VTZ2NHpRbGtraTY0b2FiVEdyYTZMaUE5UmpJ?=
+ =?utf-8?B?bEhTNlFPQzhnLzZmQmorN2tBbGRoRFdzS1NMNG9BS1YxbmNjd2NFdDJJNFFC?=
+ =?utf-8?B?Rk5uc2lVVktFWm9iMWhwTWxSSXF1bWtSTjM1LzM3Ym05NTgyQTM4Yzh2RThZ?=
+ =?utf-8?B?MkxPYmp6SnF0a2ZDckdVZk94VDZEMjF6cnQ2eStzUGtza2pnUzRIUTluWHNU?=
+ =?utf-8?B?anhaTXRuZERMSWdvOGZPZHZoWVdhYXNRNjBRTzRtQW5nZk10ZzQxMUw4RmtZ?=
+ =?utf-8?B?VDByRHJYVUpDRFlsUFdJVkNNVW16czMxQTFQY2hTVHFCb2VLTHpoOUdST21Y?=
+ =?utf-8?B?MGE2ZStnY1d1R3BydFdBSlIvSHdTNGNKeFpoSWhUaU1vUkIxdVZKU2Y1UEdB?=
+ =?utf-8?B?ZU9BWi9nY0lZenZvdlpkenB6TkdkSWZWNEpaQ0hHVU5oRUZhZWs1VDhNaytM?=
+ =?utf-8?B?YTh1djJ5NlIvSGVaeFQ5SHVUbVlQUVJJY2J5WUhPYW5yc3lKTit3N0dBQ3h3?=
+ =?utf-8?B?czhHUU1qNXdlYzc4a1M5b0FxMWszUGRkemdJRGk3WmZQTm5nTytJNXpZWk1s?=
+ =?utf-8?B?anJ0cXZUcXRiLzI1NEJWUVBmb3ozNUQrVVRhSXQ5V3A0UkdGbkpGYVV1UFZu?=
+ =?utf-8?B?bmVreFg1SVc5NlA1OWFoNjdQMkdHVjRxQVBmbVJiMk1IblZsaWZ6bTVVQ0VJ?=
+ =?utf-8?B?TnlxQ1VoODEzeFI1MmwydlI1MEZwa1B0clFONXNNWGFaM3dCcFBoUTlueUZE?=
+ =?utf-8?B?RElNeHpXYVlwN1BvWDNUMHRIOXQzRldNeElmc1VOQ21UWldKbnZqS2x0ek9o?=
+ =?utf-8?B?WFkrWE0xTmpoZ1BwYjhEZzkzN1d4VkhJSlYydHo3dXpLcjZZVEp5OU5nL3Bl?=
+ =?utf-8?B?NG5SL2ZPZjNHUzk0b2ltNnVmUkpKaVAwdVAyUjJNU0ZXTmJhRjZsK0FxTHho?=
+ =?utf-8?B?T2plRURsNUZ2aDYva3VOUEpnU2RzRGp2SzZEd2VYNnhLenF4NlVpeEhraWZQ?=
+ =?utf-8?B?ZHlYRmJQWVYxMmM2c3lncmpCYmV6WHVXbDRMNUdCNThQak9kcktXTFl3RWlI?=
+ =?utf-8?B?bDRZTUtpc0FXUlFtM2pqUXJ0bVI3RDVMMWhMT3JGb1hWWlJrZU55cnN1YkZ0?=
+ =?utf-8?B?M3BVMjRka0NRaDZsbXF4RlhhbnlRdTl2NjNSU0Mwci95eDFkUGtJUFhLKzk2?=
+ =?utf-8?Q?wHeMJR+dYZsD2IJGfaUYRWGJE?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0dff931e-5302-4ea6-bf82-08dd99290ab4
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB5685.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 May 2025 12:06:11.0455
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Ww+B8l58g3elfrEY309oh2HcnKIsYbEZpMK3SzGMw3A+CUssQ8nxaWiuyIDBHYXh
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB8213
 
-On 22.05.25 14:00, Pankaj Raghav (Samsung) wrote:
-> Hi Mike,
+On 5/22/25 13:25, Philipp Stanner wrote:
+> dma_fence_is_signaled_locked(), which is used in
+> nouveau_fence_context_kill(), can signal fences below the surface
+> through a callback.
 > 
->>> Add a config option THP_HUGE_ZERO_PAGE_ALWAYS that will always allocate
->>> the huge_zero_folio, and it will never be freed. This makes using the
->>> huge_zero_folio without having to pass any mm struct and a call to put_folio
->>> in the destructor.
->>
->> I don't think this config option should be tied to THP. It's perfectly
->> sensible to have a configuration with HUGETLB and without THP.
->>   
+> There is neither need for nor use in doing that when killing a fence
+> context.
 > 
-> Hmm, that makes sense. You mean something like this (untested):
+> Replace dma_fence_is_signaled_locked() with __dma_fence_is_signaled(), a
+> function which only checks, never signals.
+
+That is not a good approach.
+
+Having the __dma_fence_is_signaled() means that other would be allowed to call it as well.
+
+But nouveau can do that here only because it knows that the fence was issued by nouveau.
+
+What nouveau can to is to test the signaled flag directly, but that's what you try to avoid as well.
+
+Regards,
+Christian.
+
 > 
-> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-> index 2e1527580746..d447a9b9eb7d 100644
-> --- a/arch/x86/Kconfig
-> +++ b/arch/x86/Kconfig
-> @@ -151,8 +151,8 @@ config X86
->          select ARCH_WANT_OPTIMIZE_DAX_VMEMMAP   if X86_64
->          select ARCH_WANT_OPTIMIZE_HUGETLB_VMEMMAP       if X86_64
->          select ARCH_WANT_HUGETLB_VMEMMAP_PREINIT if X86_64
-> +       select ARCH_WANTS_HUGE_ZERO_PAGE_ALWAYS if X86_64
->          select ARCH_WANTS_THP_SWAP              if X86_64
-> -       select ARCH_WANTS_THP_ZERO_PAGE_ALWAYS  if X86_64
->          select ARCH_HAS_PARANOID_L1D_FLUSH
->          select BUILDTIME_TABLE_SORT
->          select CLKEVT_I8253
-> diff --git a/mm/Kconfig b/mm/Kconfig
-> index a2994e7d55ba..83a5b95a2286 100644
-> --- a/mm/Kconfig
-> +++ b/mm/Kconfig
-> @@ -823,9 +823,19 @@ config ARCH_WANT_GENERAL_HUGETLB
->   config ARCH_WANTS_THP_SWAP
->          def_bool n
->   
-> -config ARCH_WANTS_THP_ZERO_PAGE_ALWAYS
-> +config ARCH_WANTS_HUGE_ZERO_PAGE_ALWAYS
->          def_bool n
->   
-> +config HUGE_ZERO_PAGE_ALWAYS
-
-Likely something like
-
-PMD_ZERO_PAGE
-
-Will be a lot clearer.
-
- > +       def_bool y> +       depends on HUGETLB_PAGE && 
-ARCH_WANTS_HUGE_ZERO_PAGE_ALWAYS
-
-I suspect it should then also be independent of HUGETLB_PAGE?
-
-> +       help
-> +         Typically huge_zero_folio, which is a huge page of zeroes, is allocated
-> +         on demand and deallocated when not in use. This option will always
-> +         allocate huge_zero_folio for zeroing and it is never deallocated.
-> +         Not suitable for memory constrained systems.
-
-I assume that code then has to live in mm/memory.c ?
-
-
--- 
-Cheers,
-
-David / dhildenb
+> Signed-off-by: Philipp Stanner <phasta@kernel.org>
+> ---
+>  drivers/gpu/drm/nouveau/nouveau_fence.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/gpu/drm/nouveau/nouveau_fence.c b/drivers/gpu/drm/nouveau/nouveau_fence.c
+> index d5654e26d5bc..993b3dcb5db0 100644
+> --- a/drivers/gpu/drm/nouveau/nouveau_fence.c
+> +++ b/drivers/gpu/drm/nouveau/nouveau_fence.c
+> @@ -88,7 +88,7 @@ nouveau_fence_context_kill(struct nouveau_fence_chan *fctx, int error)
+>  
+>  	spin_lock_irqsave(&fctx->lock, flags);
+>  	list_for_each_entry_safe(fence, tmp, &fctx->pending, head) {
+> -		if (error && !dma_fence_is_signaled_locked(&fence->base))
+> +		if (error && !__dma_fence_is_signaled(&fence->base))
+>  			dma_fence_set_error(&fence->base, error);
+>  
+>  		if (nouveau_fence_signal(fence))
 
