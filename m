@@ -1,203 +1,212 @@
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2076.outbound.protection.outlook.com [40.107.92.76])
+Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F2F433DB;
-	Thu, 22 May 2025 12:06:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.76
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747915577; cv=fail; b=avPnM2NIJAbEk+Hu3qG0DxXV0Kx64JrdWgQ13G45tLHYksC/GdTmBoighAsI93I1i6+IeY9nrwOX/Xnpaex6GlZJXvF4hMmhY87iD+Vk5GC2APf1AqLF50qHnqFu8mB+ncrTOxgi1bkwNAmU7USNAcMEghXnjcjsJS6nmRtzBl8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747915577; c=relaxed/simple;
-	bh=ZZ1Y+LQtMmwcRE5YOC8X39Y8+gLLim/DMOLYGnmrHjg=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=rYUzWbDy+nAcHjHw28wNGiAi3/vuygpvgKsbiPmXgx6CnA9O19DODYst0KOQVd58Ga3MoW+UKzFqDyduTC+NJVs76RiWyMVfApm+gQxFxFTqlTrNYvKz8XnnlYU8aSaT3SqY5Vpk/wZL/GHjoXxoQ3f1u2LtYYxHbl/u4IZaLH8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=cVyLveeb; arc=fail smtp.client-ip=40.107.92.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F00433DB;
+	Thu, 22 May 2025 12:06:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747915608; cv=none; b=DPIkNYJGsyN43Eh/XLp0zYjj76nhFgWgFdztTX/DpVbrer9pVEzNSEzNr2VHDjsO2cfGypHHSCuFbdFnGUmSgJ6WUW6dZ3UWjy5qXq0K6qtGMj6jZKKGqlNxOf5tsX54mU+IzsJqnGH0EcvQAwWjzg+mgZLwOs+o115m0Mnxqkk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747915608; c=relaxed/simple;
+	bh=sarlfpjmwco1wBVRTTBDateodZuUqAOn115Z368wacc=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=Vk+N3klDSzCUR4eA8brmEmE72mm6WEBTOnRho8dJzUmsFHyf5D1c/UIuA7J4k9U2m4S6VfyksfC8shQnn66mJDyoslVNdQ/kDVnP8vW3ySNOYX1/aMfHX6uH8FTEIS8UX9OZeuW0I+q007hhL0nVS56/YZ1vWOwKGCYxy3jtIxg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=RulxBa0V; arc=none smtp.client-ip=217.70.183.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="cVyLveeb"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=WBWcXReSGxokMawDNRJ7RvcOFqK/6nOB0f3Ub86/cTK65+n9pcdfzb8ifvhbmvvId1i7NhLdRRzi3JWeJYxwaZ8KaOYv7VenHuM4r6LiG3H8OGzLypILR4HD3FlnOQna9TZCwVfWw5Ke/Q/ie9SJKxqs0Dw1K13YhY1DBGd0pv05X5EAbe6cNjYF2nkAFlMUsRZkPEUtWBw2l539OIOVaSsonwOMtXKmu4aGdN1wgPgw+JDQHCQTlJBHO4nYD4p5gRStoLAWx7y2ZpSHaJdfwZYiQERIwAJqgkxd0QIOxUDD2cS5TRmXXnYEYvD7EErKAcM+2+TC+ArYXyr218vU5w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=1vw8V+WllNfpKnQS8hsDnauAE2OG/zRh+5luxeOQuvs=;
- b=EFVclOHAemm8Q/MCnphOxd4YqdSJDZB1yTNXQpV77pKyea+8oqC58IDu2H0yOGYqclkOTmew8xEyeH0sijIzkB8IaddvZjFyVfw0PlOMQ0TYm7QCODyr7zRP63bjXmwYH/ygwD1fBCag2RJqNryn+37lL01n0QqoltI1aedjLip6bNqb6IfgT6fHHrRJ8FtLBimLjzegAim9beHYNxofb0OnLKV59a4QhmuJdoSz+bbSWxiCngeZJZ8oi1n4cLbFq+C2p6BEJCg4wsm9Wlit3oESc8QEDxK1yZbvfpOndPq3nmT/VsYc109lxBUqUCdHVPM2Mj4fRuJajOo4Yz3DFQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1vw8V+WllNfpKnQS8hsDnauAE2OG/zRh+5luxeOQuvs=;
- b=cVyLveebGP/hAwOXNOXpKrdJwuqvuLMJaIYanYOT/WBs8T9Sp7Uvy3nZppMWGclFND5VDFqZuUO+elS9/tssqazcXFpdJfT8x/uhEuNPdTfqsyE5FzJ17H6hHhRaZ2HoKvuFHasyCgt+bFndZHBLynF4U50Ho4+bB896mSbzpS4=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from PH7PR12MB5685.namprd12.prod.outlook.com (2603:10b6:510:13c::22)
- by CY8PR12MB8213.namprd12.prod.outlook.com (2603:10b6:930:71::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.20; Thu, 22 May
- 2025 12:06:11 +0000
-Received: from PH7PR12MB5685.namprd12.prod.outlook.com
- ([fe80::46fb:96f2:7667:7ca5]) by PH7PR12MB5685.namprd12.prod.outlook.com
- ([fe80::46fb:96f2:7667:7ca5%7]) with mapi id 15.20.8722.031; Thu, 22 May 2025
- 12:06:11 +0000
-Message-ID: <af03b541-0b69-4b3d-b498-b68e0beb3dcb@amd.com>
-Date: Thu, 22 May 2025 14:06:05 +0200
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] drm/nouveau: Don't signal when killing the fence
- context
-To: Philipp Stanner <phasta@kernel.org>, Lyude Paul <lyude@redhat.com>,
- Danilo Krummrich <dakr@kernel.org>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>, Sumit Semwal <sumit.semwal@linaro.org>
-Cc: dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
- linux-kernel@vger.kernel.org, linux-media@vger.kernel.org
-References: <20250522112540.161411-2-phasta@kernel.org>
- <20250522112540.161411-3-phasta@kernel.org>
-Content-Language: en-US
-From: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
-In-Reply-To: <20250522112540.161411-3-phasta@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MN2PR01CA0064.prod.exchangelabs.com (2603:10b6:208:23f::33)
- To PH7PR12MB5685.namprd12.prod.outlook.com (2603:10b6:510:13c::22)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="RulxBa0V"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id F37851FD48;
+	Thu, 22 May 2025 12:06:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1747915603;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=xa4FngajQSj/KFbgvgvpRtuRSkbY6yfLKj4dHrHeIRM=;
+	b=RulxBa0Vyjqc+owdBmdIBHviKcMau7F2yIpvEe6hhlPszwIbm9rs2atFMOyI/Z1w6knrTT
+	QnLHZ8NvzZhkPqmFHAJof6vnsbyrTnMTsqdSW0mDhf8X9Ol9oG2Mh97j2i+/nOrwexPyfa
+	9fiLgK4mbkutselTmId4z6TE9F9X2CHh5a0Qo7GRS/ddTgc2AULQyCKY+CzNHk46MueVPy
+	VkVcAPLTdyTS+EyMoABElqhUgVq5x/iT8uhXKWsvpF4SaUeLLMm1d/iEpIX02D9EWfbefi
+	qrd6TfagA74EXjlUsFTNSHgshVBPncGkUkzlstP42PqxkDLF95k1PvKiZoEGCA==
+From: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
+Subject: [PATCH v9 00/11] Add support for MAX7360
+Date: Thu, 22 May 2025 14:06:15 +0200
+Message-Id: <20250522-mdb-max7360-support-v9-0-74fc03517e41@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR12MB5685:EE_|CY8PR12MB8213:EE_
-X-MS-Office365-Filtering-Correlation-Id: 0dff931e-5302-4ea6-bf82-08dd99290ab4
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|366016|376014|7416014|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?WXdkeUgrV2pGdWNmY2x4cXZTTGVuTlhoK0lITTBCVGhmL2d2K0RoN1BJUHFs?=
- =?utf-8?B?T2ZRRndlM3U5blpmYjZocThXSGo0VWZINkJ6bjVJVzFqNWM0RW1JSUt3aXBo?=
- =?utf-8?B?R2M4WEs5UFpTUGgwTmJiU2lXYUpFWHJKT3lneU9YYkdaWU1BVG9VU2UxNnIx?=
- =?utf-8?B?Ymh5SStHclNLOHloRWQyaUphUnpVVjZDaW5xRjdzRnduRmZFdlhjQmNsaGpk?=
- =?utf-8?B?ek5jcUNSZFNBUEk0UU9td0tsQTFOblN6WjF3RndEWHkrdkNMYzBRV2lCTXZa?=
- =?utf-8?B?ck1nSllYVzN3RHBXZEpXeHNqTFNLOUljNy9GQVpFQ1VWaHIxTWQxeWdlWVo4?=
- =?utf-8?B?SUU2Umt3ekVQaE45b2k4ZzU4NVhYTUF6ZW5mQ2xKajNIQkJ5bkovaG91Lyta?=
- =?utf-8?B?SzlYU2Q0NGtxMmczUU8waFhHVFVMRXFnN3paQ3NqY3RVVWI2UlVzdWUyWk84?=
- =?utf-8?B?OVJiam9zbVJrYlJ2OFlYRG80dkxKNmpkNXRkSTR6SEtYU3ZZc2hvbEFDMjBt?=
- =?utf-8?B?RzhHWjBOZzByek9VM3I3OGVZdm5jeHA2NUpIR0RYbnJ6cGpVbWRvV1czQ3R1?=
- =?utf-8?B?QUMyYm5HTGNOMi9tejk0UG44cE1KaWN3RlFiWGtqY25BZW4vSWhoMEN0U1hO?=
- =?utf-8?B?M25BOXAvSURreGJFbzV0N00vL3lSV0JkY0ZtZUU4U3dLNmRKeXk1WElaYmF6?=
- =?utf-8?B?SHIyRlI2TFBSUWJwMEhSS0U3anRlblNVaGZwOTdRNnl6RHdTY2pUdklGMnVy?=
- =?utf-8?B?c3FXK1VrcDdwUnRwTklOR0d1Vmt0dUdhZXhzYzBnaGtUSEI4b1p4U1Z4VVRB?=
- =?utf-8?B?RXRTWDcvVTBsTFJvR1V6RWdoaWFtYWdCcmlkSmFRQUYxSEMzV1Z5L2Ryd3E2?=
- =?utf-8?B?K0owR05zcVVwY1NtWXZxMFBRWTdKemwzTUVlK203OWtNamtMOCs4QXJnYlVs?=
- =?utf-8?B?TmRndnJVVnpraTFRTExlMEhWamR0RGtYeEJKaTRkZ1hMYmlsMnpKejVDb0gv?=
- =?utf-8?B?ano3L09wSVpsMmhYNmhtR1EvVkJWRDIwM0RMcEFFZyt1ZzlxLy8reXluWHk2?=
- =?utf-8?B?SHRYcURxeU50WmdGN09CeU5HbWtWU0VvT1VqZlRmV0p3NHZnTWlmYm1MdUJF?=
- =?utf-8?B?anpLUVNETUEwTS8zMlBCYkdZVXN5a2Q0d1F5UjdVVUJiMUE5K0ZGeFJVYklW?=
- =?utf-8?B?UmpFMFpBQ2JxaXhqM3FxcjFoRm5VWitzZ2NhMEdJVkZzbUpxYTF1all5OFV6?=
- =?utf-8?B?SmJKaE1MeEIwVTcweEpkVDVrNUpFK0tQZUlwRHJOT0h2SUNFbStydTVWeVNX?=
- =?utf-8?B?cW45dzZ6WEtVOUJFTSs2MEtud2RycWIrazlwR2h3V2VncTkxaSt0S1N0YUZT?=
- =?utf-8?B?dk9MUUJnUGJMN3dxL1Y4QUlNMUdGdDBjSlBTZG1GWWdheGFIUXRXeVV3NXE4?=
- =?utf-8?B?TFplWGU4NmVEcXBEUkkybFdUcEMwVitjUHY2NFZDc2lBK3FGSEFvbFZGT0Ex?=
- =?utf-8?B?aXIwQXNWZ0FnZHB0M0JjREpWRTcrL1NhYmVwb3dkamRQV0I2SVF1VWVtMGV6?=
- =?utf-8?B?eXVrWnE2TjZYeFIzTHF4eGtYcTdsdGluSDRSZkw2cmt6WStIRkpJZlZSbG5o?=
- =?utf-8?B?SmdaVXhCQU1KaWJqZ0NqR0cyNlRWMVQrSEc0RzZEeW1DWFk3b1hFZitrMW92?=
- =?utf-8?B?SVFEcTM4SzFDRDkxTURPamc2ck5EcE51cEVvaVB2bVFGUDd5NFhrZDB6STJq?=
- =?utf-8?B?OGVURnBSdkhwVzVMV1pWemlVRThzVFE1Zk9tWHNSOTRNRDY5RjM1dUFQWmtN?=
- =?utf-8?B?aVZNU3cwaklUVVdDSVc5NFNxczg0YTJ5SEFzWVJsZkptOUtkVDgyRDJZb3Rj?=
- =?utf-8?B?ZU9Calh4aVdqYW5GUjdTVVBqTENRZ2txakFKSVJ2Qmh3OUphVXp6SlhOVXdI?=
- =?utf-8?Q?FWWo/nGrwfQ=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5685.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?dXlvZWQwem0yYVBvOW5EWDBCQUtDeGl3SWJrWlhEKzJoZnJtNVpFRDFGMkJB?=
- =?utf-8?B?QWd5RjZhTDFEQlZ2SXQzdmxqdjdMNHB0TEtJalpqcExLSkR0OWdRZzhNbDZy?=
- =?utf-8?B?NG0rTTFQdXVISlJWb21QZDBOVUtDNlZXU3o3Q3VZQ09hU2pFREp3bDV4eW5T?=
- =?utf-8?B?eDhiV1grNm1YQTlJaTk4ZzBrOEFsUGdCQStWNWJoVkZWYXJjK29oc3htVUov?=
- =?utf-8?B?c1lnTy8rTkdSWWZISDdJV3NzbDZhMmdXTkZXekZlOHJkd0xXbVl4VVBiOUpP?=
- =?utf-8?B?MDI3SW1HZUVYMXIxNEhxVTFHMzdYWnpGVGp5L1lUdDY4M1B6QW85WTRDaVJa?=
- =?utf-8?B?ODdRb05NYk9nbTIxV1Bpb0dBcG9PVFo3MExLQUxVenEyU0RxVzNsWGpMSkZV?=
- =?utf-8?B?TDlTZHhkeTNKN1Z6WnE2N1M2RENTQmpHRTRaR3Bmb1RDNDV1b3JzS2s4bC9a?=
- =?utf-8?B?WUdyV3YrUE9ZeTJtNzFrVmx4SU9FdnFwL2RWdDNSQkJETzB2RHppQTF4Rkoy?=
- =?utf-8?B?NE81U0txdmFWSXFxSEwxeCtLZFliRkgxcEtXNk5ZMEs5eXQ3eVVFODJ6TWU2?=
- =?utf-8?B?dTRrUlJ4V1gwbHdQR2NMTkN5czBpTDVxQVl0TGhnU2Faa05hUVhkRm1pUCt1?=
- =?utf-8?B?NDdTNEtBYm9kNlk1ekEwa0MvaTcvSFMvSWUxZnVqNCtuc1FjbzlHQyszUWZ4?=
- =?utf-8?B?NEY0b3QzNFlDMkJXNklZcWtvbWxkU1hGMXlsY0VnWFdCbG03akhnL0dBNkpO?=
- =?utf-8?B?MEdLWDR5THIxUGptR2YvdjduV243L2pVbFNINGxZMWxjbkFZc3dzUGN3MHVa?=
- =?utf-8?B?VWMyaitHY1M1ZzBCK2ZXY3M4c3kxZm9mYzlQZlJ0UTkwMFIrOHRWTjdMb2RF?=
- =?utf-8?B?S0RvL0NmdHJVeTRBQ2I5OTI4VTZ2NHpRbGtraTY0b2FiVEdyYTZMaUE5UmpJ?=
- =?utf-8?B?bEhTNlFPQzhnLzZmQmorN2tBbGRoRFdzS1NMNG9BS1YxbmNjd2NFdDJJNFFC?=
- =?utf-8?B?Rk5uc2lVVktFWm9iMWhwTWxSSXF1bWtSTjM1LzM3Ym05NTgyQTM4Yzh2RThZ?=
- =?utf-8?B?MkxPYmp6SnF0a2ZDckdVZk94VDZEMjF6cnQ2eStzUGtza2pnUzRIUTluWHNU?=
- =?utf-8?B?anhaTXRuZERMSWdvOGZPZHZoWVdhYXNRNjBRTzRtQW5nZk10ZzQxMUw4RmtZ?=
- =?utf-8?B?VDByRHJYVUpDRFlsUFdJVkNNVW16czMxQTFQY2hTVHFCb2VLTHpoOUdST21Y?=
- =?utf-8?B?MGE2ZStnY1d1R3BydFdBSlIvSHdTNGNKeFpoSWhUaU1vUkIxdVZKU2Y1UEdB?=
- =?utf-8?B?ZU9BWi9nY0lZenZvdlpkenB6TkdkSWZWNEpaQ0hHVU5oRUZhZWs1VDhNaytM?=
- =?utf-8?B?YTh1djJ5NlIvSGVaeFQ5SHVUbVlQUVJJY2J5WUhPYW5yc3lKTit3N0dBQ3h3?=
- =?utf-8?B?czhHUU1qNXdlYzc4a1M5b0FxMWszUGRkemdJRGk3WmZQTm5nTytJNXpZWk1s?=
- =?utf-8?B?anJ0cXZUcXRiLzI1NEJWUVBmb3ozNUQrVVRhSXQ5V3A0UkdGbkpGYVV1UFZu?=
- =?utf-8?B?bmVreFg1SVc5NlA1OWFoNjdQMkdHVjRxQVBmbVJiMk1IblZsaWZ6bTVVQ0VJ?=
- =?utf-8?B?TnlxQ1VoODEzeFI1MmwydlI1MEZwa1B0clFONXNNWGFaM3dCcFBoUTlueUZE?=
- =?utf-8?B?RElNeHpXYVlwN1BvWDNUMHRIOXQzRldNeElmc1VOQ21UWldKbnZqS2x0ek9o?=
- =?utf-8?B?WFkrWE0xTmpoZ1BwYjhEZzkzN1d4VkhJSlYydHo3dXpLcjZZVEp5OU5nL3Bl?=
- =?utf-8?B?NG5SL2ZPZjNHUzk0b2ltNnVmUkpKaVAwdVAyUjJNU0ZXTmJhRjZsK0FxTHho?=
- =?utf-8?B?T2plRURsNUZ2aDYva3VOUEpnU2RzRGp2SzZEd2VYNnhLenF4NlVpeEhraWZQ?=
- =?utf-8?B?ZHlYRmJQWVYxMmM2c3lncmpCYmV6WHVXbDRMNUdCNThQak9kcktXTFl3RWlI?=
- =?utf-8?B?bDRZTUtpc0FXUlFtM2pqUXJ0bVI3RDVMMWhMT3JGb1hWWlJrZU55cnN1YkZ0?=
- =?utf-8?B?M3BVMjRka0NRaDZsbXF4RlhhbnlRdTl2NjNSU0Mwci95eDFkUGtJUFhLKzk2?=
- =?utf-8?Q?wHeMJR+dYZsD2IJGfaUYRWGJE?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0dff931e-5302-4ea6-bf82-08dd99290ab4
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB5685.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 May 2025 12:06:11.0455
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Ww+B8l58g3elfrEY309oh2HcnKIsYbEZpMK3SzGMw3A+CUssQ8nxaWiuyIDBHYXh
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB8213
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIADcTL2gC/33QTW7DIBAF4KtErEsFM/x21XtUXTCAG6Q6juzUS
+ hX57sWRKqey3eVD8M0bbmzIfckDezncWJ/HMpTuVIN/OrB4DKePzEuqmYEAJUF63ibibbhaNII
+ PX+dz1184AAYXs9IUkNWX5z435XpX395rPpbh0vXf9yGjnE//90bJBXfZobTazddeqesun+X0H
+ LuWzeIIDwrgtgJVQRtcAohoclor+KtoIeWOglXxWnpSIZKgjS5qUUCqbUXNGwXU0SQib8xa0Yu
+ C0m0ruioNgaDQeJuCWCtmUZTY+V1TFRtAo3bWZPRrxT4osNPFVkVlYYRLItimWStuUfReF1cVo
+ qycaQxFsn+VaZp+AGU3+qeiAgAA
+To: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Kamel Bouhara <kamel.bouhara@bootlin.com>, 
+ Linus Walleij <linus.walleij@linaro.org>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>, 
+ Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
+ =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
+ Michael Walle <mwalle@kernel.org>, Mark Brown <broonie@kernel.org>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-gpio@vger.kernel.org, linux-input@vger.kernel.org, 
+ linux-pwm@vger.kernel.org, andriy.shevchenko@intel.com, 
+ =?utf-8?q?Gr=C3=A9gory_Clement?= <gregory.clement@bootlin.com>, 
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+ Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>, 
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+X-Mailer: b4 0.14.1
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1747915601; l=6039;
+ i=mathieu.dubois-briand@bootlin.com; s=20241219; h=from:subject:message-id;
+ bh=sarlfpjmwco1wBVRTTBDateodZuUqAOn115Z368wacc=;
+ b=qHEGL0EaoRkPoiIasJEM9p1K3SVTVHGOE6/CuwcQq2BqVIDWYmzjyY/UlcZXEy9RiY/uc6jb3
+ a4i5t1gZsHLDZQcq9bV0Hb5Yb6ViNKvkepfeAdKcqsRNxPJeJzVPrIV
+X-Developer-Key: i=mathieu.dubois-briand@bootlin.com; a=ed25519;
+ pk=1PVTmzPXfKvDwcPUzG0aqdGoKZJA3b9s+3DqRlm0Lww=
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgdehleduucdltddurdegfedvrddttddmucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhufffkfggtgfgvfevofesthejredtredtjeenucfhrhhomhepofgrthhhihgvuhcuffhusghoihhsqdeurhhirghnugcuoehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpefhkeffueegvdekiefhfeejueeukeekgeegjeeghefgvdekveevvdekieetkeelveenucffohhmrghinhepkhgvrhhnvghlrdhorhhgpddugedqrhgtvddrqdhlihhnkhenucfkphepvdgrtddumegtsgdugeemheehieemjegrtddtmeeffhgtfhemfhgstdgumeduvdeivdemvdgvjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemheehieemjegrtddtmeeffhgtfhemfhgstdgumeduvdeivdemvdgvjeeipdhhvghloheplgduvdejrddtrddurddungdpmhgrihhlfhhrohhmpehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvhedprhgtphhtthhopegurghkrheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhin
+ hhushdrfigrlhhlvghijheslhhinhgrrhhordhorhhgpdhrtghpthhtohepsghrohhonhhivgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghnughrihihrdhshhgvvhgthhgvnhhkoheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmpdhrtghpthhtohepthhhohhmrghsrdhpvghtrgiiiihonhhisegsohhothhlihhnrdgtohhmpdhrtghpthhtohepsghrghhlsegsghguvghvrdhplhdprhgtphhtthhopegumhhithhrhidrthhorhhokhhhohhvsehgmhgrihhlrdgtohhm
+X-GND-Sasl: mathieu.dubois-briand@bootlin.com
 
-On 5/22/25 13:25, Philipp Stanner wrote:
-> dma_fence_is_signaled_locked(), which is used in
-> nouveau_fence_context_kill(), can signal fences below the surface
-> through a callback.
-> 
-> There is neither need for nor use in doing that when killing a fence
-> context.
-> 
-> Replace dma_fence_is_signaled_locked() with __dma_fence_is_signaled(), a
-> function which only checks, never signals.
+This series implements a set of drivers allowing to support the Maxim
+Integrated MAX7360 device.
 
-That is not a good approach.
+The MAX7360 is an I2C key-switch and led controller, with following
+functionalities:
+- Keypad controller for a key matrix of up to 8 rows and 8 columns.
+- Rotary encoder support, for a single rotary encoder.
+- Up to 8 PWM outputs.
+- Up to 8 GPIOs with support for interrupts and 6 GPOs.
 
-Having the __dma_fence_is_signaled() means that other would be allowed to call it as well.
+Chipset pins are shared between all functionalities, so all cannot be
+used at the same time.
 
-But nouveau can do that here only because it knows that the fence was issued by nouveau.
+Signed-off-by: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
+---
+Changes in v9:
+- Fix build issue with bad usage of array_size() on intermediate commit.
+- MFD: Fix error strings. Also fix #define style in the header file.
+- Pinctrl: Fix missing include.
+- PWM: Fix register writes in max7360_pwm_waveform() and
+  max7360_pwm_round_waveform_tohw().
+- GPIO: Fix GPIO valid mask initialization.
+- Link to v8: https://lore.kernel.org/r/20250509-mdb-max7360-support-v8-0-bbe486f6bcb7@bootlin.com
 
-What nouveau can to is to test the signaled flag directly, but that's what you try to avoid as well.
+Changes in v8:
+- Small changes in drivers.
+- Rebased on v6.15-rc5
+- Link to v7: https://lore.kernel.org/r/20250428-mdb-max7360-support-v7-0-4e0608d0a7ff@bootlin.com
 
-Regards,
-Christian.
+Changes in v7:
+- Add rotary encoder absolute axis support in device tree bindings and
+  driver.
+- Lot of small changes in keypad, rotary encoder and GPIO drivers.
+- Rebased on v6.15-rc4
+- Link to v6: https://lore.kernel.org/r/20250409-mdb-max7360-support-v6-0-7a2535876e39@bootlin.com
 
-> 
-> Signed-off-by: Philipp Stanner <phasta@kernel.org>
-> ---
->  drivers/gpu/drm/nouveau/nouveau_fence.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/gpu/drm/nouveau/nouveau_fence.c b/drivers/gpu/drm/nouveau/nouveau_fence.c
-> index d5654e26d5bc..993b3dcb5db0 100644
-> --- a/drivers/gpu/drm/nouveau/nouveau_fence.c
-> +++ b/drivers/gpu/drm/nouveau/nouveau_fence.c
-> @@ -88,7 +88,7 @@ nouveau_fence_context_kill(struct nouveau_fence_chan *fctx, int error)
->  
->  	spin_lock_irqsave(&fctx->lock, flags);
->  	list_for_each_entry_safe(fence, tmp, &fctx->pending, head) {
-> -		if (error && !dma_fence_is_signaled_locked(&fence->base))
-> +		if (error && !__dma_fence_is_signaled(&fence->base))
->  			dma_fence_set_error(&fence->base, error);
->  
->  		if (nouveau_fence_signal(fence))
+Changes in v6:
+- Rebased on v6.15-rc1.
+- Use device_set_of_node_from_dev() instead of creating PWM and Pinctrl
+  on parent device.
+- Various small fixes in all drivers.
+- Fix pins property pattern in pinctrl dt bindings.
+- Link to v5: https://lore.kernel.org/r/20250318-mdb-max7360-support-v5-0-fb20baf97da0@bootlin.com
+
+Changes in v5:
+- Add pinctrl driver to replace the previous use of request()/free()
+  callbacks for PORT pins.
+- Remove ngpios property from GPIO device tree bindings.
+- Use GPIO valid_mask to mark unusable keypad columns GPOs, instead of
+  changing ngpios.
+- Drop patches adding support for request()/free() callbacks in GPIO
+  regmap and gpio_regmap_get_ngpio().
+- Allow gpio_regmap_register() to create the associated regmap IRQ.
+- Various fixes in MFD, PWM, GPIO and KEYPAD drivers.
+- Link to v4: https://lore.kernel.org/r/20250214-mdb-max7360-support-v4-0-8a35c6dbb966@bootlin.com
+
+Changes in v4:
+- Modified the GPIO driver to use gpio-regmap and regmap-irq.
+- Add support for request()/free() callbacks in gpio-regmap.
+- Add support for status_is_level in regmap-irq.
+- Switched the PWM driver to waveform callbacks.
+- Various small fixes in MFD, PWM, GPIO drivers and dt bindings.
+- Rebased on v6.14-rc2.
+- Link to v3: https://lore.kernel.org/r/20250113-mdb-max7360-support-v3-0-9519b4acb0b1@bootlin.com
+
+Changes in v3:
+- Fix MFD device tree binding to add gpio child nodes.
+- Fix various small issues in device tree bindings.
+- Add missing line returns in error messages.
+- Use dev_err_probe() when possible.
+- Link to v2: https://lore.kernel.org/r/20241223-mdb-max7360-support-v2-0-37a8d22c36ed@bootlin.com
+
+Changes in v2:
+- Removing device tree subnodes for keypad, rotary encoder and pwm
+  functionalities.
+- Fixed dt-bindings syntax and naming.
+- Fixed missing handling of requested period in PWM driver.
+- Cleanup of the code
+- Link to v1: https://lore.kernel.org/r/20241219-mdb-max7360-support-v1-0-8e8317584121@bootlin.com
+
+---
+Kamel Bouhara (2):
+      mfd: Add max7360 support
+      pwm: max7360: Add MAX7360 PWM support
+
+Mathieu Dubois-Briand (9):
+      dt-bindings: mfd: gpio: Add MAX7360
+      pinctrl: Add MAX7360 pinctrl driver
+      regmap: irq: Add support for chips without separate IRQ status
+      gpio: regmap: Allow to allocate regmap-irq device
+      gpio: regmap: Allow to provide init_valid_mask callback
+      gpio: max7360: Add MAX7360 gpio support
+      input: keyboard: Add support for MAX7360 keypad
+      input: misc: Add support for MAX7360 rotary
+      MAINTAINERS: Add entry on MAX7360 driver
+
+ .../bindings/gpio/maxim,max7360-gpio.yaml          |  83 ++++++
+ .../devicetree/bindings/mfd/maxim,max7360.yaml     | 191 +++++++++++++
+ MAINTAINERS                                        |  13 +
+ drivers/base/regmap/regmap-irq.c                   |  99 ++++---
+ drivers/gpio/Kconfig                               |  12 +
+ drivers/gpio/Makefile                              |   1 +
+ drivers/gpio/gpio-max7360.c                        | 257 +++++++++++++++++
+ drivers/gpio/gpio-regmap.c                         |  22 +-
+ drivers/input/keyboard/Kconfig                     |  12 +
+ drivers/input/keyboard/Makefile                    |   1 +
+ drivers/input/keyboard/max7360-keypad.c            | 308 +++++++++++++++++++++
+ drivers/input/misc/Kconfig                         |  10 +
+ drivers/input/misc/Makefile                        |   1 +
+ drivers/input/misc/max7360-rotary.c                | 192 +++++++++++++
+ drivers/mfd/Kconfig                                |  14 +
+ drivers/mfd/Makefile                               |   1 +
+ drivers/mfd/max7360.c                              | 171 ++++++++++++
+ drivers/pinctrl/Kconfig                            |  11 +
+ drivers/pinctrl/Makefile                           |   1 +
+ drivers/pinctrl/pinctrl-max7360.c                  | 215 ++++++++++++++
+ drivers/pwm/Kconfig                                |  10 +
+ drivers/pwm/Makefile                               |   1 +
+ drivers/pwm/pwm-max7360.c                          | 180 ++++++++++++
+ include/linux/gpio/regmap.h                        |  18 ++
+ include/linux/mfd/max7360.h                        | 109 ++++++++
+ include/linux/regmap.h                             |   3 +
+ 26 files changed, 1903 insertions(+), 33 deletions(-)
+---
+base-commit: 92a09c47464d040866cf2b4cd052bc60555185fb
+change-id: 20241219-mdb-max7360-support-223a8ce45ba3
+
+Best regards,
+-- 
+Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
 
