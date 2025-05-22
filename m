@@ -1,144 +1,102 @@
-Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5812D148827;
-	Thu, 22 May 2025 20:05:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47B681EDA39;
+	Thu, 22 May 2025 20:05:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747944331; cv=none; b=C9XPeidSmTkIE/IUynrsH4agobrRQCoNQw99LDOa3Dkb/a2FN1epwLpo5ZU5RVqMsRSkroGpyBZ2XmGtqhze5Xh3FOOP2For95XHqmNIn8ukuqe60xEBJrNQsac2Ad+oyPjyrY+2SugkP65b9yNAnN/JV0X5z61MGhppsI5/Pzs=
+	t=1747944352; cv=none; b=nyB0j9DqRsIezGgKOJjljOsbcmIJwnVZm1oCumsmCISSLabB1xOLan5dxVB0tO1ZTgZ0QHfSFIBNsuhtTantSTkp8k9P04doGECUJwnsj5s6nTfkoDNGBPQ0mfkfbawsLcr3AjGOe9CmPCAkgA6gNVIYJSAk/9RlllKGPJF/HPY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747944331; c=relaxed/simple;
-	bh=g62bCrkPGn4DhPfRt4BBU9rJEliO6Mnud/Cr8E48tFg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=TnM0JXE2oUA8VDkijaa7c8JFz05KnvmPACqYhTQ6AeBT1ZIwaK2NKWIDCpyyZlza06kZW22x5NuLYQ64ZKGLp1bRTmXpw2aqwG36abHS1E09iovdfUXY7Zm32VbOGlWgSvBk18FO/sf1REocURJmxuoyESOTX0RFbujqnJeqFCA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=D6TJCySC; arc=none smtp.client-ip=209.85.222.177
+	s=arc-20240116; t=1747944352; c=relaxed/simple;
+	bh=PwXql5ZCCKKA4XkDZsjmxfvBZJ2akfXd0xfKzICmRAI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=FSdA+uD5Yk2KPpMXeBgqsaD/4LE+HGUaoXRQWW3pE7czLoWyaTbOAqdQrLjXdPysxWkY2SEdURZlOhnzKVc9gLcgcukkAtIYX1FMbMbfeLQB2dq9Qxjeu9/eFaCg9YjujN+XQImjFAu0t+gqg20rVuOWeKzzghXkz4m7gQrnBlA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QI2mnTcH; arc=none smtp.client-ip=209.85.214.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D6TJCySC"
-Received: by mail-qk1-f177.google.com with SMTP id af79cd13be357-7c53b9d66fdso1143422285a.3;
-        Thu, 22 May 2025 13:05:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QI2mnTcH"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-231c88cc984so8515675ad.1;
+        Thu, 22 May 2025 13:05:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747944329; x=1748549129; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=1wSVqz32Lg2dSnny/+XxgnMzOGKReyfgy7ECXHzhydg=;
-        b=D6TJCySC/eB3DE+tB0WW/5HE0IIxZUoqrnHPb6iKTEzqoSkD+Tx7y3Kh/6KrLg6KC3
-         dyV7nRa0iUaiFUC6uzOi0SHwiewOqjSJDCeSnerYKUAixZoY7JROrcstrDbhFPZG+E5v
-         8WzM2gcltOhMKvIGYe1mC4vq2U4hk84RT4A2OmB2hAYjsrl0jGnlfxo1WbtU+DgvxtK3
-         6WvSYOpPUE7PMJG0UMcuAL4jwukUo0AuLOPlqE9fM1BzfuLbP1rBDTchSlrlGV2Jf+6r
-         kmxBiqrZIyPI0L+fC9f/8wE4tA7yygR4Fps6Js7tNZX7hfjhaMg27dGn3cfxaxkW4yxV
-         6F5w==
+        d=gmail.com; s=20230601; t=1747944350; x=1748549150; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PEAP9pb/0X/MHqDazxQDkHXQgCofrGr3ghVoB2vRtOE=;
+        b=QI2mnTcHdAms0/mXpLl0lqvAUK/BxM80gMJXu/Bspk8C5UtKV5606faH4V/Zmb2gXn
+         c9K6nt571x2SIETk0JnDgl0ylvFY21EoSvFIF7XVg9O4RFl6lzEIhqyfkMkE1aL2IbQx
+         Xb2ZizQkizDjwI3oLGG8gXMXnQKLAdZyv0dhPja3P5CDq7NvPLOTzd+dE9CHy/6AhEUi
+         x8f7v97/i8yKkyM3wFH14sJNTVYXQ7hvIA15YNdpmgDYNf34KkeUKbzO2wSWTKzAQQ2L
+         wmQ/LCiBPrWGAMEAJTAEEVZUZjX2wpYhS2Ajwpb3mkcNqEC+P6ZRPFu3+Cc+t0m1oYP+
+         EL9Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747944329; x=1748549129;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=1wSVqz32Lg2dSnny/+XxgnMzOGKReyfgy7ECXHzhydg=;
-        b=ByuQjuRv3mb0ZFw5sdzhzxQ7WQiGeSvOt2QHBznFxjm8KCd9zKDWd5+eOlIAcpVQ4I
-         9NmnLjbSANNWg9eq7hMb+T7ClzT/rGoF6G1LhW38QQL9c7f88DSN6i9SalnqUERYF/03
-         NHR9k5lTIBz5dk1Cr5OTuVU+AS28RIqbFlm+BJuIBEB6KCEJgVkCg9qInSPcveEruOJI
-         r4hnww7Zalc7sETh4OeOxDY71ND9eEydr22BhBceTjunlLjoYvS47mrekqX3tZgsnN21
-         FBBGy2W4zZWsIvZWkk39v03yp9FtExEDfix64qTADNK9Evh2+ALO2fBsWyVmXhoIVqdw
-         U29Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVjT5IxeBM4pnmlwTXtOd12sMwK6Zm9Pkqn3qcMpqjmGtB2Wl7hOpmJrX7lj1mZ1Usg1tDqDrVsRvSsols=@vger.kernel.org, AJvYcCXZHRkSfZ2FTgKzluLrS2n3kv7Ou3YXuxPWXG/bEdTXUsepfPcyTZK5719xArDPZeSDkCZSLcTi1T61+yADRJY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzluRFrPgHI1NOsATl0wMRnnkjZWy3cAcVivQmH8b6CLqpMoNFX
-	dtIOOE38rodB1eUbn62eZSwDDx9004GHOnJePadfQgIE8jR5w7rx8pXc
-X-Gm-Gg: ASbGncvwxNO293r6cATEINV4w/nsSbBBRg/xik8dd1427xgdd86tm2O4FabSjOJZk9Z
-	UUkMVYo7INBrpEPOR3OJm8F3leKfs1bNEfd1ao6cyZx0dHQPHTRaeEkcPP0+YVSSylu3NiRw11E
-	aDd7Cldec4W2fQue0uO/itPF/76o0tTzHXrIuTMXp/c+wmGBmdcXNYYfHiZkHfzLSfZ0tfDFJBI
-	Fuw3E9Vjv2DRWRThYG/XWil1R6qRrUv7YP1X4fgBRwFdkwZ6Xt7V3x81hnuVxeZlT0XVIJY3/iA
-	5vliblVL5yAbGhGR+oMt+wepPad9ajEn4qOkRDiEKD4cfdGSPQyeTJjQEGaqGzlof7m/o+ZcmEQ
-	=
-X-Google-Smtp-Source: AGHT+IG5nSWFEty9vCN6gC150pOJ2PmZw80Dh5SuO3c3/HPGrsLNCcHFR/yUs1nQe+u4ZesyOmiwHw==
-X-Received: by 2002:a05:620a:2903:b0:7c7:a5f5:5616 with SMTP id af79cd13be357-7cd47fae57amr2902555785a.42.1747944329026;
-        Thu, 22 May 2025 13:05:29 -0700 (PDT)
-Received: from localhost.localdomain ([2804:14d:4c64:81ec:7409:107a:a63b:a3da])
-        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-87bec228c01sm10867459241.33.2025.05.22.13.05.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 May 2025 13:05:28 -0700 (PDT)
-From: Rodrigo Gobbi <rodrigo.gobbi.7@gmail.com>
-To: jjohnson@kernel.org
-Cc: ~lkcamp/patches@lists.sr.ht,
-	linux-wireless@vger.kernel.org,
-	ath11k@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH ath-next v3] wifi: ath11k: validate ath11k_crypto_mode on top of ath11k_core_qmi_firmware_ready
-Date: Thu, 22 May 2025 17:01:12 -0300
-Message-ID: <20250522200519.16858-1-rodrigo.gobbi.7@gmail.com>
-X-Mailer: git-send-email 2.49.0
+        d=1e100.net; s=20230601; t=1747944350; x=1748549150;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=PEAP9pb/0X/MHqDazxQDkHXQgCofrGr3ghVoB2vRtOE=;
+        b=icvnt9hMBJfnFzAj5eiXh7ZrGCDUFm8rImNSLJ/Ht/fxv8ZJyg/Xwwm1+p4ZzzRDbs
+         fxONZ1hwNJZhPg2VNLxN+ayL4g/TgJKWF9rSvLpRQvYG3yPi8cscB9mWBKFBgpVc+ctf
+         YY56l2J8rz9XdHuBJlg+zLxbybHo1RSvhNUKU7W8ZJVbL3nGbD1sEntCKgXNVdWao2tV
+         hrkeHaC1PUJATX3G0QhSORXjzeDj2ueSzkkXkWEuORm9mtHc+UbOvraN/DwtqqgZjQW4
+         d+3HZxncAlPDJvxs6xe5v3vaL8VOEEOgimtpcVCTKKzvE8l9ZcSv67VusbY1MXg6Z9sC
+         yqRQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUpVVkbOVsL8KZXl3W5kdJ4LEHT6qwr0/Y/am4IYD0WErqzgVsVR/PcOUhd670fRV9noc6PsBN1rGnOW7E=@vger.kernel.org, AJvYcCVnDs0xiAoPL/5PtIofgLgBJI+uUCTtwBZmxgtJyYto5u+nHVGdlTZfD6IYHIS40Q/CIazJaBkHUTGVWrHccWA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxoTI32ME7OON1eSEw7MpzIyKDLsOnHHVW7auUbATORrjhwmu2/
+	20abbadS3sBIG8KBzpGH4J/R2hQwOHX/jY4tiP/b1VXcMWE/WZMd5aSbRuC0tT4jeS+REtzttTk
+	roWx+0mTUpBUfkmCE/sOPTOkBF+6pPNg=
+X-Gm-Gg: ASbGncuC9roBCK7Ijm/vLw5I+JMUnG/snG1eQagfL5af+r826U2tjSPLGDvrD3beCy9
+	Ds85naRwmyjWIltVqiLXSfH6Zgcg+wHSuq5JL7t3P5UtqxsOkkgyp5rI+40eGVI/cX4+d/pYvM/
+	xWnLIFyr5F3ECIZcn3mNNIqTtax/+cs+xf
+X-Google-Smtp-Source: AGHT+IGPM4c++XAu2BeE0v0Qn2lebj+uX6J1h637R5QAppETAHsqqSaI+d/qnmhdsieSt+fAB2/XC93MamPMrxQDWBg=
+X-Received: by 2002:a17:902:ea0a:b0:224:c46:d164 with SMTP id
+ d9443c01a7336-231d43891f9mr125907535ad.2.1747944350417; Thu, 22 May 2025
+ 13:05:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250413005650.1745894-1-ojeda@kernel.org> <CAH5fLgiF0kZdOYaQi18_LTNx6Onq-5PBomA=bwS0m0z+C0wtvg@mail.gmail.com>
+ <CANiq72ngfTJ5PTYaJOOQ2NedERrLYzA62hL8Fgw5C4QkuZ2R-Q@mail.gmail.com> <Z_0X8Z9M2H0mmcK8@google.com>
+In-Reply-To: <Z_0X8Z9M2H0mmcK8@google.com>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Thu, 22 May 2025 22:05:37 +0200
+X-Gm-Features: AX0GCFsd3MjqVKVYRSlSmd3gv8L2oHNQPn44WQ8nmzQaz13xEZl3bEswwymnTDg
+Message-ID: <CANiq72=ttuQYrGNDqNZDmBN5G4TUpna+ex8eD85HvOP723frDw@mail.gmail.com>
+Subject: Re: [PATCH] rust: add C FFI types to the prelude
+To: Alice Ryhl <aliceryhl@google.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, patches@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-if ath11k_crypto_mode is invalid (not ATH11K_CRYPT_MODE_SW/ATH11K_CRYPT_MODE_HW),
-ath11k_core_qmi_firmware_ready() will not undo some actions that was previously
-started/configured. Do the validation as soon as possible in order to avoid
-undoing actions in that case and also to fix the following smatch warning:
+On Mon, Apr 14, 2025 at 4:13=E2=80=AFPM Alice Ryhl <aliceryhl@google.com> w=
+rote:
+>
+> Hmm. Maybe, but I think having it at the end is okay. Could we catch
+> core::ffi with checkpath instead of clippy? Just search for core::ffi?
 
-drivers/net/wireless/ath/ath11k/core.c:2166 ath11k_core_qmi_firmware_ready()
-warn: missing unwind goto?
+Sure, we can add it as a good first issue (Clippy would still be ideal
+-- it allows to check all the current code).
 
-Signed-off-by: Rodrigo Gobbi <rodrigo.gobbi.7@gmail.com>
----
-Changelog:
-v3: move validation to the beginning of the ath11k_core_qmi_firmware_ready(), so
-we do not need to clean-up things. A small change over the commit msg due that change.
-v2: https://lore.kernel.org/linux-wireless/20250515222520.4922-1-rodrigo.gobbi.7@gmail.com/#t
-v1: https://lore.kernel.org/linux-wireless/20250515004258.87234-1-rodrigo.gobbi.7@gmail.com/
----
- drivers/net/wireless/ath/ath11k/core.c | 28 +++++++++++++-------------
- 1 file changed, 14 insertions(+), 14 deletions(-)
+I came up with this, which puts the right way first:
 
-diff --git a/drivers/net/wireless/ath/ath11k/core.c b/drivers/net/wireless/ath/ath11k/core.c
-index 2e9f8a5e61e4..b894e27435da 100644
---- a/drivers/net/wireless/ath/ath11k/core.c
-+++ b/drivers/net/wireless/ath/ath11k/core.c
-@@ -2134,6 +2134,20 @@ int ath11k_core_qmi_firmware_ready(struct ath11k_base *ab)
- {
- 	int ret;
- 
-+	switch (ath11k_crypto_mode) {
-+	case ATH11K_CRYPT_MODE_SW:
-+		set_bit(ATH11K_FLAG_HW_CRYPTO_DISABLED, &ab->dev_flags);
-+		set_bit(ATH11K_FLAG_RAW_MODE, &ab->dev_flags);
-+		break;
-+	case ATH11K_CRYPT_MODE_HW:
-+		clear_bit(ATH11K_FLAG_HW_CRYPTO_DISABLED, &ab->dev_flags);
-+		clear_bit(ATH11K_FLAG_RAW_MODE, &ab->dev_flags);
-+		break;
-+	default:
-+		ath11k_info(ab, "invalid crypto_mode: %d\n", ath11k_crypto_mode);
-+		return -EINVAL;
-+	}
-+
- 	ret = ath11k_core_start_firmware(ab, ab->fw_mode);
- 	if (ret) {
- 		ath11k_err(ab, "failed to start firmware: %d\n", ret);
-@@ -2152,20 +2166,6 @@ int ath11k_core_qmi_firmware_ready(struct ath11k_base *ab)
- 		goto err_firmware_stop;
- 	}
- 
--	switch (ath11k_crypto_mode) {
--	case ATH11K_CRYPT_MODE_SW:
--		set_bit(ATH11K_FLAG_HW_CRYPTO_DISABLED, &ab->dev_flags);
--		set_bit(ATH11K_FLAG_RAW_MODE, &ab->dev_flags);
--		break;
--	case ATH11K_CRYPT_MODE_HW:
--		clear_bit(ATH11K_FLAG_HW_CRYPTO_DISABLED, &ab->dev_flags);
--		clear_bit(ATH11K_FLAG_RAW_MODE, &ab->dev_flags);
--		break;
--	default:
--		ath11k_info(ab, "invalid crypto_mode: %d\n", ath11k_crypto_mode);
--		return -EINVAL;
--	}
--
- 	if (ath11k_frame_mode == ATH11K_HW_TXRX_RAW)
- 		set_bit(ATH11K_FLAG_RAW_MODE, &ab->dev_flags);
- 
--- 
-2.49.0
+    Rust kernel code refers to C types, such as ``int``, using type
+    aliases such as ``c_int``, which are readily available from
+    the ``kernel`` prelude. Please do not use the aliases from
+    ``core::ffi`` -- they may not map to the correct types.
 
+If neither of you are against that, I will put that in a few days,
+including Danilo's tag.
+
+Thanks!
+
+Cheers,
+Miguel
