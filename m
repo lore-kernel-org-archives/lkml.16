@@ -1,80 +1,268 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.4])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 27CF12512EC;
-	Thu, 22 May 2025 16:41:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.4
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1EFC23BCF3;
+	Thu, 22 May 2025 16:41:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747932087; cv=none; b=pNu/zrpo1/a1fnZC1QjH8xMc3CaZXHY09LstLq4B2aZ4eE5whaCJkubal4Rft7uRlC4lgpVcaLO6vJyQcd1bcmePXnv8iH6pYG4pmOftdvJALl92mdLIQQKW7G6fXzDNdGTvrvqnWc2fQgAybOLZTBFzONJqNHxWmR74pgmjJKo=
+	t=1747932119; cv=none; b=uEK6pgvN9JEJaRnCS+H3hcbe5saymdtb8FN+0Qe+RnaEP45r7LMZzp8OEeQD4kdpX//duHx0Gxjy93+ezg3ktZpnfl/pVdC/FnyoVWAHfJCx38tPLCcZETMmzkw53997qSsBpXLRsNKv3bG312YO9T/8PfKZzB6LlapTuSCk4oU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747932087; c=relaxed/simple;
-	bh=crPL1jEiYz9vumhMbCM8KylOWiGOqdsKjRUv6x/Lj0o=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=IktMXArPN9UkYGwUoSgfVZCGf0Wwuk5ybZFZ9KWx7s6YWJb4C3zJg9lw5RTMiE5xGfRsKY5EeSbofsq9q86+ny1bFrS58Jl2/PuWTynzzpx1G9zCyAGwHYIRQlVr9VlD99x5XNUvKv/babNZsIlIRr+eaQMc6rmegpWyTDcxtso=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=jueRHUc2; arc=none smtp.client-ip=117.135.210.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1747932119; c=relaxed/simple;
+	bh=SpacbBiVU2Pqfd4vTeSA9VS+2Q412z1EYkTywjIUPIk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IQngAbWcLeiVwNM9l3rMp1hgkmchOU36nQ02e9olpZjLCTqCZ5esXiF3WtNs3phOgEe6hYdbes7XzNisQ3xKp6JOMHULQtOCEY/9jHBuuhuy2DA3EaVn//D8bqf/eGHHvO0UWRM5InpMGmzGDKwIvq0rGCGRjmyz+HgelIvCaTA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=i59d+CEO; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="jueRHUc2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:To:
-	Content-Type; bh=cmCLcWS0KLMM912YRmQXXhWg3w7uEQGxZs6hXxfJW4k=;
-	b=jueRHUc2fb7ak/hlRgDgFEadBFdSL/cVjmLFAHOhJ9fT5oSP7Eulp5I+N+0nFO
-	EcMRhvXxKXM85lIDX7EL0iGf+JqCtHWcDFP6wtgmHpa4Y6nDcxwlXfwtSD/72cNe
-	OwiJGJWikEDMwMiAEWcaImFZ1SD5lJgnuafa76QQwJiVc=
-Received: from [192.168.71.93] (unknown [])
-	by gzga-smtp-mtada-g1-1 (Coremail) with SMTP id _____wCnDlebUy9onccJDQ--.9263S2;
-	Fri, 23 May 2025 00:41:00 +0800 (CST)
-Message-ID: <8ae7e59e-a47f-4005-ae30-90d4be78c536@163.com>
-Date: Fri, 23 May 2025 00:40:59 +0800
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="i59d+CEO"
+Received: from pendragon.ideasonboard.com (179.218-130-109.adsl-dyn.isp.belgacom.be [109.130.218.179])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 984D7605;
+	Thu, 22 May 2025 18:41:32 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1747932092;
+	bh=SpacbBiVU2Pqfd4vTeSA9VS+2Q412z1EYkTywjIUPIk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=i59d+CEOAGVcQEkILZCTGVG8HgC4GGDp38wDv3SyLG6MrXwemerYL0q9SJQLFNImI
+	 ifEBKqt5t1wuw5FD/maDZl90RNN/vaadS2qhq/eA0D0tmXmNFue5nBFyIPEQmv1aFY
+	 +2ySTC4TBO3ntFS8scy5KyVCRst1VitxjNLuEmO0=
+Date: Thu, 22 May 2025 18:41:47 +0200
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Stefan Klug <stefan.klug@ideasonboard.com>
+Cc: linux-media@vger.kernel.org, Dafna Hirschfeld <dafna@fastmail.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Heiko Stuebner <heiko@sntech.de>,
+	linux-rockchip@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	Hans Verkuil <hans@jjverkuil.nl>
+Subject: Re: [PATCH 2/3] media: rkisp1: Add
+ RKISP1_CID_SUPPORTED_PARAMS_BLOCKS control
+Message-ID: <20250522164147.GV12514@pendragon.ideasonboard.com>
+References: <20250522150944.400046-2-stefan.klug@ideasonboard.com>
+ <20250522150944.400046-4-stefan.klug@ideasonboard.com>
+ <20250522155641.GU12514@pendragon.ideasonboard.com>
+ <174793176608.244022.1396416000017796106@localhost>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] i2c: tegra: Add missing kernel-doc for dma_dev member
-From: Hans Zhang <18255117159@163.com>
-To: =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>
-Cc: bhelgaas@google.com, manivannan.sadhasivam@linaro.org,
- ajayagarwal@google.com, ilpo.jarvinen@linux.intel.com,
- linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250522163251.399223-1-18255117159@163.com>
- <20250522163535.GA3558378@rocinante>
- <8472c23c-167f-4e77-bc04-a9498fd41fa8@163.com>
-Content-Language: en-US
-In-Reply-To: <8472c23c-167f-4e77-bc04-a9498fd41fa8@163.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wCnDlebUy9onccJDQ--.9263S2
-X-Coremail-Antispam: 1Uf129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
-	VFW2AGmfu7bjvjm3AaLaJ3UbIYCTnIWIevJa73UjIFyTuYvjxU05rcDUUUU
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/xtbBDx9Vo2gvSyDRZgAAs9
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <174793176608.244022.1396416000017796106@localhost>
 
-
-
-On 2025/5/23 00:39, Hans Zhang wrote:
+On Thu, May 22, 2025 at 06:36:06PM +0200, Stefan Klug wrote:
+> Hi Laurent,
 > 
+> Thank you for the review.
 > 
-> On 2025/5/23 00:35, Krzysztof Wilczyński wrote:
->> Hello,
->>
->> [...]
->>>   drivers/i2c/busses/i2c-tegra.c | 1 +
->>
->> I think you got a wrong set of maintainers here. :)
->>
->> Thank you!
->>
->>     Krzysztof
+> Quoting Laurent Pinchart (2025-05-22 17:56:41)
+> > Hi Stefan,
+> > 
+> > Thank you for the patch.
+> > 
+> > On Thu, May 22, 2025 at 05:08:39PM +0200, Stefan Klug wrote:
+> > > Add a RKISP1_CID_SUPPORTED_PARAMS_BLOCKS V4L2 control to be able to
+> > > query the parameters blocks supported by the current kernel on the
+> > > current hardware from user space.
+> > > 
+> > > Signed-off-by: Stefan Klug <stefan.klug@ideasonboard.com>
+> > > ---
+> > >  .../platform/rockchip/rkisp1/rkisp1-common.h  |  2 +
+> > >  .../platform/rockchip/rkisp1/rkisp1-params.c  | 50 ++++++++++++++++++-
+> > >  include/uapi/linux/rkisp1-config.h            | 10 ++++
+> > >  include/uapi/linux/v4l2-controls.h            |  6 +++
+> > >  4 files changed, 67 insertions(+), 1 deletion(-)
+> > > 
+> > > diff --git a/drivers/media/platform/rockchip/rkisp1/rkisp1-common.h b/drivers/media/platform/rockchip/rkisp1/rkisp1-common.h
+> > > index ca952fd0829b..5f187f9efc7b 100644
+> > > --- a/drivers/media/platform/rockchip/rkisp1/rkisp1-common.h
+> > > +++ b/drivers/media/platform/rockchip/rkisp1/rkisp1-common.h
+> > > @@ -415,6 +415,8 @@ struct rkisp1_params {
+> > >       spinlock_t config_lock; /* locks the buffers list 'params' */
+> > >       struct list_head params;
+> > >  
+> > > +     struct v4l2_ctrl_handler ctrls;
+> > > +
+> > >       const struct v4l2_meta_format *metafmt;
+> > >  
+> > >       enum v4l2_quantization quantization;
+> > > diff --git a/drivers/media/platform/rockchip/rkisp1/rkisp1-params.c b/drivers/media/platform/rockchip/rkisp1/rkisp1-params.c
+> > > index 918eb06c7465..60c9b3c46593 100644
+> > > --- a/drivers/media/platform/rockchip/rkisp1/rkisp1-params.c
+> > > +++ b/drivers/media/platform/rockchip/rkisp1/rkisp1-params.c
+> > > @@ -2736,6 +2736,45 @@ static int rkisp1_params_init_vb2_queue(struct vb2_queue *q,
+> > >       return vb2_queue_init(q);
+> > >  }
+> > >  
+> > > +static int rkisp1_ctrl_init(struct rkisp1_params *params)
+> > > +{
+> > > +     int ret;
+> > > +
+> > > +     v4l2_ctrl_handler_init(&params->ctrls, 1);
+> > > +
+> > > +     struct v4l2_ctrl_config ctrl_config = {
+> > > +             .id = RKISP1_CID_SUPPORTED_PARAMS_BLOCKS,
+> > > +             .name = "Supported Params Blocks",
+> > > +             .type = V4L2_CTRL_TYPE_BITMASK,
+> > > +             .flags = V4L2_CTRL_FLAG_READ_ONLY,
+> > > +     };
+> > 
+> >         struct v4l2_ctrl_config ctrl_config = {
+> >                 .id = RKISP1_CID_SUPPORTED_PARAMS_BLOCKS,
+> >                 .name = "Supported Params Blocks",
+> >                 .type = V4L2_CTRL_TYPE_BITMASK,
+> >                 .flags = V4L2_CTRL_FLAG_READ_ONLY,
+> >         };
+> >         int ret;
+> > 
+> >         v4l2_ctrl_handler_init(&params->ctrls, 1);
+> > 
+> > Mixing code and variable declarations is still usually frown upon in the
+> > kernel.
 > 
-> Dear Krzysztof,
-> 
-> Yes, I just found out. I'm very sorry.
-> 
+> I thought frown upon is not a no. And as this structure is not yet
+> complete and is modified afterwards it feels natural to me to put it
+> close to that place. But I can move it above the function. You decide.
 
-The notes made locally have been copied and sent to the previous email 
-address. It has been resent to the corresponding Maintainer. :)
+It obviously take someone to make the first move for things to change
+:-) I however tend to favour consistency in coding style within a
+driver.
 
-> Best regards,
-> Hans
+> > > +
+> > > +     for (unsigned int i = 0; i < ARRAY_SIZE(rkisp1_ext_params_handlers); i++) {
+> > > +             const struct rkisp1_ext_params_handler *block_handler;
+> > > +
+> > > +             block_handler = &rkisp1_ext_params_handlers[i];
+> > > +             ctrl_config.max |= BIT(i);
+> > > +
+> > > +             if ((params->rkisp1->info->features & block_handler->features) !=
+> > > +                 block_handler->features)
+> > > +                     continue;
+> > > +
+> > > +             ctrl_config.def |= BIT(i);
+> > > +     }
+> > > +
+> > > +     v4l2_ctrl_new_custom(&params->ctrls, &ctrl_config, NULL);
+> > > +
+> > > +     params->vnode.vdev.ctrl_handler = &params->ctrls;
+> > > +
+> > > +     if (params->ctrls.error) {
+> > > +             ret = params->ctrls.error;
+> > > +             v4l2_ctrl_handler_free(&params->ctrls);
+> > > +             return ret;
+> > > +     }
+> > > +
+> > > +     return 0;
+> > > +}
+> > > +
+> > >  int rkisp1_params_register(struct rkisp1_device *rkisp1)
+> > >  {
+> > >       struct rkisp1_params *params = &rkisp1->params;
+> > > @@ -2776,10 +2815,16 @@ int rkisp1_params_register(struct rkisp1_device *rkisp1)
+> > >  
+> > >       video_set_drvdata(vdev, params);
+> > >  
+> > > +     ret = rkisp1_ctrl_init(params);
+> > > +     if (ret) {
+> > > +             dev_err(rkisp1->dev, "Control initialization error %d\n", ret);
+> > > +             goto err_mutex;
+> > > +     }
+> > > +
+> > >       node->pad.flags = MEDIA_PAD_FL_SOURCE;
+> > >       ret = media_entity_pads_init(&vdev->entity, 1, &node->pad);
+> > >       if (ret)
+> > > -             goto err_mutex;
+> > > +             goto err_ctrl;
+> > >  
+> > >       ret = video_register_device(vdev, VFL_TYPE_VIDEO, -1);
+> > >       if (ret) {
+> > > @@ -2792,6 +2837,8 @@ int rkisp1_params_register(struct rkisp1_device *rkisp1)
+> > >  
+> > >  err_media:
+> > >       media_entity_cleanup(&vdev->entity);
+> > > +err_ctrl:
+> > > +     v4l2_ctrl_handler_free(&params->ctrls);
+> > >  err_mutex:
+> > >       mutex_destroy(&node->vlock);
+> > >       return ret;
+> > > @@ -2808,5 +2855,6 @@ void rkisp1_params_unregister(struct rkisp1_device *rkisp1)
+> > >  
+> > >       vb2_video_unregister_device(vdev);
+> > >       media_entity_cleanup(&vdev->entity);
+> > > +     v4l2_ctrl_handler_free(&params->ctrls);
+> > >       mutex_destroy(&node->vlock);
+> > >  }
+> > > diff --git a/include/uapi/linux/rkisp1-config.h b/include/uapi/linux/rkisp1-config.h
+> > > index 2d995f3c1ca3..4fc8f221d0c4 100644
+> > > --- a/include/uapi/linux/rkisp1-config.h
+> > > +++ b/include/uapi/linux/rkisp1-config.h
+> > > @@ -1086,6 +1086,9 @@ enum rkisp1_ext_params_block_type {
+> > >  #define RKISP1_EXT_PARAMS_FL_BLOCK_DISABLE   (1U << 0)
+> > >  #define RKISP1_EXT_PARAMS_FL_BLOCK_ENABLE    (1U << 1)
+> > >  
+> > > +/* A bitmask of parameters blocks supported on the current hardware. */
+> > > +#define RKISP1_CID_SUPPORTED_PARAMS_BLOCKS   (V4L2_CID_USER_RKISP1_BASE + 0x01)
+> > > +
+> > >  /**
+> > >   * struct rkisp1_ext_params_block_header - RkISP1 extensible parameters block
+> > >   *                                      header
+> > > @@ -1520,6 +1523,13 @@ enum rksip1_ext_param_buffer_version {
+> > >   * V4L2 control. If such control is not available, userspace should assume only
+> > >   * RKISP1_EXT_PARAM_BUFFER_V1 is supported by the driver.
+> > >   *
+> > > + * The read-only V4L2 control ``RKISP1_CID_SUPPORTED_PARAMS_BLOCKS`` can be used
+> > > + * to query the blocks supported by the current hardware. It contains a bitmask
+> > 
+> > s/current hardware/device/
+> > 
+> > > + * where each bit represents the availability of the corresponding entry
+> > > + * from the :c:type:`rkisp1_ext_params_block_type` enum. The max value of the
+> > > + * control represents the blocks supported by the current kernel (independent of
+> > > + * the current hardware).
+> > 
+> >  * from the :c:type:`rkisp1_ext_params_block_type` enum. The current and default
+> >  * values of the control represents the blocks supported by the device instance,
+> >  * while the maximum value represents the blocks supported by the kernel driver,
+> >  * independently of the device instance.
+> > 
+> > I was going to say that the control should be documented in
+> > Documentation/userspace-api/drivers/rkisp1.rst, but rkisp1-config.h is
+> > pulled in the documentation tree by
+> > Documentation/userspace-api/media/v4l/metafmt-rkisp1.rst, so I'm OK with
+> > this. Hans, Mauro, are you fine as well with documenting the control
+> > here ?
+> 
+> Looking at the docs, I realized that most people will read the already
+> existing docs. So creating a completely new file just for the single
+> control didn't feel good. As you like.
+> 
+> > Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> > 
+> > > + *
+> > >   * For each ISP block that userspace wants to configure, a block-specific
+> > >   * structure is appended to the @data buffer, one after the other without gaps
+> > >   * in between nor overlaps. Userspace shall populate the @data_size field with
+> > > diff --git a/include/uapi/linux/v4l2-controls.h b/include/uapi/linux/v4l2-controls.h
+> > > index 72e32814ea83..f836512e9deb 100644
+> > > --- a/include/uapi/linux/v4l2-controls.h
+> > > +++ b/include/uapi/linux/v4l2-controls.h
+> > > @@ -222,6 +222,12 @@ enum v4l2_colorfx {
+> > >   */
+> > >  #define V4L2_CID_USER_UVC_BASE                       (V4L2_CID_USER_BASE + 0x11e0)
+> > >  
+> > > +/*
+> > > + * The base for Rockchip ISP1 driver controls.
+> > > + * We reserve 16 controls for this driver.
+> > > + */
+> > > +#define V4L2_CID_USER_RKISP1_BASE            (V4L2_CID_USER_BASE + 0x1220)
+> > > +
+> > >  /* MPEG-class control IDs */
+> > >  /* The MPEG controls are applicable to all codec controls
+> > >   * and the 'MPEG' part of the define is historical */
 
+-- 
+Regards,
+
+Laurent Pinchart
