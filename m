@@ -1,141 +1,85 @@
-Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [80.241.56.172])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 035BB221D9E;
-	Thu, 22 May 2025 13:34:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAF093010C;
+	Thu, 22 May 2025 13:37:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747920875; cv=none; b=j1mr/GtcvzG4UOPTAaiyBY2grBpLjdMoqCCamHluM83bfv95hOdsX6Qdbt8J3HVqUlWOtPBtPLeRzI1YAmZMfU0naI5oYvYHzWoLLTyKpipBwNcP8LEcPrM6n2jUJLvpQcdSzCpBZJdHfyexOVwmR4At+UegOcCm9fJzThRNauc=
+	t=1747921069; cv=none; b=KUft6oxESodkucclcLqqTjR8OE7CobniaY8ylMGqtlM+D4Rl17lF4n5cSTf4OMSYSFgyOY+vqTsWHz/MgX2bXHzC8zsECgV09xbu+3xO0pLg2RyeT/eu4iBG9Mj0VAOGwyFa4wKFUf62Hg4RNKOhYZrP/G62l7gagEQMqsJrVnw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747920875; c=relaxed/simple;
-	bh=8GZdBTOYVGwbZLvXBpdpHobZi2bZ9UpNg9GvNcbl24g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OUkAkZU8NEyBJMx1qylukteA18142FlKyAAnXoQyz+q0/boWM/aQLFHX56E9zIxJp81lGPl1UKHMdfX4EotbvzIwxFaPLpE44D8lXMFS4vgoAqSJ4zc8dfj7pjWpgq58pbTSfG1nEZnf7h0Li11eau4gWsWHfC7x3KVyomONLyk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pankajraghav.com; spf=pass smtp.mailfrom=pankajraghav.com; dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b=HrGq0kn0; arc=none smtp.client-ip=80.241.56.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pankajraghav.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pankajraghav.com
+	s=arc-20240116; t=1747921069; c=relaxed/simple;
+	bh=O5IayrBokl5BHsWRWLoEYER4M1qM4RaD1n/YXy1JPlo=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=ZbbWQH+UP/YPtWlz/RtwFWR5PnQsaTMcSNTGGlPWTQiHEKM/m4Dwn+fPs6R3UU+3BlP5qHod9gY/V54hjA8szHVwcT/fFU5IPeywfHj6wUWnIVL1wSJBbKSrXMK6G9ZoVSSkuJdgtcKeHoeuYudXVeeSo0AuTkjASuLb/1J666M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ufnRlrlI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b="HrGq0kn0"
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [10.196.197.2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4b38Qs0sDSz9sr6;
-	Thu, 22 May 2025 15:34:29 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pankajraghav.com;
-	s=MBO0001; t=1747920869;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=HglpUfe4kmsfzDLqBmD4mwNcQaYbHQqEm+gYK0kZUv4=;
-	b=HrGq0kn0IswTMrElT71G4ZbK3lUndY7xUDOTKbv2J80oqPrjLnUqLn3Fi7gSIsFWizXlKH
-	lET7rBNAo32lcL2lchoPLdDYG+yTQcX9pqm55XyS7dPpHzVrlyZqtrDpaUuKLtT1qjJ/xH
-	BQbXyJbjAWLxsFsUCsyzxVRP/SqXyQ/KFyesfs/5enWVN0YbWPTYoZ0Nu4V+IiNx/vGBwJ
-	yKGuzIficxnnHqOVo1Sva0+r3cY2I9dM5TP/N9SXqnh6OX7LG57zDJsnErFsM5TldjywJC
-	q9PHiKQsrqg4H2Qgzwx+X0ivgfrDH7WwWNm15hdk33MI9vgZ6a0Yb0Jq7m0sIQ==
-Date: Thu, 22 May 2025 15:34:17 +0200
-From: "Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>
-To: David Hildenbrand <david@redhat.com>
-Cc: Mike Rapoport <rppt@kernel.org>, Pankaj Raghav <p.raghav@samsung.com>, 
-	Suren Baghdasaryan <surenb@google.com>, Vlastimil Babka <vbabka@suse.cz>, 
-	Ryan Roberts <ryan.roberts@arm.com>, Michal Hocko <mhocko@suse.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, Nico Pache <npache@redhat.com>, Dev Jain <dev.jain@arm.com>, 
-	Baolin Wang <baolin.wang@linux.alibaba.com>, Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>, 
-	"H . Peter Anvin" <hpa@zytor.com>, Zi Yan <ziy@nvidia.com>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, "Liam R . Howlett" <Liam.Howlett@oracle.com>, 
-	Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	"Darrick J . Wong" <djwong@kernel.org>, gost.dev@samsung.com, hch@lst.de, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, willy@infradead.org, x86@kernel.org, mcgrof@kernel.org
-Subject: Re: [RFC v2 0/2] add THP_HUGE_ZERO_PAGE_ALWAYS config option
-Message-ID: <b3ceg4gdg5exbugyarudabfuaowvqfqgrzo62hoexxhvvfwjs7@4dbrig7wm7ds>
-References: <20250522090243.758943-1-p.raghav@samsung.com>
- <aC8LGDwJXvlDl866@kernel.org>
- <6lhepdol4nlnht7elb7jx7ot5hhckiegyyl6zeap2hmltdwb5t@ywsaklwnakuh>
- <6894a8b1-a1a7-4a35-8193-68df3340f0ad@redhat.com>
- <625s5hffr3iz35uv4hts4sxpprwwuxxpbsmbvasy24cthlsj6x@tg2zqm6v2wqm>
- <eab4b461-9717-47df-8d56-c303c3f6012d@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ufnRlrlI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6207CC4CEEB;
+	Thu, 22 May 2025 13:37:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747921069;
+	bh=O5IayrBokl5BHsWRWLoEYER4M1qM4RaD1n/YXy1JPlo=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=ufnRlrlI+WGrlVfJmnUwZzSh4CuegJqXHfUT1UxCSOsPW+KHuf5vk6JL3yWMym/OL
+	 VGpTF+amRwiDq+bsXz1lyHhX4UdM4WJX3ZfR4M2z8gOjBxgZQ2k1K1jvorfqor/AHJ
+	 Z+1DoXqifVSGmIlQSfzi7KrFLQngM+dSIfklVlopBWL09lfOtQHNp36dLeGDqu6ouO
+	 jmd1vbaf+QANWxcSDApMRevDEPL7+LJYWCsUyqQIVee/FFtQbfiANL3jENEmqfD2OK
+	 /5pE2ocFwN0A28hYnVnLFeR+RYpkmtunomRGL3oIqKNCIajuGx0nRPVf0haAj5YFsj
+	 IYFzflJpzEW4Q==
+From: Mark Brown <broonie@kernel.org>
+To: Richard Fitzgerald <rf@opensource.cirrus.com>
+Cc: linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ patches@opensource.cirrus.com
+In-Reply-To: <20250522103816.543919-1-rf@opensource.cirrus.com>
+References: <20250522103816.543919-1-rf@opensource.cirrus.com>
+Subject: Re: [PATCH] ASoC: wm_adsp: Make cirrus_dir const
+Message-Id: <174792106813.84332.11770588156901299671.b4-ty@kernel.org>
+Date: Thu, 22 May 2025 14:37:48 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <eab4b461-9717-47df-8d56-c303c3f6012d@redhat.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.15-dev-c25d1
 
-On Thu, May 22, 2025 at 02:50:20PM +0200, David Hildenbrand wrote:
-> On 22.05.25 14:34, Pankaj Raghav (Samsung) wrote:
-> > Hi David,
-> > 
-> > > >    config ARCH_WANTS_THP_SWAP
-> > > >           def_bool n
-> > > > -config ARCH_WANTS_THP_ZERO_PAGE_ALWAYS
-> > > > +config ARCH_WANTS_HUGE_ZERO_PAGE_ALWAYS
-> > > >           def_bool n
-> > > > +config HUGE_ZERO_PAGE_ALWAYS
-> > > 
-> > > Likely something like
-> > > 
-> > > PMD_ZERO_PAGE
-> > > 
-> > > Will be a lot clearer.
-> > 
-> > Sounds much better :)
+On Thu, 22 May 2025 11:38:16 +0100, Richard Fitzgerald wrote:
+> The cirrus_dir pointer should be const data but was missing the second
+> const needed to achieve this.
 > 
-> And maybe something like
+> I haven't marked this as a 'Fixes' because it isn't causing any bugs,
+> it's only a code improvement.
 > 
-> "STATIC_PMD_ZERO_PAGE"
 > 
-> would be even clearer.
-> 
-> The other one would be the dynamic one.
+> [...]
 
-Got it.
-So if I understand correctly, we are going to have two huge zero pages,
-- one that is always allocated statically.
-- the existing dynamic will still be there for the existing users.
+Applied to
 
-> 
-> > 
-> > > 
-> > > > +       def_bool y> +       depends on HUGETLB_PAGE &&
-> > > ARCH_WANTS_HUGE_ZERO_PAGE_ALWAYS
-> > > 
-> > > I suspect it should then also be independent of HUGETLB_PAGE?
-> > 
-> > You are right. So we don't depend on any of these features.
-> > 
-> > > 
-> > > > +       help
-> > > > +         Typically huge_zero_folio, which is a huge page of zeroes, is allocated
-> > > > +         on demand and deallocated when not in use. This option will always
-> > > > +         allocate huge_zero_folio for zeroing and it is never deallocated.
-> > > > +         Not suitable for memory constrained systems.
-> > > 
-> > > I assume that code then has to live in mm/memory.c ?
-> > 
-> > Hmm, then huge_zero_folio should have always been in mm/memory.c to
-> > begin with?
-> > 
-> 
-> It's complicated. Only do_huge_pmd_anonymous_page() (and fsdax) really uses
-> it, and it may only get mapped into a process under certain conditions
-> (related to THP / PMD handling).
-> 
-Got it.
-> > 
-> > So IIUC your comment, we should move the huge_zero_page_init() in the
-> > first patch to mm/memory.c and the existing shrinker code can be a part
-> > where they already are?
-> 
-> Good question. At least the "static" part can easily be moved over. Maybe
-> the dynamic part as well.
-> 
-> Worth trying it out and seeing how it looks :)
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
 
-Challenge accepted ;) Thanks for the comments David.
+Thanks!
 
---
-Pankaj
+[1/1] ASoC: wm_adsp: Make cirrus_dir const
+      commit: fd4b6c0fdf71d71f2bbc2f9aceb6f0814b4d93e2
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
