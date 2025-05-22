@@ -1,123 +1,123 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+Received: from mail-pl1-f226.google.com (mail-pl1-f226.google.com [209.85.214.226])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41D5812DD95
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 17:24:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96B0D12DD95
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 17:25:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.226
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747934659; cv=none; b=awtECZqo/9pBSOQEJbYGhLGCeZydMHFybu9WnrhI/M848L1UCQaqljmfSi+Y6Q3V0XmWeehjAzWkzyAcOzCZeNRJwm4JyPqZwsuRhoExpw3KQxWf3T/7To8SHFON3XgLCQW+Bm76OnIrxjdQnWpt8eZP+Xyh4SB6yI2noXpLhgI=
+	t=1747934741; cv=none; b=X9pSq3qWiMv85umqGaOGWfcYk6nwZ9MxSOSRl8FDazTBqEAMy6iBbKX3vx+3/dQ+mnF0m0HqLAN39gHDUM1/cbOihp8l/UBzEJgVPIwWKo1Z2E6i6BVcDE9m15kiM98bZHqd5T198gr0e42rDvP4L5VTdCFhDyPsoEX6peU3UPc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747934659; c=relaxed/simple;
-	bh=KvaN/yfKGtsdh01A/Vg2kwDIuhYHaquHlXyuOmWW2AY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fibp5mBAbQMRyo7boKC12Tz9LYTw5EiAsqbAKZ9HDeSwPNKQ+7zP8jj6Ct/vjtR8voyGGMBG/mneQuguYvuWF2MyvbBVp7pg5eFeM0YBXFlVxVwxSctqFmXnR009y0nuihsM0qxtNoviTUnxQQ2xujZ4z/wu5adF7lu2wDsdvBY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=kqw/jrLu; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1747934741; c=relaxed/simple;
+	bh=pG+Ljcg2NdLwwejPnVH/lD8ZYAmgFCkB4ASHTJpwEYU=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version; b=TcPVv4u3+TDOAuW08o3I9qEIo08h/aF++pg2V0PJo4zlGeag6AEDPQffMWel4IuN/khNMw1o7otARuob67iT/E4Hj6AkwI57doP1di/5CnDb50l3s/0P+YolyH4nq1m/pXu17E0VqPLDx9pdzYnaIa/HvcD5dMFQdBDjbuLWLfs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=fO+thVoU; arc=none smtp.client-ip=209.85.214.226
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="kqw/jrLu"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-2322bace4ceso46693315ad.2
-        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 10:24:17 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="fO+thVoU"
+Received: by mail-pl1-f226.google.com with SMTP id d9443c01a7336-231ecbe2a5dso6209895ad.0
+        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 10:25:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1747934657; x=1748539457; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=MEF6GYIX6oyyajg52e52+WAYQucDYWoIxRKIMxJyhFk=;
-        b=kqw/jrLub+zCKPoBet4PGFa78Su6c28iN9OUXjF5lmi1ETg4dBGQXs+SlrCto4/Fhn
-         BxnmCVISVwgV7OI6Gq9kLLDi82bOYFNJj1YOeUU57fyIbccmaKHmnQdbc7XuCxVodBWy
-         8hgfYZZZNwnXOvV5HoS2E60MgFegTogiujbDs=
+        d=broadcom.com; s=google; t=1747934739; x=1748539539; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Tw7FWHJTHoTxSyh8sMffr2afOmlsN99OAoBlNLmMnx8=;
+        b=fO+thVoUyU526U49xg/hc95ltVDCIovtcchTW8y5KUjYLLCXh9kPMjCZSN9HQK/Oxk
+         wYByQcB8KleiPCEQUaNDWHkXQ4YhsNG0+1F3wSjY92KOfcA1bcFDKia/xV1MrV52i6Ay
+         xRCEJtzYZjPBAXsnMMorLsgzvI57WCy0DKvyw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747934657; x=1748539457;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MEF6GYIX6oyyajg52e52+WAYQucDYWoIxRKIMxJyhFk=;
-        b=fCUk6c8TJctgdntYqs83Of4STtsnj7KkU7LyJEBsQCIfMd930E9wXsZ8Z5x1pzJATk
-         jPADMbUFPSwFwZ391Vlti9bXqqnDc8KEj27PvuaIIOU6j2KrcGP6idEsRRNenP5l+435
-         gkMtpFKk9AbMF0y07F5lN4MIJTU/m1YuHc2G7xWdrYvPihNHihWeGHAymivmES/hhA2L
-         iQHFkSvjOnkFE9Y3rQykyanIfv4YolwfzEJgHVmtIXrWuFgV2rgjvvRmlvXqUrXv7rmu
-         KqF6fclu3H5L87l706D2n62YLCyV0LWQeA01xf+MVgtoUU7g1RZUR+AWDd18vI3DAfzZ
-         SPjA==
-X-Forwarded-Encrypted: i=1; AJvYcCV1xExbSivCyhYXrOOZia7Vqwk5fzg+oC7PJtjADEfIw5W74JZT2ohE1p4VSPD+uIiPlCsSIUph5UpVMYU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwYHz+SQenfn96krQidt/ZyjJiX489SjbWxUPv3DxOeioVGFf+X
-	ojiE8YcQ27B/cjVKqgkr9Jj7p3uMUvaDtfI46VITcUw1rYk24d/YYMNZBLytkDS65g==
-X-Gm-Gg: ASbGncuQTqdtGVUan8I1siutNKmrDIaogyKdxU4p1PBAnAq90ZIZ6/yAM4oG+jox/xm
-	AhrwQ9K66oKETLFWqQqTS1CPTxqLsMDqJrfQnh9Ps9GmFBuojMGugU8RpiikFwQ/PQyEXK+IoEF
-	DIa3WEIZiLeBgUh/il+pximZcJymjkhpN7pn4wWkhx58xF4rQB92Uqd3iG5tPWz1svo5XwVCRo2
-	8B3lGCeYhzcngj+aanhk436cjRBCapAQbKJmdgi+EEhJIMg/OTd8PwpiklHZIPc0a4Je4SbztQ+
-	dWviYfMxNHPN7hqWzGAF/nlesgNE7sZNc9YTRzVbcmKDCQATHAUMnO81Emg9H+cSPFlYOfkoem7
-	KGc2XihGyhk4Jog==
-X-Google-Smtp-Source: AGHT+IFRSz/tRaVeLZrqA1fX8rhsQ1UTYI64MklqaLYZeJlKbPrLh3UFKLqJnOjYtsSZL7+ciGxB4A==
-X-Received: by 2002:a17:902:d4c8:b0:220:eade:d77e with SMTP id d9443c01a7336-231d452da59mr375514505ad.40.1747934657477;
-        Thu, 22 May 2025 10:24:17 -0700 (PDT)
-Received: from localhost ([2a00:79e0:2e14:7:88a1:1660:1cc7:bb28])
-        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-231d4ed239bsm111440565ad.219.2025.05.22.10.24.16
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 22 May 2025 10:24:16 -0700 (PDT)
-Date: Thu, 22 May 2025 10:24:14 -0700
-From: Brian Norris <briannorris@chromium.org>
-To: rafael@beims.me
-Cc: Francesco Dolcini <francesco@dolcini.it>,
-	Rafael Beims <rafael.beims@toradex.com>,
-	linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] wifi: mwifiex: enable host mlme on sdio W8997 chipsets
-Message-ID: <aC9dvv6Ki1T5RsHF@google.com>
-References: <20250521101950.1220793-1-rafael@beims.me>
+        d=1e100.net; s=20230601; t=1747934739; x=1748539539;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Tw7FWHJTHoTxSyh8sMffr2afOmlsN99OAoBlNLmMnx8=;
+        b=Kiybu80/CoIeRACdzhzZDkj1XOxM7vxfjJ//nnQxBpN8BSJJ/572S0BiiFtZkPKArt
+         jzdWqL/q6d1Y+/1SUzyqofTEUeJqzFXLpZS/cxh/ORvo5qZcMznkaXWqrPRT3+ByZtl7
+         /GT/gWaRdS035NWqkIFjWPqIcvWJKzKBjtGQ26kUE7qjCLMBXznZLNnxGjT384vQ1Lfz
+         juVKvsQadpaN1QnDHfsluEHgBDSwhLlwnuS+3LGrasnRWpBmQiPyB6yrRzoKpzg0oXE/
+         0VCb5Gv5gMe1DSjgr5XNugj13WEDSLMG+eoP2rcScGY1sPFRRI69vS9Osp9JZC4arbI+
+         tLfQ==
+X-Gm-Message-State: AOJu0YyEF0WQUmx1WZDtLEGGXxq3iS93t5CbLPuStWqQE5593deGCFOq
+	ZhhAA4K+lA3BmejLB4/fB8rI81eo3SMntjDanbTvOOsI27nDS5oJMpvw7giPHvGm+FiHlCLWjz6
+	giOHLIcek3IyZmEp9tqxvx/ovyPTWNJzIlNYbdv5U8lS3NrFE+wOkuY5geVBeJg/geLJp14fKCc
+	H+sB7hg9BHjNPQoAiKwN+Grc75KJoqcvpjVl8Sb3QrYVkA3fjfeNzoi+vrWsTNuro8oemkZtA4l
+	FeER2Akybc=
+X-Gm-Gg: ASbGncvJNqq3RIDvirb4A9CSFuDtfH0xZ5YiryTFWY5dMO172H9K0fj/QhU1lMvvE/T
+	bDbkvEJNNHQ3YBuZso4UWtckM+mBsyxZEO/wjMV+SPrDEk2V+O37VjN3Vd/axf1pShVj2V2xGRH
+	LICXnP3MEpbx37EZPWArkyhqBzMWIrw4CR0Mmc5qmBxoswCVxIWi/cf9GhE0Alkz4TBwPrCojkv
+	U4W2BboC3YoUSPuUyCwCWCnnQ3fpoRrpcJC/TuY6SFp+LkQE/xsXmJ8bmRT3DqQqhztd6mqAqGh
+	m7srHm/uj3bM6uQ4CYJpu8Ja1lWU5oG2a3KnvQFfpcy+1CwpH8W0mzTZNXaxMw==
+X-Google-Smtp-Source: AGHT+IHJRMdwimLeCFUPqWI2Rz4/IgYjieooyfaDdhQuq5+G3kUl29ETHlRAzYPjvkWQrpX2AalOKef/KwWh
+X-Received: by 2002:a17:903:1987:b0:22f:b902:fa87 with SMTP id d9443c01a7336-231d450f7b1mr141844165ad.10.1747934738495;
+        Thu, 22 May 2025 10:25:38 -0700 (PDT)
+Received: from bcacpedev-irv-2.lvn.broadcom.net ([192.19.161.250])
+        by smtp-relay.gmail.com with ESMTPS id d9443c01a7336-231d4e97810sm7175875ad.75.2025.05.22.10.25.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 May 2025 10:25:38 -0700 (PDT)
+X-Relaying-Domain: broadcom.com
+From: dregan@broadcom.com
+To: linux-kernel@vger.kernel.org,
+	linux-mtd@lists.infradead.org,
+	bcm-kernel-feedback-list@broadcom.com,
+	william.zhang@broadcom.com,
+	anand.gore@broadcom.com,
+	florian.fainelli@broadcom.com,
+	kamal.dasu@broadcom.com,
+	dan.beygelman@broadcom.com,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	=?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= <noltari@gmail.com>,
+	rafal@milecki.pl,
+	computersforpeace@gmail.com,
+	frieder.schrempf@kontron.de,
+	vigneshr@ti.com,
+	richard@nod.at,
+	bbrezillon@kernel.org,
+	kdasu.kdev@gmail.com,
+	jaimeliao.tw@gmail.com,
+	kilobyte@angband.pl,
+	jonas.gorski@gmail.com,
+	dgcbueu@gmail.com,
+	dregan@broadcom.com,
+	dregan@mail.com
+Subject: [PATCH] mtd: nand: brcmnand: fix NAND timeout when accessing eMMC
+Date: Thu, 22 May 2025 10:25:17 -0700
+Message-ID: <20250522172526.3926633-1-dregan@broadcom.com>
+X-Mailer: git-send-email 2.43.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250521101950.1220793-1-rafael@beims.me>
+Content-Transfer-Encoding: 8bit
 
-On Wed, May 21, 2025 at 07:19:34AM -0300, rafael@beims.me wrote:
-> From: Rafael Beims <rafael.beims@toradex.com>
-> 
-> Enable the host mlme flag for W8997 chipsets so WPA3 can be used.
-> This feature depends on firmware support (V2 API key), which may not be
-> available in all available firmwares.
+From: David Regan <dregan@broadcom.com>
 
-Is it available in *any* W8997 firmware? Or particularly, is it
-available in the firmware in linux-firmware.git? Judging by its git
-history, the answer is "no", in which case this is definitely NAK'd.
+When booting a board to NAND and accessing NAND while eMMC
+transactions are occurring the NAND will sometimes timeout. This
+is due to both NAND and eMMC controller sharing the same data bus
+on BCMBCA chips. Fix is to extend NAND timeout to allow eMMC
+transactions time to complete.
 
-At a minimum, can you post what FW version you're testing with? This is
-the bare minimum required for this kind of patch on many other drivers,
-although I'm not sure we've been so strict on mwifiex.
+Signed-off-by: David Regan <dregan@broadcom.com>
+Reviewed-by: William Zhang <william.zhang@broadcom.com>
+Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
+---
+ drivers/mtd/nand/raw/brcmnand/brcmnand.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-And even if it works for *some* firmware, I'd generally highly encourage
-not making breaking changes like this, where there's a long history of
-users on the old FW version. So, we'd need to teach the driver to know
-the difference between v1 and v2 API here, and choose accordingly.
+diff --git a/drivers/mtd/nand/raw/brcmnand/brcmnand.c b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
+index 17f6d9723df9..1e9d56a315da 100644
+--- a/drivers/mtd/nand/raw/brcmnand/brcmnand.c
++++ b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
+@@ -101,7 +101,7 @@ struct brcm_nand_dma_desc {
+ #define BRCMNAND_MIN_DEVSIZE	(4ULL * 1024 * 1024)
+ 
+ #define NAND_CTRL_RDY			(INTFC_CTLR_READY | INTFC_FLASH_READY)
+-#define NAND_POLL_STATUS_TIMEOUT_MS	100
++#define NAND_POLL_STATUS_TIMEOUT_MS	500
+ 
+ #define EDU_CMD_WRITE          0x00
+ #define EDU_CMD_READ           0x01
+-- 
+2.43.5
 
-Brian
-
-> Signed-off-by: Rafael Beims <rafael.beims@toradex.com>
-> ---
-> Tested on a Verdin iMX8MP (SDIO-UART) and Verdin iMX8MM (SDIO-SDIO):
->     - created AP's requiring WPA2 and WPA3 authentication and successfully
->       connected clients to them.
->     - connected as a client to AP's requiring WPA2 and WPA3 authentication
-> ---
->  drivers/net/wireless/marvell/mwifiex/sdio.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/net/wireless/marvell/mwifiex/sdio.c b/drivers/net/wireless/marvell/mwifiex/sdio.c
-> index c1fe48448839..f039d6f19183 100644
-> --- a/drivers/net/wireless/marvell/mwifiex/sdio.c
-> +++ b/drivers/net/wireless/marvell/mwifiex/sdio.c
-> @@ -438,7 +438,7 @@ static const struct mwifiex_sdio_device mwifiex_sdio_sd8997 = {
->  	.can_auto_tdls = false,
->  	.can_ext_scan = true,
->  	.fw_ready_extra_delay = false,
-> -	.host_mlme = false,
-> +	.host_mlme = true,
->  };
->  
->  static const struct mwifiex_sdio_device mwifiex_sdio_sd8887 = {
-> -- 
-> 2.47.2
-> 
