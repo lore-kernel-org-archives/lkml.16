@@ -1,219 +1,142 @@
-Received: from mail-vk1-f178.google.com (mail-vk1-f178.google.com [209.85.221.178])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F41723E344;
-	Thu, 22 May 2025 20:41:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1977241697
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 20:42:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747946502; cv=none; b=KscN7V4TRY7Hr2xWhtpwNzY/CdJBWEayg4F6GDKGCEpSmd8AwgeWDnI2Nu9+EPwUw37YpIuAPL9ofp20WNtzlD4QZdYiKz96aJpOOZpeLrp+EEv0WXJno4F9m9oiL9vdBD1gse8kbDsmSts+ci/uMTYWaKkzr224Vluyk4+npzs=
+	t=1747946545; cv=none; b=DvNb4F5he+Te2SDl6pErojKLQ1B0QXl7gUSuWDRKC+Ruv21O6yCkDGEgW9um++7GYtJFT5gXWO4c81KOSxlvgvXr5CjeN7jutv5SoBegvcR6tVu9DTZWDwy/bTlbSjM1JG5Luqz2UUqfP9mU6AoZVFxQ2nGSIIfrnuNXZY0UpmA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747946502; c=relaxed/simple;
-	bh=DY4mrB6YDD//Bfgcx9Eh8hKnn2LDA9Ci4LgBPodML5w=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kG6x2xntQ03KS6crkPvnMpYaz0gami34LY2TwiBvxPZy3BiJ2SGTiyg/6mEfTdzt/lbGAl8i51poBf73rXpIXmVHz+AaSPjHo7MvKRBFDg7h6FscnlYtwWMjwdI3yQkk5hCXbpLif5Rj8/vdDDHVtp98FZJ1SOjL0xQnLZI2po4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MsOfove4; arc=none smtp.client-ip=209.85.221.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747946545; c=relaxed/simple;
+	bh=dp/jIYM6WqZk+vcAH0XvJduAuAkOD7KEaEg1Q9V2gcI=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=XnDihLOhX7SeqDBgH0sc57CQGO/EPc6XIsq/FwxRJFArK17U9POlTrk2jpKWs3NOrqK2LAfo7pjRJ/Zi2vTRwHA/kAauUk9qiINdNyE9q1z3g3D/qKUslxAJW+Ej3wLMwUC3KCGj4D347wOuzONhZc4onabT2okT5k35tF00BWk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=SkfljHa4; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Yy0XL3yq; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=V48WQ0a9; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=bOiITXi5; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MsOfove4"
-Received: by mail-vk1-f178.google.com with SMTP id 71dfb90a1353d-5242f137a1eso2627024e0c.1;
-        Thu, 22 May 2025 13:41:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747946499; x=1748551299; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=UOJ++JRwDLRv5kHakUABnXwxcqziSYlZ6Fbqfxdk8HU=;
-        b=MsOfove4G3sp2Xxwh438a+A+h71/RLoaAmm7q9Z941hhu04/wA7/zuL7hls4Yrd86a
-         RM/JB5KGDVJjd4jgEh/Dk0d3TFJ9vFGE6O9sX4/0kBMfzuqdbJ4pD9ilWVMkLGVwykOY
-         m5s96J/cNOxxRETUufckgtvD1ZF98FXjr2f5s2YgGntk8h2CMIGgPbQXCYtw8BYHFTq4
-         dShnUfWUpp+3HlGSpA95mkuxmniLMaUvTvdDafTZjKg9ZV52FY4lYAfKSauPVlz+wL9J
-         lRDxSmivYZNWbK/hxXynjo/MUPAIOVZukErKO4q8XgITyxE/vO7emn3RzHGXsPB4Kpg2
-         Kv+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747946499; x=1748551299;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=UOJ++JRwDLRv5kHakUABnXwxcqziSYlZ6Fbqfxdk8HU=;
-        b=I44vs/wZaAfi0IO88ycHlDlX7nxfZtab6YvuefNJ6xcL6yJCgkDsseBe5dt1D9jmxt
-         Ss4itZbn8UfihgJeqaNm4fzWWshqczN2yESU7E405tdXbOqM3FTnRVh+hcn0zBoVsoBJ
-         Hy6Duq2t+Qw+gfPx7qsZ48VAQ+VcNDl1YCjMlkk7mUrmCX/iuAdzynLdabWa7aPM5/vC
-         8gcQ1mhbClwDw1a7ypuiw3AfEBHeQPbp2kAm9kxzk3TF7VpG6GhKwK0KSCoPOkAq1KK/
-         atQjXcYgXcgEXkykKR2xGgefN+SR/m6+VD7FdCZdms7Vdwj4PnfmvQ29JSW1MbzHqx5i
-         MTFQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUH+zmgubuoSQLPavcVwQ/smzG5M9Fh0ktw7c4AhMGg1LgimSyf07HJfV+BwalPry3Gkqe31G6YdIsm@vger.kernel.org, AJvYcCUzFNQG6G/tlCw+NqoRIe6zWJxCGrWy7kNP04fE/8FMD/S1DBDUCQe3/4J7+YlXimXGE6Wa600UvPiOl6xS@vger.kernel.org, AJvYcCWdwQZf8xuMqhiiqjDLHPnWuuS3DLteKT5vJpr1BOXPaF3fYFP+jWQcp7mw9I3I/lugodwztj9FWr1y@vger.kernel.org
-X-Gm-Message-State: AOJu0YxNE86biQ4ZrK6kPaNmB1QP5YS89AQE153eWv/TZl7W8iSrHGaQ
-	TLeNXLqSCQ6TuLUtHHQqFM/E0Aj+NPVxYjzBrCNhLabaarZMaKgXCNnF
-X-Gm-Gg: ASbGnctigaXXXWQlZPThgOu3vLKW2UraDgkocHOR+wOdoM846gLmQXV2gUH61dU9Kic
-	kkoVGtUWoTwJiGSPu1td98Yj8kgZJWsFzjZFGYiYUTJVx3asFAvXmlHsrrV2XYmM0rRIR07R+ES
-	JZXpr7/8QZW5aGMayXr+vnhrGe5jPIKsHvsFqVi2NIOH3b713FwTANUmQWKXEnQ0WKV9k9xaYpz
-	3DXVwUr/7Vkf8Do2oH6/BcuslAH5d89RS2dFkskUgH+eaPrwaIUsWsfCmQ/8pGgD4bz1TGi17Oa
-	MebnMjGRqRPzxTv7pcF2SfFCOUyuoAiZgBP2vExBO3T10FnQbfgAGD+AqTXOXfwuHDpH2EEBrYY
-	=
-X-Google-Smtp-Source: AGHT+IEPTYGwYNGHl1Brz2nJoKhimJ3nW2UXmVoXuR/6aFxu/hxMQ1+VbCl8CocBg5N5v8SR2crwhg==
-X-Received: by 2002:a05:6122:792:b0:529:2644:9118 with SMTP id 71dfb90a1353d-52dbcde8621mr23702729e0c.9.1747946499031;
-        Thu, 22 May 2025 13:41:39 -0700 (PDT)
-Received: from localhost.localdomain ([2804:14d:4c64:81ec:7409:107a:a63b:a3da])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-52dba94000esm12435697e0c.12.2025.05.22.13.41.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 May 2025 13:41:38 -0700 (PDT)
-From: Rodrigo Gobbi <rodrigo.gobbi.7@gmail.com>
-To: jic23@kernel.org,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	dlechner@baylibre.com,
-	nuno.sa@analog.com,
-	andy@kernel.org
-Cc: ~lkcamp/patches@lists.sr.ht,
-	linux-iio@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v3] dt-bindings: iio: adc: st,spear600-adc: txt to yaml format conversion.
-Date: Thu, 22 May 2025 17:37:16 -0300
-Message-ID: <20250522204130.21604-1-rodrigo.gobbi.7@gmail.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="SkfljHa4";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Yy0XL3yq";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="V48WQ0a9";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="bOiITXi5"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id DEA2F21B91;
+	Thu, 22 May 2025 20:42:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1747946542; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=gLNpYFc+mlgcAA1tWX8OkQ12UIgugg0qcebMpSoFN74=;
+	b=SkfljHa42fe6n7UzehWFIT63xMvxAvas7SjMvfBWb47cqj5fNgifLC9Hjkg/5+KBYMvdfd
+	XBhgITFCBsZmn2pB8ImKvas39mpQEfJ5uZMtzP0j3iMe8k+5T2e/RlANZcHf/pxqrGtXai
+	1lYZj7n2FNFwJX3h147YM4hwzlM6ev8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1747946542;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=gLNpYFc+mlgcAA1tWX8OkQ12UIgugg0qcebMpSoFN74=;
+	b=Yy0XL3yqIOaXuf/R3eIcfbdeVhtPPCI7A7rxNZycOgT0FonVwTpBO2gmpBYzoceFJfepKx
+	9t7MmLK5eySJ+sBA==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1747946541; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=gLNpYFc+mlgcAA1tWX8OkQ12UIgugg0qcebMpSoFN74=;
+	b=V48WQ0a9LGgCtsw3AaQKf7zTzsXr7Hn3fqNQrPUb6KJ5Hs49ufbNgX9262eu4BQ5qj7Zqz
+	+4o8775FKVy12AkM7EcN0oiIfGABu6K3AWrV6oGo2MYKfPFbt24OKgczzl42/D+A2/+/y+
+	LOyfwO9SjlMtwdx7iMPRllwgOxObx/U=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1747946541;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=gLNpYFc+mlgcAA1tWX8OkQ12UIgugg0qcebMpSoFN74=;
+	b=bOiITXi56mBxnrCq3sSlbqUAsgAeuCTuBs38gJcyPhgFKh3AcDKxj6hWHD7DcqwsqCVGMl
+	ahRSGir2D0dP6NDg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id C7678137B8;
+	Thu, 22 May 2025 20:42:21 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id La4TMC2ML2g2fQAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Thu, 22 May 2025 20:42:21 +0000
+Date: Thu, 22 May 2025 22:42:17 +0200
+Message-ID: <87r00g74ye.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: Randy Dunlap <rdunlap@infradead.org>
+Cc: linux-kernel@vger.kernel.org,
+	Daniel Dadap <ddadap@nvidia.com>,
+	Takashi Iwai <tiwai@suse.de>,
+	Jaroslav Kysela <perex@perex.cz>,
+	linux-sound@vger.kernel.org
+Subject: Re: [PATCH] ALSA: hda_acpi: eliminate defined but not used warnings
+In-Reply-To: <20250522203020.1478369-1-rdunlap@infradead.org>
+References: <20250522203020.1478369-1-rdunlap@infradead.org>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Spam-Score: -0.30
+X-Spamd-Result: default: False [-0.30 / 50.00];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_SHORT(-0.20)[-0.998];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	RCPT_COUNT_FIVE(0.00)[6]
 
-Straight forward conversion from spear-adc.txt into yaml format.
+On Thu, 22 May 2025 22:30:20 +0200,
+Randy Dunlap wrote:
+> 
+> When CONFIG_PM_SLEEP is not set, the hda_acpi_suspend() and
+> hda_acpi_resume() functions are not used and cause build warnings:
+> 
+> sound/pci/hda/hda_acpi.c:282:12: warning: 'hda_acpi_resume' defined but not used [-Wunused-function]
+>   282 | static int hda_acpi_resume(struct device *dev)
+> sound/pci/hda/hda_acpi.c:269:12: warning: 'hda_acpi_suspend' defined but not used [-Wunused-function]
+>   269 | static int hda_acpi_suspend(struct device *dev)
+> 
+> Enclose these functions inside an ifdef CONFIG_PM_SLEEP block to
+> prevent the warnings.
+> 
+> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+> Cc: Daniel Dadap <ddadap@nvidia.com>
+> Cc: Takashi Iwai <tiwai@suse.de>
+> Cc: Jaroslav Kysela <perex@perex.cz>
+> Cc: linux-sound@vger.kernel.org
 
-Signed-off-by: Rodrigo Gobbi <rodrigo.gobbi.7@gmail.com>
----
-Changelog:
-v3: some yaml style, constraints and units pointed at v2.
-    also, remove duplicated ref at MAINTAINERS file
-v2: https://lore.kernel.org/linux-devicetree/20250430020248.26639-1-rodrigo.gobbi.7@gmail.com/
-v1: https://lore.kernel.org/linux-devicetree/20250423022956.31218-1-rodrigo.gobbi.7@gmail.com/
----
- .../bindings/iio/adc/st,spear600-adc.yaml     | 69 +++++++++++++++++++
- .../bindings/staging/iio/adc/spear-adc.txt    | 24 -------
- MAINTAINERS                                   |  1 -
- 3 files changed, 69 insertions(+), 25 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/iio/adc/st,spear600-adc.yaml
- delete mode 100644 Documentation/devicetree/bindings/staging/iio/adc/spear-adc.txt
+Err, it just an incorrect use of SET_SYSTEM_SLEEP_PM_OPS() instead of
+SYSTEM_SLEEP_OPS().  It seems that v5 patch went back to a wrong
+macro, likely mistakenly.
 
-diff --git a/Documentation/devicetree/bindings/iio/adc/st,spear600-adc.yaml b/Documentation/devicetree/bindings/iio/adc/st,spear600-adc.yaml
-new file mode 100644
-index 000000000000..dd9ec3038703
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/adc/st,spear600-adc.yaml
-@@ -0,0 +1,69 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/iio/adc/st,spear600-adc.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: ST SPEAr ADC device driver
-+
-+maintainers:
-+  - Jonathan Cameron <jic23@kernel.org>
-+
-+description: |
-+  Integrated ADC inside the ST SPEAr SoC, SPEAr600, supporting
-+  10-bit resolution. Datasheet can be found here:
-+  https://www.st.com/resource/en/datasheet/spear600.pdf
-+
-+properties:
-+  compatible:
-+    enum:
-+      - st,spear600-adc
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  sampling-frequency:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    minimum: 2500000
-+    maximum: 20000000
-+    description:
-+      Default sampling frequency of the ADC in Hz.
-+
-+  vref-external:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    minimum: 1000
-+    maximum: 2800
-+    description:
-+      External voltage reference in milli-volts. If omitted the internal voltage
-+      reference will be used.
-+
-+  average-samples:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    minimum: 0
-+    maximum: 15
-+    default: 0
-+    description:
-+      Number of samples to generate an average value. If omitted, single data
-+      conversion will be used.
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - sampling-frequency
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    adc@d8200000 {
-+        compatible = "st,spear600-adc";
-+        reg = <0xd8200000 0x1000>;
-+        interrupt-parent = <&vic1>;
-+        interrupts = <6>;
-+        sampling-frequency = <5000000>;
-+        vref-external = <2500>;	/* 2.5V VRef */
-+    };
-diff --git a/Documentation/devicetree/bindings/staging/iio/adc/spear-adc.txt b/Documentation/devicetree/bindings/staging/iio/adc/spear-adc.txt
-deleted file mode 100644
-index 88bc94fe1f6d..000000000000
---- a/Documentation/devicetree/bindings/staging/iio/adc/spear-adc.txt
-+++ /dev/null
-@@ -1,24 +0,0 @@
--* ST SPEAr ADC device driver
--
--Required properties:
--- compatible: Should be "st,spear600-adc"
--- reg: Address and length of the register set for the device
--- interrupts: Should contain the ADC interrupt
--- sampling-frequency: Default sampling frequency
--
--Optional properties:
--- vref-external: External voltage reference in milli-volts. If omitted
--  the internal voltage reference will be used.
--- average-samples: Number of samples to generate an average value. If
--  omitted, single data conversion will be used.
--
--Examples:
--
--	adc: adc@d8200000 {
--		compatible = "st,spear600-adc";
--		reg = <0xd8200000 0x1000>;
--		interrupt-parent = <&vic1>;
--		interrupts = <6>;
--		sampling-frequency = <5000000>;
--		vref-external = <2500>;	/* 2.5V VRef */
--	};
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 906881b6c5cb..96760a05a5c5 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -23213,7 +23213,6 @@ STAGING - INDUSTRIAL IO
- M:	Jonathan Cameron <jic23@kernel.org>
- L:	linux-iio@vger.kernel.org
- S:	Odd Fixes
--F:	Documentation/devicetree/bindings/staging/iio/
- F:	drivers/staging/iio/
- 
- STAGING - NVIDIA COMPLIANT EMBEDDED CONTROLLER INTERFACE (nvec)
--- 
-2.49.0
+A fix patch will follow.
 
+
+thanks,
+
+Takashi
