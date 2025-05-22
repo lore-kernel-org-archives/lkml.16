@@ -1,148 +1,165 @@
-Received: from fhigh-a1-smtp.messagingengine.com (fhigh-a1-smtp.messagingengine.com [103.168.172.152])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EADE01494DF;
-	Thu, 22 May 2025 16:15:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.152
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B72CB4594A
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 16:16:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747930522; cv=none; b=doaGAPbQQ17bpJd01v9Ta+ij+rjDGm9f1076NZZcmWOSLG/XTrUASfEZPCL5Ag3gdHNJXk5K5rxKdRcDVEcdFMGeL93/5PX35D653RIpeTWTT8vArD8d5cIEgGqenYHnMre7KPvLkb5cDrEjginCl3cZvT3Rrjwn/71LHVR4ajg=
+	t=1747930567; cv=none; b=ueMn7KlIi53o8mebOQhFW9VSOGq2RjClee2X7mTuoHH/viRI60/mOp0vRN5LEvk73qpI2Y3RNU31s9xVVoIEQWsfikJ8yyP9n0RvnSI9Umho0WCbjypRDaRSGORH6RmsKqKy/pV3X00PxDl228vJ+4CQI2CQlq9PzGU+6yww9os=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747930522; c=relaxed/simple;
-	bh=tQIbf2HlOErPFVkOx0MHQsWayH4MzvMxKiwqgNM+gIw=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=LQ6RlSAlS9QnlioysmXdV7aHl3osgV/gPj/Qq6EjFVAPenqR5jD5wgyA42wVEPpV/jXz8xv2Y8UHgDXtulZElXdqINpET+AaS2TkoTEvsQ8KyRx6HPFLZeXdxU2OrDMejW/pZIevuc3sU6kFT1VkhAFV6zqL+hy/4EQ2CBAacXU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=svenpeter.dev; spf=pass smtp.mailfrom=svenpeter.dev; dkim=pass (2048-bit key) header.d=svenpeter.dev header.i=@svenpeter.dev header.b=B9bi2B7C; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=uLmBJdr8; arc=none smtp.client-ip=103.168.172.152
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=svenpeter.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=svenpeter.dev
+	s=arc-20240116; t=1747930567; c=relaxed/simple;
+	bh=iP2PagZOuTlQYwtXEIS3nGBd1jiTN2n+OxpL1RH6JzI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HeTA+hG7PBilMTRK3YZgoBdVSDwid86lYDACfUc/PVkHqpjpRsr+AeCiNENQdBd1DBmtQN6KBW+A54tDNQNjFaMQCVJpaaLfB4YAhmSet81ChKy/hjM7FffPIlSCV0HpkfiE3iyqBg87RVlqZN5wBip1U5sJZZF++lFfzWE8GlY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a9krYB+y; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=svenpeter.dev header.i=@svenpeter.dev header.b="B9bi2B7C";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="uLmBJdr8"
-Received: from phl-compute-04.internal (phl-compute-04.phl.internal [10.202.2.44])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id 0CE1B1140132;
-	Thu, 22 May 2025 12:15:18 -0400 (EDT)
-Received: from phl-imap-12 ([10.202.2.86])
-  by phl-compute-04.internal (MEProxy); Thu, 22 May 2025 12:15:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=svenpeter.dev;
-	 h=cc:cc:content-transfer-encoding:content-type:content-type
-	:date:date:from:from:in-reply-to:in-reply-to:message-id
-	:mime-version:references:reply-to:subject:subject:to:to; s=fm1;
-	 t=1747930518; x=1748016918; bh=MBTpQbywQFLmTTQkFgXTxm8iWE7BxybC
-	g7tJBMmOGUE=; b=B9bi2B7CnXLp+kb3svPCNRju5PNb1KDnU3lYD+Av3i6+nC9u
-	ZvsKUnNz8B3qR+bpqQhrRkJ/tNK/EPeHwR3q0HvbrP4o5t0ZI9NOBGq8SAd97b4U
-	IRk0o5K6L/EVV3clXwO75WQyPrYaN+AOVlkaJAgWowzoiV9WHZwKnpxyMIB96H2u
-	Xz1JKahUhemA57TD5aQlD12gabc5tSKsLg1m5JKrSPZrhx6UwNv4kcHAi91tBJGk
-	QVrN9HXlxmP8FOOigVYyOxreG4sndqgq9mdd7SgoRWykdarUtQr/3KKd/di1oLmT
-	Bu01KhgXsmm+Y3YkYzmBzq37R3DpLTPkpbMyag==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1747930518; x=
-	1748016918; bh=MBTpQbywQFLmTTQkFgXTxm8iWE7BxybCg7tJBMmOGUE=; b=u
-	LmBJdr8kFFwLUwi/cjQSCYXQVB9Uz1AyTJsKsdyUvCLeV4Cajkel7vYFbr44H8H2
-	2wN6DGAWhh0bX6dVycyKg0CVxvxqVL660C+WECr9YRhSk/fdJH59JJvU+dkLQqjx
-	r65gVedaz3Rd1TAa+86Y35yvz+1WFbs4KS8AFegqg6cBGiEcCFV5xjPZ4ZWS9Ols
-	AYNOnNxia1ESHyABFa1SymftWehQlH8CDYfTqottz1EMpfTVpjzMdh7cOcRCXc51
-	zL3TFaEUM2SiA7uYx6AKQhvK04FNd8ew5BffznD3NgMN9p1yCsoAxD1KJgoBZYyQ
-	ul24bFzAir4OBJUQFh94g==
-X-ME-Sender: <xms:lE0vaMLwUSNRHe9rOlIek5IH5yF1gV8ngvEu7TxwvM_2pAWd44KyeQ>
-    <xme:lE0vaMLq_x5JbBPSX3_vyoDwGlpR8hotcQFKCwrTyPXFDdIsKBSn-ICtAL5soh1sD
-    PEY4DxEt_yo36F9Pfs>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgdeigedvucdltddurdegfedvrddttd
-    dmucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgf
-    nhhsuhgsshgtrhhisggvpdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttd
-    enucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgj
-    fhfutgfgsehtjeertdertddtnecuhfhrohhmpedfufhvvghnucfrvghtvghrfdcuoehsvh
-    gvnhesshhvvghnphgvthgvrhdruggvvheqnecuggftrfgrthhtvghrnhepleefteeugedu
-    udeuudeuhfefheegveekueefffdvffektdffffelveffvddvueffnecuvehluhhsthgvrh
-    fuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepshhvvghnsehsvhgvnhhpvght
-    vghrrdguvghvpdhnsggprhgtphhtthhopeduledpmhhouggvpehsmhhtphhouhhtpdhrtg
-    hpthhtoheprhhmkhdokhgvrhhnvghlsegrrhhmlhhinhhugidrohhrghdruhhkpdhrtghp
-    thhtohepsghrghhlsegsghguvghvrdhplhdprhgtphhtthhopehsvggsrghsthhirghnrd
-    hrvghitghhvghlsegtohhllhgrsghorhgrrdgtohhmpdhrtghpthhtohepnhgvrghlsehg
-    ohhmphgrrdguvghvpdhrtghpthhtohepjhesjhgrnhhnrghurdhnvghtpdhrtghpthhtoh
-    eptghonhhorhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkrhiikhdought
-    sehkvghrnhgvlhdrohhrghdprhgtphhtthhopehlvggvsehkvghrnhgvlhdrohhrghdprh
-    gtphhtthhopehmrgiisehkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:lU0vaMuYGb6UxDNM1d0uvsMQ1SVzVN0tQzwa7-l5gpNzDQ3Ywa-1YA>
-    <xmx:lU0vaJbcMxqM-lsGnAR5bi1sA-GIq1fseQpq0MuUrw8aihaAhFgVaw>
-    <xmx:lU0vaDZ0z2pFdHEn4tFzNMqjza0UtBIudtqWGeF_bzARYUjoBzHDFg>
-    <xmx:lU0vaFCba1PF5PlMgKRZ3JWfKdbvKkCHSNIDnChfdYzrmXHTxSSsdQ>
-    <xmx:lk0vaFK4eE6CWoBCW1Z_aUsWMLN7jZMKiOpnCa_bOWHa5-zsFSGz4dof>
-Feedback-ID: i51094778:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id D14D01060063; Thu, 22 May 2025 12:15:16 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a9krYB+y"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3CA5C4CEE4;
+	Thu, 22 May 2025 16:16:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747930567;
+	bh=iP2PagZOuTlQYwtXEIS3nGBd1jiTN2n+OxpL1RH6JzI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=a9krYB+yegW8QS+CzT2jy2VOeai+gZWIgsOomVsu4KP6hx3eUwEmasI6pwmvoXMxT
+	 3RaZBVYYh0frxxZy+qO1/XI9dvcbEEA/ymZkHFcjKDH145dnJ5lkLl/xKQAkPbR0zE
+	 /EGCopAhHyKSLFFMcL2VHiWags8bc7eCaPo6lnZ2f+7kVIUSQrmV+zlmwiR+WGTF+t
+	 UVqon5koKJhYPeD8RhX0h4eRktk9Zyca+R6mrIPanPTLrDGjlGJdqyIAkaukKR+MuN
+	 sHXw1pUKQUc/n3U/fKpdou3yQvsu++/kdkuzzhtWt4DV2GQbosR3cs6ause3WbmMM8
+	 qor8PMLjHaMwA==
+Date: Thu, 22 May 2025 18:16:04 +0200
+From: Maxime Ripard <mripard@kernel.org>
+To: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, Dave Stevenson <dave.stevenson@raspberrypi.com>, 
+	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, Dmitry Baryshkov <lumag@kernel.org>, kernel@collabora.com, 
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 23/23] drm/tests: hdmi: Add test for unsupported
+ RGB/YUV420 mode
+Message-ID: <20250522-mutant-emu-of-youth-ae70cd@houat>
+References: <20250425-hdmi-conn-yuv-v4-0-5e55e2aaa3fa@collabora.com>
+ <20250425-hdmi-conn-yuv-v4-23-5e55e2aaa3fa@collabora.com>
+ <20250519-classy-millipede-of-competence-4bb6ad@houat>
+ <a37b4045-0d94-4148-bb1e-fc08104e6173@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: T6f92ed75002c46d1
-Date: Thu, 22 May 2025 18:14:56 +0200
-From: "Sven Peter" <sven@svenpeter.dev>
-To: "Sebastian Reichel" <sebastian.reichel@collabora.com>
-Cc: "Janne Grunau" <j@jannau.net>, "Alyssa Rosenzweig" <alyssa@rosenzweig.io>,
- "Neal Gompa" <neal@gompa.dev>, "Hector Martin" <marcan@marcan.st>,
- "Linus Walleij" <linus.walleij@linaro.org>,
- "Bartosz Golaszewski" <brgl@bgdev.pl>, "Rob Herring" <robh@kernel.org>,
- "Krzysztof Kozlowski" <krzk+dt@kernel.org>,
- "Conor Dooley" <conor+dt@kernel.org>, "Lee Jones" <lee@kernel.org>,
- "Marc Zyngier" <maz@kernel.org>, "Russell King" <rmk+kernel@armlinux.org.uk>,
- asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-pm@vger.kernel.org
-Message-Id: <706858ca-7ebf-4419-a096-3907aab923bf@app.fastmail.com>
-In-Reply-To: 
- <gk656zq44i6ls6bbcb6qpd42typzkw3hqbft6b6rvfaw5aocsd@2fsiokbcnbtf>
-References: <20250515-smc-6-15-v6-0-c47b1ef4b0ae@svenpeter.dev>
- <20250515-smc-6-15-v6-7-c47b1ef4b0ae@svenpeter.dev>
- <gk656zq44i6ls6bbcb6qpd42typzkw3hqbft6b6rvfaw5aocsd@2fsiokbcnbtf>
-Subject: Re: [PATCH v6 07/10] power: reset: macsmc-reboot: Add driver for rebooting via
- Apple SMC
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
-
-Hi Sebastian,
-
-On Thu, May 22, 2025, at 15:06, Sebastian Reichel wrote:
-> Hi,
->
-> On Thu, May 15, 2025 at 06:21:19AM +0000, Sven Peter via B4 Relay wrote:
->> From: Hector Martin <marcan@marcan.st>
->> 
->> This driver implements the reboot/shutdown support exposed by the SMC
->> on Apple Silicon machines, such as Apple M1 Macs.
->> 
-
-[...]
-
->> +
->> +static int macsmc_reboot_probe(struct platform_device *pdev)
->> +{
->> +	struct apple_smc *smc = dev_get_drvdata(pdev->dev.parent);
->> +	struct macsmc_reboot *reboot;
->> +	int ret, i;
->> +
->> +	/* Ignore devices without this functionality */
->> +	if (!apple_smc_key_exists(smc, SMC_KEY(MBSE)))
->> +		return -ENODEV;
->
-> Is that a leftover? I would expect that you do not have the
-> 'apple,smc-reboot' sub-device described in DT for such a case.
-
-Yup, that's another leftover, will remove it for v7 as well.
-
->
-> Otherwise
->
-> Reviewed-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+Content-Type: multipart/signed; micalg=pgp-sha384;
+	protocol="application/pgp-signature"; boundary="mhdrv5hb2rwnvz46"
+Content-Disposition: inline
+In-Reply-To: <a37b4045-0d94-4148-bb1e-fc08104e6173@collabora.com>
 
 
-Thanks for the review!
+--mhdrv5hb2rwnvz46
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v4 23/23] drm/tests: hdmi: Add test for unsupported
+ RGB/YUV420 mode
+MIME-Version: 1.0
 
+Hi,
 
-Sven
+On Mon, May 19, 2025 at 01:55:10PM +0300, Cristian Ciocaltea wrote:
+> On 5/19/25 11:42 AM, Maxime Ripard wrote:
+> > Hi,
+> >=20
+> > On Fri, Apr 25, 2025 at 01:27:14PM +0300, Cristian Ciocaltea wrote:
+> >> Provide a test to verify that if both driver and screen support RGB and
+> >> YUV420 formats, drm_atomic_helper_connector_hdmi_check() cannot succeed
+> >> when trying to set a mode unsupported by the display.
+> >>
+> >> Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
+> >> ---
+> >>  drivers/gpu/drm/tests/drm_hdmi_state_helper_test.c | 66 +++++++++++++=
++++++++++
+> >>  1 file changed, 66 insertions(+)
+> >>
+> >> diff --git a/drivers/gpu/drm/tests/drm_hdmi_state_helper_test.c b/driv=
+ers/gpu/drm/tests/drm_hdmi_state_helper_test.c
+> >> index d79084cfb516b69c4244098c0767d604ad02f2c3..6337a1c52b86810c638f44=
+6c4995e7ee63dbc084 100644
+> >> --- a/drivers/gpu/drm/tests/drm_hdmi_state_helper_test.c
+> >> +++ b/drivers/gpu/drm/tests/drm_hdmi_state_helper_test.c
+> >> @@ -1622,6 +1622,71 @@ static void drm_test_check_driver_unsupported_f=
+allback_yuv420(struct kunit *test
+> >>  	drm_modeset_acquire_fini(&ctx);
+> >>  }
+> >> =20
+> >> +/*
+> >> + * Test that if a driver and screen supports RGB and YUV420 formats, =
+but the
+> >> + * chosen mode cannot be supported by the screen, we end up with unsu=
+ccessful
+> >> + * fallback attempts.
+> >> + */
+> >> +static void drm_test_check_display_unsupported_fallback_rgb_yuv420(st=
+ruct kunit *test)
+> >> +{
+> >> +	struct drm_atomic_helper_connector_hdmi_priv *priv;
+> >> +	struct drm_modeset_acquire_ctx ctx;
+> >> +	struct drm_crtc_state *crtc_state;
+> >> +	struct drm_atomic_state *state;
+> >> +	struct drm_display_info *info;
+> >> +	struct drm_display_mode *preferred, *unsupported_mode;
+> >> +	struct drm_connector *conn;
+> >> +	struct drm_device *drm;
+> >> +	struct drm_crtc *crtc;
+> >> +	int ret;
+> >> +
+> >> +	priv =3D drm_kunit_helper_connector_hdmi_init_with_edid_funcs(test,
+> >> +				BIT(HDMI_COLORSPACE_RGB) |
+> >> +				BIT(HDMI_COLORSPACE_YUV420),
+> >> +				10,
+> >> +				&dummy_connector_hdmi_funcs,
+> >> +				test_edid_hdmi_4k_rgb_yuv420_dc_max_340mhz);
+> >> +	KUNIT_ASSERT_NOT_NULL(test, priv);
+> >> +
+> >> +	drm =3D &priv->drm;
+> >> +	crtc =3D priv->crtc;
+> >> +	conn =3D &priv->connector;
+> >> +	info =3D &conn->display_info;
+> >> +	KUNIT_ASSERT_TRUE(test, info->is_hdmi);
+> >> +	KUNIT_ASSERT_TRUE(test, conn->ycbcr_420_allowed);
+> >> +
+> >> +	preferred =3D find_preferred_mode(conn);
+> >> +	KUNIT_ASSERT_NOT_NULL(test, preferred);
+> >> +
+> >> +	unsupported_mode =3D drm_kunit_display_mode_from_cea_vic(test, drm, =
+96);
+> >> +	KUNIT_ASSERT_NOT_NULL(test, unsupported_mode);
+> >=20
+> > I'm not sure what this one is supposed to test. If the mode is
+> > unsupported by the screen, it will be for both YUV and RGB, right? So
+> > what are we testing here?
+>=20
+> That would be the case suggested at [1]:
+>=20
+> "We still need to do the same with a driver that supports both, but the
+> monitor doesn't."
+>=20
+> Should we drop it?
+
+Ah, I see. I meant that we should normally end up with YUV420 (so mode
+is supported by the monitor, but the resolution is too high for RGB and
+we should pick YUV instead), but the monitor doesn't support it and thus
+we fail.
+
+Maxime
+
+--mhdrv5hb2rwnvz46
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCaC9NxAAKCRAnX84Zoj2+
+dvjcAYCrIYbp+3gtUVmOEXvLPcHTGaV8voIHR/Yy2Kan41uLSiJ/9x91JrV3fB25
+cSaXAgwBfje3/Oq4Y9XCr7RjoyQ+0XDtYtEe2NtJ8toIvJm4auAiJV+gWAGhrYJP
+p0pHi8mFRw==
+=HtM9
+-----END PGP SIGNATURE-----
+
+--mhdrv5hb2rwnvz46--
