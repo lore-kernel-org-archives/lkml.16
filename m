@@ -1,239 +1,249 @@
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A46522094;
-	Thu, 22 May 2025 07:38:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3DFE221FD1
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 07:38:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747899510; cv=none; b=AjRHsSX4htNKTDsyyn4seQzI4mlc0gkdQpMzrbEew6MUWCGzGu5SA1gvleq8X87lI5SaMu4bb+alWEztTRd5ix7SBf+aT7x8U6/EXVzi+m7lDBdbYQjCugy/pyV5kNSIoM3ZtDpVhXl/CstHfadwWjI9UTDwTMqa0NyXmJfcL+4=
+	t=1747899519; cv=none; b=KyBMw7HruNF21fAuf0Km+KaiK5IzyDrYKgOPPDe+92frPSd/hhxhtOt7dA+NQQIH1X7X5yOcgmosDtJmJ3VSsucBs4WsIA8AHH+PKsuWTmP7nEYQM1ltf9CcVo79JXVskWrk2QDtpSC8ZkolZ4JrlLFWIKiLflL0l11D+H125M4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747899510; c=relaxed/simple;
-	bh=8OhPGt/jydEbBY/zZDynjRZuDAOxGolGqhFzAXz+BAA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KeBnvTdsydjNtspjGtMocMFGH/A3FB7rod5tDIPsh11SBUv/LDtSPYSt1GhoMIEM/t2+1yQylCubXeScIyGDglhE82rhEiARRfA5qHw7uD8a+Q59W6iXZP8nV2QJUDsMh2OlF+5MfuZGJlJjj7KIf+oDZhCKEMTvg6ClCLIe9BU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=Az96nyol; arc=none smtp.client-ip=144.6.53.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+	s=arc-20240116; t=1747899519; c=relaxed/simple;
+	bh=o95nKMg223tMGoS9vDgOi8Gy2YHCGLiKyamcEO+mz60=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=RxudS2TsPF+rzWB2LITP+2StgVDYKwY4EdZ4ghDoQuiTId5t/dRM6SxOfk0K9f5i2WrBuCDTJ48KLAGXCmGnD5htPxkuH51KRAI9xRHhtonwFUpSWNQH9IXxxN10AxCbqQvSijPvwkPO2IOQqv7GLwAOqVOvSZBv4hgVJhjmcyE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=dVtBGH0L; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="Az96nyol"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
-	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=4AslYNqCOhzeQ5TnT+S2AenfLhGHOz9s1B4iCroiOjM=; b=Az96nyoll3MrD/bS+CYf1P+rXv
-	8Ehfg1HzewOqOu7OZH5wmwJd5gd+E7uh9+PXJDm01hjvDqFUNmnFDgh2QPoX+Nq8VJaxEs1mTXFan
-	Zg/2ydw2Idj9GDLt/6xC4NuafzAyFJvkxwjGBQueiVe7SEWdqaYbwBH4IeMQiWI+ZZLOy3HUULcpt
-	xI5taZh2k9obh9MlsFMXFrHopRT/Ko5HEY2rUuFtD4sc0WnO7GLZ71xXUt0NVRe1B1s+Bx0nX3XcY
-	q0vHETBz2IfC73YXg8ot8RpIHS/9NQRjXKZJMgc9QbFLjSz929ao1IqUIImPDTITvY8WA0ZCY6esc
-	3y+6pesw==;
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
-	id 1uI0VQ-0081PY-0T;
-	Thu, 22 May 2025 15:38:21 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Thu, 22 May 2025 15:38:20 +0800
-Date: Thu, 22 May 2025 15:38:20 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: Corentin Labbe <clabbe.montjoie@gmail.com>
-Cc: Klaus Kudielka <klaus.kudielka@gmail.com>,
-	Eric Biggers <ebiggers@kernel.org>, regressions@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-	Boris Brezillon <bbrezillon@kernel.org>,
-	EBALARD Arnaud <Arnaud.Ebalard@ssi.gouv.fr>,
-	Romain Perier <romain.perier@gmail.com>,
-	Arnd Bergmann <arnd@arndb.de>, Andrew Lunn <andrew@lunn.ch>,
-	Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-	Gregory Clement <gregory.clement@bootlin.com>,
-	Christoph Hellwig <hch@infradead.org>,
-	Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: Re: crypto: marvell/cesa - dma_alloc_coherent broken but kmalloc +
- dma_map_single works
-Message-ID: <aC7UbAIDA46olNJL@gondor.apana.org.au>
-References: <aCcyXkeBvHQYvf2d@Red>
- <aCczV6MF6xk5rRA3@gondor.apana.org.au>
- <aChx_ODF_hYKL8XO@Red>
- <aCmTQoJw6XG1CkuZ@gondor.apana.org.au>
- <aC1fY6IP-8MzVIbx@gondor.apana.org.au>
- <aC2aAvX07Aaho08d@gondor.apana.org.au>
- <aC2uvvzlR89iVFGW@Red>
- <aC2xTI1ZuXoZjgjX@gondor.apana.org.au>
- <aC3cF0-bWb-Jiz4i@Red>
- <aC6TkPM6mOuFwvkD@gondor.apana.org.au>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dVtBGH0L"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-43cfe574976so55596355e9.1
+        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 00:38:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1747899516; x=1748504316; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=LD8ntK8xfh1M3SZdEUxa9DUXDRo4uk6n0BDBJQLK434=;
+        b=dVtBGH0LOAuCSszyXLxE1ddwchhr4aIXzhyp68QvKFQ+ghqhS1Vljx8saUMtL5dSXh
+         R3u/rwDMDwgk9dPSxUuu6+h5O4eG9L1r4Xj1n0CeB7dyTUoePSX+qrYJMPZSvfRjTqan
+         xiCbJKwYFrXrw1af2kCMVMyNz8kyfbpmsIeddaRo+05DQkIKQCt3ouIjBlU8yXK/8+Qe
+         f9W1nw6+v3nmQPYEAnrP6eS4Jbe+Q0bTc4JIvPfo2s2aHVIWOhh1wCY5685ET9nu61SS
+         alHWnOven3aSMCkC+EU8LIzCHQFV59rGTCcG5v4U5epr7r+FpygMfHUet5vOdaQfFtmu
+         W8zw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747899516; x=1748504316;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=LD8ntK8xfh1M3SZdEUxa9DUXDRo4uk6n0BDBJQLK434=;
+        b=JYvR8mWft5BW4Dz0eQeUbtAfuDGlNRxjKZWjH9buAmuc9YnebTXC+L/c9T+3uZxnUF
+         2klNHUjYI76SugEMA32n84/Wuxd4iu96lrkDrGUBFmfqd10eFtK/nwobzHknMKxnKmql
+         1a3zJrmIbTKnIw3fY+XxY5gKzdkXzLmkkQocppTv6AqnOpcLMuCn46XQzV+4l0hjhQUP
+         jQR9unHLooldyRGSFRhsaPS0uTikBrqSFHBiC6TYk4l462BhXpjAJ0EJIGD/UYW9j6nx
+         IlKaR7ZXvZ9mMR7KRXRkL2dptj5l1b7yzR6zrQTuFPDNgZJULgEORBDCxv0NE5KfVVtU
+         a6mA==
+X-Gm-Message-State: AOJu0YztZy70L2ZJB3nfRZAw73wgCvfTbm3NaUqj8aQR8Vi85Lrh2iDj
+	yZ2NxJ4ybztCgnLQhqfhB0+PaI/Ysrf3x/CscOkQBX+ZcIh4bSV86oGexokVIph/SFQ=
+X-Gm-Gg: ASbGncugENKdeomFrhABKEHsshr/+2IVe24KY6w8x0/7mb3P7C2Mdy6NksUuqZN8/3T
+	TmP8NOysn8SDpVipR7I2sjnlSViUg3vYl0DfqSC/31hSA0ErZrE9Z5kjQdspk66FNgAQ1TZ4Otz
+	hCYJg+wHL3ClNIAxo3GQ17UQSrbtZ9CoFDRLoNRCe1mh/O9yeVvb9oxJ/alQibbXBzkiN8Kvu/y
+	g8vFk08cqCrw9cZjaP6zHWMmqJ5IJYsqdY8tjl+K6E+e1883c7uGTMUmcsDtCCY6NnaICOb6V40
+	1YCwnhNHseOduEBcS56FWKk8Su0w1vFDaUtEeKzf4KZTNIyEjGRr3vy10lkASxE32FpdliKBeFs
+	ZW/tG49EBuSKNiNVcBF2d8RTSqW/G
+X-Google-Smtp-Source: AGHT+IFkx1lvqitqZfDeiJsWs3JMGtQyZreZK7E9FGT4beePl8PD+rep4VjjgQc2mmbXeTT1TE60Zw==
+X-Received: by 2002:a05:6000:18a5:b0:3a3:76ff:a617 with SMTP id ffacd0b85a97d-3a376ffafa7mr10754675f8f.32.1747899515856;
+        Thu, 22 May 2025 00:38:35 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:3d9:2080:ca6a:4d93:cd32:83a5? ([2a01:e0a:3d9:2080:ca6a:4d93:cd32:83a5])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a35ca8899bsm22008549f8f.62.2025.05.22.00.38.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 22 May 2025 00:38:35 -0700 (PDT)
+Message-ID: <a42b9cbb-2f85-40c4-8b40-6f84970aba86@linaro.org>
+Date: Thu, 22 May 2025 09:38:34 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aC6TkPM6mOuFwvkD@gondor.apana.org.au>
+User-Agent: Mozilla Thunderbird
+From: neil.armstrong@linaro.org
+Reply-To: Neil Armstrong <neil.armstrong@linaro.org>
+Subject: Re: [PATCH v4 1/5] drm/msm/hdmi: switch to generic PHY subsystem
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
+ Rob Clark <robdclark@gmail.com>, Abhinav Kumar <quic_abhinavk@quicinc.com>,
+ Dmitry Baryshkov <lumag@kernel.org>, Sean Paul <sean@poorly.run>,
+ Marijn Suijten <marijn.suijten@somainline.org>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
+ linux-phy@lists.infradead.org, Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+References: <20250520-fd-hdmi-phy-v4-0-fcbaa652ad75@oss.qualcomm.com>
+ <20250520-fd-hdmi-phy-v4-1-fcbaa652ad75@oss.qualcomm.com>
+Content-Language: en-US, fr
+Autocrypt: addr=neil.armstrong@linaro.org; keydata=
+ xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
+ OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
+ Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
+ YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
+ GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
+ UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
+ GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
+ yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
+ QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
+ SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
+ 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
+ Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
+ oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
+ M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
+ 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
+ KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
+ 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
+ QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
+Organization: Linaro
+In-Reply-To: <20250520-fd-hdmi-phy-v4-1-fcbaa652ad75@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, May 22, 2025 at 11:01:36AM +0800, Herbert Xu wrote:
+On 20/05/2025 22:44, Dmitry Baryshkov wrote:
+> From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 > 
-> So here is the latest debugging patch with dma_map_single on top
-> of cryptodev.  Note that the partial hash mismatch code is buggy
-> but it doesn't matter because it still prints enough info for us
-> to interpret.
+> Change the MSM HDMI driver to use generic PHY subsystem. Moving PHY
+> drivers allows better code sharing with the rest of the PHY system.
+> 
+> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+> ---
+>   drivers/gpu/drm/msm/Makefile                     |   7 -
+>   drivers/gpu/drm/msm/hdmi/hdmi.c                  |  58 +-
+>   drivers/gpu/drm/msm/hdmi/hdmi.h                  |  80 +--
+>   drivers/gpu/drm/msm/hdmi/hdmi_bridge.c           |  32 +-
+>   drivers/gpu/drm/msm/hdmi/hdmi_phy.c              | 225 -------
+>   drivers/gpu/drm/msm/hdmi/hdmi_phy_8960.c         |  51 --
+>   drivers/gpu/drm/msm/hdmi/hdmi_phy_8996.c         | 765 ----------------------
+>   drivers/gpu/drm/msm/hdmi/hdmi_phy_8998.c         | 769 -----------------------
+>   drivers/gpu/drm/msm/hdmi/hdmi_phy_8x60.c         | 141 -----
+>   drivers/gpu/drm/msm/hdmi/hdmi_phy_8x74.c         |  44 --
+>   drivers/gpu/drm/msm/hdmi/hdmi_pll_8960.c         | 458 --------------
+>   drivers/phy/qualcomm/Kconfig                     |  21 +
+>   drivers/phy/qualcomm/Makefile                    |  14 +
+>   drivers/phy/qualcomm/phy-qcom-hdmi-28hpm.c       |  71 +++
+>   drivers/phy/qualcomm/phy-qcom-hdmi-28lpm.c       | 441 +++++++++++++
+>   drivers/phy/qualcomm/phy-qcom-hdmi-45nm.c        | 186 ++++++
+>   drivers/phy/qualcomm/phy-qcom-hdmi-preqmp.c      | 212 +++++++
+>   drivers/phy/qualcomm/phy-qcom-hdmi-preqmp.h      |  81 +++
+>   drivers/phy/qualcomm/phy-qcom-qmp-hdmi-base.c    | 185 ++++++
+>   drivers/phy/qualcomm/phy-qcom-qmp-hdmi-msm8996.c | 442 +++++++++++++
+>   drivers/phy/qualcomm/phy-qcom-qmp-hdmi-msm8998.c | 495 +++++++++++++++
+>   drivers/phy/qualcomm/phy-qcom-qmp-hdmi.h         |  77 +++
+>   22 files changed, 2259 insertions(+), 2596 deletions(-)
+> 
 
-Oops, I screwed up that patch.  Here is the corrected version.
+<snip>
 
-Thanks,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
---
-diff --git a/drivers/crypto/marvell/cesa/hash.c b/drivers/crypto/marvell/cesa/hash.c
-index 6815eddc9068..5c46cd267789 100644
---- a/drivers/crypto/marvell/cesa/hash.c
-+++ b/drivers/crypto/marvell/cesa/hash.c
-@@ -49,8 +49,7 @@ mv_cesa_ahash_req_iter_next_op(struct mv_cesa_ahash_dma_iter *iter)
- static inline int
- mv_cesa_ahash_dma_alloc_cache(struct mv_cesa_ahash_dma_req *req, gfp_t flags)
- {
--	req->cache = dma_pool_alloc(cesa_dev->dma->cache_pool, flags,
--				    &req->cache_dma);
-+	req->cache = kmalloc(CESA_MAX_HASH_BLOCK_SIZE, flags);
- 	if (!req->cache)
- 		return -ENOMEM;
- 
-@@ -63,8 +62,8 @@ mv_cesa_ahash_dma_free_cache(struct mv_cesa_ahash_dma_req *req)
- 	if (!req->cache)
- 		return;
- 
--	dma_pool_free(cesa_dev->dma->cache_pool, req->cache,
--		      req->cache_dma);
-+	dma_unmap_single(cesa_dev->dev, req->cache_dma, CESA_MAX_HASH_BLOCK_SIZE, DMA_TO_DEVICE);
-+	kfree(req->cache);
- }
- 
- static int mv_cesa_ahash_dma_alloc_padding(struct mv_cesa_ahash_dma_req *req,
-@@ -533,6 +532,13 @@ mv_cesa_ahash_dma_add_cache(struct mv_cesa_tdma_chain *chain,
- 
- 	memcpy(ahashdreq->cache, creq->cache, creq->cache_ptr);
- 
-+	ahashdreq->cache_dma = dma_map_single(cesa_dev->dev, ahashdreq->cache, CESA_MAX_HASH_BLOCK_SIZE, DMA_TO_DEVICE);
-+	if (dma_mapping_error(cesa_dev->dev, ahashdreq->cache_dma)) {
-+		dev_err(cesa_dev->dev, "dma_map_single failed\n");
-+		kfree(ahashdreq->cache);
-+		return -ENOMEM;
-+	}
-+
- 	return mv_cesa_dma_add_data_transfer(chain,
- 					     CESA_SA_DATA_SRAM_OFFSET,
- 					     ahashdreq->cache_dma,
-diff --git a/drivers/crypto/marvell/cesa/cesa.c b/drivers/crypto/marvell/cesa/cesa.c
-index 9c21f5d835d2..fd7f43575cb2 100644
---- a/drivers/crypto/marvell/cesa/cesa.c
-+++ b/drivers/crypto/marvell/cesa/cesa.c
-@@ -127,6 +127,8 @@ static irqreturn_t mv_cesa_int(int irq, void *priv)
- 		if (!(status & mask))
- 			break;
- 
-+		pr_err("mv_cesa_int: %d 0x%x 0x%x\n", engine->id, status, mask);
-+
- 		/*
- 		 * TODO: avoid clearing the FPGA_INT_STATUS if this not
- 		 * relevant on some platforms.
-diff --git a/drivers/crypto/marvell/cesa/hash.c b/drivers/crypto/marvell/cesa/hash.c
-index 6815eddc9068..ff0735aaed7d 100644
---- a/drivers/crypto/marvell/cesa/hash.c
-+++ b/drivers/crypto/marvell/cesa/hash.c
-@@ -397,6 +397,8 @@ static void mv_cesa_ahash_complete(struct crypto_async_request *req)
- 	}
- 
- 	atomic_sub(ahashreq->nbytes, &engine->load);
-+
-+	pr_err("mv_cesa_ahash_complete: %d 0x%lx\n", engine->id, (unsigned long)ahashreq);
- }
- 
- static void mv_cesa_ahash_prepare(struct crypto_async_request *req,
-@@ -418,6 +420,8 @@ static void mv_cesa_ahash_req_cleanup(struct crypto_async_request *req)
- 	struct ahash_request *ahashreq = ahash_request_cast(req);
- 	struct mv_cesa_ahash_req *creq = ahash_request_ctx(ahashreq);
- 
-+	pr_err("mv_cesa_ahash_req_cleanup: %d 0x%lx\n", creq->base.engine->id, (unsigned long)ahashreq);
-+
- 	if (creq->last_req)
- 		mv_cesa_ahash_last_cleanup(ahashreq);
- 
-@@ -796,6 +800,7 @@ static int mv_cesa_ahash_queue_req(struct ahash_request *req)
- 	engine = mv_cesa_select_engine(req->nbytes);
- 	mv_cesa_ahash_prepare(&req->base, engine);
- 
-+	pr_err("mv_cesa_ahash_queue_req: %d 0x%lx %d %d\n", engine->id, (unsigned long)req, req->nbytes, creq->last_req);
- 	ret = mv_cesa_queue_req(&req->base, &creq->base);
- 
- 	if (mv_cesa_req_needs_cleanup(&req->base, ret))
-diff --git a/drivers/crypto/marvell/cesa/tdma.c b/drivers/crypto/marvell/cesa/tdma.c
-index 243305354420..55860b480dd6 100644
---- a/drivers/crypto/marvell/cesa/tdma.c
-+++ b/drivers/crypto/marvell/cesa/tdma.c
-@@ -47,6 +47,8 @@ void mv_cesa_dma_step(struct mv_cesa_req *dreq)
- 	engine->chain_hw.last = dreq->chain.last;
- 	spin_unlock_bh(&engine->lock);
- 
-+	pr_err("mv_cesa_dma_step: %d 0x%lx 0x%lx 0x%lx\n", engine->id, (unsigned long)dreq, (unsigned long)dreq->chain.first->cur_dma, (unsigned long)dreq->chain.last->cur_dma);
-+
- 	writel_relaxed(0, engine->regs + CESA_SA_CFG);
- 
- 	mv_cesa_set_int_mask(engine, CESA_SA_INT_ACC0_IDMA_DONE);
-@@ -137,6 +139,7 @@ int mv_cesa_tdma_process(struct mv_cesa_engine *engine, u32 status)
- 	int res = 0;
- 
- 	tdma_cur = readl(engine->regs + CESA_TDMA_CUR);
-+	pr_err("mv_cesa_tdma_process: %d 0x%lx\n", engine->id, (unsigned long)tdma_cur);
- 
- 	for (tdma = engine->chain_hw.first; tdma; tdma = next) {
- 		spin_lock_bh(&engine->lock);
-@@ -186,6 +189,8 @@ int mv_cesa_tdma_process(struct mv_cesa_engine *engine, u32 status)
- 			break;
- 	}
- 
-+	pr_err("mv_cesa_tdma_process: %d %d 0x%lx\n", engine->id, res, (unsigned long)req);
-+
- 	/*
- 	 * Save the last request in error to engine->req, so that the core
- 	 * knows which request was faulty
-diff --git a/drivers/crypto/marvell/cesa/hash.c b/drivers/crypto/marvell/cesa/hash.c
-index 6815eddc9068..230501fe843b 100644
---- a/drivers/crypto/marvell/cesa/hash.c
-+++ b/drivers/crypto/marvell/cesa/hash.c
-@@ -374,6 +374,12 @@ static void mv_cesa_ahash_complete(struct crypto_async_request *req)
- 
- 		memcpy(ahashreq->result, data, digsize);
- 	} else {
-+		struct {
-+			u32 digest[8];
-+			u64 len;
-+		} state;
-+
-+		memcpy(state.digest, creq->state, digsize);
- 		for (i = 0; i < digsize / 4; i++)
- 			creq->state[i] = readl_relaxed(engine->regs +
- 						       CESA_IVDIG(i));
-@@ -393,6 +399,21 @@ static void mv_cesa_ahash_complete(struct crypto_async_request *req)
- 				for (i = 0; i < digsize / 4; i++)
- 					result[i] = cpu_to_be32(creq->state[i]);
- 			}
-+		} else {
-+			HASH_FBREQ_ON_STACK(fbreq, ahashreq);
-+
-+			crypto_ahash_import_core(fbreq, &state);
-+			crypto_ahash_update(fbreq);
-+			crypto_ahash_export_core(fbreq, &state);
-+			if (memcmp(state.digest, creq->state, digsize)) {
-+				pr_err("mv_cesa_ahash_complete partial hash mismatch\n");
-+				print_hex_dump(KERN_ERR, "", DUMP_PREFIX_OFFSET,
-+						16, 1,
-+						state.digest, digsize, false);
-+				print_hex_dump(KERN_ERR, "", DUMP_PREFIX_OFFSET,
-+						16, 1,
-+						creq->state, digsize, false);
-+			}
- 		}
- 	}
- 
+> diff --git a/drivers/gpu/drm/msm/hdmi/hdmi_bridge.c b/drivers/gpu/drm/msm/hdmi/hdmi_bridge.c
+> index 53a7ce8cc7bc7b6278eae2cbc42c3fda8d697f6d..1a00c26c1b40fc81623c9fb22ba25f448c27bffb 100644
+> --- a/drivers/gpu/drm/msm/hdmi/hdmi_bridge.c
+> +++ b/drivers/gpu/drm/msm/hdmi/hdmi_bridge.c
+> @@ -5,6 +5,7 @@
+>    */
+>   
+>   #include <linux/delay.h>
+> +#include <linux/phy/phy.h>
+>   #include <drm/drm_bridge_connector.h>
+>   #include <drm/drm_edid.h>
+>   #include <drm/display/drm_hdmi_helper.h>
+> @@ -286,11 +287,12 @@ static void msm_hdmi_bridge_atomic_pre_enable(struct drm_bridge *bridge,
+>   {
+>   	struct hdmi_bridge *hdmi_bridge = to_hdmi_bridge(bridge);
+>   	struct hdmi *hdmi = hdmi_bridge->hdmi;
+> -	struct hdmi_phy *phy = hdmi->phy;
+>   	struct drm_encoder *encoder = bridge->encoder;
+>   	struct drm_connector *connector;
+>   	struct drm_connector_state *conn_state;
+>   	struct drm_crtc_state *crtc_state;
+> +	union phy_configure_opts phy_opts;
+> +	int ret;
+>   
+>   	DBG("power up");
+>   
+> @@ -304,7 +306,7 @@ static void msm_hdmi_bridge_atomic_pre_enable(struct drm_bridge *bridge,
+>   
+>   	mutex_lock(&hdmi->state_mutex);
+>   	if (!hdmi->power_on) {
+> -		msm_hdmi_phy_resource_enable(phy);
+> +		phy_init(hdmi->phy);
+>   		msm_hdmi_power_on(bridge);
+>   		hdmi->power_on = true;
+>   	}
+> @@ -315,7 +317,23 @@ static void msm_hdmi_bridge_atomic_pre_enable(struct drm_bridge *bridge,
+>   
+>   	drm_atomic_helper_connector_hdmi_update_infoframes(connector, state);
+>   
+> -	msm_hdmi_phy_powerup(phy, hdmi->pixclock);
+> +	phy_opts.hdmi.tmds_char_rate = conn_state->hdmi.tmds_char_rate;
+> +	phy_opts.hdmi.bpc = 8;
+> +	phy_configure(hdmi->phy, &phy_opts);
+> +
+> +	ret = phy_power_on(hdmi->phy);
+> +	if (WARN_ON(ret))
+> +		return;
+> +
+> +	if (hdmi->extp_clk) {
+> +		ret = clk_set_rate(hdmi->extp_clk, hdmi->pixclock);
+> +		if (ret)
+> +			DRM_DEV_ERROR(bridge->dev->dev, "failed to set extp clk rate: %d\n", ret);
+> +
+> +		ret = clk_prepare_enable(hdmi->extp_clk);
+> +		if (ret)
+> +			DRM_DEV_ERROR(bridge->dev->dev, "failed to enable extp clk: %d\n", ret);
+> +	}
+
+Why do you again set the extp_clk since it's already set & enabled in msm_hdmi_power_on() ?
+
+Perhaps I missed a change but it's like that on next-20250521
+
+>   
+>   	msm_hdmi_set_mode(hdmi, true);
+>   
+> @@ -328,7 +346,6 @@ static void msm_hdmi_bridge_atomic_post_disable(struct drm_bridge *bridge,
+>   {
+>   	struct hdmi_bridge *hdmi_bridge = to_hdmi_bridge(bridge);
+>   	struct hdmi *hdmi = hdmi_bridge->hdmi;
+> -	struct hdmi_phy *phy = hdmi->phy;
+>   
+>   	if (hdmi->hdcp_ctrl)
+>   		msm_hdmi_hdcp_off(hdmi->hdcp_ctrl);
+> @@ -339,14 +356,17 @@ static void msm_hdmi_bridge_atomic_post_disable(struct drm_bridge *bridge,
+>   	mutex_lock(&hdmi->state_mutex);
+>   	msm_hdmi_set_mode(hdmi, hdmi->hpd_enabled);
+>   
+> -	msm_hdmi_phy_powerdown(phy);
+> +	if (hdmi->extp_clk)
+> +		clk_disable_unprepare(hdmi->extp_clk);
+> +
+> +	phy_power_off(hdmi->phy);
+>   
+>   	if (hdmi->power_on) {
+>   		power_off(bridge);
+>   		hdmi->power_on = false;
+>   		if (hdmi->connector->display_info.is_hdmi)
+>   			msm_hdmi_audio_update(hdmi);
+> -		msm_hdmi_phy_resource_disable(phy);
+> +		phy_exit(hdmi->phy);
+>   	}
+>   	mutex_unlock(&hdmi->state_mutex);
+>   }
+<snip>
+
+Otherwise it looks fine even there's a lot to digest and hard to figure out
+the exact changes done to the PHY drivers.
+
+Neil
