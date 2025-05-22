@@ -1,69 +1,70 @@
-Received: from mail-vs1-f47.google.com (mail-vs1-f47.google.com [209.85.217.47])
+Received: from mail-vk1-f173.google.com (mail-vk1-f173.google.com [209.85.221.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7E57286D7B;
-	Thu, 22 May 2025 10:00:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3A8A265CD3;
+	Thu, 22 May 2025 10:01:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747908049; cv=none; b=Usjo7Glpml9jqudelue5euYY/K1iAskudRdJe4YQXTW5siUI+Sjz9fMJ4GeWmA8KsdzCRUDusVF6502tCPr4xzZ8wuP4ZnxWHluRnAE93C/8Sq1eWP65b/Kgz9Yokkrd0X494ltNTnjBP1oojytdJmr1jjMxY0glcqK2ueJmOXg=
+	t=1747908078; cv=none; b=HuB64G23biCfeu4wegyuQj9omyKF1t3IRLCuLoILSrb55YllLGctNCRfKIpK0SPAE3e0RnOskJQlxQLUWK8q+DVCUfbFZURqMi62eKfH3p0e4ecBHQQ+qzs5vZnCDqzGlOBQi09Pw1yJsltu5h2je58A8qv9erPBXusq+49aFLc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747908049; c=relaxed/simple;
-	bh=drDuFP8elgaanqXpYaCIjXYAUCK1v3unDiYKeRYxjbo=;
+	s=arc-20240116; t=1747908078; c=relaxed/simple;
+	bh=O+ZykPvL20QxnpDZph15DoKzX2v0rKeJ68OxTA3doBM=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=u8ziCD8+JHP+5BykJiaeSRguQpmEWidf66+WMIrW7oE1X/UvRCPfqybY8jAH6i4ZafyOjvzoPRXDFjz+ju8+7vTrmcrf9hIyEBd+RaQxXf3+kPFA0cG4Im0f7UGFspXQtZiKHBcmCsJbSz+8pR6a8DdbRA59PS62ESzN77sewZQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.217.47
+	 To:Cc:Content-Type; b=LYJ1ZzpdIcSXhaPI5802yhKoHXbupV6dM4zgovCb76nAWhypQwoxFkg6oMUg+TwODOQ2fwac/RreYS821nKkdTlwtqNyY9eqw/zHwWcIdhEk/K46dKN2O7D+Gml5K5ny+03p3j1KVjyfZ/6y/8q+Hb/XzCoUKTNSb46BbulGCPo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vs1-f47.google.com with SMTP id ada2fe7eead31-4e11ee95b2cso4419833137.3;
-        Thu, 22 May 2025 03:00:47 -0700 (PDT)
+Received: by mail-vk1-f173.google.com with SMTP id 71dfb90a1353d-52eec011ff2so1431455e0c.1;
+        Thu, 22 May 2025 03:01:16 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747908045; x=1748512845;
+        d=1e100.net; s=20230601; t=1747908075; x=1748512875;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=XoblhsMk0V3JqpiubAvMkWbYBcCGAhlUNkOion5qgWA=;
-        b=cGu/WxIWWi08pbXdQ+hdZk9Y4wYcnc9sLzdzaim4gGElLjUBIuMw6VW2dncX9oIg3T
-         QU8QT6D2U+HhzQFSSb3IU6fvxnTQZZYWAjNpyNDYT/lYBIcYuol2L47R8FxMvl6iohCg
-         VFyy1E52gwX7DesnXMKj13d3qDQi1G1LkD7tSiwcCK+kcfXtjUBN4Fkg59t0qayPWkeL
-         eOdnNvgZF/3Fd0wzlQ5TvilVGfp4swVBt7ImlEf+tvhJimkZYABYvgRdu92ogd/pqOT+
-         aT/ci1WVIz/AWjz1nPqK4k+grlI71/aBI7t1nUBfgPaOximgGiOgxmNxr9rJKV81j1jF
-         xz8w==
-X-Forwarded-Encrypted: i=1; AJvYcCVE77SnOB+JLr+6IG3g7v9FpXZEFkA7poy/i/ZrC0bMD3fcws5CMaDHns9E3MuE8XyH/5iLfTxfpzDx@vger.kernel.org, AJvYcCWWULMU0vnw1GviXgQr40/SOQw4H9GnqierY8QiZ3zb0j0nLAcnUT+iabZ5ArnAR9CTuCCQaPHlFFh3CHK8@vger.kernel.org, AJvYcCXcVdTrTWENStwcbucX3H8loqeFx8wh78JWbbyYnNzLoxPErWxBKxp3KQQzsZsI6UCjqcW6BxTDQFbiRNtoyPdUpas=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyyS5Jgq7TyZyLn4Ljvx2s/sDSJv6rDhADldq0kOldBGSF5EmuX
-	lgROMCXxmnTiDdr7/2/GwHxXkbNk8pWwqw/gnj+8GLxGqaV/MXAOfgotg/1vxX5f
-X-Gm-Gg: ASbGncuPlzeex1O2by9/GDrli2i9061RhoomhlsDp/2lZzZx5yiKT7gmT2mNJjbO+Uj
-	pSDrKiAuij+iKZLY6aIyQ1i19l0QxR4fzEy0PKBYGaHrCcUol5kDGD3qLC28iLj/XEVfmaY5Wpu
-	C4TPHlZ+/owCfTf/2/WOedhggb+I4q6E0FDrc3Cz1bOIi+HTrzZrHYGxonCIpTHvNt8Wf9i+mJD
-	diBBOqBf/L4c+XmzSZT5VJH+VYKSFYMBjL+6VDWh5pgARK5WLD45BmVWUB+WM2F7jc2cjx7Y7+2
-	Wtl0AT4An2SiQbTWvQsSx1pfjW1rg9KTyv2Pui0BCyyJgoGXe0EDo3c01p4kZKOfCvQex4azn8N
-	D6hFRZud8hGLD9PfohA==
-X-Google-Smtp-Source: AGHT+IFo/MlDmlIfw0TqxjT7phHVgFNsqhlgqDzjKpmITyI0aSHafvVyi+dhB8r9XbDZfa3fiAVY/Q==
-X-Received: by 2002:a05:6102:5714:b0:4c1:94df:9aea with SMTP id ada2fe7eead31-4dfa6bebe78mr21468275137.15.1747908045343;
-        Thu, 22 May 2025 03:00:45 -0700 (PDT)
-Received: from mail-vk1-f174.google.com (mail-vk1-f174.google.com. [209.85.221.174])
-        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-87bec2299a2sm10306149241.32.2025.05.22.03.00.42
+        bh=S63yXm7ey5VHw2+9ds7BlWtE6pf7cM+bMKIz42illeY=;
+        b=mkEhpYeBK/Sh5jTdQRt+3kGMGfa8nvr9x00MT4DWkdDgjzpPhMLvefi79G4AJYBHsi
+         DY4pU2aJAAkcSlOOOjLF8/C+8Z2/BG+9gUCZIt7jmqpbueY9amKxGesf432NYvLRgbEk
+         MPhRZoyGRNU5HP4H25nYj9KdQwogxPtO9diZgkn41eo9o0H27JvuvfdO+QJeb8CQGQc0
+         4WEvkkHH2hFfGGhAYRJLSLS+jE/YJujyUTiwccTdKlC8Yt/UHAn7iQ/7UdJVgx36e1NX
+         0NyZ7M6JXYI2blMbxRIbwI5gqVkApxHcTPGtAZljTqzBFjRS1UGtFlst449pNBB7fRPb
+         1FDQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUYShML+Ci+q6sM4ynbdCs1ueBjo1xBRBapHu4ykXliG/iiMIsR9CONpKX0DX78yPkA1GXIGYrecMTR@vger.kernel.org, AJvYcCVTU5PJ1+TMqKfT5XKy2oISnHx/81N1FLLQNkvwYBF7Z5QlbFn8eE5SNkHggWChQ77aEleHqQYE8lHnUCPffXdSrpw=@vger.kernel.org, AJvYcCWFWYtNdHCy7Yq5euYhlMBd6dQ7XItBDJJWmULOA4TM+2VnRQAlUuv8qqtKNSaFj083egYYxTBS82wGlYuG@vger.kernel.org
+X-Gm-Message-State: AOJu0YzG0WTB3El9DTylUpDOdDbtQAFQQQPknFUFmNv/xNoYNFXkJ8iS
+	31Lj9Hl8DuvdZtGNBlrJDw+7KzF9jwGZFX8Nc2a4PsR3wr6bJpAwTQA75PTxeZ63
+X-Gm-Gg: ASbGncunFdgRRYLbTeX3T/dMNWziAGguMfM2t/rOUGCCUS5RDN8lo8Ths01DD57ro83
+	InLwI07dlo55GzU7gR9uO95k7XibCKPVjD6oJcTeyQOYCF1SJbJPNAIpkC0sE6eiq+gtCwRIxrG
+	3PBz4pGnJQVny2intnsV5IwuRnD+IVqFtY54Y9yPAbqDo2iLtg8kHpyGWBE08gwqGImaFLml7Wr
+	oJFguBWklHRyRq9jsgd+OvhofOHbVVimCKujzl3Lsqp3h1Ylv6wvwA8I1RITvDHsX7h5Wik9tnD
+	aghTF7dzvk6w2erEWnYz2z0j1g+oirsYCd5Ju9ybv6t1Tp1KqP6sT1uuIfr+8zRhCWJkUHHDPjT
+	h/Z2/iaQVb/cLd2aC3g==
+X-Google-Smtp-Source: AGHT+IHtcarjAgHfDnsF7BJzJOfGVHHFEjlDGmVgauCM16dSlRLv3YSQXAkkZiYbeEuQgoGYCDJB1Q==
+X-Received: by 2002:a05:6122:3309:b0:524:2fe2:46ba with SMTP id 71dfb90a1353d-52dbcecf382mr21185064e0c.11.1747908075171;
+        Thu, 22 May 2025 03:01:15 -0700 (PDT)
+Received: from mail-vk1-f169.google.com (mail-vk1-f169.google.com. [209.85.221.169])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-52dba94827fsm11544431e0c.20.2025.05.22.03.01.14
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 22 May 2025 03:00:42 -0700 (PDT)
-Received: by mail-vk1-f174.google.com with SMTP id 71dfb90a1353d-52934f4fb23so5270736e0c.1;
-        Thu, 22 May 2025 03:00:42 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVO195qs2fUTetY7O2n2fcdO87x9H74f/IURZ8zoiJuRAKmN3IaO3kpfXsmCi90/g8oh2fLAuiz1VtK93A0Lbp74N8=@vger.kernel.org, AJvYcCVXJ2wXLPPA5RR7oAFP1mxhRtRC//KobbyZy9gJarK/Gii+v/5sV2aQaDrNoFpf/cosql39bSvedbT8@vger.kernel.org, AJvYcCX3vaXHfOr9dE54N3S51MfEpTDdOnM7ysh40iFX5OCQoWGxzmw+eD7kOylicFd/ZMys86fWV/r9ggtKJ03b@vger.kernel.org
-X-Received: by 2002:a05:6122:88c:b0:52a:cdd8:fc33 with SMTP id
- 71dfb90a1353d-52dba614e02mr19107010e0c.0.1747908042255; Thu, 22 May 2025
- 03:00:42 -0700 (PDT)
+        Thu, 22 May 2025 03:01:14 -0700 (PDT)
+Received: by mail-vk1-f169.google.com with SMTP id 71dfb90a1353d-52eec011ff2so1431442e0c.1;
+        Thu, 22 May 2025 03:01:14 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCW7TCSGG57dOYh23iCEBXJqzaIAeO/icXtrr8E9enL7QiUgcgrBCtMKXVaNEz+Ew6zi60FVBRfiHEgd0oWA@vger.kernel.org, AJvYcCX+K/e11CPodnFfUPrG95727Rgoyz8LgCSWA/RSLIaB3rKBOFD1E94RSeIMu4dBmvrvtUTKaWwlBuPb@vger.kernel.org, AJvYcCXVi1OauDFJEJqEEVWSKkSy02qI4yDst6OjhNjniW82k251VhBTtJipYKoc+RGNAV/T+Hm+83jGrC5zOfppybr5wEg=@vger.kernel.org
+X-Received: by 2002:a05:6102:54a2:b0:4dd:b75f:2e82 with SMTP id
+ ada2fe7eead31-4e049ea35b3mr19767557137.15.1747908069410; Thu, 22 May 2025
+ 03:01:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250514101528.41663-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20250514101528.41663-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20250514101528.41663-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
+References: <20250514101528.41663-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20250514101528.41663-5-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20250514101528.41663-5-prabhakar.mahadev-lad.rj@bp.renesas.com>
 From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Thu, 22 May 2025 12:00:30 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdViBg45_JGwBvETxOwCk5a_6e97WRNwiu=BrH=gnAHCfQ@mail.gmail.com>
-X-Gm-Features: AX0GCFvUskLiE52IcoYxsMlcd0ZSP1eMjQRGOpw9t5TC41kqHOSJaMDdN-Skzzc
-Message-ID: <CAMuHMdViBg45_JGwBvETxOwCk5a_6e97WRNwiu=BrH=gnAHCfQ@mail.gmail.com>
-Subject: Re: [PATCH 02/10] arm64: dts: renesas: r9a09g056n48-rzv2n-evk: Enable GBETH
+Date: Thu, 22 May 2025 12:00:57 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdX12tcPxA+E6QHe9ADfrFfJqh5vn=V1O4ynpj0Mhoaqew@mail.gmail.com>
+X-Gm-Features: AX0GCFv7-uDaI14mB4J_JekQl9NFA4vtfAOgEecOtQtR_Y2SRZ05AZRMtUjDR8c
+Message-ID: <CAMuHMdX12tcPxA+E6QHe9ADfrFfJqh5vn=V1O4ynpj0Mhoaqew@mail.gmail.com>
+Subject: Re: [PATCH 04/10] arm64: dts: renesas: r9a09g056n48-rzv2n-evk: Enable
+ OSTM timers on RZ/V2N EVK
 To: Prabhakar <prabhakar.csengg@gmail.com>
 Cc: Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh@kernel.org>, 
 	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
@@ -76,7 +77,8 @@ Content-Type: text/plain; charset="UTF-8"
 On Wed, 14 May 2025 at 12:15, Prabhakar <prabhakar.csengg@gmail.com> wrote:
 > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 >
-> Enable GBETH nodes on RZ/V2N EVK.
+> Enable OSTM0-OSTM7 instances in the RZ/V2N EVK device tree so that all
+> eight OSTM general timers are active and available.
 >
 > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
