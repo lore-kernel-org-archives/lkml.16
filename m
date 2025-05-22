@@ -1,134 +1,152 @@
-Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD98F1F1518;
-	Thu, 22 May 2025 12:52:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C14B77D098;
+	Thu, 22 May 2025 12:53:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747918367; cv=none; b=XtYrTQK3aQCeP8KaZHahg+d4BuO9gmAcYaU/xDI9Nk5GX3hevs/S0eLSpLWyDVqjxdV6Zj5X6X2kHloC8aMAn7wT3NDLoPk2uUf8Y3+/cM/jWBQQSYMzUwLK8uyQDKWtMh/lYz4dpvUURpIweCiv/45fUTvmvxme23PH3khcN/I=
+	t=1747918391; cv=none; b=fEhB2sRDl8Zy2i7Yv1W//j84YMWatDNr20M+fhXuTozd2CbYRBnWVOWLbPCidQ1AzxBz3KJ2TtTYchYvTNry5eYqJJaTCijscp3jDQtgP4icpPZDKJ8n9z5IzXTTCFIQit5cWRYMW1dJj6qDMCtqyV42HzAiX8MVBbLiRMCgYX0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747918367; c=relaxed/simple;
-	bh=tJv4QNjBKtokHjJxeh7G67BZfnogRDLdbuB/31QUnks=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=c3Y7CPg2cSs0Ii7nVOMhntLy86g/zPHyYCpQDPrGXDx46XZJ6aJD8zUnF9U6GvmxIFIp016Ye+z+H4IjkXTGAemyLDOrgyekX5lJjNlsiyFRNqNrXSGTLxqkFx0IgmGw70Zium/RmnNQK/5u3pfkHKOAuspPqgxr3QHLADIM0/Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Geym4q+0; arc=none smtp.client-ip=209.85.216.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Geym4q+0"
-Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-30e85955bebso1105300a91.0;
-        Thu, 22 May 2025 05:52:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747918365; x=1748523165; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=TJ1dqFNlHXFf99EeiB4N9E7VkmnO2BZbDxwhgOO2l9U=;
-        b=Geym4q+0VdhYCIbsA9ep2z+M98bdmHOODDKbfJiCxmsUUBJJFDRvWhLQS/3GwI3hOP
-         5MD7G+9QNKYkl0Fy+BDcI0ATcR0b3/iBHkBgJ/tZ1sSS51k5IHHuna7Xej5YdbB+ZwhR
-         q8XNe2KvrA7e96SOXQysxx+yf2yccnMMOt8AX2udC8va5DFXfYAm5jY0MwYXw53bbj58
-         hpAS+a1BqC24upqUrTFlY5VZnOGiIqZrnkQ5vQ6JLz1WaqQlr6UaP73epmtI0LopbJbu
-         4zPwOExpEAGZ5yEytJWxoBDUvL0qa5v+Dqd5BdPI9Ckoo+EQVQHIbqFHxuFWXu/0lVKL
-         +RBA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747918365; x=1748523165;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=TJ1dqFNlHXFf99EeiB4N9E7VkmnO2BZbDxwhgOO2l9U=;
-        b=HFkJOE/t7HBRwJkaBXxCKwSHys8Cnd2KlcltIcgcBfyEvyFYiYZ1CCZejbRLI0giF7
-         Y9OvtzUisyQ20W8wgK3hMpvT+JC5KTZ4MZGl9KvL2Bhcn7SWoiOQuOwqMALoOjWky2Pd
-         RKuOcCQlZyWXtyOBCC0lVyplhnu244w+/T7g8W9j+IKHicQGpssAygKlvSFyczCeGy8J
-         clZJ0LZpp4fKI421fxgbH12FVjm9GHkNW5cXgJVPzySreLl6b48PRHOI2T3GTr/K3Ur0
-         o6wHrccqerTJ4cDDP2fTZypA8lRzYdF4q5359mYVW6T8dxiYaKNOQym2KiXQJenhSIeA
-         dS4A==
-X-Forwarded-Encrypted: i=1; AJvYcCWAA4n3UblOB9x+fN4IRxr0Bc4HxorhgBzdEGQaHYaTZkGvDYMO6ML4i446hzd8DNv3bnqvUM8H4RFVsi7e/Ho=@vger.kernel.org, AJvYcCX+QeD6/zj9dBcLRuBCdKTXE7FA3tAabQ/MCwxHARbEyIut3C6pRHDyKWV/K4N9D81kIEND6QUdfCxcuaw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy/fSXCBmd5c3+EWSiFiqV84/846KVnLeiugbnFlhwrBl9ix8fs
-	zFoxy5hrt9tF05I0fcB8lBCac8+VVnpCZbFLIQVNNuRu/ph2Se+IkpDTbtWMyE85qTjMKjOdieq
-	yYCHNryHI8ByyL7LBhq/IOsefDk5IWwk=
-X-Gm-Gg: ASbGncvMFlmgEjeKltzEAHCmeS0doUfN4ZvDpghgtxl0SwaBeXQViHp6Bz9MsUD6X7G
-	VtIRWkxUjgDYt54XzL/P2gNaOV5GjRLk9OhCkfj9tytJQrJP5SibPF44aSGtREp90XlXmB5vl7r
-	IIzAxgj8G17p4id9LnQgOYUUXrn9um3INm
-X-Google-Smtp-Source: AGHT+IGQab83uIDU/GDVEexZuM5wwTP4lC86/RT9iNGRKxL/kDU1nqV9xYvUEmkaYpYKc/nYSDo/XA0Hp3rhrP5TbQ4=
-X-Received: by 2002:a17:902:c951:b0:21f:356:758f with SMTP id
- d9443c01a7336-231d438823amr134924235ad.3.1747918364882; Thu, 22 May 2025
- 05:52:44 -0700 (PDT)
+	s=arc-20240116; t=1747918391; c=relaxed/simple;
+	bh=v0j7BCEBYHwYpjXQ14egKJnzntDYAwSddW3wCQPWE7k=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=peN+W0zdSJuT941fIPIBurFTli80AbKynvTcsTFNPF53EBmAvfpBNdkGdsLMYZAPAWmYWifSeGEUcyi6NGAQ8uHY6mOPZed9bu5afiQ8TUAY1qTmTOHwbVXjrqMYfvw304tualU5B8gs6phdtt/WwqKJyIlRWkuI6PcjCU2Eovo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.44])
+	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4b37V33sZwz1jBXD;
+	Thu, 22 May 2025 20:52:11 +0800 (CST)
+Received: from kwepemg500010.china.huawei.com (unknown [7.202.181.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id DC8B3140109;
+	Thu, 22 May 2025 20:53:04 +0800 (CST)
+Received: from [10.174.178.209] (10.174.178.209) by
+ kwepemg500010.china.huawei.com (7.202.181.71) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Thu, 22 May 2025 20:53:04 +0800
+Message-ID: <353dfc63-2495-4874-a19f-ee124e075888@huawei.com>
+Date: Thu, 22 May 2025 20:53:03 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250522-rust-mno-fdpic-arm-fix-v2-1-a6f691d9c198@gmail.com>
-In-Reply-To: <20250522-rust-mno-fdpic-arm-fix-v2-1-a6f691d9c198@gmail.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Thu, 22 May 2025 14:52:32 +0200
-X-Gm-Features: AX0GCFtFzPcuH3SiIlAcuYu5MJfjb9QDePgyNRa2KtJcWu-QNzrT_t3oGCGwMkk
-Message-ID: <CANiq72mh1h8d-EWrZef=BPPtadZyHG0B+tg9GgA_RnWiETWMkA@mail.gmail.com>
-Subject: Re: [PATCH v2] arm: Fix rustgcc unknown argument '-mno-fdpic'
-To: Rudraksha Gupta <guptarud@gmail.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-	Danilo Krummrich <dakr@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, 
-	Justin Stitt <justinstitt@google.com>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, llvm@lists.linux.dev, 
-	torvalds@linux-foundation.org, Ben Wolsieffer <ben.wolsieffer@hefring.com>, 
-	Naresh Kamboju <naresh.kamboju@linaro.org>, Christian Schrrefl <chrisi.schrefl@gmail.com>, 
-	Russell King <rmk+kernel@armlinux.org.uk>, Ard Biesheuvel <ardb@kernel.org>, anders.roxell@linaro.org, 
-	arnd@arndb.de, dan.carpenter@linaro.org, laura.nao@collabora.com, 
-	lkft-triage@lists.linaro.org, regressions@lists.linux.dev, 
-	Nick Clifton <nickc@redhat.com>, Richard Earnshaw <richard.earnshaw@arm.com>, 
-	Ramana Radhakrishnan <ramanara@nvidia.com>, Linux Kernel Functional Testing <lkft@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V2 0/2] smb: client: Fix use-after-free in readdir
+To: Steve French <smfrench@gmail.com>
+CC: Paulo Alcantara <pc@manguebit.com>, <sfrench@us.ibm.com>,
+	<linux-cifs@vger.kernel.org>, <samba-technical@lists.samba.org>,
+	<linux-kernel@vger.kernel.org>, <chengzhihao1@huawei.com>,
+	<yi.zhang@huawei.com>, <yangerkun@huawei.com>
+References: <20250516091256.2756826-1-wangzhaolong1@huawei.com>
+ <860a4f7600814b17e48dbabe1ae19f68@manguebit.com>
+ <CAH2r5mvo1e3034LpCWUAuE0=dDBb7R0bMCmt80dGRWKMegRV+Q@mail.gmail.com>
+ <c1e693c6-573f-49d4-b6cf-cc308c339f06@huawei.com>
+ <CAH2r5mvoS8Py_M95+i0hB2iP06Uqz5JQbb13schBfdmJ6NzL3g@mail.gmail.com>
+From: Wang Zhaolong <wangzhaolong1@huawei.com>
+In-Reply-To: <CAH2r5mvoS8Py_M95+i0hB2iP06Uqz5JQbb13schBfdmJ6NzL3g@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: kwepems500001.china.huawei.com (7.221.188.70) To
+ kwepemg500010.china.huawei.com (7.202.181.71)
 
-On Thu, May 22, 2025 at 2:02=E2=80=AFPM Rudraksha Gupta <guptarud@gmail.com=
-> wrote:
->
-> Currently rust on arm fails to compile due to '-mno-fdpic'. This flag
-> disables a GCC feature that we don't want for kernel builds, so let's
-> skip it as it doesn't apply to Clang.
->
->     UPD     include/generated/asm-offsets.h
->     CALL    scripts/checksyscalls.sh
->     RUSTC L rust/core.o
->     BINDGEN rust/bindings/bindings_generated.rs
->     BINDGEN rust/bindings/bindings_helpers_generated.rs
->     CC      rust/helpers/helpers.o
->     Unable to generate bindings: clang diagnosed error: error: unknown ar=
-gument: '-mno-fdpic'
->     make[2]: *** [rust/Makefile:369: rust/bindings/bindings_helpers_gener=
-ated.rs] Error 1
->     make[2]: *** Deleting file 'rust/bindings/bindings_helpers_generated.=
-rs'
->     make[2]: *** Waiting for unfinished jobs....
->     Unable to generate bindings: clang diagnosed error: error: unknown ar=
-gument: '-mno-fdpic'
->     make[2]: *** [rust/Makefile:349: rust/bindings/bindings_generated.rs]=
- Error 1
->     make[2]: *** Deleting file 'rust/bindings/bindings_generated.rs'
->     make[1]: *** [/home/pmos/build/src/linux-next-next-20250521/Makefile:=
-1285: prepare] Error 2
->     make: *** [Makefile:248: __sub-make] Error 2
->
-> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-> Closes: https://lore.kernel.org/all/CA+G9fYvOanQBYXKSg7C6EU30k8sTRC0JRPJX=
-Yu7wWK51w38QUQ@mail.gmail.com/
-> Suggested-by: Miguel Ojeda <ojeda@kernel.org>
-> Tested-by: Rudraksha Gupta <guptarud@gmail.com>
-> Acked-by: Naresh Kamboju <naresh.kamboju@linaro.org>
-> Signed-off-by: Rudraksha Gupta <guptarud@gmail.com>
 
-Thanks for sending a v2! I was going to fix it myself, but this is
-even better :)
 
-By the way, submitting a patch typically requires / generally implies
-that you actually tested it, so your own Tested-by is usually not
-provided.
 
-Cheers,
-Miguel
+
+> I was able to reproduce it by running the reproducer poc much longer
+
+
+I was able to reproduce the issue described in the patch within 1-3 minutes by
+running POC on a virtual machine with 4 CPU cores, under the CONFIG_KASAN=y.
+
+> 
+> [189335.643181] Key type cifs.idmap unregistered
+> [189335.643203] Key type cifs.spnego unregistered
+> [189335.649519] CIFS: VFS: kmem_cache_destroy small req cachep
+> [189335.656316]
+> =============================================================================
+> [189335.656320] BUG cifs_small_rq (Tainted: G    B   W  OE      ):
+> Objects remaining on __kmem_cache_shutdown()
+> [189335.656322]
+> -----------------------------------------------------------------------------
+> 
+> [189335.656324] Object 0x000000001a39cfef @offset=15232
+> [189335.656326] Slab 0x00000000479475fe objects=36 used=1
+> fp=0x0000000090941d36
+> flags=0x17ffffc0000240(workingset|head|node=0|zone=2|lastcpupid=0x1fffff)
+> [189335.656334] ------------[ cut here ]------------
+> [189335.656335] WARNING: CPU: 1 PID: 84118 at mm/slub.c:1135
+> __slab_err+0x1d/0x30
+> ....
+> [189335.656512]  [last unloaded: cifs(OE)]
+> [189335.656516] CPU: 1 UID: 0 PID: 84118 Comm: rmmod Tainted: G    B
+> W  OE       6.15.0-061500rc4-generic #202504272253 PREEMPT(voluntary)
+> [189335.656520] Tainted: [B]=BAD_PAGE, [W]=WARN, [O]=OOT_MODULE,
+> [E]=UNSIGNED_MODULE
+> [189335.656521] Hardware name: LENOVO 20MAS08500/20MAS08500, BIOS
+> N2CET70W (1.53 ) 03/11/2024
+> [189335.656522] RIP: 0010:__slab_err+0x1d/0x30
+> [189335.656525] Code: 90 90 90 90 90 90 90 90 90 90 90 90 90 0f 1f 44
+> 00 00 55 48 89 e5 e8 72 ff ff ff be 01 00 00 00 bf 05 00 00 00 e8 33
+> b2 1c 00 <0f> 0b 5d 31 f6 31 ff c3 cc cc cc cc 0f 1f 80 00 00 00 00 90
+> 90 90
+> [189335.656527] RSP: 0018:ffffcf3041b33a18 EFLAGS: 00010046
+> [189335.656529] RAX: 0000000000000000 RBX: ffffcf3041b33a60 RCX:
+> 0000000000000000
+> [189335.656530] RDX: 0000000000000000 RSI: 0000000000000000 RDI:
+> 0000000000000000
+> [189335.656531] RBP: ffffcf3041b33a18 R08: 0000000000000000 R09:
+> 0000000000000000
+> [189335.656533] R10: 0000000000000000 R11: 0000000000000000 R12:
+> ffff8c1b49eb7600
+> [189335.656534] R13: ffff8c1b4ccd9580 R14: dead000000000122 R15:
+> ffff8c1b4ccd9580
+> [189335.656535] FS:  00007d912677e080(0000) GS:ffff8c2312b1b000(0000)
+> knlGS:0000000000000000
+> [189335.656537] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [189335.656538] CR2: 000061c8bedf4778 CR3: 00000003f2b4a001 CR4:
+> 00000000003726f0
+> [189335.656540] DR0: 0000000000000000 DR1: 0000000000000000 DR2:
+> 0000000000000000
+> [189335.656541] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7:
+> 0000000000000400
+> [189335.656542] Call Trace:
+> [189335.656543]  <TASK>
+> [189335.656546]  free_partial.cold+0x137/0x191
+> [189335.656550]  __kmem_cache_shutdown+0x46/0xa0
+> [189335.656553]  kmem_cache_destroy+0x3e/0x1c0
+> [189335.656558]  cifs_destroy_request_bufs+0x5c/0x70 [cifs]
+> [189335.656618]  exit_cifs+0x3a/0xef0 [cifs]
+> [189335.656666]  __do_sys_delete_module.isra.0+0x19d/0x2e0
+> [189335.656671]  __x64_sys_delete_module+0x12/0x20
+> [189335.656674]  x64_sys_call+0x1765/0x2320
+> [189335.656677]  do_syscall_64+0x7e/0x210
+> [189335.656679]  ? __fput+0x1a2/0x2d0
+> [189335.656681]  ? kmem_cache_free+0x408/0x470
+> [189335.656684]  ? __fput+0x1a2/0x2d0
+> [189335.656686]  ? arch_exit_to_user_mode_prepare.isra.0+0x22/0xd0
+> [189335.656689]  ? syscall_exit_to_user_mode+0x38/0x1d0
+> [189335.656692]  ? do_syscall_64+0x8a/0x210
+> [189335.656695]  ? do_read_fault+0xfb/0x230
+> [189335.656698]  ? do_fault+0x15d/0x220
+> [189335.656699]  ? handle_pte_fault+0x140/0x210
+> [189335.656702]  ? __handle_mm_fault+0x3cd/0x790
+> [189335.656705]  ? __count_memcg_events+0xd3/0x1a0
+> [189335.656708]  ? count_memcg_events.constprop.0+0x2a/0x50
+> [189335.656710]  ? handle_mm_fault+0x1ca/0x2e0
+> [189335.656713]  ? do_user_addr_fault+0x2f8/0x830
+> [189335.656716]  ? arch_exit_to_user_mode_prepare.isra.0+0x22/0xd0
+> [189335.656719]  ? irqentry_exit_to_user_mode+0x2d/0x1d0
+> [189335.656722]  ? irqentry_exit+0x43/0x50
+> [189335.656724]  ? exc_page_fault+0x96/0x1e0
+> [189335.656727]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
+> [189335.656729] RIP: 0033:0x7d9125f2ac9b
+
+This call trace seems to look like a memory leak or a reference
+counting management issue. Can it still be reproduced even after my
+patch is applied?
+
+Best regards,
+Wang Zhaolong
