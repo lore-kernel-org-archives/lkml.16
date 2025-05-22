@@ -1,127 +1,206 @@
-Received: from mail-qv1-f48.google.com (mail-qv1-f48.google.com [209.85.219.48])
+Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F3FE1172A
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 03:08:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E3B527718;
+	Thu, 22 May 2025 03:11:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747883304; cv=none; b=nEcJVpEWKAkj8FDITVicZo172epa3Oaeeejriq/LvXt5/Ij49BwcN6tK5EgM1M7rxQtiVDYrjJEZ6oR0sRzETz+TjXD6tTYaL6QoCSRB5Ub8z8MV7JFIiGT16M34ejNU5QDC8c1s7xSHRgL//4ez5hAHdVd3upPWgeR6uFhuhQg=
+	t=1747883494; cv=none; b=WLEG83H9YRj7hByMrztxkRjOJhychp8yB24h1vnj7sftquTHDNutTTDatabhU+SM128vzvppOT/EheonIMmBuTz6MyjeEvX/SZMWhufAyBaVj3U0i2GaHk2dlWsiLpEKqZd2zBOZukmc/fRlNy1/XD/YA7Ny6WkH40TS95g78Wg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747883304; c=relaxed/simple;
-	bh=q2KZ86WaIx1gEeDCZnA2QS5Jz55c/igaAybUfOzqVeU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZIlZU1PwTx4Ezv9/F4ZukJvOSuE3s37QqYHEZiX+YlnKaz4WIVWCuPRhAxp6ib/5+vaSNtl0OKyimdJqvz1QYtI8GRnk8KalBuBm8jNm1iJBGgvTnFpLAT008HxLxdq1rEmAMcrtG/l/fB9bRcBC2joCdSxfWYEiapSkyt64TW8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=mVbWfFYi; arc=none smtp.client-ip=209.85.219.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	s=arc-20240116; t=1747883494; c=relaxed/simple;
+	bh=IPYn8fz9zcaLbQa6XS0icpIQHNwzuXngs2jCr56c5a8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Z0k8UjTfNT2fXxqF5NrzVtmRtnzodL12esUPzg5UQyR7l5HSlzfKxD7D483OYCUq5z/xfhHqxPEzyrj5GeHKTzys0J6tO0OhkzA6JnjEEytC8+k0qww8+aFi6XjhXFBR3jMH5LDb1PlH2wyZ5Gjvyg6KcPQgDEqQsC2BBpjFKKk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fphwMoIx; arc=none smtp.client-ip=209.85.210.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="mVbWfFYi"
-Received: by mail-qv1-f48.google.com with SMTP id 6a1803df08f44-6f8b9c6b453so67578306d6.2
-        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 20:08:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fphwMoIx"
+Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-742c2ed0fe1so4796383b3a.1;
+        Wed, 21 May 2025 20:11:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1747883299; x=1748488099; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=AGVNczz6qr4dQlYUXeVEe2dNVe5Hjh6BmJ07Zb+P3ZI=;
-        b=mVbWfFYiJvJ1vGIBvB+JyR6zuvME0t1ge9qfJGgyqYREfat3LTNTG/LqjMHslIBl5V
-         AKhJDFif1RwZQS/hrZFK7/NEWWZvaWw8t4dzhzOulXIgWJFkgK/ZVsp9X5rbV32OVZwR
-         ojWQqgux8ay222z6DZLVQHtAk0CbhHS8oMxuosvQbUZWrV9VFV2l+VuNERHwwXaY6QMW
-         GQgRgO2BQjIlWKlG42AA4+hrC4UVKnytGzqmfQp0XCphLVBCJm2kbIGKTCiT7CUAW1tT
-         1V0sKUCo5BXEr9UHgVW/zFS/5Nov5mCCR984mByzEB6DfAH2Iz7rGKq6iGMUBJJBSZJ8
-         FJ5w==
+        d=gmail.com; s=20230601; t=1747883490; x=1748488290; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=w2h1eS/LzljS1IIkostr5pLzZhBsy848oiMCgLs6Xg0=;
+        b=fphwMoIx46qjrqKzTUlfF0Wl0/K3dH47qqvnkcDx3lV7VLfwlzdTyseGDSw4lpJzbM
+         Uh4cFWiTESP5T1qCUnEQec8QcH6lH/4KLCvOJlJUKLLERVx5z652yK1cRDMzHlx43pya
+         I2g/qhbqdpfqUbTOYhO2EWYLt3jlP1ec0G65tK6S88R9zvEPtQxHLnVsjFcBjfjd92Fx
+         KG5S+dHtDAbVkufrOTFhLbrDKvgX9Fc7BjXGxGdehpjhpNvfsvQzJtPNn7QBIRChauxG
+         UZSBP7RyJRZYticRnDm/A2DC9HCYcfTq7evLzRl2ZhuCgPgQXD8ajplwreOdErjSie8p
+         1dCQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747883299; x=1748488099;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=AGVNczz6qr4dQlYUXeVEe2dNVe5Hjh6BmJ07Zb+P3ZI=;
-        b=J1swrWervWdotvf4fi5J9lvK3mKhnCTSF/UU1JIsa9hOKQ3AfeBdkPEJC1y0cI3KKx
-         E7OSq0oAT3XI58Do/na1IGDkBNGFhkacVLl4yH9aRXKK82+h5fWWXLtcKxEc15c5yM6w
-         aHN+x4xo/ZvZZd3IcEpU6FTf1fbtlDZh9f4wgfCXsS13L311fs3KyZo7xpqpFhgNMxTA
-         7Ndy3Xes1XdxCIpvgWcvJw1EnJdv7ofP2MTwv7wkmyyANEyXLiSD3/Th0KMAS3uCDLTy
-         NuAXtNayqlgtyqlVPCgIwU7vJ21rdnkHGBxtP5fZM0evfyU94NUB9zCdH6lF+IBJM/Gu
-         0n0Q==
-X-Forwarded-Encrypted: i=1; AJvYcCW00s3SiakVQlx2P6iRGth2dBbwUKOdbyEq9C2LWCJ/FcH8xYKXLt9nq/ZGEvDmBYOTserzzYQ5BaxNeGQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyPtLQpUx14wCIsuQDkW2uEUwJJDhJKTu/As78eVIOs2kLS8iL/
-	IZ9852mLkeHKhSZCa9umjkbNXdrvst3ze7FoOvDR7bdnwtkggvVfBamPsKq8sI3hihw=
-X-Gm-Gg: ASbGncvdPs0jhJ3P5LJ6AXm4DrSWe15b/442wy48iQRdgP46HGE3SC9TLedZcngC0w2
-	KtTBF7cpiIonTMHC6ZW1OaMnvsjcDhSjSEJde6CRQ4BwSZocz7KnWIP3v63Tef0lJqVPVHs2Uce
-	MkFAwgnFyLlm7gZzlJHw70X3PfUKBxSN658S3EyHnX/Dn+jCEP36NMZXmTED6r675OrBVzpGmWq
-	/Vdq5pS9t6SGQ6h43clrg5HbJSgNkxIALvHRTDS4aWJ5g5hY3xQBq7/poWy+JHiVBlQz/U9RJmP
-	WUtu7FmygT0v4gms8oxGWqYE9JgKnl5/7G1rouiJocAWyzmsBn2ekuItU9wSclxPnbSzFp4q1OC
-	TD1vcN1CoUu+L+rJh7IRDWSjx0gtD3Sc=
-X-Google-Smtp-Source: AGHT+IFSrnLEH05GG4SlQC5J9N13ka7pCoc3hDoinN3MroPbkQgIIeIPHyBXTSm1kxX304ReSIUJhg==
-X-Received: by 2002:a05:6214:da2:b0:6e8:89bd:2b50 with SMTP id 6a1803df08f44-6f8b2cb9a48mr380561136d6.7.1747883298782;
-        Wed, 21 May 2025 20:08:18 -0700 (PDT)
-Received: from gourry-fedora-PF4VCD3F (pool-96-255-20-42.washdc.ftas.verizon.net. [96.255.20.42])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f8b584bb4bsm86728866d6.68.2025.05.21.20.08.17
+        d=1e100.net; s=20230601; t=1747883490; x=1748488290;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=w2h1eS/LzljS1IIkostr5pLzZhBsy848oiMCgLs6Xg0=;
+        b=Qtv0J1IW4EpEiMEHmuNeorAs3OP4goGMTTwSMyXQ+hoHZ7yjysN8BbMlj3YUoYC8Ln
+         9U5dKD+O0GOUG7G0BtECReXDRZCmq42VM5YTuAK5vW5nLvyQH12kyHMXVMRmy7kHpzQN
+         ZF4eoaLprSwrqow6OiMSWks2J/JG7gtgOWJPO0Mdt+hpCokrbMkKvBm8rpF5cujXz0Yc
+         C+ff8EHaXTSewnqWjtbMVBXeRU5CGiv/vBMi5Od2h8tHTAx2HQSfWkXHxOnbvPIkEGCL
+         i29khUfYK71SwQidxXJ/dLfvpvDCwV4Uu5iPteikXKUQtsoRobs69xGP6vX7QQ3SlRXC
+         sH1A==
+X-Forwarded-Encrypted: i=1; AJvYcCVfIfWosW01K3QMWSqZqYruJFfu8+NWOeGMPPyw4QUgO9qd+q6Ov5SanNbjMiMDI/wBqRemWw5uX/yVBKc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzx3weyRaorl8+z7+elT+lsiM0rsyKS1FaiubzS7aIsHMKstPW5
+	AM/bXuv6jJvBx3Fv6k/HQIdxgoC4Vj9pzhgGpME+spMyKqmIIN9TLJhP5bZ5
+X-Gm-Gg: ASbGnctCKnBpo7X9KZ2SRjEyLrageuTkvXSpFpna54cBHr2mJDruEVvgMqIbmz4CRFn
+	s0qIHTmI6/SZNLyJWdfxgImelujyC6X75t0mvTLGeFy0INMyC9RrH1hgQDWxTGBXhZtlg9AK0KH
+	W2xRu71aD5AbujuqDsOodWbsqeFixxBS71MUeuT8mZhmY6bV7alliHhgMqIDYxlI7skv3yDishs
+	dRhCwMC01Gr0OyNuHQfQIJ6qEgwC5wvSVIed0PHNLJqb9nVWUlR83NxUu9mDtdTEz6j+3kTR2xF
+	7U3hxtsXrKp7W2Gk8DA0Il4k/oe7xczCSaa1YvfheMD64TGmX+X/wyjb+J1Wnoj6R5USmgxHZzU
+	ExbU/+PQHd9Va
+X-Google-Smtp-Source: AGHT+IGniznh0ts9NxFH5+t9kJd249DOK+nfbCXQCEmCmvkI5lLK6lXs4GEDFzVngyLAHgRCQ3e+Rw==
+X-Received: by 2002:a05:6a21:502:b0:203:ca66:e30 with SMTP id adf61e73a8af0-216219edf88mr37148896637.37.1747883490479;
+        Wed, 21 May 2025 20:11:30 -0700 (PDT)
+Received: from localhost (c-73-158-218-242.hsd1.ca.comcast.net. [73.158.218.242])
+        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-742a97395basm10351194b3a.76.2025.05.21.20.11.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 May 2025 20:08:18 -0700 (PDT)
-Date: Wed, 21 May 2025 23:08:16 -0400
-From: Gregory Price <gourry@gourry.net>
-To: SeongJae Park <sj@kernel.org>
-Cc: Bharata B Rao <bharata@amd.com>, linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org, Jonathan.Cameron@huawei.com,
-	dave.hansen@intel.com, hannes@cmpxchg.org,
-	mgorman@techsingularity.net, mingo@redhat.com, peterz@infradead.org,
-	raghavendra.kt@amd.com, riel@surriel.com, rientjes@google.com,
-	weixugc@google.com, willy@infradead.org,
-	ying.huang@linux.alibaba.com, ziy@nvidia.com, dave@stgolabs.net,
-	nifan.cxl@gmail.com, joshua.hahnjy@gmail.com,
-	xuezhengchu@huawei.com, yiannis@zptcorp.com,
-	akpm@linux-foundation.org, david@redhat.com
-Subject: Re: [RFC PATCH v0 0/2] Batch migration for NUMA balancing
-Message-ID: <aC6VIG7GPnqr3ug-@gourry-fedora-PF4VCD3F>
-References: <20250521080238.209678-1-bharata@amd.com>
- <20250521184552.46414-1-sj@kernel.org>
+        Wed, 21 May 2025 20:11:30 -0700 (PDT)
+From: Stanislav Fomichev <stfomichev@gmail.com>
+To: netdev@vger.kernel.org
+Cc: davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	willemdebruijn.kernel@gmail.com,
+	horms@kernel.org,
+	stfomichev@gmail.com,
+	linux-kernel@vger.kernel.org,
+	syzbot+b191b5ccad8d7a986286@syzkaller.appspotmail.com
+Subject: [PATCH net v2] af_packet: move notifier's packet_dev_mc out of rcu critical section
+Date: Wed, 21 May 2025 20:11:28 -0700
+Message-ID: <20250522031129.3247266-1-stfomichev@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250521184552.46414-1-sj@kernel.org>
+Content-Transfer-Encoding: 8bit
 
-On Wed, May 21, 2025 at 11:45:52AM -0700, SeongJae Park wrote:
-> Hi Bharata,
-> 
-> On Wed, 21 May 2025 13:32:36 +0530 Bharata B Rao <bharata@amd.com> wrote:
-> 
-> > Hi,
-> > 
-> > This is an attempt to convert the NUMA balancing to do batched
-> > migration instead of migrating one folio at a time. The basic
-> > idea is to collect (from hint fault handler) the folios to be
-> > migrated in a list and batch-migrate them from task_work context.
-> > More details about the specifics are present in patch 2/2.
-> > 
-> > During LSFMM[1] and subsequent discussions in MM alignment calls[2],
-> > it was suggested that separate migration threads to handle migration
-> > or promotion request may be desirable. Existing NUMA balancing, hot
-> > page promotion and other future promotion techniques could off-load
-> > migration part to these threads. Or if we manage to have a single
-> > source of hotness truth like kpromoted[3], then that too can hand
-> > over migration requests to the migration threads. I am envisaging
-> > that different hotness sources like kmmscand[4], MGLRU[5], IBS[6]
-> > and CXL HMU would push hot page info to kpromoted, which would
-> > then isolate and push the folios to be promoted to the migrator
-> > thread.
-> 
-> I think (or, hope) it would also be not very worthless or rude to mention other
-> existing and ongoing works that have potentials to serve for similar purpose or
-> collaborate in future, here.
-> 
-> DAMON is designed for a sort of multi-source access information handling.  In
-> LSFMM, I proposed[1] damon_report_access() interface for making it easier to be
-> extended for more types of access information.  Currenlty damon_report_access()
-> is under early development.  I think this has a potential to serve something
-> similar to your single source goal.
-> 
+Syzkaller reports the following issue:
 
-It seems to me that DAMON might make use of the batch migration
-interface, so if you need any changes or extensions, it might be good
-for you (SJ) to take a look at that for us.
+ BUG: sleeping function called from invalid context at kernel/locking/mutex.c:578
+ __mutex_lock+0x106/0xe80 kernel/locking/mutex.c:746
+ team_change_rx_flags+0x38/0x220 drivers/net/team/team_core.c:1781
+ dev_change_rx_flags net/core/dev.c:9145 [inline]
+ __dev_set_promiscuity+0x3f8/0x590 net/core/dev.c:9189
+ netif_set_promiscuity+0x50/0xe0 net/core/dev.c:9201
+ dev_set_promiscuity+0x126/0x260 net/core/dev_api.c:286 packet_dev_mc net/packet/af_packet.c:3698 [inline]
+ packet_dev_mclist_delete net/packet/af_packet.c:3722 [inline]
+ packet_notifier+0x292/0xa60 net/packet/af_packet.c:4247
+ notifier_call_chain+0x1b3/0x3e0 kernel/notifier.c:85
+ call_netdevice_notifiers_extack net/core/dev.c:2214 [inline]
+ call_netdevice_notifiers net/core/dev.c:2228 [inline]
+ unregister_netdevice_many_notify+0x15d8/0x2330 net/core/dev.c:11972
+ rtnl_delete_link net/core/rtnetlink.c:3522 [inline]
+ rtnl_dellink+0x488/0x710 net/core/rtnetlink.c:3564
+ rtnetlink_rcv_msg+0x7cf/0xb70 net/core/rtnetlink.c:6955
+ netlink_rcv_skb+0x219/0x490 net/netlink/af_netlink.c:2534
 
-~Gregory
+Calling `PACKET_ADD_MEMBERSHIP` on an ops-locked device can trigger
+the `NETDEV_UNREGISTER` notifier, which may require disabling promiscuous
+and/or allmulti mode. Both of these operations require acquiring
+the netdev instance lock.
+
+Move the call to `packet_dev_mc` outside of the RCU critical section.
+The `mclist` modifications (add, del, flush, unregister) are protected by
+the RTNL, not the RCU. The RCU only protects the `sklist` and its
+associated `sks`. The delayed operation on the `mclist` entry remains
+within the RTNL.
+
+Reported-by: syzbot+b191b5ccad8d7a986286@syzkaller.appspotmail.com
+Closes: https://syzkaller.appspot.com/bug?extid=b191b5ccad8d7a986286
+Fixes: ad7c7b2172c3 ("net: hold netdev instance lock during sysfs operations")
+Signed-off-by: Stanislav Fomichev <stfomichev@gmail.com>
+---
+v2: revise commit message (Willem & Jakub) and add INIT_LIST_HEAD (Willem)
+---
+ net/packet/af_packet.c | 21 ++++++++++++++++-----
+ net/packet/internal.h  |  1 +
+ 2 files changed, 17 insertions(+), 5 deletions(-)
+
+diff --git a/net/packet/af_packet.c b/net/packet/af_packet.c
+index d4dba06297c3..20be2c47cf41 100644
+--- a/net/packet/af_packet.c
++++ b/net/packet/af_packet.c
+@@ -3713,15 +3713,15 @@ static int packet_dev_mc(struct net_device *dev, struct packet_mclist *i,
+ }
+ 
+ static void packet_dev_mclist_delete(struct net_device *dev,
+-				     struct packet_mclist **mlp)
++				     struct packet_mclist **mlp,
++				     struct list_head *list)
+ {
+ 	struct packet_mclist *ml;
+ 
+ 	while ((ml = *mlp) != NULL) {
+ 		if (ml->ifindex == dev->ifindex) {
+-			packet_dev_mc(dev, ml, -1);
++			list_add(&ml->remove_list, list);
+ 			*mlp = ml->next;
+-			kfree(ml);
+ 		} else
+ 			mlp = &ml->next;
+ 	}
+@@ -3769,6 +3769,7 @@ static int packet_mc_add(struct sock *sk, struct packet_mreq_max *mreq)
+ 	memcpy(i->addr, mreq->mr_address, i->alen);
+ 	memset(i->addr + i->alen, 0, sizeof(i->addr) - i->alen);
+ 	i->count = 1;
++	INIT_LIST_HEAD(&i->remove_list);
+ 	i->next = po->mclist;
+ 	po->mclist = i;
+ 	err = packet_dev_mc(dev, i, 1);
+@@ -4233,9 +4234,11 @@ static int packet_getsockopt(struct socket *sock, int level, int optname,
+ static int packet_notifier(struct notifier_block *this,
+ 			   unsigned long msg, void *ptr)
+ {
+-	struct sock *sk;
+ 	struct net_device *dev = netdev_notifier_info_to_dev(ptr);
+ 	struct net *net = dev_net(dev);
++	struct packet_mclist *ml, *tmp;
++	LIST_HEAD(mclist);
++	struct sock *sk;
+ 
+ 	rcu_read_lock();
+ 	sk_for_each_rcu(sk, &net->packet.sklist) {
+@@ -4244,7 +4247,8 @@ static int packet_notifier(struct notifier_block *this,
+ 		switch (msg) {
+ 		case NETDEV_UNREGISTER:
+ 			if (po->mclist)
+-				packet_dev_mclist_delete(dev, &po->mclist);
++				packet_dev_mclist_delete(dev, &po->mclist,
++							 &mclist);
+ 			fallthrough;
+ 
+ 		case NETDEV_DOWN:
+@@ -4277,6 +4281,13 @@ static int packet_notifier(struct notifier_block *this,
+ 		}
+ 	}
+ 	rcu_read_unlock();
++
++	/* packet_dev_mc might grab instance locks so can't run under rcu */
++	list_for_each_entry_safe(ml, tmp, &mclist, remove_list) {
++		packet_dev_mc(dev, ml, -1);
++		kfree(ml);
++	}
++
+ 	return NOTIFY_DONE;
+ }
+ 
+diff --git a/net/packet/internal.h b/net/packet/internal.h
+index d5d70712007a..1e743d0316fd 100644
+--- a/net/packet/internal.h
++++ b/net/packet/internal.h
+@@ -11,6 +11,7 @@ struct packet_mclist {
+ 	unsigned short		type;
+ 	unsigned short		alen;
+ 	unsigned char		addr[MAX_ADDR_LEN];
++	struct list_head	remove_list;
+ };
+ 
+ /* kbdq - kernel block descriptor queue */
+-- 
+2.49.0
+
