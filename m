@@ -1,42 +1,63 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 389E5194094;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D724C19ADA2;
 	Thu, 22 May 2025 17:21:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747934473; cv=none; b=JXewXva/M6AbRJujU4pcr1tmTNAmSRcvDOBd72wlkd8/we6b3t6N0UGhfzLjemVwiVstHOhMdxpxLg9uORmJ66mp3MNhjlhCprwTnKrg361p6pZAzFsSEBJDgUgbD/CBne6gWcaVga3NxMJ36K6Kubv8hUJX+ebnF1c/Kd+YfZ0=
+	t=1747934474; cv=none; b=OkaMvqE1fpvmAGk19WqaEAsmHFkGdKZMkSny9ykAq64zDBcmeWRQmhF5YyjLDZYa03Z6VORAKSW8pwHM2UId0I3r1o03uefZQwImQaa3Fm96PDT+jKXL4YwahgbfLpaUGsMVlZ2ZGev25ARQYF6l1Pd0XhuipYUhEUouJhgArQg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747934473; c=relaxed/simple;
-	bh=IHokm80AvQoeLm7V8X5gQdcJ8Sn6Kew2FcZbLHZKjOg=;
+	s=arc-20240116; t=1747934474; c=relaxed/simple;
+	bh=jRhI6mNMqW4aCK+zaS2xWMJWg0sThwYybWKRyZTWHd4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sBLTFmkf6dNzx7Ge23u/P4+A4fzSHQ9vIW7an7TE6Ts71eZVHD42zE8T7+z5Crb0TjjOL95HylEdzuZ2WGZMtnkwX31bsBa8nrZEkpYrJEldxQt9FVcKAEcljKyF2AzS+GSQsWCAuwF06NGWFzjZFIls6OR8wWdM78IxU6sFd1U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g4LutPHn; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=R3Gn72i5LR2Z4zX9RvgSO1Iffymco06fo/envRkYIT4u14vuVC42PdKGaMID3s0IDfGwi9+eZL0RXzlLZvfpFuXEtLhZomHPeY/vmVTKVpLeb56i3dOQ593YrIahdFvycv5pT3XT2ihFI6FoBqPMCjNqsHmRFbMDoAoR14LrvU0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DwlKrwD1; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g4LutPHn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 65102C4CEE4;
-	Thu, 22 May 2025 17:21:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747934472;
-	bh=IHokm80AvQoeLm7V8X5gQdcJ8Sn6Kew2FcZbLHZKjOg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=g4LutPHn7c8o3nAYAn8ij9FvAMc5D1Bur8iwE8oA1I1UlW/5ghPTzVeKCHUGyDRko
-	 dk2Gm6MMkuM5P232UB+qMASq7h1gz8zegWSQqbbksGV2DnREdByoJPsrryIWtg/zir
-	 ZUWxBhb1NDsumgfhknDWzQCQIuSZVMZYcsyXVUuwjq4Jc34cH8h8pNWApPRx/x4gwi
-	 4m/kDOblhP6qYp/Vi7xmKJYpvANMQ3/iYHpTAQo5nFBLP/gfpbCo44tCRN779x+aOF
-	 PMfLEMLenKqBQYAwyNGKN99VPoorI1q9UhRp4eOg7Q7nzGJaH8zqTcWr9cx0HCjMuG
-	 2I5ctQB4qgnIw==
-Date: Thu, 22 May 2025 18:21:08 +0100
-From: Simon Horman <horms@kernel.org>
-To: Alok Tiwari <alok.a.tiwari@oracle.com>
-Cc: anthony.l.nguyen@intel.com, przemyslaw.kitszel@intel.com,
-	andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
-	kuba@kernel.org, pabeni@redhat.com,
-	intel-wired-lan@lists.osuosl.org, linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org, darren.kenny@oracle.com
-Subject: Re: [PATCH] ixgbe: Fix typos and clarify comments in X550 driver code
-Message-ID: <20250522172108.GK365796@horms.kernel.org>
-References: <20250522074734.3634633-1-alok.a.tiwari@oracle.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DwlKrwD1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747934473; x=1779470473;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=jRhI6mNMqW4aCK+zaS2xWMJWg0sThwYybWKRyZTWHd4=;
+  b=DwlKrwD1ikVPkbkPeIPpqeIdi2VosC8RVNACgZAmzQp1cZ727USyWfAI
+   QsLqH/nGeYnbbLzY2bh7TGMfj7La/D2fYWvWChEkTbIlvSG7umEjxgSCr
+   8PyD5uP3ZzrH+SzaxruraAUApXfiVlmw55Yd/92QqZN+plrmeQ209JfuR
+   0FKmq1GUW0X3fFwrlwchkzr//LhdaQMh1gzaTery+UF5sp+AGplfplm2t
+   UWCmwkXsZsV6aCixt9S8BEbR9I8yuLSKvi6rTC9EBOM3Aqg/DC86lWSZF
+   KdYYgOuD6tIBmU99ffBHAjDrI7kmzqu3LaMZJd6oLmIRZmhjVbnHNR0h8
+   Q==;
+X-CSE-ConnectionGUID: j3KkLsFUSgK2rTOYLrzNAg==
+X-CSE-MsgGUID: HHwQHdVIQEeSe24A5KAQjw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11441"; a="53639000"
+X-IronPort-AV: E=Sophos;i="6.15,306,1739865600"; 
+   d="scan'208";a="53639000"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2025 10:21:13 -0700
+X-CSE-ConnectionGUID: KM+Gcn/3Truqm25Vc/G7Bw==
+X-CSE-MsgGUID: vtqoCIuuQu62amGJbMlDaw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,306,1739865600"; 
+   d="scan'208";a="140560505"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by orviesa006.jf.intel.com with ESMTP; 22 May 2025 10:21:09 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uI9bP-000PYO-0m;
+	Thu, 22 May 2025 17:21:07 +0000
+Date: Fri, 23 May 2025 01:20:32 +0800
+From: kernel test robot <lkp@intel.com>
+To: "Xin Li (Intel)" <xin@zytor.com>, linux-kernel@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, tglx@linutronix.de, mingo@redhat.com,
+	bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
+	hpa@zytor.com, peterz@infradead.org, andrew.cooper3@citrix.com,
+	stable@vger.kernel.org
+Subject: Re: [PATCH v1 1/1] x86/fred/signal: Prevent single-step upon ERETU
+ completion
+Message-ID: <202505230141.4YBHhrPI-lkp@intel.com>
+References: <20250522060549.2882444-1-xin@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -45,55 +66,60 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250522074734.3634633-1-alok.a.tiwari@oracle.com>
+In-Reply-To: <20250522060549.2882444-1-xin@zytor.com>
 
-On Thu, May 22, 2025 at 12:47:26AM -0700, Alok Tiwari wrote:
-> Corrected spelling errors such as "simular" -> "similar",
-> "excepted" -> "accepted", and "Determime" -> "Determine".
-> Fixed including incorrect word usage ("to MAC" -> "two MAC")
-> and improved awkward phrasing.
-> 
-> Aligned function header descriptions with their actual functionality
-> (e.g., "Writes a value" -> "Reads a value").
-> Corrected typo in error code from -ENIVAL to -EINVAL.
-> Improved overall clarity and consistency in comment across various
-> functions.
-> 
-> These changes improve maintainability and readability of the code
-> without affecting functionality.
-> 
-> Signed-off-by: Alok Tiwari <alok.a.tiwari@oracle.com>
-> ---
->  drivers/net/ethernet/intel/ixgbe/ixgbe_x550.c | 28 +++++++++----------
+Hi Xin,
 
-...
+kernel test robot noticed the following build errors:
 
-> @@ -1754,7 +1754,7 @@ ixgbe_setup_mac_link_sfp_n(struct ixgbe_hw *hw, ixgbe_link_speed speed,
->  	ret_val = ixgbe_supported_sfp_modules_X550em(hw, &setup_linear);
->  
->  	/* If no SFP module present, then return success. Return success since
-> -	 * SFP not present error is not excepted in the setup MAC link flow.
-> +	 * SFP not present error is not accepted in the setup MAC link flow.
+[auto build test ERROR on 6a7c3c2606105a41dde81002c0037420bc1ddf00]
 
-I wonder if "excepted" was supposed to be "expected".
+url:    https://github.com/intel-lab-lkp/linux/commits/Xin-Li-Intel/x86-fred-signal-Prevent-single-step-upon-ERETU-completion/20250522-140954
+base:   6a7c3c2606105a41dde81002c0037420bc1ddf00
+patch link:    https://lore.kernel.org/r/20250522060549.2882444-1-xin%40zytor.com
+patch subject: [PATCH v1 1/1] x86/fred/signal: Prevent single-step upon ERETU completion
+config: i386-buildonly-randconfig-003-20250522 (https://download.01.org/0day-ci/archive/20250523/202505230141.4YBHhrPI-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250523/202505230141.4YBHhrPI-lkp@intel.com/reproduce)
 
->  	 */
->  	if (ret_val == -ENOENT)
->  		return 0;
-> @@ -1804,7 +1804,7 @@ ixgbe_setup_mac_link_sfp_x550a(struct ixgbe_hw *hw, ixgbe_link_speed speed,
->  	ret_val = ixgbe_supported_sfp_modules_X550em(hw, &setup_linear);
->  
->  	/* If no SFP module present, then return success. Return success since
-> -	 * SFP not present error is not excepted in the setup MAC link flow.
-> +	 * SFP not present error is not accepted in the setup MAC link flow.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202505230141.4YBHhrPI-lkp@intel.com/
 
-Ditto.
+All errors (new ones prefixed by >>):
 
->  	 */
->  	if (ret_val == -ENOENT)
->  		return 0;
+   In file included from arch/x86/kernel/signal_32.c:32:
+   arch/x86/include/asm/sighandling.h: In function 'prevent_single_step_upon_eretu':
+>> arch/x86/include/asm/sighandling.h:44:21: error: 'struct pt_regs' has no member named 'fred_ss'
+      44 |                 regs->fred_ss.swevent = 0;
+         |                     ^~
 
-The above notwithstanding, this looks good to me.
 
-Reviewed-by: Simon Horman <horms@kernel.org>
+vim +44 arch/x86/include/asm/sighandling.h
 
+    26	
+    27	/*
+    28	 * To prevent infinite SIGTRAP handler loop if TF is used without an external
+    29	 * debugger, clear the software event flag in the augmented SS, ensuring no
+    30	 * single-step trap is pending upon ERETU completion.
+    31	 *
+    32	 * Note, this function should be called in sigreturn() before the original state
+    33	 * is restored to make sure the TF is read from the entry frame.
+    34	 */
+    35	static __always_inline void prevent_single_step_upon_eretu(struct pt_regs *regs)
+    36	{
+    37		/*
+    38		 * If the trap flag (TF) is set, i.e., the sigreturn() SYSCALL instruction
+    39		 * is being single-stepped, do not clear the software event flag in the
+    40		 * augmented SS, thus a debugger won't skip over the following instruction.
+    41		 */
+    42		if (IS_ENABLED(CONFIG_X86_FRED) && cpu_feature_enabled(X86_FEATURE_FRED) &&
+    43		    !(regs->flags & X86_EFLAGS_TF))
+  > 44			regs->fred_ss.swevent = 0;
+    45	}
+    46	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
