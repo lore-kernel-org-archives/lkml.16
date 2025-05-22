@@ -1,259 +1,243 @@
-Received: from mail-vk1-f175.google.com (mail-vk1-f175.google.com [209.85.221.175])
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E40EC28EC11
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 23:35:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18733221FB7;
+	Thu, 22 May 2025 23:35:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747956916; cv=none; b=adl53P+pFTB1PGESQX4WUH3qFNxezkBZtj4XYqf/3SF9ssewWEx7pU1MSsu8UluFBb90pJePbayw0YRK0Ot8tZelsKu3d8XOoW3XJ0F9GAzCcR31ttTDLyOcbrbzwbLy3UxmHYYmbzj5SH/1rvfeg6Et6i7k0FRw48xwrJ5hBjs=
+	t=1747956940; cv=none; b=H7DTumxHXZ3pYU8ci1kWoYO1p6KlRzGo2LhtYvv9A8WCObD5MF5V7Flym4cIUcGKBegNjv1T3x6NrDrXuoxQRpBnUXMre+zWk3gMYG9t6Whthk8uGtLborqmb9P6H4KNsjZ+GXNcHjy3y9roVG/17Rt7rkL/x8mp74KEwQvsMAI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747956916; c=relaxed/simple;
-	bh=BCg/xKCvgmbWFjMe/V+4gUuee6V7OELp6ZgmHBaY2l0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mg1aHYEY/4kAKmUumxqYca1bFWpYX6GjlA9HDUcjcKkOSRA+NE4hsZelPPEWFZdA4EJpq9a6K4Efac1KXyOwOB63HryN6nq+haass0WTc8ua/OSduYxMSC2mz163Z6QIiP2759m0vUnZJGQ3QQ3rgcyX/xnnJH4BmDHipbqeVuc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=AGNq5UD7; arc=none smtp.client-ip=209.85.221.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1747956940; c=relaxed/simple;
+	bh=czoIWuhXnPSr+ph5d5pGCEbEfyC8aXk7ltntHa/MeoQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FWLha/lPTIzERSc3Btc9enFLbgLg9tyyFr1PCPyiQ8kUL9BgjdtKwVn/ZVGqJVQBMiksTaNv2pKwIIABNHx+jJTqW7O6oJGPN4f3/QC7dcPYdZe1GcIasaDaRvhehBJwBvN2Y/u+2V7cuBlF01/NxPsh3E/QWnntx2EjfmFiZsg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Rd6xjRIX; arc=none smtp.client-ip=209.85.210.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AGNq5UD7"
-Received: by mail-vk1-f175.google.com with SMTP id 71dfb90a1353d-525b44b7720so2548146e0c.0
-        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 16:35:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rd6xjRIX"
+Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-742c035f2afso3875617b3a.2;
+        Thu, 22 May 2025 16:35:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747956914; x=1748561714; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PhbDibMW6rB2j7UXHc3PdZ57ETGCvWFeOSRMt4WT++k=;
-        b=AGNq5UD7TVi4q3GHHwFeS+yAW3IAHFiNNTePmocMKDlIsNKfYn0Q+vvZHtqAGSVCSB
-         neaaAyXqiAfWCG6Du2Wk5fsmOvdQB7NtSDWUJ01IeHW9HSvYaqk582oxiu3vpElSJpVb
-         2cNRysYWlZxNp7CbE4gktnqW5wTtZE/3iuCzOg0COJ1cbfIwQCmvwKCYaFWPHycohDoj
-         /6trSW4qlXwcIK6+eRlKlrw9Mx82wIj5sb6WkrJHTPJKgNU8iBJY5+nx6cISa1oYV3iL
-         E+2OynDecJ+UhF3NNqRdODEjLE+5r8TuwxtGZQPzXoOFbnI6lww7Yxf9015cht9lEkHF
-         JaDw==
+        d=gmail.com; s=20230601; t=1747956938; x=1748561738; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=hOzKNVIPtCb3bls2x+8GmpP1FGWXc09cxECCk2fUXy8=;
+        b=Rd6xjRIXj9NdgvooUMnJc4+iazJyks/QmZ5t73CbQ0pXxhjTaZYqS+tA/hRyzVh1so
+         RCoNEvnwRfjU8+rj6S8jl/LPYlJ/voeqB8XjJgd9dSmIIW/G80TzBDIuzrYDwgfs7IZW
+         f9gYbgHzTe1+vPwBg3uo0JpAwTKcM69DjN4R90hkBWqF1J8605irWazITsBz7Qah79Lo
+         KZQaT+vCd8BM9hIUnXa/HuqoOuM8nEiHdKY69LwybDFoFGnf4O3mJTxGB8d3az7ib8SS
+         6skr5T7MSOcvpIvjOXP6pdgfue821E8jTb7icNpLTUnqc7e4cc4oYWmE6EGCaSlCZwOu
+         1Q5A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747956914; x=1748561714;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=PhbDibMW6rB2j7UXHc3PdZ57ETGCvWFeOSRMt4WT++k=;
-        b=vDyqRpi+flyYkOidcGFmem0y7m3E5e79+s/HqyEDUhBmL6otmYic3cVyMu3269agEV
-         OmYwyfAQWzw1Z+QWCogx9SYEtP42y/J7jQSffriL+pZIER4BRVLOGBD00i0qXXpTzTVy
-         OlMSZx7Q1QkwstmebrBnxjEAjR1uoP2317ooyeG+XDNjNJT7jm9HRw3ccbu5Emr3Wc14
-         MAlmQ7BCA7M5DpoNTyY5P0dB9qedlOctvxzZDkvjApLhFuLUJn5w7SPQtGqnTCz9UllI
-         p0G/9f2xydAR0acDTnNbhAWKUe53HxmrzONDbyfuFtxMkxvC+yxVJwxVE1TH2/rxBtk4
-         iOaw==
-X-Forwarded-Encrypted: i=1; AJvYcCVPZgrLgVQq3GTg13OfH7R4aYh2OUGQU9+WODuXBRpipswMDA2cQmACrD6ctE6VF7bHkhxGIf9Es6Pn2zg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzN48uE73MwWZmxHS8aUafdX626kHfZxXyKnturVwnEb6xT5L6E
-	/zCGlDeSP0QnWxDYz1LVC8+N+0xpPCWL4iBgH+uIq2lnwCcZSZaUYNal9jKRPGf3iUHmWY9W0O6
-	FoCLTlNl9wtay5Dqx8tYV1dZTAxwMEJVxQV/vvGE1
-X-Gm-Gg: ASbGncsShjBLhQrlm925w1UfiWypgiSHWMuiim97ZTn48If2Zms+I+R4jhc72+w/CVe
-	C0WnAVdhuocgcN2aPrLCk6TBBa3XI2SxLZZYYa3C1UVfrXpYpfYgD2Pd2d9R9IQsw7Ub+eMeBbT
-	loZ1kL7bmO8QOOvr/9b6UYfMVf8bAz2itJ/9jCwkD0Yg0=
-X-Google-Smtp-Source: AGHT+IEM/DFBzItMDvMT3GgRPsQthZnDZfh8oK1+E1W0b9o/n9MYajDbrxj5M/kFns8zsnpmrkISXZ+vKbECT65sysg=
-X-Received: by 2002:a05:6122:428a:b0:520:60c2:3fd with SMTP id
- 71dfb90a1353d-52dbcc8547emr23488507e0c.3.1747956913425; Thu, 22 May 2025
- 16:35:13 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1747956938; x=1748561738;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=hOzKNVIPtCb3bls2x+8GmpP1FGWXc09cxECCk2fUXy8=;
+        b=cC03/4VRRnEEdKYETWVJpAQt/ihwTv4Dobjfn1zsZPrB3077MP/mbg0kqW2h2PB5B5
+         ZmcwVbd8BBKIhYr4RSQ05zp+mRs/jVRj8ADkMPrI8dHgrOLJthg/ws1/ZDtttgO1NcTM
+         RLHI/CMD6uVi/cMTLdnH4hyLwtWr6QbyCRTJDvnh74FS5htj9fXl/5Y/vplZw2GHqeU5
+         UI7qHk7N2LoWtnA2HH/C8q/tamRPsJHQStOV8C5DKHnUpCUquHY7g1C97hCgMvXBWo9z
+         EYuxi4CfxaKbIkRPrpD8pJbcZyQadboNq7bK27KUrvB7VqoakEJeYKhvV7gNeFU9riHc
+         NcOg==
+X-Forwarded-Encrypted: i=1; AJvYcCW1uN56u1Is4YbQ0m7N3lA7WQ/kNIk/+/zmzHTkXrwo5zDW/ArJ/Ld+r33zSstbhz2/MWB2O9X2@vger.kernel.org, AJvYcCXzRmMc08LlZ/YSQtbRfrxrORLlNF+T8msQEEfLLSAayNNEiliVlvKuxc7Dn2OPdA9HDhpOe/KLthXKYTo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxXl7f5zeMIXzx/xkO1+MgOXq8LtNGMKUr0uTgNklA8eTGSAFSE
+	t0VLaM0EC1sDGzJ59KLL0au7M49OcewiWtKz+p6fprqKKm49HLeeCBKK
+X-Gm-Gg: ASbGncvYgHvcds/XlXOg1lz3eZxIPCdukTQ8AOvM5gPQiR5G6arvGcZyCMtHV4FdANT
+	6jWHrlN5hqWKGOCgGsWu1Ef7jWgX7miBWEEPGDKKZXXx0JOSPezMdwg5fdLW1/nZ3dla5Jc4Prj
+	ww51JuQCjTekzsnLNqLwez2JmqqVvWYfVC/o+JAa9QtygAjTAn7P3cp5x3FoRy8m/Fj4VKQYPEA
+	n6HX9NEvZ7ZSbHpzSF/Ynq4f4JlkR8oXH6/lgjJt3cbCAUpxPZEEf4+FjO+TtBVP/4VLDkGpDQE
+	lexUQGT373fjtTke3SYGRbtxe85NfwyLrY5GW5AK6ZR4HuHkHgCe
+X-Google-Smtp-Source: AGHT+IGGCm275dqXU+tczGZTKOc0m27ciGhUxWu1jZ+0SBX0keCxM1iMff320GrUlWTtZOoG4gPIKg==
+X-Received: by 2002:a05:6a00:3d4d:b0:742:3fb4:f992 with SMTP id d2e1a72fcca58-742a97c3f4dmr34919826b3a.10.1747956938106;
+        Thu, 22 May 2025 16:35:38 -0700 (PDT)
+Received: from mythos-cloud.. ([125.138.201.7])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b26eaf8e114sm11873416a12.44.2025.05.22.16.35.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 May 2025 16:35:37 -0700 (PDT)
+From: Moon Yeounsu <yyyynoom@gmail.com>
+To: Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>
+Cc: Moon Yeounsu <yyyynoom@gmail.com>,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH net-next v2] net: dlink: enable RMON MMIO access on supported devices
+Date: Fri, 23 May 2025 08:34:32 +0900
+Message-ID: <20250522233432.3546-2-yyyynoom@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250412010940.1686376-1-dylanbhatch@google.com>
- <20250412010940.1686376-3-dylanbhatch@google.com> <20250509161508.GB5984@willie-the-truck>
-In-Reply-To: <20250509161508.GB5984@willie-the-truck>
-From: Dylan Hatch <dylanbhatch@google.com>
-Date: Thu, 22 May 2025 16:35:02 -0700
-X-Gm-Features: AX0GCFs1KL1GwnkdFjpSiBC0RbR_upY_O1F4fBatrZc5VR2faRf35nbV_nq9o_s
-Message-ID: <CADBMgpzZz_Nn63DLwEbdurwkEUK7RsFXPhMf7Fw3WwOdpp67BA@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] arm64/module: Use text-poke API for late relocations.
-To: Will Deacon <will@kernel.org>
-Cc: Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
-	Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>, 
-	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Puranjay Mohan <puranjay@kernel.org>, 
-	Xu Kuohai <xukuohai@huaweicloud.com>, =?UTF-8?Q?Philippe_Mathieu=2DDaud=C3=A9?= <philmd@linaro.org>, 
-	Catalin Marinas <catalin.marinas@arm.com>, "Mike Rapoport (Microsoft)" <rppt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
-	Geert Uytterhoeven <geert@linux-m68k.org>, Luis Chamberlain <mcgrof@kernel.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, Song Liu <song@kernel.org>, 
-	Ard Biesheuvel <ardb@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	Roman Gushchin <roman.gushchin@linux.dev>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hi Will,
+Enable memory-mapped I/O access to RMON statistics registers for devices
+known to work correctly. Currently, only the D-Link DGE-550T (`0x4000`)
+with PCI revision A3 (`0x0c`) is allowed.
 
-I've sent a v4 of these patches that should address your comments,
-feel free to have a look.
+To support this selectively, a runtime check was added, and the
+`MEM_MAPPING` macro was removed in favor of runtime detection.
 
-On Fri, May 9, 2025 at 9:15=E2=80=AFAM Will Deacon <will@kernel.org> wrote:
->
-> Hi Dylan,
->
-> On Sat, Apr 12, 2025 at 01:09:39AM +0000, Dylan Hatch wrote:
-> > To enable late module patching, livepatch modules need to be able to
-> > apply some of their relocations well after being loaded. In this
-> > scenario, use the text-poking API to allow this, even with
-> > STRICT_MODULE_RWX.
-> >
-> > This patch is largely based off commit 88fc078a7a8f6 ("x86/module: Use
-> > text_poke() for late relocations").
-> >
-> > Signed-off-by: Dylan Hatch <dylanbhatch@google.com>
-> > ---
-> >  arch/arm64/kernel/module.c | 129 ++++++++++++++++++++++++-------------
-> >  1 file changed, 83 insertions(+), 46 deletions(-)
->
-> On its own, this isn't gaining us an awful lot upstream as we don't have
-> livepatch support (arm64 does not select HAVE_LIVEPATCH), however I'm
-> not against incremental changes towards enabling that. Are you planning
-> to work on follow-up changes for the rest of the support?
+Tested-on: D-Link DGE-550T Rev-A3
+Signed-off-by: Moon Yeounsu <yyyynoom@gmail.com>
+---
+Changelog:
+v1: https://lore.kernel.org/netdev/20250519214046.47856-2-yyyynoom@gmail.com/
+v2:
+- Remove Kconfig option and do runtime check.
+---
+ drivers/net/ethernet/dlink/dl2k.c | 57 ++++++++++++++++---------------
+ drivers/net/ethernet/dlink/dl2k.h |  2 ++
+ 2 files changed, 32 insertions(+), 27 deletions(-)
 
-As Song mentioned, hopefully
-https://lore.kernel.org/linux-arm-kernel/20250320171559.3423224-1-song@kern=
-el.org/
-in combination with this patch should be enough for initial support of
-livepatch on arm64. I'll need to follow up with Weinan on next steps
-for the SFrame approach.
+diff --git a/drivers/net/ethernet/dlink/dl2k.c b/drivers/net/ethernet/dlink/dl2k.c
+index 232e839a9d07..4e8da21042d5 100644
+--- a/drivers/net/ethernet/dlink/dl2k.c
++++ b/drivers/net/ethernet/dlink/dl2k.c
+@@ -99,6 +99,13 @@ static const struct net_device_ops netdev_ops = {
+ 	.ndo_tx_timeout		= rio_tx_timeout,
+ };
+ 
++static bool is_support_rmon_mmio(struct pci_dev *pdev)
++{
++	return pdev->vendor == PCI_VENDOR_ID_DLINK &&
++	       pdev->device == 0x4000 &&
++	       pdev->revision == 0x0c;
++}
++
+ static int
+ rio_probe1 (struct pci_dev *pdev, const struct pci_device_id *ent)
+ {
+@@ -131,18 +138,22 @@ rio_probe1 (struct pci_dev *pdev, const struct pci_device_id *ent)
+ 
+ 	np = netdev_priv(dev);
+ 
++	if (is_support_rmon_mmio(pdev))
++		np->rmon_enable = true;
++
+ 	/* IO registers range. */
+ 	ioaddr = pci_iomap(pdev, 0, 0);
+ 	if (!ioaddr)
+ 		goto err_out_dev;
+ 	np->eeprom_addr = ioaddr;
+ 
+-#ifdef MEM_MAPPING
+-	/* MM registers range. */
+-	ioaddr = pci_iomap(pdev, 1, 0);
+-	if (!ioaddr)
+-		goto err_out_iounmap;
+-#endif
++	if (np->rmon_enable) {
++		/* MM registers range. */
++		ioaddr = pci_iomap(pdev, 1, 0);
++		if (!ioaddr)
++			goto err_out_iounmap;
++	}
++
+ 	np->ioaddr = ioaddr;
+ 	np->chip_id = chip_idx;
+ 	np->pdev = pdev;
+@@ -287,9 +298,8 @@ rio_probe1 (struct pci_dev *pdev, const struct pci_device_id *ent)
+ 	dma_free_coherent(&pdev->dev, TX_TOTAL_SIZE, np->tx_ring,
+ 			  np->tx_ring_dma);
+ err_out_iounmap:
+-#ifdef MEM_MAPPING
+-	pci_iounmap(pdev, np->ioaddr);
+-#endif
++	if (np->rmon_enable)
++		pci_iounmap(pdev, np->ioaddr);
+ 	pci_iounmap(pdev, np->eeprom_addr);
+ err_out_dev:
+ 	free_netdev (dev);
+@@ -576,7 +586,8 @@ static void rio_hw_init(struct net_device *dev)
+ 	dw8(TxDMAPollPeriod, 0xff);
+ 	dw8(RxDMABurstThresh, 0x30);
+ 	dw8(RxDMAUrgentThresh, 0x30);
+-	dw32(RmonStatMask, 0x0007ffff);
++	if (!np->rmon_enable)
++		dw32(RmonStatMask, 0x0007ffff);
+ 	/* clear statistics */
+ 	clear_stats (dev);
+ 
+@@ -1069,9 +1080,6 @@ get_stats (struct net_device *dev)
+ {
+ 	struct netdev_private *np = netdev_priv(dev);
+ 	void __iomem *ioaddr = np->ioaddr;
+-#ifdef MEM_MAPPING
+-	int i;
+-#endif
+ 	unsigned int stat_reg;
+ 
+ 	/* All statistics registers need to be acknowledged,
+@@ -1114,10 +1122,10 @@ get_stats (struct net_device *dev)
+ 	dr16(MacControlFramesXmtd);
+ 	dr16(FramesWEXDeferal);
+ 
+-#ifdef MEM_MAPPING
+-	for (i = 0x100; i <= 0x150; i += 4)
+-		dr32(i);
+-#endif
++	if (np->rmon_enable)
++		for (int i = 0x100; i <= 0x150; i += 4)
++			dr32(i);
++
+ 	dr16(TxJumboFrames);
+ 	dr16(RxJumboFrames);
+ 	dr16(TCPCheckSumErrors);
+@@ -1131,9 +1139,6 @@ clear_stats (struct net_device *dev)
+ {
+ 	struct netdev_private *np = netdev_priv(dev);
+ 	void __iomem *ioaddr = np->ioaddr;
+-#ifdef MEM_MAPPING
+-	int i;
+-#endif
+ 
+ 	/* All statistics registers need to be acknowledged,
+ 	   else statistic overflow could cause problems */
+@@ -1169,10 +1174,9 @@ clear_stats (struct net_device *dev)
+ 	dr16(BcstFramesXmtdOk);
+ 	dr16(MacControlFramesXmtd);
+ 	dr16(FramesWEXDeferal);
+-#ifdef MEM_MAPPING
+-	for (i = 0x100; i <= 0x150; i += 4)
+-		dr32(i);
+-#endif
++	if (np->rmon_enable)
++		for (int i = 0x100; i <= 0x150; i += 4)
++			dr32(i);
+ 	dr16(TxJumboFrames);
+ 	dr16(RxJumboFrames);
+ 	dr16(TCPCheckSumErrors);
+@@ -1798,9 +1802,8 @@ rio_remove1 (struct pci_dev *pdev)
+ 				  np->rx_ring_dma);
+ 		dma_free_coherent(&pdev->dev, TX_TOTAL_SIZE, np->tx_ring,
+ 				  np->tx_ring_dma);
+-#ifdef MEM_MAPPING
+-		pci_iounmap(pdev, np->ioaddr);
+-#endif
++		if (np->rmon_enable)
++			pci_iounmap(pdev, np->ioaddr);
+ 		pci_iounmap(pdev, np->eeprom_addr);
+ 		free_netdev (dev);
+ 		pci_release_regions (pdev);
+diff --git a/drivers/net/ethernet/dlink/dl2k.h b/drivers/net/ethernet/dlink/dl2k.h
+index 0e33e2eaae96..93f2978e8014 100644
+--- a/drivers/net/ethernet/dlink/dl2k.h
++++ b/drivers/net/ethernet/dlink/dl2k.h
+@@ -401,6 +401,8 @@ struct netdev_private {
+ 	u16 negotiate;		/* Negotiated media */
+ 	int phy_addr;		/* PHY addresses. */
+ 	u16 led_mode;		/* LED mode read from EEPROM (IP1000A only) */
++
++	bool rmon_enable;
+ };
+ 
+ /* The station address location in the EEPROM. */
+-- 
+2.49.0
 
->
-> > diff --git a/arch/arm64/kernel/module.c b/arch/arm64/kernel/module.c
-> > index 06bb680bfe975..0703502d9dc37 100644
-> > --- a/arch/arm64/kernel/module.c
-> > +++ b/arch/arm64/kernel/module.c
-> > @@ -18,11 +18,13 @@
-> >  #include <linux/moduleloader.h>
-> >  #include <linux/random.h>
-> >  #include <linux/scs.h>
-> > +#include <linux/memory.h>
-> >
-> >  #include <asm/alternative.h>
-> >  #include <asm/insn.h>
-> >  #include <asm/scs.h>
-> >  #include <asm/sections.h>
-> > +#include <asm/text-patching.h>
-> >
-> >  enum aarch64_reloc_op {
-> >       RELOC_OP_NONE,
-> > @@ -48,7 +50,8 @@ static u64 do_reloc(enum aarch64_reloc_op reloc_op, _=
-_le32 *place, u64 val)
-> >       return 0;
-> >  }
-> >
-> > -static int reloc_data(enum aarch64_reloc_op op, void *place, u64 val, =
-int len)
-> > +static int reloc_data(enum aarch64_reloc_op op, void *place, u64 val, =
-int len,
-> > +                   void *(*write)(void *dest, const void *src, size_t =
-len))
-> >  {
->
-> I think it's a bit grotty indirecting the write when in reality we either
-> need a straight-forward assignment (like we have today) or a call to
-> an instruction-patching helper.
->
-> In particular, when you get to functions such as:
->
-> >  static int reloc_insn_movw(enum aarch64_reloc_op op, __le32 *place, u6=
-4 val,
-> > -                        int lsb, enum aarch64_insn_movw_imm_type imm_t=
-ype)
-> > +                        int lsb, enum aarch64_insn_movw_imm_type imm_t=
-ype,
-> > +                        void *(*write)(void *dest, const void *src, si=
-ze_t len))
-> >  {
-> >       u64 imm;
-> >       s64 sval;
-> >       u32 insn =3D le32_to_cpu(*place);
-> > +     __le32 le_insn;
-> >
-> >       sval =3D do_reloc(op, place, val);
-> >       imm =3D sval >> lsb;
-> > @@ -145,7 +150,8 @@ static int reloc_insn_movw(enum aarch64_reloc_op op=
-, __le32 *place, u64 val,
-> >
-> >       /* Update the instruction with the new encoding. */
-> >       insn =3D aarch64_insn_encode_immediate(AARCH64_INSN_IMM_16, insn,=
- imm);
-> > -     *place =3D cpu_to_le32(insn);
-> > +     le_insn =3D cpu_to_le32(insn);
-> > +     write(place, &le_insn, sizeof(le_insn));
->
-> we're forced into passing &le_insn because we need the same function
-> prototype as memcpy().
->
-> Instead, how about we pass the 'struct module *mod' pointer down from
-> apply_relocate_add()? That's already done for reloc_insn_adrp() and it
-> would mean that the above could be written as:
->
->
-> static int reloc_insn_movw(struct module *mod, enum aarch64_reloc_op op,
->                            __le32 *place, u64 val, int lsb,
->                            enum aarch64_insn_movw_imm_type imm_type)
-> {
->         ...
->
->         insn =3D aarch64_insn_encode_immediate(AARCH64_INSN_IMM_16, insn,=
- imm);
->         insn =3D cpu_to_le32(insn);
->
->         if (mod->state !=3D MODULE_STATE_UNFORMED)
->                 aarch64_insn_set(place, insn, sizeof(insn));
->         else
->                 *place =3D insn;
->
->
-> meaning we can also drop the first patch, because I don't think we need
-> a text_poke() helper.
-
-Dropped the first patch in v4 and switched to the method suggested
-here, so we use a normal assignment for the non-late case. Though, it
-does seem a little repetitive, with 6 different sites doing this
-module state check. If having a straightforward assignment directly in
-the reloc_* functions isn't too important, I wonder if we can make
-local memset/memcpy-like helpers to contain this check? Like:
-
-static void *write_insn(void *place, u32 insn, struct module *me);
-static void *write_data(void *place, s64 *sval, struct module *me);
-
->
-> > +int apply_relocate_add(Elf64_Shdr *sechdrs,
-> > +                    const char *strtab,
-> > +                    unsigned int symindex,
-> > +                    unsigned int relsec,
-> > +                    struct module *me)
-> > +{
-> > +     int ret;
-> > +     bool early =3D me->state =3D=3D MODULE_STATE_UNFORMED;
-> > +     void *(*write)(void *, const void *, size_t) =3D memcpy;
-> > +
-> > +     if (!early) {
-> > +             write =3D text_poke;
-> > +             mutex_lock(&text_mutex);
-> > +     }
-> > +
-> > +     ret =3D __apply_relocate_add(sechdrs, strtab, symindex, relsec, m=
-e,
-> > +                                write);
-> > +
-> > +     if (!early)
-> > +             mutex_unlock(&text_mutex);
->
-> Why is the responsibility of the arch code to take the 'text_mutex' here?
-> The core code should be able to do that when the module state is !=3D
-> MODULE_STATE_UNFORMED.
->
-
-Moved the locking to kernel/livepatch/core.c in v4, since other call
-sites to apply_relocate_add() don't attempt late relocations. Since
-the locking was already being done in the x86 module code I had to
-remove this. It also made sense to me to split out the text_mutex
-changes into a separate patch because they only touch module/x86 and
-livepatch code, so that's how I did it in v4. But they can just as
-easily be squashed into one patch.
-
-Thanks,
-Dylan
