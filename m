@@ -1,273 +1,462 @@
-Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on2045.outbound.protection.outlook.com [40.107.21.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f42.google.com (mail-ua1-f42.google.com [209.85.222.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A80B01758B;
-	Thu, 22 May 2025 02:05:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.21.45
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747879510; cv=fail; b=MkuoQx2+IlEIHhes023KZvmCf+Yh+++wEgz9sCRI5pH6Kyf/XS7PHHtmK6xbiRCDKqA+i6QuwGzxUxss2/uh848ilsneCAxmKrRQ0oqhBXqADxErnmt924JmtgQb30PImPjm1UingXyipkk0lhMkgB3lP7Ka4hz2g1Tgzdbtoow=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747879510; c=relaxed/simple;
-	bh=DS/SVdLzV6cnA4rlODrulujMNybpq7A3QsZlvyUpt1k=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=sCB4HTj5OYylYF+CDCcofNjWEDhhEJpXEZ/Q8Lu5UJP+QxZCfC0a44UifYuPAblUpnCPvU8bo7a6jzccgs/rS3qRb41HzOaa62Jn63IZ9Wk7FSzpG6yU+vuHvNoisqMr2ZC4Og0Hk1KYW6Q9ATakkXx/kqtfC5WnaDBRpYABZng=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=B7ITALHq; arc=fail smtp.client-ip=40.107.21.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2059718E3F
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 02:05:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.42
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747879552; cv=none; b=L0iQuEgkLi5oxzt8B8qSe/5Ohyc1JCHhTI24yzrcQguuEGJATrYXYoPwjLXSHO7Q81P5zJIOykUNbSUL/q5COUeerOyylZTmneoqFaUELayhpaGKeD6+2dOBRUhdR9Eb8KkdDiOtmmiB1XGWC3cLviLcWH2vF7XeycqgIhesFrI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747879552; c=relaxed/simple;
+	bh=kX6LvYwNoxRoJCezYpAf9Uoi8auvyUl6RV2LT2j1fos=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Content-Type; b=lUJ0iFQDP6GQKv7lXztAK2YdKRlh9wxc5y0CWiZqY0D6R/ZLdG1pV35K8wKEeHmOFgQlp5hU9FzYJRn67RUP+Br3uUcP2ITnIYo50E59dJEmp4NCZQHMbcPkqRcys27zv1HTZJMkK+mIOEeE4FXdaq2PURKD9rt1FZcPyA/N47w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mruTyAc6; arc=none smtp.client-ip=209.85.222.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="B7ITALHq"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=v8s9oxjFmc6yTqHcpgxsrNCL16cHTrvMCvi/6UavoL6KVqI56eAQWiZJzLWtRRZDGT2DCk3SB+2fpkA5bXllJ44WIhp5xpSeUFDLx+IKFCY2t1yd/h5D+u8E1kArFDyfANeJxBi6ZX3PQAOdDBTE1xaOBvP5ge0zch5X5sqRd3We1sjDbJZhPWrxoVK3IrmgL6UP5xtYuI3QXd4Bm4KKsTjx1KTS7QkFa79Y9iDbyb6xYyTgnXiKJYUd2LBk0fi2WCsEE53NEiJgHgLHo2zMx/erf9hRIBa0RFerqzuu5kUcVffTKZQK9/NzFS242MKC2Bn0ZpDfpePUt1uPPO1bLw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=DS/SVdLzV6cnA4rlODrulujMNybpq7A3QsZlvyUpt1k=;
- b=pyUSkJe2BDiHWpcP48zKoWdQ5Nw5MI53L7K3443wjWdQOVSV8Qk/sGm3EMxnSDuFgfMln7VN02KF6BLkNFYoDpoxDyG/vAMpdP0rc7FhZh98DmXXI2rCY2ec8WisljW3XRHcS3X2jmn0eFfajHAYZOwm4ResaYJTPyl5MZHOSKETpvWr3ff6tW9qwWaG0jvqqTXUinTYT0L6+JCN8a0XLHLJVvUbvwNm3yTJyJOP4kx+Y4pD09C/v4Rp+vuU88T7/XyY3JBI01plI4f+4V3+O/PNTACusc8ZWbKdj0ASZCLGVZu8KWV3b769D+FNWGRvxb4VYW+PwYzfoL3P1rsXzA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DS/SVdLzV6cnA4rlODrulujMNybpq7A3QsZlvyUpt1k=;
- b=B7ITALHqFssVWlBh3iV4F92m4j61vNAm0boFqXc7BgJZ67i2PFdswfNoDgQsiOVZ92pcqC6jaYrp6V/MIJgXgCHyjIts3eoCalidJ3rGivGfoc/3GXRyOf4Z9oxVEmN7SQqRLMoPgIg40nZEJ1YCxMBQ+lxCE/bPojWGKD/LKkRhPo7UgZZvpWDFbsFqVUJTTJQrP6+CBu+KmKu1YWSyk0uPoURD3AIn9SN3orNiRtW4bHy4zMQytOogvoL8BJ4SJa1P4PNJ1QKG/L4INeomt0W3CRWH22IUTs2xsXERJM5UCwv89MykebambBreS5y8XcQR4LQZGbaLm8FPzGS0PQ==
-Received: from DB8PR04MB6939.eurprd04.prod.outlook.com (2603:10a6:10:11d::8)
- by GV2PR04MB11215.eurprd04.prod.outlook.com (2603:10a6:150:279::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.21; Thu, 22 May
- 2025 02:05:01 +0000
-Received: from DB8PR04MB6939.eurprd04.prod.outlook.com
- ([fe80::cfc9:8c5b:b1ae:59c2]) by DB8PR04MB6939.eurprd04.prod.outlook.com
- ([fe80::cfc9:8c5b:b1ae:59c2%4]) with mapi id 15.20.8722.027; Thu, 22 May 2025
- 02:05:01 +0000
-From: Joseph Guo <qijian.guo@nxp.com>
-To: Hans de Goede <hdegoede@redhat.com>, Bastien Nocera <hadess@hadess.net>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>, "open list:GOODIX TOUCHSCREEN"
-	<linux-input@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
-CC: Bough Chen <haibo.chen@nxp.com>, Justin Jiang <justin.jiang@nxp.com>
-Subject:
- =?utf-8?B?5Zue5aSNOiBbRVhUXSBSZTogW1BBVENIXSBpbnB1dDogZ29vZGl4OiBhZGQg?=
- =?utf-8?Q?poll_mode_for_goodix_touchscreen?=
-Thread-Topic: [EXT] Re: [PATCH] input: goodix: add poll mode for goodix
- touchscreen
-Thread-Index: AQHbyfshhBUmOrbKHUOgoE3/puuvO7PczySAgAEYPjA=
-Date: Thu, 22 May 2025 02:05:01 +0000
-Message-ID:
- <DB8PR04MB693958107D4F60467DB7B4529499A@DB8PR04MB6939.eurprd04.prod.outlook.com>
-References: <20250521025011.887562-1-qijian.guo@nxp.com>
- <496e6e58-8ed4-4536-bca8-feb89e7e6e69@redhat.com>
-In-Reply-To: <496e6e58-8ed4-4536-bca8-feb89e7e6e69@redhat.com>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: DB8PR04MB6939:EE_|GV2PR04MB11215:EE_
-x-ms-office365-filtering-correlation-id: 14221be1-3e47-40ad-ab9f-08dd98d50f97
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|1800799024|366016|376014|38070700018;
-x-microsoft-antispam-message-info:
- =?utf-8?B?Y21vTDkwbGVUZHM2UmJDUlR1VU5lMHJJdm1oc3BrdkJQZEkwUUtxS3dtM0lB?=
- =?utf-8?B?VzRpaWJ1Y0oreENoR3FlaSswb3BOOGZlK0RaMStzbWQ5bW5MT3ZveW9RYkdM?=
- =?utf-8?B?ZkxSRStoNncxMjFTM0ZkSGtXZTBmVVFiQzVEdXN5c3ZtTVhyZXlsMm4ydEQ4?=
- =?utf-8?B?cmcvV0EwMmgrVC81bU9NdUw3Mk1WREo2QWcrU0t6eWVyODhUdlRuUUVLNm1t?=
- =?utf-8?B?S2Zhbmt0YTZJQVZXYXc2TGJwVlJoZGN5UlpzNW5pelZ5bWJ3L1BWbGJwVlZF?=
- =?utf-8?B?dEdHd1FJejROUTZ1RDBtUUJ5R1BQTGRjYWs5T1lERUc2VktKdGFnQnA3UjBR?=
- =?utf-8?B?akEzUVkyeU9hMWhEaFJxd2taVitZWTZ4dDduNjg4ZDZiRDlSMFB5aTc5c3hi?=
- =?utf-8?B?Q0h6QUJyaE9FK1lIV1VXNnovN0tnQW5CcTA2b2ZYVy9RS0xwclVxWVd1SERC?=
- =?utf-8?B?Q3IrTFk0dGtPN3hEMlhBTWoySGVtZC9PUFZtNnNJSFE2dXRqZ2xqRFg1S3Rt?=
- =?utf-8?B?Um9CL1BKaHVsZEtWRjd1SFlrdUFSTVJyRFBqeXdETjRpY1VVYTJOcEVCcUk1?=
- =?utf-8?B?N3FadXI0R2lMME5zWU41N0hYakFTNWFlZkVuWEo5WFZFalJ5bitzQys0Z2U4?=
- =?utf-8?B?Z3VMemVpZmlReTd5T3VYOENyTE1JNVZHQ050bUh6MlJoS0lqeVYrZldCS2Y2?=
- =?utf-8?B?L1Awa1V0MkF5SlFEUy96TGkvUFE5ZGRZcGNtQmxqaGFqeGZCc2VwclUvRllE?=
- =?utf-8?B?a2pUNHRDNStkS1BmTUlsRnpTTzJacTFHQjlrMDNxR2hhT0ZJL09hRExyTTZJ?=
- =?utf-8?B?NXpldktoOFRwV3JwdWVDMGFuMWtISEVZdEJLZi93VDdvV0NWZGoyanBybnBu?=
- =?utf-8?B?dDhuVnlmMjJrM3o5QmZBSTZQdkhnNnRUQzRXVFhINFc2QVluUFI2Y044dzZR?=
- =?utf-8?B?c0xZai9sUlVsWTF4dEVIRkFhbHZEWi9PcFdGd1ZnSUhMVTUycWlWK1BpNXhu?=
- =?utf-8?B?VmlhNUJiWC9hOHQ0UVhYRUxlV0VSOWs2bHVFUVVuSWFkUUVQWVFSUmdCdmls?=
- =?utf-8?B?VDdnQzJpa01udzZDejJSWlVhUERIVnczM3VkdjdobmFDTHVRdVNrL3RicDZt?=
- =?utf-8?B?WkgwLzYzRW02RGtlRXVkTytlZlQ1QUlxUC9uZHU5YVlNR0UwaDRaekNBTHVn?=
- =?utf-8?B?eW9SSVMyMFgyOHFkS0k1dDFON0dMZGVPenVwMVZ4MmIwMjZURnZxbS9GNUhu?=
- =?utf-8?B?Z05Tckt2ZThpRmlYa1NTaW81TW1kS01XQlArbzhwd0RTLzZQenFGZzNxTDNM?=
- =?utf-8?B?QmhzN2VMT0R4UUd3SkhMVVgwM0N6NlozdmJGMTU3RkZESzJFa1lLRE9yR3kr?=
- =?utf-8?B?U1RNOW1uV2ZJTU5CZ1JZSEl2KzlSRXFxVlRFY1lGL2xib2pwOWM5ek03SmNl?=
- =?utf-8?B?RWhSbVR4WDhGRmNjRlNmMWZOekZzTFhsWmpIRW1GQ0dLRHNKN0dHOEN5VllH?=
- =?utf-8?B?bGNPVnRTUXl6bUNtbDJDNHBkcVBRSXk0Q3RTTVNHYWJEVXZqMGN6OTVpT3Fv?=
- =?utf-8?B?WHNueEZRcFNSeFptbVJtVFBYSzIwejdvTmQzWm9hM3pORFlndGtrYjB6T0hq?=
- =?utf-8?B?MU5KblRUSkZ4bjZOSnR1UU15NkRxa2hDM0kwa0dUSHIxRzlnMnpWME9wOTZH?=
- =?utf-8?B?L0x5RVBzOGFkTXpoR2UzVGUwVThUK002bG1tUGZCTWhzSXhVQ29LRXJsVkwy?=
- =?utf-8?B?bHl3OWRzSnVTMlZicVNvdk8xaDRvZmYzUTBoZ0xMbGp4TmJjWmZheGZSVTg3?=
- =?utf-8?B?OGVDU0VPK2JlS2Z2S0hJTUZ6UURSUWRTZHJTSWFsZGxOUVovenkxb0dQVCtV?=
- =?utf-8?B?TU9oclYxZWN2aFZ1aTR4QklSYUtSRnlaYTYzalY3Y3UzVFJ6T2swZzBPVUJO?=
- =?utf-8?B?R3BWN3d6bytUS01wdGFqTHFzaUtIUHgwQVlSVXlPa0pLaFh1TldSTE8xUG5E?=
- =?utf-8?Q?KN0HKzG/pAgA1FTTy9a9waU/qURVn4=3D?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:zh-cn;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB8PR04MB6939.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?S3RnOXVXN3FSTG04aW9QMzJYTjlUOVhJNnNtc2ZlYkRaQk9YMzk5RW1xQks5?=
- =?utf-8?B?eXRHVzdrOHV0bjA3TXpEM1liNEtIemh6ZE11dnp1NGRxR1p6eUFldGxhKzFz?=
- =?utf-8?B?WGs3Ti8wUWNIcHNNM3dqaWVlckt3ZWZVTUY3dUV4Q0t3TE82dVpCSUU0RnIx?=
- =?utf-8?B?U2pGNmVQNGpyQnVBS2p1cDZ1NWpqVUFDUTVoWFZqQW5kenVNRVpUc2Z0UjFR?=
- =?utf-8?B?ZzhxU1dyVVdQMGF5emlYYlkreHFodm5JM3NQSWx5TW93ZGpxL0l0YXVSQmQx?=
- =?utf-8?B?MDJQTnhrZ0tBNVFWakdrblNsVm5FRUJmVElSanFBTlhGUVVIR0MreHZuM0Jh?=
- =?utf-8?B?ZGpQOFZ2eDBiSmJ2bkpOS3h4RkhKai92Vmc5SWc1TzZSTzRmTkVmV0p1Yk9o?=
- =?utf-8?B?S2NNYWtod0lpbHAxam5hbGd0ZXlSd0xSQ0R5aG9XTy9YUXIxU3pzcWd4a0pE?=
- =?utf-8?B?TWZGR2pXdlNQS1dmbVlESi9VZnZjUlEwWVg5d2JIdktHUFM3RGVrU0RiblRH?=
- =?utf-8?B?T3FMYzk2VjBGK2loYUVMd2doYjR5WVBTSGEycE1XaDZkUjQzVUJJcnl5RGxq?=
- =?utf-8?B?VDR6aUFhdDk1ckIyalg4bm5VU05PZkpJUTVmRVBsNkJ3TmVqaDVaakZpTGlp?=
- =?utf-8?B?aUVLTW9DWDNHRlpWc2dFSFN4bnVsWUdwL2xKalZIOEtldHZVVEVhVVhTckVB?=
- =?utf-8?B?ejJpSE5CSkFRWWlva05yT1N6VEY1OS9Pemg0eEhEZ1JmWGZWbEdQOHhFTTls?=
- =?utf-8?B?QkpKeFN3YXd2QWpZU1dCZ3VSTEp0ZFZBcnVDSVpPZEY0RXJMUG9GYWpBN2Rw?=
- =?utf-8?B?NDFINDdvQ01yZlNvNjVGUHl6eGxmbUF1ZE5RVDRSc25kQVRkemhvZWJDTmo2?=
- =?utf-8?B?amVFUVgzUGRaOHJlZVZoQmI0dk9JczJSOHFUeXJLRDFTaXI1QSsvM0lNbVRo?=
- =?utf-8?B?WFprREQ4ejMyZXVSNzZFalZ1cVJEMXRKU1JRYXpMdFU3Unl1Zm8yRUlPaml1?=
- =?utf-8?B?VHVtU3k4R1oyRW9yems2L3FoVE1zUkthOEx1aytFNXc1YjJ2SE9vTkYrdHBR?=
- =?utf-8?B?bXRaVzhxb3VJenRXejNZOUxlK3FDWXBDSkF1MklPVDlDUXc4Zy9GY01ma3lv?=
- =?utf-8?B?NTEwd09QR2lIL0NqMWo5SlZiNFFuRko5d0ljN3BjV3ZMc1VxWDl1T0UwYXZK?=
- =?utf-8?B?UTYvM2Rhb0x1MmUzaHNRQWlaZlhZWHZ2U05Hdys0NVVzcmRYTVAzMW9CdWJD?=
- =?utf-8?B?ejFVN1VFdmFiNHZlZjlhZzR2dmFGSFRuZU9ydlRtZS9LT2ovMlBDWU0yY0g0?=
- =?utf-8?B?K0lwRDNhOXdLeTZNVUV1ZmRYZFRJQVNiSUl2RnllQzFYVTNOblBBNE0rVDI1?=
- =?utf-8?B?NnVRclhJVUtJUlFEa2hmYktlaGttdWEwaERJVU4wMEN5OWlYWWRrQmV6YkQr?=
- =?utf-8?B?a1BnSHVrVkdrcTVLMjZucU1qNXBGbGhYQ1gwa0ZGMVFhOG9LSnd6RW00Q1Ux?=
- =?utf-8?B?QitqUXB3VDhxL3VlRUlyUFI1KytBTlNvOUR6My9GVHIyZ3lQVnFoa2JuNmFK?=
- =?utf-8?B?TkFkSGthekRJbEFmOFhsWDZtTjJiODJQNHBtbmh6eXpaVFB3a0hCMFVBK3Fn?=
- =?utf-8?B?WHRRQWttL3hZU3psdUV3bStLR2dGaUFSUTVZb3lPb0FrRmxVdm55ZURSajFa?=
- =?utf-8?B?bGdQZW51ZE5aaEJnazZXdnA4dVpCV2N1SnFPenlRcUJMSW95RjFKRXhWY2E4?=
- =?utf-8?B?YnUyRGVkVXBjUlVmM0ZEYkxmc3Z1Q3l6QlVVbDMzekFGaEczaThaVHF0MGlZ?=
- =?utf-8?B?eXFQMmJKb1ZEaGkvYlJ4dWt1ak9ST2JORmhnclh5SkhKbGZ2OEVFcWpJaDMv?=
- =?utf-8?B?S2x5enprRXRZZmMrTHNVN3hhN1hrTFo0Tk9VL2s3dUIyS3BDTmgvWklpRzlH?=
- =?utf-8?B?Y1R1OTkrekRRcjNLZHRLR3RNSHdPc0k5ZmpFUjNvakhKdkxmWEhCOFBwTGhS?=
- =?utf-8?B?Q29lWGhRN3dtYkVia09EUmZVeDNLTE9LWFZjdVpUYSsxd2NhUXVLeHR1YUhy?=
- =?utf-8?B?R0lNQWZPcEdLaXczTTFyMTMrK3VyMVBXTmk0SnY3a3Z6UVlBL3JUbEp4Q1Nl?=
- =?utf-8?Q?7bew=3D?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mruTyAc6"
+Received: by mail-ua1-f42.google.com with SMTP id a1e0cc1a2514c-877d7fa49e0so3876680241.2
+        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 19:05:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747879549; x=1748484349; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=TfcSpn9AJtIs0/yJRdv0J7LsjW7YRrvFwD8SBJzlwA8=;
+        b=mruTyAc6+RDXYN/aQpAKLaY3F0ss58FqcWujC6vxUqtDCTod4HgoFQye4zZYadWImv
+         elEMPEmM/7qEURnmjQwxHpflAbEMsR1F8nrjPubZDjOgy+zypJvw8p8NHapEYByTfmNo
+         cV/oyIAs6HN/3QRw+LcM5TJmpmUfOJj3jdcr62xig1Wed/moQ976+EbDbWesQj/+Uv+d
+         MSOROXBSOTymtqeqIP/SPplhuMCNvZZ43X8LaZj5HPEt74nTlG2ZvXrQcss/SCV+8bt+
+         utOV1dcqAoW6T9RBeVbD3lA+GUKtFcfcT/3wYyRm9P/mKx+UUDqmL/Se4Fnpof3Ra/u9
+         1ueA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747879549; x=1748484349;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=TfcSpn9AJtIs0/yJRdv0J7LsjW7YRrvFwD8SBJzlwA8=;
+        b=X/QE5iW1eoV2tR1iStHMbEYoalPKbMQOsyzeiCGNHpWypN0YbKCJeLCA+UZf9eENVp
+         i6irZOeZM0me3PMjSLflgOpT7AHgCI8q0Vwoi08cmwtXZd4J4CUsvzrRy8E37yQXTZWB
+         Gh/BWH0h2mGhLaziky8UP7UaxAv1/oQ4pzh+0PuGuM+cNbUkVGygwFhVzOntOxZXWa0e
+         f2WzZM6wjhLQc99WKps58k6Skp4PTdIzTMoVbd82tCTi0m2+7mUH/SHUWtbzxsT4bo9g
+         iXsgNppn6PlEESgYeEO4U5OkIXJIn7SMp/Ovyvd+uHv9ZcrHL44a72mrHqIpDjUaC8Wx
+         8SiA==
+X-Forwarded-Encrypted: i=1; AJvYcCVotDxxvU6QZIb8nSinSBOGWyyKrWw2NWcWWYkUsLo9vJ7uODeRO0c428AICB8Vcf+FktZykQczYv9r61s=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwbrpJ8UDpppUQszkwSE1AQPZ5oYkYgAtc2mGAI4M5mz7bGktqe
+	JRKeRyOehXyF4rZRSbkFueB1FJrLzugb/AYWFRSr/SbbOmxq247Ll7tv+g8stb3NZPUBSXEqx6o
+	meEiPsdCheImvgSG8QvLPLWC41gXstB8=
+X-Gm-Gg: ASbGncvjaS1T13R4FCt6wBCpL/BJWaqZzEfpN8bKGDbsengZyDp73JEe8qNnM98kwzv
+	x99rZuzjE3BPBORWmiJP5Ks7AGoiKgyNtVsf5tXDVAbA05BZzP/XymlFd1E3Y5LXQ3zJua6HVHt
+	irtiC9nyOp5gv60JcnqFbvViyCSEHZjltpvA==
+X-Google-Smtp-Source: AGHT+IGkhKjoXbG/7RhJh9ClxQvyGOe78DoLqgfKSz1L9F+0+1ISN9VlM0pJauQqNv1ern4cNzoHIIrP6N6IYEdjL58=
+X-Received: by 2002:a05:6102:c0e:b0:4db:10c6:319f with SMTP id
+ ada2fe7eead31-4dfa6bf8c2amr23167425137.19.1747879548826; Wed, 21 May 2025
+ 19:05:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DB8PR04MB6939.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 14221be1-3e47-40ad-ab9f-08dd98d50f97
-X-MS-Exchange-CrossTenant-originalarrivaltime: 22 May 2025 02:05:01.3479
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: DH3EVIlDAJNiEjW/9lmMtcEF43xtMJJWCbrhxqqdHltj6O/IGPsyG162wtYUt692zBAoydm5zX3e9ipGtT27zw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: GV2PR04MB11215
+References: <20250514070820.51793-1-21cnbao@gmail.com> <xymq3lezzjc3hzh2eduogqpn6okrbbkodjdwu6ylpeszakb22a@ck6yhdfdcayq>
+In-Reply-To: <xymq3lezzjc3hzh2eduogqpn6okrbbkodjdwu6ylpeszakb22a@ck6yhdfdcayq>
+From: Barry Song <21cnbao@gmail.com>
+Date: Thu, 22 May 2025 14:05:37 +1200
+X-Gm-Features: AX0GCFuJvK1sHOpD8ShmMfDXD5NjCslpGjySxSdbTuHvd2HlgsrJtNyqAWg9UMI
+Message-ID: <CAGsJ_4yKpRv392rbM=insAPZMA-cwvTNbcPzGAEycfPDzsbJZQ@mail.gmail.com>
+Subject: Re: [PATCH RFC v2] mm: add support for dropping LRU recency on
+ process exit
+To: "Liam R. Howlett" <Liam.Howlett@oracle.com>, Barry Song <21cnbao@gmail.com>, 
+	akpm@linux-foundation.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
+	zhengtangquan@oppo.com, Barry Song <v-songbaohua@oppo.com>, 
+	Baolin Wang <baolin.wang@linux.alibaba.com>, David Hildenbrand <david@redhat.com>, 
+	Johannes Weiner <hannes@cmpxchg.org>, Matthew Wilcox <willy@infradead.org>, 
+	Oscar Salvador <osalvador@suse.de>, Ryan Roberts <ryan.roberts@arm.com>, Zi Yan <ziy@nvidia.com>, 
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Vlastimil Babka <vbabka@suse.cz>, 
+	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-SGkgSGFucywNCg0KVGhhbmtzIGZvciB5b3VyIGdyZWF0IGNvbW1lbnQuIEkgYWxyZWFkeSBtYWRl
-IHRoZSBjaGFuZ2UgaW4gdjMuDQoNCkJlc3QgUmVnYXJkcy4NCkpvc2VwaA0KDQotLS0tLemCruS7
-tuWOn+S7ti0tLS0tDQrlj5Hku7bkuro6IEhhbnMgZGUgR29lZGUgPGhkZWdvZWRlQHJlZGhhdC5j
-b20+IA0K5Y+R6YCB5pe26Ze0OiBXZWRuZXNkYXksIE1heSAyMSwgMjAyNSA1OjIwIFBNDQrmlLbk
-u7bkuro6IEpvc2VwaCBHdW8gPHFpamlhbi5ndW9AbnhwLmNvbT47IEJhc3RpZW4gTm9jZXJhIDxo
-YWRlc3NAaGFkZXNzLm5ldD47IERtaXRyeSBUb3Jva2hvdiA8ZG1pdHJ5LnRvcm9raG92QGdtYWls
-LmNvbT47IG9wZW4gbGlzdDpHT09ESVggVE9VQ0hTQ1JFRU4gPGxpbnV4LWlucHV0QHZnZXIua2Vy
-bmVsLm9yZz47IG9wZW4gbGlzdCA8bGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZz4NCuaKhOmA
-gTogQm91Z2ggQ2hlbiA8aGFpYm8uY2hlbkBueHAuY29tPjsgSnVzdGluIEppYW5nIDxqdXN0aW4u
-amlhbmdAbnhwLmNvbT4NCuS4u+mimDogW0VYVF0gUmU6IFtQQVRDSF0gaW5wdXQ6IGdvb2RpeDog
-YWRkIHBvbGwgbW9kZSBmb3IgZ29vZGl4IHRvdWNoc2NyZWVuDQoNCkNhdXRpb246IFRoaXMgaXMg
-YW4gZXh0ZXJuYWwgZW1haWwuIFBsZWFzZSB0YWtlIGNhcmUgd2hlbiBjbGlja2luZyBsaW5rcyBv
-ciBvcGVuaW5nIGF0dGFjaG1lbnRzLiBXaGVuIGluIGRvdWJ0LCByZXBvcnQgdGhlIG1lc3NhZ2Ug
-dXNpbmcgdGhlICdSZXBvcnQgdGhpcyBlbWFpbCcgYnV0dG9uDQoNCg0KSGkgSm9zZXBoLA0KDQpU
-aGFuayB5b3UgZm9yIHRoZSBuZXcgdmVyc2lvbi4NCg0KRm9yIHRoZSBuZXh0IHZlcnNpb24sIHRo
-ZSBzdWJqZWN0IGhlcmUgc2hvdWxkIGhhdmUgYmVlbiAiW1BBVENIIHYyXSBpbnB1dDogLi4uIi4N
-Cg0KWW91IGNhbiBkbyB0aGlzIGJ5IGRvaW5nIGUuZy4gOg0KDQpnaXQgZm9ybWF0LXBhdGNoIC12
-MiBIRUFEfg0KZ2l0IHNlbmQtZW1haWwgdjItMDAwMS0uLi4ucGF0Y2gNCg0KT24gMjEtTWF5LTI1
-IDQ6NTAgQU0sIEpvc2VwaCBHdW8gd3JvdGU6DQo+IGdvb2RpeCB0b3VjaHNjcmVlbiBvbmx5IHN1
-cHBvcnQgaW50ZXJydXB0IG1vZGUgYnkgZGVmYXVsdC4NCj4gU29tZSBwYW5lbHMgbGlrZSB3YXZl
-c2hhcmUgcGFuZWwgd2hpY2ggaXMgd2lkZWx5IHVzZWQgb24gcmFzcGViZXJyeSBwaSANCj4gZG9u
-J3QgaGF2ZSBpbnRlcnJ1cHQgcGlucyBhbmQgb25seSB3b3JrIG9uIGkyYyBwb2xsIG1vZGUuDQo+
-IFRoZSB3YXZlc2hhcmUgcGFuZWwgN2luY2ggcGFuZWwgdXNlIGdvb2RpeCBndDkxMSB0b3VjaHNj
-cmVlbiBjaGlwLg0KPg0KPiBTaWduZWQtb2ZmLWJ5OiBKb3NlcGggR3VvIDxxaWppYW4uZ3VvQG54
-cC5jb20+DQo+IFJldmlld2VkLWJ5OiBIYWlibyBDaGVuIDxoYWliby5jaGVuQG54cC5jb20+DQo+
-IC0tLQ0KPiBDaGFuZ2UgZnJvbSB2MSB0byB2Mg0KPiAtIFJlbW92ZSB1bnVzZWQgdmFyaWFibGUg
-aW4gZ29vZGl4X3RzX2RhdGEgc3RydWN0DQo+IC0gVXNlIHBvbGxpbmcgaW5mcmFzdHJ1Y3R1cmUN
-Cj4gLS0tDQo+ICBkcml2ZXJzL2lucHV0L3RvdWNoc2NyZWVuL2dvb2RpeC5jIHwgNTAgDQo+ICsr
-KysrKysrKysrKysrKysrKysrKysrKysrLS0tLQ0KPiAgMSBmaWxlIGNoYW5nZWQsIDQ0IGluc2Vy
-dGlvbnMoKyksIDYgZGVsZXRpb25zKC0pDQo+DQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2lucHV0
-L3RvdWNoc2NyZWVuL2dvb2RpeC5jIA0KPiBiL2RyaXZlcnMvaW5wdXQvdG91Y2hzY3JlZW4vZ29v
-ZGl4LmMNCj4gaW5kZXggYWFmNzlhYzUwMDA0Li41OGU0OWU1Y2YxNDggMTAwNjQ0DQo+IC0tLSBh
-L2RyaXZlcnMvaW5wdXQvdG91Y2hzY3JlZW4vZ29vZGl4LmMNCj4gKysrIGIvZHJpdmVycy9pbnB1
-dC90b3VjaHNjcmVlbi9nb29kaXguYw0KPiBAQCAtNDcsNiArNDcsNyBAQA0KPiAgI2RlZmluZSBS
-RVNPTFVUSU9OX0xPQyAgICAgICAgICAgICAgIDENCj4gICNkZWZpbmUgTUFYX0NPTlRBQ1RTX0xP
-QyAgICAgNQ0KPiAgI2RlZmluZSBUUklHR0VSX0xPQyAgICAgICAgICA2DQo+ICsjZGVmaW5lIEdP
-T0RJWF9QT0xMX0lOVEVSVkFMX01TICAgICAgICAgICAgICAxNyAgICAgIC8qIDE3bXMgPSA2MGZw
-cyAqLw0KPg0KPiAgLyogT3VyIHNwZWNpYWwgaGFuZGxpbmcgZm9yIEdQSU8gYWNjZXNzZXMgdGhy
-b3VnaCBBQ1BJIGlzIHg4NiANCj4gc3BlY2lmaWMgKi8gICNpZiBkZWZpbmVkIENPTkZJR19YODYg
-JiYgZGVmaW5lZCBDT05GSUdfQUNQSSBAQCAtNDk3LDYgDQo+ICs0OTgsMTQgQEAgc3RhdGljIHZv
-aWQgZ29vZGl4X3Byb2Nlc3NfZXZlbnRzKHN0cnVjdCBnb29kaXhfdHNfZGF0YSAqdHMpDQo+ICAg
-ICAgIGlucHV0X3N5bmModHMtPmlucHV0X2Rldik7DQo+ICB9DQo+DQo+ICtzdGF0aWMgdm9pZCBn
-b29kaXhfdHNfd29ya19pMmNfcG9sbChzdHJ1Y3QgaW5wdXRfZGV2ICppbnB1dCkgew0KPiArICAg
-ICBzdHJ1Y3QgZ29vZGl4X3RzX2RhdGEgKnRzID0gaW5wdXRfZ2V0X2RydmRhdGEoaW5wdXQpOw0K
-PiArDQo+ICsgICAgIGdvb2RpeF9wcm9jZXNzX2V2ZW50cyh0cyk7DQo+ICsgICAgIGdvb2RpeF9p
-MmNfd3JpdGVfdTgodHMtPmNsaWVudCwgR09PRElYX1JFQURfQ09PUl9BRERSLCAwKTsgfQ0KPiAr
-DQo+ICAvKioNCj4gICAqIGdvb2RpeF90c19pcnFfaGFuZGxlciAtIFRoZSBJUlEgaGFuZGxlcg0K
-PiAgICoNCj4gQEAgLTUyMywxNiArNTMyLDMzIEBAIHN0YXRpYyBpcnFyZXR1cm5fdCBnb29kaXhf
-dHNfaXJxX2hhbmRsZXIoaW50IGlycSwgdm9pZCAqZGV2X2lkKQ0KPiAgICAgICByZXR1cm4gSVJR
-X0hBTkRMRUQ7DQo+ICB9DQo+DQo+ICtzdGF0aWMgdm9pZCBnb29kaXhfZW5hYmxlX2lycShzdHJ1
-Y3QgZ29vZGl4X3RzX2RhdGEgKnRzKSB7DQo+ICsgICAgIGlmICh0cy0+Y2xpZW50LT5pcnEpDQo+
-ICsgICAgICAgICAgICAgZW5hYmxlX2lycSh0cy0+Y2xpZW50LT5pcnEpOyB9DQo+ICsNCj4gK3N0
-YXRpYyB2b2lkIGdvb2RpeF9kaXNhYmxlX2lycShzdHJ1Y3QgZ29vZGl4X3RzX2RhdGEgKnRzKSB7
-DQo+ICsgICAgIGlmICh0cy0+Y2xpZW50LT5pcnEpDQo+ICsgICAgICAgICAgICAgZGlzYWJsZV9p
-cnEodHMtPmNsaWVudC0+aXJxKTsgfQ0KPiArDQo+ICBzdGF0aWMgdm9pZCBnb29kaXhfZnJlZV9p
-cnEoc3RydWN0IGdvb2RpeF90c19kYXRhICp0cykgIHsNCj4gLSAgICAgZGV2bV9mcmVlX2lycSgm
-dHMtPmNsaWVudC0+ZGV2LCB0cy0+Y2xpZW50LT5pcnEsIHRzKTsNCj4gKyAgICAgaWYgKHRzLT5j
-bGllbnQtPmlycSkNCj4gKyAgICAgICAgICAgICBkZXZtX2ZyZWVfaXJxKCZ0cy0+Y2xpZW50LT5k
-ZXYsIHRzLT5jbGllbnQtPmlycSwgdHMpOw0KPiAgfQ0KPg0KPiAgc3RhdGljIGludCBnb29kaXhf
-cmVxdWVzdF9pcnEoc3RydWN0IGdvb2RpeF90c19kYXRhICp0cykgIHsNCj4gLSAgICAgcmV0dXJu
-IGRldm1fcmVxdWVzdF90aHJlYWRlZF9pcnEoJnRzLT5jbGllbnQtPmRldiwgdHMtPmNsaWVudC0+
-aXJxLA0KPiAtICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBOVUxMLCBnb29k
-aXhfdHNfaXJxX2hhbmRsZXIsDQo+IC0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgIHRzLT5pcnFfZmxhZ3MsIHRzLT5jbGllbnQtPm5hbWUsIHRzKTsNCj4gKyAgICAgaWYgKHRz
-LT5jbGllbnQtPmlycSkgew0KPiArICAgICAgICAgICAgIHJldHVybiBkZXZtX3JlcXVlc3RfdGhy
-ZWFkZWRfaXJxKCZ0cy0+Y2xpZW50LT5kZXYsIHRzLT5jbGllbnQtPmlycSwNCj4gKyAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBOVUxMLCBnb29kaXhfdHNfaXJx
-X2hhbmRsZXIsDQo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgdHMtPmlycV9mbGFncywgdHMtPmNsaWVudC0+bmFtZSwgdHMpOw0KPiArICAgICAgICAgICAg
-IH0NCj4gKyAgICAgZWxzZQ0KPiArICAgICAgICAgICAgIHJldHVybiAwOw0KPiAgfQ0KDQpUaGUg
-J30nIGhlcmUgaXMgd3JvbmdseSBpbmRlbnRlZCwgYWxzbyBpZiB5b3UgdXNlIHt9LCB3aGljaCBp
-cyBub3Qgc3RyaWN0bHkgbmVjZXNzYXJ5IGhlcmUsIHBsZWFzZSB1c2UgdGhlbSBpbiBib3RoIGJy
-YW5jaGVzIG9mIHRoZSBpZi4NCg0KU2luY2UgaW4gdGhpcyBmdW5jdGlvbiB3ZSdyZSBkZWFsaW5n
-IHdpdGggYSBtdWx0aS1saW5lIHN0YXRlbWVudCBJIHRoaW5rIGl0IG1pZ2h0IGJlIGJldHRlciB0
-byB3cml0ZSB0aGlzIGFzOg0KDQpzdGF0aWMgaW50IGdvb2RpeF9yZXF1ZXN0X2lycShzdHJ1Y3Qg
-Z29vZGl4X3RzX2RhdGEgKnRzKSB7DQogICAgICAgIGlmICghdHMtPmNsaWVudC0+aXJxKQ0KICAg
-ICAgICAgICAgICAgIHJldHVybiAwOw0KDQogICAgICAgIHJldHVybiBkZXZtX3JlcXVlc3RfdGhy
-ZWFkZWRfaXJxKCZ0cy0+Y2xpZW50LT5kZXYsIHRzLT5jbGllbnQtPmlycSwNCiAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgTlVMTCwgZ29vZGl4X3RzX2lycV9oYW5kbGVy
-LA0KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB0cy0+aXJxX2ZsYWdz
-LCB0cy0+Y2xpZW50LT5uYW1lLCB0cyk7IH0NCg0KVGhpcyB3aWxsIGFsc28gbWFrZSB0aGUgZGlm
-ZiBzbWFsbGVyLg0KDQpPciB5b3UgY2FuIGtlZXAgd2hhdCB5b3UgaGF2ZSBhbmQgZHJvcCB0aGUg
-e30uDQoNClJlZ2FyZHMsDQoNCkhhbnMNCg0KDQoNCg0KDQo+ICBzdGF0aWMgaW50IGdvb2RpeF9j
-aGVja19jZmdfOChzdHJ1Y3QgZ29vZGl4X3RzX2RhdGEgKnRzLCBjb25zdCB1OCANCj4gKmNmZywg
-aW50IGxlbikgQEAgLTEyMjksNiArMTI1NSwxOCBAQCBzdGF0aWMgaW50IGdvb2RpeF9jb25maWd1
-cmVfZGV2KHN0cnVjdCBnb29kaXhfdHNfZGF0YSAqdHMpDQo+ICAgICAgICAgICAgICAgcmV0dXJu
-IGVycm9yOw0KPiAgICAgICB9DQo+DQo+ICsgICAgIGlucHV0X3NldF9kcnZkYXRhKHRzLT5pbnB1
-dF9kZXYsIHRzKTsNCj4gKw0KPiArICAgICBpZiAoIXRzLT5jbGllbnQtPmlycSkgew0KPiArICAg
-ICAgICAgICAgIGVycm9yID0gaW5wdXRfc2V0dXBfcG9sbGluZyh0cy0+aW5wdXRfZGV2LCBnb29k
-aXhfdHNfd29ya19pMmNfcG9sbCk7DQo+ICsgICAgICAgICAgICAgaWYgKGVycm9yKSB7DQo+ICsg
-ICAgICAgICAgICAgICAgICAgICBkZXZfZXJyKCZ0cy0+Y2xpZW50LT5kZXYsDQo+ICsgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAiY291bGQgbm90IHNldCB1cCBwb2xsaW5nIG1vZGUsICVk
-XG4iLCBlcnJvcik7DQo+ICsgICAgICAgICAgICAgICAgICAgICByZXR1cm4gZXJyb3I7DQo+ICsg
-ICAgICAgICAgICAgfQ0KPiArICAgICAgICAgICAgIGlucHV0X3NldF9wb2xsX2ludGVydmFsKHRz
-LT5pbnB1dF9kZXYsIEdPT0RJWF9QT0xMX0lOVEVSVkFMX01TKTsNCj4gKyAgICAgfQ0KPiArDQo+
-ICAgICAgIGVycm9yID0gaW5wdXRfcmVnaXN0ZXJfZGV2aWNlKHRzLT5pbnB1dF9kZXYpOw0KPiAg
-ICAgICBpZiAoZXJyb3IpIHsNCj4gICAgICAgICAgICAgICBkZXZfZXJyKCZ0cy0+Y2xpZW50LT5k
-ZXYsIEBAIC0xNDM1LDcgKzE0NzMsNyBAQCBzdGF0aWMgDQo+IGludCBnb29kaXhfc3VzcGVuZChz
-dHJ1Y3QgZGV2aWNlICpkZXYpDQo+DQo+ICAgICAgIC8qIFdlIG5lZWQgZ3BpbyBwaW5zIHRvIHN1
-c3BlbmQvcmVzdW1lICovDQo+ICAgICAgIGlmICh0cy0+aXJxX3Bpbl9hY2Nlc3NfbWV0aG9kID09
-IElSUV9QSU5fQUNDRVNTX05PTkUpIHsNCj4gLSAgICAgICAgICAgICBkaXNhYmxlX2lycShjbGll
-bnQtPmlycSk7DQo+ICsgICAgICAgICAgICAgZ29vZGl4X2Rpc2FibGVfaXJxKHRzKTsNCj4gICAg
-ICAgICAgICAgICByZXR1cm4gMDsNCj4gICAgICAgfQ0KPg0KPiBAQCAtMTQ3OSw3ICsxNTE3LDcg
-QEAgc3RhdGljIGludCBnb29kaXhfcmVzdW1lKHN0cnVjdCBkZXZpY2UgKmRldikNCj4gICAgICAg
-aW50IGVycm9yOw0KPg0KPiAgICAgICBpZiAodHMtPmlycV9waW5fYWNjZXNzX21ldGhvZCA9PSBJ
-UlFfUElOX0FDQ0VTU19OT05FKSB7DQo+IC0gICAgICAgICAgICAgZW5hYmxlX2lycShjbGllbnQt
-PmlycSk7DQo+ICsgICAgICAgICAgICAgZ29vZGl4X2VuYWJsZV9pcnEodHMpOw0KPiAgICAgICAg
-ICAgICAgIHJldHVybiAwOw0KPiAgICAgICB9DQo+DQo+IC0tDQo+IDIuMzQuMQ0KPg0KDQo=
+Hi Liam,
+I really appreciate your review=E2=80=94thank you!
+
+On Wed, May 21, 2025 at 4:20=E2=80=AFAM Liam R. Howlett <Liam.Howlett@oracl=
+e.com> wrote:
+>
+> * Barry Song <21cnbao@gmail.com> [250514 03:08]:
+> > From: Barry Song <v-songbaohua@oppo.com>
+> >
+> > Currently, both zap_pmd and zap_pte always promote young file folios,
+> > regardless of whether the processes are dying.
+> > However, in systems where the process recency fades upon dying, we may
+> > want to reverse this behavior. The goal is to reclaim the folios from
+> > the dying process as quickly as possible, allowing new processes to
+> > acquire memory ASAP.
+> > For example, while Firefox is killed and LibreOffice is launched,
+> > activating Firefox's young file-backed folios makes it harder to
+> > reclaim memory that LibreOffice doesn't use at all.
+> >
+> > On systems like Android, processes are either explicitly stopped by
+> > user action or reaped due to OOM after being inactive for a long time.
+> > These processes are unlikely to restart in the near future. Rather than
+> > promoting their folios, we skip promoting and demote their exclusive
+> > folios so that memory can be reclaimed and made available for new
+> > user-facing processes.
+> >
+> > Users possibly do not care about the recency of a dying process.
+> > However, we still need an explicit user indication to take this action.
+>
+> Can you add why?  It'd be nice to capture the reasons pointed out in v1
+> discussion as they seem important to why this isn't set as a default for
+> all tasks.
+
+Essentially, I took Johannes=E2=80=99 point (and to some extent David=E2=80=
+=99s as
+well) to be that it behaves somewhat unpredictably in broader
+application scenarios=E2=80=94for example, when repeatedly executing a file
+in a script or restarting an application shortly after it exits.
+
+Also, when a shared library is mapped by multiple processes, we might
+still want to retain recency information from a process that is exiting.
+So we might only want to do that only for exclusive folios.
+
+This actually leads to two questions:
+
+1. Are we confident that the recency of a dead process is no longer
+   useful within a period of time?
+
+2. Should we limit the optimization only to exclusive folios=E2=80=94for
+   example, shared objects (.so files) that are specific to the
+   exiting process?
+
+For both questions, the answer seems to be yes.
+
+Though in the first case=E2=80=94when we repeatedly restart the same
+application=E2=80=94the folios are likely still in the LRU and may still be
+hit even if we unconditionally demote them. But that's not guaranteed.
+So we likely need a userspace hint to eliminate the uncertainty.
+
+>
+> > Thus, we introduced a prctl to provide that necessary user-level hint
+> > as suggested by Johannes and David.
+>
+> I'm not sure it really makes much of a difference if we update the lru
+> or not in this case.  Johannes point about this small change having
+> unknown results for the larger community is certainly the best argument
+> as to why we need this to be opt-in.
+>
+> We should probably document it so that people can opt-in though :)
+>
+> >
+> > We observed noticeable improvements in refaults, swap-ins, and swap-out=
+s
+> > on a hooked Android kernel. More data for this specific version will
+> > follow.
+>
+> Looking forward to the results.  What happens when I kill my app and
+> reopen it? (close all apps, open the one that was being annoying?)
+
+I'm not sure I fully understand your question. In Android, we're
+primarily concerned with smooth app switching. For example, in a
+sequence like A =E2=86=92 B =E2=86=92 C =E2=86=92 D =E2=86=92 E, if we can =
+quickly reclaim folios
+from dead processes, it helps us launch new (different) apps faster.
+
+However, if we do A =E2=86=92 kill A =E2=86=92 start A =E2=86=92 kill A =E2=
+=86=92 start A repeatedly,
+it=E2=80=99s likely not a problem because our memory can hold the same
+application. The issue arises when memory isn=E2=80=99t enough to hold
+A + B + C + D + E simultaneously.
+
+I=E2=80=99m not overly concerned about repeatedly restarting the same
+application in Android. However, for wider scenarios across various
+industries, I=E2=80=99m uncertain.
+
+>
+> >
+> > Cc: Baolin Wang <baolin.wang@linux.alibaba.com>
+> > Cc: David Hildenbrand <david@redhat.com>
+> > Cc: Johannes Weiner <hannes@cmpxchg.org>
+> > Cc: Matthew Wilcox (Oracle) <willy@infradead.org>
+> > Cc: Oscar Salvador <osalvador@suse.de>
+> > Cc: Ryan Roberts <ryan.roberts@arm.com>
+> > Cc: Zi Yan <ziy@nvidia.com>
+> > Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+> > Cc: "Liam R. Howlett" <Liam.Howlett@oracle.com>
+> > Cc: Vlastimil Babka <vbabka@suse.cz>
+> > Cc: Mike Rapoport <rppt@kernel.org>
+> > Cc: Suren Baghdasaryan <surenb@google.com>
+> > Cc: Michal Hocko <mhocko@suse.com>
+> > Signed-off-by: Barry Song <v-songbaohua@oppo.com>
+> > ---
+> >  -v2:
+> >  * add prctl as suggested by Johannes and David
+> >  * demote exclusive file folios if drop_recency can apply
+> >  -v1:
+> >  https://lore.kernel.org/linux-mm/20250412085852.48524-1-21cnbao@gmail.=
+com/
+> >
+> >  include/linux/mm_types.h   |  1 +
+> >  include/uapi/linux/prctl.h |  3 +++
+> >  kernel/sys.c               | 16 ++++++++++++++++
+> >  mm/huge_memory.c           | 12 ++++++++++--
+> >  mm/internal.h              | 14 ++++++++++++++
+> >  mm/memory.c                | 12 +++++++++++-
+> >  6 files changed, 55 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
+> > index 15808cad2bc1..84ab113c54a2 100644
+> > --- a/include/linux/mm_types.h
+> > +++ b/include/linux/mm_types.h
+> > @@ -1733,6 +1733,7 @@ enum {
+> >   * on NFS restore
+> >   */
+> >  //#define MMF_EXE_FILE_CHANGED       18      /* see prctl_set_mm_exe_f=
+ile() */
+> > +#define MMF_FADE_ON_DEATH    18      /* Recency is discarded on proces=
+s exit */
+>
+> Why is recency not in the MMF name?  Why not MMF_NO_RECENCY or
+> something?
+
+I included RECENCY in the name but found it too long. On the other hand,
+MMF_NO_RECENCY seems insufficient to convey the true meaning, since we
+do have recency=E2=80=94it=E2=80=99s just lost on death. So perhaps the ori=
+ginal, longer
+names I considered are better: MMF_RECENCY_FADE_ON_DEATH or
+MMF_NO_RECENCY_ON_DEATH?
+
+>
+> I guess we are back to no space in this flag.
+
+Yes, it is 32 bits.
+
+>
+> >
+> >  #define MMF_HAS_UPROBES              19      /* has uprobes */
+> >  #define MMF_RECALC_UPROBES   20      /* MMF_HAS_UPROBES can be wrong *=
+/
+> > diff --git a/include/uapi/linux/prctl.h b/include/uapi/linux/prctl.h
+> > index 15c18ef4eb11..22d861157552 100644
+> > --- a/include/uapi/linux/prctl.h
+> > +++ b/include/uapi/linux/prctl.h
+> > @@ -364,4 +364,7 @@ struct prctl_mm_map {
+> >  # define PR_TIMER_CREATE_RESTORE_IDS_ON              1
+> >  # define PR_TIMER_CREATE_RESTORE_IDS_GET     2
+> >
+> > +#define PR_SET_FADE_ON_DEATH                 78
+> > +#define PR_GET_FADE_ON_DEATH                 79
+> > +
+> >  #endif /* _LINUX_PRCTL_H */
+> > diff --git a/kernel/sys.c b/kernel/sys.c
+> > index c434968e9f5d..cabe1bbb35a4 100644
+> > --- a/kernel/sys.c
+> > +++ b/kernel/sys.c
+> > @@ -2658,6 +2658,22 @@ SYSCALL_DEFINE5(prctl, int, option, unsigned lon=
+g, arg2, unsigned long, arg3,
+> >                       clear_bit(MMF_DISABLE_THP, &me->mm->flags);
+> >               mmap_write_unlock(me->mm);
+> >               break;
+> > +     case PR_GET_FADE_ON_DEATH:
+> > +             if (arg2 || arg3 || arg4 || arg5)
+> > +                     return -EINVAL;
+> > +             error =3D !!test_bit(MMF_FADE_ON_DEATH, &me->mm->flags);
+> > +             break;
+>
+> Is there a usecase for get?
+
+Probably not. I was just trying to implement put/get for a pair.
+I=E2=80=99m happy to remove it if you feel it=E2=80=99s redundant.
+
+>
+> > +     case PR_SET_FADE_ON_DEATH:
+>
+> Could you just check the value prior to setting and just return if it's
+> what you want?  In which case, the setting is just change_bit(), and
+> there probably isn't a need for a get?
+
+Ok.
+
+>
+> > +             if (arg3 || arg4 || arg5)
+> > +                     return -EINVAL;
+> > +             if (mmap_write_lock_killable(me->mm))
+> > +                     return -EINTR;
+> > +             if (arg2)
+> > +                     set_bit(MMF_FADE_ON_DEATH, &me->mm->flags);
+> > +             else
+> > +                     clear_bit(MMF_FADE_ON_DEATH, &me->mm->flags);
+> > +             mmap_write_unlock(me->mm);
+> > +             break;
+> >       case PR_MPX_ENABLE_MANAGEMENT:
+> >       case PR_MPX_DISABLE_MANAGEMENT:
+> >               /* No longer implemented: */
+> > diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+> > index 2780a12b25f0..c99894611d4a 100644
+> > --- a/mm/huge_memory.c
+> > +++ b/mm/huge_memory.c
+> > @@ -2204,6 +2204,7 @@ static inline void zap_deposited_table(struct mm_=
+struct *mm, pmd_t *pmd)
+> >  int zap_huge_pmd(struct mmu_gather *tlb, struct vm_area_struct *vma,
+> >                pmd_t *pmd, unsigned long addr)
+> >  {
+> > +     bool drop_recency =3D false;
+> >       pmd_t orig_pmd;
+> >       spinlock_t *ptl;
+> >
+> > @@ -2260,13 +2261,20 @@ int zap_huge_pmd(struct mmu_gather *tlb, struct=
+ vm_area_struct *vma,
+> >                       add_mm_counter(tlb->mm, mm_counter_file(folio),
+> >                                      -HPAGE_PMD_NR);
+> >
+> > +                     drop_recency =3D zap_need_to_drop_recency(tlb->mm=
+);
+> >                       /*
+> >                        * Use flush_needed to indicate whether the PMD e=
+ntry
+> >                        * is present, instead of checking pmd_present() =
+again.
+> >                        */
+> > -                     if (flush_needed && pmd_young(orig_pmd) &&
+> > -                         likely(vma_has_recency(vma)))
+> > +                     if (flush_needed && pmd_young(orig_pmd) && !drop_=
+recency &&
+> > +                                     likely(vma_has_recency(vma)))
+> >                               folio_mark_accessed(folio);
+> > +                     /*
+> > +                      * Userspace explicitly marks recency to fade whe=
+n the process
+> > +                      * dies; demote exclusive file folios to aid recl=
+amation.
+> > +                      */
+> > +                     if (drop_recency && !folio_maybe_mapped_shared(fo=
+lio))
+> > +                             deactivate_file_folio(folio);
+> >               }
+> >
+> >               spin_unlock(ptl);
+> > diff --git a/mm/internal.h b/mm/internal.h
+> > index 6b8ed2017743..af9649b3e84a 100644
+> > --- a/mm/internal.h
+> > +++ b/mm/internal.h
+> > @@ -11,6 +11,7 @@
+> >  #include <linux/khugepaged.h>
+> >  #include <linux/mm.h>
+> >  #include <linux/mm_inline.h>
+> > +#include <linux/oom.h>
+> >  #include <linux/pagemap.h>
+> >  #include <linux/pagewalk.h>
+> >  #include <linux/rmap.h>
+> > @@ -130,6 +131,19 @@ static inline int folio_nr_pages_mapped(const stru=
+ct folio *folio)
+> >       return atomic_read(&folio->_nr_pages_mapped) & FOLIO_PAGES_MAPPED=
+;
+> >  }
+> >
+> > +/*
+> > + * Returns true if the process attached to the mm is dying or undergoi=
+ng
+> > + * OOM reaping, and its recency=E2=80=94explicitly marked by userspace=
+=E2=80=94will also
+> > + * fade; otherwise, returns false.
+> > + */
+> > +static inline bool zap_need_to_drop_recency(struct mm_struct *mm)
+>
+> This name is confusing.  We are zapping the need to drop the recency? If
+> this returns false, then the need to drop recency is false..  It is not
+> very easy to read and harder to understand how it translates to the
+> values it returns.
+>
+> How about mm_has_exit_recency(), like vma_has_recency()?
+> Or mmf_update_recency()?
+
+It seems mm_has_exit_recency() is good.
+
+>
+> > +{
+> > +     if (!atomic_read(&mm->mm_users) || check_stable_address_space(mm)=
+)
+>
+> FYI, failed forks may also set the address space as unstable.
+>
+> > +             return !!test_bit(MMF_FADE_ON_DEATH, &mm->flags);
+> > +
+> > +     return false;
+> > +}
+> > +
+> >  /*
+> >   * Retrieve the first entry of a folio based on a provided entry withi=
+n the
+> >   * folio. We cannot rely on folio->swap as there is no guarantee that =
+it has
+> > diff --git a/mm/memory.c b/mm/memory.c
+> > index 5a7e4c0e89c7..6dd01a7736a8 100644
+> > --- a/mm/memory.c
+> > +++ b/mm/memory.c
+> > @@ -1505,6 +1505,7 @@ static __always_inline void zap_present_folio_pte=
+s(struct mmu_gather *tlb,
+> >               bool *force_flush, bool *force_break, bool *any_skipped)
+> >  {
+> >       struct mm_struct *mm =3D tlb->mm;
+> > +     bool drop_recency =3D false;
+> >       bool delay_rmap =3D false;
+> >
+> >       if (!folio_test_anon(folio)) {
+> > @@ -1516,9 +1517,18 @@ static __always_inline void zap_present_folio_pt=
+es(struct mmu_gather *tlb,
+> >                               *force_flush =3D true;
+> >                       }
+> >               }
+> > -             if (pte_young(ptent) && likely(vma_has_recency(vma)))
+> > +
+> > +             drop_recency =3D zap_need_to_drop_recency(mm);
+> > +             if (pte_young(ptent) && !drop_recency &&
+> > +                             likely(vma_has_recency(vma)))
+>
+>
+> I really don't like that you are calling an atomic_read() and two flag
+> checks every time this block of code it executed.  This must impact your
+> performance?
+
+Fair enough. That seems like a valid point to consider regarding atomic
+operations.
+
+>
+> How about this:
+> 1. Check in unmap_vmas() that the range is 0 - ULONG_MAX, and if the OOM
+> flag is set.
+> 2. set a new zap_flags_t flag (mmf_update_recency, maybe?) if
+> test_bit(MMF_FADE_ON_DEATH)
+> 3. check zap_details->zap_flags if that bit is set in this function.
+> 4. (hopefully) profit with better performance :)
+>
+> Since this really is a zap flag, it fits to make it one.  It also means
+> that you will not need to check an atomic and will only check the one
+> flag as apposed to two.
+>
+> I think we can live with some user (probably syzbot) unmapping 0 -
+> ULONG_MAX and incorrectly checking a flag and, in the very rare case of
+> actually using this flag, does not do the correct LRU aging.  If you
+> unmap everything, we can be pretty confident that you will be on the
+> exit path rather quickly.
+
+Good idea=E2=80=94let me give this a try.
+
+>
+> >                       folio_mark_accessed(folio);
+> >               rss[mm_counter(folio)] -=3D nr;
+> > +             /*
+> > +              * Userspace explicitly marks recency to fade when the pr=
+ocess dies;
+> > +              * demote exclusive file folios to aid reclamation.
+> > +              */
+> > +             if (drop_recency && !folio_maybe_mapped_shared(folio))
+> > +                     deactivate_file_folio(folio);
+>
+> Thanks,
+> Liam
+>
+
+Thanks
+Barry
