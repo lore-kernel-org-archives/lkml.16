@@ -1,109 +1,99 @@
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-181.mta0.migadu.com (out-181.mta0.migadu.com [91.218.175.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E7EF19ADA4
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 18:01:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E35319C554
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 18:02:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747936894; cv=none; b=jhqpDGiwVDoI7/PgQUpir7sRb76p6PVa8Xy458in/7lvw8HtG4lBA7GcKsdQzBnia8cOymD7Ifep2cjSQU2ZhiJKeOwJS/j6ypWRQ0LEplCItgewXhU0VR5mBZbHglRON6GFZjCACmdu/zj27bT94l4Ki1Ppgv1mY7qBdcWAqgU=
+	t=1747936932; cv=none; b=aDqspSVXAeVgtku4cJzqLlV4D4i8AXlAMfZVtTvI9DVsTXfwUdj1XTGaYf2HmVW+mETy4oharBQYUWa3gUjAg8rOmZUP5m2hiNbdHtA2BdM5Ot5Q/rCv0CuPkuE6RaXNNyLb7F4MQ8G4V4xxq2W14Lsw58Z0lT5l7Bi+46uuOWk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747936894; c=relaxed/simple;
-	bh=zSrbOWuHQ1Z5sVIesfrhCLH21IIccGRYbToiYGXm2ZY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Nk6gF/YaUKSFnNvIuDzfuq22ggfeikYeHlWXfSkXGqRQdtzXx9QSDRmf6ilB5Ww7nCHmm5WAFwzG+VxoVN58upHIzPW70jcSXmtXqIQibRzIKrLJ9qrsG9mYOCcBRdla2RUscYGf63U+kMpOCNAUFKKmXKMx+Yp5zpDTZ1sMRno=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=RfM/oqgp; arc=none smtp.client-ip=209.85.208.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1747936932; c=relaxed/simple;
+	bh=fU1TDpkM78sBqyAAn65xPosK5fVvZ7Y1pL9QFc9qna8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=oJA/hp19NqIWOTKGx0F5hXfiSPZYHyhmIfsKcTFzNF44j4VvLoufmLonYTMu0XtRkFnnrh4gWslSr+g3BvDkahCkvAcCaVn65BWeUGmJzQKVZUgdBWh3NoM8q1Q1QScOfKP4mYjS6BsMOInPI5cmNStcwV6ieMGjKa2P4v366dM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=qpSD4Ag2; arc=none smtp.client-ip=91.218.175.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RfM/oqgp"
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-6000791e832so1035a12.1
-        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 11:01:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747936891; x=1748541691; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zSrbOWuHQ1Z5sVIesfrhCLH21IIccGRYbToiYGXm2ZY=;
-        b=RfM/oqgpgpo2BtQ8Hydjx6/l9ufY9xv4wAaJOqjruHsFFkRFPO+6wCY4ez1Ye8wucs
-         mGfFe8PJxJMsiTjzx0X00xzWYrqzDEszkCcRrSBOGgppUme+aIpMR9ocj7sEjF6iklkX
-         qaychnd5CS5VSeLT4skrXoqrOaIV6eBr9PQW6h4bZE9oBdK6II19NujshnoWClpC7XFF
-         DzI1N2insLehKcDiC0zkWKpqW6CNF1I4YlplfSdmgwr5HpRJDxa2uTiBHfaZKceCloF9
-         /DcHP/Cqs69AKDa6bg8xXzHYYzQHb1b8pqXJBOYOc+gg7uC2HeoAg43EP5c+uR7mZL7v
-         QcXg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747936891; x=1748541691;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=zSrbOWuHQ1Z5sVIesfrhCLH21IIccGRYbToiYGXm2ZY=;
-        b=p9XVzS7N0cVQ6ohL4WixWln5ojdpgnnNcGv8ITJ05/w7oOkZpUIWMnxOcidlSMvpXh
-         PCGF2E7K9Zpk19DRhWO8F7IJH2p7Fz3l2+ZfN4R26CdKNcgiHbTlFDelLKrWDcV/ccRc
-         zEiCZSXsXPW8cstZK3tFB5p2I+4Myq27R7CVjt8CW25gRjGIVycAdENJwmfXsI3CgT5N
-         181dahYxY12FiEWz5QyWc8yueYMohJpY+ytBzkmBBRDIqx0SvlkfAsSJ/VGvh+SQN33v
-         X+8YomYwINBfJ4JOFIW/Urx+a15TCv9E0MMUZm8hMI+8lRH/0/gRwAkWT6ghpyoYylgq
-         aNXA==
-X-Forwarded-Encrypted: i=1; AJvYcCX70yo3WjN+cKH8CongrgvmzR9gWnlSexrmHZmrt+c40CH8m4KpLjMQpBG+VKgy2LISJi4gMVxfuOO9pqc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz0jIEZHH9/ntC5g+Gpgqx/8M59Kfbf4V6bM1OWZ5RFfyHX+5Rp
-	+s8VihLxbAwOjl91bGI6G/uWgfQ7SwtHtJG583OvZnjdESXho2yitgwcy2s+BvbCqJsh6m2ORUf
-	c2Qudp83G9Ko5oXvrSPHSF9h8J++NKC2Uy95uf29V
-X-Gm-Gg: ASbGncsHvuuWsoPMBP5Iqw/47biKo7yONcoE+vkdS36x8duRCdfLvawGPlTafLD6fTk
-	trNys92jXL+MTxhV2N4UcqvWidJ3SUG6VkZBPlVLzGKQw9dAdS6wZefLBr6C5+Fv7KGcFCcyNCo
-	JbdVhDkTqhQoBULftBKzp8sYswrlIrYdkdXsBbu4S5fkbtQTcjZicYlih/jP+UR7TXBag6MWl8V
-	nnDSO8abA==
-X-Google-Smtp-Source: AGHT+IFxJE445XHoSMx5+PG2/5xKb63gk3NMgNuLdGQr4KqW7SDg77Lnmqsxp9mSej5j68Z9BUaqOffGqtQwskjYt88=
-X-Received: by 2002:aa7:d905:0:b0:601:8e4f:2eb3 with SMTP id
- 4fb4d7f45d1cf-6028fbe2b59mr9108a12.0.1747936890338; Thu, 22 May 2025 11:01:30
- -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="qpSD4Ag2"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1747936926;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=ddo6/t51Ad7jbh1RDELKsmA+85tSYxxw1JYFqZMDRG0=;
+	b=qpSD4Ag252jeNzMrw9zTEucNN68Txb6+CBaeVOjfgNFG2daUT9aLpuQH5erDSoqWwAS8Nc
+	lsInP/dzY5RrdC+n88bNlQhps5A/JrTKMZmq0tKFIG7fAWgHvPdvpse16enUOtCv77qDPs
+	fRu+xVqhxafjsjyx6w8lCKmKC52J0f4=
+From: Thorsten Blum <thorsten.blum@linux.dev>
+To: Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>,
+	Nicolas Ferre <nicolas.ferre@microchip.com>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+Cc: Thorsten Blum <thorsten.blum@linux.dev>,
+	Takashi Iwai <tiwai@suse.de>,
+	linux-sound@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] ALSA: atmel: Replace deprecated strcpy() with strscpy()
+Date: Thu, 22 May 2025 20:01:09 +0200
+Message-ID: <20250522180111.12144-2-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250522012838.163876-1-roman.gushchin@linux.dev>
-In-Reply-To: <20250522012838.163876-1-roman.gushchin@linux.dev>
-From: Jann Horn <jannh@google.com>
-Date: Thu, 22 May 2025 20:00:54 +0200
-X-Gm-Features: AX0GCFsRGhGmDXFm5yb_HSIAhFgPKv3Mqm8Lu7C30sJ_pCqFSfVgLnVDarBenOE
-Message-ID: <CAG48ez303kEZ8rWrP9AvsWGddcptAxuk6C56eBQ1Z6RJW-a_mw@mail.gmail.com>
-Subject: Re: [PATCH v6] mmu_gather: move tlb flush for VM_PFNMAP/VM_MIXEDMAP
- vmas into free_pgtables()
-To: Roman Gushchin <roman.gushchin@linux.dev>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Peter Zijlstra <peterz@infradead.org>, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org, linux-arch@vger.kernel.org, 
-	Will Deacon <will@kernel.org>, "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, 
-	Nick Piggin <npiggin@gmail.com>, Hugh Dickins <hughd@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Thu, May 22, 2025 at 3:28=E2=80=AFAM Roman Gushchin <roman.gushchin@linu=
-x.dev> wrote:
-> Commit b67fbebd4cf9 ("mmu_gather: Force tlb-flush VM_PFNMAP vmas")
-> added a forced tlbflush to tlb_vma_end(), which is required to avoid a
-> race between munmap() and unmap_mapping_range(). However it added some
-> overhead to other paths where tlb_vma_end() is used, but vmas are not
-> removed, e.g. madvise(MADV_DONTNEED).
->
-> Fix this by moving the tlb flush out of tlb_end_vma() into new
-> tlb_flush_vmas() called from free_pgtables(), somewhat similar to the
-> stable version of the original commit:
-> commit 895428ee124a ("mm: Force TLB flush for PFNMAP mappings before
-> unlink_file_vma()").
->
-> Note, that if tlb->fullmm is set, no flush is required, as the whole
-> mm is about to be destroyed.
->
-> Signed-off-by: Roman Gushchin <roman.gushchin@linux.dev>
-> Cc: Jann Horn <jannh@google.com>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Nick Piggin <npiggin@gmail.com>
-> Cc: Hugh Dickins <hughd@google.com>
-> Cc: linux-arch@vger.kernel.org
-> Cc: linux-mm@kvack.org
+strcpy() is deprecated; use strscpy() instead. Use strscpy() to copy the
+long name because there's no string to format with sprintf().
 
-Thanks, this looks better.
+No functional changes intended.
 
-Reviewed-by: Jann Horn <jannh@google.com>
+Link: https://github.com/KSPP/linux/issues/88
+Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+---
+ sound/atmel/ac97c.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
+
+diff --git a/sound/atmel/ac97c.c b/sound/atmel/ac97c.c
+index 84e264f335ca..693d48f08b88 100644
+--- a/sound/atmel/ac97c.c
++++ b/sound/atmel/ac97c.c
+@@ -16,6 +16,7 @@
+ #include <linux/module.h>
+ #include <linux/platform_device.h>
+ #include <linux/mutex.h>
++#include <linux/string.h>
+ #include <linux/types.h>
+ #include <linux/io.h>
+ 
+@@ -589,7 +590,7 @@ static int atmel_ac97c_pcm_new(struct atmel_ac97c *chip)
+ 
+ 	pcm->private_data = chip;
+ 	pcm->info_flags = 0;
+-	strcpy(pcm->name, chip->card->shortname);
++	strscpy(pcm->name, chip->card->shortname);
+ 	chip->pcm = pcm;
+ 
+ 	return 0;
+@@ -748,9 +749,9 @@ static int atmel_ac97c_probe(struct platform_device *pdev)
+ 
+ 	spin_lock_init(&chip->lock);
+ 
+-	strcpy(card->driver, "Atmel AC97C");
+-	strcpy(card->shortname, "Atmel AC97C");
+-	sprintf(card->longname, "Atmel AC97 controller");
++	strscpy(card->driver, "Atmel AC97C");
++	strscpy(card->shortname, "Atmel AC97C");
++	strscpy(card->longname, "Atmel AC97 controller");
+ 
+ 	chip->card = card;
+ 	chip->pclk = pclk;
+-- 
+2.49.0
+
