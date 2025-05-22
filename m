@@ -1,72 +1,121 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC42D20328;
-	Thu, 22 May 2025 10:59:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 250D31A23A6;
+	Thu, 22 May 2025 11:00:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747911559; cv=none; b=ld/SifVBaNl8rJBAfVpWllCaimJBXffwu5RDZWrMwZGVtACmIUt7TdFO8g2Wnly3Ho9ce6nT+EsEg5GODDN701uhx6gTmYsWf46W4sEG6kiGv/5pJttGMmLVW8bb07KktlCPlTUPzcXb02spVQrRgyOLz+YBykwCLlN6AgEN7P8=
+	t=1747911637; cv=none; b=IJPmV9M3nOw5D7LwoPB8sTVJSkRYI2UMM+DvqeRuNvEoV5MKjHYj6KwFmjhxjPVuhtR8v4Vmj5zxFtJdDmU4PWodMGy5/s00g9ywl5afJ0Bw8nvCAjy1+lTzLesrDJhVNDB78YQAWODLBYNQFZQc0qm6aagAGmwcKpDlXACg2x0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747911559; c=relaxed/simple;
-	bh=oVc2l+nSbm/Diti1r9QlUqGa3gFNeKqKd996ksGyD4c=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kXJ1V1GJVmlh3lTChxtcNe1NTzVDHAxM+fP1Jff4Bqm/cyAniiQ/BTr5ehgJvAddZxPhBoUzEF9vWiows1GL5kmlA7SiSNm8MgzHAcUHcDWxXJMsRJ3r75Nztcv7JpqtebPnN5AbhP4no5PwPNNSYQL4APs/nKJGaVE8S/mdM0c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=aE28sjqJ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747911637; c=relaxed/simple;
+	bh=PYI7vpOuR2UMtKq8PUt1Q1ak0/7zynD9AcO4jhKTgjs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Vg2iIjDnZw0ZAfxD0CcWidoiAj7eptDB8QogJgkFLObPZXN/h7aFgPmzBNJasZ1Pw1LznQ53GZaL+RlaAs9rKW8dW0uN9d5f/QTEtuevC3mP9tpup3Cjq9c9GfJMOMdToA3I61W8Db2o4eQEyfc0CCV+Yo9Own8kZDS7BX15Ic0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WcCEbIaQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="aE28sjqJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9AB38C4CEE4;
-	Thu, 22 May 2025 10:59:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1747911558;
-	bh=oVc2l+nSbm/Diti1r9QlUqGa3gFNeKqKd996ksGyD4c=;
-	h=From:To:Cc:Subject:Date:From;
-	b=aE28sjqJbT/l4wWTE8q9ORL6EuebjQko550XWqC0X2u5io8K/AqeastFG6fhwkBea
-	 x/K5wldzBLsQE8ZPpCnXUMZDAmpM6i3JjeFvQiAfUU9x6qR6FhTz+yG7yyfxPnjDZT
-	 jTnEnllCAepjFOd77j2oFXZgQ6BphvqLLqtbRWNg=
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: linux-spi@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Mark Brown <broonie@kernel.org>
-Subject: [PATCH] spi: loopback-test: fix up const pointer issue in rx_ranges_cmp()
-Date: Thu, 22 May 2025 12:59:14 +0200
-Message-ID: <2025052213-semifinal-sublevel-d631@gregkh>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WcCEbIaQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5519CC4CEE4;
+	Thu, 22 May 2025 11:00:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747911636;
+	bh=PYI7vpOuR2UMtKq8PUt1Q1ak0/7zynD9AcO4jhKTgjs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=WcCEbIaQ91oyzISl3Wzab95PTIBy/iA/lM1T3q6iTGKzrT3syzSCSxiXzvYcdJ/mn
+	 cmxUq6w7K423sd+23FxVPceaEcuw0wYwsxJXWLVaeMC6+icHJNc28GWR9Hqlvsuj+9
+	 KN/MFsSqmOr+PKDVb7VJ5JkqKxV/sZKUPn+mT+Ulki+sUdmYNM15TlOe6HvP7/h33x
+	 PFW6ethFKy00GvxfQRDyZaqxLsPc4ZLuK2xDD8E9A590gG3P1IRIo02yLZkvFgtuzE
+	 rru4hr+bepkKB7Hv1BYwg/kPim4hNpIdm9gcHV3A9kmvjWQvfnYHdZ4/CwJ6ncPxF7
+	 LsCCDpMHrsgkg==
+Date: Thu, 22 May 2025 13:00:30 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Rob Clark <robdclark@gmail.com>
+Cc: Connor Abbott <cwabbott0@gmail.com>, Rob Clark <robdclark@chromium.org>,
+	phasta@kernel.org, dri-devel@lists.freedesktop.org,
+	freedreno@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+	Matthew Brost <matthew.brost@intel.com>,
+	Christian =?iso-8859-1?Q?K=F6nig?= <ckoenig.leichtzumerken@gmail.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	open list <linux-kernel@vger.kernel.org>,
+	Boris Brezillon <boris.brezillon@collabora.com>
+Subject: Re: [PATCH v4 04/40] drm/sched: Add enqueue credit limit
+Message-ID: <aC8Dzgufa9E2MD6t@pollux>
+References: <CAJs_Fx771FFVDVFMn8YJkR9f9Ad-UQspJ9KKQw4u6Cu4TA7YPA@mail.gmail.com>
+ <CACu1E7EL+E-M0N-EAN9Bx7u9O6_pECQQdPE2ph575idhVb2Szg@mail.gmail.com>
+ <aCYkk4Y7feltfp79@pollux>
+ <CAF6AEGsoG_W3A3+BHV4n5EKZQazFubrCyfrtxVUH7+H4-j7i5A@mail.gmail.com>
+ <aCY42rgJC4sQ4tp4@pollux>
+ <CAF6AEGubHkdhfJz=bAZvctO1aTKDLwRsRyPzkoVrQ7tA6dRbKw@mail.gmail.com>
+ <aCwqAGLLCC2ZLSBK@pollux>
+ <CAF6AEGspvuTHU0t9z__p_HkdRNi=cXir3t453AbR6DFNzDpgvw@mail.gmail.com>
+ <aCyzyAPbQ1SYbo4q@pollux>
+ <CAF6AEGs+WmTO_624A3Pek-1-SD6B4PFu4sDv3htko0ABhfHFzw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1114; i=gregkh@linuxfoundation.org; h=from:subject:message-id; bh=oVc2l+nSbm/Diti1r9QlUqGa3gFNeKqKd996ksGyD4c=; b=owGbwMvMwCRo6H6F97bub03G02pJDBn6zI0/p0jZlZ6qWHBuwuMw+8bkggl5J1d4qRxY0ndHn fXJDzbpjlgWBkEmBlkxRZYv23iO7q84pOhlaHsaZg4rE8gQBi5OAZjIlh8MCxZFSWldV3i5frrq zKZ/9itP+2a1PmVY0BXwQvfoIrHV+5wdV7Ucd1Z9sXTqNAA=
-X-Developer-Key: i=gregkh@linuxfoundation.org; a=openpgp; fpr=F4B60CC5BF78C2214A313DCB3147D40DDB2DFB29
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAF6AEGs+WmTO_624A3Pek-1-SD6B4PFu4sDv3htko0ABhfHFzw@mail.gmail.com>
 
-When a list head is a const pointer, the list entry for that head also
-must remain a const pointer, otherwise we are just "throwing it away"
-for no good reason.  Fix this up by properly marking these structures as
-const.
+On Tue, May 20, 2025 at 10:22:54AM -0700, Rob Clark wrote:
+> On Tue, May 20, 2025 at 9:54 AM Danilo Krummrich <dakr@kernel.org> wrote:
+> > On Tue, May 20, 2025 at 09:07:05AM -0700, Rob Clark wrote:
+> > > On Tue, May 20, 2025 at 12:06 AM Danilo Krummrich <dakr@kernel.org> wrote:
+> > > > But let's assume we agree that we want to avoid that userspace can ever OOM itself
+> > > > through async VM_BIND, then the proposed solution seems wrong:
+> > > >
+> > > > Do we really want the driver developer to set an arbitrary boundary of a number
+> > > > of jobs that can be submitted before *async* VM_BIND blocks and becomes
+> > > > semi-sync?
+> > > >
+> > > > How do we choose this number of jobs? A very small number to be safe, which
+> > > > scales badly on powerful machines? A large number that scales well on powerful
+> > > > machines, but OOMs on weaker ones?
+> > >
+> > > The way I am using it in msm, the credit amount and limit are in units
+> > > of pre-allocated pages in-flight.  I set the enqueue_credit_limit to
+> > > 1024 pages, once there are jobs queued up exceeding that limit, they
+> > > start blocking.
+> > >
+> > > The number of _jobs_ is irrelevant, it is # of pre-alloc'd pages in flight.
+> >
+> > That doesn't make a difference for my question. How do you know 1024 pages is a
+> > good value? How do we scale for different machines with different capabilities?
+> >
+> > If you have a powerful machine with lots of memory, we might throttle userspace
+> > for no reason, no?
+> >
+> > If the machine has very limited resources, it might already be too much?
+> 
+> It may be a bit arbitrary, but then again I'm not sure that userspace
+> is in any better position to pick an appropriate limit.
+> 
+> 4MB of in-flight pages isn't going to be too much for anything that is
+> capable enough to run vk, but still allows for a lot of in-flight
+> maps.
 
-Cc: Mark Brown <broonie@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/spi/spi-loopback-test.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Ok, but what about the other way around? What's the performance impact if the
+limit is chosen rather small, but we're running on a very powerful machine?
 
-diff --git a/drivers/spi/spi-loopback-test.c b/drivers/spi/spi-loopback-test.c
-index 31a878d9458d..0389fce5b1f2 100644
---- a/drivers/spi/spi-loopback-test.c
-+++ b/drivers/spi/spi-loopback-test.c
-@@ -494,8 +494,8 @@ struct rx_ranges {
- static int rx_ranges_cmp(void *priv, const struct list_head *a,
- 			 const struct list_head *b)
- {
--	struct rx_ranges *rx_a = list_entry(a, struct rx_ranges, list);
--	struct rx_ranges *rx_b = list_entry(b, struct rx_ranges, list);
-+	const struct rx_ranges *rx_a = list_entry(a, struct rx_ranges, list);
-+	const struct rx_ranges *rx_b = list_entry(b, struct rx_ranges, list);
- 
- 	if (rx_a->start > rx_b->start)
- 		return 1;
--- 
-2.49.0
+Since you already have the implementation for hardware you have access to, can
+you please check if and how performance degrades when you use a very small
+threshold?
 
+Also, I think we should probably put this throttle mechanism in a separate
+component, that just wraps a counter of bytes or rather pages that can be
+increased and decreased through an API and the increase just blocks at a certain
+threshold.
+
+This component can then be called by a driver from the job submit IOCTL and the
+corresponding place where the pre-allocated memory is actually used / freed.
+
+Depending on the driver, this might not necessarily be in the scheduler's
+run_job() callback.
+
+We could call the component something like drm_throttle or drm_submit_throttle.
