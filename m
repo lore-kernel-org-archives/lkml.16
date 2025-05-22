@@ -1,98 +1,94 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 024CF264614;
-	Thu, 22 May 2025 08:07:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACDFF261388;
+	Thu, 22 May 2025 08:08:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747901245; cv=none; b=R6khdk9awer/XHBGmG1hcSgIU74YhIcqKNdZ96pPFDh+vSgyu4M7O7DsfJ54aHV4vhY9CTKf0MLEw14T9tZenX/V0A1IHPgVlm93YmMAcAnbTbcCuFFkVJPJvzq3iPCDhuizl1v6IcHK2cQJmSO2agzLuLmv7Ovw4ovykeXoJj8=
+	t=1747901283; cv=none; b=qtADKTjAcKJGdwxhkIwn1jkoT3wOqFYtmuwNy4ym8Ous3h08u/+5RHqyuxgAJLcP6le1LaERKNh4CfCh7aPK2MkLot/VLNuMVr+D09i0EHsZ2NKif/McRgXGWcK0xo9wuGkWgMciTpeFAL/+4aSm15umXl7LqNdRMcSbWVIIVd0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747901245; c=relaxed/simple;
-	bh=EPm96wo2mbVeci4pRjlD4z0kcMc1ORV0rQunhCIxSpY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=BZn9CQ3yG/imngQ77tY5Wt/kDr3Df4R6f+gSvJrrtSNgArcCsW7FEo/iEjZZ2Ry8MaBcam/l/RiJMw7ma7I7DkBHfM0/L/zuh7d026p6zN3ZufQybYuedUkoerRzFMf8L/vdJqnm0vmvK8hMeVLfKHFokTmIP3Cc90iEbcgicJA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Wsr3WgRN; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747901283; c=relaxed/simple;
+	bh=AsgpU/OXH0n6Yb0Oy9gxgm5VK9clyMyMr5CAUWaU9So=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Y/kYQ3daosd9zwsU14L8aixl2UVN7HdD2pYontulp99/N9Ap5ES4C76Ks2cE6sO5vJo9+f7bGAZ2Vg9lbjlLlO0BBIJSGL4VOQCyODdGpJ75ry2TpZ4Mosxmp1qBX7Q8xNE6L/nSalhSrfGwtxLzu5JjMiVXY3VG54ZqrVNrfTk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=npu2yHi7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Wsr3WgRN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C21F0C4CEE4;
-	Thu, 22 May 2025 08:07:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="npu2yHi7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF59EC4CEE4;
+	Thu, 22 May 2025 08:08:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747901244;
-	bh=EPm96wo2mbVeci4pRjlD4z0kcMc1ORV0rQunhCIxSpY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Wsr3WgRNwI4VnohI5Q1/10nRD0fdiMw2ahLFR9HN8Gn7p0HvxnHAvyVMoZHOIjTSt
-	 /1CdlAqCBs90adooUd5EZRThdVh99mw4/FUGqf1hSoWIPMYZcrmvFUJ+/1cALL7nmZ
-	 6FT042++cOfCw85muulO2gDzr6y+1iMLK77QQjsmg2FB/JfLleaijBbJ/77sHkuX/t
-	 AWwvsqk+jXAWgHQbZeVzr0b3MYcBnMY93lWzYdY6p2xXNNsxjVRCD82vYr1aevPGW9
-	 prR13LKduiKygxKg4xFrQkLaR/UVd9bYOzpKhBuzSKDkV5QtwjF4gBkpP+gCEK5VkR
-	 2HcOsBn2yK/sA==
-From: Lee Jones <lee@kernel.org>
-To: lee@kernel.org,
-	Pavel Machek <pavel@kernel.org>,
-	linux-leds@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: bettyzhou@google.com,
-	ynaffit@google.com,
-	tkjos@google.com,
-	jacek.anaszewski@gmail.com
-Subject: [PATCH v3 5/5] leds: led-test: Provide test for successful registration using init_data
-Date: Thu, 22 May 2025 09:06:52 +0100
-Message-ID: <20250522080656.1215457-5-lee@kernel.org>
-X-Mailer: git-send-email 2.49.0.1143.g0be31eac6b-goog
-In-Reply-To: <20250522080656.1215457-1-lee@kernel.org>
-References: <20250522080656.1215457-1-lee@kernel.org>
+	s=k20201202; t=1747901283;
+	bh=AsgpU/OXH0n6Yb0Oy9gxgm5VK9clyMyMr5CAUWaU9So=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=npu2yHi7RF+x3QqPt86UJMSYYCX4TVIOqXQZrJCPm0uuRfr/u3IgWtctAkR7CYm5I
+	 NvZmkWkMM0QX5lZchXerYvMg7LIh6xCfi8jr43v0dq4uBdDJkLIOtsxon0Zjz5ARJo
+	 OGIhhRWlqEF2bkpOCwN6ZpN3DJJQyh33NbrZCRmrF7qsoQ6c39dHeqMc5sBT98t4B0
+	 DDfd7DqR7cuVtRaCWrDNC7I17dkVBf0zUsiI6xE0zesRjD8qjHPoCzvUDVg3jd6ewR
+	 /Z4kH6avZrHUWv27bQ2dlz1itw0POwicnltY+WaQzJpa+Zs1Ybskh3dMOyJkL0uabM
+	 37XjpVdbKQfvA==
+Date: Thu, 22 May 2025 10:08:00 +0200
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Julien Massot <julien.massot@collabora.com>
+Cc: kernel@collabora.com, Sen Chu <sen.chu@mediatek.com>, 
+	Sean Wang <sean.wang@mediatek.com>, Macpaul Lin <macpaul.lin@mediatek.com>, 
+	Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+	=?utf-8?B?TsOtY29sYXMgRi4gUi4gQS4=?= Prado <nfraprado@collabora.com>, Hui Liu <hui.liu@mediatek.com>, Yong Wu <yong.wu@mediatek.com>, 
+	Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>, 
+	Robin Murphy <robin.murphy@arm.com>, Tinghan Shen <tinghan.shen@mediatek.com>, 
+	linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, iommu@lists.linux.dev
+Subject: Re: [PATCH v2 2/3] dt-bindings: iommu: mediatek: Support 5 IRQs on
+ MT8195 infra IOMMU
+Message-ID: <20250522-foamy-cricket-of-defiance-edc2cd@kuoka>
+References: <20250514-mt8395-dtb-errors-v2-0-d67b9077c59a@collabora.com>
+ <20250514-mt8395-dtb-errors-v2-2-d67b9077c59a@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250514-mt8395-dtb-errors-v2-2-d67b9077c59a@collabora.com>
 
-This time both the default_label and devicename are provided such that
-when concatenated together result in a device name that is acceptable.
-In this case registration should succeed.
+On Wed, May 14, 2025 at 10:19:57AM GMT, Julien Massot wrote:
+> @@ -97,7 +97,8 @@ properties:
+>      maxItems: 1
+>  
+>    interrupts:
+> -    maxItems: 1
+> +    minItems: 1
+> +    maxItems: 5
+>  
+>    clocks:
+>      items:
+> @@ -201,6 +202,21 @@ allOf:
+>        required:
+>          - mediatek,infracfg
+>  
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            enum:
+> +              - mediatek,mt8195-iommu-infra
+> +    then:
+> +      properties:
+> +        interrupts:
+> +          minItems: 5
 
-Signed-off-by: Lee Jones <lee@kernel.org>
-Reviewed-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
----
- drivers/leds/led-test.c | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+Instead list the items here and in else:, or in top-level if first
+interrupt is the same.
 
-diff --git a/drivers/leds/led-test.c b/drivers/leds/led-test.c
-index d5017c6dca08..9bdebbe04462 100644
---- a/drivers/leds/led-test.c
-+++ b/drivers/leds/led-test.c
-@@ -139,12 +139,29 @@ static void led_test_class_init_data_name_too_long(struct kunit *test)
- 	KUNIT_EXPECT_EQ(test, ret, -E2BIG);
- }
- 
-+static void led_test_class_init_data(struct kunit *test)
-+{
-+	struct led_test_ddata *ddata = test->priv;
-+	struct led_classdev *cdev = &ddata->cdev;
-+	struct device *dev = ddata->dev;
-+	int ret;
-+
-+	struct led_init_data init_data = {
-+		.devicename = "led-test-devicename",
-+		.default_label = "led-test-label",
-+	};
-+
-+	ret = devm_led_classdev_register_ext(dev, cdev, &init_data);
-+	KUNIT_EXPECT_EQ(test, ret, 0);
-+}
-+
- static struct kunit_case led_test_cases[] = {
- 	KUNIT_CASE(led_test_class_register),
- 	KUNIT_CASE(led_test_class_add_lookup_and_get),
- 	KUNIT_CASE(led_test_class_init_data_missing_default_label),
- 	KUNIT_CASE(led_test_class_init_data_missing_devicename),
- 	KUNIT_CASE(led_test_class_init_data_name_too_long),
-+	KUNIT_CASE(led_test_class_init_data),
- 	{ }
- };
- 
--- 
-2.49.0.1143.g0be31eac6b-goog
+> +    else:
+> +      properties:
+> +        interrupts:
+> +          maxItems: 1
+
+Best regards,
+Krzysztof
 
