@@ -1,89 +1,152 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mx01.omp.ru (mx01.omp.ru [90.154.21.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 171292882B5;
-	Thu, 22 May 2025 09:27:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C539C70814;
+	Thu, 22 May 2025 09:28:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.154.21.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747906061; cv=none; b=uSFQsfuUtOEvgMFWQl7laJ0WLmVeNPZWGhod6icdAnJsj8EwgnK7CXLe8LUeZT3FFy6g/cXQ+u1/Msg2K2aPKVwlWkbE1LWEhTSJIIgkpGRxeyEyFcfyK+gNF01hnaIni2VUIrEUriad1Yx6IaUTc9Ec80FWtXShdGQkAI/9NyY=
+	t=1747906142; cv=none; b=ZFzNwHL6fXWE4eKpywLJxj35enA5xxT9UmdOQY+Lag6ag8am59K/Li6oh+aeqKhGnDilSzx7g75j8eDX8TMsLa8hMdugJtzsXc1NboevM4SVeKyMxNHThZ9b6ZxK4wA4SkgXA8haOdHoeKXL8Psl0Ppe1QXcMLAbzenyvaA2nCI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747906061; c=relaxed/simple;
-	bh=8zYFm2/+iwmpkOGr5JNANwTIY7S1T/GRs1rvV4bxXfg=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=FHD4i8FWJyDwYodQ9gRXvbtLLG9ujBiws8oDb68FcgQ1OJ0YqHF31Q6IsTTnTMa5YgfE0FJYZO+lQAb5DOOLQ0KKLooz1u+D4q0oTU4NPa3HnG8+yLV0cTK5UgUbuUgpQiP0zv8DzNh6QB6TK8jXp7VpN1KbkTlGqxCB31FbsDU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KJlxGnYD; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KJlxGnYD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09E29C4CEEF;
-	Thu, 22 May 2025 09:27:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747906060;
-	bh=8zYFm2/+iwmpkOGr5JNANwTIY7S1T/GRs1rvV4bxXfg=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=KJlxGnYDHsrrJJ7Q69yDauuRz6o9ebRYVFgSnPSy+ebfpVhSFcMMLuBM8O9H755qs
-	 YA1B7c8dewFsFnuLE8hkZ06+1iTRMEUl0yVqMyIH87X8mcw+vKbHuqFYJLoJF9UNhX
-	 pJ+KBxXS63nSf44Jjr8c08yznZsMYzbYfzFpqES4JjrD050JyR8MGf0ZSXOxdkw8HS
-	 WiZTo7zgIJtf3gU9kB17C8j64hdG0VrPa+X1mJezVp4EyemGXO8iNHLr3j5M2s9/LB
-	 KOc8LJElLUCh5yVraqU+F4GmpWnqzi0Yla9yFyHzEWUiJkx/vc60yNwZPNloIrMIXP
-	 WRZsmR+GDYIxg==
-From: Mark Brown <broonie@kernel.org>
-To: Gabor Juhos <j4g8y7@gmail.com>
-Cc: Md Sadre Alam <quic_mdalam@quicinc.com>, 
- Varadarajan Narayanan <quic_varada@quicinc.com>, 
- Sricharan Ramabadhran <quic_srichara@quicinc.com>, 
- linux-spi@vger.kernel.org, linux-mtd@lists.infradead.org, 
- linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250514-qpic-snand-error-check-v1-1-c0ebd3aae72a@gmail.com>
-References: <20250514-qpic-snand-error-check-v1-1-c0ebd3aae72a@gmail.com>
-Subject: Re: [PATCH] spi: spi-qpic-snand: reuse
- qcom_spi_check_raw_flash_errors()
-Message-Id: <174790605877.30110.13985629144771079611.b4-ty@kernel.org>
-Date: Thu, 22 May 2025 10:27:38 +0100
+	s=arc-20240116; t=1747906142; c=relaxed/simple;
+	bh=W6VVxh2JpTxWEhh/uRyWVQH9raW6GeHBVsleuONtBUE=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=g5NZOJK7E49eSQAicVb2xYpci58NRfHT78Y0AKEbjR4IzJyikE3Q3Xia0AHbflAZTddRH/lqXFUPu4Npyu84Sg5i1Ya7GM+0hEF1+NioC2LL6YOQTo0DRjZbOHwiVTrM/UF274hIESBnSZG+fXoisttSgSpx/EELw2s32G/mjiY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru; spf=pass smtp.mailfrom=omp.ru; arc=none smtp.client-ip=90.154.21.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=omp.ru
+Received: from inp1wst086.omp.ru (81.22.207.138) by msexch01.omp.ru
+ (10.188.4.12) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.2.1258.12; Thu, 22 May
+ 2025 12:28:51 +0300
+From: Dmitriy Privalov <d.privalov@omp.ru>
+To: <stable@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC: Mark Fasheh <mark@fasheh.com>, Joel Becker <jlbec@evilplan.org>, Joseph Qi
+	<joseph.qi@linux.alibaba.com>, <ocfs2-devel@oss.oracle.com>,
+	<linux-kernel@vger.kernel.org>, <lvc-project@linuxtesting.org>, Mohammed
+ Anees <pvmohammedanees2003@gmail.com>,
+	<syzbot+e0055ea09f1f5e6fabdd@syzkaller.appspotmail.com>, Junxiao Bi
+	<junxiao.bi@oracle.com>, Changwei Ge <gechangwei@live.cn>, Gang He
+	<ghe@suse.com>, Jun Piao <piaojun@huawei.com>, Andrew Morton
+	<akpm@linux-foundation.org>, Dmitriy Privalov <d.privalov@omp.ru>
+Subject: [PATCH 5.15 1/1] ocfs2: fix deadlock in ocfs2_get_system_file_inode
+Date: Thu, 22 May 2025 12:28:37 +0300
+Message-ID: <20250522092838.2867777-1-d.privalov@omp.ru>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.15-dev-c25d1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: msexch01.omp.ru (10.188.4.12) To msexch01.omp.ru
+ (10.188.4.12)
+X-KSE-ServerInfo: msexch01.omp.ru, 9
+X-KSE-AntiSpam-Interceptor-Info: scan successful
+X-KSE-AntiSpam-Version: 6.1.1, Database issued on: 05/22/2025 09:17:13
+X-KSE-AntiSpam-Status: KAS_STATUS_NOT_DETECTED
+X-KSE-AntiSpam-Method: none
+X-KSE-AntiSpam-Rate: 0
+X-KSE-AntiSpam-Info: Lua profiles 193520 [May 22 2025]
+X-KSE-AntiSpam-Info: Version: 6.1.1.11
+X-KSE-AntiSpam-Info: Envelope from: d.privalov@omp.ru
+X-KSE-AntiSpam-Info: LuaCore: 59 0.3.59
+ 65f85e645735101144875e459092aa877af15aaa
+X-KSE-AntiSpam-Info: {rep_avail}
+X-KSE-AntiSpam-Info: {Tracking_uf_ne_domains}
+X-KSE-AntiSpam-Info: {Tracking_from_domain_doesnt_match_to}
+X-KSE-AntiSpam-Info:
+	omp.ru:7.1.1;syzkaller.appspot.com:5.0.1,7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;81.22.207.138:7.1.2;127.0.0.199:7.1.2;lkml.kernel.org:7.1.1;inp1wst086.omp.ru:7.1.1
+X-KSE-AntiSpam-Info: FromAlignment: s
+X-KSE-AntiSpam-Info: ApMailHostAddress: 81.22.207.138
+X-KSE-AntiSpam-Info: Rate: 0
+X-KSE-AntiSpam-Info: Status: not_detected
+X-KSE-AntiSpam-Info: Method: none
+X-KSE-AntiSpam-Info: Auth:dmarc=temperror header.from=omp.ru;spf=temperror
+ smtp.mailfrom=omp.ru;dkim=none
+X-KSE-Antiphishing-Info: Clean
+X-KSE-Antiphishing-ScanningType: Heuristic
+X-KSE-Antiphishing-Method: None
+X-KSE-Antiphishing-Bases: 05/22/2025 09:20:00
+X-KSE-Antivirus-Interceptor-Info: scan successful
+X-KSE-Antivirus-Info: Clean, bases: 5/22/2025 7:05:00 AM
+X-KSE-Attachment-Filter-Triggered-Rules: Clean
+X-KSE-Attachment-Filter-Triggered-Filters: Clean
+X-KSE-BulkMessagesFiltering-Scan-Result: InTheLimit
 
-On Wed, 14 May 2025 12:16:38 +0200, Gabor Juhos wrote:
-> The qcom_spi_check_raw_flash_errors() function can be used to
-> verify the flash status after raw operations.
-> 
-> Move the function slightly up in the code and change the
-> qcom_spi_read_last_cw() function to call it instead of using
-> an open coded implementation of the same check.
-> 
-> [...]
+From: Mohammed Anees <pvmohammedanees2003@gmail.com>
 
-Applied to
+commit 7bf1823e010e8db2fb649c790bd1b449a75f52d8 upstream.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
+syzbot has found a possible deadlock in ocfs2_get_system_file_inode [1].
 
-Thanks!
+The scenario is depicted here,
 
-[1/1] spi: spi-qpic-snand: reuse qcom_spi_check_raw_flash_errors()
-      commit: 4026c6b51cb9ffd1eea2206191552f8aa3cb55ea
+	CPU0					CPU1
+lock(&ocfs2_file_ip_alloc_sem_key);
+                               lock(&osb->system_file_mutex);
+                               lock(&ocfs2_file_ip_alloc_sem_key);
+lock(&osb->system_file_mutex);
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
+The function calls which could lead to this are:
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+CPU0
+ocfs2_mknod - lock(&ocfs2_file_ip_alloc_sem_key);
+.
+.
+.
+ocfs2_get_system_file_inode - lock(&osb->system_file_mutex);
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+CPU1 -
+ocfs2_fill_super - lock(&osb->system_file_mutex);
+.
+.
+.
+ocfs2_read_virt_blocks - lock(&ocfs2_file_ip_alloc_sem_key);
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+This issue can be resolved by making the down_read -> down_read_try
+in the ocfs2_read_virt_blocks.
 
-Thanks,
-Mark
+[1] https://syzkaller.appspot.com/bug?extid=e0055ea09f1f5e6fabdd
+
+Link: https://lkml.kernel.org/r/20240924093257.7181-1-pvmohammedanees2003@gmail.com
+Signed-off-by: Mohammed Anees <pvmohammedanees2003@gmail.com>
+Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
+Reported-by: <syzbot+e0055ea09f1f5e6fabdd@syzkaller.appspotmail.com>
+Closes: https://syzkaller.appspot.com/bug?extid=e0055ea09f1f5e6fabdd
+Tested-by: syzbot+e0055ea09f1f5e6fabdd@syzkaller.appspotmail.com
+Cc: Mark Fasheh <mark@fasheh.com>
+Cc: Joel Becker <jlbec@evilplan.org>
+Cc: Junxiao Bi <junxiao.bi@oracle.com>
+Cc: Changwei Ge <gechangwei@live.cn>
+Cc: Gang He <ghe@suse.com>
+Cc: Jun Piao <piaojun@huawei.com>
+Cc:  <stable@vger.kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Dmitriy Privalov <d.privalov@omp.ru>
+---
+ fs/ocfs2/extent_map.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/fs/ocfs2/extent_map.c b/fs/ocfs2/extent_map.c
+index 70a768b623cf..f7672472fa82 100644
+--- a/fs/ocfs2/extent_map.c
++++ b/fs/ocfs2/extent_map.c
+@@ -973,7 +973,13 @@ int ocfs2_read_virt_blocks(struct inode *inode, u64 v_block, int nr,
+ 	}
+ 
+ 	while (done < nr) {
+-		down_read(&OCFS2_I(inode)->ip_alloc_sem);
++		if (!down_read_trylock(&OCFS2_I(inode)->ip_alloc_sem)) {
++			rc = -EAGAIN;
++			mlog(ML_ERROR,
++				 "Inode #%llu ip_alloc_sem is temporarily unavailable\n",
++				 (unsigned long long)OCFS2_I(inode)->ip_blkno);
++			break;
++		}
+ 		rc = ocfs2_extent_map_get_blocks(inode, v_block + done,
+ 						 &p_block, &p_count, NULL);
+ 		up_read(&OCFS2_I(inode)->ip_alloc_sem);
+-- 
+2.34.1
 
