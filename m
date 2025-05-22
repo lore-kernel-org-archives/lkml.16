@@ -1,107 +1,110 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0016f401.pphosted.com (mx0a-0016f401.pphosted.com [67.231.148.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87A2C17BB6
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 11:11:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56B0C17BB6;
+	Thu, 22 May 2025 11:11:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.148.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747912278; cv=none; b=mvIUkZTvYyOsESYCuMJJv+XgaZ22l3EgGtbTSTb8olCDEehmMM6LZGPRm6eXe0v0kiXrxLMPQgq71u2pvsRNHppHvNKP8lVNbpnwR3b8eKwEYPnPKUCV0+88k2t/xbk7zSI3JYBhuqnBfHDI4kBY8Z8gRb3EAJtiVA00fUl+vqM=
+	t=1747912303; cv=none; b=jIy5Xj9s7upNT5hTH7oFRHvoxZLPvWysGlg6x0b5cVcM97ReQ7LN7b6J13ASfcQDzysaeQLX3nqV0v4vXoyIaXN+/icVHAOUuOnHt3nMIvHJpN2rVxOl6AGGIFnB2T4A3A63VTU9VqsMIyGFCVgpFZJ1cSEorHKe0MDOw3PMmls=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747912278; c=relaxed/simple;
-	bh=aHgtBI7v+S81AM2CaYELSl4mkDoqDdn1xSKhIL81RAo=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=gcMruWPLDP8nLfPb0m5Ws158DoZvIctq5LEfhNybfR5iW+LAsuMivAP+3KBiivtJjEsPxwhsdJjbxNp8RejF29RZ+nW1MDzihROl5Wr2A6w0WpskRNRtb+jZ/HNP6zx9GZpSjuCkBnOAEr87pt38Uqpg/sLxPOJrMKhhaH+tgdw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jVvRRaVa; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747912303; c=relaxed/simple;
+	bh=USl4YUVkSxfb7TfRutGSKttDMNWN/XNiBVJUodRetOc=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HfeundFXype6CMegzp+Wq3OVO6Ib+bdqXVvZQqOsnaxY/uGusqR4DLkHjOz0ICnU/PAfh+D12kJa5MQtrAqmaDtNTemFSguN4P8DvDLr0KTgxBdm1Yro5P+sxJ9h4vIFSrZCRZlpQMKXwU086FjXghRfHeUArmrI+mUQXL+JwDg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=L3RFVWSn; arc=none smtp.client-ip=67.231.148.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jVvRRaVa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13A4FC4CEE4;
-	Thu, 22 May 2025 11:11:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747912277;
-	bh=aHgtBI7v+S81AM2CaYELSl4mkDoqDdn1xSKhIL81RAo=;
-	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
-	b=jVvRRaVar+06zB2qK/iHi4yi0IU1sMlKvzmJRawmtVtiTsa1hhEEDTIPe48NJdHYW
-	 tvg8Ih33kas/6QxuYdmxVrkbKB6E9d/mEnu6AysBNRDNBQNaNERVlZXYR+1h6nPJCD
-	 vUTv4BAq2tuhMLW+06Zoz+su+1Rp+puTpDWnVMhLezdlxbANmZ4p/uU3hEgDUX+NPR
-	 T4BWvo4lOoIsjckr7KeNSlF7uZAcN7feyYQFxiYXF/alEBV02Z1+Ou1DRzcLP1nlZr
-	 lDW6CvLRd6p8pWDoanjvOCkWUr0LbuyYbe5Q130vAUWPQ8vCUt2M7uDNAYU6JgTMTv
-	 /lk52c3qmGc8A==
-Message-ID: <e73ac805-b51e-4457-9f7d-7d3feaff32d8@kernel.org>
-Date: Thu, 22 May 2025 19:11:14 +0800
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="L3RFVWSn"
+Received: from pps.filterd (m0431384.ppops.net [127.0.0.1])
+	by mx0a-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54LM67l6010041;
+	Thu, 22 May 2025 04:11:32 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=pfpt0220; bh=7RUf8XA3/mKUg3y1MmIWqtItv
+	jOGVG+m/4ggFiuOdAs=; b=L3RFVWSn+PGJFwbUDl8o4mVMxI+3YPWFHBD8UIDTN
+	hskFRKuTYRYRsaNTQr6gu2sk30bOKxWRovXHWUjTX5BSVwjmJVeRZU60DIAuyM0+
+	DM8ERC9EBffEruW6x/PGC/ig1kZGRAryM4SS7DkoDeH5T5gwRPW/7G3YoMbDgkUl
+	MQUcuLJtbSF2gn/n577iCVWtgLQ+webWfYZL8Dc+AL5Yj4rf763yNbd+i/ijC+H0
+	OWUzfXA9U8+chrlQc0/6SSQnJTp5K7uyfcdWrKiyljocmFwLTX7OEnU5TZ83DvVX
+	eOZEy0q8dPGn1b3s1gad6zmng/UB7CpvnDh2QYtIPTEaw==
+Received: from dc5-exch05.marvell.com ([199.233.59.128])
+	by mx0a-0016f401.pphosted.com (PPS) with ESMTPS id 46sqap99bb-3
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 22 May 2025 04:11:32 -0700 (PDT)
+Received: from DC5-EXCH05.marvell.com (10.69.176.209) by
+ DC5-EXCH05.marvell.com (10.69.176.209) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.4; Thu, 22 May 2025 04:11:26 -0700
+Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH05.marvell.com
+ (10.69.176.209) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
+ Transport; Thu, 22 May 2025 04:11:26 -0700
+Received: from test-OptiPlex-Tower-Plus-7010 (unknown [10.29.37.157])
+	by maili.marvell.com (Postfix) with SMTP id 08EBA3F7085;
+	Thu, 22 May 2025 04:11:21 -0700 (PDT)
+Date: Thu, 22 May 2025 16:41:20 +0530
+From: Hariprasad Kelam <hkelam@marvell.com>
+To: Jakub Kicinski <kuba@kernel.org>
+CC: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Sunil Goutham
+	<sgoutham@marvell.com>,
+        Linu Cherian <lcherian@marvell.com>,
+        Geetha sowjanya
+	<gakula@marvell.com>,
+        Jerin Jacob <jerinj@marvell.com>,
+        Subbaraya Sundeep
+	<sbhatta@marvell.com>,
+        Andrew Lunn <andrew+netdev@lunn.ch>,
+        "David S. Miller"
+	<davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>, Paolo Abeni
+	<pabeni@redhat.com>,
+        Bharat Bhushan <bbhushan2@marvell.com>
+Subject: Re: [net-next] octeontx2-pf: ethtool: Display "Autoneg" and "Port"
+ fields
+Message-ID: <aC8GWDelB9YwOKIz@test-OptiPlex-Tower-Plus-7010>
+References: <20250519112333.1044645-1-hkelam@marvell.com>
+ <20250520165019.6d075176@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: chao@kernel.org, linux-f2fs-devel@lists.sourceforge.net,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] f2fs: fix missing small discard in fstrim
-To: Chunhai Guo <guochunhai@vivo.com>, jaegeuk@kernel.org
-References: <20250102101310.580277-1-guochunhai@vivo.com>
- <20250102101310.580277-2-guochunhai@vivo.com>
-Content-Language: en-US
-From: Chao Yu <chao@kernel.org>
-In-Reply-To: <20250102101310.580277-2-guochunhai@vivo.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20250520165019.6d075176@kernel.org>
+X-Proofpoint-GUID: NNbiD_89UzvgdfwUFqFFQ7RyTwLTr-TP
+X-Authority-Analysis: v=2.4 cv=HfgUTjE8 c=1 sm=1 tr=0 ts=682f0664 cx=c_pps a=rEv8fa4AjpPjGxpoe8rlIQ==:117 a=rEv8fa4AjpPjGxpoe8rlIQ==:17 a=kj9zAlcOel0A:10 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=i3f_dDYzph6c6JWobKwA:9 a=CjuIK1q_8ugA:10 a=zZCYzV9kfG8A:10
+ a=lhd_8Stf4_Oa5sg58ivl:22
+X-Proofpoint-ORIG-GUID: NNbiD_89UzvgdfwUFqFFQ7RyTwLTr-TP
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIyMDExMyBTYWx0ZWRfX5wRxiW88lpKY r6yqAPf6P3IhrzGrEYmFZ5c8Az7twndLJgfZ+z7t0J/Xawb4iVevdK4+ZeWMho5mzHjXJR4PFkk aNWC6MSeYdL0VV4DG9iUbJ7baUV6b+3irnHWLhP4FbnGYCPEJuiZSYCZXAJ6PN6Ob71RyJmdhaX
+ HnSyf3F23vQGdAn84WV1rd4SBaAuQcrZ2cKds/MW2byMHRDcNAooZSmSxDmL07tKVpWOwFfeS8A FUn2NjRedNVkwX7rBQeQd1QJ09rAz/BqRI4Jk3B4PntpwaQwpyfAUaU/qJii4T1XbL6qmIEAejt hlOyC/7LS9mTeK2YbMa3kinJrsnygUQkfTKSs1cw01+qa+oFN2rR2eS/CF4cQirEamBQ3eGUCmP
+ QIE7Rr3Gw64pUpDNUR89UlwdapiqUfuLvdsyvgJu1Ag4icu/4cYBtpjacAOR/XR6nqDuhsMS
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-22_06,2025-05-22_01,2025-03-28_01
 
-On 1/2/25 18:13, Chunhai Guo wrote:
-> If userspace issues an fstrim with a range that does not include all
-> segments with small discards, these segments will be reused without being
-> discarded. This patch fixes this issue.
-> This patch is somewhat similar to commit 650d3c4e56e1 ("f2fs: fix a missing
-> discard prefree segments").
-
-I guess it's better to update commit message as we discussed?
-
+On 2025-05-21 at 05:20:19, Jakub Kicinski (kuba@kernel.org) wrote:
+> On Mon, 19 May 2025 16:53:33 +0530 Hariprasad Kelam wrote:
+> > The Octeontx2/CN10k netdev drivers access a shared firmware structure
+> > to obtain link configuration details, such as supported and advertised
+> > link modes.
+> > 
+> > This patch updates the shared firmware data to include additional
+> > fields like 'Autonegotiation' and 'Port type'.
+> > 
+> > example output:
+> >   ethtool ethx
+> > 	 Advertised auto-negotiation: Yes
+> > 	 Port: Twisted Pair
 > 
-> Fixes: d7bc2484b8d4 ("f2fs: fix small discards not to issue redundantly")
-> Signed-off-by: Chunhai Guo <guochunhai@vivo.com>
-> ---
->  fs/f2fs/segment.c | 10 +++++++---
->  1 file changed, 7 insertions(+), 3 deletions(-)
+> Can you add the real output without trimming please?
+  Ack
 > 
-> diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
-> index 8fe9f794b581..af9a62591c49 100644
-> --- a/fs/f2fs/segment.c
-> +++ b/fs/f2fs/segment.c
-> @@ -4552,6 +4552,8 @@ void f2fs_flush_sit_entries(struct f2fs_sb_info *sbi, struct cp_control *cpc)
->  	struct list_head *head = &SM_I(sbi)->sit_entry_set;
->  	bool to_journal = !is_sbi_flag_set(sbi, SBI_IS_RESIZEFS);
->  	struct seg_entry *se;
-> +	bool force = (cpc->reason & CP_DISCARD);
-> +	__u64 trim_start = cpc->trim_start;
->  
->  	down_write(&sit_i->sentry_lock);
->  
-> @@ -4609,7 +4611,9 @@ void f2fs_flush_sit_entries(struct f2fs_sb_info *sbi, struct cp_control *cpc)
->  #endif
->  
->  			/* add discard candidates */
-> -			if (!(cpc->reason & CP_DISCARD)) {
-> +			if (!force || (force &&
-
-if (!force || (f2fs_realtime_discard_enable() &&
-		(segno < trim_start || segno > trim_end)))
-
-Thanks,
-
-> +					(segno < trim_start ||
-> +					 segno > cpc->trim_end))) {
->  				cpc->trim_start = segno;
->  				add_discard_addrs(sbi, cpc, false, false);
->  			}
-> @@ -4649,8 +4653,8 @@ void f2fs_flush_sit_entries(struct f2fs_sb_info *sbi, struct cp_control *cpc)
->  	f2fs_bug_on(sbi, !list_empty(head));
->  	f2fs_bug_on(sbi, sit_i->dirty_sentries);
->  out:
-> -	if (cpc->reason & CP_DISCARD) {
-> -		__u64 trim_start = cpc->trim_start;
-> +	if (force) {
-> +		cpc->trim_start = trim_start;
->  
->  		for (; cpc->trim_start <= cpc->trim_end; cpc->trim_start++)
->  			add_discard_addrs(sbi, cpc, true, false);
-
+> > +	cmd->base.port = rsp->fwdata.port;
+> 
+> Do you validate somewhere this value is within the legitimate values
+> from kernel uAPI?
+  No, missed adding validation.
+  Will address this in next version.
