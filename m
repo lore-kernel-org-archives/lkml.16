@@ -1,140 +1,73 @@
-Received: from out-179.mta1.migadu.com (out-179.mta1.migadu.com [95.215.58.179])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F054383
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 03:48:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC02F383
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 03:49:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747885685; cv=none; b=s0Ixq6IhYHu/Kh+DFZzG5tkFjCL5hyn2jAWweZ9OQJWN6yc0x9Zq+1VSbMPbMbNHZboVEB2jwmCB+8TedJnN0Q9iSNjpeRWhsmf1GI2uZAECBTCQiYALkY2w5Tq2Ig5RRS21gl0EsN/fFlasQlYuS9jLdDXCX8ImSkUm1oaqjmk=
+	t=1747885786; cv=none; b=CYUE2dTuJxNfwACzDv28zFcgwxknIkeKvfJ7fFd4EXTLQ6QQDRDPt7v7p1k5CWQ/C1flfpkfgQ6O1yXqrYQAn5xIA2an0J6FdTgm79ZF6AYUGEpoG3seYKw/cG9VO4eEjN2v9w4+gUreiBaIL4YFO+iYVNUT5FQaa5WnnLE1TyA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747885685; c=relaxed/simple;
-	bh=h+FKSkVJoJLzHFqTiIazKO5seuUB04xC7a/m3H4dAqg=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=kB2y0cg9u6Gte1JyRxsGUDvoBuy7pXc7FrYXu59B2r9c6Vmi7XIt4GBeeAPZo+6DcntpK/Mwgz7JV1V9WwGknZ1I0Ge4Xg/iUd1C9qQ3bJjhHtBPfT/k93bUIjMBuWx3YwenrHi4VhWeod17ayxPx/sInl353CEnqMZCgOiAI1c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=HFdc255G; arc=none smtp.client-ip=95.215.58.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1747885786; c=relaxed/simple;
+	bh=pP0gCOXOC50Z/0xxYAr7ydbCoPDt1OcdK6DtbcZyLKM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iuakrhxv5xae3QPfMU3otkL5LORDbw9vzH3XRZus+dyq1kaYeSDdp+y9nve3xoXAa1eXToJDO1qPqrCdADrwMnKkyVuHrC0dJt4B4B9JKapM5XpPgrVPL3R7xIrru2PuK1I6izgPQnEfm+qyzhlFENuqUqoQvnDPhdJMHDvdCFE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DHeNByC1; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="HFdc255G"
-Content-Type: text/plain;
-	charset=us-ascii
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1747885671;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DHeNByC1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1747885783;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=BXXYi1vVEw7Vh0KRmb1QEzzCMPaHpSE9E8XA1i/G0ww=;
-	b=HFdc255GB9u7lfA3f0vLiEbH7XqTxGC58vRB2WZ2AuOAwuLba4hFa0TmhWNJuYIJdBs7Io
-	zjkY/HzfayV+tL/iqEy/Ft/VjbyteKKpa5NqtPw2Kj0hgSAzczZdNKE7pQO2D1ZQ0rJdV9
-	d19dX3LzYVUEPCBjdsVCl/K1Nw+Y1M4=
+	bh=pP0gCOXOC50Z/0xxYAr7ydbCoPDt1OcdK6DtbcZyLKM=;
+	b=DHeNByC1wOsPJXox/AJ3h//Efx6gLszfj62/lUk6fTy1+q9YFgOkZDkg1M9hhyO19Xxquk
+	vEApigB48Cqt5Swkrfuds0ICA69EKoOTKrq5zI7YTa/toxEkXf5mJpyU0peg2OeavY7qP3
+	aLt3RxL6L3Cvsc9ncf6Zcnx5SllgruA=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-329-5Ihd1d0fOMS9kWgG_6x3aQ-1; Wed,
+ 21 May 2025 23:49:40 -0400
+X-MC-Unique: 5Ihd1d0fOMS9kWgG_6x3aQ-1
+X-Mimecast-MFC-AGG-ID: 5Ihd1d0fOMS9kWgG_6x3aQ_1747885779
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 24CCB195608D;
+	Thu, 22 May 2025 03:49:39 +0000 (UTC)
+Received: from localhost (unknown [10.72.112.172])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C317A19560AE;
+	Thu, 22 May 2025 03:49:37 +0000 (UTC)
+Date: Thu, 22 May 2025 11:49:32 +0800
+From: Baoquan He <bhe@redhat.com>
+To: Mimi Zohar <zohar@linux.ibm.com>
+Cc: linux-integrity@vger.kernel.org, kexec@lists.infradead.org,
+	linux-kernel@vger.kernel.org, pmenzel@molgen.mpg.de,
+	coxu@redhat.com, ruyang@redhat.com, chenste@linux.microsoft.com
+Subject: Re: [PATCH] ima: add a knob ima= to make IMA be able to be disabled
+Message-ID: <aC6ezNcUZ/ulKgpv@MiWiFi-R3L-srv>
+References: <20250515233953.14685-1-bhe@redhat.com>
+ <aCaFNvHbYxrCaPbe@MiWiFi-R3L-srv>
+ <1d2848fe45dbf58707cecf16c4fc46b179e24415.camel@linux.ibm.com>
+ <02e5091f96404a86073abacb2861a07cf1deb439.camel@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.500.181.1.5\))
-Subject: Re: [PATCH] mm/hugetlb: fix kernel NULL pointer dereference when
- replacing free hugetlb folios
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Muchun Song <muchun.song@linux.dev>
-In-Reply-To: <1747884137-26685-1-git-send-email-yangge1116@126.com>
-Date: Thu, 22 May 2025 11:47:05 +0800
-Cc: akpm@linux-foundation.org,
- linux-mm@kvack.org,
- linux-kernel@vger.kernel.org,
- stable@vger.kernel.org,
- 21cnbao@gmail.com,
- david@redhat.com,
- baolin.wang@linux.alibaba.com,
- osalvador@suse.de,
- liuzixing@hygon.cn
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <644FF836-9DC7-42B4-BACE-C433E637B885@linux.dev>
-References: <1747884137-26685-1-git-send-email-yangge1116@126.com>
-To: yangge1116@126.com
-X-Migadu-Flow: FLOW_OUT
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <02e5091f96404a86073abacb2861a07cf1deb439.camel@linux.ibm.com>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
+On 05/21/25 at 08:58am, Mimi Zohar wrote:
+> In addition, please update the Subject line to be less generic.
 
+Sure, will change subject as below:
 
-> On May 22, 2025, at 11:22, yangge1116@126.com wrote:
->=20
-> From: Ge Yang <yangge1116@126.com>
->=20
-> A kernel crash was observed when replacing free hugetlb folios:
->=20
-> BUG: kernel NULL pointer dereference, address: 0000000000000028
-> PGD 0 P4D 0
-> Oops: Oops: 0000 [#1] SMP NOPTI
-> CPU: 28 UID: 0 PID: 29639 Comm: test_cma.sh Tainted 6.15.0-rc6-zp #41 =
-PREEMPT(voluntary)
-> RIP: 0010:alloc_and_dissolve_hugetlb_folio+0x1d/0x1f0
-> RSP: 0018:ffffc9000b30fa90 EFLAGS: 00010286
-> RAX: 0000000000000000 RBX: 0000000000342cca RCX: ffffea0043000000
-> RDX: ffffc9000b30fb08 RSI: ffffea0043000000 RDI: 0000000000000000
-> RBP: ffffc9000b30fb20 R08: 0000000000001000 R09: 0000000000000000
-> R10: ffff88886f92eb00 R11: 0000000000000000 R12: ffffea0043000000
-> R13: 0000000000000000 R14: 00000000010c0200 R15: 0000000000000004
-> FS:  00007fcda5f14740(0000) GS:ffff8888ec1d8000(0000) =
-knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 0000000000000028 CR3: 0000000391402000 CR4: 0000000000350ef0
-> Call Trace:
-> <TASK>
-> replace_free_hugepage_folios+0xb6/0x100
-> alloc_contig_range_noprof+0x18a/0x590
-> ? srso_return_thunk+0x5/0x5f
-> ? down_read+0x12/0xa0
-> ? srso_return_thunk+0x5/0x5f
-> cma_range_alloc.constprop.0+0x131/0x290
-> __cma_alloc+0xcf/0x2c0
-> cma_alloc_write+0x43/0xb0
-> simple_attr_write_xsigned.constprop.0.isra.0+0xb2/0x110
-> debugfs_attr_write+0x46/0x70
-> full_proxy_write+0x62/0xa0
-> vfs_write+0xf8/0x420
-> ? srso_return_thunk+0x5/0x5f
-> ? filp_flush+0x86/0xa0
-> ? srso_return_thunk+0x5/0x5f
-> ? filp_close+0x1f/0x30
-> ? srso_return_thunk+0x5/0x5f
-> ? do_dup2+0xaf/0x160
-> ? srso_return_thunk+0x5/0x5f
-> ksys_write+0x65/0xe0
-> do_syscall_64+0x64/0x170
-> entry_SYSCALL_64_after_hwframe+0x76/0x7e
->=20
-> There is a potential race between __update_and_free_hugetlb_folio()
-> and replace_free_hugepage_folios():
->=20
-> CPU1                              CPU2
-> __update_and_free_hugetlb_folio   replace_free_hugepage_folios
->                                    folio_test_hugetlb(folio)
->                                    -- It's still hugetlb folio.
->=20
->  __folio_clear_hugetlb(folio)
->  hugetlb_free_folio(folio)
->                                    h =3D folio_hstate(folio)
->                                    -- Here, h is NULL pointer
->=20
-> When the above race condition occurs, folio_hstate(folio) returns
-> NULL, and subsequent access to this NULL pointer will cause the
-> system to crash. To resolve this issue, execute folio_hstate(folio)
-> under the protection of the hugetlb_lock lock, ensuring that
-> folio_hstate(folio) does not return NULL.
->=20
-> Fixes: 04f13d241b8b ("mm: replace free hugepage folios after =
-migration")
-> Signed-off-by: Ge Yang <yangge1116@126.com>
-> Cc: <stable@vger.kernel.org>
-
-Thanks for fixing this problem. BTW, in order to catch future similar =
-problem,
-it is better to add WARN_ON into folio_hstate() to assert if =
-hugetlb_lock
-is not held when folio's reference count is zero. For this fix, LGTM.
-
-Reviewed-by: Muchun Song <muchun.song@linux.dev>
-
-Thanks.
+ima: add a knob ima= to allow disabling IMA in kdump kernel
 
