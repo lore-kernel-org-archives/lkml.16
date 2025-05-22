@@ -1,89 +1,101 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from jpms-ob01.noc.sony.co.jp (jpms-ob01.noc.sony.co.jp [211.125.140.164])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6488B280A32;
-	Thu, 22 May 2025 09:45:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC63419ABDE;
+	Thu, 22 May 2025 09:46:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.125.140.164
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747907150; cv=none; b=ZKg67pRZkwj5JAr3zyyRvsWCyZiY99qJDDyFTtiTFkddoj1MNilkqxAS56NySj8tE1kWiyYzVJrsk1E8ATB9GT5UEYMmqS+Xszp3VZmvDMrFDIuhyJTJWEvFvVXQcwV7//IayRweirK/N4cMq6GR5XPeFmoC1xLxudP09/VWNOk=
+	t=1747907201; cv=none; b=d4B+3nk8zF6FvMTRCrV2BZceF3MzTpE+/0JrkGrlpNmo9mveq/xGdbQeSYMl/3PkVDSeA43FDKd+d8K5+85lTOjWKPxzlpAHNIEOX5JOlyrMhs3Ir9Z7GE5E7wjmUG44jwZlD9XymA3VVqKH4meHd12dmjHS/Y80QsDrNLaQs3I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747907150; c=relaxed/simple;
-	bh=JxCPB0UFr3+YKzeXORDXLh/LUUdaJntuMHarMokXu5A=;
+	s=arc-20240116; t=1747907201; c=relaxed/simple;
+	bh=iwyvSkrXpxctGEfHrPn28Dg2OnHVDNuVDHmlyvO+q2k=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bLL5byMach//cdTFeG9YltwFmwrtzUQk53gncgnsBF91PygX1t5ExxGheFm6YOIbZfrhwd0l64kHS2UHt/AGDs6w4N/8guaoPC/kIKfOdQ0fxYOaBkJYRVBwtsd0but1Pm/+LVNLA1TlyMUFvC/Tydjwosgvc36E6VS+o4k+O+o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Itf4v18+; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=pSPr+7HYknrw9nvLEFteFGihARMBKwHlw2Veu39hMpBU55LJqgroIe6b8HoaYj2qX2iL4SuysPSc8A/pm8dh/FwRqaRiLsweHEygIJ7uModrGJjN91o1iXO5Dsxr1oKb9xNJ7LEEiVoFK9sU9irSlrIuXOA1DAr23e4qINsN1xk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sony.com; spf=pass smtp.mailfrom=sony.com; dkim=pass (2048-bit key) header.d=sony.com header.i=@sony.com header.b=PMVqI1Db; arc=none smtp.client-ip=211.125.140.164
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sony.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sony.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Itf4v18+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6FC28C4CEE4;
-	Thu, 22 May 2025 09:45:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747907149;
-	bh=JxCPB0UFr3+YKzeXORDXLh/LUUdaJntuMHarMokXu5A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Itf4v18+JkPLZp2fYPv8UHwOfLTP0TaIE7MI8WEpfoytAhGeQU3v7R9sCocSl2i73
-	 BsCrVtRgHmmHSyJ/DUxfvJnvJxwEWbWka/L2vwu6hE0W+2FuVPrktrPWNYKxHiJwpj
-	 uKffO/EbA8mmJd6/HvOVgSPl4Gtl9eG8s7YzlT5MdeXuCEmRk+b3jjHw5mpe1hVQGF
-	 jWyJi0f2+S0VxvHDAk/B5yr8uAJXb4OfSwXF7PoJz24wHhgYD56RRQovMxW4Q4UZvW
-	 BdE6mDV4OpGZd/ALCjg8Pi8u3SSvAH/QjI3JbnnDfHkT6s5LKe9yPxDBmsLuJKyv7i
-	 /dEGke1BV1guQ==
-Date: Thu, 22 May 2025 10:45:44 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Zhang Yi <zhangyi@everest-semi.com>
-Cc: robh@kernel.org, tiwai@suse.com, devicetree@vger.kernel.org,
-	conor+dt@kernel.org, lgirdwood@gmail.com,
-	linux-kernel@vger.kernel.org, linux-sound@vger.kernel.org,
-	perex@perex.cz, krzk+dt@kernel.org,
-	amadeuszx.slawinski@linux.intel.com, krzk@kernel.org
-Subject: Re: [PATCH 2/2] ASoC: codecs: add support for ES8375
-Message-ID: <50783a85-0515-47af-8486-a343e28f960a@sirena.org.uk>
-References: <20250522054619.9574-1-zhangyi@everest-semi.com>
+	dkim=pass (2048-bit key) header.d=sony.com header.i=@sony.com header.b="PMVqI1Db"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=sony.com; s=s1jp; t=1747907199; x=1779443199;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=DfbWw3E35fX776QXKTvnDVg3ShsCLZlrkgbY+W4KvCw=;
+  b=PMVqI1DbBkLUBvjtTPl61A8kZuZeQ/K4I8Uueg6nX8GObS8VP3KmeG3T
+   rHFgFF7MjcldQUVwun/Y0P0BBG5ZRRgtFZbrwge4Tmxqjk1wpLxety2FE
+   VXvdlbnvDKjnbA09vkMKkYg3UnVfwdJ7m4ZkpEEY+w43syQHUCCcdypn2
+   GRhz8mmj6ByBmC21gsrojbawNR1EeyZ5ulN5JGKB2qnskg5EwOSjyXE4B
+   Wz8vVif3ZelawwHSZS9ETVpdhb3c5kTFYAznZxmNjmKRaVEExPsIDg6gy
+   luHh1/u8RYKhh2ur6wzLD8ptZcLlVn3OdZnrfMV9cP2EWnxG9r++WhE1w
+   g==;
+Received: from unknown (HELO jpmta-ob1.noc.sony.co.jp) ([IPv6:2001:cf8:0:6e7::6])
+  by jpms-ob01.noc.sony.co.jp with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2025 18:46:37 +0900
+X-IronPort-AV: E=Sophos;i="6.15,305,1739804400"; 
+   d="scan'208";a="562636728"
+Received: from unknown (HELO JPC00244420) ([IPv6:2001:cf8:1:573:0:dddd:6b3e:119e])
+  by jpmta-ob1.noc.sony.co.jp with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2025 18:46:37 +0900
+Date: Thu, 22 May 2025 18:46:33 +0900
+From: Shashank Balaji <shashank.mahadasyam@sony.com>
+To: Russell Haley <yumpusamongus@gmail.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
+	Jonathan Corbet <corbet@lwn.net>, linux-pm@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Shinya Takumi <shinya.takumi@sony.com>
+Subject: Re: [PATCH] cpufreq, docs: (userspace governor) add that actual freq
+ is >= scaling_setspeed
+Message-ID: <aC7yeQvKVQ1No9EW@JPC00244420>
+References: <20250522-userspace-governor-doc-v1-1-c8a038e39084@sony.com>
+ <15871c67-0d18-430f-935e-261b2cda855b@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="KhVzUb2kf7n4U7by"
-Content-Disposition: inline
-In-Reply-To: <20250522054619.9574-1-zhangyi@everest-semi.com>
-X-Cookie: Beware of dog.
-
-
---KhVzUb2kf7n4U7by
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <15871c67-0d18-430f-935e-261b2cda855b@gmail.com>
 
-On Thu, May 22, 2025 at 01:46:19PM +0800, Zhang Yi wrote:
+Hi Russell,
 
-> > > +	regmap_write(es8375->regmap, ES8375_ADC_VOLUME, 0xBF);
-> > > +	regmap_write(es8375->regmap, ES8375_DAC_VOLUME, 0xBF);
+On Thu, May 22, 2025 at 03:50:55AM -0500, Russell Haley wrote:
+> If the user asks for the frequency to be set from userspace, the
+> frequency had damn well better be set from userspace.
 
-> > Some of these settings look like they are (or should be) user
-> > controllable and should be left at the chip defaults, the volumes above
-> > really stand out.  We use chip defaults to avoid having to decide which
-> > use cases to configure for.
+First of all, I agree with you. In fact, before sending this patch, I
+was considering adding CPUFREQ_GOV_STRICT_TARGET to the userspace
+governor. intel_pstate should handle the rest of it.
 
-> Because the default value of the chip's volume register is 0x00,
-> initializing the device without setting it to 0xbf will
-> cause the device to mute until the customer sets the volume.
+> In my opinion, the documentation is correct, and it is the
+> implementation in intel_pstate that is wrong. If the user wanted two
+> separate knobs that control the minimum and maximum frequencies, they
+> could leave intel_pstate in "active" mode and change scaling_min_freq
+> and scaling_max_freq.
 
-That's normal and expected, it's totally fine and normal for the user to
-have to do some configuration.
+If intel_pstate is left in "active" mode, then userspace can't use any
+of the other governors. Moreover, intel_pstate's min and max frequencies
+apply to all the cpus. Whereas, the userspace governor can be set on a
+per-cpu basis.
 
---KhVzUb2kf7n4U7by
-Content-Type: application/pgp-signature; name="signature.asc"
+Let's say this is "fixed" by adding CPUFREQ_GOV_STRICT_TARGET flag to
+the userspace governor. Then userspace has no way to get back the
+current behavior where the hardware automagically increases frequency
+beyond the target frequency. At least not without a new interface.
 
------BEGIN PGP SIGNATURE-----
+With the current behaviour, userspace can have it both ways:
+    - actual frequency = target frequency
+    - actual frequency >= target frequency
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmgu8kgACgkQJNaLcl1U
-h9AyDgf8C47CTnxxWL4fdXQc/Sg4Gy6KsN8RKyO22145ty3ni0DHIrbuk4650uBM
-SAeLf0K2AdW6yzE+lNh9sY+0XxeJdY0j3DOvZ0X0xo33MTtowoTkA08jvgMfMXUJ
-ltI0UJfu4tQAHuxAD0S/dyVzl2l4ms4qKPnz0FOFuCETUw1HWNHoiXsMFTvPXQtZ
-b8nywV8HQXV5Zmne3cTdt56DmK1fnURDwWA4pBRCsklFbWqf4zGnNExjNFRapz+L
-+i9QYqaoVtsTJpKxtgcpNqb/taN9oC2xJZRxXNO2MMHZqxRNXs7RsWmeVE29ABoU
-OXrO6FjIZDQargXxZBHLckvONYDw0Q==
-=/eHE
------END PGP SIGNATURE-----
+And the occasional higher frequency shouldn't hurt performance, right?
+But if they still want exact equality, with the current interface, they
+can do that too.
 
---KhVzUb2kf7n4U7by--
+This consideration is what led me to document the "actual freq >= target
+freq" rather than patch it so that "actual freq = target freq".
+
+Thanks
+
+Regards,
+Shashank
+"
