@@ -1,324 +1,180 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64A2970814;
-	Thu, 22 May 2025 09:22:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F00D1268C55
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 09:22:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747905733; cv=none; b=WejBbLysCIh2ISyZFOp+SQNKFKUKJcdcu8RZvJt6IICQMKVXosIzA9iphiMQQ/iDvf/+MtJKuhaUZ4M05lySk1orSyAVzDOkDnuuhc04ma3bRmXj8FfvEbspv7rAkl8H95ylr69vtx78itUHqsrLnP58AtzxNkRNdVd1mbdZec4=
+	t=1747905735; cv=none; b=X6cYKLRNUiVD9v+ANsi/7vJYDCgpaVNbMB+/894fcRT6ETFUCLg9IcgbyF3FZQey9FaKJbH8S82OhcEiXG5CC+rneLWMve+iqEU80XZzq8lurEDtIx/7h26SeN5WL02DtwrkItS9GhEDU8rfb4Oi5/CgzScJkuO9ImjyKCbB/Ok=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747905733; c=relaxed/simple;
-	bh=i8dCkvq7F3CC+MwXu1caXMU8e1Ced2QXY+V/762C0us=;
+	s=arc-20240116; t=1747905735; c=relaxed/simple;
+	bh=9Z8a5ka7+H3K8Jxv3I2afVbk0vn0VOz38kBu7wgyy74=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EUAM7SPtAUIRWYipnwtICeLpar9DMWG8CrYVglxJLKgNNW9nnTFfEmQx7i/qWzi6mTq0ZTPAA9sg+EkVyI7l2E3UYmOsjydMf2lZBFEyUjvRltvNiYTzSNHRvL9I3EppUYcE9LAshMZupec53XdCiwXdFsUxuX1iT0vb4jB4gIs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rvf8sQ3Q; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rvf8sQ3Q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB1F6C4CEE4;
-	Thu, 22 May 2025 09:22:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747905732;
-	bh=i8dCkvq7F3CC+MwXu1caXMU8e1Ced2QXY+V/762C0us=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=rvf8sQ3QJCgeX1omXxuD4whjqsxDfAtoPBsLnnHsxiciXqFCLODHbd7H+dngc9K6p
-	 0REgwotVacoRiUR+qkzBnjCWynYenu62Y/bVHjjVXSdjTyoxBLg750KAVPAk3XGbWr
-	 wPDViXnVo7AqhTn6Rh6pcjEZK1hdPtMJHlQ7Hi8ajnHz4YPAes6CGCZl8BYH5HCrJ7
-	 OZTusff9JIQxpiAX95Iucp8QOTzER+moZvZSfyULP7MZP/6+tys+QFxoLpPNH6Ngz/
-	 J915U6eA55BJDa/pQwgRbxReXH4oUigHs/4kggxWZKfedz02hfybU/fwy1hIWTvGzu
-	 +u2CiaPUXviPQ==
-Date: Thu, 22 May 2025 10:22:08 +0100
-From: Lee Jones <lee@kernel.org>
-To: Binbin Zhou <zhoubinbin@loongson.cn>
-Cc: Binbin Zhou <zhoubb.aaron@gmail.com>,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	Corey Minyard <minyard@acm.org>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	openipmi-developer@lists.sourceforge.net,
-	Chong Qiao <qiaochong@loongson.cn>
-Subject: Re: [PATCH v2 1/3] mfd: ls2kbmc: Introduce Loongson-2K BMC MFD Core
- driver
-Message-ID: <20250522092208.GB1199143@google.com>
-References: <cover.1747276047.git.zhoubinbin@loongson.cn>
- <778675bfe1040cd1bf4d281dc5c5f20edc4145c1.1747276047.git.zhoubinbin@loongson.cn>
+	 Content-Type:Content-Disposition:In-Reply-To; b=aW/vi2gUMlXE/8o7nIMjXzUq1Qs9lv46uqwO2dxOjwruINKYIr3cWrXE7DcOJ/s1EeDwbtwCdrfVqNtmRY9iKndyTqT78JDQZMO43vHUUo9W2GtJwkIS2zn2HcK81WAOPClUJkMYUFbsy5iZfBuiIU8Vfqpnq5PNJ3afzKYipMc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <mkl@pengutronix.de>)
+	id 1uI27g-0007W4-HV; Thu, 22 May 2025 11:21:56 +0200
+Received: from moin.white.stw.pengutronix.de ([2a0a:edc0:0:b01:1d::7b] helo=bjornoya.blackshift.org)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <mkl@pengutronix.de>)
+	id 1uI27g-000iBx-0j;
+	Thu, 22 May 2025 11:21:56 +0200
+Received: from pengutronix.de (unknown [IPv6:2a03:2260:2009:2000::])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange x25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	(Authenticated sender: mkl-all@blackshift.org)
+	by smtp.blackshift.org (Postfix) with ESMTPSA id 4132941760F;
+	Thu, 22 May 2025 09:21:55 +0000 (UTC)
+Date: Thu, 22 May 2025 11:21:54 +0200
+From: Marc Kleine-Budde <mkl@pengutronix.de>
+To: Elaine Zhang <zhangqing@rock-chips.com>
+Cc: kernel@pengutronix.de, mailhol.vincent@wanadoo.fr, robh@kernel.org, 
+	krzk+dt@kernel.org, conor+dt@kernel.org, heiko@sntech.de, cl@rock-chips.com, 
+	kever.yang@rock-chips.com, linux-can@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v4 2/3] net: can: rockchip: add can for RK3576 Soc
+Message-ID: <20250522-arrogant-delicate-jaguar-ca53b6-mkl@pengutronix.de>
+References: <20250522074616.3115348-1-zhangqing@rock-chips.com>
+ <20250522074616.3115348-3-zhangqing@rock-chips.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="ksituhnp66k25iih"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <778675bfe1040cd1bf4d281dc5c5f20edc4145c1.1747276047.git.zhoubinbin@loongson.cn>
+In-Reply-To: <20250522074616.3115348-3-zhangqing@rock-chips.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: mkl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-Just "core driver" in the subject line, rather than "MFD core driver".
 
-> The Loongson-2K Board Management Controller provides an PCIe
-> interface to the host to access the feature implemented in the BMC.
-> 
-> The BMC is assembled on a server similar to the server machine with
-> Loongson-3C6000 CPUs. It supports multiple sub-devices like DRM.
-> 
-> Co-developed-by: Chong Qiao <qiaochong@loongson.cn>
-> Signed-off-by: Chong Qiao <qiaochong@loongson.cn>
-> Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
+--ksituhnp66k25iih
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v4 2/3] net: can: rockchip: add can for RK3576 Soc
+MIME-Version: 1.0
+
+On 22.05.2025 15:46:15, Elaine Zhang wrote:
+> Is new controller:
+> Support CAN and CANFD protocol.
+> Support Dma.
+>=20
+> Signed-off-by: Elaine Zhang <zhangqing@rock-chips.com>
 > ---
->  drivers/mfd/Kconfig       |  13 ++++
->  drivers/mfd/Makefile      |   2 +
->  drivers/mfd/ls2kbmc-mfd.c | 156 ++++++++++++++++++++++++++++++++++++++
->  3 files changed, 171 insertions(+)
->  create mode 100644 drivers/mfd/ls2kbmc-mfd.c
-> 
-> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-> index 22b936310039..04e40085441d 100644
-> --- a/drivers/mfd/Kconfig
-> +++ b/drivers/mfd/Kconfig
-> @@ -2422,5 +2422,18 @@ config MFD_UPBOARD_FPGA
->  	  To compile this driver as a module, choose M here: the module will be
->  	  called upboard-fpga.
->  
-> +config MFD_LS2K_BMC
-> +	tristate "Loongson-2K Board Management Controller Support"
-> +	depends on LOONGARCH
-> +	default y if LOONGARCH
-> +	select MFD_CORE
-> +	help
-> +	  Say yes here to add support for the Loongson-2K BMC
-> +	  which is a Board Management Controller connected to the PCIe bus.
-> +	  The device supports multiple sub-devices like DRM.
-> +	  This driver provides common support for accessing the devices;
-> +	  additional drivers must be enabled in order to use the
-> +	  functionality of the BMC device.
 
-This paragraph has some odd line breaks.  Please re-align.
+Looking at the rkcanfd_probe() only for now.
 
->  endmenu
->  endif
-> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-> index 948cbdf42a18..18960ea13b64 100644
-> --- a/drivers/mfd/Makefile
-> +++ b/drivers/mfd/Makefile
-> @@ -290,3 +290,5 @@ obj-$(CONFIG_MFD_RSMU_I2C)	+= rsmu_i2c.o rsmu_core.o
->  obj-$(CONFIG_MFD_RSMU_SPI)	+= rsmu_spi.o rsmu_core.o
->  
->  obj-$(CONFIG_MFD_UPBOARD_FPGA)	+= upboard-fpga.o
+>  static int rkcanfd_probe(struct platform_device *pdev)
+>  {
+>  	struct rkcanfd_priv *priv;
+>  	struct net_device *ndev;
+> +	struct resource *res;
+>  	const void *match;
+> -	int err;
+> +	int err, val;
+> =20
+>  	ndev =3D alloc_candev(sizeof(struct rkcanfd_priv), RKCANFD_TXFIFO_DEPTH=
+);
+>  	if (!ndev)
+> @@ -883,6 +1396,7 @@ static int rkcanfd_probe(struct platform_device *pde=
+v)
+>  		goto out_free_candev;
+>  	}
+> =20
+> +	res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>  	priv->regs =3D devm_platform_ioremap_resource(pdev, 0);
+>  	if (IS_ERR(priv->regs)) {
+>  		err =3D PTR_ERR(priv->regs);
+> @@ -912,13 +1426,46 @@ static int rkcanfd_probe(struct platform_device *p=
+dev)
+>  	priv->can.do_set_mode =3D rkcanfd_set_mode;
+>  	priv->can.do_get_berr_counter =3D rkcanfd_get_berr_counter;
+>  	priv->ndev =3D ndev;
+> +	priv->dev =3D &pdev->dev;
+> =20
+>  	match =3D device_get_match_data(&pdev->dev);
+>  	if (match)
+>  		priv->devtype_data =3D *(struct rkcanfd_devtype_data *)match;
+> =20
+> +	if (device_property_read_u32(&pdev->dev, "rockchip,auto-retx-cnt", &val=
+))
+> +		priv->auto_retx_cnt =3D 0;
+> +	else
+> +		priv->auto_retx_cnt =3D val;
+
+What does "rockchip,auto-retx-cnt" do?
+
+> +	if (priv->auto_retx_cnt > RK3576CANFD_RETX_TIME_LIMIT_CNT_MAX)
+> +		priv->auto_retx_cnt =3D RK3576CANFD_RETX_TIME_LIMIT_CNT_MAX;
 > +
-> +obj-$(CONFIG_MFD_LS2K_BMC)	+= ls2kbmc-mfd.o
-> diff --git a/drivers/mfd/ls2kbmc-mfd.c b/drivers/mfd/ls2kbmc-mfd.c
-> new file mode 100644
-> index 000000000000..b309f6132c24
-> --- /dev/null
-> +++ b/drivers/mfd/ls2kbmc-mfd.c
-> @@ -0,0 +1,156 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Loongson-2K Board Management Controller (BMC) MFD Core Driver.
+> +	/* rx-max-data only 4 Words or 18 words are supported */
+> +	if (device_property_read_u32_array(&pdev->dev, "rockchip,rx-max-data", =
+&val, 1))
+> +		priv->rx_max_data =3D 18;
+> +	else
+> +		priv->rx_max_data =3D val;
 
-Remove the MFD part.  It's not a thing - we made it up.
+What does "rockchip,rx-max-data" do?
 
-> + * Copyright (C) 2024 Loongson Technology Corporation Limited.
-
-No changes since 2024?
-
-> + *
-> + * Originally written by Chong Qiao <qiaochong@loongson.cn>
-> + * Rewritten for mainline by Binbin Zhou <zhoubinbin@loongson.cn>
-
-"Mainline"
-
-Typically we just do:
-
-Authors:
-	Author One <one@corp.com>
-	Author Two <two@corp.com>
-
-> + */
-> +
-> +#include <linux/aperture.h>
-> +#include <linux/errno.h>
-> +#include <linux/init.h>
-> +#include <linux/kernel.h>
-> +#include <linux/mfd/core.h>
-> +#include <linux/module.h>
-> +#include <linux/pci.h>
-> +#include <linux/pci_ids.h>
-> +#include <linux/platform_data/simplefb.h>
-> +#include <linux/platform_device.h>
-> +
-> +#define LS2K_DISPLAY_RES_START (SZ_16M + SZ_2M)
-> +#define LS2K_IPMI_RES_SIZE	0x1c
-> +#define LS2K_IPMI0_RES_START	(SZ_16M + 0xf00000)
-> +#define LS2K_IPMI1_RES_START	(LS2K_IPMI0_RES_START + LS2K_IPMI_RES_SIZE)
-> +#define LS2K_IPMI2_RES_START	(LS2K_IPMI1_RES_START + LS2K_IPMI_RES_SIZE)
-> +#define LS2K_IPMI3_RES_START	(LS2K_IPMI2_RES_START + LS2K_IPMI_RES_SIZE)
-> +#define LS2K_IPMI4_RES_START	(LS2K_IPMI3_RES_START + LS2K_IPMI_RES_SIZE)
-
-Line them _all_ up please.  One more tab should do it.
-
-> +static struct resource ls2k_display_resources[] = {
-> +	DEFINE_RES_MEM_NAMED(LS2K_DISPLAY_RES_START, SZ_4M, "simpledrm-res"),
-> +};
-> +
-> +static struct resource ls2k_ipmi0_resources[] = {
-> +	DEFINE_RES_MEM_NAMED(LS2K_IPMI0_RES_START, LS2K_IPMI_RES_SIZE, "ipmi0-res"),
-> +};
-> +
-> +static struct resource ls2k_ipmi1_resources[] = {
-> +	DEFINE_RES_MEM_NAMED(LS2K_IPMI1_RES_START, LS2K_IPMI_RES_SIZE, "ipmi1-res"),
-> +};
-> +
-> +static struct resource ls2k_ipmi2_resources[] = {
-> +	DEFINE_RES_MEM_NAMED(LS2K_IPMI2_RES_START, LS2K_IPMI_RES_SIZE, "ipmi2-res"),
-> +};
-> +
-> +static struct resource ls2k_ipmi3_resources[] = {
-> +	DEFINE_RES_MEM_NAMED(LS2K_IPMI3_RES_START, LS2K_IPMI_RES_SIZE, "ipmi3-res"),
-> +};
-> +
-> +static struct resource ls2k_ipmi4_resources[] = {
-> +	DEFINE_RES_MEM_NAMED(LS2K_IPMI4_RES_START, LS2K_IPMI_RES_SIZE, "ipmi4-res"),
-> +};
-> +
-> +static struct mfd_cell ls2k_bmc_cells[] = {
-> +	MFD_CELL_RES("simple-framebuffer", ls2k_display_resources),
-> +	MFD_CELL_RES("ls2k-ipmi-si", ls2k_ipmi0_resources),
-> +	MFD_CELL_RES("ls2k-ipmi-si", ls2k_ipmi1_resources),
-> +	MFD_CELL_RES("ls2k-ipmi-si", ls2k_ipmi2_resources),
-> +	MFD_CELL_RES("ls2k-ipmi-si", ls2k_ipmi3_resources),
-> +	MFD_CELL_RES("ls2k-ipmi-si", ls2k_ipmi4_resources),
-> +};
-> +
-> +/*
-> + * Currently the Loongson-2K0500 BMC hardware does not have an i2c interface to
-
-I2C
-
-> + * adapt to the resolution.
-
-Remove the line break here.
-
-> + * We set the resolution by presetting "video=1280x1024-16@2M" to the bmc memory.
-
-BMC
-
-> + */
-> +static int ls2k_bmc_get_video_mode(struct pci_dev *pdev, struct simplefb_platform_data *pd)
-> +{
-> +	char *mode;
-> +	int depth, ret;
-> +
-> +	/* The pci mem bar last 16M is used to store the string. */
-
-PCI
-
-BAR's (maybe?)
-
-> +	mode = devm_ioremap(&pdev->dev, pci_resource_start(pdev, 0) + SZ_16M, SZ_16M);
-> +	if (!mode)
-> +		return -ENOMEM;
-> +
-> +	/* env at last 16M's beginning, first env is "video=" */
-
-This doesn't make sense to me - please reword.
-
-> +	if (!strncmp(mode, "video=", 6))
-> +		mode = mode + 6;
-> +
-> +	ret = kstrtoint(strsep(&mode, "x"), 10, &pd->width);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = kstrtoint(strsep(&mode, "-"), 10, &pd->height);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = kstrtoint(strsep(&mode, "@"), 10, &depth);
-> +	if (ret)
-> +		return ret;
-> +
-> +	pd->stride = pd->width * depth / 8;
-> +	pd->format = depth == 32 ? "a8r8g8b8" : "r5g6b5";
-> +
-> +	return 0;
-> +}
-
-Surely there is a standard format / API for this already?
-
-
-
-> +static int ls2k_bmc_probe(struct pci_dev *dev, const struct pci_device_id *id)
-> +{
-> +	int ret = 0;
-
-There is no need to pre-initialise this.
-
-> +	resource_size_t base;
-> +	struct simplefb_platform_data pd;
-
-Reverse these please (reverse Christmas tree is preferred).
-> +
-> +	ret = pci_enable_device(dev);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = ls2k_bmc_get_video_mode(dev, &pd);
-> +	if (ret)
-> +		goto disable_pci;
-> +
-> +	ls2k_bmc_cells[0].platform_data = &pd;
-> +	ls2k_bmc_cells[0].pdata_size = sizeof(pd);
-> +	base = dev->resource[0].start + LS2K_DISPLAY_RES_START;
-> +
-> +	/* Remove conflicting efifb device */
-> +	ret = aperture_remove_conflicting_devices(base, SZ_4M, "simple-framebuffer");
-> +	if (ret) {
-> +		dev_err(&dev->dev, "Remove firmware framebuffers failed: %d\n", ret);
-
-"Failed to removed firmware framebuffers"
-
-> +		goto disable_pci;
+> +	if (priv->rx_max_data !=3D 4 && priv->rx_max_data !=3D 18) {
+> +		priv->rx_max_data =3D 18;
+> +		dev_warn(&pdev->dev, "rx_max_data is invalid, set to 18 words!\n");
 > +	}
+> +	priv->rx_fifo_depth =3D RK3576CANFD_SRAM_MAX_DEPTH / priv->rx_max_data;
 > +
-> +	return devm_mfd_add_devices(&dev->dev, PLATFORM_DEVID_AUTO,
-> +				    ls2k_bmc_cells, ARRAY_SIZE(ls2k_bmc_cells),
-> +				    &dev->resource[0], 0, NULL);
+> +	priv->rxchan =3D dma_request_chan(&pdev->dev, "rx");
+> +	if (IS_ERR(priv->rxchan)) {
+> +		dev_warn(&pdev->dev, "Failed to request rxchan\n");
+> +		priv->rxchan =3D NULL;
+> +		priv->use_dma =3D 0;
+> +	} else {
+> +		priv->rx_dma_src_addr =3D res->start + RK3576CANFD_REG_RXFRD;
+> +		priv->dma_size =3D priv->rx_max_data * 4;
+> +		priv->use_dma =3D 1;
+> +	}
+> +	if (priv->use_dma)
+> +		rk3576_canfd_dma_init(priv);
 > +
-> +disable_pci:
-> +	pci_disable_device(dev);
-> +	return ret;
-> +}
-> +
-> +static void ls2k_bmc_remove(struct pci_dev *dev)
-> +{
-> +	pci_disable_device(dev);
-> +}
-> +
-> +static struct pci_device_id ls2k_bmc_devices[] = {
-> +	{ PCI_DEVICE(PCI_VENDOR_ID_LOONGSON, 0x1a05) },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(pci, ls2k_bmc_devices);
-> +
-> +static struct pci_driver ls2k_bmc_driver = {
-> +	.name = "ls2k-bmc",
-> +	.id_table = ls2k_bmc_devices,
-> +	.probe = ls2k_bmc_probe,
-> +	.remove = ls2k_bmc_remove,
-> +};
-> +
+>  	err =3D can_rx_offload_add_manual(ndev, &priv->offload,
+> -					RKCANFD_NAPI_WEIGHT);
+> +					MAX(RKCANFD_NAPI_WEIGHT, priv->rx_fifo_depth));
+>  	if (err)
+>  		goto out_free_candev;
 
-Remove this line.
+regards,
+Marc
 
-> +module_pci_driver(ls2k_bmc_driver);
-> +
-> +MODULE_DESCRIPTION("Loongson-2K BMC driver");
-> +MODULE_AUTHOR("Loongson Technology Corporation Limited");
-> +MODULE_LICENSE("GPL");
-> -- 
-> 2.47.1
-> 
+--=20
+Pengutronix e.K.                 | Marc Kleine-Budde          |
+Embedded Linux                   | https://www.pengutronix.de |
+Vertretung N=C3=BCrnberg              | Phone: +49-5121-206917-129 |
+Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-9   |
 
--- 
-Lee Jones [李琼斯]
+--ksituhnp66k25iih
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEn/sM2K9nqF/8FWzzDHRl3/mQkZwFAmgu7K8ACgkQDHRl3/mQ
+kZymsQgAjLdCzEB6HwCQxzQplmo4URWaMO82cOhALJZYjZD8yb1YNxk7EJGDXBnB
+xA1aJ1HxA1R9ipDEpv9c0Yo+jgZ3eFwqSPis5raagKrOyXwJvrJjAi6ViVH7jAa6
+txrTn/wkwoyhwMka8txzrHZXRLeWOXcKDXClGDG0eZSLIMlulkX5LqPSnvP13kzY
+HtdA/QSiZKs96hGjSqfSSYZuRkEIVyNy6GntUsf6JHTmKBjCuTCG1QQKAhwedzs3
+zkp762svGYVAhVeGzuc70F0Bx6Dk4Ec9A25VQ3n6Ekrs2Q7dOOHomHMhL05bf+Ri
+gl2L7dJrBkqGsKgG/JYo/VUa8DjXNg==
+=BNBH
+-----END PGP SIGNATURE-----
+
+--ksituhnp66k25iih--
