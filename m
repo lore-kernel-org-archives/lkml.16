@@ -1,322 +1,185 @@
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDCAC28C2CF
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 23:44:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D553D28EBE5;
+	Thu, 22 May 2025 23:44:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747957445; cv=none; b=QGTMiDPqT4Q0biqAzGepX2Y3wGvI+pgbxk3+X0721tcMUQFfR62AkdIn8WNjbjmHKDrrrpd0Jr+i3CpYcmKRKZ3MWdcc0XJ6uTJEYrYdKRv/61gT7v3OjajfCEGdqqZKQSssmHlmt6uKIqBSJhouefjNOdIMisbDcgIu0YJn2Lk=
+	t=1747957487; cv=none; b=f5be2luQzGPCLGksGXZYi+Vg4Ad01vDXlRr3rn6Ner7Kde+07FPjCoOHj8H2Jq+YxI/1h0Mv13SOlgkq46ID/uW4XtQjqnfZfowbp8sI4VHvrdKRoIVI2lC7m0fcv0sFSZyzpPGsLWsh6Lk7kkw9xY7C4fG5omtRmhWz+TyNMHg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747957445; c=relaxed/simple;
-	bh=eqUQOK68nUDANFTeSh409SkKdE9OJU323xf3HqLHh5I=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=n3R81XYuZcHsWB7swoU4TgWQ3rZ9ksqnAFjyPPqVXYokl0htPwZ4/VdX9gQ1XZNihRJw0ppoQZiEuN4hJP/Nnq3g1yL1XDwv2yDOOScA3hD8KbTFUrkyZXs0Crry/LR4UtstNkxZKGNNeJbcvNmw/0w4G4ztZbodtO6TWJq/uRs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=rR+vLswH; arc=none smtp.client-ip=209.85.208.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1747957487; c=relaxed/simple;
+	bh=HrxTnpzGlksA3R7lsGE+tdhiAU6geStxqS72uNEzULM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=UnQb9uaE8/U1rkZAz309UyKntXRwjnDPucAtmK/zSm7S2lOuMjK7DNrmOo1g2GmBJ0gCoXJfOUEiEq2gkNfPjbV2rWCi3AqFL/7dv0YVLdCIH7mi7f9NP+8HQWKVeYBfsnBe3TDxO6vgITTVDMQwP10bYW/ZIvvUbZXJ1anVdcA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gomBanB3; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rR+vLswH"
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-6000791e832so2605a12.1
-        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 16:44:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747957442; x=1748562242; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=B4fiPb/UOCIao9WUneZWXqvmbFihzHoQr99jpS6Rj54=;
-        b=rR+vLswHkzsopUCNiXzBvr6l6+YkmpkBbnohsJB+VrQEEX8SYoo6pUP130xDUSjYWJ
-         6/irkQSDLGxdh1AswCLMz6jARGlGqOIwIBt1oEZAoNqYXmJfwMKRaSuonHPTQexQL3jf
-         hbW2dXLfQNUzN05jvdXGqQiHXn63FucaBy2aR0lT6EGbvHfZ33lgSqBWUczBRTJU/5Q9
-         DZruBOLfDldlYtzeug8gHq0evKHWTvHsdh1Ei2RDlbIAnAA4LfzMCP+zf5YDByYS8Xv2
-         1dtg97EIi1Rqu3oEuq2WOtJURBVUlUvFE9tsmvOIz2cJqzkqZGavh0Mo20iFZtZU1qTa
-         9yEg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747957442; x=1748562242;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=B4fiPb/UOCIao9WUneZWXqvmbFihzHoQr99jpS6Rj54=;
-        b=KVLnZ5uipXJgv5OxhpC9SrLbLisJOY2GX2w12PPwu0wXuTA74tBSBaZsVwKOyrKWIW
-         5t/N+4CJK76z5kaJNnCOeHsBM4x6/Kn9HtWKAWuCoezm1wcw+3tUTjyHAHmJxUxRqniN
-         P7yjwJcM/WgSnPCbRIjBAQaxbLDD2ViTUlA2h/cGkVcJubNv4Nl0ObkMOViDXr3E7/e8
-         PHde2QtS7kg6ZjjxtlNBW/ThkyrDPETRtauu5vseSVVEKnPbdqLGrydSS5E5jlerAbBD
-         iEti7lh95lFB/a6YICChYqScUyalfRQJFpgu2a1cQKZOPTYFzXUgki60LORf3ex2+udj
-         GFOA==
-X-Forwarded-Encrypted: i=1; AJvYcCXxVMJ7crZomBvphCkPcua4mR9Ks/MyFftuerxN78tVSQdHbSD3nv3k4VcQK4qg/Dr+6fG7eO6u82cKwNY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwV5JI/TTMLQrGx+HYA3Qvatg79G4QMZzdp3jWkfE5NC7nX1jFj
-	gNcKyphwEknsOJC/eweuXx6DHzXxfX9KPrVrkB0gshqOSJnO031wrLkw3aLnrIiucM+mubKx6Bi
-	aYihD7SM65Xs8lXH9KMQjS8rlfgSwzjsVA7fMjY8V
-X-Gm-Gg: ASbGncsnv9NCpWF8XXUkm0+ouAN03DGdJKhiOuz9B9qA6vBwH23wvY6mAAeSyXiVG5b
-	PHxpSnitL2qnzZy5rKoYSGCTVw4KTT9IF9PENSbnME4CeUuvBCFqkZOwIADzopY5YuSHzgJDAEH
-	4I2SlFn2qyClxHdLdSPr/D0oNCFkfbPSvxl13ppE+8R2ScBua4fglWcWNf/n3MDjD9amquOfgfD
-	w==
-X-Google-Smtp-Source: AGHT+IF/egR4yp64IyXN39+uzCPNnsbCBon5KCZlz96v7UsAbEUt1hC00Ko3+8FhoiBAQTR9biQcSWL1DiqVJiyoocI=
-X-Received: by 2002:a05:6402:206a:b0:5fd:28:c3f6 with SMTP id
- 4fb4d7f45d1cf-60292d1f59amr21112a12.4.1747957441747; Thu, 22 May 2025
- 16:44:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gomBanB3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747957486; x=1779493486;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=HrxTnpzGlksA3R7lsGE+tdhiAU6geStxqS72uNEzULM=;
+  b=gomBanB30cX9JladWukW8XEgFmfH76x83KgqGzsauPNVRobbgMH0EgMl
+   du+MXQkU1hA9KLI53BGJ154ng2NFvOFUiF7NhdI7u7deg201MFpO3nlZS
+   tog3ik8z7BQHOTImrtOqGjJAqs38IUM8DnsWTTO/9jgViHeDxAywoHVBD
+   gUH4nW5VSdVqj3jr80oLn9Aa/R2V0bmtEyvA3MIquj2Ni/f/xcftl/VP6
+   hwWWcTTzZTib2hM9tqcLeW6VcRrwyjpOh2V8V+SXvLDmfQknQhSYkuQrB
+   nBlYr9he9Vnv+YoPYQkzTNIxIelV2MVJT31SKftRt+XIWA+VX3xLaChsx
+   g==;
+X-CSE-ConnectionGUID: pWvHJ+qCSy2cNBxb1TLBCw==
+X-CSE-MsgGUID: ommC8IaRQTWLWp4UdtIxsw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11441"; a="60257378"
+X-IronPort-AV: E=Sophos;i="6.15,307,1739865600"; 
+   d="scan'208";a="60257378"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2025 16:44:45 -0700
+X-CSE-ConnectionGUID: y/I8ALG+QGGXRBknYG+cJA==
+X-CSE-MsgGUID: MLFZckS/QtKuGpd0063UaQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,307,1739865600"; 
+   d="scan'208";a="145538704"
+Received: from bjrankin-mobl3.amr.corp.intel.com (HELO [10.124.223.120]) ([10.124.223.120])
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2025 16:44:44 -0700
+Message-ID: <2d99e03b-e899-41dd-91f8-d36673d23392@linux.intel.com>
+Date: Thu, 22 May 2025 16:44:43 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAGsJ_4zMNaNjRXbtDD6xYfDhckcDCnTvv+4-yB1xpuYcur=fyw@mail.gmail.com>
-In-Reply-To: <CAGsJ_4zMNaNjRXbtDD6xYfDhckcDCnTvv+4-yB1xpuYcur=fyw@mail.gmail.com>
-From: Lokesh Gidra <lokeshgidra@google.com>
-Date: Thu, 22 May 2025 16:43:50 -0700
-X-Gm-Features: AX0GCFsbtviWjkD6bterSDea-aJcibsxg37Dvva7AcHKzf-PvFffIiYv1agOzAM
-Message-ID: <CA+EESO5BafvOpcbEX1g3ELPMCUdVQ9TFBGKH-sD3OiJvofMkAg@mail.gmail.com>
-Subject: Re: [BUG]userfaultfd_move fails to move a folio when swap-in occurs
- concurrently with swap-out
-To: Barry Song <21cnbao@gmail.com>
-Cc: Peter Xu <peterx@redhat.com>, David Hildenbrand <david@redhat.com>, 
-	Suren Baghdasaryan <surenb@google.com>, Andrea Arcangeli <aarcange@redhat.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Linux-MM <linux-mm@kvack.org>, 
-	Kairui Song <ryncsn@gmail.com>, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8 13/20] PCI/ERR: Add printk level to
+ pcie_print_tlp_log()
+To: Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org
+Cc: Jon Pan-Doh <pandoh@google.com>,
+ Karolina Stolarek <karolina.stolarek@oracle.com>,
+ Weinan Liu <wnliu@google.com>, Martin Petersen <martin.petersen@oracle.com>,
+ Ben Fuller <ben.fuller@oracle.com>, Drew Walton <drewwalton@microsoft.com>,
+ Anil Agrawal <anilagrawal@meta.com>, Tony Luck <tony.luck@intel.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Lukas Wunner <lukas@wunner.de>,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+ Sargun Dhillon <sargun@meta.com>, "Paul E . McKenney" <paulmck@kernel.org>,
+ Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+ Oliver O'Halloran <oohall@gmail.com>, Kai-Heng Feng <kaihengf@nvidia.com>,
+ Keith Busch <kbusch@kernel.org>, Robert Richter <rrichter@amd.com>,
+ Terry Bowman <terry.bowman@amd.com>, Shiju Jose <shiju.jose@huawei.com>,
+ Dave Jiang <dave.jiang@intel.com>, linux-kernel@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org, Bjorn Helgaas <bhelgaas@google.com>
+References: <20250522232339.1525671-1-helgaas@kernel.org>
+ <20250522232339.1525671-14-helgaas@kernel.org>
+Content-Language: en-US
+From: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>
+In-Reply-To: <20250522232339.1525671-14-helgaas@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Thanks Barry for stress testing MOVE ioctl. It's really helpful :)
 
-On Thu, May 22, 2025 at 4:23=E2=80=AFPM Barry Song <21cnbao@gmail.com> wrot=
-e:
+On 5/22/25 4:21 PM, Bjorn Helgaas wrote:
+> From: Bjorn Helgaas <bhelgaas@google.com>
 >
-> Hi All,
+> aer_print_error() produces output at a printk level (KERN_ERR/KERN_WARNING/
+> etc) that depends on the kind of error, and it calls pcie_print_tlp_log(),
+> which previously always produced output at KERN_ERR.
 >
-> I'm encountering another bug that can be easily reproduced using the smal=
-l
-> program below[1], which performs swap-out and swap-in in parallel.
+> Add a "level" parameter so aer_print_error() can control the level of the
+> pcie_print_tlp_log() output to match.
 >
-> The issue occurs when a folio is being swapped out while it is accessed
-> concurrently. In this case, do_swap_page() handles the access. However,
-> because the folio is under writeback, do_swap_page() completely removes
-> its exclusive attribute.
->
-> do_swap_page:
->                } else if (exclusive && folio_test_writeback(folio) &&
->                           data_race(si->flags & SWP_STABLE_WRITES)) {
->                         ...
->                         exclusive =3D false;
->
-> As a result, userfaultfd_move() will return -EBUSY, even though the
-> folio is not shared and is in fact exclusively owned.
->
->                         folio =3D vm_normal_folio(src_vma, src_addr,
-> orig_src_pte);
->                         if (!folio || !PageAnonExclusive(&folio->page)) {
->                                 spin_unlock(src_ptl);
-> +                               pr_err("%s %d folio:%lx exclusive:%d
-> swapcache:%d\n",
-> +                                       __func__, __LINE__, folio,
-> PageAnonExclusive(&folio->page),
-> +                                       folio_test_swapcache(folio));
->                                 err =3D -EBUSY;
->                                 goto out;
->                         }
->
-> I understand that shared folios should not be moved. However, in this
-> case, the folio is not shared, yet its exclusive flag is not set.
->
-> Therefore, I believe PageAnonExclusive is not a reliable indicator of
-> whether a folio is truly exclusive to a process.
->
-> The kernel log output is shown below:
-> [   23.009516] move_pages_pte 1285 folio:fffffdffc01bba40 exclusive:0
-> swapcache:1
->
-> I'm still struggling to find a real fix; it seems quite challenging.
-> Please let me know if you have any ideas. In any case It seems
-> userspace should fall back to userfaultfd_copy.
->
-I'm not sure this is really a bug. A page under write-back is in a way
-'busy' isn't it? I am not an expert of anon-exclusive, but it seems to
-me that an exclusively mapped anonymous page would have it true. So,
-isn't it expected that a page under write-back will not have it set as
-the page isn't mapped?
+> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+> ---
 
-I have observed this in my testing as well, and there are a couple of
-ways to deal with it in userspace. As you suggested, falling back to
-userfaultfd_copy on receiving -EBUSY is one option. In my case, making
-a fake store on the src page and then retrying has been working fine.
+Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+
+>   drivers/pci/pci.h      | 3 ++-
+>   drivers/pci/pcie/aer.c | 5 +++--
+>   drivers/pci/pcie/dpc.c | 2 +-
+>   drivers/pci/pcie/tlp.c | 6 ++++--
+>   4 files changed, 10 insertions(+), 6 deletions(-)
 >
->
-> [1] The small program:
->
-> //Just in a couple of seconds, we are running into
-> //"UFFDIO_MOVE: Device or resource busy"
->
-> #define _GNU_SOURCE
-> #include <stdio.h>
-> #include <stdlib.h>
-> #include <string.h>
-> #include <sys/mman.h>
-> #include <sys/ioctl.h>
-> #include <sys/syscall.h>
-> #include <linux/userfaultfd.h>
-> #include <fcntl.h>
-> #include <pthread.h>
-> #include <unistd.h>
-> #include <poll.h>
-> #include <errno.h>
->
-> #define PAGE_SIZE 4096
-> #define REGION_SIZE (512 * 1024)
->
-> #ifndef UFFDIO_MOVE
-> struct uffdio_move {
->     __u64 dst;
->     __u64 src;
->     __u64 len;
->     #define UFFDIO_MOVE_MODE_DONTWAKE        ((__u64)1<<0)
->     #define UFFDIO_MOVE_MODE_ALLOW_SRC_HOLES ((__u64)1<<1)
->     __u64 mode;
->     __s64 move;
-> };
->
-> #define _UFFDIO_MOVE  (0x05)
-> #define UFFDIO_MOVE   _IOWR(UFFDIO, _UFFDIO_MOVE, struct uffdio_move)
-> #endif
->
->
-> void *src, *dst;
-> int uffd;
->
-> void *madvise_thread(void *arg) {
->     for (size_t i =3D 0; i < REGION_SIZE; i +=3D PAGE_SIZE) {
->     madvise(src + i, PAGE_SIZE, MADV_PAGEOUT);
->     usleep(100);
->     }
->     return NULL;
-> }
->
-> void *swapin_thread(void *arg) {
->     volatile char dummy;
->     for (size_t i =3D 0; i < REGION_SIZE; i +=3D PAGE_SIZE) {
->         dummy =3D ((char *)src)[i];
->         usleep(100);
->     }
->     return NULL;
-> }
->
->
-> void *fault_handler_thread(void *arg) {
->
->     struct uffd_msg msg;
->     struct uffdio_move move;
->     struct pollfd pollfd =3D { .fd =3D uffd, .events =3D POLLIN };
->     pthread_setcancelstate(PTHREAD_CANCEL_ENABLE, NULL);
->     pthread_setcanceltype(PTHREAD_CANCEL_DEFERRED, NULL);
->
->     while (1) {
->         if (poll(&pollfd, 1, -1) =3D=3D -1) {
->             perror("poll");
->             exit(EXIT_FAILURE);
->         }
->
->         if (read(uffd, &msg, sizeof(msg)) <=3D 0) {
->             perror("read");
->             exit(EXIT_FAILURE);
->         }
->
->
->         if (msg.event !=3D UFFD_EVENT_PAGEFAULT) {
->             fprintf(stderr, "Unexpected event\n");
->             exit(EXIT_FAILURE);
->         }
->
->         move.src =3D (unsigned long)src + (msg.arg.pagefault.address -
-> (unsigned long)dst);
->         move.dst =3D msg.arg.pagefault.address & ~(PAGE_SIZE - 1);
->         move.len =3D PAGE_SIZE;
->         move.mode =3D 0;
->
->         if (ioctl(uffd, UFFDIO_MOVE, &move) =3D=3D -1) {
->             perror("UFFDIO_MOVE");
->             exit(EXIT_FAILURE);
->         }
->     }
->     return NULL;
-> }
->
-> int main() {
-> again:
->     pthread_t thr, madv_thr, swapin_thr;
->     struct uffdio_api uffdio_api =3D { .api =3D UFFD_API, .features =3D 0=
- };
->     struct uffdio_register uffdio_register;
->
->     src =3D mmap(NULL, REGION_SIZE, PROT_READ | PROT_WRITE, MAP_PRIVATE
-> | MAP_ANONYMOUS, -1, 0);
->
->     if (src =3D=3D MAP_FAILED) {
->         perror("mmap src");
->         exit(EXIT_FAILURE);
->     }
->
->     memset(src, 1, REGION_SIZE);
->
->     dst =3D mmap(NULL, REGION_SIZE, PROT_READ | PROT_WRITE, MAP_PRIVATE
-> | MAP_ANONYMOUS, -1, 0);
->
->     if (dst =3D=3D MAP_FAILED) {
->         perror("mmap dst");
->         exit(EXIT_FAILURE);
->     }
->
->
->     uffd =3D syscall(SYS_userfaultfd, O_CLOEXEC | O_NONBLOCK);
->     if (uffd =3D=3D -1) {
->         perror("userfaultfd");
->         exit(EXIT_FAILURE);
->     }
->
->
->     if (ioctl(uffd, UFFDIO_API, &uffdio_api) =3D=3D -1) {
->         perror("UFFDIO_API");
->         exit(EXIT_FAILURE);
->     }
->
->     uffdio_register.range.start =3D (unsigned long)dst;
->     uffdio_register.range.len =3D REGION_SIZE;
->     uffdio_register.mode =3D UFFDIO_REGISTER_MODE_MISSING;
->
->     if (ioctl(uffd, UFFDIO_REGISTER, &uffdio_register) =3D=3D -1) {
->         perror("UFFDIO_REGISTER");
->         exit(EXIT_FAILURE);
->
->     }
->
->     if (pthread_create(&madv_thr, NULL, madvise_thread, NULL) !=3D 0) {
->         perror("pthread_create madvise_thread");
->         exit(EXIT_FAILURE);
->     }
->
->     if (pthread_create(&swapin_thr, NULL, swapin_thread, NULL) !=3D 0) {
->         perror("pthread_create swapin_thread");
->         exit(EXIT_FAILURE);
->     }
->
->     if (pthread_create(&thr, NULL, fault_handler_thread, NULL) !=3D 0) {
->         perror("pthread_create fault_handler_thread");
->         exit(EXIT_FAILURE);
->     }
->
->     for (size_t i =3D 0; i < REGION_SIZE; i +=3D PAGE_SIZE) {
->         char val =3D ((char *)dst)[i];
->         printf("Accessing dst at offset %zu, value: %d\n", i, val);
->     }
->
->     pthread_join(madv_thr, NULL);
->     pthread_join(swapin_thr, NULL);
->     pthread_cancel(thr);
->     pthread_join(thr, NULL);
->     munmap(src, REGION_SIZE);
->     munmap(dst, REGION_SIZE);
->     close(uffd);
->     goto again;
->
->     return 0;
-> }
->
-> Thanks
-> Barry
+> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> index 705f9ef58acc..1a9bfc708757 100644
+> --- a/drivers/pci/pci.h
+> +++ b/drivers/pci/pci.h
+> @@ -613,7 +613,8 @@ int pcie_read_tlp_log(struct pci_dev *dev, int where, int where2,
+>   		      struct pcie_tlp_log *log);
+>   unsigned int aer_tlp_log_len(struct pci_dev *dev, u32 aercc);
+>   void pcie_print_tlp_log(const struct pci_dev *dev,
+> -			const struct pcie_tlp_log *log, const char *pfx);
+> +			const struct pcie_tlp_log *log, const char *level,
+> +			const char *pfx);
+>   #endif	/* CONFIG_PCIEAER */
+>   
+>   #ifdef CONFIG_PCIEPORTBUS
+> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+> index f80c78846a14..f0936759ba8b 100644
+> --- a/drivers/pci/pcie/aer.c
+> +++ b/drivers/pci/pcie/aer.c
+> @@ -734,7 +734,7 @@ void aer_print_error(struct pci_dev *dev, struct aer_err_info *info)
+>   	__aer_print_error(dev, info);
+>   
+>   	if (info->tlp_header_valid)
+> -		pcie_print_tlp_log(dev, &info->tlp, dev_fmt("  "));
+> +		pcie_print_tlp_log(dev, &info->tlp, level, dev_fmt("  "));
+>   
+>   out:
+>   	if (info->id && info->error_dev_num > 1 && info->id == id)
+> @@ -797,7 +797,8 @@ void pci_print_aer(struct pci_dev *dev, int aer_severity,
+>   			aer->uncor_severity);
+>   
+>   	if (tlp_header_valid)
+> -		pcie_print_tlp_log(dev, &aer->header_log, dev_fmt("  "));
+> +		pcie_print_tlp_log(dev, &aer->header_log, info.level,
+> +				   dev_fmt("  "));
+>   }
+>   EXPORT_SYMBOL_NS_GPL(pci_print_aer, "CXL");
+>   
+> diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
+> index 6c98fabdba57..7ae1590ea1da 100644
+> --- a/drivers/pci/pcie/dpc.c
+> +++ b/drivers/pci/pcie/dpc.c
+> @@ -222,7 +222,7 @@ static void dpc_process_rp_pio_error(struct pci_dev *pdev)
+>   			  dpc_tlp_log_len(pdev),
+>   			  pdev->subordinate->flit_mode,
+>   			  &tlp_log);
+> -	pcie_print_tlp_log(pdev, &tlp_log, dev_fmt(""));
+> +	pcie_print_tlp_log(pdev, &tlp_log, KERN_ERR, dev_fmt(""));
+>   
+>   	if (pdev->dpc_rp_log_size < PCIE_STD_NUM_TLP_HEADERLOG + 1)
+>   		goto clear_status;
+> diff --git a/drivers/pci/pcie/tlp.c b/drivers/pci/pcie/tlp.c
+> index 890d5391d7f5..71f8fc9ea2ed 100644
+> --- a/drivers/pci/pcie/tlp.c
+> +++ b/drivers/pci/pcie/tlp.c
+> @@ -98,12 +98,14 @@ int pcie_read_tlp_log(struct pci_dev *dev, int where, int where2,
+>    * pcie_print_tlp_log - Print TLP Header / Prefix Log contents
+>    * @dev: PCIe device
+>    * @log: TLP Log structure
+> + * @level: Printk log level
+>    * @pfx: String prefix
+>    *
+>    * Prints TLP Header and Prefix Log information held by @log.
+>    */
+>   void pcie_print_tlp_log(const struct pci_dev *dev,
+> -			const struct pcie_tlp_log *log, const char *pfx)
+> +			const struct pcie_tlp_log *log, const char *level,
+> +			const char *pfx)
+>   {
+>   	/* EE_PREFIX_STR fits the extended DW space needed for the Flit mode */
+>   	char buf[11 * PCIE_STD_MAX_TLP_HEADERLOG + 1];
+> @@ -130,6 +132,6 @@ void pcie_print_tlp_log(const struct pci_dev *dev,
+>   		}
+>   	}
+>   
+> -	pci_err(dev, "%sTLP Header%s: %s\n", pfx,
+> +	dev_printk(level, &dev->dev, "%sTLP Header%s: %s\n", pfx,
+>   		log->flit ? " (Flit)" : "", buf);
+>   }
+
+-- 
+Sathyanarayanan Kuppuswamy
+Linux Kernel Developer
+
