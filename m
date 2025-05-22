@@ -1,191 +1,150 @@
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68D9E1DDDD
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 13:01:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D21328A402
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 13:01:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747918881; cv=none; b=T0+VfwZT4MOaDxfJPNi3MJoqS1Fta1g3YJ32HEzAXuImbfw9Q8dJIUIpjuc/om77brG1FpLYYI2nnEog7M2KAyNQlktGWSK7KOuxi7WxzJnQ93fvmzmKmGXHKRNGZulybV3bHdoVp1cRZxaKUeK5M6Vt6uxE0ryWip+v9URfPdw=
+	t=1747918913; cv=none; b=WJWGICJgJx6QDTx5HjQQY2nS69NYL7+oQrSiF+EZBO3Th0qeKU/AnTeJAceg0WwKZqxspvXt+mT8t5ZJsm1wxf57S1bjvRqfBC2kSfB+oLm4+EFUj+xlr0EBzWZmyYgqj9WmiXiMnfEaOUe1jxYriLIja9+nxf/0Q2uW3p8Zg6g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747918881; c=relaxed/simple;
-	bh=dyHhktMA+tP6K9DkwriiNHXh1gKPz9cPXffhriQHbYk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TaDdd9owlWIi1MDgt8RkqPRheLtjOEBVLyDQ0lS+YM9UIl2lo2B2WqI5ZzkeDCkf+rQEIpYvRaeUG87GakbJ9s01QkGjSrYmVuNVA9VSdaUlmtAXN6pOrDykNG3HcFVqaFyvEuZ3xKBK/mdFJ/QB8oY4mszuSRJMa1pOQSrJfTk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=H5c8q866; arc=none smtp.client-ip=209.85.167.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1747918913; c=relaxed/simple;
+	bh=JzXq7R1XzNG+n52NXGFiyUXFEj1QJzG7yyTpmVmmP5k=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=TijbcBoYr37mrWY+VUvb+/eB8eZOBgXpf3+c/BV32WXGVxbfnF1XdCwlDBj49YfaJmMQST45MqqZx/WKf8TBq/fEs2eW3ISnLNvLb3KNbIkmVICr14WvtLln24pT+qcQ9IH6GWSlLxfzvZIKn+qB10TaUVSFT0/XlL7aYx6eWgM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=A5RRdEs4; arc=none smtp.client-ip=209.85.221.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="H5c8q866"
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-54afb5fcebaso9579067e87.3
-        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 06:01:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="A5RRdEs4"
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-3a376da332aso3293471f8f.3
+        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 06:01:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1747918876; x=1748523676; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zzu+PRVXcOL8yrXNh1C3D66rYRdfVDajFRg4W7HU2/U=;
-        b=H5c8q866PU2olvrfRdCEzxfs5UqFPCJMlqXXzSEXsxL5wjcfX68lHYvdD1lpx7VvYR
-         jqk8ChlF/3FyxPHO7ilFWoR6fYkD4pecoWGltnsy96k+m1HkAbAz8sQogTwFuLQkptra
-         Ufv19xKEPummZ69LGAdIMxyde9VE/+vwiSRx62rhTCDn0oQS9e0Xy43cOyFwibBtv/PN
-         5w7x75QhSG9DFdGyBUaolHSu50bpprwtiGLlS5tbQYJc98P1oBcSBrYyPTGQQpGeDkMT
-         vSYuBDc9kVlk+4p135FHfCSw95UTuRSJ+54XFqN/pc8cIYMHeqkq0kNq67raQOtWTCcw
-         tqww==
+        d=linaro.org; s=google; t=1747918909; x=1748523709; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=85ibc1rkewyOEAiRREZNyXGvEN9PNRSpUSRlKODUCCI=;
+        b=A5RRdEs4QlW1gfeeVKrlkyQdzyhxrOi+bwEFVZTNPr1IUAhh1LngnccerQbqB0X3cb
+         lV9GAcNy0BL8dl7A+fooRbZybkvFFysGu30qPWr29Hj/aUOBgZedqHWcTkCjlbu2C6np
+         0JOTk7wR9Lgl77qHCnQ7oc/81L2GnV+b1Z7jk+/5pOgPZPUgSQBEzqX79/jWSb6VKK5P
+         YHjFQ5Hzb4mQtK2UIHFkaC1/hW4gjjKJ7WITPCVUbnQ+VsDfOls3wbU81c+yKxxESaiZ
+         W/MZwDDKlnaFQT18RXyOHQ4OYuRfYBgDBMGgx5Xo2M4kzoUP+wZ48Xzw1K6LemMTdtsq
+         sg+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747918876; x=1748523676;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=zzu+PRVXcOL8yrXNh1C3D66rYRdfVDajFRg4W7HU2/U=;
-        b=uCJaOXi0mC13tc4JzdsJ76xiIGjc3wN0GtD3sdux8MoaVglIRF+53WcodUUu5GuZsc
-         pFN8HyEkuMwC9aCYwJMHSrPwK11zmCKWZdzime5R77Pn6GnPy7ErvBz8c4hwFoQLQyk6
-         0mIpWQ+UWVjuMGze5bnJSkhtEv/deAXkroH+qqoIHY7GqVTNR6eIzDyw2Lox9XFKN0o3
-         PeEReu1mQJaFCumZi+qUMroQiMg7Gc6brsAkA2oRUljrWmdD2gDFG/LrVZIM8sKrmpQk
-         8d/4G66v8yjQgtInSQIUWDWDcsbWwWjVqVxga4e6PxjGfltwKkW+f8h8TyjJtHo5AY6E
-         yv7w==
-X-Forwarded-Encrypted: i=1; AJvYcCXDsBMkTAtgNVqr6jrIk+ew1XEcsBcZN/7k72SxwdFx/BO7B11yezOu1f2Z0CDl6V+Q84uqGjVjZ4+PVJo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzJufrky8V3uDur1BGK/Yh8ysO9CaCXcXXeAqcbCeiouW09XvPg
-	0VLmI6B51k5HCb2CD7Tr0H78pzQSfgoxvgB1Lga+6gGvlmvcXoXRUGycDfMugvv2ItRhEAG7cbS
-	+RosPovWxE1ZtEXPeMlZ3djcfoqLqjOVDHfBLxSSdeA==
-X-Gm-Gg: ASbGnctIAGRAf/eqUUYbxGnlpUwp1B+Qb1zYaP0K+6e6y3ApRAJyvwatT6oUVyfo8v7
-	sY5hNfnx7jGAoT5eLVN1LhMwWpN8Loo233dCo4LJT8OsVxSSCl1Lp7JW4Rp+vIS8Dg2UgEYnzc1
-	HbfxQINZXdoOM2SWrhHG7r/XBCjkticgPDlEfVV5XeHT98y6EWCqakNe2LJv32h3lC
-X-Google-Smtp-Source: AGHT+IEKXZsuXa61rx7iYXVdN5gAUYZ6t4jPh8WeQF1z9sKal0LbQMPKsCLBhIwfmsJA3Pg+puN9L64R+OYtBY9d0U8=
-X-Received: by 2002:a2e:a594:0:b0:30c:4610:9e9e with SMTP id
- 38308e7fff4ca-328077c36ecmr91178471fa.35.1747918874917; Thu, 22 May 2025
- 06:01:14 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1747918909; x=1748523709;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=85ibc1rkewyOEAiRREZNyXGvEN9PNRSpUSRlKODUCCI=;
+        b=uaJp+0HeNiWkCWEyOtY3aaTcpTZFigDDJj62wVYkFmrSjlm+7oP+KA41RUOTVDWt4Q
+         vKQ/ji/CULipk98L/XJf/+3JIuePvqBjIhYetOTsbSDf335qm57lhA+96s+Jx7USEGsM
+         8rYChA4tp3PnHDvu6rruIH1/T6dn7yTtVSv/onLnO6LzbvIjt3oxlP9pQbQIE/gzYAeQ
+         NOyv8KBK8tNN4HOYOLWY+GucEqPM9SQAwBd/9poybEcmQLtEX6ikMd/eyPkNkbGc5maV
+         9CpfpyCw7p7QyAuWji0Ve/dJmukoOOkgyQXJ08RKEjUmwLmae1ccYuxG1/UxfP9dlX0M
+         s1tA==
+X-Forwarded-Encrypted: i=1; AJvYcCW098Cg5zDAxaktL4mIkVZgMhFoO9eImDi5AKWYff9Omjo6QNb7NZKyYJL1Gs8+bULuzd8JMTtmr9//9TM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy6Ci+BUf0RcfFOrD3qGnLPeaPrUFMaWM0QQEC/cKPNRMpyTaSF
+	W8jhHunTYBWWpqi3kf7kdZO87Nb5011F13hkv2JT6nK65sncI2yUx2oRos1lPlEmY6g=
+X-Gm-Gg: ASbGncvkJC35nAUpqmWURuPcmkZNOr6HT/DUhmtWz8dStRsJV/b81zMwEUnbwi2cQy5
+	W5ys6HhrHV+4AZI3Vm0hgb/NHwTOOCgTxLUfwL8ZJ9owbe977nE35FbIbwf2+KTkb7iazZnJZ+h
+	hJIUh299zoKB5ZhxKIvwnH02x9XJNMQx7KCsYxD/AHDTNBZPBe3eQCA/F3YJsCPZuQ+dOoZHwr3
+	tagKR87ArJq17hGKP7QEIW7jV40xECn4/R5C3D8SEuDrO+YTqqK+kGsXrK8HoWRRcuVpQ0OGRex
+	RDSzOLECKMlsWpA1QWrXGiWoa8fN6+TWUXlm8F4h3uzuMx7m8GG8lloR1t5F8EHiUzNWbaAQ0ri
+	USpNDPDkpNC1cm/yuEyVpcziHZzuF
+X-Google-Smtp-Source: AGHT+IHDLzp25O1ERi2RnsBspAgj744QxUzZ/p26j4iE+yXlctI30IYPkhdc03KeFWm8NECKoIveHg==
+X-Received: by 2002:a05:6000:2407:b0:3a3:4baa:3ea3 with SMTP id ffacd0b85a97d-3a35ffd2ae4mr21161771f8f.41.1747918908611;
+        Thu, 22 May 2025 06:01:48 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:3d9:2080:ca6a:4d93:cd32:83a5? ([2a01:e0a:3d9:2080:ca6a:4d93:cd32:83a5])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a35ca88a34sm22855531f8f.70.2025.05.22.06.01.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 22 May 2025 06:01:48 -0700 (PDT)
+Message-ID: <94245ae6-a28c-4a37-a3dd-9828bd95c094@linaro.org>
+Date: Thu, 22 May 2025 15:01:46 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250522-mdb-max7360-support-v9-0-74fc03517e41@bootlin.com> <20250522-mdb-max7360-support-v9-6-74fc03517e41@bootlin.com>
-In-Reply-To: <20250522-mdb-max7360-support-v9-6-74fc03517e41@bootlin.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Thu, 22 May 2025 15:01:03 +0200
-X-Gm-Features: AX0GCFsKBsNYnfZ6NFYjJv1MLR5Cl4LpJ53FIqsJ0O4hK_3tLeUr_p3wGhtMou4
-Message-ID: <CAMRc=MeT+b5dBOWyf6-BpTjk70nwVhLOpCY-JHNizBo5H1-AnQ@mail.gmail.com>
-Subject: Re: [PATCH v9 06/11] gpio: regmap: Allow to allocate regmap-irq device
-To: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
-Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Kamel Bouhara <kamel.bouhara@bootlin.com>, Linus Walleij <linus.walleij@linaro.org>, 
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>, =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>, 
-	Michael Walle <mwalle@kernel.org>, Mark Brown <broonie@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Danilo Krummrich <dakr@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-input@vger.kernel.org, 
-	linux-pwm@vger.kernel.org, andriy.shevchenko@intel.com, 
-	=?UTF-8?Q?Gr=C3=A9gory_Clement?= <gregory.clement@bootlin.com>, 
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+From: neil.armstrong@linaro.org
+Reply-To: Neil Armstrong <neil.armstrong@linaro.org>
+Subject: Re: [PATCH v5 06/10] phy: qcom: Add M31 based eUSB2 PHY driver
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
+ Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Abel Vesa <abel.vesa@linaro.org>,
+ Melody Olvera <melody.olvera@oss.qualcomm.com>, Vinod Koul
+ <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Wesley Cheng <quic_wcheng@quicinc.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Philipp Zabel <p.zabel@pengutronix.de>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+References: <20250421-sm8750_usb_master-v5-0-25c79ed01d02@oss.qualcomm.com>
+ <20250421-sm8750_usb_master-v5-6-25c79ed01d02@oss.qualcomm.com>
+ <aAswZg9s41s/m/se@linaro.org>
+ <f7de2bbc-4925-430c-b263-226a633e4bfb@kernel.org>
+ <CAO9ioeXzzSBy+wYFATeckKZ2641GaTA1dB_1HOb238DdB7ACoQ@mail.gmail.com>
+Content-Language: en-US, fr
+Autocrypt: addr=neil.armstrong@linaro.org; keydata=
+ xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
+ OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
+ Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
+ YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
+ GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
+ UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
+ GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
+ yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
+ QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
+ SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
+ 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
+ Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
+ oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
+ M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
+ 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
+ KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
+ 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
+ QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
+Organization: Linaro
+In-Reply-To: <CAO9ioeXzzSBy+wYFATeckKZ2641GaTA1dB_1HOb238DdB7ACoQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, May 22, 2025 at 2:06=E2=80=AFPM Mathieu Dubois-Briand
-<mathieu.dubois-briand@bootlin.com> wrote:
->
-> GPIO controller often have support for IRQ: allow to easily allocate
-> both gpio-regmap and regmap-irq in one operation.
->
-> Signed-off-by: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
-> ---
->  drivers/gpio/gpio-regmap.c  | 21 +++++++++++++++++++--
->  include/linux/gpio/regmap.h | 11 +++++++++++
->  2 files changed, 30 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/gpio/gpio-regmap.c b/drivers/gpio/gpio-regmap.c
-> index 87c4225784cf..9cbbbaf82609 100644
-> --- a/drivers/gpio/gpio-regmap.c
-> +++ b/drivers/gpio/gpio-regmap.c
-> @@ -215,6 +215,7 @@ EXPORT_SYMBOL_GPL(gpio_regmap_get_drvdata);
->   */
->  struct gpio_regmap *gpio_regmap_register(const struct gpio_regmap_config=
- *config)
->  {
-> +       struct irq_domain *irq_domain;
->         struct gpio_regmap *gpio;
->         struct gpio_chip *chip;
->         int ret;
-> @@ -295,8 +296,24 @@ struct gpio_regmap *gpio_regmap_register(const struc=
-t gpio_regmap_config *config
->         if (ret < 0)
->                 goto err_free_gpio;
->
-> -       if (config->irq_domain) {
-> -               ret =3D gpiochip_irqchip_add_domain(chip, config->irq_dom=
-ain);
-> +#ifdef CONFIG_REGMAP_IRQ
-> +       if (config->regmap_irq_chip) {
-> +               struct regmap_irq_chip_data *irq_chip_data;
-> +
-> +               ret =3D devm_regmap_add_irq_chip_fwnode(config->parent, d=
-ev_fwnode(config->parent),
-> +                                                     config->regmap, con=
-fig->regmap_irq_line,
-> +                                                     config->regmap_irq_=
-flags, 0,
-> +                                                     config->regmap_irq_=
-chip, &irq_chip_data);
+On 22/05/2025 14:18, Dmitry Baryshkov wrote:
+> On Thu, 22 May 2025 at 14:05, Krzysztof Kozlowski <krzk@kernel.org> wrote:
+>>
+>> On 25/04/2025 08:49, Abel Vesa wrote:
+>>> On 25-04-21 15:00:13, Melody Olvera wrote:
+>>>> From: Wesley Cheng <quic_wcheng@quicinc.com>
+>>>>
+>>>> SM8750 utilizes an eUSB2 PHY from M31.  Add the initialization
+>>>
+>>> Nitpick: Drop the double space from the beginning of each phrase.
+>>
+>> Sorry, but why? That's a correct grammar.
+> 
+> 
+> Being absolutely nitpicky, this depends on the country. In some cases
+> (US) typography settled on using double space after full-stop. In
+> other cases it's a normal space.
 
-I don't think using devres here is a good idea. There's no guarantee
-that gpio_regmap_register() will be called on device attach so you
-must not make the release of the resource depend on an associated
-detach which may never happen. Please use the non-managed variant
-here.
+Ok just discovered it's a thing:
+https://en.wikipedia.org/wiki/Sentence_spacing
 
-Bart
+```
+Magazines, newspapers, and books began to adopt the single-space convention in the United States in the 1940s and in the United Kingdom in the 1950s.
+```
 
-> +               if (ret)
-> +                       goto err_free_gpio;
-> +
-> +               irq_domain =3D regmap_irq_get_domain(irq_chip_data);
-> +       } else
-> +#endif
-> +       irq_domain =3D config->irq_domain;
-> +
-> +       if (irq_domain) {
-> +               ret =3D gpiochip_irqchip_add_domain(chip, irq_domain);
->                 if (ret)
->                         goto err_remove_gpiochip;
->         }
-> diff --git a/include/linux/gpio/regmap.h b/include/linux/gpio/regmap.h
-> index c722c67668c6..19b52ac03a5d 100644
-> --- a/include/linux/gpio/regmap.h
-> +++ b/include/linux/gpio/regmap.h
-> @@ -40,6 +40,11 @@ struct regmap;
->   * @drvdata:           (Optional) Pointer to driver specific data which =
-is
->   *                     not used by gpio-remap but is provided "as is" to=
- the
->   *                     driver callback(s).
-> + * @regmap_irq_chip:   (Optional) Pointer on an regmap_irq_chip structur=
-e. If
-> + *                     set, a regmap-irq device will be created and the =
-IRQ
-> + *                     domain will be set accordingly.
-> + * @regmap_irq_line    (Optional) The IRQ the device uses to signal inte=
-rrupts.
-> + * @regmap_irq_flags   (Optional) The IRQF_ flags to use for the interru=
-pt.
->   *
->   * The ->reg_mask_xlate translates a given base address and GPIO offset =
-to
->   * register and mask pair. The base address is one of the given register
-> @@ -78,6 +83,12 @@ struct gpio_regmap_config {
->         int ngpio_per_reg;
->         struct irq_domain *irq_domain;
->
-> +#ifdef CONFIG_REGMAP_IRQ
-> +       struct regmap_irq_chip *regmap_irq_chip;
-> +       int regmap_irq_line;
-> +       unsigned long regmap_irq_flags;
-> +#endif
-> +
->         int (*reg_mask_xlate)(struct gpio_regmap *gpio, unsigned int base=
-,
->                               unsigned int offset, unsigned int *reg,
->                               unsigned int *mask);
->
-> --
-> 2.39.5
->
+Neil
