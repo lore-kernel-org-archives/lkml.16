@@ -1,125 +1,125 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0662124DCE8;
-	Thu, 22 May 2025 23:57:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D0CD24DCE8
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 23:57:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747958246; cv=none; b=o+gj+wlNNxhZ2DWaEyi3nP4CEiDW6XF9VvDE/z/d0JkzqOUBXHB3ZkawWlesvEbJ4dflBjOjQrb9RecA/27WIxL5mkwGfwiGHgi1KzL+fMKeSoHv9ozU8BtjfiRfooVVk0lfOALCXv6sFEbTTTfJtDUhkwBfipP1FHM1BKn119I=
+	t=1747958262; cv=none; b=NBQcHKIf1FG2K/Z5LduP63W2cNIqmVG0VIuKGQa0cezleCBG7lmBlT06oEvEYYIs177X/Ga4/7WNkNtS6QJsHElpbBBMUgtr5XsXQN198pfMo/YOvRJmlq/Knah90gv2RgIx3MnB2Puraz69XyQ30TgieGCuPI/5kQbHTssAtWI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747958246; c=relaxed/simple;
-	bh=QYOWZ2FwAxXVY5zAUVw+08m0cpSZDQFAL7+izIDHNig=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iHF+kcGBH/urEPk6of00AmKcAKN1bbJ0zlJlcW1r79zk/VNqGSue4fhfCwMhT5jQMKEgM5AuNbjZwYUTzYaAPZ4d4C5gwpfDDq1c8X1e10Umr6co7D6txK+DN1eajLncp1Z/oFNqiVySuPylODy9bGT3KA0nsqzHM5CX5b6HXMo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AFZtcTbK; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1747958262; c=relaxed/simple;
+	bh=+N4Q7/Fx9GrtcgTHahPABpkNsBT9qTCA29g7DhXDB24=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=lnvyrS245L6NaoVmbMl/gZKlgh5u1k2q6NmMtNTq8K0f15E8WycMPL1EQAz3Or5qH3sXmaSHGlKB+Xf77XIvOqMbKtR9xk6+BgeVOLW13U5qounvA3Io/+QAfjGCkwOGwmHErf3xJTUv0mFKVfXTwD44FZPhml+d3C8ZcZUihkM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--hramamurthy.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=biWmSEGo; arc=none smtp.client-ip=209.85.210.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--hramamurthy.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AFZtcTbK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747958245; x=1779494245;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=QYOWZ2FwAxXVY5zAUVw+08m0cpSZDQFAL7+izIDHNig=;
-  b=AFZtcTbKaMnMtDphzxx+GsHim3vTMJWvPX1S9rbbL9Ye1Zpa9u/YP9YJ
-   Af8djXw0yjfCKX/nyntsK1MJibS+0s1FrI9MEQ7sbbcryD8I7Gw0zDddK
-   qaZDepXmP2IwviSmmYKZzk4wl8ClwebeDI+iQYZP5diWIzfnVleJ18/Gd
-   2aV4l+YEG+1+mDwD0da+aBXWglV3BT5s2lDz95X5XtW4IF1Yu6uJ5S30D
-   kquDzceXGDjhwx44rLA/+ICnGeObTW7eKB6eMU9+muv568gShLmbbezz8
-   hnJS4pzjPlWQsnqKCiBjTSm5q0o8frtjbwR9t5XGLa542oulyS5is2rSr
-   A==;
-X-CSE-ConnectionGUID: I22QoPZpQDyXAV7/AYCT/w==
-X-CSE-MsgGUID: I3E6FySoR6yalJWQ3keqhw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11441"; a="60643725"
-X-IronPort-AV: E=Sophos;i="6.15,307,1739865600"; 
-   d="scan'208";a="60643725"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2025 16:57:24 -0700
-X-CSE-ConnectionGUID: 7lIzCNAVR6qR2FCNCi9FFA==
-X-CSE-MsgGUID: jsNCrqeCRwuHtFu3GzGzEQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,307,1739865600"; 
-   d="scan'208";a="140657810"
-Received: from bjrankin-mobl3.amr.corp.intel.com (HELO [10.124.223.120]) ([10.124.223.120])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2025 16:57:23 -0700
-Message-ID: <2c79c6b5-db40-4e54-b058-a95c56f735fb@linux.intel.com>
-Date: Thu, 22 May 2025 16:57:22 -0700
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="biWmSEGo"
+Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-7394792f83cso6845072b3a.3
+        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 16:57:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1747958260; x=1748563060; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=E695lb6mnZG2Azxgeb2zoRXaKZzc2rWePmDYZ8LrO3g=;
+        b=biWmSEGohXjQKBEX5gwhK+yhULX3GpIBm2VjGqN1gIpBWk+nS6rUk0rROw27hdDeFa
+         7Hfjfpq4kAL926spm5Qk3sbxshkGzkoRlhvfD+mFDf8Bfd0WrOdbjujVLn/P2FdPe8BE
+         7ic/b8m4hlOdYsHWKt6M0UeiH1ecQ7wJdZxUlj3jFQpJrJzlKkLkjGRdfzHRGH9e/H3Z
+         6J8bQlV9re7oFXq+1e7PSgdBYpGe9ADcIbbgmYooeNNgeJoQyJzyZjl0KZGDVQnEOttf
+         Je92tnVVBkA1G6yxG8F6sD8Ra2iuHU6eLA/qskmtifsQaVh2oc3qcQ/uP02k0FsVxyOf
+         AGLA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747958260; x=1748563060;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=E695lb6mnZG2Azxgeb2zoRXaKZzc2rWePmDYZ8LrO3g=;
+        b=U1TUeZMH8NooRfEC1O5lhmmo9YzmR14A+q6Kprv8D6Y6n5kX8D7TkPDQeiw8tXK71c
+         h5TPTQTP0b9ZHtQroninZy9iEA2iVyfMkVHuh7zR5pr2sXVLi/rqfh1cC3WSu8TksN/c
+         Ram+z2fmpygFTRbCBbovLeFktGusSu4M+8SeFHFEKVbQIWjoziRTX/4Enb8n/CXDhCUb
+         +O/spfNO72evyClfDUtqzWxbuy/+IeAGg7JunVW9RL2uUQo6U5lAyhPnUQxLhz5NFO6N
+         qf990cwQBJatlNN9b7O4V/DIvrXuqK6D8yrfamSrZ7ktHD8w/AdWrUHArU6i/Y2O1vGW
+         Jhig==
+X-Forwarded-Encrypted: i=1; AJvYcCVlevQ+iGPPHDpUz7HhP/POM8UmzFNpY2ooZKqhdKrlP8H0gSwojBkb+zxPmAS2+ECCqJ2JQs0KtnSq5dc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyoD6AvsgIQQOBuMBIwg1aJxLt4vKGBIZPbp8i97AwmTshrUNn2
+	EovXVL5Xi0Ym1nn1sEdlD8k/pqF4NsZtu4jNF8WNKGGw325HMcfuBIOuvItHh2UOq3+CHb8Y+cr
+	E+dM8mxlxhI/lW5cMhattAMhcvw==
+X-Google-Smtp-Source: AGHT+IFg3AqzfCowzRgk/1BxZBoVCFnad1BcDRGhv6GqoVuBPz9n6dzqgqi1FQGJMI89AZX695orPjg9TaHpIpsWUg==
+X-Received: from pfbic8.prod.google.com ([2002:a05:6a00:8a08:b0:736:86e0:8dee])
+ (user=hramamurthy job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:6a00:9455:b0:73d:ff02:8d83 with SMTP id d2e1a72fcca58-742a9786a85mr39674567b3a.3.1747958260570;
+ Thu, 22 May 2025 16:57:40 -0700 (PDT)
+Date: Thu, 22 May 2025 23:57:29 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 17/20] PCI/AER: Simplify add_error_device()
-To: Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org
-Cc: Jon Pan-Doh <pandoh@google.com>,
- Karolina Stolarek <karolina.stolarek@oracle.com>,
- Weinan Liu <wnliu@google.com>, Martin Petersen <martin.petersen@oracle.com>,
- Ben Fuller <ben.fuller@oracle.com>, Drew Walton <drewwalton@microsoft.com>,
- Anil Agrawal <anilagrawal@meta.com>, Tony Luck <tony.luck@intel.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Lukas Wunner <lukas@wunner.de>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>,
- Sargun Dhillon <sargun@meta.com>, "Paul E . McKenney" <paulmck@kernel.org>,
- Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
- Oliver O'Halloran <oohall@gmail.com>, Kai-Heng Feng <kaihengf@nvidia.com>,
- Keith Busch <kbusch@kernel.org>, Robert Richter <rrichter@amd.com>,
- Terry Bowman <terry.bowman@amd.com>, Shiju Jose <shiju.jose@huawei.com>,
- Dave Jiang <dave.jiang@intel.com>, linux-kernel@vger.kernel.org,
- linuxppc-dev@lists.ozlabs.org, Bjorn Helgaas <bhelgaas@google.com>
-References: <20250522232339.1525671-1-helgaas@kernel.org>
- <20250522232339.1525671-18-helgaas@kernel.org>
-Content-Language: en-US
-From: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>
-In-Reply-To: <20250522232339.1525671-18-helgaas@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.49.0.1151.ga128411c76-goog
+Message-ID: <20250522235737.1925605-1-hramamurthy@google.com>
+Subject: [PATCH net-next v3 0/8] gve: Add Rx HW timestamping support
+From: Harshitha Ramamurthy <hramamurthy@google.com>
+To: netdev@vger.kernel.org
+Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org, 
+	pabeni@redhat.com, jeroendb@google.com, hramamurthy@google.com, 
+	andrew+netdev@lunn.ch, willemb@google.com, ziweixiao@google.com, 
+	pkaligineedi@google.com, yyd@google.com, joshwash@google.com, 
+	shailend@google.com, linux@treblig.org, thostet@google.com, 
+	jfraker@google.com, richardcochran@gmail.com, jdamato@fastly.com, 
+	vadim.fedorenko@linux.dev, horms@kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
+From: Ziwei Xiao <ziweixiao@google.com>
 
-On 5/22/25 4:21 PM, Bjorn Helgaas wrote:
-> From: Bjorn Helgaas <bhelgaas@google.com>
->
-> Return -ENOSPC error early so the usual path through add_error_device() is
-> the straightline code.
->
-> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-> ---
+This patch series add the support of Rx HW timestamping, which sends
+adminq commands periodically to the device for clock synchronization with
+the nic.
 
-Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+Changes:
+v3:
+  - change the last_read to be u64 on patch 6/8 (Vadim Fedorenko)
+  - update the title and commit message of patch 7/8 to show it's adding
+    support for ndo functions instead of ioctls (Jakub Kicinski)
+  - Utilize extack for error logging instead of dev_err (Jakub Kicinski)
+v2:
+  - add initial PTP device support to utilize the ptp's aux_work to
+    schedule sending adminq commands periodically (Jakub Kicinski,
+    Vadim Fedorenko)
+  - add adminq lock patch into this patch series instead of sending out
+    to net since it's only needed to resolve the conflicts between the
+    upcoming PTP aux_work and the queue creation/destruction adminq
+    commands (Jakub Kicinski)
+  - add the missing READ_ONCE (Joe Damato)
 
->   drivers/pci/pcie/aer.c | 15 +++++++++------
->   1 file changed, 9 insertions(+), 6 deletions(-)
->
-> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> index 237741e66d28..24f0f5c55256 100644
-> --- a/drivers/pci/pcie/aer.c
-> +++ b/drivers/pci/pcie/aer.c
-> @@ -816,12 +816,15 @@ EXPORT_SYMBOL_NS_GPL(pci_print_aer, "CXL");
->    */
->   static int add_error_device(struct aer_err_info *e_info, struct pci_dev *dev)
->   {
-> -	if (e_info->error_dev_num < AER_MAX_MULTI_ERR_DEVICES) {
-> -		e_info->dev[e_info->error_dev_num] = pci_dev_get(dev);
-> -		e_info->error_dev_num++;
-> -		return 0;
-> -	}
-> -	return -ENOSPC;
-> +	int i = e_info->error_dev_num;
-> +
-> +	if (i >= AER_MAX_MULTI_ERR_DEVICES)
-> +		return -ENOSPC;
-> +
-> +	e_info->dev[i] = pci_dev_get(dev);
-> +	e_info->error_dev_num++;
-> +
-> +	return 0;
->   }
->   
->   /**
+Harshitha Ramamurthy (1):
+  gve: Add initial PTP device support
+
+John Fraker (5):
+  gve: Add device option for nic clock synchronization
+  gve: Add adminq command to report nic timestamp
+  gve: Add rx hardware timestamp expansion
+  gve: Implement ndo_hwtstamp_get/set for RX timestamping
+  gve: Advertise support for rx hardware timestamping
+
+Kevin Yang (1):
+  gve: Add support to query the nic clock
+
+Ziwei Xiao (1):
+  gve: Add adminq lock for queues creation and destruction
+
+ drivers/net/ethernet/google/Kconfig           |   1 +
+ drivers/net/ethernet/google/gve/Makefile      |   4 +-
+ drivers/net/ethernet/google/gve/gve.h         |  29 ++++
+ drivers/net/ethernet/google/gve/gve_adminq.c  |  98 +++++++++++--
+ drivers/net/ethernet/google/gve/gve_adminq.h  |  26 ++++
+ .../net/ethernet/google/gve/gve_desc_dqo.h    |   3 +-
+ drivers/net/ethernet/google/gve/gve_ethtool.c |  23 ++-
+ drivers/net/ethernet/google/gve/gve_main.c    |  47 +++++++
+ drivers/net/ethernet/google/gve/gve_ptp.c     | 132 ++++++++++++++++++
+ drivers/net/ethernet/google/gve/gve_rx_dqo.c  |  26 ++++
+ 10 files changed, 373 insertions(+), 16 deletions(-)
+ create mode 100644 drivers/net/ethernet/google/gve/gve_ptp.c
 
 -- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
+2.49.0.1143.g0be31eac6b-goog
 
