@@ -1,165 +1,99 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42F9E18C002
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 17:37:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5063917C21B;
+	Thu, 22 May 2025 17:39:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747935456; cv=none; b=kA5Ado0FBSkFqmvotvBYH9uvKFPTCHJ6JfbJH4lo1HAgAzXgy2OaWxxj4axP1GitkgV31sVYSiLVHbX7kdgsRIvdVTpFfiUW6T/1FgGjFmoeXxKKhpd15erxCgTciqS2UDWxTf3mLD/cJGyQK40Dps/mkYY7mZ85PJPt1rM3xKI=
+	t=1747935553; cv=none; b=dmM5i1wRgoyM1PtG6U4faJVHAiN+qI7P9fYsNI0IcZVqCP/wMl0n0YM2lJ82cLb2nmplK2jLWF/iQliX90asxpoYpa31rg9gCjhb3YY41d1eeaD26Ikn0gMDm/igDYRG5DfGY1ODkmhEoSprsdypDmiHgR53LcebYLKMnBoRThs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747935456; c=relaxed/simple;
-	bh=krxuNyKUAU7m4MQbPEtQDu9z5gQvZzRePFIerYLoPe8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HqEqKC1U8r0j7cyFW++FI4BNkJxL8o5UO70mywsZIp0mOEuXWMS5nbnsonvPKQZoassChX/jesSZdZnn4QVAsUgGyR+905ec69TyQzxHK/YyId3JFzd54xZFQ9nKJm9HwYMPz2qSK9F8XsvEaX1/6zQuZsX9yUicVCjQMzj3a5I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=O0peat//; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1747935553; c=relaxed/simple;
+	bh=kgbWheyQMuJdECLUgmaNHFbrRwfObFbfUl+lWV3YBo4=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=dyV9wsvjnsPrtrhbGmOaNPSHXPEY4kfhwYplRamr9dorTI5C10Tf7TV84EmU/xgDqBC/wIUZYNgliI6xHAoHbkDInCTjlmQYmA6gTzKD6uzdSI5wsIGjwgb9msirhUbodtF3T+RgvGbBHz4UnN1k8OE08D1m3qCX0R+sD9xRwKU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aYuIKn4m; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="O0peat//"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1747935452;
-	bh=krxuNyKUAU7m4MQbPEtQDu9z5gQvZzRePFIerYLoPe8=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=O0peat//tuaACDXb90elhk0XMExs5yzu984W7bcQoiQlKrjzqd7UBj6ysgqVa00oz
-	 PS3Udl5RTQ+8RSswTBk9d32IVNkzpdbDCUKkbAitoB7O7hyFXbhrcMDHulDcd3BAjP
-	 ZQmz1BFr24ooRaUzVoNr1PG/cKF/IEGE87ACI4CZL0WBYv8lcw1qmYd5Jx7q1uw43z
-	 vOR2mcVzFT5AC3w0eiZo5XN8MKEnjBI/3LGanEp2X6GB4MNL7bSwt6gnEe+KNQhUCh
-	 yZlAmGEZvyFbedGcf75FiWDZDgJrFezOU09CPwbrzZFpvx6m8FWV+MQZUCrwLqPUXD
-	 ehVF/rjmdY2jA==
-Received: from [192.168.1.90] (unknown [82.76.59.134])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
-	(No client certificate requested)
-	(Authenticated sender: cristicc)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id C32B717E157A;
-	Thu, 22 May 2025 19:37:31 +0200 (CEST)
-Message-ID: <2a8554af-5b5b-4402-a065-a3e765f9ca4f@collabora.com>
-Date: Thu, 22 May 2025 20:37:31 +0300
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aYuIKn4m"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0FAAC4CEE4;
+	Thu, 22 May 2025 17:39:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747935553;
+	bh=kgbWheyQMuJdECLUgmaNHFbrRwfObFbfUl+lWV3YBo4=;
+	h=From:Subject:Date:To:Cc:From;
+	b=aYuIKn4mtf1fpV7WvGnx/HJmg/2WKqAr/0U7KQcQKm4RxzzaolB9seDctEAhLnvfr
+	 7P9+P/DqZNvCBdfQz3CvhW7eA6Owgj0Coha0wE5YrVsxoKgjaihMpx+mY487hZwRPe
+	 ScPIABFfNTABaLQrzNmAvufhblHy+ogfYBSTC5mzKMX5NWw7CQ0eKN1/Mnm8fiTOIx
+	 qxcbc6vhng8o9Y5iTDUBhRkVC1nMYqtQXNkKmpnqeFqbNj0Tj0NvbR1cV2o0ITBFul
+	 jKiZRNH1Sn9Ajj8rR0tppqGjQoFcPIRNAeHPoViHmoe6yMwnJ38M/jBEdfmfBURdQR
+	 dugCROI5PRmFQ==
+From: Mark Brown <broonie@kernel.org>
+Subject: [PATCH 0/4] selftests/mm: cow and gup_longterm cleanups
+Date: Thu, 22 May 2025 18:38:49 +0100
+Message-Id: <20250522-selftests-mm-cow-dedupe-v1-0-713cee2fdd6d@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 23/23] drm/tests: hdmi: Add test for unsupported
- RGB/YUV420 mode
-To: Maxime Ripard <mripard@kernel.org>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>,
- Dave Stevenson <dave.stevenson@raspberrypi.com>,
- Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
- Dmitry Baryshkov <lumag@kernel.org>, kernel@collabora.com,
- dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-References: <20250425-hdmi-conn-yuv-v4-0-5e55e2aaa3fa@collabora.com>
- <20250425-hdmi-conn-yuv-v4-23-5e55e2aaa3fa@collabora.com>
- <20250519-classy-millipede-of-competence-4bb6ad@houat>
- <a37b4045-0d94-4148-bb1e-fc08104e6173@collabora.com>
- <20250522-mutant-emu-of-youth-ae70cd@houat>
-Content-Language: en-US
-From: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
-In-Reply-To: <20250522-mutant-emu-of-youth-ae70cd@houat>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIACphL2gC/x3MywqDMBBG4VeRWTsQkwaKryIuNPnVgXohY6sgv
+ ruhy29xzkWKJFCqi4sSfqKyLhlVWVCYumUES8wma6w33las+Aw7dFeeZw7rwRHxu4Gdi6HrjXt
+ 5/6ZcbwmDnP9z0973A8zuE2BpAAAA
+X-Change-ID: 20250521-selftests-mm-cow-dedupe-33dcab034558
+To: Andrew Morton <akpm@linux-foundation.org>, 
+ Shuah Khan <shuah@kernel.org>, David Hildenbrand <david@redhat.com>
+Cc: linux-mm@kvack.org, linux-kselftest@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
+X-Mailer: b4 0.15-dev-c25d1
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1858; i=broonie@kernel.org;
+ h=from:subject:message-id; bh=kgbWheyQMuJdECLUgmaNHFbrRwfObFbfUl+lWV3YBo4=;
+ b=owEBbQGS/pANAwAKASTWi3JdVIfQAcsmYgBoL2E6OWupulF9lD6yYXCHNGs8KxX0yaolE8vQ+6V3
+ MzYpkGWJATMEAAEKAB0WIQSt5miqZ1cYtZ/in+ok1otyXVSH0AUCaC9hOgAKCRAk1otyXVSH0FStB/
+ wMfgXECNR3OUpnWUaJlKD7VWfSCaTRZHUBrfH68PkAOg17xts0cDjhd3YqSj8heoy0WrziPPomUEaG
+ FUtj6BX/iL05Lu5TbdbELcF3hi6EQ+9fBPo5nGCt180qvITB7huCQImgOvZ/AZGijotRYdDENvWsGE
+ 2HVb7k9SC7eCGeDtMSnBn4Hu21cpimqIWTVmeQINnpAQlyIaTspUx/I8bWfH0Eon1Ctu67+a06KHRI
+ GQsmDyDCTAThcbo0jXQSFhf7CzAz3DqcM2/OYST4yLSbT9l0E8llTk4LVaG4UpzCCOoXiEwJBRylTX
+ tT4ro9CYlww+33FPORNzSz9o7S/j2h
+X-Developer-Key: i=broonie@kernel.org; a=openpgp;
+ fpr=3F2568AAC26998F9E813A1C5C3F436CA30F5D8EB
 
-Hi Maxime,
+The bulk of these changes modify the cow and gup_longterm tests to
+report unique and stable names for each test, bringing them into line
+with the expectations of tooling that works with kselftest.  The string
+reported as a test result is used by tooling to both deduplicate tests
+and track tests between test runs, using the same string for multiple
+tests or changing the string depending on test result causes problems
+for user interfaces and automation such as bisection.
 
-On 5/22/25 7:16 PM, Maxime Ripard wrote:
-> Hi,
-> 
-> On Mon, May 19, 2025 at 01:55:10PM +0300, Cristian Ciocaltea wrote:
->> On 5/19/25 11:42 AM, Maxime Ripard wrote:
->>> Hi,
->>>
->>> On Fri, Apr 25, 2025 at 01:27:14PM +0300, Cristian Ciocaltea wrote:
->>>> Provide a test to verify that if both driver and screen support RGB and
->>>> YUV420 formats, drm_atomic_helper_connector_hdmi_check() cannot succeed
->>>> when trying to set a mode unsupported by the display.
->>>>
->>>> Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
->>>> ---
->>>>  drivers/gpu/drm/tests/drm_hdmi_state_helper_test.c | 66 ++++++++++++++++++++++
->>>>  1 file changed, 66 insertions(+)
->>>>
->>>> diff --git a/drivers/gpu/drm/tests/drm_hdmi_state_helper_test.c b/drivers/gpu/drm/tests/drm_hdmi_state_helper_test.c
->>>> index d79084cfb516b69c4244098c0767d604ad02f2c3..6337a1c52b86810c638f446c4995e7ee63dbc084 100644
->>>> --- a/drivers/gpu/drm/tests/drm_hdmi_state_helper_test.c
->>>> +++ b/drivers/gpu/drm/tests/drm_hdmi_state_helper_test.c
->>>> @@ -1622,6 +1622,71 @@ static void drm_test_check_driver_unsupported_fallback_yuv420(struct kunit *test
->>>>  	drm_modeset_acquire_fini(&ctx);
->>>>  }
->>>>  
->>>> +/*
->>>> + * Test that if a driver and screen supports RGB and YUV420 formats, but the
->>>> + * chosen mode cannot be supported by the screen, we end up with unsuccessful
->>>> + * fallback attempts.
->>>> + */
->>>> +static void drm_test_check_display_unsupported_fallback_rgb_yuv420(struct kunit *test)
->>>> +{
->>>> +	struct drm_atomic_helper_connector_hdmi_priv *priv;
->>>> +	struct drm_modeset_acquire_ctx ctx;
->>>> +	struct drm_crtc_state *crtc_state;
->>>> +	struct drm_atomic_state *state;
->>>> +	struct drm_display_info *info;
->>>> +	struct drm_display_mode *preferred, *unsupported_mode;
->>>> +	struct drm_connector *conn;
->>>> +	struct drm_device *drm;
->>>> +	struct drm_crtc *crtc;
->>>> +	int ret;
->>>> +
->>>> +	priv = drm_kunit_helper_connector_hdmi_init_with_edid_funcs(test,
->>>> +				BIT(HDMI_COLORSPACE_RGB) |
->>>> +				BIT(HDMI_COLORSPACE_YUV420),
->>>> +				10,
->>>> +				&dummy_connector_hdmi_funcs,
->>>> +				test_edid_hdmi_4k_rgb_yuv420_dc_max_340mhz);
->>>> +	KUNIT_ASSERT_NOT_NULL(test, priv);
->>>> +
->>>> +	drm = &priv->drm;
->>>> +	crtc = priv->crtc;
->>>> +	conn = &priv->connector;
->>>> +	info = &conn->display_info;
->>>> +	KUNIT_ASSERT_TRUE(test, info->is_hdmi);
->>>> +	KUNIT_ASSERT_TRUE(test, conn->ycbcr_420_allowed);
->>>> +
->>>> +	preferred = find_preferred_mode(conn);
->>>> +	KUNIT_ASSERT_NOT_NULL(test, preferred);
->>>> +
->>>> +	unsupported_mode = drm_kunit_display_mode_from_cea_vic(test, drm, 96);
->>>> +	KUNIT_ASSERT_NOT_NULL(test, unsupported_mode);
->>>
->>> I'm not sure what this one is supposed to test. If the mode is
->>> unsupported by the screen, it will be for both YUV and RGB, right? So
->>> what are we testing here?
->>
->> That would be the case suggested at [1]:
->>
->> "We still need to do the same with a driver that supports both, but the
->> monitor doesn't."
->>
->> Should we drop it?
-> 
-> Ah, I see. I meant that we should normally end up with YUV420 (so mode
-> is supported by the monitor, but the resolution is too high for RGB and
-> we should pick YUV instead), but the monitor doesn't support it and thus
-> we fail.
+It was suggested that converting to use kselftest_harness.h would be a
+good way of addressing this, however that really wants the set of tests
+to run to be known at compile time but both test programs dynamically
+enumarate the set of huge page sizes the system supports and test each.
+Refactoring to handle this would be even more invasive than these
+changes which are large but straightforward and repetitive.
 
-If I get it right, to verify this scenario we'd need a new test EDID
-that basically advertises an RGB mode which is not actually supported by
-the screen, i.e. the mode requires a TMDS rate which exceeds the maximum
-supported by the display for any of the available color depths.
+A version of the main gup_longterm cleanup was previously sent
+separately, this version factors out the helpers for logging the start
+of the test since the cow test looks very similar.
 
-But that's not something we should encounter in practice, is it?  I mean
-the EDID would be wrong, as it doesn't match the hardware capabilities.
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+Mark Brown (4):
+      selftests/mm: Use standard ksft_finished() in cow and gup_longterm
+      selftest/mm: Add helper for logging test start and results
+      selftests/mm: Report unique test names for each cow test
+      selftests/mm: Fix test result reporting in gup_longterm
 
-Regardless, assuming this is solely for the purpose of testing the
-framework, I will try to come up with a test case.  The only problem
-is generating the EDID - which is a really annoying process, as I've
-already mentioned a while ago [1].  
+ tools/testing/selftests/mm/cow.c          | 340 +++++++++++++++++++-----------
+ tools/testing/selftests/mm/gup_longterm.c | 158 ++++++++------
+ tools/testing/selftests/mm/vm_util.h      |  20 ++
+ 3 files changed, 334 insertions(+), 184 deletions(-)
+---
+base-commit: a5806cd506af5a7c19bcd596e4708b5c464bfd21
+change-id: 20250521-selftests-mm-cow-dedupe-33dcab034558
 
-Hence I'm wondering if we could move on without it for the moment (I'll
-get back to it ASAP).
-
-[1] https://lore.kernel.org/all/8b0a8a7a-456a-487f-853e-5ec3e11129d7@collabora.com/
+Best regards,
+-- 
+Mark Brown <broonie@kernel.org>
 
