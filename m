@@ -1,192 +1,126 @@
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A93D18A953;
-	Thu, 22 May 2025 17:33:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4977418A953;
+	Thu, 22 May 2025 17:34:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747935219; cv=none; b=uiOhRGjK8KEDT/6bu6CMIjHoYO8sEesvuZFBIYiJRBFWHmA3wGI+koPmU2Bp1tywIEt4cFv0+MK/z3qTgQ1CACIm0FojBhew16d0VaGTRkAF3Zcb6j8aADCkKiiUGY0GwpZmqJ5YQl3QrosHSY45s2NPp1MiJN2nvptpNSXEfMI=
+	t=1747935247; cv=none; b=N6XTuo68rraoraZpm0JJBNUZvbVB54whIBqPa+HYLFglG7OaCRZ2wJZF0Nmc9jDJYRf2691+GPOUdI/b+mAguUBmwjvMZAU1ZdKFWbm6Gu+eV3AZP1MEFhvP1HaLBZ1LTCGPBN+ycBqGnNL4ZTI1ln7BAFRfdOmRCojnkswTKvQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747935219; c=relaxed/simple;
-	bh=gj1msL7eLOyGrh9eIOQP6qwkpOLxlgsJFT9+Z4f5HGc=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=Ut1yQm4sOa79hU0ZqF0Mi5zeOcdLu6jqwOkknp5665uLKAZyJ8HXDPgeaRxAMc+8+hOTT6C3NVg2cbOmKwkq5FoS6Heq3t9P+8aEHJWyi4kUuWnGK+pC3aJyrc0SMwsLJMHXffkGaUwmXMneroUuBKmE3exAYdftTkcLw4PvkAI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aVH42dSq; arc=none smtp.client-ip=209.85.218.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747935247; c=relaxed/simple;
+	bh=kyEjFb/X6MFMPK9SDnmdY55VU+U7kclm6F3WTL6NvXs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qaCpCjH0LTJo+9pg7zsTtk1n7pc/deUTz4t+H4y7y2011p8bYeHdiDPuGt2jkdj4lDBHzf3UbkfxMflFn38hfxZZpSJBlEjxS/IdI2tPTyLm9nRrVVvSg8W2ObxfNil3AFnrgZLsF4BOr5RfWIBDyOhT7awGCLXMzNfxFjwr354=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=h2YhO322; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aVH42dSq"
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-ad5273c1fd7so1399178666b.1;
-        Thu, 22 May 2025 10:33:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747935216; x=1748540016; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=MTeoN2ZNwpBqEf481xeP9DNeHeY17srYObiFUpBv5hM=;
-        b=aVH42dSqBZhCX14C5YBPBJLponiKaNMYGhETiYKuoIKn3A+QgV7dHihyGYrbRdTJHq
-         5W+fmaDqrmMC3F970+KU69S50VS72585sOl4J/gK/AxDv5jIjdMz+E06ONEUeAWdbI7G
-         5FFYvoMaZYgvjl45VLqZ3i+mO3gekEYGMtFKIpFHCkLmvkAIqsMLzkbhvzbEGZVUrufx
-         vF/zhl0+IzsFSSnSop7KEjRmOI3W85XVmzOtMp0TS0zmRSYrbWw2v14LTFKQksXp+6kc
-         96a4/dTD8Bzrunm1M+PS6yqg9CtE0VkMRVzH5Oz1ycqxhflGs66nzKI3MnRJ292rXEpF
-         aE3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747935216; x=1748540016;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=MTeoN2ZNwpBqEf481xeP9DNeHeY17srYObiFUpBv5hM=;
-        b=c3j6bfXlkhdUGBCYY1xdOEWt0CpPItNceTGCUMDdQkH7i8orDp2UXL3unzGmKM+Iw5
-         Wj8buGchBvClTZyUKMoVCT0BnLqfjBXIWowMNcWC3CFwTK8xVX6k/CHmUfyCl1X+TFp6
-         ZRSPxCBYEQXKUuERRC6i8qlSSrqGyzBKtrUS8DimW5KoHLTOdbU3pzubyxWtuw6oS0uf
-         E3NVqORGXExSWRvAdWkqRal62rTScIpKxbN71wyfuMDZp3O+uivBXuP4mVwbzGku/jJq
-         jk0vwf5TBqGdODoziKd4IaSqHw0x+eH9Kjktv9gCqQLqsUGbK9qAtQBRKIBbbeyH7WOD
-         KlfQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU12dOgmsB//6ftNdIiNJR3XQixNlf2q1AvxHon5PgIUGaTD5U+z9CG5mX3vB6mOE8SIle/k8bYZyeH@vger.kernel.org, AJvYcCV8yO6T0cOzwH86hVhjoir6scH/Av81HcEI5PfZ2roHm5yMvJCZ8Xi6XDXY/Z0n+82cVg6tgr7TCNZCGoKn@vger.kernel.org, AJvYcCVMIOo+YPvB0j822b/EVsyvrFMeLDMo4i6LZx9yrwThMgVSr5GMuWYelRtUtLCLDzrdkFbGZWzcmv9Sl84Q@vger.kernel.org
-X-Gm-Message-State: AOJu0YyPYsiUAXnVdpyKMa2hyami30+W79ou27e+7y1T071IqWkIEiaG
-	xBkQPdXb0jRAG7yZl1pCeO7bvbq2wV/47ehzf3U1gyQxlVGcWmglbpe5XePQzw==
-X-Gm-Gg: ASbGnctWtVoTvC18lUirrqPlM32m3KZmc3fiR0FjeSR55Tf8YxUgDkp3C/5OwfXl3+c
-	crXGRi+jb3jCnCtPaZakdfvjW0whvjNax2dyKL+NEEfawPxOy7TARsxffQEogMlXVZAJ3rr3WY8
-	QC41IC4Zrs8XmuXKFOTrNTGufSeQyrgIkxaWhLM3flTt0Wqt+MEN2kLtxa0nj1PLCKBIdsEojGZ
-	n5PM4fMJuJybUEL3/zLPF2nSgcIHsL0XEqZjLHKsw3iVRUbjZJcEP9b+/IQ+jm7TQmWoRIf+tYO
-	GWsSlyliKQmgmsppXGVV5wUNJYWV/VOjy5sF2ZSA7qI2SscpvxN82pcXRoKhqQFwQa8BuR+gM9w
-	x3Mej
-X-Google-Smtp-Source: AGHT+IEJfDL3Z6GwGYXoUDscFxORY7Y5IAtF5LadMRdJVetuBsgTokkfHqjuWjdkON4+K8+lf3vDlg==
-X-Received: by 2002:a17:907:3fa7:b0:ad5:a12d:6665 with SMTP id a640c23a62f3a-ad5a12d6948mr956070166b.33.1747935215255;
-        Thu, 22 May 2025 10:33:35 -0700 (PDT)
-Received: from [192.168.0.253] (5D59A51C.catv.pool.telekom.hu. [93.89.165.28])
-        by smtp.googlemail.com with ESMTPSA id a640c23a62f3a-ad52d06b532sm1098506966b.43.2025.05.22.10.33.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 May 2025 10:33:34 -0700 (PDT)
-From: Gabor Juhos <j4g8y7@gmail.com>
-Date: Thu, 22 May 2025 19:33:26 +0200
-Subject: [PATCH RFC] spi: spi-qpic-snand: overestimate corrected bitflips
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="h2YhO322"
+Received: from [192.168.7.202] ([71.202.166.45])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 54MHXanw3087605
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Thu, 22 May 2025 10:33:37 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 54MHXanw3087605
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025042001; t=1747935218;
+	bh=mQqHwVKFb6dr1hLOfIrFDJS5wccc1ddOjmF9Hl44AOg=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=h2YhO322mS6R8+/b50RFlBFg1Ax2mf4pU54cG87mgRjdVzZFyqBLJWyMiZQqw/OC3
+	 9ZZiPfsAgsDnVuPircVJFveyHpjqRqBBtPM9oyoGzsDthOS9CnlR/LHZO1Jbdu5rDv
+	 dWfT4PbefjWBojeNDSIdUe9lhpZVSgJRhtkvPLSdiauSG0QWlzi4899apE8UAh7aPi
+	 KkN6FoE2hn7Kx6ULFsdEibMyFlfsIwxS+oOu/17wFpOYhnLCAO0VkV/93J5NYzwhpU
+	 kOtmYvbFcjWxWjsdPW8TQFJl6v6ncVeVz8OekwSy8aodbwuO0/Ciirbw9KpSPd5+6q
+	 HsiRy0KJBr3fw==
+Message-ID: <83b013fb-2057-4097-ac8c-b5c38d019a0f@zytor.com>
+Date: Thu, 22 May 2025 10:33:36 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 1/1] x86/fred/signal: Prevent single-step upon ERETU
+ completion
+To: kernel test robot <lkp@intel.com>, linux-kernel@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
+        hpa@zytor.com, peterz@infradead.org, andrew.cooper3@citrix.com,
+        stable@vger.kernel.org
+References: <20250522060549.2882444-1-xin@zytor.com>
+ <202505230141.4YBHhrPI-lkp@intel.com>
+Content-Language: en-US
+From: Xin Li <xin@zytor.com>
+Autocrypt: addr=xin@zytor.com; keydata=
+ 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
+ l75w1xInsg==
+In-Reply-To: <202505230141.4YBHhrPI-lkp@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250522-qpic-snand-overestimate-bitflips-v1-1-35c65c05068e@gmail.com>
-X-B4-Tracking: v=1; b=H4sIAOVfL2gC/x3NQQrCMBBA0auUWTvQiW2RbgUP4FZcxGRSB2qaZ
- kIRSu9ucPk2/++gnIUVxmaHzJuoLLGCTg24t40To/hqMK3p294QrkkcarTR47JxZi3ysYXxJSX
- MkhSHjsj40JE7X6BmUuYg3//iAffbFZ7H8QO4AwpVdwAAAA==
-X-Change-ID: 20250521-qpic-snand-overestimate-bitflips-64112df41c38
-To: Mark Brown <broonie@kernel.org>, 
- Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: Md Sadre Alam <quic_mdalam@quicinc.com>, 
- Varadarajan Narayanan <quic_varada@quicinc.com>, 
- Sricharan Ramabadhran <quic_srichara@quicinc.com>, 
- linux-spi@vger.kernel.org, linux-mtd@lists.infradead.org, 
- linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Gabor Juhos <j4g8y7@gmail.com>
-X-Mailer: b4 0.14.2
 
-The QPIC hardware is not capable of reporting the exact number of the
-corrected bitflips, it only reports the number of the corrected bytes.
-However the current code treats that as corrected bitflips which is
-quite inaccurate in most cases. For example, even if the hardware reports
-only one byte as corrected, that byte may have contained multiple bit
-errors from one up to the maximum number of correctable bits.
+On 5/22/2025 10:20 AM, kernel test robot wrote:
+> Hi Xin,
+> 
+> kernel test robot noticed the following build errors:
+> 
+> [auto build test ERROR on 6a7c3c2606105a41dde81002c0037420bc1ddf00]
+> 
+> url:    https://github.com/intel-lab-lkp/linux/commits/Xin-Li-Intel/x86-fred-signal-Prevent-single-step-upon-ERETU-completion/20250522-140954
+> base:   6a7c3c2606105a41dde81002c0037420bc1ddf00
+> patch link:    https://lore.kernel.org/r/20250522060549.2882444-1-xin%40zytor.com
+> patch subject: [PATCH v1 1/1] x86/fred/signal: Prevent single-step upon ERETU completion
+> config: i386-buildonly-randconfig-003-20250522 (https://download.01.org/0day-ci/archive/20250523/202505230141.4YBHhrPI-lkp@intel.com/config)
+> compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250523/202505230141.4YBHhrPI-lkp@intel.com/reproduce)
+> 
+> If you fix the issue in a separate patch/commit (i.e. not just a new version of
+> the same patch/commit), kindly add following tags
+> | Reported-by: kernel test robot <lkp@intel.com>
+> | Closes: https://lore.kernel.org/oe-kbuild-all/202505230141.4YBHhrPI-lkp@intel.com/
+> 
+> All errors (new ones prefixed by >>):
+> 
+>     In file included from arch/x86/kernel/signal_32.c:32:
+>     arch/x86/include/asm/sighandling.h: In function 'prevent_single_step_upon_eretu':
+>>> arch/x86/include/asm/sighandling.h:44:21: error: 'struct pt_regs' has no member named 'fred_ss'
+>        44 |                 regs->fred_ss.swevent = 0;
+>           |                     ^~
+> 
 
-Change the code to report the maximum of the possibly corrected bits,
-thus allowing upper layers to do certain actions before the data gets
-lost due to uncorrectable errors.
+Hmm, this statement is under IS_ENABLED(CONFIG_X86_FRED), which should
+be a compile time FALSE with i386.  Why it is still being compiled?
 
-Signed-off-by: Gabor Juhos <j4g8y7@gmail.com>
----
-The patch tries to address Miquel's concerns [1] about the corrected bit
-error reporting capabilities of the QPIC hardware.
-
-[1] https://lore.kernel.org/all/87h61e8kow.fsf@bootlin.com
-
-nanbiterrs test result after the change:
-
-  # insmod mtd_test; insmod mtd_nandbiterrs dev=4
-  [   40.685251]
-  [   40.685278] ==================================================
-  [   40.685803] mtd_nandbiterrs: MTD device: 4
-  [   40.691566] mtd_nandbiterrs: MTD device size 7602176, eraseblock=131072, page=2048, oob=128
-  [   40.695528] mtd_nandbiterrs: Device uses 1 subpages of 2048 bytes
-  [   40.703789] mtd_nandbiterrs: Using page=0, offset=0, eraseblock=0
-  [   40.713655] mtd_nandbiterrs: incremental biterrors test
-  [   40.716118] mtd_nandbiterrs: write_page
-  [   40.722126] mtd_nandbiterrs: rewrite page
-  [   40.725878] mtd_nandbiterrs: read_page
-  [   41.103196] mtd_nandbiterrs: verify_page
-  [   41.106915] mtd_nandbiterrs: Successfully corrected 0 bit errors per subpage
-  [   41.111001] mtd_nandbiterrs: Inserted biterror @ 1/7
-  [   41.118007] mtd_nandbiterrs: rewrite page
-  [   41.123850] mtd_nandbiterrs: read_page
-  [   41.127458] qcom_snand 79b0000.spi: the number of corrected bits may be inaccurate
-  [   41.130538] mtd_nandbiterrs: Read reported 4 corrected bit errors
-  [   41.138060] mtd_nandbiterrs: verify_page
-  [   41.144265] mtd_nandbiterrs: Successfully corrected 1 bit errors per subpage
-  [   41.148217] mtd_nandbiterrs: Inserted biterror @ 3/7
-  [   41.155260] mtd_nandbiterrs: rewrite page
-  [   41.161076] mtd_nandbiterrs: read_page
-  [   41.164687] qcom_snand 79b0000.spi: the number of corrected bits may be inaccurate
-  [   41.167750] mtd_nandbiterrs: Read reported 4 corrected bit errors
-  [   41.175324] mtd_nandbiterrs: verify_page
-  [   41.181511] mtd_nandbiterrs: Successfully corrected 2 bit errors per subpage
-  [   41.185456] mtd_nandbiterrs: Inserted biterror @ 5/7
-  [   41.192516] mtd_nandbiterrs: rewrite page
-  [   41.198301] mtd_nandbiterrs: read_page
-  [   41.201949] qcom_snand 79b0000.spi: the number of corrected bits may be inaccurate
-  [   41.204990] mtd_nandbiterrs: Read reported 4 corrected bit errors
-  [   41.212568] mtd_nandbiterrs: verify_page
-  [   41.218720] mtd_nandbiterrs: Successfully corrected 3 bit errors per subpage
-  [   41.222714] mtd_nandbiterrs: Inserted biterror @ 7/7
-  [   41.229739] mtd_nandbiterrs: rewrite page
-  [   41.235548] mtd_nandbiterrs: read_page
-  [   41.239168] mtd_nandbiterrs: Read reported 4 corrected bit errors
-  [   41.242252] mtd_nandbiterrs: verify_page
-  [   41.248407] mtd_nandbiterrs: Successfully corrected 4 bit errors per subpage
-  [   41.252406] mtd_nandbiterrs: Inserted biterror @ 8/7
-  [   41.259413] mtd_nandbiterrs: rewrite page
-  [   41.265238] mtd_nandbiterrs: read_page
-  [   41.268858] mtd_nandbiterrs: error: read failed at 0x0
-  [   41.271937] mtd_nandbiterrs: After 5 biterrors per subpage, read reported error -74
-  [   41.280512] mtd_nandbiterrs: finished successfully.
-  [   41.284587] ==================================================
-  failed to insert /lib/modules/6.15.0-rc5+/mtd_nandbiterrs.ko
-  #
----
- drivers/spi/spi-qpic-snand.c | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
-
-diff --git a/drivers/spi/spi-qpic-snand.c b/drivers/spi/spi-qpic-snand.c
-index 17bcd12f6cb932fdf2d968692359a0301ce4acdc..137d60081754db04ceb5db64e6f250f6477021db 100644
---- a/drivers/spi/spi-qpic-snand.c
-+++ b/drivers/spi/spi-qpic-snand.c
-@@ -638,6 +638,21 @@ static int qcom_spi_check_error(struct qcom_nand_controller *snandc)
- 			unsigned int stat;
- 
- 			stat = buffer & BS_CORRECTABLE_ERR_MSK;
-+
-+			if (stat && stat != ecc_cfg->strength) {
-+				/*
-+				 * The exact number of the corrected bits is
-+				 * unknown because the hardware only reports
-+				 * the number of the corrected bytes.
-+				 *
-+				 * Assume the worst case scenario and use
-+				 * the maximum.
-+				 */
-+				dev_warn(snandc->dev,
-+					 "the number of corrected bits may be inaccurate\n");
-+				stat = ecc_cfg->strength;
-+			}
-+
- 			snandc->qspi->ecc_stats.corrected += stat;
- 			max_bitflips = max(max_bitflips, stat);
- 		}
-
----
-base-commit: e7f3d11567c2c79c4342791ba91c500b434ce147
-change-id: 20250521-qpic-snand-overestimate-bitflips-64112df41c38
-
-Best regards,
--- 
-Gabor Juhos <j4g8y7@gmail.com>
-
+Thanks!
+     Xin
