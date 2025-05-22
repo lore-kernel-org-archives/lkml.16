@@ -1,172 +1,73 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 368F629CE6;
-	Thu, 22 May 2025 02:35:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C976C2EF
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 02:40:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747881332; cv=none; b=qcij7MzBPamj+mwxRV/yuqDK5owF+ab7RutwFM/vcHzcmiwZqrj6a8eVW6k2741MdceiEEmue8QEi4EYWqxfFGT+/COOxap3uiwMU9ECsE8v5q801no9M2BScSdnjSde0K8PVX/5IsswiYuARKMLx789vhnnhKhxxEKVKVIvMOQ=
+	t=1747881643; cv=none; b=RDzP/o2akFi9squXMyihq8QdOZ8YHRvTjFCpFcNnAi3PwfSluL2QI0QXw249gipIXG06BcIvNGKl90vbT+4jZCtAp8NR/TqSH09I1G8ZNlsTEiTPKhNeb/kn1jwKo/mgiJ8FqT4fgO+4K16s19Ek25p0/nYtyfWN41s0BFVbPNc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747881332; c=relaxed/simple;
-	bh=O5WlLJx2+c4wwI4hD4aEpExVS165ZV3Rb0A7jWj6nqc=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=h1w41cFwvOfx7lhvVDal44mHEvpEsYf1nqZI7mN2XgzmTUcq81KSGub68Ui6SqJWL5AacC7oNLMxETSxS8OYXwArcgOubrbDSiT4eLcAHWkDgPDzqkYYgew/waSn4cmgzV3GokiV2oYWVYhDRNTPDv4lW0yWgw9HIpVil2vPu0g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: 687d074e36b511f0b29709d653e92f7d-20250522
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.45,REQID:7d0dadb9-b786-4c96-a233-e70fc7d489b2,IP:0,U
-	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
-	release,TS:0
-X-CID-META: VersionHash:6493067,CLOUDID:162eb6d8f44e73553c797785cbcf1e9c,BulkI
-	D:nil,BulkQuantity:0,Recheck:0,SF:81|82|102,TC:nil,Content:0|50,EDM:-3,IP:
-	nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,L
-	ES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-UUID: 687d074e36b511f0b29709d653e92f7d-20250522
-Received: from mail.kylinos.cn [(10.44.16.175)] by mailgw.kylinos.cn
-	(envelope-from <zhangzihuan@kylinos.cn>)
-	(Generic MTA)
-	with ESMTP id 261166824; Thu, 22 May 2025 10:35:21 +0800
-Received: from mail.kylinos.cn (localhost [127.0.0.1])
-	by mail.kylinos.cn (NSMail) with SMTP id 2A346E00351B;
-	Thu, 22 May 2025 10:17:05 +0800 (CST)
-X-ns-mid: postfix-682E8920-922448443
-Received: from localhost.localdomain (unknown [172.25.120.24])
-	by mail.kylinos.cn (NSMail) with ESMTPA id D27B7E003519;
-	Thu, 22 May 2025 10:17:01 +0800 (CST)
-From: Zihuan Zhang <zhangzihuan@kylinos.cn>
-To: rafael@kernel.org,
-	len.brown@intel.com,
-	pavel@kernel.org
-Cc: linux-pm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	akpm@linux-foundation.org,
-	tzungbi@kernel.org,
-	a.fatoum@pengutronix.de,
-	jani.nikula@intel.com,
-	joel.granados@kernel.org,
-	paulmck@kernel.org,
-	zhangguopeng@kylinos.cn,
-	linux@weissschuh.net,
-	Zihuan Zhang <zhangzihuan@kylinos.cn>
-Subject: [PATCH v2 1/3] PM / Sleep: Replace mutex_[un]lock(&system_transition_mutex) with [un]lock_system_sleep()
-Date: Thu, 22 May 2025 10:16:47 +0800
-Message-Id: <20250522021649.55228-2-zhangzihuan@kylinos.cn>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250522021649.55228-1-zhangzihuan@kylinos.cn>
-References: <20250522021649.55228-1-zhangzihuan@kylinos.cn>
+	s=arc-20240116; t=1747881643; c=relaxed/simple;
+	bh=ZKOHIHDDi6AxMyc2CzMPxN5RVYD91Kp2m/Cz7iSWj78=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ARX7/Dy7Z2U6BdGq11TLfeBN88vb0q2PBIEDcnZ3B2oZe5cjz8gS5+Ysa5LAowqFlqW+tC/nQNdaMzt8KZmDH+DKh0+UmHek5BnTAx34phjgm6qe98gV+0+K1eZ+de/Xs/DE+zpqvUGGbjHrVIlHmOqj2WTNcnh4csE9xFZ2a2c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GoB8ZALZ; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GoB8ZALZ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1747881640;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=HmCantyUlLY67TPpShcPTsMGfNVblvBqn7EzBXLF2qE=;
+	b=GoB8ZALZttP8gg970CaOvZCA7eB5l5IraN9u27RBu9vAwsV0heZIMdBfnhNMIIAr8BjFzH
+	/yqDPFgjQcnauT+jKfbAjJtpZfH0vxAZ9kZuOsyDBWtjZP20fjPwuz0D15/xI9y5hQ2a6Q
+	EAS7z9P8ujklrnhj5jyE7BT30FUL8Tc=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-593-jLSzU6ccPvyT8xWboeghdQ-1; Wed,
+ 21 May 2025 22:40:38 -0400
+X-MC-Unique: jLSzU6ccPvyT8xWboeghdQ-1
+X-Mimecast-MFC-AGG-ID: jLSzU6ccPvyT8xWboeghdQ_1747881637
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 6B60B1956088;
+	Thu, 22 May 2025 02:40:37 +0000 (UTC)
+Received: from fedora (unknown [10.72.116.78])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 1A81019560A7;
+	Thu, 22 May 2025 02:40:33 +0000 (UTC)
+Date: Thu, 22 May 2025 10:40:28 +0800
+From: Ming Lei <ming.lei@redhat.com>
+To: Caleb Sander Mateos <csander@purestorage.com>
+Cc: Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ublk: remove io argument from
+ ublk_auto_buf_reg_fallback()
+Message-ID: <aC6OnAWeFwte_hUa@fedora>
+References: <20250521160720.1893326-1-csander@purestorage.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250521160720.1893326-1-csander@purestorage.com>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-These function currently calls mutex_lock(&system_transition_mutex) and
-mutex_unlock() directly to protect the resume-from-disk operation from
-concurrent suspend/resume transitions.
+On Wed, May 21, 2025 at 10:07:19AM -0600, Caleb Sander Mateos wrote:
+> The argument has been unused since the function was added, so remove it.
+> 
+> Signed-off-by: Caleb Sander Mateos <csander@purestorage.com>
 
-However, this is inconsistent with the rest of the power management
-code, where lock_system_sleep() and unlock_system_sleep() are used to
-wrap suspend/hibernate transitions. These wrapper functions not only
-acquire system_transition_mutex, but also set PF_NOFREEZE for the
-calling thread, ensuring that it is not subject to freezing during
-suspend.
+Reviewed-by: Ming Lei <ming.lei@redhat.com>
 
-This change replaces the raw mutex_lock()/unlock() with the standard
-lock_system_sleep()/unlock_system_sleep() wrapper pair, bringing it in
-line with the locking pattern used by hibernate(), pm_suspend(), and
-other similar entry points.
-
-Benefits of this change:
-
- - Ensures the thread performing software resume is marked PF_NOFREEZE,
-   which is important during early resume paths where freezing is
-active.
- - Improves code clarity by making the locking intent more explicit.
- - Unifies suspend/hibernate locking style across the kernel power
-   subsystem.
- - Reduces the risk of future maintenance issues due to inconsistent
-   locking.
-
-No functional change is expected at runtime, since the lock order and
-coverage remain the same. This is a straightforward cleanup and
-consistency fix.
-
-Signed-off-by: Zihuan Zhang <zhangzihuan@kylinos.cn>
----
- kernel/power/hibernate.c | 5 +++--
- kernel/reboot.c          | 5 +++--
- 2 files changed, 6 insertions(+), 4 deletions(-)
-
-diff --git a/kernel/power/hibernate.c b/kernel/power/hibernate.c
-index 23c0f4e6cb2f..cfaa92f24857 100644
---- a/kernel/power/hibernate.c
-+++ b/kernel/power/hibernate.c
-@@ -988,6 +988,7 @@ static int __init find_resume_device(void)
-=20
- static int software_resume(void)
- {
-+	unsigned int sleep_flags;
- 	int error;
-=20
- 	pm_pr_dbg("Hibernation image partition %d:%d present\n",
-@@ -995,7 +996,7 @@ static int software_resume(void)
-=20
- 	pm_pr_dbg("Looking for hibernation image.\n");
-=20
--	mutex_lock(&system_transition_mutex);
-+	sleep_flags =3D lock_system_sleep();
- 	error =3D swsusp_check(true);
- 	if (error)
- 		goto Unlock;
-@@ -1050,7 +1051,7 @@ static int software_resume(void)
- 	hibernate_release();
- 	/* For success case, the suspend path will release the lock */
-  Unlock:
--	mutex_unlock(&system_transition_mutex);
-+	unlock_system_sleep(sleep_flags);
- 	pm_pr_dbg("Hibernation image not present or could not be loaded.\n");
- 	return error;
-  Close_Finish:
-diff --git a/kernel/reboot.c b/kernel/reboot.c
-index ec087827c85c..68ac7e377efb 100644
---- a/kernel/reboot.c
-+++ b/kernel/reboot.c
-@@ -729,6 +729,7 @@ SYSCALL_DEFINE4(reboot, int, magic1, int, magic2, uns=
-igned int, cmd,
- 		void __user *, arg)
- {
- 	struct pid_namespace *pid_ns =3D task_active_pid_ns(current);
-+	unsigned int sleep_flags;
- 	char buffer[256];
- 	int ret =3D 0;
-=20
-@@ -761,7 +762,7 @@ SYSCALL_DEFINE4(reboot, int, magic1, int, magic2, uns=
-igned int, cmd,
- 		cmd =3D LINUX_REBOOT_CMD_HALT;
- 	}
-=20
--	mutex_lock(&system_transition_mutex);
-+	sleep_flags =3D lock_system_sleep();
- 	switch (cmd) {
- 	case LINUX_REBOOT_CMD_RESTART:
- 		kernel_restart(NULL);
-@@ -811,7 +812,7 @@ SYSCALL_DEFINE4(reboot, int, magic1, int, magic2, uns=
-igned int, cmd,
- 		ret =3D -EINVAL;
- 		break;
- 	}
--	mutex_unlock(&system_transition_mutex);
-+	unlock_system_sleep(sleep_flags);
- 	return ret;
- }
-=20
---=20
-2.25.1
+Thanks, 
+Ming
 
