@@ -1,71 +1,90 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A98629CE6;
-	Thu, 22 May 2025 16:00:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.3])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EDB4829CE6;
+	Thu, 22 May 2025 16:02:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747929618; cv=none; b=F1uskqeJmnCbOtTB0cAyDM6Uer1HaE4yRNwtKKEvB44h/yW/JQi0vICyiCblHt0RAjuW8M7KWL+OhNHmCn8j3updSNGHwadAqfzCvPPCjEqLk2favY8yv/4XUGTBRpjAnLYnKAIjKlCWODYllGeezm8Om//yGOxg4Y1scyLMyBU=
+	t=1747929745; cv=none; b=nVJ5TZRpmbE4UwZNYQ+psnVo+foDC6HJTT6tW/frtcxEd+lGgCl2WGpZXo7Th3RqMtBv7h6y08KjtaMZL2ZGEEQIgyOIJgbW56TrcwnAELzxTh0dZNLdwX4Ort7j61hc6cogm4BPYbZb00Bd4GYhwIcIDRKmP2pCrEOn8YTIrng=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747929618; c=relaxed/simple;
-	bh=Duu6R2oqMGbRLS8KypoJ+q341Mlb5R2v5xwyexlzGzc=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=T1oe9YvbR9cFo5RUM8E0eDlDNUeaP+bF+HGCMeaXlobFGlyv72WXUZgjDaOFA/gKCPn9tw88XgSfSah0uH/8y6J29erVqWOwbSo3jpkTTKQf0EXlso8BFsMsuWidnDjb1n+0MKHjoFyYWaoZRt3yzwDRaK7+hj3/l0i5MCQUWvg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ScAsorDo; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747929745; c=relaxed/simple;
+	bh=K8qyu4zwXLqUbPIjChC8Rq9ekYH/PJ1pa+QpwOv/Jrg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=JRFZypcpckEZjd2/gpidG5mZCqofsFDFOV6x7kJ51+UK9EpSbsiLpSu0IK+vmDKon3cMV3zMSIPkJrDllwr8xHWXZyMhIJs5DWLa4rK3U/Ti0MuFHpdR+N0/Cssyqjs/E6satMlg7ev+NCC+v80f1eygrvb7hOYl4tOsX0DCptk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=pKWzNnO5; arc=none smtp.client-ip=117.135.210.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ScAsorDo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F02F8C4CEE4;
-	Thu, 22 May 2025 16:00:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747929617;
-	bh=Duu6R2oqMGbRLS8KypoJ+q341Mlb5R2v5xwyexlzGzc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=ScAsorDoSw/NfVCiVDXq+nPJi+lDWwlFwznuUi9r8l+wmzMpygrZ4jlScGJCr2mag
-	 dsMyh7Sitj/VKhbTgu/lSJp/z1SYqWBm0ecM0YYbpfS9I7Lnn6EpEUYJCuc2PkHy/f
-	 qshWwBgEf8KgVRL+PqRWa6tXXejMgUegVwjcxi6BsctAjBIEVfLwqPRVFMlbg5rHAK
-	 x31pQFHSq/+mH18rcgx3VeIhaj+JEOEbWSPnm7nJoyycVpXOuR1bxhHZURhXJq8XzI
-	 Th8Y66s1I+v3lO5Je5GLwB9Wenizvw9kpoVWZXr8Kdx/k/3+w3q7/6SZBdfcHckdDw
-	 Vxt9mBh2icfIw==
-Date: Thu, 22 May 2025 09:00:15 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Tariq Toukan <tariqt@nvidia.com>
-Cc: "David S. Miller" <davem@davemloft.net>, Paolo Abeni
- <pabeni@redhat.com>, Eric Dumazet <edumazet@google.com>, "Andrew Lunn"
- <andrew+netdev@lunn.ch>, Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky
- <leon@kernel.org>, "Saeed Mahameed" <saeedm@nvidia.com>, "Richard Cochran"
- <richardcochran@gmail.com>, Alexei Starovoitov <ast@kernel.org>, Daniel
- Borkmann <daniel@iogearbox.net>, Jesper Dangaard Brouer <hawk@kernel.org>,
- John Fastabend <john.fastabend@gmail.com>, <linux-rdma@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
- <bpf@vger.kernel.org>, Moshe Shemesh <moshe@nvidia.com>, Mark Bloch
- <mbloch@nvidia.com>, Gal Pressman <gal@nvidia.com>, Cosmin Ratiu
- <cratiu@nvidia.com>
-Subject: Re: [PATCH net-next 4/5] net/mlx5e: Don't drop RTNL during firmware
- flash
-Message-ID: <20250522090015.60147b61@kernel.org>
-In-Reply-To: <1747829342-1018757-5-git-send-email-tariqt@nvidia.com>
-References: <1747829342-1018757-1-git-send-email-tariqt@nvidia.com>
-	<1747829342-1018757-5-git-send-email-tariqt@nvidia.com>
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="pKWzNnO5"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Message-ID:Date:MIME-Version:Subject:To:From:
+	Content-Type; bh=0AZGXn3LCPEY9S15QKsQn0Bu/8rEFUNP3khAtgVDGKw=;
+	b=pKWzNnO5XPi/51xWxZGHLUBE5xUg3sch9xkRX49/M8KWSiSNF7lEAQuo3FmU/7
+	KRQYqXuz8ctRU1QXqUkb5NS9EW5XpDU0Y6mPMZGN9p+b2MkA5X0XqD0Wm6tLHGFX
+	ZITh/p3TlrYa7CIp2Da/UllR4Zi0q0kDKR5pe/6/tIuGo=
+Received: from [192.168.71.93] (unknown [])
+	by gzga-smtp-mtada-g0-2 (Coremail) with SMTP id _____wDXeqFZSi9ol5cRDQ--.46492S2;
+	Fri, 23 May 2025 00:01:30 +0800 (CST)
+Message-ID: <403949d7-7c36-4b9a-a079-60a5aa985dd1@163.com>
+Date: Fri, 23 May 2025 00:01:29 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/4] pci: implement "pci=aer_panic"
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: bhelgaas@google.com, tglx@linutronix.de, kw@linux.com,
+ mahesh@linux.ibm.com, oohall@gmail.com, linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+References: <20250516165518.125495-1-18255117159@163.com>
+ <e2iu7w3sn7m4zwo6ork2mbfjcfixo5jn5ydshkefezsgtquvh6@kjdvxgiapbjj>
+Content-Language: en-US
+From: Hans Zhang <18255117159@163.com>
+In-Reply-To: <e2iu7w3sn7m4zwo6ork2mbfjcfixo5jn5ydshkefezsgtquvh6@kjdvxgiapbjj>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:_____wDXeqFZSi9ol5cRDQ--.46492S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW7ZrW5KF1rKr4kKr43KFW7Jwb_yoW8XrWkpF
+	45tayDKF4DAFyfAFs2g3y0v3yjq3s5Jws8Jrn8Wr1ftr4agF17G34a9FWY9FW7Kr1I9w4S
+	vFW0q398tFn8AaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0zRBMKZUUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiWwRVo2gvRGCRpgAAs9
 
-On Wed, 21 May 2025 15:09:01 +0300 Tariq Toukan wrote:
-> However, the stack is moving towards netdev instance locking and
-> dropping and reacquiring RTNL in the context of flashing introduces
-> locking ordering issues: RTNL must be acquired before the netdev
-> instance lock and released after it.
+
+
+On 2025/5/22 19:47, Manivannan Sadhasivam wrote:
+> On Sat, May 17, 2025 at 12:55:14AM +0800, Hans Zhang wrote:
+>> The following series introduces a new kernel command-line option aer_panic
+>> to enhance error handling for PCIe Advanced Error Reporting (AER) in
+>> mission-critical environments. This feature ensures deterministic recover
+>> from fatal PCIe errors by triggering a controlled kernel panic when device
+>> recovery fails, avoiding indefinite system hangs.
+>>
+>> Problem Statement
+>> In systems where unresolved PCIe errors (e.g., bus hangs) occur,
+>> traditional error recovery mechanisms may leave the system unresponsive
+>> indefinitely. This is unacceptable for high-availability environment
+>> requiring prompt recovery via reboot.
+>>
+>> Solution
+>> The aer_panic option forces a kernel panic on unrecoverable AER errors.
+>> This bypasses prolonged recovery attempts and ensures immediate reboot.
+>>
 > 
-> This patch therefore takes the simpler approach by no longer dropping
-> and reacquiring the RTNL, as soon RTNL for ethtool will be removed,
-> leaving only the instance lock to protect against races.
+> You should not panic the kernel when a PCI error occurs (even if it is a fatal
+> one). You should instead try to reset the root complex. For that you need this
+> series that got merged recently:
+> https://lore.kernel.org/all/20250508-pcie-reset-slot-v4-0-7050093e2b50@linaro.org
+> 
+> PS: You need to populate the slot_reset callback in your controller driver to
+> reset the controller in the event of a fatal AER error or link down.
 
-You didn't mention it so just in case someone tries to report this 
-as a regression later - devlink has been the preferred way to flash
-devices for 5+ years. It has much better UX with the progress
-notifications, and already does per-instance locking.
+Dear Mani,
+
+Thank you for your reply. I will take a look at the submission record 
+you provided.
+
+Best regards,
+Hans
+
