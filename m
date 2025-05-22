@@ -1,113 +1,112 @@
-Received: from mail-il1-f177.google.com (mail-il1-f177.google.com [209.85.166.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3CC12673AC;
-	Thu, 22 May 2025 23:17:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E121D2C376B;
+	Thu, 22 May 2025 23:18:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747955834; cv=none; b=CJA4ZKvnOsJm2Aiyg+gDQj7dNrfFHZiHi8nLMDe6N7un/5ECwOfyf5oTE5ud3MdkLX1fu8BQpGLLNieLZjlBW6jkVsdAD3ZewzDmunKZvNJ77G8xdB2KVtlVPblsDq21Q8X/YzZQMUrt+iwnm4srD8LmIBAPHYwR5YtzmjqDOJA=
+	t=1747955919; cv=none; b=GGoButRua//mCatbl7CJSRynI2dyjy9hGfs2Mi8q0LlzLOGjzXRm5yTh2kduoYxDZHsEis9ttf5aQBfQ1E2sHX4W3f36K6xDo42a4/uOtH2xbsVFQWbZYd2XCGtU/GuN/iZgubAd5fwLN8LpM+alcBj7X5pzdVpk116pv6loXGU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747955834; c=relaxed/simple;
-	bh=3f3Fo7Dm23hD8Vzd8mA64sJj0jRQ2dQkVVlple2PRnQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KtufuFfflcwFJ+zHxFgvLawc5XdIkhMbEkJ5BYFQmkYBhEZ89p+JefCSf3v4suWk4DEpWO5YG3z1igEO/YcVuR0nDmfKY0XxO1i0+ttUqojYBA/6SUBRpWd12UW/JDztjB0USN1/v8Ls7BqhoZr6d9+XZyK45wFszjoOdLjo/3Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jlRoxdE1; arc=none smtp.client-ip=209.85.166.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747955919; c=relaxed/simple;
+	bh=5+7fAY6eR4MG9NgL+IBBN9GTAKyqw2wvO6TVHj4p1J0=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=mRSNcqB/GR4sACRfpPjzMcHNehOTRaJIO/uDnITxfcJcudXcDc1Y5LgefQQGO47eURTLzGfnXMIGgNaUdhaftRU0LYAEG6WMDRjWO1dnIOmc6LL8ZBBT27oyxKI5gbzL7lPD8whnwxBkZiRNG2nXDcwonscLm5IUpY7cL3ERAEc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YP72t/cH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jlRoxdE1"
-Received: by mail-il1-f177.google.com with SMTP id e9e14a558f8ab-3dc8265b9b5so18026075ab.1;
-        Thu, 22 May 2025 16:17:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747955832; x=1748560632; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GaM354tZx5U+vN6gfAJSlMDQcTM2SFE45F9vbnngQiw=;
-        b=jlRoxdE1LwDm+mLQHMuhiA+6tQirer1KWYsfNpsQIgYxcvwF3B7354a/+w0qid0OCq
-         jw1OzRuLRKgjbOG7xdxbe9OQ2Gsi+eF2gtUbLTOjmKq5AwTOQW4zRZQJUq/bgZGjbV6L
-         pQgTK70zyWv6HtN4HJndB1RQ9izCnWpZTXPw3PXnhr2WWUq43aHIfPz2cMUXRm/f2Gyq
-         KbfY/4XPYYbk2V8XJnthIvePtbrZ2+Fwo0RmurHuYL/hIPAOc2LyFiQJ43ul9mld94rE
-         1PCYbWH+hCuVRgPK9FMFek+JdOtuJ5TVd3rSaao2gyiGhH1l7IqhO0ySI7cDrAaVTzkA
-         WSUQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747955832; x=1748560632;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=GaM354tZx5U+vN6gfAJSlMDQcTM2SFE45F9vbnngQiw=;
-        b=Qt80QVxcR67BTaqWRQvE7gDik/fg6TBKwO1d+99RO8zlVsYvNqYCdJdgb7psjQLnJK
-         JK8elIRt/eWAsMOtOETcAjHV7I27G78RqA8NOgkd2iMb5pd33MT+L2rVEAfxhKGu9kAq
-         tD5jFR77htwULCp/X57UkUQVE3AeYAk34ya0Eq0rNULJ5V1LA1mQoZO9KChFLzRdA5q4
-         3/BvFm4+6O75Mz3siNmPuPfOAQpXh5nAj+MlaDdAkY6KBEkLOqXplDDFfbDS8o34W7QL
-         z0xglv+LHkQESBmc/8ZlVrRywS4FYeRnXEuTh9TWmQUhUd9VhkhgzfuqPn+u5aLD8jIq
-         aLrg==
-X-Forwarded-Encrypted: i=1; AJvYcCVrwQIH46QC4jH19CH3MSEoKbG6fIfeKLEAaDwOC0inLE2eJzjkAWlfYzYrpHd5YZ6bWhS6O420v+BJK8aLuaFN56nt@vger.kernel.org, AJvYcCX1dpSweyanYw+bJTxyTq7GWisJ/bvwZ5WA9qFCd2nTnijyR1z8gbIjcnmPpdE4pqj/JQAwlHRyZrP6wQ==@vger.kernel.org
-X-Gm-Message-State: AOJu0YxPZUGDrbCr9bgLzL0Kq5UJ1k7hLOgLz00mKnTG/T0uN2CsSZYI
-	ptoW3dkS5SOql1lZc6nkvmIdKFVgIkCFvyrmcu4mYUjo2c4RlFCeKBgBXd087mHIWrDMQVfNvN9
-	Zo1mRkU3VbEgzyw49O6ovjSvB9MvtT88=
-X-Gm-Gg: ASbGncvqGjIFd5qxiUjMUkBShvME+VAzWEFq0jv60qAGzE0jX64+eURHxKLaI0sC8qk
-	QkllMorWbOLwkcvvkAGmkaAgaNSitC3QWEVtkYVNkONYrTA9/vUOAf/zFpfFU3P4Gm8z9Vp30Ti
-	KSUzlHXixsnCi1rGAgr49SHDrZA4iOrEc=
-X-Google-Smtp-Source: AGHT+IHL7FrgTlGS+bXYyQa4ezkcG+a0z9X9zvWhqeGXgBAvxvtnrcJPNRFmVqTXDacSReyBfg0T5giZYyZPcdUJgfE=
-X-Received: by 2002:a05:6e02:3c02:b0:3d8:1dc7:ca7a with SMTP id
- e9e14a558f8ab-3db84296d9amr302457135ab.5.1747955831811; Thu, 22 May 2025
- 16:17:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YP72t/cH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8726C4CEE4;
+	Thu, 22 May 2025 23:18:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747955918;
+	bh=5+7fAY6eR4MG9NgL+IBBN9GTAKyqw2wvO6TVHj4p1J0=;
+	h=From:Subject:Date:To:Cc:From;
+	b=YP72t/cHrkt13dZbB0RmKH5rCh4yTHXqfKGg/1z1dmecZFNDvXALUFp+J+e1qKcW8
+	 2X4rqSsgSg3k9nub7aITAlbgxPTAXT37jX/jnOQFUy/hTD0VgJHJ6wprHMC2ipkVyf
+	 p9AbO2VzTg9akgS+Q9VQx+g5FjL8Sd0L7TLzqmXRoqQY3PS8vlHGhQ0MwiWJzZCqZP
+	 oOV7OqvrnTcHkGqGIDnqVUdU8ahnG8P6E9DUf2yIfXg8MIjflQfFb3+2H217sApjxm
+	 /p9JId4UCQdchTFWKLsywjEYUy8Ar0Zk9Y7T+jnz3yKZ5XW3WuuEyjdkS8h1vHlUN2
+	 KBBpeXlV83MxQ==
+From: Konrad Dybcio <konradybcio@kernel.org>
+Subject: [PATCH 00/10] Grab IPA IMEM slice through DT, part 2
+Date: Fri, 23 May 2025 01:18:15 +0200
+Message-Id: <20250523-topic-ipa_mem_dts-v1-0-f7aa94fac1ab@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250518025734.61479-1-kerneljasonxing@gmail.com>
-In-Reply-To: <20250518025734.61479-1-kerneljasonxing@gmail.com>
-From: Jason Xing <kerneljasonxing@gmail.com>
-Date: Fri, 23 May 2025 07:16:35 +0800
-X-Gm-Features: AX0GCFt7enlOC2dQS-dK7V0yyxkE3qzeKRNR56_u9wVWI7Gr7wIMNtBCnBTB4wo
-Message-ID: <CAL+tcoCD5ORW=JqvZg7=uJXkLi-WTG-Szj1k8ya9sX6LcR41jQ@mail.gmail.com>
-Subject: Re: [PATCH v3 0/4] relayfs: misc changes
-To: axboe@kernel.dk, rostedt@goodmis.org, mhiramat@kernel.org, 
-	mathieu.desnoyers@efficios.com, akpm@linux-foundation.org
-Cc: linux-kernel@vger.kernel.org, linux-block@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, Jason Xing <kernelxing@tencent.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIALewL2gC/23NTQqDMBAF4KtI1h0xkdRWSuk9ikjUsR1o/Jsog
+ nj3Ru2ym4H34H2zCMaBkEUaLGLAiZjaxgd5CkT5Ns0LgSqfhYqUjrSKwbUdlUCdyS3avHIM+lL
+ rKomNrJUUftcNWNO8m8/syAP2o6fdUQqLzGan0+D2RyZPwyQhgkJXOj6rqyyT+tEyh/1oPmVrb
+ ejPfftWGEbYGnJp0ODs4Acqka3rF+uaAjHgAAAA
+X-Change-ID: 20250523-topic-ipa_mem_dts-58f5d73a1f21
+To: Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, cros-qcom-dts-watchers@chromium.org, 
+ Sai Prakash Ranjan <quic_saipraka@quicinc.com>
+Cc: Marijn Suijten <marijn.suijten@somainline.org>, 
+ linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, 
+ Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1747955915; l=2463;
+ i=konrad.dybcio@oss.qualcomm.com; s=20230215; h=from:subject:message-id;
+ bh=5+7fAY6eR4MG9NgL+IBBN9GTAKyqw2wvO6TVHj4p1J0=;
+ b=/TJ7cmk/FJQ068DNpf4DiXwjXvvwoHB4aCxNMSQYG6EENJ8OeIgY6tdoB42SC3CMHcHCkab6t
+ jV41lYN5NIMDd1hg6qfVsToAjyXPFWfjTvYN1hMN4ZZhRrwWD05AFKq
+X-Developer-Key: i=konrad.dybcio@oss.qualcomm.com; a=ed25519;
+ pk=iclgkYvtl2w05SSXO5EjjSYlhFKsJ+5OSZBjOkQuEms=
 
-On Sun, May 18, 2025 at 10:57=E2=80=AFAM Jason Xing <kerneljasonxing@gmail.=
-com> wrote:
->
-> From: Jason Xing <kernelxing@tencent.com>
->
-> The series mostly focuses on the error counters which helps every user
-> debug their own kernel module.
->
-> ---
-> Note: this series is made on top of this cleanup[1] and unmerged commit[2=
-]
-> [1]: https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git/log/?h=
-=3Dmm-nonmm-unstable
-> [2]: https://lore.kernel.org/all/20250507134225.63248-1-kerneljasonxing@g=
-mail.com/
->
-> Jason Xing (4):
->   relayfs: support a counter tracking if per-cpu buffers is full
->   relayfs: introduce getting relayfs statistics function
->   blktrace: use rbuf->stats.full as a drop indicator in relayfs
->   relayfs: support a counter tracking if data is too big to write
->
->  include/linux/relay.h   | 19 ++++++++++++++-
->  kernel/relay.c          | 52 +++++++++++++++++++++++++++++++++++------
->  kernel/trace/blktrace.c | 22 ++---------------
->  3 files changed, 65 insertions(+), 28 deletions(-)
+The IPA IMEM slice addresses/sizes are hardcoded in the driver. That's
+mucho no bueno, especially since the same versions of IPA are used
+across a number of vastly different platforms, which invalidates that
+approach completely.
 
-Hi Andrew,
+This series wires up the IMEM slices in DT on almost all platforms
+(need some more time for SDX55/65) and fills in the necessary bindings
+holes.
 
-Any comments on the series?
+Tested on SC7280 only, FWIW.
 
-Thanks,
-Jason
+Patches 1-3 are good to go instantly, the rest must wait for the
+bindings changes that were submitted in the series marked as a
+dependency.
 
->
-> --
-> 2.43.5
->
+Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+---
+Konrad Dybcio (10):
+      dt-bindings: sram: qcom,imem: Add a number of missing compatibles
+      arm64: dts: qcom: sdm845: Expand IMEM region
+      arm64: dts: qcom: sc7180: Expand IMEM region
+      arm64: dts: qcom: sc7180: Explicitly describe the IPA IMEM slice
+      arm64: dts: qcom: sc7280: Explicitly describe the IPA IMEM slice
+      arm64: dts: qcom: sdm845: Explicitly describe the IPA IMEM slice
+      arm64: dts: qcom: sm6350: Explicitly describe the IPA IMEM slice
+      arm64: dts: qcom: sm8350: Explicitly describe the IPA IMEM slice
+      arm64: dts: qcom: sm8550: Explicitly describe the IPA IMEM slice
+      arm64: dts: qcom: sm8650: Explicitly describe the IPA IMEM slice
+
+ Documentation/devicetree/bindings/sram/qcom,imem.yaml | 13 +++++++++++++
+ arch/arm64/boot/dts/qcom/sc7180.dtsi                  | 16 +++++++++++-----
+ arch/arm64/boot/dts/qcom/sc7280.dtsi                  |  6 ++++++
+ arch/arm64/boot/dts/qcom/sdm845.dtsi                  | 16 +++++++++++-----
+ arch/arm64/boot/dts/qcom/sm6350.dtsi                  | 16 ++++++++++++++++
+ arch/arm64/boot/dts/qcom/sm8350.dtsi                  | 16 ++++++++++++++++
+ arch/arm64/boot/dts/qcom/sm8550.dtsi                  | 16 ++++++++++++++++
+ arch/arm64/boot/dts/qcom/sm8650.dtsi                  | 16 ++++++++++++++++
+ 8 files changed, 105 insertions(+), 10 deletions(-)
+---
+base-commit: 6add743d2854d744c3037235b87c1c9d164fd132
+change-id: 20250523-topic-ipa_mem_dts-58f5d73a1f21
+prerequisite-message-id: <20250523-topic-ipa_imem-v1-0-b5d536291c7f@oss.qualcomm.com>
+prerequisite-patch-id: f6aa0c354d434ec11dd88b93528c05cb3a45bb07
+prerequisite-patch-id: 89f72ef0c3d3f29753b0cb9e290a4036ba380cc1
+prerequisite-patch-id: 330c94ac7c2b42dd86c5f763b133f0d2598fda40
+
+Best regards,
+-- 
+Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+
