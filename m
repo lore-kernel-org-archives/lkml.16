@@ -1,63 +1,247 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5664C36B;
-	Thu, 22 May 2025 00:44:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E1D92F30;
+	Thu, 22 May 2025 00:49:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747874648; cv=none; b=bxQIhHJWher1K8cmFbgeN6jFi1yQQRz53332v5ASDJRRfAzGkPN3mB9qpq/FQRMbIBLWffktg7O70eXuEOGRgvxLcVDqn7L2FFZqiVHMg//LIobSwIWuIivaML2QaK94komKc/AX/Zu/B64cImKJdXkJMMwWPvdLb8Dk4o48qGw=
+	t=1747874946; cv=none; b=hrb3ZJZbf3X91gRNWaR7g2xi95vipXpcdjmMZZToVCMe9JOLlk9qD2ouKYCY6Z+ZRs/1VAns6VzgQ08q7zKgKDz2afzxGpz9KVPk6tB0APsXNw7b0pVWdzAuSLCAG7CT1RpW7GpPnQZB7QGMELxvdSbES6TmJ6QlQGbb6IQIS+A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747874648; c=relaxed/simple;
-	bh=48s2RaX/WnCgVXH4B5LLHthSl+K94O//Nsv9mgP9TUw=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=TvdN0hKoNgE1VokPZciRUpE1nGGAmZTVkA59UjblKFaDCY34LFM254B/PGgS8NrOLOPPsxX+0fG+6RK497/X8AjwNsne+9jriag6NOKlv24uLcT2zqm5zDEbWu6SImUPVrKvxdkyS2swWuYy47RCNBVpJpvG6chZKqzFoGSMjv0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=orSWVTMF; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747874946; c=relaxed/simple;
+	bh=BRyJVxRQR3Asg4/ZCuNHWYeVdXLzeUtZAcuVk6XH2oc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=d2Ez66o18CujbrEWxt71nM68Rn8lceWR6MSprddxW9ddUdfRGYIYyHNh7OxR8x0J/AnGit/JRKW5JIjevnd4INbn38tzrr8WDV9/CJURqmmt/q+ZZyiVf7yTZL/zQ2qyLjxVx0Ra/FbyVqehHUoaLR6kFtttfUwaxeKZcR3jT0k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=eIw8SLTF; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="orSWVTMF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2FA7DC4CEE4;
-	Thu, 22 May 2025 00:44:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747874648;
-	bh=48s2RaX/WnCgVXH4B5LLHthSl+K94O//Nsv9mgP9TUw=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=orSWVTMF4L7HFFDvPNRKkjyyMLWPvitkE1vT97e8U1t/p5aWUnwUSEpMZZm1tFwQi
-	 epQVbdx8hjiBIOuY502rN+uWwDRNfTfNNsA5Gt3w9sspPy03MzT3gPCS8EY5UCPo5x
-	 x+xWhxBg+oE3L1/oUkzOLum2ID/OEgBgakdMAN/eYgPElWuiPFEzCt1ApKHwl2ZQJj
-	 jWC49AkwqgPpih7fevcHs3skMNMaEI/gkzQ7rCdzqBXaAnsw1hocQRQkMno+WjbzXb
-	 ZnriFh8s72fwhftlSaMRnH0I5wDSPEMP4erybFtKn9Tb1vUhOJP/o+t8ULiY3Yfobz
-	 yB0vPKa+Yg6pA==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EB22B380DBE0;
-	Thu, 22 May 2025 00:44:44 +0000 (UTC)
-Subject: Re: [GIT PULL] clk fixes for v6.15-rc7
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <20250521214133.1193304-1-sboyd@kernel.org>
-References: <20250521214133.1193304-1-sboyd@kernel.org>
-X-PR-Tracked-List-Id: <linux-clk.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20250521214133.1193304-1-sboyd@kernel.org>
-X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/clk/linux.git tags/clk-fixes-for-linus
-X-PR-Tracked-Commit-Id: 6a56880562d470b7bbdd1d955ff3fad4ad73a74f
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: d608703fcdd9e9538f6c7a0fcf98bf79b1375b60
-Message-Id: <174787468342.2333889.4818983198382528923.pr-tracker-bot@kernel.org>
-Date: Thu, 22 May 2025 00:44:43 +0000
-To: Stephen Boyd <sboyd@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Michael Turquette <mturquette@baylibre.com>, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="eIw8SLTF"
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54LHSSrF020937;
+	Thu, 22 May 2025 00:48:45 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	DmPhszqiCtYUTkb9Ey+ul5DFwAmk4oVD18bJnHmknaI=; b=eIw8SLTFHFH6Bo72
+	LUNfhty0JapqnLWo2675dlyvG6xNk/8O06NiASqNYo4uYH9DaQzEvWXo5foNQt1+
+	skB9XOvrCp8QGqPMUCAdC9rX8JQnhvoI1jcrHsJbiGOVm6Y9dqK/l3S9DUUP6dJI
+	sWgGuCCcE2YJBmSHptLIjWGQV73NR6Z1H2z9UyMAV0A/Zf0opSJzarmyfpSjKNj7
+	1dGHgcgkMfIY/2QU9vPiHC9jftBJSrIYZtvPJhjWeCWYkSaIP/jpvLBMjAeJxZMU
+	dlNm0ZCuX+H3rEVbbzvsQpae2Ons9qf08x0uiG0Lw+UdqYAF0mWtEN/5a785gv/F
+	us32jg==
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46rwf04pha-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 22 May 2025 00:48:44 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54M0mXWh029404
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 22 May 2025 00:48:33 GMT
+Received: from [10.134.71.247] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 21 May
+ 2025 17:48:32 -0700
+Message-ID: <930881ab-99ec-44de-92fb-09273d061677@quicinc.com>
+Date: Wed, 21 May 2025 17:48:32 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/4] dt-bindings: display/msm: add stream 1 pixel clock
+ binding
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+CC: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        Rob Clark
+	<robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        Marijn Suijten
+	<marijn.suijten@somainline.org>,
+        David Airlie <airlied@gmail.com>, "Simona
+ Vetter" <simona@ffwll.ch>,
+        Maarten Lankhorst
+	<maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Kuogee Hsieh <quic_khsieh@quicinc.com>,
+        Mahadevan <quic_mahap@quicinc.com>, <linux-arm-msm@vger.kernel.org>,
+        <dri-devel@lists.freedesktop.org>, <freedreno@lists.freedesktop.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20241202-dp_mst_bindings-v1-0-9a9a43b0624a@quicinc.com>
+ <20241202-dp_mst_bindings-v1-3-9a9a43b0624a@quicinc.com>
+ <edlw7grqy74rihy5jw5t2krcyfn24c6b2lfxht4b52wx6fvck6@pqeqrbnwtsf3>
+ <0101602d-0434-47ea-8957-471c4ead100d@quicinc.com>
+ <2m5fq7whbvaq4sbbxittxhbksw6erfotlwalrfevujq4mrt3kk@ctbgwinz2o72>
+Content-Language: en-US
+From: Abhinav Kumar <quic_abhinavk@quicinc.com>
+In-Reply-To: <2m5fq7whbvaq4sbbxittxhbksw6erfotlwalrfevujq4mrt3kk@ctbgwinz2o72>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: 67-OQHAA8IBtzG_dlKxEtcqD81q5kJGc
+X-Proofpoint-ORIG-GUID: 67-OQHAA8IBtzG_dlKxEtcqD81q5kJGc
+X-Authority-Analysis: v=2.4 cv=ZP3XmW7b c=1 sm=1 tr=0 ts=682e746c cx=c_pps
+ a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=COk6AnOGAAAA:8
+ a=mvoR8rSpNx2g5lO-hroA:9 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIyMDAwNSBTYWx0ZWRfX5SSP9xgBQ2ow
+ g1Lw7abSueQtZgB/BphEPNCDCSm6WBJXh9aflLeZP/JoDKeA+ne0J71noS89tA8yrEv8KZU05PI
+ OuYLnvPGcxq/2y0+etpV4/fiWTl+bWGvOrJ14RGtTolm1a26Z1Sz4iygMGPnHJe3PKwnWX1n3QZ
+ 3OIf2Jq77pZ7E8EQYh9UKmjVz6ao2NSkSUEhwAECIkFS1+GvzwSFvS5At0bnCs2VZNE8CgMUoiM
+ 9f6ww5K8MfnpkEYbODAVkKqqgj9cMyG/Y2klMrebaRLwFhKxoEKdgTz1k666Q9cUHiA9eoNXsSJ
+ 077aX6Y9fadh88NgNp3oZ0zWt6Lx1bqBox2PFOFg3cS7P7SDNMZCUWOTpMlFfNmaOobdaNNUy0i
+ jZhIpwB1pXj+eV5nWHwg9ruD4mVDuSS21jSSkvYPFYTjL+nDgBcmjnLV3ICoDcptyu7VsSQl
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-22_01,2025-05-20_03,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ priorityscore=1501 adultscore=0 mlxlogscore=999 suspectscore=0 bulkscore=0
+ impostorscore=0 phishscore=0 spamscore=0 mlxscore=0 lowpriorityscore=0
+ clxscore=1015 malwarescore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
+ definitions=main-2505220005
 
-The pull request you sent on Wed, 21 May 2025 14:41:31 -0700:
 
-> https://git.kernel.org/pub/scm/linux/kernel/git/clk/linux.git tags/clk-fixes-for-linus
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/d608703fcdd9e9538f6c7a0fcf98bf79b1375b60
+On 4/23/2025 7:23 AM, Dmitry Baryshkov wrote:
+> On Tue, Apr 22, 2025 at 07:46:57PM -0700, Abhinav Kumar wrote:
+>>
+>>
+>> On 12/3/2024 5:43 AM, Dmitry Baryshkov wrote:
+>>> On Mon, Dec 02, 2024 at 07:31:41PM -0800, Abhinav Kumar wrote:
+>>>> On some chipsets the display port controller can support more
+>>>> than one pixel stream (multi-stream transport). To support MST
+>>>> on such chipsets, add the binding for stream 1 pixel clock for
+>>>> display port controller. Since this mode is not supported on all
+>>>> chipsets, add exception rules and min/max items to clearly mark
+>>>> which chipsets support only SST mode (single stream) and which ones
+>>>> support MST.
+>>>>
+>>>> Signed-off-by: Abhinav Kumar <quic_abhinavk@quicinc.com>
+>>>> ---
+>>>>    .../bindings/display/msm/dp-controller.yaml        | 32 ++++++++++++++++++++++
+>>>>    .../bindings/display/msm/qcom,sa8775p-mdss.yaml    |  9 ++++--
+>>>>    2 files changed, 38 insertions(+), 3 deletions(-)
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/display/msm/dp-controller.yaml b/Documentation/devicetree/bindings/display/msm/dp-controller.yaml
+>>>> index 9fe2bf0484d8..650d19e58277 100644
+>>>> --- a/Documentation/devicetree/bindings/display/msm/dp-controller.yaml
+>>>> +++ b/Documentation/devicetree/bindings/display/msm/dp-controller.yaml
+>>>> @@ -50,30 +50,38 @@ properties:
+>>>>        maxItems: 1
+>>>>      clocks:
+>>>> +    minItems: 5
+>>>>        items:
+>>>>          - description: AHB clock to enable register access
+>>>>          - description: Display Port AUX clock
+>>>>          - description: Display Port Link clock
+>>>>          - description: Link interface clock between DP and PHY
+>>>>          - description: Display Port stream 0 Pixel clock
+>>>> +      - description: Display Port stream 1 Pixel clock
+>>>>      clock-names:
+>>>> +    minItems: 5
+>>>>        items:
+>>>>          - const: core_iface
+>>>>          - const: core_aux
+>>>>          - const: ctrl_link
+>>>>          - const: ctrl_link_iface
+>>>>          - const: stream_pixel
+>>>> +      - const: stream_1_pixel
+>>>>      assigned-clocks:
+>>>> +    minItems: 2
+>>>>        items:
+>>>>          - description: link clock source
+>>>>          - description: stream 0 pixel clock source
+>>>> +      - description: stream 1 pixel clock source
+>>>>      assigned-clock-parents:
+>>>> +    minItems: 2
+>>>>        items:
+>>>>          - description: Link clock PLL output provided by PHY block
+>>>>          - description: Stream 0 pixel clock PLL output provided by PHY block
+>>>> +      - description: Stream 1 pixel clock PLL output provided by PHY block
+>>>>      phys:
+>>>>        maxItems: 1
+>>>> @@ -175,6 +183,30 @@ allOf:
+>>>>          required:
+>>>>            - "#sound-dai-cells"
+>>>> +  - if:
+>>>> +      properties:
+>>>> +        compatible:
+>>>> +          contains:
+>>>> +            enum:
+>>>> +              - qcom,sa8775p-dp
+>>>
+>>> Why do you need an extra platform conditional?
+>>>
+>>
+>> I expect this list to grow and also there can be chipsets which support 4
+>> streams as well, so an extra platform conditional was needed.
+> 
+> Ack
+> 
+>>
+>>>> +
+>>>> +    then:
+>>>> +      properties:
+>>>> +        clocks:
+>>>> +          maxItems: 6
+>>>> +        clock-names:
+>>>> +          items:
+>>>> +            - const: core_iface
+>>>> +            - const: core_aux
+>>>> +            - const: ctrl_link
+>>>> +            - const: ctrl_link_iface
+>>>> +            - const: stream_pixel
+>>>> +            - const: stream_1_pixel
+> 
+> You don't need to ducplicate the list. Just specify min/maxItems.
+> 
 
-Thank you!
+Ack
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+>>>> +        assigned-clocks:
+>>>> +          maxItems: 3
+>>>> +        assigned-clock-parents:
+>>>> +          maxItems: 3
+>>>> +
+>>>>    additionalProperties: false
+>>>>    examples:
+>>>> diff --git a/Documentation/devicetree/bindings/display/msm/qcom,sa8775p-mdss.yaml b/Documentation/devicetree/bindings/display/msm/qcom,sa8775p-mdss.yaml
+>>>> index 58f8a01f29c7..7f10e6ad8f63 100644
+>>>> --- a/Documentation/devicetree/bindings/display/msm/qcom,sa8775p-mdss.yaml
+>>>> +++ b/Documentation/devicetree/bindings/display/msm/qcom,sa8775p-mdss.yaml
+>>>> @@ -177,16 +177,19 @@ examples:
+>>>>                         <&dispcc_dptx0_aux_clk>,
+>>>>                         <&dispcc_dptx0_link_clk>,
+>>>>                         <&dispcc_dptx0_link_intf_clk>,
+>>>> -                     <&dispcc_dptx0_pixel0_clk>;
+>>>> +                     <&dispcc_dptx0_pixel0_clk>,
+>>>> +                     <&dispcc_dptx0_pixel1_clk>;
+>>>>                clock-names = "core_iface",
+>>>>                              "core_aux",
+>>>>                              "ctrl_link",
+>>>>                              "ctrl_link_iface",
+>>>> -                          "stream_pixel";
+>>>> +                          "stream_pixel",
+>>>> +                          "stream_1_pixel";
+>>>>                assigned-clocks = <&dispcc_mdss_dptx0_link_clk_src>,
+>>>> +                              <&dispcc_mdss_dptx0_pixel1_clk_src>,
+>>>>                                  <&dispcc_mdss_dptx0_pixel0_clk_src>;
+>>>> -            assigned-clock-parents = <&mdss0_edp_phy 0>, <&mdss0_edp_phy 1>;
+>>>> +            assigned-clock-parents = <&mdss0_edp_phy 0>, <&mdss0_edp_phy 1>, <&mdss0_edp_phy 1>;
+>>>>                phys = <&mdss0_edp_phy>;
+>>>>                phy-names = "dp";
+>>>>
+>>>> -- 
+>>>> 2.34.1
+>>>>
+>>>
+>>
+> 
+
