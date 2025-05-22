@@ -1,168 +1,107 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69BB913AA2E
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 07:02:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DB121A841C;
+	Thu, 22 May 2025 07:02:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747897351; cv=none; b=N7mGyKYtqw2A+ABxWF79knjkjy8ftcfXb4rIqgYi5oufQ2g7xRx1yncyekyRxrUPT8MDd/x43P8M5Kc7qBBc7joigesN+dtxh+v5geM0+TWfYe0zM371VQ+ho2VLt3lhjjXcBuDll4Ks/mTiyXjhF8yg3ljcqf90XFdOVdHs6g4=
+	t=1747897357; cv=none; b=Mr+QqCRvoIDD/yC8uQUygPJvdI9PjacxBqMmoFdgunb1eqy3NjeZG9P4bvY3K5JEbLVp5yPfG895EhENU3eMrIVnpWOvyDXGqVkj6UHoZfMtnEXUnJk6KkkjOKYHPwPokFKx1l8ww+MMA+ZDTAjDZxzZWBK49GIVq7HqFKRdZ5A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747897351; c=relaxed/simple;
-	bh=b0LgYCJ+zS3Y4qZy5tIhukWCpc9KZHUh/mN5i260kEM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ATeTMlybTeCjkcT54U0CKNV1e6t/qfc733qQjR67kNEyxwdsomzAE97RDwDgsRy1rlpS3zjTA8x32kMpKkO3yTQR2vIEbBG98igxdmVjIG3RkPFMAQOINYn5G7JJcyyoLvlzfYPFh2ut1v3XsqTcW6MF9wwUf1TVZBqtGcRM/tA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=drMO31Vs; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1747897357; c=relaxed/simple;
+	bh=uA2NaTnSrsjaw+u1a1w4m99SGUK5RHR7xtImeGhk49g=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=h+APQYwf3QfxLLvnKT+J/U/YBTkg/8rA3piVrTY/QPRv+JTRpuv8TLWseOw5dNmeDoYUNeJhQ565+J4GzgCvxMrs38ZSGrYC+me5AehjDvpL47C5NK1yosR/B+2BhmQHm8o8u02G0Zvm8gXsahpHMT+CcMUZCW79hE8wu7TBQ6c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZO4y/2m8; arc=none smtp.client-ip=209.85.216.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="drMO31Vs"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747897348;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ag2ux448b2TruItxL58I3ryWzU9MIQdqPkcm2HcLdRo=;
-	b=drMO31Vs2AliPOQjLgZg91CPoTrwOfSpTJ+mjrbrJkVRov2Oy1emk5EcOVnLtbwq7s5FM0
-	J/dhhu58rrgj0+pQgrfEeWSD5X1CxmJf8VWXhGJxOyo8Nq4DAMHc8eRF4Afn0ZJnn2khXG
-	9pc2t9QPuk/siV5jG8h2jlHb4IDmqDQ=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-219-KbJ_zj1lO5aMGzPmuMa9Wg-1; Thu, 22 May 2025 03:02:26 -0400
-X-MC-Unique: KbJ_zj1lO5aMGzPmuMa9Wg-1
-X-Mimecast-MFC-AGG-ID: KbJ_zj1lO5aMGzPmuMa9Wg_1747897345
-Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-acbbb000796so567118766b.2
-        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 00:02:26 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZO4y/2m8"
+Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-30ea8e2bbaaso4538598a91.2;
+        Thu, 22 May 2025 00:02:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747897355; x=1748502155; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=jGtCz5gnhXYzL9ayCi6Yx/k+BthTHNTVsByaVh8/+D0=;
+        b=ZO4y/2m8ylkHghvF74kzQLrWPnJ6mZPQJIgecpOG7oaD5tp+SdhNWKKLn6EEM9/1e2
+         gf+hRFwGdHmKfTLz3mGCoVZm2GMfDfCqqWrX5qmcFh6XFTPYtkfTieZb5t0Uemrgu9fD
+         oRXZE+7iNTPtzbea2XBsa05VwJrRk6l7NI5gkaJCUpympg3zz71RCCFY0axr5dVx31zO
+         VNm8/kMgGBih3i0USszpGDRz5w8So4MoQvpJ5vqvsAtZ1YHTPE6ns74MAdrWN3Fahifv
+         wbE3iCJvS53uSHzYVSGHiW+ii7byb+lQExKaqxnHVolyzutLbqF2koLJ5xOaUXaXZT0F
+         TcaA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747897345; x=1748502145;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ag2ux448b2TruItxL58I3ryWzU9MIQdqPkcm2HcLdRo=;
-        b=KWJsoDae4s8+SmVbVPflwFx8OMqeUfwrw/HaaG+bxkctJEZAc+8s01ssV3rwL/xJLM
-         S0fi6YoraKFzPDYIu+qJeu88S8pLaoIW1dtAirAn+EvRgr5D2xsYgAn7yKNyDa5taYbs
-         6MF+abB9+4PagsvCFax8u2Cr0xuU3vqZ53hid6XKpmCQnc7FWGyfv8oIkjxXe/ZwaA1W
-         d5EbE4z3vQ+33uYJl2nWaQsxWInEWrx+RSNLBzqvMhpoBNv+2gNc29eZ6O7x5Dow9E7n
-         1i2pZCs1HaOljnA9+rEh0g920t9mOIhvSqYClryCrlAD6w4dqJ7RpOwKYPii0ZdbDQpI
-         ZxuQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXyPPMeiRp/Ro4jgG60zeQZO3gyJFZVF3vIqAkCH5VqAyty9jRy52bbLZ+Rw98sRrGes+UmrM8Rdp8+BFg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxt76iSbKstxAzGcGfVxqVRII4sBHkUYg1LM5kilpA/8fxO0z9m
-	fUwqa0Ph/mlK+OAMTxyH9BgQjGtj1ynAhLMmHYpnQtdLwrfaauRR6fSgAEs72T9/vJV/B1mDIy8
-	ikOetSYRJ8PpPm7fOx7QwyhM/AJlpk857FxEqjAu87BLLEqfeLmvEr5y4TdNiZBa2TAyAc7RVpC
-	7y+q8o7LBvR+SYg5xrPkVCkk4xveGlmWlqcBX7LcdM
-X-Gm-Gg: ASbGnctYh/QQ9DHn5SLYx2GqytUokTiuq7wrlwwZAqthMCHvstRPjii+SscjOYeyZND
-	1xUHMWy/syz20uw52TxtvKVBCIfWfeTXQGTYCT9bfPw8JWCLHwV3lbDTBmclK6Db2BNlOEQ==
-X-Received: by 2002:a17:907:7da2:b0:ad2:39a9:f1b2 with SMTP id a640c23a62f3a-ad536fa5966mr2109580466b.59.1747897345041;
-        Thu, 22 May 2025 00:02:25 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IE224W/P6ICKS/konR+EeFebTwhEbszkWz9E3Wsg8PLsnr9Hw7dE9zCQrVu1l5zjDhj9J/D3CGCH13JfIKwK50=
-X-Received: by 2002:a17:907:7da2:b0:ad2:39a9:f1b2 with SMTP id
- a640c23a62f3a-ad536fa5966mr2109577066b.59.1747897344587; Thu, 22 May 2025
- 00:02:24 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1747897355; x=1748502155;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=jGtCz5gnhXYzL9ayCi6Yx/k+BthTHNTVsByaVh8/+D0=;
+        b=f5NEvHeaKdZ8adA62/0CvWzqcTZbJRCTouAJf3bu/NTFUwMKMCnZmZkHkHb1+qv1r7
+         Xblo1pH6+nVD+RqoJ+9HNxM6u02ZhQQkZru54lc1xWwyhmNALcdP0W5p5CyG/pDjLoSo
+         NqQiheWNP+pUgOZ4rLEsfOryKko6LuaK9aFnKmmSHteilF0zb8elMHsAPYmwde3JoKrm
+         qkcMEFQ+xGXhGi5J5NF4plHy3d11klzKrkoTbMYh6EguUbNkZKvj9FUu7XFiJtlX/CES
+         PsVBO3TYTGA9hm2k6FtWw188e/5YsS9UbnOAsmE+VXEkIYlnMg7t9+DDm7lfNklspkHt
+         cujw==
+X-Forwarded-Encrypted: i=1; AJvYcCUxdw+JeBMFG5PZ1sVQv4mqnqXsUkmRHHCtwdxQSeI7jPZI6C9LjFlpqtGPc/fGyq+JeiEaiOPjgBo=@vger.kernel.org, AJvYcCXYfOTrnVaNFN/ODgMtwn+TW/f/WCplsPHHDuJAtMsl/T3ZItgknCiBLMVDWDiBPzE7XnGLMAYssungBg3p@vger.kernel.org
+X-Gm-Message-State: AOJu0YxMp7x+UUp8hDQHltDJ51aD6lb1T3LnIW4NIJuxIanQ2C2/q/j4
+	GoT3/jFkpLZRWo6kCWsfCMFSbMPMkO+3U/wv3Ibl3tyXcv0zgljifnFIQD4kI/r5
+X-Gm-Gg: ASbGnctTQp7PmyXNbaIvl42ZAt8eGv4LGXQRNwh2ftczvDVTwB70z4rU6LIdj2qzycq
+	2RxjMpvZAsSI9kcoUBHd6Mart94Ewg0dftMAh7zaL1TKE1LLHQFdHKi5WGJqQ5f5UuW1nyNbapb
+	R9JLmrfsfbVwZqGaV14+MvgNSxT6oah/UFBWbkgAk2pQ3Rx47GKCHhSbCGfRT2fLk//1WrCIpeC
+	lCvlmviQLu9AstAWqSZbM3ae9Ah+7IykOYzOSEvsL0gisaSZ6p+tVUpjYskjTN8/3Ii3byE2+rn
+	AxeG/RIzSO5ifjaZBAOg3Q0TZCWIkR3kvsvvXjIjTz5Vtss5yakDEqNgp67rapW73DPbY1x06V1
+	pkeV9t80zL4jMFA==
+X-Google-Smtp-Source: AGHT+IGLZQvgE6vIaT87y4QlfLMbqTSQVnSQp3oMK/aK4G8bVgQ/LuMqQC40bpRTNLSNHvIWBuWD5A==
+X-Received: by 2002:a17:90b:3e8e:b0:2ff:4e90:3c55 with SMTP id 98e67ed59e1d1-30e7d5ac887mr34551529a91.27.1747897354183;
+        Thu, 22 May 2025 00:02:34 -0700 (PDT)
+Received: from SHOUYELIU-MC0.tencent.com ([43.132.141.21])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b2982c04d12sm3646879a12.21.2025.05.22.00.02.31
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Thu, 22 May 2025 00:02:33 -0700 (PDT)
+From: shouyeliu <shouyeliu@gmail.com>
+To: ray.huang@amd.com,
+	gautham.shenoy@amd.com,
+	mario.limonciello@amd.com,
+	perry.yuan@amd.com,
+	corbet@lwn.net
+Cc: linux-pm@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Shouye Liu <shouyeliu@tencent.com>
+Subject: [PATCH] Documentation: amd-pstate:fix minimum performance state label error
+Date: Thu, 22 May 2025 15:01:41 +0800
+Message-Id: <20250522070140.17557-1-shouyeliu@gmail.com>
+X-Mailer: git-send-email 2.39.5 (Apple Git-154)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250324054333.1954-1-jasowang@redhat.com> <CAPpAL=x4BWNh__YpzkzpErkseh04FT7WNLmg=xMXtfZ0S9BabQ@mail.gmail.com>
- <CAJaqyWdtKEYiY2tBB0F477LqxVs8fzaix96551WSMa=KdT3C5Q@mail.gmail.com> <20250518173443-mutt-send-email-mst@kernel.org>
-In-Reply-To: <20250518173443-mutt-send-email-mst@kernel.org>
-From: Lei Yang <leiyang@redhat.com>
-Date: Thu, 22 May 2025 15:01:47 +0800
-X-Gm-Features: AX0GCFuYF7XdFlyXEtLr_TPKhkebV0K74gj6NfVMZNAX5P30zqgaAxprNPeRmtA
-Message-ID: <CAPpAL=zhKD7q3OmcR9_nWqMXk1grz0gNJ2Wqk923k4i+kuMfgw@mail.gmail.com>
-Subject: Re: [PATCH 00/19] virtio_ring in order support
-To: "Michael S. Tsirkin" <mst@redhat.com>
-Cc: Eugenio Perez Martin <eperezma@redhat.com>, Jason Wang <jasowang@redhat.com>, xuanzhuo@linux.alibaba.com, 
-	virtualization@lists.linux.dev, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Mon, May 19, 2025 at 5:35=E2=80=AFAM Michael S. Tsirkin <mst@redhat.com>=
- wrote:
->
-> On Wed, Mar 26, 2025 at 07:39:47AM +0100, Eugenio Perez Martin wrote:
-> > On Mon, Mar 24, 2025 at 3:44=E2=80=AFPM Lei Yang <leiyang@redhat.com> w=
-rote:
-> > >
-> > > QE tested this series of patches with virtio-net regression tests,
-> > > everything works fine.
-> > >
-> >
-> > Hi Lei,
-> >
-> > Is it possible to test this series also with virtio-net-pci,...,in_orde=
-r=3Don?
-> >
-> > Thanks!
->
->
-> Lei, what do you think?
+In the AMD P-States Performance Scale diagram, the labels for "Max Perf"
+and "Lowest Perf" were incorrectly used to define the range for
+"Desired Perf".The "Desired performance target" should be bounded by the
+"Maximum requested performance" and the "Minimum requested performance",
+which corresponds to "Max Perf" and "Min Perf", respectively.
 
+Signed-off-by: Shouye Liu <shouyeliu@tencent.com>
+---
+ Documentation/admin-guide/pm/amd-pstate.rst | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Sure,  I will test it and provide test results ASAP.
-
-Thanks
-Lei
->
->
-> > > Tested-by: Lei Yang <leiyang@redhat.com>
-> > >
-> > > On Mon, Mar 24, 2025 at 1:45=E2=80=AFPM Jason Wang <jasowang@redhat.c=
-om> wrote:
-> > > >
-> > > > Hello all:
-> > > >
-> > > > This sereis tries to implement the VIRTIO_F_IN_ORDER to
-> > > > virtio_ring. This is done by introducing virtqueue ops so we can
-> > > > implement separate helpers for different virtqueue layout/features
-> > > > then the in-order were implmeented on top.
-> > > >
-> > > > Tests shows 5% imporvemnt in RX PPS with KVM guest + testpmd on the
-> > > > host.
-> > > >
-> > > > Please review.
-> > > >
-> > > > Thanks
-> > > >
-> > > > Jason Wang (19):
-> > > >   virtio_ring: rename virtqueue_reinit_xxx to virtqueue_reset_xxx()
-> > > >   virtio_ring: switch to use vring_virtqueue in virtqueue_poll vari=
-ants
-> > > >   virtio_ring: unify logic of virtqueue_poll() and more_used()
-> > > >   virtio_ring: switch to use vring_virtqueue for virtqueue resize
-> > > >     variants
-> > > >   virtio_ring: switch to use vring_virtqueue for virtqueue_kick_pre=
-pare
-> > > >     variants
-> > > >   virtio_ring: switch to use vring_virtqueue for virtqueue_add vari=
-ants
-> > > >   virtio: switch to use vring_virtqueue for virtqueue_add variants
-> > > >   virtio_ring: switch to use vring_virtqueue for enable_cb_prepare
-> > > >     variants
-> > > >   virtio_ring: use vring_virtqueue for enable_cb_delayed variants
-> > > >   virtio_ring: switch to use vring_virtqueue for disable_cb variant=
-s
-> > > >   virtio_ring: switch to use vring_virtqueue for detach_unused_buf
-> > > >     variants
-> > > >   virtio_ring: use u16 for last_used_idx in virtqueue_poll_split()
-> > > >   virtio_ring: introduce virtqueue ops
-> > > >   virtio_ring: determine descriptor flags at one time
-> > > >   virtio_ring: factor out core logic of buffer detaching
-> > > >   virtio_ring: factor out core logic for updating last_used_idx
-> > > >   virtio_ring: move next_avail_idx to vring_virtqueue
-> > > >   virtio_ring: factor out split indirect detaching logic
-> > > >   virtio_ring: add in order support
-> > > >
-> > > >  drivers/virtio/virtio_ring.c | 856 ++++++++++++++++++++++++++-----=
-----
-> > > >  1 file changed, 653 insertions(+), 203 deletions(-)
-> > > >
-> > > > --
-> > > > 2.42.0
-> > > >
-> > > >
-> > >
->
+diff --git a/Documentation/admin-guide/pm/amd-pstate.rst b/Documentation/admin-guide/pm/amd-pstate.rst
+index 412423c54f25..e1771f2225d5 100644
+--- a/Documentation/admin-guide/pm/amd-pstate.rst
++++ b/Documentation/admin-guide/pm/amd-pstate.rst
+@@ -72,7 +72,7 @@ to manage each performance update behavior. ::
+   Lowest non-        |                       |                         |                       |
+   linear perf ------>+-----------------------+                         +-----------------------+
+                      |                       |                         |                       |
+-                     |                       |       Lowest perf  ---->|                       |
++                     |                       |          Min perf  ---->|                       |
+                      |                       |                         |                       |
+   Lowest perf ------>+-----------------------+                         +-----------------------+
+                      |                       |                         |                       |
+-- 
+2.19.1
 
