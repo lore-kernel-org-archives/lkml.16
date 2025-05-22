@@ -1,64 +1,64 @@
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CE4618A6A9
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 18:35:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64F58770FE
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 18:36:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747938911; cv=none; b=LUbzgZiUfSRCo0CNGs95ydlmg59sNHea42g+00Ihn5sJZMQlakC56LCXCd5UAdiLxneAPbnJsYlQuhbVSMp0W8WU3j6VbmbXnGvDliGCSr523JkmK3qJL3tffIncTFlSng2S35UgEOK2SDIvL2YRGTiHUdCvMPdc5B+SIKQl2Ds=
+	t=1747939013; cv=none; b=KHYZIAjVy5wY3Js268QajJQT7Kv/7gZZByGGN4njRNATDvT3TLBVvV3Ref1folPCtaKAziCLDSwq40gwf2Ado2jZA6JUA+LVbH42FyoGzqJB3TcPBnVZRBQuURSFUmariHq24EndHMngIRMMGxeJr8U0v537swgiC0lVH65aJTQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747938911; c=relaxed/simple;
-	bh=f1D9BovMo8iqrKm/nDHPg06l6bXZxkHNmPPS65XcYBU=;
+	s=arc-20240116; t=1747939013; c=relaxed/simple;
+	bh=r2LJRwJfk5HQfOY1MfeFn7U5D6uIM9YRcshMS9LAyXs=;
 	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=m4+nNrbGbUPg0QUB42KfPiIxqDgIr5XooAemVmhqXNT/t9W9DJBYyX/8dm10k6u4w7gi3N2pQlwqKE1hFLLINPMIuQpYSj/waP7beac0gnbd96EmATn/AlHqmlTF/NzfRoueQ2jR6jtxbyrZRm+kQYZjVUTDPSPUi++RzRge6CA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=N5OBIZQT; arc=none smtp.client-ip=209.85.221.46
+	 In-Reply-To:Content-Type; b=JN9U6N9PTfLXDDgzNX2RwsrA24DrN4Y4JXjPMNK+HIHe5aaYyQEErxE+afONNuRdqCkDgriBCUmRjbyqYPJIi7JUWzyZi5ojrbnMNnzw+2ARVuVwKgZbizelWtkPecYIoEf59KuQSgt3u5a28T3FxQUbudX97yv9lIla5R+FNSM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ynp51Emq; arc=none smtp.client-ip=209.85.221.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="N5OBIZQT"
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-3a361c8a830so1057878f8f.0
-        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 11:35:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ynp51Emq"
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-3a362e099cfso992595f8f.2
+        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 11:36:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1747938908; x=1748543708; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1747939009; x=1748543809; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:autocrypt:content-language
          :from:references:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=63yYAU1/zCZjwoovQdKacafDUnTaZ3CpcA6v5mzZ3T8=;
-        b=N5OBIZQTP11W2XLCX0Jbk8GCqDhTYKEL6B2ekCTHUsdxYvcb3TiOQCVwQ5aLhW0fxj
-         fUHFCxmPI2zFeUELb6clbAiSPtqEqsE89UKTvz4vPura1rK0HcTof9DpjZ2ip6t80wuF
-         1hYn5V7bvy7ccohWZ92t5kGhBJsbVkEIsKTyb+tV8KBxyrlHHzLzUd0eQb3Ei36Rnw0n
-         W62I8ksm3cY5rTLdsScALT+gOp38LsGkPTKGmKXJHm/aYWj5bI0P0yZ0tP1wzNj68Cih
-         hIWxskUo7F+OpGLPZtkUTkoBenIbSfNQ8Kvd1AUafLvLY551ujW6DL8DQGgn7/m/CQ+q
-         gKUg==
+        bh=RJGS5GdAP2jwMN2asFwop/bmwWDSIqO/lnl06Fno7WE=;
+        b=ynp51Emq3Sz7WihnFRiS8jgSbdB9ZHFA6LAn0KXX6vjoX+Etc73olrQIWeEzIuD8IB
+         gKaGwAEaW9psSOBtT96NyvNRRaQcJ+Bvs8rYh4kR+B21iqkK0DZXRznJc+kV89pirUgb
+         D8tLRICQIs1FsgIlv3zAg89eXYRdX2fwt09up2jnorFJYRm8EOSk6CC3D4ZYYOYlwJuz
+         17SH1C4OK4Oq4j8N1Q7wUjZHzyOQHYZ0xLNVlBPq0CddX+IgNuR4gNkJU6O0lWBNSWXr
+         9jWN/5da0eNdPndLKy2Wg5xTnGnkcibBK8JYLQUs3rV+6cYF/VGZr1yRTju0uVjqtHgT
+         SwNA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747938908; x=1748543708;
+        d=1e100.net; s=20230601; t=1747939009; x=1748543809;
         h=content-transfer-encoding:in-reply-to:autocrypt:content-language
          :from:references:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=63yYAU1/zCZjwoovQdKacafDUnTaZ3CpcA6v5mzZ3T8=;
-        b=d1eq2gL384aWw/OjwiO5LOV6AfAAvzMeliWijFy+xLnu+RY+MkemVcSKHPa/qNaNoo
-         B7h3ef2oqPQ8ppoumIDhihghAjoJetIM+aK38D49kS9vKN3ONlgyhww2mPEaARtlnF3w
-         CXU7dEL5xma7PBPfMJ/OmDvAE75iaR+84Eu6R6u81hfafLBQT93U4YCPSfBF7yTapp6G
-         67jhS4l6ldkSDR4KKjyB1Nb1lZZeB/58bTYjZDNdpJ4T9upqF5glmj/f/LYowadgnqAt
-         hxmGdKo7RIcZ1XF8hMQAVHqRGrS6jdtHRfDUTXBn/q3LyHLl7usVEy1ExfF1XJDEdbZ3
-         N8hg==
-X-Forwarded-Encrypted: i=1; AJvYcCX4NKVFCWYo1jdr9vqBuzikWCWqwPSvGu1HqqXieP0NMXYetoyGB7Hz0gizirZ9i96swFufsIzWoNG1gu4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yww83il5MkB2+JEbiR42LxGK3776FlrDGTKk8EYwTeMGucHfNlc
-	5btI4T+L/FwnRzsR8dj7cej84GYKvpRpsdn1Eqt1j562scxGF/a7TLMGixMBYSfQGDU=
-X-Gm-Gg: ASbGncs0BUhcn7DxGSuKgB83AfS7jJ4eNq8K6W1ugUnmvhPJJzyAOneq+LZ2H+1qKHc
-	yeBM1lLRhv3i21P3j7HmkL6z5KXq71gtQZw3yM4Tfzd3FnTkqQRigXRfI6OX0jvQWSZOiCVFAdu
-	3KXNj1iTHaTIIfX3PERxm0NRjJsLVajzh4FBEQa7P1g3bVXrXR1Fk78C4yB/IBLBiY9ZIpWYTFE
-	+cV/6Lqsw6VPlUB/u0bi1YUZ6QiEsCln1MOteoyGTtD8uq4WbDQ9wf0ij7EThmsoYGZcTtYFVGX
-	94n82EUBxdKiQC3GOp66cZniJKiaeaEvxHiletnLi6Vbkc0g6EkUQlfmM4E4fggsNgnc0Kk=
-X-Google-Smtp-Source: AGHT+IEl3vOLOf2Qp9jRpcgL9PTta/D5XWSZ3M7PgmDofFcyAjPs7Cu8q5oB0FbiriHmg1z/1qWxrw==
-X-Received: by 2002:a5d:5f46:0:b0:3a0:b807:742c with SMTP id ffacd0b85a97d-3a35c826936mr9382361f8f.6.1747938907879;
-        Thu, 22 May 2025 11:35:07 -0700 (PDT)
+        bh=RJGS5GdAP2jwMN2asFwop/bmwWDSIqO/lnl06Fno7WE=;
+        b=W+cNX4k1Bmc6VzcZyav4OV7g5u9tJ96faO1ZYM5ieyJ30aKEmvG5px9VLDM7Dp4NLx
+         G/NXxejpyovxy4IewvT7H8bZt9ULtdsdcD/zMO3IycnxrNwo38PJn12nOk+WDEtFdKav
+         9+AT2hZwSlOfvALyGswBl/SnyEu4xhvz75iq8MRBhBe5CQUUeSfbxULPEfykDY65T1+2
+         0/U4RHjelmO6RUJvYqpbUjlIK92VJJP2CZksiT/Baqu5t0ymuEO5VYAW4gFYaGwvZju2
+         0j0NuYpxmrxoxGRzztEL2lH0Vx/Wtmf84nAIP17Pqscj4KEWcNC0U8C+ok1E37yrTE5v
+         omZA==
+X-Forwarded-Encrypted: i=1; AJvYcCUdkmXKEx/QXr521YwpxjpYQXR+uPALDuxC3CHv2eB9ImGsBdejOXonNUdkmBvvebTRUxJXTgq/ygpvdmY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxqqVxM00XkZ5UkkurA1Rbqa7Xm9Yc7cqKTwotWllp41zur4QEu
+	E3qc7W53RTfHNin9FDr1jC/PIYNMzKp26EMioRm1iLhP5UJtY6kYZ0AeJu2xhuwD/9A=
+X-Gm-Gg: ASbGncut0g6B2asoWEKj3E9IXqvdpvshOVroTPkUQXcJTfAZYMSZ5IGLBi9IJ6A26mv
+	bG/j+0vMO4vZtuT4BUBpOTxXPI6WWUxItXLskqZafEJNJGxTLlinQoOThjVUvyYbi+5MF9sgBKv
+	QOVQe713zNGhHpCt44shyT6SVp/oVY2I51jb32Jec+xl+h4xptxb396nSDaxyjh/UxQYn4OdOVD
+	Uv7SJonHPXAZ9ioyonw9RQzE6YmA29kJWJUkebaP3T8pFLp8qtohDufEXjAcq39CJkB0UqkGDGn
+	bxpKODi0qCDQwBzEmPj3zaH1Imvba9l2avaU2z2E8HMAXQnIxT0oGfFe6DIn8mqzzfVWbLY=
+X-Google-Smtp-Source: AGHT+IHR+WLXCmN0YpGsXVAMyTrf5qwUXOqpxWzDyNHvcgpM8sHVsTuYa3Mt6GIgso9ohbfhoLilLw==
+X-Received: by 2002:a5d:5f47:0:b0:3a3:6a3d:163a with SMTP id ffacd0b85a97d-3a36a3d18b3mr7521239f8f.12.1747939009584;
+        Thu, 22 May 2025 11:36:49 -0700 (PDT)
 Received: from [192.168.1.29] ([178.197.223.125])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a36c6eeaf8sm16352368f8f.48.2025.05.22.11.35.06
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-447f6b295fdsm120822505e9.5.2025.05.22.11.36.48
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 22 May 2025 11:35:06 -0700 (PDT)
-Message-ID: <2932ac8c-7248-4056-8b9e-4f5702d597ab@linaro.org>
-Date: Thu, 22 May 2025 20:35:06 +0200
+        Thu, 22 May 2025 11:36:48 -0700 (PDT)
+Message-ID: <3cf3f029-f56c-4ea7-a10d-ece09fdbb2b0@linaro.org>
+Date: Thu, 22 May 2025 20:36:47 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,11 +66,17 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] dmaengine: sh: Do not enable SH_DMAE_BASE by default
- during compile testing
-To: Vinod Koul <vkoul@kernel.org>, Peter Ujfalusi <peter.ujfalusi@gmail.com>,
- dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250404122114.359087-1-krzysztof.kozlowski@linaro.org>
+Subject: Re: [PATCH 1/2] watchdog: stm32: Fix wakeup source leaks on device
+ unbind
+To: Guenter Roeck <linux@roeck-us.net>,
+ Wim Van Sebroeck <wim@linux-watchdog.org>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-stm32@st-md-mailman.stormreply.com,
+ linux-arm-kernel@lists.infradead.org
+References: <20250406203531.61322-1-krzysztof.kozlowski@linaro.org>
+ <f1dc5228-ac91-47c3-a854-b425cb77bb5f@roeck-us.net>
 From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Content-Language: en-US
 Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
@@ -117,19 +123,23 @@ Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  h0At/TN/618e/QVlZPbMeNSp3S3ieMP9Q6y4gw5CfgiDRJ2K9g99m6Rvlx1qwom6QbU06ltb
  vJE2K9oKd9nPp1NrBfBdEhX8oOwdCLJXEq83vdtOEqE42RxfYta4P3by0BHpcwzYbmi/Et7T
  2+47PN9NZAOyb771QoVr8A==
-In-Reply-To: <20250404122114.359087-1-krzysztof.kozlowski@linaro.org>
+In-Reply-To: <f1dc5228-ac91-47c3-a854-b425cb77bb5f@roeck-us.net>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 04/04/2025 14:21, Krzysztof Kozlowski wrote:
-> Enabling the compile test should not cause automatic enabling of all
-> drivers.
+On 06/04/2025 23:17, Guenter Roeck wrote:
+> On 4/6/25 13:35, Krzysztof Kozlowski wrote:
+>> Device can be unbound or probe can fail, so driver must also release
+>> memory for the wakeup source.
+>>
+>> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 > 
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> ---
->  drivers/dma/sh/Kconfig | 2 +-
+> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+> 
 
-Ping, can this be applied?
+
+This was almost two months ago, got review but still did not reach
+linux-next. What is needed for this patchset?
 
 Best regards,
 Krzysztof
