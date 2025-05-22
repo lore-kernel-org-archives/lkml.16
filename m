@@ -1,121 +1,92 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 129153C38;
-	Thu, 22 May 2025 09:56:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.5])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 537081C5489;
+	Thu, 22 May 2025 09:56:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747907796; cv=none; b=ipHVCThUlg2XUcE7yqOmKp+TOlMKCb49rHI9l5d7buNsqC8UsviF6L1cDMUlz8MtUCEIEog8mZOayPC5SKZP3e2mVzZoUAlkxlB2kzCdBfSN9Y9n5UMN48KUecCGv3zETkzGc0mg3vihMpSVk2MZPlWLuyuWIk9b1q3iPRS5cuA=
+	t=1747907825; cv=none; b=cjjlnT6wj2+VcY6n9rvnbZPiFUISa4zGd4IVg95OM5VW+TyHOx+Dnr6pQafK8AD4hYbH6ssLBALI5OoEW+6Mth8BEaceueswCIY0l8IEGOYScpOHmSam/8PleqdJ7QG3sgzQlcsi16ShgRtXI3f8zXgii5fFYwg22I0aTJX1ZKY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747907796; c=relaxed/simple;
-	bh=l+UBCZ90uofbpfwu3YkJzh8e5MpIZHy9Wgl4VOlqqQ8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uDBf+lfVdHRyiPxybkixwWfyNwWd6uvef5b4bOsrUCn11uiF+C2dB7ogwqQAPwi+/jg/u7qrF6d54X23hw3uVG87cSCqfC9OSESZRwxcw1iSnPkHFabQaecNQaHW6/u7Jjnm5WnLBe1JLBS43WOZt7ha/1orFF3Jg2crbxbiEjM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sOGhBB7A; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747907825; c=relaxed/simple;
+	bh=XjKIIcx3vLMme/sjaI9nyr8i3Pmp6qx3DPHpese1Jao=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
+	 MIME-Version:Message-ID; b=W5KAl5Kv+CrK6cpfNN/kYC1EbqeWzH96u4s2wkfuVwduVXq+hJN/RZbyc1mxdwT2SakkcWVMmR3zqMXeEKWcOwBlvsLshSg4pORbC6HZu0igE68k04jRO6tbNnjS9C1uxpBiqVKrNgXQG0j+QK0tccto+mIuOB4BJfuUNAgj+LA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=fail (1024-bit key) header.d=163.com header.i=@163.com header.b=WaiHNJNe reason="signature verification failed"; arc=none smtp.client-ip=117.135.210.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sOGhBB7A"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74330C4CEE4;
-	Thu, 22 May 2025 09:56:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747907794;
-	bh=l+UBCZ90uofbpfwu3YkJzh8e5MpIZHy9Wgl4VOlqqQ8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=sOGhBB7AyYSHlj7s2xcnLFewRhTps5gnKReHSzWTEv8zi3E98oOyS9oyoqLK62vRu
-	 jyy8rRfgpQAnXZ9HZ7zBzmKaeTZjRs229VPnKLG4KGH5kysl1/rf2OAQs9qmZF0P6Y
-	 7BfzEdsSSvIYATjrOFYUAizciWlFftbXCaGf7zk5RFEJBhbf6KOBqoJkUoHPjBEWwQ
-	 TCmW1vWkXLUI3xdgV8BIgDkmwzXtewI7CU144XoA371TaF9OepfCpmvBtVWDh/2/Hq
-	 kdHh0ZgNC8DOm2qQQDUmgkDCff9h+jbflCaglp92F4i7Drkub1MdLT9sZ6g8QDSBId
-	 gN/o3tp9TnZ0Q==
-Received: by mail-oo1-f45.google.com with SMTP id 006d021491bc7-604f0d27c24so4082080eaf.2;
-        Thu, 22 May 2025 02:56:34 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUWUfWuPSb0mbGJJmzPD+HZTF5QDVVNbmuiV5jyc4IOt5S/O77zDTrU56WFueqTG+el3mA5n54ovlc=@vger.kernel.org, AJvYcCV1CNCVHuuhTGkP7wH0Bic1//mbV0OXRimpjDDLZQnZfB9pROJyPXbZ9fFm013XyEBHlw6MyawSJMQ=@vger.kernel.org, AJvYcCVBF9KMq/Lj59JBfxHM/0b8It6hJO75ecWY863rp1x26BBbrLGOhhYQbz2KZbCgJG32OtwHCcL7Kf34kqWv@vger.kernel.org
-X-Gm-Message-State: AOJu0YxCrT4x94uWNozXSS2WduA4Gu9wg7Vre62mH/Rkl3nkrSSxfck0
-	E/FAfAQp6lWnE+vioOujvx6BCkuG5ghjHhGam3KTEA8oDBf29r7NtthpOla+0z3z/R4HxShth/C
-	AIQOROsAd3Wr5xetxisSwFwDCLEHQsMQ=
-X-Google-Smtp-Source: AGHT+IFDlauQgvFUHi7zRroxnG0JT5GL+TEEToKRpHxNLwLE2g/bn421wTKa1Lj6BeKs24deqdV/eZDC+3zwVRMva/k=
-X-Received: by 2002:a4a:ec49:0:b0:607:dd61:9c33 with SMTP id
- 006d021491bc7-609f48646b0mr13509442eaf.1.1747907793770; Thu, 22 May 2025
- 02:56:33 -0700 (PDT)
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b="WaiHNJNe"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Date:From:To:Subject:Content-Type:MIME-Version:
+	Message-ID; bh=okdYhAg1EMXOC1tTtA3Ehh6LzobI5jXkaIDyLZfblgk=; b=W
+	aiHNJNey5FkSDAN2DAQY1AN6Ln5fO3oP0+wbEbQIiSi7IH5BhC20UCKM/ehB1EJa
+	8R66N/gNKxOkVIxefG19u8HL9DmpqIiwQat8AZqYQELGeZsdZvn9D5K+W+AHrDSq
+	k4DnknWzcKjDsMFu57wKAMrv6/aGHyBX16iJX9+TLw=
+Received: from 00107082$163.com ( [111.35.189.95] ) by
+ ajax-webmail-wmsvr-40-100 (Coremail) ; Thu, 22 May 2025 17:56:34 +0800
+ (CST)
+Date: Thu, 22 May 2025 17:56:34 +0800 (CST)
+From: "David Wang" <00107082@163.com>
+To: "Greg KH" <gregkh@linuxfoundation.org>
+Cc: mathias.nyman@intel.com, oneukum@suse.com, stern@rowland.harvard.edu,
+	hminas@synopsys.com, rui.silva@linaro.org, jgross@suse.com,
+	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 2/2] USB: xhci: use urb hcpriv mempool for private
+ data
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20240801(9da12a7b)
+ Copyright (c) 2002-2025 www.mailtech.cn 163com
+In-Reply-To: <2025052211-oxidizing-tannery-de3f@gregkh>
+References: <a235e322e270942dc3d607d4b46ff7db29abeb2d.1747897366.git.00107082@163.com>
+ <5f14d11e4c651f9e856d760bc8b45ea7ac863b2f.1747897366.git.00107082@163.com>
+ <2025052211-oxidizing-tannery-de3f@gregkh>
+X-NTES-SC: AL_Qu2fBfWbuE8i4iCZZukZnEYQheY4XMKyuPkg1YJXOp80siTL9w4MZm9zFkDN986wFQWhoAiIdylMx/1of7R9bZJVNX/HNQ3LFeP/ZbF4qrek
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=GBK
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250522-userspace-governor-doc-v1-1-c8a038e39084@sony.com>
- <15871c67-0d18-430f-935e-261b2cda855b@gmail.com> <aC7yeQvKVQ1No9EW@JPC00244420>
-In-Reply-To: <aC7yeQvKVQ1No9EW@JPC00244420>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Thu, 22 May 2025 11:56:22 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0i6i6xt5-QOU2r0MDxR+7aOXYBUJ4kkJFQg6+RekayTNQ@mail.gmail.com>
-X-Gm-Features: AX0GCFuDeg96kru4SyCumlyfA3Q7mWIK4DCxHnyPBE6HaK68vl43j7pxhzrRxqk
-Message-ID: <CAJZ5v0i6i6xt5-QOU2r0MDxR+7aOXYBUJ4kkJFQg6+RekayTNQ@mail.gmail.com>
-Subject: Re: [PATCH] cpufreq, docs: (userspace governor) add that actual freq
- is >= scaling_setspeed
-To: Shashank Balaji <shashank.mahadasyam@sony.com>
-Cc: Russell Haley <yumpusamongus@gmail.com>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Viresh Kumar <viresh.kumar@linaro.org>, Jonathan Corbet <corbet@lwn.net>, linux-pm@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Shinya Takumi <shinya.takumi@sony.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Message-ID: <45b6468c.9346.196f76c5461.Coremail.00107082@163.com>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID:ZCgvCgCnjwPS9C5o0M0KAA--.22592W
+X-CM-SenderInfo: qqqrilqqysqiywtou0bp/xtbBkBBVqmgu58u1pQAFsA
+X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
 
-On Thu, May 22, 2025 at 11:46=E2=80=AFAM Shashank Balaji
-<shashank.mahadasyam@sony.com> wrote:
->
-> Hi Russell,
->
-> On Thu, May 22, 2025 at 03:50:55AM -0500, Russell Haley wrote:
-> > If the user asks for the frequency to be set from userspace, the
-> > frequency had damn well better be set from userspace.
->
-> First of all, I agree with you. In fact, before sending this patch, I
-> was considering adding CPUFREQ_GOV_STRICT_TARGET to the userspace
-> governor. intel_pstate should handle the rest of it.
-
-This wouldn't work the way you expect, though.  It would cause the
-driver to always set the frequency to policy->max.
-
-> > In my opinion, the documentation is correct, and it is the
-> > implementation in intel_pstate that is wrong. If the user wanted two
-> > separate knobs that control the minimum and maximum frequencies, they
-> > could leave intel_pstate in "active" mode and change scaling_min_freq
-> > and scaling_max_freq.
->
-> If intel_pstate is left in "active" mode, then userspace can't use any
-> of the other governors. Moreover, intel_pstate's min and max frequencies
-> apply to all the cpus.
-
-That's not true.
-
-scaling_min_freq and scaling_max_freq is per CPU, but the values from
-there are subject to hardware coordination.
-
-> Whereas, the userspace governor can be set on a per-cpu basis.
-
-This is also subject to hardware coordination.
-
-> Let's say this is "fixed" by adding CPUFREQ_GOV_STRICT_TARGET flag to
-> the userspace governor. Then userspace has no way to get back the
-> current behavior where the hardware automagically increases frequency
-> beyond the target frequency. At least not without a new interface.
->
-> With the current behaviour, userspace can have it both ways:
->     - actual frequency =3D target frequency
->     - actual frequency >=3D target frequency
->
-> And the occasional higher frequency shouldn't hurt performance, right?
-> But if they still want exact equality, with the current interface, they
-> can do that too.
->
-> This consideration is what led me to document the "actual freq >=3D targe=
-t
-> freq" rather than patch it so that "actual freq =3D target freq".
-
-The documentation can be adjusted by replacing "set" with "request" in
-the userspace governor description and adding a clarification to it
-that the requested frequency is between the policy min and max levels.
-
-With HWP enabled, the closest to setting the frequency to a specific
-value one can get is by setting scaling_min_freq and scaling_max_freq
-to that value.
+QXQgMjAyNS0wNS0yMiAxNjozMjo0MCwgIkdyZWcgS0giIDxncmVna2hAbGludXhmb3VuZGF0aW9u
+Lm9yZz4gd3JvdGU6Cj5PbiBUaHUsIE1heSAyMiwgMjAyNSBhdCAwMzoxMDoxMFBNICswODAwLCBE
+YXZpZCBXYW5nIHdyb3RlOgo+PiB4aGNpIGtlZXBzIGFsbG9jL2ZyZWUgcHJpdmF0ZSBkYXRhIGZv
+ciBlYWNoIGVucXVldWUvZGVxdWV1ZSBjeWNsZXMsCj4+IHdoZW4gdXNpbmcgYSBVU0Igd2ViY2Ft
+LCBhbGxvY2F0aW9uIHJhdGUgaXMgfjI1MC9zOwo+PiB3aGVuIHVzaW5nIGEgVVNCIG1pYywgYWxs
+b2NhdGlvbiByYXRlIHJlYWNoZXMgfjFrL3M7Cj4+IFRoZSBtb3JlIHVzYiBkZXZpY2UgaW4gdXNl
+LCB0aGUgaGlnaGVyIGFsbG9jYXRpb24gcmF0ZS4KPj4gCj4+IFVSQiBvYmplY3RzIGhhdmUgbG9u
+Z2VyIGxpZmVzcGFuIHRoYW4gcHJpdmF0ZSBkYXRhLCBoYW5kIG92ZXIgb3duZXJzaGlwCj4+IG9m
+IHByaXZhdGUgZGF0YSB0byB1cmIgY2FuIHNhdmUgbG90cyBvZiBtZW1vcnkgYWxsb2NhdGlvbnMg
+b3ZlciB0aW1lLgo+PiBXaXRoIHRoaXMgY2hhbmdlLCBubyBleHRyYSBtZW1vcnkgYWxsb2NhdGlv
+biBpcyBuZWVkZWQgZHVyaW5nIHVzYWdlcyBvZgo+PiBVU0Igd2ViY2FtL21pYy4KPj4gCj4+IFNp
+Z25lZC1vZmYtYnk6IERhdmlkIFdhbmcgPDAwMTA3MDgyQDE2My5jb20+Cj4+IC0tLQo+PiAgZHJp
+dmVycy91c2IvaG9zdC94aGNpLW1lbS5jICB8IDEgKwo+PiAgZHJpdmVycy91c2IvaG9zdC94aGNp
+LXJpbmcuYyB8IDMgKy0tCj4+ICBkcml2ZXJzL3VzYi9ob3N0L3hoY2kuYyAgICAgIHwgOCArKyst
+LS0tLQo+PiAgMyBmaWxlcyBjaGFuZ2VkLCA1IGluc2VydGlvbnMoKyksIDcgZGVsZXRpb25zKC0p
+Cj4+IAo+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy91c2IvaG9zdC94aGNpLW1lbS5jIGIvZHJpdmVy
+cy91c2IvaG9zdC94aGNpLW1lbS5jCj4+IGluZGV4IGQ2OTgwOTVmYzg4ZC4uYjE5ZTQxY2YxYzRj
+IDEwMDY0NAo+PiAtLS0gYS9kcml2ZXJzL3VzYi9ob3N0L3hoY2ktbWVtLmMKPj4gKysrIGIvZHJp
+dmVycy91c2IvaG9zdC94aGNpLW1lbS5jCj4+IEBAIC0xNzQ1LDYgKzE3NDUsNyBAQCBzdHJ1Y3Qg
+eGhjaV9jb21tYW5kICp4aGNpX2FsbG9jX2NvbW1hbmRfd2l0aF9jdHgoc3RydWN0IHhoY2lfaGNk
+ICp4aGNpLAo+PiAgCj4+ICB2b2lkIHhoY2lfdXJiX2ZyZWVfcHJpdihzdHJ1Y3QgdXJiX3ByaXYg
+KnVyYl9wcml2KQo+PiAgewo+PiArCVdBUk5fT05DRSgxLCAieGhjaSBwcml2YXRlIGRhdGEgc2hv
+dWxkIGJlIG1hbmFnZWQgYnkgdXJiIik7Cj4KPllvdSBqdXN0IGNyYXNoZWQgdGhlIGtlcm5lbCBp
+ZiB0aGlzIGV2ZXIgZ2V0cyBoaXQuICBBcyB5b3UgYXJlIHNheWluZwo+dGhpcyBzaG91bGQgbmV2
+ZXIgYmUgY2FsbGVkLCB3aHkgaXMgdGhpcyBmdW5jdGlvbiBldmVuIHByZXNlbnQgYW55bW9yZT8K
+Pgo+VGhpcyBtYWtlcyBubyBzZW5zZSA6KAoKSSBtZWFudCB0byB3YXJuIGZ1cnRoZXIgY2hhbmdl
+cyB0byB4aGNpOiAgYmV0dGVyIG5vdCBtYW5hZ2UgIHByaXZhdGUgZGF0YSAuCkkgZG9uJ3QgdGhp
+bmsgaXQgd291bGQgY3Jhc2gsICAgeGhjaV91cmJfZnJlZV9wcml2IHNob3VsZCBub3QgIGJlIHBh
+aXJlZCB3aXRoIAp1cmJfaGNwcml2X21lbXBvb2xfemFsbG9jLiAgKEJ1dCBub3RoaW5nIHByZXZl
+bnQgaXQgdGhvdWdoLCBzYW1lIGFzIG5vdGhpbmcgCnByZXZlbnRzIHVyYl9oY3ByaXZfbWVtcG9v
+bF96YWxsb2MgYmVpbmcgcGFpcmVkIHdpdGgga2ZyZWUuLi4uKQpJdCB3b3VsZCBiZSBiZXR0ZXIg
+dG8gcmVtb3ZlIHRoZSB3aG9sZSBmdW5jdGlvbi4KCgo+Cj5BZ2FpbiwgTkVWRVIgYWRkIGEgV0FS
+TiooKSBjYWxsIHRvIHRoZSBrZXJuZWwgZm9yIHNvbWV0aGluZyB0aGF0IGl0Cj5zaG91bGQgYmUg
+aGFuZGxpbmcgcHJvcGVybHkgb24gaXRzIG93bi4gIE90aGVyd2lzZSB5b3UganVzdCBsb3N0IGFs
+bCB0aGUKPnVzZXIncyBkYXRhIHdoZW4gdGhlIGJveCBnb3QgcmVib290ZWQgKGFuZCBpZiB1c2Vy
+c3BhY2UgY2FuIHRyaWdnZXIKPnRoaXMsIHlvdSBqdXN0IGNyZWF0ZWQgYSBuZXcgQ1ZFLi4uKQoK
+Q29weSB0aGF0fiEKClRoYW5rc34KRGF2aWQKPgo+dGhhbmtzLAo+Cj5ncmVnIGstaAo=
