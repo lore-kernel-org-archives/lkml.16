@@ -1,49 +1,44 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B662381BA;
-	Thu, 22 May 2025 12:32:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11A32381BA;
+	Thu, 22 May 2025 12:33:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747917164; cv=none; b=p2sggFLaXYSEpJ+g2qmoWQ2EdyiJi9TUnrUS07gq6j4MjHavUJRavOc0O9GPqkjlTwS3vBTBzVm4NOgE10KQdFizLNcF+p/FObVGEX445LPMDjm03LvcmIXBMWcF6TNQmnZB41cogR8YsL41Tlil2EwJ157dbxchnc3GAwQeRjk=
+	t=1747917224; cv=none; b=ZQJv3rD0PK22yq1bNlw8xdlpjeo4G/1jUJtTECXbjHFmktL85J/7rkRoVaA0ckjDQpJ3GK9dZDelz4roD2P8u5uwoHROyOn6FSu9wExX8r0VqzXeg51toqtqxPQAATetZS/3CqV7dI9BWWeFSu7W4Th4u2KwMgNH2jdbgPhu83w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747917164; c=relaxed/simple;
-	bh=r4cYLZUDYQDfzfjRP5THCg2REgGtHgRwFNQ7nd54qMc=;
+	s=arc-20240116; t=1747917224; c=relaxed/simple;
+	bh=uP61MchQPewY0Ob/xBfWVgKe5JiKOcl72p3w7LJxVss=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SQi9KSvFOQyAaYJaQ4+19xd7CkjIwrUHjvp3wmWwTN7o98cx+FF4sIN/4VADB6DRHgHuhsl1pPkuFDxN7x7CHNPG1xGaWEGZEw9dpQFhi00f+fXOQivm9ursy7T/GDvw/l4C616y7mFjqtzZg1Ru94oPWVHBCk3lXUvvdQPLnzw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ERBds/35; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=ghEtXVxA6XvpU+HR476fpuHc66Fz4EoZeK5mMe30LeLzWoNpDa0pTFZHf+Vi6+RoF8299AZD2uO+JP5QQ9fGtba5wzJ3NtrSMIHTxMdv8FUgv2z4mKzC/IalLnFDyZZ1FtjkbBkmzSgDoNC/NQKosCX8jN9+PfUNjk2+6fiqDC8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=cKRC3kO3; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ERBds/35"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93155C4CEE4;
-	Thu, 22 May 2025 12:32:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747917163;
-	bh=r4cYLZUDYQDfzfjRP5THCg2REgGtHgRwFNQ7nd54qMc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ERBds/35Smq1+0+h43mlQ02p5HXfQQqlX2clTAQLhyKzR6NvWTyBdRzW5CGAYieJK
-	 BOlnP6uxtfR114DLKpwYkJewkqFFYRc9F7c6EUjbDee6Xue1i0hS88l2AOdEZGdB3j
-	 UxcOflPldjgPQwzgCrYw7e4vlq8HLUG82qT1LhB07+EDjYXg3oclTJO4Y9VI0b0P50
-	 aM5jMhwdk/u3mph9iJmbcNceRmoFa/NsHQLOcZo8XNsC0nH0cnqpvOSg6I4h07AfM/
-	 y3b7MA30fWsUMs6AmRVuemMrWzBH0qWKzm1I9V0ncBDZQ2QuJCBJZ56PGXLbGjKUnz
-	 /TrvL6a1NPpjg==
-Date: Thu, 22 May 2025 15:32:35 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: David Hildenbrand <david@redhat.com>
-Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	"Liam R . Howlett" <Liam.Howlett@oracle.com>,
-	Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Christian Brauner <brauner@kernel.org>, linux-mm@kvack.org,
-	linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
-	SeongJae Park <sj@kernel.org>, Usama Arif <usamaarif642@gmail.com>
-Subject: Re: [RFC PATCH 1/5] mm: madvise: refactor madvise_populate()
-Message-ID: <aC8ZY_B7RKc9RMzw@kernel.org>
-References: <cover.1747686021.git.lorenzo.stoakes@oracle.com>
- <96503fba082709bc4894ba4134f9fac1d179ba93.1747686021.git.lorenzo.stoakes@oracle.com>
- <becb11bd-e10c-4f59-9ff1-1f7acd2e1ee0@redhat.com>
- <ea17a0a6-fe19-4f0b-9899-56d39b9fbac3@lucifer.local>
- <d9456551-a3ea-454c-8832-c0530f702ce0@redhat.com>
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="cKRC3kO3"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=QRm0+jOKmPeRh8S3vbmBsdZ3er87cYnpMRW/rqcs0pU=; b=cKRC3kO32MHq23ZPOKvEXwFAdy
+	EkGIQlvit4BnfwInI4cbw5e/giWtfQLNvpQdjSCebnzbrmxreBEm6X6RfvxrD/ntJHSqMZI9oQrnF
+	KVtZXg+45wDAaqgReogAtn0MKXEhOfyw7B5FiYIxYymSTcu76eTgJ5D2mlqKUjVfDc7k=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1uI576-00DUdV-AG; Thu, 22 May 2025 14:33:32 +0200
+Date: Thu, 22 May 2025 14:33:32 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Wei Fang <wei.fang@nxp.com>
+Cc: hkallweit1@gmail.com, linux@armlinux.org.uk, davem@davemloft.net,
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+	f.fainelli@gmail.com, xiaolei.wang@windriver.com,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	imx@lists.linux.dev
+Subject: Re: [PATCH net] net: phy: clear phydev->devlink when the link is
+ deleted
+Message-ID: <f19659d4-444c-4f44-9bff-4c83a8c5a7e9@lunn.ch>
+References: <20250522064253.3653521-1-wei.fang@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,101 +47,17 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <d9456551-a3ea-454c-8832-c0530f702ce0@redhat.com>
+In-Reply-To: <20250522064253.3653521-1-wei.fang@nxp.com>
 
-On Tue, May 20, 2025 at 12:42:33PM +0200, David Hildenbrand wrote:
-> On 20.05.25 12:36, Lorenzo Stoakes wrote:
-> > On Tue, May 20, 2025 at 12:30:24PM +0200, David Hildenbrand wrote:
-> > > On 19.05.25 22:52, Lorenzo Stoakes wrote:
-> > > > Use a for-loop rather than a while with the update of the start argument at
-> > > > the end of the while-loop.
-> > > > 
-> > > > This is in preparation for a subsequent commit which modifies this
-> > > > function, we therefore separate the refactoring from the actual change
-> > > > cleanly by separating the two.
-> > > > 
-> > > > Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-> > > > ---
-> > > >    mm/madvise.c | 39 ++++++++++++++++++++-------------------
-> > > >    1 file changed, 20 insertions(+), 19 deletions(-)
-> > > > 
-> > > > diff --git a/mm/madvise.c b/mm/madvise.c
-> > > > index 8433ac9b27e0..63cc69daa4c7 100644
-> > > > --- a/mm/madvise.c
-> > > > +++ b/mm/madvise.c
-> > > > @@ -967,32 +967,33 @@ static long madvise_populate(struct mm_struct *mm, unsigned long start,
-> > > >    	int locked = 1;
-> > > >    	long pages;
-> > > > -	while (start < end) {
-> > > > +	for (; start < end; start += pages * PAGE_SIZE) {
-> > > >    		/* Populate (prefault) page tables readable/writable. */
-> > > >    		pages = faultin_page_range(mm, start, end, write, &locked);
-> > > >    		if (!locked) {
-> > > >    			mmap_read_lock(mm);
-> > > >    			locked = 1;
-> > > >    		}
-> > > > -		if (pages < 0) {
-> > > > -			switch (pages) {
-> > > > -			case -EINTR:
-> > > > -				return -EINTR;
-> > > > -			case -EINVAL: /* Incompatible mappings / permissions. */
-> > > > -				return -EINVAL;
-> > > > -			case -EHWPOISON:
-> > > > -				return -EHWPOISON;
-> > > > -			case -EFAULT: /* VM_FAULT_SIGBUS or VM_FAULT_SIGSEGV */
-> > > > -				return -EFAULT;
-> > > > -			default:
-> > > > -				pr_warn_once("%s: unhandled return value: %ld\n",
-> > > > -					     __func__, pages);
-> > > > -				fallthrough;
-> > > > -			case -ENOMEM: /* No VMA or out of memory. */
-> > > > -				return -ENOMEM;
-> > > > -			}
-> > > > +
-> > > > +		if (pages >= 0)
-> > > > +			continue;
-> > > > +
-> > > > +		switch (pages) {
-> > > > +		case -EINTR:
-> > > > +			return -EINTR;
-> > > > +		case -EINVAL: /* Incompatible mappings / permissions. */
-> > > > +			return -EINVAL;
-> > > > +		case -EHWPOISON:
-> > > > +			return -EHWPOISON;
-> > > > +		case -EFAULT: /* VM_FAULT_SIGBUS or VM_FAULT_SIGSEGV */
-> > > > +			return -EFAULT;
-> > > > +		default:
-> > > > +			pr_warn_once("%s: unhandled return value: %ld\n",
-> > > > +				     __func__, pages);
-> > > > +			fallthrough;
-> > > > +		case -ENOMEM: /* No VMA or out of memory. */
-> > > > +			return -ENOMEM;
-> > > 
-> > > Can we limit it to what the patch description says? "Use a for-loop rather
-> > > than a while", or will that be a problem for the follow-up patch?
-> > 
-> > Well, kind of the point is that we can remove a level of indentation also, which
-> > then makes life easier in subsequent patch.
-> > 
-> > Happy to change description or break into two (but that seems a bit over the top
-> > maybe? :>)
-> 
-> Probably just mention it, otherwise it looks a bit like unrelated churn :)
+On Thu, May 22, 2025 at 02:42:53PM +0800, Wei Fang wrote:
+> The phydev->devlink is not cleared when the link is deleted, so calling
+> phy_detach() again will cause a crash.
 
-And for refactoring patches it's always useful to mention "no functional
-change" ;-)
+I would say crashing is correct. You have done something you should
+not do, and the crash helped you find it. phy_attach() and
+phy_detach() should always be in pairs.
 
-Acked-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
- 
-> Acked-by: David Hildenbrand <david@redhat.com>
-> 
-> -- 
-> Cheers,
-> 
-> David / dhildenb
-> 
-> 
+    Andrew
 
--- 
-Sincerely yours,
-Mike.
+---
+pw-bot: cr
