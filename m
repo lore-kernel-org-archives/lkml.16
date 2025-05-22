@@ -1,70 +1,106 @@
-Received: from out-184.mta0.migadu.com (out-184.mta0.migadu.com [91.218.175.184])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 541622980CD
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 16:49:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.184
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DBD9227EAE;
+	Thu, 22 May 2025 16:49:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747932551; cv=none; b=jhi6EgnWAh9zte8yYYUA/t4us56DHY+yDnsj68aeJnMk64vJn/038A5CdCOuOOn95X3mstkD9vR980t9ofU7Huqu0I8tC9pDY8w1UbZCQ+5179IyTZmrD3dAwBpdjKgnb5/ruLKrDn9jdH10Ctbs4AM27E2fDs81EgqRCpy62EI=
+	t=1747932581; cv=none; b=XrU1oRYokhdWAwYS7fX5JrXGOsBsPkvqi8PGt2Xl/4R1Z40uqgsxcUXNrmFWRWFCskGqHinwuVvqxkdhcxuowOmTlwTRH/1rACwgTIaqSLcy7KEbwffnJVthAfqgXRarwaAZaN5c4XT7OCGHwWcvBPfz8DETofzqFXpfIWWflHM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747932551; c=relaxed/simple;
-	bh=j35fmLgetkmSXQUe+NPZE0gq2nxVdxLHs49rTm9DE9g=;
+	s=arc-20240116; t=1747932581; c=relaxed/simple;
+	bh=LP7ImiblbThAhgrPjhOSsoI6CFpyGCPkg+vE95DbX3k=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NzmJ5oegzR09OW5uZfvpCHWSZS5cJPADeMTVDDoHk3liCTvCmF7Yahl6nQQJcnEUc5bkj/d7ozkCQNjgtYoe2l+C4teWju8WIbILZI0paGn1B5jDIg+eBmu7ZtJfu/jpKQ+czGU1STjTjIIMYqH7n/upqtcLGjN7Dcu4zeQ4oVc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=UKUCUp0u; arc=none smtp.client-ip=91.218.175.184
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	 Content-Type:Content-Disposition:In-Reply-To; b=JZdFQL6HhbZL0Z/hQd2h3i1nOrN0WeRnZg429aWIHBnEhcjqw21nJgD00MPxOuYRa4dbm4iddNakt2FGwLBVYCKeBeWIgusDaa1lkLzmvWg6jdVjW9VPbbuqNcgEoLBm8FPxiJ3cGH/mcc1zw8pXDwXe88XjXaJFFL5Kx+UbiO0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jOOJskH+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="UKUCUp0u"
-Date: Thu, 22 May 2025 12:48:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1747932537;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=RQIsaiqTMB+Ttm8nI69su9Y65q0oEsoQR0Y/F7m8Jk0=;
-	b=UKUCUp0uKZRsL5+TEW9oPVweOe+3qwmHQ0BIgxfxOh6xgIoImjNIXGE5TFIh+CYqYSy+6P
-	hT5cl70b/uEtdPLr2XmR/1pg9zoqMM5sius7lj4bnhv87w3YyzZa82eCqMuD7LEKweZge0
-	1ckWib6i12JVhhXDiDs+PGBY/cUp4o8=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Kent Overstreet <kent.overstreet@linux.dev>
-To: Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc: linux-bcache@vger.kernel.org, open list <linux-kernel@vger.kernel.org>, 
-	lkft-triage@lists.linaro.org, Linux Regressions <regressions@lists.linux.dev>, 
-	Arnd Bergmann <arnd@arndb.de>, Dan Carpenter <dan.carpenter@linaro.org>, 
-	Anders Roxell <anders.roxell@linaro.org>
-Subject: Re: riscv gcc-13 allyesconfig error the frame size of 2064 bytes is
- larger than 2048 bytes [-Werror=frame-larger-than=]
-Message-ID: <6tgxbull5sqlxbpiw3jafxtio2a3kc53yh27td4g2otb6kae5t@lr6wjawp6vfa>
-References: <CA+G9fYv08Rbg4f8ZyoZC9qseKdRygy8y86qFvts5D=BoJg888g@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jOOJskH+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 805E7C4CEE4;
+	Thu, 22 May 2025 16:49:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747932581;
+	bh=LP7ImiblbThAhgrPjhOSsoI6CFpyGCPkg+vE95DbX3k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=jOOJskH+ALMUEVBISyhXWJQuT34ek29MKVCCCCj92Gn2G3lePbm6bKCvtCxSdxN8R
+	 ODc/V5V6MC3cUgTR/VDg67fB+hUXdlvmpjRV7Wmpc4XaJ3oTF7ku412KLLcyb4umzY
+	 E6mESzVODo0xKq95zQwa9i3yW+DzZkpoYRpXRg0i8c4uboT+fZ+/ACCS73Ooqia47v
+	 Q+hfLcso4XfILh0S3GEDl3OMUeY2amaG161VGnZGA2Z8awhkI9WjwJGwCd7eDjokkp
+	 fK7h/jptGeiDE2D4NrDe7eknkHKNMhULO1OR8uzN/hx8xiBRIwwM2NBSRPy9S5oj1p
+	 UfsXHL3J9iCjA==
+Date: Thu, 22 May 2025 13:49:37 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Howard Chu <howardchu95@gmail.com>
+Cc: Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
+	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH] perf test: Add cgroup summary test case for perf trace
+Message-ID: <aC9VoTL_Cv4R7J-j@x1>
+References: <20250522142551.1062417-1-namhyung@kernel.org>
+ <CAH0uvoiZ2difXdPsjkdLikHTRwYROYUeuCdZ+gQ5uRfQ2rzwGQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CA+G9fYv08Rbg4f8ZyoZC9qseKdRygy8y86qFvts5D=BoJg888g@mail.gmail.com>
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAH0uvoiZ2difXdPsjkdLikHTRwYROYUeuCdZ+gQ5uRfQ2rzwGQ@mail.gmail.com>
 
-On Thu, May 22, 2025 at 06:59:53PM +0530, Naresh Kamboju wrote:
-> Regressions on riscv allyesconfig build failed with gcc-13 on the Linux next
-> tag next-20250516 and next-20250522.
+On Thu, May 22, 2025 at 08:33:16AM -0700, Howard Chu wrote:
+> Hello Namhyung,
 > 
-> First seen on the next-20250516
->  Good: next-20250515
->  Bad:  next-20250516
-> 
-> Regressions found on riscv:
->  - build/gcc-13-allyesconfig
-> 
-> Regression Analysis:
->  - New regression? Yes
->  - Reproducible? Yes
-> 
-> Build regression: riscv gcc-13 allyesconfig error the frame size of
-> 2064 bytes is larger than 2048 bytes [-Werror=frame-larger-than=]
+> $ sudo /tmp/perf/perf test -vv 112
+> 112: perf trace summary:
+> 112: perf trace summary
+> --- start ---
+> test child forked, pid 1574993
+> testing: perf trace -s -- true
+> testing: perf trace -S -- true
+> testing: perf trace -s --summary-mode=thread -- true
+> testing: perf trace -S --summary-mode=total -- true
+> testing: perf trace -as --summary-mode=thread --no-bpf-summary -- true
+> testing: perf trace -as --summary-mode=total --no-bpf-summary -- true
+> testing: perf trace -as --summary-mode=thread --bpf-summary -- true
+> testing: perf trace -as --summary-mode=total --bpf-summary -- true
+> testing: perf trace -aS --summary-mode=total --bpf-summary -- true
+> testing: perf trace -as --summary-mode=cgroup --bpf-summary -- true
+> testing: perf trace -aS --summary-mode=cgroup --bpf-summary -- true
+> ---- end(0) ----
+> 112: perf trace summary                                              : Ok
 
-Is this a kmsan build? kmsan seems to inflate stack usage by quite a
-lot.
+Thanks, tested and applied to perf-tools-next,
+
+- Arnaldo
+ 
+> 
+> On Thu, May 22, 2025 at 7:25 AM Namhyung Kim <namhyung@kernel.org> wrote:
+> >
+> >   $ sudo ./perf test -vv 112
+> >   112: perf trace summary:
+> >   --- start ---
+> >   test child forked, pid 1018940
+> >   testing: perf trace -s -- true
+> >   testing: perf trace -S -- true
+> >   testing: perf trace -s --summary-mode=thread -- true
+> >   testing: perf trace -S --summary-mode=total -- true
+> >   testing: perf trace -as --summary-mode=thread --no-bpf-summary -- true
+> >   testing: perf trace -as --summary-mode=total --no-bpf-summary -- true
+> >   testing: perf trace -as --summary-mode=thread --bpf-summary -- true
+> >   testing: perf trace -as --summary-mode=total --bpf-summary -- true
+> >   testing: perf trace -aS --summary-mode=total --bpf-summary -- true
+> >   testing: perf trace -as --summary-mode=cgroup --bpf-summary -- true
+> >   testing: perf trace -aS --summary-mode=cgroup --bpf-summary -- true
+> >   ---- end(0) ----
+> >   112: perf trace summary                                              : Ok
+> >
+> > Cc: Howard Chu <howardchu95@gmail.com>
+> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> 
+> Reviewed-by: Howard Chu <howardchu95@gmail.com>
+> 
+> Thanks,
+> Howard
