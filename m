@@ -1,105 +1,86 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out30-112.freemail.mail.aliyun.com (out30-112.freemail.mail.aliyun.com [115.124.30.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1395618027;
-	Thu, 22 May 2025 09:52:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8EAA18027
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 09:52:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.112
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747907526; cv=none; b=nI0is0sWRPZKoXPiPhOmHudOMy5q+cAAhvRg4V1QzX+5wxxxna/ouXS7IFAmR0JEWfbVmsxGoKIptCcgsCGYd1m5IbbNKVX3Uh9tVygAO4hp1YDXh3CzIPEX3X6H2m/3mJUoB1HQaHxHhqhJa9bojo/053mV/PiC9ppXR5hfIak=
+	t=1747907565; cv=none; b=Q/QBdxdt+FxJ+kV4ebq76+f6kmihChO+NMA6gRU9QHHjTLGcAa4J77nelvK58LJpslv65y5mKqsKrtCry1vbwuDvv3Oa1tw910dlwQShHI7y/Cf3DuEAVT/Zof6RImvxPMDk3+P8ubV5YFP2JAwaU3tBqPlo9iJFi1dUZAK0FoE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747907526; c=relaxed/simple;
-	bh=R5gUtd7Ej8tnX3ImIcWWLb8QpdfRfk/XdEuvZ0Eu8ng=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=TIGBLqtRmSWGzTj8aNy+1BM4Uzq4NQxdrcb/JgQPOVKlPiOqMxZQoo27AmyTXhm+EGKcQ7jcvsq+FDYD0I9fNzlY5yK/VKPu49oHzdpBRQTiO8stkerV8JoH/wYmOvaca1e55yYI3E5MyyZr84wtlwaOCsoQyD9JS7nMDY8HS5A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ryo8D6wt; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747907565; c=relaxed/simple;
+	bh=vrnIi33Uhbupzwn4fUSeBvcJw83c2GGrKaVsmo3+Uic=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GM5Y5wCiRUW8G6HU4FBSoyzuUSK28fMjl+hlERfk78KOhMVWNYJD8s+SpbszoKhXEJ8Y+ot8KX+hMVfdCowCpcfAM6yIKysK9SVpq43y5G49jNiwT1+eC7/2rdP1HwfoE0SKjvrcsQ99MePuO+JCETeZdHfixeTI1OnA+DWoDh0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=sIKUuVoj; arc=none smtp.client-ip=115.124.30.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ryo8D6wt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53C67C4CEE4;
-	Thu, 22 May 2025 09:52:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747907524;
-	bh=R5gUtd7Ej8tnX3ImIcWWLb8QpdfRfk/XdEuvZ0Eu8ng=;
-	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
-	b=ryo8D6wtSvio0CwhkzR158v1NFzbaqmqiiBwFrJbco1L3dx7qjfRT8hcDlZEpg6t4
-	 AxdT8B05kPM0A/uePIPKj/GrBb+wRCpVDn3hEC7QmnG+wu9wLhehBRmW+BS8DAQa2W
-	 G7K89ET0Zr0pWgEUpGq/whnwYMVQ7QUT8UI7duMghmtqm+SShBPtC34PzCuk9oapmE
-	 G4IDcD5Ica0TWIx0nunXa+Ml+f9q3/b5UkEFza31GI9wiFYDJSb0aPmCFBCNufryRV
-	 tPwLuBFkVEDXWgVNkJ0w0Wb9eNQz1qRPjTvcT6AA8JMmwhpftiKYgMOehnL5VTaX6f
-	 Ju41I9GoINa+A==
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="sIKUuVoj"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1747907560; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=eSAnloQcVa/uk9+ADt/Qeyay1jtAPm847cdU8CH03+8=;
+	b=sIKUuVojj7dLvJIMaWRUnz4OuX0a2BMxxTxmbZbjw0s8xoUuDmig8Wmwmx6nuwEJGqv+XxjqRe1kuiBXA1jCywoj/yh/bdEbv9f1fJVnbdlltFRZwcvpv6sig0/rrltmwpm885gsvX+sqrMpdNs7d7AVGavSzSHhVhtbLIHetCE=
+Received: from 30.170.233.0(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WbVPZFi_1747907554 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Thu, 22 May 2025 17:52:40 +0800
+Message-ID: <2f0e05c0-fe6b-4e84-9ef5-c33ecc43d81c@linux.alibaba.com>
+Date: Thu, 22 May 2025 17:52:32 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Thu, 22 May 2025 11:51:59 +0200
-Message-Id: <DA2LI55W3BY8.14DMW9GGSAEY5@kernel.org>
-Cc: <alex.gaynor@gmail.com>, <boqun.feng@gmail.com>, <gary@garyguo.net>,
- <bjorn3_gh@protonmail.com>, <benno.lossin@proton.me>,
- <a.hindborg@kernel.org>, <aliceryhl@google.com>, <tmgross@umich.edu>,
- <dakr@kernel.org>, <rust-for-linux@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <skhan@linuxfoundation.org>,
- <linux-kernel-mentees@lists.linux.dev>, <jserv@ccns.ncku.edu.tw>
-Subject: Re: [RFC PATCH v2] rust: list: Add examples for linked list
-From: "Benno Lossin" <lossin@kernel.org>
-To: "I Hsin Cheng" <richard120310@gmail.com>, <ojeda@kernel.org>
-X-Mailer: aerc 0.20.1
-References: <20250311133357.90322-1-richard120310@gmail.com>
-In-Reply-To: <20250311133357.90322-1-richard120310@gmail.com>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v9] erofs: support deflate decompress by using Intel QAT
+To: Bo Liu <liubo03@inspur.com>, xiang@kernel.org, chao@kernel.org
+Cc: linux-erofs@lists.ozlabs.org, linux-kernel@vger.kernel.org
+References: <20250522094931.28956-1-liubo03@inspur.com>
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+In-Reply-To: <20250522094931.28956-1-liubo03@inspur.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue Mar 11, 2025 at 2:33 PM CET, I Hsin Cheng wrote:
-> Add basic examples for the structure "List", also serve as the unit
-> tests for basic list methods. Including the following manipulations:
-> * List creation
-> * List emptiness check
-> * List insertion through push_front(), push_back()
-> * List item removal through pop_front(), pop_back()
-> * Push one list to another through push_all_back()
->
-> The method "remove()" doesn't have an example here because insertion
-> with push_front() or push_back() will take the ownership of the item,
-> which means we can't keep any valid reference to the node we want to
-> remove, unless Cursor is used. The remove example through Cursor is
-> already demonstrate with 'commit 52ae96f5187c ("rust: list: make the
-> cursor point between elements")' .
->
-> Link: https://github.com/Rust-for-Linux/linux/issues/1121
-> Signed-off-by: I Hsin Cheng <richard120310@gmail.com>
-> ---
-> Changelog:
->
-> v1 -> v2:
->     - Abandon new implementation of method to create a new "ListLink"
->       instance
->     - Rephrase the examples' comment
->     - Increase the coverity of the examples
->
-> Tests was performed on ubuntu 24.04 with x86_64 architecture.
->
-> $ ./tools/testing/kunit/kunit.py run --make_options LLVM=3D1 --arch x86_6=
-4 --kconfig_add CONFIG_RUST=3Dy
-> ...
-> [21:13:11] Testing complete. Ran 615 tests: passed: 563, skipped: 52
-> [21:13:11] Elapsed time: 23.020s total, 0.001s configuring, 10.985s build=
-ing, 12.020s running
->
-> Rust related unit tests are all passed.
->
-> Best regards,
-> I Hsin Cheng
-> ---
->  rust/kernel/list.rs | 117 ++++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 117 insertions(+)
 
-This is a nice example, so
 
-Reviewed-by: Benno Lossin <lossin@kernel.org>
+On 2025/5/22 17:49, Bo Liu wrote:
+> This patch introdueces the use of the Intel QAT to decompress compressed
+> data in the EROFS filesystem, aiming to improve the decompression speed
+> of compressed datea.
+> 
+> We created a 285MiB compressed file and then used the following command to
+> create EROFS images with different cluster size.
+>       # mkfs.erofs -zdeflate,level=9 -C16384
+> 
+> fio command was used to test random read and small random read(~5%) and
+> sequential read performance.
+>       # fio -filename=testfile  -bs=4k -rw=read -name=job1
+>       # fio -filename=testfile  -bs=4k -rw=randread -name=job1
+>       # fio -filename=testfile  -bs=4k -rw=randread --io_size=14m -name=job1
+> 
+> Here are some performance numbers for reference:
+> 
+> Processors: Intel(R) Xeon(R) 6766E(144 core)
+> Memory:     521 GiB
+> 
+> |-----------------------------------------------------------------------------|
+> |           | Cluster size | sequential read | randread  | small randread(5%) |
+> |-----------|--------------|-----------------|-----------|--------------------|
+> | Intel QAT |    4096      |    538  MiB/s   | 112 MiB/s |     20.76 MiB/s    |
+> | Intel QAT |    16384     |    699  MiB/s   | 158 MiB/s |     21.02 MiB/s    |
+> | Intel QAT |    65536     |    917  MiB/s   | 278 MiB/s |     20.90 MiB/s    |
+> | Intel QAT |    131072    |    1056 MiB/s   | 351 MiB/s |     23.36 MiB/s    |
+> | Intel QAT |    262144    |    1145 MiB/s   | 431 MiB/s |     26.66 MiB/s    |
+> | deflate   |    4096      |    499  MiB/s   | 108 MiB/s |     21.50 MiB/s    |
+> | deflate   |    16384     |    422  MiB/s   | 125 MiB/s |     18.94 MiB/s    |
+> | deflate   |    65536     |    452  MiB/s   | 159 MiB/s |     13.02 MiB/s    |
+> | deflate   |    131072    |    452  MiB/s   | 177 MiB/s |     11.44 MiB/s    |
+> | deflate   |    262144    |    466  MiB/s   | 194 MiB/s |     10.60 MiB/s    |
+> 
+> Signed-off-by: Bo Liu <liubo03@inspur.com>
+Reviewed-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 
-It uses `unwrap` a lot, which might confuse newcomers that that is ok in
-normal code. I'm wondering if we can do something about that though...
+Thanks,
+Gao Xiang
 
----
-Cheers,
-Benno
