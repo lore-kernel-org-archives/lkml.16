@@ -1,180 +1,130 @@
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93B5C221576
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 06:15:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47788221728;
+	Thu, 22 May 2025 06:15:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747894514; cv=none; b=svuXi3vAb1LprKjAvOB2+kFhyP5lB7bdzndqkWWCHO9NnbCEacosmzkkMvfkqvrUqRg/EKIobSpj4kCFFMl1PVf3TdDbC/iRoFQ0GEAc9VkaAdP4guzEEFPH6TPUbNtcnAthfXlsnPBskIK2xXWhxRSfRVclo7W2+dGt0lJrNQU=
+	t=1747894552; cv=none; b=Ss1kwyXw1K3cHMmRrOVhFQMOOpMNvq9z5Ot5fBVZwjAVwE9pUJg6ves2e1ekFbzs6Pw6F8Vsi6dWqia2MJRIz/eaLChzPMCKnqyNlgSyZFCBTOgpcJ6H6csDWmCP24YrQvtZO0z8slCEVo0lOB9lhso2aDx/nzd51R2NkrwZvc0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747894514; c=relaxed/simple;
-	bh=QTnu1Vg9plPSBCYleamIjI0RVzHfQYggAZKE5FDJTdg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kubW5RYoBjyJpmFqx9bmipVqMSuZ2Tq3N/PDJopfK6aiv1zEUThqhjPvKgN+vtWuw0YZZr1FtXVtEa4B3ULj1nJQyBYcj4xHnutPve5SFNtFM/Zokl8vGwcVcdZ3Gz9HLcl3eH91Ja7ZOe/Vrdl2zdg4qkTfdrtEpY3xbj04TVA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=KZYzV3fR; arc=none smtp.client-ip=209.85.221.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1747894552; c=relaxed/simple;
+	bh=iqpb1rYrNkcWfeBryIxnBxG6EOtFDvLTGg/V1cSIVgg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=QP9iYMPEvvQ+ngOoHPhWZW90wFgA2lVcb3lxVxB2264U2FAx3oSCB/9nfGyAGLku+nFcxRUvYK1L0dxQB/f/0JFQhh+aMqXb+KD8Xkh721iRe/2i2J10p1PEbel1aYsLqMaEWrnk7g0vERHkMreH55U3TgsvLYhER6dhZ1NYVkU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=G3WuAeqQ; arc=none smtp.client-ip=209.85.219.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KZYzV3fR"
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-3a35c339e95so924503f8f.3
-        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 23:15:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G3WuAeqQ"
+Received: by mail-qv1-f46.google.com with SMTP id 6a1803df08f44-6f8b27c2d7bso79490536d6.1;
+        Wed, 21 May 2025 23:15:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1747894511; x=1748499311; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=uG8OshWifuyuMcwd12q2qjIreQ5QpE1JSphDjs4WrDE=;
-        b=KZYzV3fRnj/BksGDgC2DdNlGGa4BoKe44y3I2l/+2ZJO2zZ5AI/grhWDiOjckyH89P
-         ZlhcDAf2wQyWjB7A1r5kE1QAuErayiOjsU6G0cMFoiPDppRvoW+g9oDBP05f2X7BsvV+
-         1mtE3BcH4TULRJ5U+sIidtGnX1UQQKxhNgEozAg0QmMTDHhVHVrjMe5KNQhrhuIMRg/8
-         9QfwLUCfPYitNAtlitq64jS3YATZpbVmwB3SgawcD1ZKnL1H6MBlNrt++eB31M+OsaI3
-         WowX+OfnDNwjWd9Sm7SQu6W9k6ICGECzqS/YWHhSppu95eLRxVKLIqv2C1XCdrxQuNFc
-         zARA==
+        d=gmail.com; s=20230601; t=1747894550; x=1748499350; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZXdrQudC82M+RXWv3KT75ifthrQS/0PqWGPX1TzmJn0=;
+        b=G3WuAeqQZ90FGfft9iSpmrwzie6mT8mrU2ygiVXrXmld+nA1LK8B0tGz1rF5sv/oG8
+         14hxrN/OGbUlMsNLMBoReTATFn/093/hunUT1CWpCOS9fPTCp2jcr32xUcI0SoC5gqWh
+         effvsmpkfW+Eo+EVpMiiuNJVNnXfYnYrDYACQs3D6hUMkAJ+8t6dMhuqxe4MqPDsIC1Z
+         aEXMrWrkf02ysfMwMJ+9T5uAJ7HzRa0rwzhnfejWfSZBrEzUIVu/n+rG8HyXyEe+ehav
+         0LmlHu6bhm7XMlFqBEih1pprPmixIwXYxWkltDhrxB3JjLV7SUBUBeTLNW7ewzyNqoqA
+         DjWQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747894511; x=1748499311;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=uG8OshWifuyuMcwd12q2qjIreQ5QpE1JSphDjs4WrDE=;
-        b=v5mU+jQ8I23oq+8UL5RSEMVgJg89WwhZFBxpG/J7VSuEp1njJKx0mPxE02dYqag4+9
-         eKvhUTMOIMSIpvUpQf3NXm6nIuVUeLvwRPLi3jx61pz4QBgopqpvBv3cTK/yT+/0+m4V
-         S+wH3O0wcKNd9xI4TxxZoAyD0yz9EwZdMICGIR+/YE4zLJjbT1f4SEM7PyofErO0Z1Mb
-         eAmEvYcaOqjhbsKl28SWb2SmbyaQLzQxowVQe2jhTWt9PBvFH5NBQuqczU4U5+AmRvMv
-         od18suT/f154I+BHGsc7BEPKj28OTlBIeewS3pQ2WDs2DZVkOH7C6SRbss9JMnzZO3xa
-         2IIg==
-X-Forwarded-Encrypted: i=1; AJvYcCVQppqtVUNuW8dpzhodwx63IlOPTxWSm9jR3bCL49AnBhD+dNJ/9PtDcOZl4o5EoNfhyqc/3WKRiqnjZSI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwSwjllHpgEUQ/q2PPOqTDU0oAAxhXXqcWpJ1R6wDDz7sHxCS9m
-	e6cs0P1vW80VYCjmMJhSY3cW7C7fUrHK4ePf83fT5V+Nkru93Mttl+9hp6GWJHObeLzCR78Gd70
-	hG8dp
-X-Gm-Gg: ASbGncvwUGqPpy3dFD/KYHdR6h6WC1uiXnm3fim+/jtBC+cRoHCnETNHfNFf2kzVYp2
-	ZsOQeQnCmMo9BZ+EpFMX4Y3QFNi0qpgPz3/MK8bujXr/4RA7nVpdIk0l8NDVwYsQ+vEQOFGKCfg
-	GbiTriK/+GGdVSvrcAcAyTMMdxXuMzIHm1XQqdBEOXhxyDeejcmSxwJ+IHuPjUmNaFdoXfoWRm/
-	tLUChfpZGy596bSsaO7X9vSwN31iKkY/Spvueo7L3KYbKdhPmA5znFoJ1/uIiO9JbICfNFvKy4S
-	z6g9kXdICFrczz5ByLUTvgNQdLeb0rGPqBi/LBa0DIL2ojhM6p+GOrnvqcG/He9r72/88y9qq+X
-	vZTJuAw==
-X-Google-Smtp-Source: AGHT+IEM9uv1fX2pmqD0YCviR3QYTH7GcWYcWn+mgg1vALiqzepMG4TqCT5yxiQPxW3h/H0yGin7Xg==
-X-Received: by 2002:a05:600c:3545:b0:439:9ec5:dfa with SMTP id 5b1f17b1804b1-442fd67590amr76834135e9.7.1747894510664;
-        Wed, 21 May 2025 23:15:10 -0700 (PDT)
-Received: from [192.168.1.29] ([178.197.223.125])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-447f6b29548sm98459055e9.4.2025.05.21.23.15.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 21 May 2025 23:15:09 -0700 (PDT)
-Message-ID: <455ef8b8-dec5-47e0-94db-611ac399903b@linaro.org>
-Date: Thu, 22 May 2025 08:15:06 +0200
+        d=1e100.net; s=20230601; t=1747894550; x=1748499350;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ZXdrQudC82M+RXWv3KT75ifthrQS/0PqWGPX1TzmJn0=;
+        b=D/rHNAxO3iTFXzZG1LKFtCionYh6/kqbefSWdfE82CtPAFszs1rIV6rAXKquYNO5lb
+         WWHjDlUwd3qasYBIbqlQk/7wjLXeA8hMX/vYd2oGg6he6MBZ+L0swWKKg+xl/KaauNOw
+         dlncJ4bUuZ67ijnT+RO0AyzK3UhyZodc+KMitXFQ4by9AnLK5P0AH1YTk9jIy+T8ocJo
+         lT7jL6Dj0CXUm5aR2W7+FijLtBU8f+jUgSZC+A7VKP8AeNIkjJJqqCYWDvwwCjX4/P4K
+         jeEH5n/RxbgGabzwTZhBoc8JjBb7N7a0F+Rk3T7rvyOrZYRQK/4+9hVi+mqIQk2DwAEQ
+         px8g==
+X-Forwarded-Encrypted: i=1; AJvYcCUPL/wr5QJ7v4oF0S4LlKhZTxeXV9eeOyoWOG8sC5oYNJMRLGmRetAfxHoy9Y86fv1sjjhHiUS8op6Cx9uu78MK/96l@vger.kernel.org, AJvYcCUU8QqIVq78Aa2GFA57KgSOoEjLN9mLENRQjcwUycOuCareeLB6fK60rKo3FbUGgFSa+ALkjKDHMipjvnNYfxP5hA==@vger.kernel.org, AJvYcCXRcMozYEy4eOMs+MfAS+4jBAT3kXVgRDUOf1owkYOpAkshMDYjGbeKNiOJxWHn0CIC4B0=@vger.kernel.org, AJvYcCXY5Utz4t455yh3ZQz3oWmJUB6TUxCpF6yM50YNZ/DxfQ9ixz2KEC5zp8zHJvlX84wQxinO16g8WfO0qgOe@vger.kernel.org, AJvYcCXfyNGZpSMmx1ko7MS2QHtgYXy1X/21qq4o9bpjyzfPX1F3KydDfQETaL87cTm2x3zmb6VLF94IPy3otxIzsg==@vger.kernel.org
+X-Gm-Message-State: AOJu0YwZxhYQLbNO9kazkUPNCgJymDV5hJWxDN8CQsh8V8BgmmeoyVJd
+	HuDIprf44bsPJqfnVvc+4W2Ta+edH4L7RINxby9vGzZLF+efoJAYR+AXsSNe/M0ZLogacszSfeE
+	Wz2m2UX7i212MnKnJw8PV3w+zJkVbha4=
+X-Gm-Gg: ASbGncs1gb4wm1gLCpoSYLLRxa/pyHSoBBXxFSbWt96+NdrSYdWGz1TqTnIGTr1XZJT
+	UENHH1s4t5uGjdJa9MDvf7CpoJJWQEeLm3Yorf8jbMYWJfxAAK6l9C5WfTIpUsffWx7ZoNR8MCa
+	j7DxQJIHt0RKzMWZVCOy+bYcnMKiSmqQNT8g==
+X-Google-Smtp-Source: AGHT+IFKOC9mEYSOYCwZB+hNIAN37e7Pn0LuF6NZH6cBUxj4agI/PryyRfq8gu07V1D2LotWOWiLP5xa0GVKeJ6VviA=
+X-Received: by 2002:ad4:5ec8:0:b0:6f5:4f18:81d9 with SMTP id
+ 6a1803df08f44-6f8b2d41e47mr406849736d6.23.1747894550006; Wed, 21 May 2025
+ 23:15:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: linux-next: manual merge of the i2c-host tree with the arm-soc
- tree
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Alexey Charkov <alchark@gmail.com>, Andi Shyti <andi@smida.it>,
- ARM <linux-arm-kernel@lists.infradead.org>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Next Mailing List <linux-next@vger.kernel.org>,
- Andi Shyti <andi.shyti@kernel.org>, Stephen Rothwell <sfr@canb.auug.org.au>
-References: <20250522121726.0a4350fc@canb.auug.org.au>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Content-Language: en-US
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- 2+47PN9NZAOyb771QoVr8A==
-In-Reply-To: <20250522121726.0a4350fc@canb.auug.org.au>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250521062337.53262-1-bhupesh@igalia.com> <20250521062337.53262-3-bhupesh@igalia.com>
+In-Reply-To: <20250521062337.53262-3-bhupesh@igalia.com>
+From: Yafang Shao <laoar.shao@gmail.com>
+Date: Thu, 22 May 2025 14:15:13 +0800
+X-Gm-Features: AX0GCFvAMu94jah4jA_vOqZJoCDzlxV3FYoqVXzO2soNYAKD2LF9n-3UXNqK9FI
+Message-ID: <CALOAHbCm_ggnxAtHMx07MUgnW01RiymD6MpR7coJOiokR4v52A@mail.gmail.com>
+Subject: Re: [PATCH v4 2/3] treewide: Switch memcpy() users of 'task->comm' to
+ a more safer implementation
+To: Bhupesh <bhupesh@igalia.com>
+Cc: akpm@linux-foundation.org, kernel-dev@igalia.com, 
+	linux-kernel@vger.kernel.org, bpf@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-mm@kvack.org, oliver.sang@intel.com, lkp@intel.com, pmladek@suse.com, 
+	rostedt@goodmis.org, mathieu.desnoyers@efficios.com, arnaldo.melo@gmail.com, 
+	alexei.starovoitov@gmail.com, andrii.nakryiko@gmail.com, 
+	mirq-linux@rere.qmqm.pl, peterz@infradead.org, willy@infradead.org, 
+	david@redhat.com, viro@zeniv.linux.org.uk, keescook@chromium.org, 
+	ebiederm@xmission.com, brauner@kernel.org, jack@suse.cz, mingo@redhat.com, 
+	juri.lelli@redhat.com, bsegall@google.com, mgorman@suse.de, 
+	vschneid@redhat.com, linux-trace-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 22/05/2025 04:17, Stephen Rothwell wrote:
-> Hi all,
-> 
-> Today's linux-next merge of the i2c-host tree got a conflict in:
-> 
->   MAINTAINERS
-> 
-> between commit:
-> 
->   47cbd5d8693d ("ARM: vt8500: MAINTAINERS: Include vt8500 soc driver in maintainers entry")
-> 
-> from the arm-soc tree and commit:
-> 
->   3887d3f64260 ("dt-bindings: i2c: i2c-wmt: Convert to YAML")
-> 
-> from the i2c-host tree.
-> 
-> I fixed it up (see below) and can carry the fix as necessary. This
-> is now fixed as far as linux-next is concerned, but any non trivial
-> conflicts should be mentioned to your upstream maintainer when your tree
-> is submitted for merging.  You may also want to consider cooperating
-> with the maintainer of the conflicting tree to minimise any particularly
-> complex conflicts.
+On Wed, May 21, 2025 at 2:24=E2=80=AFPM Bhupesh <bhupesh@igalia.com> wrote:
+>
+> As Linus mentioned in [1], currently we have several memcpy() use-cases
+> which use 'current->comm' to copy the task name over to local copies.
+> For an example:
+>
+>  ...
+>  char comm[TASK_COMM_LEN];
+>  memcpy(comm, current->comm, TASK_COMM_LEN);
+>  ...
+>
+> These should be modified so that we can later implement approaches
+> to handle the task->comm's 16-byte length limitation (TASK_COMM_LEN)
+> is a more modular way (follow-up patches do the same):
+>
+>  ...
+>  char comm[TASK_COMM_LEN];
+>  memcpy(comm, current->comm, TASK_COMM_LEN);
+>  comm[TASK_COMM_LEN - 1] =3D '\0';
+>  ...
+>
+> The relevant 'memcpy()' users were identified using the following search
+> pattern:
+>  $ git grep 'memcpy.*->comm\>'
 
+Hello Bhupesh,
 
-Arnd,
+Several BPF programs currently read task->comm directly, as seen in:
 
-I forgot to mention that in pull request. There will be a conflict in
-MAINTAINERS file in ARM/VT8500 ARM ARCHITECTURE entry:
+// tools/testing/selftests/bpf/progs/test_skb_helpers.c [0]
+bpf_probe_read_kernel_str(&comm, sizeof(comm), &task->comm);
 
- 3425 ARM/VT8500 ARM ARCHITECTURE
- 3426 M:      Alexey Charkov <alchark@gmail.com> 
- 3427 M:      Krzysztof Kozlowski <krzk@kernel.org>
+This approach may cause issues after the follow-up patch.
+I believe we should replace it with the safer bpf_get_current_comm()
+or explicitly null-terminate it with "comm[sizeof(comm) - 1] =3D '\0'".
+Out-of-tree BPF programs like BCC[1] or bpftrace[2] relying on direct
+task->comm access may also break and require updates.
 
-between multiple trees - arm-soc, i2c, devicetree and pwm, because
-patches went through different trees. This conflict will go to Linus as
-well.
+[0]. https://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf-next.git/tree/=
+tools/testing/selftests/bpf/progs/test_skb_helpers.c#n26
+[1]. https://github.com/iovisor/bcc
+[2]. https://github.com/bpftrace/bpftrace
 
-Final resolution is like:
-
- -F:	Documentation/devicetree/bindings/i2c/i2c-wmt.txt
- +F:	Documentation/devicetree/bindings/hwinfo/via,vt8500-scc-id.yaml
- +F:	Documentation/devicetree/bindings/i2c/wm,wm8505-i2c.yaml
- +F:	Documentation/devicetree/bindings/interrupt-controller/via,vt8500-intc.yaml
-+ F:	Documentation/devicetree/bindings/pwm/via,vt8500-pwm.yaml
-
-
-
-Best regards,
-Krzysztof
+--=20
+Regards
+Yafang
