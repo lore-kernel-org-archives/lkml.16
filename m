@@ -1,151 +1,324 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC5FDC2EF;
-	Thu, 22 May 2025 09:21:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64A2970814;
+	Thu, 22 May 2025 09:22:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747905686; cv=none; b=MQ+lCQhbzPEIEFodDXahr1AkILS+lxI6oueJ/aA26MKGUez94jNFW2oCGrae+OaZIeKDQHC1NVYSp5gpT9Dc5cvgulHwmfbh1WDl0hBPxZpgB2Hr+D+rP7A26BVqsbmfvDhSdLQ5tgkI05S8dFxxBWJ+No9DFfuP0w/31btMjoE=
+	t=1747905733; cv=none; b=WejBbLysCIh2ISyZFOp+SQNKFKUKJcdcu8RZvJt6IICQMKVXosIzA9iphiMQQ/iDvf/+MtJKuhaUZ4M05lySk1orSyAVzDOkDnuuhc04ma3bRmXj8FfvEbspv7rAkl8H95ylr69vtx78itUHqsrLnP58AtzxNkRNdVd1mbdZec4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747905686; c=relaxed/simple;
-	bh=mE1PBBdiCUAfuYLq9s75R8eefvL04S4/DPTR9c0GKEk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=C6UruEdvxdcLsmJ1maK68mxXMA/vRAKPp1T2g8wCAblfNz6+YwEUebq3HDXfGM9/JJPfqTMk/5fGCAzPBiiSP17kcTRXAIjpbHFI5bKjsr++5dQgrV89qj6M1/y4yul+J8pftFVvcR1s5zR2tDrZ02aoO1m/C9LzonGszxF48cI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=ggWkIadT; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1747905733; c=relaxed/simple;
+	bh=i8dCkvq7F3CC+MwXu1caXMU8e1Ced2QXY+V/762C0us=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EUAM7SPtAUIRWYipnwtICeLpar9DMWG8CrYVglxJLKgNNW9nnTFfEmQx7i/qWzi6mTq0ZTPAA9sg+EkVyI7l2E3UYmOsjydMf2lZBFEyUjvRltvNiYTzSNHRvL9I3EppUYcE9LAshMZupec53XdCiwXdFsUxuX1iT0vb4jB4gIs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rvf8sQ3Q; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="ggWkIadT"
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54M7ZfpG032698;
-	Thu, 22 May 2025 09:21:21 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	OfFQcp7R1/HPn9Y1r0ELmaSelxLSB6NhumbBR3lzbYY=; b=ggWkIadTSiuPeh1c
-	rqiU4CDsbHYxG8t5vqvPKmcymbIAJoqJex7BY2LD35Biee1w7/cHT0TcG45Q0/8B
-	quZjFtyHdMiCuNFsKdpBIsnhC78HMj3SGVB9BmLgkAgJLoKbz1h72cu39zDxsEIk
-	LSSXrFCMgz4Q4Ypol+1D4+qaaOUF1FU29z1VDgbsw4uRMe/opFNPbwx7yoTW3KRw
-	eJ1vUN1ydFbMBpVEvTSAes1GjzWIlLkSzQ2gx24i6GseuRny9Z+J7OY+S9EzzCtf
-	AtBXWgYBn0Gb3/De/Y+GaQwKkl1oihAaQEhHe07Jk8RwzyQRUjCP7JAKrTiWgJXi
-	5VG+dA==
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46s8c24bq5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 22 May 2025 09:21:20 +0000 (GMT)
-Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54M9LJEr011097
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 22 May 2025 09:21:19 GMT
-Received: from [10.152.207.135] (10.80.80.8) by nalasex01b.na.qualcomm.com
- (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 22 May
- 2025 02:21:17 -0700
-Message-ID: <d2aa2b49-f907-41e4-8208-3b92da607a34@quicinc.com>
-Date: Thu, 22 May 2025 14:51:14 +0530
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rvf8sQ3Q"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB1F6C4CEE4;
+	Thu, 22 May 2025 09:22:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747905732;
+	bh=i8dCkvq7F3CC+MwXu1caXMU8e1Ced2QXY+V/762C0us=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=rvf8sQ3QJCgeX1omXxuD4whjqsxDfAtoPBsLnnHsxiciXqFCLODHbd7H+dngc9K6p
+	 0REgwotVacoRiUR+qkzBnjCWynYenu62Y/bVHjjVXSdjTyoxBLg750KAVPAk3XGbWr
+	 wPDViXnVo7AqhTn6Rh6pcjEZK1hdPtMJHlQ7Hi8ajnHz4YPAes6CGCZl8BYH5HCrJ7
+	 OZTusff9JIQxpiAX95Iucp8QOTzER+moZvZSfyULP7MZP/6+tys+QFxoLpPNH6Ngz/
+	 J915U6eA55BJDa/pQwgRbxReXH4oUigHs/4kggxWZKfedz02hfybU/fwy1hIWTvGzu
+	 +u2CiaPUXviPQ==
+Date: Thu, 22 May 2025 10:22:08 +0100
+From: Lee Jones <lee@kernel.org>
+To: Binbin Zhou <zhoubinbin@loongson.cn>
+Cc: Binbin Zhou <zhoubb.aaron@gmail.com>,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	Corey Minyard <minyard@acm.org>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	openipmi-developer@lists.sourceforge.net,
+	Chong Qiao <qiaochong@loongson.cn>
+Subject: Re: [PATCH v2 1/3] mfd: ls2kbmc: Introduce Loongson-2K BMC MFD Core
+ driver
+Message-ID: <20250522092208.GB1199143@google.com>
+References: <cover.1747276047.git.zhoubinbin@loongson.cn>
+ <778675bfe1040cd1bf4d281dc5c5f20edc4145c1.1747276047.git.zhoubinbin@loongson.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH wireless-next 3/3] wifi: mac80211: Allow DFS/CSA on a
- radio if scan is ongoing on another radio
-To: Johannes Berg <johannes@sipsolutions.net>
-CC: <linux-wireless@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        "Aditya
- Kumar Singh" <aditya.kumar.singh@oss.qualcomm.com>
-References: <20250514-mlo-dfs-acs-v1-0-74e42a5583c6@quicinc.com>
- <20250514-mlo-dfs-acs-v1-3-74e42a5583c6@quicinc.com>
- <fb6cb470c66e215c0fde3652c1986d604731ac94.camel@sipsolutions.net>
-Content-Language: en-US
-From: Raj Kumar Bhagat <quic_rajkbhag@quicinc.com>
-In-Reply-To: <fb6cb470c66e215c0fde3652c1986d604731ac94.camel@sipsolutions.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01b.na.qualcomm.com (10.47.209.197)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIyMDA5MyBTYWx0ZWRfX2+znLhnjoevS
- 2Mj9N7SkwryDPKRQVqVm752tyEOXwu41kxJnPIK9xW2IJKOwrfXOLQRq+tsaXGV/aPoSMyqfCpt
- AerbQKugxN5eG/+nkx1cPpJbGvctHabutzJKrwzflGEZdQKlbB+p4t/7VKQQiVbDQoq0J5F0pZR
- vohAmF9KmtrZyCV2gPUlKwxwJC1S7eebDZ5ARVnt2AC+lM5mc45UIxvqU2/loNBWMb7SzJm3KOx
- yqn4T3LCPv6l1640g746gKIOUxGL4Pox6WhUQT3wEIFbb6CkjiXAxdBGAbD6KGLAiTyNtv3bhuL
- lGjUgrqxr9tFRG+SWcJCO87Z7IQF82WP9WBGIQI2YQLpHOBPkjyaax3xp2hi4pZWVutJXfH4/88
- FxKwPoAn5zcPIqilo4kiUtojFyM05GXZSBHgdsgrnx+DIgYT3fd4HgvhcEGa58Uv/3Ck2Otu
-X-Authority-Analysis: v=2.4 cv=RIuzH5i+ c=1 sm=1 tr=0 ts=682eec90 cx=c_pps
- a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10
- a=baXPdB0C5tyLT9uP71EA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-ORIG-GUID: OmCdwnk8PiL0ZG9UXGIHKQ8CmdHsRD6j
-X-Proofpoint-GUID: OmCdwnk8PiL0ZG9UXGIHKQ8CmdHsRD6j
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-22_04,2025-05-22_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- clxscore=1015 phishscore=0 suspectscore=0 malwarescore=0 bulkscore=0
- mlxlogscore=999 spamscore=0 lowpriorityscore=0 mlxscore=0 priorityscore=1501
- adultscore=0 impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
- definitions=main-2505220093
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <778675bfe1040cd1bf4d281dc5c5f20edc4145c1.1747276047.git.zhoubinbin@loongson.cn>
 
-On 5/16/2025 1:35 PM, Johannes Berg wrote:
-> On Wed, 2025-05-14 at 16:58 +0530, Raj Kumar Bhagat wrote:
->>
->> +static bool
->> +__ieee80211_is_scan_ongoing(struct wiphy *wiphy,
->> +			    struct ieee80211_local *local,
->> +			    struct cfg80211_chan_def *chandef)
+Just "core driver" in the subject line, rather than "MFD core driver".
+
+> The Loongson-2K Board Management Controller provides an PCIe
+> interface to the host to access the feature implemented in the BMC.
 > 
-> Any particular reason or the __ name? We usually have that for internal
-> locking-related things, but here doesn't matter, and there's no non-__
-> version either?
+> The BMC is assembled on a server similar to the server machine with
+> Loongson-3C6000 CPUs. It supports multiple sub-devices like DRM.
+> 
+> Co-developed-by: Chong Qiao <qiaochong@loongson.cn>
+> Signed-off-by: Chong Qiao <qiaochong@loongson.cn>
+> Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
+> ---
+>  drivers/mfd/Kconfig       |  13 ++++
+>  drivers/mfd/Makefile      |   2 +
+>  drivers/mfd/ls2kbmc-mfd.c | 156 ++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 171 insertions(+)
+>  create mode 100644 drivers/mfd/ls2kbmc-mfd.c
+> 
+> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+> index 22b936310039..04e40085441d 100644
+> --- a/drivers/mfd/Kconfig
+> +++ b/drivers/mfd/Kconfig
+> @@ -2422,5 +2422,18 @@ config MFD_UPBOARD_FPGA
+>  	  To compile this driver as a module, choose M here: the module will be
+>  	  called upboard-fpga.
+>  
+> +config MFD_LS2K_BMC
+> +	tristate "Loongson-2K Board Management Controller Support"
+> +	depends on LOONGARCH
+> +	default y if LOONGARCH
+> +	select MFD_CORE
+> +	help
+> +	  Say yes here to add support for the Loongson-2K BMC
+> +	  which is a Board Management Controller connected to the PCIe bus.
+> +	  The device supports multiple sub-devices like DRM.
+> +	  This driver provides common support for accessing the devices;
+> +	  additional drivers must be enabled in order to use the
+> +	  functionality of the BMC device.
+
+This paragraph has some odd line breaks.  Please re-align.
+
+>  endmenu
+>  endif
+> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+> index 948cbdf42a18..18960ea13b64 100644
+> --- a/drivers/mfd/Makefile
+> +++ b/drivers/mfd/Makefile
+> @@ -290,3 +290,5 @@ obj-$(CONFIG_MFD_RSMU_I2C)	+= rsmu_i2c.o rsmu_core.o
+>  obj-$(CONFIG_MFD_RSMU_SPI)	+= rsmu_spi.o rsmu_core.o
+>  
+>  obj-$(CONFIG_MFD_UPBOARD_FPGA)	+= upboard-fpga.o
+> +
+> +obj-$(CONFIG_MFD_LS2K_BMC)	+= ls2kbmc-mfd.o
+> diff --git a/drivers/mfd/ls2kbmc-mfd.c b/drivers/mfd/ls2kbmc-mfd.c
+> new file mode 100644
+> index 000000000000..b309f6132c24
+> --- /dev/null
+> +++ b/drivers/mfd/ls2kbmc-mfd.c
+> @@ -0,0 +1,156 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Loongson-2K Board Management Controller (BMC) MFD Core Driver.
+
+Remove the MFD part.  It's not a thing - we made it up.
+
+> + * Copyright (C) 2024 Loongson Technology Corporation Limited.
+
+No changes since 2024?
+
+> + *
+> + * Originally written by Chong Qiao <qiaochong@loongson.cn>
+> + * Rewritten for mainline by Binbin Zhou <zhoubinbin@loongson.cn>
+
+"Mainline"
+
+Typically we just do:
+
+Authors:
+	Author One <one@corp.com>
+	Author Two <two@corp.com>
+
+> + */
+> +
+> +#include <linux/aperture.h>
+> +#include <linux/errno.h>
+> +#include <linux/init.h>
+> +#include <linux/kernel.h>
+> +#include <linux/mfd/core.h>
+> +#include <linux/module.h>
+> +#include <linux/pci.h>
+> +#include <linux/pci_ids.h>
+> +#include <linux/platform_data/simplefb.h>
+> +#include <linux/platform_device.h>
+> +
+> +#define LS2K_DISPLAY_RES_START (SZ_16M + SZ_2M)
+> +#define LS2K_IPMI_RES_SIZE	0x1c
+> +#define LS2K_IPMI0_RES_START	(SZ_16M + 0xf00000)
+> +#define LS2K_IPMI1_RES_START	(LS2K_IPMI0_RES_START + LS2K_IPMI_RES_SIZE)
+> +#define LS2K_IPMI2_RES_START	(LS2K_IPMI1_RES_START + LS2K_IPMI_RES_SIZE)
+> +#define LS2K_IPMI3_RES_START	(LS2K_IPMI2_RES_START + LS2K_IPMI_RES_SIZE)
+> +#define LS2K_IPMI4_RES_START	(LS2K_IPMI3_RES_START + LS2K_IPMI_RES_SIZE)
+
+Line them _all_ up please.  One more tab should do it.
+
+> +static struct resource ls2k_display_resources[] = {
+> +	DEFINE_RES_MEM_NAMED(LS2K_DISPLAY_RES_START, SZ_4M, "simpledrm-res"),
+> +};
+> +
+> +static struct resource ls2k_ipmi0_resources[] = {
+> +	DEFINE_RES_MEM_NAMED(LS2K_IPMI0_RES_START, LS2K_IPMI_RES_SIZE, "ipmi0-res"),
+> +};
+> +
+> +static struct resource ls2k_ipmi1_resources[] = {
+> +	DEFINE_RES_MEM_NAMED(LS2K_IPMI1_RES_START, LS2K_IPMI_RES_SIZE, "ipmi1-res"),
+> +};
+> +
+> +static struct resource ls2k_ipmi2_resources[] = {
+> +	DEFINE_RES_MEM_NAMED(LS2K_IPMI2_RES_START, LS2K_IPMI_RES_SIZE, "ipmi2-res"),
+> +};
+> +
+> +static struct resource ls2k_ipmi3_resources[] = {
+> +	DEFINE_RES_MEM_NAMED(LS2K_IPMI3_RES_START, LS2K_IPMI_RES_SIZE, "ipmi3-res"),
+> +};
+> +
+> +static struct resource ls2k_ipmi4_resources[] = {
+> +	DEFINE_RES_MEM_NAMED(LS2K_IPMI4_RES_START, LS2K_IPMI_RES_SIZE, "ipmi4-res"),
+> +};
+> +
+> +static struct mfd_cell ls2k_bmc_cells[] = {
+> +	MFD_CELL_RES("simple-framebuffer", ls2k_display_resources),
+> +	MFD_CELL_RES("ls2k-ipmi-si", ls2k_ipmi0_resources),
+> +	MFD_CELL_RES("ls2k-ipmi-si", ls2k_ipmi1_resources),
+> +	MFD_CELL_RES("ls2k-ipmi-si", ls2k_ipmi2_resources),
+> +	MFD_CELL_RES("ls2k-ipmi-si", ls2k_ipmi3_resources),
+> +	MFD_CELL_RES("ls2k-ipmi-si", ls2k_ipmi4_resources),
+> +};
+> +
+> +/*
+> + * Currently the Loongson-2K0500 BMC hardware does not have an i2c interface to
+
+I2C
+
+> + * adapt to the resolution.
+
+Remove the line break here.
+
+> + * We set the resolution by presetting "video=1280x1024-16@2M" to the bmc memory.
+
+BMC
+
+> + */
+> +static int ls2k_bmc_get_video_mode(struct pci_dev *pdev, struct simplefb_platform_data *pd)
+> +{
+> +	char *mode;
+> +	int depth, ret;
+> +
+> +	/* The pci mem bar last 16M is used to store the string. */
+
+PCI
+
+BAR's (maybe?)
+
+> +	mode = devm_ioremap(&pdev->dev, pci_resource_start(pdev, 0) + SZ_16M, SZ_16M);
+> +	if (!mode)
+> +		return -ENOMEM;
+> +
+> +	/* env at last 16M's beginning, first env is "video=" */
+
+This doesn't make sense to me - please reword.
+
+> +	if (!strncmp(mode, "video=", 6))
+> +		mode = mode + 6;
+> +
+> +	ret = kstrtoint(strsep(&mode, "x"), 10, &pd->width);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = kstrtoint(strsep(&mode, "-"), 10, &pd->height);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = kstrtoint(strsep(&mode, "@"), 10, &depth);
+> +	if (ret)
+> +		return ret;
+> +
+> +	pd->stride = pd->width * depth / 8;
+> +	pd->format = depth == 32 ? "a8r8g8b8" : "r5g6b5";
+> +
+> +	return 0;
+> +}
+
+Surely there is a standard format / API for this already?
+
+
+
+> +static int ls2k_bmc_probe(struct pci_dev *dev, const struct pci_device_id *id)
+> +{
+> +	int ret = 0;
+
+There is no need to pre-initialise this.
+
+> +	resource_size_t base;
+> +	struct simplefb_platform_data pd;
+
+Reverse these please (reverse Christmas tree is preferred).
+> +
+> +	ret = pci_enable_device(dev);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = ls2k_bmc_get_video_mode(dev, &pd);
+> +	if (ret)
+> +		goto disable_pci;
+> +
+> +	ls2k_bmc_cells[0].platform_data = &pd;
+> +	ls2k_bmc_cells[0].pdata_size = sizeof(pd);
+> +	base = dev->resource[0].start + LS2K_DISPLAY_RES_START;
+> +
+> +	/* Remove conflicting efifb device */
+> +	ret = aperture_remove_conflicting_devices(base, SZ_4M, "simple-framebuffer");
+> +	if (ret) {
+> +		dev_err(&dev->dev, "Remove firmware framebuffers failed: %d\n", ret);
+
+"Failed to removed firmware framebuffers"
+
+> +		goto disable_pci;
+> +	}
+> +
+> +	return devm_mfd_add_devices(&dev->dev, PLATFORM_DEVID_AUTO,
+> +				    ls2k_bmc_cells, ARRAY_SIZE(ls2k_bmc_cells),
+> +				    &dev->resource[0], 0, NULL);
+> +
+> +disable_pci:
+> +	pci_disable_device(dev);
+> +	return ret;
+> +}
+> +
+> +static void ls2k_bmc_remove(struct pci_dev *dev)
+> +{
+> +	pci_disable_device(dev);
+> +}
+> +
+> +static struct pci_device_id ls2k_bmc_devices[] = {
+> +	{ PCI_DEVICE(PCI_VENDOR_ID_LOONGSON, 0x1a05) },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(pci, ls2k_bmc_devices);
+> +
+> +static struct pci_driver ls2k_bmc_driver = {
+> +	.name = "ls2k-bmc",
+> +	.id_table = ls2k_bmc_devices,
+> +	.probe = ls2k_bmc_probe,
+> +	.remove = ls2k_bmc_remove,
+> +};
+> +
+
+Remove this line.
+
+> +module_pci_driver(ls2k_bmc_driver);
+> +
+> +MODULE_DESCRIPTION("Loongson-2K BMC driver");
+> +MODULE_AUTHOR("Loongson Technology Corporation Limited");
+> +MODULE_LICENSE("GPL");
+> -- 
+> 2.47.1
 > 
 
-Next version will rename this function to "ieee80211_is_scan_ongoing()".
-
->> +{
->> +	struct cfg80211_scan_request *scan_req;
->> +	int chan_radio_idx, req_radio_idx;
->> +	struct ieee80211_roc_work *roc;
->> +	bool ret = false;
->> +
->> +	if (!list_empty(&local->roc_list) || local->scanning)
->> +		ret = true;
->> +
->> +	if (wiphy->n_radio < 2)
->> +		return ret;
->> +
->> +	/*
->> +	 * Multiple HWs are grouped under same wiphy. If not scanning then
->> +	 * return now itself
->> +	 */
->> +	if (!ret)
->> +		return ret;
-> 
-> I don't fully understand this logic, and certainly not the comment. You
-> can certainly "return false" here anyway or something. And initialize
-> ret = list_empty || scanning or something, the whole thing is hard to
-> follow?
-> 
-
-Thanks for suggestion, will simplify the above logic in next version.
-
-> 
->> +	if (!list_empty(&local->roc_list)) {
->> +		list_for_each_entry(roc, &local->roc_list, list) {
-> 
-> There's no point in checking first before iterating, it's perfectly fine
-> to iterate an empty list and do nothing while doing so ...
-> 
-
-Sure, will do in next version.
-
-> 
-> Also patch-order wise, it seems this one really should go before the
-> 2nd?
-> 
-
-Sure will update the patch order as suggested.
+-- 
+Lee Jones [李琼斯]
