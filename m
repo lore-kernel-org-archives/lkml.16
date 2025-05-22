@@ -1,66 +1,65 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 151632D321C
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 23:26:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FD992D3219
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 23:26:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747956380; cv=none; b=p7I+EaELt1jWzEpkleCckm4xw6r1OWsksg53P2ov5QYBwPl0IgfXelF/o8greEF5NKGcKbxK3HLCmZAQMXDVVi02nfAme0CfX/wtA9wSn3VgYGjnb9VEdgruQxcDglW/2xFOhaI6VEe5mavmAFwjsJSUDzRlIuK1U/4KZiOye6w=
+	t=1747956380; cv=none; b=GRJ63VSGW5Gr0ivQgbjO9AABSil0zTWR4Q7XIvywVXZ2BOAW60gCbw5Sz7c1Y5Wm/oHrfh4R9zkyLztiIWCsO0LM2+gJ2QTl2mP0XqQphpn6YZ9POfIrCgowKFxEG39HN46Ur9mEAqFk+/T2G27+Rc1eHPyU6v84/t/E3pquG4o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1747956380; c=relaxed/simple;
-	bh=yRzc0icmCI3Wfp8FtEoLTbRp1C8aPjfzbWi+UvR2NUk=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=mYJCRLixxORfbB3+0GdsN8H9+QRsSs9/Twx1VOvh0vlkzS5akkgGLKlsAkmdmI2VCNnv2/7WUfsddvhSZeGo2FJptK7QJM/KLjwxn2OPvfg48z8zHaWFudZoM/YmkIWtW/GyAqQEO4/GkyHnmdk1zviKCBoHoWl6536dXZP0Em8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=kjYUwQQ2; arc=none smtp.client-ip=209.85.128.51
+	bh=Xt+9J5CINKC67/Xf9FTS32L9c6buwlWjqj4FpG7qyTQ=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=B9YKnP8Z2HfnIf87a4wJqnchCOSy7WKI0UvCO06WuWrbp9Y2XgPzob2nIChXp+lEG61SFED45vkFLeJIhP36fxAVKUBAEUO+Q3xzYAatCkhbUgrDYQY0GkEcg3E+LFfmWBsk2uAhm3gg92oatNES8w+/uFIUAMnhUaJTKnAF6k8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=VuS0Wz1w; arc=none smtp.client-ip=209.85.128.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="kjYUwQQ2"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-43edecbfb94so93759255e9.1
-        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 16:26:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="VuS0Wz1w"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-43edb40f357so72085785e9.0
+        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 16:26:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1747956377; x=1748561177; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=dKVNMuDSduacbIBYKcZNnzCtGR0eRj8WvfLgYTzDz7M=;
-        b=kjYUwQQ20ICED7JofCgsYJKVwkIAK+g1K/cv21Gqlg8dz3A43DDvoNoADjh16Vqx/s
-         +g1mcOSyxKjsJOb11WY3VYZw5jAy798a3yKVDj/88103NVc4RSQVrMZY+k9Rd1ajOdCL
-         XKNsN6xUHgCc3WnXguz9UCsDpXmqC6rHOwpB4n92aJwlBgaVtubRYT2AYwxl47/3JFEa
-         FjhOBZfpBQz+mmRoDQiAMpFfOj+7RT4Wf0pR2NLpFGXmASyXVV12MeYxbLVzoROcoHik
-         W9e8N+mhsgnWk5Y3wX0bzHBLRJmHraLL9pxvdmMs2RugNAcSQuLhTO0z1spyXjh6b8j2
-         oaYQ==
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1747956376; x=1748561176; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=+8XVL2AzLr3r7KuN+VtnlIKRIu/pZqkSiU9SK0eyPQ0=;
+        b=VuS0Wz1wlK53wX53HMbyZymqFXpoVMBypRb2ZCvhKOlRGDU4uk8R1dr84voOSrJpWf
+         O3qbDRfGbB7KrkSCjdSYq+vVSh85IEpLD0+mLSWQGPxtzA/KW/7eu/J/NbhuZ8Dfmfww
+         uZ3YSfOSrPsr0wVw6n4EScv7jEFAMqpDwLWbaHSwsL8SrZEbZEOPJSu3WPsUIN7IvA4N
+         Ao6eF84d9cv3R8qCziO6ZT0HbSUuG4dggwd2tJzzCxNaQgkAxRJWvUb8NV0wnP75h9K9
+         Pkf9kDCIwTckTv0Vl15lINjiEev0hYiLbBWH/f6e7eP3qL2NCuBMWPernQOz4gdVXoGL
+         Lbxw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747956377; x=1748561177;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=dKVNMuDSduacbIBYKcZNnzCtGR0eRj8WvfLgYTzDz7M=;
-        b=QJLa+o/KYsHeBEgP3UCz+rcKhQ/TNVDB+H7N66LTJ1PHwAh8FWM7WB7yHYomv74BlK
-         MGn9EWTgBFLQLuwz3eE/3gHzw71u8RN/qSCFoJDzFC/nQGQ2kgbYJi1PkgmA65vzbPgS
-         ozddOPGhXWZ23opA4RcFIRTkb6jxMjzbKar4OnJzjg+3Mh+vH2BqKjXhbASHRSkXuttx
-         1qXDqcWNeH/PQpZFlCGlfCPuBnI3rtrJpr0VkPr+BsjDb8rR7JNw/qpl/40ToO594nfY
-         lBFHXdkcvoAKGFVK+Uvb61YynfgggHIAmeqQgbDxCDU5sWgOJwb6RXbzfnhrrmIs/dkH
-         95yQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWG8xaXS4hgN5Xa/Ac79rJOuNNn5lYuRr35Vwh7gaLL8aZgPHzVqevKOFPofKU8lmyp2DmyiVyImr8Xn+E=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwtWBNKvdEK7JfwRhHuTHqzn2ZsFq7L0Eo1Hj+GkMFz1CbXfVN/
-	2jJylOs6RO5V9KWmuiLkOKq+I24BzYZDaCeU7bXQooH5kKXRroHTgNm/K0GbtO7B9BA=
-X-Gm-Gg: ASbGncvxdL57jXGnPAC8+la74GSC0p8DZcj06HWvvBKZ/+B3tKqp6tDraJhxXjSlNe+
-	luMvpRZUCJJtd2I23ov0+66Nh3pCr4JGGJnwAdqzwpxthID7KArdRufPovGG46LpQA8I0n5J6WR
-	NJKA8DqyONlyKZEprt7ic9JPhu3Kli1DcFRTEOWC6g+tCiZMAKBZC+yp8yJth/iVjtfa4GLBap0
-	R6O2xeHjKmLLTshwTPqHUG8biAIuPBc2EFTUy6ELg0F+V8Ugyp2RjNuLwF4dpJNw6/RjtG6K+26
-	GyzZP2+tGlp4hAh3WY1CedbrDVdokIaqcbF0xXdKEJcZt3glueN5zg==
-X-Google-Smtp-Source: AGHT+IG6EHMwWLdGi5KKzk4nvM0cwE/VEL6TR7m61EKgB/eRoEgtVitn+rOSsP5hXJxsGHaL7N+kKQ==
-X-Received: by 2002:a05:600c:8411:b0:442:e9ec:4654 with SMTP id 5b1f17b1804b1-44b6d1d39b6mr6921755e9.8.1747956377309;
-        Thu, 22 May 2025 16:26:17 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1747956376; x=1748561176;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=+8XVL2AzLr3r7KuN+VtnlIKRIu/pZqkSiU9SK0eyPQ0=;
+        b=icmiXxjak9fqM9bhl//PrHY9fEr6IgI2bSFap036v4Cy9+Hc4DIrPmPtxmJ6N7p5HC
+         hc8yl8qoqhTZvd3nasiAW/q8RzT8imooodZzVGqjBwfLNJoBEVDfO1I8AfmDKKdacHh+
+         r/xNFoHizmYHHm7eMhKdwTQRLAwW+7zRvVGQ34d13VbmNB74rkjIlQojzxofSAYgEBN9
+         bsMAQ9w4FShEQksmZd7yWCoFLNzi8rA77r6C5GJBfUoSKqikaZwkvgFq5OCx3mcxih4y
+         ZBhGKQJ2hd2NuVAYK/KLhhB6bZARKKOtApAjuvHjNtF90iAZVtV4O+RZmt3tmgeGFCB1
+         wbGA==
+X-Forwarded-Encrypted: i=1; AJvYcCX2k4eRpzOQM8wcXW9MI53R4dlBhglRagTPlU29Mo6BdBnNVuFpMsBEHJ3AZoSU9LmZaVmLbcgm3GrewR8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy9r9Gqy1duO+1CyDFaM1QaNpITIpml/RIaw8FVM9S7SQ+Hw/tJ
+	TVr1ShtCi1KT0Drpx+QT2DMTSq93dFwqM9nWtUAAvp1TZUGnfr1v2lKTJapxZECGNBw=
+X-Gm-Gg: ASbGncufdcTQaiq6P/FXYPZYn0LRblPU8hTqjtprwLXUB9hlyClfUFBKtvHhJYVpqz4
+	jW6BUr8Rjf2RJ6khAjqJEhQxlzVmbzBOgTwDWYjo5iRJ9ffse3YMoWI3JySSuDCffxMb3hh/Guf
+	UFO5VGTK9hS0hoQyzqG3I6Y8lMPMAPCcZBB+8oQ4GdKTgnABj4NOAyhT2nO+uaMiOnrOgc1Kl/q
+	9Z9r9vOI9TOQfGJ5TVko9Ri5HV1SSNmYe+aERC8LqMbfCxdRP+TN3YD5Vlv2cbK5arPHu40Cqgc
+	bygiklYF3f1sn6qbnbwywPfxCaReAbsUqS4Kch+9HUQny59uzYXgBQ==
+X-Google-Smtp-Source: AGHT+IGEJr3BKVh5rl646evQq6jfB80g3xvgIKAUhdZFT4W8GWtoUdBDEHTxPzLL+VQCxlsQGQXhTw==
+X-Received: by 2002:a05:600c:34c4:b0:43c:ee62:33f5 with SMTP id 5b1f17b1804b1-442fd6752e7mr277601475e9.27.1747956376376;
+        Thu, 22 May 2025 16:26:16 -0700 (PDT)
 Received: from [127.0.1.1] ([2a02:c7c:75ac:6300:c05a:35d:17ae:e731])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-447f6f04334sm117825395e9.10.2025.05.22.16.26.16
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-447f6f04334sm117825395e9.10.2025.05.22.16.26.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 May 2025 16:26:17 -0700 (PDT)
+        Thu, 22 May 2025 16:26:16 -0700 (PDT)
 From: Rajnesh Kanwal <rkanwal@rivosinc.com>
-Date: Fri, 23 May 2025 00:25:07 +0100
-Subject: [PATCH v3 1/7] perf: Increase the maximum number of branches
- remove_loops() can process.
+Subject: [PATCH v3 0/7] riscv: pmu: Add support for Control Transfer
+ Records Ext.
+Date: Fri, 23 May 2025 00:25:06 +0100
+Message-Id: <20250523-b4-ctr_upstream_v3-v3-0-ad355304ba1c@rivosinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,9 +68,10 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250523-b4-ctr_upstream_v3-v3-1-ad355304ba1c@rivosinc.com>
-References: <20250523-b4-ctr_upstream_v3-v3-0-ad355304ba1c@rivosinc.com>
-In-Reply-To: <20250523-b4-ctr_upstream_v3-v3-0-ad355304ba1c@rivosinc.com>
+X-B4-Tracking: v=1; b=H4sIAFKyL2gC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyjHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDE0Mz3SQT3eSSovjSguKSotTE3PgyY10jA5M0kySDJHMTC0MloMaCotS
+ 0zAqwodGxtbUA8z9ytWQAAAA=
+X-Change-ID: 20250416-b4-ctr_upstream_v3-204f4b0b7481
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
  Arnaldo Carvalho de Melo <acme@kernel.org>, 
  Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
@@ -89,69 +89,125 @@ Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
  Palmer Dabbelt <palmer@sifive.com>, Conor Dooley <conor@kernel.org>, 
  devicetree@vger.kernel.org, Rajnesh Kanwal <rkanwal@rivosinc.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1747956375; l=1919;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1747956375; l=5043;
  i=rkanwal@rivosinc.com; s=20250522; h=from:subject:message-id;
- bh=yRzc0icmCI3Wfp8FtEoLTbRp1C8aPjfzbWi+UvR2NUk=;
- b=eXHAPMGQUlSkoKw/ZujHfDdVrgUDThW/41UrEOojqu5cpgpKRvW3csxhNcSG5dQjunGp++UGp
- BxjZ3PfI7eeCjvpIQxYxdbhtwmDvg9UZA3QLufVRs12DfstYvvJmpYm
+ bh=Xt+9J5CINKC67/Xf9FTS32L9c6buwlWjqj4FpG7qyTQ=;
+ b=voXbtY/BvjLgr1Qk+pdKoA/M9txQ+Uo8IZDt/nVzmOvCl9hu8Lrpi2vmzjOnKtVTdNeWIIAkS
+ zuOwbL5C0z1CmtoSdzyA2XjmkKpBnAPcjkCDaiTFuIC9KKpMB7oMk1P
 X-Developer-Key: i=rkanwal@rivosinc.com; a=ed25519;
  pk=aw8nvncslGKHEmTBTJqvkP/4tj6pijL8fwRRym/GuS8=
 
-RISCV CTR extension supports a maximum depth of 256 last branch records.
-Currently remove_loops() can only process 127 entries at max. This leads
-to samples with more than 127 entries being skipped. This change simply
-updates the remove_loops() logic to be able to process 256 entries.
+This series enables Control Transfer Records extension support on riscv
+architecture. This extension is similar to Arch LBR in x86 and BRBE in ARM.
+The Extension has been ratified and latest release can be found here [0]
+
+CTR extension depends on both the implementation of S-mode and Sscsrind
+extension v1.0.0 [1]. CTR access ctrsource, ctrtartget and ctrdata CSRs
+using sscsrind extension.
+
+The series is based on Smcdeleg/Ssccfg counter delegation extension [2]
+patches [3]. CTR itself doesn't depend on counter delegation support. This
+rebase is basically to include the Smcsrind patches.
+
+The last patch is in the perf tool to allow processing 256 entries. Without
+this perf seems to consider that sample as corrupted and discards it.
+
+Here is the link to a quick guide [4] to setup and run a basic perf demo on
+Linux to use CTR Ext.
+
+Qemu patches are merged upstream:
+https://lore.kernel.org/qemu-devel/20250205-b4-ctr_upstream_v6-v6-0-439d8e06c8ef@rivosinc.com/
+
+Opensbi patch is merged upstream:
+https://lore.kernel.org/opensbi/20250307124451.122828-1-rkanwal@rivosinc.com/
+
+Linux kernel patches can be found here:
+https://github.com/rajnesh-kanwal/linux/tree/b4/ctr_upstream_v3
+
+[0]: https://github.com/riscv/riscv-control-transfer-records/releases/tag/v1.0
+[1]: https://github.com/riscvarchive/riscv-indirect-csr-access/releases/tag/v1.0.0
+[2]: https://github.com/riscvarchive/riscv-smcdeleg-ssccfg/releases/tag/v1.0.0
+[3]: https://lore.kernel.org/lkml/20250114-counter_delegation-v2-0-8ba74cdb851b@rivosinc.com/
+[4]: https://github.com/rajnesh-kanwal/linux/wiki/Running-CTR-basic-demo-on-QEMU-RISC%E2%80%90V-Virt-machine
+
+To: Peter Zijlstra <peterz@infradead.org>
+To: Ingo Molnar <mingo@redhat.com>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Namhyung Kim <namhyung@kernel.org>
+To: Mark Rutland <mark.rutland@arm.com>
+To: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+To: Jiri Olsa <jolsa@kernel.org>
+To: Ian Rogers <irogers@google.com>
+To: Adrian Hunter <adrian.hunter@intel.com>
+To: Liang, Kan <kan.liang@linux.intel.com>
+To: Paul Walmsley <paul.walmsley@sifive.com>
+To: Palmer Dabbelt <palmer@dabbelt.com>
+To: Albert Ou <aou@eecs.berkeley.edu>
+To: Alexandre Ghiti <alex@ghiti.fr>
+To: Atish Kumar Patra <atishp@rivosinc.com>
+To: Anup Patel <anup@brainfault.org>
+To: Will Deacon <will@kernel.org>
+To: Rob Herring <robh@kernel.org>
+To: Krzysztof Kozlowski <krzk+dt@kernel.org>
+To: Conor Dooley <conor+dt@kernel.org>
+To: Beeman Strong <beeman@rivosinc.com>
+Cc: linux-perf-users@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-riscv@lists.infradead.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: Palmer Dabbelt <palmer@sifive.com>
+Cc: Conor Dooley <conor@kernel.org>
+Cc: devicetree@vger.kernel.org
 
 Signed-off-by: Rajnesh Kanwal <rkanwal@rivosinc.com>
 ---
- tools/perf/util/machine.c | 21 ++++++++++++++-------
- 1 file changed, 14 insertions(+), 7 deletions(-)
+Changelog:
+v3:
+- Added missing To/Cc, especially devicetree@vger.kernel.org
+- Changed the commit description to better describe the need of
+  perf tool change that increases max sample size processing
+  capacity of remove_loops function.
+- Minor fixes found while doing a virtualization PoC.
+- Added the missing commit and repository information to dt-bindings,
+  indicating where the extension was ratified.
 
-diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-index 2d51badfbf2e2d1588fa4fdd42ef6c8fea35bf0e..5414528b9d336790decfb42a4f6a4da6c6b68b07 100644
---- a/tools/perf/util/machine.c
-+++ b/tools/perf/util/machine.c
-@@ -2176,25 +2176,32 @@ static void save_iterations(struct iterations *iter,
- 		iter->cycles += be[i].flags.cycles;
- }
- 
--#define CHASHSZ 127
--#define CHASHBITS 7
--#define NO_ENTRY 0xff
-+#define CHASHBITS 8
-+#define NO_ENTRY 0xffU
- 
--#define PERF_MAX_BRANCH_DEPTH 127
-+#define PERF_MAX_BRANCH_DEPTH 256
- 
- /* Remove loops. */
-+/* Note: Last entry (i==ff) will never be checked against NO_ENTRY
-+ * so it's safe to have an unsigned char array to process 256 entries
-+ * without causing clash between last entry and NO_ENTRY value.
-+ */
- static int remove_loops(struct branch_entry *l, int nr,
- 			struct iterations *iter)
- {
- 	int i, j, off;
--	unsigned char chash[CHASHSZ];
-+	unsigned char chash[PERF_MAX_BRANCH_DEPTH];
- 
- 	memset(chash, NO_ENTRY, sizeof(chash));
- 
--	BUG_ON(PERF_MAX_BRANCH_DEPTH > 255);
-+	BUG_ON(PERF_MAX_BRANCH_DEPTH > 256);
- 
- 	for (i = 0; i < nr; i++) {
--		int h = hash_64(l[i].from, CHASHBITS) % CHASHSZ;
-+		/* Remainder division by PERF_MAX_BRANCH_DEPTH is not
-+		 * needed as hash_64 will anyway limit the hash
-+		 * to CHASHBITS
-+		 */
-+		int h = hash_64(l[i].from, CHASHBITS);
- 
- 		/* no collision handling for now */
- 		if (chash[h] == NO_ENTRY) {
+v2
+- Added context save/restore support for tasks using CTR feature.
+- https://lore.kernel.org/lkml/20250116230955.867152-1-rkanwal@rivosinc.com/ 
 
+v1:
+- https://lore.kernel.org/lkml/20240529185337.182722-1-rkanwal@rivosinc.com/
+---
+
+---
+Rajnesh Kanwal (7):
+      perf: Increase the maximum number of branches remove_loops() can process.
+      riscv: pmu: Add Control transfer records CSR definations.
+      riscv: Add Control Transfer Records extension parsing
+      riscv: pmu: Add infrastructure for Control Transfer Record
+      riscv: pmu: Add driver for Control Transfer Records Ext.
+      riscv: pmu: Integrate CTR Ext support in riscv_pmu_dev driver
+      dt-bindings: riscv: add Sxctr ISA extension description
+
+ .../devicetree/bindings/riscv/extensions.yaml      |  28 +
+ MAINTAINERS                                        |   1 +
+ arch/riscv/include/asm/csr.h                       |  83 +++
+ arch/riscv/include/asm/hwcap.h                     |   4 +
+ arch/riscv/kernel/cpufeature.c                     |   2 +
+ drivers/perf/Kconfig                               |  11 +
+ drivers/perf/Makefile                              |   1 +
+ drivers/perf/riscv_ctr.c                           | 612 +++++++++++++++++++++
+ drivers/perf/riscv_pmu_common.c                    |  25 +-
+ drivers/perf/riscv_pmu_dev.c                       |  82 +++
+ drivers/perf/riscv_pmu_legacy.c                    |   2 +
+ include/linux/perf/riscv_pmu.h                     |  55 ++
+ tools/perf/util/machine.c                          |  21 +-
+ 13 files changed, 918 insertions(+), 9 deletions(-)
+---
+base-commit: e0200e37637e573cd68f522ecd550be87e304c6c
+change-id: 20250416-b4-ctr_upstream_v3-204f4b0b7481
+
+Best regards,
 -- 
-2.43.0
+Rajnesh Kanwal
 
