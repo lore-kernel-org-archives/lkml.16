@@ -1,117 +1,111 @@
-Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6D57290F;
-	Thu, 22 May 2025 15:02:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747926145; cv=none; b=LXJSHZPrOAplmkor228ptZdCH6xAlI7NGbqrJjjytns1u0IhmOcKK+QZhjGC258eNDDt8LsAIE83UB5dLKEwfbOKuu2yA/WkATrwCK8+lZ7kLwlyqIcIfA+sUxpzV7536vNUb2LtCmCfZNyz5cB8jjrG/KX/b+9ldYTQ5PYUK88=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747926145; c=relaxed/simple;
-	bh=PCMNxXTp7vOl2U1UMU/ZCRxe7GFuxhIogfe0qyFPLBM=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=VPDFWj1iBVB/vwc31Uhv+IppaV1Js0s68ZTXBUhUIAgg3P5rIH/rLUOTDzYqzek+u0CeH0edaMcy6oBLPPV+2LwQGl+rtMLldlwx++KKUUmFuIdjkWG3q4REPVv8Ziw51Zb0svdAbcgqBlEhuq+QBv49el45WkdDmkaMdOqof8k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=C1QR/nsq; arc=none smtp.client-ip=217.70.183.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58B4935977;
+	Thu, 22 May 2025 15:04:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747926277; cv=pass; b=gMS/QecaJ+3l+Ax3Af4Zsl8XwWuWbeEggbDVH61p55npRmWorm3ugJY7PJlCpfZbdBaU52OWYSx4kqnS7shj9gg4SpCgITWvCiQ52ZGzGnPiRssRCk6KbcsYppkMygWdVUaa2EHs3l13HmFKty/A7wKM0UHUOyHFg2MSwMswXy4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747926277; c=relaxed/simple;
+	bh=y1QZHCVzfxwbLKbffCkbbTuzNdwB0qlTI7Ka0fWBIBc=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=NulGZL+hWHoP4t145HAbNIa6UAcq8YnA1Qx8kxiC5nYqHXEIIBKh97S8Qk81Y9KRRV4DgnnpD+PRfASSMINKnNz80Un7YuUZKb18k2Yn2PD7THsYt2zh1aneP+PeaeKXKThTN4GhwWm6Js7VUtR2yOeK4LxGv69p7ugFMVcpbHc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b=Mgs3MbYH; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="C1QR/nsq"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 315F843A2D;
-	Thu, 22 May 2025 15:02:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1747926135;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=PCMNxXTp7vOl2U1UMU/ZCRxe7GFuxhIogfe0qyFPLBM=;
-	b=C1QR/nsqGLxAYxBT39V3iCTWUEnreo4cdH0an0sHwxvmtrm5dQGjYNnI/xJs19aIDIBO2n
-	F4kFgyCeU9OaVkWgsTrfDtGopXWJoV9ihSH06MWWyRtpZrbgTTvRbsG0tBsrMsTQJpTIFw
-	mXVTgey9Od/driaMoYfOjgJVOBMWcoCCJPmE5JNMudSx5+QP056xSajJgGIyHzYU/vM0H7
-	27F6uPZTyWr4YOh79FdwcJx9Vm7NFy01+tLBQLXAPXAC7FV5jXmC7kSvCZPJxZxURWWAhN
-	kt3EUGZ+qE7Dt5T5p1Yge2BgmcVWLmXkDe8+zyRydSq2NN+IPrgQ4BNcsmbzIQ==
-From: Gregory CLEMENT <gregory.clement@bootlin.com>
-To: Jiaxun Yang <jiaxun.yang@flygoat.com>, Thomas Bogendoerfer
- <tsbogend@alpha.franken.de>
-Cc: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>, =?utf-8?Q?Th?=
- =?utf-8?Q?=C3=A9o?= Lebrun
- <theo.lebrun@bootlin.com>, Tawfik Bayouk <tawfik.bayouk@mobileye.com>,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
- "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] MIPS: CPS: Optimise delay CPU calibration for SMP
-In-Reply-To: <105ed884-9ee8-429a-9937-d8f58a221faa@app.fastmail.com>
-References: <20250520-smp_calib-v1-1-cd04f0a78648@bootlin.com>
- <8c4ef90e-82db-4711-a5f3-446bcca00e9d@app.fastmail.com>
- <87ecwipfr2.fsf@BLaptop.bootlin.com>
- <105ed884-9ee8-429a-9937-d8f58a221faa@app.fastmail.com>
-Date: Thu, 22 May 2025 17:02:14 +0200
-Message-ID: <87iklsofih.fsf@BLaptop.bootlin.com>
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b="Mgs3MbYH"
+ARC-Seal: i=1; a=rsa-sha256; t=1747926226; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=VaT0+rMMISfANLEhrx1eJeDw3XEdDuO0H1+K3rgnnBDqIhYyPwBvEIb4HnAuAHld5i/OkBw8g+VA9uKWADhzCXZfnA2lpBpMb5jGpgGFugvuuHPiPtxWzmeKgtYsh9LHcfhnGkKtC3Q6H6lhLtHfzMiufoR8/wEOIzNHr0K5aLM=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1747926226; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=y1QZHCVzfxwbLKbffCkbbTuzNdwB0qlTI7Ka0fWBIBc=; 
+	b=gMpBT9qIfc/XFVFWHYwam0lFFmgvEiiNypO+KQcTDDVcRS9aBiQJcBt6jY56hZGpN4FI8cMeG2a48TniWiea5cHULyqfXkUBMtFDf7mI1EpOFdogjXlBhq3X8j7gHZY4XaDc9HULJqkABKXByJ6GOfyNrs5YgLlHszF1+FUHnmA=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=daniel.almeida@collabora.com;
+	dmarc=pass header.from=<daniel.almeida@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1747926226;
+	s=zohomail; d=collabora.com; i=daniel.almeida@collabora.com;
+	h=Content-Type:Mime-Version:Subject:Subject:From:From:In-Reply-To:Date:Date:Cc:Cc:Content-Transfer-Encoding:Message-Id:Message-Id:References:To:To:Reply-To;
+	bh=y1QZHCVzfxwbLKbffCkbbTuzNdwB0qlTI7Ka0fWBIBc=;
+	b=Mgs3MbYHIxOzfkKPolz5IJUMnnuNafNkYVitKYXys0UNAyR4GHJanrBMy4XvsHm5
+	opbJkiwT7CEaSZv8wfHbWnY8eSWB5JDW8sN4VjVeU0VoKaZr9vLBb59OOkUjrsRDd5H
+	UEpcGnyY2QiJCi4vSI+hJJMujGz/TGg25Bj+KE98=
+Received: by mx.zohomail.com with SMTPS id 1747926224476523.4321217431499;
+	Thu, 22 May 2025 08:03:44 -0700 (PDT)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.500.181.1.5\))
+Subject: Re: [PATCH v2 01/12] rust: helpers: Add bindings/wrappers for
+ dma_resv_lock
+From: Daniel Almeida <daniel.almeida@collabora.com>
+In-Reply-To: <ab32a3ea-84a0-484c-a07b-85aecf99ae00@amd.com>
+Date: Thu, 22 May 2025 12:03:27 -0300
+Cc: Lyude Paul <lyude@redhat.com>,
+ dri-devel@lists.freedesktop.org,
+ rust-for-linux@vger.kernel.org,
+ linux-kernel@vger.kernel.org,
+ Asahi Lina <lina@asahilina.net>,
+ Miguel Ojeda <ojeda@kernel.org>,
+ Alex Gaynor <alex.gaynor@gmail.com>,
+ Boqun Feng <boqun.feng@gmail.com>,
+ Gary Guo <gary@garyguo.net>,
+ =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
+ Benno Lossin <benno.lossin@proton.me>,
+ Andreas Hindborg <a.hindborg@kernel.org>,
+ Alice Ryhl <aliceryhl@google.com>,
+ Trevor Gross <tmgross@umich.edu>,
+ Danilo Krummrich <dakr@kernel.org>,
+ Sumit Semwal <sumit.semwal@linaro.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Viresh Kumar <viresh.kumar@linaro.org>,
+ Wedson Almeida Filho <wedsonaf@gmail.com>,
+ "open list:DMA BUFFER SHARING FRAMEWORK:Keyword:bdma_(?:buf|fence|resv)b" <linux-media@vger.kernel.org>,
+ "moderated list:DMA BUFFER SHARING
+ FRAMEWORK:Keyword:bdma_(?:buf|fence|resv)b" <linaro-mm-sig@lists.linaro.org>
 Content-Transfer-Encoding: quoted-printable
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgdeivdeiucdltddurdegfedvrddttddmucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufgjfhffkfggtgfgsehtqhertddttdejnecuhfhrohhmpefirhgvghhorhihucevnffgoffgpffvuceoghhrvghgohhrhidrtghlvghmvghnthessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepgffhgedvhefgtdejvdethfdvieekgfetuefhueekteetgfdvueeutedttdekgeevnecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppedvrgdtudemtggsudegmeehheeimeejrgdttdemfhgrfegrmeekvgefkeemjeelgedtmeefgeehvdenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemtggsudegmeehheeimeejrgdttdemfhgrfegrmeekvgefkeemjeelgedtmeefgeehvddphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomhepghhrvghgohhrhidrtghlvghmvghnthessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepkedprhgtphhtthhopehjihgrgihunhdrhigrnhhgsehflhihghhorghtrdgtohhmpdhrtghpthhtohepthhssghoghgvnhgusegrlhhphhgrrdhfrhgrnhhkvghnrdguvgdpr
- hgtphhtthhopehvlhgrughimhhirhdrkhhonhgurhgrthhivghvsehmohgsihhlvgihvgdrtghomhdprhgtphhtthhopehthhgvohdrlhgvsghruhhnsegsohhothhlihhnrdgtohhmpdhrtghpthhtohepthgrfihfihhkrdgsrgihohhukhesmhhosghilhgvhigvrdgtohhmpdhrtghpthhtohepthhhohhmrghsrdhpvghtrgiiiihonhhisegsohhothhlihhnrdgtohhmpdhrtghpthhtoheplhhinhhugidqmhhiphhssehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-GND-Sasl: gregory.clement@bootlin.com
+Message-Id: <56CCCD08-01BB-40F0-B7BA-CD7DAE2C23D3@collabora.com>
+References: <20250521204654.1610607-1-lyude@redhat.com>
+ <20250521204654.1610607-2-lyude@redhat.com>
+ <ab32a3ea-84a0-484c-a07b-85aecf99ae00@amd.com>
+To: =?utf-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
+X-Mailer: Apple Mail (2.3826.500.181.1.5)
+X-ZohoMailClient: External
 
-Hello Jiaxun Yang,
+Hi Christian
 
-> =E5=9C=A82025=E5=B9=B45=E6=9C=8821=E6=97=A5=E5=91=A8=E4=B8=89 =E4=B8=8A=
-=E5=8D=888:47=EF=BC=8CGregory CLEMENT=E5=86=99=E9=81=93=EF=BC=9A
->> Hello Jiaxun,
->>
->>> =E5=9C=A82025=E5=B9=B45=E6=9C=8820=E6=97=A5=E5=91=A8=E4=BA=8C =E4=B8=8B=
-=E5=8D=884:21=EF=BC=8CGregory CLEMENT=E5=86=99=E9=81=93=EF=BC=9A
->>> [...]
->>>>
->>>> This allows to implement calibrate_delay_is_known(), which will return
->>>> 0 (triggering calibration) only for the primary CPU of each
->>>> cluster. For other CPUs, we can simply reuse the value from their
->>>> cluster's primary CPU core.
->>>
->>> Is __cpu_primary_cluster_mask really necessary?
->>>
->>> Maybe we can just test if current CPU is the first powered up CPU
->>> in the cluster?
->>
->> That is exactly the point of __cpu_primary_cluster_mask: setting in an
->> efficient way the first powered-up CPU for each cluster. This adds only
->> a single variable (which is actually just a long) and allows for minimal
->> impact during boot time, by doing the minimum write and read operations
->>
->> I don't see a better alternative. What do you have in mind ?
->
-> Maybe we can try mips_cps_first_online_in_cluster()?
+> On 22 May 2025, at 05:44, Christian K=C3=B6nig =
+<christian.koenig@amd.com> wrote:
+>=20
+> On 5/21/25 22:29, Lyude Paul wrote:
+>> From: Asahi Lina <lina@asahilina.net>
+>>=20
+>> This is just for basic usage in the DRM shmem abstractions for =
+implied
+>> locking, not intended as a full DMA Reservation abstraction yet.
+>=20
+> Looks good in general, but my question is if it wouldn't be better to =
+export the higher level drm_exec component instead?
+>=20
+> The drm_exec component implements the necessary loop if you want to =
+lock multiple GEM objects at the same time. As well as makes sure that =
+those GEM objects can't be released while working with them.
+>=20
+> Regtards,
+> Christian.
+>=20
 
-I didn't notice this function initially, but upon closer inspection, it
-appears that although the scan process is optimized, it still performs a
-full scan for each CPU during boot. In contrast, with the mask, the
-information is created only once and within an existing loop.
+I guess Danilo is the right person to ask, but IIRC the plan was to =
+expose the
+exec logic as part of the GPUVM abstraction, which is currently work in
+progress.
 
-I believe this function would benefit from __cpu_primary_cluster_mask,
-which is why I prefer my current implementation over using
-mips_cps_first_online_in_cluster().
-
-Regards,
-
-Thanks
-
->
-> [...]
->
-> Thanks
->
-> --=20
-> - Jiaxun
-
---=20
-Gr=C3=A9gory CLEMENT, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+=E2=80=94 Daniel=
