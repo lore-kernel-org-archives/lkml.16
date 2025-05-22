@@ -1,135 +1,129 @@
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A5BB28A3FC;
-	Thu, 22 May 2025 11:53:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72FB528A1D5
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 11:54:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747914828; cv=none; b=cJ2KCHcU6VhBF6bvyxDVU6n9OwzOJVeR2zvMOFtRfG8OVOLXsrNemu3xHSZ70nGCN2P9gs4SsSgi4FzivektE4sRU4d0O9tXEZaupYlT55jRN+CWXIQc/BgTqJi7VtYuTm+8UCWqlDsH/pRRBuBqZ3tHtcuFcjkRhl2pt9GLzYM=
+	t=1747914876; cv=none; b=Xty1UwzfRyI0Dk2iB1j7MmnlHdJKKa2KwruGBYDbBhtUl7SEs/uqIzl8mT5Jb4uGdNFlXs8VW5T/xljnkLGDFyUyL5YySNmCTPeIVw1Kp5BoSvTW41k6Y7CAY90p344/50MPXPYhI0OVhnShAhfC4iNjsLL81iLDezhx8S91Rbk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747914828; c=relaxed/simple;
-	bh=Mg7qX4I7qYfvYCd1yjRtE6Q0z11dgZZ2/+YP6BRNSqI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ILAUWFPdodKPmZZlOEzx+fgGrbxhcev+MBguKDKtlO4NQELa8Gf7k1HPOgSKXTexyVAPl/GZqv7vDzuu06GFGbPjFj0Ro3oTkJEU2WwFMC4lUQM6BBAarzFXg+VKfKPZKpVmJMb2mnTOV0Bh0oso/KJBW+G7U93v1m+J5HRtESU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Utx3SMOZ; arc=none smtp.client-ip=209.85.167.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747914876; c=relaxed/simple;
+	bh=5gAmb49IIazbAEJoONsRShX8sNRCkUD2M0GcRQSzMZI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fsJXs2VI1V7F8kpbTzIMAWw/BHrULDxBjRCqNkyKtnt4kANjjixX5O+GgjEWs90+JCMUgmlO9PBHwI85R5uZcsNjQKaznrKEjm+QgyRCZJ4BLIXAXjIwXWKZF9+VBkSKTTI2FYPX+ME3Neg7KQHleXrS6QUrOwiIw0mJwTSlMyo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=SluC6gll; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Utx3SMOZ"
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-550e2b9084dso9121755e87.1;
-        Thu, 22 May 2025 04:53:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747914825; x=1748519625; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=LhOX9eggKzblhpKFsblCKZYMw/3b9yOOLEO13B9qp7Q=;
-        b=Utx3SMOZurm20dWZOc3S3XQqvEHM+QxaJLlnA010tnKVXIOjPHUjadtXiGDdtRQ+HI
-         V1zh5wBn1YN8ZXPKAFEMpjiJ7oZTxsSAFgA0ZodYGEmB74rfUNMkN6EXWOPOqjNJUBU9
-         bOp6tYW7E6uZS3fHF1FwO1mdzk8MZe159ZhoFZ9ZmKdUHYyGmqVavOSoTcqVxIU3eMSV
-         xH3AYU0cX6xNDDNsZGb9XxErU8uNShMwHNYoWWT9MuU7j5vwROO9IZ2sVjPQEt5ug6XY
-         pnwclSNWHP+gseafHKpZEzEG3fVMII86pG50U360sJPn1uRbWVW+3ZGtRGUKQwpIhUTI
-         NNfg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747914825; x=1748519625;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=LhOX9eggKzblhpKFsblCKZYMw/3b9yOOLEO13B9qp7Q=;
-        b=jJb85Fm+18m9gsbOUw69Ty1NtKhcoZnQXp7wspAMqq5VygYApkDUbeA4Qsdnk6WzmN
-         IShldxDiwkRZ+ksYZAbjhlZLB+QIK5rbLTTWsnRuTxQePngt84ehsWfQCnzvOn4N8JbW
-         QjU6w3XqoUtdIOqnPZMqY4ghu30mHSYPj/svFUzSWHRmzmD9tTM/ZNI3hIXjOxsOMnF4
-         RIFJLyF1HGnvugsbWktArm77w/DffxY43AEaCQ/s9NQu6OkG/UWN+BMu6flCpllowxQe
-         5NUh+EEKlsDrXcNM7vtqMA3HqkDqRsYtQRq/L/pSP0OnL+pL/zpTSgXXF0IsH2NfYFE9
-         aaog==
-X-Forwarded-Encrypted: i=1; AJvYcCWsWToNDwLIIj80bI1J1nW90aSd7gabFi2s940AISewjVxbr03c7rlvqNPSUo+8R/ob/FSMjGDEEMN/IiM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy3EU3sSGQlOwM2z7yfV+VTCAHSlpyScWAk0SPkz/aY9FMsd3yo
-	qW/kIl8NZ9GkOArjlKsA4zQD/mQXAv8LZlemA/tTKgla2BprRq8Rw6cf
-X-Gm-Gg: ASbGncsvUU8r7LsfOC5YuHVvBI7MB+8o2CLjyq0Q463adtoEoCkHA98bd3zrkd5OgmE
-	XBV+GKwrVwHk5bDl1pIzUcSVWdiZoTm/msPUWBmQpkDwrWkfl4yYaRYc9lzw82Zhsew3+WibQng
-	nTPFneB+iXXBo7NJVamgLAvExnaAsR6uOzyIncDxsApJO5Vd7ZEXjV/R/e1XSHk9/mRRTWsBnlJ
-	zmFZt7blLCoQC8Wq6ryCP8LP2Li/JLHh68h3sWZxepNOHDIbZpGGZsizPfqRfLpVTFmIF21C7pN
-	sZRNto4SoF8BPq0ENHjBrb8AQFNavTk7aDxBim8i6dlVRcZz5HwV3Y+lvYqyEuRrXLE4ubKutfD
-	1qI5/W+a6IqKqxKONKUWf6bMxMBd1NDgIYCQdTGOTNEr+Jix/toOAd2eB
-X-Google-Smtp-Source: AGHT+IHEu6igARvex4pLKN67zsQTJTB2aQTsbDZx0BPl2mbP8nmToiz5iTopXp5wnV0hgYgTHrkRVQ==
-X-Received: by 2002:a05:6512:31d6:b0:54f:c616:ee28 with SMTP id 2adb3069b0e04-550e9906d2bmr8236399e87.47.1747914824718;
-        Thu, 22 May 2025 04:53:44 -0700 (PDT)
-Received: from uuba.fritz.box (2001-14ba-53-1500-7c4-bcaf-182a-540c.rev.dnainternet.fi. [2001:14ba:53:1500:7c4:bcaf:182a:540c])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-550e7017e79sm3343760e87.154.2025.05.22.04.53.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 May 2025 04:53:44 -0700 (PDT)
-From: =?UTF-8?q?Hanne-Lotta=20M=C3=A4enp=C3=A4=C3=A4?= <hannelotta@gmail.com>
-To: mchehab@kernel.org,
-	ribalda@chromium.org,
-	hverkuil@xs4all.nl,
-	sebastian.fricke@collabora.com,
-	hljunggr@cisco.com,
-	dave.jiang@intel.com,
-	jgg@ziepe.ca,
-	saeedm@nvidia.com,
-	Jonathan.Cameron@huawei.com,
-	corbet@lwn.net,
-	ilpo.jarvinen@linux.intel.com,
-	mario.limonciello@amd.com,
-	W_Armin@gmx.de,
-	mpearson-lenovo@squebb.ca,
-	skhan@linuxfoundation.org
-Cc: linux-media@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-kernel-mentees@lists.linux.dev,
-	=?UTF-8?q?Hanne-Lotta=20M=C3=A4enp=C3=A4=C3=A4?= <hannelotta@gmail.com>
-Subject: [PATCH v2 4/4] docs: Fix typos, improve grammar in Userspace API
-Date: Thu, 22 May 2025 14:52:55 +0300
-Message-Id: <20250522115255.137450-4-hannelotta@gmail.com>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250522115255.137450-1-hannelotta@gmail.com>
-References: <20250522115255.137450-1-hannelotta@gmail.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="SluC6gll"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=OaRRngOHy0kK33o+oMOgjYeJSVoBzhiok336J8dzm6g=; b=SluC6glli74tHAo/ZVm/SJwlJL
+	WUQ4HmVN9bmduxda/C5kgVMWxl5Tl2sb8epFML8cDASr7cJ8oSwrX/Owfd/9ePUKe8BDMKSoOdzYX
+	uV9vzVLfVE0p9E+aaUp70XXLEgqD0bJZhZuwOkK84jGuCW8TNtb64kGMepmpA1mPVxelxTIgYPiUN
+	2dmJ88BDj0qUNpBsBe3aLADRvyvhRdEQFb2nWasFX+5Of5FPeiGbY4xCs80HBvOyBb+zxvpvLYcS8
+	amQkMGlw7s0j+2p4INKtxyVCGZx9siKGVVv9XDy4Cb0yjs6DZFNFB5muL4+2Y60CKGmrIoN1/XtU5
+	/fGM+Ebw==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
+	id 1uI4V9-000000011hz-3prp;
+	Thu, 22 May 2025 11:54:20 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 1AEB93002E5; Thu, 22 May 2025 13:54:19 +0200 (CEST)
+Date: Thu, 22 May 2025 13:54:18 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Aaron Lu <ziqianlu@bytedance.com>
+Cc: Valentin Schneider <vschneid@redhat.com>,
+	Ben Segall <bsegall@google.com>,
+	K Prateek Nayak <kprateek.nayak@amd.com>,
+	Josh Don <joshdon@google.com>, Ingo Molnar <mingo@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Xi Wang <xii@google.com>, linux-kernel@vger.kernel.org,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>, Mel Gorman <mgorman@suse.de>,
+	Chengming Zhou <chengming.zhou@linux.dev>,
+	Chuyi Zhou <zhouchuyi@bytedance.com>,
+	Jan Kiszka <jan.kiszka@siemens.com>,
+	Florian Bezdeka <florian.bezdeka@siemens.com>
+Subject: Re: [PATCH 2/7] sched/fair: prepare throttle path for task based
+ throttle
+Message-ID: <20250522115418.GI24938@noisy.programming.kicks-ass.net>
+References: <20250520104110.3673059-1-ziqianlu@bytedance.com>
+ <20250520104110.3673059-3-ziqianlu@bytedance.com>
+ <20250522104843.GG39944@noisy.programming.kicks-ass.net>
+ <20250522114012.GA672414@bytedance>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250522114012.GA672414@bytedance>
 
-Fix a typo and improve wording and punctuation in
-the documentation for Userspace API.
+On Thu, May 22, 2025 at 07:44:55PM +0800, Aaron Lu wrote:
+> On Thu, May 22, 2025 at 12:48:43PM +0200, Peter Zijlstra wrote:
+> > On Tue, May 20, 2025 at 06:41:05PM +0800, Aaron Lu wrote:
+> > 
+> > >  static void throttle_cfs_rq_work(struct callback_head *work)
+> > >  {
+> > > +	struct task_struct *p = container_of(work, struct task_struct, sched_throttle_work);
+> > > +	struct sched_entity *se;
+> > > +	struct cfs_rq *cfs_rq;
+> > > +	struct rq *rq;
+> > > +
+> > > +	WARN_ON_ONCE(p != current);
+> > > +	p->sched_throttle_work.next = &p->sched_throttle_work;
+> > > +
+> > > +	/*
+> > > +	 * If task is exiting, then there won't be a return to userspace, so we
+> > > +	 * don't have to bother with any of this.
+> > > +	 */
+> > > +	if ((p->flags & PF_EXITING))
+> > > +		return;
+> > > +
+> > > +	scoped_guard(task_rq_lock, p) {
+> > > +		se = &p->se;
+> > > +		cfs_rq = cfs_rq_of(se);
+> > > +
+> > > +		/* Raced, forget */
+> > > +		if (p->sched_class != &fair_sched_class)
+> > > +			return;
+> > > +
+> > > +		/*
+> > > +		 * If not in limbo, then either replenish has happened or this
+> > > +		 * task got migrated out of the throttled cfs_rq, move along.
+> > > +		 */
+> > > +		if (!cfs_rq->throttle_count)
+> > > +			return;
+> > > +		rq = scope.rq;
+> > > +		update_rq_clock(rq);
+> > > +		WARN_ON_ONCE(!list_empty(&p->throttle_node));
+> > > +		dequeue_task_fair(rq, p, DEQUEUE_SLEEP | DEQUEUE_SPECIAL);
+> > > +		list_add(&p->throttle_node, &cfs_rq->throttled_limbo_list);
+> > > +		resched_curr(rq);
+> > > +	}
+> > > +
+> > > +	cond_resched_tasks_rcu_qs();
+> > >  }
+> > 
+> > What's that cond_resched thing about? The general plan is to make
+> > cond_resched go away.
+> 
+> Got it.
+> 
+> The purpose is to let throttled task schedule and also mark a task rcu
+> quiescent state. Without this cond_resched_tasks_rcu_qs(), this task
+> will be scheduled by cond_resched() in task_work_run() and since that is
+> a preempt schedule, it didn't mark a task rcu quiescent state.
+> 
+> Any suggestion here? Perhaps a plain schedule()? Thanks.
 
-Signed-off-by: Hanne-Lotta Mäenpää <hannelotta@gmail.com>
----
+I am confused, this is task_work_run(), that is ran from
+exit_to_user_mode_loop(), which contains a schedule().
 
-Notes:
-    v1 -> v2: No changes
-
- Documentation/userspace-api/sysfs-platform_profile.rst | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/Documentation/userspace-api/sysfs-platform_profile.rst b/Documentation/userspace-api/sysfs-platform_profile.rst
-index 7f013356118a..6613e188242a 100644
---- a/Documentation/userspace-api/sysfs-platform_profile.rst
-+++ b/Documentation/userspace-api/sysfs-platform_profile.rst
-@@ -18,9 +18,9 @@ API for selecting the platform profile of these automatic mechanisms.
- Note that this API is only for selecting the platform profile, it is
- NOT a goal of this API to allow monitoring the resulting performance
- characteristics. Monitoring performance is best done with device/vendor
--specific tools such as e.g. turbostat.
-+specific tools, e.g. turbostat.
- 
--Specifically when selecting a high performance profile the actual achieved
-+Specifically, when selecting a high performance profile the actual achieved
- performance may be limited by various factors such as: the heat generated
- by other components, room temperature, free air flow at the bottom of a
- laptop, etc. It is explicitly NOT a goal of this API to let userspace know
-@@ -44,7 +44,7 @@ added. Drivers which wish to introduce new profile names must:
- "Custom" profile support
- ========================
- The platform_profile class also supports profiles advertising a "custom"
--profile. This is intended to be set by drivers when the setttings in the
-+profile. This is intended to be set by drivers when the settings in the
- driver have been modified in a way that a standard profile doesn't represent
- the current state.
- 
--- 
-2.39.5
 
