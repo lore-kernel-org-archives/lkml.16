@@ -1,161 +1,153 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB1B2199223;
-	Thu, 22 May 2025 17:40:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A80119D8A8
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 17:40:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747935655; cv=none; b=Puofy7Z5VhVRsxMi+oxW/mQPtBh0b5XJz5ZHtKArUQqClGI4evwQau8OWK327AaZRtFd/LJ/bD+nEtKgG1wuUmVxdpOm6th08ZQ9C2m6SGQ2kJrZgP3njTctJYhShPR5qgXaINKsER/bpbwZIu8itpnp/CZHUnZwl9nYwK4xveY=
+	t=1747935658; cv=none; b=PTjRqqESijsxVelAkmWTqyPQMBY7+PMprsIa+KvFq9s5Jg8rUVlX4ZtiqATztz5p41dSVtKTTrWS2JjbQ7QyHth3bilKdAzjLMPFL8K18Zj9T2fWWQtygcPMiE0VY0tMAX8HElfcmOwCYjC/usTKvIMeS3R5DdtOZUnltr21Vwk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747935655; c=relaxed/simple;
-	bh=be+OHwazIl+Fe6S2ppgzwUZso2vzakG++zIJxWtQR74=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HUnVC0HObn1uEgb+KbOddEq7sTAMCnFS2SgFtHfJke7w5HCsUHxoG0djORuHoqDjHmmEi4kBuSjFW9VJYx+oq8akKgAs+nROhZItVCT7VbRuzvLB/9dZTfZ1SKiSYaY3Zu4KJdPnMu+Xf8jdl3YWTsmJAI09xasm+4GJjrIzOGg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lNjL/vo5; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747935658; c=relaxed/simple;
+	bh=Gx8rat0F5gGYg4tYeBd9EDyzRXpBbhu3rhNTcZhiZH0=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=OFItlZKXh5gggyqlDopVBTSe4GOI3bdX17ul4svRYs5ZIPjpA8M6ObKTkVpwq4aITt566YEdHyYfvfGQ+uZGF8jBrH2G4ACGZXBdZOJKlWzqqKSd2/igEa0yEvtJrjRxfI7hbR409NrhRcT+NSsZs2dY8QB/7vmty4L7oS0tuC4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=rOe4Hinx; arc=none smtp.client-ip=209.85.128.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lNjL/vo5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 576D9C4CEE4;
-	Thu, 22 May 2025 17:40:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747935655;
-	bh=be+OHwazIl+Fe6S2ppgzwUZso2vzakG++zIJxWtQR74=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=lNjL/vo58QMoJU8AANQEmnmUyIZzAm6cCNqy4vlrkiQ5sxXVYhioQ1xt28/aQvC7D
-	 ew7N5dlLYiCCan9LqnQ9gXd0O5xGkUA2kGC4Dl+v0V9RDXiL9mOnSEPIH3n1JXDpBP
-	 sDU5qQ1/bK+f4yVFAmwF7fauXKkZz6b8d8VAO86Yv4USCy3sw8eCJQ1fkCAhsd4ZWn
-	 /LYTOHz7/wOwnxC4Y/4jcMAlqemgCGIz88NZbY9w9uHWVWCR0Dg2SIdVOt+o+sM7Ph
-	 OB/NYy+kHtUeaNJQNpOH2H0EjDPyu8eeEgiU8vcrw2GA5aqo2mO6mBLcEHvcNwtdNQ
-	 llCohwW2JIyVg==
-Message-ID: <522af2fb-6c85-462d-978a-cd03fb5bb76c@kernel.org>
-Date: Thu, 22 May 2025 19:40:51 +0200
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rOe4Hinx"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-442e9c00bf4so61597445e9.3
+        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 10:40:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1747935654; x=1748540454; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=7NPUIJScbl2wo5u3vE+t7s0/ylzAg/M0wI+ubRZFTc8=;
+        b=rOe4HinxoTlFgGf5eDTyYcj/Zuzhla5daG70e3i2i+QZ0KOUt65ainVzvnAEyAr57l
+         /CO8JRKS7MBZwQARq4iT3IySEJ1ZqyLq/xGhAm6HPTKjx/u2ZpuXVMb6vVNQ13M1dnDi
+         Cowk2iTizfOC7e7UVGXvxj764kH0wqvXNLLarjzsnZOr/RX5uDkhA26VYCM/DgVo9X+8
+         LspNm4zF2mS4kd1li+F545nX9ZUBvCoacCxcPWxYH1gtdFv9yCQc0s6ZwYolHCZsK9b8
+         A7M+uZqTpmBfggPXXDRa7hRKhjEvTUwDq33clwvWIXiVyNpmRnF5pqjIwqgNLPR1ZR9m
+         HkNA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747935654; x=1748540454;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=7NPUIJScbl2wo5u3vE+t7s0/ylzAg/M0wI+ubRZFTc8=;
+        b=e+AisF3O6ZOK/4X1UdIQ1cpgEwjpwcgYsAeXQPY063EmBUmx7+fB4iqjdOYO4NVkmu
+         lBee/Dh8WjV3NcFHcYcieWhHMfNsvhOfl94ObDuoQcupZ4JlBKDcMlfvYQAmSfnSFsAb
+         2KIpLh238Gia3hZQoIJmLzhU6iZmzGt/rnYreuyh0AKmd1aEv70qEFoPH40/9En7MYXG
+         sTEwZ7tqd2mc+mrT8X5WZ6+NU7f2tEGivpUD+OjyEKsNO/hIMqavvKtjpm/s0tvgDQcr
+         4Ogd5RWufDbRlIZSlmIDitWOyYucgorgND65Lpc4BI4gme+trp2EeUSkrbrJvddwBLfo
+         lqKA==
+X-Forwarded-Encrypted: i=1; AJvYcCXtnamJRGhq0wtvnMQqSskG2wXVFGcGMFzulEmasp07wED3tHNHAxqpnIK2GmGzwQIVlf+B+uB1kYFZmKs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzN4jDykCGmhMM6xamGEtfBvoOHOX8taDtutLyzw8hq7JUG89wk
+	cldlXm+E1C6HnIDXPoM9ojpg3d8RvO7LZz2O/Xpru2yp0eVcyLRKuYXYIZRu0e5ww5A=
+X-Gm-Gg: ASbGncuGdgLd2vqxh16wvh0QobF7vNMl7Bwzj5HysKFzwp50fUMDrE3rNASzbuSUY+t
+	l0MCoSe4ctjE5J2BXwnppL6lBpWRfxLJJ4iFgHljmD3nx1vMg9lNv38x/ST+6xILeemmJJPv3il
+	m3Bci3/ykwnXrv/0rTdkckzQ3b3yZrSPf/g1u/lTAq/mQCuKck575GPDWyHBpix8oqeZuJ5Pwz+
+	E2p+dlwZgXKrUhgtNLA9Z24lx895F0srRmsk7zOoPFvYwguxk/ylue4k4H4nT4DLS3WS0D4mlTG
+	Myjf+32lYGMQ4MGJrRKiLjJ+/ylw/P6jv7yr0i6LODzp0zk08VSujl3ik5M=
+X-Google-Smtp-Source: AGHT+IGGhVpRpV0KK+9csxjRQAa7427Mshc5zMSpLcRZ9lrj8a5WqdPgOzbFmkpOpGEFcPdmgHYleQ==
+X-Received: by 2002:a05:600c:c8c:b0:442:f4a3:b5ec with SMTP id 5b1f17b1804b1-442fefd5f8dmr271581325e9.4.1747935654432;
+        Thu, 22 May 2025 10:40:54 -0700 (PDT)
+Received: from orion.home ([2a02:c7c:7213:c700:6c33:c245:91e5:a9f4])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-447f7bae847sm109563195e9.36.2025.05.22.10.40.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 May 2025 10:40:53 -0700 (PDT)
+From: Alexey Klimov <alexey.klimov@linaro.org>
+Subject: [PATCH v3 00/12] qrb4210-rb2: add wsa audio playback and capture
+ support
+Date: Thu, 22 May 2025 18:40:50 +0100
+Message-Id: <20250522-rb2_audio_v3-v3-0-9eeb08cab9dc@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC v2 2/2] dt-bindings: leds: lp50xx: Document child reg,
- fix example
-To: Johan Adolfsson <johan.adolfsson@axis.com>, Lee Jones <lee@kernel.org>,
- Pavel Machek <pavel@kernel.org>,
- Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Cc: linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, kernel@axis.com
-References: <20250522-led-fix-v2-0-652046323ec3@axis.com>
- <20250522-led-fix-v2-2-652046323ec3@axis.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <20250522-led-fix-v2-2-652046323ec3@axis.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAKJhL2gC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyjHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDUyMj3aIko/jE0pTM/PgyY920tERDo5TkZDNDEwsloJaCotS0zAqwcdG
+ xtbUAU/wbnV4AAAA=
+X-Change-ID: 20250522-rb2_audio_v3-ffa12dcc6148
+To: Srinivas Kandagatla <srini@kernel.org>, Mark Brown <broonie@kernel.org>, 
+ linux-sound@vger.kernel.org
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
+ Dmitry Baryshkov <lumag@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
+ Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, 
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
+ linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
+ Srinivas Kandagatla <srini@kernel.org>, 
+ Konrad Dybcio <konradybcio@kernel.org>
+X-Mailer: b4 0.14.2
 
-On 22/05/2025 16:14, Johan Adolfsson wrote:
-> The led child reg node is the index within the bank, document that
-> and update the example accordingly.
-> 
-> Signed-off-by: Johan Adolfsson <johan.adolfsson@axis.com>
+Rebased, updated, re-tested. This implements the playback support via the
+following path: RX1 from DSP is connected to rxmacro which communicates
+with wcd codec using soundwire. This goes into AUX input of wcd. Wcd codec
+outputs analog audio into wsa8815 amplifier. Capturing works through vamacro
+using one onboard DMIC which is directly connected to vamacro codec.
 
+Changes since v2:
+-- dropped [PATCH v2 08/14] dt-bindings: arm: qcom-soc: extend pattern matching
+to support qcom,wsa881x and replaced with new one;
+-- dropped [PATCH v2 14/14] ASoC: qcom: sm8250: force single channel via RX_1 output for qrb4210
+-- reordered as suggested by Krzysztof;
+-- updates to wsa881x-common.h registers descriptions and corresponding updates
+to wsa881x-common.c (Konrad);
+-- sorted subnodes in DT alphabetically as suggested by Konrad;
+-- wsa881x bindings updates (as suggested by Krzysztof);
+-- ASoC: dt-bindings: qcom: Add SM6115 LPASS rxmacro and vamacro codecs
+is still present;
+-- added "qcom,wsa8810" compatible to wsa881x-i2c.c;
+-- wsa881x is still present in wsa881x_probe_common();
 
-<form letter>
-Please use scripts/get_maintainers.pl to get a list of necessary people
-and lists to CC. It might happen, that command when run on an older
-kernel, gives you outdated entries. Therefore please be sure you base
-your patches on recent Linux kernel.
+Second version:
+https://lore.kernel.org/linux-arm-msm/20241212004727.2903846-1-alexey.klimov@linaro.org/
 
-Tools like b4 or scripts/get_maintainer.pl provide you proper list of
-people, so fix your workflow. Tools might also fail if you work on some
-ancient tree (don't, instead use mainline) or work on fork of kernel
-(don't, instead use mainline). Just use b4 and everything should be
-fine, although remember about `b4 prep --auto-to-cc` if you added new
-patches to the patchset.
+First version:
+https://lore.kernel.org/linux-sound/20241101053154.497550-1-alexey.klimov@linaro.org/
 
-You missed at least devicetree list (maybe more), so this won't be
-tested by automated tooling. Performing review on untested code might be
-a waste of time.
+---
+Alexey Klimov (12):
+      ASoC: dt-bindings: qcom: Add SM6115 LPASS rxmacro and vamacro codecs
+      dt-bindings: arm: qcom-soc: ignore "wsa" from being selected as SoC component
+      ASoC: dt-bindings: qcom,wsa881x: extend description to analog mode
+      ASoC: codecs: lpass-rx-macro: add sm6115 compatible
+      ASoC: codecs: wsa881x: split into common and soundwire drivers
+      ASoC: codecs: add wsa881x-i2c amplifier codec driver
+      arm64: dts: qcom: sm6115: add LPASS devices
+      arm64: dts: qcom: sm4250: add description of soundwire and dmic pins
+      arm64: dts: qcom: qrb4210-rb2: add wcd937x codec support
+      arm64: dts: qcom: qrb4210-rb2: enable wsa881x amplifier
+      arm64: dts: qcom: qrb4210-rb2: add WSA audio playback support
+      arm64: dts: qcom: qrb4210-rb2: add VA capture support
 
-Please kindly resend and include all necessary To/Cc entries.
-</form letter>
-
-
-> ---
->  Documentation/devicetree/bindings/leds/leds-lp50xx.yaml | 11 ++++++++---
->  1 file changed, 8 insertions(+), 3 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/leds/leds-lp50xx.yaml b/Documentation/devicetree/bindings/leds/leds-lp50xx.yaml
-> index 402c25424525..8ce327d00c2d 100644
-> --- a/Documentation/devicetree/bindings/leds/leds-lp50xx.yaml
-> +++ b/Documentation/devicetree/bindings/leds/leds-lp50xx.yaml
-> @@ -82,6 +82,11 @@ patternProperties:
->          properties:
->            reg:
->              maxItems: 1
-> +            description:
-> +              This property denotes the index within the LED bank, 0, 1 or 2.
-
-Do not open code constraints. You probably wanted minimum/maximum
-instead of above syntax.
-
-> +              The value is actually optional for backward compatibility reasons
-
-No, it is not optional - see schema.
-
-> +              but is highly recommended to handle reversed devicetree
-> +              processing properly.
->  
->          required:
->            - reg
-> @@ -139,17 +144,17 @@ examples:
->                  function = LED_FUNCTION_STANDBY;
->  
->                  led@3 {
-> -                    reg = <0x3>;
-> +                    reg = <0x0>;
-
-Mismatched unit address.
-
+ .../devicetree/bindings/arm/qcom-soc.yaml          |    2 +-
+ .../bindings/sound/qcom,lpass-rx-macro.yaml        |   19 +
+ .../bindings/sound/qcom,lpass-va-macro.yaml        |   22 +-
+ .../devicetree/bindings/sound/qcom,wsa881x.yaml    |   66 +-
+ arch/arm64/boot/dts/qcom/qrb4210-rb2.dts           |  113 ++
+ arch/arm64/boot/dts/qcom/sm4250.dtsi               |   62 +
+ arch/arm64/boot/dts/qcom/sm6115.dtsi               |  132 ++
+ sound/soc/codecs/Kconfig                           |   15 +
+ sound/soc/codecs/Makefile                          |    4 +
+ sound/soc/codecs/lpass-rx-macro.c                  |    4 +-
+ sound/soc/codecs/wsa881x-common.c                  |  193 +++
+ sound/soc/codecs/wsa881x-common.h                  |  478 +++++++
+ sound/soc/codecs/wsa881x-i2c.c                     | 1353 ++++++++++++++++++++
+ sound/soc/codecs/wsa881x.c                         |  493 +------
+ 14 files changed, 2459 insertions(+), 497 deletions(-)
+---
+base-commit: 7bac2c97af4078d7a627500c9bcdd5b033f97718
+change-id: 20250522-rb2_audio_v3-ffa12dcc6148
 
 Best regards,
-Krzysztof
+-- 
+Alexey Klimov <alexey.klimov@linaro.org>
+
