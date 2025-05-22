@@ -1,104 +1,141 @@
-Received: from mail-vk1-f180.google.com (mail-vk1-f180.google.com [209.85.221.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E89C9208AD
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 18:20:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89D41208AD;
+	Thu, 22 May 2025 18:21:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747938004; cv=none; b=B7f5v31CgbNT2IQcE2KywC1rwKJcXNcRuWaXLfCVovcBfD6zhkTNcNVdFhF18iDscsUub3OZ5XB7dL7PnghRl4RLtrPpUz/IFSO772GA+nFnxiwRvjdLkXCtmI3ZWWziWBWyPvMBJne/zsMIvaG8V/GNVOitn/sZHfztEi1+7rw=
+	t=1747938062; cv=none; b=plGFV9hTBOsqC5WLoRwdIgV6Mqdy3gK60vM2NNwVVpORLsSBIkKqvVx7fQvs5KADr/YVLabtuc+7W98xesP3WZyEA2uuVGLWtrldUwrJliJ/P9rCWUG7RUfd3JTKnBFjZqZlojdL0prs32NyPEtzgBsSJ1uVix5aGoJsCc2bA+s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747938004; c=relaxed/simple;
-	bh=1X1PfimKgGxSYNptMRYntUWCk2oprV8ZT6Liq06yiX0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=EKXQJ+BCpykOkZDUSmTLPmwhxhGX7YuSAfEGjyoYtIXrIw9tddrrBPZ+OXY02aLVFBbIECg86iCf6k1u0VhrRjC2slxLkGjPHd19wJZmtpNIaHAQjq0J0sPQcTThfnVN57NfVR0bIv+JRw0u9rFHqmLpajfJxjDd8rafINCQ860=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=1MwTBHSm; arc=none smtp.client-ip=209.85.221.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1747938062; c=relaxed/simple;
+	bh=lxv1mrz27uBYXTf8K3NOoJWG7c0aDCWYEZb6JCimCME=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=N8g/ZD8YHo0tmlK+OzntWMfptoutrkwdfE94yeCSyXPyL+nBndFOwqrztAZMNd5MD62JYLfqeAQXPmxB426typiFEjzDVjxHMecHdpfVbIMQvp5SZmt02rmc5UvJ0qIS5lFRo40xSzKPKLK5v0/VK6jBultQmOBnCR8GwGku8tk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=SPYSdpMf; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="1MwTBHSm"
-Received: by mail-vk1-f180.google.com with SMTP id 71dfb90a1353d-52eff44a661so862341e0c.3
-        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 11:20:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747938002; x=1748542802; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1X1PfimKgGxSYNptMRYntUWCk2oprV8ZT6Liq06yiX0=;
-        b=1MwTBHSmIKT/HtCiz8l1tT03S5LkGkTlYbdLVX47ZodJMcNC0ime3oonsoXYjYKf8n
-         zY4aZWfHtV3vsS5Fqhe9f9XwNDnSI82p1s9SdLkcTVpRV9hCck4ijQhUhl/35uZVbK9N
-         oWmYDsKOzYUd0Yj3Q/M2ckNmrk0Y8rAAY3tMgoyHyvVae4/38NY2XbvNeyo99chdr7Ej
-         E/jOmT+eGTCwF5tSIZaiZIcOq33/yMbQjJJtbWE8gI+b3dpwxrT+ADu4igc4M8RbpoBJ
-         N+JRwLR8Cih44BUB0kHHJYHo+AQbf8uNMkX5HCymR/WmAzdbJ+f3n3r7AOUAHpuzgAxX
-         G3eQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747938002; x=1748542802;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=1X1PfimKgGxSYNptMRYntUWCk2oprV8ZT6Liq06yiX0=;
-        b=VRxY5UaC9+k9u2XOvvZmINDX5n+2IDDhQ8u7MGgn+3OFa8yX5Gm3BnOnAOc+a3o40E
-         Uv7RUSCmWuDhjjC6GVvCXhLzuhtCO1EA/bYxYxjQ3iY8eHOpczBxJ9OywQ1X5nzkcyEW
-         XN75HFDg+GVh0Pkm4cr97ZVWz4Ch9o2pijpnVFXB/f9716yvr1gHGwK6ClS4YPHGz/rQ
-         f9wFtSCacV/snWWg2Zt/IRr0KTUyzgta+fhz93aysUeUuRiZNaZaQqHjsN682+xVrS1C
-         R9LJ5r5T8+95IodspXyrQAzUE1aD//PwF5EZQevgQQTDdmKD1r/7GZAa91TSLbYzAlri
-         1C0w==
-X-Forwarded-Encrypted: i=1; AJvYcCVkeSzPWVaq5TcHh56p5th2SM5fsTk8LKqkVfEQ8ew+2y/FwtX2VAgwQzYidFCMP/U+SJguyQ+r2rysnt8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx7eFusRSVcInCc1+s+T9zwx1IKZe0AyZRYD8Rh75003ccuV9AZ
-	PfdjL7Qnt55wOFceQCcCj4zARfz8T7qOxDws3OV5D/0S4KGRzX/sW+VUyAq7Wuc06PR9dMu7sQP
-	BGtb5NrlBC+fCa+1QWcO0r2O1TBve3fnq7qosctx+
-X-Gm-Gg: ASbGnctSLqzfPujoWpLySU2qw1pROqHpqX095t9iXxlPDK4fjM5ObkvWeidC+vQ1Rde
-	17nEh6Qx9kG/LjjzFMg5ORfhd03w5yz1KgcQpEN10cUoS1T4fPSRkYGbuuS/0PGMxD3jqWax9/V
-	H0AbHnsUHTuySHK9tDgJwGP2n54CRuTsfMerGBrzlFPaNGLUpnoCdQcv7h1MymcrdROtqL8BHPB
-	FFp
-X-Google-Smtp-Source: AGHT+IEfN+I/C5Ybrmxr1qWevAFLAFonO1e5hjzbuNX4xDEjbOi3PdSdxPRofPaqo9kuaUkHrj/UIsRxp8SKA7jZji0=
-X-Received: by 2002:a05:6122:d19:b0:529:2644:8c with SMTP id
- 71dfb90a1353d-52dbcdfccb7mr20392929e0c.8.1747938001548; Thu, 22 May 2025
- 11:20:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="SPYSdpMf"
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54MAjqbd029481;
+	Thu, 22 May 2025 18:19:58 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	3YXR8er64i8TNQwCGsGTIh45J5+aN82cu97cDgSI07o=; b=SPYSdpMfVMCx5Ce4
+	QcsKWUC53mMheSmcBNvdA4sEJgaJakpBaIFPMowv5wCEg0gRGq8zzQt4KA257t6R
+	EiZv77Dy29zWmlFm0DXl17fwLKj90JYmc0oXkTBR7GUPg12J6U2OoJnNbhLsdp0x
+	0v/2o0D67KOXpRLCyWdQADFijggE74s7omNW5kP2LXrnhjNPiwrW+seoes1oFqSd
+	NRX6WPYU97+KxNwxuDJAv0w2YcUhz0YTpM216eXcxrJ+RXoDBYYZCQgu8O+So7u2
+	/SIx8/qoUzuOLpjAcXNlJDuQdn1cih1gR0weh9DDiH8Ih7qFRvoVMZ+wVr/b6UCJ
+	SoLPNQ==
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46rwf47dpt-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 22 May 2025 18:19:58 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54MIJvc6018539
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 22 May 2025 18:19:57 GMT
+Received: from [10.134.71.247] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 22 May
+ 2025 11:19:55 -0700
+Message-ID: <a5571512-d931-46ce-8cbe-f1118681c6d1@quicinc.com>
+Date: Thu, 22 May 2025 11:19:53 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250521222725.3895192-1-blakejones@google.com>
- <20250521222725.3895192-2-blakejones@google.com> <aC9iF4_eASPkPxXd@x1>
-In-Reply-To: <aC9iF4_eASPkPxXd@x1>
-From: Blake Jones <blakejones@google.com>
-Date: Thu, 22 May 2025 14:19:49 -0400
-X-Gm-Features: AX0GCFvCecoYWZVTumub_yv2z4rw1y06pQ1j8hvSuiCvYMyPM1bOhtN7H-YE9cM
-Message-ID: <CAP_z_Cg_vH1+BAm87U4gYQ0hDRGtHkkYb2DHtTRSd_QNvg3ZLQ@mail.gmail.com>
-Subject: Re: [PATCH 1/3] perf: add support for printing BTF character arrays
- as strings
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Ian Rogers <irogers@google.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	Chun-Tse Shao <ctshao@google.com>, Zhongqiu Han <quic_zhonhan@quicinc.com>, 
-	James Clark <james.clark@linaro.org>, Charlie Jenkins <charlie@rivosinc.com>, 
-	Andi Kleen <ak@linux.intel.com>, Dmitry Vyukov <dvyukov@google.com>, Leo Yan <leo.yan@arm.com>, 
-	Yujie Liu <yujie.liu@intel.com>, Graham Woodward <graham.woodward@arm.com>, 
-	Yicong Yang <yangyicong@hisilicon.com>, Ben Gainey <ben.gainey@arm.com>, 
-	linux-kernel@vger.kernel.org, bpf@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 00/45] drm/msm/dp: Add MST support for MSM chipsets
+To: Jens Glathe <jens.glathe@oldschoolsolutions.biz>,
+        Rob Clark
+	<robdclark@gmail.com>,
+        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        "Sean
+ Paul" <sean@poorly.run>,
+        Marijn Suijten <marijn.suijten@somainline.org>,
+        "David Airlie" <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        Stephen
+ Boyd <swboyd@chromium.org>,
+        Chandan Uddaraju <chandanu@codeaurora.org>,
+        "Guenter Roeck" <groeck@chromium.org>,
+        Kuogee Hsieh
+	<quic_khsieh@quicinc.com>,
+        "Bjorn Andersson" <andersson@kernel.org>,
+        Konrad
+ Dybcio <konradybcio@kernel.org>,
+        "Rob Herring" <robh@kernel.org>,
+        Krzysztof
+ Kozlowski <krzk+dt@kernel.org>,
+        "Conor Dooley" <conor+dt@kernel.org>
+CC: Vara Reddy <quic_varar@quicinc.com>, Rob Clark <robdclark@chromium.org>,
+        Tanmay Shah <tanmay@codeaurora.org>, <linux-arm-msm@vger.kernel.org>,
+        <dri-devel@lists.freedesktop.org>, <freedreno@lists.freedesktop.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        Jessica Zhang
+	<quic_jesszhan@quicinc.com>,
+        Laurent Pinchart
+	<laurent.pinchart@ideasonboard.com>,
+        Yongxing Mou <quic_yongmou@quicinc.com>
+References: <20241205-dp_mst-v1-0-f8618d42a99a@quicinc.com>
+ <aeb8c8d5-9ce5-410d-8021-df30081697af@oldschoolsolutions.biz>
+Content-Language: en-US
+From: Abhinav Kumar <quic_abhinavk@quicinc.com>
+In-Reply-To: <aeb8c8d5-9ce5-410d-8021-df30081697af@oldschoolsolutions.biz>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIyMDE4NSBTYWx0ZWRfX61owZbJTwSAl
+ BCRuIK7tNLqrGOb+8WZuixy20nYGrMVgpqV54UoxvKW//1k52e9WVT5+IZw4o/qEF4Zyfab8oPO
+ 8Cev6Wj03FTaK3g5IAOu7OHSDlWb9+YXy7A9XXmt/LXgd/6upyYefNoj2P30INg6wye4hY+GGve
+ YavP8mKvZKnqVFysDgP4o3NTy33Eqklj9laI555nBale0jIYXAOGZlUQkZtwNmUCXLAx9o2aJkP
+ s0axsMZIBZYNyO028fHGWRBhr+GcJ7uNMAKD+bxve4+as5wk9o04jb4jNH+brAAmOHvgmSdBqa5
+ PtGJee32vH0z3f36YNGuUbMilQD/CYMLaTGPRATplKkk2xhQIQfZyvrT7r2H33eCu+dc+NRQOav
+ wPh53yYwqzQdA3mFZeYLvPnKy/0wIc7Sbz5jkFvg7r6VqCWuTpHLVMNElMHVDDUV2vL0HFl1
+X-Proofpoint-GUID: X9VmTCzSYb66XkSQQZ7axkdsjXISaY8w
+X-Authority-Analysis: v=2.4 cv=Ws8rMcfv c=1 sm=1 tr=0 ts=682f6ace cx=c_pps
+ a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10
+ a=42cjtDgYKixFzRowy9kA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-ORIG-GUID: X9VmTCzSYb66XkSQQZ7axkdsjXISaY8w
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-22_08,2025-05-22_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ spamscore=0 malwarescore=0 clxscore=1011 suspectscore=0 mlxscore=0
+ bulkscore=0 phishscore=0 priorityscore=1501 impostorscore=0
+ lowpriorityscore=0 mlxlogscore=999 adultscore=0 classifier=spam authscore=0
+ authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505160000 definitions=main-2505220185
 
-Hi Arnaldo,
+Hi Jens
 
-On Thu, May 22, 2025 at 1:42=E2=80=AFPM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
-> I'll test this but unsure if this part should go thru the perf tool
-> tree, perhaps should go, together with some test case, via the libbpf
-> tree?
+On 5/10/2025 5:12 AM, Jens Glathe wrote:
+> On 06.12.24 05:31, Abhinav Kumar wrote:
+>> base-commit: b166256c1e6ce356fa1404d4c8531830e6f100a8
+> 
+> Hi Abhinav,
+> 
+> I would like to test / play around with this patchset, unfortunately 
+> this base commit is not easy to find. Trying to apply without gives lots 
+> of conflicts. Can you please rebase?
+> 
+> with best regards
+> 
+> Jens
+> 
+> 
 
-Thanks for taking a look at this. I'd appreciate your guidance here - I
-sent it here because the other two patches in my patch set depend on this
-one.
+We will post a rebased version of this series with the review comments 
+addressed within the next 3-4 weeks.
 
-Blake
+Thanks
+
+Abhinav
