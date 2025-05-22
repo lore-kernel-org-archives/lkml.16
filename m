@@ -1,243 +1,125 @@
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18733221FB7;
-	Thu, 22 May 2025 23:35:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66AE12494F9
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 23:37:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747956940; cv=none; b=H7DTumxHXZ3pYU8ci1kWoYO1p6KlRzGo2LhtYvv9A8WCObD5MF5V7Flym4cIUcGKBegNjv1T3x6NrDrXuoxQRpBnUXMre+zWk3gMYG9t6Whthk8uGtLborqmb9P6H4KNsjZ+GXNcHjy3y9roVG/17Rt7rkL/x8mp74KEwQvsMAI=
+	t=1747957065; cv=none; b=o7COW25DnuH0EDdSebNNgZMDlRo2UlodQ0/lUZuS1SMQXY6FMUEEUT6EqMrPPwZ1EInQ6dlz4ZeecJQ2xx0h1ozW1RMpBay+LgyGDdOeC9TRAG1rTevU+5DnFjn03BI1/VCifZe43cafhctDdZIrwSh8dvqruivDNnJ5NEJ6mUQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747956940; c=relaxed/simple;
-	bh=czoIWuhXnPSr+ph5d5pGCEbEfyC8aXk7ltntHa/MeoQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FWLha/lPTIzERSc3Btc9enFLbgLg9tyyFr1PCPyiQ8kUL9BgjdtKwVn/ZVGqJVQBMiksTaNv2pKwIIABNHx+jJTqW7O6oJGPN4f3/QC7dcPYdZe1GcIasaDaRvhehBJwBvN2Y/u+2V7cuBlF01/NxPsh3E/QWnntx2EjfmFiZsg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Rd6xjRIX; arc=none smtp.client-ip=209.85.210.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747957065; c=relaxed/simple;
+	bh=7HznakEWAX3QxiOzowEE528i6qDkLEzzGNrvSoNsN9c=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=F/2rPVTXRLKi0XWnUqWz0R3nXfpYPaq47siOEqqf6fMfKxJr6EUsBqJogGHGAnzUfb3guWwAm/JHtn/42XzSJh0d9YaQwEjluPl6Vgoe9LwrRFrNzu4aWggos99JhQTbzzeaI5ORTL+Y12gwl33tovkx1mbwZEzq8/RupwfY7Vo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=SkXKFSYA; arc=none smtp.client-ip=209.85.216.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rd6xjRIX"
-Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-742c035f2afso3875617b3a.2;
-        Thu, 22 May 2025 16:35:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SkXKFSYA"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-30ebf91d150so6962338a91.0
+        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 16:37:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747956938; x=1748561738; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=hOzKNVIPtCb3bls2x+8GmpP1FGWXc09cxECCk2fUXy8=;
-        b=Rd6xjRIXj9NdgvooUMnJc4+iazJyks/QmZ5t73CbQ0pXxhjTaZYqS+tA/hRyzVh1so
-         RCoNEvnwRfjU8+rj6S8jl/LPYlJ/voeqB8XjJgd9dSmIIW/G80TzBDIuzrYDwgfs7IZW
-         f9gYbgHzTe1+vPwBg3uo0JpAwTKcM69DjN4R90hkBWqF1J8605irWazITsBz7Qah79Lo
-         KZQaT+vCd8BM9hIUnXa/HuqoOuM8nEiHdKY69LwybDFoFGnf4O3mJTxGB8d3az7ib8SS
-         6skr5T7MSOcvpIvjOXP6pdgfue821E8jTb7icNpLTUnqc7e4cc4oYWmE6EGCaSlCZwOu
-         1Q5A==
+        d=google.com; s=20230601; t=1747957063; x=1748561863; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
+        bh=uPxUrn14vuCfCMnKXPuJKpCi+RnH/dlPI+aSAjTgJIQ=;
+        b=SkXKFSYApdsPjWpIPz5B9XNLdQ+eWKcQiy0NvTTO3iNZqGZGZopPabFBd65HjlaWYB
+         LOUSA3Uy0CijsNzYm9CcHH10rWoaK4Ge9UckmZndNmFjBBC39AU27wXZq0pdKrssiBuO
+         MRWCydZQFtPJVR5CHBsIwGdOBRVAo5ZOezsoTed+IKQ3oEjBfzIi0iHgCjrC4mS3jdXn
+         eFlJmq+UsK/oxPEMiQh9C6TQds++hzaLO3vYiDw4JZ7EpPlYFjen2Ohre3l2CGsUO0Pd
+         B/0l+RIg+qaqijPZ79zzJ0EO8uAcirnw4CoLiN1Ms120Uo627BKikUL0tT4c4/fkth76
+         E1qg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747956938; x=1748561738;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1747957064; x=1748561864;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=hOzKNVIPtCb3bls2x+8GmpP1FGWXc09cxECCk2fUXy8=;
-        b=cC03/4VRRnEEdKYETWVJpAQt/ihwTv4Dobjfn1zsZPrB3077MP/mbg0kqW2h2PB5B5
-         ZmcwVbd8BBKIhYr4RSQ05zp+mRs/jVRj8ADkMPrI8dHgrOLJthg/ws1/ZDtttgO1NcTM
-         RLHI/CMD6uVi/cMTLdnH4hyLwtWr6QbyCRTJDvnh74FS5htj9fXl/5Y/vplZw2GHqeU5
-         UI7qHk7N2LoWtnA2HH/C8q/tamRPsJHQStOV8C5DKHnUpCUquHY7g1C97hCgMvXBWo9z
-         EYuxi4CfxaKbIkRPrpD8pJbcZyQadboNq7bK27KUrvB7VqoakEJeYKhvV7gNeFU9riHc
-         NcOg==
-X-Forwarded-Encrypted: i=1; AJvYcCW1uN56u1Is4YbQ0m7N3lA7WQ/kNIk/+/zmzHTkXrwo5zDW/ArJ/Ld+r33zSstbhz2/MWB2O9X2@vger.kernel.org, AJvYcCXzRmMc08LlZ/YSQtbRfrxrORLlNF+T8msQEEfLLSAayNNEiliVlvKuxc7Dn2OPdA9HDhpOe/KLthXKYTo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxXl7f5zeMIXzx/xkO1+MgOXq8LtNGMKUr0uTgNklA8eTGSAFSE
-	t0VLaM0EC1sDGzJ59KLL0au7M49OcewiWtKz+p6fprqKKm49HLeeCBKK
-X-Gm-Gg: ASbGncvYgHvcds/XlXOg1lz3eZxIPCdukTQ8AOvM5gPQiR5G6arvGcZyCMtHV4FdANT
-	6jWHrlN5hqWKGOCgGsWu1Ef7jWgX7miBWEEPGDKKZXXx0JOSPezMdwg5fdLW1/nZ3dla5Jc4Prj
-	ww51JuQCjTekzsnLNqLwez2JmqqVvWYfVC/o+JAa9QtygAjTAn7P3cp5x3FoRy8m/Fj4VKQYPEA
-	n6HX9NEvZ7ZSbHpzSF/Ynq4f4JlkR8oXH6/lgjJt3cbCAUpxPZEEf4+FjO+TtBVP/4VLDkGpDQE
-	lexUQGT373fjtTke3SYGRbtxe85NfwyLrY5GW5AK6ZR4HuHkHgCe
-X-Google-Smtp-Source: AGHT+IGGCm275dqXU+tczGZTKOc0m27ciGhUxWu1jZ+0SBX0keCxM1iMff320GrUlWTtZOoG4gPIKg==
-X-Received: by 2002:a05:6a00:3d4d:b0:742:3fb4:f992 with SMTP id d2e1a72fcca58-742a97c3f4dmr34919826b3a.10.1747956938106;
-        Thu, 22 May 2025 16:35:38 -0700 (PDT)
-Received: from mythos-cloud.. ([125.138.201.7])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b26eaf8e114sm11873416a12.44.2025.05.22.16.35.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 May 2025 16:35:37 -0700 (PDT)
-From: Moon Yeounsu <yyyynoom@gmail.com>
-To: Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>
-Cc: Moon Yeounsu <yyyynoom@gmail.com>,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH net-next v2] net: dlink: enable RMON MMIO access on supported devices
-Date: Fri, 23 May 2025 08:34:32 +0900
-Message-ID: <20250522233432.3546-2-yyyynoom@gmail.com>
-X-Mailer: git-send-email 2.49.0
+        bh=uPxUrn14vuCfCMnKXPuJKpCi+RnH/dlPI+aSAjTgJIQ=;
+        b=B66IwaScjcvbEvSzriLFgJIgZC2mK2RSUDku4CFVXw4pzNdvQf+ZU2yhT/t4GHI28v
+         dvbVVXlmhz65f34RKwxbN9uavlF3RC3zWU2DmpCkW3j6sVxvf39uLpw2xBqH/RJXaSJr
+         7HlKxSB1YiQFgOvQjkpsSYLlXFXUvPbPz5ipNAr8F58JWbX2xfSCFOn7TRLKbRFzj36t
+         Ufb2i12Q+rUoI0RJzUrTWMHetWeISNW5oVMFo2ngnxzqrdI1CJxidI0aB/50DrIveCSL
+         Kdj8POfwxgO4vETA0rFDe3rHGB792DjXByNk7mdXwvodmRJmk0tZqDd8bN7t3chwbCm1
+         cXMg==
+X-Gm-Message-State: AOJu0YxDrbRbf9dvTgqX5z8no7W08ajLBtXXT85gzfzUGnCqbFpi22Gv
+	XtSmG7rIHIov0ndB36hIYD1zwqEqqu58fvGagnbFnFb32vpIuDkBsbRo7m1Pz8D4bJrPRcHp2+T
+	4Xg6PIw==
+X-Google-Smtp-Source: AGHT+IGI69KyPY1At0pbvO9taKFOli2nLHw8tUa/zK4co4eocqDHMTFbGsbKlwZf9ojX+OImaEWTLGTboac=
+X-Received: from pjbsw15.prod.google.com ([2002:a17:90b:2c8f:b0:301:4260:4d23])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:2c8c:b0:2fe:8c22:48b0
+ with SMTP id 98e67ed59e1d1-30e7d555a3bmr38071711a91.15.1747957063457; Thu, 22
+ May 2025 16:37:43 -0700 (PDT)
+Reply-To: Sean Christopherson <seanjc@google.com>
+Date: Thu, 22 May 2025 16:37:25 -0700
+In-Reply-To: <20250522233733.3176144-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+References: <20250522233733.3176144-1-seanjc@google.com>
+X-Mailer: git-send-email 2.49.0.1151.ga128411c76-goog
+Message-ID: <20250522233733.3176144-2-seanjc@google.com>
+Subject: [PATCH v3 1/8] drm/gpu: Remove dead checks on wbinvd_on_all_cpus()'s
+ return value
+From: Sean Christopherson <seanjc@google.com>
+To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
+Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, Kevin Loughlin <kevinloughlin@google.com>, 
+	Tom Lendacky <thomas.lendacky@amd.com>, Kai Huang <kai.huang@intel.com>, 
+	Ingo Molnar <mingo@kernel.org>, Zheyun Shen <szy0127@sjtu.edu.cn>, 
+	Mingwei Zhang <mizhang@google.com>, Francesco Lavra <francescolavra.fl@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Enable memory-mapped I/O access to RMON statistics registers for devices
-known to work correctly. Currently, only the D-Link DGE-550T (`0x4000`)
-with PCI revision A3 (`0x0c`) is allowed.
+Remove the checks and associated pr_err() on wbinvd_on_all_cpus() failure,
+as the helper has unconditionally returned 0/success since commit
+caa759323c73 ("smp: Remove smp_call_function() and on_each_cpu() return
+values").
 
-To support this selectively, a runtime check was added, and the
-`MEM_MAPPING` macro was removed in favor of runtime detection.
-
-Tested-on: D-Link DGE-550T Rev-A3
-Signed-off-by: Moon Yeounsu <yyyynoom@gmail.com>
+Signed-off-by: Sean Christopherson <seanjc@google.com>
 ---
-Changelog:
-v1: https://lore.kernel.org/netdev/20250519214046.47856-2-yyyynoom@gmail.com/
-v2:
-- Remove Kconfig option and do runtime check.
----
- drivers/net/ethernet/dlink/dl2k.c | 57 ++++++++++++++++---------------
- drivers/net/ethernet/dlink/dl2k.h |  2 ++
- 2 files changed, 32 insertions(+), 27 deletions(-)
+ drivers/gpu/drm/drm_cache.c | 9 +++------
+ 1 file changed, 3 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/net/ethernet/dlink/dl2k.c b/drivers/net/ethernet/dlink/dl2k.c
-index 232e839a9d07..4e8da21042d5 100644
---- a/drivers/net/ethernet/dlink/dl2k.c
-+++ b/drivers/net/ethernet/dlink/dl2k.c
-@@ -99,6 +99,13 @@ static const struct net_device_ops netdev_ops = {
- 	.ndo_tx_timeout		= rio_tx_timeout,
- };
+diff --git a/drivers/gpu/drm/drm_cache.c b/drivers/gpu/drm/drm_cache.c
+index 7051c9c909c2..ea1d2d5d2c66 100644
+--- a/drivers/gpu/drm/drm_cache.c
++++ b/drivers/gpu/drm/drm_cache.c
+@@ -93,8 +93,7 @@ drm_clflush_pages(struct page *pages[], unsigned long num_pages)
+ 		return;
+ 	}
  
-+static bool is_support_rmon_mmio(struct pci_dev *pdev)
-+{
-+	return pdev->vendor == PCI_VENDOR_ID_DLINK &&
-+	       pdev->device == 0x4000 &&
-+	       pdev->revision == 0x0c;
-+}
-+
- static int
- rio_probe1 (struct pci_dev *pdev, const struct pci_device_id *ent)
- {
-@@ -131,18 +138,22 @@ rio_probe1 (struct pci_dev *pdev, const struct pci_device_id *ent)
+-	if (wbinvd_on_all_cpus())
+-		pr_err("Timed out waiting for cache flush\n");
++	wbinvd_on_all_cpus();
  
- 	np = netdev_priv(dev);
+ #elif defined(__powerpc__)
+ 	unsigned long i;
+@@ -139,8 +138,7 @@ drm_clflush_sg(struct sg_table *st)
+ 		return;
+ 	}
  
-+	if (is_support_rmon_mmio(pdev))
-+		np->rmon_enable = true;
-+
- 	/* IO registers range. */
- 	ioaddr = pci_iomap(pdev, 0, 0);
- 	if (!ioaddr)
- 		goto err_out_dev;
- 	np->eeprom_addr = ioaddr;
+-	if (wbinvd_on_all_cpus())
+-		pr_err("Timed out waiting for cache flush\n");
++	wbinvd_on_all_cpus();
+ #else
+ 	WARN_ONCE(1, "Architecture has no drm_cache.c support\n");
+ #endif
+@@ -172,8 +170,7 @@ drm_clflush_virt_range(void *addr, unsigned long length)
+ 		return;
+ 	}
  
--#ifdef MEM_MAPPING
--	/* MM registers range. */
--	ioaddr = pci_iomap(pdev, 1, 0);
--	if (!ioaddr)
--		goto err_out_iounmap;
--#endif
-+	if (np->rmon_enable) {
-+		/* MM registers range. */
-+		ioaddr = pci_iomap(pdev, 1, 0);
-+		if (!ioaddr)
-+			goto err_out_iounmap;
-+	}
-+
- 	np->ioaddr = ioaddr;
- 	np->chip_id = chip_idx;
- 	np->pdev = pdev;
-@@ -287,9 +298,8 @@ rio_probe1 (struct pci_dev *pdev, const struct pci_device_id *ent)
- 	dma_free_coherent(&pdev->dev, TX_TOTAL_SIZE, np->tx_ring,
- 			  np->tx_ring_dma);
- err_out_iounmap:
--#ifdef MEM_MAPPING
--	pci_iounmap(pdev, np->ioaddr);
--#endif
-+	if (np->rmon_enable)
-+		pci_iounmap(pdev, np->ioaddr);
- 	pci_iounmap(pdev, np->eeprom_addr);
- err_out_dev:
- 	free_netdev (dev);
-@@ -576,7 +586,8 @@ static void rio_hw_init(struct net_device *dev)
- 	dw8(TxDMAPollPeriod, 0xff);
- 	dw8(RxDMABurstThresh, 0x30);
- 	dw8(RxDMAUrgentThresh, 0x30);
--	dw32(RmonStatMask, 0x0007ffff);
-+	if (!np->rmon_enable)
-+		dw32(RmonStatMask, 0x0007ffff);
- 	/* clear statistics */
- 	clear_stats (dev);
- 
-@@ -1069,9 +1080,6 @@ get_stats (struct net_device *dev)
- {
- 	struct netdev_private *np = netdev_priv(dev);
- 	void __iomem *ioaddr = np->ioaddr;
--#ifdef MEM_MAPPING
--	int i;
--#endif
- 	unsigned int stat_reg;
- 
- 	/* All statistics registers need to be acknowledged,
-@@ -1114,10 +1122,10 @@ get_stats (struct net_device *dev)
- 	dr16(MacControlFramesXmtd);
- 	dr16(FramesWEXDeferal);
- 
--#ifdef MEM_MAPPING
--	for (i = 0x100; i <= 0x150; i += 4)
--		dr32(i);
--#endif
-+	if (np->rmon_enable)
-+		for (int i = 0x100; i <= 0x150; i += 4)
-+			dr32(i);
-+
- 	dr16(TxJumboFrames);
- 	dr16(RxJumboFrames);
- 	dr16(TCPCheckSumErrors);
-@@ -1131,9 +1139,6 @@ clear_stats (struct net_device *dev)
- {
- 	struct netdev_private *np = netdev_priv(dev);
- 	void __iomem *ioaddr = np->ioaddr;
--#ifdef MEM_MAPPING
--	int i;
--#endif
- 
- 	/* All statistics registers need to be acknowledged,
- 	   else statistic overflow could cause problems */
-@@ -1169,10 +1174,9 @@ clear_stats (struct net_device *dev)
- 	dr16(BcstFramesXmtdOk);
- 	dr16(MacControlFramesXmtd);
- 	dr16(FramesWEXDeferal);
--#ifdef MEM_MAPPING
--	for (i = 0x100; i <= 0x150; i += 4)
--		dr32(i);
--#endif
-+	if (np->rmon_enable)
-+		for (int i = 0x100; i <= 0x150; i += 4)
-+			dr32(i);
- 	dr16(TxJumboFrames);
- 	dr16(RxJumboFrames);
- 	dr16(TCPCheckSumErrors);
-@@ -1798,9 +1802,8 @@ rio_remove1 (struct pci_dev *pdev)
- 				  np->rx_ring_dma);
- 		dma_free_coherent(&pdev->dev, TX_TOTAL_SIZE, np->tx_ring,
- 				  np->tx_ring_dma);
--#ifdef MEM_MAPPING
--		pci_iounmap(pdev, np->ioaddr);
--#endif
-+		if (np->rmon_enable)
-+			pci_iounmap(pdev, np->ioaddr);
- 		pci_iounmap(pdev, np->eeprom_addr);
- 		free_netdev (dev);
- 		pci_release_regions (pdev);
-diff --git a/drivers/net/ethernet/dlink/dl2k.h b/drivers/net/ethernet/dlink/dl2k.h
-index 0e33e2eaae96..93f2978e8014 100644
---- a/drivers/net/ethernet/dlink/dl2k.h
-+++ b/drivers/net/ethernet/dlink/dl2k.h
-@@ -401,6 +401,8 @@ struct netdev_private {
- 	u16 negotiate;		/* Negotiated media */
- 	int phy_addr;		/* PHY addresses. */
- 	u16 led_mode;		/* LED mode read from EEPROM (IP1000A only) */
-+
-+	bool rmon_enable;
- };
- 
- /* The station address location in the EEPROM. */
+-	if (wbinvd_on_all_cpus())
+-		pr_err("Timed out waiting for cache flush\n");
++	wbinvd_on_all_cpus();
+ #else
+ 	WARN_ONCE(1, "Architecture has no drm_cache.c support\n");
+ #endif
 -- 
-2.49.0
+2.49.0.1151.ga128411c76-goog
 
