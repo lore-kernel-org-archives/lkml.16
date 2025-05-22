@@ -1,66 +1,117 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B843B221FAA;
-	Thu, 22 May 2025 11:04:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA38F221FAA;
+	Thu, 22 May 2025 11:05:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747911887; cv=none; b=KUIz9CddY6+/1gje8VevBaGl5dCKV48Uhl+3G1Bx+oN4TViwfy2/j0lO9B10mb2ZgBjpqmh8dBO45bl+6TispUgUCKrZF8AUmvhQ+1EOy9G3RIsmtwR0YT1SVuMnzCwP/g4Jk4uZUIdZP7+/tWzjxwIiRuy5EPo0p3joQR0320g=
+	t=1747911939; cv=none; b=S39aMytlqwtKH2i+phKqwt58kJMKQHmvDH+GvmiYhK/oard465WivhiEpHOZ1JjQSFdrixrV7AX+AHSc/Zgcl/2st6X8ybJNC9ZTtyrvqytnuyizfsfCy0xMjsqE2pFcezi0EmADLoFDx10GGQ79Qj+XJdz6HwxjpeqdMjKeKlk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747911887; c=relaxed/simple;
-	bh=XCVGZBptPngsgiauWq4BS6Y5vaFq0UsSrQKpKR80tU4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=WJbDQoTpR4MODy8dcJDu0TWcAJ/CK/aUzhtC0KHDRalwg83O/v4x9HWJc2AuN7mVyhQPdF7XRELBylheeZo8pMA6N7ckKe91+4Dl9pNE2RN8I+d3/5IBGB9kPvOHS7t5yqEmBr47g3wFSIQBj33J6sKaOsA/sCf5CgFKSdcBTDM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=el3XRMu4; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747911939; c=relaxed/simple;
+	bh=5px03ExXDydJ/MrO567tg0hKrlshFFteCf5a8XXEe0U=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=oUTT0gifa5bAxVUfq94bq1L0FAg779FAPMmvlEtv68tdQhRwxoE6Gu+utEkQNGv/xyg/NxqIWrqY7Afy8enof5bXLiNH2d05ncIhKhHcYG+eyxg4flxGUU/f9AvIEI6L3vkpcFlbItjHJJly+1/CXJ5fP3SWu/O4x8Fwh8UmSj4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PyMy9Cwk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="el3XRMu4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74ACDC4CEE4;
-	Thu, 22 May 2025 11:04:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PyMy9Cwk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7978AC4CEE4;
+	Thu, 22 May 2025 11:05:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747911887;
-	bh=XCVGZBptPngsgiauWq4BS6Y5vaFq0UsSrQKpKR80tU4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=el3XRMu4vilz47QpC2uw9DYSWpAYhV/6JriIIjR2OedWeTusRVyornwfNJVYiI2pL
-	 d1cZ5rMN5z+TNIsh2sKZTgk9tPNGB50QDgbqy2ynXPX6GVsBMNWNZksF5tOLhf+ENt
-	 zSrFgktIh2YsCzqqNcxWTcBm7ElLOXQNg01D+NJJcwpCkln1llNHFpRMoPbanG/7//
-	 C+pGJpWKwxEgvk64FKowOZchGQc0wTQUZ19OGxM+RcqYi8t6L/zwIiywb2FYqUjsDA
-	 yh9KrU/F/l6I/KyOt4zcvgPKXesRGp5pwzCrYBeKS1ca212OiFjJTnkuteBE3CNM57
-	 Tx0HW9RG63olQ==
-From: =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>
-To: rafael@kernel.org,
-	lenb@kernel.org,
-	bhelgaas@google.com,
-	will@kernel.org,
-	sunilvl@ventanamicro.com,
-	Markus.Elfring@web.de,
-	Zhe Qiao <qiaozhe@iscas.ac.cn>
-Cc: linux-acpi@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] ACPI: PCI: Release excess memory usage.
-Date: Thu, 22 May 2025 11:04:43 +0000
-Message-ID: <174791182681.71268.8372880535317037945.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250430060603.381504-1-qiaozhe@iscas.ac.cn>
-References: <20250430060603.381504-1-qiaozhe@iscas.ac.cn>
+	s=k20201202; t=1747911939;
+	bh=5px03ExXDydJ/MrO567tg0hKrlshFFteCf5a8XXEe0U=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=PyMy9CwknfsJ5D8XJl/QKA114yTvjNyLGPMe45akHqicCZ9+q0lObrXzbMGEBcJwZ
+	 iRudyZAG/XhozbD4yzroYcP0oL0n/gBblUVS6qmNpvkGVWBdWfYSnEwtQDt+uPkX6g
+	 +pRgXdb9ICd8w+ZbZMpM6uxAbUH7BpqG4YvqZN3s6kiPKXyvV/vVthNuIY8CLbhRkO
+	 e+4yduGAG9BRsHFNIlZKZ6vsQacEvY0KJ/CV5fUmsuhPXxmyEeoDuVg3P6gadm0Sef
+	 YObttLC6NKWZYaI1zx5oeBXm5lStjUggbvU/qIfNVfA+VIyMvN16o948VHdVApTjt/
+	 J3EL5PMR10ENQ==
+Message-ID: <f7de2bbc-4925-430c-b263-226a633e4bfb@kernel.org>
+Date: Thu, 22 May 2025 13:05:32 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 06/10] phy: qcom: Add M31 based eUSB2 PHY driver
+To: Abel Vesa <abel.vesa@linaro.org>,
+ Melody Olvera <melody.olvera@oss.qualcomm.com>
+Cc: Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I
+ <kishon@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Wesley Cheng <quic_wcheng@quicinc.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Philipp Zabel <p.zabel@pengutronix.de>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+References: <20250421-sm8750_usb_master-v5-0-25c79ed01d02@oss.qualcomm.com>
+ <20250421-sm8750_usb_master-v5-6-25c79ed01d02@oss.qualcomm.com>
+ <aAswZg9s41s/m/se@linaro.org>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <aAswZg9s41s/m/se@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hello,
+On 25/04/2025 08:49, Abel Vesa wrote:
+> On 25-04-21 15:00:13, Melody Olvera wrote:
+>> From: Wesley Cheng <quic_wcheng@quicinc.com>
+>>
+>> SM8750 utilizes an eUSB2 PHY from M31.  Add the initialization
+> 
+> Nitpick: Drop the double space from the beginning of each phrase.
 
-> In the pci_acpi_scan_root() function, when creating a PCI bus fails,
-> we need to free up the previously allocated memory, which can avoid
-> invalid memory usage and save resources.
+Sorry, but why? That's a correct grammar.
 
-Applied to pci-acpi, thank you!
-
-[1/1] ACPI: PCI: Release excess memory usage.
-      https://git.kernel.org/pci/pci/c/631b2af2f357
-
-	Krzysztof
+Best regards,
+Krzysztof
