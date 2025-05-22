@@ -1,153 +1,168 @@
-Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9F6728851A
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 10:12:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D748B24E4C6
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 10:14:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747908733; cv=none; b=RGLiK96Y4UkfWvaXg36Z/5NsbH3pZIlqIfDXieiXCb+z+WDSMorT2wdhkoCiLUMwwnZ8OrJ/da//eeOIhzYMaMV3mdvspKqWYh/904roj7gBn2voUG/YE8g8ZRVsVVpWNmwUkRJDO/gfedBa3ZZ8+8pE2g2wzuxixsCYQm/UTuk=
+	t=1747908842; cv=none; b=Wuwi1aU4LAM4rX86nbFsQFcW13m4Iw53nK5xnmghNmRCfZXtCa2l+437NPacHNo45F1nzSP52x9wAdDE9WO41vTpSCRsjwAFLpfHvf7OSO1oSrSASwDMMWBPPJ5kG2JTQX6664FUCAUKqo2zZwWVcFSdHEY3KC84tg5aPsbTGfI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747908733; c=relaxed/simple;
-	bh=c15E/+NBPv6fuFlNqrqrXNkHhGA9OL64AoKJ5bRvttw=;
+	s=arc-20240116; t=1747908842; c=relaxed/simple;
+	bh=mU+1lrLV/UCuvsDQ9kNhrLKhkDT2B/4yK5q5d22eY44=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=S0JQrqAaBQKaorprrs9H+3PYkxu53+IsLBBgbv+CfJUBQJIZFxJ9hxOn2lO6TUmLW9kh92Dnx0CApytaBQX/pkcXeXkxjMu8im0k6fFdO3Yvrqo146KPpUTGE8piIg/msru6at1bNKVS4OIwmT5qA9rbHMD3bkyFrIVOCUARPNo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=lGbp1kEf; arc=none smtp.client-ip=194.117.254.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=LRjsPHc8KI92SnOErbmzOQMuAS14IP5ueLYemnxe+DtqWwysDu9rSx+RVI4F0SLlO64UL08x99wmAjlpNX72OK/8ozxY8toozVj/4I9rsl4/WIc+DunvAs96El+9o0g1da4eYr276n3FdkLr5y7pcDtCsLkO+WMhrjvhjduGJco=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=svP685j2; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=8l/rmVdx; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=CQk9PPjZ; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=13aXx17F; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="lGbp1kEf"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	sang-engineering.com; h=date:from:to:cc:subject:message-id
-	:references:mime-version:content-type:in-reply-to; s=k1; bh=6F1W
-	vTj0UGEy3Utpc80p61aj/NjDeQE3A7oZc1v2ynk=; b=lGbp1kEfpG10X5kVOQ/4
-	U2Lg2CKtVTF1n++pqpLaLOo6RO1oInLMzE95Qt/g8q+eMoSl6jcyi5TGK3HavNDt
-	xTvoc+/cP6fEL+BwuFsreHA4d326qVqc1K83KKQt0Z6uOrBG1swLZdkER+7g/mMf
-	D/bSfKrBq5pyhYQw1zX25lvRzLh6xyWaqobn5umCW0llBG178cjqIhu6ug78YMGw
-	rkCFUaESAI/n+0AH/B5Jksjusepwzo6ivGvwKQnrX0UG46c4wcuVQvjI23c8l1qr
-	8kn8I9Wteq/29hp5AmhTyz+cWNKhArBDFKtLjb+7U43RyJBSdUmrT+lVIDIlkr56
-	eA==
-Received: (qmail 3610671 invoked from network); 22 May 2025 12:12:08 +0200
-Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 22 May 2025 12:12:08 +0200
-X-UD-Smtp-Session: l3s3148p1@j7XctrY15tggAwDPXwj7ADHm2wGe7qss
-Date: Thu, 22 May 2025 12:12:08 +0200
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
-To: Cosmin Tanislav <demonsingur@gmail.com>
-Cc: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Romain Gantois <romain.gantois@bootlin.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-media@vger.kernel.org
-Subject: Re: [PATCH v5 0/9] i2c: atr: allow usage of nested ATRs
-Message-ID: <aC74eGw6_CIR1fd4@shikoro>
-Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Cosmin Tanislav <demonsingur@gmail.com>,
-	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Romain Gantois <romain.gantois@bootlin.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-media@vger.kernel.org
-References: <20250507121917.2364416-1-demonsingur@gmail.com>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="svP685j2";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="8l/rmVdx";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="CQk9PPjZ";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="13aXx17F"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id E4C64219AF;
+	Thu, 22 May 2025 10:13:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1747908839; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=TTj530S0+pt4TB23fjg5olxByY/4NarPybW7KGHkyhc=;
+	b=svP685j2KPgsEpvtXT51KJY5WgnxyyO+0y1IG00r8tOBeCBFrcTJdWQJx9PeMBaYFl31ic
+	JWLFLU+Hrlau5TgTIWfO7ymgliTXfxy6eB0VZ0UtjwEAI90zICTxxkWrvBt3MLMho9Qe1h
+	cwTL9TiFTEPoQ9ARW91GP6+TdEGCXJw=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1747908839;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=TTj530S0+pt4TB23fjg5olxByY/4NarPybW7KGHkyhc=;
+	b=8l/rmVdxqLqueF90g4p+EwikrOPcb1Y/TGbkPU80Tlvfgzo4NCjkURkda/+8hLceyXhMXw
+	ArfTvlGtz8e+4zDA==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=CQk9PPjZ;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=13aXx17F
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1747908838; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=TTj530S0+pt4TB23fjg5olxByY/4NarPybW7KGHkyhc=;
+	b=CQk9PPjZlFADxCr7gK9SEIWJiU+uc1WV6fdhK3OD3y/ufSpu1cAEcbe71na17dMBBZZ2q2
+	UUBF0DBNvVXfxMcEzS1ISCbGnfGQvKv/o6lmVlcfklx08GKmM8gcNIc/ztPKMIqbzmrcE5
+	MGeuNfW6YemilOI2ZceRmyB2Fxn4MoE=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1747908838;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=TTj530S0+pt4TB23fjg5olxByY/4NarPybW7KGHkyhc=;
+	b=13aXx17FFBz1wfQvf8jdKLSxkc/F4/CE32sBzuuseWCidgW3Y0yEwwOQrquIczXobEx7Br
+	hZHWF93PHkHdmHBg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id A7F50137B8;
+	Thu, 22 May 2025 10:13:58 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id gxzxJ+b4LmhAPwAAD6G6ig
+	(envelope-from <osalvador@suse.de>); Thu, 22 May 2025 10:13:58 +0000
+Date: Thu, 22 May 2025 12:13:57 +0200
+From: Oscar Salvador <osalvador@suse.de>
+To: Muchun Song <muchun.song@linux.dev>
+Cc: yangge1116@126.com, akpm@linux-foundation.org, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+	21cnbao@gmail.com, david@redhat.com, baolin.wang@linux.alibaba.com,
+	liuzixing@hygon.cn
+Subject: Re: [PATCH] mm/hugetlb: fix kernel NULL pointer dereference when
+ replacing free hugetlb folios
+Message-ID: <aC745T00Ft3g7e7G@localhost.localdomain>
+References: <1747884137-26685-1-git-send-email-yangge1116@126.com>
+ <644FF836-9DC7-42B4-BACE-C433E637B885@linux.dev>
+ <aC63fmFKK84K7YiZ@localhost.localdomain>
+ <065093C4-3599-456F-84B7-EDCC1A3E8AFC@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="LvuMpXix1y3uk6B7"
-Content-Disposition: inline
-In-Reply-To: <20250507121917.2364416-1-demonsingur@gmail.com>
-
-
---LvuMpXix1y3uk6B7
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <065093C4-3599-456F-84B7-EDCC1A3E8AFC@linux.dev>
+X-Rspamd-Action: no action
+X-Spam-Level: 
+X-Rspamd-Queue-Id: E4C64219AF
+X-Spam-Score: -1.51
+X-Spam-Flag: NO
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Spamd-Result: default: False [-1.51 / 50.00];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	FREEMAIL_ENVRCPT(0.00)[126.com,gmail.com];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	TO_DN_SOME(0.00)[];
+	FREEMAIL_CC(0.00)[126.com,linux-foundation.org,kvack.org,vger.kernel.org,gmail.com,redhat.com,linux.alibaba.com,hygon.cn];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_TRACE(0.00)[suse.de:+];
+	MISSING_XM_UA(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received,2a07:de40:b281:104:10:150:64:97:from];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	RCPT_COUNT_SEVEN(0.00)[10];
+	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[localhost.localdomain:mid,suse.de:email,suse.de:dkim,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo]
 
-On Wed, May 07, 2025 at 03:19:06PM +0300, Cosmin Tanislav wrote:
-> For upcoming GMSL drivers, we need to be able to use nested ATRs.
-> The deserializer changes the address of the serializers, and can only
-> do that for the serializers, while the serializers have proper address
-> translation hardware, and can translate the address of its children.
->=20
-> To achieve this, add a static flag and a passthrough flag.
-> The static flag prevents usage of dynamic remapping by disallowing
-> creation of new mappings outside of the attach_addr() function.
-> The passthrough flag prevents messages coming from non-direct children
-> (which don't have a local mapping) to be treated as erroneous.
->=20
-> This series also contains various fixes to the logic observed during
-> development.
->=20
-> The previous version is at:
-> https://lore.kernel.org/lkml/20250428102516.933571-1-demonsingur@gmail.com
->=20
-> V5:
->  * pick up Reviewed-by tags
->  * expand the I2C_ATR_F_STATIC description
->  * place i2c_atr_create_mapping_by_addr() before
->    i2c_atr_replace_mapping_by_addr()
->=20
-> V4:
->  * rebase on latest merged changes, and latest submitted fixes
->=20
-> V3:
->  * remove i2c_atr_new_flags(), add flags parameter to i2c_atr_new() in
->    a new patch
->  * remove "i2c: atr: unlock mutex after c2a access" patch as it will
->    be moved into the base series
->  * remove alias_pairs variable used only once
->  * remove err_del_c2a label used only once
->  * add lockdep_assert_held to i2c_atr_create_mapping_by_addr()
->  * I2C_ATR_STATIC -> I2C_ATR_F_STATIC
->  * I2C_ATR_PASSTHROUGH -> I2C_ATR_F_PASSTHROUGH
->  * add passthrough check to i2c_atr_smbus_xfer()
->=20
-> V2:
->  * rename and split up i2c_atr_find_mapping_by_addr() to allow for
->    usage of parts of its logic where applicable
->=20
-> Cosmin Tanislav (8):
->   i2c: atr: find_mapping() -> get_mapping()
->   i2c: atr: split up i2c_atr_get_mapping_by_addr()
->   i2c: atr: do not create mapping in detach_addr()
->   i2c: atr: deduplicate logic in attach_addr()
->   i2c: atr: allow replacing mappings in attach_addr()
->   i2c: atr: add flags parameter to i2c_atr_new()
->   i2c: atr: add static flag
->   i2c: atr: add passthrough flag
->=20
-> Tomi Valkeinen (1):
->   i2c: atr: Fix lockdep for nested ATRs
->=20
+On Thu, May 22, 2025 at 03:13:31PM +0800, Muchun Song wrote:
+> 
+> 
+> > On May 22, 2025, at 13:34, Oscar Salvador <osalvador@suse.de> wrote:
+> > 
+> > On Thu, May 22, 2025 at 11:47:05AM +0800, Muchun Song wrote:
+> >> Thanks for fixing this problem. BTW, in order to catch future similar problem,
+> >> it is better to add WARN_ON into folio_hstate() to assert if hugetlb_lock
+> >> is not held when folio's reference count is zero. For this fix, LGTM.
+> > 
+> > Why cannot we put all the burden in alloc_and_dissolve_hugetlb_folio(),
+> > which will again check things under the lock?
+> 
+> I've also considered about this choice, because there is another similar
+> case in isolate_or_dissolve_huge_page() which could benefit from this
+> change. I am fine with both approaches. Anyway, adding an assertion into
+> folio_hstate() is an improvement for capturing invalid users in the future.
+> Because any user of folio_hstate() should hold a reference to folio or
+> hold the hugetlb_lock to make sure it returns a valid hstate for a hugetlb
+> folio.
 
-Applied to for-next, thanks!
+Yes, I am not arguing about that, it makes perfect sense to me, but I am
+just kinda against these micro-optimizations for taking the lock to check
+things when we are calling in a function that will again the lock to
+check things.
 
+Actually, I think that the folio_test_hugetlb() check in
+replace_free_hugepage_folios() was put there to try tro be smart and save cycles in
+case we were not dealing with a hugetlb page (so freed under us).
+Now that we learnt that we cannot do that without 1) taking a refcount
+2) or holding the lock, that becomes superfluos, so I would just wipe that
+out.
 
---LvuMpXix1y3uk6B7
-Content-Type: application/pgp-signature; name="signature.asc"
+ 
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmgu+HgACgkQFA3kzBSg
-KbYDNBAAtneX9Reko82ECjjvgXy/IQZH+eaJaxDK7MOb2KcrUQv5F9pB2eH04HRe
-v0xgW3fe6zRMSFx1jkJRIFf+QHeFxYuZeV35guSEnR9GDN1zeL0wxBy9lkUEUXtw
-nik2uc/4IrAIZ7VqlcrbXIsfMCrHDF2fQnzPpVKDI4QVDdHtyO4RzXygNrZuJwrb
-dlW9076cwj+vZh05Rkq6AFrrEqdPyj8O2wtvo2vASfYU6Vk8gpMaMqmJ9RTkJHFq
-/4wEdsEx9mXZ0YvMTN6iAWiKF6Sg5z4SU7crSShnV7htkmJNVhvelNKpThkg8OsQ
-R70GdAiiwE1tJa/VKdRF9DQtOmmqmfaOMWVLJuCs8mOsqKZbnHJtXI5uIm74oP+z
-AGDnLZF2G7zhex6T0DRfiMsNmqA3+yhBRdBLH4kkt/qJHZ3y+ljVUAwCSd60f1Gs
-GWRtuoahvbAhYpQv6uekQM9l/IHDqn1ie5J0eEO2MZ8Jcr7icaEg8DG4bsQu6H6n
-/7ib+GUFzfIihz2swlkByJ/SGHUAvelN/R9gyasopJavEVi1bHMpcgRRBcTxVx5X
-aniRBER17AMA+xaeQyXKiFq8RievCusZvI+/6M6N/TlfTgMGCU2mVBsSJzZtSOaU
-ZpZjxlr5BgVO5C5/kz4eqkSH1j+sJIPdxQwMl+6VrVqYa8XnPBM=
-=4Gps
------END PGP SIGNATURE-----
-
---LvuMpXix1y3uk6B7--
+-- 
+Oscar Salvador
+SUSE Labs
