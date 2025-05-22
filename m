@@ -1,61 +1,35 @@
-Received: from mail-il1-f177.google.com (mail-il1-f177.google.com [209.85.166.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A1EB2980C7
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 15:17:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 400C12980A8;
+	Thu, 22 May 2025 15:17:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747927050; cv=none; b=C33DvALSJNRvKWygkE9aZmWRf3lavGCE7HSOZEg7eRzTXfNVI+Pdw97vMx7ZuoUcfatTvWRhsT3jSWXgJTFbXD8rFgjc5ea4I/VpWcH7RFAC6ctdmo2enPoX6lO6Lw8PuCutx1Khb+/GllbPUKSWa2U+FWDE4RUplv5BgKXPYxc=
+	t=1747927066; cv=none; b=I/GUuOnZyvm2/JcXa0hVHW4brOwHMN/HEPmBW5EY97Ce7g8J6Q92vMu44Ehw6bAflYGz6JrX7+zAT5KYjy8nW/ZAUWjYjHi0aRADx5KgpFiWgh1xfNlo08uIxZM19oqnyToNLor92TUl9cJDO5pD8cfr2IQ1NjC26lWIP/tOCm4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747927050; c=relaxed/simple;
-	bh=yECD6ZktgTjXDSCFgMyFUoroNATnVYVOCITlOnNEHpc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fI4VgsRE6YezUcIcQh9xxziXlE8BdxLWZmsOGqvXDb47vf9kdsuwyG9OpO8GsBupxs1Y7NZNfTdnGOg/CA+sJ0pXJXWRkRP+nT09goPDhM4Z7EbGLoam1gH3R30sohBzPYUe9HpoUaQxW4UnEv516ME5DPQeypYqAlF0GewoPi0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=XLPHO6rK; arc=none smtp.client-ip=209.85.166.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="XLPHO6rK"
-Received: by mail-il1-f177.google.com with SMTP id e9e14a558f8ab-3d80bbf3aefso21003825ab.1
-        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 08:17:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1747927047; x=1748531847; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=IETGeB30Ud5t90dKFtz7PPdKbD88fIhHcL4tZXb4WTs=;
-        b=XLPHO6rKWko+sw+IZXc/CqddPJL2u1YVjas/lQyH6No6tywCoJ7tXRSOTQxrtLDOVH
-         LNnjbQDtVPx+89YwKtWJQHrYaKnKaB2ScLHuG13vC8AwOKipjeQg3aQt1ryQnI8tvACg
-         V3CIVdUvzcmWqoCUHxCjnID5DGrM0g0GvBXRw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747927047; x=1748531847;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=IETGeB30Ud5t90dKFtz7PPdKbD88fIhHcL4tZXb4WTs=;
-        b=hFTsuXK1YP5nmm5quhhtL8VTMEarTNzQatW7U4BOsL8pnr6+stiP1M3zoWaOJcvn7U
-         NBYBlLozxZsu2N9eZq9HsXuyijbzn0WGAAxnzNl7cuurAllN4dCuUIN24bwmLhndJfiy
-         PbE9etvj4c/mXAGFx0kGsNNGEHMWhQaUbWycdcZh97tk5/KERzYfuAEZ/11izdSiKqts
-         5azMy3yt+u2wZ/Wp0OPRlILIN/7UL63PvPmMlt00+PwB0eXnQWzGy80cktDhWEYC9AHw
-         s821JjmsitIuA49N7KRZN2r3nNB24zDPRDVxixyZMchL+0lLB3NIvfXl2gC03aX+Bhkx
-         kNqw==
-X-Forwarded-Encrypted: i=1; AJvYcCUYL6WAtN67qAMM0t7qrQPzYLlaHrhR9mlyEfC1kidU6NPhmELTcy5wmf3lQpun2pONfjAH/ByCzDPXsow=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwXjSoEGlQWXNJqLm9Lz8Zh3Xd9M8a/tVsD8gm7XSw6k/15kBdw
-	RdEVtOl6ueUpzE8Q/QmqTV59nNQTGbrQkJY3bjcl6RRsEs5cyCo3BPwyHrMVUqmUY24=
-X-Gm-Gg: ASbGnctZKrVrGZnEt1qOnBOBFqBpcf5V8nE2ua/JHiIXkaN2/OI1LKWbJClAazMVNs0
-	q4OcheMK+OX3Ng9lFMb4nDR+a+6ijZ3FNniCbL4zpEZ1qTo+vZqWbRasBQlfrmYn8ayomk2Qc8s
-	3CHktISAWLN6QkpwmveSefU/bBUAVTijn4GgWOJNEgjMyjhJ/L73HFTq36KS8yyrGWChYpTb46n
-	o6BwUI72zWNhV5QjdIiaRjERLAv2xwpmEd9m46UOmROY4UFH8Nt5271EFeCh7+BGuuiHP+4dXuS
-	ZVhLQZJchNrh2YR7oqQGXvxf8ptsBWAtEGZOrsEEDh4Zx6gf8Inzw58WzlMgzQ==
-X-Google-Smtp-Source: AGHT+IE4miy92v8IzzM9z3nzWIqMhYC4PYeZ/1gnpzPA+Nm1GpEEXc0VF3cDp3wCEis+0MsO80e57g==
-X-Received: by 2002:a05:6e02:3e06:b0:3d5:893a:93ea with SMTP id e9e14a558f8ab-3db843046c6mr236224255ab.13.1747927047461;
-        Thu, 22 May 2025 08:17:27 -0700 (PDT)
-Received: from [192.168.1.14] ([38.175.170.29])
-        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-3dc8ad89ecfsm5792365ab.26.2025.05.22.08.17.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 22 May 2025 08:17:26 -0700 (PDT)
-Message-ID: <2b7acb5f-65c7-4787-aac5-ebcec83c8ac0@linuxfoundation.org>
-Date: Thu, 22 May 2025 09:17:26 -0600
+	s=arc-20240116; t=1747927066; c=relaxed/simple;
+	bh=Hk/4aw3TnbHARX0fqegYUGU2nCn30vgBEqTred1rBFI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=eESH1pP0q8mhu7g+gSwTsLSD2OcYRIz7xlSABBtIgBgSyZ+wzB2NAQJfXjpskQZfDf/0yxXprh72jOfLzmuu1NJnylJpHT72Hiowq0mOK0xd1/nuViuyXYkcil9THJAyIhI44uB8JM+Pz4whznxh5+ovJ5mqHmPQrykP5CKpHlQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.252])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4b3Bcl6GhxzvWm2;
+	Thu, 22 May 2025 23:13:11 +0800 (CST)
+Received: from dggemv706-chm.china.huawei.com (unknown [10.3.19.33])
+	by mail.maildlp.com (Postfix) with ESMTPS id 1B9D3180B42;
+	Thu, 22 May 2025 23:17:34 +0800 (CST)
+Received: from kwepemq200002.china.huawei.com (7.202.195.90) by
+ dggemv706-chm.china.huawei.com (10.3.19.33) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Thu, 22 May 2025 23:17:33 +0800
+Received: from [10.174.177.223] (10.174.177.223) by
+ kwepemq200002.china.huawei.com (7.202.195.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Thu, 22 May 2025 23:17:32 +0800
+Message-ID: <29d3e8fa-8cd0-4c93-a685-619758ab5af4@huawei.com>
+Date: Thu, 22 May 2025 23:17:32 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,70 +37,128 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] selftests/cpufreq: Fix cpufreq basic read and update
- testcases
-To: Viresh Kumar <viresh.kumar@linaro.org>,
- Swapnil Sapkal <swapnil.sapkal@amd.com>
-Cc: rafael@kernel.org, shuah@kernel.org, gautham.shenoy@amd.com,
- narasimhan.v@amd.com, linux-pm@vger.kernel.org,
- linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
- Shuah Khan <skhan@linuxfoundation.org>
-References: <20250430171433.10866-1-swapnil.sapkal@amd.com>
- <20250519075854.opnlhjlbybrkvd2k@vireshk-i7>
-Content-Language: en-US
-From: Shuah Khan <skhan@linuxfoundation.org>
-In-Reply-To: <20250519075854.opnlhjlbybrkvd2k@vireshk-i7>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Subject: Re: [BUG Report] KASAN: slab-use-after-free in
+ page_pool_recycle_in_ring
+To: Jakub Kicinski <kuba@kernel.org>, Mina Almasry <almasrymina@google.com>
+CC: <hawk@kernel.org>, <ilias.apalodimas@linaro.org>, <davem@davemloft.net>,
+	<edumazet@google.com>, <pabeni@redhat.com>, <horms@kernel.org>,
+	<netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<zhangchangzhong@huawei.com>
+References: <20250513083123.3514193-1-dongchenchen2@huawei.com>
+ <CAHS8izOio0bnLp3+Vzt44NVgoJpmPTJTACGjWvOXvxVqFKPSwQ@mail.gmail.com>
+ <34f06847-f0d8-4ff3-b8a1-0b1484e27ba8@huawei.com>
+ <CAHS8izPh5Z-CAJpQzDjhLVN5ye=5i1zaDqb2xQOU3QP08f+Y0Q@mail.gmail.com>
+ <20250519154723.4b2243d2@kernel.org>
+ <CAHS8izMenFPVAv=OT-PiZ-hLw899JwVpB-8xu+XF+_Onh_4KEw@mail.gmail.com>
+ <20250520110625.60455f42@kernel.org>
+From: "dongchenchen (A)" <dongchenchen2@huawei.com>
+In-Reply-To: <20250520110625.60455f42@kernel.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: kwepems500002.china.huawei.com (7.221.188.17) To
+ kwepemq200002.china.huawei.com (7.202.195.90)
 
-On 5/19/25 01:58, Viresh Kumar wrote:
-> On 30-04-25, 17:14, Swapnil Sapkal wrote:
->> In cpufreq basic selftests, one of the testcases is to read all cpufreq
->> sysfs files and print the values. This testcase assumes all the cpufreq
->> sysfs files have read permissions. However certain cpufreq sysfs files
->> (eg. stats/reset) are write only files and this testcase errors out
->> when it is not able to read the file.
->> Similarily, there is one more testcase which reads the cpufreq sysfs
->> file data and write it back to same file. This testcase also errors out
->> for sysfs files without read permission.
->> Fix these testcases by adding proper read permission checks.
 
-Can you share how you ran the test?
-
+> On Mon, 19 May 2025 17:53:08 -0700 Mina Almasry wrote:
+>> On Mon, May 19, 2025 at 3:47 PM Jakub Kicinski <kuba@kernel.org> wrote:
+>>> On Mon, 19 May 2025 12:20:59 -0700 Mina Almasry wrote:
+>>>> Clearly this is not working, but I can't tell why.
+>>> I think your fix works but for the one line that collects recycling
+>>> stats. If we put recycling stats under the producer lock we should
+>>> be safe.
+>> What are you referring to as recycle stats? Because I don't think
+>> pool->recycle_stats have anything to do with freeing the page_pool.
 >>
->> Reported-by: Narasimhan V <narasimhan.v@amd.com>
->> Signed-off-by: Swapnil Sapkal <swapnil.sapkal@amd.com>
->> ---
->>   tools/testing/selftests/cpufreq/cpufreq.sh | 15 +++++++++++----
->>   1 file changed, 11 insertions(+), 4 deletions(-)
->>
->> diff --git a/tools/testing/selftests/cpufreq/cpufreq.sh b/tools/testing/selftests/cpufreq/cpufreq.sh
->> index e350c521b467..3484fa34e8d8 100755
->> --- a/tools/testing/selftests/cpufreq/cpufreq.sh
->> +++ b/tools/testing/selftests/cpufreq/cpufreq.sh
->> @@ -52,7 +52,14 @@ read_cpufreq_files_in_dir()
->>   	for file in $files; do
->>   		if [ -f $1/$file ]; then
->>   			printf "$file:"
->> -			cat $1/$file
->> +			#file is readable ?
->> +			local rfile=$(ls -l $1/$file | awk '$1 ~ /^.*r.*/ { print $NF; }')
->> +
->> +			if [ ! -z $rfile ]; then
->> +				cat $1/$file
->> +			else
->> +				printf "$file is not readable\n"
->> +			fi
-> 
-> What about:
-> 
-> if [ -r $1/$file ]; then
->      cat $1/$file
-> else
->      printf "$file is not readable\n"
-> fi
-> 
-> 
+>> Or do you mean that we should put all the call sites that increment
+>> and decrement pool->pages_state_release_cnt and
+>> pool->pages_state_hold_cnt under the producer lock?
+> No, just the "informational" recycling stats. Looking at what Dong
+> Chenchen has shared:
+>
+> page_pool_recycle_in_ring
+>     ptr_ring_produce
+>       spin_lock(&r->producer_lock);
+>       WRITE_ONCE(r->queue[r->producer++], ptr)
+>       spin_unlock(&r->producer_lock);
+>         //recycle last page to pool
+>                                   page_pool_release
+>                                     page_pool_scrub
+>                                       page_pool_empty_ring
+>                                         ptr_ring_consume
+>                                         page_pool_return_page //release
+> all page
+>                                     __page_pool_destroy
+> free_percpu(pool->recycle_stats);
+>                                        kfree(pool) //free
+>     recycle_stat_inc(pool, ring); //uaf read
+>
+>
+> The thread which put the last page into the ring has released the
+> producer lock and now it's trying to increment the recycling stats.
+> Which is invalid, the page it put into the right was de facto the
+> reference it held. So once it put that page in the ring it should
+> no longer touch the page pool.
+>
+> It's not really related to the refcounting itself, the recycling
+> stats don't control the lifetime of the object. With your patch
+> to turn the producer lock into a proper barrier, the remaining
+> issue feels to me like a basic UAF?
 
-thanks,
--- Shuah
+Hi, Jakub
+Maybe we can fix the problem as follow:
+
+diff --git a/net/core/page_pool.c b/net/core/page_pool.c
+index 7745ad924ae2..de3fa33d6775 100644
+--- a/net/core/page_pool.c
++++ b/net/core/page_pool.c
+@@ -707,19 +707,18 @@ void page_pool_return_page(struct page_pool *pool, netmem_ref netmem)
+  
+  static bool page_pool_recycle_in_ring(struct page_pool *pool, netmem_ref netmem)
+  {
++	bool in_softirq;
+  	int ret;
+-	/* BH protection not needed if current is softirq */
+-	if (in_softirq())
+-		ret = ptr_ring_produce(&pool->ring, (__force void *)netmem);
+-	else
+-		ret = ptr_ring_produce_bh(&pool->ring, (__force void *)netmem);
+  
+-	if (!ret) {
++	/* BH protection not needed if current is softirq */
++	in_softirq = page_pool_producer_lock(pool);
++	ret = __ptr_ring_produce(&pool->ring, (__force void *)netmem);
++	if (!ret)
+  		recycle_stat_inc(pool, ring);
+-		return true;
+-	}
+  
+-	return false;
++	page_pool_producer_unlock(pool, in_softirq);
++
++	return ret ? false : true;
+  }
+  
+  /* Only allow direct recycling in special circumstances, into the
+
+@@ -1091,10 +1090,16 @@ static void page_pool_scrub(struct page_pool *pool)
+  
+  static int page_pool_release(struct page_pool *pool)
+  {
++	bool in_softirq;
+  	int inflight;
+  
++	/* Acquire producer lock to make sure we don't race with another thread
++	 * returning a netmem to the ptr_ring.
++	 */
++	in_softirq = page_pool_producer_lock(pool);
+  	page_pool_scrub(pool);
+  	inflight = page_pool_inflight(pool, true);
++	page_pool_producer_unlock(pool, in_softirq);
+  	if (!inflight)
+  		__page_pool_destroy(pool);
+  
+I have tested this patch.
+-----
+Best Regards,
+Dong Chenchen
+
