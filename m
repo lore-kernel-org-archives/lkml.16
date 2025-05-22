@@ -1,145 +1,146 @@
-Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FB8F41AAC
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 14:17:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECE3541AAC;
+	Thu, 22 May 2025 14:17:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747923424; cv=none; b=Q4S+p4DgPWwPpW4tl+SIGGyjdvEdG8vPUug2wiNfa2EpVPy+Q9l27a7A5rYoYyI+kQdXS+5/42OXyWzJ8IEAONZN6a5SIKSoyHdFjMv8HNirtw1fyVDmmk3874cWW428+N1oy2qYZEg2IuwE2rhy9AFS7BLAXH4iZSHH/96jjOQ=
+	t=1747923438; cv=none; b=gwjnd5ZaoQ4jLwEct3lqgF9PHEAfaRHvYInh3IpIFHVYkb4yY+wBf8XXK6Dx7Hz8AkV1s5KBFz0kAm29aK6LEjFDl/igIV5HQTIUJ8HRLVJRGWM1dlBUt5l5oQdpgdWGhsIvhab4BVDlB8o9yfqwNWrzLyvrLye0NmBzkT45Sm0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747923424; c=relaxed/simple;
-	bh=V0l6Z7w33PZpewWBFsGJ7P1kFzsFpAJX+LDsIrWFihc=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=lnHgx0z8p/uMDNn2GvOKFew4Aq/lNb2INcSdXmnJ55R04p2lPLMF+LyjxSBpdayWRfmsF7BC1hNSotsXMok0moYZZT/PMeBpeR6dEbnPWE2w2e15z2MdnJgq9rtk+Vo0SxztfNzDXMy1IwkRCjiXNFI0l7ttgl1yS/zJPnETkdc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f72.google.com with SMTP id ca18e2360f4ac-85e4f920dacso670646339f.2
-        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 07:17:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747923422; x=1748528222;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=9Sfq/lUq7/4vCCOnZ2qCfA7grzyChvgxUkP/l2Ik7zo=;
-        b=i4egXSuTXCnNfOblALwUCQB9KyRwvZZleI3w189ESAMFisCT5APrX/p4CfNglgro8p
-         jfDwUYt4yQihWY9qaqGvFhb7Ax3TtQLCew7oxFj9E13o4lb2JMeAxLDM0ikoAZtB77yP
-         XeEDyhvjUHBa7LLsnBBN1knDDzYnzGBD2BrDtthRMAaKWsxy4vP0yZE5U9KWL58r2xSi
-         qV0PVgKTs0msKTMJDQT9vpj1aHLt5HGxqZXlgnFzuBSN7lzIS+8xHtnDtTNMFzgRibyc
-         K22/RpIRowRlZDDkG0Lu7pGP6p/RqGCzepYXBHaMHuEYaYszUaO3C15f0AagYVZ7G33j
-         FlCQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV9ea6o6A5D37FBhCvWVh/NqbOADWsrF6B5N10qaP8ZtewVhyrKpz6O8swlse0i4ugXIjz5k/CuNLUX6AA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwZuduqGr69LeyB2W0b6chr/XepE3A+JQ6a2/2yHiSW0z8dgc5n
-	Nu7L8nJLa7ruYI0frrxYKODBSIorOqqR3cBh7EqP3tHh1BaWydmJH/xUWgE3GQ+xg2mSQZUwnFv
-	0ZyGpdS+nwdYX3fzW2nyT8nC5RqmbxaqQC8ViWlbJGS6QUy4Mx8qMKdMZeF0=
-X-Google-Smtp-Source: AGHT+IHRObJRJiznU4QGNjNqK3Kpaim9SEIIN+tX1OvGbqd10g2eKBEkAYly0275E7qks7AwLtMHriGMlZn0ewiiEeAXC1mB5kvS
+	s=arc-20240116; t=1747923438; c=relaxed/simple;
+	bh=FIAP5ivOA9Tc52MccphjuWXYgFP4ivGn13zAzEuvEOg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=YoxtbTphaPKeg2efVq/+PBilS6YS6zkF24vx88N/0vbN6YLdHQ+wX2MFpz6eLuPFXIm6s0oC4yv8LOpPZnj/id3F04VQlFGuQ1W+aU573rUhDUpJo5SNDbn5n0o1qDtpCCznHJJpqCs+BZ+2lsh3B6q4Qrdaz7Dvri7isis5huY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FpdkCoBE; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FpdkCoBE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F4F2C4CEE4;
+	Thu, 22 May 2025 14:17:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747923436;
+	bh=FIAP5ivOA9Tc52MccphjuWXYgFP4ivGn13zAzEuvEOg=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=FpdkCoBEgERzSMO4wqrP46cxPcN7MTgEhi9c3w0XYPP3iOpAR+5Jn/e6iz4QQujOY
+	 37hQXKQs3dfh1b8mqu23o1LZOBNATvSG0HPkvJE25vu+tiQf04tli6W13ORP/RgY+b
+	 pee+yIJ+r+7cIB7fGiub5BwQcclB6ngvniO9xJCdwP+pbCWHqNx5t8tp3XzM7Rx1hn
+	 9XhwsTnsINcnew/jOlZxQBd+0vT7EspvsbFP6ewcxhQgtGzxw+epMbEZasiOhvHdtY
+	 v9Do9My08L3NdnoJs4WioUZbK/EgTvtfsonWrmKzOAumZXT26a7de4OXd+jH9fOZ59
+	 nP5wkVWDRcvhw==
+Message-ID: <2567dc7e-f88d-475e-9ae8-a454416251c2@kernel.org>
+Date: Thu, 22 May 2025 16:17:09 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:4192:b0:864:4b3a:9e3a with SMTP id
- ca18e2360f4ac-86a2324e6afmr3070582039f.13.1747923422201; Thu, 22 May 2025
- 07:17:02 -0700 (PDT)
-Date: Thu, 22 May 2025 07:17:02 -0700
-In-Reply-To: <CAMj1kXEUW2arc4E1z5VkqUm6yi_bPyPwUtvg99PpM4bQLpct5w@mail.gmail.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <682f31de.a00a0220.2a3337.001d.GAE@google.com>
-Subject: Re: [syzbot] [fs?] [efi?] BUG: unable to handle kernel paging request
- in alloc_fs_context
-From: syzbot <syzbot+52cd651546d11d2af06b@syzkaller.appspotmail.com>
-To: ardb@kernel.org, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 0/7] MT9M114 driver bugfix and improvements
+To: Mathis Foerst <mathis.foerst@mt.com>, linux-kernel@vger.kernel.org
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Sakari Ailus <sakari.ailus@linux.intel.com>,
+ Steve Longerbeam <slongerbeam@gmail.com>,
+ Philipp Zabel <p.zabel@pengutronix.de>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>, linux-media@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-staging@lists.linux.dev,
+ imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+ manuel.traut@mt.com, mathis.foerst@zuehlke.com
+References: <20250522140613.104963-1-mathis.foerst@mt.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <20250522140613.104963-1-mathis.foerst@mt.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hello,
+On 22/05/2025 16:06, Mathis Foerst wrote:
+> Hi,
+> 
+> this patch series contains the following bugfix and improvements
+> for the MT9M114 camera driver:
+> 
+> Changelog:
+> 
+> v4 -> v5:
+> - Apply reformatings and small refactorings as suggested in review comments
+> - Split PATCH 4 into two parts: One for applying HFLIP / VFLIP while 
+>   streaming, one for applying set_selection while streaming.
+> - Add condition to apply set_selection immediately only if the size of the
+>   cropping rectangle does not change in PATCH 5
+> - Use device_property_read_u32 instead of of_property_read_u32 in PATCH 7
+> 
+> v3 -> v4:
+> - Rename DT binding from "onnn,slew-rate" to "slew-rate" in PATCH 1 and 6 as
+>   requested in the review comment.
+> 
+> v2 -> v3:
+> - Dropped PATCH 2 ("media: mt9m114: Add get_mbus_config").
+>   Based on the comments, this issure won't be fixed in the MT9M114
+>   driver but in "imx-media-csi.c" in a separate patch.
+> - Renumbered patches accordingly.
+> - Fix the incomplete renaming of the DT property from 'pad-slew-rate'
+>   to 'onnn,slew-rate' in PATCH 1 and 6.
+> - Fix checkpatch formatting suggestions in PATCH 2 and 6.
+> 
+> v1 -> v2:
+> - Fix the subjects of the patches
+> - Dropped PATCH 1 ("Add bypass-pll DT-binding") as it can be automatically
+>   detected if the PLL should be bypassed.
+> - Renumbered patches accordingly
+> - Switch to uint32, add default value and clarify documentation in PATCH 1
+> - Add 'Fixes' and 'Cc' tags as suggested in PATCH 6
+> 
+I am looking at this changelog and cannot find:
 
-syzbot has tested the proposed patch but the reproducer is still triggering an issue:
-BUG: unable to handle kernel paging request in alloc_fs_context
+Where did you mention and explain dropping two reviews which you
+received (see submitting patches)?
 
-Bluetooth: hci0: Opcode 0x0c1a failed: -4
-efivarfs: resyncing variable state
-Unable to handle kernel paging request at virtual address dfff800000000005
-KASAN: null-ptr-deref in range [0x0000000000000028-0x000000000000002f]
-Mem abort info:
-  ESR = 0x0000000096000005
-  EC = 0x25: DABT (current EL), IL = 32 bits
-  SET = 0, FnV = 0
-  EA = 0, S1PTW = 0
-  FSC = 0x05: level 1 translation fault
-Data abort info:
-  ISV = 0, ISS = 0x00000005, ISS2 = 0x00000000
-  CM = 0, WnR = 0, TnD = 0, TagAccess = 0
-  GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
-[dfff800000000005] address between user and kernel address ranges
-Internal error: Oops: 0000000096000005 [#1]  SMP
-Modules linked in:
-CPU: 1 UID: 0 PID: 7789 Comm: syz.0.174 Not tainted 6.15.0-rc7-syzkaller-gd7fa1af5b33e #0 PREEMPT 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
-pstate: 80400005 (Nzcv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-pc : alloc_fs_context+0x1b4/0x76c fs/fs_context.c:294
-lr : __lse_atomic64_add arch/arm64/include/asm/atomic_lse.h:134 [inline]
-lr : arch_atomic64_add arch/arm64/include/asm/atomic.h:67 [inline]
-lr : raw_atomic64_add include/linux/atomic/atomic-arch-fallback.h:2672 [inline]
-lr : raw_atomic_long_add include/linux/atomic/atomic-long.h:121 [inline]
-lr : atomic_long_add include/linux/atomic/atomic-instrumented.h:3261 [inline]
-lr : get_cred_many include/linux/cred.h:203 [inline]
-lr : get_cred include/linux/cred.h:218 [inline]
-lr : alloc_fs_context+0x150/0x76c fs/fs_context.c:293
-sp : ffff80009b8c7440
-x29: ffff80009b8c7470 x28: dfff800000000000 x27: ffff0000cbd6a758
-x26: 0000000000000028 x25: ffff0000d6dd9cc8 x24: ffff80008fba8a20
-x23: 0000000000000000 x22: ffff0000d6dd9c98 x21: ffff0000cbd69e80
-x20: 0000000000000000 x19: ffff0000d6dd9c00 x18: ffff800090e6c920
-x17: ffff800092f39000 x16: ffff80008adbda98 x15: 0000000000000001
-x14: 1fffe00019683fa0 x13: 0000000000000000 x12: 0000000000000000
-x11: ffff600019683fa1 x10: 0000000000ff0100 x9 : 0000000000000000
-x8 : 0000000000000005 x7 : ffff80008020cba8 x6 : ffff8000803f41e0
-x5 : ffff0000d95932c8 x4 : ffff80009b8c71f8 x3 : ffff800080dfffa8
-x2 : 0000000000000001 x1 : 0000000000000008 x0 : 0000000000000001
-Call trace:
- alloc_fs_context+0x1b4/0x76c fs/fs_context.c:294 (P)
- fs_context_for_mount+0x34/0x44 fs/fs_context.c:332
- vfs_kern_mount+0x38/0x178 fs/namespace.c:1309
- efivarfs_pm_notify+0x1c4/0x4b4 fs/efivarfs/super.c:529
- notifier_call_chain+0x1b8/0x4e4 kernel/notifier.c:85
- blocking_notifier_call_chain+0x70/0xa0 kernel/notifier.c:380
- pm_notifier_call_chain+0x2c/0x3c kernel/power/main.c:109
- snapshot_release+0x104/0x1c4 kernel/power/user.c:125
- __fput+0x340/0x75c fs/file_table.c:465
- ____fput+0x20/0x58 fs/file_table.c:493
- task_work_run+0x1dc/0x260 kernel/task_work.c:227
- exit_task_work include/linux/task_work.h:40 [inline]
- do_exit+0x4e8/0x1998 kernel/exit.c:953
- do_group_exit+0x194/0x22c kernel/exit.c:1102
- get_signal+0x11dc/0x12f8 kernel/signal.c:3034
- do_signal+0x274/0x4438 arch/arm64/kernel/signal.c:1615
- do_notify_resume+0xac/0x1ec arch/arm64/kernel/entry-common.c:148
- exit_to_user_mode_prepare arch/arm64/kernel/entry-common.c:169 [inline]
- exit_to_user_mode arch/arm64/kernel/entry-common.c:178 [inline]
- el0_svc+0xb4/0x17c arch/arm64/kernel/entry-common.c:768
- el0t_64_sync_handler+0x78/0x108 arch/arm64/kernel/entry-common.c:786
- el0t_64_sync+0x198/0x19c arch/arm64/kernel/entry.S:600
-Code: 97f8aa83 f9400368 9100a11a d343ff48 (387c6908) 
----[ end trace 0000000000000000 ]---
-----------------
-Code disassembly (best guess):
-   0:	97f8aa83 	bl	0xffffffffffe2aa0c
-   4:	f9400368 	ldr	x8, [x27]
-   8:	9100a11a 	add	x26, x8, #0x28
-   c:	d343ff48 	lsr	x8, x26, #3
-* 10:	387c6908 	ldrb	w8, [x8, x28] <-- trapping instruction
-
-
-Tested on:
-
-commit:         d7fa1af5 Merge branch 'for-next/core' into for-kernelci
-git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git for-kernelci
-console output: https://syzkaller.appspot.com/x/log.txt?x=1689aad4580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=89c13de706fbf07a
-dashboard link: https://syzkaller.appspot.com/bug?extid=52cd651546d11d2af06b
-compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
-userspace arch: arm64
-
-Note: no patches were applied.
+Best regards,
+Krzysztof
