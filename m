@@ -1,204 +1,163 @@
-Received: from mailhub9-fb.kaspersky-labs.com (mailhub9-fb.kaspersky-labs.com [195.122.169.2])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D24A92638BC;
-	Thu, 22 May 2025 09:22:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.122.169.2
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A889254873
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 09:22:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747905759; cv=none; b=aYlP/7IkhihbEAJkB4SGHXYkpklNEXsHC4aQSwwM2vBgxKkrN8lSmyezEgpkJYZ/TYf//42f3wehnzCzInQFnlSWX46kBI+UIjJPUHuoTVB//WZPZvxqMCN34KEJ8oy6jMtk+ykph1nbGvov9VZE5+cHkSNDwQanOxfK3A40s3w=
+	t=1747905761; cv=none; b=Cl22tEgLAPYuXS6BVvh/uel7B1JGmmeEj6PbY3j4asUsA9CoZX5FXElorgMbzrUNj5uq9Tu7Wwo6T0YoqFI++wddAv1JCDKEh1YuKkOGXN2JY9qGp4/QbPX4Tyr1AwJpHVoTHg6UQJAUzSKP6/LVhCQu/Mz9FKSuO5qHJ78KO54=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747905759; c=relaxed/simple;
-	bh=qigQEnNqaQWtRiBqtpmRRtl7HMDzo/ebfQTJy3XHors=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=oihKjGcBYy5fpGeAgLkch98jeyeXCKaSAeP+vLqx5IYaZSwu1XwS++jwH2fU6+73IY3/Y+0YKEyzqfWo5BCR9X9kDqYny5iLOSnO9Irjha2zPRDMDW2SwSdq5+Eiapmd9CzGpOjw6lqdDOgcnX5lRDs1BCjIb90BZn6uurYu+Ts=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kaspersky.com; spf=pass smtp.mailfrom=kaspersky.com; dkim=pass (2048-bit key) header.d=kaspersky.com header.i=@kaspersky.com header.b=MeFKXjiC; dkim=pass (2048-bit key) header.d=kaspersky.com header.i=@kaspersky.com header.b=H7NRlwt2; arc=none smtp.client-ip=195.122.169.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kaspersky.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kaspersky.com
+	s=arc-20240116; t=1747905761; c=relaxed/simple;
+	bh=a80hXcGHLnEXqoaB3/i3Ak7XE5EBq2FHTMb5YZ4WKkU=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=V8zqpgyupKOhoFB2L+zdHesbMpKv0jxpXXU7SLqWvwM2BYsHqW3XasMQY+n9Nd0SKPRZ0ERyiEvdB6Lgqe2wiRzkIL5KNKxN+FTXuOAnAq2vce0VHmtliS30qBS7oKNgO0k35M+qJqfRLQQP/+yQs7DsN6mXp0u0EVCSqCF/Ask=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=frOgHyA1; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kaspersky.com header.i=@kaspersky.com header.b="MeFKXjiC";
-	dkim=pass (2048-bit key) header.d=kaspersky.com header.i=@kaspersky.com header.b="H7NRlwt2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kaspersky.com;
-	s=mail202502; t=1747905381;
-	bh=xqG5r0/5jevHvz5MUnt00ucOWx3cyvf6DBRXeCPlpz4=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type;
-	b=MeFKXjiCaegQfGQuT+JuetKoPMd7t5lP3fd8+bvODAjJY1MzscvaKJzN9VTz/0yjK
-	 k6jeIBv2yIsiY4PRuZ9ADgIRZNWztV3cUzAi+ukvuN1rbO80Fu4zxmyLlSjIknOBBF
-	 R1Zv8BlHn6IiiI6TiGiaoc2xHVetBgJ0H3a3LL/NAm61mUANqA1XKokpS7UQBiSz3i
-	 QJaB3tBSp0tX3LU8LmvkwM5SGQjgnDHikd57yYtnTxabg1ayIGVvWteaC7x4cfMIvE
-	 GYfKdw1GJckfAuY44ikl5biA8L6E+yWLDorBHE+Lppuyc/ForHpZ85efyVqOUz/83I
-	 ed+b56NZKawPQ==
-Received: from mailhub9-fb.kaspersky-labs.com (localhost [127.0.0.1])
-	by mailhub9-fb.kaspersky-labs.com (Postfix) with ESMTP id 28D40906584;
-	Thu, 22 May 2025 12:16:21 +0300 (MSK)
-Received: from mx13.kaspersky-labs.com (mx13.kaspersky-labs.com [91.103.66.164])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "mx13.kaspersky-labs.com", Issuer "Kaspersky MailRelays CA G3" (verified OK))
-	by mailhub9-fb.kaspersky-labs.com (Postfix) with ESMTPS id EB21E902838;
-	Thu, 22 May 2025 12:16:20 +0300 (MSK)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kaspersky.com;
-	s=mail202502; t=1747905373;
-	bh=xqG5r0/5jevHvz5MUnt00ucOWx3cyvf6DBRXeCPlpz4=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type;
-	b=H7NRlwt2NbcaSDpNOOrPSUWVritlgUKCeDn0dIsswbR4kC5E/NaaOqdeeVW8Rz/7g
-	 cZHdx0zXrTPClkbydACTtgzyTgiL5ugujmEYfbKl/QkZ/TaUYBH1N6vXuIyjbQI0aM
-	 6XOnrpiYqzPxGzuHyOk1MdcEC1gstqBXNIMscJVak6P7AkV61y283CvzDxDG9nv6wj
-	 PFhEnXuS8yZyTbY36MpefkbIXqHiKifWSDKKpLRiuVhNvA2x1+cYj3Uufh7ZFGNrYL
-	 0PHkATdK8p2pc/xRkfEoJldgIyNmJVF7RoFuWN3UgEmlMGpSYTFI2OZ/KtDGc7/vHk
-	 gyRhjMBKjMc3A==
-Received: from relay13.kaspersky-labs.com (localhost [127.0.0.1])
-	by relay13.kaspersky-labs.com (Postfix) with ESMTP id 40E233E1CA6;
-	Thu, 22 May 2025 12:16:13 +0300 (MSK)
-Received: from mail-hq2.kaspersky.com (unknown [91.103.66.208])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(Client CN "mail-hq2.kaspersky.com", Issuer "Kaspersky MailRelays CA G3" (verified OK))
-	by mailhub13.kaspersky-labs.com (Postfix) with ESMTPS id 95CFB3E1BEF;
-	Thu, 22 May 2025 12:16:12 +0300 (MSK)
-Received: from moskovkin-pc.avp.ru (10.16.49.191) by HQMAILSRV1.avp.ru
- (10.64.57.51) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1748.10; Thu, 22 May
- 2025 12:15:47 +0300
-From: Vladimir Moskovkin <Vladimir.Moskovkin@kaspersky.com>
-To: MyungJoo Ham <myungjoo.ham@samsung.com>
-CC: Vladimir Moskovkin <Vladimir.Moskovkin@kaspersky.com>, Chanwoo Choi
-	<cw00.choi@samsung.com>, =?UTF-8?q?Pawe=C5=82=20Chmiel?=
-	<pawel.mikolaj.chmiel@gmail.com>, Jonathan Bakker <xc-racer2@live.ca>, Tomasz
- Figa <tomasz.figa@gmail.com>, <linux-kernel@vger.kernel.org>,
-	<lvc-project@linuxtesting.org>, <stable@vger.kernel.org>
-Subject: [PATCH] extcon: fsa9480: Avoid buffer overflow in fsa9480_handle_change()
-Date: Thu, 22 May 2025 12:14:56 +0300
-Message-ID: <20250522091456.2402795-1-Vladimir.Moskovkin@kaspersky.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="frOgHyA1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747905759; x=1779441759;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version:content-transfer-encoding;
+  bh=a80hXcGHLnEXqoaB3/i3Ak7XE5EBq2FHTMb5YZ4WKkU=;
+  b=frOgHyA16BZiq/UYUw3xxDdOcUDs7/JkW6M/zC4kF0nZHTi11J6wRrlI
+   V3JYiru+aNZl2MIrFIN2POn/mvf5UTXyGipAPt5b4twouib+9bMKzRzSR
+   L7vHu1DaM9497dU4/BleYZQ/fKtCm1mvGcbc8ExL5OMQEL6+ZzIcvvW2a
+   vwd2qzpJIjvMWvVfkbQ12zcbrsZ5m3SOSaiipB+xx3H7MCiEDP8zMpFWw
+   cueVdNMVdVdxytChv0NzvDCIIcG7xx6qss/roN3sKLf+CqYLXcNE45blF
+   IJTAONcJp8dNN5OEQ3Q7yYKR5b0ZH0aiEWyPlQkkfGNBsX5t9MdnRW2WM
+   A==;
+X-CSE-ConnectionGUID: xyQRhzV/Sauf+MltgqrrPA==
+X-CSE-MsgGUID: +b+yEFQBSp2CMPSRPaAwwQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11440"; a="72445573"
+X-IronPort-AV: E=Sophos;i="6.15,305,1739865600"; 
+   d="scan'208";a="72445573"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2025 02:22:39 -0700
+X-CSE-ConnectionGUID: ZF/aOTzKS164tKbdKmjWZQ==
+X-CSE-MsgGUID: udRzaoqjTj25RI1WnsRiSQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,305,1739865600"; 
+   d="scan'208";a="145661444"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.112])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2025 02:22:33 -0700
+From: Jani Nikula <jani.nikula@linux.intel.com>
+To: "Borah, Chaitanya Kumar" <chaitanya.kumar.borah@intel.com>, Luca
+ Ceresoli <luca.ceresoli@bootlin.com>, Maarten Lankhorst
+ <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
+ Thomas Zimmermann <tzimmermann@suse.de>, "Hajda, Andrzej"
+ <andrzej.hajda@intel.com>, Neil Armstrong <neil.armstrong@linaro.org>,
+ Robert
+ Foss <rfoss@kernel.org>, Laurent Pinchart
+ <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>,
+ Jernej
+ Skrabec <jernej.skrabec@gmail.com>, David Airlie <airlied@gmail.com>,
+ Simona
+ Vetter <simona@ffwll.ch>, Ville Syrjala <ville.syrjala@linux.intel.com>
+Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+ "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] drm/bridge: fix build with CONFIG_OF=n
+In-Reply-To: <SJ1PR11MB6129DAE64D41911F049AF98EB999A@SJ1PR11MB6129.namprd11.prod.outlook.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20250522-devm_drm_put_bridge-fix-non-of-build-v1-1-a05234dea046@bootlin.com>
+ <SJ1PR11MB6129DAE64D41911F049AF98EB999A@SJ1PR11MB6129.namprd11.prod.outlook.com>
+Date: Thu, 22 May 2025 12:22:30 +0300
+Message-ID: <87zff5rodl.fsf@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: HQMAILSRV2.avp.ru (10.64.57.52) To HQMAILSRV1.avp.ru
- (10.64.57.51)
-X-KSE-ServerInfo: HQMAILSRV1.avp.ru, 9
-X-KSE-AntiSpam-Interceptor-Info: scan successful
-X-KSE-AntiSpam-Version: 6.1.1, Database issued on: 05/22/2025 08:39:06
-X-KSE-AntiSpam-Status: KAS_STATUS_NOT_DETECTED
-X-KSE-AntiSpam-Method: none
-X-KSE-AntiSpam-Rate: 0
-X-KSE-AntiSpam-Info: Lua profiles 193520 [May 22 2025]
-X-KSE-AntiSpam-Info: Version: 6.1.1.11
-X-KSE-AntiSpam-Info: Envelope from: Vladimir.Moskovkin@kaspersky.com
-X-KSE-AntiSpam-Info: LuaCore: 59 0.3.59
- 65f85e645735101144875e459092aa877af15aaa
-X-KSE-AntiSpam-Info: {Tracking_cluster_exceptions}
-X-KSE-AntiSpam-Info: {Tracking_real_kaspersky_domains}
-X-KSE-AntiSpam-Info: {Tracking_from_domain_doesnt_match_to}
-X-KSE-AntiSpam-Info: d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;moskovkin-pc.avp.ru:7.1.1,5.0.1;kaspersky.com:7.1.1,5.0.1;127.0.0.199:7.1.2
-X-KSE-AntiSpam-Info: {Tracking_white_helo}
-X-KSE-AntiSpam-Info: FromAlignment: s
-X-KSE-AntiSpam-Info: Rate: 0
-X-KSE-AntiSpam-Info: Status: not_detected
-X-KSE-AntiSpam-Info: Method: none
-X-KSE-Antiphishing-Info: Clean
-X-KSE-Antiphishing-ScanningType: Deterministic
-X-KSE-Antiphishing-Method: None
-X-KSE-Antiphishing-Bases: 05/22/2025 08:42:00
-X-KSE-AttachmentFiltering-Interceptor-Info: no applicable attachment filtering
- rules found
-X-KSE-Antivirus-Interceptor-Info: scan successful
-X-KSE-Antivirus-Info: Clean, bases: 5/22/2025 8:29:00 AM
-X-KSE-BulkMessagesFiltering-Scan-Result: InTheLimit
-X-KSE-AttachmentFiltering-Interceptor-Info: no applicable attachment filtering
- rules found
-X-KSE-BulkMessagesFiltering-Scan-Result: InTheLimit
-X-KSMG-AntiPhishing: NotDetected
-X-KSMG-AntiSpam-Interceptor-Info: not scanned
-X-KSMG-AntiSpam-Status: not scanned, disabled by settings
-X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.1.1.8310, bases: 2025/05/22 05:45:00 #27780458
-X-KSMG-AntiVirus-Status: NotDetected, skipped
-X-KSMG-LinksScanning: NotDetected
-X-KSMG-Message-Action: skipped
-X-KSMG-Rule-ID: 52
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Bit 7 of the 'Device Type 2' (0Bh) register is reserved in the FSA9480
-device, but is used by the FSA880 and TSU6111 devices.
+On Thu, 22 May 2025, "Borah, Chaitanya Kumar" <chaitanya.kumar.borah@intel.=
+com> wrote:
+>> -----Original Message-----
+>> From: dri-devel <dri-devel-bounces@lists.freedesktop.org> On Behalf Of L=
+uca
+>> Ceresoli
+>> Sent: Thursday, May 22, 2025 12:43 PM
+>> To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>; Maxime Ripard
+>> <mripard@kernel.org>; Thomas Zimmermann <tzimmermann@suse.de>;
+>> Hajda, Andrzej <andrzej.hajda@intel.com>; Neil Armstrong
+>> <neil.armstrong@linaro.org>; Robert Foss <rfoss@kernel.org>; Laurent
+>> Pinchart <Laurent.pinchart@ideasonboard.com>; Jonas Karlman
+>> <jonas@kwiboo.se>; Jernej Skrabec <jernej.skrabec@gmail.com>; David
+>> Airlie <airlied@gmail.com>; Simona Vetter <simona@ffwll.ch>; Ville Syrja=
+la
+>> <ville.syrjala@linux.intel.com>
+>> Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>; dri-
+>> devel@lists.freedesktop.org; linux-kernel@vger.kernel.org; Luca Ceresoli
+>> <luca.ceresoli@bootlin.com>
+>> Subject: [PATCH] drm/bridge: fix build with CONFIG_OF=3Dn
+>>=20
+>> Commit 5164553d739e ("drm/bridge: add devm_drm_put_bridge()") adds
+>> two declarations for devm_drm_put_bridge():
+>>=20
+>>  1) an inline declaration in the #else branch of
+>>     '#if defined(CONFIG_OF)...'
+>>  2) one outside of the same #if
+>>=20
+>> This results in a build failure with CONFIG_OF=3Dn:
+>>=20
+>>   ../drivers/gpu/drm/drm_bridge.c:1406:6: error: redefinition of
+>> =E2=80=98devm_drm_put_bridge=E2=80=99
+>>=20
+>> The function has nothing to do with OF, thus fix by removing declaration=
+ 1.
+>
+> LGTM. Fixes the build error.
+>
+> Tested-by: Chaitanya Kumar Borah <chaitanya.kumar.borah@intel.com>
+> Reviewed-by: Chaitanya Kumar Borah <chaitanya.kumar.borah@intel.com>
 
-From FSA9480 datasheet, Table 18. Device Type 2:
+Ditto. Please merge.
 
-Reset Value: x0000000
-===========================================================================
- Bit # |     Name     | Size (Bits) |             Description
----------------------------------------------------------------------------
-   7   |   Reserved   |      1      | NA
+BR,
+Jani.
 
-From FSA880 datasheet, Table 13. Device Type 2:
+>
+>
+>>=20
+>> Fixes: 5164553d739e ("drm/bridge: add devm_drm_put_bridge()")
+>> Reported-by: Ville Syrjala <ville.syrjala@linux.intel.com>
+>> Closes: https://oftc.catirclogs.org/dri-devel/2025-05-21#34288266;
+>> Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
+>> ---
+>>  include/drm/drm_bridge.h | 2 --
+>>  1 file changed, 2 deletions(-)
+>>=20
+>> diff --git a/include/drm/drm_bridge.h b/include/drm/drm_bridge.h index
+>> 464da28f9134f0fcece5c72a8c5fe7f3e42c7e3d..0af5db244db8580ea0c9af1d9a
+>> 373b7bf62ee699 100644
+>> --- a/include/drm/drm_bridge.h
+>> +++ b/include/drm/drm_bridge.h
+>> @@ -1311,8 +1311,6 @@ static inline struct drm_bridge
+>> *devm_drm_of_get_bridge(struct device *dev,
+>>  	return ERR_PTR(-ENODEV);
+>>  }
+>>=20
+>> -static inline void devm_drm_put_bridge(struct device *dev, struct
+>> drm_bridge *bridge) {}
+>> -
+>>  static inline struct drm_bridge *drmm_of_get_bridge(struct drm_device
+>> *drm,
+>>  						     struct device_node *node,
+>>  						     u32 port,
+>>=20
+>> ---
+>> base-commit: a3436f63aa4f93b043a970cc72a196a501191ecc
+>> change-id: 20250522-devm_drm_put_bridge-fix-non-of-build-fbb67d28494c
+>>=20
+>> Best regards,
+>> --
+>> Luca Ceresoli <luca.ceresoli@bootlin.com>
+>
 
-Reset Value: 0xxx0000
-===========================================================================
- Bit # |     Name     | Size (Bits) |             Description
----------------------------------------------------------------------------
-   7   | Unknown      |      1      | 1: Any accessory detected as unknown
-       | Accessory    |             |    or an accessory that cannot be
-       |              |             |    detected as being valid even
-       |              |             |    though ID_CON is not floating
-       |              |             | 0: Unknown accessory not detected
-
-From TSU6111 datasheet, Device Type 2:
-
-Reset Value:x0000000
-===========================================================================
- Bit # |     Name     | Size (Bits) |             Description
----------------------------------------------------------------------------
-   7   | Audio Type 3 |      1      | Audio device type 3
-
-So the value obtained from the FSA9480_REG_DEV_T2 register in the
-fsa9480_detect_dev() function may have the 7th bit set.
-In this case, the 'dev' parameter in the fsa9480_handle_change() function
-will be 15. And this will cause the 'cable_types' array to overflow when
-accessed at this index.
-
-Extend the 'cable_types' array with a new value 'DEV_RESERVED' as
-specified in the FSA9480 datasheet. Do not use it as it serves for
-various purposes in the listed devices.
-
-Found by Linux Verification Center (linuxtesting.org) with SVACE.
-
-Fixes: bad5b5e707a5 ("extcon: Add fsa9480 extcon driver")
-Cc: stable@vger.kernel.org
-Signed-off-by: Vladimir Moskovkin <Vladimir.Moskovkin@kaspersky.com>
----
- drivers/extcon/extcon-fsa9480.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/extcon/extcon-fsa9480.c b/drivers/extcon/extcon-fsa9480.c
-index b11b43171063..30972a7214f7 100644
---- a/drivers/extcon/extcon-fsa9480.c
-+++ b/drivers/extcon/extcon-fsa9480.c
-@@ -68,6 +68,7 @@
- #define DEV_T1_CHARGER_MASK     (DEV_DEDICATED_CHG | DEV_USB_CHG)
- 
- /* Device Type 2 */
-+#define DEV_RESERVED            15
- #define DEV_AV                  14
- #define DEV_TTY                 13
- #define DEV_PPD                 12
-@@ -133,6 +134,7 @@ static const u64 cable_types[] = {
- 	[DEV_USB] = BIT_ULL(EXTCON_USB) | BIT_ULL(EXTCON_CHG_USB_SDP),
- 	[DEV_AUDIO_2] = BIT_ULL(EXTCON_JACK_LINE_OUT),
- 	[DEV_AUDIO_1] = BIT_ULL(EXTCON_JACK_LINE_OUT),
-+	[DEV_RESERVED] = 0,
- 	[DEV_AV] = BIT_ULL(EXTCON_JACK_LINE_OUT)
- 		   | BIT_ULL(EXTCON_JACK_VIDEO_OUT),
- 	[DEV_TTY] = BIT_ULL(EXTCON_JIG),
-@@ -228,7 +230,7 @@ static void fsa9480_detect_dev(struct fsa9480_usbsw *usbsw)
- 		dev_err(usbsw->dev, "%s: failed to read registers", __func__);
- 		return;
- 	}
--	val = val2 << 8 | val1;
-+	val = val2 << 8 | (val1 & 0xFF);
- 
- 	dev_info(usbsw->dev, "dev1: 0x%x, dev2: 0x%x\n", val1, val2);
- 
--- 
-2.25.1
-
+--=20
+Jani Nikula, Intel
