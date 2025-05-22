@@ -1,161 +1,140 @@
-Received: from mail.hugovil.com (mail.hugovil.com [162.243.120.170])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E42982698AF;
-	Thu, 22 May 2025 19:14:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.243.120.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 353D729AAF2
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 19:14:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747941250; cv=none; b=GMVbg90WKN+ZnAEayx2QkjwYc16jT4my41ZbYU7dSmvN93/YAhUJDVt8BDjyV/MGGYlk1annUfeXf+hV6WgmquNO+fWh0Uke5w2cYkPaNJ8iMEyP9cYatyfkD87OK7Y39m6jdTIQjfioiFmV9cKWV6tK1JjXL/ctHZg2qlHaFjY=
+	t=1747941290; cv=none; b=GJcNRnGuem8YcSSIUeII4rVPdmDiTLMVSgF5iLPMW3baJTLcdxj9FeLxrcXso1rNbJ0r85EaAzQPzoQH39DHCDdmdahfaMpfuIjE/1bE3ng31L9iygn3tVtwF5ZJM69ljSNVMksbHdzZK9kEyJxNwhLyodq9W+EAhn4+ZESEPog=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747941250; c=relaxed/simple;
-	bh=uOIMWrU2rICv7Ji4NNiHPMmMIXVbbabOTueK93k3Enw=;
-	h=Date:From:To:Cc:Message-Id:In-Reply-To:References:Mime-Version:
-	 Content-Type:Subject; b=fA8jRYqTuMWTWWFfZu8ORNwFpYBXNTqzVNrEFFEBql6w0C70NRuljl8cRXPKzNG2OnU02f7Z/bo86A8nGJ+wDGvmRYOK/u27USDtVXnkvu855BoZHqI4R5gqk/QA14K8jtGB0JqpEdoqa6wFYdVxXLLUgHOIzMEAXStybLImde8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hugovil.com; spf=pass smtp.mailfrom=hugovil.com; dkim=pass (1024-bit key) header.d=hugovil.com header.i=@hugovil.com header.b=JqTEvhUB; arc=none smtp.client-ip=162.243.120.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hugovil.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hugovil.com
+	s=arc-20240116; t=1747941290; c=relaxed/simple;
+	bh=ZKftViqfFFhN799plnLsAOvLuBZBpAPSXcMvWbXpQ+c=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=fg8Xd+IEK5Qza7lxyC3WpRidwYPLgNwxsNERsqNLGl8n/3HoI04g52ZELdSsE9pfS6+kLPSXZo9nOLfcklv9SSqif7c4utGmve+AAuAo8i+FX4AuhSIs36djXUGNDPHTaQNNd+/7k9Cmfy8SprFj4w8uGJwGtmLZ4YfVFsk+mj4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=O8jb1gtw; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=hugovil.com header.i=@hugovil.com header.b="JqTEvhUB"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hugovil.com
-	; s=x; h=Subject:Content-Transfer-Encoding:Mime-Version:Message-Id:Cc:To:From
-	:Date:subject:date:message-id:reply-to;
-	bh=frzJT8TDmbXbrl93CAqw5BX6Dez3V1DpAl1yjjO3Oxk=; b=JqTEvhUBq8f/oi1ZnB+V3xcL+b
-	f3TcxATAKxx5ZqkdY+a8KHzrnCupe6F6WQ34T/SP3ftYh3q2UQgxgRK8bs/sIas7rrE9siwgTDjuS
-	Dpbo9V1v/P+s+Pmb5Vk1Qm2AXQbKaLSzyrvsAi9KJV2aGFUPCuiu/G7R2Wjrzm92GTpc=;
-Received: from modemcable168.174-80-70.mc.videotron.ca ([70.80.174.168]:33532 helo=pettiford.lan)
-	by mail.hugovil.com with esmtpa (Exim 4.92)
-	(envelope-from <hugo@hugovil.com>)
-	id 1uIBMS-0000FR-VD; Thu, 22 May 2025 15:13:49 -0400
-Date: Thu, 22 May 2025 15:13:48 -0400
-From: Hugo Villeneuve <hugo@hugovil.com>
-To: Biju Das <biju.das.jz@bp.renesas.com>
-Cc: "maarten.lankhorst@linux.intel.com" <maarten.lankhorst@linux.intel.com>,
- "mripard@kernel.org" <mripard@kernel.org>, "tzimmermann@suse.de"
- <tzimmermann@suse.de>, "airlied@gmail.com" <airlied@gmail.com>,
- "simona@ffwll.ch" <simona@ffwll.ch>, Chris Brandt
- <Chris.Brandt@renesas.com>, "dri-devel@lists.freedesktop.org"
- <dri-devel@lists.freedesktop.org>, "linux-renesas-soc@vger.kernel.org"
- <linux-renesas-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org"
- <linux-kernel@vger.kernel.org>, Hugo Villeneuve <hvilleneuve@dimonoff.com>
-Message-Id: <20250522151348.856a75a66cd87d8794500dc4@hugovil.com>
-In-Reply-To: <TY3PR01MB113464412C75E0AC1928A4FBA8699A@TY3PR01MB11346.jpnprd01.prod.outlook.com>
-References: <20250522143911.138077-1-hugo@hugovil.com>
-	<TY3PR01MB113464412C75E0AC1928A4FBA8699A@TY3PR01MB11346.jpnprd01.prod.outlook.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="O8jb1gtw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1747941288;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=D7brFv7pUq6T8Mxdu91uiPIb94+Tmd0tGfLRCcDs510=;
+	b=O8jb1gtwvzOU5uNKR3UUf160UZwht2O2OqDaLBfuQ01hpwPoD67neWldH3zgnN9H7yD7rr
+	eyqfL7dr1387HO2mzIWUVamEqT+lO6Ac/yvjVP5toVVs6HGkJePxtEMhyCTJGOBPBoTJDZ
+	tKt1F1ex2eHDe1R4dwxZAxFi+0CdQIA=
+Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
+ [209.85.219.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-18-PNlpXCp1OHCJ949Qenrnaw-1; Thu, 22 May 2025 15:14:46 -0400
+X-MC-Unique: PNlpXCp1OHCJ949Qenrnaw-1
+X-Mimecast-MFC-AGG-ID: PNlpXCp1OHCJ949Qenrnaw_1747941286
+Received: by mail-qv1-f69.google.com with SMTP id 6a1803df08f44-6f8dd95985dso105620226d6.0
+        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 12:14:46 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747941286; x=1748546086;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=D7brFv7pUq6T8Mxdu91uiPIb94+Tmd0tGfLRCcDs510=;
+        b=ViIwsRSDOtVKj0FS9RET1WTzb5GpOGfMk/+i3BSMvWYhpzrh5Qvwat36UHWGXBov1F
+         nKG0BIhfizzOmyG2M79Xzk5kkj6Ynw7DIQ9/bvHFLTjqa4r1AF8QvGsqyzI6p8HRyPFA
+         Bls+Dz/h7tcQN4j8AwcLLERDmUl4HraypkUAGUDP4jQTT4rKlCeZP109nvV+qPEboIx9
+         RjW0q6UU/FcptS8xjMeyO1/aYrN1YSl7hUsDLU4wCSyt+pD5MxCftvuC3hWcB4U9LTkL
+         pLGtEZonPZBt73sMCmBq98isrmFgOks6juyHxChkbP24pQNHSDShFe53KS8sEA6AuTQV
+         pQOQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXoF+43+0n4bQI5mHpFt75OBH7vDcgLPTWQ/YAdyUhYYCxRN34YRDT5P1RavkuIDHB70hTN267MXh9Mcdo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxP1aexEJFGRgBL+DXyZZ/iItTWpNvretuzIEzcPXQvQ5RmnnQ9
+	iDNj9VUM2QWKn2Ivz/UClwRb13RDB3Xz0kpyenNJ2FmxkHmmJ6zOlRjWJ3daVREk1hbYHiqIcJF
+	JeRarhBj0nljae6PvTc3MdToSe9Fe4lrlyHDawp4KqMWTL/0nAMgR+aFhP2p3boVT+Q==
+X-Gm-Gg: ASbGncst1vu3qWdF1sYajvga4ibshQgLlROWB4Qps7qfU+jdMHFsC5okxKCQw9xsWSh
+	nFmL1HXc6dj/VitQMWT3Niw+I1TNYPp3lCdQxUa+GR/QQsoWgG2/0DE4VuTCej3MyZnGNLrDtCZ
+	Aw/+fzb+Xw7T3yPzMbv8CIrmK1hLIYmnl7+ey5azB9wu1Rarr5eiMVDcWiWS/UQl/q1igIY3J9V
+	N8KptvxfrFyMKS6QrRENCUf4/VrMAwGe52p64WJe/uVDKDt22kJOlTwTslcYaITTYo/SXRFXWUv
+	3zTSBfH3MmjCxXtpt6kHPLQhXbFs1hz23hUSO5sr3KE=
+X-Received: by 2002:a05:6214:cc2:b0:6e8:9394:cbbe with SMTP id 6a1803df08f44-6f8b2c7b117mr370336306d6.20.1747941286035;
+        Thu, 22 May 2025 12:14:46 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEnvP93RgtHFU3/OIdPk/sEAnUG6j69VFPbMwWobtaNerAwoUt+hZltUAYDKdgFPSEjENLeGA==
+X-Received: by 2002:a05:6214:cc2:b0:6e8:9394:cbbe with SMTP id 6a1803df08f44-6f8b2c7b117mr370335926d6.20.1747941285457;
+        Thu, 22 May 2025 12:14:45 -0700 (PDT)
+Received: from jkangas-thinkpadp1gen3.rmtuswa.csb ([2601:1c2:4301:5e20:98fe:4ecb:4f14:576b])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f8b08ab862sm102862916d6.38.2025.05.22.12.14.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 May 2025 12:14:45 -0700 (PDT)
+From: Jared Kangas <jkangas@redhat.com>
+To: sumit.semwal@linaro.org,
+	benjamin.gaignard@collabora.com,
+	Brian.Starkey@arm.com,
+	jstultz@google.com,
+	tjmercier@google.com,
+	christian.koenig@amd.com
+Cc: mripard@kernel.org,
+	linux-media@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	linaro-mm-sig@lists.linaro.org,
+	linux-kernel@vger.kernel.org,
+	Jared Kangas <jkangas@redhat.com>
+Subject: [PATCH v3 0/3] dma-buf: heaps: Use constant name for CMA heap
+Date: Thu, 22 May 2025 12:14:15 -0700
+Message-ID: <20250522191418.442390-1-jkangas@redhat.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 70.80.174.168
-X-SA-Exim-Mail-From: hugo@hugovil.com
-X-Spam-Level: 
-X-Spam-Report: 
-	* -1.0 ALL_TRUSTED Passed through trusted hosts only via SMTP
-	*  0.1 URIBL_CSS_A Contains URL's A record listed in the Spamhaus CSS
-	*      blocklist
-	*      [URIs: hugovil.com]
-	*  0.1 URIBL_CSS Contains an URL's NS IP listed in the Spamhaus CSS
-	*      blocklist
-	*      [URIs: hugovil.com]
-	* -0.8 NICE_REPLY_A Looks like a legit reply (A)
-Subject: Re: [PATCH v3 0/2] drm: rcar-du: rzg2l_mipi_dsi: add MIPI DSI
- command support
-X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
-X-SA-Exim-Scanned: Yes (on mail.hugovil.com)
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Thu, 22 May 2025 18:40:29 +0000
-Biju Das <biju.das.jz@bp.renesas.com> wrote:
+Hi all,
 
-> Hi Hugo,
-> 
-> Thanks for the patch.
-> 
-> > -----Original Message-----
-> > From: Hugo Villeneuve <hugo@hugovil.com>
-> > Sent: 22 May 2025 15:39
-> > Subject: [PATCH v3 0/2] drm: rcar-du: rzg2l_mipi_dsi: add MIPI DSI command support
-> > 
-> > From: Hugo Villeneuve <hvilleneuve@dimonoff.com>
-> > 
-> > Hello,
-> > this patch series add support for sending MIPI DSI command packets to the Renesas RZ/G2L MIPI DSI
-> > driver.
-> > 
-> > Tested on a custom board with a SolidRun RZ/G2L SOM, with two different LCD panels using the jd9365da
-> > and st7703 drivers.
-> > 
-> > Tested short and long writes.
-> > 
-> > Tested read of 1 byte, 2 bytes and long reads.
-> 
-> I see tested-by tag for patch[1] and this patch series is conflict with that patch.
+This patch series is based on a previous discussion around CMA heap
+naming. [1] The heap's name depends on the device name, which is
+generally "reserved", "linux,cma", or "default-pool", but could be any
+arbitrary name given to the default CMA area in the devicetree. For a
+consistent userspace interface, the series introduces a constant name
+for the CMA heap, and for backwards compatibility, an additional Kconfig
+that controls the creation of a legacy-named heap with the same CMA
+backing.
 
-Hi Biju,
-there is no conflict per se for the moment, as these are two separate
-submissions. Chris's patch is not part of this submission.
+The ideas to handle backwards compatibility in [1] are to either use a
+symlink or add a heap node with a duplicate minor. However, I assume
+that we don't want to create symlinks in /dev from module initcalls, and
+attempting to duplicate minors would cause device_create() to fail.
+Because of these drawbacks, after brainstorming with Maxime Ripard, I
+went with creating a new node in devtmpfs with its own minor. This
+admittedly makes it a little unclear that the old and new nodes are
+backed by the same heap when both are present. The only approach that I
+think would provide total clarity on this in userspace is symlinking,
+which seemed like a fairly involved solution for devtmpfs, but if I'm
+wrong on this, please let me know.
 
-I tested patch[1] by rebasing my series on top of Chris patch.
+Changelog:
 
-> Can this patch series work without patch[1]? If yes, no issue.
+v3:
+  - Extract documentation markup fix to separate patch.
+  - Adjust DEFAULT_CMA_NAME per discussion in [2].
+  - Warn if the legacy heap name and the default heap name are the same.
+  - Fix DMABUF_HEAPS_CMA_LEGACY prompt.
+  - Touch up commit log wording.
 
-Yes it can.
+v2:
+  - Use tabs instead of spaces for large vertical alignment.
 
+[1]: https://lore.kernel.org/all/f6412229-4606-41ad-8c05-7bbba2eb6e08@ti.com/
+[2]: https://lore.kernel.org/all/CANDhNCroe6ZBtN_o=c71kzFFaWK-fF5rCdnr9P5h1sgPOWSGSw@mail.gmail.com/
 
-> Otherwise, you need to rebase your patch on top of [1] to avoid merge conflict.
+Jared Kangas (3):
+  Documentation: dma-buf: heaps: Fix code markup
+  dma-buf: heaps: Parameterize heap name in __add_cma_heap()
+  dma-buf: heaps: Give default CMA heap a fixed name
 
-Eventually, if Chris's patch is accepted before my series, I
-will rebase and resubmit then. Right now, it seems I cannot do it,
-because submitting my serie based on an "not yet accepted" patch will
-result in the kernel test robot complaining (and rightly so). Unless
-there is a mean to specify that my serie depends on other
-unapplied patch...
-
-Ideally, it should have been easier if I could have integrated Chris's
-patch into my serie, but he preferred to send his patch alone since
-he felt that it could be accepted more rapidly like this.
-
-Hugo.
-
-
-> [1] https://lore.kernel.org/all/20250521210335.3149065-1-chris.brandt@renesas.com/
-> 
-> Cheers,
-> Biju
-> 
-> > 
-> > Thank you.
-> > 
-> > Link: [v1] https://lore.kernel.org/all/20250520164034.3453315-1-hugo@hugovil.com
-> > 
-> > Changes for V3:
-> > - No code change, resending after fixing mail server config resulting in
-> >   only cover letter being sent
-> > 
-> > Changes for V2:
-> > - Change commit message prefix to "drm: renesas: rz-du: "
-> > - Reorder variables in rzg2l_mipi_dsi_read_response()
-> > - Remove unused macros
-> > - Add missing bitfield include (kernel test robot)
-> > 
-> > Hugo Villeneuve (2):
-> >   drm: renesas: rz-du: Implement MIPI DSI host transfers
-> >   drm: renesas: rz-du: Set DCS maximum return packet size
-> > 
-> >  .../gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c    | 186 ++++++++++++++++++
-> >  .../drm/renesas/rz-du/rzg2l_mipi_dsi_regs.h   |  54 +++++
-> >  2 files changed, 240 insertions(+)
-> > 
-> > 
-> > base-commit: c4f8ac095fc91084108ec21117eb9c1fff64725d
-> > --
-> > 2.39.5
-> 
-> 
-
+ Documentation/userspace-api/dma-buf-heaps.rst | 11 +++---
+ drivers/dma-buf/heaps/Kconfig                 | 10 ++++++
+ drivers/dma-buf/heaps/cma_heap.c              | 36 +++++++++++++++----
+ 3 files changed, 46 insertions(+), 11 deletions(-)
 
 -- 
-Hugo Villeneuve
+2.49.0
+
