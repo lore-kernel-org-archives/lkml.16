@@ -1,101 +1,86 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 344DE195;
-	Thu, 22 May 2025 08:32:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE858221DB4;
+	Thu, 22 May 2025 08:32:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747902732; cv=none; b=YLK6Y6P0E33LTGa1/5ErZ13D+588njshHLEBzPAQLuK+efPcWqprLAVqjEema+vwtnmwEVPHtAkOUyO/eULyjnrYu1yBx1svKItFZ3wxF3M8Q6NIlj9xf2GLtym2iY9y17AQKR2NU3gdggyeq2bE0pTCOCpqYyoUd8Ync0JU0Io=
+	t=1747902764; cv=none; b=oGC2IoxMVBJRJ2yg228mYD/z4Qikj9m+EGX9yPfOJ/Z5JeSues/xNzqJ22WTMBd26lMpKJ7qPYQ/ZnnH5mRu46PFd6IFyhBAslYq4+Ft0XK0syQnK4xFBrxzlwC9EzPQB+mKw8Zv6yJ5e8HXugxf1qiNidgLYhAWUeJOexEV42s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747902732; c=relaxed/simple;
-	bh=WZQ6HWfccKpwFuwd6OP4pxDr+2OU5kN37ioPZebYFl8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=iwUN/XBEfbYopsDe4MWszv/f9vMwfC3d9oEMdjG+/yjI3oV7FDkAsceb8/AkIUR2JaPPTerNWgN+QkPHxVo368bRGYmdYP1GgQmRF+JhyktYyc8t+E1P0szjOogBug2a7Rk5TECgurjnCBglWCnvizI0QlTpG+7B6bSEuyUsTLE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YM0ss1GM; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747902764; c=relaxed/simple;
+	bh=qzece0dG6CvJSlZWCPI6r8FLhfVkXatcWlynd1wqVIs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aM2Xr0ubJB+TT9EAHwar5nwF752LFah2Bqt4pOAuJcWxryeGUZSr0XA9RHVeX5f6ZR4UOjUk+Qk2PNyu4ZDOIQt50Bu18yWjio40ICxk1IaeOAanjStDrDWPGNQ97+CA0gjx7BUdT8TMJ6e1SullJmOjROxRyZGWwyKuXiI8fvY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=pKUCoG91; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YM0ss1GM"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-44a57d08bbfso4392485e9.2;
-        Thu, 22 May 2025 01:32:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747902729; x=1748507529; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=SrIJdQiEhSsbGgqftG4sW4hqql7zVGZrpv/yvD1/dGY=;
-        b=YM0ss1GM3VIAb1pDTO8vPvQVtWKTnCSHMogESU1yixqLQDUlCdM8Q0BjCvjw2G5iHk
-         WxX+jy2IpIDbHU6kfIf7LQAGDHCa2Ak7TOhLVZuisID/0B4ukAVgjgFjlW/HK0OQA1Ma
-         elBLHmSc915XNtMy2cLXOk3NLqKLGIQyI9QfaVAXoR1dOs+6wNEVntBNKiPoMm4ZbvB4
-         n+n5GXDJmib7AxLZuwV+j/lpUPljea98f1JWQdDdeuhu4VuASZAmVaSe4eJrIqS/qCan
-         xwNFG9InQJXwkkqUkbhLGH18Tup2pp4/QLmrm8e/KPMRF8l3aPz2yeQvRZ1922fR82yR
-         FsSw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747902729; x=1748507529;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=SrIJdQiEhSsbGgqftG4sW4hqql7zVGZrpv/yvD1/dGY=;
-        b=g7xjfiUxUgJtCB/OcQxnMpScxiCMMBGJ60ReCXFeGSCm5SDDWUz0A/p97xSxBPwYE8
-         ewzubPEn1K1TXICAamdssbswGk9BMI7+3xVM2s4ZOAtAcaL5UFXKedPAp0YaPX+aEcCV
-         BGb6OlItg8OP6IRvzAzD1koaNqSsY2/FdUC21KF1+0UWLE+YS8Fcbs5D4Xnvwx2159ZN
-         dP0SS2hbAi2V7Iear1SEJ/MoU5NAmidBDJ57DKxHGYsItsblMCW7IS5ht+GI4NXobkzE
-         NOAC1EtMAen3Qs1Qo/PsSUEb+8UOFhFZ15KgvfnqmGG5wbLTubqfgNF/eLoI5HobWzQ3
-         ToRw==
-X-Forwarded-Encrypted: i=1; AJvYcCUE8UTYHb3LAqzqFxlx5cC6wT5IJX63ml6YtQPNI7kv1b8xxZ5iBvLZLrFNfHEnWvCNPvdiiT7ZT5Oz27g=@vger.kernel.org, AJvYcCWWPwJQQ6jQM5xzhPvUEdqHr/SgMnwQfYqnjBlztDe0fmYnmS/CL1O3nLYxzputzazZa2oK1nFrKYw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx00v79L5vWhep+sVPVoVlmiRjqtS9cdDkeiHpDg+qtDAifSQ9g
-	tMvO0Ok+h6GRKIaglbHQ6vy1dSL5p1Ln6QSjgsOxEbAYgRFo/Q07f//d
-X-Gm-Gg: ASbGncuHf+8/KeSimNFaTqyfJeLxU2JO/eq8fHB8av/BHu6W6n1qAuj83Z/saYJXgrs
-	bDRFDpFjm7IRg9jsooIRWJhX6n8hLjC1gNw+LZvnQROnXrGWmhvmZ8PvZPalDDM/Ueln/q/4IFS
-	lDTw6zQxfguiwQlbhoGxNA0HsydQk6xnrRlj3Y31AGt+LX0TXSKUu6UFKVN49HPX5PBk4nf+2Aa
-	4YZcfZ+JWjWdZtZgLNNn5XCEhsK6wqPo0fHHyUcV38ezwyGp41ceNSaA3Y0piUR7tTGWgOHLed8
-	8LcYHiL3olx6xh7VHlIohnrwiKP7xx6saOZ6NiLqgyhs5piFPg==
-X-Google-Smtp-Source: AGHT+IEWxTNbNldirqzkPayemAcdRy+LiGEXRQOfWvBP6iR1PKB5wnbTpTszol6POISM5nSMgXTsUA==
-X-Received: by 2002:a05:600c:8709:b0:44a:b478:1387 with SMTP id 5b1f17b1804b1-44ab48784e8mr9569075e9.17.1747902729154;
-        Thu, 22 May 2025 01:32:09 -0700 (PDT)
-Received: from localhost ([87.254.0.133])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-447f7ca2dd9sm93544565e9.37.2025.05.22.01.32.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 May 2025 01:32:08 -0700 (PDT)
-From: Colin Ian King <colin.i.king@gmail.com>
-To: "Rafael J . Wysocki" <rafael@kernel.org>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Zhang Rui <rui.zhang@intel.com>,
-	Lukasz Luba <lukasz.luba@arm.com>,
-	linux-pm@vger.kernel.org
-Cc: kernel-janitors@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH][next] thermal/drivers/airoha: Fix spelling mistake "calibrarion" -> "calibration"
-Date: Thu, 22 May 2025 09:31:57 +0100
-Message-ID: <20250522083157.1957240-1-colin.i.king@gmail.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="pKUCoG91"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97438C4CEE4;
+	Thu, 22 May 2025 08:32:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1747902764;
+	bh=qzece0dG6CvJSlZWCPI6r8FLhfVkXatcWlynd1wqVIs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=pKUCoG914/X+xlvH/BOpuEKwVoVSXwwkoo0maruRQOUIpAJ6ZGTzsz+UWf0xEORJ2
+	 Yoqg9xvwSmiIbg6OmNbtuTx695hOf+bJNtSuVlTLukRSuAzj0aiPVR0QGZlcpaND0W
+	 rnbmqcXSjNaDik4Qjix97orsR3I50tR8gRKpRgYc=
+Date: Thu, 22 May 2025 10:32:40 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: David Wang <00107082@163.com>
+Cc: mathias.nyman@intel.com, oneukum@suse.com, stern@rowland.harvard.edu,
+	hminas@synopsys.com, rui.silva@linaro.org, jgross@suse.com,
+	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 2/2] USB: xhci: use urb hcpriv mempool for private data
+Message-ID: <2025052211-oxidizing-tannery-de3f@gregkh>
+References: <a235e322e270942dc3d607d4b46ff7db29abeb2d.1747897366.git.00107082@163.com>
+ <5f14d11e4c651f9e856d760bc8b45ea7ac863b2f.1747897366.git.00107082@163.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5f14d11e4c651f9e856d760bc8b45ea7ac863b2f.1747897366.git.00107082@163.com>
 
-There is a spelling mistake in a dev_info message. Fix it.
+On Thu, May 22, 2025 at 03:10:10PM +0800, David Wang wrote:
+> xhci keeps alloc/free private data for each enqueue/dequeue cycles,
+> when using a USB webcam, allocation rate is ~250/s;
+> when using a USB mic, allocation rate reaches ~1k/s;
+> The more usb device in use, the higher allocation rate.
+> 
+> URB objects have longer lifespan than private data, hand over ownership
+> of private data to urb can save lots of memory allocations over time.
+> With this change, no extra memory allocation is needed during usages of
+> USB webcam/mic.
+> 
+> Signed-off-by: David Wang <00107082@163.com>
+> ---
+>  drivers/usb/host/xhci-mem.c  | 1 +
+>  drivers/usb/host/xhci-ring.c | 3 +--
+>  drivers/usb/host/xhci.c      | 8 +++-----
+>  3 files changed, 5 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/usb/host/xhci-mem.c b/drivers/usb/host/xhci-mem.c
+> index d698095fc88d..b19e41cf1c4c 100644
+> --- a/drivers/usb/host/xhci-mem.c
+> +++ b/drivers/usb/host/xhci-mem.c
+> @@ -1745,6 +1745,7 @@ struct xhci_command *xhci_alloc_command_with_ctx(struct xhci_hcd *xhci,
+>  
+>  void xhci_urb_free_priv(struct urb_priv *urb_priv)
+>  {
+> +	WARN_ONCE(1, "xhci private data should be managed by urb");
 
-Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
----
- drivers/thermal/airoha_thermal.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+You just crashed the kernel if this ever gets hit.  As you are saying
+this should never be called, why is this function even present anymore?
 
-diff --git a/drivers/thermal/airoha_thermal.c b/drivers/thermal/airoha_thermal.c
-index 9a7a702a17de..b9fd6bfc88e5 100644
---- a/drivers/thermal/airoha_thermal.c
-+++ b/drivers/thermal/airoha_thermal.c
-@@ -352,7 +352,7 @@ static void airoha_thermal_setup_adc_val(struct device *dev,
- 		priv->default_offset = airoha_get_thermal_ADC(priv);
- 		priv->default_slope = EN7581_SLOPE_X100_DIO_DEFAULT;
- 		priv->init_temp = EN7581_INIT_TEMP_NONK_X10;
--		dev_info(dev, "missing thermal calibrarion EFUSE, using non calibrated value\n");
-+		dev_info(dev, "missing thermal calibration EFUSE, using non calibrated value\n");
- 	}
- }
- 
--- 
-2.49.0
+This makes no sense :(
 
+Again, NEVER add a WARN*() call to the kernel for something that it
+should be handling properly on its own.  Otherwise you just lost all the
+user's data when the box got rebooted (and if userspace can trigger
+this, you just created a new CVE...)
+
+thanks,
+
+greg k-h
