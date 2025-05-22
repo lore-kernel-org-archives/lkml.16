@@ -1,276 +1,192 @@
-Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
+Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC44B1854;
-	Thu, 22 May 2025 02:17:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFEBAEAD0
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 02:22:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747880278; cv=none; b=bILhnpm0XQusiNiqFVCBMAoLv0AboScpH16POeG/e9tTOmaGzVdPySEDaR4A4VrmCTtABc1Wxc0vz72yN7RcbFe9ayXZwlfd9sMeFnkUb306lgNfB9L5j0LMfwOW8Cp4fWZei9fQpkqP2bzTX+L18iMEypvD2Oa6SfV2dfPu3IY=
+	t=1747880555; cv=none; b=FVPvJKlJLI96dCymChQOJBpzkT2wyiyEAAfiu7nghgwyDL3O7WiB31kfxE5TrVqqEm2GmcbdKQdK/nvEy/wyK11x9/sNixZ/HlwzUfXqU+0vqDTnSu+xAgJUQrPDLqOOcKzuBjnLve4wsyE+3rxKTMDT3MJDzK4gGXx5fAnwzuk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747880278; c=relaxed/simple;
-	bh=ZKHlp2Nech7ncXIlk7l+RizijugHYBco9l6vR+ZotRU=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=jto2EkQm2pNXW+8mjdD54p6XgdUcAZzrXPlgRfg+HZ9gRotpTXnPhUkfeqMI6hW5UGi1PyhuEq5J5uDVgnAD8TwIeFpdDUw7x5kRDdznIswIQW6GJVIKpKbvMKenW/jZkjej8d6YST0d5rht31ph/lYr9tXgLxGmJV0rQL6ZnvQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aNt++kvn; arc=none smtp.client-ip=209.85.210.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747880555; c=relaxed/simple;
+	bh=SbJQmBmxZPR8coPCUMiUL7otI69+WcCa0485S2sBHh4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=KZW3PXwVxvNvXBoJ5KG3XBR0T2I+Eeaoaif640zTYtPfSo/GKixPOAX3AlDpEhGftUIUcjoI/gi0nDErvc6VJnk1aWXPq79JCb6nfqa5lqlLKzg9BOhMVtHuPAFP8K4kY/V3hZJ4Lw6J0e9ASSuTX+nh5tPArJ7JcR0HtRsjxg0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=zSeL6So1; arc=none smtp.client-ip=209.85.219.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aNt++kvn"
-Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-742c9563fd9so3813711b3a.3;
-        Wed, 21 May 2025 19:17:56 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="zSeL6So1"
+Received: by mail-qv1-f43.google.com with SMTP id 6a1803df08f44-6f8a87f0c0fso72333206d6.0
+        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 19:22:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747880276; x=1748485076; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=google.com; s=20230601; t=1747880553; x=1748485353; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=D921nCJ6FrC9kndO6rYQP/8DUS7TGpst7yDOrwd7H6w=;
-        b=aNt++kvnpZKH9dAipVCX7H3aRwL9BR0ngtuNjb+KjI3tEuxk/oHPkQ+TIIGZqShY07
-         Z3cYwKN8hSryHmVrSO1wN6LxD1AJtW5SgYI/vCgAxK4L2uQN8DMQaeHpKOMekcT3zNW1
-         cGOjXgd2zIsKVGiM0kD0qcKan1mcuS1f3IG4Q8SeYxn7UkYuwRIeiRyG2DCnpPhkzmeM
-         zNVRHXJBGfen9vWiIPtc2IMK/OY6riWo83lT4lLQQrbAh1wFcODkJIbqqGpExO0ukkEd
-         Ot/NtD7nPjIyQc3NZ0zwcSfpFTwyqe6ld9StU77j/PozydhI/bSbuvO5GfXroCUXj0aL
-         /48g==
+        bh=cdUzQUue9v8nSaPVDipR0NdMbJfNS0IJI4RFISwRhr4=;
+        b=zSeL6So1axiAzw0s0YRJNhgRJmqRq/AcJt8ZOE/O/7FTfJ7Fxxqp5el8AiIdtlHA9Q
+         38gKo9tZcmS0XkHTRr+oDbTUS4B6iRGREGvNWalE233C84olQ+dWeZtQH9qEO7+YRqBH
+         b1VzTdbk86NtSzI6KKKhGNaIt/vVkf6ZoUgRlm9MR7KHlw4Hn+G+7n+h/JVFKwYm4kdV
+         0fVZEMHc9Ig+xS2JUnXdB/n6cVFibzh+rkZEMmfv45a+XV9A2vmfgZ+A+dX4XfC8DlZr
+         el7nKcpBvKISKyuPhjuliVui+ZPeh1JjfGXfLXvnmpxOGssKby3RZWhzWnfHkLQEMx0b
+         fOpw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747880276; x=1748485076;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1747880553; x=1748485353;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=D921nCJ6FrC9kndO6rYQP/8DUS7TGpst7yDOrwd7H6w=;
-        b=qbjbq3GA8OCSnFUKttSMG/ZByDfhu1BXEiyq764+XQvNy+j4Q+8Rc2z9WUe4F3lUjG
-         rVpqbpH+somqAXEwGln3pugMVa9zJ67zdjGSMeX9yVarISc1U9wzyeH3dV8z3bDwHbgw
-         SzlLmgUoiWX7c/9HwFc3yg0o69chTe11+dnbmzYSpxbRac5TjkGBXCkFdBqdwClM4iSy
-         JmyU0tORdBlQwMgsGpwFkObHM+2AtITMc94yF1giiHSV1GQs/97u4TpkeBI4UieYiWVa
-         89uMkQvFYSDqLrW+/AyNwY99G5BtZ9vwSwIRQkNwpn1DpkNLYlt6CsFbn2tUxW3nYTc1
-         8eeA==
-X-Forwarded-Encrypted: i=1; AJvYcCWEIbWpHD2a9yqiczihoE0zO+45/ipE3OM1tqifbhZgreCYxiDSdQFI+dS6lPDHVBl4IvqMp9pVzC20FoWx@vger.kernel.org, AJvYcCXKX9gyAZlurSJqYtxjXIBN8RthpzTJUwaycmZ+R9Gh7WVRHsuI7DENWOThQuRntgEzbTE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzPa+br2J91ux2pMps8byKWE3OFnLXeAomJ0v4uSSFD03mLjfmk
-	76EoHOmocd68Te4HLn1+aeqaVcEkN5UZ0XH05msfcal6NmUyk5Fqlgvn1+aMQkep61M=
-X-Gm-Gg: ASbGnctqCITzWJkBvOucgY//daSsgtleZ5p+CRvGtszT4b//xmEb8JL7vw6S7ZECmM2
-	FUEWsdIafDAXXUJrNFiqF8cD/e7os5WTTfmTr7KDHUQ3sbool0XOSMk9Xz3cTFkFLL7HVHqd7cJ
-	nWgPn0loZ80I/M62jTIFr8w7IBmCza42LEoH8dhWQ5GVUCVczifqLhaAlC11lYdvpDTo6XZWYWR
-	ykwjnO7nZY89oxmhdQ1/1ETVJBVQMObgNGj4Jx2iOR4MEdQ0I9de8+56XmKZw6aTxQVMx5PpcnJ
-	cnBgJ1JpN3yTQjChPib1JjpDkaVXJfAuF7IgFftRvoUInNvnqycDK84oG3RzZ8Y+yeRTOdt5FA=
-	=
-X-Google-Smtp-Source: AGHT+IHZzsGo8/7lkBUgo0SExevzjPKhKdaR3FROnQpsvJA4S96qjNIpAkDzf1CO5av9nl8PYHKI/A==
-X-Received: by 2002:a05:6a00:e0e:b0:730:9946:5973 with SMTP id d2e1a72fcca58-742acc8da9fmr27434635b3a.5.1747880275746;
-        Wed, 21 May 2025 19:17:55 -0700 (PDT)
-Received: from devant.antgroup-inc.local ([47.89.83.0])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-742a96e2106sm10542863b3a.17.2025.05.21.19.17.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 May 2025 19:17:55 -0700 (PDT)
-From: Xuewei Niu <niuxuewei97@gmail.com>
-X-Google-Original-From: Xuewei Niu <niuxuewei.nxw@antgroup.com>
-To: sgarzare@redhat.com
-Cc: Oxffffaa@gmail.com,
-	davem@davemloft.net,
-	fupan.lfp@antgroup.com,
-	jasowang@redhat.com,
-	kvm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	mst@redhat.com,
-	niuxuewei.nxw@antgroup.com,
-	niuxuewei97@gmail.com,
-	pabeni@redhat.com,
-	stefanha@redhat.com,
-	virtualization@lists.linux.dev,
-	xuanzhuo@linux.alibaba.com
-Subject: Re: [PATCH 2/3] vsock/virtio: Add SIOCINQ support for all virtio based transports
-Date: Thu, 22 May 2025 10:17:39 +0800
-Message-Id: <20250522021739.3363194-1-niuxuewei.nxw@antgroup.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <CAGxU2F4k-K+nvF4re8kQwdMfPZ=a6KLvgj-ntAPZVxyQKv6E_w@mail.gmail.com>
-References: <CAGxU2F4k-K+nvF4re8kQwdMfPZ=a6KLvgj-ntAPZVxyQKv6E_w@mail.gmail.com>
+        bh=cdUzQUue9v8nSaPVDipR0NdMbJfNS0IJI4RFISwRhr4=;
+        b=q7hPTGObXK+hUUT8Fk/LJcYcnMhEu5B+iw4TUlhUqCjMM72NJaMKcKeCs+ilUSAzf6
+         T1NfHAtmr/ahhYQnaOATAUIFm//9kLA1o2kQfvRPaGSCrtL9R33niS0WEr6AOlmUIFDf
+         /clLXvdmIBocEKOYWetH9TWApAVv+lFbTCRr3dzoZDE+7E6yTKe3N3eC+SLSouufKeSY
+         4B1SYYtS7j3t9nWeDuqySI5EwEm7pgevBS36yy+LE3qjk5fnQXZcUNsB2yy4j6caozQw
+         zzCbeg1FU7oIvlmIG/cLfA7LcYtoCXXMuQSEev5vP04HZLCh3V+KNiXwEuG49EKWHRp9
+         LveQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU1rQqU7Y//SaCXdDzRmscmXeC8tQ+v2rOiL4Vn54i7oPFHX+iy7p8zsfk9XMoBwBftkllFLA4MewH8HGw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzgGeM89PyN2GUDFPlJtvKi7/jmnBXQbKfx1A7Osp6SgzbCorVE
+	z3mmmnsKUO4aXev0+SBTayfhy8dairuxmY/J6KU6j8fQKHwCQL38mZ93l0OcsQN1splYhNxheUL
+	5UTYT/CUe832wJRQ2Une6lL3UzNqPyK51B9fiQYBgLZ9RZSTsGGliG1NJHZ4=
+X-Gm-Gg: ASbGnctRjSmbjlGTrQBwqHlWxinYm+qM60pLm8GGlosvIIg0g5C8ZwZIMsuQOjyq1hj
+	kbDQgHS5JHEFd8eLrdmNUafo9P8AhEFVRbHXyzoID12E4iWHSQYmcIAWpt1De9yXlwIkJnUNJ3G
+	TK5dA5mZrly5z4T/P+rY4rTqIyPPZUZ7if8QOi6M+62ujUTZu6683Z
+X-Google-Smtp-Source: AGHT+IGvvbhx/OpA0ADthVbZJdPu7pa/8lX6HpZ2/4FqctQxusP4BwE7BrxBFTW4uqHmQiW92Q2I875vsEXDKNgKAo0=
+X-Received: by 2002:a05:6214:202e:b0:6e8:9dfa:d932 with SMTP id
+ 6a1803df08f44-6f8b0836cc1mr397664296d6.15.1747880552448; Wed, 21 May 2025
+ 19:22:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250517043942.372315-1-royluo@google.com> <8f023425-3f9b-423c-9459-449d0835c608@linux.intel.com>
+ <CAMTwNXB0QLP-b=RmLPtRJo=T_efN_3H4dd5AiMNYrJDXddJkMA@mail.gmail.com> <fbf92981-6601-4ee9-a494-718e322ac1b9@linux.intel.com>
+In-Reply-To: <fbf92981-6601-4ee9-a494-718e322ac1b9@linux.intel.com>
+From: Roy Luo <royluo@google.com>
+Date: Wed, 21 May 2025 19:21:56 -0700
+X-Gm-Features: AX0GCFvMkPkxo-3aieFdeqIqShCAfovkwXEc0Hi9O2cZxOCA7YSaj1sjHUDCI0Q
+Message-ID: <CA+zupgyU2czaczPcqavYBi=NrPqKqgp7SbrUocy0qbJ0m9np6g@mail.gmail.com>
+Subject: Re: [PATCH v1] Revert "usb: xhci: Implement xhci_handshake_check_state()
+ helper"
+To: Mathias Nyman <mathias.nyman@linux.intel.com>
+Cc: Udipto Goswami <udipto.goswami@oss.qualcomm.com>, mathias.nyman@intel.com, 
+	quic_ugoswami@quicinc.com, Thinh.Nguyen@synopsys.com, 
+	gregkh@linuxfoundation.org, michal.pecio@gmail.com, linux-usb@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-> On Wed, 21 May 2025 at 10:58, Stefano Garzarella <sgarzare@redhat.com> wrote:
+On Tue, May 20, 2025 at 9:18=E2=80=AFAM Mathias Nyman
+<mathias.nyman@linux.intel.com> wrote:
+>
+> On 19.5.2025 21.13, Udipto Goswami wrote:
+> > On Mon, May 19, 2025 at 6:23=E2=80=AFPM Mathias Nyman
+> > <mathias.nyman@linux.intel.com> wrote:
+> >>
+> >> On 17.5.2025 7.39, Roy Luo wrote:
+> >>> This reverts commit 6ccb83d6c4972ebe6ae49de5eba051de3638362c.
+> >>>
+> >>> Commit 6ccb83d6c497 ("usb: xhci: Implement xhci_handshake_check_state=
+()
+> >>> helper") was introduced to workaround watchdog timeout issues on some
+> >>> platforms, allowing xhci_reset() to bail out early without waiting
+> >>> for the reset to complete.
+> >>>
+> >>> Skipping the xhci handshake during a reset is a dangerous move. The
+> >>> xhci specification explicitly states that certain registers cannot
+> >>> be accessed during reset in section 5.4.1 USB Command Register (USBCM=
+D),
+> >>> Host Controller Reset (HCRST) field:
+> >>> "This bit is cleared to '0' by the Host Controller when the reset
+> >>> process is complete. Software cannot terminate the reset process
+> >>> early by writinga '0' to this bit and shall not write any xHC
+> >>> Operational or Runtime registers until while HCRST is '1'."
+> >>>
+> >>> This behavior causes a regression on SNPS DWC3 USB controller with
+> >>> dual-role capability. When the DWC3 controller exits host mode and
+> >>> removes xhci while a reset is still in progress, and then tries to
+> >>> configure its hardware for device mode, the ongoing reset leads to
+> >>> register access issues; specifically, all register reads returns 0.
+> >>> These issues extend beyond the xhci register space (which is expected
+> >>> during a reset) and affect the entire DWC3 IP block, causing the DWC3
+> >>> device mode to malfunction.
+> >>
+> >> I agree with you and Thinh that waiting for the HCRST bit to clear dur=
+ing
+> >> reset is the right thing to do, especially now when we know skipping i=
+t
+> >> causes issues for SNPS DWC3, even if it's only during remove phase.
+> >>
+> >> But reverting this patch will re-introduce the issue originally worked
+> >> around by Udipto Goswami, causing regression.
+> >>
+> >> Best thing to do would be to wait for HCRST to clear for all other pla=
+tforms
+> >> except the one with the issue.
+> >>
+> >> Udipto Goswami, can you recall the platforms that needed this workarou=
+d?
+> >> and do we have an easy way to detect those?
 > >
-> > Forgot to CC Arseniy.
+> > Hi Mathias,
 > >
-> > On Wed, 21 May 2025 at 10:57, Stefano Garzarella <sgarzare@redhat.com> wrote:
-> > >
-> > > On Wed, May 21, 2025 at 10:06:13AM +0800, Xuewei Niu wrote:
-> > > >> On Mon, May 19, 2025 at 03:06:48PM +0800, Xuewei Niu wrote:
-> > > >> >The virtio_vsock_sock has a new field called bytes_unread as the return
-> > > >> >value of the SIOCINQ ioctl.
-> > > >> >
-> > > >> >Though the rx_bytes exists, we introduce a bytes_unread field to the
-> > > >> >virtio_vsock_sock struct. The reason is that it will not be updated
-> > > >> >until the skbuff is fully consumed, which causes inconsistency.
-> > > >> >
-> > > >> >The byte_unread is increased by the length of the skbuff when skbuff is
-> > > >> >enqueued, and it is decreased when dequeued.
-> > > >> >
-> > > >> >Signed-off-by: Xuewei Niu <niuxuewei.nxw@antgroup.com>
-> > > >> >---
-> > > >> > drivers/vhost/vsock.c                   |  1 +
-> > > >> > include/linux/virtio_vsock.h            |  2 ++
-> > > >> > net/vmw_vsock/virtio_transport.c        |  1 +
-> > > >> > net/vmw_vsock/virtio_transport_common.c | 17 +++++++++++++++++
-> > > >> > net/vmw_vsock/vsock_loopback.c          |  1 +
-> > > >> > 5 files changed, 22 insertions(+)
-> > > >> >
-> > > >> >diff --git a/drivers/vhost/vsock.c b/drivers/vhost/vsock.c
-> > > >> >index 802153e23073..0f20af6e5036 100644
-> > > >> >--- a/drivers/vhost/vsock.c
-> > > >> >+++ b/drivers/vhost/vsock.c
-> > > >> >@@ -452,6 +452,7 @@ static struct virtio_transport vhost_transport = {
-> > > >> >            .notify_set_rcvlowat      = virtio_transport_notify_set_rcvlowat,
-> > > >> >
-> > > >> >            .unsent_bytes             = virtio_transport_unsent_bytes,
-> > > >> >+           .unread_bytes             = virtio_transport_unread_bytes,
-> > > >> >
-> > > >> >            .read_skb = virtio_transport_read_skb,
-> > > >> >    },
-> > > >> >diff --git a/include/linux/virtio_vsock.h b/include/linux/virtio_vsock.h
-> > > >> >index 0387d64e2c66..0a7bd240113a 100644
-> > > >> >--- a/include/linux/virtio_vsock.h
-> > > >> >+++ b/include/linux/virtio_vsock.h
-> > > >> >@@ -142,6 +142,7 @@ struct virtio_vsock_sock {
-> > > >> >    u32 buf_alloc;
-> > > >> >    struct sk_buff_head rx_queue;
-> > > >> >    u32 msg_count;
-> > > >> >+   size_t bytes_unread;
-> > > >>
-> > > >> Can we just use `rx_bytes` field we already have?
-> > > >>
-> > > >> Thanks,
-> > > >> Stefano
-> > > >
-> > > >I perfer not. The `rx_bytes` won't be updated until the skbuff is fully
-> > > >consumed, causing inconsistency issues. If it is acceptable to you, I'll
-> > > >reuse the field instead.
-> > >
-> > > I think here we found a little pre-existing issue that should be related
-> > > also to what Arseniy (CCed) is trying to fix (low_rx_bytes).
-> > >
-> > > We basically have 2 counters:
-> > > - rx_bytes, which we use internally to see if there are bytes to read
-> > >    and for sock_rcvlowat
-> > > - fwd_cnt, which we use instead for the credit mechanism and informing
-> > >    the other peer whether we have space or not
-> > >
-> > > These are updated with virtio_transport_dec_rx_pkt() and
-> > > virtio_transport_inc_rx_pkt()
-> > >
-> > > As far as I can see, from the beginning, we call
-> > > virtio_transport_dec_rx_pkt() only when we consume the entire packet.
-> > > This makes sense for `fwd_cnt`, because we still have occupied space in
-> > > memory and we don't want to update the credit until we free all the
-> > > space, but I think it makes no sense for `rx_bytes`, which is only used
-> > > internally and should reflect the current situation of bytes to read.
-> > >
-> > > So in my opinion we should fix it this way (untested):
-> > >
-> > > diff --git a/net/vmw_vsock/virtio_transport_common.c b/net/vmw_vsock/virtio_transport_common.c
-> > > index 11eae88c60fc..ee70cb114328 100644
-> > > --- a/net/vmw_vsock/virtio_transport_common.c
-> > > +++ b/net/vmw_vsock/virtio_transport_common.c
-> > > @@ -449,10 +449,10 @@ static bool virtio_transport_inc_rx_pkt(struct virtio_vsock_sock *vvs,
-> > >   }
-> > >
-> > >   static void virtio_transport_dec_rx_pkt(struct virtio_vsock_sock *vvs,
-> > > -                                       u32 len)
-> > > +                                       u32 bytes_read, u32 bytes_dequeued)
-> > >   {
-> > > -       vvs->rx_bytes -= len;
-> > > -       vvs->fwd_cnt += len;
-> > > +       vvs->rx_bytes -= bytes_read;
-> > > +       vvs->fwd_cnt += bytes_dequeued;
-> > >   }
-> > >
-> > >   void virtio_transport_inc_tx_pkt(struct virtio_vsock_sock *vvs, struct sk_buff *skb)
-> > > @@ -581,11 +581,11 @@ virtio_transport_stream_do_dequeue(struct vsock_sock *vsk,
-> > >                                    size_t len)
-> > >   {
-> > >         struct virtio_vsock_sock *vvs = vsk->trans;
-> > > -       size_t bytes, total = 0;
-> > >         struct sk_buff *skb;
-> > >         u32 fwd_cnt_delta;
-> > >         bool low_rx_bytes;
-> > >         int err = -EFAULT;
-> > > +       size_t total = 0;
-> > >         u32 free_space;
-> > >
-> > >         spin_lock_bh(&vvs->rx_lock);
-> > > @@ -597,6 +597,8 @@ virtio_transport_stream_do_dequeue(struct vsock_sock *vsk,
-> > >         }
-> > >
-> > >         while (total < len && !skb_queue_empty(&vvs->rx_queue)) {
-> > > +               size_t bytes, dequeued = 0;
-> > > +
-> > >                 skb = skb_peek(&vvs->rx_queue);
-> > >
-> > >                 bytes = min_t(size_t, len - total,
-> > > @@ -620,12 +622,12 @@ virtio_transport_stream_do_dequeue(struct vsock_sock *vsk,
-> > >                 VIRTIO_VSOCK_SKB_CB(skb)->offset += bytes;
-> > >
-> > >                 if (skb->len == VIRTIO_VSOCK_SKB_CB(skb)->offset) {
-> > > -                       u32 pkt_len = le32_to_cpu(virtio_vsock_hdr(skb)->len);
-> > > -
-> > > -                       virtio_transport_dec_rx_pkt(vvs, pkt_len);
-> > > +                       dequeued = le32_to_cpu(virtio_vsock_hdr(skb)->len);
-> > >                         __skb_unlink(skb, &vvs->rx_queue);
-> > >                         consume_skb(skb);
-> > >                 }
-> > > +
-> > > +               virtio_transport_dec_rx_pkt(vvs, bytes, dequeued);
-> > >         }
-> > >
-> > >         fwd_cnt_delta = vvs->fwd_cnt - vvs->last_fwd_cnt;
-> > > @@ -782,7 +784,7 @@ static int virtio_transport_seqpacket_do_dequeue(struct vsock_sock *vsk,
-> > >                                 msg->msg_flags |= MSG_EOR;
-> > >                 }
-> > >
-> > > -               virtio_transport_dec_rx_pkt(vvs, pkt_len);
-> > > +               virtio_transport_dec_rx_pkt(vvs, pkt_len, pkt_len);
-> > >                 vvs->bytes_unread -= pkt_len;
-> > >                 kfree_skb(skb);
-> > >         }
-> > > @@ -1752,6 +1754,7 @@ int virtio_transport_read_skb(struct vsock_sock *vsk, skb_read_actor_t recv_acto
-> > >         struct sock *sk = sk_vsock(vsk);
-> > >         struct virtio_vsock_hdr *hdr;
-> > >         struct sk_buff *skb;
-> > > +       u32 pkt_len;
-> > >         int off = 0;
-> > >         int err;
-> > >
-> > > @@ -1769,7 +1772,8 @@ int virtio_transport_read_skb(struct vsock_sock *vsk, skb_read_actor_t recv_acto
-> > >         if (le32_to_cpu(hdr->flags) & VIRTIO_VSOCK_SEQ_EOM)
-> > >                 vvs->msg_count--;
-> > >
-> > > -       virtio_transport_dec_rx_pkt(vvs, le32_to_cpu(hdr->len));
-> > > +       pkt_len = le32_to_cpu(hdr->len);
-> > > +       virtio_transport_dec_rx_pkt(vvs, pkt_len, pkt_len);
-> > >         spin_unlock_bh(&vvs->rx_lock);
-> > >
-> > >         virtio_transport_send_credit_update(vsk);
-> > >
-> > > @Arseniy WDYT?
-> > > I will test it and send a proper patch.
-> > >
-> > > @Xuewei with that fixed, I think you can use `rx_bytes`, right?
-> 
-> If it's true, can we just use `vsock_stream_has_data()` return value
-> instead of adding a new transport's callback?
-> 
-> Thanks,
-> Stefano
+> >  From what I recall, we saw this issue coming up on our QCOM mobile
+> > platforms but it was not consistent. It was only reported in long runs
+> > i believe. The most recent instance when I pushed this patch was with
+> > platform SM8650, it was a watchdog timeout issue where xhci_reset() ->
+> > xhci_handshake() polling read timeout upon xhci remove. Unfortunately
+> > I was not able to simulate the scenario for more granular testing and
+> > had validated it with long hours stress testing.
+> > The callstack was like so:
+> >
+> > Full call stack on core6:
+> > -000|readl([X19] addr =3D 0xFFFFFFC03CC08020)
+> > -001|xhci_handshake(inline)
+> > -001|xhci_reset([X19] xhci =3D 0xFFFFFF8942052250, [X20] timeout_us =3D=
+ 10000000)
+> > -002|xhci_resume([X20] xhci =3D 0xFFFFFF8942052250, [?] hibernated =3D =
+?)
+> > -003|xhci_plat_runtime_resume([locdesc] dev =3D ?)
+> > -004|pm_generic_runtime_resume([locdesc] dev =3D ?)
+> > -005|__rpm_callback([X23] cb =3D 0xFFFFFFE3F09307D8, [X22] dev =3D
+> > 0xFFFFFF890F619C10)
+> > -006|rpm_callback(inline)
+> > -006|rpm_resume([X19] dev =3D 0xFFFFFF890F619C10,
+> > [NSD:0xFFFFFFC041453AD4] rpmflags =3D 4)
+> > -007|__pm_runtime_resume([X20] dev =3D 0xFFFFFF890F619C10, [X19] rpmfla=
+gs =3D 4)
+> > -008|pm_runtime_get_sync(inline)
+> > -008|xhci_plat_remove([X20] dev =3D 0xFFFFFF890F619C00)
+>
+> Thank you for clarifying this.
+>
+> So patch avoids the long timeout by always cutting xhci reinit path short=
+ in
+> xhci_resume() if resume was caused by pm_runtime_get_sync() call in
+> xhci_plat_remove()
+>
+> void xhci_plat_remove(struct platform_device *dev)
+> {
+>         xhci->xhc_state |=3D XHCI_STATE_REMOVING;
+>         pm_runtime_get_sync(&dev->dev);
+>         ...
+> }
+>
+> I think we can revert this patch, and just make sure that we don't reset =
+the
+> host in the reinit path of xhci_resume() if XHCI_STATE_REMOVING is set.
+> Just return immediately instead.
+>
 
-Nice catch! Will do.
+Just to be sure, are you proposing that we skip xhci_reset() within
+the reinit path
+of xhci_resume()? If we do that, could that lead to issues with
+subsequent operations
+in the reinit sequence, such as xhci_init() or xhci_run()?
+
+Do you prefer to group the change to skip xhci_reset() within the
+reinit path together
+with this revert? or do you want it to be sent and reviewed separately?
 
 Thanks,
-Xuewei
-
-> > >
-> > > Also because you missed for example `virtio_transport_read_skb()` used
-> > > by ebpf (see commit 3543152f2d33 ("vsock: Update rx_bytes on
-> > > read_skb()")).
-> > >
-> > > Thanks,
-> > > Stefano
+Roy
