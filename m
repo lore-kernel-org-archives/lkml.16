@@ -1,24 +1,39 @@
-Received: from cstnet.cn (smtp21.cstnet.cn [159.226.251.21])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A849A1AAA2F
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 18:28:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C1581A01C6
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 18:28:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747938489; cv=none; b=WPdNpeIMvxeaKjZTyPGO/q+tTwnQS8pM3iy1ELjIuFnYLSr6jrFRoTL/3mMqozRqtCCLgKCfTS4WykM3ezipZXhB50Cp1W0SULUwAFHTJH04hfMKr96HyPRffK9GUQejmasIu+iXB+3jJW7GjJeb/lsUrAljqAy9Cw90OXP8OCQ=
+	t=1747938526; cv=none; b=BqdrwfO5tarGtKNfNyHaOBTjQz68ltXznHQT4szKFtLFyGknSSwRvXeY4rz7uY9yY+IBwflVMbd39JDTBcv653OzUy70D8uGPsEEeC99/SsdMjfezs0z7tnChcalY7WQZaDL2B8UoyHdSmPMSSZH6go3NNsPCVuAGx8ImVJiSVE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747938489; c=relaxed/simple;
-	bh=sIGwMeU7wqKRu2tpPXn/ayJVK+WlzSufnu4DScOKKdU=;
+	s=arc-20240116; t=1747938526; c=relaxed/simple;
+	bh=NF64JsuJIWIqZ9I8k79mB0WKf9Zo8IW+FV+6nEFXaHI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=q7dDvv/WvWQp0rtbfWxGSqmcmelGqKxHUZl8t+T6schgATDfqypeO5kzz6DIbK0SGcBF3awxzHwCq7EQb2yXDWj22vkxzSyY4copwfgTeAc8qwtSE/2qIY4hJZC9cRWAFoEmWj5+50sSSSG8jrJB1QuTxE/giKA/sZbNHeCGzq8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=isrc.iscas.ac.cn; spf=pass smtp.mailfrom=isrc.iscas.ac.cn; arc=none smtp.client-ip=159.226.251.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=isrc.iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=isrc.iscas.ac.cn
-Received: from [198.18.0.1] (unknown [58.60.1.25])
-	by APP-01 (Coremail) with SMTP id qwCowADneg2ibC9oVD80AA--.7569S2;
-	Fri, 23 May 2025 02:27:48 +0800 (CST)
-Message-ID: <2f33a148-2a6d-4906-b2fc-6a8c853af3db@isrc.iscas.ac.cn>
-Date: Fri, 23 May 2025 02:27:47 +0800
+	 In-Reply-To:Content-Type; b=KyWblxkO3ll1G4ZRX903TEJWXG6tQXHgduTE5b5mPp/VGw7QhAmfxLCJTlErSSSGRE1N5uXjL98R7YFziCz8fXxCmSUR95AwN46uTPKyjNQGq60WXRyGWMj1DpO3ALELYql1iaxL5tgfcJimGtx9aN9bnYnOvwPcnhRjbeVHkmE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=jrzrLSLR; arc=none smtp.client-ip=213.97.179.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="jrzrLSLR"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=HwwUQzl2D3BmUBvszgNuv2TqAHKnY1hIL7TIDiTl2xw=; b=jrzrLSLROaYViBzc8snOQcBTBq
+	CjVKgSO3BcCNtF+Jay50sRDaoRvdGQHBSzVVeyqB54BrKlF3mF9qxlIHnZvNfUiJr/GU2gTtNv1TT
+	8Z7ne2TmuHAqcfbYRSUpLVeg4fAIctj+/KlrcKelFv1+Pb8CKShSaLTUnKwz525fVNwRI+4WDbB+D
+	eIMGsvfJypwHE/BK2KGIT7IZk+kqqwybhqcLnQOZeGu/Dg+cSfNpaAj7llQI39sQk792eZndhlrBS
+	umftwv++YOSAy+Om5gRt3t9nZi7My8D3cvPoBpd3oRZm7x9fIH78QDafyYi/Hk602CH6UOQlSsT4+
+	ozIPB23g==;
+Received: from [191.204.192.64] (helo=[192.168.15.100])
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
+	id 1uIAee-00BqOC-DY; Thu, 22 May 2025 20:28:32 +0200
+Message-ID: <df1d45c0-60f0-4850-9324-ab52a3f7f8e1@igalia.com>
+Date: Thu, 22 May 2025 15:28:27 -0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -26,39 +41,38 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] riscv: vector: fix xtheadvector save/restore
-To: Han Gao <rabenda.cn@gmail.com>, linux-riscv@lists.infradead.org
-Cc: Paul Walmsley <paul.walmsley@sifive.com>,
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Alexandre Ghiti <alex@ghiti.fr>, Charlie Jenkins <charlie@rivosinc.com>,
- Jesse Taube <jesse@rivosinc.com>, Andy Chiu <andybnac@gmail.com>,
- linux-kernel@vger.kernel.org
-References: <c221c98dc2369ea691e3eb664bf084dc909496f6.1747934680.git.rabenda.cn@gmail.com>
+Subject: Re: [PATCH] drm: drm_auth: Convert mutex usage to guard(mutex)
+To: Thomas Zimmermann <tzimmermann@suse.de>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+ kernel-dev@igalia.com, Kees Cook <keescook@chromium.org>,
+ Tvrtko Ursulin <tvrtko.ursulin@igalia.com>
+References: <20250509142627.639419-1-andrealmeid@igalia.com>
+ <7133e9b4-c05a-4901-940e-de3e70bbbb1e@suse.de>
 Content-Language: en-US
-From: Xiongchuan Tan <tanxiongchuan@isrc.iscas.ac.cn>
-In-Reply-To: <c221c98dc2369ea691e3eb664bf084dc909496f6.1747934680.git.rabenda.cn@gmail.com>
+From: =?UTF-8?Q?Andr=C3=A9_Almeida?= <andrealmeid@igalia.com>
+In-Reply-To: <7133e9b4-c05a-4901-940e-de3e70bbbb1e@suse.de>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:qwCowADneg2ibC9oVD80AA--.7569S2
-X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
-	VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUYh7k0a2IF6F4UM7kC6x804xWl14x267AK
-	xVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AKwVWUJVWUGw
-	A2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26r1j
-	6r1xM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r1j6r4UM28EF7xvwVC2z280aVAFwI0_Jr
-	0_Gr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4j6r4UJwAS0I0E0xvYzxvE52x082IY62kv
-	0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z2
-	80aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF
-	7I0E8cxan2IY04v7MxAIw28IcxkI7VAKI48JMxAqzxv26xkF7I0En4kS14v26r1q6r43Mx
-	C20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAF
-	wI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20x
-	vE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v2
-	0xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxV
-	WUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU7GYLDUUUU
-X-CM-SenderInfo: xwdq5xprqjuxxxdqqxxvufhxpvfd2hldfou0/1tbiDAYKAWgvPnNZZgABs1
+Content-Transfer-Encoding: 8bit
 
-I tested this patch with llama.cpp while adding xtheadvector support.
-Surprisingly, this bug did not prevent the LLM from generating plausible
-output, though the model's responses became noticeably less coherent.
+Hi Thomas,
 
-Tested-by: Xiongchuan Tan <tanxiongchuan@isrc.iscas.ac.cn>
+Em 12/05/2025 03:52, Thomas Zimmermann escreveu:
+> Hi
+> 
+> Am 09.05.25 um 16:26 schrieb André Almeida:
+>> Replace open-coded mutex handling with cleanup.h guard(mutex). This
+>> simplifies the code and removes the "goto unlock" pattern.
+>>
+>> Tested with igt tests core_auth and core_setmaster.
+>>
+>> Signed-off-by: André Almeida <andrealmeid@igalia.com>
+> 
+> Reviewed-by: Thomas Zimmermann <tzimmermann@suse.de>
+> 
+Do you mind applying this patch at drm-misc?
 
+Thanks!
+	André
