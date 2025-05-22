@@ -1,114 +1,111 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBD5628B503;
-	Thu, 22 May 2025 16:50:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F308818858A;
+	Thu, 22 May 2025 16:51:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747932617; cv=none; b=IHqaI0XWxLofNLhoMcdeg6q2W+H/T+mTwsCqTFm0DUKGGrGtoU6ochIje6lK2IQzGNjZqzdfw3DkbKxRE1IsUFemmLFlxngLR78MYkE4EPwLrTAsUyG0R4+x2dFNdn3ItdzwRypUlY1kcxbELvvJf64kFLeLzHUqEoMZaTPR5cE=
+	t=1747932698; cv=none; b=eTifGv0Rt2+sxgxnC+E63sauIRRJIDUC8t9FYWK/CyP1Zp7qQdPRMxv9UJFza1NCv2CkEdxAMJOKrICBiulmPl6ERa4kfTho9t1C4Ylvsritxqdd+uWZAjEYCdc83boAPT/+PpTJjsbiRtqnn16uNAH8B8wNGdhEGKG4jfrx42I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747932617; c=relaxed/simple;
-	bh=WAQaKse2ihBxfu0TJ9aEs4/TLMUkglE0FPdyzXEACyg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ugn534+toqhQRuRAH06ap94NiJ2aBt+i6lXNX0o2265AptKfIFsN6MrSYvRiFrlbjqX3gdYNhPgbEAc86RQvr3R4wGF9yie9t72kcWbqKD4N79XEm8CmL788CtN2ag60tagtPtIhcKuzMbsN5oPhSwrlghXzZ5wLpzsoAUt6sN4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NDMhW3rA; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1747932698; c=relaxed/simple;
+	bh=ZyjDRlaUljAfi8q455xMtlrqhLM1yrweMT6baGuF55E=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=BfjTdc4TikjJFLytmr+3OXqKHwkb/7NZmA7Nzpkn5BRKco8gwz/OXO2Njc7bNx3H8GnXBqQQ//VK6KzZkpl4bE5jlprkn7yLXPp37dU9sBhzFM8XL5MMHOjsH6rTHgEtEcKRubosOhvLE0CG8WhTD1tRYVSF5xjq1AiZr2OmBWI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BCR3GzrJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NDMhW3rA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747932615; x=1779468615;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=WAQaKse2ihBxfu0TJ9aEs4/TLMUkglE0FPdyzXEACyg=;
-  b=NDMhW3rAbFiuePF43ilafJA4YtWevh8/3hfTA/q0jyR9Br5ERanu+jeg
-   bb+T40cDLpB2CNLUB3aMz+Qfu/AgRJizyZZ29SlAHgvuR9VOaKnqnkiMs
-   HAK38Rqbq/Vj5yIF94k+35Bx6eke3c6Jp/GpafkMk6hurKz8klNimoedM
-   dWpJDpvZVQTaqlu/PwworLUCXibbKmRGb7GHCAWqyRJ+BzulZw9DBjWWL
-   sKGZF2W2jd2wwgSERNweRrrTBjDKkbisVMullrhxOIM9MR95qkoS+XaHx
-   OaK1x5gl3fIT8KCS3u/tI7YKDKoyepsBDrAcNLCverkf3zpy/o1rCv7RG
-   g==;
-X-CSE-ConnectionGUID: 9ZvJMLx/QLar4Xmhr/mrTA==
-X-CSE-MsgGUID: D3jOHAtBRA6jggFvzo4aag==
-X-IronPort-AV: E=McAfee;i="6700,10204,11441"; a="53783824"
-X-IronPort-AV: E=Sophos;i="6.15,306,1739865600"; 
-   d="scan'208";a="53783824"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2025 09:50:14 -0700
-X-CSE-ConnectionGUID: k2um+OxgQP2XgqQbU3n+og==
-X-CSE-MsgGUID: BSIuWrpQQNafNT2SQQcBPQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,306,1739865600"; 
-   d="scan'208";a="145550047"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by fmviesa005.fm.intel.com with ESMTP; 22 May 2025 09:50:05 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uI97L-000PWq-2Q;
-	Thu, 22 May 2025 16:50:03 +0000
-Date: Fri, 23 May 2025 00:49:07 +0800
-From: kernel test robot <lkp@intel.com>
-To: Jens Wiklander <jens.wiklander@linaro.org>,
-	linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-	dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
-	op-tee@lists.trustedfirmware.org,
-	linux-arm-kernel@lists.infradead.org
-Cc: oe-kbuild-all@lists.linux.dev, Olivier Masse <olivier.masse@nxp.com>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Yong Wu <yong.wu@mediatek.com>,
-	Sumit Semwal <sumit.semwal@linaro.org>,
-	Benjamin Gaignard <benjamin.gaignard@collabora.com>,
-	Brian Starkey <Brian.Starkey@arm.com>,
-	John Stultz <jstultz@google.com>,
-	"T . J . Mercier" <tjmercier@google.com>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-	Sumit Garg <sumit.garg@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	azarrabi@qti.qualcomm.com, Simona Vetter <simona.vetter@ffwll.ch>,
-	Daniel Stone <daniel@fooishbar.org>,
-	Rouven Czerwinski <rouven.czerwinski@linaro.org>,
-	Jens Wiklander <jens.wiklander@linaro.org>
-Subject: Re: [PATCH v9 6/9] tee: add tee_shm_alloc_dma_mem()
-Message-ID: <202505230242.8jtn9m5R-lkp@intel.com>
-References: <20250520152436.474778-7-jens.wiklander@linaro.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BCR3GzrJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 8715AC4CEEA;
+	Thu, 22 May 2025 16:51:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747932697;
+	bh=ZyjDRlaUljAfi8q455xMtlrqhLM1yrweMT6baGuF55E=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=BCR3GzrJbE3IOPpuWHK2h3aU6w5ooQPz+FeVw8i2a354dabQzPqxM8fJoDDagAO7T
+	 CM9UEx/bjaxXKSDE8nG1l3HxjFLQcv64ltpxngVI4ynwmSl5gO4xscXoBVDNdvJLWx
+	 kAWZgZ4c+jWv6saUeh3hE5SgxrvXE+Hs7be1Ud2TlzG4NBzilWnJP0MVnt7dLPaT1D
+	 skgO/lKF29SXtwZyidI7RG77A4wwR90X5oJN9bIWu2kPPxmulzvycNpk+CrZfZWCh1
+	 m1hRCE7fJ2At//5npDaarAmCTaRMPqPvE8ObCyOWclmzpexegmUrlWYx3Oc7jOGwBM
+	 X8T08J4Lk8o3A==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76E26C54EDA;
+	Thu, 22 May 2025 16:51:37 +0000 (UTC)
+From: Alejandro Enrique via B4 Relay <devnull+alejandroe1.geotab.com@kernel.org>
+Date: Thu, 22 May 2025 18:51:05 +0200
+Subject: [PATCH v2 2/2] gnss: ubx: add support for the safeboot gpio
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250520152436.474778-7-jens.wiklander@linaro.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250522-ubx-safeboot-v2-2-08c22378b8c9@geotab.com>
+References: <20250522-ubx-safeboot-v2-0-08c22378b8c9@geotab.com>
+In-Reply-To: <20250522-ubx-safeboot-v2-0-08c22378b8c9@geotab.com>
+To: Johan Hovold <johan@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Alejandro Enrique <alejandroe1@geotab.com>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1747932696; l=1402;
+ i=alejandroe1@geotab.com; s=20250514; h=from:subject:message-id;
+ bh=5q+UP/BRI1cuC24cDBux+9AkjID15/gPXOINM1Yuf4o=;
+ b=5l9yKE0744FlWyjZWyv0I/rGEgSlfrWCWO9JaUxMKa/w2pJIuY/I4S9p741rcGvVtBn4q06gW
+ IsojkHvqaFkBsAIEzR0fVQPZzqlLwWKqYHLSHWYahxURpkUliwLnj2L
+X-Developer-Key: i=alejandroe1@geotab.com; a=ed25519;
+ pk=xzHMPbqczL/tMsjXr26iLoHwIzLveHVnT+GIU4p1k38=
+X-Endpoint-Received: by B4 Relay for alejandroe1@geotab.com/20250514 with
+ auth_id=404
+X-Original-From: Alejandro Enrique <alejandroe1@geotab.com>
+Reply-To: alejandroe1@geotab.com
 
-Hi Jens,
+From: Alejandro Enrique <alejandroe1@geotab.com>
 
-kernel test robot noticed the following build errors:
+U-Blox 8/M8/M9 chip have a pin to start it in safeboot mode, to be
+used to recover from situations where the flash content has become
+corrupted and needs to be restored. If this pin is asserted at power
+up/reset, the receiver starts in safeboot mode and GNSS operation is
+disabled.
 
-[auto build test ERROR on b4432656b36e5cc1d50a1f2dc15357543add530e]
+Deassert the safeboot pin when probing this driver.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Jens-Wiklander/optee-sync-secure-world-ABI-headers/20250520-232546
-base:   b4432656b36e5cc1d50a1f2dc15357543add530e
-patch link:    https://lore.kernel.org/r/20250520152436.474778-7-jens.wiklander%40linaro.org
-patch subject: [PATCH v9 6/9] tee: add tee_shm_alloc_dma_mem()
-config: um-randconfig-r123-20250522 (https://download.01.org/0day-ci/archive/20250523/202505230242.8jtn9m5R-lkp@intel.com/config)
-compiler: clang version 16.0.6 (https://github.com/llvm/llvm-project 7cbf1a2591520c2491aa35339f227775f4d3adf6)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250523/202505230242.8jtn9m5R-lkp@intel.com/reproduce)
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Signed-off-by: Alejandro Enrique <alejandroe1@geotab.com>
+---
+ drivers/gnss/ubx.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505230242.8jtn9m5R-lkp@intel.com/
-
-All errors (new ones prefixed by >>, old ones prefixed by <<):
-
-ERROR: modpost: "memremap" [drivers/tee/tee.ko] undefined!
-ERROR: modpost: "memunmap" [drivers/tee/tee.ko] undefined!
->> ERROR: modpost: "dma_alloc_pages" [drivers/tee/tee.ko] undefined!
->> ERROR: modpost: "dma_free_pages" [drivers/tee/tee.ko] undefined!
+diff --git a/drivers/gnss/ubx.c b/drivers/gnss/ubx.c
+index 92402f6082c415c7b9051338eef5406b09e09455..1d6acace84f76f8d5d2eacdbbf5ab7a934b33486 100644
+--- a/drivers/gnss/ubx.c
++++ b/drivers/gnss/ubx.c
+@@ -67,6 +67,7 @@ static int ubx_probe(struct serdev_device *serdev)
+ {
+ 	struct gnss_serial *gserial;
+ 	struct gpio_desc *reset;
++	struct gpio_desc *safeboot;
+ 	struct ubx_data *data;
+ 	int ret;
+ 
+@@ -82,6 +83,13 @@ static int ubx_probe(struct serdev_device *serdev)
+ 
+ 	data = gnss_serial_get_drvdata(gserial);
+ 
++	/* Deassert safeboot */
++	safeboot = devm_gpiod_get_optional(&serdev->dev, "safeboot", GPIOD_OUT_LOW);
++	if (IS_ERR(safeboot)) {
++		ret = PTR_ERR(safeboot);
++		goto err_free_gserial;
++	}
++
+ 	data->vcc = devm_regulator_get(&serdev->dev, "vcc");
+ 	if (IS_ERR(data->vcc)) {
+ 		ret = PTR_ERR(data->vcc);
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.34.1
+
+
