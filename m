@@ -1,114 +1,96 @@
-Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f174.google.com (mail-vk1-f174.google.com [209.85.221.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F357222333D
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 08:50:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41A57262FEA;
+	Thu, 22 May 2025 08:50:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747903834; cv=none; b=jraSK6xu0Z7dHl/ndaND2HvYGjLivAreAY4QrkClsl6Q3w+ovJ58RO/8p8R+lmcipkxHpPnY+9s88D3pCRzs3QCP5cRNsxlActNFXMQbN/JWyYj6rOGjl7fPXbOHAoP+1MIxkQAVmCU92EqfiFaGZOsQqkA+x2P2KSNg7un9N9Q=
+	t=1747903849; cv=none; b=DTInx6ieT+u6p0ZB3nkVi52bOTrPn0lty6qxjynnm2n5yfQjLKczpn7StvfroLKD+TkSNAo0MW+vT5G0+W7j0CRJ2ra1+wTJbu5MAabe1oXwKMcUAR69vvWgFGXAy7fwUPejj057U7ItL2MS0zn+1E/HCcdikqXABVOzwkM8Lw0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747903834; c=relaxed/simple;
-	bh=EtxZat09Duwzr/erZWJUT3v6HVDaUnav3wiWadh0jXI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rW5ZUhbwtINj1Zan6F5xRO39FJGsBYT0WmqmoV38K7rnKW4of6LMvlATF7wPoORi7o/qFMW68igMY5FlwR0cn8Q8E+U9eL2uLAWJmks2ubJ4eBlmXOAYttA5nt20yC0oxuYQ6u6gvoPCNuSlJIoRulNlsgCUo4yls2ZF4O1nsx4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=NBzWLp5R; arc=none smtp.client-ip=194.117.254.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="NBzWLp5R"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	sang-engineering.com; h=date:from:to:cc:subject:message-id
-	:references:mime-version:content-type:in-reply-to; s=k1; bh=fsWp
-	FVyDIvdFelNHSyQhjkc8g9/TrCFYMl4nEph/irw=; b=NBzWLp5R6EnuQxbZYJ2c
-	xP7uJBdarPhz/WpHeEuSf6ldN1xp3TNNz3pdFJHeU+0b/c3MAmBUKcpe/Y4eusJ6
-	e7CiAKf1nFBsGQxjvD9WtrEmvsKZuxY+8+guhLAYskxQ8pX9ZfW9cr4fFRi4RoXp
-	PV6NgP2uTHtue9XwN8sLMEarcMoR7kY4aHfsddA52NBKweUvd/KV045dMef+QFhB
-	7fLHkCwfX/B7h99WYvXxvULahdQLzMipUZATsEwXQaNiY6/kFi5sAbBPfKg40NAq
-	dzNQd4+nnO4toe/jjtgFPPLpCFkmwd2+HtdsEk34q+FHiiEWGMqHpBvHOeJ0IjaO
-	Fw==
-Received: (qmail 3580289 invoked from network); 22 May 2025 10:50:24 +0200
-Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 22 May 2025 10:50:24 +0200
-X-UD-Smtp-Session: l3s3148p1@UL6MkrU1uOsgAwDPXwj7ADHm2wGe7qss
-Date: Thu, 22 May 2025 10:50:24 +0200
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
-To: Cosmin Tanislav <demonsingur@gmail.com>
-Cc: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Romain Gantois <romain.gantois@bootlin.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-media@vger.kernel.org
-Subject: Re: [PATCH v5 7/9] i2c: atr: add flags parameter to i2c_atr_new()
-Message-ID: <aC7lUE4kj8fnVVgM@shikoro>
-Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Cosmin Tanislav <demonsingur@gmail.com>,
-	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Romain Gantois <romain.gantois@bootlin.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-media@vger.kernel.org
-References: <20250507121917.2364416-1-demonsingur@gmail.com>
- <20250507121917.2364416-8-demonsingur@gmail.com>
+	s=arc-20240116; t=1747903849; c=relaxed/simple;
+	bh=2K+KQZzikeLIqku9jAOLpFAf26kMriVUDbPVnwyyxbE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=JgShQ6Wo8ajCoOMCdaWIodmziJJHoQ5+9/XA8cTwpLsLq2YdT4LdZMtsWavLR39rNV4TNv/Kn4N4aoM5HkuAGBx+BWJ1E8O2LuZ3mya56k0JBjNJEpF07qujztNBKRnpbStwaaJJHZi8fIGf6Jmf+Tvykd0TWwQoitCSwj3vDfY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vk1-f174.google.com with SMTP id 71dfb90a1353d-525da75d902so2464178e0c.3;
+        Thu, 22 May 2025 01:50:47 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747903846; x=1748508646;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=1RdSzTCdQ/gxFkTRRjzHv6shBsRitKkDZ+s9AT0E9TE=;
+        b=hpxiGxa4sGgx1/v9g0RjZ1nRvljhilkDUsPXIxXK2yJTBwJlW6w7FfNAatw+oD9v92
+         9gt89t54jQycuK4HxHnMuy9JJ7FoJ5zq6OZqQiTeYuEaZzC+DUYXBu7SXuXNCivfz1wC
+         a0Mi20y6k8eAVczE2RTRw+50KNOJ/8cL3fcVW5ijJFRbpSl7gw5g3s5bvw/cpdZYYbyV
+         niEcYaurVk8hsp4ierEXmEBCTB3B7yido+SSvDo5i/fxEAW7kuBotK9j581tfuOGh4dl
+         CeF3NgkIO9LSc6DJj6XEOpKRo050Q3YEmJ+fiKiIZ5XMYKTPHqfvVZCdkOsXCqc8VLte
+         WCwA==
+X-Forwarded-Encrypted: i=1; AJvYcCUFI+65Qr3olfNEZUWSKYHVWh9rVbXiXxSyNRpPaDH6fEILRRgv7CKB2Oi7xOmPAHeBp6J46YLz/+k=@vger.kernel.org, AJvYcCVbyFsFlkzKHse3800HJBmu8/XT/P3AjqxeHhQXdRFk+gWhBSmIoG5Vho/KRaI/1ily72MP3F764ZwuZmjE@vger.kernel.org, AJvYcCVcEV+m2pjkahBvcf8wJc6ZPdSDLIZxDVvI/tW62qkSNnWfpJJe5jsNtHKLQD8OuTlFN7Y0JZG4zAhAO5UZxTH8ijk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyEEtjzHcU5lDfoGq2+5CXLAu8jbQpbDhAGEN4LeZqITMGknzmb
+	wCQmDaiMXJW6S/JLDzfg3ZudfjixabDMNpHIcOQEjShx+MRJ+g0s911hnY9ri5kj
+X-Gm-Gg: ASbGncs5sgADASj3zanS/RtdRyCQH0AGTUm7DSmw9BOnQ0ZWT9SegN7H3Ut+k0vsFDU
+	IBepeYQHfaBhxf7U7Sxt1EIeIr3sSitORt+Ir6R9XGziI23qp+6xVlPxonHQrQUUxcdpkHbOSfR
+	CstfgRonYUOpwQTIBFuuWPV87s3icOzsHujtQNTffBBSzCCLDfDlBNHa9ZvEIMfhovfXOliiYnc
+	sZHHScRhUCYR4ORsAxEyDZ2K58SXAr2ppwo0VIVJdW4fxc6S074qfnv3EBBK/I8NgXw4j+gHGwf
+	mxmi96tpXqS7Tm3kL3aq8lSbmb1M59p5geqHa21TyhOkBpNWX35f04cHyKfKRNNSdohXVbUXt8O
+	9Lgcq1qM8VPUwug==
+X-Google-Smtp-Source: AGHT+IFWze0MmGxN/7N1fO+4bwKK2wa/oIXyq5oFO+zpyzsW8jGnkp8SxDveAx6TexXeZIsoHHIrBQ==
+X-Received: by 2002:a05:6122:4710:b0:520:4996:7d2a with SMTP id 71dfb90a1353d-52dba94f828mr20111955e0c.10.1747903846359;
+        Thu, 22 May 2025 01:50:46 -0700 (PDT)
+Received: from mail-vs1-f42.google.com (mail-vs1-f42.google.com. [209.85.217.42])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-52dbab4e96bsm11441779e0c.29.2025.05.22.01.50.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 22 May 2025 01:50:45 -0700 (PDT)
+Received: by mail-vs1-f42.google.com with SMTP id ada2fe7eead31-4dfa5cee94fso1993772137.1;
+        Thu, 22 May 2025 01:50:45 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUBZz7yk3DBFfzy46bCQoUGSqMmUxgf6Ex+OwwFa4f536mxy28m2ZagUU2+bm+VKEoSUt4rJpg6ffI=@vger.kernel.org, AJvYcCX8116Hq9KRK+luWQc9jDL56fS0urFOH46HvQ315jB56mbi+dFfgNluhcAS/FMSLWDRy6BJ4xwrAV+h1glo@vger.kernel.org, AJvYcCX8I/XUbPV/8niT2mQl60jK7JQdKklwBcdxmyyLaVoEiZfOf0Tav0rKXa2yrUMuCzhEJxE+9b9X7mBAzIRMW7K3iYA=@vger.kernel.org
+X-Received: by 2002:a05:6102:6c5:b0:4e2:c6e4:ab1e with SMTP id
+ ada2fe7eead31-4e2c6e4aca9mr3843819137.7.1747903845438; Thu, 22 May 2025
+ 01:50:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="GUaFME06mW/cC1Mp"
-Content-Disposition: inline
-In-Reply-To: <20250507121917.2364416-8-demonsingur@gmail.com>
+References: <20250513154635.273664-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20250513154635.273664-5-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20250513154635.273664-5-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Thu, 22 May 2025 10:50:33 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdVfCwbWmQaqaMAR+gfyYvevvBDBh=R_ZV-sVX7vW3ZaGA@mail.gmail.com>
+X-Gm-Features: AX0GCFv2mPwCdEPHFEBBSuxXYcqm_Khprg-6zD_yAUBC96QpV0aFb_9P-gawdgU
+Message-ID: <CAMuHMdVfCwbWmQaqaMAR+gfyYvevvBDBh=R_ZV-sVX7vW3ZaGA@mail.gmail.com>
+Subject: Re: [PATCH 4/5] clk: renesas: r9a09g056: Add clock and reset entries
+ for WDT controllers
+To: Prabhakar <prabhakar.csengg@gmail.com>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
+	linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
 
+On Tue, 13 May 2025 at 17:46, Prabhakar <prabhakar.csengg@gmail.com> wrote:
+> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+>
+> Add module clock and reset definitions for WDT0-3, which are available
+> on the RZ/V2N (R9A09G056) SoC.
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
---GUaFME06mW/cC1Mp
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i.e. will queue in renesas-clk for v6.17.
 
-On Wed, May 07, 2025 at 03:19:13PM +0300, Cosmin Tanislav wrote:
-> In preparation for adding multiple flags that change the behavior,
-> add a flags parameter to i2c_atr_new() and an i2c_atr_flags enum.
->=20
-> Signed-off-by: Cosmin Tanislav <demonsingur@gmail.com>
-> Reviewed-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
-> Reviewed-by: Romain Gantois <romain.gantois@bootlin.com>
+Gr{oetje,eeting}s,
 
-How did you guys get it to build?
+                        Geert
 
-  CC      drivers/i2c/i2c-atr.o
-In file included from drivers/i2c/i2c-atr.c:12:
-=2E/include/linux/i2c-atr.h:25:1: error: empty enum is invalid
-   25 | };
-      | ^
-make[4]: *** [scripts/Makefile.build:203: drivers/i2c/i2c-atr.o] Error 1
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-I'll squash patches 7+8 to avoid it.
-
-
---GUaFME06mW/cC1Mp
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmgu5UwACgkQFA3kzBSg
-KbZdBQ/9HqvniooWptw/34BzQrDFNQGRllH8iZBxq4TMELMTy3CQ1fy2PedWrek3
-IADHl/aUWYODbqdrjv5K+Vci4K5IwV0O9N1C35ibwdMwJQSxzLqf4iM+Wx3S4B3d
-64zGmbsE2+eri0QjG9ioy+Awdl3282xwtOIe4/i7luSPgytJrs0vl/XUZ7wtX2pK
-vUl73dd8pQ5+Vo2fs70yg64b/Lg05P/fltERi98iWiD6u6pD5mFF0srRtfB/tL36
-xh2RNcdSiloyv6hCA8dNb6cpWWSiVcW8BDx95XwtiPdzthTAbhi7zjhpMHppBaXE
-vT/2zQtcyLJ7pI0AMEYGN+SuGYY/SFNKbLsGMTRbj4q7sXIGkwD8kYDDqTW8F3of
-fOCUD33+JqezEHKi6IzdLqMSNUUHabUFShU6lpo/XDOJuSk9WCzZyGqxlgTMPQne
-vPOdnyUb+WibqM9BHZlFZpc7od/Ia4LjTbYqOwRzWv5ZY/rYOwJEgXyiHImt6LwA
-hGq5BTs1Nk3eNwHHU5JRyQIZXUZIEHkmK74NVJDvm4yrSXb8pkbF5IMKt8M4KnFB
-6a69so8NzWc64zww1MCbYHyeyy29M5hGBbbkbvtnDIojtMySEMaFsHTGuWCfa0/E
-Majscltz9XTzHv0SO0NDrCkCHevzPedffqKboih8JjGaLhg90SM=
-=6GB0
------END PGP SIGNATURE-----
-
---GUaFME06mW/cC1Mp--
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
