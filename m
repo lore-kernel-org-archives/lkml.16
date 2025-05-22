@@ -1,503 +1,209 @@
-Received: from unicom146.biz-email.net (unicom146.biz-email.net [210.51.26.146])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CBFA1A727D
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 08:47:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.51.26.146
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08F0A283147
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 08:47:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747903636; cv=none; b=iLrKkBW8+7qjXcZqSBkhw7LtlSDsOA5KwPBkDjwyl/zna/8smmZ1sRxGCwpAqpUnpkAV76F8TH1KWesrM5yHa1CyLcTAJDSrMO0vAd0z2TEMqukhfYqSqdRr3IZVRYtAVbeUQy9QT4JEcvnPo3kZ7veUw2x06ut7slsJJfvs/Uc=
+	t=1747903643; cv=none; b=Q5MWydTNugJ0ukU/APQApong4RngKlTvP6D28eUsNNH1CxA0UnX2MoHDCNyGgnbW2uEI2KVFKVYqlKMlDbU0DRyzAC8MmUhbo4Vfa/9gMCxU0HE/QhoVmx1rl/gtK1zsjBJozdhofngc2GoBuKUNCWqfbmhj9dt14non9F01eIk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747903636; c=relaxed/simple;
-	bh=if9sk7oQomtpLea1ijv2AlF92GvEiXIlf1AvQIEdm+s=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=iFqSyQ2YMVknEk3pgUOamL0R4fOKOV+aEY3KXbCjTcUfLqtU95CeyJsDU7qKRktD4Nr07RM8ZYjJClXMFN8oAiW/gLs9LYEk4HjYVXQ8ghzkgkIcT8T9I7z6jMwVWXTqKe4BA7pFlBBOV2QkjYer8UbWgWPaiU5Ty1lfTNn7S+o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=inspur.com; spf=pass smtp.mailfrom=inspur.com; arc=none smtp.client-ip=210.51.26.146
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=inspur.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inspur.com
-Received: from jtjnmail201608.home.langchao.com
-        by unicom146.biz-email.net ((D)) with ASMTP (SSL) id 202505221647055215;
-        Thu, 22 May 2025 16:47:05 +0800
-Received: from localhost.localdomain (10.94.19.116) by
- jtjnmail201608.home.langchao.com (10.100.2.8) with Microsoft SMTP Server id
- 15.1.2507.39; Thu, 22 May 2025 16:47:05 +0800
-From: Bo Liu <liubo03@inspur.com>
-To: <xiang@kernel.org>, <chao@kernel.org>
-CC: <linux-erofs@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>, Bo Liu
-	<liubo03@inspur.com>
-Subject: [PATCH v8] erofs: support deflate decompress by using Intel QAT
-Date: Thu, 22 May 2025 04:47:00 -0400
-Message-ID: <20250522084700.21354-1-liubo03@inspur.com>
-X-Mailer: git-send-email 2.18.2
+	s=arc-20240116; t=1747903643; c=relaxed/simple;
+	bh=U+OG+d8hfbvDmx6UAkB0xp/yTFEsXXxzx5uEKuDitx0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=sQAvtP8wiOAmpsvk7K0L9OwhCawu5RZY2/uJfj/CfEvYI2dOR/SCrFDSC29bIzvh3mZwIgcMHApqMc0SQmkB8Dbg2439d87HkymS0VF8aSceHj6RALMc8ohN1xStm7F2iAErHeyYl3C/24OO2eRSMhKPmdaF4zwakzQ9uThUdcY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=tGl8jzIA; arc=none smtp.client-ip=209.85.218.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tGl8jzIA"
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-ad574992fcaso774591266b.1
+        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 01:47:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1747903639; x=1748508439; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=oS/IyWoxphzadKMNL528mkjgxZl+WM6LE8gdVJhwq9M=;
+        b=tGl8jzIAXGP8jQrpoyyYSzS3E0Z9xsSOUiJwxlbrFZRBZbLTYuDRucvBQjoZHU1n0f
+         qrWDqxV1qN0kD4OnnxMZk6Y0MBYYE6EiiUGv4YQv5aXtdh8oYURnoe4Qa3J5WgtiibtB
+         t6DcNt8wYdG1K7YhxoR8WbY9KZtnNUxM5lkUslm6LyuEzWBLb5H78NlSB5qTUrMuQpkm
+         YVowJiEhIz5rRlIURv0D9mD26gqD9OtXwvFoK2UCk2SKl7Keptzf98P6Oq+snMj73tSA
+         uKVKU5wXkcTAJ5nnqjPMtYM6mPIYO0cyHV0GTCIjnk230BozxPFtRxDJmPAgGFIySI6Q
+         umCw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747903639; x=1748508439;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=oS/IyWoxphzadKMNL528mkjgxZl+WM6LE8gdVJhwq9M=;
+        b=P7QK7GKWXKOCRl0Kcte8cyXXr+1XsOkrNVKqW5yAAI/4bbLVA4r53WdyV6rFlWX7ee
+         6totSVri605uv3SGXg6a2W+nMmUSxVnvb5XG9d6XyjMJU0bb1lwt+dsP2APLgfS05Nat
+         6VlCPUnqTNciYompt/irlb/wVCp6xWRc3SIuaxmE4T9ZKor2WzLOaXAfxK4GUyPfEga+
+         3VJYH40T5AmXWoy+6r9X1AAnFO+96qDlmv7LUr7SqdMp/L9tpSifXq5k//niwdv60M2h
+         Ez7gyy/Q+lN5feWVPbE/0uFa9qlHuZRPyaym1L7UjWWiuLE6PWUjjqktN4QrNo9CW7Lx
+         kGYw==
+X-Forwarded-Encrypted: i=1; AJvYcCUUWMMANoZ/HL+swnqj7Kl/5p7ZB15VP5XnQy8Ycr285lOdZMEjSPwW06JZ63H7FIazJt+7P2PRX2VNMM8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyi+W8r36/T1M/g6t5gBIcm+0rGkwNBVO9vxCGOwB6arC53UD1U
+	+0Apvdu2muPQyqntIfHZbint7JbUCGS9ZLsfo9A7lQN/NRekivm9MDrqsa98VXM21t+eis26z07
+	8Hy0qUgjem0aF3fX7s7rRHIK2kqXT72ZSMgWkjP4N
+X-Gm-Gg: ASbGncseGlHHz78oV3JSxQtuT0ZGMTMLpNt49fFEMXXWp0neEJd9ReC6SelAHE7fpod
+	PA01OMLpGmJpmkqeckFWgBXoJ4e3HlOH5q8SOBynu52nEmefw8QFFK1CH3xlweE0MQk/0RUNpCC
+	CM2OoijI+TP1VmZeofnO09FNMEl7bP9VO81cVLGx8x+Kh7YBnBkdaBMw09VKxajTRzkVhGHt/d0
+	Q==
+X-Google-Smtp-Source: AGHT+IGeAg1FS5B957kESwNOhWbrhXwRf3wUtm+gPXXt8nbTePldZrjWHzjSiP9EyuW/zL2m5UDSODG2jnkgkuOoADI=
+X-Received: by 2002:a17:906:9fc6:b0:ac6:ff34:d046 with SMTP id
+ a640c23a62f3a-ad52d468b54mr2375897166b.2.1747903639073; Thu, 22 May 2025
+ 01:47:19 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-tUid: 2025522164705a22477d0eeeec0e24bcef39a22f878e3
-X-Abuse-Reports-To: service@corp-email.com
-Abuse-Reports-To: service@corp-email.com
-X-Complaints-To: service@corp-email.com
-X-Report-Abuse-To: service@corp-email.com
+References: <cover.1747349530.git.babu.moger@amd.com> <CALPaoChSzzU5mzMZsdT6CeyEn0WD1qdT9fKCoNW_ty4tojtrkw@mail.gmail.com>
+ <4dbcea13-382e-4af2-960d-0e66652cc2f5@amd.com> <8dd6e3a0-b2e1-48a7-8fa4-62e78b1407ae@intel.com>
+ <6c77b065-a54e-4b9c-a4cf-8b81676f2ab2@amd.com> <f4178258-f7ad-4db2-9284-3f28e8ee8d00@intel.com>
+ <92bcab75-72c6-46d4-97a2-119e7124c90c@amd.com> <11465976-f030-4c1b-88c6-3eebf0c8f13b@intel.com>
+ <CALPaoCjTwySGX9i7uAtCWLKQpmELKP55xDLJhHmUve8ptsfFTw@mail.gmail.com>
+ <7f10fa69-d1fe-4748-b10c-fa0c9b60bd66@intel.com> <aC5lL_qY00vd8qp4@agluck-desk3>
+ <a131e8ed-88b2-4fed-983b-5deea955a9a5@intel.com> <SJ1PR11MB6083B627895846B8663B4805FC99A@SJ1PR11MB6083.namprd11.prod.outlook.com>
+In-Reply-To: <SJ1PR11MB6083B627895846B8663B4805FC99A@SJ1PR11MB6083.namprd11.prod.outlook.com>
+From: Peter Newman <peternewman@google.com>
+Date: Thu, 22 May 2025 10:47:08 +0200
+X-Gm-Features: AX0GCFvn_pniYEQ4ayGp21nJqPmU30VsCiLX7_tjgWkuAxOIR_cGH5liC51ZY9o
+Message-ID: <CALPaoCjh_NXQLtNBqei=7a6Jsr17fEnPO+kqMaNq4xNu2UPDJA@mail.gmail.com>
+Subject: Re: [PATCH v13 00/27] x86/resctrl : Support AMD Assignable Bandwidth
+ Monitoring Counters (ABMC)
+To: "Luck, Tony" <tony.luck@intel.com>
+Cc: "Chatre, Reinette" <reinette.chatre@intel.com>, "Moger, Babu" <bmoger@amd.com>, 
+	"babu.moger@amd.com" <babu.moger@amd.com>, "corbet@lwn.net" <corbet@lwn.net>, 
+	"tglx@linutronix.de" <tglx@linutronix.de>, "mingo@redhat.com" <mingo@redhat.com>, "bp@alien8.de" <bp@alien8.de>, 
+	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>, "james.morse@arm.com" <james.morse@arm.com>, 
+	"dave.martin@arm.com" <dave.martin@arm.com>, "fenghuay@nvidia.com" <fenghuay@nvidia.com>, 
+	"x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>, 
+	"paulmck@kernel.org" <paulmck@kernel.org>, 
+	"akpm@linux-foundation.org" <akpm@linux-foundation.org>, "thuth@redhat.com" <thuth@redhat.com>, 
+	"rostedt@goodmis.org" <rostedt@goodmis.org>, "ardb@kernel.org" <ardb@kernel.org>, 
+	"gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, 
+	"daniel.sneddon@linux.intel.com" <daniel.sneddon@linux.intel.com>, 
+	"jpoimboe@kernel.org" <jpoimboe@kernel.org>, 
+	"alexandre.chartre@oracle.com" <alexandre.chartre@oracle.com>, 
+	"pawan.kumar.gupta@linux.intel.com" <pawan.kumar.gupta@linux.intel.com>, 
+	"thomas.lendacky@amd.com" <thomas.lendacky@amd.com>, "perry.yuan@amd.com" <perry.yuan@amd.com>, 
+	"seanjc@google.com" <seanjc@google.com>, "Huang, Kai" <kai.huang@intel.com>, 
+	"Li, Xiaoyao" <xiaoyao.li@intel.com>, 
+	"kan.liang@linux.intel.com" <kan.liang@linux.intel.com>, "Li, Xin3" <xin3.li@intel.com>, 
+	"ebiggers@google.com" <ebiggers@google.com>, "xin@zytor.com" <xin@zytor.com>, 
+	"Mehta, Sohil" <sohil.mehta@intel.com>, 
+	"andrew.cooper3@citrix.com" <andrew.cooper3@citrix.com>, 
+	"mario.limonciello@amd.com" <mario.limonciello@amd.com>, 
+	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	"Wieczor-Retman, Maciej" <maciej.wieczor-retman@intel.com>, "Eranian, Stephane" <eranian@google.com>, 
+	"Xiaojian.Du@amd.com" <Xiaojian.Du@amd.com>, "gautham.shenoy@amd.com" <gautham.shenoy@amd.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-This patch introdueces the use of the Intel QAT to decompress compressed
-data in the EROFS filesystem, aiming to improve the decompression speed
-of compressed datea.
+Hi Tony, Reinette,
 
-We created a 285MiB compressed file and then used the following command to
-create EROFS images with different cluster size.
-     # mkfs.erofs -zdeflate,level=9 -C16384
+On Thu, May 22, 2025 at 2:21=E2=80=AFAM Luck, Tony <tony.luck@intel.com> wr=
+ote:
+>
+> > >>> There's also the mongroup-RMID overcommit use case I described
+> > >>> above[1]. On Intel we can safely assume that there are counters to
+> > >>> back all RMIDs, so num_mbm_cntrs would be calculated directly from
+> > >>> num_rmids.
+> > >>
+> > >> This is about the:
+> > >>    There's now more interest in Google for allowing explicit control=
+ of
+> > >>    where RMIDs are assigned on Intel platforms. Even though the numb=
+er of
+> > >>    RMIDs implemented by hardware tends to be roughly the number of
+> > >>    containers they want to support, they often still need to create
+> > >>    containers when all RMIDs have already been allocated, which is n=
+ot
+> > >>    currently allowed. Once the container has been created and starts
+> > >>    running, it's no longer possible to move its threads into a monit=
+oring
+> > >>    group whenever RMIDs should become available again, so it's impor=
+tant
+> > >>    for resctrl to maintain an accurate task list for a container eve=
+n
+> > >>    when RMIDs are not available.
+> > >>
+> > >> I see a monitor group as a collection of tasks that need to be monit=
+ored together.
+> > >> The "task list" is the group of tasks that share a monitoring ID tha=
+t
+> > >> is required to be a valid ID since when any of the tasks are schedul=
+ed that ID is
+> > >> written to the hardware. I intentionally tried to not use RMID since=
+ I believe
+> > >> this is required for all archs.
+> > >> I thus do not understand how a task can start running when it does n=
+ot have
+> > >> a valid monitoring ID. The idea of "deferred assignment" is not clea=
+r to me,
+> > >> there can never be "unmonitored tasks", no? I think I am missing som=
+ething here.
 
-fio command was used to test random read and small random read(~5%) and
-sequential read performance.
-     # fio -filename=testfile  -bs=4k -rw=read -name=job1
-     # fio -filename=testfile  -bs=4k -rw=randread -name=job1
-     # fio -filename=testfile  -bs=4k -rw=randread --io_size=14m -name=job1
+You are correct. I did forget to mention something...
 
-Here are some performance numbers for reference:
+> > >
+> > > In the AMD/RMID implemenentation this might be achieved with somethin=
+g
+> > > extra in the task structure to denote whether a task is in a monitore=
+d
+> > > group or not. E.g. We add "task->rmid_valid" as well as "task->rmid".
+> > > Tasks in an unmonitored group retain their "task->rmid" (that's what
+> > > identifies them as a member of a group) but have task->rmid_valid set
+> > > to false.  Context switch code would be updated to load "0" into the
+> > > IA32_PQR_ASSOC.RMID field for tasks without a valid RMID. So they
+> > > would still be monitored, but activity would be bundled with all
+> > > tasks in the default resctrl group.
+> > >
+> > > Presumably something analogous could be done for ARM/MPAM.
+> > >
+> >
+> > I do not interpret this as an unmonitored task but instead a task that
+> > belongs to the default resource group. Specifically, any data accumulat=
+ed by
+> > such a task is attributed to the default resource group. Having tasks
+> > in a separate group but their monitoring data accumulating in/contribut=
+ed to
+> > the default resource group (that has its own set of tasks) sounds wrong=
+ to me.
+> > Such an implementation makes any monitoring data of default resource gr=
+oup
+> > invalid, and by extension impossible to use default resource group to m=
+anage
+> > an allocation for a group of monitor groups if user space needs insight
+> > in monitoring data across all these monitor groups. User space will nee=
+d to
+> > interact with resctrl differently and individually query monitor groups=
+ instead
+> > of CTRL_MON group once.
+>
+> Maybe assign one of the limited supply of RMIDs for these "unmonitored"
+> tasks. Populate a resctrl group named "unmonitored" that lists all the
+> unmonitored tasks in a (read-only) "tasks" file. And supply all the count=
+s
+> for these tasks in normal looking "mon_data" directory.
 
-Processors: Intel(R) Xeon(R) 6766E(144 core)
-Memory:     521 GiB
+I needed to switch to an rdtgroup struct pointer rather than hardware
+IDs in the task structure to indicate group membership[1], otherwise
+it's not possible to determine which tasks are in a group when it
+doesn't have a unique HW ID value.
 
-|-----------------------------------------------------------------------------|
-|           | Cluster size | sequential read | randread  | small randread(5%) |
-|-----------|--------------|-----------------|-----------|--------------------|
-| Intel QAT |    4096      |    538  MiB/s   | 112 MiB/s |     20.76 MiB/s    |
-| Intel QAT |    16384     |    699  MiB/s   | 158 MiB/s |     21.02 MiB/s    |
-| Intel QAT |    65536     |    917  MiB/s   | 278 MiB/s |     20.90 MiB/s    |
-| Intel QAT |    131072    |    1056 MiB/s   | 351 MiB/s |     23.36 MiB/s    |
-| Intel QAT |    262144    |    1145 MiB/s   | 431 MiB/s |     26.66 MiB/s    |
-| deflate   |    4096      |    499  MiB/s   | 108 MiB/s |     21.50 MiB/s    |
-| deflate   |    16384     |    422  MiB/s   | 125 MiB/s |     18.94 MiB/s    |
-| deflate   |    65536     |    452  MiB/s   | 159 MiB/s |     13.02 MiB/s    |
-| deflate   |    131072    |    452  MiB/s   | 177 MiB/s |     11.44 MiB/s    |
-| deflate   |    262144    |    466  MiB/s   | 194 MiB/s |     10.60 MiB/s    |
+Also this is required for shared assignment so that changing a group's
+IDs in a domain only requires updating running tasks rather than
+needing to search the entire task list, which would lead to the same
+problem we encountered in mongroup rename[2].
 
-Signed-off-by: Bo Liu <liubo03@inspur.com>
----
-v1: https://lore.kernel.org/linux-erofs/20250410042048.3044-1-liubo03@inspur.com/
-v2: https://lore.kernel.org/linux-erofs/20250410042048.3044-1-liubo03@inspur.com/T/#t
-v3: https://lore.kernel.org/linux-erofs/20250516082634.3801-1-liubo03@inspur.com/
-v4: https://lore.kernel.org/linux-erofs/20250521100326.2867828-1-hsiangkao@linux.alibaba.com/
-v5: https://lore.kernel.org/linux-erofs/f245b9edfc1b4205804c415cc0608558@inspur.com/T/#t
-v6: https://lore.kernel.org/linux-erofs/20250522081433.16812-1-liubo03@inspur.com/T/#u
-v7: https://lore.kernel.org/linux-erofs/20250522083920.19855-1-liubo03@inspur.com/T/#u
-change since v7:
- - update code style.
+-Peter
 
- Documentation/ABI/testing/sysfs-fs-erofs |   9 ++
- fs/erofs/Kconfig                         |  14 ++
- fs/erofs/Makefile                        |   1 +
- fs/erofs/compress.h                      |  10 ++
- fs/erofs/decompressor_crypto.c           | 186 +++++++++++++++++++++++
- fs/erofs/decompressor_deflate.c          |  17 ++-
- fs/erofs/sysfs.c                         |  34 ++++-
- fs/erofs/zdata.c                         |   1 +
- 8 files changed, 269 insertions(+), 3 deletions(-)
- create mode 100644 fs/erofs/decompressor_crypto.c
-
-diff --git a/Documentation/ABI/testing/sysfs-fs-erofs b/Documentation/ABI/testing/sysfs-fs-erofs
-index b134146d735b..4d024f043ea1 100644
---- a/Documentation/ABI/testing/sysfs-fs-erofs
-+++ b/Documentation/ABI/testing/sysfs-fs-erofs
-@@ -27,3 +27,12 @@ Description:	Writing to this will drop compression-related caches,
- 		- 1 : invalidate cached compressed folios
- 		- 2 : drop in-memory pclusters
- 		- 3 : drop in-memory pclusters and cached compressed folios
-+
-+What:		/sys/fs/erofs/accel
-+Date:		May 2025
-+Contact:	"Bo Liu" <liubo03@inspur.com>
-+Description:	Used to set or show hardware accelerators in effect
-+		and multiple accelerators are separated by '\n'.
-+		Supported accelerator(s): qat_deflate.
-+		Disable all accelerators with an empty string (echo > accel).
-+
-diff --git a/fs/erofs/Kconfig b/fs/erofs/Kconfig
-index 331e49cd1b8d..74e878a9784a 100644
---- a/fs/erofs/Kconfig
-+++ b/fs/erofs/Kconfig
-@@ -144,6 +144,20 @@ config EROFS_FS_ZIP_ZSTD
- 
- 	  If unsure, say N.
- 
-+config EROFS_FS_ZIP_ACCEL
-+	bool "EROFS hardware decompression support"
-+	depends on EROFS_FS_ZIP
-+	help
-+	  Saying Y here includes hardware accelerator support for reading
-+	  EROFS file systems containing compressed data.  It gives better
-+	  decompression speed than the software-implemented decompression, and
-+	  it costs lower CPU overhead.
-+
-+	  Hardware accelerator support is an experimental feature for now and
-+	  file systems are still readable without selecting this option.
-+
-+	  If unsure, say N.
-+
- config EROFS_FS_ONDEMAND
- 	bool "EROFS fscache-based on-demand read support (deprecated)"
- 	depends on EROFS_FS
-diff --git a/fs/erofs/Makefile b/fs/erofs/Makefile
-index 4331d53c7109..549abc424763 100644
---- a/fs/erofs/Makefile
-+++ b/fs/erofs/Makefile
-@@ -7,5 +7,6 @@ erofs-$(CONFIG_EROFS_FS_ZIP) += decompressor.o zmap.o zdata.o zutil.o
- erofs-$(CONFIG_EROFS_FS_ZIP_LZMA) += decompressor_lzma.o
- erofs-$(CONFIG_EROFS_FS_ZIP_DEFLATE) += decompressor_deflate.o
- erofs-$(CONFIG_EROFS_FS_ZIP_ZSTD) += decompressor_zstd.o
-+erofs-$(CONFIG_EROFS_FS_ZIP_ACCEL) += decompressor_crypto.o
- erofs-$(CONFIG_EROFS_FS_BACKED_BY_FILE) += fileio.o
- erofs-$(CONFIG_EROFS_FS_ONDEMAND) += fscache.o
-diff --git a/fs/erofs/compress.h b/fs/erofs/compress.h
-index 2704d7a592a5..6a3dc3ba406a 100644
---- a/fs/erofs/compress.h
-+++ b/fs/erofs/compress.h
-@@ -76,4 +76,14 @@ int z_erofs_fixup_insize(struct z_erofs_decompress_req *rq, const char *padbuf,
- 			 unsigned int padbufsize);
- int __init z_erofs_init_decompressor(void);
- void z_erofs_exit_decompressor(void);
-+int z_erofs_crypto_decompress(struct z_erofs_decompress_req *rq,
-+				struct page **pgpl);
-+int z_erofs_crypto_enable_engine(const char *name, int len);
-+#ifdef CONFIG_EROFS_FS_ZIP_ACCEL
-+void z_erofs_crypto_disable_all_engines(void);
-+int z_erofs_crypto_show_engines(char *buf, int size, char sep);
-+#else
-+static inline void z_erofs_crypto_disable_all_engines(void) {}
-+static inline int z_erofs_crypto_show_engines(char *buf, int size, char sep) { return 0; }
-+#endif
- #endif
-diff --git a/fs/erofs/decompressor_crypto.c b/fs/erofs/decompressor_crypto.c
-new file mode 100644
-index 000000000000..f4891d335792
---- /dev/null
-+++ b/fs/erofs/decompressor_crypto.c
-@@ -0,0 +1,186 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+#include <linux/scatterlist.h>
-+#include <crypto/acompress.h>
-+
-+#include "compress.h"
-+
-+static int __z_erofs_crypto_decompress(struct z_erofs_decompress_req *rq,
-+				struct crypto_acomp *tfm)
-+{
-+	struct sg_table st_src, st_dst;
-+	struct acomp_req *req;
-+	struct crypto_wait wait;
-+	u8 *headpage;
-+	int ret;
-+
-+	headpage = kmap_local_page(*rq->in);
-+	ret = z_erofs_fixup_insize(rq, headpage + rq->pageofs_in,
-+						min_t(unsigned int, rq->inputsize,
-+							  rq->sb->s_blocksize - rq->pageofs_in));
-+	kunmap_local(headpage);
-+	if (ret)
-+		return ret;
-+
-+	req = acomp_request_alloc(tfm);
-+	if (!req)
-+		return -ENOMEM;
-+
-+	ret = sg_alloc_table_from_pages_segment(&st_src, rq->in, rq->inpages,
-+			rq->pageofs_in, rq->inputsize, UINT_MAX, GFP_KERNEL);
-+	if (ret < 0)
-+		goto failed_src_alloc;
-+
-+	ret = sg_alloc_table_from_pages_segment(&st_dst, rq->out, rq->outpages,
-+			rq->pageofs_out, rq->outputsize, UINT_MAX, GFP_KERNEL);
-+	if (ret < 0)
-+		goto failed_dst_alloc;
-+
-+	acomp_request_set_params(req, st_src.sgl,
-+		st_dst.sgl, rq->inputsize, rq->outputsize);
-+
-+	crypto_init_wait(&wait);
-+	acomp_request_set_callback(req, CRYPTO_TFM_REQ_MAY_BACKLOG,
-+				crypto_req_done, &wait);
-+
-+	ret = crypto_wait_req(crypto_acomp_decompress(req), &wait);
-+	if (ret) {
-+		erofs_err(rq->sb, "failed to decompress %d in[%u, %u] out[%u]",
-+			  ret, rq->inputsize, rq->pageofs_in, rq->outputsize);
-+		ret = -EIO;
-+	}
-+
-+	sg_free_table(&st_dst);
-+failed_dst_alloc:
-+	sg_free_table(&st_src);
-+failed_src_alloc:
-+	acomp_request_free(req);
-+	return ret;
-+}
-+
-+struct z_erofs_crypto_engine {
-+	char *crypto_name;
-+	struct crypto_acomp *tfm;
-+};
-+
-+struct z_erofs_crypto_engine *z_erofs_crypto[Z_EROFS_COMPRESSION_MAX] = {
-+	[Z_EROFS_COMPRESSION_LZ4] = (struct z_erofs_crypto_engine[]) {
-+		{},
-+	},
-+	[Z_EROFS_COMPRESSION_LZMA] = (struct z_erofs_crypto_engine[]) {
-+		{},
-+	},
-+	[Z_EROFS_COMPRESSION_DEFLATE] = (struct z_erofs_crypto_engine[]) {
-+		{ .crypto_name = "qat_deflate", },
-+		{},
-+	},
-+	[Z_EROFS_COMPRESSION_ZSTD] = (struct z_erofs_crypto_engine[]) {
-+		{},
-+	},
-+};
-+
-+static DECLARE_RWSEM(z_erofs_crypto_rwsem);
-+
-+static struct crypto_acomp *z_erofs_crypto_get_engine(int alg)
-+{
-+	struct z_erofs_crypto_engine *e;
-+
-+	for (e = z_erofs_crypto[alg]; e->crypto_name; ++e)
-+		if (e->tfm)
-+			return e->tfm;
-+	return NULL;
-+}
-+
-+
-+int z_erofs_crypto_decompress(struct z_erofs_decompress_req *rq,
-+				 struct page **pgpl)
-+{
-+	struct crypto_acomp *tfm;
-+	int i, err;
-+
-+	down_read(&z_erofs_crypto_rwsem);
-+	tfm = z_erofs_crypto_get_engine(rq->alg);
-+	if (!tfm) {
-+		err = -EOPNOTSUPP;
-+		goto out;
-+	}
-+
-+	for (i = 0; i < rq->outpages; i++) {
-+		struct page *const page = rq->out[i];
-+		struct page *victim;
-+
-+		if (!page) {
-+			victim = __erofs_allocpage(pgpl, rq->gfp, true);
-+			if (!victim) {
-+				err = -ENOMEM;
-+				goto out;
-+			}
-+			set_page_private(victim, Z_EROFS_SHORTLIVED_PAGE);
-+			rq->out[i] = victim;
-+		}
-+	}
-+
-+	err = __z_erofs_crypto_decompress(rq, tfm);
-+out:
-+	up_read(&z_erofs_crypto_rwsem);
-+	return err;
-+}
-+
-+int z_erofs_crypto_enable_engine(const char *name, int len)
-+{
-+	struct z_erofs_crypto_engine *e;
-+	struct crypto_acomp *tfm;
-+	int alg;
-+
-+	down_write(&z_erofs_crypto_rwsem);
-+	for (alg = 0; alg < Z_EROFS_COMPRESSION_MAX; ++alg) {
-+		for (e = z_erofs_crypto[alg]; e->crypto_name; ++e) {
-+			if (!strncmp(name, e->crypto_name, len)) {
-+				if (e->tfm)
-+					break;
-+				tfm = crypto_alloc_acomp(e->crypto_name, 0, 0);
-+				if (IS_ERR(tfm)) {
-+					up_write(&z_erofs_crypto_rwsem);
-+					return -EOPNOTSUPP;
-+				}
-+				e->tfm = tfm;
-+				break;
-+			}
-+		}
-+	}
-+	up_write(&z_erofs_crypto_rwsem);
-+	return 0;
-+}
-+
-+void z_erofs_crypto_disable_all_engines(void)
-+{
-+	struct z_erofs_crypto_engine *e;
-+	int alg;
-+
-+	down_write(&z_erofs_crypto_rwsem);
-+	for (alg = 0; alg < Z_EROFS_COMPRESSION_MAX; ++alg) {
-+		for (e = z_erofs_crypto[alg]; e->crypto_name; ++e) {
-+			if (!e->tfm)
-+				continue;
-+			crypto_free_acomp(e->tfm);
-+			e->tfm = NULL;
-+		}
-+	}
-+	up_write(&z_erofs_crypto_rwsem);
-+}
-+
-+int z_erofs_crypto_show_engines(char *buf, int size, char sep)
-+{
-+	struct z_erofs_crypto_engine *e;
-+	int alg, len = 0;
-+
-+	for (alg = 0; alg < Z_EROFS_COMPRESSION_MAX; ++alg) {
-+		for (e = z_erofs_crypto[alg]; e->crypto_name; ++e) {
-+			if (!e->tfm)
-+				continue;
-+			len += scnprintf(buf + len, size - len, "%s%c",
-+					 e->crypto_name, sep);
-+		}
-+	}
-+	return len;
-+}
-+
-diff --git a/fs/erofs/decompressor_deflate.c b/fs/erofs/decompressor_deflate.c
-index c6908a487054..e4c9df9d7978 100644
---- a/fs/erofs/decompressor_deflate.c
-+++ b/fs/erofs/decompressor_deflate.c
-@@ -97,7 +97,7 @@ static int z_erofs_load_deflate_config(struct super_block *sb,
- 	return -ENOMEM;
- }
- 
--static int z_erofs_deflate_decompress(struct z_erofs_decompress_req *rq,
-+static int __z_erofs_deflate_decompress(struct z_erofs_decompress_req *rq,
- 				      struct page **pgpl)
- {
- 	struct super_block *sb = rq->sb;
-@@ -178,6 +178,21 @@ static int z_erofs_deflate_decompress(struct z_erofs_decompress_req *rq,
- 	return err;
- }
- 
-+static int z_erofs_deflate_decompress(struct z_erofs_decompress_req *rq,
-+				struct page **pgpl)
-+{
-+#ifdef CONFIG_EROFS_FS_ZIP_ACCEL
-+	int err;
-+
-+	if (!rq->partial_decoding) {
-+		err = z_erofs_crypto_decompress(rq, pgpl);
-+		if (err != -EOPNOTSUPP)
-+			return err;
-+	}
-+#endif
-+	return __z_erofs_deflate_decompress(rq, pgpl);
-+}
-+
- const struct z_erofs_decompressor z_erofs_deflate_decomp = {
- 	.config = z_erofs_load_deflate_config,
- 	.decompress = z_erofs_deflate_decompress,
-diff --git a/fs/erofs/sysfs.c b/fs/erofs/sysfs.c
-index dad4e6c6c155..1239d452f45f 100644
---- a/fs/erofs/sysfs.c
-+++ b/fs/erofs/sysfs.c
-@@ -7,12 +7,14 @@
- #include <linux/kobject.h>
- 
- #include "internal.h"
-+#include "compress.h"
- 
- enum {
- 	attr_feature,
- 	attr_drop_caches,
- 	attr_pointer_ui,
- 	attr_pointer_bool,
-+	attr_accel,
- };
- 
- enum {
-@@ -60,14 +62,26 @@ static struct erofs_attr erofs_attr_##_name = {			\
- EROFS_ATTR_RW_UI(sync_decompress, erofs_mount_opts);
- EROFS_ATTR_FUNC(drop_caches, 0200);
- #endif
-+#ifdef CONFIG_EROFS_FS_ZIP_ACCEL
-+EROFS_ATTR_FUNC(accel, 0644);
-+#endif
- 
--static struct attribute *erofs_attrs[] = {
-+static struct attribute *erofs_sb_attrs[] = {
- #ifdef CONFIG_EROFS_FS_ZIP
- 	ATTR_LIST(sync_decompress),
- 	ATTR_LIST(drop_caches),
- #endif
- 	NULL,
- };
-+ATTRIBUTE_GROUPS(erofs_sb);
-+
-+static struct attribute *erofs_attrs[] = {
-+#ifdef CONFIG_EROFS_FS_ZIP_ACCEL
-+	ATTR_LIST(accel),
-+#endif
-+	NULL,
-+};
-+
- ATTRIBUTE_GROUPS(erofs);
- 
- /* Features this copy of erofs supports */
-@@ -128,6 +142,8 @@ static ssize_t erofs_attr_show(struct kobject *kobj,
- 		if (!ptr)
- 			return 0;
- 		return sysfs_emit(buf, "%d\n", *(bool *)ptr);
-+	case attr_accel:
-+		return z_erofs_crypto_show_engines(buf, PAGE_SIZE, '\n');
- 	}
- 	return 0;
- }
-@@ -181,6 +197,19 @@ static ssize_t erofs_attr_store(struct kobject *kobj, struct attribute *attr,
- 		if (t & 1)
- 			invalidate_mapping_pages(MNGD_MAPPING(sbi), 0, -1);
- 		return len;
-+#endif
-+#ifdef CONFIG_EROFS_FS_ZIP_ACCEL
-+	case attr_accel:
-+		buf = skip_spaces(buf);
-+		z_erofs_crypto_disable_all_engines();
-+		while (*buf) {
-+			t = strcspn(buf, "\n");
-+			ret = z_erofs_crypto_enable_engine(buf, t);
-+			if (ret < 0)
-+				return ret;
-+			buf += buf[t] != '\0' ? t + 1 : t;
-+		}
-+		return len;
- #endif
- 	}
- 	return 0;
-@@ -199,12 +228,13 @@ static const struct sysfs_ops erofs_attr_ops = {
- };
- 
- static const struct kobj_type erofs_sb_ktype = {
--	.default_groups = erofs_groups,
-+	.default_groups = erofs_sb_groups,
- 	.sysfs_ops	= &erofs_attr_ops,
- 	.release	= erofs_sb_release,
- };
- 
- static const struct kobj_type erofs_ktype = {
-+	.default_groups = erofs_groups,
- 	.sysfs_ops	= &erofs_attr_ops,
- };
- 
-diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
-index 0671184d9cf1..f02bf95aeb3f 100644
---- a/fs/erofs/zdata.c
-+++ b/fs/erofs/zdata.c
-@@ -409,6 +409,7 @@ void z_erofs_exit_subsystem(void)
- 	erofs_destroy_percpu_workers();
- 	destroy_workqueue(z_erofs_workqueue);
- 	z_erofs_destroy_pcluster_pool();
-+	z_erofs_crypto_disable_all_engines();
- 	z_erofs_exit_decompressor();
- }
- 
--- 
-2.31.1
-
+[1] https://lore.kernel.org/lkml/20240325172707.73966-5-peternewman@google.=
+com/
+[2] https://lore.kernel.org/lkml/CALPaoCh0SbG1+VbbgcxjubE7Cc2Pb6QqhG3NH6X=
+=3DWwsNfqNjtA@mail.gmail.com/
