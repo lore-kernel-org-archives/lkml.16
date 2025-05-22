@@ -1,213 +1,111 @@
-Received: from out-179.mta1.migadu.com (out-179.mta1.migadu.com [95.215.58.179])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DFAF289344
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 10:48:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC07333DB
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 10:49:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747910899; cv=none; b=eigRXMhpi6K9vqpWOyPH/1bXk8Tv1iHs9Pi0ko4ysvbepg5xGtqFU+Hdh49hWslCKFjVM3lhzFH51QNouz4/vKQBQamDLK/5nayDQ7RNf4Tgcuur+hrg49IwypCMgWBeK686uAB8DHp/ZFCh73PHs8eJaQI9VYgyKa7KV0goi2A=
+	t=1747910949; cv=none; b=BnU3Xa4pCxD510Ncb0ISh5FSpLMxqh+vzDWd6OeAH8NVlX/lp8eTFPBMOaQcnNW2wMiiqZ1CI5116TMDPQrkTEhxEStAUimARnKxWQ/Gojjcqn5pPBog57jvYcWWC498wVMYAR+7orcEK3Hqy+7/4z6j3eO7FpiGGS1ijrPGS6c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747910899; c=relaxed/simple;
-	bh=anDXNe31KV2yrx2zqPc4nLb0ASeqvgkQOlbV+1ioiEI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kuioY/D2PSiyc4cgnl9g+4RdzVxF9dPUt6d49WAc9exrdqQzdAp5Ws/4B7DFSS5bURiAoFm9JNRzpB2+SCId9Da6lLs/0G/gJM6nhBwCecL+fFup8X/rZLTe23kpIJ6P98KySBY7Yxgou66ZJrELdfYNP1i+prJ9gnTiC49hn7Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=oO3C+Moh; arc=none smtp.client-ip=95.215.58.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1747910949; c=relaxed/simple;
+	bh=b1jA/JmPZfGSjyBQho4a1/wR7TWihgI9QJ4xrU3j21k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qRQnxdCqJVOlmiP3RnPYGcHiDreUTyrDEfRcaIQQJw9+JJ4+oUV9MLFh/VJW/P3FwRlhkQSXYtxh0wWBNZDVpsSmM8wV1g0jBD9yOiEwBHGERRIMxieGsnF+oLWqq9Jt4PEigEUjiFS9QKT0hGKP5SwKDjJGROuN4CTJwRegyfM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=BQrKXCij; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="oO3C+Moh"
-Message-ID: <c770157f-4175-45b3-836e-ecf59f9ab8e0@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1747910884;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=iRaVoAsmpjZU46Lb6rdginXbd43xV+PDnPKwnu4HVHU=;
-	b=oO3C+Moh4MMuBlkdjJwf6QNfDM5LRw3BBunUTyVVHPpgLfm/glBRuJUo1Ps4evyDvWgqnS
-	vWjADRfPYctPjDG2doBqUT9kkfHMnIDEYrtWrSmWfT5mCJJwI4fnEnmwOwugmyk89Iov0x
-	wfj9+g0h7nyOd1hkbndRqz40QcoX4Fs=
-Date: Thu, 22 May 2025 11:47:59 +0100
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="BQrKXCij"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=RVuKIb6DBOmyqCHMM98pwZpdSdwUjm0UpHEs16rMVRo=; b=BQrKXCij4q0yH/WM1zqb4p8XUW
+	OnbqYWEFKvvQqOHkmYjxc1IljuLP/86ia90Qv5ITH33FqzpIVvZsFD8izC92GUJ31Qtsv0JvDsRaR
+	XtbfmVSekIZY4Nj4PUcEzXOdAA6qyKWvOCxoFYVqXhfakyqNqL2aedd+AP6Q2D4HIRUEOa2ydWrum
+	fosrY2mo7ZtuA9AqJi6INl2uy4rEL+Wcpjtmt6XNkBQjxtJNYRkHQrOeGHymJr1f6MyuCMB4JHiM2
+	zE/C6Ttd4Aj8SZ0bx8WtDX85qtUdzqfoLzSZnYzZMbtAUopb0WrXxeh9ZQQHlPhFelLIfuSCWavpd
+	dIkeiBqQ==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
+	id 1uI3Ti-000000011R5-0PLA;
+	Thu, 22 May 2025 10:48:46 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id D8F50300472; Thu, 22 May 2025 12:48:43 +0200 (CEST)
+Date: Thu, 22 May 2025 12:48:43 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Aaron Lu <ziqianlu@bytedance.com>
+Cc: Valentin Schneider <vschneid@redhat.com>,
+	Ben Segall <bsegall@google.com>,
+	K Prateek Nayak <kprateek.nayak@amd.com>,
+	Josh Don <joshdon@google.com>, Ingo Molnar <mingo@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Xi Wang <xii@google.com>, linux-kernel@vger.kernel.org,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>, Mel Gorman <mgorman@suse.de>,
+	Chengming Zhou <chengming.zhou@linux.dev>,
+	Chuyi Zhou <zhouchuyi@bytedance.com>,
+	Jan Kiszka <jan.kiszka@siemens.com>,
+	Florian Bezdeka <florian.bezdeka@siemens.com>
+Subject: Re: [PATCH 2/7] sched/fair: prepare throttle path for task based
+ throttle
+Message-ID: <20250522104843.GG39944@noisy.programming.kicks-ass.net>
+References: <20250520104110.3673059-1-ziqianlu@bytedance.com>
+ <20250520104110.3673059-3-ziqianlu@bytedance.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH net] net: lan966x: Fix 1-step timestamping over ipv4 or
- ipv6
-To: Horatiu Vultur <horatiu.vultur@microchip.com>,
- UNGLinuxDriver@microchip.com, andrew+netdev@lunn.ch, davem@davemloft.net,
- edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- richardcochran@gmail.com
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250521124159.2713525-1-horatiu.vultur@microchip.com>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Vadim Fedorenko <vadim.fedorenko@linux.dev>
-In-Reply-To: <20250521124159.2713525-1-horatiu.vultur@microchip.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250520104110.3673059-3-ziqianlu@bytedance.com>
 
-On 21/05/2025 13:41, Horatiu Vultur wrote:
-> When enabling 1-step timestamping for ptp frames that are over udpv4 or
-> udpv6 then the inserted timestamp is added at the wrong offset in the
-> frame, meaning that will modify the frame at the wrong place, so the
-> frame will be malformed.
-> To fix this, the HW needs to know which kind of frame it is to know
-> where to insert the timestamp. For that there is a field in the IFH that
-> says the PDU_TYPE, which can be NONE  which is the default value,
-> IPV4 or IPV6. Therefore make sure to set the PDU_TYPE so the HW knows
-> where to insert the timestamp.
-> Like I mention before the issue is not seen with L2 frames because by
-> default the PDU_TYPE has a value of 0, which represents the L2 frames.
-> 
-> Fixes: 77eecf25bd9d2f ("net: lan966x: Update extraction/injection for timestamping")
-> Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
-> ---
->   .../ethernet/microchip/lan966x/lan966x_main.c |  6 +++
->   .../ethernet/microchip/lan966x/lan966x_main.h |  5 ++
->   .../ethernet/microchip/lan966x/lan966x_ptp.c  | 49 ++++++++++++++-----
->   3 files changed, 47 insertions(+), 13 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/microchip/lan966x/lan966x_main.c b/drivers/net/ethernet/microchip/lan966x/lan966x_main.c
-> index 0af143ec0f869..427bdc0e4908c 100644
-> --- a/drivers/net/ethernet/microchip/lan966x/lan966x_main.c
-> +++ b/drivers/net/ethernet/microchip/lan966x/lan966x_main.c
-> @@ -353,6 +353,11 @@ static void lan966x_ifh_set_rew_op(void *ifh, u64 rew_op)
->   	lan966x_ifh_set(ifh, rew_op, IFH_POS_REW_CMD, IFH_WID_REW_CMD);
->   }
->   
-> +static void lan966x_ifh_set_oam_type(void *ifh, u64 oam_type)
-> +{
-> +	lan966x_ifh_set(ifh, oam_type, IFH_POS_PDU_TYPE, IFH_WID_PDU_TYPE);
-> +}
+On Tue, May 20, 2025 at 06:41:05PM +0800, Aaron Lu wrote:
+
+>  static void throttle_cfs_rq_work(struct callback_head *work)
+>  {
+> +	struct task_struct *p = container_of(work, struct task_struct, sched_throttle_work);
+> +	struct sched_entity *se;
+> +	struct cfs_rq *cfs_rq;
+> +	struct rq *rq;
 > +
->   static void lan966x_ifh_set_timestamp(void *ifh, u64 timestamp)
->   {
->   	lan966x_ifh_set(ifh, timestamp, IFH_POS_TIMESTAMP, IFH_WID_TIMESTAMP);
-> @@ -380,6 +385,7 @@ static netdev_tx_t lan966x_port_xmit(struct sk_buff *skb,
->   			return err;
->   
->   		lan966x_ifh_set_rew_op(ifh, LAN966X_SKB_CB(skb)->rew_op);
-> +		lan966x_ifh_set_oam_type(ifh, LAN966X_SKB_CB(skb)->pdu_type);
->   		lan966x_ifh_set_timestamp(ifh, LAN966X_SKB_CB(skb)->ts_id);
->   	}
->   
-> diff --git a/drivers/net/ethernet/microchip/lan966x/lan966x_main.h b/drivers/net/ethernet/microchip/lan966x/lan966x_main.h
-> index 1efa584e71077..1f9df67f05044 100644
-> --- a/drivers/net/ethernet/microchip/lan966x/lan966x_main.h
-> +++ b/drivers/net/ethernet/microchip/lan966x/lan966x_main.h
-> @@ -75,6 +75,10 @@
->   #define IFH_REW_OP_ONE_STEP_PTP		0x3
->   #define IFH_REW_OP_TWO_STEP_PTP		0x4
->   
-> +#define IFH_PDU_TYPE_NONE		0
-> +#define IFH_PDU_TYPE_IPV4		7
-> +#define IFH_PDU_TYPE_IPV6		8
+> +	WARN_ON_ONCE(p != current);
+> +	p->sched_throttle_work.next = &p->sched_throttle_work;
 > +
->   #define FDMA_RX_DCB_MAX_DBS		1
->   #define FDMA_TX_DCB_MAX_DBS		1
->   
-> @@ -254,6 +258,7 @@ struct lan966x_phc {
->   
->   struct lan966x_skb_cb {
->   	u8 rew_op;
-> +	u8 pdu_type;
->   	u16 ts_id;
->   	unsigned long jiffies;
->   };
-> diff --git a/drivers/net/ethernet/microchip/lan966x/lan966x_ptp.c b/drivers/net/ethernet/microchip/lan966x/lan966x_ptp.c
-> index 63905bb5a63a8..87e5e81d40dc6 100644
-> --- a/drivers/net/ethernet/microchip/lan966x/lan966x_ptp.c
-> +++ b/drivers/net/ethernet/microchip/lan966x/lan966x_ptp.c
-> @@ -322,34 +322,55 @@ void lan966x_ptp_hwtstamp_get(struct lan966x_port *port,
->   	*cfg = phc->hwtstamp_config;
->   }
->   
-> -static int lan966x_ptp_classify(struct lan966x_port *port, struct sk_buff *skb)
-> +static void lan966x_ptp_classify(struct lan966x_port *port, struct sk_buff *skb,
-> +				 u8 *rew_op, u8 *pdu_type)
->   {
->   	struct ptp_header *header;
->   	u8 msgtype;
->   	int type;
->   
-> -	if (port->ptp_tx_cmd == IFH_REW_OP_NOOP)
-> -		return IFH_REW_OP_NOOP;
-> +	if (port->ptp_tx_cmd == IFH_REW_OP_NOOP) {
-> +		*rew_op = IFH_REW_OP_NOOP;
-> +		*pdu_type = IFH_PDU_TYPE_NONE;
+> +	/*
+> +	 * If task is exiting, then there won't be a return to userspace, so we
+> +	 * don't have to bother with any of this.
+> +	 */
+> +	if ((p->flags & PF_EXITING))
 > +		return;
-> +	}
->   
->   	type = ptp_classify_raw(skb);
-> -	if (type == PTP_CLASS_NONE)
-> -		return IFH_REW_OP_NOOP;
-> +	if (type == PTP_CLASS_NONE) {
-> +		*rew_op = IFH_REW_OP_NOOP;
-> +		*pdu_type = IFH_PDU_TYPE_NONE;
-> +		return;
-> +	}
->   
->   	header = ptp_parse_header(skb, type);
-> -	if (!header)
-> -		return IFH_REW_OP_NOOP;
-> +	if (!header) {
-> +		*rew_op = IFH_REW_OP_NOOP;
-> +		*pdu_type = IFH_PDU_TYPE_NONE;
-> +		return;
-> +	}
->   
-> -	if (port->ptp_tx_cmd == IFH_REW_OP_TWO_STEP_PTP)
-> -		return IFH_REW_OP_TWO_STEP_PTP;
-> +	if (type & PTP_CLASS_L2)
-> +		*pdu_type = IFH_PDU_TYPE_NONE;
-> +	if (type & PTP_CLASS_IPV4)
-> +		*pdu_type = IFH_PDU_TYPE_IPV4;
-> +	if (type & PTP_CLASS_IPV6)
-> +		*pdu_type = IFH_PDU_TYPE_IPV6;
-
-ptp_classify_raw() will also return PTP_CLASS_IPV4 or PTP_CLASS_IPV6
-flags set for (PTP_CLASS_VLAN|PTP_CLASS_IPV4) and
-(PTP_CLASS_VLAN|PTP_CLASS_IPV6) cases. Will the hardware support proper
-timestamp placing in these cases?
-
 > +
-> +	if (port->ptp_tx_cmd == IFH_REW_OP_TWO_STEP_PTP) {
-> +		*rew_op = IFH_REW_OP_TWO_STEP_PTP;
-> +		return;
+> +	scoped_guard(task_rq_lock, p) {
+> +		se = &p->se;
+> +		cfs_rq = cfs_rq_of(se);
+> +
+> +		/* Raced, forget */
+> +		if (p->sched_class != &fair_sched_class)
+> +			return;
+> +
+> +		/*
+> +		 * If not in limbo, then either replenish has happened or this
+> +		 * task got migrated out of the throttled cfs_rq, move along.
+> +		 */
+> +		if (!cfs_rq->throttle_count)
+> +			return;
+> +		rq = scope.rq;
+> +		update_rq_clock(rq);
+> +		WARN_ON_ONCE(!list_empty(&p->throttle_node));
+> +		dequeue_task_fair(rq, p, DEQUEUE_SLEEP | DEQUEUE_SPECIAL);
+> +		list_add(&p->throttle_node, &cfs_rq->throttled_limbo_list);
+> +		resched_curr(rq);
 > +	}
->   
->   	/* If it is sync and run 1 step then set the correct operation,
->   	 * otherwise run as 2 step
->   	 */
->   	msgtype = ptp_get_msgtype(header, type);
-> -	if ((msgtype & 0xf) == 0)
-> -		return IFH_REW_OP_ONE_STEP_PTP;
-> +	if ((msgtype & 0xf) == 0) {
-> +		*rew_op = IFH_REW_OP_ONE_STEP_PTP;
-> +		return;
-> +	}
->   
-> -	return IFH_REW_OP_TWO_STEP_PTP;
-> +	*rew_op = IFH_REW_OP_TWO_STEP_PTP;
->   }
->   
->   static void lan966x_ptp_txtstamp_old_release(struct lan966x_port *port)
-> @@ -374,10 +395,12 @@ int lan966x_ptp_txtstamp_request(struct lan966x_port *port,
->   {
->   	struct lan966x *lan966x = port->lan966x;
->   	unsigned long flags;
-> +	u8 pdu_type;
->   	u8 rew_op;
->   
-> -	rew_op = lan966x_ptp_classify(port, skb);
-> +	lan966x_ptp_classify(port, skb, &rew_op, &pdu_type);
->   	LAN966X_SKB_CB(skb)->rew_op = rew_op;
-> +	LAN966X_SKB_CB(skb)->pdu_type = pdu_type;
->   
->   	if (rew_op != IFH_REW_OP_TWO_STEP_PTP)
->   		return 0;
+> +
+> +	cond_resched_tasks_rcu_qs();
+>  }
 
+What's that cond_resched thing about? The general plan is to make
+cond_resched go away.
