@@ -1,205 +1,97 @@
-Received: from mx0b-0016f401.pphosted.com (mx0b-0016f401.pphosted.com [67.231.156.173])
+Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E769C289354;
-	Thu, 22 May 2025 10:07:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.156.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AE3326A09A;
+	Thu, 22 May 2025 10:07:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747908429; cv=none; b=AlyNWT2N0btLuufPV/Fa8PRnOXpiZ5TxqQqrj2XtyXgdi6ZH3AhzVYeZSSF5KOmc3bqV8GRdVW4ptmvete9oksZqEBobbBrIQMSd22DxBBuzUPWfp0TQqIz9LwRVrQC+xmtlCmrv6Ok6yQZ17VayHcljIdAD8vxZg6+MJCNaE84=
+	t=1747908442; cv=none; b=dsdv6cW9jjhCW6+CsDXlRqiB6eVu/oIJiA+rPCf0etW1HP/RDfSYvyvCQsG5AjYzBNj9vkWKrJDGp1Y+mDkDRuv0HxQqY18tTWPaBJZoDmsO0+0lnJAdy4/QkvbvfcgnGNdp0ns/gsRjAex0BCIqZsOorCr5uksQUoXqrBsX2Xk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747908429; c=relaxed/simple;
-	bh=4pDb4C0sh/qZHgIzi6dKO1GV+ZeBStwpDtSQmWiKse0=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=nZ7uw9uQP0lJRSm/cVXquesbbB8uNiU3T8k2odstk2ypqezoyHSUVlLX705sEDhlrTWbK/lIOHajaNG0gIS36Kq6vRBi5xmYi+c7J/JBbDensaob0pGG4C9CajbMA2oN80Uqkn60ru/WrXvA4vYGCsflrmMym+R1dClsnQgueG8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=i/btlNAz; arc=none smtp.client-ip=67.231.156.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
+	s=arc-20240116; t=1747908442; c=relaxed/simple;
+	bh=NiburEsVTch0FnwAH7158kJCqksh9zLSN/Cvo3feDWQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=bWka/QtFH6+nc5LCXRYRS65EOsG1JxDAw/E+SU8VDsXIdWfMfhg6wRvcYMEeXD7NFcmnv8fglpO2x/nt72C//7LO7LDcSD+O/hL5+iaUwAWnfoHLVgG+HIr3iGx2bTr8Pvt5xKvoizHP6mZbwTr1X8iHl3ElDvkiHA5JHfDi0P4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=KNrHscjB; arc=none smtp.client-ip=217.70.183.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="i/btlNAz"
-Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
-	by mx0b-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54M6WIcj008628;
-	Thu, 22 May 2025 03:06:51 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pfpt0220; bh=X
-	k8PVtFakCzcbPiBPd8CnD1tldsGHZZEWkvVmn0VXJ4=; b=i/btlNAzGeOD6v08M
-	8QbNBSwrOuIQjo85C7GwGZQGDH67RzzKtkFTkIgLLm1i3M673E1cclTnywtJELC4
-	TbrHFQNrIiR+Ew/13jbCGdcVG/pcGdZNUOsSlpGZHXHTyUR7VbxC7MPf256ONaAd
-	VWFkRB1q2r8h9pJZddoGFxWhHoszqA5OI15ushmnz/+GKO1mVWN7afS246KFFyQM
-	y928rbM0MLNiZtEZD8WDmFXa6+s9bRgT9rQ9MlBkz40BkuHSUbU5KWSG7QfW6KeC
-	m3AXlBEiX47evwoO4yfDd+LbkA8H1Dyb1Sx1j5TmpW0ujhln2utNzniP9nmEO/7c
-	amF6w==
-Received: from dc6wp-exch02.marvell.com ([4.21.29.225])
-	by mx0b-0016f401.pphosted.com (PPS) with ESMTPS id 46sxr1gc04-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 22 May 2025 03:06:50 -0700 (PDT)
-Received: from DC6WP-EXCH02.marvell.com (10.76.176.209) by
- DC6WP-EXCH02.marvell.com (10.76.176.209) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.4; Thu, 22 May 2025 03:06:50 -0700
-Received: from maili.marvell.com (10.69.176.80) by DC6WP-EXCH02.marvell.com
- (10.76.176.209) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
- Transport; Thu, 22 May 2025 03:06:50 -0700
-Received: from bharat-OptiPlex-Tower-Plus-7020.. (unknown [10.28.34.254])
-	by maili.marvell.com (Postfix) with ESMTP id 34F873F704D;
-	Thu, 22 May 2025 03:06:45 -0700 (PDT)
-From: Bharat Bhushan <bbhushan2@marvell.com>
-To: <bbrezillon@kernel.org>, <schalla@marvell.com>,
-        <herbert@gondor.apana.org.au>, <davem@davemloft.net>,
-        <giovanni.cabiddu@intel.com>, <linux@treblig.org>,
-        <bharatb.linux@gmail.com>, <linux-crypto@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC: Bharat Bhushan <bbhushan2@marvell.com>, <stable@vger.kernel.org>
-Subject: [PATCH 4/4 v4] crypto: octeontx2: Fix address alignment on CN10KB and CN10KA-B0
-Date: Thu, 22 May 2025 15:36:27 +0530
-Message-ID: <20250522100627.175210-5-bbhushan2@marvell.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250522100627.175210-1-bbhushan2@marvell.com>
-References: <20250522100627.175210-1-bbhushan2@marvell.com>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="KNrHscjB"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 3020541DDB;
+	Thu, 22 May 2025 10:07:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1747908437;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=NiburEsVTch0FnwAH7158kJCqksh9zLSN/Cvo3feDWQ=;
+	b=KNrHscjBvBbxNq4QoZfAGq12vQ9e4Mv3Jm4STFacfxBxWAP/+MdwX3k/pE0mCfKiw4S95n
+	8E+mof7vyH0GiLRIVMmWlI+HyXVCh24Q1FcGFYwGxt5fQhy7xBO4cRjtYH30wE1D/8GzBb
+	z0zre+cgnS8W6pv9xigW6pbqXqSVm/EvNgjr35cNrGsarlji1hAdsChOj/DIYO33DfaLwO
+	NZQ/T6Xc0+c1+3ZNcCtylts494aqHI/Rwcjq4yd8igT/jFSrqqts1rJvxW10NwqrrnMm8Y
+	UWhbBhBTCV84ijnhHRQcX9LIzpU20FHe3llG7j1ytjQM4+JvS03c09lUwAYVuA==
+Date: Thu, 22 May 2025 12:07:13 +0200
+From: Luca Ceresoli <luca.ceresoli@bootlin.com>
+To: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc: Cosmin Tanislav <demonsingur@gmail.com>, Tomi Valkeinen
+ <tomi.valkeinen@ideasonboard.com>, Mauro Carvalho Chehab
+ <mchehab@kernel.org>, Romain Gantois <romain.gantois@bootlin.com>, Arnd
+ Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-media@vger.kernel.org, Tomi Valkeinen
+ <tomi.valkeinen+renesas@ideasonboard.com>
+Subject: Re: [PATCH v5 1/9] i2c: atr: Fix lockdep for nested ATRs
+Message-ID: <20250522120713.7feafa47@booty>
+In-Reply-To: <aC7o_obqzBlhW0tE@shikoro>
+References: <20250507121917.2364416-1-demonsingur@gmail.com>
+	<20250507121917.2364416-2-demonsingur@gmail.com>
+	<aC7o_obqzBlhW0tE@shikoro>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-GUID: fiy2aakT7L7dPgENFes702I92A9IY5M2
-X-Proofpoint-ORIG-GUID: fiy2aakT7L7dPgENFes702I92A9IY5M2
-X-Authority-Analysis: v=2.4 cv=LYU86ifi c=1 sm=1 tr=0 ts=682ef73b cx=c_pps a=gIfcoYsirJbf48DBMSPrZA==:117 a=gIfcoYsirJbf48DBMSPrZA==:17 a=dt9VzEwgFbYA:10 a=M5GUcnROAAAA:8 a=VwQbUJbxAAAA:8 a=BhrP5AWxFkdJNdVQK0QA:9 a=OBjm3rFKGHvpk9ecZwUJ:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIyMDEwMSBTYWx0ZWRfX15NwPiTbS9ke yve0y+n/NiS4vFhMlid9TFZgTrtDqx/fiVdaQSeyQfq5l2DfDcHDjbijGTwHdCJOkM56g7gDtc1 kTBKeCibcvHXc0kICLixuzLEla9ViU55AH2VeBrAH0Ur1gT4sG5OpW5qylELG/oJs3VEESeuLmQ
- YggzmYRSDmDzvz+EB9qoluVr7UHuo3Yk36JVYRbShX3xJFPCXq2Rz6Ye5e0JPUpvkd3WnJQQ0YF yyUyO5iOVAWjnJEdkudlVoFYsw3l83KcNtS38thZXnImWwqy9YLAUZtBEri8Y9xWP7W9uXUSC8H A3F6kgmLAhFeg6/eq5V+t+gkPJFDfP6ksBw8umOrXBItpRBBKoMdJpfr143zmJPUYRaCB/qSdo4
- wT0YbJof5bVZ0pFIKQVe4sZjoUfWCTF+oPr4/ugrsB1VzmYBsguJ1DV3ChpUl6lTo2vCtokW
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-22_05,2025-05-22_01,2025-03-28_01
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgdehieejucdltddurdegfedvrddttddmucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtqhertdertdejnecuhfhrohhmpefnuhgtrgcuvegvrhgvshholhhiuceolhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhephfetudeugfehheeliefhjeejuddvledtuddttdevledthfehgeeugfetheekgfffnecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppedvrgdtvdemieejtdemvddtvddtmegvrgdtudemsggvgedumeelhegvjeemfeegfeemledufegvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddvmeeijedtmedvtddvtdemvggrtddumegsvgegudemleehvgejmeefgeefmeeludefvgdphhgvlhhopegsohhothihpdhmrghilhhfrhhomheplhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepuddupdhrtghpthhtohepfihsrgdorhgvnhgvshgrshesshgrnhhgqdgvnhhgihhnvggvrhhinhhgrdgtohhmpdhrtghpthhtohepuggvmhhonhhsihhnghhurhesghhmrghilhdrtghomhdprhgtphhtt
+ hhopehtohhmihdrvhgrlhhkvghinhgvnhesihguvggrshhonhgsohgrrhgurdgtohhmpdhrtghpthhtohepmhgthhgvhhgrsgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprhhomhgrihhnrdhgrghnthhoihhssegsohhothhlihhnrdgtohhmpdhrtghpthhtoheprghrnhgusegrrhhnuggsrdguvgdprhgtphhtthhopehgrhgvghhkhheslhhinhhugihfohhunhgurghtihhonhdrohhrghdprhgtphhtthhopehlihhnuhigqdhivdgtsehvghgvrhdrkhgvrhhnvghlrdhorhhg
+X-GND-Sasl: luca.ceresoli@bootlin.com
 
-octeontx2 crypto driver allocates memory using kmalloc/kzalloc,
-and uses this memory for dma (does dma_map_single()). It assumes
-that kmalloc/kzalloc will return 128-byte aligned address. But
-kmalloc/kzalloc returns 8-byte aligned address after below changes:
-  "9382bc44b5f5 arm64: allow kmalloc() caches aligned to the
-   smaller cache_line_size()
+On Thu, 22 May 2025 11:06:06 +0200
+Wolfram Sang <wsa+renesas@sang-engineering.com> wrote:
 
-Memory allocated are used for following purpose:
- - Input data or scatter list address - 8-Byte alignment
- - Output data or gather list address - 8-Byte alignment
- - Completion address - 32-Byte alignment.
+> On Wed, May 07, 2025 at 03:19:07PM +0300, Cosmin Tanislav wrote:
+> > From: Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>
+> >=20
+> > When we have an ATR, and another ATR as a subdevice of the first ATR,
+> > we get lockdep warnings for the i2c_atr.lock and
+> > i2c_atr_chan.orig_addrs_lock. This is because lockdep uses a static key
+> > for the locks, and doesn't see the locks of the separate ATR instances
+> > as separate.
+> >=20
+> > Fix this by generating a dynamic lock key per lock instance.
+> >=20
+> > Signed-off-by: Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>
+> > Reviewed-by: Luca Ceresoli <luca.ceresoli@bootlin.com> =20
+>=20
+> Your SoB is missing. I will add it for you if you confirm here.
 
-This patch ensures all addresses are aligned as mentioned above.
+Mine? I didn't think it would be needed based on:
 
-Signed-off-by: Bharat Bhushan <bbhushan2@marvell.com>
-Cc: <stable@vger.kernel.org> # v6.8+
----
-v3->v4:
- - Again fixed memory size calculation as per review comment
+> The Signed-off-by: tag indicates that the signer was involved in the
+> development of the patch, or that he/she was in the patch=E2=80=99s deliv=
+ery
+> path.
 
-v2->v3:
- - Align DMA memory to ARCH_DMA_MINALIGN as that is mapped as
-   bidirectional
+I'm not involved in the development, and "being in the delivery path" is pr=
+obably not clear enought to me.
 
-v1->v2:
- - Fixed memory padding size calculation as per review comment
-
- .../marvell/octeontx2/otx2_cpt_reqmgr.h       | 59 ++++++++++++++-----
- 1 file changed, 44 insertions(+), 15 deletions(-)
-
-diff --git a/drivers/crypto/marvell/octeontx2/otx2_cpt_reqmgr.h b/drivers/crypto/marvell/octeontx2/otx2_cpt_reqmgr.h
-index 98de93851ba1..90a031421aac 100644
---- a/drivers/crypto/marvell/octeontx2/otx2_cpt_reqmgr.h
-+++ b/drivers/crypto/marvell/octeontx2/otx2_cpt_reqmgr.h
-@@ -350,22 +350,48 @@ static inline struct otx2_cpt_inst_info *
- cn10k_sgv2_info_create(struct pci_dev *pdev, struct otx2_cpt_req_info *req,
- 		       gfp_t gfp)
- {
--	u32 dlen = 0, g_len, sg_len, info_len;
--	int align = OTX2_CPT_DMA_MINALIGN;
-+	u32 dlen = 0, g_len, s_len, sg_len, info_len;
- 	struct otx2_cpt_inst_info *info;
--	u16 g_sz_bytes, s_sz_bytes;
- 	u32 total_mem_len;
- 	int i;
- 
--	g_sz_bytes = ((req->in_cnt + 2) / 3) *
--		      sizeof(struct cn10kb_cpt_sglist_component);
--	s_sz_bytes = ((req->out_cnt + 2) / 3) *
--		      sizeof(struct cn10kb_cpt_sglist_component);
-+	/* Allocate memory to meet below alignment requirement:
-+	 *  ------------------------------------
-+	 * |    struct otx2_cpt_inst_info       |
-+	 * |    (No alignment required)         |
-+	 * |    --------------------------------|
-+	 * |   | padding for ARCH_DMA_MINALIGN  |
-+	 * |   | alignment                      |
-+	 * |------------------------------------|
-+	 * |    SG List Gather/Input memory     |
-+	 * |    Length = multiple of 32Bytes    |
-+	 * |    Alignment = 8Byte               |
-+	 * |----------------------------------  |
-+	 * |    SG List Scatter/Output memory   |
-+	 * |    Length = multiple of 32Bytes    |
-+	 * |    Alignment = 8Byte               |
-+	 * |     -------------------------------|
-+	 * |    | padding for 32B alignment     |
-+	 * |------------------------------------|
-+	 * |    Result response memory          |
-+	 * |    Alignment = 32Byte              |
-+	 *  ------------------------------------
-+	 */
-+
-+	info_len = sizeof(*info);
-+
-+	g_len = ((req->in_cnt + 2) / 3) *
-+		 sizeof(struct cn10kb_cpt_sglist_component);
-+	s_len = ((req->out_cnt + 2) / 3) *
-+		 sizeof(struct cn10kb_cpt_sglist_component);
-+	sg_len = g_len + s_len;
- 
--	g_len = ALIGN(g_sz_bytes, align);
--	sg_len = ALIGN(g_len + s_sz_bytes, align);
--	info_len = ALIGN(sizeof(*info), align);
--	total_mem_len = sg_len + info_len + sizeof(union otx2_cpt_res_s);
-+	/* Allocate extra memory for SG and response address alignment */
-+	total_mem_len = ALIGN(info_len, OTX2_CPT_DPTR_RPTR_ALIGN);
-+	total_mem_len += (ARCH_DMA_MINALIGN - 1) &
-+			  ~(OTX2_CPT_DPTR_RPTR_ALIGN - 1);
-+	total_mem_len += ALIGN(sg_len, OTX2_CPT_RES_ADDR_ALIGN);
-+	total_mem_len += sizeof(union otx2_cpt_res_s);
- 
- 	info = kzalloc(total_mem_len, gfp);
- 	if (unlikely(!info))
-@@ -375,7 +401,8 @@ cn10k_sgv2_info_create(struct pci_dev *pdev, struct otx2_cpt_req_info *req,
- 		dlen += req->in[i].size;
- 
- 	info->dlen = dlen;
--	info->in_buffer = (u8 *)info + info_len;
-+	info->in_buffer = PTR_ALIGN((u8 *)info + info_len, ARCH_DMA_MINALIGN);
-+	info->out_buffer = info->in_buffer + g_len;
- 	info->gthr_sz = req->in_cnt;
- 	info->sctr_sz = req->out_cnt;
- 
-@@ -387,7 +414,7 @@ cn10k_sgv2_info_create(struct pci_dev *pdev, struct otx2_cpt_req_info *req,
- 	}
- 
- 	if (sgv2io_components_setup(pdev, req->out, req->out_cnt,
--				    &info->in_buffer[g_len])) {
-+				    info->out_buffer)) {
- 		dev_err(&pdev->dev, "Failed to setup scatter list\n");
- 		goto destroy_info;
- 	}
-@@ -404,8 +431,10 @@ cn10k_sgv2_info_create(struct pci_dev *pdev, struct otx2_cpt_req_info *req,
- 	 * Get buffer for union otx2_cpt_res_s response
- 	 * structure and its physical address
- 	 */
--	info->completion_addr = info->in_buffer + sg_len;
--	info->comp_baddr = info->dptr_baddr + sg_len;
-+	info->completion_addr = PTR_ALIGN((info->in_buffer + sg_len),
-+					  OTX2_CPT_RES_ADDR_ALIGN);
-+	info->comp_baddr = ALIGN((info->dptr_baddr + sg_len),
-+				 OTX2_CPT_RES_ADDR_ALIGN);
- 
- 	return info;
- 
--- 
-2.34.1
-
+--=20
+Luca Ceresoli, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
