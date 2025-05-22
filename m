@@ -1,97 +1,167 @@
-Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com [209.85.222.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD8AC231849;
-	Thu, 22 May 2025 08:51:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F29B0231849
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 08:51:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.61.82.184
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747903876; cv=none; b=dbE9Ki8QlXspdFgWm7sNwnXQZHikomMIBWUBSoRY/F5olfql2IP6UzbmfH8bPJodZ6i0uOKeUCkjVZiVjoyapdZBcpBUQb/IoRA+q2+mtxBR1QidoFYR60c3YfdwZ2QjamQS9V4GEZf/g2MA/tOKAbTAFcG5MASenzT/TFFR9vA=
+	t=1747903921; cv=none; b=NbMt1p5YuyK4JGAHlY4REiGEEaBaXYuPLX4gqixAjY7UIPECdinciWwXJW9I2NCNeOG27E18wtJRdpRMcREdqn2cNz+VXQzqivupdAsIT0nR7aH6pf9ZQxW+bfS3ZSN9WugblxgavM5EHS7949LxpdXvtlS/4UpTfAFXzjlZgAg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747903876; c=relaxed/simple;
-	bh=PXs0nXCgQ8rBU8HMbxjPoWfVULj4RccEpiZbPUyj2Qs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gublueVY8uHCey9bXlhI68nUjuP4VOpgCdgBjTZOIROMriX5NKv7A7xmBO/S49OZCBa055y0aTKwcuUhE8k77cPwXcNVP9VijUoarjwawoEavcjBr+CP2vYjPmqTyuFxkoa582Jhzz8UL5SF8aa1rzFWDffYcSC2nVh2O4lRhlk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ua1-f51.google.com with SMTP id a1e0cc1a2514c-87beb9976e5so1212092241.3;
-        Thu, 22 May 2025 01:51:14 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747903872; x=1748508672;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=tiimu5tH07Aj+FycvxevJCkcuTBlAW8I7CVjocXv1xc=;
-        b=EH18pPhToO3iaGI99evp8eBC67jg1v+zOUfdSGEh/ulTJWagYP8DEa8qM7806Z6dae
-         BuhVjTv/tBykbiJsXr1b1rxjH+8YXTcDBoR10Sqc07+CGsTbZCwjBVdLqQGxE7lGLQRa
-         lmWwmh9G+9RQKnHeoyL7qLitMiWhaBWecKFAuDXF/wvJv3hOpB3hSKnhQwsUBYHBC/B7
-         Ckz5Wm0BxYme2g+s3Pe085CB9Bk08p9xrMC+nHj7fuLhmUB6zryyJu4A8vJgFY11eT8z
-         Ki5h7EYhss9K5sM4g+YUzp+XXw3m6x5zL0tLt8zGENZEVakMTT/mZ7FO788V+3/jdsYP
-         Q9Uw==
-X-Forwarded-Encrypted: i=1; AJvYcCVL1YjT34bpgbUyKDPQHnYgb/TSr++qS7KyWQZSyFeLhH1lMawnixX0dOuoG4uxN89xsEeQ5JQu22Dy0+hK@vger.kernel.org, AJvYcCW4FJwXh/sLGfYKNwUWhzui1PrnOTxy8tfe38+KuA+QQ32GLIjdeKuE/cIKEddTaxS2WlT6QIlSa7c=@vger.kernel.org, AJvYcCWDecgXUuK8TDY0cUJ+CLFvduvhhmeamvputIUMfVSdMh0yFJFN9DYRIZXE2tPalK4YfJhtAKBjgLR8DkwCWOWEq/Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxuxUD4wgcJwb1EM6dLtK4erWMsO3XULeDLHNz2eklQBJ5cmMIk
-	cFGVs3hjdk1UWjb+yLeS0651ZaeN4Q8NcaNvU/N9tNtpzt9Ha+evadX/KBt+RsTu
-X-Gm-Gg: ASbGncsayux8oH82dCpgLhqo9ZwSY2KyjDauV9+aOVWRBknzGitPhgzE+tiXwVgDxHi
-	qEe7d2bfmUm2nA8jUiVmlzptrRG1XUxnwDfk+ObOp9WKx4qKwL8wMqvLMKVY0mVE9RSoCjGaBP5
-	oAFt39hyyA8W/DTYBOZpVhv0VzcITiKNXYf/ABJ5th5/RKiK9Dg9ZgR6eiR0Gs2eyvr55EmNPv9
-	jmeN+ZK6ZkOTtS/v1qm36n/fk97cd1DIhBV0tbwFPaYcktHuUqNb1ytep03aZQDP3ecgq1yzJbs
-	ZurtNk0Oh5+lsijXA6+TyiKQCaIOhYP0WKK/g69gPSvr730YF9HAXWhUsRaO/QBTIEkYDjhLXKw
-	cBryGReFcTG4HgWBAkQ==
-X-Google-Smtp-Source: AGHT+IEaMToFJpx75lmZK7oRC8x4EXwhflqF9QB8ck7KAWZeAOiuEdpK7GJEBvYAqpbwt2KJfWV8BA==
-X-Received: by 2002:a05:6102:91a:b0:4c1:8928:cefb with SMTP id ada2fe7eead31-4dfa6b9ca16mr20044740137.12.1747903871720;
-        Thu, 22 May 2025 01:51:11 -0700 (PDT)
-Received: from mail-vk1-f171.google.com (mail-vk1-f171.google.com. [209.85.221.171])
-        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-87bec155391sm9973258241.15.2025.05.22.01.51.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 22 May 2025 01:51:11 -0700 (PDT)
-Received: by mail-vk1-f171.google.com with SMTP id 71dfb90a1353d-52e728960c3so1722693e0c.2;
-        Thu, 22 May 2025 01:51:11 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUvO4bWxEo48N35yzJw0pgsFVVkzdsnhzo1nGH88+S80zO7taum+Ly/prUanjPThcqoBSpC2j3j3cI=@vger.kernel.org, AJvYcCWBDuzz1Elc41PxMMj+Wym42YMIEyVIh6utodLt6WefjQjLwpl3mAaf+ZGMdnzOg4+j9jser5kbTwLIRb7ZEKsQd9E=@vger.kernel.org, AJvYcCXPnfd68xx4gBLQB66u8ywOmOn+NR0m8ge2iagH6OK+pVtaI0z5VqasAZGiG70lAHO+GAs2o3bf9F3Wiqrq@vger.kernel.org
-X-Received: by 2002:a05:6122:3bd5:b0:520:5185:1c31 with SMTP id
- 71dfb90a1353d-52dba94ac39mr22366617e0c.9.1747903870882; Thu, 22 May 2025
- 01:51:10 -0700 (PDT)
+	s=arc-20240116; t=1747903921; c=relaxed/simple;
+	bh=luai2h6sSCDjvD2rBQjs/TPsnGi3MZt1WBpKi8pa/F4=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=CdzJEjqOuLwyVEULYmWf8epLCABa/Q3Xk9vE7x8vdMHDu9VqkUCSbi1uyJjJAMMtLtFwYWyCsNAY97HHkYLTNJgoksoVCljFuH/U3hKnDROoH5oZOmlSAadKOIc3bNNOvioJHCmrF0GE0G8nNwJ4GgVOkRilTGaTYWd9LK2BTKY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=tdFOBWq3; arc=none smtp.client-ip=210.61.82.184
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="tdFOBWq3"
+X-UUID: 01766d2636ea11f082f7f7ac98dee637-20250522
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+	h=Content-Type:Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=d6+8TKL9ybPi8GR52+9DRexy0HiUe+IYVYfqzERk5rg=;
+	b=tdFOBWq3xnxVgWEXWcV+6sdoZjQXxGwkO0qzWu2vzQuwiZwrRJ3UZM2RLWqJueGlbDUlAIADjdokuqFzZHNBmvPWVZadxfMxfKybNOear7sDzb7J5B6OQdKujL9BvLnea55NcTl02xjL+0TYlAlNlUZNDGdFvf5bCueV2/rXPfE=;
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.2.1,REQID:b6e7632c-f492-4898-b24f-1151dcbd53b7,IP:0,UR
+	L:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:r
+	elease,TS:0
+X-CID-META: VersionHash:0ef645f,CLOUDID:08f5da57-abad-4ac2-9923-3af0a8a9a079,B
+	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0|50,EDM:-3,IP:ni
+	l,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES
+	:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-UUID: 01766d2636ea11f082f7f7ac98dee637-20250522
+Received: from mtkmbs10n2.mediatek.inc [(172.21.101.183)] by mailgw02.mediatek.com
+	(envelope-from <jason-jh.lin@mediatek.com>)
+	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+	with ESMTP id 1572632181; Thu, 22 May 2025 16:51:52 +0800
+Received: from mtkmbs13n1.mediatek.inc (172.21.101.193) by
+ MTKMBS14N1.mediatek.inc (172.21.101.75) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.39; Thu, 22 May 2025 16:51:50 +0800
+Received: from mtksitap99.mediatek.inc (10.233.130.16) by
+ mtkmbs13n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
+ 15.2.1258.39 via Frontend Transport; Thu, 22 May 2025 16:51:50 +0800
+From: Jason-JH Lin <jason-jh.lin@mediatek.com>
+To: Chun-Kuang Hu <chunkuang.hu@kernel.org>, AngeloGioacchino Del Regno
+	<angelogioacchino.delregno@collabora.com>
+CC: "Jason-JH . Lin" <jason-jh.lin@mediatek.com>, Nancy Lin
+	<nancy.lin@mediatek.com>, Singo Chang <singo.chang@mediatek.com>, Paul-PL
+ Chen <paul-pl.chen@mediatek.com>, Yongqiang Niu <yongqiang.niu@mediatek.com>,
+	Zhenxing Qin <zhenxing.qin@mediatek.com>, Sirius Wang
+	<sirius.wang@mediatek.com>, Xavier Chang <xavier.chang@mediatek.com>, Fei
+ Shao <fshao@chromium.org>, Chen-yu Tsai <wenst@chromium.org>,
+	<dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
+	<linux-mediatek@lists.infradead.org>, <linux-arm-kernel@lists.infradead.org>,
+	<Project_Global_Chrome_Upstream_Group@mediatek.com>
+Subject: [PATCH] drm/mediatek: Add wait_event_timeout when disabling plane
+Date: Thu, 22 May 2025 16:34:24 +0800
+Message-ID: <20250522085149.3361598-1-jason-jh.lin@mediatek.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250513154635.273664-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20250513154635.273664-6-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20250513154635.273664-6-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Thu, 22 May 2025 10:50:59 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdVTaPNQ2QTX+T0dhZaxKCrxF3t2X+11fAT0Va214j6SyA@mail.gmail.com>
-X-Gm-Features: AX0GCFvCfzFXjwq9jXS6l2tFB-QyakJZrXkldCCPJq3bFwGmUxvJmqCvm465bik
-Message-ID: <CAMuHMdVTaPNQ2QTX+T0dhZaxKCrxF3t2X+11fAT0Va214j6SyA@mail.gmail.com>
-Subject: Re: [PATCH 5/5] clk: renesas: r9a09g056: Add clocks and resets for
- Mali-G31 GPU
-To: Prabhakar <prabhakar.csengg@gmail.com>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
-	linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-MTK: N
 
-On Tue, 13 May 2025 at 17:46, Prabhakar <prabhakar.csengg@gmail.com> wrote:
-> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->
-> Add clock and reset support for the Mali-G31 GPU on the Renesas RZ/V2N
-> (R9A09G056) SoC. This includes adding clock sources required for the
-> module clocks.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Our hardware registers are set through GCE, not by the CPU.
+DRM might assume the hardware is disabled immediately after calling
+atomic_disable() of drm_plane, but it is only truly disabled after the
+GCE IRQ is triggered.
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in renesas-clk for v6.17.
+Additionally, the cursor plane in DRM uses async_commit, so DRM will
+not wait for vblank and will free the buffer immediately after calling
+atomic_disable().
 
-Gr{oetje,eeting}s,
+To prevent the framebuffer from being freed before the layer disable
+settings are configured into the hardware, which can cause an IOMMU
+fault error, a wait_event_timeout has been added to wait for the
+ddp_cmdq_cb() callback,indicating that the GCE IRQ has been triggered.
 
-                        Geert
+Fixes: 119f5173628a ("drm/mediatek: Add DRM Driver for Mediatek SoC MT8173.")
+Signed-off-by: Jason-JH Lin <jason-jh.lin@mediatek.com>
+---
+ drivers/gpu/drm/mediatek/mtk_crtc.c  | 30 ++++++++++++++++++++++++++++
+ drivers/gpu/drm/mediatek/mtk_crtc.h  |  1 +
+ drivers/gpu/drm/mediatek/mtk_plane.c |  5 +++++
+ 3 files changed, 36 insertions(+)
 
+diff --git a/drivers/gpu/drm/mediatek/mtk_crtc.c b/drivers/gpu/drm/mediatek/mtk_crtc.c
+index 8f6fba4217ec..944a3d1e5ec9 100644
+--- a/drivers/gpu/drm/mediatek/mtk_crtc.c
++++ b/drivers/gpu/drm/mediatek/mtk_crtc.c
+@@ -719,6 +719,36 @@ int mtk_crtc_plane_check(struct drm_crtc *crtc, struct drm_plane *plane,
+ 	return 0;
+ }
+ 
++void mtk_crtc_plane_disable(struct drm_crtc *crtc, struct drm_plane *plane)
++{
++	struct mtk_crtc *mtk_crtc = to_mtk_crtc(crtc);
++	struct mtk_plane_state *plane_state = to_mtk_plane_state(plane->state);
++	int i;
++
++	if (!mtk_crtc->enabled)
++		return;
++
++	/* set pending plane state to disabled */
++	for (i = 0; i < mtk_crtc->layer_nr; i++) {
++		struct drm_plane *mtk_plane = &mtk_crtc->planes[i];
++		struct mtk_plane_state *mtk_plane_state = to_mtk_plane_state(mtk_plane->state);
++
++		if (mtk_plane->index == plane->index) {
++			memcpy(mtk_plane_state, plane_state, sizeof(*plane_state));
++			break;
++		}
++	}
++	mtk_crtc_update_config(mtk_crtc, false);
++
++#if IS_REACHABLE(CONFIG_MTK_CMDQ)
++	/* wait for planes to be disabled by cmdq */
++	if (mtk_crtc->cmdq_client.chan)
++		wait_event_timeout(mtk_crtc->cb_blocking_queue,
++				   mtk_crtc->cmdq_vblank_cnt == 0,
++				   msecs_to_jiffies(500));
++#endif
++}
++
+ void mtk_crtc_async_update(struct drm_crtc *crtc, struct drm_plane *plane,
+ 			   struct drm_atomic_state *state)
+ {
+diff --git a/drivers/gpu/drm/mediatek/mtk_crtc.h b/drivers/gpu/drm/mediatek/mtk_crtc.h
+index 388e900b6f4d..828f109b83e7 100644
+--- a/drivers/gpu/drm/mediatek/mtk_crtc.h
++++ b/drivers/gpu/drm/mediatek/mtk_crtc.h
+@@ -21,6 +21,7 @@ int mtk_crtc_create(struct drm_device *drm_dev, const unsigned int *path,
+ 		    unsigned int num_conn_routes);
+ int mtk_crtc_plane_check(struct drm_crtc *crtc, struct drm_plane *plane,
+ 			 struct mtk_plane_state *state);
++void mtk_crtc_plane_disable(struct drm_crtc *crtc, struct drm_plane *plane);
+ void mtk_crtc_async_update(struct drm_crtc *crtc, struct drm_plane *plane,
+ 			   struct drm_atomic_state *plane_state);
+ struct device *mtk_crtc_dma_dev_get(struct drm_crtc *crtc);
+diff --git a/drivers/gpu/drm/mediatek/mtk_plane.c b/drivers/gpu/drm/mediatek/mtk_plane.c
+index 655106bbb76d..59edbe26f01e 100644
+--- a/drivers/gpu/drm/mediatek/mtk_plane.c
++++ b/drivers/gpu/drm/mediatek/mtk_plane.c
+@@ -285,9 +285,14 @@ static void mtk_plane_atomic_disable(struct drm_plane *plane,
+ 	struct drm_plane_state *new_state = drm_atomic_get_new_plane_state(state,
+ 									   plane);
+ 	struct mtk_plane_state *mtk_plane_state = to_mtk_plane_state(new_state);
++	struct drm_plane_state *old_state = drm_atomic_get_old_plane_state(state,
++									   plane);
++
+ 	mtk_plane_state->pending.enable = false;
+ 	wmb(); /* Make sure the above parameter is set before update */
+ 	mtk_plane_state->pending.dirty = true;
++
++	mtk_crtc_plane_disable(old_state->crtc, plane);
+ }
+ 
+ static void mtk_plane_atomic_update(struct drm_plane *plane,
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.43.0
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
