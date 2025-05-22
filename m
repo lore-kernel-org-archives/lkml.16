@@ -1,119 +1,154 @@
-Received: from mail-il1-f176.google.com (mail-il1-f176.google.com [209.85.166.176])
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E417E286D67
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 22:43:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8D5A2882B5
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 22:44:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747953821; cv=none; b=L2W4pBErcLvj/1s0cUTqJ/pT2vsN82sAMQmf7sukUfsYmYeaAKbd6D4D16QtB6mmcYHD7m1iK5j9kTdcDVbwLJQKDf/Ymu9Is2G+ObMuQ1EB3K8uk58JM8EqYaTlFWzdERTEdb69RUqx1Mu0HdBmOrFub1sOotntyNZJvdphYZU=
+	t=1747953850; cv=none; b=tlh2U43EGg2MkCNItMVEHHzUub2XvgrUtT2FnuImIoQ+RKWk7cMFfU9P8qG5dEagsLFm7hNNnBiDFR5o/4hTwoiR2J90ZhoQJ+Ga+kD9EyuE1cnQtlMvRwRRxICGGcUMcjXmK1YiZyaoCJT02gR7JegAvaawxvYCyO+zF+Cf2Fo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747953821; c=relaxed/simple;
-	bh=d8ElNV1KxKf1PTMc9BiSriOci7moGD7yluHGQynQVf4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pdNLCLtgh5mZakqsB90jdr5Vuvx9Tk1c1pfVReuS1tSqoYgwfMErgdW0Q2yuv6kBCUwv/b6P0E3MWmz729EY9pH3IQDjE9KLPD4kUhWKuvZFv6IcCbRkESCkSojUkMYUT8iVm8XZ3M+dAvYDlcvI2sqY3IoGHTHGRsDn/pvSKZI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Q4ROYLk9; arc=none smtp.client-ip=209.85.166.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1747953850; c=relaxed/simple;
+	bh=5sOL7pB6oTTIdBnyFV8S131A9ORjb++y1AVBheBVwyg=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=DFf1jPGjrEdXvWtB5L9XDeA4HdAZZUGziPtusYPLxRddu6Bw9z3jE8l9oRXa+qV7JyS2o24kA6XGavQ1HbUF5FMb4W7d9FR2GAUfnqja5v+yWxrV55S4xZLBo4eqLUoz7DNVp7EU+MWHWe+gaG0jUDQZgar30z5fHP7HQqmpuvE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Tda7KhZY; arc=none smtp.client-ip=209.85.216.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Q4ROYLk9"
-Received: by mail-il1-f176.google.com with SMTP id e9e14a558f8ab-3da73df6c4eso67561305ab.0
-        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 15:43:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Tda7KhZY"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-30e9e81d4b0so8114788a91.3
+        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 15:44:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1747953819; x=1748558619; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=SgAx9FRjAiSPVmD+10IVtHJnBsxw+8aMplanI2nZMN4=;
-        b=Q4ROYLk9WwKxIjKIoOaiWWf9PUKeUP0J+yExkA0SoGTwi2C10purbPzas95RyyCkCK
-         ZIq61ypWB2cYSIQSL/6CKRmyN9809QtMSgKWIvvJJhsltEVKKD4qjmQXEJp4Y7Yff+hJ
-         tM1x0NB0ZlBRVUEn7aJTJnR48jkCGwI+Hsd6A=
+        d=google.com; s=20230601; t=1747953847; x=1748558647; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Sj7O/zXnxLWyEfr+1bNZHll+hm9si4+OEjirrZf3yQU=;
+        b=Tda7KhZYlUsYX30vd3TXZguh8tR3VrUAJ4PxMfeCF6n2kgBUoS1A5l8RWjj9vzJK1x
+         ErKF7Y6pnbjAV3nhR8H6cuFZy3saQStBdKwkZjOwZxmz5xaRLyitzx8nUdLsMbAJWPvc
+         T2KiJtnHD1QOykTjYYlnjIpCgFrPjTqOrtx+ktIG0qmu5gD2kLll0Bjj4QrQxbKoefAF
+         4whOtjUzOWJwCuq1Tw6sYZtEUP9dNFqsNwp9D5zrc7bMAIrlmBkpmb44oo/9M/aiqfzD
+         7S78j6xleSXuptMDCrmIMHJBmA/FkHtMtZ9AvpWgabzZ6VV3clybekFYwN3OcrjE9q0W
+         KBRA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747953819; x=1748558619;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=SgAx9FRjAiSPVmD+10IVtHJnBsxw+8aMplanI2nZMN4=;
-        b=v3rtRUKvQWjbdwSLahm9e04QzoJtwZjYVjx+APTHSvBro3vRqhAHBfaYbDnDn8O4wi
-         xEGhrAkb2a3aVqvNEjOkwZhNxGLef5G6xx8+Z1tZrhGc6yJG/91aUn5uvDhEnd79Aass
-         3eXRMMDLTnREIpXFxS4+c6o2Tw2LsjqLgq4ZweAiLDMuhSP6bblMsadNdJWgvCrkDVxh
-         BWNiXCxfAFAWgsENT0nnquJ6s8OX+xLtZcjZdKG1LUtT6IWpGU7xy80IZnspQCK7szBw
-         HhUG1UfGouDp509YbQxTHYeJz3dUt2DvTjsTGcAEtEaLC3cW1nMMBEtiAMS5BuiPaH0O
-         Rg0g==
-X-Forwarded-Encrypted: i=1; AJvYcCXnw53WRd/piMXKyeg1YSjiqW1bzlfhLOjjui/qoNYae4GYs9fpC1PgIXgPbTpsHSI7VIlbDXZ33cfP/rA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw/oq1o3jXp7aKgO3q1MsnrjYNUIBDn3tsV8heLDImwlsFS1I/B
-	mCT8UZ09UjgFEgr9ODSUuxQZjXHFt76hwRRgNJ/JPJgk+oLytxeAxYyNSP0TQn2NrZw=
-X-Gm-Gg: ASbGncvMaW6MqXgDmc8snrwk+IelRT0r5uQFQTT1TlG/K2yNFNTbh8tw+WFvX13yLwn
-	2LQDk9bamSt8JU9oaYeQzX5NHEb8mFlgk84lgWFM9uYvG641ntBBdUih+OKRPbRuyl4JEgIxYJN
-	FX3Yz2m6klaq8KsUo2V2MozxjabMDaT1iJhPw4F/7mh72MSbWwje9b6mBzx0DwSgvLePoGd8NKU
-	izixS2rmRWY7T+r4/wHS+ZDq3DUnP78mCGlP+aIkceIgSqdR0dAC4ouK9Zx2BRub4wBI+M6ygbY
-	4dPyUCGVjHR1Yq30xy1kqUZu/KzgIjfcJ8DQ4Yc5ofwIt+JQSefoYJ8elleTAQ==
-X-Google-Smtp-Source: AGHT+IGgZrub3EqyIIKtPGhYUaoxCm8eFkqbXkOsp+d+6Y4GjpSAtke5qsqtY8wSwjMno4kibcNjng==
-X-Received: by 2002:a05:6e02:3c02:b0:3d8:1dc7:ca7a with SMTP id e9e14a558f8ab-3db84296d9amr301540885ab.5.1747953818933;
-        Thu, 22 May 2025 15:43:38 -0700 (PDT)
-Received: from [192.168.1.14] ([38.175.170.29])
-        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-3db843cf8fbsm37711915ab.1.2025.05.22.15.43.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 22 May 2025 15:43:38 -0700 (PDT)
-Message-ID: <a2980c99-6a6e-42ac-8978-8e0ab5319a9c@linuxfoundation.org>
-Date: Thu, 22 May 2025 16:43:37 -0600
+        d=1e100.net; s=20230601; t=1747953847; x=1748558647;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Sj7O/zXnxLWyEfr+1bNZHll+hm9si4+OEjirrZf3yQU=;
+        b=PidmU8xpfXTDwgB6W+L5HTWb7httUNnQ9cgCsdZNsfsvzR3U8UdgtTbI8iRQn6tIW7
+         yzZdo30z5X7FCtrhlBBTxtIwU9Bn6p6YE5UXMa8/yurUDbjVYPrmudQLYLxLQE/OmG+/
+         UMN1MDpcU7knZwoMJNOxZvdDwxpsffpNvapNbcoHUkU+/FkRMFDIAMOeD3nRBdfGHlBY
+         RFQ3XXFhX7zADLy44qdHZDj48m4DG/89hA0fNoHFu0r6m9CjX0z4K7a7ZqpQ4wlBKEkA
+         Q3tQ6mxXFTQvkvT9PwTt96sVsx4vs82irctWB9T+peGmdpK9VaLkS07vaFiTxE3lIcmm
+         Ga/w==
+X-Forwarded-Encrypted: i=1; AJvYcCW67mQyPFGqjuSUN1/lu8VZY0CDJ1GNy3gdyKL4IpZv9JETtgkZ6xd250nRGQBQxEXw2BZg5TmhhjmnAyM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxjc+YVq1hHpFnKs35lA7zjf9jxwil/FollsgYdHlp1EDydhWdb
+	jgyU/UZuoJ2zqLXKujNcfZbqaJnAuq7ji+lvkTfmadPejyTNUs/D/KXAZ9/lO9JtICf/sShHsyX
+	eK2UYeQ==
+X-Google-Smtp-Source: AGHT+IGoPWmWq4q8zz+VWqAZHqqihZEUfMRSRH6eimytp/ket8uG716lDvP3zEiB0z4s39QEh7QHPmctfls=
+X-Received: from pjbpl10.prod.google.com ([2002:a17:90b:268a:b0:301:2a0f:b03d])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:3c90:b0:2ff:6af3:b5fa
+ with SMTP id 98e67ed59e1d1-30e8322592emr33588602a91.22.1747953847261; Thu, 22
+ May 2025 15:44:07 -0700 (PDT)
+Date: Thu, 22 May 2025 15:44:05 -0700
+In-Reply-To: <aC-XmCl9SVX39Hgl@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/1] Fix typo in cpu-on-off-test selftest script:
-To: Jihed Chaibi <jihed.chaibi.dev@gmail.com>, shuah@kernel.org
-Cc: linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-kernel-mentees@lists.linux.dev
-References: <20250517011928.673585-1-jihed.chaibi.dev@gmail.com>
-Content-Language: en-US
-From: Shuah Khan <skhan@linuxfoundation.org>
-In-Reply-To: <20250517011928.673585-1-jihed.chaibi.dev@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+References: <20250522005555.55705-1-mlevitsk@redhat.com> <20250522005555.55705-4-mlevitsk@redhat.com>
+ <aC-XmCl9SVX39Hgl@google.com>
+Message-ID: <aC-otXnBwHsdZ7B4@google.com>
+Subject: Re: [PATCH v5 3/5] KVM: nVMX: check vmcs12->guest_ia32_debugctl value
+ given by L2
+From: Sean Christopherson <seanjc@google.com>
+To: Maxim Levitsky <mlevitsk@redhat.com>
+Cc: kvm@vger.kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
+	Thomas Gleixner <tglx@linutronix.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
+	Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org, 
+	x86@kernel.org, Paolo Bonzini <pbonzini@redhat.com>, Chao Gao <chao.gao@intel.com>, 
+	Jim Mattson <jmattson@google.com>
+Content-Type: text/plain; charset="us-ascii"
 
-On 5/16/25 19:19, Jihed Chaibi wrote:
-> Fix typo in hotplaggable_offline_cpus function name:
++Jim
+
+On Thu, May 22, 2025, Sean Christopherson wrote:
+> On Wed, May 21, 2025, Maxim Levitsky wrote:
+> > Check the vmcs12 guest_ia32_debugctl value before loading it, to avoid L2
+> > being able to load arbitrary values to hardware IA32_DEBUGCTL.
+> > 
+> > Reviewed-by: Chao Gao <chao.gao@intel.com>
+> > Signed-off-by: Maxim Levitsky <mlevitsk@redhat.com>
+> > ---
+> >  arch/x86/kvm/vmx/nested.c | 3 ++-
+> >  arch/x86/kvm/vmx/vmx.c    | 2 +-
+> >  arch/x86/kvm/vmx/vmx.h    | 1 +
+> >  3 files changed, 4 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
+> > index e073e3008b16..00f2b762710c 100644
+> > --- a/arch/x86/kvm/vmx/nested.c
+> > +++ b/arch/x86/kvm/vmx/nested.c
+> > @@ -3146,7 +3146,8 @@ static int nested_vmx_check_guest_state(struct kvm_vcpu *vcpu,
+> >  		return -EINVAL;
+> >  
+> >  	if ((vmcs12->vm_entry_controls & VM_ENTRY_LOAD_DEBUG_CONTROLS) &&
+> > -	    CC(!kvm_dr7_valid(vmcs12->guest_dr7)))
+> > +	    (CC(!kvm_dr7_valid(vmcs12->guest_dr7)) ||
+> > +	     CC(vmcs12->guest_ia32_debugctl & ~vmx_get_supported_debugctl(vcpu, false))))
 > 
-> "hotplaggable" is replaced by "hotpluggable"
+> This is a breaking change.  For better or worse (read: worse), KVM's ABI is to
+> drop BTF and LBR if they're unsupported (the former is always unsupported).
+> Failure to honor that ABI means L1 can't excplitly load what it think is its
+> current value into L2.
 > 
-> Signed-off-by: Jihed Chaibi <jihed.chaibi.dev@gmail.com>
-> ---
+> I'll slot in a path to provide another helper for checking the validity of
+> DEBUGCTL.  I think I've managed to cobble together something that isn't too
+> horrific (options are a bit limited due to the existing ugliness).
 
-Change looks good to me. Change log should specify the
-subsusystem. Check submitting patches document and refer
-to a few change logs for this file using git log.
+And then Jim ruined my day.  :-)
 
-Send v2 with a proper change log.
+As evidenced by this hilarious KUT testcase, it's entirely possible there are
+existing KVM guests that are utilizing/abusing DEBUGCTL features.
 
->   tools/testing/selftests/cpu-hotplug/cpu-on-off-test.sh | 4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/tools/testing/selftests/cpu-hotplug/cpu-on-off-test.sh b/tools/testing/selftests/cpu-hotplug/cpu-on-off-test.sh
-> index d5dc7e0dc..6232a46ca 100755
-> --- a/tools/testing/selftests/cpu-hotplug/cpu-on-off-test.sh
-> +++ b/tools/testing/selftests/cpu-hotplug/cpu-on-off-test.sh
-> @@ -67,7 +67,7 @@ hotpluggable_cpus()
->   	done
->   }
->   
-> -hotplaggable_offline_cpus()
-> +hotpluggable_offline_cpus()
->   {
->   	hotpluggable_cpus 0
->   }
-> @@ -151,7 +151,7 @@ offline_cpu_expect_fail()
->   
->   online_all_hot_pluggable_cpus()
->   {
-> -	for cpu in `hotplaggable_offline_cpus`; do
-> +	for cpu in `hotpluggable_offline_cpus`; do
->   		online_cpu_expect_success $cpu
->   	done
->   }
+	/*
+	 * Optional RTM test for hardware that supports RTM, to
+	 * demonstrate that the current volume 3 of the SDM
+	 * (325384-067US), table 27-1 is incorrect. Bit 16 of the exit
+	 * qualification for debug exceptions is not reserved. It is
+	 * set to 1 if a debug exception (#DB) or a breakpoint
+	 * exception (#BP) occurs inside an RTM region while advanced
+	 * debugging of RTM transactional regions is enabled.
+	 */
+	if (this_cpu_has(X86_FEATURE_RTM)) {
+		vmcs_write(ENT_CONTROLS,
+			   vmcs_read(ENT_CONTROLS) | ENT_LOAD_DBGCTLS);
+		/*
+		 * Set DR7.RTM[bit 11] and IA32_DEBUGCTL.RTM[bit 15]
+		 * in the guest to enable advanced debugging of RTM
+		 * transactional regions.
+		 */
+		vmcs_write(GUEST_DR7, BIT(11));
+		vmcs_write(GUEST_DEBUGCTL, BIT(15));
+		single_step_guest("Hardware delivered single-step in "
+				  "transactional region", starting_dr6, 0);
+		check_db_exit(false, false, false, &xbegin, BIT(16),
+			      starting_dr6);
+	} else {
+		vmcs_write(GUEST_RIP, (u64)&skip_rtm);
+		enter_guest();
+	}
 
-thanks,
--- Shuah
+For RTM specifically, disallowing DEBUGCTL.RTM but allowing DR7.RTM seems a bit
+silly.  Unless there's a security concern, that can probably be fixed by adding
+support for RTM.  Note, there's also a virtualization hole here, as KVM doesn't
+vet DR7 beyond checking that bits 63:32 are zero, i.e. a guest could set DR7.RTM
+even if KVM doesn't advertise support.  Of course, closing that hole would require
+completely dropping support for disabling DR interception, since VMX doesn't
+give per-DR controls.
 
+For the other bits, I don't see a good solution.  The only viable options I see
+are to silently drop all unsupported bits (maybe with a quirk?), or enforce all
+bits and cross our fingers that no L1 VMM is running guests with those bits set
+in GUEST_DEBUGCTL.
