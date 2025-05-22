@@ -1,208 +1,445 @@
-Received: from ni.piap.pl (ni.piap.pl [195.187.100.5])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F340E28C2C5;
-	Thu, 22 May 2025 12:06:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.187.100.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9769F29D19
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 12:09:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747915620; cv=none; b=eq/8uta3O8JYL2ytprZvqww1Se7jZes6HJdMjjIl409l2D9snGAe5aQFSlmqhgehJAjjgTA9Khuw7WQnlk6CxfEthLXfcbPTG/D5a8zDD8nHbD5AflNxk63vT3lqQ3ccS/pUkZNUE1glaKUek5VJye6QqnwtVW8Xu1VDCDV5+wI=
+	t=1747915751; cv=none; b=Obzt5HpBrQJoUVz0wIH5RTpU37GgK7AsLu45SQAuL54b5/g9OwoY0gzPI3TfV6OP1Z8hlV/e/0PFR4THrzbDWis04kJr95osSM9CQuuP7s5+Dx91eCH99uraVgSuqWJYsaVv5iv9+bfvoCqjj9Rm9sZWI9H3xP1sO0JLgWrRsuA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747915620; c=relaxed/simple;
-	bh=9qp3Kd8ijlu4et/Q0UdxfQJ7ibFlI/xNi3I8Q++iEC4=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=lcyj1T5DzPwuBhk0ztS+Hd4OoIDfTxPeqJrB84sVq8mpbJyvvP3e+LpY2riSoMHVMBUp6B4EwtejcitMlN4Ruv4yPJIVgvGk+PL61+30uuE/OoX34r14ORtUMo9ackmbhx1r8JRI2P84NCWyhLsDdUnBVYK0/tUxP0ObpYpIfrQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=piap.pl; spf=pass smtp.mailfrom=piap.pl; arc=none smtp.client-ip=195.187.100.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=piap.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=piap.pl
-Received: from t19.piap.pl (OSB1819.piap.pl [10.0.9.19])
-	by ni.piap.pl (Postfix) with ESMTPS id 9ED24C405A45;
-	Thu, 22 May 2025 14:06:49 +0200 (CEST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 ni.piap.pl 9ED24C405A45
-From: =?utf-8?Q?Krzysztof_Ha=C5=82asa?= <khalasa@piap.pl>
-To: Jacopo Mondi <jacopo.mondi@ideasonboard.com>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>,  Rui Miguel Silva
- <rmfrfs@gmail.com>,  Martin Kepplinger <martink@posteo.de>,  Purism Kernel
- Team <kernel@puri.sm>,  Mauro Carvalho Chehab <mchehab@kernel.org>,  Shawn
- Guo <shawnguo@kernel.org>,  Sascha Hauer <s.hauer@pengutronix.de>,
-  Pengutronix Kernel Team <kernel@pengutronix.de>,  Fabio Estevam
- <festevam@gmail.com>,  linux-media@vger.kernel.org,  imx@lists.linux.dev,
-  linux-arm-kernel@lists.infradead.org,  linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Enable MIPI filtering by DT on i.MX8M*
-In-Reply-To: <iegnn5xoosqpk52hvipcr73aliwhqtsq6r6ctvt5756bhy6yen@rqcdongb7fdf>
-	(Jacopo Mondi's message of "Wed, 21 May 2025 11:08:13 +0200")
-References: <m3h61u9jy2.fsf@t19.piap.pl>
-	<20250509103733.GE28896@pendragon.ideasonboard.com>
-	<m3o6vn8np5.fsf@t19.piap.pl>
-	<iegnn5xoosqpk52hvipcr73aliwhqtsq6r6ctvt5756bhy6yen@rqcdongb7fdf>
-Sender: khalasa@piap.pl
-Date: Thu, 22 May 2025 14:06:49 +0200
-Message-ID: <m31psg97dy.fsf@t19.piap.pl>
+	s=arc-20240116; t=1747915751; c=relaxed/simple;
+	bh=2OT71y3KG48GLuGZJvhlpAWuITT+Slde3w+fhiNxFe8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=JM8mtbGQqK/eKXv6YskVfzJsSSAvk49oybIXFhhE+/MvaC3hwwFW61cVkKPg4zwCOegRHmE/GhxhC2UG09tiOqf5arhNvxlZhTCdfwO8Vy585WLDLmNn/bCjU8hIQDPDmbd8tFdaNe+YfSy0+hVVI5gJ1QB6kL1OOVGOfXL4S0s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=jVdR7dlY; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jVdR7dlY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1747915748;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=h44IAMVeMtd/tY4Uko+zGeVBMuEmJ/4cWrA7K+kWhWw=;
+	b=jVdR7dlYcxLeX6fLI3wL8PeY8SfOo5uUCAkXhsOjygpQl3oWmnKZmhXTb7VlD4WmTV+I9t
+	F0BN6MU20SEAVr9y75xeCM8ZErk/WiItW0mfNhAnb4WwiPYqeXpJKrVkH8nWQj1GkicfgA
+	Qzha18vX/dmYyCK4cLsepqyW7jQtX+g=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-671-gZLYHpm5MKSVsEf7MWPB5Q-1; Thu, 22 May 2025 08:09:07 -0400
+X-MC-Unique: gZLYHpm5MKSVsEf7MWPB5Q-1
+X-Mimecast-MFC-AGG-ID: gZLYHpm5MKSVsEf7MWPB5Q_1747915746
+Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-3a364d121ccso2796389f8f.2
+        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 05:09:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747915746; x=1748520546;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=h44IAMVeMtd/tY4Uko+zGeVBMuEmJ/4cWrA7K+kWhWw=;
+        b=eybkzUUBEYjNM1DvGw7nmW02uQRTobZ4+8ORoisFxY/7Dk0CGjjDcTS0GoxYKmST0g
+         h2bCihmJiTtHMjTgrX3Z4orpozGSoylEZpbaROFh4ch0CzcHCICQ19kttNHo40a9WLGD
+         sWyozQtzTQLABtllZEmKX2vHGttdPEHlUdwOb4ST20LGbhsFVVL8f2WQowIWPc+yG57B
+         ZHG1e5FfYgNr3+l2ZfI4vztq/NuGJmPGO+m+UloD/KfkdZShGFNr8u5DgJKDZ0r9zFqr
+         AbQ/dQJRVezkcdXLZSDEaFdDRDSInFnpvHmZn9Krp3mK+/ExubdwdItBMymQG8GM2AGH
+         9MvQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWS5SzcWjZCqLTLctIiXt3JP3arkCK6pzgrabWibnLlIb2bQMHiyVzbXXYHAe2m624AO7znShBIuvdRtf4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxRizPB64aUe7Z7tIrF0mIUcBe4MBAa7EnxYq9qCVWBzXbHxqGi
+	GRVgej5DtA8gsjKt/mxznHjmYdW0h8xbeXT01qSRMmx3R0kbGusHd/xAaQHl4rhEbbzUXmDgw3T
+	OwFBiIyhd8awDPAWfLjcOQjK2BOF5JWXg0LfatmVrKPsAlIQ3ALEdldgxYClC3oVBmA==
+X-Gm-Gg: ASbGncvFsrW3VJRLuPoWXSL4rH2SvG4+xIJ9eTvxjXWwn3suOi9fDJpsf/fg8E0wSGg
+	WgdA3Zr4jaeYJPQSz1ISWBIZjMsevGuDPhWxZGgvYQml6QAAOG+1aObOCLXNBy6R6g22LOKHmNk
+	u+jGcVBSnsQFaMyBRYxglHHMd0pOqtYD/fazDqSQ5lKRZ21h8DP/RDV934qzUkVju+AzhQeNJ2e
+	vr/YSsRwjTQp7mh7QAshtUi7btBu+bOpIdC6t7Ghjud7ssulmQuwJLkCX/a/Es13V/AC8xPUryO
+	kTbrp7NY+nk65uesIRhiJk6lyqO6KQLZXxxUN3Ff43t/cmZ9nAuNz4R8tcQLpuJv5iI5RkA8HxD
+	7n6fFdY6k5ZOefLAD1joXofjwThb/03acW4byYMA=
+X-Received: by 2002:a05:6000:2913:b0:3a3:655e:d472 with SMTP id ffacd0b85a97d-3a3655ed55cmr16869564f8f.47.1747915745830;
+        Thu, 22 May 2025 05:09:05 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGKStihXpAyFUJRGyp/g+Aoh3dtnhX6R0nZva9Bp5MgYHL9Vip9LjX4p7dLEH2zhm4rLg30Cw==
+X-Received: by 2002:a05:6000:2913:b0:3a3:655e:d472 with SMTP id ffacd0b85a97d-3a3655ed55cmr16869513f8f.47.1747915745275;
+        Thu, 22 May 2025 05:09:05 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f22:2e00:6e71:238a:de9f:e396? (p200300d82f222e006e71238ade9fe396.dip0.t-ipconnect.de. [2003:d8:2f22:2e00:6e71:238a:de9f:e396])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-447f78aeb56sm100300165e9.27.2025.05.22.05.09.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 22 May 2025 05:09:04 -0700 (PDT)
+Message-ID: <aeb5cfd2-ca8c-4e69-b27e-74c6ab4de520@redhat.com>
+Date: Thu, 22 May 2025 14:09:02 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 1/4] drivers/base/node: Optimize memory block
+ registration to reduce boot time
+To: Donet Tom <donettom@linux.ibm.com>,
+ Andrew Morton <akpm@linux-foundation.org>, Mike Rapoport <rppt@kernel.org>,
+ Oscar Salvador <osalvador@suse.de>, Zi Yan <ziy@nvidia.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Ritesh Harjani <ritesh.list@gmail.com>, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, "Rafael J . Wysocki" <rafael@kernel.org>,
+ Danilo Krummrich <dakr@kernel.org>,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+ Alison Schofield <alison.schofield@intel.com>,
+ Yury Norov <yury.norov@gmail.com>, Dave Jiang <dave.jiang@intel.com>
+References: <d2490e807b2c13950bc1d4199f22ec078cc4c56a.1747904868.git.donettom@linux.ibm.com>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <d2490e807b2c13950bc1d4199f22ec078cc4c56a.1747904868.git.donettom@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hi Jacopo,
+On 22.05.25 11:17, Donet Tom wrote:
+> During node device initialization, `memory blocks` are registered under
+> each NUMA node. The `memory blocks` to be registered are identified using
+> the node’s start and end PFNs, which are obtained from the node's pg_data
+> 
+> However, not all PFNs within this range necessarily belong to the same
+> node—some may belong to other nodes. Additionally, due to the
+> discontiguous nature of physical memory, certain sections within a
+> `memory block` may be absent.
+> 
+> As a result, `memory blocks` that fall between a node’s start and end
+> PFNs may span across multiple nodes, and some sections within those blocks
+> may be missing. `Memory blocks` have a fixed size, which is architecture
+> dependent.
+> 
+> Due to these considerations, the memory block registration is currently
+> performed as follows:
+> 
+> for_each_online_node(nid):
+>      start_pfn = pgdat->node_start_pfn;
+>      end_pfn = pgdat->node_start_pfn + node_spanned_pages;
+>      for_each_memory_block_between(PFN_PHYS(start_pfn), PFN_PHYS(end_pfn))
+>          mem_blk = memory_block_id(pfn_to_section_nr(pfn));
+>          pfn_mb_start=section_nr_to_pfn(mem_blk->start_section_nr)
+>          pfn_mb_end = pfn_start + memory_block_pfns - 1
+>          for (pfn = pfn_mb_start; pfn < pfn_mb_end; pfn++):
+>              if (get_nid_for_pfn(pfn) != nid):
+>                  continue;
+>              else
+>                  do_register_memory_block_under_node(nid, mem_blk,
+>                                                          MEMINIT_EARLY);
+> 
+> Here, we derive the start and end PFNs from the node's pg_data, then
+> determine the memory blocks that may belong to the node. For each
+> `memory block` in this range, we inspect all PFNs it contains and check
+> their associated NUMA node ID. If a PFN within the block matches the
+> current node, the memory block is registered under that node.
+> 
+> If CONFIG_DEFERRED_STRUCT_PAGE_INIT is enabled, get_nid_for_pfn() performs
+> a binary search in the `memblock regions` to determine the NUMA node ID
+> for a given PFN. If it is not enabled, the node ID is retrieved directly
+> from the struct page.
+> 
+> On large systems, this process can become time-consuming, especially since
+> we iterate over each `memory block` and all PFNs within it until a match is
+> found. When CONFIG_DEFERRED_STRUCT_PAGE_INIT is enabled, the additional
+> overhead of the binary search increases the execution time significantly,
+> potentially leading to soft lockups during boot.
+> 
+> In this patch, we iterate over `memblock region` to identify the
+> `memory blocks` that belong to the current NUMA node. `memblock regions`
+> are contiguous memory ranges, each associated with a single NUMA node, and
+> they do not span across multiple nodes.
+> 
+> for_each_memory_region(r): // r => region
+>    if (!node_online(r->nid)):
+>      continue;
+>    else
+>      for_each_memory_block_between(r->base, r->base + r->size - 1):
+>        do_register_memory_block_under_node(r->nid, mem_blk, MEMINIT_EARLY);
+> 
+> We iterate over all memblock regions, and if the node associated with the
+> region is online, we calculate the start and end memory blocks based on the
+> region's start and end PFNs. We then register all the memory blocks within
+> that range under the region node.
+> 
+> Test Results on My system with 32TB RAM
+> =======================================
+> 1. Boot time with CONFIG_DEFERRED_STRUCT_PAGE_INIT enabled.
+> 
+> Without this patch
+> ------------------
+> Startup finished in 1min 16.528s (kernel)
+> 
+> With this patch
+> ---------------
+> Startup finished in 17.236s (kernel) - 78% Improvement
+> 
+> 2. Boot time with CONFIG_DEFERRED_STRUCT_PAGE_INIT disabled.
+> 
+> Without this patch
+> ------------------
+> Startup finished in 28.320s (kernel)
+> 
+> With this patch
+> ---------------
+> Startup finished in 15.621s (kernel) - 46% Improvement
+> 
+> Acked-by: Zi Yan <ziy@nvidia.com>
+> Signed-off-by: Donet Tom <donettom@linux.ibm.com>
+> 
+> ---
+> v4 -> v5
+> 
+> 1. Moved all helpers(memory_block_id(), pfn_to_block_id(), and phys_to_block_id())
+>     into memory.h and exported sections_per_block.
+> 2. register_memory_blocks_early() moved out of for_each_online_node().
+>     Now we iterate over all memory regions at once and register the
+>     memory blocks.
+> 
+>     Tested corner cases where memory blocks span across multiple memblock regions; it
+>     is working fine.
+> 
+>     #cd /sys/devices/system/node/
+>     # find node1/  |grep memory0
+>     node1/memory0
+>     # find node0/  |grep memory0
+>     node0/memory0
+>     # find node0/  |grep memory0
+>     node2/memory0
+>     # cat node0/memory0/valid_zones
+>     none
+> 
+> V4 - https://lore.kernel.org/all/f94685be9cdc931a026999d236d7e92de29725c7.1747376551.git.donettom@linux.ibm.com/
+> V3 - https://lore.kernel.org/all/b49ed289096643ff5b5fbedcf1d1c1be42845a74.1746250339.git.donettom@linux.ibm.com/
+> v2 - https://lore.kernel.org/all/fbe1e0c7d91bf3fa9a64ff5d84b53ded1d0d5ac7.1745852397.git.donettom@linux.ibm.com/
+> v1 - https://lore.kernel.org/all/50142a29010463f436dc5c4feb540e5de3bb09df.1744175097.git.donettom@linux.ibm.com/
+> ---
+>   drivers/base/memory.c  | 21 ++++----------------
+>   drivers/base/node.c    | 45 ++++++++++++++++++++++++++++++++++++++++--
+>   include/linux/memory.h | 19 +++++++++++++++++-
+>   include/linux/node.h   |  3 +++
+>   4 files changed, 68 insertions(+), 20 deletions(-)
+> 
+> diff --git a/drivers/base/memory.c b/drivers/base/memory.c
+> index 19469e7f88c2..39fcc075a36f 100644
+> --- a/drivers/base/memory.c
+> +++ b/drivers/base/memory.c
+> @@ -22,6 +22,7 @@
+>   #include <linux/stat.h>
+>   #include <linux/slab.h>
+>   #include <linux/xarray.h>
+> +#include <linux/export.h>
+>   
+>   #include <linux/atomic.h>
+>   #include <linux/uaccess.h>
+> @@ -48,22 +49,8 @@ int mhp_online_type_from_str(const char *str)
+>   
+>   #define to_memory_block(dev) container_of(dev, struct memory_block, dev)
+>   
+> -static int sections_per_block;
+> -
+> -static inline unsigned long memory_block_id(unsigned long section_nr)
+> -{
+> -	return section_nr / sections_per_block;
+> -}
+> -
+> -static inline unsigned long pfn_to_block_id(unsigned long pfn)
+> -{
+> -	return memory_block_id(pfn_to_section_nr(pfn));
+> -}
+> -
+> -static inline unsigned long phys_to_block_id(unsigned long phys)
+> -{
+> -	return pfn_to_block_id(PFN_DOWN(phys));
+> -}
+> +int sections_per_block;
+> +EXPORT_SYMBOL(sections_per_block);
+>   
+>   static int memory_subsys_online(struct device *dev);
+>   static int memory_subsys_offline(struct device *dev);
+> @@ -632,7 +619,7 @@ int __weak arch_get_memory_phys_device(unsigned long start_pfn)
+>    *
+>    * Called under device_hotplug_lock.
+>    */
+> -static struct memory_block *find_memory_block_by_id(unsigned long block_id)
+> +struct memory_block *find_memory_block_by_id(unsigned long block_id)
+>   {
+>   	struct memory_block *mem;
+>   
+> diff --git a/drivers/base/node.c b/drivers/base/node.c
+> index cd13ef287011..e8b6f6b9ce51 100644
+> --- a/drivers/base/node.c
+> +++ b/drivers/base/node.c
+> @@ -20,6 +20,7 @@
+>   #include <linux/pm_runtime.h>
+>   #include <linux/swap.h>
+>   #include <linux/slab.h>
+> +#include <linux/memblock.h>
+>   
+>   static const struct bus_type node_subsys = {
+>   	.name = "node",
+> @@ -850,6 +851,41 @@ void unregister_memory_block_under_nodes(struct memory_block *mem_blk)
+>   			  kobject_name(&node_devices[mem_blk->nid]->dev.kobj));
+>   }
+>   
+> +/*
+> + * register_memory_blocks_under_node_early : Register the memory blocks
+> + *                 under the nodes.
 
-Jacopo Mondi <jacopo.mondi@ideasonboard.com> writes:
+"register_memory_blocks_under_nodes"
 
-> However the i.MX8MP does implement INTERLEAVE_MODE, and it's anyway
-> marked as V3.6.3, so DT filtering is there disabled as well. I guess
-> this is intentional, see below...
+> + *
+> + * This function iterates over all memblock regions, and if the node associated with
 
-BTW the version register on iMX8MP is 3060301, which may possibly mean
-something like 3.6.3.1. I wonder if 8MM has the same.
+"the node" does not apply.
 
-> some registers like 32E4_000C are not listed in the peripheral memory
-> map, so you're probably reading an invalid memory area there
+> + * the region is online, calculates the start and end memory blocks based on the
+> + * region's start and end PFNs. Then, registers all the memory blocks within that
+> + * range under the region node.
 
-Sure - those are apparently wired to contain "DEADCAFE" (a hex value).
+More like "registers all memory blocks under the corresponding nodes 
+..." then clarify that a block might get registered under multiple nodes 
+etc.
 
-> If you're capturing RAW12 in 1920x1080 these two registers are
->
-> 32E40040: (MIPI_CSI1_ISP_CONFIG_CH0) =3D 0xb0
-> 32E40044: (MIPI_CSI1_ISP_RESOLUTION_CH0) =3D 0x4380780
-> 32E40048: (MIPI_CSI1_ISP_SYNC_CH0) =3D 0
-> 32E4004c: invalid
+> + */
+> +static void register_memory_blocks_under_node_early(void)
+> +{
+> +	struct memblock_region *r;
+> +
+> +	for_each_mem_region(r) {
+> +		const unsigned long start_block_id = phys_to_block_id(r->base);
+> +		const unsigned long end_block_id = phys_to_block_id(r->base + r->size - 1);
+> +		unsigned long block_id;
+> +
+> +		if (!node_online(r->nid))
+> +			continue;
+> +
+> +		for (block_id = start_block_id; block_id <= end_block_id; block_id++) {
+> +			struct memory_block *mem;
+> +
+> +			mem = find_memory_block_by_id(block_id);
+> +			if (!mem)
+> +				continue;
+> +
+> +			do_register_memory_block_under_node(r->nid, mem, MEMINIT_EARLY);
+> +			put_device(&mem->dev);
+> +		}
+> +
+> +	}
+> +}
+> +
+>   void register_memory_blocks_under_node(int nid, unsigned long start_pfn,
+>   				       unsigned long end_pfn,
+>   				       enum meminit_context context)
+> @@ -971,11 +1007,16 @@ void __init node_dev_init(void)
+>   
+>   	/*
+>   	 * Create all node devices, which will properly link the node
+> -	 * to applicable memory block devices and already created cpu devices.
+> +	 * to already created cpu devices.
+>   	 */
+>   	for_each_online_node(i) {
+> -		ret = register_one_node(i);
+> +		ret =  __register_one_node(i);
+>   		if (ret)
+>   			panic("%s() failed to add node: %d\n", __func__, ret);
+>   	}
+> +
+> +	/*
+> +	 * Link the node to memory block devices
+> +	 */
+> +	register_memory_blocks_under_node_early();
+ >   }> diff --git a/include/linux/memory.h b/include/linux/memory.h
+> index 12daa6ec7d09..2a61088e17ad 100644
+> --- a/include/linux/memory.h
+> +++ b/include/linux/memory.h
+> @@ -171,12 +171,30 @@ struct memory_group *memory_group_find_by_id(int mgid);
+>   typedef int (*walk_memory_groups_func_t)(struct memory_group *, void *);
+>   int walk_dynamic_memory_groups(int nid, walk_memory_groups_func_t func,
+>   			       struct memory_group *excluded, void *arg);
+> +struct memory_block *find_memory_block_by_id(unsigned long block_id);
+>   #define hotplug_memory_notifier(fn, pri) ({		\
+>   	static __meminitdata struct notifier_block fn##_mem_nb =\
+>   		{ .notifier_call = fn, .priority = pri };\
+>   	register_memory_notifier(&fn##_mem_nb);			\
+>   })
+>   
+> +extern int sections_per_block;
+> +
+> +static inline unsigned long memory_block_id(unsigned long section_nr)
+> +{
+> +	return section_nr / sections_per_block;
+> +}
+> +
+> +static inline unsigned long pfn_to_block_id(unsigned long pfn)
+> +{
+> +	return memory_block_id(pfn_to_section_nr(pfn));
+> +}
+> +
+> +static inline unsigned long phys_to_block_id(unsigned long phys)
+> +{
+> +	return pfn_to_block_id(PFN_DOWN(phys));
+> +}
+> +
+>   #ifdef CONFIG_NUMA
+>   void memory_block_add_nid(struct memory_block *mem, int nid,
+>   			  enum meminit_context context);
+> @@ -188,5 +206,4 @@ void memory_block_add_nid(struct memory_block *mem, int nid,
+>    * can sleep.
+>    */
+>   extern struct mutex text_mutex;
+> -
 
-Sure.
-
->> 32E40050:      8FD 80008000        0 DEADCAFE <<< ISP_CONFIG1
->> 32E40060:      8FE 80008000        0 DEADCAFE <<< ISP_CONFIG2
->> 32E40070:      8FF 80008000        0 DEADCAFE ???
->
-> All of these are invalid registers
-
-Only those DEADCAFEs are strictly invalid, the rest is just
-undocumented. With the notable exception of version register, they
-aren't probably useful, though - due to the way the CSIC is connected to
-the rest of the chip.
-
-I only mentioned them because Laurent asked about capturing embedded
-data - I guess the registers could be used for that on some other chip
-(apparently not on i.MX8MP).
-
-> We have been using 8mp extensively with sensors that produce embedded
-> data and afaict ED are not in the final image.
-
-Well, I admit I haven't looked it down to this finest detail. The
-visible effect was the image was slightly corrupted without the DT
-filtering, so I assumed ED was doing that.
-
-I use two similar sensors: IMX290 (on CSI1) and IMX462 (CSI2). It
-appears IMX290 doesn't cause the problem, while IMX462 does. This may
-depend on the CSI used, though. Both sensors seem to produce the
-following MIPI packets (counting from start of video frame, 1920x1080p25
-raw 12 bit):
-- Frame Start: DT=3D0
-- a short Embedded data packet, DT=3D12h
-- a NULL packet, line-sized, DT=3D0x10
-- 10 User Defined 8-bit Data Type 8 packets, line-sized, DT=3D0x37, called
-  apparently "Vertical OB" by Sony datasheet
-- 1080 real lines, DT=3D0x2C, 12-bit RGGB data
-- short Frame End packet, DT=3D1
-
-I hope I got this right, this is straight from oscilloscope (only
-checked IDs on IMX462, will confirm IMX290 later but it looks the same).
-In 1280x1080p25 mode there are 4 (not 10) "vertical OB" packets, and 720
-RGGB lines instead of 1080.
-
-The ED packet is much shorted than an RGGB line data (2.32us vs 13.57 us
-or 3.54us vs 13.88us - 1080p and 720p use different MIPI clock rates).
-
-So yes, this whole ED packet definitely doesn't end up in the image.
-IMX462 produces just a tiny 2-pixel dot in the left top corner, possibly
-shifting some data to the right (I remember it did that, but I can't
-observe it now - could be a kernel (driver) version change?).
-
-> My understanding is that the gasket that connects the CSIS to the ISI
-> and the ISP has a filtering register has well, and there is where ED
-> gets discarded. Could you maybe check the value of register GASKET_0_CTRL
-> to confirm this ?
-
-(with the filtering)
-
-MEDIA_BLOCK_CTRL:
-   32EC0000h   1FFFFFFh Media Mix Software Reset Register (IMX_MEDIA_BLK_CT=
-RL_SFT_RSTN)
-   32EC0004h     70700h Media Mix Clock Enable Register (IMX_MEDIA_BLK_CTRL=
-_CLK_EN)
-      Clock enabled: ISP_CLKs MIPI_CSI2_CLKs BUS_BLK_CLK
-   32EC0008h  40000000h MIPI PHY Control Register (MIPI_RESET_DIV)
-   32EC004Ch      FC00h LCDIF ARCACHE Control Register (LCDIF_ARCACHE_CTRL)
-   32EC0050h  1FF00000h ISI CACHE Control Register (ISI_CACHE_CTRL)
-   32EC0060h          0 Gasket 0 output disabled
-   32EC0090h          0 Gasket 1 output disabled
-   32EC0138h    2D8000h ISP Dewarp Control Register (ISP_DEWARP_CONTROL)
-      ISP ID mode 0, ISP1: DT 0h (unknown), ISP2: DT 2Ch (RAW12) left-just =
-mode
-
-MIPI_CSI2:
-   32E50000h   3060301h CSIS version (MIPI_CSIS_VERSION)
-   32E50004h      4705h CSIS Common Control Register (MIPI_CSIS_CMN_CTRL)
-      Filtering by DT, Update shadow ctrl, 4 data lanes
-   32E50008h     F0000h CSIS Clock Control Register (MIPI_CSIS_CLK_CTRL)
-   32E50010h  FFFFFFFFh Interrupt mask register 0 (MIPI_CSIS_INTMSK)
-   32E50020h        F0h D-PHY status register (MIPI_CSIS_DPHYSTATUS)
-      Clock lane: Active, Data lanes: 0: Stop, 1: Stop, 2: Stop, 3: Stop
-   32E50024h   600001Fh D-PHY common control register (MIPI_CSIS_DPHYCTRL)
-   32E50030h       1F4h D-PHY Master and Slave Control register Low (DPHY_M=
-ASTER_SLAVE_CTRL_LOW)
-   32E50040h        B0h ISP Configuration Register (MIPI_CSIS_ISPCONFIG_CH0)
-      DT 2Ch (RAW12)
-   32E50044h   2D00500h ISP Resolution Register (MIPI_CSIS_ISPRESOL_CH0) =
-=3D> 1280 * 720
-   32E50080h        B0h Shadow Configuration Register (MIPI_CSIS_ISPCONFIG_=
-CH0)
-      DT 2Ch (RAW12)
-   32E50084h   2D00500h Shadow Resolution Register (MIPI_CSIS_ISPRESOL_CH0)=
- =3D> 1280 * 720
-   32E50100h      25E2h Frame Counter (FRAME_COUNTER_CH0)
-
-This produces (test_pattern=3D5 which starts with black, using ISP):
-Y =3D  00 00 00 00  00 00 00 00  00 00 00 00  00 00 00 00...
-UV =3D 80 80 80 80  80 80 80 80  80 80 80 80  80 80 80 80...
-
-Now I do (perhaps I should revert the patch instead):
-./devmem write32 0x32E50004 0x14305
-
-and this does:
-Y =3D  E6 FF 36 1B  00 00 00 00  00 00 00 00  00 00 00 00...
-UV =3D 85 6A 74 B4  7D 8C 80 80  80 80 80 80  80 80 80 80...
-
-Maybe I could see where these values come from.
+Unrelated change.
 
 
-With test_pattern =3D 4
-Y =3D  52 52 4E 4D  14 14 00 00  00 00 00 51  52 52 4E 4D...
-UV =3D 82 83 82 83  81 81 80 80  80 80 81 80  82 83 82 83...
-changes into (without filtering):
-Y =3D  9B 99 58 53  14 14 00 00  00 00 00 51  52 52 4E 4D...
-UV =3D 77 AE 78 9A  81 83 80 80  80 80 81 80  82 83 82 83...
+Apart from that LGTM
 
-The values are stable but it seems they are added/xored/etc. with the
-original image data or something.
+-- 
+Cheers,
 
-> In particular the "Gasket 0 data type" is programmed in
-> drivers/media/platform/nxp/imx8-isi/imx8-isi-gasket.c with the data
-> type of the first stream reported by the sensor with get_frame_desc().
-> In your case, assuming RAW12 you should have 101100b in that register.
+David / dhildenb
 
-Gaskets are disabled. I will try to do some tests tomorrow.
-
-> Now, I think the idea was to use the gasket for filtering ED (and
-> other non-image data) to be able to route them to the ISI for capture,
-> while images are sent to the ISP for processing. This is currently not
-> implemented and there are some unclear parts in the documentation
-> about this, but overall my expectation is that ED are filtered by the
-> gasket so you shouldn't need to enable DT filtering on the CSIS.
---=20
-Krzysztof "Chris" Ha=C5=82asa
-
-Sie=C4=87 Badawcza =C5=81ukasiewicz
-Przemys=C5=82owy Instytut Automatyki i Pomiar=C3=B3w PIAP
-Al. Jerozolimskie 202, 02-486 Warszawa
