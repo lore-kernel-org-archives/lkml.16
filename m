@@ -1,88 +1,106 @@
-Received: from out-188.mta0.migadu.com (out-188.mta0.migadu.com [91.218.175.188])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 797742D028A
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 23:23:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39F0B2D191F;
+	Thu, 22 May 2025 23:23:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747956210; cv=none; b=mGlMcdBBNgxq1velywJuHw7VwuD1/AgUmxb/xFOVeb2PewKtYvHKxg0OFGIR9K5LvB8Zmzg7eYMSZabyVFvB3Lm1X6WhpMUgfiAcuozstUa1R8Dx5QU9NJiVLwbGkGqHlyRtTTdg/9Is4reEas8OE087xj7HoYoW4/eBf+Oo4I4=
+	t=1747956227; cv=none; b=o6JR+dazSssrvJoT4rXJw5pHVZx0Ajri5D4lF7IjDYBXcXXOswvgjRPkdKHR4tUIzPybKhFAHkGiakMgMimvXab77YY3QFpe8orLLBtkvD1o8vCGd6N+yQMcwNTZkI1Flyodi/4/M/LzPIX3658wGJm5jH5+dqOr6kT2uuH1jsk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747956210; c=relaxed/simple;
-	bh=cQOE7AHANFTWsddjSUf1WysWvD/f3zxtPh7qHtOAEc4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=foTxTSz3TkeFgosbj6uR2TL8oAMkyKuLqTE/XdWWB6S4oEXfIEdKQnJTA3QMpTLKX9OqPS7x7jSe9UwNrarJMCbMeNZXtd6OjxYtTG8XU9oZPZBOPV0kpBxB5dHdxFEUskpgLSt2HhEmq0iYIirjm9mK9uXkY8lbhESinfkOGGY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=HY3FP8+L; arc=none smtp.client-ip=91.218.175.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1747956227; c=relaxed/simple;
+	bh=IpozNL8P1/qwMOXg42wi4u8eXPEwz1FArxo4wownd8k=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=dXu98LuvJynB7PL3FAVR2lHC5cPnXpZZbnqeTPEevQWHUzt8SpOTtEN0iglIDrP4Z1yQmzMyuDcxlyS7AYH7K7v+q81dTCAGRlI+bFGFbqp5gvgb6WJGU0qN+jiZCnlizZUj2dz4DtPKrjg8ETBoW4vVFkPI3EyLWtEKdQJNny0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t3FVszZr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="HY3FP8+L"
-Message-ID: <dbd4b59b-4183-47fe-9287-c0a438df348c@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1747956196;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ZjBrfRlKkyz6t/lnslzV8zqwSeW+0W/IeRXzNqdfJ0w=;
-	b=HY3FP8+LzHey1aSQ6Gwrc3cxCS6clnxqyCjH5imoEisJnTk6G3q9M71JLwguxvnl6ZWuZH
-	j0XcwEQMDauRhxB3VfWmcEai8RLZwRak+pTXmhYoJxZnWimVTXtBIwb9zNceeGabqVBt4O
-	1hfpysRewHlU4PdtCouE6cgSWgis6ZM=
-Date: Thu, 22 May 2025 16:23:10 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t3FVszZr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8485CC4CEE4;
+	Thu, 22 May 2025 23:23:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747956226;
+	bh=IpozNL8P1/qwMOXg42wi4u8eXPEwz1FArxo4wownd8k=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=t3FVszZrWQ8AwjTu2VrLM7kQ3E5+zH+9fiWnTLc6A+EJ7XMcNeAbNqj1RvW4EVcdl
+	 41XMXVpTMQ/MM/W2H7lafTdHo3jBL69KeAt7OpmwXQ3sKJpuX2tgMCduJx8d/z+ZCn
+	 802n1BH3bTsqqwE4cjwB9T08orGdn6g59EPE2nATihd/N/xRGkqt7squYugq9LgMFr
+	 QGhDGGqzWzoD7ZJRZxREa/piwSZ7XN/SJKNUBX4g0dH7ErzL1IlvLwQRP+3AbsNApQ
+	 C1sW73uQD37I1fbt0nVu524HnqzQdBA4yBuzNO2RRkA/DWpsDlYQqIh4BzbfbBhfIY
+	 rHNhT0hUKPA/Q==
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: linux-pci@vger.kernel.org
+Cc: Jon Pan-Doh <pandoh@google.com>,
+	Karolina Stolarek <karolina.stolarek@oracle.com>,
+	Weinan Liu <wnliu@google.com>,
+	Martin Petersen <martin.petersen@oracle.com>,
+	Ben Fuller <ben.fuller@oracle.com>,
+	Drew Walton <drewwalton@microsoft.com>,
+	Anil Agrawal <anilagrawal@meta.com>,
+	Tony Luck <tony.luck@intel.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>,
+	Lukas Wunner <lukas@wunner.de>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Sargun Dhillon <sargun@meta.com>,
+	"Paul E . McKenney" <paulmck@kernel.org>,
+	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+	Oliver O'Halloran <oohall@gmail.com>,
+	Kai-Heng Feng <kaihengf@nvidia.com>,
+	Keith Busch <kbusch@kernel.org>,
+	Robert Richter <rrichter@amd.com>,
+	Terry Bowman <terry.bowman@amd.com>,
+	Shiju Jose <shiju.jose@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	linux-kernel@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>
+Subject: [PATCH v8 01/20] PCI/DPC: Initialize aer_err_info before using it
+Date: Thu, 22 May 2025 18:21:07 -0500
+Message-ID: <20250522232339.1525671-2-helgaas@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250522232339.1525671-1-helgaas@kernel.org>
+References: <20250522232339.1525671-1-helgaas@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH bpf-next v6] bpf, sockmap: avoid using sk_socket after
- free when sending
-To: Jiayuan Chen <jiayuan.chen@linux.dev>
-Cc: bpf@vger.kernel.org, Michal Luczaj <mhal@rbox.co>,
- John Fastabend <john.fastabend@gmail.com>,
- Jakub Sitnicki <jakub@cloudflare.com>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Simon Horman <horms@kernel.org>,
- Thadeu Lima de Souza Cascardo <cascardo@igalia.com>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250516141713.291150-1-jiayuan.chen@linux.dev>
- <3eb50302-d90c-4477-b296-f5f29a7d1eca@linux.dev>
- <2c8ab490e47d44ef5250ac755a5388fe147345d4@linux.dev>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Martin KaFai Lau <martin.lau@linux.dev>
-In-Reply-To: <2c8ab490e47d44ef5250ac755a5388fe147345d4@linux.dev>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On 5/22/25 3:56 PM, Jiayuan Chen wrote:
->>>   @@ -656,6 +656,13 @@ static void sk_psock_backlog(struct work_struct *work)
->>>   bool ingress;
->>>   int ret;
->>>   > + /* Increment the psock refcnt to synchronize with close(fd) path in
->>>   + * sock_map_close(), ensuring we wait for backlog thread completion
->>>   + * before sk_socket freed. If refcnt increment fails, it indicates
->>>   + * sock_map_close() completed with sk_socket potentially already freed.
->>>   + */
->>>   + if (!sk_psock_get(psock->sk))
->>
->> This seems to be the first use case to pass "psock->sk" to "sk_psock_get()".
->>
->> I could have missed the sock_map details here. Considering it is racing with sock_map_close() which should also do a sock_put(sk) [?],
->>
->> could you help to explain what makes it safe to access the psock->sk here?
->>
+From: Bjorn Helgaas <bhelgaas@google.com>
 
-> 
-> Using 'sk_psock_get(psock->sk)' in the workqueue is safe because
-> sock_map_close() only reduces the reference count of psock to zero, while
-> the actual memory release is fully handled by the RCU callback: sk_psock_destroy().
-> 
-> In sk_psock_destroy(), we first cancel_delayed_work_sync() to wait for the
-> workqueue to complete, and then perform sock_put(psock->sk). This means we
+Previously the struct aer_err_info "info" was allocated on the stack
+without being initialized, so it contained junk except for the fields we
+explicitly set later.
 
-Got it. The sock_put(psock->sk) done after a rcu gp is the part that I was missing.
+Initialize "info" at declaration so it starts as all zeros.
 
-Applied. Thanks.
+Fixes: 8aefa9b0d910 ("PCI/DPC: Print AER status in DPC event handling")
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Tested-by: Krzysztof Wilczyński <kwilczynski@kernel.org>
+Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Link: https://patch.msgid.link/20250520215047.1350603-2-helgaas@kernel.org
+---
+ drivers/pci/pcie/dpc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
+index df42f15c9829..3daaf61c79c9 100644
+--- a/drivers/pci/pcie/dpc.c
++++ b/drivers/pci/pcie/dpc.c
+@@ -258,7 +258,7 @@ static int dpc_get_aer_uncorrect_severity(struct pci_dev *dev,
+ void dpc_process_error(struct pci_dev *pdev)
+ {
+ 	u16 cap = pdev->dpc_cap, status, source, reason, ext_reason;
+-	struct aer_err_info info;
++	struct aer_err_info info = {};
+ 
+ 	pci_read_config_word(pdev, cap + PCI_EXP_DPC_STATUS, &status);
+ 	pci_read_config_word(pdev, cap + PCI_EXP_DPC_SOURCE_ID, &source);
+-- 
+2.43.0
 
