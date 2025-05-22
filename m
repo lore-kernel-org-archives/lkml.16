@@ -1,56 +1,56 @@
-Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3B062D29A9
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 23:52:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57C202D29CE
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 23:52:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747957965; cv=none; b=uqoPgsmdkG6jR5hv90Cn7U0T9fPR2b2EgWQmXQ1/YFu8TVPRP6CperKVMuKr2PdAcgm8XodQXPgWDxErS3+j20p4JFXb1xyPRpTAH0U38PcvRBJRfUBz8BzE1zwhkJ4YY0TPyWrwJjS0M7gakkXchs1DIfTOqphMlOoiHqgVusM=
+	t=1747957967; cv=none; b=E/VIGc6qmsaOrwCyPMgHxokrTKFlitaSOLggshKqGVGJxCi76edKsUkhuUJli8jsjL5ohd7kzOy5aqi9an/Qqzho2qpUwHWVwMF38E/4u+VQpAfoirXiiW9+6m5pwPxr11wXhAl1Cu6caOVomBipIxvf1JE66DW3foj/orzWc2s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747957965; c=relaxed/simple;
-	bh=JpleTdHHK7C1xQPDlVA5bM4aXnpZtQxgRshM++nWF7s=;
+	s=arc-20240116; t=1747957967; c=relaxed/simple;
+	bh=Q+vc4pb6WDvcUQF3b0USVqnlp5sa+HZsP4+IXWQxYWs=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=NtzSvLXLRskL58wcgEVt0UPhTtU2fvYysC/YnYUiMOXfMh37pWI3FvmlhuGStE4unr4lfHQFYuNxF/MNRfxtAlX8uwm0Rx3nmo69awwnF+x7TqkPuv19kxUeGr3hymFCapiuOxcDQMzrCpTTDqef6KmdQdHDFVunEc9FsahlvFM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=2PcJ5KCd; arc=none smtp.client-ip=209.85.214.201
+	 To:Cc:Content-Type; b=jiti6TSDcQgfo2R2TUGvDThcelM8youlyMA7XVYPYxT4rkltW0Y1S4Ua9v0/+0+P0GbtocE5FjAQgKI4FCDmjiKhThQMIUhdtBWRuDgWFrQjvos9wUIw/bJvx2zvL5AsXIuWEGQKCFv2fWHksh748Za3ZcKVMR1azrp2v5ZpIHo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=NIdvL3sI; arc=none smtp.client-ip=209.85.216.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="2PcJ5KCd"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-2321207ff20so85330345ad.0
-        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 16:52:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NIdvL3sI"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-310a3196132so1787803a91.3
+        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 16:52:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747957963; x=1748562763; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1747957964; x=1748562764; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=LLDErP7lwjTldw1/pS35D8l5zAYowrsUowCS37TMy6E=;
-        b=2PcJ5KCdGsyjyNx+ja5Vu9TdeI7Bd9WN7xtEXH9ilfxGpUNejh+MWer1qCPFgL+CWm
-         fdG/fkDL4qlAfLM5AX30YWvRBrWnVcvyNE1JPTke+1nvJul3CilDJVR6P5bfVajUGK74
-         nl2ySuGJ5d0wRwd/NiBNYyBd4Cxt5f6d8i8orhTtTYh87PBBqiBk3Mq2cdGqB0UTDWGO
-         k9kM6JYhOt1OecDHRWU+KdZyEf6tnG52dZDhjp5pavVg4EcjRbshkmeuGF8UD/MXaWLM
-         Cs6oQq3JVQH6QHxd1T6DHlX+rQRYRU23ngawT/1gI/1zWjT29yd7bwqMYYElLmVoAgj0
-         YQAw==
+        bh=MSc6nvEfNa3Mk9v70O2GwrdpOydgfEuVH7IGLa1xnl8=;
+        b=NIdvL3sIzNl31piD6L0t7pnrTkq0kqdSsSvAWyMNIlQW26/lXgnufAv5RnekSzD+rX
+         GiPV3DaNG0fh8JX6UpsFT/hes+p2huzxysIyH8WLYINcHkw4YmAAiAx/ovs95HQwqPrH
+         LYtCOwXZwXIpfP6qNzGJm8bz56zYIvmeU1yw0eX4qWSuYNQUFyezNRFEllr80y6rr7kK
+         tUBTO2FlTmwBuyR5t6AQJOD7S+k0q1KM565aylXW927yTuhVZtFvYP1i9ELlHloUjeOm
+         L5C8pE5pppGu/dfWSi3BQsFQ9lfNQlO8N8cTrmybJkXrdzcOEsNJipvGnTWWb2Hynhe3
+         9l6w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747957963; x=1748562763;
+        d=1e100.net; s=20230601; t=1747957964; x=1748562764;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=LLDErP7lwjTldw1/pS35D8l5zAYowrsUowCS37TMy6E=;
-        b=cGNf2vi/ak8pOtnqqsu3t41FWOKBZC7+UwnmMSUkbGK523owfHtQaO/Y+raWu9ie3i
-         zh209XVHSMijPDQ3zGD8xvwr912gMwtdgDOBz9XgdHt429X3G/BoqGZlEU8OhHE/+ZPQ
-         SApGTbFL1QCSBUop/p7DsNFdg9K++3RCwOvcY5rCwtj36ILfDyuWT3xQKQnWoQ8Snf3y
-         nrDhxaT7k+mlxLemkA+8WftnVY91boaddUUcjEC+iKERS3If4ptpMHtfoa2qiduFDdNI
-         w72bu6bntOnfD0MQAOPEbF+Uuzyf7L4+HHnj0k3C4Eyij1d1uqGfn6qBxP05SPmqxnVt
-         kCjg==
-X-Gm-Message-State: AOJu0YxUefbP8Onf2fe+Iecr03EWV//BnSbwTE1b9pc50k9NcVDiFGLU
-	4Cx7PV8SDJiN3HrfiOG0plsCLIR8yojVs7qCvhs9gf9vk91faXxUY3QdGXydNVqr60YILs8RzKN
-	z7p+RUg==
-X-Google-Smtp-Source: AGHT+IHOq6Cu35CTphJBsObc11lhP6kmwx8FMCg+YC2dNqr/wE8KG8ou9486KEEIS+EkPDFQhABlYWoiNSA=
-X-Received: from plhi16.prod.google.com ([2002:a17:903:2ed0:b0:22e:4a61:5545])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:e808:b0:22e:3c2:d477
- with SMTP id d9443c01a7336-233f21ae905mr11694945ad.25.1747957962830; Thu, 22
- May 2025 16:52:42 -0700 (PDT)
+        bh=MSc6nvEfNa3Mk9v70O2GwrdpOydgfEuVH7IGLa1xnl8=;
+        b=WoPy28MnBEaqjop1AjzCdxYaG3e1DRVjxYazCcs2wf18kLrUn25Pz/cpxjSjgcMGi6
+         pQlFOhnT1M0/5B+S655FfZz9Yl4jEbHMVJe7JgbiXrqUl4pGhIwRpMfaEdET2eMyqMiY
+         AFELlEB7kyoq3atE1CCJ06V06sf4qgCYV3HYbikRZlpPYHkZFIe2UJzzC9dI+PBPusrI
+         nu3//8UD1Szf8/6l4VZDKv4Xoeu29zdEXZEZCceox1yZ1Gtphf0ZsI7g969lzrLzg2E1
+         kVQQ7A5QhC910x0yLV9aSO/tRck8xt7az/H/oyDHDD+g0RnXc7KwrSXtVVx6zQ/XGZJ2
+         iZ6g==
+X-Gm-Message-State: AOJu0Yyplna1Lt18EWig1ANRgXnkGZgxFi7pBWapRIVYxeSi4IqfGvGX
+	HKsdececWflBkMkq8mKfY/Nb5FjrLz/pifkeDYC/0TFpshdf+frmITdQvcCG6qz/offBM73FctZ
+	5Emgj7w==
+X-Google-Smtp-Source: AGHT+IFtihXA1ixlkcjuYPXGi/3nyMcTJqsYkMUIphzCaA6DcRFEslloczpIHH8OqTcj441vz3MgX+UAWJI=
+X-Received: from pjb7.prod.google.com ([2002:a17:90b:2f07:b0:2fe:800f:23a])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:4c02:b0:2fe:80cb:ac05
+ with SMTP id 98e67ed59e1d1-310e96c946emr1657552a91.9.1747957964380; Thu, 22
+ May 2025 16:52:44 -0700 (PDT)
 Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Thu, 22 May 2025 16:52:15 -0700
+Date: Thu, 22 May 2025 16:52:16 -0700
 In-Reply-To: <20250522235223.3178519-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -60,8 +60,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250522235223.3178519-1-seanjc@google.com>
 X-Mailer: git-send-email 2.49.0.1151.ga128411c76-goog
-Message-ID: <20250522235223.3178519-6-seanjc@google.com>
-Subject: [PATCH v3 05/13] KVM: Add irqfd to eventfd's waitqueue while holding irqfds.lock
+Message-ID: <20250522235223.3178519-7-seanjc@google.com>
+Subject: [PATCH v3 06/13] sched/wait: Drop WQ_FLAG_EXCLUSIVE from add_wait_queue_priority()
 From: Sean Christopherson <seanjc@google.com>
 To: "K. Y. Srinivasan" <kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>, 
 	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>, 
@@ -78,72 +78,98 @@ Cc: linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
 	David Matlack <dmatlack@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Add an irqfd to its target eventfd's waitqueue while holding irqfds.lock,
-which is mildly terrifying but functionally safe.  irqfds.lock is taken
-inside the waitqueue's lock, but if and only if the eventfd is being
-released, i.e. that path is mutually exclusive with registration as KVM
-holds a reference to the eventfd (and obviously must do so to avoid UAF).
+Drop the setting of WQ_FLAG_EXCLUSIVE from add_wait_queue_priority() and
+instead have callers manually add the flag prior to adding their structure
+to the queue.  Blindly setting WQ_FLAG_EXCLUSIVE is flawed, as the nature
+of exclusive, priority waiters means that only the first waiter added will
+ever receive notifications.
 
-This will allow using the eventfd's waitqueue to enforce KVM's requirement
-that eventfd is assigned to at most one irqfd, without introducing races.
+Pushing the flawed behavior to callers will allow fixing the problem one
+hypervisor at a time (KVM added the flawed API, and then KVM's code was
+copy+pasted nearly verbatim by Xen and Hyper-V), and will also allow for
+adding an API that provides true exclusivity, i.e. that guarantees at most
+one priority waiter is in the queue.
+
+Opportunistically add a comment in Hyper-V to call out the mess.  Xen
+privcmd's irqfd_wakefup() doesn't actually operate in exclusive mode, i.e.
+can be "fixed" simply by dropping WQ_FLAG_EXCLUSIVE.  And KVM is primed to
+switch to the aforementioned fully exclusive API, i.e. won't be carrying
+the flawed code for long.
+
+No functional change intended.
 
 Signed-off-by: Sean Christopherson <seanjc@google.com>
 ---
- virt/kvm/eventfd.c | 21 ++++++++++++++++++---
- 1 file changed, 18 insertions(+), 3 deletions(-)
+ drivers/hv/mshv_eventfd.c | 8 ++++++++
+ drivers/xen/privcmd.c     | 1 +
+ kernel/sched/wait.c       | 4 ++--
+ virt/kvm/eventfd.c        | 1 +
+ 4 files changed, 12 insertions(+), 2 deletions(-)
 
+diff --git a/drivers/hv/mshv_eventfd.c b/drivers/hv/mshv_eventfd.c
+index 8dd22be2ca0b..b348928871c2 100644
+--- a/drivers/hv/mshv_eventfd.c
++++ b/drivers/hv/mshv_eventfd.c
+@@ -368,6 +368,14 @@ static void mshv_irqfd_queue_proc(struct file *file, wait_queue_head_t *wqh,
+ 			container_of(polltbl, struct mshv_irqfd, irqfd_polltbl);
+ 
+ 	irqfd->irqfd_wqh = wqh;
++
++	/*
++	 * TODO: Ensure there isn't already an exclusive, priority waiter, e.g.
++	 * that the irqfd isn't already bound to another partition.  Only the
++	 * first exclusive waiter encountered will be notified, and
++	 * add_wait_queue_priority() doesn't enforce exclusivity.
++	 */
++	irqfd->irqfd_wait.flags |= WQ_FLAG_EXCLUSIVE;
+ 	add_wait_queue_priority(wqh, &irqfd->irqfd_wait);
+ }
+ 
+diff --git a/drivers/xen/privcmd.c b/drivers/xen/privcmd.c
+index 13a10f3294a8..c08ec8a7d27c 100644
+--- a/drivers/xen/privcmd.c
++++ b/drivers/xen/privcmd.c
+@@ -957,6 +957,7 @@ irqfd_poll_func(struct file *file, wait_queue_head_t *wqh, poll_table *pt)
+ 	struct privcmd_kernel_irqfd *kirqfd =
+ 		container_of(pt, struct privcmd_kernel_irqfd, pt);
+ 
++	kirqfd->wait.flags |= WQ_FLAG_EXCLUSIVE;
+ 	add_wait_queue_priority(wqh, &kirqfd->wait);
+ }
+ 
+diff --git a/kernel/sched/wait.c b/kernel/sched/wait.c
+index 51e38f5f4701..4ab3ab195277 100644
+--- a/kernel/sched/wait.c
++++ b/kernel/sched/wait.c
+@@ -40,7 +40,7 @@ void add_wait_queue_priority(struct wait_queue_head *wq_head, struct wait_queue_
+ {
+ 	unsigned long flags;
+ 
+-	wq_entry->flags |= WQ_FLAG_EXCLUSIVE | WQ_FLAG_PRIORITY;
++	wq_entry->flags |= WQ_FLAG_PRIORITY;
+ 	spin_lock_irqsave(&wq_head->lock, flags);
+ 	__add_wait_queue(wq_head, wq_entry);
+ 	spin_unlock_irqrestore(&wq_head->lock, flags);
+@@ -64,7 +64,7 @@ EXPORT_SYMBOL(remove_wait_queue);
+  * the non-exclusive tasks. Normally, exclusive tasks will be at the end of
+  * the list and any non-exclusive tasks will be woken first. A priority task
+  * may be at the head of the list, and can consume the event without any other
+- * tasks being woken.
++ * tasks being woken if it's also an exclusive task.
+  *
+  * There are circumstances in which we can try to wake a task which has already
+  * started to run but is not in state TASK_RUNNING. try_to_wake_up() returns
 diff --git a/virt/kvm/eventfd.c b/virt/kvm/eventfd.c
-index 99274d60335d..04877b297267 100644
+index 04877b297267..c7969904637a 100644
 --- a/virt/kvm/eventfd.c
 +++ b/virt/kvm/eventfd.c
-@@ -204,6 +204,11 @@ irqfd_wakeup(wait_queue_entry_t *wait, unsigned mode, int sync, void *key)
- 	int ret = 0;
- 
- 	if (flags & EPOLLIN) {
-+		/*
-+		 * WARNING: Do NOT take irqfds.lock in any path except EPOLLHUP,
-+		 * as KVM holds irqfds.lock when registering the irqfd with the
-+		 * eventfd.
-+		 */
- 		u64 cnt;
- 		eventfd_ctx_do_read(irqfd->eventfd, &cnt);
- 
-@@ -225,6 +230,11 @@ irqfd_wakeup(wait_queue_entry_t *wait, unsigned mode, int sync, void *key)
- 		/* The eventfd is closing, detach from KVM */
- 		unsigned long iflags;
- 
-+		/*
-+		 * Taking irqfds.lock is safe here, as KVM holds a reference to
-+		 * the eventfd when registering the irqfd, i.e. this path can't
-+		 * be reached while kvm_irqfd_add() is running.
-+		 */
- 		spin_lock_irqsave(&kvm->irqfds.lock, iflags);
- 
- 		/*
-@@ -296,16 +306,21 @@ static void kvm_irqfd_register(struct file *file, wait_queue_head_t *wqh,
- 
- 	list_add_tail(&irqfd->list, &kvm->irqfds.items);
- 
--	spin_unlock_irq(&kvm->irqfds.lock);
--
- 	/*
- 	 * Add the irqfd as a priority waiter on the eventfd, with a custom
- 	 * wake-up handler, so that KVM *and only KVM* is notified whenever the
--	 * underlying eventfd is signaled.
-+	 * underlying eventfd is signaled.  Temporarily lie to lockdep about
-+	 * holding irqfds.lock to avoid a false positive regarding potential
-+	 * deadlock with irqfd_wakeup() (see irqfd_wakeup() for details).
- 	 */
+@@ -316,6 +316,7 @@ static void kvm_irqfd_register(struct file *file, wait_queue_head_t *wqh,
  	init_waitqueue_func_entry(&irqfd->wait, irqfd_wakeup);
  
-+	spin_release(&kvm->irqfds.lock.dep_map, _RET_IP_);
+ 	spin_release(&kvm->irqfds.lock.dep_map, _RET_IP_);
++	irqfd->wait.flags |= WQ_FLAG_EXCLUSIVE;
  	add_wait_queue_priority(wqh, &irqfd->wait);
-+	spin_acquire(&kvm->irqfds.lock.dep_map, 0, 0, _RET_IP_);
-+
-+	spin_unlock_irq(&kvm->irqfds.lock);
-+
- 	p->ret = 0;
- }
+ 	spin_acquire(&kvm->irqfds.lock.dep_map, 0, 0, _RET_IP_);
  
 -- 
 2.49.0.1151.ga128411c76-goog
