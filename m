@@ -1,75 +1,65 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1430289E11;
-	Thu, 22 May 2025 10:57:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E613189F3F;
+	Thu, 22 May 2025 10:58:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747911450; cv=none; b=lBhMnHE+m5+pio7hQpfVA+n/LXDsHhJhuwwJmiTsnSkVHV45Dzzpa5qimWTUfaRiJZI5UPe+EMvQ+uI2TSK0HMtqUj5fxRVyjDXAEIwxoAHKXxe9TVoSnYg8D0sq+LqCgySiwzRZL0nhbx3f9tciuJ+T53UwvRdJ+72Og5JDhHY=
+	t=1747911502; cv=none; b=QqkfOS3dRwyjA1ufBPFwzvAfrdkZOZUpyYatUE4YLFoXBeGr9Kvu1M0Odt3LsUey7IgDgSwuFV5uF47Z/OX0kV1IIwoN497IIwlh1q2ylRrpLRK/U5p/xzBeBR45mQVYl+Mff7W0OeO9ZEdLUwN3v3IGcxlB0B41IzX3Hlv74ec=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747911450; c=relaxed/simple;
-	bh=/w2C647Ki1Ko/omjghXi8LGBFeBgUweyzHfDIxNLXoE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=NVwmwqjWP/R7fgt174vsn8zQQGbS1xx9POpyNy82tLoKFoEdcLXeufWaVdyNNZ2vLpluLVqJhqzgOjaxvYdxSsalGLluE96udIrn6Mv46fQeu1EJNOt9x+dpDQUvILOL/APOzaMq7GZRC6hLWcGC+cDMxunijv/RRvffFoNS1ZI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=2XZBffpV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747911502; c=relaxed/simple;
+	bh=PDHSuJeVzaQLbG5Jx/nVIsNqj3Jmhb+WDPT0/4r9BfY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=o78RBchDOBiZdr5PXhih68ZeLleHDa1ilszST1Sj2JqscIhbVS/FcchhKrldfYYPl90l9yl39p8R0Z6HUb2xnllZW3FtrgbF7Zk1tvyiFbc3IgUoEqJNLVaFbehTfj6ty+qsfCr1YTkgRwR6hMcDg8fqSOUH365b/eXiddPWzvg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Dx7ujbeO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="2XZBffpV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AAB53C4CEED;
-	Thu, 22 May 2025 10:57:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1747911450;
-	bh=/w2C647Ki1Ko/omjghXi8LGBFeBgUweyzHfDIxNLXoE=;
-	h=From:To:Cc:Subject:Date:From;
-	b=2XZBffpV30J0Onf55Twmzqk+YpDldKg0KzeOvia+dFe80KUE/yzQcWxszNXatz6LK
-	 nTVV2rdmRaiIAuPAKsdtadRGQrdeJgyWwioVf2j1dp0rmiz6a7tnw7kQ/8wUB1dc//
-	 RpAYU1r3o2GhLh+Ut56eIMFqYQpL9xs3JYg3E2O0=
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: linux-spi@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Mark Brown <broonie@kernel.org>
-Subject: [PATCH] spi: gpio: fix const issue in spi_to_spi_gpio()
-Date: Thu, 22 May 2025 12:57:26 +0200
-Message-ID: <2025052225-scallion-ritzy-dbbd@gregkh>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Dx7ujbeO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA5BBC4CEE4;
+	Thu, 22 May 2025 10:58:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747911501;
+	bh=PDHSuJeVzaQLbG5Jx/nVIsNqj3Jmhb+WDPT0/4r9BfY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=Dx7ujbeOEtpC0ObXPE5GfsSOt4gzXV/ttJRjWRgkhIWTPbOAYpzgnRXo8jcopm8Ib
+	 0PJAM+A0DLbnjy4tl4AEf8x+BDPt92emnMIAw0SHJ0wW3/M8LMQyl2SddNqHhTWSIY
+	 85bFqZbXnugUQmbBZofH5tOrEFOnN0sKWyOuXPc/O2gEldiWWfcWX9J7UT81RObOsm
+	 7hwk08IE4OeVJbUvhsnyNF4wAUj3BQJ6Co8lYd2rdAW2k30xM0ZYsDRVIY/dXiLNvx
+	 2/cPmPI/x95vYLap2gDKGl/s7F8Wxrf8u2c0aY3SR3DIBnGnjzaVi7bkgPtBZS3xWK
+	 P3JUEnS/MMoMQ==
+From: =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>
+To: Bjorn Helgaas <bhelgaas@google.com>,
+	Philipp Stanner <phasta@kernel.org>
+Cc: linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: Remove forgotten function prototype
+Date: Thu, 22 May 2025 10:58:18 +0000
+Message-ID: <174791142570.69774.3694250973468244165.b4-ty@kernel.org>
 X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250522084626.150148-2-phasta@kernel.org>
+References: <20250522084626.150148-2-phasta@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1163; i=gregkh@linuxfoundation.org; h=from:subject:message-id; bh=/w2C647Ki1Ko/omjghXi8LGBFeBgUweyzHfDIxNLXoE=; b=owGbwMvMwCRo6H6F97bub03G02pJDBn6zGJ/5EpTgpf+kRC5sPDUaz/75tmzFn39xLyzss3HN 2+n68aejlgWBkEmBlkxRZYv23iO7q84pOhlaHsaZg4rE8gQBi5OAZhIaCzDPJNYs3h2u8iPoQ8y 7IL7Nfmlrdv/Miw4G8A8t5t1/v9TbovU/i0Nk5+4pvAlAA==
-X-Developer-Key: i=gregkh@linuxfoundation.org; a=openpgp; fpr=F4B60CC5BF78C2214A313DCB3147D40DDB2DFB29
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-While the struct spi_device * passed into spi_to_spi_gpio() is a const
-one, the struct spi_bitbang * that is retrieved from the controller
-field in the spi_device is NOT a const pointer, as it is coming from the
-spi_controller_get_devdata() call, and then passed to container_of()
-which would strip off the const attribute for no good reason (i.e. if a
-const pointer is passed to container_of() it still is const coming out).
+Hello,
 
-Fix this all up by properly declaring the struct spi_bitbang * as not
-const.
+> The subsystem-internal header pci.h still contains the function
+> prototype of pcim_intx(), which has since been made public in the global
+> header.
+> 
+> Remove the redundant function prototype.
+> 
+> 
+> [...]
 
-Cc: Mark Brown <broonie@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/spi/spi-gpio.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Applied to devres, thank you!
 
-diff --git a/drivers/spi/spi-gpio.c b/drivers/spi/spi-gpio.c
-index 405deb6677c1..ea5f1b10b79e 100644
---- a/drivers/spi/spi-gpio.c
-+++ b/drivers/spi/spi-gpio.c
-@@ -46,7 +46,7 @@ struct spi_gpio {
- static inline struct spi_gpio *__pure
- spi_to_spi_gpio(const struct spi_device *spi)
- {
--	const struct spi_bitbang	*bang;
-+	struct spi_bitbang		*bang;
- 	struct spi_gpio			*spi_gpio;
- 
- 	bang = spi_controller_get_devdata(spi->controller);
--- 
-2.49.0
+[1/1] PCI: Remove forgotten function prototype
+      https://git.kernel.org/pci/pci/c/dfc970ad6197
 
+	Krzysztof
