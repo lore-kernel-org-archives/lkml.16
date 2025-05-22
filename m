@@ -1,808 +1,244 @@
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2068.outbound.protection.outlook.com [40.107.237.68])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0F161A315A
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 17:58:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747936735; cv=none; b=H5kyP0QS9OxGwjlS/Xxsft7gdv2599bUWwMBoEnP/kFMH7nXluUe+7CmdxdTRMofTm/duZazLK15Di6thJ3aTPJoFBKdqOScA5FHv/4wnj88Nug9qmcYWG5yXxKbApeu6wV+Wp3avMRViWg6VU87C9isF89ZWsepRtCirYe0S2Y=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747936735; c=relaxed/simple;
-	bh=Hqovwy3tLMvNqmQT71P3dSQeOq2Ze+lyDqLbqaDif94=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=fZGOmCxSxLnumHyrF81Aq43mbWc9IbmSumVQlc9SQVWXIoi5xZcqup1yx25PynRYe6VpCRKD+UhbeTCkjO4o750gy0bec5xmbTxpzxEyB6rvl1B1q3su7srXEO+HlyvYcITJ3YCjsTgKbmd+cf0qCU5BHvbsP5HDnMmXMXHQvG4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=ECZnnmUL; arc=none smtp.client-ip=209.85.167.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B05F28C5C6;
+	Thu, 22 May 2025 18:00:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.68
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747936808; cv=fail; b=aN+6dDxygI5Vq6h1f6QdR6Vkg2EqUiy1+COzyX6s30RYrx/ctLrkJtwk6NHhZusZzrX1pvS6He4chbG4iK8M8Zv5eZmB/aRH+emwjObcjAZJj1+gxlUucHm3uyhgBbmeEtTKvk4l535rl6GlZpyf0YgDOyEzKmeCyhMBNf3zUMM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747936808; c=relaxed/simple;
+	bh=e3OKP8DkThJhjtY1bs8yDtW4ckKAqLOD5Tj4TJjWmb0=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=HMUapcf/SxeRdtNiHA8Q+qiHLLcG7sy46gJsuHS34Wuq7ydlP8Gqp7aLua44hLXhN8APM8e5r+ntukPalWNNFHGrUhwoebPfi2U8mI4YNiYUHDJCJx/jF3YGsjQRrqqAmvI074E2z1Hr+wJ3Fq3yuZP9C5I4olgQ0DIXa62LEFs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=gC6tsyWg; arc=fail smtp.client-ip=40.107.237.68
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ECZnnmUL"
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-551fc6d4a76so4376106e87.0
-        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 10:58:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1747936729; x=1748541529; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=9dQUTZ31D0zh+zulUyWmSUXmj3c3OqU40QtL4roneXY=;
-        b=ECZnnmULMY5kOXMRKEOgQRTuCq+/sTE/QTvKXB4+HE7GhSYmvRVV5hkmnCUilG71Wc
-         iJTh0T+UZ7h7LuklIEKokyq3R4+3eDBj4koRKqr5WbHaV63bvF5E11pM1OiIruNyIdzf
-         5beKyxNgIkjscr7ojRouN34R6Hfuf0nEKLfnQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747936729; x=1748541529;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9dQUTZ31D0zh+zulUyWmSUXmj3c3OqU40QtL4roneXY=;
-        b=Znac5sv8+NQ8ZVFRWTJ7t+swf7baP+eCegsYYZq6XeGpTqIVzjJVz9IIcki7xG8mWv
-         HoOu0dCP9xcq2TODbpebPzS5MlP7DBrt5vof/RHdjRLwr3EToPvGmhIevG2yhfra55M0
-         EbJB3XZh4OENNrbcEHl80Pti8nW5qNDI1RrOwCyIWE3GQ1obPv9glh+5Jvk7w52TcxZM
-         IsRmRDXU0ixoian6IB/ejm58zaKmOqOzjcU9wf6TOc+0GBv+apUKeJC2RfadQsTJB1Dz
-         F6DVTOJ8e9H0ZpTCZTi7iz3SOYp+bJrRhdgDsZACnGgAFQMNzMJVzcQR4xD9dT6u/miY
-         +D/w==
-X-Forwarded-Encrypted: i=1; AJvYcCWyFZSB832Efp/9m7YbZObYZzcgO9WfA4s16J6c1D3DxOopi9sPdxmL38RBUudrH/3P6aK7O3UMnFGkv8I=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyje0RW60KksZ2PWi+qD2PN62stf//F2YtiFpzQEpzv/gU9Y93V
-	8pryiRRSdNOgmmaEuqXGiKOYpzBRppfytjwOfMBKTtfAsdbnue+ax0+p76Z/GA3KhQ==
-X-Gm-Gg: ASbGncuJLHvvzDmK3jaqbVoIaQ2jpJQoEBzBqlISNcUrHEhvS6l0r1/iVMADdxO7JZ1
-	IkUBs6hFrRn6XAQspxtRkU/8drAO2CNdTL94FxgZpxK2k7LnOUHnf57RIwcECavRp2rLrJ0wp4U
-	5C+RdloUOtc4Yd0sefXU51kKQVVgV6mVpHPzWGoHA7PG1ySysqOJX++l/2mrkDub+BMRCdb3GyU
-	Ro/z1hGW6+Wwd/KZERKg3okvApfpdZEws3UbYV85JRUsX/B6xHLn0CdQrguDCKCdMP2az0Y54q0
-	zqCRZ+dKXlX0RHSmHjEnJKqT3DWsPWNkU1Okh3DeoaFvJ+giGN5gGoLdzdYxrol1gbduzrTxTGo
-	peCsge9zWA/XGNSA6exlhL/aPsQ==
-X-Google-Smtp-Source: AGHT+IEc978JlOlQfR0ep4DR6VFUm7Powq0ZltTYBG4OhNAbP6HrPN/YqTlC5BW2uoOXlcoYFvuACw==
-X-Received: by 2002:a05:6512:4406:b0:550:e3a0:19d4 with SMTP id 2adb3069b0e04-550e97a40damr6185697e87.19.1747936728889;
-        Thu, 22 May 2025 10:58:48 -0700 (PDT)
-Received: from ribalda.c.googlers.com (90.52.88.34.bc.googleusercontent.com. [34.88.52.90])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-550e703e858sm3483992e87.227.2025.05.22.10.58.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 May 2025 10:58:48 -0700 (PDT)
-From: Ricardo Ribalda <ribalda@chromium.org>
-Date: Thu, 22 May 2025 17:58:47 +0000
-Subject: [PATCH 2/3] media: uvcvideo: Use vb2 ioctl and fop helpers
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="gC6tsyWg"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=fOdbJCeX8V+9UiPQ9GFHjyu8sGNhpBW7t3XxwUwhnrwNIgyHndMpCakK5btBs1h5qiajfTtCjS18/c/zOXvPM3pIji4z64wr8fvJPEfEVH92GEI/RyrR2uGDgbGUjJxGbsZcgeF9cBDHixLTiHofr30TnUWJGAAZ+YlH6zel98wWHpyYKOgholHWmEcyJ6SJ42yS21Pj6iv/8d9e5V953VjJAoi+7n6e6ITjncBU7KCOAwhl9SwWoRAnueozmVmxR9dmej9w+V5Kvfu222g203g946zu5AmG7GTr7i6udYxXhW0E0h37IZy2CinsSMPQQDeuURdMjxbhIPckIK3ciw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=e3OKP8DkThJhjtY1bs8yDtW4ckKAqLOD5Tj4TJjWmb0=;
+ b=tHEDmZ6+B7lnFuGsN6iHXywikTekEJ7+yMsvBQEEv8uW/yFbimI8GNNZeQizpvfohQFp0EjTVvqc1UBuJbmF3VPbNNeX7mhL2xB2StyXa5+W8VwygUpFeSiD/eZ7n/bLdH7KGI1iF21VAk0ononqNFFqe9EehSK8q7Q/M30TDtYnG3Wv84Y1xtV8ZE/QNVnpJP68lnrkdjGL/letWn6Jz/JC0KOGIV6HVOMbAsy74NMY1QyPLkCjFedBOdhTT8J6r5rRFAyBX+yFsexH8w3UoVmcjnLG7l3vEHz3jRgTX8ik68PzWNo8+0JMKuNJTsbJ7C6LCDjoxMUz16MPRR6prQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=e3OKP8DkThJhjtY1bs8yDtW4ckKAqLOD5Tj4TJjWmb0=;
+ b=gC6tsyWgF0ODFedN1FQr14FowR0eBZST9bgfsyCO0oL90uPVRAGwA5GLuFveUOmpoQbfdPpR5e6VFP+p+WLXJJ9aX6b2KgG7RtA9Q0VLuKOoDoEEju7/4IhalYT6W92T4LVeFAeqm8OVFRTU615FDkoGQ/PV/DrFP9rT4dJvAzAaH+uQMICVFfZZJYzBLVJVbGvEQf/m/v+0OvtNVLM3O3bATbDw1M3x/BQcIRsdCYT/VG5gx07goDYD+kwSALI99R/p8EbENNC4/soRQ3CvY+dYCd0/d0LLSQOYbKwU6zf/tpbn+/SDs+YQ+UR29O899BkZ5P47Y8HhsNLKS3Zs0Q==
+Received: from DS7PR12MB5719.namprd12.prod.outlook.com (2603:10b6:8:72::16) by
+ LV2PR12MB5797.namprd12.prod.outlook.com (2603:10b6:408:17b::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8746.31; Thu, 22 May
+ 2025 18:00:03 +0000
+Received: from DS7PR12MB5719.namprd12.prod.outlook.com
+ ([fe80::2e4a:1df3:8c8a:f53d]) by DS7PR12MB5719.namprd12.prod.outlook.com
+ ([fe80::2e4a:1df3:8c8a:f53d%4]) with mapi id 15.20.8746.030; Thu, 22 May 2025
+ 18:00:02 +0000
+From: Ron Li <xiangrongl@nvidia.com>
+To: =?utf-8?B?SWxwbyBKw6RydmluZW4=?= <ilpo.jarvinen@linux.intel.com>, Herbert
+ Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>,
+	"linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>
+CC: Hans de Goede <hdegoede@redhat.com>, Vadim Pasternak <vadimp@nvidia.com>,
+	Khalil Blaiech <kblaiech@nvidia.com>, David Thompson
+	<davthompson@nvidia.com>, "platform-driver-x86@vger.kernel.org"
+	<platform-driver-x86@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v1] platform/mellanox: Add mlxbf_pka driver for BlueField
+ Soc
+Thread-Topic: [PATCH v1] platform/mellanox: Add mlxbf_pka driver for BlueField
+ Soc
+Thread-Index: AQHbxdBOF6Y3K2UCAU+TuMyhglt9BLPU+6gAgAn+WmA=
+Date: Thu, 22 May 2025 18:00:02 +0000
+Message-ID:
+ <DS7PR12MB57191E5CCC239A43370B8729A999A@DS7PR12MB5719.namprd12.prod.outlook.com>
+References: <20250515193234.2436452-1-xiangrongl@nvidia.com>
+ <c85784ee-5f06-6d7a-377e-07db7af8bd35@linux.intel.com>
+In-Reply-To: <c85784ee-5f06-6d7a-377e-07db7af8bd35@linux.intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: DS7PR12MB5719:EE_|LV2PR12MB5797:EE_
+x-ms-office365-filtering-correlation-id: 9be27f2a-f1a3-450a-6080-08dd995a79f4
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|366016|1800799024|376014|38070700018;
+x-microsoft-antispam-message-info:
+ =?utf-8?B?czMxWXd3T1ExRStwYU42OENrM3dyTUNIaFExdFhZZjhhWk9pOHRPeWY0d3gx?=
+ =?utf-8?B?VVptUXlyWlpmMVA3a1YzUzJuMEtXY3ZoNTcyWGtpTmVUMlJtY2xBSmNlWUlP?=
+ =?utf-8?B?c1ZISUgyMUFBcEZiSGp6a2NVQlAveDR2Q2EyTWNuckN2dHNmWGtzdFNzbzVn?=
+ =?utf-8?B?L3R1cm9oekNuR1UySnlCTmlMNkZvY1N1V0NXR1ZxKzBsczFQNkZFRHIzL2lW?=
+ =?utf-8?B?TDk0K3FQdk9XK0oyaklISzhqcll0VmhGanlGZ3VEWjBrcWVzSXUrZWhiUlZm?=
+ =?utf-8?B?UWtDbGdXZmNlZDkzb1dMVEtaaXgwemh6VnBWRTVaT2M1dStyZVFwN0NBTHEx?=
+ =?utf-8?B?QjVITXBMdTRDMzEyVGZrenJWeGNyd2d2TldlSmZmOHhrcjNOUmtRQWx3bDBT?=
+ =?utf-8?B?b2pJTjExdWlaK1FOQmJEeDhIdldJN0tkbjdEZk5XTDhSWnBGWGhaaU9BL1ZB?=
+ =?utf-8?B?QVBrMUx3OU04TVVPY1RoMlRQVUZhdVpHWFQrck5neGIyc25lb2JqNkw3R0g3?=
+ =?utf-8?B?cVprdHJ1RnB4ZG5rTVp6cUdqUnJEOFpZVDZvTjltYzFlTkdEaE5Nb3djK0J5?=
+ =?utf-8?B?dEFMMlRudkxmYS9ndytDRFk0VU9XRkVQNEh0L2gzSXZjSHpXanlHZ0svU3V0?=
+ =?utf-8?B?SE5Mb294eXNKTGF4eDUwYXdCMHcwazBxS0JENmdoSG1nNSs0amRXS2Q4eTZ5?=
+ =?utf-8?B?R0lydCswYU5Da1lHK3JhNXhaakhMS2l5endPWndudURNOE53blVzYXZkUEY3?=
+ =?utf-8?B?emMwaWFvT2hBUFM0bXFUeXlKY2NkZzgrRXhxUTYxSEdLK0cyTFdkWVFBTFE1?=
+ =?utf-8?B?VkVXalFzTWpENGw1SG0rd24raE9icE5OaWkzVGpQdjNJcnQ2Q1RnRlZWSUEx?=
+ =?utf-8?B?YUNFZGE2cVRRU2VackFOUTZtWWp5VUxBMEhLVmxDRXBEaU5LZmV5c1pIelFm?=
+ =?utf-8?B?c1I5MHU5WjkybVk2NDFXeUkwYVZEQ3BKT2NRUXlZT3B2bGlJcFpNam5qMUI0?=
+ =?utf-8?B?bjRpQk10QUd5c0pjejdWdmlUQUlhd3psMll2eDlBZ0Rxay8wV1ptTDlMN0dm?=
+ =?utf-8?B?OStPNXUxZlpiWk1wUk1GWCs3aEw1dWt0MStUd0h3RTRlbmlBd3BMUlA1Rm1K?=
+ =?utf-8?B?cDBqRlJuay9nZmJYMjN0S2tIcUl4ZkZyeDlSbGlRenZsYzVxRC9JZDQxREN0?=
+ =?utf-8?B?RDZmVlM2NkRLTGUwMnpDaCs2UE9NTWNUelJpcDVhdDZvYjF4YXM2MzhOQnlF?=
+ =?utf-8?B?ZTBCbm9YdUFYT29aT1FPNlBnN2NBSng4WGZvVXdBcnVxa1lpMW1iV0ZGWFpq?=
+ =?utf-8?B?VTc1ZlBSR2NKZFZBdHRORHgvNHFHREZ2WVllY2hWZjJBRmJMSHpNa1hHYzRi?=
+ =?utf-8?B?T0UxNWVSdUM0NFdaMnRCcm42aFZ4cW9pS0loQ3JGTitBUk5Qanh6YnFROG5u?=
+ =?utf-8?B?Z1NnWkx3YTBCa0pQeEtEdndtZDdHN08wU2ttVnFIbVppV05yNmRKaWxtbEtK?=
+ =?utf-8?B?cGdCdjBrSmlwaXZPTWhGYUlHSGcwbnM4bXI0YnlXS1JkTUNMVStSSnZZZFlk?=
+ =?utf-8?B?N3puWXNhVlpUNTRuQUoyYWRjQVd5T3Y1M01kT2lVc01WWFFVYlRwRlF0V1hp?=
+ =?utf-8?B?MEo0QnlrSWdHRFBraXhLSUNzS3QwZkZITWRKT0RRRlQyWHZxbGlXSnluT045?=
+ =?utf-8?B?Mll5UTZuSVRUeCs1dlR0NlJHcEpWV3RtSWJmUWJWTWxML2tXRnJMTzNMRE90?=
+ =?utf-8?B?enFCVGh5Q3VXaUVIbXV4Ui9vYTY3UGVmU2J1STg4Z1EvTGhOSTRrY0hiVGhl?=
+ =?utf-8?B?UW9FZ1MrRktwUXFlLzBhRldxKzh6a245ajgyWXc2bGVuUmJaVjdWeFJEWHgx?=
+ =?utf-8?B?RDJnbXJlM1YxV3JSR2NmUXVlcmVZcSt1Q1JycGhtUnZMTXdHS2FhMFIwMS9y?=
+ =?utf-8?B?SFNRYityTGluWURDTlc4SVE1M3lIRlFVNUdlZUJoYkdnRDFzbFl6ZU9oZmFs?=
+ =?utf-8?B?bVRYRXdZRkN3PT0=?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB5719.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?Ky8ySmlHTmlScHpIQWZvcGpCQTBBTFJOeXY5Ly9xc0RaNG1VUkYrT3F5OEJS?=
+ =?utf-8?B?TXJ4WWk0RmpDM0VqRWdRNUdGTHlYOUZIbWRtSjZvSXpqcDdIQzd1NU5yL0Zw?=
+ =?utf-8?B?YXhNN1ZrWU81TjFNdUM5SnYvbXEyZDd5a0tsMXdaRWo2cE5ST1IvWHhJMFJP?=
+ =?utf-8?B?VWdzTTlPbEQ5VFBYWkNVb29XWFJ2UHhaVWxJeVVzNHNXY3IxWHRGN3dQVWlp?=
+ =?utf-8?B?aEFXVUZsSmQxSUd5WCtuSVBzNGdSRUViaGFidFc1ZEhENEVrMzNzbGtNQVFG?=
+ =?utf-8?B?UzBZSXRJYkltV1VpRkNzRCsrY2E0QVppc3pHc0Npb3lMeGhJSTB0S2UzOHlO?=
+ =?utf-8?B?RStadEs4dmpSbk5SWFRvdnFkdVR2OGRzWEJYOUsxdFVCNWZOa0lKei9id2pq?=
+ =?utf-8?B?NXVwWU01aVY2VlJKQVBxVUpSYkx1QWJKa21XNFdmcmhMcEVnNjFYNE5na1pQ?=
+ =?utf-8?B?KzhBQ3RPbE8xUGtqZ1NUaDV2V1BUSC92Q0M1MWhKeGtuK214ZDlsaXdqdFVX?=
+ =?utf-8?B?MUVhelBOb0puVHdMbzR4ZUJBdUxpeEh4NVdZMVBlY0VUZkdKWkxwMHNCVmZQ?=
+ =?utf-8?B?bWlZNGZvVHpHd0R2c25BazhJUXZEYTFzZHBsQ0lDeEkwK3dzNlBETUJ5cEtV?=
+ =?utf-8?B?WUdZZXoxMm4xZ2hTYjV1ZnFRK0NSY0ZIbm5odzB1UGtGTHpzdjJOSGxZV0p3?=
+ =?utf-8?B?K1N6K1VTNHZETjA4UlBKOVdUaCs0TjZncWZURW85YW1XZmE4NHUveFVsdUc5?=
+ =?utf-8?B?WDBZdVErcGNsb0tSY3ExWGJqRUcxcTZXTGJLeGtXQTN1ZldwRGZxbm9aZzFi?=
+ =?utf-8?B?MkhnVFI3bHBaaWErY3gwYm0vaVlOaGZPWGkxQ3FGS1E0eXBLMDNWaEZGV2M3?=
+ =?utf-8?B?M1B3Q1VpZjFYOVB4TlNKODBIaVI3SnZVeUwwY2dMMWJtbWJIUW55MExXWUY5?=
+ =?utf-8?B?UjdrWFBDK2tSVVcvZy9zZXRsNHZlWXo1N1dSdUlpTXpVa0xsWkdjN1h2Rldw?=
+ =?utf-8?B?ZDlJSlc0QWtRd0swNGVEY25UdUc1TTYyaDNYYWJ3T2lsc1RDWEkwU0lvT1A5?=
+ =?utf-8?B?Zm9SRXJUWlRGa09WNDNQOTk2RlFJZE85V2s0bnExYXdTWE9ML3FxTFltSElJ?=
+ =?utf-8?B?VG9TS0h1OUlOSEFaRHFaZHp1d1crbTRVcHBpWkl2OFgrSmJCcHl3T2hldDE0?=
+ =?utf-8?B?cGZmYU5BSm95TVRqeFZPbm42U0VlZjU0MVVVQjZpNCtsL0tmZGl5OUJyNS9q?=
+ =?utf-8?B?RFBFNVRlR3RyQy9nd2tZbktSSm5FVG9nTXlGbHFvOXJsS3M0QVBQTmd0WXJx?=
+ =?utf-8?B?aTFvd04ra0RGMHBYdmdMUG9EZXhoZTVyUTYwYThZdUF2a3Q3cDk0Vk94RGhZ?=
+ =?utf-8?B?UmNHeFBNbU5QL2pmRFY3NDBPSG82bTJiMlB2QkdNOXRqZlA1SkxZSXcvMDlh?=
+ =?utf-8?B?YjR6S3k5Zjd0Y2QwcldDQlJiaDExdmZzWm1qbDJXYkZ0a1p1RW9iOVZLOXJn?=
+ =?utf-8?B?d0lUVnNlK1dUaFlMSzBlbjA4ZmxYSkQ5NTdhMThlaUZUYjJ4L0JZMHJBVjFs?=
+ =?utf-8?B?M3ZFVjRQTWxvVTRYd2E0emxHb09oVWVITUlUM3oyRlplTGJNTVlLN3diSDhv?=
+ =?utf-8?B?Nit2QW11cFhBUUg1WlNJWE1DeGhPek5pYkVDUFZmbkM1RHRhbHJOZWpabXhS?=
+ =?utf-8?B?TUxlcXVVQjBKODJLUE83TzkyQ0JLY3BBaWFKb1ZFVkVEeXFnalYvdXB1M0kx?=
+ =?utf-8?B?SUlXTXVCMVBjR0x2ZFNvZUVidkV3Z3F0cDVGZXE5TXNVSTJ0N2U0MlF1R1Rm?=
+ =?utf-8?B?NXlaekFHWTh3NUhnaWpYRWNWZjVzWU9sbmViZlluTmhRNlF3NnI1RFU1bXBx?=
+ =?utf-8?B?a0FkU1hxTkEvR2pHSkRFQ3lnaTV5TCtXdGZlZHgrQXJCRGxvQWU4U1RUdHhr?=
+ =?utf-8?B?TFZHekdZMitVU0l3dU1DMHFQRGEvR1VtMnI1am9zSFVqOVZ1a1lUbTNCY0Yz?=
+ =?utf-8?B?WHFqRHlzeEdUaUtFNE5VQVoxVEFUeUdRY1JQRWtCZHdDazVEVVpscWhQV1ZC?=
+ =?utf-8?B?K2Y1SGlXZUplQ2xWNUV1eXNwWWxGV1ZSaFlVQmVTbXVXNWNzcUp5bW9FNUxQ?=
+ =?utf-8?Q?XyLIET9NipmvtU09uYYXMD4dO?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250522-uvc-fop-v1-2-3bfe7a00f31d@chromium.org>
-References: <20250522-uvc-fop-v1-0-3bfe7a00f31d@chromium.org>
-In-Reply-To: <20250522-uvc-fop-v1-0-3bfe7a00f31d@chromium.org>
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
- Hans de Goede <hdegoede@redhat.com>, Hans Verkuil <hans@jjverkuil.nl>, 
- Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Ricardo Ribalda <ribalda@chromium.org>
-X-Mailer: b4 0.14.2
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB5719.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9be27f2a-f1a3-450a-6080-08dd995a79f4
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 May 2025 18:00:02.8258
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: ckjnfkzvhyLnjr2Ap9NuTxzpdcRk6sGNxdfg50ESAQOMViCLq6G3V2OFw65FdwLqtAZcpizXqpumG93NCLJ3dg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV2PR12MB5797
 
-From: Hans Verkuil <hans@jjverkuil.nl>
-
-When uvc was written the vb2 ioctl and file operation helpers didn't exist.
-
-This patch switches uvc over to those helpers, which removes a lot of
-boilerplatecode and simplifies VIDIOC_G/S_PRIORITY handling and allows us
-to drop the 'privileges' scheme, since that's now handled inside the vb2
-helpers.
-
-This makes it possible for uvc to fix the v4l2-compliance streaming tests:
- warn: v4l2-test-formats.cpp(1075): Could not set fmt2
-
-This patch introduces a change on behavior on the uvcdriver to be
-aligned with the rest of the subsystem. Now S_INPUT, S_PARM and
-S_FORMAT do no gran exclusive ownership of the device.
-
-Signed-off-by: Hans Verkuil <hans@jjverkuil.nl>
-Co-developed-by: Ricardo Ribalda <ribalda@chromium.org>
-Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
----
- drivers/media/usb/uvc/uvc_driver.c   |  34 +----
- drivers/media/usb/uvc/uvc_metadata.c |   8 +-
- drivers/media/usb/uvc/uvc_queue.c    | 143 --------------------
- drivers/media/usb/uvc/uvc_v4l2.c     | 251 +++--------------------------------
- drivers/media/usb/uvc/uvcvideo.h     |  37 +-----
- 5 files changed, 30 insertions(+), 443 deletions(-)
-
-diff --git a/drivers/media/usb/uvc/uvc_driver.c b/drivers/media/usb/uvc/uvc_driver.c
-index da24a655ab68cc0957762f2b67387677c22224d1..4eeedab93b90939fc4c925012a18b7d018ade39f 100644
---- a/drivers/media/usb/uvc/uvc_driver.c
-+++ b/drivers/media/usb/uvc/uvc_driver.c
-@@ -1725,7 +1725,6 @@ static struct uvc_video_chain *uvc_alloc_chain(struct uvc_device *dev)
- 	INIT_LIST_HEAD(&chain->entities);
- 	mutex_init(&chain->ctrl_mutex);
- 	chain->dev = dev;
--	v4l2_prio_init(&chain->prio);
- 
- 	return chain;
- }
-@@ -1958,31 +1957,7 @@ static void uvc_unregister_video(struct uvc_device *dev)
- 		if (!video_is_registered(&stream->vdev))
- 			continue;
- 
--		/*
--		 * For stream->vdev we follow the same logic as:
--		 * vb2_video_unregister_device().
--		 */
--
--		/* 1. Take a reference to vdev */
--		get_device(&stream->vdev.dev);
--
--		/* 2. Ensure that no new ioctls can be called. */
--		video_unregister_device(&stream->vdev);
--
--		/* 3. Wait for old ioctls to finish. */
--		mutex_lock(&stream->mutex);
--
--		/* 4. Stop streaming. */
--		uvc_queue_release(&stream->queue);
--
--		mutex_unlock(&stream->mutex);
--
--		put_device(&stream->vdev.dev);
--
--		/*
--		 * For stream->meta.vdev we can directly call:
--		 * vb2_video_unregister_device().
--		 */
-+		vb2_video_unregister_device(&stream->vdev);
- 		vb2_video_unregister_device(&stream->meta.vdev);
- 
- 		/*
-@@ -2029,7 +2004,8 @@ int uvc_register_video_device(struct uvc_device *dev,
- 	vdev->fops = fops;
- 	vdev->ioctl_ops = ioctl_ops;
- 	vdev->release = uvc_release;
--	vdev->prio = &stream->chain->prio;
-+	vdev->queue = &queue->queue;
-+	vdev->lock = &queue->mutex;
- 	if (type == V4L2_BUF_TYPE_VIDEO_OUTPUT)
- 		vdev->vfl_dir = VFL_DIR_TX;
- 	else
-@@ -2399,8 +2375,8 @@ static int __uvc_resume(struct usb_interface *intf, int reset)
- 		if (stream->intf == intf) {
- 			ret = uvc_video_resume(stream, reset);
- 			if (ret < 0)
--				uvc_queue_streamoff(&stream->queue,
--						    stream->queue.queue.type);
-+				vb2_streamoff(&stream->queue.queue,
-+					      stream->queue.queue.type);
- 			return ret;
- 		}
- 	}
-diff --git a/drivers/media/usb/uvc/uvc_metadata.c b/drivers/media/usb/uvc/uvc_metadata.c
-index 82de7781f5b6b70c5ba16bcba9e0741231231904..d3aab22f91cea21aefc56409924dfa1451aec914 100644
---- a/drivers/media/usb/uvc/uvc_metadata.c
-+++ b/drivers/media/usb/uvc/uvc_metadata.c
-@@ -96,7 +96,7 @@ static int uvc_meta_v4l2_set_format(struct file *file, void *fh,
- 	 */
- 	mutex_lock(&stream->mutex);
- 
--	if (uvc_queue_allocated(&stream->queue))
-+	if (vb2_is_busy(&stream->meta.queue.queue))
- 		ret = -EBUSY;
- 	else
- 		stream->meta.format = fmt->dataformat;
-@@ -164,12 +164,6 @@ int uvc_meta_register(struct uvc_streaming *stream)
- 
- 	stream->meta.format = V4L2_META_FMT_UVC;
- 
--	/*
--	 * The video interface queue uses manual locking and thus does not set
--	 * the queue pointer. Set it manually here.
--	 */
--	vdev->queue = &queue->queue;
--
- 	return uvc_register_video_device(dev, stream, vdev, queue,
- 					 V4L2_BUF_TYPE_META_CAPTURE,
- 					 &uvc_meta_fops, &uvc_meta_ioctl_ops);
-diff --git a/drivers/media/usb/uvc/uvc_queue.c b/drivers/media/usb/uvc/uvc_queue.c
-index 2ee142621042167c2587b6a6fdd51c1a46d31c11..72c5494dee9f46ff61072e7d293bfaddda40e615 100644
---- a/drivers/media/usb/uvc/uvc_queue.c
-+++ b/drivers/media/usb/uvc/uvc_queue.c
-@@ -242,153 +242,10 @@ int uvc_queue_init(struct uvc_video_queue *queue, enum v4l2_buf_type type)
- 	return 0;
- }
- 
--void uvc_queue_release(struct uvc_video_queue *queue)
--{
--	mutex_lock(&queue->mutex);
--	vb2_queue_release(&queue->queue);
--	mutex_unlock(&queue->mutex);
--}
--
--/* -----------------------------------------------------------------------------
-- * V4L2 queue operations
-- */
--
--int uvc_request_buffers(struct uvc_video_queue *queue,
--			struct v4l2_requestbuffers *rb)
--{
--	int ret;
--
--	mutex_lock(&queue->mutex);
--	ret = vb2_reqbufs(&queue->queue, rb);
--	mutex_unlock(&queue->mutex);
--
--	return ret ? ret : rb->count;
--}
--
--int uvc_query_buffer(struct uvc_video_queue *queue, struct v4l2_buffer *buf)
--{
--	int ret;
--
--	mutex_lock(&queue->mutex);
--	ret = vb2_querybuf(&queue->queue, buf);
--	mutex_unlock(&queue->mutex);
--
--	return ret;
--}
--
--int uvc_create_buffers(struct uvc_video_queue *queue,
--		       struct v4l2_create_buffers *cb)
--{
--	int ret;
--
--	mutex_lock(&queue->mutex);
--	ret = vb2_create_bufs(&queue->queue, cb);
--	mutex_unlock(&queue->mutex);
--
--	return ret;
--}
--
--int uvc_queue_buffer(struct uvc_video_queue *queue,
--		     struct media_device *mdev, struct v4l2_buffer *buf)
--{
--	int ret;
--
--	mutex_lock(&queue->mutex);
--	ret = vb2_qbuf(&queue->queue, mdev, buf);
--	mutex_unlock(&queue->mutex);
--
--	return ret;
--}
--
--int uvc_export_buffer(struct uvc_video_queue *queue,
--		      struct v4l2_exportbuffer *exp)
--{
--	int ret;
--
--	mutex_lock(&queue->mutex);
--	ret = vb2_expbuf(&queue->queue, exp);
--	mutex_unlock(&queue->mutex);
--
--	return ret;
--}
--
--int uvc_dequeue_buffer(struct uvc_video_queue *queue, struct v4l2_buffer *buf,
--		       int nonblocking)
--{
--	int ret;
--
--	mutex_lock(&queue->mutex);
--	ret = vb2_dqbuf(&queue->queue, buf, nonblocking);
--	mutex_unlock(&queue->mutex);
--
--	return ret;
--}
--
--int uvc_queue_streamon(struct uvc_video_queue *queue, enum v4l2_buf_type type)
--{
--	int ret;
--
--	mutex_lock(&queue->mutex);
--	ret = vb2_streamon(&queue->queue, type);
--	mutex_unlock(&queue->mutex);
--
--	return ret;
--}
--
--int uvc_queue_streamoff(struct uvc_video_queue *queue, enum v4l2_buf_type type)
--{
--	int ret;
--
--	mutex_lock(&queue->mutex);
--	ret = vb2_streamoff(&queue->queue, type);
--	mutex_unlock(&queue->mutex);
--
--	return ret;
--}
--
--int uvc_queue_mmap(struct uvc_video_queue *queue, struct vm_area_struct *vma)
--{
--	return vb2_mmap(&queue->queue, vma);
--}
--
--#ifndef CONFIG_MMU
--unsigned long uvc_queue_get_unmapped_area(struct uvc_video_queue *queue,
--		unsigned long pgoff)
--{
--	return vb2_get_unmapped_area(&queue->queue, 0, 0, pgoff, 0);
--}
--#endif
--
--__poll_t uvc_queue_poll(struct uvc_video_queue *queue, struct file *file,
--			    poll_table *wait)
--{
--	__poll_t ret;
--
--	mutex_lock(&queue->mutex);
--	ret = vb2_poll(&queue->queue, file, wait);
--	mutex_unlock(&queue->mutex);
--
--	return ret;
--}
--
- /* -----------------------------------------------------------------------------
-  *
-  */
- 
--/*
-- * Check if buffers have been allocated.
-- */
--int uvc_queue_allocated(struct uvc_video_queue *queue)
--{
--	int allocated;
--
--	mutex_lock(&queue->mutex);
--	allocated = vb2_is_busy(&queue->queue);
--	mutex_unlock(&queue->mutex);
--
--	return allocated;
--}
--
- /*
-  * Cancel the video buffers queue.
-  *
-diff --git a/drivers/media/usb/uvc/uvc_v4l2.c b/drivers/media/usb/uvc/uvc_v4l2.c
-index 862b4e34e5b629cf324479a9bb59ebe8784ccd5d..7a5ecbefa32c0a6b74c85d7f77a25b433598471e 100644
---- a/drivers/media/usb/uvc/uvc_v4l2.c
-+++ b/drivers/media/usb/uvc/uvc_v4l2.c
-@@ -47,8 +47,6 @@ void uvc_pm_put(struct uvc_device *dev)
- 	usb_autopm_put_interface(dev->intf);
- }
- 
--static int uvc_acquire_privileges(struct uvc_fh *handle);
--
- static int uvc_control_add_xu_mapping(struct uvc_video_chain *chain,
- 				      struct uvc_control_mapping *map,
- 				      const struct uvc_xu_control_mapping *xmap)
-@@ -436,10 +434,6 @@ static int uvc_ioctl_s_fmt(struct file *file, void *fh,
- 	const struct uvc_frame *frame;
- 	int ret;
- 
--	ret = uvc_acquire_privileges(handle);
--	if (ret < 0)
--		return ret;
--
- 	if (fmt->type != stream->type)
- 		return -EINVAL;
- 
-@@ -448,8 +442,7 @@ static int uvc_ioctl_s_fmt(struct file *file, void *fh,
- 		return ret;
- 
- 	mutex_lock(&stream->mutex);
--
--	if (uvc_queue_allocated(&stream->queue)) {
-+	if (vb2_is_busy(&stream->queue.queue)) {
- 		ret = -EBUSY;
- 		goto done;
- 	}
-@@ -513,10 +506,6 @@ static int uvc_ioctl_s_parm(struct file *file, void *fh,
- 	unsigned int i;
- 	int ret;
- 
--	ret = uvc_acquire_privileges(handle);
--	if (ret < 0)
--		return ret;
--
- 	if (parm->type != stream->type)
- 		return -EINVAL;
- 
-@@ -593,63 +582,6 @@ static int uvc_ioctl_s_parm(struct file *file, void *fh,
- 	return 0;
- }
- 
--/* ------------------------------------------------------------------------
-- * Privilege management
-- */
--
--/*
-- * Privilege management is the multiple-open implementation basis. The current
-- * implementation is completely transparent for the end-user and doesn't
-- * require explicit use of the VIDIOC_G_PRIORITY and VIDIOC_S_PRIORITY ioctls.
-- * Those ioctls enable finer control on the device (by making possible for a
-- * user to request exclusive access to a device), but are not mature yet.
-- * Switching to the V4L2 priority mechanism might be considered in the future
-- * if this situation changes.
-- *
-- * Each open instance of a UVC device can either be in a privileged or
-- * unprivileged state. Only a single instance can be in a privileged state at
-- * a given time. Trying to perform an operation that requires privileges will
-- * automatically acquire the required privileges if possible, or return -EBUSY
-- * otherwise. Privileges are dismissed when closing the instance or when
-- * freeing the video buffers using VIDIOC_REQBUFS.
-- *
-- * Operations that require privileges are:
-- *
-- * - VIDIOC_S_INPUT
-- * - VIDIOC_S_PARM
-- * - VIDIOC_S_FMT
-- * - VIDIOC_CREATE_BUFS
-- * - VIDIOC_REQBUFS
-- */
--static int uvc_acquire_privileges(struct uvc_fh *handle)
--{
--	/* Always succeed if the handle is already privileged. */
--	if (handle->state == UVC_HANDLE_ACTIVE)
--		return 0;
--
--	/* Check if the device already has a privileged handle. */
--	if (atomic_inc_return(&handle->stream->active) != 1) {
--		atomic_dec(&handle->stream->active);
--		return -EBUSY;
--	}
--
--	handle->state = UVC_HANDLE_ACTIVE;
--	return 0;
--}
--
--static void uvc_dismiss_privileges(struct uvc_fh *handle)
--{
--	if (handle->state == UVC_HANDLE_ACTIVE)
--		atomic_dec(&handle->stream->active);
--
--	handle->state = UVC_HANDLE_PASSIVE;
--}
--
--static int uvc_has_privileges(struct uvc_fh *handle)
--{
--	return handle->state == UVC_HANDLE_ACTIVE;
--}
--
- /* ------------------------------------------------------------------------
-  * V4L2 file operations
-  */
-@@ -671,7 +603,6 @@ static int uvc_v4l2_open(struct file *file)
- 	v4l2_fh_add(&handle->vfh);
- 	handle->chain = stream->chain;
- 	handle->stream = stream;
--	handle->state = UVC_HANDLE_PASSIVE;
- 	file->private_data = handle;
- 
- 	return 0;
-@@ -686,18 +617,11 @@ static int uvc_v4l2_release(struct file *file)
- 
- 	uvc_ctrl_cleanup_fh(handle);
- 
--	/* Only free resources if this is a privileged handle. */
--	if (uvc_has_privileges(handle))
--		uvc_queue_release(&stream->queue);
--
- 	if (handle->is_streaming)
- 		uvc_pm_put(stream->dev);
- 
- 	/* Release the file handle. */
--	uvc_dismiss_privileges(handle);
--	v4l2_fh_del(&handle->vfh);
--	v4l2_fh_exit(&handle->vfh);
--	kfree(handle);
-+	vb2_fop_release(file);
- 	file->private_data = NULL;
- 
- 	return 0;
-@@ -753,91 +677,6 @@ static int uvc_ioctl_try_fmt(struct file *file, void *fh,
- 	return uvc_v4l2_try_format(stream, fmt, &probe, NULL, NULL);
- }
- 
--static int uvc_ioctl_reqbufs(struct file *file, void *fh,
--			     struct v4l2_requestbuffers *rb)
--{
--	struct uvc_fh *handle = fh;
--	struct uvc_streaming *stream = handle->stream;
--	int ret;
--
--	ret = uvc_acquire_privileges(handle);
--	if (ret < 0)
--		return ret;
--
--	mutex_lock(&stream->mutex);
--	ret = uvc_request_buffers(&stream->queue, rb);
--	mutex_unlock(&stream->mutex);
--	if (ret < 0)
--		return ret;
--
--	if (ret == 0)
--		uvc_dismiss_privileges(handle);
--
--	return 0;
--}
--
--static int uvc_ioctl_querybuf(struct file *file, void *fh,
--			      struct v4l2_buffer *buf)
--{
--	struct uvc_fh *handle = fh;
--	struct uvc_streaming *stream = handle->stream;
--
--	if (!uvc_has_privileges(handle))
--		return -EBUSY;
--
--	return uvc_query_buffer(&stream->queue, buf);
--}
--
--static int uvc_ioctl_qbuf(struct file *file, void *fh, struct v4l2_buffer *buf)
--{
--	struct uvc_fh *handle = fh;
--	struct uvc_streaming *stream = handle->stream;
--
--	if (!uvc_has_privileges(handle))
--		return -EBUSY;
--
--	return uvc_queue_buffer(&stream->queue,
--				stream->vdev.v4l2_dev->mdev, buf);
--}
--
--static int uvc_ioctl_expbuf(struct file *file, void *fh,
--			    struct v4l2_exportbuffer *exp)
--{
--	struct uvc_fh *handle = fh;
--	struct uvc_streaming *stream = handle->stream;
--
--	if (!uvc_has_privileges(handle))
--		return -EBUSY;
--
--	return uvc_export_buffer(&stream->queue, exp);
--}
--
--static int uvc_ioctl_dqbuf(struct file *file, void *fh, struct v4l2_buffer *buf)
--{
--	struct uvc_fh *handle = fh;
--	struct uvc_streaming *stream = handle->stream;
--
--	if (!uvc_has_privileges(handle))
--		return -EBUSY;
--
--	return uvc_dequeue_buffer(&stream->queue, buf,
--				  file->f_flags & O_NONBLOCK);
--}
--
--static int uvc_ioctl_create_bufs(struct file *file, void *fh,
--				  struct v4l2_create_buffers *cb)
--{
--	struct uvc_fh *handle = fh;
--	struct uvc_streaming *stream = handle->stream;
--	int ret;
--
--	ret = uvc_acquire_privileges(handle);
--	if (ret < 0)
--		return ret;
--
--	return uvc_create_buffers(&stream->queue, cb);
--}
--
- static int uvc_ioctl_streamon(struct file *file, void *fh,
- 			      enum v4l2_buf_type type)
- {
-@@ -845,11 +684,6 @@ static int uvc_ioctl_streamon(struct file *file, void *fh,
- 	struct uvc_streaming *stream = handle->stream;
- 	int ret;
- 
--	if (!uvc_has_privileges(handle))
--		return -EBUSY;
--
--	guard(mutex)(&stream->mutex);
--
- 	if (handle->is_streaming)
- 		return 0;
- 
-@@ -857,7 +691,7 @@ static int uvc_ioctl_streamon(struct file *file, void *fh,
- 	if (ret)
- 		return ret;
- 
--	ret = uvc_queue_streamon(&stream->queue, type);
-+	ret = vb2_ioctl_streamon(file, fh, type);
- 	if (ret) {
- 		uvc_pm_put(stream->dev);
- 		return ret;
-@@ -873,13 +707,12 @@ static int uvc_ioctl_streamoff(struct file *file, void *fh,
- {
- 	struct uvc_fh *handle = fh;
- 	struct uvc_streaming *stream = handle->stream;
-+	int ret;
- 
--	if (!uvc_has_privileges(handle))
--		return -EBUSY;
--
--	guard(mutex)(&stream->mutex);
-+	ret = vb2_ioctl_streamoff(file, fh, type);
-+	if (ret)
-+		return ret;
- 
--	uvc_queue_streamoff(&stream->queue, type);
- 	if (handle->is_streaming) {
- 		handle->is_streaming = false;
- 		uvc_pm_put(stream->dev);
-@@ -962,13 +795,13 @@ static int uvc_ioctl_g_input(struct file *file, void *fh, unsigned int *input)
- static int uvc_ioctl_s_input(struct file *file, void *fh, unsigned int input)
- {
- 	struct uvc_fh *handle = fh;
-+	struct uvc_streaming *stream = handle->stream;
- 	struct uvc_video_chain *chain = handle->chain;
- 	u8 *buf;
- 	int ret;
- 
--	ret = uvc_acquire_privileges(handle);
--	if (ret < 0)
--		return ret;
-+	if (vb2_is_busy(&stream->queue.queue))
-+		return -EBUSY;
- 
- 	if (chain->selector == NULL ||
- 	    (chain->dev->quirks & UVC_QUIRK_IGNORE_SELECTOR_UNIT)) {
-@@ -1471,50 +1304,6 @@ static long uvc_v4l2_unlocked_ioctl(struct file *file,
- 	return ret;
- }
- 
--static ssize_t uvc_v4l2_read(struct file *file, char __user *data,
--		    size_t count, loff_t *ppos)
--{
--	struct uvc_fh *handle = file->private_data;
--	struct uvc_streaming *stream = handle->stream;
--
--	uvc_dbg(stream->dev, CALLS, "%s: not implemented\n", __func__);
--	return -EINVAL;
--}
--
--static int uvc_v4l2_mmap(struct file *file, struct vm_area_struct *vma)
--{
--	struct uvc_fh *handle = file->private_data;
--	struct uvc_streaming *stream = handle->stream;
--
--	uvc_dbg(stream->dev, CALLS, "%s\n", __func__);
--
--	return uvc_queue_mmap(&stream->queue, vma);
--}
--
--static __poll_t uvc_v4l2_poll(struct file *file, poll_table *wait)
--{
--	struct uvc_fh *handle = file->private_data;
--	struct uvc_streaming *stream = handle->stream;
--
--	uvc_dbg(stream->dev, CALLS, "%s\n", __func__);
--
--	return uvc_queue_poll(&stream->queue, file, wait);
--}
--
--#ifndef CONFIG_MMU
--static unsigned long uvc_v4l2_get_unmapped_area(struct file *file,
--		unsigned long addr, unsigned long len, unsigned long pgoff,
--		unsigned long flags)
--{
--	struct uvc_fh *handle = file->private_data;
--	struct uvc_streaming *stream = handle->stream;
--
--	uvc_dbg(stream->dev, CALLS, "%s\n", __func__);
--
--	return uvc_queue_get_unmapped_area(&stream->queue, pgoff);
--}
--#endif
--
- const struct v4l2_ioctl_ops uvc_ioctl_ops = {
- 	.vidioc_g_fmt_vid_cap = uvc_ioctl_g_fmt,
- 	.vidioc_g_fmt_vid_out = uvc_ioctl_g_fmt,
-@@ -1527,12 +1316,13 @@ const struct v4l2_ioctl_ops uvc_ioctl_ops = {
- 	.vidioc_enum_fmt_vid_out = uvc_ioctl_enum_fmt,
- 	.vidioc_try_fmt_vid_cap = uvc_ioctl_try_fmt,
- 	.vidioc_try_fmt_vid_out = uvc_ioctl_try_fmt,
--	.vidioc_reqbufs = uvc_ioctl_reqbufs,
--	.vidioc_querybuf = uvc_ioctl_querybuf,
--	.vidioc_qbuf = uvc_ioctl_qbuf,
--	.vidioc_expbuf = uvc_ioctl_expbuf,
--	.vidioc_dqbuf = uvc_ioctl_dqbuf,
--	.vidioc_create_bufs = uvc_ioctl_create_bufs,
-+	.vidioc_reqbufs = vb2_ioctl_reqbufs,
-+	.vidioc_querybuf = vb2_ioctl_querybuf,
-+	.vidioc_prepare_buf = vb2_ioctl_prepare_buf,
-+	.vidioc_qbuf = vb2_ioctl_qbuf,
-+	.vidioc_expbuf = vb2_ioctl_expbuf,
-+	.vidioc_dqbuf = vb2_ioctl_dqbuf,
-+	.vidioc_create_bufs = vb2_ioctl_create_bufs,
- 	.vidioc_streamon = uvc_ioctl_streamon,
- 	.vidioc_streamoff = uvc_ioctl_streamoff,
- 	.vidioc_enum_input = uvc_ioctl_enum_input,
-@@ -1559,11 +1349,10 @@ const struct v4l2_file_operations uvc_fops = {
- #ifdef CONFIG_COMPAT
- 	.compat_ioctl32	= uvc_v4l2_compat_ioctl32,
- #endif
--	.read		= uvc_v4l2_read,
--	.mmap		= uvc_v4l2_mmap,
--	.poll		= uvc_v4l2_poll,
-+	.mmap		= vb2_fop_mmap,
-+	.poll		= vb2_fop_poll,
- #ifndef CONFIG_MMU
--	.get_unmapped_area = uvc_v4l2_get_unmapped_area,
-+	.get_unmapped_area = vb2_fop_get_unmapped_area,
- #endif
- };
- 
-diff --git a/drivers/media/usb/uvc/uvcvideo.h b/drivers/media/usb/uvc/uvcvideo.h
-index b9f8eb62ba1d82ea7788cf6c10cc838a429dbc9e..3ddbf065a2cbae40ee48cb06f84ca8f0052990c4 100644
---- a/drivers/media/usb/uvc/uvcvideo.h
-+++ b/drivers/media/usb/uvc/uvcvideo.h
-@@ -326,7 +326,10 @@ struct uvc_buffer {
- 
- struct uvc_video_queue {
- 	struct vb2_queue queue;
--	struct mutex mutex;			/* Protects queue */
-+	struct mutex mutex;			/*
-+						 * Serializes vb2_queue and
-+						 * fops
-+						 */
- 
- 	unsigned int flags;
- 	unsigned int buf_used;
-@@ -349,7 +352,6 @@ struct uvc_video_chain {
- 						 * uvc_fh.pending_async_ctrls
- 						 */
- 
--	struct v4l2_prio_state prio;		/* V4L2 priority state */
- 	u32 caps;				/* V4L2 chain-wide caps */
- 	u8 ctrl_class_bitmap;			/* Bitmap of valid classes */
- };
-@@ -619,16 +621,10 @@ struct uvc_device {
- 	struct uvc_entity *gpio_unit;
- };
- 
--enum uvc_handle_state {
--	UVC_HANDLE_PASSIVE	= 0,
--	UVC_HANDLE_ACTIVE	= 1,
--};
--
- struct uvc_fh {
- 	struct v4l2_fh vfh;
- 	struct uvc_video_chain *chain;
- 	struct uvc_streaming *stream;
--	enum uvc_handle_state state;
- 	unsigned int pending_async_ctrls;
- 	bool is_streaming;
- };
-@@ -687,36 +683,11 @@ struct uvc_entity *uvc_entity_by_id(struct uvc_device *dev, int id);
- 
- /* Video buffers queue management. */
- int uvc_queue_init(struct uvc_video_queue *queue, enum v4l2_buf_type type);
--void uvc_queue_release(struct uvc_video_queue *queue);
--int uvc_request_buffers(struct uvc_video_queue *queue,
--			struct v4l2_requestbuffers *rb);
--int uvc_query_buffer(struct uvc_video_queue *queue,
--		     struct v4l2_buffer *v4l2_buf);
--int uvc_create_buffers(struct uvc_video_queue *queue,
--		       struct v4l2_create_buffers *v4l2_cb);
--int uvc_queue_buffer(struct uvc_video_queue *queue,
--		     struct media_device *mdev,
--		     struct v4l2_buffer *v4l2_buf);
--int uvc_export_buffer(struct uvc_video_queue *queue,
--		      struct v4l2_exportbuffer *exp);
--int uvc_dequeue_buffer(struct uvc_video_queue *queue,
--		       struct v4l2_buffer *v4l2_buf, int nonblocking);
--int uvc_queue_streamon(struct uvc_video_queue *queue, enum v4l2_buf_type type);
--int uvc_queue_streamoff(struct uvc_video_queue *queue, enum v4l2_buf_type type);
- void uvc_queue_cancel(struct uvc_video_queue *queue, int disconnect);
- struct uvc_buffer *uvc_queue_next_buffer(struct uvc_video_queue *queue,
- 					 struct uvc_buffer *buf);
- struct uvc_buffer *uvc_queue_get_current_buffer(struct uvc_video_queue *queue);
- void uvc_queue_buffer_release(struct uvc_buffer *buf);
--int uvc_queue_mmap(struct uvc_video_queue *queue,
--		   struct vm_area_struct *vma);
--__poll_t uvc_queue_poll(struct uvc_video_queue *queue, struct file *file,
--			poll_table *wait);
--#ifndef CONFIG_MMU
--unsigned long uvc_queue_get_unmapped_area(struct uvc_video_queue *queue,
--					  unsigned long pgoff);
--#endif
--int uvc_queue_allocated(struct uvc_video_queue *queue);
- static inline int uvc_queue_streaming(struct uvc_video_queue *queue)
- {
- 	return vb2_is_streaming(&queue->queue);
-
--- 
-2.49.0.1151.ga128411c76-goog
-
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogSWxwbyBKw6RydmluZW4g
+PGlscG8uamFydmluZW5AbGludXguaW50ZWwuY29tPg0KPiBTZW50OiBGcmlkYXksIE1heSAxNiwg
+MjAyNSA1OjIwIEFNDQo+IFRvOiBSb24gTGkgPHhpYW5ncm9uZ2xAbnZpZGlhLmNvbT47IEhlcmJl
+cnQgWHUNCj4gPGhlcmJlcnRAZ29uZG9yLmFwYW5hLm9yZy5hdT47IERhdmlkIFMuIE1pbGxlciA8
+ZGF2ZW1AZGF2ZW1sb2Z0Lm5ldD47DQo+IGxpbnV4LWNyeXB0b0B2Z2VyLmtlcm5lbC5vcmcNCj4g
+Q2M6IEhhbnMgZGUgR29lZGUgPGhkZWdvZWRlQHJlZGhhdC5jb20+OyBWYWRpbSBQYXN0ZXJuYWsN
+Cj4gPHZhZGltcEBudmlkaWEuY29tPjsgS2hhbGlsIEJsYWllY2ggPGtibGFpZWNoQG52aWRpYS5j
+b20+OyBEYXZpZA0KPiBUaG9tcHNvbiA8ZGF2dGhvbXBzb25AbnZpZGlhLmNvbT47IHBsYXRmb3Jt
+LWRyaXZlci0NCj4geDg2QHZnZXIua2VybmVsLm9yZzsgTEtNTCA8bGludXgta2VybmVsQHZnZXIu
+a2VybmVsLm9yZz4NCj4gU3ViamVjdDogUmU6IFtQQVRDSCB2MV0gcGxhdGZvcm0vbWVsbGFub3g6
+IEFkZCBtbHhiZl9wa2EgZHJpdmVyIGZvciBCbHVlRmllbGQNCj4gU29jDQo+IA0KPiBFeHRlcm5h
+bCBlbWFpbDogVXNlIGNhdXRpb24gb3BlbmluZyBsaW5rcyBvciBhdHRhY2htZW50cw0KPiANCj4g
+DQo+IE9uIFRodSwgMTUgTWF5IDIwMjUsIFJvbiBMaSB3cm90ZToNCj4gDQo+ID4gQWRkIHRoZSBt
+bHhiZl9wa2EgZHJpdmVyIHRvIHN1cHBvcnQgdGhlIEJsdWVGaWVsZCBTb0MgUHVibGljIEtleQ0K
+PiA+IEFjY2VsZXJhdGlvbiAoUEtBKSBoYXJkd2FyZS4gVGhlIFBLQSBwcm92aWRlcyBhIHNpbXBs
+ZSwgY29tcGxldGUNCj4gPiBmcmFtZXdvcmsgZm9yIGNyeXB0byBwdWJsaWMga2V5IGhhcmR3YXJl
+IG9mZmxvYWQuIEl0IHN1cHBvcnRzIGRpcmVjdA0KPiA+IGFjY2VzcyB0byB0aGUgcHVibGljIGtl
+eSBoYXJkd2FyZSByZXNvdXJjZXMgZnJvbSB0aGUgdXNlciBzcGFjZSwgYW5kDQo+ID4gbWFrZXMg
+YXZhaWxhYmxlIHNldmVyYWwgYXJpdGhtZXRpYyBvcGVyYXRpb25zOiBzb21lIGJhc2ljIG9wZXJh
+dGlvbnMNCj4gPiAoZS5nLiwgYWRkaXRpb24gYW5kIG11bHRpcGxpY2F0aW9uKSwgc29tZSBjb21w
+bGV4IG9wZXJhdGlvbnMgKGUuZy4sDQo+ID4gbW9kdWxhciBleHBvbmVudGlhdGlvbiBhbmQgbW9k
+dWxhciBpbnZlcnNpb24pLCBhbmQgaGlnaC1sZXZlbA0KPiA+IG9wZXJhdGlvbnMgc3VjaCBhcyBS
+U0EsIERpZmZpZS1IYWxsbWFuLCBFbGxpcHRpYyBDdXJ2ZSBDcnlwdG9ncmFwaHksDQo+ID4gYW5k
+IHRoZSBGZWRlcmFsIERpZ2l0YWwgU2lnbmF0dXJlIEFsZ29yaXRobSAoRFNBIGFzIGRvY3VtZW50
+ZWQgaW4NCj4gPiBGSVBTLTE4NikgcHVibGljLXByaXZhdGUga2V5IHN5c3RlbXMuDQo+ID4NCj4g
+PiBUaGUgUEtBIGRyaXZlciBpbml0aWFsaXplcyB0aGUgUEtBIGhhcmR3YXJlIGludGVyZmFjZSBh
+bmQgaW1wbGVtZW50cw0KPiA+IGZpbGUgb3BlcmF0aW9ucyBzbyB0aGF0IHVzZXIgc3BhY2UgbGli
+cmFyaWVzIGNhbiBieXBhc3MgdGhlIGtlcm5lbCBhbmQNCj4gPiBoYXZlIGRpcmVjdCBhY2Nlc3Mg
+dG8gYSBzcGVjaWZpYyBzZXQgb2YgZGV2aWNlIHJlZ2lzdGVycy4gVGhlIEFybSBjb3Jlcw0KPiA+
+IGludGVyZmFjZSB0byB0aGUgUEtBIGhhcmR3YXJlIHRocm91Z2ggcmluZ3MgYW5kIGEgNjRLQiBt
+ZW1vcnkga25vd24gYXMNCj4gPiBXaW5kb3cgUkFNLiBUaGVyZSBhcmUgbXVsdGlwbGUgUEtBIGRl
+dmljZXMgb24gdGhlIEJsdWVGaWVsZCBTb0MuIEluDQo+ID4gZ2VuZXJhbCwgZWFjaCBQS0EgZGV2
+aWNlIGhhcyA0IHJpbmdzLCAxIHdpbmRvdyBSQU0gYW5kIDEgVHJ1ZSBSYW5kb20NCj4gPiBOdW1i
+ZXIgR2VuZXJhdG9yIChUUk5HKS4gVGh1cywgdGhlIGRyaXZlciBoYXMgYmVlbiBkZXNpZ25lZCB0
+byBwcm9iZQ0KPiA+IGVhY2ggUEtBIGFuZCBlYWNoIGluZGl2aWR1YWwgcmluZyBpbnNpZGUgYSBn
+aXZlbiBQS0EuIEl0IGFsc28gcmVnaXN0ZXJzDQo+ID4gdGhlIFRSTkcgdG8gZmVlZCB0aGUga2Vy
+bmVsIGVudHJvcHkgKGkuZS4sIC9kZXYvaHdybmcpLiBUbyBpbXBsZW1lbnQNCj4gPiBzdWNoIGRl
+c2lnbiwgdGhlIGRyaXZlciBjcmVhdGVzIGluZGl2aWR1YWwgZGV2aWNlIGZpbGVzIGZvciBlYWNo
+IHJpbmcNCj4gPiBhbmQgVFJORyBtb2R1bGUuIFRoZSByaW5nIGRldmljZSBmaWxlcyBhcmUgaWRl
+bnRpZmllZCB1c2luZyB0aGVpciBpZHMsDQo+ID4gaS5lLiwgL2Rldi9tbHhiZl9wa2EvPHJpbmdf
+aWQ+Lg0KPiA+DQo+ID4gVGhlIG1haW4gZHJpdmVyIGxvZ2ljIHN1Y2ggYXMgcHJvYmUoKSBhbmQg
+cmVtb3ZlKCkgYXJlIGltcGxlbWVudGVkIGluDQo+ID4gbWx4YmZfcGthX2Rydi5jLiBUaGUgUEtB
+IHJpbmcgZGV2aWNlIG9wZXJhdGlvbnMgYXJlIGFsc28gaW1wbGVtZW50ZWQgaW4NCj4gPiB0aGlz
+IHNvdXJjZSBmaWxlLCBzdWNoIGFzIG9wZW4oKSwgcmVsZWFzZSgpIGFuZCBtbWFwKCkuDQo+ID4N
+Cj4gPiBUaGUgbWx4YmZfcGthX2Rldi5jIHNvdXJjZSBmaWxlIGltcGxlbWVudHMgZnVuY3Rpb25z
+IHRvIG9wZXJhdGUgdGhlDQo+ID4gdW5kZXJseWluZyBQS0EgaGFyZHdhcmUsIHN1Y2ggYXMgVFJO
+RyBvcGVyYXRpb24sIFBLQSBoYXJkd2FyZSBJL08NCj4gPiBhY2Nlc3MsIFBLQSBtZW1vcnkgcmVz
+b3VyY2Ugb3BlcmF0aW9uLCBldGMuDQo+ID4NCj4gPiBUaGUgUEtBIGRyaXZlciBpcyBhIGxpZ2h3
+ZWlnaHQgZHJpdmVyIHRoYXQgaW1wbGVtZW50cyBmaWxlIG9wZXJhdGlvbnMNCj4gPiBhbmQgbWFw
+IG1lbW9yeSByZWdpb25zIG9mIHRoZSBQS0EgaGFyZHdhcmUgdG8gdXNlciBzcGFjZSBkcml2ZXJz
+IGFuZA0KPiA+IGxpYnJhcmllcy4gVGhlcmUgaXMgbm8gaW4ta2VybmVsIGNyeXB0byBzdXBwb3J0
+LiBUaGVyZWZvcmUsIHRoZSBQS0ENCj4gPiBkcml2ZXIgaXMgaW5jbHVkZWQgdW5kZXIgZHJpdmVy
+cy9wbGF0Zm9ybS9tZWxsYW5veC4NCj4gPg0KPiA+IFRlc3RpbmcNCj4gPg0KPiA+IC0gU3VjY2Vz
+c2Z1bCBidWlsZCBvZiBrZXJuZWwgZm9yIEFSTTY0Lg0KPiA+DQo+ID4gLSBUZXN0ZWQgQVJNNjQg
+YnVpbGQgb24gc2V2ZXJhbCBNZWxsYW5veCBCbHVlRmllbGQgMiBhbmQgMyBTb0MgYm9hcmRzDQo+
+ID4gdGhhdCBpbmNsdWRlIHRoZSBQS0EgaGFyZHdhcmUuIFRoZSB0ZXN0aW5nIGluY2x1ZGVzIHRo
+ZSB2YWxpZGF0aW9uIG9mDQo+ID4gdGhlIFBLQSBoYXJkd2FyZSBleGVjdXRpb24sIHJhbmRvbSBu
+dW1iZXIgZ2VuZXJhdGlvbiBhbmQgcHVibGljIGtleQ0KPiA+IGFjY2VsZXJhdGlvbiBwZXJmb3Jt
+YW5jZS4NCj4gDQo+IEhpLA0KPiANCj4gV2UndmUgdGhlIGluLWtlcm5lbCBjcnlwdG8gZnJhbWV3
+b3JrIGJ1dCBJIGRvbid0IHNlZSBhbnkgYXR0ZW1wdCB0byBidWlsZA0KPiBpbnRvIHRoYXQgZnJh
+bWV3b3JrIEFGQUlDVC4gV2h5IGlzIHRoYXQ/IFlvdSBicnVzaCBpdCBvZmYgYXMgIlRoZSBQS0EN
+Cj4gZHJpdmVyIGlzIGEgbGlnaHR3ZWlnaHQgZHJpdmVyIC4uLiIgYnV0IGxldHMgc2VlIGlmIHRo
+ZSBjcnlwdG8gcGVvcGxlDQo+IGFncmVlIHdpdGggdGhhdCBhcHByb2FjaCAoSSBhZGRlZCB0aGVt
+KS4NCj4gDQo+IChQbGVhc2UgYWxzbyBDYyBjcnlwdG8gcGVvcGxlIGluIGFueSBmdXJ0aGVyIHN1
+Ym1pc3Npb24uKQ0KPiANCg0KSGkgSWxwbywNCldoaWxlIEkgYW0gd29ya2luZyBvbiB1cGRhdGlu
+ZyB0aGUgUEtBIGRyaXZlciBhY2NvcmRpbmcgdG8gdGhlIHJldmlldyBjb21tZW50cywNCkknZCBs
+aWtlIHRvIGZpcnN0IGFuc3dlciB0aGlzIHF1ZXN0aW9uIG9mIHdoeSB0aGUgUEtBIGRyaXZlciBp
+cyBub3QgYnVpbHQgaW50bw0KdGhlIGNyeXB0byBtb2R1bGU6DQoNClRoaXMgUEtBIG1vZHVsZSBp
+cyBhIHBsYXRmb3JtLXNwZWNpZmljIGltcGxlbWVudGF0aW9uIHRoYXQgYWxsb3dzIHVzZXIgc3Bh
+Y2UNCmRyaXZlcnMgdG8gcmVhZC93cml0ZSB0aGUgQmx1ZUZpZWxkIFBLQSBoYXJkd2FyZSByZWdp
+c3RlcnMuIEl0IGRvZXNu4oCZdCBvZmZlciBhbnkNCmNyeXB0byBzZXJ2aWNlIHRvIHRoZSBrZXJu
+ZWwgb3IgaW1wbGVtZW50IGFueSBjcnlwdG8gQVBJLiBUaGUgUEtBIG1vZHVsZSBhbHNvDQpuZWVk
+cyB0byBoYW5kbGUgaGFyZHdhcmUtc3BlY2lmaWMgb3BlcmF0aW9ucyB0aGF0IGFyZSBub3QgY292
+ZXJlZCBieSB0aGUNCnN0YW5kYXJkIGNyeXB0byBpbnRlcmZhY2VzLiBJbiBhZGRpdGlvbiwgdGhl
+IFBLQSBtb2R1bGUgaXMgdGlnaHRseSBpbnRlZ3JhdGVkDQp3aXRoIGl0cyBzcGVjaWZpYyBoYXJk
+d2FyZSBhbmQgdXNlIGNhc2VzLCB0byBhY2hpZXZlIGJldHRlcg0KcGVyZm9ybWFuY2UuDQo=
