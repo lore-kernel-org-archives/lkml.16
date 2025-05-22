@@ -1,30 +1,37 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.3])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EDB4829CE6;
-	Thu, 22 May 2025 16:02:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.3
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17D2F28DB74;
+	Thu, 22 May 2025 16:02:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747929745; cv=none; b=nVJ5TZRpmbE4UwZNYQ+psnVo+foDC6HJTT6tW/frtcxEd+lGgCl2WGpZXo7Th3RqMtBv7h6y08KjtaMZL2ZGEEQIgyOIJgbW56TrcwnAELzxTh0dZNLdwX4Ort7j61hc6cogm4BPYbZb00Bd4GYhwIcIDRKmP2pCrEOn8YTIrng=
+	t=1747929781; cv=none; b=bAiheDsKn2fo81PO0hxy3Sr9eTI55n0weyp/eoe43+NAj1qEROwpqTTaYWoHjcK0+D+bdl7iyUPtJ4dP6W+TGrQLaly6bRtiCsN8zh0nmWaDxdAktCSOsFInArLeWENhbwnHPd6XP2qUhhKcTW25Ka6gfmPECrQ/hVCfbhNjI0E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747929745; c=relaxed/simple;
-	bh=K8qyu4zwXLqUbPIjChC8Rq9ekYH/PJ1pa+QpwOv/Jrg=;
+	s=arc-20240116; t=1747929781; c=relaxed/simple;
+	bh=D6ravmCBSVatM9FHIJ31YvtkmOKYHcAxJeudYDVHco0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JRFZypcpckEZjd2/gpidG5mZCqofsFDFOV6x7kJ51+UK9EpSbsiLpSu0IK+vmDKon3cMV3zMSIPkJrDllwr8xHWXZyMhIJs5DWLa4rK3U/Ti0MuFHpdR+N0/Cssyqjs/E6satMlg7ev+NCC+v80f1eygrvb7hOYl4tOsX0DCptk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=pKWzNnO5; arc=none smtp.client-ip=117.135.210.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	 In-Reply-To:Content-Type; b=ruav0ADPSUP9yvgC+5pWkYvfgF3T2/W+WdQsKf/KHDUprwrqe/0dAvkA/sDIgDaCy3uoIPR280t/TGxuVBa5eKzEpIreFKV+1DmCf1x5XCNRbtLVLQfDAH8N0t6k042rsakDSMZY0yE9IXQtqyFOij6VP/3oov/MOvm4EUXXZ7Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Xa8FIgBb; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="pKWzNnO5"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Message-ID:Date:MIME-Version:Subject:To:From:
-	Content-Type; bh=0AZGXn3LCPEY9S15QKsQn0Bu/8rEFUNP3khAtgVDGKw=;
-	b=pKWzNnO5XPi/51xWxZGHLUBE5xUg3sch9xkRX49/M8KWSiSNF7lEAQuo3FmU/7
-	KRQYqXuz8ctRU1QXqUkb5NS9EW5XpDU0Y6mPMZGN9p+b2MkA5X0XqD0Wm6tLHGFX
-	ZITh/p3TlrYa7CIp2Da/UllR4Zi0q0kDKR5pe/6/tIuGo=
-Received: from [192.168.71.93] (unknown [])
-	by gzga-smtp-mtada-g0-2 (Coremail) with SMTP id _____wDXeqFZSi9ol5cRDQ--.46492S2;
-	Fri, 23 May 2025 00:01:30 +0800 (CST)
-Message-ID: <403949d7-7c36-4b9a-a079-60a5aa985dd1@163.com>
-Date: Fri, 23 May 2025 00:01:29 +0800
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Xa8FIgBb"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
+	:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=F1dsqNtUuf3M8zsJPk5NeexiAp4QTOkB320yTzwQKvE=; b=Xa8FIgBbD9AdgAGgb4A3Lh5FOo
+	iTWFgJa73bwF7+u4DtMq8KNBzMOOXxXecUU6RmfVxKjqxaov+u2pNaqITKhYoOuPOwbG6FvQscNUx
+	mNzi3zEs2nG0pE+iU9GfhLgYpY3p3Sz723VAUdhEeqlnX5f6U3K0zxLInQR9Mdtt+ML+xDk1f3yN1
+	pAZJn/6tbA3invnvxWWeBKTDJEPiQIAMmFGRzsx2jStPCP2D4uzvSG7cFKBQRffnCvFDV+s9X+ycZ
+	JPPxbONXG0fR31rAGYqZIaCB4GprbYFq9OWKodFYIdm3xk8wyvvyt15GuBv+MF3ecLTk3kCRl++yU
+	DEd7neXA==;
+Received: from [50.53.25.54] (helo=[192.168.254.17])
+	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
+	id 1uI8Nd-000000013Ap-06Vh;
+	Thu, 22 May 2025 16:02:49 +0000
+Message-ID: <0a9c4d5a-a84c-420c-a781-84b18e90d34a@infradead.org>
+Date: Thu, 22 May 2025 09:02:44 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -32,59 +39,40 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/4] pci: implement "pci=aer_panic"
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: bhelgaas@google.com, tglx@linutronix.de, kw@linux.com,
- mahesh@linux.ibm.com, oohall@gmail.com, linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-References: <20250516165518.125495-1-18255117159@163.com>
- <e2iu7w3sn7m4zwo6ork2mbfjcfixo5jn5ydshkefezsgtquvh6@kjdvxgiapbjj>
+Subject: Re: [PATCH] Doc: networking: Fix various typos in rds.rst
+To: Alok Tiwari <alok.a.tiwari@oracle.com>, allison.henderson@oracle.com,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+ pabeni@redhat.com, horms@kernel.org, corbet@lwn.net, netdev@vger.kernel.org,
+ linux-rdma@vger.kernel.org, rds-devel@oss.oracle.com,
+ linux-doc@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, darren.kenny@oracle.com
+References: <20250522074413.3634446-1-alok.a.tiwari@oracle.com>
 Content-Language: en-US
-From: Hans Zhang <18255117159@163.com>
-In-Reply-To: <e2iu7w3sn7m4zwo6ork2mbfjcfixo5jn5ydshkefezsgtquvh6@kjdvxgiapbjj>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20250522074413.3634446-1-alok.a.tiwari@oracle.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:_____wDXeqFZSi9ol5cRDQ--.46492S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW7ZrW5KF1rKr4kKr43KFW7Jwb_yoW8XrWkpF
-	45tayDKF4DAFyfAFs2g3y0v3yjq3s5Jws8Jrn8Wr1ftr4agF17G34a9FWY9FW7Kr1I9w4S
-	vFW0q398tFn8AaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0zRBMKZUUUUU=
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiWwRVo2gvRGCRpgAAs9
 
 
 
-On 2025/5/22 19:47, Manivannan Sadhasivam wrote:
-> On Sat, May 17, 2025 at 12:55:14AM +0800, Hans Zhang wrote:
->> The following series introduces a new kernel command-line option aer_panic
->> to enhance error handling for PCIe Advanced Error Reporting (AER) in
->> mission-critical environments. This feature ensures deterministic recover
->> from fatal PCIe errors by triggering a controlled kernel panic when device
->> recovery fails, avoiding indefinite system hangs.
->>
->> Problem Statement
->> In systems where unresolved PCIe errors (e.g., bus hangs) occur,
->> traditional error recovery mechanisms may leave the system unresponsive
->> indefinitely. This is unacceptable for high-availability environment
->> requiring prompt recovery via reboot.
->>
->> Solution
->> The aer_panic option forces a kernel panic on unrecoverable AER errors.
->> This bypasses prolonged recovery attempts and ensures immediate reboot.
->>
+On 5/22/25 12:43 AM, Alok Tiwari wrote:
+> Corrected "sages" to "messages" in the bitmap allocation description.
+> Fixed "competed" to "completed" in the recv path datagram handling section.
+> Corrected "privatee" to "private" in the multipath RDS section.
+> Fixed "mutlipath" to "multipath" in the transport capabilities description.
 > 
-> You should not panic the kernel when a PCI error occurs (even if it is a fatal
-> one). You should instead try to reset the root complex. For that you need this
-> series that got merged recently:
-> https://lore.kernel.org/all/20250508-pcie-reset-slot-v4-0-7050093e2b50@linaro.org
+> These changes improve documentation clarity and maintain consistency.
 > 
-> PS: You need to populate the slot_reset callback in your controller driver to
-> reset the controller in the event of a fatal AER error or link down.
+> Signed-off-by: Alok Tiwari <alok.a.tiwari@oracle.com>
 
-Dear Mani,
+Acked-by: Randy Dunlap <rdunlap@infradead.org>
 
-Thank you for your reply. I will take a look at the submission record 
-you provided.
+Thanks.
 
-Best regards,
-Hans
+> ---
+>  Documentation/networking/rds.rst | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+> 
 
+-- 
+~Randy
