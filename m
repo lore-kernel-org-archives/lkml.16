@@ -1,96 +1,171 @@
-Received: from mail-io1-f51.google.com (mail-io1-f51.google.com [209.85.166.51])
+Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1796A1A23A6
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 11:01:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 831F01A23A6;
+	Thu, 22 May 2025 11:03:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747911697; cv=none; b=IB+/1AumIb3ZdaD1TIUYb5ZIc5nNuQNujzOrM3OreehG0vUzRBOcSgJhE4TU7gLsQ15Ju7QN/+S/IAKqP/K0xQp2qM/VWR3XaADG3vPLatlFPqYxv52PzlCW2wW9VeURNSeQ04QCan0UMLsXYklG0+gJfK4pw1c755i7QAYmARI=
+	t=1747911828; cv=none; b=XhVkAqSzLI90q2Vg4JscsEoeLFU1KWmLNFFudMsTP4KT4d4nDQJOPXGeLYWO+u3vIODs4Pm96X6GzEPqwSCNhsWbwMn7dXO1O6ZMuM5tN3TsReHRiKS7XoEbfbzNO+M6wH1a3CvQe4eY8lFgMyJfGkND/DpIzj4W3bu+QpI/iGk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747911697; c=relaxed/simple;
-	bh=qXgQFiP9zdYe49wiGj7TaFAwHtShTEVf5cGGUuLFXKY=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=b36qAngVYSigG/+3d8WTT91qb6j4BhU+5qiEqPYZF3XXVOCNCIoplobRlhQFUYYGg+Ppb8THNSuw5dGvnvkU9X2XL1RD1ge8zpc6Q37uFoQlYzoAMG7RJ0tk4p3CMVB7hFpcKVaGEQy5UUP/2xPnz4QgifvHcVzW4s4LGohtwbE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=cbVWTJYR; arc=none smtp.client-ip=209.85.166.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="cbVWTJYR"
-Received: by mail-io1-f51.google.com with SMTP id ca18e2360f4ac-85e73562577so834895639f.0
-        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 04:01:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1747911694; x=1748516494; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=er0jXo5oOmMu/rDbFaN+1MqVw9z+fLQBI6xqJSB9pUo=;
-        b=cbVWTJYRoX3NK8V3Uy/lh3nIhfqbvyl/2UHvw9Pw/jVAn55QmeWBHOgG4uf3uAmNgb
-         BG6vhNQxAJHIX3ufwPu4Mw4Mw0DslG3KBU80jQLZGXjq7WkJGim7Q0S7N+pXI8yvMQl0
-         BpXNor4S/FnSBVZsgRjqXBTlIoyf+v0I29trqHkaPRA8cgAEFAMPvuHCpEXwGV6UJUm5
-         4o6IIcaOdiQjIbnTjZN/wEsYYEydFIDeHhaciW7Lpbj4BCwfIhdFcFdNZpF1ww0SgkJm
-         CBLkB9yXkrs4ULD6ZBfkDTt9KsXIL55KujYNEUkto7yFo3IHEeev/LC7MT3hB51oiGn8
-         Bweg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747911694; x=1748516494;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=er0jXo5oOmMu/rDbFaN+1MqVw9z+fLQBI6xqJSB9pUo=;
-        b=NoeKsbSxoKVyeaRFJ8HldpWvStFQD4EvSQnj28R3gPp0ycF4nyZpgMcrRcgaxn4pVE
-         fyK8U3DDQ3g8+vZhPBWTVwJCdAtdWYjUs+HP0RWkZjoB78kaF/AQ2JVHzBlEwVFO1xdY
-         KSvNyAg7GXyFTMaEsIgzYJMrxiVpzIQAfywW0fFHWm0iwUe+UTuNcRunjktLLQE6TuoH
-         KHHbpspg5+VJbcsJMe5na93DrGg7fcq2+Hd1KSn4yKgX+Kyk7kmp0qwloRKUEoZAeRw/
-         pno6potVUKbf1bqtZnQ8Dk/O4fYKAkffSU+fO6G+2yXFpalJTyDzZbKvOhy2fsgo4pP/
-         6DCg==
-X-Forwarded-Encrypted: i=1; AJvYcCW5jUeB4BhMDZ4+EGRxAunGb3ML+/YIdxfj/bYIrHOqShrdAbEjkEWpPDKYm3yP0OhVOuNyUEANfBpuTJw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzfIOjLhUfWADGAhz6Fwql21EX0v1v4Cvq49we7tLQKJtYojbZl
-	WYb2gsQ9arP/bMMdbf0/dRBH5iEqZNiHdtRjIJsPUKrMFfZhycOI+axis7eXpmUfRic=
-X-Gm-Gg: ASbGnctS6PidQIA8HZ2LYghPlUlWunMlho9m1xU/NwzwHqHElu/FopzKoymooKA5/da
-	F2JYPi8WUfuew0g+n0ywLdBL2yER2eEWjBWKJ7qDj7kaHC8GolUWd2OKl56Zdu1jfOnsOcVhTrX
-	htU/OQoi7PwaBC1va1vFBgQEqHn1Uznz1/Oox1knXC6lEPE7TPClBXN2Qvu8oQMrsfAu+zOLErT
-	qwcJTsfqz2x6uIpKR2uq0U3n8995+yMDMxEO67zyRgIILVpQ/kbuqDQs6E5KwGQHqSGfXwUTjdQ
-	KoUPn22+H5LnnS5vYNX1LwZmqzok7xWZ8gusF2AssGU=
-X-Google-Smtp-Source: AGHT+IHx+VvVgq+ZqV1Ts6u6c0D0dY+PtcAR89odzCGYw+Tu+H75LmrDfffaf8Va81+MCQKJfbi+Dg==
-X-Received: by 2002:a05:6602:6cce:b0:867:8ef:69e8 with SMTP id ca18e2360f4ac-86a23175f1emr3267453839f.3.1747911694032;
-        Thu, 22 May 2025 04:01:34 -0700 (PDT)
-Received: from [127.0.0.1] ([198.8.77.157])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4fbcc3ae126sm3092441173.37.2025.05.22.04.01.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 May 2025 04:01:33 -0700 (PDT)
-From: Jens Axboe <axboe@kernel.dk>
-To: Ming Lei <ming.lei@redhat.com>, 
- Caleb Sander Mateos <csander@purestorage.com>
-Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250521160720.1893326-1-csander@purestorage.com>
-References: <20250521160720.1893326-1-csander@purestorage.com>
-Subject: Re: [PATCH] ublk: remove io argument from
- ublk_auto_buf_reg_fallback()
-Message-Id: <174791169320.1065728.9443828880429452099.b4-ty@kernel.dk>
-Date: Thu, 22 May 2025 05:01:33 -0600
+	s=arc-20240116; t=1747911828; c=relaxed/simple;
+	bh=eEvo3LknW+2PwByaViXA1NM51KqZpfaAISstO/YCbc8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FgFZhe1d0NK9zjYD6h2J9EagveaQxi1KjFpg2CRl6S31CWrxXjr4kmv41z14SPTu9Sy3mTH4Axa0HXctTSKpue4T/WIf52PkP5wXjjRgIALDjbZQB3XK3Tdxc0Fbwz27uFA2UM7erRv7ZebLvmb0Ab7dvHGuTmuSvSh4hHDUWmc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
+Received: from localhost (unknown [116.232.18.143])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dlan)
+	by smtp.gentoo.org (Postfix) with ESMTPSA id 3B7F63430BD;
+	Thu, 22 May 2025 11:03:44 +0000 (UTC)
+Date: Thu, 22 May 2025 11:03:33 +0000
+From: Yixun Lan <dlan@gentoo.org>
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Alex Elder <elder@riscstar.com>, linux-mmc@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
+	spacemit@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] mmc: sdhci-of-k1: add support for SpacemiT K1 SoC
+Message-ID: <20250522110333-GYA30672@gentoo>
+References: <20250501-20-k1-sdhci-v2-0-3e7005fae29b@gentoo.org>
+ <20250501-20-k1-sdhci-v2-2-3e7005fae29b@gentoo.org>
+ <CAPDyKFoDWS6DWdKOaxTDEYeKv3hjVDoR7XGi19nESVssc-RG8g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14.3-dev-7b9b9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAPDyKFoDWS6DWdKOaxTDEYeKv3hjVDoR7XGi19nESVssc-RG8g@mail.gmail.com>
 
+Hi Ulf,
 
-On Wed, 21 May 2025 10:07:19 -0600, Caleb Sander Mateos wrote:
-> The argument has been unused since the function was added, so remove it.
+On 13:34 Mon 19 May     , Ulf Hansson wrote:
+> On Thu, 1 May 2025 at 10:51, Yixun Lan <dlan@gentoo.org> wrote:
+> >
+> > The SDHCI controller found in SpacemiT K1 SoC features SD,
+> > SDIO, eMMC support, such as:
+> >
+> > - Compatible for 4-bit SDIO 3.0 UHS-I protocol, up to SDR104
+> > - Compatible for 4-bit SD 3.0 UHS-I protocol, up to SDR104
+> > - Compatible for 8bit eMMC5.1, up to HS400
+> >
+> > Signed-off-by: Yixun Lan <dlan@gentoo.org>
+> > ---
+> >  drivers/mmc/host/Kconfig       |  14 ++
+> >  drivers/mmc/host/Makefile      |   1 +
+> >  drivers/mmc/host/sdhci-of-k1.c | 306 +++++++++++++++++++++++++++++++++++++++++
+> >  3 files changed, 321 insertions(+)
+> >
+> > [...]
+> > +
+> > +#include "sdhci.h"
+> > +#include "sdhci-pltfm.h"
+> > +
+> > +#define SDHC_MMC_CTRL_REG              0x114
+I will add 'SPACEMIT_' prefix for the register definitions,
+AFAIK, vendor will continue to reuse this IP for their next generation SoC
+
+> > +#define  MISC_INT_EN                   BIT(1)
+> > +#define  MISC_INT                      BIT(2)
+for BITs definition, it's also quite generic.. I could add
+'SDHC_' prefix to make them slightly unique, and as all those registers
+fall into SDHC category..
+
 > 
+> These define-names look a bit too generic to me. Please add some
+> additional prefixes so it becomes more clear what they are.
 > 
+Initially, I've followed the datasheet closely for creating those naming..
 
-Applied, thanks!
+https://developer.spacemit.com/documentation?token=WZNvwFDkYinYx0k9jzPcMK5WnIe#12.5.4.36-sdhc_mmc_ctrl_reg-register
 
-[1/1] ublk: remove io argument from ublk_auto_buf_reg_fallback()
-      commit: 5234f2c3e3010f1b9c90b617e92c4b38e3240914
+> This applies to all the others below too.
+> 
+> > +#define  ENHANCE_STROBE_EN             BIT(8)
+> > +#define  MMC_HS400                     BIT(9)
+> > +#define  MMC_HS200                     BIT(10)
+> > +#define  MMC_CARD_MODE                 BIT(12)
+> > +
+> > +#define SDHC_TX_CFG_REG                        0x11C
+> > +#define  TX_INT_CLK_SEL                        BIT(30)
+> > +#define  TX_MUX_SEL                    BIT(31)
+> > +
+> > +#define SDHC_PHY_CTRL_REG              0x160
+> > +#define  PHY_FUNC_EN                   BIT(0)
+> > +#define  PHY_PLL_LOCK                  BIT(1)
+> > +#define  HOST_LEGACY_MODE              BIT(31)
+> > +
+> > +#define SDHC_PHY_FUNC_REG              0x164
+> > +#define  PHY_TEST_EN                   BIT(7)
+> > +#define  HS200_USE_RFIFO               BIT(15)
+> > +
+> > +#define SDHC_PHY_DLLCFG                        0x168
+> > +#define  DLL_PREDLY_NUM                        GENMASK(3, 2)
+> > +#define  DLL_FULLDLY_RANGE             GENMASK(5, 4)
+> > +#define  DLL_VREG_CTRL                 GENMASK(7, 6)
+> > +#define  DLL_ENABLE                    BIT(31)
+> > +
+> > +#define SDHC_PHY_DLLCFG1               0x16C
+> > +#define  DLL_REG1_CTRL                 GENMASK(7, 0)
+> > +#define  DLL_REG2_CTRL                 GENMASK(15, 8)
+> > +#define  DLL_REG3_CTRL                 GENMASK(23, 16)
+> > +#define  DLL_REG4_CTRL                 GENMASK(31, 24)
+> > +
+> > +#define SDHC_PHY_DLLSTS                        0x170
+> > +#define  DLL_LOCK_STATE                        BIT(0)
+> > +
+> > +#define SDHC_PHY_PADCFG_REG            0x178
+> > +#define  PHY_DRIVE_SEL                 GENMASK(2, 0)
+> > +#define  RX_BIAS_CTRL                  BIT(5)
+> 
+> [...]
+> 
+> > +
+> > +static int spacemit_sdhci_pre_select_hs400(struct mmc_host *mmc)
+> > +{
+> > +       struct sdhci_host *host = mmc_priv(mmc);
+> > +
+> > +       spacemit_sdhci_setbits(host, MMC_HS400, SDHC_MMC_CTRL_REG);
+> > +       host->mmc->caps |= MMC_CAP_WAIT_WHILE_BUSY;
+> 
+> At least this deserves a comment. Isn't MMC_CAP_WAIT_WHILE_BUSY
+> working for all cases?
+> 
+I mostly copy the logic from vendor driver while refactoring the code,
+and again check the logic, it sounds a little bit weird that the flag
+is enabled in pre_select_hs400(), then disabled in post_select_hs400(),
+I really don't understand the logic behind this, or even any quirk?..
 
-Best regards,
+while, I've tested both cases of enabling or disabling the flag globally,
+they both works fine as result.. so to be conservative, I plan to drop
+this "enable-and-disable" logic, and would revisit them once adding
+"SD card/SDIO" support in the future
+
+> > +
+> > +       return 0;
+> > +}
+> > +
+> > +static void spacemit_sdhci_post_select_hs400(struct mmc_host *mmc)
+> > +{
+> > +       struct sdhci_host *host = mmc_priv(mmc);
+> > +
+> > +       spacemit_sdhci_phy_dll_init(host);
+> > +       host->mmc->caps &= ~MMC_CAP_WAIT_WHILE_BUSY;
+> 
+> Dito.
+> 
+> [...]
+> 
+> Kind regards
+> Uffe
+
 -- 
-Jens Axboe
-
-
-
+Yixun Lan (dlan)
