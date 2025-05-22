@@ -1,203 +1,165 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02FBF28A1F0;
-	Thu, 22 May 2025 11:20:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9379D28A408;
+	Thu, 22 May 2025 11:20:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747912826; cv=none; b=FXEjFO2tauFdbvShjug21/zFlodlzpG1humq1ObrW/T4C3GiHhzvlvcu5fWe2vKmW7eOvpsPZzPm2Kjx0RD7GDYyPnqoHbyOVfPFlfWlNgP3e2E5spoiUAbtoPCjXjRcT/u0KP2a/e4Kz2DyfDd6TpRsg/NedA1DBT5DfmQBd9g=
+	t=1747912833; cv=none; b=ErkUC6Ai/ocEdrt8GJINr2mV7rtNcEIyuQAtdz8751jttkpv/BLvTtNlCIs1JrQhZNlhoPef8kB1tsDSnfCjN4bywW3BvB+ONLEjxsVK/XVUT1KxJBzz5FZVQLCfEIQD2TMxa/ASg5jErdTY6/6u7ZQn0iB36S1WLogtAEdzDE8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747912826; c=relaxed/simple;
-	bh=B5b52Gxbl6cfi05GskfaE62/PK/gBhMM9exzJDKRnBM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=K7hfAnMDVZD4vhDNipDXL1wpVsGhm3P2e6ZJn9xxDDptwrI3YRmvjrAKv0rPaQ22eRQA/eBmKHmpi9x/3ezgepbT6JEYk0bXhxCq3q2WqIrungz0h6inR6X9EIvnqUZ6zUz6vKiNG/z2guPqNCKxys9ENobrBc2oMD65K4KPwBY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PRMJ9NgO; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747912833; c=relaxed/simple;
+	bh=ISSgg2ni57m/DyPvzZYGJQINx6jPbdPqORJsDObz3x4=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GzGRJPJp/hf0VcW8rqUxsuIccZf2/4OZmB2CZGAb7i/jJS8RLedsWWz94RKxGeBL8v+afcJeI7HfbBcomu6mJa137Lh/8dyc/5njHOma0gYygVTUxc0Mcr6Tco7HL7IJNUqhhls97ukztp9bS/tHlY6OtHD3AeeWZJlX++rTbFA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=N9vJaIUX; arc=none smtp.client-ip=68.232.153.233
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PRMJ9NgO"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-23274dbcbc2so29090265ad.1;
-        Thu, 22 May 2025 04:20:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747912824; x=1748517624; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wyMHELK/W37ReKJqaI5CZ8imY31+a8EBxUQ+RkojFSw=;
-        b=PRMJ9NgOFHMaFGUzgBuQQuAxyQmrgzx3IHj57WjP06KQhzRteAtScDwr+DbkpcZJZo
-         JJdtd37u/p6LUm6PbbrAnVkq6YoVQgruVdCc9WRSzt7qQ3pegfdld1Yzggrp6U/DftbJ
-         AbQZ83XCJwvwcRZ468wPT9v2+mILGzuzJ2Q8o1BdOOiP7D+ALMMR0PHZ6qRbiqA2WK2l
-         cvP5gBI7fbrG0dD36+6o5VD7FeZi+IpZFPKjRsbjQwMHGm/ztg6H7IkvkcoF8wQ0O5Gq
-         TpakcZngwWnlXfrTDqjEOevuRmje2KCX7y7pfjJAyLuctWr+ojYeLDgaYl15G3pVEzOf
-         XHLg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747912824; x=1748517624;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wyMHELK/W37ReKJqaI5CZ8imY31+a8EBxUQ+RkojFSw=;
-        b=xIdmcxB1qsG9H/j9YKmm9m2iBDvHMIUcR1f5ARG8iB6AN8CmOUNe73jzjQzhEX8qTx
-         4JwRUZgZ3wbt7KuA7LDvm9RNmio3azK6u2taVL1ExAM+d5vPU4kO5ptgiNkl9vmBbE4h
-         uoFxNuYf4OlQyoWGtjBR8emzKLhQzwSurvsuYYg0WrcsdwuSd6vCwRQfZjVxZXoJX+Zc
-         wkhY/C3w4xaEWWw8tBDF54PMEwdUOggb8QVYDHiQa53HYdjADoAL/Ow+Ei0On8TO+3ec
-         xbm7Sgodp+15Pn/aXzxDz0ljUHQ/3ilcNl+jEmZf2xmsVh5x1fmfp+WrtrGIs8pPgThD
-         Az7Q==
-X-Forwarded-Encrypted: i=1; AJvYcCW+rls6wwvTKNML3osHTpwN1ZfKV+4/KjvW2OClFeNXkBglF2MoraDgs1Qz0DcGH5vs0RyCVlBUN0WF@vger.kernel.org
-X-Gm-Message-State: AOJu0YyPZiTDDvQJxPvEV8QlQaxvVF/Ku4Fj1NBmm8hSfzXRXY5z9t4t
-	2OSdA8YuoFhYxBUGrNgegwNDQgaEz8tAxix89NCtSpegswOWClJsjq23EluLoHOL
-X-Gm-Gg: ASbGnct9gwIGEjF2lEhAnQxCb3VFCsXzHtVz53fLlCIuk/7dhYc5K5DJmrgHLT3NZl5
-	l1WHNd/MPDxNwJ7mqQBqSfRIbTLMy9cS2+ckTs7FVd2lsXkHnMOdRAimwnpwgVDfGviElSxZwae
-	f25KDKqqXw+2n2vjyK8TdS+ZrrzatH1wubPPlwZTQCCDTu1zEOHXTqRzUGeyCZkeTZz6PnnRWV2
-	/SK4c6LWBGMwNlvAK8B+eY4r+AHgRyiPg1jDkdTkHSUwsCs9/3UyzAseyGQCpa5/m6QKtDLEUWe
-	iCXkBrKXduVHYwbqn00GMPZfB3t7prsz3+mWrj9P06ni0sxQsd00CifNkprFkVK0ANjP064hHbj
-	abA7OTg==
-X-Google-Smtp-Source: AGHT+IEvfYpzq+KtCnA48kgadaoajRidcVSbbuTuYcaFBRD35if4dtavF9FBXrZza+w4uOtV1v8BkQ==
-X-Received: by 2002:a17:903:41c7:b0:231:7fbc:19d8 with SMTP id d9443c01a7336-231de35159bmr323077995ad.5.1747912824106;
-        Thu, 22 May 2025 04:20:24 -0700 (PDT)
-Received: from trigkey.. (FL1-119-244-79-106.tky.mesh.ad.jp. [119.244.79.106])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-231d4ac93b3sm107730145ad.4.2025.05.22.04.20.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 May 2025 04:20:23 -0700 (PDT)
-From: Daisuke Matsuda <dskmtsd@gmail.com>
-To: linux-kernel@vger.kernel.org,
-	linux-rdma@vger.kernel.org,
-	leon@kernel.org,
-	jgg@ziepe.ca,
-	zyjzyj2000@gmail.com
-Cc: Daisuke Matsuda <dskmtsd@gmail.com>
-Subject: [PATCH for-next v4 2/2] RDMA/rxe: Enable asynchronous prefetch for ODP MRs
-Date: Thu, 22 May 2025 11:19:55 +0000
-Message-ID: <20250522111955.3227-3-dskmtsd@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250522111955.3227-1-dskmtsd@gmail.com>
-References: <20250522111955.3227-1-dskmtsd@gmail.com>
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="N9vJaIUX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1747912829; x=1779448829;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=ISSgg2ni57m/DyPvzZYGJQINx6jPbdPqORJsDObz3x4=;
+  b=N9vJaIUXmxkhPfqgyt8YUSEXtklW6rTm42C+/V8LxQ09mUeLJZN7JWZX
+   DMwl4PDl8nX5nAs3/+nqp/4/GUcwy/msO1macOIAuCw+KVxJNEoehQbiq
+   xB4O3Flsr3ngFo/zPOAOnMeU/q2ruv/n92CWWNeLFuNOODCJc8O7KhXcj
+   PfhnQbX6YNpVcnMjCyWwxbxap872R9OnpCJfuoB6Xfae9W6rHvwHgyo6B
+   zZlEJTjqQx7haaccVFhbJITw5Kk1fVSHCZKYR7rHr5kWDILCiYci3i0e/
+   Q4TZNdUHPcNFhqoN0PvUgu3qMSyNeTviWMTdcduMoxqMW2/peMKdhvLE8
+   w==;
+X-CSE-ConnectionGUID: RlPMJyqTQP+hBDG1surljg==
+X-CSE-MsgGUID: fFeDH56rTpe7gLksoS26hg==
+X-IronPort-AV: E=Sophos;i="6.15,305,1739862000"; 
+   d="scan'208";a="273316516"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa5.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 22 May 2025 04:20:22 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.87.72) by
+ chn-vm-ex02.mchp-main.com (10.10.87.72) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.44; Thu, 22 May 2025 04:20:18 -0700
+Received: from localhost (10.10.85.11) by chn-vm-ex02.mchp-main.com
+ (10.10.85.144) with Microsoft SMTP Server id 15.1.2507.44 via Frontend
+ Transport; Thu, 22 May 2025 04:20:18 -0700
+Date: Thu, 22 May 2025 13:18:39 +0200
+From: Horatiu Vultur <horatiu.vultur@microchip.com>
+To: Vadim Fedorenko <vadim.fedorenko@linux.dev>
+CC: <UNGLinuxDriver@microchip.com>, <andrew+netdev@lunn.ch>,
+	<davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
+	<pabeni@redhat.com>, <richardcochran@gmail.com>, <netdev@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH net] net: lan966x: Fix 1-step timestamping over ipv4 or
+ ipv6
+Message-ID: <20250522111839.tlieiy5s7qfrqxbb@DEN-DL-M31836.microchip.com>
+References: <20250521124159.2713525-1-horatiu.vultur@microchip.com>
+ <c770157f-4175-45b3-836e-ecf59f9ab8e0@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+In-Reply-To: <c770157f-4175-45b3-836e-ecf59f9ab8e0@linux.dev>
 
-Calling ibv_advise_mr(3) with flags other than IBV_ADVISE_MR_FLAG_FLUSH
-invokes an asynchronous request. It is best-effort, and thus can safely be
-deferred to the system-wide workqueue.
+The 05/22/2025 11:47, Vadim Fedorenko wrote:
 
-The reference counter in rxe_mr is used to ensure that the MRs persist and
-that rxe is not terminated until the queued work is done.
+Hi Vadim,
 
-Signed-off-by: Daisuke Matsuda <dskmtsd@gmail.com>
----
- drivers/infiniband/sw/rxe/rxe_odp.c | 81 ++++++++++++++++++++++++++++-
- 1 file changed, 79 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/infiniband/sw/rxe/rxe_odp.c b/drivers/infiniband/sw/rxe/rxe_odp.c
-index c723d8a6cfec..2b112b07ec8c 100644
---- a/drivers/infiniband/sw/rxe/rxe_odp.c
-+++ b/drivers/infiniband/sw/rxe/rxe_odp.c
-@@ -423,6 +423,46 @@ enum resp_states rxe_odp_do_atomic_write(struct rxe_mr *mr, u64 iova, u64 value)
- 	return RESPST_NONE;
- }
- 
-+struct prefetch_mr_work {
-+	struct work_struct work;
-+	u32 pf_flags;
-+	u32 num_sge;
-+	struct {
-+		u64 io_virt;
-+		struct rxe_mr *mr;
-+		size_t length;
-+	} frags[];
-+};
-+
-+static void rxe_ib_prefetch_mr_work(struct work_struct *w)
-+{
-+	struct prefetch_mr_work *work =
-+		container_of(w, struct prefetch_mr_work, work);
-+	int ret;
-+	u32 i;
-+
-+	/* We rely on IB/core that work is executed if we have num_sge != 0 only. */
-+	WARN_ON(!work->num_sge);
-+	for (i = 0; i < work->num_sge; ++i) {
-+		struct ib_umem_odp *umem_odp;
-+
-+		ret = rxe_odp_do_pagefault_and_lock(work->frags[i].mr, work->frags[i].io_virt,
-+						    work->frags[i].length, work->pf_flags);
-+		if (ret < 0) {
-+			rxe_dbg_mr(work->frags[i].mr, "failed to prefetch the mr\n");
-+			goto deref;
-+		}
-+
-+		umem_odp = to_ib_umem_odp(work->frags[i].mr->umem);
-+		mutex_unlock(&umem_odp->umem_mutex);
-+
-+deref:
-+		rxe_put(work->frags[i].mr);
-+	}
-+
-+	kvfree(work);
-+}
-+
- static int rxe_ib_prefetch_sg_list(struct ib_pd *ibpd,
- 				   enum ib_uverbs_advise_mr_advice advice,
- 				   u32 pf_flags, struct ib_sge *sg_list,
-@@ -472,7 +512,11 @@ static int rxe_ib_advise_mr_prefetch(struct ib_pd *ibpd,
- 				     enum ib_uverbs_advise_mr_advice advice,
- 				     u32 flags, struct ib_sge *sg_list, u32 num_sge)
- {
-+	struct rxe_pd *pd = container_of(ibpd, struct rxe_pd, ibpd);
- 	u32 pf_flags = RXE_PAGEFAULT_DEFAULT;
-+	struct prefetch_mr_work *work;
-+	struct rxe_mr *mr;
-+	u32 i;
- 
- 	if (advice == IB_UVERBS_ADVISE_MR_ADVICE_PREFETCH)
- 		pf_flags |= RXE_PAGEFAULT_RDONLY;
-@@ -485,8 +529,41 @@ static int rxe_ib_advise_mr_prefetch(struct ib_pd *ibpd,
- 		return rxe_ib_prefetch_sg_list(ibpd, advice, pf_flags, sg_list,
- 					       num_sge);
- 
--	/* Asynchronous call is to be added in the next patch */
--	return -EOPNOTSUPP;
-+	/* Asynchronous call is "best-effort" and allowed to fail */
-+	work = kvzalloc(struct_size(work, frags, num_sge), GFP_KERNEL);
-+	if (!work)
-+		return -ENOMEM;
-+
-+	INIT_WORK(&work->work, rxe_ib_prefetch_mr_work);
-+	work->pf_flags = pf_flags;
-+	work->num_sge = num_sge;
-+
-+	for (i = 0; i < num_sge; ++i) {
-+		/* takes a reference, which will be released in the queued work */
-+		mr = lookup_mr(pd, IB_ACCESS_LOCAL_WRITE,
-+			       sg_list[i].lkey, RXE_LOOKUP_LOCAL);
-+		if (IS_ERR(mr))
-+			goto err;
-+
-+		work->frags[i].io_virt = sg_list[i].addr;
-+		work->frags[i].length = sg_list[i].length;
-+		work->frags[i].mr = mr;
-+	}
-+
-+	queue_work(system_unbound_wq, &work->work);
-+
-+	return 0;
-+
-+ err:
-+	/* rollback reference counts for the invalid request */
-+	while (i > 0) {
-+		i--;
-+		rxe_put(work->frags[i].mr);
-+	}
-+
-+	kvfree(work);
-+
-+	return PTR_ERR(mr);
- }
- 
- int rxe_ib_advise_mr(struct ib_pd *ibpd,
+> > -static int lan966x_ptp_classify(struct lan966x_port *port, struct sk_buff *skb)
+> > +static void lan966x_ptp_classify(struct lan966x_port *port, struct sk_buff *skb,
+> > +                              u8 *rew_op, u8 *pdu_type)
+> >   {
+> >       struct ptp_header *header;
+> >       u8 msgtype;
+> >       int type;
+> > 
+> > -     if (port->ptp_tx_cmd == IFH_REW_OP_NOOP)
+> > -             return IFH_REW_OP_NOOP;
+> > +     if (port->ptp_tx_cmd == IFH_REW_OP_NOOP) {
+> > +             *rew_op = IFH_REW_OP_NOOP;
+> > +             *pdu_type = IFH_PDU_TYPE_NONE;
+> > +             return;
+> > +     }
+> > 
+> >       type = ptp_classify_raw(skb);
+> > -     if (type == PTP_CLASS_NONE)
+> > -             return IFH_REW_OP_NOOP;
+> > +     if (type == PTP_CLASS_NONE) {
+> > +             *rew_op = IFH_REW_OP_NOOP;
+> > +             *pdu_type = IFH_PDU_TYPE_NONE;
+> > +             return;
+> > +     }
+> > 
+> >       header = ptp_parse_header(skb, type);
+> > -     if (!header)
+> > -             return IFH_REW_OP_NOOP;
+> > +     if (!header) {
+> > +             *rew_op = IFH_REW_OP_NOOP;
+> > +             *pdu_type = IFH_PDU_TYPE_NONE;
+> > +             return;
+> > +     }
+> > 
+> > -     if (port->ptp_tx_cmd == IFH_REW_OP_TWO_STEP_PTP)
+> > -             return IFH_REW_OP_TWO_STEP_PTP;
+> > +     if (type & PTP_CLASS_L2)
+> > +             *pdu_type = IFH_PDU_TYPE_NONE;
+> > +     if (type & PTP_CLASS_IPV4)
+> > +             *pdu_type = IFH_PDU_TYPE_IPV4;
+> > +     if (type & PTP_CLASS_IPV6)
+> > +             *pdu_type = IFH_PDU_TYPE_IPV6;
+> 
+> ptp_classify_raw() will also return PTP_CLASS_IPV4 or PTP_CLASS_IPV6
+> flags set for (PTP_CLASS_VLAN|PTP_CLASS_IPV4) and
+> (PTP_CLASS_VLAN|PTP_CLASS_IPV6) cases. Will the hardware support proper
+> timestamp placing in these cases?
+
+Yes, the HW seems to be working also in that case.
+I just created a vlan interface and then start ptp4l on that interface
+and I could see that the frames were updated correctly.
+
+> 
+> > +
+> > +     if (port->ptp_tx_cmd == IFH_REW_OP_TWO_STEP_PTP) {
+> > +             *rew_op = IFH_REW_OP_TWO_STEP_PTP;
+> > +             return;
+> > +     }
+> > 
+> >       /* If it is sync and run 1 step then set the correct operation,
+> >        * otherwise run as 2 step
+> >        */
+> >       msgtype = ptp_get_msgtype(header, type);
+> > -     if ((msgtype & 0xf) == 0)
+> > -             return IFH_REW_OP_ONE_STEP_PTP;
+> > +     if ((msgtype & 0xf) == 0) {
+> > +             *rew_op = IFH_REW_OP_ONE_STEP_PTP;
+> > +             return;
+> > +     }
+> > 
+> > -     return IFH_REW_OP_TWO_STEP_PTP;
+> > +     *rew_op = IFH_REW_OP_TWO_STEP_PTP;
+> >   }
+> > 
+> >   static void lan966x_ptp_txtstamp_old_release(struct lan966x_port *port)
+> > @@ -374,10 +395,12 @@ int lan966x_ptp_txtstamp_request(struct lan966x_port *port,
+> >   {
+> >       struct lan966x *lan966x = port->lan966x;
+> >       unsigned long flags;
+> > +     u8 pdu_type;
+> >       u8 rew_op;
+> > 
+> > -     rew_op = lan966x_ptp_classify(port, skb);
+> > +     lan966x_ptp_classify(port, skb, &rew_op, &pdu_type);
+> >       LAN966X_SKB_CB(skb)->rew_op = rew_op;
+> > +     LAN966X_SKB_CB(skb)->pdu_type = pdu_type;
+> > 
+> >       if (rew_op != IFH_REW_OP_TWO_STEP_PTP)
+> >               return 0;
+> 
+
 -- 
-2.43.0
-
+/Horatiu
