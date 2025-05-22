@@ -1,202 +1,291 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA1872356CB
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 13:26:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 993D028A721
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 13:27:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747920412; cv=none; b=YcYgp/5cniEO0fAtTpf21D2SwAdac1z2kkeQXNVywTb67qc3Fni8dgLndCDZYfao7IP0KJk5URmfJ0szzYHupkVTFy7UNEYrdRcZbcR1oNexptGoi9+pMal7oAWw6H5T5S1cnQ/80WfwHFZfCwzSdAcva8hMnLn01of/6N7bGq0=
+	t=1747920426; cv=none; b=ku3SoEepP/+lyDuvwoL9a7Ju0sxE9kQeFqdVrAsyrgAoYZugxpeMndIESve0gOLflF6oXhce1L8+vp56hKC82dnVmiVClnPzwxrTaG5M9y0CnCdu2WPUw65GCyWNmYeZXzJWlxpk6ujjrrr0f9S3k4c0Z45fpRY4HiI5Qa5rCZo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747920412; c=relaxed/simple;
-	bh=wVcXWke1H00O8eS52URTngi4ghwGulmWiT8pcjkcZ6g=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=bwcwZ/9MVPdKn8CSmRRwH4SjF9XdyG2e0+S1InVy/aO4ySFSIGcDaNe/0mO+DFU/Y5ueMVbikh7WtJb+wib+Mq94dXWdNy5EnE5fPp44qBdRfnhapHwGjIUvBWi8ROXdF6ggzKSTMDGkh61ECz0g40ChdbHdyEh6vtcIyMwj3ac=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kbTU1WzA; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1747920426; c=relaxed/simple;
+	bh=7jXywNUlzc1MmLwvPQoNGJwLEr1+Ff8jUu8LgYX1h5o=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=I3WEp2hY7seQphcXZCI1DtosceRHrUZsFf9TsOD2gVNl+JwHbAui+h1uduK6QusZHctL1Wd7//PC5p84e6F8PojSLxsfPtAQWAysJow645oCOW3eqOC1fqWpn8HZi7eQHpSlVc+EEs4UU8VG1mD2MyU9UCXJLDOGnVhevtn+CY4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WInItyvI; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kbTU1WzA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747920411; x=1779456411;
-  h=date:from:to:cc:subject:message-id;
-  bh=wVcXWke1H00O8eS52URTngi4ghwGulmWiT8pcjkcZ6g=;
-  b=kbTU1WzAmF17UnV4ZB1Qht24nn+Tud9JZiCS9AzT1q0QzmNpta1iGFb6
-   zOqPIavGFJOY1Yd3Bhy5Bwa6r637oVJ8El4kUTWvGIWtWZC7Uc7EEqFAp
-   XtDS3pEo5bk05k8CjMrIThE8Si+DuCi0s+jIaKK6NNj4aYM7I4M70dscW
-   B3rh/DffwEokbASQv4DKpuBivqbaxhrSU8nOIdw5Zo4QLgRtG2t3BW/fK
-   b39BJuOTNR/u/9J0pXFdv0UDrSIQxKM70zSlFBL7kiWVb5/Z3CTO8JmVa
-   /J6HMhFhkNC4UjzQt2FDzMgdy1nTDyrx6mBv64VVcgXnT5yaKB93LLOvt
-   Q==;
-X-CSE-ConnectionGUID: CRu6jI1UQVS/h+kIBmkMmw==
-X-CSE-MsgGUID: h6EaNO8dTeO/DNoOnqdNaw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11441"; a="49862346"
-X-IronPort-AV: E=Sophos;i="6.15,306,1739865600"; 
-   d="scan'208";a="49862346"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2025 06:26:50 -0700
-X-CSE-ConnectionGUID: WaeygXZTQCmaa14QSXSk/Q==
-X-CSE-MsgGUID: KewnLBPPSV+YMbJkVk5KZA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,306,1739865600"; 
-   d="scan'208";a="140409089"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by orviesa009.jf.intel.com with ESMTP; 22 May 2025 06:26:48 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uI5wb-000PNE-35;
-	Thu, 22 May 2025 13:26:45 +0000
-Date: Thu, 22 May 2025 21:25:55 +0800
-From: kernel test robot <lkp@intel.com>
-To: "x86-ml" <x86@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Subject: [tip:locking/futex] BUILD SUCCESS
- 78272d44970c07899c78661f6b7492b5a7e14a90
-Message-ID: <202505222145.WUOj6pfu-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WInItyvI"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1747920423;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=ioYh4K71wobSHT6+Q/FjdFJoAKJDxW2IKKHl5ZAfDW0=;
+	b=WInItyvIMrc+B3Jen/8xwmkyfJi0gbdZTe7l1eyTDqBW+CKJD3olC19hltRd1mf3mmvicP
+	dzeerPVsddziuhe1SqWBpIjJ9acbqNwT7tazS44nS7HzsVoukqa23tpwlDF76oDK4vILw4
+	wLpOR1bwFnJKI02/dlxSP3Yw0Zc9ubw=
+Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-137-1mu3k9u5MK2d4_Yb00fHCA-1; Thu,
+ 22 May 2025 09:27:01 -0400
+X-MC-Unique: 1mu3k9u5MK2d4_Yb00fHCA-1
+X-Mimecast-MFC-AGG-ID: 1mu3k9u5MK2d4_Yb00fHCA_1747920420
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 8E8F8195423F;
+	Thu, 22 May 2025 13:26:59 +0000 (UTC)
+Received: from gerbillo.redhat.com (unknown [10.45.225.118])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 772CB30001A1;
+	Thu, 22 May 2025 13:26:56 +0000 (UTC)
+From: Paolo Abeni <pabeni@redhat.com>
+To: torvalds@linux-foundation.org
+Cc: kuba@kernel.org,
+	davem@davemloft.net,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [GIT PULL] Networking for v6.15-rc8
+Date: Thu, 22 May 2025 15:26:47 +0200
+Message-ID: <20250522132647.48139-1-pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git locking/futex
-branch HEAD: 78272d44970c07899c78661f6b7492b5a7e14a90  selftests/futex: Fix spelling mistake "unitiliazed" -> "uninitialized"
+Hi Linus!
 
-elapsed time: 1456m
+The following changes since commit ef935650e044fc742b531bf85cc315ff7aa781ea:
 
-configs tested: 125
-configs skipped: 2
+  Merge tag 'net-6.15-rc7' of git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net (2025-05-15 10:40:49 -0700)
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+are available in the Git repository at:
 
-tested configs:
-alpha                             allnoconfig    gcc-14.2.0
-alpha                            allyesconfig    gcc-14.2.0
-arc                              allmodconfig    gcc-14.2.0
-arc                               allnoconfig    gcc-14.2.0
-arc                              allyesconfig    gcc-14.2.0
-arc                      axs103_smp_defconfig    gcc-14.2.0
-arc                   randconfig-001-20250521    gcc-10.5.0
-arc                   randconfig-002-20250521    gcc-12.4.0
-arc                    vdk_hs38_smp_defconfig    gcc-14.2.0
-arm                              alldefconfig    gcc-14.2.0
-arm                               allnoconfig    clang-21
-arm                              allyesconfig    gcc-14.2.0
-arm                         orion5x_defconfig    clang-21
-arm                   randconfig-001-20250521    clang-21
-arm                   randconfig-002-20250521    clang-21
-arm                   randconfig-003-20250521    clang-16
-arm                   randconfig-004-20250521    clang-21
-arm                        realview_defconfig    clang-16
-arm64                            allmodconfig    clang-19
-arm64                             allnoconfig    gcc-14.2.0
-arm64                 randconfig-001-20250521    gcc-6.5.0
-arm64                 randconfig-002-20250521    gcc-6.5.0
-arm64                 randconfig-003-20250521    gcc-8.5.0
-arm64                 randconfig-004-20250521    gcc-8.5.0
-csky                              allnoconfig    gcc-14.2.0
-csky                  randconfig-001-20250522    gcc-15.1.0
-csky                  randconfig-002-20250522    gcc-15.1.0
-hexagon                          allmodconfig    clang-17
-hexagon                           allnoconfig    clang-21
-hexagon                          allyesconfig    clang-21
-hexagon               randconfig-001-20250522    clang-17
-hexagon               randconfig-002-20250522    clang-21
-i386                             allmodconfig    gcc-12
-i386                              allnoconfig    gcc-12
-i386                             allyesconfig    gcc-12
-i386        buildonly-randconfig-001-20250521    clang-20
-i386        buildonly-randconfig-002-20250521    clang-20
-i386        buildonly-randconfig-003-20250521    gcc-12
-i386        buildonly-randconfig-004-20250521    clang-20
-i386        buildonly-randconfig-005-20250521    gcc-12
-i386        buildonly-randconfig-006-20250521    gcc-12
-i386                                defconfig    clang-20
-loongarch                        allmodconfig    gcc-14.2.0
-loongarch                         allnoconfig    gcc-14.2.0
-loongarch             randconfig-001-20250522    gcc-15.1.0
-loongarch             randconfig-002-20250522    gcc-15.1.0
-m68k                             allmodconfig    gcc-14.2.0
-m68k                              allnoconfig    gcc-14.2.0
-m68k                             allyesconfig    gcc-14.2.0
-microblaze                       allmodconfig    gcc-14.2.0
-microblaze                        allnoconfig    gcc-14.2.0
-microblaze                       allyesconfig    gcc-14.2.0
-mips                              allnoconfig    gcc-14.2.0
-mips                          ath25_defconfig    clang-21
-mips                           jazz_defconfig    clang-17
-mips                        vocore2_defconfig    clang-21
-nios2                             allnoconfig    gcc-14.2.0
-nios2                 randconfig-001-20250522    gcc-9.3.0
-nios2                 randconfig-002-20250522    gcc-9.3.0
-openrisc                          allnoconfig    gcc-14.2.0
-openrisc                         allyesconfig    gcc-14.2.0
-openrisc                            defconfig    gcc-14.2.0
-parisc                            allnoconfig    gcc-14.2.0
-parisc                              defconfig    gcc-14.2.0
-parisc                randconfig-001-20250522    gcc-6.5.0
-parisc                randconfig-002-20250522    gcc-12.4.0
-powerpc                           allnoconfig    gcc-14.2.0
-powerpc                      bamboo_defconfig    clang-21
-powerpc                    mvme5100_defconfig    gcc-14.2.0
-powerpc               randconfig-001-20250522    gcc-9.3.0
-powerpc               randconfig-002-20250522    clang-21
-powerpc               randconfig-003-20250522    gcc-7.5.0
-powerpc                     skiroot_defconfig    clang-21
-powerpc                  storcenter_defconfig    gcc-14.2.0
-powerpc64             randconfig-001-20250522    clang-21
-powerpc64             randconfig-002-20250522    gcc-10.5.0
-powerpc64             randconfig-003-20250522    gcc-7.5.0
-riscv                             allnoconfig    gcc-14.2.0
-riscv                               defconfig    clang-21
-riscv                 randconfig-001-20250522    gcc-9.3.0
-riscv                 randconfig-002-20250522    clang-18
-s390                             allmodconfig    clang-18
-s390                              allnoconfig    clang-21
-s390                             allyesconfig    gcc-14.2.0
-s390                                defconfig    clang-21
-s390                  randconfig-001-20250522    clang-19
-s390                  randconfig-002-20250522    clang-18
-sh                               allmodconfig    gcc-14.2.0
-sh                                allnoconfig    gcc-14.2.0
-sh                               allyesconfig    gcc-14.2.0
-sh                                  defconfig    gcc-14.2.0
-sh                        edosk7760_defconfig    gcc-14.2.0
-sh                          r7780mp_defconfig    gcc-14.2.0
-sh                    randconfig-001-20250522    gcc-13.3.0
-sh                    randconfig-002-20250522    gcc-13.3.0
-sparc                            allmodconfig    gcc-14.2.0
-sparc                             allnoconfig    gcc-14.2.0
-sparc                 randconfig-001-20250522    gcc-14.2.0
-sparc                 randconfig-002-20250522    gcc-6.5.0
-sparc64                             defconfig    gcc-14.2.0
-sparc64               randconfig-001-20250522    gcc-14.2.0
-sparc64               randconfig-002-20250522    gcc-12.4.0
-um                               allmodconfig    clang-19
-um                                allnoconfig    clang-21
-um                               allyesconfig    gcc-12
-um                                  defconfig    clang-21
-um                             i386_defconfig    gcc-12
-um                    randconfig-001-20250522    gcc-12
-um                    randconfig-002-20250522    gcc-12
-um                           x86_64_defconfig    clang-21
-x86_64                            allnoconfig    clang-20
-x86_64                           allyesconfig    clang-20
-x86_64      buildonly-randconfig-001-20250521    clang-20
-x86_64      buildonly-randconfig-002-20250521    clang-20
-x86_64      buildonly-randconfig-003-20250521    gcc-12
-x86_64      buildonly-randconfig-004-20250521    gcc-12
-x86_64      buildonly-randconfig-005-20250521    clang-20
-x86_64      buildonly-randconfig-006-20250521    clang-20
-x86_64                              defconfig    gcc-11
-x86_64                          rhel-9.4-rust    clang-18
-xtensa                            allnoconfig    gcc-14.2.0
-xtensa                          iss_defconfig    gcc-14.2.0
-xtensa                randconfig-001-20250522    gcc-14.2.0
-xtensa                randconfig-002-20250522    gcc-10.5.0
-xtensa                    smp_lx200_defconfig    gcc-14.2.0
+  git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net.git net-6.15-rc8
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+for you to fetch changes up to 3fab2d2d901a87710f691ba9488b3fd284ee8296:
+
+  Merge tag 'linux-can-fixes-for-6.15-20250521' of git://git.kernel.org/pub/scm/linux/kernel/git/mkl/linux-can (2025-05-22 12:32:38 +0200)
+
+----------------------------------------------------------------
+This is somewhat larger than what I hoped for, with a few PRs from
+subsystems and follow-ups for the recent netdev locking changes,
+anyhow there are no known pending regressions.
+
+Including fixes from bluetooth, ipsec and CAN.
+
+Current release - regressions:
+
+  - eth: team: grab team lock during team_change_rx_flags
+
+  - eth: bnxt_en: fix netdev locking in ULP IRQ functions
+
+Current release - new code bugs:
+
+  - xfrm: ipcomp: fix truesize computation on receive
+
+  - eth: airoha: fix page recycling in airoha_qdma_rx_process()
+
+Previous releases - regressions:
+
+  - sched: hfsc: fix qlen accounting bug when using peek in hfsc_enqueue()
+
+  - mr: consolidate the ipmr_can_free_table() checks.
+
+  - bridge: netfilter: fix forwarding of fragmented packets
+
+  - xsk: bring back busy polling support in XDP_COPY
+
+  - can:
+    - add missing rcu read protection for procfs content
+    - kvaser_pciefd: force IRQ edge in case of nested IRQ
+
+Previous releases - always broken:
+
+  - xfrm: espintcp: remove encap socket caching to avoid reference leak
+
+  - bluetooth: use skb_pull to avoid unsafe access in QCA dump handling
+
+  - eth: idpf:
+    - fix null-ptr-deref in idpf_features_check
+    - fix idpf_vport_splitq_napi_poll()
+
+  - eth:  hibmcge: fix wrong ndo.open() after reset fail issue
+
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+
+----------------------------------------------------------------
+Axel Forsman (3):
+      can: kvaser_pciefd: Force IRQ edge in case of nested IRQ
+      can: kvaser_pciefd: Fix echo_skb race
+      can: kvaser_pciefd: Continue parsing DMA buf after dropped RX
+
+Carlos Sanchez (1):
+      can: slcan: allow reception of short error messages
+
+Cong Wang (2):
+      sch_hfsc: Fix qlen accounting bug when using peek in hfsc_enqueue()
+      selftests/tc-testing: Add an HFSC qlen accounting test
+
+Dave Ertman (1):
+      ice: Fix LACP bonds without SRIOV environment
+
+En-Wei Wu (1):
+      Bluetooth: btusb: use skb_pull to avoid unsafe access in QCA dump handling
+
+Eric Dumazet (1):
+      idpf: fix idpf_vport_splitq_napi_poll()
+
+Geetha sowjanya (1):
+      octeontx2-af: Fix APR entry mapping based on APR_LMT_CFG
+
+Ido Schimmel (1):
+      bridge: netfilter: Fix forwarding of fragmented packets
+
+Ilia Gavrilov (1):
+      llc: fix data loss when reading from a socket in llc_ui_recvmsg()
+
+Jacob Keller (1):
+      ice: fix vf->num_mac count with port representors
+
+Jakob Unterwurzacher (1):
+      net: dsa: microchip: linearize skb for tail-tagging switches
+
+Jakub Kicinski (3):
+      Merge tag 'for-net-2025-05-15' of git://git.kernel.org/pub/scm/linux/kernel/git/bluetooth/bluetooth
+      Merge branch '100GbE' of git://git.kernel.org/pub/scm/linux/kernel/git/tnguy/net-queue
+      Merge branch 'there-are-some-bugfix-for-hibmcge-driver'
+
+Jijie Shao (2):
+      net: hibmcge: fix incorrect statistics update issue
+      net: hibmcge: fix wrong ndo.open() after reset fail issue.
+
+Lorenzo Bianconi (1):
+      net: airoha: Fix page recycling in airoha_qdma_rx_process()
+
+Luiz Augusto von Dentz (1):
+      Bluetooth: L2CAP: Fix not checking l2cap_chan security level
+
+Marc Kleine-Budde (2):
+      Merge patch series "can: bcm: add locking for bcm_op runtime updates"
+      Merge patch series "can: kvaser_pciefd: Fix ISR race conditions"
+
+Michael Chan (1):
+      bnxt_en: Fix netdev locking in ULP IRQ functions
+
+Nishanth Menon (1):
+      net: ethernet: ti: am65-cpsw: Lower random mac address error print to info
+
+Oliver Hartkopp (2):
+      can: bcm: add locking for bcm_op runtime updates
+      can: bcm: add missing rcu read protection for procfs content
+
+Paolo Abeni (6):
+      mr: consolidate the ipmr_can_free_table() checks.
+      Merge tag 'linux-can-fixes-for-6.15-20250520' of git://git.kernel.org/pub/scm/linux/kernel/git/mkl/linux-can
+      Merge branch 'net_sched-fix-hfsc-qlen-backlog-accounting-bug-and-add-selftest'
+      Merge tag 'ipsec-2025-05-21' of git://git.kernel.org/pub/scm/linux/kernel/git/klassert/ipsec
+      Merge branch 'octeontx2-af-apr-mapping-fixes'
+      Merge tag 'linux-can-fixes-for-6.15-20250521' of git://git.kernel.org/pub/scm/linux/kernel/git/mkl/linux-can
+
+Paul Barker (1):
+      MAINTAINERS: Drop myself to reviewer for ravb driver
+
+Paul Chaignon (1):
+      xfrm: Sanitize marks before insert
+
+Paul Kocialkowski (1):
+      net: dwmac-sun8i: Use parsed internal PHY address instead of 1
+
+Pavan Kumar Linga (1):
+      idpf: fix null-ptr-deref in idpf_features_check
+
+Rob Herring (Arm) (1):
+      dt-bindings: can: microchip,mcp2510: Fix $id path
+
+Ronak Doshi (1):
+      vmxnet3: update MTU after device quiesce
+
+Sabrina Dubroca (3):
+      espintcp: fix skb leaks
+      espintcp: remove encap socket caching to avoid reference leak
+      xfrm: ipcomp: fix truesize computation on receive
+
+Sagi Maimon (1):
+      ptp: ocp: Limit signal/freq counts in summary output functions
+
+Samiullah Khawaja (1):
+      xsk: Bring back busy polling support in XDP_COPY
+
+Stanislav Fomichev (1):
+      team: grab team lock during team_change_rx_flags
+
+Subbaraya Sundeep (1):
+      octeontx2-af: Set LMT_ENA bit for APR table entries
+
+Suman Ghosh (1):
+      octeontx2-pf: Avoid adding dcbnl_ops for LBK and SDP vf
+
+Thangaraj Samynathan (1):
+      net: lan743x: Restore SGMII CTRL register on resume
+
+Tobias Brunner (1):
+      xfrm: Fix UDP GRO handling for some corner cases
+
+Wang Liang (1):
+      net/tipc: fix slab-use-after-free Read in tipc_aead_encrypt_done
+
+ .../bindings/net/can/microchip,mcp2510.yaml        |   2 +-
+ MAINTAINERS                                        |   2 +-
+ drivers/bluetooth/btusb.c                          |  98 +++++------
+ drivers/net/can/kvaser_pciefd.c                    | 182 ++++++++++++---------
+ drivers/net/can/slcan/slcan-core.c                 |  26 ++-
+ drivers/net/ethernet/airoha/airoha_eth.c           |  22 +--
+ drivers/net/ethernet/broadcom/bnxt/bnxt_ulp.c      |   9 +-
+ drivers/net/ethernet/hisilicon/hibmcge/hbg_err.c   |  16 +-
+ .../net/ethernet/hisilicon/hibmcge/hbg_ethtool.c   |   3 +
+ drivers/net/ethernet/intel/ice/ice_lag.c           |   6 +
+ drivers/net/ethernet/intel/ice/ice_virtchnl.c      |   1 -
+ drivers/net/ethernet/intel/idpf/idpf.h             |   2 +
+ drivers/net/ethernet/intel/idpf/idpf_lib.c         |  10 +-
+ drivers/net/ethernet/intel/idpf/idpf_txrx.c        |  18 +-
+ .../net/ethernet/marvell/octeontx2/af/rvu_cn10k.c  |  24 ++-
+ .../ethernet/marvell/octeontx2/af/rvu_debugfs.c    |  11 +-
+ .../net/ethernet/marvell/octeontx2/nic/otx2_vf.c   |   9 +-
+ drivers/net/ethernet/microchip/lan743x_main.c      |  19 ++-
+ drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c  |   2 +-
+ drivers/net/ethernet/ti/am65-cpsw-nuss.c           |   2 +-
+ drivers/net/team/team_core.c                       |   6 +-
+ drivers/net/vmxnet3/vmxnet3_drv.c                  |   5 +-
+ drivers/ptp/ptp_ocp.c                              |  24 ++-
+ include/linux/mroute_base.h                        |   5 +
+ include/net/netdev_lock.h                          |   3 +
+ include/net/xfrm.h                                 |   1 -
+ net/bluetooth/l2cap_core.c                         |  15 +-
+ net/bridge/br_nf_core.c                            |   7 +-
+ net/bridge/br_private.h                            |   1 +
+ net/can/bcm.c                                      |  79 ++++++---
+ net/dsa/tag_ksz.c                                  |  19 ++-
+ net/ipv4/esp4.c                                    |  53 +-----
+ net/ipv4/ipmr.c                                    |  12 +-
+ net/ipv4/xfrm4_input.c                             |  18 +-
+ net/ipv6/esp6.c                                    |  53 +-----
+ net/ipv6/ip6mr.c                                   |  12 +-
+ net/ipv6/xfrm6_input.c                             |  18 +-
+ net/llc/af_llc.c                                   |   8 +-
+ net/sched/sch_hfsc.c                               |   6 +-
+ net/tipc/crypto.c                                  |   5 +
+ net/xdp/xsk.c                                      |   2 +-
+ net/xfrm/espintcp.c                                |   4 +-
+ net/xfrm/xfrm_ipcomp.c                             |   3 +-
+ net/xfrm/xfrm_policy.c                             |   3 +
+ net/xfrm/xfrm_state.c                              |   6 +-
+ .../tc-testing/tc-tests/infra/qdiscs.json          |  27 +++
+ 46 files changed, 452 insertions(+), 407 deletions(-)
+
