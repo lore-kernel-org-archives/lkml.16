@@ -1,262 +1,227 @@
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2067.outbound.protection.outlook.com [40.107.92.67])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 376001A9B4C;
-	Thu, 22 May 2025 19:53:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.67
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747943599; cv=fail; b=oCXXE67euLLopRzrfB+EVf/IAjxE+4QMgPM7+i8QCZe7i+uHPcbZnMp6XJOMc8gtCqokFsLKlYFjF5yUZM5aT35dLtrPRuaRHW7+Y1hUeoeXB4V9f5VU6ofMdBMIFyvVO8nDdMaoZXCHiN7zw6uKANKmgIpIOTbrj65L7oRjSsY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747943599; c=relaxed/simple;
-	bh=Qmee4qhvS86doR1euSyFJpLs3iFgXid1lkv4L5esAJU=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=X3zSq5uWe/Uv5SYOxkawhOXJeCxbhogqI0oTWkawFpdcsfQuat28yHJ0E5B2hP1QZQIdIpR5aLtu1WvR0+yegjKSn2PwAZs93sdzIRG1RHXOAMK0GBKvi7y1f+rSWihWs84u9YaYFdZc51NC4hCp4Bo8Y2wC1Z3/poKd2TP7PLg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=IPdNyVZW; arc=fail smtp.client-ip=40.107.92.67
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78ED913D8B2
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 19:53:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747943601; cv=none; b=gMJ3rgPiNDvvyMuTRLXma5Aom6W+FtLbElPHBD9SdJCpNAKR5VNZFjQROysHANqiuBrTGkofV/Uhj4jSOFlH5M8vlnP1lAMYx73Ukl5ll2YXZ71b69NjjD4n86TU221xgNlIFMR6b7GsJqcySQPsCfv9zRperou7BFdC2l6erD4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747943601; c=relaxed/simple;
+	bh=UFlponZZxYkww3GfGrUbDyL3TOTEiG2DwvWqSjHEQHg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HIMlYjUCNp73YAWNYHmbOeV5pBz2IRYleDgiOX9J9NNeTm+oGeoFACDVf/9v1DunaOGt5pZJILPyjGwqpRJDXmxp1zeCJmJm55FVUqSPjYEtJFAyJTgrL/3EeJW8HEK/iWhD48ayjbwu1TMemQEFAHuDqE+c+50SD3XU42v1Exc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=QmdQ/BJ5; arc=none smtp.client-ip=209.85.221.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="IPdNyVZW"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=YbfwO8C6H0uZvVgRrbiW2ZZlsLFRaYv4EhWs9ga/XqUxoSKmAVcPkiVNFSpm5uPFxlDPk5CIMhqt+J5rL/bPHp2KRtj9MpxACX+ajej6mAtv/o/3ULEI6xO1PFBvghj36Q8bBEKrn3Txm7JOJF5TIf6RQvSfPIbCjPXgjmAUT9hVGb8TifQQuIyXmMAIjR2l42DXpynA2aDqF3HQaRo2H8RIenKAx4asKmqrTLnTxAoiwPdiiQ56Wz+mphOp78PHL/eiOIPnRNtVkUafyGx7vn9WBbn+uTX8VWvFP+GBPGZ8FRz9D1QoEMb/VIgeiujBiDGfLlb53iklC9Qd9UExEg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=cGx1poJ7CwVydL/t8c9A/pibUzt75tjZqcr+UMj2A3A=;
- b=eNz32iwCX4wAMX3CKRY7vpyIpmzHmMuRKOQT9MN1dr69TgsvxnKtOByBumb1w4w14xPkg4h3IUNv54hHtYbRHu9T46R9pV5jnMkueS+i04cOS9x5UHmE3LKEyvVzU71tvhw8w2lu82PPMqRTpspBMOZBeNLq9I7gUimARAiEHJrkob6miUKtzpfd594lPDOn/Ahbxc2CgLgeoO7qkr4MRUH1TjFi6dm7ttJDzLO2YwhtyD+uGg0aiXNvxwZRhCatW6dAKxZrZLqPABJE6dx6CJcCRW6NaD9ohsiaxfigxf2t1oXD5rrb148m/iCElq7PIHke3ujAXateX5dmGwQWmA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=lwn.net smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=cGx1poJ7CwVydL/t8c9A/pibUzt75tjZqcr+UMj2A3A=;
- b=IPdNyVZWWGPk6XiVf3347kFjgmNklvgGPzYes2yhzE/N54XjQdhFlPHbTLLyZHBkad9W4cqrGWrO+VOFJyQpmmycvW9VqznL34eWYdUGcy0F9rUvMdDOOqeukybttZQE0DNeGX1GGpMsvCIBf0y0LS2BJoTJDH8ekWgllsoGMuY=
-Received: from BY1P220CA0002.NAMP220.PROD.OUTLOOK.COM (2603:10b6:a03:59d::6)
- by IA1PR12MB6258.namprd12.prod.outlook.com (2603:10b6:208:3e6::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8746.32; Thu, 22 May
- 2025 19:53:09 +0000
-Received: from BY1PEPF0001AE19.namprd04.prod.outlook.com
- (2603:10b6:a03:59d:cafe::42) by BY1P220CA0002.outlook.office365.com
- (2603:10b6:a03:59d::6) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8769.21 via Frontend Transport; Thu,
- 22 May 2025 19:53:09 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- BY1PEPF0001AE19.mail.protection.outlook.com (10.167.242.101) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8769.18 via Frontend Transport; Thu, 22 May 2025 19:53:09 +0000
-Received: from bmoger-ubuntu.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 22 May
- 2025 14:53:06 -0500
-From: Babu Moger <babu.moger@amd.com>
-To: <corbet@lwn.net>, <tony.luck@intel.com>, <reinette.chatre@intel.com>,
-	<Dave.Martin@arm.com>, <james.morse@arm.com>, <tglx@linutronix.de>,
-	<mingo@redhat.com>, <bp@alien8.de>, <dave.hansen@linux.intel.com>
-CC: <x86@kernel.org>, <hpa@zytor.com>, <akpm@linux-foundation.org>,
-	<rostedt@goodmis.org>, <paulmck@kernel.org>, <thuth@redhat.com>,
-	<ardb@kernel.org>, <gregkh@linuxfoundation.org>, <thomas.lendacky@amd.com>,
-	<seanjc@google.com>, <mario.limonciello@amd.com>, <perry.yuan@amd.com>,
-	<kai.huang@intel.com>, <xiaoyao.li@intel.com>, <nikunj@amd.com>,
-	<kan.liang@linux.intel.com>, <xin3.li@intel.com>, <babu.moger@amd.com>,
-	<andrew.cooper3@citrix.com>, <ebiggers@google.com>, <xin@zytor.com>,
-	<sohil.mehta@intel.com>, <Xiaojian.Du@amd.com>, <gautham.shenoy@amd.com>,
-	<linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v5 7/8] x86/resctrl: Modify rdt_parse_data to pass mode and CLOSID
-Date: Thu, 22 May 2025 14:51:38 -0500
-Message-ID: <c1a0d51772df5c30e88e29117d56835898b24265.1747943499.git.babu.moger@amd.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <cover.1747943499.git.babu.moger@amd.com>
-References: <cover.1747943499.git.babu.moger@amd.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QmdQ/BJ5"
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-3a4bdee0bf7so869238f8f.1
+        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 12:53:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1747943598; x=1748548398; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=scYVrd373I9MlT/u/1ycHxVnYL+MjqMEz6PW3HBMlFQ=;
+        b=QmdQ/BJ5rzSEnUe/cuISyT0rNHokEz+1pxyuqth4AI3yKY39lNRhDBq1X9ll/kIyqJ
+         WweDG4tzG36eWyaadreGR8LPoyqg04OroRT/LYTyfINjkEuoq1Ct8gJGsuQHDWsiqpYG
+         wi1/3kX1ocuMCVApO+rkLupMCoK2jZ4hlXMJ7SWOhpQU8uuQA5BDsf3ISDchPy+tPJvy
+         NHtOBp+YGJLNjnoht6Au+gDBstbfzIYYYulvNBMtUXFzNZfwEfNATtXr3xh9zcYqILj0
+         G5ewoktA/95yXDTQLBsclmU+7h9NuV+cu6HouE/LwWOTg9S+bbulU6y+dUch1Wt9BAc4
+         0DcQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747943598; x=1748548398;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=scYVrd373I9MlT/u/1ycHxVnYL+MjqMEz6PW3HBMlFQ=;
+        b=NjVZ2YuiFAadGhOs2OP3X3J2FDkBKXoHC3syw9GgHb39agc33lw7G67Jdcz+XmJgPd
+         bJYNsQ/xllKOz3DoKIBH0QPVFTlm7PSpx4GPYqswBXWzOrckDjvZVREHj9mo1Hg6FpY0
+         S83UlWK2GNEhPVrqGxEEf1rfTnbMCJ3BX8g+F023FmyMV8QJo96DpadyyvymutPyvkGS
+         y3w5Ne/aPxq4ePkVuje3HTb2/HxiN3KOevv9YAj8qIbN1uNPIFVFwVtL/EMvHohuVLpD
+         xf88ugLUvXy3Rc1MOfEIukcFCzSQQyfszPVkCzVw51aLs/5iUb9ocKMJSnb2Wl7kib5p
+         sxZQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXToybMoQq5EfHj0qu1qlO6PkcMrqzWnBbciQScxZJdng08U95/qYxsHUoo/lMPHjfpbrlGJ4VkdV2KwLY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwDD4eVdPZeF1encEnyhN02pZ0MlSk4t/AifISrMr0PENMnmcMw
+	nMh9qiTG6OnMIAaKDaN+K3mMXuMMTTk+chrbZt+Gj70MUG+66gP8uPyNxGRTS0ycF/g=
+X-Gm-Gg: ASbGnctXfK63Ezu63RFKS3sPyoi0SwhixxoSwqpc/P6VIuVA7UtNOwnXecP6Mg8XLzQ
+	PmVNJWbFcWnELTaYe+nPS/+XSUYZphGQVxubGBifgu1dwi6BPfGAR7Rr+LNrYZ4ltefZ9sfbAvQ
+	Inpha5hP9dvx8wzKRP8UjZVJaeN6LKZIk7Iyzz/Pw09CDRevZK9URM138sRNYEW4JBWBfSQeKDK
+	gHt4wPNCW7UqrsLvlaGJ1uWQNQ2A5NOP8hKTAwKiJMhUcHJOVAxG/lkDoOvySCs4uVJ0VQ+i7jM
+	IouWyJ1ClhXBS6Le3Ys3ra9OCv5+1VE9cncv9bwkzSsL/9oaYlmo9lX1Kdk5XQQ=
+X-Google-Smtp-Source: AGHT+IE27jiIBztRmaRAQVYdgJQjQilKzkMOn7fyKdg3PUi22O9+0AG/mjYx8r/1u1nyhyVc9L73hA==
+X-Received: by 2002:a05:6000:2281:b0:3a3:7be3:cba9 with SMTP id ffacd0b85a97d-3a37be3cebdmr9684954f8f.18.1747943597543;
+        Thu, 22 May 2025 12:53:17 -0700 (PDT)
+Received: from linaro.org ([2a02:2454:ff21:ef30:c340:2dcf:7e37:1be8])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-447f1ef01besm115280035e9.10.2025.05.22.12.53.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 May 2025 12:53:17 -0700 (PDT)
+Date: Thu, 22 May 2025 21:53:12 +0200
+From: Stephan Gerhold <stephan.gerhold@linaro.org>
+To: Krzysztof Kozlowski <krzk@kernel.org>,
+	Saravana Kannan <saravanak@google.com>
+Cc: Rob Herring <robh@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
+	Jassi Brar <jassisinghbrar@gmail.com>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, linux-arm-msm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-clk@vger.kernel.org, Georgi Djakov <djakov@kernel.org>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: Re: [PATCH 1/4] dt-bindings: mailbox: qcom,apcs: Add separate node
+ for clock-controller
+Message-ID: <aC-AqDa8cjq2AYeM@linaro.org>
+References: <20250506-qcom-apcs-mailbox-cc-v1-0-b54dddb150a5@linaro.org>
+ <20250506-qcom-apcs-mailbox-cc-v1-1-b54dddb150a5@linaro.org>
+ <7vszdea2djl43oojvw3vlrip23f7cfyxkyn6jw3wc2f7yowht5@bgsc2pqscujc>
+ <aCNGSwL7043GoJBz@linaro.org>
+ <20250514160841.GA2427890-robh@kernel.org>
+ <aCUHTJGktLFhXq4Q@linaro.org>
+ <20250521-psychedelic-cute-grouse-ee1291@kuoka>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BY1PEPF0001AE19:EE_|IA1PR12MB6258:EE_
-X-MS-Office365-Filtering-Correlation-Id: 6e74e7d6-3170-469d-04e4-08dd996a46eb
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|1800799024|82310400026|376014|7416014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?BB/VfsRQYMco8FdFAPqkDYeCzJPNI4GKVLkqaXWLDiHDzl+jL9oGl/D9/yE3?=
- =?us-ascii?Q?oU6Ye397DysnMGDuXn0p1u+QWX4JOVubL+qsiViBOeYsH7cCV6/SF6DFbK4G?=
- =?us-ascii?Q?j48x5Jpzvv/UFWLeG9EJxY/8em0M8xk/nomWnxUOnUzN/cqKX3PMWyr4QzNA?=
- =?us-ascii?Q?yiQKH4dHxhWDcJw7LLjhRQTr2WWhB47n8N2sSUmQzGoHbT0ajpeFGJxGHx9p?=
- =?us-ascii?Q?0M3SEV44V6708+5HcDcMURfDfKKjTrF3Y2etj8czsjQe5Q9tCcURvVRwnm6d?=
- =?us-ascii?Q?fp4sB6E8kNmIoRVkzwPsUXbe0uff8EH0zJ7E5UOGXpSvQr0AFRgupPAT7B8M?=
- =?us-ascii?Q?n3hDYJTe3HQDZXJ2I0U1xdqEisiCo/rtLbJdpm4BtGa7cMbSOyJE2mdEqvIJ?=
- =?us-ascii?Q?iNYArYXjRrL9C5QLoYEaGeCbaqJzf3UHlQFXdHUJFMbiqLe2gtjbmTKlkwOK?=
- =?us-ascii?Q?yaJN5BWfEFqLGI4SmMYcZp0pQg1DzGNY9lwxGEZDD0+CF2werKByl6MJMzxT?=
- =?us-ascii?Q?YeXg5g5ZhlgamE56g/7FihnRi2IdL4BO6vvwyigRpxNCCqdICtYze4JavCrH?=
- =?us-ascii?Q?Tfbik0Tw/6FD6+PjBdtJ30aSbxhgY0OfQnrAuMFQSeYzeqEnakmqYCPZIyR/?=
- =?us-ascii?Q?mkRo5QAjNuTtYAnYMGJAiimBNv4HLwXfzRQd5xlyFh5a5m1s9PInuVdZRa9v?=
- =?us-ascii?Q?1wEirnx60bLCHg+NlYooytoO+84caS59t9ZivFLbgf7GkS5RnFWkUZt/rhRg?=
- =?us-ascii?Q?J+ulHrctorjyzjuzw7BiHrvqMTU8QeLZ3/sPpeP8gfqXed6QeW0SKVJ7yXgJ?=
- =?us-ascii?Q?BNGo/RdePKHeyU2HRAGUtkPwGhdYtYFpmzKc14ClTANXJAGnlMEfnIrkKVAK?=
- =?us-ascii?Q?2e9oDvtf1QAWaOEq4Od/Ozcw7pv8f2N91cj2rNBuRPheF8szDThnc9Sjvm+c?=
- =?us-ascii?Q?tOYc0+0QQqvqPn+jQzTIYNZTt1MiZdHIqlX5efUHkCSsFyBitxC+Eg/wUL2o?=
- =?us-ascii?Q?Yy3pWtiBhoJsP6OOjr+tlR+TOHR6nLiKuoi8U0VgaX7pTpw7yzHa3tda/iUm?=
- =?us-ascii?Q?HJloT0Rh/HvGKQlNUUBpNaznVrGSGXeuFZmKOd9gZ8nGprRHMb8pBhy117ab?=
- =?us-ascii?Q?jcuOGbi0hri1DoO5gvhbvf/c5Piw4Ztdd76Eb5Hk2eQeQC/aP+BusBpKZGil?=
- =?us-ascii?Q?I5rsVW1kZWJQS0EC9NK9Zl2pv42DbdALr9jmOiOjMVw/QrRNfzhxxyHXUvju?=
- =?us-ascii?Q?nllC7ssGJX4JiCkTaK7pbeZoi4HnJKTYScpiZLn9k5F7ITVtvPigMs210zhx?=
- =?us-ascii?Q?iRXnpxCCJGGLPZkdC+qagBFEO04J+5rpxBMjii9/GWdFxHfWAfpN06VJ9j0E?=
- =?us-ascii?Q?xBahCt+32i6V194BmDqI7Qx+bPLHydKVvxC2f0FIokbLiMjFNlKmNfRggOF0?=
- =?us-ascii?Q?jol1GbAtlhJx2XT4duAh42hfVr5JNy9WG8cPuZLH0uHHiob4ZhlPjo0cdOlL?=
- =?us-ascii?Q?T6XBeKq+BgADxbcNHt8llmmlLeHMDTIqXLC9?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(1800799024)(82310400026)(376014)(7416014);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 May 2025 19:53:09.0512
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6e74e7d6-3170-469d-04e4-08dd996a46eb
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BY1PEPF0001AE19.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB6258
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250521-psychedelic-cute-grouse-ee1291@kuoka>
 
-The functions parse_cbm() and parse_bw() require mode and CLOSID to
-validate the Capacity Bit Mask (CBM). It is passed through struct
-rdtgroup in rdt_parse_data. Instead of passing them through struct
-rdtgroup, pass mode and closid directly.
++Saravana
 
-This change enables parse_cbm() to be used for verifying CBM in io_alloc
-feature.
+On Wed, May 21, 2025 at 11:20:40AM +0200, Krzysztof Kozlowski wrote:
+> On Wed, May 14, 2025 at 10:12:44PM GMT, Stephan Gerhold wrote:
+> > > > > > The mailbox itself does not need any clocks and should probe early to
+> 
+> ... so probe it early.
+> 
+> > > > > > unblock the rest of the boot process. The "clocks" are only needed for the
+> > > > > > separate clock controller. In Linux, these are already two separate drivers
+> > > > > > that can probe independently.
+> 
+> They can probe later, no problem and DT does not stop that. Linux, not
+> DT, controls the ways of probing of devices and their children.
+> 
+> > > > > > 
+> > > > > 
+> > > > > Why does this circular dependency need to be broken in the DeviceTree
+> > > > > representation?
+> > > > > 
+> > > > > As you describe, the mailbox probes and register the mailbox controller
+> > > > > and it registers the clock controller. The mailbox device isn't affected
+> > > > > by the clock controller failing to find rpmcc...
+> > > > > 
+> > > > 
+> > > > That's right, but the problem is that the probe() function of the
+> > > > mailbox driver won't be called at all. The device tree *looks* like the
+> > > > mailbox depends on the clock, so fw_devlink tries to defer probing until
+> > > > the clock is probed (which won't ever happen, because the mailbox is
+> > > > needed to make the clock available).
+> > > > 
+> > > > I'm not sure why fw_devlink doesn't detect this cycle and tries to probe
+> > > > them anyway, but fact is that we need to split this up in order to avoid
+> > > > warnings and have the supplies/consumers set up properly. Those device
+> > > > links are created based on the device tree and not the drivers.
+> > > 
+> > > Does "post-init-providers" providers solve your problem?
+> > > 
+> > 
+> > I would expect that it does, but it feels like the wrong solution to the
+> > problem to me. The clock is not really a post-init provider: It's not
+> > consumed at all by the mailbox and needed immediately to initialize the
+> > clock controller. The real problem in my opinion is that we're
+> > describing two essentially distinct devices/drivers in a single device
+> > node, and there is no way to distinguish that.
+> > 
+> > By splitting up the two distinct components into separate device tree
+> > nodes, the relation between the providers/consumers is clearly
+> > described.
+> 
+> You can split devices without splitting the nodes. I do not see reason
+> why the DT is the problem here.
+> 
 
-Signed-off-by: Babu Moger <babu.moger@amd.com>
----
-v5: Resolved conflicts due to recent resctrl FS/ARCH code restructure.
+The Linux drivers for this particular mailbox/clock controller already
+work exactly the way you propose. They are split into two devices that
+can probe independently.
 
-v4: New patch to call parse_cbm() directly to avoid code duplication.
----
- fs/resctrl/ctrlmondata.c | 29 +++++++++++++----------------
- fs/resctrl/internal.h    |  6 ++++++
- 2 files changed, 19 insertions(+), 16 deletions(-)
+The problem is outside of the drivers, because fw_devlink in Linux
+blocks probing until all resources specified in the device tree nodes
+become available. fw_devlink has no knowledge that the mailbox described
+by this peculiar device tree node does not actually need the clocks:
 
-diff --git a/fs/resctrl/ctrlmondata.c b/fs/resctrl/ctrlmondata.c
-index ea039852569a..6409637b4de6 100644
---- a/fs/resctrl/ctrlmondata.c
-+++ b/fs/resctrl/ctrlmondata.c
-@@ -23,11 +23,6 @@
- 
- #include "internal.h"
- 
--struct rdt_parse_data {
--	struct rdtgroup		*rdtgrp;
--	char			*buf;
--};
--
- typedef int (ctrlval_parser_t)(struct rdt_parse_data *data,
- 			       struct resctrl_schema *s,
- 			       struct rdt_ctrl_domain *d);
-@@ -77,8 +72,8 @@ static int parse_bw(struct rdt_parse_data *data, struct resctrl_schema *s,
- 		    struct rdt_ctrl_domain *d)
- {
- 	struct resctrl_staged_config *cfg;
--	u32 closid = data->rdtgrp->closid;
- 	struct rdt_resource *r = s->res;
-+	u32 closid = data->closid;
- 	u32 bw_val;
- 
- 	cfg = &d->staged_config[s->conf_type];
-@@ -156,9 +151,10 @@ static bool cbm_validate(char *buf, u32 *data, struct rdt_resource *r)
- static int parse_cbm(struct rdt_parse_data *data, struct resctrl_schema *s,
- 		     struct rdt_ctrl_domain *d)
- {
--	struct rdtgroup *rdtgrp = data->rdtgrp;
-+	enum rdtgrp_mode mode = data->mode;
- 	struct resctrl_staged_config *cfg;
- 	struct rdt_resource *r = s->res;
-+	u32 closid = data->closid;
- 	u32 cbm_val;
- 
- 	cfg = &d->staged_config[s->conf_type];
-@@ -171,7 +167,7 @@ static int parse_cbm(struct rdt_parse_data *data, struct resctrl_schema *s,
- 	 * Cannot set up more than one pseudo-locked region in a cache
- 	 * hierarchy.
- 	 */
--	if (rdtgrp->mode == RDT_MODE_PSEUDO_LOCKSETUP &&
-+	if (mode == RDT_MODE_PSEUDO_LOCKSETUP &&
- 	    rdtgroup_pseudo_locked_in_hierarchy(d)) {
- 		rdt_last_cmd_puts("Pseudo-locked region in hierarchy\n");
- 		return -EINVAL;
-@@ -180,9 +176,9 @@ static int parse_cbm(struct rdt_parse_data *data, struct resctrl_schema *s,
- 	if (!cbm_validate(data->buf, &cbm_val, r))
- 		return -EINVAL;
- 
--	if ((rdtgrp->mode == RDT_MODE_EXCLUSIVE ||
--	     rdtgrp->mode == RDT_MODE_SHAREABLE) &&
--	    rdtgroup_cbm_overlaps_pseudo_locked(d, cbm_val)) {
-+	if ((mode == RDT_MODE_EXCLUSIVE ||
-+	     mode == RDT_MODE_SHAREABLE) &&
-+	     rdtgroup_cbm_overlaps_pseudo_locked(d, cbm_val)) {
- 		rdt_last_cmd_puts("CBM overlaps with pseudo-locked region\n");
- 		return -EINVAL;
- 	}
-@@ -191,14 +187,14 @@ static int parse_cbm(struct rdt_parse_data *data, struct resctrl_schema *s,
- 	 * The CBM may not overlap with the CBM of another closid if
- 	 * either is exclusive.
- 	 */
--	if (rdtgroup_cbm_overlaps(s, d, cbm_val, rdtgrp->closid, true)) {
-+	if (rdtgroup_cbm_overlaps(s, d, cbm_val, closid, true)) {
- 		rdt_last_cmd_puts("Overlaps with exclusive group\n");
- 		return -EINVAL;
- 	}
- 
--	if (rdtgroup_cbm_overlaps(s, d, cbm_val, rdtgrp->closid, false)) {
--		if (rdtgrp->mode == RDT_MODE_EXCLUSIVE ||
--		    rdtgrp->mode == RDT_MODE_PSEUDO_LOCKSETUP) {
-+	if (rdtgroup_cbm_overlaps(s, d, cbm_val, closid, false)) {
-+		if (mode == RDT_MODE_EXCLUSIVE ||
-+		    mode == RDT_MODE_PSEUDO_LOCKSETUP) {
- 			rdt_last_cmd_puts("Overlaps with other group\n");
- 			return -EINVAL;
- 		}
-@@ -262,7 +258,8 @@ static int parse_line(char *line, struct resctrl_schema *s,
- 	list_for_each_entry(d, &r->ctrl_domains, hdr.list) {
- 		if (d->hdr.id == dom_id) {
- 			data.buf = dom;
--			data.rdtgrp = rdtgrp;
-+			data.closid = rdtgrp->closid;
-+			data.mode = rdtgrp->mode;
- 			if (parse_ctrlval(&data, s, d))
- 				return -EINVAL;
- 			if (rdtgrp->mode ==  RDT_MODE_PSEUDO_LOCKSETUP) {
-diff --git a/fs/resctrl/internal.h b/fs/resctrl/internal.h
-index 14f3697c1187..10a3188ffa54 100644
---- a/fs/resctrl/internal.h
-+++ b/fs/resctrl/internal.h
-@@ -201,6 +201,12 @@ struct rdtgroup {
- 	struct pseudo_lock_region	*plr;
- };
- 
-+struct rdt_parse_data {
-+	u32			closid;
-+	enum rdtgrp_mode	mode;
-+	char			*buf;
-+};
-+
- /* rdtgroup.flags */
- #define	RDT_DELETED		1
- 
--- 
-2.34.1
+	apcs1_mbox: mailbox@b011000 {
+		compatible = "qcom,msm8939-apcs-kpss-global", "syscon";
+		reg = <0x0b011000 0x1000>;
+		#mbox-cells = <1>;
+		clocks = <&a53pll_c1>, <&gcc GPLL0_VOTE>, <&rpmcc RPM_SMD_XO_CLK_SRC>;
+		clock-names = "pll", "aux", "ref";
+		#clock-cells = <0>;
+	};
 
+Without device-specific quirks in fw_devlink, the fact that these clocks
+are only used by an unrelated clock controller only becomes clear if we
+split the device tree node like I propose in this series:
+
+	apcs1_mbox: mailbox@b011000 {
+		compatible = "qcom,msm8939-apcs-kpss-global", "syscon";
+		reg = <0x0b011000 0x1000>;
+		#mbox-cells = <1>;
+
+		apcs1_clk: clock-controller {
+			clocks = <&a53pll_c1>, <&gcc GPLL0_VOTE>, <&rpmcc RPM_SMD_XO_CLK_SRC>;
+			clock-names = "pll", "aux", "ref";
+			#clock-cells = <0>;
+		};
+	};
+
+It is easy to say that the problem is in Linux (and not the DT), but
+unless you are suggesting to remove fw_devlink from Linux, or to add
+more device-specific quirks to the generic fw_devlink code, I'm only
+aware of the following two options to make this work (both already
+discussed in this email thread):
+
+ 1. post-init-providers (as suggested by Rob):
+
+		post-init-providers = <&a53pll_c1>, <&gcc>, <&rpmcc>;
+
+    To repeat my previous email: IMHO this is a crude workaround for
+    this situation. The clock is not really a post-init provider: It's
+    not consumed at all by the mailbox and needed immediately to
+    initialize the clock controller.
+
+    With this approach, there are no device links created for the
+    clocks, so we don't get the proper probe/suspend ordering that
+    fw_devlink normally provides.
+
+ 2. Split up device tree node (this patch series): With this approach,
+    the mailbox can probe early and the clock controller child device
+    gets the expected consumer/supplier device links to the clocks. IMHO
+    this is the cleanest solution to go for.
+
+@Saravana: Is there any other option that I missed? Or perhaps you have
+any other suggestions how we should handle this?
+
+To summarize the series and previous emails, the dependency cycle that
+was in msm8939.dtsi before commit d92e9ea2f0f9 ("arm64: dts: qcom:
+msm8939: revert use of APCS mbox for RPM") is:
+
+  1. The clock controller inside &apcs1_mbox needs
+     clocks = <&rpmcc RPM_SMD_XO_CLK_SRC>.
+  2. &rpmcc is a child of remoteproc &rpm
+  3. remoteproc &rpm needs mboxes = <&apcs1_mbox 8>;
+
+This is not a real dependency cycle, the clocks in the mailbox@ node are
+not needed for the mailbox. They are only used and needed for the clock
+controller child device that makes use of the same device tree node.
+
+At runtime this cycle currently results in none of the devices probing:
+
+[   13.281637] platform remoteproc: deferred probe pending: qcom-rpm-proc: Failed to register smd-edge
+[   13.296257] platform b011000.mailbox: deferred probe pending: platform: supplier b016000.clock not ready
+[   13.308397] platform b016000.clock: deferred probe pending: platform: wait for supplier /remoteproc/smd-edge/rpm-requests/clock-controller
+
+Thanks,
+Stephan
