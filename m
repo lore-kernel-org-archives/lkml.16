@@ -1,141 +1,115 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89D41208AD;
-	Thu, 22 May 2025 18:21:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+Received: from relmlie5.idc.renesas.com (relmlor1.renesas.com [210.160.252.171])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 57B6D208AD;
+	Thu, 22 May 2025 18:23:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747938062; cv=none; b=plGFV9hTBOsqC5WLoRwdIgV6Mqdy3gK60vM2NNwVVpORLsSBIkKqvVx7fQvs5KADr/YVLabtuc+7W98xesP3WZyEA2uuVGLWtrldUwrJliJ/P9rCWUG7RUfd3JTKnBFjZqZlojdL0prs32NyPEtzgBsSJ1uVix5aGoJsCc2bA+s=
+	t=1747938199; cv=none; b=qxca8OgLV8PW32xTXgzTUUtoir9dDm6lAIwVvfkFaT20X41DrsLYh6akFEvO3cX+o5PYTnqzR3Zewi6+u57oxC7ySwnt0RHO1pRxd1Yhf7HEI+aOIs8GyQOn3pnPY/x0xsYFo2fTyPAUMTsdFsJMjWUHQwcDYf79w0BxtwKJVqM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747938062; c=relaxed/simple;
-	bh=lxv1mrz27uBYXTf8K3NOoJWG7c0aDCWYEZb6JCimCME=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=N8g/ZD8YHo0tmlK+OzntWMfptoutrkwdfE94yeCSyXPyL+nBndFOwqrztAZMNd5MD62JYLfqeAQXPmxB426typiFEjzDVjxHMecHdpfVbIMQvp5SZmt02rmc5UvJ0qIS5lFRo40xSzKPKLK5v0/VK6jBultQmOBnCR8GwGku8tk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=SPYSdpMf; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="SPYSdpMf"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54MAjqbd029481;
-	Thu, 22 May 2025 18:19:58 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	3YXR8er64i8TNQwCGsGTIh45J5+aN82cu97cDgSI07o=; b=SPYSdpMfVMCx5Ce4
-	QcsKWUC53mMheSmcBNvdA4sEJgaJakpBaIFPMowv5wCEg0gRGq8zzQt4KA257t6R
-	EiZv77Dy29zWmlFm0DXl17fwLKj90JYmc0oXkTBR7GUPg12J6U2OoJnNbhLsdp0x
-	0v/2o0D67KOXpRLCyWdQADFijggE74s7omNW5kP2LXrnhjNPiwrW+seoes1oFqSd
-	NRX6WPYU97+KxNwxuDJAv0w2YcUhz0YTpM216eXcxrJ+RXoDBYYZCQgu8O+So7u2
-	/SIx8/qoUzuOLpjAcXNlJDuQdn1cih1gR0weh9DDiH8Ih7qFRvoVMZ+wVr/b6UCJ
-	SoLPNQ==
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46rwf47dpt-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 22 May 2025 18:19:58 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54MIJvc6018539
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 22 May 2025 18:19:57 GMT
-Received: from [10.134.71.247] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 22 May
- 2025 11:19:55 -0700
-Message-ID: <a5571512-d931-46ce-8cbe-f1118681c6d1@quicinc.com>
-Date: Thu, 22 May 2025 11:19:53 -0700
+	s=arc-20240116; t=1747938199; c=relaxed/simple;
+	bh=0uIGB6AYp+NE4k2Bu8VAEfPMGxGU7Esz8GDtIMONpwA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kywsPPpoIo7TZHebJHkh/D96095kMeWyZfXDIXnLwOtTp4netC2pLQzHYr1cEjlDxvbaTETv/iEpANNsDOdRgls/z5WYslA1IPuG5sVDhweyXxiZt1gJEHM8H8Li5fllKCh03EuacG5jnq/HLjG8mMwwQRHksYb0XDpSTTGUHM8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; arc=none smtp.client-ip=210.160.252.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
+X-CSE-ConnectionGUID: lVALX+CIRDaxcGjvIGti8Q==
+X-CSE-MsgGUID: 125OKLfMTqqzJmWG9TmdZw==
+Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
+  by relmlie5.idc.renesas.com with ESMTP; 23 May 2025 03:23:14 +0900
+Received: from ubuntu.adwin.renesas.com (unknown [10.226.92.203])
+	by relmlir6.idc.renesas.com (Postfix) with ESMTP id B78784061FFE;
+	Fri, 23 May 2025 03:23:09 +0900 (JST)
+From: John Madieu <john.madieu.xa@bp.renesas.com>
+To: john.madieu.xa@bp.renesas.com,
+	conor+dt@kernel.org,
+	daniel.lezcano@linaro.org,
+	geert+renesas@glider.be,
+	krzk+dt@kernel.org,
+	rafael@kernel.org
+Cc: biju.das.jz@bp.renesas.com,
+	devicetree@vger.kernel.org,
+	john.madieu@gmail.com,
+	linux-kernel@vger.kernel.org,
+	linux-pm@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org,
+	lukasz.luba@arm.com,
+	magnus.damm@gmail.com,
+	robh@kernel.org,
+	rui.zhang@intel.com,
+	sboyd@kernel.org,
+	niklas.soderlund+renesas@ragnatech.se
+Subject: [PATCH v6 0/5] thermal: renesas: Add support for RZ/G3E
+Date: Thu, 22 May 2025 20:22:43 +0200
+Message-ID: <20250522182252.1593159-1-john.madieu.xa@bp.renesas.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 00/45] drm/msm/dp: Add MST support for MSM chipsets
-To: Jens Glathe <jens.glathe@oldschoolsolutions.biz>,
-        Rob Clark
-	<robdclark@gmail.com>,
-        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        "Sean
- Paul" <sean@poorly.run>,
-        Marijn Suijten <marijn.suijten@somainline.org>,
-        "David Airlie" <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        Stephen
- Boyd <swboyd@chromium.org>,
-        Chandan Uddaraju <chandanu@codeaurora.org>,
-        "Guenter Roeck" <groeck@chromium.org>,
-        Kuogee Hsieh
-	<quic_khsieh@quicinc.com>,
-        "Bjorn Andersson" <andersson@kernel.org>,
-        Konrad
- Dybcio <konradybcio@kernel.org>,
-        "Rob Herring" <robh@kernel.org>,
-        Krzysztof
- Kozlowski <krzk+dt@kernel.org>,
-        "Conor Dooley" <conor+dt@kernel.org>
-CC: Vara Reddy <quic_varar@quicinc.com>, Rob Clark <robdclark@chromium.org>,
-        Tanmay Shah <tanmay@codeaurora.org>, <linux-arm-msm@vger.kernel.org>,
-        <dri-devel@lists.freedesktop.org>, <freedreno@lists.freedesktop.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        Jessica Zhang
-	<quic_jesszhan@quicinc.com>,
-        Laurent Pinchart
-	<laurent.pinchart@ideasonboard.com>,
-        Yongxing Mou <quic_yongmou@quicinc.com>
-References: <20241205-dp_mst-v1-0-f8618d42a99a@quicinc.com>
- <aeb8c8d5-9ce5-410d-8021-df30081697af@oldschoolsolutions.biz>
-Content-Language: en-US
-From: Abhinav Kumar <quic_abhinavk@quicinc.com>
-In-Reply-To: <aeb8c8d5-9ce5-410d-8021-df30081697af@oldschoolsolutions.biz>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIyMDE4NSBTYWx0ZWRfX61owZbJTwSAl
- BCRuIK7tNLqrGOb+8WZuixy20nYGrMVgpqV54UoxvKW//1k52e9WVT5+IZw4o/qEF4Zyfab8oPO
- 8Cev6Wj03FTaK3g5IAOu7OHSDlWb9+YXy7A9XXmt/LXgd/6upyYefNoj2P30INg6wye4hY+GGve
- YavP8mKvZKnqVFysDgP4o3NTy33Eqklj9laI555nBale0jIYXAOGZlUQkZtwNmUCXLAx9o2aJkP
- s0axsMZIBZYNyO028fHGWRBhr+GcJ7uNMAKD+bxve4+as5wk9o04jb4jNH+brAAmOHvgmSdBqa5
- PtGJee32vH0z3f36YNGuUbMilQD/CYMLaTGPRATplKkk2xhQIQfZyvrT7r2H33eCu+dc+NRQOav
- wPh53yYwqzQdA3mFZeYLvPnKy/0wIc7Sbz5jkFvg7r6VqCWuTpHLVMNElMHVDDUV2vL0HFl1
-X-Proofpoint-GUID: X9VmTCzSYb66XkSQQZ7axkdsjXISaY8w
-X-Authority-Analysis: v=2.4 cv=Ws8rMcfv c=1 sm=1 tr=0 ts=682f6ace cx=c_pps
- a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10
- a=42cjtDgYKixFzRowy9kA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-ORIG-GUID: X9VmTCzSYb66XkSQQZ7axkdsjXISaY8w
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-22_08,2025-05-22_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- spamscore=0 malwarescore=0 clxscore=1011 suspectscore=0 mlxscore=0
- bulkscore=0 phishscore=0 priorityscore=1501 impostorscore=0
- lowpriorityscore=0 mlxlogscore=999 adultscore=0 classifier=spam authscore=0
- authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505160000 definitions=main-2505220185
+Content-Transfer-Encoding: 8bit
 
-Hi Jens
+This series adds support for the temperature sensor unit (TSU) found on the
+Renesas RZ/G3E SoC.
 
-On 5/10/2025 5:12 AM, Jens Glathe wrote:
-> On 06.12.24 05:31, Abhinav Kumar wrote:
->> base-commit: b166256c1e6ce356fa1404d4c8531830e6f100a8
-> 
-> Hi Abhinav,
-> 
-> I would like to test / play around with this patchset, unfortunately 
-> this base commit is not easy to find. Trying to apply without gives lots 
-> of conflicts. Can you please rebase?
-> 
-> with best regards
-> 
-> Jens
-> 
-> 
+The series consists of 5 patches (one of which is not related to the thermal
+framework) that progressively add TSU support as follows:
+- patch 1/5:    adds syscon/regmap support for accessing system controller
+                registers, enabling access to TSU calibration values
 
-We will post a rebased version of this series with the review comments 
-addressed within the next 3-4 weeks.
+- patch 2-5/5:  adds dt-bindings, actual driver, DT node, and config symbol.
 
-Thanks
+Patch 1/5 has been duplicated at [1] in USB series. Since it was not reviewed
+nor merged yet, I use it here to ease the review, so that which ever is
+reviewed first get merged.
 
-Abhinav
+Changes:
+
+v1 -> v2
+ * Fix yaml warnings from dt-binding
+ * Update IRQ names to reflect TSU expectations
+
+v2 -> v3
+ * Remove useless 'renesas,tsu-operating-mode' property
+
+v3 -> v4
+ * Improve commit messages
+
+v4 -> v5
+ * Remove useless curly braces on single line-protected scoped guards
+
+v5 -> v6
+ * Minor typo fix
+ * Constify regmap config in patch 1/5
+
+Regards,
+
+[1] https://patchwork.kernel.org/project/linux-renesas-soc/patch/20250521140943.3830195-2-claudiu.beznea.uj@bp.renesas.com/
+
+John Madieu (5):
+  soc: renesas: rz-sysc: Add syscon/regmap support
+  dt-bindings: thermal: r9a09g047-tsu: Document the TSU unit
+  thermal: renesas: rzg3e: Add thermal driver for the Renesas RZ/G3E SoC
+  arm64: dts: renesas: r9a09g047: Add TSU node
+  arm64: defconfig: Enable the Renesas RZ/G3E thermal driver
+
+ .../thermal/renesas,r9a09g047-tsu.yaml        |  81 ++++
+ MAINTAINERS                                   |   7 +
+ arch/arm64/boot/dts/renesas/r9a09g047.dtsi    |  48 ++
+ arch/arm64/configs/defconfig                  |   1 +
+ drivers/soc/renesas/Kconfig                   |   1 +
+ drivers/soc/renesas/r9a08g045-sysc.c          |  10 +
+ drivers/soc/renesas/r9a09g047-sys.c           |  10 +
+ drivers/soc/renesas/r9a09g057-sys.c           |  10 +
+ drivers/soc/renesas/rz-sysc.c                 |  17 +-
+ drivers/soc/renesas/rz-sysc.h                 |   3 +
+ drivers/thermal/renesas/Kconfig               |   7 +
+ drivers/thermal/renesas/Makefile              |   1 +
+ drivers/thermal/renesas/rzg3e_thermal.c       | 443 ++++++++++++++++++
+ 13 files changed, 638 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/thermal/renesas,r9a09g047-tsu.yaml
+ create mode 100644 drivers/thermal/renesas/rzg3e_thermal.c
+
+-- 
+2.25.1
+
