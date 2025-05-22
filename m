@@ -1,209 +1,302 @@
-Received: from szxga07-in.huawei.com (szxga07-in.huawei.com [45.249.212.35])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8E0F289E33
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 11:12:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A91E238C3D;
+	Thu, 22 May 2025 11:12:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747912340; cv=none; b=b+H8fpAAkxLiOFqtGXFDZsZ6/Hve11rlG5fdaMlpaIFTn3DIvATM+2SWdseezYZQv2feT78FLKgjZfTejAfVcwNnSxt+DKpuTNv3eSUmk3dEfUxQ0FEid3v00T2pPc5bHfEgv8dWHQnvy9MbV0ebDf09NgaGp62JVs057QzueeY=
+	t=1747912372; cv=none; b=mqnZjPNd7BBLMPkncNKdFspfq8dcgR2AHcRh5m51ELpEfXObRJrqM7Ru6Z9vK2jMu2tTxSyfbM190Q8RB7lXgTEsVmbRCroxxCOK4HnwH1viO2cSQxynyonpnp6K+E8ieSdnw4yjiI1rPY6vFWJUMhQ+Z4x1LePHhyWPUJDTAP4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747912340; c=relaxed/simple;
-	bh=75I/OW5q8OM58GIc6q02iQepqOY7feV5LCtaTaQtmtw=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Kjk3EkW2BMnV2IJuZ1vEox0sOcvM+u5J69kYFuTBV4XUW5CerDOu0+3R+sXYP51SisRp0PpK/15rCfVzHBjvQEXJhB+eZ86HJihh/9hO81UyKe+5V3qgeYhC74cZsFQKvaLoa//geJ2DJDUxO3JUQivVVcpe1s9QSm0riB/53k8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.163])
-	by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4b35Fj0bH7z1f1gs;
-	Thu, 22 May 2025 19:11:21 +0800 (CST)
-Received: from dggemv705-chm.china.huawei.com (unknown [10.3.19.32])
-	by mail.maildlp.com (Postfix) with ESMTPS id 775FF1800B3;
-	Thu, 22 May 2025 19:12:15 +0800 (CST)
-Received: from kwepemq200011.china.huawei.com (7.202.195.155) by
- dggemv705-chm.china.huawei.com (10.3.19.32) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Thu, 22 May 2025 19:11:58 +0800
-Received: from huawei.com (10.67.174.28) by kwepemq200011.china.huawei.com
- (7.202.195.155) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Thu, 22 May
- 2025 19:11:56 +0800
-From: Liao Chang <liaochang1@huawei.com>
-To: <catalin.marinas@arm.com>, <will@kernel.org>, <maz@kernel.org>,
-	<oliver.upton@linux.dev>, <joey.gouly@arm.com>, <suzuki.poulose@arm.com>,
-	<yuzenghui@huawei.com>, <mark.rutland@arm.com>, <broonie@kernel.org>,
-	<liaochang1@huawei.com>, <puranjay@kernel.org>, <sgsu.park@samsung.com>,
-	<frederic@kernel.org>, <gshan@redhat.com>, <sudeep.holla@arm.com>,
-	<guohanjun@huawei.com>, <ryan.roberts@arm.com>,
-	<Jonathan.Cameron@huawei.com>, <liuwei09@cestc.cn>,
-	<shameerali.kolothum.thodi@huawei.com>, <james.morse@arm.com>,
-	<hardevsinh.palaniya@siliconsignals.io>, <ptosi@google.com>,
-	<kristina.martsenko@arm.com>, <vschneid@redhat.com>,
-	<thiago.bauermann@linaro.org>, <yang@os.amperecomputing.com>,
-	<david@redhat.com>, <minhuadotchen@gmail.com>, <tglx@linutronix.de>,
-	<farbere@amazon.com>, <arnd@arndb.de>, <rppt@kernel.org>,
-	<mcgrof@kernel.org>, <guoweikang.kernel@gmail.com>, <robh@kernel.org>,
-	<andreyknvl@gmail.com>, <usamaarif642@gmail.com>,
-	<samuel.holland@sifive.com>, <kevin.brodsky@arm.com>, <Dave.Martin@arm.com>,
-	<rmk+kernel@armlinux.org.uk>, <jean-philippe@linaro.org>,
-	<ruanjinjie@huawei.com>, <dianders@chromium.org>, <pcc@google.com>,
-	<bigeasy@linutronix.de>, <jintack@cs.columbia.edu>,
-	<christoffer.dall@arm.com>, <tabba@google.com>, <robin.murphy@arm.com>,
-	<ziy@nvidia.com>, <wangkefeng.wang@huawei.com>, <quic_zhenhuah@quicinc.com>,
-	<anshuman.khandual@arm.com>, <yangyicong@hisilicon.com>
-CC: <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-	<kvmarm@lists.linux.dev>
-Subject: [PATCH v5 0/2] Rework Arm64 exception mask helpers
-Date: Thu, 22 May 2025 10:56:56 +0000
-Message-ID: <20250522105658.1338331-1-liaochang1@huawei.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1747912372; c=relaxed/simple;
+	bh=t23o9My5MPTo2kL39zqs5RrxOPSJJzuwpTXXq6P5B3U=;
+	h=Message-ID:Subject:From:To:Cc:In-Reply-To:References:Content-Type:
+	 Date:MIME-Version; b=nlUNtYgDFukdRNR1ysJ85Iu9S/aEL2XlWZ4a+hBhpythTx+rMBBEvoOlDNCBFEwuf/Dd12v+XXYqkJWESlnVBRue9cY98QnmtqB9Ech8Kbi0GwxwVOSxXRhjySJRmlRUxJlO7MNnSrrFR9fZSf0kyVY5xb3xkpqrzvLDtH2oHCY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=ZLtHkmLc; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="ZLtHkmLc"
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54M78ku1004484;
+	Thu, 22 May 2025 11:12:40 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=G1RQsE
+	kqmML1TEPWctfGHJ1nO+XyWcWYCQfZVbO4SGM=; b=ZLtHkmLcttBfArE5upuGID
+	SasonDQWYyjGKjVCmhaCrdYrHUztububtvWhbs/jtQiMCVMqIneOfnjqMIvuAM8h
+	JOV16Bl4+qd5u7p4ZnOL+q2+sl0BD5t15GaEZEPFu7g58n7HSnM3xUiRf4xZGLtM
+	VAx269oLzm7/iq3oR/aRYirUxFb1P19BIZdN7gtS8YeVBo0JwOEP/SYAWdyZ9CdA
+	19QFTjs9jhRD1h3HNGagtOi2hDG3LVMPk3Wei720KtYwUe3kNqVelhT9gLJE7ZMj
+	z0LM7+1Qi18kjlAReDfh12MDfi9W/uyfgDwx6FBTpQeQuSXt4rc3aN4hBRz4nUiw
+	==
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46smh73pwv-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 22 May 2025 11:12:40 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 54M9jFCZ015487;
+	Thu, 22 May 2025 11:12:39 GMT
+Received: from smtprelay06.wdc07v.mail.ibm.com ([172.16.1.73])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 46rwnnh53j-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 22 May 2025 11:12:39 +0000
+Received: from smtpav03.wdc07v.mail.ibm.com (smtpav03.wdc07v.mail.ibm.com [10.39.53.230])
+	by smtprelay06.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 54MBCd8b19071588
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 22 May 2025 11:12:39 GMT
+Received: from smtpav03.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 2D0A65805C;
+	Thu, 22 May 2025 11:12:39 +0000 (GMT)
+Received: from smtpav03.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 5F1CD5805A;
+	Thu, 22 May 2025 11:12:38 +0000 (GMT)
+Received: from li-43857255-d5e6-4659-90f1-fc5cee4750ad.ibm.com (unknown [9.61.163.247])
+	by smtpav03.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Thu, 22 May 2025 11:12:38 +0000 (GMT)
+Message-ID: <c0f1df02160138d0782cb897eda844287b3d7792.camel@linux.ibm.com>
+Subject: Re: [PATCH] ima: add a knob ima= to make IMA be able to be disabled
+From: Mimi Zohar <zohar@linux.ibm.com>
+To: Baoquan He <bhe@redhat.com>
+Cc: linux-integrity@vger.kernel.org, kexec@lists.infradead.org,
+        linux-kernel@vger.kernel.org, pmenzel@molgen.mpg.de, coxu@redhat.com,
+        ruyang@redhat.com, chenste@linux.microsoft.com
+In-Reply-To: <aC6Y3S9hEB1snvwj@MiWiFi-R3L-srv>
+References: <20250515233953.14685-1-bhe@redhat.com>
+	 <aCaFNvHbYxrCaPbe@MiWiFi-R3L-srv>
+	 <1d2848fe45dbf58707cecf16c4fc46b179e24415.camel@linux.ibm.com>
+	 <aC6Y3S9hEB1snvwj@MiWiFi-R3L-srv>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 22 May 2025 07:08:04 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: kwepems200001.china.huawei.com (7.221.188.67) To
- kwepemq200011.china.huawei.com (7.202.195.155)
+User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+X-TM-AS-GCONF: 00
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIyMDExMiBTYWx0ZWRfX1LqELZKjPPld HxM4ReRgZMzP/pNJFiISQK2KZE6XeEutYqzePla8pZmoBBCiQsRANn8XinzprUg2hKwNQYRS0qe sowGxT73OfTVd2GO5CfGnNIECxXELysSAoFt8PZMIQ56J7/VoKWD3P2PzZocP/S65Y1qnu76HdY
+ 3cZSY0JVXgEFaWlteUEuDuSquOuZzjLtDiUMZ19Z4m64JDxhinypZEG2HWSvDOkByWuDm+CnxRT XxRLjWENHA3v194fHePnML1zZ4CvwsFoBBEIwYLLi0pe1jCs8FWWX7g8IYMSaXw90DiWczLsOzC NdhXN3EoTJ4/LAawBZvhNOVo/235YWBwKPSnCSOB+DpKVqRNlE21dSRgtXVm2KbC4E0kHg3lmbM
+ Qy2Mcf0wYMBlA28IDTWa/R00tcESGhFTDA2/Pfj6w5wKm8dUQjblyI/yj1WVa5bBg/v9e8mA
+X-Proofpoint-GUID: 7epxmsGcW0Unb2QLmiQgzdBfzhuQoTyA
+X-Proofpoint-ORIG-GUID: 7epxmsGcW0Unb2QLmiQgzdBfzhuQoTyA
+X-Authority-Analysis: v=2.4 cv=EdfIQOmC c=1 sm=1 tr=0 ts=682f06a8 cx=c_pps a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17 a=UeMwZWw34uBX8khp:21 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=20KFwNOVAAAA:8 a=dagHe2M521LXfLvkCjsA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-22_05,2025-05-22_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ suspectscore=0 adultscore=0 mlxscore=0 lowpriorityscore=0 malwarescore=0
+ phishscore=0 priorityscore=1501 bulkscore=0 clxscore=1015 mlxlogscore=999
+ spamscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
+ definitions=main-2505220112
 
-This patch series is a significant rework of the exception mask helpers,
-building upon the discussions from a year ago [1]. The need for this
-reworking has become increasingly apparent with the emerging platform
-and virtualization support for FEAT_NMI [2], and Mark Brown's FEAT_NMI
-patch series [3] really highlighted the existing "hacking style"
-approach to DAIF management that needed addressing before NMI
-functionality could be properly integrated.
+On Thu, 2025-05-22 at 11:24 +0800, Baoquan He wrote:
+> On 05/21/25 at 08:54am, Mimi Zohar wrote:
+> > On Fri, 2025-05-16 at 08:22 +0800, Baoquan He wrote:
+> > > CC kexec list.
+> > >=20
+> > > On 05/16/25 at 07:39am, Baoquan He wrote:
+> > > > Kdump kernel doesn't need IMA functionality, and enabling IMA will =
+cost
+> > > > extra memory. It would be very helpful to allow IMA to be disabled =
+for
+> > > > kdump kernel.
+>=20
+> Thanks a lot for careufl reviewing and great suggestions.
+>=20
+> >=20
+> > The real question is not whether kdump needs "IMA", but whether not ena=
+bling
+> > IMA in the kdump kernel could be abused.=C2=A0 The comments below don't=
+ address
+> > that question but limit/emphasize, as much as possible, turning IMA off=
+ is
+> > limited to the kdump kernel.
+>=20
+> Are you suggesting removing below paragraph from patch log because they
+> are redundant? I can remove it in v2 if yes.
 
-Furthermore, with Jonathan has platform that now support FEAT_NMI,
-there's a strong desire to see Mark Brown's FEAT_NMI patchset merged
-soon. All of these factors emphasize the importance of a robust and
-clean exception mask rework. Therefore, I'm pushing this patchset again
-and would greatly appreciate your review.
+"The comments below" was referring to my comments on the patch, not the nex=
+t
+paragraph.  "don't address that question" refers to whether the kdump kerne=
+l
+could be abused.
 
-This series broadly follows the suggestions made by Mark Rutland in
-response [4] to Mark Brown's FEAT_NMI patchset. To summarize his
-thoughts on DAIF + PMR + ALLINT management:
+We're trying to close integrity gaps, not add new ones.  Verifying the UKI'=
+s
+signature addresses the integrity of the initramfs.  What about the integri=
+ty of
+the kdump initramfs (or for that matter the kexec initramfs)?  If the kdump
+initramfs was signed, IMA would be able to verify it before the kexec.
 
-(a) Adding entry-specific helpers to manipulate abstract exception masks
-    covering DAIF + PMR + ALLINT. Those need unmask-at-entry and
-    mask-at-exit behaviour, and today only need to manage DAIF + PMR.
+As for the next paragraph, based on Coiby's response, please remove it.
 
-    It should be possible to do this ahead of ALLINT / NMI support.
+thanks,
 
-(b) Adding new "logical exception mask" helpers that treat DAIF + PMR +
-    ALLINT as separate elements. 
-
-While attempting to follow Mark Rutland's guidance, I may have initially
-misunderstood some nuances, leading to a complete redesign and recoding
-of this patchset. As a result, it looks rather different from the previous
-revision.
-
-In short summary, to reduce the complexity of a single, monolithic
-function trying to handle every scenario, this patchset now introduces
-two distinct series of logical exception mask helpers. Each series is
-tailored for a specific kernel configuration and use case. I believe
-this policy makes the behavior of each exception mask helper much more
-explicit for any given situation, and simplifies the future integration
-of FEAT_NMI support without introducing further complexity.
-
-Thanks,
-
-[1] https://lore.kernel.org/all/20240614034433.602622-1-liaochang1@huawei.com/
-[2] https://lore.kernel.org/all/20240407081733.3231820-1-ruanjinjie@huawei.com/
-[3] https://lore.kernel.org/linux-arm-kernel/20221112151708.175147-1-broonie@kernel.org/
-[4] https://lore.kernel.org/linux-arm-kernel/Y5c9SLeJacLYHmP7@FVFF77S0Q05N/
-
-v5->v4:
-1. The rework has been fully redesigned, you'll find all the details in
-   the first patch.
-2. The rework focus on replacing the helpers defined in daifflags.h, so
-   less patches in this series, it will be easier to review and discuss.
-
-v4->v3:
-General Enhancements
---------------------
-Commit messages of [PATCH 04/05/06] have been enriched to outline the
-implementation details, motivations and potential effects. This might
-improve develper understanding and review efficiency.
-
-Specific Changes
-----------------
-1. [PATCH 01] new utilize the existing helper maco in sysregs.h to
-   generate the "MSR ALLLINT, #Imm1" instruction. Additionally, helper
-   names have been renamed to start with msr_pstate_ for better
-   discoverability (as suggested by Mark Brown).
-
-2. For [PATCH 04], due to the barrier side-effect of writing to PSTATE
-   fields, it is unnecessary to call pmr_sync() in
-   __pmr_local_allint_restore(). Add a table in comments to depict the
-   relationship between the type of interrupt masking and hardware
-   register configuration.
-
-3. For [PATCH 05/06], function names have been revised to better reflect
-   their purpose:
-
-   local_errint_enable()       -> local_irq_serror_enable()
-   local_errint_disable()      -> local_nmi_serror_disable()
-   local_allint_mark_enabled() -> local_irq_mark_enabled()
-   local_allint_disable()      -> local_nmi_disable()
-   local_errnmi_enable()       -> local_nmi_serror_enable()
-
-4. For [PATCH 07], A bug in local_nmi_enable() has been fixed. The v3
-   version is overly complex and included an unnecessary write operation
-   to PSTATE.DAIF.
-
-5. [PATCH 09] introduce a slight optimization for NMI handling. Since
-   the intermediate step of marking IRQ TO-BE enabled is no longer
-   required, dropping PMR before acknowledge PSEUDO_NMI is also
-   unnecessary.
-
-6. [PATCH 10] migrates CPU idle contex save/restore operation to the
-   newly introduced logical interrupt masking helper functions.
-
-v3->v2:
-1. Squash two commits that address two minor issues into Mark Brown's
-   origin patch for detecting FEAT_NMI.
-2. Add one patch resolves the kprobe reenter panic while testing
-   FEAT_NMI on QEMU.
-
-v2->v1:
-Add SoB tags following the origin author's SoBs.
-
----
-
-Liao Chang (2):
-  arm64: New exception mask helpers to manage DAIF, PMR and ALLINT
-  arm64: Deprecate the old daifflags helpers
-
- arch/arm64/include/asm/daifflags.h      | 144 -------------------
- arch/arm64/include/asm/exception_mask.h | 137 ++++++++++++++++++
- arch/arm64/include/asm/kvm_host.h       |   2 +-
- arch/arm64/include/asm/mmu_context.h    |   2 +-
- arch/arm64/kernel/Makefile              |   2 +-
- arch/arm64/kernel/acpi.c                |  10 +-
- arch/arm64/kernel/cpufeature.c          |   3 +
- arch/arm64/kernel/debug-monitors.c      |   6 +-
- arch/arm64/kernel/entry-common.c        |  81 +++++------
- arch/arm64/kernel/exception_mask.c      | 177 ++++++++++++++++++++++++
- arch/arm64/kernel/hibernate.c           |   6 +-
- arch/arm64/kernel/irq.c                 |   4 +-
- arch/arm64/kernel/machine_kexec.c       |   4 +-
- arch/arm64/kernel/probes/kprobes.c      |   2 +-
- arch/arm64/kernel/setup.c               |   4 +-
- arch/arm64/kernel/signal.c              |   2 +-
- arch/arm64/kernel/smp.c                 |  10 +-
- arch/arm64/kernel/suspend.c             |   6 +-
- arch/arm64/kernel/traps.c               |   2 +-
- arch/arm64/kvm/hyp/vgic-v3-sr.c         |   4 +-
- arch/arm64/kvm/hyp/vhe/switch.c         |   4 +-
- arch/arm64/mm/fault.c                   |   2 +-
- arch/arm64/mm/mmu.c                     |   6 +-
- 23 files changed, 397 insertions(+), 223 deletions(-)
- delete mode 100644 arch/arm64/include/asm/daifflags.h
- create mode 100644 arch/arm64/include/asm/exception_mask.h
- create mode 100644 arch/arm64/kernel/exception_mask.c
-
--- 
-2.34.1
-
+Mimi
+>=20
+> >=20
+> > > >=20
+> > > > And Coiby also mentioned that for kdump kernel incorrect ima-policy
+> > > > loaded
+> > > > by systemd could cause kdump kernel hang, and it's possible the boo=
+ting
+> > > > process may be stopped by a strict, albeit syntax-correct policy an=
+d
+> > > > users
+> > > > can't log into the system to fix the policy. In these cases, allowi=
+ng to
+> > > > disable IMA is very helpful too for kdump kernel.
+> > > >=20
+> > > > Hence add a knob ima=3Don|off here to allow people to disable IMA i=
+n kdump
+> > > > kenrel if needed.
+> >=20
+> > ^kernel
+>=20
+> Will change.
+>=20
+> >=20
+> > > >=20
+> > > > Signed-off-by: Baoquan He <bhe@redhat.com>
+> > > > ---
+> > > > =C2=A0.../admin-guide/kernel-parameters.txt=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 5 +++++
+> > > > =C2=A0security/integrity/ima/ima_main.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 22 +++++++++++++++++++
+> > > > =C2=A02 files changed, 27 insertions(+)
+> > > >=20
+> > > > diff --git a/Documentation/admin-guide/kernel-parameters.txt
+> > > > b/Documentation/admin-guide/kernel-parameters.txt
+> > > > index d9fd26b95b34..762fb6ddcc24 100644
+> > > > --- a/Documentation/admin-guide/kernel-parameters.txt
+> > > > +++ b/Documentation/admin-guide/kernel-parameters.txt
+> > > > @@ -2202,6 +2202,11 @@
+> > > > =C2=A0			different crypto accelerators. This option can
+> > > > be
+> > > > used
+> > > > =C2=A0			to achieve best performance for particular HW.
+> > > > =C2=A0
+> > > > +	ima=3D		[IMA] Enable or disable IMA
+> > > > +			Format: { "off" | "on" }
+> > > > +			Default: "on"
+> > > > +			Note that this is only useful for kdump kernel.
+> >=20
+> > Instead of "useful" I would prefer something clearer like "limited".
+>=20
+> Makes sense, will change.
+>=20
+> >=20
+> > > > +
+> > > > =C2=A0	init=3D		[KNL]
+> > > > =C2=A0			Format: <full_path>
+> > > > =C2=A0			Run specified binary instead of /sbin/init as
+> > > > init
+> > > > diff --git a/security/integrity/ima/ima_main.c
+> > > > b/security/integrity/ima/ima_main.c
+> > > > index f3e7ac513db3..07af5c6af138 100644
+> > > > --- a/security/integrity/ima/ima_main.c
+> > > > +++ b/security/integrity/ima/ima_main.c
+> > > > @@ -27,6 +27,7 @@
+> > > > =C2=A0#include <linux/fs.h>
+> > > > =C2=A0#include <linux/iversion.h>
+> > > > =C2=A0#include <linux/evm.h>
+> > > > +#include <linux/crash_dump.h>
+> > > > =C2=A0
+> > > > =C2=A0#include "ima.h"
+> > > > =C2=A0
+> > > > @@ -38,11 +39,27 @@ int ima_appraise;
+> > > > =C2=A0
+> > > > =C2=A0int __ro_after_init ima_hash_algo =3D HASH_ALGO_SHA1;
+> > > > =C2=A0static int hash_setup_done;
+> > > > +static int ima_disabled;
+> >=20
+> > Like the ima_hash_algo variable definition above, ima_disabled should b=
+e
+> > defined as __ro_after_init.
+>=20
+> Will add __ro_after_init.
+>=20
+> >=20
+> > > > =C2=A0
+> > > > =C2=A0static struct notifier_block ima_lsm_policy_notifier =3D {
+> > > > =C2=A0	.notifier_call =3D ima_lsm_policy_change,
+> > > > =C2=A0};
+> > > > =C2=A0
+> > > > +static int __init ima_setup(char *str)
+> > > > +{
+> >=20
+> > is_kdump_kernel() should also be called here, before the tests below.=
+=20
+> > Something like:
+> >=20
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!is_kdump_kernel()) {
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 pr_info("Warning ima setup option only permitted in kdump")=
+;
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 return 1;
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
+>=20
+> Sure, will change as suggested.
+>=20
+> >=20
+> > > > +	if (strncmp(str, "off", 3) =3D=3D 0)
+> > > > +		ima_disabled =3D 1;
+> > > > +	else if (strncmp(str, "on", 2) =3D=3D 0)
+> > > > +		ima_disabled =3D 0;
+> > > > +	else
+> > > > +		pr_err("Invalid ima setup option: \"%s\" , please
+> > > > specify
+> > > > ima=3Don|off.", str);
+> > > > +
+> > > > +	return 1;
+> > > > +}
+> > > > +__setup("ima=3D", ima_setup);
+> > > > +
+> > > > +
+> > > > +
+> >=20
+> > Remove the extraneous blank line.
+>=20
+> sure.
+>=20
+> >=20
+> > > > =C2=A0static int __init hash_setup(char *str)
+> > > > =C2=A0{
+> > > > =C2=A0	struct ima_template_desc *template_desc =3D
+> > > > ima_template_desc_current();
+> > > > @@ -1184,6 +1201,11 @@ static int __init init_ima(void)
+> > > > =C2=A0{
+> > > > =C2=A0	int error;
+> > > > =C2=A0
+> > > > +	if (ima_disabled && is_kdump_kernel()) {
+> > > > +		pr_info("IMA functionality is disabled");
+> > > > +		return 0;
+> > > > +	}
+> > > > +
+> >=20
+> > Even with the additional call to is_kdump_kernel() in ima_setup, please=
+ keep
+> > the is_kdump_kernel() test here as well.=C2=A0 Even though the code is =
+self
+> > describing, please add a one line comment emphasizing disabling IMA is
+> > limited
+> > to kdump.
+>=20
+> OK, will keep code here as this v1 is and add one line of comment at
+> above.
+>=20
+> Thanks again.
+>=20
+> >=20
+> > > > =C2=A0	ima_appraise_parse_cmdline();
+> > > > =C2=A0	ima_init_template_list();
+> > > > =C2=A0	hash_setup(CONFIG_IMA_DEFAULT_HASH);
+> > > > --=20
+> > > > 2.41.0
+> > > >=20
+> > >=20
+> > >=20
