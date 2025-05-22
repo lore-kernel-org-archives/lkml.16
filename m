@@ -1,202 +1,99 @@
-Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam02on2086.outbound.protection.outlook.com [40.107.212.86])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A756028A402;
-	Thu, 22 May 2025 13:09:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.212.86
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747919399; cv=fail; b=Nav828J4AF74p1DZRpW79DWa0nMdEBZeQ+7sDgD+ZvwZ9RqQHF3QsPGaoQ9D0gOhrVwEtjgUtdW8hmAFgHKmBZmGsOuanw0zvbIJAkG9gJnHr5uYs+A3UqOdqa21MTRZlxPLxO2k2vQZOFNCAnSEJlpiKaiZYLT8PzIY0CNZL3s=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747919399; c=relaxed/simple;
-	bh=2WVAosUHgpENnk7kHTcjaW4A6deXvQxOkf3XpMm41f8=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=PtWYPprpegQ/A/bg2j/bfdpH8nNMvtv+eQ/v6OopHJoha09dVp7gzeantpsy1afops7OxPe0s7UAOOsaQP4lr2u+vgKxlbqdhj6jy5dzoAe2r7KSRa456+/Q/yHWs4jANNSBd/fKxTTD4DBX0jLpSEuBmjWM7NkNxHHU7sfuZMI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=xDLqeSHU; arc=fail smtp.client-ip=40.107.212.86
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="xDLqeSHU"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=VVUb4w3kAzofIuzHjGTbiF3qC2kVvGZN5iON8pqOU41Na/2mK7BG6F2wB6Lj/AVmPdOXoEGz1GFd8my6JiOZCwvxneqDimf/DhN7XzFUsSvgZmK6gkYH/lOvlvkElsa6Wdqu+5gF3/CMG/Rrs1Um+NCvZAvTx+n7ZdX6Yy2W7bCWU3LtJnrXQbyL42VZjYzVCrPavdWW8OEXFcdJYVXsWm+d+rVWpUHeOeYDJS6lC9mOry40tCOHEePynvHErYdy+WHVG2Inclixncz4RcUpxsXrSzdDuGBID4JqW0jH2E2lgOt0uBtevwkmHFRRl6oHh0j5XccuPzEJl6B+LXmuSw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=6MYzRybTptYaZMOUDQtlgQyY5V5axZWI2TscVvL0ye4=;
- b=TgMNfrZTMqLeZMpdNEQzCYwzPhrs7NAKHeHVHSC5UbGxjdCJZ70Suusf1Vdt2KeK1eDSz1Vcr4qxmtiwsiW56+5jkBtXM3Q7BFmshwCg233nCNIoFLxAl7dV3IB8fTW+ZTkjO44kaHn/okAqVnhFdHDG+Cx0km6NhMWX63jCuXxgN340pRjxfvsWH876BN9u+N3ixr9ev1GcHlaYC5wNmufa8+PKSaAoa8Rk10vVKK0IOIzcGWSZHFSLg5mlTseOYM+A0eZE//Y99f+ME+WjV0j3xmEmS3j4Oti875+oY//f0DUpWw+DrNYLYr1wY3jiv2R2G5+K2UaTDStjxGQbTA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6MYzRybTptYaZMOUDQtlgQyY5V5axZWI2TscVvL0ye4=;
- b=xDLqeSHUgciX2Ko59cZYoHT3wVCmyGRyXIf3vQ4DJCjTjw/tNStujLFx333ToQokfsw1IbLo9sXPofvoP1korANY8eve8d13PTMJpVJ07VrNLA/rSKAjhy74bSZ9tgjek/PFyzvug02Wq0p/uV0aBPcRd9K4frsGAsk38jVhptQ=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from PH7PR12MB5685.namprd12.prod.outlook.com (2603:10b6:510:13c::22)
- by SA3PR12MB7832.namprd12.prod.outlook.com (2603:10b6:806:31f::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8746.30; Thu, 22 May
- 2025 13:09:55 +0000
-Received: from PH7PR12MB5685.namprd12.prod.outlook.com
- ([fe80::46fb:96f2:7667:7ca5]) by PH7PR12MB5685.namprd12.prod.outlook.com
- ([fe80::46fb:96f2:7667:7ca5%7]) with mapi id 15.20.8722.031; Thu, 22 May 2025
- 13:09:55 +0000
-Message-ID: <ebedece4-9758-47e9-b621-37b40e3f0fc3@amd.com>
-Date: Thu, 22 May 2025 15:09:49 +0200
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] drm/nouveau: Don't signal when killing the fence
- context
-To: Danilo Krummrich <dakr@kernel.org>
-Cc: phasta@kernel.org, Lyude Paul <lyude@redhat.com>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Sumit Semwal <sumit.semwal@linaro.org>, dri-devel@lists.freedesktop.org,
- nouveau@lists.freedesktop.org, linux-kernel@vger.kernel.org,
- linux-media@vger.kernel.org
-References: <20250522112540.161411-2-phasta@kernel.org>
- <20250522112540.161411-3-phasta@kernel.org>
- <af03b541-0b69-4b3d-b498-b68e0beb3dcb@amd.com>
- <06210b9dc5e5ea8365295b77942c3ca030f02729.camel@mailbox.org>
- <eae0ff0f-31a6-433a-b255-9bdb4727a940@amd.com> <aC8fpEXYWZ9Oy41J@pollux>
-Content-Language: en-US
-From: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
-In-Reply-To: <aC8fpEXYWZ9Oy41J@pollux>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: BL1PR13CA0245.namprd13.prod.outlook.com
- (2603:10b6:208:2ba::10) To PH7PR12MB5685.namprd12.prod.outlook.com
- (2603:10b6:510:13c::22)
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 960AD2F85B;
+	Thu, 22 May 2025 13:10:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747919446; cv=none; b=bb/0DNqdnvvTHmts2jJ7iQH3MwXTv/yWSwNdTtF/nbBqCSNRCFzSozqH8z72iiM0/7VXWqUcddWWzekQIQlUISqpKylfddh3T2n8qvId7RZDCq0HdpXhNsR8DwGm8QbGyM5K96zBDZe3G29fRV2VGQHwGgdPPrl7uCv0hdVYie8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747919446; c=relaxed/simple;
+	bh=4RO+ZVNYclCYbas2PTF9cypJ+dqERh2DHg4PqTJnmD0=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=u5tRXlv5kVa2oqBdfyyKq7EqkGmdexC2Dod6RCuZM2AbDjc2nP46FUITdTBejTf1TqS0mxN0nKM2qJe7RMotbmp/fzv+S1k9T/7uE2cHI0qFeFbbqgylJLnHrH5Xtflb9rJhd5e3MTRNggZRt1xpYxjV/5hr2Vm7bhqOqsHTZFg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=arm.com; spf=none smtp.mailfrom=foss.arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=foss.arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 971D21A2D;
+	Thu, 22 May 2025 06:10:29 -0700 (PDT)
+Received: from usa.arm.com (GTV29432L0-2.cambridge.arm.com [10.1.25.66])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 777ED3F673;
+	Thu, 22 May 2025 06:10:42 -0700 (PDT)
+From: Aishwarya <aishwarya.tcv@arm.com>
+To: dominik.grzegorzek@oracle.com
+Cc: chenridong@huawei.com,
+	daniel.m.jordan@oracle.com,
+	herbert@gondor.apana.org.au,
+	linux-crypto@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	steffen.klassert@secunet.com,
+	broonie@kernel.org
+Subject: Re: [PATCH] padata: do not leak refcount in reorder_work
+Date: Thu, 22 May 2025 14:10:41 +0100
+Message-Id: <20250522131041.8917-1-aishwarya.tcv@arm.com>
+X-Mailer: git-send-email 2.39.5 (Apple Git-154)
+In-Reply-To: <20250518174531.1287128-1-dominik.grzegorzek@oracle.com>
+References: <20250518174531.1287128-1-dominik.grzegorzek@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR12MB5685:EE_|SA3PR12MB7832:EE_
-X-MS-Office365-Filtering-Correlation-Id: 493a14e0-4ae9-4c60-e64b-08dd9931f208
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|7416014|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?dk41K3g5U1ZaOXBMc1RNUGV0Ynp5d29OTmJaU1l3VmdsandaQ1FtNklMdnR2?=
- =?utf-8?B?Nk1LQVVNL096WEdWaDlXQjBQaEtETmpoMWMzd1U0TXYrOEtGakFqa3hOUDgx?=
- =?utf-8?B?NmJmQ01Qc3JIM0VreFd2emIvRERCdW5JakZvMGFlQTZtZFBXQ2FVU0tFMWNE?=
- =?utf-8?B?c3V2VDV6ZDVHelU1WU5VbHpLb1IrVHNxbnZiZ2QvL3lxRmdhYk5xWmFnSzY0?=
- =?utf-8?B?Q3JLVVNPZzJZWGR3WGVBOTdha0dWbHFhRWZMak5xNTdZQkJ2NVNlRGc3cEVG?=
- =?utf-8?B?NGc2bnBlR250WFY2TE1lUlA1azFWQXJZVjQrSkIzM2tMTUx6Tm9kQjhtamcv?=
- =?utf-8?B?WlE3Q1ZKWGhYQU1wQ0ZqNGtINGFNL0RGTGY0NERPNUk4ak4wTVNSRDhDdXVD?=
- =?utf-8?B?NTJobU84c04xWWZVUjhnajRSQ2ZUblROdzNlMkxvL0ovZ251ZTVYZjRnZFhQ?=
- =?utf-8?B?SWZoNGdrMlU5RXh6M0Uybmkvb2JHYndUeitZOWkxTDZBMHNkZGMwTDVRMGVG?=
- =?utf-8?B?NStrUS9FM29xclppOUtkZXB2WnJjT3hZdkFCY01sNHUvVGNsQzdCNVdaMEF1?=
- =?utf-8?B?dExrUVdWUW5BZ2QzOGt0ai9KOU1WdXhSU21lZ3hBWnc4dmQ5QWRva2R6MXc1?=
- =?utf-8?B?T1hka1RmVW1zVWthYUcrNnhFbDM4U2tFOGEveGoxdk5jdHMrKzA2bjU4SUsz?=
- =?utf-8?B?aTg4QnRUOTRsSXFZWDRwcjJ1YTRLRGpkMzRSK3ZsOEs2RlZqY1Qxc2xxaTNy?=
- =?utf-8?B?Q3kxc25mK2F4UmNLeDFRT0ZZdm9aczg2RVBPdmpmdEIwcEFVYnVuVUI1MitF?=
- =?utf-8?B?dkRsTkNoamJubHJubHA5YkpGY0EvbEwxM2s2SEMyTFFLbzVmYXJwWmp2cUhM?=
- =?utf-8?B?cEhCcHZBaVFXSnVZSzVWbFFVMTVYd2REK3A2OGR0bTgrS0Zrb0U3MUdrUFF1?=
- =?utf-8?B?eEdRUmIvMVVZL2NTNHNCcE9HQzVoNDRYR1ZXbCtYSFlMS1JwdFE5Rzc1Nkhh?=
- =?utf-8?B?Wm9GaTRKK3Fmb1hMTTNVQVhTVXNHMElVMklqNWt3N1FJRGM5ZTkyOFZ6UHdu?=
- =?utf-8?B?SzB6Y2NGcFRkdHBGYkdFSVJmazc4YmtXOGE5SUQ3U2VZc2lST0hUdWdqenFL?=
- =?utf-8?B?SWQ4TmFJa0UwOVZOYXdhUjNDQXZIRXJDRkM5QnhPQmFzRUp1MEhEVUVGVzdR?=
- =?utf-8?B?bCt4ZjZVYSsrK1RCd1kyZlQ3TU50UGhGdFdqNHF6c0RDa09kT084VXZ5S2Zi?=
- =?utf-8?B?SWtqS2Vrak56M1hSWm9IbXc3MXRJWVVkd2Fvc3JYVWw3WEdzZUpXWXRTWFpv?=
- =?utf-8?B?amhEZHhrdjhJN3Nvcmk3Z09vbDlEUTk0Ym9OeVluVTFWNkZ0R2xWdXMwVXpD?=
- =?utf-8?B?UnZsTnhsREU1eExYR1hsaHRLUGc2OUxPcHhsc1NKTGFneldrajBSNkpsenpu?=
- =?utf-8?B?cUJ6ZUNQQVZ6UmZ0WnhCZU1ZNXFGdGdRMG9GU0VGcXVTUXNnK1RLQ3c0alRj?=
- =?utf-8?B?N0RRdk9ka1p4RXA5Zk85dVIvR0V6SXJMcyszUjZZaEo3amcwR0kyMmNVa2pj?=
- =?utf-8?B?MFlpSU1IRnJCQTQyY05DdkJhMy93SWw3dlk0WitCODd2RUVvemN2Q3o4OERI?=
- =?utf-8?B?V3NuUlNPR2czN1d5dWJ5aktVdjg2dkVKd2hHSXZvR1VTWStIMmwxZTRObDhv?=
- =?utf-8?B?TzFvdzQ0ZVRQTzJFMTFwRWhKaFdTWlcwUlltOTBmOTJxdWwveVFKZ1ZBZ0sw?=
- =?utf-8?B?UFZKelcvSzZTemJqRjM3RjBkTzFIMm9vdWd5eTNLV3k4U1NtdkRmY3JNQW9M?=
- =?utf-8?B?dWNMZjNXQzJPRVNHRjdTVmdyRXNPc0dNTnJBZ01iQXFCS2dpdDlBY0lUWnhO?=
- =?utf-8?B?OGFsKzlBWTNuV1VXM3hQV3J1MlRSOVlpQTUvcXdXcW5STm90dWhsNHJiNUxs?=
- =?utf-8?Q?PMLDAKdB+jQ=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5685.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?N2VwT3paOHFnTTdZeHVqN2dlKzUySENjd01tMjU0a3k3eUVNTWpubGlZSHlX?=
- =?utf-8?B?QlNJbWRZNFNyTVBTbGFpd2M2OWQrUkNQWFRzaUwvcDRlNjFJUjBRandPYkFt?=
- =?utf-8?B?LzI2OVRMWFg0RHU1QlREWDBiSzVGQ0UvNStVSGYxUXNSQ3FZRmJ0L0JwdXhL?=
- =?utf-8?B?U1lhUUZ2WEV2eDVjMHl1TkdzcjZFMTNNYmg0SWF2OUU2ZzhpdVZMcHRIeGph?=
- =?utf-8?B?Q1hmN280TXpRMThzZ3hWRkZ4aXRySVpPU0VCQUZHcCsyaHQyRTJVL01ITjUr?=
- =?utf-8?B?L3l1YlJwbUgxdXZjU09oRTVJNmRHMjlMNmk2NnZmL05kUVJxUU1Vd3Vwb1dB?=
- =?utf-8?B?SzZxeDZBMC9KaWh2M1pDaW1yWHA0c1pZU2ZIakpXdm1HUTVHOTM0RDBteG5a?=
- =?utf-8?B?YkNhSWZ3ZFEwQXA2TXFjK2dNbEF6dWR1RWZaZVNMdWZZeG5aL1Y0KzNoaXVN?=
- =?utf-8?B?TjBwQWZOM21kRTgzaVl4OVpkV3piWlQyRmFwN3FSWDkybmtmV09iQytqNDZK?=
- =?utf-8?B?dHVVL3ovTFN0Yk5Zblg1d0ZwZ0RsQ3BwRzRoSk8yV0E5VkZpK1Q4bHIwN1BV?=
- =?utf-8?B?eWM1UGhYQldXaGk3UTBPQXNrb3c4OXVuamxGdHArMkdpWk9BMG1uQ0JoSkZu?=
- =?utf-8?B?UXBCL0dOK0grWmtEMzgxckVNSFdzVTRpM3RrYTEva014SEI2N2M1ekhSZzU0?=
- =?utf-8?B?WE5iZmZZZk5zalFrUDhabGRRZGhlZElvVDZKYzhGVS8zS09iTU0zVWFTVEZC?=
- =?utf-8?B?TVJMU1IrSEh3WmpWTEUwUjdBemVGZUUzT25JYXlsbEVxUnFnMjBlN1RsRGtT?=
- =?utf-8?B?anF0RHZsLyt5R3d1UjRrTUZMYW5GcFlGbXZkeWFPaWExNkpmUkFaQnJNWmVt?=
- =?utf-8?B?dnkvbEFVNXJEb0xHQXFGWWdzT2l1MEpvUGhWZEdhb0p0S2puQUJXNlI4QzRz?=
- =?utf-8?B?Q2sybHlxUEVpUUQvV21GeGhrb3Y5TGxtck1vTUplWmdjS1Evb2NZbTNYZnUy?=
- =?utf-8?B?cjFJdUxvOGN4VVFyMHdrckdIT0U0SlNnckhlWC9VeHQyYlhQWFV5TVg3eis3?=
- =?utf-8?B?cEdlV245djQ4VDBybDY1L0syYThTdmZGSjYwK2ZoMmQzU0dFVmJmQWFyVVp2?=
- =?utf-8?B?d3ZQVXFNNlZpWW9aUXFEM1JJMEFQVGQvc0I2Q2VsSVBhREZqUEcybmJrYzRB?=
- =?utf-8?B?UWVZby9tL01VUkNJWjljYzZYODVBV2s2ZGNQZjlxUG1vV1RoUFpGVWVmZVd0?=
- =?utf-8?B?QTVPT2Q5OFBPRW5sbGZER0d0WEI1Uy9CMWUwMElFUGpwU0tIWElNRHMwK2xw?=
- =?utf-8?B?RlJSOUQvWDZlaWxFdDlJUGZTRW53c2J6Nm9IR1lHT3hMRmRDOU1OOE1qV3VP?=
- =?utf-8?B?S3lCTU1xTzJGWVJ6aVpXbWR6aTUrM0Y2ZERVc3kzTGhIZnpNUnRXTnV2dm1w?=
- =?utf-8?B?dExtYW9qSTRTSHNrUDhjaVRLeFFxZEM5dVppTXJkd0NVOEtwaVRqUlFkRXEz?=
- =?utf-8?B?eHRkem5RVlVZb21CSVR1bkJqWk5EK1dFK3dGSGQ3OWF0ZWJxWWIzOXhQZGFa?=
- =?utf-8?B?cFpEbHpqeXRNdi9PdDY3TlJLdmgxY3g0WTJYZmhvT2U1RTNUcGREd2hCMWdG?=
- =?utf-8?B?bm10YlowYnB6a2NJQ295c1NDMkN2V1dhMHE0QzRFdzVoWnlWTzdNYXM2YW5x?=
- =?utf-8?B?bElrUFE0NThWb2NFUHVTelVLUHBZYXo5WjVROGVUT3ZUdjVCbEV0bC9lVWoz?=
- =?utf-8?B?dE1Fb1h6TCs3TEJESnBEbWw3cHlIeFZtY2Vtc1hmMGkzOENaZWh5UkFoVm11?=
- =?utf-8?B?NlpreElkRHd5VDRCM2ZSbWNJZks5ejcyd0lPbFU4MnFLMW95Ym1MWnpwOGpj?=
- =?utf-8?B?VmxXRG9GVXFFdFRDVG1uMVZtUHBWTyt3NHdpcHFoeXRiZTdnbG92OE1ZNVk3?=
- =?utf-8?B?SU8rbVY5Wjc2dk90a1E1eHVpV1diUHI5TVk5L1VmbERjdU56MTBPdllWL0FZ?=
- =?utf-8?B?ZEhqQUJNSVZZSUpFQ2YxNFFYeTFJVHAzYklEOVJRTmpqU3B3ODU0ZHFEV2Rz?=
- =?utf-8?B?RmY1alMyazNrOXRWOTFTaGw3aGpJK0JQTXFCRit6aWtMMjQ0ZmQ1VjZSdzhV?=
- =?utf-8?Q?fLSSprOz9e6PCp+qimc4r0Aur?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 493a14e0-4ae9-4c60-e64b-08dd9931f208
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB5685.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 May 2025 13:09:55.0969
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Hg/9C8SvVYNahRxcFLnOD0N6u/7/WLe/iDlQYB0epGwnQU8dNke6BnPndGSK08H3
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA3PR12MB7832
+Content-Transfer-Encoding: 8bit
 
-On 5/22/25 14:59, Danilo Krummrich wrote:
-> On Thu, May 22, 2025 at 02:34:33PM +0200, Christian König wrote:
->> See all the functions inside include/linux/dma-fence.h can be used by everybody. It's basically the public interface of the dma_fence object.
-> 
-> As you write below, in certain cases it is valid to call this from drivers, so
-> it's not unreasonable to have it as part of the public API.
+Hi Dominik,
 
-The question is from which drivers?
+I wanted to report a regression observed while running the
+`kselftest-mm` suite, specifically the
+`mm_run_vmtests_sh_migration_migration_shared_anon` test, on an
+Arm64 Marvell Thunder X2 (TX2) system.
 
->> So testing if a fence is signaled without calling the callback is only allowed by whoever implemented the fence.
->>
->> In other words nouveau can test nouveau fences, i915 can test i915 fences, amdgpu can test amdgpu fences etc... But if you have the wrapper that makes it officially allowed that nouveau starts testing i915 fences and that would be problematic.
-> 
-> In general, I like the  __dma_fence_is_signaled() helper, because this way we
-> can document in which cases it is allowed to be used, i.e. the ones you descibe
-> above.
-> 
-> test_bit() can be called by anyone and there is no documentation comment
-> explaining that it is only allowed under certain conditions.
+The kernel was built using defconfig with the additional config
+fragment from:
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/testing/selftests/mm/config
 
-That's a rather good argument.
+This works fine on v6.15-rc7.
 
-> Having the __dma_fence_is_signaled() helper properly documented could get you
-> rid of having to explain in which case the test_bit() dance is allowed to do
-> over and over again. :-)
+A bisect identified this patch as introducing the failure. Bisected
+it on the tag "v6.15-rc7-7-g4a95bc121ccd" at repo:
+git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
 
-That's an even better argument. 
+Failure log:
+11193 03:29:14.806502  # # running ./migration
+11194 03:29:14.806876  # # -------------------
+11195 03:29:14.820939  # # TAP version 13
+11196 03:29:14.821236  # # 1..6
+11197 03:29:14.821519  # # # Starting 6 tests from 1 test cases.
+11198 03:29:14.821773  # # #  RUN           migration.private_anon ...
+11199 03:29:34.602964  # # #            OK  migration.private_anon
+11200 03:29:34.603418  # # ok 1 migration.private_anon
+11201 03:29:34.603687  # # #  RUN           migration.shared_anon ...
+11202 03:29:34.973479  # # Didn't migrate 1 pages
+11203 03:29:34.973855  # # # migration.c:175:shared_anon:Expected migrate(ptr,
+self->n1, self->n2) (-2) == 0 (0)
+11204 03:29:34.984787  # # # shared_anon: Test terminated by assertion
+11205 03:29:34.985105  # # #          FAIL  migration.shared_anon
+11206 03:29:34.985365  # # not ok 2 migration.shared_anon
+11207 03:29:34.988568  # # #  RUN           migration.private_anon_thp ...
+11208 03:29:54.597572  # # #            OK  migration.private_anon_thp
+11209 03:29:54.597951  # # ok 3 migration.private_anon_thp
+11210 03:29:54.598487  # # #  RUN           migration.shared_anon_thp ...
+11211 03:29:55.011183  # # Didn't migrate 1 pages
+11212 03:29:55.011524  # # # migration.c:241:shared_anon_thp:Expected migrate(ptr,
+self->n1, self->n2) (-2) == 0 (0)
+11213 03:29:55.022519  # # # shared_anon_thp: Test terminated by assertion
+11214 03:29:55.022834  # # #          FAIL  migration.shared_anon_thp
+11215 03:29:55.027864  # # not ok 4 migration.shared_anon_thp
+11216 03:29:55.028156  # # #  RUN           migration.private_anon_htlb ...
+11217 03:30:14.595327  # # #            OK  migration.private_anon_htlb
+11218 03:30:14.595777  # # ok 5 migration.private_anon_htlb
+11219 03:30:14.596398  # # #  RUN           migration.shared_anon_htlb ...
+11220 03:30:34.595239  # # #            OK  migration.shared_anon_htlb
+11221 03:30:34.595623  # # ok 6 migration.shared_anon_htlb
+11222 03:30:34.595859  # # # FAILED: 4 / 6 tests passed.
+11223 03:30:34.603816  # # # Totals: pass:4 fail:2 xfail:0 xpass:0 skip:0 error:0
+11224 03:30:34.604110  # # [FAIL]
+11225 03:30:34.604342  # not ok 55 migration # exit=1
 
-> I also think the name is good, since the '__' prefix already implies that there
-> are some restrictions on the use of this helper.
-
-I'm still hesitating. Adding something to the API always made it usable by everybody.
-
-Now suddenly saying we add that to the include/linux/dma-fence.h header but only certainly code can use it still sounds questionable to me.
-
-Regards,
-Christian.
+Thanks,
+Aishwarya
