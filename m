@@ -1,79 +1,203 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f41.google.com (mail-io1-f41.google.com [209.85.166.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D193926B970;
-	Thu, 22 May 2025 22:13:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59E8326B96F
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 22:14:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747952028; cv=none; b=A+/v3Jf/REaegTvsegUzCLc7WEzxjhhe1jNW2iFI2GfEC4wlt2+GLtU4N53UQxuW9JfD9z7kdszeVbt6mkWrsx7wcfcRLDoR/Iu3NzMkY45n3OFkPjIujj1TxGTGeDetxSQzSSVAHYr62ISLGq3kj+GlCVCIqKkgbOPYJeQ9VGc=
+	t=1747952047; cv=none; b=gGu0kcXUkFrtbmm1StRHiDyVxMxGDaZU7TvHxvFfM2nZdLcfjGwAf814idZPp3vIs8pYnwO8qX/hi18surpYc6z4bU0NpJr5JBUBiL9DurYlaFP7JxulHkkYyTPn7FPFaWfpZVEuZ4yliIGEOoixEpugOIDZPcDY4JvGTj3IQPE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747952028; c=relaxed/simple;
-	bh=0gNOwm+ixznGLcCYt/xPhR3d4d4LaGz5vTfy/hu3DeU=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=TgVEYI/itjKn/xWlQLfQ2NpPy/b2sc5xUjeITaPHSmdNzbF/28wKO7M1iYPDxII5+FZHj1LcfzqrOjZGjwE4ZvNg7/hYSxltcMNMuMllY2yWtoabaAmRcLnsQ+NaxLKOfKVktCOkXdWx6wV2KQJWGuNGxEqdfnJ6+NdV37l8uKw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QayDC5Eg; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747952047; c=relaxed/simple;
+	bh=jQxZc8Y032ak08Q0emttPc7dQ2u6AroqvGo538WQ7Tc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gKe3CuzE+hEzcrQ2swzWuEz0iePMHak05fZwgNPHRIOkZ96aO06a4YoywDMVQF5ulSCp8GGDfHeYaIp5QSlN8wrzI7fUqCAci6JpSIRO9wXDr+T8Uu7ADgU9zGj8AjXKd3gvAsFOxR/7hUSd46wmgWnBjkM6MIsuB+aNXiP3mXE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=YRc4X0pM; arc=none smtp.client-ip=209.85.166.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QayDC5Eg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BAEE9C4CEF1;
-	Thu, 22 May 2025 22:13:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747952028;
-	bh=0gNOwm+ixznGLcCYt/xPhR3d4d4LaGz5vTfy/hu3DeU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=QayDC5EgTGqTHm0LyhLO+93nYto8xwaXxnmHWOcLfK9JGJs5wwNjDt8zRihB8Bsaf
-	 WI0+IvnCEntuufcLV0Niu8z93wdydo3Lz1HcO7+x9qUBS7yFR9NMMhYoGnI0WF33Z4
-	 Y2Okq3RJ/2dobr+h9w0/Y7z8G2WXPuv6s07o2aWzKNqx4zB2n6LgB8fhpKMm2v6fZZ
-	 zWF9jyp1KxIi+4qsjfrTZAGcDwrZhufzJO5ICENGEeK/NhKfUhjnu8+LFOK3sZFkdx
-	 0PjqtGz4RitRwfzkVSqXwcSgUIwwzKjhcSxt1zmR3w8JEmGNyU7S2vdAy7cyCplqqo
-	 V6Gd3sU0/yn1g==
-Date: Thu, 22 May 2025 15:13:46 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Saurabh Sengar <ssengar@linux.microsoft.com>
-Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
- decui@microsoft.com, andrew+netdev@lunn.ch, davem@davemloft.net,
- edumazet@google.com, pabeni@redhat.com, horms@kernel.org, ast@kernel.org,
- daniel@iogearbox.net, hawk@kernel.org, john.fastabend@gmail.com,
- sdf@fomichev.me, kuniyu@amazon.com, ahmed.zaki@intel.com,
- aleksander.lobakin@intel.com, linux-hyperv@vger.kernel.org,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
- ssengar@microsoft.com, stable@vger.kernel.org
-Subject: Re: [PATCH net,v2] hv_netvsc: fix potential deadlock in
- netvsc_vf_setxdp()
-Message-ID: <20250522151346.57390f40@kernel.org>
-In-Reply-To: <1747823103-3420-1-git-send-email-ssengar@linux.microsoft.com>
-References: <1747823103-3420-1-git-send-email-ssengar@linux.microsoft.com>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="YRc4X0pM"
+Received: by mail-io1-f41.google.com with SMTP id ca18e2360f4ac-85e73562577so885136939f.0
+        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 15:14:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google; t=1747952044; x=1748556844; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=5J4a3zUt5UqnI9NTo1FnvOQZ+RKzfc651OJ0pMNk2Gs=;
+        b=YRc4X0pMfPYUWM1bs4/3+Q4/UXN1G1BG9c58s0XSuE2Tj/D4eSEhk+n0IZ7eKTw8mw
+         7w1lSKvLswgLZdnWm4pt4gS4VgRpJkzq24KPKzLA0beCXKAhtJasey3a+yvr6PgWJEY+
+         4xMazALxFNZ2njUdhYPOQPJDU5274rspYIo6Q=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747952044; x=1748556844;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=5J4a3zUt5UqnI9NTo1FnvOQZ+RKzfc651OJ0pMNk2Gs=;
+        b=q2ol4VH4AJrw58nuzTZyO1KcWjvUdU6rXqLqNjcPeFenE+zPHGq1Ka6UA57jF9Vh4C
+         QFjsd45mLJWKM5vsRd1KlVtojTfIBlDoW6ef46PEHgH2zcIrsPeIxwzQQOYIQfkTLJ0u
+         O200BR76k5Ep99+tjtEEoZXeYp48VwoHkucdlLHD/pONHQu9ErCiaL8vGPGon1H6siRV
+         6vmbmSg2+COdlm3MoYKEYCFrCNcU9eIeSjLYlVp8BVigpyS3Ng590LMKZoe+NE9Q/xlj
+         NhIs/ty1kySJQyrRSfI2cSG76wt244kFIb7EtEbQlRSj3dzUzgN3kaSJP3GOXOhavvtc
+         AcbA==
+X-Forwarded-Encrypted: i=1; AJvYcCVOQHbh19oRNgsgUNthfctVrmLKagDaSfEEPkZTsAyAmR8XTJkSQIT3nxWQBs+MEwtkTzKxLiFQw8quBEY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyYAHHeqf43sv86sfi1nIFxBj++W7iD5SeVcI1AwcM4pZ7HHjjf
+	/kk1uX5DqRuGI+W8grsVOefTY0oBYRcKQQKLrVURsiuNb7B9fpNaXyLJQAMZtb6ljYk=
+X-Gm-Gg: ASbGncu7BR5zNdxg5WI4uJKauZ4B2a7sT0FV5M04UlFeyNWMHgO3Iq0HlIdhyP0bs9e
+	zkJm2sg57rSE929zqpa4LZhGuw04qRvuyVFn5dFXpKO3Fb9eJis+FokXoHwZIUguQDOCZQhnbbl
+	yk4CCmiqNvm+daB0xpP4j6COIFJQ5zoURAk0cdUyUteuKWFxo5Cgl1w7GgRr9MPofg408D7W2cm
+	c0NmMmbuf01vAuN3cIPbSvz7XAUSqJgnx8TefaihxpAcmYOs1TcLNSHEtX2xUBsk40SRZmv1Mi8
+	WjBQ9cHWMavWWfo9KRGgGlL0/IEtg8ckEyrnq0ndk4vNS++t4t3LmSDB3zJ1ofnPizXHOEhZ
+X-Google-Smtp-Source: AGHT+IHZwWolaO+Fli0MkyNXJU+s8LgK5LKgl/nzRVICPjKpFxXTDptFKvju9PZib6E6vi0/FV/j5w==
+X-Received: by 2002:a05:6e02:3b89:b0:3ce:8ed9:ca94 with SMTP id e9e14a558f8ab-3db84321c68mr281912535ab.14.1747952044306;
+        Thu, 22 May 2025 15:14:04 -0700 (PDT)
+Received: from [192.168.1.14] ([38.175.170.29])
+        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-3dc879a918esm9653705ab.41.2025.05.22.15.14.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 22 May 2025 15:14:03 -0700 (PDT)
+Message-ID: <9d502cef-b2cb-4309-b268-7c75f8451833@linuxfoundation.org>
+Date: Thu, 22 May 2025 16:14:02 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] selftests: Improve test output grammar, code style
+To: =?UTF-8?B?SGFubmUtTG90dGEgTcOkZW5ww6TDpA==?= <hannelotta@gmail.com>,
+ shuah@kernel.org, alexandre.belloni@bootlin.com
+Cc: linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-rtc@vger.kernel.org, Shuah Khan <skhan@linuxfoundation.org>
+References: <20250516084233.66594-1-hannelotta@gmail.com>
+Content-Language: en-US
+From: Shuah Khan <skhan@linuxfoundation.org>
+In-Reply-To: <20250516084233.66594-1-hannelotta@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Wed, 21 May 2025 03:25:03 -0700 Saurabh Sengar wrote:
-> The MANA driver's probe registers netdevice via the following call chain:
+On 5/16/25 02:42, Hanne-Lotta Mäenpää wrote:
+> Add small grammar fixes in perf events and Real Time Clock tests'
+> output messages.
 > 
-> mana_probe()
->   register_netdev()
->     register_netdevice()
-> 
-> register_netdevice() calls notifier callback for netvsc driver,
-> holding the netdev mutex via netdev_lock_ops().
-> 
-> Further this netvsc notifier callback end up attempting to acquire the
-> same lock again in dev_xdp_propagate() leading to deadlock.
-> 
-> netvsc_netdev_event()
->   netvsc_vf_setxdp()
->     dev_xdp_propagate()
-> 
-> This deadlock was not observed so far because net_shaper_ops was never set,
+> Include braces around a single if statement, when there are multiple
+> statements in the else branch, to align with the kernel coding style.
 
-The lock is on the VF, I think you meant to say that no device you use
-in Azure is ops locked?
+This patch combines several changes in one including combining changes
+to two tests.
 
-There's also the call to netvsc_register_vf() on probe path, please
-fix or explain why it doesn't need locking in the commit message.
--- 
-pw-bot: cr
+> 
+> Signed-off-by: Hanne-Lotta Mäenpää <hannelotta@gmail.com>
+> ---
+> 
+> Notes:
+>      v1 -> v2: Improved wording in RTC tests based on feedback from
+>      Alexandre Belloni <alexandre.belloni@bootlin.com>
+> 
+>   tools/testing/selftests/perf_events/watermark_signal.c |  7 ++++---
+>   tools/testing/selftests/rtc/rtctest.c                  | 10 +++++-----
+>   2 files changed, 9 insertions(+), 8 deletions(-)
+> 
+
+Send separate patches for selftests/perf_events and selftests/rtc/rtctest.c
+
+
+> diff --git a/tools/testing/selftests/perf_events/watermark_signal.c b/tools/testing/selftests/perf_events/watermark_signal.c
+> index 49dc1e831174..6176afd4950b 100644
+> --- a/tools/testing/selftests/perf_events/watermark_signal.c
+> +++ b/tools/testing/selftests/perf_events/watermark_signal.c
+> @@ -65,8 +65,9 @@ TEST(watermark_signal)
+>   
+>   	child = fork();
+>   	EXPECT_GE(child, 0);
+> -	if (child == 0)
+> +	if (child == 0) {
+>   		do_child();
+> +	}
+>   	else if (child < 0) {
+>   		perror("fork()");
+>   		goto cleanup;
+> @@ -75,7 +76,7 @@ TEST(watermark_signal)
+>   	if (waitpid(child, &child_status, WSTOPPED) != child ||
+>   	    !(WIFSTOPPED(child_status) && WSTOPSIG(child_status) == SIGSTOP)) {
+>   		fprintf(stderr,
+> -			"failed to sycnhronize with child errno=%d status=%x\n",
+> +			"failed to synchronize with child errno=%d status=%x\n",
+
+This change is good.
+
+>   			errno,
+>   			child_status);
+>   		goto cleanup;
+> @@ -84,7 +85,7 @@ TEST(watermark_signal)
+>   	fd = syscall(__NR_perf_event_open, &attr, child, -1, -1,
+>   		     PERF_FLAG_FD_CLOEXEC);
+>   	if (fd < 0) {
+> -		fprintf(stderr, "failed opening event %llx\n", attr.config);
+> +		fprintf(stderr, "failed to setup performance monitoring %llx\n", attr.config);
+
+This change make it hard to understand what went wrong unlike the original
+message.
+
+>   		goto cleanup;
+>   	}
+>   
+> diff --git a/tools/testing/selftests/rtc/rtctest.c b/tools/testing/selftests/rtc/rtctest.c
+> index be175c0e6ae3..930bf0ce4fa6 100644
+> --- a/tools/testing/selftests/rtc/rtctest.c
+> +++ b/tools/testing/selftests/rtc/rtctest.c
+> @@ -138,10 +138,10 @@ TEST_F_TIMEOUT(rtc, date_read_loop, READ_LOOP_DURATION_SEC + 2) {
+>   		rtc_read = rtc_time_to_timestamp(&rtc_tm);
+>   		/* Time should not go backwards */
+>   		ASSERT_LE(prev_rtc_read, rtc_read);
+> -		/* Time should not increase more then 1s at a time */
+> +		/* Time should not increase more than 1s per read */
+>   		ASSERT_GE(prev_rtc_read + 1, rtc_read);
+>   
+> -		/* Sleep 11ms to avoid killing / overheating the RTC */
+> +		/* Sleep 11ms to avoid overheating the RTC */
+
+This change removes important information. What is the reason for this
+change?
+
+>   		nanosleep_with_retries(READ_LOOP_SLEEP_MS * 1000000);
+>   
+>   		prev_rtc_read = rtc_read;
+> @@ -236,7 +236,7 @@ TEST_F(rtc, alarm_alm_set) {
+>   	if (alarm_state == RTC_ALARM_DISABLED)
+>   		SKIP(return, "Skipping test since alarms are not supported.");
+>   	if (alarm_state == RTC_ALARM_RES_MINUTE)
+> -		SKIP(return, "Skipping test since alarms has only minute granularity.");
+> +		SKIP(return, "Skipping test since alarm has only minute granularity.");
+>   
+>   	rc = ioctl(self->fd, RTC_RD_TIME, &tm);
+>   	ASSERT_NE(-1, rc);
+> @@ -306,7 +306,7 @@ TEST_F(rtc, alarm_wkalm_set) {
+>   	if (alarm_state == RTC_ALARM_DISABLED)
+>   		SKIP(return, "Skipping test since alarms are not supported.");
+
+This one still says "alarms"
+
+>   	if (alarm_state == RTC_ALARM_RES_MINUTE)
+> -		SKIP(return, "Skipping test since alarms has only minute granularity.");
+> +		SKIP(return, "Skipping test since alarm has only minute granularity.");
+
+Isn't "alarms" consistent with other messages?
+
+>   
+>   	rc = ioctl(self->fd, RTC_RD_TIME, &alarm.time);
+>   	ASSERT_NE(-1, rc);
+> @@ -502,7 +502,7 @@ int main(int argc, char **argv)
+>   	if (access(rtc_file, R_OK) == 0)
+>   		ret = test_harness_run(argc, argv);
+>   	else
+> -		ksft_exit_skip("[SKIP]: Cannot access rtc file %s - Exiting\n",
+> +		ksft_exit_skip("Cannot access RTC file %s - exiting\n",
+>   						rtc_file);
+
+I don't see any reason for this change either.
+
+>   
+>   	return ret;
+
+thanks,
+-- Shuah
