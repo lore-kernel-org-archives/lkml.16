@@ -1,134 +1,103 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DACE2C3741
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 23:09:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F162D258CC2;
+	Thu, 22 May 2025 23:09:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747955391; cv=none; b=Ysy/qxqZ32KJpv098yo19N8fY2FTpDXJUyeCYfCDaAPgljrpd/RCsbxJKJQBuAuV8cV1ozMVTAPZJcAsLmgxzPeiTy7tnEgNAgj6nJH96xr0JZi2e81GZuTbpe7TZnxjwW/avBfBzmfcI4ZhN9KiTLYPu3PTAL524MhKN7qO1Dw=
+	t=1747955395; cv=none; b=WPQCJjB1FSidhcWpPt0WsKhFx8jZYhNIxVJzATEsaBEdAQipqvyxjq/erbiDdwH5vZBiMzEidIJV1w7XyTL5AEdvTptWTkeSbhW1BjoBcDtaVYRtpanebRBxi+4DQQ7NSFMb81JeHwzihmR1x1k+dL+i7Tuu/yPKrLsDH8mlj7I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747955391; c=relaxed/simple;
-	bh=xmmNbzOUYy0JPMzyNz1HKekN9DEWLMlFpi6NUrnivS4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=iYaM1aMIWZQvpdBkWK0sWsfF7UkzzBr+lqTo0c7u4GqHykV5Kc9eP5FeBdXMC4V1HMIA/XZ+AZqBD28Jht26E4/PU2j5XDwY9ae8ysTmQTeLsx3o6Cw6PhcTVxtIE9Sdy9POQBYww3WC1L9KbzWRU/Oyj4rHJ5K2nOJSW7ojnI8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=oBTNiygl; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1747955395; c=relaxed/simple;
+	bh=kMPYYZuS/QJqqrivdoubC5Yelg+gIuqU0mSYY14p948=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=uAhFT1NjnFx+EJUlvqWejlKjeRr6H5gPBe3kMb4WIPVpIrGqeckJa6BIXCs/3upYfbizRtFvNeoU4GghJSl2zqtS58tyoL01wsCFLhe5qs6Jb9R6q4jozbuxYGPVRrv1W0aSDEr4vnMCrzNXyCmNrksZpHdRLM7aE28Ou6bNEkE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZabzY/Yb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oBTNiygl"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-231f37e114eso49565ad.1
-        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 16:09:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747955389; x=1748560189; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3CA0pRDW8qyZDyuAgULvPatj8bCNl1YIn/HHQYllO0s=;
-        b=oBTNiygl/9B2pDQnU2F0D9VLdshIg7n5cpDLYLXnNgRjtb18pqPJgh1+Ynpr/xLQrU
-         mUdwvEjT2Nk9Kl0jKN/GDaswaWwe+7mAV4gzHLwe3zVPPv4n0MwZqU/2lWxT5DaaRrCO
-         rb/1rt5tTXdLmxD/anWCe/RylrKQnAEjjmdvp+CAL+NDe4AkeP5enk4C8gVgDsf/kbhV
-         6pBieMjmdgMJZ761758MHj6DRhsxnZv8Gl6SCI35d+x8wdnsqUXM0zOOgM8yiG61Snh3
-         CKPQ2nBJvZQ15GrHPIf+ytJfc91AdlWUVdQe/jvRGol1weISc18hGPGlb/MSW6kMnJDZ
-         XJOQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747955389; x=1748560189;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3CA0pRDW8qyZDyuAgULvPatj8bCNl1YIn/HHQYllO0s=;
-        b=aWgsMuRL+G82ZeIkBi5jeUApA4Ai8thsIIkGXgQrLuNDSOshCL6Fqm9nUkaGO0TTEj
-         V1j/AUR8iQZTmVDgIS9djubR95GgJVvf1FHu9dGnpLFW9WCgRrkfws0V84HNP4Fmm42G
-         /2cybMbxnMuayIyTf4K+nqYTRWm6VVZE+Zjlj+H5MmgqjLoeUD2ZjiZonB6wLslf9TQf
-         l+qCQ+QvbaBWTyRON7mBvXwer/naocT0nrU7hp8uUETDmI0ZB6MA506LE657nksgD+Nl
-         Mtez+vYUcWzkTX3qB/XwQATuH99aoz2Ys/r8oOKlmMPB6e2I2Ip077cKodBYZxhEqfn1
-         SLWw==
-X-Forwarded-Encrypted: i=1; AJvYcCVtQc6QucSjeHqQVxBI4cs1tEZL5MPx7HUcoChqkDSOe1K690N4jkTo+hYBpZwXcHk2gqDfg9lwcIoLTHU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxHLX3LqaGZ4Ptc8qcwif/UvbV6/dW+lNod7Bt1Gluej0yhXCOT
-	xi+vMnii9rySgmwAE00x7lOEXxG9bT/27qxVTQiQc1ZSMuf/38KPonbfJIr+DlHYSZv+pGm2Naz
-	8J100L1ldeTNQNZJ8r1lijZ5cHd3MIUf0O64DBWbv
-X-Gm-Gg: ASbGncsZmCI6Bt9OWEqLM9iIA4utBZQP7MGCwhqf0O/VbBjKqOE6RGtatEKigkQ3Jen
-	jwfkMDCa9CyUVIYnTtl0YHJC0olpm2NeD8T7N11eH+ErgP8Z6HpOOrDuirZtoUZTVTZD5iBhEMB
-	GsHc5Yoh0tm/Doc9p8Mnyt3tXvRI2IAkV2KFy098yZCSztFkSy9860HlXcjgHmxPwqNuSV/YsVu
-	w==
-X-Google-Smtp-Source: AGHT+IFJtNB+0R2HZaOFLO4H9RgrMoQxEv/cH23gmsEVlbJSkVFzBnQPZ8T049oEzAv/Mchs37L4pYjnW9hurdHf+gY=
-X-Received: by 2002:a17:902:f548:b0:21d:dd8f:6e01 with SMTP id
- d9443c01a7336-233f34d7114mr438365ad.5.1747955389173; Thu, 22 May 2025
- 16:09:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZabzY/Yb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A944C4CEE4;
+	Thu, 22 May 2025 23:09:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747955394;
+	bh=kMPYYZuS/QJqqrivdoubC5Yelg+gIuqU0mSYY14p948=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=ZabzY/Yb5hwq8uX9we+VwTgKxJZ9xicuH1fFXheWEcEnM00FRP0CRRTgEbcZM9jSr
+	 34rrzqOuagSGitJnAaHxjcsoBz4dmv7zau02oc2p/b/4RjDlPydc4BlrPQgH29esAX
+	 jZKeaKgNErE4FiqlTPX3cpJ4CeoG2aBQ1t+FofVkNSR/Wo7i5PpNaz8uEaV8X6pTSK
+	 HBnIevuK3o6pzAslk4zspAZIO2ukM0ecTP+ftD/1hS0968snz8gEuWUG/9TSf4Qk7K
+	 MEfwSVa1LJlLRX48PewGjzmZ02h0hqYlbdjq+WECD015/oDeeaGiffSbtBmGy/PRT3
+	 X6DCFXLPNoBKA==
+From: Konrad Dybcio <konradybcio@kernel.org>
+Date: Fri, 23 May 2025 01:08:33 +0200
+Subject: [PATCH 2/3] dt-bindings: net: qcom,ipa: Add sram property for
+ describing IMEM slice
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <1747950086-1246773-1-git-send-email-tariqt@nvidia.com> <1747950086-1246773-3-git-send-email-tariqt@nvidia.com>
-In-Reply-To: <1747950086-1246773-3-git-send-email-tariqt@nvidia.com>
-From: Mina Almasry <almasrymina@google.com>
-Date: Thu, 22 May 2025 16:09:35 -0700
-X-Gm-Features: AX0GCFvKx6EEmbSiu0G5AWSPg_voGp_bld5yLcmbYZI2_sQO6H-AEI2Fdpricnw
-Message-ID: <CAHS8izOUs-CEAzuBrE9rz_X5XHqJmWfrar8VtzrFJrS9=8zQLw@mail.gmail.com>
-Subject: Re: [PATCH net-next V2 02/11] net: Add skb_can_coalesce for netmem
-To: Tariq Toukan <tariqt@nvidia.com>
-Cc: "David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, 
-	Paolo Abeni <pabeni@redhat.com>, Eric Dumazet <edumazet@google.com>, 
-	Andrew Lunn <andrew+netdev@lunn.ch>, Saeed Mahameed <saeedm@nvidia.com>, 
-	Leon Romanovsky <leon@kernel.org>, Richard Cochran <richardcochran@gmail.com>, 
-	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Jesper Dangaard Brouer <hawk@kernel.org>, John Fastabend <john.fastabend@gmail.com>, netdev@vger.kernel.org, 
-	linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org, bpf@vger.kernel.org, 
-	Moshe Shemesh <moshe@nvidia.com>, Mark Bloch <mbloch@nvidia.com>, Gal Pressman <gal@nvidia.com>, 
-	Cosmin Ratiu <cratiu@nvidia.com>, Dragos Tatulea <dtatulea@nvidia.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250523-topic-ipa_imem-v1-2-b5d536291c7f@oss.qualcomm.com>
+References: <20250523-topic-ipa_imem-v1-0-b5d536291c7f@oss.qualcomm.com>
+In-Reply-To: <20250523-topic-ipa_imem-v1-0-b5d536291c7f@oss.qualcomm.com>
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
+ Andrew Lunn <andrew+netdev@lunn.ch>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Alex Elder <elder@kernel.org>
+Cc: Marijn Suijten <marijn.suijten@somainline.org>, 
+ linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
+ Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1747955379; l=1489;
+ i=konrad.dybcio@oss.qualcomm.com; s=20230215; h=from:subject:message-id;
+ bh=xCDZ0iThgX8rJN0xG4Yf/rk8aYWhnMvh5eQO5JlQqL4=;
+ b=UQ2lqepFJ2j/Lu39sbZwe/jv+9ot6iMfprBEx6zwqAsj5mdZI6tbP4ENWfr9B9Z5MiLrpVe50
+ B8Xd7eHH89NBvdmR9vII54be0xjojyhVoabeo6OfuzrtGFxnvqswr7q
+X-Developer-Key: i=konrad.dybcio@oss.qualcomm.com; a=ed25519;
+ pk=iclgkYvtl2w05SSXO5EjjSYlhFKsJ+5OSZBjOkQuEms=
 
-On Thu, May 22, 2025 at 2:43=E2=80=AFPM Tariq Toukan <tariqt@nvidia.com> wr=
-ote:
->
-> From: Dragos Tatulea <dtatulea@nvidia.com>
->
-> Allow drivers that have moved over to netmem to do fragment coalescing.
->
-> Signed-off-by: Dragos Tatulea <dtatulea@nvidia.com>
-> Signed-off-by: Cosmin Ratiu <cratiu@nvidia.com>
-> Signed-off-by: Tariq Toukan <tariqt@nvidia.com>
-> ---
->  include/linux/skbuff.h | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
->
-> diff --git a/include/linux/skbuff.h b/include/linux/skbuff.h
-> index 5520524c93bf..e8e2860183b4 100644
-> --- a/include/linux/skbuff.h
-> +++ b/include/linux/skbuff.h
-> @@ -3887,6 +3887,18 @@ static inline bool skb_can_coalesce(struct sk_buff=
- *skb, int i,
->         return false;
->  }
->
-> +static inline bool skb_can_coalesce_netmem(struct sk_buff *skb, int i,
-> +                                          const netmem_ref netmem, int o=
-ff)
-> +{
-> +       if (i) {
-> +               const skb_frag_t *frag =3D &skb_shinfo(skb)->frags[i - 1]=
-;
-> +
-> +               return netmem =3D=3D skb_frag_netmem(frag) &&
-> +                      off =3D=3D skb_frag_off(frag) + skb_frag_size(frag=
-);
-> +       }
-> +       return false;
-> +}
-> +
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 
-Can we limit the code duplication by changing skb_can_coalesce to call
-skb_can_coalesce_netmem? Or is that too bad for perf?
+The IPA driver currently grabs a slice of IMEM through hardcoded
+addresses. Not only is that ugly and against the principles of DT,
+but it also creates a situation where two distinct platforms
+implementing the same version of IPA would need to be hardcoded
+together and matched at runtime.
 
-static inline bool skb_can_coalesce(struct sk_buff *skb, int i, const
-struct page *page, int off) {
-    skb_can_coalesce_netmem(skb, i, page_to_netmem(page), off);
-}
+Instead, do the sane thing and accept a handle to said region directly.
 
-It's always safe to cast a page to netmem.
+Don't make it required on purpose, as a) it's not there on ancient
+implementations (currently unsupported) and we're not yet done with
+filling the data across al DTs.
 
---=20
-Thanks,
-Mina
+Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+---
+ Documentation/devicetree/bindings/net/qcom,ipa.yaml | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/net/qcom,ipa.yaml b/Documentation/devicetree/bindings/net/qcom,ipa.yaml
+index b4a79912d4739bec33933cdd7bb5e720eb41c814..1109f4d170af7178b998c6b7d415cc60de1c58c5 100644
+--- a/Documentation/devicetree/bindings/net/qcom,ipa.yaml
++++ b/Documentation/devicetree/bindings/net/qcom,ipa.yaml
+@@ -166,6 +166,13 @@ properties:
+       initializing IPA hardware.  Optional, and only used when
+       Trust Zone performs early initialization.
+ 
++  sram:
++    maxItems: 1
++    description:
++      A reference to an additional region residing in IMEM (special
++      on-chip SRAM), which is accessed by the IPA firmware and needs
++      to be IOMMU-mapped from the OS.
++
+ required:
+   - compatible
+   - iommus
+
+-- 
+2.49.0
+
