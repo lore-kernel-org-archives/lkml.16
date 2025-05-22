@@ -1,74 +1,57 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtp134-100.sina.com.cn (smtp134-100.sina.com.cn [180.149.134.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4533018027;
-	Thu, 22 May 2025 09:53:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD3812356DA
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 09:55:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=180.149.134.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747907637; cv=none; b=N/G4/r7M6YrYqjpU8FD20yfI5/lxevvC+ks8Uu6AsiPX+iB+z4cZKUHIroD8IfEagc1dV+ZBPV5lZG1UJHFa5UaJfkfMi49asQiR/98jA6Oqrn9v4lXJpwSTy3ROzFF5LC1KSRf2JylGSuZbDKKIoOnikg5TYhDz/jhcNkaq8JI=
+	t=1747907713; cv=none; b=YTjievam7xyHvFLGiBr/ZBclVktBY5IHUkHPpaq+XeQzFDbrRRd+DcT2Mvuy/gwR+/PS7bxdngJHJsuGsTQEf+yk0ShTvFuAukiPbbyNJRJRpkAK+T8CzofwLW/ezv1rluxEAJqQcyRZUwCZn/qe8tONwQFLI/KivFKZ1ixn/Zo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747907637; c=relaxed/simple;
-	bh=T0pbowsOjTPIPmPLHltgm1guTj5BuJMB/woFP9FHf2k=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=QUoja4TjZnwKd+/pxEC+QQN34e6LRZlGEapZnl+VTTt/bleImHF6z1PIDSj+N681QTtBX/R2CZkn9wN+oEJp8ryPVHoBG5iL/HupFNkaZXk0mK3fdOtSPbAzNzUITV6LLgEFDCjGz1WDHI+zKE3NM0CIyIY+XXDpBWtL9JZfixk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RevpVodL; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RevpVodL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9711CC4CEE4;
-	Thu, 22 May 2025 09:53:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747907636;
-	bh=T0pbowsOjTPIPmPLHltgm1guTj5BuJMB/woFP9FHf2k=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=RevpVodLJXvQ0wS4ohgmz+wxoibCLUyT1275uRa6QccMU+8LK1bt6ZpQjjvBEvKnf
-	 c49Huy+IAD1uiDKI/VlGR1afy/itNlkQ7csiD2VnwOkHbzL3v0mCUBDsowNBIfuWAG
-	 UC97AHv1x63ukf7b6uARgSKznbyJ2eG1o3lilPdqxmxSPfQmIWjeTjmgcuy4Qzscrm
-	 ACtfsMnd/TMYzawjRjEnfr5Gp59D9f2seXtsEHfmiRvv2zYVCXSTaJ3bTxembmvJ3V
-	 cw7G5l7JeN7yIIXXkX81T1iwgbLU7VmdisGZyKJxIjSFkceAp/rTDvxJ6vb4dGqxJa
-	 ZrNJezcfwwrig==
-From: William Breathitt Gray <wbg@kernel.org>
-To: Kamel Bouhara <kamel.bouhara@bootlin.com>,
-	Dharma Balasubiramani <dharma.b@microchip.com>
-Cc: William Breathitt Gray <wbg@kernel.org>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-iio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] counter: microchip-tcb-capture: Add watch validation support
-Date: Thu, 22 May 2025 18:53:43 +0900
-Message-ID: <174790756290.777945.12152629166611050360.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250520-counter-tcb-v3-1-4631e2aff7ed@microchip.com>
-References: <20250520-counter-tcb-v3-1-4631e2aff7ed@microchip.com>
+	s=arc-20240116; t=1747907713; c=relaxed/simple;
+	bh=v5mx8hHSC8ujjutLkZQ4+PgocT6absct5dh6c41uN8Y=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=kmzxy8am3O4LJJBnraqNfu3qWIH6NY7ekpcwFaHypHw+upRrWUgUnKUew1RcMLohwmVziBOUxfRLAf2jOGCtEyFGyWbgDoGnrPlQvB04ln50lYZPrhanktWy8MyaSA1LbyJr/fqcatvaxcfABXGhITozyp9lkeKemp270s3m0uc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=everest-semi.com; spf=pass smtp.mailfrom=everest-semi.com; arc=none smtp.client-ip=180.149.134.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=everest-semi.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=everest-semi.com
+Received: from unknown (HELO zy-virtual-machine.localdomain)([180.172.39.205])
+	by sina.net (10.185.250.32) with ESMTP
+	id 682EF4770000799E; Thu, 22 May 2025 17:55:04 +0800 (CST)
+X-Sender: zhangyi@everest-semi.com
+X-Auth-ID: zhangyi@everest-semi.com
+Authentication-Results: sina.net;
+	 spf=none smtp.mailfrom=zhangyi@everest-semi.com;
+	 dkim=none header.i=none;
+	 dmarc=none action=none header.from=zhangyi@everest-semi.com
+X-SMAIL-MID: F6B89C767C2C49F3A68479481D15E0B9
+X-SMAIL-UIID: F6B89C767C2C49F3A68479481D15E0B9-20250522-175504
+From: Zhang Yi <zhangyi@everest-semi.com>
+To: broonie@kernel.org
+Cc: robh@kernel.org,
+	tiwai@suse.com,
+	devicetree@vger.kernel.org,
+	conor+dt@kernel.org,
+	lgirdwood@gmail.com,
+	linux-kernel@vger.kernel.org,
+	linux-sound@vger.kernel.org,
+	perex@perex.cz,
+	krzk+dt@kernel.org,
+	amadeuszx.slawinski@linux.intel.com,
+	krzk@kernel.org
+Subject: RE: [PATCH 2/2] ASoC: codecs: add support for ES8375
+Date: Thu, 22 May 2025 17:55:02 +0800
+Message-Id: <20250522095502.10106-1-zhangyi@everest-semi.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Developer-Signature: v=1; a=openpgp-sha256; l=716; i=wbg@kernel.org; h=from:subject:message-id; bh=FyrqgtuhplOt4MO8YUx+XOl66iMHGL1vISika9BhmV0=; b=owGbwMvMwCW21SPs1D4hZW3G02pJDBl6XwSC4tMesbNKbmq4G8K5PaLweNfJJUlXvz3ZJ9/E/ U9pusmJjlIWBjEuBlkxRZZe87N3H1xS1fjxYv42mDmsTCBDGLg4BWAiUd6MDPP2X7u90yKySKzG S9BX4eQRwXv+Z1InrWmrTon//ZrdaDYjw4xpW36f85+7XvDyNDvmhYcatELPqh66OLnf/23qvXS hPn4A
-X-Developer-Key: i=wbg@kernel.org; a=openpgp; fpr=8D37CDDDE0D22528F8E89FB6B54856CABE12232B
-Content-Transfer-Encoding: 8bit
 
-
-On Tue, 20 May 2025 20:51:46 +0530, Dharma Balasubiramani wrote:
-> The Timer Counter Block (TCB) exposes several kinds of events to the
-> Counter framework, but not every event is meaningful on every hardware
-> channel. Add a `watch_validate()` callback so userspace may register only
-> the combinations actually supported:
+> > Because the default value of the chip's volume register is 0x00,
+> > initializing the device without setting it to 0xbf will
+> > cause the device to mute until the customer sets the volume.
 > 
-> * Channel 0 (COUNTER_MCHP_EVCHN_CV, COUNTER_MCHP_EVCHN_RA)
->    - COUNTER_EVENT_CAPTURE
->    - COUNTER_EVENT_CHANGE_OF_STATE
->    - COUNTER_EVENT_OVERFLOW
-> 
-> [...]
+> That's normal and expected, it's totally fine and normal for the user to
+> have to do some configuration.
 
-Applied, thanks!
-
-[1/1] counter: microchip-tcb-capture: Add watch validation support
-      commit: ae3392c0f12f179b969ce17856ed18bf8d69a35e
-
-Best regards,
--- 
-William Breathitt Gray <wbg@kernel.org>
+I got it. Thanks.
