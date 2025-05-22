@@ -1,163 +1,102 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDFDB219EB
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 09:01:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB4D1219EB
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 09:03:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747904508; cv=none; b=fpMHcRtvKo1Zz7kCeLdS9FA8kpOrWy1zzu7tQwp7R8PNZrcBloUq3nqU3ZZZHc/5CyJznEkpJvEZL2q7R2SVA1C25VnWI11eNAw0n0Y3HbEcOjp/wOaZDMtaP0YjeqCXoHxsi4VppBXqMvqBS6GR0TnVLFPw4lvnaJEUf8vMlDU=
+	t=1747904583; cv=none; b=a6MoNPaN3i+iegMh3BE/xRZSgpgJkbAwhOKatK0175wDzmEcXI2rQzmWqNOKy18nQsahDHTmCP55mDHrhqjzJImhzjdTti1g3hu87AeCwP/4e/XNboOVbkdRqTj7216w9IB9uqZMyL3H5t3kMkyRCC6BlYr7MzSi+JI0P75mAHE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747904508; c=relaxed/simple;
-	bh=Y2u3Tf3ZtpKkFGrUn/yAhih7xStQrfI/befKd6X4mzc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=qrsPrmQ89huEFWgW8983KYLKuzBqPzoic9enhdkiKRsQBY8qRz/HRVaRl1sOcbQx+QrpIDidosWq+bep++LGcFTShn3LwkjZE8I+uyLwqwKXOfPpFnMaDAekBIzyGxUg/Kx2EmQOY2Qs5G7M4VSPj5eM+WIgsAFvvgWor0hCoYM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: 5ae5a60036eb11f0b29709d653e92f7d-20250522
-X-CTIC-Tags:
-	HR_CC_AS_FROM, HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NAME, HR_CTE_8B
-	HR_CTT_MISS, HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_DIGIT_LEN
-	HR_FROM_NAME, HR_SJ_LANG, HR_SJ_LEN, HR_SJ_LETTER, HR_SJ_NOR_SYM
-	HR_SJ_PHRASE, HR_SJ_PHRASE_LEN, HR_SJ_WS, HR_TO_COUNT, HR_TO_DOMAIN_COUNT
-	HR_TO_NO_NAME, IP_TRUSTED, SRC_TRUSTED, DN_TRUSTED, SA_TRUSTED
-	SA_EXISTED, SN_TRUSTED, SN_EXISTED, SPF_NOPASS, DKIM_NOPASS
-	DMARC_NOPASS
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.45,REQID:ac8dba5b-05ec-4fbc-bab5-e9c9af5f1536,IP:0,U
-	RL:0,TC:0,Content:-5,EDM:25,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTI
-	ON:release,TS:15
-X-CID-INFO: VERSION:1.1.45,REQID:ac8dba5b-05ec-4fbc-bab5-e9c9af5f1536,IP:0,URL
-	:0,TC:0,Content:-5,EDM:25,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTION
-	:release,TS:15
-X-CID-META: VersionHash:6493067,CLOUDID:c0436d343feae5af07daef3ffbf139ee,BulkI
-	D:250522170134V7A8COOO,BulkQuantity:0,Recheck:0,SF:17|19|38|66|78|102,TC:n
-	il,Content:0|50,EDM:5,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil
-	,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0,NGT
-X-CID-BAS: 0,NGT,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD
-X-UUID: 5ae5a60036eb11f0b29709d653e92f7d-20250522
-X-User: xiaopei01@kylinos.cn
-Received: from localhost.localdomain [(10.44.16.150)] by mailgw.kylinos.cn
-	(envelope-from <xiaopei01@kylinos.cn>)
-	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
-	with ESMTP id 1413325579; Thu, 22 May 2025 17:01:31 +0800
-From: Pei Xiao <xiaopei01@kylinos.cn>
-To: gregkh@linuxfoundation.org,
-	linux-kernel@vger.kernel.org,
-	rafael@kernel.org,
-	dakr@kernel.org,
-	andriy.shevchenko@linux.intel.com,
-	bartosz.golaszewski@linaro.org
-Cc: Pei Xiao <xiaopei01@kylinos.cn>
-Subject: [PATCH] devres: Move remaining devm_alloc_percpu and devm_device_add_group to devres.h
-Date: Thu, 22 May 2025 17:01:26 +0800
-Message-Id: <5ac1e2a127c9df7233ca8ba0696ebb08960d0fc3.1747903894.git.xiaopei01@kylinos.cn>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1747904583; c=relaxed/simple;
+	bh=pvynabwV+K7UmXm4rdZ3v5WzzhRgmux0KWIbDokGE/E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TfIifGpdULs1SFTSHq1WGWSv1OfbMrPdgTcEGA03HBj2+lRLSumfDPFWGvhVGT+SigOPdeP6Wdv0lBN9NZ117zKE/LC9v17+KSRa6BBN00PN58UpyIjoCR7pDxEPFy+8Lfiqzq/5LiA/D16sYhgbGxqgezq1811kKFBTg6rVj48=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <mkl@pengutronix.de>)
+	id 1uI1p5-0003f4-CQ; Thu, 22 May 2025 11:02:43 +0200
+Received: from moin.white.stw.pengutronix.de ([2a0a:edc0:0:b01:1d::7b] helo=bjornoya.blackshift.org)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <mkl@pengutronix.de>)
+	id 1uI1p5-000huU-0F;
+	Thu, 22 May 2025 11:02:43 +0200
+Received: from pengutronix.de (unknown [IPv6:2a03:2260:2009:2000::])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange x25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	(Authenticated sender: mkl-all@blackshift.org)
+	by smtp.blackshift.org (Postfix) with ESMTPSA id 2264D4175E8;
+	Thu, 22 May 2025 09:02:42 +0000 (UTC)
+Date: Thu, 22 May 2025 11:02:41 +0200
+From: Marc Kleine-Budde <mkl@pengutronix.de>
+To: Elaine Zhang <zhangqing@rock-chips.com>
+Cc: kernel@pengutronix.de, mailhol.vincent@wanadoo.fr, robh@kernel.org, 
+	krzk+dt@kernel.org, conor+dt@kernel.org, heiko@sntech.de, cl@rock-chips.com, 
+	kever.yang@rock-chips.com, linux-can@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v3 3/3] arm64: dts: rockchip: rk3576: add can dts nodes
+Message-ID: <20250522-poetic-sloth-of-memory-3c2e33-mkl@pengutronix.de>
+References: <20250522063232.2197432-1-zhangqing@rock-chips.com>
+ <20250522063232.2197432-4-zhangqing@rock-chips.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="t63acjbvqvulm4br"
+Content-Disposition: inline
+In-Reply-To: <20250522063232.2197432-4-zhangqing@rock-chips.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: mkl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-Since commit f5e5631df596("devres: Move devm_*_action*() APIs to
-devres.h"), But devm_alloc_percpu() and devm_device_add_group didn't be
-moved.
 
-so move it.The changes improve header organization by keeping all
-resource-managed device APIs in the dedicated devres.h header,
-reducing cross-header dependencies and making the interfaces
-easier to locate.
+--t63acjbvqvulm4br
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v3 3/3] arm64: dts: rockchip: rk3576: add can dts nodes
+MIME-Version: 1.0
 
-Signed-off-by: Pei Xiao <xiaopei01@kylinos.cn>
----
- include/linux/device.h        | 21 ---------------------
- include/linux/device/devres.h | 24 ++++++++++++++++++++++++
- 2 files changed, 24 insertions(+), 21 deletions(-)
+On 22.05.2025 14:32:32, Elaine Zhang wrote:
+> Signed-off-by: Elaine Zhang <zhangqing@rock-chips.com>
+> ---
+>  arch/arm64/boot/dts/rockchip/rk3576.dtsi | 22 ++++++++++++++++++++++
+>  1 file changed, 22 insertions(+)
 
-diff --git a/include/linux/device.h b/include/linux/device.h
-index 4940db137fff..6dd6ae8f405b 100644
---- a/include/linux/device.h
-+++ b/include/linux/device.h
-@@ -281,25 +281,6 @@ int __must_check device_create_bin_file(struct device *dev,
- void device_remove_bin_file(struct device *dev,
- 			    const struct bin_attribute *attr);
- 
--/**
-- * devm_alloc_percpu - Resource-managed alloc_percpu
-- * @dev: Device to allocate per-cpu memory for
-- * @type: Type to allocate per-cpu memory for
-- *
-- * Managed alloc_percpu. Per-cpu memory allocated with this function is
-- * automatically freed on driver detach.
-- *
-- * RETURNS:
-- * Pointer to allocated memory on success, NULL on failure.
-- */
--#define devm_alloc_percpu(dev, type)      \
--	((typeof(type) __percpu *)__devm_alloc_percpu((dev), sizeof(type), \
--						      __alignof__(type)))
--
--void __percpu *__devm_alloc_percpu(struct device *dev, size_t size,
--				   size_t align);
--void devm_free_percpu(struct device *dev, void __percpu *pdata);
--
- struct device_dma_parameters {
- 	/*
- 	 * a low level driver may set these to teach IOMMU code about
-@@ -1127,8 +1108,6 @@ static inline void device_remove_group(struct device *dev,
- 	device_remove_groups(dev, groups);
- }
- 
--int __must_check devm_device_add_group(struct device *dev,
--				       const struct attribute_group *grp);
- 
- /*
-  * get_device - atomically increment the reference count for the device.
-diff --git a/include/linux/device/devres.h b/include/linux/device/devres.h
-index ae696d10faff..624ba81d4d8b 100644
---- a/include/linux/device/devres.h
-+++ b/include/linux/device/devres.h
-@@ -7,8 +7,10 @@
- #include <linux/numa.h>
- #include <linux/overflow.h>
- #include <linux/stdarg.h>
-+#include <linux/sysfs.h>
- #include <linux/types.h>
- #include <asm/bug.h>
-+#include <asm/percpu.h>
- 
- struct device;
- struct device_node;
-@@ -167,4 +169,26 @@ static inline int __devm_add_action_or_reset(struct device *dev, void (*action)(
- 
- bool devm_is_action_added(struct device *dev, void (*action)(void *), void *data);
- 
-+/**
-+ * devm_alloc_percpu - Resource-managed alloc_percpu
-+ * @dev: Device to allocate per-cpu memory for
-+ * @type: Type to allocate per-cpu memory for
-+ *
-+ * Managed alloc_percpu. Per-cpu memory allocated with this function is
-+ * automatically freed on driver detach.
-+ *
-+ * RETURNS:
-+ * Pointer to allocated memory on success, NULL on failure.
-+ */
-+#define devm_alloc_percpu(dev, type)      \
-+	((typeof(type) __percpu *)__devm_alloc_percpu((dev), sizeof(type), \
-+						      __alignof__(type)))
-+
-+void __percpu *__devm_alloc_percpu(struct device *dev, size_t size,
-+				   size_t align);
-+void devm_free_percpu(struct device *dev, void __percpu *pdata);
-+
-+int __must_check devm_device_add_group(struct device *dev,
-+				       const struct attribute_group *grp);
-+
- #endif /* _DEVICE_DEVRES_H_ */
--- 
-2.25.1
+Please upstream the dtsi changes via the rockchip soc tree, once the
+yaml changes are in net-next/main.
 
+regards,
+Marc
+
+--=20
+Pengutronix e.K.                 | Marc Kleine-Budde          |
+Embedded Linux                   | https://www.pengutronix.de |
+Vertretung N=C3=BCrnberg              | Phone: +49-5121-206917-129 |
+Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-9   |
+
+--t63acjbvqvulm4br
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEn/sM2K9nqF/8FWzzDHRl3/mQkZwFAmgu6C4ACgkQDHRl3/mQ
+kZyRDwf/WT5jFUA6f9sJPzL/R7UCu5fTOaxRuiSdEflm/vzbTA5jgKIwjp1GV2E7
+BtTYgX5bKQ5f4jUlt9OYozeFVHpXcuxvGHaCHV8tdIq2jDZI+RXazlNOMouRWgxw
++SKGlXbV5sCVxa5DObzCjvZsgZhaEsXm+vYGuuWZfYVbfnn/oqMcoZrGe+DvdpR3
+glDLQA7Ikz6JFh1HwlShFnW3EvB9f7NkRelHm/DGigbLxtx+FEFENtW7/xFmEeML
+rMkNT3XcFMq6y6MhtssU78OWaJod6LvAfwR2xcYJY68jACl6oGr8uzVOpZcPnPIn
+WtU9JbU0AsDZntgGtlbiTH+uBxLPAA==
+=ku/M
+-----END PGP SIGNATURE-----
+
+--t63acjbvqvulm4br--
