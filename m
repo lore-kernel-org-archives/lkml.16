@@ -1,147 +1,153 @@
-Received: from lithops.sigma-star.at (mailout.nod.at [116.203.167.152])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f53.google.com (mail-qv1-f53.google.com [209.85.219.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E00FC28D854
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 19:05:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.203.167.152
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C571288C03
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 19:06:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747940739; cv=none; b=FXB9J/xSgzZA2fpe64CNkTd4PsCNWWv0KYf2eFaa4jSOOczuIErXiqGzfkirtaB+ggef8mb/UMxwsxrl+vVXRrofBMTKj+lBqeMU8CEFfutXpuBVqkGNUlZRfCPEWW4/Df9zXDn1tPmeis0r+wE2XaH+EWpGhQEJn4YWbqFT4Ek=
+	t=1747940765; cv=none; b=HWVMfEmFlMx2EdO26u354Z6DZ/y+tkUcA3KQ6VzaJC7sKb5sg9rb3Gxea/Wm2lgXIs/Y//uFXi3JqRwG1yabL1fp9dKHiZ5ecq3eJF2OJG6iTQWTTg4pyP3xFmlyAHIcRM7B4NQNN76w/OzC4z/7voQb2ezl2FFdJqXnfuaz8LA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747940739; c=relaxed/simple;
-	bh=H/1vGhVZ5EI3Oju0SmXklImYosX/mrv0L2Z9wFDIlY0=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 MIME-Version:Content-Type; b=rc2V6swZfzkPEAqL8NdQOlNX/6Aod/wOGQ7kQZ79aSJ/vnJ6RFqTpr99Rka0DYkM3LVGNKkScoF7XBJBZnS0sldwwrgBas9/IRZgupgLITU6XZrsk7Y9J9ouxJBG7xH3iNOi+zAgFZbJsPME5JwIPoUoeBkQXKpGd5CR6UCd0PY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nod.at; spf=fail smtp.mailfrom=nod.at; arc=none smtp.client-ip=116.203.167.152
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nod.at
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nod.at
-Received: from localhost (localhost [127.0.0.1])
-	by lithops.sigma-star.at (Postfix) with ESMTP id AD761298565;
-	Thu, 22 May 2025 21:05:32 +0200 (CEST)
-Received: from lithops.sigma-star.at ([127.0.0.1])
-	by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10032)
-	with ESMTP id v07nohqir7qv; Thu, 22 May 2025 21:05:31 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-	by lithops.sigma-star.at (Postfix) with ESMTP id 08803298566;
-	Thu, 22 May 2025 21:05:31 +0200 (CEST)
-Received: from lithops.sigma-star.at ([127.0.0.1])
-	by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id 1LVLdbTPUxEc; Thu, 22 May 2025 21:05:30 +0200 (CEST)
-Received: from lithops.sigma-star.at (lithops.sigma-star.at [195.201.40.130])
-	by lithops.sigma-star.at (Postfix) with ESMTP id D62E0298565;
-	Thu, 22 May 2025 21:05:30 +0200 (CEST)
-Date: Thu, 22 May 2025 21:05:30 +0200 (CEST)
-From: Richard Weinberger <richard@nod.at>
-To: Leonid Arapov <arapovl839@gmail.com>
-Cc: David Woodhouse <dwmw2@infradead.org>, 
-	Ferenc Havasi <havasi@inf.u-szeged.hu>, tglx <tglx@linutronix.de>, 
-	linux-mtd <linux-mtd@lists.infradead.org>, 
-	linux-kernel <linux-kernel@vger.kernel.org>
-Message-ID: <805192433.83579512.1747940730785.JavaMail.zimbra@nod.at>
-In-Reply-To: <20250423193209.5811-1-arapovl839@gmail.com>
-References: <20250423193209.5811-1-arapovl839@gmail.com>
-Subject: Re: [PATCH] jffs2: Decrease xattr length limit to avoid summary
- write error
+	s=arc-20240116; t=1747940765; c=relaxed/simple;
+	bh=fFa+XHgjPqFLyF5EjVk/o8grCR8OeDIEJejOPFDEFq4=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=LYIe0TMz1tWXJNcu3Wv9hFpYa3Gz0RQBQgjBs+oAmjXBAs9z6vEyiVQLipgEObdrnVwUA5oWArhx3NT3vVUd0rxCm/7aCe73MD7V6VaZtSIAr8xmd02Y72DgJK1i1K2qaOOZUAOqOfg1QLRCU5x3mHbe3+Np1Jz0NDtTPaCTB88=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ndufresne.ca; spf=none smtp.mailfrom=ndufresne.ca; dkim=pass (2048-bit key) header.d=ndufresne-ca.20230601.gappssmtp.com header.i=@ndufresne-ca.20230601.gappssmtp.com header.b=2lEjZDcL; arc=none smtp.client-ip=209.85.219.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ndufresne.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ndufresne.ca
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ndufresne-ca.20230601.gappssmtp.com header.i=@ndufresne-ca.20230601.gappssmtp.com header.b="2lEjZDcL"
+Received: by mail-qv1-f53.google.com with SMTP id 6a1803df08f44-6f8cb6b3340so87008186d6.1
+        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 12:06:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ndufresne-ca.20230601.gappssmtp.com; s=20230601; t=1747940762; x=1748545562; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=uAfLd2+eW+OIWxtnxvjxahlHfrrw/biV9Jvjs+l5fkc=;
+        b=2lEjZDcLkiLKhRiFUnSvh3+Dl98+uNd/w2q6wNNLa7iO9w6TeTe9ogaM3jt9voEjVB
+         JDZxApy/mj/nQEJ+BH7v6ELSD1XMi1rGcLgqP9KlF0O0tCwZ7/f39N+QwBHLoIc4FczP
+         AyGEx71RoL5u4f0oQoDPM8CffylA/d8Df6KyssmNtQAXty1THMX1N73UXWJu8Nt2uA6W
+         0sTOmO/BEeDZXz8VXp3r3sFDetqsU3cuO8RbFQuRWAwoCkOHaeg7hI/+UJJHUmgD9c6P
+         cEnGWcmVuoF0RGLOuO1+vKMxLRMkcg2bpQ87c9rFC3yV/COEe4idjoZhly7jZB0s4xuf
+         otqw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747940762; x=1748545562;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=uAfLd2+eW+OIWxtnxvjxahlHfrrw/biV9Jvjs+l5fkc=;
+        b=NLdC1S5ZZJwgLOqbXOhQDimumtjq38ARrIlTX7EfvYwAqw6ejq2us2FYrw4tMSfwfb
+         a+0S/xKwjRpVxG2m9Ik2qmcxi6jZk3MTECEJbhG6WSSoVauoOiwO53MxXhJjoYwKOxNX
+         QftV0KWEg9/hd7kXI158R+hEZSJ+6Y2AnhjmHHKabwWsbwkOFYmaGIBqZ1ADtit7qzf+
+         C1838YGllh3WVuPojmznaaZnLwvGnaHp+VFlHjakAV132iMPx+sH/+Rh4N/wl6597PGt
+         JYgbv8K2hUCf02rREQavPLCgMwNUFg1/xEjbzGojqFtNKzE9/zKISHpwFfYnzIsVjIQO
+         WFTw==
+X-Forwarded-Encrypted: i=1; AJvYcCWQQJY6e3Cy1aqYaPuv8uJdb4nLXQ+mdSwkRV2fmsUmgBjGRKGtqNbA+/Uf6MDaXL8fsvJPFIwpaBb/1k4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyspqQ5ELfAS8MZ9ShXX99pqd/0bPmGz774aWRLGnTR7K9FbF4B
+	4U4+AOsdbIltWRBXjpik5BDF2rgBN0wmmo7vgdYpHB78rCK9zIx1aHj7KaCmyUIKxKA=
+X-Gm-Gg: ASbGncsYBuh7mz+4UW+ElyfcD9YqhAsjN6LkuGr464o0N+51uN4Lvfn+V3r3+sH1kR2
+	eKkVprRb2T0WKS1zqI/5ZG3xsxLIIb+jm6DpaW9YUzGoJw8pKUcpfBD0nKkW0aKJcpM0Cf4UFxs
+	cprm/EJW4ZTIm4gXj5SzVKRMTccwc0pXezTVJ7w/brBTlBiBG9i0o19eoBibCUeQRnNRmF/gOAj
+	8ZfdIVjN4JkSnliEX4Ihr/BIX4rGvJvCrTNwgj/2wOh4i2mQFsuVuYDbVZ73VlvZM16Jm2reYNT
+	674LQUfu7IA9x91lWOmM+rDGx59nbSUyBXOvY6JfwQCSWXC0RGHnQPuX
+X-Google-Smtp-Source: AGHT+IFMHoWCgYSKrp77j14dN4ezA6lfoJ+4Q+N0FgBs+1y4jyW6o9IHP3m48s9bZ43HqbDB/3wpZw==
+X-Received: by 2002:a05:6214:402:b0:6f2:c7b0:3b16 with SMTP id 6a1803df08f44-6f8b2c32addmr375505626d6.6.1747940762274;
+        Thu, 22 May 2025 12:06:02 -0700 (PDT)
+Received: from ?IPv6:2606:6d00:17:b2fc::5ac? ([2606:6d00:17:b2fc::5ac])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f8b096dda9sm102909986d6.71.2025.05.22.12.06.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 May 2025 12:06:01 -0700 (PDT)
+Message-ID: <8b18533170e7ba395c574de69768dcc27f718767.camel@ndufresne.ca>
+Subject: Re: [PATCH 1/1] dt-bindings: media: convert fsl-vdoa.txt to yaml
+ format
+From: Nicolas Dufresne <nicolas@ndufresne.ca>
+To: Frank Li <Frank.li@nxp.com>, "Rob Herring (Arm)" <robh@kernel.org>
+Cc: Conor Dooley <conor+dt@kernel.org>, linux-media@vger.kernel.org, Mauro
+ Carvalho Chehab <mchehab@kernel.org>, Pengutronix Kernel Team
+ <kernel@pengutronix.de>, Shawn Guo	 <shawnguo@kernel.org>, Fabio Estevam
+ <festevam@gmail.com>, Krzysztof Kozlowski	 <krzk+dt@kernel.org>,
+ linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, Sascha Hauer <s.hauer@pengutronix.de>, 
+	devicetree@vger.kernel.org
+Date: Thu, 22 May 2025 15:06:01 -0400
+In-Reply-To: <b97c254c5169acb32b9f65f71b363a3eb1cfc8a2.camel@ndufresne.ca>
+References: <20250411213601.3273670-1-Frank.Li@nxp.com>
+		 <174448105342.1415739.9619142538994119426.robh@kernel.org>
+		 <aC9xv08a5k5Pz1t+@lizhi-Precision-Tower-5810>
+	 <b97c254c5169acb32b9f65f71b363a3eb1cfc8a2.camel@ndufresne.ca>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.1 (3.56.1-1.fc42) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: Zimbra 8.8.12_GA_3807 (ZimbraWebClient - FF138 (Linux)/8.8.12_GA_3809)
-Thread-Topic: jffs2: Decrease xattr length limit to avoid summary write error
-Thread-Index: 5lo8AZNICDt9g8QiKbMyFbwAJPCU4Q==
 
------ Urspr=C3=BCngliche Mail -----
-> Von: "Leonid Arapov" <arapovl839@gmail.com>
-> An: "David Woodhouse" <dwmw2@infradead.org>
-> CC: "Leonid Arapov" <arapovl839@gmail.com>, "richard" <richard@nod.at>, "=
-Ferenc Havasi" <havasi@inf.u-szeged.hu>, "tglx"
-> <tglx@linutronix.de>, "linux-mtd" <linux-mtd@lists.infradead.org>, "linux=
--kernel" <linux-kernel@vger.kernel.org>
-> Gesendet: Mittwoch, 23. April 2025 21:32:05
-> Betreff: [PATCH] jffs2: Decrease xattr length limit to avoid summary writ=
-e error
+Hi again,
 
-> When fuzzing, the following error is observed:
+Le jeudi 22 mai 2025 =C3=A0 14:57 -0400, Nicolas Dufresne a =C3=A9crit=C2=
+=A0:
+> Hi Frank,
 >=20
-> jffs2: warning: (1096) jffs2_sum_write_sumnode: Empty summary info!!!
-> ------------[ cut here ]------------
-> kernel BUG at fs/jffs2/summary.c:865!
-> invalid opcode: 0000 [#1] PREEMPT SMP KASAN NOPTI
-> CPU: 1 PID: 1096 Comm: syz-executor340 Not tainted
-> 6.1.108-syzkaller-00007-g86fb5a1a71c9 #0
-> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-1
-> 04/01/2014
-> RIP: 0010:jffs2_sum_write_sumnode.cold+0x195/0x43b fs/jffs2/summary.c:865
-> Call Trace:
-> jffs2_do_reserve_space+0xa18/0xd60 fs/jffs2/nodemgmt.c:388
-> jffs2_reserve_space+0x55f/0xaa0 fs/jffs2/nodemgmt.c:197
-> do_jffs2_setxattr+0x212/0x1570 fs/jffs2/xattr.c:1117
-> __vfs_setxattr+0x118/0x180 fs/xattr.c:182
-> __vfs_setxattr_noperm+0x125/0x600 fs/xattr.c:216
-> __vfs_setxattr_locked+0x1d3/0x260 fs/xattr.c:277
-> vfs_setxattr+0x13f/0x340 fs/xattr.c:309
-> setxattr+0x14a/0x160 fs/xattr.c:617
-> path_setxattr+0x19b/0x1d0 fs/xattr.c:636
-> __do_sys_setxattr fs/xattr.c:652 [inline]
-> __se_sys_setxattr fs/xattr.c:648 [inline]
-> __x64_sys_setxattr+0xc0/0x160 fs/xattr.c:648
-> do_syscall_64+0x35/0x80 arch/x86/entry/common.c:81
+> Le jeudi 22 mai 2025 =C3=A0 14:49 -0400, Frank Li a =C3=A9crit=C2=A0:
+> > On Sat, Apr 12, 2025 at 01:04:14PM -0500, Rob Herring (Arm) wrote:
+> > >=20
+> > > On Fri, 11 Apr 2025 17:36:00 -0400, Frank Li wrote:
+> > > > Convert fsl-vdoa.txt to yaml format.
+> > > >=20
+> > > > Additional changes:
+> > > > - Add irq.h and imx6qdl-clock.h in example.
+> > > >=20
+> > > > Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> > > > ---
+> > > > =C2=A0.../bindings/media/fsl,imx6q-vdoa.yaml=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 | 42 +++++++++++++++++++
+> > > > =C2=A0.../devicetree/bindings/media/fsl-vdoa.txt=C2=A0=C2=A0=C2=A0 =
+| 21 ----------
+> > > > =C2=A02 files changed, 42 insertions(+), 21 deletions(-)
+> > > > =C2=A0create mode 100644 Documentation/devicetree/bindings/media/fs=
+l,imx6q-vdoa.yaml
+> > > > =C2=A0delete mode 100644 Documentation/devicetree/bindings/media/fs=
+l-vdoa.txt
+> > > >=20
+> > >=20
+> > > Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+> >=20
+> > All:
+> > 	Anyone pick this patch?
 >=20
-> The error occurs when trying to create a new attribute of a file by xattr
-> syscall. Size and name of the attribure are set by user. Current limit of
-> total size of an attribute is equal to free size in a clean block and it
-> doesn't include space needed for summary data structures. So it is
-> possible to create an attribute whose size doesn't exceed the limit but
-> the total size of attribute and its summary data does. If requested size
-> of an attribute satisfies this condition, it leads to the following
-> behavior:
->=20
-> jffs2_do_reserve_space tries to reserve requested size for an attribute
-> and its summary. It fails to do so because even a clean block doesn't hav=
-e
-> enough free space. Then it writes existing summary to the current block
-> and proceeds to the next block. Summary data is linked to a specific eras=
-e
-> block so it needs to be written to the current block before selecting
-> a new one.
->=20
-> Then this function is called again to reserve space in a new block.
-> It fails again and tries to write summary as the first time but at this
-> point collected summary for the block is empty and it leads to BUG() in
-> jffs2_summary_write_sumnode.
->=20
-> Decrease maximum allowed size of xattr buffer.
->=20
-> Found by Linux Verification Center (linuxtesting.org) with Syzkaller.
->=20
-> Fixes: e631ddba5887 ("[JFFS2] Add erase block summary support (mount time
-> improvement)")
-> Signed-off-by: Leonid Arapov <arapovl839@gmail.com>
-> ---
-> fs/jffs2/xattr.c | 3 ++-
-> 1 file changed, 2 insertions(+), 1 deletion(-)
->=20
-> diff --git a/fs/jffs2/xattr.c b/fs/jffs2/xattr.c
-> index defb4162c3d5..7380f32e6d0f 100644
-> --- a/fs/jffs2/xattr.c
-> +++ b/fs/jffs2/xattr.c
-> @@ -1110,7 +1110,8 @@ int do_jffs2_setxattr(struct inode *inode, int xpre=
-fix,
-> const char *xname,
-> =09=09return rc;
->=20
-> =09request =3D PAD(sizeof(struct jffs2_raw_xattr) + strlen(xname) + 1 + s=
-ize);
-> -=09if (request > c->sector_size - c->cleanmarker_size)
-> +=09if (request > c->sector_size - c->cleanmarker_size -
-> +=09    JFFS2_SUMMARY_XATTR_SIZE - JFFS2_SUMMARY_FRAME_SIZE)
-> =09=09return -ERANGE;
+> Thanks for the highlight, this is stuff from before my time and I had not=
+ associated it
+> with CODA initially. I've picked it now.
 
-What about systems without summary support and existing filesystems?
-We need to be super careful with such changes.
+Actually, before I do so, any of the following warnings should be addressed=
+ ? I effectively don't
+see a clear entry for that bindings, but could have miss-read and there is =
+a second warning,
+which based on having Rb is likely false positive ?
 
-Thanks,
-//richard
+---
+[[ATTACHMENT|junit/./0001-dt-bindings-media-convert-fsl-vdoa.txt-to-yaml-fo=
+rma.patch checkpatch.err.txt]]
+WARNING: added, moved or deleted file(s), does MAINTAINERS need updating?
+#21:=20
+new file mode 100644
+
+WARNING: DT binding docs and includes should be a separate patch. See: Docu=
+mentation/devicetree/bindings/submitting-
+patches.rst
+
+total: 0 errors, 2 warnings, 0 checks, 42 lines checked
+---
+
+Nicolas
+
+>=20
+> regards,
+> Nicolas
+>=20
+> >=20
+> > Frank
+> > >=20
