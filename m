@@ -1,55 +1,55 @@
-Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95E672D29DE
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 23:57:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F29A72D3A8C
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 23:57:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747958273; cv=none; b=J2R/KcxwxYYqPe0YvUc19VSYKBTsIXi8Hr3sw/1YVpC11OE65h2NjwvvcVIP+uG6qtjOftV6xfZo3bNpQK0VwNl0UERI2qmba3O36ksfdnGFckZYIfbOpZIqzz7Xfq3rByO+rtcwaCqg/Em+jryecjfkzO4oaxO2QnR/hVor0JE=
+	t=1747958273; cv=none; b=B6QSlY+2RUwe1rcZe5ZoKtfMOx/dD94+90kqI4q2wcHLKYvzAENnnXgHCIxEKdWSnRtEW0Cwv+hStaheIiRlRncqYA5VcOn1Yup+EKo+AXMLo9iO4rWdf2W1+jJtWLVXG7cCKIkoIg78gb61Yk17lvOtcN03gcDTzCEUO17ObH8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1747958273; c=relaxed/simple;
-	bh=KsU85/LVK/RVxvxFqeEmiH8e3CRbB9hHdYDVZaU9NXQ=;
+	bh=yBhOfv7eu2/XqSrNXehEo+4lpPVO30A19mzFnjwsSpY=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=c0T3PjOU70nvFbTblvUXQIGbr4iH405yFioI/uqGBo5YUZihaZ0E2sGBiVZc/n21BBzYl485FWzNLVk+kQ7+0+LQMrBXMUT/1LP2qq9Fh0QK7TBk4+Kve75LmCcXJ0qsirxDoG5TzpmgS1DkovVBOXdJhh5rTmSIBJarGXiZJCg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--hramamurthy.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=waae8oH/; arc=none smtp.client-ip=209.85.210.201
+	 To:Cc:Content-Type; b=d/Z23jkYUQW85/Dqxrq4L9oBM4S3FpQUz0IhzbZ+vmRaZwd2XTJOKsUVgBf+3kxnhfXfWNpHsypJlE4GyJMGTFZjiLL2J3wkjy0I8YlXy8kH37Rb+T6w3UiEXuKedUMEamlO6ZZ2tb7Ql6xQ/20vP9+Lz5m6dZYcNIUavb7NViU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--hramamurthy.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=sU6U1C0I; arc=none smtp.client-ip=209.85.216.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--hramamurthy.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="waae8oH/"
-Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-7429f7f9ee3so6104932b3a.2
-        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 16:57:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sU6U1C0I"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-310c5c2c38cso1496623a91.1
+        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 16:57:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747958270; x=1748563070; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1747958271; x=1748563071; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=/U4F4F2baZjVLSiJ5F9H7XP7MI6hq4zoM+YfBft1UC4=;
-        b=waae8oH/sCJjko+/EAqIpvri4iQvuZZJHxZakfRhb2zERy58+9rQ1i6u92OAZJqoPE
-         BkFMVWxTIKiy89XiDW5P8okf2oPOYj429a9hH2j38FH8BiovDqsxbw3tdNMHK2HN1hKp
-         7Lrs1Vxwk/yEguYF5hIKuDYUDB/XSGubxlvSnklm/wvy1oXxx1ddYR9Gm4gLJnheypBa
-         07L9LGFqdvEyj6nXl5AfC+2O08O4vZsm630eM52Ja/NjnIDSCIC2tzz1vXU+GpVH/APT
-         skw8XEs6+cTKjn7XOHR3DLbw90YdElNFTjOYgtXswR94Z5iBH1TTVgZMOcyL6hf2Qq5L
-         YPiQ==
+        bh=uEHW4PYDNmFipk6wLuYuCvPhqaUjcYJlMloM7o1AYLs=;
+        b=sU6U1C0IBPppYtD4pRzZrKWdWlrnOsDxyvxE2nP48TcQN9y5rgcqAgW5p/02p5S9VD
+         vCtFerTXRQL5geJ2X5iNf3xjV69SLQwpvk/yWiwRaLiCbY/1nkRe4RxXVeh0MxG9OZ0I
+         +Y5JFseh3xHzuHyvSmtrP57EcXIA+6Us/YThgJdACyet5NvmjwRRJL2Bkdse2Bb/8wNf
+         rs+OQHlLgEFDGDfr3pi+6LApEi+TyAvhfBYh7pUBBcMhayITiyNStRvGFj9v6yYo+Ozs
+         OzYqB+ZBkJe0aU1EVZkhhT2Nowpxhv1WBsMNxm++o9HwDBM5ggBi8IeenCDlkx267WW1
+         YKBQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747958270; x=1748563070;
+        d=1e100.net; s=20230601; t=1747958271; x=1748563071;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/U4F4F2baZjVLSiJ5F9H7XP7MI6hq4zoM+YfBft1UC4=;
-        b=C0SrNGxULXNOsHeIaBvCOdHZqShHWuw0ezS8kEJEXSAeXYmTC+oDNWgYtkvP06CEo1
-         BfK2PF/tKR9wKIHVWrTDsU4vXr87Y3EXHggXm0Hc8+XeGPng9L7uY1BpARKhWysdQxbR
-         kr5YnRZ25flBbZWqqvbsHpU+Aolb/Yt5PtB6dGNVelyhYCvdmRPWOflRnXdb2rXV0mEt
-         d3zaeAbtebnO4wZoTYpC/pAXj6ocBI9j3hG1R0rfivR2j9lib33rvjW/VVZ3EdVLCpEA
-         QZE1n2agt7DWAlMcsKU6DSTQ1nrd27jhlwk3NLiT4Lo4mZbl9o9ApFdi6Mi/3d/NE5gB
-         0OpQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXBbeUXrr27HFi/vdbtWDNPneMd23T4rKZEOUz5CnyR1gDj2R35gWIWLyJSFMUUJqJ4c4lXx5ryCfRny9I=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyDkniop5srXBoYdL9B6neKNwlqvjo+Y33GLps/NvjffoTznwbn
-	VgY3t5+L4T/6DrHfyyhW3o8BK6tlF/svZVk6teywycsjAYmfaS018HWh3Vr8h1ScVBn+NtQgoPM
-	Ge8Q6tnffKbCW54NWv+MnybFsnQ==
-X-Google-Smtp-Source: AGHT+IEJdalaKRNSP2s4lpQ4yBO8ShRBy3a/J7ixPVGUEG0s+ijq9EKgywPOSNxjqQNTcKp5dNY+vqa+ntvXZiBf0A==
-X-Received: from pfux21.prod.google.com ([2002:a05:6a00:bd5:b0:740:b53a:e67f])
+        bh=uEHW4PYDNmFipk6wLuYuCvPhqaUjcYJlMloM7o1AYLs=;
+        b=CUlAgCj8wDDDB4FkEy0ORn35pM+AQqPPbHuoVa+zN5OJb4D4Gj3v8i+Is61ZDNih/H
+         TWMwL4AetHe6cWDwtrmxC+tUX0gqLhOMGr72f/iNJMkjwkZLfbjicMWN2a28ZfhNO9b9
+         N0wBvAUJrkAmrvdzwTLFaF+LDJZox87FfhZn2Jq2q2frBgzpvb36K62J3kse0YniMaIO
+         CNZYbJCoJnwUt3oX1VwA1kro1lgmEpjYDy6ekccRptn0McwqECJq1NJG0PSXiQ+rE88m
+         JrphRmmwxwcgZ84yEvtEkg2vgBJIbrsuGPriLz3GrzKWmWiP+dBSBUBha3r7SK+j8d6a
+         /U7A==
+X-Forwarded-Encrypted: i=1; AJvYcCXBvc6uXzGviMAzJL6wHcTABgaD7XT9OhFLc/Y1bPnAeN+JFdaZdtB+NhmfGSqp8VrrK+s2UpSjww33w3s=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzfzd3ZlHNTlLZ73z+NGx0Lfgl1AE+OwAValMjtkDIqxtdepG+l
+	hL51FsjbI/PDbj2rmoh/kIsbYNorMAPVnSFQREQRmy7aTq2hwRE7D4GbigHEDyy42fCSpuoCfw7
+	BDEIx5sW1GJLYUI89rtS4u+d9qg==
+X-Google-Smtp-Source: AGHT+IFN1tFabWhABotg5f5D5MqfR1osrSXCCv6rzoIhra/MHMAM9QSreyv/qqkqk3+zrQwoF0BdaOHkErrCls8YWQ==
+X-Received: from pjj13.prod.google.com ([2002:a17:90b:554d:b0:2fc:11a0:c549])
  (user=hramamurthy job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6a00:a18:b0:740:afda:a742 with SMTP id d2e1a72fcca58-745ed7763dbmr1443151b3a.0.1747958269860;
- Thu, 22 May 2025 16:57:49 -0700 (PDT)
-Date: Thu, 22 May 2025 23:57:35 +0000
+ 2002:a17:90b:4acf:b0:2ee:aa28:79aa with SMTP id 98e67ed59e1d1-30e830c772dmr35441433a91.6.1747958271209;
+ Thu, 22 May 2025 16:57:51 -0700 (PDT)
+Date: Thu, 22 May 2025 23:57:36 +0000
 In-Reply-To: <20250522235737.1925605-1-hramamurthy@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250522235737.1925605-1-hramamurthy@google.com>
 X-Mailer: git-send-email 2.49.0.1151.ga128411c76-goog
-Message-ID: <20250522235737.1925605-7-hramamurthy@google.com>
-Subject: [PATCH net-next v3 6/8] gve: Add rx hardware timestamp expansion
+Message-ID: <20250522235737.1925605-8-hramamurthy@google.com>
+Subject: [PATCH net-next v3 7/8] gve: Implement ndo_hwtstamp_get/set for RX timestamping
 From: Harshitha Ramamurthy <hramamurthy@google.com>
 To: netdev@vger.kernel.org
 Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org, 
@@ -74,17 +74,17 @@ Content-Type: text/plain; charset="UTF-8"
 
 From: John Fraker <jfraker@google.com>
 
-Allow the rx path to recover the high 32 bits of the full 64 bit rx
-timestamp.
+Implement ndo_hwtstamp_get/set to enable hardware RX timestamping,
+providing support for SIOC[SG]HWTSTAMP IOCTLs. Included with this support
+is the small change necessary to read the rx timestamp out of the rx
+descriptor, now that timestamps start being enabled. The gve clock is
+only used for hardware timestamps, so started when timestamps are
+requested and stopped when not needed.
 
-Use the low 32 bits of the last synced nic time and the 32 bits of the
-timestamp provided in the rx descriptor to generate a difference, which
-is then applied to the last synced nic time to reconstruct the complete
-64-bit timestamp.
-
-This scheme remains accurate as long as no more than ~2 seconds have
-passed between the last read of the nic clock and the timestamping
-application of the received packet.
+This version only supports RX hardware timestamping with the rx filter
+HWTSTAMP_FILTER_ALL. If the user attempts to configure a more
+restrictive filter, the filter will be set to HWTSTAMP_FILTER_ALL in the
+returned structure.
 
 Signed-off-by: John Fraker <jfraker@google.com>
 Signed-off-by: Ziwei Xiao <ziweixiao@google.com>
@@ -92,48 +92,152 @@ Reviewed-by: Willem de Bruijn <willemb@google.com>
 Signed-off-by: Harshitha Ramamurthy <hramamurthy@google.com>
 ---
  Changes in v3:
- - Change the last_read to be u64 (Vadim Fedorenko)
-
- Changes in v2:
- - Add the missing READ_ONCE (Joe Damato)
+ - Update the title and commit message to show it's adding support for
+   ndo functions instead of ioctls (Jakub Kicinski)
+ - Utilize extack for error logging instead of dev_err (Jakub Kicinski)
 ---
- drivers/net/ethernet/google/gve/gve_rx_dqo.c | 23 ++++++++++++++++++++
- 1 file changed, 23 insertions(+)
+ drivers/net/ethernet/google/gve/gve.h         |  2 +
+ .../net/ethernet/google/gve/gve_desc_dqo.h    |  3 +-
+ drivers/net/ethernet/google/gve/gve_main.c    | 47 +++++++++++++++++++
+ drivers/net/ethernet/google/gve/gve_rx_dqo.c  |  5 +-
+ 4 files changed, 55 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/google/gve/gve_rx_dqo.c b/drivers/net/ethernet/google/gve/gve_rx_dqo.c
-index dcb0545baa50..9aadf8435f8b 100644
---- a/drivers/net/ethernet/google/gve/gve_rx_dqo.c
-+++ b/drivers/net/ethernet/google/gve/gve_rx_dqo.c
-@@ -437,6 +437,29 @@ static void gve_rx_skb_hash(struct sk_buff *skb,
- 	skb_set_hash(skb, le32_to_cpu(compl_desc->hash), hash_type);
+diff --git a/drivers/net/ethernet/google/gve/gve.h b/drivers/net/ethernet/google/gve/gve.h
+index 97054b272e40..a812612c52ba 100644
+--- a/drivers/net/ethernet/google/gve/gve.h
++++ b/drivers/net/ethernet/google/gve/gve.h
+@@ -11,6 +11,7 @@
+ #include <linux/dmapool.h>
+ #include <linux/ethtool_netlink.h>
+ #include <linux/netdevice.h>
++#include <linux/net_tstamp.h>
+ #include <linux/pci.h>
+ #include <linux/ptp_clock_kernel.h>
+ #include <linux/u64_stats_sync.h>
+@@ -882,6 +883,7 @@ struct gve_priv {
+ 	/* True if the device supports reading the nic clock */
+ 	bool nic_timestamp_supported;
+ 	struct gve_ptp *ptp;
++	struct kernel_hwtstamp_config ts_config;
+ 	struct gve_nic_ts_report *nic_ts_report;
+ 	dma_addr_t nic_ts_report_bus;
+ 	u64 last_sync_nic_counter; /* Clock counter from last NIC TS report */
+diff --git a/drivers/net/ethernet/google/gve/gve_desc_dqo.h b/drivers/net/ethernet/google/gve/gve_desc_dqo.h
+index f79cd0591110..d17da841b5a0 100644
+--- a/drivers/net/ethernet/google/gve/gve_desc_dqo.h
++++ b/drivers/net/ethernet/google/gve/gve_desc_dqo.h
+@@ -247,7 +247,8 @@ struct gve_rx_compl_desc_dqo {
+ 	};
+ 	__le32 hash;
+ 	__le32 reserved6;
+-	__le64 reserved7;
++	__le32 reserved7;
++	__le32 ts; /* timestamp in nanosecs */
+ } __packed;
+ 
+ static_assert(sizeof(struct gve_rx_compl_desc_dqo) == 32);
+diff --git a/drivers/net/ethernet/google/gve/gve_main.c b/drivers/net/ethernet/google/gve/gve_main.c
+index e1ffbd561fac..853e236f024a 100644
+--- a/drivers/net/ethernet/google/gve/gve_main.c
++++ b/drivers/net/ethernet/google/gve/gve_main.c
+@@ -721,6 +721,7 @@ static void gve_teardown_device_resources(struct gve_priv *priv)
+ 	gve_free_counter_array(priv);
+ 	gve_free_notify_blocks(priv);
+ 	gve_free_stats_report(priv);
++	gve_teardown_clock(priv);
+ 	gve_clear_device_resources_ok(priv);
  }
  
-+/* Expand the hardware timestamp to the full 64 bits of width, and add it to the
-+ * skb.
-+ *
-+ * This algorithm works by using the passed hardware timestamp to generate a
-+ * diff relative to the last read of the nic clock. This diff can be positive or
-+ * negative, as it is possible that we have read the clock more recently than
-+ * the hardware has received this packet. To detect this, we use the high bit of
-+ * the diff, and assume that the read is more recent if the high bit is set. In
-+ * this case we invert the process.
-+ *
-+ * Note that this means if the time delta between packet reception and the last
-+ * clock read is greater than ~2 seconds, this will provide invalid results.
-+ */
-+static void __maybe_unused gve_rx_skb_hwtstamp(struct gve_rx_ring *rx, u32 hwts)
+@@ -2041,6 +2042,47 @@ static int gve_set_features(struct net_device *netdev,
+ 	return err;
+ }
+ 
++static int gve_get_ts_config(struct net_device *dev,
++			     struct kernel_hwtstamp_config *kernel_config)
 +{
-+	u64 last_read = READ_ONCE(rx->gve->last_sync_nic_counter);
-+	struct sk_buff *skb = rx->ctx.skb_head;
-+	u32 low = (u32)last_read;
-+	s32 diff = hwts - low;
++	struct gve_priv *priv = netdev_priv(dev);
 +
-+	skb_hwtstamps(skb)->hwtstamp = ns_to_ktime(last_read + diff);
++	*kernel_config = priv->ts_config;
++	return 0;
 +}
 +
- static void gve_rx_free_skb(struct napi_struct *napi, struct gve_rx_ring *rx)
++static int gve_set_ts_config(struct net_device *dev,
++			     struct kernel_hwtstamp_config *kernel_config,
++			     struct netlink_ext_ack *extack)
++{
++	struct gve_priv *priv = netdev_priv(dev);
++	int err;
++
++	if (kernel_config->tx_type != HWTSTAMP_TX_OFF) {
++		NL_SET_ERR_MSG_MOD(extack, "TX timestamping is not supported");
++		return -ERANGE;
++	}
++
++	if (kernel_config->rx_filter != HWTSTAMP_FILTER_NONE) {
++		kernel_config->rx_filter = HWTSTAMP_FILTER_ALL;
++		if (!priv->nic_ts_report) {
++			err = gve_init_clock(priv);
++			if (err) {
++				NL_SET_ERR_MSG_MOD(extack,
++						   "Failed to initialize GVE clock");
++				kernel_config->rx_filter = HWTSTAMP_FILTER_NONE;
++				return err;
++			}
++		}
++	} else {
++		gve_teardown_clock(priv);
++	}
++
++	priv->ts_config.rx_filter = kernel_config->rx_filter;
++
++	return 0;
++}
++
+ static const struct net_device_ops gve_netdev_ops = {
+ 	.ndo_start_xmit		=	gve_start_xmit,
+ 	.ndo_features_check	=	gve_features_check,
+@@ -2052,6 +2094,8 @@ static const struct net_device_ops gve_netdev_ops = {
+ 	.ndo_bpf		=	gve_xdp,
+ 	.ndo_xdp_xmit		=	gve_xdp_xmit,
+ 	.ndo_xsk_wakeup		=	gve_xsk_wakeup,
++	.ndo_hwtstamp_get	=	gve_get_ts_config,
++	.ndo_hwtstamp_set	=	gve_set_ts_config,
+ };
+ 
+ static void gve_handle_status(struct gve_priv *priv, u32 status)
+@@ -2271,6 +2315,9 @@ static int gve_init_priv(struct gve_priv *priv, bool skip_describe_device)
+ 		priv->rx_coalesce_usecs = GVE_RX_IRQ_RATELIMIT_US_DQO;
+ 	}
+ 
++	priv->ts_config.tx_type = HWTSTAMP_TX_OFF;
++	priv->ts_config.rx_filter = HWTSTAMP_FILTER_NONE;
++
+ setup_device:
+ 	gve_set_netdev_xdp_features(priv);
+ 	err = gve_setup_device_resources(priv);
+diff --git a/drivers/net/ethernet/google/gve/gve_rx_dqo.c b/drivers/net/ethernet/google/gve/gve_rx_dqo.c
+index 9aadf8435f8b..0be41a0cdd15 100644
+--- a/drivers/net/ethernet/google/gve/gve_rx_dqo.c
++++ b/drivers/net/ethernet/google/gve/gve_rx_dqo.c
+@@ -450,7 +450,7 @@ static void gve_rx_skb_hash(struct sk_buff *skb,
+  * Note that this means if the time delta between packet reception and the last
+  * clock read is greater than ~2 seconds, this will provide invalid results.
+  */
+-static void __maybe_unused gve_rx_skb_hwtstamp(struct gve_rx_ring *rx, u32 hwts)
++static void gve_rx_skb_hwtstamp(struct gve_rx_ring *rx, u32 hwts)
  {
- 	if (!rx->ctx.skb_head)
+ 	u64 last_read = READ_ONCE(rx->gve->last_sync_nic_counter);
+ 	struct sk_buff *skb = rx->ctx.skb_head;
+@@ -790,6 +790,9 @@ static int gve_rx_complete_skb(struct gve_rx_ring *rx, struct napi_struct *napi,
+ 	if (feat & NETIF_F_RXCSUM)
+ 		gve_rx_skb_csum(rx->ctx.skb_head, desc, ptype);
+ 
++	if (rx->gve->ts_config.rx_filter == HWTSTAMP_FILTER_ALL)
++		gve_rx_skb_hwtstamp(rx, le32_to_cpu(desc->ts));
++
+ 	/* RSC packets must set gso_size otherwise the TCP stack will complain
+ 	 * that packets are larger than MTU.
+ 	 */
 -- 
 2.49.0.1143.g0be31eac6b-goog
 
