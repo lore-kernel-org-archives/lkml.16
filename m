@@ -1,104 +1,93 @@
-Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81260268691;
-	Thu, 22 May 2025 08:36:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C36FEEA6;
+	Thu, 22 May 2025 08:37:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747902974; cv=none; b=ta30B5cUryBVho5SCau/CTk4y7LXADlPz2SeuqPdRCWpP2bU32QDqSz8d+uKgf54Sp3SA8RVGBVDma+LOGwLTvm/HX0yDA3BISm3EMlv47vVo6XFvYFDsWhU+2OcI4Sk3rmO+9/bae1sVUverElGNFdgiTCt48FdSzePBgaskFs=
+	t=1747903044; cv=none; b=aMbCKjj9I3BzML/6c6IG1Qlmbq/dAiFtm6QxuaPsPqoOPBEwsSGA912vZoEGpIg6cafIpuMBWFgLug3LplZIiER8DJH4IcxFMXWB0qxDqOcNT19w6xYidfMIEqYbPGqc5aHqucQRsYtVh5v+g5xEpX9S62YzMyk/PHJIMxZdNk4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747902974; c=relaxed/simple;
-	bh=0iqH3SFau2Ad0MLJhsn1yGSNEsRQWQL4MBklLj1xHpc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ANQ/rz3QZJKjhTpYlayI4SV15B2Ll4TDt9tP+xgA91NMBAvVJ7HrG0K9/YelyHe6/6/8TJabGfcGG+vv07u8kJSJBfV7mVnfstNaEqTs2vhJray6jck/bdxM9inDGcKCVGX0U/R4bB4fZd3XbZiFyF0GLjR31PmiEdihbBtN3oU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=aw1ic9y4; arc=none smtp.client-ip=213.97.179.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	s=arc-20240116; t=1747903044; c=relaxed/simple;
+	bh=oY4+UgQCVvoQesJJge7kprCNLqjSqhkBf7sdCr6VYtg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=mtIR6jqy8aEgngRcYJsq7vxLTOMZyBynDxZAUxWr6CDdNAPzbHhzwrjY9Kfh5PC7kjnrNp5BFL1kOX0Ob+4NrSKAVC+BJKStgyweR0Binhv5G01VQD1N07c4tca9OV9qCgObtvv0TUwMeoBDa+lbCobwXMj0MjuXDgj1CKGjJzA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=akFnLoL9; arc=none smtp.client-ip=209.85.215.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="aw1ic9y4"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=MlBjh67fGAfaX5KmbbcZM9E/1HTJY8YOYuHSiHb/X8g=; b=aw1ic9y4PyfVRDebLTLqFx8AOM
-	j1uaR058N/V3dYnT6vvo65fUpuBqhwjqZBTmBAmf34hT6QrL36k1du5c3CGxF3dj2GirdrctCjJhO
-	4oU8xknCmvl1ZBkc9ZtcfFY4XlGTCwkYMydJNh3sEX7jyfFaUWH/ndkMItPWeLlsI6nsISmLUgPdo
-	QPLnN/b8yMAPM09zUOkCAUXFZZtawKC1EHJqJSHfkoXydgqYxHP0lpBAY1wEplne9yIPhyMzNVpb8
-	brpOjWA1Jjx2G5NzsOaEb5t89ihzHZ2SaKK8QahCiYgkpQAyxnI0cFfOiWdQDrJfbevIStQ5rCJSj
-	3B/hdWnw==;
-Received: from [106.101.7.122] (helo=[192.168.210.21])
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-	id 1uI1PH-00Bcfi-Ew; Thu, 22 May 2025 10:36:03 +0200
-Message-ID: <c85cbb96-8c0f-4f91-a568-20c9de65b10b@igalia.com>
-Date: Thu, 22 May 2025 17:35:55 +0900
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="akFnLoL9"
+Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-b07698318ebso1094759a12.2;
+        Thu, 22 May 2025 01:37:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747903042; x=1748507842; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=oY4+UgQCVvoQesJJge7kprCNLqjSqhkBf7sdCr6VYtg=;
+        b=akFnLoL9Y0b6jAGLCJWIrWNsAGbE5EiHJ/XRWXT0rYY/eXJ6g+jF04c33dxEVAy39Y
+         3X30TgVY8J+82EMaEG1eBAtcTMEXFIyEYwHc0/TfOQvFsNlThxlASsf+dvrRv42QiAAM
+         JRwB+oYIteqEp69uGTdjJzr+eG2bLeUbJT7xDSrPLWxjRDgGkSKKxT5n9m8JWL+yWCAu
+         eBORPt1zYIjckToRMvUdjptxq84xlKcfxfnB/MIT20RVdG1SpLAK2QYpLk/+b6TkJkon
+         r9H1g7KUTAUj1f4dDbdupcfro7cWPdU+1eoXNzhx+uUp+g5kYpvdza0krerYQoN7MkRj
+         9IQg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747903042; x=1748507842;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=oY4+UgQCVvoQesJJge7kprCNLqjSqhkBf7sdCr6VYtg=;
+        b=VU/znM2zKfE6JKU1nNTUNBwBYvT7ssqQuAy/txe8fHVr7xThzmDvUDqNGIT7OWlRPd
+         xhCntFn0qpjo/JZ++VSNiNjEXFmibysuL7olaj9YxKqgBgnRDs9im2IbXmA7HtTpTl6v
+         HPreZSebNachsm6HWnz8wWRJ1cO2WybnN0uCcDB3oceJ2r6RJ7BDn528FK7I0FmrOxWx
+         gFMJ9BKKDzfQdaxJgEGDQFJ2hHJ9lEFxfV4wp/coMlgyLWuJfWFpOvcuk2CtBVaO8/A3
+         MprlkU0t2QrElKMtIcWy3EXX3x3j8QLcJSw6zOA1Jrqg03dVTTWJwXJ+vPplM4Lsjpba
+         VRsg==
+X-Forwarded-Encrypted: i=1; AJvYcCVxOEwv2WcOgByfR06Imko6Dj0n4svXksqgwQKCpQfdvMjO4qKbDSWduS5umcJFaps/XQPr+qr95L5/pMK7Nnc=@vger.kernel.org, AJvYcCWEpIeePJoilUpH1JxQyapRpK4+1Kk879Auo9xcmqv3QN7rZ0FFBF7mOO7NHY12y8zS/C4f6zs1zhLOGvE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywl7VriDRFFfrjNLMzP0jBIJEpocUmfvJHlbnx3VlPFCQtrQsxO
+	zZVc3jQWX3exmW+j5YsTUINsptYldoPEg+7/Tf7dEUN0mXiavvldcbznzoG9IMgRICyct2JIJSg
+	rDIz5SzK3kGKNtBGBMe6X+E69JaGYfIE=
+X-Gm-Gg: ASbGncuJ00gV9MvTwDaRpn5Jv4K5l0tEwFdeaVg2oHNoLPyeKzx2t2acdctvfLB9eMt
+	mpDQnu3RaAQ/p4MFuvjX2w8rb4QL4SgKUfOlACUXhpVUIK2ZHP2+5NEbLhPWg3pX3tElsjQTkxM
+	wcVNnLsfUmIXZA/J4IOmoykyDBwns8Uk7BFwnMw2HBPUw=
+X-Google-Smtp-Source: AGHT+IEEEZdQ7euhtyjeEUt4MOuFHCd4s8owX7AJtPg4uB48tfhP3RNVjlK+dvshh5EuQ2s2FY4SiTALhxEkYKRLYlQ=
+X-Received: by 2002:a17:903:41d0:b0:224:1005:7281 with SMTP id
+ d9443c01a7336-231d43c3d88mr121146085ad.7.1747903042265; Thu, 22 May 2025
+ 01:37:22 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] PM: EM: Add inotify support when the energy model is
- updated.
-To: Lukasz Luba <lukasz.luba@arm.com>
-Cc: christian.loehle@arm.com, tj@kernel.org, pavel@kernel.org,
- kernel-dev@igalia.com, linux-pm@vger.kernel.org,
- linux-kernel@vger.kernel.org, len.brown@intel.com,
- "Rafael J. Wysocki" <rafael@kernel.org>
-References: <20250507014728.6094-1-changwoo@igalia.com>
- <a82423bc-8c38-4d57-93da-c4f20011cc92@arm.com>
- <CAJZ5v0ixh=ra-TDbC59rpZoGn0pRWmAMchHqoOb_XwB2XUzA7Q@mail.gmail.com>
- <90834b07-9261-4be6-a10b-88d3f5308e1e@igalia.com>
- <CAJZ5v0jiAHHLP2O_0ZkXPPCXq9tFTxqrap1mFXOJtKuBo-gJfw@mail.gmail.com>
- <96b4ae67-b9a8-47d3-a951-a880848e6719@arm.com>
-From: Changwoo Min <changwoo@igalia.com>
-Content-Language: en-US, ko-KR, en-US-large, ko
-In-Reply-To: <96b4ae67-b9a8-47d3-a951-a880848e6719@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20250326-topic-panthor-rs-genmask-v5-1-bfa6140214da@collabora.com>
+ <DA2D41UHSQTB.2P6FHWB6TBVO7@nvidia.com> <CANiq72ny+uSZ8wNyqozTUNma1tKfS4du0yd4+nTjioYmyw25CQ@mail.gmail.com>
+ <DA2JMEL971SA.3J61636AYG6E9@nvidia.com>
+In-Reply-To: <DA2JMEL971SA.3J61636AYG6E9@nvidia.com>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Thu, 22 May 2025 10:37:10 +0200
+X-Gm-Features: AX0GCFufmhX62WtMvz1y_1so_6WBJR_Ow8DXOt09i5c6TUoUoFRqmUA2jAKdXpA
+Message-ID: <CANiq72mAmbgoE=1ko5tC5xVjPRYQPA+eAU-uK9Gd6+m3WGBYKQ@mail.gmail.com>
+Subject: Re: [PATCH v5] rust: kernel: add support for bits/genmask macros
+To: Alexandre Courbot <acourbot@nvidia.com>
+Cc: Daniel Almeida <daniel.almeida@collabora.com>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
+	Danilo Krummrich <dakr@kernel.org>, linux-kernel@vger.kernel.org, 
+	rust-for-linux@vger.kernel.org, Fiona Behrens <me@kloenk.dev>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Thu, May 22, 2025 at 10:23=E2=80=AFAM Alexandre Courbot <acourbot@nvidia=
+.com> wrote:
+>
+> Like everything else in this module. :)
 
+I meant it in the sense that using `build_assert!` means one cannot
+compile down a "concrete implementation" because the value wouldn't be
+able to be checked (so it needs to use generics or otherwise be marked
+as `#[inline]`).
 
-On 5/22/25 17:19, Lukasz Luba wrote:
-> 
-> 
-> On 5/10/25 12:34, Rafael J. Wysocki wrote:
->> On Sat, May 10, 2025 at 7:07 AM Changwoo Min <changwoo@igalia.com> wrote:
-
->>> I am curious about whether the energy mode is likely to be updated more
->>> often with this change. How often the energy model is likely to be
->>> updated is the factor to be considered for the interface and the model
->>> to post-processing the eneergy model (in the BPF schedulers).
->>
->> It really is hard to say precisely because eventually this will depend
->> on the platform firmware.  Hopefully, this is not going to happen too
->> often, but if the thermal envelope of the platform is tight, for
->> instance, it may not be the case.
-> 
-> It's hard to say for all use cases, but there are some easy to measure
-> and understand:
-> 
-> 1. Long scenarios with heavy GPU usage (e.g. gaming). Power on CPUs
->     built from High-Performance cells can be affected by +20% and after
->     ~1min
-> 2. Longer recording with heavy ISP usage, similar to above
-> 
-> In those two, it's sufficient to update the EM every 1-3sec to reach
-> this +20% after 60sec. Although, at the beginning when the GPU starts
-> heating the updates should happen a bit more often.
-> 
-> There are some more complex cases, e.g. when more than 1 Big CPU does
-> heavy computations and the heat is higher than normal EM model of
-> single CPU (even for that scenario profile). Then the updates to EM
-> can go a bit more often (it depends what the platform would like
-> to leverage and achieve w/ SW).
-
-Thank you for the further clarification. I think the netlink 
-notification should be fast and efficient enough to cover these scenarios.
-
-Regards,
-Changwoo Min
-
+Cheers,
+Miguel
