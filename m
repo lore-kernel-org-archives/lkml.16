@@ -1,105 +1,131 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74E682BFC64
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 20:10:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADE45221FA5
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 20:21:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747944619; cv=none; b=KO49nxNMEDq5HILuU/AwF21cCUBx8ol0+MCUthc7qJ+VXE7EIde6D4EbI4M1G1rSSgOS3X+K7Ozprer4ybM45grPaBetngUAVY+SeLvLOtbx0Htn1l04I+m1j0YHK1yRNtJm2YI0jwFKcv6m7jK7sz/WUqWRwcXJ+0QC8y87AqU=
+	t=1747945300; cv=none; b=DoaG7Id3ZuazB/VU2q9e4iYGSVnWUVxo6fKHWph6lBd/7haiZtOL/QBR/4nr9f3exRSzk4x7m7s2Q6X6NF8udSponaJhzDLUcqVz+swDSx3cFn3SLUPKi3qI8kJRDFHXSHiBGezOQIsrLsF5aGXiFOFMJ/EB5DDp8WyDtbi0vCw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747944619; c=relaxed/simple;
-	bh=u1d0amzEQMXWLc+O6o+EmY9H47Q/ZLgRR2P2wcViHWM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Y8IXQei1d+oHg8yvjRGUHHMWov3RX4ktNj+KfVhUrxML69f6aELJH/7lXEO/IMrp7S791qKnaJisf8AXfIaWhIf0OkBG2T5przei3M0cwrV8VPHQ6n+imGDkeIUYz+v7dLSIU74y2RPuSZpvSTNnSblFhkr0T31bVPb2pLR7DbU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Fl556fUl; arc=none smtp.client-ip=209.85.221.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1747945300; c=relaxed/simple;
+	bh=C+HddV3dWrxO+zZIzKiR0mbeSaPT4T/kAf+7rTEziO0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=TIAgQ6N6XbbjxL3MnPSiDapEjkLEFYTY7RgexzPQFuH0w3vJBB4l0aYovEO5XnNX59P6QrsRnl5PL4l/EDkU57pvPmS4UeXqaS+Y2uYQXcHPM/MovVFsPYJ7em+zRj2M3lHka0yW4DufC00HZzFbXTPcDYBd5g7ECXOlPE8ZodY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=byxaRnv8; arc=none smtp.client-ip=209.85.210.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Fl556fUl"
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3a36748920cso5608310f8f.2
-        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 13:10:17 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="byxaRnv8"
+Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-74019695377so6197658b3a.3
+        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 13:21:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747944616; x=1748549416; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Zi6UK63Kniro/hiv/vg69lXNbuiW+Rc4uGAFOEdYP7c=;
-        b=Fl556fUljacUaSLGbWtgKpbXHUXrH7uPQgGPfrjX3KR0zEHB/4GmEqMjK9OCeqq94z
-         Bn8oiIWpZT6IoX6uJDM4OyfYFDyKDzEEpM2eAu2xd2ft+Img4qTmPLAASVD6X1BE37u/
-         aRF2XK9oZt7FJiAAMy44KmBT0wW/s+jg0kxLFZ0cG1WQ8goucEU3TEMV+x3bNujiOK8v
-         cUP5MaZlySPFYWlvxBs6uA7XO/l2SsodAaYTQscV+ej4fVnWH64606/gis6bDQxBRojM
-         csCO4LwkEohVkZ30yoCSUBW4tBD9JkLYqC4amEwjjeqaWWo084R8Hneq2YK7REzztQpy
-         ukHQ==
+        d=broadcom.com; s=google; t=1747945298; x=1748550098; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:to:subject:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=Tm4k4ovRqOoI0MDP4KWD2K4fuBBJ8zeOAXfHx9a9JHw=;
+        b=byxaRnv8YpMoIITws7k7q7QrPfTO+CICmJqe8CVpEEn0wfuqPksnCFrEIkvwzomS56
+         fTEuvJTYy7EYQbvevnC/PvHXPcjzImNDcfNCBLK+ipJSPGZRuiEDW/CGUflzRYDT8viZ
+         3The3+4R2Tnt17Giffr0geHA8/++B5bVqJAqk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747944616; x=1748549416;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Zi6UK63Kniro/hiv/vg69lXNbuiW+Rc4uGAFOEdYP7c=;
-        b=HEAlrLiK3p+DW1qzkcqcMp++HWU2wmmtHG4432E82/tzZwZa6tRjAUAQkD/914jFp/
-         pdqWXAguwnAImImdlj0rkmWe5BM8n7aSR+RRlJ81O26o4orUwglmJGz1geFyWLJhGg82
-         xqYQ3tviAr97s71UlbSN5iafuce6l1Hj5IAtZb+sBw+it1RBrWBoKh/dSt6i6/mWjNay
-         n/Dj4VV+ZJxwIila5bG/oOX3trv+HEno9JDF7+7t8ZAQgjaSWq3OCP9OKN9a5gNu0+FG
-         qc1v15sPEtf7uVDqGOZbPDMrG3bhe/kbNsUO+rE3tD/75AMHwj0ybz84pK8z/U+Ls0fU
-         25fA==
-X-Forwarded-Encrypted: i=1; AJvYcCX9OX2nzryuus+Cpxh9buLLhNzKdFnikfNm5aYYvBFETQgo9QJ0qAnZGm+7I8rria3YPs3v6g0x2RAzVk8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywy7eFsXwFtg1ThuujnfrkjJkQMC9N8PIh7ApqfRs8Zu4EIkZuk
-	5a6IKnPWFmtvFx2o6Z2VuDiZKtSyOGAMIBDPnRf2bY8qg/wHRQHjrTdTS+wYwbKK/T6If728w9W
-	aeKhkn0mKpDaIxvYLOrOWSQguT8Ej6Krt2vFXFi05
-X-Gm-Gg: ASbGncsqQ9+v0HcdbjTD9MxiW1pijTryfW/KQU9AlBhl4pn/lTArEcqyLShHnicTWGj
-	XmlTTW5T+sRA5iGIggFLOR6tkw2m/epsHCXo/m9CmLOiCr3bDLKFnRy8y0KI9OTWIXQxjzptZ/r
-	LF9ZJ7KuqjoVjTW+UIW7xGT97QMzx7VA/qrUlyIrfx4/29LkP/TVVPi/HnoSZrt/aReNxQAXJsl
-	A==
-X-Google-Smtp-Source: AGHT+IHd6YqAoxYw8miBcoEkIf/xB+HqLUuOOhvJRjCeKRZF7C69+8RuD1SZ5w0zECEw6IKhFE00IUJDA7Pw53bTrRo=
-X-Received: by 2002:a5d:64c7:0:b0:3a3:6584:3fa1 with SMTP id
- ffacd0b85a97d-3a365844ba6mr22936770f8f.44.1747944615640; Thu, 22 May 2025
- 13:10:15 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1747945298; x=1748550098;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Tm4k4ovRqOoI0MDP4KWD2K4fuBBJ8zeOAXfHx9a9JHw=;
+        b=XX4phT+1/lc7QrFIxRPXahf2a8xwtrShXIOHvGERgAkuOYQYZotGNrJHdcAXMmMjfR
+         XEu3g0z75IQ1GJifjM1R7NJrcdQ5zNcdl0aULn85992mG/5qmoZEr1GJhAnYdKGHkoH+
+         MNZkSXeBn2+7cn0MPCsAW+B145LAKIS0/PtrEBErrkFp7cAI0kBNeAMOG3l4BTMaZzhY
+         D1P5r09pCc8HPs2MrhNlETdaAnKi6zsHFmEjCpzzSXoT+5YQJh0MWhBInmhxes3xvUN0
+         ld/6TVgbuHoSKrn57eCprGIOdShfTbT0wbQlJqJGBhGF+mwDEL/Yez1GkisdrPrbwNWb
+         7tww==
+X-Forwarded-Encrypted: i=1; AJvYcCVTUrHfeVYMVVG9ncBe9JbPuamiiUCP2Z+/Vqg2quIOxx4PcNqrC7oy/u7e1yIeKWtFhtj5Y4GRwpHbwBU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxo5HfYElZL47St2ADGraUEPicMenpoYlI8UqMBGUOFpo/bRJBG
+	FmEeyBv2jtbT9BnmIptq7jSgHxEXZMfsXfsJevK+4yG2esC8jEn0PbsPdOCuVi93gw==
+X-Gm-Gg: ASbGncsRQvezaRO1ExCGXcV5blJ5udqgZkLEoAsZK8jVUtjJkTn+5xc1g7gjj3sW2x4
+	+kuDLmmXfNa68w+cjjlmmaqhE/IRKY7Fr9qSwYMvti8sYmcL8WX/NJ25KqN5w1Zw5y4r9//Chr3
+	3UkX2HnxAbIKLXciZT9GRrMyl81oxfbPytzHxQvp+0/uDcE0EAH6Ds8sshW6XFCJPvGVvc1HVci
+	Fp3DpSjPS17qzK7qz7b1KpykIg9De7lMWI6s4+8IxbRksQq/wcT7dW11U3D/N3DYns7T9fNu1oY
+	Hd5tUHe6mc8lO15cs5cjoLIHJFHuSKPjGlnhCwJr3bXMMjLS4Vgljymhv5r23fYUB1hsXhMGXlT
+	xTm6aZMX+Eq51nL4=
+X-Google-Smtp-Source: AGHT+IEaTiXQ8DcjsheamxqoCiITTgF5Qwn9UxSlMyPIr8D4XZpnBsIW9NefScg8Yg/LjcEtiK6AUA==
+X-Received: by 2002:a05:6a00:2e9a:b0:740:9abe:4d94 with SMTP id d2e1a72fcca58-745ed905b34mr653721b3a.21.1747945297901;
+        Thu, 22 May 2025 13:21:37 -0700 (PDT)
+Received: from [10.67.48.245] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-742a96def68sm11661081b3a.30.2025.05.22.13.21.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 22 May 2025 13:21:36 -0700 (PDT)
+Message-ID: <551fae31-05c7-4555-85cb-eaee2cc67691@broadcom.com>
+Date: Thu, 22 May 2025 13:21:34 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250413005650.1745894-1-ojeda@kernel.org> <CAH5fLgiF0kZdOYaQi18_LTNx6Onq-5PBomA=bwS0m0z+C0wtvg@mail.gmail.com>
- <CANiq72ngfTJ5PTYaJOOQ2NedERrLYzA62hL8Fgw5C4QkuZ2R-Q@mail.gmail.com>
- <Z_0X8Z9M2H0mmcK8@google.com> <CANiq72=ttuQYrGNDqNZDmBN5G4TUpna+ex8eD85HvOP723frDw@mail.gmail.com>
-In-Reply-To: <CANiq72=ttuQYrGNDqNZDmBN5G4TUpna+ex8eD85HvOP723frDw@mail.gmail.com>
-From: Alice Ryhl <aliceryhl@google.com>
-Date: Thu, 22 May 2025 13:10:03 -0700
-X-Gm-Features: AX0GCFsS36Reksqvi8aRibe6a18Oz-bTGUW4k34hhUquW5v3Uv-Z43TgekyqjRs
-Message-ID: <CAH5fLggfFJ3TmoDbVa1SqOPywOHKDy85CR5pz5wZ8VpZj+Cr6w@mail.gmail.com>
-Subject: Re: [PATCH] rust: add C FFI types to the prelude
-To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, patches@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5] mtd: rawnand: brcmnand: legacy exec_op implementation
+To: =?UTF-8?Q?=C3=81lvaro_Fern=C3=A1ndez_Rojas?= <noltari@gmail.com>,
+ linux-mtd@lists.infradead.org, dregan@broadcom.com,
+ miquel.raynal@bootlin.com, bcm-kernel-feedback-list@broadcom.com,
+ florian.fainelli@broadcom.com, rafal@milecki.pl,
+ computersforpeace@gmail.com, kamal.dasu@broadcom.com,
+ dan.beygelman@broadcom.com, william.zhang@broadcom.com,
+ frieder.schrempf@kontron.de, linux-kernel@vger.kernel.org, vigneshr@ti.com,
+ richard@nod.at, bbrezillon@kernel.org, kdasu.kdev@gmail.com,
+ jaimeliao.tw@gmail.com, kilobyte@angband.pl, jonas.gorski@gmail.com,
+ dgcbueu@gmail.com
+References: <20250521080325.581366-1-noltari@gmail.com>
+Content-Language: en-US
+From: Florian Fainelli <florian.fainelli@broadcom.com>
+Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
+ xsBNBFPAG8ABCAC3EO02urEwipgbUNJ1r6oI2Vr/+uE389lSEShN2PmL3MVnzhViSAtrYxeT
+ M0Txqn1tOWoIc4QUl6Ggqf5KP6FoRkCrgMMTnUAINsINYXK+3OLe7HjP10h2jDRX4Ajs4Ghs
+ JrZOBru6rH0YrgAhr6O5gG7NE1jhly+EsOa2MpwOiXO4DE/YKZGuVe6Bh87WqmILs9KvnNrQ
+ PcycQnYKTVpqE95d4M824M5cuRB6D1GrYovCsjA9uxo22kPdOoQRAu5gBBn3AdtALFyQj9DQ
+ KQuc39/i/Kt6XLZ/RsBc6qLs+p+JnEuPJngTSfWvzGjpx0nkwCMi4yBb+xk7Hki4kEslABEB
+ AAHNMEZsb3JpYW4gRmFpbmVsbGkgPGZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tPsLB
+ IQQQAQgAywUCZWl41AUJI+Jo+hcKAAG/SMv+fS3xUQWa0NryPuoRGjsA3SAUAAAAAAAWAAFr
+ ZXktdXNhZ2UtbWFza0BwZ3AuY29tjDAUgAAAAAAgAAdwcmVmZXJyZWQtZW1haWwtZW5jb2Rp
+ bmdAcGdwLmNvbXBncG1pbWUICwkIBwMCAQoFF4AAAAAZGGxkYXA6Ly9rZXlzLmJyb2FkY29t
+ Lm5ldAUbAwAAAAMWAgEFHgEAAAAEFQgJChYhBNXZKpfnkVze1+R8aIExtcQpvGagAAoJEIEx
+ tcQpvGagWPEH/2l0DNr9QkTwJUxOoP9wgHfmVhqc0ZlDsBFv91I3BbhGKI5UATbipKNqG13Z
+ TsBrJHcrnCqnTRS+8n9/myOF0ng2A4YT0EJnayzHugXm+hrkO5O9UEPJ8a+0553VqyoFhHqA
+ zjxj8fUu1px5cbb4R9G4UAySqyeLLeqnYLCKb4+GklGSBGsLMYvLmIDNYlkhMdnnzsSUAS61
+ WJYW6jjnzMwuKJ0ZHv7xZvSHyhIsFRiYiEs44kiYjbUUMcXor/uLEuTIazGrE3MahuGdjpT2
+ IOjoMiTsbMc0yfhHp6G/2E769oDXMVxCCbMVpA+LUtVIQEA+8Zr6mX0Yk4nDS7OiBlvOwE0E
+ U8AbwQEIAKxr71oqe+0+MYCc7WafWEcpQHFUwvYLcdBoOnmJPxDwDRpvU5LhqSPvk/yJdh9k
+ 4xUDQu3rm1qIW2I9Puk5n/Jz/lZsqGw8T13DKyu8eMcvaA/irm9lX9El27DPHy/0qsxmxVmU
+ pu9y9S+BmaMb2CM9IuyxMWEl9ruWFS2jAWh/R8CrdnL6+zLk60R7XGzmSJqF09vYNlJ6Bdbs
+ MWDXkYWWP5Ub1ZJGNJQ4qT7g8IN0qXxzLQsmz6tbgLMEHYBGx80bBF8AkdThd6SLhreCN7Uh
+ IR/5NXGqotAZao2xlDpJLuOMQtoH9WVNuuxQQZHVd8if+yp6yRJ5DAmIUt5CCPcAEQEAAcLB
+ gQQYAQIBKwUCU8AbwgUbDAAAAMBdIAQZAQgABgUCU8AbwQAKCRCTYAaomC8PVQ0VCACWk3n+
+ obFABEp5Rg6Qvspi9kWXcwCcfZV41OIYWhXMoc57ssjCand5noZi8bKg0bxw4qsg+9cNgZ3P
+ N/DFWcNKcAT3Z2/4fTnJqdJS//YcEhlr8uGs+ZWFcqAPbteFCM4dGDRruo69IrHfyyQGx16s
+ CcFlrN8vD066RKevFepb/ml7eYEdN5SRALyEdQMKeCSf3mectdoECEqdF/MWpfWIYQ1hEfdm
+ C2Kztm+h3Nkt9ZQLqc3wsPJZmbD9T0c9Rphfypgw/SfTf2/CHoYVkKqwUIzI59itl5Lze+R5
+ wDByhWHx2Ud2R7SudmT9XK1e0x7W7a5z11Q6vrzuED5nQvkhAAoJEIExtcQpvGagugcIAJd5
+ EYe6KM6Y6RvI6TvHp+QgbU5dxvjqSiSvam0Ms3QrLidCtantcGT2Wz/2PlbZqkoJxMQc40rb
+ fXa4xQSvJYj0GWpadrDJUvUu3LEsunDCxdWrmbmwGRKqZraV2oG7YEddmDqOe0Xm/NxeSobc
+ MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
+ 7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
+ 95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
+In-Reply-To: <20250521080325.581366-1-noltari@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Thu, May 22, 2025 at 1:05=E2=80=AFPM Miguel Ojeda
-<miguel.ojeda.sandonis@gmail.com> wrote:
->
-> On Mon, Apr 14, 2025 at 4:13=E2=80=AFPM Alice Ryhl <aliceryhl@google.com>=
- wrote:
-> >
-> > Hmm. Maybe, but I think having it at the end is okay. Could we catch
-> > core::ffi with checkpath instead of clippy? Just search for core::ffi?
->
-> Sure, we can add it as a good first issue (Clippy would still be ideal
-> -- it allows to check all the current code).
->
-> I came up with this, which puts the right way first:
->
->     Rust kernel code refers to C types, such as ``int``, using type
->     aliases such as ``c_int``, which are readily available from
->     the ``kernel`` prelude. Please do not use the aliases from
->     ``core::ffi`` -- they may not map to the correct types.
->
-> If neither of you are against that, I will put that in a few days,
-> including Danilo's tag.
+On 5/21/25 01:03, Álvaro Fernández Rojas wrote:
+> Commit 3c8260ce7663 ("mtd: rawnand: brcmnand: exec_op implementation")
+> removed legacy interface functions, breaking < v5.0 controllers support.
+> In order to fix older controllers we need to add an alternative exec_op
+> implementation which doesn't rely on low level registers.
+> 
+> Fixes: 3c8260ce7663 ("mtd: rawnand: brcmnand: exec_op implementation")
+> Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
+> Reviewed-by: David Regan <dregan@broadcom.com>
 
-LGTM
-Reviewed-by: Alice Ryhl <aliceryhl@google.com>
+Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
+-- 
+Florian
+
