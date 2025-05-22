@@ -1,117 +1,81 @@
-Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8784F272E79
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 22:26:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1B9913C81B;
+	Thu, 22 May 2025 22:30:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747952773; cv=none; b=lX/fbOicshI7s1Rfz7/RY4whd9vF0O3dHXa9K57h0qXTV5SfF4Act5q07aT1Qr6h+Iwe8g8+ZiVlOrPtXN3uuaGB1em8b4f5xyEdyeQGKRc+Ryv3tYw+2zYjieRyiFi9ZQMmGOB1Jsjfa9XJleniF725SOT8uvyV9Z08S/Ccuec=
+	t=1747953015; cv=none; b=GYLnYJWsIFAMH8dHRPWN7dIGpW6bwlr4/8fzwHcOpWaWwhfx+ESDSMfyrPxieHmy169/gPvLKnAfNcmkKkPDRx4QaQBwDAfRfOJMsQQjjIwtR4x9ETohykOepZPy6J+FDGAJCBxJJ1mCFxFgEELIUJdk7jrHkDHFZg6ofGMb5b0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747952773; c=relaxed/simple;
-	bh=ERIIFgKxrnPwjSVA6jXYtUfeYroUqJBM9v+L48OiIjw=;
-	h=Date:Message-ID:MIME-Version:Content-Type:From:To:Cc:Subject:
-	 References:In-Reply-To; b=n/TYlbqhtAhHnNNN7y4e5fEz+enBoJliVs4c2u/6Df4ZqnrECK9/uZK2iYEwka++6WmswR48HzdRQDYr4KaFLfEK/2+d7CiMkcRVQoJ2ldyF2yRnFn09+P36PvlY6aPqvoJ+V1HdtEuUdwCJJ4AqpK4rFPcm9JGWiQLZtDFhw+s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=ToVMF8Pc; arc=none smtp.client-ip=209.85.222.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
+	s=arc-20240116; t=1747953015; c=relaxed/simple;
+	bh=jW9IdrEDsP9dLKs3o6gfn990nlhAFd7trNmrhCDWRIU=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=buBPipG/P6cDADPuXYBQlTQdUkHUsDlMo+t21FYjpsHrR/geP20UlzU+W6/NNf/P+kw2vg0OU/PF3F2fI9gygkbA2x8VwHZ+IKspMBO51LWjjrCV9SYgOAjDuqa60Oh3N6BC3VXXc8Mj5t8RdxL0c82HzA6Vdtr1PbgF4ouLa7Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=obNWYMD/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="ToVMF8Pc"
-Received: by mail-qk1-f172.google.com with SMTP id af79cd13be357-7c542ffec37so948106985a.2
-        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 15:26:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore.com; s=google; t=1747952768; x=1748557568; darn=vger.kernel.org;
-        h=in-reply-to:references:subject:cc:to:from:content-transfer-encoding
-         :mime-version:message-id:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=yW4BwrWRPMGZw+m/ri6EFRKCjP4k+SeXSk6ZWrWvJiA=;
-        b=ToVMF8PcVy37DRcyydOqAzRtU8MIfxnsQYcyTujtaPP+6rNuh10GiSxHl8BpEOL7Vl
-         xP549yj/DsBJfMi3qCROE0CjVVteyRyHylhdLw04oGcxRiQntTqkGaj0qxDt91en7Yaf
-         k+SmxoaFBB+G/5sErCk+bkQleUrTH6XQJe2p+LIipbvb4fbPmu1wnSD2q+VMoi0xxJsW
-         gaMrvrcaiHSnHiky9rJUvXODz2114Xg3/bkQmKiZIEtphocJflv5aC1cQ1XzMR2q+5M1
-         e5C3pB8Uc+2bJywG7HLAABdlrHUZ45rP3ykqZkmL5ezlodK/YayNjCLBFI5pn3kcMbPH
-         Giow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747952768; x=1748557568;
-        h=in-reply-to:references:subject:cc:to:from:content-transfer-encoding
-         :mime-version:message-id:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=yW4BwrWRPMGZw+m/ri6EFRKCjP4k+SeXSk6ZWrWvJiA=;
-        b=d2SBTqZviZrRp2JBTPSpIxI5wVdGtr1wR3pM/+NCTUMZvcQEp9sQ2fciXgpJ1AMHso
-         OaG/I35V4wSh+Yidzja5d59quYCXyzqZ+wVhMs7ZsGcBxzEL8oOBFAd3PAq4oRflictb
-         c3wu9dxuAbFwkcSHYyfsIRw81nQK3okB6MtszcL0RbRc5rCom6z3/dm5qITZGBfQ3Ha9
-         vAebj4tN1H0mbzQ9itUwwv5I55ClEgEomaD9U+AXah1R85nKIwmv29U0VmMwYvFL2R2k
-         /8n+ypHSzqaa3eiCp4gpb/A0v11tA4aGBfh4HrZnEsY8hA20fGeI0xWuLOBhXqKQE5dz
-         p2jA==
-X-Forwarded-Encrypted: i=1; AJvYcCWK1aKfpRb236oOZ8KUFGQ7ZXO0U/M3MhzLuE7H6h9Gyk+8eZNg9Eho2oMLDBYhUOwKPVuMtcUX3Ejj+tU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyktVMtRmOQbpdCv35vfNDHJoArVXIIbbkKT9OGLd9FGq/ycioA
-	IQYL+8WkncsMYnoD+a+R8X+SJeYN6GhY1ae/5z4IN+onOlxkH4u2ywrItXgzwM7WgA==
-X-Gm-Gg: ASbGncsn1LK9cRJxwZRTDuvUqEWzwvt50n3U5JtUng02nQWPS1cnWpHvRN6QK5K5sKv
-	3i3BsKyELz8+b8hCjiV1bRROc9/OK3m12fvP5go4xHwYTQPhqDR2MboslQws80o2X8snIVaV2Lp
-	TIblbqpNzIucxWtQ9MdxfVZyxY5TCVeD3Tx5aqvN7X+JTAFBkhKQQafKRamYjdqqD6ZcPnok5AO
-	czIU0Cfro3qaEhPJ3HK+6DOsVbyICRhc8wGFPWUF4B1LApRePd+G6FJvmDdylyovEanyqGM2kR3
-	eyVaPLoNA9lHBn5QKBiqb95JoiPknVPT8fOT5SzGaLnMIPJ7UoKGRHvSimOt32WVctdxorWqVVC
-	z8jHW+fsosY9FdD2HkHEG
-X-Google-Smtp-Source: AGHT+IHmIlyqjG6e3vdHM+wi0UqPbDaDdVTY/IdBlClNAbyXhci/B2Ul0PB2ozu0sL7+1EWeTaPM2w==
-X-Received: by 2002:a05:620a:408e:b0:7ce:d352:668f with SMTP id af79cd13be357-7ced352670emr1334278485a.47.1747952768087;
-        Thu, 22 May 2025 15:26:08 -0700 (PDT)
-Received: from localhost (pool-71-126-255-178.bstnma.fios.verizon.net. [71.126.255.178])
-        by smtp.gmail.com with UTF8SMTPSA id af79cd13be357-7cd468b69dfsm1089029585a.79.2025.05.22.15.26.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 May 2025 15:26:07 -0700 (PDT)
-Date: Thu, 22 May 2025 18:26:07 -0400
-Message-ID: <8bf36078ef8f3e884a1d3d8415834680@paul-moore.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="obNWYMD/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EDE62C4CEEF;
+	Thu, 22 May 2025 22:30:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747953014;
+	bh=jW9IdrEDsP9dLKs3o6gfn990nlhAFd7trNmrhCDWRIU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=obNWYMD/5Bwx1hqCakZIHjeBBRpDNPMNTHeyi2pqJ7N2SbPNuHw9RUB7B6LCru2vP
+	 z4YEHTiRuzmiDy+lXUoak1zEtryA5CKB+4ZsA+LWH+Lub14ST+gLL3jIzG9alpKyq6
+	 bmp3ry8RO3vmopj8dbGHCf9CW0gW+CrfzeCnFfJnKaoPDyP18xWTB82bffDJGqxKEo
+	 udFbocLtZ06ZyrX5fHE0Q8uKk3M++SMyU3H6X2pUXtFaJrtD8iacCRIpDWwwPQOmCS
+	 2wFxf2ggMriYjO0Mws2AtsBVBfY/E/G8F/kir+YpjA1vDyobuNT6dpVu5GFrczS+uN
+	 5M7oJ3XVbb21g==
+Date: Thu, 22 May 2025 15:30:13 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Tariq Toukan <tariqt@nvidia.com>
+Cc: "David S. Miller" <davem@davemloft.net>, Paolo Abeni
+ <pabeni@redhat.com>, Eric Dumazet <edumazet@google.com>, "Andrew Lunn"
+ <andrew+netdev@lunn.ch>, Saeed Mahameed <saeedm@nvidia.com>, Leon
+ Romanovsky <leon@kernel.org>, Richard Cochran <richardcochran@gmail.com>,
+ Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann
+ <daniel@iogearbox.net>, Jesper Dangaard Brouer <hawk@kernel.org>, John
+ Fastabend <john.fastabend@gmail.com>, <netdev@vger.kernel.org>,
+ <linux-rdma@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <bpf@vger.kernel.org>, Moshe Shemesh <moshe@nvidia.com>, Mark Bloch
+ <mbloch@nvidia.com>, Gal Pressman <gal@nvidia.com>, Cosmin Ratiu
+ <cratiu@nvidia.com>, Dragos Tatulea <dtatulea@nvidia.com>
+Subject: Re: [PATCH net-next V2 06/11] net/mlx5e: SHAMPO: Separate pool for
+ headers
+Message-ID: <20250522153013.62ac43be@kernel.org>
+In-Reply-To: <1747950086-1246773-7-git-send-email-tariqt@nvidia.com>
+References: <1747950086-1246773-1-git-send-email-tariqt@nvidia.com>
+	<1747950086-1246773-7-git-send-email-tariqt@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 
-Content-Type: text/plain; charset=UTF-8 
-Content-Transfer-Encoding: 8bit 
-X-Mailer: pstg-pwork:20250522_1740/pstg-lib:20250522_1730/pstg-pwork:20250522_1740
-From: Paul Moore <paul@paul-moore.com>
-To: Andrey Albershteyn <aalbersh@redhat.com>, Richard Henderson <richard.henderson@linaro.org>, 
-	Matt Turner <mattst88@gmail.com>, Russell King <linux@armlinux.org.uk>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	Geert Uytterhoeven <geert@linux-m68k.org>, Michal Simek <monstr@monstr.eu>, 
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>, Helge Deller <deller@gmx.de>, 
-	Madhavan Srinivasan <maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, 
-	Nicholas Piggin <npiggin@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, 
-	Naveen N Rao <naveen@kernel.org>, Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
-	Alexander Gordeev <agordeev@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
-	Sven Schnelle <svens@linux.ibm.com>, Yoshinori Sato <ysato@users.sourceforge.jp>, 
-	Rich Felker <dalias@libc.org>, John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, 
-	"David S. Miller" <davem@davemloft.net>, Andreas Larsson <andreas@gaisler.com>, 
-	Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
-	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, Chris Zankel <chris@zankel.net>, Max Filippov <jcmvbkbc@gmail.com>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
-	=?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>, 
-	=?UTF-8?Q?G=C3=BCnther_Noack?= <gnoack@google.com>, 
-	Arnd Bergmann <arnd@arndb.de>, =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>, 
-	James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>, 
-	Stephen Smalley <stephen.smalley.work@gmail.com>, Ondrej Mosnacek <omosnace@redhat.com>, 
-	Tyler Hicks <code@tyhicks.com>, Miklos Szeredi <miklos@szeredi.hu>, 
-	Amir Goldstein <amir73il@gmail.com>
-Cc: linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org, linux-sh@vger.kernel.org, sparclinux@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-security-module@vger.kernel.org, linux-api@vger.kernel.org, linux-arch@vger.kernel.org, selinux@vger.kernel.org, ecryptfs@vger.kernel.org, linux-unionfs@vger.kernel.org, linux-xfs@vger.kernel.org, Andrey Albershteyn <aalbersh@kernel.org>
-Subject: Re: [PATCH v5 3/7] selinux: implement inode_file_[g|s]etattr hooks
-References: <20250513-xattrat-syscall-v5-3-22bb9c6c767f@kernel.org>
-In-Reply-To: <20250513-xattrat-syscall-v5-3-22bb9c6c767f@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On May 13, 2025 Andrey Albershteyn <aalbersh@redhat.com> wrote:
-> 
-> These hooks are called on inode extended attribute retrieval/change.
-> 
-> Cc: selinux@vger.kernel.org
-> Cc: Paul Moore <paul@paul-moore.com>
-> 
-> Signed-off-by: Andrey Albershteyn <aalbersh@kernel.org>
-> ---
->  security/selinux/hooks.c | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
+On Fri, 23 May 2025 00:41:21 +0300 Tariq Toukan wrote:
+> Allocate a separate page pool for headers when SHAMPO is enabled.
+> This will be useful for adding support to zc page pool, which has to be
+> different from the headers page pool.
 
-Acked-by: Paul Moore <paul@paul-moore.com>
+Could you explain why always allocate a separate pool? 
+For bnxt we do it only if ZC is enabled (or system pages are large),
+see bnxt_separate_head_pool() and page_pool_is_unreadable().
 
---
-paul-moore.com
+Not sure if page_pool_is_unreadable() existed when this code
+was written.
+
+> -	wq_size = BIT(MLX5_GET(wq, wqc, log_wq_sz));
+> -	*pool_size += (rq->mpwqe.shampo->hd_per_wqe * wq_size) /
+> -		     MLX5E_SHAMPO_WQ_HEADER_PER_PAGE;
+> +
+> +	/* separate page pool for shampo headers */
+> +	{
+> +		int wq_size = BIT(MLX5_GET(wq, wqc, log_wq_sz));
+> +		struct page_pool_params pp_params = { };
+> +		u32 pool_size;
+
+A free standing code block? I this it's universally understood 
+to be very poor coding style..
