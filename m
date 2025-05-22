@@ -1,267 +1,234 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f194.google.com (mail-pg1-f194.google.com [209.85.215.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 804DE33F7;
-	Thu, 22 May 2025 01:06:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.20
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747875992; cv=fail; b=XeEmKjEXKabqDpiGNVF2A5HihI/pguKW8shYQUikjq32vZBIAS7ZJ+PCrcOsxhZ2f8JMRm7ZdpEhMQPubJa5x8xDL9kKGUVriqkOuMkaAjZ+wLG5kOQ1F/b7gOj0HzLe8x3AIzsVvQLlvDVAAkLV7PeW0dkY41l7sG5wj1pUWfs=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747875992; c=relaxed/simple;
-	bh=vSrA1NCs+uFu1JDMcGMnrqcHXhYRdtMYYtkXqTPXyTU=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=d9xmzxAGB14ZXmbIFm+CRFeZt+HX/TeQODv/ykiefIPMlfLmwWtY5iP8+PFmHjdLmH52Cma61nADiC/sJyQD4S9RNINV+mGF3+FsXtscTVOmpSw8n1S4DuK9xIKYno3vZXKgOS50RpGpZxajfbXTftjNa9Lo8LFse+Xq4zuv4j0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aB3KcuBS; arc=fail smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 014BF33F7
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 01:11:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.194
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747876274; cv=none; b=gXAiYXurnPMYL1VfTm8OoLb9u8KV8uRf6JR/ojT8U3VuY9kGz9M+PQ+fO+IJY3TyvjFi6R8LGyQw7vTh8wYLvP5xZg9nCnF3LCS/NQ5aNXQua5QCgk0yVLuN3MM/uf+XuwlDKsPhNiWiKWTMwRjoUWtRpioy2fnU59ScJjbWOQQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747876274; c=relaxed/simple;
+	bh=Ad3zrYI4XRg0xONw2y6z1U06jffb0/tt3RcAun2pks8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=S9D0IniX8FGeuYOR5vlNEFSNC+4AsP6kA89b4Bwd7B+/KsUyO8nI9bbgEy9V75Nn/x1FarHqSd/9OxIQEbB2kLBo9nV22fbcyf0X1NTSHml7lzdaUtgvOgk16EVR165lbRhOD316A8sWgzqJUsGMIPYxf6nqBamJ2+l6M/Gw2TQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=KeJelZdq; arc=none smtp.client-ip=209.85.215.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aB3KcuBS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747875990; x=1779411990;
-  h=date:from:to:cc:subject:message-id:reply-to:references:
-   in-reply-to:mime-version;
-  bh=vSrA1NCs+uFu1JDMcGMnrqcHXhYRdtMYYtkXqTPXyTU=;
-  b=aB3KcuBSAn50IAwGVrO2adn80hz4MAmcO5OsJLDUvq0AYPmTXQ2BIX8/
-   mLelgGbTKCAbSO1+d0QwGtNxpV/RNKViCtOOTVzsGVH0ST+UBjw22kCPo
-   BoQ9x0roR9DHtfVkWTpzDG9Fk9fUOAxWLCZIPOMVcSqP7LDpfalLxSaAG
-   jCaI8EQgR4g868Y/ltsCo1/G7ikdnT7G80Aa+hHkRLAN79sJGXnZ+Ggoe
-   ZzMQPJ8Bz4oPcU/dGNWcA8Oeytqzao/XU9wyjLnQFCXC7AryKIB6AXQY0
-   FMapLEu22PVR8JNjtr4rfDSXnEoP6HQZY1Rb1zZWlgd/p+B88ODeNkQFf
-   w==;
-X-CSE-ConnectionGUID: ED1DxwqQSoCVPSIyyqAW5g==
-X-CSE-MsgGUID: UhPbubfKSrS+NcVEvw/wNw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11440"; a="49586642"
-X-IronPort-AV: E=Sophos;i="6.15,304,1739865600"; 
-   d="scan'208";a="49586642"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2025 18:06:26 -0700
-X-CSE-ConnectionGUID: xhuda1jCRx+31BbPOPBe8g==
-X-CSE-MsgGUID: SE2ZJDVvTcG4FBoztr+KEQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,304,1739865600"; 
-   d="scan'208";a="140236937"
-Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
-  by fmviesa006.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2025 18:06:25 -0700
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Wed, 21 May 2025 18:06:24 -0700
-Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25 via Frontend Transport; Wed, 21 May 2025 18:06:24 -0700
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.175)
- by edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.55; Wed, 21 May 2025 18:06:23 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=EUnZXz/HfmMZG9YcZDh1E9Gi8bUv7nRqiosLznU0t8R18D11Sg8heETl9wy5BITHD2NMytlnUV+G2z8YTJjw4zm9GtdU9Q/YUMKXwgy09AMrzD5CsomFAY55JIuj+rGUB+LMOcUK5t3ayiolwmt8nTcD5phXRZadTo0CKAga0HQnnXSP3A2l5T24WCm2JXou+HQ8gsT3cQI7lbN/KtC9kOGdmkg5ycvtTEJOfyCVJJR1qjOsAnkOl30jc2z7W60YvWCgtpXiqEg2411+0kBf9eaS1Fj0tCujrbRy04/rFwvOoVBckVcTVH+aNuXFIxgeU9wlqphLH15uPSGoChXx8A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=AzqHJ6EbKyJd4p2Bv8J8kJtljr9+hFNdZYkGvkophUo=;
- b=xt47a+G+8kpvWv6u6BritjT/St3Bb99iYqssd8QRMlappXazI/5mGzMKamvCtRMzw0rl/WERjXMrRa68lkJBu84EMorjgyll4paTvTtyy4Hk1mrEwIobFw9VYAA3kIidSabsde6lTNKKhvyFCJJVpPaltgrWHqoWah77coYXXoYwnb4K8yx/Wug4Vzc1hqmRqNeI8cYHP1UfhPNw+ALEyPv26HUBCgVLHP87BuTMe0fPoOfntnS4LYUKFoLzYJTLB5ZMQuvZlfjubTtpg/3nW3WB6CJGjn3M7UxxDd6UJ3s+1fmxcBqhTLzMBqVumqjomryF0xmBxQCYsUCWWzZCWg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from DS7PR11MB5966.namprd11.prod.outlook.com (2603:10b6:8:71::6) by
- SA1PR11MB6822.namprd11.prod.outlook.com (2603:10b6:806:29f::8) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8722.32; Thu, 22 May 2025 01:06:14 +0000
-Received: from DS7PR11MB5966.namprd11.prod.outlook.com
- ([fe80::e971:d8f4:66c4:12ca]) by DS7PR11MB5966.namprd11.prod.outlook.com
- ([fe80::e971:d8f4:66c4:12ca%2]) with mapi id 15.20.8746.030; Thu, 22 May 2025
- 01:06:14 +0000
-Date: Thu, 22 May 2025 09:04:05 +0800
-From: Yan Zhao <yan.y.zhao@intel.com>
-To: Sean Christopherson <seanjc@google.com>
-CC: Paolo Bonzini <pbonzini@redhat.com>, <kvm@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, Peter Xu <peterx@redhat.com>, Maxim Levitsky
-	<mlevitsk@redhat.com>, Binbin Wu <binbin.wu@linux.intel.com>, James Houghton
-	<jthoughton@google.com>, Pankaj Gupta <pankaj.gupta@amd.com>
-Subject: Re: [PATCH v3 5/6] KVM: Use mask of harvested dirty ring entries to
- coalesce dirty ring resets
-Message-ID: <aC54BWeyfyUh4BZS@yzhao56-desk.sh.intel.com>
-Reply-To: Yan Zhao <yan.y.zhao@intel.com>
-References: <20250516213540.2546077-1-seanjc@google.com>
- <20250516213540.2546077-6-seanjc@google.com>
- <aC2Z1X0tcJiAMWSV@yzhao56-desk.sh.intel.com>
- <aC3pNVfgNcnuJXUG@google.com>
- <aC4taDzB45fUNQJr@google.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <aC4taDzB45fUNQJr@google.com>
-X-ClientProxiedBy: SG2PR04CA0216.apcprd04.prod.outlook.com
- (2603:1096:4:187::18) To DS7PR11MB5966.namprd11.prod.outlook.com
- (2603:10b6:8:71::6)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KeJelZdq"
+Received: by mail-pg1-f194.google.com with SMTP id 41be03b00d2f7-afc857702d1so6439254a12.3
+        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 18:11:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1747876272; x=1748481072; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3BXu5AhU668DeVMQXwhRYtvbb/ldwfvRhDhf9vXtb6o=;
+        b=KeJelZdqgAgdoLMjSz0Yv3TiYTN5/r4CH7oqD+t1tUOJGh/o+oBnBXenPlbT7CbaVG
+         bg67jPRrqjVXOYRFRCpXXUD6jJYb/KMIcSgGNkkF8HUE+oowfXDssjHGm60wPofiDyDq
+         96FxGVlHcp7/axRoRd1rINhwdPDCG8Z6zWGmw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747876272; x=1748481072;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=3BXu5AhU668DeVMQXwhRYtvbb/ldwfvRhDhf9vXtb6o=;
+        b=d64R/szYv0k/EmkCczOwawNKHTomPZsnLOjsOdGqga/He9nDqjavfmkpg0pvmQP3eQ
+         vHlSO29jXrFDlrvwfxpTnsynjA6VRNSr/SbH2VuNXPdI2WoX8effL++9pt8427eqjsSl
+         LM/vXpRJJg9twwoKeqD2ZIKRWB683BKVV/OY9SHLUlc+qg1yMykvKo5zPjijBXYuZKDF
+         U0BM3ox1Xtoczfif21nysp4iwNL0Bg4oEFqr/AGo2pEKA7UfwwFahyb88UwGxPGMWrHI
+         IawliirP92H9UlH00L+g6gI7dA84kbg5cunjeKZBScXQtnMo2hmh596MRwdoVaVrDNh0
+         PQbw==
+X-Forwarded-Encrypted: i=1; AJvYcCXDgvu4bVXYgI52aV133/1eas4ZEFMIYOHFsjtYo0aqELfTTxYrWmGyzszLgzJW6r464N2r+zr62ia4Imk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwbblyQFIC+xBqOTtQcIInaZsRpI6u18gIB8r5xyv+Xc8SVclNX
+	wlOPVHwPqeDahGN2WE2v9efbkLKbQqSVIAh3gTlcgVWPAJSw5ZZKNPpG3lYONSvwAc59+knvSDM
+	troSr+Q==
+X-Gm-Gg: ASbGncv0vr3o7M3xgHaPQiXBSD6sjY+2YYM4HAd33qYYoL1UFA13ojInQN69pDyNDrN
+	zhtfwT71q4X+IwR4hOxtzQy0OCudgEBZpH9TUUxctnT0FbsZW0YO059deCE4Xb0pDml3vS7dreD
+	QjV11I0zac4v2IGhuZkvpH3CXJw7T2GBAChG94kgfgmt0rhBcXQvuGB4QwZbQZcULb7IdBimKrW
+	9UgM/uFzc7e1sq4mi4Hcj4uH43fJCSU8lnUK3RPiRqQ681JcfoQrPgazebvVnH4j2cD4A+sLtDv
+	1oiOAVerBQo8VGdGtmJ6TNCyNnyuHh0QiPgJQsuSyDNxaqsP6vYwONcG4Qi6j/w0FTQ+R9anZVT
+	1iC9yd916c/meEYXVGXJ2JZQv8ivtmQ==
+X-Google-Smtp-Source: AGHT+IHlJ5Ha/0Fu208Al9cH56BvC5RVk20CDgd8TUY2eu7GgFVT4sl+mEM3eyZKeEkZSBnqpsi6ng==
+X-Received: by 2002:a17:902:e5d1:b0:224:8bf:6d81 with SMTP id d9443c01a7336-231d45ac8ffmr312804665ad.46.1747876272229;
+        Wed, 21 May 2025 18:11:12 -0700 (PDT)
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com. [209.85.214.176])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-231d4ac944esm98717585ad.49.2025.05.21.18.11.11
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 21 May 2025 18:11:12 -0700 (PDT)
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-231e011edfaso64595145ad.0
+        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 18:11:11 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUpSVfARC9BYhv8v8DjkWn1PTS3JBm96S/KlSd67u41Rtiio2tsXaY9zLEohs8K/i4WzRwr3IvxhaA4Fh4=@vger.kernel.org
+X-Received: by 2002:a17:902:c94f:b0:223:5ca8:5ecb with SMTP id
+ d9443c01a7336-231d45ab485mr292944705ad.42.1747876271067; Wed, 21 May 2025
+ 18:11:11 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS7PR11MB5966:EE_|SA1PR11MB6822:EE_
-X-MS-Office365-Filtering-Correlation-Id: c89c8777-76e6-404a-efbe-08dd98ccd925
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?+9mTcJJtdCOUV3aR0Kli3DRpQiZD704u4/NqW6Hrk2l1H5Q7/4tNEoEbLjOw?=
- =?us-ascii?Q?/9zmdo9vUrlQZQ1FvTkMepzMt8rBzxvPz0Jw5hss+M+XaNBqAuchSTWP0KwG?=
- =?us-ascii?Q?qB5QtLOUG/tOef9e+LnjR/glydFKMKx2dJJrWgO1xlFUl0hhFlFEhkH/cchh?=
- =?us-ascii?Q?m78b2jLmCX3na0XsAjzWu/nMum3VNVJESQy3Lm2utQrf9YHQuTHrmvEFj5Qr?=
- =?us-ascii?Q?SG/Tz650d0kEh1IVTZRgfjfBgHPL9FCse+29l+nJpWGN7b+O1KEgSfkUwu9w?=
- =?us-ascii?Q?ikx9twFVuDw/HufoSDDWetOgkBN97FcRCgX/xBorCBezD8/Hrm8r0oM18Vzo?=
- =?us-ascii?Q?8Gi4ftl9xBhTHTBnZEjslGwAaqVNFS+5oWvN+nPbO8BtY2qmFS9nlodWqCif?=
- =?us-ascii?Q?GP0GnfGi/jP0rN9GQ5FbOw4HtWaSsAbS4pRux8Liz5Us+L4XLBzrOdtHlLVF?=
- =?us-ascii?Q?VGOSbHG0lDluEs2YT5m9ClAUkqNOO91AcGHbdYms1VLhiEvZwJ5bRoTU4pb2?=
- =?us-ascii?Q?nbjDjZZx+1zX8q4hN6FsyPxVxhgGAyxrL5t6OwZWp06sICGGngz6HgLi9dkl?=
- =?us-ascii?Q?FeeddF9Ql9E3mrkvLkjSN5Jh9v9Cyr1idq/rtuq3SrJN76QiegrOuMRE9xTx?=
- =?us-ascii?Q?1jiqGMvvnalSHO1FytJE4H8v/v7amJe4BGNWbmSbU3+ZKEyMMmXoXftJyJiv?=
- =?us-ascii?Q?Ujdplme9cssA31037Dw5DKCbEDwb/VkagfJBorpGMgLcf3KeQtJhvjg1bIBT?=
- =?us-ascii?Q?t7MmeN4n/oCKK736LUhCV6pME3pKu1SW8odiKkFnZUyGWa+EimXOZnBR7PKt?=
- =?us-ascii?Q?liO1fAzjgANxTywtLbDv1jQuqnHQWaP3J+vROhvWX9DsrPCpOndoRY9cgcKb?=
- =?us-ascii?Q?0IUsZTrh1eV4be+TMkBXqTr3gOnFnaGREgFR2oh5ffhVjkjSbODvYmAKMnH+?=
- =?us-ascii?Q?TQCk98ObMj1wm70o+HLGhJd+qDDS97H4ffEGSeRxTwJ2+R16OBuL0UaGAbT1?=
- =?us-ascii?Q?CvG0AzDSkgcY05Np7jmnP1PY8mRcSJ1pJf+DKZqcQkEraOZVL8xXOnevzt4E?=
- =?us-ascii?Q?2HWyOi5dmKkTF1JpSKx4s/t0nLFQlCiC+Hicrz4dLvh1il3jVICJInJhrCN+?=
- =?us-ascii?Q?MYjE34P+NeEhZuMsPCXLNH70snAHVllKI4M0AWJIu9Zb+JOkVvoFbNUQvYQq?=
- =?us-ascii?Q?19ZKmJD+Mf69NHCs8YQKFnKaVV1+hhQ2Omcce6KIc/QOq5i1EFagFEWx0as0?=
- =?us-ascii?Q?GbvjVCwNizx5JRMpVr67LEd/YIwLPhGWdqBvkGteeGmI4rrb/JjKP5YUGJqF?=
- =?us-ascii?Q?ABMm92CBuMt8rFx9pbvpgmTKiTpo12fZbPCnBEMrXoOpcQTgTvMoOlePTPnt?=
- =?us-ascii?Q?JJBCqqiE05Y//yK3FuEXNYTnne6ajmjQx3h0Fr++Ktg8cqpZ3zVMIkywXRx2?=
- =?us-ascii?Q?9iA8sVAjRso=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR11MB5966.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?Hp8L3r2xlxRMfEmoXIs/1n0M+qRw79NrItnrAPxmGhNrj0uzxOpFO4E7coCq?=
- =?us-ascii?Q?bZvRkO054eG8VpruMPXZjWdvHNVNFxiAfwRUG3sJbWei0uKL6eM4gX44WxPq?=
- =?us-ascii?Q?+qib5mjV7NsAw0fRWgdxkzRcm1YHhyfL3WhPIGYHDx2T1Exq0XkmPf3UkvM3?=
- =?us-ascii?Q?zygpBJzs8gw4FpF7OOg4fLwP/rl1VvlfI3MmRUstr1+cn7ycgpnUMzHR3AX7?=
- =?us-ascii?Q?5NtmV4yxJ2TE9g4Hxl/uTCJS5ujiia/0OTpfzD0xfuRs4Dvzk8j9LvQGOdDs?=
- =?us-ascii?Q?/gnFxXjJRi+UJDMri8v2VEygwCsbMNb4ihQqxGoG+88cGu1FsnyMYKQEpNe1?=
- =?us-ascii?Q?YW9LiURKdeGck8EhkXz1iQlbCfCbsqW80e6/cu56Pj2605LT8PNMableq1Ut?=
- =?us-ascii?Q?hgAzjMXRQaVQrjjjRc+dV+xJlcvPabJu2ix6H0BkoEJ66vJGDzLarWP/KPs6?=
- =?us-ascii?Q?BOmE7//TU0M6QbfjHELF3fd/O9mR8wRzfV6KDcx1dQOgauirGt7vKWRy+Zk9?=
- =?us-ascii?Q?cTE1y+IcUmKKOUezrzeMNtIBkVInEL2Aa3MhkqTxzfta1JMvdEIrKsc22lZp?=
- =?us-ascii?Q?Hkx3zxesHxHgHJp4EEnSKaBE0Z626Ai8A42XhkblpB+gMaQmxyIdfC5qAY5X?=
- =?us-ascii?Q?lsfW/3XawCm/zyNXHX/49GNu0p2/3MYtZk5wbJFwh8gqRLBOeP/mvQU0T2Q4?=
- =?us-ascii?Q?NLo1zLp3vpEdZCP12nH2dpl2f9oDoHWzgdZEKctLXSnxVSXqtT9ji3iUP3ID?=
- =?us-ascii?Q?UwMIZLm45yA9JVG5ixyUSEY9pnRzdoCc6JHP7bl6UeagKb9XvGoejOGK1N8u?=
- =?us-ascii?Q?1cW8Mbl9NwpOYMCbWcGvhUTranR3Y3hXk8QSXOQwp2UAsF3TZnmXeT6/II4Y?=
- =?us-ascii?Q?Rj9ZadbdVFAd20kkdTvsc5alzRPQNqMQP0mduuUFCuoIGq2KJRYNSythmI5p?=
- =?us-ascii?Q?Vfd6Z8eVzxSClgavsNsBKzG9oTOXKuzeTGv5169Acnf4apDtCURI+xLsZAe4?=
- =?us-ascii?Q?GX9l4eCG86IJPp0ahWhe0sCnf//jWPhPDh+dn1Lky4MnXlPhC7Dq8+GZDA6s?=
- =?us-ascii?Q?+V9T1DMOhokZIHVyRMxMMddrL3ndhXu07/r9eoujpB7qLnaj5rBVYGQ7PMxp?=
- =?us-ascii?Q?ADIqrJ1W3bniGNHpm59F6w7Yk0M78f9Hu5VQ+bq806EuAPiMARVAtBKyqzHy?=
- =?us-ascii?Q?agKGTc+4hjcgh6BLAtJGFSwNonqVyMZAMfHsVLS4AVkR0eZnCTxb79B+OqTU?=
- =?us-ascii?Q?zkqYYzXvFqckCt1q7dTxnfv12VPk2JwAoAVX+vikZBq5JwCKr2GG5kQzTf6b?=
- =?us-ascii?Q?+wdX3D63ADXqcXZEsvDz1scE/x63uXbKjWIqDqxGfqA1tFr+EbypeRKgfOpa?=
- =?us-ascii?Q?Z8fphZ45cQ/oe/IgV+3uLgy66377UwQKdEwwzRXUitg/45BzaaktNR14xEn4?=
- =?us-ascii?Q?3HETMJv6FpRrlaNGCREwoS3oqb5iKmsJBh+0/0TfqzWQY6coxkkSqX1Airv0?=
- =?us-ascii?Q?aXUNLc2NDs5qIYvTufCuhfXj1A0vYBjPTDKsJ3h+cdk/tUALydkzrIRMrKA1?=
- =?us-ascii?Q?+XkiQucbSityTVNFTBmFSEpWVuMN0c1thUftEOwF?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: c89c8777-76e6-404a-efbe-08dd98ccd925
-X-MS-Exchange-CrossTenant-AuthSource: DS7PR11MB5966.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 May 2025 01:06:14.2614
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: lxwrhzRAiAnb64Or0pwleQ7bOlB8Wehi8O1i2KaiQdPHz65S4B26sMc457WRJ+uTbKGAj15rGfiApRmYxcZCQg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR11MB6822
-X-OriginatorOrg: intel.com
+References: <20250508115433.449102-1-j-choudhary@ti.com>
+In-Reply-To: <20250508115433.449102-1-j-choudhary@ti.com>
+From: Doug Anderson <dianders@chromium.org>
+Date: Wed, 21 May 2025 18:10:59 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=V1mNX-WidTAaENH66-2ExN=F_ovuX818uQGfc+Gsym1Q@mail.gmail.com>
+X-Gm-Features: AX0GCFsfqtRg5gds9Yg2OcCBHplls8kkmTCilAH-BAWcG36UzmUn4pE-4UwIYNQ
+Message-ID: <CAD=FV=V1mNX-WidTAaENH66-2ExN=F_ovuX818uQGfc+Gsym1Q@mail.gmail.com>
+Subject: Re: [PATCH v2] drm/bridge: ti-sn65dsi86: Add HPD for DisplayPort
+ connector type
+To: Jayesh Choudhary <j-choudhary@ti.com>
+Cc: andrzej.hajda@intel.com, neil.armstrong@linaro.org, rfoss@kernel.org, 
+	Laurent.pinchart@ideasonboard.com, dri-devel@lists.freedesktop.org, 
+	tomi.valkeinen@ideasonboard.com, max.krummenacher@toradex.com, 
+	jonas@kwiboo.se, jernej.skrabec@gmail.com, maarten.lankhorst@linux.intel.com, 
+	mripard@kernel.org, tzimmermann@suse.de, airlied@gmail.com, simona@ffwll.ch, 
+	kieran.bingham+renesas@ideasonboard.com, linux-kernel@vger.kernel.org, 
+	max.oss.09@gmail.com, devarsht@ti.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, May 21, 2025 at 12:45:44PM -0700, Sean Christopherson wrote:
-> On Wed, May 21, 2025, Sean Christopherson wrote:
-> > On Wed, May 21, 2025, Yan Zhao wrote:
-> > > On Fri, May 16, 2025 at 02:35:39PM -0700, Sean Christopherson wrote:
-> > > > @@ -141,42 +140,42 @@ int kvm_dirty_ring_reset(struct kvm *kvm, struct kvm_dirty_ring *ring,
-> > > >  		ring->reset_index++;
-> > > >  		(*nr_entries_reset)++;
-> > > >  
-> > > > -		/*
-> > > > -		 * While the size of each ring is fixed, it's possible for the
-> > > > -		 * ring to be constantly re-dirtied/harvested while the reset
-> > > > -		 * is in-progress (the hard limit exists only to guard against
-> > > > -		 * wrapping the count into negative space).
-> > > > -		 */
-> > > > -		if (!first_round)
-> > > > +		if (mask) {
-> > > > +			/*
-> > > > +			 * While the size of each ring is fixed, it's possible
-> > > > +			 * for the ring to be constantly re-dirtied/harvested
-> > > > +			 * while the reset is in-progress (the hard limit exists
-> > > > +			 * only to guard against the count becoming negative).
-> > > > +			 */
-> > > >  			cond_resched();
-> > > >  
-> > > > -		/*
-> > > > -		 * Try to coalesce the reset operations when the guest is
-> > > > -		 * scanning pages in the same slot.
-> > > > -		 */
-> > > > -		if (!first_round && next_slot == cur_slot) {
-> > > > -			s64 delta = next_offset - cur_offset;
-> > > > +			/*
-> > > > +			 * Try to coalesce the reset operations when the guest
-> > > > +			 * is scanning pages in the same slot.
-> > > > +			 */
-> > > > +			if (next_slot == cur_slot) {
-> > > > +				s64 delta = next_offset - cur_offset;
-> > > >  
-> > > > -			if (delta >= 0 && delta < BITS_PER_LONG) {
-> > > > -				mask |= 1ull << delta;
-> > > > -				continue;
-> > > > -			}
-> > > > +				if (delta >= 0 && delta < BITS_PER_LONG) {
-> > > > +					mask |= 1ull << delta;
-> > > > +					continue;
-> > > > +				}
-> > > >  
-> > > > -			/* Backwards visit, careful about overflows!  */
-> > > > -			if (delta > -BITS_PER_LONG && delta < 0 &&
-> > > > -			    (mask << -delta >> -delta) == mask) {
-> > > > -				cur_offset = next_offset;
-> > > > -				mask = (mask << -delta) | 1;
-> > > > -				continue;
-> > > > +				/* Backwards visit, careful about overflows! */
-> > > > +				if (delta > -BITS_PER_LONG && delta < 0 &&
-> > > > +				(mask << -delta >> -delta) == mask) {
-> > > > +					cur_offset = next_offset;
-> > > > +					mask = (mask << -delta) | 1;
-> > > > +					continue;
-> > > > +				}
-> > > >  			}
-> > > > -		}
-> > > >  
-> > > > -		/*
-> > > > -		 * Reset the slot for all the harvested entries that have been
-> > > > -		 * gathered, but not yet fully processed.
-> > > > -		 */
-> > > > -		if (mask)
-> > > > +			/*
-> > > > +			 * Reset the slot for all the harvested entries that
-> > > > +			 * have been gathered, but not yet fully processed.
-> > > > +			 */
-> > > >  			kvm_reset_dirty_gfn(kvm, cur_slot, cur_offset, mask);
-> > > Nit and feel free to ignore it :)
-> > > 
-> > > Would it be better to move the "cond_resched()" to here, i.e., executing it for
-> > > at most every 64 entries?
-> > 
-> > Hmm, yeah, I think that makes sense.  The time spent manipulating the ring and
-> > mask+offset is quite trivial, so checking on every single entry is unnecessary.
-> 
-> Oh, no, scratch that.  Thankfully, past me explicitly documented this.  From
-> patch 3:
-> 
->   Note!  Take care to check for reschedule even in the "continue" paths,
->   as a pathological scenario (or malicious userspace) could dirty the same
->   gfn over and over, i.e. always hit the continue path.
+Hi,
+
+On Thu, May 8, 2025 at 4:54=E2=80=AFAM Jayesh Choudhary <j-choudhary@ti.com=
+> wrote:
 >
-> A batch isn't guaranteed to be flushed after processing 64 entries, it's only
-> flushed when an entry more than N gfns away is encountered.
-Oh, I overlooked the "pathological scenario". You are right!
+> By default, HPD was disabled on SN65DSI86 bridge. When the driver was
+> added (commit "a095f15c00e27"), the HPD_DISABLE bit was set in pre-enable
+> call which was moved to other function calls subsequently.
+> Later on, commit "c312b0df3b13" added detect utility for DP mode. But wit=
+h
+> HPD_DISABLE bit set, all the HPD events are disabled[0] and the debounced
+> state always return 1 (always connected state)
+>
+> Also, with the suspend and resume calls before every register access, the
+> bridge starts with disconnected state and the HPD state is reflected
+> correctly only after debounce time (400ms). However, adding this delay
+> in the detect function causes frame drop and visible glitch in display.
+>
+> So to get the detect utility working properly for DP mode without any
+> performance issues in display, instead of reading HPD state from the
+> register, rely on aux communication. Use 'drm_dp_dpcd_read_link_status'
+> to find if we have something connected at the sink.
+>
+> [0]: <https://www.ti.com/lit/gpn/SN65DSI86> (Pg. 32)
+>
+> Fixes: c312b0df3b13 ("drm/bridge: ti-sn65dsi86: Implement bridge connecto=
+r operations for DP")
+> Cc: Max Krummenacher <max.krummenacher@toradex.com>
+> Signed-off-by: Jayesh Choudhary <j-choudhary@ti.com>
+> ---
+>
+> v1 patch link which was sent as RFC:
+> <https://patchwork.kernel.org/project/dri-devel/patch/20250424105432.2553=
+09-1-j-choudhary@ti.com/>
+>
+> Changelog v1->v2:
+> - Drop additional property in bindings and use conditional.
+> - Instead of register read for HPD state, use dpcd read which returns 0
+>   for success and error codes for no connection
+> - Add relevant history for the required change in commit message
+> - Drop RFC subject-prefix in v2 as v2 is in better state after discussion
+>   in v1 and Max's mail thread
+> - Add "Cc:" tag
+>
+> This approach does not make suspend/resume no-op and no additional
+> delay needs to be added in the detect hook which causes frame drops.
+>
+> Here, I am adding conditional to HPD_DISABLE bit even when we are
+> not using the register read to get HPD state. This is to prevent
+> unnecessary register updates in every resume call.
+> (It was adding to latency and leading to ~2-3 frame drop every 10 sec)
+>
+> Tested and verified on TI's J784S4-EVM platform:
+> - Display comes up
+> - Detect utility works with a couple of seconds latency.
+>   But I guess without interrupt support, this is acceptable.
+> - No frame-drop observed
+>
+> Discussion thread for Max's patch:
+> <https://patchwork.kernel.org/project/dri-devel/patch/20250501074805.3069=
+311-1-max.oss.09@gmail.com/>
+>
+>  drivers/gpu/drm/bridge/ti-sn65dsi86.c | 17 ++++++++++-------
+>  1 file changed, 10 insertions(+), 7 deletions(-)
+
+Sorry for the delay in responding. Things got a little crazy over the
+last few weeks.
+
+
+> diff --git a/drivers/gpu/drm/bridge/ti-sn65dsi86.c b/drivers/gpu/drm/brid=
+ge/ti-sn65dsi86.c
+> index 60224f476e1d..9489e78b6da3 100644
+> --- a/drivers/gpu/drm/bridge/ti-sn65dsi86.c
+> +++ b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
+> @@ -352,8 +352,10 @@ static void ti_sn65dsi86_enable_comms(struct ti_sn65=
+dsi86 *pdata,
+>          * change this to be conditional on someone specifying that HPD s=
+hould
+>          * be used.
+>          */
+> -       regmap_update_bits(pdata->regmap, SN_HPD_DISABLE_REG, HPD_DISABLE=
+,
+> -                          HPD_DISABLE);
+> +
+> +       if (pdata->bridge.type =3D=3D DRM_MODE_CONNECTOR_eDP)
+> +               regmap_update_bits(pdata->regmap, SN_HPD_DISABLE_REG, HPD=
+_DISABLE,
+> +                                  HPD_DISABLE);
+
+Given your an Max's testing, I'm totally on-board with the above.
+
+>
+>         pdata->comms_enabled =3D true;
+>
+> @@ -1194,13 +1196,14 @@ static enum drm_connector_status ti_sn_bridge_det=
+ect(struct drm_bridge *bridge)
+>  {
+>         struct ti_sn65dsi86 *pdata =3D bridge_to_ti_sn65dsi86(bridge);
+>         int val =3D 0;
+> +       u8 link_status[DP_LINK_STATUS_SIZE];
+>
+> -       pm_runtime_get_sync(pdata->dev);
+> -       regmap_read(pdata->regmap, SN_HPD_DISABLE_REG, &val);
+> -       pm_runtime_put_autosuspend(pdata->dev);
+> +       val =3D drm_dp_dpcd_read_link_status(&pdata->aux, link_status);
+>
+> -       return val & HPD_DEBOUNCED_STATE ? connector_status_connected
+> -                                        : connector_status_disconnected;
+> +       if (val < 0)
+> +               return connector_status_disconnected;
+> +       else
+> +               return connector_status_connected;
+
+I'd really rather not do this. It took me a little while to realize
+why this was working and also not being slow like your 400ms delay
+was. I believe that each time you do the AUX transfer it grabs a
+pm_runtime reference and then puts it with "autosuspend". Then you're
+relying on the fact that detect is called often enough so that the
+autosuspend doesn't actually hit so the next time your function runs
+then it's fast. Is that accurate?
+
+I'd rather see something like this in the bridge's probe (untested)
+
+  if (pdata->bridge.type =3D=3D DRM_MODE_CONNECTOR_DisplayPort) {
+    pdata->bridge.ops =3D DRM_BRIDGE_OP_EDID | DRM_BRIDGE_OP_DETECT;
+
+    /*
+     * In order for DRM_BRIDGE_OP_DETECT to work in a reasonable
+     * way we need to keep the bridge powered on all the time.
+     * The bridge takes hundreds of milliseconds to debounce HPD
+     * and we simply can't wait that amount of time in every call
+     * to detect.
+     */
+    pm_runtime_get_sync(pdata->dev);
+  }
+
+...obviously you'd also need to find the right times to undo this in
+error handling and in remove.
+
+Nicely, this would be the same type of solution needed for if we ever
+enabled interrupts.
+
+-Doug
