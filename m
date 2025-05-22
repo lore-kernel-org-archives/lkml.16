@@ -1,291 +1,134 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 993D028A721
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 13:27:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF43828A721;
+	Thu, 22 May 2025 13:27:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747920426; cv=none; b=ku3SoEepP/+lyDuvwoL9a7Ju0sxE9kQeFqdVrAsyrgAoYZugxpeMndIESve0gOLflF6oXhce1L8+vp56hKC82dnVmiVClnPzwxrTaG5M9y0CnCdu2WPUw65GCyWNmYeZXzJWlxpk6ujjrrr0f9S3k4c0Z45fpRY4HiI5Qa5rCZo=
+	t=1747920438; cv=none; b=SjWDvh32rLfcwBWJhlXeHbGEiBJLFCmwqmvDcEct8t+IeogVHM0OoaZycKmtHRxWcD/LysSdDLvS8eXe5VFBOxbiOSPR2IivdZ4zQPdB5auZU3nvhD3auu0QMv2pUwmxZ1EXSMYIRV+o7dwlLp5/ciybgTpZBCQLpav9Clj4TOo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747920426; c=relaxed/simple;
-	bh=7jXywNUlzc1MmLwvPQoNGJwLEr1+Ff8jUu8LgYX1h5o=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=I3WEp2hY7seQphcXZCI1DtosceRHrUZsFf9TsOD2gVNl+JwHbAui+h1uduK6QusZHctL1Wd7//PC5p84e6F8PojSLxsfPtAQWAysJow645oCOW3eqOC1fqWpn8HZi7eQHpSlVc+EEs4UU8VG1mD2MyU9UCXJLDOGnVhevtn+CY4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WInItyvI; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1747920438; c=relaxed/simple;
+	bh=HCEjzAxEoNpGh9RhZKRmEp/YfkDRMjOx87EArtdY46E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=egVBsucqZ4GmVl4mZO5YoJD8qcFia4mN4HRKHY8+hn+kxvg0+7XJyLkN8HMer/+pYKF2ltpWBPb2Jg5pz5G9yKO/4kCCVzVnEfQ9AypXEgdVZ59ZiVL810FvfV4x4R+ZuK0GtS61ColkfJVzpBtAOe/od/yd8jVFRLP1JwEpQFk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HX8/fEVn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WInItyvI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747920423;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=ioYh4K71wobSHT6+Q/FjdFJoAKJDxW2IKKHl5ZAfDW0=;
-	b=WInItyvIMrc+B3Jen/8xwmkyfJi0gbdZTe7l1eyTDqBW+CKJD3olC19hltRd1mf3mmvicP
-	dzeerPVsddziuhe1SqWBpIjJ9acbqNwT7tazS44nS7HzsVoukqa23tpwlDF76oDK4vILw4
-	wLpOR1bwFnJKI02/dlxSP3Yw0Zc9ubw=
-Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-137-1mu3k9u5MK2d4_Yb00fHCA-1; Thu,
- 22 May 2025 09:27:01 -0400
-X-MC-Unique: 1mu3k9u5MK2d4_Yb00fHCA-1
-X-Mimecast-MFC-AGG-ID: 1mu3k9u5MK2d4_Yb00fHCA_1747920420
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 8E8F8195423F;
-	Thu, 22 May 2025 13:26:59 +0000 (UTC)
-Received: from gerbillo.redhat.com (unknown [10.45.225.118])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 772CB30001A1;
-	Thu, 22 May 2025 13:26:56 +0000 (UTC)
-From: Paolo Abeni <pabeni@redhat.com>
-To: torvalds@linux-foundation.org
-Cc: kuba@kernel.org,
-	davem@davemloft.net,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [GIT PULL] Networking for v6.15-rc8
-Date: Thu, 22 May 2025 15:26:47 +0200
-Message-ID: <20250522132647.48139-1-pabeni@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HX8/fEVn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41359C4CEE4;
+	Thu, 22 May 2025 13:27:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747920437;
+	bh=HCEjzAxEoNpGh9RhZKRmEp/YfkDRMjOx87EArtdY46E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=HX8/fEVnJvd/yp+XvMm6fuoT2Be58dmLXfJr8hgrabR73FFcNigPFKdn+c3GtPvVq
+	 6okjJznCebd8m4O8UJyXi0mht1LUzLR72gd8OH1y0nAmyd/xiRdMcA9XmFzf32q6tV
+	 jIO8+Kp5rGT0S4VgtqsRPW7Hv8I0SljmLnNh5oLnpbHkNsvBQ38Jbe0HXa9NAa1Qhl
+	 eHtLZtobi80OWuumLi4g3zf2jPDyKEVkacw+YhuM5AZEHlSGxToAC+qIdECIxH6+bY
+	 3uHtIFk8lKy3sIDLZmA5C4nOnaYjcrbWWWny0shY57JnjSnmb3za+qk148NsSsDTuH
+	 HY+tZN2kfneWQ==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1uI5x4-000000003QS-1Ibp;
+	Thu, 22 May 2025 15:27:14 +0200
+Date: Thu, 22 May 2025 15:27:14 +0200
+From: Johan Hovold <johan@kernel.org>
+To: Melody Olvera <melody.olvera@oss.qualcomm.com>
+Cc: Vinod Koul <vkoul@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Wesley Cheng <quic_wcheng@quicinc.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, linux-arm-msm@vger.kernel.org,
+	linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
+	Abel Vesa <abel.vesa@linaro.org>, Marc Zyngier <maz@kernel.org>
+Subject: Re: [PATCH v5 06/10] phy: qcom: Add M31 based eUSB2 PHY driver
+Message-ID: <aC8mMiw2o3MRmBtm@hovoldconsulting.com>
+References: <20250421-sm8750_usb_master-v5-0-25c79ed01d02@oss.qualcomm.com>
+ <20250421-sm8750_usb_master-v5-6-25c79ed01d02@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
-
-Hi Linus!
-
-The following changes since commit ef935650e044fc742b531bf85cc315ff7aa781ea:
-
-  Merge tag 'net-6.15-rc7' of git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net (2025-05-15 10:40:49 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net.git net-6.15-rc8
-
-for you to fetch changes up to 3fab2d2d901a87710f691ba9488b3fd284ee8296:
-
-  Merge tag 'linux-can-fixes-for-6.15-20250521' of git://git.kernel.org/pub/scm/linux/kernel/git/mkl/linux-can (2025-05-22 12:32:38 +0200)
-
-----------------------------------------------------------------
-This is somewhat larger than what I hoped for, with a few PRs from
-subsystems and follow-ups for the recent netdev locking changes,
-anyhow there are no known pending regressions.
-
-Including fixes from bluetooth, ipsec and CAN.
-
-Current release - regressions:
-
-  - eth: team: grab team lock during team_change_rx_flags
-
-  - eth: bnxt_en: fix netdev locking in ULP IRQ functions
-
-Current release - new code bugs:
-
-  - xfrm: ipcomp: fix truesize computation on receive
-
-  - eth: airoha: fix page recycling in airoha_qdma_rx_process()
-
-Previous releases - regressions:
-
-  - sched: hfsc: fix qlen accounting bug when using peek in hfsc_enqueue()
-
-  - mr: consolidate the ipmr_can_free_table() checks.
-
-  - bridge: netfilter: fix forwarding of fragmented packets
-
-  - xsk: bring back busy polling support in XDP_COPY
-
-  - can:
-    - add missing rcu read protection for procfs content
-    - kvaser_pciefd: force IRQ edge in case of nested IRQ
-
-Previous releases - always broken:
-
-  - xfrm: espintcp: remove encap socket caching to avoid reference leak
-
-  - bluetooth: use skb_pull to avoid unsafe access in QCA dump handling
-
-  - eth: idpf:
-    - fix null-ptr-deref in idpf_features_check
-    - fix idpf_vport_splitq_napi_poll()
-
-  - eth:  hibmcge: fix wrong ndo.open() after reset fail issue
-
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-
-----------------------------------------------------------------
-Axel Forsman (3):
-      can: kvaser_pciefd: Force IRQ edge in case of nested IRQ
-      can: kvaser_pciefd: Fix echo_skb race
-      can: kvaser_pciefd: Continue parsing DMA buf after dropped RX
-
-Carlos Sanchez (1):
-      can: slcan: allow reception of short error messages
-
-Cong Wang (2):
-      sch_hfsc: Fix qlen accounting bug when using peek in hfsc_enqueue()
-      selftests/tc-testing: Add an HFSC qlen accounting test
-
-Dave Ertman (1):
-      ice: Fix LACP bonds without SRIOV environment
-
-En-Wei Wu (1):
-      Bluetooth: btusb: use skb_pull to avoid unsafe access in QCA dump handling
-
-Eric Dumazet (1):
-      idpf: fix idpf_vport_splitq_napi_poll()
-
-Geetha sowjanya (1):
-      octeontx2-af: Fix APR entry mapping based on APR_LMT_CFG
-
-Ido Schimmel (1):
-      bridge: netfilter: Fix forwarding of fragmented packets
-
-Ilia Gavrilov (1):
-      llc: fix data loss when reading from a socket in llc_ui_recvmsg()
-
-Jacob Keller (1):
-      ice: fix vf->num_mac count with port representors
-
-Jakob Unterwurzacher (1):
-      net: dsa: microchip: linearize skb for tail-tagging switches
-
-Jakub Kicinski (3):
-      Merge tag 'for-net-2025-05-15' of git://git.kernel.org/pub/scm/linux/kernel/git/bluetooth/bluetooth
-      Merge branch '100GbE' of git://git.kernel.org/pub/scm/linux/kernel/git/tnguy/net-queue
-      Merge branch 'there-are-some-bugfix-for-hibmcge-driver'
-
-Jijie Shao (2):
-      net: hibmcge: fix incorrect statistics update issue
-      net: hibmcge: fix wrong ndo.open() after reset fail issue.
-
-Lorenzo Bianconi (1):
-      net: airoha: Fix page recycling in airoha_qdma_rx_process()
-
-Luiz Augusto von Dentz (1):
-      Bluetooth: L2CAP: Fix not checking l2cap_chan security level
-
-Marc Kleine-Budde (2):
-      Merge patch series "can: bcm: add locking for bcm_op runtime updates"
-      Merge patch series "can: kvaser_pciefd: Fix ISR race conditions"
-
-Michael Chan (1):
-      bnxt_en: Fix netdev locking in ULP IRQ functions
-
-Nishanth Menon (1):
-      net: ethernet: ti: am65-cpsw: Lower random mac address error print to info
-
-Oliver Hartkopp (2):
-      can: bcm: add locking for bcm_op runtime updates
-      can: bcm: add missing rcu read protection for procfs content
-
-Paolo Abeni (6):
-      mr: consolidate the ipmr_can_free_table() checks.
-      Merge tag 'linux-can-fixes-for-6.15-20250520' of git://git.kernel.org/pub/scm/linux/kernel/git/mkl/linux-can
-      Merge branch 'net_sched-fix-hfsc-qlen-backlog-accounting-bug-and-add-selftest'
-      Merge tag 'ipsec-2025-05-21' of git://git.kernel.org/pub/scm/linux/kernel/git/klassert/ipsec
-      Merge branch 'octeontx2-af-apr-mapping-fixes'
-      Merge tag 'linux-can-fixes-for-6.15-20250521' of git://git.kernel.org/pub/scm/linux/kernel/git/mkl/linux-can
-
-Paul Barker (1):
-      MAINTAINERS: Drop myself to reviewer for ravb driver
-
-Paul Chaignon (1):
-      xfrm: Sanitize marks before insert
-
-Paul Kocialkowski (1):
-      net: dwmac-sun8i: Use parsed internal PHY address instead of 1
-
-Pavan Kumar Linga (1):
-      idpf: fix null-ptr-deref in idpf_features_check
-
-Rob Herring (Arm) (1):
-      dt-bindings: can: microchip,mcp2510: Fix $id path
-
-Ronak Doshi (1):
-      vmxnet3: update MTU after device quiesce
-
-Sabrina Dubroca (3):
-      espintcp: fix skb leaks
-      espintcp: remove encap socket caching to avoid reference leak
-      xfrm: ipcomp: fix truesize computation on receive
-
-Sagi Maimon (1):
-      ptp: ocp: Limit signal/freq counts in summary output functions
-
-Samiullah Khawaja (1):
-      xsk: Bring back busy polling support in XDP_COPY
-
-Stanislav Fomichev (1):
-      team: grab team lock during team_change_rx_flags
-
-Subbaraya Sundeep (1):
-      octeontx2-af: Set LMT_ENA bit for APR table entries
-
-Suman Ghosh (1):
-      octeontx2-pf: Avoid adding dcbnl_ops for LBK and SDP vf
-
-Thangaraj Samynathan (1):
-      net: lan743x: Restore SGMII CTRL register on resume
-
-Tobias Brunner (1):
-      xfrm: Fix UDP GRO handling for some corner cases
-
-Wang Liang (1):
-      net/tipc: fix slab-use-after-free Read in tipc_aead_encrypt_done
-
- .../bindings/net/can/microchip,mcp2510.yaml        |   2 +-
- MAINTAINERS                                        |   2 +-
- drivers/bluetooth/btusb.c                          |  98 +++++------
- drivers/net/can/kvaser_pciefd.c                    | 182 ++++++++++++---------
- drivers/net/can/slcan/slcan-core.c                 |  26 ++-
- drivers/net/ethernet/airoha/airoha_eth.c           |  22 +--
- drivers/net/ethernet/broadcom/bnxt/bnxt_ulp.c      |   9 +-
- drivers/net/ethernet/hisilicon/hibmcge/hbg_err.c   |  16 +-
- .../net/ethernet/hisilicon/hibmcge/hbg_ethtool.c   |   3 +
- drivers/net/ethernet/intel/ice/ice_lag.c           |   6 +
- drivers/net/ethernet/intel/ice/ice_virtchnl.c      |   1 -
- drivers/net/ethernet/intel/idpf/idpf.h             |   2 +
- drivers/net/ethernet/intel/idpf/idpf_lib.c         |  10 +-
- drivers/net/ethernet/intel/idpf/idpf_txrx.c        |  18 +-
- .../net/ethernet/marvell/octeontx2/af/rvu_cn10k.c  |  24 ++-
- .../ethernet/marvell/octeontx2/af/rvu_debugfs.c    |  11 +-
- .../net/ethernet/marvell/octeontx2/nic/otx2_vf.c   |   9 +-
- drivers/net/ethernet/microchip/lan743x_main.c      |  19 ++-
- drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c  |   2 +-
- drivers/net/ethernet/ti/am65-cpsw-nuss.c           |   2 +-
- drivers/net/team/team_core.c                       |   6 +-
- drivers/net/vmxnet3/vmxnet3_drv.c                  |   5 +-
- drivers/ptp/ptp_ocp.c                              |  24 ++-
- include/linux/mroute_base.h                        |   5 +
- include/net/netdev_lock.h                          |   3 +
- include/net/xfrm.h                                 |   1 -
- net/bluetooth/l2cap_core.c                         |  15 +-
- net/bridge/br_nf_core.c                            |   7 +-
- net/bridge/br_private.h                            |   1 +
- net/can/bcm.c                                      |  79 ++++++---
- net/dsa/tag_ksz.c                                  |  19 ++-
- net/ipv4/esp4.c                                    |  53 +-----
- net/ipv4/ipmr.c                                    |  12 +-
- net/ipv4/xfrm4_input.c                             |  18 +-
- net/ipv6/esp6.c                                    |  53 +-----
- net/ipv6/ip6mr.c                                   |  12 +-
- net/ipv6/xfrm6_input.c                             |  18 +-
- net/llc/af_llc.c                                   |   8 +-
- net/sched/sch_hfsc.c                               |   6 +-
- net/tipc/crypto.c                                  |   5 +
- net/xdp/xsk.c                                      |   2 +-
- net/xfrm/espintcp.c                                |   4 +-
- net/xfrm/xfrm_ipcomp.c                             |   3 +-
- net/xfrm/xfrm_policy.c                             |   3 +
- net/xfrm/xfrm_state.c                              |   6 +-
- .../tc-testing/tc-tests/infra/qdiscs.json          |  27 +++
- 46 files changed, 452 insertions(+), 407 deletions(-)
-
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250421-sm8750_usb_master-v5-6-25c79ed01d02@oss.qualcomm.com>
+
+On Mon, Apr 21, 2025 at 03:00:13PM -0700, Melody Olvera wrote:
+> From: Wesley Cheng <quic_wcheng@quicinc.com>
+> 
+> SM8750 utilizes an eUSB2 PHY from M31.  Add the initialization
+> sequences to bring it out of reset and into an operational state.  This
+> differs to the M31 USB driver, in that the M31 eUSB2 driver will
+> require a connection to an eUSB2 repeater.  This PHY driver will handle
+> the initialization of the associated eUSB2 repeater when required.
+
+> +static int m31eusb2_phy_init(struct phy *uphy)
+> +{
+> +	struct m31eusb2_phy *phy = phy_get_drvdata(uphy);
+> +	const struct m31_eusb2_priv_data *data = phy->data;
+> +	int ret;
+> +
+> +	ret = regulator_bulk_enable(M31_EUSB_NUM_VREGS, phy->vregs);
+> +	if (ret) {
+> +		dev_err(&uphy->dev, "failed to enable regulator, %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	ret = phy_init(phy->repeater);
+> +	if (ret) {
+> +		dev_err(&uphy->dev, "repeater init failed. %d\n", ret);
+> +		goto disable_vreg;
+> +	}
+
+> +static int m31eusb2_phy_probe(struct platform_device *pdev)
+> +{
+> +	struct phy_provider *phy_provider;
+> +	const struct m31_eusb2_priv_data *data;
+> +	struct device *dev = &pdev->dev;
+> +	struct m31eusb2_phy *phy;
+> +	int ret;
+> +
+> +	phy = devm_kzalloc(dev, sizeof(*phy), GFP_KERNEL);
+> +	if (!phy)
+> +		return -ENOMEM;
+
+> +	phy->phy = devm_phy_create(dev, NULL, &m31eusb2_phy_gen_ops);
+> +	if (IS_ERR(phy->phy))
+> +		return dev_err_probe(dev, PTR_ERR(phy->phy),
+> +				     "failed to create phy\n");
+> +
+> +	ret = devm_regulator_bulk_get_const(dev, M31_EUSB_NUM_VREGS,
+> +					    m31_eusb_phy_vregs, &phy->vregs);
+> +	if (ret)
+> +		return dev_err_probe(dev, ret,
+> +				"failed to get regulator supplies\n");
+> +
+> +	phy_set_drvdata(phy->phy, phy);
+> +
+> +	phy->repeater = devm_of_phy_get_by_index(dev, dev->of_node, 0);
+> +	if (IS_ERR(phy->repeater))
+> +		return dev_err_probe(dev, PTR_ERR(phy->repeater),
+> +				     "failed to get repeater\n");
+
+Requesting the repeater PHY like this and managing it from the PHY ops
+currently breaks lockdep as I've previously reported here:
+
+	https://lore.kernel.org/lkml/ZnpoAVGJMG4Zu-Jw@hovoldconsulting.com/
+
+I don't think we should merge this until that issue has been resolved as
+it leaves us with an increasing number of (Qualcomm) SoCs where lockdep
+cannot be used, which risks introducing further locking bugs without
+anyone noticing.
+
+Johan
