@@ -1,89 +1,104 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f42.google.com (mail-ua1-f42.google.com [209.85.222.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E98B80B;
-	Thu, 22 May 2025 14:44:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87E4328D83C;
+	Thu, 22 May 2025 14:44:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747925068; cv=none; b=bwx5Ch9JHZgHStM4ZVt2qnJA8O79wDDk8Q+vU5L9ZT9/KBzVWFCHgAx0DQrWwL8FgrJN1bz5I5MGiP4K1ezXwrr4loEDtOyPHO3NMxISQX0eezhY0arIWUoxdoVpkGjPRXh7Fx5PVmyEjyoowNRNTiTEHIBPq+/heKJc6Ac8dzI=
+	t=1747925072; cv=none; b=PIr92/NAJWpv9Ptu5RKQj40h945/46luh7bKkEvFixDz4WYHfpQSxfVHBlw2Ku7Tl6+M0N7/Qd0kJopgxwBKzyOc+SrU0FpoEBGAZkE56hRM0Wpo+IHyVAM73NYnv70y4oEHYsbsM04X4Wpl94FKGkD12OIllCp/IhBPjyN4Y1c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747925068; c=relaxed/simple;
-	bh=NRmEVrSXUud61bv4B9E47LlieBBKw07Sw2puRK7v1VY=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=g+97e3thmggcglK0p4vn47hNGqNHhahc46t1HyRfXMZha7XMkQczcvxJH6fWArtXlhXVNL5JB6iYEvgUoXAilw+5VYXcOHiFwsnjdwJyMxhtmt9jeTaPLoR5cBogXisQ7FSQvelP7GnIoieqlkfmXexonw+CDyKXJsxISv51F6o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HBhXkQYm; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HBhXkQYm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70D8BC4CEE4;
-	Thu, 22 May 2025 14:44:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747925067;
-	bh=NRmEVrSXUud61bv4B9E47LlieBBKw07Sw2puRK7v1VY=;
-	h=From:To:Cc:Subject:Date:From;
-	b=HBhXkQYmZUS/P1fkwRw0KSKBrdtQzUX5tFmZvUb5CPqkxtJ0BeYOdUgW2L2JmRpFL
-	 gLkyZNApgB5ygMkm9MaETPr2r12rYW0fRxokQnuDnjef+T4vNNmKo029wnucF4nqau
-	 rvh6xOlt9PY+KsyVeLUr2X0q8GKLcknTIkrmBnXaO5f82ieSrneK9wJ6okaVizMkMW
-	 P9t+a2SAN62g3AqCjmAB09wknjoNaE91dihb6amh+GqTAPGd346dYY+X8+ElCRZudg
-	 XQxBlJM5y0UL0fdq+QYZ9BxRJ3h2N818r/PjNQTMofrFHAaL4YtzhL07RQE5wjMWQV
-	 Y+0EB3eTLrSng==
-From: Arnd Bergmann <arnd@kernel.org>
-To: Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>,
-	Hans de Goede <hdegoede@redhat.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Suma Hegde <suma.hegde@amd.com>
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	Carlos Bilbao <carlos.bilbao@kernel.org>,
-	Yazen Ghannam <yazen.ghannam@amd.com>,
-	"Borislav Petkov (AMD)" <bp@alien8.de>,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] platform/x86/amd/hsmp: fix building with CONFIG_HWMON=m
-Date: Thu, 22 May 2025 16:38:49 +0200
-Message-Id: <20250522144422.2824083-1-arnd@kernel.org>
-X-Mailer: git-send-email 2.39.5
+	s=arc-20240116; t=1747925072; c=relaxed/simple;
+	bh=7eN8T2Lu0G0vXGJTit+4Atz7rsp+K06a3934NhscIeY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=VUWjjants8GJfwI4x3AEO20O15HOVDeB6bZeOdk2wuMagVVTdU/BVW8JbAT5pdr+VcItXiwLqXXmAZL0VS4Oy9kTxXCAglouY5HXesAKs4JULL1z2KLPYDb2+L8DIih1SAbopPPdUGJH9UIYStbLxHCMrfR9t7PqVPUmjgPM1F4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ua1-f42.google.com with SMTP id a1e0cc1a2514c-87bfe95866fso1589817241.1;
+        Thu, 22 May 2025 07:44:30 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747925069; x=1748529869;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=JoDM7/wAH6ynL7Y3OXXOPf5iYJNspTC2Ms5jOsjMvpg=;
+        b=RhWMysxmYE3/FWFwhCIP0DmuJBh7TULf+naRU37j9nqihKUzNNiniTIS3QLPHnB65j
+         IIIBZiO0NQ9rFjqLn0Gg/c6S45iK5Pss1NJseSDfqc2F1uqEiuMZVduua+0Gn+8aqXpc
+         tIp0vdYFE7MjnoO2z6VERdSpD8bdeeReZtaB99YP7tqrd3SVihqwWbmBM2sgifEFp9D2
+         JAF1KMCUjOOAuwh+b4FKoLSHLJ0XpSonx9+gXSCWJ3CHiitJsO/WIZdIPT/DIv6SO3IF
+         sS6W3q4oUm41ue3D9yWoZqOF/PpVujOEq4/CJtUakSmoKktnIhP9FNTrGjGu1G9WeLha
+         8TJw==
+X-Forwarded-Encrypted: i=1; AJvYcCUOWXYPiVuu/i/TGvC67gOAMxZCM3y7BNdqlUcHDryQ3tipmVEsjdSA1LZfCXfK7iftHZ8zc3Urv8EFYMev2FkpDqE=@vger.kernel.org, AJvYcCV4LZslIdNjTW+TUZ7oyrWiswlysH37nlFcqBw++tHgfjd0AVxDr095sTY2BNrz7S55guy4JExXWohs3wLS@vger.kernel.org, AJvYcCVNox815iUPlJMoqm/v9a8wJvy968cnsPPXpNvxINnLXLMN+0Yn58EDTRcOsvwnex9fYGQM/DQ+QJvb@vger.kernel.org, AJvYcCVaONveH0ado9tjTIsdIvtNr+gMSNq98oRtb/Q8WFzBP92CQA5zP73np0qEH+KoZMIXzgfhOM26B95f@vger.kernel.org
+X-Gm-Message-State: AOJu0YzZdKa5Qv2X7ZDBK0JU7MV03exDSAxGaVsi5QreZhHqmdQ8fOHa
+	xLvczBq7WjVnPr5wNnAvD3LLf3rFn+VPF4mT8ELmlszpoaLtsz1Mi68SB1Jv4VEY
+X-Gm-Gg: ASbGncuZdxa0K2nnwO0iLFXNXTuZrB/5KP/n73X0A958LNcxIvomTSLM3hjoB0ogm9g
+	h/dhccPuLcfBpfBEkbdz/L1xmwyusBuD5OBJ1OIvYRV2TN1UoUWW1oZVjHOvxtl8xHmvkfh4Gq3
+	WiKSToA1/jQ29e9D0u0I716CRcTJWDtJ216zJuH8qiTiO8On7lq3O4KUqh9kPXMX910YoGm04pT
+	CHJL1PEk6QyGI/pWrQyupJtmNgHkSNoJOf/Evpv3lZzrY3Z8gGCv+aBUaaFTCtwKDOU/OJoA7/T
+	ajqmlc/bdIn3UuzZ6W0/2DiqrhZwYdzut9LhMCMXeKMhQkvBocTe858GVGXc95saqZ6r/MORfn6
+	UAYI/DlLMWtM8Z1NQKoos1vbr
+X-Google-Smtp-Source: AGHT+IExtf5OzJ6weF89sE1FyM8WpJPeXNtBRaLpF2kJWuYVykv8pC1pQxbNQ5mpTCLTYRdoDNWTrg==
+X-Received: by 2002:a05:6122:31a0:b0:520:af9c:c058 with SMTP id 71dfb90a1353d-52dba86eb34mr23097662e0c.5.1747925068732;
+        Thu, 22 May 2025 07:44:28 -0700 (PDT)
+Received: from mail-vs1-f51.google.com (mail-vs1-f51.google.com. [209.85.217.51])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-52dba7584dcsm12134241e0c.0.2025.05.22.07.44.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 22 May 2025 07:44:28 -0700 (PDT)
+Received: by mail-vs1-f51.google.com with SMTP id ada2fe7eead31-4e290e4716fso1703731137.2;
+        Thu, 22 May 2025 07:44:28 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUV566lwmjVXl7aDz64RrE4PFLd3b4ejbiDt2IWGr1cJYhhAkBcOav/m5rMIw3hQOJOOP+anwZgbuBzFQKP@vger.kernel.org, AJvYcCV9OSF6AeGCNG8D1g4pChJIOh0jYlqQX2ZYXQI0PCwkgPbjaYw/clhR1WQ2qypxVbB0ScYEFCWWKXtz@vger.kernel.org, AJvYcCVCB8B5E7DUSfo9K0BBUUP31FJIRiEZ36taQLTld/EHCrCId8ECvFUt05Xqd6egsLzDhmV+Z0krNbHQ@vger.kernel.org, AJvYcCXAjHfFX85OQE8NF/niYbra3K3jZDhz7skdaomXuEhRhQ2zyLvzOGjeIdMuLBQx9Y3Y9gb/pAdwXyh9EefO1R9WcX0=@vger.kernel.org
+X-Received: by 2002:a05:6102:1628:b0:4dd:bb2c:491b with SMTP id
+ ada2fe7eead31-4dfa6b54db3mr24231590137.7.1747925068345; Thu, 22 May 2025
+ 07:44:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250514090415.4098534-1-claudiu.beznea.uj@bp.renesas.com> <20250514090415.4098534-3-claudiu.beznea.uj@bp.renesas.com>
+In-Reply-To: <20250514090415.4098534-3-claudiu.beznea.uj@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Thu, 22 May 2025 16:44:15 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdWV8G78ePzGwAiVcp5PXz9dtN3U9zreSP_fYC8xgKsbkw@mail.gmail.com>
+X-Gm-Features: AX0GCFs53T2SMIq3OYUqZ6vyMuW8SSfCIPdxDsefQIHufsYYJhM0biCecVwwioc
+Message-ID: <CAMuHMdWV8G78ePzGwAiVcp5PXz9dtN3U9zreSP_fYC8xgKsbkw@mail.gmail.com>
+Subject: Re: [PATCH v2 2/8] clk: renesas: rzg2l-cpg: Move pointers after hw member
+To: Claudiu <claudiu.beznea@tuxon.dev>
+Cc: mturquette@baylibre.com, sboyd@kernel.org, robh@kernel.org, 
+	krzk+dt@kernel.org, conor+dt@kernel.org, magnus.damm@gmail.com, 
+	linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
 
-From: Arnd Bergmann <arnd@arndb.de>
+On Wed, 14 May 2025 at 11:04, Claudiu <claudiu.beznea@tuxon.dev> wrote:
+> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+>
+> Reorder the pointer members in struct mstp_clock so they appear immediately
+> after the hw member. This helps avoid potential padding and eliminates the
+> need for any calculations in the to_mod_clock() macro. As struct clk_hw
+> currently contains only pointers, placing it first also avoids padding.
+>
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+> ---
+>
+> Changes in v2:
+> - moved pointers after hw member
+> - updated the patch title and description to reflect the new approach
+> - collected tags
 
-When CONFIG_HWMON is built as a loadable module, the HSMP drivers
-cannot be built-in:
+Thanks, will queue in renesas-clk for v6.17.
 
-ERROR: modpost: "hsmp_create_sensor" [drivers/platform/x86/amd/hsmp/amd_hsmp.ko] undefined!
-ERROR: modpost: "hsmp_create_sensor" [drivers/platform/x86/amd/hsmp/hsmp_acpi.ko] undefined!
+Gr{oetje,eeting}s,
 
-Enforce that through the usual Kconfig dependnecy trick.
+                        Geert
 
-Fixes: 92c025db52bb ("platform/x86/amd/hsmp: Report power via hwmon sensors")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/platform/x86/amd/hsmp/Kconfig | 2 ++
- 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/platform/x86/amd/hsmp/Kconfig b/drivers/platform/x86/amd/hsmp/Kconfig
-index d6f7a62d55b5..2911120792e8 100644
---- a/drivers/platform/x86/amd/hsmp/Kconfig
-+++ b/drivers/platform/x86/amd/hsmp/Kconfig
-@@ -12,6 +12,7 @@ menu "AMD HSMP Driver"
- config AMD_HSMP_ACPI
- 	tristate "AMD HSMP ACPI device driver"
- 	depends on ACPI
-+	depends on HWMON || !HWMON
- 	select AMD_HSMP
- 	help
- 	  Host System Management Port (HSMP) interface is a mailbox interface
-@@ -29,6 +30,7 @@ config AMD_HSMP_ACPI
- 
- config AMD_HSMP_PLAT
- 	tristate "AMD HSMP platform device driver"
-+	depends on HWMON || !HWMON
- 	select AMD_HSMP
- 	help
- 	  Host System Management Port (HSMP) interface is a mailbox interface
--- 
-2.39.5
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
