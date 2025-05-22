@@ -1,151 +1,86 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45AAB2980CF;
-	Thu, 22 May 2025 15:19:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E06F51C4609;
+	Thu, 22 May 2025 15:21:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747927193; cv=none; b=GuaPpkmvu3p6a/TUB7wgJ1+T2nXyWdrcJqUZ5Kui856ENb3JaV/tcUMNJQ/beADfY+9kt7KTrzEo1iOFNYZis6YR3CUdzLQLnwmMTryq1Ep3l6MQhdtMwuc4OA8w5gXui7WlCW4dptuFx+L381kleyvnebYkhc88//m+D8z+hg8=
+	t=1747927294; cv=none; b=ZSejeTUwiMmY5x3R7M2h0XG2NOFGJSw7RFMTo7HAU4ohv+D+c1VbHhvJin+dLQ1OIAHs3w/bFqjRjS+YY91MwggeSf0t7aSsjTCFTwtN4O5keaS+4LiXfoHgoWXSRjx4Ic/j2THZ1KKfVUfvns62IVMZ1ZEgWfR8xZc/Jm0+N3g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747927193; c=relaxed/simple;
-	bh=i/Js2zX68Eh3W7lgqs/TTe1lrc9T8F5QtriTzSirtG0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fExNiPD8Ft45GKco7ln5Y3D6r8wmF28tO4eQZkk5P4j3CpIP9ZpO/F+vIQChc8l7Ou6b7fxbMz02gQkJv1HGdbj5sA1n5QfK7ln+CgHLe6unVQ4gp47MND2EO+fFOjAdz6i1nXBXVkhWl2lADioLl2iwihn3jfYD5tflad2ONcA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pTg5BNhU; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747927294; c=relaxed/simple;
+	bh=tpteHR4j4RW8B5bGrxwkjmVxwT1rmhw2u37kWPPCBU8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=L0RJhl5c5pGwSuImimCwAn6EgY0jDv6gxlctJ1pnUkNAeoqUWVrjtLgOi6zZTgKIJgpR9jhG21jdIfkTM07CmIOKVLs50rDWSIBLRAvWYLkTKZLPhNFoiECGPUqymHg/uAR80nygM410WM8hcsdLedecV+GVmM8hB9ybLrWpqHg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HuGurj2l; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pTg5BNhU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21E11C4CEE4;
-	Thu, 22 May 2025 15:19:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HuGurj2l"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67606C4CEE4;
+	Thu, 22 May 2025 15:21:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747927192;
-	bh=i/Js2zX68Eh3W7lgqs/TTe1lrc9T8F5QtriTzSirtG0=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=pTg5BNhUAoee/xVitjxTjED/pewWLkBcqEfv3UrU7AE+0Vypb4uTWXUb6QP7J27wy
-	 aBrw3MG/LcF6k1DC8wEsCP8MA1Dk1jKj/ZjXxSW51Ieqa4Q1IjQfbRWct30uIM5NMr
-	 P3opyo5kculIdphJU8RjY7+UJQx7S8tRM/W+o8n1BluvWTS5BuF91aVNg3IYCtIoCz
-	 6zxVNbzrZOGwADbF5RG3qYurpxFx3ONXmzzt4LhwTpDvdW8T8088Bt+N0D2ZFFcv+z
-	 crQoboux33gGvJqH7RsctVCBk0khmYdISxkpwUK0IS8oYfsxmx0Gv0rwOcgGvEV5D7
-	 B7eUfSbV8yv2g==
-Message-ID: <b538701d-cfb1-4e86-994b-0a8f394e8335@kernel.org>
-Date: Thu, 22 May 2025 17:19:48 +0200
+	s=k20201202; t=1747927293;
+	bh=tpteHR4j4RW8B5bGrxwkjmVxwT1rmhw2u37kWPPCBU8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=HuGurj2lcnxWSiV65uFPDXeyYIIcA/Ege0JFRQTY+yuVXAYNCfPnaI/6sAjRiu6UY
+	 gbRszGGEu6GkcPylHhLc2v3lb8Uc0HWEldny8P/oSccTpBowdF4MUgArWT09XX4pWZ
+	 dWMIxLTAKOUZOVNJfCsFfltudEND1hzo66pQqIUGYKlMKye0rmqQ9FRtMjhElurLbd
+	 iSaX3ePvBGN0fa7DRtU/k9N43hs7JVIYX8naXRVJ92/c2m3OlOKdq9GJ0vkERFmV0i
+	 J5AttV7bKfJor2pPLyd3i3yFSyI2MpAloWan6EP7doKApstzg4OqYEUWuOnGu2ghEk
+	 iDQoCe2nZpVgQ==
+Date: Thu, 22 May 2025 16:21:29 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Miaoqing Pan <miaoqing.pan@oss.qualcomm.com>
+Cc: jjohnson@kernel.org, johannes@sipsolutions.net, robh@kernel.org,
+	krzk+dt@kernel.org, conor+dt@kernel.org, ath11k@lists.infradead.org,
+	linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org
+Subject: Re: [PATCH ath-next 1/2] dt-bindings: net: wireless: ath11k-pci:
+ describe firmware-name property
+Message-ID: <20250522-elves-appealing-8ecff4971f4a@spud>
+References: <20250522013444.1301330-1-miaoqing.pan@oss.qualcomm.com>
+ <20250522013444.1301330-2-miaoqing.pan@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/3] dt-bindings: pwm: adi,axi-pwmgen: fix clocks
-To: David Lechner <dlechner@baylibre.com>,
- Michael Hennerich <michael.hennerich@analog.com>,
- =?UTF-8?Q?Nuno_S=C3=A1?= <nuno.sa@analog.com>,
- Trevor Gamblin <tgamblin@baylibre.com>,
- =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>
-Cc: linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250522-pwm-axi-pwmgen-add-external-clock-v2-0-086ea9e6ecf0@baylibre.com>
- <20250522-pwm-axi-pwmgen-add-external-clock-v2-2-086ea9e6ecf0@baylibre.com>
- <4ed39a7f-bfca-4095-98ea-56b3c183b8f1@kernel.org>
- <a364f588-03aa-4fac-a35e-d1cf201e924f@baylibre.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <a364f588-03aa-4fac-a35e-d1cf201e924f@baylibre.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-
-On 22/05/2025 17:17, David Lechner wrote:
-> On 5/22/25 10:00 AM, Krzysztof Kozlowski wrote:
->> On 22/05/2025 16:49, David Lechner wrote:
->>> Fix a shortcoming in the bindings that doesn't allow for a separate
->>> external clock.
->>>
->>> The AXI PWMGEN IP block has a compile option ASYNC_CLK_EN that allows
->>> the use of an external clock for the PWM output separate from the AXI
->>> clock that runs the peripheral.
->>>
->>> This was missed in the original bindings and so users were writing dts
->>> files where the one and only clock specified would be the external
->>> clock, if there was one, incorrectly missing the separate AXI clock.
->>>
->>> The correct bindings are that the AXI clock is always required and the
->>> external clock is optional (must be given only when HDL compile option
->>> ASYNC_CLK_EN=1).
->>>
->>> Fixes: 1edf2c2a2841 ("dt-bindings: pwm: Add AXI PWM generator")
->>> Signed-off-by: David Lechner <dlechner@baylibre.com>
->>> ---
->>>  Documentation/devicetree/bindings/pwm/adi,axi-pwmgen.yaml | 14 ++++++++++++--
->>>  1 file changed, 12 insertions(+), 2 deletions(-)
->>
->> Please test your patches. This does not pass build (binding_check). :/
->>
-> 
-> Oh no, I knew I was forgetting something. :-(
-> 
-> Maybe time to see about building this into b4 prep --check so it won't
-> be so easy to forget.
-> 
-> The correct will be:
-> 
-> 
->   clock-names:
->     oneOf:
->       - const: axi
->       - items:
->           - const: axi
->           - const: ext
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="DOVqCIfPjKAtLcqy"
+Content-Disposition: inline
+In-Reply-To: <20250522013444.1301330-2-miaoqing.pan@oss.qualcomm.com>
 
 
-Then just
-minItems: 1
-items:
-  - foo
-  - bar
+--DOVqCIfPjKAtLcqy
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Best regards,
-Krzysztof
+On Thu, May 22, 2025 at 09:34:43AM +0800, Miaoqing Pan wrote:
+> Introduce 'firmware-name' property to allow end-users and/or integrators
+> to decide which usecase-specific firmware to run on the WCN6855. This is
+> necessary due to resource limitations such as memory capacity and
+> CPU capability, or performance and power optimization for different
+> application scenarios.
+>=20
+> Two firmwares are supported: 'WCN6855/hw2.0' and 'WCN6855/hw2.0/nfa765'.
+> The former is the default firmware, suitable for most WiFi 6 STA
+> functions. The latter adds support for commercial-quality SAP and
+> optimizes power consumption for IoT applications.
+>=20
+> Signed-off-by: Miaoqing Pan <miaoqing.pan@oss.qualcomm.com>
+
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
+
+
+--DOVqCIfPjKAtLcqy
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaC9A+AAKCRB4tDGHoIJi
+0r/0AP9lmNp1y/LqEal+ClxcWGKPEJiDGBkHW5NbPiRHcRSJswD/Tg9dzDCG6wvf
+GEE4QzIxtB0xIL3syZHj6PjYN9/n4wg=
+=92db
+-----END PGP SIGNATURE-----
+
+--DOVqCIfPjKAtLcqy--
