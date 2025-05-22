@@ -1,309 +1,227 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2088.outbound.protection.outlook.com [40.107.93.88])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69D0319ADA2;
-	Thu, 22 May 2025 17:30:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747935003; cv=none; b=GUAGRbdLvOhxJXIVmbWhpr0zQrQ2VJ+FELqKKKS2dt7B85mfVGSWKin/q1se+t5kV3ZLnzHueJDkmaX2LWYqoaSGqQ5LM/0nj5yi0+Bkb1ShyisHSTQe8PCII3TlqD/HvNjiJ9h54BWFMtpcBg6/jfAzmPXWb3RWf4cCrSaf6ms=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747935003; c=relaxed/simple;
-	bh=JwPQWMT8jn6Zv25lJj2JKvKxkW2xWQiBVrIple5TRdc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=niWE+6fQrgQJqJ6qT8+lolQk2ttSR2Zyb46tHfALdvNFiGnQrTRehjN6HWOurVgjzxZl4N00+hvdz9M/WIVJd/t84+dPEE4e26inDoKf5VU5ilRg3lp4y8MmcDPpdySiU/iojYJfvQlOxXa4/2UJl8HgF0aUnKZlYCUwNPTR4jQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DoLEJXx1; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 134F118DB16
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 17:30:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.88
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747935014; cv=fail; b=XZg6abm2QfyxiOVytiH+t4BTNesA+AOQq9/AemwPlw54ulHfZu9k+cMOvfF4od3EWQK+nEYMFvrCof+u9fNpGd5x5TdDHKN9ZTYzO04IPAOK80ovkeWF8wpseIQ3fr3tkT487qlF4eihPIRDG33ert7cJxkA5UNW8huK+cU4tx8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747935014; c=relaxed/simple;
+	bh=UxMMR+QdOOY/vqZ5H4+0GpLt45D0elMgW2TnFqzpKOE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=Lqo93h4sgeUQ8FdBxF1RaH9AirXnYKcv3HnT/m3H6My4gTIRcZnokQJ5H5EbFQUDqVo8BoFQ0Wsj9HSqkXF06TE7pt9XAClnYerspv9HxPbuqshI4ElT1czvEFEo9rZuy3pnD7hItTeme+jHBQOTnzZmAtM48hMp46bKHCqatMA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=AtbkB+zm; arc=fail smtp.client-ip=40.107.93.88
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DoLEJXx1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53EFFC4CEE4;
-	Thu, 22 May 2025 17:30:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747935002;
-	bh=JwPQWMT8jn6Zv25lJj2JKvKxkW2xWQiBVrIple5TRdc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=DoLEJXx16Z11gb6uuqLSZi2LbLaG+PLMfcYwrSQk9HmFLwojtcVRRDXsUSPZOLrqo
-	 HaP054K/PCis6rVSa4oMGNee3wpCUfXBg7NnEfME/AqPIPKCBuLKcO0OXYUT1epdtd
-	 Dv2Z59ifSu8Mj1QTkTy1C8TEPoo5Bfaf9oiIJximUlqQDVqGIrbVcLKt6RVHBzAyqT
-	 jSHKVMwdsvEAh9Gv+rdhCQzjnOR9cxpZOUJwfVkw0utHqgyf6DDkvcFyPtCjvkz6jE
-	 KS7N1R5CXO5oc4wJyU78v0XvUPAPkQvuQuM236v8AC8QLmg3IuAeM18nAAepv9ynf9
-	 upKdTQ267NPZQ==
-Date: Thu, 22 May 2025 14:30:00 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Yuzhuo Jing <yuzhuo@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Liang Kan <kan.liang@linux.intel.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	"Steven Rostedt (Google)" <rostedt@goodmis.org>,
-	James Clark <james.clark@linaro.org>,
-	Tomas Glozar <tglozar@redhat.com>, Leo Yan <leo.yan@arm.com>,
-	Guilherme Amadio <amadio@gentoo.org>,
-	Yang Jihong <yangjihong@bytedance.com>,
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-	Adhemerval Zanella <adhemerval.zanella@linaro.org>,
-	Wei Yang <richard.weiyang@gmail.com>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	"Mike Rapoport (Microsoft)" <rppt@kernel.org>,
-	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-	Kajol Jain <kjain@linux.ibm.com>,
-	Aditya Gupta <adityag@linux.ibm.com>,
-	Charlie Jenkins <charlie@rivosinc.com>,
-	"Steinar H. Gunderson" <sesse@google.com>,
-	"Dr. David Alan Gilbert" <linux@treblig.org>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
-	Al Viro <viro@zeniv.linux.org.uk>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, llvm@lists.linux.dev
-Subject: Re: [PATCH v1 4/4] tools: Remove libcrypto dependency
-Message-ID: <aC9fGPZ2qb2dje0x@x1>
-References: <20250521225307.743726-1-yuzhuo@google.com>
- <20250521225307.743726-5-yuzhuo@google.com>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="AtbkB+zm"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=LwOMcfQDVp+q3vZ+CxbUc2y51sLotHqrhmtxoA6mW5w5gCGCnE/9T+IfrCiOTwDWyqhA/BV/gJoTr9xh85ap0fR9e7yroTBCFeChFI55K9oaLMX+z2MgFRAzZJ65BYyzAukFCs7jRouFXrIMfqmCf+8B71hgIj6oWaJLLUbQfRdqOj8wj9byM2sGYhBj6QY8B/H0plZL9me4s3NeMQ+wItWq0liq44IYNtBEn7KGtSGcuD26y9ziYUPT3cbnzk3iDpC5ZSYlYK07wQeW+FWmyzsZrFWLEFLQcOykuQPpMMlSwCojdI4YdKO3KSHeNxwiw0/VanlH0lfYl7N+nD2B3A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=PbJ5aepG6vGMTM+PRIXfVALBap59JIIydexljlcS1AY=;
+ b=Q5Wq4YfV1pjxMe1oRAWpRg9w40wZkY06MnYrOYJsxPqvetOy5xelB0q9n4IsNZI8CWonAyZdNGD2ShuYWz5O3WSRnjMLuBaoTJRXLv4VQvVCYxmZmBnPlTfgIiRnf97MXj/zrUxENZDa8ch+YUqwCrOvkC0m4uARLRLGlORwOARylZS7ZEO6j00StYt0i65VyDvDgG1ngPRO5oKcRxwLXKgQj1tao34EfzACwxggesSblnay7WyIpy5rZMZu8YN1ntGWWkmBugm6dTastB9NS4rmILdjkE33hIYT9Uwq1ZGLQpbLy6Y5SZmZ/B6Z3ajuW3S+OUWgASroOij97M1FLw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=PbJ5aepG6vGMTM+PRIXfVALBap59JIIydexljlcS1AY=;
+ b=AtbkB+zmhxMNTO2lYY+HBlqEzleZMoXUjzaUxnQexaCsFTbHXQwpdgTKlSw3NBrUQoeoYTbUWQRDLHvxohkjNq12McPcOBJ6OFczi7bMVU+1fkJlc9+lGLTorHK1p8tR+6HVvRvqWPtxzRg3E1lrzONdYDzDt6//TToh5VGsQ4lDAG2eWgv7suFzzfdrC/qCUQVBGlQ7QdiFjA1v4I5OP3yZUadvBUEHaAH9q3N+vX3O6OfhheCyGQ+/dc4YP61S1VNUv47Sx2lCSElo6Y51jKDlGHb/e6c1J+20RfpZzG6JEkQy9843rVJsIVl0VLysKbO0IP4tYLeRB7a5wp4qIA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from DS7PR12MB9473.namprd12.prod.outlook.com (2603:10b6:8:252::5) by
+ SJ2PR12MB8884.namprd12.prod.outlook.com (2603:10b6:a03:547::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8746.30; Thu, 22 May
+ 2025 17:30:08 +0000
+Received: from DS7PR12MB9473.namprd12.prod.outlook.com
+ ([fe80::5189:ecec:d84a:133a]) by DS7PR12MB9473.namprd12.prod.outlook.com
+ ([fe80::5189:ecec:d84a:133a%5]) with mapi id 15.20.8746.030; Thu, 22 May 2025
+ 17:30:08 +0000
+From: Zi Yan <ziy@nvidia.com>
+To: David Hildenbrand <david@redhat.com>
+Cc: Bharata B Rao <bharata@amd.com>, linux-kernel@vger.kernel.org,
+ linux-mm@kvack.org, Jonathan.Cameron@huawei.com, dave.hansen@intel.com,
+ gourry@gourry.net, hannes@cmpxchg.org, mgorman@techsingularity.net,
+ mingo@redhat.com, peterz@infradead.org, raghavendra.kt@amd.com,
+ riel@surriel.com, rientjes@google.com, sj@kernel.org, weixugc@google.com,
+ willy@infradead.org, ying.huang@linux.alibaba.com, dave@stgolabs.net,
+ nifan.cxl@gmail.com, joshua.hahnjy@gmail.com, xuezhengchu@huawei.com,
+ yiannis@zptcorp.com, akpm@linux-foundation.org
+Subject: Re: [RFC PATCH v0 2/2] mm: sched: Batch-migrate misplaced pages
+Date: Thu, 22 May 2025 13:30:06 -0400
+X-Mailer: MailMate (2.0r6255)
+Message-ID: <FF2F9A08-9BD8-4207-901D-AC9B21443BF6@nvidia.com>
+In-Reply-To: <382839fc-ea63-421a-8397-72cb35dd8052@redhat.com>
+References: <20250521080238.209678-1-bharata@amd.com>
+ <20250521080238.209678-3-bharata@amd.com>
+ <62cef618-123c-4ffa-b45a-c38b65d2a5a3@redhat.com>
+ <AE28D27C-58C2-41A4-B553-50049E963745@nvidia.com>
+ <5d6b92d8-251f-463b-adde-724ea25b2d89@redhat.com>
+ <996B013E-4143-4182-959F-356241BE609A@nvidia.com>
+ <382839fc-ea63-421a-8397-72cb35dd8052@redhat.com>
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
+X-ClientProxiedBy: MN0PR02CA0019.namprd02.prod.outlook.com
+ (2603:10b6:208:530::34) To DS7PR12MB9473.namprd12.prod.outlook.com
+ (2603:10b6:8:252::5)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250521225307.743726-5-yuzhuo@google.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS7PR12MB9473:EE_|SJ2PR12MB8884:EE_
+X-MS-Office365-Filtering-Correlation-Id: ffd6e492-3d55-4104-3b14-08dd99564c81
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016|7416014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?VW3912SDnieME8hnuUJ1voZCBRz0syL5lsaKt/BjqFtjigNjHGktl6VMafGZ?=
+ =?us-ascii?Q?uYJxP1WpcbAHJz5ko8kj2SPIx6ioQx2jvReF+PIVy+9ZXJytjjLw1z4nbqvM?=
+ =?us-ascii?Q?qISL95rKCUEHgVujNSZxpk2Gj2GJwFjuic00FgXapM6mAWGp3Z2ZsR5yPlCl?=
+ =?us-ascii?Q?j5rO1Sbr2MSQmzlMIkCRlId/x+uAsZY+Rqzre8juhsgh+UZVBnbRMdXMq+Gi?=
+ =?us-ascii?Q?1TB0GwrnUzBHNcH2yHVa6BC+QjnJNC9hE3ugwAmJgd5/L9bnXFIWuSmYtnnd?=
+ =?us-ascii?Q?gDd73ZWCPZO3S7poUtNmYTd/uAuZoh/Vd2Asl0GH8cGYDzOw6MsGsyUQhmlh?=
+ =?us-ascii?Q?+uToEccdPvyqU+6NRKnYWj5oJFCYjPUZSyJ8t+dP6B7KbRM2hWjuKHv+KG44?=
+ =?us-ascii?Q?SWAbMfNxjKtEy/OitUOCzg7eR4v6Z99OXthoqAg6kTymYUPFkPnA0OSRGTsT?=
+ =?us-ascii?Q?U5aFjoNAg9z4a7SQ2FP42HVVpWvrqCXNUNHujqVNrbzNYwg83ZGJFvaoQyqg?=
+ =?us-ascii?Q?0uetI1l+X1vVvmLrMmyl+sKRCgFpG1qqXkohYJBrWeiFYeFqmKdXzeEDTL3e?=
+ =?us-ascii?Q?cciR1x90JXWnGSbKZLLIEr1a9Qg9EN1G43zlXCYgiofl26pRUxNiHYux9Kiy?=
+ =?us-ascii?Q?3c/q7hnbVsm18owpuF9vKREX+eOoCDIR5wnZwsSjgYPvsIJ8p8nEuJ++e8Lb?=
+ =?us-ascii?Q?Um3qAA8hpZR+w7/6/bEVIC+x+D31aYBcv1mcyjodbZI/z2GrAxXASNQnN6Tb?=
+ =?us-ascii?Q?1hWAhruk785YxM+3JbuT33EeWVGPYJKya3YTylTdVKf+HXfKasrUSR5V0UHp?=
+ =?us-ascii?Q?xofx/awbTcjIzkpE9436MklzRWf8Naqg7aJeXUqXVkVKZMVivBKUBrkQFbtz?=
+ =?us-ascii?Q?m6LRie3plfJgv3wPUVTmK5CFfDL9S7u2ThN50Rn4YNR10Nu1kXXkqwFLCDBV?=
+ =?us-ascii?Q?XlO9CP2HzCLhoI+wHJbU4d3/SaxpOB0JI29hip9x3RLumK5KR2zNL04bMg84?=
+ =?us-ascii?Q?fa3f2FywtsVQiEtbfV+01T/O6ESZkyQrKTUva5P0VYKUt5BVVKImIXMXsu+F?=
+ =?us-ascii?Q?wrHgRiEw5hzp5TWj8bQMX+jk5lNATctBmt4JpXc1QK39oF34fMFTAHmGnCmh?=
+ =?us-ascii?Q?9W8vnrK6X3JMFtWgY1jpndVvMhbCbnYLPC5dhMekJnm14jh3OZ0uz5m79vYo?=
+ =?us-ascii?Q?9334tGCVQv9vKwu20pZ1iz92yNXH2DI4eQdBqFpNO/Budk9E03W4tozZYGPs?=
+ =?us-ascii?Q?e2elSV57LZVjLAINyUyo5r0BbjZ5MRCJfL/NXbpQNhCzgfWigOrRxL2ZWySS?=
+ =?us-ascii?Q?CowU7mbXoGC26U5I0menVkB0meloDFdd4pq2+YYzUGr2wt22GBT9QepZeG6b?=
+ =?us-ascii?Q?Y3gJu5Gs0JzWXM3GHg67up6f+okHwOBQgAvNF1kZlAZZv3HDe6u2snsmt4qg?=
+ =?us-ascii?Q?HH4e/Tfogs0=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB9473.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016)(7416014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?A6bnIISYZsdkAGjBq8YPiuf2tITMlbplYi9Dpga8uE/t2g41Mmnks3Y+fzS8?=
+ =?us-ascii?Q?8nQpYdAevEvn4G2IrgPnqx+5x6NLRxbvgPZAbOnIaSPixHd6B7MzJXDo51IH?=
+ =?us-ascii?Q?8gJC+qpwxTHJVg3bo9O810TtDoMPhLQoqZEcWFnLzJoQ3DzqOBtCNGt3WLUm?=
+ =?us-ascii?Q?6b6uJs9PPMeicKVshq6rOcIsPC/IBpOSrnXzOVDDZURRdSSTxZyMHuz844lx?=
+ =?us-ascii?Q?2lqq1YqZqMmiIZOBHtyrQJtC8E7LYgiloOpzvbgkRwywzIF0UtJmM6CqA9r7?=
+ =?us-ascii?Q?ascF4BWS0zvVAgdLUlnilAhzBtKzey+vhaZYoDUFlj1CCo5F+4Yx8bMWLVkm?=
+ =?us-ascii?Q?QS7sckbueGiuNyD8WHK2+4RgYG0oIoGCLsuZ//zINrrORWrOiMzTSqOEDIBF?=
+ =?us-ascii?Q?0/8L39SfT7aLz2mKc6kU6SC+0UYwZiTvd3BH9tzn3B5thEBn+bpdH4z19Eoi?=
+ =?us-ascii?Q?Zyw4PtL/305VfuRcKLehSJCEgkEhOt+QSuuZBXiNoduBBYe/Ci07XlFWAliW?=
+ =?us-ascii?Q?JAP56kByDVowp/jycFyBIaXC4v5q43bVMCi43WYOFwKAAG/JQkpDrKcE8mS7?=
+ =?us-ascii?Q?+jYGcWRpONaqKsLpCH60hb4MHt4b+/msbaRxULtKKpBTvm4BmcjjfasJE598?=
+ =?us-ascii?Q?ExW0XJuhfMidLeWse6EViLhFJAcdu8h4NltKITXUr01WsBHNQsGU2qwoVxws?=
+ =?us-ascii?Q?TRNsfmn/22/UFy4SNq7dXH/MdxJTigcE8osaoVsv1MkuJytf6EjfVD0fdi6W?=
+ =?us-ascii?Q?vmGm8UjVXyKqa5Vj1y3cNlG+KXUNM0yDLYd8MUs6kPmxqu2OPogJPsWu3tDh?=
+ =?us-ascii?Q?X3N642hYfXOB3/M67N0BUw2PvJRiBhgI6SrKXIP8ChF6GSQ6M59qqf1HOlfd?=
+ =?us-ascii?Q?mmNhmhqiXVSfTbjA44101wVBxDjTGmswgYe41cdZezpTzXZpYbYCM3hDNnoD?=
+ =?us-ascii?Q?GDm9Seaz34LClNDAy9c6clpzvr2Ub0vP1oQEXx55RRAlXZapEyVDdMC0GS9+?=
+ =?us-ascii?Q?ZDW0Oj1Rg48uLl4+7wEgnVp1FLAvWe2TrxiYCiBP7ot1nBiskClTtNBJJNJD?=
+ =?us-ascii?Q?4YrdrtMtpA+zS5BDnC1JTnLRbvr06CPeVKfwVDdJ41RYgzpI/MresgYf4iZU?=
+ =?us-ascii?Q?FbvP77nlgWYNmNRYre3EC4dDPG4W+8vIQj0gjVIs3u8GWDORJkHtiln5CcsJ?=
+ =?us-ascii?Q?gIpZHtIWp5Twr77t9+q7PGzcTJsx8i2EVXF7d8U0ANe3u4JCBc5Kzw4trbO4?=
+ =?us-ascii?Q?EruL1AZct68fPKNWq6OVcJYPe6Rz+0+dCQhzGfpHYDsBtjv7HK8/FC9PHtU3?=
+ =?us-ascii?Q?Yu1LAdqwevfx/u6S0KEO992cw3P5jqBQTPM5muD04s+ZNU6Ege0lLJ5hU7to?=
+ =?us-ascii?Q?2Cm3Z3nNU3xkQnVtInwbR/5LW0jLV8HBQdagOkoe+D2uvmF6bsofeuTrOCgQ?=
+ =?us-ascii?Q?UVVvFZc0/ZLhNagaDi0Uglcj6X8/BjUdNc99FcKOFtaS1vz5mw+b5dGRTe7v?=
+ =?us-ascii?Q?FM87EiQBeUHihQbyviNQujwsTEI+YM/bh62cl9KTSsEofmlNQEHw6luUtCBX?=
+ =?us-ascii?Q?dq+vOWPSfHRIX6FsUnksS+OnGrEj5vwMU+xCgs+7?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ffd6e492-3d55-4104-3b14-08dd99564c81
+X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB9473.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 May 2025 17:30:08.7591
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: y2Cy2I5ZP81egPGuNkdSmVIwTPWUiG4ay/3JAMvns5gb8aXDskafXNz5Nk1lH0gj
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB8884
 
-On Wed, May 21, 2025 at 03:53:07PM -0700, Yuzhuo Jing wrote:
-> Remove all occurrence of libcrypto in the build system.
+On 22 May 2025, at 13:21, David Hildenbrand wrote:
 
-and that was so far used only by tools/perf, good:
+> On 22.05.25 18:38, Zi Yan wrote:
+>> On 22 May 2025, at 12:26, David Hildenbrand wrote:
+>>
+>>> On 22.05.25 18:24, Zi Yan wrote:
+>>>> On 22 May 2025, at 12:11, David Hildenbrand wrote:
+>>>>
+>>>>> On 21.05.25 10:02, Bharata B Rao wrote:
+>>>>>> Currently the folios identified as misplaced by the NUMA
+>>>>>> balancing sub-system are migrated one by one from the NUMA
+>>>>>> hint fault handler as and when they are identified as
+>>>>>> misplaced.
+>>>>>>
+>>>>>> Instead of such singe folio migrations, batch them and
+>>>>>> migrate them at once.
+>>>>>>
+>>>>>> Identified misplaced folios are isolated and stored in
+>>>>>> a per-task list. A new task_work is queued from task tick
+>>>>>> handler to migrate them in batches. Migration is done
+>>>>>> periodically or if pending number of isolated foios exceeds
+>>>>>> a threshold.
+>>>>>
+>>>>> That means that these pages are effectively unmovable for other pur=
+poses (CMA, compaction, long-term pinning, whatever) until that list was =
+drained.
+>>>>>
+>>>>> Bad.
+>>>>
+>>>> Probably we can mark these pages and when others want to migrate the=
+ page,
+>>>> get_new_page() just looks at the page's target node and get a new pa=
+ge from
+>>>> the target node.
+>>>
+>>> How do you envision that working when CMA needs to migrate this exact=
+ page to a different location?
+>>>
+>>> It cannot isolate it for migration because ... it's already isolated =
+=2E.. so it will give up.
+>>>
+>>> Marking might not be easy I assume ...
+>>
+>> I guess you mean we do not have any extra bit to indicate this page is=
+ isolated,
+>> but it can be migrated. My point is that if this page is going to be m=
+igrated
+>> due to other reasons, like CMA, compaction, why not migrate it to the =
+target
+>> node instead of moving it around within the same node.
+>
+> I think we'd have to identify that
+>
+> a) This page is isolate for migration (could be isolated for other
+>    reasons)
+>
+> b) The one responsible for the isolation is numa code (could be someone=
 
-⬢ [acme@toolbx perf-tools-next]$ git grep -w feature-libcrypto tools/
+>    else)
+>
+> c) We're allowed to grab that page from that list (IOW sync against
+>    others, and especially also against), to essentially "steal" the
+>    isolated page.
 
-As there are some other features that are tested/used by other tools/
-living code.
+Right. c) sounds like adding more contention to the candidate list.
+I wonder if we can just mark the page as migration candidate (using
+a page flag or something else), then migrate it whenever CMA,
+compaction, long-term pinning and more look at the page. In addition,
+periodically, the migration task would do a PFN scanning and migrate
+any migration candidate. I remember Willy did some experiments showing
+that PFN scanning is very fast.
 
-⬢ [acme@toolbx perf-tools-next]$ git grep -w feature-libbfd tools/
-tools/bpf/bpftool/Makefile:  ifeq ($(feature-libbfd),1)
-tools/bpf/bpftool/Makefile:  else ifeq ($(feature-libbfd-liberty),1)
-tools/bpf/bpftool/Makefile:  else ifeq ($(feature-libbfd-liberty-z),1)
-tools/perf/Makefile.config:  ifeq ($(feature-libbfd), 1)
-tools/perf/Makefile.config:    ifeq ($(feature-libbfd-liberty), 1)
-tools/perf/Makefile.config:      ifeq ($(feature-libbfd-liberty-z), 1)
-tools/perf/Makefile.config:  ifeq ($(feature-libbfd-buildid), 1)
-⬢ [acme@toolbx perf-tools-next]$
-
-- Arnaldo
- 
-> Signed-off-by: Yuzhuo Jing <yuzhuo@google.com>
-> ---
->  tools/build/Makefile.feature            |  2 --
->  tools/build/feature/Makefile            |  4 ----
->  tools/build/feature/test-all.c          |  5 -----
->  tools/build/feature/test-libcrypto.c    | 25 -------------------------
->  tools/perf/Documentation/perf-check.txt |  1 -
->  tools/perf/Makefile.config              | 13 -------------
->  tools/perf/Makefile.perf                |  3 ---
->  tools/perf/builtin-check.c              |  1 -
->  tools/perf/tests/make                   |  4 +---
->  9 files changed, 1 insertion(+), 57 deletions(-)
->  delete mode 100644 tools/build/feature/test-libcrypto.c
-> 
-> diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
-> index 57bd995ce6af..bbadfb5568eb 100644
-> --- a/tools/build/Makefile.feature
-> +++ b/tools/build/Makefile.feature
-> @@ -86,7 +86,6 @@ FEATURE_TESTS_BASIC :=                  \
->          libtraceevent                   \
->          libtracefs                      \
->          libcpupower                     \
-> -        libcrypto                       \
->          pthread-attr-setaffinity-np     \
->          pthread-barrier     		\
->          reallocarray                    \
-> @@ -152,7 +151,6 @@ FEATURE_DISPLAY ?=              \
->           numa_num_possible_cpus \
->           libperl                \
->           libpython              \
-> -         libcrypto              \
->           libcapstone            \
->           llvm-perf              \
->           zlib                   \
-> diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
-> index b8b5fb183dd4..04a4aa0341aa 100644
-> --- a/tools/build/feature/Makefile
-> +++ b/tools/build/feature/Makefile
-> @@ -38,7 +38,6 @@ FILES=                                          \
->           test-libtraceevent.bin                 \
->           test-libcpupower.bin                   \
->           test-libtracefs.bin                    \
-> -         test-libcrypto.bin                     \
->           test-libunwind.bin                     \
->           test-libunwind-debug-frame.bin         \
->           test-libunwind-x86.bin                 \
-> @@ -246,9 +245,6 @@ $(OUTPUT)test-libcpupower.bin:
->  $(OUTPUT)test-libtracefs.bin:
->  	 $(BUILD) $(shell $(PKG_CONFIG) --cflags libtracefs 2>/dev/null) -ltracefs
->  
-> -$(OUTPUT)test-libcrypto.bin:
-> -	$(BUILD) -lcrypto
-> -
->  $(OUTPUT)test-gtk2.bin:
->  	$(BUILD) $(shell $(PKG_CONFIG) --libs --cflags gtk+-2.0 2>/dev/null) -Wno-deprecated-declarations
->  
-> diff --git a/tools/build/feature/test-all.c b/tools/build/feature/test-all.c
-> index 03ddaac6f4c4..ce72e2061ac0 100644
-> --- a/tools/build/feature/test-all.c
-> +++ b/tools/build/feature/test-all.c
-> @@ -138,10 +138,6 @@
->  # include "test-bpf.c"
->  #undef main
->  
-> -#define main main_test_libcrypto
-> -# include "test-libcrypto.c"
-> -#undef main
-> -
->  #define main main_test_sdt
->  # include "test-sdt.c"
->  #undef main
-> @@ -206,7 +202,6 @@ int main(int argc, char *argv[])
->  	main_test_lzma();
->  	main_test_get_cpuid();
->  	main_test_bpf();
-> -	main_test_libcrypto();
->  	main_test_scandirat();
->  	main_test_sched_getcpu();
->  	main_test_sdt();
-> diff --git a/tools/build/feature/test-libcrypto.c b/tools/build/feature/test-libcrypto.c
-> deleted file mode 100644
-> index bc34a5bbb504..000000000000
-> --- a/tools/build/feature/test-libcrypto.c
-> +++ /dev/null
-> @@ -1,25 +0,0 @@
-> -// SPDX-License-Identifier: GPL-2.0
-> -#include <openssl/evp.h>
-> -#include <openssl/sha.h>
-> -#include <openssl/md5.h>
-> -
-> -int main(void)
-> -{
-> -	EVP_MD_CTX *mdctx;
-> -	unsigned char md[MD5_DIGEST_LENGTH + SHA_DIGEST_LENGTH];
-> -	unsigned char dat[] = "12345";
-> -	unsigned int digest_len;
-> -
-> -	mdctx = EVP_MD_CTX_new();
-> -	if (!mdctx)
-> -		return 0;
-> -
-> -	EVP_DigestInit_ex(mdctx, EVP_md5(), NULL);
-> -	EVP_DigestUpdate(mdctx, &dat[0], sizeof(dat));
-> -	EVP_DigestFinal_ex(mdctx, &md[0], &digest_len);
-> -	EVP_MD_CTX_free(mdctx);
-> -
-> -	SHA1(&dat[0], sizeof(dat), &md[0]);
-> -
-> -	return 0;
-> -}
-> diff --git a/tools/perf/Documentation/perf-check.txt b/tools/perf/Documentation/perf-check.txt
-> index a764a4629220..2b96cb578658 100644
-> --- a/tools/perf/Documentation/perf-check.txt
-> +++ b/tools/perf/Documentation/perf-check.txt
-> @@ -53,7 +53,6 @@ feature::
->                  auxtrace                /  HAVE_AUXTRACE_SUPPORT
->                  libbfd                  /  HAVE_LIBBFD_SUPPORT
->                  libcapstone             /  HAVE_LIBCAPSTONE_SUPPORT
-> -                libcrypto               /  HAVE_LIBCRYPTO_SUPPORT
->                  libdw-dwarf-unwind      /  HAVE_LIBDW_SUPPORT
->                  libelf                  /  HAVE_LIBELF_SUPPORT
->                  libnuma                 /  HAVE_LIBNUMA_SUPPORT
-> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-> index d1ea7bf44964..d19d1f132726 100644
-> --- a/tools/perf/Makefile.config
-> +++ b/tools/perf/Makefile.config
-> @@ -130,8 +130,6 @@ ifndef NO_LIBUNWIND
->    FEATURE_CHECK_LDFLAGS-libunwind-x86_64 += -lunwind -llzma -lunwind-x86_64
->  endif
->  
-> -FEATURE_CHECK_LDFLAGS-libcrypto = -lcrypto
-> -
->  ifdef CSINCLUDES
->    LIBOPENCSD_CFLAGS := -I$(CSINCLUDES)
->  endif
-> @@ -772,17 +770,6 @@ ifneq ($(NO_LIBTRACEEVENT),1)
->    $(call detected,CONFIG_TRACE)
->  endif
->  
-> -ifndef NO_LIBCRYPTO
-> -  ifneq ($(feature-libcrypto), 1)
-> -    $(warning No libcrypto.h found, disables jitted code injection, please install openssl-devel or libssl-dev)
-> -    NO_LIBCRYPTO := 1
-> -  else
-> -    CFLAGS += -DHAVE_LIBCRYPTO_SUPPORT
-> -    EXTLIBS += -lcrypto
-> -    $(call detected,CONFIG_CRYPTO)
-> -  endif
-> -endif
-> -
->  ifndef NO_SLANG
->    ifneq ($(feature-libslang), 1)
->      ifneq ($(feature-libslang-include-subdir), 1)
-> diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-> index d4c7031b01a7..9246c94656e0 100644
-> --- a/tools/perf/Makefile.perf
-> +++ b/tools/perf/Makefile.perf
-> @@ -61,9 +61,6 @@ include ../scripts/utilities.mak
->  #
->  # Define NO_LIBBIONIC if you do not want bionic support
->  #
-> -# Define NO_LIBCRYPTO if you do not want libcrypto (openssl) support
-> -# used for generating build-ids for ELFs generated by jitdump.
-> -#
->  # Define NO_LIBDW_DWARF_UNWIND if you do not want libdw support
->  # for dwarf backtrace post unwind.
->  #
-> diff --git a/tools/perf/builtin-check.c b/tools/perf/builtin-check.c
-> index 9a509cb3bb9a..ad49f2564aae 100644
-> --- a/tools/perf/builtin-check.c
-> +++ b/tools/perf/builtin-check.c
-> @@ -44,7 +44,6 @@ struct feature_status supported_features[] = {
->  	FEATURE_STATUS("auxtrace", HAVE_AUXTRACE_SUPPORT),
->  	FEATURE_STATUS_TIP("libbfd", HAVE_LIBBFD_SUPPORT, "Deprecated, license incompatibility, use BUILD_NONDISTRO=1 and install binutils-dev[el]"),
->  	FEATURE_STATUS("libcapstone", HAVE_LIBCAPSTONE_SUPPORT),
-> -	FEATURE_STATUS("libcrypto", HAVE_LIBCRYPTO_SUPPORT),
->  	FEATURE_STATUS("libdw-dwarf-unwind", HAVE_LIBDW_SUPPORT),
->  	FEATURE_STATUS("libelf", HAVE_LIBELF_SUPPORT),
->  	FEATURE_STATUS("libnuma", HAVE_LIBNUMA_SUPPORT),
-> diff --git a/tools/perf/tests/make b/tools/perf/tests/make
-> index 0ee94caf9ec1..e3651e5b195a 100644
-> --- a/tools/perf/tests/make
-> +++ b/tools/perf/tests/make
-> @@ -91,7 +91,6 @@ make_no_auxtrace    := NO_AUXTRACE=1
->  make_no_libbpf	    := NO_LIBBPF=1
->  make_libbpf_dynamic := LIBBPF_DYNAMIC=1
->  make_no_libbpf_DEBUG := NO_LIBBPF=1 DEBUG=1
-> -make_no_libcrypto   := NO_LIBCRYPTO=1
->  make_no_libllvm     := NO_LIBLLVM=1
->  make_with_babeltrace:= LIBBABELTRACE=1
->  make_with_coresight := CORESIGHT=1
-> @@ -122,7 +121,7 @@ make_minimal        := NO_LIBPERL=1 NO_LIBPYTHON=1 NO_GTK2=1
->  make_minimal        += NO_DEMANGLE=1 NO_LIBELF=1 NO_BACKTRACE=1
->  make_minimal        += NO_LIBNUMA=1 NO_LIBBIONIC=1
->  make_minimal        += NO_LIBDW_DWARF_UNWIND=1 NO_AUXTRACE=1 NO_LIBBPF=1
-> -make_minimal        += NO_LIBCRYPTO=1 NO_SDT=1 NO_JVMTI=1 NO_LIBZSTD=1
-> +make_minimal        += NO_SDT=1 NO_JVMTI=1 NO_LIBZSTD=1
->  make_minimal        += NO_LIBCAP=1 NO_CAPSTONE=1
->  
->  # $(run) contains all available tests
-> @@ -160,7 +159,6 @@ run += make_no_libbionic
->  run += make_no_auxtrace
->  run += make_no_libbpf
->  run += make_no_libbpf_DEBUG
-> -run += make_no_libcrypto
->  run += make_no_libllvm
->  run += make_no_sdt
->  run += make_no_syscall_tbl
-> -- 
-> 2.49.0.1164.gab81da1b16-goog
+--
+Best Regards,
+Yan, Zi
