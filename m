@@ -1,132 +1,115 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F30FA225412;
-	Thu, 22 May 2025 16:51:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF44A29A32A;
+	Thu, 22 May 2025 16:53:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747932698; cv=none; b=AMvJlTN6amFZV+3sep0Hzb300kiK5osN3ItGNs7csPz3wmYXeh7gtSQqJecY91ED32oRFZvBWK9XrO+qDYY41+btahYDQH8Vr+iOCGXLT4ZF/RwFgZllZwyytZHjwu58RivZrwGfO+0FYeNPKNAZSDfLCYe3L3yBq2TOrEPVZKM=
+	t=1747932834; cv=none; b=IBjPDqig/1BJRoGSIn0WRqqB8BGDlNVJxBCO/RULVxBxPafw34DMiMWYWtr2mGD6Ag+kQFKwcGOEeWt6Nf2ffaXeamGgn9ddlcvOF08xsTDzhLwbKZGYpm6SGRS7dwKJCaO4FBHvCXbGuwBXfdxYpwKA/yR1pDHVfkAOuITMbgg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747932698; c=relaxed/simple;
-	bh=XqRKlmwtskDBzgjp9eBWrIxZScG8XDNG6qHQOIsuaGE=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=tJTZzNeSHMahklJsR9UhvyTXAo195h2hhmKwly9XEW7YacUNtXhRquBT07att5X8T6kBBJeUEQkHRacDnzm/VDKEriC1GkkQNe3GtWgVTOpmksW69+4BPw45z2kP/BNVf7TaD12j7RP0Q362JwF2yzKICjkIrX7j9l3gIxpO9Eo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BDBCMx4r; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747932834; c=relaxed/simple;
+	bh=xE5ZOtlR6OATG9/4T3dvjATiI+PvfvxCWdxptiFvfeQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=RqOK2LvLcBbQxr6A9HNtgqHuF3u78wOqYEmlFeOeyG5/iAqEBScbW8jyLNNe0jfnwSqNYun+sl4UzwpR1jLAWqx1L+4/erHCsH9mq4zPE/e4I9xrYvh1z36O8whkVTRtfpWH963Wv0jDIyPp1j8kEHX27rEOmyZos+KRA6HgjBk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nj17yPTt; arc=none smtp.client-ip=209.85.128.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BDBCMx4r"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 7701BC4CEED;
-	Thu, 22 May 2025 16:51:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747932697;
-	bh=XqRKlmwtskDBzgjp9eBWrIxZScG8XDNG6qHQOIsuaGE=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=BDBCMx4rMOVfWemhvYqVCQ9CzTDfGSDqAuvmeKySp11XmKVY1NwTOQOoOjeCRZ+VU
-	 TL+qZ0ogbsWGFCY7pk5yxSq+/xrI2wopAN6BcBtw0vEV59qPfLxUfSiR5s9c9Kymvu
-	 RVCqfu+ZA1nT5BN0pYI57QbUCknUmsHNhEGFsF9xT8UxRa4CZVeo9OD14rydcU5Dtj
-	 0FwVOud0lk1zbfztIb6rY+Bw9Z24MISZITRNtCQnv5QBnRNFGy9CuAaJUntvQGJuLI
-	 CPtC6Jrix3Xv5EaVcnIPOaXHvNta4OrsCR845zUy0zlwoKoGTZUE4Yjs60Y+Yi+jaN
-	 AP9DZzSGwCE9Q==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67FB3C54E90;
-	Thu, 22 May 2025 16:51:37 +0000 (UTC)
-From: Alejandro Enrique via B4 Relay <devnull+alejandroe1.geotab.com@kernel.org>
-Date: Thu, 22 May 2025 18:51:04 +0200
-Subject: [PATCH v2 1/2] dt-bindings: gnss: u-blox: add "safeboot-gpios"
- binding
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nj17yPTt"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-43ce71582e9so69279305e9.1;
+        Thu, 22 May 2025 09:53:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747932831; x=1748537631; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ARK5arm4xRMg5UA4OO1T6K5We9IiVU4dSpLE3tmkVDE=;
+        b=nj17yPTt1wQW4sbKrbPjq+Q/Gf9en3mptUNstFos4rda/qIUds+XuSc0Hn5Lkzb3ov
+         LjworIxRv0yuWIHAG0yjEnm9gm8rf/Bfz4XMUoVUcqaKy1i/8J2Nl0iEiSmkmZ8/I815
+         /y7f24Qsm+cL/A4D4qFqRbWcHzaICiFVwKQbQWPqbLgHBXCwInzxvRdhVtAwauN9DpGC
+         gO68xOyC5ltWB1yndvLtu7uaa+fV1hYgwZkxIyjiufQV88POEYpL6ZvMvjBW2Ip+y0xN
+         TQQ4oAtMugCKWvs2A/+RFqN8mGw9a+h1Rbgfs6dmVKRpLkx3fzWnK8FHKBn0/QpJsTp9
+         wCkA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747932831; x=1748537631;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ARK5arm4xRMg5UA4OO1T6K5We9IiVU4dSpLE3tmkVDE=;
+        b=UVAzxNCIE2vHsHvFLvvXBuvjztk7NJZMT9lg6x0Z1BbX0VkL3MojVALsjpyFVn97dd
+         ZxQAbTeFWRMz81ZmnXDLOhGYI+QThGi4htk+Yz+traHvR6IJEv8AxibphWlsftgTdJEp
+         xwYOhNUFhDsa5KBm7eCbI7Zdw4z2B4T00bJHIel1im1MeCHdE4riQ7ItbrIogWkqJR97
+         MIVbmvdin96Wv0GKKH/Bp/n61Z3YIx/Fq6WkpLGJ3HeQN9muBvgFXcXYBEury4yFFM8F
+         zUKc1phJMVUb+WZZFdEWeBbJQGwjjFLhqDkAFZVj6r7z+Mksi4pn0CjXovdXclMqIWP1
+         z/hQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUuWv9dtJDXw2GUWdZk7e2tQdMyGNGYFjcHbC0JHYQ808RFGD8ci6cOObCOLHAfjgKjrv1q1ThuGEFl@vger.kernel.org, AJvYcCVr0iZ9TK35h4SBgW2ZV+LQNQeo6FF7et5cX65jRF5im3U73aRalZe2KW7K/T9rT2Nq0eHPJnxq@vger.kernel.org, AJvYcCWp1ff+fv6PmvylxWTItfUsS7Rg7MlDYQ3owngXTI4rsq//UKoZFgnFztLx3YJ/yuegyxLklm259k7Jj1y9@vger.kernel.org
+X-Gm-Message-State: AOJu0YyJOMij4+WfL/k+L77MCdDmrep3HQObnSZ3aKZ4zMVjWV2osWLj
+	U0KFQ8MDzRqmmUSspAzcw5rJkuNx31GYNszm7YlKPVXluE5DJXnCefYY
+X-Gm-Gg: ASbGncuMlq/mR4rqCs85eLRUdNqYWIEvKlOo3twmrdPWqi1pe087M0DOPXruR8MTD/g
+	v8roI/lg8mdgY3hcUYU3dAGrVfuvdjkR7BCIoN3ElS/Xizhgfiq9vgDslGy+HG8QpIjJjK5GL7B
+	HX80SlMb6nSGcBqXxTyM/YC1PxXfaBaGIrDvHJ6s4/pqpduPUkUchGj/JlVHcuArSdl3EAflJxe
+	IECwsJ1TXyxHeR6E/xrifThiqVST9Rcg9XsZ+wCLtL0qetw0xxUpINT7ax9yvMFLjUk6To/Wn7d
+	r8ykuUh/aoxrakvxLi9qSxsubRoYEwcGJdPswKbHy3NcYuZKrVn334ZR5aXXi5uKQ8GrKbmLmzD
+	DuQVtRLVoD2ywc8Zp8GsF
+X-Google-Smtp-Source: AGHT+IHWhtAWXRBGh/ENakgND9IzcrqJZpmuMgIAj3z1JdfL9BG36SGp+6PXxZ3vxlmo2rQYJG68cA==
+X-Received: by 2002:a05:600c:8411:b0:44b:1f5b:8c85 with SMTP id 5b1f17b1804b1-44b1f5b8d2cmr16008065e9.13.1747932830716;
+        Thu, 22 May 2025 09:53:50 -0700 (PDT)
+Received: from localhost.localdomain (93-34-88-225.ip49.fastwebnet.it. [93.34.88.225])
+        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-447f6b297easm118737525e9.6.2025.05.22.09.53.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 May 2025 09:53:49 -0700 (PDT)
+From: Christian Marangi <ansuelsmth@gmail.com>
+To: Andrew Lunn <andrew@lunn.ch>,
+	Vladimir Oltean <olteanv@gmail.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	"Chester A. Unal" <chester.a.unal@arinc9.com>,
+	Daniel Golle <daniel@makrotopia.org>,
+	DENG Qingfang <dqfext@gmail.com>,
+	Sean Wang <sean.wang@mediatek.com>,
+	SkyLake Huang <SkyLake.Huang@mediatek.com>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	=?UTF-8?q?Ar=C4=B1n=C3=A7=20=C3=9CNAL?= <arinc.unal@arinc9.com>,
+	Landen Chao <Landen.Chao@mediatek.com>,
+	netdev@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org
+Cc: Christian Marangi <ansuelsmth@gmail.com>
+Subject: [net-next PATCH 0/3] net: dsa: mt7530: Add AN7583 support + PHY
+Date: Thu, 22 May 2025 18:53:08 +0200
+Message-ID: <20250522165313.6411-1-ansuelsmth@gmail.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250522-ubx-safeboot-v2-1-08c22378b8c9@geotab.com>
-References: <20250522-ubx-safeboot-v2-0-08c22378b8c9@geotab.com>
-In-Reply-To: <20250522-ubx-safeboot-v2-0-08c22378b8c9@geotab.com>
-To: Johan Hovold <johan@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Alejandro Enrique <alejandroe1@geotab.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1747932696; l=1890;
- i=alejandroe1@geotab.com; s=20250514; h=from:subject:message-id;
- bh=Qgfr/42Hk/Jl7APKEe5TWsDxVDS5VL624ZuNvtX/yFo=;
- b=RR2rXONjgeJOS3q2oViWu/z3Xnbe5J92rwAaRkPUD7Qyz+Y1SzrloMBVy85A836QHokJ3IKM7
- gzG8Zfod1wmASeNBXZSLofMLUo2Cg9EBkYPokgOiwW0SHVU66lhLf1G
-X-Developer-Key: i=alejandroe1@geotab.com; a=ed25519;
- pk=xzHMPbqczL/tMsjXr26iLoHwIzLveHVnT+GIU4p1k38=
-X-Endpoint-Received: by B4 Relay for alejandroe1@geotab.com/20250514 with
- auth_id=404
-X-Original-From: Alejandro Enrique <alejandroe1@geotab.com>
-Reply-To: alejandroe1@geotab.com
+Content-Transfer-Encoding: 8bit
 
-From: Alejandro Enrique <alejandroe1@geotab.com>
+This small series add the required changes to make Airoha AN7583
+Switch and Internal PHY work due to strange default configuration.
 
-U-Blox 8/M8/M9 chip have a pin to start it in safeboot mode, to be
-used to recover from situations where the flash content has become
-corrupted and needs to be restored. Introduce a binding to support
-this safeboot pin.
+Christian Marangi (3):
+  dt-bindings: net: dsa: mediatek,mt7530: Add airoha,an7583-switch
+  net: dsa: mt7530: Add AN7583 support
+  net: phy: mediatek: Add Airoha AN7583 PHY support
 
-Signed-off-by: Alejandro Enrique <alejandroe1@geotab.com>
----
- Documentation/devicetree/bindings/gnss/u-blox,neo-6m.yaml | 20 ++++++++++++++++----
- 1 file changed, 16 insertions(+), 4 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/gnss/u-blox,neo-6m.yaml b/Documentation/devicetree/bindings/gnss/u-blox,neo-6m.yaml
-index 7d4b6d49e5eea2201ac05ba6d54b1c1721172f26..7589327a77da5c70bfebe57685e2a4bbfd95934c 100644
---- a/Documentation/devicetree/bindings/gnss/u-blox,neo-6m.yaml
-+++ b/Documentation/devicetree/bindings/gnss/u-blox,neo-6m.yaml
-@@ -6,10 +6,6 @@ $schema: http://devicetree.org/meta-schemas/core.yaml#
- 
- title: U-blox GNSS Receiver
- 
--allOf:
--  - $ref: gnss-common.yaml#
--  - $ref: /schemas/serial/serial-peripheral-props.yaml#
--
- maintainers:
-   - Johan Hovold <johan@kernel.org>
- 
-@@ -32,6 +28,9 @@ properties:
-   reset-gpios:
-     maxItems: 1
- 
-+  safeboot-gpios:
-+    maxItems: 1
-+
-   vcc-supply:
-     description: >
-       Main voltage regulator
-@@ -49,6 +48,18 @@ required:
-   - compatible
-   - vcc-supply
- 
-+allOf:
-+  - $ref: gnss-common.yaml#
-+  - $ref: /schemas/serial/serial-peripheral-props.yaml#
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: u-blox,neo-6m
-+    then:
-+      properties:
-+        safeboot-gpios: false
-+
- unevaluatedProperties: false
- 
- examples:
-@@ -61,5 +72,6 @@ examples:
-             v-bckp-supply = <&gnss_v_bckp_reg>;
-             vcc-supply = <&gnss_vcc_reg>;
-             reset-gpios = <&gpio 1 GPIO_ACTIVE_LOW>;
-+            safeboot-gpios = <&gpio 2 GPIO_ACTIVE_LOW>;
-         };
-     };
+ .../bindings/net/dsa/mediatek,mt7530.yaml     |  5 ++++
+ drivers/net/dsa/mt7530-mmio.c                 |  1 +
+ drivers/net/dsa/mt7530.c                      | 24 +++++++++++++++++--
+ drivers/net/dsa/mt7530.h                      | 18 ++++++++++----
+ drivers/net/phy/mediatek/mtk-ge-soc.c         | 20 ++++++++++++++++
+ 5 files changed, 62 insertions(+), 6 deletions(-)
 
 -- 
-2.34.1
-
+2.48.1
 
