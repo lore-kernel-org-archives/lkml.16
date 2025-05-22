@@ -1,96 +1,105 @@
-Received: from mail-vk1-f174.google.com (mail-vk1-f174.google.com [209.85.221.174])
+Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41A57262FEA;
-	Thu, 22 May 2025 08:50:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9687D2356B0;
+	Thu, 22 May 2025 08:50:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747903849; cv=none; b=DTInx6ieT+u6p0ZB3nkVi52bOTrPn0lty6qxjynnm2n5yfQjLKczpn7StvfroLKD+TkSNAo0MW+vT5G0+W7j0CRJ2ra1+wTJbu5MAabe1oXwKMcUAR69vvWgFGXAy7fwUPejj057U7ItL2MS0zn+1E/HCcdikqXABVOzwkM8Lw0=
+	t=1747903861; cv=none; b=YC4ko/NN7obx4qaMh+apQmWJGrLS3Zfcs8+RNw5qXO2fpFN/UAkkrhokl+mcwnFVZygIBxrKTslIqiWftNuLdweQDHdmZc8EXuTGHxGhaPf6Wf56z6cM3GOT4v63TRRXFZelllQBZTsf5b9WOj3yJs6UnpaNzm3GXrimO33KFO4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747903849; c=relaxed/simple;
-	bh=2K+KQZzikeLIqku9jAOLpFAf26kMriVUDbPVnwyyxbE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JgShQ6Wo8ajCoOMCdaWIodmziJJHoQ5+9/XA8cTwpLsLq2YdT4LdZMtsWavLR39rNV4TNv/Kn4N4aoM5HkuAGBx+BWJ1E8O2LuZ3mya56k0JBjNJEpF07qujztNBKRnpbStwaaJJHZi8fIGf6Jmf+Tvykd0TWwQoitCSwj3vDfY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+	s=arc-20240116; t=1747903861; c=relaxed/simple;
+	bh=vCtAwPKsS+J2jeMoni9nfCTO0QYTaGxynNQgOruhtB0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=DndrgL8QjneEn1TcqPdfIuBdifMIpXu15nSC8LARpbdYIm7di0dWlzE3EkIjozdzGBiFQm6J+ozaAdzAjIXNPyVZJv+AbfNVcdp2h/393hmBad2EsMr1CVNogcnVdWdy94XWJFbSu8GkskAxi9Pclju8B/7m6eBPSJkiyyUeTR4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CwUHr/S5; arc=none smtp.client-ip=209.85.160.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vk1-f174.google.com with SMTP id 71dfb90a1353d-525da75d902so2464178e0c.3;
-        Thu, 22 May 2025 01:50:47 -0700 (PDT)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CwUHr/S5"
+Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-4769f3e19a9so52593291cf.0;
+        Thu, 22 May 2025 01:50:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747903858; x=1748508658; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=eCQ9z6t4IW6K9Tkhuy43bBJfJ2LcpjBVMC/j6CP1IIQ=;
+        b=CwUHr/S5vB5Osqf+n6qQbd0V3HPXsxzyqf5BA7KD0v9ngfAflfrJ5qIcMP2OT37oJy
+         +hkohcYQ/2M+wKTnn+xkNaodO72ezL4w5rUDdp2RHHNFywvn19e7Qg/ZZGlxjmmnnT+v
+         GJpac+68SsD50OZaTJjxmictzoyKtN1yU1lxL/GxU3iKxKwsX9XB9TiC595JwliOckxD
+         7ZCEvXStFYde3mDAK9TFKCuhZYxRcFk+2UGlqH9b+2bq3u5k3PLGOKBarDvw2igri4GW
+         YuOZb72O1icB90pmCg7CCezTRsASNjpu5THCgqqj4SyxzOL8jz57W0wPb0NWM74JmwjA
+         UXng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747903846; x=1748508646;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=1RdSzTCdQ/gxFkTRRjzHv6shBsRitKkDZ+s9AT0E9TE=;
-        b=hpxiGxa4sGgx1/v9g0RjZ1nRvljhilkDUsPXIxXK2yJTBwJlW6w7FfNAatw+oD9v92
-         9gt89t54jQycuK4HxHnMuy9JJ7FoJ5zq6OZqQiTeYuEaZzC+DUYXBu7SXuXNCivfz1wC
-         a0Mi20y6k8eAVczE2RTRw+50KNOJ/8cL3fcVW5ijJFRbpSl7gw5g3s5bvw/cpdZYYbyV
-         niEcYaurVk8hsp4ierEXmEBCTB3B7yido+SSvDo5i/fxEAW7kuBotK9j581tfuOGh4dl
-         CeF3NgkIO9LSc6DJj6XEOpKRo050Q3YEmJ+fiKiIZ5XMYKTPHqfvVZCdkOsXCqc8VLte
-         WCwA==
-X-Forwarded-Encrypted: i=1; AJvYcCUFI+65Qr3olfNEZUWSKYHVWh9rVbXiXxSyNRpPaDH6fEILRRgv7CKB2Oi7xOmPAHeBp6J46YLz/+k=@vger.kernel.org, AJvYcCVbyFsFlkzKHse3800HJBmu8/XT/P3AjqxeHhQXdRFk+gWhBSmIoG5Vho/KRaI/1ily72MP3F764ZwuZmjE@vger.kernel.org, AJvYcCVcEV+m2pjkahBvcf8wJc6ZPdSDLIZxDVvI/tW62qkSNnWfpJJe5jsNtHKLQD8OuTlFN7Y0JZG4zAhAO5UZxTH8ijk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyEEtjzHcU5lDfoGq2+5CXLAu8jbQpbDhAGEN4LeZqITMGknzmb
-	wCQmDaiMXJW6S/JLDzfg3ZudfjixabDMNpHIcOQEjShx+MRJ+g0s911hnY9ri5kj
-X-Gm-Gg: ASbGncs5sgADASj3zanS/RtdRyCQH0AGTUm7DSmw9BOnQ0ZWT9SegN7H3Ut+k0vsFDU
-	IBepeYQHfaBhxf7U7Sxt1EIeIr3sSitORt+Ir6R9XGziI23qp+6xVlPxonHQrQUUxcdpkHbOSfR
-	CstfgRonYUOpwQTIBFuuWPV87s3icOzsHujtQNTffBBSzCCLDfDlBNHa9ZvEIMfhovfXOliiYnc
-	sZHHScRhUCYR4ORsAxEyDZ2K58SXAr2ppwo0VIVJdW4fxc6S074qfnv3EBBK/I8NgXw4j+gHGwf
-	mxmi96tpXqS7Tm3kL3aq8lSbmb1M59p5geqHa21TyhOkBpNWX35f04cHyKfKRNNSdohXVbUXt8O
-	9Lgcq1qM8VPUwug==
-X-Google-Smtp-Source: AGHT+IFWze0MmGxN/7N1fO+4bwKK2wa/oIXyq5oFO+zpyzsW8jGnkp8SxDveAx6TexXeZIsoHHIrBQ==
-X-Received: by 2002:a05:6122:4710:b0:520:4996:7d2a with SMTP id 71dfb90a1353d-52dba94f828mr20111955e0c.10.1747903846359;
-        Thu, 22 May 2025 01:50:46 -0700 (PDT)
-Received: from mail-vs1-f42.google.com (mail-vs1-f42.google.com. [209.85.217.42])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-52dbab4e96bsm11441779e0c.29.2025.05.22.01.50.45
+        d=1e100.net; s=20230601; t=1747903858; x=1748508658;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=eCQ9z6t4IW6K9Tkhuy43bBJfJ2LcpjBVMC/j6CP1IIQ=;
+        b=nQeD5f276gqsDykK7xQKiffpXTCWcXiP4hZWP8CocO8JQe+zjJDwnFOnaCgZIqg/nD
+         HENsyc8/7jS4fuBQiaiOY0sg4OD6zHvLFU7AeOdluaLVwxWBKvgiqjx4AayXhdnB+a9g
+         77eUWIHTvyyrcdRpC4rhsOrWWjJwrsSYLrwsy8a+nFBbljfHUrJP0/6b6HssKac4Qf62
+         nb7/P+pDAN7pwh1OxmSWPym4WO1dhSoUuNiVoP9Cm8TNFf7dwsH+S+EyIkqbgPcmnPp2
+         YVJ1mWHuciR0FSVb+6EMGcOCT/V83EVWgLvkyVX7kb4iLzysHtN0S4JsLLUNqDfxCIns
+         +ELw==
+X-Forwarded-Encrypted: i=1; AJvYcCUoCTKWfOK5wkdAYAl8Wg7CSZjcGNvB+nOuKmkf8/IWz2MKjXHgLWyG5bgtg+zGPxbWw5YFENCFmS60Z7ZC@vger.kernel.org, AJvYcCWRrViPBzpBFPv4r7PFS7r3BH9RFR5P4UNOFS8BOoiWU2YoF3eLuT3TF2vuTqjxG2m63YEKM3lFtmU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy7e41Z9JrZBEc5Z0s3GsVf+SIFIx6lsEkxy4sJ8rugNb9GdlB3
+	b2LsjLPBqjcBryZkklQrSkLjERF9WjXRb4tNcrNGBu/l7crO4SGitu5B37wWlEvY
+X-Gm-Gg: ASbGncul0wyI2SkfoiSW4DPxQ6lMVJGyVbOOzwNNjlAxw1BkkxoTXgaJSpdGPCjUvTS
+	mJP5XQtC0DgBIOMcG77hNAGnRJ+viDE/pUt1d/E8EDK4F68s6pGRSX7cBdcJqcO8z/upLkE9NIb
+	2yYiyqjOTjKzaPVwI+f2C/rBvfRaW7dCS5/ts2tEOTLP9Vl84wFqUlTKV3moM9Oy9jZEDUExi1M
+	WA9C8sXy8+UsE/HS+AuvpQZV0Q6a+64HK4Y+OVYIwT5Aw+aVAKm2bm6EXG2AN5fO+R8Be/Eek88
+	uOD7/f8OGkKMJ7+Uuj0joos2zJbJ3iNNm3bgXIzRl0dYtL/bISphJW2iNFJMyOCIUbo=
+X-Google-Smtp-Source: AGHT+IHOyxo6I9Vnm74dVmcNYWy1/xQqPxP3wvHGsNE3PL5cS7byPNmY6cxzJiC8bu7KyyjaHHNDUQ==
+X-Received: by 2002:a05:622a:5591:b0:498:111:93bb with SMTP id d75a77b69052e-4980120dbd7mr324505011cf.37.1747903858317;
+        Thu, 22 May 2025 01:50:58 -0700 (PDT)
+Received: from ?IPV6:2600:6c56:7d00:582f::64e? ([2600:6c56:7d00:582f::64e])
+        by smtp.googlemail.com with ESMTPSA id d75a77b69052e-494ae425388sm95564141cf.39.2025.05.22.01.50.57
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 22 May 2025 01:50:45 -0700 (PDT)
-Received: by mail-vs1-f42.google.com with SMTP id ada2fe7eead31-4dfa5cee94fso1993772137.1;
-        Thu, 22 May 2025 01:50:45 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUBZz7yk3DBFfzy46bCQoUGSqMmUxgf6Ex+OwwFa4f536mxy28m2ZagUU2+bm+VKEoSUt4rJpg6ffI=@vger.kernel.org, AJvYcCX8116Hq9KRK+luWQc9jDL56fS0urFOH46HvQ315jB56mbi+dFfgNluhcAS/FMSLWDRy6BJ4xwrAV+h1glo@vger.kernel.org, AJvYcCX8I/XUbPV/8niT2mQl60jK7JQdKklwBcdxmyyLaVoEiZfOf0Tav0rKXa2yrUMuCzhEJxE+9b9X7mBAzIRMW7K3iYA=@vger.kernel.org
-X-Received: by 2002:a05:6102:6c5:b0:4e2:c6e4:ab1e with SMTP id
- ada2fe7eead31-4e2c6e4aca9mr3843819137.7.1747903845438; Thu, 22 May 2025
- 01:50:45 -0700 (PDT)
+        Thu, 22 May 2025 01:50:58 -0700 (PDT)
+Message-ID: <15871c67-0d18-430f-935e-261b2cda855b@gmail.com>
+Date: Thu, 22 May 2025 03:50:55 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250513154635.273664-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20250513154635.273664-5-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20250513154635.273664-5-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Thu, 22 May 2025 10:50:33 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdVfCwbWmQaqaMAR+gfyYvevvBDBh=R_ZV-sVX7vW3ZaGA@mail.gmail.com>
-X-Gm-Features: AX0GCFv2mPwCdEPHFEBBSuxXYcqm_Khprg-6zD_yAUBC96QpV0aFb_9P-gawdgU
-Message-ID: <CAMuHMdVfCwbWmQaqaMAR+gfyYvevvBDBh=R_ZV-sVX7vW3ZaGA@mail.gmail.com>
-Subject: Re: [PATCH 4/5] clk: renesas: r9a09g056: Add clock and reset entries
- for WDT controllers
-To: Prabhakar <prabhakar.csengg@gmail.com>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
-	linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] cpufreq, docs: (userspace governor) add that actual freq
+ is >= scaling_setspeed
+To: Shashank Balaji <shashank.mahadasyam@sony.com>,
+ "Rafael J. Wysocki" <rafael@kernel.org>,
+ Viresh Kumar <viresh.kumar@linaro.org>, Jonathan Corbet <corbet@lwn.net>
+Cc: linux-pm@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Shinya Takumi <shinya.takumi@sony.com>
+References: <20250522-userspace-governor-doc-v1-1-c8a038e39084@sony.com>
+Content-Language: en-US
+From: Russell Haley <yumpusamongus@gmail.com>
+In-Reply-To: <20250522-userspace-governor-doc-v1-1-c8a038e39084@sony.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, 13 May 2025 at 17:46, Prabhakar <prabhakar.csengg@gmail.com> wrote:
-> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->
-> Add module clock and reset definitions for WDT0-3, which are available
-> on the RZ/V2N (R9A09G056) SoC.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in renesas-clk for v6.17.
+On 5/22/25 3:05 AM, Shashank Balaji wrote:
+> The userspace governor does not have the CPUFREQ_GOV_STRICT_TARGET flag, which
+> means the requested frequency may not strictly be followed. This is true in the
+> case of the intel_pstate driver with HWP enabled. When programming the
+> HWP_REQUEST MSR, the min_perf is set to `scaling_setspeed`, and the max_perf
+> is set to the policy's max. So, the hardware is free to increase the frequency
+> beyond the requested frequency.
+> 
+> This behaviour can be slightly surprising, given the current wording "allows
+> userspace to set the CPU frequency". Hence, document this.
+> 
 
-Gr{oetje,eeting}s,
+In my opinion, the documentation is correct, and it is the
+implementation in intel_pstate that is wrong. If the user wanted two
+separate knobs that control the minimum and maximum frequencies, they
+could leave intel_pstate in "active" mode and change scaling_min_freq
+and scaling_max_freq.
 
-                        Geert
+If the user asks for the frequency to be set from userspace, the
+frequency had damn well better be set from userspace.
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+- Russell
