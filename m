@@ -1,187 +1,96 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f179.google.com (mail-vk1-f179.google.com [209.85.221.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BB131E0DE3;
-	Thu, 22 May 2025 09:20:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 622EB286895;
+	Thu, 22 May 2025 09:20:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747905647; cv=none; b=VFYBl6oROW5+Fd5mi0QufdodMs6oYCDtUYj/pCAyW/vdynRn052oK4GUFI44qQu/TbuaHXHvHm0wCHbXHVzw/JLcKrzHvFuDc6PLm3n0ldyYvT+H6kAIizjYZlgB9JviVwD+WwWDsQo5fxxOmE97BSHGVrsawsTlG6/XaaELFxw=
+	t=1747905654; cv=none; b=ppL8wZYnJuHMznx2Q6AtkzMyalZ4Pwqbj8roxBpHDlSPILxH7mDo4GyvCtqpD1ukEev7Fxqi1bWxfoeXbXdryHRsx1odQu9PJsSbUvn3TzEDa0qfgel43GYsnhr0HBNO1/He4g/vQWFbGHGH3imHBYoEXZaiM8MzLUK2Nufs5No=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747905647; c=relaxed/simple;
-	bh=IypJbHtPtGnr60GnDnY/4E33paJD/tPKLrN5MDKX9VM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=GWwmiwujgvmXqoGxn5kfdSsFV7nL66+NPtiuWYF7zJk7ZTkOXeIVbqd0RukESPZ3uPXe8qHTeqK30HwsvppLXET8GeCLCdGlqUzWQzySphIcxfi/wOyU3ZP5Bu3uIfbOQoOhLveHsBgJJlZEndicUGC1jxG+yedXuU7e8HlrXFQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=FkxMbu74; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="FkxMbu74"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54M7IPxu013417;
-	Thu, 22 May 2025 09:20:26 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	1TWNeFD3RtvStATwZPx3RrPcEDbFBkfg15OgYn7S8Pk=; b=FkxMbu74hjSwIPgf
-	ZqthEca5AQJXLAbU5yiy8FUD8o/1gEBGIkT0D9HSmMwraeF8Tgh552V582+uhzcE
-	jHWK1hGaBhOcAZcBrKNHME7r08lWEui6Qui+KxMi0FG67T4EIDA/LnZmCu2byGVk
-	0cIrpTMgSijMTTIx8uncJ3ZoQjxTnkp4aytyebpPHw20sbyXOapCB/OOUdlhgIwp
-	ESKU1cyrI7dORobI3tc0TvvCL5UHU8lw2Wz7aIjhXpG6DuqYzSh3yR7v8snagw5c
-	BaIjJHW91ud6P9gVEOP98mv85yAdlqbIFGRBXmxqlI1XnfsCiGAGzNUzn8LQIcl6
-	WpclaA==
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46rwh5dwdu-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 22 May 2025 09:20:25 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54M9KPLc009388
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 22 May 2025 09:20:25 GMT
-Received: from [10.218.7.247] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 22 May
- 2025 02:20:20 -0700
-Message-ID: <6d3fabc6-9701-443d-a08d-71e6c69e4ed0@quicinc.com>
-Date: Thu, 22 May 2025 14:50:17 +0530
+	s=arc-20240116; t=1747905654; c=relaxed/simple;
+	bh=8hjrQ4o99phj5n8LXNouI7NQKRxGtSxPnWReZhMKRWk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=OGJW8ceLUe7G69vYKTQmnvf/Sq5TBxwOq5sAPfwGt18rfcsSG6wy2adp8QxcokueNropgYzv53IrAnw5V48MMXMTkM1dBj8gVjS8FnYtUFgH6MHFRAsaNK1gceSRuD70pQYV7qltHwFD4q/vX40wo0eiZ2qjrjPdmPk5fCz4Vs4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vk1-f179.google.com with SMTP id 71dfb90a1353d-52e728960c3so1734556e0c.2;
+        Thu, 22 May 2025 02:20:52 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747905650; x=1748510450;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=T9FyqBtIcUriSr6/yzV0Dp4PFK+1KKR8JLNCAZ04quo=;
+        b=nweERMDJo8gLWRFQIaDt2RRwmrlRa2QBpE18kTwi71xWXs4mywo96j1aEvFuh/FZ/f
+         Pg98q7qSMjjhOgVbx8GOPdi2aDjGYIRvpMNLLTf79v2yv5Z3HVT8q+RLygacyv0vP1jE
+         SpDiLrOq9zqfFciUIlU+MIB1nHvSj8K3ChHZFoa4n534lQjY9qSXdCVUkUOAYrfZvA8u
+         8wWm/F42QHp6XL6f+bfLn6/AIP/qFOBNAmlnBdZ9BmwsxsbYhH2D9N8x3Egv/CAS5dO2
+         aAOMruyIfNBDBauxQH9xvXpkCYeuW/GqOnuzwJh2e0nba0s7ejf1a2Ak83P7J5CUk9Bg
+         OzCA==
+X-Forwarded-Encrypted: i=1; AJvYcCVDFYJ7NI+cwbB64SirQ1OEsjN/bkrT6o6OqmumBjxd+Ri83KyVS4zk+eQYNmyVKQ6kd3/6p9IBIcG9@vger.kernel.org, AJvYcCVMIGhbxCbkttt5PbwwxPK87MmEg1VQdYOAsw2iMpnKengv/sVfYv+tMvl5JVIbjGI9eP1NYM3hOcZXBk/+6o9jtzM=@vger.kernel.org, AJvYcCVSLV35EaWKLOUiRcREXyst5qw6tiLDEi/pEGmV3xxP4IhQvSAdG3wD8Y7wM1+nLCURQg++5+BYPRtnK1J2@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz9GT15Pcjbth4RtBuEO4rhtYbNrebCcNV2Tbw3ZT4NyZr3aENI
+	ciTC3d/qp9mSLubztycSoC+3uSdISSapWEpNs4JJ/j/B5UcJDx6lb/GUVW3ZQQ4D
+X-Gm-Gg: ASbGncsukrHip8oyufvmnH4gmp9RLR0HrsJNCSMVhqvrPI07Q1hoLBelpUjQ6SCxwBE
+	9gEVB+1S18BR51T6OKK5Kytr+6TLFUU7yxA7h/ahtf0xLzChtvmqkEPyDzhMPfUfUl6SOCFBbIL
+	K8XulM2d2KCblODoRwir/NxseXUHrIpGhyOFcMhX3SoiNlstmZlPNmIxvuniNf+6zu54FHcn/Sc
+	8iclS7Hp8AdXw3kOOnLkPmFG1jTFF8Z8H5kWDRONb0yWIWf/MGxVDt97fLnr9EyCoBrs3EVqVhF
+	Ab6q7ll+RnmVXWJTP3nrh48PvNga53/WMqMzn4wzqrVm5ZGQ24swFlePiobgq5zI/hbnVwAir04
+	YFg4/gpB9d58XIA==
+X-Google-Smtp-Source: AGHT+IHgxN4cXqvTw5PI54D6ZeCMIasqPA0qVj9E8911qaFnzm9YvOYGy52bYNjNlvs/iMBU69vYxw==
+X-Received: by 2002:a05:6122:3bd5:b0:520:5185:1c31 with SMTP id 71dfb90a1353d-52dba94ac39mr22402586e0c.9.1747905650132;
+        Thu, 22 May 2025 02:20:50 -0700 (PDT)
+Received: from mail-ua1-f54.google.com (mail-ua1-f54.google.com. [209.85.222.54])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-52dbab4e983sm11464661e0c.31.2025.05.22.02.20.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 22 May 2025 02:20:49 -0700 (PDT)
+Received: by mail-ua1-f54.google.com with SMTP id a1e0cc1a2514c-87beb9976e5so1217552241.3;
+        Thu, 22 May 2025 02:20:49 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWe31s86yzK+oLSvnWfJcQ/eB2NbZi+d1oQFJFNJtJVmshD6+MJKAQKs1UzWyI9f510WmVP84SGXrb50FuxxJ287HQ=@vger.kernel.org, AJvYcCWsTeS4DBOEhHZBLtq6A62L2b8T+jS3pZRZXXpmPnJ1vTDqhE6WKYgEgT1bd526TWY++TBQze6Yx/64ocin@vger.kernel.org, AJvYcCXgsgsF/WpGdD4QqZ1x8G9/4/VajwbLlrQz7OIOiJ0ihWgA9aNcc062wgRFC6yovdaHOeQrscV5l4wx@vger.kernel.org
+X-Received: by 2002:a05:6102:105c:b0:4e2:83c4:92a0 with SMTP id
+ ada2fe7eead31-4e283c495b7mr11218776137.16.1747905649098; Thu, 22 May 2025
+ 02:20:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V5 07/11] phy: qcom-qmp-ufs: Remove qmp_ufs_exit() and
- Inline qmp_ufs_com_exit()
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-CC: <vkoul@kernel.org>, <kishon@kernel.org>,
-        <James.Bottomley@hansenpartnership.com>, <martin.petersen@oracle.com>,
-        <bvanassche@acm.org>, <andersson@kernel.org>,
-        <neil.armstrong@linaro.org>, <dmitry.baryshkov@oss.qualcomm.com>,
-        <konrad.dybcio@oss.qualcomm.com>, <quic_rdwivedi@quicinc.com>,
-        <quic_cang@quicinc.com>, <linux-arm-msm@vger.kernel.org>,
-        <linux-phy@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <linux-scsi@vger.kernel.org>
-References: <20250515162722.6933-1-quic_nitirawa@quicinc.com>
- <20250515162722.6933-8-quic_nitirawa@quicinc.com>
- <untqxy76skl53c55bdjz5usk4seuypjqbxkfub2qeqz42mewqr@r4cutmkvy235>
- <79d2f373-ee53-4cd2-b228-171daf3adcb7@quicinc.com>
- <qrope222shpeqvhe2dnh4p4jmznuu7tr3jh2zujwbbd3khg4yo@wm2epj5ydefc>
-Content-Language: en-US
-From: Nitin Rawat <quic_nitirawa@quicinc.com>
-In-Reply-To: <qrope222shpeqvhe2dnh4p4jmznuu7tr3jh2zujwbbd3khg4yo@wm2epj5ydefc>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIyMDA5MyBTYWx0ZWRfX3aBf8rINn04w
- W/+LE+z96YZ18oSRyXEO5hgIfX7y0gmBovLSkMj5EDSergAYwTy0fpVzKlHZSkQG0A9c/woCunZ
- EtJe2f7suAvSA49inX1riXf/kKmCe3AgkxTZhUMltK/38vudSYGxGjbCKFVPZKQ0DoHPmdoMiSC
- OP+ccuuSuq7A2rQXJegpBgMqIXHy8I4K1VjBkYIm1FtXAdbqRLyUfIs9JKMUQv5s9H9/o1Zhe37
- bkXeaPrAl0hRaz73ushZC/sNmXB8lOt6BkTVH+Dy3ogaU/bVXvNUVZ1DOY2e0jE0oHsYDgCvjGV
- JWWN0DHHxXtfbglQxH05mc+FWHv38PaB0abB5CrAw3WOFqsCENJgpJv/W7dwzkWRz8Nyg4ov6A9
- OZ0IZ9YZZpFj7nDC7OPA9d5L9sEEfDpmgatB+emGhckIEmp4A5SpXVNkXK5dwakhqedLBmgm
-X-Authority-Analysis: v=2.4 cv=XeWJzJ55 c=1 sm=1 tr=0 ts=682eec59 cx=c_pps
- a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=COk6AnOGAAAA:8
- a=EUspDBNiAAAA:8 a=tevBJ2omWQ-VxGc_UgsA:9 a=QEXdDO2ut3YA:10
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-GUID: 9EMLqy3UAAPLFhtUPvafhHNHjRooUPkB
-X-Proofpoint-ORIG-GUID: 9EMLqy3UAAPLFhtUPvafhHNHjRooUPkB
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-22_04,2025-05-22_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- phishscore=0 clxscore=1015 mlxlogscore=999 mlxscore=0 bulkscore=0 spamscore=0
- suspectscore=0 impostorscore=0 adultscore=0 malwarescore=0 lowpriorityscore=0
- priorityscore=1501 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
- definitions=main-2505220093
+References: <20250514101528.41663-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20250514101528.41663-10-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20250514101528.41663-10-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Thu, 22 May 2025 11:20:36 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdWaZaScRihVk5d7cAzFTh-730MwZf84MEdFFBFNzzhw1w@mail.gmail.com>
+X-Gm-Features: AX0GCFuTLnS3jBwXIku3alhVwmphmPKcurd-weN5o7EoVvqwjDFOcpVZOtoW8hk
+Message-ID: <CAMuHMdWaZaScRihVk5d7cAzFTh-730MwZf84MEdFFBFNzzhw1w@mail.gmail.com>
+Subject: Re: [PATCH 09/10] arm64: dts: renesas: r9a09g056: Add Mali-G31 GPU node
+To: Prabhakar <prabhakar.csengg@gmail.com>
+Cc: Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
 
+On Wed, 14 May 2025 at 12:15, Prabhakar <prabhakar.csengg@gmail.com> wrote:
+> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+>
+> Add the device tree node for the ARM Mali-G31 GPU found on selected
+> variants of the Renesas RZ/V2N (R9A09G056) SoC.
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i.e. will queue in renesas-devel for v6.17.
 
-On 5/22/2025 2:23 PM, Manivannan Sadhasivam wrote:
-> On Thu, May 22, 2025 at 03:49:12AM +0530, Nitin Rawat wrote:
->>
->>
->> On 5/21/2025 7:19 PM, Manivannan Sadhasivam wrote:
->>> On Thu, May 15, 2025 at 09:57:18PM +0530, Nitin Rawat wrote:
->>>> qmp_ufs_exit() is a wrapper function. It only calls qmp_ufs_com_exit().
->>>> Remove it to simplify the ufs phy driver.
->>>>
->>>
->>> Okay, so you are doing it now...
->>
->> Yes
->>
->>>
->>>> Additonally partial Inline(dropping the reset assert) qmp_ufs_com_exit
->>>> into qmp_ufs_power_off function to avoid unnecessary function call.
->>>>
->>>
->>> Why are you dropping the reset_assert()?
->>
->> This was not aligning to Phy programming guide .
->>
-> 
-> You should mention it in the description.
+Gr{oetje,eeting}s,
 
-Sure, will update the commit text.
+                        Geert
 
-> 
->>
->>>
->>>> Signed-off-by: Nitin Rawat <quic_nitirawa@quicinc.com>
->>>> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
->>>> ---
->>>>    drivers/phy/qualcomm/phy-qcom-qmp-ufs.c | 19 +++++--------------
->>>>    1 file changed, 5 insertions(+), 14 deletions(-)
->>>>
->>>> diff --git a/drivers/phy/qualcomm/phy-qcom-qmp-ufs.c b/drivers/phy/qualcomm/phy-qcom-qmp-ufs.c
->>>> index a5974a1fb5bb..fca47e5e8bf0 100644
->>>> --- a/drivers/phy/qualcomm/phy-qcom-qmp-ufs.c
->>>> +++ b/drivers/phy/qualcomm/phy-qcom-qmp-ufs.c
->>>> @@ -1758,19 +1758,6 @@ static void qmp_ufs_init_registers(struct qmp_ufs *qmp, const struct qmp_phy_cfg
->>>>    		qmp_ufs_init_all(qmp, &cfg->tbls_hs_b);
->>>>    }
->>>> -static int qmp_ufs_com_exit(struct qmp_ufs *qmp)
->>>> -{
->>>> -	const struct qmp_phy_cfg *cfg = qmp->cfg;
->>>> -
->>>> -	reset_control_assert(qmp->ufs_reset);
->>>> -
->>>> -	clk_bulk_disable_unprepare(qmp->num_clks, qmp->clks);
->>>> -
->>>> -	regulator_bulk_disable(cfg->num_vregs, qmp->vregs);
->>>> -
->>>> -	return 0;
->>>> -}
->>>> -
->>>>    static int qmp_ufs_power_on(struct phy *phy)
->>>>    {
->>>>    	struct qmp_ufs *qmp = phy_get_drvdata(phy);
->>>> @@ -1851,7 +1838,11 @@ static int qmp_ufs_power_off(struct phy *phy)
->>>>    	qphy_clrbits(qmp->pcs, cfg->regs[QPHY_PCS_POWER_DOWN_CONTROL],
->>>>    			SW_PWRDN);
->>>> -	qmp_ufs_com_exit(qmp);
->>>> +	/* Turn off all the phy clocks */
->>>
->>> You should drop this and below comment. They add no value.
->>
->> Comments are actually provided for each operation within qmp_ufs_power_off
->> which actually facilitate understanding of all actions performed by the
->> function which may not be fully clear by code. Hence
->> I thought to keep the comments. But If you insist i'll remove.
->>
-> 
-> For complex code, comment should be added indeed. But for
-> clk_bulk_disable_unprepare() and regulator_bulk_disable(), NO. It is obvious
-> that they turn off clock and regulators.
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-ok sure, will remove it.
-
-> 
-> - Mani
-> 
-
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
