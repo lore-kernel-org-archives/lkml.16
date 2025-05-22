@@ -1,97 +1,69 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BF1919ABDE
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 09:47:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.4])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1EE4119ABDE;
+	Thu, 22 May 2025 09:47:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747907252; cv=none; b=MzHjDyt7kgz6sJz3RlNyLrvk3oVJK+OWxYs3RBXS8RYOaM7fBYMyGaMCz0yrSG2FuxDZoZNbjr2ZIJYz55BEE0CWWFp6moXMUVZxF3tSkWsVHkCmsnrChey6sv/xjMylTht2UIAEnnbq1rD08vzR0oaeJ+Y4Zfxasc/mlZZGwDg=
+	t=1747907260; cv=none; b=nYou9YFtdrtR2vIOHE/TLiSL8N2wwtIOXyFV/E+fEf5l5xUJ2CqvdOv3a5YrDruV0CfNLov9SrOQs+YLlbKA/rP/l4CNy0k3w67cBnQYjjp8L/9gqAb0vEZYq/PpFAOseFGx4BaE/0aXstNqiUrVdzE64QfqTn+mC/+xGfPOmIA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747907252; c=relaxed/simple;
-	bh=KG+s4PtaPgSpBFVQKiFr3oBf0P0d1Ti4Oj0Puwts4+I=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=n+rzFJNlGAV42CntvdhTfrLzeZDrifZ6tUBHtvttgOzhuHdXPpakaiT39Mg0X4PuzgADPqOtgQ4KQy0+dZda7yeyVCziyxeEFrZDMsUhFG20QlHb4MTK2quUoCL+McWELz9r2RWoAK2RxhPXr2/Dg8vG/83MYBYX7exHZ2OXJTA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FLoARL14; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1747907260; c=relaxed/simple;
+	bh=Q/JtzSsynX2wUmCK1eEor5G/XtxF0d+v18cJ5Ise+c8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
+	 MIME-Version:Message-ID; b=LETHg81pEvr62CKM2LI6+SpvNwmRjWCFE4GYUaI3OtxFMlsl5VVlWT8bwdpnMxLrRF3gvlP4aSj9ChWbRjzxX60ri28eVjZ7Mu50aWVIeEsWSGOljWSnvHhoPpGkvCuDCMWRmTie+QhhCdoIefVRKIe5RtrzfTtbGuydBzkXdNI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=fail (1024-bit key) header.d=163.com header.i=@163.com header.b=MGX/qAUj reason="signature verification failed"; arc=none smtp.client-ip=220.197.31.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FLoARL14"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747907250; x=1779443250;
-  h=date:from:to:cc:subject:message-id;
-  bh=KG+s4PtaPgSpBFVQKiFr3oBf0P0d1Ti4Oj0Puwts4+I=;
-  b=FLoARL14BWzkAkwb6eKkm8kVFKYMdz8U5S9k4LyV2vpf0PVf6xd6UCF3
-   ZveXYoWp+YDcXF9/bO8txc7uSSeVpf1SfSzEBGKGixyGjns0LI78hdZpQ
-   4JAKnw9UM5d1cNlAcB56aEFTlQsc8bKCLZwBvAaVrP3ZG1Rkq/LgmuPve
-   gVkidPjVTnMPDTISH5e6KImNNXrzFK50jEqKMrZIuJJtN3322ULmnN1gj
-   dh1cAthGUMQ3Q4CrbqPp+56nlID3/vswCzqPHg4rP9/Vn8RA4A/hcr9in
-   va3IVw7kauRzTbc0ozQ3H6fC2/f5etNXqc3FMbdyfJwVZMQndEXQLmDDX
-   A==;
-X-CSE-ConnectionGUID: i9GF/Y1jTiSOyy+hzZ2UEA==
-X-CSE-MsgGUID: UhT9HgBARKWTN4w3PrYFRQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11440"; a="50025396"
-X-IronPort-AV: E=Sophos;i="6.15,305,1739865600"; 
-   d="scan'208";a="50025396"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2025 02:47:29 -0700
-X-CSE-ConnectionGUID: Sd8YD10bTkC5mJSiYEtDnQ==
-X-CSE-MsgGUID: 3D9+ih0fSH2G2p6bICUB9Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,305,1739865600"; 
-   d="scan'208";a="141044026"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by orviesa007.jf.intel.com with ESMTP; 22 May 2025 02:47:28 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uI2WM-000PBM-0f;
-	Thu, 22 May 2025 09:47:26 +0000
-Date: Thu, 22 May 2025 17:47:23 +0800
-From: kernel test robot <lkp@intel.com>
-To: "x86-ml" <x86@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Subject: [tip:x86/core] BUILD SUCCESS
- 6a7c3c2606105a41dde81002c0037420bc1ddf00
-Message-ID: <202505221713.V97AdmW3-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b="MGX/qAUj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Date:From:To:Subject:Content-Type:MIME-Version:
+	Message-ID; bh=UkSR7r/KpcJT49OPCs8Qy98yUDr2Bj0rxe+RJe/hqD0=; b=M
+	GX/qAUjDTJgIUt2mcAIMmT6/3vBpiJSnPYHJWlw0PebKeO18qfPYACXADub4SZmm
+	qUlntSYcmtF76KizoD906deKxvJ76WMLybu1ykQaHR8zeNti9nq3eTO1dc9jZhqP
+	A5tEJ4sDdZQksUP8LN+xBFUKrAQ/d/EpLIzCKe+Xtc=
+Received: from 00107082$163.com ( [111.35.189.95] ) by
+ ajax-webmail-wmsvr-40-100 (Coremail) ; Thu, 22 May 2025 17:47:17 +0800
+ (CST)
+Date: Thu, 22 May 2025 17:47:17 +0800 (CST)
+From: "David Wang" <00107082@163.com>
+To: "Greg KH" <gregkh@linuxfoundation.org>, mathias.nyman@intel.com,
+	oneukum@suse.com, stern@rowland.harvard.edu
+Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 1/2] USB: core: add a memory pool to urb caching
+ host-controller private data
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20240801(9da12a7b)
+ Copyright (c) 2002-2025 www.mailtech.cn 163com
+In-Reply-To: <2025052257-expectant-macarena-69ee@gregkh>
+References: <a235e322e270942dc3d607d4b46ff7db29abeb2d.1747897366.git.00107082@163.com>
+ <2025052257-expectant-macarena-69ee@gregkh>
+X-NTES-SC: AL_Qu2fBfWbuEoo4SOQYOkZnEYQheY4XMKyuPkg1YJXOp80siTL9w4MZm9zFkDN986wFQWhoAiIdylMx/1of7R9bZKdajeYGU2/DaUyEP9X97ij
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=GBK
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Message-ID: <2ffd5bed.9108.196f763d60d.Coremail.00107082@163.com>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID:ZCgvCgDnzwOm8i5oi8oKAA--.22741W
+X-CM-SenderInfo: qqqrilqqysqiywtou0bp/xtbBkBBVqmgu58u1pQACsH
+X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/core
-branch HEAD: 6a7c3c2606105a41dde81002c0037420bc1ddf00  x86/bugs: Fix spectre_v2 mitigation default on Intel
-
-elapsed time: 1395m
-
-configs tested: 20
-configs skipped: 127
-
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-tested configs:
-i386                         allmodconfig    gcc-12
-i386                          allnoconfig    gcc-12
-i386                         allyesconfig    gcc-12
-i386    buildonly-randconfig-001-20250521    clang-20
-i386    buildonly-randconfig-002-20250521    clang-20
-i386    buildonly-randconfig-003-20250521    gcc-12
-i386    buildonly-randconfig-004-20250521    clang-20
-i386    buildonly-randconfig-005-20250521    gcc-12
-i386    buildonly-randconfig-006-20250521    gcc-12
-i386                            defconfig    clang-20
-x86_64                        allnoconfig    clang-20
-x86_64                       allyesconfig    clang-20
-x86_64  buildonly-randconfig-001-20250521    clang-20
-x86_64  buildonly-randconfig-002-20250521    clang-20
-x86_64  buildonly-randconfig-003-20250521    gcc-12
-x86_64  buildonly-randconfig-004-20250521    gcc-12
-x86_64  buildonly-randconfig-005-20250521    clang-20
-x86_64  buildonly-randconfig-006-20250521    clang-20
-x86_64                          defconfig    gcc-11
-x86_64                      rhel-9.4-rust    clang-18
-
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+CkF0IDIwMjUtMDUtMjIgMTY6MzM6NDIsICJHcmVnIEtIIiA8Z3JlZ2toQGxpbnV4Zm91bmRhdGlv
+bi5vcmc+IHdyb3RlOgo+T24gVGh1LCBNYXkgMjIsIDIwMjUgYXQgMDM6MDk6NDNQTSArMDgwMCwg
+RGF2aWQgV2FuZyB3cm90ZToKPj4gRnJvbSBhbiBlbmQtdXNlcidzIHBlcnNwZWN0aXZlLCB0aGUg
+cGVyZm9ybWFuY2UgZGlmZmVyZW5jZSB3aXRoIHRoaXMgY2hhbmdlCj4+IGlzIGluc2lnbmlmaWNh
+bnQgd2hlbiBzeXN0ZW0gaXMgdW5kZXIgbm8gbWVtb3J5IHByZXNzdXJlLCBhbmQgd2hlbiB1bmRl
+cgo+PiBoZWF2eSBtZW1vcnkgcHJlc3N1cmUuIFdoZW4gc3lzdGVtIGlzIHVuZGVyIGhlYXZ5IG1l
+bW9yeSBwcmVzc3VyZSwKPj4gZXZlcnl0aGluZyBpcyBzbG93LiAgVGhlcmUgY291bGQgYmUgYSBw
+b2ludCBpbi1iZXR3ZWVuIG5vIG1lbW9yeSBwcmVzc3VyZQo+PiBhbmQgaGVhdnkgbWVtb3J5IHBy
+ZXNzdXJlIHdoZXJlIHRoZXNlIDFrKy9zIG1lbW9yeSBhbGxvY2F0aW9ucyB3b3VsZAo+PiBkb21p
+bmF0ZSB0aGUgcGVyZm9ybWFuY2UsIGJ1dCB2ZXJ5IGhhcmQgdG8gcGlucG9pbnQgaXQuCj4KPkZv
+ciB0aGlzIHJlYXNvbiBhbG9uZSBJIGNhbid0IHRha2UgdGhpcyBjaGFuZ2UsIHNvcnJ5LgoKU3Rp
+bGwsIHJlYXNvbmFibGUgdG8gbWUuLi4uCj4KPkFsc28sIGFzIG90aGVycyBoYXZlIHN0YXRlZCwg
+dGhpcyBjb3VsZCBiZSBkb25lIGluIHRoZSBoY2QgZHJpdmVycwo+dGhlbXNlbHZlcyBpZiB0aGV5
+IHdhbnQgdG8sIG5vIG5lZWQgdG8gcHVzaCB0aGlzIGludG8gdGhlIHVzYiBjb3JlLgoKCj4KPnRo
+YW5rcywKPgo+Z3JlZyBrLWgKCgpUaGFua3MgYWxsIHlvdSBndXlzIGZvciB0YWtpbmcgdGltZSBy
+ZXZpZXdpbmcvZGlzY3Vzc2luZyB0aGlzLgoKRGF2aWQK
