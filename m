@@ -1,109 +1,136 @@
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CBB9230BC2
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 11:47:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 369971EEA28
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 11:49:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747914454; cv=none; b=PRB26nCPJUeQJZesZPt+59FYm/Ifuir0AU2r59+QpgAEojw6DiaJbdtOfpEZkisB9cY2KOnG5qTzhYMQLShkuNcaEEt0e1MxbZlK3ryawOARR6Zp/te42E5riK1iykK7B6KO5LpcrIWQ9ourb2DWwhMPlNctrmwJvYyuRwRDF8s=
+	t=1747914571; cv=none; b=dm5C5HID9Xu7t2bmko0VG27SIh9DQgNvz33VQTfDBGqgJSlf6FZw1Yxp6ZbOGq4i6So1R/dTHpONKUi+TcFxRrkLckaj0AGa7SE+6MXh89upkHNh7umHb4UdcCphtN2YOT61ibixXxDI3YQPnx8Vlvetyd982r+osaYqGRq3yFo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747914454; c=relaxed/simple;
-	bh=DtQkUHQiAtMZoY9LNzs7hqcdhXOPWRoXKiwfHlU2cu0=;
+	s=arc-20240116; t=1747914571; c=relaxed/simple;
+	bh=TuBx5StHK8VP1xW3hG0mkITonEVjlS9yKCzdQ9VZWGo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=e21C9JKi/scG71nKBH/+RlKRv7w29M+y5dUCIJYxHT2KUIkClD+CnbT5llqGAVlA0cb7XmqtIfb6aT0YWDY4kUE3fRGxNGAJa0VWAtTAGB0CC6Hp/lJw7QoASwPgc43NcOji6P86+laQqSXRKXLmTxPJkjbSriFqBuQUoYccXAQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=qqlkcg7n; arc=none smtp.client-ip=209.85.210.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=n5DjDoZMv3MDd6Aac7ckWwwEOYvXxSvcWPhtx/sd+7MRd9gY8Xk9FeU2IvjaY4LEygJn4d/myv9t8IV7YZwwZefU3gh9P9SA+WJ3BZAfXuYC0W1kYsrjRgdtr3RtlsJVG+Pct/e5EJLzlYTBuvu3XAKgrIU9ziA3XzBFeUko2VQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=P2TFZOnl; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=w7a29t8u; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=P2TFZOnl; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=w7a29t8u; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qqlkcg7n"
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-742c27df0daso4367172b3a.1
-        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 04:47:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1747914452; x=1748519252; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=tJ1gudwiHyu+TUV61FEDK/7QlJCEvUcmgmmYX9winDM=;
-        b=qqlkcg7nkAkV+Csuzke1W93Z5DxDzLS4dzKMAuFeNiUvzlPwW+v5vqnmpagddFjtUv
-         de+xp5LABTbpKga6iwteixLQqLBP/jKygw4o/X0QI4EhCoh/Ihiyfiza/XInqGT2U24T
-         A6wfZTzHPBHqDiejZDDWu0LjoHPpIjFL1sagE7yJiuKWcsL/uvUOX8of5JPcI8y01IsQ
-         Ekwm+itSY1rH0c6oTW+p0L6jLrjMbA8gXwHdMB6SZBdH6zBIJRzJiJbMQro0pNjkaAa6
-         GKXkiHzZMd0PQwAo4QpDmGo0IIctqoToEZuhYEZuIMCNvDeFJSI64AtwD/lKEeD8p2gA
-         2MRA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747914452; x=1748519252;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=tJ1gudwiHyu+TUV61FEDK/7QlJCEvUcmgmmYX9winDM=;
-        b=F98lzN1VOpy0fx8bweRKk6PHoAT/LYdLgQa9cq4DeYy5+CRRK3KIrelF2OMaNIHiYv
-         44wWBlYd1nvOrJJXzBpaJa+A6R+SK4OuXsI4fho0JvvwDLJSOAo/uavIufqBgMkLUy2C
-         H7KJDQ2Z/1aqhLHLNX1QnbsMgPDao0pa8f/KiSVzjOiQbUhWoW6wLZIum3FCZOdEIUkZ
-         BqzihP6vGEMg/31H7zgzeJLgECnpTKKvQSVUevFplQsqLHANTp1GYNdJZH/KzSgRE9H8
-         RgVixEtK1Qosz49Pw8Fq+NR7M2aw00SL/rZFJW6iaIw7dQ1aTU6IqXJtCAyzSKJuYbFR
-         4Pvw==
-X-Forwarded-Encrypted: i=1; AJvYcCVwnfVDik6u3mnr5ashKikQ3kpTxsOdrP+R3Zt5/kWyZVsJATppqaaIr310owE73eKxVEeBqRQC0pMOs1c=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwUSgM7F+AWHMuikkkiNEY2UGj9o6cIAj20h93FIkrGwQAFh4vo
-	idCT9yhtpTaaHavmyuTu+BT+TTxzTVF2KD4qN6meuZCEr0NqZjEMfwpZAAkAPXTjjw==
-X-Gm-Gg: ASbGncth6D9hMppf6wke3dl6sgiGGhsdFcNfWEkWC3ycggNIciTmArq6E7AGbHG9s/p
-	G7q5+YBC7q2wfq00NT5zwm3XmaNzXs+B2vm3s/bOKrIQ+/4vssVO08hlWP9CECeaVKo+ExJw7MR
-	1GfKwz7eYlhVPX9Q9o9A/KGBNjer4L3+yhsgM/Lxgxhe55F8GwrYoELboO2BRDSvbF1bTL+DHv4
-	puPxd6MojPvaidIlIdHkkttZkuxNWdMPugAhAgJ/Fzulhkc8CxiTDAjPu6AnRDgN4qRKN8tJYeR
-	lYFkNkLhmQ2e+CtDqyMSUXTTFiwnYGJxsF8autxGlFsSOmxnbFSEXh5sjKfe9g==
-X-Google-Smtp-Source: AGHT+IHC0b/jva12Q7TKdRYGBUhf44wv/UkRVQDXr+TC6tXwIOo1ebhkI3CtBJXlt3OvApFzHql4fA==
-X-Received: by 2002:a05:6a21:900c:b0:1f5:790c:947 with SMTP id adf61e73a8af0-216218f7a98mr33151680637.19.1747914451678;
-        Thu, 22 May 2025 04:47:31 -0700 (PDT)
-Received: from thinkpad ([120.60.130.60])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b26eaf6dd83sm11140491a12.18.2025.05.22.04.47.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 May 2025 04:47:31 -0700 (PDT)
-Date: Thu, 22 May 2025 17:17:26 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Hans Zhang <18255117159@163.com>
-Cc: bhelgaas@google.com, tglx@linutronix.de, kw@linux.com, 
-	mahesh@linux.ibm.com, oohall@gmail.com, linux-pci@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH 0/4] pci: implement "pci=aer_panic"
-Message-ID: <e2iu7w3sn7m4zwo6ork2mbfjcfixo5jn5ydshkefezsgtquvh6@kjdvxgiapbjj>
-References: <20250516165518.125495-1-18255117159@163.com>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="P2TFZOnl";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="w7a29t8u";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="P2TFZOnl";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="w7a29t8u"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 3F03B21A1C;
+	Thu, 22 May 2025 11:49:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1747914568; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=GQRUtWyOBWmX6kLMyTdH5usDFLYr4fmjaiIBz46kNI8=;
+	b=P2TFZOnl4F5ci4DzulKguOM5w1aVEkvgjuxVMzS4WT1rvpAK/PoJ44urk1jsHWxEncr4qL
+	1Qz/WgoC8nc4uSQGVTtRfhgmffmbaHY8/MXjtbWXaWaUNE90R/Pgs69OkzQSP+D/dQDf6K
+	Lh/p3Q97xyWKy2LssxEQwUEa9zrLdBQ=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1747914568;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=GQRUtWyOBWmX6kLMyTdH5usDFLYr4fmjaiIBz46kNI8=;
+	b=w7a29t8uekXu6usd189cm7ZRbvY+/sniNqB717Fc59cj5YGvVjosTB3V/hkUBL9XuyeEnH
+	fQ2ux3/0sMPqIXCw==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1747914568; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=GQRUtWyOBWmX6kLMyTdH5usDFLYr4fmjaiIBz46kNI8=;
+	b=P2TFZOnl4F5ci4DzulKguOM5w1aVEkvgjuxVMzS4WT1rvpAK/PoJ44urk1jsHWxEncr4qL
+	1Qz/WgoC8nc4uSQGVTtRfhgmffmbaHY8/MXjtbWXaWaUNE90R/Pgs69OkzQSP+D/dQDf6K
+	Lh/p3Q97xyWKy2LssxEQwUEa9zrLdBQ=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1747914568;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=GQRUtWyOBWmX6kLMyTdH5usDFLYr4fmjaiIBz46kNI8=;
+	b=w7a29t8uekXu6usd189cm7ZRbvY+/sniNqB717Fc59cj5YGvVjosTB3V/hkUBL9XuyeEnH
+	fQ2ux3/0sMPqIXCw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 0E663137B8;
+	Thu, 22 May 2025 11:49:28 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id n1mzAkgPL2g5YwAAD6G6ig
+	(envelope-from <osalvador@suse.de>); Thu, 22 May 2025 11:49:28 +0000
+Date: Thu, 22 May 2025 13:49:26 +0200
+From: Oscar Salvador <osalvador@suse.de>
+To: Ge Yang <yangge1116@126.com>
+Cc: Muchun Song <muchun.song@linux.dev>, akpm@linux-foundation.org,
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org, 21cnbao@gmail.com, david@redhat.com,
+	baolin.wang@linux.alibaba.com, liuzixing@hygon.cn
+Subject: Re: [PATCH] mm/hugetlb: fix kernel NULL pointer dereference when
+ replacing free hugetlb folios
+Message-ID: <aC8PRkyd3y74Ph5R@localhost.localdomain>
+References: <1747884137-26685-1-git-send-email-yangge1116@126.com>
+ <644FF836-9DC7-42B4-BACE-C433E637B885@linux.dev>
+ <aC63fmFKK84K7YiZ@localhost.localdomain>
+ <ff6bd560-d249-418f-81f4-7cbe055a25ec@126.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250516165518.125495-1-18255117159@163.com>
+In-Reply-To: <ff6bd560-d249-418f-81f4-7cbe055a25ec@126.com>
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Spam-Score: -1.30
+X-Spamd-Result: default: False [-1.30 / 50.00];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_TLS_ALL(0.00)[];
+	FREEMAIL_TO(0.00)[126.com];
+	ARC_NA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_SEVEN(0.00)[10];
+	FREEMAIL_ENVRCPT(0.00)[126.com,gmail.com];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[linux.dev,linux-foundation.org,kvack.org,vger.kernel.org,gmail.com,redhat.com,linux.alibaba.com,hygon.cn];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo]
 
-On Sat, May 17, 2025 at 12:55:14AM +0800, Hans Zhang wrote:
-> The following series introduces a new kernel command-line option aer_panic
-> to enhance error handling for PCIe Advanced Error Reporting (AER) in
-> mission-critical environments. This feature ensures deterministic recover
-> from fatal PCIe errors by triggering a controlled kernel panic when device
-> recovery fails, avoiding indefinite system hangs.
-> 
-> Problem Statement
-> In systems where unresolved PCIe errors (e.g., bus hangs) occur,
-> traditional error recovery mechanisms may leave the system unresponsive
-> indefinitely. This is unacceptable for high-availability environment
-> requiring prompt recovery via reboot.
-> 
-> Solution
-> The aer_panic option forces a kernel panic on unrecoverable AER errors.
-> This bypasses prolonged recovery attempts and ensures immediate reboot.
-> 
+On Thu, May 22, 2025 at 07:34:56PM +0800, Ge Yang wrote:
+> It seems that we cannot simply remove the folio_test_hugetlb() check. The
+> reasons are as follows:
 
-You should not panic the kernel when a PCI error occurs (even if it is a fatal
-one). You should instead try to reset the root complex. For that you need this
-series that got merged recently:
-https://lore.kernel.org/all/20250508-pcie-reset-slot-v4-0-7050093e2b50@linaro.org
+Yeah, my thought was whether we could move the folio_hstate within
+alloc_and_dissolve_hugetlb_folio(), since the latter really needs to take the
+lock.
+But isolate_or_dissolve_huge_page() also needs the 'hstate' not only to
+pass it onto alloc_and_dissolve_hugetlb_folio() but to check whether
+hstate is gigantic.
 
-PS: You need to populate the slot_reset callback in your controller driver to
-reset the controller in the event of a fatal AER error or link down.
+Umh, kinda hate sparkling the locks all around.
 
-- Mani
 
 -- 
-மணிவண்ணன் சதாசிவம்
+Oscar Salvador
+SUSE Labs
