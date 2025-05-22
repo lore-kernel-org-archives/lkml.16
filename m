@@ -1,175 +1,119 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3207117ADF8;
-	Thu, 22 May 2025 17:18:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4916018CC1D;
+	Thu, 22 May 2025 17:20:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747934307; cv=none; b=mlSm6Svidhn2Qi/YWQdDI+deB4jlOx77YoxR9hZsuwkSljHCZinZXNKwYx77mwQMBkIQQPxpRn8i5327TMbn+lRFtn28A0VmadAwpuhUjY15Gucb4fMgFh5Gq+LzlGv/L1UoI9ISIr4nzYVD64yf/3LWb9YGhnPWh1RYf4HP4dA=
+	t=1747934448; cv=none; b=AreDKDJJqbv0y/XX40w7R1XK02GCEu4/HszTRf+j9Yf7hN0dr1LNiAOc38ekv6Rt0Q5BIT6RsMNOI/sBzBtdaPXLJxjrzbUBWK7yEiocrJ9CZx3VbyykXw1ti7w2qELHQBu4M598nC2JFsAaFhzrPAm47vAe0M/FcO/FVm2UxlI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747934307; c=relaxed/simple;
-	bh=zoiPNzQG3XUrn235BOv7NIfR26hN61HtRaFbLnKy1Vc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kN3PJCvqZGeW6SPWxMhHbgjv/ATugTlVdKFl4f/XFarw7z4Fsg1ZNmBBgQybrd+WOeTAfJtWrn0TzferpwAVIIa91XVX8SoRBO73fWMbGnAk7uqfDxzNMqaj1tHrYzaX2zkE+xKrCgq2vjh2TlUEVFMuaLGR/1bkisc6wL5b5K4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=Qj42CTTA; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1747934448; c=relaxed/simple;
+	bh=f0XMvMxyxmQO+2lM8j8iwFTLKsVl26kGRvuGKeTW2FI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gyHmQX0vd0PIGZgmFP39WP/rP9xk9LaF6ieCw8TDDZ6yb21osWHHURjkmjbyXoOLOJ3p9Vs8Axd5+eJL1rxRpPvDJCRboz24hibjljLIuNSm9avBk7o4xikaILaVpKeDi/h3i9cX/j1TQyT/UEQltPIYd7LBJ18Yi4cFqCSeTOk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dImguw1T; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="Qj42CTTA"
-Received: from terminus.zytor.com (terminus.zytor.com [IPv6:2607:7c80:54:3:0:0:0:136])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 54MHHsud3082071
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-	Thu, 22 May 2025 10:17:58 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 54MHHsud3082071
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025042001; t=1747934278;
-	bh=OLqzFsjMhr8qRTsT8xIWPFDJF2Vi1TEdICQS1PuOJeI=;
-	h=From:To:Cc:Subject:Date:From;
-	b=Qj42CTTAr3kJj6rTFUWTp9BH7/b2b/DgOWxFGo82TMO34VvamZaW3ztazkQ8k4ebu
-	 qN4/P/G09vL3FKaDJ0WW7KsuViKKGfbcL+vtQ+daqDtkgnwf4IxUTYZbFgrdxFRv42
-	 Js3OIxM1GAxvqFah78Y9i/OQru/oNC7hLcICiDnY701mDbfJLaewx8oZCOlY8nBou3
-	 QpFLgSy+0jm/ckVMxjRwPAPjlrIYBPoMGtKUgUtZq3GSb7Fax9MpFQFHeNO4Mraabq
-	 2TwMcyg6tezTQdSAK8GqeGKXcZbtmgaSiZyVuCOCVCovUygG4z4ow2dYOD+TLVaQeQ
-	 VWM+ctFFhyfkw==
-From: "Xin Li (Intel)" <xin@zytor.com>
-To: linux-kernel@vger.kernel.org
-Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        peterz@infradead.org, andrew.cooper3@citrix.com,
-        stable@vger.kernel.org
-Subject: [PATCH v2 1/1] x86/fred/signal: Prevent single-step upon ERETU completion
-Date: Thu, 22 May 2025 10:17:54 -0700
-Message-ID: <20250522171754.3082061-1-xin@zytor.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dImguw1T"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0759C4CEF4;
+	Thu, 22 May 2025 17:20:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747934447;
+	bh=f0XMvMxyxmQO+2lM8j8iwFTLKsVl26kGRvuGKeTW2FI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=dImguw1T60mad+h3HSsvAIAGBZoPyTPvysg0PLKfbw7ZusucDBwWkXb/t8dv8WMOU
+	 ZZ6aAsxZ3NJaHzMeK/jILjLP3f8g/G5mfEWuPVyaHDO7YU2O0/3emWRgm3pOcU/MoM
+	 JmlGrDbi1bgSs7VKOTVEUhua/5BFdd5TCnrm1JsexjraKyYjwoxxR/waR0FmqALK7U
+	 xbqfkbyRGTquiPEsVtBNQYh/T7x6txLXkXBg1QEvdEh+0GNyr9mlk8LW4muXOp/J3t
+	 wYvzYg2cpvpsRfSGiwFDKDnCHx7VRengnDHNYN1c1iRuk7Zj09NcuXByPiXItZX38l
+	 KVc5EXz0yFjaw==
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-ac34257295dso1339062266b.2;
+        Thu, 22 May 2025 10:20:47 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVXT1/6UD6XBHV1JonEYQL83WmOLTqSbLuSoXXgaYBLlGMDKtdWHtPOqDV39cvtHgvoVS2QCpRiAS0=@vger.kernel.org, AJvYcCVgpdCRHCeBWsPqcw4v0ko0LAS0O/yxV7mAdAKLLo15EzOWmfRZeA9i36m6ThmJBZcYaMENVugZUgwO/AfaJU6a8A==@vger.kernel.org, AJvYcCWHsSwGOiHjE6vkKn7iKwfN2UTTtLgRspCyQIPzw7DY8BzjuReaomOD5TZcV8XMMOtUH3PJ/Kn5wlhQw5HB@vger.kernel.org
+X-Gm-Message-State: AOJu0YydNwJe1+3AVpaKYlVtmtTdUIpYPn8qRTGXsZY+w8SbAmcZzGvU
+	f541O1zAvQYPeW+SG1YLN6jtQFX0yCDUZUTJJXbE8shoJIDjB/SwqzQLn0JP2cg7kDgK5JDUQ+0
+	g4HGjV1J6GOV9l5pQqDhpmNBytDqQ8A==
+X-Google-Smtp-Source: AGHT+IGAYYG+vIgGuI/ayC2uGqWgyniPCcMHhUSyeQcygsPjUjSYmhf9rYJn77siFd52fYZ5ibkezDZJq/F4ygapM/I=
+X-Received: by 2002:a17:907:3f08:b0:ad5:6939:8333 with SMTP id
+ a640c23a62f3a-ad569398704mr1462923066b.37.1747934446333; Thu, 22 May 2025
+ 10:20:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250520-arm-brbe-v19-v22-0-c1ddde38e7f8@kernel.org>
+ <20250520-arm-brbe-v19-v22-2-c1ddde38e7f8@kernel.org> <aC9NhvYzajduVm7y@e133380.arm.com>
+In-Reply-To: <aC9NhvYzajduVm7y@e133380.arm.com>
+From: Rob Herring <robh@kernel.org>
+Date: Thu, 22 May 2025 12:20:35 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqKWY7rRGTbHXTmm4RC9F8fqrs133=75XFkVdm91bLHfaw@mail.gmail.com>
+X-Gm-Features: AX0GCFvVXljRLS6CQowdkTNTXjrD3dK31miPdgViETu3tYaW68KPRqx4Jf1fUa0
+Message-ID: <CAL_JsqKWY7rRGTbHXTmm4RC9F8fqrs133=75XFkVdm91bLHfaw@mail.gmail.com>
+Subject: Re: [PATCH v22 2/5] arm64: el2_setup.h: Make __init_el2_fgt labels
+ consistent, again
+To: Dave Martin <Dave.Martin@arm.com>
+Cc: Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Jonathan Corbet <corbet@lwn.net>, Marc Zyngier <maz@kernel.org>, 
+	Oliver Upton <oliver.upton@linux.dev>, Joey Gouly <joey.gouly@arm.com>, 
+	Suzuki K Poulose <suzuki.poulose@arm.com>, Zenghui Yu <yuzenghui@huawei.com>, 
+	James Clark <james.clark@linaro.org>, Anshuman Khandual <anshuman.khandual@arm.com>, 
+	Leo Yan <leo.yan@arm.com>, linux-arm-kernel@lists.infradead.org, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-doc@vger.kernel.org, kvmarm@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Xin Li <xin@zytor.com>
+On Thu, May 22, 2025 at 11:15=E2=80=AFAM Dave Martin <Dave.Martin@arm.com> =
+wrote:
+>
+> On Tue, May 20, 2025 at 05:27:37PM -0500, Rob Herring (Arm) wrote:
+> > From: Anshuman Khandual <anshuman.khandual@arm.com>
+> >
+> > Commit 5b39db6037e7 ("arm64: el2_setup.h: Rename some labels to be more
+> > diff-friendly") reworked the labels in __init_el2_fgt to say what's
+> > skipped rather than what the target location is. The exception was
+> > "set_fgt_" which is where registers are written. In reviewing the BRBE
+> > additions, Will suggested "set_debug_fgt_" where HDFGxTR_EL2 are
+> > written. Doing that would partially revert commit 5b39db6037e7 undoing
+> > the goal of minimizing additions here, but it would follow the
+> > convention for labels where registers are written.
+> >
+> > So let's do both. Branches that skip something go to a "skip" label and
+> > places that set registers have a "set" label. This results in some
+> > double labels, but it makes things entirely consistent.
+> >
+> > While we're here, the SME skip label was incorrectly named, so fix it.
+> >
+> > Reported-by: Will Deacon <will@kernel.org>
+> > Cc: Dave Martin <Dave.Martin@arm.com>
+> > Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+> > ---
+> > This one can be applied even if the rest of the series is not.
+> >
+> > v22:
+> >  - New patch
+> > ---
+> >  arch/arm64/include/asm/el2_setup.h | 10 +++++++---
+> >  1 file changed, 7 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/arch/arm64/include/asm/el2_setup.h b/arch/arm64/include/as=
+m/el2_setup.h
+> > index ebceaae3c749..30f57b0334a3 100644
+> > --- a/arch/arm64/include/asm/el2_setup.h
+> > +++ b/arch/arm64/include/asm/el2_setup.h
+> > @@ -204,19 +204,21 @@
+> >       orr     x0, x0, #(1 << 62)
+> >
+> >  .Lskip_spe_fgt_\@:
+> > +
+> > +.Lset_debug_fgt_\@:
+>
+> Dangling label?  There doesn't seem to be any branch to it in this
+> series, unless I've missed something.
 
-Clear the software event flag in the augmented SS to prevent infinite
-SIGTRAP handler loop if TF is used without an external debugger.
+I tried to explain that in the commit message. To have both what you
+wanted and what Will suggested, you end up with 2 labels in between
+the last skip and setting registers.
 
-Following is a typical single-stepping flow for a user process:
-
-1) The user process is prepared for single-stepping by setting
-   RFLAGS.TF = 1.
-2) When any instruction in user space completes, a #DB is triggered.
-3) The kernel handles the #DB and returns to user space, invoking the
-   SIGTRAP handler with RFLAGS.TF = 0.
-4) After the SIGTRAP handler finishes, the user process performs a
-   sigreturn syscall, restoring the original state, including
-   RFLAGS.TF = 1.
-5) Goto step 2.
-
-According to the FRED specification:
-
-A) Bit 17 in the augmented SS is designated as the software event
-   flag, which is set to 1 for FRED event delivery of SYSCALL,
-   SYSENTER, or INT n.
-B) If bit 17 of the augmented SS is 1 and ERETU would result in
-   RFLAGS.TF = 1, a single-step trap will be pending upon completion
-   of ERETU.
-
-In step 4) above, the software event flag is set upon the sigreturn
-syscall, and its corresponding ERETU would restore RFLAGS.TF = 1.
-This combination causes a pending single-step trap upon completion of
-ERETU.  Therefore, another #DB is triggered before any user space
-instruction is executed, which leads to an infinite loop in which the
-SIGTRAP handler keeps being invoked on the same user space IP.
-
-Suggested-by: H. Peter Anvin (Intel) <hpa@zytor.com>
-Signed-off-by: Xin Li (Intel) <xin@zytor.com>
-Cc: stable@vger.kernel.org
----
-
-Change in v2:
-*) Remove the check cpu_feature_enabled(X86_FEATURE_FRED), because
-   regs->fred_ss.swevent will always be 0 otherwise (H. Peter Anvin).
----
- arch/x86/include/asm/sighandling.h | 19 +++++++++++++++++++
- arch/x86/kernel/signal_32.c        |  4 ++++
- arch/x86/kernel/signal_64.c        |  4 ++++
- 3 files changed, 27 insertions(+)
-
-diff --git a/arch/x86/include/asm/sighandling.h b/arch/x86/include/asm/sighandling.h
-index e770c4fc47f4..637f7705f0b2 100644
---- a/arch/x86/include/asm/sighandling.h
-+++ b/arch/x86/include/asm/sighandling.h
-@@ -24,4 +24,23 @@ int ia32_setup_rt_frame(struct ksignal *ksig, struct pt_regs *regs);
- int x64_setup_rt_frame(struct ksignal *ksig, struct pt_regs *regs);
- int x32_setup_rt_frame(struct ksignal *ksig, struct pt_regs *regs);
- 
-+/*
-+ * To prevent infinite SIGTRAP handler loop if TF is used without an external
-+ * debugger, clear the software event flag in the augmented SS, ensuring no
-+ * single-step trap is pending upon ERETU completion.
-+ *
-+ * Note, this function should be called in sigreturn() before the original state
-+ * is restored to make sure the TF is read from the entry frame.
-+ */
-+static __always_inline void prevent_single_step_upon_eretu(struct pt_regs *regs)
-+{
-+	/*
-+	 * If the trap flag (TF) is set, i.e., the sigreturn() SYSCALL instruction
-+	 * is being single-stepped, do not clear the software event flag in the
-+	 * augmented SS, thus a debugger won't skip over the following instruction.
-+	 */
-+	if (IS_ENABLED(CONFIG_X86_FRED) && !(regs->flags & X86_EFLAGS_TF))
-+		regs->fred_ss.swevent = 0;
-+}
-+
- #endif /* _ASM_X86_SIGHANDLING_H */
-diff --git a/arch/x86/kernel/signal_32.c b/arch/x86/kernel/signal_32.c
-index 98123ff10506..42bbc42bd350 100644
---- a/arch/x86/kernel/signal_32.c
-+++ b/arch/x86/kernel/signal_32.c
-@@ -152,6 +152,8 @@ SYSCALL32_DEFINE0(sigreturn)
- 	struct sigframe_ia32 __user *frame = (struct sigframe_ia32 __user *)(regs->sp-8);
- 	sigset_t set;
- 
-+	prevent_single_step_upon_eretu(regs);
-+
- 	if (!access_ok(frame, sizeof(*frame)))
- 		goto badframe;
- 	if (__get_user(set.sig[0], &frame->sc.oldmask)
-@@ -175,6 +177,8 @@ SYSCALL32_DEFINE0(rt_sigreturn)
- 	struct rt_sigframe_ia32 __user *frame;
- 	sigset_t set;
- 
-+	prevent_single_step_upon_eretu(regs);
-+
- 	frame = (struct rt_sigframe_ia32 __user *)(regs->sp - 4);
- 
- 	if (!access_ok(frame, sizeof(*frame)))
-diff --git a/arch/x86/kernel/signal_64.c b/arch/x86/kernel/signal_64.c
-index ee9453891901..d483b585c6c6 100644
---- a/arch/x86/kernel/signal_64.c
-+++ b/arch/x86/kernel/signal_64.c
-@@ -250,6 +250,8 @@ SYSCALL_DEFINE0(rt_sigreturn)
- 	sigset_t set;
- 	unsigned long uc_flags;
- 
-+	prevent_single_step_upon_eretu(regs);
-+
- 	frame = (struct rt_sigframe __user *)(regs->sp - sizeof(long));
- 	if (!access_ok(frame, sizeof(*frame)))
- 		goto badframe;
-@@ -366,6 +368,8 @@ COMPAT_SYSCALL_DEFINE0(x32_rt_sigreturn)
- 	sigset_t set;
- 	unsigned long uc_flags;
- 
-+	prevent_single_step_upon_eretu(regs);
-+
- 	frame = (struct rt_sigframe_x32 __user *)(regs->sp - 8);
- 
- 	if (!access_ok(frame, sizeof(*frame)))
-
-base-commit: 6a7c3c2606105a41dde81002c0037420bc1ddf00
--- 
-2.49.0
-
+Rob
