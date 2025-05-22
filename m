@@ -1,80 +1,73 @@
-Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05on2057.outbound.protection.outlook.com [40.107.22.57])
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2080.outbound.protection.outlook.com [40.107.237.80])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26FD028A1EE;
-	Thu, 22 May 2025 14:35:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.22.57
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A38928C87C;
+	Thu, 22 May 2025 14:35:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.80
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747924553; cv=fail; b=XWxRTrwRq0BrznPcvuo4/es9LW5k85G+MxkmoWyKaofG9APanZhjSl5KXZsbIhGGDh+Lcz99kwPr8+xBvVjKfM4r5miGGQn1m+Tecyy2JnN3I+VN3imIgiK/oFpjD1jroN89hkINNmAR1eBKC2DLI5+a/07n4GKoFToy7hFvA1Y=
+	t=1747924554; cv=fail; b=dxaoQmDjJonj9+tCBsT677jEFV6rIovAuOPRNLjAT0fpKOihXosTLo5Bu3KH+Ea5pORNPy75Wj0c+8MfEs8MoJwbCI4WaS5f/+agtli9Ald7C7M6Y5R/iqPqUTHbs/on4wsodHEZjZXX/zwJNQVNdsxt2Y858IsH6rj0VGYT24k=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747924553; c=relaxed/simple;
-	bh=p3cAlDG2oe7D64MGpf/kBy8cafnimbqAZ0Fxql0rm2U=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=uMaKE+Aj3kYg48LzFZnRIkHCFvaPh8wTV/uDWww4btEg0GyVRrAtvLjPNWF7d+ijReUJ1yiEUYjNVarebaYC+8jzlJ0fZBkQCcWl5pSXU6K/vPIivt2ZgJIPTY2nyJIGF9t1Wjc+3qIO+VND+Sachl42PTW4n/yP3vBaztnA+s8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mt.com; spf=fail smtp.mailfrom=mt.com; dkim=pass (2048-bit key) header.d=mt.com header.i=@mt.com header.b=fuT+otJ/; arc=fail smtp.client-ip=40.107.22.57
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mt.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=mt.com
+	s=arc-20240116; t=1747924554; c=relaxed/simple;
+	bh=MAwl1pBLNbrU1A2lgMdTo5DAg3gzoNZnMnAm9rL3LMM=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=jd3uEvFjp6DVsNg1/9ZPU6SWJp9lLCecbIXvVGtE2JdSS15MtwLWhqGxj3ku1nKGzlS8mHwVRRnsxAtJ5QLdnBxFgvSgyvqwBuWb+nr8OngelnjbEEupXPwUe86Opn7QMPG636z21WDIgSq6TYj8rU2sj2ENCYM/D8fmW3sHxQI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=BySLE2MI; arc=fail smtp.client-ip=40.107.237.80
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mt.com header.i=@mt.com header.b="fuT+otJ/"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="BySLE2MI"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=KevpjyG3ZJoAia2hYmASsSI7pSEgyduUrgeDNZ/wRrZRfcuTenNi78P+T8QqNAwKd+Q1ROuF9+HzJyTmPHXYkIIxhS1jvYbkBYuqfKU8sVs6iHbO+JZcF+PTGJ6uDgrsuEqkU8Mz81HBfklThYE81lL5lZgSXEr3EVkDqUBpBizDyAOqpnztF/bmgbIMDiQkwMgju7drm+IwyedpLgUir8klLB6lQ7AtvtckPuCAF9r5nQPv/XtofYmgPnPPmUWRIdFLyw3auYYjkYM+Iu3/KKMQY/yopROy6PbdlmeYLtZTJB7B27nSA3v44C4VP52Vi0pEeByne7Chig0EL1B5yA==
+ b=nSfFDyBIjQq4XMFulMUau+QcK/4aZFRyM/usdCnRdfcbt5mriZPmbvgVf65i7y6Y0ScCplN0bjeaAK7OeuDnGwLc34la7whACUdR7tEtIZoHCBp5fvp/01dKyMr7cTvHuU2T5Po2lBVpylaCL0099cQG0YtkW99TMuroe5gInpXZFwc8nM5j0mAFfml/SUORaBmRjNxM2XGU3vlbzs/kpQmGS3kmifdRpSU6S6S6oXsUtA82JJ7hC1DFkZm/nYYBFg83fQ2DAhizK3wUkSxxxet6KNAs26fhepVqTkzAiS5ka+eJbycpgTMcC+f5+hjAQa50Ks50PzJkRP8DWhBCng==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=UQcYv33i+9n3cu/hqEBCZHrKU4GwhJibwK0luUi434s=;
- b=eQwOs0dJ5E6Y3gv+EmErI9rOJ1WE4UivK2/VWkZiX0K+/+iyDKnWYVKpuyum6iMXIE+qLZhBwauGCYZX3JM4OcW3iQ1DLgcwY0iEIj46IUA3Oq2062/SDW96v0kwojis3YPSoKtzUgmovEuYUWvhXgiuB6UOYt+SwlrLncYhwSTnE2Igf363EkaXzL17z0jNyn+AfhESU8Y7aqRdm3/fVIoqlGsmQ3fab6G7/ijGdJp70MjirJc4umfsoyeMgsg0gdNHZqGwVQXCjl/oXso66NAW+4xEoLV+WMqrGz2StkpAecrcDt2HW1smf8ZJBFtSbpTvpmnk/+n0s4f5iEH3TQ==
+ bh=Up4n+APw3P1oQczNOE0Ov9s3sXAXpFSORJzwdslgB9k=;
+ b=Rqad16gPnSQEg3gsBkKoy7ch9v/xG5J0X4jOWA71qdKtX3bbQqxac1Z0SH6QFIL88gfYQ4hxMotJgbBeAJxO5YR0flv+//wiQusQZcJvNnPuszaOKLiatKiDaMZ1gv8c7FLkSvydAf/+53ut1xKpmZt/HEabNlADHkl8F9d6eQ8wbPgICr5CFqMoLtSZ4eWciTEyi2E6/8AncBZC638ZRaMM0fXDmhHza8Lg+Af9bjqYsd9+ovgVL69SEWX4GN3s6lCd6h/EJzWrIhJFo791g1Qewg00e3h9i6ondMYRxFxHOvYavigyd2sexItDlZLr7pUmJ0PQmr0vr2gGbFfkSQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mt.com; dmarc=pass action=none header.from=mt.com; dkim=pass
- header.d=mt.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mt.com; s=selector2;
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UQcYv33i+9n3cu/hqEBCZHrKU4GwhJibwK0luUi434s=;
- b=fuT+otJ/rWIFV8/B4ANZaQgdJfnc5O3aidrjvvz59rVGQjbgO1g1iXIee8mflcCHkT07CE1L9XJ0nZgcPYP3gsvMmFOdAMgTlKwvW2QnE1FGcF9pxEmB1KDDzYS7r3pbXJwzL+CgGcQW73x0VqT5BTl6AwHsjQeA3eo/rkBzQn4PikOBA9E969437pWeCw/j/1+GWjx28pvzquAEMovtR2mPH0C95sf2tDXNiTtkAssBD6T9Z3IgEZpeJ9Bcb8X1o+jlSuZEJxwuOjaIVMsqk0PB7rrGi0KYHUiKB82UKTys4Ki8h6QMYIQfLyDN/mftpKR+ZD6GxDeubjNksAlSYw==
+ bh=Up4n+APw3P1oQczNOE0Ov9s3sXAXpFSORJzwdslgB9k=;
+ b=BySLE2MIA43brT8fjcnQSFdJ3dTejY8cRFZ6mrZDZSeu6DY7HuazBAyyQd0IImRQhhy2ooZD3aDtxVL77T9Vewz2bDXzDfOwxQeVkO1yNaigFlgj4JFYtjxOPAH3TAN/dZLua3QJNHuQJwhdrn2ykJ+6vSdY4IJ0Ero8tvSlmNo=
 Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=mt.com;
-Received: from DBBPR03MB10396.eurprd03.prod.outlook.com (2603:10a6:10:53a::11)
- by AS8PR03MB9912.eurprd03.prod.outlook.com (2603:10a6:20b:636::13) with
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from PH7PR12MB5685.namprd12.prod.outlook.com (2603:10b6:510:13c::22)
+ by SJ2PR12MB9209.namprd12.prod.outlook.com (2603:10b6:a03:558::22) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.20; Thu, 22 May
- 2025 14:35:49 +0000
-Received: from DBBPR03MB10396.eurprd03.prod.outlook.com
- ([fe80::ee3c:c9be:681:c0bf]) by DBBPR03MB10396.eurprd03.prod.outlook.com
- ([fe80::ee3c:c9be:681:c0bf%2]) with mapi id 15.20.8746.030; Thu, 22 May 2025
- 14:35:49 +0000
-From: Mathis Foerst <mathis.foerst@mt.com>
-To: linux-kernel@vger.kernel.org
-Cc: Mathis Foerst <mathis.foerst@mt.com>,
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Steve Longerbeam <slongerbeam@gmail.com>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	linux-media@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-staging@lists.linux.dev,
-	imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	manuel.traut@mt.com,
-	mathis.foerst@zuehlke.com
-Subject: [PATCH v6 2/7] media: mt9m114: Bypass PLL if required
-Date: Thu, 22 May 2025 16:35:06 +0200
-Message-Id: <20250522143512.112043-3-mathis.foerst@mt.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250522143512.112043-1-mathis.foerst@mt.com>
-References: <20250522143512.112043-1-mathis.foerst@mt.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: ZR2P278CA0001.CHEP278.PROD.OUTLOOK.COM
- (2603:10a6:910:50::9) To DBBPR03MB10396.eurprd03.prod.outlook.com
- (2603:10a6:10:53a::11)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.21; Thu, 22 May
+ 2025 14:35:48 +0000
+Received: from PH7PR12MB5685.namprd12.prod.outlook.com
+ ([fe80::46fb:96f2:7667:7ca5]) by PH7PR12MB5685.namprd12.prod.outlook.com
+ ([fe80::46fb:96f2:7667:7ca5%7]) with mapi id 15.20.8722.031; Thu, 22 May 2025
+ 14:35:47 +0000
+Message-ID: <f912b8c4-c37b-4c7c-ab9f-e1b44f6fcc13@amd.com>
+Date: Thu, 22 May 2025 16:35:42 +0200
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] drm/nouveau: Don't signal when killing the fence
+ context
+To: phasta@kernel.org, Danilo Krummrich <dakr@kernel.org>
+Cc: Lyude Paul <lyude@redhat.com>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>, Sumit Semwal <sumit.semwal@linaro.org>,
+ dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org, linux-media@vger.kernel.org
+References: <20250522112540.161411-2-phasta@kernel.org>
+ <20250522112540.161411-3-phasta@kernel.org>
+ <af03b541-0b69-4b3d-b498-b68e0beb3dcb@amd.com>
+ <06210b9dc5e5ea8365295b77942c3ca030f02729.camel@mailbox.org>
+ <eae0ff0f-31a6-433a-b255-9bdb4727a940@amd.com> <aC8fpEXYWZ9Oy41J@pollux>
+ <ebedece4-9758-47e9-b621-37b40e3f0fc3@amd.com>
+ <282de2b9251e3a1b793e02ef23675dace248725b.camel@mailbox.org>
+ <dcc9f52a-4f46-4f24-bb33-b3af583a1956@amd.com>
+ <3dda25c3108747bf1c7ab2974b2429a26f0762d0.camel@mailbox.org>
+Content-Language: en-US
+From: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
+In-Reply-To: <3dda25c3108747bf1c7ab2974b2429a26f0762d0.camel@mailbox.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: BLAPR03CA0094.namprd03.prod.outlook.com
+ (2603:10b6:208:32a::9) To PH7PR12MB5685.namprd12.prod.outlook.com
+ (2603:10b6:510:13c::22)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -82,216 +75,156 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DBBPR03MB10396:EE_|AS8PR03MB9912:EE_
-X-MS-Office365-Filtering-Correlation-Id: e756516b-560c-404b-70e8-08dd993df239
+X-MS-TrafficTypeDiagnostic: PH7PR12MB5685:EE_|SJ2PR12MB9209:EE_
+X-MS-Office365-Filtering-Correlation-Id: c39754ff-a034-4596-4ad7-08dd993df138
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|52116014|7416014|376014|1800799024|38350700014;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|7416014|376014;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?SVOggW/9C+VZNQIhug+JCoip/kW3VPm/nwVkz2ce8uGpiEi42cYQ48hnpGbc?=
- =?us-ascii?Q?Kjl6w7k11hKcVQCKt7y3QWcNX817XdHWBVm+gaa0v3ejONCzsQiZJHrBIMNp?=
- =?us-ascii?Q?IDkN9DtP9zfaVlrYuxYJ1qQNd9CB77qRBRuQMJKhd7RWVAhh425q04i8nSgO?=
- =?us-ascii?Q?YoCOqere4BQZT90PyIw7BWxkLd8+6Ifow8szymYYi2x3R34rQhdB35rO3M+Q?=
- =?us-ascii?Q?hu7FhKKTlM6ljJY8x6M/RUtUCllagprJbbnvPRbYc8uxsTni+/eWhwNzcRUg?=
- =?us-ascii?Q?dx0Uqn73NuIrkcjpjNusl4JAWpVKA5VQuS8rosss5bNTbsTbcYD8YLramJQK?=
- =?us-ascii?Q?jMoBA1FfawoBBuKb72WLX4S4pbrBV65UdR+lL8kwZR/BwxwwJW+aiWZY6Dpf?=
- =?us-ascii?Q?3nYI/BzJFM+DbIYeHlxf2DckhxWdbi77currwCRFWYeqZghwdxsUsVEBzQ/w?=
- =?us-ascii?Q?WLbmxpO6YCzrP9pWNVg8idqzNTWaVJvN7CCB+JKaXSB2H3IS6CqGMGoadiWD?=
- =?us-ascii?Q?woVHTR5zkMtw1A7sSAVBylmumDq5d9Bj4qPH4jaIogXeXFKxsxkYPn6VDaNd?=
- =?us-ascii?Q?q2AnYMfYS2HA9hBq5yej2AcdU1ciXjUISLRC2Xw9Eqjtlj11XkxzPUPzFQ6o?=
- =?us-ascii?Q?Hc4gwS2pdGYH+SW+qGIpEKoZMlE1j3tZafuAOZzF1g64fjDyyJgTQcP6NpbW?=
- =?us-ascii?Q?CsYA/rnmOToN1H3hqnfhcurZV8mq4ht+fNQIkHyOS6H6TGnhzSo+gHOZazGf?=
- =?us-ascii?Q?iWU49ZlM4B7ZbhZ46SAIwEmHlO3h7Ja4WieFdocFjMHNjuRw6FtVKs5Gci01?=
- =?us-ascii?Q?2gua5eBNOo2KRw6yUgN0v2U/oJaZyXSdvEQMQgVBxp8uwuGL6QnH1WJwzXMP?=
- =?us-ascii?Q?REbXuvEm3Mp0xJcO3++SQkxu+45nw2A+95HZ9/6ePwPanzqbzgwaVwbawL5M?=
- =?us-ascii?Q?fC1CsOqyXW5Iz8eaVfxfbuNprL6yPzIzXnrk4Sf8ulRx6UD3BCTwzcfSyph/?=
- =?us-ascii?Q?ZW/M4kH/PIQg+uGl9+4VVxH9qcUiQGnA1s0TodA1oJO+xvacBAWUGPY2jWPO?=
- =?us-ascii?Q?krDH1OwUzkFtbW29Wl8r9QoG49UvFQuC88vJBefCEY3db40SaM0bcPCWfoha?=
- =?us-ascii?Q?ClYekji3FNJQzEWPHMw6geedIeU90/fFC1Gr19OeClIAbryGy+QWy+sYjzih?=
- =?us-ascii?Q?/EX6Dnsma5pcFpbiZOvYamfn27ZI9ms2gO7FNWfXUtrFerxLxjBHOQTMetjq?=
- =?us-ascii?Q?3QXOKWfwCIVjbPN0ZoHxdLjULLxPvzH6zx3tCPcM6aJLEfl017NbZMADQfUR?=
- =?us-ascii?Q?9FqwlA6CDpK9XaJYVsyLPZ01TPm5UgDRV7IZAPHqH2axR+2Zi+/L+pCCrBko?=
- =?us-ascii?Q?grZMwdUR+yytK7t4I2DeyarfjJam2GgND/SDBwUEFh4X6FfedCX8ZTzuffwU?=
- =?us-ascii?Q?XA0rxO88xaAXECD9f6SkEWza7hX7uoEHDit+ZU61nudGHj38RhogdA=3D=3D?=
+	=?utf-8?B?aW51R0N2L0RpakRVS2R0OWxqVWpULy9IUDJQbGN3TFBCSzdZaDVUblhaSEFV?=
+ =?utf-8?B?NW5pTlNoajhBYmNIVXY4dkVraWE5ZUJIa2w0b0VPc0t0b2gxVWJiL045eTJS?=
+ =?utf-8?B?MjJjRkpESjZXYTI2ZDl6cTVnanRjanFuUk4vSGY4b2xSa1ozUjEyMTExVlFt?=
+ =?utf-8?B?YkMvWk9tQWZuSFE3NDJiRHExZUUrbklFMU5FMHZVL2JuaUc1RG1kbktQdnVy?=
+ =?utf-8?B?WC9FQVZOY244WHRIbkJUWEV5YWdUU3VWdlg2WXFBbi9KYW9leWZ4d1dQMjhW?=
+ =?utf-8?B?UFZ4bzNUUUp3Sk8yYTF2dWVCZ21rZ3psQWd5dzBWaVg1QXd3b3QwVUZJM2Fu?=
+ =?utf-8?B?dDJ2eXA3c3I0M0JZYklEcnd5Y3Z0WjdLZDd5ZWxsTnJKMzJvL05YblJMaDVv?=
+ =?utf-8?B?VnpsbmIzNXlVRklGdU0vcWllWVM4RExxTFl1QjFPeDlaWUNtT3NXN2xITGpy?=
+ =?utf-8?B?enBneE0wZkJ3dmc2UGFoUkg2SXhOVEp4bWx2NVl4ZFAvNkw4TnN5WE40aFdP?=
+ =?utf-8?B?bXR0K0dWMWxvYkJ3MXA0eUpuUWxqV2t6YnVOU3BOKzVQckpQc3FDZElaQzZX?=
+ =?utf-8?B?c0hUcVhsN05sblNzUG5xYVM1bVkxblpBbFRwTEU0cUc3bVRiVUJLMlVCSFIr?=
+ =?utf-8?B?NCs4R3BucDN3ODRrcUNHQVUwK0xxajJqWTJhbyt5OFF6eXdNYkJrLzBSNVl3?=
+ =?utf-8?B?S3FraytTMEdYM2ZVVklOQmQ3U1ltajQ5V2lUTFBEMXc1QmZrU01hNUdGQnVm?=
+ =?utf-8?B?MU00ejBWcUtTb2c2eTlSV28xSTRDK3ZIVWphOWFQN05acm14MTlmUkxlaUxT?=
+ =?utf-8?B?K0ZvUUFKbEdEVzIvNGRXQ2FhT1N1Z2R6ZkQ4SjhIVVV4cVVHZndZaFErblU5?=
+ =?utf-8?B?a1ZpSjJCZUp0SHNUcVVGRy90RTUxeWV5UmdGcWhtYkliamtVVzJYaGRBQ0s1?=
+ =?utf-8?B?Y1BsM2FHYVh3TG55MGRBdmgwT3FrRUhvRlFwQnpHRWdxT3BQUnpEREZsV0s0?=
+ =?utf-8?B?S28yUzBMR3lnT2tsdUdSckk0enl5R3gvenA4aTR5ekMyYjZUcDRDdjhsVm1D?=
+ =?utf-8?B?bS9Sbmh3d0FIZlJ0TE1BTnE2cXF3dmorQzJ1V1FuNHBpNEd4Rmh1bTZRZjl3?=
+ =?utf-8?B?a0Q3NHBlUGd6allVQm4xbGx5TEpXM2llVm9QQ1VFNHFUL3ZnMU1QTExpNmFH?=
+ =?utf-8?B?ZW1tdy90KzUyZ1dZRSt2ZWRFTDhtb2Y5aStFVk05aUR3SW5jSzZWOWMyNVZ4?=
+ =?utf-8?B?RDJlOWdVN0dEWDlPVncwRjBuQWk4VHZ5WnYwRnNzVlg2bVVsR2h4NElVVFlH?=
+ =?utf-8?B?VDZMaWVsSGFxWWpUa2hHUEtrVStMWmJxRXJxSDJrWlBpWUxzS3BpOUgyNW4z?=
+ =?utf-8?B?VXYwRmJmaWNCcUdLT01KK2VSa2cwYnc1U1B3S0FkdE4wYUZqSVJGYkh1czNE?=
+ =?utf-8?B?UFhFUUhDUzdHSWkxdmdxWmcrb0RvNjBPU0syaml2Wm9vaWQwNmxsaTNjU1pl?=
+ =?utf-8?B?MUdBelNEZTBGRmRhZFJFeGdFbWlTT3FDaWpHQlI5SXBzOWR5RDArSjd2RGlz?=
+ =?utf-8?B?M3dRRWI4Qy93OWdmU0ZqL2pMb0VlcHM3K3Y3RUtST1RRQ3BHUzZxQllEdjFr?=
+ =?utf-8?B?ODNDZUZZMnNqUmlkdUdvSkhYN2hiaXR2Ni9ERHBaUG1sdDRmck4vb2lLdURu?=
+ =?utf-8?B?dzJLQ1JiSjhyNGlMcVZDemN5WlFicG45QlVCOEhwamhiSUlSTVhhanNscnVM?=
+ =?utf-8?B?YWUvM1l0Vk42a2I2SlYwSWFDREQzRjB3c2h3Vldpczc3cytNSW55Ny9sUWVl?=
+ =?utf-8?B?bm9jQlkrSzROUEplbUxHWE9uUzNrYW0xUk5LVUk5Z285ZjVSY0lQUTBIb2tQ?=
+ =?utf-8?B?bjZRR0dhT0tBRW9WK2F5dkRDQ2FRa3pzV05YNXRQNm1OTjZZQ0RUZHNrdTRq?=
+ =?utf-8?Q?mtty/BG9Kak=3D?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DBBPR03MB10396.eurprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(52116014)(7416014)(376014)(1800799024)(38350700014);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5685.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?ymym+1iq9xh0Wa5WDRPxkfn3fb17A5DeiVVoOkSNLegSeSEk0gjBMIjazIj0?=
- =?us-ascii?Q?wx22kXJngLfgmW4/f4Ubhb5w61seFbBzqP8hAQqquMfrx9/ulBN9NP2CBdM1?=
- =?us-ascii?Q?OM2ah6IZdhlUaSbE2P1Rfq4iUYJwGG5ErZIbLj2t8XrK3ox+1J0XQFmA/OSE?=
- =?us-ascii?Q?MDB4ov5bDsjObihiKohK9W+Q6Pepk3H5TzF7uu6GOZudZpt+6/OrcBdVifXV?=
- =?us-ascii?Q?lcNPFSczt3nnpdO61BI7gAS7wr+O32LE3F9x23O2o946WAgEWVpjD3L+Oupp?=
- =?us-ascii?Q?AJ0WNaW95yUADIvAsCBOPHIY4p5qlJo+/Xi0EkxG9JMe+TZcSUWkiXUIWMNu?=
- =?us-ascii?Q?reGJSPwlwUbPp6gTXJ0DfrU9TwRPPv5CCP4XysylTrphunlSQHrFz5mJJpAo?=
- =?us-ascii?Q?9zGCnipoJ1Y4VgAM7BeFFIZPCR/ZZVbN3ToXrpjXxKUbZapAs6N0xDdj0khE?=
- =?us-ascii?Q?iZFUATctC7TiuMV+/YzK5mdKSplOzFUOsDkVN/7jdSEoFpQxB7yfQnWSftP4?=
- =?us-ascii?Q?BdzuTrgErgkqq7U/l88tt1uds4IM8T4bb6gPxaI5nW3BWzoolEWvV/VE70Aa?=
- =?us-ascii?Q?OZ+PSO51tx8tPYFkC82UOjYm1kIzx5eG6u/erQv9CTLfzagEUX+NzB0vtILR?=
- =?us-ascii?Q?aU7ceJcrYCd9JiTCbmzpnIDlfXlLkv56OT3TfHbSxSX+pL5zf2fAolU8gnzn?=
- =?us-ascii?Q?LCgCdTAjJsS4onKdUjhjTpgFr2pJDn5S5vhL8gw3wcLwZ1rhNRBxW9KUup+n?=
- =?us-ascii?Q?zZMAEFze7ytZ5+ltLtdBLjb1u9rxiQaGIq5ucaVsLPdiDaC9AEifIxuXF29s?=
- =?us-ascii?Q?Ovzk369j1XdosIF/bCqqgAccuJ9ZyfnlIF0haOUjVf4KuzqtlSDjMa+aAXYf?=
- =?us-ascii?Q?LP70/QratlrVtRdEfsdGa10a8s09xgxEJdE2eIQdpHtg8B3hjuuypN4SXkWT?=
- =?us-ascii?Q?E8zZukT0UE5oyZ/3/I2S4rJfXED2EOviaYwsaLa1CB9j/ZMdCZWOr3mBicT8?=
- =?us-ascii?Q?LCJ+Y0G4nUmhElFb64rvg7dcbuNJatz6BoQNkb1cBRMpwVsAV4urUmAcdAO4?=
- =?us-ascii?Q?yP/5aUXtJgWLsGydVaBOtn5kDg3lewklcJVdMpwVwujpjk9WDEeuyvtITkXn?=
- =?us-ascii?Q?3g1a8sENx9f6vI4R46uBwnnbPgKW16RnDPaQIV1pRTgqI8gqT1X8ipNkgeRj?=
- =?us-ascii?Q?DuAS4JMmdqe5Kby0tD6Lx6xBnA2kKzLFG4OWWX2V4+W/cQthcPsUtPA6qBUm?=
- =?us-ascii?Q?UTe+M+PkEP+3KbyzAwvXgjuSbcew8DAHcHaXVSgpZ0a6/nxxG+xr38TwOgBK?=
- =?us-ascii?Q?IhV+4dXUOSJxYuQF5t3mdxZCDxgTRbg2rsPedjU48JC0ts4oP4gzj0RZx9Pw?=
- =?us-ascii?Q?aSV52ew2pZ83BibgGtL3WChwsgrT388nJd+VeDvtH6b5gUaixVzfR98iz+5Y?=
- =?us-ascii?Q?G+W5Osc7yyjP8ByZVv1zbR6Sh1t0O9Kh145Pk/hhss0dacB/J3XWgUNm2rqg?=
- =?us-ascii?Q?/whkx9zOuq3ly8zjskQIVkWmDb5+FDz3S5+Yb1XTZqaiqHS1zAs+4YidO98Z?=
- =?us-ascii?Q?DcfF4XgomMBUBlwLQZ3dXv5FErs//FVGiVE2HGiR?=
-X-OriginatorOrg: mt.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e756516b-560c-404b-70e8-08dd993df239
-X-MS-Exchange-CrossTenant-AuthSource: DBBPR03MB10396.eurprd03.prod.outlook.com
+	=?utf-8?B?RzlDYnlHWnl2RWhEVnl3MURhdzZ4SDgyaXU4eEhHcG55MzhacEdzTWlMcUMy?=
+ =?utf-8?B?elVYODlHTTRNNlVFOWozNC9UdEpKTndBdGdmcEJiUEJ4czNVTVJmdWFhMUQ2?=
+ =?utf-8?B?ak1jWmxZdHNodHpob2ZlL3V1RXRnQ25hTy9zWlZZM0RnYXVSSGloK3RvMTJi?=
+ =?utf-8?B?Yll3Z3RzK2Voa2xsN2k5bjMrT0lxR2E2dmk3YVJBNzVnWnMxL1lzZXFhYXVX?=
+ =?utf-8?B?MXlCTTQraGt3OEgySGtPQVB0Tk1jMzFVaHhrUTJqSUhaTXRhMzJBWEo5U2lT?=
+ =?utf-8?B?K0UvVFVrOU1QYU1od3pIRnlsaUNQdjNYMFhjUlQ5aDNWRUFZeTVWaFEvUGJ0?=
+ =?utf-8?B?Um9GTzlOaGV3M1IvbEhpRDRjWGF2VWlYQkNwRG9BemdaMUh4N01OTnJXZ0hV?=
+ =?utf-8?B?Ykg3dzNSN3Q5QlpoUEk3cFUzay80Z0s3eEt3ak41SHRsYi9DTmhOV0xwQXF5?=
+ =?utf-8?B?Y1J3SUp6a1F3M2xrcTVsOUhtNUdJOEo1T2liNmlhNXVQclJaWGZsNUU2QTAv?=
+ =?utf-8?B?dHhDVzRmSDl1eUgzb2ZTSnNITG94eUYwbE9oTUZYRVAwWlhUL3FodHVtR243?=
+ =?utf-8?B?WHZGTFlkanVaYTNtQ05oQUFybXF6R3BWVXVzLzlJWml3YTZrOVJiUlNRQkNk?=
+ =?utf-8?B?RDd0QWV0ckVPb0JmT2lKSDdRalJWblZXRVVLSVZaS3JkOWcwY2NNbmRYRDJC?=
+ =?utf-8?B?MDVyL0x2a1VOMTdGTm9DMm9jSkRmTUdkQUdYZHlSZ1MvMlJZUGFRYThZVFg1?=
+ =?utf-8?B?UTBTNENwVFUxQzBMYkd3cktRTDBnMkJ4QkFjMUJ2S3V3cnVxUTBVcXI2aUFQ?=
+ =?utf-8?B?c3A0bkdVQ1FFSFpUbnl4OWJ0VUt0UnlNVDl6bWxEMmNINnFZWTZDaEc4RlNq?=
+ =?utf-8?B?MFpsY0tTSjArQm9FOWpRV3JPK1dGY2t2TkhaakRzdGh5UERXYWd6MXBTd2ZD?=
+ =?utf-8?B?NzZ4bnFaY3BTb2h0RldybVpRMEJyYUs4VUZFVytra1VKd3RLSFRISmd3S00w?=
+ =?utf-8?B?d3Y2TWEraDhEZURkcE1lRG1nOC9GWFUvb09IRVNIeXV3QnhEc3Q3bXVSbjN5?=
+ =?utf-8?B?aE4xSHh4akZudzlsK2crOUh0TkU0VXIrS0JsMS9maHBVTTJSSDFtRVhJWmdL?=
+ =?utf-8?B?MnhveGNPam90K0E1K3dmb3BjZ0hnWUdoQ053cVIvNUxRWGlZMkgwZVZjZXJa?=
+ =?utf-8?B?NTVIcG1oTXcra0haYUM3N3pPNDBhTm94SDdoRTBVUFYxMXJxNllYTVU4VENO?=
+ =?utf-8?B?a1ZtMmNOK3plYnZoNUl5b2ZHNWxjNDM2d01PRjVCSVJENzBYbUVEMEh3N0Rr?=
+ =?utf-8?B?Ym5mTXRYb3dTbjhwQUVjVENiRXlUNHJyWTc1VXljT3JMUGhwMWxvZk40V0pR?=
+ =?utf-8?B?QzNNTHhLeVlNS3Mvc2FGODRXOUNraUdENWU3WGJkV3Y0aTgrbVZRVlhqRkdz?=
+ =?utf-8?B?ejhDaGlOZDc3WVB2cUpSODVxVE9JbzhhOHhodE5Tc2ZETGtxMzg1OENzVDgv?=
+ =?utf-8?B?dmU3bFhGamFLbmFDeVNnSlkzOExyWkhGaEcwTEU4a1ZzbForSzN5WGxtSXNw?=
+ =?utf-8?B?dHNqbzBPVkd2dTZpalN4bjNvKzhMNzZsQWJiTmdoUzhZNkwxbUVHQWs4aDBY?=
+ =?utf-8?B?THJRaGVpTTEwakx6cTRpYlNoTXY0MTdvbjFlaXFaT0p0YVJLRmZBMSt0czlX?=
+ =?utf-8?B?UUJwZlpzLzRtT1QzZlZwRXhIRHRjVTVkSXF5TXJHREdZeW1VQUQxNytlRDY2?=
+ =?utf-8?B?aXh0aHgramh1eEVEZkRlWlN0Y2pqY2xhdzBKd20wUElkR2tDdGR6RzVDRWZs?=
+ =?utf-8?B?SjBPS1l6WEhuTmdpU01Mcldnc3hHbUFjNElvOUJkV2F4ckhWbERvcUtJbGtX?=
+ =?utf-8?B?dDZhbkd0ZWNraFY5LzZHcDcrWTZVbmVPNkMrWm1DdGtvei96UURqQlpCRjBM?=
+ =?utf-8?B?cTg5SDVBVllIanNvRGx5bFNJNUtxSjhNVUdUaTVlTlRXL2JXU2N4MHFaMlpr?=
+ =?utf-8?B?czlCRXk4cW12TmZrMEppMFZudzZaQXM2dmFjMWtSeEQvRUJmMjVnVW5XTld5?=
+ =?utf-8?B?UFRQakpiQXYzUjFVUGNyQjlmYkZMbEZHWjZQd1ljSXFCVmpLWnFUaFVvQUxY?=
+ =?utf-8?Q?ZknlCl28/hTTY0Y6/fBeXLaaB?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c39754ff-a034-4596-4ad7-08dd993df138
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB5685.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 May 2025 14:35:49.3646
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 May 2025 14:35:47.8375
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: fb4c0aee-6cd2-482f-a1a5-717e7c02496b
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 9ggnIXBFpEx4nbT+Tk798tAdvxSHpbT/xgI7cLcMxzuOjqaznPW7YsZHcBCgVB+IGNi2JZPUw7B5OVPe1TzXcw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR03MB9912
+X-MS-Exchange-CrossTenant-UserPrincipalName: W6NDcsXb7c3OEZ81QGHgM5ksJ4TECJSoIWhoDJ63ddZwLF6IJjSisSO1u4MexFp9
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB9209
 
-The MT9M114 sensor has an internal PLL that generates the required SYSCLK
-from EXTCLK. It also has the option to bypass the PLL and use EXTCLK
-directly as SYSCLK.
-The current driver implementation uses a hardcoded PLL configuration that
-requires a specific EXTCLK frequency. Depending on the available clocks,
-it can be desirable to use a different PLL configuration or to bypass it.
+On 5/22/25 15:43, Philipp Stanner wrote:
+>>
+>> Well there is no need to implement it, but when it is implemented the
+>> caller *must* call it when polling.
+> 
+> I don't understand. Please elaborate on that a bit more. If there's no
+> need to implement it, then why can't one have a
+> __dma_fence_is_signaled(), which is then identical?
 
-The link-frequency of the output bus (Parallel or MIPI-CSI) is configured
-in the device tree.
+Because the caller then doesn't call it when it is implemented.
 
-Check if EXTCLK can be used as SYSCLK to achieve this link-frequency. If
-yes, bypass the PLL.
-Otherwise, (as before) check if EXTCLK and the default PLL configuration
-provide the required SYSCLK to achieve the link-frequency. If yes, use the
-PLL. If no, throw an error.
+E.g. you give people a function which ignores the callback.
 
-Signed-off-by: Mathis Foerst <mathis.foerst@mt.com>
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
----
- drivers/media/i2c/mt9m114.c | 68 +++++++++++++++++++++++++++----------
- 1 file changed, 50 insertions(+), 18 deletions(-)
+>>
+>> IIRC the background that we didn't allowed this was that we already
+>> had the case that users only looked at the signaling bit and then
+>> where surprised that it never changed.
+> 
+> Why would anyone expect that a fence gets signaled by calling a
+> function with the name "dma_fence_is_signaled()"? :-)
 
-diff --git a/drivers/media/i2c/mt9m114.c b/drivers/media/i2c/mt9m114.c
-index 5f0b0ad8f885..c3ec2eb0b134 100644
---- a/drivers/media/i2c/mt9m114.c
-+++ b/drivers/media/i2c/mt9m114.c
-@@ -261,6 +261,7 @@
- #define MT9M114_CAM_PGA_PGA_CONTROL			CCI_REG16(0xc95e)
- #define MT9M114_CAM_SYSCTL_PLL_ENABLE			CCI_REG8(0xc97e)
- #define MT9M114_CAM_SYSCTL_PLL_ENABLE_VALUE			BIT(0)
-+#define MT9M114_CAM_SYSCTL_PLL_DISABLE_VALUE			0x00
- #define MT9M114_CAM_SYSCTL_PLL_DIVIDER_M_N		CCI_REG16(0xc980)
- #define MT9M114_CAM_SYSCTL_PLL_DIVIDER_VALUE(m, n)		(((n) << 8) | (m))
- #define MT9M114_CAM_SYSCTL_PLL_DIVIDER_P		CCI_REG16(0xc982)
-@@ -377,6 +378,7 @@ struct mt9m114 {
- 	struct gpio_desc *reset;
- 	struct regulator_bulk_data supplies[3];
- 	struct v4l2_fwnode_endpoint bus_cfg;
-+	bool bypass_pll;
- 
- 	struct {
- 		unsigned int m;
-@@ -743,14 +745,21 @@ static int mt9m114_initialize(struct mt9m114 *sensor)
- 	}
- 
- 	/* Configure the PLL. */
--	cci_write(sensor->regmap, MT9M114_CAM_SYSCTL_PLL_ENABLE,
--		  MT9M114_CAM_SYSCTL_PLL_ENABLE_VALUE, &ret);
--	cci_write(sensor->regmap, MT9M114_CAM_SYSCTL_PLL_DIVIDER_M_N,
--		  MT9M114_CAM_SYSCTL_PLL_DIVIDER_VALUE(sensor->pll.m,
--						       sensor->pll.n),
--		  &ret);
--	cci_write(sensor->regmap, MT9M114_CAM_SYSCTL_PLL_DIVIDER_P,
--		  MT9M114_CAM_SYSCTL_PLL_DIVIDER_P_VALUE(sensor->pll.p), &ret);
-+	if (sensor->bypass_pll) {
-+		cci_write(sensor->regmap, MT9M114_CAM_SYSCTL_PLL_ENABLE,
-+			  MT9M114_CAM_SYSCTL_PLL_DISABLE_VALUE, &ret);
-+	} else {
-+		cci_write(sensor->regmap, MT9M114_CAM_SYSCTL_PLL_ENABLE,
-+			  MT9M114_CAM_SYSCTL_PLL_ENABLE_VALUE, &ret);
-+		cci_write(sensor->regmap, MT9M114_CAM_SYSCTL_PLL_DIVIDER_M_N,
-+			  MT9M114_CAM_SYSCTL_PLL_DIVIDER_VALUE(sensor->pll.m,
-+							       sensor->pll.n),
-+			  &ret);
-+		cci_write(sensor->regmap, MT9M114_CAM_SYSCTL_PLL_DIVIDER_P,
-+			  MT9M114_CAM_SYSCTL_PLL_DIVIDER_P_VALUE(sensor->pll.p),
-+			  &ret);
-+	}
-+
- 	cci_write(sensor->regmap, MT9M114_CAM_SENSOR_CFG_PIXCLK,
- 		  sensor->pixrate, &ret);
- 
-@@ -2235,9 +2244,22 @@ static const struct dev_pm_ops mt9m114_pm_ops = {
-  * Probe & Remove
-  */
- 
-+static int mt9m114_verify_link_frequency(struct mt9m114 *sensor,
-+					 unsigned int pixrate)
-+{
-+	unsigned int link_freq = sensor->bus_cfg.bus_type == V4L2_MBUS_CSI2_DPHY
-+			       ? pixrate * 8 : pixrate * 2;
-+
-+	if (sensor->bus_cfg.nr_of_link_frequencies != 1 ||
-+	    sensor->bus_cfg.link_frequencies[0] != link_freq)
-+		return -EINVAL;
-+
-+	return 0;
-+}
-+
- static int mt9m114_clk_init(struct mt9m114 *sensor)
- {
--	unsigned int link_freq;
-+	unsigned int pixrate;
- 
- 	/* Hardcode the PLL multiplier and dividers to default settings. */
- 	sensor->pll.m = 32;
-@@ -2249,19 +2271,29 @@ static int mt9m114_clk_init(struct mt9m114 *sensor)
- 	 * for 16-bit per pixel, transmitted in DDR over a single lane. For
- 	 * parallel mode, the sensor ouputs one pixel in two PIXCLK cycles.
- 	 */
--	sensor->pixrate = clk_get_rate(sensor->clk) * sensor->pll.m
--			/ ((sensor->pll.n + 1) * (sensor->pll.p + 1));
- 
--	link_freq = sensor->bus_cfg.bus_type == V4L2_MBUS_CSI2_DPHY
--		  ? sensor->pixrate * 8 : sensor->pixrate * 2;
-+	/*
-+	 * Check if EXTCLK fits the configured link frequency. Bypass the PLL
-+	 * in this case.
-+	 */
-+	pixrate = clk_get_rate(sensor->clk) / 2;
-+	if (mt9m114_verify_link_frequency(sensor, pixrate) == 0) {
-+		sensor->pixrate = pixrate;
-+		sensor->bypass_pll = true;
-+		return 0;
-+	}
- 
--	if (sensor->bus_cfg.nr_of_link_frequencies != 1 ||
--	    sensor->bus_cfg.link_frequencies[0] != link_freq) {
--		dev_err(&sensor->client->dev, "Unsupported DT link-frequencies\n");
--		return -EINVAL;
-+	/* Check if the PLL configuration fits the configured link frequency. */
-+	pixrate = clk_get_rate(sensor->clk) * sensor->pll.m
-+		/ ((sensor->pll.n + 1) * (sensor->pll.p + 1));
-+	if (mt9m114_verify_link_frequency(sensor, pixrate) == 0) {
-+		sensor->pixrate = pixrate;
-+		sensor->bypass_pll = false;
-+		return 0;
- 	}
- 
--	return 0;
-+	dev_err(&sensor->client->dev, "Unsupported DT link-frequencies\n");
-+	return -EINVAL;
- }
- 
- static int mt9m114_identify(struct mt9m114 *sensor)
--- 
-2.34.1
+Because when that function returns true the fence is considered signaled.
+
+> That was my original point, the name is not intuitive at all.
+> 
+> For example, if a driver doesn't implement that callback but signals
+> fences in interrupt handlers, and then forgets to (re-)activate the
+> interrupt, fences will never get signaled and callers to
+> dma_fence_is_signaled() will never read 'true', which isn't surprising.
+> 
+> Again, the point remains the same: the driver must guarantee that
+> fences will get signaled. Independently from how consumers of the fence
+> check it. Consumers could just stop calling dma_fence_is_signaled()
+> after the point in time T alltogether and then the driver would still
+> have to signal everything.
+
+No it doesn't. You need to call dma_fence_enable_signaling for that.
+
+Regards,
+Christian.
+
+> 
+> 
+> P.
+> 
+> 
+> 
+>>
+>> Regards,
+>> Christian.
+>>
+>>>
+>>>
+>>> P.
+>>>
+>>>>
+>>>> Regards,
+>>>> Christian.
+>>>
+>>
+> 
 
