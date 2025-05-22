@@ -1,98 +1,277 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F48929AB17;
-	Thu, 22 May 2025 16:54:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1D01127442
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 16:54:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747932864; cv=none; b=aSvZizB/Vpd+0gztvNQPi6wvGXFC04H/y+ORCihUbXe8f+Kd0LS6cuxa4a157qKHURDrER2p3ax3k25DT8FHvVaxxZNIBBDOYSXyhSl0LEc9M1HHwYcDzwrRfF6Ld5pDyhVZFXU6Xd9FIyFSnWEFXYAYzWLZRXo6CSd4Avnruao=
+	t=1747932863; cv=none; b=p8TgL1+AziAdhiapQ7AI8+m4qJf8HPl3D/rXiAxfEE1/JwHPFEjcbcqU/MDmAsb3rBdAm0L83kE7x1PGURDSEzXl2R4LfXymZPjxJI6Twntf0iUXQ1Pg6g6ItYHL1RGnShtx+vn5oDzaFa45ijx8MMrw+RAFSdZreCPfCAXCyTM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747932864; c=relaxed/simple;
-	bh=MHE8elGOD3VOUv5LCmib7J4CnzJcr2ulHeMksQP+Izg=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=W8m29d2aDzs8jJMYJVEhGiG+qSl0vcrtu0D4TWYJj0QM++JSw/F67K38S47K+qHq9e+o2GOvcVkmR/jMLqjgW0IkOnTSfOQm6RKLKWQRtOxBQi3HyBRyxdEihPfqpnEpRoIcq0gCZePb8A0NyuFyplUpN/JC9QnUf+R8XjWr9OU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4b3Dln5JKZz6M4c0;
-	Fri, 23 May 2025 00:49:25 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id E51211402EF;
-	Fri, 23 May 2025 00:54:18 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 22 May
- 2025 18:54:18 +0200
-Date: Thu, 22 May 2025 17:54:16 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Angelo Dureghello <adureghello@baylibre.com>
-CC: Nuno Sa <nuno.sa@analog.com>, Lars-Peter Clausen <lars@metafoo.de>,
-	Michael Hennerich <Michael.Hennerich@analog.com>, Jonathan Cameron
-	<jic23@kernel.org>, David Lechner <dlechner@baylibre.com>, Andy Shevchenko
-	<andy@kernel.org>, <linux-iio@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] iio: dac: adi-axi-dac: fix bus free check
-Message-ID: <20250522175416.000047cb@huawei.com>
-In-Reply-To: <20250522-iio-dac-adi-axi-dac-fix-bus-read-v1-1-26ec358c57bf@baylibre.com>
-References: <20250522-iio-dac-adi-axi-dac-fix-bus-read-v1-1-26ec358c57bf@baylibre.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1747932863; c=relaxed/simple;
+	bh=/p5BvwZ8BAJMaIviBKS1CuE/9kkviZsb/5GJtHMFnpw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BJCvT+uhV8UBqEotGyQFI0Yjgdxu+nl+SjwS5AdNXSoQvlsUkBakduHdz2PHzfkvPnbtNQ3nLSp2jdbfxkLSQVTcL19Xz1W5NAx1IB3Xi4irHT0x6FKD3seV2PI0URXGQF/1b+rXMhLUuBqte8liAkea/aBWpM4Ye/oytvMQBqc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3B0681A2D;
+	Thu, 22 May 2025 09:54:06 -0700 (PDT)
+Received: from [10.1.196.40] (e121345-lin.cambridge.arm.com [10.1.196.40])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7BB243F673;
+	Thu, 22 May 2025 09:54:19 -0700 (PDT)
+Message-ID: <1963b2f4-32f8-428f-8f88-600bb6f2622d@arm.com>
+Date: Thu, 22 May 2025 17:54:18 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] iommu: Avoid introducing more races
+To: Johan Hovold <johan@kernel.org>, Joerg Roedel <joro@8bytes.org>,
+ Will Deacon <will@kernel.org>
+Cc: iommu@lists.linux.dev, linux-kernel@vger.kernel.org,
+ Jason Gunthorpe <jgg@nvidia.com>, regressions@lists.linux.dev
+References: <09d901ad11b3a410fbb6e27f7d04ad4609c3fe4a.1741706365.git.robin.murphy@arm.com>
+ <aC71lkTn7_xfuivy@hovoldconsulting.com>
+From: Robin Murphy <robin.murphy@arm.com>
+Content-Language: en-GB
+In-Reply-To: <aC71lkTn7_xfuivy@hovoldconsulting.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500009.china.huawei.com (7.191.174.84) To
- frapeml500008.china.huawei.com (7.182.85.71)
 
-On Thu, 22 May 2025 18:47:31 +0200
-Angelo Dureghello <adureghello@baylibre.com> wrote:
+On 22/05/2025 10:59 am, Johan Hovold wrote:
+> On Tue, Mar 11, 2025 at 03:19:25PM +0000, Robin Murphy wrote:
+>> Although the lock-juggling is only a temporary workaround, we don't want
+>> it to make things avoidably worse. Jason was right to be nervous, since
+>> bus_iommu_probe() doesn't care *which* IOMMU instance it's probing for,
+>> so it probably is possible for one walk to finish a probe which a
+>> different walk started, thus we do want to check for that.
+>>
+>> Also there's no need to drop the lock just to have of_iommu_configure()
+>> do nothing when a fwspec already exists; check that directly and avoid
+>> opening a window at all in that (still somewhat likely) case.
+>>
+>> Suggested-by: Jason Gunthorpe <jgg@nvidia.com>
+>> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+>> ---
+>> I was rather expecting to send a v3 of "iommu: Get DT/ACPI parsing into
+>> the proper probe path", so I'm grateful that v2 was picked up, thanks!
+>> This is the difference as a fix/squash commit instead.
+>> ---
+>>   drivers/iommu/iommu.c | 8 +++++---
+>>   1 file changed, 5 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+>> index d824fa5166e3..c6d40abe577e 100644
+>> --- a/drivers/iommu/iommu.c
+>> +++ b/drivers/iommu/iommu.c
+>> @@ -415,13 +415,15 @@ static int iommu_init_device(struct device *dev)
+>>   	 * is buried in the bus dma_configure path. Properly unpicking that is
+>>   	 * still a big job, so for now just invoke the whole thing. The device
+>>   	 * already having a driver bound means dma_configure has already run and
+>> -	 * either found no IOMMU to wait for, or we're in its replay call right
+>> -	 * now, so either way there's no point calling it again.
+>> +	 * found no IOMMU to wait for, so there's no point calling it again.
+>>   	 */
+>> -	if (!dev->driver && dev->bus->dma_configure) {
+>> +	if (!dev->iommu->fwspec && !dev->driver && dev->bus->dma_configure) {
+>>   		mutex_unlock(&iommu_probe_device_lock);
+>>   		dev->bus->dma_configure(dev);
+>>   		mutex_lock(&iommu_probe_device_lock);
+>> +		/* If another instance finished the job for us, skip it */
+>> +		if (!dev->iommu || dev->iommu_group)
+>> +			return -ENODEV;
+>>   	}
+>>   	/*
+>>   	 * At this point, relevant devices either now have a fwspec which will
+> 
+> I hit the below NULL-pointer dereference with 6.15-rc7 (when booting the
+> x1e80100-crd) and it looks like this fix would have prevented it, but
+> it's currently only queued for 6.16-rc1.
+> 
+> It looks like the gpu smmu probe is racing with fastrpc probe and the
+> latter proceeds with iommu probe when the former temporarily releases
+> the iommu probe mutex. Note that the iommu->ready flag added by [1] does
+> not help since the apps smmu has already been probed.
+> 
+> When the probe mutex is later reacquired, symlink creation fails and the
+> tear down path sets the iommu_dev pointer to NULL, which in turn
+> triggers the NULL pointer dereference in iommu_probe_device() when
+> calling probe_finalize().
+> 
+> [ Or something along those lines (e.g. as I'm not seeing the "something
+> fishy" warning in the manually saved serial console log). ]
+> 
+> I've only seen this once, but it's clear that this is a regression in
+> 6.15 due to the iommu rework. If you agree that this fix would have
+> prevented it then perhaps we should try to get it into 6.15 final (or at
+> least backport it when 6.16-rc1 is out).
 
-> From: Angelo Dureghello <adureghello@baylibre.com>
-> 
-> This patch is intended to fix [1] that looks not yet accepted in any
-> upstream branch.
-> 
-> Poll function must check for a value equal to 0 (bus free condition).
-> 
-> [1] https://lore.kernel.org/linux-iio/l6vu54ltxd7pydkzl6xbbq55gedumzbsllfxnljyngwcg4c6zd@w6qxgn2vby75/
-> 
-> Signed-off-by: Angelo Dureghello <adureghello@baylibre.com>
-Hi Angelo.
+Indeed, at the time this was still only a hypothesised issue by 
+inspection, hence it wasn't definitively tagged as a fix. I did 
+subsequently manage to trigger the use-after-free case for a 
+non-IOMMU-client device once I started playing with async_probe - I 
+guess it's "nice" to have confirmation of the double-probe case too...
 
-That was stalled due to tree shuffling.  Given as you
-observed it hasn't made it on to any tree yet, would you mind
-squashing this in and posting a new version of that patch?
-That will probably end up cleaner than me trying to remember to squash the two.
+Since both fixes are now well-buried in the iommu/core branch, I'll make 
+a note to chase them up for stable at -rc1 as you say.
 
-Thanks!
+Cheers,
+Robin.
 
-Jonathan
-
-> ---
->  drivers/iio/dac/adi-axi-dac.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/drivers/iio/dac/adi-axi-dac.c b/drivers/iio/dac/adi-axi-dac.c
-> index b6cfe07701d47440df478f7b9b4c579434b99a25..a0e546dba3680371e00dc4c8973d4f450c18cf2d 100644
-> --- a/drivers/iio/dac/adi-axi-dac.c
-> +++ b/drivers/iio/dac/adi-axi-dac.c
-> @@ -641,7 +641,7 @@ static int axi_dac_wait_bus_free(struct axi_dac_state *st)
->  	int ret;
->  
->  	ret = regmap_read_poll_timeout(st->regmap, AXI_DAC_UI_STATUS_REG, val,
-> -		FIELD_GET(AXI_DAC_UI_STATUS_IF_BUSY, val) == -1, 10,
-> +		FIELD_GET(AXI_DAC_UI_STATUS_IF_BUSY, val) == 0, 10,
->  		100 * KILO);
->  	if (ret == -ETIMEDOUT)
->  		dev_err(st->dev, "AXI bus timeout\n");
+> Johan
 > 
-> ---
-> base-commit: 50b8b618e598468e35551003d7e5cc5db14ee113
-> change-id: 20250522-iio-dac-adi-axi-dac-fix-bus-read-244fbc07313c
+> [1] https://lore.kernel.org/lkml/88d54c1b48fed8279aa47d30f3d75173685bb26a.1745516488.git.robin.murphy@arm.com/
 > 
-> Best regards,
-
+> #regzbot ^introduced: bcb81ac6ae3c2ef95b44e7b54c3c9522364a245c
+> 
+> [    7.759456] arm-smmu 3da0000.iommu: probing hardware configuration...
+> [    7.792360] arm-smmu 3da0000.iommu: SMMUv2 with:
+> [    7.802065] arm-smmu 3da0000.iommu:  stage 1 translation
+> [    7.811229] arm-smmu 3da0000.iommu:  coherent table walk
+> [    7.811233] arm-smmu 3da0000.iommu:  stream matching with 24 register groups
+> [    7.811272] arm-smmu 3da0000.iommu:  22 context banks (0 stage-2 only)
+> [    7.820512] remoteproc remoteproc0: remote processor adsp is now up
+> [    7.821538] arm-smmu 3da0000.iommu:  Supported page sizes: 0x61311000
+> [    7.845913] qcom,fastrpc 6800000.remoteproc:glink-edge.fastrpcglink-apps-dsp.-1.-1: no reserved DMA memory for FASTRPC
+> [    7.851687] qcom,apr 6800000.remoteproc:glink-edge.adsp_apps.-1.-1: Adding APR/GPR dev: gprsvc:service:2:1
+> [    7.852191] qcom,apr 6800000.remoteproc:glink-edge.adsp_apps.-1.-1: Adding APR/GPR dev: gprsvc:service:2:2
+> [    7.852301] arm-smmu 3da0000.iommu:  Stage-1: 48-bit VA -> 40-bit IPA
+> [    7.853963] remoteproc remoteproc1: remote processor cdsp is now up
+> [    7.857232] qcom,fastrpc 32300000.remoteproc:glink-edge.fastrpcglink-apps-dsp.-1.-1: no reserved DMA memory for FASTRPC
+> [    7.861182] platform 32300000.remoteproc:glink-edge:fastrpc:compute-cb@1: Adding to iommu group 9
+> [    7.865501] arm-smmu 3da0000.iommu:  preserved 0 boot mappings
+> [    7.977602] platform 6800000.remoteproc:glink-edge:fastrpc:compute-cb@3: Adding to iommu group 10
+> [    7.991605] platform 3d00000.gpu: Adding to iommu group 11
+> [    7.998389] platform 32300000.remoteproc:glink-edge:fastrpc:compute-cb@2: Adding to iommu group 12
+> [    8.008816] platform 3d6a000.gmu: Adding to iommu group 13
+> [    8.016577] platform 6800000.remoteproc:glink-edge:fastrpc:compute-cb@4: Adding to iommu group 14
+> [    8.027036] platform 32300000.remoteproc:glink-edge:fastrpc:compute-cb@3: Adding to iommu group 15
+> [    8.037840] platform 6800000.remoteproc:glink-edge:fastrpc:compute-cb@5: Adding to iommu group 16
+> [    8.048473] platform 32300000.remoteproc:glink-edge:fastrpc:compute-cb@4: Adding to iommu group 17
+> [    8.068429] platform 6800000.remoteproc:glink-edge:fastrpc:compute-cb@6: Adding to iommu group 18
+> [    8.106128] sysfs: cannot create duplicate filename '/devices/platform/soc@0/15000000.iommu/iommu/smmu.0x00000000150
+> 00000/devices/6800000.remoteproc:glink-edge:fastrpc:compute-cb@6'
+> 
+> [    8.129705] CPU: 9 UID: 0 PID: 131 Comm: kworker/u50:4 Not tainted 6.15.0-rc7 #8 PREEMPT
+> [    8.129708] Hardware name: Qualcomm CRD, BIOS 6.0.241007.BOOT.MXF.2.4-00534.1-HAMOA-1 10/ 7/2024
+> [    8.129709] Workqueue: events_unbound deferred_probe_work_func
+> [    8.129715] Call trace:
+> [    8.129716]  show_stack+0x18/0x24 (C)
+> [    8.129719]  dump_stack_lvl+0xc0/0xd0
+> [    8.129722]  dump_stack+0x18/0x24
+> [    8.129724]  sysfs_warn_dup+0x64/0x80
+> [    8.129727]  sysfs_do_create_link_sd+0xf0/0xf8
+> [    8.129729]  sysfs_create_link_sd+0x14/0x20
+> [    8.129730]  sysfs_add_link_to_group+0x3c/0x68
+> [    8.129732]  iommu_device_link+0x40/0xb8
+> [    8.129735]  __iommu_probe_device+0x158/0x4b8
+> [    8.129737]  probe_iommu_group+0x3c/0x64
+> [    8.129739]  bus_for_each_dev+0x74/0xd0
+> [    8.129741]  iommu_device_register+0xd8/0x23c
+> [    8.129743]  arm_smmu_device_probe+0xc08/0xe94
+> [    8.129745]  platform_probe+0x68/0xd8
+> [    8.129747]  really_probe+0xc0/0x38c
+> [    8.129750]  __driver_probe_device+0x7c/0x160
+> [    8.129753]  driver_probe_device+0x40/0x110
+> [    8.129754]  __device_attach_driver+0xbc/0x158
+> [    8.129756]  bus_for_each_drv+0x80/0xdc
+> [    8.129754]  __device_attach_driver+0xbc/0x158
+> [    8.129756]  bus_for_each_drv+0x80/0xdc
+> [    8.129758]  __device_attach+0xa8/0x1d4
+> [    8.129759]  device_initial_probe+0x14/0x20
+> [    8.129761]  bus_probe_device+0xb0/0xb4
+> [    8.129763]  deferred_probe_work_func+0xa0/0xf4
+> [    8.129766]  process_one_work+0x20c/0x610
+> [    8.129769]  worker_thread+0x244/0x388
+> [    8.129771]  kthread+0x150/0x220
+> [    8.129773]  ret_from_fork+0x10/0x20
+> [    8.129808] Unable to handle kernel NULL pointer dereference at virtual address 0000000000000010
+> [    8.131501] platform 32300000.remoteproc:glink-edge:fastrpc:compute-cb@5: Adding to iommu group 11
+> [    8.131551] arm-smmu 3da0000.iommu: error -EEXIST: Failed to register iommu
+> [    8.131574] arm-smmu 3da0000.iommu: probe with driver arm-smmu failed with error -17
+> [    8.138242] Mem abort info:
+> [    8.138244]   ESR = 0x0000000096000004
+> [    8.138246]   EC = 0x25: DABT (current EL), IL = 32 bits
+> [    8.149780] platform 32300000.remoteproc:glink-edge:fastrpc:compute-cb@6: Adding to iommu group 13
+> [    8.150537] platform 32300000.remoteproc:glink-edge:fastrpc:compute-cb@7: Adding to iommu group 19
+> [    8.151166] platform 32300000.remoteproc:glink-edge:fastrpc:compute-cb@8: Adding to iommu group 20
+> [    8.152079] platform 32300000.remoteproc:glink-edge:fastrpc:compute-cb@10: Adding to iommu group 21
+> [    8.152765] platform 32300000.remoteproc:glink-edge:fastrpc:compute-cb@11: Adding to iommu group 22
+> [    8.153281]   SET = 0, FnV = 0
+> [    8.153283]   EA = 0, S1PTW = 0
+> [    8.153284]   FSC = 0x04: level 0 translation fault
+> [    8.153286] Data abort info:
+> [    8.153287]   ISV = 0, ISS = 0x00000004, ISS2 = 0x00000000
+> [    8.153387] platform 32300000.remoteproc:glink-edge:fastrpc:compute-cb@12: Adding to iommu group 23
+> [    8.154013] platform 32300000.remoteproc:glink-edge:fastrpc:compute-cb@13: Adding to iommu group 24
+> [    8.159590]   CM = 0, WnR = 0, TnD = 0, TagAccess = 0
+> [    8.159592]   GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
+> [    8.225170] user pgtable: 4k pages, 48-bit VAs, pgdp=0000000883bb6000
+> [    8.233976] [0000000000000010] pgd=0000000000000000, p4d=0000000000000000
+> [    8.234001] Internal error: Oops: 0000000096000004 [#1]  SMP
+> 
+> [    8.446080] CPU: 5 UID: 0 PID: 406 Comm: (udev-worker) Not tainted 6.15.0-rc7 #8 PREEMPT
+> [    8.446082] Hardware name: Qualcomm CRD, BIOS 6.0.241007.BOOT.MXF.2.4-00534.1-HAMOA-1 10/ 7/2024
+> [    8.459940] pstate: 61400005 (nZCv daif +PAN -UAO -TCO +DIT -SSBS BTYPE=--)
+> [    8.459942] pc : iommu_probe_device+0x50/0x7c
+> [    8.488201] lr : iommu_probe_device+0x44/0x7c
+> [    8.488203] sp : ffff800082543210
+> [    8.488204] x29: ffff800082543210 x28: 000000000000000c x27: 0000000000000001
+> [    8.488206] x26: 0000000000000000 x25: ffffd3551bac57c8 x24: 0000000000000000
+> [    8.502233] x23: 0000000000000002 x22: ffffd3551c0407c0 x21: ffffd3551c0407c0
+> [    8.502235] x20: 0000000000000000 x19: ffff23ce85720010 x18: 0000000000069e00
+> [    8.502237] x17: 0000000000000028 x16: 0000000000000000
+> [    8.523033]  x15: ffffd3551c1a5920
+> [    8.523035] x14: ffffd3551c20f720 x13: ffff23ce811c5ba0 x12: ffff23ce90b70568
+> [    8.523037] x11: ffffd3551c819960 x10: 0000000000000000 x9 : 0000000000000000
+> [    8.543927] x8 : ffffd3551c103000 x7 : ffff8000825430a0 x6 : ffff800082543030
+> [    8.543929] x5 : ffff800082544000 x4 : 0000000000000002 x3 : 0000000000000000
+> [    8.556981] x2 : 0000000000000000 x1 : 0000000000000000 x0 : 0000000000000000
+> [    8.556983] Call trace:
+> [    8.556984]  iommu_probe_device+0x50/0x7c (P)
+> [    8.582047]  of_iommu_configure+0x188/0x26c
+> [    8.582050]  of_dma_configure_id+0xcc/0x300
+> [    8.582053]  platform_dma_configure+0x80/0xa4
+> [    8.582054]  really_probe+0x74/0x38c
+> [    8.595015]  __driver_probe_device+0x7c/0x160
+> [    8.595017]  driver_probe_device+0x40/0x110
+> [    8.595019]  __device_attach_driver+0xbc/0x158
+> [    8.631849]  bus_for_each_drv+0x80/0xdc
+> [    8.631852]  __device_attach+0xa8/0x1d4
+> [    8.631853]  device_initial_probe+0x14/0x20
+> [    8.631855]  bus_probe_device+0xb0/0xb4
+> [    8.631857]  device_add+0x57c/0x784
+> [    8.653367]  of_device_add+0x44/0x60
+> [    8.653369]  of_platform_device_create_pdata+0x98/0x140
+> [    8.653371]  of_platform_bus_create+0x1b0/0x4d4
+> [    8.653372]  of_platform_populate+0x60/0x14c
+> [    8.653374]  fastrpc_rpmsg_probe+0x254/0x3d8 [fastrpc]
+> [    8.661542]  rpmsg_dev_probe+0xc0/0x1e0 [rpmsg_core]
+> [    8.671574]  really_probe+0xc0/0x38c
+> [    8.671577]  __driver_probe_device+0x7c/0x160
+> [    8.691391]  driver_probe_device+0x40/0x110
+> [    8.691391]  driver_probe_device+0x40/0x110
+> [    8.691392]  __driver_attach+0xfc/0x208
+> [    8.691393]  bus_for_each_dev+0x74/0xd0
+> [    8.691395]  driver_attach+0x24/0x30
+> [    8.691398]  bus_add_driver+0x110/0x234
+> [    8.715663]  driver_register+0x60/0x128
+> [    8.715665]  __register_rpmsg_driver+0x1c/0x28 [rpmsg_core]
+> [    8.715667]  fastrpc_init+0x40/0xb8 [fastrpc]
+> [    8.715669]  do_one_initcall+0x64/0x30c
+> [    8.730854]  do_init_module+0x58/0x204
+> [    8.730857]  load_module+0x1e24/0x1f6c
+> [    8.743016]  init_module_from_file+0x88/0xc4
+> [    8.743017]  idempotent_init_module+0x188/0x27c
+> [    8.743019]  __arm64_sys_finit_module+0x6c/0xec
+> [    8.743020]  invoke_syscall+0x48/0x110
+> [    8.743023]  el0_svc_common.constprop.0+0xc0/0xe0
+> [    8.760436]  do_el0_svc+0x1c/0x28
+> [    8.760438]  el0_svc+0x48/0x114
+> [    8.760441]  el0t_64_sync_handler+0xc8/0xcc
+> [    8.760443]  el0t_64_sync+0x198/0x19c
+> [    8.760445] Code: 940dd1a3 35000114 f9423260 f9405000 (f9400800)
+> [    8.760446] ---[ end trace 0000000000000000 ]---
