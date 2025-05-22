@@ -1,92 +1,210 @@
-Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB4CE2512D8
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 17:42:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3282918FDBE;
+	Thu, 22 May 2025 17:42:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747935757; cv=none; b=MwnTuw+elIBxc5SnKfdZsW+vnn9RnqSzjKUU+vnHEJ/lkZK8MMEzlDDNgXD8g2K3FtcnwaBycUkj3hu6pb7EmU/cWecSBBbEyhDU4DAvvDGayFmlS17W63if5OsnazFE4gul1EKZvJqs+mMGSqC7bl8dMU0Jn4/IpMFTm74Py+g=
+	t=1747935771; cv=none; b=aW/hZhDagG8DBtAoLo7iI9za3B1QW1d4NOrwq8JCTYsqTwwxpKRlDZPsIO/r1nTJc6jjy1yJVbpMv+aNl1e3jcsDfX1lBtt5kGKrhGkyhmbfUoa0M6oC4hG4nDrbWGX8sGXrkeCjM+1btMC/Hvnl8yPx7/1IAhYE2L3JUTbdOcs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747935757; c=relaxed/simple;
-	bh=T193aeRyJ1OGv0+6AYB8t+pbinpVG0oKPxn8mbqLW6U=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=ef+JmsvE3wG0JanjRuZLNsFbAROv+Z6vVHiYO9Glaip5xWJqYhBUZAWKRs5FJ5uKyNBwnJlHofMijSWlQIxg+79xFPr3amcbT1Qu6sQok2qGULpRKkMWEJQ8DOo6sQ95A5v2rjWHhaViGHMgyBOlxtUQknf2H2Gt4Szw8XM909U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=cBJXvqDE; arc=none smtp.client-ip=209.85.214.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1747935771; c=relaxed/simple;
+	bh=nc4C4Sk84UMmyGcLldRWRh/kbRCgfb4nqiv+61p0Hnk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TJ/zypu2OWln4mR2yrainnT1vh7mQ5A2NjbIIWVu8FQ0n9uaYlSAgZnKTrkDdxlHrqA7kYwq8W1plPPUUmyRT4ZVpibUzkKdySRbXHI1deyWigkThcGYUdjovtXV5l02LEYe++RWo75IcqumTKWpuGtodswRcAyGTrE1voMzjH4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OyUEFjiT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cBJXvqDE"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-231e6e1d988so87589095ad.1
-        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 10:42:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747935755; x=1748540555; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=JTZzTjxME0+T407CR9T2jnDVgTWuq2jRrI32jdizTLI=;
-        b=cBJXvqDEqJIxW7JlmSh8HwYJaAeJCwpZZdrzzV6AqwElBgTsOg7RECpAVDDINCwiax
-         l4T0i3VcXZA7bv9FxQaI0xAjrd9cEr2DwN7UOPz++d5Ah+v8GtXAT04UGqmkC5SGo0lW
-         Uj7LN8/i8f6zIwFpFjH6ZRJn8g5XSnUC6HKR47ojTYjQkiR0WCfo7B5e89Ngh5Zqrduy
-         fDBSEvdMIi0IOOD+jm3sTHG9mhzZ4W4hCPtAFlc+V9SVaZUnfydQk1b1NQJpUeVKryGd
-         2jbKgGynOqctBoKqMPbYbjp8SPQAtIttIiT1jJo1JPuleIXXhjIh6qlX4wWQXN+vf/y9
-         Jc9Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747935755; x=1748540555;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=JTZzTjxME0+T407CR9T2jnDVgTWuq2jRrI32jdizTLI=;
-        b=N4jIVhw7Ftbci0kEUBEktdArw4W7ICc3gBV2u8YHAKtL/ABbKKeHifwtngLi0T3P0j
-         kc+hCKA2XO0jJnuWupuyczjq90M/mltqxzgVSRXo0SCbvT3fycBsdscZfMLA+V8k2mdI
-         ITC70P6s/htYSaq8zb/RmPMOAJkBuwSnnhGC4EjkCJkFcSwb4vJHQvPGw2QDGjKnHUKT
-         Y4eWP7S2UbSIOdv7v12DDhs8m+JkPZwlP6dp5bjNGNQ7pv3n6r2RcL1y2H0WDt4oHco+
-         VkddIDQl4YF/odxabUg3LmhedQ+YeTyksF0S4pLSRUmiB4V8Znq39xRSI7kxH5b5yU/i
-         kzew==
-X-Forwarded-Encrypted: i=1; AJvYcCWOY9MsOGOzbmULOpLs6VENNSc/A9vtD7sS9OEcIDMcnH7/ehnUTLpCp3GWqZE8wXLSrjKWaoBQK4bcfYA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwqKOe99SGMuuWJ8UrpV/nufcNB0nT/wwHv6g2UnJOL092A5d5E
-	gOZXvKC6FKn1n+PNe6+PHgPC6iEiH05621NGriSwPPAK5fWE90QrKem69e+xVNo9kMhrsr/RYnT
-	8cwoykQ==
-X-Google-Smtp-Source: AGHT+IEitcbqn8Ct6EIf9jvCMYvrO0otsPo/CrQ4mPp/jVLneyxQpCIIYoWk6Q6DEqLI2Pu1VXOQ/PvNORU=
-X-Received: from pjbph7.prod.google.com ([2002:a17:90b:3bc7:b0:30a:9cb5:7622])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:54ce:b0:306:b593:4557
- with SMTP id 98e67ed59e1d1-30e830ca012mr41799466a91.4.1747935744786; Thu, 22
- May 2025 10:42:24 -0700 (PDT)
-Date: Thu, 22 May 2025 10:42:23 -0700
-In-Reply-To: <20250522005555.55705-3-mlevitsk@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OyUEFjiT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2E6C8C4CEE4;
+	Thu, 22 May 2025 17:42:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747935770;
+	bh=nc4C4Sk84UMmyGcLldRWRh/kbRCgfb4nqiv+61p0Hnk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=OyUEFjiTrkuo9gTJRR20Cf4fCrnaKCpIQGMniNiVvHWYKi4QX0YwkcXkb8GTOysUy
+	 EwGoLXT4+rqZnp3ij59mAeDBdHmHlClLLoc6yZ2YRNRQFCPDDptXLahVbeoHDDPn4+
+	 HC2sO1awEaW0kFD5xZydOLn7n2aLHoGKFe2AbsfPPsCRAtzXi+3xC8uyKrrBwh+bHW
+	 fuAl3PUYx+6p7bcupLBZkXwg8YAcRDmlFjXeDsABqXWehl6/1N+Ic9a8+IKjB9Pi0m
+	 a8ZMyWRAnuI4H2ifMFxCo3LxJUlGAe9JRiKEWOY+EJzRdoVtv4fcn3wGGM6EdlvfQM
+	 OCLVGTjDTIqFQ==
+Date: Thu, 22 May 2025 14:42:47 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Blake Jones <blakejones@google.com>
+Cc: Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
+	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Chun-Tse Shao <ctshao@google.com>,
+	Zhongqiu Han <quic_zhonhan@quicinc.com>,
+	James Clark <james.clark@linaro.org>,
+	Charlie Jenkins <charlie@rivosinc.com>,
+	Andi Kleen <ak@linux.intel.com>, Dmitry Vyukov <dvyukov@google.com>,
+	Leo Yan <leo.yan@arm.com>, Yujie Liu <yujie.liu@intel.com>,
+	Graham Woodward <graham.woodward@arm.com>,
+	Yicong Yang <yangyicong@hisilicon.com>,
+	Ben Gainey <ben.gainey@arm.com>, linux-kernel@vger.kernel.org,
+	bpf@vger.kernel.org, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH 1/3] perf: add support for printing BTF character arrays
+ as strings
+Message-ID: <aC9iF4_eASPkPxXd@x1>
+References: <20250521222725.3895192-1-blakejones@google.com>
+ <20250521222725.3895192-2-blakejones@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250522005555.55705-1-mlevitsk@redhat.com> <20250522005555.55705-3-mlevitsk@redhat.com>
-Message-ID: <aC9h_9CyZ4DMAAi_@google.com>
-Subject: Re: [PATCH v5 2/5] KVM: x86: Drop kvm_x86_ops.set_dr6() in favor of a
- new KVM_RUN flag
-From: Sean Christopherson <seanjc@google.com>
-To: Maxim Levitsky <mlevitsk@redhat.com>
-Cc: kvm@vger.kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
-	Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org, 
-	x86@kernel.org, Paolo Bonzini <pbonzini@redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250521222725.3895192-2-blakejones@google.com>
 
-On Wed, May 21, 2025, Maxim Levitsky wrote:
-> From: Sean Christopherson <seanjc@google.com>
+On Wed, May 21, 2025 at 03:27:23PM -0700, Blake Jones wrote:
+> The BTF dumper code currently displays arrays of characters as just that -
+> arrays, with each character formatted individually. Sometimes this is what
+> makes sense, but it's nice to be able to treat that array as a string.
 > 
-> Instruct vendor code to load the guest's DR6 into hardware via a new
-> KVM_RUN flag, and remove kvm_x86_ops.set_dr6(), whose sole purpose was to
-> load vcpu->arch.dr6 into hardware when DR6 can be read/written directly
-> by the guest.
+> This change adds a special case to the btf_dump functionality to allow
+> arrays of single-byte integer values to be printed as character strings.
+> Characters for which isprint() returns false are printed as hex-escaped
+> values. This is enabled when the new ".print_strings" is set to 1 in the
+> btf_dump_type_data_opts structure.
 > 
-> Signed-off-by: Sean Christopherson <seanjc@google.com>
+> As an example, here's what it looks like to dump the string "hello" using
+> a few different field values for btf_dump_type_data_opts (.compact = 1):
+> 
+> - .print_strings = 0, .skip_names = 0:  (char[6])['h','e','l','l','o',]
+> - .print_strings = 0, .skip_names = 1:  ['h','e','l','l','o',]
+> - .print_strings = 1, .skip_names = 0:  (char[6])"hello"
+> - .print_strings = 1, .skip_names = 1:  "hello"
+> 
+> Here's the string "h\xff", dumped with .compact = 1 and .skip_names = 1:
+> 
+> - .print_strings = 0:  ['h',-1,]
+> - .print_strings = 1:  "h\xff"
+
+I'll test this but unsure if this part should go thru the perf tool
+tree, perhaps should go, together with some test case, via the libbpf
+tree?
+
+- Arnaldo
+ 
+> Signed-off-by: Blake Jones <blakejones@google.com>
 > ---
->  arch/x86/include/asm/kvm-x86-ops.h |  1 -
->  arch/x86/include/asm/kvm_host.h    |  2 +-
->  arch/x86/kvm/svm/svm.c             | 10 ++++++----
->  arch/x86/kvm/vmx/main.c            |  9 ---------
->  arch/x86/kvm/vmx/vmx.c             |  9 +++------
->  arch/x86/kvm/x86.c                 |  2 +-
->  6 files changed, 11 insertions(+), 22 deletions(-)
-
-As alluded to in the previous patch, TDX should WARN, because guest DR6 is owned
-by the TDX module (the KVM_DEBUGREG_AUTO_SWITCH guard prevents KVM_RUN_LOAD_GUEST_DR6
-from being set).
+>  tools/lib/bpf/btf.h      |  3 ++-
+>  tools/lib/bpf/btf_dump.c | 51 +++++++++++++++++++++++++++++++++++++++-
+>  2 files changed, 52 insertions(+), 2 deletions(-)
+> 
+> diff --git a/tools/lib/bpf/btf.h b/tools/lib/bpf/btf.h
+> index 4392451d634b..be8e8e26d245 100644
+> --- a/tools/lib/bpf/btf.h
+> +++ b/tools/lib/bpf/btf.h
+> @@ -326,9 +326,10 @@ struct btf_dump_type_data_opts {
+>  	bool compact;		/* no newlines/indentation */
+>  	bool skip_names;	/* skip member/type names */
+>  	bool emit_zeroes;	/* show 0-valued fields */
+> +	bool print_strings;	/* print char arrays as strings */
+>  	size_t :0;
+>  };
+> -#define btf_dump_type_data_opts__last_field emit_zeroes
+> +#define btf_dump_type_data_opts__last_field print_strings
+>  
+>  LIBBPF_API int
+>  btf_dump__dump_type_data(struct btf_dump *d, __u32 id,
+> diff --git a/tools/lib/bpf/btf_dump.c b/tools/lib/bpf/btf_dump.c
+> index 460c3e57fadb..a07dd5accdd8 100644
+> --- a/tools/lib/bpf/btf_dump.c
+> +++ b/tools/lib/bpf/btf_dump.c
+> @@ -75,6 +75,7 @@ struct btf_dump_data {
+>  	bool is_array_member;
+>  	bool is_array_terminated;
+>  	bool is_array_char;
+> +	bool print_strings;
+>  };
+>  
+>  struct btf_dump {
+> @@ -2028,6 +2029,50 @@ static int btf_dump_var_data(struct btf_dump *d,
+>  	return btf_dump_dump_type_data(d, NULL, t, type_id, data, 0, 0);
+>  }
+>  
+> +static int btf_dump_string_data(struct btf_dump *d,
+> +				const struct btf_type *t,
+> +				__u32 id,
+> +				const void *data)
+> +{
+> +	const struct btf_array *array = btf_array(t);
+> +	__u32 i;
+> +
+> +	if (!btf_is_int(skip_mods_and_typedefs(d->btf, array->type, NULL)) ||
+> +	    btf__resolve_size(d->btf, array->type) != 1 ||
+> +	    !d->typed_dump->print_strings) {
+> +		pr_warn("unexpected %s() call for array type %u\n",
+> +			__func__, array->type);
+> +		return -EINVAL;
+> +	}
+> +
+> +	btf_dump_data_pfx(d);
+> +	btf_dump_printf(d, "\"");
+> +
+> +	for (i = 0; i < array->nelems; i++, data++) {
+> +		char c;
+> +
+> +		if (data >= d->typed_dump->data_end)
+> +			return -E2BIG;
+> +
+> +		c = *(char *)data;
+> +		if (c == '\0') {
+> +			/* When printing character arrays as strings, NUL bytes
+> +			 * are always treated as string terminators; they are
+> +			 * never printed.
+> +			 */
+> +			break;
+> +		}
+> +		if (isprint(c))
+> +			btf_dump_printf(d, "%c", c);
+> +		else
+> +			btf_dump_printf(d, "\\x%02x", *(__u8 *)data);
+> +	}
+> +
+> +	btf_dump_printf(d, "\"");
+> +
+> +	return 0;
+> +}
+> +
+>  static int btf_dump_array_data(struct btf_dump *d,
+>  			       const struct btf_type *t,
+>  			       __u32 id,
+> @@ -2055,8 +2100,11 @@ static int btf_dump_array_data(struct btf_dump *d,
+>  		 * char arrays, so if size is 1 and element is
+>  		 * printable as a char, we'll do that.
+>  		 */
+> -		if (elem_size == 1)
+> +		if (elem_size == 1) {
+> +			if (d->typed_dump->print_strings)
+> +				return btf_dump_string_data(d, t, id, data);
+>  			d->typed_dump->is_array_char = true;
+> +		}
+>  	}
+>  
+>  	/* note that we increment depth before calling btf_dump_print() below;
+> @@ -2544,6 +2592,7 @@ int btf_dump__dump_type_data(struct btf_dump *d, __u32 id,
+>  	d->typed_dump->compact = OPTS_GET(opts, compact, false);
+>  	d->typed_dump->skip_names = OPTS_GET(opts, skip_names, false);
+>  	d->typed_dump->emit_zeroes = OPTS_GET(opts, emit_zeroes, false);
+> +	d->typed_dump->print_strings = OPTS_GET(opts, print_strings, false);
+>  
+>  	ret = btf_dump_dump_type_data(d, NULL, t, id, data, 0, 0);
+>  
+> -- 
+> 2.49.0.1143.g0be31eac6b-goog
