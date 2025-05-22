@@ -1,134 +1,266 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73842320F;
-	Thu, 22 May 2025 07:05:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.5])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 04B82320F
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 07:08:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747897528; cv=none; b=sjkE8RmXzmy1Y7Y3KLEVCnsC2udVtQ7tPyVUGlXAipthd9d+CtMTjAY6aQjQJJRzNUhwpty/QhM8NgoHEaoO55mosN/lqpt54m6W7umrLRfp7u1vLvsPIIm9fbfqcxc2apDHwfauq15rNo86g7ciUXu5CIVQo6K6ucgUxGkECEU=
+	t=1747897692; cv=none; b=uF9BNfp2FYF0jGFn2uBXnhOAEfzIxn4Qegm3Dut2ct8kyza4tJ/KMK8hIMifNRbe0h0OqlJ8TDVx0OyiTcN5WbuPiLAIS67k3zVjtBzyKlHTCLL9uovVufgBSH3xcymCj/O8otrS8QFwsZ+Hrf+afHS6MRWGswgYGNYTaJ19go8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747897528; c=relaxed/simple;
-	bh=VWZUBj/REVNh4kP8z0AREFQwTT+Je+Tioh8mPZS898s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=siFpSuyHKJZVFh8pOSl6l8NnzkwZukXNnh/svgHMMtoxxr+vh64CS4iyVCG2shx/9Lioj38dq7u+3SW2k+1vsYhuxiUI5wT9viNTDKBz6oVdYyeDVyxdhnJ/b1Xqm0d5NYR2UB+BPnKU9tH085h0dS8pwktrhgPkWgV/47s8F9w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SctiR2lj; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747897692; c=relaxed/simple;
+	bh=LPw2HOuGWOtaEQtY8Q/dIcXVuDx9xTolb+0SbY9H/Is=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=R7FeOY1+53Tg7S4XXkVDdFepK3HUs1BM1x8AmubxxhcYmo95vJvFlQkLPMe8PdoL8JVnuJIb0gBRzxyYtXYQ/zU8Ywo8qW5mHJf+2auXNF2bSLj4qtXOlrbuNJ3gc3cQaypjYfLZFVSv40vima/T5rTvHjvAgW+OmnxHn6saUrk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=OsUIBpAo; arc=none smtp.client-ip=117.135.210.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SctiR2lj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69666C4CEE4;
-	Thu, 22 May 2025 07:05:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747897528;
-	bh=VWZUBj/REVNh4kP8z0AREFQwTT+Je+Tioh8mPZS898s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=SctiR2ljnFggNEHBNwQZ7pwV6Czy+jXGZxP+6Xydr+nz70JMGdmQePJZjtmqqH65T
-	 HUF8P/JVaHEpbK4WX0Q0IZgG9AiyK5KkjHRcpyL51FitfyyR859VSfvFQSIDLfuWgr
-	 KloI3qBgqWwDgRN8TXyYPJySGa93Euc10v/itg4e7LXmXYzOX7F7VGfteCOWrQr6hg
-	 8UN9NJHRGLNzOd0BEUC45bH1xuTdGPfUfQcu/hsIMAgoPEpPW2AEPjFWWTnfCGZWl1
-	 FbGLl40TSxoXPqD7/LH/X5judNrKoQ0OF8mc7PoRiPi2w6gKGOkD6BRrPPhCuo7ndH
-	 4ML4UiyN0unIA==
-Date: Thu, 22 May 2025 09:05:25 +0200
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Claudiu <claudiu.beznea@tuxon.dev>
-Cc: vkoul@kernel.org, kishon@kernel.org, robh@kernel.org, 
-	krzk+dt@kernel.org, conor+dt@kernel.org, p.zabel@pengutronix.de, 
-	geert+renesas@glider.be, magnus.damm@gmail.com, yoshihiro.shimoda.uh@renesas.com, 
-	kees@kernel.org, gustavoars@kernel.org, biju.das.jz@bp.renesas.com, 
-	linux-phy@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-renesas-soc@vger.kernel.org, linux-hardening@vger.kernel.org, john.madieu.xa@bp.renesas.com, 
-	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-Subject: Re: [PATCH v3 09/12] dt-bindings: reset: renesas,rzg2l-usbphy-ctrl:
- Document RZ/G3S support
-Message-ID: <20250522-interesting-alligator-of-youth-fd34af@kuoka>
-References: <20250521140943.3830195-1-claudiu.beznea.uj@bp.renesas.com>
- <20250521140943.3830195-10-claudiu.beznea.uj@bp.renesas.com>
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="OsUIBpAo"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=ZZ
+	Ttms7TBRD0y7cEZYRdqCrECvVlyVPosONMUJm1U7I=; b=OsUIBpAo90uSGG57xJ
+	dzJBpwBQs8Rss8sHnv6TUEmQ6jd3DCmS8iUpvjmOHUBVqDw4mJVtTlmhCDMtTjTn
+	jDGqM/KHpratEFRYDvvqOB+2z3J7hEZrw+RMTC14GTOcuhmPaTWqkshwtJ3H8iv1
+	5ETbsgaWuWamw41vUjuiRitDU=
+Received: from localhost.localdomain (unknown [])
+	by gzga-smtp-mtada-g0-3 (Coremail) with SMTP id _____wC3TPQpzS5oHcJjDA--.17971S2;
+	Thu, 22 May 2025 15:07:23 +0800 (CST)
+From: oushixiong1025@163.com
+To: =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Sean Paul <sean@poorly.run>,
+	Jocelyn Falempe <jfalempe@redhat.com>,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	Shixiong Ou <oushixiong@kylinos.cn>
+Subject: [PATCH v5 RESEND 1/3] drm/shmem-helper: Import dmabuf without mapping its sg_table
+Date: Thu, 22 May 2025 15:07:12 +0800
+Message-Id: <20250522070714.439824-1-oushixiong1025@163.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250521140943.3830195-10-claudiu.beznea.uj@bp.renesas.com>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wC3TPQpzS5oHcJjDA--.17971S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxtryrGFW8uF1kJw4rKF18uFg_yoWxKF45pF
+	sxAryUKrW5tFWqg3s3Awn7Zas09w409F4Iq3yfJw4Y93WktF1qkFn5Ar90vFy7AryDJFyS
+	qFWDAFyrCryjkF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jn2-5UUUUU=
+X-CM-SenderInfo: xrxvxxx0lr0wirqskqqrwthudrp/1tbiXBtTD2gsLiHUmAACse
 
-On Wed, May 21, 2025 at 05:09:40PM GMT, Claudiu wrote:
-> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-> 
-> The Renesas USB PHY hardware block receives an input signal from the system
-> controller. This signal must be controlled during power-on, power-off, and
-> system suspend/resume sequences as follows:
-> - during power-on/resume, it must be de-asserted before enabling clocks and
->   modules
-> - during power-off/suspend, it must be asserted after disabling clocks and
->   modules
-> 
-> Add the renesas,sysc-signals device tree property, which allows the
-> reset-rzg2l-usbphy-ctrl driver to parse, map, and control the system
-> controller signal at the appropriate time. Along with it add a new
-> compatible for the RZ/G3S SoC.
-> 
-> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-> ---
-> 
-> Changes in v3:
-> - none; this patch is new
-> 
->  .../reset/renesas,rzg2l-usbphy-ctrl.yaml      | 38 ++++++++++++++++---
->  1 file changed, 32 insertions(+), 6 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/reset/renesas,rzg2l-usbphy-ctrl.yaml b/Documentation/devicetree/bindings/reset/renesas,rzg2l-usbphy-ctrl.yaml
-> index b0b20af15313..75134330f797 100644
-> --- a/Documentation/devicetree/bindings/reset/renesas,rzg2l-usbphy-ctrl.yaml
-> +++ b/Documentation/devicetree/bindings/reset/renesas,rzg2l-usbphy-ctrl.yaml
-> @@ -15,12 +15,15 @@ description:
->  
->  properties:
->    compatible:
-> -    items:
-> -      - enum:
-> -          - renesas,r9a07g043-usbphy-ctrl # RZ/G2UL and RZ/Five
-> -          - renesas,r9a07g044-usbphy-ctrl # RZ/G2{L,LC}
-> -          - renesas,r9a07g054-usbphy-ctrl # RZ/V2L
-> -      - const: renesas,rzg2l-usbphy-ctrl
-> +    oneOf:
-> +      - items:
-> +          - enum:
-> +              - renesas,r9a07g043-usbphy-ctrl # RZ/G2UL and RZ/Five
-> +              - renesas,r9a07g044-usbphy-ctrl # RZ/G2{L,LC}
-> +              - renesas,r9a07g054-usbphy-ctrl # RZ/V2L
-> +          - const: renesas,rzg2l-usbphy-ctrl
-> +
+From: Shixiong Ou <oushixiong@kylinos.cn>
 
-Drop blank line
+[WHY]
+1. Drivers using DRM_GEM_SHADOW_PLANE_HELPER_FUNCS and
+   DRM_GEM_SHMEM_DRIVER_OPS (e.g., udl, ast) do not require
+   sg_table import.
+   They only need dma_buf_vmap() to access the shared buffer's
+   kernel virtual address.
 
-> +      - const: renesas,r9a08g045-usbphy-ctrl # RZ/G3S
->  
->    reg:
->      maxItems: 1
-> @@ -48,6 +51,16 @@ properties:
->      $ref: /schemas/regulator/regulator.yaml#
->      unevaluatedProperties: false
->  
-> +  renesas,sysc-signals:
-> +    description: System controller phandle, specifying the register
-> +      offset and bitmask associated with a specific system controller signal
+2. On certain Aspeed-based boards, a dma_mask of 0xffff_ffff may
+   trigger SWIOTLB during dmabuf import. However, IO_TLB_SEGSIZE
+   restricts the maximum DMA streaming mapping memory, resulting in
+   errors like:
 
-Same comments.
+   ast 0000:07:00.0: swiotlb buffer is full (sz: 3145728 bytes), total 32768 (slots), used 0 (slots)
 
-> +    $ref: /schemas/types.yaml#/definitions/phandle-array
-> +    items:
-> +      - items:
-> +          - description: system controller phandle
-> +          - description: register offset associated with a signal
-> +          - description: register bitmask associated with a signal
-> +
->  required:
->    - compatible
->    - reg
-> @@ -57,6 +70,19 @@ required:
->    - '#reset-cells'
->    - regulator-vbus
+[HOW]
+Provide a gem_prime_import implementation without sg_table mapping
+to avoid issues (e.g., "swiotlb buffer is full"). Drivers that do not
+require sg_table can adopt this.
 
-Best regards,
-Krzysztof
+Signed-off-by: Shixiong Ou <oushixiong@kylinos.cn>
+---
+v1->v2:
+	Patch rebase.
+v2->v3:
+	Rename the import callback function.
+	Remove drm_gem_shmem_prime_export() and separate some codes
+	to drm_gem_prime_import_self(). 
+v3->v4:
+	Separate the test from the policy.
+	Rename the macro.
+v4->v5:
+	Rename some functions.
+
+ drivers/gpu/drm/drm_gem_shmem_helper.c | 57 ++++++++++++++++++++++++++
+ drivers/gpu/drm/drm_prime.c            | 36 ++++++++++++----
+ include/drm/drm_gem_shmem_helper.h     | 15 +++++++
+ include/drm/drm_prime.h                |  3 ++
+ 4 files changed, 102 insertions(+), 9 deletions(-)
+
+diff --git a/drivers/gpu/drm/drm_gem_shmem_helper.c b/drivers/gpu/drm/drm_gem_shmem_helper.c
+index aa43265f4f4f..126aa79042ad 100644
+--- a/drivers/gpu/drm/drm_gem_shmem_helper.c
++++ b/drivers/gpu/drm/drm_gem_shmem_helper.c
+@@ -800,6 +800,63 @@ drm_gem_shmem_prime_import_sg_table(struct drm_device *dev,
+ }
+ EXPORT_SYMBOL_GPL(drm_gem_shmem_prime_import_sg_table);
+ 
++/**
++ * drm_gem_shmem_prime_import_no_map - Import dmabuf without mapping its sg_table
++ * @dev: Device to import into
++ * @dma_buf: dma-buf object to import
++ *
++ * Drivers that use the shmem helpers but also wants to import dmabuf without
++ * mapping its sg_table can use this as their &drm_driver.gem_prime_import
++ * implementation.
++ */
++struct drm_gem_object *drm_gem_shmem_prime_import_no_map(struct drm_device *dev,
++							 struct dma_buf *dma_buf)
++{
++	struct dma_buf_attachment *attach;
++	struct drm_gem_shmem_object *shmem;
++	struct drm_gem_object *obj;
++	size_t size;
++	int ret;
++
++	if (drm_gem_is_prime_exported_dma_buf(dev, dma_buf)) {
++		/*
++		 * Importing dmabuf exported from our own gem increases
++		 * refcount on gem itself instead of f_count of dmabuf.
++		 */
++		obj = dma_buf->priv;
++		drm_gem_object_get(obj);
++		return obj;
++	}
++
++	attach = dma_buf_attach(dma_buf, dev->dev);
++	if (IS_ERR(attach))
++		return ERR_CAST(attach);
++
++	get_dma_buf(dma_buf);
++
++	size = PAGE_ALIGN(attach->dmabuf->size);
++
++	shmem = __drm_gem_shmem_create(dev, size, true, NULL);
++	if (IS_ERR(shmem)) {
++		ret = PTR_ERR(shmem);
++		goto fail_detach;
++	}
++
++	drm_dbg_prime(dev, "size = %zu\n", size);
++
++	shmem->base.import_attach = attach;
++	shmem->base.resv = dma_buf->resv;
++
++	return &shmem->base;
++
++fail_detach:
++	dma_buf_detach(dma_buf, attach);
++	dma_buf_put(dma_buf);
++
++	return ERR_PTR(ret);
++}
++EXPORT_SYMBOL_GPL(drm_gem_shmem_prime_import_no_map);
++
+ MODULE_DESCRIPTION("DRM SHMEM memory-management helpers");
+ MODULE_IMPORT_NS("DMA_BUF");
+ MODULE_LICENSE("GPL v2");
+diff --git a/drivers/gpu/drm/drm_prime.c b/drivers/gpu/drm/drm_prime.c
+index d828502268b8..b825b71038d6 100644
+--- a/drivers/gpu/drm/drm_prime.c
++++ b/drivers/gpu/drm/drm_prime.c
+@@ -910,6 +910,26 @@ struct dma_buf *drm_gem_prime_export(struct drm_gem_object *obj,
+ }
+ EXPORT_SYMBOL(drm_gem_prime_export);
+ 
++
++/**
++ * drm_gem_is_prime_exported_dma_buf -
++ * checks if the DMA-BUF was exported from a GEM object belonging to @dev.
++ * @dev: drm_device to check against
++ * @dma_buf: dma-buf object to import
++ *
++ * Return: true if the DMA-BUF was exported from a GEM object belonging
++ * to @dev, false otherwise.
++ */
++
++bool drm_gem_is_prime_exported_dma_buf(struct drm_device *dev,
++				       struct dma_buf *dma_buf)
++{
++	struct drm_gem_object *obj = dma_buf->priv;
++
++	return (dma_buf->ops == &drm_gem_prime_dmabuf_ops) && (obj->dev == dev);
++}
++EXPORT_SYMBOL(drm_gem_is_prime_exported_dma_buf);
++
+ /**
+  * drm_gem_prime_import_dev - core implementation of the import callback
+  * @dev: drm_device to import into
+@@ -933,16 +953,14 @@ struct drm_gem_object *drm_gem_prime_import_dev(struct drm_device *dev,
+ 	struct drm_gem_object *obj;
+ 	int ret;
+ 
+-	if (dma_buf->ops == &drm_gem_prime_dmabuf_ops) {
++	if (drm_gem_is_prime_exported_dma_buf(dev, dma_buf)) {
++		/*
++		 * Importing dmabuf exported from our own gem increases
++		 * refcount on gem itself instead of f_count of dmabuf.
++		 */
+ 		obj = dma_buf->priv;
+-		if (obj->dev == dev) {
+-			/*
+-			 * Importing dmabuf exported from our own gem increases
+-			 * refcount on gem itself instead of f_count of dmabuf.
+-			 */
+-			drm_gem_object_get(obj);
+-			return obj;
+-		}
++		drm_gem_object_get(obj);
++		return obj;
+ 	}
+ 
+ 	if (!dev->driver->gem_prime_import_sg_table)
+diff --git a/include/drm/drm_gem_shmem_helper.h b/include/drm/drm_gem_shmem_helper.h
+index b4f993da3cae..35f7466dca84 100644
+--- a/include/drm/drm_gem_shmem_helper.h
++++ b/include/drm/drm_gem_shmem_helper.h
+@@ -287,6 +287,8 @@ drm_gem_shmem_prime_import_sg_table(struct drm_device *dev,
+ 				    struct sg_table *sgt);
+ int drm_gem_shmem_dumb_create(struct drm_file *file, struct drm_device *dev,
+ 			      struct drm_mode_create_dumb *args);
++struct drm_gem_object *drm_gem_shmem_prime_import_no_map(struct drm_device *dev,
++							 struct dma_buf *buf);
+ 
+ /**
+  * DRM_GEM_SHMEM_DRIVER_OPS - Default shmem GEM operations
+@@ -298,4 +300,17 @@ int drm_gem_shmem_dumb_create(struct drm_file *file, struct drm_device *dev,
+ 	.gem_prime_import_sg_table = drm_gem_shmem_prime_import_sg_table, \
+ 	.dumb_create		   = drm_gem_shmem_dumb_create
+ 
++/**
++ * DRM_GEM_SHMEM_DRIVER_OPS_NO_MAP_SGT - shmem GEM operations
++ *                                       without mapping sg_table on
++ *                                       imported buffer.
++ *
++ * This macro provides a shortcut for setting the shmem GEM operations in
++ * the &drm_driver structure for drivers that do not require a sg_table on
++ * imported buffers.
++ */
++#define DRM_GEM_SHMEM_DRIVER_OPS_NO_MAP_SGT \
++	.gem_prime_import       = drm_gem_shmem_prime_import_no_map, \
++	.dumb_create            = drm_gem_shmem_dumb_create
++
+ #endif /* __DRM_GEM_SHMEM_HELPER_H__ */
+diff --git a/include/drm/drm_prime.h b/include/drm/drm_prime.h
+index fa085c44d4ca..f50f862f0d8b 100644
+--- a/include/drm/drm_prime.h
++++ b/include/drm/drm_prime.h
+@@ -100,6 +100,9 @@ struct dma_buf *drm_gem_prime_export(struct drm_gem_object *obj,
+ unsigned long drm_prime_get_contiguous_size(struct sg_table *sgt);
+ 
+ /* helper functions for importing */
++bool drm_gem_is_prime_exported_dma_buf(struct drm_device *dev,
++				       struct dma_buf *dma_buf);
++
+ struct drm_gem_object *drm_gem_prime_import_dev(struct drm_device *dev,
+ 						struct dma_buf *dma_buf,
+ 						struct device *attach_dev);
+-- 
+2.17.1
 
