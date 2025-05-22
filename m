@@ -1,98 +1,113 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C82EF19ABDE;
-	Thu, 22 May 2025 09:47:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E8D119ABDE;
+	Thu, 22 May 2025 09:47:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747907239; cv=none; b=ii/kC/O3SG9Nj0gRs0+HwvBzmaBPa5VaxEq00c7jqpECC+9wyoXDXlol7XGQNhylpiAR/3juvSZtUIFajBpB9TVssu/UN1KqDrCPfhquMq74PvOFwHSPi+7YBFNteZkBRKSRAxHIVo/GkLx7wCRHVLJqYfg/Q1irc9+wRTHzSVM=
+	t=1747907246; cv=none; b=J/1fCxsgNFgt9rXSy+h67jshKcVXEaP02cikaG0zlNmGiMcaTuWYVyRreFLe3rVhlhHHukwJPMV98+df8RShgPXgyF8TWFaqbmOAtg4aS96dA7rQO8PFsnjF1FVymlimrgOZwDaXJlXLCrKYR0tybJhf3MfwsGfpo4Laz59RLi0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747907239; c=relaxed/simple;
-	bh=wPk4ppqhqv2VPlVT26EM2PkHrNSLSJCeGnRWlxBg7Rk=;
+	s=arc-20240116; t=1747907246; c=relaxed/simple;
+	bh=4Mi//bmqCitlsd1rQzDuiS76DZ9pyq2kmydmOzYN5jw=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=k3NbAkf4yTW0S111Jm4XobjpGCkwtcTzpvXXQIf8isGezXtAuwaGfMF1LLIGJjcnZFvIH53vDWgtXM2r7Op42AFeNKhYpeauN7EM4EpmYo4PgAeBXXfWLUBwO5a18r01VS7JSmecsmDe6sFno3BFASFR3lDWb8+7U9N6FhlWHdg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FCIR5Zow; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=cK3y6xQggniDnEY82rduAHQDgYhctgFIbZRvbZB/lUn6OTOQzyc8VijqTSeW4U7UKUwL4HAT7K3uH+6JARBFjZgeChxGzTsdULZA53lQsDEEzZlvERdSoWTztc7jYcfV9vT7zu0EJ+Qou9+rQXrcGhG5gmBetjUJZFHVAu6hzxc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=E/YJ7Weh; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FCIR5Zow"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2CAC2C4CEE4;
-	Thu, 22 May 2025 09:47:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747907237;
-	bh=wPk4ppqhqv2VPlVT26EM2PkHrNSLSJCeGnRWlxBg7Rk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=FCIR5ZowXZABtr+GqkpGFt4VxzB/wqaf2T8kdnoTKbL9IHDlFogYClH3XneW86das
-	 E72mm1uKBFyTyp8LOWFXdrcJvjL+nfZEg/V4NY9jfRmLlZ/J2byM0me5SNYuIWTRpn
-	 jt2Of3S3fh+CSuV10FF5PGpWacglQBKkFZEQaug/PdZBKn+FKGOB8zr5P+lx5QiMuX
-	 GgVH9zePHbmZ5uPU22XxlXr68TOjLoV55UMz1/NhHmO0HVxJECVwjIfa0M3BlwNfW6
-	 70jOhcLggwk0BrLHrbjKJh/kQHJalyX8zIi2pncbbFqhl/6IPVnqhRA7SKt2OjKWIi
-	 HMs82u5f4nrPQ==
-Received: by mail-oi1-f182.google.com with SMTP id 5614622812f47-3f8ae3ed8f4so5005190b6e.3;
-        Thu, 22 May 2025 02:47:17 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWAurBNXusr889NPPPrFdLZoa9iRiwj6IHY3XWTonzRcfXpgMhj8TN0utMpZDzf3yuKvru20UQlIOg=@vger.kernel.org, AJvYcCWJh/Re0K0m+NVWP4r6AnzBz3ud4dT0nMURB9g4hLcHZE2cv7GWrWkFdiDEs05oVCwVk5f6IUqq/kMsWVq3@vger.kernel.org, AJvYcCWe0Dw91dwiWKKqeLL0uXVz1HyjjMHNI0v8nyzqyBAejI2UbzqLiBk0vbsinbFLiRBhn2oNTbEgbgY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxmFTIkN1DmYsm5g84lWEMhYZsWsJkDfno9XZGaIooF6ivHIl4W
-	rmskHtwgNEbPz8UBdDsB0G4p51/t3Hd/PhZZ2D72DeQ0oMnvD9SbZq9rFe8+JO6Mclwh0rD/nKf
-	+IabsLrDZ/Vahq+nug6XVpKjB4jWI2+4=
-X-Google-Smtp-Source: AGHT+IHqj6QSMl9Aw2ToZVsCr3PhfufkcskyUJbk05OX0Q2RQ3/40Slrwh7uo0rEXdISL7J7PqeZOJVJKZNg9Y4Glqg=
-X-Received: by 2002:a05:6808:338a:b0:3f6:a9d4:b7e4 with SMTP id
- 5614622812f47-404d86f3f18mr16853920b6e.20.1747907236480; Thu, 22 May 2025
- 02:47:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E/YJ7Weh"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-231ecbe2a5dso5685595ad.0;
+        Thu, 22 May 2025 02:47:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747907244; x=1748512044; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ipAwY8ZxlvEf1nakEvQVnIk9cDkKI8+OAel+80ahbDs=;
+        b=E/YJ7WehRFVOuqchMTDdvFDk6Alkq7Il6ryhrxCJfHvQTrtpTLzAqSr1gaclOlqcNn
+         /7mKJKgsE2sPHKPMCOdVXxpz2RURymaIa9vTFFNsz+yokYgipeQoKP0npt4dX9iJTJHs
+         30Wr7Udb1gR/rRnxSm1U9tK9rqSccdwWMvfOSR9/bq3FMap/FonrAs+rzV65AEKLxtZl
+         GDyLKzgJ9BwOCe7sytaGVvsYcsAbICu+OhG+L2tFNWKwyQmNK/1wSghzJ4+q0Uji4cgl
+         ConOcbezkbjmekFdeoCXUn7RcqLzVFPPcMtG9k1ARMmznNNNCllAx3BGRHSJKM7o/S7F
+         rGlA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747907244; x=1748512044;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ipAwY8ZxlvEf1nakEvQVnIk9cDkKI8+OAel+80ahbDs=;
+        b=LlOlzG4v77yFyoxA+kXlRa7AVCQWO4knSFZKhNx9FhAFnp2zD59hLW7Gxg9c+6CsGS
+         UQpj1JfAmmx1CKYGXLGlKIIjqNT4KR2NACzYjbW3Y0OCFqpUSwuVuNYD2MhBbFjWjf/e
+         OxmyvCKPWn0QjWx+mQKXAqQIcVEmpyL4LmBKzt/9v2PS0ub+UvBx3xqOSZiLzNGTySwy
+         Uvdn5vFqcsVotHCD/ZMnCKM4ghtfO/anPxQxChiebdb9PqPHfcIHhpIkJc2yGYNqcKgT
+         VbMce+7VwmEpgRqqT/cqtOwgMUcNedE/YCuGs7nsUGVHz+KvltgIBYIMf6pmOxAuVygj
+         2eIw==
+X-Forwarded-Encrypted: i=1; AJvYcCVbTMfJtlhzKGV3mV9nukIdzH5n2nF4fCr5QMOWdimzeccyc8vg0Imfz+a7ptDWhuPyX3OCrQpEUf5QuOwyanA=@vger.kernel.org, AJvYcCWfWTmTeTRAEQb8fQpg5WkrzdxbrhdKYLVMhs6oU2qfb5nHSPRiTxZELS30vSQDCAKw60ynH1KnZl3byUw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwEO8FHJhJATtOubcdq6Orkh5qdzdsrs4B960Vn3++PIy6I5IcU
+	PSyfluZx0cMfy5nssyxbI3+HosvnbvU723yNLNnBNN/5o085W2oHKK1NuisYdNfdsF0Q9Io4uBa
+	sltz1gmaGaIC2YfztOsC+YHC6dKWpnww=
+X-Gm-Gg: ASbGncv2L8FAEp/t5oTWFq4LOjy4F2X2Nby/baTpZO1szlovHUKvJbRTkiKN5o+JWU8
+	6+G6uLo6RtlZ4uOscqmQxion+ThU8tuKLV4FkmJ8ZO6MD+BOxjTkH5z2QXgEEekvF946irBLhAi
+	1kFUBkezaKWCbvXpCacP2EqVOH65yQOx9j
+X-Google-Smtp-Source: AGHT+IHKkMNeaj6kG+RCv22d49KV67QvtWhnBvQaNqs96AouSRNF37SPJJw4Y6hGaON6FpFmZHUqDu6VOEZ338Aktx8=
+X-Received: by 2002:a17:903:2285:b0:22f:b00d:fe59 with SMTP id
+ d9443c01a7336-231d450fd20mr120664705ad.9.1747907244533; Thu, 22 May 2025
+ 02:47:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250522-userspace-governor-doc-v1-1-c8a038e39084@sony.com> <15871c67-0d18-430f-935e-261b2cda855b@gmail.com>
-In-Reply-To: <15871c67-0d18-430f-935e-261b2cda855b@gmail.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Thu, 22 May 2025 11:47:04 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0gz3Y+RGqBf9E1hzq9rwfrryd98Xpk51DtLd-uck5y-rw@mail.gmail.com>
-X-Gm-Features: AX0GCFuEkuL_MNkf6jCc8Tj-u2AdKArucmRgg0Lk2TB1xeDhvOGntl8-Xw66Wng
-Message-ID: <CAJZ5v0gz3Y+RGqBf9E1hzq9rwfrryd98Xpk51DtLd-uck5y-rw@mail.gmail.com>
-Subject: Re: [PATCH] cpufreq, docs: (userspace governor) add that actual freq
- is >= scaling_setspeed
-To: Russell Haley <yumpusamongus@gmail.com>
-Cc: Shashank Balaji <shashank.mahadasyam@sony.com>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Viresh Kumar <viresh.kumar@linaro.org>, Jonathan Corbet <corbet@lwn.net>, linux-pm@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Shinya Takumi <shinya.takumi@sony.com>
+References: <20250520182125.806758-1-ojeda@kernel.org>
+In-Reply-To: <20250520182125.806758-1-ojeda@kernel.org>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Thu, 22 May 2025 11:47:10 +0200
+X-Gm-Features: AX0GCFudr69K7Ker-OBq61Wf5eeUt338xEQM0BHHVJyg1bvCHsTu9tjB29wkrAQ
+Message-ID: <CANiq72=p4P9MuFKNy28PdHSqznvW_8Tep1wjm3zPXqbZVrujfg@mail.gmail.com>
+Subject: Re: [PATCH] rust: remove unneeded Rust 1.87.0 `allow(clippy::ptr_eq)`
+To: Miguel Ojeda <ojeda@kernel.org>
+Cc: Alex Gaynor <alex.gaynor@gmail.com>, Danilo Krummrich <dakr@kernel.org>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, patches@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, May 22, 2025 at 10:51=E2=80=AFAM Russell Haley <yumpusamongus@gmail=
-.com> wrote:
+On Tue, May 20, 2025 at 8:22=E2=80=AFPM Miguel Ojeda <ojeda@kernel.org> wro=
+te:
 >
+> Before a change to relax the lint was backported to Rust 1.87.0 before
+> its release, Clippy was expected to warn with:
 >
-> On 5/22/25 3:05 AM, Shashank Balaji wrote:
-> > The userspace governor does not have the CPUFREQ_GOV_STRICT_TARGET flag=
-, which
-> > means the requested frequency may not strictly be followed. This is tru=
-e in the
-> > case of the intel_pstate driver with HWP enabled. When programming the
-> > HWP_REQUEST MSR, the min_perf is set to `scaling_setspeed`, and the max=
-_perf
-> > is set to the policy's max. So, the hardware is free to increase the fr=
-equency
-> > beyond the requested frequency.
-> >
-> > This behaviour can be slightly surprising, given the current wording "a=
-llows
-> > userspace to set the CPU frequency". Hence, document this.
-> >
+>     error: use `core::ptr::eq` when comparing raw pointers
+>        --> rust/kernel/list.rs:438:12
+>         |
+>     438 |         if self.first =3D=3D item {
+>         |            ^^^^^^^^^^^^^^^^^^ help: try: `core::ptr::eq(self.fi=
+rst, item)`
+>         |
+>         =3D help: for further information visit https://rust-lang.github.=
+io/rust-clippy/master/index.html#ptr_eq
+>         =3D note: `-D clippy::ptr-eq` implied by `-D warnings`
+>         =3D help: to override `-D warnings` add `#[allow(clippy::ptr_eq)]=
+`
 >
-> In my opinion, the documentation is correct, and it is the
-> implementation in intel_pstate that is wrong. If the user wanted two
-> separate knobs that control the minimum and maximum frequencies, they
-> could leave intel_pstate in "active" mode and change scaling_min_freq
-> and scaling_max_freq.
+> The backported finally landed indeed, thus remove the `allow`s we added
+> back then, which were added just in case the backport did not land
+> in time.
 >
-> If the user asks for the frequency to be set from userspace, the
-> frequency had damn well better be set from userspace.
+> See commit a39f30870927 ("rust: allow Rust 1.87.0's `clippy::ptr_eq`
+> lint") for details.
+>
+> Link: https://github.com/rust-lang/rust/pull/140859 [1]
+> Signed-off-by: Miguel Ojeda <ojeda@kernel.org>
 
-The userspace governor requests a frequency between policy->min and
-policy->max on behalf of user space.  In intel_pstate this translates
-to setting DESIRED_PERF to the requested value which is also the case
-for the other governors.
+Applied to `rust-next` -- thanks everyone!
 
-There is no guarantee that the request will be granted by the
-hardware, either way.
+    [ Reworded for clarity. - Miguel ]
+
+Cheers,
+Miguel
