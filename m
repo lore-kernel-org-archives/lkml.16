@@ -1,71 +1,75 @@
-Received: from mail-oi1-f171.google.com (mail-oi1-f171.google.com [209.85.167.171])
+Received: from mail-oa1-f44.google.com (mail-oa1-f44.google.com [209.85.160.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D468299A82;
-	Thu, 22 May 2025 20:10:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 807EE2BF3D6;
+	Thu, 22 May 2025 20:10:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747944602; cv=none; b=szrKtH9kTw6rASjLwzjQXNnwWSWz5UJdeW4N33VGVnr/8tZ1xIBeEw3O3d4yc9oZ52KXB3OFOxDG+5A7kND6qRsmMC+jzOs0nOFnYs2+VCkKHqidennv6WpU6FBeWAjBSOUd5Ju6dxw5qTeTOgppkbLO/3BmvjieMnjxkSqag3U=
+	t=1747944606; cv=none; b=jAkOAtUe5ithigePh3pWguc86yryBHNrIXZt2HXfrnm+t9XrQjika7i/RDzyk4wPgjt2RiVZ9wKXcptFlmTclzt/QaVXKWBW4DgqOtptgMoP7H2FEe6Viu/KATWnh2uQp7m1LUyEuJbBCgfAO2XyMvGFLCEhtzx8C8DKsSH2zQI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747944602; c=relaxed/simple;
-	bh=p9/pNJYsbJZ0RIuWE1wbo3/DEdO20HrWT0SOvC3HHi8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XQH4XrZ3LGpA5GHLM1cjgtkmFPFnvYlDVU17YnKNehDFLGyZtsajD31Qqrhj7gFisK7srow8ZCFlipaGCBsHZu7mR4lB9IZM33p1vI1+WVyDETMCm6i01dAPmI/AaAcIEWEjI0uFiTC0iuzPP+pLnPEAWX6MR1XCVEZOcfrEl1s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Vy8TCyyc; arc=none smtp.client-ip=209.85.167.171
+	s=arc-20240116; t=1747944606; c=relaxed/simple;
+	bh=HktfipjCtbNhdpQdjG/jx9IyuttYJiKuu2cQchPP5AQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=DVyzCIU0ibG6c4Zqd84i+oYLg1mYFQrAkwl7uI09hBCArq1zvLWtQa7uXhfCkr0GLbNObGm3yw6sNm1zHSAD6SG7qJ00lNBurIiuIE4s4UD0/Cymcsw++KJS6IrLl2lJMzR3aZIYZsmJ7CRWiEBH9BXnt9RSdDP3AQWsS8JLlzU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AO+oBvOX; arc=none smtp.client-ip=209.85.160.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vy8TCyyc"
-Received: by mail-oi1-f171.google.com with SMTP id 5614622812f47-401e77e5443so5165900b6e.3;
-        Thu, 22 May 2025 13:10:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AO+oBvOX"
+Received: by mail-oa1-f44.google.com with SMTP id 586e51a60fabf-2cc89c59cc0so174457fac.0;
+        Thu, 22 May 2025 13:10:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747944600; x=1748549400; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=s0aAykAeokLzVgQoWk8FSpEI5FPVsNBWB79BPE5DV7A=;
-        b=Vy8TCyycQVvf0NXaKY1niUMuFLNackbxQjsFx4HrpyQNOVYpjN6yUoxlev6n6xMKyu
-         YlFxvV/PMRlBKH5sn9EE3FdEUBa3Zn3mJ0eQUlS4NXGH4ms1PU2n680D1ePEhLeyJZm9
-         JhnwUFmFLCh6rvJP4VpuixPLOLcdmYYn/G/WgMcV7a63EGdhN2lawm0HZq6ZKe1SQYIy
-         OJTaVGiKKFzDGTUHzsZhUsPIqKk/RraPPCkxlKChl/UdNi5IZHOyx2pn7ySDk28t8F6x
-         THVjvXqL9tFkjWajLjO/hBv+SlTylyNmCp31Axrq3d8NoTJ/CvrF6ANcxzGPFMyvOfIQ
-         a4sQ==
+        d=gmail.com; s=20230601; t=1747944602; x=1748549402; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=80W2fxDPnqr3BsAdMQ1F8twH1xONkZpWztd0paXrfPc=;
+        b=AO+oBvOXJWnxGRh2lvUL1o76YJG6HXDwsDfycZ18jMCiIKtsIo8o5AdTXfIjrKij8P
+         hgrb/b6UMOk3YE457bmmTNyLm58HW2dfVHk7emWvVyIOcADxangWSlpsbgDUoku3n3ot
+         D6ZYFeOmRZBn2G2zuvcQ8gQVdiQBVsU2bPs676iTJg2rLVwhXe5yKqeATYDRU3bF3nnB
+         T5/m5T8E+6H/P0opv/x4CGqYLtStwxB8pIeZHSkZg0L93VyMArNc4FuxeH/MOsP0TNEV
+         g8peueMICTIYd9fFkVtaovi/bMXy1Q22JO9W7tW00jV4Y4kaY1e2VSxIVYoiqzgAVUIy
+         4knQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747944600; x=1748549400;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=s0aAykAeokLzVgQoWk8FSpEI5FPVsNBWB79BPE5DV7A=;
-        b=BsgqL5LJUWYzb9HQfONshGa1GVlb4NVRKbwhj01k+s5Mp8qrnVx8OE+CYc+BddcXWL
-         RDj7LhNUpPn1czV80ggZ+Li5PHufgnQWHSoARtho11pLqR239HCyfvUndvx4i15kDwp3
-         mkTKAbpa0nUZNzbWbx0kN+BkvxoKJIYHUWZXYvic7XYhKVVPFfYN13v3mGoCUdaXGWyo
-         zoN+srEdu0q+1aLkDfA44H7usAt+m1vj4QV0OLyPpGnrW3zptOhUGeIiaSNBiFy0qJ/j
-         pWgi85+aID3Z0jTb0rKgI5iAiwM2MwomaiUrEaCqgpgfUY03CbjrkYhNLJC8jbSBSmY5
-         ACww==
-X-Forwarded-Encrypted: i=1; AJvYcCUnO9qCgjlHElYBaqxkH09oiK0DeR0SYnfB6t6YNgZrHNf7xWYlm5awKsLwKeR1QqV9k+1ns6PFS3JJ+JpGfkasvrYu@vger.kernel.org
-X-Gm-Message-State: AOJu0YyMNKL0V6Adct0GYWQKgbAqYQdJC7/MSli12AK/nIJ+wN+8jtO6
-	QL4w+qThm80I4RhvbgYXXekgYaM8HaWfQ57/Lje27TlSIJoaf1qKmbdeedKYJA==
-X-Gm-Gg: ASbGncvRs93iecjJ4gdpH9LpieXkVHZa/EXmNExSsBjDmeYeR2RUL849B9r7Dd+dIkH
-	49+9VguM4amMYroxZwaJ5gr21S83d1Pg96y8k+CLXPzXEroMyktEMe9IH6o3Gp1ykznDjSElvSW
-	mdH+MfqvP5TzP+igmeVQaF5ZuNm2e2ji8K7wH8pp1nOtFWCfnAILuf0M9v8nYhnbPUDQAGJKgy0
-	JIta4xK7M9Tn9KfjjG760iFXFf90qjnjWGEUJ4fvfbkPdaWM7tTqUvouRBQTCe/bSDGtZCilG3i
-	Q4ZD/uw2mh8Ta9w1a5gm+s4PvnmDsPo+2UBu+hSmhCdTQZSQUs0pB6l+mPrSLHmA1yuV/epfVZS
-	x4E5/kkK6/r6chq8KsQ==
-X-Google-Smtp-Source: AGHT+IHS4UzrtkcgzxaU838V4X3uVzJBnt4QOidUmL5u1csE+c+af+CdRqLtM+XyVXEBMxoI2L4yEw==
-X-Received: by 2002:a05:6808:80ab:b0:3fe:b0ad:f935 with SMTP id 5614622812f47-4063d995a57mr459431b6e.4.1747944600224;
-        Thu, 22 May 2025 13:10:00 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1747944602; x=1748549402;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=80W2fxDPnqr3BsAdMQ1F8twH1xONkZpWztd0paXrfPc=;
+        b=adtej17ueCQpxMjL5kJqaMNxHInCKZzEZAroQQrbH6uWqyM3UE7IIGEstWS0w9C1Z+
+         vEKOXMw/f1Hlfc0swq/cDUlbzrTr2nSM9RvRF80ztS/KlsOpsFfMemeC8tOPxPBe8E1F
+         a39jispnAHRSyB/5MFOrddTFXi3uZ7PDoJky8UOEL8884a9a1bwdA4/5DW5SIMdXWRQ7
+         VdNwyGr2mleeI4IG6vaikD0hJdYNZFgl0Pd6tAZ/2XgZJi5NG7s8oy957AgyyT7WEM0b
+         qZBrnl7Yt9H/KyvKCzNEsOlFjhoflTMPVwM1oZE8EOS536eGD/Ajx9n53wQfHcp5S+Cx
+         eVdw==
+X-Forwarded-Encrypted: i=1; AJvYcCUVCLQvjuqR/HalgEiallaZqG4tef4T8/P6HuVevFKSYAZy+DFX5/WWLDo/9bN8Xt0HiyZMq0z4nYGA2nCardrZaDml@vger.kernel.org
+X-Gm-Message-State: AOJu0YwM2GlU+1vjrbIDNrHbu8lHXGknHlECvu/Jlgj4GCx7HAx8Xw5n
+	frrGGZc7WMFehSNUGioLrZN5E3tXR2xaXdDuF5AsOQqm5daKlWrRw0NSJI9zsQ==
+X-Gm-Gg: ASbGncvQk2Lgsi3vV0PJ9iSlg/bdelMbpnpDe5fiXPnbrf+9ITtlgFda4NhYqCJ/9Fy
+	vppPYtXaJAh9+XQra8qCY+N1Rr2P7hkMekT8vB4GUgxYw0FFSKlq3B/YA2fViJOv4pbsMh1iJRy
+	3AQhYkoiOPmw7uTNYiXOxo0RYxNmy0if5F0wpGv0FmfMB/4ubgiibXCqNU+JHYEcfICi3yqfT+q
+	lxjAAJHVFz888L3rdEam63PWpOlEjOBspVwdhME5ZY/0oud0h4Z3Ct/2t4W1hXqWovBPb9o1L49
+	BNF2Ov3bTZNpnOIwQno3y9uhMLxoWBbMqcBsDvskZLgDXzHyr51wrUZfABXcMZTNR7Gk8Ss2BIf
+	1djfMjpkbmVXgCsbluA==
+X-Google-Smtp-Source: AGHT+IFNCaFEUdw9Q4Lhho49woOnZgOAPI9sRkEj7PjLf8sh5yHUiQTPttJdPwuecHTOCzVefmBBWg==
+X-Received: by 2002:a05:6870:600a:20b0:29f:bdf0:f0f5 with SMTP id 586e51a60fabf-2e83e9186cfmr427048fac.17.1747944602528;
+        Thu, 22 May 2025 13:10:02 -0700 (PDT)
 Received: from localhost.localdomain.adc.delllabs.net ([143.166.81.254])
-        by smtp.gmail.com with ESMTPSA id 5614622812f47-404d98b2762sm2651046b6e.32.2025.05.22.13.09.59
+        by smtp.gmail.com with ESMTPSA id 5614622812f47-404d98b2762sm2651046b6e.32.2025.05.22.13.10.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 May 2025 13:09:59 -0700 (PDT)
+        Thu, 22 May 2025 13:10:02 -0700 (PDT)
 From: Stuart Hayes <stuart.w.hayes@gmail.com>
 To: linux-kernel@vger.kernel.org,
 	Hans de Goede <hdegoede@redhat.com>,
 	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
 	platform-driver-x86@vger.kernel.org
 Cc: Stuart Hayes <stuart.w.hayes@gmail.com>
-Subject: [PATCH v2 0/3] platform/x86: dell_rbu: Packet data fixes
-Date: Thu, 22 May 2025 15:09:34 -0500
-Message-ID: <20250522200937.9578-1-stuart.w.hayes@gmail.com>
+Subject: [PATCH v2 1/3] platform/x86: dell_rbu: Fix sparse warning
+Date: Thu, 22 May 2025 15:09:35 -0500
+Message-ID: <20250522200937.9578-2-stuart.w.hayes@gmail.com>
 X-Mailer: git-send-email 2.47.1
+In-Reply-To: <20250522200937.9578-1-stuart.w.hayes@gmail.com>
+References: <20250522200937.9578-1-stuart.w.hayes@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,24 +78,26 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Make two fixes related to packet data and fix a sparse warning.
+Fix a sparse lock context warning.
 
 Signed-off-by: Stuart Hayes <stuart.w.hayes@gmail.com>
-
 ---
+ drivers/platform/x86/dell/dell_rbu.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-v2:
- -  Add "__must_hold" to create_packet to remove sparse warning.
- -  Make struct packet_data_list static.
-
-Stuart Hayes (3):
-  platform/x86: dell_rbu: Fix sparse warning
-  platform/x86: dell_rbu: Fix list usage
-  platform/x86: dell_rbu: Stop overwriting data buffer
-
- drivers/platform/x86/dell/dell_rbu.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
-
+diff --git a/drivers/platform/x86/dell/dell_rbu.c b/drivers/platform/x86/dell/dell_rbu.c
+index e30ca325938c..7b019fb72e86 100644
+--- a/drivers/platform/x86/dell/dell_rbu.c
++++ b/drivers/platform/x86/dell/dell_rbu.c
+@@ -91,7 +91,7 @@ static void init_packet_head(void)
+ 	rbu_data.imagesize = 0;
+ }
+ 
+-static int create_packet(void *data, size_t length)
++static int create_packet(void *data, size_t length) __must_hold(&rbu_data.lock)
+ {
+ 	struct packet_data *newpacket;
+ 	int ordernum = 0;
 -- 
 2.47.1
 
