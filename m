@@ -1,122 +1,259 @@
-Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9459228A738
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 14:03:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B96928C015;
+	Thu, 22 May 2025 14:04:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747922640; cv=none; b=PwDrO8QDJWMCsj8wfwaphX473mgdZeRE4sEfuxp8r7sXLUv+iX+cNT5GwNhs1ZOLk5VVXiGqklNm9KXTTcDUsjPSrmcAqnYlYCiu34g6U0H65/1bgwhfi9JR6Vyl5/TsKZQQ/EcwbHAnOvwajRxAiTfHLNqoasawZwlrJX0FBo4=
+	t=1747922651; cv=none; b=P20k/gJxdwS+scxOtolXuPPDPWXXezNqQqSnlygtHGht677KDXVPSlcxa/FndYvdYxpcDjp/QajWh/AtMhz7xJLVSHdFVrYP7cFe5+8U+LBhSsdXQi0WZgr7QosA/OQNHLYgNKcMZhuvlBTOOLc1tR98wBvrDsqffupPZxz35Gs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747922640; c=relaxed/simple;
-	bh=1KVjcik5so/WTA64+96vM5LC1e61yVX6g4s+JpKmV2A=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=m5F99UlTSIQme6pd5IHkUFaqUSDJ+PI/+wnklaNwgHxQJUuamOqxXX5RakVgBWvCHP2sejdxg+XFvKlu2gwuicINGJHB7jWPZR5OnXZF+0XPz99XGHtg6DJRR4prAxaDakQvHI67SHQJGkT7xKt0VGf82tO/21xT15LbhrZRtyo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Nr53kkY8; arc=none smtp.client-ip=209.85.215.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1747922651; c=relaxed/simple;
+	bh=gaVhOROGrfN2y5e11GTj0NSjXZTkCP3N2RkrF3r87Uw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OkLEbtL3XDjgzpIBlaPBPKlEVwBgpCTMow8/YrCa9CLClzrFeYCuQEEx44JmnhJbZq/64n7tMurbL2W8PAhLk+EXsVuAeB19gSkD5u8EZgfkvcHdCxReQdgO1TBITaesOj8KeYMaqaoF5MfpZ3I8koz3MtrVQc6nMdxbqyMX9Vk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jIjrUFAK; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Nr53kkY8"
-Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-b26f7d2c1f1so5962227a12.0
-        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 07:03:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1747922638; x=1748527438; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=WFeocyTJuLKPQZ0pWs7dDXWGd3yi1SWCmy79lHa62kE=;
-        b=Nr53kkY86zoALfGxA53ksW5QSy+ajHUZXaZRfjooPddKw/li9wgH5eq+V1oLLO+rRm
-         iRLgpmhc6vmk5x4k0SFWgqK9PGj4gvlCOxge0kyD298v4pqaBMA+TeafVfslFIWCxKmU
-         LDVsRqaTMzqdLqv9oxDZabsx5Zu85/7cZdQJ+TlecLoiogvY5bH7jiK8CVHOmCeSeDGh
-         I+WhuYf6ME+H95BgllFxtIpdZJTbCK6tNntVPiRC44+3Cb1BPKzlQbKv41/tm8UbO2Pr
-         KlS42pSL3+LRp89uEqX2YaIhUwHGW3vOruWOTr96Y+TRJA27L92aFJr2b8T6sCRESYyK
-         cozg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747922638; x=1748527438;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=WFeocyTJuLKPQZ0pWs7dDXWGd3yi1SWCmy79lHa62kE=;
-        b=eAf8y2TZszsDZDHtc9k1SJhQ+/WxPwkQd2O//uk3rDf1VXawrVl/Mke0Q02AuSj5xz
-         Jd92xfKGwvNtW0kT6wn7TjOAvgKpMqXyCPVoQ1yjlEReSPBcDCXIHU5+MbCxhWX3nesg
-         vVuyRYxVgyMraVdX/FoR7UgvtOMjNFqiY8yjrGrOnGIAZ4WtpxR/LsICBDlHAOfiGjHT
-         mpYWGSDmYqXuezOJjOtwzOJ9kUz7K3hknMB1R1duLbU8m1Hpbl3odwPqfFNaTwYMURKB
-         fkf/J1jd/uWupxt5Y0erbilm14ISGSLfYeQ5Y8j+ZAsOb+79sZdRHR4r+7XyJCEofDbB
-         PRHg==
-X-Forwarded-Encrypted: i=1; AJvYcCU6fMnelOaEWRB0aTRjT767smRyG0SA48R8Nj9ob91KpntvHcynnJEitjg9OW5rLnz0QGLeOgFkatSIOYw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzPJuqgJtFW0E6dPu6fqyuGRF7FwbZ0npE3i8u9gJHNdy45GGK7
-	pMQrjPQuI4wvbAkIzjev4bzM9+lx0uqXaclO5MlIZEqRNF0QXMAPuVA3GjYfSeiu+ygd2q9Dshc
-	CoI8=
-X-Gm-Gg: ASbGnctiE/eW5UmJNorHFQctGT+ni0QjsqYL4MblSXCSVMuWdZ2gJV0G0rbRq9SiCnd
-	l/5oAqVsqHYR1egfNbjlIZD+mP9AT6qWDhCllU9GUENS4ZVQmv3Kb2gd+pAHajqAmFpBfKVdQsI
-	MkYz8Ofc3XHxHVgXEeLj/4yisH+6gePbbWwiVTA3z/QpKUBNoPkD01anO/5y8JH1Efyp+cNzLYD
-	I4rf1vTYTEZCJFQ9Z/uh/UgobotVM4Fc29Z6Q8u9/Ia1VAWDBqf+xO/CQVO5q1Lypny3GljXaFI
-	rJmn4MfttNLBZrQzLbskHcThlmHFaKi0JS+aift/gOXMiMFv9Issz/OR20WNhHyN
-X-Google-Smtp-Source: AGHT+IG1vC5VzRGtucIyP67/HVoXG1ghss4YShEgmt/nznCRuiVBZrRT3C7b2kCpEHLM7q1bfdFeXg==
-X-Received: by 2002:a05:6a21:3405:b0:1f5:9330:29fe with SMTP id adf61e73a8af0-2170cb40802mr32117847637.17.1747922627085;
-        Thu, 22 May 2025 07:03:47 -0700 (PDT)
-Received: from thinkpad.. ([120.60.130.60])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-742a98a2146sm11247499b3a.160.2025.05.22.07.03.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 May 2025 07:03:44 -0700 (PDT)
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: bhelgaas@google.com
-Cc: linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	bartosz.golaszewski@linaro.org,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Jim Quinlan <james.quinlan@broadcom.com>
-Subject: [PATCH] PCI/pwrctrl: Skip creating platform device if CONFIG_PCI_PWRCTL is not enabled
-Date: Thu, 22 May 2025 19:33:26 +0530
-Message-ID: <20250522140326.93869-1-manivannan.sadhasivam@linaro.org>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jIjrUFAK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747922648; x=1779458648;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=gaVhOROGrfN2y5e11GTj0NSjXZTkCP3N2RkrF3r87Uw=;
+  b=jIjrUFAKJxqBHRwA7xK76g+qyGmbx8ziUrbLUtJbRRa4GlyhejSoVFkj
+   oJ2Q5yEqd75KBCbZAeGNg1jxVOWyRPwbZs3zuqCyA5HfLyfIbZg3mA3ny
+   pLLyb25W3O7COnhSiv50AnIWPQSkOgvw6FFeZdL74hSQ/qY4VhZcUIGB7
+   QU5njHKmq/FSdja7jzDE6znxOZ/rJ7B8XCuL8GgdN47xiwNp3MuNakfOI
+   GdxYYlbXTJlhprhOQg69s4Rq8dm4O/BkT3swDqR7vn50968qfVNBY9Rb2
+   E2Gi4bEMNI+QGEj959XycENTWmggsAwDT59Gu+93wn2ANEhLkT1Dp7Ysw
+   Q==;
+X-CSE-ConnectionGUID: YPN+j42wRnO9BtiTjlNWWA==
+X-CSE-MsgGUID: 1avFidFSSuu0lQqKV9qlQg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11441"; a="49944410"
+X-IronPort-AV: E=Sophos;i="6.15,306,1739865600"; 
+   d="scan'208";a="49944410"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2025 07:03:54 -0700
+X-CSE-ConnectionGUID: EbxyZ75ZSg6LJ8butZLGqw==
+X-CSE-MsgGUID: 91H7rSN0RQa+6dJLZGYsTA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,306,1739865600"; 
+   d="scan'208";a="177746893"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by orviesa001.jf.intel.com with ESMTP; 22 May 2025 07:03:52 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uI6WT-000PP6-0t;
+	Thu, 22 May 2025 14:03:49 +0000
+Date: Thu, 22 May 2025 22:03:39 +0800
+From: kernel test robot <lkp@intel.com>
+To: Alexander Wilhelm <alexander.wilhelm@westermo.com>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>
+Cc: oe-kbuild-all@lists.linux.dev, linux-arm-msm@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] soc: qcom: QMI encoding/decoding for big endian
+Message-ID: <202505222118.Hv5tsNGQ-lkp@intel.com>
+References: <20250521092554.1026716-2-alexander.wilhelm@westermo.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250521092554.1026716-2-alexander.wilhelm@westermo.com>
 
-For platforms that do not use pwrctrl framework, the existence of the
-pwrctrl platform device will prevent the enumeration of the PCI devices due
-to the devlink dependency. This issue is reported on the systems using the
-pci-brcmstb.c driver, which doesn't use pwrctrl framework and handles the
-endpoint supplies on its own.
+Hi Alexander,
 
-So, skip creating the pwrctrl platform device if the framework is not
-enabled. It is only a temporary solution to the issue. The actual fix would
-be to make pwrctrl framework feature complete (by supporting system PM with
-WOL) and convert the drivers that already support system PM like
-pci-brcmstb.c to use it.
+kernel test robot noticed the following build warnings:
 
-Fixes: 957f40d039a9 ("PCI/pwrctrl: Move creation of pwrctrl devices to pci_scan_device()")
-Reported-by: Jim Quinlan <james.quinlan@broadcom.com>
-Closes: https://lore.kernel.org/linux-pci/CA+-6iNwgaByXEYD3j=-+H_PKAxXRU78svPMRHDKKci8AGXAUPg@mail.gmail.com
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Tested-by: Jim Quinlan <james.quinlan@broadcom.com>
----
+[auto build test WARNING on linus/master]
+[also build test WARNING on v6.15-rc7 next-20250522]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Bjorn: Since we have merged patches that rename the Kconfig symbol from
-CONFIG_PCI_PWRCTL to CONFIG_PCI_PWRCTRL for v6.16, we need to make sure that
-those patches also rename the symbol in this patch once it gets merged in
-mainline. Maybe merging this patch to pci/pwrctrl branch and rebasing the
-renaming patches on top would also help.
+url:    https://github.com/intel-lab-lkp/linux/commits/Alexander-Wilhelm/soc-qcom-QMI-encoding-decoding-for-big-endian/20250521-172849
+base:   linus/master
+patch link:    https://lore.kernel.org/r/20250521092554.1026716-2-alexander.wilhelm%40westermo.com
+patch subject: [PATCH 1/2] soc: qcom: QMI encoding/decoding for big endian
+config: csky-randconfig-r132-20250522 (https://download.01.org/0day-ci/archive/20250522/202505222118.Hv5tsNGQ-lkp@intel.com/config)
+compiler: csky-linux-gcc (GCC) 15.1.0
+reproduce: (https://download.01.org/0day-ci/archive/20250522/202505222118.Hv5tsNGQ-lkp@intel.com/reproduce)
 
- drivers/pci/probe.c | 3 +++
- 1 file changed, 3 insertions(+)
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202505222118.Hv5tsNGQ-lkp@intel.com/
 
-diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index 364fa2a514f8..7f5e91eafe56 100644
---- a/drivers/pci/probe.c
-+++ b/drivers/pci/probe.c
-@@ -2514,6 +2514,9 @@ static struct platform_device *pci_pwrctrl_create_device(struct pci_bus *bus, in
- 	struct platform_device *pdev;
- 	struct device_node *np;
- 
-+	if (!IS_ENABLED(CONFIG_PCI_PWRCTL))
-+		return NULL;
-+
- 	np = of_pci_find_child_device(dev_of_node(&bus->dev), devfn);
- 	if (!np || of_find_device_by_node(np))
- 		return NULL;
+sparse warnings: (new ones prefixed by >>)
+>> drivers/soc/qcom/qmi_encdec.c:359:50: sparse: sparse: cast to restricted __le16
+>> drivers/soc/qcom/qmi_encdec.c:676:31: sparse: sparse: incorrect type in assignment (different base types) @@     expected unsigned int [usertype] val32 @@     got restricted __le32 [usertype] @@
+   drivers/soc/qcom/qmi_encdec.c:676:31: sparse:     expected unsigned int [usertype] val32
+   drivers/soc/qcom/qmi_encdec.c:676:31: sparse:     got restricted __le32 [usertype]
+
+vim +359 drivers/soc/qcom/qmi_encdec.c
+
+   279	
+   280	/**
+   281	 * qmi_encode() - Core Encode Function
+   282	 * @ei_array: Struct info array describing the structure to be encoded.
+   283	 * @out_buf: Buffer to hold the encoded QMI message.
+   284	 * @in_c_struct: Pointer to the C structure to be encoded.
+   285	 * @out_buf_len: Available space in the encode buffer.
+   286	 * @enc_level: Encode level to indicate the depth of the nested structure,
+   287	 *             within the main structure, being encoded.
+   288	 *
+   289	 * Return: The number of bytes of encoded information on success or negative
+   290	 * errno on error.
+   291	 */
+   292	static int qmi_encode(const struct qmi_elem_info *ei_array, void *out_buf,
+   293			      const void *in_c_struct, u32 out_buf_len,
+   294			      int enc_level)
+   295	{
+   296		const struct qmi_elem_info *temp_ei = ei_array;
+   297		u8 opt_flag_value = 0;
+   298		u32 data_len_value = 0, data_len_sz;
+   299		u8 *buf_dst = (u8 *)out_buf;
+   300		u8 *tlv_pointer;
+   301		u32 tlv_len;
+   302		u8 tlv_type;
+   303		u32 encoded_bytes = 0;
+   304		const void *buf_src;
+   305		int encode_tlv = 0;
+   306		int rc;
+   307		u8 val8;
+   308		u16 val16;
+   309	
+   310		if (!ei_array)
+   311			return 0;
+   312	
+   313		tlv_pointer = buf_dst;
+   314		tlv_len = 0;
+   315		if (enc_level == 1)
+   316			buf_dst = buf_dst + (TLV_LEN_SIZE + TLV_TYPE_SIZE);
+   317	
+   318		while (temp_ei->data_type != QMI_EOTI) {
+   319			buf_src = in_c_struct + temp_ei->offset;
+   320			tlv_type = temp_ei->tlv_type;
+   321	
+   322			if (temp_ei->array_type == NO_ARRAY) {
+   323				data_len_value = 1;
+   324			} else if (temp_ei->array_type == STATIC_ARRAY) {
+   325				data_len_value = temp_ei->elem_len;
+   326			} else if (data_len_value <= 0 ||
+   327				    temp_ei->elem_len < data_len_value) {
+   328				pr_err("%s: Invalid data length\n", __func__);
+   329				return -EINVAL;
+   330			}
+   331	
+   332			switch (temp_ei->data_type) {
+   333			case QMI_OPT_FLAG:
+   334				rc = qmi_encode_basic_elem(&opt_flag_value, buf_src,
+   335							   1, sizeof(u8));
+   336				if (opt_flag_value)
+   337					temp_ei = temp_ei + 1;
+   338				else
+   339					temp_ei = skip_to_next_elem(temp_ei, enc_level);
+   340				break;
+   341	
+   342			case QMI_DATA_LEN:
+   343				data_len_sz = temp_ei->elem_size == sizeof(u8) ?
+   344						sizeof(u8) : sizeof(u16);
+   345				/* Check to avoid out of range buffer access */
+   346				if ((data_len_sz + encoded_bytes + TLV_LEN_SIZE +
+   347				    TLV_TYPE_SIZE) > out_buf_len) {
+   348					pr_err("%s: Too Small Buffer @DATA_LEN\n",
+   349					       __func__);
+   350					return -ETOOSMALL;
+   351				}
+   352				if (data_len_sz == sizeof(u8)) {
+   353					val8 = *(u8 *)buf_src;
+   354					data_len_value = val8;
+   355					rc = qmi_encode_basic_elem(buf_dst, &val8,
+   356								   1, data_len_sz);
+   357				} else {
+   358					val16 = *(u16 *)buf_src;
+ > 359					data_len_value = le16_to_cpu(val16);
+   360					rc = qmi_encode_basic_elem(buf_dst, &val16,
+   361								   1, data_len_sz);
+   362				}
+   363				UPDATE_ENCODE_VARIABLES(temp_ei, buf_dst,
+   364							encoded_bytes, tlv_len,
+   365							encode_tlv, rc);
+   366				if (!data_len_value)
+   367					temp_ei = skip_to_next_elem(temp_ei, enc_level);
+   368				else
+   369					encode_tlv = 0;
+   370				break;
+   371	
+   372			case QMI_UNSIGNED_1_BYTE:
+   373			case QMI_UNSIGNED_2_BYTE:
+   374			case QMI_UNSIGNED_4_BYTE:
+   375			case QMI_UNSIGNED_8_BYTE:
+   376			case QMI_SIGNED_2_BYTE_ENUM:
+   377			case QMI_SIGNED_4_BYTE_ENUM:
+   378				/* Check to avoid out of range buffer access */
+   379				if (((data_len_value * temp_ei->elem_size) +
+   380				    encoded_bytes + TLV_LEN_SIZE + TLV_TYPE_SIZE) >
+   381				    out_buf_len) {
+   382					pr_err("%s: Too Small Buffer @data_type:%d\n",
+   383					       __func__, temp_ei->data_type);
+   384					return -ETOOSMALL;
+   385				}
+   386				rc = qmi_encode_basic_elem(buf_dst, buf_src,
+   387							   data_len_value,
+   388							   temp_ei->elem_size);
+   389				UPDATE_ENCODE_VARIABLES(temp_ei, buf_dst,
+   390							encoded_bytes, tlv_len,
+   391							encode_tlv, rc);
+   392				break;
+   393	
+   394			case QMI_STRUCT:
+   395				rc = qmi_encode_struct_elem(temp_ei, buf_dst, buf_src,
+   396							    data_len_value,
+   397							    out_buf_len - encoded_bytes,
+   398							    enc_level + 1);
+   399				if (rc < 0)
+   400					return rc;
+   401				UPDATE_ENCODE_VARIABLES(temp_ei, buf_dst,
+   402							encoded_bytes, tlv_len,
+   403							encode_tlv, rc);
+   404				break;
+   405	
+   406			case QMI_STRING:
+   407				rc = qmi_encode_string_elem(temp_ei, buf_dst, buf_src,
+   408							    out_buf_len - encoded_bytes,
+   409							    enc_level);
+   410				if (rc < 0)
+   411					return rc;
+   412				UPDATE_ENCODE_VARIABLES(temp_ei, buf_dst,
+   413							encoded_bytes, tlv_len,
+   414							encode_tlv, rc);
+   415				break;
+   416			default:
+   417				pr_err("%s: Unrecognized data type\n", __func__);
+   418				return -EINVAL;
+   419			}
+   420	
+   421			if (encode_tlv && enc_level == 1) {
+   422				QMI_ENCDEC_ENCODE_TLV(tlv_type, tlv_len, tlv_pointer);
+   423				encoded_bytes += (TLV_TYPE_SIZE + TLV_LEN_SIZE);
+   424				tlv_pointer = buf_dst;
+   425				tlv_len = 0;
+   426				buf_dst = buf_dst + TLV_LEN_SIZE + TLV_TYPE_SIZE;
+   427				encode_tlv = 0;
+   428			}
+   429		}
+   430	
+   431		return encoded_bytes;
+   432	}
+   433	
+
 -- 
-2.43.0
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
