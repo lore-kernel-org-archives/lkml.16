@@ -1,124 +1,130 @@
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14D2447F4A;
-	Thu, 22 May 2025 00:53:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50F17182BD
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 00:56:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747875194; cv=none; b=dujnZ35JUC1pu46C0M8qgaaPBMwFwg+GMtqkt/PFKeuAIUO1IK0W9qYujtVFX9qaBs8gaj4HB1IWxwQSFKWX+ss1oPjl5EvGYfLsouePf6PpYlUwLIn5VqAvVWAyGT2OXwakPmMj0LHNYriHBfmGXlhH0tc/6mRePCnd4p9VAfA=
+	t=1747875368; cv=none; b=M0Hv5FlmZ43/6f5Oe9tRs74cnaG61WUzYnlZWaufAZ4zth1Aor2vUr6ijJQ2p4TUS5x9/iM+ysjwQhq++PFkmZOhucyJRCTWhCLz8bO8aDA3AjgEVyfxnjH1tZVbmFxNTgXiFq+5FNA+vA9hDDawo+MjWGXDUjwMPmQPrHYKtTQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747875194; c=relaxed/simple;
-	bh=4Ft0iMqYoHiOxTAuaJ+NIPNqFRP2dzxn0Szm9BsoXF8=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=p4W4jpEEfz96qn14hSupYHMLeba68Rc4sDfTWjrRahzUCybbR8eNLt9qcDz26HBG6O+8qJqkfHZuaOZ/VknLUkXK2prYgoYCO7QV5ssjhH87kBY0Foa69o++rr9GZeydzcsuYNaz9etzlraVA9wpt32LInZQe4CrXuNua/TcDfw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TRZEanFv; arc=none smtp.client-ip=209.85.208.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747875368; c=relaxed/simple;
+	bh=RmfKv3ooNmqxZtp0dXpGdI2YqY3ynDekdBRk/ycgp1M=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=WwOlgyrh+crJrfv4wjyHv/mSwWih7BRtirOREiTvtMqNuOFerKxTG96mx1AC4pjCpaRlhvluHote2k1sXiTU6qdkyHaOgQB1UBpc6XZgxy6dQ0OH/s+DT/e3BL+xSQxHsLUwC4p+EG9c3HLIUjPzHCcoazDtwXh9cet0ydcJrvM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CZ1nON78; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TRZEanFv"
-Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-32934448e8bso16495371fa.3;
-        Wed, 21 May 2025 17:53:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747875191; x=1748479991; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=22s7w+Jw98xcNkkntdxAEeVIYsqFGoWrJTkU7tGG5AE=;
-        b=TRZEanFvJoTfOhSEhPF5+KAKpvpnRPzEoSK+KX5zgZ9ebGnkJ29aDOIBVTEJSUVKZP
-         x61Y5zekcOAUtLuWA08KS0lVmsBIjXWwjmbj235vDK+zPAXOyhTr1EsFqHoDyY3s4tGj
-         KeD9R/d8sJXbBqt/343I49GotA2vs7cg0LWU3baRTyNaZLPoHWblXtfUzStmdOWA5sJa
-         rkmBvCSye8Vlt+4XKTUA+v2B0822LLCwGgWmsbCKs1jGAmUtDxThzqPJc2byevsLuWFR
-         OoFVkkvCQLODNW7BNDYmx1ZZDzGpW68DBraBhE7goeYBb6TwcNVWbl9BJk9XNjaG/bNM
-         8xwA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747875191; x=1748479991;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=22s7w+Jw98xcNkkntdxAEeVIYsqFGoWrJTkU7tGG5AE=;
-        b=ASa9lKJNRDek+/M0MUnX5PB649EoyN2hT1CjVGOSo9hP9FLGGOw738PLlK1VxRvSje
-         I9xEQ3DU04vsAXvhipqmxjVQheOusmsMZzzbY3lxVyCW2lEtEu5qaUNXCzktc13Tk6SV
-         kcJoOP7wKBiBoSupTNLom1gWuo78gENgUOlXbDJNMm6Or5R21o3XXEupKxam09Z520ri
-         arzejLqxbKIJ5DzGL3baQLEKbk4P/c5ytj9ff0sLiBnxJzHI3I6TyqQNHnCA9lmxVpqt
-         bKiNV2VGjeVlZOSggc2XPvs4rHPeQk0TTnZtcNfyq4lWXExVMd+otWFObhC9HYhEDeve
-         yo+g==
-X-Forwarded-Encrypted: i=1; AJvYcCU1ts+gmMfiHDqUDbX0aK38oDzGDZ8cYJlO5vMRXTQxicwwC1gnOxg8sXiJJf8jPgBidivh+2n8@vger.kernel.org, AJvYcCUETTAAH5Xb9WCZlSRWKXHdnOCurf4VaDf5P99vMuV9GmYlN48xN79iD5FJJqHWazNfu7zobskiabHbG+U=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxB9ey7VQT61GDpd6qo+ebnfYlfeLGtuuiy4mNsr5JNHTrX/lhm
-	RxZSjJYFoO6/LKczttkDW51axaD0tt0KSy/HRq84RQlZHoNRqKntMyYpZ0M8PIEaESiDeJxGDNX
-	pYjZdj3rznAGYhPsMcrJr8FHb4jQBLaQmH1dqog==
-X-Gm-Gg: ASbGncu5nbQ5fXEY8z0hzUFVIPQbFQojDfgxaZ6/aR7G8LA+1ipD907fF2xA1Pggy6T
-	tKXEU0mQgMgd2jv6Yp9tNjN1K+XvLsVfcg2jg9UT3mE9E5PpzA9KYXID89Yq0+8kNcU1MdY9Ers
-	eWuACJSZsiao26LzJ85DtCXqqoZOxE8pPsXlD7q351/VlHS1rihyOClQ==
-X-Google-Smtp-Source: AGHT+IHdO/Lo1DdGl31K71Kd6XggJbdfwGqcFqEZ6CywzQGxdI13guaBbnkMmCbfEutGpbp2PMjLJ9txBQ0y1ux/2uc=
-X-Received: by 2002:a2e:a00e:0:10b0:329:14d3:366e with SMTP id
- 38308e7fff4ca-32914d339ecmr37684151fa.34.1747875190755; Wed, 21 May 2025
- 17:53:10 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CZ1nON78"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1747875365;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=nWvO0mY6BHC6eP0jPdFwbPweT5OsbJlQja3VlMg90Ig=;
+	b=CZ1nON78Jwfl0Xar+1+mLuPAHIviQ6Be64wq9CvsZk1SCGi4pR+pSkIdP+F1n/ejdRxRSu
+	bbtcixH5pGWBz7jP63kcun1//dgMj2daU/GxDX/cf3CGdEDqz7/dqE3c5EOov9nLowUtW2
+	CviavIt7CbkHj0dgkHyH8a4pbGIDMqQ=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-687-8fX2x-SSP5S7NEvugdqisw-1; Wed,
+ 21 May 2025 20:56:01 -0400
+X-MC-Unique: 8fX2x-SSP5S7NEvugdqisw-1
+X-Mimecast-MFC-AGG-ID: 8fX2x-SSP5S7NEvugdqisw_1747875359
+Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 30BC61956094;
+	Thu, 22 May 2025 00:55:59 +0000 (UTC)
+Received: from intellaptop.lan (unknown [10.22.80.5])
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 74F2C19560B7;
+	Thu, 22 May 2025 00:55:56 +0000 (UTC)
+From: Maxim Levitsky <mlevitsk@redhat.com>
+To: kvm@vger.kernel.org
+Cc: "H. Peter Anvin" <hpa@zytor.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Sean Christopherson <seanjc@google.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	linux-kernel@vger.kernel.org,
+	x86@kernel.org,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Maxim Levitsky <mlevitsk@redhat.com>
+Subject: [PATCH v5 0/5] KVM: x86: allow DEBUGCTL.DEBUGCTLMSR_FREEZE_IN_SMM passthrough
+Date: Wed, 21 May 2025 20:55:50 -0400
+Message-ID: <20250522005555.55705-1-mlevitsk@redhat.com>
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: John <john.cs.hey@gmail.com>
-Date: Thu, 22 May 2025 08:52:57 +0800
-X-Gm-Features: AX0GCFtvV1TlfYG-DgUfe2nrjFzAriSQCZPIinpZyeP4upDImzXjA374n-XivK4
-Message-ID: <CAP=Rh=OEsn4y_2LvkO3UtDWurKcGPnZ_NPSXK=FbgygNXL37Sw@mail.gmail.com>
-Subject: [Bug] "possible deadlock in rtnl_newlink" in Linux kernel v6.13
-To: "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
-Cc: Simon Horman <horms@kernel.org>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
-Dear Linux Kernel Maintainers,
+Currently KVM allows the guest to set IA32_DEBUGCTL to whatever value=0D
+the guest wants, only capped by a bitmask of allowed bits=0D
+=0D
+(except in the nested entry where KVM apparently doesn't even check=0D
+this set of allowed bits - this patch series also fixes that)=0D
+=0D
+However some IA32_DEBUGCTL bits can be useful for the host, e.g the=0D
+IA32_DEBUGCTL.DEBUGCTLMSR_FREEZE_IN_SMM which isolates the PMU from=0D
+the influence of the host's SMM.=0D
+=0D
+Reshuffle some of the code to allow (currently only this bit) to be passed=
+=0D
+though from its host value to the guest.=0D
+=0D
+Note that host value of this bit can be toggled by writing 0 or 1 to=0D
+/sys/devices/cpu/freeze_on_smi=0D
+=0D
+This was tested on a Intel(R) Xeon(R) Silver 4410Y with KVM unit tests and=
+=0D
+kvm selftests running in parallel with tight loop writing to IO port 0xB2=0D
+which on this machine generates #SMIs.=0D
+=0D
+SMI generation was also verified also by reading the MSR 0x34 which=0D
+shows the current count of #SMIs received.=0D
+=0D
+Despite the flood of #SMIs, the tests survived with this patch applied.=0D
+=0D
+V5: addressed the review feedback. Thanks.=0D
+=0D
+I also decided to wrap the read/write of the GUEST_IA32_DEBUGCTL in pmu_int=
+el.c as=0D
+well, just for the sake of consistency.=0D
+=0D
+Best regards,=0D
+     Maxim Levitsky=0D
+=0D
+Maxim Levitsky (3):=0D
+  KVM: nVMX: check vmcs12->guest_ia32_debugctl value given by L2=0D
+  KVM: VMX: wrap guest access to IA32_DEBUGCTL with wrappers=0D
+  KVM: VMX: preserve DEBUGCTLMSR_FREEZE_IN_SMM=0D
+=0D
+Sean Christopherson (2):=0D
+  KVM: x86: Convert vcpu_run()'s immediate exit param into a generic=0D
+    bitmap=0D
+  KVM: x86: Drop kvm_x86_ops.set_dr6() in favor of a new KVM_RUN flag=0D
+=0D
+ arch/x86/include/asm/kvm-x86-ops.h |  1 -=0D
+ arch/x86/include/asm/kvm_host.h    |  9 ++++++--=0D
+ arch/x86/kvm/svm/svm.c             | 14 +++++++-----=0D
+ arch/x86/kvm/vmx/main.c            | 15 +++----------=0D
+ arch/x86/kvm/vmx/nested.c          |  7 +++---=0D
+ arch/x86/kvm/vmx/pmu_intel.c       |  8 +++----=0D
+ arch/x86/kvm/vmx/tdx.c             |  3 ++-=0D
+ arch/x86/kvm/vmx/vmx.c             | 36 +++++++++++++++++++++---------=0D
+ arch/x86/kvm/vmx/vmx.h             |  3 +++=0D
+ arch/x86/kvm/vmx/x86_ops.h         |  4 ++--=0D
+ arch/x86/kvm/x86.c                 | 18 ++++++++++-----=0D
+ 11 files changed, 71 insertions(+), 47 deletions(-)=0D
+=0D
+-- =0D
+2.46.0=0D
+=0D
 
-I hope this message finds you well.
-
-I am writing to report a potential vulnerability I encountered during
-testing of the Linux Kernel version v6.13.
-
-Git Commit: ffd294d346d185b70e28b1a28abe367bbfe53c04 (tag: v6.13)
-
-Bug Location: rtnl_newlink+0x86c/0x1dd0 net/core/rtnetlink.c:4011
-
-Bug report: https://hastebin.com/share/ajavibofik.bash
-
-Complete log: https://hastebin.com/share/derufumuxu.perl
-
-Entire kernel config:  https://hastebin.com/share/lovayaqidu.ini
-
-Root Cause Analysis:
-The deadlock warning is caused by a circular locking dependency
-between two subsystems:
-
-Path A (CPU 0):
-Holds rtnl_mutex in rtnl_newlink() =E2=86=92
-Then calls e1000_close() =E2=86=92
-Triggers e1000_down_and_stop() =E2=86=92
-Calls __cancel_work_sync() =E2=86=92
-Tries to flush adapter->reset_task (=E2=86=92 needs work_completion lock)
-
-Path B (CPU 1):
-Holds work_completion lock while running e1000_reset_task() =E2=86=92
-Then calls e1000_down() =E2=86=92
-Which tries to acquire rtnl_mutex
-These two execution paths result in a circular dependency:
-
-CPU 0: rtnl_mutex =E2=86=92 work_completion
-CPU 1: work_completion =E2=86=92 rtnl_mutex
-
-This violates lock ordering and can lead to a deadlock under contention.
-This bug represents a classic case of lock inversion between
-networking core (rtnl_mutex) and a device driver (e1000 workqueue
-reset`).
-It is a design-level concurrency flaw that can lead to deadlocks under
-stress or fuzzing workloads.
-
-At present, I have not yet obtained a minimal reproducer for this
-issue. However, I am actively working on reproducing it, and I will
-promptly share any additional findings or a working reproducer as soon
-as it becomes available.
-
-Thank you very much for your time and attention to this matter. I
-truly appreciate the efforts of the Linux kernel community.
-
-Best regards,
-John
