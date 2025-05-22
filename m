@@ -1,98 +1,89 @@
-Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF4A925CC65
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 09:45:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6488B280A32;
+	Thu, 22 May 2025 09:45:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747907125; cv=none; b=PmgEmBdLmorP+ZA9Pp+loLDxiKAoQPm7GGLmmRTw8gURBsur5WDfECqVkP6ry3YAZaUw4+wjwuMumk6a5bCWJN9TsqR5SYfq7yQ5yHSo5EDQMXkX/NoNg4Ya9iFHghIkAucKavMVvAL7MfAiTGl2QoWKOxMw8FOob6AKKeU8kJY=
+	t=1747907150; cv=none; b=ZKg67pRZkwj5JAr3zyyRvsWCyZiY99qJDDyFTtiTFkddoj1MNilkqxAS56NySj8tE1kWiyYzVJrsk1E8ATB9GT5UEYMmqS+Xszp3VZmvDMrFDIuhyJTJWEvFvVXQcwV7//IayRweirK/N4cMq6GR5XPeFmoC1xLxudP09/VWNOk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747907125; c=relaxed/simple;
-	bh=lUW88JlK7BVXXMOmbI0/ku/1QkPm4H4Jjhu0abvy1yU=;
+	s=arc-20240116; t=1747907150; c=relaxed/simple;
+	bh=JxCPB0UFr3+YKzeXORDXLh/LUUdaJntuMHarMokXu5A=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ufs6UJAuSANtzgWMUmckiUkob6y7JizKacZTovTFhmVtsaiWVoMyowE70UxvgiC2JImNwf72qW5nCdRepKoasQJbyau2ajvCUzmomKpXpl2lFj7YpvwCXraxaQ3GiiZAM048GO8eawTLsz9TxJDWgnql+MsM6Kge2qaOv8olxUY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=bDdrXqbt; arc=none smtp.client-ip=209.85.210.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=bLL5byMach//cdTFeG9YltwFmwrtzUQk53gncgnsBF91PygX1t5ExxGheFm6YOIbZfrhwd0l64kHS2UHt/AGDs6w4N/8guaoPC/kIKfOdQ0fxYOaBkJYRVBwtsd0but1Pm/+LVNLA1TlyMUFvC/Tydjwosgvc36E6VS+o4k+O+o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Itf4v18+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bDdrXqbt"
-Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-72d3b48d2ffso7256474b3a.2
-        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 02:45:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1747907123; x=1748511923; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=UCeSJpIOFS0exbK/YOA4ghvpJUKGQ608Mgiqg3CcUrw=;
-        b=bDdrXqbtUtljd7QhdbP+nySI75EgWkm2QMy7DDspJHCUJI0WWdk86bCyw7QBj07bYc
-         Jykh5Lgp0Fo3yVnHif5BEUc9xpTHbQVb4ybBegIKtZTCdLLqTmhWk6/1qkOo3ceWdxlW
-         TMVUPg58b98ewNjo6w+dyqWzq9id4lAZaXFxJ6Vx5m8lV1okziSV4bVc3fmWZ49vTiIE
-         eGaE0fWnS40ArCCeoCGREIgAeo6nuRnQw7dqf4QJgnMOczWKdv6TmieLXCHDdvW+3AM7
-         369j7G9u+tAYbzyW86kfQNtIZJ9bmqv/NBcu/IkWwYTkAjlpYSA48HKsCadsus/rJPsF
-         Cm7Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747907123; x=1748511923;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=UCeSJpIOFS0exbK/YOA4ghvpJUKGQ608Mgiqg3CcUrw=;
-        b=KG0BG1noL1hTeTzsIAz0RuR9b6+MincLitc0MSQjcLIsxzrZ1fYel8PpPB9rHkXOEw
-         RfXOvlIzJfFryv+sAwYMjTVJ2IlGiy7jQMSkUlX2OpxbJoDZdO38CuEJ/qY/J5nObiUB
-         BWXus9Q1wQj4SIPYNkKU5oGigj5A88xddXO0mPPBdaAIda1BmRdVsrr8VA+zQ8qgtGKs
-         OEtm07HIqmBMP9XTMMFh+DdhVgWtuV+RQQpZXlrGT5yE/+iLWIoXx5XxofpWFo64nAkV
-         cP6yLkAAy/8nS55EnzaoQWWZAKI6fFMvcxsfw5GW0FL06NvE3VaRmG2+f2kT4QUI9IuS
-         cXJg==
-X-Forwarded-Encrypted: i=1; AJvYcCW5lFaaBQWgJj3n+qQW+z5FAXhpLZ9anDoQfJlPfINnoG+T+C07e0432BFfX63icGVui4fjJ/1eppMNc98=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyZvJ94FTTDAForFqmxeB8GahlXiHFn5OOq6X4VydpfgcIt5gK4
-	kTR3ccFrc0DtjXKoJzCJdIyL9ukLHo0rI6R/78FCmI4Vxv1+qR+DveYRNu5c33fIUOM=
-X-Gm-Gg: ASbGncss6mXWjGTl5PirTDsPq5h8xgbrx+FBPNJubnj7rfk4xcxHJf+uySDE8VPuFm0
-	6fHc8NnDGBUlljjCpZ7VMVA+B0EToyE/581MWYWOlfQ6pDvsakTzEzN9HZqsLpahorcjmg++m97
-	z6jw8mCdgayHZByfSoYoH3Nd4A0dTCMaT7XYH2Rgk62RSYdN0io3c8CvPfmIWOVAS0gMPCYSQgY
-	DzAqwgolsEpBc3i+6mV3N7MktQuHVUagXcc6RSsYPpF7Op2/OOxz1F3k1y0AZkF0QNp8sD89Q8O
-	y0j9zjItq210wdd9zZLgc6/N28Q+AqtLog3mRheGezc+IdJ2yhpn
-X-Google-Smtp-Source: AGHT+IGlWnWcKpf5U7vBQYK7+MoavUPpMAOQY1NhDDr46MQ50TxSToGTpsPqf+nd9cPRi8+h1wIeWg==
-X-Received: by 2002:a17:90a:dfc7:b0:301:c5cb:7b13 with SMTP id 98e67ed59e1d1-30e830c6247mr32532488a91.3.1747907122844;
-        Thu, 22 May 2025 02:45:22 -0700 (PDT)
-Received: from localhost ([122.172.81.72])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b2720b62e06sm4500463a12.31.2025.05.22.02.45.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 May 2025 02:45:22 -0700 (PDT)
-Date: Thu, 22 May 2025 15:15:20 +0530
-From: Viresh Kumar <viresh.kumar@linaro.org>
-To: "Sapkal, Swapnil" <swapnil.sapkal@amd.com>
-Cc: rafael@kernel.org, shuah@kernel.org, gautham.shenoy@amd.com,
-	narasimhan.v@amd.com, linux-pm@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] selftests/cpufreq: Fix cpufreq basic read and update
- testcases
-Message-ID: <20250522094520.22zwevl6vgrjf3aw@vireshk-i7>
-References: <20250430171433.10866-1-swapnil.sapkal@amd.com>
- <20250519075854.opnlhjlbybrkvd2k@vireshk-i7>
- <8a2149ca-a0fe-4b40-8fd4-61a5bf57c8b6@amd.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Itf4v18+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6FC28C4CEE4;
+	Thu, 22 May 2025 09:45:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747907149;
+	bh=JxCPB0UFr3+YKzeXORDXLh/LUUdaJntuMHarMokXu5A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Itf4v18+JkPLZp2fYPv8UHwOfLTP0TaIE7MI8WEpfoytAhGeQU3v7R9sCocSl2i73
+	 BsCrVtRgHmmHSyJ/DUxfvJnvJxwEWbWka/L2vwu6hE0W+2FuVPrktrPWNYKxHiJwpj
+	 uKffO/EbA8mmJd6/HvOVgSPl4Gtl9eG8s7YzlT5MdeXuCEmRk+b3jjHw5mpe1hVQGF
+	 jWyJi0f2+S0VxvHDAk/B5yr8uAJXb4OfSwXF7PoJz24wHhgYD56RRQovMxW4Q4UZvW
+	 BdE6mDV4OpGZd/ALCjg8Pi8u3SSvAH/QjI3JbnnDfHkT6s5LKe9yPxDBmsLuJKyv7i
+	 /dEGke1BV1guQ==
+Date: Thu, 22 May 2025 10:45:44 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Zhang Yi <zhangyi@everest-semi.com>
+Cc: robh@kernel.org, tiwai@suse.com, devicetree@vger.kernel.org,
+	conor+dt@kernel.org, lgirdwood@gmail.com,
+	linux-kernel@vger.kernel.org, linux-sound@vger.kernel.org,
+	perex@perex.cz, krzk+dt@kernel.org,
+	amadeuszx.slawinski@linux.intel.com, krzk@kernel.org
+Subject: Re: [PATCH 2/2] ASoC: codecs: add support for ES8375
+Message-ID: <50783a85-0515-47af-8486-a343e28f960a@sirena.org.uk>
+References: <20250522054619.9574-1-zhangyi@everest-semi.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="KhVzUb2kf7n4U7by"
+Content-Disposition: inline
+In-Reply-To: <20250522054619.9574-1-zhangyi@everest-semi.com>
+X-Cookie: Beware of dog.
+
+
+--KhVzUb2kf7n4U7by
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <8a2149ca-a0fe-4b40-8fd4-61a5bf57c8b6@amd.com>
 
-On 22-05-25, 14:07, Sapkal, Swapnil wrote:
-> Initially I tried the same, but it does not work properly with the root user.
+On Thu, May 22, 2025 at 01:46:19PM +0800, Zhang Yi wrote:
 
-Hmm,
+> > > +	regmap_write(es8375->regmap, ES8375_ADC_VOLUME, 0xBF);
+> > > +	regmap_write(es8375->regmap, ES8375_DAC_VOLUME, 0xBF);
 
-Tried chatgpt now and it says this should work:
+> > Some of these settings look like they are (or should be) user
+> > controllable and should be left at the chip defaults, the volumes above
+> > really stand out.  We use chip defaults to avoid having to decide which
+> > use cases to configure for.
 
-if ! cat "$1/$file" 2>/dev/null; then
-    printf "$file is not readable\n"
-fi
+> Because the default value of the chip's volume register is 0x00,
+> initializing the device without setting it to 0xbf will
+> cause the device to mute until the customer sets the volume.
 
-- This attempts to read the file.
-- If it fails, the cat command returns non-zero, and you print a message.
-- 2>/dev/null suppresses error messages (Permission denied, etc.)
-- This works reliably for both root and non-root users, because it actually tests the read action, not just permission bits.
+That's normal and expected, it's totally fine and normal for the user to
+have to do some configuration.
 
--- 
-viresh
+--KhVzUb2kf7n4U7by
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmgu8kgACgkQJNaLcl1U
+h9AyDgf8C47CTnxxWL4fdXQc/Sg4Gy6KsN8RKyO22145ty3ni0DHIrbuk4650uBM
+SAeLf0K2AdW6yzE+lNh9sY+0XxeJdY0j3DOvZ0X0xo33MTtowoTkA08jvgMfMXUJ
+ltI0UJfu4tQAHuxAD0S/dyVzl2l4ms4qKPnz0FOFuCETUw1HWNHoiXsMFTvPXQtZ
+b8nywV8HQXV5Zmne3cTdt56DmK1fnURDwWA4pBRCsklFbWqf4zGnNExjNFRapz+L
++i9QYqaoVtsTJpKxtgcpNqb/taN9oC2xJZRxXNO2MMHZqxRNXs7RsWmeVE29ABoU
+OXrO6FjIZDQargXxZBHLckvONYDw0Q==
+=/eHE
+-----END PGP SIGNATURE-----
+
+--KhVzUb2kf7n4U7by--
