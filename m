@@ -1,278 +1,125 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03F101E9900;
-	Thu, 22 May 2025 18:54:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 473D01EBA0C
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 18:57:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747940048; cv=none; b=NAKUVzHL7vhGlzUdwhXZK4NnpUDuxdKdN69z83RkJDcb/u7tiYIQ+eA2Rv/U2d+wvFQj4onBT8cD9tOnxAT6bKSXteyh6Uxo6h2HB6mTiS8lTKJsIj2JBsHuXXxIVbI8dVGHMiAY/MHRAbOlh5bGdl1AixS2pNVYfxT2akPa6Wg=
+	t=1747940245; cv=none; b=ofA7Rj8FuS0mTLW/SgvtGSxAJJ4OQzMH0Ls04GOjYxhy1bEclfPP5z93VlfcblD9BvtDbtIEUd/Da2Mcxj6lEWPsav9RZVJ+tt5qO9Mwof3kS/gryz6c9YwhZT8f0/7Rdno7uh9sWUPwQKHYwgOEogID8O/jgmkOOOHRUM1zNn0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747940048; c=relaxed/simple;
-	bh=HgoC348FoN0KI8WyZOjPt5Nfl+InpZc7Ed/ze4ZkVgA=;
-	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=FWY4DRtvLftDsn1/ZPXaLQcKPFmgFPJZ4afuIp8Tf/looCmKFX9oNpjEn+04Ai1TM2VCCx2ASvX/Gh4Vg0hj9xFSiOJ96iGbabIEImC9bA/fVUwuHfowSOx8Nqd76lMScxJ5oAeHpUmWWMXXBXUNB1DgQnB1l/qjgN1u31cYGsM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y3zM9713; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747940245; c=relaxed/simple;
+	bh=nRdyDoXu64jIJ8Y7YBIH/yF7ZXDgNxt/Zb8gayh7VQU=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=cdGtKcSfTABWLrGKRmeCKPzCLvUpsNZxYx22CBVvXkQ0uKIFOUNLJoBSBxQ6iZozv2b2AlfRmrPxGbYLkSLr1rvObATd4NOo25c0p4KP9xO1KdLPsGFWVRjSfeNyHWzhGl/O+e8f2JLCZcTC9Np2UypArDquA0T5mf5ZuHY7fcQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ndufresne.ca; spf=none smtp.mailfrom=ndufresne.ca; dkim=pass (2048-bit key) header.d=ndufresne-ca.20230601.gappssmtp.com header.i=@ndufresne-ca.20230601.gappssmtp.com header.b=FvzIxiaI; arc=none smtp.client-ip=209.85.222.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ndufresne.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ndufresne.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y3zM9713"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A971FC4CEED;
-	Thu, 22 May 2025 18:54:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747940046;
-	bh=HgoC348FoN0KI8WyZOjPt5Nfl+InpZc7Ed/ze4ZkVgA=;
-	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=Y3zM9713PxaCEtdsvRfVrkb/IaGPCUb0Bjr0IvW2mII3n0rFy+JIH7JDAp5+P6tqa
-	 PBLoGfZIHEcYCEMWVzI6WXEUe8LZ2Ary9Q7ptIY4aWe1Kl3ygTFp/HK3dPb13Z40v4
-	 FdRAW8wXVsiKr9cHNzzVUkmSql5vDM2Ks6pdzRrhF8DhGCNO4ULovihEqhdRa0haW8
-	 RXsx7PE6aVsFfyUw49xEf5/2fxTPEkgtO4t8jUdufqKFQCGlcUE9DtdvrQ8pRe5z5v
-	 OF/1R0xuLxSGbdZG8Wr7fpXevQeHiANcj4l0KOYtAjmNJt55705X5zIvaF0ETIAEOQ
-	 cgJiO05uAiJfg==
-Date: Thu, 22 May 2025 13:54:04 -0500
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	dkim=pass (2048-bit key) header.d=ndufresne-ca.20230601.gappssmtp.com header.i=@ndufresne-ca.20230601.gappssmtp.com header.b="FvzIxiaI"
+Received: by mail-qk1-f175.google.com with SMTP id af79cd13be357-7c54b651310so1197750485a.0
+        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 11:57:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ndufresne-ca.20230601.gappssmtp.com; s=20230601; t=1747940243; x=1748545043; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=bKDF0rG/fer+2OkTia/V0rbvp3EJG9E9bbf9h1+yVQU=;
+        b=FvzIxiaI9+B+nYi/JEz8JKN3fC5FPbsv3sHr+u29QfciFf12LcRBbiLbY9Qugo59fS
+         ujAdJ0a0pb1/ZPWjkjAUTDydB7iqwZcwlVQcH2R38mgg6J5Xnxhz90u7SMHyaFRFVXH3
+         eVBzg8CQtk+I5t/oG8qKniZ1KVA9p1eHlPxY246ErT1j6tSwPXgrP0Q7xykEvntVxhxC
+         rURhwlml72gnT8MV5Vs+pP27E0xV6G0fGLPSo/7v+LE4vGoCNCwnOysJa34UrcGDQWf3
+         75ZTHyCPJI/FSKge2B5+pfkrRp/jqJ7zcKrsbRwr5IL7w+o4ztG2f8Tdjbt5MX8PF2jU
+         TjrQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747940243; x=1748545043;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=bKDF0rG/fer+2OkTia/V0rbvp3EJG9E9bbf9h1+yVQU=;
+        b=XQ7/NavAScNmOSuNCvew/kRHbeg+7OhJCp5rJu4JHRtWeKrA2S5A8VWU1rofVuHwvx
+         F2ZtcHzbeeR4n7GwyhLoJf8bXdG3O0iOi4k1FxNG0n6ulT/OZB7rE0RSxGD7PcS30w0w
+         KjJpwnkCrGuzEiMs6zEwEID1Ix/yuSAfN/4tfOo57Cu+5ThtPg7dlvD1RSUyc/2QHYa6
+         JRkG8JNafD2QSlXg6m8Q2GmTn6MfYZNspHHGIDMvOQxyKm+BrKSVHYTTCaLuqKQ6aJQS
+         inIKY6/ToN5SQuXa2Srxrlz2qF9CiJDvGjNSwVfhor35jBvYJcMg8TBRaL2CwCZADwhw
+         mPSw==
+X-Forwarded-Encrypted: i=1; AJvYcCU/de5FbfdbQOAh/fD3hRvnv+uob+yDlBcc+I1O0FxhI5dZIGefGWtChh48mOmKhzymHQt+h0/O3IEzYls=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxJpUJJ4Qb/+ssv/em6WvyxjOuDwoNLjihnRe4GQsI+BIFkaQIY
+	LJlm0boJ4XC/Iv3qyLS9MfzaWWhjM24Mv7fxq3gMlkh2kq8reb8wEuz/ZJAFlWkvmt4=
+X-Gm-Gg: ASbGncvQHGQ0G2fYCbpIaT3LIk5jnZ+X/E9l+fBsNyUJgHXl0GVaTrYfKHVaam9+W1T
+	UZW19sF4eH99P/qFc1XEzhRWWKG8zh13mbhPsZMSKHxyFyhY3tmRWeP/Wor6w/Crta9YGBgFpYF
+	GwyENPocFpFmLz2Lof64F7RrjHeOhg9syjn3lmC23z1bvErk0uqhZ80pKEYj3y6M8ezbTuVzY53
+	Um3BFuseDymsUVAAWhx78AqLcOVJ6stit8qwGF50BDaS1bXwujouTE5yH3vp7nNURcsi2OCSMHr
+	lVq5uyi9f0zXloK10vjFZ1WetdALZXHsvxysKhjOSFBDqbAagVLIoh/U
+X-Google-Smtp-Source: AGHT+IGODjylhCbxxluSCJxWwfw2LSUZOhOlLONS1CCWl3mGWECFOnr+7cX5kbAgDceujcx1nVam2g==
+X-Received: by 2002:a05:620a:400c:b0:7c7:a524:9fe9 with SMTP id af79cd13be357-7cd47f4bbafmr3554668185a.27.1747940243241;
+        Thu, 22 May 2025 11:57:23 -0700 (PDT)
+Received: from ?IPv6:2606:6d00:17:b2fc::5ac? ([2606:6d00:17:b2fc::5ac])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7cd467ecf98sm1060304285a.61.2025.05.22.11.57.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 May 2025 11:57:22 -0700 (PDT)
+Message-ID: <b97c254c5169acb32b9f65f71b363a3eb1cfc8a2.camel@ndufresne.ca>
+Subject: Re: [PATCH 1/1] dt-bindings: media: convert fsl-vdoa.txt to yaml
+ format
+From: Nicolas Dufresne <nicolas@ndufresne.ca>
+To: Frank Li <Frank.li@nxp.com>, "Rob Herring (Arm)" <robh@kernel.org>
+Cc: Conor Dooley <conor+dt@kernel.org>, linux-media@vger.kernel.org, Mauro
+ Carvalho Chehab <mchehab@kernel.org>, Pengutronix Kernel Team
+ <kernel@pengutronix.de>, Shawn Guo	 <shawnguo@kernel.org>, Fabio Estevam
+ <festevam@gmail.com>, Krzysztof Kozlowski	 <krzk+dt@kernel.org>,
+ linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, Sascha Hauer <s.hauer@pengutronix.de>, 
+	devicetree@vger.kernel.org
+Date: Thu, 22 May 2025 14:57:22 -0400
+In-Reply-To: <aC9xv08a5k5Pz1t+@lizhi-Precision-Tower-5810>
+References: <20250411213601.3273670-1-Frank.Li@nxp.com>
+	 <174448105342.1415739.9619142538994119426.robh@kernel.org>
+	 <aC9xv08a5k5Pz1t+@lizhi-Precision-Tower-5810>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.1 (3.56.1-1.fc42) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: jernej.skrabec@gmail.com, rfoss@kernel.org, quic_jesszhan@quicinc.com, 
- Laurent.pinchart@ideasonboard.com, sean@poorly.run, robdclark@gmail.com, 
- andrzej.hajda@intel.com, quic_rajeevny@quicinc.com, 
- freedreno@lists.freedesktop.org, andersson@kernel.org, 
- dmitry.baryshkov@oss.qualcomm.com, neil.armstrong@linaro.org, 
- marijn.suijten@somainline.org, linux-kernel@vger.kernel.org, 
- conor+dt@kernel.org, devicetree@vger.kernel.org, krzk+dt@kernel.org, 
- konradybcio@kernel.org, robh+dt@kernel.org, linux-arm-msm@vger.kernel.org, 
- quic_vproddut@quicinc.com, dri-devel@lists.freedesktop.org, jonas@kwiboo.se, 
- quic_abhinavk@quicinc.com
-To: Ayushi Makhija <quic_amakhija@quicinc.com>
-In-Reply-To: <20250522051318.1783905-1-quic_amakhija@quicinc.com>
-References: <20250522051318.1783905-1-quic_amakhija@quicinc.com>
-Message-Id: <174793994107.3440338.11584207816526573442.robh@kernel.org>
-Subject: Re: [PATCH v8 0/2] Add DSI display support for SA8775P target
 
+Hi Frank,
 
-On Thu, 22 May 2025 10:43:16 +0530, Ayushi Makhija wrote:
-> This series enables the support for DSI to DP bridge ports
-> (labled as DSI0 and DSI1) of the Qualcomm's SA8775P Ride platform.
-> 
-> SA8775P SoC has DSI controller v2.5.1 and DSI PHY v4.2.
-> The Ride platform is having ANX7625 DSI to DP bridge chip from Analogix.
-> 
-> ---
-> Changes in  v8: Fixed the review comments from Dmirty
->     - Renamed the opp table from dsi0_opp_table to mdss_dsi_opp_table in patch 1. [Dmitry]
->     - Referred the same mdss_dsi_opp_table opp table in mdss0_dsi1 node in patch 1. [Dmitry]
->     - Link to v7 : https://lore.kernel.org/all/20250513102611.1456868-1-amakhija@qti.qualcomm.com/
-> 
-> Changes in v7: Rebased and fixed the review comments from Dmitry
->     - Below four patches of v6 are merged. Removed them from this version.
->         - [08/11] drm/bridge: anx7625: enable HPD interrupts
->         - [09/11] drm/bridge: anx7625: fix drm_bridge ops flags to
->           support hot-plugging
->         - [10/11] drm/bridge: anx7625: fix anx7625_sink_detect() to
->           return correct hpd status
->         - [11/11] drm/bridge: anx7625: change the gpiod_set_value API
->     - Rebased the remaining two patches of the series.
->     - Added anx7625 bridge supplies as fixed reulators, according to the power grid. [Dmitry]
->     - Link to v6 : https://lore.kernel.org/all/20250505094245.2660750-1-quic_amakhija@quicinc.com/
-> 
-> Changes in v6: Fixed the review comments from konard.
->     - Added the reference voltage in patch 7 for vph-pwr. [Konard]
->     - Patches from 1 to 5 of version 5 of the series are accepted.
->       So removed from here.
->     - Link to v5 : https://lore.kernel.org/all/20250424062431.2040692-1-quic_amakhija@quicinc.com/
-> 
-> Changes in v5: Fixed review comments from Dmitry
->     - Added reset gpio for io_expander(tca9539) in patch 7. [Dmitry]
->     - Updated the commit text of patch 10 for eDP configuration. [Dmitry]
->     - Link to v4 : https://lore.kernel.org/all/20250417053909.1051416-1-amakhija@qti.qualcomm.com/
-> 
-> Changes in v4: Fixed review comments from Dmirty, Krzysztof and konard
->     - Add only single compatible string in dsi ctrl pattern properties
->       in patch 3. [Krzysztof/Dmitry]
->     - Move the io_expander RESET and INTR pinctrls from i2c18 node to
->       io_expander node in patch 7. [Dmitry]
->     - Remove the gpio-hogs from io_expander node, as we are already
->       configuring them under anx7625 bridge nodes. [Dmitry/Konard]
->     - Updated the commit message based on hpd_enable() and
->       hpd_disabled() recommendation in patch 8. [Dmitry]
->     - Split the patch 9 of vesrion 3 into two separate patches. [Dmirty]
->     - Updated the commit message and commit text in patch 9 and
->       patch 10.
->     - Link to v3 : https://lore.kernel.org/all/20250404115539.1151201-1-quic_amakhija@quicinc.com/
-> 
-> Changes in v3: Fixed review comments from Dmitry and Krzysztof
->     - Added qcom,sa8775p-dsi-ctrl compatible based on the set of clocks
->       which are associated with it in patch 2. [Krzysztof]
->     - Drop the blank line and add contains instead of items in pattern
->       properties of dsi ctrl and phy in patch 3. [Krzysztof]
->     - Updated the node name from anx7625@58 to bridge@58 for anx7625
->       dsi-dp bridge in patch 7. [Dmitry/Krzysztof]
->     - Updated endpoint label name for input output ports of analogix bridge chip in patch 7.
->     - Check the DP or eDP confiuration based on the aux node in patch 9. [Dmitry]
->     - Link to v2 : https://lore.kernel.org/all/20250311122445.3597100-1-quic_amakhija@quicinc.com/
-> 
-> Changes in v2: Fixed review comments from Rob, konard, Dmitry and Krzysztof
->     - Added additionalProperities in dsi and phy patternProperties in patch 3. [Rob's bot]
->     - Updated example in qcom,sa8775p-mdss.yaml of patch 3:
->         - Added port1 and port2 inside mdss0 ports.
->         - Renamed dsi ports from mdss_dsi0_in to mdss0_dsi0_in and mdss_dsi1_in to mdss0_dsi1_in.
->     - Updated the init load value for vdds supply of DSI PHY from
->       150000uA to 48000uA as per chipset power grid in patch 4. [Dmitry]
->     - Updated the init load value for vdda supply for DSI ctrl
->       from 30100uA to 8300uA as per chipset power grid in patch 5.[Dmitry]
->     - Rebase the series to use the header with DSI phy clock IDs to make code more
->       readable in patch 6. [konard]
->     - Added the interrupts-extended in patch 7. [konard]
->     - Fixed the warning from DT checker against DT binding in patch 7. [Krzysztof]
->     - Changed the connector node name from dsi0-connector to dp-dsi0-connector and dsi1-connector to dp-dsi1-connector
->       respectively in patch 7. [Dmitry]
->     - Added the vph_pwr for anx7625 vdda10, vdds18 and vdda33 supply to fix the warnings from DT checker in
->       patch 7. [Rob's bot]
->     - Addressed device tree comments in patch 7. [Konard]
->     - Squash the DT patch 8 into DT patch 7. [Dmitry]
->     - Added hpd_enable() and hpd_disable() bridge funcs in patch 9. [Dmitry]
->     - Update hpd detection bridge op flags logic based on eDP connector in patch 10. [Dmitry]
->     - Link to v1 : https://lore.kernel.org/linux-arm-msm/20250225121824.3869719-1-quic_amakhija@quicinc.com/
-> 
-> Ayushi Makhija (2):
->   arm64: dts: qcom: sa8775p: add Display Serial Interface device nodes
->   arm64: dts: qcom: sa8775p-ride: add anx7625 DSI to DP bridge nodes
-> 
->  arch/arm64/boot/dts/qcom/sa8775p-ride.dtsi | 232 +++++++++++++++++++++
->  arch/arm64/boot/dts/qcom/sa8775p.dtsi      | 177 +++++++++++++++-
->  2 files changed, 408 insertions(+), 1 deletion(-)
-> 
-> --
-> 2.34.1
-> 
-> 
-> 
+Le jeudi 22 mai 2025 =C3=A0 14:49 -0400, Frank Li a =C3=A9crit=C2=A0:
+> On Sat, Apr 12, 2025 at 01:04:14PM -0500, Rob Herring (Arm) wrote:
+> >=20
+> > On Fri, 11 Apr 2025 17:36:00 -0400, Frank Li wrote:
+> > > Convert fsl-vdoa.txt to yaml format.
+> > >=20
+> > > Additional changes:
+> > > - Add irq.h and imx6qdl-clock.h in example.
+> > >=20
+> > > Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> > > ---
+> > > =C2=A0.../bindings/media/fsl,imx6q-vdoa.yaml=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 | 42 +++++++++++++++++++
+> > > =C2=A0.../devicetree/bindings/media/fsl-vdoa.txt=C2=A0=C2=A0=C2=A0 | =
+21 ----------
+> > > =C2=A02 files changed, 42 insertions(+), 21 deletions(-)
+> > > =C2=A0create mode 100644 Documentation/devicetree/bindings/media/fsl,=
+imx6q-vdoa.yaml
+> > > =C2=A0delete mode 100644 Documentation/devicetree/bindings/media/fsl-=
+vdoa.txt
+> > >=20
+> >=20
+> > Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+>=20
+> All:
+> 	Anyone pick this patch?
 
+Thanks for the highlight, this is stuff from before my time and I had not a=
+ssociated it
+with CODA initially. I've picked it now.
 
-My bot found new DTB warnings on the .dts files added or changed in this
-series.
+regards,
+Nicolas
 
-Some warnings may be from an existing SoC .dtsi. Or perhaps the warnings
-are fixed by another series. Ultimately, it is up to the platform
-maintainer whether these warnings are acceptable or not. No need to reply
-unless the platform maintainer has comments.
-
-If you already ran DT checks and didn't see these error(s), then
-make sure dt-schema is up to date:
-
-  pip3 install dtschema --upgrade
-
-
-This patch series was applied (using b4) to base:
- Base: attempting to guess base-commit...
- Base: remotes/arm-soc/qcom/dt64-45-g27880745470a (exact match)
-
-If this is not the correct base, please add 'base-commit' tag
-(or use b4 which does this automatically)
-
-New warnings running 'make CHECK_DTBS=y for arch/arm64/boot/dts/qcom/' for 20250522051318.1783905-1-quic_amakhija@quicinc.com:
-
-arch/arm64/boot/dts/qcom/qcs9100-ride.dtb: display-subsystem@ae00000 (qcom,sa8775p-mdss): phy@ae94400:compatible:0: 'qcom,sa8775p-edp-phy' was expected
-	from schema $id: http://devicetree.org/schemas/display/msm/qcom,sa8775p-mdss.yaml#
-arch/arm64/boot/dts/qcom/qcs9100-ride.dtb: display-subsystem@ae00000 (qcom,sa8775p-mdss): phy@ae96400:compatible:0: 'qcom,sa8775p-edp-phy' was expected
-	from schema $id: http://devicetree.org/schemas/display/msm/qcom,sa8775p-mdss.yaml#
-arch/arm64/boot/dts/qcom/qcs9100-ride.dtb: display-subsystem@ae00000 (qcom,sa8775p-mdss): Unevaluated properties are not allowed ('dsi@ae94000', 'dsi@ae96000' were unexpected)
-	from schema $id: http://devicetree.org/schemas/display/msm/qcom,sa8775p-mdss.yaml#
-arch/arm64/boot/dts/qcom/sa8775p-ride.dtb: display-subsystem@ae00000 (qcom,sa8775p-mdss): phy@ae94400:compatible:0: 'qcom,sa8775p-edp-phy' was expected
-	from schema $id: http://devicetree.org/schemas/display/msm/qcom,sa8775p-mdss.yaml#
-arch/arm64/boot/dts/qcom/sa8775p-ride.dtb: display-subsystem@ae00000 (qcom,sa8775p-mdss): phy@ae96400:compatible:0: 'qcom,sa8775p-edp-phy' was expected
-	from schema $id: http://devicetree.org/schemas/display/msm/qcom,sa8775p-mdss.yaml#
-arch/arm64/boot/dts/qcom/sa8775p-ride.dtb: display-subsystem@ae00000 (qcom,sa8775p-mdss): Unevaluated properties are not allowed ('dsi@ae94000', 'dsi@ae96000' were unexpected)
-	from schema $id: http://devicetree.org/schemas/display/msm/qcom,sa8775p-mdss.yaml#
-arch/arm64/boot/dts/qcom/qcs9100-ride.dtb: dsi@ae94000 (qcom,sa8775p-dsi-ctrl): compatible: 'oneOf' conditional failed, one must be fixed:
-	['qcom,sa8775p-dsi-ctrl', 'qcom,mdss-dsi-ctrl'] is too long
-	'qcom,sa8775p-dsi-ctrl' is not one of ['qcom,apq8064-dsi-ctrl', 'qcom,msm8226-dsi-ctrl', 'qcom,msm8916-dsi-ctrl', 'qcom,msm8953-dsi-ctrl', 'qcom,msm8974-dsi-ctrl', 'qcom,msm8976-dsi-ctrl', 'qcom,msm8996-dsi-ctrl', 'qcom,msm8998-dsi-ctrl', 'qcom,qcm2290-dsi-ctrl', 'qcom,sc7180-dsi-ctrl', 'qcom,sc7280-dsi-ctrl', 'qcom,sdm660-dsi-ctrl', 'qcom,sdm670-dsi-ctrl', 'qcom,sdm845-dsi-ctrl', 'qcom,sm6115-dsi-ctrl', 'qcom,sm6125-dsi-ctrl', 'qcom,sm6150-dsi-ctrl', 'qcom,sm6350-dsi-ctrl', 'qcom,sm6375-dsi-ctrl', 'qcom,sm7150-dsi-ctrl', 'qcom,sm8150-dsi-ctrl', 'qcom,sm8250-dsi-ctrl', 'qcom,sm8350-dsi-ctrl', 'qcom,sm8450-dsi-ctrl', 'qcom,sm8550-dsi-ctrl', 'qcom,sm8650-dsi-ctrl']
-	'qcom,sa8775p-dsi-ctrl' is not one of ['qcom,dsi-ctrl-6g-qcm2290', 'qcom,mdss-dsi-ctrl']
-	from schema $id: http://devicetree.org/schemas/display/msm/dsi-controller-main.yaml#
-arch/arm64/boot/dts/qcom/qcs9100-ride.dtb: dsi@ae94000 (qcom,sa8775p-dsi-ctrl): Unevaluated properties are not allowed ('compatible' was unexpected)
-	from schema $id: http://devicetree.org/schemas/display/msm/dsi-controller-main.yaml#
-arch/arm64/boot/dts/qcom/qcs9100-ride.dtb: /soc@0/display-subsystem@ae00000/dsi@ae94000: failed to match any schema with compatible: ['qcom,sa8775p-dsi-ctrl', 'qcom,mdss-dsi-ctrl']
-arch/arm64/boot/dts/qcom/qcs9100-ride.dtb: /soc@0/display-subsystem@ae00000/phy@ae94400: failed to match any schema with compatible: ['qcom,sa8775p-dsi-phy-5nm']
-arch/arm64/boot/dts/qcom/sa8775p-ride.dtb: dsi@ae94000 (qcom,sa8775p-dsi-ctrl): compatible: 'oneOf' conditional failed, one must be fixed:
-	['qcom,sa8775p-dsi-ctrl', 'qcom,mdss-dsi-ctrl'] is too long
-	'qcom,sa8775p-dsi-ctrl' is not one of ['qcom,apq8064-dsi-ctrl', 'qcom,msm8226-dsi-ctrl', 'qcom,msm8916-dsi-ctrl', 'qcom,msm8953-dsi-ctrl', 'qcom,msm8974-dsi-ctrl', 'qcom,msm8976-dsi-ctrl', 'qcom,msm8996-dsi-ctrl', 'qcom,msm8998-dsi-ctrl', 'qcom,qcm2290-dsi-ctrl', 'qcom,sc7180-dsi-ctrl', 'qcom,sc7280-dsi-ctrl', 'qcom,sdm660-dsi-ctrl', 'qcom,sdm670-dsi-ctrl', 'qcom,sdm845-dsi-ctrl', 'qcom,sm6115-dsi-ctrl', 'qcom,sm6125-dsi-ctrl', 'qcom,sm6150-dsi-ctrl', 'qcom,sm6350-dsi-ctrl', 'qcom,sm6375-dsi-ctrl', 'qcom,sm7150-dsi-ctrl', 'qcom,sm8150-dsi-ctrl', 'qcom,sm8250-dsi-ctrl', 'qcom,sm8350-dsi-ctrl', 'qcom,sm8450-dsi-ctrl', 'qcom,sm8550-dsi-ctrl', 'qcom,sm8650-dsi-ctrl']
-	'qcom,sa8775p-dsi-ctrl' is not one of ['qcom,dsi-ctrl-6g-qcm2290', 'qcom,mdss-dsi-ctrl']
-	from schema $id: http://devicetree.org/schemas/display/msm/dsi-controller-main.yaml#
-arch/arm64/boot/dts/qcom/qcs9100-ride.dtb: dsi@ae96000 (qcom,sa8775p-dsi-ctrl): compatible: 'oneOf' conditional failed, one must be fixed:
-	['qcom,sa8775p-dsi-ctrl', 'qcom,mdss-dsi-ctrl'] is too long
-	'qcom,sa8775p-dsi-ctrl' is not one of ['qcom,apq8064-dsi-ctrl', 'qcom,msm8226-dsi-ctrl', 'qcom,msm8916-dsi-ctrl', 'qcom,msm8953-dsi-ctrl', 'qcom,msm8974-dsi-ctrl', 'qcom,msm8976-dsi-ctrl', 'qcom,msm8996-dsi-ctrl', 'qcom,msm8998-dsi-ctrl', 'qcom,qcm2290-dsi-ctrl', 'qcom,sc7180-dsi-ctrl', 'qcom,sc7280-dsi-ctrl', 'qcom,sdm660-dsi-ctrl', 'qcom,sdm670-dsi-ctrl', 'qcom,sdm845-dsi-ctrl', 'qcom,sm6115-dsi-ctrl', 'qcom,sm6125-dsi-ctrl', 'qcom,sm6150-dsi-ctrl', 'qcom,sm6350-dsi-ctrl', 'qcom,sm6375-dsi-ctrl', 'qcom,sm7150-dsi-ctrl', 'qcom,sm8150-dsi-ctrl', 'qcom,sm8250-dsi-ctrl', 'qcom,sm8350-dsi-ctrl', 'qcom,sm8450-dsi-ctrl', 'qcom,sm8550-dsi-ctrl', 'qcom,sm8650-dsi-ctrl']
-	'qcom,sa8775p-dsi-ctrl' is not one of ['qcom,dsi-ctrl-6g-qcm2290', 'qcom,mdss-dsi-ctrl']
-	from schema $id: http://devicetree.org/schemas/display/msm/dsi-controller-main.yaml#
-arch/arm64/boot/dts/qcom/sa8775p-ride.dtb: dsi@ae94000 (qcom,sa8775p-dsi-ctrl): Unevaluated properties are not allowed ('compatible' was unexpected)
-	from schema $id: http://devicetree.org/schemas/display/msm/dsi-controller-main.yaml#
-arch/arm64/boot/dts/qcom/qcs9100-ride.dtb: dsi@ae96000 (qcom,sa8775p-dsi-ctrl): Unevaluated properties are not allowed ('compatible' was unexpected)
-	from schema $id: http://devicetree.org/schemas/display/msm/dsi-controller-main.yaml#
-arch/arm64/boot/dts/qcom/qcs9100-ride.dtb: /soc@0/display-subsystem@ae00000/dsi@ae96000: failed to match any schema with compatible: ['qcom,sa8775p-dsi-ctrl', 'qcom,mdss-dsi-ctrl']
-arch/arm64/boot/dts/qcom/sa8775p-ride.dtb: /soc@0/display-subsystem@ae00000/dsi@ae94000: failed to match any schema with compatible: ['qcom,sa8775p-dsi-ctrl', 'qcom,mdss-dsi-ctrl']
-arch/arm64/boot/dts/qcom/qcs9100-ride.dtb: /soc@0/display-subsystem@ae00000/phy@ae96400: failed to match any schema with compatible: ['qcom,sa8775p-dsi-phy-5nm']
-arch/arm64/boot/dts/qcom/sa8775p-ride.dtb: /soc@0/display-subsystem@ae00000/phy@ae94400: failed to match any schema with compatible: ['qcom,sa8775p-dsi-phy-5nm']
-arch/arm64/boot/dts/qcom/qcs9100-ride-r3.dtb: display-subsystem@ae00000 (qcom,sa8775p-mdss): phy@ae94400:compatible:0: 'qcom,sa8775p-edp-phy' was expected
-	from schema $id: http://devicetree.org/schemas/display/msm/qcom,sa8775p-mdss.yaml#
-arch/arm64/boot/dts/qcom/qcs9100-ride-r3.dtb: display-subsystem@ae00000 (qcom,sa8775p-mdss): phy@ae96400:compatible:0: 'qcom,sa8775p-edp-phy' was expected
-	from schema $id: http://devicetree.org/schemas/display/msm/qcom,sa8775p-mdss.yaml#
-arch/arm64/boot/dts/qcom/qcs9100-ride-r3.dtb: display-subsystem@ae00000 (qcom,sa8775p-mdss): Unevaluated properties are not allowed ('dsi@ae94000', 'dsi@ae96000' were unexpected)
-	from schema $id: http://devicetree.org/schemas/display/msm/qcom,sa8775p-mdss.yaml#
-arch/arm64/boot/dts/qcom/sa8775p-ride.dtb: dsi@ae96000 (qcom,sa8775p-dsi-ctrl): compatible: 'oneOf' conditional failed, one must be fixed:
-	['qcom,sa8775p-dsi-ctrl', 'qcom,mdss-dsi-ctrl'] is too long
-	'qcom,sa8775p-dsi-ctrl' is not one of ['qcom,apq8064-dsi-ctrl', 'qcom,msm8226-dsi-ctrl', 'qcom,msm8916-dsi-ctrl', 'qcom,msm8953-dsi-ctrl', 'qcom,msm8974-dsi-ctrl', 'qcom,msm8976-dsi-ctrl', 'qcom,msm8996-dsi-ctrl', 'qcom,msm8998-dsi-ctrl', 'qcom,qcm2290-dsi-ctrl', 'qcom,sc7180-dsi-ctrl', 'qcom,sc7280-dsi-ctrl', 'qcom,sdm660-dsi-ctrl', 'qcom,sdm670-dsi-ctrl', 'qcom,sdm845-dsi-ctrl', 'qcom,sm6115-dsi-ctrl', 'qcom,sm6125-dsi-ctrl', 'qcom,sm6150-dsi-ctrl', 'qcom,sm6350-dsi-ctrl', 'qcom,sm6375-dsi-ctrl', 'qcom,sm7150-dsi-ctrl', 'qcom,sm8150-dsi-ctrl', 'qcom,sm8250-dsi-ctrl', 'qcom,sm8350-dsi-ctrl', 'qcom,sm8450-dsi-ctrl', 'qcom,sm8550-dsi-ctrl', 'qcom,sm8650-dsi-ctrl']
-	'qcom,sa8775p-dsi-ctrl' is not one of ['qcom,dsi-ctrl-6g-qcm2290', 'qcom,mdss-dsi-ctrl']
-	from schema $id: http://devicetree.org/schemas/display/msm/dsi-controller-main.yaml#
-arch/arm64/boot/dts/qcom/sa8775p-ride.dtb: dsi@ae96000 (qcom,sa8775p-dsi-ctrl): Unevaluated properties are not allowed ('compatible' was unexpected)
-	from schema $id: http://devicetree.org/schemas/display/msm/dsi-controller-main.yaml#
-arch/arm64/boot/dts/qcom/sa8775p-ride.dtb: /soc@0/display-subsystem@ae00000/dsi@ae96000: failed to match any schema with compatible: ['qcom,sa8775p-dsi-ctrl', 'qcom,mdss-dsi-ctrl']
-arch/arm64/boot/dts/qcom/sa8775p-ride.dtb: /soc@0/display-subsystem@ae00000/phy@ae96400: failed to match any schema with compatible: ['qcom,sa8775p-dsi-phy-5nm']
-arch/arm64/boot/dts/qcom/qcs9100-ride-r3.dtb: dsi@ae94000 (qcom,sa8775p-dsi-ctrl): compatible: 'oneOf' conditional failed, one must be fixed:
-	['qcom,sa8775p-dsi-ctrl', 'qcom,mdss-dsi-ctrl'] is too long
-	'qcom,sa8775p-dsi-ctrl' is not one of ['qcom,apq8064-dsi-ctrl', 'qcom,msm8226-dsi-ctrl', 'qcom,msm8916-dsi-ctrl', 'qcom,msm8953-dsi-ctrl', 'qcom,msm8974-dsi-ctrl', 'qcom,msm8976-dsi-ctrl', 'qcom,msm8996-dsi-ctrl', 'qcom,msm8998-dsi-ctrl', 'qcom,qcm2290-dsi-ctrl', 'qcom,sc7180-dsi-ctrl', 'qcom,sc7280-dsi-ctrl', 'qcom,sdm660-dsi-ctrl', 'qcom,sdm670-dsi-ctrl', 'qcom,sdm845-dsi-ctrl', 'qcom,sm6115-dsi-ctrl', 'qcom,sm6125-dsi-ctrl', 'qcom,sm6150-dsi-ctrl', 'qcom,sm6350-dsi-ctrl', 'qcom,sm6375-dsi-ctrl', 'qcom,sm7150-dsi-ctrl', 'qcom,sm8150-dsi-ctrl', 'qcom,sm8250-dsi-ctrl', 'qcom,sm8350-dsi-ctrl', 'qcom,sm8450-dsi-ctrl', 'qcom,sm8550-dsi-ctrl', 'qcom,sm8650-dsi-ctrl']
-	'qcom,sa8775p-dsi-ctrl' is not one of ['qcom,dsi-ctrl-6g-qcm2290', 'qcom,mdss-dsi-ctrl']
-	from schema $id: http://devicetree.org/schemas/display/msm/dsi-controller-main.yaml#
-arch/arm64/boot/dts/qcom/qcs9100-ride-r3.dtb: dsi@ae94000 (qcom,sa8775p-dsi-ctrl): Unevaluated properties are not allowed ('compatible' was unexpected)
-	from schema $id: http://devicetree.org/schemas/display/msm/dsi-controller-main.yaml#
-arch/arm64/boot/dts/qcom/qcs9100-ride-r3.dtb: /soc@0/display-subsystem@ae00000/dsi@ae94000: failed to match any schema with compatible: ['qcom,sa8775p-dsi-ctrl', 'qcom,mdss-dsi-ctrl']
-arch/arm64/boot/dts/qcom/qcs9100-ride-r3.dtb: /soc@0/display-subsystem@ae00000/phy@ae94400: failed to match any schema with compatible: ['qcom,sa8775p-dsi-phy-5nm']
-arch/arm64/boot/dts/qcom/qcs9100-ride-r3.dtb: dsi@ae96000 (qcom,sa8775p-dsi-ctrl): compatible: 'oneOf' conditional failed, one must be fixed:
-	['qcom,sa8775p-dsi-ctrl', 'qcom,mdss-dsi-ctrl'] is too long
-	'qcom,sa8775p-dsi-ctrl' is not one of ['qcom,apq8064-dsi-ctrl', 'qcom,msm8226-dsi-ctrl', 'qcom,msm8916-dsi-ctrl', 'qcom,msm8953-dsi-ctrl', 'qcom,msm8974-dsi-ctrl', 'qcom,msm8976-dsi-ctrl', 'qcom,msm8996-dsi-ctrl', 'qcom,msm8998-dsi-ctrl', 'qcom,qcm2290-dsi-ctrl', 'qcom,sc7180-dsi-ctrl', 'qcom,sc7280-dsi-ctrl', 'qcom,sdm660-dsi-ctrl', 'qcom,sdm670-dsi-ctrl', 'qcom,sdm845-dsi-ctrl', 'qcom,sm6115-dsi-ctrl', 'qcom,sm6125-dsi-ctrl', 'qcom,sm6150-dsi-ctrl', 'qcom,sm6350-dsi-ctrl', 'qcom,sm6375-dsi-ctrl', 'qcom,sm7150-dsi-ctrl', 'qcom,sm8150-dsi-ctrl', 'qcom,sm8250-dsi-ctrl', 'qcom,sm8350-dsi-ctrl', 'qcom,sm8450-dsi-ctrl', 'qcom,sm8550-dsi-ctrl', 'qcom,sm8650-dsi-ctrl']
-	'qcom,sa8775p-dsi-ctrl' is not one of ['qcom,dsi-ctrl-6g-qcm2290', 'qcom,mdss-dsi-ctrl']
-	from schema $id: http://devicetree.org/schemas/display/msm/dsi-controller-main.yaml#
-arch/arm64/boot/dts/qcom/qcs9100-ride-r3.dtb: dsi@ae96000 (qcom,sa8775p-dsi-ctrl): Unevaluated properties are not allowed ('compatible' was unexpected)
-	from schema $id: http://devicetree.org/schemas/display/msm/dsi-controller-main.yaml#
-arch/arm64/boot/dts/qcom/qcs9100-ride-r3.dtb: /soc@0/display-subsystem@ae00000/dsi@ae96000: failed to match any schema with compatible: ['qcom,sa8775p-dsi-ctrl', 'qcom,mdss-dsi-ctrl']
-arch/arm64/boot/dts/qcom/qcs9100-ride-r3.dtb: /soc@0/display-subsystem@ae00000/phy@ae96400: failed to match any schema with compatible: ['qcom,sa8775p-dsi-phy-5nm']
-arch/arm64/boot/dts/qcom/sa8775p-ride-r3.dtb: display-subsystem@ae00000 (qcom,sa8775p-mdss): phy@ae94400:compatible:0: 'qcom,sa8775p-edp-phy' was expected
-	from schema $id: http://devicetree.org/schemas/display/msm/qcom,sa8775p-mdss.yaml#
-arch/arm64/boot/dts/qcom/sa8775p-ride-r3.dtb: display-subsystem@ae00000 (qcom,sa8775p-mdss): phy@ae96400:compatible:0: 'qcom,sa8775p-edp-phy' was expected
-	from schema $id: http://devicetree.org/schemas/display/msm/qcom,sa8775p-mdss.yaml#
-arch/arm64/boot/dts/qcom/sa8775p-ride-r3.dtb: display-subsystem@ae00000 (qcom,sa8775p-mdss): Unevaluated properties are not allowed ('dsi@ae94000', 'dsi@ae96000' were unexpected)
-	from schema $id: http://devicetree.org/schemas/display/msm/qcom,sa8775p-mdss.yaml#
-arch/arm64/boot/dts/qcom/sa8775p-ride-r3.dtb: dsi@ae94000 (qcom,sa8775p-dsi-ctrl): compatible: 'oneOf' conditional failed, one must be fixed:
-	['qcom,sa8775p-dsi-ctrl', 'qcom,mdss-dsi-ctrl'] is too long
-	'qcom,sa8775p-dsi-ctrl' is not one of ['qcom,apq8064-dsi-ctrl', 'qcom,msm8226-dsi-ctrl', 'qcom,msm8916-dsi-ctrl', 'qcom,msm8953-dsi-ctrl', 'qcom,msm8974-dsi-ctrl', 'qcom,msm8976-dsi-ctrl', 'qcom,msm8996-dsi-ctrl', 'qcom,msm8998-dsi-ctrl', 'qcom,qcm2290-dsi-ctrl', 'qcom,sc7180-dsi-ctrl', 'qcom,sc7280-dsi-ctrl', 'qcom,sdm660-dsi-ctrl', 'qcom,sdm670-dsi-ctrl', 'qcom,sdm845-dsi-ctrl', 'qcom,sm6115-dsi-ctrl', 'qcom,sm6125-dsi-ctrl', 'qcom,sm6150-dsi-ctrl', 'qcom,sm6350-dsi-ctrl', 'qcom,sm6375-dsi-ctrl', 'qcom,sm7150-dsi-ctrl', 'qcom,sm8150-dsi-ctrl', 'qcom,sm8250-dsi-ctrl', 'qcom,sm8350-dsi-ctrl', 'qcom,sm8450-dsi-ctrl', 'qcom,sm8550-dsi-ctrl', 'qcom,sm8650-dsi-ctrl']
-	'qcom,sa8775p-dsi-ctrl' is not one of ['qcom,dsi-ctrl-6g-qcm2290', 'qcom,mdss-dsi-ctrl']
-	from schema $id: http://devicetree.org/schemas/display/msm/dsi-controller-main.yaml#
-arch/arm64/boot/dts/qcom/sa8775p-ride-r3.dtb: dsi@ae94000 (qcom,sa8775p-dsi-ctrl): Unevaluated properties are not allowed ('compatible' was unexpected)
-	from schema $id: http://devicetree.org/schemas/display/msm/dsi-controller-main.yaml#
-arch/arm64/boot/dts/qcom/sa8775p-ride-r3.dtb: /soc@0/display-subsystem@ae00000/dsi@ae94000: failed to match any schema with compatible: ['qcom,sa8775p-dsi-ctrl', 'qcom,mdss-dsi-ctrl']
-arch/arm64/boot/dts/qcom/sa8775p-ride-r3.dtb: /soc@0/display-subsystem@ae00000/phy@ae94400: failed to match any schema with compatible: ['qcom,sa8775p-dsi-phy-5nm']
-arch/arm64/boot/dts/qcom/sa8775p-ride-r3.dtb: dsi@ae96000 (qcom,sa8775p-dsi-ctrl): compatible: 'oneOf' conditional failed, one must be fixed:
-	['qcom,sa8775p-dsi-ctrl', 'qcom,mdss-dsi-ctrl'] is too long
-	'qcom,sa8775p-dsi-ctrl' is not one of ['qcom,apq8064-dsi-ctrl', 'qcom,msm8226-dsi-ctrl', 'qcom,msm8916-dsi-ctrl', 'qcom,msm8953-dsi-ctrl', 'qcom,msm8974-dsi-ctrl', 'qcom,msm8976-dsi-ctrl', 'qcom,msm8996-dsi-ctrl', 'qcom,msm8998-dsi-ctrl', 'qcom,qcm2290-dsi-ctrl', 'qcom,sc7180-dsi-ctrl', 'qcom,sc7280-dsi-ctrl', 'qcom,sdm660-dsi-ctrl', 'qcom,sdm670-dsi-ctrl', 'qcom,sdm845-dsi-ctrl', 'qcom,sm6115-dsi-ctrl', 'qcom,sm6125-dsi-ctrl', 'qcom,sm6150-dsi-ctrl', 'qcom,sm6350-dsi-ctrl', 'qcom,sm6375-dsi-ctrl', 'qcom,sm7150-dsi-ctrl', 'qcom,sm8150-dsi-ctrl', 'qcom,sm8250-dsi-ctrl', 'qcom,sm8350-dsi-ctrl', 'qcom,sm8450-dsi-ctrl', 'qcom,sm8550-dsi-ctrl', 'qcom,sm8650-dsi-ctrl']
-	'qcom,sa8775p-dsi-ctrl' is not one of ['qcom,dsi-ctrl-6g-qcm2290', 'qcom,mdss-dsi-ctrl']
-	from schema $id: http://devicetree.org/schemas/display/msm/dsi-controller-main.yaml#
-arch/arm64/boot/dts/qcom/sa8775p-ride-r3.dtb: dsi@ae96000 (qcom,sa8775p-dsi-ctrl): Unevaluated properties are not allowed ('compatible' was unexpected)
-	from schema $id: http://devicetree.org/schemas/display/msm/dsi-controller-main.yaml#
-arch/arm64/boot/dts/qcom/sa8775p-ride-r3.dtb: /soc@0/display-subsystem@ae00000/dsi@ae96000: failed to match any schema with compatible: ['qcom,sa8775p-dsi-ctrl', 'qcom,mdss-dsi-ctrl']
-arch/arm64/boot/dts/qcom/sa8775p-ride-r3.dtb: /soc@0/display-subsystem@ae00000/phy@ae96400: failed to match any schema with compatible: ['qcom,sa8775p-dsi-phy-5nm']
-
-
-
-
-
+>=20
+> Frank
+> >=20
