@@ -1,163 +1,96 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B11F8286D53;
-	Thu, 22 May 2025 09:23:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AF8B2638BC;
+	Thu, 22 May 2025 09:23:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747905808; cv=none; b=hPYN0GEgO5Na8HcImhJGVZDAYmdt2e871MwjEGJtUr75ZNlBke9GlX8EjEBB9hPYM8m29Or6kcAzzP4pGmxsXn1rBrErMABDEr8NI27+NUqIQAw6rkwNXQR40GE+4ZFZwO/d+xPy37G9ATGEznM6+2J8rGZ2inB7xCk5A/maB7E=
+	t=1747905839; cv=none; b=N6t2O252RAgVkNZ1MK8CmG1D5cx8MB2H/P4BawrgZuXGX9PeHGcf4ysH6VhxkpkQzxPyn2mcOHFnag5w3/cB8jDJdBC1MSzG0iva88Ri4wCvJ7x1U+LxywK0fhfEeQ3+DeFe034KgENyCS3yNQSaaxcP1OMro+SnQ/N7lJp+fAY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747905808; c=relaxed/simple;
-	bh=MinhFm0PGjr1VPx3DakOEMjlIRpdXNwH0lAO/loccDY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=rsa+PZz1NiiBKDT2l7thhvLBxGlQEUWrSLt60/evhw5DUXhLeJG5zqQmsw60EqDMjnx0q1af2FeYaiO9mrfa23K9vacatCAqVGxULoKm2d4NA7V8qJDzOtime59NCETrmkL0pzX1ZNLx175dBCkTBXXf9RctrSTbXp/ORtrxMHA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=djDVfTQK; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1747905839; c=relaxed/simple;
+	bh=eXAlb49JkCb+TQz9exx3hf5fNZb3kP86w2z33zlM7Wc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Is/g2edGqgO5TDwFDDn5ttoElmw3o/ZuYcyRhuJIhiOJ/s+rU5Lq1LFvao8L+gz0eIwZKVTPCKHgrGhngHQ7j1qvxg35EZE8k5+tTzTIM+N/9peD/lYlO+XwAa1pY6cDdoHpVYQ+8zzQ9AIM7O7CFaPkX+/mJb0DS2aFEUh5/UI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nQ3wMS6T; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="djDVfTQK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747905807; x=1779441807;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=MinhFm0PGjr1VPx3DakOEMjlIRpdXNwH0lAO/loccDY=;
-  b=djDVfTQK2wcQhaDEuOYbMutSl71qmEe1uTPU4azKT5rp35zNyFbEsrgd
-   yWSKAJEmEgmZMq4vTBp9Vc8GpYE93Fs7bntpYn87GLpub6C2IUHjH69Da
-   nnx4in7mwdxrRhq43y2H9DZqVMYN8z3SkTlhI0b9GQus5JSZLpORi+fxO
-   +Xr712ZYRGo9Y27EbZKXXweVunlB4l5/GlQKns0sKe/58205h8aSut9Ig
-   8TSrErh5VhkAHGhhEW/AGXDPcrq6hvTx74Al/LLht/b22mD4WkSIq7brN
-   sOBUMf/WJk9D3fIK941hKahRI6yKhWxoBCfYRQBtW5VfcuSIA9jWZIGaN
-   A==;
-X-CSE-ConnectionGUID: O4ia6yHzSqmThCofXP0I6g==
-X-CSE-MsgGUID: ggrPbB+4Ru623ONRdrHvUQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11440"; a="72445691"
-X-IronPort-AV: E=Sophos;i="6.15,305,1739865600"; 
-   d="scan'208";a="72445691"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2025 02:23:27 -0700
-X-CSE-ConnectionGUID: Aph0fXZaSWGZvzJJq74/Wg==
-X-CSE-MsgGUID: b3/qxbFcSS2hSM5pgvknZQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,305,1739865600"; 
-   d="scan'208";a="145662059"
-Received: from oandoniu-mobl3.ger.corp.intel.com (HELO eresheto-mobl3.ger.corp.intel.com) ([10.245.245.170])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2025 02:23:21 -0700
-From: Elena Reshetova <elena.reshetova@intel.com>
-To: dave.hansen@intel.com
-Cc: jarkko@kernel.org,
-	seanjc@google.com,
-	kai.huang@intel.com,
-	mingo@kernel.org,
-	linux-sgx@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	x86@kernel.org,
-	asit.k.mallick@intel.com,
-	vincent.r.scarlata@intel.com,
-	chongc@google.com,
-	erdemaktas@google.com,
-	vannapurve@google.com,
-	dionnaglaze@google.com,
-	bondarn@google.com,
-	scott.raynor@intel.com,
-	Elena Reshetova <elena.reshetova@intel.com>
-Subject: [PATCH v6 5/5] x86/sgx: Enable automatic SVN updates for SGX enclaves
-Date: Thu, 22 May 2025 12:21:38 +0300
-Message-ID: <20250522092237.7895-6-elena.reshetova@intel.com>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250522092237.7895-1-elena.reshetova@intel.com>
-References: <20250522092237.7895-1-elena.reshetova@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nQ3wMS6T"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4CB9BC4CEE4;
+	Thu, 22 May 2025 09:23:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747905838;
+	bh=eXAlb49JkCb+TQz9exx3hf5fNZb3kP86w2z33zlM7Wc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=nQ3wMS6T0pfisADnNRP2uPa31VU+qtbXzfiwWoygKXDQliDo35SJyyoKHXV7oyt0O
+	 MJ9xlgSXX5R9dfkDq/Hq3QjbBrxJ4wGDuQVHw9dJpMpRrw1HTU+w2Xszb/xtWWf+F6
+	 fREJkAQEUuSo72YJTNzVs5z4G+tv/LrHNZiVFTYVlWgRPAkYE5q3+R0zZxUx41okBf
+	 tKp2e3Q8Fjsl4VEWRe7PjcpYUvp8fw8fB2yl+WEIT3OVLpIp44Xn9hnAylgvG3ahbI
+	 CpOA8SD8w4FvpQ0MN+EbZC8gI7nWu8TopVaV6dMOPVQpwlrTnxvmuqr3ogvrlmy3xB
+	 8IUB+8qbaS78Q==
+Date: Thu, 22 May 2025 10:23:54 +0100
+From: Mark Brown <broonie@kernel.org>
+To: David Hildenbrand <david@redhat.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Shuah Khan <shuah@kernel.org>, linux-mm@kvack.org,
+	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] selftests/mm: Fix test result reporting in gup_longterm
+Message-ID: <0f0622f7-2630-40f4-8556-99bd479d1aff@sirena.org.uk>
+References: <20250515-selftests-mm-gup-longterm-dups-v1-1-05f8f731cf63@kernel.org>
+ <f924f789-5269-4046-99a4-2991f9a3ab3c@redhat.com>
+ <aCcvxaFc6DE_Mhr1@finisterre.sirena.org.uk>
+ <58dbef73-6e37-46de-9092-365456306b27@redhat.com>
+ <aCc5E-wB4nBwrKEP@finisterre.sirena.org.uk>
+ <46d151d7-c04b-4538-9725-dc4f46ac8ac1@redhat.com>
+ <aCd-8kEyDm2f2w0z@finisterre.sirena.org.uk>
+ <8131ce62-0cee-455f-9eeb-e2bbed244402@redhat.com>
+ <e7cb18c4-fed3-4fa5-bb51-228f2b018ce9@sirena.org.uk>
+ <f6cf8a99-48b0-46f7-b11b-574d1544fa24@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="1STrL/W39KMKSBxv"
+Content-Disposition: inline
+In-Reply-To: <f6cf8a99-48b0-46f7-b11b-574d1544fa24@redhat.com>
+X-Cookie: Beware of dog.
 
-== Background ==
 
-ENCLS[EUPDATESVN] is a new SGX instruction [1] which allows enclave
-attestation to include information about updated microcode SVN without a
-reboot. Before an EUPDATESVN operation can be successful, all SGX memory
-(aka. EPC) must be marked as “unused” in the SGX hardware metadata
-(aka.EPCM). This requirement ensures that no compromised enclave can
-survive the EUPDATESVN procedure and provides an opportunity to generate
-new cryptographic assets.
+--1STrL/W39KMKSBxv
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-== Patch Contents ==
+On Thu, May 22, 2025 at 10:42:50AM +0200, David Hildenbrand wrote:
 
-Attempt to execute ENCLS[EUPDATESVN] every time the first file descriptor
-is obtained via sgx_(vepc_)open(). In the most common case the microcode
-SVN is already up-to-date, and the operation succeeds without updating SVN.
-If it fails with any other error code than SGX_INSUFFICIENT_ENTROPY, this
-is considered unexpected and the *open() returns an error. This should not
-happen in practice. On contrary, SGX_INSUFFICIENT_ENTROPY might happen due
-to a pressure on the system's DRNG (RDSEED) and therefore the *open() can
-be safely retried to allow normal enclave operation.
+> Probably, one might be able to revert the logic: instead of running each
+> test for each size, run each size for each test: then, the tests are fixed
+> and would be covering all available sizes in a single logical test.
 
-[1] Runtime Microcode Updates with Intel Software Guard Extensions,
-https://cdrdv2.intel.com/v1/dl/getContent/648682
+Yeah, that should work - it'd lose a bit of resolution in the test
+results for automation but I'm not sure how often that's likely to be
+relevant and the information would still be there for humans. =20
 
-Signed-off-by: Elena Reshetova <elena.reshetova@intel.com>
----
- arch/x86/kernel/cpu/sgx/main.c | 35 ++++++++++++++++++++++++++++++++--
- 1 file changed, 33 insertions(+), 2 deletions(-)
+> I agree that that really is a bigger rework. Let me take a look at your
+> original patch later (fairly busy today, please poke me if I forget).
 
-diff --git a/arch/x86/kernel/cpu/sgx/main.c b/arch/x86/kernel/cpu/sgx/main.c
-index 109d40c89fe8..73ec5ccff3ae 100644
---- a/arch/x86/kernel/cpu/sgx/main.c
-+++ b/arch/x86/kernel/cpu/sgx/main.c
-@@ -920,6 +920,8 @@ EXPORT_SYMBOL_GPL(sgx_set_attribute);
- 
- /* Counter to count the active SGX users */
- static atomic64_t sgx_usage_count;
-+/* Mutex to ensure no concurrent EPC accesses during EUPDATESVN */
-+static DEFINE_MUTEX(sgx_svn_lock);
- 
- /**
-  * sgx_updatesvn() - Attempt to call ENCLS[EUPDATESVN].
-@@ -989,8 +991,37 @@ static int sgx_update_svn(void)
- 
- int sgx_inc_usage_count(void)
- {
--	atomic64_inc(&sgx_usage_count);
--	return 0;
-+	int ret;
-+
-+	/*
-+	 * Increments from non-zero indicate potential other
-+	 * active EPC users and EUPDATESVN is not attempted.
-+	 */
-+	if (atomic64_inc_not_zero(&sgx_usage_count))
-+		return 0;
-+
-+	/*
-+	 * Ensure no other concurrent threads can start
-+	 * touching EPC while EUPDATESVN is running.
-+	 */
-+	guard(mutex)(&sgx_svn_lock);
-+
-+	if (atomic64_inc_not_zero(&sgx_usage_count))
-+		return 0;
-+
-+	/*
-+	 * Attempt to call EUPDATESVN since EPC must be
-+	 * empty at this point.
-+	 */
-+	ret = sgx_update_svn();
-+
-+	/*
-+	 * If EUPDATESVN failed, return failure to sgx_(vepc_)open and
-+	 * do not increment the sgx_usage_count.
-+	 */
-+	if (!ret)
-+		atomic64_inc(&sgx_usage_count);
-+	return ret;
- }
- 
- void sgx_dec_usage_count(void)
--- 
-2.45.2
+Thanks.  I'll take a look at the other similar tests like cow using the
+same approach I've used here.
 
+--1STrL/W39KMKSBxv
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmgu7SkACgkQJNaLcl1U
+h9ASlQf/cRLMEkBxUlfbfTgzQ+8TLtGOObYAhPQyrMYAQOdor65OEzy35eYR94iV
+d5T1hf0KzpFeZ9eGyZlpIJx7SeUWlAHsj486xpc+kDhmj0HOBrw9aPjseaOuVmNp
+bfnzh8jpNOBpQ95Y/7oXvC8iQTjbB452hrUtF0UMdV7dYzYdEumg/zMAKZZdlDi7
+TTOEDfdMqcRQUDlhHVLnPcBNydzGsZbAmaJofT8+L20pRPrDuVthuPM67/XFDN4P
+HVbDn+2PGwz189ms892GBoaYc9Bq5eJKiqNTGzywL62AZMfCIVESFndjfzrAxK0l
+yhWcd/A+J45cI+ASY+FlwqRB5qXJpw==
+=Wtd4
+-----END PGP SIGNATURE-----
+
+--1STrL/W39KMKSBxv--
