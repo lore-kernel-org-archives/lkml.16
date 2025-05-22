@@ -1,62 +1,63 @@
-Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
+Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F05F3A1B6
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 02:46:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 659327083C
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 02:46:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747882013; cv=none; b=XTv8u0++HsA/2RqaJt771t+o2ROGahBqEaVSI2sVwI6u5/318YZzQ3ZeR9B1VGYibc0R/WsVY0uKtQ+czjeDUIiUXWbEHU4m5Mr1KTg+M3jP0yEtdpUlK/5DOSX/2/PqC2yk4bM8iFYmYq0c2IiVJiZxtr81nOnelgWLEDn1lb8=
+	t=1747882016; cv=none; b=lWR+foHOR1FNiAPt4D3Cid3otJ6W/rV9IjS848il2lBHILf5meBSakoy4Dy8jA+mijnUzql/JGlov8w/KmTIPWJnEIBMCzae8in5hDDFIauR5IgrwSK+bx7enQCCr7AaZEKhzvJpRuaDbj8Hui42KRw7+/N7HgFfYA+sF42T81E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747882013; c=relaxed/simple;
-	bh=cpOKncLEcpg2HYHSfgOKP3yT9Il2SdUaIH98p7AGmpg=;
+	s=arc-20240116; t=1747882016; c=relaxed/simple;
+	bh=ftGpk6Fz3JCw1eA4rznTmTf7rH0rIKHQMlsI9Jo5Gu4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YBkM8y3pPF9qBpCYXyphGEeSzXXzAOIaTKIP3qDid5xb69t93Inacvd2Qb0Ljzo8QiP25U6c4FtRlqC6BdQup4y77D3oPyOMWMviw0BB1Mxi+khsDyIj2sfLNUoPV+JMVJAwNL+YfKBfGpB8OA4De39KuiuO/SrOtq7MhuXlXeE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ieee.org; spf=pass smtp.mailfrom=ieee.org; dkim=pass (1024-bit key) header.d=ieee.org header.i=@ieee.org header.b=ASCbXq9X; arc=none smtp.client-ip=209.85.160.179
+	 In-Reply-To:Content-Type; b=lXSd8Bo4IRnCLihS9UXzzNuQ5Gtw8jhk8iDZAaSuBlaIOv0pvvwq4GHY/lPOBXbxpeb6MfyEAwezBgihgAy+CvktZrZe99EBQdkuMggBT0t6Rz61MfEUh4tk2o+0HOQ0h6Qw7h6mRekqlCGM64Ynx9bB+uZ4NSb8HxHKFPWDyzk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ieee.org; spf=pass smtp.mailfrom=ieee.org; dkim=pass (1024-bit key) header.d=ieee.org header.i=@ieee.org header.b=LTPkLNl9; arc=none smtp.client-ip=209.85.160.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ieee.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ieee.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ieee.org header.i=@ieee.org header.b="ASCbXq9X"
-Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-47663aeff1bso70639081cf.0
-        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 19:46:51 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=ieee.org header.i=@ieee.org header.b="LTPkLNl9"
+Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-476a720e806so68742181cf.0
+        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 19:46:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ieee.org; s=google; t=1747882010; x=1748486810; darn=vger.kernel.org;
+        d=ieee.org; s=google; t=1747882013; x=1748486813; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=Mr71AaCtvqVBAhTVUb1SE+JNl4iJF/6unTZctVh/yws=;
-        b=ASCbXq9XDtiQdFeYyrT1MJUPKH7YArUSzh99telrTZcqI9lqJGw6YxY7zLSL9MiA7D
-         +EFwu+2xbazG2yCftinQMQ+4sAwkZeGQNOBwOKjynREJOeMQ6NZMueezw5ajyPs0Xqs8
-         nMkXAuupKMW+4O6BFSl8KM/i8h9H0slocgwSc=
+        bh=adh4juzvKMdVlcyct+CI2gtj5kAxAoCJXrg+y36ibis=;
+        b=LTPkLNl9GVtTIY64xkgdNME98iPXcjj4cmgMEiOg/9lWV0P9LjEbkQQil3Xg6xdHZr
+         JwslDcv+a32JdXTsI2vORoDomQNTy+3YDEprwWI8J3MX3I6cRKRFedX3fw275+z2JmXh
+         hLxojUnRfMxkMISeslaa6a1MoXNDsbpy06kRs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747882010; x=1748486810;
+        d=1e100.net; s=20230601; t=1747882013; x=1748486813;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Mr71AaCtvqVBAhTVUb1SE+JNl4iJF/6unTZctVh/yws=;
-        b=FS9KpIgUGF1hU5udWbGbVzU4b8qPZ/c2AdUonmAi6d6TnorNaABAHc4zAcVoidLqgs
-         9Az5+jj29YgaB2UUpAS4MhEJRW70tGFB0TYQC+ZC31qnvtB3k1boE0GHCAA73VstzBY0
-         2IYLsGx/tbCxp9k0JIy4b2LNXocrvG9NxA4Jzwt9XSgdbvA9UxWKyNboA819yhTaUYBw
-         wr8jlKHAtQkM5aMs5NkTgsDppf4aC+WyxEcB6FulS4YJbXzPOIv1agYh99hMRA6urQ+1
-         AGuTsFzGNJGD2qXJsvdqjJE7FgJpmuA9muxU4lR8MPk6aoslQRdO2kBWGG9awwrh8IU7
-         0WOQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWZ5yI8SK4N23LziUbNEZho3O2jdzrKw+SKSvraQYwSxBlWLlJ3twCMq43ZrtdHsSoEr8oMXPFqDkAzxvQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwgA6/7wWSfIgMjsbkzuhlL6a4DFDiv+Yl34n1mC2/cI1Td4HG/
-	OkSMefgD0vadm7QJdQH6eb0ZYCZ4HSGAXduLfHzad5ZuzJ/9UmWN4QV6Tejmcpo41Q==
-X-Gm-Gg: ASbGnctAdeO8PF5fVLHwF+F1MkzT09h97+4soypfAnZ+mChWpqfPzYbIZnT2j7bdkFd
-	H7qUaqGv/JODqLmV8iVWpadIiJvK9Mupxh4rJxS64XKE26Bd1k9MVc3u8WYnv/iiwnIvhLxEi9G
-	y173MtBLS/sZLsYYtJvRYHyfRqX8P6hYtrquwkkSnSQYbFPaVV/mjLJlsKBQd9e9jnu414uhyvk
-	5Jps3MwraXIPivzyhbF88zv/W/jTiJqZp1TZi09VYgrd11Z6QP96xGv7oJokttwlkNy8qr3FBqv
-	6mm4holL+0TpWDc4BRfsd+A4mY6AIzzarqanRikSG5YHR722ih6FyqBKMXgfYyS4bI+mGz4pUqH
-	g+oN/Z6bFuA==
-X-Google-Smtp-Source: AGHT+IFuRfWu7GcESNkglX3O7mC2+I8q2BLk8fPkB8g39depGVD2//DFqQSONTBqv71w+N66shUz0g==
-X-Received: by 2002:a05:622a:2b09:b0:494:9fce:28f7 with SMTP id d75a77b69052e-494ae349eebmr398139451cf.17.1747882010085;
-        Wed, 21 May 2025 19:46:50 -0700 (PDT)
+        bh=adh4juzvKMdVlcyct+CI2gtj5kAxAoCJXrg+y36ibis=;
+        b=IuYCmzpqqcayz4TuCxo3J21N1yYAZ44dJZMSntXufXRHrcFledKglD4SW9yhPCwXWP
+         j/5nVp7+/kaWPnyZB4vuQEItwvA6w5wC4rDeWTfzQXBWPgh2War/KI6+5Sog+3s8yreN
+         eWHrCkxOv6Lrffm1jPuKnrPHdYvdU+aiLJ6SdfQcCMkMxz3K1eKR4bsB4weZF3MzE8h6
+         nyJKYqRz6+BCRf1Mb3IOAZ2qTHlZFxHHQq7n6xsVhHzZJ5n1sW05QbCPGFCUr0xTarZ0
+         VfnthwikML3AAa7f47zTQRBuMkt4K41ydwd+miP/fuQGgfTIeP2ADnOv87/wu8hMngcg
+         q7QA==
+X-Forwarded-Encrypted: i=1; AJvYcCX8/Kkuu+hjCeWfx/pjD/jBGl1SlIc3WcnDhAVA8zEoY+7fjZI8xsP3q+9svU8EB9AsuYoG6XfaE0/aMiY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzGtd4swjuYikDrHHhl+kccO+k9PcjI44jqno2bxTcMa3idmT4+
+	FNOu2XcIzJztPsK53GeqODAIQBIFS/DjLxq5oNHNejVj9Ktd91Qva81sp40dviAjv4bssG8REbt
+	hYWmCzA==
+X-Gm-Gg: ASbGncvIwvXBAwvg28TG9zwVm3W8xWIpgvBLAhEoIWG4/2SXVE67KBKtW2R57jaGg2y
+	rAlIbmkm2CkscpjxWlX80RZ5DLIRA0dgPSMsToK4p454WMIZcxVSwGIHJEYBgP3aLVOC9fF2D9V
+	XYcn5RvrMg2YXrlxc+kiIXGJcAKX7dz3ZN58vlqUk3l3CxT52KC11Mvj3fb7An+Bbhs/x32mXqU
+	96hcX5iG7lrxU1mtWo6AIVki32TVExTYtJcUztTm/dgKlWUw6FRl3mVqMEqzY+p9qm9WjjYxvQm
+	1ue+E4xeKjMd0ujj7qctKeOf3bP+mb5qU3oPYXpxz8HL4U4M8BRQOZbJUoFrE/tY6eV7skXMCQS
+	q53hMZT7xfA==
+X-Google-Smtp-Source: AGHT+IFlle+O3zdWJKr4Z5wCjPov8E3POIa8Uq26WE0YE0cODpM/RcZxkLgNpi+rNmkGPKr/N5G14A==
+X-Received: by 2002:a05:622a:5805:b0:494:a967:6c4f with SMTP id d75a77b69052e-494ae3375dcmr344161021cf.2.1747882013320;
+        Wed, 21 May 2025 19:46:53 -0700 (PDT)
 Received: from [172.22.22.28] (c-73-228-159-35.hsd1.mn.comcast.net. [73.228.159.35])
-        by smtp.googlemail.com with ESMTPSA id d75a77b69052e-494ae3d6d84sm92828951cf.16.2025.05.21.19.46.48
+        by smtp.googlemail.com with ESMTPSA id d75a77b69052e-494ae3d6d84sm92828951cf.16.2025.05.21.19.46.50
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 21 May 2025 19:46:49 -0700 (PDT)
-Message-ID: <9a612b07-fe02-40d6-a1d4-7a6d1266ed18@ieee.org>
-Date: Wed, 21 May 2025 21:46:47 -0500
+        Wed, 21 May 2025 19:46:51 -0700 (PDT)
+Message-ID: <15a95ba4-f90b-4bdb-8804-2251879443de@ieee.org>
+Date: Wed, 21 May 2025 21:46:48 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -77,8 +78,7 @@ Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
  devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
  Johan Hovold <johan@kernel.org>, Alex Elder <elder@kernel.org>,
  greybus-dev@lists.linaro.org
-References: <20250512012748.79749-1-damien.riegel@silabs.com>
- <6fea7d17-8e08-42c7-a297-d4f5a3377661@lunn.ch>
+References: <6fea7d17-8e08-42c7-a297-d4f5a3377661@lunn.ch>
  <D9VCEGBQWBW8.3MJCYYXOZHZNX@silabs.com>
  <f1a4ab5a-f2ce-4c94-91eb-ab81aea5b413@lunn.ch>
  <D9W93CSVNNM0.F14YDBPZP64O@silabs.com>
@@ -87,118 +87,88 @@ References: <20250512012748.79749-1-damien.riegel@silabs.com>
  <2025051612-stained-wasting-26d3@gregkh>
  <D9XQ42C56TUG.2VXDA4CVURNAM@silabs.com>
  <cbfc9422-9ba8-475b-9c8d-e6ab0e53856e@lunn.ch>
+ <DA0LEHFCVRDC.2NXIZKLBP7QCJ@silabs.com>
+ <5bc03f50-498e-42c8-9a14-ca15243213bd@lunn.ch>
 Content-Language: en-US
 From: Alex Elder <elder@ieee.org>
-In-Reply-To: <cbfc9422-9ba8-475b-9c8d-e6ab0e53856e@lunn.ch>
+In-Reply-To: <5bc03f50-498e-42c8-9a14-ca15243213bd@lunn.ch>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 5/18/25 10:23 AM, Andrew Lunn wrote:
->> I think Andrew pulled Greybus in the discussion because there is some
->> overlap between Greybus and CPC:
->>    - Greybus has bundles and CPorts, CPC only has "endpoints", which
->>      would be the equivalent of a bundle with a single cport
->>    - discoverability of Greybus bundles/CPC endpoints by the host
->>    - multiple bundles/endpoints might coexist in the same
->>      module/CPC-enabled device
->>    - bundles/endpoints are independent from each other and each has its
->>      own dedicated driver
+On 5/20/25 8:04 AM, Andrew Lunn wrote:
+> On Mon, May 19, 2025 at 09:21:52PM -0400, Damien Riégel wrote:
+>> On Sun May 18, 2025 at 11:23 AM EDT, Andrew Lunn wrote:
+>>> This also comes back to my point of there being at least four vendors
+>>> of devices like yours. Linux does not want four or more
+>>> implementations of this, each 90% the same, just a different way of
+>>> converting this structure of operations into messages over a transport
+>>> bus.
+>>>
+>>> You have to define the protocol. Mainline needs that so when the next
+>>> vendor comes along, we can point at your protocol and say that is how
+>>> it has to be implemented in Mainline. Make your firmware on the SoC
+>>> understand it.  You have the advantage that you are here first, you
+>>> get to define that protocol, but you do need to clearly define it.
 >>
->> Greybus goes a step further and specs some protocols like GPIO or UART.
->> CPC doesn't spec what goes over endpoints because it's geared towards
->> radio applications and as you said, it's very device/stack specific.
+>> I understand that this is the preferred way and I'll push internally for
+>> going that direction. That being said, Greybus seems to offer the
+>> capability to have a custom driver for a given PID/VID, if a module
+>> doesn't implement a Greybus-standardized protocol. Would a custom
+>> Greybus driver for, just as an example, our Wifi stack be an acceptable
+>> option?
 > 
-> Is it device specific? Look at your Bluetooth implementation. I don't
-> see anything device specific in it. That should work for any of the
-> vendors of similar chips to yours.
-> 
-> For 802.15.4, Linux defines:
-> 
-> struct ieee802154_ops {
->          struct module   *owner;
->          int             (*start)(struct ieee802154_hw *hw);
->          void            (*stop)(struct ieee802154_hw *hw);
->          int             (*xmit_sync)(struct ieee802154_hw *hw,
->                                       struct sk_buff *skb);
->          int             (*xmit_async)(struct ieee802154_hw *hw,
->                                        struct sk_buff *skb);
->          int             (*ed)(struct ieee802154_hw *hw, u8 *level);
->          int             (*set_channel)(struct ieee802154_hw *hw, u8 page,
->                                         u8 channel);
->          int             (*set_hw_addr_filt)(struct ieee802154_hw *hw,
->                                              struct ieee802154_hw_addr_filt *filt,
->                                              unsigned long changed);
->          int             (*set_txpower)(struct ieee802154_hw *hw, s32 mbm);
->          int             (*set_lbt)(struct ieee802154_hw *hw, bool on);
->          int             (*set_cca_mode)(struct ieee802154_hw *hw,
->                                          const struct wpan_phy_cca *cca);
->          int             (*set_cca_ed_level)(struct ieee802154_hw *hw, s32 mbm);
->          int             (*set_csma_params)(struct ieee802154_hw *hw,
->                                             u8 min_be, u8 max_be, u8 retries);
->          int             (*set_frame_retries)(struct ieee802154_hw *hw,
->                                               s8 retries);
->          int             (*set_promiscuous_mode)(struct ieee802154_hw *hw,
->                                                  const bool on);
-> };
-> 
-> Many of these are optional, but this gives an abstract representation
-> of a device, which is should be possible to turn into a protocol
-> talked over a transport bus like SPI or SDIO.
+> It is not clear to me why a custom driver would be needed. You need to
+> implement a Linux WiFi driver. That API is well defined, although you
+> might only need a subset. What do you need in addition to that?
 
-This is essentially how Greybus does things.  It sets
-up drivers on the Linux side that translate callback
-functions into Greybus operations that get performed
-on target hardware on the remote module.
+This "custom driver" is needed for CPC too, right?
+You need some way to translate what's happening in
+the kernel into directions sent over your transport
+to the hardware on the other side.
 
-> This also comes back to my point of there being at least four vendors
-> of devices like yours. Linux does not want four or more
-> implementations of this, each 90% the same, just a different way of
-> converting this structure of operations into messages over a transport
-> bus.
-> 
-> You have to define the protocol. Mainline needs that so when the next
-> vendor comes along, we can point at your protocol and say that is how
-> it has to be implemented in Mainline. Make your firmware on the SoC
-> understand it.  You have the advantage that you are here first, you
-> get to define that protocol, but you do need to clearly define it.
-
-I agree with all of this.
-
-> You have listed how your implementation is similar to Greybus. You say
-> what is not so great is streaming, i.e. the bulk data transfer needed
-> to implement xmit_sync() and xmit_async() above. Greybus is too much
-> RPC based. RPCs are actually what you want for most of the operations
-> listed above, but i agree for data, in order to keep the transport
-> fully loaded, you want double buffering. However, that appears to be
-> possible with the current Greybus code.
-> 
-> gb_operation_unidirectional_timeout() says:
-
-Yes, these are request messages that don't require a response.
-The acknowledgement is about when the host *sent it*, not when
-it got received.  They're rarely used but I could see them being
-used this way.  Still, you might be limited to 255 or so in-flight
-messages.
+Don't worry about proposing changes to Greybus.  But
+please do it incrementally, and share what you would
+like to do, so people can help steer you in the most
+promising direction.
 
 					-Alex
 
->   * Note that successful send of a unidirectional operation does not imply that
->   * the request as actually reached the remote end of the connection.
->   */
+>>> So long as you are doing your memory management correctly, i don't see
+>>> why you cannot implement double buffering in the transport driver.
+>>>
+>>> I also don't see why you cannot extend the Greybus upper API and add a
+>>> true gb_operation_unidirectional_async() call.
+>>
+>> Just because touching a well established subsystem is scary, but I
+>> understand that we're allowed to make changes that make sense.
 > 
-> So long as you are doing your memory management correctly, i don't see
-> why you cannot implement double buffering in the transport driver.
+> There are developers here to help review such changes. And extending
+> existing Linux subsystems is how Linux has become the dominant OS. You
+> are getting it for free, building on the work of others, so it is not
+> too unreasonable to contribute a little bit back by making it even
+> better.
 > 
-> I also don't see why you cannot extend the Greybus upper API and add a
-> true gb_operation_unidirectional_async() call.
+>>
+>>> You also said that lots of small transfers are inefficient, and you
+>>> wanted to combine small high level messages into one big transport
+>>> layer message. This is something you frequently see with USB Ethernet
+>>> dongles. The Ethernet driver puts a number of small Ethernet packets
+>>> into one USB URB. The USB layer itself has no idea this is going on. I
+>>> don't see why the same cannot be done here, greybus itself does not
+>>> need to be aware of the packet consolidation.
+>>
+>> Yeah, so in this design, CPC would really be limited to the transport
+>> bus (SPI for now), to do packet consolidation and managing RCP available
+>> buffers. I think at this point, the next step is to come up with a proof
+>> of concept of Greybus over CPC and see if that works or not.
 > 
-> You also said that lots of small transfers are inefficient, and you
-> wanted to combine small high level messages into one big transport
-> layer message. This is something you frequently see with USB Ethernet
-> dongles. The Ethernet driver puts a number of small Ethernet packets
-> into one USB URB. The USB layer itself has no idea this is going on. I
-> don't see why the same cannot be done here, greybus itself does not
-> need to be aware of the packet consolidation.
+> You need to keep the lower level generic. I would not expect anything
+> Silabs specific in how you transport Greybus over SPI or SDIO. As part
+> of gb_operation_unidirectional_async() you need to think about flow
+> control, you need some generic mechanism to indicate receive buffer
+> availability in the device, and when to pause a while to let the
+> device catch up, but there is no reason TI, Microchip, Nordic, etc
+> should not be able to use the same encapsulation scheme.
 > 
 > 	Andrew
 
