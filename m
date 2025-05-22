@@ -1,114 +1,200 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+Received: from mail-yw1-f175.google.com (mail-yw1-f175.google.com [209.85.128.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D89A92494F1
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 23:24:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BCBD2D29B9
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 23:25:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747956291; cv=none; b=qyGcgyhYX8bPXWIl72reHnK6tTuLqpeoAlCyt4xIjZd9z1ij4C/HKyPpnpM2U9NmamhlxC7SvuER3uGBTyYDFHipbkXxeb1t1rAa2m4WefXCUKvGhsxjwnjpfyYe3ZYZVCtjo+8S3w3pv6pZjXc1yk7IZrZj2vAl/ZimYyG51ok=
+	t=1747956333; cv=none; b=KwFevcVr/m2gT+2WPClU7qpwXJDGwMkoLL5QchNn0T3v4j0XYtO4AOyt2wxCDdI6Ozvse2jy+k2NXQD/F7BEdCDGFboHE44Ef/tAIqyc5DT3fIG7nKqa7aMeqMzliqXIBObco1X/wFdJ6m9qVXReEZZLKkFumWZHf457Lyx+lEA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747956291; c=relaxed/simple;
-	bh=VtTmEXuxauJ3B94DH+XF9n637EHj0gRGrWRBC9z/qsc=;
+	s=arc-20240116; t=1747956333; c=relaxed/simple;
+	bh=8xTSm64CPrt3PR+sNDjw7Hs789WkFskuVsOorw0bNec=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XrZvhuzdKrYr+yosRONhcr+NAukKdtAq7i7xyWAFR9F+f2zpOmav1Fku4H9wuQb0xgwObcQHa3e+Ym8TDqRvYJg9IKaodTNalj0L9v9n93HWCW98weIuPh507oBCiUKWHqTthTWG10F9VRolJ7TZl+ADrLCf6SDNQemBpbOPVAM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=R8DT7Cwk; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=JJg+tS4EndbOvTcO0zheJGTOhOoJ/s9O46GMxJ7xgchbuepwOlvckBds9+A91TFDBXLlCqBM45lp1kot8XFyVrQnwfRBCXXWgeGVDbyODyHsZ/19S/QGKTStuZ+3O+yTDgl6CMUM4QQpsrA/52cdZuyX+Sf8G2Fu7k+/cUaEZJk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=KLxzth7O; arc=none smtp.client-ip=209.85.128.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="R8DT7Cwk"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-231ba6da557so44765ad.1
-        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 16:24:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="KLxzth7O"
+Received: by mail-yw1-f175.google.com with SMTP id 00721157ae682-70b50e0566fso81553167b3.0
+        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 16:25:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747956289; x=1748561089; darn=vger.kernel.org;
+        d=paul-moore.com; s=google; t=1747956330; x=1748561130; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=VtTmEXuxauJ3B94DH+XF9n637EHj0gRGrWRBC9z/qsc=;
-        b=R8DT7Cwky8b5fWqDANKkdFpT89nT7Ul0Au54CykoXx0tHPkwWi8FLxrcPmpJjZPm/Y
-         mfuD068ImdI6xzzk0MZY/J4fbCCcVbEPNR7z7YAnRr6vB3hJUNMZ48N11eHkPcEw4iWE
-         HfpbJ4PdQIaengo3a+0/yVEB65h6y3slD6KRQobGucJVS8AeWfEeCkZYhheQwQNzKdfO
-         oJNpm05tRsZ4kcyGCm4jjWLFXSoQ4GBPAooo7koTds74GxihoEQ7S8P8tSW93MApMQvb
-         CRO7fZMpccFqtJ0h2DUjXIFz9Ja1HV7DL5zNCVPhYoyq6TKS64e98wQljdrUQSie63G8
-         mAZw==
+        bh=0uL4ci1WZdyZovxUefSb6XMWKQbQDoDS9sC5km2V0Pg=;
+        b=KLxzth7OBXvm76zWTcuhKXa4zTiCWG3kNMLThUHAnz6qdV/1o+Me88zTXuJ8SuPVqr
+         pmbLCYbc9CTHqaXnD/TiK9PAJmSXn2+RTXmXXWdhmGxoxCZk6l0hy1Ufgo5m8mgTwcTI
+         lK8OX1U9i4uGuyNUjv10Y7XYz+AYeqpcbFea7ZqbJlLefwOO9Xi+luNjfw10JiwMdItW
+         v8hZIuhd9eLo6IK0wFom/IauUv82DkftM7I2cq7yE2cughmfaDUzIpEzbLY/QWWuN82u
+         +vKwpX6AnGZY9TAoJF5yVE9JsKTZ1XFeZwWxASohkRqZV+CJUZVq1pBmWmoar4qeYu9g
+         z66Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747956289; x=1748561089;
+        d=1e100.net; s=20230601; t=1747956330; x=1748561130;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=VtTmEXuxauJ3B94DH+XF9n637EHj0gRGrWRBC9z/qsc=;
-        b=AdSAYgdiQIs8iu9GYTUMlbz+FKFO8B6P+RK54z6glWroZK/sXqt1v+A1hrBFPK0yj+
-         FiQeNMTo5r/dD4Pishxkv4zxXyrMU5Rj8gARi2TUkoEdtYnUUTPX4sWN+nvfNclGKyUz
-         NSjYHeUqmBSWvYfU8dnsI2hzAo/TnQ4KSrLU/p5kzEitR6Ts3tUF8EyEX65YUKFeQiso
-         1l3bDMyzh/TGzG/+aV4ax5wHQC4bCpMen5etW6YijInKtpbZzI+Wo1joVZWn3fvi0aaQ
-         H8Zd1FPLNRovzO41mY4DlARDQG5bkePUDGqGyO0y+BUPsnD1IPb4mmEdJrXTHZBWlNzj
-         FwWA==
-X-Forwarded-Encrypted: i=1; AJvYcCUEC01NVRCEVBO81rFvpcVXDA//aA+XMGwXTHTHO+4G8eJ1PEUM0/cNlYIJMkuhaq9IwOYMz/FFi2BlyKU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwSOShhf22Yn+rfk+X7NAQ37IEaOBcCMD+4NMGvIc0zifxFt7lW
-	0OFbGIwvPQSQzXniEoJhD5netpNyoIk5LNrIcG7eSewPNZYsa/DANs3oHVUOIebkEIFerVbTd3D
-	egRqhkLUoKwNT8lE0eZx9cdLSkRgrHmPv4UcFA6Ku
-X-Gm-Gg: ASbGncuqPwb8rJOBZ3HC/tXB5GN7lEad7ZXmw5VmCbu6VKFz3NaZ6X8y59Io294vqEP
-	4n0Ygr1/Euweg5mldshQsGKPDYoahdY+qnRY0nNNCuEN9dRAJANg9E/VpxwNQWOy1ol4Y64xTlP
-	Cyk7GrnnQ+GBzrSutvzgC4xdqHx5/+vVIijgOActc7v/2sznaffnTzcDYdPo6titkyuWmqEtige
-	g==
-X-Google-Smtp-Source: AGHT+IEajyNx7hV1BwdOTZbSU0n/gFRM/BXhlbIdxZrRO5FIvUh2DpmsX58Q/EetJ9zHiSgysM3tASbsdYoFqzmr4fw=
-X-Received: by 2002:a17:903:17c4:b0:21f:465d:c588 with SMTP id
- d9443c01a7336-233f3081323mr584655ad.14.1747956288662; Thu, 22 May 2025
- 16:24:48 -0700 (PDT)
+        bh=0uL4ci1WZdyZovxUefSb6XMWKQbQDoDS9sC5km2V0Pg=;
+        b=Bux0cN7tFkvqYJ1f0l4Hu2uyjlSqkMtOhrc/UKKrXiF0ISR+Gl3tpuYZrLNuS1Aew6
+         fq50MUhXVkaW5jjzMHOlHyx+0DCvdLrEgFO3ASrMxPeJ3uiixc0JwYLGby/JAsXTJlyt
+         Nxp8krQIVBKcHCCj18T/Dflb6VWf9h18v/5B4q0kEEUFeIWwQYbqlUBnzS2OCnIV/uym
+         ZBJi2/PF0Rys/um2lhqnfbBpYJRu3QaTBVxdTuLq+64Vb8W+IhrWNqWV0E+XHDqCmdYG
+         iHKS+r74ieJ5qE0exVfmTi56CMq4VwxKTZu+CbOR8jJcyi1y6dgmeOwke+8aLeRPkKHB
+         lctA==
+X-Forwarded-Encrypted: i=1; AJvYcCXhl2kDcDHK6otmGwW5SqcV39JXs7JPr9oN2BE7NIlzAYM7CV32hMVc2h+i4W43/bhe0uhae/NTbaCDsJ0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyrTMaCZgwIEbr+lrEwjPen7fCX0glzsACLRuamwcrn0MxnzXxY
+	rVdyVsDN4JMwX+4hxNIkLEmG++BXj6/lRtHyoXByuhl2vwmRAanT7eUCl9S2KO9RH2PazBLdIRf
+	+0Lxcnk7U4qMNiAxFCwz9R9QIWCrUkGv3H26l7Q/C
+X-Gm-Gg: ASbGnctmohRqXkNkESzpj4vNB8lp1agM6JUCwCk9GtmBt4DV4sY1ZCjn/eDEkdNytSl
+	wuSu/W5aoALeyFQGimCB1rGjhsZ6ANPhsaTsJe3VLWn98H03SUvdxPua0Tlz3Av/FiOyuUyv9uV
+	iwoVEq0vv49OXrW0tNxHWBJl+xxi9ET/9e
+X-Google-Smtp-Source: AGHT+IHqIDOdvopIVKoruNZp2FA6nsIW5xRfQTbNntomxujQ5GmGe3SFUbJUdBmc/lotxuvJGdjYJkUqvIyDeOpJGDk=
+X-Received: by 2002:a05:690c:6c03:b0:70e:1771:c152 with SMTP id
+ 00721157ae682-70e1771c5d3mr26144077b3.30.1747956330254; Thu, 22 May 2025
+ 16:25:30 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <1747950086-1246773-1-git-send-email-tariqt@nvidia.com>
- <1747950086-1246773-7-git-send-email-tariqt@nvidia.com> <20250522153013.62ac43be@kernel.org>
- <aC-ugDzGHB_WqKew@x130>
-In-Reply-To: <aC-ugDzGHB_WqKew@x130>
-From: Mina Almasry <almasrymina@google.com>
-Date: Thu, 22 May 2025 16:24:36 -0700
-X-Gm-Features: AX0GCFs7hrA7hWZzLZD_-PN_wrJl-jW1GTwnaFT-Wn-3aE1B_J4p79S4m2U7qA0
-Message-ID: <CAHS8izNPJjAwbVwDnVQwHmjTKfxSqbt-jEnNzcWzTfQNGr9Lag@mail.gmail.com>
-Subject: Re: [PATCH net-next V2 06/11] net/mlx5e: SHAMPO: Separate pool for headers
-To: Saeed Mahameed <saeed@kernel.org>
-Cc: Jakub Kicinski <kuba@kernel.org>, Tariq Toukan <tariqt@nvidia.com>, 
-	"David S. Miller" <davem@davemloft.net>, Paolo Abeni <pabeni@redhat.com>, 
-	Eric Dumazet <edumazet@google.com>, Andrew Lunn <andrew+netdev@lunn.ch>, 
-	Saeed Mahameed <saeedm@nvidia.com>, Leon Romanovsky <leon@kernel.org>, 
-	Richard Cochran <richardcochran@gmail.com>, Alexei Starovoitov <ast@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, Jesper Dangaard Brouer <hawk@kernel.org>, 
-	John Fastabend <john.fastabend@gmail.com>, netdev@vger.kernel.org, 
-	linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org, bpf@vger.kernel.org, 
-	Moshe Shemesh <moshe@nvidia.com>, Mark Bloch <mbloch@nvidia.com>, Gal Pressman <gal@nvidia.com>, 
-	Cosmin Ratiu <cratiu@nvidia.com>, Dragos Tatulea <dtatulea@nvidia.com>
+References: <20250516-work-coredump-socket-v8-0-664f3caf2516@kernel.org> <20250516-work-coredump-socket-v8-4-664f3caf2516@kernel.org>
+In-Reply-To: <20250516-work-coredump-socket-v8-4-664f3caf2516@kernel.org>
+From: Paul Moore <paul@paul-moore.com>
+Date: Thu, 22 May 2025 19:25:18 -0400
+X-Gm-Features: AX0GCFt0FuHTqiMqvoz0ziFimdoZps9PqDLqEUMhVFo_oJsTI3jl215IOcxlhcE
+Message-ID: <CAHC9VhTaaDBROL=xRBcRu4gMRK5vkPBiZRsGbxc7szacuZk26Q@mail.gmail.com>
+Subject: Re: [PATCH v8 4/9] coredump: add coredump socket
+To: Christian Brauner <brauner@kernel.org>
+Cc: linux-fsdevel@vger.kernel.org, Jann Horn <jannh@google.com>, 
+	Daniel Borkmann <daniel@iogearbox.net>, Kuniyuki Iwashima <kuniyu@amazon.com>, 
+	Eric Dumazet <edumazet@google.com>, Oleg Nesterov <oleg@redhat.com>, 
+	"David S. Miller" <davem@davemloft.net>, Alexander Viro <viro@zeniv.linux.org.uk>, 
+	Daan De Meyer <daan.j.demeyer@gmail.com>, David Rheinsberg <david@readahead.eu>, 
+	Jakub Kicinski <kuba@kernel.org>, Jan Kara <jack@suse.cz>, 
+	Lennart Poettering <lennart@poettering.net>, Luca Boccassi <luca.boccassi@gmail.com>, 
+	Mike Yuan <me@yhndnzj.com>, Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
+	=?UTF-8?Q?Zbigniew_J=C4=99drzejewski=2DSzmek?= <zbyszek@in.waw.pl>, 
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
+	linux-security-module@vger.kernel.org, 
+	Alexander Mikhalitsyn <alexander@mihalicyn.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, May 22, 2025 at 4:09=E2=80=AFPM Saeed Mahameed <saeed@kernel.org> w=
-rote:
+On Fri, May 16, 2025 at 7:27=E2=80=AFAM Christian Brauner <brauner@kernel.o=
+rg> wrote:
 >
-> On 22 May 15:30, Jakub Kicinski wrote:
-> >On Fri, 23 May 2025 00:41:21 +0300 Tariq Toukan wrote:
-> >> Allocate a separate page pool for headers when SHAMPO is enabled.
-> >> This will be useful for adding support to zc page pool, which has to b=
-e
-> >> different from the headers page pool.
-> >
-> >Could you explain why always allocate a separate pool?
+> Coredumping currently supports two modes:
 >
-> Better flow management, 0 conditional code on data path to alloc/return
-> header buffers, since in mlx5 we already have separate paths to handle
-> header, we don't have/need bnxt_separate_head_pool() and
-> rxr->need_head_pool spread across the code..
+> (1) Dumping directly into a file somewhere on the filesystem.
+> (2) Dumping into a pipe connected to a usermode helper process
+>     spawned as a child of the system_unbound_wq or kthreadd.
 >
-> Since we alloc and return pages in bulks, it makes more sense to manage
-> headers and data in separate pools if we are going to do it anyway for
-> "undreadable_pools", and when there's no performance impact.
+> For simplicity I'm mostly ignoring (1). There's probably still some
+> users of (1) out there but processing coredumps in this way can be
+> considered adventurous especially in the face of set*id binaries.
 >
+> The most common option should be (2) by now. It works by allowing
+> userspace to put a string into /proc/sys/kernel/core_pattern like:
+>
+>         |/usr/lib/systemd/systemd-coredump %P %u %g %s %t %c %h
+>
+> The "|" at the beginning indicates to the kernel that a pipe must be
+> used. The path following the pipe indicator is a path to a binary that
+> will be spawned as a usermode helper process. Any additional parameters
+> pass information about the task that is generating the coredump to the
+> binary that processes the coredump.
+>
+> In the example core_pattern shown above systemd-coredump is spawned as a
+> usermode helper. There's various conceptual consequences of this
+> (non-exhaustive list):
+>
+> - systemd-coredump is spawned with file descriptor number 0 (stdin)
+>   connected to the read-end of the pipe. All other file descriptors are
+>   closed. That specifically includes 1 (stdout) and 2 (stderr). This has
+>   already caused bugs because userspace assumed that this cannot happen
+>   (Whether or not this is a sane assumption is irrelevant.).
+>
+> - systemd-coredump will be spawned as a child of system_unbound_wq. So
+>   it is not a child of any userspace process and specifically not a
+>   child of PID 1. It cannot be waited upon and is in a weird hybrid
+>   upcall which are difficult for userspace to control correctly.
+>
+> - systemd-coredump is spawned with full kernel privileges. This
+>   necessitates all kinds of weird privilege dropping excercises in
+>   userspace to make this safe.
+>
+> - A new usermode helper has to be spawned for each crashing process.
+>
+> This series adds a new mode:
+>
+> (3) Dumping into an AF_UNIX socket.
+>
+> Userspace can set /proc/sys/kernel/core_pattern to:
+>
+>         @/path/to/coredump.socket
+>
+> The "@" at the beginning indicates to the kernel that an AF_UNIX
+> coredump socket will be used to process coredumps.
+>
+> The coredump socket must be located in the initial mount namespace.
+> When a task coredumps it opens a client socket in the initial network
+> namespace and connects to the coredump socket.
+>
+> - The coredump server uses SO_PEERPIDFD to get a stable handle on the
+>   connected crashing task. The retrieved pidfd will provide a stable
+>   reference even if the crashing task gets SIGKILLed while generating
+>   the coredump.
+>
+> - By setting core_pipe_limit non-zero userspace can guarantee that the
+>   crashing task cannot be reaped behind it's back and thus process all
+>   necessary information in /proc/<pid>. The SO_PEERPIDFD can be used to
+>   detect whether /proc/<pid> still refers to the same process.
+>
+>   The core_pipe_limit isn't used to rate-limit connections to the
+>   socket. This can simply be done via AF_UNIX sockets directly.
+>
+> - The pidfd for the crashing task will grow new information how the task
+>   coredumps.
+>
+> - The coredump server should mark itself as non-dumpable.
+>
+> - A container coredump server in a separate network namespace can simply
+>   bind to another well-know address and systemd-coredump fowards
+>   coredumps to the container.
+>
+> - Coredumps could in the future also be handled via per-user/session
+>   coredump servers that run only with that users privileges.
+>
+>   The coredump server listens on the coredump socket and accepts a
+>   new coredump connection. It then retrieves SO_PEERPIDFD for the
+>   client, inspects uid/gid and hands the accepted client to the users
+>   own coredump handler which runs with the users privileges only
+>   (It must of coure pay close attention to not forward crashing suid
+>   binaries.).
+>
+> The new coredump socket will allow userspace to not have to rely on
+> usermode helpers for processing coredumps and provides a safer way to
+> handle them instead of relying on super privileged coredumping helpers
+> that have and continue to cause significant CVEs.
+>
+> This will also be significantly more lightweight since no fork()+exec()
+> for the usermodehelper is required for each crashing process. The
+> coredump server in userspace can e.g., just keep a worker pool.
+>
+> Acked-by: Luca Boccassi <luca.boccassi@gmail.com>
+> Reviewed-by: Kuniyuki Iwashima <kuniyu@amazon.com>
+> Reviewed-by: Alexander Mikhalitsyn <aleksandr.mikhalitsyn@canonical.com>
+> Signed-off-by: Christian Brauner <brauner@kernel.org>
+> ---
+>  fs/coredump.c       | 118 ++++++++++++++++++++++++++++++++++++++++++++++=
+++++--
+>  include/linux/net.h |   1 +
+>  net/unix/af_unix.c  |  54 ++++++++++++++++++------
+>  3 files changed, 156 insertions(+), 17 deletions(-)
 
-Are you allocating full pages for each incoming header (which is much
-smaller than a page)? Or are you reusing the same PAGE_SIZE from the
-page_pool to store multiple headers?
+Reviewed-by: Paul Moore <paul@paul-moore.com>
 
 --=20
-Thanks,
-Mina
+paul-moore.com
