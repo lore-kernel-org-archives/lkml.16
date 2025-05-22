@@ -1,55 +1,114 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B245A45C14;
-	Thu, 22 May 2025 16:27:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 104BE13C8EA;
+	Thu, 22 May 2025 16:28:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747931232; cv=none; b=i1WqdrdLGcLOh4AkadEIDdAExw0CQyCvt00MxBpC05a+4YM0uHfmODXt+91OaNQ6sT1QpyeD8MqN4LX7HowxcQibsxSzFUbhrnJsUDLvcrdnqwclgXJxrxEu40RMaec7H0gWA1k2I9Oe2mAQZK/ZOR+Jh8EXRXj6wD/nyAoZIRw=
+	t=1747931283; cv=none; b=IjnpJxmo8sgKyIBdFx1fjOy36o6lcqabXzVLRNKQ0Q5VIely8gq3dVi6B4ZIRDI3YkS0cht6HdqfWd6MTmpc7O/wUnA7b54xauu5fyrOLjdwTAK1ukvyrTlIiJDkHQwxm7OVNUz8WghiXe4miXk8YhXGvoHODBH2yTZlFd53V+E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747931232; c=relaxed/simple;
-	bh=oqHXaE7Qd0kijQCVXKTXRe6csmfxNAjNVGFmSTMpOEs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sS/1Kv8eZa0Qpbco1z3n8XR6VPAHblWVazwmDhsMaw880Ubv5UsYgNX58SOS+NA/dsszSFqEw8ZzprroQ7QQF8ITttcJNlHMoP81Ye+wijRRBs8+8QEJ7wSjN+/qN0QwL7wv8iMgH+wvCuoq5826HKeGMRi97+K64HPy00eXnbc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=UhmPRr5y; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747931283; c=relaxed/simple;
+	bh=Oo7katdjAPrApiDFIg790a/KcGz4l2Mds8fE4FckuV8=;
+	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=aOQTeGGRPRznZVTGFMpGo3p5PdunImbiFmVuYOwKwuOwstDuelUKTdICIBd4UYxzocVlSm3X6Y07XgkQhr4LS9jMYKAD5gIYwD5N+1MLtUNqD6V1mmv92v5ceKCyB88vgNhFR7ZheA6JG1ozFK0P8YhJOBc64SfhEOspYW+bvPg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CxC29PAs; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="UhmPRr5y"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC816C4CEE4;
-	Thu, 22 May 2025 16:27:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1747931232;
-	bh=oqHXaE7Qd0kijQCVXKTXRe6csmfxNAjNVGFmSTMpOEs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=UhmPRr5yU7gvXHwmywUjRlfxeT47Gp7UtimQC5HCD8Rh9zhLJMNd5/DVA/UihRwAU
-	 x39tPxq7g+hHQ0OiskSuUsiWu2Dxzq2j52lEnIE9P3QVdc8ZZ/AHk8Zw6Jgf2mWAHu
-	 Bch19agoCjcc9cb9RZQrp2cTyBupJ8nhb/IXAzck=
-Date: Thu, 22 May 2025 18:26:43 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Georgi Djakov <djakov@kernel.org>
-Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [GIT PULL] interconnect changes for 6.16
-Message-ID: <2025052234-fragment-these-d90c@gregkh>
-References: <20250522160331.2666873-1-djakov@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CxC29PAs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 490CEC4CEF7;
+	Thu, 22 May 2025 16:28:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747931282;
+	bh=Oo7katdjAPrApiDFIg790a/KcGz4l2Mds8fE4FckuV8=;
+	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
+	b=CxC29PAs+c3XS6Oxq47coqmerR9OpS6uOjJeBKKliXtMm8/JN48qZAYyZXQq6+kPJ
+	 ym/96qY9dGvJiis1WclAIXcutRsoofW6mbl34ge6a0gBYjgLW8nlMJo6133x2XX9+f
+	 lUrg7iJFp3L6HCsE1A3dmgh7oAgJoWPjXU4hqR+KKnLZdGyd0V/S0uVSAe9UE5AsoH
+	 AaI3WC917CEnmWxe/+vazeaO0+1nbA+ONxri0DSMjMPsIuGtmlIqqDIou1dayKARq9
+	 hB7tlYjgXImV3wG4oX9KKsXR7MKNeFVf1mKiFqk/yqrF1JU79KfniLLGoolrDiZYTU
+	 HbMlZe9+KcMcw==
+Date: Thu, 22 May 2025 11:28:00 -0500
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250522160331.2666873-1-djakov@kernel.org>
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>, devicetree@vger.kernel.org, 
+ =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Trevor Gamblin <tgamblin@baylibre.com>, 
+ linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Michael Hennerich <michael.hennerich@analog.com>
+To: David Lechner <dlechner@baylibre.com>
+In-Reply-To: <20250522-pwm-axi-pwmgen-add-external-clock-v2-2-086ea9e6ecf0@baylibre.com>
+References: <20250522-pwm-axi-pwmgen-add-external-clock-v2-0-086ea9e6ecf0@baylibre.com>
+ <20250522-pwm-axi-pwmgen-add-external-clock-v2-2-086ea9e6ecf0@baylibre.com>
+Message-Id: <174793127939.2927580.11316141266712516597.robh@kernel.org>
+Subject: Re: [PATCH v2 2/3] dt-bindings: pwm: adi,axi-pwmgen: fix clocks
 
-On Thu, May 22, 2025 at 07:03:31PM +0300, Georgi Djakov wrote:
-> Hello Greg,
+
+On Thu, 22 May 2025 09:49:40 -0500, David Lechner wrote:
+> Fix a shortcoming in the bindings that doesn't allow for a separate
+> external clock.
 > 
-> This is the pull request with interconnect changes for the v6.16-rc1 merge
-> window. It contains core and driver changes. As always, the summary is in
-> the signed tag.
+> The AXI PWMGEN IP block has a compile option ASYNC_CLK_EN that allows
+> the use of an external clock for the PWM output separate from the AXI
+> clock that runs the peripheral.
 > 
-> All patches have been in linux-next for a while. There are currently no
-> reported issues. Please pull into char-misc-next when possible.
+> This was missed in the original bindings and so users were writing dts
+> files where the one and only clock specified would be the external
+> clock, if there was one, incorrectly missing the separate AXI clock.
+> 
+> The correct bindings are that the AXI clock is always required and the
+> external clock is optional (must be given only when HDL compile option
+> ASYNC_CLK_EN=1).
+> 
+> Fixes: 1edf2c2a2841 ("dt-bindings: pwm: Add AXI PWM generator")
+> Signed-off-by: David Lechner <dlechner@baylibre.com>
+> ---
+>  Documentation/devicetree/bindings/pwm/adi,axi-pwmgen.yaml | 14 ++++++++++++--
+>  1 file changed, 12 insertions(+), 2 deletions(-)
+> 
 
-Pulled and pushed out, thanks.
+My bot found errors running 'make dt_binding_check' on your patch:
 
-greg k-h
+yamllint warnings/errors:
+./Documentation/devicetree/bindings/pwm/adi,axi-pwmgen.yaml:40:9: [warning] wrong indentation: expected 10 but found 8 (indentation)
+
+dtschema/dtc warnings/errors:
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pwm/adi,axi-pwmgen.yaml: properties:clock-names:enum: 'oneOf' conditional failed, one must be fixed:
+	{'const': 'axi'} is not of type 'integer'
+	{'const': 'axi'} is not of type 'string'
+	{'items': [{'const': 'axi'}, {'const': 'ext'}]} is not of type 'integer'
+	{'items': [{'const': 'axi'}, {'const': 'ext'}]} is not of type 'string'
+	hint: "enum" must be an array of either integers or strings
+	from schema $id: http://devicetree.org/meta-schemas/keywords.yaml#
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pwm/adi,axi-pwmgen.yaml: properties:clock-names:enum:0: {'const': 'axi'} is not of type 'string'
+	from schema $id: http://devicetree.org/meta-schemas/string-array.yaml#
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pwm/adi,axi-pwmgen.yaml: properties:clock-names:enum:1: {'items': [{'const': 'axi'}, {'const': 'ext'}]} is not of type 'string'
+	from schema $id: http://devicetree.org/meta-schemas/string-array.yaml#
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pwm/adi,axi-pwmgen.example.dtb: pwm@44b00000 (adi,axi-pwmgen-2.00.a): clock-names: ['axi', 'ext'] is not one of [{'const': 'axi'}, {'items': [{'const': 'axi'}, {'const': 'ext'}]}]
+	from schema $id: http://devicetree.org/schemas/pwm/adi,axi-pwmgen.yaml#
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pwm/adi,axi-pwmgen.example.dtb: pwm@44b00000 (adi,axi-pwmgen-2.00.a): Unevaluated properties are not allowed ('clock-names' was unexpected)
+	from schema $id: http://devicetree.org/schemas/pwm/adi,axi-pwmgen.yaml#
+
+doc reference errors (make refcheckdocs):
+
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250522-pwm-axi-pwmgen-add-external-clock-v2-2-086ea9e6ecf0@baylibre.com
+
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
+
