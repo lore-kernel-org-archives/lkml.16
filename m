@@ -1,144 +1,109 @@
-Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F6F812E7E
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 14:01:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97F2A12E7E;
+	Thu, 22 May 2025 14:02:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747922491; cv=none; b=TXpjuftIZLJjY17FU4tfsQ/rMTsR1JMU+545rq1ODF18vn4gW50xLi4lbtd/kIX3ELoupkzd8oqQf48npneOvxC5KCcDXpB6yyuBxiag0XW1U6paCyPHcSa2NqS0g/dU7GfDwV2YW7FWWqhlOa6CPQwDv0901PjZy7+z9qo9vwE=
+	t=1747922540; cv=none; b=LSo3HQJaCerxoFLoj3SINZmW8yxqVVbQs6Y3IG5LeJ/iU9KXvA67fuDmatuK3rLzKWMSiDwmDRn2FZRTCKKZnnjnHCgKLsmTpHyS1pLch2qPX0oLQQyLkP1wKImGRhJbc5LuICDoHhc3W/vZ7wIfbKLWMfdkckxHVMehbbzah0E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747922491; c=relaxed/simple;
-	bh=cCWawGlAi5EtcYvzNkZAwjsiQ+dNfkFRLkupLUUHfQg=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=Fgt1hNNFQt7xGIqYznbbZXYAXmziyLTuJYXz3Gp8BjQX3r63Qna/K7UOhz/PHFeWig1j7CxkyJBkAHNUbmBlLXuBddaHRwOuRXlBAYV2CAg0R4fPk1kcwHjg51FX40fUp2UjTcgYCq2VxfoGEd1BfayI/lt3p82N+xylH2rYAfM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=i3tXZ2R4; arc=none smtp.client-ip=209.85.128.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
+	s=arc-20240116; t=1747922540; c=relaxed/simple;
+	bh=IJBDYm1zhobgeh9FbERBRVBW1Hyn1CyU2Bq6di3Qdho=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VkOr1Nmmvvn9JpWF77njr2tyC39hXG5hRgwM5ruy8Iha0FiwC5E+W8yc5BCebGyIFqe0qnZ/UZ4r7rTS9V5f4tFJeF40z/oMsxjueEcCd5BC801Cmbwn0zawweDeFU8dEO9jqvyuVx+poqAfLWPpdVCsgLHfUljTYLZMKSzNXr4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z+Jxa7Bg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="i3tXZ2R4"
-Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-43d007b2c79so60781695e9.2
-        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 07:01:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747922488; x=1748527288; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=B5cC6E2WomPxiNcD5teHZW1dRsw1h86IYWuFIwHpyWc=;
-        b=i3tXZ2R4xmbogWhaST2zyvHAQAgtdkej1wQlqH4Z92RhnG/Km+kgMPq3riXPDLbkOs
-         tI+MdYoFL1Zl5UONiJqcqc9lI52/wFqLD2lUWDoC01HaLIxfkaGIOXDriYZzvc3h1JPl
-         vKwsBpfDijLj5gqfMHaeXh+Ep5BSVJNuT6a4bRer2+IpTT5TV1u0ciDsZobLTm2UmQl6
-         Bb3CJwKqqi/yHBboGiUtgPC9HJDDQKcP79ojSW9+EoGrE2h1WgPn/9BTZE/b+G0oDMsK
-         SkTrha/xGlVpduweJqlbf5gn8NbP3X2Xl8S3DT8dmKFmspS9/Yh9RQrKh5cduBhE0X7J
-         08Ng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747922488; x=1748527288;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=B5cC6E2WomPxiNcD5teHZW1dRsw1h86IYWuFIwHpyWc=;
-        b=GWJSEIh9gvH5gJyZb0VJbfkvcIds7h1qBxBo5arlpdgil6/x2u+0aCwJb5SxfEST6W
-         j4yGjown66X7KmMUI1rircRG8B2qhrshk6s/FVngrDGToa6MDscuXbMiSpVw2dTcfLRs
-         IMY6XVMbwdpXDPnVkLuykzTCq1uDmCkfTFBnSG1+6OK5ZrWnhPnQDMb9mvrynUJKMNyy
-         sDcBCgaWZGkna7m9sMZrMju+VED5BFKG5S6LnJwasevWzq1nyTEziRvy/5/m6YwH82GQ
-         u2+pCnjNNQeJBr6XIQEvhJIIuhW4zXxGKeQ2uXwlmOli531vQDa9xlufKuyYDX+JlxCE
-         cEnQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWlXtW9SNh8X915tRFg76wv+aCZPn6RnvqvuqgAS9etCfdeebC3br6G/QIBtZPrDmwxvHKzZ4ObV40p5zs=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz4sDxGAIq5WKLWcPsDAyebx9dqR4d1V3v6lAG5OzkB3kZ3tIIt
-	6TnOhgzHM6+p8ZFoFxrHGsvW88XPck6hOGKnUu/NL631P+x1EdO01oxhO6cRJGEt+nObGEbNqPc
-	vEiHjGeg9R1E63Vr4Lg==
-X-Google-Smtp-Source: AGHT+IHXp07QVhjl+t3lNrZ1dIZAODtIlQUgQhsn4x8db8r4PIqRl2H9njnvwDbHjr+d09nNweYztlMrIdTzR74=
-X-Received: from wmbes12.prod.google.com ([2002:a05:600c:810c:b0:44a:bfe9:5b4])
- (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:8215:b0:441:b5cb:4f94 with SMTP id 5b1f17b1804b1-442fd606ba6mr236732175e9.5.1747922487933;
- Thu, 22 May 2025 07:01:27 -0700 (PDT)
-Date: Thu, 22 May 2025 14:01:26 +0000
-In-Reply-To: <aC7DVewqqWIKetmk@pollux>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z+Jxa7Bg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69425C4CEE4;
+	Thu, 22 May 2025 14:02:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747922539;
+	bh=IJBDYm1zhobgeh9FbERBRVBW1Hyn1CyU2Bq6di3Qdho=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Z+Jxa7BgqX5yaqfQMZm+zQfmmGE45WibC0f+oVthi6nBydWGRwPIq+0SuRFbtVBJO
+	 X+7eAfEccTg2LQi/im1fdNIgghMZH0GkD0jMapRQrNRmyjMTZe3glMIWnzwUk677KE
+	 +iyRWJYrBiEa1ECXuLt6nNDAuah8IoTtsGrxrLgHhLVTst9morZyA5IuPxKdP6ukrC
+	 bWbqkw7K/WNHnl/Ov64rx0lMNvDsyw65ZZaOLKfgYI/qO8Y5CUp2o9hbAMyprFo6JA
+	 Qir2iT197qKN2IGJNw5vDF3/rMRJHR97y1rnunqyhTZSzFvtiLLOWxqIYhLM2JF70B
+	 mowQhYwrQFbQA==
+Date: Thu, 22 May 2025 15:02:14 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Dominik Grzegorzek <dominik.grzegorzek@oracle.com>
+Cc: "aishwarya.tcv@arm.com" <aishwarya.tcv@arm.com>,
+	"chenridong@huawei.com" <chenridong@huawei.com>,
+	Daniel Jordan <daniel.m.jordan@oracle.com>,
+	"herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+	"steffen.klassert@secunet.com" <steffen.klassert@secunet.com>
+Subject: Re: [PATCH] padata: do not leak refcount in reorder_work
+Message-ID: <01bc9f1e-5a49-4387-b0cb-c2f8647e3b6e@sirena.org.uk>
+References: <20250518174531.1287128-1-dominik.grzegorzek@oracle.com>
+ <20250522131041.8917-1-aishwarya.tcv@arm.com>
+ <afc8bfdaf9f14fa1f77c62f2969c4a5403ad771d.camel@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250505-debugfs-rust-v5-4-3e93ce7bb76e@google.com>
- <D9VPA1M45WBK.1TB4KOUXD24BD@kernel.org> <aCRdNJ2oq-REBotd@pollux>
- <CAGSQo0204_Dz65G33pAN3_iY=ejPXJRdAiB4ioM-nvMkAh0YXQ@mail.gmail.com>
- <D9WM0BP5446N.1NVNDCZ4Y2QN1@kernel.org> <2025051524-festival-afterglow-8483@gregkh>
- <aCzzBT96ktapP03e@google.com> <aC2HacSU7j5d9bzu@pollux> <aC5XDi7SaDJeUaAC@google.com>
- <aC7DVewqqWIKetmk@pollux>
-Message-ID: <aC8uNmrLUSS8sxHU@google.com>
-Subject: Re: [PATCH v5 4/4] rust: samples: Add debugfs sample
-From: Alice Ryhl <aliceryhl@google.com>
-To: Danilo Krummrich <dakr@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Benno Lossin <lossin@kernel.org>, 
-	Matthew Maurer <mmaurer@google.com>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, 
-	"=?utf-8?B?QmrDtnJu?= Roy Baron" <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Sami Tolvanen <samitolvanen@google.com>, 
-	Timur Tabi <ttabi@nvidia.com>, linux-kernel@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="7v4MFKbpt5VMrkBn"
+Content-Disposition: inline
+In-Reply-To: <afc8bfdaf9f14fa1f77c62f2969c4a5403ad771d.camel@oracle.com>
+X-Cookie: Beware of dog.
 
-On Thu, May 22, 2025 at 08:25:25AM +0200, Danilo Krummrich wrote:
-> On Wed, May 21, 2025 at 10:43:26PM +0000, Alice Ryhl wrote:
-> > > > * Possibly we have a way to drop a Rust object without removing it from
-> > > >   the file system. In this case, it can never be accessed from Rust
-> > > >   again, and the only way to remove it is to drop its parent directory.
-> > > 
-> > > I'm not sure about this one.
-> > > 
-> > > IIUC, this basically brings back the "keep() logic", which I still think is a
-> > > footgun and should be avoided.
-> > > 
-> > > Also, we only needed this, since due to the borrowing design we couldn't store
-> > > parent and child nodes in the same structure. With reference counting (or the
-> > > logic above) this goes away.
-> > > 
-> > > I wrote the following in a previous conversation [1].
-> > > 
-> > > --
-> > > 
-> > > What I see more likely to happen is a situation where the "root" directory
-> > > (almost) lives forever, and hence subsequent calls, such as
-> > > 
-> > > 	root.subdir("foo").keep()
-> > > 
-> > > effectively are leaks.
-> > > 
-> > > One specific example for that would be usb_debug_root, which is created in the
-> > > module scope of usb-common and is used by USB host / gadget / phy drivers.
-> > > 
-> > > The same is true for other cases where the debugfs "root" is created in the
-> > > module scope, but subsequent entries are created by driver instances. If a
-> > > driver would use keep() in such a case, we'd effectively leak memory everytime a
-> > > device is unplugged (or unbound in general).
-> > 
-> > Where is the leak? If the file is still visible in the file system, then
-> > it's not a leak to still have the memory. If the file got removed by
-> > removing its parent, then my intent is that this should free the memory
-> > of the child object.
-> 
-> Well, take the case I described above, where the debugfs "root" is created in
-> the module scope, but subsequent entries are created by driver instances. If a
-> driver would use keep() in such a case, we'd effectively the file / directory
-> (and subsequently also the corresponding memory) everytime a device is unplugged
-> (or unbound in general)."
-> 
-> If the module is built-in the directory from the module scope is *never*
-> removed, but the entries the driver e.g. creates in probe() for a particular
-> device with keep() will pile up endlessly, especially for hot-pluggable devices.
-> 
-> (It's getting even worse when there's data bound to such a leaked file, that
-> might even contain a vtable that is entered from any of the fops of the file.)
-> 
-> That'd be clearly a bug, but for the driver author calling keep() seems like a
-> valid thing to do -- to me that's clearly a built-in footgun.
 
-I mean, for cases such as this, I could imagine that you use `keep()` on
-the files stored inside of the driver directory, but don't use it on the
-directory. That way, you only have to keep a single reference to an
-entire directory around, which may be more convenient.
+--7v4MFKbpt5VMrkBn
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-But I also see your point. I don't think keep() is a critical part of
-what I think the approach should be.
+On Thu, May 22, 2025 at 01:44:29PM +0000, Dominik Grzegorzek wrote:
+> On Thu, 2025-05-22 at 14:10 +0100, Aishwarya wrote:
 
-Alice
+> > self->n1, self->n2) (-2) =3D=3D 0 (0)
+> > 11213 03:29:55.022519=A0 # # # shared_anon_thp: Test terminated by asse=
+rtion
+> > 11214 03:29:55.022834=A0 # # #=A0=A0=A0=A0=A0=A0=A0=A0=A0 FAIL=A0 migra=
+tion.shared_anon_thp
+> > 11215 03:29:55.027864=A0 # # not ok 4 migration.shared_anon_thp
+> > 11216 03:29:55.028156=A0 # # #=A0 RUN=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 mig=
+ration.private_anon_htlb ...
+> > 11217 03:30:14.595327=A0 # # #=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 OK=A0 m=
+igration.private_anon_htlb
+> > 11218 03:30:14.595777=A0 # # ok 5 migration.private_anon_htlb
+> > 11219 03:30:14.596398=A0 # # #=A0 RUN=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 mig=
+ration.shared_anon_htlb ...
+> > 11220 03:30:34.595239=A0 # # #=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 OK=A0 m=
+igration.shared_anon_htlb
+> > 11221 03:30:34.595623=A0 # # ok 6 migration.shared_anon_htlb
+
+> Looking at the test, I don't think this is related. The test allocates so=
+me
+> pages and attempts to migrate them between two NUMA nodes. It seems to be=
+ a
+> selftest for memory management code, and I don't see how this patch could=
+ affect
+> its outcome.
+
+The hugepages code does make use of padata and it's a hugepages test so
+there's some potential connection there, definitely not an obvious one
+though.
+
+--7v4MFKbpt5VMrkBn
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmgvLmUACgkQJNaLcl1U
+h9AhaAf+LyJn2mpp5ESkGdGH97HgCPHRgUcmTvPYt7GnnUpgViZsoD8SA8PpeVek
+xfFMEgQvhTw/FPV/CqZHeCIi+O8n2wp0Sdk1oWr/1r6wzjkV0K6g6AGAswT1MTR7
+z78PHvCtip060lAU4xxCNvbsdmD5HO8RyHv3vTId+YFKVN5/dFreudoX9Po7dvwx
+djfKe3lGRFUeph565FoGSVfkicgbQhR7yPKcPrYl7aoLiVfpWADJgVKbfgyHUohD
+xEns4TSVQfBWov/ZxRo/ejakkFWrZLW5p0YNfZ1/FDLfB2oXweUl3f2ovB0Ka93Z
+L6aBFigykJUpRqxV54v5CP8pWV3nuw==
+=wAeE
+-----END PGP SIGNATURE-----
+
+--7v4MFKbpt5VMrkBn--
