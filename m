@@ -1,227 +1,125 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+Received: from mail-io1-f49.google.com (mail-io1-f49.google.com [209.85.166.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 885492D3A6B
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 23:37:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEC9118DB3D;
+	Thu, 22 May 2025 23:42:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747957079; cv=none; b=Ql6wH77oSdFFOsYloj+Z9b48ueOvmOeJJCjcxF9tG6hw1Vli837pJrOyKrBmuJYMaMAL5Viz8Z4TvDuumrqHRtCbPyrIVbKBlpKxsTJKv8mtHFV2jaVBdoorKIwg3hLebk5O5kfmMdRkmiWhib3YAKJvnQJuNA0qAarsyHbfON8=
+	t=1747957376; cv=none; b=fwbvEKAP9EJWlqCNVQPMx1In0PDZIxYqwDreg/I0KzX4VltjrP2rFYmTnlZzHP5k1JdRWX3WrWxlQj/y7k7iD3MYocMK3fPQk6x/JlI2tF/hCokNuCmPawmVubmSM5pHcxnStAn3WVXJG8pLvtL/sh9UazkNbIfop7SrBrR915Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747957079; c=relaxed/simple;
-	bh=EJSWXtll+OllBjJufDyDEa/BI4x/BrdIZLYuFPsRMNI=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=emaovdfg49W7VZEr8AY3B8zwX+D2eEMljcKqMIYCXRsQj4J4kk03HRz9f+M610+nBOW4mVCGcbIiSgKHCcpoZPaOfPns5Gx4nToohLx5F25dDm/eBZKXYWJd2C4pwllR8JWEQh3pPPCjmaukWZzFnX9h4AS5vBLEfb2m97PHsTY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=CWGUyIll; arc=none smtp.client-ip=209.85.216.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1747957376; c=relaxed/simple;
+	bh=bOHBqddXS1gSodftBBdQ0VpvTwtlCZ545QEQJ4w2T2c=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=fRsI+F3KhwcyJLzB4Id5rXyY5Vv33VBZqptH/voX7vdCyZbLiNvaQSry9ThgYsRJZQh/UMj4IPBzLclRBhnR5KgXPuOIJgePVldGf3Tg1sBSv9fBDJcFvfEtiGWPqYqI7u/AaqL4XjmJWR6E73bKhyx0RHwrzNYuum0LW/hEXlY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ua96R7sW; arc=none smtp.client-ip=209.85.166.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CWGUyIll"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-310a0668968so2192008a91.0
-        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 16:37:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ua96R7sW"
+Received: by mail-io1-f49.google.com with SMTP id ca18e2360f4ac-85e46f5c50fso739496039f.3;
+        Thu, 22 May 2025 16:42:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747957075; x=1748561875; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=f9Xn4KYWiGCbjLdjL8speXTpf75EGP3mA2cTcsP7kRE=;
-        b=CWGUyIllGTIwpPH7p8CFIjoEkt97HcqLw5uADcx4SE614xhGo/A3c1Yu3oMzqJFDcf
-         D9FnC31gdE7Sa0tSdvBo5t+zeuYRTGvmuiEnD0X9batPtvloRWgtGMS3uEhFepeSTDoz
-         q4Q1egFeKDi7/wQyjMeHKTIImzG5btcewh579SpZBwpG3By6kk1dJsU/O+M5NH0wfBhd
-         QlktKvBMZCEeCsfVSlJQsl40X7IQn08vlhmMll+xJino3L6U/xla0cnrUXo2Gu2q1a/s
-         7DTajzFlGYWDN6NQ/KW6zXK9MHTAGWXGM9vFjSTjaw8dYCIeqwph55fa6+h2FFFj7Trv
-         24dg==
+        d=gmail.com; s=20230601; t=1747957374; x=1748562174; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8IxofwsL8T9ReOdXYX7tCLo1899Q9oCBZNmKLml4xN4=;
+        b=Ua96R7sWrWY0I55Pct1BtOyQiMrT6AzWMtC/EAzrMcZRbXDsM3fqgZDdmqBuQp3SxR
+         St3S2XEq34huSeEeRinwkZSX3Sj3h5aCEVfWyfWvJIgBYVXmnRbAfp1xmEd7pAv0jI/I
+         CJNQpfshuf1J4eY8Q5LwzfBsUJDfSzTYUx9Rx8dZEkhaYVvh3GEcn/7DFs0PIejUHJ7f
+         TKBjMcysUxNbj1kHY8jvZKwt8Byv4/K4trLIHdewjLB1G+dZPPkemnzTRXIBigiNjdlc
+         Dy0xuAollRrTinftTbqzLNtbiXBsTPfiWjs1u/WpLaDREVEFOZrPZHUk/CYLsXYgX+db
+         9JAw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747957075; x=1748561875;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=f9Xn4KYWiGCbjLdjL8speXTpf75EGP3mA2cTcsP7kRE=;
-        b=bN/f2EsvYQ39FaMhHnS3XCidJmzaIH0OeL6gfOCSANSJEMJCEqq9wv1RhKTNigEGQN
-         VOAOne474sGQbDp+BQn7ZCvPGI9aWajG0a/W2Tg/NKtccz7jNwXgunS3l/eVhJ/SADg6
-         a0tMOGhvTB/4l9564Uln8KKlvk23L8hneS6eQLJYH1QyLXhiP/sGmbWIvQOEn2l5+68l
-         6szdgRuFgcwwNvDNk4SunjXEHHkl0N0hZoXjELPI7lUBC1PpllLNKxUa9q0bgL0aktYn
-         vJ9eSu2Ot2gUNFn9IoWWii32GegPm+YjBg5ZhIbzb4FXD6O1uYxYV0bijAytbr6UvGB8
-         z1rg==
-X-Gm-Message-State: AOJu0Yy1HXZGL8PxX7/WzBsJ7tGjlJIoZf7Y80iO31xeIFZLPM6Geq3W
-	Bljo2mGpdfRHdK5WP9nuTLg51VeXbdju8sQNzwrbynWtTmOo1pBo+mqVayGTyLC0Th1O+45mDNA
-	3LluOUA==
-X-Google-Smtp-Source: AGHT+IF5Lb8CXIC70Vyva66+17O+yrwnyFqJbN7erK3jdHXzkFdxO3FG0VdX++4AGAOrzJkMYErRjBNX2mI=
-X-Received: from pjg13.prod.google.com ([2002:a17:90b:3f4d:b0:2ee:4a90:3d06])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:3f4c:b0:2fe:994d:613b
- with SMTP id 98e67ed59e1d1-30e7d5be445mr37978564a91.35.1747957074752; Thu, 22
- May 2025 16:37:54 -0700 (PDT)
-Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Thu, 22 May 2025 16:37:32 -0700
-In-Reply-To: <20250522233733.3176144-1-seanjc@google.com>
+        d=1e100.net; s=20230601; t=1747957374; x=1748562174;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=8IxofwsL8T9ReOdXYX7tCLo1899Q9oCBZNmKLml4xN4=;
+        b=tbAiuO8Jg8DLarjTyeII3f2bvvuqIfs9KGdx/HOAXjGjE+e+sjA+jlcid6/Raa7OmI
+         w/ClapvATF6bKeeoRWMmNBCcVekfHsjCztY1f8zrikPLtfuMmzjCotI6ZhH1OC31n71a
+         LWjyVAq+4bjTJxvxPy8LDdzV2KNOU0V1BRjXc8dFTfgbJ1yBd2owxFN28MT+2mOyTVrX
+         w9bN+SwEW/CdgTxu2Euyl81JmTVfPshd+l3zpEGpniYKgaPtT/nKzHQ5Kbaw4q3io9hU
+         SAgOFVdUU0iIwxHsZ1kezedlzICuujLf5v3sVBYNPEODEN6KFwZsVJj1QAn3X0z9SjCP
+         iHqg==
+X-Forwarded-Encrypted: i=1; AJvYcCX6/xTSZflvhLvn0V7bzWtPEq/7zD2x+2KW+0XEITDKFGIRSWrXvg1phsV/khGWAV5wBrYTA2Ar0BtKEzaB@vger.kernel.org, AJvYcCXTcqRxH/cvePIJSKXmYoXTXQ6EM60huTM/H80GsJ3A1qDhiPMt3NkKlsJIdSAh+EipfTcHvpB712n30JyuA5MM6WF5@vger.kernel.org, AJvYcCXuVJWIwIsRzNqoUEJ3zskx0s1He7rxz3dN4uvhHjfwvE6YN1f8PGFbd4lEec+Qph+nolS0jo/lKlpR3g==@vger.kernel.org
+X-Gm-Message-State: AOJu0YyRam5CAzJY4r/YquTsWOejYJmixUHFrB+TES0XeHpdSjgNuQRU
+	pcH+JyE0y/ObptFx8aOCK7JatpsAHhubk2zGheGDj3Pect+rhRvTHLziDEplVr2nKw03jyoed79
+	lH4WmNPHCcWdUuxeBqFHVHtgw240BSjE=
+X-Gm-Gg: ASbGncvXOMgvgfZk0WKUaOWXcTKU/rAr2CZgf/zZEFyUqUJ3YmKieYpO+MpmJfj2Os7
+	EFOo+9b50oaT75s/5ASqYEtqSJTnVolTbp88nrWpbDsv3hoZSgp9db0IsqYaFW457uzWJrHOm/k
+	Ft3H0Kzwo3ph5QdCFtWePo1VarN4kn2frD
+X-Google-Smtp-Source: AGHT+IEinbq6VshxzPfx2TAWHoFrFLw2NkVMJD03BeJ5ym1VzfGxKEexCFrXM8zc0aSeCDGViEDkg3148C1WU35WcPs=
+X-Received: by 2002:a05:6e02:1a4d:b0:3da:7cb7:79c with SMTP id
+ e9e14a558f8ab-3dc932879bdmr9785845ab.13.1747957373671; Thu, 22 May 2025
+ 16:42:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250522233733.3176144-1-seanjc@google.com>
-X-Mailer: git-send-email 2.49.0.1151.ga128411c76-goog
-Message-ID: <20250522233733.3176144-9-seanjc@google.com>
-Subject: [PATCH v3 8/8] KVM: SVM: Flush cache only on CPUs running SEV guest
-From: Sean Christopherson <seanjc@google.com>
-To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
-Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, Kevin Loughlin <kevinloughlin@google.com>, 
-	Tom Lendacky <thomas.lendacky@amd.com>, Kai Huang <kai.huang@intel.com>, 
-	Ingo Molnar <mingo@kernel.org>, Zheyun Shen <szy0127@sjtu.edu.cn>, 
-	Mingwei Zhang <mizhang@google.com>, Francesco Lavra <francescolavra.fl@gmail.com>
+MIME-Version: 1.0
+References: <20250518025734.61479-1-kerneljasonxing@gmail.com>
+ <CAL+tcoCD5ORW=JqvZg7=uJXkLi-WTG-Szj1k8ya9sX6LcR41jQ@mail.gmail.com> <20250522163418.f14da5eea065296d42ee3497@linux-foundation.org>
+In-Reply-To: <20250522163418.f14da5eea065296d42ee3497@linux-foundation.org>
+From: Jason Xing <kerneljasonxing@gmail.com>
+Date: Fri, 23 May 2025 07:42:17 +0800
+X-Gm-Features: AX0GCFsrufe-PZ6eOiw3-7s_nUfw5rP0iRMlS5z0ArMQRp0iBeyfFG6iZA-Fzvc
+Message-ID: <CAL+tcoBUEpcyt3Vq8_f8Jyo3+1mLtdEH2QEf6nVAOYzRHitfNA@mail.gmail.com>
+Subject: Re: [PATCH v3 0/4] relayfs: misc changes
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: axboe@kernel.dk, rostedt@goodmis.org, mhiramat@kernel.org, 
+	mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org, 
+	linux-block@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	Jason Xing <kernelxing@tencent.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Zheyun Shen <szy0127@sjtu.edu.cn>
+On Fri, May 23, 2025 at 7:34=E2=80=AFAM Andrew Morton <akpm@linux-foundatio=
+n.org> wrote:
+>
+> On Fri, 23 May 2025 07:16:35 +0800 Jason Xing <kerneljasonxing@gmail.com>=
+ wrote:
+>
+> > On Sun, May 18, 2025 at 10:57=E2=80=AFAM Jason Xing <kerneljasonxing@gm=
+ail.com> wrote:
+> > >
+> > > From: Jason Xing <kernelxing@tencent.com>
+> > >
+> > > The series mostly focuses on the error counters which helps every use=
+r
+> > > debug their own kernel module.
+> > >
+> > > ---
+> > > Note: this series is made on top of this cleanup[1] and unmerged comm=
+it[2]
+> > > [1]: https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git/log/=
+?h=3Dmm-nonmm-unstable
+> > > [2]: https://lore.kernel.org/all/20250507134225.63248-1-kerneljasonxi=
+ng@gmail.com/
+> > >
+> > > Jason Xing (4):
+> > >   relayfs: support a counter tracking if per-cpu buffers is full
+> > >   relayfs: introduce getting relayfs statistics function
+> > >   blktrace: use rbuf->stats.full as a drop indicator in relayfs
+> > >   relayfs: support a counter tracking if data is too big to write
+> > >
+> > >  include/linux/relay.h   | 19 ++++++++++++++-
+> > >  kernel/relay.c          | 52 +++++++++++++++++++++++++++++++++++----=
+--
+> > >  kernel/trace/blktrace.c | 22 ++---------------
+> > >  3 files changed, 65 insertions(+), 28 deletions(-)
+> >
+> > Hi Andrew,
+> >
+> > Any comments on the series?
+> >
+>
+> We're at -rc7 now, so I'll park this for consideration for -rc1.
 
-On AMD CPUs without ensuring cache consistency, each memory page
-reclamation in an SEV guest triggers a call to do WBNOINVD/WBINVD on all
-CPUs, thereby affecting the performance of other programs on the host.
+Okay. IIUC, it seems probably two or three weeks later. I think I'll
+keep track of the series and remind you at that time just in case you
+might forget it :)
 
-Typically, an AMD server may have 128 cores or more, while the SEV guest
-might only utilize 8 of these cores. Meanwhile, host can use qemu-affinity
-to bind these 8 vCPUs to specific physical CPUs.
-
-Therefore, keeping a record of the physical core numbers each time a vCPU
-runs can help avoid flushing the cache for all CPUs every time.
-
-Reviewed-by: Tom Lendacky <thomas.lendacky@amd.com>
-Signed-off-by: Zheyun Shen <szy0127@sjtu.edu.cn>
-Co-developed-by: Sean Christopherson <seanjc@google.com>
-Signed-off-by: Sean Christopherson <seanjc@google.com>
----
- arch/x86/kvm/svm/sev.c | 46 +++++++++++++++++++++++++++++++++++-------
- arch/x86/kvm/svm/svm.h |  1 +
- 2 files changed, 40 insertions(+), 7 deletions(-)
-
-diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
-index 2676be2b121d..c3ddcca9fdce 100644
---- a/arch/x86/kvm/svm/sev.c
-+++ b/arch/x86/kvm/svm/sev.c
-@@ -446,7 +446,12 @@ static int __sev_guest_init(struct kvm *kvm, struct kvm_sev_cmd *argp,
- 	init_args.probe = false;
- 	ret = sev_platform_init(&init_args);
- 	if (ret)
--		goto e_free;
-+		goto e_free_asid;
-+
-+	if (!zalloc_cpumask_var(&sev->have_run_cpus, GFP_KERNEL_ACCOUNT)) {
-+		ret = -ENOMEM;
-+		goto e_free_asid;
-+	}
- 
- 	/* This needs to happen after SEV/SNP firmware initialization. */
- 	if (vm_type == KVM_X86_SNP_VM) {
-@@ -464,6 +469,8 @@ static int __sev_guest_init(struct kvm *kvm, struct kvm_sev_cmd *argp,
- 	return 0;
- 
- e_free:
-+	free_cpumask_var(sev->have_run_cpus);
-+e_free_asid:
- 	argp->error = init_args.error;
- 	sev_asid_free(sev);
- 	sev->asid = 0;
-@@ -706,16 +713,31 @@ static void sev_clflush_pages(struct page *pages[], unsigned long npages)
- 	}
- }
- 
--static void sev_writeback_caches(void)
-+static void sev_writeback_caches(struct kvm *kvm)
- {
-+	/*
-+	 * Note, the caller is responsible for ensuring correctness if the mask
-+	 * can be modified, e.g. if a CPU could be doing VMRUN.
-+	 */
-+	if (cpumask_empty(to_kvm_sev_info(kvm)->have_run_cpus))
-+		return;
-+
- 	/*
- 	 * Ensure that all dirty guest tagged cache entries are written back
- 	 * before releasing the pages back to the system for use.  CLFLUSH will
- 	 * not do this without SME_COHERENT, and flushing many cache lines
- 	 * individually is slower than blasting WBINVD for large VMs, so issue
--	 * WBNOINVD (or WBINVD if the "no invalidate" variant is unsupported).
-+	 * WBNOINVD (or WBINVD if the "no invalidate" variant is unsupported)
-+	 * on CPUs that have done VMRUN, i.e. may have dirtied data using the
-+	 * VM's ASID.
-+	 *
-+	 * For simplicity, never remove CPUs from the bitmap.  Ideally, KVM
-+	 * would clear the mask when flushing caches, but doing so requires
-+	 * serializing multiple calls and having responding CPUs (to the IPI)
-+	 * mark themselves as still running if they are running (or about to
-+	 * run) a vCPU for the VM.
- 	 */
--	wbnoinvd_on_all_cpus();
-+	wbnoinvd_on_cpus_mask(to_kvm_sev_info(kvm)->have_run_cpus);
- }
- 
- static unsigned long get_num_contig_pages(unsigned long idx,
-@@ -2766,7 +2788,7 @@ int sev_mem_enc_unregister_region(struct kvm *kvm,
- 		goto failed;
- 	}
- 
--	sev_writeback_caches();
-+	sev_writeback_caches(kvm);
- 
- 	__unregister_enc_region_locked(kvm, region);
- 
-@@ -2914,6 +2936,7 @@ void sev_vm_destroy(struct kvm *kvm)
- 	}
- 
- 	sev_asid_free(sev);
-+	free_cpumask_var(sev->have_run_cpus);
- }
- 
- void __init sev_set_cpu_caps(void)
-@@ -3127,7 +3150,7 @@ static void sev_flush_encrypted_page(struct kvm_vcpu *vcpu, void *va)
- 	return;
- 
- do_sev_writeback_caches:
--	sev_writeback_caches();
-+	sev_writeback_caches(vcpu->kvm);
- }
- 
- void sev_guest_memory_reclaimed(struct kvm *kvm)
-@@ -3140,7 +3163,7 @@ void sev_guest_memory_reclaimed(struct kvm *kvm)
- 	if (!sev_guest(kvm) || sev_snp_guest(kvm))
- 		return;
- 
--	sev_writeback_caches();
-+	sev_writeback_caches(kvm);
- }
- 
- void sev_free_vcpu(struct kvm_vcpu *vcpu)
-@@ -3472,6 +3495,15 @@ int pre_sev_run(struct vcpu_svm *svm, int cpu)
- 	if (sev_es_guest(kvm) && !VALID_PAGE(svm->vmcb->control.vmsa_pa))
- 		return -EINVAL;
- 
-+	/*
-+	 * To optimize cache flushes when memory is reclaimed from an SEV VM,
-+	 * track physical CPUs that enter the guest for SEV VMs and thus can
-+	 * have encrypted, dirty data in the cache, and flush caches only for
-+	 * CPUs that have entered the guest.
-+	 */
-+	if (!cpumask_test_cpu(cpu, to_kvm_sev_info(kvm)->have_run_cpus))
-+		cpumask_set_cpu(cpu, to_kvm_sev_info(kvm)->have_run_cpus);
-+
- 	/* Assign the asid allocated with this SEV guest */
- 	svm->asid = asid;
- 
-diff --git a/arch/x86/kvm/svm/svm.h b/arch/x86/kvm/svm/svm.h
-index f16b068c4228..45d564c674ef 100644
---- a/arch/x86/kvm/svm/svm.h
-+++ b/arch/x86/kvm/svm/svm.h
-@@ -112,6 +112,7 @@ struct kvm_sev_info {
- 	void *guest_req_buf;    /* Bounce buffer for SNP Guest Request input */
- 	void *guest_resp_buf;   /* Bounce buffer for SNP Guest Request output */
- 	struct mutex guest_req_mutex; /* Must acquire before using bounce buffers */
-+	cpumask_var_t have_run_cpus; /* CPUs that have done VMRUN for this VM. */
- };
- 
- struct kvm_svm {
--- 
-2.49.0.1151.ga128411c76-goog
-
+Thanks,
+Jason
