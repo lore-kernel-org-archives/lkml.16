@@ -1,92 +1,204 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.5])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 537081C5489;
-	Thu, 22 May 2025 09:56:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.5
+Received: from mx0a-0016f401.pphosted.com (mx0a-0016f401.pphosted.com [67.231.148.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2356B1C3C04;
+	Thu, 22 May 2025 09:57:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.148.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747907825; cv=none; b=cjjlnT6wj2+VcY6n9rvnbZPiFUISa4zGd4IVg95OM5VW+TyHOx+Dnr6pQafK8AD4hYbH6ssLBALI5OoEW+6Mth8BEaceueswCIY0l8IEGOYScpOHmSam/8PleqdJ7QG3sgzQlcsi16ShgRtXI3f8zXgii5fFYwg22I0aTJX1ZKY=
+	t=1747907843; cv=none; b=l2gWTNp9hcQN8olkUtSxgzAuXZwqqEcA0wk+OagX0gd63ethmHKQ9D5c12NLktoLtA1ZasoNpos/KDrEYmJIhA7zrpPIXxRWxTLVuiwP3fHBPTsswLNZaHoO/PP4rdeL+7TkoKU2os6mlAfrHFva11+4/xr+LaLI55AR/oGBP0I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747907825; c=relaxed/simple;
-	bh=XjKIIcx3vLMme/sjaI9nyr8i3Pmp6qx3DPHpese1Jao=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
-	 MIME-Version:Message-ID; b=W5KAl5Kv+CrK6cpfNN/kYC1EbqeWzH96u4s2wkfuVwduVXq+hJN/RZbyc1mxdwT2SakkcWVMmR3zqMXeEKWcOwBlvsLshSg4pORbC6HZu0igE68k04jRO6tbNnjS9C1uxpBiqVKrNgXQG0j+QK0tccto+mIuOB4BJfuUNAgj+LA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=fail (1024-bit key) header.d=163.com header.i=@163.com header.b=WaiHNJNe reason="signature verification failed"; arc=none smtp.client-ip=117.135.210.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1747907843; c=relaxed/simple;
+	bh=I+T2DFgD4Wkhez1vjEguVZ232wfoYzqajr/YfVynwOk=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Xv6lmGPooFulTaDVzkvou0nKY7YIrjr73+8KoY/J1waEf6rKAOo/LlJ2F5etzHMQI6UmdMNL8/gz2eokAAU4SPoQDdBFzItIw8gZJUu422sRSPBZZVxFRBmiBXSky236fP652+jwR1jvj8osh7qUCBwcBLw5wbjbwhcck+tVFjw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=P7hKRzYr; arc=none smtp.client-ip=67.231.148.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b="WaiHNJNe"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Date:From:To:Subject:Content-Type:MIME-Version:
-	Message-ID; bh=okdYhAg1EMXOC1tTtA3Ehh6LzobI5jXkaIDyLZfblgk=; b=W
-	aiHNJNey5FkSDAN2DAQY1AN6Ln5fO3oP0+wbEbQIiSi7IH5BhC20UCKM/ehB1EJa
-	8R66N/gNKxOkVIxefG19u8HL9DmpqIiwQat8AZqYQELGeZsdZvn9D5K+W+AHrDSq
-	k4DnknWzcKjDsMFu57wKAMrv6/aGHyBX16iJX9+TLw=
-Received: from 00107082$163.com ( [111.35.189.95] ) by
- ajax-webmail-wmsvr-40-100 (Coremail) ; Thu, 22 May 2025 17:56:34 +0800
- (CST)
-Date: Thu, 22 May 2025 17:56:34 +0800 (CST)
-From: "David Wang" <00107082@163.com>
-To: "Greg KH" <gregkh@linuxfoundation.org>
-Cc: mathias.nyman@intel.com, oneukum@suse.com, stern@rowland.harvard.edu,
-	hminas@synopsys.com, rui.silva@linaro.org, jgross@suse.com,
-	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 2/2] USB: xhci: use urb hcpriv mempool for private
- data
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20240801(9da12a7b)
- Copyright (c) 2002-2025 www.mailtech.cn 163com
-In-Reply-To: <2025052211-oxidizing-tannery-de3f@gregkh>
-References: <a235e322e270942dc3d607d4b46ff7db29abeb2d.1747897366.git.00107082@163.com>
- <5f14d11e4c651f9e856d760bc8b45ea7ac863b2f.1747897366.git.00107082@163.com>
- <2025052211-oxidizing-tannery-de3f@gregkh>
-X-NTES-SC: AL_Qu2fBfWbuE8i4iCZZukZnEYQheY4XMKyuPkg1YJXOp80siTL9w4MZm9zFkDN986wFQWhoAiIdylMx/1of7R9bZJVNX/HNQ3LFeP/ZbF4qrek
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=GBK
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="P7hKRzYr"
+Received: from pps.filterd (m0431384.ppops.net [127.0.0.1])
+	by mx0a-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54LM5u1r008998;
+	Thu, 22 May 2025 02:57:03 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=pfpt0220; bh=U5c7mPteqm2QUW6HY0HaYiBAa
+	DrbsHXfzznmnKoaOjA=; b=P7hKRzYrXR4vtRMss82gvrzPREdnS5Sbx7n199BIE
+	Ddus++h7tkBbnI8VjfyORwFpTMon0w04M1EHKr3yH/X9EraJTTif767k2ZILhhlC
+	3aO1GITj7htEHHbUuf9x1dnJ3ElIa54H9yz2akeS83GxTnezHcdixU6t5kDcGLAB
+	MzLnAi9nmw4oqDt8kAFoH7zadYQtPZJGhTq+JGQLKyvabtr2/SN2H/pfbsWOo/Gz
+	ciAU2exPTBIMsDDL+kaZXjV/VbbI6JNqHS90wO2zwqXIr4HWoqFDbjWFtzA+QBbx
+	b/jn+5wdKCHS2Qnbl49NCMViVOlf0nXDq6f/T6Ctgp2hA==
+Received: from dc5-exch05.marvell.com ([199.233.59.128])
+	by mx0a-0016f401.pphosted.com (PPS) with ESMTPS id 46sqap94kg-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 22 May 2025 02:57:03 -0700 (PDT)
+Received: from DC5-EXCH05.marvell.com (10.69.176.209) by
+ DC5-EXCH05.marvell.com (10.69.176.209) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.4; Thu, 22 May 2025 02:57:02 -0700
+Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH05.marvell.com
+ (10.69.176.209) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
+ Transport; Thu, 22 May 2025 02:57:02 -0700
+Received: from optiplex (unknown [10.28.34.253])
+	by maili.marvell.com (Postfix) with SMTP id 70DD85B694A;
+	Thu, 22 May 2025 02:56:54 -0700 (PDT)
+Date: Thu, 22 May 2025 15:26:53 +0530
+From: Tanmay Jagdale <tanmay@marvell.com>
+To: Simon Horman <horms@kernel.org>
+CC: <bbrezillon@kernel.org>, <herbert@gondor.apana.org.au>,
+        <davem@davemloft.net>, <sgoutham@marvell.com>, <lcherian@marvell.com>,
+        <gakula@marvell.com>, <jerinj@marvell.com>, <hkelam@marvell.com>,
+        <sbhatta@marvell.com>, <andrew+netdev@lunn.ch>, <edumazet@google.com>,
+        <kuba@kernel.org>, <pabeni@redhat.com>, <bbhushan2@marvell.com>,
+        <bhelgaas@google.com>, <pstanner@redhat.com>,
+        <gregkh@linuxfoundation.org>, <peterz@infradead.org>,
+        <linux@treblig.org>, <krzysztof.kozlowski@linaro.org>,
+        <giovanni.cabiddu@intel.com>, <linux-crypto@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <gcherian@marvell.com>
+Subject: Re: [net-next PATCH v1 10/15] octeontx2-pf: ipsec: Setup NIX HW
+ resources for inbound flows
+Message-ID: <aC705Y7wYuz0VBE8@optiplex>
+References: <20250502132005.611698-1-tanmay@marvell.com>
+ <20250502132005.611698-11-tanmay@marvell.com>
+ <20250507134620.GE3339421@horms.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <45b6468c.9346.196f76c5461.Coremail.00107082@163.com>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID:ZCgvCgCnjwPS9C5o0M0KAA--.22592W
-X-CM-SenderInfo: qqqrilqqysqiywtou0bp/xtbBkBBVqmgu58u1pQAFsA
-X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20250507134620.GE3339421@horms.kernel.org>
+X-Proofpoint-GUID: DM6Zzi29iDZqzoj-n7lfV2d8l9h30JFP
+X-Authority-Analysis: v=2.4 cv=HfgUTjE8 c=1 sm=1 tr=0 ts=682ef4ef cx=c_pps a=rEv8fa4AjpPjGxpoe8rlIQ==:117 a=rEv8fa4AjpPjGxpoe8rlIQ==:17 a=kj9zAlcOel0A:10 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=M5GUcnROAAAA:8 a=9AdEF_yJOJiG8JO9BV4A:9 a=CjuIK1q_8ugA:10
+ a=OBjm3rFKGHvpk9ecZwUJ:22
+X-Proofpoint-ORIG-GUID: DM6Zzi29iDZqzoj-n7lfV2d8l9h30JFP
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIyMDEwMCBTYWx0ZWRfX1PTh1w7/ba4W WOztI0fVvvp4vK9C6d92Uq8GhdKKedqhODoZF/3s5+ykr9iZ+7lYc4UlsFNx68Bsa5vm/9Y4GNz MeBXkvreEZjeRuDH1Wg1F692pvh1ZFzW49v6mIOw0lxQnsI+udaVKDPoEBzroopyLi428GYnjKG
+ 6VOmdSK3OzzE2ZbWNUdYHhK4DCqIbOsEMkr7+Pt7ZBYCm8rzxOxfc3DqIfG0kkV9kDTNP97JT0U x/UtqZSK1UHZ5TOAviiL4/cCyNBA8jz70IgBz9koWpCfloKV2uBrhwG88EdrdogjXUvM5yFTdjf I7bBcmCwE9Zm4jY/uD0AorH1UXiLqz5B6mokFxFPFJtDEnbnhABfyLxE+ru+MDzJ6X5tLUllZnq
+ 0SjhVxinQzJ6lJiloGm+TqqwAqSRpsTpT7on5OZGE/yJPhGT3j22gjbxlcw5ggJsdSpLiVr/
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-22_05,2025-05-22_01,2025-03-28_01
 
-QXQgMjAyNS0wNS0yMiAxNjozMjo0MCwgIkdyZWcgS0giIDxncmVna2hAbGludXhmb3VuZGF0aW9u
-Lm9yZz4gd3JvdGU6Cj5PbiBUaHUsIE1heSAyMiwgMjAyNSBhdCAwMzoxMDoxMFBNICswODAwLCBE
-YXZpZCBXYW5nIHdyb3RlOgo+PiB4aGNpIGtlZXBzIGFsbG9jL2ZyZWUgcHJpdmF0ZSBkYXRhIGZv
-ciBlYWNoIGVucXVldWUvZGVxdWV1ZSBjeWNsZXMsCj4+IHdoZW4gdXNpbmcgYSBVU0Igd2ViY2Ft
-LCBhbGxvY2F0aW9uIHJhdGUgaXMgfjI1MC9zOwo+PiB3aGVuIHVzaW5nIGEgVVNCIG1pYywgYWxs
-b2NhdGlvbiByYXRlIHJlYWNoZXMgfjFrL3M7Cj4+IFRoZSBtb3JlIHVzYiBkZXZpY2UgaW4gdXNl
-LCB0aGUgaGlnaGVyIGFsbG9jYXRpb24gcmF0ZS4KPj4gCj4+IFVSQiBvYmplY3RzIGhhdmUgbG9u
-Z2VyIGxpZmVzcGFuIHRoYW4gcHJpdmF0ZSBkYXRhLCBoYW5kIG92ZXIgb3duZXJzaGlwCj4+IG9m
-IHByaXZhdGUgZGF0YSB0byB1cmIgY2FuIHNhdmUgbG90cyBvZiBtZW1vcnkgYWxsb2NhdGlvbnMg
-b3ZlciB0aW1lLgo+PiBXaXRoIHRoaXMgY2hhbmdlLCBubyBleHRyYSBtZW1vcnkgYWxsb2NhdGlv
-biBpcyBuZWVkZWQgZHVyaW5nIHVzYWdlcyBvZgo+PiBVU0Igd2ViY2FtL21pYy4KPj4gCj4+IFNp
-Z25lZC1vZmYtYnk6IERhdmlkIFdhbmcgPDAwMTA3MDgyQDE2My5jb20+Cj4+IC0tLQo+PiAgZHJp
-dmVycy91c2IvaG9zdC94aGNpLW1lbS5jICB8IDEgKwo+PiAgZHJpdmVycy91c2IvaG9zdC94aGNp
-LXJpbmcuYyB8IDMgKy0tCj4+ICBkcml2ZXJzL3VzYi9ob3N0L3hoY2kuYyAgICAgIHwgOCArKyst
-LS0tLQo+PiAgMyBmaWxlcyBjaGFuZ2VkLCA1IGluc2VydGlvbnMoKyksIDcgZGVsZXRpb25zKC0p
-Cj4+IAo+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy91c2IvaG9zdC94aGNpLW1lbS5jIGIvZHJpdmVy
-cy91c2IvaG9zdC94aGNpLW1lbS5jCj4+IGluZGV4IGQ2OTgwOTVmYzg4ZC4uYjE5ZTQxY2YxYzRj
-IDEwMDY0NAo+PiAtLS0gYS9kcml2ZXJzL3VzYi9ob3N0L3hoY2ktbWVtLmMKPj4gKysrIGIvZHJp
-dmVycy91c2IvaG9zdC94aGNpLW1lbS5jCj4+IEBAIC0xNzQ1LDYgKzE3NDUsNyBAQCBzdHJ1Y3Qg
-eGhjaV9jb21tYW5kICp4aGNpX2FsbG9jX2NvbW1hbmRfd2l0aF9jdHgoc3RydWN0IHhoY2lfaGNk
-ICp4aGNpLAo+PiAgCj4+ICB2b2lkIHhoY2lfdXJiX2ZyZWVfcHJpdihzdHJ1Y3QgdXJiX3ByaXYg
-KnVyYl9wcml2KQo+PiAgewo+PiArCVdBUk5fT05DRSgxLCAieGhjaSBwcml2YXRlIGRhdGEgc2hv
-dWxkIGJlIG1hbmFnZWQgYnkgdXJiIik7Cj4KPllvdSBqdXN0IGNyYXNoZWQgdGhlIGtlcm5lbCBp
-ZiB0aGlzIGV2ZXIgZ2V0cyBoaXQuICBBcyB5b3UgYXJlIHNheWluZwo+dGhpcyBzaG91bGQgbmV2
-ZXIgYmUgY2FsbGVkLCB3aHkgaXMgdGhpcyBmdW5jdGlvbiBldmVuIHByZXNlbnQgYW55bW9yZT8K
-Pgo+VGhpcyBtYWtlcyBubyBzZW5zZSA6KAoKSSBtZWFudCB0byB3YXJuIGZ1cnRoZXIgY2hhbmdl
-cyB0byB4aGNpOiAgYmV0dGVyIG5vdCBtYW5hZ2UgIHByaXZhdGUgZGF0YSAuCkkgZG9uJ3QgdGhp
-bmsgaXQgd291bGQgY3Jhc2gsICAgeGhjaV91cmJfZnJlZV9wcml2IHNob3VsZCBub3QgIGJlIHBh
-aXJlZCB3aXRoIAp1cmJfaGNwcml2X21lbXBvb2xfemFsbG9jLiAgKEJ1dCBub3RoaW5nIHByZXZl
-bnQgaXQgdGhvdWdoLCBzYW1lIGFzIG5vdGhpbmcgCnByZXZlbnRzIHVyYl9oY3ByaXZfbWVtcG9v
-bF96YWxsb2MgYmVpbmcgcGFpcmVkIHdpdGgga2ZyZWUuLi4uKQpJdCB3b3VsZCBiZSBiZXR0ZXIg
-dG8gcmVtb3ZlIHRoZSB3aG9sZSBmdW5jdGlvbi4KCgo+Cj5BZ2FpbiwgTkVWRVIgYWRkIGEgV0FS
-TiooKSBjYWxsIHRvIHRoZSBrZXJuZWwgZm9yIHNvbWV0aGluZyB0aGF0IGl0Cj5zaG91bGQgYmUg
-aGFuZGxpbmcgcHJvcGVybHkgb24gaXRzIG93bi4gIE90aGVyd2lzZSB5b3UganVzdCBsb3N0IGFs
-bCB0aGUKPnVzZXIncyBkYXRhIHdoZW4gdGhlIGJveCBnb3QgcmVib290ZWQgKGFuZCBpZiB1c2Vy
-c3BhY2UgY2FuIHRyaWdnZXIKPnRoaXMsIHlvdSBqdXN0IGNyZWF0ZWQgYSBuZXcgQ1ZFLi4uKQoK
-Q29weSB0aGF0fiEKClRoYW5rc34KRGF2aWQKPgo+dGhhbmtzLAo+Cj5ncmVnIGstaAo=
+Hi Simon,
+
+On 2025-05-07 at 19:16:20, Simon Horman (horms@kernel.org) wrote:
+> On Fri, May 02, 2025 at 06:49:51PM +0530, Tanmay Jagdale wrote:
+> > A incoming encrypted IPsec packet in the RVU NIX hardware needs
+> > to be classified for inline fastpath processing and then assinged
+> 
+> nit: assigned
+> 
+>      checkpatch.pl --codespell is your friend
+> 
+ACK.
+
+> > a RQ and Aura pool before sending to CPT for decryption.
+> > 
+> > Create a dedicated RQ, Aura and Pool with the following setup
+> > specifically for IPsec flows:
+> >  - Set ipsech_en, ipsecd_drop_en in RQ context to enable hardware
+> >    fastpath processing for IPsec flows.
+> >  - Configure the dedicated Aura to raise an interrupt when
+> >    it's buffer count drops below a threshold value so that the
+> >    buffers can be replenished from the CPU.
+> > 
+> > The RQ, Aura and Pool contexts are initialized only when esp-hw-offload
+> > feature is enabled via ethtool.
+> > 
+> > Also, move some of the RQ context macro definitions to otx2_common.h
+> > so that they can be used in the IPsec driver as well.
+> > 
+> > Signed-off-by: Tanmay Jagdale <tanmay@marvell.com>
+> 
+> ...
+> 
+> > diff --git a/drivers/net/ethernet/marvell/octeontx2/nic/cn10k_ipsec.c b/drivers/net/ethernet/marvell/octeontx2/nic/cn10k_ipsec.c
+> 
+> ...
+> 
+> > +static int cn10k_ipsec_setup_nix_rx_hw_resources(struct otx2_nic *pfvf)
+> > +{
+> > +	struct otx2_hw *hw = &pfvf->hw;
+> > +	int stack_pages, pool_id;
+> > +	struct otx2_pool *pool;
+> > +	int err, ptr, num_ptrs;
+> > +	dma_addr_t bufptr;
+> > +
+> > +	num_ptrs = 256;
+> > +	pool_id = pfvf->ipsec.inb_ipsec_pool;
+> > +	stack_pages = (num_ptrs + hw->stack_pg_ptrs - 1) / hw->stack_pg_ptrs;
+> > +
+> > +	mutex_lock(&pfvf->mbox.lock);
+> > +
+> > +	/* Initialize aura context */
+> > +	err = cn10k_ipsec_ingress_aura_init(pfvf, pool_id, pool_id, num_ptrs);
+> > +	if (err)
+> > +		goto fail;
+> > +
+> > +	/* Initialize pool */
+> > +	err = otx2_pool_init(pfvf, pool_id, stack_pages, num_ptrs, pfvf->rbsize, AURA_NIX_RQ);
+> > +	if (err)
+> 
+> This appears to leak pool->fc_addr.
+Okay, let me look into this.
+
+> 
+> > +		goto fail;
+> > +
+> > +	/* Flush accumulated messages */
+> > +	err = otx2_sync_mbox_msg(&pfvf->mbox);
+> > +	if (err)
+> > +		goto pool_fail;
+> > +
+> > +	/* Allocate pointers and free them to aura/pool */
+> > +	pool = &pfvf->qset.pool[pool_id];
+> > +	for (ptr = 0; ptr < num_ptrs; ptr++) {
+> > +		err = otx2_alloc_rbuf(pfvf, pool, &bufptr, pool_id, ptr);
+> > +		if (err) {
+> > +			err = -ENOMEM;
+> > +			goto pool_fail;
+> > +		}
+> > +		pfvf->hw_ops->aura_freeptr(pfvf, pool_id, bufptr + OTX2_HEAD_ROOM);
+> > +	}
+> > +
+> > +	/* Initialize RQ and map buffers from pool_id */
+> > +	err = cn10k_ipsec_ingress_rq_init(pfvf, pfvf->ipsec.inb_ipsec_rq, pool_id);
+> > +	if (err)
+> > +		goto pool_fail;
+> > +
+> > +	mutex_unlock(&pfvf->mbox.lock);
+> > +	return 0;
+> > +
+> > +pool_fail:
+> > +	mutex_unlock(&pfvf->mbox.lock);
+> > +	qmem_free(pfvf->dev, pool->stack);
+> > +	qmem_free(pfvf->dev, pool->fc_addr);
+> > +	page_pool_destroy(pool->page_pool);
+> > +	devm_kfree(pfvf->dev, pool->xdp);
+> 
+> It is not clear to me why devm_kfree() is being called here.
+> I didn't look deeply. But I think it is likely that
+> either pool->xdp should be freed when the device is released.
+> Or pool->xdp should not be allocated (and freed) using devm functions.
+Good catch. We aren't used pool->xdp for inbound IPsec yet, so I'll
+drop this.
+
+> 
+> > +	pool->xsk_pool = NULL;
+> 
+> The clean-up of pool->stack, pool->page_pool), pool->xdp, and
+> pool->xsk_pool, all seem to unwind initialisation performed by
+> otx2_pool_init(). And appear to be duplicated elsewhere.
+> I would suggest adding a helper for that.
+Okay I'll look into reusing common code.
+
+> 
+> > +fail:
+> > +	otx2_mbox_reset(&pfvf->mbox.mbox, 0);
+> > +	return err;
+> > +}
+> 
+> ...
