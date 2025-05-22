@@ -1,144 +1,93 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 148111D6193
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 18:43:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70DDD1D5CE5
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 18:43:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747939403; cv=none; b=FftFQHlH1W6h3V3y4x1S5vF9vE1p8eXmZ27EhH/M/S9K68BW7py+b8Hn0nisOamAPiMFL9Y59CvvksJxgsmOXblMEX2iqan2jIDCSPsuC3sKyNxJy0oQ21NCyVAqA1yugfhGYNymd8hmnPTQFYA4tyUBO6shNaOx1BHLY1O9OjA=
+	t=1747939408; cv=none; b=ml9SIG5vB67eropf0PWalwBnISqVkI10Hz8dbp7GKErez/8cc8l+fohaUZLPt35uk1Cy/B20E6cdI//FPTyIGxjyr5Z0fkGDP5leEV51ROwtDyPOUVfXxx8talxJKRBJhpThtLC1Aa61q+8UOSid+Yqs1N0MSgoJtVsRgrJfy+k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747939403; c=relaxed/simple;
-	bh=lEwq1w3AlBRqTR3Kjy1rxwBxEux2NoIMVA2TiZeoiqE=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=aPDuSYVDWhSu8JtibxY2OLxs3waOHlK9YXYXdgD9DFVCeREnnF4wKD2LoG9cxNYLR9s9xGc1571TnvlWhcSbSnF9ar+nC2fTnlfD8krrvI3XOTYr0571VN2jJH26sne6HQEzSFvxpr7hdaTufxycUupgg+M8oI+5vy4YDzz8dVU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Vfh2vd3e; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747939408; c=relaxed/simple;
+	bh=9PgnyaKfoiMCFCe7k0tzRnhS7quMdVuCiMUDEaqbaXo=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=GvbACRfA7Jp9fjAcg75UeLhcq5HmyG22nE1EgvZvJfmv5uV37awCzNeDFIcbeOrPSX9LCuHJ6sDF9pZXN8mZtsoL9kuzRuHQ1eaS4eowud4djGWONpR9CPRdFmUJQnRAT3Vb6ImJjTVT3m4oghHeoznop/EY6Gz3mKJDsF0sSWI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--dylanbhatch.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=q+8wM6Mt; arc=none smtp.client-ip=209.85.210.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--dylanbhatch.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Vfh2vd3e"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52F94C4CEE4;
-	Thu, 22 May 2025 18:43:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747939402;
-	bh=lEwq1w3AlBRqTR3Kjy1rxwBxEux2NoIMVA2TiZeoiqE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Vfh2vd3eOHUlJYqsmycvj46bUZ5EJlr6vnbHAR+yAOA7NKbR4LYwmQqjSdc4M2Hpd
-	 TaySuHzt7uN++7B8iIOLvk1Kh+h3+LNi94UDGZOfMOGCSWWLL7MZRji5H/4q/JG87P
-	 CdJd8zOQwDO+XqbLyzvylVlEhJ+S0Dm8EtJq2qond5SSZfYNXRwZfNdx3M2zAhUekM
-	 CS5Z/NS8ugVIhtSQdJmjq4JNlT9HfoIPJ2C543AtdXBmXxAMDpgIYwRS/IScv8IQOU
-	 oYWpqfZlhxBFOHKAG/5RIE8bDGuZ6rn754PPGwuhI1Vcizz2mNqs331HdrLutSD18/
-	 oZ9H5CVQa4TFA==
-From: SeongJae Park <sj@kernel.org>
-To: SeongJae Park <sj@kernel.org>
-Cc: Bharata B Rao <bharata@amd.com>,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	Jonathan.Cameron@huawei.com,
-	dave.hansen@intel.com,
-	gourry@gourry.net,
-	hannes@cmpxchg.org,
-	mgorman@techsingularity.net,
-	mingo@redhat.com,
-	peterz@infradead.org,
-	raghavendra.kt@amd.com,
-	riel@surriel.com,
-	rientjes@google.com,
-	weixugc@google.com,
-	willy@infradead.org,
-	ying.huang@linux.alibaba.com,
-	ziy@nvidia.com,
-	dave@stgolabs.net,
-	nifan.cxl@gmail.com,
-	joshua.hahnjy@gmail.com,
-	xuezhengchu@huawei.com,
-	yiannis@zptcorp.com,
-	akpm@linux-foundation.org,
-	david@redhat.com
-Subject: Apologies and clarifications on DAMON-disruptions (was Re: [RFC PATCH v0 0/2] Batch migration for NUMA balancing)
-Date: Thu, 22 May 2025 11:43:14 -0700
-Message-Id: <20250522184314.57708-1-sj@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250521184552.46414-1-sj@kernel.org>
-References: 
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="q+8wM6Mt"
+Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-74299055c3dso11424299b3a.0
+        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 11:43:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1747939407; x=1748544207; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=kJhW3AyBTwLj+5fICMaVOix+/q9TCuLWjAHHEUs+ZtM=;
+        b=q+8wM6MtyOqINv/yop931jXYuRzUmfbPxhHfqPQnZWaiYLtJxOdI5qlvLOOWGve8dJ
+         C5pd/EkHC1eZbgPSAWlAo/PIVeflcrygKwOQNROE3fTHgdnqEAWxaCqoXhIKkAeTwRvv
+         r+/tZZpsTnwOi98OJObxsr64nbA+2tlbKMaCtyTtZ0WXxCeI4oaRyAcOt/Yg6KZyjQ6T
+         BEniyTpEXXUoVx3QztY7nawY1g5HsMjkbSsFIAPPYd3vsL9q71UFOxmq5U3DPeXZ7QDn
+         YEl1oJfPXO8YWwWcOSQFxWwzwMAkYY8L5FEAu6FDDQIv/66Lvew3bHsbB3qNxHyoBP4b
+         VaXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747939407; x=1748544207;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=kJhW3AyBTwLj+5fICMaVOix+/q9TCuLWjAHHEUs+ZtM=;
+        b=uWI9deJxV1eviYhU1Be/iPdJgSvk7lvd8OB36Thgxueu3UU0js3g+q5BCNr2tjgkAQ
+         elh+7zo4csqJP8JgqH5jfCm0OiCKhk+dDwRC9mf+u91S/w79bryywoclszrt/wDjT49m
+         LpNW+YBKNoDrwm58y6TZF3yeeSyg2Yl/ktMQG6n8MkT9CfdbOSJad5hdhhLrtl0qgKOd
+         gOuVOYSdb22ugCKODDviD3dpnBFzbmzKt9PmqaeWkgV+Pl33qbCD8xWMAANDPBYmV29z
+         19s8rBqDnro07BxAbSUWXAeTSlr8K2mWMDatnzpy7g1JK7Cwslv0uqGS5xyK/UklRVXL
+         LmzA==
+X-Forwarded-Encrypted: i=1; AJvYcCUzUt0WZTOFc1fCGNsTt8dIy5TGgpRauHs/l50h54sSW7+obStDdkfD8z70YoY7WWCYOnAFh7tfqSQfDlw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwLCFP14Px1FgDckI21amJ4Dg2f9c7xUMi1mypdTLP8/pWAuZ05
+	/wfjl+uptENZv2xbNRuzqM5I6oGjfN8nC6kR9W+owvd8ESVsB0zuRtdpSumIBKgzm35P5F8qpVd
+	JtnhksPZp7xU9Xs5eYOYXatgN2g==
+X-Google-Smtp-Source: AGHT+IEoHYQeMI2gttjWN9nuJgkrLE6pE1VViQG8vIffgAD4ufQc//tDtGttUcf0KhgAxWPRJDyiNtZL1pXHRY8ptA==
+X-Received: from pfbjw12.prod.google.com ([2002:a05:6a00:928c:b0:736:b2a2:5bfe])
+ (user=dylanbhatch job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:6a00:10c6:b0:740:a52f:9652 with SMTP id d2e1a72fcca58-742a97aa35emr32848725b3a.6.1747939406599;
+ Thu, 22 May 2025 11:43:26 -0700 (PDT)
+Date: Thu, 22 May 2025 18:42:47 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.49.0.1151.ga128411c76-goog
+Message-ID: <20250522184249.3137187-1-dylanbhatch@google.com>
+Subject: [PATCH v3 0/2] livepatch, arm64/module: Enable late module relocations.
+From: Dylan Hatch <dylanbhatch@google.com>
+To: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>, Josh Poimboeuf <jpoimboe@kernel.org>, Jiri Kosina <jikos@kernel.org>, 
+	Miroslav Benes <mbenes@suse.cz>, Petr Mladek <pmladek@suse.com>, 
+	Joe Lawrence <joe.lawrence@redhat.com>
+Cc: Dylan Hatch <dylanbhatch@google.com>, Song Liu <song@kernel.org>, 
+	Ard Biesheuvel <ardb@kernel.org>, Sami Tolvanen <samitolvanen@google.com>, 
+	Peter Zijlstra <peterz@infradead.org>, "Mike Rapoport (Microsoft)" <rppt@kernel.org>, 
+	Andrew Morton <akpm@linux-foundation.org>, Dan Carpenter <dan.carpenter@linaro.org>, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	live-patching@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, 21 May 2025 11:45:52 -0700 SeongJae Park <sj@kernel.org> wrote:
+Late relocations (after the module is initially loaded) are needed when
+livepatches change module code. This is supported by x86, ppc, and s390.
+This series borrows the x86 methodology to reach the same level of
+support on arm64, and moves the text-poke locking into the core livepatch
+code to reduce redundancy.
 
-[...]
-> I think (or, hope) it would also be not very worthless or rude to mention other
-> existing and ongoing works that have potentials to serve for similar purpose or
-> collaborate in future, here.
-> 
-> DAMON is designed for a sort of multi-source access information handling.  In
-> LSFMM, I proposed[1] damon_report_access() interface for making it easier to be
-> extended for more types of access information.  Currenlty damon_report_access()
-> is under early development.  I think this has a potential to serve something
-> similar to your single source goal.
-[...]
+Dylan Hatch (2):
+  livepatch, x86/module: Generalize late module relocation locking.
+  arm64/module: Use text-poke API for late relocations.
 
-I heard some people are feeling uncomfortable about patterns on my mails like
-this.  I understand the pattern is that I suddenly replying to a thread saying
-"hey, by the way DAMON is ...", and I understand it bothers people when they
-wanted to discuss about something more than DAMON.
+ arch/arm64/kernel/module.c | 114 ++++++++++++++++++++++---------------
+ arch/x86/kernel/module.c   |   8 +--
+ kernel/livepatch/core.c    |  18 ++++--
+ 3 files changed, 84 insertions(+), 56 deletions(-)
 
-I never intended to make others feel uncomfortable but was doing that with only
-good faith to make discussions be made with full information.  But if you felt
-so, you felt so.  I sincerely feel sorry if you felt so, and will try my best
-to not bother you next time.
+-- 
+2.49.0.1151.ga128411c76-goog
 
-But, I'm a human and I cannot do something more than my best effort.  I hence
-expect I will unintentionally continue making people upset.  I think I migt be
-able to reduce such cases by explaining why and what I'm doing, and how you can
-avoid it.
-
-Yes, I might bothering you with exactly the pattern now, but let me do this
-hopefully as the last time, to reduce next recurrences.
-
-TL; DR: please briefly mention DAMON and optionally clarify DAMON discussion
-and/or clarifications are unwelcome for now, if you don't want to be bothered
-by DAMON.
-
-Why and What I'm Doing
-======================
-
-I sometimes find threads of works that seem related with DAMON.  From such
-mails, I find opportunities to help the work using DAMON, shiny features of
-the work that DAMON could adopt, or whatever makes me believe so.  Such mails
-sometimes contain explanations of such relations, and sometimes not.
-
-In some cases such relations description has some details that look important
-on the context but missed, outdated, or wrong.  I believe I have a
-responsibility to add or fix those as a maintainer of DAMON for making Linux
-kernel healthier with discussions under full information, and so jump in.
-
-If there is no such relations description at all, I have no ability to know if
-they just don't know about DAMON, mistakenly didn't add the part, or want to
-ignore DAMON at the moment.  Hence again I believe it is a responsibility of
-DAMON maintainer to tell about it, to help the original author and other
-reviewers' understanding.
-
-I think sometimes you didn't want to discuss or know such details of DAMON but
-I was jumping in and waste your time since I misread your intention.
-
-How You Can Prevent I Bothering You with DAMON
-==============================================
-
-Please help me better understand your intentions.  If you knwo DAMON and you
-feel I may find your work is related with DAMON, please take a moment to add a
-brief paragraph explaining it.  If you don't want me adding more details that I
-believe worthy to be added there, or don't want to discuss in that detail of
-DAMON, please mention so.  E.g., "this may have potential relations with DAMON,
-but that's out of the scope at the moment."
-
-I will also do my best to read implicit intention, but again, the best effort
-is the best effort and I cannot promise something I cannot do.
-
-
-Thanks,
-SJ
-
-[...]
