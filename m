@@ -1,246 +1,297 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4FD2A235C1E;
-	Thu, 22 May 2025 16:29:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com [209.85.219.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0543822A1D5
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 16:29:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747931364; cv=none; b=CFthUAvOa4bV4v1+WZIohUqc9OZ5K3xpT/lP39yPbKKabAABIOeR0sA4MbLgqtvQ8nIJxoFeAsPgjx2rRXPY0OEjBvXpfm9FhQVpgHusYkKhgFZqifM7UxmRjOGYKyAuY4YlWqLpkUMmwZx6Vmb/8yx17F/aidlVjbuBzLcNwIM=
+	t=1747931364; cv=none; b=p0pxlYIBrtKRdsBFK4jGE2CiBh/g33HZRRilNRLqqhv3M6x3EL+SJVltXBtNQ4jaxOcsxxLlbv/LIJgv33qCiq2HUbUlc7IGJ6Abrx+4G4I8CeDngySd+Qje8c8vr8sWvfVvAR3DhkNGBXFlUlsWbTOKehkVslJeG/FEBCRyebA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1747931364; c=relaxed/simple;
-	bh=qWPSvt0Cw6gvSZwMUYIi0pwXwe641tNnsiGfT8CNCds=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GXcNmp6YRkOkWxD/RNiNIDiC85nvltGxGKqVJkVYAwRlIrnhWoftlOfMqE1yKNPneBi5dit411vEW6zLX/tgtV8f+XAwY8HP+CEl/vLJ4xVnM2fCdIUf5sh/fShuymomFDH6Zgmbha/ZynVSn2K+bQXJGqIMECzI5xjf6kuHPgw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4CE681A2D;
-	Thu, 22 May 2025 09:29:07 -0700 (PDT)
-Received: from [10.57.47.3] (unknown [10.57.47.3])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 2B3FB3F5A1;
-	Thu, 22 May 2025 09:29:17 -0700 (PDT)
-Message-ID: <d690a126-690c-47ea-93d9-2a950b1bd2c4@arm.com>
-Date: Thu, 22 May 2025 17:29:16 +0100
+	bh=E5Se1MX0w4/6wREZRJ1UTS6fyFstj4i0z15GXjdel5U=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=o5CbGUICGGVz6G14XS4bF65AzwnIFO0ZSK9UKobLfwEoOEYQFqZ4KplX4JpwYGTg9B0BwLKtV9B3/zyzvfMh6AYCny29+z9FhDRkYlVoslZWQcQgOQz6fictX4FvLVyeweDOYFYA+V944PEIhiIY+GnB1QnbVFqKcVGh71FPj/o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=yFZbWlVR; arc=none smtp.client-ip=209.85.219.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yFZbWlVR"
+Received: by mail-yb1-f172.google.com with SMTP id 3f1490d57ef6-e7d7cb7943eso39211276.1
+        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 09:29:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1747931361; x=1748536161; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=bzBeCOxN5ECOTedH+uAhR6ydW2A+LV3aTj1+q7Sd5LM=;
+        b=yFZbWlVREkHpuBUi/3jvIOM6E2uVtP6tj6izgbKRIbN41uWxC+FNtsrsiQbXXpURgP
+         fsAhBYvr0BuolcOmIsynAe/idjLwpVNbid32Iip5z5FB+R+2NNrTFH9y8VFgZEKbF5VL
+         WIRUwyHJZ6pEdygyfLTo/DSh3LCN3ja1pf+ONpTswMVQhDP+qsNAwAYyD5KK3jM5s/r1
+         8vrE8Si++b3KdP9j+/xL1aaO4iH6K8jGI7/tqf5KFb2TE4DDS9d7/MLL1ZV/EQg9GohJ
+         1hr9ZmWvWNVua4SdCEWdWxFPCQTO5IsYrAlSk75pRCLkfgsWUSF158ArkdbPr90rSxK4
+         1dyw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747931361; x=1748536161;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=bzBeCOxN5ECOTedH+uAhR6ydW2A+LV3aTj1+q7Sd5LM=;
+        b=QlaJkphbzsTaz4vGro2LXQncE9sjmDY6+JjBgwkLVqaWkha/eHGG6BOampSUJcmUAH
+         g08LeD8/W8H+etTd6bu3j4UkJ5RNhP2ogyLSBME943OFIVu3PlpLsPzVhoX8w7XXjwpI
+         S+aZOaUqVFSNQ3KY+mutnEz89jLi8LCGxtUkXaSQUjxgqypFJzB7CxTcqu0kzEyzkK3w
+         z7dlN9hPt7wZn21igIjcm6mu6T38gdI32ZGmLh/+4LhU3EYK52njXdm32nL2PDqlMF2E
+         Ky0BGQKOLSe5DJCO61U62ZS9Fpuq6yF32CdH4EaJ/VziPejbT5oZEHZ/2FiKtDcd1rao
+         3tEA==
+X-Forwarded-Encrypted: i=1; AJvYcCWHOBA1ncz77OdJCl/r7BN9N3iPz5HTAxealWYTwBqNSofHnQlE5TpaY6de+NHFZpFsjBA1fCsO8J7G5qc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyf7ImwANt4ZWfhVthulU6ng36oNiisXXCKhCOLzya1XcxUlYO1
+	WlM4dFlp8tBFSWMd4YL7Axb0aooHdmOfvyJDysPF+xPYo409XlRWLTAZlOau4BvKVfzun0Iwv0L
+	cvKLHGk8BwLedRH9YUaiRJlfRM19kszkgE79OMAhD0w==
+X-Gm-Gg: ASbGncseoXgosdx4YEl0wcvmW1fpMYzo9TBxwMmZ8QLLVwSJDSt8+qBNJkYj9sFn7tt
+	GREJWUdZFLH2xpbO2RS5epwhgDalBZURE1DTAVuUU2Tw8vq80rVFuskGiTMbEg0VuxorPuFU2jz
+	DmV++WNgCPWXDRKR4t8qygL8fJwXKIgjgDog==
+X-Google-Smtp-Source: AGHT+IE3ybPHUQLRB5AiVGq7kfS9SUdJma9E5+ZRxkPvsCWAyn9s2p09dVtzatAJQxKskxyhePbJUTiQPz+K2hEENf8=
+X-Received: by 2002:a05:6902:6b0e:b0:e7b:369e:2aa with SMTP id
+ 3f1490d57ef6-e7d7cde1e36mr150240276.8.1747931360708; Thu, 22 May 2025
+ 09:29:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RESEND PATCH v6 1/3] arm64: Add BBM Level 2 cpu feature
-Content-Language: en-GB
-To: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Ryan Roberts <ryan.roberts@arm.com>, Will Deacon <will@kernel.org>,
- =?UTF-8?Q?Miko=C5=82aj_Lenczewski?= <miko.lenczewski@arm.com>,
- yang@os.amperecomputing.com, corbet@lwn.net, jean-philippe@linaro.org,
- robin.murphy@arm.com, joro@8bytes.org, akpm@linux-foundation.org,
- paulmck@kernel.org, mark.rutland@arm.com, joey.gouly@arm.com,
- maz@kernel.org, james.morse@arm.com, broonie@kernel.org,
- oliver.upton@linux.dev, baohua@kernel.org, david@redhat.com,
- ioworker0@gmail.com, jgg@ziepe.ca, nicolinc@nvidia.com, mshavit@google.com,
- jsnitsel@redhat.com, smostafa@google.com, kevin.tian@intel.com,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, iommu@lists.linux.dev
-References: <78fec33d-fe66-4352-be11-900f456c9af3@arm.com>
- <20250509134904.GA5707@willie-the-truck> <aB4nqtMJuvvp7Vwm@arm.com>
- <015746d7-ca46-4978-a441-09fba781fdd4@arm.com>
- <4709ff5a-f89c-426e-ae95-f8356808f4f5@arm.com>
- <99079d56-428b-4bc4-b20a-dc10032f2a2f@arm.com> <aCIiwrA_MOeVhFre@arm.com>
- <c5a74dfe-68e2-48f1-9bbb-06db8e62ffea@arm.com> <aCSHESk1DzShD4vt@arm.com>
- <0a909fc1-af17-4704-90b3-23359a00482d@arm.com> <aC9BajxkIv0UxWLq@arm.com>
-From: Suzuki K Poulose <suzuki.poulose@arm.com>
-In-Reply-To: <aC9BajxkIv0UxWLq@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250330163129.02f24afb@jic23-huawei> <5bca6dfd-fe03-4c44-acf4-a51673124338@tuxon.dev>
+ <95f5923f-7a8f-4947-b588-419525930bcb@tuxon.dev> <CAPDyKFoMqmCFBoO8FwQe2wHh2kqQi4jUZNFyiNckK7QhGVgmvg@mail.gmail.com>
+ <c3a2950a-17ff-444a-bee7-af5e7e10e2bf@tuxon.dev> <CAPDyKFozR4qDq4mzcZBK-LcoPf=fGyuJTXwdt=Ey+_DcQOAp0g@mail.gmail.com>
+ <4o3wo76st7w6qwyye3rrayuo2qx773i6jfzcnbkhdj76ouh7ds@3e2mblehkgwf>
+ <CAPDyKFqMB7XutXba73YHx1X4rm6uc3Fz6yMZ8yM=wgduEmgUDg@mail.gmail.com>
+ <a20fc6ee-c6c3-4013-b175-4918b9a44380@tuxon.dev> <CAPDyKFpbeLJUiB_xQbqDib+-8Q3AcJNVg+DuEcqmVGMbFdNxwA@mail.gmail.com>
+ <fgl4w5uhxci7rrbdigtni72vveb2gqemh6iccz4qruqkek5rja@rzwkcjg6hkid>
+ <3b1963ba-f93f-48f2-8fb0-a485dd80ffcb@tuxon.dev> <CAPDyKFqrAS4iV59S-zJ9H7_3VuGr9JdZABhfUGBwTzQNDCasaw@mail.gmail.com>
+ <482b55c9-a210-4b2d-8405-e9f30d48a8fd@tuxon.dev>
+In-Reply-To: <482b55c9-a210-4b2d-8405-e9f30d48a8fd@tuxon.dev>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Date: Thu, 22 May 2025 18:28:44 +0200
+X-Gm-Features: AX0GCFswg5C1bwIUaPv3hYdH-qYTLYaxTn-cZS_BMjY1X7ad1PMrzNM5Xo6KRaA
+Message-ID: <CAPDyKFpLF2P438GGWSgbXzpT7JNdUjtZ2ZxYf1_4=fNUX3s-KQ@mail.gmail.com>
+Subject: Re: [PATCH] driver core: platform: Use devres group to free driver
+ probe resources
+To: Claudiu Beznea <claudiu.beznea@tuxon.dev>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Jonathan Cameron <jic23@kernel.org>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, dakr@kernel.org, 
+	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, 
+	linux-renesas-soc@vger.kernel.org, geert@linux-m68k.org, 
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-iio@vger.kernel.org, bhelgaas@google.com
+Content-Type: text/plain; charset="UTF-8"
 
-On 22/05/2025 16:23, Catalin Marinas wrote:
-> Hi Suzuki,
-> 
-> Thanks for looking at this.
-> 
-> On Mon, May 19, 2025 at 10:45:31AM +0100, Suzuki K Poulose wrote:
->> On 14/05/2025 13:05, Catalin Marinas wrote:
->>> On Tue, May 13, 2025 at 10:15:49AM +0100, Suzuki K Poulose wrote:
->>>> On 12/05/2025 17:33, Catalin Marinas wrote:
->>>>> Stepping back a bit, we know that the MIDR allow-list implies
->>>>> BBML2_NOABORT (and at least BBML2 as in the ID regs). In theory, we need
->>>>
->>>> Please be aware that BBML2_NOABORT midr list may not always imply BBLM2 in
->>>> ID registers (e.g., AmpereOne. But the plan is to fixup the per cpu
->>>> ID register - struct cpuinfo_arm64 - for such cores at early boot,
->>>> individually, before it is used for sanitisation of the system wide
->>>> copy).
->>>
->>> Ah, good point. We can then ignore BBML2 ID regs and only rely on MIDR
->>> (and some future BBML3).
->>>
->>>>> So how about we introduce a WEAK_BOOT_CPU_FEATURE which gets enabled by
->>>>> the boot CPU if it has it _but_ cleared by any secondary early CPU if it
->>>>> doesn't (and never enabled by secondary CPUs). When the features are
->>>>> finalised, we know if all early CPUs had it. In combination with
->>>>> PERMITTED_FOR_LATE_CPU, we'd reject late CPUs that don't have it.
->>>>
->>>> That could work, but it introduces this "clearing" a capability, which
->>>> we don't do at the moment.
->>>>
->>>> We had an offline discussion about this some time ago, with Mark
->>>> Rutland. The best way to deal with this is to change the way we compute
->>>> capabilities. i.e.,
->>>>
->>>>
->>>> 1. Each boot CPU run through all the capabilities and maintain a per-cpu
->>>>      copy of the state.
->>>> 2. System wide capabilities can then be constructed from the all early
->>>>      boot CPU capability state (e.g., ANDing all the state from all CPUs
->>>>      for SCOPE_SYSTEM or ORing for LOCAL_CPU).
->>>>
->>>> But this requires a drastic change to the infrastructure.
->>>
->>> I think it's a lot simpler to achieve the ANDing - set the (system)
->>> capability if detected on the boot CPU, only clear it if missing on
->>> subsequent CPUs. See below on an attempt to introduce this. For lack of
->>> inspiration, I called it ARM64_CPUCAP_GLOBAL_CPU_FEATURE which has both
->>> SCOPE_LOCAL and SCOPE_SYSTEM. It's permitted for late CPUs but not
->>> optional if already enabled. The advantage of having both local&system
->>> is that the match function will be called for both scopes. I added a
->>> mask in to cpucap_default_scope() when calling matches() since so far
->>> no cap had both.
->>
->> Thanks, the change below does the trick. I am reasoning with the way
->> the scope has been defined (hacked ;-)).
->>
->> SCOPE_LOCAL_CPU && SCOPE_SYSTEM
->>
->> 1. SCOPE_LOCAL_CPU : Because you need to run this on all the (early) CPUs.
->>
->> 2. SCOPE_SYSTEM: To check if the capability holds at the end of the
->> smp boot.
->>
->> While, we really "detect" it on SCOPE_BOOT_CPU and only run the
->> cap checks, if that is available. But put another way, BOOT_CPU
->> is only used as an easy way to detect if this CPUs is the first
->> one to run the check vs at least one CPU has run and cleared the
->> cap.
-> 
-> Yes, we start with boot CPU and keep 'and-ing' new values onto it.
-> 
->> I wonder if we could use some other flag to indicate the fact that,
->> a non-boot CPU is allowed to clear the capability explicitly, rather than
->> implying it with SCOPE_SYSTEM && SCOPE_LOCAL_CPU. Or may be make
->> it explicit that the capability must be matched on ALL cpus and
->> finalized at the end ?
-> 
-> I had such variant locally but then decided to reuse the SCOPE_SYSTEM
-> for this, more of a way to indicate that we want something system-wide
-> but checked per-CPU. We could add a new flag, though I was wondering
-> whether we can have a property that's checked both per-CPU and once more
-> system-wide. That's what actually happens with the above, then the probe
-> function can tell whether it was called in the CPU or system scope.
-> 
-> Alternatively, we can leave the local/system combining for later and
-> only add a flag to tell how they compose - "any" (default) vs "all".
-> 
->> /*
->>   * When paired with SCOPE_LOCAL_CPU, all CPUs must satisfy the
->>   * condition. This is different from SCOPE_SYSTEM, where the check
->>   * is performed only once at the end of SMP boot. But SCOPE_SYSTEM
->>   * may not be sufficient in cases where the capability depends on
->>   * properties that are not "sanitised" (e.g., MIDR_EL1) and must be
->>   * satisfied by all the early SMP boot CPUs.
->>   */
->> #define ARM64_CPUCAP_MATCH_ALL_EARLY_CPUS	((u16)BIT(7))
->>
->> statici inline bool cpucap_match_all_cpus(struct arm64_capability *cap)
->> {
->> 	return !!(cap->type & ARM64_CPUCAP_MATCH_ALL_EARLY_CPUS);
->> }
-> 
-> Yes, something like this would work.
-> 
->> Also, we already go through the capablity list to report the ones
->> with "cpumask" separately, and we could use that to also report
->> the ones with MATCH_ALL_CPUs. Something like:
->>
->>
->> diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
->> index 9c4d6d552b25..14cbae51d802 100644
->> --- a/arch/arm64/kernel/cpufeature.c
->> +++ b/arch/arm64/kernel/cpufeature.c
->> @@ -3769,10 +3769,15 @@ static void __init setup_system_capabilities(void)
->>          for (int i = 0; i < ARM64_NCAPS; i++) {
->>                  const struct arm64_cpu_capabilities *caps = cpucap_ptrs[i];
->>
->> -		if (caps && caps->cpus && caps->desc &&
->> -			cpumask_any(caps->cpus) < nr_cpu_ids)
->> +		if (!caps || !caps->desc)
->> +			continue;
->> +
->> +		if (caps->cpus && cpumask_any(caps->cpus) < nr_cpu_ids)
->> 			pr_info("detected: %s on CPU%*pbl\n",
->> 				caps->desc, cpumask_pr_args(caps->cpus));
->> +
->> +		/* Report capabilities that had to be matched on all CPUs */
->> +		if (capcpucap_match_all_cpus(caps) && cpus_have_cap(caps))
->> +			pr_info("detected: %s\n", caps->desc);
->>          }
-> 
-> Yeah, I hacked something similar with the 'global' proposal based on
-> SCOPE_SYSTEM.
-> 
->>> ---------------------8<-----------------------------------------
->>> diff --git a/arch/arm64/include/asm/cpufeature.h b/arch/arm64/include/asm/cpufeature.h
->>> index c4326f1cb917..0b0b26a6f27b 100644
->>> --- a/arch/arm64/include/asm/cpufeature.h
->>> +++ b/arch/arm64/include/asm/cpufeature.h
->>> @@ -331,6 +331,15 @@ extern struct arm64_ftr_reg arm64_ftr_reg_ctrel0;
->>>    #define ARM64_CPUCAP_BOOT_CPU_FEATURE                  \
->>>    	(ARM64_CPUCAP_SCOPE_BOOT_CPU | ARM64_CPUCAP_PERMITTED_FOR_LATE_CPU)
->>> +/*
->>> + * CPU feature detected at boot time based on all CPUs. It is safe for a late
->>> + * CPU to have this feature even though the system hasn't enabled it, although
->>> + * the feature will not be used by Linux in this case. If the system has
->>> + * enabled this feature already, then every late CPU must have it.
->>> + */
->>> +#define ARM64_CPUCAP_GLOBAL_CPU_FEATURE			
->>
->> #define ARM64_CPUCAP_MATCH_ALL_CPU_FEATURE ?
->>
->> \
->>> +	 (ARM64_CPUCAP_SCOPE_LOCAL_CPU | ARM64_CPUCAP_SYSTEM_FEATURE)
->>
->>    (ARM64_CPUCAP_SCOPE_LOCAL_CPU | ARM64_CPUCAP_MATCH_ALL_EARLY_CPUS)
->>
->>
->>> +
->>>    struct arm64_cpu_capabilities {
->>>    	const char *desc;
->>>    	u16 capability;
->>> @@ -391,6 +400,11 @@ static inline int cpucap_default_scope(const struct arm64_cpu_capabilities *cap)
->>>    	return cap->type & ARM64_CPUCAP_SCOPE_MASK;
->>>    }
->>> +static inline bool cpucap_global_scope(const struct arm64_cpu_capabilities *cap)
->>
->> May be call it cpucap_match_all_cpus() ?
-> 
-> I can respin, the alternative looks good to me.
-> 
-> Now, we discussed offline of a different approach: for AmpereOne we'll
-> have to check MIDR early (as an erratum) and pretend it has BBML2,
-> populate the sanitised cpuid regs accordingly. We could do something
-> similar for the other CPUs, pretend it's something like BBML3 and get
-> the architects to commit to it (but this would delay the patchset).
-> 
-> TBH, I'd rather not hack this and only rely on the MIDR for BBM_NOABORT
-> (without any level) and the above MATCH_ALL_CPUS. My proposal is to
-> respin this with a MATCH_ALL_CPUS flag that only checks the MIDR. We can
-> later add a SCOPE_SYSTEM to the same capability that would 'or' in the
-> BBML3 cap (or just use two capabilities, though we end up with two many
-> branches or NOPs in the patched alternatives).
+On Thu, 22 May 2025 at 16:08, Claudiu Beznea <claudiu.beznea@tuxon.dev> wrote:
+>
+> Hi, Ulf,
+>
+> On 22.05.2025 14:53, Ulf Hansson wrote:
+> > On Thu, 22 May 2025 at 11:48, Claudiu Beznea <claudiu.beznea@tuxon.dev> wrote:
+> >>
+> >> Hi, Ulf,
+> >>
+> >> On 21.05.2025 17:57, Dmitry Torokhov wrote:
+> >>> On Wed, May 21, 2025 at 02:37:08PM +0200, Ulf Hansson wrote:
+> >>>> On Wed, 21 May 2025 at 07:41, Claudiu Beznea <claudiu.beznea@tuxon.dev> wrote:
+> >>>>>
+> >>>>> Hi, Ulf,
+> >>>>>
+> >>>>> On 20.05.2025 15:09, Ulf Hansson wrote:
+> >>>>>> For example, even if the order is made correctly, suppose a driver's
+> >>>>>> ->remove() callback completes by turning off the resources for its
+> >>>>>> device and leaves runtime PM enabled, as it relies on devres to do it
+> >>>>>> some point later. Beyond this point, nothing would prevent userspace
+> >>>>>> for runtime resuming/suspending the device via sysfs.
+> >>>>>
+> >>>>> If I'm not wrong, that can't happen? The driver_sysfs_remove() is called
+> >>>>> before device_remove() (which calls the driver remove) is called, this
+> >>>>> being the call path:
+> >>>>>
+> >>>>> device_driver_detach() ->
+> >>>>>   device_release_driver_internal() ->
+> >>>>>     __device_release_driver() ->
+> >>>>>       driver_sysfs_remove()
+> >>>>>       // ...
+> >>>>>       device_remove()
+> >>>>>
+> >>>>> And the driver_sysfs_remove() calls in the end __kernfs_remove() which
+> >>>>> looks to me like the place that actually drops the entries from sysfs, this
+> >>>>> being a call path for it:
+> >>>>>
+> >>>>> driver_sysfs_remove() ->
+> >>>>>   sysfs_remove_link() ->
+> >>>>>     kernfs_remove_by_name() ->
+> >>>>>       kernfs_remove_by_name_ns() ->
+> >>>>>         __kernfs_remove() ->
+> >>>>>
+> >>>>> activating the following line in __kernfs_remove():
+> >>>>>
+> >>>>> pr_debug("kernfs %s: removing\n", kernfs_rcu_name(kn));
+> >>>>>
+> >>>>> leads to the following prints when unbinding the watchdog device from its
+> >>>>> watchdog driver (attached to platform bus) on my board:
+> >>>>> https://p.fr33tux.org/935252
+> >>>>
+> >>>> Indeed this is a very good point you make! I completely overlooked
+> >>>> this fact, thanks a lot for clarifying this!
+> >>>>
+> >>>> However, my main point still stands.
+> >>>>
+> >>>> In the end, there is nothing preventing rpm_suspend|resume|idle() in
+> >>>> drivers/base/power/runtime.c from running (don't forget runtime PM is
+> >>>> asynchronous too) for the device in question. This could lead to that
+> >>>> a ->runtime_suspend|resume|idle() callback becomes executed at any
+> >>>> point in time, as long as we haven't called pm_runtime_disable() for
+> >>>> the device.
+> >>>
+> >>> So exactly the same may happen if you enter driver->remove() and
+> >>> something calls runtime API before pm_runtime_disable() is called.
+> >>> The driver has (as they should be doing currently) be prepared for this.
+> >>
+> >> I took the time and tried to do a comparison of the current solutions
+> >> (describing the bad and good things I see), trying to understand your
+> >> concerns with regards to RPM suspend|resume|idle while unbinding a device
+> >> from its driver.
+> >>
+> >> I see the following cases:
+> >>
+> >> Case 1/ the current approach when devm_pm_runtime_enable() is used in
+> >> driver's ->probe() with the current code base:
+> >>
+> >> - right after driver ->remove() finish its execution clocks are detached
+> >>   from the PM domain, through dev_pm_domain_detach() call in
+> >>   platform_remove()
+> >>
+> >> - any subsequent RPM resume|suspend|idle will lead to failure if the driver
+> >>   specific RPM APIs access directly registers and counts on PM domain to
+> >>   enable/disable the clocks
+> >>
+> >> - at this point, if the IRQs are shared (but not only) and devm requested
+> >>   the driver's IRQ handler can still be called asynchronously; driver
+> >>   should be prepared for such events and should be written to work for such
+> >>   scenarios; but as the clocks are not in the PM domain anymore and RPM is
+> >>   still enabled at this point, if the driver don't run runtime suspend on
+> >>   probe (and runtime resume/suspend on runtime), I think (because I haven't
+> >>   investigated this yet) it can't rely on pm_runtime_active()/
+> >>   pm_runtime_suspended() checks in interrupt handlers
+> >>   and can't decide if it can interrogate registers or not; interrogating
+> >>   should lead to failure at this stage as the clocks are disabled; drivers
+> >>   should work in such scenario and the CONFIG_DEBUG_SHIRQ is a way to check
+> >>   they can; I previously debugged a similar issue on drivers/net/ethernet/
+> >>   renesas/ravb driver where using devm_pm_runtime_enable() in probe and
+> >>   pm_runtime_suspended() checks in IRQ handlers was the way to make this
+> >>   scenario happy; at that time I wasn't able to find that
+> >>   dev_pm_domain_detach() have the impact discussed in this thread
+> >>
+> >> Case 2/ What is proposed in this patch: devm_pm_runtime_enable() used +
+> >> open devres group after dev_pm_domain_attach() (in probe) and close the
+> >> devres group before dev_pm_domain_attach() (in remove):
+> >>
+> >> - right after the driver ->remove() is executed only the driver allocated
+> >>   devres resources are freed; this happens before dev_pm_domain_deattach()
+> >>   is called, though the proposed devres_release_group() call in this patch
+> >>
+> >> - while doing this, driver can still get async RPM suspend|resume|idle
+> >>   requests; is like the execution is in the driver ->remove()
+> >>   but the pm_runtime_disable() hasn't been called yet
+> >>
+> >> - as the runtime PM is enabled in driver's ->probe() mostly after the HW is
+> >>   prepared to take requests and all the other devm resources are allocated,
+> >>   the RPM disable is going to be among the first things to be called by the
+> >>   devres_release_group()
+> >>
+> >> - then, after RPM disable, all the devres resources allocated only in the
+> >>   driver's ->probe() are cleaned up in reverse order, just like
+> >>   device_unbind_cleanup() -> devres_release_all() call in
+> >>   __device_release_driver() is doing, but limited only to the resources
+> >>   allocated by the driver itself; I personally see this like manually
+> >>   allocating and freeing resources in the driver itself w/o relying on
+> >>   devres
+> >>
+> >> - then it comes the turn of dev_pm_domain_detach() call in
+> >>   platform_remove(): at the time dev_pm_domain_detach() is executed the
+> >>   runtime PM is disabled and all the devres resources allocated by driver
+> >>   are freed as well
+> >>
+> >> - after the dev_pm_domain_detach() is executed all the driver resources
+> >>   are cleaned up, the driver can't get IRQs as it's handler was already
+> >>   unregistered, no other user can execute rpm suspend|resume|idle
+> >>   as the RPM is disabled at this time
+> >>
+> >> Case 3/ devm_pm_runtime_enabled() dropped and replaced by manual cleanup:
+> >> - the driver code is going be complicated, difficult to maintain and error
+> >>   prone
+> >
+> > Yes, the driver's code would become slightly more complicated, but
+> > more importantly it would be correct.
+> >
+> > To me it sounds like the driver's ->remove() callback could do this:
+> >
+> > pm_runtime_get_sync()
+> > pm_runtime_disable()
+> > pm_runtime_put_noidle()
+>
+> In my case it was just pm_runtime_disable() at the end of driver ->remove()
+> and pm_runtime_active() checks in IRQ handlers which didn't worked after
+> driver ->remove() finished execution due to disable_depth being incremented
+> in pm_runtime_disable(). The IRQs were devm requested.
+>
+> The solution found at the that time was to use devm_pm_runtime_enable() in
+> probe and pm_runtime_suspended() calls in IRQ handlers.
+>
+> >
+> > In this way, the driver will runtime resume its device, allowing
+> > devres to drop/turn-off resources in the order we want.
+> > Except for the
+> > clocks, as those would be turned off via dev_pm_domain_detach() before
+> > the IRQ handler is freed (via devres), right?
+> >
+> > To avoid getting the IRQ handler to be called when it can't access
+> > registers, we could do one of the below:
+> > *) Look for a condition in the IRQ handler and bail-out when we know
+> > we should not manage IRQs. Is using pm_runtime_enabled() sufficient,
+> > you think? Otherwise we need a driver specific flag, which should be
+> > set in ->remove().
+> > *) Don't use devm* when registering the IRQ handler.
+>
+> That's true.
+>
+> >
+> > Yes, both options further contribute to making the driver code
+> > slightly more complicated, but if you want to solve the problem sooner
+> > than later, I think this is what you need to do. Yet, I think there is
+> > another option too, see below.
+> >
+> >>
+> >> I may have missed considering things when describing the case 2 (which is
+> >> what is proposed by this patch) as I don't have the full picture behind the
+> >> dev_pm_domain_detach() call in platform bus remove. If so, please correct me.
+> >
+> > The dev_pm_domain_attach|detach() calls in bus level code
+> > (probe/remove) were added there a long time ago, way before devres was
+> > being used like today.
+> >
+> > Currently we also have devm_pm_domain_attach_list(), which is used
+> > when devices have multiple PM domains to attach too. This is *not*
+> > called by bus-level code, but by the driver themselves. For these
+> > cases, we would not encounter the problems you have been facing with
+> > clocks/IRQ-handler, I think - because the devres order is maintained
+> > for PM domains too.
+> >
+> > That said, I think adding a devm_pm_domain_attach() interface would
+> > make perfect sense. Then we can try to replace
+> > dev_pm_domain_attach|detach() in bus level code, with just a call to
+> > devm_pm_domain_attach(). In this way, we should preserve the
+> > expectation for drivers around devres for PM domains. Even if it would
+> > change the behaviour for some drivers, it still sounds like the
+> > correct thing to do in my opinion.
+>
+> This looks good to me, as well. I did prototype it on my side and tested on
+> all my failure cases and it works.
 
-Sounds good to me. Thanks for taking care of this.
+That's great! I am happy to help review, if/when you decide to post it.
 
-Cheers
-Suzuki
-
-> 
-
+Kind regards
+Uffe
