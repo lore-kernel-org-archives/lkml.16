@@ -1,203 +1,138 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fhigh-b3-smtp.messagingengine.com (fhigh-b3-smtp.messagingengine.com [202.12.124.154])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E89528FAB8;
-	Thu, 22 May 2025 15:11:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2470C290091;
+	Thu, 22 May 2025 15:11:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.154
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747926662; cv=none; b=iZcw+maxDXzVllfRNzK9J00akXzoqCgVSDQdsTHe37raCRiOhHnV+544+KAnFuC03BVQqEqmcVTdr6+7y8FHagDrHKDc/V2FYDzIJhHn9LB7t62LKfAZ2RGWIi31Ev91cYPMdjA5ScoKoz1fiiIYUJu6uS3yF9G+avzP2rp3zHo=
+	t=1747926669; cv=none; b=BIHIMmwysjZiCmAw9lsKKggnRVvrzYN2UV4NlSh531z4Zf5mJeCXqZhot/lFqhEaUyheWpx3PAHr7DknjKv5u+oft/cSrX6Np49afMA0Puf+IRhdfbo+dE7J5pgmJlAMwNeomYt42fn9qM5jNmh9TGb1dAoIveB9gKEaJluERvQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747926662; c=relaxed/simple;
-	bh=uJG6Jesy9D0JDKrfcqVhvbfKdi/yDrnCTcz3eC5EWHc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=h5VGIVKHxATKV2EpdJ/JmMVezaaish4r9H0noCGRL48GnuQTyNMEnsYtZirOtIphN8rqYUsO44Pw337MZ6hexMjcJob3+wB0I8IiJ7m1yMMPqs9pKQFsIsHYRDkLb9UOwovk5orN3pkft0odP4QZmQZF1Px+H8jbnU2Mf+UE61U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fT79k9IZ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747926669; c=relaxed/simple;
+	bh=uT56pjrvDODLrsQoFu8ndFFw9NrNmImgPMsOSNIgUjE=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=oLMzmh3tqGOoQieVqF9x2t1qoXZns2T2NmvhRrVXpbCMhj/rgA4W9S85XKm6TmJNm+SEX+hvI76YSOlTCXhXo+z01/il9yEJB7+addDli43E/zYtmRRewuOCHDs/hkMI4rmWD0ZHxjJjF/x4u7eYAyC6txx3EpLsmJ+aRrqU47k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com; spf=pass smtp.mailfrom=flygoat.com; dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b=B2GK1GUp; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=bGJiC52+; arc=none smtp.client-ip=202.12.124.154
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flygoat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fT79k9IZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4E38C4CEE4;
-	Thu, 22 May 2025 15:10:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747926661;
-	bh=uJG6Jesy9D0JDKrfcqVhvbfKdi/yDrnCTcz3eC5EWHc=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=fT79k9IZmS41Fg9K74ACV1wFXdLWWeQDKL2DpebkYumi+rwUuXcKZQrLx8Xw/p/xM
-	 Mo7gnV8T6vH7T1Esp4yK8nmlzmzSOWeTrsyX+hGJJ5ZjUsZ4LFTK9XmeOmM+qFsJbN
-	 e/EJBtVrcYQoJUACAsxAgLD/W8d2BxdMKH3d0YWtosQIoRqIRF5azt/dqmmhwGTZOx
-	 dE879aJmNOmPbVUMyGlCULowe2BMPa6+GIqjMdckcyezdybuxZLXVa27F9LvYJz2fA
-	 0w9xfsY/sVWTZwNNukHngEEIoJvZzT0MFZa6BsN1BF2uI++Qn1HxWMCYGpdXrx6Q0e
-	 eNFf9BM+TeMEQ==
-Message-ID: <ea79d8fd-8134-4d14-92f6-f656be20cd9f@kernel.org>
-Date: Thu, 22 May 2025 17:10:56 +0200
+	dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="B2GK1GUp";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="bGJiC52+"
+Received: from phl-compute-06.internal (phl-compute-06.phl.internal [10.202.2.46])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id D11AB2540182;
+	Thu, 22 May 2025 11:11:05 -0400 (EDT)
+Received: from phl-imap-12 ([10.202.2.86])
+  by phl-compute-06.internal (MEProxy); Thu, 22 May 2025 11:11:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1747926665;
+	 x=1748013065; bh=uT56pjrvDODLrsQoFu8ndFFw9NrNmImgPMsOSNIgUjE=; b=
+	B2GK1GUpl1NA51b5vZybgjb0RTZcOWylp/B5hN3M4O9JNmFfLw3pyh3N0qGDnMNF
+	CRxa7frGRcSV4ktbMyQLUTEEnHqV6bR2Dyba3Z4uAVlB/H7MbWl5CUlovQxCfPJu
+	so+UpCHnTTl2C6zorDQDs+ZPYkpGXR7onPO8pC3VmWsNdmTI0luryH81nqWY+DYg
+	tV6gYiYEZj74MqZx/127b3mpUA9YFmzvwSWksg5XGjaxQHx1yi6S3RY978g5M/2b
+	o4iUkXWf+5QaxXlJbTHUW7vzI0bDXJoLIzWg46pSMFCeKCei2nL2Q+v1nMegpVPu
+	PDoACfGyNgRSBXZvXmChJQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1747926665; x=
+	1748013065; bh=uT56pjrvDODLrsQoFu8ndFFw9NrNmImgPMsOSNIgUjE=; b=b
+	GJiC52+Ov2Cj0OsrEFthR4S9pWr+SAa+j9PUYes+EpPWiw7ehXzGaInKCnN1cBYN
+	Vr5GDJdBRnUosGCfbL0+/krsZS5TFwVNrqzc/OCfNd7DV5yDbsewLEbCT4zlExqN
+	wAnnmzvHpAar9OkQB3aU3FIGb2Z9FjLJMENJcoKTpyAVb1nVedI4Q17xW40FDAsf
+	gv2aSP5tGT5aYPnRPF4Wg0a+h22xI8p2mjEpUXX+DqlWaIoNpaLjJq+UfatuChS0
+	8wik7mZopgVNkHhA/IPeaYdj0UH2aXBxbxS2spX50MdgVGDlSyAYBWc0qedSEb9R
+	GVIHGXCVVRgnQDWNF1uoQ==
+X-ME-Sender: <xms:iD4vaLCaxgREniukd5ATkkW_UDwR57rAgHEElglqxMptk8_m46PDgQ>
+    <xme:iD4vaBgZwPnB2ZRx0pwyOPFHAdnI6sF1Xfn2tTcnSAo1IBnOQLO5kjPz1Wt0dzj0i
+    pxc0fwU7-AyIkXjcnA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgdeivdekucdltddurdegfedvrddttd
+    dmucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgf
+    nhhsuhgsshgtrhhisggvpdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttd
+    enucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgj
+    fhfutgfgsehtqhertdertdejnecuhfhrohhmpedflfhirgiguhhnucgjrghnghdfuceojh
+    hirgiguhhnrdihrghnghesfhhlhihgohgrthdrtghomheqnecuggftrfgrthhtvghrnhep
+    jeehfeduvddtgffgvdffkeethefhlefgvdevvdekuefffeekheehgeevhfevteejnecuve
+    hluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepjhhirgiguhhn
+    rdihrghnghesfhhlhihgohgrthdrtghomhdpnhgspghrtghpthhtohepkedpmhhouggvpe
+    hsmhhtphhouhhtpdhrtghpthhtohepthhssghoghgvnhgusegrlhhphhgrrdhfrhgrnhhk
+    vghnrdguvgdprhgtphhtthhopehgrhgvghhorhihrdgtlhgvmhgvnhhtsegsohhothhlih
+    hnrdgtohhmpdhrtghpthhtohepthhhvghordhlvggsrhhunhessghoohhtlhhinhdrtgho
+    mhdprhgtphhtthhopehthhhomhgrshdrphgvthgriiiiohhnihessghoohhtlhhinhdrtg
+    homhdprhgtphhtthhopehtrgiffhhikhdrsggrhihouhhksehmohgsihhlvgihvgdrtgho
+    mhdprhgtphhtthhopehvlhgrughimhhirhdrkhhonhgurhgrthhivghvsehmohgsihhlvg
+    ihvgdrtghomhdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghr
+    nhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhmihhpshesvhhgvghrrdhkvghrnh
+    gvlhdrohhrgh
+X-ME-Proxy: <xmx:iD4vaGmX1tYX0lxyVdxc39QVqV6oB-ykSztby7N0wP1xhqLojzBsaw>
+    <xmx:iD4vaNw5Fi2pciKbSs4d6LaDyiD-9ac11q3_25pWznvUQ114mRbUng>
+    <xmx:iD4vaAQPhoXk6QRYU-5SjSFgAOlfwj_BRNjt5AHsXapKEsNVtYRl6A>
+    <xmx:iD4vaAaZKByr_I3aEr0cAO-eAfH4wEZQkJwyuTrFZ_3p1vtlqb8jMA>
+    <xmx:iT4vaGbNj6f8ASmfLGRnt0cl30ZQaQEAh_uAN55DyVGp5Bux8lGSs7-g>
+Feedback-ID: ifd894703:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id B93A11060060; Thu, 22 May 2025 11:11:04 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] soc: mediatek: Add MT8196 VMM driver support
-To: "Nancy.Lin" <nancy.lin@mediatek.com>,
- Chun-Kuang Hu <chunkuang.hu@kernel.org>, Liam Girdwood
- <lgirdwood@gmail.com>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Matthias Brugger <matthias.bgg@gmail.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: Mark Brown <broonie@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
- Project_Global_Chrome_Upstream_Group@mediatek.com,
- jason-jh.lin@mediatek.com, singo.chang@mediatek.com,
- paul-pl.chen@mediatek.com
-References: <20250522150426.3418225-1-nancy.lin@mediatek.com>
- <20250522150426.3418225-3-nancy.lin@mediatek.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <20250522150426.3418225-3-nancy.lin@mediatek.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-ThreadId: Tfc8a567c59a896e5
+Date: Thu, 22 May 2025 16:10:35 +0100
+From: "Jiaxun Yang" <jiaxun.yang@flygoat.com>
+To: "Gregory CLEMENT" <gregory.clement@bootlin.com>,
+ "Thomas Bogendoerfer" <tsbogend@alpha.franken.de>
+Cc: "Vladimir Kondratiev" <vladimir.kondratiev@mobileye.com>,
+ =?UTF-8?Q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>,
+ "Tawfik Bayouk" <tawfik.bayouk@mobileye.com>,
+ "Thomas Petazzoni" <thomas.petazzoni@bootlin.com>,
+ "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+ linux-kernel@vger.kernel.org
+Message-Id: <bc3dd9ed-0fab-4f62-a55b-8ce33fea10f0@app.fastmail.com>
+In-Reply-To: <87iklsofih.fsf@BLaptop.bootlin.com>
+References: <20250520-smp_calib-v1-1-cd04f0a78648@bootlin.com>
+ <8c4ef90e-82db-4711-a5f3-446bcca00e9d@app.fastmail.com>
+ <87ecwipfr2.fsf@BLaptop.bootlin.com>
+ <105ed884-9ee8-429a-9937-d8f58a221faa@app.fastmail.com>
+ <87iklsofih.fsf@BLaptop.bootlin.com>
+Subject: Re: [PATCH] MIPS: CPS: Optimise delay CPU calibration for SMP
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On 22/05/2025 17:03, Nancy.Lin wrote:
-> From: Nancy Lin <nancy.lin@mediatek.com>
-> 
-> Add a driver for the MediaTek MT8196 VMM (Vcore for MultiMedia)
-> controller, which acts as the main power supplier for multimedia power
-> domains such as display, video encode, and video decode on MediaTek SoCs.
-> 
-> The VMM controller provides virtual regulators for multimedia IPs and
-> coordinates with the hardware common clock framework (hwccf) and the
-> Video Companioin Processor (VCP) to manage power domains. The driver
-> uses a hardware voter through HWCCF to notify the VCP to turn on or
-> off VMM-related bucks.
-> 
-> Signed-off-by: Nancy Lin <nancy.lin@mediatek.com>
-> ---
->  drivers/soc/mediatek/Kconfig       |  12 +
->  drivers/soc/mediatek/Makefile      |   1 +
->  drivers/soc/mediatek/mtk-vmm-drv.c | 471 +++++++++++++++++++++++++++++
->  3 files changed, 484 insertions(+)
->  create mode 100644 drivers/soc/mediatek/mtk-vmm-drv.c
-> 
-> diff --git a/drivers/soc/mediatek/Kconfig b/drivers/soc/mediatek/Kconfig
-> index d7293977f06e..4db4a0876083 100644
-> --- a/drivers/soc/mediatek/Kconfig
-> +++ b/drivers/soc/mediatek/Kconfig
-> @@ -69,6 +69,18 @@ config MTK_MMSYS
->  	  Say yes here to add support for the MediaTek Multimedia
->  	  Subsystem (MMSYS).
->  
-> +config MTK_VMM
-> +	tristate "MediaTek VMM driver"
-> +	help
-> +	  Say Y here to enable support for the MediaTek VMM (Vcore for
-> +	  MultiMedia) controller, which acts as the main power supplier
-> +	  for multimedia power domains such as display, video encode and
-> +	  decode on MediaTek SoCs. The VMM controller provides virtual
-> +	  regulators for multimedia IPs and coordinates with the hardware
-> +	  common clock framework (hwccf) and the Video Companion Processor
-> +	  (VCP) to manage power domains. The VMM driver uses hardware voter
-> +	  through hwccf to notify VCP to turn on/off VMM-related bucks.
-> +
->  config MTK_SVS
->  	tristate "MediaTek Smart Voltage Scaling(SVS)"
->  	depends on NVMEM_MTK_EFUSE && NVMEM
-> diff --git a/drivers/soc/mediatek/Makefile b/drivers/soc/mediatek/Makefile
-> index 0665573e3c4b..2b2071614ac4 100644
-> --- a/drivers/soc/mediatek/Makefile
-> +++ b/drivers/soc/mediatek/Makefile
-> @@ -6,6 +6,7 @@ obj-$(CONFIG_MTK_INFRACFG) += mtk-infracfg.o
->  obj-$(CONFIG_MTK_PMIC_WRAP) += mtk-pmic-wrap.o
->  obj-$(CONFIG_MTK_REGULATOR_COUPLER) += mtk-regulator-coupler.o
->  obj-$(CONFIG_MTK_MMSYS) += mtk-mmsys.o
-> +obj-$(CONFIG_MTK_VMM) += mtk-vmm-drv.o
->  obj-$(CONFIG_MTK_MMSYS) += mtk-mutex.o
->  obj-$(CONFIG_MTK_SVS) += mtk-svs.o
->  obj-$(CONFIG_MTK_SOCINFO) += mtk-socinfo.o
-> diff --git a/drivers/soc/mediatek/mtk-vmm-drv.c b/drivers/soc/mediatek/mtk-vmm-drv.c
-> new file mode 100644
-> index 000000000000..de4ceb7d59fa
-> --- /dev/null
-> +++ b/drivers/soc/mediatek/mtk-vmm-drv.c
-> @@ -0,0 +1,471 @@
-> +// SPDX-License-Identifier: (GPL-2.0 OR MIT)
-> +/*
-> + * Copyright (c) 2025 MediaTek Inc.
-> + * Author: Yunfei Dong <yunfei.dong@mediatek.com>
-> + */
-> +
-> +#include <linux/clk.h>
-> +#include <linux/delay.h>
-> +#include <linux/device.h>
-> +#include <linux/kthread.h>
-> +#include <linux/mfd/syscon.h>
-> +#include <linux/module.h>
-> +#include <linux/of_platform.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/pm_domain.h>
-> +#include <linux/pm_runtime.h>
-> +#include <linux/regmap.h>
-> +#include <linux/regulator/driver.h>
-> +#if IS_ENABLED(CONFIG_MTK_VCP_RPROC)
 
-And that's the proof you send some sort of downstream code.
 
-This does not exist.
+=E5=9C=A82025=E5=B9=B45=E6=9C=8822=E6=97=A5=E5=91=A8=E5=9B=9B =E4=B8=8B=E5=
+=8D=884:02=EF=BC=8CGregory CLEMENT=E5=86=99=E9=81=93=EF=BC=9A
+[...]
+>
+> I didn't notice this function initially, but upon closer inspection, it
+> appears that although the scan process is optimized, it still performs=
+ a
+> full scan for each CPU during boot. In contrast, with the mask, the
+> information is created only once and within an existing loop.
+>
+> I believe this function would benefit from __cpu_primary_cluster_mask,
+> which is why I prefer my current implementation over using
+> mips_cps_first_online_in_cluster().
 
-> +#include <linux/remoteproc.h>
-> +#include <linux/remoteproc/mtk_vcp_public.h>
-> +#endif
-> +
-> +#define mtk_vmm_dbg(dev, fmt, args...) \
-> +	dev_dbg(dev, "[vmm] %s(%d): " fmt "\n", __func__, __LINE__, ##args)
+Thanks for clarification!
 
-No, you do not get your own debug code.
+My concern is __cpu_primary_cluster_mask is pretty limited and the conce=
+pt
+of "primary cpu" is kind of fragile.
 
-NAK.
+To optimize mips_cps_first_online_in_cluster I think the best way forward
+would be produce cpumask for each cluster and perform cpumask_or with on=
+line
+cpu mask at runtime. cluster_cpumask can be reused by other logic later.
 
-This is nowhere close to upstream code. Don't send us downstream
-patterns please.
+Anyway, it's just my two cents.
 
-Best regards,
-Krzysztof
+Thanks
+--=20
+- Jiaxun
