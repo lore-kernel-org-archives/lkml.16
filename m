@@ -1,76 +1,98 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.prodrive-technologies.com (mail.prodrive-technologies.com [212.61.153.67])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D30497083A;
-	Thu, 22 May 2025 19:29:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7059B28935B;
+	Thu, 22 May 2025 19:29:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.61.153.67
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747942157; cv=none; b=SVyxRHj4FRDF+VUd7xdUsHpaQ40DGw2uzE20I/nRr/NxiSrSfGvownkNSMhIZWLpIMa9d745OHI+Ds2x6B8IvdmL2OUudl2XKsRusCRCy34Bf9Cx7Ix+lcAt8lcTFQj0N3F3VrB6Km/R3GUf0GqcwcvqnbUgoYRIidq3aIXFRYs=
+	t=1747942175; cv=none; b=CdHgehT1ev2fDWZDkct6prw8i2gahrayh/VOYCiXRQSa5GJzcZ2CsVS9Jp2HgFfCxZ49G+GuWNl6bD1Lj+TvI4KZJ84VxZ/gSPg8bZloxzr5fpdsK6RQ5IsexFtI3zuM+6/Hf8JHPpbjRjODRh+o3a4jlRiaFDqYM1tcprDYPgw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747942157; c=relaxed/simple;
-	bh=VTQ1sOp3emeRBHQnf/LKwayGmF56J10umRqQ1zOkHuo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=D0PaBBF4yMzITDHIqIgt2Pafw5vXO0CjDkLIBv3TFFkCNkFeQaSeHJK927qW4y21kRXqalWGNmcH+aQX0ltI/oCiD1aA/QPaIGiDa3TgSPSM8/2NbPs3ppj+mt55pBgTljjgJGzyk4jOZIDeHj3RJNcwmGRLkGYLwYgUu+aWB8k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UF0ifT+y; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UF0ifT+y"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3855FC4CEF4;
-	Thu, 22 May 2025 19:29:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747942157;
-	bh=VTQ1sOp3emeRBHQnf/LKwayGmF56J10umRqQ1zOkHuo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=UF0ifT+yPGipUqRwatAPxXxUS1qjhektWWKkqXlvbMCdwDGPhEFenTgcA2AkMLKH2
-	 0WClS46Pfb9QbGX9AM3JQlQ1OPS3Ixedi1cairenbBP6+fUYhVvDao6kdSTrXZVOgw
-	 qRVmvfRLAn5IXoKIpOZXy26tVxwo066iCYFx5o70OFAOPQ4ZAz8YmJ6usEJ1TAU+4U
-	 Gn4RE1ksvLCLLmpV8tq0ROhkX64Z5duoL5kQgsOBa24+VTeEOtIjLxim6Szdlo/opG
-	 GKYw+IlQK5UPFBFL4F4uHtvBw79wIzHtpbZkft99XCiw/Vzqs30Op07BFVSQ9fcItV
-	 iFn2QrjURlaJQ==
-Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-4766631a6a4so86142781cf.2;
-        Thu, 22 May 2025 12:29:17 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUN/f4TSw+I3larpyyj+s6aAVpLdk0ourAUQj0W7DMq5Kgkn16R02vHsMqqdVdQ+VBiBv46c1Y4nzlcp0M=@vger.kernel.org, AJvYcCUXtYEjcc1Q0TG2DzBDczzPz9/jpwhfuMQy8hN69+wAKCZD7mzmSS/M4CTDTQHqxslJ7Xy1rqUeMlGdqYlGpQ==@vger.kernel.org
-X-Gm-Message-State: AOJu0YwQ6HMXOCxmydbcFdRm4gM2oxkuCrdyHSKfTgIcnJRYjVdzNRk0
-	1csWvTQJR/OPEGLMv0hrmb3jxwd9G9sCHRZY6J0BwgYYtMPC/yNIVoT/2//L9NNODO3S+4hsZp6
-	RqAUKaHApac31Gsxnd4mMlDy0nRxEAgc=
-X-Google-Smtp-Source: AGHT+IHxoucucHwQiQ5k+QlgHbE2CP5qSpkJS6DGAZHp8GwQn8AznRtvdzBRm9o3lXbC6hZ3zyegkI2oQ1ANI3VBptk=
-X-Received: by 2002:ac8:714f:0:b0:494:b8bc:8adb with SMTP id
- d75a77b69052e-494b8bcca9emr317745361cf.5.1747942156330; Thu, 22 May 2025
- 12:29:16 -0700 (PDT)
+	s=arc-20240116; t=1747942175; c=relaxed/simple;
+	bh=C1siEeHd/5KKzCsa/rDYOwK9FIq5Jb7UZp1q+zF9z6Y=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=OTmT1lQ3hxYxMwYMsTNNMv4PmNHVD+KTvh0vQ5hslUuW7llpqmxfdpikisSLKVyhWhzP+rqA8hMAsdXUEzfSu7TSmGdVbbKoevQcF2Is/iI1B5QSUcItLaJB7PrfizkoVHrB0OKsCryh8RuuuemnxjJxruQ+UdL/ZxtpTtqBr10=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=prodrive-technologies.com; spf=pass smtp.mailfrom=prodrive-technologies.com; arc=none smtp.client-ip=212.61.153.67
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=prodrive-technologies.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=prodrive-technologies.com
+Received: from EXCOP01.bk.prodrive.nl (10.1.0.22) by EXCOP01.bk.prodrive.nl
+ (10.1.0.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Thu, 22 May
+ 2025 21:24:22 +0200
+Received: from lnxdevrm02.prodrive.nl (10.1.1.121) by EXCOP01.bk.prodrive.nl
+ (10.1.0.22) with Microsoft SMTP Server id 15.2.1544.4 via Frontend Transport;
+ Thu, 22 May 2025 21:24:22 +0200
+From: Martijn de Gouw <martijn.de.gouw@prodrive-technologies.com>
+To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, "Rob
+ Herring" <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, "Conor
+ Dooley" <conor+dt@kernel.org>, Robin Gong <yibin.gong@nxp.com>
+CC: Martijn de Gouw <martijn.de.gouw@prodrive-technologies.com>,
+	<linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
+Subject: [PATCH 1/3] dt-bindings: regulator: add pca9450: Add regulator-allowed-modes
+Date: Thu, 22 May 2025 21:23:22 +0200
+Message-ID: <20250522192325.1099680-1-martijn.de.gouw@prodrive-technologies.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250522184249.3137187-1-dylanbhatch@google.com> <20250522184249.3137187-2-dylanbhatch@google.com>
-In-Reply-To: <20250522184249.3137187-2-dylanbhatch@google.com>
-From: Song Liu <song@kernel.org>
-Date: Thu, 22 May 2025 12:29:04 -0700
-X-Gmail-Original-Message-ID: <CAPhsuW6=kz5v2fBC2fwGXSG3orRPuDf4qdh1ZsLBfQNn6Zpi6A@mail.gmail.com>
-X-Gm-Features: AX0GCFsoCb4olxuchinpzxOR6O-IyGNTRm4ViSFvjwWy9gpvmYeUfBQw7wSB5O8
-Message-ID: <CAPhsuW6=kz5v2fBC2fwGXSG3orRPuDf4qdh1ZsLBfQNn6Zpi6A@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] livepatch, x86/module: Generalize late module
- relocation locking.
-To: Dylan Hatch <dylanbhatch@google.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, Josh Poimboeuf <jpoimboe@kernel.org>, Jiri Kosina <jikos@kernel.org>, 
-	Miroslav Benes <mbenes@suse.cz>, Petr Mladek <pmladek@suse.com>, 
-	Joe Lawrence <joe.lawrence@redhat.com>, Ard Biesheuvel <ardb@kernel.org>, 
-	Sami Tolvanen <samitolvanen@google.com>, Peter Zijlstra <peterz@infradead.org>, 
-	"Mike Rapoport (Microsoft)" <rppt@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	Dan Carpenter <dan.carpenter@linaro.org>, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, live-patching@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-On Thu, May 22, 2025 at 11:43=E2=80=AFAM Dylan Hatch <dylanbhatch@google.co=
-m> wrote:
->
-> Late module relocations are an issue on any arch that supports
-> livepatch, so move the text_mutex locking to the livepatch core code.
->
-> Signed-off-by: Dylan Hatch <dylanbhatch@google.com>
+The PCA9450 has support for forced PWM mode on the buck controllers.
+Add support to control this mode.
 
-Acked-by: Song Liu <song@kernel.org>
+Signed-off-by: Martijn de Gouw <martijn.de.gouw@prodrive-technologies.com>
+---
+ .../bindings/regulator/nxp,pca9450-regulator.yaml  | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/regulator/nxp,pca9450-regulator.yaml b/Documentation/devicetree/bindings/regulator/nxp,pca9450-regulator.yaml
+index 4ffe5c3faea07..c7327474c64ba 100644
+--- a/Documentation/devicetree/bindings/regulator/nxp,pca9450-regulator.yaml
++++ b/Documentation/devicetree/bindings/regulator/nxp,pca9450-regulator.yaml
+@@ -100,6 +100,15 @@ properties:
+               PMIC default "STANDBY" state voltage in uV. Only Buck1~3 have such
+               dvs(dynamic voltage scaling) property.
+ 
++          regulator-allowed-modes:
++            description: |
++              Buck regulator operating modes allowed. Valid values below.
++              Users should use the macros from dt-bindings/regulator/nxp,pca9450-regulator.h
++                0 (PCA9450_BUCK_MODE_AUTO): Auto PFM/PWM mode
++                1 (PCA9450_BUCK_MODE_FORCE_PWM): Forced PWM mode
++            items:
++              enum: [ 0, 1 ]
++
+         unevaluatedProperties: false
+ 
+     additionalProperties: false
+@@ -143,6 +152,7 @@ allOf:
+ examples:
+   - |
+     #include <dt-bindings/interrupt-controller/irq.h>
++    #include <dt-bindings/regulator/nxp,pca9450-regulator.h>
+ 
+     i2c {
+         #address-cells = <1>;
+@@ -179,6 +189,8 @@ examples:
+                     regulator-max-microvolt = <3400000>;
+                     regulator-boot-on;
+                     regulator-always-on;
++                    regulator-inital-mode = <PCA9450_BUCK_MODE_FORCE_PWM>;
++                    regulator-allowed-modes = <PCA9450_BUCK_MODE_FORCE_PWM>;
+                 };
+                 buck5: BUCK5 {
+                     regulator-name = "BUCK5";
+@@ -186,6 +198,8 @@ examples:
+                     regulator-max-microvolt = <3400000>;
+                     regulator-boot-on;
+                     regulator-always-on;
++                    regulator-allowed-modes = <PCA9450_BUCK_MODE_AUTO
++                                               PCA9450_BUCK_MODE_FORCE_PWM>;
+                 };
+                 buck6: BUCK6 {
+                     regulator-name = "BUCK6";
+-- 
+2.39.2
+
