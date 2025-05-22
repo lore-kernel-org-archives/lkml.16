@@ -1,214 +1,364 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F130D231859;
-	Thu, 22 May 2025 11:17:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D59AA221FD0;
+	Thu, 22 May 2025 11:18:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747912652; cv=none; b=kMi61bmuy4e9Jwm81ZFdlnbvnjK48SW+Qq6KIiY/pmhXzqpvqMcDCwT0X20VHDdQgpnX7SDAb9zFAnmgLVTOiYgwuJ4lVcmPjFppVMvi2NsIMSvZBTbsI9gq5rjRWKjwg1BcXg+rXYAKeuzvJhCMBxB+EHOG9GuaMhZ0TwVtrGE=
+	t=1747912738; cv=none; b=l4JuTB9MeXXrRtT84alyYAsfo3Gxg2U7E2aGjnX0oRYaXPEY+8VzfFntByAsQ53iBmplt/MqvCRNR6HTY2pBeVznId3Dxsx/0AGN3N0aHo1I4k1EXsOwWMoGhHik63xl40zV8XPp8pBT9y+SGga3TmDl8iSHznkQfwKIQBPt8vs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747912652; c=relaxed/simple;
-	bh=cJHVVEwCyg2HFGmy3+awErBpn5aR10k/YzTfGYQ+0a0=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=sWcoZVu0NbvujKriMMVHA6F8qxl9E43VzlUSTZ1ZZj44zEWwL9IL06+TyB756a8NNzKzcWI2VUGq6fQpxZ0xRnLg2OwTRqAGFtl3RRil8OJhUE8JKSOZ14NOvoQ98GmxyRAU1l+LjHbDFeElIJsiYmRiIIXWXQTdY6Ukzuu6wMI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4b35Jv3sz3z6L5Fm;
-	Thu, 22 May 2025 19:14:07 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id DE1141402EE;
-	Thu, 22 May 2025 19:17:21 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 22 May
- 2025 13:17:20 +0200
-Date: Thu, 22 May 2025 12:17:18 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-CC: <linux-pci@vger.kernel.org>, Jon Pan-Doh <pandoh@google.com>, "Karolina
- Stolarek" <karolina.stolarek@oracle.com>, Weinan Liu <wnliu@google.com>,
-	Martin Petersen <martin.petersen@oracle.com>, Ben Fuller
-	<ben.fuller@oracle.com>, Drew Walton <drewwalton@microsoft.com>, "Anil
- Agrawal" <anilagrawal@meta.com>, Tony Luck <tony.luck@intel.com>, Ilpo
- =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>, Sathyanarayanan
- Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>, Lukas Wunner
-	<lukas@wunner.de>, Sargun Dhillon <sargun@meta.com>, "Paul E . McKenney"
-	<paulmck@kernel.org>, Mahesh J Salgaonkar <mahesh@linux.ibm.com>, Oliver
- O'Halloran <oohall@gmail.com>, Kai-Heng Feng <kaihengf@nvidia.com>, Keith
- Busch <kbusch@kernel.org>, Robert Richter <rrichter@amd.com>, "Terry Bowman"
-	<terry.bowman@amd.com>, Shiju Jose <shiju.jose@huawei.com>, "Dave Jiang"
-	<dave.jiang@intel.com>, <linux-kernel@vger.kernel.org>,
-	<linuxppc-dev@lists.ozlabs.org>, Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v7 15/17] PCI/AER: Ratelimit correctable and non-fatal
- error logging
-Message-ID: <20250522121718.00005fa2@huawei.com>
-In-Reply-To: <20250521225430.GA1442014@bhelgaas>
-References: <20250521113121.000067ce@huawei.com>
-	<20250521225430.GA1442014@bhelgaas>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1747912738; c=relaxed/simple;
+	bh=KBLID+jtNRLgFwvcTMsh7IYTvwowb0BSNTX0NPN0se4=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=UuQubBPn43SNyf58ZEhkO72ZVsfKAC0yAl8dZDb4ai0qpiID2AmQHBErkfzwUgCgBSSHmjmb5AEw/P+Y9D4DwjUIJHSgWqEb8rc7WoXNbz+z7oCitrPsp8Ux7Z2Tqukv6vGz5EcepLIlbP7RRaGjeX/dMg/B2eMjXfukzQD2OV0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NZmFlUIc; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NZmFlUIc"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 55286C4CEEF;
+	Thu, 22 May 2025 11:18:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747912737;
+	bh=KBLID+jtNRLgFwvcTMsh7IYTvwowb0BSNTX0NPN0se4=;
+	h=From:Date:Subject:To:Cc:Reply-To:From;
+	b=NZmFlUIcetKOngKSccrTrzVyFvJaW2nzjMpzhSqs39zykds5wAUn+ThQNtsC0QE46
+	 uQV5bMQxF9lt6lCyVSBjxAnqKksoqobSqRymbr+YsHvgiVB86oV72/lXN9vJxC5Fr/
+	 ct3JkquEqyCnwWo67/RnZrAKZ2I8Tzu5O1PUb9aXKKq2gvYnjIou/9NfvwcAQPvPlN
+	 TTSAaVLjSCyU4HIR5m24pa7GabOjCusi8bipOAc1CO3XCiB+23FQhQ05csgV63tf0A
+	 cyhAgIpL2Sj4b+JUtyjXMKkwazAomdKAUm0BOlPRdeoUmZOUdmp/ZxBCESo42GL1DA
+	 WxEr9YX620uqA==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42701C54E90;
+	Thu, 22 May 2025 11:18:57 +0000 (UTC)
+From: Maud Spierings via B4 Relay <devnull+maudspierings.gocontroll.com@kernel.org>
+Date: Thu, 22 May 2025 13:18:55 +0200
+Subject: [PATCH v2] iio: common: st_sensors: Fix use of uninitialize device
+ structs
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100004.china.huawei.com (7.191.162.219) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Message-Id: <20250522-st_iio_fix-v2-1-07a32655a996@gocontroll.com>
+X-B4-Tracking: v=1; b=H4sIAB4IL2gC/22MywrCMBAAf6Xs2UiyNqV68j+kFM2jXahZSUJQS
+ v/d2LPHGZhZIblILsGlWSG6Qok4VMBDA2a+h8kJspUBJWqpEUXKIxGPnt5CGd17a1vbooQavKK
+ rep/dhsozpczxs7+L+tm/m6KEErbrz4+T9qpTeJ3YcMiRl+Vo+AnDtm1fcJxpz6kAAAA=
+X-Change-ID: 20250522-st_iio_fix-1c58fdd4d420
+To: Jonathan Cameron <jic23@kernel.org>, 
+ David Lechner <dlechner@baylibre.com>, 
+ =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>, 
+ Andy Shevchenko <andy@kernel.org>, Christian Heusel <christian@heusel.eu>, 
+ Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ stable@vger.kernel.org, Maud Spierings <maudspierings@gocontroll.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1747912736; l=10903;
+ i=maudspierings@gocontroll.com; s=20250214; h=from:subject:message-id;
+ bh=APnMHoj+TfkHT0STPSKBZxD7+b2G+KxvTYujirrX1D0=;
+ b=66+hio8ym81pr1ZrXMT7/QSZWK+a+fHt4270M/hM2K7dhFAFxO7zXBany3dx9tWhYPx3WMjaU
+ yUdY4EtMrlzAXOOFsQ+PGT83VAGFh8vUf/VfuvSLXyoyO13ihr0mfS2
+X-Developer-Key: i=maudspierings@gocontroll.com; a=ed25519;
+ pk=7chUb8XpaTQDvWhzTdHC0YPMkTDloELEC7q94tOUyPg=
+X-Endpoint-Received: by B4 Relay for maudspierings@gocontroll.com/20250214
+ with auth_id=341
+X-Original-From: Maud Spierings <maudspierings@gocontroll.com>
+Reply-To: maudspierings@gocontroll.com
 
-On Wed, 21 May 2025 17:54:30 -0500
-Bjorn Helgaas <helgaas@kernel.org> wrote:
+From: Maud Spierings <maudspierings@gocontroll.com>
 
-> On Wed, May 21, 2025 at 11:31:21AM +0100, Jonathan Cameron wrote:
-> > On Tue, 20 May 2025 16:50:32 -0500
-> > Bjorn Helgaas <helgaas@kernel.org> wrote:
-> >   
-> > > From: Jon Pan-Doh <pandoh@google.com>
-> > > 
-> > > Spammy devices can flood kernel logs with AER errors and slow/stall
-> > > execution. Add per-device ratelimits for AER correctable and non-fatal
-> > > uncorrectable errors that use the kernel defaults (10 per 5s).  Logging of
-> > > fatal errors is not ratelimited.  
-> > 
-> > See below. I'm not sure that logging of fatal error should affect the rate
-> > for non fatal errors + the rate limit infrastructure kind of assumes
-> > that you only call it if you are planning to respect it's decision.
-> > 
-> > Given overall aim is to restrict rates, maybe we don't care if we sometimes
-> > throttle earlier that we might expect with a simpler separation of what
-> > is being limited.
-> > 
-> > I don't mind strongly either way.  
-> 
-> > > @@ -593,7 +593,8 @@ struct aer_err_info {
-> > >  	unsigned int id:16;
-> > >  
-> > >  	unsigned int severity:2;	/* 0:NONFATAL | 1:FATAL | 2:COR */
-> > > -	unsigned int __pad1:5;
-> > > +	unsigned int ratelimit:1;	/* 0=skip, 1=print */  
-> > 
-> > That naming is less than intuitive.  Maybe expand it to ratelimit_print or
-> > something like that.  
-> 
-> True, although it does match uses like "if (aer_ratelimit(...))"
-> 
-> I'll try ratelimit_print and see how you like it :)
-> 
-> > > +	unsigned int __pad1:4;
-> > >  	unsigned int multi_error_valid:1;
-> > >  
-> > >  	unsigned int first_error:5;
-> > > diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> > > index 4f1bff0f000f..f9e684ac7878 100644
-> > > --- a/drivers/pci/pcie/aer.c
-> > > +++ b/drivers/pci/pcie/aer.c  
-> >   
-> > > @@ -815,8 +843,19 @@ EXPORT_SYMBOL_NS_GPL(pci_print_aer, "CXL");
-> > >   */
-> > >  static int add_error_device(struct aer_err_info *e_info, struct pci_dev *dev)
-> > >  {
-> > > +	/*
-> > > +	 * Ratelimit AER log messages.  "dev" is either the source
-> > > +	 * identified by the root's Error Source ID or it has an unmasked
-> > > +	 * error logged in its own AER Capability.  If any of these devices
-> > > +	 * has not reached its ratelimit, log messages for all of them.
-> > > +	 * Messages are emitted when "e_info->ratelimit" is non-zero.
-> > > +	 *
-> > > +	 * Note that "e_info->ratelimit" was already initialized to 1 for the
-> > > +	 * ERR_FATAL case.
-> > > +	 */
-> > >  	if (e_info->error_dev_num < AER_MAX_MULTI_ERR_DEVICES) {
-> > >  		e_info->dev[e_info->error_dev_num] = pci_dev_get(dev);
-> > > +		e_info->ratelimit |= aer_ratelimit(dev, e_info->severity);  
-> > 
-> > So this is a little odd.  I think it works but there is code inside
-> > __ratelimit that I think we should not be calling for that
-> > ERROR_FATAL case (whether we should call lots of times for each
-> > device isn't obvious either but maybe that is more valid).
-> > 
-> > In the event of it already being 1 due to ERROR_FATAL you will
-> > falsely trigger a potential print from inside __ratelimit() if we
-> > were rate limited and no longer are but only skipped FATAL prints.
-> > My concern is that function is kind of assuming it's only called in
-> > cases where a rate limit decision is being made and the
-> > implementation may change in future).  
-> 
-> Hmmm.  That's pretty subtle, thanks for catching this.
-> 
-> In the light of day, ".ratelimit = fatal ? 1 : 0" looks a bit sketchy.
-> If we want to avoid ratelimiting AER_FATAL, maybe aer_ratelimit()
-> should just return 1 ("print") unconditionally in that case, without
-> calling __ratelimit():
-> 
->   static int aer_ratelimit(struct pci_dev *dev, unsigned int severity)
->   {
->     struct ratelimit_state *ratelimit;
-> 
->     if (severity == AER_FATAL)
->       return 1;       /* AER_FATAL not ratelimited */
-> 
->     if (severity == AER_CORRECTABLE)
->       ratelimit = &dev->aer_info->cor_log_ratelimit;
->     else
->       ratelimit = &dev->aer_info->uncor_log_ratelimit;
-> 
->     return __ratelimit(ratelimit);
->   }
+Throughout the various probe functions &indio_dev->dev is used before it
+is initialized. This caused a kernel panic in st_sensors_power_enable
+when the call to devm_regulator_bulk_get_enable() fails and then calls
+dev_err_probe() with the uninitialized device.
 
-Neat solution so go with that.
+This seems to only cause a panic with dev_err_probe(), dev_err,
+dev_warn and dev_info don't seem to cause a panic, but are fixed
+as well.
 
-> 
-> That still leaves this question of how to deal with info->dev[] when
-> there's more than one entry, which is kind of an annoying case that
-> only happens for the native AER path.
-> 
-> I think it's because for a single AER interrupt from an RP/RCEC, we
-> collect the root info in one struct aer_err_info and scrape all the
-> downstream devices for anything interesting.  We visit each downstream
-> device and is_error_source() reads its status register, but we only
-> keep the pci_dev pointer, so aer_get_device_error_info() has to read
-> the status registers *again*.  This all seems kind of obtuse.
-> 
-> The point of the OR above in add_error_device() was to try to match up
-> RP/RCEC logging with downstream device logging so they're ratelimited
-> the same.  If we ratelimit the Error Source ID based on the RP/RCEC
-> and the details based on the downstream devices individually, they'll
-> get out of sync, so sometimes we'll print an Error Source ID and elide
-> the details and vice versa.
-> 
-> I wanted to make it so that if we log downstream details, we also log
-> the Error Source ID.  But maybe we should ratelimit downstream devices
-> individually (instead of doing this weird union) and make the RP/RCEC
-> part more explicit, e.g.,
-> 
->   add_error_device(...)
->   {
->     int i = e_info->error_dev_num;
-> 
->     e_info->dev[i] = pci_dev_get(dev);
->     e_info->error_dev_num++;
-> 
->     if (aer_ratelimit(dev, e_info->severity)) {
->       e_info->root_ratelimit_print = 1;
->       e_info->ratelimit_print[i] = 1;
->     }
->   }
+Signed-off-by: Maud Spierings <maudspierings@gocontroll.com>
+---
+When I search for general &indio_dev->dev usage, I see quite a lot more
+hits, but I am not sure if there are issues with those too.
 
-As it's a weird corner case, I don't really mind how you handle it.
-I'm not sure I grasp this last suggestion fully but can look at the full
-code if you do go with something like that.
+This issue has existed for a long time it seems and therefore it is
+nearly impossible to find a proper fixes tag. I would love to see it at
+least backported to 6.12 as that is where I encountered it, and I
+believe the patch should apply without conflicts.
 
-Jonathan
+The investigation into this issue can be found in this thread [1]
 
-> 
-> > https://elixir.bootlin.com/linux/v6.14.7/source/lib/ratelimit.c#L56
-> > 
-> > Maybe, 
-> > 		if (!info->ratelimit)
-> > 			e_info->ratelimit = aer_ratelimit(dev, e_info->severity);
-> > is an alternative option.
-> > That allows a multiplication factor on the rate as all device count for 1.  
+[1]: https://lore.kernel.org/all/AM7P189MB100986A83D2F28AF3FFAF976E39EA@AM7P189MB1009.EURP189.PROD.OUTLOOK.COM/
+---
+Changes in v2:
+- Added SoB in commit message
+- Link to v1: https://lore.kernel.org/r/20250522-st_iio_fix-v1-1-d689b35f1612@gocontroll.com
+---
+ drivers/iio/accel/st_accel_core.c                  | 10 +++----
+ drivers/iio/common/st_sensors/st_sensors_core.c    | 35 +++++++++++-----------
+ drivers/iio/common/st_sensors/st_sensors_trigger.c | 18 +++++------
+ 3 files changed, 31 insertions(+), 32 deletions(-)
+
+diff --git a/drivers/iio/accel/st_accel_core.c b/drivers/iio/accel/st_accel_core.c
+index 99cb661fabb2d9cc1943fa8d0a6f3becb71126e6..a7961c610ed203d039bbf298c8883031a578fb0b 100644
+--- a/drivers/iio/accel/st_accel_core.c
++++ b/drivers/iio/accel/st_accel_core.c
+@@ -1353,6 +1353,7 @@ static int apply_acpi_orientation(struct iio_dev *indio_dev)
+ 	union acpi_object *ont;
+ 	union acpi_object *elements;
+ 	acpi_status status;
++	struct device *parent = indio_dev->dev.parent;
+ 	int ret = -EINVAL;
+ 	unsigned int val;
+ 	int i, j;
+@@ -1371,7 +1372,7 @@ static int apply_acpi_orientation(struct iio_dev *indio_dev)
+ 	};
+ 
+ 
+-	adev = ACPI_COMPANION(indio_dev->dev.parent);
++	adev = ACPI_COMPANION(parent);
+ 	if (!adev)
+ 		return -ENXIO;
+ 
+@@ -1380,8 +1381,7 @@ static int apply_acpi_orientation(struct iio_dev *indio_dev)
+ 	if (status == AE_NOT_FOUND) {
+ 		return -ENXIO;
+ 	} else if (ACPI_FAILURE(status)) {
+-		dev_warn(&indio_dev->dev, "failed to execute _ONT: %d\n",
+-			 status);
++		dev_warn(parent, "failed to execute _ONT: %d\n", status);
+ 		return status;
+ 	}
+ 
+@@ -1457,12 +1457,12 @@ static int apply_acpi_orientation(struct iio_dev *indio_dev)
+ 	}
+ 
+ 	ret = 0;
+-	dev_info(&indio_dev->dev, "computed mount matrix from ACPI\n");
++	dev_info(parent, "computed mount matrix from ACPI\n");
+ 
+ out:
+ 	kfree(buffer.pointer);
+ 	if (ret)
+-		dev_dbg(&indio_dev->dev,
++		dev_dbg(parent,
+ 			"failed to apply ACPI orientation data: %d\n", ret);
+ 
+ 	return ret;
+diff --git a/drivers/iio/common/st_sensors/st_sensors_core.c b/drivers/iio/common/st_sensors/st_sensors_core.c
+index 8ce1dccfea4f5aaff45d3d40f6542323dd1f0b09..11cbf561b16d41f429745abb516c137cfbb302bb 100644
+--- a/drivers/iio/common/st_sensors/st_sensors_core.c
++++ b/drivers/iio/common/st_sensors/st_sensors_core.c
+@@ -154,7 +154,7 @@ static int st_sensors_set_fullscale(struct iio_dev *indio_dev, unsigned int fs)
+ 	return err;
+ 
+ st_accel_set_fullscale_error:
+-	dev_err(&indio_dev->dev, "failed to set new fullscale.\n");
++	dev_err(indio_dev->dev.parent, "failed to set new fullscale.\n");
+ 	return err;
+ }
+ 
+@@ -231,7 +231,7 @@ int st_sensors_power_enable(struct iio_dev *indio_dev)
+ 					     ARRAY_SIZE(regulator_names),
+ 					     regulator_names);
+ 	if (err)
+-		return dev_err_probe(&indio_dev->dev, err,
++		return dev_err_probe(parent, err,
+ 				     "unable to enable supplies\n");
+ 
+ 	return 0;
+@@ -241,13 +241,14 @@ EXPORT_SYMBOL_NS(st_sensors_power_enable, "IIO_ST_SENSORS");
+ static int st_sensors_set_drdy_int_pin(struct iio_dev *indio_dev,
+ 					struct st_sensors_platform_data *pdata)
+ {
++	struct device *parent = indio_dev->dev.parent;
+ 	struct st_sensor_data *sdata = iio_priv(indio_dev);
+ 
+ 	/* Sensor does not support interrupts */
+ 	if (!sdata->sensor_settings->drdy_irq.int1.addr &&
+ 	    !sdata->sensor_settings->drdy_irq.int2.addr) {
+ 		if (pdata->drdy_int_pin)
+-			dev_info(&indio_dev->dev,
++			dev_info(parent,
+ 				 "DRDY on pin INT%d specified, but sensor does not support interrupts\n",
+ 				 pdata->drdy_int_pin);
+ 		return 0;
+@@ -256,29 +257,27 @@ static int st_sensors_set_drdy_int_pin(struct iio_dev *indio_dev,
+ 	switch (pdata->drdy_int_pin) {
+ 	case 1:
+ 		if (!sdata->sensor_settings->drdy_irq.int1.mask) {
+-			dev_err(&indio_dev->dev,
+-					"DRDY on INT1 not available.\n");
++			dev_err(parent, "DRDY on INT1 not available.\n");
+ 			return -EINVAL;
+ 		}
+ 		sdata->drdy_int_pin = 1;
+ 		break;
+ 	case 2:
+ 		if (!sdata->sensor_settings->drdy_irq.int2.mask) {
+-			dev_err(&indio_dev->dev,
+-					"DRDY on INT2 not available.\n");
++			dev_err(parent, "DRDY on INT2 not available.\n");
+ 			return -EINVAL;
+ 		}
+ 		sdata->drdy_int_pin = 2;
+ 		break;
+ 	default:
+-		dev_err(&indio_dev->dev, "DRDY on pdata not valid.\n");
++		dev_err(parent, "DRDY on pdata not valid.\n");
+ 		return -EINVAL;
+ 	}
+ 
+ 	if (pdata->open_drain) {
+ 		if (!sdata->sensor_settings->drdy_irq.int1.addr_od &&
+ 		    !sdata->sensor_settings->drdy_irq.int2.addr_od)
+-			dev_err(&indio_dev->dev,
++			dev_err(parent,
+ 				"open drain requested but unsupported.\n");
+ 		else
+ 			sdata->int_pin_open_drain = true;
+@@ -336,6 +335,7 @@ EXPORT_SYMBOL_NS(st_sensors_dev_name_probe, "IIO_ST_SENSORS");
+ int st_sensors_init_sensor(struct iio_dev *indio_dev,
+ 					struct st_sensors_platform_data *pdata)
+ {
++	struct device *parent = indio_dev->dev.parent;
+ 	struct st_sensor_data *sdata = iio_priv(indio_dev);
+ 	struct st_sensors_platform_data *of_pdata;
+ 	int err = 0;
+@@ -343,7 +343,7 @@ int st_sensors_init_sensor(struct iio_dev *indio_dev,
+ 	mutex_init(&sdata->odr_lock);
+ 
+ 	/* If OF/DT pdata exists, it will take precedence of anything else */
+-	of_pdata = st_sensors_dev_probe(indio_dev->dev.parent, pdata);
++	of_pdata = st_sensors_dev_probe(parent, pdata);
+ 	if (IS_ERR(of_pdata))
+ 		return PTR_ERR(of_pdata);
+ 	if (of_pdata)
+@@ -370,7 +370,7 @@ int st_sensors_init_sensor(struct iio_dev *indio_dev,
+ 		if (err < 0)
+ 			return err;
+ 	} else
+-		dev_info(&indio_dev->dev, "Full-scale not possible\n");
++		dev_info(parent, "Full-scale not possible\n");
+ 
+ 	err = st_sensors_set_odr(indio_dev, sdata->odr);
+ 	if (err < 0)
+@@ -405,7 +405,7 @@ int st_sensors_init_sensor(struct iio_dev *indio_dev,
+ 			mask = sdata->sensor_settings->drdy_irq.int2.mask_od;
+ 		}
+ 
+-		dev_info(&indio_dev->dev,
++		dev_info(parent,
+ 			 "set interrupt line to open drain mode on pin %d\n",
+ 			 sdata->drdy_int_pin);
+ 		err = st_sensors_write_data_with_mask(indio_dev, addr,
+@@ -593,21 +593,20 @@ EXPORT_SYMBOL_NS(st_sensors_get_settings_index, "IIO_ST_SENSORS");
+ int st_sensors_verify_id(struct iio_dev *indio_dev)
+ {
+ 	struct st_sensor_data *sdata = iio_priv(indio_dev);
++	struct device *parent = indio_dev->dev.parent;
+ 	int wai, err;
+ 
+ 	if (sdata->sensor_settings->wai_addr) {
+ 		err = regmap_read(sdata->regmap,
+ 				  sdata->sensor_settings->wai_addr, &wai);
+ 		if (err < 0) {
+-			dev_err(&indio_dev->dev,
+-				"failed to read Who-Am-I register.\n");
+-			return err;
++			return dev_err_probe(parent, err,
++					     "failed to read Who-Am-I register.\n");
+ 		}
+ 
+ 		if (sdata->sensor_settings->wai != wai) {
+-			dev_warn(&indio_dev->dev,
+-				"%s: WhoAmI mismatch (0x%x).\n",
+-				indio_dev->name, wai);
++			dev_warn(parent, "%s: WhoAmI mismatch (0x%x).\n",
++				 indio_dev->name, wai);
+ 		}
+ 	}
+ 
+diff --git a/drivers/iio/common/st_sensors/st_sensors_trigger.c b/drivers/iio/common/st_sensors/st_sensors_trigger.c
+index 9d4bf822a15dfcdd6c2835f6b9d7698cd3cb0b08..32c3278968089699dff5329e943d92b151b55fdf 100644
+--- a/drivers/iio/common/st_sensors/st_sensors_trigger.c
++++ b/drivers/iio/common/st_sensors/st_sensors_trigger.c
+@@ -127,7 +127,7 @@ int st_sensors_allocate_trigger(struct iio_dev *indio_dev,
+ 	sdata->trig = devm_iio_trigger_alloc(parent, "%s-trigger",
+ 					     indio_dev->name);
+ 	if (sdata->trig == NULL) {
+-		dev_err(&indio_dev->dev, "failed to allocate iio trigger.\n");
++		dev_err(parent, "failed to allocate iio trigger.\n");
+ 		return -ENOMEM;
+ 	}
+ 
+@@ -143,7 +143,7 @@ int st_sensors_allocate_trigger(struct iio_dev *indio_dev,
+ 	case IRQF_TRIGGER_FALLING:
+ 	case IRQF_TRIGGER_LOW:
+ 		if (!sdata->sensor_settings->drdy_irq.addr_ihl) {
+-			dev_err(&indio_dev->dev,
++			dev_err(parent,
+ 				"falling/low specified for IRQ but hardware supports only rising/high: will request rising/high\n");
+ 			if (irq_trig == IRQF_TRIGGER_FALLING)
+ 				irq_trig = IRQF_TRIGGER_RISING;
+@@ -156,21 +156,21 @@ int st_sensors_allocate_trigger(struct iio_dev *indio_dev,
+ 				sdata->sensor_settings->drdy_irq.mask_ihl, 1);
+ 			if (err < 0)
+ 				return err;
+-			dev_info(&indio_dev->dev,
++			dev_info(parent,
+ 				 "interrupts on the falling edge or active low level\n");
+ 		}
+ 		break;
+ 	case IRQF_TRIGGER_RISING:
+-		dev_info(&indio_dev->dev,
++		dev_info(parent,
+ 			 "interrupts on the rising edge\n");
+ 		break;
+ 	case IRQF_TRIGGER_HIGH:
+-		dev_info(&indio_dev->dev,
++		dev_info(parent,
+ 			 "interrupts active high level\n");
+ 		break;
+ 	default:
+ 		/* This is the most preferred mode, if possible */
+-		dev_err(&indio_dev->dev,
++		dev_err(parent,
+ 			"unsupported IRQ trigger specified (%lx), enforce rising edge\n", irq_trig);
+ 		irq_trig = IRQF_TRIGGER_RISING;
+ 	}
+@@ -179,7 +179,7 @@ int st_sensors_allocate_trigger(struct iio_dev *indio_dev,
+ 	if (irq_trig == IRQF_TRIGGER_FALLING ||
+ 	    irq_trig == IRQF_TRIGGER_RISING) {
+ 		if (!sdata->sensor_settings->drdy_irq.stat_drdy.addr) {
+-			dev_err(&indio_dev->dev,
++			dev_err(parent,
+ 				"edge IRQ not supported w/o stat register.\n");
+ 			return -EOPNOTSUPP;
+ 		}
+@@ -214,13 +214,13 @@ int st_sensors_allocate_trigger(struct iio_dev *indio_dev,
+ 					sdata->trig->name,
+ 					sdata->trig);
+ 	if (err) {
+-		dev_err(&indio_dev->dev, "failed to request trigger IRQ.\n");
++		dev_err(parent, "failed to request trigger IRQ.\n");
+ 		return err;
+ 	}
+ 
+ 	err = devm_iio_trigger_register(parent, sdata->trig);
+ 	if (err < 0) {
+-		dev_err(&indio_dev->dev, "failed to register iio trigger.\n");
++		dev_err(parent, "failed to register iio trigger.\n");
+ 		return err;
+ 	}
+ 	indio_dev->trig = iio_trigger_get(sdata->trig);
+
+---
+base-commit: 7bac2c97af4078d7a627500c9bcdd5b033f97718
+change-id: 20250522-st_iio_fix-1c58fdd4d420
+
+Best regards,
+-- 
+Maud Spierings <maudspierings@gocontroll.com>
+
 
