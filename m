@@ -1,97 +1,125 @@
-Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
+Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B5831DE8B3;
-	Thu, 22 May 2025 18:53:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25E3F1DF26B
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 18:53:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747940000; cv=none; b=jhJVhxAU9hPAicCw9EVHYQmTT7/NDCDr6/8ud+R8/MfJaiiW8iXUZFbg6wDRvRvZCqKo3/7R2NzoF3ebRNzVZHLBxKUYYvSo92c07lipGLMhn4IL3UquwDmMr5MB34VOonfIeGT+ReGhuEp8xhO8tM0b14pjXPFDHM2FcV3VOjs=
+	t=1747940024; cv=none; b=Cw1+iRz4I7t9NEFsFebSDh5jWWBQM6I75BIg/s9sdeNrtJ7hw0APRAAgFOM5R2YS4hU21AhSM9fyhUSNq7PYQiTXMjb17WcnLtGQvQWK+2VT/wnJlUtmkcRo6OH5lpeLqBbIerg4gYHSyIRa/DG2i84OgRUCGAt2KAe5HgkHAAo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747940000; c=relaxed/simple;
-	bh=KJbnwLO9PnKS+o/OspihaxX0IQGxbr3s73qXik1soWQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JkSPgIdOL+SGF7As6xRmSmLPzcJJA60CND5KSzH8sXGplerw2CqnoxSie3PYg7fTcZ9qW2MIfyC1dMBnzRiklvz244U9pl+xGL+DfNSVYz9AR0KhMkaAhE4l9XKw7fuXheTQRQCT0bf72cCpph+gdfdecTd63ZO5FZFzgazULns=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=StS0NVZc; arc=none smtp.client-ip=209.85.210.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747940024; c=relaxed/simple;
+	bh=Eu2HcWA+aiYLO3NyXIZi/n8WZASZoNLIVISYYmVLfhw=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=DKM9QSJ5mBKaGt//Akl+zAEQRLyBWPzXw5BgM4PM6n0rrkxQYOrw1/rEFoPMdloYnCAS7NS7yUsj7X+/YdeYc4TDt19C3XmoIv34Z3NaXplEDlP0KRzHMotXb2W7aACJNFyLOT+2Hec2nutM/JrQTRFVlgbN1vgjQT+W6AngL28=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ndufresne.ca; spf=none smtp.mailfrom=ndufresne.ca; dkim=pass (2048-bit key) header.d=ndufresne-ca.20230601.gappssmtp.com header.i=@ndufresne-ca.20230601.gappssmtp.com header.b=BoIzuC8V; arc=none smtp.client-ip=209.85.222.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ndufresne.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ndufresne.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="StS0NVZc"
-Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-7390d21bb1cso7183536b3a.2;
-        Thu, 22 May 2025 11:53:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ndufresne-ca.20230601.gappssmtp.com header.i=@ndufresne-ca.20230601.gappssmtp.com header.b="BoIzuC8V"
+Received: by mail-qk1-f170.google.com with SMTP id af79cd13be357-7c7913bab2cso842781585a.0
+        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 11:53:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747939997; x=1748544797; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=XBANE17upGJtSfo2ziwlQRYaEyGo/7aP/0TWDN69oCo=;
-        b=StS0NVZcoeRM6d84IDFgACUGwgZYMH8jwI7DM352jnDvLLFNbV9Xr0/9G1CZ3QpRGt
-         ixBSuET1mZklQGVsxVHXkW8eRmdOxsNOG/MciYmALkKwb66cQAbvER9jt82Q3fRzj0po
-         /GIK5lBQ5ErU8bRXT2cOhiE040kRHp2+Fb2qMKtMsSFEpBTmFAt4AS3pxQbzNEcP6mNo
-         XMOZvqLGn4c/n+TwXkwDOtYr14T4OsUUXt/4pmVk34qJxfH1wiZmDEYaYLBt8AIq1UFA
-         RmT2uh1ixo8+JUtrXv8zNfxDIBGRFEXjJAODeD3hqIL1IiGhWe3tfLPSR0KzvsAf6FHd
-         ItMQ==
+        d=ndufresne-ca.20230601.gappssmtp.com; s=20230601; t=1747940022; x=1748544822; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=EB9YLdrTTEzpsGMLMd/YlkLlxPbz4lYAAaOaN9yn4eU=;
+        b=BoIzuC8VKbkfPfldNunMdqJZelkOPxroIPR9hJJfKDJajYFsUyf0BfFufbO046SzGm
+         OhP/pE31v0POwA69mG9rmL+Cfql3ZBKKuHbHWuSz7OsVz3j/uNfdQtskxJ4STDq0bYGr
+         Tqpp55vKgw3Ha6Uf+AoMJ81WaB4hUrHn1Lc68t9tPUAnrbLeEzWYaoclI9zQT9aqXjuV
+         gKUDKdB99+3gb73bgaS3TbD05Qk1Qowcg5KkTXplCTY0sni8M8pHgkqVqwaK71pRAb7v
+         UjvQ0rGcI+edJn40RYz3bEkyk7aJhkAcJxeHGmhljTqsoczqhTKUxnChWQAG+m8RyFOm
+         IZmw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747939997; x=1748544797;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=XBANE17upGJtSfo2ziwlQRYaEyGo/7aP/0TWDN69oCo=;
-        b=QO/jQdTPjyoJESeG2FKIvrDYoT/FD9DSYm9x0LU959HXIetUdE0TMk/77hwX/kVIbR
-         i6bWMS95VyIjkXEoQ40+mriYpVvIUMYVt7KDwPPI3u7Zy1PB4HDkRCFXJNetZR7dcjVn
-         6/0F1NAvs/UAibwpe7NmFyke7rmY3xDlx550zUtgc3xPCVXjBXPgKqMqnryAsRaO7r1T
-         paGHZy3+Vym28dWGUBVkKTSKoI0HPGcAlNAt8/1JxNEriWTHPNDfsFxr6j12TGtRbHYs
-         C2fQfwZyzHVfzQHoX/ElORr32e8Hy/B4HUoo59Ju2bFY8jWcKhx8+6drUVRe/Oaz71HN
-         Y+TQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWLkQpzDudcYPBZvR/HX7KoaPi6KWmVlgKef8xIa4PVv59V/J8cnQagJPlh5RlmLgY0Of21JsmnINbv95KQ@vger.kernel.org, AJvYcCX5rRaznROk5kLpt3dwT1lTRWIuoFJ6sxyWJDX6jzDM5wdWGeDlT01A46vkNP2LRfTge4fNfSwKq/7wlBgv@vger.kernel.org
-X-Gm-Message-State: AOJu0YxSofdaK1cfA23vh889iEkjC6FroS/oJWTfZTd/6bKWUBrVWSUB
-	/UmOhahNH+5iF+pBx6R/VNqdXT5p6es2sv31BpMAyrSYuTh9SinVvaxz
-X-Gm-Gg: ASbGncto2h3gBg2Woa0P0uBgM2dv8WI70yEOuI656tQNvpdjEjhej9sC48ZlkrxMrFo
-	lPDCrzdpX/2OSizJkwvP7MUEf4MfY1FkUISQtVf8Ot6L4hsFbV00+8jWiQn1dNCDcJu8sBhX5c1
-	3PGaaHnzRNDKIiXS0xx5vgodBOAA15mgDY4ksPCi+ttG5Cz6AlFzo1/y74FOxr7UvsCSxdER1NA
-	zUv06o9fkaV1jbv4OyzQxuCSylBrR1w/zeSFx/AZqWWKOh9l71Pwa4RVBzU3K+T4kjEqBoUaVEb
-	7UGzI21OffK8AcoxJlj+vJMlr6bKLrjGbuF3UeGNvX4ubTBwO4iPfZFt1mURVETS
-X-Google-Smtp-Source: AGHT+IH4FHr6TKK37LSw/N7pyVC03rjqy4ufLuDp4wUmG7w6e/+v49oWOzOCGRwFlYTZKsMryyJI9w==
-X-Received: by 2002:a05:6a00:3985:b0:742:a334:466a with SMTP id d2e1a72fcca58-742a97eb677mr36355117b3a.12.1747939997420;
-        Thu, 22 May 2025 11:53:17 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b26eaf6e609sm11622477a12.19.2025.05.22.11.53.16
+        d=1e100.net; s=20230601; t=1747940022; x=1748544822;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=EB9YLdrTTEzpsGMLMd/YlkLlxPbz4lYAAaOaN9yn4eU=;
+        b=QnbNqVXRyCS17XWN7ocrs4rV5CQT8rhORsg9TVSYnHpbG8pRCdffPhJr03spbS/Wvk
+         /mosJyoLBqAOJbGU0DxU+RzSjmiPoGtNu7+JqsHiQGVPzPLFIK/RgF6ioVndTZ1Q5ExK
+         87i2oHRXXe/UD0ZPpfccfkSx+ihaMVyWLGeiUc8crIOW7x7+NvNe7Avc7cnxiRQBxVft
+         6WGNcItQrQYfoXM9KT8falrtfxImw/aAU3Z2jKM7ErXBem4BO31AH4t/f4l8+phSEeZ5
+         HrRJewuz5+WxnJRLrqwOwlS4byc/9/9aXtxlNev2DSbnT8FFFmUqROJyNVO70a9Oac2U
+         3tTg==
+X-Forwarded-Encrypted: i=1; AJvYcCXATKcZ0SMArDzqx+opj+UXOMlFePPmWJUuHVsrbGAGeN0GEVrN6Ip5pgNebGwijWnTOR2SeUvxF/UydkI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyZLka+7SyUmSccZ0UIEUaC+xgrBNA3Pq5nwsB7hmHd5egVwQ5A
+	vDwHcGGhOxwJ8B5PIQbmNsOkCLF8UE+ZHQABjkA2riADfKntGj8V9qYEEc2XRM6GGrs=
+X-Gm-Gg: ASbGncsSpXdxhElBfLeRXFEmR8SC9d0vgaPCMixI5sQC5i7wcXahJvF5EnMcyzp7pd+
+	t4xUOIxfcfFpuUs4nSIakW1yFo5eEYSiLnBpfDfp++A4jKuak4XJ8pUxiTtKgon9YZbKd7T/gSp
+	bYDOUiMKKO9KWs6dqOfHVonX3AQ6mR2tx1QqBUmVbzvnqmGujT3TCnJnWlB67tn80Z2tX6t/sZT
+	HMqEzefx9XmbDjV3dHNpJLAqPGPQPFE4rkvt+tJnJDMnHy7Ym0kuQYza8jvmkcbLvyQW7OtMaIG
+	tOpX2S+wC7aqgpTGrxVT6KFo68HeFES2rYR6zO50BCKyFR+UKDgL0b0/
+X-Google-Smtp-Source: AGHT+IH3qyTjY1nSRxUskWCorD7Lljuzn31tpE7McTqghbYGYZzq4YIUZsnhBxuZNoogCdQBXZTN3A==
+X-Received: by 2002:a05:620a:d8c:b0:7ca:ca00:735 with SMTP id af79cd13be357-7cd47fc5846mr4211717985a.41.1747940022040;
+        Thu, 22 May 2025 11:53:42 -0700 (PDT)
+Received: from ?IPv6:2606:6d00:17:b2fc::5ac? ([2606:6d00:17:b2fc::5ac])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7cd467bc7aesm1063496685a.24.2025.05.22.11.53.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 May 2025 11:53:16 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Date: Thu, 22 May 2025 11:53:15 -0700
-From: Guenter Roeck <linux@roeck-us.net>
-To: Kees Cook <kees@kernel.org>
-Cc: Joel Granados <joel.granados@kernel.org>, linux-kernel@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, Wen Yang <wen.yang@linux.dev>
-Subject: Re: [PATCH] kernel/sysctl-test: Unregister sysctl table after test
- completion
-Message-ID: <ce50a353-e501-4a22-9742-188edfa2a7b2@roeck-us.net>
-References: <20250522013211.3341273-1-linux@roeck-us.net>
+        Thu, 22 May 2025 11:53:41 -0700 (PDT)
+Message-ID: <1a182116a2e4a9cc18842426db2c3008b6b4d987.camel@ndufresne.ca>
+Subject: Re: [PATCH v6 4/4] arm64: dts: qcom: qcs615-ride: enable venus node
+ to initialize video codec
+From: Nicolas Dufresne <nicolas@ndufresne.ca>
+To: Renjiang Han <quic_renjiang@quicinc.com>, Stanimir Varbanov	
+ <stanimir.k.varbanov@gmail.com>, Vikash Garodia
+ <quic_vgarodia@quicinc.com>,  Bryan O'Donoghue
+ <bryan.odonoghue@linaro.org>, Mauro Carvalho Chehab <mchehab@kernel.org>,
+ Rob Herring	 <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley	 <conor+dt@kernel.org>, Bjorn Andersson
+ <andersson@kernel.org>, Konrad Dybcio	 <konradybcio@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-media@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Thu, 22 May 2025 14:53:40 -0400
+In-Reply-To: <20241219-add-venus-for-qcs615-v6-4-e9a74d3b003d@quicinc.com>
+References: <20241219-add-venus-for-qcs615-v6-0-e9a74d3b003d@quicinc.com>
+	 <20241219-add-venus-for-qcs615-v6-4-e9a74d3b003d@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.1 (3.56.1-1.fc42) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250522013211.3341273-1-linux@roeck-us.net>
 
-On Wed, May 21, 2025 at 06:32:11PM -0700, Guenter Roeck wrote:
-> One of the sysctl tests registers a valid sysctl table. This operation
-> is expected to succeed. However, it does not unregister the table after
-> executing the test. If the code is built as module and the module is
-> unloaded after the test, the next operation trying to access the table
-> (such as 'sysctl -a') will trigger a crash.
-> 
-> Unregister the registered table after test completiion to solve the
-> problem.
-> 
+Hi,
 
-Never mind, I just learned that a very similar patch has been submitted
-last December or so but was rejected, and that the acceptable (?) fix seems
-to be stalled.
+looks like your patch has been forgotten, hopefully this can be resolved. I=
+f
+it does not get pick in a week or so, feel free to resend.
 
-Sorry for the noise.
+Le jeudi 19 d=C3=A9cembre 2024 =C3=A0 11:11 +0530, Renjiang Han a =C3=A9cri=
+t=C2=A0:
+> Enable the venus node to allow the video codec to start working properly
+> by setting its status to "okay".
+>=20
+> Signed-off-by: Renjiang Han <quic_renjiang@quicinc.com>
 
-Guenter
+Acked-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
+
+regards,
+Nicolas
+
+> ---
+> =C2=A0arch/arm64/boot/dts/qcom/qcs615-ride.dts | 4 ++++
+> =C2=A01 file changed, 4 insertions(+)
+>=20
+> diff --git a/arch/arm64/boot/dts/qcom/qcs615-ride.dts b/arch/arm64/boot/d=
+ts/qcom/qcs615-ride.dts
+> index a25928933e2b66241258e418c6e5bc36c306101e..de954ede27f0942397d982f9a=
+a725e59a8de9657 100644
+> --- a/arch/arm64/boot/dts/qcom/qcs615-ride.dts
+> +++ b/arch/arm64/boot/dts/qcom/qcs615-ride.dts
+> @@ -237,6 +237,10 @@ &usb_1_dwc3 {
+> =C2=A0	dr_mode =3D "peripheral";
+> =C2=A0};
+> =C2=A0
+> +&venus {
+> +	status =3D "okay";
+> +};
+> +
+> =C2=A0&watchdog {
+> =C2=A0	clocks =3D <&sleep_clk>;
+> =C2=A0};
