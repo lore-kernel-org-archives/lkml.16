@@ -1,113 +1,118 @@
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B645828C00A;
-	Thu, 22 May 2025 15:41:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50F1A51022;
+	Thu, 22 May 2025 15:42:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747928501; cv=none; b=eVSx0Ze97eUPxFXeXINmfV+E26OKEBrArsEYRPmMcIuTBTbYRxmPyfyv4bOoYIgsGoJeEbH1BSjECRzVWvxPYVGeTTCYc53L8g2l3GU+wYi8aMVE+jMh47VB+49YILuc2hKR2MBn3PbjVU00qNtul4uUH3tGOLbiYgiNFcUNV7I=
+	t=1747928541; cv=none; b=BGu2opFE0Lg6HIgJkKQyFYZ/DvTIIpkFyB7RAK2iXlD0cJePIKYGqwnIA+2xJcwhBhgjrZp8imd+KwjfCp0KcrzR+ePqba6syP6fMXnoYWtxBpyhEiAsC9tioG+iYwv8tVbrhRcWEnK2l8+4EYoFWyOpyYCu9Q2N/a00fjg49sw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747928501; c=relaxed/simple;
-	bh=k3tB6OPX7QIGtB/u9nELbzQrJAonc4DmqQNz7pLFRc4=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=GwxEJfALJPntCt4t0IYcgyvreSK+DxHDj1zrEQ+eeR7TbY9D1tnKI47V92FtEzrawxOWnL/NEBQzOsCzclKsJmXVCjh8WXiKZEpUMp4l4A0HzdsuWbYHyPlE8qlVOJKcJTqdLdSnH7LvsiV5lwGKIrAMSpwKg7IOsWVctaNnD6Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HHdn68Cj; arc=none smtp.client-ip=209.85.208.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747928541; c=relaxed/simple;
+	bh=Pk1SR0qc+6xGK/ApAUwCssUMbaYjc92Qk7n6tZrTahg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=G7C/7UJdHd+pt/R0LQ92rl+QZ434eikX7tSBjSBg1QGHQWuaKsI0Uz2lZ5IwNs36xk4z8Ki9uJghCvs8Oi1oaIDt5GKTjcpl6SOsy5R6ei9VJb26fhempQ018CCQ1YFc7l9/4EKq8kT1AMnOQk4uhp6X/klEpJTswR1pXkj3DzI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=PzBqiEJQ; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HHdn68Cj"
-Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-329160d133aso24286541fa.2;
-        Thu, 22 May 2025 08:41:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747928497; x=1748533297; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=k3tB6OPX7QIGtB/u9nELbzQrJAonc4DmqQNz7pLFRc4=;
-        b=HHdn68Cj4bMM9Ix0X4Vbg0lmw7YspZICNZmMxgzmzshmsKJq17vJufiE1CzDml2i3t
-         /M6l1K9D8aW5+kBS4g924i1dsEV1OJeftE2GIwyb7DzB/Nezp6tezDqDhHsiZ7BRkCyc
-         VDZYkaWBL3MOfjGPMtaUNlZF1Tz+YmS//xUA76PGxd0KEiXI/9q2gCCKvlXfzggxdLV9
-         GekE7mwZUaTPGJcC0288jMfyEEE3Vs/Xu7K0YkRx8WTFza5gZ606mX4dhG5iq1P5RA9G
-         E1DBbWV42nNnrevWdnIYEKTZ1D7NFIFbYRpPQbXSbwB2qeLGU1L55pdZ1NlSHayqQSXu
-         a1nA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747928497; x=1748533297;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=k3tB6OPX7QIGtB/u9nELbzQrJAonc4DmqQNz7pLFRc4=;
-        b=t8cunQxtV9C/+41S31Dth8sN8FpTzJ+jJWHymzQhgalIexZy9XULYA+eQrbCX9pVVX
-         U5/jPSl7LCLmMjUhFC7nu/JbtT2w758wcB5ToVHpKNKHz0Y2VXd26ND5FaFagC3s9zde
-         2yr+GI4VNtmPs+V1x1tt3V3Xw06vrdkQg89Q6oNABWvEywrNfUTCNzm9nOMpzNM/nijy
-         UjFiZHLQTsMAylTZ67laZ/DjSb4gVZYyxXlUm/RF6cUJj0TcRlzN0lqja8WXvvluujY/
-         2S7ufqY2zkv4xDBRmq7jGtTr2cge5OkENfGfwFFzyhZTY3GFsxqiZjrFcH22/uS4Wked
-         AnYQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUDEYwNKezC8DZWAO+2EfXbdpYxCYTDDqMgID6H4mZC6uOAV6V7A4O11TMY93P5xvYvv4oAFTFc@vger.kernel.org, AJvYcCXCkc0g7O9LiO5/VuHqTK4KL9EvZzfBpXka2d4rFSY9RAdOPNawQE4+7Xqaj2/o8o18Yubj0JynKyFI+rE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzI2kXyFy01wZWMdj5nEVXek2ngSaxmMfxHrtGT2WJlatWqRlSm
-	4+acSJCrsIrOg7iRk3Hfud5uWyk76K2E/0IBxng2NneDjuoowvvqzDtdmh9NV0QjeQasn5TlGQR
-	As1cQghIRiQZf6clgsR0RQP19zT1/xQ==
-X-Gm-Gg: ASbGnct+EcC0n4R46ZgYPFDNTME8dZy7SbMSsXWIPrVs3sai9oovkUDf2XmKXHQaq9g
-	Ke2Ddewy7xqcUJ6h78PRw9JSB3VDM9NRa8asnXJmMMAil1GEloiNtd6BdI4uFhU7fyUHnu/+8j8
-	tZWWuwfGedzv+QqTim85bf1sCSk9bcYT/72Dt36PG8Idlq58h1AvKqjQ==
-X-Google-Smtp-Source: AGHT+IFBYT2ECq7skPX/+CLf6pZBRbOOn8MyrBq7gpAH02lpUmjOZ3+RxWM2BoLStFU/ehrHXtRin6akCdMdkRC4nSI=
-X-Received: by 2002:a05:651c:f0a:b0:30b:ee81:9622 with SMTP id
- 38308e7fff4ca-3280978631cmr74772971fa.31.1747928497402; Thu, 22 May 2025
- 08:41:37 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="PzBqiEJQ"
+Received: from pendragon.ideasonboard.com (179.218-130-109.adsl-dyn.isp.belgacom.be [109.130.218.179])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 3874D8FA;
+	Thu, 22 May 2025 17:41:55 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1747928515;
+	bh=Pk1SR0qc+6xGK/ApAUwCssUMbaYjc92Qk7n6tZrTahg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=PzBqiEJQHdBh2knAAhxgQbesGuijbf2mhWv+b76u1M+H2gHMEZUz3cgcyxQEh/vco
+	 SQOOyaVD++IkBhiueVsq1vvvzGFL/kjFmdN75sIgfxkZ/NntfKeVHycI8pCwtrloAo
+	 Tx1quKm21RNTEP99PU6UIP0PoeWDByrYoUBHg9Rk=
+Date: Thu, 22 May 2025 17:42:10 +0200
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Stefan Klug <stefan.klug@ideasonboard.com>
+Cc: linux-media@vger.kernel.org, Dafna Hirschfeld <dafna@fastmail.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Heiko Stuebner <heiko@sntech.de>,
+	linux-rockchip@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] media: rkisp1: Cleanup error handling
+Message-ID: <20250522154210.GT12514@pendragon.ideasonboard.com>
+References: <20250522150944.400046-2-stefan.klug@ideasonboard.com>
+ <20250522150944.400046-3-stefan.klug@ideasonboard.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: John <john.cs.hey@gmail.com>
-Date: Thu, 22 May 2025 23:41:23 +0800
-X-Gm-Features: AX0GCFt4Ipa5E88ueb2O2mhmmdZsvjLs_H6IPPx2cSxROCy4uonB3PH6xysBdBI
-Message-ID: <CAP=Rh=MvfhrGADy+-WJiftV2_WzMH4VEhEFmeT28qY+4yxNu4w@mail.gmail.com>
-Subject: [Bug] "general protection fault in corrupted at " in Linux kernel
- v6.14 [sock_kmalloc() Null Pointer Dereference via CALIPSO NetLabel
- Processing in IPv6 SYN Request (IPv6 + SELinux + CALIPSO Path)]
-To: Kuniyuki Iwashima <kuniyu@amazon.com>, Paolo Abeni <pabeni@redhat.com>, 
-	Willem de Bruijn <willemb@google.com>
-Cc: "David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, 
-	Simon Horman <horms@kernel.org>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250522150944.400046-3-stefan.klug@ideasonboard.com>
 
-Dear Linux Kernel Maintainers,
+Hi Stefan,
 
-I hope this message finds you well.
+Thank you for the patch.
 
-I am writing to report a potential vulnerability I encountered during
-testing of the Linux Kernel version v6.14.
+On Thu, May 22, 2025 at 05:08:38PM +0200, Stefan Klug wrote:
+> Do not call media_entity_cleanup() when media_entity_pads_init() fails.
 
-Git Commit: 38fec10eb60d687e30c8c6b5420d86e8149f7557 (tag: v6.14)
+Why is it an issue ? The media_entity_cleanup() documentation clearly
+states
 
-Bug Location: 0010:sock_kmalloc+0x35/0x170 net/core/sock.c:2806
+ * Calling media_entity_cleanup() on a media_entity whose memory has been
+ * zeroed but that has not been initialized with media_entity_pad_init() is
+ * valid and is a no-op.
 
-Bug report: https://hastebin.com/share/vewamacadi.bash
+This is by design to simplify error handling in drivers.
 
-Complete log: https://hastebin.com/share/otoxiberok.perl
+> As a drive-by fix handle an (very unlikely) error in
+> rkisp1_params_init_vb2_queue().
+> 
+> Signed-off-by: Stefan Klug <stefan.klug@ideasonboard.com>
+> ---
+>  .../media/platform/rockchip/rkisp1/rkisp1-params.c    | 11 +++++++----
+>  1 file changed, 7 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/media/platform/rockchip/rkisp1/rkisp1-params.c b/drivers/media/platform/rockchip/rkisp1/rkisp1-params.c
+> index b28f4140c8a3..918eb06c7465 100644
+> --- a/drivers/media/platform/rockchip/rkisp1/rkisp1-params.c
+> +++ b/drivers/media/platform/rockchip/rkisp1/rkisp1-params.c
+> @@ -2763,7 +2763,9 @@ int rkisp1_params_register(struct rkisp1_device *rkisp1)
+>  	vdev->queue = &node->buf_queue;
+>  	vdev->device_caps = V4L2_CAP_STREAMING | V4L2_CAP_META_OUTPUT;
+>  	vdev->vfl_dir = VFL_DIR_TX;
+> -	rkisp1_params_init_vb2_queue(vdev->queue, params);
+> +	ret = rkisp1_params_init_vb2_queue(vdev->queue, params);
+> +	if (ret)
+> +		goto err_mutex;
+>  
+>  	params->metafmt = &rkisp1_params_formats[RKISP1_PARAMS_FIXED];
+>  
+> @@ -2777,19 +2779,20 @@ int rkisp1_params_register(struct rkisp1_device *rkisp1)
+>  	node->pad.flags = MEDIA_PAD_FL_SOURCE;
+>  	ret = media_entity_pads_init(&vdev->entity, 1, &node->pad);
+>  	if (ret)
+> -		goto error;
+> +		goto err_mutex;
+>  
+>  	ret = video_register_device(vdev, VFL_TYPE_VIDEO, -1);
+>  	if (ret) {
+>  		dev_err(rkisp1->dev,
+>  			"failed to register %s, ret=%d\n", vdev->name, ret);
+> -		goto error;
+> +		goto err_media;
+>  	}
+>  
+>  	return 0;
+>  
+> -error:
+> +err_media:
+>  	media_entity_cleanup(&vdev->entity);
+> +err_mutex:
+>  	mutex_destroy(&node->vlock);
+>  	return ret;
+>  }
 
-Entire kernel config: https://pastebin.com/MRWGr3nv
+-- 
+Regards,
 
-Root Cause Analysis:
-A NULL pointer dereference occurs in sock_kmalloc() at
-net/core/sock.c:2806 due to a missing check for the validity of the sk
-pointer.
-The function attempts to retrieve the associated network namespace
-using sock_net(sk), which internally accesses sk->__sk_common.skc_net
-via read_pnet().
-However, in the specific code path triggered by an incoming IPv6 TCP
-SYN packet with NetLabel/CALIPSO security attributes, the sk structure
-is either NULL or uninitialized, resulting in a general protection
-fault.
-The vulnerability is triggered via the SELinux NetLabel connection
-request hook and affects systems with IPv6 + SELinux + CALIPSO
-enabled.
-
-At present, I have not yet obtained a minimal reproducer for this
-issue. However, I am actively working on reproducing it, and I will
-promptly share any additional findings or a working reproducer as soon
-as it becomes available.
-
-Thank you very much for your time and attention to this matter. I
-truly appreciate the efforts of the Linux kernel community.
-
-Best regards,
-John
+Laurent Pinchart
