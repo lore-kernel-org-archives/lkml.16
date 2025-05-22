@@ -1,136 +1,102 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f49.google.com (mail-io1-f49.google.com [209.85.166.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBE8A22173A
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 16:06:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C70D9299ABC
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 16:07:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747930016; cv=none; b=oyuLSx6dXntyQtrAIojUmU3bb784MAKp4RZ95ntOB5hI94sJMbCO5mJ2KIV3lCdzIbQ5tthn0vmNVnBN8STvfhUUgTNO6L2VnaFH+57dPs/w2hnKePWiTi7Rpxd1+mC+EIMeQ+MjmHYxX7whW6Z47d9RvrNcoHuGZybB9lC8LoE=
+	t=1747930073; cv=none; b=FRuQv/7Nb5JS0lx5XQeR4e06ZHi4TI2C7Of9BUMXIqHNsLq+IlBNL+nEM3W4glj5oMg/O4TFQQD7cdZ58NAmixJpnPusV8wvT7Qml0n7UsBgMBeTAGUFbNdNVZLgvqbhlXcziqguOb/4xbeTsXufsBZ8TzToRJcA2BWpWqaiYkc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747930016; c=relaxed/simple;
-	bh=oHAfxtLr472fih4uM/Vr2ZVIojGMCSC2Y8rZRoTUvsc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VOrP0AKoJU9NUYjWw/CqS9lmXE6HHiLIOxS1+hEBkwB7iI0ISEo28FqtEvWCQUqQO+7MmT2B+R1t2TSSXswpt4gi1SBfDfpmnm0MT9ySjLOaREFzGFx4B/Z6dOh9sTDqTSUD6PYHzfedapNtcMk17YvyDJ0gagfDmrSntUXjhrc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PfBpLEXK; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747930073; c=relaxed/simple;
+	bh=G8Mv8bQiaDJa5SmClYhERN31MEnqOBxSaleO48WeUSw=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=S5bjbsJLbFfJb2iu18Mj5P0FZbna/srfgOO61zGcY/gK2z3qhhyLoBE9NjLJF2weBq8Qc2FJHiZJGelJDBkGn9ot8mqwhlCwltZgte/kz5GFZZY99WkQEcSIJwDZsx1ufmCPMN4gNS8iYe0I+mnFDu6hfoQB/gu3wMaoDuBtRNw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=In63vS5y; arc=none smtp.client-ip=209.85.166.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PfBpLEXK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07D01C4CEE4;
-	Thu, 22 May 2025 16:06:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747930016;
-	bh=oHAfxtLr472fih4uM/Vr2ZVIojGMCSC2Y8rZRoTUvsc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=PfBpLEXKaSTCYKDSU8zEeKgcKomCjcePLn+Z3u/QpAYXVrVamlLD4Hw//0SVn+jtr
-	 BQDqKjPorn2poTIJbcJ+nG4k2SaSKdg3aKc0ShH80DcZTYDc7E7LrIDgQVDgmaDUH7
-	 1ML2mSY6CsFme7Btw0/s6Bf526zihTIISeLz51fi7ewTSSWueBntt1bIqAMJLUTb+H
-	 11x5GouXcETVWUSIBl6xZOKxZKHaqBHPxJfM2UfAjFUAqHOIfVEzU3gnNjrQjzZUpa
-	 2CNsHCKmGDWME2/2i5k4NlOIzjq70Y31xUj5L9Zj+ICMKJ2RigkGaSK1jcfdd2+kuN
-	 91Yz/TWcnyyyg==
-Date: Thu, 22 May 2025 18:06:53 +0200
-From: Maxime Ripard <mripard@kernel.org>
-To: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>, Dave Stevenson <dave.stevenson@raspberrypi.com>, 
-	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, Dmitry Baryshkov <lumag@kernel.org>, kernel@collabora.com, 
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 14/23] drm/tests: hdmi: Add macro to support EDEADLK
- handling
-Message-ID: <20250522-fearless-muskrat-of-ampleness-1ccd49@houat>
-References: <20250425-hdmi-conn-yuv-v4-0-5e55e2aaa3fa@collabora.com>
- <20250425-hdmi-conn-yuv-v4-14-5e55e2aaa3fa@collabora.com>
- <20250519-sturdy-cyan-mouse-6bd0f1@houat>
- <7ce1a2d1-f4cb-4975-be24-b47e184ce1a8@collabora.com>
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="In63vS5y"
+Received: by mail-io1-f49.google.com with SMTP id ca18e2360f4ac-85b3f92c8f8so762266939f.1
+        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 09:07:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1747930071; x=1748534871; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=v0F+3sCLS0bt8X7P5AVbJqQjk87UjImEe9PD0EgmZH0=;
+        b=In63vS5yi1yBruF6/7ppKhAMk0ufMqn1C4oO9lk7jjIxCScnYkDTIoLFj8f6F0L11o
+         wjkvnr7UJh83oJRuMHuAsiBhCe2AIvV1Jtf+3G37pLrEJwbygiwn0v5ZWHjxVGwqBLZr
+         TyGzn0SpAW7hD71GVQ6iaRR1esAlbGhPMY1NdqgFz3RcIohK60Bo5/wh0phcUdYRv9aA
+         6Xn8mlYrU63zEU+kNJtCi1J5N+txC3BSerZVAMa8SACGm4RW771EEOxjUuLm9ErdrrZl
+         mrnRh7+XRnBjBS9TEVrBVBxtc16RFa6E9mEwTRxAvWY6lRkMdDSLukdVtqQmclQhCUa0
+         Oa4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747930071; x=1748534871;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=v0F+3sCLS0bt8X7P5AVbJqQjk87UjImEe9PD0EgmZH0=;
+        b=HdE3ivelM27Wm0fiiUSl4iFv1i2N8+dVUb8PRyIg83+Eb0Y+QIf0u4ivy3GhT0qmWn
+         duobqiTBPjBsF6PF4O25u8FVENherVXoChc5qd9odmxZZCzGQJGCYZp/X0Dl/RJGgp7d
+         NjbwCSTGRWy8uKiKTrN1TciZLvX/1+mPs6T1l+tjK/xmFbXQwgd2q2ZJSErgxnqmTY6C
+         lNidTFdMjBETK/vyyd+TkEyJ2CW7Y4jXJ1z8V3qgrB8Zs9EhjR5qc4XUgaUiPN776/lw
+         pS8FFBNRlVINDeivdYMau0jLGRi/AvwwhWTsdAFM7BqTMOgpadlh3WC8vk1oxxQBRQ2d
+         bVdQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUpAVVRc1sGspJR4+T2oncIegKDJw6RajAtJyTrYD0Eqhf8LHIvNQ/pEQVV+TBTt3c23ocqx793/1voKZk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzgiL/T7qET8Y0q/9zpcT/ARlSzsiDo0719zK3Ll72qahjlPdhn
+	Q3LO8P6ZCyTYpxOoLcRobESXiqwet82yEIBM7gfaUNXr0ZAxALG6Oy6nhepMIqTQYM4=
+X-Gm-Gg: ASbGnctPu9R/pUgT1WEFNjW6Wi6GbenDWZz+3e2Vo4M0KRW12zBriY/qae/wyG63FG3
+	nNO8AdLG9yGicGeXZIw9MDsi442NF3Jog1LJe3sEy18z8D2KIX+9FwzaCH0hZ2OPcXwIWhEBASe
+	OKtKvowQKblo9XTczSP5CfQCG2OErS4LqX9huPiqpw/XnBaVRkOP/khY1u+7ev4SE3MdeUk3oNZ
+	STyY7wNx90BK0CO0WcWq9kQP9Q6o6GL7iO6GJKCU0J6rMUIkCGwSUDLjGllEmzamj+wbgHJbXsY
+	JN26ZbbjVHvT2K+bHjH8tv1w+Emt8H1+FvdmTkXWuA==
+X-Google-Smtp-Source: AGHT+IEmmT09lNxt6NVOQQPJ4Ie1OiNcfqxW+xqlr7SYGEsMkYruK2UASM5a6xpf1CgsBSaRB00c5g==
+X-Received: by 2002:a05:6602:19c4:b0:86a:25d5:2dbe with SMTP id ca18e2360f4ac-86a25d52e54mr2466836239f.4.1747930070711;
+        Thu, 22 May 2025 09:07:50 -0700 (PDT)
+Received: from [127.0.0.1] ([96.43.243.2])
+        by smtp.gmail.com with ESMTPSA id ca18e2360f4ac-86a235e377csm305088639f.17.2025.05.22.09.07.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 May 2025 09:07:49 -0700 (PDT)
+From: Jens Axboe <axboe@kernel.dk>
+To: Pavel Begunkov <asml.silence@gmail.com>, 
+ Steven Rostedt <rostedt@goodmis.org>, 
+ Masami Hiramatsu <mhiramat@kernel.org>, 
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+ Caleb Sander Mateos <csander@purestorage.com>
+Cc: io-uring@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-trace-kernel@vger.kernel.org
+In-Reply-To: <20250522150451.2385652-1-csander@purestorage.com>
+References: <20250522150451.2385652-1-csander@purestorage.com>
+Subject: Re: [PATCH] trace/io_uring: fix io_uring_local_work_run ctx
+ documentation
+Message-Id: <174793006954.1178150.14780914506137939683.b4-ty@kernel.dk>
+Date: Thu, 22 May 2025 10:07:49 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha384;
-	protocol="application/pgp-signature"; boundary="yiydieeqfbxg6yib"
-Content-Disposition: inline
-In-Reply-To: <7ce1a2d1-f4cb-4975-be24-b47e184ce1a8@collabora.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.14.3-dev-7b9b9
 
 
---yiydieeqfbxg6yib
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v4 14/23] drm/tests: hdmi: Add macro to support EDEADLK
- handling
-MIME-Version: 1.0
+On Thu, 22 May 2025 09:04:50 -0600, Caleb Sander Mateos wrote:
+> The comment for the tracepoint io_uring_local_work_run refers to a field
+> "tctx" and a type "io_uring_ctx", neither of which exist. "tctx" looks
+> to mean "ctx" and "io_uring_ctx" should be "io_ring_ctx".
+> 
+> 
 
-On Mon, May 19, 2025 at 01:35:46PM +0300, Cristian Ciocaltea wrote:
-> On 5/19/25 10:22 AM, Maxime Ripard wrote:
-> > Hi,
-> >=20
-> > On Fri, Apr 25, 2025 at 01:27:05PM +0300, Cristian Ciocaltea wrote:
-> >> In preparation to improve error handling throughout all test cases,
-> >> introduce a macro to check for EDEADLK and automate the restart of the
-> >> atomic sequence.
-> >>
-> >> Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
-> >> ---
-> >>  drivers/gpu/drm/tests/drm_hdmi_state_helper_test.c | 10 ++++++++++
-> >>  1 file changed, 10 insertions(+)
-> >>
-> >> diff --git a/drivers/gpu/drm/tests/drm_hdmi_state_helper_test.c b/driv=
-ers/gpu/drm/tests/drm_hdmi_state_helper_test.c
-> >> index c8969ee6518954ab4496d3a4398f428bf4104a36..c8bb131d63ea6d0c9e166c=
-8d9ba5e403118cd9f1 100644
-> >> --- a/drivers/gpu/drm/tests/drm_hdmi_state_helper_test.c
-> >> +++ b/drivers/gpu/drm/tests/drm_hdmi_state_helper_test.c
-> >> @@ -224,6 +224,16 @@ drm_kunit_helper_connector_hdmi_init(struct kunit=
- *test,
-> >>  				test_edid_hdmi_1080p_rgb_max_200mhz);
-> >>  }
-> >> =20
-> >> +#define drm_kunit_atomic_restart_on_deadlock(ret, state, ctx, start) =
-do {	\
-> >> +	if (ret =3D=3D -EDEADLK) {							\
-> >> +		if (state)							\
-> >> +			drm_atomic_state_clear(state);				\
-> >> +		ret =3D drm_modeset_backoff(ctx);					\
-> >> +		if (!ret)							\
-> >> +			goto start;						\
-> >> +	}									\
-> >> +} while (0)
-> >> +
-> >=20
-> > I'm not sure here either, for pretty much the same reason. As far as
-> > locking goes, I really think we should prefer something explicit even if
-> > it means a bit more boilerplate.
-> >=20
-> > If you still want to push this forward though, this has nothing to do
-> > with kunit so it should be made a common helper.=20
->=20
-> Ack.
->=20
-> > I do think it should be
-> > done in a separate series though. Ever-expanding series are a nightmare,
-> > both to contribute and to review :)
->=20
-> Indeed, let me take this separately.
->=20
-> If you agree, I'd prefer to drop EDEADLK handling from the new tests as
-> well, to allow sorting this out for all in a consistent manner.
+Applied, thanks!
 
-We can't unfortunately. Most CI runners now run with WW_DEBUG that will
-test for EDEADBLK handling.
+[1/1] trace/io_uring: fix io_uring_local_work_run ctx documentation
+      commit: 28be240c763a44932bfe573f09e145d182e52609
 
-Maxime
+Best regards,
+-- 
+Jens Axboe
 
---yiydieeqfbxg6yib
-Content-Type: application/pgp-signature; name="signature.asc"
 
------BEGIN PGP SIGNATURE-----
 
-iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCaC9LnQAKCRAnX84Zoj2+
-dpMYAXwPIo/WlZh2Znxsf6x67Xtl607BrjMkiSQ7aGP9WlUu+xhuPDs91FHUKLZe
-VS4wt08Bfjn43SZVO5jlm3sCrxcyDOuVU9l0bbsv/gKvu3/c78IATNUWg4o6QU9J
-MjjGG82UyA==
-=ZgmH
------END PGP SIGNATURE-----
-
---yiydieeqfbxg6yib--
