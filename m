@@ -1,33 +1,73 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18789286D72;
-	Thu, 22 May 2025 08:41:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8E73221DB3
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 08:42:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747903303; cv=none; b=OzwQABLVT2V5WppQ50mNHtUpWstlwFRzgcNpwt9m58oy2R/84ck6NcvGP7haZzsBBMVu+bAT9+FYfB8NAn3qLa0eTyXrFPIpSQpb26jh0vNGvePx5wWtkx2cmiLCdp7Zz7CnATA3PUaKZIfZTUAWUxC8cDSWvXLhSuDg50G9aP0=
+	t=1747903378; cv=none; b=WqvGMAUXoGjz+4xngLQ+nyNph9vYfZuTL1oD0XilPrAN6AZpYpf8QzLTf+tD2DmQpJRjOActaaquqM9VQtJ5rxla5v2Ng2c7Cbeibk/nCNHQQQTBpiU+VrgqI7XP5TLBzcwz08NVOY95nkjl1B5jU7rmq5LkJxegcqJ/VrxP4Uc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747903303; c=relaxed/simple;
-	bh=PTGci6U8401c8yfH1R5xOKtCxdeMWqoShulIBa7cs00=;
+	s=arc-20240116; t=1747903378; c=relaxed/simple;
+	bh=io+V+mrxK9WWXe0EXTbUgNp+2oHzLAkdNhwkoOyVEyw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cYaMLbQeA0Nkp3MuGlBQUQIRLjWgr29+8tW863wztB3KOy1YBzDUiQCMMocAPsWL8Wc1/loSZrxK91DcmZDZAPP0x1n0GgGvdns2I0uEKpQ0pD3Aver/N1p9LRVdNYzKS4Vz5X8ieC18PZxQyZeM7c2enyTrBahQf1YK8PmLHuk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t0eiwFpI; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=nb/hKZBSTUtpA94RkXP82KNvxLjyh3jQeIVQBexX+m/bfBCO+bILvM9y5bjul5V7PCj180/CIEfDU/4XIAtsw+aXICNGHERgvHR5rjEL696/q3wZE80nISLpE70Few/sL9i1mCRLIMaKxu2eAyykvs21fEkr08Tbia4VqjGyaNs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=K094s7kF; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t0eiwFpI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68FA5C4CEE4;
-	Thu, 22 May 2025 08:41:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747903302;
-	bh=PTGci6U8401c8yfH1R5xOKtCxdeMWqoShulIBa7cs00=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=t0eiwFpIsSp9FzzMM42N4AR9WxbZHuz7vws83ANlKNWsdOhlhWGTxfb+53X+dPilS
-	 ke9x1hUgDzv2BdJd4YkLkDewpVccawBuRNkNDJjig/JrafsExQCDvG73PtcVukOFpi
-	 lxbqb2Ji2pkBitRxVkbL5DmxrSLY+r1Wfv6XkkQvbKJuIBusLzGLmQRAOV0WoKawZy
-	 pNNis4PvPt1hLL3ozPszjxwaprF1UIIVqibAaCD5DFi9XU1rUB5IhmCqLXocd7Jnm0
-	 0FBhFGRfDovyeetfcAdkm+/7mA91Gw/yP2WxOBfUvs7Due6MEaRG1ogo0YNOEDRJUr
-	 19MKgVqGYshJw==
-Message-ID: <5edf74a6-7d01-4e1f-8d85-1be879d48700@kernel.org>
-Date: Thu, 22 May 2025 10:41:37 +0200
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="K094s7kF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1747903375;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=Y+JhIAMtHUIDratsJJY78KupDIZPpYinM48aTm1d/JY=;
+	b=K094s7kFX4vb8uaWYokdw3KVBkc3O+8C4qu/zGj8CegBcCxGiVQbb3NM4N8cOl+wuBx8Gh
+	91beFB8r/CuugDCBNhJ9i+wZ4e9XEEzh/pEU0ITA/AUiMYyVm4Pe0yHIyp5ax6nmDLcP13
+	KtN1ZxUwuyhR8vGlzbhYzyBnaTRmqMM=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-695-kE58pOj3P1-YLEUkkdKLeg-1; Thu, 22 May 2025 04:42:53 -0400
+X-MC-Unique: kE58pOj3P1-YLEUkkdKLeg-1
+X-Mimecast-MFC-AGG-ID: kE58pOj3P1-YLEUkkdKLeg_1747903373
+Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-3a3696a0d3aso2160894f8f.2
+        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 01:42:53 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747903373; x=1748508173;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=Y+JhIAMtHUIDratsJJY78KupDIZPpYinM48aTm1d/JY=;
+        b=r0O1KboBqrjb9prn/wlOu5nFJBQKNaLEgyhSWNg6yQUr9BbWz91GRLcK6pZz1Q/Wa4
+         NvX2IxjRgc01ym5WoKpitJhsjUOHklQH966q3epOXFpSIqXJDkY1w8VCiofvknKXTi6i
+         le6neeS8FOCz5XHcEq9f+yKJ86xVAby1gut4zJATKbKSgFVNqWx6JnNgwoMM+5LOckTI
+         8QNgB8sewsO0Wi9T05YEJlbLxZcr/jmN3p2OINB37ztyhio3cDkPM2st21OfTNiLqlbg
+         /Fo3Ux6bwgLtqA7iaC7Nyy/TRibrnUBSuoht/lXCM56tmBi8RjlDMa3m3BPRO9MacA2j
+         IhuQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVJR/ly7PlnYj6xNVNdChelNf+rmwGdjhx+G91DDuiyQIco0dpyeEI5hUxGPlCdl11xr/qJDuNAB8JdSL8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxm2FJLFUbw7QqmnWSUmdfd23Jnk0kVDuYUFZ3dpa10ksQ6J0lX
+	7uK9gxP59fr2w4mI1YabwV/0iQo1PM9udBzo1TJYA4hEy5zM/3O+z1GgkfQtjP4QuuM5WOBjEky
+	C9ESOZonzpE0va+dS5G7vZMyxI5dpRUEVUKwnGfCTt16Y17tTgP4UWINq4yenoS9uxHrRKtb7gf
+	Mx
+X-Gm-Gg: ASbGncsihPu32VbfQFUCCvD9A95UcCOSctYzUz6AxDO0y6qjZKGS0vGsy1Hr3wYdoAa
+	ow+PccgqtzfAR32nxyDTOTahtEP7D5mUnsp3IsNOjYqLpijQsocAF6VBcvpq3jnDqB1HkcQ/yD4
+	Lye70ganlHWdjzY2vXTx46fcFR8uG/e7XKD92Pu+q9oyssdQ2Q+f8H9EobuN9lMG4kuooYnw8IG
+	p9PUGoZzdOtW/Aj0owa+JwVYLtlY3d71+9gWiAKew1YdmnzdcfTs7LgWEfBxcuNT0c2pD6OrnjU
+	LLz3GbsaJUtpu5Fhx5XuFdfe0/Ac+xLZLYmDHPLbWP5K+q7VOoQ=
+X-Received: by 2002:a05:6000:2012:b0:3a3:4b95:a8ce with SMTP id ffacd0b85a97d-3a35fe5bb43mr19588977f8f.4.1747903372739;
+        Thu, 22 May 2025 01:42:52 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGz3Y59UeX0GI553areSAAultGv2dYGzLX+MDxO1ZCQLWx07jpD+bfnH7brjiXOk9VkcyUhaQ==
+X-Received: by 2002:a05:6000:2012:b0:3a3:4b95:a8ce with SMTP id ffacd0b85a97d-3a35fe5bb43mr19588952f8f.4.1747903372277;
+        Thu, 22 May 2025 01:42:52 -0700 (PDT)
+Received: from ?IPV6:2a01:599:916:16c6:54bd:1780:84bf:8f90? ([2a01:599:916:16c6:54bd:1780:84bf:8f90])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a35ca4d230sm21902505f8f.4.2025.05.22.01.42.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 22 May 2025 01:42:51 -0700 (PDT)
+Message-ID: <f6cf8a99-48b0-46f7-b11b-574d1544fa24@redhat.com>
+Date: Thu, 22 May 2025 10:42:50 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,87 +75,119 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] firmware: arm_scmi: Use dev_err_probe() simplify the
- code
-To: long.yunjian@zte.com.cn, sudeep.holla@arm.com
-Cc: cristian.marussi@arm.com, peng.fan@nxp.com,
- florian.fainelli@broadcom.com, fang.yumeng@zte.com.cn,
- arm-scmi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, dan.carpenter@linaro.org,
- christophe.jaillet@wanadoo.fr, mou.yi@zte.com.cn, ouyang.maochun@zte.com.cn,
- xu.lifeng1@zte.com.cn
-References: <20250521161449954uFxEsoI6Zg_7wDu6IAfWk@zte.com.cn>
-From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH] selftests/mm: Fix test result reporting in gup_longterm
+To: Mark Brown <broonie@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Shuah Khan <shuah@kernel.org>,
+ linux-mm@kvack.org, linux-kselftest@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250515-selftests-mm-gup-longterm-dups-v1-1-05f8f731cf63@kernel.org>
+ <f924f789-5269-4046-99a4-2991f9a3ab3c@redhat.com>
+ <aCcvxaFc6DE_Mhr1@finisterre.sirena.org.uk>
+ <58dbef73-6e37-46de-9092-365456306b27@redhat.com>
+ <aCc5E-wB4nBwrKEP@finisterre.sirena.org.uk>
+ <46d151d7-c04b-4538-9725-dc4f46ac8ac1@redhat.com>
+ <aCd-8kEyDm2f2w0z@finisterre.sirena.org.uk>
+ <8131ce62-0cee-455f-9eeb-e2bbed244402@redhat.com>
+ <e7cb18c4-fed3-4fa5-bb51-228f2b018ce9@sirena.org.uk>
+From: David Hildenbrand <david@redhat.com>
 Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
- cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
- JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
- gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
- J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
- NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
- BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
- vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
- Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
- TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
- S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
- FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJoF1BKBQkWlnSaAAoJEBuTQ307
- QWKbHukP/3t4tRp/bvDnxJfmNdNVn0gv9ep3L39IntPalBFwRKytqeQkzAju0whYWg+R/rwp
- +r2I1Fzwt7+PTjsnMFlh1AZxGDmP5MFkzVsMnfX1lGiXhYSOMP97XL6R1QSXxaWOpGNCDaUl
- ajorB0lJDcC0q3xAdwzRConxYVhlgmTrRiD8oLlSCD5baEAt5Zw17UTNDnDGmZQKR0fqLpWy
- 786Lm5OScb7DjEgcA2PRm17st4UQ1kF0rQHokVaotxRM74PPDB8bCsunlghJl1DRK9s1aSuN
- hL1Pv9VD8b4dFNvCo7b4hfAANPU67W40AaaGZ3UAfmw+1MYyo4QuAZGKzaP2ukbdCD/DYnqi
- tJy88XqWtyb4UQWKNoQqGKzlYXdKsldYqrLHGoMvj1UN9XcRtXHST/IaLn72o7j7/h/Ac5EL
- 8lSUVIG4TYn59NyxxAXa07Wi6zjVL1U11fTnFmE29ALYQEXKBI3KUO1A3p4sQWzU7uRmbuxn
- naUmm8RbpMcOfa9JjlXCLmQ5IP7Rr5tYZUCkZz08LIfF8UMXwH7OOEX87Y++EkAB+pzKZNNd
- hwoXulTAgjSy+OiaLtuCys9VdXLZ3Zy314azaCU3BoWgaMV0eAW/+gprWMXQM1lrlzvwlD/k
- whyy9wGf0AEPpLssLVt9VVxNjo6BIkt6d1pMg6mHsUEVzsFNBFVDXDQBEADNkrQYSREUL4D3
- Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
- MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
- OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
- GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
- 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
- YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
- 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
- BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
- JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
- 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
- YpsFAmgXUF8FCRaWWyoACgkQG5NDfTtBYptO0w//dlXJs5/42hAXKsk+PDg3wyEFb4NpyA1v
- qmx7SfAzk9Hf6lWwU1O6AbqNMbh6PjEwadKUk1m04S7EjdQLsj/MBSgoQtCT3MDmWUUtHZd5
- RYIPnPq3WVB47GtuO6/u375tsxhtf7vt95QSYJwCB+ZUgo4T+FV4hquZ4AsRkbgavtIzQisg
- Dgv76tnEv3YHV8Jn9mi/Bu0FURF+5kpdMfgo1sq6RXNQ//TVf8yFgRtTUdXxW/qHjlYURrm2
- H4kutobVEIxiyu6m05q3e9eZB/TaMMNVORx+1kM3j7f0rwtEYUFzY1ygQfpcMDPl7pRYoJjB
- dSsm0ZuzDaCwaxg2t8hqQJBzJCezTOIkjHUsWAK+tEbU4Z4SnNpCyM3fBqsgYdJxjyC/tWVT
- AQ18NRLtPw7tK1rdcwCl0GFQHwSwk5pDpz1NH40e6lU+NcXSeiqkDDRkHlftKPV/dV+lQXiu
- jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
- zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
- XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <20250521161449954uFxEsoI6Zg_7wDu6IAfWk@zte.com.cn>
-Content-Type: text/plain; charset=UTF-8
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <e7cb18c4-fed3-4fa5-bb51-228f2b018ce9@sirena.org.uk>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 21/05/2025 10:14, long.yunjian@zte.com.cn wrote:
-> From: Yumeng Fang <fang.yumeng@zte.com.cn>
+On 21.05.25 20:48, Mark Brown wrote:
+> On Mon, May 19, 2025 at 03:28:47PM +0200, David Hildenbrand wrote:
+>> On 16.05.25 20:07, Mark Brown wrote:
+>>> On Fri, May 16, 2025 at 04:12:08PM +0200, David Hildenbrand wrote:
 > 
-> In the probe path, dev_err() can be replaced with dev_err_probe()
+>>> [Converting to kselftet_harness]
+>>>>> That'd certainly work, though doing that is more surgery on the test
+>>>>> than I personally have the time/enthusiasm for right now.
+> 
+>>>> Same over here.
+> 
+>>>> But probably if we touch it, we should just clean it up right away. Well,
+>>>> if we decide that that is the right cleanup. (you mention something like that
+>>>> in your patch description :)
+> 
+>>> OTOH there's something to be said for just making incremental
+>>> improvements in the tests where we can, they tend not to get huge
+>>> amounts of love in general which means perfect can very much be the
+> 
+>> I would agree if it would be a handful of small changes.
+> 
+>> But here we are already at
+> 
+>>   1 file changed, 107 insertions(+), 56 deletions(-)
+> 
+> So, I did have a brief poke at this which confirmed my instinct that
+> blocking a fix for this (and the other similarly structured tests like
+> cow) seems disproportionate.
 
-That's mailbox channel setup, not probe path.
+Thanks for giving it a try.
 
-Either this patch is wrong or commit msg is just not relevant.
+> 
+> The biggest issue is the configuration of fixtures, the harness really
+> wants the set of test variants to be fixed at compile time (see the
+> FIXTURE_ macros) but we're covering the dynamically discovered list of
+> huge page sizes.
 
+Yes.
 
-> which will check if error code is -EPROBE_DEFER and prints the
-> error name. It also sets the defer probe reason which can be
-> checked later through debugfs.
+Probably, one might be able to revert the logic: instead of running each 
+test for each size, run each size for each test: then, the tests are 
+fixed and would be covering all available sizes in a single logical test.
 
-You explain the basic stuff, we all know it, but you miss to explain
-things which we do not know. Rewrite your commit msgs to explain the
-non-obvious.
+I agree that that really is a bigger rework. Let me take a look at your 
+original patch later (fairly busy today, please poke me if I forget).
 
-We all know how dev_err_probe works. What we do not know is ALWAYS that
-chan setup is the probe path (so prove that it is ALWAYS probe path).
+-- 
+Cheers,
 
+David / dhildenb
 
-
-Best regards,
-Krzysztof
