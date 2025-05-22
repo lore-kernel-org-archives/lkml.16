@@ -1,165 +1,502 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from ssh248.corpemail.net (ssh248.corpemail.net [210.51.61.248])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5CE72638BA;
-	Thu, 22 May 2025 08:14:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62D511B0434
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 08:14:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.51.61.248
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747901645; cv=none; b=iMQ7vxpGwEcQuGJqewDDDoxxeWkT6yC7Gl5As8oz5luOSALfG0UqVHVybtUPS0yg0J89kbNhFb7hrJckaDV2zGO/LPEBLagEdgCkYjmB9940R2ewCJQEiA7WcKholDJZx+HUo6sSo+ZGC+65G61zf6WCeuT2kVsTmGEFIgDkmQk=
+	t=1747901693; cv=none; b=CDvauaR4zVlQzCqDWYfUeMW9wTjc5ZFVBne/IroPxVLA9IsbNM3h0JDWV0vAH2zbVCiKKUE2WKl45Apcgcv8dAOqIY35Xn9xqegSY/TnJ+ygbapOBTCfXTr2buLbQG/B+Z4wjlwgyunv0PqjhaM91U6VX8KoYmv1Qhc0MVjmg6I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747901645; c=relaxed/simple;
-	bh=4mgw9km5mFpRuUTgNjBFlEkd7BF74iSHlGGWra4E0Iw=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=pB4wffo0v/XcQVyMUVkdgViTd5Y6Sz/SXz/9Mh2D46atlXbfDcFeEijLoaHGhxowfphgmfxqv4MU9UwGfrfRuH3wLixnPQhQa7Ej5zxLDR4QLpoBOeI7zs+MwyszJ2Y1IzwBqQSZtfaSPihHEmvHWktA/8c6nQwQFPfDKm7wOW8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=TqYCmQGU; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="TqYCmQGU"
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54LIk2ji027677;
-	Thu, 22 May 2025 08:13:02 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=qcppdkim1; bh=NKZ+l3nSbHSSSKMUKXCppXpZH2g1/C9wrFG
-	L5jgW8Mg=; b=TqYCmQGURnW7LQ9Z9VK7VN0I/QXGSSq4HcWLNsqUFqHroRM5YR4
-	n/ddJ9gxlkUVQpo11MGTahvGpIOat9oS4yqMCxLU+1HpUH35uOAti+BNgyToSYAH
-	W3c062ZKosQX1T8YKqHY8CqFwfhsdc8XMzQH3SL8Hmk+e4v9DWZdlBsfd4mUOHAD
-	Tj8nxoCFTVxQDpSts+1sRn1G7a+Ayxiwe7K91G4m99HlXJmgZIAdK3yPIy+R6o5w
-	6v1odlte3VIICJNycZmwtqcK+VCnXhOYgau+Kolh5jBwXg0kInsIYRj8BkvT55wc
-	c6aD1nPOUF1i78L+gVQCBHEpzniecPC8kjw==
-Received: from aptaippmta01.qualcomm.com (tpe-colo-wan-fw-bordernet.qualcomm.com [103.229.16.4])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46rwf9dgyw-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 22 May 2025 08:13:01 +0000 (GMT)
-Received: from pps.filterd (APTAIPPMTA01.qualcomm.com [127.0.0.1])
-	by APTAIPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTP id 54M8CwsH019012;
-	Thu, 22 May 2025 08:12:58 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by APTAIPPMTA01.qualcomm.com (PPS) with ESMTPS id 46pkhn78m1-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 22 May 2025 08:12:58 +0000
-Received: from APTAIPPMTA01.qualcomm.com (APTAIPPMTA01.qualcomm.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 54M8CvFl018990;
-	Thu, 22 May 2025 08:12:58 GMT
-Received: from cbsp-sh-gv.ap.qualcomm.com (CBSP-SH-gv.ap.qualcomm.com [10.231.249.68])
-	by APTAIPPMTA01.qualcomm.com (PPS) with ESMTPS id 54M8Cv97018985
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 22 May 2025 08:12:57 +0000
-Received: by cbsp-sh-gv.ap.qualcomm.com (Postfix, from userid 393357)
-	id 0865140CAD; Thu, 22 May 2025 16:12:56 +0800 (CST)
-From: Ziqi Chen <quic_ziqichen@quicinc.com>
-To: quic_cang@quicinc.com, bvanassche@acm.org, mani@kernel.org,
-        beanhuo@micron.com, avri.altman@wdc.com, junwoo80.lee@samsung.com,
-        martin.petersen@oracle.com, quic_ziqichen@quicinc.com,
-        quic_nguyenb@quicinc.com, quic_nitirawa@quicinc.com,
-        quic_rampraka@quicinc.com, neil.armstrong@linaro.org,
-        luca.weiss@fairphone.com, konrad.dybcio@oss.qualcomm.com,
-        peter.wang@mediatek.com
-Cc: linux-arm-msm@vger.kernel.org, linux-scsi@vger.kernel.org,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v4] scsi: ufs: core: Don't perform UFS clkscale if host asyn scan in progress
-Date: Thu, 22 May 2025 16:12:28 +0800
-Message-Id: <20250522081233.2358565-1-quic_ziqichen@quicinc.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1747901693; c=relaxed/simple;
+	bh=BW9lkn7AVrntm6RhsmjseU7DONwk9aQ8lkYW7gvBNFE=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=TJpJB1JTpDTCwEOdpUiZYRc3sKO5qc2PDVAGfIXVgWd97hx8NTWM6ztrIG6LY2a6Jj1doBZruVFv9iiUcw3r4/2dWiO2AvuFLHK+BFBUqQ3r46Frz/ItJKvsSP8CZHmPkplGb1X3+10lu7HQ0eTlCwvY6qISD5mlVpTo7yn5CPg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=inspur.com; spf=pass smtp.mailfrom=inspur.com; arc=none smtp.client-ip=210.51.61.248
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=inspur.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inspur.com
+Received: from jtjnmail201608.home.langchao.com
+        by ssh248.corpemail.net ((D)) with ASMTP (SSL) id 202505221614391774;
+        Thu, 22 May 2025 16:14:39 +0800
+Received: from localhost.localdomain (10.94.19.116) by
+ jtjnmail201608.home.langchao.com (10.100.2.8) with Microsoft SMTP Server id
+ 15.1.2507.39; Thu, 22 May 2025 16:14:40 +0800
+From: Bo Liu <liubo03@inspur.com>
+To: <xiang@kernel.org>, <chao@kernel.org>
+CC: <linux-erofs@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>, Bo Liu
+	<liubo03@inspur.com>
+Subject: [PATCH v6] erofs: support deflate decompress by using Intel QAT
+Date: Thu, 22 May 2025 04:14:33 -0400
+Message-ID: <20250522081433.16812-1-liubo03@inspur.com>
+X-Mailer: git-send-email 2.18.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QCInternal: smtphost
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: 9C0MC_UeV1nAxCF4HPh3PSWJnIC6D4b2
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIyMDA4MSBTYWx0ZWRfXwFnff2lWvPTd
- cCtojmX6uUUXDu8ZIw3La3i58J7d643YzsBgZVAHfF1+xbE2zoPP03RDhjalGZ7XP4DCYCfSt63
- /lIACkdAYDrqUhLO0Wp2VXc8dgtuE713YuxXF2jr5Hxo3NconHJJ+5FTEng7vDZB06Y7+4cS/OS
- tb2x+lzq/BXwJPJtvFMFs2tmFc9Gt9IwllG6GnVldnZ0kU7vlqc7N7Yh+hWC9bxLwLRCIEKqRZB
- KAWxxAYSoLXZeKDbEShF8jp0pmenmw+i0dUXI35VrpXGB7T7B7I6BzpJfTUnd4o2CNuLWDHXsxF
- yRgc81RlO78slhqJeGif1nzV88YvlXC18l8dNqlsQrnYte1F01r2V1UFRjAfFTRE5HrCWyR0RiN
- eklM/A2itjjLHWooBVjbVWEcJmtU+rk2KGNUKVLhWGMgYs4UJqwHcLYiqTkK2A7fhdpWdBmA
-X-Authority-Analysis: v=2.4 cv=GawXnRXL c=1 sm=1 tr=0 ts=682edc8d cx=c_pps
- a=nuhDOHQX5FNHPW3J6Bj6AA==:117 a=nuhDOHQX5FNHPW3J6Bj6AA==:17
- a=dt9VzEwgFbYA:10 a=COk6AnOGAAAA:8 a=N54-gffFAAAA:8 a=2qWgUaWB3xuvrwrepqIA:9
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-GUID: 9C0MC_UeV1nAxCF4HPh3PSWJnIC6D4b2
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-22_04,2025-05-20_03,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- mlxscore=0 mlxlogscore=999 lowpriorityscore=0 impostorscore=0
- priorityscore=1501 clxscore=1015 malwarescore=0 phishscore=0 bulkscore=0
- spamscore=0 suspectscore=0 adultscore=0 classifier=spam authscore=0
- authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505160000 definitions=main-2505220081
+Content-Type: text/plain
+tUid: 2025522161439b79179d51f7b395ee93eae4a04668331
+X-Abuse-Reports-To: service@corp-email.com
+Abuse-Reports-To: service@corp-email.com
+X-Complaints-To: service@corp-email.com
+X-Report-Abuse-To: service@corp-email.com
 
-When preparing for UFS clock scaling, the UFS driver will quiesce all sdevs
-queues in the UFS SCSI host tagset list and then unquiesce them when UFS
-clock scaling unpreparing. If the UFS SCSI host async scan is in progress
-at this time, some LUs may be added to the tagset list between UFS clkscale
-prepare and unprepare. This can cause two issues:
+This patch introdueces the use of the Intel QAT to decompress compressed
+data in the EROFS filesystem, aiming to improve the decompression speed
+of compressed datea.
 
-1. During clock scaling, there may be IO requests issued through new added
-queues that have not been quiesced, leading to task abort issue.
+We created a 285MiB compressed file and then used the following command to
+create EROFS images with different cluster size.
+     # mkfs.erofs -zdeflate,level=9 -C16384
 
-2. These new added queues that have not been quiesced will be unquiesced as
-well when UFS clkscale is unprepared, resulting in warning prints.
+fio command was used to test random read and small random read(~5%) and
+sequential read performance.
+     # fio -filename=testfile  -bs=4k -rw=read -name=job1
+     # fio -filename=testfile  -bs=4k -rw=randread -name=job1
+     # fio -filename=testfile  -bs=4k -rw=randread --io_size=14m -name=job1
 
-Therefore, use the mutex lock scan_mutex in ufshcd_clock_scaling_prepare()
-and ufshcd_clock_scaling_unprepare() to protect it.
+Here are some performance numbers for reference:
 
-Co-developed-by: Can Guo <quic_cang@quicinc.com>
-Signed-off-by: Can Guo <quic_cang@quicinc.com>
-Signed-off-by: Ziqi Chen <quic_ziqichen@quicinc.com>
-Suggested-by: Bart Van Assche <bvanassche@acm.org>
+Processors: Intel(R) Xeon(R) 6766E(144 core)
+Memory:     521 GiB
 
+|-----------------------------------------------------------------------------|
+|           | Cluster size | sequential read | randread  | small randread(5%) |
+|-----------|--------------|-----------------|-----------|--------------------|
+| Intel QAT |    4096      |    538  MiB/s   | 112 MiB/s |     20.76 MiB/s    |
+| Intel QAT |    16384     |    699  MiB/s   | 158 MiB/s |     21.02 MiB/s    |
+| Intel QAT |    65536     |    917  MiB/s   | 278 MiB/s |     20.90 MiB/s    |
+| Intel QAT |    131072    |    1056 MiB/s   | 351 MiB/s |     23.36 MiB/s    |
+| Intel QAT |    262144    |    1145 MiB/s   | 431 MiB/s |     26.66 MiB/s    |
+| deflate   |    4096      |    499  MiB/s   | 108 MiB/s |     21.50 MiB/s    |
+| deflate   |    16384     |    422  MiB/s   | 125 MiB/s |     18.94 MiB/s    |
+| deflate   |    65536     |    452  MiB/s   | 159 MiB/s |     13.02 MiB/s    |
+| deflate   |    131072    |    452  MiB/s   | 177 MiB/s |     11.44 MiB/s    |
+| deflate   |    262144    |    466  MiB/s   | 194 MiB/s |     10.60 MiB/s    |
+
+Signed-off-by: Bo Liu <liubo03@inspur.com>
 ---
-v1 -> v2:
-Move whole clkscale Initialize process out of ufshcd_add_lus().
+v1: https://lore.kernel.org/linux-erofs/20250410042048.3044-1-liubo03@inspur.com/
+v2: https://lore.kernel.org/linux-erofs/20250410042048.3044-1-liubo03@inspur.com/T/#t
+v3: https://lore.kernel.org/linux-erofs/20250516082634.3801-1-liubo03@inspur.com/
+v4: https://lore.kernel.org/linux-erofs/20250521100326.2867828-1-hsiangkao@linux.alibaba.com/
+v5: https://lore.kernel.org/linux-erofs/f245b9edfc1b4205804c415cc0608558@inspur.com/T/#t
 
-v2 -> v3:
-Add check for the return value of ufshcd_add_lus().
+change since v5:
+ - update sysfs documentation.
 
-v3 -> v4:
-1. Using lock 'scan_mutex' instead of checking flag 'scan_mutex'.
-2. Update patch name and commit message.
----
- drivers/ufs/core/ufshcd.c | 3 +++
- 1 file changed, 3 insertions(+)
+ Documentation/ABI/testing/sysfs-fs-erofs |   9 ++
+ fs/erofs/Kconfig                         |  14 ++
+ fs/erofs/Makefile                        |   1 +
+ fs/erofs/compress.h                      |  10 ++
+ fs/erofs/decompressor_crypto.c           | 186 +++++++++++++++++++++++
+ fs/erofs/decompressor_deflate.c          |  17 ++-
+ fs/erofs/sysfs.c                         |  34 ++++-
+ fs/erofs/zdata.c                         |   1 +
+ 8 files changed, 269 insertions(+), 3 deletions(-)
+ create mode 100644 fs/erofs/decompressor_crypto.c
 
-diff --git a/drivers/ufs/core/ufshcd.c b/drivers/ufs/core/ufshcd.c
-index d7ff24b48de3..a7513f256057 100644
---- a/drivers/ufs/core/ufshcd.c
-+++ b/drivers/ufs/core/ufshcd.c
-@@ -1397,6 +1397,7 @@ static int ufshcd_clock_scaling_prepare(struct ufs_hba *hba, u64 timeout_us)
- 	 * make sure that there are no outstanding requests when
- 	 * clock scaling is in progress
- 	 */
-+	mutex_lock(&hba->host->scan_mutex);
- 	blk_mq_quiesce_tagset(&hba->host->tag_set);
- 	mutex_lock(&hba->wb_mutex);
- 	down_write(&hba->clk_scaling_lock);
-@@ -1407,6 +1408,7 @@ static int ufshcd_clock_scaling_prepare(struct ufs_hba *hba, u64 timeout_us)
- 		up_write(&hba->clk_scaling_lock);
- 		mutex_unlock(&hba->wb_mutex);
- 		blk_mq_unquiesce_tagset(&hba->host->tag_set);
-+		mutex_unlock(&hba->host->scan_mutex);
- 		goto out;
+diff --git a/Documentation/ABI/testing/sysfs-fs-erofs b/Documentation/ABI/testing/sysfs-fs-erofs
+index b134146d735b..4d024f043ea1 100644
+--- a/Documentation/ABI/testing/sysfs-fs-erofs
++++ b/Documentation/ABI/testing/sysfs-fs-erofs
+@@ -27,3 +27,12 @@ Description:	Writing to this will drop compression-related caches,
+ 		- 1 : invalidate cached compressed folios
+ 		- 2 : drop in-memory pclusters
+ 		- 3 : drop in-memory pclusters and cached compressed folios
++
++What:		/sys/fs/erofs/accel
++Date:		May 2025
++Contact:	"Bo Liu" <liubo03@inspur.com>
++Description:	Used to set or show hardware accelerators in effect
++		and multiple accelerators are separated by '\n'.
++		Supported accelerator(s): qat_deflate.
++		Disable all accelerators with an empty string (echo > accel).
++
+diff --git a/fs/erofs/Kconfig b/fs/erofs/Kconfig
+index 331e49cd1b8d..74e878a9784a 100644
+--- a/fs/erofs/Kconfig
++++ b/fs/erofs/Kconfig
+@@ -144,6 +144,20 @@ config EROFS_FS_ZIP_ZSTD
+ 
+ 	  If unsure, say N.
+ 
++config EROFS_FS_ZIP_ACCEL
++	bool "EROFS hardware decompression support"
++	depends on EROFS_FS_ZIP
++	help
++	  Saying Y here includes hardware accelerator support for reading
++	  EROFS file systems containing compressed data.  It gives better
++	  decompression speed than the software-implemented decompression, and
++	  it costs lower CPU overhead.
++
++	  Hardware accelerator support is an experimental feature for now and
++	  file systems are still readable without selecting this option.
++
++	  If unsure, say N.
++
+ config EROFS_FS_ONDEMAND
+ 	bool "EROFS fscache-based on-demand read support (deprecated)"
+ 	depends on EROFS_FS
+diff --git a/fs/erofs/Makefile b/fs/erofs/Makefile
+index 4331d53c7109..549abc424763 100644
+--- a/fs/erofs/Makefile
++++ b/fs/erofs/Makefile
+@@ -7,5 +7,6 @@ erofs-$(CONFIG_EROFS_FS_ZIP) += decompressor.o zmap.o zdata.o zutil.o
+ erofs-$(CONFIG_EROFS_FS_ZIP_LZMA) += decompressor_lzma.o
+ erofs-$(CONFIG_EROFS_FS_ZIP_DEFLATE) += decompressor_deflate.o
+ erofs-$(CONFIG_EROFS_FS_ZIP_ZSTD) += decompressor_zstd.o
++erofs-$(CONFIG_EROFS_FS_ZIP_ACCEL) += decompressor_crypto.o
+ erofs-$(CONFIG_EROFS_FS_BACKED_BY_FILE) += fileio.o
+ erofs-$(CONFIG_EROFS_FS_ONDEMAND) += fscache.o
+diff --git a/fs/erofs/compress.h b/fs/erofs/compress.h
+index 2704d7a592a5..6a3dc3ba406a 100644
+--- a/fs/erofs/compress.h
++++ b/fs/erofs/compress.h
+@@ -76,4 +76,14 @@ int z_erofs_fixup_insize(struct z_erofs_decompress_req *rq, const char *padbuf,
+ 			 unsigned int padbufsize);
+ int __init z_erofs_init_decompressor(void);
+ void z_erofs_exit_decompressor(void);
++int z_erofs_crypto_decompress(struct z_erofs_decompress_req *rq,
++				struct page **pgpl);
++int z_erofs_crypto_enable_engine(const char *name, int len);
++#ifdef CONFIG_EROFS_FS_ZIP_ACCEL
++void z_erofs_crypto_disable_all_engines(void);
++int z_erofs_crypto_show_engines(char *buf, int size, char sep);
++#else
++static inline void z_erofs_crypto_disable_all_engines(void) {}
++static inline int z_erofs_crypto_show_engines(char *buf, int size, char sep) { return 0; }
++#endif
+ #endif
+diff --git a/fs/erofs/decompressor_crypto.c b/fs/erofs/decompressor_crypto.c
+new file mode 100644
+index 000000000000..95a3778cb3bd
+--- /dev/null
++++ b/fs/erofs/decompressor_crypto.c
+@@ -0,0 +1,186 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++#include <linux/scatterlist.h>
++#include <crypto/acompress.h>
++
++#include "compress.h"
++
++static int __z_erofs_crypto_decompress(struct z_erofs_decompress_req *rq,
++				struct crypto_acomp *tfm)
++{
++	struct sg_table st_src, st_dst;
++	struct acomp_req *req;
++	struct crypto_wait wait;
++	u8 *headpage;
++	int ret;
++
++	headpage = kmap_local_page(*rq->in);
++	ret = z_erofs_fixup_insize(rq, headpage + rq->pageofs_in,
++				min_t(unsigned int, rq->inputsize,
++							rq->sb->s_blocksize - rq->pageofs_in));
++	kunmap_local(headpage);
++	if (ret)
++		return ret;
++
++	req = acomp_request_alloc(tfm);
++	if (!req)
++		return -ENOMEM;
++
++	ret = sg_alloc_table_from_pages_segment(&st_src, rq->in, rq->inpages,
++			rq->pageofs_in, rq->inputsize, UINT_MAX, GFP_KERNEL);
++	if (ret < 0)
++		goto failed_src_alloc;
++
++	ret = sg_alloc_table_from_pages_segment(&st_dst, rq->out, rq->outpages,
++			rq->pageofs_out, rq->outputsize, UINT_MAX, GFP_KERNEL);
++	if (ret < 0)
++		goto failed_dst_alloc;
++
++	acomp_request_set_params(req, st_src.sgl,
++		st_dst.sgl, rq->inputsize, rq->outputsize);
++
++	crypto_init_wait(&wait);
++	acomp_request_set_callback(req, CRYPTO_TFM_REQ_MAY_BACKLOG,
++				crypto_req_done, &wait);
++
++	ret = crypto_wait_req(crypto_acomp_decompress(req), &wait);
++	if (ret) {
++		erofs_err(rq->sb, "failed to decompress %d in[%u, %u] out[%u]",
++			  ret, rq->inputsize, rq->pageofs_in, rq->outputsize);
++		ret = -EIO;
++	}
++
++	sg_free_table(&st_dst);
++failed_dst_alloc:
++	sg_free_table(&st_src);
++failed_src_alloc:
++	acomp_request_free(req);
++	return ret;
++}
++
++struct z_erofs_crypto_engine {
++	char *crypto_name;
++	struct crypto_acomp *tfm;
++};
++
++struct z_erofs_crypto_engine *z_erofs_crypto[Z_EROFS_COMPRESSION_MAX] = {
++	[Z_EROFS_COMPRESSION_LZ4] = (struct z_erofs_crypto_engine[]) {
++		{},
++	},
++	[Z_EROFS_COMPRESSION_LZMA] = (struct z_erofs_crypto_engine[]) {
++		{},
++	},
++	[Z_EROFS_COMPRESSION_DEFLATE] = (struct z_erofs_crypto_engine[]) {
++		{ .crypto_name = "qat_deflate", },
++		{},
++	},
++	[Z_EROFS_COMPRESSION_ZSTD] = (struct z_erofs_crypto_engine[]) {
++		{},
++	},
++};
++
++static DECLARE_RWSEM(z_erofs_crypto_rwsem);
++
++static struct crypto_acomp *z_erofs_crypto_get_engine(int alg)
++{
++	struct z_erofs_crypto_engine *e;
++
++	for (e = z_erofs_crypto[alg]; e->crypto_name; ++e)
++		if (e->tfm)
++			return e->tfm;
++	return NULL;
++}
++
++
++int z_erofs_crypto_decompress(struct z_erofs_decompress_req *rq,
++				 struct page **pgpl)
++{
++	struct crypto_acomp *tfm;
++	int i, err;
++
++	down_read(&z_erofs_crypto_rwsem);
++	tfm = z_erofs_crypto_get_engine(rq->alg);
++	if (!tfm) {
++		err = -EOPNOTSUPP;
++		goto out;
++	}
++
++	for (i = 0; i < rq->outpages; i++) {
++		struct page *const page = rq->out[i];
++		struct page *victim;
++
++		if (!page) {
++			victim = __erofs_allocpage(pgpl, rq->gfp, true);
++			if (!victim) {
++				err = -ENOMEM;
++				goto out;
++			}
++			set_page_private(victim, Z_EROFS_SHORTLIVED_PAGE);
++			rq->out[i] = victim;
++		}
++	}
++
++	err = __z_erofs_crypto_decompress(rq, tfm);
++out:
++	up_read(&z_erofs_crypto_rwsem);
++	return err;
++}
++
++int z_erofs_crypto_enable_engine(const char *name, int len)
++{
++	struct z_erofs_crypto_engine *e;
++	struct crypto_acomp *tfm;
++	int alg;
++
++	down_write(&z_erofs_crypto_rwsem);
++	for (alg = 0; alg < Z_EROFS_COMPRESSION_MAX; ++alg) {
++		for (e = z_erofs_crypto[alg]; e->crypto_name; ++e) {
++			if (!strncmp(name, e->crypto_name, len)) {
++				if (e->tfm)
++					break;
++				tfm = crypto_alloc_acomp(e->crypto_name, 0, 0);
++				if (IS_ERR(tfm)) {
++					up_write(&z_erofs_crypto_rwsem);
++					return -EOPNOTSUPP;
++				}
++				e->tfm = tfm;
++				break;
++			}
++		}
++	}
++	up_write(&z_erofs_crypto_rwsem);
++	return 0;
++}
++
++void z_erofs_crypto_disable_all_engines(void)
++{
++	struct z_erofs_crypto_engine *e;
++	int alg;
++
++	down_write(&z_erofs_crypto_rwsem);
++	for (alg = 0; alg < Z_EROFS_COMPRESSION_MAX; ++alg) {
++		for (e = z_erofs_crypto[alg]; e->crypto_name; ++e) {
++			if (!e->tfm)
++				continue;
++			crypto_free_acomp(e->tfm);
++			e->tfm = NULL;
++		}
++	}
++	up_write(&z_erofs_crypto_rwsem);
++}
++
++int z_erofs_crypto_show_engines(char *buf, int size, char sep)
++{
++	struct z_erofs_crypto_engine *e;
++	int alg, len = 0;
++
++	for (alg = 0; alg < Z_EROFS_COMPRESSION_MAX; ++alg) {
++		for (e = z_erofs_crypto[alg]; e->crypto_name; ++e) {
++			if (!e->tfm)
++				continue;
++			len += scnprintf(buf + len, size - len, "%s%c",
++					 e->crypto_name, sep);
++		}
++	}
++	return len;
++}
++
+diff --git a/fs/erofs/decompressor_deflate.c b/fs/erofs/decompressor_deflate.c
+index c6908a487054..e4c9df9d7978 100644
+--- a/fs/erofs/decompressor_deflate.c
++++ b/fs/erofs/decompressor_deflate.c
+@@ -97,7 +97,7 @@ static int z_erofs_load_deflate_config(struct super_block *sb,
+ 	return -ENOMEM;
+ }
+ 
+-static int z_erofs_deflate_decompress(struct z_erofs_decompress_req *rq,
++static int __z_erofs_deflate_decompress(struct z_erofs_decompress_req *rq,
+ 				      struct page **pgpl)
+ {
+ 	struct super_block *sb = rq->sb;
+@@ -178,6 +178,21 @@ static int z_erofs_deflate_decompress(struct z_erofs_decompress_req *rq,
+ 	return err;
+ }
+ 
++static int z_erofs_deflate_decompress(struct z_erofs_decompress_req *rq,
++				struct page **pgpl)
++{
++#ifdef CONFIG_EROFS_FS_ZIP_ACCEL
++	int err;
++
++	if (!rq->partial_decoding) {
++		err = z_erofs_crypto_decompress(rq, pgpl);
++		if (err != -EOPNOTSUPP)
++			return err;
++	}
++#endif
++	return __z_erofs_deflate_decompress(rq, pgpl);
++}
++
+ const struct z_erofs_decompressor z_erofs_deflate_decomp = {
+ 	.config = z_erofs_load_deflate_config,
+ 	.decompress = z_erofs_deflate_decompress,
+diff --git a/fs/erofs/sysfs.c b/fs/erofs/sysfs.c
+index dad4e6c6c155..1239d452f45f 100644
+--- a/fs/erofs/sysfs.c
++++ b/fs/erofs/sysfs.c
+@@ -7,12 +7,14 @@
+ #include <linux/kobject.h>
+ 
+ #include "internal.h"
++#include "compress.h"
+ 
+ enum {
+ 	attr_feature,
+ 	attr_drop_caches,
+ 	attr_pointer_ui,
+ 	attr_pointer_bool,
++	attr_accel,
+ };
+ 
+ enum {
+@@ -60,14 +62,26 @@ static struct erofs_attr erofs_attr_##_name = {			\
+ EROFS_ATTR_RW_UI(sync_decompress, erofs_mount_opts);
+ EROFS_ATTR_FUNC(drop_caches, 0200);
+ #endif
++#ifdef CONFIG_EROFS_FS_ZIP_ACCEL
++EROFS_ATTR_FUNC(accel, 0644);
++#endif
+ 
+-static struct attribute *erofs_attrs[] = {
++static struct attribute *erofs_sb_attrs[] = {
+ #ifdef CONFIG_EROFS_FS_ZIP
+ 	ATTR_LIST(sync_decompress),
+ 	ATTR_LIST(drop_caches),
+ #endif
+ 	NULL,
+ };
++ATTRIBUTE_GROUPS(erofs_sb);
++
++static struct attribute *erofs_attrs[] = {
++#ifdef CONFIG_EROFS_FS_ZIP_ACCEL
++	ATTR_LIST(accel),
++#endif
++	NULL,
++};
++
+ ATTRIBUTE_GROUPS(erofs);
+ 
+ /* Features this copy of erofs supports */
+@@ -128,6 +142,8 @@ static ssize_t erofs_attr_show(struct kobject *kobj,
+ 		if (!ptr)
+ 			return 0;
+ 		return sysfs_emit(buf, "%d\n", *(bool *)ptr);
++	case attr_accel:
++		return z_erofs_crypto_show_engines(buf, PAGE_SIZE, '\n');
  	}
+ 	return 0;
+ }
+@@ -181,6 +197,19 @@ static ssize_t erofs_attr_store(struct kobject *kobj, struct attribute *attr,
+ 		if (t & 1)
+ 			invalidate_mapping_pages(MNGD_MAPPING(sbi), 0, -1);
+ 		return len;
++#endif
++#ifdef CONFIG_EROFS_FS_ZIP_ACCEL
++	case attr_accel:
++		buf = skip_spaces(buf);
++		z_erofs_crypto_disable_all_engines();
++		while (*buf) {
++			t = strcspn(buf, "\n");
++			ret = z_erofs_crypto_enable_engine(buf, t);
++			if (ret < 0)
++				return ret;
++			buf += buf[t] != '\0' ? t + 1 : t;
++		}
++		return len;
+ #endif
+ 	}
+ 	return 0;
+@@ -199,12 +228,13 @@ static const struct sysfs_ops erofs_attr_ops = {
+ };
  
-@@ -1428,6 +1430,7 @@ static void ufshcd_clock_scaling_unprepare(struct ufs_hba *hba, int err)
- 	mutex_unlock(&hba->wb_mutex);
+ static const struct kobj_type erofs_sb_ktype = {
+-	.default_groups = erofs_groups,
++	.default_groups = erofs_sb_groups,
+ 	.sysfs_ops	= &erofs_attr_ops,
+ 	.release	= erofs_sb_release,
+ };
  
- 	blk_mq_unquiesce_tagset(&hba->host->tag_set);
-+	mutex_unlock(&hba->host->scan_mutex);
- 	ufshcd_release(hba);
+ static const struct kobj_type erofs_ktype = {
++	.default_groups = erofs_groups,
+ 	.sysfs_ops	= &erofs_attr_ops,
+ };
+ 
+diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
+index 0671184d9cf1..f02bf95aeb3f 100644
+--- a/fs/erofs/zdata.c
++++ b/fs/erofs/zdata.c
+@@ -409,6 +409,7 @@ void z_erofs_exit_subsystem(void)
+ 	erofs_destroy_percpu_workers();
+ 	destroy_workqueue(z_erofs_workqueue);
+ 	z_erofs_destroy_pcluster_pool();
++	z_erofs_crypto_disable_all_engines();
+ 	z_erofs_exit_decompressor();
  }
  
 -- 
-2.34.1
+2.31.1
 
