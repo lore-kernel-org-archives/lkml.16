@@ -1,268 +1,309 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4B8B130A54;
-	Thu, 22 May 2025 04:27:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 582051754B;
+	Thu, 22 May 2025 04:34:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747888022; cv=none; b=M73QyZjwt/VwtUKUm8CRRayB0vIk55N4gyDujvYvkJatqP2jhytj/EaoQrZRtzYiv+kLBnnwWndmFIg9I95HA9CrMXanKMGx0LEnyTFYdT1v6IJzni6nAQ46+SLQhltJKI7+QgArYTLf2EgImr/hxd06dlS4LwqikCLCPDAucx8=
+	t=1747888479; cv=none; b=Dko5ux9BKefqrvxZhjeJQRdfmT453CvtDyFJaqSc8eFWANwOnZJ7nEix+xbJQJBiTqKIedj2qYHBgupmjDxBwyEcz2+uSlhVggUA+Ww5cIO9SG3PUJoyuRrd5yAJ12CvfRd3JI0BG+2ECisGgSmnUowaZQ/u55AhCQCests4q9c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747888022; c=relaxed/simple;
-	bh=pYPqpCs+wZJ2se/dDYL6AzIqkv5JEmLumwWmmFC+BEk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FWaDXeI610rzkarzLv+o7lT8PFRm50/asSZ8/4Nz1XV+HiEsk/xMNXhJBTwFOks0TSiqBD44OB89R/qAR1IUU4LYulnqwoHzoai5i6DvL3ArUDD3QjUzivy7JCDPVZF0YwAOa+T+NKJjUkPlViMMLziLjH4w9BQF0wmYqBLmHCw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KLYrpJ3v; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1747888479; c=relaxed/simple;
+	bh=+MAbHI6nKFmeUN70mQufBzxvpMfwhpLjVumeLrGJOoE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nMNJ1GK41NuApMnudFhGTFXEE3oDd5jynz9I3yYTIWO6rWvTTFzaOxLQekd6VbYZcePv32Mcne/UtZ1wfLC3d1H58NfORDLnwrwLjYDcdGsq3ekKMzxidLvSduzR6/c6trEaCuPTNokKToGNZfA/fdy+CWxlu0jvkT2X9G6ljwE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=XtS+lnhu; arc=none smtp.client-ip=212.227.17.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KLYrpJ3v"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747888021; x=1779424021;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=pYPqpCs+wZJ2se/dDYL6AzIqkv5JEmLumwWmmFC+BEk=;
-  b=KLYrpJ3vN3ZGmEfFyBRrnqvGDbOLJx8EhCSzMORzpQ2xmqup7IfsoGH7
-   MtewPAH4a6SFyaSsy8IK2UHlj3NtRRYNAhmljqD85ZLcbltRu2B5efeFt
-   fZiFbNedZ4q1reZaDQBCjrRBvyCY1wbD0H/MLfClZ5tAD27TtXcJffhXU
-   bnOnD/ugWPGMyrHtYta73szZLcj8r+qutuMKeflf1XXftnMT2/hi05Iu7
-   K+BVQHnMj58f+tIpKyTBQKWgDmYUBFhkoyIpuKQJ+tQpDSi1j/c/gJjsR
-   tshF7qdn5kuEQ+Kll1BWjqFXR6XdNSrricxzXpLsencqSfZRJU+nMSOot
-   Q==;
-X-CSE-ConnectionGUID: Xu3llL9+SY+Ip5WwebkMVA==
-X-CSE-MsgGUID: WTXWstqpRYCX4G9DIpln7Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11440"; a="37513938"
-X-IronPort-AV: E=Sophos;i="6.15,305,1739865600"; 
-   d="scan'208";a="37513938"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2025 21:27:00 -0700
-X-CSE-ConnectionGUID: 8O9WDd3fSp+bh4VeJDLIbA==
-X-CSE-MsgGUID: 9l6/JDfuTBK4xlf7CvUNrg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,305,1739865600"; 
-   d="scan'208";a="145265186"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by fmviesa005.fm.intel.com with ESMTP; 21 May 2025 21:26:57 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uHxWA-000OuK-2V;
-	Thu, 22 May 2025 04:26:54 +0000
-Date: Thu, 22 May 2025 12:25:57 +0800
-From: kernel test robot <lkp@intel.com>
-To: Hugo Villeneuve <hugo@hugovil.com>, biju.das.jz@bp.renesas.com,
-	maarten.lankhorst@linux.intel.com, mripard@kernel.org,
-	tzimmermann@suse.de, airlied@gmail.com, simona@ffwll.ch
-Cc: oe-kbuild-all@lists.linux.dev, dri-devel@lists.freedesktop.org,
-	linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	hugo@hugovil.com, Hugo Villeneuve <hvilleneuve@dimonoff.com>,
-	Chris Brandt <chris.brandt@renesas.com>
-Subject: Re: [PATCH 1/2] drm: rcar-du: rzg2l_mipi_dsi: Implement host
- transfers
-Message-ID: <202505221231.A6G8HqGd-lkp@intel.com>
-References: <20250520171034.3488482-2-hugo@hugovil.com>
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="XtS+lnhu"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1747888474; x=1748493274; i=w_armin@gmx.de;
+	bh=7S9zDix78zdIHYEeVE26+vKjzjcXgCv6jfO4FBk30B8=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=XtS+lnhuZ03FzBITEYG3B+FC/bsTyc4rFbQ5ZmpGR9BF8zP1qd9enxl9BbcBNqcb
+	 W4nqE6ZViLdvEX+hFpzxuORrxcQ1OVPTttR2yVsiNvyh5oGZP0tAmisay30u9jAXX
+	 Zd/3lUun7djRP6nvK0gVYVFEcxzjpGbWYgUFQBD9OruMY3E4/xsfTncTrEBByt4lE
+	 2XBYZig0SDjpXvGAfvXWA9gzAsrCkuWiNRvz8ouEuCeHIAAbCaZFzzzyuPQSZo7Bc
+	 zOWIcWlo2xYupiM6jN2xPB6a3QVE6SbBncd1xsNRMyBRpEJUiq5+Jq/+idLMLJkQA
+	 EEOIbfc9MO8NCBbGxw==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.0.69] ([87.177.78.219]) by mail.gmx.net (mrgmx105
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MC30P-1u664q3zUD-001c53; Thu, 22
+ May 2025 06:34:34 +0200
+Message-ID: <a6d92cdd-4dc3-4080-9ed9-5b1f02f247e0@gmx.de>
+Date: Thu, 22 May 2025 06:34:32 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250520171034.3488482-2-hugo@hugovil.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] ACPI: platform_profile: Add support for non-ACPI
+ platforms
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: lenb@kernel.org, j@jannau.net, linux-acpi@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250518185111.3560-1-W_Armin@gmx.de>
+ <CAJZ5v0hNmMtR4V0tYqD1dV2BqAKJ2sCOyBadkVtG3sS3V90uvw@mail.gmail.com>
+Content-Language: en-US
+From: Armin Wolf <W_Armin@gmx.de>
+In-Reply-To: <CAJZ5v0hNmMtR4V0tYqD1dV2BqAKJ2sCOyBadkVtG3sS3V90uvw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:lsz04gt4JN4aL9AwrQjEXmCup17Dka+frZ+12hLASA9LBupKlwf
+ r7dIk2/H46ukLM87mvjXjNacZ4rDpo1/UYytn2VwzOy2hOM9uTDUdD7wNJDEOYA5eTo6OdR
+ d6N8jMJKoB7P4+XFyNV8acEPJgLfJco8dp1asgVJJJSLMPDZZBwits4Uy3hzJ0nZjCLiILx
+ xPlGIF0p/2ifGX26gFMBA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:uvk8Im9ek/M=;kozBUdOolWCeEkOzCk9nzvVX3Wg
+ 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
 
-Hi Hugo,
+Am 21.05.25 um 22:17 schrieb Rafael J. Wysocki:
 
-kernel test robot noticed the following build errors:
+> On Sun, May 18, 2025 at 8:51=E2=80=AFPM Armin Wolf <W_Armin@gmx.de> wrot=
+e:
+>> Currently the platform profile subsystem assumes that all supported
+>> (i.e. ACPI-capable) platforms always run with ACPI being enabled.
+>> However some ARM64 notebooks do not support ACPI and are instead
+>> using devicetree for booting.
+>>
+>> Do not register the legacy sysfs interface on such devices as it
+>> depends on the acpi_kobj (/sys/firmware/acpi/) being present. Users
+>> are encouraged to use the new platform-profile class interface
+>> instead.
+> So how does it work in this case?
+>
+The platform profile subsystem also exposes a more modern class-based sysf=
+s interface,
+see Documentation/ABI/testing/sysfs-class-platform-profile for details.
 
-[auto build test ERROR on 7c1a9408ce5f34ded5a85db81cf80e0975901685]
+This interface does not depend on /sys/firmware/acpi being present, so use=
+rspace
+programs can still control the platform profiles using the class-based int=
+erface.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Hugo-Villeneuve/drm-rcar-du-rzg2l_mipi_dsi-Implement-host-transfers/20250521-011613
-base:   7c1a9408ce5f34ded5a85db81cf80e0975901685
-patch link:    https://lore.kernel.org/r/20250520171034.3488482-2-hugo%40hugovil.com
-patch subject: [PATCH 1/2] drm: rcar-du: rzg2l_mipi_dsi: Implement host transfers
-config: m68k-allmodconfig (https://download.01.org/0day-ci/archive/20250522/202505221231.A6G8HqGd-lkp@intel.com/config)
-compiler: m68k-linux-gcc (GCC) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250522/202505221231.A6G8HqGd-lkp@intel.com/reproduce)
+This will become very important once we have platform profile drivers not =
+depending on
+some sort of ACPI interface. I suspect that sooner or later some drivers f=
+or the embedded
+controllers on ARM64 notebooks (devicetree!) will register with the platfo=
+rm profile subsystem.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505221231.A6G8HqGd-lkp@intel.com/
+Apart from that this allows input drivers using platform_profile_cycle() t=
+o work on non-ACPI
+platforms (like ARm64 devices using devicetree).
 
-All errors (new ones prefixed by >>):
+Thanks,
+Armin Wolf
 
-   drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c: In function 'rzg2l_mipi_dsi_read_response':
->> drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c:684:20: error: implicit declaration of function 'FIELD_GET' [-Wimplicit-function-declaration]
-     684 |         datatype = FIELD_GET(RXRSS0R_DT, result);
-         |                    ^~~~~~~~~
-   drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c: In function 'rzg2l_mipi_dsi_host_transfer':
->> drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c:742:26: error: implicit declaration of function 'FIELD_PREP' [-Wimplicit-function-declaration]
-     742 |                 value |= FIELD_PREP(SQCH0DSC0AR_BTA, SQCH0DSC0AR_BTA_NON_READ);
-         |                          ^~~~~~~~~~
-
-
-vim +/FIELD_GET +684 drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c
-
-   661	
-   662	static ssize_t rzg2l_mipi_dsi_read_response(struct rzg2l_mipi_dsi *dsi,
-   663						    const struct mipi_dsi_msg *msg)
-   664	{
-   665		u8 *msg_rx = msg->rx_buf;
-   666		u16 size;
-   667		u8 datatype;
-   668		u32 result;
-   669	
-   670		result = rzg2l_mipi_dsi_link_read(dsi, RXRSS0R);
-   671		if (result & RXRSS0R_RXPKTDFAIL) {
-   672			dev_err(dsi->dev, "packet rx data did not save correctly\n");
-   673			return -EPROTO;
-   674		}
-   675	
-   676		if (result & RXRSS0R_RXFAIL) {
-   677			dev_err(dsi->dev, "packet rx failure\n");
-   678			return -EPROTO;
-   679		}
-   680	
-   681		if (!(result & RXRSS0R_RXSUC))
-   682			return -EPROTO;
-   683	
- > 684		datatype = FIELD_GET(RXRSS0R_DT, result);
-   685	
-   686		switch (datatype) {
-   687		case 0:
-   688			dev_dbg(dsi->dev, "ACK\n");
-   689			return 0;
-   690		case MIPI_DSI_RX_END_OF_TRANSMISSION:
-   691			dev_dbg(dsi->dev, "EoTp\n");
-   692			return 0;
-   693		case MIPI_DSI_RX_ACKNOWLEDGE_AND_ERROR_REPORT:
-   694			dev_dbg(dsi->dev, "Acknowledge and error report: $%02x%02x\n",
-   695				(u8)FIELD_GET(RXRSS0R_DATA1, result),
-   696				(u8)FIELD_GET(RXRSS0R_DATA0, result));
-   697			return 0;
-   698		case MIPI_DSI_RX_DCS_SHORT_READ_RESPONSE_1BYTE:
-   699		case MIPI_DSI_RX_GENERIC_SHORT_READ_RESPONSE_1BYTE:
-   700			msg_rx[0] = FIELD_GET(RXRSS0R_DATA0, result);
-   701			return 1;
-   702		case MIPI_DSI_RX_DCS_SHORT_READ_RESPONSE_2BYTE:
-   703		case MIPI_DSI_RX_GENERIC_SHORT_READ_RESPONSE_2BYTE:
-   704			msg_rx[0] = FIELD_GET(RXRSS0R_DATA0, result);
-   705			msg_rx[1] = FIELD_GET(RXRSS0R_DATA1, result);
-   706			return 2;
-   707		case MIPI_DSI_RX_GENERIC_LONG_READ_RESPONSE:
-   708		case MIPI_DSI_RX_DCS_LONG_READ_RESPONSE:
-   709			size = FIELD_GET(RXRSS0R_WC, result);
-   710	
-   711			if (size > msg->rx_len) {
-   712				dev_err(dsi->dev, "rx buffer too small");
-   713				return -ENOSPC;
-   714			}
-   715	
-   716			memcpy(msg_rx, dsi->dcs_buf_virt, size);
-   717			return size;
-   718		default:
-   719			dev_err(dsi->dev, "unhandled response type: %02x\n", datatype);
-   720			return -EPROTO;
-   721		}
-   722	}
-   723	
-   724	static ssize_t rzg2l_mipi_dsi_host_transfer(struct mipi_dsi_host *host,
-   725						    const struct mipi_dsi_msg *msg)
-   726	{
-   727		struct rzg2l_mipi_dsi *dsi = host_to_rzg2l_mipi_dsi(host);
-   728		struct mipi_dsi_packet packet;
-   729		bool need_bta;
-   730		u32 value;
-   731		int ret;
-   732	
-   733		ret = mipi_dsi_create_packet(&packet, msg);
-   734		if (ret < 0)
-   735			return ret;
-   736	
-   737		/* Terminate operation after this descriptor is finished */
-   738		value = SQCH0DSC0AR_NXACT_TERM;
-   739	
-   740		if (msg->flags & MIPI_DSI_MSG_REQ_ACK) {
-   741			need_bta = true; /* Message with explicitly requested ACK */
- > 742			value |= FIELD_PREP(SQCH0DSC0AR_BTA, SQCH0DSC0AR_BTA_NON_READ);
-   743		} else if (msg->rx_buf && msg->rx_len > 0) {
-   744			need_bta = true; /* Read request */
-   745			value |= FIELD_PREP(SQCH0DSC0AR_BTA, SQCH0DSC0AR_BTA_READ);
-   746		} else {
-   747			need_bta = false;
-   748			value |= FIELD_PREP(SQCH0DSC0AR_BTA, SQCH0DSC0AR_BTA_NONE);
-   749		}
-   750	
-   751		/* Set transmission speed */
-   752		if (msg->flags & MIPI_DSI_MSG_USE_LPM)
-   753			value |= SQCH0DSC0AR_SPD_LOW;
-   754		else
-   755			value |= SQCH0DSC0AR_SPD_HIGH;
-   756	
-   757		/* Write TX packet header */
-   758		value |= FIELD_PREP(SQCH0DSC0AR_DT, packet.header[0]) |
-   759			FIELD_PREP(SQCH0DSC0AR_DATA0, packet.header[1]) |
-   760			FIELD_PREP(SQCH0DSC0AR_DATA1, packet.header[2]);
-   761	
-   762		if (mipi_dsi_packet_format_is_long(msg->type)) {
-   763			value |= SQCH0DSC0AR_FMT_LONG;
-   764	
-   765			if (packet.payload_length > RZG2L_DCS_BUF_SIZE) {
-   766				dev_err(dsi->dev, "Packet Tx payload size (%d) too large",
-   767					(unsigned int)packet.payload_length);
-   768				return -ENOSPC;
-   769			}
-   770	
-   771			/* Copy TX packet payload data to memory space */
-   772			memcpy(dsi->dcs_buf_virt, packet.payload, packet.payload_length);
-   773		} else {
-   774			value |= SQCH0DSC0AR_FMT_SHORT;
-   775		}
-   776	
-   777		rzg2l_mipi_dsi_link_write(dsi, SQCH0DSC0AR, value);
-   778	
-   779		/*
-   780		 * Write: specify payload data source location, only used for
-   781		 *        long packet.
-   782		 * Read:  specify payload data storage location of response
-   783		 *        packet. Note: a read packet is always a short packet.
-   784		 *        If the response packet is a short packet or a long packet
-   785		 *        with WC = 0 (no payload), DTSEL is meaningless.
-   786		 */
-   787		rzg2l_mipi_dsi_link_write(dsi, SQCH0DSC0BR, SQCH0DSC0BR_DTSEL_MEM_SPACE);
-   788	
-   789		/*
-   790		 * Set SQCHxSR.AACTFIN bit when descriptor actions are finished.
-   791		 * Read: set Rx result save slot number to 0 (ACTCODE).
-   792		 */
-   793		rzg2l_mipi_dsi_link_write(dsi, SQCH0DSC0CR, SQCH0DSC0CR_FINACT);
-   794	
-   795		/* Set rx/tx payload data address, only relevant for long packet. */
-   796		rzg2l_mipi_dsi_link_write(dsi, SQCH0DSC0DR, (u32)dsi->dcs_buf_phys);
-   797	
-   798		/* Start sequence 0 operation */
-   799		value = rzg2l_mipi_dsi_link_read(dsi, SQCH0SET0R);
-   800		value |= SQCH0SET0R_START;
-   801		rzg2l_mipi_dsi_link_write(dsi, SQCH0SET0R, value);
-   802	
-   803		/* Wait for operation to finish */
-   804		ret = read_poll_timeout(rzg2l_mipi_dsi_link_read,
-   805					value, value & SQCH0SR_ADESFIN,
-   806					2000, 20000, false, dsi, SQCH0SR);
-   807		if (ret == 0) {
-   808			/* Success: clear status bit */
-   809			rzg2l_mipi_dsi_link_write(dsi, SQCH0SCR, SQCH0SCR_ADESFIN);
-   810	
-   811			if (need_bta)
-   812				ret = rzg2l_mipi_dsi_read_response(dsi, msg);
-   813			else
-   814				ret = packet.payload_length;
-   815		}
-   816	
-   817		return ret;
-   818	}
-   819	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+>> Reviewed-by: Janne Grunau <j@jannau.net>
+>> Tested-by: Janne Grunau <j@jannau.net>
+>> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+>> ---
+>>   drivers/acpi/platform_profile.c | 68 ++++++++++++++++++++++++++------=
+-
+>>   1 file changed, 55 insertions(+), 13 deletions(-)
+>>
+>> diff --git a/drivers/acpi/platform_profile.c b/drivers/acpi/platform_pr=
+ofile.c
+>> index ffbfd32f4cf1..c5a5da7d03f1 100644
+>> --- a/drivers/acpi/platform_profile.c
+>> +++ b/drivers/acpi/platform_profile.c
+>> @@ -190,6 +190,20 @@ static ssize_t profile_show(struct device *dev,
+>>          return sysfs_emit(buf, "%s\n", profile_names[profile]);
+>>   }
+>>
+>> +/**
+>> + * profile_notify_legacy - Notify the legacy sysfs interface
+>> + *
+>> + * This wrapper takes care of only notifying the legacy sysfs interfac=
+e
+>> + * if it was registered during module initialization.
+>> + */
+>> +static void profile_notify_legacy(void)
+>> +{
+>> +       if (!acpi_kobj)
+>> +               return;
+>> +
+>> +       sysfs_notify(acpi_kobj, NULL, "platform_profile");
+>> +}
+>> +
+>>   /**
+>>    * profile_store - Set the profile for a class device
+>>    * @dev: The device
+>> @@ -215,7 +229,7 @@ static ssize_t profile_store(struct device *dev,
+>>                          return ret;
+>>          }
+>>
+>> -       sysfs_notify(acpi_kobj, NULL, "platform_profile");
+>> +       profile_notify_legacy();
+>>
+>>          return count;
+>>   }
+>> @@ -435,7 +449,7 @@ static ssize_t platform_profile_store(struct kobjec=
+t *kobj,
+>>                          return ret;
+>>          }
+>>
+>> -       sysfs_notify(acpi_kobj, NULL, "platform_profile");
+>> +       profile_notify_legacy();
+>>
+>>          return count;
+>>   }
+>> @@ -472,6 +486,22 @@ static const struct attribute_group platform_profi=
+le_group =3D {
+>>          .is_visible =3D profile_class_is_visible,
+>>   };
+>>
+>> +/**
+>> + * profile_update_legacy - Update the legacy sysfs interface
+>> + *
+>> + * This wrapper takes care of only updating the legacy sysfs interface
+>> + * if it was registered during module initialization.
+>> + *
+>> + * Return: 0 on success or error code on failure.
+>> + */
+>> +static int profile_update_legacy(void)
+>> +{
+>> +       if (!acpi_kobj)
+>> +               return 0;
+>> +
+>> +       return sysfs_update_group(acpi_kobj, &platform_profile_group);
+>> +}
+>> +
+>>   /**
+>>    * platform_profile_notify - Notify class device and legacy sysfs int=
+erface
+>>    * @dev: The class device
+>> @@ -481,7 +511,7 @@ void platform_profile_notify(struct device *dev)
+>>          scoped_cond_guard(mutex_intr, return, &profile_lock) {
+>>                  _notify_class_profile(dev, NULL);
+>>          }
+>> -       sysfs_notify(acpi_kobj, NULL, "platform_profile");
+>> +       profile_notify_legacy();
+>>   }
+>>   EXPORT_SYMBOL_GPL(platform_profile_notify);
+>>
+>> @@ -529,7 +559,7 @@ int platform_profile_cycle(void)
+>>                          return err;
+>>          }
+>>
+>> -       sysfs_notify(acpi_kobj, NULL, "platform_profile");
+>> +       profile_notify_legacy();
+>>
+>>          return 0;
+>>   }
+>> @@ -603,9 +633,9 @@ struct device *platform_profile_register(struct dev=
+ice *dev, const char *name,
+>>                  goto cleanup_ida;
+>>          }
+>>
+>> -       sysfs_notify(acpi_kobj, NULL, "platform_profile");
+>> +       profile_notify_legacy();
+>>
+>> -       err =3D sysfs_update_group(acpi_kobj, &platform_profile_group);
+>> +       err =3D profile_update_legacy();
+>>          if (err)
+>>                  goto cleanup_cur;
+>>
+>> @@ -639,8 +669,8 @@ void platform_profile_remove(struct device *dev)
+>>          ida_free(&platform_profile_ida, pprof->minor);
+>>          device_unregister(&pprof->dev);
+>>
+>> -       sysfs_notify(acpi_kobj, NULL, "platform_profile");
+>> -       sysfs_update_group(acpi_kobj, &platform_profile_group);
+>> +       profile_notify_legacy();
+>> +       profile_update_legacy();
+>>   }
+>>   EXPORT_SYMBOL_GPL(platform_profile_remove);
+>>
+>> @@ -692,16 +722,28 @@ static int __init platform_profile_init(void)
+>>          if (err)
+>>                  return err;
+>>
+>> -       err =3D sysfs_create_group(acpi_kobj, &platform_profile_group);
+>> -       if (err)
+>> -               class_unregister(&platform_profile_class);
+>> +       /*
+>> +        * The ACPI kobject can be missing if ACPI was disabled during =
+booting.
+>> +        * We thus skip the initialization of the legacy sysfs interfac=
+e in such
+>> +        * cases to allow the platform profile class to work on ARM64 n=
+otebooks
+>> +        * without ACPI support.
+>> +        */
+>> +       if (acpi_kobj) {
+>> +               err =3D sysfs_create_group(acpi_kobj, &platform_profile=
+_group);
+>> +               if (err < 0) {
+>> +                       class_unregister(&platform_profile_class);
+>> +                       return err;
+>> +               }
+>> +       }
+>>
+>> -       return err;
+>> +       return 0;
+>>   }
+>>
+>>   static void __exit platform_profile_exit(void)
+>>   {
+>> -       sysfs_remove_group(acpi_kobj, &platform_profile_group);
+>> +       if (acpi_kobj)
+>> +               sysfs_remove_group(acpi_kobj, &platform_profile_group);
+>> +
+>>          class_unregister(&platform_profile_class);
+>>   }
+>>   module_init(platform_profile_init);
+>> --
+>> 2.39.5
+>>
+>>
