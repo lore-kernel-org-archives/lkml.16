@@ -1,140 +1,188 @@
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EA0E178CC8
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 17:53:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EB8A191F7F;
+	Thu, 22 May 2025 17:53:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747936401; cv=none; b=Zi/Of0WBQDexpoMr55PpDqJxRGPuMxRxyOPQ1Yni0sF0WCq6Kq3TLYiUNDSegsJuoX+LMBwsvtvYdUqXajZnBkm8kZMnOrjqDHOMo9GahlMqag+8/rzW73TeKdrXgMDhSKt/ATkocUkTwx4ITq0IUhn7rOVnaku5VY6g2bvadWU=
+	t=1747936436; cv=none; b=Hr9qY+i1ymFgP+2umLby5wC1/q3RwyRf3VhzJR0AhQXkLpUZxWyOjmw8UzJPiLQSzgixaESMinuhjrtk4HBigVi2qfUxpHgJGmmsz3eS/AKGg09kGRynTgPm6BmP7DjmeSJbcgSR/zxjswI83nHywWnSFji1QS4ijMS7IxObLB4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747936401; c=relaxed/simple;
-	bh=2DqPO9m+tgbAe4Ckhbo5jvNcDR5GpfJRlEmFsuvh7eA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rOn68nkRN1zWxDXN/ow5NkLv7Y2pWaY5QhVKZXz/Mb67dmscpIr1e03eLAbUlnyoS3EYvHfQ0HgCIRhsQs2MOsM3YpDFlVEqOdHfC0X7q2SPHVIMKI01YURv5QFYiZjdNXmA/rHHQy4rTGu4nNNjzhFusstt+RcqjhkVE/XCpOA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com; spf=pass smtp.mailfrom=cloud.com; dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b=APNh+yyk; arc=none smtp.client-ip=209.85.218.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cloud.com
+	s=arc-20240116; t=1747936436; c=relaxed/simple;
+	bh=VDe7WchprwxHqUaUHtWmfdks6bP4YZttSO5Wx3GdlaM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pbyLgKlCT0i2NxWa/9JvMu7XBd63VKVQ2IRdlZOFdaiYXcCLbPGcIVOe5XUtiWP/37hgU5DRlSxAxAy069Dk01KxB4FqBIPwVkbVRgNriTGDXOmro70Z6TZdSUSUlQ2ynBG8nS+h1+qLtZ3v0zog85/Ltz/fPPHJ5iMpNEb3EBk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IahWRoJr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="APNh+yyk"
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-acacb8743a7so27396466b.1
-        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 10:53:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=citrix.com; s=google; t=1747936398; x=1748541198; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=2DqPO9m+tgbAe4Ckhbo5jvNcDR5GpfJRlEmFsuvh7eA=;
-        b=APNh+yykN5WzXSd8MGJYYl6QU6PrVRcvrfj8LopRumsow4rZFSED+qKGIofQ2vnuE5
-         Wi4fDMwxIaI/N28UTXBatH4arAoz9BG7wLBq6kxAaujLtlJ1e/9NKU7yVSmEWpt3o8ck
-         Tr8kXJ9ctZ4Z0Fly08iffuQDGA/GldyA+I77Q=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747936398; x=1748541198;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2DqPO9m+tgbAe4Ckhbo5jvNcDR5GpfJRlEmFsuvh7eA=;
-        b=oLJAETLTFoKp66aadBxSrw4QMPU0jTcYFsmODOjt6yDsh2x/D/oZPNe1S9epIQa+iD
-         OVZZPTZBuiLvwq5RAmAtTYe0k4AMgF91rH2kzeY94K6hh74olh+IO07pPRYXB8REUrMb
-         PzZYt2cRSNvTBxgD+5Jrtu5b9yAQEkJ+a9632w/BZAyzwHKE6CP15CO5I9uv18W2s2yC
-         PxTEp2C0sJ682qlp+oBQ5Z+YBCkPCUVZBlrFRB9S/g/arZ3cJTzA+2f/afzmxTOkGcC/
-         gtPxERlxV6GFnhpaXk75dtQ5uQ5TqzJl475kMGosZ9WAfFBh43JITnpHxoW1HoXYmWOz
-         /kMA==
-X-Forwarded-Encrypted: i=1; AJvYcCW1PYNgMQt8uh68cFRY8Q4/joHma+DNuGiZPf3YOHbYjyR/gZWg/7ngyM0/VTGGeYZIbc40io9y2bNb838=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwMNt4W3bVBmLk8Hvum4jeqfXKOgzI/QI0MiVJBZfbXpSbQnCew
-	b+NdDfBTlnQcVjs09k2qmuk7j374aoT8VZb85AntM/QlUoSN2FR2DIWWgaXjtm7qXTo=
-X-Gm-Gg: ASbGncsTDzRrdELS//FhKeTix22Cbmp51d4ldn19VkyygwQWW8te0eCZ1AQ4PoHaMlv
-	fb76C3FtiAEESx/cXwHdIg1r1uNGO7uwb5xd/wUsDXU3CqTFxYlL0NAdl/SqwCltibfYi3/CUwd
-	XuUTcR7VxU6ehX/f8cgW0K/hYGM7OSWKx3r7Re+ftbHiFWoaydGZ2IP87lMAz3qOGBx9fSyjiFV
-	IAww9XEglxyNl8Dqd+E1+UIe6c+R/vi5seXD1YDPhP2RaRsGOsSe0zCVKfbGfCXLbLd4mxvdWuh
-	pqDKiJV7Rm21R5kItAKgZGnCRPeAFPLY0fX097zQJ+TWqwT9/AF9jQG3xVvBE/BGh7MRmE6S+I3
-	0wq0kARKxp2xUFouol5zOhw44ma4=
-X-Google-Smtp-Source: AGHT+IFLMQBu1Plj4cfIFHd3VJU8a91RL1azB4BMNmVoJ1voM+eiW3mvxk1mnmsU/iC8ey7cqZj44A==
-X-Received: by 2002:a17:907:2d29:b0:ad5:4737:f030 with SMTP id a640c23a62f3a-ad64e2887c6mr37969266b.1.1747936398314;
-        Thu, 22 May 2025 10:53:18 -0700 (PDT)
-Received: from [192.168.1.183] (host-92-26-98-202.as13285.net. [92.26.98.202])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad52d4b6d18sm1101141966b.153.2025.05.22.10.53.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 22 May 2025 10:53:17 -0700 (PDT)
-Message-ID: <ad8d3a12-25f3-4d57-8f34-950b7967f92b@citrix.com>
-Date: Thu, 22 May 2025 18:53:16 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IahWRoJr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B7A0C4CEEA;
+	Thu, 22 May 2025 17:53:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747936435;
+	bh=VDe7WchprwxHqUaUHtWmfdks6bP4YZttSO5Wx3GdlaM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=IahWRoJrbznbYxqclK/j/ceJ/kZWMP5CAFdL+XNwxfUXDmrUHUjCMj2c7JatFaPNa
+	 ItyuVjWY7SjNz4vxYfJu4H1D031IgLuPFLJap+fkyU7S3ln21tnN4ZW5H2jNnd1ddb
+	 oZJWSN/iT/C4zQKrkFAeaJFRlhkwjmqG0v1Y4v5h6izayRUvEHbyunO+V8uvjGTiJF
+	 oimJtzm4UQTlf86S++djN0hwVPHFBMN4QnQogJkeU+9DmvrcJXz+XQb8il7xmzQMjw
+	 9/KZMle1op6HedLdLJdGar8SRLbhG/5oPm5A2O529kD9BYVlAcbHc5l1iDdfhz3mP+
+	 U5aHqjT3lXkAw==
+Date: Thu, 22 May 2025 19:53:49 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Alice Ryhl <aliceryhl@google.com>, Benno Lossin <lossin@kernel.org>,
+	Matthew Maurer <mmaurer@google.com>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Trevor Gross <tmgross@umich.edu>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Timur Tabi <ttabi@nvidia.com>, linux-kernel@vger.kernel.org,
+	rust-for-linux@vger.kernel.org
+Subject: Re: [PATCH v5 4/4] rust: samples: Add debugfs sample
+Message-ID: <aC9krUYJmJqu0xVR@cassiopeiae>
+References: <aCRdNJ2oq-REBotd@pollux>
+ <CAGSQo0204_Dz65G33pAN3_iY=ejPXJRdAiB4ioM-nvMkAh0YXQ@mail.gmail.com>
+ <D9WM0BP5446N.1NVNDCZ4Y2QN1@kernel.org>
+ <2025051524-festival-afterglow-8483@gregkh>
+ <aCzzBT96ktapP03e@google.com>
+ <aC2HacSU7j5d9bzu@pollux>
+ <aC5XDi7SaDJeUaAC@google.com>
+ <aC7DVewqqWIKetmk@pollux>
+ <aC8uNmrLUSS8sxHU@google.com>
+ <2025052201-return-reprogram-add9@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/1] x86/fred/signal: Prevent single-step upon ERETU
- completion
-To: Dave Hansen <dave.hansen@intel.com>, "Xin Li (Intel)" <xin@zytor.com>,
- linux-kernel@vger.kernel.org
-Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
- dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
- peterz@infradead.org, stable@vger.kernel.org
-References: <20250522171754.3082061-1-xin@zytor.com>
- <e4f1120b-0bff-4f01-8fe7-5e394a254020@intel.com>
-Content-Language: en-GB
-From: Andrew Cooper <andrew.cooper3@citrix.com>
-Autocrypt: addr=andrew.cooper3@citrix.com; keydata=
- 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
- 6+ahAA==
-In-Reply-To: <e4f1120b-0bff-4f01-8fe7-5e394a254020@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2025052201-return-reprogram-add9@gregkh>
 
-On 22/05/2025 6:22 pm, Dave Hansen wrote:
-> On 5/22/25 10:17, Xin Li (Intel) wrote:
->> Clear the software event flag in the augmented SS to prevent infinite
->> SIGTRAP handler loop if TF is used without an external debugger.
-> Do you have a test case for this? It seems like the kind of thing we'd
-> want in selftests/.
+On Thu, May 22, 2025 at 04:15:46PM +0200, Greg Kroah-Hartman wrote:
+> On Thu, May 22, 2025 at 02:01:26PM +0000, Alice Ryhl wrote:
+> > On Thu, May 22, 2025 at 08:25:25AM +0200, Danilo Krummrich wrote:
+> > > On Wed, May 21, 2025 at 10:43:26PM +0000, Alice Ryhl wrote:
+> > > > > > * Possibly we have a way to drop a Rust object without removing it from
+> > > > > >   the file system. In this case, it can never be accessed from Rust
+> > > > > >   again, and the only way to remove it is to drop its parent directory.
+> > > > > 
+> > > > > I'm not sure about this one.
+> > > > > 
+> > > > > IIUC, this basically brings back the "keep() logic", which I still think is a
+> > > > > footgun and should be avoided.
+> > > > > 
+> > > > > Also, we only needed this, since due to the borrowing design we couldn't store
+> > > > > parent and child nodes in the same structure. With reference counting (or the
+> > > > > logic above) this goes away.
+> > > > > 
+> > > > > I wrote the following in a previous conversation [1].
+> > > > > 
+> > > > > --
+> > > > > 
+> > > > > What I see more likely to happen is a situation where the "root" directory
+> > > > > (almost) lives forever, and hence subsequent calls, such as
+> > > > > 
+> > > > > 	root.subdir("foo").keep()
+> > > > > 
+> > > > > effectively are leaks.
+> > > > > 
+> > > > > One specific example for that would be usb_debug_root, which is created in the
+> > > > > module scope of usb-common and is used by USB host / gadget / phy drivers.
+> > > > > 
+> > > > > The same is true for other cases where the debugfs "root" is created in the
+> > > > > module scope, but subsequent entries are created by driver instances. If a
+> > > > > driver would use keep() in such a case, we'd effectively leak memory everytime a
+> > > > > device is unplugged (or unbound in general).
+> > > > 
+> > > > Where is the leak? If the file is still visible in the file system, then
+> > > > it's not a leak to still have the memory. If the file got removed by
+> > > > removing its parent, then my intent is that this should free the memory
+> > > > of the child object.
+> > > 
+> > > Well, take the case I described above, where the debugfs "root" is created in
+> > > the module scope, but subsequent entries are created by driver instances. If a
+> > > driver would use keep() in such a case, we'd effectively the file / directory
+> > > (and subsequently also the corresponding memory) everytime a device is unplugged
+> > > (or unbound in general)."
+> > > 
+> > > If the module is built-in the directory from the module scope is *never*
+> > > removed, but the entries the driver e.g. creates in probe() for a particular
+> > > device with keep() will pile up endlessly, especially for hot-pluggable devices.
+> > > 
+> > > (It's getting even worse when there's data bound to such a leaked file, that
+> > > might even contain a vtable that is entered from any of the fops of the file.)
+> > > 
+> > > That'd be clearly a bug, but for the driver author calling keep() seems like a
+> > > valid thing to do -- to me that's clearly a built-in footgun.
+> > 
+> > I mean, for cases such as this, I could imagine that you use `keep()` on
+> > the files stored inside of the driver directory, but don't use it on the
+> > directory. That way, you only have to keep a single reference to an
+> > entire directory around, which may be more convenient.
+> 
+> No, sorry, but debugfs files are "create and forget" type of things.
+> The caller has NO reference back to the file at all in the C version,
+> let's not add that functionality back to the rust side after I spent a
+> long time removing it from the C code :)
 
-Hmm.
+This response sounds like we may have a different understanding of what "keep"
+means.
 
-This was a behaviour intentionally changed in FRED so traps wouldn't get
-lost if an exception where to occur.
+Earlier versions of this patch series introduced a keep() method for both
+debugfs::File and debugfs::Dir, which would consume, and hence get rid of, the
+instance of a debugfs::File or a debugfs::Dir object, while *keeping* the
+corresponding directory / file in the filesystem.
 
-What precise case is triggering this?
+This makes it easy for a driver to leak the directory / file in the filesystem,
+as explained in [1], which you seemed to agree with in [2].
 
-~Andrew
+Was this a misunderstanding?
+
+> If you really want to delete a debugfs file that you have created in the
+> past, then look it up and delete it with the call that is present for
+> that.
+
+This is promoting a C pattern (which for C code obviously makes a lot of sense),
+i.e. we have a function that creates a thing and another function that removes
+the thing given a handle of the created thing. Whether the handle is valid is
+the responsibility of the caller.
+
+In this case the handle would be the filename. For instance:
+
+	debugfs_create_file("foo", parent, ...);
+	debugfs_remove(debugfs_lookup("foo", parent));
+
+This leaves room to the caller for making mistakes, e.g. if the caller makes a
+typo in the filename. In this case we wouldn't even recognize it from the return
+value, since there is none.
+
+In Rust, we do things differently, i.e. we wrap things into an object that
+cleans up itself, once it goes out of scope. For instance:
+
+	let file = debugfs::File::new("foo", parent);
+
+Subsequently we store file in a structure that represents the time we want this
+file to exist. Once it goes out of scope, it's removed automatically.
+
+This is better, since we can't make any mistakes anymore, i.e. we can't mess up
+the filename or pass the wrong parent to clean things up.
+
+Depending on whether the above was a misunderstanding and depending on how you
+think about it with this rationale, I have quite some more reasons why we don't
+want to have files / directories around in the filesystem without a
+corresponding object representation in Rust.
+
+But before I write up a lot more text, I'd like to see if we're not already on
+the same page. :-)
+
+> The only thing I think that might be worth "keeping" in some form, as an
+> object reference as discussed, is a debugfs directory.
+
+[1] https://lore.kernel.org/lkml/aC7DVewqqWIKetmk@pollux/
+[2] https://lore.kernel.org/lkml/2025052205-thing-daylight-1115@gregkh/
