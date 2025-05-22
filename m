@@ -1,33 +1,48 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 414441AD3E0;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 760BF3BBC9;
 	Thu, 22 May 2025 06:58:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747897102; cv=none; b=e/LWP+bJEWw72OE7KibnX0TeXKTAORLch7JO/pap6Uuy5pPWAOOV542SI5dSPEzxZ8+hq40f/5f1xZNQxdWn90Pedns0tstUjFZvO/rPijMzYy6MX2JyFHWu3ATjsHX1mYp2wrwmX1GifV+N64rvx2iXPSIur6otmGRCxlkC3QA=
+	t=1747897103; cv=none; b=GDSsck4XUTf7Ghp23Pskaa7P519XVHkTSTFmNJBmcyG8J2GHV/frK3drKNWUGcXCdSSc8lM8dJkJ+DzQYU0SRzC+gB1+uJ8F18KWSNcRb2giFK9BAqD468Ef6lugz/mOnXQJDat9fEq6RQ6hoNvcogxfbwCWeTL9ZLO1v03Nosc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747897102; c=relaxed/simple;
-	bh=yIscN6qoA34z9Zb9F5xniTQYvJ4yyoyvTBX/f8DyTsA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iTTa9QqRtRQ5RuYBGrZgA1GwwCdt70ALqw4A/EnMhmO9Nq7eS02VGwDENLuQmO3eiGoS1UW8CQEzJG91FZHgjkhFHdcntYpEs3tgsHrriXFMFdu4KXnRKzQzZG403zNyDy50dEWc/2ZVsScva1ItXT4yg6WKaLm2GQeMFpPIgb8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cZhkPiaF; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747897103; c=relaxed/simple;
+	bh=/Lg3si8gVwOqnameydaJqJb5vxdiX8my8fGYMgU+abM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=OmuweK1HpUYSln2Dek3xZQUKJfWD9SG9ukQUhAkDAFJE8F+DfstZ0nirYzbu/dqadGdSkyNgFGD96NOBj+1IhUnPW+/sBlDbXyRqc47BloJKARD2F2tj2YPU06gE56ybs5AFvMLyhMO3FDOnUEx1k/1ADoi2P39y5HwNQ+/onB0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=n8Vi2Knm; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cZhkPiaF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58431C4CEE4;
-	Thu, 22 May 2025 06:58:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747897101;
-	bh=yIscN6qoA34z9Zb9F5xniTQYvJ4yyoyvTBX/f8DyTsA=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=cZhkPiaFbr/c0GFkEk5V22r5SDKEkfiILkXBesGA2oi9agiR0P3H0T8Ur4RY9ZaFM
-	 jN7IbG4vFQpu9BZ5v5ia/PMjd/Dk68G0DvP4/oSEC+SRkc3s5Npz0o4tjXo0cKVbil
-	 v01z41UomFELdMH4sN6JlHdIrVWY0U97mf+wkvPsemeuwpVcxMQ00Iau43f4PlL2yW
-	 7mlg0AB3TNTDx9wZ4nWt9Oe6c6vOnp4jBw8cJBM1PqVAZHF+rBr+XsGNz0JtO+0PaR
-	 Jhu6/uHIp4gzMwuJe5VISPwOboL4CLLc02GkNa2ZgKp75vcOgQjgU1dRngd3iC4lJt
-	 BRKowddWz5DGw==
-Message-ID: <ed51c57a-35c4-43e4-9041-221026fb6273@kernel.org>
-Date: Thu, 22 May 2025 08:58:16 +0200
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="n8Vi2Knm"
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54LILvRm020952;
+	Thu, 22 May 2025 06:58:16 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	EF4kaG9PLnD3XpqPRg88hhQWtvSeHYMCzJ0iyi62kto=; b=n8Vi2KnmCa5kW/Pf
+	T3riJW+m7FD6mFaoxjzWqmCOs+KCtaXojKbKQs9i1eR9u+GJbIFiY9qUQPqaXUWf
+	3SRXscFcj60dtVkSCHOWOujCGPZiF6YkBBk616rWqu5GaAryJtChiqLcqSzw2GAc
+	G23p2LfnabqIyFi6Hlmcpj66pVNAUv9Q9m1t3NuFIusi0OkLI0jfEZzxtR2iNiTS
+	W3pCQsnwEKJLdotlSkqz/epHut3vVXAGdHRr0ez46NsNqu/95TGjSQNu4g8mvikt
+	NxbZplU7OXPTNjgSh2h0thF8+6xUjvC5X0NlONZYYmD3Ysb+yE1tJZRHbhzXezMa
+	GcEIVA==
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46rwf05eus-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 22 May 2025 06:58:15 +0000 (GMT)
+Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
+	by NALASPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54M6wFCC011711
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 22 May 2025 06:58:15 GMT
+Received: from [10.253.12.55] (10.80.80.8) by nalasex01c.na.qualcomm.com
+ (10.47.97.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 21 May
+ 2025 23:58:11 -0700
+Message-ID: <c7497f1e-96a3-43e1-b552-64b5811dfc5d@quicinc.com>
+Date: Thu, 22 May 2025 14:58:01 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,132 +50,119 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/3] dt-bindings: can: rockchip_canfd: add rk3576
- CAN-FD controller
-To: Elaine Zhang <zhangqing@rock-chips.com>, mkl@pengutronix.de,
- kernel@pengutronix.de, mailhol.vincent@wanadoo.fr, robh@kernel.org,
- krzk+dt@kernel.org, conor+dt@kernel.org, heiko@sntech.de, cl@rock-chips.com,
- kever.yang@rock-chips.com
-Cc: linux-can@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
- devicetree@vger.kernel.org
-References: <20250522063232.2197432-1-zhangqing@rock-chips.com>
- <20250522063232.2197432-2-zhangqing@rock-chips.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH 2/2] arm64: dts: qcom: qcs615: Enable camss for
+ qcs615-adp-air
+To: Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+        Bjorn Andersson
+	<andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring
+	<robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>, <todor.too@gmail.com>,
+        <rfoss@kernel.org>
+CC: <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-media@vger.kernel.org>
+References: <20250520-qcs615-adp-air-camss-v1-0-ac25ca137d34@quicinc.com>
+ <20250520-qcs615-adp-air-camss-v1-2-ac25ca137d34@quicinc.com>
+ <b2cf41af-756d-4e78-8df0-0350198d357d@linaro.org>
 Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <20250522063232.2197432-2-zhangqing@rock-chips.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+From: Wenmeng Liu <quic_wenmliu@quicinc.com>
+In-Reply-To: <b2cf41af-756d-4e78-8df0-0350198d357d@linaro.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01c.na.qualcomm.com (10.47.97.35)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: x3W53ueNS4uAOt32x48xwF31_I7VWQgj
+X-Proofpoint-ORIG-GUID: x3W53ueNS4uAOt32x48xwF31_I7VWQgj
+X-Authority-Analysis: v=2.4 cv=ZP3XmW7b c=1 sm=1 tr=0 ts=682ecb07 cx=c_pps
+ a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=COk6AnOGAAAA:8
+ a=enoOy_T-X7bchgmFXmcA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIyMDA2NyBTYWx0ZWRfXxQfw2ho2BEKq
+ 80JZOPNrqWLzU4K/bd1OuXWJppT+ubHVsC9K2Q2PYkajPgvm7vkSPBCfiwqTc397GoGQ6VowQPb
+ +UsoApnZ3euhMQb7doQ3K6R/dGdL/IrJyDw4HzhpnW/x8mpukvdDeoY74B/Cr2HCjlR1DTAflsZ
+ EvBmDKrCKdiV0TJ1IoayxtXVwyyBw1oXw5gb4oVrNlgo0PheAMjxXDtIRebLdDUd/sPe0M+abYm
+ QhiIb41KZqRzipQfY9qeRiXS04x8qXA1rCzOO8AfVU5yOEXv+gGmvltQtzEfbb+/xaql+z8tIuQ
+ WLm+TiZBEJhmmJXtJj/tGSEEBXgWNXFemrji8Ex+vqkahfRrwxhGu3heE48mqJZsoEpdPv6DV80
+ vlanZha8CoKCMGhKQ4jsD92/f2vYMnZJz/fhFlbdlG2mbOfe/XaO7vH/cUo9qPtU/eOrLy1o
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-22_03,2025-05-20_03,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ priorityscore=1501 adultscore=0 mlxlogscore=961 suspectscore=0 bulkscore=0
+ impostorscore=0 phishscore=0 spamscore=0 mlxscore=0 lowpriorityscore=0
+ clxscore=1015 malwarescore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
+ definitions=main-2505220067
 
-On 22/05/2025 08:32, Elaine Zhang wrote:
-> Add documentation for the rockchip rk3576 CAN-FD controller.
+
+
+On 2025/5/21 21:07, Bryan O'Donoghue wrote:
+> On 20/05/2025 09:56, Wenmeng Liu wrote:
+>> This change enables camera driver for QCS615 ADP AIR board.
+>>
+>> Signed-off-by: Wenmeng Liu <quic_wenmliu@quicinc.com>
+>> ---
+>>   arch/arm64/boot/dts/qcom/qcs615-ride.dts | 7 +++++++
+>>   1 file changed, 7 insertions(+)
+>>
+>> diff --git a/arch/arm64/boot/dts/qcom/qcs615-ride.dts b/arch/arm64/ 
+>> boot/dts/qcom/qcs615-ride.dts
+>> index 
+>> 2b5aa3c66867676bda59ff82b902b6e4974126f8..be8b829ec508d7de7a4cd6be6d1d4e83b09734bb 100644
+>> --- a/arch/arm64/boot/dts/qcom/qcs615-ride.dts
+>> +++ b/arch/arm64/boot/dts/qcom/qcs615-ride.dts
+>> @@ -211,6 +211,13 @@ vreg_l17a: ldo17 {
+>>       };
+>>   };
+>> +&camss {
+>> +    vdda-phy-supply = <&vreg_l5a>;
+>> +    vdda-pll-supply = <&vreg_l12a>;
+>> +
+>> +    status = "ok";
+>> +};
+>> +
+>>   &gcc {
+>>       clocks = <&rpmhcc RPMH_CXO_CLK>,
+>>            <&rpmhcc RPMH_CXO_CLK_A>,
+>>
 > 
-> Signed-off-by: Elaine Zhang <zhangqing@rock-chips.com>
+> I think there's some confusion.
+> 
+> I'm willing to accept CSID and VFE changes with the minimum proof of TPG 
+> driving it.
+> 
+> But - CSIPHY in CAMSS which is only proven by TPG is obviously not a 
+> proof and again I agree with the consensus here - there's little value 
+> to an end-user in just having the TPG for a camera.
+> 
+> No sensor:
+> CAMSS::CSID
+> CAMSS::VFE
+> 
+> Just about acceptable
+> 
+> No sensor:
+> CAMSS::CSIPHY
+> DTS::CAMSS enable
+> 
+> Is too much of an ask.
+> 
+> Just publish your sensor code ! We need more sensor enablement upstream 
+> anyway.
+> 
 > ---
->  .../net/can/rockchip,rk3576-canfd.yaml        | 82 +++++++++++++++++++
->  1 file changed, 82 insertions(+)
-
-There is no cover letter (maybe something got lost on the lists?), no
-changelog. What was happening with this patch?
+> bod
 
 
->  create mode 100644 Documentation/devicetree/bindings/net/can/rockchip,rk3576-canfd.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/net/can/rockchip,rk3576-canfd.yaml b/Documentation/devicetree/bindings/net/can/rockchip,rk3576-canfd.yaml
-> new file mode 100644
-> index 000000000000..85caf6d19607
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/can/rockchip,rk3576-canfd.yaml
-> @@ -0,0 +1,82 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/net/can/rockchip,rk3568v2-canfd.yaml#
+Hi bryan,
 
-Never tested, so just quick glance, not review.
+I will upload the sensor code together in the next version.
 
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title:
+Thanks,
+Wenmeng
 
-
-That's never a line break. Open existing files and look how it is done
-there.
-
-
-> +  Rk3576 CAN-FD controller
-
-
-...
-
-
-> +
-> +        can0: can@2ac00000 {
-
-Drop label
-
-> +            compatible = "rockchip,rk3576-canfd";
-
-Messed indentation
-
-> +	    reg = <0x0 0x2ac00000 0x0 0x1000>;
-> +	    interrupts = <GIC_SPI 121 IRQ_TYPE_LEVEL_HIGH>;
-> +	    clocks = <&cru CLK_CAN0>, <&cru HCLK_CAN0>;
-> +	    clock-names = "baud", "pclk";
-> +	    resets = <&cru SRST_CAN0>, <&cru SRST_H_CAN0>;
-> +	    reset-names = "can", "can-apb";
-> +	    dmas = <&dmac0 20>;
-> +	    dma-names = "rx";
-> +	    status = "disabled";
-
-No, it cannot be disabled. Drop. Look at other bindings or example-schema.
-
-> +	};
-> +    };
-
-
-Best regards,
-Krzysztof
