@@ -1,183 +1,213 @@
-Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2069.outbound.protection.outlook.com [40.107.100.69])
+Received: from out-179.mta1.migadu.com (out-179.mta1.migadu.com [95.215.58.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C41F61EF387;
-	Thu, 22 May 2025 10:47:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.100.69
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747910880; cv=fail; b=FvXoLlB2O8ef4mu7A2HXBZBHDMrZN/oyqhK66ae2gw26PHjXP+zPZgZP7vVbaD6NZTan5oZph1vFd8bPnDeh+NzYaiqV9pLb9R1r2Cw7GG5QtLdSq65hF5RK1C9LOJNio/CRKV8REoIwTuX3ZN3UoNY7OcOqDSrC4WvyjERqHv4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747910880; c=relaxed/simple;
-	bh=y4L3JQm95jtRBfnsiN+gXzOLMirJxE7v+IJfWdyZW9E=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ZDV9hMVlwe2iVo5bcSsbn8VgO66/Abp5QEK2Pb0IUHVOdBKyCrrGXlX2ozuyuSoM+GsxnmKhr3X+lr0n0MxzPShiTgp89NjBp9fY3rcWQj6Zp2kPntfnH4/yVsNELyUI+o9iJn0a9gpzwF45ksIrV+bQQYnundDGea8/0lsqZKI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=gSl93Vei; arc=fail smtp.client-ip=40.107.100.69
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DFAF289344
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 10:48:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.179
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747910899; cv=none; b=eigRXMhpi6K9vqpWOyPH/1bXk8Tv1iHs9Pi0ko4ysvbepg5xGtqFU+Hdh49hWslCKFjVM3lhzFH51QNouz4/vKQBQamDLK/5nayDQ7RNf4Tgcuur+hrg49IwypCMgWBeK686uAB8DHp/ZFCh73PHs8eJaQI9VYgyKa7KV0goi2A=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747910899; c=relaxed/simple;
+	bh=anDXNe31KV2yrx2zqPc4nLb0ASeqvgkQOlbV+1ioiEI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=kuioY/D2PSiyc4cgnl9g+4RdzVxF9dPUt6d49WAc9exrdqQzdAp5Ws/4B7DFSS5bURiAoFm9JNRzpB2+SCId9Da6lLs/0G/gJM6nhBwCecL+fFup8X/rZLTe23kpIJ6P98KySBY7Yxgou66ZJrELdfYNP1i+prJ9gnTiC49hn7Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=oO3C+Moh; arc=none smtp.client-ip=95.215.58.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="gSl93Vei"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=LOFYEmWPlotI4B/SvAfEue7wB9xro13UgGQ9j8A3KSeWnu6ZTr9SjFcYegfgT68Q1RtGYyk0jl9RZCiV5XyuKIdPDNLLT+6pLv1eM7HW019Yxj/HxWIRf7XEpCsz/5OJctBu5cNcN9qq9oT9HCzQSKvYEIKvcbmrFU3pQB0JnBo3Z1OBcs8OXsz0kEWh1yW2dRBl1wQZppzx7gv9xa1I9YSfnc3CiembaEeN24k7GX2OJN7BfLwftB4SENFpjnL4LPmy3jVD3zkWB7DJTfJLFk54iXwdKbI0+GR88E0vockm8VOpGABHJViqDvU4BGoHuZapEIbWN4fy2+dgrbRDWg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=SmJ+XezZ+nm8AU174cDLAPXzY78+9/cxBlWApK27btE=;
- b=zIA2G7M78vX2mOF8i0ax7qdUSpcaMGutNe4UT4bkisGL9+1cXgrDLf7xzt/KSgK3PCmfGPS54NzpYygXPnwMFEqMdVtc76DvbpBnrZA7R1JlSEoSeLgWZ5mzyf9QxFNKWsQIIhpKYPgNIeO1Sho4Vvvm4FhJ9SvKPE4twR5FWztTSB3j/5TC1MUWqftsubi2fpWxFrPEZiSiEr30IFPMdS95En1zrO/9bN4E1ffoWW41/263Q/X7v7Yq5v3W2lmbaUVFeA1IAt6MFipiLpKHDxnntluCla6q+kT7mQF9dePsTIXs9Xt0nFgoZ6urcgEHL7Qac+wJ4MAw8KGJGVjeFQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=SmJ+XezZ+nm8AU174cDLAPXzY78+9/cxBlWApK27btE=;
- b=gSl93VeiPKoHIxUoXGGkyNvHgfTDt9YA7s5IX5Xjp98mmjn4kxTnpVlyQ+hiV89v2DHQK/BijlVyvQfkppVb5anB0TrRfiR1275Uz/oxoKfskJkYRbNGf4iybxgfl1MDSctR1F+YXYDi3bH/gnBB6wjpx4qBsRxEKvQAO6X5QGg=
-Received: from BY5PR13CA0025.namprd13.prod.outlook.com (2603:10b6:a03:180::38)
- by DM6PR12MB4267.namprd12.prod.outlook.com (2603:10b6:5:21e::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.20; Thu, 22 May
- 2025 10:47:52 +0000
-Received: from SJ5PEPF00000208.namprd05.prod.outlook.com
- (2603:10b6:a03:180:cafe::f9) by BY5PR13CA0025.outlook.office365.com
- (2603:10b6:a03:180::38) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8769.18 via Frontend Transport; Thu,
- 22 May 2025 10:47:52 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- SJ5PEPF00000208.mail.protection.outlook.com (10.167.244.41) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8769.18 via Frontend Transport; Thu, 22 May 2025 10:47:52 +0000
-Received: from SATLEXMB05.amd.com (10.181.40.146) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 22 May
- 2025 05:47:51 -0500
-Received: from SATLEXMB03.amd.com (10.181.40.144) by SATLEXMB05.amd.com
- (10.181.40.146) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 22 May
- 2025 05:47:50 -0500
-Received: from xhdakumarma40.xilinx.com (10.180.168.240) by SATLEXMB03.amd.com
- (10.181.40.144) with Microsoft SMTP Server id 15.1.2507.39 via Frontend
- Transport; Thu, 22 May 2025 05:47:47 -0500
-From: Amit Kumar Mahapatra <amit.kumar-mahapatra@amd.com>
-To: <broonie@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-	<conor+dt@kernel.org>
-CC: <linux-spi@vger.kernel.org>, <devicetree@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <git@amd.com>, <amitrkcian2002@gmail.com>,
-	Amit Kumar Mahapatra <amit.kumar-mahapatra@amd.com>
-Subject: [PATCH v2] spi: dt-bindings: cdns,qspi-nor: Update minItems/maxItems of resets for Cadence OSPI controller
-Date: Thu, 22 May 2025 16:17:45 +0530
-Message-ID: <20250522104745.327675-1-amit.kumar-mahapatra@amd.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="oO3C+Moh"
+Message-ID: <c770157f-4175-45b3-836e-ecf59f9ab8e0@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1747910884;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=iRaVoAsmpjZU46Lb6rdginXbd43xV+PDnPKwnu4HVHU=;
+	b=oO3C+Moh4MMuBlkdjJwf6QNfDM5LRw3BBunUTyVVHPpgLfm/glBRuJUo1Ps4evyDvWgqnS
+	vWjADRfPYctPjDG2doBqUT9kkfHMnIDEYrtWrSmWfT5mCJJwI4fnEnmwOwugmyk89Iov0x
+	wfj9+g0h7nyOd1hkbndRqz40QcoX4Fs=
+Date: Thu, 22 May 2025 11:47:59 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-Received-SPF: None (SATLEXMB05.amd.com: amit.kumar-mahapatra@amd.com does not
- designate permitted sender hosts)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ5PEPF00000208:EE_|DM6PR12MB4267:EE_
-X-MS-Office365-Filtering-Correlation-Id: 640f1a86-8345-4fca-08fc-08dd991e1a3b
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|36860700013|1800799024|82310400026;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?6JQ5jlnMcR+EgcR7mYrFHqZ1Dy495eIBeXDh+SzMqR59RFTbNNLFFcX6vzOp?=
- =?us-ascii?Q?cacxH5JKQAkmzVcXbNYwYtQZ4RdXc+U6NtlBzVk5Fvrpk/SXyKKQuIybn1rz?=
- =?us-ascii?Q?jWkUV9AIMGSlr5fU0NJS5f8p5F7fOsidC719nlUMygz0UjjeHt3D0QRG3Rp1?=
- =?us-ascii?Q?xuznZkFFe3IY/U0CB0fGrvCTYASdhUu8aGpKJah6vB8rtGA879Ux50HEKT5x?=
- =?us-ascii?Q?N2HqGWqeRF6yLOWapqQA66/dg/shDx55dvH1Ibv9e6hxpzZlK2NlG7Vfujfv?=
- =?us-ascii?Q?rbzMmCCDOeAnk64ikVIQdGPgmEkwXKVLK6mZc4GXJOpcqo5xgcxzlCWd4nWw?=
- =?us-ascii?Q?tl6jFNfGxIlgTeJJhOJ4xdchHvx0w7nPXgu5R9iI+sGBwBjrYhSkRpgDR/4d?=
- =?us-ascii?Q?CyqxjD0WG2DA9UZNQU+VdDJR9G9W4ny5KwVFpiJHnO2opbgSjYrLyApYym1r?=
- =?us-ascii?Q?Ntv0rnDxjJBnVK6Fbymogp0usUUhNFuHyDg57jMTZC6H+wDylf1lt3XNZkgE?=
- =?us-ascii?Q?0KhDTXZPkttGnITs/cuN5Q5v6e5oQyAM93xMl+y3BN6BVGxeEX7ky5udyYkB?=
- =?us-ascii?Q?TDQ66pIKA6jBmOoimDHZA1lG2M28Wp3YMjUdaXvwRk7DWSkSfCwKauPTCnqu?=
- =?us-ascii?Q?SDISpsF5KkM/d2E2A1xV4kW+8OBnYb6cswndGB2xqGUOik865YFnJZT+/6pn?=
- =?us-ascii?Q?YSOINeVv0G7C8av7BVMioFwzXRSlyuTeaFIaZMOq4VWyGpo2aV4HUbpd8/e9?=
- =?us-ascii?Q?ZIYw71iEHN3E/4O038hVxrVHhE1lQ16Xi8HQGeVgEBs8kyJJd/QRG2ZuOKEd?=
- =?us-ascii?Q?wpmV1IeP+3MUaVF8zjuia5kUgVJVqp+KmFDGI88MJ164p7VHZtR9GQARed/M?=
- =?us-ascii?Q?jfwqSq6iOEWBepNwUFZZZSmPAXVuoHrX01fyGeYIKERgi07uc5WDqy7DdYjB?=
- =?us-ascii?Q?lg09tS82kLgC2OqcttDk9TZf5C7lH23A+BPbyAdaVXHpOnxRBQnQe8D7i3s8?=
- =?us-ascii?Q?NxxOJeVPT26KQuXX8NwtToSAssUeSI+ko4kvPNakN+sAH3ImQ2yH9FCSTE8n?=
- =?us-ascii?Q?9M3f3/9ijRBPclpcNlNG2lXnEi94gK/TDM3G1hgWhfuXjl1WeaT6yHJWGKMh?=
- =?us-ascii?Q?qpZi/rjq1koqUGMuWA9LJuXHBcSNgeDbJ8GjCVmxnJSwUTckYNFctgXbv9I8?=
- =?us-ascii?Q?RJdS+hMD5wxS9tdRtMXImht6SHGW+bCwViNqsJMM4/0yyxExRyOSKIFF63eV?=
- =?us-ascii?Q?ABQqkr3Cc/goI3xYgKjzrwnK+1rEMIFN5vYH/0wq5B8GoscDIKZYXOYH2445?=
- =?us-ascii?Q?Tx8Kc6MjFvDkcxFC5LqPHljeWhhMATJJgWqUIezdrzDRmRTuDUtCvoWU6GCu?=
- =?us-ascii?Q?cKe2wsoXuq/AiANamgHF/sWduiPgCxQvBrrSeCJli6kKzETIF8P3FnPEDr0c?=
- =?us-ascii?Q?2z21MkXUDE+/0fn3j94eTzh5ppi2EtoYjZcJ+Ntj/1lDpBCee+ThNxFFZM9k?=
- =?us-ascii?Q?1Wt1+IK2x2INJHkiNfX3boy9y9q4v80h9rT4?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(36860700013)(1800799024)(82310400026);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 May 2025 10:47:52.3278
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 640f1a86-8345-4fca-08fc-08dd991e1a3b
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SJ5PEPF00000208.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4267
+Subject: Re: [PATCH net] net: lan966x: Fix 1-step timestamping over ipv4 or
+ ipv6
+To: Horatiu Vultur <horatiu.vultur@microchip.com>,
+ UNGLinuxDriver@microchip.com, andrew+netdev@lunn.ch, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ richardcochran@gmail.com
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250521124159.2713525-1-horatiu.vultur@microchip.com>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Vadim Fedorenko <vadim.fedorenko@linux.dev>
+In-Reply-To: <20250521124159.2713525-1-horatiu.vultur@microchip.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-The Cadence Octal SPI (OSPI) controller on AMD Versal SoCs requires only
-one reset entry. To reflect this, the maxItems for "resets" and
-"reset-names" has been set to 1 for AMD Versal SoCs, and the minItems for
-these properties has also been updated to 1.
+On 21/05/2025 13:41, Horatiu Vultur wrote:
+> When enabling 1-step timestamping for ptp frames that are over udpv4 or
+> udpv6 then the inserted timestamp is added at the wrong offset in the
+> frame, meaning that will modify the frame at the wrong place, so the
+> frame will be malformed.
+> To fix this, the HW needs to know which kind of frame it is to know
+> where to insert the timestamp. For that there is a field in the IFH that
+> says the PDU_TYPE, which can be NONE  which is the default value,
+> IPV4 or IPV6. Therefore make sure to set the PDU_TYPE so the HW knows
+> where to insert the timestamp.
+> Like I mention before the issue is not seen with L2 frames because by
+> default the PDU_TYPE has a value of 0, which represents the L2 frames.
+> 
+> Fixes: 77eecf25bd9d2f ("net: lan966x: Update extraction/injection for timestamping")
+> Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
+> ---
+>   .../ethernet/microchip/lan966x/lan966x_main.c |  6 +++
+>   .../ethernet/microchip/lan966x/lan966x_main.h |  5 ++
+>   .../ethernet/microchip/lan966x/lan966x_ptp.c  | 49 ++++++++++++++-----
+>   3 files changed, 47 insertions(+), 13 deletions(-)
+> 
+> diff --git a/drivers/net/ethernet/microchip/lan966x/lan966x_main.c b/drivers/net/ethernet/microchip/lan966x/lan966x_main.c
+> index 0af143ec0f869..427bdc0e4908c 100644
+> --- a/drivers/net/ethernet/microchip/lan966x/lan966x_main.c
+> +++ b/drivers/net/ethernet/microchip/lan966x/lan966x_main.c
+> @@ -353,6 +353,11 @@ static void lan966x_ifh_set_rew_op(void *ifh, u64 rew_op)
+>   	lan966x_ifh_set(ifh, rew_op, IFH_POS_REW_CMD, IFH_WID_REW_CMD);
+>   }
+>   
+> +static void lan966x_ifh_set_oam_type(void *ifh, u64 oam_type)
+> +{
+> +	lan966x_ifh_set(ifh, oam_type, IFH_POS_PDU_TYPE, IFH_WID_PDU_TYPE);
+> +}
+> +
+>   static void lan966x_ifh_set_timestamp(void *ifh, u64 timestamp)
+>   {
+>   	lan966x_ifh_set(ifh, timestamp, IFH_POS_TIMESTAMP, IFH_WID_TIMESTAMP);
+> @@ -380,6 +385,7 @@ static netdev_tx_t lan966x_port_xmit(struct sk_buff *skb,
+>   			return err;
+>   
+>   		lan966x_ifh_set_rew_op(ifh, LAN966X_SKB_CB(skb)->rew_op);
+> +		lan966x_ifh_set_oam_type(ifh, LAN966X_SKB_CB(skb)->pdu_type);
+>   		lan966x_ifh_set_timestamp(ifh, LAN966X_SKB_CB(skb)->ts_id);
+>   	}
+>   
+> diff --git a/drivers/net/ethernet/microchip/lan966x/lan966x_main.h b/drivers/net/ethernet/microchip/lan966x/lan966x_main.h
+> index 1efa584e71077..1f9df67f05044 100644
+> --- a/drivers/net/ethernet/microchip/lan966x/lan966x_main.h
+> +++ b/drivers/net/ethernet/microchip/lan966x/lan966x_main.h
+> @@ -75,6 +75,10 @@
+>   #define IFH_REW_OP_ONE_STEP_PTP		0x3
+>   #define IFH_REW_OP_TWO_STEP_PTP		0x4
+>   
+> +#define IFH_PDU_TYPE_NONE		0
+> +#define IFH_PDU_TYPE_IPV4		7
+> +#define IFH_PDU_TYPE_IPV6		8
+> +
+>   #define FDMA_RX_DCB_MAX_DBS		1
+>   #define FDMA_TX_DCB_MAX_DBS		1
+>   
+> @@ -254,6 +258,7 @@ struct lan966x_phc {
+>   
+>   struct lan966x_skb_cb {
+>   	u8 rew_op;
+> +	u8 pdu_type;
+>   	u16 ts_id;
+>   	unsigned long jiffies;
+>   };
+> diff --git a/drivers/net/ethernet/microchip/lan966x/lan966x_ptp.c b/drivers/net/ethernet/microchip/lan966x/lan966x_ptp.c
+> index 63905bb5a63a8..87e5e81d40dc6 100644
+> --- a/drivers/net/ethernet/microchip/lan966x/lan966x_ptp.c
+> +++ b/drivers/net/ethernet/microchip/lan966x/lan966x_ptp.c
+> @@ -322,34 +322,55 @@ void lan966x_ptp_hwtstamp_get(struct lan966x_port *port,
+>   	*cfg = phc->hwtstamp_config;
+>   }
+>   
+> -static int lan966x_ptp_classify(struct lan966x_port *port, struct sk_buff *skb)
+> +static void lan966x_ptp_classify(struct lan966x_port *port, struct sk_buff *skb,
+> +				 u8 *rew_op, u8 *pdu_type)
+>   {
+>   	struct ptp_header *header;
+>   	u8 msgtype;
+>   	int type;
+>   
+> -	if (port->ptp_tx_cmd == IFH_REW_OP_NOOP)
+> -		return IFH_REW_OP_NOOP;
+> +	if (port->ptp_tx_cmd == IFH_REW_OP_NOOP) {
+> +		*rew_op = IFH_REW_OP_NOOP;
+> +		*pdu_type = IFH_PDU_TYPE_NONE;
+> +		return;
+> +	}
+>   
+>   	type = ptp_classify_raw(skb);
+> -	if (type == PTP_CLASS_NONE)
+> -		return IFH_REW_OP_NOOP;
+> +	if (type == PTP_CLASS_NONE) {
+> +		*rew_op = IFH_REW_OP_NOOP;
+> +		*pdu_type = IFH_PDU_TYPE_NONE;
+> +		return;
+> +	}
+>   
+>   	header = ptp_parse_header(skb, type);
+> -	if (!header)
+> -		return IFH_REW_OP_NOOP;
+> +	if (!header) {
+> +		*rew_op = IFH_REW_OP_NOOP;
+> +		*pdu_type = IFH_PDU_TYPE_NONE;
+> +		return;
+> +	}
+>   
+> -	if (port->ptp_tx_cmd == IFH_REW_OP_TWO_STEP_PTP)
+> -		return IFH_REW_OP_TWO_STEP_PTP;
+> +	if (type & PTP_CLASS_L2)
+> +		*pdu_type = IFH_PDU_TYPE_NONE;
+> +	if (type & PTP_CLASS_IPV4)
+> +		*pdu_type = IFH_PDU_TYPE_IPV4;
+> +	if (type & PTP_CLASS_IPV6)
+> +		*pdu_type = IFH_PDU_TYPE_IPV6;
 
-Signed-off-by: Amit Kumar Mahapatra <amit.kumar-mahapatra@amd.com>
----
-BRANCH: mtd/next
+ptp_classify_raw() will also return PTP_CLASS_IPV4 or PTP_CLASS_IPV6
+flags set for (PTP_CLASS_VLAN|PTP_CLASS_IPV4) and
+(PTP_CLASS_VLAN|PTP_CLASS_IPV6) cases. Will the hardware support proper
+timestamp placing in these cases?
 
-Changes in v2:
- - Removed "resets" & "reset-names" from required properties.
- - To address review comments, removed "maxItems" from "reset-names".
----
- .../devicetree/bindings/spi/cdns,qspi-nor.yaml        | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml b/Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml
-index d48ecd6cd5ad..648b8452877c 100644
---- a/Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml
-+++ b/Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml
-@@ -17,6 +17,13 @@ allOf:
-           contains:
-             const: xlnx,versal-ospi-1.0
-     then:
-+      properties:
-+        resets:
-+          maxItems: 1
-+
-+        reset-names:
-+          items:
-+            enum: [ qspi ]
-       required:
-         - power-domains
-   - if:
-@@ -132,11 +139,11 @@ properties:
-     maxItems: 1
- 
-   resets:
--    minItems: 2
-+    minItems: 1
-     maxItems: 3
- 
-   reset-names:
--    minItems: 2
-+    minItems: 1
-     maxItems: 3
-     items:
-       enum: [ qspi, qspi-ocp, rstc_ref ]
--- 
-2.34.1
+> +
+> +	if (port->ptp_tx_cmd == IFH_REW_OP_TWO_STEP_PTP) {
+> +		*rew_op = IFH_REW_OP_TWO_STEP_PTP;
+> +		return;
+> +	}
+>   
+>   	/* If it is sync and run 1 step then set the correct operation,
+>   	 * otherwise run as 2 step
+>   	 */
+>   	msgtype = ptp_get_msgtype(header, type);
+> -	if ((msgtype & 0xf) == 0)
+> -		return IFH_REW_OP_ONE_STEP_PTP;
+> +	if ((msgtype & 0xf) == 0) {
+> +		*rew_op = IFH_REW_OP_ONE_STEP_PTP;
+> +		return;
+> +	}
+>   
+> -	return IFH_REW_OP_TWO_STEP_PTP;
+> +	*rew_op = IFH_REW_OP_TWO_STEP_PTP;
+>   }
+>   
+>   static void lan966x_ptp_txtstamp_old_release(struct lan966x_port *port)
+> @@ -374,10 +395,12 @@ int lan966x_ptp_txtstamp_request(struct lan966x_port *port,
+>   {
+>   	struct lan966x *lan966x = port->lan966x;
+>   	unsigned long flags;
+> +	u8 pdu_type;
+>   	u8 rew_op;
+>   
+> -	rew_op = lan966x_ptp_classify(port, skb);
+> +	lan966x_ptp_classify(port, skb, &rew_op, &pdu_type);
+>   	LAN966X_SKB_CB(skb)->rew_op = rew_op;
+> +	LAN966X_SKB_CB(skb)->pdu_type = pdu_type;
+>   
+>   	if (rew_op != IFH_REW_OP_TWO_STEP_PTP)
+>   		return 0;
 
