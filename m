@@ -1,80 +1,116 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E8CD241693;
-	Thu, 22 May 2025 07:51:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BCA0D241693
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 07:51:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747900287; cv=none; b=ATQsY/c2WzF7fv3kov/dlPIPykoGzjzOId1IWEVQ/Wwmf8QxPeikP8Prt/hETTr6M01dZgLIbQOTMMQH4o1n09N09Vo25Eynic53SimUKd3Fr4fdqBWwADo8YyaoblLoAS/MvhZw6cGLODOUsGEe97Ze+67FQFvFj3ux6z4MQHE=
+	t=1747900292; cv=none; b=cXk3KPh5r7kW+M19teXKUhSbF7Pi5DMG4sjYWrrNgjlPmmo+37erCTdJthCeG8SrtpSbJgxNEfcavQV6OJ/3uQAa8CUa2bcXhYm0rPjuS5HLxr3avLCIZOyH5fPTlPWdpNXzD8cCGmHHiL4lZBDd7d2Wqq/LMOz6poH6HR5ivJA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747900287; c=relaxed/simple;
-	bh=/aYhT8vM2cDXmeV1vWj3lHW7/qM3cYogO7PhzIceLb4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lNBDeqYKCCcXh6yRrwIrCGyNjHjU2DhtRy3LELuAsqsRU+HCIaghMW6n1UhOcpT7hKIpsMkK4+RxMMjU36c9wOhPIRWVDnmWGMmunttrFFXc257lu6/v0+r8WbYrCn+Semsd/WMGl3P/OmgIE5prVJm3aBeEQ42QwFry0/JyFe4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=ikkB023H; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ikkB023H"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=JNtiODZQ5XMXnuwJKYtkx+44LK5XAKVKSFPKx4Ql4GM=; b=ikkB023HEBCMo4GcGGzELvxPza
-	AQRWbHZzoFQU6IVmFzVLnRytXGjtKXMy7QjSEMtI31OtlyxHvZNnoerklamCBbO5vsCwrAfB5HAZH
-	fyB2avBm5YOl4QSZgvdGee7qXJG95CXdHswEKs1Q6TR238al9kdf/KxCqpZTOiZyfhgEAsE1PQCOG
-	ZjnC9+vfNMYgrz/037KDvrgFZAi8n1MgO4sumlF00r+HcXvUEtCejtwQ1pD1UX+akbJmqktlKOUEu
-	aNXZ7PPwHra4So2z87WImFQm/0fs+lBIT6IUgrZ81XwkKjhtBNyXOAynN9Pk+tTFd2AZTGEN+fHXi
-	VV5wFUSg==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uI0hm-00000005nXa-2sLP;
-	Thu, 22 May 2025 07:51:06 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 00DBE300677; Thu, 22 May 2025 09:51:05 +0200 (CEST)
-Date: Thu, 22 May 2025 09:51:05 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Dave Hansen <dave.hansen@intel.com>
-Cc: Ingo Molnar <mingo@kernel.org>, Chao Gao <chao.gao@intel.com>,
-	x86@kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-	tglx@linutronix.de, seanjc@google.com, pbonzini@redhat.com,
-	rick.p.edgecombe@intel.com, weijiang.yang@intel.com,
-	john.allen@amd.com, bp@alien8.de, chang.seok.bae@intel.com,
-	xin3.li@intel.com, Aruna Ramakrishna <aruna.ramakrishna@oracle.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Eric Biggers <ebiggers@google.com>,
-	"H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-	Kees Cook <kees@kernel.org>, Maxim Levitsky <mlevitsk@redhat.com>,
-	Mitchell Levy <levymitchell0@gmail.com>,
-	Nikolay Borisov <nik.borisov@suse.com>,
-	Oleg Nesterov <oleg@redhat.com>,
-	Samuel Holland <samuel.holland@sifive.com>,
-	Sohil Mehta <sohil.mehta@intel.com>,
-	Stanislav Spassov <stanspas@amazon.de>,
-	Uros Bizjak <ubizjak@gmail.com>,
-	Vignesh Balasubramanian <vigbalas@amd.com>,
-	Zhao Liu <zhao1.liu@intel.com>
-Subject: Re: [PATCH v7 0/6] Introduce CET supervisor state support
-Message-ID: <20250522075105.GF24938@noisy.programming.kicks-ass.net>
-References: <20250512085735.564475-1-chao.gao@intel.com>
- <aCYLMY00dKbiIfsB@gmail.com>
- <ed3adddc-50a9-4538-9928-22dea0583e24@intel.com>
+	s=arc-20240116; t=1747900292; c=relaxed/simple;
+	bh=5Er2Se0J/OYgKRlrGNVO3MlntzBG01vQWKegNQrLvfQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gcjfu4Y5s4rl70eQEcP9Pp2L64Oo3JWGSs/v8EpBOEjQMZOKwVMxbswUkjHD4FdTdbQBhr5jGouyLN5ec+EoFSD6tgDhyimVbpMcw7DjBZQG/UEPIQLE/MKMwoupC5hfln3EKwpVVk2xG263KdI9OhDuouVAznPzpBLbGzsyEDk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 78BDE1A2D;
+	Thu, 22 May 2025 00:51:15 -0700 (PDT)
+Received: from [10.57.94.227] (unknown [10.57.94.227])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AE2BD3F673;
+	Thu, 22 May 2025 00:51:25 -0700 (PDT)
+Message-ID: <1ab00224-cca4-4442-a346-eb8a6797e09e@arm.com>
+Date: Thu, 22 May 2025 08:51:24 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ed3adddc-50a9-4538-9928-22dea0583e24@intel.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 2/5] mm: Add batched versions of
+ ptep_modify_prot_start/commit
+Content-Language: en-GB
+To: Dev Jain <dev.jain@arm.com>, akpm@linux-foundation.org
+Cc: david@redhat.com, willy@infradead.org, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, catalin.marinas@arm.com, will@kernel.org,
+ Liam.Howlett@oracle.com, lorenzo.stoakes@oracle.com, vbabka@suse.cz,
+ jannh@google.com, anshuman.khandual@arm.com, peterx@redhat.com,
+ joey.gouly@arm.com, ioworker0@gmail.com, baohua@kernel.org,
+ kevin.brodsky@arm.com, quic_zhenhuah@quicinc.com,
+ christophe.leroy@csgroup.eu, yangyicong@hisilicon.com,
+ linux-arm-kernel@lists.infradead.org, hughd@google.com,
+ yang@os.amperecomputing.com, ziy@nvidia.com
+References: <20250519074824.42909-1-dev.jain@arm.com>
+ <20250519074824.42909-3-dev.jain@arm.com>
+ <59242559-5e90-4422-82f7-179a44eb968a@arm.com>
+ <7a1ae902-d97c-41ae-a3e7-5b6258ced1c5@arm.com>
+ <fc219152-f771-41b0-8857-42de5e6dd35e@arm.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <fc219152-f771-41b0-8857-42de5e6dd35e@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Fri, May 16, 2025 at 08:20:54AM -0700, Dave Hansen wrote:
+On 22/05/2025 07:33, Dev Jain wrote:
+> 
+> On 21/05/25 5:15 pm, Ryan Roberts wrote:
+>> On 21/05/2025 12:16, Ryan Roberts wrote:
+>>> On 19/05/2025 08:48, Dev Jain wrote:
+>>>> Batch ptep_modify_prot_start/commit in preparation for optimizing mprotect.
+>>>> Architecture can override these helpers; in case not, they are implemented
+>>>> as a simple loop over the corresponding single pte helpers.
+>>>>
+>>>> Signed-off-by: Dev Jain <dev.jain@arm.com>
+>> [...]
+>>
+>>> I have some general concerns about the correctness of batching these functions.
+>>> The support was originally added by Commit 1ea0704e0da6 ("mm: add a
+>>> ptep_modify_prot transaction abstraction"), and the intent was to make it easier
+>>> to defer the pte updates for XEN on x86.
+>>>
+>>> Your default implementations of the batched versions will match the number of
+>>> ptep_modify_prot_start() calls with the same number of ptep_modify_prot_commit()
+>>> calls, even if modify_prot_commit_ptes() is called incrementally for sub-batches
+>>> of the batch used for modify_prot_start_ptes(). That's a requirement and you've
+>>> met it. But in the batched case, there are 2 differences;
+>>>
+>>>    - You can now have multiple PTEs within a start-commit block at one time. I
+>>> hope none of the specialized implementations care about that (i.e. XEN).
+>> I had a look; this isn't a problem.
+>>
+>>>    - when calling ptep_modify_prot_commit(), old_pte may not be exactly what
+>>> ptep_modify_prot_start() returned for that pte. You have collected the A/D bits,
+>>> and according to your docs "PTE bits in the PTE range besides the PFN can
+>>> differ" when calling modify_prot_start_ptes() so R/W and other things could
+>>> differ here.
+>> It looks like powerpc will break if you provide old_pte which has different
+>> permissions to the "real" old_pte, see radix__ptep_modify_prot_commit(). So I
+>> think you need to at least spec modify_prot_start_ptes() to require that all
+>> bits of the PTE except the PFN, access and dirty are identical. And perhaps you
+>> can VM_WARN if found to be otherwise? And perhaps modify
+>> ptep_modify_prot_commit()'s documentation to explcitly allow old_pte's
+>> access/dirty to be "upgraded" from what was actually read in
+>> ptep_modify_prot_start()?
+> 
+> 
+> Got it, so we just need to document that, the permissions for all ptes must be
+> identical
 
-> It's getting into shape, but it has a slight shortage of reviews. For
-> now, it's an all-Intel patch even though I _thought_ AMD had this
-> feature too. 
+Not just permissions; all bits (inc SW bits) except PFN and A/D.
 
-Yeah, AMD should have this. While AMD does not implement IBT, they did
-do implement SS, and as such, they should be having this stuff as well.
+> 
+> when using modify_prot_start_ptes(). And that we may be smearing extra a/d bits in
+> 
+> modify_prot_commit_ptes().
+> 
+> 
+>>
+>> XEN/x86 and arm64 don't care about old_pte.
+>>
+>> Thanks,
+>> Ryan
+>>
+>>> I'm not sure if these are problems in practice; they probably are not. But have
+>>> you checked the XEN implementation (and any other specialized implementations)
+>>> are definitely compatible with your batched semantics?
+>>>
 
