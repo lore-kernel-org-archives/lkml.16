@@ -1,91 +1,110 @@
-Received: from mail-vk1-f182.google.com (mail-vk1-f182.google.com [209.85.221.182])
+Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81FB81C8613
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 22:15:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5736826D4F0
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 22:15:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747952158; cv=none; b=ZY4heK0URkaow8745Rm8tqM9dA2j+PCJGM5IbnKrR2hNcoAocI+y9LxAzzME7UNQPr7uGvqRtLGfPAXPD0YYufbciAoCz/Vzx4A3muw0rg+LvHsNwCjX+zOYuDeP0FM0uHD5svaZohq/bqpdGqfoVA8Na7N65uw4bAQ0IGLlIjo=
+	t=1747952160; cv=none; b=sglbrPTkuCftOHShC6GTWmIsaJ/kehWBsJXkngCQupRfWshwAjHN9AAasdwEWSeTCn3JozXF0HkJhOJbTk3TJ6HehAXTMrF4pU3kj3LVTRoTF0SYgJ6nTKPvSLRThzkYviUGoBRQn6GFBtZbmPzohHKbm4NXtCUpK8sv7mmJeaU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747952158; c=relaxed/simple;
-	bh=HMVPD+OZ4s7bW6e0XRDSTuuwdVn0ze69F4/9nj3q3/o=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tlIkn6x1A5mYI7EELxVygzEgLm6B6ErabP2EHqVsUp/yV6FhLBX15d6KosuuClYtwSS2QISyXffbaUFmJhciEKoxmq0y2x06higJtqdnttAs+sr7+t4InkoKJyaJo0w9GmayDHAkNznRh6Qp7/rbpxe+QhLgOKiGN5u3kEjCbX8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lxXppN3d; arc=none smtp.client-ip=209.85.221.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747952160; c=relaxed/simple;
+	bh=LW+MUjjgFxmY4AsGxQLPysxlArJG7cv+3/2gt31yCqc=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=mYmHcy0xlOO+Zr1K09PaXx9D4uEAhVLZout+vdZ9Fpq6HQWKnkorMclJt9xCdy5BIEf80BxD8sl7ZPcOrn6dmX50KKa0JTWDKYcfQLddWe49Qo0XuuErEOvo7hQUnJe9wJIlWFd/V1FH644gTkUN45Q2BXJQn1pZDk8ATgyj7RQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=na0UG0FZ; arc=none smtp.client-ip=209.85.210.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lxXppN3d"
-Received: by mail-vk1-f182.google.com with SMTP id 71dfb90a1353d-528ce9731dbso2024366e0c.0
-        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 15:15:56 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="na0UG0FZ"
+Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-7394792f83cso6786686b3a.3
+        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 15:15:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747952155; x=1748556955; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HMVPD+OZ4s7bW6e0XRDSTuuwdVn0ze69F4/9nj3q3/o=;
-        b=lxXppN3dwx5vBk4EyPhdHZ3+Cm5MfUZAzZB8Sm5NNEmDPj+VOE+//P+5s+DI6G36Gr
-         y0IZyFzHgdAZvuNGua1mZRU+Q89ZJdk6+aRdFZ+ASKGFcEjbvDzyLltncjr7uSqEI3iV
-         +V2wCJI6tlbqLTleGPfgGMkdfECqkkfrRNEkR1Lpz7Xyfh23UMp3zxOXsinzhqGS4YcK
-         AjD8xu0ancepGsLgXHWJ7R+tml++r59/P5qA87VnUO8JFGhG5HjPszezRBMAChxQdXQP
-         eGfsXG82zQmLZ+jQzYmx4AkwF/s+4ahQc/NkVwFEuyB3B2CXnum3Tw+j/xvN2TeBB/nr
-         2N2w==
+        d=google.com; s=20230601; t=1747952158; x=1748556958; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=XxUISslG9B59ofXzKWqHmNS0LqVEIEBut6Uu0RQ9388=;
+        b=na0UG0FZhHKDWAQHpdT+p4WtnLWFf8u60KeDmVtKXtVdd3b+wiyBAJ64dh3OXNQeuz
+         AoFJ9Lxp6+8d2rlbcA7PmlY6ez3pOwjvGeN7nr0Nr1Lkiv2WQDu6MWzlJMfZEBixMBJA
+         mIADDFU806bnJ9IpH6Inw/zpCILgFwDw/5Knc8EKzIyWJ+ECnfnwSbLFmOURq8pCjpzK
+         W/a0OsTEQN0H1Hq0BqlXHV+MV7ITnkPoTl4HqLdHDAds2F+iRrma1kkBP/Tkb9M45ff+
+         1miODzCi6yQm+a/GnoLlzoY/xooc7d0LjHy7GfoH/KVklzP32xD0Rdk183mPnPt2VX6u
+         ghsw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747952155; x=1748556955;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=HMVPD+OZ4s7bW6e0XRDSTuuwdVn0ze69F4/9nj3q3/o=;
-        b=NE8clCkDEpP4VBgoIp8TMOqRoL2WNvCrc5H/qG9Dsefi6ukQs92WG9Qr57WAO+TXOl
-         fXdRauUL+M5J+dZnEw1a6YBL3Bh7JXg80wWrSkyi2eU746HY9zSVxm74zmddJU8fucq2
-         9xEBX0zYw5Oal0KutF4OFsi5ElCXpJt1IZo1WPOVL6vCRkSDxfy4M7H6IrlyPTLyH2Mj
-         J0QBcyskuIuyHTdsgURHjKz4rGEXa6mw+WuzLvBWJPLd2WVimFHnCuP6bvx1/sMLpDN7
-         OF3MaMvf+xIctwyhjrUjz52lzp2Sf26SyyRrfuiiRthh/FTp8NYmzhvvzo59Gbe9LdC5
-         Nmtw==
-X-Forwarded-Encrypted: i=1; AJvYcCVdyHB1R3z06tes+TJT5FBnbrm+0LQlPlThUF89TiPKUj06hKaoOPAuk0zLTkLJsPtac7N1bqIACiGYiPE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyXvT1CS5jJ98uRVlNeYBHhRBScK0GRj6Y9DLKDzBT4vE8buzj8
-	y+wUa3Xu2M6XfbB6wFWxysbGO1BSkqTg1Z8ZhhPQalOgDigad9dzqnXyaqH9Cs9A+qEqHEWVwP8
-	vQk5M3kPnhzhFFA1I1bPEV481U+fzUUA=
-X-Gm-Gg: ASbGncsGnAGNkyOCLRT5Hk1pVynxJcfhbJYy/M4vO4sK/WUMnYf5eoe3yWLdEPKiaZB
-	RrmYIvjFrP4dADEUHD/ihsLUZy14RWs23Hq2QfClORw4RqdigxzPf//p6TJw9jiwIrQTZTChWYc
-	Bz9/AEqyc40NO7FVeqrPFoLgIaYj57tkkCvQ==
-X-Google-Smtp-Source: AGHT+IELKM+qJGk4ES+SzP+nMeVkDl1p/ATvfrdoyJX0Rrj5FYUfqh6gUJLEkF1LESGIA7CBZLzcWZJYbiLJSeeTdrI=
-X-Received: by 2002:a05:6122:21a3:b0:52d:b855:e0b5 with SMTP id
- 71dfb90a1353d-52f1fd00ae1mr774306e0c.3.1747952155267; Thu, 22 May 2025
- 15:15:55 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1747952158; x=1748556958;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=XxUISslG9B59ofXzKWqHmNS0LqVEIEBut6Uu0RQ9388=;
+        b=s4pPJGIsDjgT758LevkmVuSvScyhzATs+PA/NbNKJ+vY1+RwqbAq99Ga/HZw2siCPg
+         DMLavCOzqmHiFKeKz96RwITL8oADUMF1VvbTqpHpZ2K9MnjjAbNRWE9xryZy9Y8P6/Y7
+         b+xmDtvGmzVE1CEwzctgWVOd5u5Pu8tnnKnn15gZQ7r37D0PTSEhm/ywBD95VgU0OANJ
+         /rc/OvRiiebEDULF/bPCzDT0qQmtTFg/UWoC9VCXbwKHZhvi65evYbOrpwg5FVm9V+C7
+         Fxug0XPL2zXgJ9zQG2WnSSlcVirMjOaVYp2eE2ipWOpo2WHT5SwNEDc9sS4tWTThIWgP
+         W9UA==
+X-Forwarded-Encrypted: i=1; AJvYcCW/LAtveKugzIEnLfHMmZb9FpMW6em5CwNB1ld/yJuk6YiTxlhKtrbDeCzpSowCZf2nirlugZCNKcG6f74=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx4HUA0oRZOK4CWvMnZwse6Ppmdqh5XFTj1aqiRJWp0YtdbSlZe
+	shOXWA38Plzq3oPGloxHDUZW05cA3YIW1xj1YB8NScWG1IdqF78i/mMXyTjjH+B0PVzoTQs8iD1
+	rf3Vk3g==
+X-Google-Smtp-Source: AGHT+IGyRULfTNKX9wKPHMVLGQE0IQU5Z1GV3srVw7WcCwXk+0qXNLGqzbMfgQlIwQ1yx9mkZyKSwWAhdiY=
+X-Received: from pfwz39.prod.google.com ([2002:a05:6a00:1da7:b0:740:3f40:b53b])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:12c3:b0:1f5:6c94:2cd7
+ with SMTP id adf61e73a8af0-216219f81dcmr37864857637.42.1747952158537; Thu, 22
+ May 2025 15:15:58 -0700 (PDT)
+Date: Thu, 22 May 2025 15:15:57 -0700
+In-Reply-To: <87h61cquww.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <c221c98dc2369ea691e3eb664bf084dc909496f6.1747934680.git.rabenda.cn@gmail.com>
- <2f33a148-2a6d-4906-b2fc-6a8c853af3db@isrc.iscas.ac.cn>
-In-Reply-To: <2f33a148-2a6d-4906-b2fc-6a8c853af3db@isrc.iscas.ac.cn>
-From: Han Gao <rabenda.cn@gmail.com>
-Date: Fri, 23 May 2025 06:15:43 +0800
-X-Gm-Features: AX0GCFuthVeZjjuVfaYZWDOio-cbzgkI4-MTLHEvOEchzx8VHJF-GHdmQoeZq-A
-Message-ID: <CAAT7Ki-0dNFU-DJNVg+kA19D29W25fiEVQcP6SakvgCUMhQz1Q@mail.gmail.com>
-Subject: Re: [PATCH] riscv: vector: fix xtheadvector save/restore
-To: linux-riscv@lists.infradead.org
-Cc: Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, 
-	Charlie Jenkins <charlie@rivosinc.com>, Jesse Taube <jesse@rivosinc.com>, 
-	Andy Chiu <andybnac@gmail.com>, linux-kernel@vger.kernel.org, 
-	Xiongchuan Tan <tanxiongchuan@isrc.iscas.ac.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+References: <20250517091639.3807875-8-ardb+git@google.com> <20250517091639.3807875-9-ardb+git@google.com>
+ <20250519094038.GIaCr8ltHvLBYjk8iI@fat_crate.local> <aCstaIBSfcHXpr8D@gmail.com>
+ <20250519131944.GCaCsv8A71vn21AB1W@fat_crate.local> <874ixernra.ffs@tglx>
+ <20250522075553.GG24938@noisy.programming.kicks-ass.net> <aC896zTw_z7Bx6I2@google.com>
+ <87h61cquww.ffs@tglx>
+Message-ID: <aC-iHUcRmgYoE59E@google.com>
+Subject: Re: [PATCH v4 1/6] x86/cpu: Use a new feature flag for 5 level paging
+From: Sean Christopherson <seanjc@google.com>
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: Peter Zijlstra <peterz@infradead.org>, Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@kernel.org>, 
+	"Ahmed S. Darwish" <darwi@linutronix.de>, Ard Biesheuvel <ardb+git@google.com>, linux-kernel@vger.kernel.org, 
+	x86@kernel.org, Ard Biesheuvel <ardb@kernel.org>, 
+	Linus Torvalds <torvalds@linux-foundation.org>, Brian Gerst <brgerst@gmail.com>, 
+	"Kirill A. Shutemov" <kirill@shutemov.name>
+Content-Type: text/plain; charset="us-ascii"
 
-Sorry, forgot to add the fix tag
+On Thu, May 22, 2025, Thomas Gleixner wrote:
+> On Thu, May 22 2025 at 08:08, Sean Christopherson wrote:
+> > On Thu, May 22, 2025, Peter Zijlstra wrote:
+> >> On Wed, May 21, 2025 at 05:23:37PM +0200, Thomas Gleixner wrote:
+> >> 
+> >> >    4) Drivers having access to CPUID is just wrong. We've had issues
+> >> >       with that in the past because drivers evaluated CPUID themself and
+> >> >       missed that the core code had stuff disabled.
+> >> 
+> >> I had this patch that read the module instructions and failed loading if
+> >> they used 'fancy' instructions. Do you want me to revive that?
+> 
+> Once we have the new infrastructure in place....
+> 
+> > Unless you want to grant exceptions, that's not going to fly for KVM.  KVM makes
+> > heavy use of CPUID, the consumption/output of which is firmly entrenched in KVM's
+> > ABI.
+> 
+> If there is a full in memory copy of all CPUID leafs, then what needs KVM beyond
+> reading it from there?
 
-Fixes: d863910eabaf ("riscv: vector: Support xtheadvector save/restore")
+Ah, I missed that context.  If it's a truly full (e.g. includes the XSTATE sizes
+sub-leafs and all that jazz) and unmodified copy, then it'll work.
 
-On Fri, May 23, 2025 at 2:28=E2=80=AFAM Xiongchuan Tan
-<tanxiongchuan@isrc.iscas.ac.cn> wrote:
->
-> I tested this patch with llama.cpp while adding xtheadvector support.
-> Surprisingly, this bug did not prevent the LLM from generating plausible
-> output, though the model's responses became noticeably less coherent.
->
-> Tested-by: Xiongchuan Tan <tanxiongchuan@isrc.iscas.ac.cn>
->
+If it's a modified/filtered copy, it might work?  I'd have to think/dig more.
+I'm pretty sure the only CPUID-based feature that KVM supports based solely on
+hardware capabilities is LA57, and it sounds like that will have special handling
+anyways.
+
+My bigger concern is cases where the kernel _adds_ features.  KVM's default
+handling of features is to advertise support if and only both the host kernel
+and hardware support a feature.  I.e. KVM does a bitwise-AND of CPUID and
+boot_cpu_data.x86_capability.  KVM does opt-in for a handful of features, but
+they are the exception, not the rule.  I don't see an obvious way to maintain
+that behavior without KVM doing CPUID itself.
