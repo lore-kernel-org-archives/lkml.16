@@ -1,222 +1,113 @@
-Received: from mail.stoffel.org (mail.stoffel.org [172.104.24.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BA6225745A;
-	Thu, 22 May 2025 21:45:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=172.104.24.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C0BA256C99
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 21:45:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747950304; cv=none; b=VyLbh8q+eX+LgmUcIl85Zx5NFhRmVGcH05lcJzMrxqw4L6VtGRusI5C5wOjNBA/cjYcb6gX7/Xg+/2TmNqBUbAON9dekI1BGZj3POaGLnemqG2LPn7xOOQO67e2KkAxUStUW3u01G5oSf9uSK260dnN9PfJiAPe8NXZo9vtrw5Q=
+	t=1747950353; cv=none; b=QbONMBmD52HGjSit9UVPDpAGZxriHT5zKwQRBNpfHfRkt3ByE6SjWxe1+vwnZR9sFcCmSC74Vdj6u9eKBHxKxvWimZhX4cPlZufL3QXUbBX0w0P8bs5mbJhlEhRx/USp2XlxWLcAkiSP1GE6GnJLUBUBVlqZOkWJ5RgeFoR9AN4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747950304; c=relaxed/simple;
-	bh=quAfFYzFTzjSxtdhvcIUWaLjy4FsUqMuqkB6PG3nfx4=;
-	h=MIME-Version:Content-Type:Message-ID:Date:From:To:Cc:Subject:
-	 In-Reply-To:References; b=QEG2BG9ubAQUryJczPArhZhsGnpxxXl9+mEAg3WSEAIrbpxBqj0du+BVetfIQfuIsQd5lecKKDRohZJwmGOZYnrXpq312evRPEpMieyYdi0ncsH0JIE5MvhnIz4jlrUGBEpk+EemnWV2mP3eZgjRlCRP1hvOmCFyw6D/NhC1Vq0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=stoffel.org; spf=pass smtp.mailfrom=stoffel.org; arc=none smtp.client-ip=172.104.24.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=stoffel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stoffel.org
-Received: from quad.stoffel.org (syn-097-095-183-072.res.spectrum.com [97.95.183.72])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.stoffel.org (Postfix) with ESMTPSA id 4210F1E38E;
-	Thu, 22 May 2025 17:44:55 -0400 (EDT)
-Received: by quad.stoffel.org (Postfix, from userid 1000)
-	id F4218A0FEF; Thu, 22 May 2025 17:44:49 -0400 (EDT)
+	s=arc-20240116; t=1747950353; c=relaxed/simple;
+	bh=DJx/aLS1TGfy8I3D0Cv/JMVu0rnq4KxpL+LBDnwUdg4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=NRJYC3tb8ANSZsFRnwgw5LPLN9ZrZwXwuWiieIYcYMff4JbfQ2rfAoMQJWeE+zsjfUkkJBTHrn2+jNljH4N+mHrRUKEBG9RMMG+lYRwuUFXvgd9cCt+2VkI3pc4IG2DloJ6Sc0LXmjfP+gWgdXsNypV2I8wXPXHVOy2bQwYxqdQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=uax8tqAd; arc=none smtp.client-ip=209.85.167.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uax8tqAd"
+Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-54e816aeca6so11792397e87.2
+        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 14:45:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1747950349; x=1748555149; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=vqdIrlhupGwlncjOV9Hzqn7rsNd9R0o91HFcTndTQoE=;
+        b=uax8tqAdSDH6AcDsTW3Jet/tWK6kYjcEwI16XOLeAGY9eGxM99vaKpppKhkqzO5Gi6
+         FGtEOkIG1F6KtyfVCHx7TTinDMWINqSSQPU97Z6ff7zBlmWT3BPPKYarOMzd8CImUvzu
+         bhs0goWC8IX4ZWTUi/GP/yBeURxLU4ixIajhtEeDV5ucU2q0X9MdPIzJdKW6PU5sUlel
+         v+Qd4zURLB3Rt2mxJH+wrxeK2H9pQVsVWKyssPJQ8S3b5H5HrmxXKrK1+3aF+G3GTmsj
+         NAYLX4yxPy9mjscRpeOLrcVnREcgcXvjRBfKvGX9Nug2juNcsq1MIiKT4AL8GlwwZWcK
+         047g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747950349; x=1748555149;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=vqdIrlhupGwlncjOV9Hzqn7rsNd9R0o91HFcTndTQoE=;
+        b=IoJYsM7s7xDTFc1x38RTL/uFHXEk8m+Fo8rLkUiIia/EmZWy9UZe8BsUGHqSRBMlOH
+         HrcPP2sCV8qTcniA/ISWK0524AUB9ybYHHGB5n2s+9Ja+Zu+lLmDqzFKT7wJics46qBO
+         19/GHaTckjYkpzeqIBj4Ydk0uu2t2i0BxPK9J3NQbgXjx9ZTiPVTg2cgYyMHc/T9JBkF
+         ke3v9ZvuNZjPWi0TsHC/Dzus+N9HWmSIBN2vTzSLemGtVskHYSy6iayv5z0mjwED363O
+         Ne1tecqgoKhUINNaQDQTUshP6kBe21oei7zURQZU7ZS40YkfhFIm8pR8TrkSkwP79XSP
+         x8UQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXeDi0lfch9vOoyL+AENGVSqYFipg2sECZn/mxHQQWwf3v3geoiUmLgUrtWCknw0JBmlTtAqwqIAkpEaVE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx73cCRkXo7ZO6i7XRA16Gyu0Op28U9jgeFhc8X/luhFbZSgO/j
+	+0Tex6zfa8reMqjSNz08ZdZdGZVG3vu7PaIDDbSG2xiiUfhUO60YCdIaCFy/4fa3EB4=
+X-Gm-Gg: ASbGncuz+E5XFaM5/hdJwSane44iWNJpsTXkVdq2SH1v9pyNdFy1i+T0BhRH6Q3dpnr
+	kawy2kydjbQnWndH/MXUVNi3fyYoMhlc4wruSaq5hecpMtTApHTvovzhR4bXR1fGyJnX5f22YVo
+	gdc0zZmE8LW47N+osCqjtfuG3BWZzl30q3rUdU8sKpApIORBr7PaUuZzAAEpSCb2HO931+5mY3t
+	VyQ2D4jymWrYTBUDeoYgC+0ZqvKMp1TFnINgiUqhEbvWsbDughsYw8rXnkomXlnxO8AUVI6qg82
+	lsoQX4pGWBfLKrVcNuN9Pk5pSy0l6pOt6LAJsZAWOM091FsjPcRRrmdf1nQ2vHvkYRCSgb1RZO+
+	LrsrZ4xxjBVLLKhigbxzqw59iZjBvW12MCmz+
+X-Google-Smtp-Source: AGHT+IG+1WOzXAzO+qsS1YYWCu4EXbkGcHy3c/2SG1FKBiP2nI4pbnNDQFuWw7TtSiy4ji1kz+G1qQ==
+X-Received: by 2002:a05:6512:630e:b0:549:b179:e905 with SMTP id 2adb3069b0e04-550e7197701mr6913914e87.9.1747950349564;
+        Thu, 22 May 2025 14:45:49 -0700 (PDT)
+Received: from uffe-tuxpro14.. (h-178-174-189-39.A498.priv.bahnhof.se. [178.174.189.39])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-551faf6be77sm1739796e87.84.2025.05.22.14.45.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 May 2025 14:45:48 -0700 (PDT)
+From: Ulf Hansson <ulf.hansson@linaro.org>
+To: Linus <torvalds@linux-foundation.org>,
+	linux-mmc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [GIT PULL] MMC fixes for v6.15-rc8
+Date: Thu, 22 May 2025 23:45:46 +0200
+Message-ID: <20250522214546.168524-1-ulf.hansson@linaro.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Message-ID: <26671.39633.973350.866531@quad.stoffel.home>
-Date: Thu, 22 May 2025 17:44:49 -0400
-From: "John Stoffel" <john@stoffel.org>
-To: Kent Overstreet <kent.overstreet@linux.dev>
-Cc: John Stoffel <john@stoffel.org>,
-    Amir Goldstein <amir73il@gmail.com>,
-    linux-fsdevel@vger.kernel.org,
-    linux-bcachefs@vger.kernel.org,
-    linux-kernel@vger.kernel.org,
-    linux-unionfs@vger.kernel.org,
-    Miklos Szeredi <miklos@szeredi.hu>,
-    Alexander Viro <viro@zeniv.linux.org.uk>,
-    Christian Brauner <brauner@kernel.org>,
-    Jan Kara <jack@suse.cz>
-X-Clacks-Overhead: GNU Terry Pratchett
-Subject: Re: [PATCH 0/6] overlayfs + casefolding
-In-Reply-To: <7b272tdagnkvzt5eo4g4wy47rjwf67nqk26aq27uetc57kzza5@7p5cmikl2fw6>
-References: <20250520051600.1903319-1-kent.overstreet@linux.dev>
-	<CAOQ4uxg8p2Kg0BKrU4NSUzLVVLWcW=vLaw4kJkVR1Q-LyRbRXA@mail.gmail.com>
-	<osbsqlzkc4zttz4gxa25exm5bhqog3tpyirsezcbcdesaucd7g@4sltqny4ybnz>
-	<CAOQ4uxjUC=1MinjDCOfY5t89N3ga6msLmpVXL1p23qdQax6fSg@mail.gmail.com>
-	<gdvg6zswvq4zjzo6vntggoacrgxxh33zmejo72yusp7aqkqzic@kaibexik7lvh>
-	<CAOQ4uxg9sKC_8PLARkN6aB3E_U62_S3kfnBuRbAvho9BNzGAsQ@mail.gmail.com>
-	<rkbkjp7xvefmtutkwtltyd6xch2pbw47x5czx6ctldemus2bvj@2ukfdmtfjjbw>
-	<26668.52908.574606.416955@quad.stoffel.home>
-	<7b272tdagnkvzt5eo4g4wy47rjwf67nqk26aq27uetc57kzza5@7p5cmikl2fw6>
-X-Mailer: VM 8.3.x under 28.2 (x86_64-pc-linux-gnu)
+Content-Transfer-Encoding: 8bit
 
->>>>> "Kent" =3D=3D Kent Overstreet <kent.overstreet@linux.dev> writes:
+Hi Linus,
 
-> On Tue, May 20, 2025 at 02:49:16PM -0400, John Stoffel wrote:
->> >>>>> "Kent" =3D=3D Kent Overstreet <kent.overstreet@linux.dev> writes:
->>=20
->> > On Tue, May 20, 2025 at 04:03:27PM +0200, Amir Goldstein wrote:
->> >> On Tue, May 20, 2025 at 2:43=E2=80=AFPM Kent Overstreet
->> >> <kent.overstreet@linux.dev> wrote:
->> >> >
->> >> > On Tue, May 20, 2025 at 02:40:07PM +0200, Amir Goldstein wrote:
->> >> > > On Tue, May 20, 2025 at 2:25=E2=80=AFPM Kent Overstreet
->> >> > > <kent.overstreet@linux.dev> wrote:
->> >> > > >
->> >> > > > On Tue, May 20, 2025 at 10:05:14AM +0200, Amir Goldstein wrote:
->> >> > > > > On Tue, May 20, 2025 at 7:16=E2=80=AFAM Kent Overstreet
->> >> > > > > <kent.overstreet@linux.dev> wrote:
->> >> > > > > >
->> >> > > > > > This series allows overlayfs and casefolding to safely be used on the
->> >> > > > > > same filesystem by providing exclusion to ensure that overlayfs never
->> >> > > > > > has to deal with casefolded directories.
->> >> > > > > >
->> >> > > > > > Currently, overlayfs can't be used _at all_ if a filesystem even
->> >> > > > > > supports casefolding, which is really nasty for users.
->> >> > > > > >
->> >> > > > > > Components:
->> >> > > > > >
->> >> > > > > > - filesystem has to track, for each directory, "does any _descendent_
->> >> > > > > >   have casefolding enabled"
->> >> > > > > >
->> >> > > > > > - new inode flag to pass this to VFS layer
->> >> > > > > >
->> >> > > > > > - new dcache methods for providing refs for overlayfs, and filesystem
->> >> > > > > >   methods for safely clearing this flag
->> >> > > > > >
->> >> > > > > > - new superblock flag for indicating to overlayfs & dcache "filesystem
->> >> > > > > >   supports casefolding, it's safe to use provided new dcache methods are
->> >> > > > > >   used"
->> >> > > > > >
->> >> > > > >
->> >> > > > > I don't think that this is really needed.
->> >> > > > >
->> >> > > > > Too bad you did not ask before going through the trouble of this implementation.
->> >> > > > >
->> >> > > > > I think it is enough for overlayfs to know the THIS directory has no
->> >> > > > > casefolding.
->> >> > > >
->> >> > > > overlayfs works on trees, not directories...
->> >> > >
->> >> > > I know how overlayfs works...
->> >> > >
->> >> > > I've explained why I don't think that sanitizing the entire tree is needed
->> >> > > for creating overlayfs over a filesystem that may enable casefolding
->> >> > > on some of its directories.
->> >> >
->> >> > So, you want to move error checking from mount time, where we _just_
->> >> > did a massive API rework so that we can return errors in a way that
->> >> > users will actually see them - to open/lookup, where all we have are a
->> >> > small fixed set of error codes?
->> >>=20
->> >> That's one way of putting it.
->> >>=20
->> >> Please explain the use case.
->> >>=20
->> >> When is overlayfs created over a subtree that is only partially case folded?
->> >> Is that really so common that a mount time error justifies all the vfs
->> >> infrastructure involved?
->>=20
->> > Amir, you've got two widely used filesystem features that conflict and
->> > can't be used on the same filesystem.
->>=20
->> Wait, what?  How many people use casefolding, on a per-directory
->> basis?  It's stupid.  Unix/Linux has used case-sensitive filesystems
->> for years.  Yes, linux supports other OSes which did do casefolding,
->> but yikes... per-directory support is just insane.  It should be
->> per-filesystem only at BEST.=20=20
+Here's a PR with a couple of MMC fixes intended for v6.15-rc8. Details about the
+highlights are as usual found in the signed tag.
 
-> Quite a lot.
+Please pull this in!
 
-As I'm learning!  :-)    And sorry for the late reply... life got in
-the way...
+Kind regards
+Ulf Hansson
 
-> You may not realize this, but Valve has, quietly, behind the scenes,
-> been intelligently funding a ton of Linux work with an eye towards
-> not just gaming, but improving Linus on the desktop. And they've
-> been deploying it too, you can buy a Steam deck today.
 
-So... this arguement that you're improving the desktop by doing
-case-folding on filesystems smells bogus to me.  I think it's more
-correct to say "Valve wants windows application support on top of
-linux, and since windows does case-folding, linux should too."
+The following changes since commit 82f2b0b97b36ee3fcddf0f0780a9a0825d52fec3:
 
-Which is more an arguement for supporting legacy backwards
-implementations.  But for the future?  God, why?=20
+  Linux 6.15-rc6 (2025-05-11 14:54:11 -0700)
 
-> And a significant fraction of desktop users like to play games - we're
-> not just all work. Windows ports need casefolding - alternatives have
-> been discussed and they're non viable.
+are available in the Git repository at:
 
-> (I fondly remember the days when I had time for such things).
+  git://git.kernel.org/pub/scm/linux/kernel/git/ulfh/mmc.git tags/mmc-v6.15-rc6
 
-Heh heh.  I'm not a Windows gamer at all, which is why I haven't run
-into this at all.=20=20
+for you to fetch changes up to 71c9475b1e2cc4d31370b1b7a328bdfeea5d53b4:
 
-> Samba fileservers are a thing, too.
+  mmc: sdhci_am654: Add SDHCI_QUIRK2_SUPPRESS_V1P8_ENA quirk to am62 compatible (2025-05-19 14:26:12 +0200)
 
-Sure.  And I understand that Windows (even Windows 11!) is still does
-casefolding by default.  Sigh... which sucks.=20=20
+----------------------------------------------------------------
+MMC host:
+ - sdhci_am654: Fix MMC init failures on am62x boards
+ - sdhci-of-dwcmshc: Add PD workaround on RK3576 to avoid hang
 
-> And for all us desktop/workstation users, not being able to use the same
-> filesystem for wine and docker is the kind of jankiness that makes
-> people say "maybe Linux isn't ready for the desktop after all".
+----------------------------------------------------------------
+Judith Mendez (1):
+      mmc: sdhci_am654: Add SDHCI_QUIRK2_SUPPRESS_V1P8_ENA quirk to am62 compatible
 
-I dunno... I just wonder why overlayfs (or some other level) can't
-just hide this and leave the lower levels alone.  Yes, when you have
-'foo' and 'Foo' on Linux, how do you handle it?  It's painful.
+Nicolas Frattaroli (1):
+      mmc: sdhci-of-dwcmshc: add PD workaround on RK3576
 
-> Put aside your feelings on casefolding - this is about basic attention
-> to detail.
-
-Heh.  I'm getting an education here.  And disliking all the hoops
-filesystems have to go through to support this (IMHO) dumb feature of
-windows.=20=20
-
->> > That's _broken_.
->>=20
->> So?  what about my cross mounting of VMS filesystems with "foo.txt;3"
->> version control so I can go back to previous versions?  Why can't I do
->> that from my Linux systems that's mounting that VMS image?=20=20=20
->>=20
->> Just because it's done doesn't mean it's not dumb.=20=20
->>=20
->> > Users hate partitioning just for separate /boot and /home, having to
->> > partition for different applications is horrible. And since overlay
->> > fs is used under the hood by docker, and casefolding is used under
->> > the hood for running Windows applications, this isn't something
->> > people can predict in advance.
->>=20
->> Sure I can, I don't run windows applications to screw casefolding.
->> :-)
->>=20
->> And I personally LIKE having a seperate /boot and /home, because it
->> gives isolation.  The world is not just single user laptops with
->> everything all on one disk or spread across a couple of disks using
->> LVM or RAID or all of the above.=20=20
->>=20
->> I also don't see any updates for the XFS tests, or any other
->> filesystem tests, that actually checks and confirms this decidedly
->> obtuse and dumb to implement idea.=20=20
-
-> Well, you certainly are making your personal feelings known :)
-
-> But for me, as the engineer designing and implementing this stuff, I
-> don't let my personal feelings dictate.
-
-> That's not my place.
-
-> My job is to write code that works, works reliably, solves real
-> problems, and lets users do the things they want with their machines.
-
-> All this drama over casefolding has been pure distraction, and I would
-> appreciate if you and everyone else could tone it down now.
-
+ drivers/mmc/host/sdhci-of-dwcmshc.c | 40 +++++++++++++++++++++++++++++++++++++
+ drivers/mmc/host/sdhci_am654.c      | 35 +++++++++++++++++++++++++++++++-
+ 2 files changed, 74 insertions(+), 1 deletion(-)
