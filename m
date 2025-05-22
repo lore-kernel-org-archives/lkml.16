@@ -1,123 +1,142 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 191202F41;
-	Thu, 22 May 2025 12:50:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F056E28B4F8;
+	Thu, 22 May 2025 12:51:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747918259; cv=none; b=P9Xz14xa+uyUuNaYs+fKfROd4/52XXOSFDjnNRnd8KWxUjCWdm5GSwHE/qlALJUi979jrJBebyti+acJLpLAsYbJG32/tyXp5SHnpJG9vtesxijRVMHE070fa8DAJGV14TWckv9FwxOrlAWvnLhZkN7m2zwEHGYk3Ld3FXc5cs4=
+	t=1747918272; cv=none; b=rH/VtChW8gwx/5oQXVXl2QLL/I+BGohe+OWmzLlAlflEtNYMQhDRm+PGnnhAWNU/+wAui30e8xiQmwJqehDhXXNbtzacIB9AEhnPa/Za5hRJ2qxl70EgN/mQbVW1PNhu3E4ppwky4yRss0/UL3L4DOmRIaUgBJQ2l5ckU4nzS2Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747918259; c=relaxed/simple;
-	bh=AmQ+WbfG9xtw0Z+jRNSrCJrEUIrK7Wv3brjyfx7Lyiw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YnY6abJpbIWz9UaPvPyYIzmy/yGq5Dxk7Gpx294MA32HglFAsHa3/UPKqWyd3YGOQ7tsXkLhuajdr/JLn+hm3hFIDrvVgttJ+OB2ox65T9m6GIYZwjE6wbmMYfzJOt9SQeWmKNn/dQnPOMhj0KYW1qrXPPrCUGObD1RROOuKtls=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=Fe+uMmjt; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="Fe+uMmjt"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=ziV+qFWQFPGemtwtFuQ2yto/+aZFcx7ZXSBvpy3WpXs=; b=Fe+uMmjtdt4LUngmv3HG9SnhGa
-	ae1zfCnl9CkSjiudDhV24Xr3nhTqPUAd0fp+PeA8Dm7cZTkUmNC0BCN9fsFkZdNc+VRHiRJ6Ru+gL
-	WKMEE9yXPOyV1bECHpNIcwT59ilUoK+dAMpkgpZoRtjOimeLgLMNSZDASTdZoGWju0Rw=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1uI5No-00DUjP-Ee; Thu, 22 May 2025 14:50:48 +0200
-Date: Thu, 22 May 2025 14:50:48 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Quentin Schulz <quentin.schulz@cherry.de>
-Cc: Quentin Schulz <foss+kernel@0leil.net>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Jakob Unterwurzacher <jakob.unterwurzacher@cherry.de>,
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-	Kever Yang <kever.yang@rock-chips.com>
-Subject: Re: [PATCH 2/2] arm64: dts: rockchip: support Ethernet Switch
- adapter for RK3588 Jaguar
-Message-ID: <9c99aba9-87f5-41fe-8b11-7ef27525750c@lunn.ch>
-References: <20250521-jaguar-mezz-eth-switch-v1-0-9b5c48ebb867@cherry.de>
- <20250521-jaguar-mezz-eth-switch-v1-2-9b5c48ebb867@cherry.de>
- <657a085c-4214-4096-8a68-047d57a40d60@lunn.ch>
- <19574942-d06b-44b0-8b6c-d3ddd94db89f@cherry.de>
+	s=arc-20240116; t=1747918272; c=relaxed/simple;
+	bh=X0rZEaYdyYRtGIm2Pmk1oZsl94SCwzySACYaJD0Mw6A=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dXTxW23wlCVaCdUcCFdTL9OR1OFcT0BFpfUmuatYSlpA4T6hph4TTzkip9TtopyVZXeAkZFhVb0de7PCyyi9pzIrVX0S7REZKvgdOQeFMjFZa12ukL11edBTqZzZWkQmVcTAD8oQn8KrsFGQwHBVuPA5PR5uWmdckKHYdRUSEXo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [223.64.69.3])
+	by gateway (Coremail) with SMTP id _____8CxbWu5HS9ooZn2AA--.5359S3;
+	Thu, 22 May 2025 20:51:05 +0800 (CST)
+Received: from localhost.localdomain (unknown [223.64.69.3])
+	by front1 (Coremail) with SMTP id qMiowMDxesS0HS9omzDoAA--.58651S2;
+	Thu, 22 May 2025 20:51:04 +0800 (CST)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	Xuefeng Li <lixuefeng@loongson.cn>,
+	Guo Ren <guoren@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	linux-kernel@vger.kernel.org,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	stable@vger.kernel.org,
+	WANG Rui <wangrui@loongson.cn>
+Subject: [PATCH] LoongArch: Avoid using $r0/$r1 as "mask" for csrxchg
+Date: Thu, 22 May 2025 20:50:50 +0800
+Message-ID: <20250522125050.2215157-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <19574942-d06b-44b0-8b6c-d3ddd94db89f@cherry.de>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowMDxesS0HS9omzDoAA--.58651S2
+X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj93XoWxXrW5Gw15ZFWxJr48Ww4UAwc_yoW5Jw18pF
+	WDCr48KF4rWFyxA39Fqr9I9w13Wr97Gw4Iya9rC397tFyDZr18ArZ5CF98XFyUGa1vv34I
+	vFWYyw4S9F4DJabCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUkYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4
+	xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v2
+	6r4UJVWxJr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxAIw28IcxkI7V
+	AKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCj
+	r7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6x
+	IIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAI
+	w20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x
+	0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU8YXdUUUUUU==
 
-On Thu, May 22, 2025 at 10:18:12AM +0200, Quentin Schulz wrote:
-> Hi Andrew,
-> 
-> On 5/21/25 6:25 PM, Andrew Lunn wrote:
-> > > +&gmac1 {
-> > > +	clock_in_out = "output";
-> > > +	phy-mode = "rgmii";
-> > 
-> > Does the PCB have extra long clock lines to implement the 2ns delays?
-> > 
-> 
-> Not that I am aware no.
+When building kernel with LLVM there are occasionally such errors:
 
-So 'rgmii-id' describes the hardware.
+In file included from ./include/linux/spinlock.h:59:
+In file included from ./include/linux/irqflags.h:17:
+arch/loongarch/include/asm/irqflags.h:38:3: error: must not be $r0 or $r1
+   38 |                 "csrxchg %[val], %[mask], %[reg]\n\t"
+      |                 ^
+<inline asm>:1:16: note: instantiated into assembly here
+    1 |         csrxchg $a1, $ra, 0
+      |                       ^
 
-> 
-> The issue here is that I believe the Linux driver actually got the whole
-> phy-mode thing wrong?
+The "mask" of the csrxchg instruction should not be $r0 or $r1, but the
+compiler cannot avoid generating such code currently. So force to use t0
+in the inline asm, in order to avoid using $r0/$r1.
 
-Quite possible, a few drivers do.
+Cc: stable@vger.kernel.org
+Suggested-by: WANG Rui <wangrui@loongson.cn>
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+---
+ arch/loongarch/include/asm/irqflags.h | 16 ++++++++++++----
+ 1 file changed, 12 insertions(+), 4 deletions(-)
 
-> drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c
-> 
-> First, tx_delay defaults to 0x30 if absent, rx_delay to 0x10 if absent,
-> which seems a bit odd but why not.
-> 
-> Then you have rk_gmac_powerup() handling the delays.
-> 
-> If RGMII, then use rx_delay and tx_delay. If RGMII-ID, use neither. If
-> RGMII-RXID use tx_delay. If RGMII-TXID use rx_delay.
-> 
-> This is the complete opposite of what I was expecting?
+diff --git a/arch/loongarch/include/asm/irqflags.h b/arch/loongarch/include/asm/irqflags.h
+index 319a8c616f1f..003172b8406b 100644
+--- a/arch/loongarch/include/asm/irqflags.h
++++ b/arch/loongarch/include/asm/irqflags.h
+@@ -14,40 +14,48 @@
+ static inline void arch_local_irq_enable(void)
+ {
+ 	u32 flags = CSR_CRMD_IE;
++	register u32 mask asm("t0") = CSR_CRMD_IE;
++
+ 	__asm__ __volatile__(
+ 		"csrxchg %[val], %[mask], %[reg]\n\t"
+ 		: [val] "+r" (flags)
+-		: [mask] "r" (CSR_CRMD_IE), [reg] "i" (LOONGARCH_CSR_CRMD)
++		: [mask] "r" (mask), [reg] "i" (LOONGARCH_CSR_CRMD)
+ 		: "memory");
+ }
+ 
+ static inline void arch_local_irq_disable(void)
+ {
+ 	u32 flags = 0;
++	register u32 mask asm("t0") = CSR_CRMD_IE;
++
+ 	__asm__ __volatile__(
+ 		"csrxchg %[val], %[mask], %[reg]\n\t"
+ 		: [val] "+r" (flags)
+-		: [mask] "r" (CSR_CRMD_IE), [reg] "i" (LOONGARCH_CSR_CRMD)
++		: [mask] "r" (mask), [reg] "i" (LOONGARCH_CSR_CRMD)
+ 		: "memory");
+ }
+ 
+ static inline unsigned long arch_local_irq_save(void)
+ {
+ 	u32 flags = 0;
++	register u32 mask asm("t0") = CSR_CRMD_IE;
++
+ 	__asm__ __volatile__(
+ 		"csrxchg %[val], %[mask], %[reg]\n\t"
+ 		: [val] "+r" (flags)
+-		: [mask] "r" (CSR_CRMD_IE), [reg] "i" (LOONGARCH_CSR_CRMD)
++		: [mask] "r" (mask), [reg] "i" (LOONGARCH_CSR_CRMD)
+ 		: "memory");
+ 	return flags;
+ }
+ 
+ static inline void arch_local_irq_restore(unsigned long flags)
+ {
++	register u32 mask asm("t0") = CSR_CRMD_IE;
++
+ 	__asm__ __volatile__(
+ 		"csrxchg %[val], %[mask], %[reg]\n\t"
+ 		: [val] "+r" (flags)
+-		: [mask] "r" (CSR_CRMD_IE), [reg] "i" (LOONGARCH_CSR_CRMD)
++		: [mask] "r" (mask), [reg] "i" (LOONGARCH_CSR_CRMD)
+ 		: "memory");
+ }
+ 
+-- 
+2.47.1
 
-This driver, and the aspeed driver cause a lot of problems....
-
-> > Since this has a switch on the other end, its a bit more complicated
-> > with RGMII delays. Normally, the MAC does nothing and passed rgmii-id
-> > to the PHY, and the PHY then does the delays. However, here you don't
-> > have a PHY. So you have the MAC add the delays. This looks O.K. I
-> 
-> The switch actually supports adding delays on the port used for DSA conduit.
-
-That actually looks to be the simplest and correct solution. Set the
-MAC to 'rgmii-id', rx_delay and tx_delay to 0, even if they are
-ignored. And in the switch, also 'rgmii-id' and let it insert the 2ns
-delay. You can use rx-internal-delay-ps and tx-internal-delay-ps if
-you want, but it seems to default to sensible values.
-
-> I'm a bit confused by the following sentence:
-> 
-> """
-> Normally, the MAC does nothing and passed rgmii-id
-> """
-> 
-> is this something that the MAC driver is supposed to do or is the subsystem
-> handling that somehow? How do I know how/when to rewrite the phy-mode passed
-> to the PHY?
-
-A small number of MACs have hard coded delays. You cannot turn the
-delay off. So the MAC has no choice but to do the delay. 'rgmii' is
-simply not possible, so -EINVAL. For 'rgmii-id', if you pass that to
-the PHY, it will also add a delay, and 4ns in total does not work. So
-when the MAC is adding delays, it needs to mask out the delays it is
-adding before calling phy_attach() passing an rgmii mode.
-
-	Andrew
