@@ -1,182 +1,298 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4942828C5C1
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 15:06:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C9BF28FAA5
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 15:08:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747926396; cv=none; b=f3ytHCpbhcVWJkHTDRJ3hqkNQ0hGKGJYz+OaH0qlR0Y4UHwAC1tOwFEwTgfLBc1ZTsBCh+0GweCDYkuzoPU5y67vm2NkXgXVLZe1tt5u6QyBwQvS27CGH5AuU+Odmd8TjD2EPvpiOFRs1AHJ3pYU4JnejoQLgKXqaZ3JmyF5Heo=
+	t=1747926490; cv=none; b=c5S2iU/nLjBn8EQJur20DmiKyCIMZglxlZzycAuVs1GZlcmK5q9aObtmuYvLMGkzbrvp+jBwIJUZyhP/encrPHmK77QoXpJJ3yaO4oW1qv0aGhng0Sxzn1ieS3RnTO+Y+k9GeY6AJlgqQHt3auz3tIJK/9u/kSbwd/gYAPtYgaU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747926396; c=relaxed/simple;
-	bh=mEO+SQ66q9f9bw9yAxTeWTvOGdYchecNjKdNFoT1k9Q=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IwbsBlb9GQqoC1icZRsjH5NkMvrz9ypN6myEAPjtDTgfJ0YtJV/IDtMWpjqbFOe6I1DgWZc31vk1Xpf5cJPh4eC5BcBHbKvDp/RjECGZMrY3R0M7Kxy6DnT0UydJV4FNBmjGP1iwzlevcqQic6dx121iHP+eteo3zsJlUkp3Jw0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=YVKgPZpF; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1747926490; c=relaxed/simple;
+	bh=mS5GgND8UuontDSj6ihHGCoTUwpMjYc0hUM5E0VMdiw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=H4+z0cNyt+oeMOsQwKyNJ+NMHy+KfFsKCHMGWDl6Ei9qu9O6/koXDNd2NNijHOYUBsq/CMI+aLtr3j9TU8zZTYbBtALMXNo4/qulLJniETwWiahBglFG2IMlvGKLmcambzXfm25v7ulhU8+N8+9kHVJk2hhU/SjWpsh6OmV63JE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=LrVyzu8H; arc=none smtp.client-ip=209.85.160.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="YVKgPZpF"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54M7cCW5016898
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 15:06:33 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	W2ZZQlG8j86gUKyQclX6XprA53hnoYhy4zTXw2h1Huk=; b=YVKgPZpFDoHcUBTW
-	yUth7s0dP4bliKVMvq7S4C2lsJ/fh+dB1JR/Cnn4Z+cpr9HoPL+t3Hq1DIXKe24t
-	EKbT+Pmn4gBq29RZ+ON/vLl/StcUqeAFp2sCFqy0R3nBohP1/A17z0yq7rmF9myG
-	Uo2yvC3Jy1GmsSCENPVvI0eF/Amm0tll5Mv0zoubMA0Z29IIJISk8l0OnSEi5EI5
-	1PN9DZwacvrFN5gAK3DsKP1h0Qx2iFMyi83YrdU/su1F5qaixZQz3HHYy+gV5jKj
-	NMxUiRlToGQtl/iTto7kZrQk/+Zn1TXUYAxdlii6Ik8gg1HT6if21j4exlzQNso8
-	xJCHzg==
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46rwf9xrnw-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 15:06:33 +0000 (GMT)
-Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7c5ad42d6bcso221579885a.2
-        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 08:06:32 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LrVyzu8H"
+Received: by mail-qt1-f180.google.com with SMTP id d75a77b69052e-47666573242so1886671cf.0
+        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 08:08:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1747926487; x=1748531287; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qD45WleDxaKRfdFYJAyThj8STlU1fBlpeISFDoR8AxE=;
+        b=LrVyzu8HKZceJUPRGikNvFqLtgrq3CtpXTZOnut4Ti2CSlZ7AW8x8ceV6svNQ34NR7
+         Z5cK6UaaLQKvbCU/Va4oRUuK/9I0V5wfTvoS7AWWzRXBZF4QhNYYBumiLP2Khr9qIT2n
+         TWTVPg3ujukyWTNMCasiVYTy0vQ1WB4b/rck+m/h+su5q7tg/GeLk4BMNeb0WnNzCt5D
+         uccLY2HH+inF5bgXSWskxjX07U8UMegufT1dDEGwiXbridstBQO6gG43PaGGamqJakad
+         FkHzdf1ft+WpxeQrZakbYXDMODodNstm7D1f5+5qXRDKri7yuJycSHgit6DEsbUQeLBK
+         CT8A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747926392; x=1748531192;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=W2ZZQlG8j86gUKyQclX6XprA53hnoYhy4zTXw2h1Huk=;
-        b=QLSjsjjl3BFk7B6y5VRMD1vx3B/0+DIk/8xW9Qka+PMYv9nsO2tS0jNhksL+1ziLbj
-         KWbkWZw4X7sPqCnU/ZAYdWUG88DRQ2TygFEbmrzpTb6A6m/A5w2OdXJ/Hb53Oq1qnof4
-         zc4VppK85lVfQ+8rB5bb7RD8qqvj8QE3n8k2XPoZqo03oa5N9F+7P7OJIg2Ru0IpnZqt
-         l2C5gG5l8Gi6upI42HLnHkjqWszj0h4mxA3X0Xh3s462oU+N/eV8VkMtPrDYnIKsVNBC
-         A71XTwQ7SxZgi+udcUt3JlldMZ130c9lObFbfA7/dKrc8ML0bLDN1uUs6ska0OxrA7yL
-         C3bQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWDln2jglVqao00iEpz9cIhT2jCouSQ/HYq8iAA0tq4OGGCyU+sOKHrjAk/ytYAtfd52MUqFILm29W/ZbM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx8NwFUc/i5NsqnRsYmGO1AT+ztcbEe9xf0LNWpHap0nCArFHdt
-	QGYVPFts4TIo/MqpPAR/Szr6882X1i50lGBiePRpJ/Wt+ibgGCQvlkUdWMrDXy8suShuun+el3/
-	kt+9u+EVvlO6tDrvlqlEFbyV212yhB7Jb7SAE+K73A/q9Y/8hsSlNeRFIMkat/6/i5gA=
-X-Gm-Gg: ASbGncuflY9Y3A8Cl6S0CpZ2XFi9impNJjCXUG7pdGxwmeJaplFzbYBTpDen/BGkB0J
-	bSZdwNmz/a7h0PSnC+YpusEtmWoR9iTEFH/uXjWD1apw2VqgZ/YMnXSp9+q2iqXaLF32LWG5/2d
-	tMfDSgfOiHh3jnSGxPKAJl1axWiTcM9AHgvbwrfmFGvxiAhZT2P0LQfFw+W+KSH/vtLcWlyRZho
-	KUupLW8ZLaeHHhBE67fTHTKV6NeOJ2StEmajnd2bBYa55alA4Do8JDwn1R0TJgWkamBTWigXChh
-	eneExFs5o0++Ngkj7YYMo1KdrQ4C8Vk+q6mZwqphPkaIdxTs34AjNSgIFgJ4TMWOzA==
-X-Received: by 2002:a05:620a:6406:b0:7c7:9d87:9e2 with SMTP id af79cd13be357-7cd467be344mr1502752885a.12.1747926392042;
-        Thu, 22 May 2025 08:06:32 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHSNzVT9npK6d+E8iUfm1J/u2+h3suqYhR++9LiAPyNlwVIEX5ZkOLp61BNj2fsTa3dIHMB0Q==
-X-Received: by 2002:a05:620a:6406:b0:7c7:9d87:9e2 with SMTP id af79cd13be357-7cd467be344mr1502750085a.12.1747926391604;
-        Thu, 22 May 2025 08:06:31 -0700 (PDT)
-Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad52d06ded7sm1099929966b.61.2025.05.22.08.06.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 22 May 2025 08:06:31 -0700 (PDT)
-Message-ID: <757925b7-3795-409a-9419-b33767c49e2e@oss.qualcomm.com>
-Date: Thu, 22 May 2025 17:06:29 +0200
+        d=1e100.net; s=20230601; t=1747926487; x=1748531287;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=qD45WleDxaKRfdFYJAyThj8STlU1fBlpeISFDoR8AxE=;
+        b=vqKA3kvAhBmr/IfUT4bTcJn40Pedk3vmbbM5ZL8wZeEswUeMPXzJ3+TP7eQzJCbqCX
+         QrSZzZzRHQHB8R3Vcw54otrDl+fUq/2QQKFBppMcOUcbWSNVvR24+uiu1V1jAkv6BPED
+         70bw1eRhQpjzP5232PzCJBIYBsFeTq1GLHgXPAICLi3iVz42tYP0tBJsaec1QaPCLIVT
+         r8ccqW24Q67t0qu5xKPWIUNUtu3vwuIJwaMX47pF30KLXAPz2z28sFJotKBdp/DOyW+X
+         JVeG61oHXTILHm3n9VcBX0yAq8TpT8U33218nkoJ2ZYKkV1P7qW17ZAXQT3aBK4/Qo7F
+         5WGQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVhOw7Q+7lW68Lc1Mi2yYDgfgaAy81eUuEsxmWKtfnkVxwXWnNN74ioDcoKyxD7gpl2iPiCXSM+QhPkRII=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxwAb1vBpCBSwJwBjJNQY6rSYA2q0KtxD4i9u6UeYQ+J9u0efvp
+	BPgz98XnOaNCJNsDxKPlv8M1JWGytdeEvXXqaj41ZvYzjhBxpv60tnLIEuN1n6yup1s5bv3Vi4Z
+	HsoB9oqrasEYRSAyGzEtC0f6j0y3WjLwBTqrG9F76
+X-Gm-Gg: ASbGncusPc7FqyK0v3BMj+ybwmiMbVdBoywyUz+bW5LT+n8F4m5+CwuXbz+T38nYMrm
+	gBD+Fq+4Hw6sHxqtvxmoZezrTAoA02OGyi/HWsm5a8Zd8/iRLgdyFCj7tjm7j+MW2KYYiFgfYaf
+	5gZdClj9f4kECXctfkQQhVh3YmPcu+jbNaf1+aoh+kETM=
+X-Google-Smtp-Source: AGHT+IExWgZ/kprFJR2qUAmAvBSuiZQwIp3xVKHZZRhAngXGir6bXeq3t/Qwhx3C/I2QsXxLMQlJK+hvAoH5fIBVNiQ=
+X-Received: by 2002:a05:622a:1356:b0:497:2f60:4ca4 with SMTP id
+ d75a77b69052e-49cf05d4f7cmr3910441cf.15.1747926486878; Thu, 22 May 2025
+ 08:08:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] arm64: dts: qcom: qcs615: fix a crash issue caused by
- infinite loop for Coresight
-To: Jie Gan <jie.gan@oss.qualcomm.com>,
-        Bjorn Andersson
- <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Suzuki K Poulose
- <suzuki.poulose@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        James Clark <james.clark@linaro.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20250522005016.2148-1-jie.gan@oss.qualcomm.com>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <20250522005016.2148-1-jie.gan@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Authority-Analysis: v=2.4 cv=V9990fni c=1 sm=1 tr=0 ts=682f3d79 cx=c_pps
- a=qKBjSQ1v91RyAK45QCPf5w==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
- a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=EUspDBNiAAAA:8 a=zEdONPlssZfnCtCruvAA:9
- a=QEXdDO2ut3YA:10 a=NFOGd7dJGGMPyQGDc5-O:22
-X-Proofpoint-ORIG-GUID: nYQXWBFc3K9ijYKcUIzfAEzhNkMrBGLW
-X-Proofpoint-GUID: nYQXWBFc3K9ijYKcUIzfAEzhNkMrBGLW
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIyMDE1MyBTYWx0ZWRfX64wczp9o7A9d
- 4te/9HV/czZRCB1aYrxHGsI6ZHAILYda9wkyA/20uoYggPim4IqmEo9+D5gOENivpThWHP8J1qR
- MZ6KFNAO/MFcnNH0iTcFdPIA/FzyM0GSC6wCc8/MtVixKRTh72gurCsyKVZV3iYh+1y8QuvBXLk
- 3E4cxuYpPDbQUghwjGKOnfsuLNXdfBoZHr12TCqBrR2EJbfq0fAJgAArzOM8BRu1OGGpRVttv8B
- 8D1rGJ0K5iokkNhPwy7pGJ6gl/3tAXpFMx6DTEvA9SMjIj5GSOhMAdADHXev1ovEbez3o3G/VI7
- n8Y6UChTSVzD93kWnzD8zfgFh8vErz9H4ITZgkODmxt6/04p5mtifNiyc4Day7hqnYP+2iwAy6T
- ZsinzeR9u4EyEW6pV/vvQqpUrcNTQtbvc0+D45878YMGbd/AJHf49YdHSTLcqSNJswCYi9ad
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-22_07,2025-05-22_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- mlxlogscore=999 bulkscore=0 impostorscore=0 clxscore=1015 priorityscore=1501
- lowpriorityscore=0 mlxscore=0 spamscore=0 phishscore=0 suspectscore=0
- adultscore=0 malwarescore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
- definitions=main-2505220153
+References: <CAGtprH_Evyc7tLhDB0t0fN+BUx5qeqWq8A2yZ5-ijbJ5UJ5f-g@mail.gmail.com>
+ <CA+EHjTy7iBNBb9DRdtgq8oYmvgykhSNvZL3FrRV4XF90t3XgBg@mail.gmail.com>
+ <CAGtprH_7jSpwF77j1GW8rjSrbtZZ2OW2iGck5=Wk67+VnF9vjQ@mail.gmail.com>
+ <CA+EHjTzMhKCoftfJUuL0WUZW4DdqOHgVDcn0Cmf-0r--8rBdbg@mail.gmail.com>
+ <diqzecwjnk95.fsf@ackerleytng-ctop.c.googlers.com> <CA+EHjTyY5C1QgkoAqvJ0kHM4nUvKc1e1nQ0Uq+BANtVEnZH90w@mail.gmail.com>
+ <CAGtprH-fE=G923ctBAcq5zFna+2WULhmHDSbXUsZKUrin29b4g@mail.gmail.com>
+ <CA+EHjTxvufYVA8LQWRKEX7zA0gWLQUHVO2LvwKc5JXVu-XAEEA@mail.gmail.com>
+ <CAGtprH_TfKT3oRPCLbh-ojLGXSfOQ2XA39pVhr47gb3ikPtUkw@mail.gmail.com>
+ <CA+EHjTxJZ_pb7+chRoZxvkxuib2YjbiHg=_+f4bpRt2xDFNCzQ@mail.gmail.com> <aC86OsU2HSFZkJP6@google.com>
+In-Reply-To: <aC86OsU2HSFZkJP6@google.com>
+From: Fuad Tabba <tabba@google.com>
+Date: Thu, 22 May 2025 16:07:29 +0100
+X-Gm-Features: AX0GCFtxE_5yf3JaUaANLr_bOaaQ7-YRdImpBrNEqDFWm2pmOqea-YH30YgPCtI
+Message-ID: <CA+EHjTxjt-mb_WbtVymaBvCb1EdJAVMV_uGb4xDs_ewg4k0C4g@mail.gmail.com>
+Subject: Re: [RFC PATCH v2 04/51] KVM: guest_memfd: Introduce
+ KVM_GMEM_CONVERT_SHARED/PRIVATE ioctls
+To: Sean Christopherson <seanjc@google.com>
+Cc: Vishal Annapurve <vannapurve@google.com>, Ackerley Tng <ackerleytng@google.com>, kvm@vger.kernel.org, 
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org, x86@kernel.org, 
+	linux-fsdevel@vger.kernel.org, aik@amd.com, ajones@ventanamicro.com, 
+	akpm@linux-foundation.org, amoorthy@google.com, anthony.yznaga@oracle.com, 
+	anup@brainfault.org, aou@eecs.berkeley.edu, bfoster@redhat.com, 
+	binbin.wu@linux.intel.com, brauner@kernel.org, catalin.marinas@arm.com, 
+	chao.p.peng@intel.com, chenhuacai@kernel.org, dave.hansen@intel.com, 
+	david@redhat.com, dmatlack@google.com, dwmw@amazon.co.uk, 
+	erdemaktas@google.com, fan.du@intel.com, fvdl@google.com, graf@amazon.com, 
+	haibo1.xu@intel.com, hch@infradead.org, hughd@google.com, ira.weiny@intel.com, 
+	isaku.yamahata@intel.com, jack@suse.cz, james.morse@arm.com, 
+	jarkko@kernel.org, jgg@ziepe.ca, jgowans@amazon.com, jhubbard@nvidia.com, 
+	jroedel@suse.de, jthoughton@google.com, jun.miao@intel.com, 
+	kai.huang@intel.com, keirf@google.com, kent.overstreet@linux.dev, 
+	kirill.shutemov@intel.com, liam.merwick@oracle.com, 
+	maciej.wieczor-retman@intel.com, mail@maciej.szmigiero.name, maz@kernel.org, 
+	mic@digikod.net, michael.roth@amd.com, mpe@ellerman.id.au, 
+	muchun.song@linux.dev, nikunj@amd.com, nsaenz@amazon.es, 
+	oliver.upton@linux.dev, palmer@dabbelt.com, pankaj.gupta@amd.com, 
+	paul.walmsley@sifive.com, pbonzini@redhat.com, pdurrant@amazon.co.uk, 
+	peterx@redhat.com, pgonda@google.com, pvorel@suse.cz, qperret@google.com, 
+	quic_cvanscha@quicinc.com, quic_eberman@quicinc.com, 
+	quic_mnalajal@quicinc.com, quic_pderrin@quicinc.com, quic_pheragu@quicinc.com, 
+	quic_svaddagi@quicinc.com, quic_tsoni@quicinc.com, richard.weiyang@gmail.com, 
+	rick.p.edgecombe@intel.com, rientjes@google.com, roypat@amazon.co.uk, 
+	rppt@kernel.org, shuah@kernel.org, steven.price@arm.com, 
+	steven.sistare@oracle.com, suzuki.poulose@arm.com, thomas.lendacky@amd.com, 
+	usama.arif@bytedance.com, vbabka@suse.cz, viro@zeniv.linux.org.uk, 
+	vkuznets@redhat.com, wei.w.wang@intel.com, will@kernel.org, 
+	willy@infradead.org, xiaoyao.li@intel.com, yan.y.zhao@intel.com, 
+	yilun.xu@intel.com, yuzenghui@huawei.com, zhiquan1.li@intel.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 5/22/25 2:50 AM, Jie Gan wrote:
-> An infinite loop has been created by the Coresight devices. When only a
-> source device is enabled, the coresight_find_activated_sysfs_sink function
-> is recursively invoked in an attempt to locate an active sink device,
-> ultimately leading to a stack overflow and system crash. Therefore, disable
-> the replicator1 to break the infinite loop and prevent a potential stack
-> overflow.
+Hi Sean,
 
-Is it something we can fix the driver not to do instead?
+On Thu, 22 May 2025 at 15:52, Sean Christopherson <seanjc@google.com> wrote=
+:
+>
+> On Wed, May 21, 2025, Fuad Tabba wrote:
+> > On Wed, 21 May 2025 at 16:51, Vishal Annapurve <vannapurve@google.com> =
+wrote:
+> > > On Wed, May 21, 2025 at 8:22=E2=80=AFAM Fuad Tabba <tabba@google.com>=
+ wrote:
+> > > > On Wed, 21 May 2025 at 15:42, Vishal Annapurve <vannapurve@google.c=
+om> wrote:
+> > > > > On Wed, May 21, 2025 at 5:36=E2=80=AFAM Fuad Tabba <tabba@google.=
+com> wrote:
+> > > > > There are a bunch of complexities here, reboot sequence on x86 ca=
+n be
+> > > > > triggered using multiple ways that I don't fully understand, but =
+few
+> > > > > of them include reading/writing to "reset register" in MMIO/PCI c=
+onfig
+> > > > > space that are emulated by the host userspace directly. Host has =
+to
+> > > > > know when the guest is shutting down to manage it's lifecycle.
+> > > >
+> > > > In that case, I think we need to fully understand these complexitie=
+s
+> > > > before adding new IOCTLs. It could be that once we understand these
+> > > > issues, we find that we don't need these IOCTLs. It's hard to justi=
+fy
+> > > > adding an IOCTL for something we don't understand.
+> > > >
+> > >
+> > > I don't understand all the ways x86 guest can trigger reboot but I do
+> > > know that x86 CoCo linux guest kernel triggers reset using MMIO/PCI
+> > > config register write that is emulated by host userspace.
+> > >
+> > > > > x86 CoCo VM firmwares don't support warm/soft reboot and even if =
+it
+> > > > > does in future, guest kernel can choose a different reboot mechan=
+ism.
+> > > > > So guest reboot needs to be emulated by always starting from scra=
+tch.
+> > > > > This sequence needs initial guest firmware payload to be installe=
+d
+> > > > > into private ranges of guest_memfd.
+> > > > >
+> > > > > >
+> > > > > > Either the host doesn't (or cannot even) know that the guest is
+> > > > > > rebooting, in which case I don't see how having an IOCTL would =
+help.
+> > > > >
+> > > > > Host does know that the guest is rebooting.
+> > > >
+> > > > In that case, that (i.e., the host finding out that the guest is
+> > > > rebooting) could trigger the conversion back to private. No need fo=
+r an
+> > > > IOCTL.
+> > >
+> > > In the reboot scenarios, it's the host userspace finding out that the=
+ guest
+> > > kernel wants to reboot.
+> >
+> > How does the host userspace find that out? If the host userspace is cap=
+able
+> > of finding that out, then surely KVM is also capable of finding out the=
+ same.
+>
+> Nope, not on x86.  Well, not without userspace invoking a new ioctl, whic=
+h would
+> defeat the purpose of adding these ioctls.
+>
+> KVM is only responsible for emulating/virtualizing the "CPU".  The chipse=
+t, e.g.
+> the PCI config space, is fully owned by userspace.  KVM doesn't even know=
+ whether
+> or not PCI exists for the VM.  And reboot may be emulated by simply creat=
+ing a
+> new KVM instance, i.e. even if KVM was somehow aware of the reboot reques=
+t, the
+> change in state would happen in an entirely new struct kvm.
+>
+> That said, Vishal and Ackerley, this patch is a bit lacking on the docume=
+ntation
+> front.  The changelog asserts that:
+>
+>   A guest_memfd ioctl is used because shareability is a property of the m=
+emory,
+>   and this property should be modifiable independently of the attached st=
+ruct kvm
+>
+> but then follows with a very weak and IMO largely irrelevant justificatio=
+n of:
+>
+>   This allows shareability to be modified even if the memory is not yet b=
+ound
+>   using memslots.
+>
+> Allowing userspace to change shareability without memslots is one relativ=
+ely minor
+> flow in one very specific use case.
+>
+> The real justification for these ioctls is that fundamentally, shareabili=
+ty for
+> in-place conversions is a property of a guest_memfd instance and not a st=
+ruct kvm
+> instance, and so needs to owned by guest_memfd.
 
-Konrad
+Thanks for the clarification Sean. I have a couple of followup
+questions/comments that you might be able to help with:
 
-> 
-> replicator1_out   ->   funnel_swao_in6   ->   tmc_etf_swao_in   ->  tmc_etf_swao_out
->      |                                                                     |
-> replicator1_in                                                     replicator_swao_in
->      |                                                                     |
-> replicator0_out1                                                   replicator_swao_out0
->      |                                                                     |
-> replicator0_in                                                     funnel_in1_in3
->      |                                                                     |
-> tmc_etf_out <- tmc_etf_in <- funnel_merg_out <- funnel_merg_in1 <- funnel_in1_out
-> 
-> [call trace]
->    dump_backtrace+0x9c/0x128
->    show_stack+0x20/0x38
->    dump_stack_lvl+0x48/0x60
->    dump_stack+0x18/0x28
->    panic+0x340/0x3b0
->    nmi_panic+0x94/0xa0
->    panic_bad_stack+0x114/0x138
->    handle_bad_stack+0x34/0xb8
->    __bad_stack+0x78/0x80
->    coresight_find_activated_sysfs_sink+0x28/0xa0 [coresight]
->    coresight_find_activated_sysfs_sink+0x5c/0xa0 [coresight]
->    coresight_find_activated_sysfs_sink+0x5c/0xa0 [coresight]
->    coresight_find_activated_sysfs_sink+0x5c/0xa0 [coresight]
->    coresight_find_activated_sysfs_sink+0x5c/0xa0 [coresight]
->    ...
->    coresight_find_activated_sysfs_sink+0x5c/0xa0 [coresight]
->    coresight_enable_sysfs+0x80/0x2a0 [coresight]
-> 
-> side effect after the change:
-> Only trace data originating from AOSS can reach the ETF_SWAO and EUD sinks.
-> 
-> Fixes: bf469630552a ("arm64: dts: qcom: qcs615: Add coresight nodes")
-> Signed-off-by: Jie Gan <jie.gan@oss.qualcomm.com>
-> ---
->  arch/arm64/boot/dts/qcom/qcs615.dtsi | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/qcs615.dtsi b/arch/arm64/boot/dts/qcom/qcs615.dtsi
-> index f08ba09772f3..b67c1f8a1118 100644
-> --- a/arch/arm64/boot/dts/qcom/qcs615.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/qcs615.dtsi
-> @@ -1902,6 +1902,7 @@ replicator@604a000 {
->  
->  			clocks = <&aoss_qmp>;
->  			clock-names = "apb_pclk";
-> +			status = "disabled";
->  
->  			in-ports {
->  				port {
+From a conceptual point of view, I understand that the in-place
+conversion is a property of guest_memfd. But that doesn't necessarily
+mean that the interface between kvm <-> guest_memfd is a userspace
+IOCTL. We already communicate directly between the two. Other, even
+less related subsystems within the kernel also interact without going
+through userspace. Why can't we do the same here? I'm not suggesting
+it not be owned by guest_memfd, but that we communicate directly.
+
+From a performance point of view, I would expect the common case to be
+that when KVM gets an unshare request from the guest, it would be able
+to unmap those pages from the (cooperative) host userspace, and return
+back to the guest. In this scenario, the host userspace wouldn't even
+need to be involved. Having a userspace IOCTL as part of this makes
+that trip unnecessarily longer for the common case.
+
+Cheers,
+/fuad
+
+> I.e. focus on justifying the change from a design and conceptual perspect=
+ive,
+> not from a mechanical perspective of a flow that likely's somewhat unique=
+ to our
+> specific environment.  Y'all are getting deep into the weeds on a random =
+aspect
+> of x86 platform architecture, instead of focusing on the overall design.
+>
+> The other issue that's likely making this more confusing than it needs to=
+ be is
+> that this series is actually two completely different series bundled into=
+ one,
+> with very little explanation.  Moving shared vs. private ownership into
+> guest_memfd isn't a requirement for 1GiB support, it's a requirement for =
+in-place
+> shared/private conversion in guest_memfd.
+>
+> For the current guest_memfd implementation, shared vs. private is tracked=
+ in the
+> VM via memory attributes, because a guest_memfd instance is *only* privat=
+e.  I.e.
+> shared vs. private is a property of the VM, not of the guest_memfd instan=
+ce.  But
+> when in-place conversion support comes along, ownership of that particula=
+r
+> attribute needs to shift to the guest_memfd instance.
+>
+> I know I gave feedback on earlier posting about there being too series fl=
+ying
+> around, but shoving two distinct concepts into a single series is not the=
+ answer.
+> My complaints about too much noise wasn't that there were multiple series=
+, it was
+> that there was very little coordination and lots of chaos.
+>
+> If you split this series in two, which should be trivial since you've alr=
+eady
+> organized the patches as a split, then sans the selftests (thank you for =
+those!),
+> in-place conversion support will be its own (much smaller!) series that c=
+an focus
+> on that specific aspect of the design, and can provide a cover letter tha=
+t
+> expounds on the design goals and uAPI.
+>
+>   KVM: guest_memfd: Add CAP KVM_CAP_GMEM_CONVERSION
+>   KVM: Query guest_memfd for private/shared status
+>   KVM: guest_memfd: Skip LRU for guest_memfd folios
+>   KVM: guest_memfd: Introduce KVM_GMEM_CONVERT_SHARED/PRIVATE ioctls
+>   KVM: guest_memfd: Introduce and use shareability to guard faulting
+>   KVM: guest_memfd: Make guest mem use guest mem inodes instead of anonym=
+ous inodes
+>
+> And then you can post the 1GiB series separately.  So long as you provide=
+ pointers
+> to dependencies along with a link to a repo+branch with the kitchen sink,=
+ I won't
+> complain about things being too chaotic :-)
