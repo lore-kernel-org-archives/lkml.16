@@ -1,33 +1,65 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f41.google.com (mail-qv1-f41.google.com [209.85.219.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 117AC17BB6;
-	Thu, 22 May 2025 11:14:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F33D4221F0A;
+	Thu, 22 May 2025 11:15:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747912476; cv=none; b=k5wSmQiAyjL6if4tYfn4/Z6QC9dG10vE5z9U2UbjRvuVq7FixOS4+1hv9IaYzD4XLr5Me+xnJy9qixZH/zBlNUuM8Fb7u3mV0ttEWeVeDSYAFwyzrO2hugbBPYwsgYJ8nRdZh6ra8hYA3L6VfZ4inS15xfcnEwPDpOEAPet2qtE=
+	t=1747912529; cv=none; b=QeYhF1fM0r9L+5st2VXb6qqbBBh3NQ5nizWqhsrWrxAlBW+73WTPeOqRXJ6YvFxGVPX3sg676t3REqN52XYHUKvgSm7OT4MCQ4i0eulW1R65ZxgJm5q+X4u8v9osGSWihg5i+SefMOa9kJYQL3RcKSycC9NwgZ6DSMeXP9szowI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747912476; c=relaxed/simple;
-	bh=eW2QelSQB/EKZ9gl1bUD03UjRnPqi7z3lwjkjCqNWec=;
+	s=arc-20240116; t=1747912529; c=relaxed/simple;
+	bh=PYiCglQe17p+UCnGT1JX2kII7JObgxkxKAaLnythrUM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=H0JLiIQPLmMQ2RVtwWYa0RH9f8ghJkalg5J66WZiXONvcLJJ6QGQigbxIlCJ38p2mJ57IKgZpxRP7wXMuYUhvU1uWS1j/uYdUTa+fuEhoVY8xPQfJFehMPy2JuDb4XuQYlNfpCyfz+KrPnkrl2J0AE8H+q4rHKwMM6bYHUpW+M0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WqGM6UQW; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=DFPssCqNolR2HWsJ1C2A7Vfx/b5xtSXlYEt9jDerqkJhDztSeY8+sKlNEAVojX6dvoPWAs5huDQhjg8xzH5pzHag5Lgtw6sa5LKIe5kSgvcn7cyGHxGRuZ9PwXBx7PT9iqHwv2j5jjhECF0DkXe4k97AKM7QCgHDOUaAkII90iw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XNsgnW/P; arc=none smtp.client-ip=209.85.219.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WqGM6UQW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7ED2C4CEE4;
-	Thu, 22 May 2025 11:14:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747912475;
-	bh=eW2QelSQB/EKZ9gl1bUD03UjRnPqi7z3lwjkjCqNWec=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=WqGM6UQWqapQ+edwdyH8NlKwvcY4lw4IbDAhwqKuDDtpqHNJdMfkv0RpWurcScsbW
-	 xwVG6czfLo10TxQ4BLUFCkUjcvbXmfJecQVVBcTUndC05ciCtZfJaX7qLNek/kU8R3
-	 6CmF3m70+Kd3pXR70gnBIjPxLmDX91RguJobub0+8rDYkwNoOj5oUzQIvkpieOJ+ra
-	 MCYytlzIVVKKNoZCwPUCf9RD8WI0VjUXpY2lhzNeoyAiUFX4Lz7PWppDSzXVhDXnp3
-	 UR59iLksMih1Cn14mMqidLYJkBbtTL2ALxDZUS3WfFNbNyeqx6UqFC3BqjzD3wFpeQ
-	 xQM0CvJ7CbSiQ==
-Message-ID: <1cfe31c9-7586-4abc-bac1-96fd9a5eb365@kernel.org>
-Date: Thu, 22 May 2025 13:14:30 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XNsgnW/P"
+Received: by mail-qv1-f41.google.com with SMTP id 6a1803df08f44-6f8b0fdd5ffso77807276d6.0;
+        Thu, 22 May 2025 04:15:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747912527; x=1748517327; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Xif0BFiKHRKFy77wQivk8+MEWBvoVtTEierfI/Fy18Y=;
+        b=XNsgnW/PUG6c/rjJ83pvhAByBMv5GupUxd6fJcOVTjAmSvB6XHNOr3xKu/ZBEWUnAc
+         x8gFoaDVla1WQFrwuqq7W8P01O/9FNpYlB4GeNvv8DxkH6R+DBz24W9wuJs9/FMelAMs
+         S+c/2z1p0VxI1GTNVcdvSH0EPou++Vu9K12g3WrkOgOLdX6Pdqe+on+HFdoi1jt1ijKa
+         uwBLjZs8HvrBaq3X0FKbXLmNk9yAf0dbM1vrJmxVW7MCilbLdUgxwKzd+r2QUmC2dR2g
+         4hUYRso8xI8+u1xrraOTbuo0eZ1QsZwqNtChvjt8eD6zYOV3VgIgJeBpUgPEtD1lbsNp
+         /dIw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747912527; x=1748517327;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Xif0BFiKHRKFy77wQivk8+MEWBvoVtTEierfI/Fy18Y=;
+        b=SfrdupxguTM3JNTwH2FZW0NsDPmL8RvqEBSJnzknCQEvOW129ZPGaqG+ExmNi+pFpp
+         /baO/pYohJtzQCti/CUWjDVU+Ogrp4YDflo0nqmFsHcoay4fQTQtjWzKI4D+qe9zq82T
+         o+xiwpSFabviQ43U+U5LGtc1tqJYu2PgLti74qO0JuzJHP2Q2e9uQFIJElg9fb2J9EtA
+         cOUuwFIPZNMfEWzS66KvL5PlhSU9JpEGDTrsNVB3bbHZwDsaQYYWGKnQkQTgaNZv6S8T
+         DLwSqHB+JSKmutj6VPvanoaQIZdI0q9eD0aLO1Jq1WoNmZWAZdgfIy7y1O9fuhiQm6ZT
+         28Fw==
+X-Forwarded-Encrypted: i=1; AJvYcCU5hPz3AiDnCLOt1ix1GR1VxmJNoRBuyU6Yz5xGaRHXo2o4Fd6oxrgj7Crm2/n/zJ8uZol80NMZTLTHFePK@vger.kernel.org, AJvYcCW+XfTp6bYqHW4IC79N+5IQhzl5r/1iG5Al1RGj8GZY5rYTgyOSgk6LgTGjATD05PFjkT4JdDsoeSY=@vger.kernel.org, AJvYcCWTv4178lyzRNWJv3Lycvknt8bsALDrqZ/LM6G5GT8BFCbSn+jExhUjVujOjLuNcR6Zx/M+ackkA7g=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzaldxHpIaYjfvooEN0QNGN9Vhqqnxkpd8GcnIOnD3lI3jhsUFd
+	zI9jnoxIXevg41CIoVTolMohenMw7DL/VDAvVVUieA9CaPPEhmaX4u8F
+X-Gm-Gg: ASbGncu+gSKPIKoid5lOCFvF6CrAmtYrTN9HuVUADQ5znsyoHddZBkKi10mcVfd+yRk
+	GdEAhojn+dN1VRBEJb0hzZxL/KTWL5BTYnV8AYFwoRfksw2RZ+fZqBjxg1Zzp8XAtraf6dzhtcM
+	UgdAQmSqw2OedBMM/u5Tj8e81iR8MYedaOaBWvwHwNSjiRkdrXFULyApgQKXkdO3rdTl9oH9J3G
+	zAgyJQLT7g9y4d2Xlh3CuQ89ijINUf1mj0trZNFFzjqXyxRF9667MvdTRbhu/OgWCk0gbex+T3l
+	KZDXLkyE0hawk7cxzbwW1T58qFoh6aBTwyXPIpgN6XVuoWIund82WTa19wyxcV4ShWw7FJcHYsi
+	cRw==
+X-Google-Smtp-Source: AGHT+IF+w9MKktfhqzOrURUJ6c7DxwXWpC4hkXUEFIIUtW7CQjQt72TsTF4tBGZW48aVTTDOw3j/RQ==
+X-Received: by 2002:ad4:5f08:0:b0:6e8:f166:b19c with SMTP id 6a1803df08f44-6f8b08ee744mr332249466d6.41.1747912526433;
+        Thu, 22 May 2025 04:15:26 -0700 (PDT)
+Received: from ?IPV6:2600:6c56:7d00:582f::64e? ([2600:6c56:7d00:582f::64e])
+        by smtp.googlemail.com with ESMTPSA id 6a1803df08f44-6f8b0883f45sm98958816d6.23.2025.05.22.04.15.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 22 May 2025 04:15:26 -0700 (PDT)
+Message-ID: <b62c0462-8185-4eb8-8ac6-7f2abc387768@gmail.com>
+Date: Thu, 22 May 2025 06:15:24 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,72 +67,70 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 1/2] ASoC: dt-bindings: Add Everest ES8375 audio CODEC
-To: Zhang Yi <zhangyi@everest-semi.com>, broonie@kernel.org, robh@kernel.org,
- tiwai@suse.com, devicetree@vger.kernel.org, conor+dt@kernel.org,
- lgirdwood@gmail.com, linux-kernel@vger.kernel.org,
- linux-sound@vger.kernel.org, perex@perex.cz, krzk+dt@kernel.org
-Cc: amadeuszx.slawinski@linux.intel.com
-References: <20250522103548.20134-1-zhangyi@everest-semi.com>
- <20250522103548.20134-2-zhangyi@everest-semi.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH] cpufreq, docs: (userspace governor) add that actual freq
+ is >= scaling_setspeed
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Shashank Balaji <shashank.mahadasyam@sony.com>,
+ Viresh Kumar <viresh.kumar@linaro.org>, Jonathan Corbet <corbet@lwn.net>,
+ linux-pm@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Shinya Takumi <shinya.takumi@sony.com>
+References: <20250522-userspace-governor-doc-v1-1-c8a038e39084@sony.com>
+ <15871c67-0d18-430f-935e-261b2cda855b@gmail.com>
+ <CAJZ5v0gz3Y+RGqBf9E1hzq9rwfrryd98Xpk51DtLd-uck5y-rw@mail.gmail.com>
 Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <20250522103548.20134-2-zhangyi@everest-semi.com>
+From: Russell Haley <yumpusamongus@gmail.com>
+In-Reply-To: <CAJZ5v0gz3Y+RGqBf9E1hzq9rwfrryd98Xpk51DtLd-uck5y-rw@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 22/05/2025 12:35, Zhang Yi wrote:
-> Add device tree binding documentation for Everest ES8375
+
+
+On 5/22/25 4:47 AM, Rafael J. Wysocki wrote:
+> On Thu, May 22, 2025 at 10:51 AM Russell Haley <yumpusamongus@gmail.com> wrote:
+>>
+>>
+>> On 5/22/25 3:05 AM, Shashank Balaji wrote:
+>>> The userspace governor does not have the CPUFREQ_GOV_STRICT_TARGET flag, which
+>>> means the requested frequency may not strictly be followed. This is true in the
+>>> case of the intel_pstate driver with HWP enabled. When programming the
+>>> HWP_REQUEST MSR, the min_perf is set to `scaling_setspeed`, and the max_perf
+>>> is set to the policy's max. So, the hardware is free to increase the frequency
+>>> beyond the requested frequency.
+>>>
+>>> This behaviour can be slightly surprising, given the current wording "allows
+>>> userspace to set the CPU frequency". Hence, document this.
+>>>
+>>
+>> In my opinion, the documentation is correct, and it is the
+>> implementation in intel_pstate that is wrong. If the user wanted two
+>> separate knobs that control the minimum and maximum frequencies, they
+>> could leave intel_pstate in "active" mode and change scaling_min_freq
+>> and scaling_max_freq.
+>>
+>> If the user asks for the frequency to be set from userspace, the
+>> frequency had damn well better be set from userspace.
 > 
-> Signed-off-by: Zhang Yi <zhangyi@everest-semi.com>
-> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> The userspace governor requests a frequency between policy->min and
+> policy->max on behalf of user space.  In intel_pstate this translates
+> to setting DESIRED_PERF to the requested value which is also the case
+> for the other governors.
 
-No.
+Huh.  On this Skylake box with kernel 6.14.6, it seems to be setting
+Minimum_Performance, and leaving desired at 0.
 
-This never happened.
+> echo userspace | sudo tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
+userspace
+> echo 1400000 | sudo tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_setspeed
+1400000
+> sudo x86_energy_perf_policy &| grep REQ
+cpu0: HWP_REQ: min 14 max 40 des 0 epp 128 window 0x0 (0*10^0us) use_pkg 0
+cpu1: HWP_REQ: min 14 max 40 des 0 epp 128 window 0x0 (0*10^0us) use_pkg 0
+cpu2: HWP_REQ: min 14 max 40 des 0 epp 128 window 0x0 (0*10^0us) use_pkg 0
+cpu3: HWP_REQ: min 14 max 40 des 0 epp 128 window 0x0 (0*10^0us) use_pkg 0
+cpu4: HWP_REQ: min 14 max 40 des 0 epp 128 window 0x0 (0*10^0us) use_pkg 0
+cpu5: HWP_REQ: min 14 max 40 des 0 epp 128 window 0x0 (0*10^0us) use_pkg 0
+cpu6: HWP_REQ: min 14 max 40 des 0 epp 128 window 0x0 (0*10^0us) use_pkg 0
+cpu7: HWP_REQ: min 14 max 40 des 0 epp 128 window 0x0 (0*10^0us) use_pkg 0
 
-Best regards,
-Krzysztof
+Cheers,
+Russell
