@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D34F2186E40;
-	Thu, 22 May 2025 17:36:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86CAD186E40;
+	Thu, 22 May 2025 17:37:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747935393; cv=none; b=q372QBDpMeKXvuaoG+4hVufS8CGVV8pQSTTj9dFLONjpZqsVhwWiyeet0Olsu0phO9femIOqpYY/T1JoA8pUXZKnhHTdQ92v0L0nfIQ76IBYjGPNsaf6h4vV+U1/XAUvkkPWXvHbxya6uOXFB4z99qU77hqcJ+4CPpilt8+pyMk=
+	t=1747935423; cv=none; b=GFp636fB6ylDEsGSv4d8pHMAxZZdNmlYzLBFTqpte3AVYNW/ka3nxQf3rHI7M/lpu8V9go/C8CmBpZEHXqYfj9feCSlxbJkbG8J3faZeIe/i6QbrNowvldeRY7f9U5CkcRBlMKgi/q1oos/12e8eHj83sMQRCr20HcTcCquNJfk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747935393; c=relaxed/simple;
-	bh=h6IKV+exwH+SnsugW1f4T3DXGUbr8ypKtFYzOAn4Ocg=;
+	s=arc-20240116; t=1747935423; c=relaxed/simple;
+	bh=OxfIKO+QmYGDrLtTPvYdL9CdEMbwd0LFwi13XTcxGTU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UuBPiJFoLamx6obqgNFQmskui0SsWCgQC3n6RJFABqGXt9F7o7Jsi16pCuO21rWL++9aBJYw8j+JvbefFCMR9U2cBDu+ho+MXukLFKqNG1p1OVr7McejnBmp925r4p0dhyQdhHZNvjji2g2o6XWesOPqxwohe72w0TV1tBDCZ4U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KOjA/KIm; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=Drs7LR/n6odfrqXrCXTiO9Eu3JNLZaSS5KN1IHhp6tkbnPSRxvcmZSw9MDpV5ay5z0/fL53LNIHq5SKkQAbOxYg5npw63/tfsbvI/yMQkW3SeRkVgVXoHSVfglDF1P3LsS0nfar16ozl4Nl5FrGPc0lgdyp4g2QZvmS/oirOMRM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s001fONv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KOjA/KIm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6AEAC4CEE4;
-	Thu, 22 May 2025 17:36:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s001fONv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21631C4CEE4;
+	Thu, 22 May 2025 17:37:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747935392;
-	bh=h6IKV+exwH+SnsugW1f4T3DXGUbr8ypKtFYzOAn4Ocg=;
+	s=k20201202; t=1747935423;
+	bh=OxfIKO+QmYGDrLtTPvYdL9CdEMbwd0LFwi13XTcxGTU=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=KOjA/KImvxaUsNdGMidxp1cmvE2SgGpnsl3a/2eQA9oL+kTxn9zTUQ7FGAKEwbXlQ
-	 7cMfLAMnaswxA6SQD2u3b7YyAfNE/7tfG5viRgzSRMEryUV8gsIaVsLWW/0IGANwgA
-	 sL+Gswb12F6eZd5ESO0F/CBEUCu3C5DMhLW0mPhHJtH98R102ALLyUNsk+OXWjrs/U
-	 Ze2Cw6oHUMvJhmc0uRuS7VYBYreewpdSddFDiFV6MfKtZRcFIoKvRaUEzPEM9J/hWI
-	 FTijBnpwulJvcDFfcu0vzirjCcro314pCYUaE2NxcDUCRJIBG6FL+pRMsmVx4xAL5B
-	 X8dZ5/QdCFlFQ==
-Message-ID: <ab6bfdd7-13af-4abd-94e1-25fb3d0edb1c@kernel.org>
-Date: Thu, 22 May 2025 19:36:28 +0200
+	b=s001fONvFjucklurnjWWNgw5XVyeNWrJ8eQqZUxN/OFM+gBsAqGyFcPFFPUiR0MTe
+	 6N2QuErbR4zs9jg8Twq4zVYWi84tcMPEeszFNQFQb60BRhU7WqJjwhLQdkr4MkCu3q
+	 Id4Ss3CpA6erkcmQEqjBq/WQnlpp+uIpXB8jwe/NOLGx65AJ3bUVb/Uc3Win61c/GY
+	 BduMepQoCGpCVB04BNNag7dklrpF1YTJ4tKFzlVDTmhHP+G4cfeBUfchYydA8p7b3z
+	 FL2Sk+Abbmfc+5ZPAaw9QOqmz+Vb54MS4qsLnrNTzk+GDZLBMGUGn/Zv61VWenTj/w
+	 2JWvxjBXJCstg==
+Message-ID: <0ae08e9c-49a9-417d-b7e3-57383674b94d@kernel.org>
+Date: Thu, 22 May 2025 19:36:59 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,12 +35,14 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] dt-bindings: gnss: add u-blox,neo-9m compatible
+Subject: Re: [PATCH v2 1/2] dt-bindings: gnss: u-blox: add "safeboot-gpios"
+ binding
 To: alejandroe1@geotab.com, Johan Hovold <johan@kernel.org>,
  Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
  Conor Dooley <conor+dt@kernel.org>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-References: <20250522-ubx-m9-v2-1-6ecd470527bc@geotab.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250522-ubx-safeboot-v2-0-08c22378b8c9@geotab.com>
+ <20250522-ubx-safeboot-v2-1-08c22378b8c9@geotab.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -86,72 +88,25 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <20250522-ubx-m9-v2-1-6ecd470527bc@geotab.com>
+In-Reply-To: <20250522-ubx-safeboot-v2-1-08c22378b8c9@geotab.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 22/05/2025 18:18, Alejandro Enrique via B4 Relay wrote:
+On 22/05/2025 18:51, Alejandro Enrique via B4 Relay wrote:
 > From: Alejandro Enrique <alejandroe1@geotab.com>
 > 
-> Add compatible for u-blox NEO-9M GPS module.
+> U-Blox 8/M8/M9 chip have a pin to start it in safeboot mode, to be
+> used to recover from situations where the flash content has become
+> corrupted and needs to be restored. Introduce a binding to support
+> this safeboot pin.
 > 
 > Signed-off-by: Alejandro Enrique <alejandroe1@geotab.com>
 > ---
-> This series just add the compatible string for u-blox NEO-9M module,
-> using neo-m8 as fallback. I have tested the driver with such a module
-> and it is working fine.
-> ---
-> Changes in v2:
-> - Modify the binding to allow falling back to neo-m8
-> - Remove compatible string from u-blox driver
-> - Link to v1: https://lore.kernel.org/r/20250514-ubx-m9-v1-0-193973a4f3ca@geotab.com
-> ---
->  Documentation/devicetree/bindings/gnss/u-blox,neo-6m.yaml | 25 +++++++++++++++++++++----
->  1 file changed, 21 insertions(+), 4 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/gnss/u-blox,neo-6m.yaml b/Documentation/devicetree/bindings/gnss/u-blox,neo-6m.yaml
-> index 7d4b6d49e5eea2201ac05ba6d54b1c1721172f26..215f8931ca08c1b0954fc2f70eabe3ec8d89edea 100644
-> --- a/Documentation/devicetree/bindings/gnss/u-blox,neo-6m.yaml
-> +++ b/Documentation/devicetree/bindings/gnss/u-blox,neo-6m.yaml
-> @@ -18,10 +18,16 @@ description: >
->  
->  properties:
->    compatible:
-> -    enum:
-> -      - u-blox,neo-6m
-> -      - u-blox,neo-8
-> -      - u-blox,neo-m8
-> +    oneOf:
-> +      - items:
+>  Documentation/devicetree/bindings/gnss/u-blox,neo-6m.yaml | 20 +++++++++++++++
 
-Drop items here, just enum directly.
 
-> +          - enum:
-> +              - u-blox,neo-6m
-> +              - u-blox,neo-8
-> +              - u-blox,neo-m8
-> +
 
-Drop blank line.
-
-> +      - items:
-> +          - const: u-blox,neo-m9
-> +          - const: u-blox,neo-m8
->  
->    reg:
->      description: >
-> @@ -63,3 +69,14 @@ examples:
->              reset-gpios = <&gpio 1 GPIO_ACTIVE_LOW>;
->          };
->      };
-> +  - |
-> +    #include <dt-bindings/gpio/gpio.h>
-> +
-> +    serial {
-> +        gnss {
-> +            compatible = "u-blox,neo-m9", "u-blox,neo-m8";
-
-No need for new example, it's the same as previous.
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
 
 Best regards,
