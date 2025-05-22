@@ -1,73 +1,73 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9769F29D19
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 12:09:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67ACB28934B
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 12:09:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747915751; cv=none; b=Obzt5HpBrQJoUVz0wIH5RTpU37GgK7AsLu45SQAuL54b5/g9OwoY0gzPI3TfV6OP1Z8hlV/e/0PFR4THrzbDWis04kJr95osSM9CQuuP7s5+Dx91eCH99uraVgSuqWJYsaVv5iv9+bfvoCqjj9Rm9sZWI9H3xP1sO0JLgWrRsuA=
+	t=1747915799; cv=none; b=KBjSwNXZEijHNkTGl7v3rFJ/4iITAmpQaFPBFzCQ7BPG5w1YQ/MWA9H/4l2FKm9J68GKJGj1MMahwSeQVlAHO3hi2zomXu0a/ZGH346qUZQWsPITzZgHAsAlYx6xmsXlnW8SNuU0P8KJUzwVt+/xrbdWI06qKsEXv/urrtqisbM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747915751; c=relaxed/simple;
-	bh=2OT71y3KG48GLuGZJvhlpAWuITT+Slde3w+fhiNxFe8=;
+	s=arc-20240116; t=1747915799; c=relaxed/simple;
+	bh=5rW1vHGH4iGZXXFotChC2aJYTsJnuFJygn8KK1nlFJ8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JM8mtbGQqK/eKXv6YskVfzJsSSAvk49oybIXFhhE+/MvaC3hwwFW61cVkKPg4zwCOegRHmE/GhxhC2UG09tiOqf5arhNvxlZhTCdfwO8Vy585WLDLmNn/bCjU8hIQDPDmbd8tFdaNe+YfSy0+hVVI5gJ1QB6kL1OOVGOfXL4S0s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=jVdR7dlY; arc=none smtp.client-ip=170.10.129.124
+	 In-Reply-To:Content-Type; b=gIH+KfZpz/1arTOZ2a5PvGLltBoeo5oUqXVQcTgLSKJHrVt+7msnNp5GCMaaeCWlgczWHfAjO28CTopipPOmRNc1y8nXU73NwFz4eHi1LU7q291kGZAPTl+nqGCXdzlI9fCds2ujXuX5Zocws96IA11UZTPOPMWljxaDsHcLi6A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GauTPHzm; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jVdR7dlY"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GauTPHzm"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747915748;
+	s=mimecast20190719; t=1747915796;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=h44IAMVeMtd/tY4Uko+zGeVBMuEmJ/4cWrA7K+kWhWw=;
-	b=jVdR7dlYcxLeX6fLI3wL8PeY8SfOo5uUCAkXhsOjygpQl3oWmnKZmhXTb7VlD4WmTV+I9t
-	F0BN6MU20SEAVr9y75xeCM8ZErk/WiItW0mfNhAnb4WwiPYqeXpJKrVkH8nWQj1GkicfgA
-	Qzha18vX/dmYyCK4cLsepqyW7jQtX+g=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=h63Vh9AcL+XQZbWgxx9VYchL1II9slKpRWz9Edq0vFY=;
+	b=GauTPHzmNZ5GdWtzwQgkloorjh8VSlqCuwDxTI63OZOnpuhamDSm0+p5zyAM9CLPAhnJsK
+	61iHQfQFsuJ2BR30LQkR227VhnpDjV8Hj2kb8aeD6UWfMrjPzZexpFTX3IL7yCxLyvcITP
+	hrsz4tA1InCld0qUVCLpbAIX8cGMGLc=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-671-gZLYHpm5MKSVsEf7MWPB5Q-1; Thu, 22 May 2025 08:09:07 -0400
-X-MC-Unique: gZLYHpm5MKSVsEf7MWPB5Q-1
-X-Mimecast-MFC-AGG-ID: gZLYHpm5MKSVsEf7MWPB5Q_1747915746
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-3a364d121ccso2796389f8f.2
-        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 05:09:07 -0700 (PDT)
+ us-mta-351-8o0D6Cf6MWCn0HlMA0UD5g-1; Thu, 22 May 2025 08:09:55 -0400
+X-MC-Unique: 8o0D6Cf6MWCn0HlMA0UD5g-1
+X-Mimecast-MFC-AGG-ID: 8o0D6Cf6MWCn0HlMA0UD5g_1747915794
+Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-3a35ec8845cso3377999f8f.2
+        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 05:09:54 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747915746; x=1748520546;
+        d=1e100.net; s=20230601; t=1747915794; x=1748520594;
         h=content-transfer-encoding:in-reply-to:organization:autocrypt
          :content-language:from:references:cc:to:subject:user-agent
          :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=h44IAMVeMtd/tY4Uko+zGeVBMuEmJ/4cWrA7K+kWhWw=;
-        b=eybkzUUBEYjNM1DvGw7nmW02uQRTobZ4+8ORoisFxY/7Dk0CGjjDcTS0GoxYKmST0g
-         h2bCihmJiTtHMjTgrX3Z4orpozGSoylEZpbaROFh4ch0CzcHCICQ19kttNHo40a9WLGD
-         sWyozQtzTQLABtllZEmKX2vHGttdPEHlUdwOb4ST20LGbhsFVVL8f2WQowIWPc+yG57B
-         ZHG1e5FfYgNr3+l2ZfI4vztq/NuGJmPGO+m+UloD/KfkdZShGFNr8u5DgJKDZ0r9zFqr
-         AbQ/dQJRVezkcdXLZSDEaFdDRDSInFnpvHmZn9Krp3mK+/ExubdwdItBMymQG8GM2AGH
-         9MvQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWS5SzcWjZCqLTLctIiXt3JP3arkCK6pzgrabWibnLlIb2bQMHiyVzbXXYHAe2m624AO7znShBIuvdRtf4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxRizPB64aUe7Z7tIrF0mIUcBe4MBAa7EnxYq9qCVWBzXbHxqGi
-	GRVgej5DtA8gsjKt/mxznHjmYdW0h8xbeXT01qSRMmx3R0kbGusHd/xAaQHl4rhEbbzUXmDgw3T
-	OwFBiIyhd8awDPAWfLjcOQjK2BOF5JWXg0LfatmVrKPsAlIQ3ALEdldgxYClC3oVBmA==
-X-Gm-Gg: ASbGncvFsrW3VJRLuPoWXSL4rH2SvG4+xIJ9eTvxjXWwn3suOi9fDJpsf/fg8E0wSGg
-	WgdA3Zr4jaeYJPQSz1ISWBIZjMsevGuDPhWxZGgvYQml6QAAOG+1aObOCLXNBy6R6g22LOKHmNk
-	u+jGcVBSnsQFaMyBRYxglHHMd0pOqtYD/fazDqSQ5lKRZ21h8DP/RDV934qzUkVju+AzhQeNJ2e
-	vr/YSsRwjTQp7mh7QAshtUi7btBu+bOpIdC6t7Ghjud7ssulmQuwJLkCX/a/Es13V/AC8xPUryO
-	kTbrp7NY+nk65uesIRhiJk6lyqO6KQLZXxxUN3Ff43t/cmZ9nAuNz4R8tcQLpuJv5iI5RkA8HxD
-	7n6fFdY6k5ZOefLAD1joXofjwThb/03acW4byYMA=
-X-Received: by 2002:a05:6000:2913:b0:3a3:655e:d472 with SMTP id ffacd0b85a97d-3a3655ed55cmr16869564f8f.47.1747915745830;
-        Thu, 22 May 2025 05:09:05 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGKStihXpAyFUJRGyp/g+Aoh3dtnhX6R0nZva9Bp5MgYHL9Vip9LjX4p7dLEH2zhm4rLg30Cw==
-X-Received: by 2002:a05:6000:2913:b0:3a3:655e:d472 with SMTP id ffacd0b85a97d-3a3655ed55cmr16869513f8f.47.1747915745275;
-        Thu, 22 May 2025 05:09:05 -0700 (PDT)
+        bh=h63Vh9AcL+XQZbWgxx9VYchL1II9slKpRWz9Edq0vFY=;
+        b=B9YXgW1lI8k/xrlkD6Lie8JOpI2/+dydO/R2ll0rTNAfZf5TFWe7s4wvvHyPJ1LHPf
+         v7JZXOdNG21DblahQ8CLFGRpLfftRwXSlPcxh4uwS0urAvKzwIO8K4s1Q98U37+GX/Hd
+         +2S5dqgdQXZ6kGpWm63ISQnB3O+j+cnvwNThqc0Mme8MHlu1k5t3wgnULPtapRTd7iet
+         Al6geHavbcIUsRacOrBVVVUpNILOT2PMdtw/r6FqXs/4wcRLsvrmWHStT6r/j6NR33a3
+         jX9fZ3tBUNz/buvyFFK6YZ4FXiShyPcHh2VmwTmO1b3it8r8LmGr3CV3NqwvTQNzG1zb
+         XmEA==
+X-Forwarded-Encrypted: i=1; AJvYcCVSk+DJHsxYi9F/C/8fAXCuN8mPTFjU9gscYJb6VVsS1JMvB9lqGdYKZgCFd00BKBQQkzGxP5M2JKz0kPo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxpO5h6IEdtM5IpU0enK7/xp8/qKyAocyR+Bu6VAINjr5U2wloN
+	okeIuPwJ7hQqSvQlSqGwCuOjJX1uk75mgrxOPE5T8OT3zchQkUxG4eXr0TuFNILDWwHsRLEepzB
+	Z/UU7SCmseWAgzjfClAn7om5P0nSulWscWz1urRJUS5USxvSIMvld6vqLsLrxoBrqHw==
+X-Gm-Gg: ASbGnctICF1GUDSHvDiJGbLXiVFXdg4FqnQLUY5o65mS5FcO615jY5vXAo0zXHCH7l3
+	nsMFUe7nAxUaUimb4X5oSIsiMzRtI7XoHB/FTUpBTvIesTY71/q+Dr2ckQ5Tix5ryVW/ECptsM4
+	UKJgv0DyAdgwRvNDcoIZW3xIUPl1Qrk74OzQxBCBLD37FN2E0mgC5U6y+zCGkx7/2+mgE/pwcRy
+	u4RsVCLO0allCwT74csfQke60w9aHx0XU2XH7GFfP805vUkiE3MBIjR0+MD+SaTetW3yr0rZ+5/
+	pvL1zK4aVs+6uzPfrU+16rYFMYoucy6bgano0Q0FK/jX8DzGt6tk7G76YryLODIDDfRIyy4J25G
+	zfVVPGHtcOcxo8K4DXZytZRiDtWpzERyJZNEf2Bk=
+X-Received: by 2002:a05:6000:2085:b0:3a3:ec58:ea81 with SMTP id ffacd0b85a97d-3a3ec58ef6bmr7406359f8f.42.1747915793866;
+        Thu, 22 May 2025 05:09:53 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGYHSIxI4JjI+m3HcB49s/0eJ6cNUV1jaWKNAeVskLvVaYMnsSZmXfYw51Uhm4k1N8gwNn0Mg==
+X-Received: by 2002:a05:6000:2085:b0:3a3:ec58:ea81 with SMTP id ffacd0b85a97d-3a3ec58ef6bmr7406324f8f.42.1747915793483;
+        Thu, 22 May 2025 05:09:53 -0700 (PDT)
 Received: from ?IPV6:2003:d8:2f22:2e00:6e71:238a:de9f:e396? (p200300d82f222e006e71238ade9fe396.dip0.t-ipconnect.de. [2003:d8:2f22:2e00:6e71:238a:de9f:e396])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-447f78aeb56sm100300165e9.27.2025.05.22.05.09.03
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-447f1ef01besm102300665e9.10.2025.05.22.05.09.52
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 22 May 2025 05:09:04 -0700 (PDT)
-Message-ID: <aeb5cfd2-ca8c-4e69-b27e-74c6ab4de520@redhat.com>
-Date: Thu, 22 May 2025 14:09:02 +0200
+        Thu, 22 May 2025 05:09:52 -0700 (PDT)
+Message-ID: <de532851-aee0-4841-b9d8-c4ffe3f576dc@redhat.com>
+Date: Thu, 22 May 2025 14:09:51 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,8 +75,8 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 1/4] drivers/base/node: Optimize memory block
- registration to reduce boot time
+Subject: Re: [PATCH v5 3/4] drivers/base/node: Remove
+ register_memory_blocks_under_node() function call from register_one_node
 To: Donet Tom <donettom@linux.ibm.com>,
  Andrew Morton <akpm@linux-foundation.org>, Mike Rapoport <rppt@kernel.org>,
  Oscar Salvador <osalvador@suse.de>, Zi Yan <ziy@nvidia.com>,
@@ -88,6 +88,7 @@ Cc: Ritesh Harjani <ritesh.list@gmail.com>, linux-mm@kvack.org,
  Alison Schofield <alison.schofield@intel.com>,
  Yury Norov <yury.norov@gmail.com>, Dave Jiang <dave.jiang@intel.com>
 References: <d2490e807b2c13950bc1d4199f22ec078cc4c56a.1747904868.git.donettom@linux.ibm.com>
+ <a2cc58f18dc984fc9563b9c10d5708cc92ac579f.1747904868.git.donettom@linux.ibm.com>
 From: David Hildenbrand <david@redhat.com>
 Content-Language: en-US
 Autocrypt: addr=david@redhat.com; keydata=
@@ -135,308 +136,28 @@ Autocrypt: addr=david@redhat.com; keydata=
  jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
  WNyWQQ==
 Organization: Red Hat
-In-Reply-To: <d2490e807b2c13950bc1d4199f22ec078cc4c56a.1747904868.git.donettom@linux.ibm.com>
+In-Reply-To: <a2cc58f18dc984fc9563b9c10d5708cc92ac579f.1747904868.git.donettom@linux.ibm.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
 On 22.05.25 11:17, Donet Tom wrote:
-> During node device initialization, `memory blocks` are registered under
-> each NUMA node. The `memory blocks` to be registered are identified using
-> the node’s start and end PFNs, which are obtained from the node's pg_data
+> register_one_node() is now only called via cpu_up() → __try_online_node()
+> during CPU hotplug operations to online a node.
 > 
-> However, not all PFNs within this range necessarily belong to the same
-> node—some may belong to other nodes. Additionally, due to the
-> discontiguous nature of physical memory, certain sections within a
-> `memory block` may be absent.
+> At this stage, the node has not yet had any memory added. As a result,
+> there are no memory blocks to walk or register, so calling
+> register_memory_blocks_under_node() is unnecessary.
 > 
-> As a result, `memory blocks` that fall between a node’s start and end
-> PFNs may span across multiple nodes, and some sections within those blocks
-> may be missing. `Memory blocks` have a fixed size, which is architecture
-> dependent.
+> Therefore, the call to register_memory_blocks_under_node()
+> has been removed from register_one_node().
 > 
-> Due to these considerations, the memory block registration is currently
-> performed as follows:
-> 
-> for_each_online_node(nid):
->      start_pfn = pgdat->node_start_pfn;
->      end_pfn = pgdat->node_start_pfn + node_spanned_pages;
->      for_each_memory_block_between(PFN_PHYS(start_pfn), PFN_PHYS(end_pfn))
->          mem_blk = memory_block_id(pfn_to_section_nr(pfn));
->          pfn_mb_start=section_nr_to_pfn(mem_blk->start_section_nr)
->          pfn_mb_end = pfn_start + memory_block_pfns - 1
->          for (pfn = pfn_mb_start; pfn < pfn_mb_end; pfn++):
->              if (get_nid_for_pfn(pfn) != nid):
->                  continue;
->              else
->                  do_register_memory_block_under_node(nid, mem_blk,
->                                                          MEMINIT_EARLY);
-> 
-> Here, we derive the start and end PFNs from the node's pg_data, then
-> determine the memory blocks that may belong to the node. For each
-> `memory block` in this range, we inspect all PFNs it contains and check
-> their associated NUMA node ID. If a PFN within the block matches the
-> current node, the memory block is registered under that node.
-> 
-> If CONFIG_DEFERRED_STRUCT_PAGE_INIT is enabled, get_nid_for_pfn() performs
-> a binary search in the `memblock regions` to determine the NUMA node ID
-> for a given PFN. If it is not enabled, the node ID is retrieved directly
-> from the struct page.
-> 
-> On large systems, this process can become time-consuming, especially since
-> we iterate over each `memory block` and all PFNs within it until a match is
-> found. When CONFIG_DEFERRED_STRUCT_PAGE_INIT is enabled, the additional
-> overhead of the binary search increases the execution time significantly,
-> potentially leading to soft lockups during boot.
-> 
-> In this patch, we iterate over `memblock region` to identify the
-> `memory blocks` that belong to the current NUMA node. `memblock regions`
-> are contiguous memory ranges, each associated with a single NUMA node, and
-> they do not span across multiple nodes.
-> 
-> for_each_memory_region(r): // r => region
->    if (!node_online(r->nid)):
->      continue;
->    else
->      for_each_memory_block_between(r->base, r->base + r->size - 1):
->        do_register_memory_block_under_node(r->nid, mem_blk, MEMINIT_EARLY);
-> 
-> We iterate over all memblock regions, and if the node associated with the
-> region is online, we calculate the start and end memory blocks based on the
-> region's start and end PFNs. We then register all the memory blocks within
-> that range under the region node.
-> 
-> Test Results on My system with 32TB RAM
-> =======================================
-> 1. Boot time with CONFIG_DEFERRED_STRUCT_PAGE_INIT enabled.
-> 
-> Without this patch
-> ------------------
-> Startup finished in 1min 16.528s (kernel)
-> 
-> With this patch
-> ---------------
-> Startup finished in 17.236s (kernel) - 78% Improvement
-> 
-> 2. Boot time with CONFIG_DEFERRED_STRUCT_PAGE_INIT disabled.
-> 
-> Without this patch
-> ------------------
-> Startup finished in 28.320s (kernel)
-> 
-> With this patch
-> ---------------
-> Startup finished in 15.621s (kernel) - 46% Improvement
-> 
-> Acked-by: Zi Yan <ziy@nvidia.com>
+> Acked-by: Oscar Salvador <osalvador@suse.de>
+> Acked-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
 > Signed-off-by: Donet Tom <donettom@linux.ibm.com>
 > 
 > ---
-> v4 -> v5
-> 
-> 1. Moved all helpers(memory_block_id(), pfn_to_block_id(), and phys_to_block_id())
->     into memory.h and exported sections_per_block.
-> 2. register_memory_blocks_early() moved out of for_each_online_node().
->     Now we iterate over all memory regions at once and register the
->     memory blocks.
-> 
->     Tested corner cases where memory blocks span across multiple memblock regions; it
->     is working fine.
-> 
->     #cd /sys/devices/system/node/
->     # find node1/  |grep memory0
->     node1/memory0
->     # find node0/  |grep memory0
->     node0/memory0
->     # find node0/  |grep memory0
->     node2/memory0
->     # cat node0/memory0/valid_zones
->     none
-> 
-> V4 - https://lore.kernel.org/all/f94685be9cdc931a026999d236d7e92de29725c7.1747376551.git.donettom@linux.ibm.com/
-> V3 - https://lore.kernel.org/all/b49ed289096643ff5b5fbedcf1d1c1be42845a74.1746250339.git.donettom@linux.ibm.com/
-> v2 - https://lore.kernel.org/all/fbe1e0c7d91bf3fa9a64ff5d84b53ded1d0d5ac7.1745852397.git.donettom@linux.ibm.com/
-> v1 - https://lore.kernel.org/all/50142a29010463f436dc5c4feb540e5de3bb09df.1744175097.git.donettom@linux.ibm.com/
-> ---
->   drivers/base/memory.c  | 21 ++++----------------
->   drivers/base/node.c    | 45 ++++++++++++++++++++++++++++++++++++++++--
->   include/linux/memory.h | 19 +++++++++++++++++-
->   include/linux/node.h   |  3 +++
->   4 files changed, 68 insertions(+), 20 deletions(-)
-> 
-> diff --git a/drivers/base/memory.c b/drivers/base/memory.c
-> index 19469e7f88c2..39fcc075a36f 100644
-> --- a/drivers/base/memory.c
-> +++ b/drivers/base/memory.c
-> @@ -22,6 +22,7 @@
->   #include <linux/stat.h>
->   #include <linux/slab.h>
->   #include <linux/xarray.h>
-> +#include <linux/export.h>
->   
->   #include <linux/atomic.h>
->   #include <linux/uaccess.h>
-> @@ -48,22 +49,8 @@ int mhp_online_type_from_str(const char *str)
->   
->   #define to_memory_block(dev) container_of(dev, struct memory_block, dev)
->   
-> -static int sections_per_block;
-> -
-> -static inline unsigned long memory_block_id(unsigned long section_nr)
-> -{
-> -	return section_nr / sections_per_block;
-> -}
-> -
-> -static inline unsigned long pfn_to_block_id(unsigned long pfn)
-> -{
-> -	return memory_block_id(pfn_to_section_nr(pfn));
-> -}
-> -
-> -static inline unsigned long phys_to_block_id(unsigned long phys)
-> -{
-> -	return pfn_to_block_id(PFN_DOWN(phys));
-> -}
-> +int sections_per_block;
-> +EXPORT_SYMBOL(sections_per_block);
->   
->   static int memory_subsys_online(struct device *dev);
->   static int memory_subsys_offline(struct device *dev);
-> @@ -632,7 +619,7 @@ int __weak arch_get_memory_phys_device(unsigned long start_pfn)
->    *
->    * Called under device_hotplug_lock.
->    */
-> -static struct memory_block *find_memory_block_by_id(unsigned long block_id)
-> +struct memory_block *find_memory_block_by_id(unsigned long block_id)
->   {
->   	struct memory_block *mem;
->   
-> diff --git a/drivers/base/node.c b/drivers/base/node.c
-> index cd13ef287011..e8b6f6b9ce51 100644
-> --- a/drivers/base/node.c
-> +++ b/drivers/base/node.c
-> @@ -20,6 +20,7 @@
->   #include <linux/pm_runtime.h>
->   #include <linux/swap.h>
->   #include <linux/slab.h>
-> +#include <linux/memblock.h>
->   
->   static const struct bus_type node_subsys = {
->   	.name = "node",
-> @@ -850,6 +851,41 @@ void unregister_memory_block_under_nodes(struct memory_block *mem_blk)
->   			  kobject_name(&node_devices[mem_blk->nid]->dev.kobj));
->   }
->   
-> +/*
-> + * register_memory_blocks_under_node_early : Register the memory blocks
-> + *                 under the nodes.
 
-"register_memory_blocks_under_nodes"
-
-> + *
-> + * This function iterates over all memblock regions, and if the node associated with
-
-"the node" does not apply.
-
-> + * the region is online, calculates the start and end memory blocks based on the
-> + * region's start and end PFNs. Then, registers all the memory blocks within that
-> + * range under the region node.
-
-More like "registers all memory blocks under the corresponding nodes 
-..." then clarify that a block might get registered under multiple nodes 
-etc.
-
-> + */
-> +static void register_memory_blocks_under_node_early(void)
-> +{
-> +	struct memblock_region *r;
-> +
-> +	for_each_mem_region(r) {
-> +		const unsigned long start_block_id = phys_to_block_id(r->base);
-> +		const unsigned long end_block_id = phys_to_block_id(r->base + r->size - 1);
-> +		unsigned long block_id;
-> +
-> +		if (!node_online(r->nid))
-> +			continue;
-> +
-> +		for (block_id = start_block_id; block_id <= end_block_id; block_id++) {
-> +			struct memory_block *mem;
-> +
-> +			mem = find_memory_block_by_id(block_id);
-> +			if (!mem)
-> +				continue;
-> +
-> +			do_register_memory_block_under_node(r->nid, mem, MEMINIT_EARLY);
-> +			put_device(&mem->dev);
-> +		}
-> +
-> +	}
-> +}
-> +
->   void register_memory_blocks_under_node(int nid, unsigned long start_pfn,
->   				       unsigned long end_pfn,
->   				       enum meminit_context context)
-> @@ -971,11 +1007,16 @@ void __init node_dev_init(void)
->   
->   	/*
->   	 * Create all node devices, which will properly link the node
-> -	 * to applicable memory block devices and already created cpu devices.
-> +	 * to already created cpu devices.
->   	 */
->   	for_each_online_node(i) {
-> -		ret = register_one_node(i);
-> +		ret =  __register_one_node(i);
->   		if (ret)
->   			panic("%s() failed to add node: %d\n", __func__, ret);
->   	}
-> +
-> +	/*
-> +	 * Link the node to memory block devices
-> +	 */
-> +	register_memory_blocks_under_node_early();
- >   }> diff --git a/include/linux/memory.h b/include/linux/memory.h
-> index 12daa6ec7d09..2a61088e17ad 100644
-> --- a/include/linux/memory.h
-> +++ b/include/linux/memory.h
-> @@ -171,12 +171,30 @@ struct memory_group *memory_group_find_by_id(int mgid);
->   typedef int (*walk_memory_groups_func_t)(struct memory_group *, void *);
->   int walk_dynamic_memory_groups(int nid, walk_memory_groups_func_t func,
->   			       struct memory_group *excluded, void *arg);
-> +struct memory_block *find_memory_block_by_id(unsigned long block_id);
->   #define hotplug_memory_notifier(fn, pri) ({		\
->   	static __meminitdata struct notifier_block fn##_mem_nb =\
->   		{ .notifier_call = fn, .priority = pri };\
->   	register_memory_notifier(&fn##_mem_nb);			\
->   })
->   
-> +extern int sections_per_block;
-> +
-> +static inline unsigned long memory_block_id(unsigned long section_nr)
-> +{
-> +	return section_nr / sections_per_block;
-> +}
-> +
-> +static inline unsigned long pfn_to_block_id(unsigned long pfn)
-> +{
-> +	return memory_block_id(pfn_to_section_nr(pfn));
-> +}
-> +
-> +static inline unsigned long phys_to_block_id(unsigned long phys)
-> +{
-> +	return pfn_to_block_id(PFN_DOWN(phys));
-> +}
-> +
->   #ifdef CONFIG_NUMA
->   void memory_block_add_nid(struct memory_block *mem, int nid,
->   			  enum meminit_context context);
-> @@ -188,5 +206,4 @@ void memory_block_add_nid(struct memory_block *mem, int nid,
->    * can sleep.
->    */
->   extern struct mutex text_mutex;
-> -
-
-Unrelated change.
-
-
-Apart from that LGTM
+Acked-by: David Hildenbrand <david@redhat.com>
 
 -- 
 Cheers,
