@@ -1,198 +1,126 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66F2F15A85A;
-	Thu, 22 May 2025 17:05:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D18D0184E;
+	Thu, 22 May 2025 17:06:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747933518; cv=none; b=iefhm0Ewy5yNJvUpdeCmYwg8ZuSqerAKTzAXAXHtVkedTPCUII+qENmgUp8Ef18CZDv95PN4C+9QKDmzbTos0zW1o5NmOKq5sH7YPYUAHzZqE0DXFSKmTji7zAu65gnec56Yp4Gs7agtbt4gFVLvso3LLsfq71BRCxSXE/EZqgI=
+	t=1747933613; cv=none; b=ol612tKN1tGKpgwTXlcSdoFuS3ELjVDGW+FFYgtHoIyxrltc0yhvjUnTZqhY1HZzZzclQ4YxMKY+7KPaaY5h7FKr5U/Iw9ABEIwH4iUMFcOTxANX+84nXYWUkObvZg0fhqvUQ3gnY89ENBN99H6cLMfgFsohquh6/UNtveKg5Ws=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747933518; c=relaxed/simple;
-	bh=qstri+tqk+O9EZT92fQLIX0+WT6dPohgFDTdac8pzHI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cOyz2aAFLeE9sCAq/0R53HoAzc3fkC2/aqY3XLfzq2uzUbI6tm8RQtC0P/SuE5Cw7/Vam2TFqF0FgPVVlbfjNQgFs2dQYr+fS4hZoFVP3oNc4NGEVG5D9Hjlx/vyD8ZnrWSRI6yVC+MWfGDXfSc8kkd+bzozy1Y1b2+cSVVNcCQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ALRA0jxx; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747933613; c=relaxed/simple;
+	bh=Xrq8IL2vFlNFiAWRKzVMFO5UYY1UmJBFHebhTXzI1EA=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 Mime-Version:Content-Type; b=hrDsxz5STX1aw5TI+FvqiBl4USugp0TkvXralAX/IgIG/4nxwOjd55E1btyWEgqZWFRYT7yJ63rLn0FmKEU0Gz6r9vqUejjZHMFM7TXI57Zv1+hSJlzYYAoGgYp4l7okHOl/tPVw7he6kb4qLGBArSW5z7SBcuM/SX0WUo0TecI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AxoYyJEL; arc=none smtp.client-ip=209.85.160.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ALRA0jxx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 423A9C4CEE4;
-	Thu, 22 May 2025 17:05:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747933516;
-	bh=qstri+tqk+O9EZT92fQLIX0+WT6dPohgFDTdac8pzHI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ALRA0jxx9EGCoUH8l4BhGi3eVtI37aH0eWiBQDgFi2Nb6mCU/rx/4/fuHVh3x3tZs
-	 ALr0rpeqOs6PJYJBop9xDEKCEco6UOzc7m7WYwnzcqAW7lfS7nMKYD3EMTkaztEkXx
-	 XDOA0mxMlgcoZ69S1ozGdEfqZMbtbnn6y8AS4GyVGt49vMwj3BqEpq+SLCQPXpIxnw
-	 Bc7NIrBcwic+HT9t9gnR/Cw4bBOsESp3jAH86RVENyI3M4a2j9Ri6Dc2v6DzibKd6Y
-	 E47CTC4Z3Kz3MXug/4Rj4kHSd77/Dl8gcII/oyGgRo+gp4wTgs0xIL7yfWD/g1iBNF
-	 RfDnAugQ1ttKQ==
-Date: Thu, 22 May 2025 14:05:14 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Yuzhuo Jing <yuzhuo@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Liang Kan <kan.liang@linux.intel.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	"Steven Rostedt (Google)" <rostedt@goodmis.org>,
-	James Clark <james.clark@linaro.org>,
-	Tomas Glozar <tglozar@redhat.com>, Leo Yan <leo.yan@arm.com>,
-	Guilherme Amadio <amadio@gentoo.org>,
-	Yang Jihong <yangjihong@bytedance.com>,
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-	Adhemerval Zanella <adhemerval.zanella@linaro.org>,
-	Wei Yang <richard.weiyang@gmail.com>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	"Mike Rapoport (Microsoft)" <rppt@kernel.org>,
-	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-	Kajol Jain <kjain@linux.ibm.com>,
-	Aditya Gupta <adityag@linux.ibm.com>,
-	Charlie Jenkins <charlie@rivosinc.com>,
-	"Steinar H. Gunderson" <sesse@google.com>,
-	"Dr. David Alan Gilbert" <linux@treblig.org>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
-	Al Viro <viro@zeniv.linux.org.uk>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, llvm@lists.linux.dev
-Subject: Re: [PATCH v1 3/4] perf genelf: Remove libcrypto dependency and use
- sha1 utils
-Message-ID: <aC9ZSujcZkZ5KvEy@x1>
-References: <20250521225307.743726-1-yuzhuo@google.com>
- <20250521225307.743726-4-yuzhuo@google.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AxoYyJEL"
+Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-476ac73c76fso118503391cf.0;
+        Thu, 22 May 2025 10:06:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747933610; x=1748538410; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Vqz4uQ6Mi4Zp+A95QCJrlEDt3IrPpTzX/7MsZrQkvuY=;
+        b=AxoYyJELsTiZGF9fICZ3F84JGmxiHeRAyEilQFKqjs2Q4jVlDYHP/q2vI/OMzMevqf
+         UlVxJKCOtPat37z1R00ifnvy+h1PWChWzXPj0mvAt/I7SItojDWnU4J1FXl3Jvz81pTg
+         +Febii3qv4QkmT4LrM5Xn9HeOt04deGF6o0dd/DFEFfnINHQNw96vuAoWuh9UQhkNBTU
+         rKvjH05CO8rVKZNb/MfjE44hZKkHoG9xIaGmxA0RypMx5mjHsrCZ/GsjN2nIk6eexdbd
+         YCkilEd9kUx2+Vsv5zi62FKnmZ7gax9rOt6uWPEHGVjJu1XMoAKyuhqeO2pfZvZRWVni
+         +JuA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747933610; x=1748538410;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:cc:to:from:date:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=Vqz4uQ6Mi4Zp+A95QCJrlEDt3IrPpTzX/7MsZrQkvuY=;
+        b=nM48T2rO36TNS2a/A4Aq24h9lN5HxfeCLpApWU8yaHe5LS70GrPk4UsmCbdu3fcK70
+         tRCWeazn15ba9oQRm2QnvWUd1AbhTeRdlFkQM8Yog65jZJEtSzTCYiqwphivU9rJESWt
+         MCqRsBtu965kNThJqTpPEgvNl0Ob2APtcuoErqJ+EhBaOaHaEVRM7xI5hAkjnZVpewIW
+         dVvH03xD2AspKm+ikFyHs4frVOMfQbdj78Lo30xGnyClWSEq7dutDirMFmdWdP55v4mq
+         eIpKUonjP7TJKwGrybyoqes5nkbB+uzWKKBuQF/fAkpODuyWldLmxPs7nhC5dsiDlV9M
+         fN6A==
+X-Forwarded-Encrypted: i=1; AJvYcCWFuVE+9eo3TprKrNloJ7JEO/ysAmWAlCne3Q1VNQJ63PM/SHLJtp1TFwzH7WJ/uTeXzaWIIi2CJXmUdSs=@vger.kernel.org, AJvYcCWdbPFS42yKVnsh8adYZ71YYbX5ZlWbcotb60n+KG/6eoaP9xnnXDANFmuCXVzempSGvpZYIHEO@vger.kernel.org
+X-Gm-Message-State: AOJu0YyiuZIYylgf5FHOw/lGBXKP4fftqfi1pglvjA7yW/gwKs9PwKbW
+	Mui7XObc82wS0IiT2fsy72ti845R8t2gAA+B06f8+zzGB252VCM3AFFh
+X-Gm-Gg: ASbGncs1WqxjOaP9hPN0OEZeNCU5Ui0d/P1AaoWPG8lrfHSNbqCZJVTkmFHTawFLcwb
+	z0p1GMzKLot7oaMI7qdZGawPqbjVF/8AH33h4+M7e+OuxATcUOrvOlM7EEWKgUSTKTKeNkryh/p
+	5AaJ08uxctjhGyL95yS8zb7YJNbX8vWF0KQek8qAJvaQdnktk+BgdrI5ngc3ZxL4JfcseRzDh0T
+	/pj3RGRAsHviacyC7nTJJui0wNSncC5vSJRupZRyBdQ6VjqVwYGY2T1lDG8YqLBUlndbY0a/lEv
+	M9PIgNdcrC/vu7vanumEaH5nT0SEK5pxD3zGss/yitpHbdua5MzW+5DBYq/0952iFHwjT5nKUPu
+	iQg4MJmOvhWlC8UYsj1rGsk0=
+X-Google-Smtp-Source: AGHT+IEGDWqUbNThCKT87ztwaE/lAdSrYVWFPyDYaua7c+9Il+9cIbYYQSfVU0q3Jm88R5lZgZ8UIg==
+X-Received: by 2002:ac8:718a:0:b0:476:ad9d:d4e9 with SMTP id d75a77b69052e-494ae3d6caamr253225061cf.24.1747933610635;
+        Thu, 22 May 2025 10:06:50 -0700 (PDT)
+Received: from localhost (23.67.48.34.bc.googleusercontent.com. [34.48.67.23])
+        by smtp.gmail.com with UTF8SMTPSA id d75a77b69052e-497ae224a4bsm76673711cf.76.2025.05.22.10.06.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 May 2025 10:06:49 -0700 (PDT)
+Date: Thu, 22 May 2025 13:06:49 -0400
+From: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+To: Stanislav Fomichev <stfomichev@gmail.com>, 
+ netdev@vger.kernel.org
+Cc: davem@davemloft.net, 
+ edumazet@google.com, 
+ kuba@kernel.org, 
+ pabeni@redhat.com, 
+ willemdebruijn.kernel@gmail.com, 
+ horms@kernel.org, 
+ stfomichev@gmail.com, 
+ linux-kernel@vger.kernel.org, 
+ syzbot+b191b5ccad8d7a986286@syzkaller.appspotmail.com
+Message-ID: <682f59a9887be_12c79229452@willemb.c.googlers.com.notmuch>
+In-Reply-To: <20250522031129.3247266-1-stfomichev@gmail.com>
+References: <20250522031129.3247266-1-stfomichev@gmail.com>
+Subject: Re: [PATCH net v2] af_packet: move notifier's packet_dev_mc out of
+ rcu critical section
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250521225307.743726-4-yuzhuo@google.com>
+Mime-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, May 21, 2025 at 03:53:06PM -0700, Yuzhuo Jing wrote:
-> genelf is the only file in perf that depends on libcrypto (or openssl)
-> which only calculates a Build ID (SHA1, MD5, or URANDOM).  SHA1 was
-> expected to be the default option, but MD5 was used by default due to
-> previous issues when linking against Java.  This commit switches genelf
-> to use in-house SHA1 utils, and also removes MD5 and URANDOM options
-> since we have a reliable SHA1 implementation to rely on.  It passes the
-> tools/perf/tests/shell/test_java_symbol.sh test.
-
-Cool, I was going to ask if there was some 'perf test' this could be
-tested with, there is, good.
-
-- Arnaldo
- 
-> Signed-off-by: Yuzhuo Jing <yuzhuo@google.com>
-> ---
->  tools/perf/util/genelf.c | 72 ++++------------------------------------
->  1 file changed, 6 insertions(+), 66 deletions(-)
+Stanislav Fomichev wrote:
+> Syzkaller reports the following issue:
 > 
-> diff --git a/tools/perf/util/genelf.c b/tools/perf/util/genelf.c
-> index cdce7f173d00..cfedb29260ef 100644
-> --- a/tools/perf/util/genelf.c
-> +++ b/tools/perf/util/genelf.c
-> @@ -28,24 +28,7 @@
->  #define NT_GNU_BUILD_ID 3
->  #endif
->  
-> -#define BUILD_ID_URANDOM /* different uuid for each run */
-> -
-> -#ifdef HAVE_LIBCRYPTO_SUPPORT
-> -
-> -#define BUILD_ID_MD5
-> -#undef BUILD_ID_SHA	/* does not seem to work well when linked with Java */
-> -#undef BUILD_ID_URANDOM /* different uuid for each run */
-> -
-> -#ifdef BUILD_ID_SHA
-> -#include <openssl/sha.h>
-> -#endif
-> -
-> -#ifdef BUILD_ID_MD5
-> -#include <openssl/evp.h>
-> -#include <openssl/md5.h>
-> -#endif
-> -#endif
-> -
-> +#include "sha1_base.h"
->  
->  typedef struct {
->    unsigned int namesz;  /* Size of entry's owner string */
-> @@ -92,64 +75,21 @@ static Elf_Sym symtab[]={
->  	}
->  };
->  
-> -#ifdef BUILD_ID_URANDOM
-> -static void
-> -gen_build_id(struct buildid_note *note,
-> -	     unsigned long load_addr __maybe_unused,
-> -	     const void *code __maybe_unused,
-> -	     size_t csize __maybe_unused)
-> -{
-> -	int fd;
-> -	size_t sz = sizeof(note->build_id);
-> -	ssize_t sret;
-> -
-> -	fd = open("/dev/urandom", O_RDONLY);
-> -	if (fd == -1)
-> -		err(1, "cannot access /dev/urandom for buildid");
-> -
-> -	sret = read(fd, note->build_id, sz);
-> -
-> -	close(fd);
-> -
-> -	if (sret != (ssize_t)sz)
-> -		memset(note->build_id, 0, sz);
-> -}
-> -#endif
-> -
-> -#ifdef BUILD_ID_SHA
->  static void
->  gen_build_id(struct buildid_note *note,
->  	     unsigned long load_addr __maybe_unused,
->  	     const void *code,
->  	     size_t csize)
->  {
-> -	if (sizeof(note->build_id) < SHA_DIGEST_LENGTH)
-> -		errx(1, "build_id too small for SHA1");
-> -
-> -	SHA1(code, csize, (unsigned char *)note->build_id);
-> -}
-> -#endif
-> -
-> -#ifdef BUILD_ID_MD5
-> -static void
-> -gen_build_id(struct buildid_note *note, unsigned long load_addr, const void *code, size_t csize)
-> -{
-> -	EVP_MD_CTX *mdctx;
-> +	struct sha1_state sctx;
->  
-> -	if (sizeof(note->build_id) < 16)
-> -		errx(1, "build_id too small for MD5");
-> +	if (sizeof(note->build_id) < SHA1_DIGEST_SIZE)
-> +		errx(1, "build_id too small for SHA1");
->  
-> -	mdctx = EVP_MD_CTX_new();
-> -	if (!mdctx)
-> -		errx(2, "failed to create EVP_MD_CTX");
-> +	sha1_base_init(&sctx);
->  
-> -	EVP_DigestInit_ex(mdctx, EVP_md5(), NULL);
-> -	EVP_DigestUpdate(mdctx, &load_addr, sizeof(load_addr));
-> -	EVP_DigestUpdate(mdctx, code, csize);
-> -	EVP_DigestFinal_ex(mdctx, (unsigned char *)note->build_id, NULL);
-> -	EVP_MD_CTX_free(mdctx);
-> +	crypto_sha1_finup(&sctx, code, csize, (unsigned char *)note->build_id);
->  }
-> -#endif
->  
->  static int
->  jit_add_eh_frame_info(Elf *e, void* unwinding, uint64_t unwinding_header_size,
-> -- 
-> 2.49.0.1164.gab81da1b16-goog
+>  BUG: sleeping function called from invalid context at kernel/locking/mutex.c:578
+>  __mutex_lock+0x106/0xe80 kernel/locking/mutex.c:746
+>  team_change_rx_flags+0x38/0x220 drivers/net/team/team_core.c:1781
+>  dev_change_rx_flags net/core/dev.c:9145 [inline]
+>  __dev_set_promiscuity+0x3f8/0x590 net/core/dev.c:9189
+>  netif_set_promiscuity+0x50/0xe0 net/core/dev.c:9201
+>  dev_set_promiscuity+0x126/0x260 net/core/dev_api.c:286 packet_dev_mc net/packet/af_packet.c:3698 [inline]
+>  packet_dev_mclist_delete net/packet/af_packet.c:3722 [inline]
+>  packet_notifier+0x292/0xa60 net/packet/af_packet.c:4247
+>  notifier_call_chain+0x1b3/0x3e0 kernel/notifier.c:85
+>  call_netdevice_notifiers_extack net/core/dev.c:2214 [inline]
+>  call_netdevice_notifiers net/core/dev.c:2228 [inline]
+>  unregister_netdevice_many_notify+0x15d8/0x2330 net/core/dev.c:11972
+>  rtnl_delete_link net/core/rtnetlink.c:3522 [inline]
+>  rtnl_dellink+0x488/0x710 net/core/rtnetlink.c:3564
+>  rtnetlink_rcv_msg+0x7cf/0xb70 net/core/rtnetlink.c:6955
+>  netlink_rcv_skb+0x219/0x490 net/netlink/af_netlink.c:2534
+> 
+> Calling `PACKET_ADD_MEMBERSHIP` on an ops-locked device can trigger
+> the `NETDEV_UNREGISTER` notifier, which may require disabling promiscuous
+> and/or allmulti mode. Both of these operations require acquiring
+> the netdev instance lock.
+> 
+> Move the call to `packet_dev_mc` outside of the RCU critical section.
+> The `mclist` modifications (add, del, flush, unregister) are protected by
+> the RTNL, not the RCU. The RCU only protects the `sklist` and its
+> associated `sks`. The delayed operation on the `mclist` entry remains
+> within the RTNL.
+> 
+> Reported-by: syzbot+b191b5ccad8d7a986286@syzkaller.appspotmail.com
+> Closes: https://syzkaller.appspot.com/bug?extid=b191b5ccad8d7a986286
+> Fixes: ad7c7b2172c3 ("net: hold netdev instance lock during sysfs operations")
+> Signed-off-by: Stanislav Fomichev <stfomichev@gmail.com>
+
+Reviewed-by: Willem de Bruijn <willemb@google.com>
