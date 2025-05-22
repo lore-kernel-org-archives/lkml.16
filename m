@@ -1,33 +1,39 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22B82221545;
-	Thu, 22 May 2025 06:19:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A12771AF0B5;
+	Thu, 22 May 2025 06:20:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747894799; cv=none; b=Nv3a4vGEl6nyXa+XAjdBaRWeHkRWVNWk7Q7zVW5nEeBmr2drXvM8z0cHH398nH3SIS+FZH1pccTAM7OeCk8rrQ/vNDLZeWr9+6pyA10wON+SYpIMzo3CkthcuxyzQgNEjJsF0k6BCjgpHH0H9hKJy9IMNkPhsgZq1dzCj7HWqRA=
+	t=1747894834; cv=none; b=eC9CIdFezi2eViWxgRcw78CaP3jQhAEgXz//PP77dch8mnyeM9s/R0cUyWAZmG2hiCV7luqz3E6G3p052CbQWxpRK7WnI0uJ69rEc+OgwSpHqetnSymWIh9OT8E5gd/87j0yMXq3qI1qNA0NwUgkesam5EBzJnJEWujzsAwS0zk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747894799; c=relaxed/simple;
-	bh=I3uUYxB9gq0LkC82C7gZzNJaJajWj4XOzEUutTldBiI=;
+	s=arc-20240116; t=1747894834; c=relaxed/simple;
+	bh=3sWViiZaf9RhENi7473FExg7j1NIW1+ICKGOTV5yJyc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=W++UEnIVKUkYHDs0Kbs2MeMu3RseyyTPhPkprHkAEQKeZSfjzHqE2w+aI9AFW8U9qQqLs6W3H7NSPV6gyhqiqYmu6Eu03y2o7LIIcxedw1B6EItcvri/X82VRRqqmzMZxnzlRT56jdNOWe/j4OD4ScQAj65aYEht3aUTpWZD/s0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AURGy7jX; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=YlZprFZL1rIlYZrBNC+ERiGM8dInq/TDrJedcGUEhlgHMQ8mihdyC0dC7sHHKYelIyXVQgW+grlqdS7vPtJHKN7NBcAOXnAwbqvKIzLRwibhSUsVaGqaEidtBQ5OuwT0lWPpMEkV/Untw1l0R97k5QVn7kKxJJZJK+6ISPQfcu8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=bAQsoRJ8; arc=none smtp.client-ip=213.97.179.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AURGy7jX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C897C4CEE4;
-	Thu, 22 May 2025 06:19:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747894798;
-	bh=I3uUYxB9gq0LkC82C7gZzNJaJajWj4XOzEUutTldBiI=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=AURGy7jXvJgXpb73jjgq1fA7kXI7UM82gFb4ofwDpgJxeV3WhAU1pVLU02a4jYuYm
-	 OGtPocsuzDv+/7OJ8iwrL6DBrN2mnav2+g65msJeFVg0AYDaSLtmQ9Yz17zR9fuR+Q
-	 B51X4grM+e/y3KaoWxes2TLpXCQ/Ctz7z0kUkbCYw5I/N2nbesbiOu30/e1NdpsYya
-	 L3gksTjYrpLneZXVdLhkn4ncfSIRde3NWSVw9CNI6FkuAA6h1V+BOjNGjaiI5Ykn3Z
-	 kL8KpminC/nMlKlEobligibbPDnX6X+rkroXqQgvzqVGJB5KkKVTHQxz1kZIoIyVhs
-	 54CUUZtAOhWNw==
-Message-ID: <650740e3-1a21-46b1-a297-f8d6b7df9ae9@kernel.org>
-Date: Thu, 22 May 2025 08:19:53 +0200
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="bAQsoRJ8"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=kiRPMbGvX4N7MDqUbh2hwhW3nBE5n+0fzxaK4sfzW48=; b=bAQsoRJ8pQBUwCHUnq9KRGF2t5
+	5bf6INLPShE6UWjyx2uyzRMiNLzm1PhRq55ap8xTB5zaLFusTGFKuZYIkKDF7jiUe1YSVknf1JASf
+	bR1RHPx4Mmq+FlT65YOBlXAdsWsr/p84ni/wUribMo1E7+E+d1KQOu6ArDgyFDKxdKjzqkjQr0O9N
+	K99FUQi4aIfYUdhE6P3d+VBU1zniOtycYNixTxTOLmG162yPiZpMFkdWBnJkHTm5voomI8+0PGrwj
+	dH5UgV3CoQRowl8o0X8ACcKGPvRoK975x5ujao6DHDEPffnqeTGLEQp/ovaeMmcN/7gjtAYRGDjAV
+	fhT45Ixg==;
+Received: from [191.204.192.64] (helo=[192.168.15.100])
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
+	id 1uHzI3-00BZzW-Kh; Thu, 22 May 2025 08:20:27 +0200
+Message-ID: <32f30f6d-e995-4f00-a8ec-31100a634a38@igalia.com>
+Date: Thu, 22 May 2025 03:20:23 -0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,119 +41,85 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 3/8] MAINTAINERS: add maintainer for the Ka-Ro
- tx8p-ml81 COM module
-To: Ahmad Fatoum <a.fatoum@pengutronix.de>,
- Maud Spierings | GOcontroll <maudspierings@gocontroll.com>,
- Shawn Guo <shawnguo2@yeah.net>, Rob Herring <robh@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
- Fabio Estevam <festevam@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "imx@lists.linux.dev" <imx@lists.linux.dev>,
- Pengutronix Kernel Team <kernel@pengutronix.de>,
- Shawn Guo <shawnguo@kernel.org>,
- "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
-References: <20250417-initial_display-v6-0-3c6f6d24c7af@gocontroll.com>
- <20250417-initial_display-v6-3-3c6f6d24c7af@gocontroll.com>
- <aB26FRq/Ets5fiRK@dragon>
- <PA4PR04MB7630F5874577DA12FCBE1537C58AA@PA4PR04MB7630.eurprd04.prod.outlook.com>
- <aB3DuZMBIwsFXrVz@dragon>
- <PA4PR04MB76309AE2C6E2C774DF8FAE29C58AA@PA4PR04MB7630.eurprd04.prod.outlook.com>
- <3ba28773-61ec-4e1e-949d-e8285525d1d2@pengutronix.de>
-From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH] ovl: Allow mount options to be parsed on remount
+To: Christian Brauner <brauner@kernel.org>,
+ Amir Goldstein <amir73il@gmail.com>
+Cc: Miklos Szeredi <miklos@szeredi.hu>, linux-unionfs@vger.kernel.org,
+ linux-kernel@vger.kernel.org, kernel-dev@igalia.com,
+ linux-fsdevel@vger.kernel.org
+References: <20250521-ovl_ro-v1-1-2350b1493d94@igalia.com>
+ <CAOQ4uxgXP8WrgLvtR6ar+OncP6Fh0JLVO0+K+NtDX1tGa2TVxA@mail.gmail.com>
+ <20250521-blusen-bequem-4857e2ce9155@brauner>
 Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <3ba28773-61ec-4e1e-949d-e8285525d1d2@pengutronix.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+From: =?UTF-8?Q?Andr=C3=A9_Almeida?= <andrealmeid@igalia.com>
+In-Reply-To: <20250521-blusen-bequem-4857e2ce9155@brauner>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On 21/05/2025 22:39, Ahmad Fatoum wrote:
-> Dear Device Tree Maintainers,
-> Dear Maud and Shawn,
-> 
-> On 09.05.25 11:03, Maud Spierings | GOcontroll wrote:
->> On 5/9/25 10:58, Shawn Guo wrote:
->>>>>> +KA-RO TX8P COM MODULE
->>>>>> +M:	Maud Spierings <maudspierings@gocontroll.com>
->>>>>> +L:	imx@lists.linux.dev
->>>>>> +S:	Maintained
->>>>>> +F:	arch/arm64/boot/dts/freescale/imx8mp-tx8p-ml81.dtsi
->>>>>> +
->>>>>
->>>>> I'm not fond of such changes, as MAINTAINERS file could be bloated
->>>>> quickly by individual DTS.
->>>>
->>>> Is there some way you would prefer to see it? I don't really know of a better
->>>> way.
+Hi Christian, Amir,
+
+Thanks for the feedback :)
+
+Em 21/05/2025 08:20, Christian Brauner escreveu:
+> On Wed, May 21, 2025 at 12:35:57PM +0200, Amir Goldstein wrote:
+>> On Wed, May 21, 2025 at 8:45 AM André Almeida <andrealmeid@igalia.com> wrote:
 >>>
->>> There was some discussion about getting ./scripts/get_maintainer.pl pick
->>> up the Author: field (in DTS header area).  But I'm not sure where it
->>> ended.
+
+[...]
+
 >>
->> I feel like that would be wrong in this situation too, it would pull in
->> Lothar Wassmann, who has nothing to do with me upstreaming this. I have
->> seen him around on the mailing list but given that Ka-Ro are not
->> upstreaming these themselves, I feel it would be weird to pull him into
->> this.
-> 
-> We can add multiple authors. Authors not wishing to receive mail can always
-> remove their name or blackhole their mail address via the mailmap.
-> 
-> I am not leaning strongly in favor of either way, but I am bothered a little
-> by b4 nagging me about adding MAINTAINERS entry for device trees that I've
-> added. It would be nice to have a guideline here.
+>> I see the test generic/623 failure - this test needs to be fixed for overlay
+>> or not run on overlayfs.
+>>
+>> I do not see those other 5 failures although before running the test I did:
+>> export LIBMOUNT_FORCE_MOUNT2=always
+>>
+>> Not sure what I am doing differently.
+>>
 
-Hm? That's not a warning anyone should fix. If any of these patches are
-because of checkpatch, then obviously this should never be accepted.
+I have created a smaller reproducer for this, have a look:
 
-And that's true for every other change, every addition of C or H file.
-You do not add maintainer entries for them.
+  mkdir -p ovl/lower ovl/upper ovl/merge ovl/work ovl/mnt
+  sudo mount -t overlay overlay -o lowerdir=ovl/lower,upperdir=ovl/ 
+upper,workdir=ovl/work ovl/mnt
+  sudo mount ovl/mnt -o remount,ro
 
-> 
+And this returns:
 
+  mount: /tmp/ovl/mnt: fsconfig() failed: overlay: No changes allowed in 
+  reconfigure.
+        dmesg(1) may have more information after failed mount system call.
 
-Best regards,
-Krzysztof
+However, when I use mount like this:
+
+  sudo mount -t overlay overlay -o remount,ro ovl/mnt
+
+mount succeeds. Having a look at strace, I found out that the first 
+mount command tries to set lowerdir to "ovl/lower" again, which will to 
+return -EINVAL from ovl_parse_param():
+
+    fspick(3, "", FSPICK_NO_AUTOMOUNT|FSPICK_EMPTY_PATH) = 4
+    fsconfig(4, FSCONFIG_SET_STRING, "lowerdir", "/tmp/ovl/lower", 0) = 
+-1 EINVAL (Invalid argument)
+
+Now, the second mount command sets just the "ro" flag, which will return 
+after vfs_parse_sb_flag(), before getting to ovl_parse_param():
+
+    fspick(3, "", FSPICK_NO_AUTOMOUNT|FSPICK_EMPTY_PATH) = 4
+    fsconfig(4, FSCONFIG_SET_FLAG, "ro", NULL, 0) = 0
+
+After applying my patch and running the first mount command again, we 
+can set that this flag is set only after setting all the strings:
+
+    fsconfig(4, FSCONFIG_SET_STRING, "lowerdir", "/tmp/ovl/lower", 0) = 0
+    fsconfig(4, FSCONFIG_SET_STRING, "upperdir", "/tmp/ovl/upper", 0) = 0
+    fsconfig(4, FSCONFIG_SET_STRING, "workdir", "/tmp/ovl/work", 0) = 0
+    fsconfig(4, FSCONFIG_SET_STRING, "uuid", "on", 0) = 0
+    fsconfig(4, FSCONFIG_SET_FLAG, "ro", NULL, 0) = 0
+
+I understood that the patch that I proposed is wrong, and now I wonder 
+if the kernel needs to be fixed at all, or if the bug is how mount is 
+using fsconfig() in the first mount command?
+
+Thanks,
+	André
