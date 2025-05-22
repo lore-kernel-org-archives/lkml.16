@@ -1,326 +1,104 @@
-Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0016f401.pphosted.com (mx0a-0016f401.pphosted.com [67.231.148.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 374BD28851A;
-	Thu, 22 May 2025 10:06:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73329286D72;
+	Thu, 22 May 2025 10:06:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.148.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747908373; cv=none; b=VvhMBbGdSRaDvXc2cdhu+PqaWJqozZvD6QYH0datmcQliMmh45IzAXVUV8IMVcfWwwhPe1naV4pmtQbbb//tm0zItwXwfRtq5VqLet3NyulTviz4U8w9Re1KB3ZUMNzWxzOq+FywQpamVn18PCjltA3wUaA8k2KHR3CSIJxfhTk=
+	t=1747908406; cv=none; b=SYEx4DhbOCw/PdBn6dQ8uhQJPKDk2C/UW+lIJkY+9vDdumZ/D9NyW816GAHFWMdewpydbHlI1depNMfTDJ/ZnsRhuWegIYb3bM6/PbL53s61RNAFVy8TP5kpS1MrknPwqONhGqDDFLVr8itim2d1Iv21MK73MO2MyA4YniJXxQg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747908373; c=relaxed/simple;
-	bh=ChSZSu7hmIuT7effoaPAWyOvfP3O7T3z0s6eqm+Yze0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=SGw6E2osore00jDi9ApV09RXEGGkQPCWOGvFTSJ3syCVei1t9ZGsWBI/2xwDg8332zms2wV6uCZkX7jkMkd/SVbOX5HP7cQHluBee69/SpxFf1LA3OvD9GoqJliUZPj19jvnbsOezznnL43VaT0YGTRw4rn/JmtlVrTOfxoM+xQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GjYSAFc+; arc=none smtp.client-ip=209.85.210.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747908406; c=relaxed/simple;
+	bh=V+HOpa4ZLt1QROCir0lhwmjopu2L6RTP7KP9xQg1uIk=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=kSi2sSd+wPrzOsolpMVmkI+ujNiID5DGruwom7u9Ng07jQCYXNgXr8O3jlsunHe3Op61RvVzyQIE0j1BBfpTYkZ5WpibziP/Rahe8CTdWZCaV4onUckRvM+CoTTWEyCTlypiXimyOX0vWtklQK6bGl53LZvSB79U9BZ7r6/bGKM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=LyG5lhXZ; arc=none smtp.client-ip=67.231.148.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GjYSAFc+"
-Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-742c46611b6so6271424b3a.1;
-        Thu, 22 May 2025 03:06:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747908371; x=1748513171; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=sQDwXIeyZllCDvqZjDm6jpgTiDgSBksJI+A8OE2se5o=;
-        b=GjYSAFc+UZo6tOk8cbbTtCKHbgKtH0r9LmBiWcNvgklo/MMSlBKOTM8hv2QdqbTRGv
-         UOsqBc/8vNT9V3lRBmAhA+9L/ox+xyiQ+UKgGef+imHAdCj9nyYeD+AZcVBjcVEYu58O
-         yNzTUd+lzfylCyJvI0+5Lfod08tGofXAE1UL57iyXbvPRxImmyciGLykmHfLiA+mLl8d
-         V7e9tF2z78S8qrRkjXhovt7QcW8M293e37ScXx8tfFCLe1RXTtMqBYYlb1PbFVdjw2fR
-         RhEDLia3jNBCrqw9WRgqijqagfsXoOh02zvvWdQuyl0aC0xmP8dmXVOqpmeZhiRpUMCX
-         ZpwA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747908371; x=1748513171;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=sQDwXIeyZllCDvqZjDm6jpgTiDgSBksJI+A8OE2se5o=;
-        b=Mph3rwI94WTAke8wcTvgQ5bmTatjQM43EkxdUk/q5bXQNWFFDPMWqnH+kbBOVRSVcV
-         wtUHlPMhJn2HFFgZNgR5p5TPQ1hzgrxiwJQcO5/rJh4ZZGqCFNZiREIu7qEEwBFuyR6J
-         suoStiwS04hjEeZz67nswhviDafo4nR6uX1GFSQD71E1k6wTMkmmbDMnPi3MRVHfa1ND
-         pEe3NSsefQ0IrNbuGsglu+fP33865nkIwMiU0pW8yrRdAxnWSDjU11Zog3bfsBWBiTKh
-         hTSt6g6/uMGDolqzVwZ7KUk2n8UnoypQw8O8LVSlwK7rIfbK86DE57pi8OmJYOOnKaZl
-         GlTQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUMaDC9sKk4AzoNWl7eeUGsRrAOym2omYhT6e1xsaT9HkWWOuR7PWV2wmtx8CujfGJpKFNgVx410m9v@vger.kernel.org, AJvYcCW6boSxdZWfkpd20woLG0deA7BUWNwq6K/UXDLepnNpPoP2rm2Rpu9HNvUzlQWZITmLvpy/kP6fz+GdUKRk@vger.kernel.org, AJvYcCWjU4pI1IzCkmsmcLasa1tiqB4x2xpIM2FG0liDTOTKG92AA7MupgHajVXEfIdihAnEvxsmQNEBEPb2vaUoYA==@vger.kernel.org
-X-Gm-Message-State: AOJu0YyRWNZz0Yqwrc4j28mdIzIMluY5yvxWjna6N2k9lessysVHG3wH
-	5O8X+UQTcmM8GOX25h/iBtBNvHktwaRsj+7jbwhiXfpPo1KYFh6gnx41
-X-Gm-Gg: ASbGncsqE1WdeP3E1uGd9WPFLLIoljVxfkP7liOjbG66AGRbT21R91nePWR6lvjBmY/
-	HNjd2SOhU+cOBq9i2xb0aAoWoRW6E6zTiUdbSozhW1ZK8z4eJ1N44hrsChh/20CO7tCCj84tFe+
-	tHX54VH6at4kNkMWmBysWVQVInPCiILxazz5eCOnA8IFByoJb42IVG2JXmuzoDqRYQN2EtS+joN
-	Cq+pqJKfpEV6NZeAwmRT7R3jEpPNuvyRs8Bq4KDDmIEw1WzEscG1qcq3Pj5w/lWHKWYvK5U+2bM
-	iVS9TpP0LnZSWyk8XTA0M+9/BS6pxgqcUtqNXua3zi7bi7xmbw==
-X-Google-Smtp-Source: AGHT+IFp5E/M6ee6WS/dW7TR2m3N73IUBx2OG6ikeo265Pnb0nvBVnRojA/WpBa5iCi45szOmeU6KA==
-X-Received: by 2002:a05:6a20:9c97:b0:1f5:5614:18d3 with SMTP id adf61e73a8af0-216fb192731mr37651346637.8.1747908371349;
-        Thu, 22 May 2025 03:06:11 -0700 (PDT)
-Received: from nuvole.. ([144.202.86.13])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-742a986d8d7sm11237888b3a.130.2025.05.22.03.06.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 May 2025 03:06:10 -0700 (PDT)
-From: Pengyu Luo <mitltlatltl@gmail.com>
-To: neil.armstrong@linaro.org
-Cc: andersson@kernel.org,
-	conor+dt@kernel.org,
-	devicetree@vger.kernel.org,
-	konradybcio@kernel.org,
-	krzk+dt@kernel.org,
-	linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	mitltlatltl@gmail.com,
-	robh@kernel.org
-Subject: Re: [PATCH 2/2] arm64: dts: qcom: sm8650: Add support for Oneplus Pad Pro (caihong)
-Date: Thu, 22 May 2025 18:05:53 +0800
-Message-ID: <20250522100605.914443-1-mitltlatltl@gmail.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <11329f37-e410-4912-84cc-d5bcc01e6715@linaro.org>
-References: <11329f37-e410-4912-84cc-d5bcc01e6715@linaro.org>
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="LyG5lhXZ"
+Received: from pps.filterd (m0431384.ppops.net [127.0.0.1])
+	by mx0a-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54LM5XFp008367;
+	Thu, 22 May 2025 03:06:35 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=pfpt0220; bh=1oY3A2J8MYXiGNyA+QlmBsr
+	Ldc2IdL7dWZwQfg2v234=; b=LyG5lhXZPgjAcftpgyGPXVFgEFWsDyUMUHV8nBa
+	3xdpqCh5PQKShi0PggKbjvH7nHJx/IMQmze0nJ0FjEEwdaLoNiktmGLNpzucoiOS
+	mSc+MifdE8I4BpesE7G9dkMaYRu6HpNHUmf1ArJgl65WX6aqYsEMlEk3P8j3DV+q
+	rOJZFAD5bJ7ICldHlu1S3LaObgVJaj7H5Vg5E6XmEGIZ4Atmq4W+Ls0jTgTJ7ZCx
+	HwfK0bVcMX83C+1FWrUlrgnBIep6thIdbsFurc0zUxixRbQ/uwU4O/Yk5VXBMfAt
+	Qm6+0YD7ogLRE/+DjVoLrCUISCAjqfgAcXMOyEp4NEV0hHg==
+Received: from dc6wp-exch02.marvell.com ([4.21.29.225])
+	by mx0a-0016f401.pphosted.com (PPS) with ESMTPS id 46sqap95m5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 22 May 2025 03:06:34 -0700 (PDT)
+Received: from DC6WP-EXCH02.marvell.com (10.76.176.209) by
+ DC6WP-EXCH02.marvell.com (10.76.176.209) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.4; Thu, 22 May 2025 03:06:33 -0700
+Received: from maili.marvell.com (10.69.176.80) by DC6WP-EXCH02.marvell.com
+ (10.76.176.209) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
+ Transport; Thu, 22 May 2025 03:06:33 -0700
+Received: from bharat-OptiPlex-Tower-Plus-7020.. (unknown [10.28.34.254])
+	by maili.marvell.com (Postfix) with ESMTP id E134D3F7083;
+	Thu, 22 May 2025 03:06:29 -0700 (PDT)
+From: Bharat Bhushan <bbhushan2@marvell.com>
+To: <bbrezillon@kernel.org>, <schalla@marvell.com>,
+        <herbert@gondor.apana.org.au>, <davem@davemloft.net>,
+        <giovanni.cabiddu@intel.com>, <linux@treblig.org>,
+        <bharatb.linux@gmail.com>, <linux-crypto@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC: Bharat Bhushan <bbhushan2@marvell.com>
+Subject: [PATCH 0/4 v4] crypto: octeontx2: Fix hang and address alignment issues
+Date: Thu, 22 May 2025 15:36:23 +0530
+Message-ID: <20250522100627.175210-1-bbhushan2@marvell.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-GUID: 56QjARDuFOCbNE-2Yc3azTlz43rYs7bE
+X-Authority-Analysis: v=2.4 cv=HfgUTjE8 c=1 sm=1 tr=0 ts=682ef72a cx=c_pps a=gIfcoYsirJbf48DBMSPrZA==:117 a=gIfcoYsirJbf48DBMSPrZA==:17 a=dt9VzEwgFbYA:10 a=31lhjb_RWtGG_5pqcG4A:9
+X-Proofpoint-ORIG-GUID: 56QjARDuFOCbNE-2Yc3azTlz43rYs7bE
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIyMDEwMSBTYWx0ZWRfX+ls7ufzMKr3z f8pIslddte1K4vKA+ZcwoXWVvtIc1N88M0/2kFKwEfXVh1xDcH0G/VfFYMGobYKF7RTtZEq3zG7 PUUx8DtQ3YNuJRjWW/gbChmSlTD2qqdf9MVhXmBFKV0UIerybHnxX09UG3ykvrvnOyPdJa1bBUm
+ TrorIxqkpVOK6+m3b0QeSOE5q3CTHehFz1aONtMH1jAyCH1roonsFUC5JiyB5RrEDMkKanxu1iV DaU1aDMyAaDgsRLaGzMRErVMwU0jmOFwUjZIULXe20GRuuMdYpkpuR9AH1JZxCSyn0opsDQZS66 xr8XWbrfpTCCglMgKRb9pbiTPv+PUe+kNTZvplmZwvteAPRmN5V+Ya8lgStibHM96SgoeMo6Ztf
+ +rgNp6EdigY0pD9BWcSecH/6Xd72v9w/S/3CnrEHQG9BFiwi+JUH/p9SPjUJgGZH6LWcNLJd
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-22_05,2025-05-22_01,2025-03-28_01
 
-On Wed, May 21, 2025 at 8:49 PM <neil.armstrong@linaro.org> wrote:
->
-> Hi,
->
-> On 20/05/2025 18:42, Pengyu Luo wrote:
-> > The OnePlus Pad Pro is an Android tablet based on the Qualcomm SM8650
-> > platform. Its device codename is "caihong". This patch adds an initial
-> > devicetree for basic functionality.
-> >
-> > Currently working components include:
-> > - Backlight
-> > - Bluetooth
-> > - Battery charging (up to 5v 0.5a) & reporting via pmic-glink (There
-> > are many unknown notifications)
-> > - Display panel ([1])
-> > - Keyboard (via BT)
-> > - Power key & volume keys
-> > - Touchscreen & stylus ([2])
-> > - USB Type-c port
-> > - UFS storage
-> > - Wi-Fi
-> >
-> > The following components are currently non-functional:
-> > - Audio
-> > - Cameras
-> > - Charging pump (dual sc8547)
-> > - Keyboard (via pogo pin)
-> > - Stylus wireless charger (cps8601)
-> > - UCSI over GLINK (PPM init fails)
->
-> Are you sure the QMP PHY and the dwc3 probes ? if one is missing, UCSI PPM init will timeout because it doesn't find the connectors muxes & otg devices.
->
+First patch of the series fixes possible infinite loop.
 
-I am pretty sure.
-ucsi_glink.pmic_glink_ucsi pmic_glink.ucsi.0: PPM init failed, stop trying
+Remaining three patches fixes address alignment issue observed
+after "9382bc44b5f5 arm64: allow kmalloc() caches aligned to the
+       smaller cache_line_size()"
 
-> >
-> > [1]: The panel is a dual-DSI, dual-DSC display that requires setting
-> >       'slice_per_pkt = 2' in the DPU configuration. The panel driver
-> >       will be submitted separately later.
-> > [2]: Touchscreen/stylus driver available at:
-> >       https://github.com/OnePlusOSS/android_kernel_modules_and_devicetree_oneplus_sm8650/blob/oneplus/sm8650_v_15.0.0_pad_pro/vendor/oplus/kernel/touchpanel/oplus_touchscreen_v2/Novatek/NT36532_noflash/nvt_drivers_nt36532_noflash.c
-> >       The downstream driver has been ported and tested locally, but
-> >       requires cleanup, it may be submitted separately later.
-> >
-> > To test this device tree, follow these minimal steps:
-> >
-> > 1. Build the kernel. Ensure that all `compatible` strings used in
-> > this device tree (or any included dtsi files) have corresponding
-> > drivers enabled in the kernel configuration.
-> >
-> > 2. Creating boot image
-> >
-> > Merge the kernel and device tree blob:
-> >
-> > cat arch/arm64/boot/Image.gz arch/arm64/boot/dts/qcom/sm8650-oneplus-\
-> > caihong.dtb > kernel-dtb
-> >
-> > Then create a boot.img:
-> >
-> > mkbootimg \
-> > --base 0x00000000 \
-> > --kernel_offset 0x00008000 \
-> > --ramdisk_offset 0x01000000 \
-> > --second_offset 0x00f00000 \
-> > --tags_offset 0x00000100 \
-> > --pagesize 4096 \
-> > --header_version 4 \
-> > --kernel kernel-dtb \
-> > --ramdisk some_ramdisk \
-> > --cmdline "some comeline" \
-> > -o mainline-boot.img
->
-> Isn't image version 2 working ?
->
+First 3 patches applies to Linux version 6.5 onwards.
+Patch-4 applies to Linux version 6.8 onwards
 
-Yes, '--header_version 2' works, I followed the version of stock boot
-image. If there is a rule to follow?
+v3->v4:
+ - Again fixed memory size calculation as per review comment
 
-> >
-> > 3. Flashing the boot image
-> >
-> > fastboot --disable-verity --disable-verification flash vbmeta vbmeta.img
-> > fastboot erase dtbo
-> > fastboot flash boot mainline-boot.img
-> >
-> > See also https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=39c5963
-> >
-> > Signed-off-by: Pengyu Luo <mitltlatltl@gmail.com>
-> > ---
-> >   .../boot/dts/qcom/sm8650-oneplus-caihong.dts  | 960 ++++++++++++++++++
-> >   1 file changed, 960 insertions(+)
-> >   create mode 100644 arch/arm64/boot/dts/qcom/sm8650-oneplus-caihong.dts
-> >
-> > diff --git a/arch/arm64/boot/dts/qcom/sm8650-oneplus-caihong.dts b/arch/arm64/boot/dts/qcom/sm8650-oneplus-caihong.dts
-> > new file mode 100644
-> > index 0000000000..93aed47e10
-> > --- /dev/null
-> > +++ b/arch/arm64/boot/dts/qcom/sm8650-oneplus-caihong.dts
-> > @@ -0,0 +1,960 @@
-> > +// SPDX-License-Identifier: BSD-3-Clause
-> > +/*
-> > + * Based on Qualcomm Reference Device DeviceTree
-> > + *
-> > + * Copyright (c) 2023, Linaro Limited
-> > + * Copyright (c) 2025, Pengyu Luo <mitltlatltl@gmail.com>
-> > + */
-> > +
-> > +/dts-v1/;
-> > +
-> > +#include <dt-bindings/regulator/qcom,rpmh-regulator.h>
-> > +#include "sm8650.dtsi"
-> > +#include "pm8550.dtsi"
-> > +#include "pm8550b.dtsi"
-> > +#define PMK8550VE_SID 8
-> > +#include "pm8550ve.dtsi"
-> > +#include "pm8550vs.dtsi"
-> > +#include "pmk8550.dtsi"
-> > +
-> > +/delete-node/ &adspslpi_mem;
-> > +/delete-node/ &hwfence_shbuf;
-> > +
-> > +/* No Modem */
-> > +/delete-node/ &mpss_mem;
-> > +/delete-node/ &q6_mpss_dtb_mem;
-> > +/delete-node/ &mpss_dsm_mem;
-> > +/delete-node/ &mpss_dsm_mem_2;
-> > +/delete-node/ &qlink_logging_mem;
-> > +/delete-node/ &remoteproc_mpss;
-> > +
-> > +/* Unused now, and reusable, taking 144 MiB back */
-> > +/delete-node/ &trust_ui_vm_mem;
-> > +/delete-node/ &oem_vm_mem;
-> > +/delete-node/ &qdss_mem;
->
-> Are you sure QTEE won't use this ?
->
+v2->v3:
+ - Align DMA memory to ARCH_DMA_MINALIGN as that is mapped as
+   bidirectional
 
-I am not sure, but these two VM nodes are never referred by any device
-in the downstream DT. QDSS and coresight things are unnecessary on the
-retail devices.
+v1->v2:
+ - Fixed memory padding size calculation as per review comment
 
-> > +
-> > +/ {
-> > +     model = "Oneplus Pad Pro";
-> > +     compatible = "oneplus,caihong", "qcom,sm8650";
-> > +     chassis-type = "tablet";
-> > +
-> > +     aliases {
-> > +             serial0 = &uart14;
-> > +     };
-> > +
-> > +     bl_avdd_5p9: bl-avdd-regulator {
-> > +             compatible = "regulator-fixed";
-> > +             regulator-name = "bl_avdd_5p9";
-> > +             regulator-min-microvolt = <5900000>;
-> > +             regulator-max-microvolt = <5900000>;
-> > +             gpio = <&tlmm 90 GPIO_ACTIVE_HIGH>;
-> > +             enable-active-high;
-> > +     };
-> > +
-> > +     bl_avee_5p9: bl-avee-regulator {
-> > +             compatible = "regulator-fixed";
-> > +             regulator-name = "bl_avee_5p9";
-> > +             regulator-min-microvolt = <5900000>;
-> > +             regulator-max-microvolt = <5900000>;
-> > +             gpio = <&tlmm 91 GPIO_ACTIVE_HIGH>;
-> > +             enable-active-high;
-> > +     };
-> > +
-> > +     gpio-keys {
-> > +             compatible = "gpio-keys";
-> > +
-> > +             pinctrl-0 = <&volume_up_n>;
-> > +             pinctrl-names = "default";
-> > +
-> > +             key-volume-up {
-> > +                     label = "Volume Up";
-> > +                     linux,code = <KEY_VOLUMEDOWN>;
-> > +                     gpios = <&pm8550_gpios 6 GPIO_ACTIVE_LOW>;
-> > +                     debounce-interval = <15>;
-> > +                     linux,can-disable;
-> > +                     wakeup-source;
-> > +             };
-> > +     };
-> > +
-> > +     pmic-glink {
-> > +             compatible = "qcom,sm8650-pmic-glink",
-> > +                          "qcom,sm8550-pmic-glink",
-> > +                          "qcom,pmic-glink";
-> > +             #address-cells = <1>;
-> > +             #size-cells = <0>;
-> > +             orientation-gpios = <&tlmm 29 GPIO_ACTIVE_HIGH>;
-> > +
-> > +             connector@0 {
-> > +                     compatible = "usb-c-connector";
-> > +                     reg = <0>;
-> > +
-> > +                     power-role = "dual";
-> > +                     data-role = "dual";
-> > +
-> > +                     ports {
-> > +                             #address-cells = <1>;
-> > +                             #size-cells = <0>;
-> > +
-> > +                             port@0 {
-> > +                                     reg = <0>;
-> > +
-> > +                                     pmic_glink_hs_in: endpoint {
-> > +                                             remote-endpoint = <&usb_1_dwc3_hs>;
-> > +                                     };
-> > +                             };
-> > +
-> > +                             port@1 {
-> > +                                     reg = <1>;
-> > +
-> > +                                     pmic_glink_ss_in: endpoint {
-> > +                                             remote-endpoint = <&usb_dp_qmpphy_out>;
-> > +                                     };
-> > +                             };
->
-> No Altmode display ? no SBU mux nor redrivers ?
->
+Bharat Bhushan (4):
+  crypto: octeontx2: add timeout for load_fvc completion poll
+  crypto: octeontx2: Fix address alignment issue on ucode loading
+  crypto: octeontx2: Fix address alignment on CN10K A0/A1 and OcteonTX2
+  crypto: octeontx2: Fix address alignment on CN10KB and CN10KA-B0
 
-There should be a wcd939x_i2c@e, it will be added after I figure out
-sound things. Actually, I added it locally, it does not work. Since
-its name is wcd939x, it made me feel it is for usb dac handling only.
-I never checked it carefully. But you mentioned this, I just checked
-downstream bindings, it says
+ .../marvell/octeontx2/otx2_cpt_reqmgr.h       | 125 +++++++++++++-----
+ .../marvell/octeontx2/otx2_cptpf_ucode.c      |  51 ++++---
+ 2 files changed, 130 insertions(+), 46 deletions(-)
 
-QTI WCD9395 Device
+-- 
+2.34.1
 
-This device is used for switching orientation of USB-C analog
-and for display. It uses I2C communication to set the registers
-to configure the switches inside the WCD9395 chip to change
-orientation and also to set SBU1/SBU2 connections of USB-C.
-
-Thanks. I will check it again.
-
-Best wishes,
-Pengyu
