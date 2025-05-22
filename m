@@ -1,122 +1,117 @@
-Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C96B288C9E
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 08:58:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 584A2281531;
+	Thu, 22 May 2025 08:59:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747904324; cv=none; b=CYBa4N0W1WqfJSR0DxtP+qAOKVSqVNdjCh2QgJduvdvSNtQJ5P1/mLWNNnj4DhvlNNeMPXTPfzRL6+6gQeY7mcoWIgk0U6qLHuW0OjjyLv5+ZZWHN3s+9Nm7YtN7lyfzCs+/quE+ii+B/bBmu40eveAO2TNJgA25Vz2zEo+dtJo=
+	t=1747904353; cv=none; b=eE1JDRLzi7cZYjJj8sbOXxOwBnjU1gGiL4fu/nEPF7O+UQA5kB6TyWIgWk5KGav99sKc4Jo4VMM+VBhU2VSgYUNHQlxr7BM7gzWKNNyhRCMTF4Ae6lemEqtWW8ve5dJmUqWiEdTXIcgYI1YwfcJ0/o4Eq990IsrYo8n0CLWaVtY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747904324; c=relaxed/simple;
-	bh=rIgTX22Upf+QtLihqTghTi+nnAb/MFR37PeAhk+wQ5M=;
+	s=arc-20240116; t=1747904353; c=relaxed/simple;
+	bh=F+UaMKsaTaM23XM2k8ATYaf6ORfK+hGHKXw+SidOvP0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dECK0r5qSysD/Wd8r7SmSgE/wtrmLC6W/lleAX2u5ehzA08jHtr9mtj1H9izbCEarR8/HfCkYTcc4pi/1xw2fN6HR3vonsDDxsNOrCGu64j+ZNjGLnnvHS9zpLd/Er6fzApbAhboXj2Xw5hKkU6BYVrNI/AqoeDpnoTrU89ZFDQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=X+2B+9gL; arc=none smtp.client-ip=194.117.254.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=kaxJaPo0MSjVIdZluGzEs4uV4Unw7iBgGngsb9rfCdL00MVx3sF7uDRowbAoK33vgs7pu8yArElpaHKj6ZG09e2KyhqE2vNydgYGmLF/n0FAM4qOJbeLz5fSD14vt5aTdpIYfLE3iwmRelEsA1RVNRU9/VkV7qGRnBpVp9gyyS4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T7/ESCQo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="X+2B+9gL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	sang-engineering.com; h=date:from:to:cc:subject:message-id
-	:references:mime-version:content-type:in-reply-to; s=k1; bh=tHPW
-	Jsdh9LsI67avamJkFkbr3biAag3pxIaMylejiMY=; b=X+2B+9gLkEu6NtgKS/E8
-	y8Rtu5zFd19M6ddtIzvHt0tXGn/O7pK7GkcLt/L+IxDBl5DbSyPH45O4/cMu/ChX
-	nz3sTYyh4CerMVzB7EJa7yk9Y03LauOGj3WmS6cPgzwd1NgBnkzWATPXUDOfSOwS
-	hQKdAzYcQTvPdfNNWi6umLl0xBf+ll3acfH45pjN3krXbaAbOZRsOQ2DynahqSOR
-	MaWJDbc+Jc6ZCQEvzc55MliBElK/lBOb2PseV34XCq42rt6hnsmAweYNWHtL7oab
-	w1gn+8oF0tvS3XD9iVS5LIS9Q+tok/1aGG5+NQan+BnYGIKkWMtmV3B2IMV3KKDN
-	Pg==
-Received: (qmail 3583304 invoked from network); 22 May 2025 10:58:39 +0200
-Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 22 May 2025 10:58:39 +0200
-X-UD-Smtp-Session: l3s3148p1@/OISsLU1lM4gAwDPXwj7ADHm2wGe7qss
-Date: Thu, 22 May 2025 10:58:39 +0200
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
-To: Cosmin Tanislav <demonsingur@gmail.com>
-Cc: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Romain Gantois <romain.gantois@bootlin.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-media@vger.kernel.org
-Subject: Re: [PATCH v5 8/9] i2c: atr: add static flag
-Message-ID: <aC7nPzu3TAtqMuiy@shikoro>
-Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Cosmin Tanislav <demonsingur@gmail.com>,
-	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Romain Gantois <romain.gantois@bootlin.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-media@vger.kernel.org
-References: <20250507121917.2364416-1-demonsingur@gmail.com>
- <20250507121917.2364416-9-demonsingur@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T7/ESCQo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43286C4CEE4;
+	Thu, 22 May 2025 08:59:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747904352;
+	bh=F+UaMKsaTaM23XM2k8ATYaf6ORfK+hGHKXw+SidOvP0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=T7/ESCQoDO8xpAYpb+TppNiGZuXD5kGBMkqEXzyjHKG58NZQ51X20EicgGsjmDVWf
+	 k4w9RLdbhirJCnP+M0h925cuPMimyMsxAWwOoiOJgNoctuAh0Dhxbt9qERxyNJionC
+	 PRiYKhMolbpRhCrnlNpWWy8fRRc8nRJT5ABEjOmKP+buMPt4qLkzijSFAiBXOCqiDP
+	 E9QzVu+v82JG7fylZCh6T5qq6Rqf8BPjIBhXB+2qGmJHyUiE6QHSjQDMkCAyyivlbq
+	 c9PraU0EWUzPy9MM4Dsr1b4BaQVdzc+qv8QHGxeFFfHW+pXEzxI803IAPDeGvO4LhV
+	 wFgOe8d2pMqGg==
+Date: Thu, 22 May 2025 09:59:06 +0100
+From: Lee Jones <lee@kernel.org>
+To: sven@svenpeter.dev
+Cc: Janne Grunau <j@jannau.net>, Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+	Neal Gompa <neal@gompa.dev>, Hector Martin <marcan@marcan.st>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Sebastian Reichel <sre@kernel.org>, Marc Zyngier <maz@kernel.org>,
+	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
+	asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
+Subject: Re: [PATCH v6 05/10] mfd: Add Apple Silicon System Management
+ Controller
+Message-ID: <20250522085906.GA1199143@google.com>
+References: <20250515-smc-6-15-v6-0-c47b1ef4b0ae@svenpeter.dev>
+ <20250515-smc-6-15-v6-5-c47b1ef4b0ae@svenpeter.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="TaY6Pwvb1erV6YQH"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250507121917.2364416-9-demonsingur@gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250515-smc-6-15-v6-5-c47b1ef4b0ae@svenpeter.dev>
 
+On Thu, 15 May 2025, Sven Peter via B4 Relay wrote:
 
---TaY6Pwvb1erV6YQH
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> From: Sven Peter <sven@svenpeter.dev>
+> 
+> The System Management Controller (SMC) on Apple Silicon machines is a
+> piece of hardware that exposes various functionalities such as
+> temperature sensors, voltage/power meters, shutdown/reboot handling,
+> GPIOs and more.
+> 
+> Communication happens via a shared mailbox using the RTKit protocol
+> which is also used for other co-processors. The SMC protocol then allows
+> reading and writing many different keys which implement the various
+> features. The MFD core device handles this protocol and exposes it
+> to the sub-devices.
+> 
+> Some of the sub-devices are potentially also useful on pre-M1 Apple
+> machines and support for SMCs on these machines can be added at a later
+> time.
+> 
+> Co-developed-by: Hector Martin <marcan@marcan.st>
+> Signed-off-by: Hector Martin <marcan@marcan.st>
+> Reviewed-by: Alyssa Rosenzweig <alyssa@rosenzweig.io>
+> Reviewed-by: Neal Gompa <neal@gompa.dev>
+> Signed-off-by: Sven Peter <sven@svenpeter.dev>
+> ---
+>  MAINTAINERS                |   2 +
+>  drivers/mfd/Kconfig        |  18 ++
+>  drivers/mfd/Makefile       |   1 +
+>  drivers/mfd/macsmc.c       | 498 +++++++++++++++++++++++++++++++++++++++++++++
+>  include/linux/mfd/macsmc.h | 279 +++++++++++++++++++++++++
+>  5 files changed, 798 insertions(+)
 
-On Wed, May 07, 2025 at 03:19:14PM +0300, Cosmin Tanislav wrote:
-> Some I2C ATRs do not support dynamic remapping, only static mapping
-> of direct children.
->=20
-> Mappings will only be added or removed as a result of devices being
-> added or removed from a child bus.
->=20
-> The ATR pool will have to be big enough to accomodate all devices
+Arghhh, so close!
 
-    CHECKPATCH
-WARNING: 'accomodate' may be misspelled - perhaps 'accommodate'?
-#12:=20
-The ATR pool will have to be big enough to accomodate all devices
-                                           ^^^^^^^^^^
+[...]
 
-WARNING: 'accomodate' may be misspelled - perhaps 'accommodate'?
-#134: FILE: include/linux/i2c-atr.h:27:
-+ *                    The ATR pool will have to be big enough to accomodat=
-e all
-                                                                  ^^^^^^^^^^
-total: 0 errors, 2 warnings, 0 checks, 105 lines checked
+> +static struct platform_driver apple_smc_driver = {
+> +	.driver = {
+> +		.name = "mfd-macsmc",
 
-I fixed it for you this time.
+Drop the 'mfd-' part please.
 
-Also, please make you sure you have a To: recipient in the mail header
-next time.
+> +		.of_match_table = apple_smc_of_match,
+> +	},
+> +	.probe = apple_smc_probe,
+> +};
+> +module_platform_driver(apple_smc_driver);
+> +
+> +MODULE_AUTHOR("Hector Martin <marcan@marcan.st>");
+> +MODULE_AUTHOR("Sven Peter <sven@svenpeter.dev>");
+> +MODULE_LICENSE("Dual MIT/GPL");
+> +MODULE_DESCRIPTION("Apple SMC driver");
 
+I plan to apply this set after the merge-window.
 
---TaY6Pwvb1erV6YQH
-Content-Type: application/pgp-signature; name="signature.asc"
+What else are you waiting on?
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmgu5z8ACgkQFA3kzBSg
-KbYqDg/8CdkAV2akb6oEEHJ8ZyDCurbMvK+Ok1jnhxG0K9wHuNSciEKTSW0O+YHA
-1RRRv5HLi7KCr788gsMJovtm/tDTfhxp9W7V2GEdn86jKyvVD/qbuZ6W6btuOjD2
-z07QEv38KMkuCuzRah42kmE8PfVW1nLBjak/V6rmYxydOR65+ohH+PNyXyZsgGyE
-JBT5Uhnc6hfJpNF7oY4AczYlIdiEYeqbyJ33tPcqFLGDVBWOicoI6gTgzrFrvNSZ
-UtmnrNcEXXPojC6OJwq8RYg7nBSUDmnuAaa0inwSWGW/ce5kxT4kVmAsYABtDDpB
-jGrATSoEG19bWxzyFG52xFl+uI4rOEF/oOd2dkqrLqvkENEuPEdNgDqo4FVj0EO+
-YsEoX60++i/Ee/xCV/QwPgET7vB9Ka8bV4/3Qdal8ebP5ZG1VrIus+TSLiU9qDC5
-FG/k2vyCvkrFVjY1uboY6x/uH9s+aUNNy0OK5YBpXJWHL29n1i3GxsHEKINWtubO
-EjWPSwNltJZMwLGyAMswdQmydfzRcVEOEB0E2iJothuJ5atxWnQuHS1fO0pSXS9J
-BUHZQcNaqlnifvkFjuDbIn3SdaHAlO4UGpFiAd0SZwucWHU0cJikL/zTkeAA07lO
-A8sJlOVDlUd8lLxSQz1X3JgG66nZtNOieHUG7CmSEZmwqsL8/lc=
-=dTD8
------END PGP SIGNATURE-----
-
---TaY6Pwvb1erV6YQH--
+-- 
+Lee Jones [李琼斯]
