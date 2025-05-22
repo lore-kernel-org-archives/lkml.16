@@ -1,125 +1,139 @@
-Received: from out-181.mta1.migadu.com (out-181.mta1.migadu.com [95.215.58.181])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 135FBF9DA
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 02:32:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 879FC1172A;
+	Thu, 22 May 2025 02:35:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747881126; cv=none; b=HJChCpXRSuWEgz8bVEeLJN6Lws5J1xDIcMbPZSIQTmK1tCsdnMBg3wYHtu2zukMPlXjvtwUgacHpj9YoMIR7vM0kp4mZoQxbo67o+eMjGJaKSyCNJ1tMY4iXDU+tBN1YSvxWDY5DhOZnh2ODQaLVLMA9BoijJTbMx6Dw75GsNI0=
+	t=1747881330; cv=none; b=uO7bS83gk4dihWMkk1MRYMut9aUd4vZpHU//8EZSktYML9IXrtUGjQIwn3azSEyZy854nRX8uOdxsnutVeAhvu5i8Wzvb4pbPNQPyX359OYGIEFIMOdr2MzG1pIS2D+rrel+b1YgNDvnBcP/wGliDQHiyEovrW1tbdVJ6uS7a0c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747881126; c=relaxed/simple;
-	bh=CIkfuXr5e/FFnQf8w7cXy456Pqrq9wN5w94SM65gMCM=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=odgbCzt07m855Z7mQ4H24phKFSDGhv+pPXwpkS7TE29zFnsW6f3LLmU3JlVl37bxR72TSr2ySrfaGIXgYJFc8LImWHQCWp0gkb/Rv4QVNUr0fnSCctjdKn6szNr+bZM6CgNgs/YyD6O/5StQztnLEXdyv7idPaIIhQ4WMg88oTY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=XorGxnXs; arc=none smtp.client-ip=95.215.58.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="XorGxnXs"
-Content-Type: text/plain;
-	charset=us-ascii
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1747881120;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=v7OyzNFi4koovf7Ot55c4ptctb/+0JCIucwjXRDLPVY=;
-	b=XorGxnXsae3VA5C2XCc0b1ahJ4y3yZPrGL8iFM61ZfF/bFE72dsoWm1KBWgv8HcBWbInlm
-	Tc35CcCFHdTz7gf3QP37s+aiEutg8fLTRFzwXKgRgckoYYwJ0TnjCDKVEzb4G0cmVdp+ZQ
-	zncFIK9i1r3a1eelRhzVGRbTthLmg2Y=
+	s=arc-20240116; t=1747881330; c=relaxed/simple;
+	bh=ttUHZ2SO5aE6GFFXpMt/n/cJfl6ftCJJVoxXZ5mH3ng=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=iJWoF02Kz2wejHLiCzEJ90OlZFf8sQ377OWmJitRzXUYysueas2ZDcT+7hn5q2hLjg3i1WImaRxK1LLnYl1iA3Zi+Mg1tJtMypoA9UWi8rlkBR9BOLN0/dVbCBPxvn0PDj56KLEPmDgy2S2zFzgJqSrkvPEtQgpCI6rsZHbQKdM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: 68ae149236b511f0b29709d653e92f7d-20250522
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.45,REQID:615e2428-35b8-4b14-9f8b-321c3f46725e,IP:0,U
+	RL:0,TC:0,Content:-25,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
+	N:release,TS:-25
+X-CID-META: VersionHash:6493067,CLOUDID:6ce6c8b6e70f0946646e63f75385181d,BulkI
+	D:nil,BulkQuantity:0,Recheck:0,SF:81|82|102,TC:nil,Content:0|50,EDM:-3,IP:
+	nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,L
+	ES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-UUID: 68ae149236b511f0b29709d653e92f7d-20250522
+Received: from mail.kylinos.cn [(10.44.16.175)] by mailgw.kylinos.cn
+	(envelope-from <zhangzihuan@kylinos.cn>)
+	(Generic MTA)
+	with ESMTP id 2001903690; Thu, 22 May 2025 10:35:22 +0800
+Received: from mail.kylinos.cn (localhost [127.0.0.1])
+	by mail.kylinos.cn (NSMail) with SMTP id 3AC23E003519;
+	Thu, 22 May 2025 10:17:07 +0800 (CST)
+X-ns-mid: postfix-682E8923-87613444
+Received: from localhost.localdomain (unknown [172.25.120.24])
+	by mail.kylinos.cn (NSMail) with ESMTPA id EAE2BE003519;
+	Thu, 22 May 2025 10:17:05 +0800 (CST)
+From: Zihuan Zhang <zhangzihuan@kylinos.cn>
+To: rafael@kernel.org,
+	len.brown@intel.com,
+	pavel@kernel.org
+Cc: linux-pm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	akpm@linux-foundation.org,
+	tzungbi@kernel.org,
+	a.fatoum@pengutronix.de,
+	jani.nikula@intel.com,
+	joel.granados@kernel.org,
+	paulmck@kernel.org,
+	zhangguopeng@kylinos.cn,
+	linux@weissschuh.net,
+	Zihuan Zhang <zhangzihuan@kylinos.cn>
+Subject: [PATCH v2 2/3] PM / Sleep:  Introduce try_lock_system_sleep()
+Date: Thu, 22 May 2025 10:16:48 +0800
+Message-Id: <20250522021649.55228-3-zhangzihuan@kylinos.cn>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20250522021649.55228-1-zhangzihuan@kylinos.cn>
+References: <20250522021649.55228-1-zhangzihuan@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.500.181.1.5\))
-Subject: Re: [PATCH RFC 27/28] mm: memcontrol: eliminate the problem of dying
- memory cgroup for LRU folios
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Muchun Song <muchun.song@linux.dev>
-In-Reply-To: <aCxnFg0VSpd7g_Ju@hyeyoo>
-Date: Thu, 22 May 2025 10:31:20 +0800
-Cc: Muchun Song <songmuchun@bytedance.com>,
- hannes@cmpxchg.org,
- mhocko@kernel.org,
- roman.gushchin@linux.dev,
- shakeel.butt@linux.dev,
- akpm@linux-foundation.org,
- david@fromorbit.com,
- zhengqi.arch@bytedance.com,
- yosry.ahmed@linux.dev,
- nphamcs@gmail.com,
- chengming.zhou@linux.dev,
- linux-kernel@vger.kernel.org,
- cgroups@vger.kernel.org,
- linux-mm@kvack.org,
- hamzamahfooz@linux.microsoft.com,
- apais@linux.microsoft.com
-Content-Transfer-Encoding: 7bit
-Message-Id: <3782D28E-B0F0-4CC7-98A6-27E443A92730@linux.dev>
-References: <20250415024532.26632-1-songmuchun@bytedance.com>
- <20250415024532.26632-28-songmuchun@bytedance.com> <aCxnFg0VSpd7g_Ju@hyeyoo>
-To: Harry Yoo <harry.yoo@oracle.com>
-X-Migadu-Flow: FLOW_OUT
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
 
+The suspend subsystem uses system_transition_mutex to serialize
+suspend and hibernate transitions. The existing lock_system_sleep()
+wrapper both acquires the mutex and sets PF_NOFREEZE on the current
+task to avoid it being frozen during the suspend process.
 
+However, in some places such as enter_state(), mutex_trylock() is
+used instead. This path currently lacks PF_NOFREEZE protection.
 
-> On May 20, 2025, at 19:27, Harry Yoo <harry.yoo@oracle.com> wrote:
-> 
-> On Tue, Apr 15, 2025 at 10:45:31AM +0800, Muchun Song wrote:
->> Pagecache pages are charged at allocation time and hold a reference
->> to the original memory cgroup until reclaimed. Depending on memory
->> pressure, page sharing patterns between different cgroups and cgroup
->> creation/destruction rates, many dying memory cgroups can be pinned
->> by pagecache pages, reducing page reclaim efficiency and wasting
->> memory. Converting LRU folios and most other raw memory cgroup pins
->> to the object cgroup direction can fix this long-living problem.
->> 
->> Finally, folio->memcg_data of LRU folios and kmem folios will always
->> point to an object cgroup pointer. The folio->memcg_data of slab
->> folios will point to an vector of object cgroups.
->> 
->> Signed-off-by: Muchun Song <songmuchun@bytedance.com>
->> ---
->> include/linux/memcontrol.h |  78 +++++--------
->> mm/huge_memory.c           |  33 ++++++
->> mm/memcontrol-v1.c         |  15 ++-
->> mm/memcontrol.c            | 228 +++++++++++++++++++++++++------------
->> 4 files changed, 222 insertions(+), 132 deletions(-)
-> 
-> [...]
-> 
->> +static void lruvec_reparent_lru(struct lruvec *src, struct lruvec *dst,
->> + 				enum lru_list lru)
->> +{
->> + 	int zid;
->> + 	struct mem_cgroup_per_node *mz_src, *mz_dst;
->> +
->> + 	mz_src = container_of(src, struct mem_cgroup_per_node, lruvec);
->> + 	mz_dst = container_of(dst, struct mem_cgroup_per_node, lruvec);
->> +	
->> + 	if (lru != LRU_UNEVICTABLE)
->> + 	list_splice_tail_init(&src->lists[lru], &dst->lists[lru]);
->> +
->> + 	for (zid = 0; zid < MAX_NR_ZONES; zid++) {
->> + 		mz_dst->lru_zone_size[zid][lru] += mz_src->lru_zone_size[zid][lru];
->> + 		mz_src->lru_zone_size[zid][lru] = 0;
->> + 	}
->> +}
-> 
-> I think this function should also update memcg and lruvec stats of
-> parent memcg? Or is it intentional?
+This patch introduces a new wrapper:
 
-Hi Harry,
+    try_lock_system_sleep()
 
-No. Do not need. Because the statistics are accounted hierarchically.
+It sets PF_NOFREEZE and then performs mutex_trylock(), mirroring the
+existing lock_system_sleep() implementation. This improves consistency
+and enables future cleanup of raw trylock calls.
 
-Thanks.
+Signed-off-by: Zihuan Zhang <zhangzihuan@kylinos.cn>
+---
+ include/linux/suspend.h |  2 ++
+ kernel/power/main.c     | 14 ++++++++++++++
+ 2 files changed, 16 insertions(+)
 
-> 
-> -- 
-> Cheers,
-> Harry / Hyeonggon
-
+diff --git a/include/linux/suspend.h b/include/linux/suspend.h
+index da6ebca3ff77..6c9e8fe0c446 100644
+--- a/include/linux/suspend.h
++++ b/include/linux/suspend.h
+@@ -468,6 +468,7 @@ extern void pm_wakep_autosleep_enabled(bool set);
+ extern void pm_print_active_wakeup_sources(void);
+=20
+ extern unsigned int lock_system_sleep(void);
++extern unsigned int try_lock_system_sleep(void);
+ extern void unlock_system_sleep(unsigned int);
+=20
+ #else /* !CONFIG_PM_SLEEP */
+@@ -496,6 +497,7 @@ static inline void pm_wakeup_clear(bool reset) {}
+ static inline void pm_system_irq_wakeup(unsigned int irq_number) {}
+=20
+ static inline unsigned int lock_system_sleep(void) { return 0; }
++static inline unsigned int try_lock_system_sleep(void) { return 0; }
+ static inline void unlock_system_sleep(unsigned int flags) {}
+=20
+ #endif /* !CONFIG_PM_SLEEP */
+diff --git a/kernel/power/main.c b/kernel/power/main.c
+index 6254814d4817..0d3f94f62664 100644
+--- a/kernel/power/main.c
++++ b/kernel/power/main.c
+@@ -58,6 +58,20 @@ unsigned int lock_system_sleep(void)
+ }
+ EXPORT_SYMBOL_GPL(lock_system_sleep);
+=20
++unsigned int try_lock_system_sleep(void)
++{
++	unsigned int flags =3D current->flags;
++	current->flags |=3D PF_NOFREEZE;
++
++	if (!mutex_trylock(&system_transition_mutex)) {
++		current->flags =3D flags;
++		return 0;
++	}
++
++	return flags;
++}
++EXPORT_SYMBOL_GPL(try_lock_system_sleep);
++
+ void unlock_system_sleep(unsigned int flags)
+ {
+ 	if (!(flags & PF_NOFREEZE))
+--=20
+2.25.1
 
