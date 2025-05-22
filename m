@@ -1,121 +1,110 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1274924EF85
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 08:00:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6995424EF6F
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 08:00:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747900817; cv=none; b=Tbbfn0BdC5z9fkxsN889e2lyxu57+kcvFgt32ttPKI5zdE7VQm9xfObsLH/63y0E7v1kYmuuHSBOnJ2QjkevAoxrhpjhs95jgd4EP7Vo8Vz0u/6ybAmKzAnOlH2BymE7s/qXNWwN39S8ElOZ1vquVumUYOWxIBlB0u2wdfFODtg=
+	t=1747900831; cv=none; b=ANtqdjluTkqNHVcQWi+Jlfl+wdgm9vGxggdlK7JD25/KP7irFrz058RF3iAUzAi63V0OIOIt0KKgWuHG3dM/eYrEmBVVj/cTuAQKm5Cgp7d0uBNMJ02CcHdBlJJNyRNuqpe3xf1Y8CBGGkq0DIaGC3ZX5yVDZrubqRiOv/6vh9w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747900817; c=relaxed/simple;
-	bh=Bw3kgMM52a4tBIU1z0adE+k11qpVVeTREOCcrArRWZY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uFvos/StOR7hoWl+vmlBwZx5BOSQTaohU5j9qAT/qPcwWD398FBmycIRVrthWXQ50FMpppH5UWT6GqzfyApIOkAmBN6ps6AEpTevo8Zeg2HAPZ3bS4fy5EKpRgc1+LwL0FowszE2vz3iF4L12rAuaEEAsv1vkvwUIGxjh6RWF3Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <mkl@pengutronix.de>)
-	id 1uI0qN-0004uV-1S; Thu, 22 May 2025 09:59:59 +0200
-Received: from moin.white.stw.pengutronix.de ([2a0a:edc0:0:b01:1d::7b] helo=bjornoya.blackshift.org)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <mkl@pengutronix.de>)
-	id 1uI0qL-000hFi-0P;
-	Thu, 22 May 2025 09:59:57 +0200
-Received: from pengutronix.de (unknown [IPv6:2a03:2260:2009:2000::])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	(Authenticated sender: mkl-all@blackshift.org)
-	by smtp.blackshift.org (Postfix) with ESMTPSA id 1A403417179;
-	Thu, 22 May 2025 07:59:56 +0000 (UTC)
-Date: Thu, 22 May 2025 09:59:55 +0200
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-To: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
-Cc: Elaine Zhang <zhangqing@rock-chips.com>, kernel@pengutronix.de, 
-	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, heiko@sntech.de, 
-	cl@rock-chips.com, kever.yang@rock-chips.com, linux-can@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	devicetree@vger.kernel.org
-Subject: Re: [PATCH v3 2/3] net: can: rockchip: add can for RK3576 Soc
-Message-ID: <20250522-delightful-lean-chachalaca-4950e0-mkl@pengutronix.de>
-References: <20250522063232.2197432-1-zhangqing@rock-chips.com>
- <20250522063232.2197432-3-zhangqing@rock-chips.com>
- <CAMZ6RqJzR6ucRnCHFq8ZFRnznRsFYq6BMQY24aaROJMLWigU4A@mail.gmail.com>
+	s=arc-20240116; t=1747900831; c=relaxed/simple;
+	bh=2KrLRCNsvyk+hOa4GOw+soTgVGJ/UOZjQf27qAwdHMg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=HDh07ZysXjKgs920dQM8mvWEzQOOG+1xxEf44/SCOzm8ZtCjlk3bRzbQo+orp0ECLKsCi1npr6S+PiKRpZTqFNVptIT25Q7M78b4HQG7lozrcpzgrAJ+DLkdTlVwBdQaRo15FFMHKnf/S/jhgJNankdhsi+1N2HXjcLzPDZQuOI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=Z+nWEFaI; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="Z+nWEFaI"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-43cfe574976so55792065e9.1
+        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 01:00:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1747900826; x=1748505626; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Ilxl+LSaAl6Lq/YJ+iXyW4KufkIqKnj6oK2o+Hh3z1c=;
+        b=Z+nWEFaICmKG3vLaynTV/QECLCx5/vGIMQynd+OEOelvsX8QhIp8fQVcNam8+w8flk
+         wgSVONPADdzGbynsmLG3V6pRmP5xlTGOmjpq2FCSYWCWU16OW2m9vWxkz+ju0vbJx7tG
+         C9G/PhS+MoSogy17s+G3HPSRBnEXq8tQ0raAK19tEpJxIyLDNYaNw26Z1TaDC0V7HdMu
+         LgXdYHkp35Pz4UiE2GiGk/gFr45H6WubsDW1uQYrcFD8ilRtqmkOlfvb+xJawu6bq/Ww
+         /4HNo2O28GcoOQ7OkbvUrOZ/KrP70cc/5VICLmSyj+ACv9ZwexHBL0VPCUPY4Suf6In+
+         DA0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747900826; x=1748505626;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Ilxl+LSaAl6Lq/YJ+iXyW4KufkIqKnj6oK2o+Hh3z1c=;
+        b=hT5F4oiSMO5zSK2M21UjzCME9WCcJlkmw5kRheCa2qyrBhXe37eO55GQPZfsfp0szM
+         8mg6k71yluJIN/PQUTZu+JGZddYisPpGmXPtpb8lyisPm3HZwOAugfeU0xLHEAL1sEPe
+         Z35yr9FhGDAmeIJFp48xb85T6vamallBIbWN570pmHYjzoN8xZwIuc1Ye/6vD3NCsz2R
+         bYppeMDTvngTfGeXuG3xNjP5UvNXAv0XTNfEoVHg3iI2MxAOOTpn57eOAJrfq4DfiqCk
+         KinTR2x32xfn0fCuk3bbZ8lthF5bOGSOG92yLwPz4AL1CM520dIdMOBBtNna4NusDTyd
+         D0ZQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVR8TM/a9Za5XzBitsaPAGJxwVX/kFjjLESFLAXwB+xUwRofy4goEj1Y/unhwqPDHXyK86kHa/dzUouT9o=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyAr/8kljCyztVf4XCFFsULc5FcEwbMP/qcFQwyOG5xQTzW5em2
+	MeO/q7Tcz4NGzgvnG9GEJnPt1KEss/pntIkS1clSYmXsgxEdN3IjXGVYoOYZaKJw148=
+X-Gm-Gg: ASbGncuPQzSf2QTjxR1FSfB2jAX2L3jeF25l5WB9kjT/OfrMWpu8CFGF0BJb626qpqs
+	LGqHugpOvraC8jjv1xy4bhGJshJsCXePyVSwbjuBG6/AYay/wQA47PkLe+wPlYF4eFY1C/mzvTQ
+	DsxplyLaW2JG1ojvFrw0jkbpSrv/n9DHYnuEBDZ0T2frOZaLq8QQm/6L13MepxzYEVa87qj1OOs
+	nEO1azkITgOFGYGsb7BX3DcbUt/LSrK/UWBIFFr/Q2YElG9GRknfI4q2DLXFdPDwvKFWTCT8vKi
+	LxDnSU7g5P5UOchk+Eemdu+Oa04IPSoq0nJzLudP5mH1iLXBxR1S
+X-Google-Smtp-Source: AGHT+IGIbjY86ciIOyRVyM/0jS+mEA9hAYBdMWLbkWJXiCcKUuA3jgCciTCBgFzCu9rZSMQYBYX7Mw==
+X-Received: by 2002:a5d:64ee:0:b0:397:5de8:6937 with SMTP id ffacd0b85a97d-3a35c840cfcmr20664488f8f.41.1747900826480;
+        Thu, 22 May 2025 01:00:26 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:774c:e9f0:1d32:4927])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a362b4e2e1sm20913519f8f.96.2025.05.22.01.00.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 May 2025 01:00:26 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	"Peng Fan (OSS)" <peng.fan@oss.nxp.com>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Peng Fan <peng.fan@nxp.com>
+Subject: Re: [PATCH 0/4] gpio: select GPIOLIB_IRQCHIP for various entries
+Date: Thu, 22 May 2025 10:00:24 +0200
+Message-ID: <174790082298.11547.4760162788670811259.b4-ty@linaro.org>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250522-gpio-fix-v1-0-98ceae7c4c3c@nxp.com>
+References: <20250522-gpio-fix-v1-0-98ceae7c4c3c@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="lpmlapbweec4lyva"
-Content-Disposition: inline
-In-Reply-To: <CAMZ6RqJzR6ucRnCHFq8ZFRnznRsFYq6BMQY24aaROJMLWigU4A@mail.gmail.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: mkl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
 
---lpmlapbweec4lyva
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v3 2/3] net: can: rockchip: add can for RK3576 Soc
-MIME-Version: 1.0
+On Thu, 22 May 2025 15:11:49 +0800, Peng Fan (OSS) wrote:
+> There was an effort to make irq_chip immutable for several drivers,
+> but kernel test robot reports build errors for:
+> gpio-mpc8xxx
+> gpio-pxa
+> gpio-davinci
+> 
+> Thanks to Bartosz for helping on this.
+> 
+> [...]
 
-On 22.05.2025 16:51:40, Vincent Mailhol wrote:
-> On Thu. 22 May 2025 at 15:38, Elaine Zhang <zhangqing@rock-chips.com> wro=
-te:
-> >
-> > Is new controller:
-> > Support CAN and CANFD protocol.
-> > Support Dma.
->=20
-> Please write a more verbose description with proper sentences.
->=20
-> > Signed-off-by: Elaine Zhang <zhangqing@rock-chips.com>
->=20
-> You need to break this into several patches and several files.
->=20
-> You can not put everything in rockchip_canfd-core.c. Create a
-> rockchip_rk3568.c in which you will move all the already existing
-> rk3568 specific functions. Then, in another patch, create a
-> rockchip_rk3576.c that will contain all the new code. Also adjust the
-> headers accordingly.
+Applied, thanks!
 
-I think the first patch modifying driver code should be to add the
-callbacks to rockchip_canfd-core.c and move the rk3568 code to it. The
-second patch to add the rk3576 without DMA and then add DMA mode. Maybe
-even split more. Have a look at the series where I added the original
-driver for an idea how to add the support incremental.
+[1/4] gpio: bcm-kona: select GPIOLIB_IRQCHIP
+      https://git.kernel.org/brgl/linux/c/86fabf1b174069465ea12b4140cb35543fd0c738
+[2/4] gpio: grgpio: select GPIOLIB_IRQCHIP
+      https://git.kernel.org/brgl/linux/c/3dff3563cc11e90f046902f0b2be40e82f5ee251
+[3/4] gpio: lpc18xx: select GPIOLIB_IRQCHIP
+      https://git.kernel.org/brgl/linux/c/01e4397d0c1c9ae434c574f45359ad0c226a864b
+[4/4] gpio: timberdale: select GPIOLIB_IRQCHIP
+      https://git.kernel.org/brgl/linux/c/8b8ef309093ff196967a21ee51a9cdb404a13bf6
 
-regards,
-Marc
-
---=20
-Pengutronix e.K.                 | Marc Kleine-Budde          |
-Embedded Linux                   | https://www.pengutronix.de |
-Vertretung N=C3=BCrnberg              | Phone: +49-5121-206917-129 |
-Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-9   |
-
---lpmlapbweec4lyva
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEn/sM2K9nqF/8FWzzDHRl3/mQkZwFAmgu2XgACgkQDHRl3/mQ
-kZzQJAgApXCC8s2c2+CiMrRCtKvYLVoAutalwYhghaYH2BXfFWc/d+28zc2+kk2x
-A0KBEBHsHyNacv50PzO6Cd4sbbvsPUUHEYBHoqFP4rU/v2ume72v4R6vlnGe5wq4
-ARFfylPB108a4IQ/rFrJK00fBPA0QEL+xLFhs5qhIC4ULpkFZA2gQ3pvOSaBAC/1
-1Lpp8qjNt1Clk2JlI255nJylV04Xe8qcTNq490v1Tj4Cj++vZh414SFvmHBWrbb2
-ui2ptgp7K6tqo+GnUu2aFQf1o3GAGoXCEE0AcQCIBuq1d8Rf2lrVM1Koo0cAgNQ1
-B2NARj0eLbE2aIKJayqbaBmLHYDzrw==
-=uXC8
------END PGP SIGNATURE-----
-
---lpmlapbweec4lyva--
+Best regards,
+-- 
+Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
