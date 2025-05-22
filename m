@@ -1,97 +1,103 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEA8D286425;
-	Thu, 22 May 2025 11:21:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63C412B9A9;
+	Thu, 22 May 2025 11:23:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747912915; cv=none; b=SyuY8pfg2LALJdO2TvhiZ8dSdA8KipF8dtn2/SIAKjTr8RPOZycDesWzKH2FiOsKqYfhphWAHfggGghoyKF/xhCejG1trgXR22C3oVMPoV4tn8EwXmXn9ZdUsfXfgGRIbRVFCO8fVa3KYVlVhZLRPUk38rOT5Njj9GvX+NadTeQ=
+	t=1747913003; cv=none; b=kqTwM2DkOFzS6hmgqv+JhpGLBK511LFV/KyqCk/bc/caBY3C6gGOATIivDix7Ujh3FdY2TOIDYaW8OitYlcdm2ZmuGStnLlgG8qH7FgvfbfRE/SDyjjU+Ug8VuSi9Ba5YZhDAp52suELTUavhzAcVyD7usgRkW0bmOaDdAS1BCY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747912915; c=relaxed/simple;
-	bh=GCD+itmTe0b/J+qM5d/v9KELzW7ui94Qc8QFqpcbKRU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DpM7q3h0PXUrJ/6emdB/LrHb25vmq8Nso8VT3PJBKzeaPZethEt7/LcVBOq+coGEyETcFJpK8qsr+0Fj8RmCm+S94aNwmDv9Ize3LgJNfTVCG6ArzIo6SsCVGdqjjWnzuHGd/MxWU706pd7HuWjLVucEKA69zp9FqoBf/+qrnLA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=X2UF6ukk; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747913003; c=relaxed/simple;
+	bh=9DOvodseAtkhj1FPlCJCI3dYj0L1ouxljdZeJQaHcDE=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=PGLX2jhx/8w+iFansCJ3h4pIA1a/sD5w4O8u+j/YSMQN2p+XeUtb7ghpxCxe4Qjh/h/MtyMDRFivHMf5UBfMmqGfHsdvNIlNeqm+AfdVpeFKZuTYl2VKyoNhaIiqnSdlIJcMgDn+MWQTGB0Q7Cu+Syblv2klcuEHno3qxkYobQE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=SAJ6FEXL; arc=none smtp.client-ip=168.119.38.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="X2UF6ukk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8CB5C4CEE4;
-	Thu, 22 May 2025 11:21:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1747912914;
-	bh=GCD+itmTe0b/J+qM5d/v9KELzW7ui94Qc8QFqpcbKRU=;
-	h=From:To:Cc:Subject:Date:From;
-	b=X2UF6ukk+tKDTt0kPLw/7GhH+/e7aKlEhp97dDHCPLmB5yeIHdByPelphTX4hh0Zs
-	 p7pdo+v+5HoR4wQc4uxD4Chrl0aItfyGalhUTTqwbtblQnW+EhcroRTIfyd1Y5/yp3
-	 ydDrXXADhUJML9MjTBwAZaLIBYEda7aQgZUA4lpM=
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: netdev@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Alexander Lobakin <alobakin@pm.me>,
-	Andrew Lunn <andrew@lunn.ch>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>
-Subject: [PATCH net-next] net: phy: fix up const issues in to_mdio_device() and to_phy_device()
-Date: Thu, 22 May 2025 13:21:47 +0200
-Message-ID: <2025052246-conduit-glory-8fc9@gregkh>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="SAJ6FEXL"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
+	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
+	Resent-Cc:Resent-Message-ID; bh=AUt4PGqakZkzIjDFuR4EXoZk716c/Pi23AsUXz1LtIU=;
+	t=1747913002; x=1749122602; b=SAJ6FEXLbRlZ4PtxZbZtQZxLVPThoIxDqeij3O2BfA3Pfkx
+	WhCquWg+0LHQWu9mpyPybk0CY6zsMrJ4TJY0i60mjoU4xnAWqiMmZ9AcJU7iqut643HCqsUkITyMv
+	6JZqCRmQDn964wxAVuEfY/ChjoZZVfQ1tYm59kSTCAwpsZ2wwptucTenvoT6ikTYvhEIbzrM67WRO
+	45F5+FWDjqxdSfhDpKFg8wTVkJvhLD5Jggb1XwzCKPXco7Bzkr4W/0BuJ0oeS4AU0dNfLDvR/37Xy
+	zdNZnA2VJs69o5jikstzK7x5oBlEgD4cmNgMHqUOkPo7mYoatDkJeSQXag1Y7OGw==;
+Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.98.2)
+	(envelope-from <johannes@sipsolutions.net>)
+	id 1uI418-0000000GkgW-3s9z;
+	Thu, 22 May 2025 13:23:19 +0200
+Message-ID: <f694233ea7378257fbc992bd3d6f10ac7f6d3695.camel@sipsolutions.net>
+Subject: Re: [PATCH wireless-next 2/3] wifi: mac80211: Allow scan on a radio
+ while operating on DFS on another radio
+From: Johannes Berg <johannes@sipsolutions.net>
+To: Raj Kumar Bhagat <quic_rajkbhag@quicinc.com>
+Cc: linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Thu, 22 May 2025 13:23:18 +0200
+In-Reply-To: <a91c82f1-df99-4938-8f41-ce90e9e08ad8@quicinc.com>
+References: <20250514-mlo-dfs-acs-v1-0-74e42a5583c6@quicinc.com>
+	 <20250514-mlo-dfs-acs-v1-2-74e42a5583c6@quicinc.com>
+	 <d23e55879c6d8b6cabcc8357f153ae0622a4c53a.camel@sipsolutions.net>
+	 <a91c82f1-df99-4938-8f41-ce90e9e08ad8@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1872; i=gregkh@linuxfoundation.org; h=from:subject:message-id; bh=GCD+itmTe0b/J+qM5d/v9KELzW7ui94Qc8QFqpcbKRU=; b=owGbwMvMwCRo6H6F97bub03G02pJDBn6HKdmMJrd3yc0ewrXk/0MpXzXFie97J75PVmRu6jv7 tvDD2LYOmJZGASZGGTFFFm+bOM5ur/ikKKXoe1pmDmsTCBDGLg4BWAizwUYFswO3Xj21hmN8/Eq zNsDX0isiOE3sGZYcILp8+Tsnn6HzHXbbif6/zkh/FrjGAA=
-X-Developer-Key: i=gregkh@linuxfoundation.org; a=openpgp; fpr=F4B60CC5BF78C2214A313DCB3147D40DDB2DFB29
-Content-Transfer-Encoding: 8bit
+X-malware-bazaar: not-scanned
 
-Both to_mdio_device() and to_phy_device() "throw away" the const pointer
-attribute passed to them and return a non-const pointer, which generally
-is not a good thing overall.  Fix this up by using container_of_const()
-which was designed for this very problem.
+On Thu, 2025-05-22 at 16:10 +0530, Raj Kumar Bhagat wrote:
+>=20
+> I'm not sure If I fully understood the this comment.
+>=20
+> This patch assumes that multiple radios are grouped under a single wiphy.
+> Each radio has its own list of frequencies it can scan, and there is no o=
+verlap
+> in frequencies between any two radios within the same wiphy.
 
-Cc: Alexander Lobakin <alobakin@pm.me>
-Cc: Andrew Lunn <andrew@lunn.ch>
-Cc: Heiner Kallweit <hkallweit1@gmail.com>
-Cc: Russell King <linux@armlinux.org.uk>
-Fixes: 7eab14de73a8 ("mdio, phy: fix -Wshadow warnings triggered by nested container_of()")
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- include/linux/mdio.h | 5 +----
- include/linux/phy.h  | 5 +----
- 2 files changed, 2 insertions(+), 8 deletions(-)
+Yeah I guess I'm just overly paranoid due to lack of familiarity with
+all the multi-radio things.
 
-diff --git a/include/linux/mdio.h b/include/linux/mdio.h
-index 3c3deac57894..e43ff9f980a4 100644
---- a/include/linux/mdio.h
-+++ b/include/linux/mdio.h
-@@ -45,10 +45,7 @@ struct mdio_device {
- 	unsigned int reset_deassert_delay;
- };
- 
--static inline struct mdio_device *to_mdio_device(const struct device *dev)
--{
--	return container_of(dev, struct mdio_device, dev);
--}
-+#define to_mdio_device(__dev)	container_of_const(__dev, struct mdio_device, dev)
- 
- /* struct mdio_driver_common: Common to all MDIO drivers */
- struct mdio_driver_common {
-diff --git a/include/linux/phy.h b/include/linux/phy.h
-index a2bfae80c449..bef68f6af99a 100644
---- a/include/linux/phy.h
-+++ b/include/linux/phy.h
-@@ -744,10 +744,7 @@ struct phy_device {
- #define PHY_F_NO_IRQ		0x80000000
- #define PHY_F_RXC_ALWAYS_ON	0x40000000
- 
--static inline struct phy_device *to_phy_device(const struct device *dev)
--{
--	return container_of(to_mdio_device(dev), struct phy_device, mdio);
--}
-+#define to_phy_device(__dev)	container_of_const(to_mdio_device(__dev), struct phy_device, mdio)
- 
- /**
-  * struct phy_tdr_config - Configuration of a TDR raw test
--- 
-2.49.0
+> If this assumption holds, then if one radio is operating on a DFS channel=
+ and a
+> new scan request does not include any frequencies from that radio's list,=
+ the
+> scan should be allowed=E2=80=94since the DFS radio wouldn't be involved i=
+n handling that
+> scan request.
 
+Agree.
+
+> > > +	for (i =3D 0; i < scan_req->n_channels; i++) {
+> > > +		chan =3D scan_req->channels[i];
+> > > +		chan_radio_idx =3D cfg80211_get_radio_idx_by_chan(wiphy, chan);
+> > > +		/*
+> > > +		 * Skip channels with an invalid radio index and continue
+> > > +		 * checking. If any channel in the scan request matches the
+> > > +		 * given radio index, return true.
+> > > +		 */
+> > > +		if (chan_radio_idx < 0)
+> > > +			continue;
+> >=20
+> > This seems ... wrong? If there's a channel in the scan request that
+> > didn't map to _any_ radio then how are we even scanning there? And the
+> > comment seems even stranger, why would we _want_ to ignore it (which it
+> > conveniently doesn't answer)?
+> >=20
+>=20
+> It seems, (chan_radio_idx < 0) should never be true because the chan is
+> taken from the valid scan request. I should remove this check in next ver=
+sion?
+
+I'm not sure, why did you add it? Maybe it should be a WARN_ON and abort
+the whole function? It just doesn't seem right to _ignore_.
+
+johannes
