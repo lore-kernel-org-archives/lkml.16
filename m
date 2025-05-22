@@ -1,192 +1,117 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35C06239E85;
-	Thu, 22 May 2025 15:01:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6D57290F;
+	Thu, 22 May 2025 15:02:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747926120; cv=none; b=RqYJF4QOpXn287SOYJnrGlzFYuq3cLSyxfSf9Nt6YCXmEmRjdXmV7Lj7hz02NEAAhBeklOH4s5G+Idh+JQZGFVm8YSyI7lHUfs+EyhEY8jhzgfVzvh0g/zgkhfqh+cpPOleaI89L7p9tYgTu1Kg/UNVGe4nunFdOorbNPYwh5cc=
+	t=1747926145; cv=none; b=LXJSHZPrOAplmkor228ptZdCH6xAlI7NGbqrJjjytns1u0IhmOcKK+QZhjGC258eNDDt8LsAIE83UB5dLKEwfbOKuu2yA/WkATrwCK8+lZ7kLwlyqIcIfA+sUxpzV7536vNUb2LtCmCfZNyz5cB8jjrG/KX/b+9ldYTQ5PYUK88=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747926120; c=relaxed/simple;
-	bh=1AAQm9CHyytzF4+9O6MKBfp9oHP7mXu2dEOCXa+XQ60=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sW4c/mhavjHn5NEOQppOtTmnOGX/5+421DmxDSbUvWxgufoZ66skBMY3MhJz2Yp+mta6Flq84JEQfPPuZvYuCnz1rRTaLmtc/Tqnbgv7J6hGP6GInXSXGiv04joKxljsUKCPR8F82S+fcqy61UFbwuYlB54EbXae8/vALxJ6Smo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Oz+QvmtP; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747926145; c=relaxed/simple;
+	bh=PCMNxXTp7vOl2U1UMU/ZCRxe7GFuxhIogfe0qyFPLBM=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=VPDFWj1iBVB/vwc31Uhv+IppaV1Js0s68ZTXBUhUIAgg3P5rIH/rLUOTDzYqzek+u0CeH0edaMcy6oBLPPV+2LwQGl+rtMLldlwx++KKUUmFuIdjkWG3q4REPVv8Ziw51Zb0svdAbcgqBlEhuq+QBv49el45WkdDmkaMdOqof8k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=C1QR/nsq; arc=none smtp.client-ip=217.70.183.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Oz+QvmtP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37A09C4CEE4;
-	Thu, 22 May 2025 15:01:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747926119;
-	bh=1AAQm9CHyytzF4+9O6MKBfp9oHP7mXu2dEOCXa+XQ60=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Oz+QvmtPcLQhIfHb7Dmv2r8M+WiSoRM5qPUWyn0k87l+wT8VAirzhjzTpBW0eGBlb
-	 UmHr0bWOMyDkznyYF5LwH3teEaFZ1uE9qr6HXEdA+j0uBq3hgFzQ6nt0ZspVQXE85T
-	 OIIkY81dtcbV0m2gziJg01/r6Y2SIPkamj7M1kl4Hwl0qo9CYgYZTmBxYNa7ftFs4G
-	 zPja9fq08Kq/yFwJiQQ67CJDZJ1PPEHri6tbgslerK1on4Zw3xOpk7dM39CBPgwm8x
-	 voI88BFxvrFhvQuMo4HtIGvK0M5a3QE0bAoKlVQx3xcpqnnkL1paG+vNMl/2NKstkd
-	 Ah2lYGSdfnOWQ==
-Date: Thu, 22 May 2025 17:01:57 +0200
-From: Maxime Ripard <mripard@kernel.org>
-To: Liu Ying <victor.liu@nxp.com>
-Cc: Luca Ceresoli <luca.ceresoli@bootlin.com>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Andrzej Hajda <andrzej.hajda@intel.com>, Neil Armstrong <neil.armstrong@linaro.org>, 
-	Robert Foss <rfoss@kernel.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
-	Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
-	Jagan Teki <jagan@amarulasolutions.com>, Shawn Guo <shawnguo@kernel.org>, 
-	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
-	Fabio Estevam <festevam@gmail.com>, Douglas Anderson <dianders@chromium.org>, 
-	Chun-Kuang Hu <chunkuang.hu@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, 
-	Anusha Srivatsa <asrivats@redhat.com>, Paul Kocialkowski <paulk@sys-base.io>, 
-	Dmitry Baryshkov <lumag@kernel.org>, Hui Pu <Hui.Pu@gehealthcare.com>, 
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>, dri-devel@lists.freedesktop.org, asahi@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, chrome-platform@lists.linux.dev, imx@lists.linux.dev, 
-	linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, 
-	linux-amlogic@lists.infradead.org, linux-renesas-soc@vger.kernel.org, 
-	platform-driver-x86@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
-	freedreno@lists.freedesktop.org, linux-stm32@st-md-mailman.stormreply.com, 
-	Louis Chauvet <louis.chauvet@bootlin.com>, Alim Akhtar <alim.akhtar@samsung.com>, 
-	Inki Dae <inki.dae@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, 
-	Seung-Woo Kim <sw0312.kim@samsung.com>, Manikandan Muralidharan <manikandan.m@microchip.com>, 
-	Adam Ford <aford173@gmail.com>, Adrien Grassein <adrien.grassein@gmail.com>, 
-	Aleksandr Mishin <amishin@t-argos.ru>, Andy Yan <andy.yan@rock-chips.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Benson Leung <bleung@chromium.org>, 
-	Biju Das <biju.das.jz@bp.renesas.com>, Christoph Fritz <chf.fritz@googlemail.com>, 
-	Cristian Ciocaltea <cristian.ciocaltea@collabora.com>, Detlev Casanova <detlev.casanova@collabora.com>, 
-	Dharma Balasubiramani <dharma.b@microchip.com>, Guenter Roeck <groeck@chromium.org>, 
-	Heiko Stuebner <heiko@sntech.de>, Jani Nikula <jani.nikula@intel.com>, Janne Grunau <j@jannau.net>, 
-	Jerome Brunet <jbrunet@baylibre.com>, Jesse Van Gavere <jesseevg@gmail.com>, 
-	Kevin Hilman <khilman@baylibre.com>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, 
-	Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Matthias Brugger <matthias.bgg@gmail.com>, 
-	Philipp Zabel <p.zabel@pengutronix.de>, Phong LE <ple@baylibre.com>, 
-	Sasha Finkelstein <fnkl.kernel@gmail.com>, Sugar Zhang <sugar.zhang@rock-chips.com>, 
-	Sui Jingfeng <sui.jingfeng@linux.dev>, Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>, 
-	Vitalii Mordan <mordan@ispras.ru>, "Rob Herring (Arm)" <robh@kernel.org>, 
-	Hsin-Te Yuan <yuanhsinte@chromium.org>, Pin-yen Lin <treapking@chromium.org>, 
-	Xin Ji <xji@analogixsemi.com>, Aradhya Bhatia <a-bhatia1@ti.com>, 
-	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>, Ian Ray <ian.ray@gehealthcare.com>, 
-	Martyn Welch <martyn.welch@collabora.co.uk>, Peter Senna Tschudin <peter.senna@gmail.com>, 
-	Helge Deller <deller@gmx.de>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, 
-	Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Philippe Cornu <philippe.cornu@foss.st.com>, 
-	Raphael Gallais-Pou <raphael.gallais-pou@foss.st.com>, Yannick Fertre <yannick.fertre@foss.st.com>, 
-	Alain Volmat <alain.volmat@foss.st.com>, Raphael Gallais-Pou <rgallaispou@gmail.com>, 
-	Michal Simek <michal.simek@amd.com>, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org
-Subject: Re: [PATCH v3 00/22] drm: convert all bridges to
- devm_drm_bridge_alloc()
-Message-ID: <20250522-eager-cautious-dragon-c09cbe@houat>
-References: <20250509-drm-bridge-convert-to-alloc-api-v3-0-b8bc1f16d7aa@bootlin.com>
- <20250521162216.79dd3290@booty>
- <36ade269-a590-4243-889c-006f37d9ae6e@nxp.com>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="C1QR/nsq"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 315F843A2D;
+	Thu, 22 May 2025 15:02:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1747926135;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=PCMNxXTp7vOl2U1UMU/ZCRxe7GFuxhIogfe0qyFPLBM=;
+	b=C1QR/nsqGLxAYxBT39V3iCTWUEnreo4cdH0an0sHwxvmtrm5dQGjYNnI/xJs19aIDIBO2n
+	F4kFgyCeU9OaVkWgsTrfDtGopXWJoV9ihSH06MWWyRtpZrbgTTvRbsG0tBsrMsTQJpTIFw
+	mXVTgey9Od/driaMoYfOjgJVOBMWcoCCJPmE5JNMudSx5+QP056xSajJgGIyHzYU/vM0H7
+	27F6uPZTyWr4YOh79FdwcJx9Vm7NFy01+tLBQLXAPXAC7FV5jXmC7kSvCZPJxZxURWWAhN
+	kt3EUGZ+qE7Dt5T5p1Yge2BgmcVWLmXkDe8+zyRydSq2NN+IPrgQ4BNcsmbzIQ==
+From: Gregory CLEMENT <gregory.clement@bootlin.com>
+To: Jiaxun Yang <jiaxun.yang@flygoat.com>, Thomas Bogendoerfer
+ <tsbogend@alpha.franken.de>
+Cc: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>, =?utf-8?Q?Th?=
+ =?utf-8?Q?=C3=A9o?= Lebrun
+ <theo.lebrun@bootlin.com>, Tawfik Bayouk <tawfik.bayouk@mobileye.com>,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+ "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] MIPS: CPS: Optimise delay CPU calibration for SMP
+In-Reply-To: <105ed884-9ee8-429a-9937-d8f58a221faa@app.fastmail.com>
+References: <20250520-smp_calib-v1-1-cd04f0a78648@bootlin.com>
+ <8c4ef90e-82db-4711-a5f3-446bcca00e9d@app.fastmail.com>
+ <87ecwipfr2.fsf@BLaptop.bootlin.com>
+ <105ed884-9ee8-429a-9937-d8f58a221faa@app.fastmail.com>
+Date: Thu, 22 May 2025 17:02:14 +0200
+Message-ID: <87iklsofih.fsf@BLaptop.bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha384;
-	protocol="application/pgp-signature"; boundary="lkfsaolmoihne3h2"
-Content-Disposition: inline
-In-Reply-To: <36ade269-a590-4243-889c-006f37d9ae6e@nxp.com>
-
-
---lkfsaolmoihne3h2
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v3 00/22] drm: convert all bridges to
- devm_drm_bridge_alloc()
-MIME-Version: 1.0
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgdeivdeiucdltddurdegfedvrddttddmucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufgjfhffkfggtgfgsehtqhertddttdejnecuhfhrohhmpefirhgvghhorhihucevnffgoffgpffvuceoghhrvghgohhrhidrtghlvghmvghnthessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepgffhgedvhefgtdejvdethfdvieekgfetuefhueekteetgfdvueeutedttdekgeevnecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppedvrgdtudemtggsudegmeehheeimeejrgdttdemfhgrfegrmeekvgefkeemjeelgedtmeefgeehvdenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemtggsudegmeehheeimeejrgdttdemfhgrfegrmeekvgefkeemjeelgedtmeefgeehvddphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomhepghhrvghgohhrhidrtghlvghmvghnthessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepkedprhgtphhtthhopehjihgrgihunhdrhigrnhhgsehflhihghhorghtrdgtohhmpdhrtghpthhtohepthhssghoghgvnhgusegrlhhphhgrrdhfrhgrnhhkvghnrdguvgdpr
+ hgtphhtthhopehvlhgrughimhhirhdrkhhonhgurhgrthhivghvsehmohgsihhlvgihvgdrtghomhdprhgtphhtthhopehthhgvohdrlhgvsghruhhnsegsohhothhlihhnrdgtohhmpdhrtghpthhtohepthgrfihfihhkrdgsrgihohhukhesmhhosghilhgvhigvrdgtohhmpdhrtghpthhtohepthhhohhmrghsrdhpvghtrgiiiihonhhisegsohhothhlihhnrdgtohhmpdhrtghpthhtoheplhhinhhugidqmhhiphhssehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
+X-GND-Sasl: gregory.clement@bootlin.com
 
-On Thu, May 22, 2025 at 11:20:17AM +0800, Liu Ying wrote:
-> >>       drm: convert many bridge drivers from devm_kzalloc() to devm_drm=
-_bridge_alloc() API
-> >=20
-> > This patch affects multiple drivers. Running get_maintainers.pl
-> > points at Shawn Guo's repository. After reviewing the MAINTAINERS file,
-> > this looks like due to the 'N:' line in:
-> >=20
-> > ARM/FREESCALE IMX / MXC ARM ARCHITECTURE
-> > M:	Shawn Guo <shawnguo@kernel.org>
-> > M:	Sascha Hauer <s.hauer@pengutronix.de>
-> > R:	Pengutronix Kernel Team <kernel@pengutronix.de>
-> > ...
-> > T:	git git://git.kernel.org/pub/scm/linux/kernel/git/shawnguo/linux.git
-> > N:	imx
-> > ...
-> >=20
-> > (https://gitlab.freedesktop.org/drm/misc/kernel/-/blob/drm-misc-next/MA=
-INTAINERS?ref_type=3Dheads#L2511-2528)
-> >=20
-> > Here 'imx' matches the 'drivers/gpu/drm/bridge/imx/imx-legacy-bridge.c'
-> > file that is touched by the patch. That regexp appears overly generic t=
-o me.
-> >=20
-> > Shawn, can it be fixed by making it less generic?
-> >=20
-> > If not, can we at least add a band-aid 'X:' entry for
-> > drivers/gpu/drm/bridge/imx?
-> >=20
-> > I think the other matching entry is the one to consider:
-> >=20
-> > DRM DRIVERS FOR FREESCALE IMX BRIDGE
-> > M:	Liu Ying <victor.liu@nxp.com>
-> > L:	dri-devel@lists.freedesktop.org
-> > S:	Maintained
-> > F:	Documentation/devicetree/bindings/display/bridge/fsl,imx8qxp-ldb.yaml
-> > F:	Documentation/devicetree/bindings/display/bridge/fsl,imx8qxp-pixel-c=
-ombiner.yaml
-> > F:	Documentation/devicetree/bindings/display/bridge/fsl,imx8qxp-pixel-l=
-ink.yaml
-> > F:	Documentation/devicetree/bindings/display/bridge/fsl,imx8qxp-pxl2dpi=
-=2Eyaml
-> > F:	drivers/gpu/drm/bridge/imx/
-> >=20
-> > (https://gitlab.freedesktop.org/drm/misc/kernel/-/blob/drm-misc-next/MA=
-INTAINERS?ref_type=3Dheads#L7940-7948)
-> >=20
-> > However it does not list any trees. I _guess_ drm-misc applies here as
-> > a fallback as well as common sense.
-> >=20
-> > Liu, should this entry have a 'T:' line for drm/misc?
->=20
-> These bridge drivers also don't have a 'T:' line:
->=20
-> DRM DRIVER FOR CHIPONE ICN6211 MIPI-DSI to RGB CONVERTER BRIDGE
-> DRM DRIVER FOR PARADE PS8640 BRIDGE CHIP
-> DRM DRIVER FOR TI DLPC3433 MIPI DSI TO DMD BRIDGE
-> DRM DRIVER FOR TI SN65DSI86 BRIDGE CHIP
-> LONTIUM LT8912B MIPI TO HDMI BRIDGE
-> MEGACHIPS STDPXXXX-GE-B850V3-FW LVDS/DP++ BRIDGES
-> MICROCHIP SAM9x7-COMPATIBLE LVDS CONTROLLER
->=20
-> I think that they fallback to drm-misc since "DRM DRIVERS FOR BRIDGE CHIP=
-S"
-> covers them.  I don't have strong opinion on adding a "T" line to them, at
-> least to "DRM DRIVERS FOR FREESCALE IMX BRIDGE".  Anyway, it would be good
-> to know comments from maintainers for "DRM DRIVERS FOR BRIDGE CHIPS" and
-> "DRM DRIVERS".
+Hello Jiaxun Yang,
 
-That's good enough to me. drivers/gpu/drm/bridge is indeed under the
-maintenance of drm-misc and there's no exception afaik.
+> =E5=9C=A82025=E5=B9=B45=E6=9C=8821=E6=97=A5=E5=91=A8=E4=B8=89 =E4=B8=8A=
+=E5=8D=888:47=EF=BC=8CGregory CLEMENT=E5=86=99=E9=81=93=EF=BC=9A
+>> Hello Jiaxun,
+>>
+>>> =E5=9C=A82025=E5=B9=B45=E6=9C=8820=E6=97=A5=E5=91=A8=E4=BA=8C =E4=B8=8B=
+=E5=8D=884:21=EF=BC=8CGregory CLEMENT=E5=86=99=E9=81=93=EF=BC=9A
+>>> [...]
+>>>>
+>>>> This allows to implement calibrate_delay_is_known(), which will return
+>>>> 0 (triggering calibration) only for the primary CPU of each
+>>>> cluster. For other CPUs, we can simply reuse the value from their
+>>>> cluster's primary CPU core.
+>>>
+>>> Is __cpu_primary_cluster_mask really necessary?
+>>>
+>>> Maybe we can just test if current CPU is the first powered up CPU
+>>> in the cluster?
+>>
+>> That is exactly the point of __cpu_primary_cluster_mask: setting in an
+>> efficient way the first powered-up CPU for each cluster. This adds only
+>> a single variable (which is actually just a long) and allows for minimal
+>> impact during boot time, by doing the minimum write and read operations
+>>
+>> I don't see a better alternative. What do you have in mind ?
+>
+> Maybe we can try mips_cps_first_online_in_cluster()?
 
-get_maintainers.pl also properly reports it, so I'm not sure we need to
-do anything there.
+I didn't notice this function initially, but upon closer inspection, it
+appears that although the scan process is optimized, it still performs a
+full scan for each CPU during boot. In contrast, with the mask, the
+information is created only once and within an existing loop.
 
-Maxime
+I believe this function would benefit from __cpu_primary_cluster_mask,
+which is why I prefer my current implementation over using
+mips_cps_first_online_in_cluster().
 
---lkfsaolmoihne3h2
-Content-Type: application/pgp-signature; name="signature.asc"
+Regards,
 
------BEGIN PGP SIGNATURE-----
+Thanks
 
-iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCaC88ZAAKCRAnX84Zoj2+
-djG+AX9azcCjWg3uajj8kpv9U5tIOYfiLFB/+gEceKcg1OKQ4lA85Sy7O401gsKA
-sHQZxUMBf0Vj0sOJiWj/u8nCjMwjpC+xsQThFbSdD/ITqF4PFVw2BCwG7J/5XsKx
-gWgLGdqwyQ==
-=0NYb
------END PGP SIGNATURE-----
+>
+> [...]
+>
+> Thanks
+>
+> --=20
+> - Jiaxun
 
---lkfsaolmoihne3h2--
+--=20
+Gr=C3=A9gory CLEMENT, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
