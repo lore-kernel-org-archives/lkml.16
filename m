@@ -1,128 +1,60 @@
-Received: from fout-a7-smtp.messagingengine.com (fout-a7-smtp.messagingengine.com [103.168.172.150])
+Received: from out30-130.freemail.mail.aliyun.com (out30-130.freemail.mail.aliyun.com [115.124.30.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C31211A5BA2;
-	Thu, 22 May 2025 06:33:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.150
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C59F1714B4;
+	Thu, 22 May 2025 06:33:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747895593; cv=none; b=qFc4xLzwjnBeELN+LRdWvyGKFYgyWxDDRSLpfVkN1p9Wgmi7CYdsL8o8SJBlDPZgE7Cm5Aw0S9ATh05LgLIn2jR87QRBfCEJ9aPKOMOnfanL5U2qy7cVV2Lmru2YolTLqsTYneZ+osa3GhtrFD14yXm88g68tKtxoiHsBjl0V4c=
+	t=1747895626; cv=none; b=uasMvbyZC8iEygty4pBgCB0j9KK6LNNmlFm1WgY9yzdlQO6xv+1dbyNcZqtjSgarvSP1N6lQ8dlEcea7Udjj5etxPkVjM9eM81Xi0hHvAvIDy8TcPv28m/shjn/6dxJhYZl5WkNS+x8xvYbc+suBblBtpxJZ60pT9g9OmLozack=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747895593; c=relaxed/simple;
-	bh=ntk5Ubl42GNcRLeUmofXZQYlp86nlzOBOGux945yP5I=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=KXQeYIna/wNB+NpZSA/kW84CEBWkGqw820YL6Liz1mtKUbgqgsyp7b6q7DGA3QaKETj1ByCq/Qzplkl941tsnbIM/nq771RkBVAnY7fIAfVDOo9Whxu59NvlmlOLODdnN+9xLPjC+WyJjSm2tDPAuYf/zkjqv2HFJp+ThUL10vs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=auLSngXo; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=QKxg8xq+; arc=none smtp.client-ip=103.168.172.150
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1747895626; c=relaxed/simple;
+	bh=CUFxhyDVr0xLwX7m27ThYmU07naEB+SMbY+iLXOBXt4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ckUVUuf6UHxwRS4K2LSqwTXObCbYozpZsNeuNmxSj9UMA+D4R+t/rLU/gdSJ6COk9BqqEK1ofp+rTl3izAASbUFpcOo4gN/Wss3dWtDluivhsojzDbREcBwjFLPx9YwpA1zhk5jD1BDL9xjnDjhVoR2mwxX65Ip3CZQrvvGCWwc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=cQ0D3NUP; arc=none smtp.client-ip=115.124.30.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="auLSngXo";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="QKxg8xq+"
-Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
-	by mailfout.phl.internal (Postfix) with ESMTP id 8D448138045A;
-	Thu, 22 May 2025 02:33:07 -0400 (EDT)
-Received: from phl-imap-12 ([10.202.2.86])
-  by phl-compute-05.internal (MEProxy); Thu, 22 May 2025 02:33:07 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1747895587;
-	 x=1747981987; bh=vMGUoZzGgqy12ZDjUuXY6i1U+XhJq0NsYCP29BFtS7g=; b=
-	auLSngXoC44z/CnF2qGq6nzaBq75DsiePdpeRoW2P+46L69um6K5qWoAiSliD57z
-	Kdo1koXaAzJgoBqScd4QkuwnpaAFxWUN4xpvm+bXwxyJY1iNSWXW8U6WA5xqzrOt
-	mW50YgUl70nXStPTlqAKKZi2haq+7hYgmXEijpCvzC0bgQKUjDesLpTqGj1hDksX
-	G9efGBJWyPilPle7EFm/aosekG6HD6pz0LXr7Z+GGPWUoWQ2w2s8jYmOXrdelTb0
-	bHoZcpeYdXPWcNKT7VtTtcaFqQVVrALP3tfxsqyv8umc9xwDnWj7ekVOdX3LacJz
-	aABqpcPd9NUKDuQ2NoA7Fg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1747895587; x=
-	1747981987; bh=vMGUoZzGgqy12ZDjUuXY6i1U+XhJq0NsYCP29BFtS7g=; b=Q
-	Kxg8xq+5a4dzwEObu1vdpZUgrBu5QTbqr0ojZ7AcmxqpcVeyUVYgPt/PON+iu7zV
-	UpvlsWH2qrZcWDH1csqlJNsChDocipkAaCIyJezPPuVfnPFaFYXb+nHzbK4qeA0/
-	EWksBpL6Nc/WPWJFAVakYgEQVUFl4yhkVqPKU1OuJ4NrRppLc+mGDy5SzMwf3sEJ
-	TUZ9y/EawoGLCJLYaJwj5jVCU8tKD5aIvIfV6nZIvjvI27wL76GGMcPhQG0k2qHH
-	4Cw9471EiWDtqgY2xAJYiAAWAMyb65uKJy8oACd2u+RqNPgE8dItfbHp2Yna01qF
-	xZtzm9cvtiPUGW5RSucyQ==
-X-ME-Sender: <xms:I8UuaEUovyb_wGOoCBRUQfAGSgZj9OAxFjsvBnegT-BSz68E9KEYxA>
-    <xme:I8UuaIk_JHuR48hr4r0XHISEmhdFvx-1GKf4ICz_6y7JyX574jbLdnyhqUAtKETUT
-    4A58miSxeBirE5Xauw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgdehvdehucdltddurdegfedvrddttd
-    dmucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgf
-    nhhsuhgsshgtrhhisggvpdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttd
-    enucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgj
-    fhfutgfgsehtjeertdertddtnecuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuc
-    eorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrthhtvghrnhephfdthfdvtdefhedu
-    keetgefggffhjeeggeetfefggfevudegudevledvkefhvdeinecuvehluhhsthgvrhfuih
-    iivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvgdp
-    nhgspghrtghpthhtohepjedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepsghhvg
-    hlghgrrghssehgohhoghhlvgdrtghomhdprhgtphhtthhopehjohihtggvrdhoohhisehi
-    nhhtvghlrdgtohhmpdhrtghpthhtoheprghrnhgusehkvghrnhgvlhdrohhrghdprhgtph
-    htthhopehjihhrihhslhgrsgihsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehtghhl
-    gieslhhinhhuthhrohhnihigrdguvgdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlh
-    esvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhptghisehv
-    ghgvrhdrkhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:I8UuaIZ7MFfyOeKVSz5qL7N-eJfmK_mUSSKO6yGk7bvP-W2tYRPmQw>
-    <xmx:I8UuaDVoCgcjAbyLwRag84XWpRBZj4M1I_6RQTqLWEUPyge_GpbAcw>
-    <xmx:I8UuaOnALZxH_94VjHKNMSVwQ55i8XgZk6xBayfbogln-0VL7QaIcg>
-    <xmx:I8UuaIcVfwCuU6Qxu26bJVpx_9Qi_f2oRsknADVI55zp8oSDOuW-Fw>
-    <xmx:I8UuaPmn7PppwHlSQdS1micjhNbwhZgnl89Ss6fF1sHVZNSc8jsvmF5U>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 134901060061; Thu, 22 May 2025 02:33:07 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="cQ0D3NUP"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1747895613; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=6u+Ws6X5pzzDW5QmSYZtMVI4ITusZY9qox+oFBTbG7M=;
+	b=cQ0D3NUPPxucsRyZDusK2qSPHaXOpDqRn5amT+wkPj+4nd1qLTOA3w4akp2Hwpov7RrPgsGATDi6Xq6y75gZ+tI0jk1k1IOF4AbILJmRtqIJWhw6C+FqUiOegOWsj2JT15p8mNQN0mz3Y6RmYTK97ruPiTeehmWjfO73oEjlFYo=
+Received: from localhost.localdomain(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WbUiQMz_1747895611 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Thu, 22 May 2025 14:33:32 +0800
+From: Shuai Xue <xueshuai@linux.alibaba.com>
+To: vinicius.gomes@intel.com,
+	dave.jiang@intel.com,
+	fenghuay@nvidia.com,
+	vkoul@kernel.org
+Cc: xueshuai@linux.alibaba.com,
+	dmaengine@vger.kernel.org,
+	colin.i.king@gmail.com,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v1 0/2] dmaengine: idxd: minor fixes for idxd driver
+Date: Thu, 22 May 2025 14:33:27 +0800
+Message-ID: <20250522063329.51156-1-xueshuai@linux.alibaba.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: Te25cda601bfc812c
-Date: Thu, 22 May 2025 08:32:46 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Jiri Slaby" <jirislaby@kernel.org>, "Arnd Bergmann" <arnd@kernel.org>,
- "Thomas Gleixner" <tglx@linutronix.de>
-Cc: "Joyce Ooi" <joyce.ooi@intel.com>, "Bjorn Helgaas" <bhelgaas@google.com>,
- linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Message-Id: <beb25d1b-e7d9-4de9-83f6-4b6bf6616bda@app.fastmail.com>
-In-Reply-To: <e926d3ba-5ed2-4942-b928-a969ca085f63@kernel.org>
-References: <20250521163329.2137973-1-arnd@kernel.org>
- <e926d3ba-5ed2-4942-b928-a969ca085f63@kernel.org>
-Subject: Re: [PATCH] pci: altera: remove unused 'node' variable
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On Thu, May 22, 2025, at 07:53, Jiri Slaby wrote:
-> On 21. 05. 25, 18:29, Arnd Bergmann wrote:
->> From: Arnd Bergmann <arnd@arndb.de>
->> 
->> This variable is only used when CONFIG_OF is enabled:
->> 
->> drivers/pci/controller/pcie-altera.c: In function 'altera_pcie_init_irq_domain':
->> drivers/pci/controller/pcie-altera.c:855:29: error: unused variable 'node' [-Werror=unused-variable]
->>    855 |         struct device_node *node = dev->of_node;
->> 
->> Use dev_fwnode() in place of of_node_to_fwnode() to avoid this.
->
-> Reviewed-by: Jiri Slaby <jirislaby@kernel.org>
->
-> Right, this reminds me that my dev_fwnode() patches (in my local queue 
-> -- they were supposed to be in v3) are not only cleanup, but also fix 
-> warnings.
->
-> I was thinking to send those after the merge window (so that I can route 
-> through subsys maintainers and not bother Thomas, as they touch many 
-> files [1]), but I will send them when I am back from a conf.
+Add two minor fixes for idxd driver.
 
-Ok. As far as I can tell, my two patches (mfd and pci) touching
-four of those files are sufficient to address all the warnings
-I see on x86, arm64 and arm. I came to the same conclusion about
-being able to do more as cleanups but not needing them before the
-merge window.
+Shuai Xue (2):
+  dmaengine: idxd: Fix race condition between WQ enable and reset paths
+  dmaengine: idxd: fix potential NULL pointer dereference on wq setup
+    error path
 
-I also checked the power and mips specific files in your list
-and they should be warning-free as far as I can tell.
+ drivers/dma/idxd/device.c | 20 ++++++++++++++++++--
+ drivers/dma/idxd/init.c   |  3 ++-
+ 2 files changed, 20 insertions(+), 3 deletions(-)
 
-       Arnd
+-- 
+2.43.5
+
