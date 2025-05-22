@@ -1,114 +1,61 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9AEF28A1E3;
-	Thu, 22 May 2025 14:33:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9AE749625
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 14:34:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747924395; cv=none; b=X2CVZijH1hjzT0IEPFJ2qnU3gsxgTpgoXVtNQUvoKx/pYMMfLNWUcwNrWtgFzzHop8889+uRuf4JhwqEPZSyvAc/ij3tklGsWoK2yXTSx4vT4z2BiqApn16xrX6eJ8HtPG5HUfPk1yKASiP/dzi/d7X+GfUNMuty3nTsJS5XT50=
+	t=1747924489; cv=none; b=GuQQERNcCIu2ofH+DyioQR20TErF0Jd8C3RdS/O4KKtGw9qZg8lHPj8xJ5prGcqTSFQtO4rGTn+TIASPNKYJ/mdSAm78kHxaEPqvLm43Winz4hhu73QzMUsxi5lFtrX6Kqb0wzagVOUEe0dkwlIXMNM5tJiIkEkck7Syvir6ATo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747924395; c=relaxed/simple;
-	bh=DJKs6Q7Dqz8+aybYX0U4dC30YuBlJrtErU/MK3V46QE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Z5416MQkpltk5thumjhqyfei0vMoq+Q8rzGBcr8frjlXLTBi3HVxQbL9GeLGjsQeKxO091/oIPde0nyb42md+SGhkI2f15mA6oeq48WGtsg9avda+zw6iGOeXhgdMiwblDf3fwCdMs38m/qiLkYXvQx6v3zDo44hMyxkiK8omEk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CMqrnovc; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747924489; c=relaxed/simple;
+	bh=RMasDVOiSa0dzk4n96wLEuqXYoUKAgEUX92oLUcvssE=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=U0mPnptkdx+iQKO2PtgyCtmPndLpy6Xp6ovqOYLlap3HFmFfbjJj4F+30T2sxx4mtwJ/MhhLHNlJmZf1jSJyQNA/I0IyhHIQvkTKjTi0/G2Rw+u3O7hXHyfrap9cHGqF4Yzs+dFOEGdcrtVNj9o5GRJcT6RLSmXwcjE7KPc0aUE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r+W+OWSI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CMqrnovc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9834C4CEE4;
-	Thu, 22 May 2025 14:33:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r+W+OWSI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DCC00C4CEE4;
+	Thu, 22 May 2025 14:34:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747924395;
-	bh=DJKs6Q7Dqz8+aybYX0U4dC30YuBlJrtErU/MK3V46QE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=CMqrnovcHVWVuc3u/CUiT/cqgMzY16zqBcFlJI8s/Uavv6xzqnejwTL8rrF8O2I2N
-	 gNE44hAp4VSoMH3h2B1ZNvI6nYfepyKAsHH8E1BVz8OxIM4UZOl1fEWXLh7Sh6EMsm
-	 0CjKLxVRKsxR+bqIvgk06sY5ZKXcTzcz48n5Vhy9dB/uNscKVde3Iy9L2fW77rlblD
-	 YKt5V71dLuLFYQpHwBuqs6hADi7P5z09QLXhV3LYuBgTPSgiVJzLOcQeNbhOPY61j6
-	 Ka9esymGb0jdUuhDMNRvG48/ItghTZCDgL5T5EGHETWhukGRofLsAn6rTzyqK454tZ
-	 Y2DVt0kKBnYiQ==
-Date: Thu, 22 May 2025 15:33:09 +0100
+	s=k20201202; t=1747924488;
+	bh=RMasDVOiSa0dzk4n96wLEuqXYoUKAgEUX92oLUcvssE=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=r+W+OWSIT1qpkf8nEZTyhtiI/V3vzPiAMvF2ETl0eVjr6x//rrgY5KhwwWFSL0XWK
+	 QF6557r1potRF4/qHJOvAY0AaNCCGohAg6c392i7I+VB1XakVk9vMvh4FHjBjpQT5P
+	 6J6yeiBHtMolS7kPNDlTlAoGWnEbfTIhWpQzj66iKq0oTFiyF7Y93e/IBKpWAN4WkH
+	 er0uobvvyjmNhUkyrIQrEdSNJxwJyWPCc/XUSrV1RT0xfAx4EJpT+QdrDuY7N4qSPE
+	 mETGDzjFy9H/jqTkTgz4RtOZuTnmUtQ3aOi/ouktt+Aw3amiCtQ38nxQ3mtYt5C7q+
+	 u85PPzN6TKFHg==
 From: Lee Jones <lee@kernel.org>
-To: Alexandru Soponar <asoponar@taladin.ro>
-Cc: linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
-	linux-iio@vger.kernel.org, linux-leds@vger.kernel.org,
-	linux-watchdog@vger.kernel.org, jdelvare@suse.com,
-	linux@roeck-us.net, jic23@kernel.org, pavel@ucw.cz,
-	baocheng.su@siemens.com, wim@linux-watchdog.org,
-	tobias.schaffner@siemens.com,
-	angelogioacchino.delregno@collabora.com,
-	benedikt.niedermayr@siemens.com, matthias.bgg@gmail.com,
-	aardelean@baylibre.com, contact@sopy.one
-Subject: Re: [PATCH 13/16] leds: eds-mt6370-rgb: Fix type incompatibility
- with find_closest()
-Message-ID: <20250522143309.GA1378991@google.com>
-References: <20250515081332.151250-1-asoponar@taladin.ro>
- <20250515081332.151250-14-asoponar@taladin.ro>
+To: lee@kernel.org, Sumanth Gavini <sumanth.gavini@yahoo.com>
+Cc: linux-kernel@vger.kernel.org
+In-Reply-To: <20250520020808.159586-1-sumanth.gavini@yahoo.com>
+References: <20250520020808.159586-1-sumanth.gavini.ref@yahoo.com>
+ <20250520020808.159586-1-sumanth.gavini@yahoo.com>
+Subject: Re: (subset) [PATCH] mfd: maxim: Correct Samsung "Electronics"
+ spelling in headers
+Message-Id: <174792448762.1382298.17329304857950785447.b4-ty@kernel.org>
+Date: Thu, 22 May 2025 15:34:47 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250515081332.151250-14-asoponar@taladin.ro>
+X-Mailer: b4 0.15-dev-b75d9
 
-On Thu, 15 May 2025, Alexandru Soponar wrote:
-
-> The common_tfreqs and mt6372_tfreqs arrays were previously declared as
-> unsigned int but used with find_closest(), which now takes signed int
-> parameters. Change these arrays from unsigned int to int to maintain type
-> compatibility with the find_closest() function signature and prevent
-> compilation errors.
+On Mon, 19 May 2025 19:08:05 -0700, Sumanth Gavini wrote:
+> Fix the misspelling of 'Electronics' in MFD driver headers.
 > 
-> Signed-off-by: Alexandru Soponar <asoponar@taladin.ro>
-> ---
->  drivers/leds/rgb/leds-mt6370-rgb.c | 9 +++++----
->  1 file changed, 5 insertions(+), 4 deletions(-)
-
-Acked-by: Lee Jones <lee@kernel.org>
-
-> diff --git a/drivers/leds/rgb/leds-mt6370-rgb.c b/drivers/leds/rgb/leds-mt6370-rgb.c
-> index ebd3ba878dd5..6ce11432dd96 100644
-> --- a/drivers/leds/rgb/leds-mt6370-rgb.c
-> +++ b/drivers/leds/rgb/leds-mt6370-rgb.c
-> @@ -135,7 +135,7 @@ struct mt6370_led {
->  };
->  
->  struct mt6370_pdata {
-> -	const unsigned int *tfreq;
-> +	const int *tfreq;
->  	unsigned int tfreq_len;
->  	u16 reg_rgb1_tr;
->  	s16 reg_rgb_chrind_tr;
-> @@ -212,11 +212,11 @@ static const struct linear_range mt6372_led_ranges[R_MAX_RANGES] = {
->  	[R_LED_TOFF]	= { 250, 0, 15, 500 },
->  };
->  
-> -static const unsigned int common_tfreqs[] = {
-> +static const int common_tfreqs[] = {
->  	10000, 5000, 2000, 1000, 500, 200, 5, 1,
->  };
->  
-> -static const unsigned int mt6372_tfreqs[] = {
-> +static const int mt6372_tfreqs[] = {
->  	8000, 4000, 2000, 1000, 500, 250, 8, 4,
->  };
->  
-> @@ -304,7 +304,8 @@ static int mt6370_set_led_freq(struct mt6370_priv *priv, unsigned int led_no, un
->  	const struct mt6370_pdata *pdata = priv->pdata;
->  	enum mt6370_led_field sel_field;
->  	unsigned int tfreq_len = pdata->tfreq_len;
-> -	unsigned int tsum, sel;
-> +	unsigned int sel;
-> +	int tsum;
->  
->  	tsum = ton + toff;
->  
-> -- 
-> 2.49.0
 > 
 
--- 
+Applied, thanks!
+
+[1/1] mfd: maxim: Correct Samsung "Electronics" spelling in headers
+      commit: 01a09c2378753ba24f75fa12b7c8eac7f0f0b030
+
+--
 Lee Jones [李琼斯]
+
