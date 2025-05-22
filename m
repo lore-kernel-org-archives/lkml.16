@@ -1,196 +1,301 @@
-Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.netfilter.org (mail.netfilter.org [217.70.190.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D39E13D8B2
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 19:20:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC01E20E6E3;
+	Thu, 22 May 2025 19:24:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.190.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747941619; cv=none; b=dOU96P99+40vBCxKKUf9UQyKh3ol7tMsKikGFprKNRwyal//R1A3TU0uYnHukUKH0raVWC4BujFLw1V6mnHaA89i6TrfA+XdIBI67f/sPxgcOMhYGM9PP0X61mnETn02MGZBDNLITihawgD3gfocg6BC5xi5XHlMUxJ3S+QehTU=
+	t=1747941902; cv=none; b=pgMD0JBrzeRP5dTXhbnXyZ8ZZEyADumljgyJJpUFBxeomuQnX5XV831gWZbhhR/hDBqWIL7Q7fruy6jw8EII+j3fObroXBawTQXXI58MqqQJjkZVNYXcTVx4HuoybOiQkvUIM+18BHHTMWFzlPuHwK6MndTfzHj973pgESifZng=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747941619; c=relaxed/simple;
-	bh=Flu/isAmyCbTrz9xwLn13hoRVk9PwsB7V2D3/wlR9aE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=F0YjbKi8tXC0DQ4ppiv/jMFoLKKZPAT7Ex7t4BPxJhWBnhxcshZWWjVf3uyrG4jB+50DWWWXk1O32Idit3HNKNZ1LVUFW43Tm2ca/y4B56kVbhoRR8FShvJXh6yVxWPHPDy2fznMfn9DdtV4IOZREgCWV3yBXDylVrfMalJRlgM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Kz1ddCio; arc=none smtp.client-ip=209.85.222.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1747941902; c=relaxed/simple;
+	bh=KG1Jja0n0UrMwxefm4bdFF3JgNAo8tKJq9EJ7r6+Ud4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HxqYtd19OTGwc6q+fZ72ygk9cWvE1Q1TzNXNhQbcl4AoDPpGSOnySnMzyECi1rz7RydVtRUGcf+DXZwIGKOxM27o4+pbB9hforAgmi5WyBv+cxchA3zzBd/UTvebkGm7Elhgxkrtoytm7fIYFj9oPfJxnQIyIW0NODiSu04la1E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=netfilter.org; spf=pass smtp.mailfrom=netfilter.org; dkim=pass (2048-bit key) header.d=netfilter.org header.i=@netfilter.org header.b=H/XNdmFs; dkim=pass (2048-bit key) header.d=netfilter.org header.i=@netfilter.org header.b=aI9QrZzi; arc=none smtp.client-ip=217.70.190.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=netfilter.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=netfilter.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Kz1ddCio"
-Received: by mail-qk1-f173.google.com with SMTP id af79cd13be357-7c55500cf80so703186085a.1
-        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 12:20:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747941617; x=1748546417; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PgIZQIPQ0j6raACnSoKFPNh2DzvC29iIOKiCMVH+gE8=;
-        b=Kz1ddCio8Wg6juUFw3ZmZyvlB8xlyqBYYUdchO6LhII0ZV4DRwiyr76eJXnFRG+hoO
-         elC8V1mbezzrlEHIKqZcUfQ3idyrN1jgBnxmbXl6a1JuZ6lowKhRDaTWEETCQ83eaDQS
-         XL17dW1jw7dxZl/UrecyXvGHZJuA9hFYZuo0sIVpQtMWEwn46CxPa+C4KxOh0HOyYNYf
-         SzQTenoVJO7ZtTb12PSKawsXDi/28va9Kqh+qzSIWzQLgx7db3KgJimnSdMv4Uz6DTcT
-         4mDc9vXOlLfHHWyK36rE9/ghJpEXWijuUBtPzGB4uACRmck4NXIcr7n+5/jYHNf/ZWbA
-         v3Nw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747941617; x=1748546417;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=PgIZQIPQ0j6raACnSoKFPNh2DzvC29iIOKiCMVH+gE8=;
-        b=RmYOGKwg5hmBASc1HAMLTSgXWvQ3TAB9JzUiPy39cNUaaiAlQIJLUeVNQ6F9hxaRtn
-         4istyopBwZd2lfUKY5RHA9xhny1qgXd3fKPtkF8FTksntozihkG3ialKdpeKMvx8P6fi
-         7xd/dHy6KlV6bMBF4trF7AJ4fVAxpTl+iLLQh1ODi+/J4qG/m3kovwDMcg4jwyHOeS4f
-         tM/twuJ5FSwC7ppSr5mjXhVrxe5459r2+ym6wkMO8p9/FS5nfM3QjMsKoTgYR2wZlhLd
-         djHUTSlK3AfzqSV7cPJGILaFlH575uwk4hkjpsLSi6ddHU6k2zIcpt0E7oZc6nrv+7hJ
-         49Ag==
-X-Forwarded-Encrypted: i=1; AJvYcCUbBiTdROLBuE36vlyYNUvz1l0KNtBpnSkwwrlzvz0M2kLDetzCNcMdFKpc9ehRNoMu3MmDlRBvrV+GsA0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzhQP0sizQkOYIYpmvdj1s4qHgmfQGwgxjRwGQPng13qKiOivdz
-	bfUi/hgYD+Zgc1ZSFMUc5ABBr+HswCRpe9I1aBV/rWYnCgAivTLyRPtW3333oYYRw2Bpu7nGOs2
-	c/pzNnxVEyQtIrPh33Jn+ePia6sDB5mOs40dy1XvL
-X-Gm-Gg: ASbGncsBC8jWO7WGLCrcgQvl388ITSV6+Bh8SYwEFclQc2Bgi9Rnc0UD/vEE5JFQgjS
-	MGEZuiV0R+JxEZEWjKNiIPfUB30KDfRS+oUdE5yTZe1vYhd441eQKrdWMnRdHG2LDFdpn/ftMc6
-	ZSuD+Ej4KjELIBYxPtvIAEPzECM7k86Q1wGtsQbXypn9+gtrP6Hy0ZoakCMjC5HV7oms7MOCMiF
-	vdYs5Ad++rr
-X-Google-Smtp-Source: AGHT+IGm1Btmu3cb/tiOOdp0UebQ2jl7A41+6mFY13R7UjK0iunERZC6D0vXs4YT7J5HKX2YgiexhtSR0yQfkPA2JxA=
-X-Received: by 2002:a05:6214:2345:b0:6f8:a7c2:bb11 with SMTP id
- 6a1803df08f44-6fa93a29fddmr4939596d6.6.1747941616531; Thu, 22 May 2025
- 12:20:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=netfilter.org header.i=@netfilter.org header.b="H/XNdmFs";
+	dkim=pass (2048-bit key) header.d=netfilter.org header.i=@netfilter.org header.b="aI9QrZzi"
+Received: by mail.netfilter.org (Postfix, from userid 109)
+	id 1B49460702; Thu, 22 May 2025 21:24:57 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=netfilter.org;
+	s=2025; t=1747941897;
+	bh=01VDqd0ZfEmw/7MqDTZbhRjwp4vzisbjEHiab4aspTg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=H/XNdmFskWdbg4SxQy/CDwuJiL/bY85MMKUXyrVU1JSa1WGYRL+AzwpEM59qCuj6H
+	 9gz1KxY53YM34VU7a0rPcRVYbGD8O5H3sRFKG4MC+z9H4YxaWUCXruEY6tIXKZZZUz
+	 OoGibhu4S7iPt9rhQYKSW259eoH5wKX/VRmsszdRPGHndep7WctZUuK/C+94qGCbp6
+	 ABzzKPzZKMfmz/P6TLpq/qbDCaZ6CEqG3JhS4hmS4r2VzHl9/Ydw5IeaqUdY2DNxxe
+	 cDVYUN3xltk/jRgTn72wBAyIIM4XzaDIhlvA+NHYeafm8RYkgYehZ2xAGy+GDutLdG
+	 5v31m5FxV6tKw==
+X-Spam-Level: 
+Received: from netfilter.org (mail-agni [217.70.190.124])
+	by mail.netfilter.org (Postfix) with ESMTPSA id 12B7D606F6;
+	Thu, 22 May 2025 21:24:51 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=netfilter.org;
+	s=2025; t=1747941891;
+	bh=01VDqd0ZfEmw/7MqDTZbhRjwp4vzisbjEHiab4aspTg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=aI9QrZziZzKaA30a3EQPXTUb1kznOrr7LybujBzXjIJaxToT8I1QlfglZA9w9I2LS
+	 s83LmjSktsxVBPf8Yh3QPY7OdxSXg/Ixu6P6EYPLVcsaDvr9gA3i+d/Gqo9BR0NJcE
+	 NZirVKSZhxZxdRZ/+WDxDCtwC1oMPRAnTsyLGIlrPBUVD+zJwRaz0iM1t9tp7KoUSV
+	 ledHeVCHE0L9jfXX9a16bhLCWARgidVqBQnAf3c5UrUz4GULDdEtZQLPyqu0htKjFt
+	 0YTpfVsD49UW1aScTk82fA9LRV8UNN5Lbzv39QatMUkbZ/FI/i3v3zovHyPDeCDJY/
+	 DuwT5Qnuy6CpQ==
+Date: Thu, 22 May 2025 21:24:48 +0200
+From: Pablo Neira Ayuso <pablo@netfilter.org>
+To: lvxiafei <xiafei_xupt@163.com>
+Cc: coreteam@netfilter.org, davem@davemloft.net, edumazet@google.com,
+	horms@kernel.org, kadlec@netfilter.org, kuba@kernel.org,
+	linux-kernel@vger.kernel.org, lvxiafei@sensetime.com,
+	netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
+	pabeni@redhat.com
+Subject: Re: [PATCH V6] netfilter: netns nf_conntrack: per-netns
+ net.netfilter.nf_conntrack_max sysctl
+Message-ID: <aC96AHaQX9WVtln5@calendula>
+References: <20250407095052.49526-1-xiafei_xupt@163.com>
+ <20250415090834.24882-1-xiafei_xupt@163.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250517043942.372315-1-royluo@google.com> <8f023425-3f9b-423c-9459-449d0835c608@linux.intel.com>
- <CAMTwNXB0QLP-b=RmLPtRJo=T_efN_3H4dd5AiMNYrJDXddJkMA@mail.gmail.com>
- <fbf92981-6601-4ee9-a494-718e322ac1b9@linux.intel.com> <CA+zupgyU2czaczPcqavYBi=NrPqKqgp7SbrUocy0qbJ0m9np6g@mail.gmail.com>
- <6bfee225-7519-41ab-8ae9-99267c5ce06e@intel.com>
-In-Reply-To: <6bfee225-7519-41ab-8ae9-99267c5ce06e@intel.com>
-From: Roy Luo <royluo@google.com>
-Date: Thu, 22 May 2025 12:19:40 -0700
-X-Gm-Features: AX0GCFuJzBzMPdmywUarQdKbXYdF5W_yqGe-afth_QCS9OITwqZ39S_C5IBtRsY
-Message-ID: <CA+zupgxkvm9HxG4Aj1avPA-ZgjVxmg3T3GtbfnV=rXk9P7-pFQ@mail.gmail.com>
-Subject: Re: [PATCH v1] Revert "usb: xhci: Implement xhci_handshake_check_state()
- helper"
-To: Mathias Nyman <mathias.nyman@intel.com>
-Cc: Mathias Nyman <mathias.nyman@linux.intel.com>, 
-	Udipto Goswami <udipto.goswami@oss.qualcomm.com>, quic_ugoswami@quicinc.com, 
-	Thinh.Nguyen@synopsys.com, gregkh@linuxfoundation.org, michal.pecio@gmail.com, 
-	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250415090834.24882-1-xiafei_xupt@163.com>
 
-On Thu, May 22, 2025 at 5:24=E2=80=AFAM Mathias Nyman <mathias.nyman@intel.=
-com> wrote:
->
-> On 22.5.2025 5.21, Roy Luo wrote:
-> >>>> Udipto Goswami, can you recall the platforms that needed this workar=
-oud?
-> >>>> and do we have an easy way to detect those?
-> >>>
-> >>> Hi Mathias,
-> >>>
-> >>>   From what I recall, we saw this issue coming up on our QCOM mobile
-> >>> platforms but it was not consistent. It was only reported in long run=
-s
-> >>> i believe. The most recent instance when I pushed this patch was with
-> >>> platform SM8650, it was a watchdog timeout issue where xhci_reset() -=
->
-> >>> xhci_handshake() polling read timeout upon xhci remove. Unfortunately
-> >>> I was not able to simulate the scenario for more granular testing and
-> >>> had validated it with long hours stress testing.
-> >>> The callstack was like so:
-> >>>
-> >>> Full call stack on core6:
-> >>> -000|readl([X19] addr =3D 0xFFFFFFC03CC08020)
-> >>> -001|xhci_handshake(inline)
-> >>> -001|xhci_reset([X19] xhci =3D 0xFFFFFF8942052250, [X20] timeout_us =
-=3D 10000000)
-> >>> -002|xhci_resume([X20] xhci =3D 0xFFFFFF8942052250, [?] hibernated =
-=3D ?)
-> >>> -003|xhci_plat_runtime_resume([locdesc] dev =3D ?)
-> >>> -004|pm_generic_runtime_resume([locdesc] dev =3D ?)
-> >>> -005|__rpm_callback([X23] cb =3D 0xFFFFFFE3F09307D8, [X22] dev =3D
-> >>> 0xFFFFFF890F619C10)
-> >>> -006|rpm_callback(inline)
-> >>> -006|rpm_resume([X19] dev =3D 0xFFFFFF890F619C10,
-> >>> [NSD:0xFFFFFFC041453AD4] rpmflags =3D 4)
-> >>> -007|__pm_runtime_resume([X20] dev =3D 0xFFFFFF890F619C10, [X19] rpmf=
-lags =3D 4)
-> >>> -008|pm_runtime_get_sync(inline)
-> >>> -008|xhci_plat_remove([X20] dev =3D 0xFFFFFF890F619C00)
-> >>
-> >> Thank you for clarifying this.
-> >>
-> >> So patch avoids the long timeout by always cutting xhci reinit path sh=
-ort in
-> >> xhci_resume() if resume was caused by pm_runtime_get_sync() call in
-> >> xhci_plat_remove()
-> >>
-> >> void xhci_plat_remove(struct platform_device *dev)
-> >> {
-> >>          xhci->xhc_state |=3D XHCI_STATE_REMOVING;
-> >>          pm_runtime_get_sync(&dev->dev);
-> >>          ...
-> >> }
-> >>
-> >> I think we can revert this patch, and just make sure that we don't res=
-et the
-> >> host in the reinit path of xhci_resume() if XHCI_STATE_REMOVING is set=
-.
-> >> Just return immediately instead.
-> >>
-> >
-> > Just to be sure, are you proposing that we skip xhci_reset() within
-> > the reinit path
-> > of xhci_resume()? If we do that, could that lead to issues with
-> > subsequent operations
-> > in the reinit sequence, such as xhci_init() or xhci_run()?
->
-> I suggest to only skip xhci_reset in xhci_resume() if XHCI_STATE_REMOVING=
- is set.
->
-> This should be similar to what is going on already.
->
-> xhci_reset() currently returns -ENODEV if XHCI_STATE_REMOVING is set, unl=
-ess reset
-> completes extremely fast. xhci_resume() bails out if xhci_reset() returns=
- error:
->
-> xhci_resume()
->    ...
->    if (power_lost) {
->      ...
->      retval =3D xhci_reset(xhci, XHCI_RESET_LONG_USEC);
->      spin_unlock_irq(&xhci->lock);
->      if (retval)
->        return retval;
-> >
-> > Do you prefer to group the change to skip xhci_reset() within the
-> > reinit path together
-> > with this revert? or do you want it to be sent and reviewed separately?
->
-> First a patch that bails out from xhci_resume() if XHCI_STATE_REMOVING is=
- set
-> and we are in the reinit (power_lost) path about to call xhci_reset();
->
-> Then a second patch that reverts 6ccb83d6c497 ("usb: xhci: Implement
-> xhci_handshake_check_state()
->
-> Does this sound reasonable?
->
-> should avoid the QCOM 10sec watchdog issue as next xhci_rest() called
-> in xhci_remove() path has a short 250ms timeout, and ensure the
-> SNPS DWC3 USB regression won't trigger.
->
-> Thanks
-> Mathias
->
+On Tue, Apr 15, 2025 at 05:08:34PM +0800, lvxiafei wrote:
+> diff --git a/Documentation/networking/nf_conntrack-sysctl.rst b/Documentation/networking/nf_conntrack-sysctl.rst
+> index 238b66d0e059..6e7f17f5959a 100644
+> --- a/Documentation/networking/nf_conntrack-sysctl.rst
+> +++ b/Documentation/networking/nf_conntrack-sysctl.rst
+> @@ -93,12 +93,29 @@ nf_conntrack_log_invalid - INTEGER
+>  	Log invalid packets of a type specified by value.
+>  
+>  nf_conntrack_max - INTEGER
+> -        Maximum number of allowed connection tracking entries. This value is set
+> -        to nf_conntrack_buckets by default.
+> -        Note that connection tracking entries are added to the table twice -- once
+> -        for the original direction and once for the reply direction (i.e., with
+> -        the reversed address). This means that with default settings a maxed-out
+> -        table will have a average hash chain length of 2, not 1.
+> +    - 0 - disabled (unlimited)
 
-Thanks for the clarification! SGTM.
-I've sent out a new patchset accordingly
-https://lore.kernel.org/linux-usb/20250522190912.457583-1-royluo@google.com=
-/
+unlimited is too much, and the number of buckets is also global, how
+does this work?
 
-Thanks,
-Roy
+Is your goal to allow a netns to have larger table than netns? There
+should be a cap for this.
+
+> +    - not 0 - enabled
+> +
+> +    Maximum number of allowed connection tracking entries per netns. This value
+> +    is set to nf_conntrack_buckets by default.
+> +
+> +    Note that connection tracking entries are added to the table twice -- once
+> +    for the original direction and once for the reply direction (i.e., with
+> +    the reversed address). This means that with default settings a maxed-out
+> +    table will have a average hash chain length of 2, not 1.
+> +
+> +    The limit of other netns cannot be greater than init_net netns.
+> +    +----------------+-------------+----------------+
+> +    | init_net netns | other netns | limit behavior |
+> +    +----------------+-------------+----------------+
+> +    | 0              | 0           | unlimited      |
+> +    +----------------+-------------+----------------+
+> +    | 0              | not 0       | other          |
+> +    +----------------+-------------+----------------+
+> +    | not 0          | 0           | init_net       |
+> +    +----------------+-------------+----------------+
+> +    | not 0          | not 0       | min            |
+> +    +----------------+-------------+----------------+
+>  
+>  nf_conntrack_tcp_be_liberal - BOOLEAN
+>  	- 0 - disabled (default)
+> diff --git a/include/net/netfilter/nf_conntrack.h b/include/net/netfilter/nf_conntrack.h
+> index 3f02a45773e8..594439b2f5a1 100644
+> --- a/include/net/netfilter/nf_conntrack.h
+> +++ b/include/net/netfilter/nf_conntrack.h
+> @@ -320,7 +320,6 @@ int nf_conntrack_hash_resize(unsigned int hashsize);
+>  extern struct hlist_nulls_head *nf_conntrack_hash;
+>  extern unsigned int nf_conntrack_htable_size;
+>  extern seqcount_spinlock_t nf_conntrack_generation;
+> -extern unsigned int nf_conntrack_max;
+>  
+>  /* must be called with rcu read lock held */
+>  static inline void
+> @@ -360,6 +359,17 @@ static inline struct nf_conntrack_net *nf_ct_pernet(const struct net *net)
+>  	return net_generic(net, nf_conntrack_net_id);
+>  }
+>  
+> +static inline unsigned int nf_conntrack_max(const struct net *net)
+> +{
+> +#if IS_ENABLED(CONFIG_NF_CONNTRACK)
+> +	return likely(init_net.ct.sysctl_max && net->ct.sysctl_max) ?
+> +	    min(init_net.ct.sysctl_max, net->ct.sysctl_max) :
+> +	    max(init_net.ct.sysctl_max, net->ct.sysctl_max);
+> +#else
+> +	return 0;
+> +#endif
+> +}
+> +
+>  int nf_ct_skb_network_trim(struct sk_buff *skb, int family);
+>  int nf_ct_handle_fragments(struct net *net, struct sk_buff *skb,
+>  			   u16 zone, u8 family, u8 *proto, u16 *mru);
+> diff --git a/include/net/netns/conntrack.h b/include/net/netns/conntrack.h
+> index bae914815aa3..d3fcd0b92b2d 100644
+> --- a/include/net/netns/conntrack.h
+> +++ b/include/net/netns/conntrack.h
+> @@ -102,6 +102,7 @@ struct netns_ct {
+>  	u8			sysctl_acct;
+>  	u8			sysctl_tstamp;
+>  	u8			sysctl_checksum;
+> +	unsigned int		sysctl_max;
+>  
+>  	struct ip_conntrack_stat __percpu *stat;
+>  	struct nf_ct_event_notifier __rcu *nf_conntrack_event_cb;
+> diff --git a/net/netfilter/nf_conntrack_core.c b/net/netfilter/nf_conntrack_core.c
+> index 7f8b245e287a..a738564923ec 100644
+> --- a/net/netfilter/nf_conntrack_core.c
+> +++ b/net/netfilter/nf_conntrack_core.c
+> @@ -202,8 +202,6 @@ static void nf_conntrack_all_unlock(void)
+>  unsigned int nf_conntrack_htable_size __read_mostly;
+>  EXPORT_SYMBOL_GPL(nf_conntrack_htable_size);
+>  
+> -unsigned int nf_conntrack_max __read_mostly;
+> -EXPORT_SYMBOL_GPL(nf_conntrack_max);
+>  seqcount_spinlock_t nf_conntrack_generation __read_mostly;
+>  static siphash_aligned_key_t nf_conntrack_hash_rnd;
+>  
+> @@ -1498,7 +1496,7 @@ static bool gc_worker_can_early_drop(const struct nf_conn *ct)
+>  
+>  static void gc_worker(struct work_struct *work)
+>  {
+> -	unsigned int i, hashsz, nf_conntrack_max95 = 0;
+> +	unsigned int i, hashsz;
+>  	u32 end_time, start_time = nfct_time_stamp;
+>  	struct conntrack_gc_work *gc_work;
+>  	unsigned int expired_count = 0;
+> @@ -1509,8 +1507,6 @@ static void gc_worker(struct work_struct *work)
+>  	gc_work = container_of(work, struct conntrack_gc_work, dwork.work);
+>  
+>  	i = gc_work->next_bucket;
+> -	if (gc_work->early_drop)
+> -		nf_conntrack_max95 = nf_conntrack_max / 100u * 95u;
+>  
+>  	if (i == 0) {
+>  		gc_work->avg_timeout = GC_SCAN_INTERVAL_INIT;
+> @@ -1538,6 +1534,7 @@ static void gc_worker(struct work_struct *work)
+>  		}
+>  
+>  		hlist_nulls_for_each_entry_rcu(h, n, &ct_hash[i], hnnode) {
+> +			unsigned int nf_conntrack_max95 = 0;
+>  			struct nf_conntrack_net *cnet;
+>  			struct net *net;
+>  			long expires;
+> @@ -1567,11 +1564,14 @@ static void gc_worker(struct work_struct *work)
+>  			expires = clamp(nf_ct_expires(tmp), GC_SCAN_INTERVAL_MIN, GC_SCAN_INTERVAL_CLAMP);
+>  			expires = (expires - (long)next_run) / ++count;
+>  			next_run += expires;
+> +			net = nf_ct_net(tmp);
+> +
+> +			if (gc_work->early_drop)
+> +				nf_conntrack_max95 = nf_conntrack_max(net) / 100u * 95u;
+>  
+>  			if (nf_conntrack_max95 == 0 || gc_worker_skip_ct(tmp))
+>  				continue;
+>  
+> -			net = nf_ct_net(tmp);
+>  			cnet = nf_ct_pernet(net);
+>  			if (atomic_read(&cnet->count) < nf_conntrack_max95)
+>  				continue;
+> @@ -1648,13 +1648,14 @@ __nf_conntrack_alloc(struct net *net,
+>  		     gfp_t gfp, u32 hash)
+>  {
+>  	struct nf_conntrack_net *cnet = nf_ct_pernet(net);
+> -	unsigned int ct_count;
+> +	unsigned int ct_max, ct_count;
+>  	struct nf_conn *ct;
+>  
+>  	/* We don't want any race condition at early drop stage */
+>  	ct_count = atomic_inc_return(&cnet->count);
+> +	ct_max = nf_conntrack_max(net);
+>  
+> -	if (nf_conntrack_max && unlikely(ct_count > nf_conntrack_max)) {
+> +	if (ct_max && unlikely(ct_count > ct_max)) {
+>  		if (!early_drop(net, hash)) {
+>  			if (!conntrack_gc_work.early_drop)
+>  				conntrack_gc_work.early_drop = true;
+> @@ -2650,7 +2651,7 @@ int nf_conntrack_init_start(void)
+>  	if (!nf_conntrack_hash)
+>  		return -ENOMEM;
+>  
+> -	nf_conntrack_max = max_factor * nf_conntrack_htable_size;
+> +	init_net.ct.sysctl_max = max_factor * nf_conntrack_htable_size;
+>  
+>  	nf_conntrack_cachep = kmem_cache_create("nf_conntrack",
+>  						sizeof(struct nf_conn),
+> diff --git a/net/netfilter/nf_conntrack_netlink.c b/net/netfilter/nf_conntrack_netlink.c
+> index 2cc0fde23344..73e6bb1e939b 100644
+> --- a/net/netfilter/nf_conntrack_netlink.c
+> +++ b/net/netfilter/nf_conntrack_netlink.c
+> @@ -2608,7 +2608,7 @@ ctnetlink_stat_ct_fill_info(struct sk_buff *skb, u32 portid, u32 seq, u32 type,
+>  	if (nla_put_be32(skb, CTA_STATS_GLOBAL_ENTRIES, htonl(nr_conntracks)))
+>  		goto nla_put_failure;
+>  
+> -	if (nla_put_be32(skb, CTA_STATS_GLOBAL_MAX_ENTRIES, htonl(nf_conntrack_max)))
+> +	if (nla_put_be32(skb, CTA_STATS_GLOBAL_MAX_ENTRIES, htonl(nf_conntrack_max(net))))
+>  		goto nla_put_failure;
+>  
+>  	nlmsg_end(skb, nlh);
+> diff --git a/net/netfilter/nf_conntrack_standalone.c b/net/netfilter/nf_conntrack_standalone.c
+> index 2f666751c7e7..5db6df0e4eb3 100644
+> --- a/net/netfilter/nf_conntrack_standalone.c
+> +++ b/net/netfilter/nf_conntrack_standalone.c
+> @@ -615,7 +615,7 @@ enum nf_ct_sysctl_index {
+>  static struct ctl_table nf_ct_sysctl_table[] = {
+>  	[NF_SYSCTL_CT_MAX] = {
+>  		.procname	= "nf_conntrack_max",
+> -		.data		= &nf_conntrack_max,
+> +		.data		= &init_net.ct.sysctl_max,
+>  		.maxlen		= sizeof(int),
+>  		.mode		= 0644,
+>  		.proc_handler	= proc_dointvec_minmax,
+> @@ -948,7 +948,7 @@ static struct ctl_table nf_ct_sysctl_table[] = {
+>  static struct ctl_table nf_ct_netfilter_table[] = {
+>  	{
+>  		.procname	= "nf_conntrack_max",
+> -		.data		= &nf_conntrack_max,
+> +		.data		= &init_net.ct.sysctl_max,
+>  		.maxlen		= sizeof(int),
+>  		.mode		= 0644,
+>  		.proc_handler	= proc_dointvec_minmax,
+> @@ -1063,6 +1063,7 @@ static int nf_conntrack_standalone_init_sysctl(struct net *net)
+>  
+>  	table[NF_SYSCTL_CT_COUNT].data = &cnet->count;
+>  	table[NF_SYSCTL_CT_CHECKSUM].data = &net->ct.sysctl_checksum;
+> +	table[NF_SYSCTL_CT_MAX].data = &net->ct.sysctl_max;
+>  	table[NF_SYSCTL_CT_LOG_INVALID].data = &net->ct.sysctl_log_invalid;
+>  	table[NF_SYSCTL_CT_ACCT].data = &net->ct.sysctl_acct;
+>  #ifdef CONFIG_NF_CONNTRACK_EVENTS
+> @@ -1087,7 +1088,6 @@ static int nf_conntrack_standalone_init_sysctl(struct net *net)
+>  
+>  	/* Don't allow non-init_net ns to alter global sysctls */
+>  	if (!net_eq(&init_net, net)) {
+> -		table[NF_SYSCTL_CT_MAX].mode = 0444;
+>  		table[NF_SYSCTL_CT_EXPECT_MAX].mode = 0444;
+>  		table[NF_SYSCTL_CT_BUCKETS].mode = 0444;
+>  	}
+> @@ -1139,6 +1139,7 @@ static int nf_conntrack_pernet_init(struct net *net)
+>  	int ret;
+>  
+>  	net->ct.sysctl_checksum = 1;
+> +	net->ct.sysctl_max = init_net.ct.sysctl_max;
+>  
+>  	ret = nf_conntrack_standalone_init_sysctl(net);
+>  	if (ret < 0)
+> -- 
+> 2.40.1
+> 
