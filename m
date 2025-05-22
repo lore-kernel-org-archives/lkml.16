@@ -1,116 +1,217 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E84D1531E8
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 17:52:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48B6719ADBF
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 17:52:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747936363; cv=none; b=tY/JhS5492n0NSCoHr0/e8dyleYBR/wG5R6bfvj/lBpf39DbfhCm5elFgdpRMrGIB+31by0+nqd8w7L58TlVhrUU2/qOh/l7FrywjEpYEXJAWgqy70z6DaNTg+RBWnDJGBSlJBWXm6cl99amLK4AHHoYk7pZLz2bj16KnI5PAbM=
+	t=1747936366; cv=none; b=HjCTuQiot3KfktJvA1AS6HuqN26AO2xVo/vrw9NNSeOAcXRmDV+UuBu0+xCQHZqYqDcQp8EMNygJjdikksavBITikqj/p8giLTKmhXVObscK116xtvAHCksppk2/HF9A1XVoRQQQ8rq+nsSPIxXuHwGScIMG1jVPk4n9lGTgj2k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747936363; c=relaxed/simple;
-	bh=33shT5yeyG4GlN8jGmN8cxW02rgQnzlcfRYf0PWvCkY=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=CjprgHfJVUKS9rIjplHDaLsp1lv1lAI9vHCd4H6fq0HhL3nvNUC1cacusKaaIGgmhWQUlxpb7AqILauJGvzvqK7xWtk222r60nSuap9NYY5rI8N9g4z9uhVE6y3t4Tt+piQtsFZgMffKK0QIEI7+yGR+YEfDSQjFy9zJ8NlADpc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QGzb0cUU; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1747936366; c=relaxed/simple;
+	bh=9btVnPDQ/5pbfG+bD1s8KqMltDfTPB7R2unTJ88Ktjg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TX4fLIHX9bG1wgfYcGjinwfTsfKeAD8ZhLgNb418TTgf8ormW2ZPtqoCD3LFtXUis6KFG9YeBaSplDR+uUatjWh0gIhf0l7drxZxUx8YsMXxR+x/Ac9w0LYYb2xzjyQ01DfcOksp9fcJWj75ZHmzmmnAjieUJoGxBVtJ8J7bvMM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=H6fP7ohJ; arc=none smtp.client-ip=209.85.221.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QGzb0cUU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747936358;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qCFC7svM4JZpb/vXhsBX/8srNOTogK7PWQN0WLRIUJo=;
-	b=QGzb0cUUzaIuIEZrMYl3U1evj/GwYMzLtL03G2DfzhMtjYWJ/QtpK1doC064J+I/Ec+CQe
-	J7+w93EyQCs1UCSf0vwfcEBomCRLz/X5fWWBO/lFRxrOlkIGoARq3UehtqZlsHf0ks2Zzb
-	l4DuQ+lo2uMUAqV1ub+q8xcNaX5YdDU=
-Received: from mail-io1-f70.google.com (mail-io1-f70.google.com
- [209.85.166.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-519-GqOpK3RIPiuu-3JihGQyTw-1; Thu, 22 May 2025 13:52:36 -0400
-X-MC-Unique: GqOpK3RIPiuu-3JihGQyTw-1
-X-Mimecast-MFC-AGG-ID: GqOpK3RIPiuu-3JihGQyTw_1747936356
-Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-8614a8474f6so142250739f.3
-        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 10:52:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="H6fP7ohJ"
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3a37b5de515so604141f8f.2
+        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 10:52:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1747936363; x=1748541163; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=GbnwMM90Tp9Pwsxwupta8O9pbwTshaJHr+P8ctDhHxg=;
+        b=H6fP7ohJuGWawYRAACo+sPrrwOqekGCi02PHEEzAwbBNoYWxSRJtOzy8vA3cg3Pah9
+         6wmCegmF1lwP+4b1B/bw2Al4hnIpahHI4kjm02tlDFPIWIS366mp3T+/vln6iN27RjFp
+         gkbOQwU2HOh9vFdkX7/M1wzS+fFFCdBqb70keQ2TLrX0cjlfBee5uSRaQHU4wkuqCtcl
+         ILoiyosM86v7zUmvNubWV6fFcbGK7DlUZCLqE9Hxm2VA9uIXRO00tucUx5g6sZcRJuKG
+         AzzTX8BM/j+zkmFjptZ54kc9/oRnVhInpwTeu4ppgXXr+IqTxNiYXqc3cDcX7tgMOKMr
+         6J1Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747936355; x=1748541155;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qCFC7svM4JZpb/vXhsBX/8srNOTogK7PWQN0WLRIUJo=;
-        b=LhnyMyhIme5VnnRBkRFX1PcIMAjmnHoIi4CZrlAGFU9zolflNSftwX5LRaEC0PeBKv
-         Vk+h5+lSTP5hl/sEJimb2fpKrkUcPwmvkacBhPMmQEhw25pcbVMqA+4HrW0I/eI8JCsE
-         wvv0+ndeyqt6Bs8mDEuJBq5DyKVtSd0kbRzTERLbkpCnTk/U7nHqvsasrduwDxaYXn1O
-         qDw14EpMmfXwBFDlyOZ5ho+kctYNoq3gpaFnm9A5IzeegroCd7R/cI8KkfgtsRqy8skF
-         FgWxWzIxwyfY+SquBVS9gPQYpJGI3Vpo5jq37nMdXY0QgJn/6Ou8ygTwWVt1Iga2iUeN
-         RcEQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXZSVTsgISdSGb7R336BqvkkFJH4FUaAoxXs3z2mcVMToC6o+Ata2rPqnqhBs3eHRW9UsYDemdC3IYr0IM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw+QUsoaafvv8OXYJiVSptVVdOdCGAWSCsky8LxBG9zPQ6Y49S3
-	Ahtw4eNNe63OvPgmHktjL9RnxNP8riP89+Pp5I029GMJcNN52U18HMtXKhzQ3AA3xDQ0R0F/7+Z
-	Z9Nh7EvzFq5MZ40Zek9t/D3elj6p2xe10gXgbP6S9+AKT5NXH3o4R0QqCs6MSYnR+71LPa1eRYg
-	==
-X-Gm-Gg: ASbGncvuyp0N676bdUUmbFrQGtBBRkHaENjLzZ1zbc5QkCzBt3XSBaAXqq9A0TZsWCb
-	cE7TpDNUl7YeIdW4F8MMQHLOvq6O2hFxQKV/JmzYdbL7GKMMHQICllHBMUpVC8RGvaNHWLh/6vJ
-	lPZm7iJnUMgffaV6V0A3kYmbFXyye4K06ncZSLMvFyibl7MyMeWgYQb9jSRmEWcuuvjaXF+1UHR
-	e/HIyOf4QBy9HwyXsqqQW6EdK79g16MQKmoN4aiVpKrdxZFaxJIItYRLZGsMIwKQX4pToUkIoIY
-	g2lnMTw/rysAW0I=
-X-Received: by 2002:a05:6e02:4901:b0:3dc:8075:ccc4 with SMTP id e9e14a558f8ab-3dc8085148cmr26949175ab.3.1747936355320;
-        Thu, 22 May 2025 10:52:35 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEXoXfZvws0L1W7xZChiVtBXB0ueiTvpjJifRiy6I6C2ZywtlKUHJyc9rf8zT1q87w+pM5CSw==
-X-Received: by 2002:a05:6e02:4901:b0:3dc:8075:ccc4 with SMTP id e9e14a558f8ab-3dc8085148cmr26949045ab.3.1747936354959;
-        Thu, 22 May 2025 10:52:34 -0700 (PDT)
-Received: from redhat.com ([38.15.36.11])
-        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-3dc89bfeebfsm7228115ab.68.2025.05.22.10.52.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 May 2025 10:52:33 -0700 (PDT)
-Date: Thu, 22 May 2025 11:52:31 -0600
-From: Alex Williamson <alex.williamson@redhat.com>
-To: "Li,Rongqing" <lirongqing@baidu.com>
-Cc: "kwankhede@nvidia.com" <kwankhede@nvidia.com>, "yan.y.zhao@intel.com"
- <yan.y.zhao@intel.com>, "cjia@nvidia.com" <cjia@nvidia.com>,
- "kvm@vger.kernel.org" <kvm@vger.kernel.org>, "linux-kernel@vger.kernel.org"
- <linux-kernel@vger.kernel.org>
-Subject: Re: [????] Re: [PATCH] vfio/type1: fixed rollback in
- vfio_dma_bitmap_alloc_all()
-Message-ID: <20250522115231.729dad0c.alex.williamson@redhat.com>
-In-Reply-To: <64e1bbd6b7e94aa0b5bc4556d5d335a6@baidu.com>
-References: <20250521034647.2877-1-lirongqing@baidu.com>
-	<20250521140034.35648fde.alex.williamson@redhat.com>
-	<64e1bbd6b7e94aa0b5bc4556d5d335a6@baidu.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+        d=1e100.net; s=20230601; t=1747936363; x=1748541163;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=GbnwMM90Tp9Pwsxwupta8O9pbwTshaJHr+P8ctDhHxg=;
+        b=oX665lH0HnP0PydF4UhKSiI+3kr6nuc1oPXCXoEDVU5qYHQ6iWwg9xjAZRRJnurCzG
+         owqPXdH4WC4kzA0pcEInDUpHEmYbwRIiZPHYGpBGuecZeIRc37B89QZmv7eyU+8iUtPl
+         VQY9+cpk7EuqXKzDV1mh/kb2pfyiDITy1czICkTeFZCDEgq0Sn+JJbOf0lvpAkT8easL
+         AZog9L86m+ZKrmZsWjj7WgIMQ7LVD/7yib1gFh/bxVOGOhlAeemvDF33wUraG+NrhY6d
+         NC+gciOBcQmpLK6E01qUypjTJ3C20JCV2ePsqu83klpTqiZnw0mb6A8JOOksKxinxMzB
+         p/0g==
+X-Forwarded-Encrypted: i=1; AJvYcCVOItnA6uDuU/oDXt3+L+Leeaspg0ro8Lt7R/HKCIo6yioHpNWtijpcb55S1X93qysfGGbe3UjN3joZr3E=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxYIZrqsO4P5H7okbLZf5noPcNO7tx2VhasPgawjto2QpyRqvQu
+	+3RR6YFbnjHljkuULU3zuGZg6fT41Hh8SqFyvJ3YEs2L55OwFbVOSDh3fZZsE6CI5RI=
+X-Gm-Gg: ASbGncsW7kZ0gur7KDUwGtQ1ar9ikXKF9WU6MsliKyAbcP/FU7pHqrvrIGP7aVVHG5j
+	mILtJ6n/6bYlRZx1yTWwKEnMxwK/vNv6GEzWFwJPh7tJ4EeBaMwYLN50CNIcntZYNlP4EbQeWlj
+	JbaLev2HPsU9emc07QaWCNdeMKNRXYy8eCiK+o/AQJgXxjb3yHxYhAGAfVDu8/JspAFc4dbFBP5
+	CPzpXDe3D7wFP5Xb5IcgQum49oyy3F1y2sPbf0zqfpFCAfOmgANCu6/ZxfzKX96X7YSFQb7gzYO
+	eKV835rdhCsda3TnifgTIwXWKcYoYIgd7Z4bP4cS39USsLhN9CmLDEsFbZnB5ofEhVxS17U=
+X-Google-Smtp-Source: AGHT+IFWyjcdpS14Udb2lwsYPAyL+RI4DXcO80D52N7Zxv1r5Hp4zUi/6e3mDIF/WFfoDfaJTgziTA==
+X-Received: by 2002:a05:600c:314f:b0:439:8294:2115 with SMTP id 5b1f17b1804b1-442fd68436amr96058945e9.8.1747936362592;
+        Thu, 22 May 2025 10:52:42 -0700 (PDT)
+Received: from [192.168.1.29] ([178.197.223.125])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-447f6f062fcsm110380555e9.15.2025.05.22.10.52.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 22 May 2025 10:52:41 -0700 (PDT)
+Message-ID: <26afac49-2500-470b-a21a-d57e4ff14fa6@linaro.org>
+Date: Thu, 22 May 2025 19:52:39 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 07/12] arm64: dts: qcom: sm6115: add LPASS devices
+To: Alexey Klimov <alexey.klimov@linaro.org>,
+ Srinivas Kandagatla <srini@kernel.org>, Mark Brown <broonie@kernel.org>,
+ linux-sound@vger.kernel.org
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
+ Dmitry Baryshkov <lumag@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>,
+ Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+ linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+References: <20250522-rb2_audio_v3-v3-0-9eeb08cab9dc@linaro.org>
+ <20250522-rb2_audio_v3-v3-7-9eeb08cab9dc@linaro.org>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Content-Language: en-US
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ 2+47PN9NZAOyb771QoVr8A==
+In-Reply-To: <20250522-rb2_audio_v3-v3-7-9eeb08cab9dc@linaro.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On Thu, 22 May 2025 01:53:48 +0000
-"Li,Rongqing" <lirongqing@baidu.com> wrote:
-
-> >     vfio/type1: Fix error unwind in migration dirty bitmap allocation
-> > 
-> >     When setting up dirty page tracking at the vfio IOMMU backend for
-> >     device migration, if an error is encountered allocating a tracking
-> >     bitmap, the unwind loop fails to free previously allocated tracking
-> >     bitmaps.  This occurs because the wrong loop index is used to
-> >     generate the tracking object.  This results in unintended memory
-> >     usage for the life of the current DMA mappings where bitmaps were
-> >     successfully allocated.
-> > 
-> >     Use the correct loop index to derive the tracking object for
-> >     freeing during unwind.
-> >   
+On 22/05/2025 19:40, Alexey Klimov wrote:
+> The rxmacro, txmacro, vamacro, soundwire nodes, lpass clock controllers
+> are required to support audio playback and audio capture on sm6115 and
+> its derivatives.
 > 
-> Your changelog is extremely detailed and highly accurate.
+> Cc: Konrad Dybcio <konradybcio@kernel.org>
+> Cc: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+
+Just keep one CC.
+
+> Cc: Srinivas Kandagatla <srini@kernel.org>
+> Co-developed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+
+Missing SoB.
+
+> Signed-off-by: Alexey Klimov <alexey.klimov@linaro.org>
+> ---
+>  arch/arm64/boot/dts/qcom/sm6115.dtsi | 132 +++++++++++++++++++++++++++++++++++
+>  1 file changed, 132 insertions(+)
 > 
-> Please directly incorporate this patch with your changelog
+> diff --git a/arch/arm64/boot/dts/qcom/sm6115.dtsi b/arch/arm64/boot/dts/qcom/sm6115.dtsi
+> index c8865779173eca65f9e94535b5339f590d4b1410..045887ae215b0965ffc098fd31fd18ac1ad90b7b 100644
+> --- a/arch/arm64/boot/dts/qcom/sm6115.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sm6115.dtsi
+> @@ -2689,6 +2689,138 @@ funnel_apss1_in: endpoint {
+>  			};
+>  		};
 
-Applied to vfio next branch for v6.16 with updated changelog.  Thanks,
 
-Alex
 
+...
+
+> +		swr0: soundwire@a740000 {
+> +			compatible = "qcom,soundwire-v1.6.0";
+> +			reg = <0x0 0x0a740000 0x0 0x2000>;
+> +			interrupts = <GIC_SPI 296 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 79 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&txmacro>;
+> +			clock-names = "iface";
+> +
+> +			resets = <&lpasscc 0>;
+> +			reset-names = "swr_audio_cgcr";
+> +
+> +			label = "VA_TX";
+> +			qcom,din-ports = <3>;
+> +			qcom,dout-ports = <0>;
+> +
+> +			qcom,ports-sinterval-low =	/bits/ 8 <0x03 0x03 0x03>;
+> +			qcom,ports-offset1 =		/bits/ 8 <0x01 0x02 0x01>;
+> +			qcom,ports-offset2 =		/bits/ 8 <0x00 0x00 0x00>;
+> +			qcom,ports-hstart =		/bits/ 8 <0xff 0xff 0xff>;
+> +			qcom,ports-hstop =		/bits/ 8 <0xff 0xff 0xff>;
+> +			qcom,ports-word-length =	/bits/ 8 <0xff 0xff 0xff>;
+> +			qcom,ports-block-pack-mode =	/bits/ 8 <0xff 0xff 0xff>;
+> +			qcom,ports-block-group-count =	/bits/ 8 <0xff 0xff 0xff>;
+> +			qcom,ports-lane-control =	/bits/ 8 <0x00 0x00 0x00>;
+> +
+> +			#sound-dai-cells = <1>;
+> +			#address-cells = <2>;
+> +			#size-cells = <0>;
+
+Why this not is not disabled? That's a bus. Each bus node makes no sense
+on its own without the actual devices, thus it is always disabled in the
+SoC file. Just take a look at other DTSI.
+
+> +		};
+> +
+> +		lpasscc: clock-controller@a7ec000 {
+> +			compatible = "qcom,sm6115-lpasscc";
+> +			reg = <0x0 0x0a7ec000 0x0 0x1000>;
+> +			#reset-cells = <1>;
+> +		};
+> +
+>  		remoteproc_adsp: remoteproc@a400000 {
+
+Looks like not ordered by unit address.
+
+>  			compatible = "qcom,sm6115-adsp-pas";
+>  			reg = <0x0 0x0a400000 0x0 0x4040>;
+> 
+
+
+Best regards,
+Krzysztof
