@@ -1,64 +1,61 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 504C23A1B6;
-	Thu, 22 May 2025 03:12:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1886DF58;
+	Thu, 22 May 2025 03:14:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747883575; cv=none; b=uYpCIR3A412svsyCeIEJiHJMHovwIDcxIC+k+7Fu0p1D7USsuToM6t1EJClcnk8H6xCjkeBhsedHUfmOZod+YLcxbioHj5hUZU5vcy3ULDlOgstQv7hqoC3IPtvubHXM5V9hoyEtgYdg2wI2c5z23H5uq3+njYJijzdbIrjN8l8=
+	t=1747883644; cv=none; b=rgJlBX3u5HiiJTyqL6sO1Txye/b7Ojd14O+uwZriq2coCPDQmCG9TgdKgVtDFLK7bmVSZYWsgVaBudgka8magwkzShSqtTJRgE1gA5i1fHtNGnYf5z3XX1fx4nnbrwQwTTesUuSq34+17gyApfAcftJEFQSrwOXL7cFDoueRcEQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747883575; c=relaxed/simple;
-	bh=5/LiaP+uX/OsJwwbgqyM+MuEPY85wwD6eLPaxD/gW/o=;
+	s=arc-20240116; t=1747883644; c=relaxed/simple;
+	bh=wiT1vr9uF2pjY3S1MwJnyp5i3k/Wihi0DO7LrevA+aY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=r+8QmTHLwEuB+UjxDhvav6lOzao1MWZut9ym6JFTEoyKu2P8tbY9m4UGfAiDq0BDxrg3sw5sbMBoSgRV5vp/Eofsl1n41+Xs0fzeN1wMRaq5QUGO76RQaFDVFw7xPs5/SE6tQ8rFzYlKbj51q9Qn3MgC1/kg0OLemMPb2J9Dn5Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NMG928al; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=AZ6AUlKFaeVGjElfxiTH6MdC+lkO3jKf0DIHUIl4DwsIJpjAPwkUe1p9oU6y4ey3v3wUWgEWQvAPT5hkTPVYyOA3nSVoPDK/fGE4du45eXZD1yDw5PQSggrieSCNPu6n0GQNHyW4Jc7U9uGISddItV/Am1giPsrTwatjoNDTYaQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=NExLDvSx; arc=none smtp.client-ip=144.6.53.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NMG928al"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747883572; x=1779419572;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=5/LiaP+uX/OsJwwbgqyM+MuEPY85wwD6eLPaxD/gW/o=;
-  b=NMG928alRp4OyDLV7ObVfvCfjJMRRrqcZMP5e9vRWYbWZy87pXUKvwFK
-   f1HmCVLvofD2EgywWvtG8ScZI7KcMfYEGmmT6otQt2sb15b9QOdp9i9Yb
-   i07W7043bnS+NXtJliEfirXK8IZvJ2CBDFQp6GNVSfexwJU3gsZE2765U
-   4o1T6uWh3XPiVzuEmhWV762vpe7k8TMDectZCs9BZIHAIZzTsZwZoB7Dv
-   AHUu2CO3CdViiJxnKpyhXZ9ORrts5WBTM8DAr20NnE1YZNe9lYy+MJcDE
-   gMGc7gSWliDzo8wR4qfkyPRSmxtRqTUN3LxiecmBz/exqmMdB2c4VrGHX
-   A==;
-X-CSE-ConnectionGUID: 4qdnsOX1TIOCME1jXslAng==
-X-CSE-MsgGUID: h82ngtgGRYaFfh1Gopvc8w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11440"; a="72414850"
-X-IronPort-AV: E=Sophos;i="6.15,305,1739865600"; 
-   d="scan'208";a="72414850"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2025 20:12:52 -0700
-X-CSE-ConnectionGUID: FuZxdP3RQWym+in8/eOzWA==
-X-CSE-MsgGUID: /6oOLcPMQtWU4RDqyGpVAw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,305,1739865600"; 
-   d="scan'208";a="177541262"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by orviesa001.jf.intel.com with ESMTP; 21 May 2025 20:12:48 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uHwMP-000OsC-0J;
-	Thu, 22 May 2025 03:12:45 +0000
-Date: Thu, 22 May 2025 11:12:35 +0800
-From: kernel test robot <lkp@intel.com>
-To: Wentao Liang <vulab@iscas.ac.cn>, saeedm@nvidia.com, leon@kernel.org,
-	tariqt@nvidia.com, andrew+netdev@lunn.ch, davem@davemloft.net,
-	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com
-Cc: oe-kbuild-all@lists.linux.dev, netdev@vger.kernel.org,
-	linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Wentao Liang <vulab@iscas.ac.cn>, stable@vger.kernel.org
-Subject: Re: [PATCH v3] net/mlx5: Add error handling in
- mlx5_query_nic_vport_node_guid()
-Message-ID: <202505221016.r93lwUfJ-lkp@intel.com>
-References: <20250521132343.844-1-vulab@iscas.ac.cn>
+	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="NExLDvSx"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
+	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=1iz/dspRKGJfames/a2O7Pg1SnBVWfkpTF65gemphXY=; b=NExLDvSxb1qc8PL4JvKo1XZ1la
+	CAb8bkNQsxxXF1HlmIOsTK4uHmeqz2WkUgDOjMqtPNRvV7LLTWFkF7GvblqJkyNS4fbqeIah2LGSC
+	+LEIo0rcSiui9no3MS+90HlMah1PjD9HqolOS2vFFuSBqsz/tWenHukCC6wFuWnU+Z1SWKDoGBIDx
+	9p5uO1LVE4H2dx+zHwHdrRo1vPD+B9CXvJcmb7olF7Jc641nLNSQ1M+guqpI0Zwbk5acBwY8d8EuR
+	Ton8Im7y4V/OWfzVAn08B+buzOomnbm1k1TCD/k/Vd6UnO8K/B15E7xjY0TgGZ38IiCDdU0B6Ldah
+	ebuLvYZg==;
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
+	id 1uHwNY-007yxj-2z;
+	Thu, 22 May 2025 11:13:57 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Thu, 22 May 2025 11:13:56 +0800
+Date: Thu, 22 May 2025 11:13:56 +0800
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Corentin Labbe <clabbe.montjoie@gmail.com>,
+	Klaus Kudielka <klaus.kudielka@gmail.com>,
+	Eric Biggers <ebiggers@kernel.org>, regressions@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+	"'bbrezillon@kernel.org'" <bbrezillon@kernel.org>,
+	EBALARD Arnaud <Arnaud.Ebalard@ssi.gouv.fr>,
+	Romain Perier <romain.perier@gmail.com>
+Subject: Re: [PATCH] crypto: marvell/cesa - Avoid empty transfer descriptor
+Message-ID: <aC6WdO4E6ugCm42K@gondor.apana.org.au>
+References: <aCZ3_ZMAFu6gzlyt@gondor.apana.org.au>
+ <aCcyXkeBvHQYvf2d@Red>
+ <aCczV6MF6xk5rRA3@gondor.apana.org.au>
+ <aChx_ODF_hYKL8XO@Red>
+ <aCmTQoJw6XG1CkuZ@gondor.apana.org.au>
+ <aC1fY6IP-8MzVIbx@gondor.apana.org.au>
+ <aC2aAvX07Aaho08d@gondor.apana.org.au>
+ <23fe1dec-032a-41fb-8e60-3a1b6c098c4e@app.fastmail.com>
+ <aC2p6xkMz4BtzPYH@gondor.apana.org.au>
+ <1024b1b7-9d58-4db4-a71a-108f6df7b623@app.fastmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,68 +64,62 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250521132343.844-1-vulab@iscas.ac.cn>
+In-Reply-To: <1024b1b7-9d58-4db4-a71a-108f6df7b623@app.fastmail.com>
 
-Hi Wentao,
+On Wed, May 21, 2025 at 01:36:06PM +0200, Arnd Bergmann wrote:
+>
+> Ok. Which SoC exactly is this on? Armada XP or Armada 385?
 
-kernel test robot noticed the following build errors:
+I have no idea :) Corentin, can you tell Arnd what you're using
+for the tests?
 
-[auto build test ERROR on net-next/main]
-[also build test ERROR on net/main linus/master v6.15-rc7 next-20250521]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+> I see. Just a few more ideas what it could be in case it's not
+> what you suspect:
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Wentao-Liang/net-mlx5-Add-error-handling-in-mlx5_query_nic_vport_node_guid/20250521-212557
-base:   net-next/main
-patch link:    https://lore.kernel.org/r/20250521132343.844-1-vulab%40iscas.ac.cn
-patch subject: [PATCH v3] net/mlx5: Add error handling in mlx5_query_nic_vport_node_guid()
-config: loongarch-randconfig-002-20250522 (https://download.01.org/0day-ci/archive/20250522/202505221016.r93lwUfJ-lkp@intel.com/config)
-compiler: loongarch64-linux-gcc (GCC) 15.1.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250522/202505221016.r93lwUfJ-lkp@intel.com/reproduce)
+It appears to be proven now.  After replacing the coherent memroy
+with kmalloc + dma_map_single, it actually works reliably to pass
+all the crypto fuzz tests (hmac is still failing but I think that's
+a different issue).
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505221016.r93lwUfJ-lkp@intel.com/
+Maybe I'm misreading the code, but I thought that dma_map_single on
+this machine should actually be a no-op because the device is marked
+as coherent? Arnd, Christophe?
 
-All errors (new ones prefixed by >>):
+But it's clearly making a difference.  My suspicion arose because
+the fully linear hash digests where all data came from the user
+were never failing.  It was only failing when some of the data was
+coming from the bounce buffer within the driver.  That bounce buffer
+was setup with dma_map_pool (each being 64 bytes long).
 
-   drivers/net/ethernet/mellanox/mlx5/core/vport.c: In function 'mlx5_query_nic_vport_node_guid':
->> drivers/net/ethernet/mellanox/mlx5/core/vport.c:474:9: error: 'ret' undeclared (first use in this function); did you mean 'net'?
-     474 |         ret = mlx5_query_nic_vport_context(mdev, 0, out);
-         |         ^~~
-         |         net
-   drivers/net/ethernet/mellanox/mlx5/core/vport.c:474:9: note: each undeclared identifier is reported only once for each function it appears in
+> - the SRAM gets mapped into kernel space using ioremap(), which
+>   on Armada 375/38x uses MT_UNCACHED rather than MT_DEVICE as
+>   a workaround for a possible deadlock on actual MMIO registers.
+>   It's possible that the SRAM should be mapped using a different
+>   map flag to ensure it's actually consistent. If a store is
+>   posted to the SRAM, it may still be in flight at the time that
+>   the DMA master looks at it.
 
+AFAICS we're not touching the SRAM directly.  Everything is mediated
+with the tdma unit on the cesa device.  So the cesa tdma unit is
+copying the data to and from the SRAM with DMA.
 
-vim +474 drivers/net/ethernet/mellanox/mlx5/core/vport.c
+> - I see a lot of chaining of DMA descriptors, but no dma_wmb()
+>   or spinlock. A dma_wmb() or stronger (wmb, dma_mb, mb)
+>   is probably required between writing to a coherent descriptor
+>   and making it visible from another one. A spinlock is
+>   of course needed if you have multiple CPUs adding data
+>   into a shared linked list (I think this one is not shared
+>   but haven't confirmed that).
 
-   463	
-   464	int mlx5_query_nic_vport_node_guid(struct mlx5_core_dev *mdev, u64 *node_guid)
-   465	{
-   466		u32 *out;
-   467		int outlen = MLX5_ST_SZ_BYTES(query_nic_vport_context_out);
-   468		int err;
-   469	
-   470		out = kvzalloc(outlen, GFP_KERNEL);
-   471		if (!out)
-   472			return -ENOMEM;
-   473	
- > 474		ret = mlx5_query_nic_vport_context(mdev, 0, out);
-   475		if (err)
-   476			goto out;
-   477	
-   478		*node_guid = MLX5_GET64(query_nic_vport_context_out, out,
-   479					nic_vport_context.node_guid);
-   480	out:
-   481		kvfree(out);
-   482	
-   483		return err;
-   484	}
-   485	EXPORT_SYMBOL_GPL(mlx5_query_nic_vport_node_guid);
-   486	
+Yes that chaining is definitely broken.  However, I don't think
+it's causing the corruption.  We've already tried disabling the
+chaining and it makes no difference whatsoever.
 
+In any case the tip of cryptodev now disables the broken chaining
+so it should no longer be an issue going forward.
+
+Thanks,
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
