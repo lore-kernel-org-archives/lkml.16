@@ -1,61 +1,116 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.hugovil.com (mail.hugovil.com [162.243.120.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9AE749625
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 14:34:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B26728C03F;
+	Thu, 22 May 2025 14:34:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.243.120.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747924489; cv=none; b=GuQQERNcCIu2ofH+DyioQR20TErF0Jd8C3RdS/O4KKtGw9qZg8lHPj8xJ5prGcqTSFQtO4rGTn+TIASPNKYJ/mdSAm78kHxaEPqvLm43Winz4hhu73QzMUsxi5lFtrX6Kqb0wzagVOUEe0dkwlIXMNM5tJiIkEkck7Syvir6ATo=
+	t=1747924491; cv=none; b=rMOXErIvy9CnEKxd77C9BbLimQYXt03WiSvdMx3I+8Gi53U7lDfKrphkAw97q55AeENYpfCW1GbFHnfHzkFqA/g3+LFRCFrjUwcbv0plwTJ4CRCJ6DgH4S5287AT98LEbNHqgtoOUUDZpSUopgakTKyVHAbxOGsfjwo/Sr1eKpo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747924489; c=relaxed/simple;
-	bh=RMasDVOiSa0dzk4n96wLEuqXYoUKAgEUX92oLUcvssE=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=U0mPnptkdx+iQKO2PtgyCtmPndLpy6Xp6ovqOYLlap3HFmFfbjJj4F+30T2sxx4mtwJ/MhhLHNlJmZf1jSJyQNA/I0IyhHIQvkTKjTi0/G2Rw+u3O7hXHyfrap9cHGqF4Yzs+dFOEGdcrtVNj9o5GRJcT6RLSmXwcjE7KPc0aUE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r+W+OWSI; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747924491; c=relaxed/simple;
+	bh=c2fhfgJhxxShEmXj79y8vYzylslOBBV8VYZ66Q9upYg=;
+	h=Date:From:To:Cc:Message-Id:In-Reply-To:References:Mime-Version:
+	 Content-Type:Subject; b=rPH3idluhSM0rvbdgl+KlV3xyBKjgGGy6UEmjVfsxnofAgQ3Jl5DJVJuc0p6X5IwBlDAKosfx//8zOO3/fb8FsWLyN2w396o6iWCHAAlShRz1hehIp5hhu/UpdVkb48DKvx9PZOCw3+JqCTBdFclI4YJzKvTNz72xpPHeNza3+A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hugovil.com; spf=pass smtp.mailfrom=hugovil.com; dkim=pass (1024-bit key) header.d=hugovil.com header.i=@hugovil.com header.b=JZ42M9P2; arc=none smtp.client-ip=162.243.120.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hugovil.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hugovil.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r+W+OWSI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DCC00C4CEE4;
-	Thu, 22 May 2025 14:34:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747924488;
-	bh=RMasDVOiSa0dzk4n96wLEuqXYoUKAgEUX92oLUcvssE=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=r+W+OWSIT1qpkf8nEZTyhtiI/V3vzPiAMvF2ETl0eVjr6x//rrgY5KhwwWFSL0XWK
-	 QF6557r1potRF4/qHJOvAY0AaNCCGohAg6c392i7I+VB1XakVk9vMvh4FHjBjpQT5P
-	 6J6yeiBHtMolS7kPNDlTlAoGWnEbfTIhWpQzj66iKq0oTFiyF7Y93e/IBKpWAN4WkH
-	 er0uobvvyjmNhUkyrIQrEdSNJxwJyWPCc/XUSrV1RT0xfAx4EJpT+QdrDuY7N4qSPE
-	 mETGDzjFy9H/jqTkTgz4RtOZuTnmUtQ3aOi/ouktt+Aw3amiCtQ38nxQ3mtYt5C7q+
-	 u85PPzN6TKFHg==
-From: Lee Jones <lee@kernel.org>
-To: lee@kernel.org, Sumanth Gavini <sumanth.gavini@yahoo.com>
-Cc: linux-kernel@vger.kernel.org
-In-Reply-To: <20250520020808.159586-1-sumanth.gavini@yahoo.com>
-References: <20250520020808.159586-1-sumanth.gavini.ref@yahoo.com>
- <20250520020808.159586-1-sumanth.gavini@yahoo.com>
-Subject: Re: (subset) [PATCH] mfd: maxim: Correct Samsung "Electronics"
- spelling in headers
-Message-Id: <174792448762.1382298.17329304857950785447.b4-ty@kernel.org>
-Date: Thu, 22 May 2025 15:34:47 +0100
+	dkim=pass (1024-bit key) header.d=hugovil.com header.i=@hugovil.com header.b="JZ42M9P2"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hugovil.com
+	; s=x; h=Subject:Content-Transfer-Encoding:Mime-Version:Message-Id:Cc:To:From
+	:Date:subject:date:message-id:reply-to;
+	bh=KNH97gaggb/2wYQaAga1tD5BDYJYpNJdDjfVqWXvc0o=; b=JZ42M9P2ChwaXIpqNCTevCVa+S
+	fGDHj20jfwMfzp/idK9InSj9LDVscAQzJ8KR8nxye7d09RS+IF/+fudnNq3yffn3nRrnBbrvPkvwp
+	Phj24q9hLT7r/TRJmDdTyAs5VNLFWEvmhQgAswGejGu9mOustnztVPSPSO3HqMS9IxpQ=;
+Received: from modemcable168.174-80-70.mc.videotron.ca ([70.80.174.168]:56132 helo=pettiford.lan)
+	by mail.hugovil.com with esmtpa (Exim 4.92)
+	(envelope-from <hugo@hugovil.com>)
+	id 1uI70K-0006Cq-Hn; Thu, 22 May 2025 10:34:40 -0400
+Date: Thu, 22 May 2025 10:34:40 -0400
+From: Hugo Villeneuve <hugo@hugovil.com>
+To: Hugo Villeneuve <hugo@hugovil.com>
+Cc: biju.das.jz@bp.renesas.com, maarten.lankhorst@linux.intel.com,
+ mripard@kernel.org, tzimmermann@suse.de, airlied@gmail.com,
+ simona@ffwll.ch, dri-devel@lists.freedesktop.org,
+ linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Hugo
+ Villeneuve <hvilleneuve@dimonoff.com>
+Message-Id: <20250522103440.e13dfb99deffb934f791e3b3@hugovil.com>
+In-Reply-To: <20250522140322.64667-1-hugo@hugovil.com>
+References: <20250522140322.64667-1-hugo@hugovil.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Mailer: b4 0.15-dev-b75d9
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 70.80.174.168
+X-SA-Exim-Mail-From: hugo@hugovil.com
+X-Spam-Level: 
+X-Spam-Report: 
+	* -1.0 ALL_TRUSTED Passed through trusted hosts only via SMTP
+	*  0.1 URIBL_CSS_A Contains URL's A record listed in the Spamhaus CSS
+	*      blocklist
+	*      [URIs: hugovil.com]
+	*  0.1 URIBL_CSS Contains an URL's NS IP listed in the Spamhaus CSS
+	*      blocklist
+	*      [URIs: hugovil.com]
+	* -0.8 NICE_REPLY_A Looks like a legit reply (A)
+Subject: Re: [PATCH v2 0/2] drm: rcar-du: rzg2l_mipi_dsi: add MIPI DSI
+ command support
+X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
+X-SA-Exim-Scanned: Yes (on mail.hugovil.com)
 
-On Mon, 19 May 2025 19:08:05 -0700, Sumanth Gavini wrote:
-> Fix the misspelling of 'Electronics' in MFD driver headers.
+On Thu, 22 May 2025 10:03:20 -0400
+Hugo Villeneuve <hugo@hugovil.com> wrote:
+
+> From: Hugo Villeneuve <hvilleneuve@dimonoff.com>
+> 
+> Hello,
+> this patch series add support for sending MIPI DSI command packets to the
+> Renesas RZ/G2L MIPI DSI driver.
+> 
+> Tested on a custom board with a SolidRun RZ/G2L SOM, with two different LCD
+> panels using the jd9365da and st7703 drivers.
+> 
+> Tested short and long writes.
+> 
+> Tested read of 1 byte, 2 bytes and long reads.
+> 
+> Thank you.
+> 
+> Link: [v1] https://lore.kernel.org/all/20250520164034.3453315-1-hugo@hugovil.com
+> 
+> Changes for V2:
+> - Change commit message prefix to "drm: renesas: rz-du: "
+> - Reorder variables in rzg2l_mipi_dsi_read_response()
+> - Remove unused macros
+> - Add missing bitfield include (kernel test robot)
+> 
+> Hugo Villeneuve (2):
+>   drm: renesas: rz-du: Implement MIPI DSI host transfers
+>   drm: renesas: rz-du: Set DCS maximum return packet size
+> 
+>  .../gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c    | 186 ++++++++++++++++++
+>  .../drm/renesas/rz-du/rzg2l_mipi_dsi_regs.h   |  54 +++++
+>  2 files changed, 240 insertions(+)
+> 
+> 
+> base-commit: c4f8ac095fc91084108ec21117eb9c1fff64725d
+> -- 
+> 2.39.5
 > 
 > 
 
-Applied, thanks!
+I hit the same problem with my mail server, preventing patches 1/2 and
+2/2 not being sent.
 
-[1/1] mfd: maxim: Correct Samsung "Electronics" spelling in headers
-      commit: 01a09c2378753ba24f75fa12b7c8eac7f0f0b030
+Fixed by modifying exim4 smtp_accept_max_per_connection option from 1
+to 100.
 
---
-Lee Jones [李琼斯]
+Will resend a proper v3.
 
+-- 
+Hugo Villeneuve
