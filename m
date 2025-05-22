@@ -1,164 +1,141 @@
-Received: from smtp-fw-52003.amazon.com (smtp-fw-52003.amazon.com [52.119.213.152])
+Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [80.241.56.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECBDD35949;
-	Thu, 22 May 2025 13:31:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.119.213.152
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 035BB221D9E;
+	Thu, 22 May 2025 13:34:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747920686; cv=none; b=YXmOtQtCYoJGKkSxLLHYUyza9TPwgU0y8qjqg3bJAF4aArNVM37zgtjkeDTsiwxG+CXJDmzJjV1XxtNtjNSc8iTUpwNWBzTKz4usbJzxp74Bj2PSzKH2acUF370YOMYU/sJ7dpQBKZrubYp4ZhQUtfCKI7ghHl+YOttt/vKK9tU=
+	t=1747920875; cv=none; b=j1mr/GtcvzG4UOPTAaiyBY2grBpLjdMoqCCamHluM83bfv95hOdsX6Qdbt8J3HVqUlWOtPBtPLeRzI1YAmZMfU0naI5oYvYHzWoLLTyKpipBwNcP8LEcPrM6n2jUJLvpQcdSzCpBZJdHfyexOVwmR4At+UegOcCm9fJzThRNauc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747920686; c=relaxed/simple;
-	bh=jwWiLe42S9SsbU+ebldx8V794Mu/3hXTJRdX5N3/+X0=;
-	h=From:To:CC:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=FCuYQKRCeSe9/QwA+ILOYZAdjTL9eyQaemx6N3H+PU1W6P5AyXqoXAJtXg9PkSJjsEk94X3/eCEW5iPSzTYXWxG4tduR8bqM5W8+AiIouD3BuvH1u1NGb7lDAV3l1zM+khBnJUkRw0R3IwM/YMamW+DmQFbT6HgQ6pHcxu+3Jmg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.de; spf=pass smtp.mailfrom=amazon.de; dkim=pass (2048-bit key) header.d=amazon.de header.i=@amazon.de header.b=jQd4bDjC; arc=none smtp.client-ip=52.119.213.152
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.de
+	s=arc-20240116; t=1747920875; c=relaxed/simple;
+	bh=8GZdBTOYVGwbZLvXBpdpHobZi2bZ9UpNg9GvNcbl24g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OUkAkZU8NEyBJMx1qylukteA18142FlKyAAnXoQyz+q0/boWM/aQLFHX56E9zIxJp81lGPl1UKHMdfX4EotbvzIwxFaPLpE44D8lXMFS4vgoAqSJ4zc8dfj7pjWpgq58pbTSfG1nEZnf7h0Li11eau4gWsWHfC7x3KVyomONLyk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pankajraghav.com; spf=pass smtp.mailfrom=pankajraghav.com; dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b=HrGq0kn0; arc=none smtp.client-ip=80.241.56.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pankajraghav.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pankajraghav.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=amazon.de header.i=@amazon.de header.b="jQd4bDjC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazoncorp2;
-  t=1747920684; x=1779456684;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=OlB+2OtTrJazNk0kELLux61Y/VPnAYDjFX1pVaDScWs=;
-  b=jQd4bDjCZHBGVyAA+NHskUIFRN2g0yQZxBNRmkzrfNnTZjvJsDOgpUM7
-   WRkDj+3KNR4zT2AyWQQXhMIbx/7NmF7Wv+1gWwz/v1oDFO51NJstP1/74
-   Gs6lw0YuD9jXNNNBFowt7GrS9itvPeopRy2n5xRqsi9OfuN0cmSfoTaog
-   fvBx6/o9HZWGYaEVKvOCsjoLbQ13ZxEu5U3+qob3DXh+yOlLhMIZAUZS5
-   sARD4myrD9E0JyoQCVL98tEn2OzdYG1loi1E7moS9kJmlvB/2Uez0YFLG
-   NChyTiza0BGT38LFDYLizEXl4YjTY4oKROXqFIsW/FteJvpLc+FusMP37
-   Q==;
-X-IronPort-AV: E=Sophos;i="6.15,306,1739836800"; 
-   d="scan'208";a="96236152"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.6])
-  by smtp-border-fw-52003.iad7.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2025 13:31:16 +0000
-Received: from EX19MTAUWB001.ant.amazon.com [10.0.38.20:64371]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.18.109:2525] with esmtp (Farcaster)
- id befc10d2-e35f-4a55-9b8d-6a66acedb4c3; Thu, 22 May 2025 13:31:15 +0000 (UTC)
-X-Farcaster-Flow-ID: befc10d2-e35f-4a55-9b8d-6a66acedb4c3
-Received: from EX19EXOUWC001.ant.amazon.com (10.250.64.135) by
- EX19MTAUWB001.ant.amazon.com (10.250.64.248) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Thu, 22 May 2025 13:31:14 +0000
-Received: from EX19MTAUWA002.ant.amazon.com (10.250.64.202) by
- EX19EXOUWC001.ant.amazon.com (10.250.64.135) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Thu, 22 May 2025 13:31:13 +0000
-Received: from email-imr-corp-prod-pdx-all-2b-c1559d0e.us-west-2.amazon.com
- (10.25.36.210) by mail-relay.amazon.com (10.250.64.203) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id
- 15.2.1544.14 via Frontend Transport; Thu, 22 May 2025 13:31:13 +0000
-Received: from dev-dsk-ptyadav-1c-43206220.eu-west-1.amazon.com (dev-dsk-ptyadav-1c-43206220.eu-west-1.amazon.com [172.19.91.144])
-	by email-imr-corp-prod-pdx-all-2b-c1559d0e.us-west-2.amazon.com (Postfix) with ESMTP id 59D7B4080E;
-	Thu, 22 May 2025 13:31:13 +0000 (UTC)
-Received: by dev-dsk-ptyadav-1c-43206220.eu-west-1.amazon.com (Postfix, from userid 23027615)
-	id E490B157A; Thu, 22 May 2025 15:31:12 +0200 (CEST)
-From: Pratyush Yadav <ptyadav@amazon.de>
-To: Mike Rapoport <rppt@kernel.org>
-CC: Andrew Morton <akpm@linux-foundation.org>, Alexandre Ghiti
-	<alexghiti@rivosinc.com>, <linux-arch@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>
-Subject: Re: [PATCH] mm/cma: make detection of highmem_start more robust
-In-Reply-To: <aCwW70QKGFtXVxEH@kernel.org>
-References: <20250519171805.1288393-1-rppt@kernel.org>
-	<mafs0plg4tgee.fsf@amazon.de> <aCwW70QKGFtXVxEH@kernel.org>
-Date: Thu, 22 May 2025 15:31:12 +0200
-Message-ID: <mafs04ixcu5zz.fsf_-_@amazon.de>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b="HrGq0kn0"
+Received: from smtp2.mailbox.org (smtp2.mailbox.org [10.196.197.2])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4b38Qs0sDSz9sr6;
+	Thu, 22 May 2025 15:34:29 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pankajraghav.com;
+	s=MBO0001; t=1747920869;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=HglpUfe4kmsfzDLqBmD4mwNcQaYbHQqEm+gYK0kZUv4=;
+	b=HrGq0kn0IswTMrElT71G4ZbK3lUndY7xUDOTKbv2J80oqPrjLnUqLn3Fi7gSIsFWizXlKH
+	lET7rBNAo32lcL2lchoPLdDYG+yTQcX9pqm55XyS7dPpHzVrlyZqtrDpaUuKLtT1qjJ/xH
+	BQbXyJbjAWLxsFsUCsyzxVRP/SqXyQ/KFyesfs/5enWVN0YbWPTYoZ0Nu4V+IiNx/vGBwJ
+	yKGuzIficxnnHqOVo1Sva0+r3cY2I9dM5TP/N9SXqnh6OX7LG57zDJsnErFsM5TldjywJC
+	q9PHiKQsrqg4H2Qgzwx+X0ivgfrDH7WwWNm15hdk33MI9vgZ6a0Yb0Jq7m0sIQ==
+Date: Thu, 22 May 2025 15:34:17 +0200
+From: "Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>
+To: David Hildenbrand <david@redhat.com>
+Cc: Mike Rapoport <rppt@kernel.org>, Pankaj Raghav <p.raghav@samsung.com>, 
+	Suren Baghdasaryan <surenb@google.com>, Vlastimil Babka <vbabka@suse.cz>, 
+	Ryan Roberts <ryan.roberts@arm.com>, Michal Hocko <mhocko@suse.com>, 
+	Thomas Gleixner <tglx@linutronix.de>, Nico Pache <npache@redhat.com>, Dev Jain <dev.jain@arm.com>, 
+	Baolin Wang <baolin.wang@linux.alibaba.com>, Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>, 
+	"H . Peter Anvin" <hpa@zytor.com>, Zi Yan <ziy@nvidia.com>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, "Liam R . Howlett" <Liam.Howlett@oracle.com>, 
+	Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	"Darrick J . Wong" <djwong@kernel.org>, gost.dev@samsung.com, hch@lst.de, linux-kernel@vger.kernel.org, 
+	linux-mm@kvack.org, willy@infradead.org, x86@kernel.org, mcgrof@kernel.org
+Subject: Re: [RFC v2 0/2] add THP_HUGE_ZERO_PAGE_ALWAYS config option
+Message-ID: <b3ceg4gdg5exbugyarudabfuaowvqfqgrzo62hoexxhvvfwjs7@4dbrig7wm7ds>
+References: <20250522090243.758943-1-p.raghav@samsung.com>
+ <aC8LGDwJXvlDl866@kernel.org>
+ <6lhepdol4nlnht7elb7jx7ot5hhckiegyyl6zeap2hmltdwb5t@ywsaklwnakuh>
+ <6894a8b1-a1a7-4a35-8193-68df3340f0ad@redhat.com>
+ <625s5hffr3iz35uv4hts4sxpprwwuxxpbsmbvasy24cthlsj6x@tg2zqm6v2wqm>
+ <eab4b461-9717-47df-8d56-c303c3f6012d@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <eab4b461-9717-47df-8d56-c303c3f6012d@redhat.com>
 
-Hi Mike,
+On Thu, May 22, 2025 at 02:50:20PM +0200, David Hildenbrand wrote:
+> On 22.05.25 14:34, Pankaj Raghav (Samsung) wrote:
+> > Hi David,
+> > 
+> > > >    config ARCH_WANTS_THP_SWAP
+> > > >           def_bool n
+> > > > -config ARCH_WANTS_THP_ZERO_PAGE_ALWAYS
+> > > > +config ARCH_WANTS_HUGE_ZERO_PAGE_ALWAYS
+> > > >           def_bool n
+> > > > +config HUGE_ZERO_PAGE_ALWAYS
+> > > 
+> > > Likely something like
+> > > 
+> > > PMD_ZERO_PAGE
+> > > 
+> > > Will be a lot clearer.
+> > 
+> > Sounds much better :)
+> 
+> And maybe something like
+> 
+> "STATIC_PMD_ZERO_PAGE"
+> 
+> would be even clearer.
+> 
+> The other one would be the dynamic one.
 
-On Tue, May 20 2025, Mike Rapoport wrote:
+Got it.
+So if I understand correctly, we are going to have two huge zero pages,
+- one that is always allocated statically.
+- the existing dynamic will still be there for the existing users.
 
-> On Mon, May 19, 2025 at 11:55:05PM +0200, Pratyush Yadav wrote:
->> Hi Mike,
->>
->> On Mon, May 19 2025, Mike Rapoport wrote:
->>
->> > From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
->> >
->> > Pratyush Yadav reports the following crash:
->> >
->> >     ------------[ cut here ]------------
->> >     kernel BUG at arch/x86/mm/physaddr.c:23!
->> >     ception 0x06 IP 10:ffffffff812ebbf8 error 0 cr2 0xffff88903ffff000
->> >     CPU: 0 UID: 0 PID: 0 Comm: swapper Not tainted 6.15.0-rc6+ #231 PREEMPT(undef)
->> >     Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS Arch Linux 1.16.3-1-1 04/01/2014
->> >     RIP: 0010:__phys_addr+0x58/0x60
->> >     Code: 01 48 89 c2 48 d3 ea 48 85 d2 75 05 e9 91 52 cf 00 0f 0b 48 3d ff ff ff 1f 77 0f 48 8b 05 20 54 55 01 48 01 d0 e9 78 52 cf 00 <0f> 0b 90 0f 1f 44 00 00 90 90 90 90 90 90 90 90 90 90 90 90 90 90
->> >     RSP: 0000:ffffffff82803dd8 EFLAGS: 00010006 ORIG_RAX: 0000000000000000
->> >     RAX: 000000007fffffff RBX: 00000000ffffffff RCX: 0000000000000000
->> >     RDX: 000000007fffffff RSI: 0000000280000000 RDI: ffffffffffffffff
->> >     RBP: ffffffff82803e68 R08: 0000000000000000 R09: 0000000000000000
->> >     R10: ffffffff83153180 R11: ffffffff82803e48 R12: ffffffff83c9aed0
->> >     R13: 0000000000000000 R14: 0000001040000000 R15: 0000000000000000
->> >     FS:  0000000000000000(0000) GS:0000000000000000(0000) knlGS:0000000000000000
->> >     CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->> >     CR2: ffff88903ffff000 CR3: 0000000002838000 CR4: 00000000000000b0
->> >     Call Trace:
->> >      <TASK>
->> >      ? __cma_declare_contiguous_nid+0x6e/0x340
->> >      ? cma_declare_contiguous_nid+0x33/0x70
->> >      ? dma_contiguous_reserve_area+0x2f/0x70
->> >      ? setup_arch+0x6f1/0x870
->> >      ? start_kernel+0x52/0x4b0
->> >      ? x86_64_start_reservations+0x29/0x30
->> >      ? x86_64_start_kernel+0x7c/0x80
->> >      ? common_startup_64+0x13e/0x141
->> >
->> >   The reason is that __cma_declare_contiguous_nid() does:
->> >
->> >           highmem_start = __pa(high_memory - 1) + 1;
->> >
->> >   If dma_contiguous_reserve_area() (or any other CMA declaration) is
->> >   called before free_area_init(), high_memory is uninitialized. Without
->> >   CONFIG_DEBUG_VIRTUAL, it will likely work but use the wrong value for
->> >   highmem_start.
->> >
->> > The issue occurs because commit e120d1bc12da ("arch, mm: set high_memory in
->> > free_area_init()") moved initialization of high_memory after the call to
->> > dma_contiguous_reserve() -> __cma_declare_contiguous_nid() on several
->> > architectures.
->> >
->> > In the case CONFIG_HIGHMEM is enabled, some architectures that actually
->> > support HIGHMEM (arm, powerpc and x86) have initialization of high_memory
->> > before a possible call to __cma_declare_contiguous_nid() and some
->> > initialized high_memory late anyway (arc, csky, microblase, mips, sparc,
->> > xtensa) even before the commit e120d1bc12da so they are fine with using
->> > uninitialized value of high_memory.
->>
->> I don't know if they are fine or they haven't realized this is a bug
->> yet.
->
-> For those that initialized high_memory in their mem_init() it would have
-> been a bug quite some time.
+> 
+> > 
+> > > 
+> > > > +       def_bool y> +       depends on HUGETLB_PAGE &&
+> > > ARCH_WANTS_HUGE_ZERO_PAGE_ALWAYS
+> > > 
+> > > I suspect it should then also be independent of HUGETLB_PAGE?
+> > 
+> > You are right. So we don't depend on any of these features.
+> > 
+> > > 
+> > > > +       help
+> > > > +         Typically huge_zero_folio, which is a huge page of zeroes, is allocated
+> > > > +         on demand and deallocated when not in use. This option will always
+> > > > +         allocate huge_zero_folio for zeroing and it is never deallocated.
+> > > > +         Not suitable for memory constrained systems.
+> > > 
+> > > I assume that code then has to live in mm/memory.c ?
+> > 
+> > Hmm, then huge_zero_folio should have always been in mm/memory.c to
+> > begin with?
+> > 
+> 
+> It's complicated. Only do_huge_pmd_anonymous_page() (and fsdax) really uses
+> it, and it may only get mapped into a process under certain conditions
+> (related to THP / PMD handling).
+> 
+Got it.
+> > 
+> > So IIUC your comment, we should move the huge_zero_page_init() in the
+> > first patch to mm/memory.c and the existing shrinker code can be a part
+> > where they already are?
+> 
+> Good question. At least the "static" part can easily be moved over. Maybe
+> the dynamic part as well.
+> 
+> Worth trying it out and seeing how it looks :)
 
-Agreed. This patch fixes the regression caused by e120d1bc12da5 ("arch,
-mm: set high_memory in free_area_init()"). I don't think you need to go
-around fixing long standing bugs. I was just thinking out loud with this
-comment.
+Challenge accepted ;) Thanks for the comments David.
 
-[...]
-
--- 
-Regards,
-Pratyush Yadav
-
-
-
-Amazon Web Services Development Center Germany GmbH
-Tamara-Danz-Str. 13
-10243 Berlin
-Geschaeftsfuehrung: Christian Schlaeger, Jonathan Weiss
-Eingetragen am Amtsgericht Charlottenburg unter HRB 257764 B
-Sitz: Berlin
-Ust-ID: DE 365 538 597
-
+--
+Pankaj
