@@ -1,99 +1,125 @@
-Received: from mail-il1-f170.google.com (mail-il1-f170.google.com [209.85.166.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69386289E2F
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 11:26:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF2942B9A9
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 11:28:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747913208; cv=none; b=lm8HpQ1UcPZPQ7tSr9TlJvuNf1UHA001qTSzzQPQNDHmyFE5lpZyoQNNOIpQP8u0ELoMut+syWku/mLWgBK9oaDBKqBpyOwME0dLlbnC6ARO0PObt5gnkFG6TjDwRJCf8Zn29mJ0d6KPpl+aK+Mmcs0kCRGSG0ILi0K03f39dQI=
+	t=1747913286; cv=none; b=RoNrhSI7FIyHvP/VT3dcQ/6/KfLFGEsbgtsrh7b7ZXu9Q7EdndYsStJz8ivb8rJ7nJz5xcDRMzcJTzY1crh4R8xZQBJk6JfPqqxfQ/p2W7QACRbR8Obtk2g1lEzEi/RPZa6GCR07kUSZYIX/sQel+kYEYXpjZPULN8C+uZmQl+4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747913208; c=relaxed/simple;
-	bh=tO+EPnAPVJiuWHkuvnHJBaP5+AY092bC5r7Cuo5Qndo=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=J9/luYH3xxbLQu5rhL3M2d59uARrKTx8wBnO7djOt+COJvuxfTgi8jnhrqC6PP7cHC/0WGx0jWRzvppFGQ613olUEMaSKC/+EpqQwcV8l77Is9/V5f4nktAdCCiTOLrPKWrk6TGwtsxm2BAXogekQiWltmJabIy4S6/GObDUDqg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dOQmiKgn; arc=none smtp.client-ip=209.85.166.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747913286; c=relaxed/simple;
+	bh=wrLndpLeatp9wBGYUXidOjah085egs0Hmvle5JjDa0A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CcOHSX8Z/SWz+qhErIvoM6QKyTaoo3aoh7BnfSanD/F5pIGXBW0pIqjlayvRRB8YOa9ugTIE9RP0mCdBjMEpuc2cRlSwiyCMbmk6cRw8opEtXPK0f776+PAUnCQgxhau5a6Z3KmX+ieRMU+Gper8Guquk5O+0JkJzHUe/X2wGeI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=SBr+kHBg; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dOQmiKgn"
-Received: by mail-il1-f170.google.com with SMTP id e9e14a558f8ab-3d812103686so23943405ab.0
-        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 04:26:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747913206; x=1748518006; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=tO+EPnAPVJiuWHkuvnHJBaP5+AY092bC5r7Cuo5Qndo=;
-        b=dOQmiKgnKrANEOVpXrE2sdphOR5Pr4z2gzznFgo/bOjm1a+jkqc9XtTBn2SeC1zEpH
-         FsIDb2qdb+6XaCIuL2txUMR6zm5ohUbHg7xOOtlKWQ8s80McCYhtZFmqn0cNamLUQ33V
-         p2IsczO308SNFTkyPlpXlIAW6adMggk+XGup59ifsxm6PwwqGsUShQz1pHWS44y87Av5
-         Kk+LRoaX3+8Gtqb7LljfXCIxN0fGpkw0SJuL6ylWL6qcxWjLtUQWFkCsF+iG/B5kaZXB
-         NZyNMqOJSTIkPTFCfgBPw+20wwBbq7MJFt6Hexne23s5wG+kmrpF1T+N4SgRca52nPAX
-         ykhQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747913206; x=1748518006;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=tO+EPnAPVJiuWHkuvnHJBaP5+AY092bC5r7Cuo5Qndo=;
-        b=W5P/DXnQhujkvAZmIo1Bgv3wz/MIzGtUqYvfrcOx1X0ko5o94hlXOQFz1SzP77/uP6
-         eYqEHzgNX8S6fei3jXbKCz6onk3iH6qiXFDHlp1h3AvHStwPsV2M6I4Jaz3BSea8uoXH
-         tc46Mz1/FlyuWmZrFRWgigavG63ZoBHkjb/mvnuj7io2qRZ15TkcVGhy9O40NCnYzybH
-         r/YGEBXl89GG3mLBIuCWLuFO3pGCp5ggRuNTBXt9+IQ/Wj8EMvCPbTW1VZe2XVaaMIwP
-         xM4lrPlJFNpmzNgmMbQHKOBX93GiQtG2zDoAUx981ywPy0uSOVvuitWFuA9RCuGJX9YU
-         papw==
-X-Gm-Message-State: AOJu0YzcY113HWitNS+2hpQoESkyUcdpvHM6JsjB8wNv5Y+ALJ0niqwS
-	VRkl1wUIOY2qvC2wZaSgDfU+r675uHNM3aPwHSBW7D3NXgAKclPSoaxqhFmgYUnT2t5E42nYWX0
-	tVOI5mLLhYA4w9boaL8I2iy5HzdxzxOikF0Q1YxuOyK5w
-X-Gm-Gg: ASbGncuSlv+F2IhcuwvxPeopdjad0Kw4GCqP0sNHn+ad5Soxu07Y/l6hMUL2npF7LA8
-	22JUoBFsHTL3waoBQo8LfYKC9HDWGpPI/GNKtloM2aIsI8/kC4kJqS0FLXAhPUKmoL146t9Xnie
-	gjQaSTAS5TBMly52O/LkqJuDhngCBitZg=
-X-Google-Smtp-Source: AGHT+IHUjWOGnGkUyyRinb3VeBY+Ht9go8JPY37khypaaY+CtAgLdqwadqYGKT4BQMYTeeiFBih496n0TmMn6LnqKRs=
-X-Received: by 2002:a05:6e02:440f:10b0:3dc:90fc:2837 with SMTP id
- e9e14a558f8ab-3dc90fc291bmr2426275ab.8.1747913206153; Thu, 22 May 2025
- 04:26:46 -0700 (PDT)
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="SBr+kHBg"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id A0F7B40E0238;
+	Thu, 22 May 2025 11:27:54 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id obI0p_6iIzXK; Thu, 22 May 2025 11:27:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1747913269; bh=VXP4G28s+yyqXXz4f5HL6GK1nYQ1f8I8r0biDfWWSj4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=SBr+kHBg/mq1Zz98oKFsjZAAtqSomtkNyZRpsBICSJjtag1/ebkb4IO3AupFfXLxl
+	 TyaqWPfrEwnyPrVZ+G8RydfBTnTLi8WXO1e7Jdd9i3SWkQZxw+OG3YBWUsEHg8bSBu
+	 b4I1UDNyOJvME2KNNWxaX8Ce1zoTLWBNrnhvlVuDK9q7zQL5+4Z4WjQ/18aePuSdJj
+	 20DVZ/D3vAhtFIyTWPV+k2jx1u/4pavZG3cT8J/KPRAVAbECb4ilUqH91qpPVeIWyu
+	 2inh2Wyuphr7fWWhbQXtiZYsa3tX/inyNJ6pSk0mROmMNjkT3Qm3w19f/0+OzOc7z1
+	 saRnYhlL9yl5WAsjX7nas6Jn4METtN8PRcPwHW7/f9GrlQY2SQGPBhEVdlBVSKx29a
+	 7SfQkqYH9k4yzycwPQWDj5zpwPR0iLxBM5G+4if507FMLf6W6XHSY6pKfXOLOpZrBU
+	 p+TNLsqCPli0p5H+4JBU6l8cGLaBAyl8WRivPZSYF+CuM7k9mXVwo9SUzGkC4hqYyo
+	 DBCjF8Yh63y+iqlzPwYwlnEo75jq0DO09jzbYDrimfEy3sDYiL/26DTWMo26bAih3V
+	 uSoEJ9MJGzktjcVSnKoCxwdivFBYjETqUSAKryrmKB7gV4fU76IbtmsGYw4N6eIVPJ
+	 A6FFrwpQp0pH8WUIadhcms9Q=
+Received: from zn.tnic (p579690ee.dip0.t-ipconnect.de [87.150.144.238])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id BEA2540E01FA;
+	Thu, 22 May 2025 11:27:43 +0000 (UTC)
+Date: Thu, 22 May 2025 13:27:30 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+Cc: x86@kernel.org, David Kaplan <david.kaplan@amd.com>,
+	linux-kernel@vger.kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+	Josh Poimboeuf <jpoimboe@kernel.org>
+Subject: Re: [PATCH v2 1/7] x86/retbleed: Check for AUTO in all cases
+Message-ID: <20250522112730.GFaC8KIk7jbj4EyoV7@fat_crate.local>
+References: <20250521-eibrs-fix-v2-0-70e2598e932c@linux.intel.com>
+ <20250521-eibrs-fix-v2-1-70e2598e932c@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: =?UTF-8?Q?Durmu=C5=9F?= <dozaltay@gmail.com>
-Date: Thu, 22 May 2025 14:26:36 +0300
-X-Gm-Features: AX0GCFvHVDPamKgduTXrvEy0qI8s6LpgKqStgeQw713C_-u6aSMzUGnsFYFdyX8
-Message-ID: <CABH-8xdaDFjWyQ40Nyo59Gm5kD3Qi5hh76o-uam1yC3wNtJNqQ@mail.gmail.com>
-Subject: Regression: RX 470 fails to boot with amdgpu.dpm=1 on kernel 6.7+
-To: linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250521-eibrs-fix-v2-1-70e2598e932c@linux.intel.com>
 
-Hello,
+On Wed, May 21, 2025 at 07:44:22PM -0700, Pawan Gupta wrote:
+> When none of mitigation option is selected, AUTO gets converted to NONE.
+> This is currently only being done for Intel. The check is useful in
+> general, make it common.
+> 
+> Signed-off-by: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+> ---
+>  arch/x86/kernel/cpu/bugs.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/arch/x86/kernel/cpu/bugs.c b/arch/x86/kernel/cpu/bugs.c
+> index 7f94e6a5497d9a2d312a76095e48d6b364565777..19ff705b3128eacad5659990ed345d7a19bcb0f4 100644
+> --- a/arch/x86/kernel/cpu/bugs.c
+> +++ b/arch/x86/kernel/cpu/bugs.c
+> @@ -1294,15 +1294,15 @@ static void __init retbleed_update_mitigation(void)
+>  			if (retbleed_mitigation != RETBLEED_MITIGATION_STUFF)
+>  				pr_err(RETBLEED_INTEL_MSG);
+>  		}
+> -		/* If nothing has set the mitigation yet, default to NONE. */
+> -		if (retbleed_mitigation == RETBLEED_MITIGATION_AUTO)
+> -			retbleed_mitigation = RETBLEED_MITIGATION_NONE;
+>  	}
+> +
+> +	/* If nothing has set the mitigation yet, default to NONE. */
+> +	if (retbleed_mitigation == RETBLEED_MITIGATION_AUTO)
+> +		retbleed_mitigation = RETBLEED_MITIGATION_NONE;
+>  out:
+>  	pr_info("%s\n", retbleed_strings[retbleed_mitigation]);
+>  }
 
-I'm experiencing a critical issue on my system with an AMD RX 470 GPU.
-When booting with recent kernel versions (6.7.x or newer), the system
-fails to boot properly unless I explicitly disable Dynamic Power
-Management (DPM) via the `amdgpu.dpm=3D0` kernel parameter.
+So, the way I see it is, AUTO means user didn't select anything so we will
+select the default thing.
+ 
+And we do that in the select function.
 
-When DPM is enabled (`amdgpu.dpm=3D1` or omitted, since it's the
-default), the system either freezes during early boot or fails to
-initialize the display. However, using the LTS kernel (6.6.x),
-everything works as expected with DPM enabled.
+But then in the update function we bring back AUTO from the dead again,
+forcing us to having to deal with it, well, again.
 
-This seems to be a regression introduced in kernel 6.7 or later, and
-it specifically affects older GCN4 (Polaris) GPUs like the RX 470.
-Disabling DPM allows the system to boot, but significantly reduces GPU
-performance.
+So can we simply set to RETBLEED_MITIGATION_NONE in the retbleed + its = stuff
+option when SPECTRE_V2_RETPOLINE not selected?
 
-Things I=E2=80=99ve tried:
-- Confirmed that the latest `linux-firmware` is installed.
-- Verified correct firmware files exist under `/lib/firmware/amdgpu/`.
-- Tested multiple kernels (mainline and LTS).
-- Using Mesa with ACO (Radeon open driver stack).
-- System boots fine with LTS kernel (6.6.x) + DPM enabled.
+This'll get rid of the AUTO crap.
 
-System info:
-- GPU: AMD RX 470 (GCN 4 / Polaris)
-- Distro: Arch Linux
-- Kernel (working): linux-lts 6.6.x
-- Kernel (broken): 6.7.x and newer (currently tested on 6.14.6)
+For that, the select function should probably select something else from AUTO
+on Intel too.
 
-Thanks in advance,
-Durmus Ozaltay
+My point is, let's deal with AUTO in the select functions only and then forget
+it from then on...
+
+Right?
+
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
