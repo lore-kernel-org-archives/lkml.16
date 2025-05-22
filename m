@@ -1,116 +1,115 @@
-Received: from mx0b-0016f401.pphosted.com (mx0a-0016f401.pphosted.com [67.231.148.174])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D9881F3B89;
-	Thu, 22 May 2025 05:57:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.148.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2E0A157A67
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 06:05:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747893476; cv=none; b=jLftSx+aORX46A5Qxnsh38TseoQS6B7Ug4Z7Bw3hIZrmYWyN3axgJ8GLA0JXymNfEQnKrETKTbuVOoI289L2963muTGa+N0jYo22j52PCwz3ztGvbfEvHOeS8BzfqLEXLbNkHx2VFnUaTT4PacHxMYATDr7OQv1/Rb+ToprJVzk=
+	t=1747893954; cv=none; b=gxDJIuAJOzy+4SiYWfiC5wOiIM8eKTeJ3D/M70yR8jUI0vMDFQv+qdYB+Or6bFbnzyzUDiiHyEmaZWZjQqEutSr9krWNjHv48Yuq0rEm2XqGbItnrlsLigvAdSswWBAV7hde41/fqd8EFZOcm64fhr2gMMJ5TZYJr9oMt7GZU4U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747893476; c=relaxed/simple;
-	bh=3WeuTWf00a8CIQ6rDioYC/Y6x+vib4vbWBWfGv2pM1Y=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Gef50hJSJibDvlYrWSMsl4YOCDc1B2Gz0wGUoCDWvB/5Cw+rWgVFLLidGXiVyE4zEN/ZBLALlYvVVOduoNn7CcK/4ty5ed37fP3CZKS35wQvYBA8mEoA5dZtmpBgz0JqTHZs1Vz6JtP/MpackG9kYMP7Yub1yKyOBp8m14NElZc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=dtc5EZQQ; arc=none smtp.client-ip=67.231.148.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
+	s=arc-20240116; t=1747893954; c=relaxed/simple;
+	bh=I+7T0XWA3psCI0S3YgG5g5cyv/Ez0iIKfqzxER3LdUA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bjzYeHU13LFS05SDVDOFaM3o30FzvMy27A/3QK0jQ20j9nPJCXcVB71G4Gweha8RE5JSjpCFjUHwcFy/q6aNyJ6wyKkiyXPe1Kd3CAo6sjcbRRTM+FVcGsZkn8X3YTpycumtoz4dGqKI5OUSPPXDqqUVW6gMJGfXzImyMG80kCY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=a/o7v4Zk; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="dtc5EZQQ"
-Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
-	by mx0a-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54LNWNwG010290;
-	Wed, 21 May 2025 22:57:38 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pfpt0220; bh=X
-	kkuJza7kOUufs/cQ2lXoFNA3GSdaOGpzSuPaapYVyw=; b=dtc5EZQQVfzERy3NI
-	sL+8LgpxmoLHDWtuk7J+y7oZ1fwCRKCDigg/gXzqok8k3gR1k2PicHFJD7xlUSg5
-	/aLdOb7j1Dx9ssKphuRWe0gwyLqRn/47/WABKGX0tBhnkD1H9TF4OdQbYMZ0m0QF
-	KYBeuhQ/9ZZoP90a6ASX32AnrzvlAkEorSl936w88jWxS8pH5F1Fs3jlmdIWYdtD
-	5AzN/V5wmffbg4nVgsLp4xjlVGwFhwaVuGQXJrordtz6igtEV6BYkwwznQHWEuXe
-	3s0oWoyDRwpKXjllYpivkt5VQs81EGceEw6jvpKlIgtn0JWtaECZ/2LPA4XuDGrK
-	K6EvA==
-Received: from dc6wp-exch02.marvell.com ([4.21.29.225])
-	by mx0a-0016f401.pphosted.com (PPS) with ESMTPS id 46srka8j99-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 21 May 2025 22:57:38 -0700 (PDT)
-Received: from DC6WP-EXCH02.marvell.com (10.76.176.209) by
- DC6WP-EXCH02.marvell.com (10.76.176.209) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.4; Wed, 21 May 2025 22:57:36 -0700
-Received: from maili.marvell.com (10.69.176.80) by DC6WP-EXCH02.marvell.com
- (10.76.176.209) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
- Transport; Wed, 21 May 2025 22:57:36 -0700
-Received: from tx2-sever.caveonetworks.com (unknown [10.110.141.15])
-	by maili.marvell.com (Postfix) with ESMTP id 82CC33F708E;
-	Wed, 21 May 2025 22:57:36 -0700 (PDT)
-From: George Cherian <george.cherian@marvell.com>
-To: <linux@roeck-us.net>, <wim@linux-watchdog.org>, <a.fatoum@pengutronix.de>
-CC: <linux-watchdog@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        "George
- Cherian" <george.cherian@marvell.com>
-Subject: [RESEND PATCH v5 2/2] drivers: sbsa_gwdt: Enable the reset_on_panic feature
-Date: Thu, 22 May 2025 05:57:15 +0000
-Message-ID: <20250522055715.3533356-3-george.cherian@marvell.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250522055715.3533356-1-george.cherian@marvell.com>
-References: <20250522055715.3533356-1-george.cherian@marvell.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="a/o7v4Zk"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1747893951;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=T5UcmE338HgvT5w4WTQ/s8ig0Q1beM5AA/bl1F3aF54=;
+	b=a/o7v4ZkwmBXwwC5djpQGh5E3iE7kPwsGSehez+eqvdE1PI4tM0QCW4vxC1N52f80gzasr
+	MFAPb0E4Ht7tTFAbYx1UlI9eMCArXgaGA15+l7sfAltxz2lTaO/YH84OIEJvt358qdrvh1
+	+1Fs9b/FCcHmiWkB9tqKCU1eVN8EAGc=
+Received: from mail-pg1-f200.google.com (mail-pg1-f200.google.com
+ [209.85.215.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-483-CdF6DqvHMuiXAR_1IN2xJQ-1; Thu, 22 May 2025 02:05:49 -0400
+X-MC-Unique: CdF6DqvHMuiXAR_1IN2xJQ-1
+X-Mimecast-MFC-AGG-ID: CdF6DqvHMuiXAR_1IN2xJQ_1747893948
+Received: by mail-pg1-f200.google.com with SMTP id 41be03b00d2f7-b1ffc678adfso4943800a12.0
+        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 23:05:49 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747893948; x=1748498748;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=T5UcmE338HgvT5w4WTQ/s8ig0Q1beM5AA/bl1F3aF54=;
+        b=PyE8wJeOt8OCcwnqcj9tWbLDMuMo4RFPIkptFEV7dewHbm0EUeGI/JQhrYAnOK54jt
+         7s5fmMEpbQ1aEXo+vXH9M/GmLMFiURO2x0KxzGFPMAgqHpzqC53thoXj3Kt6Q2UjtSo8
+         zyITSR2DBFExs7o5Cd7hd1wIpJ/KLvPm632A5FqBDhs8yCt/pmX3C1KFBHKM8vgfvVA1
+         RI1Otrva6r6dIUbY7ltmqU83tKqW0XR3ChMqAkvy5hwazaXqYbR75PlBgOV7gsX+K+Of
+         Ss06EXmtuYbQhztd91geG8Cy56cxDW8E6XA1WGgn4wMhu2J8sW5iIgrLVo1VbnPOe4GI
+         AFnw==
+X-Forwarded-Encrypted: i=1; AJvYcCUZf3AXFqDrpvJXPEa6+HVJgSmQJ+TT4jfDZnPMvhwO2DxwYSzsk+2NLd/LJTabqhbpgnTVWhdiyKotIdE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxr613HJPEuAY5RL1f9YH7eFskGeF0fJHnJ9N9WXzfi7+ZFQszC
+	wSpQu7rIn4DRFw6ENweOwumd23bObmqy51A9mPIQHK9XaOznlKisq1aP2cocwpkwcBm912gtyWh
+	7p6XkB97uOJKepTeLiRfZE59gerPtTLs/EH1gJ0PFt+oL8l3DM3TsqJtseG21z4DM4Q==
+X-Gm-Gg: ASbGncs60+13b2w7XEPCcx9KDIEsI7ODosVx40cbEWzCTRYTT3Nzz/3TMsFkyZcI4Vz
+	JDuC6cA+1HgK9BzC6vUNuanyPcn+8Kb1OETwrVhPPo6QilnroQsMj7xOi/u5JZfzt7jnKl2TCpx
+	qZVgVnascMVkN8+PEFUVVbY52AeQCZxy5HwAnHfHiME/GQLCN3qTfiPROxjY3TjblYgxdRO0Ck1
+	vtq1A5R5zVQnm6oVA3YrH8o+GyCVLKWT1lfASFTxKpVKG7D1Fj0WkfjR5VfuxTlEqVctooYlPIe
+	Ycs=
+X-Received: by 2002:a05:6a20:12ca:b0:1f3:418c:6281 with SMTP id adf61e73a8af0-21621875ab8mr35263900637.4.1747893948575;
+        Wed, 21 May 2025 23:05:48 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHTFkdwaFGdarcTnLubzQX5o2FjgnhFMq7UwYkJHfRvH9tVaqvdnFp2FCz6WDEjhRKA3X+QBA==
+X-Received: by 2002:a05:6a20:12ca:b0:1f3:418c:6281 with SMTP id adf61e73a8af0-21621875ab8mr35263873637.4.1747893948226;
+        Wed, 21 May 2025 23:05:48 -0700 (PDT)
+Received: from localhost ([209.132.188.88])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b26eb0a0b19sm10539159a12.74.2025.05.21.23.05.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 21 May 2025 23:05:47 -0700 (PDT)
+Date: Thu, 22 May 2025 14:02:43 +0800
+From: Coiby Xu <coxu@redhat.com>
+To: Baoquan He <bhe@redhat.com>
+Cc: Mimi Zohar <zohar@linux.ibm.com>, linux-integrity@vger.kernel.org, 
+	kexec@lists.infradead.org, linux-kernel@vger.kernel.org, pmenzel@molgen.mpg.de, 
+	ruyang@redhat.com, chenste@linux.microsoft.com
+Subject: Re: [PATCH] ima: add a knob ima= to make IMA be able to be disabled
+Message-ID: <wzquib7u5sycaf5prdgztlcudvaa2kma6jv3zmyfw7krzgnbkp@x2u5vnumfl4v>
+References: <20250515233953.14685-1-bhe@redhat.com>
+ <aCaFNvHbYxrCaPbe@MiWiFi-R3L-srv>
+ <1d2848fe45dbf58707cecf16c4fc46b179e24415.camel@linux.ibm.com>
+ <aC6Y3S9hEB1snvwj@MiWiFi-R3L-srv>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-GUID: hMS1bauiqjSZkET81TUw7f6W7F-orrRX
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIyMDA1NyBTYWx0ZWRfX5wuRj8St0l7o NblrE3eVhUE5lTdoDPs2BapLxsggi34t/Z63L7QETKo05KcP6nfgNIc5HEAnddyhrtxFyTAdZXw OGBOsnmLo9LHsvaHTPdFR3c5aeEJZNjVANT/tMWiWyq0aZRWiBrOKs2iEA31DlerMM0IXQp6iPA
- lz/Zx4tMAzCx/HSTcYEtIMCMPNXH/vv/nF2JFeA+KgmSSRDH1SE3zCgH125qr6iyapU4DvLa28t sbGFSYRlX5KVb0B1/cmAOoPuvUifUUu1uEj4UiG3IHxH8Ri4MqOs03sK2yB768T4MrMj/H19ceB i+KBypVGNePPoDX6vDPGFg7RMZ/Tb+MEJeaX9i2ZvyhzhOSQyPrt75efPJw1qA3g2ULFF6wKXmq
- dPO0iyEMvjv3dnXS5Tma/axIDSTqrfBiCpnuaYylaYYEjy8K8FDSez5LilD102jpaylxhd0f
-X-Proofpoint-ORIG-GUID: hMS1bauiqjSZkET81TUw7f6W7F-orrRX
-X-Authority-Analysis: v=2.4 cv=Bp+dwZX5 c=1 sm=1 tr=0 ts=682ebcd2 cx=c_pps a=gIfcoYsirJbf48DBMSPrZA==:117 a=gIfcoYsirJbf48DBMSPrZA==:17 a=dt9VzEwgFbYA:10 a=M5GUcnROAAAA:8 a=vEtRRzcOuqZZwul3seoA:9 a=OBjm3rFKGHvpk9ecZwUJ:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-22_03,2025-05-20_03,2025-03-28_01
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <aC6Y3S9hEB1snvwj@MiWiFi-R3L-srv>
 
-Set the WDIOF_OPS_ATOMIC for sbsa_gwdt driver, since the ops are atomic.
-Also set the reset_on_panic timeout, this enables the panic notifier to
-be registered by watchdog core and use the reset_on_panic timeout to be
-configured in case of kernel panic. reset_on_panic is by default set to
-60sec. This can be modified runtime via sysfs.
+On Thu, May 22, 2025 at 11:24:13AM +0800, Baoquan He wrote:
+>On 05/21/25 at 08:54am, Mimi Zohar wrote:
+>> On Fri, 2025-05-16 at 08:22 +0800, Baoquan He wrote:
+>> > CC kexec list.
+>> >
+>> > On 05/16/25 at 07:39am, Baoquan He wrote:
+>> > > Kdump kernel doesn't need IMA functionality, and enabling IMA will cost
+>> > > extra memory. It would be very helpful to allow IMA to be disabled for
+>> > > kdump kernel.
+>
+>Thanks a lot for careufl reviewing and great suggestions.
+>
+>>
+>> The real question is not whether kdump needs "IMA", but whether not enabling
+>> IMA in the kdump kernel could be abused.  The comments below don't address
+>> that question but limit/emphasize, as much as possible, turning IMA off is
+>> limited to the kdump kernel.
+>
+>Are you suggesting removing below paragraph from patch log because they
+>are redundant? I can remove it in v2 if yes.
 
-Signed-off-by: George Cherian <george.cherian@marvell.com>
----
- drivers/watchdog/sbsa_gwdt.c | 3 +++
- 1 file changed, 3 insertions(+)
+I understand Mimi's suggestion as the commit message should answer the
+question why disabling IMA should be limited to kdump.
 
-diff --git a/drivers/watchdog/sbsa_gwdt.c b/drivers/watchdog/sbsa_gwdt.c
-index 5f23913ce3b4..fd5095137712 100644
---- a/drivers/watchdog/sbsa_gwdt.c
-+++ b/drivers/watchdog/sbsa_gwdt.c
-@@ -92,6 +92,7 @@ struct sbsa_gwdt {
- };
- 
- #define DEFAULT_TIMEOUT		10 /* seconds */
-+#define DEFAULT_RESET_ON_PANIC_TIMEOUT		60 /* seconds */
- 
- static unsigned int timeout;
- module_param(timeout, uint, 0);
-@@ -242,6 +243,7 @@ static const struct watchdog_info sbsa_gwdt_info = {
- 	.options	= WDIOF_SETTIMEOUT |
- 			  WDIOF_KEEPALIVEPING |
- 			  WDIOF_MAGICCLOSE |
-+			  WDIOF_OPS_ATOMIC |
- 			  WDIOF_CARDRESET,
- };
- 
-@@ -291,6 +293,7 @@ static int sbsa_gwdt_probe(struct platform_device *pdev)
- 	wdd->ops = &sbsa_gwdt_ops;
- 	wdd->min_timeout = 1;
- 	wdd->timeout = DEFAULT_TIMEOUT;
-+	wdd->reset_on_panic = DEFAULT_RESET_ON_PANIC_TIMEOUT;
- 	watchdog_set_drvdata(wdd, gwdt);
- 	watchdog_set_nowayout(wdd, nowayout);
- 	sbsa_gwdt_get_version(wdd);
 -- 
-2.34.1
+Best regards,
+Coiby
 
