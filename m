@@ -1,88 +1,91 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDDFC14658D;
-	Thu, 22 May 2025 20:30:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67B1C221F33;
+	Thu, 22 May 2025 20:30:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747945828; cv=none; b=eW6WHy6+uZQuARx2WJp8V5sg9uT5p0m8yTiKTpmN2RoBUkZdNAu6N07Sfzxu4MYkx2j4CIdbT1S4+CnyOSeUB8qpJ39XGmNwYR9f5OUhmC/IDy5nTU6lOvlx/M59zEEElPEl+Ads/BJ8NpLuduoJBz2HqJEWSfOxtfUg6TQJTis=
+	t=1747945845; cv=none; b=TZgBvQKvPGy42PnqkBZAGVNkjruu899XSuiycjp+lV57P7zhEXnO6WIPvjg4EUqMHGmTlS5v2/5NsYPwkozsyudSu5Mpueht8/CI2cyFJSRf7r9VGpYB3iqDTSdEgyGtR4KDLObXz6ELQgpgIQ0tWixWc357Sg3lENlny8zY7Zc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747945828; c=relaxed/simple;
-	bh=uQsezi9xXkJD2WST6jUpJh15925KiJ4sgHCkw5DImdo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Mkbg3sc2p8S6rXVoXKMvFmSgyHsf7LDfZogTO8+Je0XPIYdtpE5ImdB6E7EjPCp2XeUzJ89lQFYjAuR6LfwWBF22guv/yKFLABI3IeIPjfrZvTbxSz0aKwiV+0af55dRJRSI49pifNJgmnDv3h7A6So++GPaMzpbXrniS0P+eQI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=NNopRXti; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1747945845; c=relaxed/simple;
+	bh=rqJt2LeqXijI9OuagfbU1dZUmmQmO9he9zCJF0F/Ycc=;
+	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=H2HmDNKG/Y/MNG23dUeh1iKKRHX4c2HbOtOFio9ijKEi9MxhzCyCTxTf0Y2DuJ2z6kxPBr6OcEDq1pFhS501TM/YjDRUvqPzOHlKntxJoVGobMBS8+Enf19SM0b8wsAIMZST4vP0zhYhwbzTIkfEldPkcIPUx6VoHDRXQanmN3M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S4hZYky9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="NNopRXti"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
-	Content-ID:Content-Description:In-Reply-To:References;
-	bh=VGADaWwXrD+siNXh8qq1xehNpdCscPaXOmC04LLMKnQ=; b=NNopRXtifwcXyHYvXFOVwUxpKa
-	pNHAti/vb/q4J/SziLLCMOtFfjhQRbInqm25vuIYI472EXbIYQCxQPlHYtwuwWqEzxvkZ/K38l88R
-	8utM8FNXYwsGtTcpZ01R6tmRibEqlV7LadsVbGHE6NFl+4tiQo19yo+j7UacwBo5ZOfkC0cJunCBQ
-	EZcMvEmzOLVheupSvplGEpWNdCAcibrSPVeb86Ol4uBtmASgFY8ztKegRR5tbc0nt7BFQoRcjRLym
-	YRDmV/UaiUuMjju4PxfgL9Yf68nFL5IrDVuad6FkE9rJBk6f+wbIUK608LF9HBDphqP1JcKP1dv0g
-	yzzYlMhw==;
-Received: from [50.53.25.54] (helo=bombadil.infradead.org)
-	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uICYZ-000000027ox-2ihN;
-	Thu, 22 May 2025 20:30:23 +0000
-From: Randy Dunlap <rdunlap@infradead.org>
-To: linux-kernel@vger.kernel.org
-Cc: Randy Dunlap <rdunlap@infradead.org>,
-	Daniel Dadap <ddadap@nvidia.com>,
-	Takashi Iwai <tiwai@suse.de>,
-	Jaroslav Kysela <perex@perex.cz>,
-	linux-sound@vger.kernel.org
-Subject: [PATCH] ALSA: hda_acpi: eliminate defined but not used warnings
-Date: Thu, 22 May 2025 13:30:20 -0700
-Message-ID: <20250522203020.1478369-1-rdunlap@infradead.org>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S4hZYky9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B6437C4CEE4;
+	Thu, 22 May 2025 20:30:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747945844;
+	bh=rqJt2LeqXijI9OuagfbU1dZUmmQmO9he9zCJF0F/Ycc=;
+	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
+	b=S4hZYky92s+Oqrjudop6ZcTUc2bJaYuAfpfJEUxfrRSgPCkyzNoKi/1nq/5tyCcbD
+	 OMwhtuPt+jKpPa1gdreK9zhHiTqjUS7Zb4kS4ZP46nl+8YD5YYkhk6bMY/TQbcA8D+
+	 szMQVT30Dk7Djdv6duQ/tg7p01y8OUL39sh4yR2ZYGj3pNtLZ9pxAB7NqS9PCtA51d
+	 2HNhVOOgh5hYcAzplBxFUBgGuvpYkH2CVIXZttVbgkExEJMlbA/lPQYpVqejIwhlhA
+	 8ULi+lcaqBLTqkGW4hEa+g3DBc8SLzl1Zto1HFjQeL1UUjGjWzb7v1a9yi4c798S8t
+	 NwBMZVagl+h6w==
+Date: Thu, 22 May 2025 15:30:42 -0500
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: Conor Dooley <conor+dt@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Robin Gong <yibin.gong@nxp.com>, 
+ linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>, 
+ devicetree@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>
+To: Martijn de Gouw <martijn.de.gouw@prodrive-technologies.com>
+In-Reply-To: <20250522192325.1099680-1-martijn.de.gouw@prodrive-technologies.com>
+References: <20250522192325.1099680-1-martijn.de.gouw@prodrive-technologies.com>
+Message-Id: <174794584287.3722828.5721121369955097366.robh@kernel.org>
+Subject: Re: [PATCH 1/3] dt-bindings: regulator: add pca9450: Add
+ regulator-allowed-modes
 
-When CONFIG_PM_SLEEP is not set, the hda_acpi_suspend() and
-hda_acpi_resume() functions are not used and cause build warnings:
 
-sound/pci/hda/hda_acpi.c:282:12: warning: 'hda_acpi_resume' defined but not used [-Wunused-function]
-  282 | static int hda_acpi_resume(struct device *dev)
-sound/pci/hda/hda_acpi.c:269:12: warning: 'hda_acpi_suspend' defined but not used [-Wunused-function]
-  269 | static int hda_acpi_suspend(struct device *dev)
+On Thu, 22 May 2025 21:23:22 +0200, Martijn de Gouw wrote:
+> The PCA9450 has support for forced PWM mode on the buck controllers.
+> Add support to control this mode.
+> 
+> Signed-off-by: Martijn de Gouw <martijn.de.gouw@prodrive-technologies.com>
+> ---
+>  .../bindings/regulator/nxp,pca9450-regulator.yaml  | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
+> 
 
-Enclose these functions inside an ifdef CONFIG_PM_SLEEP block to
-prevent the warnings.
+My bot found errors running 'make dt_binding_check' on your patch:
 
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Daniel Dadap <ddadap@nvidia.com>
-Cc: Takashi Iwai <tiwai@suse.de>
-Cc: Jaroslav Kysela <perex@perex.cz>
-Cc: linux-sound@vger.kernel.org
----
- sound/pci/hda/hda_acpi.c |    2 ++
- 1 file changed, 2 insertions(+)
+yamllint warnings/errors:
 
---- linux-next-20250522.orig/sound/pci/hda/hda_acpi.c
-+++ linux-next-20250522/sound/pci/hda/hda_acpi.c
-@@ -266,6 +266,7 @@ static void hda_acpi_shutdown(struct pla
- 		azx_stop_chip(chip);
- }
- 
-+#ifdef CONFIG_PM_SLEEP
- static int hda_acpi_suspend(struct device *dev)
- {
- 	struct snd_card *card = dev_get_drvdata(dev);
-@@ -291,6 +292,7 @@ static int hda_acpi_resume(struct device
- 
- 	return 0;
- }
-+#endif /* CONFIG_PM_SLEEP */
- 
- static const struct dev_pm_ops hda_acpi_pm = {
- 	SET_SYSTEM_SLEEP_PM_OPS(hda_acpi_suspend, hda_acpi_resume)
+dtschema/dtc warnings/errors:
+Documentation/devicetree/bindings/regulator/nxp,pca9450-regulator.example.dts:25:18: fatal error: dt-bindings/regulator/nxp,pca9450-regulator.h: No such file or directory
+   25 |         #include <dt-bindings/regulator/nxp,pca9450-regulator.h>
+      |                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+compilation terminated.
+make[2]: *** [scripts/Makefile.dtbs:131: Documentation/devicetree/bindings/regulator/nxp,pca9450-regulator.example.dtb] Error 1
+make[2]: *** Waiting for unfinished jobs....
+make[1]: *** [/builds/robherring/dt-review-ci/linux/Makefile:1524: dt_binding_check] Error 2
+make: *** [Makefile:248: __sub-make] Error 2
+
+doc reference errors (make refcheckdocs):
+
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250522192325.1099680-1-martijn.de.gouw@prodrive-technologies.com
+
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
+
