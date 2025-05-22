@@ -1,261 +1,114 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1DEC28D8D4
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 14:52:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA0FE28CF74
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 14:52:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747925567; cv=none; b=YcKT/SqVuI6j9r8xw+pdHQ5BgzpdgvSMyUr+8MFQPHn1AU8mFVGlclG5oTIyrxhDf3PX+36lLaU6CTw6MjRuGxJyGUNraNHoImXzEwQiNyF0GX5t4jIuMVSzAzDXVez+WOMqr67GPROi2H7Pzw9jGGae5sHx82J10CJFnq1ef/k=
+	t=1747925570; cv=none; b=RJiA2n5MrqN2bm4kGsGTJl4pdqkf+fpl/706h3hxQmJnoD+LIaVADmrqlkH/Fa5fUuub0OAgoE5ZI9z1OC/NJeEAOJG+f6Aaj6aP4GGx4F7pNsvHyQrZCdgoiTGpLggcI7fka3XdJp+oSrDMlHdTFTr+v/VdSHu60yZLFBn1HV8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747925567; c=relaxed/simple;
-	bh=1B2UwXy+eREibFkEN65Y0H/bWVpqpUf2RZLMqTnAq5Y=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=qUy1LLh0qEApu3F0xeszlI9+hMuwUmtk3A5dvyq2BBn/nTbkdSc+57twwn68OtXndEErmdfXGhypqPmIA+Lz7obSj+0dtW48HMDurYCQKTGlAvms0Mt7QFylZkrgmtQYFLdE/fls76SXjBAGL8zyFQ23q95AOY77aUj/G3pCNlg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=zdA9yKnN; arc=none smtp.client-ip=209.85.216.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1747925570; c=relaxed/simple;
+	bh=7uAUNv82+LtkHA55DSD3QR6OnOrjU66RtE2T6otPNFw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MPadByqsHb/sO0F4x1Xg/PByxxuno/iAagFO4QVG+ExuPzpZPJ2DLWSk3Ih0XRpWcHF8V4AoUstEyZfCgi/6dBj7sE8suWJpZFl8v57U1JUl4C5mZ5yjN5ysmHfVMG40/6zC31NbxEEq+/Vb8AlMrMfNf0aFdX76tQZYnDeWa5E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CLtw3qnB; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="zdA9yKnN"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-30e9e81d4b0so7587240a91.3
-        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 07:52:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747925564; x=1748530364; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=BZ8YmHyMaz5fBM8/QXNAl/DrlvoX+XAfi4wswaLDq3M=;
-        b=zdA9yKnN1usatZmyKWAbMy7lox0ughIHEzhF1kVZhNIKCgObXq3IcSySrnI6xndpGa
-         buNoRgBrF0Dq4CEahrVWJvrIs3nfiqiOF3uK+9wk4aL3MsB5hTEnU9bCfxIl+Kb+S51P
-         v7tHVctUd8fhEIr6sFALS1OIxjQRqUWzTuIFqwy8yAbtyv1NA66Oqc0DPJzhl3wW5u+f
-         te0+MDTYwFcBi9FvXEaQwNjwx+5mxxSumPEw5Ng3Z4hR8Jw3g4i1Eum5rfHMKdMkEhZI
-         C/Bj12DM+ioK6oI6VR21o4LlOQJMkj/WXGQaGPBFU/velcjxUiKu7CIyIen3OJIhN89i
-         MdrA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747925564; x=1748530364;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=BZ8YmHyMaz5fBM8/QXNAl/DrlvoX+XAfi4wswaLDq3M=;
-        b=FEKLNVmm1UAqCBNKgz94SpKpcc80oSuOOOIy+B6QdWD9LDLtzgL9DyFvczRXOd3gQc
-         szapgpJcRho68o/e47JRe7xAZQAx/6qr0U6qryc9b3I/XT8KKOzYr3PoPUU50kEb2Y15
-         o4/rRgj/B3mCZVFuJBV/yNuUBfSi2UklFM42TrO++3wFO72yacdV5X2tlCiJ2zHUEH8U
-         kPu3HOx7qI6wIXfpXxvA/0YbYq0LH7HPT2bN29LtOjU0qEtHDyjyNuBnOKTGm46AGDgv
-         AEBQkANm4DimPeHs/DYEBIjZKA8Ig6FWRHL10ESioJWS46SNrQZj3gc7dP2uqedSs8JK
-         2Ggg==
-X-Forwarded-Encrypted: i=1; AJvYcCW5AeJ/fIykY94MSF7zgGKxmwgb8PihYRQlpjphbrtSWYJ4XoSCjnvqfKdAdJK/sZ9aZjpUHJ7UwmxcISc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyQ4px0XS8XFbWBA7EgCZcCEU+tm8uRsWuAz2hMiEkL1CDIZrNi
-	FxdFs0FEy4JMi5rxA5dRQ9FdfwvsyNswDIZGrcO6lkZIHZFsO8L/TrDQnLrm+4q3sfegtIK5ZOe
-	lMp3ZeQ==
-X-Google-Smtp-Source: AGHT+IHmTGrJIsuX8DX7FPF6xj7anm5a8QzgcrjE2b6L+vmsQ7gy3otN9k2Cq927P88vBTOc0bfdhLfFkXo=
-X-Received: from pjbnt17.prod.google.com ([2002:a17:90b:2491:b0:310:89d3:b3dd])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:1dc2:b0:2ee:b2e6:4276
- with SMTP id 98e67ed59e1d1-30e8322593dmr36667692a91.27.1747925563833; Thu, 22
- May 2025 07:52:43 -0700 (PDT)
-Date: Thu, 22 May 2025 07:52:42 -0700
-In-Reply-To: <CA+EHjTxJZ_pb7+chRoZxvkxuib2YjbiHg=_+f4bpRt2xDFNCzQ@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CLtw3qnB"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1747925566;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=pRqvAWIG+gW89awdSOcbpmSa/4HXlHRyH1DkS4kHixo=;
+	b=CLtw3qnBKcV53XvXZanT8KqJSCvoV6yMoEWnGpHM4YqvBcmdL+HjWSzbgk2K95wcRXLkrc
+	NYdWMizxnNJaOt5hANVPSlkHnSdfQoav8MQspp488BIkCzU0o6v+eVIMozRo+HGyt7grPb
+	M1HkzAa49Uv8hTtVOg9j4yX16p4gfjw=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-678-CcOIsM9IPI2ikLnRdLq8jw-1; Thu,
+ 22 May 2025 10:52:44 -0400
+X-MC-Unique: CcOIsM9IPI2ikLnRdLq8jw-1
+X-Mimecast-MFC-AGG-ID: CcOIsM9IPI2ikLnRdLq8jw_1747925563
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 5D92619560AA;
+	Thu, 22 May 2025 14:52:43 +0000 (UTC)
+Received: from localhost (unknown [10.72.112.172])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 60F0218001D8;
+	Thu, 22 May 2025 14:52:40 +0000 (UTC)
+Date: Thu, 22 May 2025 22:52:37 +0800
+From: Baoquan He <bhe@redhat.com>
+To: Mimi Zohar <zohar@linux.ibm.com>, piliu@redhat.com, prudo@redhat.com
+Cc: linux-integrity@vger.kernel.org, kexec@lists.infradead.org,
+	linux-kernel@vger.kernel.org, pmenzel@molgen.mpg.de,
+	coxu@redhat.com, ruyang@redhat.com, chenste@linux.microsoft.com
+Subject: Re: [PATCH] ima: add a knob ima= to make IMA be able to be disabled
+Message-ID: <aC86NSypHlER2C3L@MiWiFi-R3L-srv>
+References: <20250515233953.14685-1-bhe@redhat.com>
+ <aCaFNvHbYxrCaPbe@MiWiFi-R3L-srv>
+ <1d2848fe45dbf58707cecf16c4fc46b179e24415.camel@linux.ibm.com>
+ <aC6Y3S9hEB1snvwj@MiWiFi-R3L-srv>
+ <c0f1df02160138d0782cb897eda844287b3d7792.camel@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <CAGtprH_Evyc7tLhDB0t0fN+BUx5qeqWq8A2yZ5-ijbJ5UJ5f-g@mail.gmail.com>
- <CA+EHjTy7iBNBb9DRdtgq8oYmvgykhSNvZL3FrRV4XF90t3XgBg@mail.gmail.com>
- <CAGtprH_7jSpwF77j1GW8rjSrbtZZ2OW2iGck5=Wk67+VnF9vjQ@mail.gmail.com>
- <CA+EHjTzMhKCoftfJUuL0WUZW4DdqOHgVDcn0Cmf-0r--8rBdbg@mail.gmail.com>
- <diqzecwjnk95.fsf@ackerleytng-ctop.c.googlers.com> <CA+EHjTyY5C1QgkoAqvJ0kHM4nUvKc1e1nQ0Uq+BANtVEnZH90w@mail.gmail.com>
- <CAGtprH-fE=G923ctBAcq5zFna+2WULhmHDSbXUsZKUrin29b4g@mail.gmail.com>
- <CA+EHjTxvufYVA8LQWRKEX7zA0gWLQUHVO2LvwKc5JXVu-XAEEA@mail.gmail.com>
- <CAGtprH_TfKT3oRPCLbh-ojLGXSfOQ2XA39pVhr47gb3ikPtUkw@mail.gmail.com> <CA+EHjTxJZ_pb7+chRoZxvkxuib2YjbiHg=_+f4bpRt2xDFNCzQ@mail.gmail.com>
-Message-ID: <aC86OsU2HSFZkJP6@google.com>
-Subject: Re: [RFC PATCH v2 04/51] KVM: guest_memfd: Introduce
- KVM_GMEM_CONVERT_SHARED/PRIVATE ioctls
-From: Sean Christopherson <seanjc@google.com>
-To: Fuad Tabba <tabba@google.com>
-Cc: Vishal Annapurve <vannapurve@google.com>, Ackerley Tng <ackerleytng@google.com>, kvm@vger.kernel.org, 
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org, x86@kernel.org, 
-	linux-fsdevel@vger.kernel.org, aik@amd.com, ajones@ventanamicro.com, 
-	akpm@linux-foundation.org, amoorthy@google.com, anthony.yznaga@oracle.com, 
-	anup@brainfault.org, aou@eecs.berkeley.edu, bfoster@redhat.com, 
-	binbin.wu@linux.intel.com, brauner@kernel.org, catalin.marinas@arm.com, 
-	chao.p.peng@intel.com, chenhuacai@kernel.org, dave.hansen@intel.com, 
-	david@redhat.com, dmatlack@google.com, dwmw@amazon.co.uk, 
-	erdemaktas@google.com, fan.du@intel.com, fvdl@google.com, graf@amazon.com, 
-	haibo1.xu@intel.com, hch@infradead.org, hughd@google.com, ira.weiny@intel.com, 
-	isaku.yamahata@intel.com, jack@suse.cz, james.morse@arm.com, 
-	jarkko@kernel.org, jgg@ziepe.ca, jgowans@amazon.com, jhubbard@nvidia.com, 
-	jroedel@suse.de, jthoughton@google.com, jun.miao@intel.com, 
-	kai.huang@intel.com, keirf@google.com, kent.overstreet@linux.dev, 
-	kirill.shutemov@intel.com, liam.merwick@oracle.com, 
-	maciej.wieczor-retman@intel.com, mail@maciej.szmigiero.name, maz@kernel.org, 
-	mic@digikod.net, michael.roth@amd.com, mpe@ellerman.id.au, 
-	muchun.song@linux.dev, nikunj@amd.com, nsaenz@amazon.es, 
-	oliver.upton@linux.dev, palmer@dabbelt.com, pankaj.gupta@amd.com, 
-	paul.walmsley@sifive.com, pbonzini@redhat.com, pdurrant@amazon.co.uk, 
-	peterx@redhat.com, pgonda@google.com, pvorel@suse.cz, qperret@google.com, 
-	quic_cvanscha@quicinc.com, quic_eberman@quicinc.com, 
-	quic_mnalajal@quicinc.com, quic_pderrin@quicinc.com, quic_pheragu@quicinc.com, 
-	quic_svaddagi@quicinc.com, quic_tsoni@quicinc.com, richard.weiyang@gmail.com, 
-	rick.p.edgecombe@intel.com, rientjes@google.com, roypat@amazon.co.uk, 
-	rppt@kernel.org, shuah@kernel.org, steven.price@arm.com, 
-	steven.sistare@oracle.com, suzuki.poulose@arm.com, thomas.lendacky@amd.com, 
-	usama.arif@bytedance.com, vbabka@suse.cz, viro@zeniv.linux.org.uk, 
-	vkuznets@redhat.com, wei.w.wang@intel.com, will@kernel.org, 
-	willy@infradead.org, xiaoyao.li@intel.com, yan.y.zhao@intel.com, 
-	yilun.xu@intel.com, yuzenghui@huawei.com, zhiquan1.li@intel.com
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <c0f1df02160138d0782cb897eda844287b3d7792.camel@linux.ibm.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-On Wed, May 21, 2025, Fuad Tabba wrote:
-> On Wed, 21 May 2025 at 16:51, Vishal Annapurve <vannapurve@google.com> wr=
-ote:
-> > On Wed, May 21, 2025 at 8:22=E2=80=AFAM Fuad Tabba <tabba@google.com> w=
-rote:
-> > > On Wed, 21 May 2025 at 15:42, Vishal Annapurve <vannapurve@google.com=
-> wrote:
-> > > > On Wed, May 21, 2025 at 5:36=E2=80=AFAM Fuad Tabba <tabba@google.co=
-m> wrote:
-> > > > There are a bunch of complexities here, reboot sequence on x86 can =
-be
-> > > > triggered using multiple ways that I don't fully understand, but fe=
-w
-> > > > of them include reading/writing to "reset register" in MMIO/PCI con=
-fig
-> > > > space that are emulated by the host userspace directly. Host has to
-> > > > know when the guest is shutting down to manage it's lifecycle.
-> > >
-> > > In that case, I think we need to fully understand these complexities
-> > > before adding new IOCTLs. It could be that once we understand these
-> > > issues, we find that we don't need these IOCTLs. It's hard to justify
-> > > adding an IOCTL for something we don't understand.
-> > >
-> >
-> > I don't understand all the ways x86 guest can trigger reboot but I do
-> > know that x86 CoCo linux guest kernel triggers reset using MMIO/PCI
-> > config register write that is emulated by host userspace.
-> >
-> > > > x86 CoCo VM firmwares don't support warm/soft reboot and even if it
-> > > > does in future, guest kernel can choose a different reboot mechanis=
-m.
-> > > > So guest reboot needs to be emulated by always starting from scratc=
-h.
-> > > > This sequence needs initial guest firmware payload to be installed
-> > > > into private ranges of guest_memfd.
-> > > >
-> > > > >
-> > > > > Either the host doesn't (or cannot even) know that the guest is
-> > > > > rebooting, in which case I don't see how having an IOCTL would he=
-lp.
-> > > >
-> > > > Host does know that the guest is rebooting.
-> > >
-> > > In that case, that (i.e., the host finding out that the guest is
-> > > rebooting) could trigger the conversion back to private. No need for =
-an
-> > > IOCTL.
-> >
-> > In the reboot scenarios, it's the host userspace finding out that the g=
-uest
-> > kernel wants to reboot.
->=20
-> How does the host userspace find that out? If the host userspace is capab=
-le
-> of finding that out, then surely KVM is also capable of finding out the s=
-ame.
+On 05/22/25 at 07:08am, Mimi Zohar wrote:
+> On Thu, 2025-05-22 at 11:24 +0800, Baoquan He wrote:
+> > On 05/21/25 at 08:54am, Mimi Zohar wrote:
+> > > On Fri, 2025-05-16 at 08:22 +0800, Baoquan He wrote:
+> > > > CC kexec list.
+> > > > 
+> > > > On 05/16/25 at 07:39am, Baoquan He wrote:
+> > > > > Kdump kernel doesn't need IMA functionality, and enabling IMA will cost
+> > > > > extra memory. It would be very helpful to allow IMA to be disabled for
+> > > > > kdump kernel.
+> > 
+> > Thanks a lot for careufl reviewing and great suggestions.
+> > 
+> > > 
+> > > The real question is not whether kdump needs "IMA", but whether not enabling
+> > > IMA in the kdump kernel could be abused.  The comments below don't address
+> > > that question but limit/emphasize, as much as possible, turning IMA off is
+> > > limited to the kdump kernel.
+> > 
+> > Are you suggesting removing below paragraph from patch log because they
+> > are redundant? I can remove it in v2 if yes.
+> 
+> "The comments below" was referring to my comments on the patch, not the next
+> paragraph.  "don't address that question" refers to whether the kdump kernel
+> could be abused.
+> 
+> We're trying to close integrity gaps, not add new ones.  Verifying the UKI's
+> signature addresses the integrity of the initramfs.  What about the integrity of
+> the kdump initramfs (or for that matter the kexec initramfs)?  If the kdump
+> initramfs was signed, IMA would be able to verify it before the kexec.
 
-Nope, not on x86.  Well, not without userspace invoking a new ioctl, which =
-would
-defeat the purpose of adding these ioctls.
+Kdump initramfs could be generated each time when loading once change is
+detected, e.g newer kernel, kdump config tuning. It's different than
+UNI's normal initramfs. We don't need verify it as far as I know
+according to discussion with UNI dev, so ima=off can be set by default
+in kdump kernel. Even though one day that's really needed, ima=on|off is
+a switch, not a hard code.
 
-KVM is only responsible for emulating/virtualizing the "CPU".  The chipset,=
- e.g.
-the PCI config space, is fully owned by userspace.  KVM doesn't even know w=
-hether
-or not PCI exists for the VM.  And reboot may be emulated by simply creatin=
-g a
-new KVM instance, i.e. even if KVM was somehow aware of the reboot request,=
- the
-change in state would happen in an entirely new struct kvm.
+Add people woiking on kdump UKI to CC.
 
-That said, Vishal and Ackerley, this patch is a bit lacking on the document=
-ation
-front.  The changelog asserts that:
+> 
+> As for the next paragraph, based on Coiby's response, please remove it.
 
-  A guest_memfd ioctl is used because shareability is a property of the mem=
-ory,
-  and this property should be modifiable independently of the attached stru=
-ct kvm
+Got it, thanks.
 
-but then follows with a very weak and IMO largely irrelevant justification =
-of:
-
-  This allows shareability to be modified even if the memory is not yet bou=
-nd
-  using memslots.
-
-Allowing userspace to change shareability without memslots is one relativel=
-y minor
-flow in one very specific use case.
-
-The real justification for these ioctls is that fundamentally, shareability=
- for
-in-place conversions is a property of a guest_memfd instance and not a stru=
-ct kvm
-instance, and so needs to owned by guest_memfd.
-
-I.e. focus on justifying the change from a design and conceptual perspectiv=
-e,
-not from a mechanical perspective of a flow that likely's somewhat unique t=
-o our
-specific environment.  Y'all are getting deep into the weeds on a random as=
-pect
-of x86 platform architecture, instead of focusing on the overall design.
-
-The other issue that's likely making this more confusing than it needs to b=
-e is
-that this series is actually two completely different series bundled into o=
-ne,
-with very little explanation.  Moving shared vs. private ownership into
-guest_memfd isn't a requirement for 1GiB support, it's a requirement for in=
--place
-shared/private conversion in guest_memfd.
-
-For the current guest_memfd implementation, shared vs. private is tracked i=
-n the
-VM via memory attributes, because a guest_memfd instance is *only* private.=
-  I.e.
-shared vs. private is a property of the VM, not of the guest_memfd instance=
-.  But
-when in-place conversion support comes along, ownership of that particular
-attribute needs to shift to the guest_memfd instance.
-
-I know I gave feedback on earlier posting about there being too series flyi=
-ng
-around, but shoving two distinct concepts into a single series is not the a=
-nswer.
-My complaints about too much noise wasn't that there were multiple series, =
-it was
-that there was very little coordination and lots of chaos.
-
-If you split this series in two, which should be trivial since you've alrea=
-dy
-organized the patches as a split, then sans the selftests (thank you for th=
-ose!),
-in-place conversion support will be its own (much smaller!) series that can=
- focus
-on that specific aspect of the design, and can provide a cover letter that
-expounds on the design goals and uAPI.
-
-  KVM: guest_memfd: Add CAP KVM_CAP_GMEM_CONVERSION
-  KVM: Query guest_memfd for private/shared status
-  KVM: guest_memfd: Skip LRU for guest_memfd folios
-  KVM: guest_memfd: Introduce KVM_GMEM_CONVERT_SHARED/PRIVATE ioctls
-  KVM: guest_memfd: Introduce and use shareability to guard faulting
-  KVM: guest_memfd: Make guest mem use guest mem inodes instead of anonymou=
-s inodes
-
-And then you can post the 1GiB series separately.  So long as you provide p=
-ointers
-to dependencies along with a link to a repo+branch with the kitchen sink, I=
- won't
-complain about things being too chaotic :-)
