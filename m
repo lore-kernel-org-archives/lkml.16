@@ -1,136 +1,132 @@
-Received: from out30-130.freemail.mail.aliyun.com (out30-130.freemail.mail.aliyun.com [115.124.30.130])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6A072DCBE7;
-	Fri, 23 May 2025 03:16:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D86B2DCBE7;
+	Fri, 23 May 2025 03:23:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747970189; cv=none; b=dM8tfpbTVcKVT5W1nocPcy+hivmily1iGeld536e4sPIy0D79PllvDjQYP9BrpDSSf03K2w1L8l/KpoQInT5e166AmsIPzTQfHJf4OODf+yq9gvcdmOE4oGGYQ/V05EiWXnQkTeaZkbmJgf1RZl8ahIUwtjk44w6FxaEuTklp1k=
+	t=1747970633; cv=none; b=WsSkfsec3rGHWdekb0zulladqYXZU8hP7lrHpd4ya9MC8I3l/kvuyvKQVG8HCYaPiyebh0ugW23i9iyyFKiK8l0Yez/YvndVwKcCd7+0PNRtotJkmhsby2oTUF2/uM+MjNSUPzEQYlr4Puf5KDRksRFDvjv8rDYlCBvv89WLRyQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747970189; c=relaxed/simple;
-	bh=4ILR+KNCVjzNUNFwBTMlAvwJnCMmVeT55gitSiQ3iZw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=CScwlO+jDebVUuKABwVI+kTePXMuXmzCmacjwnlJsmwARR1Wy/UgvHtVtMNsaA4bbjlyaCHZPVOqkliiCbcDKtlOPOFrWmknDtWQ3icjsEufl0nGWXUydijAa7CUFGLvcyfpbXQPVudIe0GqT8vipB+mu7oVooSBgqJaiezX5iY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=um2upLww; arc=none smtp.client-ip=115.124.30.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1747970633; c=relaxed/simple;
+	bh=iyWz/fXuH0R7TlOwsw4fx5qxRfUBjcvlYeTAUH0oq5U=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=kmSGqYkwLQWYlNOaC/fznc3s+VyWItB1HLcPm8HawBzF22v+1W4cMyZI3hL3fg/GoaAG+tqzOU1B4BWZlvMlSpGqDNLm/pG/JUXcWWAfU+1HGdoCmHNOEiN4GqpC2wO8+zPuU9R+EoTqe6+0GPMShkp/IMtVcFvHkIFj21qGYcw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=Y6SM0pXE; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="um2upLww"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1747970184; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=WFP3g7I4K8WGl+2djGsOu7kO5N2vxrcXlNXYY/Iekm8=;
-	b=um2upLwwfnBcL2SA5WVhauQ/3MqArXJmr6jFHbWnjYgx3naUFQvjh7LQ17A0UB3iT0JCrOsqXa18XHSmqgQrzoiq378wIys1wHzk2c6QAOvRG+M0qYks/8w+hvproj3iUGCWH+taxoB6Oq6P3ZxB9n8XASNjgHooKiwwzle1j4w=
-Received: from localhost(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0WbYd28j_1747970183 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Fri, 23 May 2025 11:16:23 +0800
-From: Baolin Wang <baolin.wang@linux.alibaba.com>
-To: akpm@linux-foundation.org,
-	david@redhat.com,
-	shakeelb@google.com
-Cc: lorenzo.stoakes@oracle.com,
-	Liam.Howlett@oracle.com,
-	vbabka@suse.cz,
-	rppt@kernel.org,
-	surenb@google.com,
-	mhocko@suse.com,
-	baolin.wang@linux.alibaba.com,
-	linux-mm@kvack.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [RFC PATCH] mm: fix the inaccurate memory statistics issue for users
-Date: Fri, 23 May 2025 11:16:13 +0800
-Message-ID: <3dd21f662925c108cfe706c8954e8c201a327550.1747969935.git.baolin.wang@linux.alibaba.com>
-X-Mailer: git-send-email 2.43.5
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Y6SM0pXE"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1747970625;
+	bh=eBuTKXWoJ65Z6cyACn+klnCL2HucQeD9omFwYBo3AyY=;
+	h=Date:From:To:Cc:Subject:From;
+	b=Y6SM0pXElwt89qEX1gwhZKE6BemeF6c65ZYX0wGdajOrhilDTtGR4o40UoqdRt9AM
+	 9REZtfmqpzIYzhg1CNUVM/dU46P4o/U6RRMkIMf2WKscORwMoyaNG9PyJlxjamMGRC
+	 e1O4Gl82CTKVqkmUOPv8DFqO7JhFemkp56Xf7FRwL/4r9ayEawPl0ar2jZUY1FarIj
+	 8gcU3hq/WMaaCmCjYz5Tsxi25BMjwc4greC9nzkUjXb4dGW6Qp4QrxvYHPH32UZmVG
+	 EjqkGXCcNNT/MT3cEgtzr1rG697qgefWVF+TwLynuLnsbztNaSrl7ZOhPnj1Acsbzl
+	 KheN6i1bOWvWQ==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4b3Vqh5mTYz4xfH;
+	Fri, 23 May 2025 13:23:44 +1000 (AEST)
+Date: Fri, 23 May 2025 13:23:43 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@kernel.org>,
+ "H. Peter Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>,
+ Bjorn Helgaas <bhelgaas@google.com>, Lorenzo Pieralisi
+ <lpieralisi@kernel.org>, Krzysztof =?UTF-8?B?V2lsY3p5xYRza2k=?=
+ <kwilczynski@kernel.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
+ Mailing List <linux-next@vger.kernel.org>, Philipp Stanner
+ <phasta@kernel.org>
+Subject: linux-next: manual merge of the tip tree with the pci tree
+Message-ID: <20250523132343.6f33b625@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="Sig_/ADs_KDf/ECZz2ci6q1vhCHu";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-On some large machines with a high number of CPUs running a 64K kernel,
-we found that the 'RES' field is always 0 displayed by the top command
-for some processes, which will cause a lot of confusion for users.
+--Sig_/ADs_KDf/ECZz2ci6q1vhCHu
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-    PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND
- 875525 root      20   0   12480      0      0 R   0.3   0.0   0:00.08 top
-      1 root      20   0  172800      0      0 S   0.0   0.0   0:04.52 systemd
+Hi all,
 
-The main reason is that the batch size of the percpu counter is quite large
-on these machines, caching a significant percpu value, since converting mm's
-rss stats into percpu_counter by commit f1a7941243c1 ("mm: convert mm's rss
-stats into percpu_counter"). Intuitively, the batch number should be optimized,
-but on some paths, performance may take precedence over statistical accuracy.
-Therefore, introducing a new interface to add the percpu statistical count
-and display it to users, which can remove the confusion. In addition, this
-change is not expected to be on a performance-critical path, so the modification
-should be acceptable.
+Today's linux-next merge of the tip tree got a conflict in:
 
-Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
----
- fs/proc/task_mmu.c | 14 +++++++-------
- include/linux/mm.h |  5 +++++
- 2 files changed, 12 insertions(+), 7 deletions(-)
+  drivers/pci/pci.h
 
-diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
-index b9e4fbbdf6e6..f629e6526935 100644
---- a/fs/proc/task_mmu.c
-+++ b/fs/proc/task_mmu.c
-@@ -36,9 +36,9 @@ void task_mem(struct seq_file *m, struct mm_struct *mm)
- 	unsigned long text, lib, swap, anon, file, shmem;
- 	unsigned long hiwater_vm, total_vm, hiwater_rss, total_rss;
- 
--	anon = get_mm_counter(mm, MM_ANONPAGES);
--	file = get_mm_counter(mm, MM_FILEPAGES);
--	shmem = get_mm_counter(mm, MM_SHMEMPAGES);
-+	anon = get_mm_counter_sum(mm, MM_ANONPAGES);
-+	file = get_mm_counter_sum(mm, MM_FILEPAGES);
-+	shmem = get_mm_counter_sum(mm, MM_SHMEMPAGES);
- 
- 	/*
- 	 * Note: to minimize their overhead, mm maintains hiwater_vm and
-@@ -59,7 +59,7 @@ void task_mem(struct seq_file *m, struct mm_struct *mm)
- 	text = min(text, mm->exec_vm << PAGE_SHIFT);
- 	lib = (mm->exec_vm << PAGE_SHIFT) - text;
- 
--	swap = get_mm_counter(mm, MM_SWAPENTS);
-+	swap = get_mm_counter_sum(mm, MM_SWAPENTS);
- 	SEQ_PUT_DEC("VmPeak:\t", hiwater_vm);
- 	SEQ_PUT_DEC(" kB\nVmSize:\t", total_vm);
- 	SEQ_PUT_DEC(" kB\nVmLck:\t", mm->locked_vm);
-@@ -92,12 +92,12 @@ unsigned long task_statm(struct mm_struct *mm,
- 			 unsigned long *shared, unsigned long *text,
- 			 unsigned long *data, unsigned long *resident)
- {
--	*shared = get_mm_counter(mm, MM_FILEPAGES) +
--			get_mm_counter(mm, MM_SHMEMPAGES);
-+	*shared = get_mm_counter_sum(mm, MM_FILEPAGES) +
-+			get_mm_counter_sum(mm, MM_SHMEMPAGES);
- 	*text = (PAGE_ALIGN(mm->end_code) - (mm->start_code & PAGE_MASK))
- 								>> PAGE_SHIFT;
- 	*data = mm->data_vm + mm->stack_vm;
--	*resident = *shared + get_mm_counter(mm, MM_ANONPAGES);
-+	*resident = *shared + get_mm_counter_sum(mm, MM_ANONPAGES);
- 	return mm->total_vm;
- }
- 
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 185424858f23..15ec5cfe9515 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -2568,6 +2568,11 @@ static inline unsigned long get_mm_counter(struct mm_struct *mm, int member)
- 	return percpu_counter_read_positive(&mm->rss_stat[member]);
- }
- 
-+static inline unsigned long get_mm_counter_sum(struct mm_struct *mm, int member)
-+{
-+	return percpu_counter_sum_positive(&mm->rss_stat[member]);
-+}
-+
- void mm_trace_rss_stat(struct mm_struct *mm, int member);
- 
- static inline void add_mm_counter(struct mm_struct *mm, int member, long value)
--- 
-2.43.5
+between commits:
 
+  51f6aec99cb0 ("PCI: Remove hybrid devres nature from request functions")
+  8e9987485d9a ("PCI: Remove pcim_request_region_exclusive()")
+  dfc970ad6197 ("PCI: Remove function pcim_intx() prototype from pci.h")
+
+from the pci tree and commit:
+
+  d5124a9957b2 ("PCI/MSI: Provide a sane mechanism for TPH")
+
+from the tip tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc drivers/pci/pci.h
+index e39a2a5df587,39f368d2f26d..000000000000
+--- a/drivers/pci/pci.h
++++ b/drivers/pci/pci.h
+@@@ -1105,6 -1059,20 +1105,15 @@@ static inline pci_power_t mid_pci_get_p
+  }
+  #endif
+ =20
+ -int pcim_intx(struct pci_dev *dev, int enable);
+ -int pcim_request_region_exclusive(struct pci_dev *pdev, int bar,
+ -				  const char *name);
+ -void pcim_release_region(struct pci_dev *pdev, int bar);
+ -
++ #ifdef CONFIG_PCI_MSI
++ int pci_msix_write_tph_tag(struct pci_dev *pdev, unsigned int index, u16 =
+tag);
++ #else
++ static inline int pci_msix_write_tph_tag(struct pci_dev *pdev, unsigned i=
+nt index, u16 tag)
++ {
++ 	return -ENODEV;
++ }
++ #endif
++=20
+  /*
+   * Config Address for PCI Configuration Mechanism #1
+   *
+
+--Sig_/ADs_KDf/ECZz2ci6q1vhCHu
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgv6j8ACgkQAVBC80lX
+0GzuFAf+I4NsjHtzzXHUpckyCMm7E44o1YLUDyJUsLxQXoe10a3m27c24QIs+Uht
+otilrA43ltv/dZrST9bCF91pKQZHuMn0a393uxS22LfLvJgUKyLpHP0QwDQUYlsu
+Om+OoAqWcCBP7eAlY8+hq8EmMDShknVPgeB9Mwviu08z4JbWlFNMVsGiKN7JJyY5
+9iCPSVzOA9z/oqpocee7OtRGikZSEa0HZArl3acxU/t1N5RDspz/UN6AWIWHusiu
+xgcUuh3J5sFEMot3eBXNJlD9YobK2gnKujwOR1p5YW90d1zgVhQcPClAbHnNPZDC
+USRwLVT+00Bo+qXhIUeDwj3YSuYBSw==
+=afDw
+-----END PGP SIGNATURE-----
+
+--Sig_/ADs_KDf/ECZz2ci6q1vhCHu--
