@@ -1,73 +1,120 @@
-Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42C101F9F7A
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 08:41:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.71
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF208212FB7;
+	Fri, 23 May 2025 08:42:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747989665; cv=none; b=WwywtHasr6T8dWKevcKRJE5HcO0Kh4DV6GZFqWIuDnFsfC6J7ScD0m1fZcj8Oy6lHt4Jzo3EL3fORpPlJ+O3xi3avnEGeoZb+52IQyvAeOMqaErbchL3cYb/FgGITwMs1b5jKMDtIns2QoNZ2BZv8mzH2DYUVsBD8Wp2VkmfMms=
+	t=1747989724; cv=none; b=gN0DW6pftVeMsMqZd//CP7AYk1AjXdXXa9kf0xAJrlabx5/PPsXwJF6MgPdiT0NYpv/p4jlSfVpZM+PqKmdCU1zZsAZo3UkNYsGMJMawaytKSq5ssGZyeMjfEHE+KcyeMZmStJy72FVqkxcOUVXsjNRYktOC9YkN0d4dumhnokI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747989665; c=relaxed/simple;
-	bh=RwBFzvr5ClAWxcrvKPx1zlMdVci5wYm7JBC1VOzXyDQ=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=Y05EdnkIu/StUM/W2z14PAmyxyae+MZ+URADLS4Lkm8DmRMGh1I/QNKE/w5J083jvT1wh1DkYxncMP5VV8YiSEV4+J0iMlR+yUTJZRtrlrXQOyUSPhs6I2tHkNSkE9cuPZ8U5A9lZ3AyWgW1Wxo8pee5YUmIiqy9PjRuLCdBHv4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-85b418faf73so1549799139f.1
-        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 01:41:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747989663; x=1748594463;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=sdEatDoKMv0fGdIX22a+IXF9Rmt1AiH9dEsocdY2lCQ=;
-        b=dhk+07xGrIBVS/vOli9/f8v4J+dloUlhQk/1OXmRSJPFZwLI9NAoJwtFy+uIDxGAwH
-         pIvHaf+gVUP2+Pm9/ANywMH3goTLVcmeMSgvVq1K796H+IFNOYza8gP0DGpT+jXSluLM
-         aG5nHwGUacCU/5DmR6CAvD5UdzabQdcE2mQECz0lyA3NOtriKYWf91S5n9A/C0rugO3f
-         81TdIb0otf+HZDEbA6+SkcIu9/8cz4RB5VBJtppsQ73/6+6Yx9bZGDIKsSbrW9bdHCHi
-         ivDk9qvhP2R62EG5+3BGcIJAnqizDADnUw3xBeKF1+E9H0PhEna2De+P7bArYPZOkJfF
-         EjvQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVdjP9pD3vnB1/6Z9A2gCQvl36MPj72PFCHDMWNnVAfyLCn37qFnU5DQoIFI1FUJ/MKMSs9qZgWAGYL4Ec=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyggZ8peYeEb8faAJcNHfshKsZufX469vH8zP1l2E2Uoocwflek
-	laJoGCT3XPfUe/3OU7aerecS4o5w24i01O9BpvhiaSil3JHNa4jhdf856azUfV5b+UcKywW80Xy
-	YkVOhq23zMz4WfHFj96h04gK0Pg4Dk8QjqnIZJaZvFeiv1g6451Y5wLroXs8=
-X-Google-Smtp-Source: AGHT+IEM8LAu9qrpPxispG0F8JBTigMByYILxjmPOLv3uqsAuIzegP49x/yj1EZr7JWCmKdV/CcEId3EVUJKvy47FDmZFl5RLEQr
+	s=arc-20240116; t=1747989724; c=relaxed/simple;
+	bh=Ge0vUo3iweL/SBw+DVpHfGAAJGT74IYcsdhrQ6AoAiU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lxyM3w8KwkuT++ve6mWxRWyZVBRel5yJVi+QzVRkybxnVL/QXCICSWzzNcZfxhoEaDzOdHsGKqBTZOgxBUu0jbrfomHRwlg8hGkWPl0G1TBT6e0U1q9B+kqjnNejDiCQzJdyJhlFc5iOSXVyyHpdpl1XOjK7kuVwi9SMCPslCiY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uh5nX+iF; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uh5nX+iF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B224AC4CEE9;
+	Fri, 23 May 2025 08:42:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747989724;
+	bh=Ge0vUo3iweL/SBw+DVpHfGAAJGT74IYcsdhrQ6AoAiU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=uh5nX+iFF8tXYLcWdaKY9DPHl8AVO2/UA8qeqouKj7CJnkR1Mw3rpwq/GkAfii9SP
+	 vqvlS2K/gjAKP8xOKyAyVZFV1DIDzlNuo4yoPs0i/0cpwcHqIPRgzqLMEDJ/MXg/By
+	 BFL2fO0LDayKZFB4/is+Zh85zDpOsFUZWleAXwk28dKOrm1c3F33wXNEJC3Uto+R0L
+	 W4FF0Msy/4PhuoXr6r8GLv7G6E9Hkgv5UaqV9Mj1kt6VXZTiKdjO9Q1LGOFBsem+EB
+	 CO9mLOag9PgLEsT8mJBdETDdNamZkUSt+nSrMyqMlG85L3gfbni8XAVRYBDDtkwkDf
+	 4SyRTvEV4NqVQ==
+Date: Fri, 23 May 2025 10:42:01 +0200
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Stephan Gerhold <stephan.gerhold@linaro.org>
+Cc: Rob Herring <robh@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
+	Jassi Brar <jassisinghbrar@gmail.com>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Michael Turquette <mturquette@baylibre.com>, 
+	Stephen Boyd <sboyd@kernel.org>, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-clk@vger.kernel.org, Georgi Djakov <djakov@kernel.org>, 
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: Re: [PATCH 1/4] dt-bindings: mailbox: qcom,apcs: Add separate node
+ for clock-controller
+Message-ID: <20250523-curvy-ubiquitous-cicada-eac1a1@kuoka>
+References: <20250506-qcom-apcs-mailbox-cc-v1-0-b54dddb150a5@linaro.org>
+ <20250506-qcom-apcs-mailbox-cc-v1-1-b54dddb150a5@linaro.org>
+ <7vszdea2djl43oojvw3vlrip23f7cfyxkyn6jw3wc2f7yowht5@bgsc2pqscujc>
+ <aCNGSwL7043GoJBz@linaro.org>
+ <20250514160841.GA2427890-robh@kernel.org>
+ <aCUHTJGktLFhXq4Q@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:6a87:b0:86a:24fe:c51f with SMTP id
- ca18e2360f4ac-86caf092e03mr284858439f.7.1747989663361; Fri, 23 May 2025
- 01:41:03 -0700 (PDT)
-Date: Fri, 23 May 2025 01:41:03 -0700
-In-Reply-To: <cfa0f817-4063-4119-a570-5cbf91315369@yandex.ru>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <6830349f.a70a0220.1765ec.014b.GAE@google.com>
-Subject: Re: [syzbot] [bluetooth?] KASAN: slab-use-after-free Read in
- mgmt_remove_adv_monitor_complete (3)
-From: syzbot <syzbot+feb0dc579bbe30a13190@syzkaller.appspotmail.com>
-To: dmantipov@yandex.ru, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <aCUHTJGktLFhXq4Q@linaro.org>
 
-Hello,
+On Wed, May 14, 2025 at 10:12:44PM GMT, Stephan Gerhold wrote:
+> On Wed, May 14, 2025 at 11:08:41AM -0500, Rob Herring wrote:
+> > On Tue, May 13, 2025 at 02:16:59PM +0100, Stephan Gerhold wrote:
+> > > On Sun, May 11, 2025 at 05:48:11PM -0500, Bjorn Andersson wrote:
+> > > > On Tue, May 06, 2025 at 03:10:08PM +0200, Stephan Gerhold wrote:
+> > > > > APCS "global" is sort of a "miscellaneous" hardware block that combines
+> > > > > multiple registers inside the application processor subsystem. Two distinct
+> > > > > use cases are currently stuffed together in a single device tree node:
+> > > > > 
+> > > > >  - Mailbox: to communicate with other remoteprocs in the system.
+> > > > >  - Clock: for controlling the CPU frequency.
+> > > > > 
+> > > > > These two use cases have unavoidable circular dependencies: the mailbox is
+> > > > > needed as early as possible during boot to start controlling shared
+> > > > > resources like clocks and power domains, while the clock controller needs
+> > > > > one of these shared clocks as its parent. Currently, there is no way to
+> > > > > distinguish these two use cases for generic mechanisms like fw_devlink.
+> > > > > 
+> > > > > This is currently blocking conversion of the deprecated custom "qcom,ipc"
+> > > > > properties to the standard "mboxes", see e.g. commit d92e9ea2f0f9
+> > > > > ("arm64: dts: qcom: msm8939: revert use of APCS mbox for RPM"):
+> > > > >   1. remoteproc &rpm needs mboxes = <&apcs1_mbox 8>;
+> > > > >   2. The clock controller inside &apcs1_mbox needs
+> > > > >      clocks = <&rpmcc RPM_SMD_XO_CLK_SRC>.
+> > > > >   3. &rpmcc is a child of remoteproc &rpm
+> > > > > 
+> > > > > The mailbox itself does not need any clocks and should probe early to
+> > > > > unblock the rest of the boot process. The "clocks" are only needed for the
+> > > > > separate clock controller. In Linux, these are already two separate drivers
+> > > > > that can probe independently.
+> > > > > 
+> > > > 
+> > > > Why does this circular dependency need to be broken in the DeviceTree
+> > > > representation?
+> > > > 
+> > > > As you describe, the mailbox probes and register the mailbox controller
+> > > > and it registers the clock controller. The mailbox device isn't affected
+> > > > by the clock controller failing to find rpmcc...
+> > > > 
+> > > 
+> > > That's right, but the problem is that the probe() function of the
+> > > mailbox driver won't be called at all. The device tree *looks* like the
+> > > mailbox depends on the clock, so fw_devlink tries to defer probing until
+> > > the clock is probed (which won't ever happen, because the mailbox is
+> > > needed to make the clock available).
+> > > 
+> > > I'm not sure why fw_devlink doesn't detect this cycle and tries to probe
+> > > them anyway, but fact is that we need to split this up in order to avoid
+> > > warnings and have the supplies/consumers set up properly. Those device
+> > > links are created based on the device tree and not the drivers.
+> > 
+> > Does "post-init-providers" providers solve your problem?
+> > 
+> 
+> I would expect that it does, but it feels like the wrong solution to the
+> problem to me. The clock is not really a post-init provider: It's not
 
-syzbot has tested the proposed patch and the reproducer did not trigger any issue:
+But the entire node (so the mbox containing clocks) is a provider. This
+looks exactly like the case for post-init or do I miss here something.
+First, I do not see circular dependencies in the DT.
 
-Reported-by: syzbot+feb0dc579bbe30a13190@syzkaller.appspotmail.com
-Tested-by: syzbot+feb0dc579bbe30a13190@syzkaller.appspotmail.com
+Best regards,
+Krzysztof
 
-Tested on:
-
-commit:         94305e83 Merge tag 'pmdomain-v6.15-rc3' of git://git.k..
-git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-console output: https://syzkaller.appspot.com/x/log.txt?x=1302c170580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=9fd1c9848687d742
-dashboard link: https://syzkaller.appspot.com/bug?extid=feb0dc579bbe30a13190
-compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=11bf25f4580000
-
-Note: testing is done by a robot and is best-effort only.
