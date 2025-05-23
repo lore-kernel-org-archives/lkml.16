@@ -1,114 +1,141 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CBD3128819;
-	Fri, 23 May 2025 14:40:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BBCD128819
+	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 14:42:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748011212; cv=none; b=iDwXRK0J9aFbF318X4w9CjB1vI3ebO1A62o4Se6mYnucZOtPAaarL/j2lYpBIWrRvrQKm/gbJlvqNqPCm1PDa//9oOz+T0kW+gD7NQBTe9XPws2Z04yt8udpuBJ7OKKlYwA3t9HE9WQXwvKZGWFudzy5ODoIkJqjc6tJFohedGs=
+	t=1748011324; cv=none; b=S/S51kv3igkn+Xv9cCdaOfaWcRFzEusuqlXQpL7cKhZrSWnFxxkFLGSPOceuUOx6Ii1mF+8evx8HERkw9oxk8eTINGIVSrppbqhMeRaw4WUSJcS/ZjyWH8p6UYdLRIgsKsbZBAHn+JvgJ0CyaZ5svKLgUmfLGOexvmQnepv6M0c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748011212; c=relaxed/simple;
-	bh=kDH8jZXV99RD2+zo4pJD6EuCbMiuvvhMAXVAdMZ2zbw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RItPO3D03uzAgjKzQDo/EvYziz6SiYT0VifBNZjEI931Ob5qyzK4bbPhUmG2Kw2StnHJQfUYS7ICY71wMH+WvkG+Ay/FU5CvFQZaS8lBNu+CwDcY2R/sAvx3dIG6HP8xJW7u+KuVKU3TCIaQnjqAZLHNFhMsXvp8nZ23wPukZCY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C9PP/tB3; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748011324; c=relaxed/simple;
+	bh=TJVmDWtF8ogHcPybe5MPS/1F53dHtYzA+KTELhmEMR8=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=O/xR5ScXqN9lDTpKcljP5dC6bj0nm/hwcoy/pJrYtYMcApI0mdNa5ddnkipWSbFnvZMT24YcIG+EDdyrLNqft1feTAMVclzAJZ3XKJEdrM1dzXnLPfwZSZgiUPjDuiGguK4RbZplOw3oucbgWQqrqjQEengoEN87Na4QnL3jXaA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=bnzEE4vT; arc=none smtp.client-ip=217.70.183.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C9PP/tB3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0C47C4CEF0;
-	Fri, 23 May 2025 14:40:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748011211;
-	bh=kDH8jZXV99RD2+zo4pJD6EuCbMiuvvhMAXVAdMZ2zbw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=C9PP/tB3z2cPIk8KO7Voz9zSN9IifDuiLJW1bZFUM2duas3p+MVzI9a7UdbyOGuLE
-	 QrsJn5NdMhn20n6vkV8eRqE5W7qcbnB8W71vfExJDVAvOLVFTU2vSYgrkPYaOvRQxK
-	 0mHMmUV6VKh1njsd9BKfv/z9Wfprdu7jFDczUMlSo2+6e1KVf3WAyCfNcopJAvEnq1
-	 0/fAPA3GrxBd/dFh2+8YfJ/BpPxhv9FfC8ShEBUrykCKEpj6ilYZRI2ZDc9i71eice
-	 slioYRE+rtrZC4eE4cG7aTAvyjU6JVyyy9q+2bh/mstbQ8/YjU3UDPU8U5YWgBY4CU
-	 50r66APadVNBA==
-Received: by mail-oi1-f181.google.com with SMTP id 5614622812f47-3f6eaa017d0so24350b6e.0;
-        Fri, 23 May 2025 07:40:11 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVZQY+K3Uv9epWqob5cBiP/oKpuIMgn5Z6VZ1fD/0S8xrENorp/e+vcm81CN60lO9mBYHzaow0uu9rR@vger.kernel.org, AJvYcCXnegxQ4fOiHvxW8MCeLy2XDSDlisQCbr/ok5cQbKpMBPP3Qa4WQf0HHkhGxbpSVGbLrB7lZmwB0OmRvCG6@vger.kernel.org
-X-Gm-Message-State: AOJu0YxWvbvv8DU2+bxU/AK3Swivov/u+/LI4pOpoGBctT3UCGErFL11
-	c5Yknubo5qHBtPpeZmfJUEQrX7t0fCH7ARwk1AHh6gyxazNiih0UB5n9+MKLKAtdiR1JL0J3/h9
-	a3OfQX8Jx86qJulFQG8XyVEUHDL02Cmo=
-X-Google-Smtp-Source: AGHT+IGQr3P7AfTvLgKRXbD5diVDb27jmEpvVaCwm8ZbA9G70HeOVXC3cf8q9SLWdxAV3FDrKgW5kaCx+NPnWIcHZjM=
-X-Received: by 2002:a05:6808:6f95:b0:3f8:e55c:16ea with SMTP id
- 5614622812f47-4063da9ff85mr2239014b6e.24.1748011210939; Fri, 23 May 2025
- 07:40:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="bnzEE4vT"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 5BF6143E93;
+	Fri, 23 May 2025 14:41:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1748011320;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=mSFnLqPW+tl6sHrtOhCJPYLdIIPpPKykLbxeoUP2BcA=;
+	b=bnzEE4vT5y16PkwydBazGFiX9oeF8E8gnnWYCjcpjdqfsmhja1TWueJ24ZBC21l0esGzTH
+	Nj8xhsCQhDWPyvE1zv5jp/hm0V+d12CS7HedfiohMvSiHuuVbrou7rxUSNAHyu/yecWej/
+	O3kMvX5liYzvmaHVWsCCtb1We5KxRTzjWHELoJcRhE/w2mW3LNLfc6/6xLy55/rlEKBoUH
+	73x1/sikXgai8TkUz1znjpV7oKmKWWJkEw9yK/jW+Gkez2tWnaqZJCv8HnvwtMbm5Guqcv
+	/l3DGtVzRDWEB94Gb5BDJ9bmhaVJRQL+/p83WWVKRI8Vil4K4HY4WQTw5ij77w==
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+To: =?utf-8?Q?=C3=81lvaro_Fern=C3=A1ndez?= Rojas <noltari@gmail.com>
+Cc: linux-mtd@lists.infradead.org,  dregan@broadcom.com,
+  bcm-kernel-feedback-list@broadcom.com,  florian.fainelli@broadcom.com,
+  rafal@milecki.pl,  computersforpeace@gmail.com,  kamal.dasu@broadcom.com,
+  dan.beygelman@broadcom.com,  william.zhang@broadcom.com,
+  frieder.schrempf@kontron.de,  linux-kernel@vger.kernel.org,
+  vigneshr@ti.com,  richard@nod.at,  bbrezillon@kernel.org,
+  kdasu.kdev@gmail.com,  jaimeliao.tw@gmail.com,  kilobyte@angband.pl,
+  jonas.gorski@gmail.com,  dgcbueu@gmail.com
+Subject: Re: [PATCH v5] mtd: rawnand: brcmnand: legacy exec_op implementation
+In-Reply-To: <20250521080325.581366-1-noltari@gmail.com> (=?utf-8?Q?=22?=
+ =?utf-8?Q?=C3=81lvaro_Fern=C3=A1ndez?=
+	Rojas"'s message of "Wed, 21 May 2025 10:03:25 +0200")
+References: <20250521080325.581366-1-noltari@gmail.com>
+User-Agent: mu4e 1.12.7; emacs 29.4
+Date: Fri, 23 May 2025 16:41:58 +0200
+Message-ID: <87wma74ceh.fsf@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250518185111.3560-1-W_Armin@gmx.de> <CAJZ5v0hNmMtR4V0tYqD1dV2BqAKJ2sCOyBadkVtG3sS3V90uvw@mail.gmail.com>
- <a6d92cdd-4dc3-4080-9ed9-5b1f02f247e0@gmx.de>
-In-Reply-To: <a6d92cdd-4dc3-4080-9ed9-5b1f02f247e0@gmx.de>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Fri, 23 May 2025 16:39:59 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0icRdTSToaKbdf=MdRin4NyB2MstUVaQo8VR6-n7DkVMQ@mail.gmail.com>
-X-Gm-Features: AX0GCFvijkBoIWEzV6Uh8N85l6IpPkZxi-mYiFPeR4aMvrQfCV2VB0rGHojPkw0
-Message-ID: <CAJZ5v0icRdTSToaKbdf=MdRin4NyB2MstUVaQo8VR6-n7DkVMQ@mail.gmail.com>
-Subject: Re: [PATCH 1/2] ACPI: platform_profile: Add support for non-ACPI platforms
-To: Armin Wolf <W_Armin@gmx.de>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, lenb@kernel.org, j@jannau.net, 
-	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Arnd Bergmann <arnd@arndb.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
+X-GND-State: clean
+X-GND-Score: 0
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgdeluddvucdltddurdegfedvrddttddmucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecunecujfgurhephffvvefujghffgffkfggtgfgsehtqhertddtreejnecuhfhrohhmpefoihhquhgvlhcutfgrhihnrghluceomhhiqhhuvghlrdhrrgihnhgrlhessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepffeghfejtdefieeguddukedujeektdeihfelleeuieeuveehkedvleduheeivdefnecukfhppeelvddrudekgedrleekrddtnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledvrddukeegrdelkedrtddphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomhepmhhiqhhuvghlrdhrrgihnhgrlhessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepvddtpdhrtghpthhtohepnhholhhtrghrihesghhmrghilhdrtghomhdprhgtphhtthhopehlihhnuhigqdhmthgusehlihhsthhsrdhinhhfrhgruggvrggurdhorhhgpdhrtghpthhtohepughrvghgrghnsegsrhhorggutghomhdrtghomhdprhgtphhtthhopegstghmqdhkvghrnhgvlhdqfhgvvggusggrtghkqdhlihhsthessghrohgruggtohhmrdgtohhmpdhrtghpthhtohepfhhlohhrihgrnhdrfhgrihhnvghllhhisegsrhhor
+ ggutghomhdrtghomhdprhgtphhtthhopehrrghfrghlsehmihhlvggtkhhirdhplhdprhgtphhtthhopegtohhmphhuthgvrhhsfhhorhhpvggrtggvsehgmhgrihhlrdgtohhmpdhrtghpthhtohepkhgrmhgrlhdruggrshhusegsrhhorggutghomhdrtghomh
+X-GND-Sasl: miquel.raynal@bootlin.com
 
-On Thu, May 22, 2025 at 6:34=E2=80=AFAM Armin Wolf <W_Armin@gmx.de> wrote:
+On 21/05/2025 at 10:03:25 +02, =C3=81lvaro Fern=C3=A1ndez Rojas <noltari@gm=
+ail.com> wrote:
+
+> Commit 3c8260ce7663 ("mtd: rawnand: brcmnand: exec_op implementation")
+> removed legacy interface functions, breaking < v5.0 controllers support.
+> In order to fix older controllers we need to add an alternative exec_op
+> implementation which doesn't rely on low level registers.
 >
-> Am 21.05.25 um 22:17 schrieb Rafael J. Wysocki:
+> Fixes: 3c8260ce7663 ("mtd: rawnand: brcmnand: exec_op implementation")
+> Signed-off-by: =C3=81lvaro Fern=C3=A1ndez Rojas <noltari@gmail.com>
+> Reviewed-by: David Regan <dregan@broadcom.com>
+> ---
+>  drivers/mtd/nand/raw/brcmnand/brcmnand.c | 222 ++++++++++++++++++++++-
+>  1 file changed, 215 insertions(+), 7 deletions(-)
 >
-> > On Sun, May 18, 2025 at 8:51=E2=80=AFPM Armin Wolf <W_Armin@gmx.de> wro=
-te:
-> >> Currently the platform profile subsystem assumes that all supported
-> >> (i.e. ACPI-capable) platforms always run with ACPI being enabled.
-> >> However some ARM64 notebooks do not support ACPI and are instead
-> >> using devicetree for booting.
-> >>
-> >> Do not register the legacy sysfs interface on such devices as it
-> >> depends on the acpi_kobj (/sys/firmware/acpi/) being present. Users
-> >> are encouraged to use the new platform-profile class interface
-> >> instead.
-> > So how does it work in this case?
-> >
-> The platform profile subsystem also exposes a more modern class-based sys=
-fs interface,
-> see Documentation/ABI/testing/sysfs-class-platform-profile for details.
+>  v5: add changes requested by Miqu=C3=A8l Raynal:
+>   - Mention and explain legacy in native_cmd_conv.
+>   - EOPNOTSUPP instead of EINVAL for instr->type else.
+>   - Implement missing check_only functionality.
 >
-> This interface does not depend on /sys/firmware/acpi being present, so us=
-erspace
-> programs can still control the platform profiles using the class-based in=
-terface.
+>  v4: add changes requested by Jonas Gorski:
+>   - Add missing breaks in brcmnand_exec_instructions_legacy.
+>   - Restore missing ret assignment in brcmnand_exec_op.
 >
-> This will become very important once we have platform profile drivers not=
- depending on
-> some sort of ACPI interface. I suspect that sooner or later some drivers =
-for the embedded
-> controllers on ARM64 notebooks (devicetree!) will register with the platf=
-orm profile subsystem.
+>  v3: add changes requested by Florian and other improvements:
+>   - Add associative array for native command conversion.
+>   - Add function pointer to brcmnand_controller for exec_instr
+>     functionality.
+>   - Fix CMD_BLOCK_ERASE address.
+>   - Drop NAND_CMD_READOOB support.
 >
-> Apart from that this allows input drivers using platform_profile_cycle() =
-to work on non-ACPI
-> platforms (like ARm64 devices using devicetree).
+>  v2: multiple improvements:
+>   - Use proper native commands for checks.
+>   - Fix NAND_CMD_PARAM/NAND_CMD_RNDOUT addr calculation.
+>   - Remove host->last_addr usage.
+>   - Remove sector_size_1k since it only applies to v5.0+ controllers.
+>   - Remove brcmnand_wp since it doesn't exist for < v5.0 controllers.
+>   - Use j instead of i for flash_cache loop.
+>
 
-This driver though is located in drivers/acpi/ and depends on
-CONFIG_ACPI.  Moreover, the platform profile provider drivers need to
-select ACPI_PLATFORM_PROFILE so it gets built.  This means that there
-are no non-ACPI platform profile providers currently in the tree.
+...
 
-While the observation that the code in the driver, other than the
-legacy sysfs interface, doesn't really depend on ACPI is valid, if you
-want it to be used on systems without ACPI, it needs to be properly
-converted to a generic driver.
+> +static int brcmnand_check_instructions_legacy(struct nand_chip *chip,
+> +					      const struct nand_operation *op)
+> +{
+> +	const struct nand_op_instr *instr;
+> +	unsigned int i;
+> +	u8 cmd;
+> +
+> +	for (i =3D 0; i < op->ninstrs; i++) {
+> +		instr =3D &op->instrs[i];
+> +
+> +		switch (instr->type) {
+> +		case NAND_OP_CMD_INSTR:
+> +			cmd =3D native_cmd_conv[instr->ctx.cmd.opcode];
+> +			if (cmd =3D=3D CMD_NOT_SUPPORTED)
+> +				return -EOPNOTSUPP;
+> +			break;
+> +		case NAND_OP_ADDR_INSTR:
+> +		case NAND_OP_DATA_IN_INSTR:
 
-For now, it is better to simply make it fail to initialize without
-ACPI, so I'm going to apply this patch:
+No NAND_OP_DATA_OUT_INSTR?
 
-https://patchwork.kernel.org/project/linux-acpi/patch/20250522141410.31315-=
-1-alexghiti@rivosinc.com/
+> +		case NAND_OP_WAITRDY_INSTR:
+> +			break;
+> +		default:
+> +			return -EOPNOTSUPP;
+> +		}
+> +	}
+> +
+> +	return 0;
+> +}
 
-Thanks!
+Rest lgtm.
+
+Thanks,
+Miqu=C3=A8l
