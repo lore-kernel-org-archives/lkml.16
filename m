@@ -1,223 +1,160 @@
-Received: from mail-io1-f53.google.com (mail-io1-f53.google.com [209.85.166.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCD0C625;
-	Fri, 23 May 2025 02:52:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DF2627466;
+	Fri, 23 May 2025 02:52:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747968724; cv=none; b=NrABINn2P6E/dBjGxzvshiVWv00Sk/Np48KKXHDpHsG42jNdN+oH/NIamM1VbSG3DRk9WWC+PG0wQh5yvu5xQcw+oZnH9I9fKV2L09iokd8LHKpEFHTRMMYnkKMVZiewmiWhlUvgAAMmPUYiWmKtrfCjfWc9xKklu3nvqNpWY/Q=
+	t=1747968766; cv=none; b=MRooTbzKX8GlivpP1aiVGolInDS89jqoGy/kvdtp9ELU1oKTvHAjTEcuGzRzPA/0tZ/kSk1T13oHSMhQC+xnGwEXV2XsFktQi3jn52BEBpW0HB4zjUD3SirjaMiWICqpgIcF1OhAa8GYD5SN2yu7x+TU8Ssf7RX3Jpz/+5HOucY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747968724; c=relaxed/simple;
-	bh=85tposCp5qIjog1xev8yR53k0au9MVEHGTMIGzRIr7Q=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qAJ+cE8nQsr0vHQV6yX9f3N0tum3W0+YEF17Cwiy1Sx27XmwwoIOnvlLuklw/kjcf9A9MC9XKGUGJFR+nbjQrfW7tH41rJUpuSWaAsbwsxIfVZvIQR1q8QLuWaSyF5PwjBAzBuiMiy63P0jZ0cWRobecvRp4AbH0ZKLeneqo7zA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iYUFyamI; arc=none smtp.client-ip=209.85.166.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747968766; c=relaxed/simple;
+	bh=RMZSHyGq8lLP5R/e5mbMKL+hRBJ17vHYbXM+BXDmcB8=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:CC:References:
+	 In-Reply-To:Content-Type; b=DnVVHirIbJ4BOUB9iMXf8E41rNUSAKBd1l1hK8j8pAMJ1HtKywdQJTqHzqkmmdCR4r/1FBUZTuhFq05YboJX/rC4NM+R+aNMikYW752D+ks9Ykd+2bJkOs092OK3tIfsiY9JqLB+KOPVahVxbOQ8Rdq1giIzeDKawb26bmAgDB0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Z7EEbjuD; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iYUFyamI"
-Received: by mail-io1-f53.google.com with SMTP id ca18e2360f4ac-85dac9728cdso282571939f.0;
-        Thu, 22 May 2025 19:52:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747968722; x=1748573522; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xTSB0zI8EV3WEUJwB1OwJBkD3PikZdbJJrajz68TKpU=;
-        b=iYUFyamII8RerW7DT3bq75XcbVu/Yd8caUQIrFXWUB0FdSIO4vUHsC9d6DqyJjUE3F
-         qwmwcKvUADWEuD7zPGJx6kuiTn+dLeMVMR09MM0ueVP7qN7mMI73iOZOtnBmPA+EfHh+
-         Y9R82XnbwvA6X8viEPsv6mhO0aN+uj7UR0BrGph+b6hI0xiKc/HqwHCZ3a3R3EG0wk5N
-         gvEP6nhpJCEWXLLHJghIuNuYTxFgW5Wd+ejFEN1VhrXweN2zhXGrDAx1zmnfhZw5aXzL
-         qQCCpwqslmVuW9krwUImtr4ogJUZEaHDOg5vzEeTOtZeTOgT0ASdmMtQz9IVcDdlYXzD
-         tbbg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747968722; x=1748573522;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=xTSB0zI8EV3WEUJwB1OwJBkD3PikZdbJJrajz68TKpU=;
-        b=VoyHl2Q9GKuMc6HwQrJ8MgbvgqVmSOhYzComga3KvsKsUBTOY1aYS2TM0C1VPQ+RtD
-         AZnDEsfhGbz2hyCOqHn5bZu19udBU0kMspOT2fDLLCKg4mrPq1oLyN1e58S3FKQ1h5bz
-         hM5BZZyc4cl6wPQvjHnnZDMmQBSJKFkxBvWX8yBW3ij/qiyZduywRFEDSMPee6UbFx6+
-         ff6oUPSxrdg0bSfSCZDvwS0tVJli+mLi50c7oDy+yDBjeuZYYhOjenkOB/IrXehRf3bt
-         mBGE8KtFiMTZt3FrFWepN6w4Hypi4tPjyIeb1F0tZQglIy+EVmAYzLF4zfWClXHcNSn3
-         zsng==
-X-Forwarded-Encrypted: i=1; AJvYcCUBmECB5ZJdZY3xYQoHjBGFwRFQ1I4+uU8IRCn8CyGtRo2vtZxZloJHl1pCfx0+pr0X8mgPKpRejciOm1jx@vger.kernel.org, AJvYcCWcgHcSZ0zDAE87jp926jUhOOk3v80D0o3ZlHPzlOFdFt5m/f60wtGQib0eqbnVc711X+7maYiIAE7rX/m1@vger.kernel.org
-X-Gm-Message-State: AOJu0YwDhU7UUV1cG0wROqVmRruTrTCujRYEf/sXV9MzXu3uxAR4Xh1z
-	iAg3x6g3PJ6urI6H2BN9PEA75v9TJ4iVyiX851wJybBe3tIKcrDuwqgNkCwCYJmtnZaQhRdomHs
-	ng6wY8/ahQRjeRAc85QqCrvSE4xg6EIs=
-X-Gm-Gg: ASbGncuUIwf3aSp0sOlTZHrJq7GJtMqtSgZUajS5SBgZc6MGNtrokBBemN/yrsTKDFm
-	Ja0BCNq0yqCysWDPY5Neb8Sj1EFiKG7X3jPgFPhEV9DoLIdE7GIyxycvEFJeDOr88sQrhaSTtdI
-	90fggM/CXFrgnYEP8bjvWC8PhbFz+2M4zAWKANYptATiXpDlbfNH+cNCBXvUgJ3F69
-X-Google-Smtp-Source: AGHT+IGekz0rAdSPy6Esyn61QabmWg59bnZX7oGPMZFq1CRW47PXVM8Ji2t7L5VbUHV5PXKnuAfwbKUUuHc/BlAt9Z0=
-X-Received: by 2002:a05:6602:6cc6:b0:861:7237:9021 with SMTP id
- ca18e2360f4ac-86caf0c1576mr176258739f.3.1747968721680; Thu, 22 May 2025
- 19:52:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Z7EEbjuD"
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54MIA2b2025025;
+	Fri, 23 May 2025 02:52:34 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	ZKOEpOnXCkx//rWtBuQbetdixfQvhhL4O3NFDgntfg0=; b=Z7EEbjuDiARDzaqp
+	+MoPHM3eyzWVEhwLgca0jk0MncOOPcMJYBJ1spMYsDpXV9SDjcSLm0Gbe3NGXU7u
+	cImPAAzC2YKgdL4kKOUpHK1b0scN0N2wVyRNlL4BoXIi6qWJs18c22lSyAyFBbJr
+	/C2JSmYD40nF/u1Eu+REyHhVDhv11cd9wl7+cJpj4zr0jx+Rm6N2tPqwHRtP1gRI
+	wn6FmaNW5AC2It5bmt5LvWG9xq1CL3PiPlKiujbC5Nl/layIaIZuuGuaZBT9mCcJ
+	ySmnxl88CZ1oS5EW0JUsQdI+3kfSjlAO7/Ra9KmkiZoZsj67k0JQr1uZJUS0UAsl
+	tXGMhA==
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46rwf707uf-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 23 May 2025 02:52:33 +0000 (GMT)
+Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
+	by NALASPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54N2qWQb031983
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 23 May 2025 02:52:32 GMT
+Received: from [10.253.8.154] (10.80.80.8) by nalasex01b.na.qualcomm.com
+ (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 22 May
+ 2025 19:52:29 -0700
+Message-ID: <8e171057-b3c3-4808-b49e-f04ffd310b31@quicinc.com>
+Date: Fri, 23 May 2025 10:52:27 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250514175527.42488-1-robdclark@gmail.com> <20250514175527.42488-2-robdclark@gmail.com>
- <aCWrwz2IF6VBUi4e@pollux> <aCWueFzx2QzF7LVg@pollux> <CAF6AEGu9MPxKnkHo45gSRxaCP+CTzqsKZjiLuy4Ne4GbrsStGA@mail.gmail.com>
- <aCYqlvp_T77LyuMa@pollux> <CAF6AEGsOTNedZhuBzipSQgNpG0SyVObaeq+g5U1hGUFfRYjw8w@mail.gmail.com>
- <aCb-72KH-NrzvGXy@pollux> <CAF6AEGu=KzCnkxuUsYvCHBGwo-e2W16u_cRT1NFAXLphty1_ig@mail.gmail.com>
- <CAPM=9tzcvDVDOM88O8oqDHURR1nbR7KsFStavNnT1CN6C6kGgg@mail.gmail.com>
- <CAF6AEGuv3GXTBcU99sBjAa5gPOSNoxwY+eiPy=Q--cLYHVn+cw@mail.gmail.com> <CAPM=9tykCXSKOH0BcMkNLKyCWfEN-kCjs0U7UA+C1pPqFr1jLA@mail.gmail.com>
-In-Reply-To: <CAPM=9tykCXSKOH0BcMkNLKyCWfEN-kCjs0U7UA+C1pPqFr1jLA@mail.gmail.com>
-From: Rob Clark <robdclark@gmail.com>
-Date: Thu, 22 May 2025 19:51:50 -0700
-X-Gm-Features: AX0GCFv84KCQV61BbxGSWUJ9Yyr5yOTqzENnybuQuOJ009enSSfsiTbWai8yKfg
-Message-ID: <CAF6AEGuK+X4Q=Z-anjQuUBi952eYSs3u9HxVz0GSQM8fokdiiw@mail.gmail.com>
-Subject: Re: [PATCH v4 01/40] drm/gpuvm: Don't require obj lock in destructor path
-To: Dave Airlie <airlied@gmail.com>
-Cc: Danilo Krummrich <dakr@kernel.org>, dri-devel@lists.freedesktop.org, 
-	freedreno@lists.freedesktop.org, linux-arm-msm@vger.kernel.org, 
-	Connor Abbott <cwabbott0@gmail.com>, Rob Clark <robdclark@chromium.org>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, Simona Vetter <simona@ffwll.ch>, 
-	open list <linux-kernel@vger.kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1] tty: serdev: serdev-ttyport: Fix use-after-free in
+ ttyport_close() due to uninitialized serport->tty
+From: Xin Chen <quic_cxin@quicinc.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC: Rob Herring <robh@kernel.org>, Jiri Slaby <jirislaby@kernel.org>,
+        <linux-serial@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <liulzhao@qti.qualcomm.com>, <quic_chejiang@quicinc.com>,
+        <zaiyongc@qti.qualcomm.com>, <quic_zijuhu@quicinc.com>,
+        <quic_mohamull@quicinc.com>,
+        Panicker Harish <quic_pharish@quicinc.com>
+References: <20250430111617.1151390-1-quic_cxin@quicinc.com>
+ <2025043022-rumbling-guy-26fb@gregkh>
+ <d388b471-482b-48ba-a504-694529535362@quicinc.com>
+ <2025050851-splatter-thesaurus-f54e@gregkh>
+ <38bf94e1-ebed-4d03-8ea0-4040009e8d31@quicinc.com>
+Content-Language: en-US
+In-Reply-To: <38bf94e1-ebed-4d03-8ea0-4040009e8d31@quicinc.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01b.na.qualcomm.com (10.47.209.197)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: MeW7e1yphHbr84ng-NDw_-BhoCDClvYY
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIzMDAyNCBTYWx0ZWRfX+dTMXtCyVZqZ
+ SgyP15MPIn5nPIkYZRuxwCadsL9eJYiKgLUOUs/3leOVBNWkbXnXsI19wXmZrbFH/edUVcl1TT1
+ Tvy+TGh9Of+mWZZx3Wi3T33460W5msaolnMrh2CIEIU2zk6M3wyx6flWoF2jB94FB9tG9lLvgNS
+ iZ8jcB4nk6m8V9msSQCfHj2w7awJ5+SHtD42hQiF0S14cg0qqddF6brEI3tK3XT6cVjejdg9Epm
+ O3DYylBupyGW2D2PqUydnkuZ6N/vrThINun1ami+cBezqGhVSUUpq1rGrMB6XEz6u5m2MY2M/k1
+ zszUIIhUMo4S6CWKjeIJUI2EEah4mEQP5yktEc2C6b40BupYqXajQ8uAhx7SlhXms+2ZfhxApEI
+ fcSOCEnkcfckF4Va7f9jfl1pIZAjEiPUpeJnVShreNCh3e+nHvf95zj8rwPYcuRQz75anVms
+X-Authority-Analysis: v=2.4 cv=fZOty1QF c=1 sm=1 tr=0 ts=682fe2f1 cx=c_pps
+ a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10
+ a=_eFTLsDQhpw06QD9osAA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-ORIG-GUID: MeW7e1yphHbr84ng-NDw_-BhoCDClvYY
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-23_02,2025-05-22_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ clxscore=1015 mlxscore=0 adultscore=0 spamscore=0 bulkscore=0 suspectscore=0
+ malwarescore=0 priorityscore=1501 impostorscore=0 mlxlogscore=877
+ lowpriorityscore=0 phishscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505160000 definitions=main-2505230024
 
-On Tue, May 20, 2025 at 3:31=E2=80=AFPM Dave Airlie <airlied@gmail.com> wro=
-te:
->
-> On Wed, 21 May 2025 at 07:53, Rob Clark <robdclark@gmail.com> wrote:
-> >
-> > On Tue, May 20, 2025 at 2:25=E2=80=AFPM Dave Airlie <airlied@gmail.com>=
- wrote:
-> > >
-> > > On Sat, 17 May 2025 at 02:20, Rob Clark <robdclark@gmail.com> wrote:
-> > > >
-> > > > On Fri, May 16, 2025 at 2:01=E2=80=AFAM Danilo Krummrich <dakr@kern=
-el.org> wrote:
-> > > > >
-> > > > > On Thu, May 15, 2025 at 02:57:46PM -0700, Rob Clark wrote:
-> > > > > > On Thu, May 15, 2025 at 10:55=E2=80=AFAM Danilo Krummrich <dakr=
-@kernel.org> wrote:
-> > > > > > > Anyways, I don't agree with that. Even if you can tweak your =
-driver to not run
-> > > > > > > into trouble with this, we can't introduce a mode that violat=
-es GOUVM's internal
-> > > > > > > lifetimes and subsequently fix it up with WARN_ON() or BUG_ON=
-().
-> > > > > > >
-> > > > > > > I still don't see a real technical reason why msm can't be re=
-worked to follow
-> > > > > > > those lifetime rules.
-> > > > > >
-> > > > > > The basic issue is that (a) it would be really awkward to have =
-two
-> > > > > > side-by-side VM/VMA management/tracking systems.  But in legacy=
- mode,
-> > > > > > we have the opposite direction of reference holding.  (But at t=
-he same
-> > > > > > time, don't need/use most of the features of gpuvm.)
-> > > > >
-> > > > > Ok, let's try to move this forward; I see three options (in order=
- of descending
-> > > > > preference):
-> > > > >
-> > > > >   1) Rework the legacy code to properly work with GPUVM.
-> > > > >   2) Don't use GPUVM for the legacy mode.
-> > > > >   .
-> > > > >   .
-> > > > >   .
-> > > > >   3) Get an ACK from Dave / Sima to implement those workarounds f=
-or MSM in
-> > > > >      GPUVM.
-> > > > >
-> > > > > If you go for 3), the code introduced by those two patches should=
- be guarded
-> > > > > with a flag that makes it very clear that this is a workaround sp=
-ecifically
-> > > > > for MSM legacy mode and does not give any guarantees in terms of =
-correctness
-> > > > > regarding lifetimes etc., e.g. DRM_GPUVM_MSM_LEGACY_QUIRK.
-> > > >
-> > > > I'm not even sure how #2 would work, other than just copy/pasta all=
- of
-> > > > drm_gpuvm into msm, which doesn't really seem great.
-> > > >
-> > > > As for #1, even if I could get it to work, it would still be a lot
-> > > > more mmu map/unmap (like on every pageflip, vs the current state th=
-at
-> > > > the vma is kept around until the object is freed).  For the
-> > > > non-VM_BIND world, there are advantages to the BO holding the ref t=
-o
-> > > > the VMA, rather than the other way around.  Even at just a modest
-> > > > single layer 1080p the map takes ~.2ms and unmap ~.3ms (plus the un=
-map
-> > > > costs a tlbinv).  So from that standpoint, #3 is the superior optio=
-n.
-> > > >
-> > >
-> > > Before we get to #3, I'll need a bit more info here on why you have t=
-o
-> > > map/unmap the VMA on every pageflip.
-> >
-> > Previously we'd keep the VMA hanging around until the GEM obj is
-> > freed.  But that can't work if the VMA (via the VM_BO) is holding a
-> > reference to the GEM obj.
-> >
-> > I was kinda thinking about keeping the VMA around until the handle is
-> > closed.. but that doesn't cover the dma-buf case (ie. when you
-> > re-import the dma-buf fd each frame.. I know android does this, unsure
-> > about other wsi's).
-> >
-> > > But actually I think 2 is the best option, I think in nouveau this is
-> > > where we ended up, we didn't modify the old submission paths at all
-> > > and kept the old bo/vm lifetimes.
-> > >
-> > > We just added completely new bind/exec ioctls and you can only use on=
-e
-> > > method once you've opened an fd.
-> >
-> > hmm, but that means tracking VMAs against a single BO differently..
-> > which.. at least seems ugly..
->
-> I don't think it is if you already have the code to do that, and just
-> add gpuvm support in parallel.
->
-> You also have to figure out that the world is moving towards Vulkan
-> for everything so any optimisations you've made for particular legacy
-> paths will need to be dealt with in the future picture anyways.
->
-> But I'd rather not hack gpuvm into being something it isn't, if there
-> is a meaningful commonality in legacy bo/vm bindings across drivers,
-> we could create something new, but the ref counting and handling is
-> pretty fundamental to gpuvm architecture.
->
-> There should only be two paths, legacy and gpuvm, and you shouldn't
-> ever be mixing them on a particular exec path, since you should only
-> have a vm per userspace fd, and can pick which way to use it the first
-> time someone calls it.
 
-It's not as much about the exec path, as it is about making all the
-non-exec paths (like shrinker/residency) have to deal with two
-completely different things..
 
-But I think I have figured out something workable.  I add an extra
-refcnt per BO for the vma, incremented by userspace holding a gem
-handle, userspace holding a dma-buf fd, or (ofc) actual pin for
-scanout.  When the refcount is above zero I defer teardown in the
-kms->vm until it drops to zero.  It isn't _exactly_ the same as lazy
-VMA teardown when the BO is freed, but it is effectively the same
-thing.  And whenever the vma_ref is greater than zero, the BO has
-something else holding a ref so the ref loop doesn't matter.  If there
-is no userspace process holding a reference to the BO via handle or
-dma-buf fd, then it isn't going to be used again in a swapchain, so
-the difference btwn tearing down the VMA when the vma_ref drops to
-zero vs when the BO is freed doesn't amount to anything.
+On 5/14/2025 5:14 PM, Xin Chen wrote:
+> 
+> 
+> On 5/8/2025 5:41 PM, Greg Kroah-Hartman wrote:
+>> On Thu, May 08, 2025 at 05:29:18PM +0800, Xin Chen wrote:
+>>>
+>>> On 4/30/2025 7:40 PM, Greg Kroah-Hartman wrote:
+>>>> On Wed, Apr 30, 2025 at 07:16:17PM +0800, Xin Chen wrote:
+>>>>> When ttyport_open() fails to initialize a tty device, serport->tty is not
+>>>>> --- a/drivers/tty/serdev/serdev-ttyport.c
+>>>>> +++ b/drivers/tty/serdev/serdev-ttyport.c
+>>>>> @@ -88,6 +88,10 @@ static void ttyport_write_flush(struct serdev_controller *ctrl)
+>>>>>  {
+>>>>>  	struct serport *serport = serdev_controller_get_drvdata(ctrl);
+>>>>>  	struct tty_struct *tty = serport->tty;
+>>>>> +	if (!tty) {
+>>>>> +		dev_err(&ctrl->dev, "tty is null\n");
+>>>>> +		return;
+>>>>> +	}
+>>>>
+>>>> What prevents tty from going NULL right after you just checked this?
+>>>
+>>> First sorry for reply so late for I have a long statutory holidays.
+>>> Maybe I don't get your point. From my side, there is nothing to prevent it.
+>>> Check here is to avoid code go on if tty is NULL.
+>>
+>> Yes, but the problem is, serport->tty could change to be NULL right
+>> after you check it, so you have not removed the real race that can
+>> happen here.  There is no lock, so by adding this check you are only
+>> reducing the risk of the problem happening, not actually fixing the
+>> issue so that it will never happen.
+>>
+>> Please fix it so that this can never happen.
+>>
+> 
+> Actually I have never thought the race condition issue since the crash I met is
+> not caused by race condition. It's caused due to Bluetooth driver call
+> ttyport_close() after ttyport_open() failed. This two action happen one after
+> another in one thread and it seems impossible to have race condition. And with
+> my fix the crash doesn't happen again in several test of same case.
+> 
+> Let me introduce the complete process for you:
+>   1) hci_dev_open_sync()->
+> hci_dev_init_sync()->hci_dev_setup_sync()->hdev->setup()(hci_uart_setup)->qca_setup(),
+> here in qca_setup(), qca_read_soc_version() fails and goto out, then calls
+> serdev_device_close() to close tty normally. And then call serdev_device_open()
+> to retry.
+>   2) serdev_device_open() fails due to tty_init_dev() fails, then tty gets
+> released, which means this time the tty has been freed succesfully.
+>   3) Return back to upper func  hci_dev_open_sync(),
+> hdev->close()(hci_uart_close) is called. And hci_uart_close calls
+> hci_uart_flush() and serdev_device_close(). serdev_device_close() tries to close
+> tty again, it's calltrace is serdev_device_close()->ttyport_close()->tty_lock(),
+> tty_unlock(), tty_release_struct(). The four funcs hci_uart_flush(), tty_lock(),
+> tty_unlock(), tty_release_struct() read tty pointer's value, which is invalid
+> and causes crash.
+> 
 
-It's a bit weird adding some extra mechanism specifically for the
-scanout vm, and maybe a bit uglier (depending on eye-of-beholder) than
-making gpuvm work in either way (since the latter was a pretty
-straightforward patch), but less ugly than having to parallel
-mechanisms.  So if you _really_ don't like the WEAK_REF flag, I have a
-workable alternative that addresses the performance problems.
-
-BR,
--R
+Hi Greg, could you please take some time to review my reply?
+Thanks very much!
