@@ -1,102 +1,146 @@
-Received: from mail-vk1-f172.google.com (mail-vk1-f172.google.com [209.85.221.172])
+Received: from mail-vs1-f46.google.com (mail-vs1-f46.google.com [209.85.217.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B48582253AB;
-	Fri, 23 May 2025 09:46:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9D41222581
+	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 09:47:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747993602; cv=none; b=s+EBzZ4d2G04j5SZC1yaJ5eiEe8LVbHKhhV0ybz/9sK1NG004I5SdJJ4OATEJm71E2v6vJDYiGF+0++pHiqyywMKLXu/Oo/RyH5rtCbPWcloH+pug53e/f0Ya4JdBM9SEeMyTd3dZAx2mzP+BORCkDY1N//La94s5qV7gV2FyKE=
+	t=1747993624; cv=none; b=cSJ4oehWU6JqBUfYzm1KWjeBD47Hsf7/auK3AYNl1b8jtjkTLTqgdGcVUWd2yhaNyJ2cHEYhLh8tetRzK7Y3QSMirHbbYFfkhzsDbYWAJ5bJOo7+buLwbBy9z+u+wpBE/Y2K024kbVPcYoJlp78CY/nhFHQlV0R2LB60XBKsE0I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747993602; c=relaxed/simple;
-	bh=xqa/HSFlliZVLQFtzZUC+BUP3sUivsPlNaXidDaf0sY=;
+	s=arc-20240116; t=1747993624; c=relaxed/simple;
+	bh=o9YHokNPMqtx+jepK5KMdLnYKClHIsOx/FzxBuROOGQ=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GvGDn06lqNo4xipWM72Jtkx8Hfm3j/iouFDaHyv4njv4AZO7r0y4UGVUlaCiEDPm1b8iXRfKLRcWFmiiGQmk8zrhOqkc/c17nWEEFSpIkCNLUzksKpjRVFwyOUeUiZ9csUBogw9TODf1ztK43Ksl/KMDPJZE8FjVSlfNfImqaVY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+	 To:Cc:Content-Type; b=j7Wu1E1VOHyUYiMqsUK5c2DrSkcbcSct7TxIfDYSY+uiFTJMAQIY2uZI41pr1NRWu0uHNrIGn4BqhGMIKXCttufI/7RhTAb5Ze/O0gqSBudzbSCH6lPFZ2MMtsqce30HDlMq42sXn/HolTDEJdvR+qMUF/7x22D3b9lMJPkN/Vw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fwTU9yFb; arc=none smtp.client-ip=209.85.217.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vk1-f172.google.com with SMTP id 71dfb90a1353d-5242f137a1eso2780482e0c.1;
-        Fri, 23 May 2025 02:46:40 -0700 (PDT)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fwTU9yFb"
+Received: by mail-vs1-f46.google.com with SMTP id ada2fe7eead31-4e02acb2467so2688748137.2
+        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 02:47:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747993621; x=1748598421; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=mG/X9C8yLKGrCYYF7Sr7M9bc4WrV25ayjzMFPl4s38o=;
+        b=fwTU9yFbT32andp/xZjoJ7BNayGXKxTwZvaz4H3F5hxR7AfMGHWPyQXaPb7faN9qj2
+         1aHxzz4JCDwTFQqJ0UGPW6UOSE4Aq6cX3hLaAjMtm2F7LsBqQOBKFqQr/XxxSZ9reDpB
+         z9MHAzunSSouFjaPWxCWmfaNL5EQhqeQS/pBx4ppjyKzuJzOMRpwGHy72RKKc3QzOBLg
+         /2iszopyIl1h9GGfMjLlhsJ72luQqdmPIXHyvBHEE78CQhSuksHvXypazDAauTvAmn18
+         KEGJeVTD1j2lFRr3o5moLbDRashyRStrn8PY8oApklekYBxv/oHfmL//QpYzDp/9X8Cp
+         /Z8w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747993599; x=1748598399;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=lMXBch1hfTjYIe9g9/nID/K1NoViF4Bz1jBWL1za1do=;
-        b=P8NhqScVZ4lxT6gkfAnQV1g+NYpxVSwsILJDujIU8o6nfusquXY5riMA2uPJMc+qal
-         /UljWC+S7R1RWnb+bspnQxu+HVunre5tp7sd8oNiATgm3fqDKLs0d7IP2FKSKGy/dW00
-         Y6aA5P3MXnUz8hNSIMQuG5LHmkVGKfK3PJSVajUtgdXEjXwHkUxLL4SRYWJ6wC9YMs30
-         1wo2W/m9OEFFzKlRdxrjYKkuFiKYdYJl4FyGe6cdZ7/wpFeTh4v0v7q5CRwhwOIrwegk
-         0zLhGPSzMo/0n+R21NapYPMISq5PJkUracPAAXZ3CYFq7tZ9wAWrGfyh1q8PDX6++c67
-         AE3g==
-X-Forwarded-Encrypted: i=1; AJvYcCVeVWcSqIbZEsiphw8BZUXkO5ATrL2+DhKLefS79mpNxK5pwtNplwAnls4L6qJh/iRWkUNjDUBA2XKFQVg=@vger.kernel.org, AJvYcCVqU7VgWK6hiWXEq/vs/WNJjQeOX9+zES8IzrcW7X9/azwWUGpPSefYNyhZasrApeXsCr/iqYQUs/THu6l8@vger.kernel.org, AJvYcCWeRpK92gkqB7EV7SnRG7XWx42llM9Tcjo+JQ1pgUviUBSEXKOGtNDWF/9gpaEoxo+iVu/uF6XydGRVSNDoSDATT7I=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw54BOyktwXn+2sDOs3AQ2SlN5bMVMgK2Fck6D9LwX5HI3h4Jaq
-	SVBv+XdOM82SeR8eokRgEQJBJSTF57+VtBnQYtwgPyEtSWstj6CJeaJRkzwAjJBg
-X-Gm-Gg: ASbGncttcJuY7EAZ+qLhzxnxxq9xbBOgD/z0/FCM4vHH9VeI5YNunx8TKB3iGAJcwds
-	51rzdfsOj6FYPOsF8f0bdyhSuhBTvO+oscD2qvDyjO+MLT8hqI38A8S4N8ZqPCBWnjUe1EqsgRJ
-	ESUeq88pIjl/W/gu3PHWI7suhZ0xAbiQkITLi9dmENS8B2BqwuFoXTjEMrRvYX8B4FbazXz0qcJ
-	b/BkuMNfn9fVcZwxe68T+zjv3a9ynMWkUAkATIZquxkU9bn0d39RBvMeGT/vVOH99Cr6bnsunbh
-	0vlnlCEifattoui2f0ncUdITapjGWJDCqy3DiMqhMQ1GPMudIryeJJjf8Rb+Hq9z3HY00WVtvDo
-	pf7NihRBF35qzKFL+Rw==
-X-Google-Smtp-Source: AGHT+IGhm1uIBMRMAbnuZ3NK9nAI+quuaR/3sPDNfHLG3Z7LZLlb1/SbBXdeDIqk0C8QbZro6A86YA==
-X-Received: by 2002:a05:6122:ec9:b0:52a:c0db:29e3 with SMTP id 71dfb90a1353d-52dbce1e5a3mr21890570e0c.10.1747993599006;
-        Fri, 23 May 2025 02:46:39 -0700 (PDT)
-Received: from mail-vk1-f175.google.com (mail-vk1-f175.google.com. [209.85.221.175])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-52dba7584dcsm13435722e0c.0.2025.05.23.02.46.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 23 May 2025 02:46:38 -0700 (PDT)
-Received: by mail-vk1-f175.google.com with SMTP id 71dfb90a1353d-525b44b7720so2668411e0c.0;
-        Fri, 23 May 2025 02:46:38 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUpVco+BbaeWB4A1h1uv9/Xzr20jLs6RQCnCAXNhGQyi1qEXHoDmFoZp963wYdlf7B69q9fOc8Y7ySKwUMWIPO09iw=@vger.kernel.org, AJvYcCV7KEVhNBwR8/1q6enlXxMAtejvN71KOjsxd1Yd5poyYSBTClhHm5W3+IRWoLw8YU/eh89iK5dfnaBTfDjR@vger.kernel.org, AJvYcCX9oQS/BdQxvlhF0Tt8OAO5nAEH9EfVaFZmr0/r4P+/K68tg72J94Y42u6H/T9laFSMAKYxJcE6y9ymH2M=@vger.kernel.org
-X-Received: by 2002:a05:6122:1b07:b0:52c:49b6:7f05 with SMTP id
- 71dfb90a1353d-52dbcd6d4a1mr25286007e0c.6.1747993598445; Fri, 23 May 2025
- 02:46:38 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1747993621; x=1748598421;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=mG/X9C8yLKGrCYYF7Sr7M9bc4WrV25ayjzMFPl4s38o=;
+        b=BD/AGGvOseuhpIoFEaeA1nPoouEWW0BlLjMCSZvbQOvjI+6baakO4/quoOxaD72Hp/
+         XioeYLF2/gFC5f4SuvQnXvGwHUkhs5Bz3kZC0WdcnvrytamwZF/FfzKdHazO9ry79icE
+         IcgDeP5iHKx4CWkZe+vpGNagja9NPe7L40sr7KCkdfeqgoZzO3RRwHZkS1jOqAQp6A3D
+         RVblRybZ4wVnzs41+zKkdlKWWVAEPlwhLuKUeA5L0iCQBLf0IrSGYocKelJm/v90bdEC
+         kgqaeFYYeQ8g5rbhrvMWWbSYz7HqyNeJAjYMe5nqmgX1GPs0tcNqa5oeLQrL1iv5IIVG
+         cgxg==
+X-Forwarded-Encrypted: i=1; AJvYcCWpPlgbbbzcGxb/2EdknsAhBJ62hrEgyS5g5InxQzlmH4cskKZIf8sJgHPTTo4np9kavP6OMaysmLYV6nk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw6w88/s3zWhMqkzrYQxfawlRado/Kteyvn4rnTTi4kwlt4bawt
+	3NivOh2HDPyPNrIsLtaIsQz6NeX+hKGRs5uSLiZKu0vIzHTEQlS0W5uPvJdQa3co41DQX/sRekr
+	Q/WDaQu1MUrBpCMP78aCzFGCcpUQWo/k=
+X-Gm-Gg: ASbGncuyERpKokhaYyzQl0s2LUXJPfRIAujsOL1KQTNDSs4r5Bozs2kjrg+oMzzz3ua
+	eLEFdRjkm6iF8mh8gjHZUk+z96+ka40afD7YxDJNGr39OpYcEpN6NQmRFxLfgCN/cmmH+pF320h
+	RXhKr3CeVYq2l3p8mhILpLM44R6yR6SxjO7A==
+X-Google-Smtp-Source: AGHT+IHAYdMEYRC8z0rbKLDfqHoHryyGMy92RPuCzpxv8FFDn4mHzgqK5lJyEjBbQ67ikR/UAYHuhSL5IbJNpdX2yIo=
+X-Received: by 2002:a05:6102:8005:b0:4dd:ad20:a334 with SMTP id
+ ada2fe7eead31-4e049d57331mr26626257137.7.1747993621363; Fri, 23 May 2025
+ 02:47:01 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250515141828.43444-1-thierry.bultel.yh@bp.renesas.com> <20250515141828.43444-7-thierry.bultel.yh@bp.renesas.com>
-In-Reply-To: <20250515141828.43444-7-thierry.bultel.yh@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Fri, 23 May 2025 11:46:26 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdUShe091nRnAqkL4RKwe21Oj7O95fK7UG_JcJ-aH72Cdg@mail.gmail.com>
-X-Gm-Features: AX0GCFvlOG4fTS9H4cNoeEJRhlYFUJpsRVO_9sQ-rvGJRjgTg2PY8_QrCilW0x0
-Message-ID: <CAMuHMdUShe091nRnAqkL4RKwe21Oj7O95fK7UG_JcJ-aH72Cdg@mail.gmail.com>
-Subject: Re: [PATCH v9 06/10] serial: sh-sci: Use private port ID
-To: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
-Cc: thierry.bultel@linatsea.fr, linux-renesas-soc@vger.kernel.org, 
-	paul.barker.ct@bp.renesas.com, linux-kernel@vger.kernel.org, 
-	linux-serial@vger.kernel.org
+References: <c221c98dc2369ea691e3eb664bf084dc909496f6.1747934680.git.rabenda.cn@gmail.com>
+ <cad644ea-a2c9-490d-ab41-160c73425169@ghiti.fr>
+In-Reply-To: <cad644ea-a2c9-490d-ab41-160c73425169@ghiti.fr>
+From: Han Gao <rabenda.cn@gmail.com>
+Date: Fri, 23 May 2025 17:46:50 +0800
+X-Gm-Features: AX0GCFtrmKXe53zw37RzsAhs7ISafqXR93CpDlieunRkAwGVKhVAexNUbzdpcBw
+Message-ID: <CAAT7Ki8Z5O61j8bS3OkdYMbcnfJBY18zxJe=qZeJWCpYTibReg@mail.gmail.com>
+Subject: Re: [PATCH] riscv: vector: fix xtheadvector save/restore
+To: Alexandre Ghiti <alex@ghiti.fr>
+Cc: linux-riscv@lists.infradead.org, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	Charlie Jenkins <charlie@rivosinc.com>, Jesse Taube <jesse@rivosinc.com>, 
+	Andy Chiu <andybnac@gmail.com>, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, 15 May 2025 at 16:19, Thierry Bultel
-<thierry.bultel.yh@bp.renesas.com> wrote:
-> New port types cannot be added in serial_core.h, which is shared with
-> userspace.
-> In order to support new port types, the coming new ones will have
-> BIT(7) set in the id value, and in this case, uartport->type is
-> set to PORT_GENERIC.
-> This commit therefore changes all the places where the port type is
-> read, by not relying on uartport->type but on the private
-> value stored in struct sci_port.
+I will release v2 later to add explanation and add fix tag
+
+Thanks,
+
+Han
+
+On Fri, May 23, 2025 at 4:54=E2=80=AFPM Alexandre Ghiti <alex@ghiti.fr> wro=
+te:
 >
-> Signed-off-by: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
-> ---
-> Changes v8->v9:
->  - Shrunk length od type & regtype
->  - Uses BIT(7) in id value
->  - Set sci_ports[0].type & sci_ports[0].regtype in scix_early_console_setup
-
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+> Hi Han,
+>
+> On 5/22/25 19:27, Han Gao wrote:
+> > Fix [1] save/restore vector register error
+> >
+> > Link: https://lore.kernel.org/all/20241113-xtheadvector-v11-9-236c22791=
+ef9@rivosinc.com/ [1]
+>
+>
+> Would you mind rephrasing the log? It should explain what was wrong and
+> how you fixed it.
+>
+> Thanks,
+>
+> Alex
+>
+>
+> >
+> > Signed-off-by: Han Gao <rabenda.cn@gmail.com>
+> > ---
+> >   arch/riscv/include/asm/vector.h | 12 ++++++------
+> >   1 file changed, 6 insertions(+), 6 deletions(-)
+> >
+> > diff --git a/arch/riscv/include/asm/vector.h b/arch/riscv/include/asm/v=
+ector.h
+> > index e8a83f55be2b..7df6355023a3 100644
+> > --- a/arch/riscv/include/asm/vector.h
+> > +++ b/arch/riscv/include/asm/vector.h
+> > @@ -200,11 +200,11 @@ static inline void __riscv_v_vstate_save(struct _=
+_riscv_v_ext_state *save_to,
+> >                       THEAD_VSETVLI_T4X0E8M8D1
+> >                       THEAD_VSB_V_V0T0
+> >                       "add            t0, t0, t4\n\t"
+> > -                     THEAD_VSB_V_V0T0
+> > +                     THEAD_VSB_V_V8T0
+> >                       "add            t0, t0, t4\n\t"
+> > -                     THEAD_VSB_V_V0T0
+> > +                     THEAD_VSB_V_V16T0
+> >                       "add            t0, t0, t4\n\t"
+> > -                     THEAD_VSB_V_V0T0
+> > +                     THEAD_VSB_V_V24T0
+> >                       : : "r" (datap) : "memory", "t0", "t4");
+> >       } else {
+> >               asm volatile (
+> > @@ -236,11 +236,11 @@ static inline void __riscv_v_vstate_restore(struc=
+t __riscv_v_ext_state *restore_
+> >                       THEAD_VSETVLI_T4X0E8M8D1
+> >                       THEAD_VLB_V_V0T0
+> >                       "add            t0, t0, t4\n\t"
+> > -                     THEAD_VLB_V_V0T0
+> > +                     THEAD_VLB_V_V8T0
+> >                       "add            t0, t0, t4\n\t"
+> > -                     THEAD_VLB_V_V0T0
+> > +                     THEAD_VLB_V_V16T0
+> >                       "add            t0, t0, t4\n\t"
+> > -                     THEAD_VLB_V_V0T0
+> > +                     THEAD_VLB_V_V24T0
+> >                       : : "r" (datap) : "memory", "t0", "t4");
+> >       } else {
+> >               asm volatile (
