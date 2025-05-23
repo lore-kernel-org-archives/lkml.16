@@ -1,338 +1,227 @@
-Received: from mx0b-0016f401.pphosted.com (mx0b-0016f401.pphosted.com [67.231.156.173])
+Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam02on2063.outbound.protection.outlook.com [40.107.212.63])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7BCC1D555;
-	Fri, 23 May 2025 04:09:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.156.173
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747973366; cv=none; b=dDmrRgHwlmO8GOBH9gj0/86jL1vCAtyjD3DugKcyuOhMGqtZ0mqMfCNPpYzSkoV+L4rt8esZ6nKtBfWKJVnsZc2ApYTJf1ZuyDe0asr2DiY0E490/dOhpT4lxTr6xNTsRNUXEeQQ4dUD+yl15kwNe1yuB5oXrNWcfRkErA09w5U=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747973366; c=relaxed/simple;
-	bh=qNobk9fgQQSof9lyEmePaCjQ4aZTIP4RbG11zgo+ooo=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UsnOqH0Q+LNGudORT8mJbc+AoWz2tTyY9kd7dZ6Ay59WjI+ngOcl9u57g6eV+ZairAVrOm4Qg9asFJaIIIhW2Q7T4pZX8gJfv6QHELayYqMp0jN9/emnZLUAsOAIs66oKZzJARC3XLU3xCo1Kp0Qq1K63h5y58hcd/k+4SbBbEg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=i9Jq8464; arc=none smtp.client-ip=67.231.156.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AF1F2DCBF0;
+	Fri, 23 May 2025 04:12:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.212.63
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747973543; cv=fail; b=H3zYyd+pt8iF02n7swB4T3Gau53qbuS6QfTFjie9rgME6Wz+XPTmK8fWL+v4z+TreRfxCpkJvRNBwdeVfQO3tg9DcMx77K3TkIuzLBE35ahlAtA1ZpswY27c/Ehx5+0S5Kw1Gxiy9TZS1Vix3+P4jzvmDghbcOqrgKjBM0BaSDM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747973543; c=relaxed/simple;
+	bh=LtDYOYwXJalEc+RX0FTSRGf1u1i9T4qaEkCItgT4TEM=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=Cuv5o3L0ECTDirPKytH9yYiCDezPuPPyR8QUVo0no5u1F06lSZJu2/Pv78aYOi7Os2jHhxXUDQYD8IQxRxNnqOwIdZIDXeJdDeDRYNTvAzliEFvU8kTEC7t24Bsyp7+owSrfpc7dL8kGzR5se+0FF5HmqJ/2Nim7ipIUjrSz/FU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=4c7BJs6R; arc=fail smtp.client-ip=40.107.212.63
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="i9Jq8464"
-Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
-	by mx0b-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54MNV9Tk006044;
-	Thu, 22 May 2025 21:09:01 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=pfpt0220; bh=stIh9YAtiyc/Nx7vz9uRqFTQW
-	vJ8iq/9zHi9YsfcQZY=; b=i9Jq8464rQYAr+NEVPgnSXe3Tc9AOymPG9ENVxrJx
-	8jJiKUGlyA1R+kiokrKjYVactk1KqYBLTHvNPDi2UwkAyVK5guWYcL0hJli6A0s+
-	Dcym2pfqfMx0U8XQJukjs01wl6FHn13Vu7hTgRCm3rmnwM2VbD08kmWUmDL+vtPX
-	d8TT/BSDouABfzqQAXxwzRxsrGicf/s0HdPl8+H4rHnjaxZGqo5Vjx2oOP3M83ZY
-	N9brw5++Gzorj+DuS88N6rg8QRJHoMv7UJRTVvpdGP2aHOxxotCyuscK4pjReC93
-	u4ZM6RqU0zDqUkdW7k93qON5XvKowDQxYUXHsUuFIoKCw==
-Received: from dc6wp-exch02.marvell.com ([4.21.29.225])
-	by mx0b-0016f401.pphosted.com (PPS) with ESMTPS id 46tdnkrdxn-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 22 May 2025 21:09:01 -0700 (PDT)
-Received: from DC6WP-EXCH02.marvell.com (10.76.176.209) by
- DC6WP-EXCH02.marvell.com (10.76.176.209) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.4; Thu, 22 May 2025 21:09:00 -0700
-Received: from maili.marvell.com (10.69.176.80) by DC6WP-EXCH02.marvell.com
- (10.76.176.209) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
- Transport; Thu, 22 May 2025 21:09:00 -0700
-Received: from optiplex (unknown [10.28.34.253])
-	by maili.marvell.com (Postfix) with SMTP id B08AF3F7079;
-	Thu, 22 May 2025 21:08:52 -0700 (PDT)
-Date: Fri, 23 May 2025 09:38:51 +0530
-From: Tanmay Jagdale <tanmay@marvell.com>
-To: Simon Horman <horms@kernel.org>
-CC: <herbert@gondor.apana.org.au>, <davem@davemloft.net>,
-        <sgoutham@marvell.com>, <lcherian@marvell.com>, <gakula@marvell.com>,
-        <jerinj@marvell.com>, <hkelam@marvell.com>, <sbhatta@marvell.com>,
-        <andrew+netdev@lunn.ch>, <edumazet@google.com>, <kuba@kernel.org>,
-        <pabeni@redhat.com>, <bbhushan2@marvell.com>, <bhelgaas@google.com>,
-        <pstanner@redhat.com>, <gregkh@linuxfoundation.org>,
-        <peterz@infradead.org>, <linux@treblig.org>,
-        <linux-crypto@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <rkannoth@marvell.com>, <sumang@marvell.com>,
-        <gcherian@marvell.com>
-Subject: Re: [net-next PATCH v1 14/15] octeontx2-pf: ipsec: Process CPT
- metapackets
-Message-ID: <aC_003av7qNpNO93@optiplex>
-References: <20250502132005.611698-1-tanmay@marvell.com>
- <20250502132005.611698-15-tanmay@marvell.com>
- <20250507163050.GH3339421@horms.kernel.org>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="4c7BJs6R"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=pmZx5Ne1zWSyy1GEwfCijDcNP55DZfPe+BZ2I9+mUaLUQgfBTyd1GFyiYus3HI7x9yyjfgiiLB5f1hgemW6E9NwGE0h3yOWibJKulUEMNl5irqgnXrh6Y173njWbSLo37h8wm7WhC3daG6wskS19rGQAewgB+FQgx6TQm9qC6QlP+UVVDathQOOiP31aQ/U8rUmsGzfTJAK8cG7gCZl++keKl3Q5ixFVJUjbqpkJqg5o1Bpiz0IMhmU2V7NJIyl1qtReTxNZBSMSWVBNSVHQ5zddds/u4hOuqwJmqXqob1V51wav4dMqpsZc3izDNtAGWV0g/qjog2aqxXek2KFpPw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=RBt5bZXAT8bniLNJaAIOpr7jWw9vWAdU0oP8SyA2Cd8=;
+ b=PiW9JTD8f7Ua+9Z2+TDoqLINq0ZRt7h/PX4Vw0BvE5Yu255LVLZdRfbXsblTJvmWFVjbI4QcP2BoWGA3VlcKtfZSGdjXw3jASMq6NrDR4uaqix8BbXxT4iWdHy/uyWi9lsbUy57ZhtLUr8vHU+nnl+zh5bh2aG5ddNKOJa7OJwM2kqr1ABTvazg+s8JEHxn6gBhaLHf04PFAFY4lzcQcbtceN9m9N71EG5ixMBjdNzJuMqeeOfuD1OngCdwqiVLyl/AjsJtwFX/Jby8KX6L1BvOhlsYbAGbYihLRgA20pgMkEQs9CWhPOg+sj/EH/E8aVwtn81Axo1hG8rXkjw7eww==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RBt5bZXAT8bniLNJaAIOpr7jWw9vWAdU0oP8SyA2Cd8=;
+ b=4c7BJs6Rmf+RAn1Qk0WOlXCrpEk+JlN73r20tC//pCXjUdBqyHgR8/m5q+Oy4RAJITmxFGnlWTxJFmqj2ju32oj0gXWD8KBKKyFMm3MyjzLaMpnWv2pZxsre/ZZHjwjN1bhzXap87wrq97d+81vw5AGoi7/d5vQXTujfTQ7iodw=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DM4PR12MB5962.namprd12.prod.outlook.com (2603:10b6:8:69::7) by
+ CH3PR12MB9079.namprd12.prod.outlook.com (2603:10b6:610:1a1::9) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8769.22; Fri, 23 May 2025 04:12:16 +0000
+Received: from DM4PR12MB5962.namprd12.prod.outlook.com
+ ([fe80::5df0:a9be:ee71:f30a]) by DM4PR12MB5962.namprd12.prod.outlook.com
+ ([fe80::5df0:a9be:ee71:f30a%3]) with mapi id 15.20.8746.030; Fri, 23 May 2025
+ 04:12:15 +0000
+Message-ID: <35537263-47cf-4cc3-9808-7a93361d3ba8@amd.com>
+Date: Fri, 23 May 2025 09:42:07 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] platform/x86/amd/hsmp: fix building with CONFIG_HWMON=m
+To: Arnd Bergmann <arnd@kernel.org>,
+ Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>,
+ Hans de Goede <hdegoede@redhat.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, Carlos Bilbao <carlos.bilbao@kernel.org>,
+ Yazen Ghannam <yazen.ghannam@amd.com>, "Borislav Petkov (AMD)"
+ <bp@alien8.de>, platform-driver-x86@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250522144422.2824083-1-arnd@kernel.org>
+Content-Language: en-US
+From: Suma Hegde <Suma.Hegde@amd.com>
+In-Reply-To: <20250522144422.2824083-1-arnd@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: PN4PR01CA0048.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:279::8) To DM4PR12MB5962.namprd12.prod.outlook.com
+ (2603:10b6:8:69::7)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20250507163050.GH3339421@horms.kernel.org>
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIzMDAzNSBTYWx0ZWRfXz00kcWVomhgU ucdwmTeCC3YHN/CZS6Eave1/seKNjkgV4tNPbvgeeR/nCeQ+/dsA1BISbtRFj9WtQm3rNHK8Wo3 VYbOfXN4rLVVG0sH/Cte7FjoMP7niryhcA6aXN3zhMOxxUgA60dFqEjYpPan76f/We8IkJpneg6
- juNcqhg+5ARkpREPu1EkHCDCkzriN5471PqZAwI8iwO7BNucbuDovoZw5v8A1X2RQtI7i0dveVQ spkzH68HwVjuq1VmWmV+dTlCsdhSemsFosWyQZBO46rqtF4ykayN7G+AVPvBbU/DXtd2+8rhunj 4J1KQ+H6l41yAY0gT4qkMaYsKtwSxAQdDS0XBuQ7CGHwDOBWYTFrLVirDC5oaiJUMr8+uh9aD7A
- NT5c8eSK+qX0hBHdxnOCcbipHBOcuMCPFkaqJjnkwCOhEzXYuPCzfe/Di3gxpeKDuJ9vak8p
-X-Authority-Analysis: v=2.4 cv=Hst2G1TS c=1 sm=1 tr=0 ts=682ff4dd cx=c_pps a=gIfcoYsirJbf48DBMSPrZA==:117 a=gIfcoYsirJbf48DBMSPrZA==:17 a=kj9zAlcOel0A:10 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=M5GUcnROAAAA:8 a=fxPYiSP9r1EW3jPGSAEA:9 a=CjuIK1q_8ugA:10
- a=OBjm3rFKGHvpk9ecZwUJ:22
-X-Proofpoint-GUID: 60EmdaymcUzhAqO-khgHJeqx9hFuK0yo
-X-Proofpoint-ORIG-GUID: 60EmdaymcUzhAqO-khgHJeqx9hFuK0yo
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-23_02,2025-05-22_01,2025-03-28_01
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM4PR12MB5962:EE_|CH3PR12MB9079:EE_
+X-MS-Office365-Filtering-Correlation-Id: deb5d2c4-2fc6-4234-9f00-08dd99b00039
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?aE9JUUQxTWJ6MmxmOXRSaW84MXRXOXhuSVpoN1FyazNac0pYMGJveXlJQm5N?=
+ =?utf-8?B?NUhRRmJmWVhubHh5TmwwMzVkek11QTJ5Q3RCVmdBWE1Ndlp0L2UvRDQxR3d6?=
+ =?utf-8?B?Vkdmd0l5cW5Vb3lCakNQNWw5MGlaN29RNk9YOVJVbEVoZU5OV2hkbStjazNP?=
+ =?utf-8?B?TE9SZ0o3MysxcUZKaUI2QVE5Q1REVi9oWkJjQlNyZkN1Um52ek1wVHpDaWl3?=
+ =?utf-8?B?ckMrano0Z09OcVJsV2VLeExDeUwvbDBOVjNqWU5xditOanl6WEVVWWxWK0tL?=
+ =?utf-8?B?SHkwMHl4d1VyOVpDOVhNcXI3VnlRSllreVIycTdwbURScFN4QmlubmxHVkZF?=
+ =?utf-8?B?S05NUDVIeDNUTmJ3WTQvMUxSOEVjbkNITWI1RExZcS84alA4Ti9QSmgwYmhM?=
+ =?utf-8?B?a21DQmh3NU4zdHk1UnVrd1pPbXJXZFp6UDl3SVZoRmtlTStiV3IvWVJpYk1D?=
+ =?utf-8?B?T0g3bG5sd1ZWZ3owVFpUL0lFNmFwaGRZUGVxb1puNDJ5MnNpcDVuTmRSMWRT?=
+ =?utf-8?B?SkZZRzk1d3ZRTllQRkZuaUd4YkNpYUNiZGxxMlRzeVFnN1JCQVpQVXBiZmVi?=
+ =?utf-8?B?cVhWTVVEWkE4cEVKWXh0TFpPV0N6cVg4Vy9YQjJZclQyMWVFTHpxOVFiOVNl?=
+ =?utf-8?B?dDlMNTRXcEgrQ21kT0FXL2ZKUkgwRktpWTdDL1pwd1c4bytVeGM3WjhoRzhl?=
+ =?utf-8?B?L2xZS0hrMjlzRFoxUEkzaEU0T3BQT05ZYzBZUm9jVTJEZkVjU01hVm5oS3Rm?=
+ =?utf-8?B?OW9DUHJSL0o5Nk82QWgvR2UzaG1xYk1EN2d0TVZjZUw2UkZEblZ5bzkrZUpR?=
+ =?utf-8?B?RTNGU3owS3dEeW0vN3RYUHZZYVhoTktrSXRjUGFwN3dodmJmbUh0RCtDcU1Y?=
+ =?utf-8?B?dXMyK3FXWXpvL05jdXJUWjNtdlJId3BzS3IvQ2t5TWJncE5YeGJsTlRsWE5h?=
+ =?utf-8?B?aEVJR0tFdnh6NzlaTUd0Tld3cFVrNk5aY3J5UlJKbkR0RkdrSGUwTU5zaStC?=
+ =?utf-8?B?LzhDMUZHei9SZmpWbFhQeWljRURnK3RhWlkweHQ4UExDckMyNkphcjlYWTNF?=
+ =?utf-8?B?L2lmcG5mZ3k4R21rNTI5YWd5ZGZEd1ZBaUN2WmxTUmpLbVB4R3dMNnRBM0tm?=
+ =?utf-8?B?Zjc2WWZIRjhHT3hqeXFYZ3lEWE5LQTRWUGFrZEZsdXpOdUMwditseWZvUDBE?=
+ =?utf-8?B?d1AvYWY1SVo1UFVCQ0hVaVNrcVh5MjVmUUEzbnl4TnBIbXNvTjgzWkxaQnlh?=
+ =?utf-8?B?VnRVcVFUcHdzUTBUTU42b1ZuT3BMaXc0dVJPZ29sdG9kc0pNaysrL1o3MHhq?=
+ =?utf-8?B?ZjlmaVVYLzhNQUhRWnpUaDZaUDdTWElJL1Z0OWFRUlFvWW9iNlNhU3YwM0Qz?=
+ =?utf-8?B?MG5CS2RndFBhVllMK0RHSHpNRW0renZrWEIvaEtHZHM2WGMxZEtuV2pjRFMz?=
+ =?utf-8?B?RkduOU5xVVFTSGM2U1UwczBvNUpBM2tzWWgvZXJNaGVSVEpUWEdaZzlLeVR5?=
+ =?utf-8?B?c3l4Vmt3cktQd0ZEQ2JMUElSVXpsWWZlQzZsTkhXM2xVRWF2WTBJNGVTWUNv?=
+ =?utf-8?B?dUt4R2cyZG5WUTVpaEgyS2lNd0h1ckFmMGFhRkgvUG1DL21HY01GVm9QNWdm?=
+ =?utf-8?B?MExkalRWWWRJbWVMRFJwRkJSZWpOdkVIMi9UNmQ4VHhvQkpvcHRDZ25JRU93?=
+ =?utf-8?B?VjlLcHQzWWkveG1reVo2QnBOdklsWjVNQ1F5cTZ5WTErMmtUeGhBeUVNSGpK?=
+ =?utf-8?B?WFJqUnZ1Si8yeWUwMElTbE9SWFJYMHZpS0U3U3RUb2NENTNQdXJtRW9USDhw?=
+ =?utf-8?B?dnVsVzdKcll2MEJEMnFMajVDbEw4KzB4Z3kwTG1BWDhNWm00Ynl0c0pON1Fw?=
+ =?utf-8?B?TUF3Z2dVOTlSS2dIMVAwRTdUSjlBNURXSkRuWG1BK2NWS3p0N1VHNFJxaGtR?=
+ =?utf-8?Q?HKaXzeFXtns=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB5962.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?Z3hjeW95a1ZFZk1ZSlVkYWs1RHgvSDZLb0VidWh5RFE3bG0vajFaYmV1NkZF?=
+ =?utf-8?B?eFJieG52QUlFR3J4Z3haeFVWUlNYV3pmSnFvSVBSWmREcldrSmJzbTluelhW?=
+ =?utf-8?B?ZXRTZmFQL29lTFJqYzhYQ1puU0VoY2F0T1hHbHlwWGU0dFI0VmhSQlRvU1Fs?=
+ =?utf-8?B?a2xNZmExRXpLcDFyNTZJNzJlSUN1akE5NDJOR0pRRi96ZnpRam5nTmFJY1dn?=
+ =?utf-8?B?V3dOanpob1Jid2ROSUExWGNYSFhoNVQ1ODJSUTlUeW9JaWpnUStHbEFCcmc2?=
+ =?utf-8?B?emRoRzVzWk4zMDFFT1A5bzcvOUJJUUIwNXNJNFVBVkVWaURGZTZFeWIzTkEx?=
+ =?utf-8?B?RlJ4VEZZcHFJSGx3YkNzOEFNMVpzbkk2dmx5UENYbGxtTVpqOW9RVVY3NjEx?=
+ =?utf-8?B?NXNRWE1lQ3MwVnlJcFRVRFJDd1RYbEJJWTRsdmVHdWs0VW5admp1c2V2blI2?=
+ =?utf-8?B?RUlxeFU4SUlqQWwxNWFzU1N1Z24ydHVQcmhEaGt5U29Qc0tkNmhPcUk3VGQw?=
+ =?utf-8?B?U2cvWU5pT0dCVmQ5MEhkM01qNEl4b0NJaTV2MmxCcVhIY1V2elNIU3FiWGQ3?=
+ =?utf-8?B?bS9ueGE0Q0hBTmloRllMRnZmeWVobHZXZmdwc01mVnZqdEM3eVdCWDloK3U3?=
+ =?utf-8?B?TzdUUEs5cFIwVFNLbEE2Ykg5V2QxdS9ZaHVuNXNZN1BNc0dlZ001NjFPMWdm?=
+ =?utf-8?B?cm5pQ21zUURSU3RwZUJjM1hzODNlMkVZckEwRnZzSUkwTGs5dnBmUXNWNHU5?=
+ =?utf-8?B?SElhR2NlTmVUM1pWQWNUbFhjUm1PRWFUOGlnd0NtTVNyVWlhaU9vak93bWhC?=
+ =?utf-8?B?ZzEyRXhpTGF1bzJRQzF1UEwyc29hdTB5RkZJeWI3NVQwZmV3QlRROWZ5UHo2?=
+ =?utf-8?B?Mk0rTVFTd0NmZ01DK0o0ZnEyamRaR0kvVHdVams4MCt4RStnU2UrdEVEbi9I?=
+ =?utf-8?B?R0dGdHIxVERJdWN5bmZGbmVUVVBXZThsTHVpdUlsR3pXZk15ZWFMMFlmazJN?=
+ =?utf-8?B?d3V6ZGlaclQ5c2JiSjY1WUZWN2dlR2hvdVR3VHBFNStMRzFUVExxQjVISWhy?=
+ =?utf-8?B?UHJ5S292QkVkNGQ0WkNNdXU4QzN0NE51SzRVNkFlai9yc0lUb3VScFI1cUtK?=
+ =?utf-8?B?aHFQcFl5elh5Qjk4dWYxM1hKemVVRHFuYk9YR3g2VjZ2Vk1sMnVlWGN0RnZN?=
+ =?utf-8?B?QnU2S3hPRmtLVGR4MU5KUVQ1Q2FVTDJ3YjE3NllTb2xzZFBPY2h3RzZZa3I3?=
+ =?utf-8?B?c0h3d1ZybGE3cGR0Ni95WDZJZCtXbFhtM201SVlteUZKcmh6cjIvbldDYWN1?=
+ =?utf-8?B?QkdxUjdUbnQ4OG9PYzVPcHNwVlNpdXZBVDVtSzhMOWZHdmNCZG1lNzBNQkIz?=
+ =?utf-8?B?QzdBZ2J4TitZTkU1NGQ1L2o2dEtzamNZRGNGd3FjbnBzOWNsTmNVMWU4azVO?=
+ =?utf-8?B?dUxOYTJOUE1vVE9QWURtaDN5R09RWFJGYWZlREFwdGVJK1NKc2trVXF5NGQ1?=
+ =?utf-8?B?cmNrb0tlK3pGRHFIdTloMGtOQW4vdWR1K3BoR3daVmsxM29vaGVvUFpLMEd2?=
+ =?utf-8?B?T1NLWTNZU1N2U3dROTN5Q3ZUU0FZLzhtUFBYU3p6Y2ZteThvU3ZVTjJvL0d6?=
+ =?utf-8?B?STMxdUN5Q01XcGNyUmJtMGRIVm1RWk4rMHU0eldXM20wQU9KZ0VZYzI1all3?=
+ =?utf-8?B?dXZTb0w5TUVRNEVnWUx1S3pvdmd5aGJwUlk3U2VQc3RTcjV6ZGFwQzE1TVQ1?=
+ =?utf-8?B?NmxOWHVuUUI0ODAyU1FNQkptTnB1ajZBdUVVeVhBZ2NFWkQ3Z2JLZWI4UEh4?=
+ =?utf-8?B?VnN1aVNqYnMrRyt6VEFsa1Jua0wxZDdpbzFVbkw5OHQ4dXpGQXdwRTIxQS94?=
+ =?utf-8?B?RDNOWGtRbEhDYzNZbW8xSnVMWk9sc0JnYjNUSUplMDdLUmpwSEhJcVRqalY1?=
+ =?utf-8?B?UVVZZTd3cjBmV0JXM0JtZGc5MnB0SGo2c2lscXBjT0xnSnJBajNXVGJhK2hm?=
+ =?utf-8?B?NXQ0ai9ZNVhPQ3diYUJDNkN4WCtVNWhXY1JlRm9lNUMwKzFra0ZlZHJNWEt5?=
+ =?utf-8?B?d0NZQjdoN0JyUm85SjlFT0ZLUTVudVpuMENjWndxMzRGM1BmL0szdE5xQUdY?=
+ =?utf-8?Q?jRPoqlcm3A1OZ4BxzKRit6slN?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: deb5d2c4-2fc6-4234-9f00-08dd99b00039
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB5962.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 May 2025 04:12:15.7092
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: jkTVGREYMgGq29H8oQDJ+otLN4crqfVXPEi9MLg+ssBD9t2GtHQCB8+41LEg0JkkZXTePoniQU4YNOJewvaJyw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB9079
 
-Hi Simon,
+Hi Arnd,
 
-On 2025-05-07 at 22:00:50, Simon Horman (horms@kernel.org) wrote:
-> On Fri, May 02, 2025 at 06:49:55PM +0530, Tanmay Jagdale wrote:
-> > CPT hardware forwards decrypted IPsec packets to NIX via the X2P bus
-> > as metapackets which are of 256 bytes in length. Each metapacket
-> > contains CPT_PARSE_HDR_S and initial bytes of the decrypted packet
-> > that helps NIX RX in classifying and submitting to CPU. Additionally,
-> > CPT also sets BIT(11) of the channel number to indicate that it's a
-> > 2nd pass packet from CPT.
-> > 
-> > Since the metapackets are not complete packets, they don't have to go
-> > through L3/L4 layer length and checksum verification so these are
-> > disabled via the NIX_LF_INLINE_RQ_CFG mailbox during IPsec initialization.
-> > 
-> > The CPT_PARSE_HDR_S contains a WQE pointer to the complete decrypted
-> > packet. Add code in the rx NAPI handler to parse the header and extract
-> > WQE pointer. Later, use this WQE pointer to construct the skb, set the
-> > XFRM packet mode flags to indicate successful decryption before submitting
-> > it to the network stack.
-> > 
-> > Signed-off-by: Tanmay Jagdale <tanmay@marvell.com>
-> > ---
-> >  .../marvell/octeontx2/nic/cn10k_ipsec.c       | 61 +++++++++++++++++++
-> >  .../marvell/octeontx2/nic/cn10k_ipsec.h       | 47 ++++++++++++++
-> >  .../marvell/octeontx2/nic/otx2_struct.h       | 16 +++++
-> >  .../marvell/octeontx2/nic/otx2_txrx.c         | 25 +++++++-
-> >  4 files changed, 147 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/drivers/net/ethernet/marvell/octeontx2/nic/cn10k_ipsec.c b/drivers/net/ethernet/marvell/octeontx2/nic/cn10k_ipsec.c
-> > index 91c8f13b6e48..bebf5cdedee4 100644
-> > --- a/drivers/net/ethernet/marvell/octeontx2/nic/cn10k_ipsec.c
-> > +++ b/drivers/net/ethernet/marvell/octeontx2/nic/cn10k_ipsec.c
-> > @@ -346,6 +346,67 @@ static int cn10k_outb_cpt_init(struct net_device *netdev)
-> >  	return ret;
-> >  }
-> >  
-> > +struct nix_wqe_rx_s *cn10k_ipsec_process_cpt_metapkt(struct otx2_nic *pfvf,
-> > +						     struct nix_rx_sg_s *sg,
-> > +						     struct sk_buff *skb,
-> > +						     int qidx)
-> > +{
-> > +	struct nix_wqe_rx_s *wqe = NULL;
-> > +	u64 *seg_addr = &sg->seg_addr;
-> > +	struct cpt_parse_hdr_s *cptp;
-> > +	struct xfrm_offload *xo;
-> > +	struct otx2_pool *pool;
-> > +	struct xfrm_state *xs;
-> > +	struct sec_path *sp;
-> > +	u64 *va_ptr;
-> > +	void *va;
-> > +	int i;
-> > +
-> > +	/* CPT_PARSE_HDR_S is present in the beginning of the buffer */
-> > +	va = phys_to_virt(otx2_iova_to_phys(pfvf->iommu_domain, *seg_addr));
-> > +
-> > +	/* Convert CPT_PARSE_HDR_S from BE to LE */
-> > +	va_ptr = (u64 *)va;
-> 
-> phys_to_virt returns a void *. And there is no need to explicitly cast
-> another pointer type to or from a void *.
-> 
-> So probably this can simply be:
-> 
-> 	va_ptr = phys_to_virt(...);
-ACK.
-> 
-> 
-> > +	for (i = 0; i < (sizeof(struct cpt_parse_hdr_s) / sizeof(u64)); i++)
-> > +		va_ptr[i] = be64_to_cpu(va_ptr[i]);
-> 
-> Please don't use the same variable to hold both big endian and
-> host byte order values. Because tooling can no longer provide
-> information about endian mismatches.
-> 
-> Flagged by Sparse.
-> 
-> Also, isn't only the long word that exactly comprises the
-> wqe_ptr field of cpt_parse_hdr_s used? If so, perhaps
-> only that portion needs to be converted to host byte order?
-Yes I don't need the complete cpt_parse_hdr_s to be converted,
-just wqe_ptr and cookie. So I'll rework this logic.
 
-> 
-> I'd explore describing the members of struct cpt_parse_hdr_s as __be64.
-> And use FIELD_PREP and FIELD_GET to deal with parts of each __be64.
-> I think that would lead to a simpler implementation.
-ACK. I'll explore defining structure in a big endian format
-and using the FIELD_XX macros.
+On 5/22/2025 8:08 PM, Arnd Bergmann wrote:
+> Caution: This message originated from an External Source. Use proper caution when opening attachments, clicking links, or responding.
+>
+>
+> From: Arnd Bergmann <arnd@arndb.de>
+>
+> When CONFIG_HWMON is built as a loadable module, the HSMP drivers
+> cannot be built-in:
+>
+> ERROR: modpost: "hsmp_create_sensor" [drivers/platform/x86/amd/hsmp/amd_hsmp.ko] undefined!
+> ERROR: modpost: "hsmp_create_sensor" [drivers/platform/x86/amd/hsmp/hsmp_acpi.ko] undefined!
+>
+> Enforce that through the usual Kconfig dependnecy trick.
+>
+> Fixes: 92c025db52bb ("platform/x86/amd/hsmp: Report power via hwmon sensors")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>   drivers/platform/x86/amd/hsmp/Kconfig | 2 ++
+>   1 file changed, 2 insertions(+)
+>
+> diff --git a/drivers/platform/x86/amd/hsmp/Kconfig b/drivers/platform/x86/amd/hsmp/Kconfig
+> index d6f7a62d55b5..2911120792e8 100644
+> --- a/drivers/platform/x86/amd/hsmp/Kconfig
+> +++ b/drivers/platform/x86/amd/hsmp/Kconfig
+> @@ -12,6 +12,7 @@ menu "AMD HSMP Driver"
+>   config AMD_HSMP_ACPI
+>          tristate "AMD HSMP ACPI device driver"
+>          depends on ACPI
+> +       depends on HWMON || !HWMON
 
-> 
-> > +
-> > +	cptp = (struct cpt_parse_hdr_s *)va;
-> > +
-> > +	/* Convert the wqe_ptr from CPT_PARSE_HDR_S to a CPU usable pointer */
-> > +	wqe = (struct nix_wqe_rx_s *)phys_to_virt(otx2_iova_to_phys(pfvf->iommu_domain,
-> > +								    cptp->wqe_ptr));
-> 
-> There is probably no need to cast from void * here either.
-> 
-> 	wqe = phys_to_virt(otx2_iova_to_phys(pfvf->iommu_domain,
-> 	                   cptp->wqe_ptr));
-> 
-ACK.
 
-> > +
-> > +	/* Get the XFRM state pointer stored in SA context */
-> > +	va_ptr = pfvf->ipsec.inb_sa->base +
-> > +		(cptp->cookie * pfvf->ipsec.sa_tbl_entry_sz) + 1024;
-> > +	xs = (struct xfrm_state *)*va_ptr;
-> 
-> Maybe this can be more succinctly written as follows?
-> 
-> 	xs = pfvf->ipsec.inb_sa->base +
-> 		(cptp->cookie * pfvf->ipsec.sa_tbl_entry_sz) + 1024;
-> 
-ACK.
+Thanks for sending this fix.  I verified it.
 
-> > +
-> > +	/* Set XFRM offload status and flags for successful decryption */
-> > +	sp = secpath_set(skb);
-> > +	if (!sp) {
-> > +		netdev_err(pfvf->netdev, "Failed to secpath_set\n");
-> > +		wqe = NULL;
-> > +		goto err_out;
-> > +	}
-> > +
-> > +	rcu_read_lock();
-> > +	xfrm_state_hold(xs);
-> > +	rcu_read_unlock();
-> > +
-> > +	sp->xvec[sp->len++] = xs;
-> > +	sp->olen++;
-> > +
-> > +	xo = xfrm_offload(skb);
-> > +	xo->flags = CRYPTO_DONE;
-> > +	xo->status = CRYPTO_SUCCESS;
-> > +
-> > +err_out:
-> > +	/* Free the metapacket memory here since it's not needed anymore */
-> > +	pool = &pfvf->qset.pool[qidx];
-> > +	otx2_free_bufs(pfvf, pool, *seg_addr - OTX2_HEAD_ROOM, pfvf->rbsize);
-> > +	return wqe;
-> > +}
-> > +
-> >  static int cn10k_inb_alloc_mcam_entry(struct otx2_nic *pfvf,
-> >  				      struct cn10k_inb_sw_ctx_info *inb_ctx_info)
-> >  {
-> > diff --git a/drivers/net/ethernet/marvell/octeontx2/nic/cn10k_ipsec.h b/drivers/net/ethernet/marvell/octeontx2/nic/cn10k_ipsec.h
-> > index aad5ebea64ef..68046e377486 100644
-> > --- a/drivers/net/ethernet/marvell/octeontx2/nic/cn10k_ipsec.h
-> > +++ b/drivers/net/ethernet/marvell/octeontx2/nic/cn10k_ipsec.h
-> > @@ -8,6 +8,7 @@
-> >  #define CN10K_IPSEC_H
-> >  
-> >  #include <linux/types.h>
-> > +#include "otx2_struct.h"
-> >  
-> >  DECLARE_STATIC_KEY_FALSE(cn10k_ipsec_sa_enabled);
-> >  
-> > @@ -302,6 +303,41 @@ struct cpt_sg_s {
-> >  	u64 rsvd_63_50	: 14;
-> >  };
-> >  
-> > +/* CPT Parse Header Structure for Inbound packets */
-> > +struct cpt_parse_hdr_s {
-> > +	/* Word 0 */
-> > +	u64 cookie      : 32;
-> > +	u64 match_id    : 16;
-> > +	u64 err_sum     : 1;
-> > +	u64 reas_sts    : 4;
-> > +	u64 reserved_53 : 1;
-> > +	u64 et_owr      : 1;
-> > +	u64 pkt_fmt     : 1;
-> > +	u64 pad_len     : 3;
-> > +	u64 num_frags   : 3;
-> > +	u64 pkt_out     : 2;
-> > +
-> > +	/* Word 1 */
-> > +	u64 wqe_ptr;
-> > +
-> > +	/* Word 2 */
-> > +	u64 frag_age    : 16;
-> > +	u64 res_32_16   : 16;
-> > +	u64 pf_func     : 16;
-> > +	u64 il3_off     : 8;
-> > +	u64 fi_pad      : 3;
-> > +	u64 fi_offset   : 5;
-> > +
-> > +	/* Word 3 */
-> > +	u64 hw_ccode    : 8;
-> > +	u64 uc_ccode    : 8;
-> > +	u64 res3_32_16  : 16;
-> > +	u64 spi         : 32;
-> > +
-> > +	/* Word 4 */
-> > +	u64 misc;
-> > +};
-> > +
-> >  /* CPT LF_INPROG Register */
-> >  #define CPT_LF_INPROG_INFLIGHT	GENMASK_ULL(8, 0)
-> >  #define CPT_LF_INPROG_GRB_CNT	GENMASK_ULL(39, 32)
-> 
-> ...
-> 
-> > diff --git a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_txrx.c b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_txrx.c
-> 
-> ...
-> 
-> > @@ -355,8 +359,25 @@ static void otx2_rcv_pkt_handler(struct otx2_nic *pfvf,
-> >  	if (unlikely(!skb))
-> >  		return;
-> >  
-> > -	start = (void *)sg;
-> > -	end = start + ((cqe->parse.desc_sizem1 + 1) * 16);
-> > +	if (parse->chan & 0x800) {
-> > +		orig_pkt_wqe = cn10k_ipsec_process_cpt_metapkt(pfvf, sg, skb, cq->cq_idx);
-> > +		if (!orig_pkt_wqe) {
-> > +			netdev_err(pfvf->netdev, "Invalid WQE in CPT metapacket\n");
-> > +			napi_free_frags(napi);
-> > +			cq->pool_ptrs++;
-> > +			return;
-> > +		}
-> > +		/* Switch *sg to the orig_pkt_wqe's *sg which has the actual
-> > +		 * complete decrypted packet by CPT.
-> > +		 */
-> > +		sg = &orig_pkt_wqe->sg;
-> > +		start = (void *)sg;
-> 
-> I don't think this cast is necessary, start is a void *.
-> Likewise below.
-ACK.
+Along with this  fix, I will change IS_REACHABLE() to IS_ENABLED() in 
+hsmp.h as its not necessary and send v2 of this patch.
 
-> 
-> > +		end = start + ((orig_pkt_wqe->parse.desc_sizem1 + 1) * 16);
-> > +	} else {
-> > +		start = (void *)sg;
-> > +		end = start + ((cqe->parse.desc_sizem1 + 1) * 16);
-> > +	}
-> 
-> The (size + 1) * 16 calculation seems to be repeated.
-> Perhaps a helper function is appropriate.
-ACK.
+-#if IS_REACHABLE(CONFIG_HWMON)
++#if IS_ENABLED(CONFIG_HWMON)
+  int hsmp_create_sensor(struct device *dev, u16 sock_ind);
+  #else
+static inline int hsmp_create_sensor(struct device *dev, u16 sock_ind) { 
+return 0; }
+#endif
 
-Thanks,
-Tanmay
-> 
-> > +
-> >  	while (start < end) {
-> >  		sg = (struct nix_rx_sg_s *)start;
-> >  		seg_addr = &sg->seg_addr;
-> > -- 
-> > 2.43.0
-> > 
-> > 
+>          select AMD_HSMP
+>          help
+>            Host System Management Port (HSMP) interface is a mailbox interface
+> @@ -29,6 +30,7 @@ config AMD_HSMP_ACPI
+>
+>   config AMD_HSMP_PLAT
+>          tristate "AMD HSMP platform device driver"
+> +       depends on HWMON || !HWMON
+>          select AMD_HSMP
+>          help
+>            Host System Management Port (HSMP) interface is a mailbox interface
+> --
+> 2.39.5
+
+
+Thanks and Regards,
+
+Suma
+
