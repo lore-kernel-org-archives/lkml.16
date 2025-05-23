@@ -1,247 +1,184 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1705E221547;
-	Fri, 23 May 2025 16:53:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAA732957B6
+	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 16:57:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748019216; cv=none; b=nFUUo6CrCCZMzbIQ7M2mhS1IvutI9eKE8qkVfClM/z7ArdaMNpul1YNDoX+XW+74/fnXcAB9fw+9jPQamaUTbsiD4JBDlp5xnb6UO1OhODdSshIrKmp7iR2m+qU0rZXJ0n7Hf63Psad5i1QgFRsDTbzAVn4UbbDGdWIDmcqhXRc=
+	t=1748019457; cv=none; b=bSNxZ5frerG6PJetKRgTIF1K6bhuMjekE5W7HThwr4zKGo9UQUlVhoU/7oNnjWNjRNl3OHi6vbkrqTUZ/G4t8FjR2HZfHuNLcZsrAgsi+6gltohKXxuZQOjwl47LhMil8vSQ0o7ETN/pZ6gyBWcgaaYHQsxKyac1yJNMbA99eAk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748019216; c=relaxed/simple;
-	bh=7vPG/vp7sl4OImEeVueSFERD4i0cKqTC9I6nhMiwNis=;
-	h=Content-Type:MIME-Version:In-Reply-To:References:Subject:From:Cc:
-	 To:Date:Message-ID; b=ipFjJAqHVy4c7b8XsQ33oaG0W+Apo9JK6ykt5Gyx5sjthhBA54VXBoya5MzniHLngShMU6um/SC5d6zjafiNDXX2zpZ5NqYsl60ZqhqN0XmRp5bnN7WRWIODHgk2f76fG3rRtQdVEQIaPhtE9geDOb1b1aOQp2K7ElyysX9Digo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=cRMsfUbH; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1748019457; c=relaxed/simple;
+	bh=dzcmhlnVKKdWYCIX3XHmBq2cR+Pxheb4XJE7tjG3Mno=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=U8lBrVIK34q68Rh1hESKsfd4fZk/+gcVW5JexXENZNv4aDWDLRkMBLeWYnWtAWbanSgaCe1PIxAZmXhqNiNgQ5hEiyWzPYMhqSLLUzWBpbG/0ChAmOuegOcf43nObGFWeIrNVsl9E+hw/1rnXveFXHgDKPf/WASjgdkSLmYWOho=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=aC0XGSlh; arc=none smtp.client-ip=209.85.216.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="cRMsfUbH"
-Received: from mail.ideasonboard.com (unknown [IPv6:2401:4900:1c68:b8ba:6efe:8413:cff8:dd59])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 241464A4;
-	Fri, 23 May 2025 18:53:08 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1748019189;
-	bh=7vPG/vp7sl4OImEeVueSFERD4i0cKqTC9I6nhMiwNis=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-	b=cRMsfUbH7i5mxtR8mZEQ4nJQsnu9h4Y1CDyXqkj9mgRp+C6gznDtib3km3s6vS5AD
-	 q1OnahOfYX1I81PfDdaYJmI49rCxqDsXNow4hCh5a1lDchZBvSWp9DZn8JqeX1wmZJ
-	 mLcsiRtv7Eg2SVNqou+v9DWSXSCuB/ZIaISdOIIs=
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aC0XGSlh"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-3108d5123c4so101674a91.1
+        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 09:57:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1748019455; x=1748624255; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Tg6VPPI8kv2xdiChglqqkBYvwi/LLRExk2X0fxJWCgo=;
+        b=aC0XGSlhtWE2p1SBXcUFqTBIyEslxhQbxhTbqWc65pgs9ngy2N5CFaQ5RkOOsnDP/+
+         mDWcX5s+uh+L0rG6AWTeu05j9k5dCygdfkFSqoc5XLrwEn6aXTCbcYtBJnS4SETq1WZ0
+         iMRxncMW71rCsyjCSrIQMh/zYAq085UBCWbCGt9K4ZksUqrrsLd+heFJUvIzEi2xzePe
+         Xe86gBkTyVUYwp5HzOlyaEgd+ctSeJ0edMqTBS5e3EeNJKeAhWSHwQGXLSA5Bj6flSI6
+         yRlKXE0LHcChR0BUw1y6Hyu5pUNQnPqwYhUwIsJJZJwCZRuK0sAc5kHqovtbLfhXk0DC
+         JwoQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748019455; x=1748624255;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Tg6VPPI8kv2xdiChglqqkBYvwi/LLRExk2X0fxJWCgo=;
+        b=ejVFyy/D0QTaZ58e0jVZnmnOMrYttBMeV5BzTLOyZz1OmWjjyj1CyhItuPMU7x5oAl
+         otc5Bcf77mnyITyCgKm1LyrDNAAoTAub3NUaMEEPR2PEFVt4nWjOoayfZbW19nItBxvG
+         KuY8+fbMETLgiZgpxNgjTrfBnIs+ilvCNE8Mx9eacZs2QDWKf7sukyAINJXGuI91zRxB
+         PEVg0B+Vmy6fvunyF6XLHqf8Kn9iPgqsp7EPRar7hKmc9Lo0rnW0Odi+ZtFdqTunDRNa
+         dDCd8Ud23d9apRkQ6H7G/zaEBdnfEWDHrFlJa9dIeXq0JS6C/gO6JmFohHgvNfpeicbV
+         P/lA==
+X-Forwarded-Encrypted: i=1; AJvYcCW+b1+VVYJ5lQvT6DQTkp/Aap7Ox35ehV90TIYwlNC1pJl0BzZgzWeoh86YDkRRcVFHAZJPoscr7BA7Zk0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxyN+OQuRw0/baGbGUZJLaPHnVaQKJKNQZkgnEczUAc5bXT+zYK
+	G+z89xynGl4A3JHj9jJ3WRfYEKV7+pZw9Diqordb8yrY5XVmXrorVVRd6zI1as+qJiggHzdfCO0
+	uSPrlZA==
+X-Google-Smtp-Source: AGHT+IEHfCYOjZsuRb/M8TPESis6ZI0dnDFaK77moTYHdMcRaVyF428KvmMqQTyXTjdclRuzgfc1Xfc0P2U=
+X-Received: from pjb6.prod.google.com ([2002:a17:90b:2f06:b0:2f8:49ad:406c])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:528d:b0:2fa:15ab:4de7
+ with SMTP id 98e67ed59e1d1-30e830ebd92mr52401611a91.12.1748019454866; Fri, 23
+ May 2025 09:57:34 -0700 (PDT)
+Date: Fri, 23 May 2025 09:57:33 -0700
+In-Reply-To: <20250522151031.426788-1-chao.gao@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20250523083655.3876005-3-y-abhilashchandra@ti.com>
-References: <20250523083655.3876005-1-y-abhilashchandra@ti.com> <20250523083655.3876005-3-y-abhilashchandra@ti.com>
-Subject: Re: [PATCH 2/2] media: i2c: ds90ub960: Add support for DS90UB954-Q1
-From: Jai Luthra <jai.luthra@ideasonboard.com>
-Cc: hverkuil@xs4all.nl, sakari.ailus@linux.intel.com, laurent.pinchart@ideasonboard.com, vaishnav.a@ti.com, u-kumar1@ti.com, jai.luthra@linux.dev, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, y-abhilashchandra@ti.com
-To: Yemike Abhilash Chandra <y-abhilashchandra@ti.com>, conor+dt@kernel.org, krzk+dt@kernel.org, mchehab@kernel.org, robh@kernel.org, tomi.valkeinen@ideasonboard.com
-Date: Fri, 23 May 2025 22:23:26 +0530
-Message-ID: <174801920679.2094995.12860064357887094874@freya>
-User-Agent: alot/0.12.dev28+gd2c823fe
+Mime-Version: 1.0
+References: <20250522151031.426788-1-chao.gao@intel.com>
+Message-ID: <aDCo_SczQOUaB2rS@google.com>
+Subject: Re: [PATCH v8 0/6] Introduce CET supervisor state support
+From: Sean Christopherson <seanjc@google.com>
+To: Chao Gao <chao.gao@intel.com>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org, 
+	tglx@linutronix.de, dave.hansen@intel.com, pbonzini@redhat.com, 
+	peterz@infradead.org, rick.p.edgecombe@intel.com, weijiang.yang@intel.com, 
+	john.allen@amd.com, bp@alien8.de, chang.seok.bae@intel.com, xin3.li@intel.com, 
+	Dave Hansen <dave.hansen@linux.intel.com>, Eric Biggers <ebiggers@google.com>, 
+	"H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>, Kees Cook <kees@kernel.org>, 
+	Maxim Levitsky <mlevitsk@redhat.com>, Mitchell Levy <levymitchell0@gmail.com>, 
+	Nikolay Borisov <nik.borisov@suse.com>, Oleg Nesterov <oleg@redhat.com>, 
+	Sohil Mehta <sohil.mehta@intel.com>, Stanislav Spassov <stanspas@amazon.de>, 
+	Vignesh Balasubramanian <vigbalas@amd.com>
+Content-Type: text/plain; charset="us-ascii"
 
-Hi Abhilash,
+On Thu, May 22, 2025, Chao Gao wrote:
+> Chao Gao (4):
+>   x86/fpu/xstate: Differentiate default features for host and guest FPUs
+>   x86/fpu: Initialize guest FPU permissions from guest defaults
+>   x86/fpu: Initialize guest fpstate and FPU pseudo container from guest
+>     defaults
+>   x86/fpu: Remove xfd argument from __fpstate_reset()
+> 
+> Yang Weijiang (2):
+>   x86/fpu/xstate: Introduce "guest-only" supervisor xfeature set
+>   x86/fpu/xstate: Add CET supervisor xfeature support as a guest-only
+>     feature
 
-Thanks for the patch.
+Acked-by: Sean Christopherson <seanjc@google.com>
 
-Quoting Yemike Abhilash Chandra (2025-05-23 14:06:55)
-> DS90UB954-Q1 is an FPDLink-III deserializer that is mostly register
-> compatible with DS90UB960-Q1. The main difference is that it supports
-> half of the RX and TX ports, i.e. 2x FPDLink RX ports and 1x CSI TX
-> port.
->=20
-> Some other registers are marked as reserved in the datasheet as well,
-> notably around CSI-TX frame and line-count monitoring and some other
-> status registers. The datasheet also does not mention anything about
+Side topic, and *probably* unrelated to this series, I tripped the following
+WARN when running it through the KVM tests (though I don't think it has anything
+to do with KVM?).  The WARN is the version of xfd_validate_state() that's guarded
+by CONFIG_X86_DEBUG_FPU=y.
 
-So what happens when userspace calls LOG_STATUS and the driver tries to
-read these monitoring registers? Are these populated in the device but just
-marked as reserved in the datasheet?
+   WARNING: CPU: 232 PID: 15391 at arch/x86/kernel/fpu/xstate.c:1543 xfd_validate_state+0x65/0x70
+   Modules linked in: kvm_intel kvm irqbypass vfat fat dummy bridge stp llc intel_vsec cdc_acm cdc_ncm cdc_eem cdc_ether usbnet mii xhci_pci xhci_hcd ehci_pci ehci_hcd [last unloaded: kvm_intel]
+   CPU: 232 UID: 0 PID: 15391 Comm: DefaultEventMan Tainted: G S                  6.15.0-smp--3542d5d75b5c-cet #678 NONE 
+   Tainted: [S]=CPU_OUT_OF_SPEC
+   Hardware name: Google Izumi-EMR/izumi, BIOS 0.20240807.2-0 10/09/2024
+   RIP: 0010:xfd_validate_state+0x65/0x70
+   Code: 10 4c 3b 60 18 74 23 49 81 fe 80 c4 45 ab 74 15 4d 0b 7e 08 49 f7 d7 49 85 df 75 0e 5b 41 5c 41 5e 41 5f 5d c3 40 84 ed 75 f2 <0f> 0b eb ee 0f 1f 80 00 00 00 00 66 0f 1f 00 0f 1f 44 00 00 48 89
+   RSP: 0018:ff7ada85584a3e08 EFLAGS: 00010246
+   RAX: ff2c5d2908a53940 RBX: 00000000000e00ff RCX: ff2c5d2908a53940
+   RDX: 0000000000000001 RSI: 00000000000e00ff RDI: ff2c5d2908a521c0
+   RBP: 0000000000000001 R08: 0000000000000001 R09: 0000000000000000
+   R10: ffffffffaa56fa4d R11: 0000000000000000 R12: 0000000000040000
+   R13: ff2c5d2908a521c0 R14: ffffffffab45c480 R15: 0000000000000000
+   FS:  00007f21084d6700(0000) GS:ff2c5da752b41000(0000) knlGS:0000000000000000
+   CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+   CR2: 0000000000000000 CR3: 00000001ca832006 CR4: 0000000000f73ef0
+   DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+   DR3: 0000000000000000 DR6: 00000000fffe07f0 DR7: 0000000000000400
+   PKRU: 00000000
+   Call Trace:
+    <TASK>
+    fpu__clear_user_states+0x9c/0x100
+    arch_do_signal_or_restart+0x142/0x210
+    exit_to_user_mode_loop+0x55/0x100
+    do_syscall_64+0x205/0x2c0
+    entry_SYSCALL_64_after_hwframe+0x4b/0x53
+   RIP: 0033:0x55ad185f2ee0
+   Code: 8c fc 48 8d 0d 6e d5 8e fc 4c 8d 05 64 cb 78 fc bf 03 00 00 00 ba 25 03 00 00 49 89 c1 31 c0 e8 e6 2e 08 00 cc cc cc cc cc cc <55> 48 89 e5 41 57 41 56 41 55 41 54 53 48 83 ec 28 49 89 d7 49 89
+   RSP: 002b:00007f21084d3e38 EFLAGS: 00000246 ORIG_RAX: 00000000000001b9
+   RAX: 0000000000000000 RBX: 0000000000000000 RCX: 000055ad18136f73
+   RDX: 00007f21084d3e40 RSI: 00007f21084d3f70 RDI: 000000000000001b
+   RBP: 00007f21084d4f90 R08: 0000000000000000 R09: 0000000000000000
+   R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000001
+   R13: 000011f03fbc2f00 R14: ffffffffffffffff R15: 0000000000000000
+    </TASK>
+   irq event stamp: 368
+   hardirqs last  enabled at (367): [<ffffffffaaf5f1b8>] _raw_write_unlock_irq+0x28/0x40
+   hardirqs last disabled at (368): [<ffffffffaaf5487d>] __schedule+0x1bd/0xea0
+   softirqs last  enabled at (0): [<ffffffffaa2aa1ca>] copy_process+0x38a/0x1350
+   softirqs last disabled at (0): [<0000000000000000>] 0x0
+   ---[ end trace 0000000000000000 ]---
 
-Whatever is the case, please make sure the driver doesn't crash, and update
-the commit message with the reality if the datasheet is wrong.
+But I've hit the WARN once before, so whatever is going on is pre-existing.  I
+haven't done any experiments to see if the WARN fires more frequently with this
+series.  I mentioned it here purely out of convenience.
 
-> setting strobe position, and fails to lock the RX ports if we forcefully
-> set it, so disable it through the hw_data.
->=20
-> Link: https://www.ti.com/lit/gpn/ds90ub954-q1
-> Signed-off-by: Yemike Abhilash Chandra <y-abhilashchandra@ti.com>
-> ---
->  drivers/media/i2c/Kconfig     |  2 +-
->  drivers/media/i2c/ds90ub960.c | 46 +++++++++++++++++++++++++++++++++++
->  2 files changed, 47 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/media/i2c/Kconfig b/drivers/media/i2c/Kconfig
-> index e68202954a8f..6e265e1cec20 100644
-> --- a/drivers/media/i2c/Kconfig
-> +++ b/drivers/media/i2c/Kconfig
-> @@ -1662,7 +1662,7 @@ config VIDEO_DS90UB960
->         select V4L2_FWNODE
->         select VIDEO_V4L2_SUBDEV_API
->         help
-> -         Device driver for the Texas Instruments DS90UB960
-> +         Device driver for the Texas Instruments DS90UB954/DS90UB960
->           FPD-Link III Deserializer and DS90UB9702 FPD-Link IV Deserializ=
-er.
-
-nit:
-           Device driver for the Texas Instruments DS90UB954, DS90UB960
-           FPD-Link III Deserializers and DS90UB9702 FPD-Link IV Deserializ=
-er.
-
-> =20
->  config VIDEO_MAX96714
-> diff --git a/drivers/media/i2c/ds90ub960.c b/drivers/media/i2c/ds90ub960.c
-> index ed2cf9d247d1..38e4f006d098 100644
-> --- a/drivers/media/i2c/ds90ub960.c
-> +++ b/drivers/media/i2c/ds90ub960.c
-> @@ -460,6 +460,7 @@ struct ub960_hw_data {
->         u8 num_txports;
->         bool is_ub9702;
->         bool is_fpdlink4;
-> +       bool is_ub954;
->  };
-> =20
->  enum ub960_rxport_mode {
-> @@ -982,6 +983,10 @@ static int ub960_txport_select(struct ub960_data *pr=
-iv, u8 nport)
-> =20
->         lockdep_assert_held(&priv->reg_lock);
-> =20
-> +       /* TX port registers are shared for UB954*/
-> +       if (priv->hw_data->is_ub954)
-> +               return 0;
-> +
-
-nit: This could be moved above the assertion
-
->         if (priv->reg_current.txport =3D=3D nport)
->                 return 0;
-> =20
-> @@ -1415,6 +1420,13 @@ static int ub960_parse_dt_txport(struct ub960_data=
- *priv,
->                 goto err_free_vep;
->         }
-> =20
-> +       /* UB954 does not support 1.2 Gbps */
-> +       if (priv->tx_data_rate =3D=3D MHZ(1200) && priv->hw_data->is_ub95=
-4) {
-> +               dev_err(dev, "tx%u: invalid 'link-frequencies' value\n", =
-nport);
-> +               ret =3D -EINVAL;
-> +               goto err_free_vep;
-> +       }
-> +
-
-The error handling is exactly the same as the previous if {} block that
-checks the allowed data rates for UB960. IMO cleaner to move this condition
-in that block.
-
-Maybe even a separate table for allowed data-rates for each chip, but that
-is probably overkill.
-
->         v4l2_fwnode_endpoint_free(&vep);
-> =20
->         priv->txports[nport] =3D txport;
-> @@ -1572,6 +1584,10 @@ static int ub960_rxport_set_strobe_pos(struct ub96=
-0_data *priv,
->         u8 clk_delay, data_delay;
->         int ret =3D 0;
-> =20
-> +       /* FIXME: After writing to this area the UB954 chip no longer res=
-ponds */
-> +       if (priv->hw_data->is_ub954)
-> +               return 0;
-> +
-
-It would be good to understand if this is a hardware limitation or not.
-Tomi, do you have any idea?
-
->         clk_delay =3D UB960_IR_RX_ANA_STROBE_SET_CLK_NO_EXTRA_DELAY;
->         data_delay =3D UB960_IR_RX_ANA_STROBE_SET_DATA_NO_EXTRA_DELAY;
-> =20
-> @@ -5021,6 +5037,27 @@ static int ub960_enable_core_hw(struct ub960_data =
-*priv)
->         if (priv->hw_data->is_ub9702)
->                 ret =3D ub960_read(priv, UB9702_SR_REFCLK_FREQ, &refclk_f=
-req,
->                                  NULL);
-> +       else if (priv->hw_data->is_ub954) {
-> +               /* From DS90UB954-Q1 datasheet:
-> +                * "REFCLK_FREQ measurement is not synchronized. Value in=
- this
-> +                * register should read twice and only considered valid if
-
-                   * register should be read twice and only considered vali=
-d if
-
-> +                * REFCLK_FREQ is unchanged between reads."
-> +                */
-> +               unsigned long timeout =3D jiffies + msecs_to_jiffies(100);
-> +
-> +               do {
-> +                       u8 refclk_new;
-> +
-> +                       ret =3D ub960_read(priv, UB960_XR_REFCLK_FREQ, &r=
-efclk_new,
-> +                                        NULL);
-> +                       if (ret)
-> +                               goto err_pd_gpio;
-> +
-> +                       if (refclk_new =3D=3D refclk_freq)
-> +                               break;
-> +                       refclk_freq =3D refclk_new;
-> +               } while (time_before(jiffies, timeout));
-> +       }
-
-Hmm.. in your testing did you find this actually requiring more than one
-read?
-
-I'm surprised because this is missing from UB960 which is an older device.
-
->         else
->                 ret =3D ub960_read(priv, UB960_XR_REFCLK_FREQ, &refclk_fr=
-eq,
->                                  NULL);
-> @@ -5177,6 +5214,13 @@ static void ub960_remove(struct i2c_client *client)
->         mutex_destroy(&priv->reg_lock);
->  }
-> =20
-> +static const struct ub960_hw_data ds90ub954_hw =3D {
-> +       .model =3D "ub954",
-> +       .num_rxports =3D 2,
-> +       .num_txports =3D 1,
-> +       .is_ub954 =3D true,
-> +};
-> +
->  static const struct ub960_hw_data ds90ub960_hw =3D {
->         .model =3D "ub960",
->         .num_rxports =3D 4,
-> @@ -5192,6 +5236,7 @@ static const struct ub960_hw_data ds90ub9702_hw =3D=
- {
->  };
-> =20
->  static const struct i2c_device_id ub960_id[] =3D {
-> +       { "ds90ub954-q1", (kernel_ulong_t)&ds90ub954_hw },
->         { "ds90ub960-q1", (kernel_ulong_t)&ds90ub960_hw },
->         { "ds90ub9702-q1", (kernel_ulong_t)&ds90ub9702_hw },
->         {}
-> @@ -5199,6 +5244,7 @@ static const struct i2c_device_id ub960_id[] =3D {
->  MODULE_DEVICE_TABLE(i2c, ub960_id);
-> =20
->  static const struct of_device_id ub960_dt_ids[] =3D {
-> +       { .compatible =3D "ti,ds90ub954-q1", .data =3D &ds90ub954_hw },
->         { .compatible =3D "ti,ds90ub960-q1", .data =3D &ds90ub960_hw },
->         { .compatible =3D "ti,ds90ub9702-q1", .data =3D &ds90ub9702_hw },
->         {}
-> --=20
-> 2.34.1
->=20
->
-
-Thanks,
-Jai
+  ------------[ cut here ]------------
+  WARNING: CPU: 77 PID: 14821 at arch/x86/kernel/fpu/xstate.c:1466 xfd_validate_state+0x4a/0x50
+  Modules linked in: kvm_intel kvm irqbypass vfat fat dummy bridge stp llc intel_vsec cdc_acm cdc_ncm cdc_eem cdc_ether usbnet mii xhci_pci xhci_hcd ehci_pci ehci_hcd sr_mod cdrom loop [last unloaded: kvm]
+  CPU: 77 UID: 0 PID: 14821 Comm: futex-default-S Tainted: G S      W           6.15.0-smp--a2104d5ba341-sink #605 NONE 
+  Tainted: [S]=CPU_OUT_OF_SPEC, [W]=WARN
+  Hardware name: Google Izumi-EMR/izumi, BIOS 0.20240807.2-0 10/09/2024
+  RIP: 0010:xfd_validate_state+0x4a/0x50
+  Code: 50 0a a9 4d 8b 80 90 17 00 00 49 3b 48 18 74 1a 48 81 ff 80 a4 65 a7 74 0d 48 0b 47 08 48 f7 d0 48 85 f0 75 05 c3 84 d2 75 fb <0f> 0b c3 0f 1f 00 66 0f 1f 00 0f 1f 44 00 00 48 89 f8 48 8b 7f 10
+  RSP: 0018:ff1ba89ef124fe58 EFLAGS: 00010246
+  RAX: 0000000000000000 RBX: ffffffffa644871e RCX: 0000000000040000
+  RDX: 0000000000000001 RSI: 00000000000600ff RDI: ffffffffa765a480
+  RBP: 0000000000000000 R08: ff137abd4db65bc0 R09: 0000000000000000
+  R10: ffffffffa6775f8d R11: 0000000000000000 R12: 0000000000000000
+  R13: 0000000000000000 R14: ff137abd4db65b80 R15: 0000000000000000
+  FS:  00007fea8bce7700(0000) GS:ff137afc151b3000(0000) knlGS:0000000000000000
+  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+  CR2: 0000000000000000 CR3: 00000001a87c0004 CR4: 0000000000f73ef0
+  DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+  DR3: 0000000000000000 DR6: 00000000fffe07f0 DR7: 0000000000000400
+  PKRU: 00000000
+  Call Trace:
+   <TASK>
+   fpu__clear_user_states+0x92/0xf0
+   arch_do_signal_or_restart+0x134/0x200
+   syscall_exit_to_user_mode+0x8a/0x110
+   do_syscall_64+0x8b/0x160
+   entry_SYSCALL_64_after_hwframe+0x4b/0x53
+  RIP: 0033:0x563afb5588c0
+  Code: f0 e9 df fc ff ff 48 8b 5d 88 4d 89 f0 e9 b5 fe ff ff cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc <55> 48 89 e5 41 57 41 56 41 55 41 54 53 50 49 89 d7 e8 0a 6f f2 01
+  RSP: 002b:00007fea8bce4e78 EFLAGS: 00000202 ORIG_RAX: 00000000000000e8
+  RAX: 0000000000000000 RBX: 000011fcd50a6dd0 RCX: 0000563af84d6b30
+  RDX: 00007fea8bce4e80 RSI: 00007fea8bce4fb0 RDI: 000000000000001e
+  RBP: 00007fea8bce5c30 R08: 0000000000000000 R09: 00007fea8bce6ca0
+  R10: 00000000000007d0 R11: 0000000000000202 R12: 0000000063239328
+  R13: 00000000680b9c83 R14: 00000000000007d0 R15: 000011fcd5c46150
+   </TASK>
+  irq event stamp: 496018
+  hardirqs last  enabled at (496017): [<ffffffffa7158965>] _raw_spin_unlock_irqrestore+0x35/0x50
+  hardirqs last disabled at (496018): [<ffffffffa714e6fd>] __schedule+0x1bd/0xe90
+  softirqs last  enabled at (495074): [<ffffffffa64c02ec>] __irq_exit_rcu+0x6c/0x130
+  softirqs last disabled at (495065): [<ffffffffa64c02ec>] __irq_exit_rcu+0x6c/0x130
+  ---[ end trace 0000000000000000 ]---
