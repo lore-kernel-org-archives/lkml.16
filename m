@@ -1,854 +1,334 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7F74F2F3E;
-	Fri, 23 May 2025 10:19:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2A2622579B
+	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 10:20:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747995601; cv=none; b=MiryxMqRBBpTu2sI0ktlV1l6WQPzhrngtDbGkb0KKHbw/klhurF770zsTc8hCz4Ql7XaqqyTD3t6I/r0f0eIOwJ26GAgpuA72TtZGq5XUvFJg/nvXwjnccZXS8wyL5rCANgQHbDl9tlciCxmr4bGjdH+g6QcxC+nbAiwXdx2zdk=
+	t=1747995649; cv=none; b=ohoAvay7Uupaig0xwGY2/tdwFOR++EFsB+KeDJysd3jQiMBPKOQGtcbGq2Mp4GmA3R6VVku+V459gbF72q1BVlw4JdSHjlj9Nlp4asg8PwR4zowXI+usX6Tw9BhQp1IDDc54mxc8MT1AWZf41beBynz9bvod1iTdwgbUgDbaNOI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747995601; c=relaxed/simple;
-	bh=MM72kkgw9fnrayr60tDWASm3L4vcvGMLla9tDX7YkUg=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Hs2u1g6EagzCLO1BnlW1PYU8Ih8lnMLsADgphqjJnifl9ccvq2byBzGn0fxQ2hpaFKHlR6nmMiP5cgnv/fnCvKCF0wnYK31hpC0mPVWZtQLaHm6MR6qN7k9aw26X8Josrbv9IB89ujoww1diOaz+doRU5pL3urztp3umonr+H2U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.2.10.34])
-	by gateway (Coremail) with SMTP id _____8BxXWuCSzBognb4AA--.8028S3;
-	Fri, 23 May 2025 18:18:42 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.2.10.34])
-	by front1 (Coremail) with SMTP id qMiowMCx7xt9SzBoX+zqAA--.11756S4;
-	Fri, 23 May 2025 18:18:40 +0800 (CST)
-From: Tianyang Zhang <zhangtianyang@loongson.cn>
-To: chenhuacai@kernel.org,
-	kernel@xen0n.name,
-	corbet@lwn.net,
-	alexs@kernel.org,
-	si.yanteng@linux.dev,
-	tglx@linutronix.de,
-	jiaxun.yang@flygoat.com,
-	peterz@infradead.org,
-	wangliupu@loongson.cn,
-	lvjianmin@loongson.cn,
-	maobibo@loongson.cn,
-	siyanteng@cqsoftware.com.cn,
-	gaosong@loongson.cn,
-	yangtiezhu@loongson.cn
-Cc: loongarch@lists.linux.dev,
-	linux-doc@vger.kernel.org,
+	s=arc-20240116; t=1747995649; c=relaxed/simple;
+	bh=Zvy0yjeXuo37Rz8IuRQUNYpVX0oiQaA/jdiqrd6rLCU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Irs5UYbJ4s9/3v+gH5rr9Hi4NQsxOz4FhD34eK03MPIbPtMvNRsxtA7hbZemrd4wz+nVmLrnj1PfBzjoN6PCi1LpyM56N4w4iBJKyBV7XpuHpHzfeg5paCwRZQnaMIyUWhG8wsUim/AftTp3EHsHaezPWRVTwCSY9DMI+xjo974=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=eBd8ii3c; arc=none smtp.client-ip=209.85.210.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="eBd8ii3c"
+Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-73972a54919so8182901b3a.3
+        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 03:20:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1747995646; x=1748600446; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=PcccdexedjdJTtFmXwsVUsVKEhg4QFkUCYHYRVB4dvk=;
+        b=eBd8ii3c4s9ywyZKB/YzNGKTlbbx5HJIPyNcr7RS0/ncCakNivk++z32kfRL4W044A
+         +2rmjH0g5g8Jodrpq0VG5XlH+HUZnWdLVqKanrGKkrWFeUSxBkU9h8+LHxgyGMWOKVKJ
+         Hxoc8BcDOGcF5VtM/x6KIFE7ORihThHavI/BkXAsOFcw3VLTacaxlcwzQTuDNEq/zbOz
+         AHnFVl6NqWdQvjzbDjwzF1F7553TiMKeQnb+PWStWMrBrSTX1IzUAUHCLpRl2ui4oUQZ
+         3Zs7WUdVZsx0RxREbB0Y+7jtP3yvZxvB5tIF0phEzEGiRliz8VygIoEdhnsBX9yhrGc4
+         bSXw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747995646; x=1748600446;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=PcccdexedjdJTtFmXwsVUsVKEhg4QFkUCYHYRVB4dvk=;
+        b=UJTtSnA93Jl7ihIxeqASnHvqCpTdXcLPTZw72yrFuohUUQddDaoFijcqkpKPpPE3KR
+         mvxjXCsFEYpHC+uPxrymzeCGHyKfbn4m3RUZqhJtwrs8TZeKVLHFry1IUwDu4P2B+C8X
+         X6xl/JINO4ZZktsYQY0Q5xxD4hYz/XgYmNZXU4GyE88lS/Gs+ATgQQB/hZX9lT4nMDwe
+         +pCatfnSBpnJmMm9w/a2PrBZZVLyVQEEI4a1tropwRVTh5W6u/bIo7DeG/1Dm1oGmf1T
+         mCHesdujGNrOTFnF7l+nKvosWO9WI+UbUq7x5TZfMjjQYOeqsndhbmCUMGaE0a7JITVB
+         c1Bg==
+X-Forwarded-Encrypted: i=1; AJvYcCUtadq4QnAKlCbf191PvdriQLVCsG04uNAOJjCkuIawYwMxKdsZwJZyZ9OkvbR+FeZexeVg0GB9gnhrddI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yze50oTLjHmYsYHBxNN5Qvs1EABLrHeMCcmV5bZcYJpQixJfj6J
+	C2LLtLwB8cAujqJfeRrCCdA1CjaZ0k4cRoc0N2aqoz6cmI24DJZ21WxYcReMJioRlnE=
+X-Gm-Gg: ASbGncvGPd4paqz3QL+Z6AAIU6EfWEByb1/dghvqhczdUmjGQFlyVZQZlniO0OjhMe0
+	d2aWjnw47NTOkigYox8x3/8YumenV+zbAiwhPe8a5rhKB29ZWFuRL4TRD/1q4s5wdIa3hO6TVQH
+	RrE1s5/oqFRN9twm8snRLWSHK5Z0lg+/rgjgXSmBa68pKpBiKeR0V6AFdm+lDtP3dbyXWmT8nwD
+	bnOAJK1eJ0xrsU1EyALySyhWF6SbaL/EEBBVcXrl8R7NKc2jldL32858BJ/M2Tm4RjuB/hCFx3D
+	jnQWlxb2uVzdVI/DTbCUDIWAVocG4e1vYvHF1Sv5wStGK8WLE+k0
+X-Google-Smtp-Source: AGHT+IGW5MQq2RPWnXafJRg+YIczQ4DhpPwC8Bknbai+r2sLMAlywyZ0F0gvby/uq/dGmtRTBiBSXA==
+X-Received: by 2002:a05:6a00:4fd6:b0:736:41ec:aaad with SMTP id d2e1a72fcca58-745ed87cdc4mr3458465b3a.14.1747995646026;
+        Fri, 23 May 2025 03:20:46 -0700 (PDT)
+Received: from carbon-x1.. ([2a01:e0a:e17:9700:16d2:7456:6634:9626])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-742a9829ce8sm12466688b3a.118.2025.05.23.03.20.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 23 May 2025 03:20:45 -0700 (PDT)
+From: =?UTF-8?q?Cl=C3=A9ment=20L=C3=A9ger?= <cleger@rivosinc.com>
+To: Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Anup Patel <anup@brainfault.org>,
+	Atish Patra <atishp@atishpatra.org>,
+	Shuah Khan <shuah@kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	linux-riscv@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
-	Tianyang Zhang <zhangtianyang@loongson.cn>
-Subject: [PATCH v3 2/2] irq/irq-loongarch-ir:Add Redirect irqchip support
-Date: Fri, 23 May 2025 18:18:33 +0800
-Message-Id: <20250523101833.17940-3-zhangtianyang@loongson.cn>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20250523101833.17940-1-zhangtianyang@loongson.cn>
-References: <20250523101833.17940-1-zhangtianyang@loongson.cn>
+	linux-doc@vger.kernel.org,
+	kvm@vger.kernel.org,
+	kvm-riscv@lists.infradead.org,
+	linux-kselftest@vger.kernel.org
+Cc: =?UTF-8?q?Cl=C3=A9ment=20L=C3=A9ger?= <cleger@rivosinc.com>,
+	Samuel Holland <samuel.holland@sifive.com>,
+	Andrew Jones <ajones@ventanamicro.com>,
+	Deepak Gupta <debug@rivosinc.com>,
+	Charlie Jenkins <charlie@rivosinc.com>
+Subject: [PATCH v8 00/14] riscv: add SBI FWFT misaligned exception delegation support
+Date: Fri, 23 May 2025 12:19:17 +0200
+Message-ID: <20250523101932.1594077-1-cleger@rivosinc.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMCx7xt9SzBoX+zqAA--.11756S4
-X-CM-SenderInfo: x2kd0wxwld05hdqjqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj9fXoWfWr17Zr13trWUXFy5WFy5ZFc_yoW8KF1rGo
-	WfJFs3G34rWr18CFWrKa17tFyxZrWrGF4rAw1fuFZ7Z3ZFvr45KrW7G3yavFy2gF10qFsx
-	Aay0qwn3JFWxtrn3l-sFpf9Il3svdjkaLaAFLSUrUUUU5b8apTn2vfkv8UJUUUU8wcxFpf
-	9Il3svdxBIdaVrn0xqx4xG64xvF2IEw4CE5I8CrVC2j2Jv73VFW2AGmfu7bjvjm3AaLaJ3
-	UjIYCTnIWjp_UUUYX7kC6x804xWl14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI
-	8IcIk0rVWrJVCq3wAFIxvE14AKwVWUAVWUZwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xG
-	Y2AK021l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14
-	v26F4j6r4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AK
-	xVW0oVCq3wAaw2AFwI0_JF0_Jw1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0c
-	Ia020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jw0_
-	WrylYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwI
-	xGrwCY1x0262kKe7AKxVWUtVW8ZwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWU
-	JVW8JwCFI7km07C267AKxVWUAVWUtwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4
-	vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr41lIxAIcVC0I7IY
-	x2IY67AKxVW5JVW7JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26c
-	xKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAF
-	wI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jYE_NUUUUU=
 
-The main function of the Redirected interrupt controller is to manage the
-redirected-interrupt table, which consists of many redirected entries.
-When MSI interrupts are requested, the driver creates a corresponding
-redirected entry that describes the target CPU/vector number and the
-operating mode of the interrupt. The redirected interrupt module has an
-independent cache, and during the interrupt routing process, it will
-prioritize the redirected entries that hit the cache. The driver
-invalidates certain entry caches via a command queue.
+The SBI Firmware Feature extension allows the S-mode to request some
+specific features (either hardware or software) to be enabled. This
+series uses this extension to request misaligned access exception
+delegation to S-mode in order to let the kernel handle it. It also adds
+support for the KVM FWFT SBI extension based on the misaligned access
+handling infrastructure.
 
-Co-developed-by: Liupu Wang <wangliupu@loongson.cn>
-Signed-off-by: Liupu Wang <wangliupu@loongson.cn>
-Signed-off-by: Tianyang Zhang <zhangtianyang@loongson.cn>
+FWFT SBI extension is part of the SBI V3.0 specifications [1]. It can be
+tested using the qemu provided at [2] which contains the series from
+[3]. Upstream kvm-unit-tests can be used inside kvm to tests the correct
+delegation of misaligned exceptions. Upstream OpenSBI can be used.
+
+Note: Since SBI V3.0 is not yet ratified, FWFT extension API is split
+between interface only and implementation, allowing to pick only the
+interface which do not have hard dependencies on SBI.
+
+The tests can be run using the kselftest from series [4].
+
+$ qemu-system-riscv64 \
+	-cpu rv64,trap-misaligned-access=true,v=true \
+	-M virt \
+	-m 1024M \
+	-bios fw_dynamic.bin \
+	-kernel Image
+ ...
+
+ # ./misaligned
+ TAP version 13
+ 1..23
+ # Starting 23 tests from 1 test cases.
+ #  RUN           global.gp_load_lh ...
+ #            OK  global.gp_load_lh
+ ok 1 global.gp_load_lh
+ #  RUN           global.gp_load_lhu ...
+ #            OK  global.gp_load_lhu
+ ok 2 global.gp_load_lhu
+ #  RUN           global.gp_load_lw ...
+ #            OK  global.gp_load_lw
+ ok 3 global.gp_load_lw
+ #  RUN           global.gp_load_lwu ...
+ #            OK  global.gp_load_lwu
+ ok 4 global.gp_load_lwu
+ #  RUN           global.gp_load_ld ...
+ #            OK  global.gp_load_ld
+ ok 5 global.gp_load_ld
+ #  RUN           global.gp_load_c_lw ...
+ #            OK  global.gp_load_c_lw
+ ok 6 global.gp_load_c_lw
+ #  RUN           global.gp_load_c_ld ...
+ #            OK  global.gp_load_c_ld
+ ok 7 global.gp_load_c_ld
+ #  RUN           global.gp_load_c_ldsp ...
+ #            OK  global.gp_load_c_ldsp
+ ok 8 global.gp_load_c_ldsp
+ #  RUN           global.gp_load_sh ...
+ #            OK  global.gp_load_sh
+ ok 9 global.gp_load_sh
+ #  RUN           global.gp_load_sw ...
+ #            OK  global.gp_load_sw
+ ok 10 global.gp_load_sw
+ #  RUN           global.gp_load_sd ...
+ #            OK  global.gp_load_sd
+ ok 11 global.gp_load_sd
+ #  RUN           global.gp_load_c_sw ...
+ #            OK  global.gp_load_c_sw
+ ok 12 global.gp_load_c_sw
+ #  RUN           global.gp_load_c_sd ...
+ #            OK  global.gp_load_c_sd
+ ok 13 global.gp_load_c_sd
+ #  RUN           global.gp_load_c_sdsp ...
+ #            OK  global.gp_load_c_sdsp
+ ok 14 global.gp_load_c_sdsp
+ #  RUN           global.fpu_load_flw ...
+ #            OK  global.fpu_load_flw
+ ok 15 global.fpu_load_flw
+ #  RUN           global.fpu_load_fld ...
+ #            OK  global.fpu_load_fld
+ ok 16 global.fpu_load_fld
+ #  RUN           global.fpu_load_c_fld ...
+ #            OK  global.fpu_load_c_fld
+ ok 17 global.fpu_load_c_fld
+ #  RUN           global.fpu_load_c_fldsp ...
+ #            OK  global.fpu_load_c_fldsp
+ ok 18 global.fpu_load_c_fldsp
+ #  RUN           global.fpu_store_fsw ...
+ #            OK  global.fpu_store_fsw
+ ok 19 global.fpu_store_fsw
+ #  RUN           global.fpu_store_fsd ...
+ #            OK  global.fpu_store_fsd
+ ok 20 global.fpu_store_fsd
+ #  RUN           global.fpu_store_c_fsd ...
+ #            OK  global.fpu_store_c_fsd
+ ok 21 global.fpu_store_c_fsd
+ #  RUN           global.fpu_store_c_fsdsp ...
+ #            OK  global.fpu_store_c_fsdsp
+ ok 22 global.fpu_store_c_fsdsp
+ #  RUN           global.gen_sigbus ...
+ [12797.988647] misaligned[618]: unhandled signal 7 code 0x1 at 0x0000000000014dc0 in misaligned[4dc0,10000+76000]
+ [12797.988990] CPU: 0 UID: 0 PID: 618 Comm: misaligned Not tainted 6.13.0-rc6-00008-g4ec4468967c9-dirty #51
+ [12797.989169] Hardware name: riscv-virtio,qemu (DT)
+ [12797.989264] epc : 0000000000014dc0 ra : 0000000000014d00 sp : 00007fffe165d100
+ [12797.989407]  gp : 000000000008f6e8 tp : 0000000000095760 t0 : 0000000000000008
+ [12797.989544]  t1 : 00000000000965d8 t2 : 000000000008e830 s0 : 00007fffe165d160
+ [12797.989692]  s1 : 000000000000001a a0 : 0000000000000000 a1 : 0000000000000002
+ [12797.989831]  a2 : 0000000000000000 a3 : 0000000000000000 a4 : ffffffffdeadbeef
+ [12797.989964]  a5 : 000000000008ef61 a6 : 626769735f6e0000 a7 : fffffffffffff000
+ [12797.990094]  s2 : 0000000000000001 s3 : 00007fffe165d838 s4 : 00007fffe165d848
+ [12797.990238]  s5 : 000000000000001a s6 : 0000000000010442 s7 : 0000000000010200
+ [12797.990391]  s8 : 000000000000003a s9 : 0000000000094508 s10: 0000000000000000
+ [12797.990526]  s11: 0000555567460668 t3 : 00007fffe165d070 t4 : 00000000000965d0
+ [12797.990656]  t5 : fefefefefefefeff t6 : 0000000000000073
+ [12797.990756] status: 0000000200004020 badaddr: 000000000008ef61 cause: 0000000000000006
+ [12797.990911] Code: 8793 8791 3423 fcf4 3783 fc84 c737 dead 0713 eef7 (c398) 0001
+ #            OK  global.gen_sigbus
+ ok 23 global.gen_sigbus
+ # PASSED: 23 / 23 tests passed.
+ # Totals: pass:23 fail:0 xfail:0 xpass:0 skip:0 error:0
+
+With kvm-tools:
+
+ # lkvm run -k sbi.flat -m 128
+  Info: # lkvm run -k sbi.flat -m 128 -c 1 --name guest-97
+  Info: Removed ghost socket file "/root/.lkvm//guest-97.sock".
+
+ ##########################################################################
+ #    kvm-unit-tests
+ ##########################################################################
+
+ ... [test messages elided]
+ PASS: sbi: fwft: FWFT extension probing no error
+ PASS: sbi: fwft: get/set reserved feature 0x6 error == SBI_ERR_DENIED
+ PASS: sbi: fwft: get/set reserved feature 0x3fffffff error == SBI_ERR_DENIED
+ PASS: sbi: fwft: get/set reserved feature 0x80000000 error == SBI_ERR_DENIED
+ PASS: sbi: fwft: get/set reserved feature 0xbfffffff error == SBI_ERR_DENIED
+ PASS: sbi: fwft: misaligned_deleg: Get misaligned deleg feature no error
+ PASS: sbi: fwft: misaligned_deleg: Set misaligned deleg feature invalid value error
+ PASS: sbi: fwft: misaligned_deleg: Set misaligned deleg feature invalid value error
+ PASS: sbi: fwft: misaligned_deleg: Set misaligned deleg feature value no error
+ PASS: sbi: fwft: misaligned_deleg: Set misaligned deleg feature value 0
+ PASS: sbi: fwft: misaligned_deleg: Set misaligned deleg feature value no error
+ PASS: sbi: fwft: misaligned_deleg: Set misaligned deleg feature value 1
+ PASS: sbi: fwft: misaligned_deleg: Verify misaligned load exception trap in supervisor
+ SUMMARY: 50 tests, 2 unexpected failures, 12 skipped
+
+This series is available at [5].
+
+Link: https://github.com/riscv-non-isa/riscv-sbi-doc/releases/download/vv3.0-rc2/riscv-sbi.pdf [1]
+Link: https://github.com/rivosinc/qemu/tree/dev/cleger/misaligned [2]
+Link: https://lore.kernel.org/all/20241211211933.198792-3-fkonrad@amd.com/T/ [3]
+Link: https://lore.kernel.org/linux-riscv/20250414123543.1615478-1-cleger@rivosinc.com [4]
+Link: https://github.com/rivosinc/linux/tree/dev/cleger/fwft [5]
 ---
- arch/loongarch/include/asm/cpu-features.h |   1 +
- arch/loongarch/include/asm/cpu.h          |   2 +
- arch/loongarch/include/asm/loongarch.h    |   6 +
- arch/loongarch/kernel/cpu-probe.c         |   2 +
- drivers/irqchip/Makefile                  |   2 +-
- drivers/irqchip/irq-loongarch-avec.c      |  20 +-
- drivers/irqchip/irq-loongarch-ir.c        | 562 ++++++++++++++++++++++
- drivers/irqchip/irq-loongson.h            |  12 +
- include/linux/cpuhotplug.h                |   1 +
- 9 files changed, 594 insertions(+), 14 deletions(-)
- create mode 100644 drivers/irqchip/irq-loongarch-ir.c
 
-diff --git a/arch/loongarch/include/asm/cpu-features.h b/arch/loongarch/include/asm/cpu-features.h
-index fc83bb32f9f0..03f7e93e81e0 100644
---- a/arch/loongarch/include/asm/cpu-features.h
-+++ b/arch/loongarch/include/asm/cpu-features.h
-@@ -68,5 +68,6 @@
- #define cpu_has_ptw		cpu_opt(LOONGARCH_CPU_PTW)
- #define cpu_has_lspw		cpu_opt(LOONGARCH_CPU_LSPW)
- #define cpu_has_avecint		cpu_opt(LOONGARCH_CPU_AVECINT)
-+#define cpu_has_redirectint	cpu_opt(LOONGARCH_CPU_REDIRECTINT)
- 
- #endif /* __ASM_CPU_FEATURES_H */
-diff --git a/arch/loongarch/include/asm/cpu.h b/arch/loongarch/include/asm/cpu.h
-index 98cf4d7b4b0a..33cd96e569d8 100644
---- a/arch/loongarch/include/asm/cpu.h
-+++ b/arch/loongarch/include/asm/cpu.h
-@@ -102,6 +102,7 @@ enum cpu_type_enum {
- #define CPU_FEATURE_PTW			27	/* CPU has hardware page table walker */
- #define CPU_FEATURE_LSPW		28	/* CPU has LSPW (lddir/ldpte instructions) */
- #define CPU_FEATURE_AVECINT		29	/* CPU has AVEC interrupt */
-+#define CPU_FEATURE_REDIRECTINT		30      /* CPU has interrupt remmap */
- 
- #define LOONGARCH_CPU_CPUCFG		BIT_ULL(CPU_FEATURE_CPUCFG)
- #define LOONGARCH_CPU_LAM		BIT_ULL(CPU_FEATURE_LAM)
-@@ -133,5 +134,6 @@ enum cpu_type_enum {
- #define LOONGARCH_CPU_PTW		BIT_ULL(CPU_FEATURE_PTW)
- #define LOONGARCH_CPU_LSPW		BIT_ULL(CPU_FEATURE_LSPW)
- #define LOONGARCH_CPU_AVECINT		BIT_ULL(CPU_FEATURE_AVECINT)
-+#define LOONGARCH_CPU_REDIRECTINT	BIT_ULL(CPU_FEATURE_REDIRECTINT)
- 
- #endif /* _ASM_CPU_H */
-diff --git a/arch/loongarch/include/asm/loongarch.h b/arch/loongarch/include/asm/loongarch.h
-index 52651aa0e583..95e06cb6831e 100644
---- a/arch/loongarch/include/asm/loongarch.h
-+++ b/arch/loongarch/include/asm/loongarch.h
-@@ -1130,6 +1130,7 @@
- #define  IOCSRF_FLATMODE		BIT_ULL(10)
- #define  IOCSRF_VM			BIT_ULL(11)
- #define  IOCSRF_AVEC			BIT_ULL(15)
-+#define  IOCSRF_REDIRECTINT		BIT_ULL(16)
- 
- #define LOONGARCH_IOCSR_VENDOR		0x10
- 
-@@ -1189,6 +1190,11 @@
- 
- #define LOONGARCH_IOCSR_EXTIOI_NODEMAP_BASE	0x14a0
- #define LOONGARCH_IOCSR_EXTIOI_IPMAP_BASE	0x14c0
-+#define LOONGARCH_IOCSR_REDIRECT_CFG		0x15e0
-+#define LOONGARCH_IOCSR_REDIRECT_TBR		0x15e8  /* IRT BASE REG*/
-+#define LOONGARCH_IOCSR_REDIRECT_CQB		0x15f0  /* IRT CACHE QUEUE BASE */
-+#define LOONGARCH_IOCSR_REDIRECT_CQH		0x15f8  /* IRT CACHE QUEUE HEAD, 32bit */
-+#define LOONGARCH_IOCSR_REDIRECT_CQT		0x15fc  /* IRT CACHE QUEUE TAIL, 32bit */
- #define LOONGARCH_IOCSR_EXTIOI_EN_BASE		0x1600
- #define LOONGARCH_IOCSR_EXTIOI_BOUNCE_BASE	0x1680
- #define LOONGARCH_IOCSR_EXTIOI_ISR_BASE		0x1800
-diff --git a/arch/loongarch/kernel/cpu-probe.c b/arch/loongarch/kernel/cpu-probe.c
-index fedaa67cde41..543474fd1399 100644
---- a/arch/loongarch/kernel/cpu-probe.c
-+++ b/arch/loongarch/kernel/cpu-probe.c
-@@ -289,6 +289,8 @@ static inline void cpu_probe_loongson(struct cpuinfo_loongarch *c, unsigned int
- 		c->options |= LOONGARCH_CPU_EIODECODE;
- 	if (config & IOCSRF_AVEC)
- 		c->options |= LOONGARCH_CPU_AVECINT;
-+	if (config & IOCSRF_REDIRECTINT)
-+		c->options |= LOONGARCH_CPU_REDIRECTINT;
- 	if (config & IOCSRF_VM)
- 		c->options |= LOONGARCH_CPU_HYPERVISOR;
- }
-diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
-index 365bcea9a61f..2bb8618f96d1 100644
---- a/drivers/irqchip/Makefile
-+++ b/drivers/irqchip/Makefile
-@@ -114,7 +114,7 @@ obj-$(CONFIG_LS1X_IRQ)			+= irq-ls1x.o
- obj-$(CONFIG_TI_SCI_INTR_IRQCHIP)	+= irq-ti-sci-intr.o
- obj-$(CONFIG_TI_SCI_INTA_IRQCHIP)	+= irq-ti-sci-inta.o
- obj-$(CONFIG_TI_PRUSS_INTC)		+= irq-pruss-intc.o
--obj-$(CONFIG_IRQ_LOONGARCH_CPU)		+= irq-loongarch-cpu.o irq-loongarch-avec.o
-+obj-$(CONFIG_IRQ_LOONGARCH_CPU)		+= irq-loongarch-cpu.o irq-loongarch-avec.o irq-loongarch-ir.o
- obj-$(CONFIG_LOONGSON_LIOINTC)		+= irq-loongson-liointc.o
- obj-$(CONFIG_LOONGSON_EIOINTC)		+= irq-loongson-eiointc.o
- obj-$(CONFIG_LOONGSON_HTPIC)		+= irq-loongson-htpic.o
-diff --git a/drivers/irqchip/irq-loongarch-avec.c b/drivers/irqchip/irq-loongarch-avec.c
-index 80e55955a29f..7f4a671038ee 100644
---- a/drivers/irqchip/irq-loongarch-avec.c
-+++ b/drivers/irqchip/irq-loongarch-avec.c
-@@ -24,7 +24,6 @@
- #define VECTORS_PER_REG		64
- #define IRR_VECTOR_MASK		0xffUL
- #define IRR_INVALID_MASK	0x80000000UL
--#define AVEC_MSG_OFFSET		0x100000
- 
- #ifdef CONFIG_SMP
- struct pending_list {
-@@ -47,15 +46,6 @@ struct avecintc_chip {
- 
- static struct avecintc_chip loongarch_avec;
- 
--struct avecintc_data {
--	struct list_head	entry;
--	unsigned int		cpu;
--	unsigned int		vec;
--	unsigned int		prev_cpu;
--	unsigned int		prev_vec;
--	unsigned int		moving;
--};
--
- static inline void avecintc_enable(void)
- {
- 	u64 value;
-@@ -85,7 +75,7 @@ static inline void pending_list_init(int cpu)
- 	INIT_LIST_HEAD(&plist->head);
- }
- 
--static void avecintc_sync(struct avecintc_data *adata)
-+void avecintc_sync(struct avecintc_data *adata)
- {
- 	struct pending_list *plist;
- 
-@@ -109,7 +99,7 @@ static int avecintc_set_affinity(struct irq_data *data, const struct cpumask *de
- 			return -EBUSY;
- 
- 		if (cpu_online(adata->cpu) && cpumask_test_cpu(adata->cpu, dest))
--			return 0;
-+			return IRQ_SET_MASK_OK_DONE;
- 
- 		cpumask_and(&intersect_mask, dest, cpu_online_mask);
- 
-@@ -121,7 +111,8 @@ static int avecintc_set_affinity(struct irq_data *data, const struct cpumask *de
- 		adata->cpu = cpu;
- 		adata->vec = vector;
- 		per_cpu_ptr(irq_map, adata->cpu)[adata->vec] = irq_data_to_desc(data);
--		avecintc_sync(adata);
-+		if (!cpu_has_redirectint)
-+			avecintc_sync(adata);
- 	}
- 
- 	irq_data_update_effective_affinity(data, cpumask_of(cpu));
-@@ -412,6 +403,9 @@ static int __init pch_msi_parse_madt(union acpi_subtable_headers *header,
- 
- static inline int __init acpi_cascade_irqdomain_init(void)
- {
-+	if (cpu_has_redirectint)
-+		return redirect_acpi_init(loongarch_avec.domain);
-+
- 	return acpi_table_parse_madt(ACPI_MADT_TYPE_MSI_PIC, pch_msi_parse_madt, 1);
- }
- 
-diff --git a/drivers/irqchip/irq-loongarch-ir.c b/drivers/irqchip/irq-loongarch-ir.c
-new file mode 100644
-index 000000000000..ac1ee3f78aa4
---- /dev/null
-+++ b/drivers/irqchip/irq-loongarch-ir.c
-@@ -0,0 +1,562 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2020 Loongson Technologies, Inc.
-+ */
-+
-+#include <linux/cpuhotplug.h>
-+#include <linux/init.h>
-+#include <linux/interrupt.h>
-+#include <linux/kernel.h>
-+#include <linux/irq.h>
-+#include <linux/irqchip.h>
-+#include <linux/irqdomain.h>
-+#include <linux/spinlock.h>
-+#include <linux/msi.h>
-+
-+#include <asm/irq.h>
-+#include <asm/loongarch.h>
-+#include <asm/setup.h>
-+#include <larchintrin.h>
-+
-+#include "irq-loongson.h"
-+#include "irq-msi-lib.h"
-+
-+#define IRD_ENTRIES			65536
-+
-+/* redirect entry size 128bits */
-+#define IRD_PAGE_ORDER			(20 - PAGE_SHIFT)
-+
-+/* irt cache invalid queue */
-+#define	INVALID_QUEUE_SIZE		4096
-+
-+#define INVALID_QUEUE_PAGE_ORDER	(16 - PAGE_SHIFT)
-+
-+#define GPID_ADDR_MASK			0x3ffffffffffULL
-+#define GPID_ADDR_SHIFT			6
-+
-+#define CQB_SIZE_SHIFT			0
-+#define CQB_SIZE_MASK			0xf
-+#define CQB_ADDR_SHIFT			12
-+#define CQB_ADDR_MASK			(0xfffffffffULL)
-+
-+#define CFG_DISABLE_IDLE		2
-+#define INVALID_INDEX			0
-+
-+#define MAX_IR_ENGINES			16
-+
-+struct irq_domain *redirect_domain;
-+
-+struct redirect_entry {
-+	struct  {
-+		__u64	valid	: 1,
-+			res1	: 5,
-+			gpid	: 42,
-+			res2	: 8,
-+			vector	: 8;
-+	}	lo;
-+	__u64	hi;
-+};
-+
-+struct redirect_gpid {
-+	u64	pir[4];      /* Pending interrupt requested */
-+	u8	en	: 1, /* doorbell */
-+		res0	: 7;
-+	u8	irqnum;
-+	u16	res1;
-+	u32	dst;
-+	u32	rsvd[6];
-+} __aligned(64);
-+
-+struct redirect_table {
-+	int			node;
-+	struct redirect_entry	*table;
-+	unsigned long		*bitmap;
-+	unsigned int		nr_ird;
-+	struct page		*page;
-+	raw_spinlock_t		lock;
-+};
-+
-+struct redirect_item {
-+	int			index;
-+	struct redirect_entry	*entry;
-+	struct redirect_gpid	*gpid;
-+	struct redirect_table	*table;
-+};
-+
-+struct redirect_queue {
-+	int		node;
-+	u64		base;
-+	u32		max_size;
-+	int		head;
-+	int		tail;
-+	struct page	*page;
-+	raw_spinlock_t	lock;
-+};
-+
-+struct irde_desc {
-+	struct redirect_table	ird_table;
-+	struct redirect_queue	inv_queue;
-+};
-+
-+struct irde_inv_cmd {
-+	union {
-+		__u64	cmd_info;
-+		struct {
-+			__u64	res1		: 4,
-+				type		: 1,
-+				need_notice	: 1,
-+				pad		: 2,
-+				index		: 16,
-+				pad2		: 40;
-+		}	index;
-+	};
-+	__u64		notice_addr;
-+};
-+
-+static struct irde_desc irde_descs[MAX_IR_ENGINES];
-+static phys_addr_t msi_base_addr;
-+static phys_addr_t redirect_reg_base = 0x1fe00000;
-+
-+#define REDIRECT_REG_BASE(reg, node) \
-+	(UNCACHE_BASE | redirect_reg_base | (u64)(node) << NODE_ADDRSPACE_SHIFT | (reg))
-+#define	redirect_reg_queue_head(node)	REDIRECT_REG_BASE(LOONGARCH_IOCSR_REDIRECT_CQH, (node))
-+#define	redirect_reg_queue_tail(node)	REDIRECT_REG_BASE(LOONGARCH_IOCSR_REDIRECT_CQT, (node))
-+#define read_queue_head(node)		(*((u32 *)(redirect_reg_queue_head(node))))
-+#define read_queue_tail(node)		(*((u32 *)(redirect_reg_queue_tail(node))))
-+#define write_queue_tail(node, val)	(*((u32 *)(redirect_reg_queue_tail(node))) = (val))
-+
-+static inline bool invalid_queue_is_full(int node, u32 *tail)
-+{
-+	u32 head;
-+
-+	head = read_queue_head(node);
-+	*tail = read_queue_tail(node);
-+
-+	return !!(head == ((*tail + 1) % INVALID_QUEUE_SIZE));
-+}
-+
-+static void invalid_enqueue(struct redirect_queue *rqueue, struct irde_inv_cmd *cmd)
-+{
-+	struct irde_inv_cmd *inv_addr;
-+	u32 tail;
-+
-+	guard(raw_spinlock_irqsave)(&rqueue->lock);
-+
-+	while (invalid_queue_is_full(rqueue->node, &tail))
-+		cpu_relax();
-+
-+	inv_addr = (struct irde_inv_cmd *)(rqueue->base + tail * sizeof(struct irde_inv_cmd));
-+	memcpy(inv_addr, cmd, sizeof(struct irde_inv_cmd));
-+	tail = (tail + 1) % INVALID_QUEUE_SIZE;
-+
-+	/*
-+	 * The uncache-memory access may have an out of order problem cache-memory access,
-+	 * so a barrier is needed to ensure tail is valid
-+	 */
-+	wmb();
-+
-+	write_queue_tail(rqueue->node, tail);
-+}
-+
-+static void irde_invlid_entry_node(struct redirect_item *item)
-+{
-+	struct redirect_queue *rqueue;
-+	struct irde_inv_cmd cmd;
-+	volatile u64 raddr = 0;
-+	int node = item->table->node;
-+
-+	rqueue = &(irde_descs[node].inv_queue);
-+	cmd.cmd_info = 0;
-+	cmd.index.type = INVALID_INDEX;
-+	cmd.index.need_notice = 1;
-+	cmd.index.index = item->index;
-+	cmd.notice_addr = (u64)(__pa(&raddr));
-+
-+	invalid_enqueue(rqueue, &cmd);
-+
-+	while (!raddr)
-+		cpu_relax();
-+
-+}
-+
-+static inline struct avecintc_data *irq_data_get_avec_data(struct irq_data *data)
-+{
-+	return data->parent_data->chip_data;
-+}
-+
-+static int redirect_table_alloc(struct redirect_item *item, struct redirect_table *ird_table)
-+{
-+	int index;
-+
-+	guard(raw_spinlock_irqsave)(&ird_table->lock);
-+
-+	index = find_first_zero_bit(ird_table->bitmap, IRD_ENTRIES);
-+	if (index > IRD_ENTRIES) {
-+		pr_err("No redirect entry to use\n");
-+		return -ENOMEM;
-+	}
-+
-+	__set_bit(index, ird_table->bitmap);
-+
-+	item->index = index;
-+	item->entry = &ird_table->table[index];
-+	item->table = ird_table;
-+
-+	return 0;
-+}
-+
-+static int redirect_table_free(struct redirect_item *item)
-+{
-+	struct redirect_table *ird_table;
-+	struct redirect_entry *entry;
-+
-+	ird_table = item->table;
-+
-+	entry = item->entry;
-+	memset(entry, 0, sizeof(struct redirect_entry));
-+
-+	scoped_guard(raw_spinlock_irqsave, &ird_table->lock)
-+		bitmap_release_region(ird_table->bitmap, item->index, 0);
-+
-+	kfree(item->gpid);
-+
-+	irde_invlid_entry_node(item);
-+
-+	return 0;
-+}
-+
-+static inline void redirect_domain_prepare_entry(struct redirect_item *item,
-+					struct avecintc_data *adata)
-+{
-+	struct redirect_entry *entry = item->entry;
-+
-+	item->gpid->en = 1;
-+	item->gpid->irqnum = adata->vec;
-+	item->gpid->dst = adata->cpu;
-+
-+	entry->lo.valid = 1;
-+	entry->lo.gpid = ((long)item->gpid >> GPID_ADDR_SHIFT) & (GPID_ADDR_MASK);
-+	entry->lo.vector = 0xff;
-+}
-+
-+static int redirect_set_affinity(struct irq_data *data, const struct cpumask *dest, bool force)
-+{
-+	struct redirect_item *item = data->chip_data;
-+	struct avecintc_data *adata;
-+	int ret;
-+
-+	ret = irq_chip_set_affinity_parent(data, dest, force);
-+	if (ret == IRQ_SET_MASK_OK_DONE) {
-+		return ret;
-+	} else if (ret) {
-+		pr_err("IRDE:set_affinity error %d\n", ret);
-+		return ret;
-+	}
-+
-+	adata = irq_data_get_avec_data(data);
-+	redirect_domain_prepare_entry(item, adata);
-+	irde_invlid_entry_node(item);
-+	avecintc_sync(adata);
-+
-+	return IRQ_SET_MASK_OK;
-+}
-+
-+static void redirect_compose_msi_msg(struct irq_data *d, struct msi_msg *msg)
-+{
-+	struct redirect_item *item;
-+
-+	item = irq_data_get_irq_chip_data(d);
-+	msg->address_lo = (msi_base_addr | 1 << 2 | ((item->index & 0xffff) << 4));
-+	msg->address_hi = 0x0;
-+	msg->data = 0x0;
-+}
-+
-+static inline void redirect_ack_irq(struct irq_data *d)
-+{
-+}
-+
-+static inline void redirect_unmask_irq(struct irq_data *d)
-+{
-+}
-+
-+static inline void redirect_mask_irq(struct irq_data *d)
-+{
-+}
-+
-+static struct irq_chip loongarch_redirect_chip = {
-+	.name			= "REDIRECT",
-+	.irq_ack		= redirect_ack_irq,
-+	.irq_mask		= redirect_mask_irq,
-+	.irq_unmask		= redirect_unmask_irq,
-+	.irq_set_affinity	= redirect_set_affinity,
-+	.irq_compose_msi_msg	= redirect_compose_msi_msg,
-+};
-+
-+static void redirect_free_resources(struct irq_domain *domain, unsigned int virq,
-+				unsigned int nr_irqs)
-+{
-+	for (int i = 0; i < nr_irqs; i++) {
-+		struct irq_data *irq_data;
-+
-+		irq_data = irq_domain_get_irq_data(domain, virq  + i);
-+		if (irq_data && irq_data->chip_data) {
-+			struct redirect_item *item;
-+
-+			item = irq_data->chip_data;
-+			redirect_table_free(item);
-+			kfree(item);
-+		}
-+	}
-+}
-+
-+static int redirect_domain_alloc(struct irq_domain *domain, unsigned int virq,
-+			unsigned int nr_irqs, void *arg)
-+{
-+	struct redirect_table *ird_table;
-+	struct avecintc_data *avec_data;
-+	struct irq_data *irq_data;
-+	msi_alloc_info_t *info;
-+	int ret, i, node;
-+
-+	info = (msi_alloc_info_t *)arg;
-+	node = dev_to_node(info->desc->dev);
-+	ird_table = &irde_descs[node].ird_table;
-+
-+	ret = irq_domain_alloc_irqs_parent(domain, virq, nr_irqs, arg);
-+	if (ret < 0)
-+		return ret;
-+
-+	for (i = 0; i < nr_irqs; i++) {
-+		struct redirect_item *item;
-+
-+		item = kzalloc(sizeof(struct redirect_item), GFP_KERNEL);
-+		if (!item) {
-+			pr_err("Alloc redirect descriptor failed\n");
-+			goto out_free_resources;
-+		}
-+
-+		irq_data = irq_domain_get_irq_data(domain, virq + i);
-+
-+		avec_data = irq_data_get_avec_data(irq_data);
-+		ret = redirect_table_alloc(item, ird_table);
-+		if (ret) {
-+			pr_err("Alloc redirect table entry failed\n");
-+			goto out_free_resources;
-+		}
-+
-+		item->gpid = kzalloc_node(sizeof(struct redirect_gpid), GFP_KERNEL, node);
-+		if (!item->gpid) {
-+			pr_err("Alloc redirect GPID failed\n");
-+			goto out_free_resources;
-+		}
-+
-+		irq_data->chip_data = item;
-+		irq_data->chip = &loongarch_redirect_chip;
-+		redirect_domain_prepare_entry(item, avec_data);
-+	}
-+	return 0;
-+
-+out_free_resources:
-+	redirect_free_resources(domain, virq, nr_irqs);
-+	irq_domain_free_irqs_common(domain, virq, nr_irqs);
-+
-+	return -EINVAL;
-+}
-+
-+static void redirect_domain_free(struct irq_domain *domain, unsigned int virq, unsigned int nr_irqs)
-+{
-+	redirect_free_resources(domain, virq, nr_irqs);
-+	return irq_domain_free_irqs_common(domain, virq, nr_irqs);
-+}
-+
-+static const struct irq_domain_ops redirect_domain_ops = {
-+	.alloc		= redirect_domain_alloc,
-+	.free		= redirect_domain_free,
-+	.select		= msi_lib_irq_domain_select,
-+};
-+
-+static int redirect_queue_init(int node)
-+{
-+	struct redirect_queue *rqueue = &(irde_descs[node].inv_queue);
-+	struct page *pages;
-+
-+	pages = alloc_pages_node(0, GFP_KERNEL | __GFP_ZERO, INVALID_QUEUE_PAGE_ORDER);
-+	if (!pages) {
-+		pr_err("Node [%d] Invalid Queue alloc pages failed!\n", node);
-+		return -ENOMEM;
-+	}
-+
-+	rqueue->page = pages;
-+	rqueue->base = (u64)page_address(pages);
-+	rqueue->max_size = INVALID_QUEUE_SIZE;
-+	rqueue->head = 0;
-+	rqueue->tail = 0;
-+	rqueue->node = node;
-+	raw_spin_lock_init(&rqueue->lock);
-+
-+	iocsr_write32(0, LOONGARCH_IOCSR_REDIRECT_CQH);
-+	iocsr_write32(0, LOONGARCH_IOCSR_REDIRECT_CQT);
-+	iocsr_write64(((rqueue->base & (CQB_ADDR_MASK << CQB_ADDR_SHIFT)) |
-+				(CQB_SIZE_MASK << CQB_SIZE_SHIFT)), LOONGARCH_IOCSR_REDIRECT_CQB);
-+	return 0;
-+}
-+
-+static int redirect_table_init(int node)
-+{
-+	struct redirect_table *ird_table = &(irde_descs[node].ird_table);
-+	unsigned long *bitmap;
-+	struct page *pages;
-+
-+	pages = alloc_pages_node(node, GFP_KERNEL | __GFP_ZERO, IRD_PAGE_ORDER);
-+	if (!pages) {
-+		pr_err("Node [%d] redirect table alloc pages failed!\n", node);
-+		return -ENOMEM;
-+	}
-+	ird_table->page = pages;
-+	ird_table->table = page_address(pages);
-+
-+	bitmap = bitmap_zalloc(IRD_ENTRIES, GFP_KERNEL);
-+	if (!bitmap) {
-+		pr_err("Node [%d] redirect table bitmap alloc pages failed!\n", node);
-+		return -ENOMEM;
-+	}
-+
-+	ird_table->bitmap = bitmap;
-+	ird_table->nr_ird = IRD_ENTRIES;
-+	ird_table->node = node;
-+
-+	raw_spin_lock_init(&ird_table->lock);
-+
-+	if (redirect_queue_init(node))
-+		return -EINVAL;
-+
-+	iocsr_write64(CFG_DISABLE_IDLE, LOONGARCH_IOCSR_REDIRECT_CFG);
-+	iocsr_write64(__pa(ird_table->table), LOONGARCH_IOCSR_REDIRECT_TBR);
-+
-+	return 0;
-+}
-+
-+static void redirect_table_fini(int node)
-+{
-+	struct redirect_table *ird_table = &(irde_descs[node].ird_table);
-+	struct redirect_queue *rqueue = &(irde_descs[node].inv_queue);
-+
-+	if (ird_table->page) {
-+		__free_pages(ird_table->page, IRD_PAGE_ORDER);
-+		ird_table->table = NULL;
-+		ird_table->page = NULL;
-+	}
-+
-+	if (ird_table->page) {
-+		bitmap_free(ird_table->bitmap);
-+		ird_table->bitmap = NULL;
-+	}
-+
-+	if (rqueue->page) {
-+		__free_pages(rqueue->page, INVALID_QUEUE_PAGE_ORDER);
-+		rqueue->page = NULL;
-+		rqueue->base = 0;
-+	}
-+
-+	iocsr_write64(0, LOONGARCH_IOCSR_REDIRECT_CQB);
-+	iocsr_write64(0, LOONGARCH_IOCSR_REDIRECT_TBR);
-+}
-+
-+static int redirect_cpu_online(unsigned int cpu)
-+{
-+	int ret, node = cpu_to_node(cpu);
-+
-+	if (cpu != cpumask_first(cpumask_of_node(node)))
-+		return 0;
-+
-+	ret = redirect_table_init(node);
-+	if (ret) {
-+		redirect_table_fini(node);
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
-+#if defined(CONFIG_ACPI)
-+static int __init redirect_reg_base_init(void)
-+{
-+	acpi_status status;
-+	uint64_t addr = 0;
-+
-+	if (acpi_disabled)
-+		return 0;
-+
-+	status = acpi_evaluate_integer(NULL, "\\_SB.NO00", NULL, &addr);
-+	if (ACPI_FAILURE(status) || !addr)
-+		pr_info("redirect_iocsr_base used default 0x1fe00000\n");
-+	else
-+		redirect_reg_base = addr;
-+
-+	return 0;
-+}
-+subsys_initcall_sync(redirect_reg_base_init);
-+
-+static int __init pch_msi_parse_madt(union acpi_subtable_headers *header,
-+		const unsigned long end)
-+{
-+	struct acpi_madt_msi_pic *pchmsi_entry = (struct acpi_madt_msi_pic *)header;
-+
-+	msi_base_addr = pchmsi_entry->msg_address - AVEC_MSG_OFFSET;
-+
-+	return pch_msi_acpi_init_avec(redirect_domain);
-+}
-+
-+static int __init acpi_cascade_irqdomain_init(void)
-+{
-+	return acpi_table_parse_madt(ACPI_MADT_TYPE_MSI_PIC, pch_msi_parse_madt, 1);
-+}
-+
-+int __init redirect_acpi_init(struct irq_domain *parent)
-+{
-+	struct fwnode_handle *fwnode;
-+	struct irq_domain *domain;
-+	int ret;
-+
-+	fwnode = irq_domain_alloc_named_fwnode("redirect");
-+	if (!fwnode) {
-+		pr_err("Unable to alloc redirect domain handle\n");
-+		goto fail;
-+	}
-+
-+	domain = irq_domain_create_hierarchy(parent, 0, IRD_ENTRIES, fwnode,
-+			&redirect_domain_ops, irde_descs);
-+	if (!domain) {
-+		pr_err("Unable to alloc redirect domain\n");
-+		goto out_free_fwnode;
-+	}
-+
-+	redirect_domain = domain;
-+
-+	ret = redirect_table_init(0);
-+	if (ret)
-+		goto out_free_table;
-+
-+	ret = acpi_cascade_irqdomain_init();
-+	if (ret < 0) {
-+		pr_err("Failed to cascade IRQ domain, ret=%d\n", ret);
-+		goto out_free_table;
-+	}
-+
-+	cpuhp_setup_state_nocalls(CPUHP_AP_IRQ_REDIRECT_STARTING,
-+				  "irqchip/loongarch/redirect:starting",
-+				  redirect_cpu_online, NULL);
-+
-+	pr_info("loongarch irq redirect modules init succeeded\n");
-+	return 0;
-+
-+out_free_table:
-+	redirect_table_fini(0);
-+	irq_domain_remove(redirect_domain);
-+	redirect_domain = NULL;
-+out_free_fwnode:
-+	irq_domain_free_fwnode(fwnode);
-+fail:
-+	return -EINVAL;
-+}
-+#endif
-diff --git a/drivers/irqchip/irq-loongson.h b/drivers/irqchip/irq-loongson.h
-index 11fa138d1f44..05ad40ffb62b 100644
---- a/drivers/irqchip/irq-loongson.h
-+++ b/drivers/irqchip/irq-loongson.h
-@@ -5,6 +5,15 @@
- 
- #ifndef _DRIVERS_IRQCHIP_IRQ_LOONGSON_H
- #define _DRIVERS_IRQCHIP_IRQ_LOONGSON_H
-+#define AVEC_MSG_OFFSET		0x100000
-+struct avecintc_data {
-+	struct list_head        entry;
-+	unsigned int            cpu;
-+	unsigned int            vec;
-+	unsigned int            prev_cpu;
-+	unsigned int            prev_vec;
-+	unsigned int            moving;
-+};
- 
- int find_pch_pic(u32 gsi);
- 
-@@ -24,4 +33,7 @@ int pch_msi_acpi_init(struct irq_domain *parent,
- 					struct acpi_madt_msi_pic *acpi_pchmsi);
- int pch_msi_acpi_init_avec(struct irq_domain *parent);
- 
-+int redirect_acpi_init(struct irq_domain *parent);
-+
-+void avecintc_sync(struct avecintc_data *adata);
- #endif /* _DRIVERS_IRQCHIP_IRQ_LOONGSON_H */
-diff --git a/include/linux/cpuhotplug.h b/include/linux/cpuhotplug.h
-index 1987400000b4..6a4ff072db42 100644
---- a/include/linux/cpuhotplug.h
-+++ b/include/linux/cpuhotplug.h
-@@ -145,6 +145,7 @@ enum cpuhp_state {
- 	CPUHP_AP_IRQ_MIPS_GIC_STARTING,
- 	CPUHP_AP_IRQ_EIOINTC_STARTING,
- 	CPUHP_AP_IRQ_AVECINTC_STARTING,
-+	CPUHP_AP_IRQ_REDIRECT_STARTING,
- 	CPUHP_AP_IRQ_SIFIVE_PLIC_STARTING,
- 	CPUHP_AP_IRQ_THEAD_ACLINT_SSWI_STARTING,
- 	CPUHP_AP_IRQ_RISCV_IMSIC_STARTING,
+V8:
+ - Move misaligned_access_speed under CONFIG_RISCV_MISALIGNED and add a
+   separate commit for that.
+
+V7:
+ - Fix ifdefery build problems
+ - Move sbi_fwft_is_supported with fwft_set_req struct
+ - Added Atish Reviewed-by
+ - Updated KVM vcpu cfg hedeleg value in set_delegation
+ - Changed SBI ETIME error mapping to ETIMEDOUT
+ - Fixed a few typo reported by Alok
+
+V6:
+ - Rename FWFT interface to remove "_local"
+ - Fix test for MEDELEG values in KVM FWFT support
+ - Add __init for unaligned_access_init()
+ - Rebased on master
+
+V5:
+ - Return ERANGE as mapping for SBI_ERR_BAD_RANGE
+ - Removed unused sbi_fwft_get()
+ - Fix kernel for sbi_fwft_local_set_cpumask()
+ - Fix indentation for sbi_fwft_local_set()
+ - Remove spurious space in kvm_sbi_fwft_ops.
+ - Rebased on origin/master
+ - Remove fixes commits and sent them as a separate series [4]
+
+V4:
+ - Check SBI version 3.0 instead of 2.0 for FWFT presence
+ - Use long for kvm_sbi_fwft operation return value
+ - Init KVM sbi extension even if default_disabled
+ - Remove revert_on_fail parameter for sbi_fwft_feature_set().
+ - Fix comments for sbi_fwft_set/get()
+ - Only handle local features (there are no globals yet in the spec)
+ - Add new SBI errors to sbi_err_map_linux_errno()
+
+V3:
+ - Added comment about kvm sbi fwft supported/set/get callback
+   requirements
+ - Move struct kvm_sbi_fwft_feature in kvm_sbi_fwft.c
+ - Add a FWFT interface
+
+V2:
+ - Added Kselftest for misaligned testing
+ - Added get_user() usage instead of __get_user()
+ - Reenable interrupt when possible in misaligned access handling
+ - Document that riscv supports unaligned-traps
+ - Fix KVM extension state when an init function is present
+ - Rework SBI misaligned accesses trap delegation code
+ - Added support for CPU hotplugging
+ - Added KVM SBI reset callback
+ - Added reset for KVM SBI FWFT lock
+ - Return SBI_ERR_DENIED_LOCKED when LOCK flag is set
+
+Clément Léger (14):
+  riscv: sbi: add Firmware Feature (FWFT) SBI extensions definitions
+  riscv: sbi: remove useless parenthesis
+  riscv: sbi: add new SBI error mappings
+  riscv: sbi: add FWFT extension interface
+  riscv: sbi: add SBI FWFT extension calls
+  riscv: misaligned: request misaligned exception from SBI
+  riscv: misaligned: use on_each_cpu() for scalar misaligned access
+    probing
+  riscv: misaligned: declare misaligned_access_speed under
+    CONFIG_RISCV_MISALIGNED
+  riscv: misaligned: move emulated access uniformity check in a function
+  riscv: misaligned: add a function to check misalign trap delegability
+  RISC-V: KVM: add SBI extension init()/deinit() functions
+  RISC-V: KVM: add SBI extension reset callback
+  RISC-V: KVM: add support for FWFT SBI extension
+  RISC-V: KVM: add support for SBI_FWFT_MISALIGNED_DELEG
+
+ arch/riscv/include/asm/cpufeature.h        |  14 +-
+ arch/riscv/include/asm/kvm_host.h          |   5 +-
+ arch/riscv/include/asm/kvm_vcpu_sbi.h      |  12 +
+ arch/riscv/include/asm/kvm_vcpu_sbi_fwft.h |  29 +++
+ arch/riscv/include/asm/sbi.h               |  60 +++++
+ arch/riscv/include/uapi/asm/kvm.h          |   1 +
+ arch/riscv/kernel/sbi.c                    |  81 ++++++-
+ arch/riscv/kernel/traps_misaligned.c       | 112 ++++++++-
+ arch/riscv/kernel/unaligned_access_speed.c |   8 +-
+ arch/riscv/kvm/Makefile                    |   1 +
+ arch/riscv/kvm/vcpu.c                      |   4 +-
+ arch/riscv/kvm/vcpu_sbi.c                  |  54 +++++
+ arch/riscv/kvm/vcpu_sbi_fwft.c             | 257 +++++++++++++++++++++
+ arch/riscv/kvm/vcpu_sbi_sta.c              |   3 +-
+ 14 files changed, 620 insertions(+), 21 deletions(-)
+ create mode 100644 arch/riscv/include/asm/kvm_vcpu_sbi_fwft.h
+ create mode 100644 arch/riscv/kvm/vcpu_sbi_fwft.c
+
 -- 
-2.20.1
+2.49.0
 
