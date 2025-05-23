@@ -1,176 +1,147 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 062552DCBFE;
-	Fri, 23 May 2025 17:17:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A8972980BA;
+	Fri, 23 May 2025 17:17:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748020657; cv=none; b=qlfRGvKDK8FkUijyjQa5G/OqSWFkoWpKLOu5ddCYRfcECMO3wh0NPI3biEgWian2YbcF8+G+niuYrJwEfvXcT4u0Ybb4pA1pckKouiTT6NgPo/a+0RabaATOtzmjdGG1zEOPcylbuT0jwa2wlaxjaPh4ZmzD5jjSS5nNshfMYc8=
+	t=1748020660; cv=none; b=CwVjL19yCD5aq+1CMompi8uljbDMz1/K0D2uHFGf0ewX5NaMvSzuHaTHF6QpBrTwEwmFALAMSlLjt7wDtRNt6ZUbbuyZmFaSqO/LJs1nQplmg0tKaalhKD54te/SzgopEDZXgEgF6q1AOUOjRCbBPLw+DJdbUuObjY+nLmv8Eag=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748020657; c=relaxed/simple;
-	bh=VtqYDADSD+9g4gOpQfp0t5SIzJac5qrHjWQds4iw7C8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=d+FafVMkIXaNVSy2KAzNGr7IQgJh1wPMoAewG4gXvCnEQ8iUH+u83ghvAX643FZX6Q+FnTvADuh/gQNWyNrvBoTjw+RsPi6cpuCTe4VcMWDZO6/n41ddn2ebLwv6NLYHyUxrzPAxORcCEmicFvo8kYF/cL2Yx0tWR9NYTMAA/Do=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nrDIlR+5; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1748020660; c=relaxed/simple;
+	bh=dXqyC8onlMCGx7bgGvbd6oe6+Yn1lkQ2kVJSZPh8pbw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=eZD4cZSS/G5UOyRsQ6z1UBcAlvV5giF9jsZ+mCYtDN7ad9hcRM0/UyWVp8Cw6hH3ovB9OQ+MmNGBdHODoNsVU7Pox/p9mic4Pr+qSzxm2WxcITzbqMzrQ7ap1xg1FM3RfXCKjvhoeT5Ha/1zzUqSq3WoywDlmlkXEux3cpPvf5A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CiEfgbxx; arc=none smtp.client-ip=209.85.215.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nrDIlR+5"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748020656; x=1779556656;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=VtqYDADSD+9g4gOpQfp0t5SIzJac5qrHjWQds4iw7C8=;
-  b=nrDIlR+5vaf6LTGy0Ryz+nfn31Ug76cyDo5k44YdKANBJpMg28JYJNDL
-   MVdqxAVH4NbdGks3wSVjWoLwh9RBWAfONd/I3GZGmyjPp7lgzm5NGspKk
-   KUlEYpteHQxSn8ggIsR5jSs+U2kwdxY1GjLeN0/WiDBN+ewGPDkhkobHB
-   hDyzgSB0LqZoI/sGnUqlM474VdltSRucGXyq/QhPSbJlYl1quPNuQIPtO
-   NsQATCS7YjnyfWyIJhmW8sdu5+9Kp7oldhBZPyLTN4I/HV1LDuzvmwjH2
-   Bxm9CVv6T9Hr9Wd5OBdQQ/yVFMEWAfnVf5f+HztLStp0CpcnKhajjTZbY
-   A==;
-X-CSE-ConnectionGUID: aEATL9OISO+z47F85dVVJQ==
-X-CSE-MsgGUID: R3PUfUbETQikCTYOEoqF+g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11441"; a="50008200"
-X-IronPort-AV: E=Sophos;i="6.15,309,1739865600"; 
-   d="scan'208";a="50008200"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2025 10:17:22 -0700
-X-CSE-ConnectionGUID: qVEhXmnVRtiLQvylOYTIwQ==
-X-CSE-MsgGUID: jyr4rZg6S3+79dGN0sHlfg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,309,1739865600"; 
-   d="scan'208";a="146198911"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by orviesa004.jf.intel.com with ESMTP; 23 May 2025 10:17:15 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uIW1B-000Qc0-0b;
-	Fri, 23 May 2025 17:17:13 +0000
-Date: Sat, 24 May 2025 01:16:35 +0800
-From: kernel test robot <lkp@intel.com>
-To: Byungchul Park <byungchul@sk.com>, willy@infradead.org,
-	netdev@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org, kernel_team@skhynix.com, kuba@kernel.org,
-	almasrymina@google.com, ilias.apalodimas@linaro.org,
-	harry.yoo@oracle.com, hawk@kernel.org, akpm@linux-foundation.org,
-	davem@davemloft.net, john.fastabend@gmail.com,
-	andrew+netdev@lunn.ch, asml.silence@gmail.com, toke@redhat.com,
-	tariqt@nvidia.com, edumazet@google.com, pabeni@redhat.com,
-	saeedm@nvidia.com, leon@kernel.org, ast@kernel.org,
-	daniel@iogearbox.net, david@redhat.com, lorenzo.stoakes@oracle.com,
-	Liam.Howlett@oracle.com, vbabka@suse.cz, rppt@kernel.org,
-	surenb@google.com, mhocko@suse.com
-Subject: Re: [PATCH 18/18] mm, netmem: remove the page pool members in struct
- page
-Message-ID: <202505240152.9ODpQBK0-lkp@intel.com>
-References: <20250523032609.16334-19-byungchul@sk.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CiEfgbxx"
+Received: by mail-pg1-f180.google.com with SMTP id 41be03b00d2f7-b13e0471a2dso45311a12.2;
+        Fri, 23 May 2025 10:17:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748020658; x=1748625458; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6YFTP5lUlE1QjHF8yyWUrq58B97+VhwR7KGRjGcZgPs=;
+        b=CiEfgbxxLiEGfTYPYdI0abWgIyyIvnlGBR26tUHD7itGTrpTuJrFKw4OxkxK+49NJ7
+         /Tl1GEWJm5OeXgVQSkN/plZ1jo05b5FRZjD1zDj1TbQVeRUPUZeZ8Oe+nIo5Ml6LAyGZ
+         LBwAQLEQ/W8LH9dLa+o7owm25QuhpILIDcZW9hnipc9kMk5LqMTEtE5p8VBdXuVRGDeV
+         O19i33bRTm6lGlP4JDMEY4FJIqMWmnmjh6lGSjjMvo2l6Ce3dD/pO3hr2roh8X+cP6Bw
+         jo0GNtF6qTb/1byUxz6aPhT0A2A1pA4G3FaYZg78B9oyDfBpso76pfU2Ql9g+JnVhzYn
+         ybYw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748020658; x=1748625458;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=6YFTP5lUlE1QjHF8yyWUrq58B97+VhwR7KGRjGcZgPs=;
+        b=lpq0EbVHV3QfwuqYbFt7rjPkiQsnjVodiHNsswVrMUsVrBxw99FLb4zlv58a/qjbr8
+         O5P/nY+vlHlg9JgpuAbDR1galzUiumeSR0VQdYus2NbQYi58fT3lIoJScbPLFS5s5oJN
+         +CjQuomD7gJ0PaIuhjXJfXg+AkG1kbpcB5hAjZ6qMiEvw/CGPwdftzaGO0RjboB1G7+g
+         aRxN5NOG1Mzxfr5sYZgG9RK8jPlbyAnH91hIkmQj/s9Wegyni9/45VteNwGyDuNrcCNG
+         8O+VgrwrXuhqmZ9pIjuIUyiqhFeV8OoUKkwJUUKAFO2uDIneKi/oMgKnoEbmA4Q20Mt2
+         U49w==
+X-Forwarded-Encrypted: i=1; AJvYcCUL9+Wkjd9Cae4XpDGOnmaSkG6ImNsOAuBYYnbh+ky/cw1jEu3mZrTQ61bfCTl+OR5xge6ekk7YM4B9w6IE@vger.kernel.org, AJvYcCXrM0ux8Xly69HAWmThe36ngcLRhGv4yPz5Fl9IDzWsyb3R0PRdj32klMYDFHS9tV/GlWQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyEEL6hwcoCdoydEe6dAd0mf0M27Ey0tlOSIYVP9+zrs1EcMId8
+	+HjsKko22ctuZudxKLy8NmNdoRgyx7gP9p2mhmV7YR0JIPZzVTpXIxDGmwid4lZhBVjFz3wDUmQ
+	jcdACrgsMFVdoXsNkqM4mBs/Xm1qsQBE=
+X-Gm-Gg: ASbGncuJYBJLIkmHQSKmlPONDb+epl40shauiZe6VHXUhNc5x99vy4oBCVONGzQEl5Z
+	vt++ftBAQgy0I4fX4Cbac3BrBHB/X2HMC4KAilJKvI7p3Kka3V9ipVlLxMy3iAC7u7eumYR8Wed
+	nelm7ujTseKdxgP6fnTlFtkAfDycNTzC95yp/srxMOi4DFr5hNTBafDUnejQ==
+X-Google-Smtp-Source: AGHT+IHxnUGtdhm0ZP99cQHtnMkhM1UZm0zCWjs0mx/nTwYTlO/TXJHnxSx4FYWEjrKj3bzbamrBih5AuADjXyO3I+Y=
+X-Received: by 2002:a17:90b:134b:b0:301:1bce:c26f with SMTP id
+ 98e67ed59e1d1-30e830c7a7cmr37275562a91.3.1748020658522; Fri, 23 May 2025
+ 10:17:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250523032609.16334-19-byungchul@sk.com>
+References: <20250515064800.2201498-1-senozhatsky@chromium.org>
+ <CAEf4BzYTiPuOUbQgkNvT2haAupeep79q0pVu=fcD5fEgnAjR_A@mail.gmail.com> <z4gvqyk3ktqhd4wmi7ju3qw67c56brf5klxcer3vqmp3v6sujn@2xq7j3ji4kic>
+In-Reply-To: <z4gvqyk3ktqhd4wmi7ju3qw67c56brf5klxcer3vqmp3v6sujn@2xq7j3ji4kic>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Fri, 23 May 2025 10:17:25 -0700
+X-Gm-Features: AX0GCFsaeoqPTWi3rJBb3CU87mJdvE_ZJLIUN_YDjWlkSxqikPbDITrdaOUf1WI
+Message-ID: <CAEf4BzZ_5+717wK7g-3zuB6=DL-yfN6YYX=6RdZNf+DJfnkyhg@mail.gmail.com>
+Subject: Re: [PATCHv2] bpf: add bpf_msleep_interruptible() kfunc
+To: Sergey Senozhatsky <senozhatsky@chromium.org>
+Cc: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	John Fastabend <john.fastabend@gmail.com>, Martin KaFai Lau <martin.lau@linux.dev>, 
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Matt Bobrowski <mattbobrowski@google.com>, bpf@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Byungchul,
+On Fri, May 23, 2025 at 12:23=E2=80=AFAM Sergey Senozhatsky
+<senozhatsky@chromium.org> wrote:
+>
+> On (25/05/20 16:26), Andrii Nakryiko wrote:
+> > On Wed, May 14, 2025 at 11:48=E2=80=AFPM Sergey Senozhatsky
+> > <senozhatsky@chromium.org> wrote:
+> > >
+> > > bpf_msleep_interruptible() puts a calling context into an
+> > > interruptible sleep.  This function is expected to be used
+> > > for testing only (perhaps in conjunction with fault-injection)
+> > > to simulate various execution delays or timeouts.
+> > >
+> > > Signed-off-by: Sergey Senozhatsky <senozhatsky@chromium.org>
+> > > ---
+> > >
+> > > v2:
+> > > -- switched to kfunc (Matt)
+> > >
+> > >  kernel/bpf/helpers.c | 7 +++++++
+> > >  1 file changed, 7 insertions(+)
+> > >
+> > > diff --git a/kernel/bpf/helpers.c b/kernel/bpf/helpers.c
+> > > index fed53da75025..a7404ab3b0b8 100644
+> > > --- a/kernel/bpf/helpers.c
+> > > +++ b/kernel/bpf/helpers.c
+> > > @@ -24,6 +24,7 @@
+> > >  #include <linux/bpf_mem_alloc.h>
+> > >  #include <linux/kasan.h>
+> > >  #include <linux/bpf_verifier.h>
+> > > +#include <linux/delay.h>
+> > >
+> > >  #include "../../lib/kstrtox.h"
+> > >
+> > > @@ -3283,6 +3284,11 @@ __bpf_kfunc void bpf_local_irq_restore(unsigne=
+d long *flags__irq_flag)
+> > >         local_irq_restore(*flags__irq_flag);
+> > >  }
+> > >
+> > > +__bpf_kfunc unsigned long bpf_msleep_interruptible(unsigned int msec=
+s)
+> > > +{
+> > > +       return msleep_interruptible(msecs);
+> > > +}
+> > > +
+> >
+> > What happened to the trying out custom kernel module for
+> > fuzzing/testing use case you have?
+>
+> Oh, my bad.  I think it wasn't clear to me that this was the final
+> conclusion, it looked to me that the conversation ended up with a
+> number of open questions.
+>
+> > I'll repeat my concerns. BPF maps and progs are all interdependent
+> > between each other by global RCU Tasks Trace "domain". Delay one RCU
+> > tasks trace grace period through the use of msleep() will delay
+> > everything BPF-related in the entire kernel.
+> >
+> > Until we have some way to give some of BPF programs and its isolated
+> > BPF maps its own RCU domain, I don't think we should allow arbitrary
+> > sleeps inside BPF programs.
+>
+> I see.  How are sleepable BPF programs operate wrt RCU currently?
 
-kernel test robot noticed the following build errors:
-
-[auto build test ERROR on f44092606a3f153bb7e6b277006b1f4a5b914cfc]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Byungchul-Park/netmem-introduce-struct-netmem_desc-struct_group_tagged-ed-on-struct-net_iov/20250523-112806
-base:   f44092606a3f153bb7e6b277006b1f4a5b914cfc
-patch link:    https://lore.kernel.org/r/20250523032609.16334-19-byungchul%40sk.com
-patch subject: [PATCH 18/18] mm, netmem: remove the page pool members in struct page
-config: x86_64-rhel-9.4-kunit (https://download.01.org/0day-ci/archive/20250524/202505240152.9ODpQBK0-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250524/202505240152.9ODpQBK0-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505240152.9ODpQBK0-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   In file included from include/linux/net/intel/libie/rx.h:7,
-                    from drivers/net/ethernet/intel/iavf/iavf_txrx.c:5:
-   include/net/libeth/rx.h: In function 'libeth_rx_sync_for_cpu':
-   include/net/libeth/rx.h:140:40: error: 'struct page' has no member named 'pp'
-     140 |         page_pool_dma_sync_for_cpu(page->pp, page, fqe->offset, len);
-         |                                        ^~
-   drivers/net/ethernet/intel/iavf/iavf_txrx.c: In function 'iavf_add_rx_frag':
->> drivers/net/ethernet/intel/iavf/iavf_txrx.c:1200:33: error: 'struct page' has no member named 'pp'
-    1200 |         u32 hr = rx_buffer->page->pp->p.offset;
-         |                                 ^~
-   drivers/net/ethernet/intel/iavf/iavf_txrx.c: In function 'iavf_build_skb':
-   drivers/net/ethernet/intel/iavf/iavf_txrx.c:1217:33: error: 'struct page' has no member named 'pp'
-    1217 |         u32 hr = rx_buffer->page->pp->p.offset;
-         |                                 ^~
---
-   In file included from drivers/net/ethernet/intel/idpf/idpf_txrx.c:4:
-   include/net/libeth/rx.h: In function 'libeth_rx_sync_for_cpu':
-   include/net/libeth/rx.h:140:40: error: 'struct page' has no member named 'pp'
-     140 |         page_pool_dma_sync_for_cpu(page->pp, page, fqe->offset, len);
-         |                                        ^~
-   drivers/net/ethernet/intel/idpf/idpf_txrx.c: In function 'idpf_rx_page_rel':
->> drivers/net/ethernet/intel/idpf/idpf_txrx.c:389:45: error: 'struct page' has no member named 'pp'
-     389 |         page_pool_put_full_page(rx_buf->page->pp, rx_buf->page, false);
-         |                                             ^~
-   drivers/net/ethernet/intel/idpf/idpf_txrx.c: In function 'idpf_rx_add_frag':
-   drivers/net/ethernet/intel/idpf/idpf_txrx.c:3254:30: error: 'struct page' has no member named 'pp'
-    3254 |         u32 hr = rx_buf->page->pp->p.offset;
-         |                              ^~
-   drivers/net/ethernet/intel/idpf/idpf_txrx.c: In function 'idpf_rx_hsplit_wa':
-   drivers/net/ethernet/intel/idpf/idpf_txrx.c:3286:64: error: 'struct page' has no member named 'pp'
-    3286 |         dst = page_address(hdr->page) + hdr->offset + hdr->page->pp->p.offset;
-         |                                                                ^~
-   drivers/net/ethernet/intel/idpf/idpf_txrx.c:3287:64: error: 'struct page' has no member named 'pp'
-    3287 |         src = page_address(buf->page) + buf->offset + buf->page->pp->p.offset;
-         |                                                                ^~
-   drivers/net/ethernet/intel/idpf/idpf_txrx.c: In function 'idpf_rx_build_skb':
-   drivers/net/ethernet/intel/idpf/idpf_txrx.c:3305:27: error: 'struct page' has no member named 'pp'
-    3305 |         u32 hr = buf->page->pp->p.offset;
-         |                           ^~
---
-   In file included from drivers/net/wireless/mediatek/mt76/mt76x2/../mt76x02.h:12,
-                    from drivers/net/wireless/mediatek/mt76/mt76x2/mt76x2.h:23,
-                    from drivers/net/wireless/mediatek/mt76/mt76x2/eeprom.c:9:
-   drivers/net/wireless/mediatek/mt76/mt76x2/../mt76.h: In function 'mt76_put_page_pool_buf':
->> drivers/net/wireless/mediatek/mt76/mt76x2/../mt76.h:1788:37: error: 'struct page' has no member named 'pp'
-    1788 |         page_pool_put_full_page(page->pp, page, allow_direct);
-         |                                     ^~
-
-
-vim +1200 drivers/net/ethernet/intel/iavf/iavf_txrx.c
-
-7f12ad741a4870 drivers/net/ethernet/intel/i40evf/i40e_txrx.c Greg Rose         2013-12-21  1184  
-ab9ad98eb5f95b drivers/net/ethernet/intel/i40evf/i40e_txrx.c Jesse Brandeburg  2016-04-18  1185  /**
-56184e01c00d6d drivers/net/ethernet/intel/iavf/iavf_txrx.c   Jesse Brandeburg  2018-09-14  1186   * iavf_add_rx_frag - Add contents of Rx buffer to sk_buff
-ab9ad98eb5f95b drivers/net/ethernet/intel/i40evf/i40e_txrx.c Jesse Brandeburg  2016-04-18  1187   * @skb: sk_buff to place the data into
-5fa4caff59f251 drivers/net/ethernet/intel/iavf/iavf_txrx.c   Alexander Lobakin 2024-04-18  1188   * @rx_buffer: buffer containing page to add
-a0cfc3130eef54 drivers/net/ethernet/intel/i40evf/i40e_txrx.c Alexander Duyck   2017-03-14  1189   * @size: packet length from rx_desc
-ab9ad98eb5f95b drivers/net/ethernet/intel/i40evf/i40e_txrx.c Jesse Brandeburg  2016-04-18  1190   *
-ab9ad98eb5f95b drivers/net/ethernet/intel/i40evf/i40e_txrx.c Jesse Brandeburg  2016-04-18  1191   * This function will add the data contained in rx_buffer->page to the skb.
-fa2343e9034ce6 drivers/net/ethernet/intel/i40evf/i40e_txrx.c Alexander Duyck   2017-03-14  1192   * It will just attach the page as a frag to the skb.
-ab9ad98eb5f95b drivers/net/ethernet/intel/i40evf/i40e_txrx.c Jesse Brandeburg  2016-04-18  1193   *
-fa2343e9034ce6 drivers/net/ethernet/intel/i40evf/i40e_txrx.c Alexander Duyck   2017-03-14  1194   * The function will then update the page offset.
-ab9ad98eb5f95b drivers/net/ethernet/intel/i40evf/i40e_txrx.c Jesse Brandeburg  2016-04-18  1195   **/
-5fa4caff59f251 drivers/net/ethernet/intel/iavf/iavf_txrx.c   Alexander Lobakin 2024-04-18  1196  static void iavf_add_rx_frag(struct sk_buff *skb,
-5fa4caff59f251 drivers/net/ethernet/intel/iavf/iavf_txrx.c   Alexander Lobakin 2024-04-18  1197  			     const struct libeth_fqe *rx_buffer,
-a0cfc3130eef54 drivers/net/ethernet/intel/i40evf/i40e_txrx.c Alexander Duyck   2017-03-14  1198  			     unsigned int size)
-ab9ad98eb5f95b drivers/net/ethernet/intel/i40evf/i40e_txrx.c Jesse Brandeburg  2016-04-18  1199  {
-5fa4caff59f251 drivers/net/ethernet/intel/iavf/iavf_txrx.c   Alexander Lobakin 2024-04-18 @1200  	u32 hr = rx_buffer->page->pp->p.offset;
-efa14c3985828d drivers/net/ethernet/intel/iavf/iavf_txrx.c   Mitch Williams    2019-05-14  1201  
-fa2343e9034ce6 drivers/net/ethernet/intel/i40evf/i40e_txrx.c Alexander Duyck   2017-03-14  1202  	skb_add_rx_frag(skb, skb_shinfo(skb)->nr_frags, rx_buffer->page,
-5fa4caff59f251 drivers/net/ethernet/intel/iavf/iavf_txrx.c   Alexander Lobakin 2024-04-18  1203  			rx_buffer->offset + hr, size, rx_buffer->truesize);
-9a064128fc8489 drivers/net/ethernet/intel/i40evf/i40e_txrx.c Alexander Duyck   2017-03-14  1204  }
-9a064128fc8489 drivers/net/ethernet/intel/i40evf/i40e_txrx.c Alexander Duyck   2017-03-14  1205  
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+What we call "sleepable BPF" is really "faultable BPF", meaning we
+only allow the kernel to handle page faults to bring data into
+physical memory. There is no real sleeping (though userfaultfd is its
+own set of problems when it comes to page fault predictability). So we
+consider this fault delay to be bounded. With msleep() that
+boundedness is explicitly abandoned.
