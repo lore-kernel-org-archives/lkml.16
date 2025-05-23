@@ -1,118 +1,140 @@
-Received: from out-171.mta0.migadu.com (out-171.mta0.migadu.com [91.218.175.171])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CB9B2DCBF6
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 18:02:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E045A293B5C;
+	Fri, 23 May 2025 18:03:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748023345; cv=none; b=uWZxp01qr1fZJqF22RjWfSJLck5gczpihVdliGEbYx5FHeug7mAKr+9hyEypRG6FFPb1QhCVm7K81T2eD4SR/evNrSsThTWdWOY/SA9p2VjTZv9dGlc2AoA/4qfid4/33x1c4RmHuKMdgDK3kLOmrbz+CXk18+9Br9MbJak9asU=
+	t=1748023381; cv=none; b=s1FGQNK/X7mcqAsTtBkIqhMpgj/Pv3B099wgs3hqgvoo13x0qjUOLb6Dyn1sBd6MKsY2RwB1VBAaGHJWs2DHWPc47iAvvAO4nb8fSYVJxD4MNilH4IXijf4Iu/apS3CgRSrokej1U4b+yMaLDNg91sIzjHILFsG/BenK0+RVdSg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748023345; c=relaxed/simple;
-	bh=/IJS+eg31HVMWiLhSeRqgdbO7HyM9IVVNSvfwS9h97Q=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bs3n+XaWC90pNUJ8dS4xrPz81BReRcQz3CesgPq0XWGnGB3LTXvQ77POJueTBZ0t/gtw4YwKWe1DA99TFOUz7dE81mhIO3gtemeVzYoCCDpUowArT8sexd6TMtFJjeUde9pLB447lYCSj5kmHj1ouw/YF8E+/puV86pUayG7efs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=cb6ir8xE; arc=none smtp.client-ip=91.218.175.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1748023381; c=relaxed/simple;
+	bh=d/CZd0yu4Tfmli9qaZ+EAbiupvzbLXWHymbt3P4VdII=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=RANoZHGQlvvZ4vfEeqE2NVr9778O/Jcy4UD5OzuPpDfyIsfCV5awoZPeqmvpfQaWWzlqVfFOSiugqnh+pVV/sIznuqW+fWphJxyFwzBStmXeORoYXWrL5DDDCOZiFKkIIrk91W1rb8q75eUnH4WpIG4y8yFA5/HbRiNFCIoa+qY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dJyv9dAo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="cb6ir8xE"
-Message-ID: <5dd587b3-8c04-41d1-b677-5b07266cfec5@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1748023337;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=dVgfGwkpVOgVzuNCU5zCPpN93of0x7k+aYCz5DP0VOA=;
-	b=cb6ir8xE4q8LN9CRbizpHOwYHG/1HnOlKRh3ajaE1tDkmTd8L19cu4lPf8tqbFVowAvU7o
-	37f+G4WGNnNmva62kOAHzlLog/TeUa+vG94ciSfJV4Agz/wUc+d1DCUpdSbMrQe4M9rbRz
-	+MQCdF0ERsqq1cCkeU0V+ucqdayBGaM=
-Date: Fri, 23 May 2025 11:02:11 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dJyv9dAo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 614F1C4CEF0;
+	Fri, 23 May 2025 18:03:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748023380;
+	bh=d/CZd0yu4Tfmli9qaZ+EAbiupvzbLXWHymbt3P4VdII=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=dJyv9dAontErDkYUzz7YcVksv/4K1fjKNKEqmNTEdsrXrhx6GZBefVWBR/ONj4G9L
+	 7mnYYWQD4GbLvfyCQPytweMVlA2R6gmLu8xJxZBM8TKyEk3CZAEvMwze8e+6tiWI0u
+	 a9s5h+vJsdXGWr5IvEYwbXmNjrbInxoFKO5TJ5Qm+4ZsrfaQx9Yr6uPTVN0YhFJ1qe
+	 7incrf3DrcL3uG+KssHmfmXYhhUby8qzSu7bJiH8QKtQbXwvi/s5u2Ek3IvIK8tagV
+	 3ZBrGwaKzgHw+dRPbUImbo3NrkevH0uJWgPm56683xWWKW/wWMHfXvuqzgOyIxpO6X
+	 3mFyiAWdKgKPA==
+Received: by mail-oo1-f51.google.com with SMTP id 006d021491bc7-6021e3daeabso86546eaf.3;
+        Fri, 23 May 2025 11:03:00 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWc8bKQ9jTZorhpZnWjoLsDw2y4Nw37D4NEndufUOkquEvMtGdSUwCvHJ8FTjjsxBOZbMIbunsc5Av3TQ1m@vger.kernel.org, AJvYcCXWuvSxtAGv2EUNimr/y9Bo3Z2+Hzqq+e6i55ibQ5VSkTRPjVBu58qEYkiTxhe8RWSTjPIz8CUEwSfg@vger.kernel.org
+X-Gm-Message-State: AOJu0YyiTY+u6WFzpB1D2pgcda6kl9IaMW70HGRojgrdrFGozOquQ8I8
+	QmTxuH5dMZIjaow8o/HMUMMJAL6KP9ZLa/hLUz6Kjnn2896o4ArcvaZAzJILsz9f7mp5yGjWUeo
+	LYTj5+IHH+U19emYJLlMuD0mGibDDzOk=
+X-Google-Smtp-Source: AGHT+IHO+WmOp6+ClNzeFqNALypAVMWRWVOjEcyjqnL7SpjjuFzAlk0SEmsYCUGJyAKxsqTmackVJW+bb/DihV1b1hk=
+X-Received: by 2002:a4a:ee83:0:b0:60a:383:dbce with SMTP id
+ 006d021491bc7-60b9fba5da2mr184657eaf.8.1748023379682; Fri, 23 May 2025
+ 11:02:59 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v8 13/14] RISC-V: KVM: add support for FWFT SBI extension
-To: =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@ventanamicro.com>,
- =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>,
- Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
- <palmer@dabbelt.com>, Anup Patel <anup@brainfault.org>,
- Atish Patra <atishp@atishpatra.org>, Shuah Khan <shuah@kernel.org>,
- Jonathan Corbet <corbet@lwn.net>, linux-riscv@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- kvm@vger.kernel.org, kvm-riscv@lists.infradead.org,
- linux-kselftest@vger.kernel.org
-Cc: Samuel Holland <samuel.holland@sifive.com>,
- Andrew Jones <ajones@ventanamicro.com>, Deepak Gupta <debug@rivosinc.com>,
- Charlie Jenkins <charlie@rivosinc.com>,
- linux-riscv <linux-riscv-bounces@lists.infradead.org>
-References: <20250523101932.1594077-1-cleger@rivosinc.com>
- <20250523101932.1594077-14-cleger@rivosinc.com>
- <DA3K95ZYJ52S.1K6O3LN6WEI0N@ventanamicro.com>
- <9f9e2869-725d-4590-887a-9b0ef091472e@rivosinc.com>
- <DA3OJ7WWUGLT.35AVP0QQDJRZV@ventanamicro.com>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Atish Patra <atish.patra@linux.dev>
-In-Reply-To: <DA3OJ7WWUGLT.35AVP0QQDJRZV@ventanamicro.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+References: <20250518185111.3560-1-W_Armin@gmx.de> <CAJZ5v0hNmMtR4V0tYqD1dV2BqAKJ2sCOyBadkVtG3sS3V90uvw@mail.gmail.com>
+ <a6d92cdd-4dc3-4080-9ed9-5b1f02f247e0@gmx.de> <CAJZ5v0icRdTSToaKbdf=MdRin4NyB2MstUVaQo8VR6-n7DkVMQ@mail.gmail.com>
+ <20250523162917.GC2575813@robin.jannau.net>
+In-Reply-To: <20250523162917.GC2575813@robin.jannau.net>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Fri, 23 May 2025 20:02:48 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0haWTB92-r2UHmpc8JXh69uOHaS4qZUG3MyhqFLw1kOTw@mail.gmail.com>
+X-Gm-Features: AX0GCFsZOxg8jr12u1v3p7beV2tEpMQJn0GmiDUBSpRPv_VoOG5AEbtWuQ_8NuA
+Message-ID: <CAJZ5v0haWTB92-r2UHmpc8JXh69uOHaS4qZUG3MyhqFLw1kOTw@mail.gmail.com>
+Subject: Re: [PATCH 1/2] ACPI: platform_profile: Add support for non-ACPI platforms
+To: Janne Grunau <j@jannau.net>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Armin Wolf <W_Armin@gmx.de>, lenb@kernel.org, 
+	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Arnd Bergmann <arnd@arndb.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 5/23/25 9:27 AM, Radim KrÄmÃ¡Å wrote:
-> 2025-05-23T17:29:49+02:00, Clément Léger <cleger@rivosinc.com>:
->> On 23/05/2025 15:05, Radim Krčmář wrote:
->>> 2025-05-23T12:19:30+02:00, Clément Léger <cleger@rivosinc.com>:
->>>> +++ b/arch/riscv/kvm/vcpu_sbi_fwft.c
->>>> +static const enum sbi_fwft_feature_t kvm_fwft_defined_features[] = {
->>>> +	SBI_FWFT_MISALIGNED_EXC_DELEG,
->>>> +	SBI_FWFT_LANDING_PAD,
->>>> +	SBI_FWFT_SHADOW_STACK,
->>>> +	SBI_FWFT_DOUBLE_TRAP,
->>>> +	SBI_FWFT_PTE_AD_HW_UPDATING,
->>>> +	SBI_FWFT_POINTER_MASKING_PMLEN,
->>>> +};
->>>
->>> How will userspace control which subset of these features is allowed in
->>> the guest?
->>>
->>> (We can reuse the KVM SBI extension interface if we don't want to add a
->>>   FWFT specific ONE_REG.)
->>
->> Hi Radim,
->>
->> I didn't looked at that part. But most likely using the kvm one reg
->> interface seems ok like what is done for STA ? We could have per feature
->> override with one reg per feature.
-> 
-> Sounds fine.
-> 
+On Fri, May 23, 2025 at 6:29=E2=80=AFPM Janne Grunau <j@jannau.net> wrote:
+>
+> On Fri, May 23, 2025 at 04:39:59PM +0200, Rafael J. Wysocki wrote:
+> > On Thu, May 22, 2025 at 6:34=E2=80=AFAM Armin Wolf <W_Armin@gmx.de> wro=
+te:
+> > >
+> > > Am 21.05.25 um 22:17 schrieb Rafael J. Wysocki:
+> > >
+> > > > On Sun, May 18, 2025 at 8:51=E2=80=AFPM Armin Wolf <W_Armin@gmx.de>=
+ wrote:
+> > > >> Currently the platform profile subsystem assumes that all supporte=
+d
+> > > >> (i.e. ACPI-capable) platforms always run with ACPI being enabled.
+> > > >> However some ARM64 notebooks do not support ACPI and are instead
+> > > >> using devicetree for booting.
+> > > >>
+> > > >> Do not register the legacy sysfs interface on such devices as it
+> > > >> depends on the acpi_kobj (/sys/firmware/acpi/) being present. User=
+s
+> > > >> are encouraged to use the new platform-profile class interface
+> > > >> instead.
+> > > > So how does it work in this case?
+> > > >
+> > > The platform profile subsystem also exposes a more modern class-based=
+ sysfs interface,
+> > > see Documentation/ABI/testing/sysfs-class-platform-profile for detail=
+s.
+> > >
+> > > This interface does not depend on /sys/firmware/acpi being present, s=
+o userspace
+> > > programs can still control the platform profiles using the class-base=
+d interface.
+> > >
+> > > This will become very important once we have platform profile drivers=
+ not depending on
+> > > some sort of ACPI interface. I suspect that sooner or later some driv=
+ers for the embedded
+> > > controllers on ARM64 notebooks (devicetree!) will register with the p=
+latform profile subsystem.
+> > >
+> > > Apart from that this allows input drivers using platform_profile_cycl=
+e() to work on non-ACPI
+> > > platforms (like ARm64 devices using devicetree).
+> >
+> > This driver though is located in drivers/acpi/ and depends on
+> > CONFIG_ACPI.  Moreover, the platform profile provider drivers need to
+> > select ACPI_PLATFORM_PROFILE so it gets built.  This means that there
+> > are no non-ACPI platform profile providers currently in the tree.
+> >
+> > While the observation that the code in the driver, other than the
+> > legacy sysfs interface, doesn't really depend on ACPI is valid, if you
+> > want it to be used on systems without ACPI, it needs to be properly
+> > converted to a generic driver.
+> >
+> > For now, it is better to simply make it fail to initialize without
+> > ACPI, so I'm going to apply this patch:
+> >
+> > https://patchwork.kernel.org/project/linux-acpi/patch/20250522141410.31=
+315-1-alexghiti@rivosinc.com/
+>
+> That unfortunately does not help with the hid-lenovo regression. Commit
+> 84c9d2a968c8 ("HID: lenovo: Support for ThinkPad-X12-TAB-1/2 Kbd Fn
+> keys") added a platform_profile_cycle() call and thus a dependency on
+> platform_profile.
 
-Yeah. We can have a follow up series for SBI FWFT state that allows user 
-space to toggle each state individually.
+And so on ACPI because platform_profile depends on it.
 
->> Is this something blocking though ? We'd like to merge FWFT once SBI 3.0
->> is ratified so that would be nice not delaying it too much. I'll take a
->> look at it to see if it isn't too long to implement.
-> 
-> Not blocking, but I would at least default FWFT to disabled, because
-> current userspace cannot handle [14/14].  (Well... save/restore was
-> probably broken even before, but let's try to not make it worse. :])
-> 
+> hid-lenovo is used for USB and Bluetooth devices and
+> not just for Lenovo laptop/tablet specific devices.
+> Above patch just avoids the warning splat but still prevents loading
+> hid-lenovo when ACPI is enabled in the kernel (like Distro kernels) on
+> a non-ACPI system. This breaks devices like "Lenovo ThinkPad Compact
+> Keyboard with TrackPoint" on such systems.
+>
+> I will send a patch to remove platform_profile_cycle() call as short
+> term regression fix and tell the original author to to resubmit once the
+> platform_profile dependency on non-ACPI systems is worked out.
 
-User space can not enable or disable misaligned access delegation as 
-there is no interface for now rightly pointed by you. I guess supporting 
-that would be quicker than fixing the broader guest save/restore 
-anyways. Isn't it ?
-
-We can have the patches ready for the next MW for FWFT one reg interface.
-
-> Thanks.
-> 
-> _______________________________________________
-> linux-riscv mailing list
-> linux-riscv@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-riscv
-
+Sure, thanks!
