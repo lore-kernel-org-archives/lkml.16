@@ -1,103 +1,85 @@
-Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 358B1207DFD;
-	Fri, 23 May 2025 15:27:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0F5F128819;
+	Fri, 23 May 2025 15:28:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748014022; cv=none; b=JdoFSKVej8ch7qfzPl4Wg1pQqDw3zgQKfGTnh6qlVU5roU+No1fiPHioNqNdPN1Mv/j3Co4fLaY+YkAwehBtVEO9x0uatlDrU7Ui3SW2I8triIwF2ILVT9w0If+wQA6cDFfpSE7ZBm+lu1IEuWJyNaMUwfa2RySwitXEFDz18+c=
+	t=1748014089; cv=none; b=QXnqvb4pfHHvhpxNyJQ6gf2w9Rx0UiBow9BdmeZgNYMDj/iZANCDT7gKCKYmrsxOMeGyXhBV7hl+LPYB/hRHsDpqcn65liF5IoCLYrzYMy3scoFAXojCgbWksv+GztU461XyyD3R5hM53VZoYlyE4Mr41zxGMfB5VPba6WhAAVU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748014022; c=relaxed/simple;
-	bh=PYunuzs3oJy/N2+82erHr2vRNwackk1nSZPaDtV12Y8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Zr/b7/VIwKe9SwGr7qRCNvR4Z8RvzWBFg4h39vnAb2rKC/JxgckFf4Ma7FqN3xfbLCzdtQ+0XHeVVmekxIjaBO/2udtHxbY3hKNURk/ghDiUbVdA/bur1c2WrfzlpsciQRHJfTgeaQjODHr4B0VTmEZfl/HZoyJ0bhhMQ5W/dd8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qk1-f182.google.com with SMTP id af79cd13be357-7c54f67db99so108817585a.1;
-        Fri, 23 May 2025 08:27:00 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748014019; x=1748618819;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=5/mFreN/N8gKGzXkzRAExzIbBGUdEjq8ge84vdymmY8=;
-        b=hqFX9/67YgcgABY0+4pxbplXeDfh8YdEhwl9iO4GjafAhcxnwx/rSNN6/nfAlEP4sE
-         5fvRgtqVuy+GlY/ch1SC2XgTRNjtu+/4szstaGiHk7VuW92Cyitr2iAqU8oplU6dzPdQ
-         ak40CwxnP73N7KHjcSJTNTmqCl56mFGf3nGU/CiTwcA1qoqfEpfjn3xvEv5RI9bWadaA
-         quYlpLLRnfuhBJhSh2hONW3XvnldYKHDyrD956eVACdkEEHbxnD8CUN/kNNeDH1HH95i
-         WOagyNrXnRnrqGlDykp9cUq7H2sVDmiCY9X1ubW4gZNBiBZu3nbnobs9wjDfjHzXPm8L
-         uHFw==
-X-Forwarded-Encrypted: i=1; AJvYcCUbcjyCFh6K76Hvn7LS5B+oay57W//vOC6rh9e81SmhMp7UeMhKbOPa+TprKWegE9bKYfD5Xzja0yK9@vger.kernel.org, AJvYcCW7xgnig3OZ4x9Vi3CyI0TKYBa/xYOCMRW7LhXHkffphO8w5pVIljwFXlFVQjGH9AlFMEppeVSfkl2S0VUh@vger.kernel.org, AJvYcCWXlEj8CKJI+brwWtTqOhmCvyeNOiqnCk0218/UqIatdVvpYk1Bo4KAynBRrmSJ9UlVncvKXKbJjYHfbzo+@vger.kernel.org, AJvYcCWaK6uLOfaN5eawoXrGHzkjGEiiJ9d+yJ5yBPNLDg9e0aOx6xRA/1VwIjKsc36/emzv/6ihYSiUzysjik+p3R4s7NE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxIMdj1mgxqYFZ0KQhPbo2gQ+U29w0PBpnJh0cAIWeMt4pLGrNt
-	J6tXvTTdaYCwQfX9AlE2R+M2cyC/VYj9XHv/BZY0XO8IwNAe6ZUyaE7Ftda13aYxgx4=
-X-Gm-Gg: ASbGnctTOnhA40j+rjV2uKC72zuM8iEH/g2ovV0qnYNCSdGjoYXvrWN7xgn8IEKOixq
-	FqXWBzZH8EGOeqRlPjpCSAkW/H15C+w4he4HWkleJIDvWYhglgy7sfywoYVWW3uvMmXyEXkjQt/
-	mjo4MdAU/mgBi00rK7oW+mloouv6+P8bhtrGMK584wFO3QxhjbiwgfHQE67Dnyqv1XeMWBoTUDa
-	/NMnrUVifoVZrQwKoklDEX9eoZ/xxalaR3bBpJoCh35cZsXWu+t7kgg5wUgrmg8I/h/M2GRDe0f
-	fbIhqc30RZhOgghudcvq8fX1dlL4Kp3ST7yxXg8xvm0oatTyoaZaN1B0crgODVi5+/aKegiyKyl
-	5JhnqUhZQ2+g1TA==
-X-Google-Smtp-Source: AGHT+IFlfGZ3CuMnppifHGnoF8jwnh1TLtoICgDNGuigyodwUehM//Y3Ye4uYztryrokWHqgbW+Osw==
-X-Received: by 2002:a05:620a:44d2:b0:7ca:ef8d:d358 with SMTP id af79cd13be357-7cee228bcb8mr519891985a.18.1748014019106;
-        Fri, 23 May 2025 08:26:59 -0700 (PDT)
-Received: from mail-qv1-f44.google.com (mail-qv1-f44.google.com. [209.85.219.44])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7cd467edc16sm1190690885a.50.2025.05.23.08.26.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 23 May 2025 08:26:58 -0700 (PDT)
-Received: by mail-qv1-f44.google.com with SMTP id 6a1803df08f44-6f0cfbe2042so848526d6.1;
-        Fri, 23 May 2025 08:26:58 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVI74ZE0+DG/CaH48fFsAPqS2zczW7VRI2+mEPoiKG17AZiOYdSiA3+Dhm5Difsfazwo2Zn0LXxOi48@vger.kernel.org, AJvYcCVg+nZuHfmCyEOE1lqGSEVWOhQJgekaeHTY1VL4EjUqCR00gIyv6wjCUDo40opo34B/6rH4sonAYxg1qQGp@vger.kernel.org, AJvYcCXEPvVh+iY49n4D67w7WO8sixE7EATGYAwfbvmgk/UajlrKiQMC4CRI+uGG1IXc6LWFrAKKx/nu5Pn5s1N6SyaqDug=@vger.kernel.org, AJvYcCXLAq9IuJdTRTg/IkqKMM3h9gjGwOLmgSS3NkEQxjfVvkl6IclJiUi7F2qidyJQLySZfgJFJUB7XUG3BzTW@vger.kernel.org
-X-Received: by 2002:a05:6214:194f:b0:6f8:c773:26e with SMTP id
- 6a1803df08f44-6fa935de959mr56751126d6.18.1748014018481; Fri, 23 May 2025
- 08:26:58 -0700 (PDT)
+	s=arc-20240116; t=1748014089; c=relaxed/simple;
+	bh=CZB04wmED1JGXTOX7r3pF+DNYjq86hwdBgfs+9h9GIk=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=rWctnG9Nysa4ptfJWdOCUHpZf21t6s3B3CtVy62uCW6nWgkxxoktkSBp3ZI8gpsgqyxWr/mqEoy1HaEigqFfqzx5kv5rbaWML8mDfFA8Y6VyxriePiRUpJoI4GCuipum7vpM4ILkSKrGblzzziQjyxd8O4hT0pijXUbKEGqBjmc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gVduL2Vu; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gVduL2Vu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23D27C4CEED;
+	Fri, 23 May 2025 15:28:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748014089;
+	bh=CZB04wmED1JGXTOX7r3pF+DNYjq86hwdBgfs+9h9GIk=;
+	h=From:Subject:Date:To:Cc:From;
+	b=gVduL2VuCeuf4pQxFJx0fwLrhbZUblHaB1wr5H5RoC7vPcuXx1EzDJ8TT6SnqyJKH
+	 x2KDobQoJSnlbnVLcxkQCYiiMxa1NAHKRLpWk4Q5p/PAdLUYk37EEB/+KUWaTuIRvX
+	 UaFSfvsU680FSqAptdMwPgVjqTjyKhRa7k/MkB5/MOqlpVyabPGpEbM+HkuOrIDk2H
+	 iCw1JMREjuwBI6oPKEM0uhHpCdKsqVZm4xLQ7IPVilr/v7g/pJ641eKZzkkpU/GM7H
+	 3R9MzQWylu0Js2/AwBz1BWUNWs6em9iruA8Qn6FwuLwPh6knSwq583J+24zvEm2WUK
+	 /GglluzfLRVIg==
+From: Mark Brown <broonie@kernel.org>
+Subject: [PATCH 0/3] kselftest/arm64: Update sve-ptrace for ABI changes
+Date: Fri, 23 May 2025 16:27:11 +0100
+Message-Id: <20250523-kselftest-arm64-ssve-fixups-v1-0-65069a263b21@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250523142417.2840797-1-thierry.bultel.yh@bp.renesas.com> <20250523142417.2840797-2-thierry.bultel.yh@bp.renesas.com>
-In-Reply-To: <20250523142417.2840797-2-thierry.bultel.yh@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Fri, 23 May 2025 17:26:45 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdVUwqYK6V1+F+aMJCnMLh0Y6SRVAW8cNVoMDxLsAOXKyw@mail.gmail.com>
-X-Gm-Features: AX0GCFu62-GdW3-iaPeMH_SSfSV5cKa0GeyZsatptNE6HFBLm2EpBfJshpDfulA
-Message-ID: <CAMuHMdVUwqYK6V1+F+aMJCnMLh0Y6SRVAW8cNVoMDxLsAOXKyw@mail.gmail.com>
-Subject: Re: [PATCH v10 01/10] dt-bindings: serial: Added secondary clock for
- RZ/T2H RSCI
-To: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
-Cc: thierry.bultel@linatsea.fr, linux-renesas-soc@vger.kernel.org, 
-	paul.barker.ct@bp.renesas.com, linux-kernel@vger.kernel.org, 
-	linux-serial@vger.kernel.org, devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAM+TMGgC/x3MWwqDMBBG4a3IPHfApBqKW5E+RP2jg/VCxoog7
+ t3g48eBc5IiCpSq7KSIXVSWOcG8MmoHP/dg6ZLJ5rbMS/vmUfELG3RjHydXsOoODnL8V+XGfTy
+ caQ2aQOmwRqTy3Ovvdd32wsvmbQAAAA==
+X-Change-ID: 20250523-kselftest-arm64-ssve-fixups-b68ae61c1ebf
+To: Catalin Marinas <catalin.marinas@arm.com>, 
+ Will Deacon <will@kernel.org>, Shuah Khan <shuah@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, 
+ Shuah Khan <skhan@linuxfoundation.org>, 
+ linux-arm-kernel@lists.infradead.org, linux-kselftest@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
+X-Mailer: b4 0.15-dev-c25d1
+X-Developer-Signature: v=1; a=openpgp-sha256; l=924; i=broonie@kernel.org;
+ h=from:subject:message-id; bh=CZB04wmED1JGXTOX7r3pF+DNYjq86hwdBgfs+9h9GIk=;
+ b=owEBbQGS/pANAwAKASTWi3JdVIfQAcsmYgBoMJQDvgIanx1caBCCr87FUvZ8dKH1eaZQMuQne
+ 1kZk1zR6MGJATMEAAEKAB0WIQSt5miqZ1cYtZ/in+ok1otyXVSH0AUCaDCUAwAKCRAk1otyXVSH
+ 0EibB/sEq4AqGXPx+vRbuDmgWUbOvJP+ZmmajU04uYmsaIWeVuBVVfiGUKA9Ea+S3pMTtLtC3pE
+ 5bTB5B85GhVFLkWQvC8rH6AySwwtp+E939MDZiSosNI2ZW+NlmHfDWdaimlUXi9t8Kr9t0dn8Re
+ U7ptTiLahvAE20OIYtOVADcjoXbfuuJRZ1KGUrSTzCHB2nBXlqZAjUsV9mY3uQS4ApVKxp+Zu+I
+ DDtlR8FztVlXmGnjUTYbdkDY9lhmsUq/hvH/f2nxaax6hWQA3AS6VoEo/Sm14obk4kQcrrJ5dbO
+ p7llEXafVoq6n2IjamPhg6vp861w2hPfqN2BGC+vm8xvsGtS
+X-Developer-Key: i=broonie@kernel.org; a=openpgp;
+ fpr=3F2568AAC26998F9E813A1C5C3F436CA30F5D8EB
 
-On Fri, 23 May 2025 at 16:24, Thierry Bultel
-<thierry.bultel.yh@bp.renesas.com> wrote:
-> At boot, the default clock is the PCLKM core clock (synchronous
-> clock, which is enabled by the bootloader).
-> For different baudrates, the asynchronous clock input must be used.
-> Clock selection is made by an internal register of RCSI.
->
-> Add the optional "sck", external clock input.
->
-> Also remove the unneeded serial0 alias from the dts example.
->
-> Signed-off-by: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
-> ---
-> Changes v9->v10:
->  - mention sck in description
->  - no maxItems on clock-names
->  - fixed the #include dependency in dts example
+Mark Rutland's recent SME fixes updated the SME ABI to reject any
+attempt to write FPSIMD register data via the streaming mode SVE
+register set but did not update the sve-ptrace test to take account of
+this, resulting in spurious failures.  Update the test for this, and
+also fix another preexisting issue I noticed while looking at this.
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+Mark Brown (3):
+      kselftest/arm64: Fix check for setting new VLs in sve-ptrace
+      kselftest/arm64: Fix test for streaming FPSIMD write in sve-ptrace
+      kselftest/arm64: Specify SVE data when testing VL set in sve-ptrace
 
-Gr{oetje,eeting}s,
+ tools/testing/selftests/arm64/fp/sve-ptrace.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+---
+base-commit: 1c1abfd151c824698830ee900cc8d9f62e9a5fbb
+change-id: 20250523-kselftest-arm64-ssve-fixups-b68ae61c1ebf
 
-                        Geert
-
+Best regards,
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+Mark Brown <broonie@kernel.org>
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
