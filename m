@@ -1,226 +1,131 @@
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF8DD5695;
-	Fri, 23 May 2025 12:31:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FADAE552;
+	Fri, 23 May 2025 12:32:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748003474; cv=none; b=Ek+dEnA4nP5GA7BDO9LkUdN3gB64nUktlA60l9fxpLNKotAzRxsvQH10uPUQzoLfGOAIhgsMAfHSnagezWOQE5jpUIGq+BTG4z85NV6cS5w/EwDShAGRVHmc5fJNrifhc01Gj7OdPD0tZn4e+SPfNkZIBXUkHNoGkTAfIrOfBr0=
+	t=1748003523; cv=none; b=GRJfuANkoH5tdyrqlNxq59cEwFlqwBf3Gns7SloyEHrpxwCjc/d6K3HPF3LTpscQS+H3feU0M5zij0C/7CAPJQwmLFLil+ASgbCep6PPaWSH0Hcreb2+kXjnnHfarXzCJITrw+9d3teUASRqFExO4nQB8JzIe9RVBeHnCoRBMgg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748003474; c=relaxed/simple;
-	bh=6RL7KQIOgJBaxllw15lEHWUqm8MNQgnkMaFeUS0xE7A=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Emix2L4JqQru+p9lr5nGglvNSDIEXRfn5WHpGSh8BOvq0dxXns6IyP9SJ7vJ9U0/Eel4uPsm8owGAIGM0EEh66Ls0aqt/NZW6D+v/wDyTSG4FTYyiacvVTaNOMHXt17iR+AlAZbIFdBvCekN2LG4pbBJwLR1UHC/CPt9wlvXmaI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LveV0kGh; arc=none smtp.client-ip=209.85.208.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748003523; c=relaxed/simple;
+	bh=j0CL94Rb8NLPTthjduF/9Bmuzez0jW0NPtqEk9wPUBI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Pswo0odFB2QdP2BogO4d0RRAitpMVEeEQ9mGGSG24iYGvndxNJbXgzo3smTP2v8TphyPF0Lj9QOwI7Ysz/OqA4CFwCERcGXUm3Li/9RurBQgW48Vp4DuqhZ4Vmtkk5/QIM1G+Kt5+Xd3Hk3axvHmdhz8MmBs5yqVzwL6YRHD6Tw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=dtTyykSV; arc=none smtp.client-ip=213.97.179.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LveV0kGh"
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-602039559d8so9450772a12.1;
-        Fri, 23 May 2025 05:31:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748003471; x=1748608271; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gZePJaaViCvSD05MKtWm1uzZsAobi9HR7bhRGFEkvks=;
-        b=LveV0kGhYDF9kbKi+JE7ELI7ktb1bN9OCOIQj1jer2N4NOjRS5tXQRCW1XNgjgVhpt
-         PNox1uBj/lBUn4b8ghW/h9soz1/Jxo++3CaQtHNmDMBXjHYZPDOgbsLXWRI2aAKOYXwg
-         QvE6wx3ZuDDZxuuBYA6AJwC6QUl7kik/XUISarspwzfCGw+VlaCTF7wXm0LcS+6qi/Sv
-         nw9fru6mNHxwrQ12corZvoDkjOxXBjDeqKyjUgj3IDfaPQqV7mLEQJgLj//0NKyUvh3S
-         kv/MK1c3dOIvto/f1Cf58gmiWFRQ1U3BwVJA3MgHp5G6uEIuj7d+18tk1zS0/TJkRXcG
-         ho8Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748003471; x=1748608271;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=gZePJaaViCvSD05MKtWm1uzZsAobi9HR7bhRGFEkvks=;
-        b=xPk7UuC42cazrWMeNzQB/zCr7T/R6Cm6p89yEfEjB3WJZcP71vrE0ud8nGCJyDc+YW
-         ZevH43V9wi4a6urbgN/Wc0UEwaxV25zLN2sqRKYsEuNJEnxi3aUhun3Lp04GjESXUUrx
-         e6xSpWcXXhKecxibCo9uKv8ayjuK5yWQfCyWPeN9VuXHqJtURDJ92P5Q7VScJQyACkZa
-         IBXulnxPRGzvztRktE7t7p4p/cuOrEIp9yEkaxIrFxarelXHhHdpDp3TgyHwD7xVdaLu
-         ZnNhgMOq1vezpgrfDd/P0Gd7Fvu9JbtsyULaxzEea6gjV8lmaXLRdkT0fJtmRQ8bBkHQ
-         HCcw==
-X-Forwarded-Encrypted: i=1; AJvYcCVUHxcXwGFMMflUTeHCUngSHw02RBtGyAFKd92T08hOebB5+Nu5qY2Ux0Nllni6O2woQQ1Gi2u2eRrd@vger.kernel.org, AJvYcCXi2grKaoRJAuM4EwwE9oxi5L3Iryu3GEj4qn684AGCY2xmNUKl75Bh/Sk62rIivnhVW/oR4G5xRf/25bbG@vger.kernel.org, AJvYcCXye4jqRkw81zsgMwqBOGPdzb4sj7gKr494wuoGYbhcLyIy73SL+DYu+YJVS67bXvy/4z+hHezLXetB@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywwp+RFvu+gBXfuAWR5jnnZYj9mYcU89wOAb06MyXbQG26rItZB
-	wqaYggei+y0B4M1uug+BlTEbsODUlH1qY3HESLcrJb1k0+PVGtgSnK/TJadFoFFmDm7a8dLE+Ug
-	TXNZ1EScHf1l0/l33AosqAHJ9+EPDHGY=
-X-Gm-Gg: ASbGnctHnp1ThRsY1AeJrhqOo4EarX2Bsv3Cr5/D4WNBYCdoFVcTYev5Cy86oYbN4gS
-	Gu7uXDgPfbszYL9tQDAE68XdgRFeV3HiZPFmENjxAyBE7Six5BQxyWVyFGZaQ59YRBwHWa8teMC
-	6BLDQodGnB6LfHUXSntAPHkmotMtU3V/zo
-X-Google-Smtp-Source: AGHT+IGWlJUkoqEM1lKufCkJoGQC1KPn5qxbYU6vzVhsAOysE3E9HU2ESod2o4cWjRIgZJsMEdsYZE4ddIeAwpI8ivY=
-X-Received: by 2002:a17:907:d05:b0:ad5:1c28:3c4b with SMTP id
- a640c23a62f3a-ad536f29859mr2451295366b.52.1748003470843; Fri, 23 May 2025
- 05:31:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="dtTyykSV"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=yO0EwDZrf4fd992J3B8iCK71Ip2ga1Ayg9UxqoNl3Zw=; b=dtTyykSVssYRpd4G7j3B1bGx7I
+	XaQ18MuK8E645S1dcEUB3aD0MCqSWaQrM8s5x4zd7EMH21QPKvZLczSBuupJvoATKwLzkNDz0oKzu
+	zRbXx08nyKMkS4pymGSq4SQkGRV4apCr3ONB78Zr+sphNCIq0b5ob9xUJVBTi4ubC2cBJjSY073Yg
+	TlVq/YRLU9Q8wN57CZXZ59s6qDswZVnBXNVx9kQo/74OSSCd0nasd+9qRZOek6hwqtuzv+2YP6iek
+	fyTrBrCqR79iZ46ueTEXEhkuBrtjifNRI9A58IN0M1VTKXjMtLMZi/CidjNG0DgWI0g/DPPgrACDo
+	Fy4F4v/A==;
+Received: from [223.233.76.245] (helo=[192.168.1.12])
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
+	id 1uIRZ1-00CB4g-9x; Fri, 23 May 2025 14:31:51 +0200
+Message-ID: <a7c323fe-6d11-4a21-a203-bd60acbfd831@igalia.com>
+Date: Fri, 23 May 2025 18:01:41 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250523104552.32742-1-ziyao@disroot.org> <20250523104552.32742-2-ziyao@disroot.org>
-In-Reply-To: <20250523104552.32742-2-ziyao@disroot.org>
-From: Binbin Zhou <zhoubb.aaron@gmail.com>
-Date: Fri, 23 May 2025 20:30:57 +0800
-X-Gm-Features: AX0GCFuUC-pGEjSv1O0q4b7QC2Sp4Bks5MdQhMyjc7562FwoYKnYCHzHRGmQXp0
-Message-ID: <CAMpQs4JRy+Q2D5B9cOLyuD=8EcWNqqyhJcm+X5wiqTgjy5cikA@mail.gmail.com>
-Subject: Re: [PATCH 1/8] dt-bindings: clock: Document Loongson 2K0300 clock controller
-To: Yao Zi <ziyao@disroot.org>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
-	Yinbo Zhu <zhuyinbo@loongson.cn>, linux-clk@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	loongarch@lists.linux.dev, Mingcong Bai <jeffbai@aosc.io>, 
-	Kexy Biscuit <kexybiscuit@aosc.io>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.5.0
+Subject: Re: [PATCH v4 3/3] exec: Add support for 64 byte 'tsk->comm_ext'
+Content-Language: en-US
+To: Kees Cook <kees@kernel.org>, Bhupesh <bhupesh@igalia.com>
+Cc: akpm@linux-foundation.org, kernel-dev@igalia.com,
+ linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ linux-mm@kvack.org, oliver.sang@intel.com, lkp@intel.com,
+ laoar.shao@gmail.com, pmladek@suse.com, rostedt@goodmis.org,
+ mathieu.desnoyers@efficios.com, arnaldo.melo@gmail.com,
+ alexei.starovoitov@gmail.com, andrii.nakryiko@gmail.com,
+ mirq-linux@rere.qmqm.pl, peterz@infradead.org, willy@infradead.org,
+ david@redhat.com, viro@zeniv.linux.org.uk, ebiederm@xmission.com,
+ brauner@kernel.org, jack@suse.cz, mingo@redhat.com, juri.lelli@redhat.com,
+ bsegall@google.com, mgorman@suse.de, vschneid@redhat.com,
+ linux-trace-kernel@vger.kernel.org
+References: <20250521062337.53262-1-bhupesh@igalia.com>
+ <20250521062337.53262-4-bhupesh@igalia.com>
+ <202505222041.B639D482FB@keescook>
+From: Bhupesh Sharma <bhsharma@igalia.com>
+In-Reply-To: <202505222041.B639D482FB@keescook>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Fri, May 23, 2025 at 6:46=E2=80=AFPM Yao Zi <ziyao@disroot.org> wrote:
->
-> Document the clock controller shipped in Loongson 2K0300 SoC, which
-> generates various clock signals for SoC peripherals.
->
-> Signed-off-by: Yao Zi <ziyao@disroot.org>
-> ---
->  .../bindings/clock/loongson,ls2k0300-clk.yaml | 52 ++++++++++++++++++
->  .../dt-bindings/clock/loongson,ls2k0300-clk.h | 54 +++++++++++++++++++
->  2 files changed, 106 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/loongson,ls2k=
-0300-clk.yaml
+Hi Kees,
 
-I don't think a new binding file for 2K0300 is needed. Adding
-compatible entries to loongson,ls2k-clk.yaml would be more appropriate
-as they are almost all similar.
+Thanks for the review.
 
->  create mode 100644 include/dt-bindings/clock/loongson,ls2k0300-clk.h
+On 5/23/25 9:18 AM, Kees Cook wrote:
+> On Wed, May 21, 2025 at 11:53:37AM +0530, Bhupesh wrote:
+>> Historically due to the 16-byte length of TASK_COMM_LEN, the
+>> users of 'tsk->comm' are restricted to use a fixed-size target
+>> buffer also of TASK_COMM_LEN for 'memcpy()' like use-cases.
+>>
+>> To fix the same, Linus suggested in [1] that we can add the
+>> following union inside 'task_struct':
+>>         union {
+>>                 char    comm[TASK_COMM_LEN];
+>>                 char    comm_ext[TASK_COMM_EXT_LEN];
+>>         };
+> I remain unconvinced that this is at all safe. With the existing
+> memcpy() and so many places using %s and task->comm, this feels very
+> very risky to me.
 >
-> diff --git a/Documentation/devicetree/bindings/clock/loongson,ls2k0300-cl=
-k.yaml b/Documentation/devicetree/bindings/clock/loongson,ls2k0300-clk.yaml
-> new file mode 100644
-> index 000000000000..d96b9d7cb7c4
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/loongson,ls2k0300-clk.yaml
-> @@ -0,0 +1,52 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/clock/loongson,ls2k0300-clk.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Loongson-2K0300 SoC Clock Controller
-> +
-> +maintainers:
-> +  - Yao Zi <ziyao@disroot.org>
-> +
-> +description: |
-> +  The Loongson 2K0300 clock controller generates various clocks for SoC
-> +  peripherals. See include/dt-bindings/clock/loongson,ls2k0300-clk.h for
-> +  valid clock IDs.
-> +
-> +properties:
-> +  compatible:
-> +    const: loongson,ls2k0300-clk
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    items:
-> +      - description: External 120MHz reference clock
-> +
-> +  clock-names:
-> +    items:
-> +      - const: ref_120m
-> +
-> +  '#clock-cells':
-> +    const: 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - clocks
-> +  - clock-names
-> +  - '#clock-cells'
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    clk: clock-controller@16000400 {
-> +        compatible =3D "loongson,ls2k0300-clk";
-> +        reg =3D <0x16000400 0x100>;
-> +        clocks =3D <&ref_120m>;
-> +        clock-names =3D "ref_120m";
-> +        #clock-cells =3D <1>;
-> +    };
-> diff --git a/include/dt-bindings/clock/loongson,ls2k0300-clk.h b/include/=
-dt-bindings/clock/loongson,ls2k0300-clk.h
-> new file mode 100644
-> index 000000000000..5e8f7b2f33f2
-> --- /dev/null
-> +++ b/include/dt-bindings/clock/loongson,ls2k0300-clk.h
-> @@ -0,0 +1,54 @@
-> +/* SPDX-License-Identifier: (GPL-2.0-only OR MIT) */
-> +/*
-> + * Copyright (C) 2025 Yao Zi <ziyao@disroot.org>
-> + */
-> +#ifndef _DT_BINDINGS_CLK_LOONGSON_LS2K300_H_
-> +#define _DT_BINDINGS_CLK_LOONGSON_LS2K300_H_
-> +
-> +/* Derivied from REFCLK */
-> +#define LS2K0300_CLK_STABLE                    0
-> +#define LS2K0300_PLL_NODE                      1
-> +#define LS2K0300_PLL_DDR                       2
-> +#define LS2K0300_PLL_PIX                       3
-> +#define LS2K0300_CLK_THSENS                    4
-> +
-> +/* Derived from PLL_NODE */
-> +#define LS2K0300_CLK_NODE_DIV                  5
-> +#define LS2K0300_CLK_NODE_PLL_GATE             6
-> +#define LS2K0300_CLK_NODE_SCALE                        7
-> +#define LS2K0300_CLK_NODE_GATE                 8
-> +#define LS2K0300_CLK_GMAC_DIV                  9
-> +#define LS2K0300_CLK_GMAC_GATE                 10
-> +#define LS2K0300_CLK_I2S_DIV                   11
-> +#define LS2K0300_CLK_I2S_SCALE                 12
-> +#define LS2K0300_CLK_I2S_GATE                  13
-> +
-> +/* Derived from PLL_DDR */
-> +#define LS2K0300_CLK_DDR_DIV                   14
-> +#define LS2K0300_CLK_DDR_GATE                  15
-> +#define LS2K0300_CLK_NET_DIV                   16
-> +#define LS2K0300_CLK_NET_GATE                  17
-> +#define LS2K0300_CLK_DEV_DIV                   18
-> +#define LS2K0300_CLK_DEV_GATE                  19
-> +
-> +/* Derived from PLL_PIX */
-> +#define LS2K0300_CLK_PIX_DIV                   20
-> +#define LS2K0300_CLK_PIX_PLL_GATE              21
-> +#define LS2K0300_CLK_PIX_SCALE                 22
-> +#define LS2K0300_CLK_PIX_GATE                  23
-> +#define LS2K0300_CLK_GMACBP_DIV                        24
-> +#define LS2K0300_CLK_GMACBP_GATE               25
-> +
-> +/* Derived from CLK_DEV */
-> +#define LS2K0300_CLK_USB_SCALE                 26
-> +#define LS2K0300_CLK_USB_GATE                  27
-> +#define LS2K0300_CLK_APB_SCALE                 28
-> +#define LS2K0300_CLK_APB_GATE                  29
-> +#define LS2K0300_CLK_BOOT_SCALE                        30
-> +#define LS2K0300_CLK_BOOT_GATE                 31
-> +#define LS2K0300_CLK_SDIO_SCALE                        32
-> +#define LS2K0300_CLK_SDIO_GATE                 33
-> +
-> +#define LS2K0300_CLK_GMAC_IN                   34
-> +
-> +#endif // _DT_BINDINGS_CLK_LOONGSON_LS2K300_H_
-> --
-> 2.49.0
->
+> Can we just make it separate, instead of a union? Then we don't have to
+> touch comm at all.
+
+I understand your apprehensions, but I think we have covered _almost_ 
+all the existing use-cases as of now:
+
+1. memcpy() users: Handled by [PATCH 2/3] of this series, where we 
+identify existing users using the following search
+     pattern:
+        $ git grep 'memcpy.*->comm\>'
+
+2. %s usage: I checked this at multiple places and can confirm that %s 
+usage to print out 'tsk->comm' (as a string), get the longer
+     new "extended comm".
+
+3. users who do 'sizeof(->comm)' will continue to get the old value 
+because of the union.
+
+The problem with having two separate comms: tsk->comm and tsk->ext_comm, 
+instead of a union is two fold:
+(a). If we keep two separate statically allocated comms: tsk->comm and 
+tsk->ext_comm in struct task_struct, we need to basically keep 
+supporting backward compatibility / ABI via tsk->comm and ask new 
+user-land users to move to tsk->ext_comm.
+
+(b). If we keep one statically allocated comm: tsk->comm and one dynamically allocated tsk->ext_comm in struct task_struct, then we have the problem of allocating the tsk->ext_comm which _may_ be in the exec()  hot path.
+
+I think the discussion between Linus and Yafang (see [1]), was more towards avoiding the approach in 3(a).
+
+Also we discussed the 3(b) approach, during the review of v2 of this series, where there was a apprehensions around: adding another field to store the task name and allocating tsk->ext_comm dynamically in the exec() hot path (see [2]).
+
+[1]. https://lore.kernel.org/all/CAHk-=wjAmmHUg6vho1KjzQi2=psR30+CogFd4aXrThr2gsiS4g@mail.gmail.com/
+[2]. https://lore.kernel.org/lkml/CALOAHbB51b-reG6+ypr43sBJ-QpQhF39r5WPjuEp5rgabgRmoA@mail.gmail.com/
+
+Please let me know your views.
+
+Thanks,
+Bhupesh
+
+>> and then modify '__set_task_comm()' to pass 'tsk->comm_ext'
+>> to the existing users.
+> We can use set_task_comm() to set both still...
 >
 
---=20
-Thanks.
-Binbin
