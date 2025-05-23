@@ -1,123 +1,205 @@
-Received: from mail.actia.se (mail.actia.se [212.181.117.226])
+Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65B5729375E;
-	Fri, 23 May 2025 13:33:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.181.117.226
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 897D75FB95;
+	Fri, 23 May 2025 13:34:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748007230; cv=none; b=EJK0LLTFPDGp2OrIvJBot8DCssX1JzwePi9hGQwp9zULUNzj6yJC9cWjAO/qAweEazT2D9fFGztUPRw8uJzsU7KWPat6TOnrTuVeHXvsmsVg+od267iFcFzLAB3oiRp67esgAOp6QDnBzEM4m4A+aJj6XlvRC3vUT65FAaxoCgc=
+	t=1748007261; cv=none; b=ZEkl0qrZtdWlST95T1/fI8mAmlieylt3tvkp0jbsY0zirvjoXaTA8F1L7MvFv79kOxB7peBMJSVF9i7KymCVVOGrbwuw9SXkRYT4EUdtzph/4KkaxHXbeQ4V7m0132X0eC3UlKym33LQVlX7Tcwd+31+oJU40NlEbE71mdbl0oA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748007230; c=relaxed/simple;
-	bh=36QJMW5pEJUHtQkQLki8rTjxolYQrZNrNwsjEeZsaxo=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=kYJ4n79/UO3lqbzNAGTYs1SeSMRVnIZDBgfik99ij/0HkK463B9YTv//2FFXJ02ZA98FBJrFv5aZWAIM2iyw5i72UvmeoHuYGhAb2IetJKo4bB573eiKHA9A4gfkmSx2fExEJ+qOF+o+v5wVH1iy8NsmbwmDOk9+XudpMwJheWw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=actia.se; spf=pass smtp.mailfrom=actia.se; arc=none smtp.client-ip=212.181.117.226
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=actia.se
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=actia.se
-Received: from S036ANL.actianordic.se (10.12.31.117) by S035ANL.actianordic.se
- (10.12.31.116) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 23 May
- 2025 15:18:33 +0200
-Received: from S036ANL.actianordic.se ([fe80::e13e:1feb:4ea6:ec69]) by
- S036ANL.actianordic.se ([fe80::e13e:1feb:4ea6:ec69%3]) with mapi id
- 15.01.2507.039; Fri, 23 May 2025 15:18:33 +0200
-From: John Ernberg <john.ernberg@actia.se>
-To: =?utf-8?B?SG9yaWEgR2VhbnTEgw==?= <horia.geanta@nxp.com>, Pankaj Gupta
-	<pankaj.gupta@nxp.com>, Gaurav Jain <gaurav.jain@nxp.com>, Herbert Xu
-	<herbert@gondor.apana.org.au>, "David S . Miller" <davem@davemloft.net>, "Rob
- Herring" <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, "Conor
- Dooley" <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer
-	<s.hauer@pengutronix.de>
-CC: Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam
-	<festevam@gmail.com>, Thomas Richard <thomas.richard@bootlin.com>,
-	"linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"imx@lists.linux.dev" <imx@lists.linux.dev>,
-	"linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, John Ernberg <john.ernberg@actia.se>
-Subject: [PATCH 4/4] arm64: dts: freescale: imx8qxp/imx8qm: Add CAAM support
-Thread-Topic: [PATCH 4/4] arm64: dts: freescale: imx8qxp/imx8qm: Add CAAM
- support
-Thread-Index: AQHby+UuH7XxjH3Oy02KoZkEi3Dspw==
-Date: Fri, 23 May 2025 13:18:32 +0000
-Message-ID: <20250523131814.1047662-5-john.ernberg@actia.se>
-References: <20250523131814.1047662-1-john.ernberg@actia.se>
-In-Reply-To: <20250523131814.1047662-1-john.ernberg@actia.se>
-Accept-Language: en-US, sv-SE
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-mailer: git-send-email 2.49.0
-x-esetresult: clean, is OK
-x-esetid: 37303A2956B14453607162
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <928AE8E9249EE0458E24F6D5F153B114@actia.se>
-Content-Transfer-Encoding: base64
+	s=arc-20240116; t=1748007261; c=relaxed/simple;
+	bh=LTmwRQRobGT+9LVynrkU/vsVFP50bei2FW2/JtlF2xE=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=n8RqCEjIIrvyGs09N3GCzRqrg5bUGdithUC9xPklnSBB2c9ohfpejxGYnB/MmWRuaNjgDitGI2NM118wIN07SSheqSu31yNVcgkzlm9vutwtQaFUd4oCKLuyK1IIvQrc5KNHAkCHGH1fmbDYKasOw1L1Rm1qqLfc2Plkzoi/Ttg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NFM0i8wl; arc=none smtp.client-ip=209.85.216.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NFM0i8wl"
+Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-30e93626065so6272151a91.1;
+        Fri, 23 May 2025 06:34:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748007259; x=1748612059; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=eiu0KVR2fYUbvLhDI6ebtfAFwgk+5+sYMaG0Ry5Sfk4=;
+        b=NFM0i8wlt7gi0XJ8PW+itAVR5+XdLfKFW4uNxY5eiGA3S9ozLNAXvZpW25OMOQdZ7k
+         bEVt26dycS0BA/JMTpLT5NZMykKxPLpuWNTC4eqFxzZt9SyIgzmiT+7FZJcc8btPuZqC
+         wXF0t2udYZ/UJ1l3Kwn9MPMp3bHLBjDj8aBIrM5X4sxzOefauRl9TVwLy8OT6vt3wuQ7
+         rAHZ7AePI4j77ngldzKseXzXe1/WEsxXSyEAFjOXciNuALBf61z5MueK2OfiGO+wV7Qg
+         Nva5r8Qo9TDnQW7NoQthAt9EsylfGz10q2Iez1r71k1DvSr7mLbb9yO4FKsdlpC/Nr02
+         TYFg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748007259; x=1748612059;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=eiu0KVR2fYUbvLhDI6ebtfAFwgk+5+sYMaG0Ry5Sfk4=;
+        b=dnnKnPlzeanDkCQ1thz02iRNUnkbINcj+Su4c3L+SY4hjoJOpJjx5DsFNrijE3UL39
+         tlH3Qke13/dnyCeeUPbTBEnlUnyIC4YheeqoI1JObDEEXUstVsE4205cW5ShowqS4Tc3
+         f+K0ia4HmX5Tl5t15fCvWZcPG0xVGwqCNykilq/dXsZL15UhxnCMR9XC9KwPJE4yhe3a
+         +KRaN+6mv+PDYx6YZMoamdRSkW3d7cb2jqGC7oxbQc0EUtehNm791NXbRANA9mvUQm7T
+         U9pTkt5PUrwI+QZFkuxA4ODGS5PBII/RlK1LHh7D9puFoqXzX9/lAhFQRCecl7AmgINC
+         oxNw==
+X-Forwarded-Encrypted: i=1; AJvYcCUcdGYltxPDdtdZgf2riIERSRwBPGEF9RiVVins82ajQH+LTlDoVIJgQ3ctsh7bbMpqaRs5/besARi7O2gB@vger.kernel.org, AJvYcCVLTpJYOMRAyT+Mqhc1OjpKKsWtQKsVgpnYPituvKwdSXbKzhiVJbPWognueGAV/pHnv2uTadpFr0AU@vger.kernel.org
+X-Gm-Message-State: AOJu0YxG0Gb+gEOIQLF8sKl4A6cVeRhfL+yOS2xyszfr1aEoHDjTzt1W
+	xpWxYmP54uxxthERk/v8BY7SKQlL7yNev5hsNT5yqfLDc7sTkL2VNTN0
+X-Gm-Gg: ASbGncs/MxlktQcdN6v/4thw5aa278IXVExDprI88LQVOoF47fyFBkdOdCgZ6VBNp02
+	m5uUMUyHeyvDGT/47+ttEvT874rl+PaA4bvYLfoXgOC03pvzpLszMGeGt8LqwMT+5hqf5O2RTJG
+	eji0mCdvrpHVv3gse/9N34EE2s6qJ7qGb9zZe+eya9sX9gU/l6V8n8GWxzpBeEpW2xBeKu1U05e
+	2X2TXW6UUGY6MfR2Jplv3PoUBAAZMykz8BwOKvnaglALOvM4wpysZyWFFDYsdBaIoiT5gN1/tSu
+	CWgpOxusmdhoHSJR60MAaeByZT/xqBKRLDU0/YzHSAJB3ppA7jHHtEZ6wx07
+X-Google-Smtp-Source: AGHT+IHjuVJdklfm00XeHF7SLPfR034qveSgInfgmtI/zpDkIT4kFLFov3QvtDBYaVmztMcqpo8UqA==
+X-Received: by 2002:a17:90b:52c8:b0:30e:382f:8b86 with SMTP id 98e67ed59e1d1-30e8312dc73mr48552905a91.15.1748007258531;
+        Fri, 23 May 2025 06:34:18 -0700 (PDT)
+Received: from Black-Pearl. ([223.230.93.129])
+        by smtp.googlemail.com with ESMTPSA id 98e67ed59e1d1-30f36513bb7sm7324625a91.46.2025.05.23.06.34.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 23 May 2025 06:34:18 -0700 (PDT)
+From: Charan Pedumuru <charan.pedumuru@gmail.com>
+Date: Fri, 23 May 2025 13:34:10 +0000
+Subject: [PATCH] dt-bindings: mmc: ti,da830-mmc: convert text based binding
+ to json schema
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250523-davinci-mmc-v1-1-ceebd8352d9c@gmail.com>
+X-B4-Tracking: v=1; b=H4sIAFF5MGgC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDUyNj3ZTEssy85Ezd3Nxk3WRzAxMTE4Nk45QUAyWgjoKi1LTMCrBp0bG
+ 1tQB8zgDsXQAAAA==
+X-Change-ID: 20250523-davinci-mmc-c704440c3dd0
+To: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Charan Pedumuru <charan.pedumuru@gmail.com>
+X-Mailer: b4 0.14.2
 
-RnJvbTogSG9yaWEgR2VhbnTEgyA8aG9yaWEuZ2VhbnRhQG54cC5jb20+DQoNClRoZSBpTVg4UVhQ
-IGFuZCBpTVg4UU0gaGF2ZSBhIENBQU0gKENyeXB0b2dyYXBoaWMgQWNjZWxlcmF0aW9uIGFuZA0K
-QXNzdXJhbmNlIE1vZHVsZSkgbGlrZSBtYW55IG90aGVyIGlNWHMuDQoNCkFkZCB0aGUgZGVmaW5p
-dGlvbnMgZm9yIGl0Lg0KDQpKb2IgUmluZ3MgMCBhbmQgMSBhcmUgYm91bmQgdG8gdGhlIFNFQ08g
-KFNlY3VyaXR5IENvbnRyb2xsZXIpIEFSTSBjb3JlDQphbmQgYXJlIG5vdCBleHBvc2VkIG91dHNp
-ZGUgaXQuIFRoZXJlJ3Mgbm8gcG9pbnQgdG8gZGVmaW5lIHRoZW0gaW4gdGhlDQpiaW5kaW5ncyBh
-cyB0aGV5IGNhbm5vdCBiZSB1c2VkIG91dHNpZGUgdGhlIFNFQ08uDQoNClNpZ25lZC1vZmYtYnk6
-IEhvcmlhIEdlYW50xIMgPGhvcmlhLmdlYW50YUBueHAuY29tPg0KW2plcm5iZXJnOiBDb21taXQg
-bWVzc2FnZSwgZml4ZWQgZHRic19jaGVjayB3YXJuaW5ncywgdHJpbW1lZCBtZW1vcnkgcmFuZ2Vz
-XQ0KU2lnbmVkLW9mZi1ieTogSm9obiBFcm5iZXJnIDxqb2huLmVybmJlcmdAYWN0aWEuc2U+DQoN
-Ci0tLQ0KDQpJbXBvcnRlZCBmcm9tIE5YUCB0cmVlLCB0cmltbWVkIGRvd24gYW5kIGZpeGVkIHRo
-ZSBkdGJzX2NoZWNrIHdhcm5pbmdzLg0KQ29uc3RyYWluZWQgdGhlIHJhbmdlcyB0byB0aGUgbmVl
-ZGVkIG9uZXMuDQpDaGFuZ2VkIHRoZSBjb21taXQgbWVzc2FnZS4NCk9yaWdpbmFsIGhlcmU6IGh0
-dHBzOi8vZ2l0aHViLmNvbS9ueHAtaW14L2xpbnV4LWlteC9jb21taXQvNjk5ZTU0YjM4NmNiOWI1
-M2RlZjQwMTc5OGQwYTRlNjQ2MTA1NTgzZA0KLS0tDQogLi4uL2Jvb3QvZHRzL2ZyZWVzY2FsZS9p
-bXg4LXNzLXNlY3VyaXR5LmR0c2kgIHwgMzggKysrKysrKysrKysrKysrKysrKw0KIGFyY2gvYXJt
-NjQvYm9vdC9kdHMvZnJlZXNjYWxlL2lteDhxbS5kdHNpICAgICB8ICAxICsNCiBhcmNoL2FybTY0
-L2Jvb3QvZHRzL2ZyZWVzY2FsZS9pbXg4cXhwLmR0c2kgICAgfCAgMSArDQogMyBmaWxlcyBjaGFu
-Z2VkLCA0MCBpbnNlcnRpb25zKCspDQogY3JlYXRlIG1vZGUgMTAwNjQ0IGFyY2gvYXJtNjQvYm9v
-dC9kdHMvZnJlZXNjYWxlL2lteDgtc3Mtc2VjdXJpdHkuZHRzaQ0KDQpkaWZmIC0tZ2l0IGEvYXJj
-aC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvaW14OC1zcy1zZWN1cml0eS5kdHNpIGIvYXJjaC9h
-cm02NC9ib290L2R0cy9mcmVlc2NhbGUvaW14OC1zcy1zZWN1cml0eS5kdHNpDQpuZXcgZmlsZSBt
-b2RlIDEwMDY0NA0KaW5kZXggMDAwMDAwMDAwMDAwLi5kZjA0ZTIwM2U3ODMNCi0tLSAvZGV2L251
-bGwNCisrKyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2lteDgtc3Mtc2VjdXJpdHku
-ZHRzaQ0KQEAgLTAsMCArMSwzOCBAQA0KKy8vIFNQRFgtTGljZW5zZS1JZGVudGlmaWVyOiBHUEwt
-Mi4wKw0KKy8qDQorICogQ29weXJpZ2h0IDIwMTkgTlhQDQorICovDQorDQorI2luY2x1ZGUgPGR0
-LWJpbmRpbmdzL2Zpcm13YXJlL2lteC9yc3JjLmg+DQorDQorc2VjdXJpdHlfc3Vic3lzOiBidXNA
-MzE0MDAwMDAgew0KKwljb21wYXRpYmxlID0gInNpbXBsZS1idXMiOw0KKwkjYWRkcmVzcy1jZWxs
-cyA9IDwxPjsNCisJI3NpemUtY2VsbHMgPSA8MT47DQorCXJhbmdlcyA9IDwweDMxNDAwMDAwIDB4
-MCAweDMxNDAwMDAwIDB4OTAwMDA+Ow0KKw0KKwljcnlwdG86IGNyeXB0b0AzMTQwMDAwMCB7DQor
-CQljb21wYXRpYmxlID0gImZzbCxzZWMtdjQuMCI7DQorCQlyZWcgPSA8MHgzMTQwMDAwMCAweDkw
-MDAwPjsNCisJCWludGVycnVwdHMgPSA8R0lDX1NQSSAxNDggSVJRX1RZUEVfTEVWRUxfSElHSD47
-DQorCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsNCisJCSNzaXplLWNlbGxzID0gPDE+Ow0KKwkJcmFu
-Z2VzID0gPDAgMHgzMTQwMDAwMCAweDkwMDAwPjsNCisJCWZzbCxzZWMtZXJhID0gPDk+Ow0KKwkJ
-cG93ZXItZG9tYWlucyA9IDwmcGQgSU1YX1NDX1JfQ0FBTV9KUjI+Ow0KKw0KKwkJc2VjX2pyMjog
-anJAMzAwMDAgew0KKwkJCWNvbXBhdGlibGUgPSAiZnNsLHNlYy12NC4wLWpvYi1yaW5nIjsNCisJ
-CQlyZWcgPSA8MHgzMDAwMCAweDEwMDAwPjsNCisJCQlpbnRlcnJ1cHRzID0gPEdJQ19TUEkgNDUz
-IElSUV9UWVBFX0xFVkVMX0hJR0g+Ow0KKwkJCXBvd2VyLWRvbWFpbnMgPSA8JnBkIElNWF9TQ19S
-X0NBQU1fSlIyPjsNCisJCX07DQorDQorCQlzZWNfanIzOiBqckA0MDAwMCB7DQorCQkJY29tcGF0
-aWJsZSA9ICJmc2wsc2VjLXY0LjAtam9iLXJpbmciOw0KKwkJCXJlZyA9IDwweDQwMDAwIDB4MTAw
-MDA+Ow0KKwkJCWludGVycnVwdHMgPSA8R0lDX1NQSSA0NTQgSVJRX1RZUEVfTEVWRUxfSElHSD47
-DQorCQkJcG93ZXItZG9tYWlucyA9IDwmcGQgSU1YX1NDX1JfQ0FBTV9KUjM+Ow0KKwkJfTsNCisJ
-fTsNCit9Ow0KZGlmZiAtLWdpdCBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2lteDhx
-bS5kdHNpIGIvYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvaW14OHFtLmR0c2kNCmluZGV4
-IDZmYTMxYmM5ZWNlOC4uNmRmMDE4NjQzZjIwIDEwMDY0NA0KLS0tIGEvYXJjaC9hcm02NC9ib290
-L2R0cy9mcmVlc2NhbGUvaW14OHFtLmR0c2kNCisrKyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJl
-ZXNjYWxlL2lteDhxbS5kdHNpDQpAQCAtNjEyLDYgKzYxMiw3IEBAIHZwdV9kc3A6IGRzcEA1NTZl
-ODAwMCB7DQogCX07DQogDQogCS8qIHNvcnRlZCBpbiByZWdpc3RlciBhZGRyZXNzICovDQorCSNp
-bmNsdWRlICJpbXg4LXNzLXNlY3VyaXR5LmR0c2kiDQogCSNpbmNsdWRlICJpbXg4LXNzLWNtNDEu
-ZHRzaSINCiAJI2luY2x1ZGUgImlteDgtc3MtYXVkaW8uZHRzaSINCiAJI2luY2x1ZGUgImlteDgt
-c3MtdnB1LmR0c2kiDQpkaWZmIC0tZ2l0IGEvYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUv
-aW14OHF4cC5kdHNpIGIvYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvaW14OHF4cC5kdHNp
-DQppbmRleCAwNTEzODMyNmYwYTUuLmUxNDAxNTVkNjVjNiAxMDA2NDQNCi0tLSBhL2FyY2gvYXJt
-NjQvYm9vdC9kdHMvZnJlZXNjYWxlL2lteDhxeHAuZHRzaQ0KKysrIGIvYXJjaC9hcm02NC9ib290
-L2R0cy9mcmVlc2NhbGUvaW14OHF4cC5kdHNpDQpAQCAtMzIxLDYgKzMyMSw3IEBAIG1hcDAgew0K
-IAkvKiBzb3J0ZWQgaW4gcmVnaXN0ZXIgYWRkcmVzcyAqLw0KIAkjaW5jbHVkZSAiaW14OC1zcy1p
-bWcuZHRzaSINCiAJI2luY2x1ZGUgImlteDgtc3MtdnB1LmR0c2kiDQorCSNpbmNsdWRlICJpbXg4
-LXNzLXNlY3VyaXR5LmR0c2kiDQogCSNpbmNsdWRlICJpbXg4LXNzLWNtNDAuZHRzaSINCiAJI2lu
-Y2x1ZGUgImlteDgtc3MtZ3B1MC5kdHNpIg0KIAkjaW5jbHVkZSAiaW14OC1zcy1hZG1hLmR0c2ki
-DQotLSANCjIuNDkuMA0K
+Convert TI Highspeed MMC host controller binding to YAML format. Add
+'clocks' property to resolve errors identified by 'dtb_check'.
+
+Signed-off-by: Charan Pedumuru <charan.pedumuru@gmail.com>
+---
+ .../devicetree/bindings/mmc/davinci_mmc.txt        | 32 -----------
+ .../devicetree/bindings/mmc/ti,da830-mmc.yaml      | 62 ++++++++++++++++++++++
+ 2 files changed, 62 insertions(+), 32 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/mmc/davinci_mmc.txt b/Documentation/devicetree/bindings/mmc/davinci_mmc.txt
+deleted file mode 100644
+index 516fb0143d4c21d1c8e44a8846d55ea5458d7b74..0000000000000000000000000000000000000000
+--- a/Documentation/devicetree/bindings/mmc/davinci_mmc.txt
++++ /dev/null
+@@ -1,32 +0,0 @@
+-* TI Highspeed MMC host controller for DaVinci
+-
+-The Highspeed MMC Host Controller on TI DaVinci family
+-provides an interface for MMC, SD and SDIO types of memory cards.
+-
+-This file documents the properties used by the davinci_mmc driver.
+-
+-Required properties:
+-- compatible:
+- Should be "ti,da830-mmc": for da830, da850, dm365
+- Should be "ti,dm355-mmc": for dm355, dm644x
+-
+-Optional properties:
+-- bus-width: Number of data lines, can be <1>, <4>, or <8>, default <1>
+-- max-frequency: Maximum operating clock frequency, default 25MHz.
+-- dmas: List of DMA specifiers with the controller specific format
+-	as described in the generic DMA client binding. A tx and rx
+-	specifier is required.
+-- dma-names: RX and TX  DMA request names. These strings correspond
+-	1:1 with the DMA specifiers listed in dmas.
+-
+-Example:
+-mmc0: mmc@1c40000 {
+-	compatible = "ti,da830-mmc",
+-	reg = <0x40000 0x1000>;
+-	interrupts = <16>;
+-	bus-width = <4>;
+-	max-frequency = <50000000>;
+-	dmas = <&edma 16
+-		&edma 17>;
+-	dma-names = "rx", "tx";
+-};
+diff --git a/Documentation/devicetree/bindings/mmc/ti,da830-mmc.yaml b/Documentation/devicetree/bindings/mmc/ti,da830-mmc.yaml
+new file mode 100644
+index 0000000000000000000000000000000000000000..2be2ad0bdd14693208c2d6b94cc9257ab3209635
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mmc/ti,da830-mmc.yaml
+@@ -0,0 +1,62 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/mmc/ti,da830-mmc.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: TI Highspeed MMC host controller for DaVinci
++
++description:
++  The Highspeed MMC Host Controller on TI DaVinci family
++  provides an interface for MMC, SD and SDIO types of memory cards.
++
++allOf:
++  - $ref: mmc-controller.yaml
++
++maintainers:
++  - Rob Herring <robh@kernel.org>
++
++properties:
++  compatible:
++    enum:
++      - ti,da830-mmc
++      - ti,dm355-mmc
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 2
++
++  dmas:
++    maxItems: 2
++
++  dma-names:
++    items:
++      - const: rx
++      - const: tx
++
++required:
++  - compatible
++  - reg
++  - interrupts
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/irq.h>
++    mmc@1c40000 {
++        compatible = "ti,da830-mmc";
++        reg = <0x40000 0x1000>;
++        interrupts = <16 IRQ_TYPE_LEVEL_HIGH>,
++                     <17 IRQ_TYPE_LEVEL_HIGH>;
++        bus-width = <4>;
++        max-frequency = <50000000>;
++        dmas = <&edma 16>, <&edma 17>;
++        dma-names = "rx", "tx";
++    };
++...
+
+---
+base-commit: 7bac2c97af4078d7a627500c9bcdd5b033f97718
+change-id: 20250523-davinci-mmc-c704440c3dd0
+
+Best regards,
+-- 
+Charan Pedumuru <charan.pedumuru@gmail.com>
+
