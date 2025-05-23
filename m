@@ -1,37 +1,37 @@
 Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C0741C5D7B;
-	Fri, 23 May 2025 10:48:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 130571E0E1A;
+	Fri, 23 May 2025 10:48:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747997289; cv=none; b=DIIRYVH1BUTUeim8ok1RhMBfYRq4Z0C6nhnPEv38utGy6L7nRNGj6InLUHTGm6dkujQuj55PzClmQurhdv7XlFXFqNJXcupYIPHCPgSTPwfyLAu8HtN6AW3ubpLhvbmg4aXczlfER1FMgIDz0/wjwA7XTqyhLi8VGA3AkcNHXGY=
+	t=1747997295; cv=none; b=pSkLJstdLmVPEEf8y2ouTWgUB7CoNAb/pgq+IHWdVAoNzs+UVi8l7qmwpDMwUiNaE5fL979etgwOoOm8fxNBIiE/8if5TbXwBofSA9bw+1fHlOCLJ1RrKYBqn9aRkyXDOlputRwI6K8AfO2zb803+N6hLAqPYYHecocI7LnR4QI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747997289; c=relaxed/simple;
-	bh=gcYtgfygnQQQpxyGja4Ww0pSmxn9UnF2hNVedw7xXtc=;
+	s=arc-20240116; t=1747997295; c=relaxed/simple;
+	bh=RDSQaJMIl4s52JXv/6rsXVa1hW+rLPRn4tt6o4Hu6oc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=LGxisiO+IcfzonbrnJDPLEvvqBYriwyG9RNe/3OT8R46LrV0KKJCYcFykZ9T+QWXCbhkvE7TJLngaZlr+iSR3g9Xn8fDDK9XBwPzyk4fHE1oXhu00BPHYMA0Hx8xWeVUc0vXveb+mG2E/BEkBudDHi8I4i40UD5YYecUGmAkN8s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=QV4uzwEk; arc=none smtp.client-ip=178.21.23.139
+	 MIME-Version; b=n/m5kfY8xIeQ4sN+TANoOFQqmpP/X/yhWxPCGn4EC5dT/T5gjj7ssV17fU3eRl1WguK842fNWzJjpmhp+YKXOKiXsO44/TjcZbMRrJkam2CmJhIGT151uGIupgdvEnTgwE4IvjqRSL9EJaI3P18k0G1mxspupE5L10IUvFfX0PI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=eqGcF60w; arc=none smtp.client-ip=178.21.23.139
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="QV4uzwEk"
+	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="eqGcF60w"
 Received: from mail01.disroot.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id E59AE25F0B;
-	Fri, 23 May 2025 12:48:06 +0200 (CEST)
+	by disroot.org (Postfix) with ESMTP id 8531F2609A;
+	Fri, 23 May 2025 12:48:12 +0200 (CEST)
 X-Virus-Scanned: SPAM Filter at disroot.org
 Received: from layka.disroot.org ([127.0.0.1])
  by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id H16zQKtTlpA6; Fri, 23 May 2025 12:48:06 +0200 (CEST)
+ id nyF6jddWwMZo; Fri, 23 May 2025 12:48:12 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1747997286; bh=gcYtgfygnQQQpxyGja4Ww0pSmxn9UnF2hNVedw7xXtc=;
+	t=1747997292; bh=RDSQaJMIl4s52JXv/6rsXVa1hW+rLPRn4tt6o4Hu6oc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=QV4uzwEkguPQFW/rEjH/hp8hz6wUIWv3Qj3RjOcytpYvgugTIUv+dnitlbl5B/nPz
-	 bdVa6AYBxMPh1pw7bt82Z0esgi7DUWQH8NVH9UllgRysLG5Hb8T3Mz2cG8t6DVYh7o
-	 mOonJYvWKofw00hLkouLUhhFqKafE5Y/91165feaJdX9NZY3rmsBJPhN3MiTe4jglC
-	 2yBgK9ZFejgj3/U75/iG3pA0cBESTEJFefRbrPZAkl73ATHZiwt8vKZlJqISY3VgTi
-	 KtRwZL4o4/G6M0tvpN3PzqYtzBTourzZ/evbfcoZuxedv5uh5sFfuoJ51eqyh02+V4
-	 FZH4egyMoiKOQ==
+	b=eqGcF60we91T0+xfG1y3ly6frYiY8tzQOWap7KO2E3r7bzI8HcMoj0VGZd+s/QeF2
+	 A/JqJV3oK1BoZ/gi+x8z83PX/sGpF9eRxY+coVQel5f34l33yeFW9Fu2IhIOvGnk67
+	 fktVULfv6zlplDE0vNSoFAlwOlT2rC8/36aOw+NsCUCfuWpPfYKJ2WTcc/sHvLA8Z5
+	 wqCN0Mptw9O16F+0Ce6jgoJDNF3mAV+3md4WEkS+X/RLTf+nqqO6ObQ2H9RAZBLVzL
+	 Goe5A7H35026AXmFc4ETou3NiBr1GrQQLsBj9g885/PlpRDRYQx+YqXjRh2j4RXImK
+	 Hbndh1DR2dDhw==
 From: Yao Zi <ziyao@disroot.org>
 To: Michael Turquette <mturquette@baylibre.com>,
 	Stephen Boyd <sboyd@kernel.org>,
@@ -48,9 +48,9 @@ Cc: linux-clk@vger.kernel.org,
 	Mingcong Bai <jeffbai@aosc.io>,
 	Kexy Biscuit <kexybiscuit@aosc.io>,
 	Yao Zi <ziyao@disroot.org>
-Subject: [PATCH 6/8] clk: loongson2: Add clock definitions for Loongson 2K0300 SoC
-Date: Fri, 23 May 2025 10:45:50 +0000
-Message-ID: <20250523104552.32742-7-ziyao@disroot.org>
+Subject: [PATCH 7/8] LoongArch: dts: Add clock tree for Loongson 2K0300
+Date: Fri, 23 May 2025 10:45:51 +0000
+Message-ID: <20250523104552.32742-8-ziyao@disroot.org>
 In-Reply-To: <20250523104552.32742-1-ziyao@disroot.org>
 References: <20250523104552.32742-1-ziyao@disroot.org>
 Precedence: bulk
@@ -61,93 +61,71 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The clock controller of Loongson 2K0300 consists of three PLLs, requires
-an 120MHz external reference clock to function, and generates clocks in
-various frequencies for SoC peripherals.
-
-Clock definitions for previous SoC generations could be reused for most
-clock hardwares. There're two gates marked as critical, clk_node_gate
-and clk_boot_gate, which supply the CPU cores and the system
-configuration bus. Disabling them leads to a SoC hang.
+Describe the clock controller integrated in Loongson 2K0300 SoC and
+clocks for UARTs.
 
 Signed-off-by: Yao Zi <ziyao@disroot.org>
 ---
- drivers/clk/clk-loongson2.c | 48 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 48 insertions(+)
+ arch/loongarch/boot/dts/loongson-2k0300.dtsi | 17 ++++++++++++++---
+ 1 file changed, 14 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/clk/clk-loongson2.c b/drivers/clk/clk-loongson2.c
-index 52a9f1c2794a..1d210a7683ea 100644
---- a/drivers/clk/clk-loongson2.c
-+++ b/drivers/clk/clk-loongson2.c
-@@ -12,6 +12,7 @@
- #include <linux/platform_device.h>
- #include <linux/io-64-nonatomic-lo-hi.h>
- #include <dt-bindings/clock/loongson,ls2k-clk.h>
+diff --git a/arch/loongarch/boot/dts/loongson-2k0300.dtsi b/arch/loongarch/boot/dts/loongson-2k0300.dtsi
+index ce3574691aa9..44e37d6f8e98 100644
+--- a/arch/loongarch/boot/dts/loongson-2k0300.dtsi
++++ b/arch/loongarch/boot/dts/loongson-2k0300.dtsi
+@@ -6,6 +6,7 @@
+ 
+ /dts-v1/;
+ 
 +#include <dt-bindings/clock/loongson,ls2k0300-clk.h>
+ #include <dt-bindings/interrupt-controller/irq.h>
  
- enum loongson2_clk_type {
- 	CLK_TYPE_PLL,
-@@ -137,6 +138,52 @@ struct loongson2_clk_board_info {
- 		.fixed_rate	= _rate,			\
- 	}
+ / {
+@@ -21,7 +22,7 @@ cpu0: cpu@0 {
+ 			compatible = "loongson,la264";
+ 			reg = <0>;
+ 			device_type = "cpu";
+-			clocks = <&cpu_clk>;
++			clocks = <&clk LS2K0300_CLK_NODE_GATE>;
+ 		};
  
-+static const struct loongson2_clk_board_info ls2k0300_clks[] = {
-+	/* Reference Clock */
-+	CLK_PLL(LS2K0300_PLL_NODE, "pll_node",   0x00, 15, 9, 8, 7),
-+	CLK_PLL(LS2K0300_PLL_DDR,  "pll_ddr",    0x08, 15, 9, 8, 7),
-+	CLK_PLL(LS2K0300_PLL_PIX,  "pll_pix",    0x10, 15, 9, 8, 7),
-+	CLK_FIXED(LS2K0300_CLK_STABLE, "clk_stable", NULL, 100000000),
-+	CLK_FIXED(LS2K0300_CLK_THSENS, "clk_thsens", NULL, 10000000),
-+	/* Node PLL */
-+	CLK_DIV(LS2K0300_CLK_NODE_DIV, "clk_node_div", "pll_node", 0x00, 24, 7),
-+	CLK_DIV(LS2K0300_CLK_GMAC_DIV, "clk_gmac_div", "pll_node", 0x04, 0, 7),
-+	CLK_DIV(LS2K0300_CLK_I2S_DIV,  "clk_i2s_div",  "pll_node", 0x04, 8, 7),
-+	CLK_GATE(LS2K0300_CLK_NODE_PLL_GATE,   "clk_node_pll_gate", "clk_node_div", 0x00, 0),
-+	CLK_GATE(LS2K0300_CLK_GMAC_GATE,       "clk_gmac_gate",	    "clk_gmac_div", 0x00, 1),
-+	CLK_GATE(LS2K0300_CLK_I2S_GATE,        "clk_i2s_gate",	    "clk_i2s_div", 0x00, 2),
-+	CLK_GATE_FLAGS(LS2K0300_CLK_NODE_GATE, "clk_node_gate",	    "clk_node_scale",
-+		       0x24, 0, CLK_IS_CRITICAL),
-+	CLK_SCALE_MODE(LS2K0300_CLK_NODE_SCALE,    "clk_node_scale",    "clk_node_pll_gate",
-+		       0x20, 0, 3, 3),
-+	/* DDR PLL */
-+	CLK_DIV(LS2K0300_CLK_DDR_DIV, "clk_ddr_div", "pll_ddr", 0x08, 24, 7),
-+	CLK_DIV(LS2K0300_CLK_NET_DIV, "clk_net_div", "pll_ddr", 0x0c, 0, 7),
-+	CLK_DIV(LS2K0300_CLK_DEV_DIV, "clk_dev_div", "pll_ddr", 0x0c, 8, 7),
-+	CLK_GATE(LS2K0300_CLK_NET_GATE,		"clk_net_gate", "clk_net_div", 0x08, 1),
-+	CLK_GATE(LS2K0300_CLK_DEV_GATE,		"clk_dev_gate",	"clk_dev_div", 0x08, 2),
-+	CLK_GATE_FLAGS(LS2K0300_CLK_DDR_GATE,	"clk_ddr_gate",	"clk_ddr_div",
-+		       0x08, 0, CLK_IS_CRITICAL),
-+	/* PIX PLL */
-+	CLK_DIV(LS2K0300_CLK_PIX_DIV,	 "clk_pix_div",	   "pll_pix", 0x10, 24, 7),
-+	CLK_DIV(LS2K0300_CLK_GMACBP_DIV, "clk_gmacbp_div", "pll_pix", 0x14, 0, 7),
-+	CLK_GATE(LS2K0300_CLK_PIX_PLL_GATE, "clk_pix_pll_gate",	"clk_pix_div", 0x10, 0),
-+	CLK_GATE(LS2K0300_CLK_PIX_GATE,	    "clk_pix_gate",	"clk_pix_scale", 0x24, 6),
-+	CLK_GATE(LS2K0300_CLK_GMACBP_GATE,  "clk_gmacbp_gate",	"clk_gmacbp_div", 0x10, 1),
-+	CLK_SCALE_MODE(LS2K0300_CLK_PIX_SCALE,	"clk_pix_scale",	"clk_pix_pll_gate",
-+		       0x20, 4, 3, 7),
-+	/* clk_dev_gate */
-+	CLK_DIV(LS2K0300_CLK_SDIO_SCALE, "clk_sdio_scale", "clk_dev_gate", 0x20, 24, 4),
-+	CLK_GATE(LS2K0300_CLK_USB_GATE,	 "clk_usb_gate",	"clk_usb_scale", 0x24, 2),
-+	CLK_GATE(LS2K0300_CLK_SDIO_GATE, "clk_sdio_gate",	"clk_sdio_scale", 0x24, 4),
-+	CLK_GATE(LS2K0300_CLK_APB_GATE,  "clk_apb_gate",	"clk_apb_scale", 0x24, 3),
-+	CLK_GATE_FLAGS(LS2K0300_CLK_BOOT_GATE, "clk_boot_gate",	"clk_boot_scale",
-+		       0x24, 1, CLK_IS_CRITICAL),
-+	CLK_SCALE_MODE(LS2K0300_CLK_USB_SCALE,  "clk_usb_scale",  "clk_dev_gate", 0x20, 12, 3, 15),
-+	CLK_SCALE_MODE(LS2K0300_CLK_APB_SCALE,  "clk_apb_scale",  "clk_dev_gate", 0x20, 16, 3, 19),
-+	CLK_SCALE_MODE(LS2K0300_CLK_BOOT_SCALE, "clk_boot_scale", "clk_dev_gate", 0x20, 8, 3, 11),
-+};
+ 	};
+@@ -32,9 +33,10 @@ cpuintc: interrupt-controller {
+ 		#interrupt-cells = <1>;
+ 	};
+ 
+-	cpu_clk: clock-1000m {
++	refclk: clock-120m {
+ 		compatible = "fixed-clock";
+-		clock-frequency = <1000000000>;
++		clock-frequency = <120000000>;
++		clock-output-names = "refclk_120m";
+ 		#clock-cells = <0>;
+ 	};
+ 
+@@ -46,6 +48,14 @@ soc@10000000 {
+ 			 <0x00 0x02000000 0x00 0x02000000 0x0 0x04000000>,
+ 			 <0x00 0x40000000 0x00 0x40000000 0x0 0x40000000>;
+ 
++		clk: clock-controller@16000400 {
++			compatible = "loongson,ls2k0300-clk";
++			reg = <0x0 0x16000400 0x0 0x100>;
++			clocks = <&refclk>;
++			clock-names = "ref_120m";
++			#clock-cells = <1>;
++		};
 +
- static const struct loongson2_clk_board_info ls2k0500_clks[] = {
- 	CLK_PLL(LOONGSON2_NODE_PLL,   "pll_node", 0,    16, 8, 8, 6),
- 	CLK_PLL(LOONGSON2_DDR_PLL,    "pll_ddr",  0x8,  16, 8, 8, 6),
-@@ -393,6 +440,7 @@ static int loongson2_clk_probe(struct platform_device *pdev)
- }
- 
- static const struct of_device_id loongson2_clk_match_table[] = {
-+	{ .compatible = "loongson,ls2k0300-clk", .data = &ls2k0300_clks },
- 	{ .compatible = "loongson,ls2k0500-clk", .data = &ls2k0500_clks },
- 	{ .compatible = "loongson,ls2k-clk", .data = &ls2k1000_clks },
- 	{ .compatible = "loongson,ls2k2000-clk", .data = &ls2k2000_clks },
+ 		liointc0: interrupt-controller@16001400 {
+ 			compatible = "loongson,liointc-2.0";
+ 			reg = <0x0 0x16001400 0x0 0x40>,
+@@ -87,6 +97,7 @@ liointc1: interrupt-controller@16001440 {
+ 		uart0: serial@16100000 {
+ 			compatible = "ns16550a";
+ 			reg = <0 0x16100000 0 0x10>;
++			clocks = <&clk LS2K0300_CLK_APB_GATE>;
+ 			interrupt-parent = <&liointc0>;
+ 			interrupts = <0 IRQ_TYPE_LEVEL_HIGH>;
+ 			no-loopback-test;
 -- 
 2.49.0
 
