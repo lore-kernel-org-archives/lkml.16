@@ -1,84 +1,221 @@
-Received: from mxct.zte.com.cn (mxct.zte.com.cn [183.62.165.209])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9787810A3E;
-	Fri, 23 May 2025 06:19:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=183.62.165.209
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F09F718FC86
+	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 06:19:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747981160; cv=none; b=iEKMFjB95ShPlsfGPEpxScjLcNTbkvEXW6KivNzduNlOcMmW+f3cY80m0HY54bWXV9ntK0FSKSeuVQysTY34m19n6wNimSapfiHk/EP/4IT8BBI4q4u08SApllLsthcnQE67V8WqrwxB2iLP+W2lZqRfS8WXETgr/pCyhIkSxr4=
+	t=1747981172; cv=none; b=XWjbM11tMbaRApnco4VKaY1MEHqb86ROF/Th16WONBAVtYQBSq08jMYTVW28v0tWMm43/Qf2XIE1r0xNybpfg1Rlh79/5O4VE2W2rVRWxifvWaJS9dxP7kxrLwgqXdE30lDtYsXN7Wy8lZ2EeUx6BR3d/N9iG0X4WgGGftzK4nw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747981160; c=relaxed/simple;
-	bh=r/rqlj0hH3msm6cMwGWp9RH90rKWhigIXMjT3hM46cQ=;
-	h=Date:Message-ID:Mime-Version:From:To:Cc:Subject:Content-Type; b=Ufn0rekRdK/YiIElhCOUe/G7i03b6w0Io3V/6ONUggw9xP3BmvV0wTSdHvS7AlOU6gZ8Ud6yeEfvHW1jRT1g8D28tBYszO67FMutrxeO/a8bVdV3uWKYB0P3bJNYJ117Za5zAPsqdxZ1IeSsFUYcppejHNZCvDr8wf2IBodUOyA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=183.62.165.209
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zte.com.cn
-Received: from mse-fl2.zte.com.cn (unknown [10.5.228.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	s=arc-20240116; t=1747981172; c=relaxed/simple;
+	bh=UeKvgkmDNxf8u/XaW81EMlPeoAjlVIX5+/U2UtZ3PrM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qThy5REgN9TunysChH4+KT1Crr7Ed0GeojNz+NUKp6KlAp6RSON4PYJb65Kc613c0uSzujQj1PLPPm/yAnMFHunz9efRUhVanEC478I/40leFPFp8kOCsGoh+wMHDs20pDhdxOF9Z5SgVx92Any85YXCn+CvTdSKhxs8H8FZCuQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=IRZQV8+9; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=hdGwkoX2; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=IRZQV8+9; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=hdGwkoX2; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="IRZQV8+9";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="hdGwkoX2";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="IRZQV8+9";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="hdGwkoX2"
+Received: from kitsune.suse.cz (unknown [10.100.12.127])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mxct.zte.com.cn (FangMail) with ESMTPS id 4b3Zk96zWBz4x5pP;
-	Fri, 23 May 2025 14:19:13 +0800 (CST)
-Received: from njy2app04.zte.com.cn ([10.40.12.64])
-	by mse-fl2.zte.com.cn with SMTP id 54N6J8Qh078827;
-	Fri, 23 May 2025 14:19:09 +0800 (+08)
-	(envelope-from long.yunjian@zte.com.cn)
-Received: from mapi (njy2app02[null])
-	by mapi (Zmail) with MAPI id mid201;
-	Fri, 23 May 2025 14:19:10 +0800 (CST)
-Date: Fri, 23 May 2025 14:19:10 +0800 (CST)
-X-Zmail-TransId: 2afa6830135e198-abe58
-X-Mailer: Zmail v1.0
-Message-ID: <20250523141910793yUFpjomfu0byK_yFddHQu@zte.com.cn>
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 29E431F7A8;
+	Fri, 23 May 2025 06:19:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1747981169; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=oLNt3RtdnKwFBR5q5jDcZxmQHHAKPZSgXtIxyhohpeU=;
+	b=IRZQV8+9L8Ns96iocdMPl3/WA43ZPmuDxsuN46noj7OtBcuG4YwCgkesfLAhr3gIaQ0gXw
+	UkJqMG888Uo7HczVfd38sRJpWiGuX9gffeiT+/GyEXH0r9E4R1RyJeCRIDQSgqmhEF7hvR
+	dzF9A9w/Gwr6gSfwBkVS/aeNL+QaYpk=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1747981169;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=oLNt3RtdnKwFBR5q5jDcZxmQHHAKPZSgXtIxyhohpeU=;
+	b=hdGwkoX2cFA7F2N97OZ+m6VAA65nInrPD3JlD5KaDrDNIAo5qE8Fm0J3JRs42J7uWQ9lS3
+	rWPq03TPzya3pGAw==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1747981169; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=oLNt3RtdnKwFBR5q5jDcZxmQHHAKPZSgXtIxyhohpeU=;
+	b=IRZQV8+9L8Ns96iocdMPl3/WA43ZPmuDxsuN46noj7OtBcuG4YwCgkesfLAhr3gIaQ0gXw
+	UkJqMG888Uo7HczVfd38sRJpWiGuX9gffeiT+/GyEXH0r9E4R1RyJeCRIDQSgqmhEF7hvR
+	dzF9A9w/Gwr6gSfwBkVS/aeNL+QaYpk=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1747981169;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=oLNt3RtdnKwFBR5q5jDcZxmQHHAKPZSgXtIxyhohpeU=;
+	b=hdGwkoX2cFA7F2N97OZ+m6VAA65nInrPD3JlD5KaDrDNIAo5qE8Fm0J3JRs42J7uWQ9lS3
+	rWPq03TPzya3pGAw==
+Date: Fri, 23 May 2025 08:19:22 +0200
+From: Michal =?iso-8859-1?Q?Such=E1nek?= <msuchanek@suse.de>
+To: Srish Srinivasan <ssrish@linux.ibm.com>
+Cc: linux-integrity@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	maddy@linux.ibm.com, mpe@ellerman.id.au, npiggin@gmail.com,
+	christophe.leroy@csgroup.eu, naveen@kernel.org, ajd@linux.ibm.com,
+	zohar@linux.ibm.com, nayna@linux.ibm.com,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/3] powerpc/secvar: Expose secvars relevant to the
+ key management mode
+Message-ID: <aDATahmPIsOmiFAK@kitsune.suse.cz>
+References: <20250521105759.8408-1-ssrish@linux.ibm.com>
+ <20250521105759.8408-3-ssrish@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-From: <long.yunjian@zte.com.cn>
-To: <vkoul@kernel.org>
-Cc: <yung-chuan.liao@linux.intel.com>, <pierre-louis.bossart@linux.dev>,
-        <sanyog.r.kale@intel.com>, <linux-sound@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <mou.yi@zte.com.cn>,
-        <xu.lifeng1@zte.com.cn>, <fang.yumeng@zte.com.cn>,
-        <ouyang.maochun@zte.com.cn>
-Subject: =?UTF-8?B?W1BBVENIXSBzb3VuZHdpcmU6IGludGVsX2FjZTIueDogVXNlIHN0cl9yZWFkX3dyaXRlKCkgaGVscGVy?=
-Content-Type: text/plain;
-	charset="UTF-8"
-X-MAIL:mse-fl2.zte.com.cn 54N6J8Qh078827
-X-Fangmail-Anti-Spam-Filtered: true
-X-Fangmail-MID-QID: 68301361.000/4b3Zk96zWBz4x5pP
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250521105759.8408-3-ssrish@linux.ibm.com>
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Spam-Score: -1.30
+X-Spamd-Result: default: False [-1.30 / 50.00];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MIME_TRACE(0.00)[0:+];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	ARC_NA(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FREEMAIL_CC(0.00)[vger.kernel.org,lists.ozlabs.org,linux.ibm.com,ellerman.id.au,gmail.com,csgroup.eu,kernel.org];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	MISSING_XM_UA(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[12];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCVD_COUNT_ZERO(0.00)[0];
+	TO_DN_SOME(0.00)[]
 
-From: Yumeng Fang <fang.yumeng@zte.com.cn>
+Hello,
 
-Remove hard-coded strings by using the str_read_write() helper.
+On Wed, May 21, 2025 at 04:27:58PM +0530, Srish Srinivasan wrote:
+> The PLPKS enabled PowerVM LPAR sysfs exposes all of the secure boot
+> secvars irrespective of the key management mode.
+> 
+> The PowerVM LPAR supports static and dynamic key management for secure
+> boot. The key management option can be updated in the management
+> console. Only in the dynamic key mode can the user modify the secure
+> boot secvars db, dbx, grubdb, grubdbx, and sbat, which are exposed via
+> the sysfs interface. But the sysfs interface exposes these secvars even
+> in the static key mode. This could lead to errors when reading them or
+> writing to them in the static key mode.
 
-Signed-off-by: Yumeng Fang <fang.yumeng@zte.com.cn>
-Signed-off-by: Yunjian Long <long.yunjian@zte.com.cn>
----
- drivers/soundwire/intel_ace2x.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+would it cause an error when reading these variables or only when
+writing them?
 
-diff --git a/drivers/soundwire/intel_ace2x.c b/drivers/soundwire/intel_ace2x.c
-index 5b31e1f69591..7e893e4f48d6 100644
---- a/drivers/soundwire/intel_ace2x.c
-+++ b/drivers/soundwire/intel_ace2x.c
-@@ -11,6 +11,7 @@
- #include <linux/soundwire/sdw_registers.h>
- #include <linux/soundwire/sdw.h>
- #include <linux/soundwire/sdw_intel.h>
-+#include <linux/string_choices.h>
- #include <sound/hdaudio.h>
- #include <sound/hda-mlink.h>
- #include <sound/hda-sdw-bpt.h>
-@@ -183,7 +184,7 @@ static int intel_ace2x_bpt_open_stream(struct sdw_intel *sdw, struct sdw_slave *
- 		return 0;
+Thanks
 
- 	dev_err(cdns->dev, "%s: sdw_prepare_%s_dma_buffer failed %d\n",
--		__func__, command ? "read" : "write", ret);
-+		__func__, str_read_write(command), ret);
+Michal
 
- 	ret1 = hda_sdw_bpt_close(cdns->dev->parent, /* PCI device */
- 				 sdw->bpt_ctx.bpt_tx_stream, &sdw->bpt_ctx.dmab_tx_bdl,
--- 
-2.25.1
+
+> 
+> Expose only PK, trustedcadb, and moduledb in the static key mode to
+> enable loading of signed third-party kernel modules.
+> 
+> Co-developed-by: Souradeep <soura@imap.linux.ibm.com>
+> Signed-off-by: Souradeep <soura@imap.linux.ibm.com>
+> Signed-off-by: Srish Srinivasan <ssrish@linux.ibm.com>
+> Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
+> Reviewed-by: Stefan Berger <stefanb@linux.ibm.com>
+> Reviewed-by: Nayna Jain <nayna@linux.ibm.com>
+> Reviewed-by: Andrew Donnellan <ajd@linux.ibm.com>
+> ---
+>  Documentation/ABI/testing/sysfs-secvar        |  6 ++++
+>  arch/powerpc/platforms/pseries/plpks-secvar.c | 28 ++++++++++++++++---
+>  2 files changed, 30 insertions(+), 4 deletions(-)
+> 
+> diff --git a/Documentation/ABI/testing/sysfs-secvar b/Documentation/ABI/testing/sysfs-secvar
+> index 45281888e520..948df3446a03 100644
+> --- a/Documentation/ABI/testing/sysfs-secvar
+> +++ b/Documentation/ABI/testing/sysfs-secvar
+> @@ -37,6 +37,12 @@ Description:	Each secure variable is represented as a directory named as
+>  		representation. The data and size can be determined by reading
+>  		their respective attribute files.
+>  
+> +		Only secvars relevant to the key management mode are exposed.
+> +		Only in the dynamic key mode can the user modify the secure boot
+> +		secvars db, dbx, grubdb, grubdbx, and sbat. PK, trustedcadb and
+> +		moduledb are the secvars common to both static and dynamic key
+> +		management modes.
+> +
+>  What:		/sys/firmware/secvar/vars/<variable_name>/size
+>  Date:		August 2019
+>  Contact:	Nayna Jain <nayna@linux.ibm.com>
+> diff --git a/arch/powerpc/platforms/pseries/plpks-secvar.c b/arch/powerpc/platforms/pseries/plpks-secvar.c
+> index 767e5e8c6990..f9e9cc40c9d0 100644
+> --- a/arch/powerpc/platforms/pseries/plpks-secvar.c
+> +++ b/arch/powerpc/platforms/pseries/plpks-secvar.c
+> @@ -59,7 +59,14 @@ static u32 get_policy(const char *name)
+>  		return PLPKS_SIGNEDUPDATE;
+>  }
+>  
+> -static const char * const plpks_var_names[] = {
+> +static const char * const plpks_var_names_static[] = {
+> +	"PK",
+> +	"moduledb",
+> +	"trustedcadb",
+> +	NULL,
+> +};
+> +
+> +static const char * const plpks_var_names_dynamic[] = {
+>  	"PK",
+>  	"KEK",
+>  	"db",
+> @@ -213,21 +220,34 @@ static int plpks_max_size(u64 *max_size)
+>  	return 0;
+>  }
+>  
+> +static const struct secvar_operations plpks_secvar_ops_static = {
+> +	.get = plpks_get_variable,
+> +	.set = plpks_set_variable,
+> +	.format = plpks_secvar_format,
+> +	.max_size = plpks_max_size,
+> +	.config_attrs = config_attrs,
+> +	.var_names = plpks_var_names_static,
+> +};
+>  
+> -static const struct secvar_operations plpks_secvar_ops = {
+> +static const struct secvar_operations plpks_secvar_ops_dynamic = {
+>  	.get = plpks_get_variable,
+>  	.set = plpks_set_variable,
+>  	.format = plpks_secvar_format,
+>  	.max_size = plpks_max_size,
+>  	.config_attrs = config_attrs,
+> -	.var_names = plpks_var_names,
+> +	.var_names = plpks_var_names_dynamic,
+>  };
+>  
+>  static int plpks_secvar_init(void)
+>  {
+> +	u8 mode;
+> +
+>  	if (!plpks_is_available())
+>  		return -ENODEV;
+>  
+> -	return set_secvar_ops(&plpks_secvar_ops);
+> +	mode = plpks_get_sb_keymgmt_mode();
+> +	if (mode)
+> +		return set_secvar_ops(&plpks_secvar_ops_dynamic);
+> +	return set_secvar_ops(&plpks_secvar_ops_static);
+>  }
+>  machine_device_initcall(pseries, plpks_secvar_init);
+> -- 
+> 2.47.1
+> 
+> 
