@@ -1,228 +1,409 @@
-Received: from mail-il1-f205.google.com (mail-il1-f205.google.com [209.85.166.205])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 411B01F17F7
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 04:46:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.205
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747975597; cv=none; b=nrvvFSqgsD1tRqBwVIeAll5NXqucBgUXWuB7ZragBOum1GHcCuS/b+36WUfrlIG+oc+prrlecbbSaDRIVwpRIRubFj4uvP6WycpsBwEdz8ZP3JzUIIrw1PQOZBmJ45oPP9eY2S86cj7p0uT873+gZ+QhDDhRgxkvKydRazqD7uQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747975597; c=relaxed/simple;
-	bh=XAqPNcQTWX91zcH2mVA5CqsMow38DbgaVvBjBUe0TDo=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=Cc3Sc28/HIDtyEPyLM6SWzh1NfNVM6Oqw3y12YPIEQNqFt69QO0WzIM3AfQsvXVou2eq6gtOkrkf5vgcOuxAbUsMpo5LdM86i0XHNHJxiDc6hOTbSfG/atK5iRJrHXiA19S4LcgYSxD7tujP6b/oPIHGvyyjTWx6wbpj0+cd2jA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.205
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f205.google.com with SMTP id e9e14a558f8ab-3dc7bc950ceso41574645ab.1
-        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 21:46:35 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747975594; x=1748580394;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=xbWOPZAgkoPSb2bLTKcY8Iaj/okxhf05Cpg7L2qKMFs=;
-        b=gig2Mxo878n2PDXNNzw0++PXqMc0TeyPsBYKQ9oKVkiA71qGOmQKndVVrdMPpvkGXt
-         949qOqQ6HgplLNXodP9SmvEU4zGcepHA41PSbuLe2P3mWrKXSWWf8Qu3xx1bBUhdpnGP
-         sZWrlB1l5rW3RarNEPYrTQlsg1pkP0bCkDSBH9S1rZRr6N5ZDZDgNiUj/D6Wv/aSyo3M
-         zTNk4dTjiRecU6OKdEH61et60q133FWNkmdmz+T9aL7+YocDBqUKWqKw8DriDSMI4uGA
-         oaBK3B2CKt6bx+weLvjnPyS78aBY3qZwoJdFo7t67RvVTjyaM+9cdVsykUmAPHs7Psfz
-         GoDg==
-X-Forwarded-Encrypted: i=1; AJvYcCXRkPrWzndqg4Dfiw12MdfeL5If5pmzc4MRVMne0SvtDPp3sDjl+Lrlji80mqXZjvW+XhXM4FINyF0xyNA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwyBWWVIcLT9MzKAGBYZ4kAyxOJw3rW4xLIN/FQNngkFeEw5wWu
-	cnlWAXmNFj6QSPjf1jd7usI81Pp1pLd+49r5PMvnKiaveRpRSOrr+ePvcLug856thAhGhOo3gXP
-	N45YubYhby4ogoFxkYWv0lChOpjqxg2do/fagKoN+xVqBiMwoVg6hgpp9Mio=
-X-Google-Smtp-Source: AGHT+IGnYULwd6+EAnWNTWM0zxMUrJYcKL/b/3KprQheG4Ilx0uvk8CYbzsaxTdqbvfzzzJnXsbooSyMhwtja4j4AVeD293W+Nb3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68EAF2DCBF2;
+	Fri, 23 May 2025 04:47:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.7
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747975672; cv=fail; b=Vt0XHj/7ASMTXnT/KbEJAZkhW0JlLJGUFtmAeluvzzbIf8tf9AgcBrf2UazlQDgEJu2g7NpupF4xbBznkLXYBjw7CI0VMzyk2fhNDncf55N93V4MnJD3ZQKxUYJ09QHrj3bM+Ny6EkQPGLMX+4ympERKGrN5c1bf7DUOIGUEMh4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747975672; c=relaxed/simple;
+	bh=3rlT4JviZAMYHUcVlzBhKMWXGg4+5iDLNzrshU5cjLk=;
+	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=TRm/krx/7fVdkqPbpgTIw31JhMyNwmhe+iBcGh46aqORzws5i+OY67OG9Qxtyzk5v8OaPj4ojNPJovyt+KwmMZizLEN3vShn+Iu1tY2euaILyJ3PrT2kZ19+HqlsZWbn2nUEBIY+CL77yTrPD9OJUWWq4qPm4Vnb7C3ns9ix2F8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Lv+ZkYR8; arc=fail smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Lv+ZkYR8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747975670; x=1779511670;
+  h=message-id:date:subject:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=3rlT4JviZAMYHUcVlzBhKMWXGg4+5iDLNzrshU5cjLk=;
+  b=Lv+ZkYR81tBD5s2Mw4lZh3ALFm3SPtr2dJR8hnt4HSwTOiUCtHi4yNKF
+   MaxQhVWhzufWIziWkmS4vhon6TFs4FxDwrbczbUFQo/QSaHBHxX/JWFS5
+   BnSY8Avkm2aFNNADfTzATgPrfr4SFsISxApfNPGbM0LiaTY7yfdx2mg3i
+   oz/ngjGzk4+O7CMhcxmMyzxMR/B6YJc7FoRVCWq3ogw0JmoIUUQWsv1Pi
+   BXyCrwJMEkOvD321zW+wZZ6gf/HLtTypCBocYwoEOji3x/ubMDI1r2keP
+   gDpO2H0fAlVegH7PJMyyBLddKlucOiaRbcH5a2nVJyqvhAc5TnQYb/AyT
+   w==;
+X-CSE-ConnectionGUID: 9vl7PDjeRzan+iVz0VyqqA==
+X-CSE-MsgGUID: uDqRwblYTWSHu7z4U0HbKQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11441"; a="75422523"
+X-IronPort-AV: E=Sophos;i="6.15,307,1739865600"; 
+   d="scan'208";a="75422523"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2025 21:47:49 -0700
+X-CSE-ConnectionGUID: Y0CFjFV2S3O4SUW3RwPQXQ==
+X-CSE-MsgGUID: 8ig2dXVuT/eBhO7daoNfUA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,307,1739865600"; 
+   d="scan'208";a="141005957"
+Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
+  by fmviesa007.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2025 21:47:49 -0700
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Thu, 22 May 2025 21:47:48 -0700
+Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25 via Frontend Transport; Thu, 22 May 2025 21:47:48 -0700
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (40.107.237.74)
+ by edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.55; Thu, 22 May 2025 21:47:48 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=YX5IGK/ZkdKmJvgBHLomPm3HQEByphwlc1inYrl6szLAdw5NIOnljlxodJLwXiONDMYEyEZ+BtH54QOO/2tK8ehPhGz1ZwAUalNWix+39SbJcOtphI8hF7QVfIxcNPqptT3NwBlmYRXGyN23zRrwawyYLY9rQPaUHDB9/H+bV8KCRkOc4ID0FJz+LX1Bu5tD1VD1ViSCive+7I7Y30x6exgDTAl8gGKd6ruGlLgtSt4HonX/BkeOK5VJFwEFyO1maJ2+5QiAYJt40JSuORqleOoCUzAedvl+qvytX++/CEUdjljKsIA10u/N7OcsBTImiHpWsaYGZdin4GHhu29SWg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Os3RpG3UIOttsaqwIqopNgixEEVt+uLbCqdRQjRkmTw=;
+ b=VixjqoKDVVI6qaaU3ZFhNVMRllzDUQ38FuCqwf6n8ft8N2fA59sC/v/buRG7oIj6x1xjo60hrf8I05D6/PYZviPbVD3qz7vPCnd5sRW9TxJdKMXlBed4vftcETcHJLqmVpA6GBGrKPSfHJF5skDgXWzpQLTMWc1AJViWYMFwmf4u+7q6pNEZSe51fvLtHf5VuOC0SLHEBFUEHK18TWZvwj9fPYE/bHK9MPpqR5mwKCdcMVVgtjKjTmPfriEA4JF6yIzccwBWKhbXpEMmkwQzf5oKZDZgheB/v2oUcxoPveUYuSIqlQ06/PCGw1crERy4JPKm2o1WLVILUQweIo1VMA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from SJ2PR11MB7573.namprd11.prod.outlook.com (2603:10b6:a03:4d2::10)
+ by PH7PR11MB5915.namprd11.prod.outlook.com (2603:10b6:510:13c::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.21; Fri, 23 May
+ 2025 04:47:44 +0000
+Received: from SJ2PR11MB7573.namprd11.prod.outlook.com
+ ([fe80::61a:aa57:1d81:a9cf]) by SJ2PR11MB7573.namprd11.prod.outlook.com
+ ([fe80::61a:aa57:1d81:a9cf%3]) with mapi id 15.20.8746.030; Fri, 23 May 2025
+ 04:47:44 +0000
+Message-ID: <b197893b-37f2-47de-ad4b-801192ea3e7a@intel.com>
+Date: Thu, 22 May 2025 21:47:41 -0700
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v13 23/27] x86/resctrl: Introduce mbm_L3_assignments to
+ list assignments in a group
+To: Babu Moger <babu.moger@amd.com>, <corbet@lwn.net>, <tony.luck@intel.com>,
+	<tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
+	<dave.hansen@linux.intel.com>
+CC: <james.morse@arm.com>, <dave.martin@arm.com>, <fenghuay@nvidia.com>,
+	<x86@kernel.org>, <hpa@zytor.com>, <paulmck@kernel.org>,
+	<akpm@linux-foundation.org>, <thuth@redhat.com>, <rostedt@goodmis.org>,
+	<ardb@kernel.org>, <gregkh@linuxfoundation.org>,
+	<daniel.sneddon@linux.intel.com>, <jpoimboe@kernel.org>,
+	<alexandre.chartre@oracle.com>, <pawan.kumar.gupta@linux.intel.com>,
+	<thomas.lendacky@amd.com>, <perry.yuan@amd.com>, <seanjc@google.com>,
+	<kai.huang@intel.com>, <xiaoyao.li@intel.com>, <kan.liang@linux.intel.com>,
+	<xin3.li@intel.com>, <ebiggers@google.com>, <xin@zytor.com>,
+	<sohil.mehta@intel.com>, <andrew.cooper3@citrix.com>,
+	<mario.limonciello@amd.com>, <linux-doc@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <peternewman@google.com>,
+	<maciej.wieczor-retman@intel.com>, <eranian@google.com>,
+	<Xiaojian.Du@amd.com>, <gautham.shenoy@amd.com>
+References: <cover.1747349530.git.babu.moger@amd.com>
+ <e0fe5863ad1801183047196d212ff3b1b79898fe.1747349530.git.babu.moger@amd.com>
+From: Reinette Chatre <reinette.chatre@intel.com>
+Content-Language: en-US
+In-Reply-To: <e0fe5863ad1801183047196d212ff3b1b79898fe.1747349530.git.babu.moger@amd.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: BYAPR05CA0087.namprd05.prod.outlook.com
+ (2603:10b6:a03:e0::28) To SJ2PR11MB7573.namprd11.prod.outlook.com
+ (2603:10b6:a03:4d2::10)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:174b:b0:3dc:7f3b:aca9 with SMTP id
- e9e14a558f8ab-3dc7f3bae28mr124342205ab.14.1747975594321; Thu, 22 May 2025
- 21:46:34 -0700 (PDT)
-Date: Thu, 22 May 2025 21:46:34 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <682ffdaa.a70a0220.253bc2.0061.GAE@google.com>
-Subject: [syzbot] [jfs?] [xfs?] [bcachefs?] INFO: task hung in sb_start_write (2)
-From: syzbot <syzbot+b3fba2e269970207b61d@syzkaller.appspotmail.com>
-To: brauner@kernel.org, cem@kernel.org, jack@suse.cz, 
-	jfs-discussion@lists.sourceforge.net, kent.overstreet@linux.dev, 
-	linux-bcachefs@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org, shaggy@kernel.org, 
-	syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
-Content-Type: text/plain; charset="UTF-8"
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ2PR11MB7573:EE_|PH7PR11MB5915:EE_
+X-MS-Office365-Filtering-Correlation-Id: da3dc3b7-4f46-4361-a78b-08dd99b4f4ed
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014|7416014|7053199007;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?VXkweTdUQXM4OVBKSzdralNub0x4bTNzRUwwY0NyT2FhQWJNNG9ZMGp5MEVv?=
+ =?utf-8?B?bExhQkxUa0hUbjVMdXNGR3lJZXZ5Vmw3QkFjTUUvTDJRZEh3RU9hclB3cmE0?=
+ =?utf-8?B?bVVVWWJiaWRHMFVNSjVYWkZTYllUUmFQTUdCcitqQ0dTM1pSNzUyWjdIYVRF?=
+ =?utf-8?B?T09nTkl2QjdJdXQ4ejA0N0xwUEFpUWNPZ20zQUFZUllLOXRVd29ua3cwYTJh?=
+ =?utf-8?B?ZWhkTURYWjFEUzlZK1FiYjlLWU50NXB2Ny8zanFNcG40eHJOanVnYUMvVHZN?=
+ =?utf-8?B?VEtYM3hmaFRvbXJ3djhUVXRmSzZrOWYxSHNidk9JU1JxQ2t1b1EzcEZkTW8z?=
+ =?utf-8?B?aVB0b3RKR20yMXJDaHVzVFp3THk4UW9jdXpZaWxZTHJOSzR1RXl5S0srYTFO?=
+ =?utf-8?B?OUxER0VyS2JlR2tyaUo1MXZyNmdYV015bW0zM1VRRWZpaXg5allOQkhNaFUx?=
+ =?utf-8?B?OHRYVzJsMEU3MTZxQ2VOYmhmUjBTVG5nUkYxcXRVdEEwY25zQkpZM1lNOGhs?=
+ =?utf-8?B?SzVtaU43Q1hUYURGeTVrOUxmVFR5MmtrYXJQbmpLNW1MRGtPellWaEQ4ZVli?=
+ =?utf-8?B?alRlUWZkTFRGMHBDNU81bVhITWluTjNPOVgzQ3BrVDUxZU04WGhUK3R4K3Bl?=
+ =?utf-8?B?UE4rc1JkMjhzTVNQQ1owWXFoYk51MHIzdFk1L1d6S1NlZDZDRllEZUNBNDVx?=
+ =?utf-8?B?M0U0RmJrRkZtOXpEN0U3WWRmM2RpSHRyK0xkZXVodlg2ZGdkNzFqWUJlU2hQ?=
+ =?utf-8?B?RzJ3Lyt4ZG1vTXp0ODJOeWYrOFovWUkwMHhmOWpGZHExVzVDcmNzT1Nnd3JQ?=
+ =?utf-8?B?aC95R1hXRTVDd09WQzBXc2FrdDRIZ3VveEdlQlRJbGFPUkk2ZGs5ZmxzR1Jx?=
+ =?utf-8?B?dkNERGZiWmdTd09kYVZ1SzQxditVa0VORmJKWXhyeDBvRHhoMU5WeDZITmlI?=
+ =?utf-8?B?TFBHV1FwenB5Q005Z2t0TW5OeXBMKzhVejNnbVhlOEc0TTZVdDVORmdjbHRj?=
+ =?utf-8?B?SzZNMnZnWXpUNTVZeVFiZFVNL3NwU2NvMWkzRWYwTURRSlpkYVJMdkZwUE15?=
+ =?utf-8?B?K3JhZ1NrMS9QZHRLcFlzS3J1UGdlQkZNRDQvVmtLaTVqN1pIZGtTbnozMXZG?=
+ =?utf-8?B?b1UzODBkRjFkd0c1OTVkV3IvdmN5TW5weUNZMENDRjNwZXI0S2paZU5nMnJ6?=
+ =?utf-8?B?ZHRwaGpoMmcxTzQ0b2xENW9mUkNDb1JVRVRtYnVoUnc3ZDdESUdheTNBMFRv?=
+ =?utf-8?B?UTVDejJnQmN0ZEdSVFZmbllWYm5kd2RkdmN1RWpKeXFKK1gyOU15ZjByTVBU?=
+ =?utf-8?B?OUgxbmpOWWZhQmJGYXNNd0Rtbmw3dDI0UXVVNGllb1dzTVByRDFtcndqczhU?=
+ =?utf-8?B?allmYld6VkV6ZStCbFlUZnZkZWdTTUtaU2lObXBKdjg1Z1Jhb1EvZ3JrM2dI?=
+ =?utf-8?B?NkRZeFQ1N1NCTkIrOW1tUHF5UEhmWWs5ZmpGN3V5TWN6b3ZBUnZ6NWI0ejNa?=
+ =?utf-8?B?Ykkxa3hMRkRvNnBkQ1JxbXJiSm9GWllib3R2TXgzS0R6TFFDTzNPOHRyMlVw?=
+ =?utf-8?B?MzRkOHpOaVZsczNXckJ6Qi9iVFlvU3BuOTdQYVV1M2dxaDV1c3h1K2dZQTl2?=
+ =?utf-8?B?eU1uaXpTMjFIekFmNFpWVGRpcEJDNzZzN0d3WmFKSDBUTVlieG54dXloWFhm?=
+ =?utf-8?B?M1RHK3FGTXdURnNyUXluWDF2bkpEVWdwaXJ3cmlPRGFjTjF4SlAwMWV5ZVFr?=
+ =?utf-8?B?MEJjMUtFSk5hb1JZK2wweXN6Vml2Q3NqdjYzV2tvWVpRQytHeE1XTmRGb3Jz?=
+ =?utf-8?Q?GzxuFSfM1mJFhQ7/ePmxyGtPb3+rwjlUfYN2o=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ2PR11MB7573.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?ejhSTEszMW1Nc2UyRzdMOC92UzZUUVFMWEd6b0xBSlVKRjdNYWxERkU0Mi9y?=
+ =?utf-8?B?N0swa2dqelN1eDVyWnVVL0tIeUlNNWpweDJiZFh2U3BBR1N0b0dVVTNDVUMz?=
+ =?utf-8?B?S2txZ3NFcUc2R2RHUTBUd2xRS2tMUHFiaGsxY2dkUVU2UUxvRVlpb1NVTE9n?=
+ =?utf-8?B?Ym5LUGlYcHUraFhKSzEyYlRBK2ZieU9mT1NHL1ppWDF4b0hSWklETi9tRUFV?=
+ =?utf-8?B?dFdURzhyck1PWWhHTWFHdm1tRmdxSjMrUmsralNMUTFnQUcyQ2xWV2lua0JS?=
+ =?utf-8?B?VXQ0TitUWTA4aUlhYWM3VlBzNXl4SkdFdzZQZkVEUXJZb21BNEYzZ040dHp5?=
+ =?utf-8?B?MUdMNmtJTTVDdTliMjlQN04rQ2tmLytzTE5GRXU2bTY3dTlCZG1laXJoK0Ix?=
+ =?utf-8?B?bHlZQk9VbW5oeXJWa2pISnlLZitiZ2xqMGJmdUNQaHh4SnZvSmtKdUduRm5R?=
+ =?utf-8?B?NFF2NFg0ejM0OEo1R1NuTHJtTlE4TkdrY2ZnWnVIeGt4b21CTXk2MmVER0hX?=
+ =?utf-8?B?cmZrbmJ3ekdJUEFVMzBUaHMwWEFabHVuU0tLdk5zdkxTcHZQb1p6QWppaHJV?=
+ =?utf-8?B?US9pOHFUT3U3OThxZ2ZKa0tOQ0llRUxyazRaZGxxdHRmQkxFVVBYaXlPTjBN?=
+ =?utf-8?B?OUg5L2pScnlWWER5QmZ6eStzRThBMmJaVE84SjFkUXhsQkNyN2N2SVg1MGZr?=
+ =?utf-8?B?cGNsS2J5cnpkOVdFVEkzUlF2T2tqTUNXM2lXNEhLODlkV0hHSEdPYkpHU2FC?=
+ =?utf-8?B?aXlNdklMc1czMlNsZUJoSUFrcWdUZ0lyOHp3Vm9JVFRyYmswQzl5emFwbE9o?=
+ =?utf-8?B?VFlCaE5yTEZFby9RSFhTUDF1YlNQUFc3VnBscU1hWDk3WitLTlNHRU1lS3hL?=
+ =?utf-8?B?UC93Yy9FZ25NYUd5WVlhZDBnY25Xb3U3QnUyYTdXUHpUWVJkZisvc2RySDVG?=
+ =?utf-8?B?QlFTNDhmamFVQlZmM1ZyeFhSYm5Xa1hXUGcrMFhqNHYzeWZPb3ZpclAxOHpy?=
+ =?utf-8?B?S0FKUEJoWi8yUGFOakdybXVlM3pHNWRnLzRoMk1vWE9Bbm1CTHM0SUtCanZp?=
+ =?utf-8?B?MnFVUEtncDJrVHU1QWFaK1NNd2RuVXdPSEw4SDMwZEN1Z0t5aC9vK1NJakND?=
+ =?utf-8?B?d3hKZzhGK3M1OEllVmRtVlpFbnZ6a3NBQ2tiYTg3UTIzN3gvcXNGTVAzOUFE?=
+ =?utf-8?B?OVNrcW8vTWtWN2ZuZG1QSjVFVEhXa0hJUnlvR3U0UVpuMmxIR1hPNjRUNnBt?=
+ =?utf-8?B?L21wRTJBRXhxYnJUYkV1MlJWcVI2aGFWUmdyV24yTVgwVy9tRzhRVkhRb0xT?=
+ =?utf-8?B?aE9sNDdUcDFWK2FIR0lIQm5malFzUEdhcWNESHk2SkFIS1AxVkVUZDhydDlm?=
+ =?utf-8?B?V0ZVZmpTNE5iU0RUdzhVMFFVVFMyUzhGbzU0T1ZtZnlhK1QyemxocjFUOFJx?=
+ =?utf-8?B?ZVdoUkNlWFNTV0laMU95QklPWXlqa2s5NnZkL0VxZUpJS0pNSWRUbzMwdzV6?=
+ =?utf-8?B?VWtWcVQ4cGpJSkJJRzl5QjNnWHdkeGt5ZFFsTERQckZYczhCaU5vOG04NlV6?=
+ =?utf-8?B?TUVoRFIrVVV4WHJiYWwyaTFhSWN0OCtOSHRFZnZpREhrbUdicCs0ejJRTm1G?=
+ =?utf-8?B?SWhjTTdvS3NhWVlMSHBqTDEwUnNYNDhuWjVWalU3cmVEWVBCRTRpK3pKd3Nk?=
+ =?utf-8?B?cjl2eXRYQ1cyNSt3aDNORk1OdlVCZVpqb1R6akdjei83eERwMXdlb1ZsV0dI?=
+ =?utf-8?B?UWFQRnJSWENVWmZuYy8zYUdTU3lkMTQ0L1N4NFA0d3l2VC9pZ1RiVUkrUUpT?=
+ =?utf-8?B?VG10K3hGWDNldi9XWEJKNCtkckZtUEViKzh6VUJmME1qZWc0RmV5V1c2SzA0?=
+ =?utf-8?B?b1pFck1PV01LbFVDUFNyZmp6SWZYR2g5WUZYanFkRGNQVFd2NnkzVWJFZjk0?=
+ =?utf-8?B?Vk9Pd3ovLzQvMTFOTGVsWUpGeDlPN25BelY5TW5aSS9Bb3Fjd3BjWEZSd2tn?=
+ =?utf-8?B?N2J5b0ZRdUcrRDFVcTdlOFcwVloxSkZoVTRua1FDSHhweXRFUWZlMklaajZF?=
+ =?utf-8?B?Rm1MdEJzMk1PUGliU3o4TVlTM2lYSm5XME11cHZNbjNpSFhuWXB2ajdvWVNL?=
+ =?utf-8?B?NVVhcFo0bHVXUjBJTmJTeTN2MmxJcGcwbHpubDNOV013bzNmMTFjOFdveXVS?=
+ =?utf-8?B?R3c9PQ==?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: da3dc3b7-4f46-4361-a78b-08dd99b4f4ed
+X-MS-Exchange-CrossTenant-AuthSource: SJ2PR11MB7573.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 May 2025 04:47:44.0412
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: D1MP3OGP+ecfCbuJDkINM2H6w1eAUHbE8fYOfmJqN3SF7dtYnxr7j7D9HSveXcy1MwrRiiqkC/OdDrxq0wtTN+58kNeHRUkYS1Pkd6c9C+w=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR11MB5915
+X-OriginatorOrg: intel.com
 
-Hello,
+Hi Babu,
 
-syzbot found the following issue on:
+On 5/15/25 3:52 PM, Babu Moger wrote:
+> Introduce the interface to display the assignment states for each group
+> when mbm_cntr_assign mode is enabled.
+> 
+> The list is displayed in the following format:
+> <Event configuration>:<Domain id>=<Assignment type>
 
-HEAD commit:    a5806cd506af Linux 6.15-rc7
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=11923f68580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=3340af1a8845dd35
-dashboard link: https://syzkaller.appspot.com/bug?extid=b3fba2e269970207b61d
-compiler:       Debian clang version 20.1.2 (++20250402124445+58df0ef89dd6-1~exp1~20250402004600.97), Debian LLD 20.1.2
+Should this just be <Event>? The information is just the event name, not
+its configuration that will be in the "event_filter" file.
 
-Unfortunately, I don't have any reproducer for this issue yet.
+> 
+> Event configuration: A valid event configuration listed in the
+> /sys/fs/resctrl/info/L3_MON/counter_configs directory.
+> 
+> Domain ID: A valid domain ID number.
+> 
+> The assignment type can be one of the following:
+> 
+> _ : No event configuration assigned
+> 
+> e : Event configuration assigned in exclusive mode
+> 
+> Example:
+> $cd /sys/fs/resctrl
+> $cat mbm_L3_assignments
+> mbm_total_bytes:0=e;1=e
+> mbm_local_bytes:0=e;1=e
+> 
+> Signed-off-by: Babu Moger <babu.moger@amd.com>
+> ---
+> v13: Changelog update.
+>      Few changes in mbm_L3_assignments_show() after moving the event config to evt_list.
+>      Resolved conflicts caused by the recent FS/ARCH code restructure.
+>      The rdtgroup.c/monitor.c files have been split between the FS and ARCH directories.
+> 
+> v12: New patch:
+>      Assignment interface moved inside the group based the discussion
+>      https://lore.kernel.org/lkml/CALPaoCiii0vXOF06mfV=kVLBzhfNo0SFqt4kQGwGSGVUqvr2Dg@mail.gmail.com/#t
+> ---
+>  Documentation/filesystems/resctrl.rst | 28 +++++++++++++++
+>  fs/resctrl/monitor.c                  |  1 +
+>  fs/resctrl/rdtgroup.c                 | 52 +++++++++++++++++++++++++++
+>  3 files changed, 81 insertions(+)
+> 
+> diff --git a/Documentation/filesystems/resctrl.rst b/Documentation/filesystems/resctrl.rst
+> index 356f1f918a86..2350c1f21f4e 100644
+> --- a/Documentation/filesystems/resctrl.rst
+> +++ b/Documentation/filesystems/resctrl.rst
+> @@ -504,6 +504,34 @@ When the "mba_MBps" mount option is used all CTRL_MON groups will also contain:
+>  	/sys/fs/resctrl/info/L3_MON/mon_features changes the input
+>  	event.
+>  
+> +"mbm_L3_assignments":
+> +	This interface file is created when the mbm_cntr_assign mode is supported
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/652000eacd92/disk-a5806cd5.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/2b445a74e31e/vmlinux-a5806cd5.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/0a4ef01f165f/bzImage-a5806cd5.xz
+"This interface file is created when" -> "Exists when mbm_cntr_assign mode is supported"?
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+b3fba2e269970207b61d@syzkaller.appspotmail.com
+> +	and shows the assignment status for each group.
 
-INFO: task syz.9.533:10335 blocked for more than 143 seconds.
-      Not tainted 6.15.0-rc7-syzkaller #0
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-task:syz.9.533       state:D stack:24344 pid:10335 tgid:10334 ppid:7718   task_flags:0x400140 flags:0x00000004
-Call Trace:
- <TASK>
- context_switch kernel/sched/core.c:5382 [inline]
- __schedule+0x168f/0x4c70 kernel/sched/core.c:6767
- __schedule_loop kernel/sched/core.c:6845 [inline]
- schedule+0x165/0x360 kernel/sched/core.c:6860
- percpu_rwsem_wait+0x2ab/0x300 kernel/locking/percpu-rwsem.c:162
- __percpu_down_read+0xe3/0x120 kernel/locking/percpu-rwsem.c:177
- percpu_down_read include/linux/percpu-rwsem.h:66 [inline]
- __sb_start_write include/linux/fs.h:1783 [inline]
- sb_start_write+0x185/0x1c0 include/linux/fs.h:1919
- mnt_want_write+0x41/0x90 fs/namespace.c:556
- open_last_lookups fs/namei.c:3789 [inline]
- path_openat+0x85d/0x3830 fs/namei.c:4036
- do_filp_open+0x1fa/0x410 fs/namei.c:4066
- do_sys_openat2+0x121/0x1c0 fs/open.c:1429
- do_sys_open fs/open.c:1444 [inline]
- __do_sys_openat fs/open.c:1460 [inline]
- __se_sys_openat fs/open.c:1455 [inline]
- __x64_sys_openat+0x138/0x170 fs/open.c:1455
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xf6/0x210 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f8e2a18e969
-RSP: 002b:00007f8e2b0be038 EFLAGS: 00000246 ORIG_RAX: 0000000000000101
-RAX: ffffffffffffffda RBX: 00007f8e2a3b5fa0 RCX: 00007f8e2a18e969
-RDX: 000000000000275a RSI: 0000200000000100 RDI: ffffffffffffff9c
-RBP: 00007f8e2a210ab1 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-R13: 0000000000000000 R14: 00007f8e2a3b5fa0 R15: 00007fffe529a348
- </TASK>
+This doc is in the portion documenting files in monitor groups. So rather:
+"the assignment status for each group" -> "the counter assignment status for the MON group"?
 
-Showing all locks held in the system:
-1 lock held by khungtaskd/31:
- #0: ffffffff8df3dee0 (rcu_read_lock){....}-{1:3}, at: rcu_lock_acquire include/linux/rcupdate.h:331 [inline]
- #0: ffffffff8df3dee0 (rcu_read_lock){....}-{1:3}, at: rcu_read_lock include/linux/rcupdate.h:841 [inline]
- #0: ffffffff8df3dee0 (rcu_read_lock){....}-{1:3}, at: debug_show_all_locks+0x2e/0x180 kernel/locking/lockdep.c:6764
-5 locks held by kworker/u8:2/36:
-2 locks held by kworker/u8:6/1089:
-2 locks held by getty/5583:
- #0: ffff88803055e0a0 (&tty->ldisc_sem){++++}-{0:0}, at: tty_ldisc_ref_wait+0x25/0x70 drivers/tty/tty_ldisc.c:243
- #1: ffffc90002ffe2f0 (&ldata->atomic_read_lock){+.+.}-{4:4}, at: n_tty_read+0x43e/0x1400 drivers/tty/n_tty.c:2222
-1 lock held by udevd/9862:
-2 locks held by udevd/10189:
- #0: ffff888022a2e3a0 (&sb->s_type->i_mutex_key#7){++++}-{4:4}, at: inode_lock_shared include/linux/fs.h:877 [inline]
- #0: ffff888022a2e3a0 (&sb->s_type->i_mutex_key#7){++++}-{4:4}, at: blkdev_read_iter+0x2f8/0x440 block/fops.c:808
- #1: ffff8880b88399d8 (&rq->__lock){-.-.}-{2:2}, at: raw_spin_rq_lock_nested+0x2a/0x140 kernel/sched/core.c:605
-1 lock held by syz.9.533/10335:
- #0: ffff88802f0e0420 (sb_writers#25){++++}-{0:0}, at: mnt_want_write+0x41/0x90 fs/namespace.c:556
-3 locks held by syz-executor/12892:
- #0: ffff8880b89399d8 (&rq->__lock){-.-.}-{2:2}, at: raw_spin_rq_lock_nested+0x2a/0x140 kernel/sched/core.c:605
- #1: ffff8880b8923b08 (&per_cpu_ptr(group->pcpu, cpu)->seq){-.-.}-{0:0}, at: psi_task_switch+0x39e/0x6d0 kernel/sched/psi.c:987
- #2: ffff88807a093758 (&sb->s_type->i_lock_key#9){+.+.}-{3:3}, at: spin_trylock include/linux/spinlock.h:361 [inline]
- #2: ffff88807a093758 (&sb->s_type->i_lock_key#9){+.+.}-{3:3}, at: lock_for_kill+0x84/0x210 fs/dcache.c:705
-2 locks held by syz.2.1023/13285:
-2 locks held by dhcpcd-run-hook/13307:
- #0: ffff8880b89399d8 (&rq->__lock){-.-.}-{2:2}, at: raw_spin_rq_lock_nested+0x2a/0x140 kernel/sched/core.c:605
- #1: ffff8880b8923b08 (&per_cpu_ptr(group->pcpu, cpu)->seq){-.-.}-{0:0}, at: psi_task_switch+0x39e/0x6d0 kernel/sched/psi.c:987
+> +
+> +	The assignment list is displayed in the following format:
+> +
+> +	<Event configuration>:<Domain id>=<Assignment type>
 
-=============================================
+<Event configuration> -> <Event>
 
-NMI backtrace for cpu 0
-CPU: 0 UID: 0 PID: 31 Comm: khungtaskd Not tainted 6.15.0-rc7-syzkaller #0 PREEMPT(full) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
-Call Trace:
- <TASK>
- dump_stack_lvl+0x189/0x250 lib/dump_stack.c:120
- nmi_cpu_backtrace+0x39e/0x3d0 lib/nmi_backtrace.c:113
- nmi_trigger_cpumask_backtrace+0x17a/0x300 lib/nmi_backtrace.c:62
- trigger_all_cpu_backtrace include/linux/nmi.h:158 [inline]
- check_hung_uninterruptible_tasks kernel/hung_task.c:274 [inline]
- watchdog+0xfee/0x1030 kernel/hung_task.c:437
- kthread+0x711/0x8a0 kernel/kthread.c:464
- ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:153
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
- </TASK>
-Sending NMI from CPU 0 to CPUs 1:
-NMI backtrace for cpu 1
-CPU: 1 UID: 0 PID: 13310 Comm: rm Not tainted 6.15.0-rc7-syzkaller #0 PREEMPT(full) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
-RIP: 0010:file_ref_inc include/linux/file_ref.h:121 [inline]
-RIP: 0010:get_file include/linux/fs.h:1133 [inline]
-RIP: 0010:__mmap_new_file_vma mm/vma.c:2352 [inline]
-RIP: 0010:__mmap_new_vma mm/vma.c:2417 [inline]
-RIP: 0010:__mmap_region mm/vma.c:2519 [inline]
-RIP: 0010:mmap_region+0xf23/0x1e50 mm/vma.c:2597
-Code: 24 18 01 00 00 48 89 44 24 50 49 8d be 60 01 00 00 be 08 00 00 00 e8 1c 3f 0e 00 41 bf 01 00 00 00 f0 4d 0f c1 be 60 01 00 00 <31> ff 4c 89 fe e8 83 6c ae ff 4d 85 ff 78 74 e8 99 67 ae ff 4c 8b
-RSP: 0018:ffffc9000418f2c0 EFLAGS: 00000202
-RAX: ffffc9000418f301 RBX: ffff88806733f2a0 RCX: ffffffff82118924
-RDX: 0000000000000001 RSI: 0000000000000008 RDI: ffff88807e407820
-RBP: ffffc9000418f730 R08: ffff88807e407827 R09: 1ffff1100fc80f04
-R10: dffffc0000000000 R11: ffffed100fc80f05 R12: ffff88806733f280
-R13: ffffc9000418f3d0 R14: ffff88807e4076c0 R15: 0000000000000000
-FS:  0000000000000000(0000) GS:ffff8881261f6000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 000055aa8d186008 CR3: 000000007f374000 CR4: 00000000003526f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- do_mmap+0xc68/0x1100 mm/mmap.c:561
- vm_mmap_pgoff+0x31b/0x4c0 mm/util.c:579
- elf_map fs/binfmt_elf.c:387 [inline]
- elf_load+0x140/0x6c0 fs/binfmt_elf.c:414
- load_elf_interp+0x469/0xaf0 fs/binfmt_elf.c:681
- load_elf_binary+0x19d2/0x27a0 fs/binfmt_elf.c:1246
- search_binary_handler fs/exec.c:1778 [inline]
- exec_binprm fs/exec.c:1810 [inline]
- bprm_execve+0x999/0x1440 fs/exec.c:1862
- do_execveat_common+0x510/0x6a0 fs/exec.c:1968
- do_execve fs/exec.c:2042 [inline]
- __do_sys_execve fs/exec.c:2118 [inline]
- __se_sys_execve fs/exec.c:2113 [inline]
- __x64_sys_execve+0x94/0xb0 fs/exec.c:2113
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xf6/0x210 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f6e5ef70107
-Code: Unable to access opcode bytes at 0x7f6e5ef700dd.
-RSP: 002b:00007fff92965db8 EFLAGS: 00000246 ORIG_RAX: 000000000000003b
-RAX: ffffffffffffffda RBX: 00005577b8e42fe0 RCX: 00007f6e5ef70107
-RDX: 00005577b8e43000 RSI: 00005577b8e42fe0 RDI: 00005577b8e43088
-RBP: 00005577b8e43088 R08: 00007fff92968e28 R09: 0000000000000000
-R10: 0000000000000008 R11: 0000000000000246 R12: 00005577b8e43000
-R13: 00007f6e5f135e8b R14: 00005577b8e43000 R15: 0000000000000000
- </TASK>
+> +
+> +	Event configuration: A valid event configuration listed in the
 
+"A valid event in the /sys/fs/resctrl/info/L3_MON/event_configs directory"
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+> +	/sys/fs/resctrl/info/L3_MON/counter_configs directory.
+> +
+> +	Domain ID: A valid domain ID number.
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+"A valid domain ID"
 
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
+> +
+> +	Assignment types:
+> +
+> +	_ : No event configuration assigned
 
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
+hmmm ... since the line has event as first field, would this not reflect the
+counter? That is "No counter assigned"
 
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
+> +
+> +	e : Event configuration assigned in exclusive mode
 
-If you want to undo deduplication, reply with:
-#syz undup
+"Counter assigned exclusively"? (with exclusive defined somewhere)
+
+> +
+> +	Example:
+> +	To list the assignment states for the default group.
+
+"the counter assignment states"?
+
+> +	::
+> +
+> +	  # cd /sys/fs/resctrl
+> +	  # cat mbm_L3_assignments
+> +	    mbm_total_bytes:0=e;1=e
+> +	    mbm_local_bytes:0=e;1=e
+> +
+>  Resource allocation rules
+>  -------------------------
+>  
+> diff --git a/fs/resctrl/monitor.c b/fs/resctrl/monitor.c
+> index 5f6c4b662f3b..b982540ce4e3 100644
+> --- a/fs/resctrl/monitor.c
+> +++ b/fs/resctrl/monitor.c
+> @@ -935,6 +935,7 @@ int resctrl_mon_resource_init(void)
+>  		resctrl_file_fflags_init("event_filter", RFTYPE_ASSIGN_CONFIG);
+>  		resctrl_file_fflags_init("mbm_assign_on_mkdir", RFTYPE_MON_INFO |
+>  					 RFTYPE_RES_CACHE);
+> +		resctrl_file_fflags_init("mbm_L3_assignments", RFTYPE_MON_BASE);
+>  	}
+>  
+>  	return 0;
+> diff --git a/fs/resctrl/rdtgroup.c b/fs/resctrl/rdtgroup.c
+> index 931ea355f159..8d970b99bbbd 100644
+> --- a/fs/resctrl/rdtgroup.c
+> +++ b/fs/resctrl/rdtgroup.c
+> @@ -2080,6 +2080,52 @@ static ssize_t resctrl_mbm_assign_on_mkdir_write(struct kernfs_open_file *of,
+>  	return ret ?: nbytes;
+>  }
+>  
+> +static int mbm_L3_assignments_show(struct kernfs_open_file *of, struct seq_file *s, void *v)
+> +{
+> +	struct rdt_resource *r = resctrl_arch_get_resource(RDT_RESOURCE_L3);
+> +	struct rdt_mon_domain *d;
+> +	struct rdtgroup *rdtgrp;
+> +	struct mon_evt *mevt;
+> +	int ret = 0;
+> +	bool sep;
+> +
+> +	rdtgrp = rdtgroup_kn_lock_live(of->kn);
+> +	if (!rdtgrp)
+> +		return -ENOENT;
+
+Missing a rdtgroup_kn_unlock()?
+
+> +
+> +	rdt_last_cmd_clear();
+> +	if (!resctrl_arch_mbm_cntr_assign_enabled(r)) {
+> +		rdt_last_cmd_puts("mbm_cntr_assign mode not enabled\n");
+> +		ret = -ENOENT;
+> +		goto assign_out;
+
+grep goto fs/resctrl/rdtgroup.c
+
+> +	}
+> +
+> +	list_for_each_entry(mevt, &r->mon.evt_list, list) {
+
+can use for_each_mbm_event() and then below will not be needed?
+
+> +		if (mevt->mbm_mode != MBM_MODE_ASSIGN)
+> +			continue;
+> +
+> +		sep = false;
+> +		seq_printf(s, "%s:", mevt->name);
+> +		list_for_each_entry(d, &r->mon_domains, hdr.list) {
+> +			if (sep)
+> +				seq_putc(s, ';');
+> +
+> +			if (mbm_cntr_get(r, d, rdtgrp, mevt->evtid) >= 0)
+> +				seq_printf(s, "%d=e", d->hdr.id);
+> +			else
+> +				seq_printf(s, "%d=_", d->hdr.id);
+> +
+> +			sep = true;
+> +		}
+> +		seq_putc(s, '\n');
+> +	}
+> +
+> +assign_out:
+> +	rdtgroup_kn_unlock(of->kn);
+> +
+> +	return ret;
+> +}
+> +
+>  /* rdtgroup information files for one cache resource. */
+>  static struct rftype res_common_files[] = {
+>  	{
+> @@ -2218,6 +2264,12 @@ static struct rftype res_common_files[] = {
+>  		.seq_show	= event_filter_show,
+>  		.write		= event_filter_write,
+>  	},
+> +	{
+> +		.name		= "mbm_L3_assignments",
+> +		.mode		= 0444,
+> +		.kf_ops		= &rdtgroup_kf_single_ops,
+> +		.seq_show	= mbm_L3_assignments_show,
+> +	},
+>  	{
+>  		.name		= "mbm_assign_mode",
+>  		.mode		= 0444,
+
+Reinette
