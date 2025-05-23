@@ -1,61 +1,63 @@
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D48E41A08DF
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 13:40:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9832D29375E
+	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 13:40:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748007641; cv=none; b=QyT3Ap6wHhrMfShY6uPd95Kf8oHisnjCl5nTBJeJ+nDvq9p+7iDna3a3kJhXXCr24c0I0AgI1LnfJxBQ1RMhEqAGRjSf9pZ0ykUdM/+GDcLDRhCvtg0sAkGuZMhHKHNcaqTaX8IBjmDthCQHuNHidpPGPQ4cStGkNkuIKjPVzSo=
+	t=1748007644; cv=none; b=kp7zQh8B5nPdRtCCufYFPPd97hcDWQQaGrpRZ2BPKuO/W6tKVTgsuaQ0PhKlkHyaZ6KGeD3OL7JI2coad9fdzTI/3gcLXf0k4dq9Eg7NiPuOJZlP08oqpfy9m7nlwdJ5yS2qSTosSfvzJAPxbs0KwzuwFIKp6jHcCKXVj+9tVrs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748007641; c=relaxed/simple;
-	bh=0hShcddQUJ+0eOxNUp6ajHVoa9avM9UDQg3ZWcmCiL4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=pg3hBKDsEb8ztO05nem2VLrHJDEUqVGPSPoVlw2GXVW+uRLx9P7RF7xS3MYEP0bnab0oXiBFLkTvbT88IDcRIGJQsbbNf9yFa8/6zVQ+jDGmPjIRCKyqKTmfFhW0JRLnRFjp1LCtaDcILJoiR4S7aEC5pCyJ/SCJ1QYA7fvPqj0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=BobEldln; arc=none smtp.client-ip=209.85.167.50
+	s=arc-20240116; t=1748007644; c=relaxed/simple;
+	bh=ZWuXoHRykjcQLvugNPxk6lMikozG+4QpwkTnChGz2TI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=hE24sYJprzA/UG5pNf1G5Il5lrYAmAab8NrKKG/LA5cKKO5gy2tZReOOq3TqOAiIx7MCL/DVKztvw6Pwr/JAPUx29zTvSObM6h9T4XSMX2iZZ8WsFQdsdJid9/QnU57z0wZsJvV/oMp6mL2Ezmv7n94z2pN0+HrAresJ++aTtK8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=s5SO9le5; arc=none smtp.client-ip=209.85.167.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BobEldln"
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-54c0fa6d455so11504885e87.1
-        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 06:40:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="s5SO9le5"
+Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-54afb5fcebaso10979766e87.3
+        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 06:40:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1748007638; x=1748612438; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=o8UsG0Cv+W+SbA3fwsKYtIRZq6NFodm959GZlb0m+LI=;
-        b=BobEldlnqiWaTKuDsewJMTFSxNvCYZecB70K8TqP34uetLYnLvKGpyyC5zq3rEkTjI
-         eWgCpQfnydq73QFaJp/fcbWDK1oBhT3bJ334USJ4qIiWrpvwh+wRWn02EkGoHXd6fVd/
-         uYc5+uccy2XP5jPdrI2h8N8IOKW9Q1V6SmusCbReukNKLkpt7NBUj80aUBKUOeZUNghd
-         scJ+c302MIs930wH+XE7LSLJXudgvKO7co5B2XVIXK9NrXRlPmx+SG9x5sJ5Z+RH2ujq
-         cj+E3fKiaxmHV/XLs+9VHW8RqG+ioWQ4Q6udMMlbDCvLnNQOp3cNsi9cFib7hWL+Tzv4
-         eoMw==
+        d=linaro.org; s=google; t=1748007641; x=1748612441; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=pVuyQaWXDo32LSLemr1Wiyb/FTBR994cD4zXDWOXk7w=;
+        b=s5SO9le58+lcREccGO3MaZ3Nx2+KdSXzrVQbArBo4z61JHHrAOBhqqSYXX6up24zAJ
+         +YcOiTuf6q4mTwzO4Xj+j1H0WZSL+YBaXmpTIiJYDw4X7PdcOpIDCbp48Vn92MKXpTR6
+         Xzh5kUB1zNtEa1WzfWZQfPOlQt6Qd23OgwXIy39LqJMax2+Fcz+8OXft8e594mheGooa
+         pcj3++Cjh/+IbvacuYQg2l+CeYdLndpCI088jbEPjgUt78RRTR7t41H7Tbc5v5MdZNmk
+         vK5Kaum5Vyl6a82bL7Mkt2foMr7B6Mj1L/7DMcoU8RFxo/m9wI1/WYgLuen7bfJ1HkP7
+         SmVA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748007638; x=1748612438;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=o8UsG0Cv+W+SbA3fwsKYtIRZq6NFodm959GZlb0m+LI=;
-        b=dEPNzXtexiC2CBtTXfoMZjDIJ6xpxuAs7W2ExZvFf5xMpSjoK6lP2YxWp9X6eVGjQZ
-         u166KK4ofq+7UranQUdpvdOi/yRRIiZ7AAK8crj4KYSEuAGJqO4GLPOGVS1N1Lj2xuBp
-         vP7zOBKIK15dvcR8J6BL45U8lHu2J9SjKUD1y/H2SC3jhYVbhfInJ2KYJhrsVi61rFk3
-         ON8q+weFEqmmHa9Sw/DAw0+jJH5eR/mnUyeSlynR2aOw8E8l4I1t+pLdj4KchCpBJ2oN
-         m3EHbkgnNIJ1xKhFmSeT0zPupqXLqilwHg23gS0QIsNxgWcewKrMXMYJLssKy/YvA3eZ
-         Gwlw==
-X-Forwarded-Encrypted: i=1; AJvYcCX7JpdN0ZuL9o3hTFlElkiz7dnyaiyHA10l2meCY4k1wDCQZ93v8utRgNtGEbIFyit97f4xkykNqQFeBfA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YweQajx73F9H6Yet+1ZzsMhLQ9t9lHUfTbPYIR+lcm5JCcH51yx
-	LOxzMpg/hj/JFNBi+9ZgVHxprQg7m4LLel/jNtSBoFu/74HwGhy/CvrQyLsj/40TapI=
-X-Gm-Gg: ASbGncuA5jqzhqwfiM5LRpTa6KH6Hd1EiOQD0kZus7YYIDVtOX/QfEhthZwCYph9+Mk
-	/7X5m1i+4VlH6kNJnfG4HW8BuW/ZDmAVAYD6zRKgTkvNdsWUtTwZyIi7rSqP8tWWnRj5XYeY9Kn
-	f7Bi0O37OlQitBDCKNrqv6iIaUw3Quzy/lio+WNDolR24eGb3BFehY2keqzFdAIzUB0FPwq8FZb
-	c5yqJxKvFq51noBOvALZbFMqacAeji8Hp56nx8h325w3ck1Zp4TZFyGSO6JC96ZbuGljXV/gmsF
-	KaCBlaYQig/FdJNedazb3RXwQgKMffX3mZTqFgJfujL3OfmRmKAU4MXhnQEQQy94DhgaFHgmLMC
-	EeFCTRLrCgNwYUDjhwtEKnC5jTA==
-X-Google-Smtp-Source: AGHT+IHnygsP+tGAk04VZnCfGgEIdN8EfQ0ZCgQ471fg+idaH3A0yfEu5eg6xgFw+xqxxde3XVbpbQ==
-X-Received: by 2002:a05:6512:6081:b0:545:6fa:bf5f with SMTP id 2adb3069b0e04-550e7195284mr7962698e87.2.1748007637808;
-        Fri, 23 May 2025 06:40:37 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1748007641; x=1748612441;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=pVuyQaWXDo32LSLemr1Wiyb/FTBR994cD4zXDWOXk7w=;
+        b=HOvZ0R2qbl3diFc/xX2U5lyR5JBq4lPDVKajPy30cWwzsROiV2vm6eIZR8S8Z4oFuD
+         btbc+JsIkGBg5fcnqD4PlTZMnIjC/txIEFuR34K2poPWvOvv5kodcJO3BQHeCmPzeojw
+         3tEZy1WPEFxAMJhVRksuauFPJulR70htKYDuwPMUTKcfMbBPBMQy48IsbcTiArBVLhL9
+         N4QrwYZnaVW3uofbXL766+vRgi88zGrE1oF5k9VwTRb0UK4MWI7mLuqt+FAq1uEElqG8
+         kGlUdWDtfnzAfgZ7/QNBpcBQ3Eh9E5ItZjeyIblBYXIUQ1SJJjGCeSAZUykexXwSdcoE
+         V3MA==
+X-Forwarded-Encrypted: i=1; AJvYcCXHZZ5RgQwURZfx+wr55PTrnod9B23NCQnAJACh9XiWLzRdfddAhBZe+hOPDrIz/HoL2xeHJ8owtul9rCc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwwVj7f8LZGg5FCNZ0UDi/Wf1mQ7P1Z/bKnh2fTGH8ell6yc5P/
+	7hL6VhI9UDtvrDpS0EBtCh04wQvbjrWYJLsC/yG4ZlRQuUQPonxSoKzETOE7iT+BYMU=
+X-Gm-Gg: ASbGncsEvg4MM3ktgtbCmVuCoA9N59n2AaelZuDAoM9bd153wMsWKpirTJPJeB2D0dO
+	xKAumaanKGh2y5795ZpBiw6VSfMG0BoFxvcH40gSkzLs1lLRq5zSDq10+T/Lr092NZWnQLB/qB7
+	Vb23zc9LYdQpgYthuJ+rkEjrOGLAdvRDTTHOaOY0VWu9f6BlMohnbUYi3DNOlwzOdbI19nYN5jU
+	ycYuSC7eg53vrmKoT/Jnc5YpGcBOLY38H50Yc3CWxuc/5iowF3A3o5Z3GQFJnd9TyfWg9UvBX38
+	ObUNr1aH6LsSH4djOfc+iTxl0BntMhUHMw71EllYUzCueYLRjorXO1u9pQ/yMyVusUs+5Nnkdw3
+	uRl4WuzUSdvFlBdKbe4tt5RDlvA==
+X-Google-Smtp-Source: AGHT+IEVIbZ36oRuBgtUIV/gY2wrVcuoRcXYW2ew4UfjOMiCZ3z4VNYKumXWYXyWKY98xtuLk0dWog==
+X-Received: by 2002:a05:6512:22c9:b0:551:eb71:4aa8 with SMTP id 2adb3069b0e04-551eb714cbdmr4668192e87.25.1748007640612;
+        Fri, 23 May 2025 06:40:40 -0700 (PDT)
 Received: from uffe-tuxpro14.. (h-178-174-189-39.A498.priv.bahnhof.se. [178.174.189.39])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-551fc0d473bsm1950609e87.244.2025.05.23.06.40.34
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-551fc0d473bsm1950609e87.244.2025.05.23.06.40.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 May 2025 06:40:37 -0700 (PDT)
+        Fri, 23 May 2025 06:40:40 -0700 (PDT)
 From: Ulf Hansson <ulf.hansson@linaro.org>
 To: Saravana Kannan <saravanak@google.com>,
 	Stephen Boyd <sboyd@kernel.org>,
@@ -76,10 +78,12 @@ Cc: "Rafael J . Wysocki" <rafael@kernel.org>,
 	Ulf Hansson <ulf.hansson@linaro.org>,
 	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 00/21] pmdomain: Add generic ->sync_state() support to genpd
-Date: Fri, 23 May 2025 15:39:57 +0200
-Message-ID: <20250523134025.75130-1-ulf.hansson@linaro.org>
+Subject: [PATCH v2 01/21] pmdomain: core: Use of_fwnode_handle()
+Date: Fri, 23 May 2025 15:39:58 +0200
+Message-ID: <20250523134025.75130-2-ulf.hansson@linaro.org>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250523134025.75130-1-ulf.hansson@linaro.org>
+References: <20250523134025.75130-1-ulf.hansson@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -88,75 +92,64 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Changes in v2:
-	- Well, quite a lot as I discovered various problems when doing
-	additional testing of corner-case. I suggest re-review from scratch,
-	even if I decided to keep some reviewed-by tags.
-	- Added patches to allow some drivers that needs to align or opt-out
-	from the new common behaviour in genpd.
+Let's avoid accessing the np->fwnode directly and use the common helper
+of_fwnode_handle() instead.
 
-If a PM domain (genpd) is powered-on during boot, there is probably a good
-reason for it. Therefore it's known to be a bad idea to allow such genpd to be
-powered-off before all of its consumer devices have been probed. This series
-intends to fix this problem.
+Suggested-by: Saravana Kannan <saravanak@google.com>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+---
+ drivers/pmdomain/core.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-We have been discussing these issues at LKML and at various Linux-conferences
-in the past. I have therefore tried to include the people I can recall being
-involved, but I may have forgotten some (my apologies), feel free to loop them
-in.
-
-I have tested this with QEMU with a bunch of local test-drivers and DT nodes.
-Let me know if you want me to share this code too.
-
-Please help review and test!
-Finally, a big thanks to Saravana for all the support!
-
-Kind regards
-Ulf Hansson
-
-
-Saravana Kannan (1):
-  driver core: Add dev_set_drv_sync_state()
-
-Ulf Hansson (20):
-  pmdomain: core: Use of_fwnode_handle()
-  pmdomain: core: Add a bus and a driver for genpd providers
-  pmdomain: core: Add the genpd->dev to the genpd provider bus
-  pmdomain: core: Export a common ->sync_state() helper for genpd
-    providers
-  pmdomain: core: Prepare to add the common ->sync_state() support
-  soc/tegra: pmc: Opt-out from genpd's common ->sync_state() support
-  cpuidle: psci: Opt-out from genpd's common ->sync_state() support
-  cpuidle: riscv-sbi: Opt-out from genpd's common ->sync_state() support
-  pmdomain: qcom: rpmhpd: Use of_genpd_sync_state()
-  pmdomain: qcom: rpmhpd: Use of_genpd_sync_state()
-  firmware/pmdomain: xilinx: Move ->sync_state() support to firmware
-    driver
-  firmware: xilinx: Don't share zynqmp_pm_init_finalize()
-  firmware: xilinx: Use of_genpd_sync_state()
-  driver core: Export get_dev_from_fwnode()
-  pmdomain: core: Add common ->sync_state() support for genpd providers
-  pmdomain: core: Default to use of_genpd_sync_state() for genpd
-    providers
-  pmdomain: core: Leave powered-on genpds on until late_initcall_sync
-  pmdomain: core: Leave powered-on genpds on until sync_state
-  cpuidle: psci: Drop redundant sync_state support
-  cpuidle: riscv-sbi: Drop redundant sync_state support
-
- drivers/base/core.c                         |   8 +-
- drivers/cpuidle/cpuidle-psci-domain.c       |  14 --
- drivers/cpuidle/cpuidle-riscv-sbi.c         |  14 --
- drivers/firmware/xilinx/zynqmp.c            |  18 +-
- drivers/pmdomain/core.c                     | 239 ++++++++++++++++++--
- drivers/pmdomain/qcom/rpmhpd.c              |   2 +
- drivers/pmdomain/qcom/rpmpd.c               |   2 +
- drivers/pmdomain/xilinx/zynqmp-pm-domains.c |  16 --
- drivers/soc/tegra/pmc.c                     |  26 ++-
- include/linux/device.h                      |  13 ++
- include/linux/firmware/xlnx-zynqmp.h        |   6 -
- include/linux/pm_domain.h                   |  17 ++
- 12 files changed, 294 insertions(+), 81 deletions(-)
-
+diff --git a/drivers/pmdomain/core.c b/drivers/pmdomain/core.c
+index ff5c7f2b69ce..9a66b728fbbf 100644
+--- a/drivers/pmdomain/core.c
++++ b/drivers/pmdomain/core.c
+@@ -2557,7 +2557,7 @@ static int genpd_add_provider(struct device_node *np, genpd_xlate_t xlate,
+ 	cp->node = of_node_get(np);
+ 	cp->data = data;
+ 	cp->xlate = xlate;
+-	fwnode_dev_initialized(&np->fwnode, true);
++	fwnode_dev_initialized(of_fwnode_handle(np), true);
+ 
+ 	mutex_lock(&of_genpd_mutex);
+ 	list_add(&cp->link, &of_genpd_providers);
+@@ -2727,7 +2727,7 @@ void of_genpd_del_provider(struct device_node *np)
+ 			 * so that the PM domain can be safely removed.
+ 			 */
+ 			list_for_each_entry(gpd, &gpd_list, gpd_list_node) {
+-				if (gpd->provider == &np->fwnode) {
++				if (gpd->provider == of_fwnode_handle(np)) {
+ 					gpd->has_provider = false;
+ 
+ 					if (gpd->opp_table) {
+@@ -2737,7 +2737,7 @@ void of_genpd_del_provider(struct device_node *np)
+ 				}
+ 			}
+ 
+-			fwnode_dev_initialized(&cp->node->fwnode, false);
++			fwnode_dev_initialized(of_fwnode_handle(cp->node), false);
+ 			list_del(&cp->link);
+ 			of_node_put(cp->node);
+ 			kfree(cp);
+@@ -2916,7 +2916,7 @@ struct generic_pm_domain *of_genpd_remove_last(struct device_node *np)
+ 
+ 	mutex_lock(&gpd_list_lock);
+ 	list_for_each_entry_safe(gpd, tmp, &gpd_list, gpd_list_node) {
+-		if (gpd->provider == &np->fwnode) {
++		if (gpd->provider == of_fwnode_handle(np)) {
+ 			ret = genpd_remove(gpd);
+ 			genpd = ret ? ERR_PTR(ret) : gpd;
+ 			break;
+@@ -3269,7 +3269,7 @@ static int genpd_parse_state(struct genpd_power_state *genpd_state,
+ 
+ 	genpd_state->power_on_latency_ns = 1000LL * exit_latency;
+ 	genpd_state->power_off_latency_ns = 1000LL * entry_latency;
+-	genpd_state->fwnode = &state_node->fwnode;
++	genpd_state->fwnode = of_fwnode_handle(state_node);
+ 
+ 	return 0;
+ }
 -- 
 2.43.0
 
