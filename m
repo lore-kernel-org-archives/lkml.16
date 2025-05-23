@@ -1,100 +1,72 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E75B623F27B;
-	Fri, 23 May 2025 08:35:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D8F6158535
+	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 08:36:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747989335; cv=none; b=r4pmshwfBpclYCFHOX9oIjiRn9d8b+sbysOddimupXv/dnCXfqubwycmlvVr5szCBjT6GLHfgqoYRvg+cSys6CIZy5UHPRwznqVVnqIyvN8Mqn1lMjLAIFKNR4jnnCtjf7PHYqx1Nc2fLNyobo6rXEqVHSWdyhzVacM0sLzm8TI=
+	t=1747989408; cv=none; b=ary4k2032j1W/AOo/Lg+9Xu9W9x4MjQdKnIEuYTDsMUXi0MpeuyugBXGfulFR9aGiTgjy7O/OZywxWuyqXgVOY3RYmfugfguLeG2Qj7zTgik3BmRHUjM9ITV3UQ8Kzr1QYQEnEmFM5EWKoAGGFDFmPFgGsfaH26xYPmJ2CUxVlI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747989335; c=relaxed/simple;
-	bh=iEx80n8fgG/89TBgoMUIAJYHS9tPKdASg/vwQc+vbVg=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ud0eJzOSRhM5jfjvCIDb28Xrfh5n1r5mSkFWtT2PlR6wZRr5PSbe6roRQMu9dwzHVF15P9eDvQBRnNPlkj+thv8ds+aZhAsC91KFrXA5idAMRMqQ7kjEweyF3uvDBviUm4PNI9599rN4HGm9URfIaY20/bPoLQzkkqYCdQvDxY0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=a89jG/QS; arc=none smtp.client-ip=68.232.153.233
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	s=arc-20240116; t=1747989408; c=relaxed/simple;
+	bh=V+cVhh0+RqApElsqrP57oXouUjLJ6b/UgVZaqBCH0Jw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rHyybDWByME0Up19pnwehP4xmqpr5xfBtJNtpSUBcs/eq9ibgbYlfFgG0/A1LXNQCe6Go7wTYPH3Trl1ygGqg1PhnEpkF5B+HVw8mf5kq1v71qEU40LuFp7tApU+RKArPbjIlyUzcytPrEVSVGo6KcEzmzvHRdo/aq3YZko6Fus=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=ZYmH6Mhq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="a89jG/QS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1747989335; x=1779525335;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=iEx80n8fgG/89TBgoMUIAJYHS9tPKdASg/vwQc+vbVg=;
-  b=a89jG/QSoR8iNavr92Q0uJKr2LxOlTKYsfjppzX3CM6WHYNURqGEydJZ
-   0cPhhsz3K7tiKtbf9ALezvkYZp33DPEfTCi7aLzbEjkyX+bled1PUZiDY
-   mgGAhuf465vUELrbUsnzpc0jwDXe9+Ewj90+yO8ka6JNZG3PTaMw7aqcG
-   gfpaZ5uWxq4FSaOwTPENLvXD/Hc7O1Kuo7itP4meu9EdVZp60zKLyjeRD
-   lNZq6oGVZyJX+XuPlo6ug+UWw7BUcADDRtnO2iH6kUHt/GFD89j1zLQMS
-   dBKGWvNb5HB/oBE0IRMTwNA+QgiohAlUPBhx1hYyeIzXAb1Vt24j8nSUm
-   Q==;
-X-CSE-ConnectionGUID: rV4OX+4HSQ+r696EVeXuxw==
-X-CSE-MsgGUID: jK41x6mXQJmu38my/w8XNA==
-X-IronPort-AV: E=Sophos;i="6.15,308,1739862000"; 
-   d="scan'208";a="41989874"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 23 May 2025 01:34:31 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Fri, 23 May 2025 01:34:28 -0700
-Received: from DEN-DL-M31836.microchip.com (10.10.85.11) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server id
- 15.1.2507.44 via Frontend Transport; Fri, 23 May 2025 01:34:25 -0700
-From: Horatiu Vultur <horatiu.vultur@microchip.com>
-To: <andrew@lunn.ch>, <hkallweit1@gmail.com>, <linux@armlinux.org.uk>,
-	<davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
-	<pabeni@redhat.com>, <richardcochran@gmail.com>, <kory.maincent@bootlin.com>,
-	<wintera@linux.ibm.com>, <viro@zeniv.linux.org.uk>,
-	<quentin.schulz@bootlin.com>, <atenart@kernel.org>
-CC: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Horatiu Vultur
-	<horatiu.vultur@microchip.com>
-Subject: [PATCH net] net: phy: mscc: Stop clearing the the UDPv4 checksum for L2 frames
-Date: Fri, 23 May 2025 10:27:16 +0200
-Message-ID: <20250523082716.2935895-1-horatiu.vultur@microchip.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="ZYmH6Mhq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E7E2C4CEE9;
+	Fri, 23 May 2025 08:36:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1747989407;
+	bh=V+cVhh0+RqApElsqrP57oXouUjLJ6b/UgVZaqBCH0Jw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ZYmH6MhqzKFKCVONX+z7lJPBI+vhRS82dN6qe/cWt3G1Qaz8ao8XyCVD4lnhzJUvm
+	 qmSE0JzBqe7cFsVaaV8uMdd83mS4o9Ofg0AQxteMROYoMPLv/ARry5AovB95JzEWd1
+	 XZa+HPASts2I+fKsgNMiNHmD6mv4axwTjZ4+QfNM=
+Date: Fri, 23 May 2025 10:36:45 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: David Laight <david.laight.linux@gmail.com>
+Cc: Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/1] container_of: Document container_of() is not to be
+ used in new code
+Message-ID: <2025052306-childlike-operating-d9c7@gregkh>
+References: <20250520103437.468691-1-sakari.ailus@linux.intel.com>
+ <aCyOzUIIvMk6Gp8o@smile.fi.intel.com>
+ <2025052000-widen-lip-350b@gregkh>
+ <aCz9jlMcXDooqx0s@kekkonen.localdomain>
+ <2025052138-carport-applaud-61b8@gregkh>
+ <2025052121-drastic-hacker-aab6@gregkh>
+ <20250522220142.14876993@pumpkin>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250522220142.14876993@pumpkin>
 
-We have noticed that when PHY timestamping is enabled, L2 frames seems
-to be modified by changing two 2 bytes with a value of 0. The place were
-these 2 bytes seems to be random(or I couldn't find a pattern).  In most
-of the cases the userspace can ignore these frames but if for example
-those 2 bytes are in the correction field there is nothing to do.  This
-seems to happen when configuring the HW for IPv4 even that the flow is
-not enabled.
-These 2 bytes correspond to the UDPv4 checksum and once we don't enable
-clearing the checksum when using L2 frames then the frame doesn't seem
-to be changed anymore.
+On Thu, May 22, 2025 at 10:01:42PM +0100, David Laight wrote:
+> On Wed, 21 May 2025 15:31:36 +0200
+> Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
+> 
+> > On Wed, May 21, 2025 at 03:27:19PM +0200, Greg Kroah-Hartman wrote:
+> ...
+> > I tried it for the whole tree, and ugh, there are some real "errors" in
+> > there.  The nfs inode handling logic is crazy, passing in a const
+> > pointer and then setting fields in it.  So this will be some real work
+> > to unwind and fix in some places.
+> 
+> Perhaps change the really dodgy ones to container_of_deconst().
+> And fix the easy ones so they compile with the 'const' check.
 
-Fixes: 7d272e63e0979d ("net: phy: mscc: timestamping and PHC support")
-Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
----
- drivers/net/phy/mscc/mscc_ptp.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+Ick, no, let me fix these up properly.  I'm picking them off, and have
+found some real issues here.  It will give me something to build patches
+for over time while doing stable kernel test builds :)
 
-diff --git a/drivers/net/phy/mscc/mscc_ptp.c b/drivers/net/phy/mscc/mscc_ptp.c
-index 6f96f2679f0bf..6b800081eed52 100644
---- a/drivers/net/phy/mscc/mscc_ptp.c
-+++ b/drivers/net/phy/mscc/mscc_ptp.c
-@@ -946,7 +946,9 @@ static int vsc85xx_ip1_conf(struct phy_device *phydev, enum ts_blk blk,
- 	/* UDP checksum offset in IPv4 packet
- 	 * according to: https://tools.ietf.org/html/rfc768
- 	 */
--	val |= IP1_NXT_PROT_UDP_CHKSUM_OFF(26) | IP1_NXT_PROT_UDP_CHKSUM_CLEAR;
-+	val |= IP1_NXT_PROT_UDP_CHKSUM_OFF(26);
-+	if (enable)
-+		val |= IP1_NXT_PROT_UDP_CHKSUM_CLEAR;
- 	vsc85xx_ts_write_csr(phydev, blk, MSCC_ANA_IP1_NXT_PROT_UDP_CHKSUM,
- 			     val);
- 
--- 
-2.34.1
+thanks,
 
+greg k-h
