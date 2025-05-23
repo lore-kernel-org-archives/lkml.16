@@ -1,128 +1,121 @@
-Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E86F522AE41;
-	Fri, 23 May 2025 11:20:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
+Received: from pegase1.c-s.fr (pegase1.c-s.fr [93.17.236.30])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5475422A4F0;
+	Fri, 23 May 2025 11:20:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.236.30
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747999236; cv=none; b=Zc2jeWM5T8VQkj9UUjWVkBB/BkMGZFFOaLJsu8+Dr07uoqb+s8LqginWip4/0lAy+yu8mLO+mZNAfLQu0MrHsgN5MgZlTbnsHH8nVuRjfwV1OI0iRr6JWnjrjhYzn2tJzc41OMOetWIBDtrZ8LlH6EAJ4dxEbAGEkXy5cGvK3l4=
+	t=1747999250; cv=none; b=rpfyIWXfHVWiQrF8JxF5Sxk5PAwgacj6Ld7KeWlc2QhD6ceNQp7Qn1P6nPdwFov628V/m7m42l6kUqDr2h2aIEZ33dTuNDD0DwSAY9rhqySvd4C89AaO4k0sKyCZfaVpNX5hNBWedwYKIEbNfxn5KDYzFd2KVDbSHD5JZC8O8Fw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747999236; c=relaxed/simple;
-	bh=XmeiGBXI70ukFbp2wX31QSqHU/R9FyAhU/P3DDXoibQ=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fYLDUdCtLo2Nmv9UlQIhB+OX16Al9gH4nM+uIdcs3ZhTpwKjBfkBnZaezvoeTwzwUAIvDju7/FrE1DlSOZZduzYioPVdv3YI3LKxioP8o4DUmMYE+I885ELWCH0dFBlqFY3OAj3LT+FVPtOVQy9ni2JGpoK0fQj4rdI74Epvzvc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=pGrh4cl5; arc=none smtp.client-ip=198.47.19.245
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="pGrh4cl5"
-Received: from fllvem-sh03.itg.ti.com ([10.64.41.86])
-	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTP id 54NBJc1K2086996;
-	Fri, 23 May 2025 06:19:38 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1747999178;
-	bh=G3eBoRI6ajKzQj7PIYgoVul0HEV9Bq6GwjJIxWdrMvs=;
-	h=Date:From:To:CC:Subject:References:In-Reply-To;
-	b=pGrh4cl5UNwlzQb/0t74988xZoSrBH7x4348QMBKDmfEIEnMxH8v3P122scZKOLoq
-	 WcvICifTw0IpvVBp7SlgqxN1dmooOa4XIXH6VEXHmwzZMIPuwOd/B/40p6zsECZIL9
-	 nKV7oX048/6bbOEblbgcqX9fFjhONqR8xG9NOzpE=
-Received: from DFLE110.ent.ti.com (dfle110.ent.ti.com [10.64.6.31])
-	by fllvem-sh03.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 54NBJcAC023157
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
-	Fri, 23 May 2025 06:19:38 -0500
-Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 23
- May 2025 06:19:37 -0500
-Received: from lelvem-mr06.itg.ti.com (10.180.75.8) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Fri, 23 May 2025 06:19:37 -0500
-Received: from localhost (uda0133052.dhcp.ti.com [128.247.81.232])
-	by lelvem-mr06.itg.ti.com (8.18.1/8.18.1) with ESMTP id 54NBJblW1172257;
-	Fri, 23 May 2025 06:19:37 -0500
-Date: Fri, 23 May 2025 06:19:37 -0500
-From: Nishanth Menon <nm@ti.com>
-To: Kees Cook <kees@kernel.org>
-CC: Arnd Bergmann <arnd@arndb.de>, Russell King <linux@armlinux.org.uk>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner
-	<tglx@linutronix.de>,
-        Santosh Shilimkar <ssantosh@kernel.org>, Lee Jones
-	<lee@kernel.org>,
-        Allison Randal <allison@lohutok.net>,
-        Greg Kroah-Hartman
-	<gregkh@linuxfoundation.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Christoph Hellwig
-	<hch@lst.de>, Marco Elver <elver@google.com>,
-        Andrey Konovalov
-	<andreyknvl@gmail.com>,
-        Andrey Ryabinin <ryabinin.a.a@gmail.com>,
-        Ard
- Biesheuvel <ardb@kernel.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Nathan
- Chancellor <nathan@kernel.org>,
-        Nicolas Schier <nicolas.schier@linux.dev>,
-        Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-        Bill Wendling
-	<morbo@google.com>,
-        Justin Stitt <justinstitt@google.com>, <linux-kernel@vger.kernel.org>,
-        <x86@kernel.org>, <kasan-dev@googlegroups.com>,
-        <linux-doc@vger.kernel.org>, <kvmarm@lists.linux.dev>,
-        <linux-riscv@lists.infradead.org>, <linux-s390@vger.kernel.org>,
-        <linux-efi@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
-        <linux-kbuild@vger.kernel.org>,
-        <linux-security-module@vger.kernel.org>,
-        <linux-kselftest@vger.kernel.org>, <sparclinux@vger.kernel.org>,
-        <llvm@lists.linux.dev>
-Subject: Re: [PATCH v2 05/14] arm: Handle KCOV __init vs inline mismatches
-Message-ID: <20250523111937.f2fqhoshqevdoxcl@snowbird>
-References: <20250523043251.it.550-kees@kernel.org>
- <20250523043935.2009972-5-kees@kernel.org>
+	s=arc-20240116; t=1747999250; c=relaxed/simple;
+	bh=D5m9mjlqCvHyLg3xU/I4oNYkRM182PIux4X7sbU/rBI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Aafev/shQp0wH8ConsGAU7vD8objnhqOsNkY7miM4rHRS0hAAmMAFf1GYfotQKIefFoceK/EcbMQLop/PmC836pdIuIPpHd129VdCkxWJznU3VuoOMY3VRSjPDu04uQWQlmO4H3iBxJmmQfRGdWIrio7jtciFFaZy5NfzoJZLwc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.236.30
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
+Received: from localhost (mailhub3.si.c-s.fr [192.168.12.233])
+	by localhost (Postfix) with ESMTP id 4b3hmd3T2Mz9vXt;
+	Fri, 23 May 2025 12:51:45 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+	by localhost (pegase1.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id x6OGEq_bauYM; Fri, 23 May 2025 12:51:45 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+	by pegase1.c-s.fr (Postfix) with ESMTP id 4b3hmd2TkFz9vXs;
+	Fri, 23 May 2025 12:51:45 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 4884C8B769;
+	Fri, 23 May 2025 12:51:45 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+	with ESMTP id p6vSVHiM0Uvz; Fri, 23 May 2025 12:51:45 +0200 (CEST)
+Received: from [192.168.235.99] (unknown [192.168.235.99])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 08E138B763;
+	Fri, 23 May 2025 12:51:43 +0200 (CEST)
+Message-ID: <8ad901c3-3fcb-4643-ac5a-c1f30f93d07f@csgroup.eu>
+Date: Fri, 23 May 2025 12:51:43 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20250523043935.2009972-5-kees@kernel.org>
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/6] ASoC: aoa: Use helper function
+ for_each_child_of_node_scoped()
+To: Ai Chao <aichao@kylinos.cn>, perex@perex.cz, tiwai@suse.com,
+ johannes@sipsolutions.net, kuninori.morimoto.gx@renesas.com,
+ lgirdwood@gmail.com, broonie@kernel.org, jbrunet@baylibre.com,
+ neil.armstrong@linaro.org, khilman@baylibre.com,
+ martin.blumenstingl@googlemail.com, shengjiu.wang@gmail.com,
+ Xiubo.Lee@gmail.com, festevam@gmail.com, nicoleotsuka@gmail.com,
+ shawnguo@kernel.org, s.hauer@pengutronix.de, srinivas.kandagatla@linaro.org
+Cc: linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org, linux-renesas-soc@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org,
+ imx@lists.linux.dev, kernel@pengutronix.de, linux-arm-msm@vger.kernel.org
+References: <20250522050300.519244-1-aichao@kylinos.cn>
+ <20250522050300.519244-3-aichao@kylinos.cn>
+Content-Language: fr-FR
+From: Christophe Leroy <christophe.leroy@csgroup.eu>
+In-Reply-To: <20250522050300.519244-3-aichao@kylinos.cn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On 21:39-20250522, Kees Cook wrote:
-> When KCOV is enabled all functions get instrumented, unless
-> the __no_sanitize_coverage attribute is used. To prepare for
-> __no_sanitize_coverage being applied to __init functions, we have to
-> handle differences in how GCC's inline optimizations get resolved. For
-> arm this exposed several places where __init annotations were missing
-> but ended up being "accidentally correct". Fix these cases and force
-> several functions to be inline with __always_inline.
+
+
+Le 22/05/2025 à 07:02, Ai Chao a écrit :
+> The for_each_child_of_node_scoped() helper provides a scope-based
+> clean-up functionality to put the device_node automatically, and
+> as such, there is no need to call of_node_put() directly.
+
+I don't understand this explanation.
+
+You say "no need to call of_node_put()" and the only thing you do in 
+addition to changing from for_each_child_of_node() to 
+for_each_child_of_node_scoped() is to _add_ a new call to of_node_put().
+
+I would expect to see a _removal_ of some of_node_put() when I read your 
+description.
+
+Christophe
+
 > 
-> Signed-off-by: Kees Cook <kees@kernel.org>
+> Thus, use this helper to simplify the code.
+> 
+> Signed-off-by: Ai Chao <aichao@kylinos.cn>
 > ---
-[...]
-> diff --git a/drivers/soc/ti/pm33xx.c b/drivers/soc/ti/pm33xx.c
-> index dfdff186c805..dc52a2197d24 100644
-> --- a/drivers/soc/ti/pm33xx.c
-> +++ b/drivers/soc/ti/pm33xx.c
-> @@ -145,7 +145,7 @@ static int am33xx_do_sram_idle(u32 wfi_flags)
->  	return pm_ops->cpu_suspend(am33xx_do_wfi_sram, wfi_flags);
->  }
->  
-> -static int __init am43xx_map_gic(void)
-> +static int am43xx_map_gic(void)
->  {
->  	gic_dist_base = ioremap(AM43XX_GIC_DIST_BASE, SZ_4K);
->  
-> -- 
-> 2.34.1
+>   sound/aoa/soundbus/i2sbus/core.c | 5 +++--
+>   1 file changed, 3 insertions(+), 2 deletions(-)
 > 
-Acked-by: Nishanth Menon <nm@ti.com>
--- 
-Regards,
-Nishanth Menon
-Key (0xDDB5849D1736249D) / Fingerprint: F8A2 8693 54EB 8232 17A3  1A34 DDB5 849D 1736 249D
+> diff --git a/sound/aoa/soundbus/i2sbus/core.c b/sound/aoa/soundbus/i2sbus/core.c
+> index ce84288168e4..20a4c5891afc 100644
+> --- a/sound/aoa/soundbus/i2sbus/core.c
+> +++ b/sound/aoa/soundbus/i2sbus/core.c
+> @@ -207,6 +207,8 @@ static int i2sbus_add_dev(struct macio_dev *macio,
+>   			}
+>   		}
+>   	}
+> +	of_node_put(sound);
+> +
+>   	/* for the time being, until we can handle non-layout-id
+>   	 * things in some fabric, refuse to attach if there is no
+>   	 * layout-id property or we haven't been forced to attach.
+> @@ -335,7 +337,6 @@ static int i2sbus_add_dev(struct macio_dev *macio,
+>   
+>   static int i2sbus_probe(struct macio_dev* dev, const struct of_device_id *match)
+>   {
+> -	struct device_node *np;
+>   	int got = 0, err;
+>   	struct i2sbus_control *control = NULL;
+>   
+> @@ -347,7 +348,7 @@ static int i2sbus_probe(struct macio_dev* dev, const struct of_device_id *match)
+>   		return -ENODEV;
+>   	}
+>   
+> -	for_each_child_of_node(dev->ofdev.dev.of_node, np) {
+> +	for_each_child_of_node_scoped(dev->ofdev.dev.of_node, np) {
+>   		if (of_device_is_compatible(np, "i2sbus") ||
+>   		    of_device_is_compatible(np, "i2s-modem")) {
+>   			got += i2sbus_add_dev(dev, control, np);
+
