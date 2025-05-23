@@ -1,137 +1,94 @@
-Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83161296735;
-	Fri, 23 May 2025 14:47:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C94D7296D39;
+	Fri, 23 May 2025 14:47:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748011648; cv=none; b=p3NWbA8FnhM+RI2SWY/pJqwdOoLldoMfrv6Wjvfwiop4xHc1p+KK3AqDYrIkO1LioObeEq0w7P9Rl/nN9H8Qv1iEcQbo15Z2IP2Ge+g9pHxIVYgxQN0gjqq7KZie/xwVCbZ6wiaOaGb0PZ+/871ipk3XsY9FuC4NlQfcp0EbiSY=
+	t=1748011650; cv=none; b=PtIVZPkyPVCYnvc9qY0JhCh/+CtZ6yXvZOfSHOOlMtZ0ofp1tuJN5v7+nhXlt5zbr76vQYHXejpa8xCcYDLMwLTP4/HKXS2XjyD+b4CVFypCXIR2nM7Tfbj9M6csTvfKFhLsS7tydg4vvvV8VCom4GgjSKIExAao1mcJZBNDEwo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748011648; c=relaxed/simple;
-	bh=uJVEqtQB2R0KIYcty+/oFwmLq8Os/xq6uQ23VuVDeuU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HyJXgmJZ/iexpjCYBxXsYjxI42oA5pdtEFyAa1pxvPuoQy4Ig8ja+ID/OJmggs7eqgZiSVUdaECGR1AOV3oanHQEIw5iedjvxdy8px0mv5baGUckmVPAIb7dGN1xvHZ1cKLkOT6ENzCa6yQPHO/cpjVCVNL4RK+8OJbiNQmIWcU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=ih242rmi; arc=none smtp.client-ip=213.97.179.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="ih242rmi"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=9zrV7433NHFYKHB0uHhJrmu7dOYAkEyNGtUe1qTfMxY=; b=ih242rmiGTg7PIJBXm/mbCuRbd
-	9HqXObANz4FIiecYRyNtFnWmzUTa4LI+LyRFX/qZoUH6HjlSA2+XShtnDMk5kiUpA8F9b9g+UmlvH
-	VO9eWwxM+1xjqOkjPYQTz5UUrf1Pdqy+OGko1g+2jKGjnOmF1NZcWqnTHvDpAX3bRL3YTOizs3xvH
-	VB/0yFhASnY+ANiv4EkJJ4eubbb+jkp4KkkuibNjyiL1tKzW+Vm2qrA9tJyM2TB3jB9vsXRde4yKu
-	3b8MDNnQ1V71mvTymGIw0P9Pc7kKKq1CANuci5a/Trzq0b7nEKZCrPigj6kgpHaRZNRUL9DcfPpbe
-	ZStse38Q==;
-Received: from [81.79.92.254] (helo=[192.168.0.101])
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-	id 1uITfv-00CDpK-BA; Fri, 23 May 2025 16:47:07 +0200
-Message-ID: <4255f9a9-be17-4a9a-b7cf-8e3d4f93b38b@igalia.com>
-Date: Fri, 23 May 2025 15:47:06 +0100
+	s=arc-20240116; t=1748011650; c=relaxed/simple;
+	bh=ci51TN0zWIkUuCtREvFuALW7XcksRaibdd6IoD9Sm2g=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=cO9d2UFkuQpkyzbkf39TPr87VAKrLWXSng/MjC61UtuqFBmSU3wAHtFDFpsLamSwSX4lzBttiZGK30iGFEP6NodA3gf/VKf+Py1Wq2PVuZYdhd8+VcmIEjXgn5/mCHd4EiJJRk4Da4/3hLTUR87t+LOVuI15eoWA5H+1q2lzn7Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
+Received: from [127.0.0.1] (unknown [116.232.18.143])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dlan)
+	by smtp.gentoo.org (Postfix) with ESMTPSA id 77F9B343270;
+	Fri, 23 May 2025 14:47:23 +0000 (UTC)
+From: Yixun Lan <dlan@gentoo.org>
+Date: Fri, 23 May 2025 22:46:32 +0800
+Subject: [PATCH 2/2] mmc: sdhci-of-k1: disable HW busy detection
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] dma-buf: Add __dma_fence_is_signaled()
-To: Philipp Stanner <phasta@kernel.org>, Lyude Paul <lyude@redhat.com>,
- Danilo Krummrich <dakr@kernel.org>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>, Sumit Semwal <sumit.semwal@linaro.org>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
-Cc: dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
- linux-kernel@vger.kernel.org, linux-media@vger.kernel.org
-References: <20250522112540.161411-2-phasta@kernel.org>
-Content-Language: en-GB
-From: Tvrtko Ursulin <tvrtko.ursulin@igalia.com>
-In-Reply-To: <20250522112540.161411-2-phasta@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-Id: <20250523-21-k1-sdhci-v1-2-9f293116a7e7@gentoo.org>
+References: <20250523-21-k1-sdhci-v1-0-9f293116a7e7@gentoo.org>
+In-Reply-To: <20250523-21-k1-sdhci-v1-0-9f293116a7e7@gentoo.org>
+To: Adrian Hunter <adrian.hunter@intel.com>, 
+ Ulf Hansson <ulf.hansson@linaro.org>
+Cc: linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-riscv@lists.infradead.org, spacemit@lists.linux.dev, 
+ Yixun Lan <dlan@gentoo.org>
+X-Mailer: b4 0.15-dev
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1167; i=dlan@gentoo.org;
+ h=from:subject:message-id; bh=ci51TN0zWIkUuCtREvFuALW7XcksRaibdd6IoD9Sm2g=;
+ b=owEBzQIy/ZANAwAKATGq6kdZTbvtAcsmYgBoMIpyusZ8D6qbB+Gs/i5nVYuZsa0KAy+jE6sr9
+ 4Jzp4cyFhWJApMEAAEKAH0WIQS1urjJwxtxFWcCI9wxqupHWU277QUCaDCKcl8UgAAAAAAuAChp
+ c3N1ZXItZnByQG5vdGF0aW9ucy5vcGVucGdwLmZpZnRoaG9yc2VtYW4ubmV0QjVCQUI4QzlDMzF
+ CNzExNTY3MDIyM0RDMzFBQUVBNDc1OTREQkJFRAAKCRAxqupHWU277agdD/9arIG33iPsRPT10E
+ r3siK0Jzx331n/x1wWBEQpcPdFVnkYdMUh5FMmG0XN4zXPFjii2T82PJDM4F8i/thQ2dex9mPrV
+ puQPBg0tEVJs4UABj4N4KSuA9bmCEH76BB44+XSMvBrWejUmQfP+DN5wrDWihXJL0RPL+z7ziT5
+ XGGj2FIrCPoWnLvrF1WwD4EUbJtxgrROXKB3qW8AFUMYHSwjOzvec795itMAI1XrlFXT35HSsEm
+ U64F4k2OpbL3qnfgSdkhs/qakKo8WImxyLNwuE9TkRaAo73DSOhiZ8ZYUh4y/aY+ci0uORQSvSd
+ xWTYf0CsymAI/eDKAWMTdTjeXCkBxgbfteujZbpcbAa7l9PJd5cC4RFQUixKfC5YgQCY0r4aktD
+ n4uV1ZTqiQEbaACGgrqaNK5EoP+MxvbbEN8PwZ1yccSsljkMpDs5xzN7f3kBZE/bAAvz/W6fb/x
+ afcWfLOu+o/2Lo+vk/qqAmCIOnkpSx0ACcm9apH/G9Xfzc0fvQ9m8U+0r8d4zl7iXZj+nLSxdWY
+ vBZRfdDEGtvwC+C0ByqWKPEMHr7HV2EiTPwS7Tdvdki6Je1SZNaD2DjPHDcUJd716dbOjtt5LaY
+ xNup/HkQEje5HbDRzK2fojE9p80l9ao32RWPw1RGPxrU/zf0xaiOPe3bGin4BDA6YZSg==
+X-Developer-Key: i=dlan@gentoo.org; a=openpgp;
+ fpr=50B03A1A5CBCD33576EF8CD7920C0DBCAABEFD55
 
+It doesn't make sense to enable HW busy detection in pre_select_hs400(),
+while disable it later in post_select_hs400(). And the reason behind this
+isn't clear. Therefore, let's disable it for now.
 
-On 22/05/2025 12:25, Philipp Stanner wrote:
-> Some parties want to check whether a function is already signaled
-> without actually signaling the fence, which is what
-> dma_fence_is_signaled() might due if the fence ops 'signaled' callback
+Signed-off-by: Yixun Lan <dlan@gentoo.org>
+---
+ drivers/mmc/host/sdhci-of-k1.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-s/due/do/
+diff --git a/drivers/mmc/host/sdhci-of-k1.c b/drivers/mmc/host/sdhci-of-k1.c
+index 1e1e012cdff9143a7dffa4e00bd9baac2a2dff2d..89f37f147a8a12cc80978d637cd31b9ecc0e9eac 100644
+--- a/drivers/mmc/host/sdhci-of-k1.c
++++ b/drivers/mmc/host/sdhci-of-k1.c
+@@ -178,7 +178,6 @@ static int spacemit_sdhci_pre_select_hs400(struct mmc_host *mmc)
+ 	struct sdhci_host *host = mmc_priv(mmc);
+ 
+ 	spacemit_sdhci_setbits(host, SDHC_MMC_HS400, SPACEMIT_SDHC_MMC_CTRL_REG);
+-	host->mmc->caps |= MMC_CAP_WAIT_WHILE_BUSY;
+ 
+ 	return 0;
+ }
+@@ -188,7 +187,6 @@ static void spacemit_sdhci_post_select_hs400(struct mmc_host *mmc)
+ 	struct sdhci_host *host = mmc_priv(mmc);
+ 
+ 	spacemit_sdhci_phy_dll_init(host);
+-	host->mmc->caps &= ~MMC_CAP_WAIT_WHILE_BUSY;
+ }
+ 
+ static void spacemit_sdhci_pre_hs400_to_hs200(struct mmc_host *mmc)
 
-> is implemented.
-> 
-> Add __dma_fence_is_signaled(), which _only_ checks whether a fence is
-> signaled. Use it internally.
-> 
-> Suggested-by: Tvrtko Ursulin <tvrtko.ursulin@igalia.com>
-> Signed-off-by: Philipp Stanner <phasta@kernel.org>
-> ---
->   include/linux/dma-fence.h | 24 ++++++++++++++++++++++--
->   1 file changed, 22 insertions(+), 2 deletions(-)
-> 
-> diff --git a/include/linux/dma-fence.h b/include/linux/dma-fence.h
-> index 48b5202c531d..ac951a54a007 100644
-> --- a/include/linux/dma-fence.h
-> +++ b/include/linux/dma-fence.h
-> @@ -381,6 +381,26 @@ bool dma_fence_remove_callback(struct dma_fence *fence,
->   			       struct dma_fence_cb *cb);
->   void dma_fence_enable_sw_signaling(struct dma_fence *fence);
->   
-> +/**
-> + * __dma_fence_is_signaled - Only check whether a fence is signaled yet.
-> + * @fence: the fence to check
-> + *
-> + * This function just checks whether @fence is signaled, without interacting
-> + * with the fence in any way. The user must, therefore, ensure through other
-
-s/user/caller/ ?
-
-Otherwise looks good to me. For if/when Christian approves you can add my:
-
-Reviewed-by: Tvrtko Ursulin <tvrtko.ursulin@igalia.com>
-
-Regards,
-
-Tvrtko
-
-> + * means that fences get signaled eventually.
-> + *
-> + * This function does not require locking.
-> + *
-> + * See also dma_fence_is_signaled().
-> + *
-> + * Return: true if signaled, false otherwise.
-> + */
-> +static inline bool
-> +__dma_fence_is_signaled(struct dma_fence *fence)
-> +{
-> +	return test_bit(DMA_FENCE_FLAG_SIGNALED_BIT, &fence->flags);
-> +}
-> +
->   /**
->    * dma_fence_is_signaled_locked - Return an indication if the fence
->    *                                is signaled yet.
-> @@ -398,7 +418,7 @@ void dma_fence_enable_sw_signaling(struct dma_fence *fence);
->   static inline bool
->   dma_fence_is_signaled_locked(struct dma_fence *fence)
->   {
-> -	if (test_bit(DMA_FENCE_FLAG_SIGNALED_BIT, &fence->flags))
-> +	if (__dma_fence_is_signaled(fence))
->   		return true;
->   
->   	if (fence->ops->signaled && fence->ops->signaled(fence)) {
-> @@ -428,7 +448,7 @@ dma_fence_is_signaled_locked(struct dma_fence *fence)
->   static inline bool
->   dma_fence_is_signaled(struct dma_fence *fence)
->   {
-> -	if (test_bit(DMA_FENCE_FLAG_SIGNALED_BIT, &fence->flags))
-> +	if (__dma_fence_is_signaled(fence))
->   		return true;
->   
->   	if (fence->ops->signaled && fence->ops->signaled(fence)) {
+-- 
+2.49.0
 
