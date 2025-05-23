@@ -1,89 +1,132 @@
-Received: from mail.nppct.ru (mail.nppct.ru [195.133.245.4])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5061A288517
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 07:57:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.133.245.4
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41268284B51
+	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 07:57:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747987026; cv=none; b=j4nWMDMS9Mz4GNxEvIONffretipLQkdfu4aFWhk9Hag3M9L8K/0aO1NXszNLqMWAIww5MXWBzy4pI3T+uc+xOMqD1OCTgKZOy+0Hq0SixVZM1Oekuj1JYmm1JbinQCUnG5AjAY96bQWvsMYi6GTQ+R0gbi9E2o6aO34q/tl073Y=
+	t=1747987077; cv=none; b=HdD2Jg+zhbnXAonphzzAUl7y5gJOTLRmC9Yp5hOUisvV43Y3tOs0/RJuTqGHYfQZnfdaGt2aBDlESKJPX0xK8mqaLmtRxHHgWFvjc+illAvIsFckpNWXDluFyeAuxF2qdFy3kGojzq+XPpQd1uxNnH3WycjCpYVJH48vL0HSAWo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747987026; c=relaxed/simple;
-	bh=rR3vPAPlUJEfRssL5GiwmgHjwvovtafRJtml2i1CacQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Pz9iBV0dIR0abBMgI93uVxysWhnNasMSDtxwKobVMLLCEcGm46Ztiwy/WP4wXaUv0tS+8FrtKt4lgS9K9S1w+cWGYZOvQaw0xYh6V8jdV3QYbACRGH8JQ4Otp7a3mMBlTFbfooILyUpHmKG67xnNF/piY/Cp2tCsyoIXW7DXrzY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nppct.ru; spf=pass smtp.mailfrom=nppct.ru; dkim=pass (1024-bit key) header.d=nppct.ru header.i=@nppct.ru header.b=TLxqil1W; arc=none smtp.client-ip=195.133.245.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nppct.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nppct.ru
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nppct.ru header.i=@nppct.ru header.b="TLxqil1W"
-Received: from mail.nppct.ru (localhost [127.0.0.1])
-	by mail.nppct.ru (Postfix) with ESMTP id 45AA61C118E
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 10:50:24 +0300 (MSK)
-Authentication-Results: mail.nppct.ru (amavisd-new); dkim=pass (1024-bit key)
-	reason="pass (just generated, assumed good)" header.d=nppct.ru
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=nppct.ru; h=
-	content-transfer-encoding:mime-version:x-mailer:message-id:date
-	:date:subject:subject:to:from:from; s=dkim; t=1747986623; x=
-	1748850624; bh=rR3vPAPlUJEfRssL5GiwmgHjwvovtafRJtml2i1CacQ=; b=T
-	Lxqil1W0wc6J8ZbOZNvlAt+gde3rmNzxtgsGs8bQjb33Y4axC67muacweDXiZIbd
-	Tr68qhQFQsJHFcZFbhDDODtFjXagIdYmfIc2PzkNZSurjYreYykl4AyGWxzqrGKD
-	IkmcQe/Ymm75u0KFRyry0Lhg/wnOQeYySOIBPpFQt4=
-X-Virus-Scanned: Debian amavisd-new at mail.nppct.ru
-Received: from mail.nppct.ru ([127.0.0.1])
-	by mail.nppct.ru (mail.nppct.ru [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id ExOGWsjwMiPu for <linux-kernel@vger.kernel.org>;
-	Fri, 23 May 2025 10:50:23 +0300 (MSK)
-Received: from localhost.localdomain (unknown [87.249.24.51])
-	by mail.nppct.ru (Postfix) with ESMTPSA id 91B471C0DAB;
-	Fri, 23 May 2025 10:50:22 +0300 (MSK)
-From: Alexey Nepomnyashih <sdl@nppct.ru>
-To: Lyude Paul <lyude@redhat.com>
-Cc: Alexey Nepomnyashih <sdl@nppct.ru>,
-	Danilo Krummrich <dakr@kernel.org>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	dri-devel@lists.freedesktop.org,
-	nouveau@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	lvc-project@linuxtesting.org,
-	stable@vger.kernel.org
-Subject: [PATCH] drm/nouveau/mmu: fix potential overflow in PFN size calculation
-Date: Fri, 23 May 2025 07:50:14 +0000
-Message-ID: <20250523075015.884716-1-sdl@nppct.ru>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1747987077; c=relaxed/simple;
+	bh=OOuu4v+25IIQ7QDi9jbPM/8rm8PAsLVroOL54A/YPm0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ti7Q3D83YMBnPFA3P6vcnnunl30UEHavkGVuFDk5VwsV6SnksDUWYDooc0HEKBBd+Gc+P8ittiqkNA3tp5DfNJUivQDWjFIs55GyQfGApLh9W3KI055RL3+z2XMAEiMbwZppIbwqvZtnGNUYql73fIQoL4tRp+kg4sWDKT3Qi0w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <mkl@pengutronix.de>)
+	id 1uINHZ-0002W0-6N; Fri, 23 May 2025 09:57:33 +0200
+Received: from moin.white.stw.pengutronix.de ([2a0a:edc0:0:b01:1d::7b] helo=bjornoya.blackshift.org)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <mkl@pengutronix.de>)
+	id 1uINHY-000riJ-29;
+	Fri, 23 May 2025 09:57:32 +0200
+Received: from pengutronix.de (unknown [IPv6:2a03:2260:2009:2000::])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange x25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	(Authenticated sender: mkl-all@blackshift.org)
+	by smtp.blackshift.org (Postfix) with ESMTPSA id B5556418125;
+	Fri, 23 May 2025 07:57:31 +0000 (UTC)
+Date: Fri, 23 May 2025 09:57:31 +0200
+From: Marc Kleine-Budde <mkl@pengutronix.de>
+To: Elaine Zhang <zhangqing@rock-chips.com>
+Cc: kernel@pengutronix.de, mailhol.vincent@wanadoo.fr, robh@kernel.org, 
+	krzk+dt@kernel.org, conor+dt@kernel.org, heiko@sntech.de, cl@rock-chips.com, 
+	kever.yang@rock-chips.com, linux-can@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v5 1/4] dt-bindings: can: rockchip_canfd: add rk3576
+ CAN-FD controller
+Message-ID: <20250523-sensible-sweet-hyrax-984f9b-mkl@pengutronix.de>
+References: <20250523075422.4010083-1-zhangqing@rock-chips.com>
+ <20250523075422.4010083-2-zhangqing@rock-chips.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="l6uuvyinhxjcnadv"
+Content-Disposition: inline
+In-Reply-To: <20250523075422.4010083-2-zhangqing@rock-chips.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: mkl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-On most Linux-supported platforms, `int` is 32-bit, making (1 << 47)
-undefined and potentially dangerous. To ensure defined behavior and
-correct 64-bit arithmetic, replace `1` with `1ULL`.
 
-Found by Linux Verification Center (linuxtesting.org) with SVACE.
+--l6uuvyinhxjcnadv
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v5 1/4] dt-bindings: can: rockchip_canfd: add rk3576
+ CAN-FD controller
+MIME-Version: 1.0
 
-Cc: stable@vger.kernel.org # v5.1+
-Fixes: a5ff307fe1f2 ("drm/nouveau/mmu: add a privileged method to directly manage PTEs")
-Signed-off-by: Alexey Nepomnyashih <sdl@nppct.ru>
----
- drivers/gpu/drm/nouveau/nvkm/subdev/mmu/vmm.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On 23.05.2025 15:54:19, Elaine Zhang wrote:
+> Add documentation for the rockchip rk3576 CAN-FD controller.
+>=20
+> Signed-off-by: Elaine Zhang <zhangqing@rock-chips.com>
+> ---
+>  .../net/can/rockchip,rk3568v2-canfd.yaml      | 24 +++++++++++++++++++
+>  1 file changed, 24 insertions(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/net/can/rockchip,rk3568v2-=
+canfd.yaml b/Documentation/devicetree/bindings/net/can/rockchip,rk3568v2-ca=
+nfd.yaml
+> index a077c0330013..e5dfce382061 100644
+> --- a/Documentation/devicetree/bindings/net/can/rockchip,rk3568v2-canfd.y=
+aml
+> +++ b/Documentation/devicetree/bindings/net/can/rockchip,rk3568v2-canfd.y=
+aml
+> @@ -17,6 +17,7 @@ properties:
+>    compatible:
+>      oneOf:
+>        - const: rockchip,rk3568v2-canfd
+> +      - const: rockchip,rk3576-canfd
+>        - items:
+>            - const: rockchip,rk3568v3-canfd
+>            - const: rockchip,rk3568v2-canfd
+> @@ -43,6 +44,13 @@ properties:
+>        - const: core
+>        - const: apb
+> =20
+> +  dmas:
+> +    maxItems: 1
+> +
+> +  dma-names:
+> +    items:
+> +      - const: rx
+> +
 
-diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/mmu/vmm.c b/drivers/gpu/drm/nouveau/nvkm/subdev/mmu/vmm.c
-index 9c97800fe037..29da1acbe3a8 100644
---- a/drivers/gpu/drm/nouveau/nvkm/subdev/mmu/vmm.c
-+++ b/drivers/gpu/drm/nouveau/nvkm/subdev/mmu/vmm.c
-@@ -1383,7 +1383,7 @@ nvkm_vmm_pfn_map(struct nvkm_vmm *vmm, u8 shift, u64 addr, u64 size, u64 *pfn)
- 			 */
- 			while (size) {
- 				pfn[pi++] = NVKM_VMM_PFN_NONE;
--				size -= 1 << page->shift;
-+				size -= 1ULL << page->shift;
- 			}
- 		} else {
- 			pi += size >> page->shift;
--- 
-2.43.0
+DMA is only supported for rockchip,rk3576-canfd.
 
+Marc
+
+--=20
+Pengutronix e.K.                 | Marc Kleine-Budde          |
+Embedded Linux                   | https://www.pengutronix.de |
+Vertretung N=C3=BCrnberg              | Phone: +49-5121-206917-129 |
+Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-9   |
+
+--l6uuvyinhxjcnadv
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEn/sM2K9nqF/8FWzzDHRl3/mQkZwFAmgwKmcACgkQDHRl3/mQ
+kZyMbwf/XUVyqmirmNMJN5NTdOyyJ7ZdXwPRxOX7Hxi7c1ZhispUFBJFZB5CYRkj
+ewRMjK27U12jhd4LQ8RWs5e2zp6WlH2CY21FfjEjK9gtgzzd1d0LcmyrgoH8BSQN
+doM/l/i8tphiGjQmSE1eOtm0yIQRetIR6HJARSYYVAtgtfpDGiGtaO8digkJQRZt
+Ll1VFI9G/aIeKpb7bWDF2uX8tsj1BHtab/vqz7kZ8RqHL70nJYViGoG1q9w9NyZv
+tJSgvif35bC22wHmVFqPfxPc2QCrPuIhy8412ylkkzUIYjfz+AYyLpM6PjjT29Ma
+GZ3OiW8x4+USrowh1cu4j5P9UdhjUw==
+=AV9k
+-----END PGP SIGNATURE-----
+
+--l6uuvyinhxjcnadv--
