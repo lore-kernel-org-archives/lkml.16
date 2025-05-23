@@ -1,46 +1,46 @@
 Received: from EUR02-AM0-obe.outbound.protection.outlook.com (mail-am0eur02on2080.outbound.protection.outlook.com [40.107.247.80])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95FE8297B72;
-	Fri, 23 May 2025 16:17:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 531DB297A4C;
+	Fri, 23 May 2025 16:17:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.247.80
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748017081; cv=fail; b=je+rW+6pMqaqHf5RXUvQaV0xI9jgMhSICdb2/S4zsQamnDUvI/u6nazs0UO6oAQQcXfxwxO1RAT6RHhOJGW4TJRjvJnAMxllBsf15+cTpWnyEW+URNHTe005m/CDthNwE4H4/X6WhivsHrznVFVduP8nWXAKix96Yhw9+tWzkiM=
+	t=1748017077; cv=fail; b=MPjH1PnPf9Rd3fGIPJh0BxU7vweikc1UFrfzTBvwoXFjqkkhpyTrwCYkJGcOMpt2tYqzOMCwmH83+8eZPcJPjzsmkNBH4Di/7PDdZrk2NxbxyIuHMUCGKAh576N5HT45WJ9H0jAQdsraCSB8cfcl5Pd32gZxOMg1uUwu2xbvkhE=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748017081; c=relaxed/simple;
-	bh=feb5YloesLl43G5f84SgqgbWokhhNPjgWlVHxBkL7Gg=;
+	s=arc-20240116; t=1748017077; c=relaxed/simple;
+	bh=McoGr/TL/LYPFBc4/J26+EPgb57P45G4LM7rKKtxFRA=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=E0ryngVzUX9Y1JbNv849yzrzi+cMoWJSzy1hSrHnJPwb2+m+mLa8+13o560DNU5nTYv3ZxlvquH6DyzQswe6AXycbn5wa+X24rXkIxmzl6YMevymjK1za6WZF342IfoWtXsFHXS5Kxjbg5WXCtKlTR3RExz9O1M5mPOb3L9zsIY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=dGjVKEKQ; arc=fail smtp.client-ip=40.107.247.80
+	 Content-Type:MIME-Version; b=AYQJZNzSb/tskvHmEjPPKsgwuUP0KWQA4t4TD3mcAc+PfrIEfkTRnG38UPO2vv+jgau4uBTpl+B8kIy/FuAjHwAdynM7noCkvdFcutQRbtRsxRaNb4f6hdUqhClqSt0n/dn9zvmxCYphi3//jbMunlVtTCRYyPfdnsJ9ta/txDQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=F5+cDv9L; arc=fail smtp.client-ip=40.107.247.80
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="dGjVKEKQ"
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="F5+cDv9L"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=jrvq7PWOIvuQIugadb5gBUVTbJl7puj37XhOGN1PYGWwgD0PnNTjiGg0FqxfLlCR+cxRVLZ/7htllSrofx6YZkPEARayk2ue9C8I1BsZMt+iOQoByqmf/MqeWlaIzVjzU4wSxbpMkSnmmYILRfyjnM0fOtiKn/75MzQtS2nCOATOCiNNxjORIZ1x8Nw+sEjKTP0VP9OLJpPfEXz1j/m0Qssb7YQxthlTgX6mjq4oCFbK9PFNFDKtv+U5eX3mTWmWT1Rn3GORbTrJeHa8EywjR118zl16OASkm/qoioFk4XvA/aYCH782DKbP185EywY/HlC3qW5aek3DzYKhcCFw3A==
+ b=QlrV3LFRGdupg/kUXSii/ucnFDwxpTMiU1iPbFowet83fWUL+90zl/F4XExg2jQahh2X9D2jMXZEJ6L2xFZ/tL780yI2gzDZbclumUGY00aMcLnww+hxeD/ebDHCxIH6m3zvCs1m2hj8PB1Zr1gapZh+GgKLay+29f3rWsAwwK92JfVLSJag6xgv6iHg2MSg3XIEaBj0HdjfajET0p/KljOh8HlB+LfIT5CN+iQdaTI7X2o1uT+7Xzul0kEuWgwjBkL9FDssceuIqcGplhUJ7/TTU/g1jzLlUdXDldWIE6gpmXm7gmCoj2T/o9N/rBXfHXOz4irjZQoXNERKYf+i9Q==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=jbJhFalVVjVZfaH85BFHAcbOYeAEA0RMss+9Wu7fm14=;
- b=VsLWIIPc66wjTaO1FWjip3YYYL2hDIWddnKS0t90Cd5JNdC19Y2E2CCBpL9c38FTqrL06I0RtS+a4ZwR09DB0ifKrcrmpDzMWN580tJv3OALGtF5tqUI7zAOCYVYLsMERjzgeS/KNSgcxdDf4/3Z1kVo3vAG09R8824a8b9050hUFwaLWoZzc7WpQ9AQWa/0nhcbDW1r1NqVxPm9NNnY2BojAAUgA8xhNNpn9f7+nmk9zAYEhvh/s4m+Nm8OfhEO/cnZ2ZrtocGzxs4k4caC6qRVkwcvyqmaoR3aqrhbSUOToHMq3VZ5bCAoJmx3400y44CI0ewKdIjPGAeNy03JvA==
+ bh=TmyXCOITD7boG8wxv8lz/15qzWTK/d8pwmxnKz9TXto=;
+ b=QakjfGPO3kTZA8iyQWIIFI2UHZtnYOZwx7x7xJqYVG06923VxpznxDYnhmzkxmT7EFzlZAXXBP+XKgIfZ+mkUsuPnzPCu+06AMSHe4ilzYKd70zRLf8m2sAPxobKeLm8n5539nWEx3+2VOifO2LLym/F3ArasZg4P5zqlNjL3X6HOabMx9PAJ2wS+fNRUA8xhEg3J2rc7Ar3MLmfbD6LPHppB+/GVdj6jxgzcWY4eyeDFsTP0oyUYnxONJDfmmhsocDv3uSyUSC+JWKjwcknEmDRlAFBU2Bcs6xUFiUmPhw+3TTC3qu7bKjZPq6D9DY7eWRSCc+Kcw4kE3PfjxtwPA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
  header.d=nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jbJhFalVVjVZfaH85BFHAcbOYeAEA0RMss+9Wu7fm14=;
- b=dGjVKEKQ/vrTfiQJsv4kJb6HsSVZSEPp6/LghedFtfa+ZDX00XI1FHn9QXUfUaS+Gps8of/4AgFkT+HQUoreIU/vYdrQhWlSgyprZ90AXclS22ffBYHUV80UHViFkX1LPr1iD5R9lwejbozcRkfEnKyHgvsF+XP0ymsNQRD0xXjSTF4hEGz+WmBdRt/dOQFreFtJvT9SZXVkd7aKdvbn58DzXZkM5TIjGnXWdlyyY9kzPHEoDbG8+HyOcvavzD1uCixyuE4IsaEJgx8ftmxNo3mEt4rTBFrK5BRX8pcF2/XkXUK52NHQPjwC/sAzE1Z0bAU2v0hNHKjBqv3/WKKlyQ==
+ bh=TmyXCOITD7boG8wxv8lz/15qzWTK/d8pwmxnKz9TXto=;
+ b=F5+cDv9L+4RtjURDDjkvvBz4OZ7yk8CFbluPJ0GzqgbY5iaiKR+ApqZBTX7qjkKmgR7FDPis3h+Dk22bMqVDOqtHxeuXtA/r1yyDdNgKnik4JhTcPMxJ7tKuDsO8Ej9TpQh/xCWl4+IP3pQgxLNzuVDbqcntiYUZyHb0AEY03zZ6+kVLU07dPqHdPs2y/Lu+RwJy/A3U/copgv5qaGJKjQEl3t4R2mvTPyC/bChNspSVZc+zAKQeVRWLy2MAU/tnqeAOK2THVPMklt4fwa1FveNDl3PUap5zgtRCd5dVFcyzNwRptp7aJOMOdMiTPxkdCQc2u0stkMrVS8Z7h0oxnA==
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=nxp.com;
 Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
  by AM7PR04MB6966.eurprd04.prod.outlook.com (2603:10a6:20b:109::12) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.21; Fri, 23 May
- 2025 16:17:58 +0000
+ 2025 16:17:51 +0000
 Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
  ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
  ([fe80::9126:a61e:341d:4b06%2]) with mapi id 15.20.8746.030; Fri, 23 May 2025
- 16:17:58 +0000
+ 16:17:51 +0000
 From: Frank Li <Frank.Li@nxp.com>
 To: Shawn Guo <shawnguo@kernel.org>,
 	Sascha Hauer <s.hauer@pengutronix.de>,
@@ -53,9 +53,9 @@ To: Shawn Guo <shawnguo@kernel.org>,
 	devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS),
 	linux-kernel@vger.kernel.org (open list)
 Cc: imx@lists.linux.dev
-Subject: [PATCH 5/6] ARM: dts: vf: vf-colibri-eval-v3: add power-supply for edt,et057090dhu
-Date: Fri, 23 May 2025 12:17:24 -0400
-Message-Id: <20250523161726.548682-5-Frank.Li@nxp.com>
+Subject: [PATCH 3/6] ARM: dts: vf: remove redundant layer under iomux
+Date: Fri, 23 May 2025 12:17:22 -0400
+Message-Id: <20250523161726.548682-3-Frank.Li@nxp.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20250523161726.548682-1-Frank.Li@nxp.com>
 References: <20250523161726.548682-1-Frank.Li@nxp.com>
@@ -72,103 +72,1086 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|AM7PR04MB6966:EE_
-X-MS-Office365-Filtering-Correlation-Id: bdd10a5d-b19a-4d2c-e75c-08dd9a1561f8
+X-MS-Office365-Filtering-Correlation-Id: f4409b41-a49f-455d-8273-08dd9a155da0
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
 	BCL:0;ARA:13230040|1800799024|366016|7416014|376014|52116014|38350700014|921020;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?UoUXoOoJCnBCmdarfKerOloUOa0v1GqAyrcX5j5LFHY32tgfvw6dfy0I0JHp?=
- =?us-ascii?Q?iNT8UMiINlW71RIP2n81x4GX1knA6jc/5EJiwCA4Lte2u1o6rj37WTafE2UA?=
- =?us-ascii?Q?Ww4Ce4BKj8Gbuz2kXroLZbbIHdH1ftqWwHny11PdOZOOC4YM5pEFYSTnPIPQ?=
- =?us-ascii?Q?FGyibEY/Bzsk2Vs8jIX3AumYdS9GeWcuW1MmxSQWRHeL/APJDlqL/N26yAD1?=
- =?us-ascii?Q?ct1eNPr5mfJ3G1af0NSMf7/vJQB6RxcfAsOVp7OeN+giGk6TAQzoIHbwpMfw?=
- =?us-ascii?Q?EyUTErXX0E1JPRq2JwIZ0wX171Um5/lA6nuSxfRFIJOGuCkBslywyMG0AJPh?=
- =?us-ascii?Q?W1DtDG/BrC0Sa9R3jTlhuBxnF56q3Mj9kvdBoFiLC4lEub6BwA99Bj+Mwpeg?=
- =?us-ascii?Q?jMor55mMmwsfABKA1AWa3QgGO8GGCLrILXZ8gY1EhuNpigLrJ3M+cw5ZjGfV?=
- =?us-ascii?Q?YGrAqbXl42orR0bYGutp4CP5JwgYhoEYjtRZK0oodC2BySd+MSpYywwQUpGT?=
- =?us-ascii?Q?i3IroX+8p1iz7kapAnljHeozhgUqyJzEMfMcp9wcZzSbWsQaKPEVswlUjXi0?=
- =?us-ascii?Q?gGZVoFZ7Rw+q0Ail1eFLFcVuy9gWuHDjY3NTbV+no+6Y4GQhr2amNVQhLkyu?=
- =?us-ascii?Q?BQ3ytjyqhw4aT7inOsiQttov2sykWp66HSjlv8/913EyeB3Mg3zJGDbxKVrO?=
- =?us-ascii?Q?nRGBbgtuq+hGxsG824N+DNZ/6QvRd3Hw52L+/YcpUQlmvjsHSQddXJMMk/cX?=
- =?us-ascii?Q?W2bCuqvWL7ykxJKtZNbTHJS0rO4XfiFF7+jXQ4hK/Yi6d9BJ41VMmbXR1mGF?=
- =?us-ascii?Q?uclLVx48KyaCRT8N0ns3Lv8DIwpHWKuoA1N607elXOIw9MqhH4XTDpfHK7MG?=
- =?us-ascii?Q?gqFKA6kSAxwKHGrkOMhiiqOD2Hk14E+zW/O0egLqrdZLBPapAOYOa7zHmdaI?=
- =?us-ascii?Q?l41wzOVD3mjLiDFwEYrbPfzH0+kNLuvs+0GIRJhoITbNvmpgElWFpmbJIlbh?=
- =?us-ascii?Q?5ZmHye3WYVojS+7iiO3UChPIYFkDW94bGdybIjc4Fpbf/iLJx5xFkWxSnTVA?=
- =?us-ascii?Q?Vw5H3PWnpkTzDSdf83oJvBSJwImcx+zPZc6HmlZw8b8Gd5HY+ArwLNHSisP9?=
- =?us-ascii?Q?FA+AmQRc6qteWoNC1d3ET829o2tDVVj/BH4u6eAysIbzs5rDC+vE60/CRtcl?=
- =?us-ascii?Q?u1MRRz63OXLSRqj7tR3ETe0q3dE2RCMyMt9tlOYUIozSVSdZEDoNoktNaTab?=
- =?us-ascii?Q?TDuzgFCzCqzL2KGf8jLBs4AxaW7pvp9AjT/6MAv+IS4t10rHnudjLNUvha01?=
- =?us-ascii?Q?o7Bv4lBG56JHsaFaPaWtL3dEJkg0JsrTidYMLTT9TAsOgPrkoUeGoAt9558a?=
- =?us-ascii?Q?fN2spzBtlI5ipD6NGK+eTX4gl8Bo6+jvwXS8f3d+tjaJNmOBuN1cNWsH/NXa?=
- =?us-ascii?Q?MS76Ld7XDBxtvcg/WPC9CmoGJZumyrdK6bu7Wt2xUvdONp8FX0oxDla9xOPC?=
- =?us-ascii?Q?gvO/Vf0FWudmstI=3D?=
+	=?us-ascii?Q?FPz8E5u+MkEN9e+TM+BCY0xO6591zC9FNiLtr7VENMJC0S91nraQyboepBNC?=
+ =?us-ascii?Q?K+WjgwukeOg4/mPdQvT2/mj04ZeiPUDUpGrpHmY0kfDb57Am+FObqQSKW99M?=
+ =?us-ascii?Q?y8QqwlJYexKXmZfkJjhtrIgeRJto7tfbrervuHEHNFn0+sZvfHBvYEuQbUNe?=
+ =?us-ascii?Q?XT0p5zZUx3Fa0JOf4GPiZz71afSaSyQwE/DDRTObI3sjL0Ws1NEyD8rpvgew?=
+ =?us-ascii?Q?R/gFHGu4ylNOsyaxXZfIqJ61CCZAoyEw3Sdgv/pztiegof9Xvhh5IGK+f2AV?=
+ =?us-ascii?Q?2+EUq8LfGA42/lefMnCmJawDVseVS9Ls29O6tB0bZs5AP5wAYXzXYo+9PEw2?=
+ =?us-ascii?Q?6NDj4kqM/3dBqnM8nKiUJg1LwnZ0nyGHxoUPtNZFgCyHj6tdwXD49WyeVvQo?=
+ =?us-ascii?Q?yJsDZ85oDzFx7joP6fuUrl6SvQLp4RWgfy6W1594PLr8GQr75+UaIGjGE0By?=
+ =?us-ascii?Q?Sp/gHCuuYMIwCwcvRyKQiZoUxFdOwa5jnw6thh4Z7Y52harTgWcN9YAPD6xP?=
+ =?us-ascii?Q?bQL4q4WwTfFxPZQoqBUrzLhoOt1xUZKkV1TU082u5KWp3jAr08pIYyOLjOxD?=
+ =?us-ascii?Q?s6vmYydyOPRadQ4kpNwvHH9g4rkuJhu4DvKgjYR/lE9d6lMAwUje8AlQXCRl?=
+ =?us-ascii?Q?OOqsNU6jOsiGG5Z7Bc8pilU4ABooX0AuSy9EYR6VX8ZyXXRki3I3e9TFi7d0?=
+ =?us-ascii?Q?wL/gqcr+Wwtksn7XWwf6UCy6a2qJdu2tb2rJ/5Ut4tYCiKIr1BJwKXVldrOK?=
+ =?us-ascii?Q?Ef+zyMz9tHMnFtQQZ6TYSZBdrt4U4P6+WWF/Iih1wNGJBLkZjUPY7CEjkaFz?=
+ =?us-ascii?Q?P6Tex3Gq06wnMXBAxeXkZEu9jLSpOEq27jFro7j19xMxE7yqgyMZHXgHAP8p?=
+ =?us-ascii?Q?N+BUtDjnqwWC5MsUIMho8UVJP5zZUfWiEFsJ6/88PkgRzNeaKp5IsbPOMxYx?=
+ =?us-ascii?Q?TUBDQT44xqUSNss1zcjLmayzAiI/KO9aUMX2vfhct7M+vIwJXTlaF4xasSze?=
+ =?us-ascii?Q?TYdTpegsCWyU9BraybX6nzFBW6Rx0/gBy+q53Ezb5wH4uWiQlopiaOOnaQm4?=
+ =?us-ascii?Q?wa4JvKa9lmPOn9eec4qiWT389pKTYyELwCDqYtI8wugafqqlyFVgHGcluHMl?=
+ =?us-ascii?Q?LmhMNFvS/6xo2Mg6TQ18Qsy9poTDiUKxPFDAVBrnDm4QFNeEwhFghlr+zJm6?=
+ =?us-ascii?Q?rP25zT0hAc1FNvDgAT+BWVi7knh9sHJbu2iMdbUMQyoVjOnZIKM/1r41GGYa?=
+ =?us-ascii?Q?R2oYwEjnwQpv2fHDlQW3iBrmJwdENXOAgwnPc5VLXb4mFNXl3USdis4SDA+G?=
+ =?us-ascii?Q?vKNWqwNY6X8SCkcr+1DTrOvy4jWIireHuyefK2W55r2Q3K84MQP5LPs29QDB?=
+ =?us-ascii?Q?0xCKXW8yWS0v69dPZznrp6+nWl0ZIftBAZDhxvbEd4BXgAI3DycPSROauW11?=
+ =?us-ascii?Q?9ckWlwE7rpm6qjRSAuYluQk5Kn/2+1cdQe92Nvxcvn8dxxPiMrPj6tyTgnMh?=
+ =?us-ascii?Q?WPVsIKf1rMMD+Ko=3D?=
 X-Forefront-Antispam-Report:
 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014)(52116014)(38350700014)(921020);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?juzPDxzbFqHXz6a433QWJeB017tiWevA4T6gg0xckYdfT/0KzwWmMusDkZXk?=
- =?us-ascii?Q?uCJLyUpsH+Sc6vb/a8impbuhx7E9t11CkZnB6e+o2texpRVKdKavLbAPA1rY?=
- =?us-ascii?Q?fl9aFMrnawJYTPidPSWxYsGTS5drng1Qv0dGjps7tjjQxymaG195Sk1EZZdC?=
- =?us-ascii?Q?LOqJZWkkffa+UdhjdiZbqHaE9dH4SWCTYZieqvAX8I2QA+FvRO1AZbHHWeRJ?=
- =?us-ascii?Q?rQoimjCfBuaUMzpsoyVGmAuWcHN2YnNC4llPMSgs/jPYjdq+UMMxePZJW+2i?=
- =?us-ascii?Q?OLASTJeb0Lw9TJbV4WGD8b/GEtYZJoiPi14V6iBH2zm4I+/G2L+XCREG+Jw9?=
- =?us-ascii?Q?VFPz186EdN0Y1LCkVliDHN7H1dFYR37JGXuYJBBXV+h5a2IL9p657uo6c6J1?=
- =?us-ascii?Q?ZJ2zx1q1lamOYHBY3JmIrcxyYsnESOkTxSvxE6jf2FTNAwFjjwxDbINI4V6F?=
- =?us-ascii?Q?GItD7oHgs+qRJtuorr5OH0iEpAewVYXM9N8dlN7np5YDNvKqvfkC0EhXqXFx?=
- =?us-ascii?Q?qrFjpAdvHxP45716fI1buRSx7USP1zoadvaF9YURTQ1VDVuiVXiU/0Nb94P6?=
- =?us-ascii?Q?jFqXqX6fFiAYEaOPaStu1EcjfDxQkkF/TttKzXRwhBlobSu2k/JwM7J2vE1f?=
- =?us-ascii?Q?VM2zgjt/HmVTvkDWz6Fx4QE2GHNxW2QdAoJbXyYbMXVBSsVwjpIVYFHH2qGn?=
- =?us-ascii?Q?v89vVnZAL5EvyU4UvY4y+BU6Um6fo3QGQngOM2GKowiOKkvzVURdsPH9Wly2?=
- =?us-ascii?Q?c4dIf6tK+RRU1L46jpAXsFprMfpsuSL1xc2MVG5fdWn1qrpIRiqyIuhECuXr?=
- =?us-ascii?Q?JQMBJN+0FeoJPGeBDcj6nC7pfQWwJFivw15gNe+Ac2dClRGsmhcP6mhqan9+?=
- =?us-ascii?Q?bjsYPF+LpykS/liDKTG2kpReST3zACWHpVVBG7ez8aCJNsuUbY3QWY/txboB?=
- =?us-ascii?Q?4isvNbNSqISHYX+0a6ef5A3G5boS7VpBYI/1ItV8vRYXAW55jS3ymDZ7UimF?=
- =?us-ascii?Q?R5oGz715EKi9NAWze8WuaiL1AVGMR+KKW3GeuKJ/92VzsdAIUzJrLspts1Om?=
- =?us-ascii?Q?TDpgBUMw5eYlCUzMTSe29dny94mjtRroOpWEs202au3OrJjL7r57x6FzWjII?=
- =?us-ascii?Q?9v9AP+pMrW/5aTCOzDKizFb8tSFTotdIHVlIndJm5ZT6dxl2Ije/nnWCRTVI?=
- =?us-ascii?Q?dDLImQC02nu34Ar7in1BDfm0GLfWPkY4eGzpXkiBAe9BmvQjfk+RMZbYH3lq?=
- =?us-ascii?Q?RPdLROpibxffXyrfu9FNoEwnBx66ARyJH/jHueNuNG1ix2HXiUpHDaallDql?=
- =?us-ascii?Q?JpLhAoUlgUg5RcgCeA5zmbVzrhn1nuoUdFBkC0WhkVJpZkbhoUFAUSqqyj76?=
- =?us-ascii?Q?t84GuAgIpmHa4h/Ftoh4j3yrKKjLEW7oljD38JBFwuG4umgfTmc6IGGK4n8S?=
- =?us-ascii?Q?dPFcicSKLgkAD/XpbhSXWKN+bQA5tarfT99WERAStJ2VRp3+P3KJ61nASsJk?=
- =?us-ascii?Q?1OktKh1iA1yYwdWPqtFlBgRmYGP8o8QI4nFlF8vUBN6Ljd58fkhtH2glnGk4?=
- =?us-ascii?Q?saDAFKeVO+cXa0DcsbDMZ23cAiIVuRx7SZMJT1dx?=
+	=?us-ascii?Q?JC9K3pR4Qzj8L4Qxfq7+1ktSRtP8ZKGtECt8BLiLGqx7T+uo5tkXo0buY92X?=
+ =?us-ascii?Q?Cb6o/Y3tVde2EAJOjla8yIXg0WEkMQ+43taAAp7YTA+wr2OgdA2h4umlNd78?=
+ =?us-ascii?Q?47svZ8+mNMSOaXH9LuFug7HhRn6D3fbGiuDScoQbK8f6Sb+VoAbxSvKR6s1Q?=
+ =?us-ascii?Q?DZzpo9K5aUguHOu2Q9ZcDc8nboUQMChljHJHPMhHhN8FzJJah86KARXt88NA?=
+ =?us-ascii?Q?7fzyhktcOixnBGZNe8WP2MIY6NPmeftM2in5Sm/CI9sdGeLwf8pwd3+sKk8X?=
+ =?us-ascii?Q?F5R6Hh7OemwpE9tTBS7PF2czI60ffkho/1BKhmpUa9C1FtaxYfVBJdJsHZVc?=
+ =?us-ascii?Q?DZ7ewSaaFlkG52edzt6uAAKt11M93PH0Dm4aoq4elmjRbcxwc9aPkJbHTPz2?=
+ =?us-ascii?Q?t0tVakKMgPG4rZPON63DSITbCUNR+tZfW3UivqW/799EO9G1PsE1hSAdcNyS?=
+ =?us-ascii?Q?oU8Ety6BZdwB4eNBuBZxv46XIANPzAnTyRWgd2CKpgyA8AhY13R9ZEZG2R/v?=
+ =?us-ascii?Q?Qk7Yaj4gLryT4zsCsjwe+kvFRAaMDi1aEEL7SbIUw+SEmooNt1qwo6Q3A4IL?=
+ =?us-ascii?Q?ubbbzRMPzx51TOrNl7+l9RwYb8vn4lMQDqXRhATN4dah5uXg3tAsVDmBopo+?=
+ =?us-ascii?Q?ZNs1QTjrJIphofRDtRCiA5QsuwkdacfsaohG7SwrNmeCpTpfcBy+vCk5w1oP?=
+ =?us-ascii?Q?PWeBwUNjwfwiXcBOYlAjXamUQSlz2BIN/VIun5TkEkKF84qtZv8SklBoiqmS?=
+ =?us-ascii?Q?ol9h7HYc/LGwxs0WZ44AEO6boPqPib5VH9vmbDaK7gW3dC9uBEjKNpu/sf9v?=
+ =?us-ascii?Q?qp+XktoXK+g/nfdEFmZWs2BlpkTreb2tpSMuZ1SUY+OPsEH+j7Hj29N7Et5r?=
+ =?us-ascii?Q?J+5m3vP1n4J3AkLkEetog1koH0TToX8gVJIWG8WImMPkLM1EW30/iUjj0ODZ?=
+ =?us-ascii?Q?ZvvL/23sNpFq2jCfWqJOEIkPtE9cPYOBKWwSaA0hhqbjLucjRm6defOQNN/m?=
+ =?us-ascii?Q?lFoJ9Qt436VChd9jXWCEin2Gnr4zfFk3KQiIIiobXqxEAFDqR4w6lCXaF3ct?=
+ =?us-ascii?Q?vrdcAmAt8FqaSD3qLxfDgbUmNP3cDUXN+ZEmggOIABDcZN3rwcshfVQHm5/B?=
+ =?us-ascii?Q?7SWRXjkkLlpHd8HlRsoUAj8mCFkTwG9QdVIjdqOBahVrbe71HRHoBJnvkQPK?=
+ =?us-ascii?Q?UlD/ZkMMleWYFXt0VUEaULZVx76+BFZzkz0nT7zR8F5aOd51ni6ctw8OsLSk?=
+ =?us-ascii?Q?s2mBHzQZPmN/obEx21Zt75Uouwymm2dniDlwssFmBbXos5byhOG2gvFCQkhX?=
+ =?us-ascii?Q?WdiqJRJUXyWGFzAbw3dT+O3R/PT2kr2iJIobpltmg72T4b32j+I26n10FIqe?=
+ =?us-ascii?Q?wMgpWOwyyUkaRw854sx2rBEN29wtbol1aTHMdn12DJzx+2+nCbAeDOcLTR6s?=
+ =?us-ascii?Q?Nj7hZjczG7Jm6FxA6/VVCvhpUpMIZa3UItzkxIETn6duwhPxTAVvRgvWau9D?=
+ =?us-ascii?Q?vDvVC7T6EG7JUD9dLM9mQalEERTtqlEdG4LlyHsBhUnp+8H2RaARkM1PiknZ?=
+ =?us-ascii?Q?bXNOCtou1R0y8YPlfZOihOeWtbbOJrEhISGC7H8i?=
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: bdd10a5d-b19a-4d2c-e75c-08dd9a1561f8
+X-MS-Exchange-CrossTenant-Network-Message-Id: f4409b41-a49f-455d-8273-08dd9a155da0
 X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 May 2025 16:17:58.8599
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 May 2025 16:17:51.6947
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: lGTrkhzMdfMPNltEjtvgMT0De9OAmXvRy/RAnXYDRp7u+Lge3XWKw6BBrB86QL3tj/XmaNLX4PuWVtm0T8x3jQ==
+X-MS-Exchange-CrossTenant-UserPrincipalName: jIqER/oZuDWW7kpwAZ7wg2qt9qog8ZyOrnGAHldhgDzZA44TpsaFUTF/MljJh2UJUIhP4Me69mYUUUVRAh1o9w==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM7PR04MB6966
 
-Add power-supply for edt,et057090dhu to fix below CHECK_DTB warning:
+Remove redundant layer under iomux and add grp surfix for pinmux node name
+to fix below CHECK_DTB warning:
 
-arch/arm/boot/dts/nxp/vf/vf610-colibri-eval-v3.dtb:
-    panel (edt,et057090dhu): 'power-supply' is a required property
+arch/arm/boot/dts/nxp/vf/vf610-colibri-eval-v3.dtb: pinctrl@40048000 (fsl,vf610-iomuxc):
+    Unevaluated properties are not allowed ('vf610-colibri' was unexpected)
 
 Signed-off-by: Frank Li <Frank.Li@nxp.com>
 ---
- arch/arm/boot/dts/nxp/vf/vf-colibri-eval-v3.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+ .../boot/dts/nxp/vf/vf-colibri-eval-v3.dtsi   |  10 +-
+ arch/arm/boot/dts/nxp/vf/vf-colibri.dtsi      | 348 +++++++++---------
+ arch/arm/boot/dts/nxp/vf/vf500-colibri.dtsi   |  44 ++-
+ arch/arm/boot/dts/nxp/vf/vf610-bk4.dts        |   2 +-
+ arch/arm/boot/dts/nxp/vf/vf610-cosmic.dts     |  60 ++-
+ arch/arm/boot/dts/nxp/vf/vf610-twr.dts        | 228 ++++++------
+ arch/arm/boot/dts/nxp/vf/vf610-zii-cfu1.dts   |   2 +-
+ .../boot/dts/nxp/vf/vf610-zii-dev-rev-c.dts   |   8 +-
+ .../boot/dts/nxp/vf/vf610-zii-scu4-aib.dts    |   8 +-
+ arch/arm/boot/dts/nxp/vf/vf610-zii-spb4.dts   |   4 +-
+ .../boot/dts/nxp/vf/vf610-zii-ssmb-dtu.dts    |   6 +-
+ .../boot/dts/nxp/vf/vf610-zii-ssmb-spu3.dts   |   4 +-
+ arch/arm/boot/dts/nxp/vf/vf610m4-colibri.dts  |  16 +-
+ arch/arm/boot/dts/nxp/vf/vf610m4-cosmic.dts   |  12 +-
+ 14 files changed, 369 insertions(+), 383 deletions(-)
 
 diff --git a/arch/arm/boot/dts/nxp/vf/vf-colibri-eval-v3.dtsi b/arch/arm/boot/dts/nxp/vf/vf-colibri-eval-v3.dtsi
-index 69c6647118e14..86c360868e4bf 100644
+index 5a19da9313ae6..69c6647118e14 100644
 --- a/arch/arm/boot/dts/nxp/vf/vf-colibri-eval-v3.dtsi
 +++ b/arch/arm/boot/dts/nxp/vf/vf-colibri-eval-v3.dtsi
-@@ -17,6 +17,7 @@ clk16m: clk16m {
- 	panel: panel {
- 		compatible = "edt,et057090dhu";
- 		backlight = <&bl>;
-+		power-supply = <&reg_3v3>;
+@@ -142,11 +142,9 @@ &usbh1 {
+ };
  
- 		port {
- 			panel_in: endpoint {
+ &iomuxc {
+-	vf610-colibri {
+-		pinctrl_can_int: can_int {
+-			fsl,pins = <
+-				VF610_PAD_PTB21__GPIO_43	0x22ed
+-			>;
+-		};
++	pinctrl_can_int: can_intgrp {
++		fsl,pins = <
++			VF610_PAD_PTB21__GPIO_43	0x22ed
++		>;
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/nxp/vf/vf-colibri.dtsi b/arch/arm/boot/dts/nxp/vf/vf-colibri.dtsi
+index cc1e069c44e62..98f9ee1b00306 100644
+--- a/arch/arm/boot/dts/nxp/vf/vf-colibri.dtsi
++++ b/arch/arm/boot/dts/nxp/vf/vf-colibri.dtsi
+@@ -171,180 +171,178 @@ &usbphy1 {
+ };
+ 
+ &iomuxc {
+-	vf610-colibri {
+-		pinctrl_flexcan0: can0grp {
+-			fsl,pins = <
+-				VF610_PAD_PTB14__CAN0_RX	0x31F1
+-				VF610_PAD_PTB15__CAN0_TX	0x31F2
+-			>;
+-		};
+-
+-		pinctrl_flexcan1: can1grp {
+-			fsl,pins = <
+-				VF610_PAD_PTB16__CAN1_RX	0x31F1
+-				VF610_PAD_PTB17__CAN1_TX	0x31F2
+-			>;
+-		};
+-
+-		pinctrl_gpio_ext: gpio_ext {
+-			fsl,pins = <
+-				VF610_PAD_PTD10__GPIO_89	0x22ed /* EXT_IO_0 */
+-				VF610_PAD_PTD9__GPIO_88		0x22ed /* EXT_IO_1 */
+-				VF610_PAD_PTD26__GPIO_68	0x22ed /* EXT_IO_2 */
+-			>;
+-		};
+-
+-		pinctrl_dcu0_1: dcu0grp_1 {
+-			fsl,pins = <
+-				VF610_PAD_PTE0__DCU0_HSYNC	0x1902
+-				VF610_PAD_PTE1__DCU0_VSYNC	0x1902
+-				VF610_PAD_PTE2__DCU0_PCLK	0x1902
+-				VF610_PAD_PTE4__DCU0_DE		0x1902
+-				VF610_PAD_PTE5__DCU0_R0		0x1902
+-				VF610_PAD_PTE6__DCU0_R1		0x1902
+-				VF610_PAD_PTE7__DCU0_R2		0x1902
+-				VF610_PAD_PTE8__DCU0_R3		0x1902
+-				VF610_PAD_PTE9__DCU0_R4		0x1902
+-				VF610_PAD_PTE10__DCU0_R5	0x1902
+-				VF610_PAD_PTE11__DCU0_R6	0x1902
+-				VF610_PAD_PTE12__DCU0_R7	0x1902
+-				VF610_PAD_PTE13__DCU0_G0	0x1902
+-				VF610_PAD_PTE14__DCU0_G1	0x1902
+-				VF610_PAD_PTE15__DCU0_G2	0x1902
+-				VF610_PAD_PTE16__DCU0_G3	0x1902
+-				VF610_PAD_PTE17__DCU0_G4	0x1902
+-				VF610_PAD_PTE18__DCU0_G5	0x1902
+-				VF610_PAD_PTE19__DCU0_G6	0x1902
+-				VF610_PAD_PTE20__DCU0_G7	0x1902
+-				VF610_PAD_PTE21__DCU0_B0	0x1902
+-				VF610_PAD_PTE22__DCU0_B1	0x1902
+-				VF610_PAD_PTE23__DCU0_B2	0x1902
+-				VF610_PAD_PTE24__DCU0_B3	0x1902
+-				VF610_PAD_PTE25__DCU0_B4	0x1902
+-				VF610_PAD_PTE26__DCU0_B5	0x1902
+-				VF610_PAD_PTE27__DCU0_B6	0x1902
+-				VF610_PAD_PTE28__DCU0_B7	0x1902
+-			>;
+-		};
+-
+-		pinctrl_dspi1: dspi1grp {
+-			fsl,pins = <
+-				VF610_PAD_PTD5__DSPI1_CS0		0x33e2
+-				VF610_PAD_PTD6__DSPI1_SIN		0x33e1
+-				VF610_PAD_PTD7__DSPI1_SOUT		0x33e2
+-				VF610_PAD_PTD8__DSPI1_SCK		0x33e2
+-			>;
+-		};
+-
+-		pinctrl_esdhc1: esdhc1grp {
+-			fsl,pins = <
+-				VF610_PAD_PTA24__ESDHC1_CLK	0x31ef
+-				VF610_PAD_PTA25__ESDHC1_CMD	0x31ef
+-				VF610_PAD_PTA26__ESDHC1_DAT0	0x31ef
+-				VF610_PAD_PTA27__ESDHC1_DAT1	0x31ef
+-				VF610_PAD_PTA28__ESDHC1_DATA2	0x31ef
+-				VF610_PAD_PTA29__ESDHC1_DAT3	0x31ef
+-				VF610_PAD_PTB20__GPIO_42	0x219d
+-			>;
+-		};
+-
+-		pinctrl_fec1: fec1grp {
+-			fsl,pins = <
+-				VF610_PAD_PTA6__RMII_CLKOUT		0x30d2
+-				VF610_PAD_PTC9__ENET_RMII1_MDC		0x30d2
+-				VF610_PAD_PTC10__ENET_RMII1_MDIO	0x30d3
+-				VF610_PAD_PTC11__ENET_RMII1_CRS		0x30d1
+-				VF610_PAD_PTC12__ENET_RMII1_RXD1	0x30d1
+-				VF610_PAD_PTC13__ENET_RMII1_RXD0	0x30d1
+-				VF610_PAD_PTC14__ENET_RMII1_RXER	0x30d1
+-				VF610_PAD_PTC15__ENET_RMII1_TXD1	0x30d2
+-				VF610_PAD_PTC16__ENET_RMII1_TXD0	0x30d2
+-				VF610_PAD_PTC17__ENET_RMII1_TXEN	0x30d2
+-			>;
+-		};
+-
+-		pinctrl_gpio_bl_on: gpio_bl_on {
+-			fsl,pins = <
+-				VF610_PAD_PTC0__GPIO_45		0x22ef
+-			>;
+-		};
+-
+-		pinctrl_i2c0: i2c0grp {
+-			fsl,pins = <
+-				VF610_PAD_PTB14__I2C0_SCL		0x37ff
+-				VF610_PAD_PTB15__I2C0_SDA		0x37ff
+-			>;
+-		};
+-
+-		pinctrl_i2c0_gpio: i2c0gpiogrp {
+-			fsl,pins = <
+-				VF610_PAD_PTB14__GPIO_36		0x37ff
+-				VF610_PAD_PTB15__GPIO_37		0x37ff
+-			>;
+-		};
+-
+-		pinctrl_nfc: nfcgrp {
+-			fsl,pins = <
+-				VF610_PAD_PTD23__NF_IO7		0x28df
+-				VF610_PAD_PTD22__NF_IO6		0x28df
+-				VF610_PAD_PTD21__NF_IO5		0x28df
+-				VF610_PAD_PTD20__NF_IO4		0x28df
+-				VF610_PAD_PTD19__NF_IO3		0x28df
+-				VF610_PAD_PTD18__NF_IO2		0x28df
+-				VF610_PAD_PTD17__NF_IO1		0x28df
+-				VF610_PAD_PTD16__NF_IO0		0x28df
+-				VF610_PAD_PTB24__NF_WE_B	0x28c2
+-				VF610_PAD_PTB25__NF_CE0_B	0x28c2
+-				VF610_PAD_PTB27__NF_RE_B	0x28c2
+-				VF610_PAD_PTC26__NF_RB_B	0x283d
+-				VF610_PAD_PTC27__NF_ALE		0x28c2
+-				VF610_PAD_PTC28__NF_CLE		0x28c2
+-			>;
+-		};
+-
+-		pinctrl_pwm0: pwm0grp {
+-			fsl,pins = <
+-				VF610_PAD_PTB0__FTM0_CH0		0x1182
+-				VF610_PAD_PTB1__FTM0_CH1		0x1182
+-			>;
+-		};
+-
+-		pinctrl_pwm1: pwm1grp {
+-			fsl,pins = <
+-				VF610_PAD_PTB8__FTM1_CH0		0x1182
+-				VF610_PAD_PTB9__FTM1_CH1		0x1182
+-			>;
+-		};
+-
+-		pinctrl_uart0: uart0grp {
+-			fsl,pins = <
+-				VF610_PAD_PTB10__UART0_TX		0x21a2
+-				VF610_PAD_PTB11__UART0_RX		0x21a1
+-				VF610_PAD_PTB12__UART0_RTS		0x21a2
+-				VF610_PAD_PTB13__UART0_CTS		0x21a1
+-			>;
+-		};
+-
+-		pinctrl_uart1: uart1grp {
+-			fsl,pins = <
+-				VF610_PAD_PTB4__UART1_TX		0x21a2
+-				VF610_PAD_PTB5__UART1_RX		0x21a1
+-			>;
+-		};
+-
+-		pinctrl_uart2: uart2grp {
+-			fsl,pins = <
+-				VF610_PAD_PTD0__UART2_TX		0x21a2
+-				VF610_PAD_PTD1__UART2_RX		0x21a1
+-				VF610_PAD_PTD2__UART2_RTS		0x21a2
+-				VF610_PAD_PTD3__UART2_CTS		0x21a1
+-			>;
+-		};
+-
+-		pinctrl_usbh1_reg: gpio_usb_vbus {
+-			fsl,pins = <
+-				VF610_PAD_PTD4__GPIO_83			0x22ed
+-			>;
+-		};
++	pinctrl_flexcan0: can0grp {
++		fsl,pins = <
++			VF610_PAD_PTB14__CAN0_RX	0x31F1
++			VF610_PAD_PTB15__CAN0_TX	0x31F2
++		>;
++	};
++
++	pinctrl_flexcan1: can1grp {
++		fsl,pins = <
++			VF610_PAD_PTB16__CAN1_RX	0x31F1
++			VF610_PAD_PTB17__CAN1_TX	0x31F2
++		>;
++	};
++
++	pinctrl_gpio_ext: gpio_extgrp {
++		fsl,pins = <
++			VF610_PAD_PTD10__GPIO_89	0x22ed /* EXT_IO_0 */
++			VF610_PAD_PTD9__GPIO_88		0x22ed /* EXT_IO_1 */
++			VF610_PAD_PTD26__GPIO_68	0x22ed /* EXT_IO_2 */
++		>;
++	};
++
++	pinctrl_dcu0_1: dcu01grp {
++		fsl,pins = <
++			VF610_PAD_PTE0__DCU0_HSYNC	0x1902
++			VF610_PAD_PTE1__DCU0_VSYNC	0x1902
++			VF610_PAD_PTE2__DCU0_PCLK	0x1902
++			VF610_PAD_PTE4__DCU0_DE		0x1902
++			VF610_PAD_PTE5__DCU0_R0		0x1902
++			VF610_PAD_PTE6__DCU0_R1		0x1902
++			VF610_PAD_PTE7__DCU0_R2		0x1902
++			VF610_PAD_PTE8__DCU0_R3		0x1902
++			VF610_PAD_PTE9__DCU0_R4		0x1902
++			VF610_PAD_PTE10__DCU0_R5	0x1902
++			VF610_PAD_PTE11__DCU0_R6	0x1902
++			VF610_PAD_PTE12__DCU0_R7	0x1902
++			VF610_PAD_PTE13__DCU0_G0	0x1902
++			VF610_PAD_PTE14__DCU0_G1	0x1902
++			VF610_PAD_PTE15__DCU0_G2	0x1902
++			VF610_PAD_PTE16__DCU0_G3	0x1902
++			VF610_PAD_PTE17__DCU0_G4	0x1902
++			VF610_PAD_PTE18__DCU0_G5	0x1902
++			VF610_PAD_PTE19__DCU0_G6	0x1902
++			VF610_PAD_PTE20__DCU0_G7	0x1902
++			VF610_PAD_PTE21__DCU0_B0	0x1902
++			VF610_PAD_PTE22__DCU0_B1	0x1902
++			VF610_PAD_PTE23__DCU0_B2	0x1902
++			VF610_PAD_PTE24__DCU0_B3	0x1902
++			VF610_PAD_PTE25__DCU0_B4	0x1902
++			VF610_PAD_PTE26__DCU0_B5	0x1902
++			VF610_PAD_PTE27__DCU0_B6	0x1902
++			VF610_PAD_PTE28__DCU0_B7	0x1902
++		>;
++	};
++
++	pinctrl_dspi1: dspi1grp {
++		fsl,pins = <
++			VF610_PAD_PTD5__DSPI1_CS0		0x33e2
++			VF610_PAD_PTD6__DSPI1_SIN		0x33e1
++			VF610_PAD_PTD7__DSPI1_SOUT		0x33e2
++			VF610_PAD_PTD8__DSPI1_SCK		0x33e2
++		>;
++	};
++
++	pinctrl_esdhc1: esdhc1grp {
++		fsl,pins = <
++			VF610_PAD_PTA24__ESDHC1_CLK	0x31ef
++			VF610_PAD_PTA25__ESDHC1_CMD	0x31ef
++			VF610_PAD_PTA26__ESDHC1_DAT0	0x31ef
++			VF610_PAD_PTA27__ESDHC1_DAT1	0x31ef
++			VF610_PAD_PTA28__ESDHC1_DATA2	0x31ef
++			VF610_PAD_PTA29__ESDHC1_DAT3	0x31ef
++			VF610_PAD_PTB20__GPIO_42	0x219d
++		>;
++	};
++
++	pinctrl_fec1: fec1grp {
++		fsl,pins = <
++			VF610_PAD_PTA6__RMII_CLKOUT		0x30d2
++			VF610_PAD_PTC9__ENET_RMII1_MDC		0x30d2
++			VF610_PAD_PTC10__ENET_RMII1_MDIO	0x30d3
++			VF610_PAD_PTC11__ENET_RMII1_CRS		0x30d1
++			VF610_PAD_PTC12__ENET_RMII1_RXD1	0x30d1
++			VF610_PAD_PTC13__ENET_RMII1_RXD0	0x30d1
++			VF610_PAD_PTC14__ENET_RMII1_RXER	0x30d1
++			VF610_PAD_PTC15__ENET_RMII1_TXD1	0x30d2
++			VF610_PAD_PTC16__ENET_RMII1_TXD0	0x30d2
++			VF610_PAD_PTC17__ENET_RMII1_TXEN	0x30d2
++		>;
++	};
++
++	pinctrl_gpio_bl_on: gpio_bl_ongrp {
++		fsl,pins = <
++			VF610_PAD_PTC0__GPIO_45		0x22ef
++		>;
++	};
++
++	pinctrl_i2c0: i2c0grp {
++		fsl,pins = <
++			VF610_PAD_PTB14__I2C0_SCL		0x37ff
++			VF610_PAD_PTB15__I2C0_SDA		0x37ff
++		>;
++	};
++
++	pinctrl_i2c0_gpio: i2c0gpiogrp {
++		fsl,pins = <
++			VF610_PAD_PTB14__GPIO_36		0x37ff
++			VF610_PAD_PTB15__GPIO_37		0x37ff
++		>;
++	};
++
++	pinctrl_nfc: nfcgrp {
++		fsl,pins = <
++			VF610_PAD_PTD23__NF_IO7		0x28df
++			VF610_PAD_PTD22__NF_IO6		0x28df
++			VF610_PAD_PTD21__NF_IO5		0x28df
++			VF610_PAD_PTD20__NF_IO4		0x28df
++			VF610_PAD_PTD19__NF_IO3		0x28df
++			VF610_PAD_PTD18__NF_IO2		0x28df
++			VF610_PAD_PTD17__NF_IO1		0x28df
++			VF610_PAD_PTD16__NF_IO0		0x28df
++			VF610_PAD_PTB24__NF_WE_B	0x28c2
++			VF610_PAD_PTB25__NF_CE0_B	0x28c2
++			VF610_PAD_PTB27__NF_RE_B	0x28c2
++			VF610_PAD_PTC26__NF_RB_B	0x283d
++			VF610_PAD_PTC27__NF_ALE		0x28c2
++			VF610_PAD_PTC28__NF_CLE		0x28c2
++		>;
++	};
++
++	pinctrl_pwm0: pwm0grp {
++		fsl,pins = <
++			VF610_PAD_PTB0__FTM0_CH0		0x1182
++			VF610_PAD_PTB1__FTM0_CH1		0x1182
++		>;
++	};
++
++	pinctrl_pwm1: pwm1grp {
++		fsl,pins = <
++			VF610_PAD_PTB8__FTM1_CH0		0x1182
++			VF610_PAD_PTB9__FTM1_CH1		0x1182
++		>;
++	};
++
++	pinctrl_uart0: uart0grp {
++		fsl,pins = <
++			VF610_PAD_PTB10__UART0_TX		0x21a2
++			VF610_PAD_PTB11__UART0_RX		0x21a1
++			VF610_PAD_PTB12__UART0_RTS		0x21a2
++			VF610_PAD_PTB13__UART0_CTS		0x21a1
++		>;
++	};
++
++	pinctrl_uart1: uart1grp {
++		fsl,pins = <
++			VF610_PAD_PTB4__UART1_TX		0x21a2
++			VF610_PAD_PTB5__UART1_RX		0x21a1
++		>;
++	};
++
++	pinctrl_uart2: uart2grp {
++		fsl,pins = <
++			VF610_PAD_PTD0__UART2_TX		0x21a2
++			VF610_PAD_PTD1__UART2_RX		0x21a1
++			VF610_PAD_PTD2__UART2_RTS		0x21a2
++			VF610_PAD_PTD3__UART2_CTS		0x21a1
++		>;
++	};
++
++	pinctrl_usbh1_reg: gpio_usb_vbusgrp {
++		fsl,pins = <
++			VF610_PAD_PTD4__GPIO_83			0x22ed
++		>;
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/nxp/vf/vf500-colibri.dtsi b/arch/arm/boot/dts/nxp/vf/vf500-colibri.dtsi
+index 8af7ed56e6539..ae3403c766d69 100644
+--- a/arch/arm/boot/dts/nxp/vf/vf500-colibri.dtsi
++++ b/arch/arm/boot/dts/nxp/vf/vf500-colibri.dtsi
+@@ -40,30 +40,28 @@ &nfc {
+ };
+ 
+ &iomuxc {
+-	vf610-colibri {
+-		pinctrl_touchctrl_idle: touchctrl_idle {
+-			fsl,pins = <
+-				VF610_PAD_PTA18__GPIO_8		0x006d
+-				VF610_PAD_PTA19__GPIO_9		0x006c
+-				>;
+-		};
++	pinctrl_touchctrl_idle: touchctrl_idlegrp {
++		fsl,pins = <
++			VF610_PAD_PTA18__GPIO_8		0x006d
++			VF610_PAD_PTA19__GPIO_9		0x006c
++			>;
++	};
+ 
+-		pinctrl_touchctrl_default: touchctrl_default {
+-			fsl,pins = <
+-				VF610_PAD_PTA18__ADC0_SE0	0x0040
+-				VF610_PAD_PTA19__ADC0_SE1	0x0040
+-				VF610_PAD_PTA16__ADC1_SE0	0x0040
+-				VF610_PAD_PTB2__ADC1_SE2	0x0040
+-				>;
+-		};
++	pinctrl_touchctrl_default: touchctrl_defaultgrp {
++		fsl,pins = <
++			VF610_PAD_PTA18__ADC0_SE0	0x0040
++			VF610_PAD_PTA19__ADC0_SE1	0x0040
++			VF610_PAD_PTA16__ADC1_SE0	0x0040
++			VF610_PAD_PTB2__ADC1_SE2	0x0040
++			>;
++	};
+ 
+-		pinctrl_touchctrl_gpios: touchctrl_gpios {
+-			fsl,pins = <
+-				VF610_PAD_PTA23__GPIO_13	0x22e9
+-				VF610_PAD_PTB23__GPIO_93	0x22e9
+-				VF610_PAD_PTA22__GPIO_12	0x22e9
+-				VF610_PAD_PTA11__GPIO_4		0x22e9
+-				>;
+-		};
++	pinctrl_touchctrl_gpios: touchctrl_gpiosgrp {
++		fsl,pins = <
++			VF610_PAD_PTA23__GPIO_13	0x22e9
++			VF610_PAD_PTB23__GPIO_93	0x22e9
++			VF610_PAD_PTA22__GPIO_12	0x22e9
++			VF610_PAD_PTA11__GPIO_4		0x22e9
++			>;
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/nxp/vf/vf610-bk4.dts b/arch/arm/boot/dts/nxp/vf/vf610-bk4.dts
+index 2492fb99956ce..e36c854dc2974 100644
+--- a/arch/arm/boot/dts/nxp/vf/vf610-bk4.dts
++++ b/arch/arm/boot/dts/nxp/vf/vf610-bk4.dts
+@@ -458,7 +458,7 @@ VF610_PAD_PTE16__GPIO_121	0x1183
+ 		>;
+ 	};
+ 
+-	pinctrl_gpio_spi: pinctrl-gpio-spi {
++	pinctrl_gpio_spi: pinctrl-gpio-spigrp {
+ 		fsl,pins = <
+ 			VF610_PAD_PTB18__GPIO_40        0x1183
+ 			VF610_PAD_PTD10__GPIO_89        0x1183
+diff --git a/arch/arm/boot/dts/nxp/vf/vf610-cosmic.dts b/arch/arm/boot/dts/nxp/vf/vf610-cosmic.dts
+index 703f375d7e240..f1e6344b0c697 100644
+--- a/arch/arm/boot/dts/nxp/vf/vf610-cosmic.dts
++++ b/arch/arm/boot/dts/nxp/vf/vf610-cosmic.dts
+@@ -47,39 +47,37 @@ &fec1 {
+ };
+ 
+ &iomuxc {
+-	vf610-cosmic {
+-		pinctrl_esdhc1: esdhc1grp {
+-			fsl,pins = <
+-				VF610_PAD_PTA24__ESDHC1_CLK	0x31ef
+-				VF610_PAD_PTA25__ESDHC1_CMD	0x31ef
+-				VF610_PAD_PTA26__ESDHC1_DAT0	0x31ef
+-				VF610_PAD_PTA27__ESDHC1_DAT1	0x31ef
+-				VF610_PAD_PTA28__ESDHC1_DATA2	0x31ef
+-				VF610_PAD_PTA29__ESDHC1_DAT3	0x31ef
+-				VF610_PAD_PTB28__GPIO_98	0x219d
+-			>;
+-		};
++	pinctrl_esdhc1: esdhc1grp {
++		fsl,pins = <
++			VF610_PAD_PTA24__ESDHC1_CLK	0x31ef
++			VF610_PAD_PTA25__ESDHC1_CMD	0x31ef
++			VF610_PAD_PTA26__ESDHC1_DAT0	0x31ef
++			VF610_PAD_PTA27__ESDHC1_DAT1	0x31ef
++			VF610_PAD_PTA28__ESDHC1_DATA2	0x31ef
++			VF610_PAD_PTA29__ESDHC1_DAT3	0x31ef
++			VF610_PAD_PTB28__GPIO_98	0x219d
++		>;
++	};
+ 
+-		pinctrl_fec1: fec1grp {
+-			fsl,pins = <
+-				VF610_PAD_PTC9__ENET_RMII1_MDC		0x30d2
+-				VF610_PAD_PTC10__ENET_RMII1_MDIO	0x30d3
+-				VF610_PAD_PTC11__ENET_RMII1_CRS		0x30d1
+-				VF610_PAD_PTC12__ENET_RMII1_RXD1	0x30d1
+-				VF610_PAD_PTC13__ENET_RMII1_RXD0	0x30d1
+-				VF610_PAD_PTC14__ENET_RMII1_RXER	0x30d1
+-				VF610_PAD_PTC15__ENET_RMII1_TXD1	0x30d2
+-				VF610_PAD_PTC16__ENET_RMII1_TXD0	0x30d2
+-				VF610_PAD_PTC17__ENET_RMII1_TXEN	0x30d2
+-			>;
+-		};
++	pinctrl_fec1: fec1grp {
++		fsl,pins = <
++			VF610_PAD_PTC9__ENET_RMII1_MDC		0x30d2
++			VF610_PAD_PTC10__ENET_RMII1_MDIO	0x30d3
++			VF610_PAD_PTC11__ENET_RMII1_CRS		0x30d1
++			VF610_PAD_PTC12__ENET_RMII1_RXD1	0x30d1
++			VF610_PAD_PTC13__ENET_RMII1_RXD0	0x30d1
++			VF610_PAD_PTC14__ENET_RMII1_RXER	0x30d1
++			VF610_PAD_PTC15__ENET_RMII1_TXD1	0x30d2
++			VF610_PAD_PTC16__ENET_RMII1_TXD0	0x30d2
++			VF610_PAD_PTC17__ENET_RMII1_TXEN	0x30d2
++		>;
++	};
+ 
+-		pinctrl_uart1: uart1grp {
+-			fsl,pins = <
+-				VF610_PAD_PTB4__UART1_TX		0x21a2
+-				VF610_PAD_PTB5__UART1_RX		0x21a1
+-			>;
+-		};
++	pinctrl_uart1: uart1grp {
++		fsl,pins = <
++			VF610_PAD_PTB4__UART1_TX		0x21a2
++			VF610_PAD_PTB5__UART1_RX		0x21a1
++		>;
+ 	};
+ };
+ 
+diff --git a/arch/arm/boot/dts/nxp/vf/vf610-twr.dts b/arch/arm/boot/dts/nxp/vf/vf610-twr.dts
+index 876c14ecceb69..e7c2f6d46ab23 100644
+--- a/arch/arm/boot/dts/nxp/vf/vf610-twr.dts
++++ b/arch/arm/boot/dts/nxp/vf/vf610-twr.dts
+@@ -166,131 +166,129 @@ codec: sgtl5000@a {
+ };
+ 
+ &iomuxc {
+-	vf610-twr {
+-		pinctrl_adc0_ad5: adc0ad5grp {
+-			fsl,pins = <
+-				VF610_PAD_PTC30__ADC0_SE5		0xa1
+-			>;
+-		};
++	pinctrl_adc0_ad5: adc0ad5grp {
++		fsl,pins = <
++			VF610_PAD_PTC30__ADC0_SE5		0xa1
++		>;
++	};
+ 
+-		pinctrl_dspi0: dspi0grp {
+-			fsl,pins = <
+-				VF610_PAD_PTB19__DSPI0_CS0		0x1182
+-				VF610_PAD_PTB20__DSPI0_SIN		0x1181
+-				VF610_PAD_PTB21__DSPI0_SOUT		0x1182
+-				VF610_PAD_PTB22__DSPI0_SCK		0x1182
+-			>;
+-		};
++	pinctrl_dspi0: dspi0grp {
++		fsl,pins = <
++			VF610_PAD_PTB19__DSPI0_CS0		0x1182
++			VF610_PAD_PTB20__DSPI0_SIN		0x1181
++			VF610_PAD_PTB21__DSPI0_SOUT		0x1182
++			VF610_PAD_PTB22__DSPI0_SCK		0x1182
++		>;
++	};
+ 
+-		pinctrl_esdhc1: esdhc1grp {
+-			fsl,pins = <
+-				VF610_PAD_PTA24__ESDHC1_CLK	0x31ef
+-				VF610_PAD_PTA25__ESDHC1_CMD	0x31ef
+-				VF610_PAD_PTA26__ESDHC1_DAT0	0x31ef
+-				VF610_PAD_PTA27__ESDHC1_DAT1	0x31ef
+-				VF610_PAD_PTA28__ESDHC1_DATA2	0x31ef
+-				VF610_PAD_PTA29__ESDHC1_DAT3	0x31ef
+-				VF610_PAD_PTA7__GPIO_134	0x219d
+-			>;
+-		};
++	pinctrl_esdhc1: esdhc1grp {
++		fsl,pins = <
++			VF610_PAD_PTA24__ESDHC1_CLK	0x31ef
++			VF610_PAD_PTA25__ESDHC1_CMD	0x31ef
++			VF610_PAD_PTA26__ESDHC1_DAT0	0x31ef
++			VF610_PAD_PTA27__ESDHC1_DAT1	0x31ef
++			VF610_PAD_PTA28__ESDHC1_DATA2	0x31ef
++			VF610_PAD_PTA29__ESDHC1_DAT3	0x31ef
++			VF610_PAD_PTA7__GPIO_134	0x219d
++		>;
++	};
+ 
+-		pinctrl_fec0: fec0grp {
+-			fsl,pins = <
+-				VF610_PAD_PTA6__RMII_CLKIN		0x30d1
+-				VF610_PAD_PTC0__ENET_RMII0_MDC		0x30d3
+-				VF610_PAD_PTC1__ENET_RMII0_MDIO		0x30d1
+-				VF610_PAD_PTC2__ENET_RMII0_CRS		0x30d1
+-				VF610_PAD_PTC3__ENET_RMII0_RXD1		0x30d1
+-				VF610_PAD_PTC4__ENET_RMII0_RXD0		0x30d1
+-				VF610_PAD_PTC5__ENET_RMII0_RXER		0x30d1
+-				VF610_PAD_PTC6__ENET_RMII0_TXD1		0x30d2
+-				VF610_PAD_PTC7__ENET_RMII0_TXD0		0x30d2
+-				VF610_PAD_PTC8__ENET_RMII0_TXEN		0x30d2
+-			>;
+-		};
++	pinctrl_fec0: fec0grp {
++		fsl,pins = <
++			VF610_PAD_PTA6__RMII_CLKIN		0x30d1
++			VF610_PAD_PTC0__ENET_RMII0_MDC		0x30d3
++			VF610_PAD_PTC1__ENET_RMII0_MDIO		0x30d1
++			VF610_PAD_PTC2__ENET_RMII0_CRS		0x30d1
++			VF610_PAD_PTC3__ENET_RMII0_RXD1		0x30d1
++			VF610_PAD_PTC4__ENET_RMII0_RXD0		0x30d1
++			VF610_PAD_PTC5__ENET_RMII0_RXER		0x30d1
++			VF610_PAD_PTC6__ENET_RMII0_TXD1		0x30d2
++			VF610_PAD_PTC7__ENET_RMII0_TXD0		0x30d2
++			VF610_PAD_PTC8__ENET_RMII0_TXEN		0x30d2
++		>;
++	};
+ 
+-		pinctrl_fec1: fec1grp {
+-			fsl,pins = <
+-				VF610_PAD_PTC9__ENET_RMII1_MDC		0x30d2
+-				VF610_PAD_PTC10__ENET_RMII1_MDIO	0x30d3
+-				VF610_PAD_PTC11__ENET_RMII1_CRS		0x30d1
+-				VF610_PAD_PTC12__ENET_RMII1_RXD1	0x30d1
+-				VF610_PAD_PTC13__ENET_RMII1_RXD0	0x30d1
+-				VF610_PAD_PTC14__ENET_RMII1_RXER	0x30d1
+-				VF610_PAD_PTC15__ENET_RMII1_TXD1	0x30d2
+-				VF610_PAD_PTC16__ENET_RMII1_TXD0	0x30d2
+-				VF610_PAD_PTC17__ENET_RMII1_TXEN	0x30d2
+-			>;
+-		};
++	pinctrl_fec1: fec1grp {
++		fsl,pins = <
++			VF610_PAD_PTC9__ENET_RMII1_MDC		0x30d2
++			VF610_PAD_PTC10__ENET_RMII1_MDIO	0x30d3
++			VF610_PAD_PTC11__ENET_RMII1_CRS		0x30d1
++			VF610_PAD_PTC12__ENET_RMII1_RXD1	0x30d1
++			VF610_PAD_PTC13__ENET_RMII1_RXD0	0x30d1
++			VF610_PAD_PTC14__ENET_RMII1_RXER	0x30d1
++			VF610_PAD_PTC15__ENET_RMII1_TXD1	0x30d2
++			VF610_PAD_PTC16__ENET_RMII1_TXD0	0x30d2
++			VF610_PAD_PTC17__ENET_RMII1_TXEN	0x30d2
++		>;
++	};
+ 
+-		pinctrl_i2c0: i2c0grp {
+-			fsl,pins = <
+-				VF610_PAD_PTB14__I2C0_SCL		0x30d3
+-				VF610_PAD_PTB15__I2C0_SDA		0x30d3
+-			>;
+-		};
++	pinctrl_i2c0: i2c0grp {
++		fsl,pins = <
++			VF610_PAD_PTB14__I2C0_SCL		0x30d3
++			VF610_PAD_PTB15__I2C0_SDA		0x30d3
++		>;
++	};
+ 
+-		pinctrl_nfc: nfcgrp {
+-			fsl,pins = <
+-				VF610_PAD_PTD31__NF_IO15	0x28df
+-				VF610_PAD_PTD30__NF_IO14	0x28df
+-				VF610_PAD_PTD29__NF_IO13	0x28df
+-				VF610_PAD_PTD28__NF_IO12	0x28df
+-				VF610_PAD_PTD27__NF_IO11	0x28df
+-				VF610_PAD_PTD26__NF_IO10	0x28df
+-				VF610_PAD_PTD25__NF_IO9		0x28df
+-				VF610_PAD_PTD24__NF_IO8		0x28df
+-				VF610_PAD_PTD23__NF_IO7		0x28df
+-				VF610_PAD_PTD22__NF_IO6		0x28df
+-				VF610_PAD_PTD21__NF_IO5		0x28df
+-				VF610_PAD_PTD20__NF_IO4		0x28df
+-				VF610_PAD_PTD19__NF_IO3		0x28df
+-				VF610_PAD_PTD18__NF_IO2		0x28df
+-				VF610_PAD_PTD17__NF_IO1		0x28df
+-				VF610_PAD_PTD16__NF_IO0		0x28df
+-				VF610_PAD_PTB24__NF_WE_B	0x28c2
+-				VF610_PAD_PTB25__NF_CE0_B	0x28c2
+-				VF610_PAD_PTB27__NF_RE_B	0x28c2
+-				VF610_PAD_PTC26__NF_RB_B	0x283d
+-				VF610_PAD_PTC27__NF_ALE		0x28c2
+-				VF610_PAD_PTC28__NF_CLE		0x28c2
+-			>;
+-		};
++	pinctrl_nfc: nfcgrp {
++		fsl,pins = <
++			VF610_PAD_PTD31__NF_IO15	0x28df
++			VF610_PAD_PTD30__NF_IO14	0x28df
++			VF610_PAD_PTD29__NF_IO13	0x28df
++			VF610_PAD_PTD28__NF_IO12	0x28df
++			VF610_PAD_PTD27__NF_IO11	0x28df
++			VF610_PAD_PTD26__NF_IO10	0x28df
++			VF610_PAD_PTD25__NF_IO9		0x28df
++			VF610_PAD_PTD24__NF_IO8		0x28df
++			VF610_PAD_PTD23__NF_IO7		0x28df
++			VF610_PAD_PTD22__NF_IO6		0x28df
++			VF610_PAD_PTD21__NF_IO5		0x28df
++			VF610_PAD_PTD20__NF_IO4		0x28df
++			VF610_PAD_PTD19__NF_IO3		0x28df
++			VF610_PAD_PTD18__NF_IO2		0x28df
++			VF610_PAD_PTD17__NF_IO1		0x28df
++			VF610_PAD_PTD16__NF_IO0		0x28df
++			VF610_PAD_PTB24__NF_WE_B	0x28c2
++			VF610_PAD_PTB25__NF_CE0_B	0x28c2
++			VF610_PAD_PTB27__NF_RE_B	0x28c2
++			VF610_PAD_PTC26__NF_RB_B	0x283d
++			VF610_PAD_PTC27__NF_ALE		0x28c2
++			VF610_PAD_PTC28__NF_CLE		0x28c2
++		>;
++	};
+ 
+-		pinctrl_pwm0: pwm0grp {
+-			fsl,pins = <
+-				VF610_PAD_PTB0__FTM0_CH0		0x1582
+-				VF610_PAD_PTB1__FTM0_CH1		0x1582
+-				VF610_PAD_PTB2__FTM0_CH2		0x1582
+-				VF610_PAD_PTB3__FTM0_CH3		0x1582
+-			>;
+-		};
++	pinctrl_pwm0: pwm0grp {
++		fsl,pins = <
++			VF610_PAD_PTB0__FTM0_CH0		0x1582
++			VF610_PAD_PTB1__FTM0_CH1		0x1582
++			VF610_PAD_PTB2__FTM0_CH2		0x1582
++			VF610_PAD_PTB3__FTM0_CH3		0x1582
++		>;
++	};
+ 
+-		pinctrl_sai2: sai2grp {
+-			fsl,pins = <
+-				VF610_PAD_PTA16__SAI2_TX_BCLK		0x02ed
+-				VF610_PAD_PTA18__SAI2_TX_DATA		0x02ee
+-				VF610_PAD_PTA19__SAI2_TX_SYNC		0x02ed
+-				VF610_PAD_PTA21__SAI2_RX_BCLK		0x02ed
+-				VF610_PAD_PTA22__SAI2_RX_DATA		0x02ed
+-				VF610_PAD_PTA23__SAI2_RX_SYNC		0x02ed
+-				VF610_PAD_PTB18__EXT_AUDIO_MCLK		0x02ed
+-			>;
+-		};
++	pinctrl_sai2: sai2grp {
++		fsl,pins = <
++			VF610_PAD_PTA16__SAI2_TX_BCLK		0x02ed
++			VF610_PAD_PTA18__SAI2_TX_DATA		0x02ee
++			VF610_PAD_PTA19__SAI2_TX_SYNC		0x02ed
++			VF610_PAD_PTA21__SAI2_RX_BCLK		0x02ed
++			VF610_PAD_PTA22__SAI2_RX_DATA		0x02ed
++			VF610_PAD_PTA23__SAI2_RX_SYNC		0x02ed
++			VF610_PAD_PTB18__EXT_AUDIO_MCLK		0x02ed
++		>;
++	};
+ 
+-		pinctrl_uart1: uart1grp {
+-			fsl,pins = <
+-				VF610_PAD_PTB4__UART1_TX		0x21a2
+-				VF610_PAD_PTB5__UART1_RX		0x21a1
+-			>;
+-		};
++	pinctrl_uart1: uart1grp {
++		fsl,pins = <
++			VF610_PAD_PTB4__UART1_TX		0x21a2
++			VF610_PAD_PTB5__UART1_RX		0x21a1
++		>;
++	};
+ 
+-		pinctrl_uart2: uart2grp {
+-			fsl,pins = <
+-				VF610_PAD_PTB6__UART2_TX		0x21a2
+-				VF610_PAD_PTB7__UART2_RX		0x21a1
+-			>;
+-		};
++	pinctrl_uart2: uart2grp {
++		fsl,pins = <
++			VF610_PAD_PTB6__UART2_TX		0x21a2
++			VF610_PAD_PTB7__UART2_RX		0x21a1
++		>;
+ 	};
+ };
+ 
+diff --git a/arch/arm/boot/dts/nxp/vf/vf610-zii-cfu1.dts b/arch/arm/boot/dts/nxp/vf/vf610-zii-cfu1.dts
+index 7e72f860c3c51..24eae049af69a 100644
+--- a/arch/arm/boot/dts/nxp/vf/vf610-zii-cfu1.dts
++++ b/arch/arm/boot/dts/nxp/vf/vf610-zii-cfu1.dts
+@@ -333,7 +333,7 @@ VF610_PAD_PTB17__I2C1_SDA		0x37ff
+ 		>;
+ 	};
+ 
+-	pinctrl_leds_debug: pinctrl-leds-debug {
++	pinctrl_leds_debug: pinctrl-leds-debuggrp {
+ 		fsl,pins = <
+ 			VF610_PAD_PTD3__GPIO_82			0x31c2
+ 			VF610_PAD_PTE3__GPIO_108		0x31c2
+diff --git a/arch/arm/boot/dts/nxp/vf/vf610-zii-dev-rev-c.dts b/arch/arm/boot/dts/nxp/vf/vf610-zii-dev-rev-c.dts
+index 4f99044837f8d..7a209c9c57a4d 100644
+--- a/arch/arm/boot/dts/nxp/vf/vf610-zii-dev-rev-c.dts
++++ b/arch/arm/boot/dts/nxp/vf/vf610-zii-dev-rev-c.dts
+@@ -429,7 +429,7 @@ ethernet-phy@0 {
+ };
+ 
+ &iomuxc {
+-	pinctr_atzb_rf_233: pinctrl-atzb-rf-233 {
++	pinctr_atzb_rf_233: pinctrl-atzb-rf-233grp {
+ 		fsl,pins = <
+ 			VF610_PAD_PTB2__GPIO_24		0x31c2
+ 			VF610_PAD_PTE27__GPIO_132	0x33e2
+@@ -437,7 +437,7 @@ VF610_PAD_PTE27__GPIO_132	0x33e2
+ 	};
+ 
+ 
+-	pinctrl_sx1503_20: pinctrl-sx1503-20 {
++	pinctrl_sx1503_20: pinctrl-sx1503-20grp {
+ 		fsl,pins = <
+ 			VF610_PAD_PTB1__GPIO_23		0x219d
+ 		>;
+@@ -450,7 +450,7 @@ VF610_PAD_PTA21__UART3_RX	0x21a1
+ 		>;
+ 	};
+ 
+-	pinctrl_mdio_mux: pinctrl-mdio-mux {
++	pinctrl_mdio_mux: pinctrl-mdio-muxgrp {
+ 		fsl,pins = <
+ 			VF610_PAD_PTA18__GPIO_8		0x31c2
+ 			VF610_PAD_PTA19__GPIO_9		0x31c2
+@@ -458,7 +458,7 @@ VF610_PAD_PTB3__GPIO_25		0x31c2
+ 		>;
+ 	};
+ 
+-	pinctrl_fec0_phy_int: pinctrl-fec0-phy-int {
++	pinctrl_fec0_phy_int: pinctrl-fec0-phy-intgrp {
+ 		fsl,pins = <
+ 			VF610_PAD_PTB28__GPIO_98	0x219d
+ 		>;
+diff --git a/arch/arm/boot/dts/nxp/vf/vf610-zii-scu4-aib.dts b/arch/arm/boot/dts/nxp/vf/vf610-zii-scu4-aib.dts
+index 62bd53917eaff..b3d338312df4f 100644
+--- a/arch/arm/boot/dts/nxp/vf/vf610-zii-scu4-aib.dts
++++ b/arch/arm/boot/dts/nxp/vf/vf610-zii-scu4-aib.dts
+@@ -745,7 +745,7 @@ VF610_PAD_PTC8__DSPI1_SCK		0x1182
+ 		>;
+ 	};
+ 
+-	pinctrl_dspi2: dspi2gpio {
++	pinctrl_dspi2: dspi2gpiogrp {
+ 		fsl,pins = <
+ 			VF610_PAD_PTD30__GPIO_64		0x33e2
+ 			VF610_PAD_PTD29__GPIO_65		0x33e1
+@@ -817,13 +817,13 @@ VF610_PAD_PTA23__I2C2_SDA		0x37ff
+ 		>;
+ 	};
+ 
+-	pinctrl_leds_debug: pinctrl-leds-debug {
++	pinctrl_leds_debug: pinctrl-leds-debuggrp {
+ 		fsl,pins = <
+ 			 VF610_PAD_PTB26__GPIO_96		0x31c2
+ 		   >;
+ 	};
+ 
+-	pinctrl_mdio_mux: pinctrl-mdio-mux {
++	pinctrl_mdio_mux: pinctrl-mdio-muxgrp {
+ 		fsl,pins = <
+ 			VF610_PAD_PTE27__GPIO_132		0x31c2
+ 			VF610_PAD_PTE28__GPIO_133		0x31c2
+@@ -843,7 +843,7 @@ VF610_PAD_PTD12__QSPI0_B_DATA0		0x31c3
+ 		>;
+ 	};
+ 
+-	pinctrl_sx1503_20: pinctrl-sx1503-20 {
++	pinctrl_sx1503_20: pinctrl-sx1503-20grp {
+ 		fsl,pins = <
+ 			VF610_PAD_PTD31__GPIO_63		0x219d
+ 			>;
+diff --git a/arch/arm/boot/dts/nxp/vf/vf610-zii-spb4.dts b/arch/arm/boot/dts/nxp/vf/vf610-zii-spb4.dts
+index 2a490464660c0..423d185c971f6 100644
+--- a/arch/arm/boot/dts/nxp/vf/vf610-zii-spb4.dts
++++ b/arch/arm/boot/dts/nxp/vf/vf610-zii-spb4.dts
+@@ -323,7 +323,7 @@ VF610_PAD_PTC17__ENET_RMII1_TXEN	0x30d2
+ 		>;
+ 	};
+ 
+-	pinctrl_gpio_switch0: pinctrl-gpio-switch0 {
++	pinctrl_gpio_switch0: pinctrl-gpio-switch0grp {
+ 		fsl,pins = <
+ 			VF610_PAD_PTB28__GPIO_98		0x219d
+ 		>;
+@@ -343,7 +343,7 @@ VF610_PAD_PTB17__I2C1_SDA		0x37ff
+ 		>;
+ 	};
+ 
+-	pinctrl_leds_debug: pinctrl-leds-debug {
++	pinctrl_leds_debug: pinctrl-leds-debuggrp {
+ 		fsl,pins = <
+ 			VF610_PAD_PTD3__GPIO_82			0x31c2
+ 		>;
+diff --git a/arch/arm/boot/dts/nxp/vf/vf610-zii-ssmb-dtu.dts b/arch/arm/boot/dts/nxp/vf/vf610-zii-ssmb-dtu.dts
+index 078d8699e16d7..d5c7f710c3146 100644
+--- a/arch/arm/boot/dts/nxp/vf/vf610-zii-ssmb-dtu.dts
++++ b/arch/arm/boot/dts/nxp/vf/vf610-zii-ssmb-dtu.dts
+@@ -284,13 +284,13 @@ VF610_PAD_PTC17__ENET_RMII1_TXEN	0x30d2
+ 		>;
+ 	};
+ 
+-	pinctrl_gpio_phy9: pinctrl-gpio-phy9 {
++	pinctrl_gpio_phy9: pinctrl-gpio-phy9grp {
+ 		fsl,pins = <
+ 			VF610_PAD_PTB24__GPIO_94		0x219d
+ 		>;
+ 	};
+ 
+-	pinctrl_gpio_switch0: pinctrl-gpio-switch0 {
++	pinctrl_gpio_switch0: pinctrl-gpio-switch0grp {
+ 		fsl,pins = <
+ 			VF610_PAD_PTB28__GPIO_98		0x219d
+ 		>;
+@@ -310,7 +310,7 @@ VF610_PAD_PTB17__I2C1_SDA		0x37ff
+ 		>;
+ 	};
+ 
+-	pinctrl_leds_debug: pinctrl-leds-debug {
++	pinctrl_leds_debug: pinctrl-leds-debuggrp {
+ 		fsl,pins = <
+ 			VF610_PAD_PTD3__GPIO_82			0x31c2
+ 		>;
+diff --git a/arch/arm/boot/dts/nxp/vf/vf610-zii-ssmb-spu3.dts b/arch/arm/boot/dts/nxp/vf/vf610-zii-ssmb-spu3.dts
+index 22c8f44390a96..344cc2b4d0ad5 100644
+--- a/arch/arm/boot/dts/nxp/vf/vf610-zii-ssmb-spu3.dts
++++ b/arch/arm/boot/dts/nxp/vf/vf610-zii-ssmb-spu3.dts
+@@ -330,7 +330,7 @@ VF610_PAD_PTC17__ENET_RMII1_TXEN	0x30d2
+ 		>;
+ 	};
+ 
+-	pinctrl_gpio_switch0: pinctrl-gpio-switch0 {
++	pinctrl_gpio_switch0: pinctrl-gpio-switch0grp {
+ 		fsl,pins = <
+ 			VF610_PAD_PTB28__GPIO_98		0x219d
+ 		>;
+@@ -350,7 +350,7 @@ VF610_PAD_PTB17__I2C1_SDA		0x37ff
+ 		>;
+ 	};
+ 
+-	pinctrl_leds_debug: pinctrl-leds-debug {
++	pinctrl_leds_debug: pinctrl-leds-debuggrp {
+ 		fsl,pins = <
+ 			VF610_PAD_PTD3__GPIO_82			0x31c2
+ 		>;
+diff --git a/arch/arm/boot/dts/nxp/vf/vf610m4-colibri.dts b/arch/arm/boot/dts/nxp/vf/vf610m4-colibri.dts
+index 2c2db47af4416..86d32f54c250f 100644
+--- a/arch/arm/boot/dts/nxp/vf/vf610m4-colibri.dts
++++ b/arch/arm/boot/dts/nxp/vf/vf610m4-colibri.dts
+@@ -50,14 +50,12 @@ &uart2 {
+ };
+ 
+ &iomuxc {
+-	vf610-colibri {
+-		pinctrl_uart2: uart2grp {
+-			fsl,pins = <
+-				VF610_PAD_PTD0__UART2_TX		0x21a2
+-				VF610_PAD_PTD1__UART2_RX		0x21a1
+-				VF610_PAD_PTD2__UART2_RTS		0x21a2
+-				VF610_PAD_PTD3__UART2_CTS		0x21a1
+-			>;
+-		};
++	pinctrl_uart2: uart2grp {
++		fsl,pins = <
++			VF610_PAD_PTD0__UART2_TX		0x21a2
++			VF610_PAD_PTD1__UART2_RX		0x21a1
++			VF610_PAD_PTD2__UART2_RTS		0x21a2
++			VF610_PAD_PTD3__UART2_CTS		0x21a1
++		>;
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/nxp/vf/vf610m4-cosmic.dts b/arch/arm/boot/dts/nxp/vf/vf610m4-cosmic.dts
+index f7474c11aabd0..454b484368cb7 100644
+--- a/arch/arm/boot/dts/nxp/vf/vf610m4-cosmic.dts
++++ b/arch/arm/boot/dts/nxp/vf/vf610m4-cosmic.dts
+@@ -79,12 +79,10 @@ &uart3 {
+ };
+ 
+ &iomuxc {
+-	vf610-cosmic {
+-		pinctrl_uart3: uart3grp {
+-			fsl,pins = <
+-				VF610_PAD_PTA20__UART3_TX		0x21a2
+-				VF610_PAD_PTA21__UART3_RX		0x21a1
+-			>;
+-		};
++	pinctrl_uart3: uart3grp {
++		fsl,pins = <
++			VF610_PAD_PTA20__UART3_TX		0x21a2
++			VF610_PAD_PTA21__UART3_RX		0x21a1
++		>;
+ 	};
+ };
 -- 
 2.34.1
 
