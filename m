@@ -1,134 +1,168 @@
-Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com [209.85.128.179])
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F26D139CFA;
-	Fri, 23 May 2025 09:09:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE229224244;
+	Fri, 23 May 2025 09:09:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747991350; cv=none; b=YmVjBCcUv5sYUoShKLy7AFwQ3v9GXHgvTl+xWHlmpya6y+snkVgj4Ewym09mX3a5IzJvhddcTwt6dJC1P1SzXDbKKMOIAdfeY5PD9LIrhK7mS5J9fR8zvvDDWkD9+1bBh0qUopoA9sRJxMreDMvWDFvleyZlLsTZF/q+0i/kdZY=
+	t=1747991364; cv=none; b=axpZRYHobf707nHQ28uEkx/ffHD0F0gXSJ05mZaSg9kbESAx13lqXd08Yh8iCCp0QZIS+v/yQEuE6MGqb8i+AbWawU8XhujHFC8F6qw2SdzQbzcAqIqJxypgiBJmhIg0EZLUk9jmkfI947EZ5H327nJcO2AVdWefYizR7Z0K9P8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747991350; c=relaxed/simple;
-	bh=IZ7gqBrZgtYFnrMGX/kr93mrH6BsXgJrXrzx0q1yJns=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=iIhpiPYJg1Uv7Nu9EiYNe66/BAcV7zJXUkEOqMr+VRSNk48SM1DTfGDJYoQZH2Z5sHYWrx836RPsOG+p1eV7yaRqDMo0VeDJEqGM5v2tdLr80nZPj9DXok17SZNiOioHK4NxoDe8T8HSkjY8g+6khVqtG3y/Rb5+bJQsW/USQww=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=W7X28vYr; arc=none smtp.client-ip=209.85.128.179
+	s=arc-20240116; t=1747991364; c=relaxed/simple;
+	bh=lW7WtQ2vlF2Wd82UclrK1JSl9S2LF9/UCtgR3hlKKjw=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=aUdNoEPHYNYRh0cM8hwxn1HZh9YzxUFgaobauuC2/fW/F34zn46mDt5Kb6FPV96ZnflHn080VWXbdwd18klWW/F5s0ghIr1SfuKkld6nwHiHcupmmwQLQFwa2W6Qfs5CpWm8QU3r/hjZbytGdGMKw1yvj8wfEDZxcE69G67lYLA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Fxd9gY/8; arc=none smtp.client-ip=209.85.128.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W7X28vYr"
-Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-70e09e8adc9so14358567b3.2;
-        Fri, 23 May 2025 02:09:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fxd9gY/8"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-43cfba466b2so98771445e9.3;
+        Fri, 23 May 2025 02:09:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747991348; x=1748596148; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=IZ7gqBrZgtYFnrMGX/kr93mrH6BsXgJrXrzx0q1yJns=;
-        b=W7X28vYrPyYdWP4JtTq7e9TyfTkU0llyB+dZDHe6jCuwuOgYtSqTVz09xGHwuhXraO
-         YvHaGYWrv/EdMJ3vxsNp9V7S1PxJn+5QBs6gBioU8No6bsJRtXhFX7OLK9HVRest0X8k
-         XjmX8VXDNtzPL0kyLAyYxE0F+PeLLGP6y6saOQuWgPXtGw85Wye+r4hBbSffej8phxL3
-         nG/KrhFXglMbeqy4vGVzHBh0BUwF5kyY9xaoPf6fez+N4hTVhpaFZpPUv9N2MU0h6QoF
-         /I4bDFqyUE8eBB56MeBRfkCDBsjMA3yV6LsrLHkYAJAzN/BB8XOkQesQdxnYFOqqFDXM
-         BGeg==
+        d=gmail.com; s=20230601; t=1747991361; x=1748596161; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=+AP8LZoG25l93LAAiXUjrH09qdNvVnby2FpvyeZp92o=;
+        b=Fxd9gY/8X6UAY/66g6ho8St1+KFQG0NY3a6AuI2kfpRD/2nAtj60RSGjZ3fYBMQKL/
+         W6zPJbE3/EtOvgRwbz17nLSQdorqllxYzgG6CRAwX/Xu7zg4LPjHP0KDs7csFOCd7/5H
+         MHv5iOkI3aL5WgLQTBsOtZJLzBlPoGYrsK6aun5NNT/zORQ7adTdnVIKBvsHGYQWgAwT
+         Rxj/7J+CIAsdFMq82LNaD1RPnF1PhW0IXs3ovdjNu9HLVTZlJSCRyf/gesKjqWL2FSSs
+         63epKGNJpdMwjI7/kCXB8hCzMz5HJ7StriCVA/h4JbeOftwl1SU9WyfB76zc3EKaNvQU
+         lslg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747991348; x=1748596148;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=IZ7gqBrZgtYFnrMGX/kr93mrH6BsXgJrXrzx0q1yJns=;
-        b=JUlwxwE7NDEbq3bTbK+//tffApDmhZkyx27I7+7hSGOk/mL9x4/XybKuWzHeOCIDFW
-         E4XwkfaK/ITxHiRX/eIQd7I/M2Zjpsmlj/TIk0p47wsi8D/Z0kgQq0mKzuJUet9Q/h3P
-         dR6lG6leShP2d1frSWSbjv5rHjUb3SwPy2OlLLVx6c9fO24MN09S5UFiPkLQPwTyjpzS
-         JbZFXbciHuw7sv7TpYb8gmS10lbctgSFpG+wJuPD1OEwoQhHdkbJqJHxzDDaGKUofgBn
-         WcVyoJwPZUyA45uvSkU0axaPdlfZ3Oqov0OJFydinmZXDyOmtB8ZTiYklUfUieW7GVPO
-         OMAg==
-X-Forwarded-Encrypted: i=1; AJvYcCUien6BfxVeEqzW5ePsxxTcjCvmbsk12PjsM/4Kc8RozGb2eoWxVDoWX8lyN2xeaVGZJ3btD/5bG4LmGZc=@vger.kernel.org, AJvYcCUkDtlvXsd8bROf8netzJhfllvPzfq3+RsDsB4ObHxYi5RJX2E+M0GYbak9G4uwEnMPdB5bElC3@vger.kernel.org
-X-Gm-Message-State: AOJu0YzWVmv+XTkvZbh9RfJLuawZq/JnwD86/rOm2KEYp8Gk4/jpNesd
-	aHZDlQkz/1cT00pCSm+go3SjyAJ3KjeuMLo51JmSk5j5rKx2GgbZ71pmHD6Ysto2bMYARcR0FsY
-	1/YQO+r+hMZH8RTNCtEhjemTDclsRiIQ=
-X-Gm-Gg: ASbGnctSUvyO01Ag/G8RkidcV256x8HwsrxuiURikmZMLiYxBy38MiI8+mbjiNWO5c5
-	zkXV8rtxA7TV29QSppNMZkonH42J3hNXfxIn9m6HJe7lIz+KbKyRl84JJIr+msscgowRfu9F8OV
-	NUUB0amiozyH+KAX9Ux5gQhuClBhiP/qHeMKieemK65g==
-X-Google-Smtp-Source: AGHT+IGXaL7QqjDlaDb1GkhvoJFxiwsSoVycNITgF5U4Ia5QqlfCK94bczHMTbWAprkq1FvzTQY4gYXmRzGkMpjUfZA=
-X-Received: by 2002:a05:690c:88e:b0:6ef:652b:91cf with SMTP id
- 00721157ae682-70ca7c15312mr389216277b3.27.1747991348039; Fri, 23 May 2025
- 02:09:08 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1747991361; x=1748596161;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=+AP8LZoG25l93LAAiXUjrH09qdNvVnby2FpvyeZp92o=;
+        b=fj2SZTFi802vf/dSKX3MEZ0TJIOHt2uRZkp+l/9MI6gHXYJ5wQTTHVUWEykM/PJZA7
+         ODMHweNJbJ1dXcbo3Hsd4hygcFrLg9e0ANtACIWt78x9JG62tisoIcJevy153ZloHcm/
+         LZ4zccH5pFG7NX9HYLVXXVlXNTjm8C6NBgzjbb5IMJ2hC6sjAsi7pnk+C6vL8ZV7tF7c
+         HpIcgUJyyjNepHfE5KgYXscpTxpy4ZS74M2PnA0kADbLG2A5024JbKtF47l3km4vH61b
+         QpxccJ5CRiIFtimw3gJil22ArJswSiiY2I/fzgJsbb3n/Lc94kp3YYn1jBsSW1T1MeOg
+         DhuQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXNwmxV0fiCy2MCA/9ADLYLqpYngVEzDTr4LHburzi8blQQ7CH9txaSJilrMEqB3IuoEM4Gs6lC/JK2PpuT@vger.kernel.org, AJvYcCXq6bgiOUzQgPxGHkpWjXfbDElrEhAq2W75c7fRFNg1MEI5LbEaBB4atbrGG1yFU1Ftljwka+MKN7XD@vger.kernel.org
+X-Gm-Message-State: AOJu0YwolIBWbcc2omTb0KCNPnexkmHG2RSaNwwBiGG0M+ixRw6Oa1Ep
+	SjyeLGqKZKcuKjNzF951FnLhvvccyeUnZ13P2jqrjvkXupdtsUhzdXsVClQInL6/
+X-Gm-Gg: ASbGncuFULAdygbtHks3X5l7pBg1V73o1FWxs20bX+UJMSXEow8BtHPliqT0eAMWMAP
+	NFn+NHgO4rforjlzz2t6buNYHGY/K4pKbEPrW7nH36ks/4bhqK4XG3xJeUJ2Bj93IG05AybgvRj
+	CRjILP+e+wUvof+oNm2ghczRQHGAatZ4Idl6a9vEY4tN+yle6EkXxC6kWeV2A5h5gAKAafLfQHc
+	e/WyCog6jqe63G8BJhffCfp2k0MUOsSODJYQWQ677XgL5y9mmKf5GQsDVkhf0TrE/8z2joBxe0A
+	LevqNkBAmx4jgXqY1IOARXkpJFfSyQbcZNmpFPRbfTMJDjZuWRUxHzQ=
+X-Google-Smtp-Source: AGHT+IFlCbanJtgwwqNJsZ4IcpUy1GJzGJ+c40q3HPEhx/L+0W/eUlETwtP4KjCbM/5ysYMU9EAwAg==
+X-Received: by 2002:a05:600c:890b:b0:442:ffaa:6681 with SMTP id 5b1f17b1804b1-442ffaa6b6fmr178704095e9.28.1747991360643;
+        Fri, 23 May 2025 02:09:20 -0700 (PDT)
+Received: from [100.73.1.233] ([185.128.9.48])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-447f381465fsm133670215e9.29.2025.05.23.02.09.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 23 May 2025 02:09:20 -0700 (PDT)
+Message-ID: <92107be5d4085f934c725d31177aae00b971984d.camel@gmail.com>
+Subject: Re: [PATCH v2 3/3] pwm: axi-pwmgen: fix missing separate external
+ clock
+From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
+To: David Lechner <dlechner@baylibre.com>, Michael Hennerich	
+ <michael.hennerich@analog.com>, Nuno =?ISO-8859-1?Q?S=E1?=
+ <nuno.sa@analog.com>,  Trevor Gamblin <tgamblin@baylibre.com>, Uwe
+ =?ISO-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>, Rob Herring	
+ <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley	
+ <conor+dt@kernel.org>
+Cc: linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Date: Fri, 23 May 2025 10:09:22 +0100
+In-Reply-To: <20250522-pwm-axi-pwmgen-add-external-clock-v2-3-086ea9e6ecf0@baylibre.com>
+References: 
+	<20250522-pwm-axi-pwmgen-add-external-clock-v2-0-086ea9e6ecf0@baylibre.com>
+	 <20250522-pwm-axi-pwmgen-add-external-clock-v2-3-086ea9e6ecf0@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.1 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250519174550.1486064-1-jonas.gorski@gmail.com>
- <20250519174550.1486064-3-jonas.gorski@gmail.com> <ed75677c-c3fb-41d1-a2cd-dd84d224ffe3@lunn.ch>
- <CAOiHx=nwbs7030GKZHLc6Pc6LA6Hqq0NYfNSt=3zOgnj5zpAYQ@mail.gmail.com>
- <2e5e16a1-e59e-470d-a1d9-618a1b9efdd4@lunn.ch> <CAOiHx=mQ8z1CO1V-8b=7pjK-Hm9_4-tcvucKXpM1i+eOOB4axg@mail.gmail.com>
- <e0d25a68-057b-4839-a8cd-affe458bfea3@lunn.ch>
-In-Reply-To: <e0d25a68-057b-4839-a8cd-affe458bfea3@lunn.ch>
-From: Jonas Gorski <jonas.gorski@gmail.com>
-Date: Fri, 23 May 2025 11:08:55 +0200
-X-Gm-Features: AX0GCFtnVRfex_9nhQ4cx9PCVZ832oz1Y9t0dDtKGYfJ3JHQmtusGVXqvc2KluY
-Message-ID: <CAOiHx==NzwF3mXfkf+mS0AZzb-FTR0SHwG9n0Hw9nRiR4k-z6w@mail.gmail.com>
-Subject: Re: [PATCH net 2/3] net: dsa: b53: fix configuring RGMII delay on bcm63xx
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Florian Fainelli <florian.fainelli@broadcom.com>, Vladimir Oltean <olteanv@gmail.com>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Vivien Didelot <vivien.didelot@gmail.com>, =?UTF-8?B?w4FsdmFybyBGZXJuw6FuZGV6IFJvamFz?= <noltari@gmail.com>, 
-	Florian Fainelli <f.fainelli@gmail.com>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, May 20, 2025 at 2:15=E2=80=AFAM Andrew Lunn <andrew@lunn.ch> wrote:
->
-> > Without this change no mode/port works, since there is always either a
-> > 0 ns delay or a 4 ns delay in the rx/tx paths (I assume, I have no
-> > equipment to measure).
-> >
-> > With this change all modes/ports work.
->
-> Which is wrong.
->
-> > With "rgmii-id" the mac doesn't
-> > configure any delays (and the phy does instead), with "rgmii" it's
-> > vice versa, so there is always the expected 2 ns delay. Same for rxid
-> > and txid.
->
-> If you read the description of what these four modes mean, you should
-> understand why only one should work. And given the most likely PCB
-> design, the only mode that should work is rgmii-id. You would have to
-> change the PCB design, to make the other modes work.
+On Thu, 2025-05-22 at 09:49 -0500, David Lechner wrote:
+> Add proper support for external clock to the AXI PWM generator driver.
+>=20
+> In most cases, the HDL for this IP block is compiled with the default
+> ASYNC_CLK_EN=3D1. With this option, there is a separate external clock
+> that drives the PWM output separate from the peripheral clock. So the
+> driver should be enabling the "axi" clock to power the peripheral and
+> the "ext" clock to drive the PWM output.
+>=20
+> When ASYNC_CLK_EN=3D0, the "axi" clock is also used to drive the PWM
+> output and there is no "ext" clock.
+>=20
+> Previously, if there was a separate external clock, users had to specify
+> only the external clock and (incorrectly) omit the AXI clock in order
+> to get the correct operating frequency for the PWM output.
+>=20
+> The devicetree bindings are updated to fix this shortcoming and this
+> patch changes the driver to match the new bindings. To preserve
+> compatibility with any existing dtbs that specify only one clock, we
+> don't require the clock name on the first clock.
+>=20
+> Fixes: 41814fe5c782 ("pwm: Add driver for AXI PWM generator")
+> Signed-off-by: David Lechner <dlechner@baylibre.com>
+> ---
 
-Since I also have BCM6368 with a BCM53115 connected to one of the
-RGMII ports lying around, I played around with it, and it was
-surprisingly hard to make it *not* work. Only if I enabled delay on
-*both* sides it stopped working, no delay or delay only on one side
-continued working (and I used iperf to try if larger amounts of
-traffic break it).
+Acked-by: Nuno S=C3=A1 <nuno.sa@analog.com>
 
-So in way, with BCM6368 enabling no (sampling) delays on its MAC side,
-all four modes work. I understand that they shouldn't, but the reality
-is that they do. Maybe the switches can auto-detect/adapt to (missing)
-delays for a certain amount.
-
-@Florian, do you know if this is expected? And yes, I even added the
-RGMII delay workaround (change link speed to force the pll to resync)
-to ensure that the delays are applied. Though I guess the way Linux
-works it isn't needed, and only when changing delays while the link is
-up.
-
-> > The Switch is always integrated into the host SoC, so there is no
-> > (r)gmii cpu port to configure. There's basically directly attached DMA
-> > to/from the buffers of the cpu port. Not sure if there are even
-> > buffers, or if it is a direct to DMA delivery.
->
-> That makes it a lot simpler. It always plays the MAC side. So i
-> recommend you just hard code it no delay, and let the PHY add the
-> delays as needed.
-
-Sure thing. I saw that there are device tree properties that can be
-used to explicitly enable delays on the MAC side, so in case we ever
-need them we can implement them (e.g. a PHY that can't do delays).
-
-Best regards,
-Jonas
+> =C2=A0drivers/pwm/pwm-axi-pwmgen.c | 23 ++++++++++++++++++++---
+> =C2=A01 file changed, 20 insertions(+), 3 deletions(-)
+>=20
+> diff --git a/drivers/pwm/pwm-axi-pwmgen.c b/drivers/pwm/pwm-axi-pwmgen.c
+> index
+> 4337c8f5acf055fc87dc134f2a70b99b0cb5ede6..60dcd354237316bced2d951b7f0b116=
+c8291
+> bb0d 100644
+> --- a/drivers/pwm/pwm-axi-pwmgen.c
+> +++ b/drivers/pwm/pwm-axi-pwmgen.c
+> @@ -257,7 +257,7 @@ static int axi_pwmgen_probe(struct platform_device *p=
+dev)
+> =C2=A0	struct regmap *regmap;
+> =C2=A0	struct pwm_chip *chip;
+> =C2=A0	struct axi_pwmgen_ddata *ddata;
+> -	struct clk *clk;
+> +	struct clk *axi_clk, *clk;
+> =C2=A0	void __iomem *io_base;
+> =C2=A0	int ret;
+> =C2=A0
+> @@ -280,9 +280,26 @@ static int axi_pwmgen_probe(struct platform_device *=
+pdev)
+> =C2=A0	ddata =3D pwmchip_get_drvdata(chip);
+> =C2=A0	ddata->regmap =3D regmap;
+> =C2=A0
+> -	clk =3D devm_clk_get_enabled(dev, NULL);
+> +	/*
+> +	 * Using NULL here instead of "axi" for backwards compatibility.
+> There
+> +	 * are some dtbs that don't give clock-names and have the "ext" clock
+> +	 * as the one and only clock (due to mistake in the original
+> bindings).
+> +	 */
+> +	axi_clk =3D devm_clk_get_enabled(dev, NULL);
+> +	if (IS_ERR(axi_clk))
+> +		return dev_err_probe(dev, PTR_ERR(axi_clk), "failed to get
+> axi clock\n");
+> +
+> +	clk =3D devm_clk_get_optional_enabled(dev, "ext");
+> =C2=A0	if (IS_ERR(clk))
+> -		return dev_err_probe(dev, PTR_ERR(clk), "failed to get
+> clock\n");
+> +		return dev_err_probe(dev, PTR_ERR(clk), "failed to get ext
+> clock\n");
+> +
+> +	/*
+> +	 * If there is no "ext" clock, it means the HDL was compiled with
+> +	 * ASYNC_CLK_EN=3D0. In this case, the AXI clock is also used for the
+> +	 * PWM output clock.
+> +	 */
+> +	if (!clk)
+> +		clk =3D axi_clk;
+> =C2=A0
+> =C2=A0	ret =3D devm_clk_rate_exclusive_get(dev, clk);
+> =C2=A0	if (ret)
