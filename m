@@ -1,83 +1,176 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86273C8CE
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 12:35:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5525E56A;
+	Fri, 23 May 2025 12:38:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748003730; cv=none; b=QnNn9zKlnkaN1+SiaT71HyLO3D317KCySE46PWcwbofnp1OY9BulfmaqprLUpKKZdIbYKYhwog8JpqulWUw+3ylMDVsw+uNdMYqTu8XPG0zlEkuzjyVV+4umdS6DzHA03F7nk27Czma+T0hASFt4H68v401o1UeshQXqn3Sdq1o=
+	t=1748003926; cv=none; b=qPUM/tDfa4qVEpstuffLiBcheMK5rFeRr+p95I/JdOOpB4kJeLqB+E9qb7N+xmVZKChZd1zyd228Sal/Y49/BSxRRhNqrltLc7LuPFPFGvmVV1GgWVA0CmMot4iutsYloe1CmniCHs83n2XuLRgsW89uaAoBxoZZzqGNfL3HgDY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748003730; c=relaxed/simple;
-	bh=XkIvQT+/yWhVwpes43vYQ0OrO3E8O5aoaWzFfhJST6o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=f23yo488Ti+YdvYajmNkoNz2IK1734uFWmLs8k0oRlAH+d80oXS2kVkV/mms/ncn2qOggvbGyYmlYkaBENKaDAhsBrJo7iMVvq8tewxQekpltrVnOoXjd3NXXGLWpH7tGbn4+ohXuN4qm9hYVQS+SQCTXqRmSEwQVHQ1HWEK+XE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=nrac3uS1; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1748003926; c=relaxed/simple;
+	bh=XVNu4dyr7CqFaBgq6wnAd0uXqRpquMHskcdqzRjbx/8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XvUWtXSALiPVJtKM962XBI74iOo57ujhc93xpmTqh9ejr8dappTIF+wqNNZaR+RPWuCxyRdQL469Q8ejn5V6ZfyHQR1isfG2C1GmMTSnwZtMrKfV2sN4yQeC0fdJJmYVcYdsudMw0eV/0NdwLbIvB2blwv778z3qXLleMX3t8p8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cl+C82wS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="nrac3uS1"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=joYyarh9uwtRJl475buma+o5HMm3sVPLQkQWh3pNq3c=; b=nrac3uS1AdK7R0d+xBmKCcbBAW
-	NplkfWtQvoDkM13QRtqCaamPmJXCQng82whBE2NtJG+IZlxaheYySZdFcfgWEBfTs84ffoqplCTWP
-	3SJLx6adbh7U1h3mEJhMVVGBYQYuDpPotwPFXb6HXReoryo4qgo6vI6CUzms4s2AYusdrPMHAlnp1
-	pFo6Rv7oDTa8leT07FyllpFSrd8viuptGXB/LNe1gRH6rG9VVLP2zOvW7VCcYGifynqMBZZV90GtJ
-	/ZfqURkiVw6TH31ZayJMTpdDP8Ca8w785jWQ0cA0/h1ICmrfEt+s22ozGK7WgsjXQEuWUkk31cg6D
-	Uj/+c+2A==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uIRcL-00000007a1L-37DM;
-	Fri, 23 May 2025 12:35:17 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 2EEB83003B0; Fri, 23 May 2025 14:35:17 +0200 (CEST)
-Date: Fri, 23 May 2025 14:35:16 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Aaron Lu <ziqianlu@bytedance.com>
-Cc: Valentin Schneider <vschneid@redhat.com>,
-	Ben Segall <bsegall@google.com>,
-	K Prateek Nayak <kprateek.nayak@amd.com>,
-	Josh Don <joshdon@google.com>, Ingo Molnar <mingo@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Xi Wang <xii@google.com>, linux-kernel@vger.kernel.org,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>, Mel Gorman <mgorman@suse.de>,
-	Chengming Zhou <chengming.zhou@linux.dev>,
-	Chuyi Zhou <zhouchuyi@bytedance.com>,
-	Jan Kiszka <jan.kiszka@siemens.com>,
-	Florian Bezdeka <florian.bezdeka@siemens.com>
-Subject: Re: [PATCH 2/7] sched/fair: prepare throttle path for task based
- throttle
-Message-ID: <20250523123516.GK39944@noisy.programming.kicks-ass.net>
-References: <20250520104110.3673059-1-ziqianlu@bytedance.com>
- <20250520104110.3673059-3-ziqianlu@bytedance.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cl+C82wS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0BBE0C4CEE9;
+	Fri, 23 May 2025 12:38:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748003926;
+	bh=XVNu4dyr7CqFaBgq6wnAd0uXqRpquMHskcdqzRjbx/8=;
+	h=From:To:Cc:Subject:Date:From;
+	b=cl+C82wSVNDCCauR/Lx25+SmpL0ciHLslMQ1kM003EsdeoEe4J94bHq5CUZn/at0L
+	 G0Gjrs1+xsI2ghuaL08HBpaknNo8nvYnXgOvv6D1PTCEOL3jUk1YG+VLUsu5zDVJCO
+	 GWEXNUXPGgg0ozOIlkqPPTu1G8ip06IgAfaUc6HSvt9IYNfvuzx0maDE5ZV++zKtMQ
+	 mNA54lLfSK0qrfjdiI0wceDIhtSVxIhBnGQZeRWioDMZ+ZkY0EiCJunfre0ORwkev2
+	 /VenpbGLb6arqKj0AeqEQaWrq+w5VEmr9RSfToc/mLWQSLJHXlSsCMZJ40L4KYvxNQ
+	 +Eo7BMrUHuvgw==
+From: Christian Brauner <brauner@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Christian Brauner <brauner@kernel.org>,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [GIT PULL for v6.16] vfs lookup_{noperm,one}() cleanup
+Date: Fri, 23 May 2025 14:36:59 +0200
+Message-ID: <20250523-vfs-cleanups-f29f2bd1fce7@brauner>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250520104110.3673059-3-ziqianlu@bytedance.com>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5304; i=brauner@kernel.org; h=from:subject:message-id; bh=XVNu4dyr7CqFaBgq6wnAd0uXqRpquMHskcdqzRjbx/8=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWQYZH/WfzFpa9MEvUlP7tVn9EhNUlonJNJ1zKLw6Ryd9 6XKK/XcO0pZGMS4GGTFFFkc2k3C5ZbzVGw2ytSAmcPKBDKEgYtTACZSYM/I0KFzVijwjK2Id9qP 72vmCyzW9DpXbTZ7moT+/5211kvaqhkZXke2bz4s8aXtjLraYYtWb0mJxU83lNharr/SJyi2NEO eAwA=
+X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
+Content-Transfer-Encoding: 8bit
 
-On Tue, May 20, 2025 at 06:41:05PM +0800, Aaron Lu wrote:
->  static int tg_throttle_down(struct task_group *tg, void *data)
->  {
->  	struct rq *rq = data;
->  	struct cfs_rq *cfs_rq = tg->cfs_rq[cpu_of(rq)];
->  
-> +	cfs_rq->throttle_count++;
-> +	if (cfs_rq->throttle_count > 1)
-> +		return 0;
+Hey Linus,
 
-	if (cfs_rq->throttle_count++)
-		return 0;
+/* Summary */
 
-vs
-	
-	if (--cfs_rq->throttle_count)
-		return;
+This contains cleanups for the lookup_one*() family of helpers.
 
+We expose a set of functions with names containing "lookup_one_len" and
+others without the "_len".  This difference has nothing to do with
+"len". It's rater a historical accident that can be confusing.
+
+The functions without "_len" take a "mnt_idmap" pointer. This is found
+in the "vfsmount" and that is an important question when choosing which
+to use: do you have a vfsmount, or are you "inside" the filesystem. A
+related question is "is permission checking relevant here?".
+
+nfsd and cachefiles *do* have a vfsmount but *don't* use the non-_len
+functions. They pass nop_mnt_idmap and refuse to work on filesystems
+which have any other idmap.
+
+This work changes nfsd and cachefile to use the lookup_one family of
+functions and to explictily pass &nop_mnt_idmap which is consistent with
+all other vfs interfaces used where &nop_mnt_idmap is explicitly passed.
+
+The remaining uses of the "_one" functions do not require permission
+checks so these are renamed to be "_noperm" and the permission checking
+is removed.
+
+This series also changes these lookup function to take a qstr instead of
+separate name and len. In many cases this simplifies the call.
+
+/* Testing */
+
+gcc (Debian 14.2.0-19) 14.2.0
+Debian clang version 19.1.7 (3)
+
+No build failures or warnings were observed.
+
+/* Conflicts */
+
+Merge conflicts with mainline
+=============================
+
+No known conflicts.
+
+Merge conflicts with other trees
+================================
+
+No known conflicts.
+
+The following changes since commit 0af2f6be1b4281385b618cb86ad946eded089ac8:
+
+  Linux 6.15-rc1 (2025-04-06 13:11:33 -0700)
+
+are available in the Git repository at:
+
+  git@gitolite.kernel.org:pub/scm/linux/kernel/git/vfs/vfs tags/vfs-6.16-rc1.async.dir
+
+for you to fetch changes up to 4e5c53e03806359e68dde5e951e50cd1f4908405:
+
+  Merge patch series "VFS: improve interface for lookup_one functions" (2025-04-08 11:24:42 +0200)
+
+Please consider pulling these changes from the signed vfs-6.16-rc1.async.dir tag.
+
+Thanks!
+Christian
+
+----------------------------------------------------------------
+vfs-6.16-rc1.async.dir
+
+----------------------------------------------------------------
+Christian Brauner (1):
+      Merge patch series "VFS: improve interface for lookup_one functions"
+
+NeilBrown (6):
+      VFS: improve interface for lookup_one functions
+      nfsd: Use lookup_one() rather than lookup_one_len()
+      cachefiles: Use lookup_one() rather than lookup_one_len()
+      VFS: rename lookup_one_len family to lookup_noperm and remove permission check
+      Use try_lookup_noperm() instead of d_hash_and_lookup() outside of VFS
+      VFS: change lookup_one_common and lookup_noperm_common to take a qstr
+
+ Documentation/filesystems/porting.rst |  40 +++++++++
+ arch/s390/hypfs/inode.c               |   2 +-
+ drivers/android/binderfs.c            |   4 +-
+ drivers/infiniband/hw/qib/qib_fs.c    |   4 +-
+ fs/afs/dir.c                          |   2 +-
+ fs/afs/dir_silly.c                    |   6 +-
+ fs/autofs/dev-ioctl.c                 |   3 +-
+ fs/binfmt_misc.c                      |   2 +-
+ fs/btrfs/ioctl.c                      |   9 +-
+ fs/cachefiles/internal.h              |   1 -
+ fs/cachefiles/key.c                   |   1 -
+ fs/cachefiles/namei.c                 |  14 +--
+ fs/dcache.c                           |   1 -
+ fs/debugfs/inode.c                    |   6 +-
+ fs/ecryptfs/inode.c                   |  16 ++--
+ fs/efivarfs/super.c                   |  15 ++--
+ fs/exportfs/expfs.c                   |   5 +-
+ fs/internal.h                         |   1 +
+ fs/kernfs/mount.c                     |   2 +-
+ fs/namei.c                            | 156 +++++++++++++++++-----------------
+ fs/nfs/unlink.c                       |  11 ++-
+ fs/nfsd/nfs3proc.c                    |   4 +-
+ fs/nfsd/nfs3xdr.c                     |   4 +-
+ fs/nfsd/nfs4proc.c                    |   4 +-
+ fs/nfsd/nfs4recover.c                 |  13 +--
+ fs/nfsd/nfs4xdr.c                     |   4 +-
+ fs/nfsd/nfsproc.c                     |   5 +-
+ fs/nfsd/vfs.c                         |  17 ++--
+ fs/overlayfs/export.c                 |   6 +-
+ fs/overlayfs/namei.c                  |  14 +--
+ fs/overlayfs/overlayfs.h              |   2 +-
+ fs/overlayfs/readdir.c                |   9 +-
+ fs/proc/base.c                        |   2 +-
+ fs/quota/dquot.c                      |   2 +-
+ fs/smb/client/cached_dir.c            |   5 +-
+ fs/smb/client/cifsfs.c                |   3 +-
+ fs/smb/client/readdir.c               |   3 +-
+ fs/smb/server/smb2pdu.c               |   7 +-
+ fs/tracefs/inode.c                    |   2 +-
+ fs/xfs/scrub/orphanage.c              |   7 +-
+ include/linux/dcache.h                |   4 +-
+ include/linux/namei.h                 |  17 ++--
+ ipc/mqueue.c                          |   5 +-
+ kernel/bpf/inode.c                    |   2 +-
+ net/sunrpc/rpc_pipe.c                 |  12 +--
+ security/apparmor/apparmorfs.c        |   4 +-
+ security/inode.c                      |   2 +-
+ security/selinux/selinuxfs.c          |   4 +-
+ 48 files changed, 254 insertions(+), 210 deletions(-)
