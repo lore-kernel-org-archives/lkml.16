@@ -1,160 +1,175 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B7D823814A
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 12:23:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE0CE224243
+	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 12:24:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748002989; cv=none; b=hvP+mDM+h7A/t8wxsr5774DYkOk8WCrbTdHiZTfZnv/g/IMsMkAN7Ew8ffkrPH+hIMkg2leaXEBQ/bElfVPRplxjnEY5YlVD5wIwHDGhZmRoN9sejfjfbdU0ldfVPil7lWU5eFFecvFLNNkVthMcornz2ieCzIvAf5ZFww5HpO0=
+	t=1748003058; cv=none; b=Wgr6zXleGHULx+laZSxVyD5leC0lZ/aSG2m+6e6gK+rPhn9jwjwAmgk2g+ICqin2s9HBPK86fCdIH0S2kwCYVeIBqVFM8cxN8Wugm15qAsZ2IWGmENfj1ErjphiC4SWOX3uk3PonMq8BSLjBr7eucbFShK4SdZhR9ldqIjGmeek=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748002989; c=relaxed/simple;
-	bh=sjsD+QbK9mnb6AiEpXSNG/jWV1+33z4lHQ8TlXIeQB4=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=rlsKtuzF5uoYKHuIvH5JTTLg7/y702tLqgmAhe3BNt/A0Em5XzrTAa1UmrsLbcLsh/+3rWrxuaGzxAvfTsd7zWl5ok0wt4bkNvb3ginbNduS1yICjT0v2UEZhYHfpYJz+18iLb4A7z42266jhbhFeYLBqi38oA06zx+6CwGdTlo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Fam9uvvz; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1748003058; c=relaxed/simple;
+	bh=CRQ1CMrTbmORbM8q+dECoDek/gZU71KuJkuyy/QwL7c=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=aNLZEYd8UarAHTWG1bdzOC5JhBDEtwGCNT9240hl9zGYRpgsowdNrzK7bbDoXpwVMhhm0i8J4/12dEdaIIyaP+3d94nO0uQpsz0inWdxEWkzlkk7ypk+iOKNf1hL30Pyl5fEadKB39crfdPIc4R3ovKSX285yJgMF/FkhNfeMlg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=adDDdjZf; arc=none smtp.client-ip=209.85.167.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Fam9uvvz"
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54NC7TI2024630;
-	Fri, 23 May 2025 12:22:58 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=Mv27Rn
-	kmPikA+dNN5lMrWWVazp6Le4oxa7GInuekgfs=; b=Fam9uvvztkQVl6hAO0xAbe
-	+lmcBR1E0+Vd3DxlCeuKdCmoTeOYPEpoktkQQheX7wUl751ii7wi9F8NNQp7fSyj
-	5F3CvcAXHNbgTteN27wPxZ/yHF5psAsvROFP9XCraHH4IiFKtm/Ky1XrIGXLDn9F
-	k6X//ngx5/p0qQ64SZBURMx7G9H3qwOIAxyUyhy4yTfR0fVuAkOlFIdcETrhs6tq
-	VrYMUp6pACr9KaIz2iMEwFzZj+OofsdxJ8qZZWArzMknw1jtwVTDjC/Eqj5PDs6T
-	tzx5S5HPJOy0Ig4mtVhCF6ijhuIGX1uGtTg/cSKFxKiLj+6Xkq2V1AaFYo9+fyXw
-	==
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46sxhwfm6v-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 23 May 2025 12:22:58 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 54NAwmfi020713;
-	Fri, 23 May 2025 12:22:57 GMT
-Received: from smtprelay07.wdc07v.mail.ibm.com ([172.16.1.74])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 46rwkq6fr3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 23 May 2025 12:22:57 +0000
-Received: from smtpav01.wdc07v.mail.ibm.com (smtpav01.wdc07v.mail.ibm.com [10.39.53.228])
-	by smtprelay07.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 54NCMtSt15401478
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 23 May 2025 12:22:55 GMT
-Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 883FC58059;
-	Fri, 23 May 2025 12:22:55 +0000 (GMT)
-Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 6864C5804B;
-	Fri, 23 May 2025 12:22:53 +0000 (GMT)
-Received: from [9.87.148.238] (unknown [9.87.148.238])
-	by smtpav01.wdc07v.mail.ibm.com (Postfix) with ESMTPS;
-	Fri, 23 May 2025 12:22:53 +0000 (GMT)
-Message-ID: <ad10fe2a-2065-48a4-a200-a0c91be2d439@linux.ibm.com>
-Date: Fri, 23 May 2025 14:22:52 +0200
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="adDDdjZf"
+Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-54acc0cd458so11872496e87.0
+        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 05:24:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1748003055; x=1748607855; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=fezVj3hu+n03EIwbXRE/aCJEPV25lQN8HH83CRPugxs=;
+        b=adDDdjZfyubirpITGT4eapqIbqhQ0iSI1/32WlFlzP5lovIEb9LxSX8xamZANCauP5
+         EzSPnYGsEpeP7lsGp8cw8AaC8cNjQ+SIxssLUJm0xlBgBgZY1l5tAKNoCzmeqvbb1K0S
+         6BNSNuxjg2U/EjR4o/EwDSuQYGgDSvXGr4Gns=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748003055; x=1748607855;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=fezVj3hu+n03EIwbXRE/aCJEPV25lQN8HH83CRPugxs=;
+        b=JO5Z7B10eC7VVc6kvxlFJD1IUu/rRGfRjAJQpQrIrEeFrYroMnA76DTH3HRVZtgQZO
+         r8hf9sWM81FkJBCHnmRhcRF9mpt6G/ZXHLQN2TgStvhQg0Rr5+SZcb90UB6mDE2yYh9E
+         kXjKSRRsi78bZPiVAggzLPjkqb9ZAOhXL4Uz2/vtJxsT/4tdonT6hJo6Zu/71Msg+9UR
+         WPIsr5bzTCpvGVy1tfM8Z/o/bp+dTXLYxSMfJl1sOHZ4qG/aOEHDcZYJ7SysRaE5pYb2
+         G7YeGipycDgLuqHawi7RXiCFlCNGO0+YyohDVejwe7vOPR5Pc7HDg5aujNDeR7AkXLzc
+         WjQg==
+X-Forwarded-Encrypted: i=1; AJvYcCXtRY5fggyrck5Y4lhsK0avap/DCSXeAIDj6x3+RrAtGnpTAoAX4hakOZZhA2MXrUutIC2tdVQlbOBOBnk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyS9gyZ9dwnAw/NhndsfO+qtmo21Yds9z+UZdDoM5sg36YHz8Od
+	uxoScrz5gshBtqJ+uv+7gb0FtQJgjstCHadEFoLsO6T9vGMO6PG92MTpi1G2qvDT5do+fVvGE1c
+	F4HZJDw==
+X-Gm-Gg: ASbGncs+1Rj6HbgGAOvV7DFRh+P06AlrLmU5jnfqKUZys2baBKq1wTDONgCMSpg7LKT
+	RXqFXXizTUygSb0801I0NRnsYvUKht7oFzrUq0Out0w1s1WFI4p4OgxHPcqJ2ASF61nz8/WaX8+
+	4cYABu+RQzfxH4yFTxfj97hY414N+dD93lcMCsqzHFLOEserG6SQi+rdDHN44olTt3sICQ1p+C4
+	naG+iXzkTrQia0LHW8yLKhEJfa3t6hg0rNHMXZazEqv6OjsYCM4lIqyji2Aw4Eis7jRvFQ9+CXQ
+	ZNcH99xp/tXUcY3rE+qVXFdUixBdWwrdwyNc/47l1Z15yj6pr/CBJhZmdx+Ej/tHOlnESsbA+Bf
+	zppUO63JI+WxaOMchLUuhAVN4D8fQ
+X-Google-Smtp-Source: AGHT+IFOdpVO4NcKBFR6GPLUfS4Jx5a8qXKrCTU5i9b1Td7IOideLJuNZt3aNnfmmKEsNCaDVPoxhA==
+X-Received: by 2002:a05:6512:6289:b0:54f:bd1b:a556 with SMTP id 2adb3069b0e04-550e71c96d3mr10802435e87.21.1748003054636;
+        Fri, 23 May 2025 05:24:14 -0700 (PDT)
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com. [209.85.208.174])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-551fd0768a5sm1892718e87.71.2025.05.23.05.24.13
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 23 May 2025 05:24:13 -0700 (PDT)
+Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-32909637624so71230531fa.1
+        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 05:24:13 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXnP00mZWA+WUeVEDfl4wG47NdJ7xhJT+2k8vdSkSg+4oebE9ezRHJxt9by+Kt+fntyCKNKwzutKxWMK/A=@vger.kernel.org
+X-Received: by 2002:a05:651c:20c1:b0:328:848:839f with SMTP id
+ 38308e7fff4ca-32808488552mr57254401fa.40.1748003053410; Fri, 23 May 2025
+ 05:24:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Zaslonko Mikhail <zaslonko@linux.ibm.com>
-Subject: Re: [PATCH 2/2] zram: support deflate-specific params
-To: Sergey Senozhatsky <senozhatsky@chromium.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-        Minchan Kim <minchan@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, Heiko Carstens <hca@linux.ibm.com>,
-        Ilya Leoshkevich <iii@linux.ibm.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-References: <20250514024825.1745489-1-senozhatsky@chromium.org>
- <20250514024825.1745489-3-senozhatsky@chromium.org>
- <bec7391c-e40d-4633-a2d0-881eb6d18f19@linux.ibm.com>
- <ystv6cvrdllh64eqkislh47a3bnx5d2lk42ox4eiuuubioin6u@gmt5pwbkwiz3>
-Content-Language: en-US
-In-Reply-To: <ystv6cvrdllh64eqkislh47a3bnx5d2lk42ox4eiuuubioin6u@gmt5pwbkwiz3>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIzMDEwNiBTYWx0ZWRfX7gZyliZNFwXF qW1DmWB/PGXZcq3A+N2ScMUfWZPTH730bCxyxEAjuT9dYlWG+8cYazRed6UZk9nOpH5rz/RW4OX 14vY7LbEKQSVpgBw7QS/WsMhnKdt45Z2EtHH9Sfq7/PUA8x3cHRuZJERAvYaBqvcmv6r5DXQlIl
- AyxHtfj7V+u/1K9nGkkJS1rnWx9vl57B2c0J4R3CSNigAQ8271kYPQYcg/5nWjis2e5+XI4F2BG O5+JywZkY8Aw4mTz3+0qdN5F14oIT62w/PQareKA2ODn6TJWpTlq16kaNJX3ESpX/rj2VEDHgWX Ip1FePTwyoV8Tt4f/fwDhdlkQjuy5HHPpKVDPSrMXhCYjsXkhLKCbqogDDjTKMylctXrr3SBNHw
- t+f3xENcRahBtNr2lt0CCtV8biDVYln4p39lhkl7R+Ty/gQ0wAKhXo3l1398EJajRLmkSm/c
-X-Proofpoint-GUID: pniA40CTIlxMhhHTF1GgFVpc--QfoHea
-X-Authority-Analysis: v=2.4 cv=O685vA9W c=1 sm=1 tr=0 ts=683068a2 cx=c_pps a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VnNF1IyMAAAA:8 a=anLjIrP37XIjfVduPqUA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-ORIG-GUID: pniA40CTIlxMhhHTF1GgFVpc--QfoHea
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-23_03,2025-05-22_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxlogscore=999
- spamscore=0 mlxscore=0 phishscore=0 bulkscore=0 priorityscore=1501
- lowpriorityscore=0 impostorscore=0 clxscore=1015 malwarescore=0
- suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
- definitions=main-2505230106
+References: <20250509-uvc-followup-v1-0-73bcde30d2b5@chromium.org>
+ <20250509-uvc-followup-v1-4-73bcde30d2b5@chromium.org> <20250523115759.GE12514@pendragon.ideasonboard.com>
+In-Reply-To: <20250523115759.GE12514@pendragon.ideasonboard.com>
+From: Ricardo Ribalda <ribalda@chromium.org>
+Date: Fri, 23 May 2025 14:24:00 +0200
+X-Gmail-Original-Message-ID: <CANiDSCsmhQFYwsPy8QNnrgrwKj3E9PHJbo+hKv_i-_70b-Wktw@mail.gmail.com>
+X-Gm-Features: AX0GCFt2VRsyLYkzyn2U4jT6Qm-K5sPzCzV9IpY2Lpvoh6aT3jqDH6TEI5q1KAg
+Message-ID: <CANiDSCsmhQFYwsPy8QNnrgrwKj3E9PHJbo+hKv_i-_70b-Wktw@mail.gmail.com>
+Subject: Re: [PATCH 4/4] media: uvcvideo: Populate all errors in uvc_probe()
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Hans de Goede <hdegoede@redhat.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, linux-media@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Hello,
+Hi Laurent
 
-On 15.05.2025 05:14, Sergey Senozhatsky wrote:
-> Cc-ing Herbert
-> 
-> On (25/05/14 12:58), Zaslonko Mikhail wrote:
->> Looks good to me.
->>
+On Fri, 23 May 2025 at 13:58, Laurent Pinchart
+<laurent.pinchart@ideasonboard.com> wrote:
+>
+> Hi Ricardo,
+>
+> On Fri, May 09, 2025 at 06:24:16PM +0000, Ricardo Ribalda wrote:
+> > Now we are replacing most of the error codes with -ENODEV.
+> > Instead, Populate the error code from the functions called by
+> > uvc_probe().
+> >
+> > Take this opportunity to replace a generic error code from
+> > uvc_scan_device() into something more meaningful.
+> >
+> > Suggested-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> > Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
+> > ---
+> >  drivers/media/usb/uvc/uvc_driver.c | 15 ++++-----------
+> >  1 file changed, 4 insertions(+), 11 deletions(-)
+> >
+> > diff --git a/drivers/media/usb/uvc/uvc_driver.c b/drivers/media/usb/uvc/uvc_driver.c
+> > index da24a655ab68cc0957762f2b67387677c22224d1..cdf4bbe582272277a6a95267e9752010adc51b6b 100644
+> > --- a/drivers/media/usb/uvc/uvc_driver.c
+> > +++ b/drivers/media/usb/uvc/uvc_driver.c
+> > @@ -1866,7 +1866,7 @@ static int uvc_scan_device(struct uvc_device *dev)
+> >
+> >       if (list_empty(&dev->chains)) {
+> >               dev_info(&dev->udev->dev, "No valid video chain found.\n");
+> > -             return -1;
+> > +             return -ENODEV;
+> >       }
+> >
+> >       /* Add GPIO entity to the first chain. */
+> > @@ -2239,7 +2239,6 @@ static int uvc_probe(struct usb_interface *intf,
+> >       /* Parse the Video Class control descriptor. */
+> >       ret = uvc_parse_control(dev);
+> >       if (ret < 0) {
+> > -             ret = -ENODEV;
+> >               uvc_dbg(dev, PROBE, "Unable to parse UVC descriptors\n");
+> >               goto error;
+> >       }
+> > @@ -2275,22 +2274,16 @@ static int uvc_probe(struct usb_interface *intf,
+> >               goto error;
+> >
+> >       /* Scan the device for video chains. */
+> > -     if (uvc_scan_device(dev) < 0) {
+> > -             ret = -ENODEV;
+> > +     if (uvc_scan_device(dev) < 0)
+>
+> That's not going to work. You probably meant
+>
+>         ret = uvc_scan_device(dev);
+>         if (ret < 0)
 
->> Also, here is another patch suggestion from my side on top of this one. 
->> Let me know what you think.
->>
->> ---8<---
->>
->> zram: Utilize s390 hardware deflate acceleration for zram
->>
->> Utilize s390 hardware deflate acceleration for zram deflate compression
->> by default when the facility is available.
->>
->> Signed-off-by: Mikhail Zaslonko <zaslonko@linux.ibm.com>
->>
->> diff --git a/drivers/block/zram/backend_deflate.c b/drivers/block/zram/backend_deflate.c
->> index b75016e0e654..5bfc57522e3a 100644
->> --- a/drivers/block/zram/backend_deflate.c
->> +++ b/drivers/block/zram/backend_deflate.c
->> @@ -22,10 +22,23 @@ static void deflate_release_params(struct zcomp_params *params)
->>
->>  static int deflate_setup_params(struct zcomp_params *params)
->>  {
->> -       if (params->level == ZCOMP_PARAM_NOT_SET)
->> -               params->level = Z_DEFAULT_COMPRESSION;
->> -       if (params->deflate.winbits == ZCOMP_PARAM_NOT_SET)
->> -               params->deflate.winbits = DEFLATE_DEF_WINBITS;
->> +       /*
->> +        * In case of s390 zlib hardware support available,
->> +        * use maximum window size and level one as default compression
->> +        * parameters in order to utilize hardware deflate acceleration.
->> +        */
->> +       if (params->level == ZCOMP_PARAM_NOT_SET) {
->> +               if (zlib_deflate_dfltcc_enabled())
->> +                       params->level = Z_BEST_SPEED;
->> +               else
->> +                       params->level = Z_DEFAULT_COMPRESSION;
->> +       }
->> +       if (params->deflate.winbits == ZCOMP_PARAM_NOT_SET) {
->> +               if (zlib_deflate_dfltcc_enabled())
->> +                       params->deflate.winbits = -MAX_WBITS;
->> +               else
->> +                       params->deflate.winbits = DEFLATE_DEF_WINBITS;
->> +       }
-> 
-> I'm not sure if we want this much of s390 specific code in the generic
-> zram/Crypto API code.  Both of these params can be configured by user-space
-> via the algorithm_params device attribute.
+Ups, seems like I sent a partial path :S
 
-I understand the concern. My intention was to use special defaults for s390
-when no algorithm_params configured by the user (which is the common case,
-I assume). Do you see other way of doing so without touching zram generic
-code?
+Sorry about that. Shall I resend 4/4 or you want to take it as well?
 
-Thanks,
-Mikhail
+>
+> Same elsewhere where applicable.
+>
+> >               goto error;
+> > -     }
+> >
+> >       /* Initialize controls. */
+> > -     if (uvc_ctrl_init_device(dev) < 0) {
+> > -             ret = -ENODEV;
+> > +     if (uvc_ctrl_init_device(dev) < 0)
+> >               goto error;
+> > -     }
+> >
+> >       /* Register video device nodes. */
+> > -     if (uvc_register_chains(dev) < 0) {
+> > -             ret = -ENODEV;
+> > +     if (uvc_register_chains(dev) < 0)
+> >               goto error;
+> > -     }
+> >
+> >  #ifdef CONFIG_MEDIA_CONTROLLER
+> >       /* Register the media device node */
+>
+> --
+> Regards,
+>
+> Laurent Pinchart
 
+
+
+-- 
+Ricardo Ribalda
