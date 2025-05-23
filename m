@@ -1,71 +1,59 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5BE629AB0E;
-	Fri, 23 May 2025 19:00:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3955729A9E1
+	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 19:01:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748026834; cv=none; b=nLX0t38TLq0TivFHYfSNlWKaHZh/XlM22wOyqmE5LjJqmpYIf5U5DHvhCaxhPoEYXl97FsOPBEBwRsr6QhcVxq4g52huEAmqfG1/AS66MjkI8y/V40AJE6qHwRIub9a/L/3VgHsxgi51fliWBVLbUmad87O8ieumvpzECPc1mas=
+	t=1748026897; cv=none; b=AEKS2oDwwqIqgBiIYLYdF3QuHcufJLAGFSL9iq3Z7X1oS+kycEbcBjTfbg+Mx4RQcMOapHao6ykmCqneaeE42G4gmwej+j8OnUg/EX0sClfWN17mPxyhL3kW6cxSvH2y6Up0hKWIC/wmh2PjGF7ALCxM298uan6Iay7dG4sxha0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748026834; c=relaxed/simple;
-	bh=aPl01hl0HF/y+fjBiqpumEymlqEj6USzOz+MtuzBp60=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AVqcTBQ2bsh8cLHMLhfOhxlT7i4NkEBO/AcW1rYDRDNATbmeeYgdUiICAptm1Jycvjc5U31ZeQSEohbj/4uZBfyzwusLxNbeKqs8Btt/Db8vV5HCIhvF8Y1LDatRXYGUiyGQrQuX9U8CPlcSxEMR3UnQZK+pCWUbfGy5+HHmnlE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=C958QBAN; arc=none smtp.client-ip=192.198.163.12
+	s=arc-20240116; t=1748026897; c=relaxed/simple;
+	bh=v6wuUWJ+W348xqte7tCyyZAdylCLnHPtZVPokniv7RA=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=Vph3qzgZh3eBCY27oIi7SKXWz16Uk7vf8rp/maolLfat364Y4hIBrjjIaZJEl7tgjc3w4XEaA3vhbkBABmnIakbJMVk+cvXsyAbN+QveHLbh9aZV23QdltTnp+rnK6smYJk4UvLARxiXDGXPrI2OGOktmlfLCec0e1atBsDf1hg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QcRX6MsW; arc=none smtp.client-ip=198.175.65.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="C958QBAN"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QcRX6MsW"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748026833; x=1779562833;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=aPl01hl0HF/y+fjBiqpumEymlqEj6USzOz+MtuzBp60=;
-  b=C958QBAN42XDWls0C5GdhkQUUWBs1liEMEqankVbyiEuT956TfLBn6Sp
-   xgDQYvhDyF8EB1G05aa7QrAafBu6au6xaNLolNUBHcg5nX38xPi6DKUXT
-   KcKFqABR0vyOPsLxgimdIN86SkCApGL7HvqD6VS2yrBcpodXOI9k7QnNQ
-   Kk4C7N76YHEUV7eRe6iTt96sUluOn8OhtuP3dDPwNWsmyY5E2g8MjJr/U
-   hBeSFAjtQj6jkSSWg0Ce8oFu3Z1fIx8DFZjAnx+ihw94WMIJbejI7LmYA
-   R5O1tyU53OTvCjdwr/FExGsHk5uHTyV/uoIqI2B7wAjNyVxZWT/5/ELb6
+  t=1748026897; x=1779562897;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=v6wuUWJ+W348xqte7tCyyZAdylCLnHPtZVPokniv7RA=;
+  b=QcRX6MsWnyun2oacE4wvi5VkmatrNO1osVe4WWI7Vx53iv7xGRB8+R3U
+   G7KMZFGGrz/DU/O5J+8GNSFAAkfScsgYQhc5WXiEvAwzKptZqPUlVjUlB
+   y2rx7L4d6TZivxR2jltu2LYaRuVkWs9xxm7cOQPcW/Tko9p3/wFDuTiQk
+   CQUSBW9Q/bXwMcLnos0V0sQGD3M3Atyt8/n/UVw1QhJVsAyqBMgT4cIeA
+   37yGJam5EnGcRNRpsgJZaA6SIMhBE9EJFGOLX8DL3whGL35TKYJ8Wl7Iy
+   YIhl6Sh+PojsF51UpuPMF31H0uBicHehvBhGBfywAW28heVFZepBcGZHG
    g==;
-X-CSE-ConnectionGUID: f3nMVAuOSwC3jzkV1Zsegw==
-X-CSE-MsgGUID: Z5xHxySVRkWSdPveEdVZIA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11441"; a="53886858"
+X-CSE-ConnectionGUID: igcw06CzQ5CZiSeK8Luj8A==
+X-CSE-MsgGUID: t3tX0TzeQhGqG76hvg62Fg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11441"; a="50146261"
 X-IronPort-AV: E=Sophos;i="6.15,309,1739865600"; 
-   d="scan'208";a="53886858"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2025 12:00:27 -0700
-X-CSE-ConnectionGUID: IqaW5hpeRy+7lHFzMImncQ==
-X-CSE-MsgGUID: Bo8TqtGAQ/qeIkD7+pv8eg==
+   d="scan'208";a="50146261"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2025 12:01:35 -0700
+X-CSE-ConnectionGUID: vOBYePCRQEG5+oZNnfEVfw==
+X-CSE-MsgGUID: TMzonataQoiRMPut+0zC3g==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,309,1739865600"; 
-   d="scan'208";a="141816157"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by orviesa007.jf.intel.com with ESMTP; 23 May 2025 12:00:23 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
+   d="scan'208";a="164493992"
+Received: from igk-lkp-server01.igk.intel.com (HELO a1decbf9c5f9) ([10.211.3.150])
+  by fmviesa002.fm.intel.com with ESMTP; 23 May 2025 12:01:33 -0700
+Received: from kbuild by a1decbf9c5f9 with local (Exim 4.96)
 	(envelope-from <lkp@intel.com>)
-	id 1uIXcy-000QfE-24;
-	Fri, 23 May 2025 19:00:20 +0000
-Date: Sat, 24 May 2025 02:59:48 +0800
+	id 1uIXe7-0001Yk-1o;
+	Fri, 23 May 2025 19:01:31 +0000
+Date: Sat, 24 May 2025 03:00:57 +0800
 From: kernel test robot <lkp@intel.com>
-To: Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Alex Elder <elder@kernel.org>
-Cc: oe-kbuild-all@lists.linux.dev, netdev@vger.kernel.org,
-	Marijn Suijten <marijn.suijten@somainline.org>,
-	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Subject: Re: [PATCH 3/3] net: ipa: Grab IMEM slice base/size from DTS
-Message-ID: <202505240200.w0D4DdAY-lkp@intel.com>
-References: <20250523-topic-ipa_imem-v1-3-b5d536291c7f@oss.qualcomm.com>
+To: Masahiro Yamada <masahiroy@kernel.org>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: /usr/bin/ld: warning: .tmp_vmlinux1 has a LOAD segment with RWX
+ permissions
+Message-ID: <202505240339.KSGJmZ2d-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,119 +62,25 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250523-topic-ipa_imem-v1-3-b5d536291c7f@oss.qualcomm.com>
 
-Hi Konrad,
-
-kernel test robot noticed the following build warnings:
-
-[auto build test WARNING on 460178e842c7a1e48a06df684c66eb5fd630bcf7]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Konrad-Dybcio/dt-bindings-sram-qcom-imem-Allow-modem-tables/20250523-071359
-base:   460178e842c7a1e48a06df684c66eb5fd630bcf7
-patch link:    https://lore.kernel.org/r/20250523-topic-ipa_imem-v1-3-b5d536291c7f%40oss.qualcomm.com
-patch subject: [PATCH 3/3] net: ipa: Grab IMEM slice base/size from DTS
-config: xtensa-randconfig-002-20250524 (https://download.01.org/0day-ci/archive/20250524/202505240200.w0D4DdAY-lkp@intel.com/config)
-compiler: xtensa-linux-gcc (GCC) 8.5.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250524/202505240200.w0D4DdAY-lkp@intel.com/reproduce)
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   7586ac7c340c3672f116052c1d150f134810965b
+commit: b1a9a5e04767e2a78783e19c9e55c25812ceccc3 kbuild: merge temporary vmlinux for BTF and kallsyms
+date:   10 months ago
+config: um-randconfig-2006-20250515 (https://download.01.org/0day-ci/archive/20250524/202505240339.KSGJmZ2d-lkp@intel.com/config)
+compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project f819f46284f2a79790038e1f6649172789734ae8)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250524/202505240339.KSGJmZ2d-lkp@intel.com/reproduce)
 
 If you fix the issue in a separate patch/commit (i.e. not just a new version of
 the same patch/commit), kindly add following tags
 | Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505240200.w0D4DdAY-lkp@intel.com/
+| Closes: https://lore.kernel.org/oe-kbuild-all/202505240339.KSGJmZ2d-lkp@intel.com/
 
 All warnings (new ones prefixed by >>):
 
-   drivers/net/ipa/ipa_mem.c: In function 'ipa_mem_init':
->> drivers/net/ipa/ipa_mem.c:623:17: warning: variable 'imem_size' set but not used [-Wunused-but-set-variable]
-     u32 imem_base, imem_size;
-                    ^~~~~~~~~
->> drivers/net/ipa/ipa_mem.c:623:6: warning: variable 'imem_base' set but not used [-Wunused-but-set-variable]
-     u32 imem_base, imem_size;
-         ^~~~~~~~~
-
-
-vim +/imem_size +623 drivers/net/ipa/ipa_mem.c
-
-   616	
-   617	/* Perform memory region-related initialization */
-   618	int ipa_mem_init(struct ipa *ipa, struct platform_device *pdev,
-   619			 const struct ipa_mem_data *mem_data)
-   620	{
-   621		struct device_node *ipa_slice_np;
-   622		struct device *dev = &pdev->dev;
- > 623		u32 imem_base, imem_size;
-   624		struct resource *res;
-   625		int ret;
-   626	
-   627		/* Make sure the set of defined memory regions is valid */
-   628		if (!ipa_mem_valid(ipa, mem_data))
-   629			return -EINVAL;
-   630	
-   631		ipa->mem_count = mem_data->local_count;
-   632		ipa->mem = mem_data->local;
-   633	
-   634		/* Check the route and filter table memory regions */
-   635		if (!ipa_table_mem_valid(ipa, false))
-   636			return -EINVAL;
-   637		if (!ipa_table_mem_valid(ipa, true))
-   638			return -EINVAL;
-   639	
-   640		ret = dma_set_mask_and_coherent(dev, DMA_BIT_MASK(64));
-   641		if (ret) {
-   642			dev_err(dev, "error %d setting DMA mask\n", ret);
-   643			return ret;
-   644		}
-   645	
-   646		res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "ipa-shared");
-   647		if (!res) {
-   648			dev_err(dev,
-   649				"DT error getting \"ipa-shared\" memory property\n");
-   650			return -ENODEV;
-   651		}
-   652	
-   653		ipa->mem_virt = memremap(res->start, resource_size(res), MEMREMAP_WC);
-   654		if (!ipa->mem_virt) {
-   655			dev_err(dev, "unable to remap \"ipa-shared\" memory\n");
-   656			return -ENOMEM;
-   657		}
-   658	
-   659		ipa->mem_addr = res->start;
-   660		ipa->mem_size = resource_size(res);
-   661	
-   662		ipa_slice_np = of_parse_phandle(dev->of_node, "sram", 0);
-   663		if (ipa_slice_np) {
-   664			ret = of_address_to_resource(ipa_slice_np, 0, res);
-   665			of_node_put(ipa_slice_np);
-   666			if (ret)
-   667				return ret;
-   668	
-   669			imem_base = res->start;
-   670			imem_size = resource_size(res);
-   671		} else {
-   672			/* Backwards compatibility for DTs lacking an explicit reference */
-   673			imem_base = mem_data->imem_addr;
-   674			imem_size = mem_data->imem_size;
-   675		}
-   676	
-   677		ret = ipa_imem_init(ipa, mem_data->imem_addr, mem_data->imem_size);
-   678		if (ret)
-   679			goto err_unmap;
-   680	
-   681		ret = ipa_smem_init(ipa, mem_data->smem_size);
-   682		if (ret)
-   683			goto err_imem_exit;
-   684	
-   685		return 0;
-   686	
-   687	err_imem_exit:
-   688		ipa_imem_exit(ipa);
-   689	err_unmap:
-   690		memunmap(ipa->mem_virt);
-   691	
-   692		return ret;
-   693	}
-   694	
+>> /usr/bin/ld: warning: .tmp_vmlinux1 has a LOAD segment with RWX permissions
+>> /usr/bin/ld: warning: .tmp_vmlinux2 has a LOAD segment with RWX permissions
+   /usr/bin/ld: warning: vmlinux has a LOAD segment with RWX permissions
 
 -- 
 0-DAY CI Kernel Test Service
