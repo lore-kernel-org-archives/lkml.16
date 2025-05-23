@@ -1,157 +1,144 @@
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E0772951BC
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 14:28:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE9F32DCC0C;
+	Fri, 23 May 2025 14:31:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748010526; cv=none; b=Wv4NUGwY4twqEX/EJFtdMfQjWkDGKwtTx0zXKtewvP6pWdao3oiZANvVLdtGm3x04sz8cYvfkRZVFZKiFU2ak4nBiI/luWDEWLkbkhWu6dy2XDNoM8NlVfPnSqPYPxX6q0g+omkoic7F81ZXOewMnWhIilE+WkJ/gKhTplWd1JY=
+	t=1748010698; cv=none; b=Y5BJ1cGDgpMsCb02K0TNtnG3UR8y+Jk7G3l/NQvIJKso21X/9ELu1IEgmYRer/+OBRzOx62cZNm4cLIZOXetiF1blkri8+JT3R6FPcQVWKlkR3qzSoQKlTGqeVQjsfISjvsayfRGJG594zmKBYS+Oelw1VEIG/uBmpDMyuYszMU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748010526; c=relaxed/simple;
-	bh=a2TDZ2q/7uNti2V57OlYau145NB4eR13OsEIBn0U4gA=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=kc9ZQVcN4gDUehbGHWe1PFVo+vdxj2XnSCKGqtn9OZmCaKeVftGcd/kQVO/KyJgrNYQG99G3zNVU/MeDFgWjrGn3wTCzSQh2iWFa8X6VfrNuk3wEApEzskTDbQiJNrAKfdS2cz6k/lZ6vXCF7J33YVhvZxTRQPs7f7xrqBtlhB4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=B2SRNaCS; arc=none smtp.client-ip=209.85.167.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1748010698; c=relaxed/simple;
+	bh=F8AHXtmwckzlSUmmoc0BGi2VV71no0d0RwZD7r2sahA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=o194Wc0rvbpzd1CwWnUzI5NhYKaFNzxbwzOC9iqFw/wxRspij30SFBTFi0d2fdO8+ffSt5uHCSoyMpB7kvBtCoM5UpaUMDYyQrMZlZ1Sog5/kWzmOOjp0TNnmMZx8/Lqk+XvjJgrhzUkc52V9U5/78TrIHlyysEwAomTShsr6Bk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=4ihlR58X; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=lcyVzjQk; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="B2SRNaCS"
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-551fe46934eso1117999e87.1
-        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 07:28:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1748010522; x=1748615322; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Iw0TCyt07qCHVss0tlxpT1VU8Sfr9QBlaolFbQV/mVU=;
-        b=B2SRNaCSKyyKEZJ1UPGQXvduY2oxpVWCQr4r9vP3xmlXZmfohiKV41WSjQ/lf49TVH
-         URyKbYQR/3Mb1s0gkukNsf5H5nrV9XLGxSBWKnKmRTp/sGnrI7mPtrEB6SYFL8i9DVoM
-         D/2drHtyEUwq2HmBbtzhnW/8moIlPB2bsPdlk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748010522; x=1748615322;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Iw0TCyt07qCHVss0tlxpT1VU8Sfr9QBlaolFbQV/mVU=;
-        b=P1aoRlst0p7uDeQraiV8K512GBHlTlC67CIN7HQjQwO9LnuSkfaJ90WAA5WK+UIeu4
-         JlxEy4bFw33S6f7uR0pwynIgD3uXe1fSJCwec+VOLG5xwHiTqGNEbp6/X5Xz4rLaKsLO
-         +unhmXVvGT3QyJEGXZn5vXeFmcSrbga663R9EQKAIEhEuxEfeNWuCPAKW3lRN0pikDJS
-         n6GnksOzfe8hlRAgCSpIg7yNnV7MkwqrP8wZm6IDyOM1/Z3QNv8DND3J3qX3b3gpVI6d
-         NyZfQ8BYHjXJGEqZpvzwV4YA4Lp0Ahy7uFb9rY5uif+GGuRm3YdhdNuR17ryunE03Xgk
-         yFvw==
-X-Forwarded-Encrypted: i=1; AJvYcCUABbmyCafEAcbIN9jgDo0HUu1xWk1memKiiiH2eUL3rYlSHC9ZxCQCi8skQzJbj8DkNwy6TiDxtRrW+nE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzcnLEbxviwTlZpKdR937b+cAUUSnmPC2wx0oz7ucmMHZ/BDzRx
-	bbcR2RNLEchu9bDurU50yIQyZd51hwcHO51+4ivSDN2a1pMXL5MsIdL6Ed4QQz78Gw==
-X-Gm-Gg: ASbGncu5uUYR6RFG/szwZsEc2UbaaBgxxjD8hI/ileOpvypGiYVm0VEkJbAHz9HtOTy
-	Ha0zwp9SnL7M24L+tPutO5O9FomkTjCclACrnX61dERY3nR5XFX3d0770b0RrhtnRosFVXKy5RJ
-	pyVf7UVmqND2l3GhuVcYBgMZHXS6DoshBzPQvZaempThGg2ZePJgdtpLlycOL97NvG2o9NPZuNR
-	BC9kxDtT69445QjykUtFd/GeOBy12INFS3kZBP2H5y0OKpjSNFA4OrHE8CnnS6plwiMwHLgcKC1
-	uUcmpG6GdkNVJWiYAnt9aqSvKpUY8OUE509WT9Uv9XexK/9Y7B1L6DakUsy+4Vv1C7wIZETrFWm
-	B384xIOVDCR3TFkzd7Hi3w9MERg==
-X-Google-Smtp-Source: AGHT+IEBZg7xrIchOcxBtUlwk2C3pGpQWWzzOxVC3QlFAe5yveXxpUNg2ZCRPGvVTd0hCvw0OsJVIQ==
-X-Received: by 2002:a05:6512:3054:b0:549:88b8:ccad with SMTP id 2adb3069b0e04-552156bbd11mr1215091e87.20.1748010522389;
-        Fri, 23 May 2025 07:28:42 -0700 (PDT)
-Received: from ribalda.c.googlers.com (90.52.88.34.bc.googleusercontent.com. [34.88.52.90])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-551fc7d8a4bsm1952590e87.115.2025.05.23.07.28.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 May 2025 07:28:42 -0700 (PDT)
-From: Ricardo Ribalda <ribalda@chromium.org>
-Date: Fri, 23 May 2025 14:28:41 +0000
-Subject: [PATCH v2] media: uvcvideo: Populate all errors in uvc_probe()
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="4ihlR58X";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="lcyVzjQk"
+Date: Fri, 23 May 2025 16:31:32 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1748010694;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=fEZ6N6/GF0ZchnaYLlsA8GRq22FznhGXk6veRassrhY=;
+	b=4ihlR58X7u+FIL4yEadB/WP2vETM0c9pnq1Hl1akE8KY7Y/PXnw3AXEASUOQbcnaEupLN6
+	IwkZLCQtdyJHa4q/r4qW6t2zHvn3LvF000Nuv0KbmrbhKN640VHTZ3+B9qVojyz7jbQbIl
+	4guWTmqiT/t/gF4cxUozTGgPS54KHybNGABCzQTIEtbCF278035U3afRKFxYXClfwncV2v
+	eTCDB/UipuUgVhrQkuYnoDBtPmMhEHSw7tMuAuD3852Owmi7xlByE7W2oVZ3PNxMOK+x10
+	BRgVN+ahvnJmYy4SZnTg3UMsRjy1kqZAIfOeV+yjAdZjsPqHgBEcMVI6uavahg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1748010694;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=fEZ6N6/GF0ZchnaYLlsA8GRq22FznhGXk6veRassrhY=;
+	b=lcyVzjQklrUcJISkGY4WIZyKTwWqR2KcBF0PqUERD7JZg0Lc/A/0e54TsHZahAoya9o/nI
+	IB/9TxBVhUXaV8AQ==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: Nam Cao <namcao@linutronix.de>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+	John Ogness <john.ogness@linutronix.de>,
+	Clark Williams <clrkwllms@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>, linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev,
+	linux-rt-users@vger.kernel.org, Joe Damato <jdamato@fastly.com>,
+	Martin Karsten <mkarsten@uwaterloo.ca>,
+	Jens Axboe <axboe@kernel.dk>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Valentin Schneider <vschneid@redhat.com>
+Subject: Re: [PATCH v2] eventpoll: Fix priority inversion problem
+Message-ID: <20250523143132.i_YkS3R3@linutronix.de>
+References: <20250523061104.3490066-1-namcao@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250523-uvc-followup-v2-1-487541656e83@chromium.org>
-X-B4-Tracking: v=1; b=H4sIABiGMGgC/3XMSw7CIBSF4a00dyyGQrCpI/dhOrA8yk3a0lwEN
- Q17Fzt3+J/kfDtES2gjXJsdyGaMGNYa4tSA9o91sgxNbRBcKK54z1LWzIV5Dq+0MdN3zqmLNK5
- XUC8bWYfvg7sPtT3GZ6DPoef2t/6Bcss46+SojZXciFHdtKewYFrOgSYYSilfYHDKkKsAAAA=
-X-Change-ID: 20250509-uvc-followup-d97ff563df95
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
- Hans de Goede <hdegoede@redhat.com>, 
- Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Ricardo Ribalda <ribalda@chromium.org>
-X-Mailer: b4 0.14.2
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250523061104.3490066-1-namcao@linutronix.de>
 
-Now we are replacing most of the error codes with -ENODEV.
-Instead, Populate the error code from the functions called by
-uvc_probe().
+On 2025-05-23 08:11:04 [+0200], Nam Cao wrote:
+> @@ -867,10 +837,25 @@ static bool __ep_remove(struct eventpoll *ep, struct epitem *epi, bool force)
+>  
+>  	rb_erase_cached(&epi->rbn, &ep->rbr);
+>  
+> -	write_lock_irq(&ep->lock);
+> -	if (ep_is_linked(epi))
+> -		list_del_init(&epi->rdllink);
+> -	write_unlock_irq(&ep->lock);
+> +	/*
+> +	 * ep->mtx is held, which means no waiter is touching the ready list. This item is also no
+> +	 * longer being added. Therefore, the ready flag can only mean one thing: this item is on
+> +	 * the ready list.
+> +	 */
+> +	if (smp_load_acquire(&epi->ready)) {
+> +		put_back_last = NULL;
+> +		while (true) {
+> +			struct llist_node *n = llist_del_first(&ep->rdllist);
+> +
+> +			if (&epi->rdllink == n || WARN_ON(!n))
+> +				break;
+> +			if (!put_back_last)
+> +				put_back_last = n;
+> +			llist_add(n, &put_back);
 
-Take this opportunity to replace a generic error code from
-uvc_scan_device() into something more meaningful.
+put_back is local, you cam use __llist_add()
 
-Suggested-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
----
-CodeStyle and refactor patches after the last uvc Pull Request.
----
-Changes in v2:
-- Patches 1-3 will be handled by Laurent: https://lore.kernel.org/linux-media/20250523125840.GG12514@pendragon.ideasonboard.com/
-- Properly propagate ret value. Sorry about that :)
-- Link to v1: https://lore.kernel.org/r/20250509-uvc-followup-v1-0-73bcde30d2b5@chromium.org
----
- drivers/media/usb/uvc/uvc_driver.c | 18 +++++++-----------
- 1 file changed, 7 insertions(+), 11 deletions(-)
+You could llist_del_all() and then you could use the non-atomic
+operations for the replacement. But you need to walk the whole list to
+know the first and last for the batch.
+the "wait" perf bench throws in "16320" items. Avoiding
+llist_del_first() makes hardly a different to, worse, to slight
+improvement. Since it is all random it depends when the atomic operation
+outweighs  
 
-diff --git a/drivers/media/usb/uvc/uvc_driver.c b/drivers/media/usb/uvc/uvc_driver.c
-index da24a655ab68cc0957762f2b67387677c22224d1..04552da114354128b0cc8fb25e1cc645498ac323 100644
---- a/drivers/media/usb/uvc/uvc_driver.c
-+++ b/drivers/media/usb/uvc/uvc_driver.c
-@@ -1866,7 +1866,7 @@ static int uvc_scan_device(struct uvc_device *dev)
- 
- 	if (list_empty(&dev->chains)) {
- 		dev_info(&dev->udev->dev, "No valid video chain found.\n");
--		return -1;
-+		return -ENODEV;
- 	}
- 
- 	/* Add GPIO entity to the first chain. */
-@@ -2239,7 +2239,6 @@ static int uvc_probe(struct usb_interface *intf,
- 	/* Parse the Video Class control descriptor. */
- 	ret = uvc_parse_control(dev);
- 	if (ret < 0) {
--		ret = -ENODEV;
- 		uvc_dbg(dev, PROBE, "Unable to parse UVC descriptors\n");
- 		goto error;
- 	}
-@@ -2275,22 +2274,19 @@ static int uvc_probe(struct usb_interface *intf,
- 		goto error;
- 
- 	/* Scan the device for video chains. */
--	if (uvc_scan_device(dev) < 0) {
--		ret = -ENODEV;
-+	ret = uvc_scan_device(dev);
-+	if (ret < 0)
- 		goto error;
--	}
- 
- 	/* Initialize controls. */
--	if (uvc_ctrl_init_device(dev) < 0) {
--		ret = -ENODEV;
-+	ret = uvc_ctrl_init_device(dev);
-+	if (ret < 0)
- 		goto error;
--	}
- 
- 	/* Register video device nodes. */
--	if (uvc_register_chains(dev) < 0) {
--		ret = -ENODEV;
-+	ret = uvc_register_chains(dev);
-+	if (ret < 0)
- 		goto error;
--	}
- 
- #ifdef CONFIG_MEDIA_CONTROLLER
- 	/* Register the media device node */
+The ctl case gets worse with this approach. On average it has to iterate
+over 45% items to find the right item and it adds less than 200 items.
+So the atomic does not outweigh the while iteration.
 
----
-base-commit: 5e1ff2314797bf53636468a97719a8222deca9ae
-change-id: 20250509-uvc-followup-d97ff563df95
+> +		}
+> +		if (put_back_last)
+> +			llist_add_batch(put_back.first, put_back_last, &ep->rdllist);
+> +	}
+>  
+>  	wakeup_source_unregister(ep_wakeup_source(epi));
+>  	/*
+> @@ -1867,19 +1767,20 @@ static int ep_send_events(struct eventpoll *ep,
+>  	init_poll_funcptr(&pt, NULL);
+>  
+>  	mutex_lock(&ep->mtx);
+> -	ep_start_scan(ep, &txlist);
+>  
+> -	/*
+> -	 * We can loop without lock because we are passed a task private list.
+> -	 * Items cannot vanish during the loop we are holding ep->mtx.
+> -	 */
+> -	list_for_each_entry_safe(epi, tmp, &txlist, rdllink) {
+> +	while (res < maxevents) {
+>  		struct wakeup_source *ws;
+> +		struct llist_node *n;
+>  		__poll_t revents;
+>  
+> -		if (res >= maxevents)
+> +		n = llist_del_first(&ep->rdllist);
+> +		if (!n)
+>  			break;
+>  
+> +		epi = llist_entry(n, struct epitem, rdllink);
+> +		llist_add(n, &txlist);
 
-Best regards,
--- 
-Ricardo Ribalda <ribalda@chromium.org>
+txlist is local, you can use __list_add()
 
+> +		smp_store_release(&epi->ready, false);
+> +
+>  		/*
+>  		 * Activate ep->ws before deactivating epi->ws to prevent
+>  		 * triggering auto-suspend here (in case we reactive epi->ws
+
+Sebastian
