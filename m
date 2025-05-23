@@ -1,344 +1,151 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C97422338;
-	Fri, 23 May 2025 12:40:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B66992DF68;
+	Fri, 23 May 2025 12:40:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748004033; cv=none; b=T0PgERPdxM11GrQEkTBN/xe9dVyBMtF4/7gggPG3QLY1v/VIPx74PNy96G9cbCS/OuBx1/6Beo0i9hmcOMG8DbOqRJmu5qZZymbWabXqTLGrZ4luz/qanVZDYWIxsKu0lmE1mFsi3UZZ1a/DNKwbFz4uk76yyR1FWsFAdTfYIjk=
+	t=1748004036; cv=none; b=RZbMVasoMgflTVqXs7Yf/HgQ7NzVwMIbcmdKJx1ndPuPdC0Gd395oyui/xnMfEzbF/YQRxMuQvsALqtZXy05Jk4zfWRd0sGbfgJN4O99ZDJpcsoViD6K5r6TRpNOtNBetGthcPJ0rwe1CEfPKFkLPXgcvdTSDP/0HkZNfF3WDSU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748004033; c=relaxed/simple;
-	bh=fF+vi/ZJYg9zV+u9eX7xmuQO6ZZBAO4jnx5M3Mhc/bY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=jtOrM76D79lkbUxMySQy5h9sCsgeloQDyt8rZRZCCGVUqGIjpqswd7mJiv3Jbnvb8vQ80mQprxjuw391BaXxrOyyzqZdwLWxdDLjFuVJHAci6JRFXPFw3VsRINm4RVqNdgJZuk8/gG4Q+gyjbsm6Txm2n9vad8lWbBbDuaylwXc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Zg3tJd7G; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748004036; c=relaxed/simple;
+	bh=sA8TrAly6Qt0aAA5v1vLnwngN71dQUxehlr6vaz6YzE=;
+	h=From:Subject:Date:Message-ID:MIME-Version:Content-Type:To:CC; b=TBqEsPVBB6eJMu6Dw1P/OUgl0dWofd5WLVwPqpRur8crp7sPG5C8isTZqeYeZQiiBFLvxxJUWV5yGO1M6OYWoz29EmMS5gx9klnTMOl8AnDPP7l+E4In5mAxN8k+ad/Yt6gYkxPP3EiLvtP3P+kxh0GFGX8y/LU+dLC4WF9vYOI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=1LipR1xB; arc=none smtp.client-ip=91.207.212.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Zg3tJd7G"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 800EEC4CEF2;
-	Fri, 23 May 2025 12:40:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748004032;
-	bh=fF+vi/ZJYg9zV+u9eX7xmuQO6ZZBAO4jnx5M3Mhc/bY=;
-	h=From:To:Cc:Subject:Date:From;
-	b=Zg3tJd7GofaGMzUefTrUGWXEVEl2Sx87Zxez0I3ohctHa0HfuKiMN+FEXUdpxrKRs
-	 k6UERm64bste1VBeEBCMC2KjKhdDp1/TgLSY67fnMswBIx6m1Q0e7E5l9B4xojNu/z
-	 hhzPTngRu8aS3ztqKIJa9MdAn/hRu7DNinB+TI04wK/7WoWnnVjF/T3IKQbH/dzGkM
-	 CLwKY0v4HAS26ULlzweIVZP2vSo39vrNPyQwv8yVtJ7RPXrJbwW69YM/I/mMG3sK9t
-	 l3llkkcrSF7m8+NCIohHUCBzg80U/RunjbfvJJy6B7fDWM4x0QMnLXsdEbi9picKJi
-	 ehiDtBMhCw/4Q==
-From: Christian Brauner <brauner@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Christian Brauner <brauner@kernel.org>,
-	linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [GIT PULL for v6.16] vfs misc
-Date: Fri, 23 May 2025 14:40:22 +0200
-Message-ID: <20250523-vfs-misc-bd367f758841@brauner>
-X-Mailer: git-send-email 2.47.2
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="1LipR1xB"
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54NBKc2I029978;
+	Fri, 23 May 2025 14:40:13 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=selector1; bh=2YyhQzykqr2IukkjXY4a8d
+	iTP0eWbO99O5z3m7RWB6U=; b=1LipR1xBEOhYzBdlcKyKjqBAaALvXVHak154yN
+	a3rM8dGt+hVaaSYYundcEOORPxBDe1v5dGHpyQgG8kk5NF9mmGmBUd0HAhyhh/Sh
+	s62yDWkrkQOENh4sme4SvcxhKQvked7n7fwOhqO4PMvC/mAVW1EJHHiOThvTo1il
+	6suVWNjUG4y0WJHXhf6z/8SuJD+1j9/JI4jssRGyI+GfuCTxWVMfwlQw7B4w7sED
+	w2mTF4rn4hf6CH2LOxHHEl7eYrkELMMckQHFyLPvX85u7h+IkV2rQlcZ+di8FAI3
+	Cjwz3mPAAQ/BSnly9knWdIbBkIR6Gcg4okzYJ0fAOi/F9h1A==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 46rwfcdxje-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 23 May 2025 14:40:12 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id E53224002D;
+	Fri, 23 May 2025 14:39:06 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id CBFDDA0D901;
+	Fri, 23 May 2025 14:38:23 +0200 (CEST)
+Received: from localhost (10.48.81.67) by SHFDAG1NODE2.st.com (10.75.129.70)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 23 May
+ 2025 14:38:23 +0200
+From: =?utf-8?q?Cl=C3=A9ment_Le_Goffic?= <clement.legoffic@foss.st.com>
+Subject: [PATCH v3 0/9] Introduce HDP support for STM32MP platforms
+Date: Fri, 23 May 2025 14:38:12 +0200
+Message-ID: <20250523-hdp-upstream-v3-0-bd6ca199466a@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=12411; i=brauner@kernel.org; h=from:subject:message-id; bh=fF+vi/ZJYg9zV+u9eX7xmuQO6ZZBAO4jnx5M3Mhc/bY=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWQY5OxOiL/zg7u2QNC4s/7ii4/zKk4funvi/IwlR99Od Yo9M+eLdEcpC4MYF4OsmCKLQ7tJuNxynorNRpkaMHNYmUCGMHBxCsBEDE4yMszODvq3LijnRYXL /kSDX9G3ncuVnZZfWG0R9JDTLmJ+JTfDf6cbPeYykp/nMDS8nBAj5bJMXvXp9S9h0vwSCvOOK92 0YgYA
-X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIADRsMGgC/13MSw6CMBSF4a2Yji0pt1wCjtyHcVD6kA6gpBcbD
+ WHvFhJjcHhO8n8LIxu9JXY5LSza5MmHMQ95PjHdq/FhuTd5MxCAAqDivZn4c6I5WjXwGsCiUWW
+ lWsdyMkXr/Gvnbve8e09ziO9dT+X2fiE8QqnkgrdGVK2uUUqhri4QFTQXOgxsoxL8cgTxl0POU
+ bq6azp0TjfHfF3XD3UnYD3pAAAA
+X-Change-ID: 20250224-hdp-upstream-622e5da14a9f
+To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue
+	<alexandre.torgue@foss.st.com>,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+CC: <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        =?utf-8?q?Cl=C3=A9ment_Le_Goffic?=
+	<clement.legoffic@foss.st.com>
+X-Mailer: b4 0.15-dev-6f78e
+X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SHFDAG1NODE2.st.com
+ (10.75.129.70)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-23_03,2025-05-22_01,2025-03-28_01
+
+This patch series introduces the Hardware Debug Port (HDP) support for
+STM32MP platforms.
+
+It includes updates to the mmio gpio driver, the addition of device tree
+bindings, the HDP driver, and updates to the device tree files for
+STM32MP13, STM32MP15,
+and STM32MP25 SoCs.
+The series also updates the MAINTAINERS file to include myself as the
+maintainer for the STM32 HDP driver and adds the necessary
+pinmux configurations for HDP pins on STM32MP157C-DK2 as example.
+
+Signed-off-by: Clément Le Goffic <clement.legoffic@foss.st.com>
+---
+Changes in v3:
+- Use `bgpio_init()` function:
+    - Add add patch to create the `BGPIOF_NO_INPUT` flag needed for the
+     `bgpio_setup_direction()` used in `bgpio_init()`
+    - Remove `stm32_hdp_gpio_get` and `stm32_hdp_gpio_set`
+- Use `static` pm ops
+- Update bindings:
+    - add pattern instruction for pin values
+    - remove function's maxItems to use `function: true`
+    - fix the compatible in the exemples
+- Link to v2: https://lore.kernel.org/r/20250520-hdp-upstream-v2-0-53f6b8b5ffc8@foss.st.com
+
+Changes in v2:
+- Remove bindings header files with function name as #define
+- Add match_data with function name for three compatible:
+  "st,stm32mp131-hdp", "st,stm32mp151-hdp" and "st,stm32mp251-hdp".
+- Rework a bit the driver to use match_data.
+- Remove the use of `dev_err_probe(` in the resume ops.
+- Remove `MODULE_ALIAS(`.
+- Remove the vertical bar in bindings description paragraph.
+- Fix an error in the `pinctrl-0` parameter of the binding example, it
+  was refering a node that wasn't existing.
+- Use uppercase pin names.
+- Link to v1: https://lore.kernel.org/r/20250225-hdp-upstream-v1-0-9d049c65330a@foss.st.com
+
+---
+Clément Le Goffic (9):
+      gpio: mmio: add BGPIOF_NO_INPUT flag for GPO gpiochip
+      dt-bindings: pinctrl: stm32: Introduce HDP
+      pinctrl: stm32: Introduce HDP driver
+      MAINTAINERS: Add Clément Le Goffic as STM32 HDP maintainer
+      ARM: dts: stm32: add Hardware debug port (HDP) on stm32mp13
+      ARM: dts: stm32: add Hardware debug port (HDP) on stm32mp15
+      ARM: dts: stm32: add Hardware debug port (HDP) on stm32mp25
+      ARM: dts: stm32: add alternate pinmux for HDP pin and add HDP pinctrl node
+      ARM: dts: stm32: add Hardware debug port (HDP) on stm32mp157c-dk2 board
+
+ .../bindings/pinctrl/st,stm32-pinctrl-hdp.yaml     | 187 ++++++
+ MAINTAINERS                                        |   6 +
+ arch/arm/boot/dts/st/stm32mp131.dtsi               |   6 +
+ arch/arm/boot/dts/st/stm32mp15-pinctrl.dtsi        |  25 +
+ arch/arm/boot/dts/st/stm32mp151.dtsi               |   7 +
+ arch/arm/boot/dts/st/stm32mp157c-dk2.dts           |   6 +
+ arch/arm64/boot/dts/st/stm32mp251.dtsi             |   7 +
+ drivers/gpio/gpio-mmio.c                           |  11 +-
+ drivers/pinctrl/stm32/Kconfig                      |  14 +
+ drivers/pinctrl/stm32/Makefile                     |   1 +
+ drivers/pinctrl/stm32/pinctrl-stm32-hdp.c          | 720 +++++++++++++++++++++
+ include/linux/gpio/driver.h                        |   1 +
+ 12 files changed, 990 insertions(+), 1 deletion(-)
+---
+base-commit: a08b2b34239e63bd839078de98911d3653cdab83
+change-id: 20250224-hdp-upstream-622e5da14a9f
+
+Best regards,
+-- 
+Clément Le Goffic <clement.legoffic@foss.st.com>
 
-Hey Linus,
-
-/* Summary */
-
-This contains the usual selections of misc updates for this cycle.
-
-Features:
-
-- Use folios for symlinks in the page cache
-
-  FUSE already uses folios for its symlinks. Mirror that conversion in
-  the generic code and the NFS code. That lets us get rid of a few
-  folio->page->folio conversions in this path, and some of the few
-  remaining users of read_cache_page() / read_mapping_page().
-
-- Try and make a few filesystem operations killable on the VFS
-  inode->i_mutex level.
-
-- Add sysctl vfs_cache_pressure_denom for bulk file operations
-
-  Some workloads need to preserve more dentries than we currently allow
-  through out sysctl interface.
-
-  A HDFS servers with 12 HDDs per server, on a HDFS datanode startup
-  involves scanning all files and caching their metadata (including
-  dentries and inodes) in memory. Each HDD contains approximately 2
-  million files, resulting in a total of ~20 million cached dentries
-  after initialization.
-
-  To minimize dentry reclamation, they set vfs_cache_pressure to 1.
-  Despite this configuration, memory pressure conditions can still
-  trigger reclamation of up to 50% of cached dentries, reducing the
-  cache from 20 million to approximately 10 million entries. During the
-  subsequent cache rebuild period, any HDFS datanode restart operation
-  incurs substantial latency penalties until full cache recovery
-  completes.
-
-  To maintain service stability, more dentries need to be preserved
-  during memory reclamation. The current minimum reclaim ratio (1/100 of
-  total dentries) remains too aggressive for such workload. This patch
-  introduces vfs_cache_pressure_denom for more granular cache pressure
-  control. The configuration [vfs_cache_pressure=1,
-  vfs_cache_pressure_denom=10000] effectively maintains the full 20
-  million dentry cache under memory pressure, preventing datanode
-  restart performance degradation.
-
-- Avoid some jumps in inode_permission() using likely()/unlikely().
-
-- Avid a memory access which is most likely a cache miss when descending
-  into devcgroup_inode_permission().
-
-- Add fastpath predicts for stat() and fdput().
-
-- Anonymous inodes currently don't come with a proper mode causing
-  issues in the kernel when we want to add useful VFS debug assert. Fix
-  that by giving them a proper mode and masking it off when we report it
-  to userspace which relies on them not having any mode.
-
-- Anonymous inodes currently allow to change inode attributes because
-  the VFS falls back to simple_setattr() if i_op->setattr isn't
-  implemented. This means the ownership and mode for every single user
-  of anon_inode_inode can be changed. Block that as it's either useless
-  or actively harmful. If specific ownership is needed the respective
-  subsystem should allocate anonymous inodes from their own private
-  superblock.
-
-- Raise SB_I_NODEV and SB_I_NOEXEC on the anonymous inode superblock.
-
-- Add proper tests for anonymous inode behavior.
-
-- Make it easy to detect proper anonymous inodes and to ensure that we
-  can detect them in codepaths such as readahead().
-
-Cleanups:
-
-- Port pidfs to the new anon_inode_{g,s}etattr() helpers.
-
-- Try to remove the uselib() system call.
-
-- Add unlikely branch hint return path for poll.
-
-- Add unlikely branch hint on return path for core_sys_select.
-
-- Don't allow signals to interrupt getdents copying for fuse.
-
-- Provide a size hint to dir_context for during readdir().
-
-- Use writeback_iter directly in mpage_writepages.
-
-- Update compression and mtime descriptions in initramfs documentation.
-
-- Update main netfs API document.
-
-- Remove useless plus one in super_cache_scan().
-
-- Remove unnecessary NULL-check guards during setns().
-
-- Add separate separate {get,put}_cgroup_ns no-op cases.
-
-Fixes:
-
-- Fix typo in root= kernel parameter description.
-
-- Use KERN_INFO for infof()|info_plog()|infofc().
-
-- Correct comments of fs_validate_description()
-
-- Mark an unlikely if condition with unlikely() in vfs_parse_monolithic_sep().
-
-- Delete macro fsparam_u32hex()
-
-- Remove unused and problematic validate_constant_table().
-
-- Fix potential unsigned integer underflow in fs_name().
-
-- Make file-nr output the total allocated file handles.
-
-/* Testing */
-
-gcc (Debian 14.2.0-19) 14.2.0
-Debian clang version 19.1.7 (3)
-
-No build failures or warnings were observed.
-
-/* Conflicts */
-
-Merge conflicts with mainline
-=============================
-
-No known conflicts.
-
-Merge conflicts with other trees
-================================
-
-This will have a merge conflict with the vfs freeze pull request sent as:
-
-https://lore.kernel.org/20250523-vfs-freeze-8e3934479cba@brauner
-
-that can be resolved as follows:
-
-diff --cc fs/internal.h
-index 8800e1bb23e3,f545400ce607..000000000000
---- a/fs/internal.h
-+++ b/fs/internal.h
-@@@ -344,4 -343,8 +344,9 @@@ static inline bool path_mounted(const s
-  void file_f_owner_release(struct file *file);
-  bool file_seek_cur_needs_f_lock(struct file *file);
-  int statmount_mnt_idmap(struct mnt_idmap *idmap, struct seq_file *seq, bool uid_map);
- +struct dentry *find_next_child(struct dentry *parent, struct dentry *prev);
-+ int anon_inode_getattr(struct mnt_idmap *idmap, const struct path *path,
-+                      struct kstat *stat, u32 request_mask,
-+                      unsigned int query_flags);
-+ int anon_inode_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
-+                      struct iattr *attr);
-
-The following changes since commit 0af2f6be1b4281385b618cb86ad946eded089ac8:
-
-  Linux 6.15-rc1 (2025-04-06 13:11:33 -0700)
-
-are available in the Git repository at:
-
-  git@gitolite.kernel.org:pub/scm/linux/kernel/git/vfs/vfs tags/vfs-6.16-rc1.misc
-
-for you to fetch changes up to 76145cb37ff0636fdf2a15320b2c2421915df32b:
-
-  Merge patch series "Use folios for symlinks in the page cache" (2025-05-15 12:14:34 +0200)
-
-Please consider pulling these changes from the signed vfs-6.16-rc1.misc tag.
-
-Thanks!
-Christian
-
-----------------------------------------------------------------
-vfs-6.16-rc1.misc
-
-----------------------------------------------------------------
-Christian Brauner (17):
-      anon_inode: use a proper mode internally
-      pidfs: use anon_inode_getattr()
-      anon_inode: explicitly block ->setattr()
-      pidfs: use anon_inode_setattr()
-      anon_inode: raise SB_I_NODEV and SB_I_NOEXEC
-      selftests/filesystems: add chown() test for anonymous inodes
-      selftests/filesystems: add chmod() test for anonymous inodes
-      selftests/filesystems: add exec() test for anonymous inodes
-      selftests/filesystems: add open() test for anonymous inodes
-      Merge patch series "fs: harden anon inodes"
-      Merge patch series "fs: sort out cosmetic differences between stat funcs and add predicts"
-      fs: remove uselib() system call
-      Merge patch series "two nits for path lookup"
-      fs: add S_ANON_INODE
-      Merge patch series "Minor namespace code simplication"
-      Merge patch series "include/linux/fs.h: add inode_lock_killable()"
-      Merge patch series "Use folios for symlinks in the page cache"
-
-David Disseldorp (1):
-      docs: initramfs: update compression and mtime descriptions
-
-David Howells (1):
-      netfs: Update main API document
-
-Jinliang Zheng (1):
-      fs: remove useless plus one in super_cache_scan()
-
-Joel Savitz (2):
-      kernel/nsproxy: remove unnecessary guards
-      include/cgroup: separate {get,put}_cgroup_ns no-op case
-
-Li RongQing (1):
-      fs: Make file-nr output the total allocated file handles
-
-Mateusz Guzik (6):
-      fs: sort out cosmetic differences between stat funcs and add predicts
-      fs: predict not having to do anything in fdput()
-      fs: unconditionally use atime_needs_update() in pick_link()
-      fs: improve codegen in link_path_walk()
-      fs: touch up predicts in inode_permission()
-      device_cgroup: avoid access to ->i_rdev in the common case in devcgroup_inode_permission()
-
-Matthew Wilcox (Oracle) (3):
-      fs: Convert __page_get_link() to use a folio
-      nfs: Use a folio in nfs_get_link()
-      fs: Pass a folio to page_put_link()
-
-Max Kellermann (4):
-      include/linux/fs.h: add inode_lock_killable()
-      fs/open: make chmod_common() and chown_common() killable
-      fs/open: make do_truncate() killable
-      fs/read_write: make default_llseek() killable
-
-Miklos Szeredi (2):
-      fuse: don't allow signals to interrupt getdents copying
-      readdir: supply dir_context.count as readdir buffer size hint
-
-Petr Vaněk (1):
-      Documentation: fix typo in root= kernel parameter description
-
-Yafang Shao (1):
-      vfs: Add sysctl vfs_cache_pressure_denom for bulk file operations
-
-Zijun Hu (6):
-      fs/fs_context: Use KERN_INFO for infof()|info_plog()|infofc()
-      fs/fs_parse: Correct comments of fs_validate_description()
-      fs/fs_context: Mark an unlikely if condition with unlikely() in vfs_parse_monolithic_sep()
-      fs/filesystems: Fix potential unsigned integer underflow in fs_name()
-      fs/fs_parse: Delete macro fsparam_u32hex()
-      fs/fs_parse: Remove unused and problematic validate_constant_table()
-
- Documentation/admin-guide/kernel-parameters.txt    |    2 +-
- Documentation/admin-guide/sysctl/vm.rst            |   32 +-
- .../driver-api/early-userspace/buffer-format.rst   |   34 +-
- Documentation/filesystems/mount_api.rst            |   16 -
- Documentation/filesystems/netfs_library.rst        | 1016 ++++++++++++++------
- arch/m68k/configs/amcore_defconfig                 |    1 -
- arch/x86/configs/i386_defconfig                    |    1 -
- arch/xtensa/configs/cadence_csp_defconfig          |    1 -
- fs/anon_inodes.c                                   |   45 +
- fs/binfmt_elf.c                                    |   76 --
- fs/dcache.c                                        |   11 +-
- fs/exec.c                                          |   60 --
- fs/exportfs/expfs.c                                |    1 +
- fs/file_table.c                                    |    2 +-
- fs/filesystems.c                                   |   14 +-
- fs/fs_context.c                                    |    6 +-
- fs/fs_parser.c                                     |   55 +-
- fs/fuse/dir.c                                      |    2 +-
- fs/fuse/readdir.c                                  |    4 +-
- fs/internal.h                                      |    5 +
- fs/ioctl.c                                         |    7 +-
- fs/libfs.c                                         |   10 +-
- fs/mpage.c                                         |   13 +-
- fs/namei.c                                         |   79 +-
- fs/nfs/symlink.c                                   |   20 +-
- fs/open.c                                          |   14 +-
- fs/overlayfs/readdir.c                             |   12 +-
- fs/pidfs.c                                         |   28 +-
- fs/read_write.c                                    |    4 +-
- fs/readdir.c                                       |   47 +-
- fs/select.c                                        |    4 +-
- fs/stat.c                                          |   35 +-
- fs/super.c                                         |    2 +-
- include/linux/binfmts.h                            |    1 -
- include/linux/cgroup.h                             |   26 +-
- include/linux/device_cgroup.h                      |    7 +-
- include/linux/file.h                               |    2 +-
- include/linux/fs.h                                 |   22 +
- include/linux/fs_parser.h                          |    7 -
- init/Kconfig                                       |   10 -
- kernel/nsproxy.c                                   |   30 +-
- mm/readahead.c                                     |   20 +-
- tools/testing/selftests/bpf/config.aarch64         |    1 -
- tools/testing/selftests/bpf/config.s390x           |    1 -
- tools/testing/selftests/filesystems/.gitignore     |    1 +
- tools/testing/selftests/filesystems/Makefile       |    2 +-
- .../selftests/filesystems/anon_inode_test.c        |   69 ++
- 47 files changed, 1164 insertions(+), 694 deletions(-)
- create mode 100644 tools/testing/selftests/filesystems/anon_inode_test.c
