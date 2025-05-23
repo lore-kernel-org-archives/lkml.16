@@ -1,183 +1,125 @@
-Received: from mail-vs1-f50.google.com (mail-vs1-f50.google.com [209.85.217.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from ni.piap.pl (ni.piap.pl [195.187.100.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88B16226D09;
-	Fri, 23 May 2025 09:57:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9B26238179;
+	Fri, 23 May 2025 09:58:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.187.100.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747994275; cv=none; b=ILiGfk1q44+8ecbro3zuh6yz+N7wjJHZCHoXeyjNDHCo++FeExm2MV+6dNbxs8Di3oJ5rW25SgP5M31ji0/UFTf2Nbo+DNbHYRTxlY3b0FUC2kamptYbZQ22qq05RYMWMe8fSHCMqL2VfxiaLv1FiRr2XlHGVFGGKl6CVQDQ1fw=
+	t=1747994308; cv=none; b=Y180Nsx5vBWY+Zvpmo6f20aFUskP4s7KHvTt1C2SVNYn3qssdEUCgSFdLwD56h69LTQfrcvtWIJ89XEzhx0UMtuRHkKUJE05IVVBHuyUzRdb+z6K5esAKIMmNsFB/tqhAIPhDboWcXa1JfLZKjsGdxm8WGWay7/B0lOrQKAmI9w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747994275; c=relaxed/simple;
-	bh=o3+U2pTjpoLy4VBlboNFSpKjjYw/1Y9CbZlyI6v5MxI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Itsjk/RzHJ0Nu593JPB3bwovKMvo2MeZSu9DY448wmEaFHRzuIXnj+1UMRVqfaw+u+cag4hI8wD/vzaANFe6xT3APUfbzJUIs1URCUPZaa2/qXw3DhKB+8zIHLftnslPuQGIk+bvffjzPaS9fyQ9NfMeiW/gfChEtc+Xfxtixxg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.217.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vs1-f50.google.com with SMTP id ada2fe7eead31-4e2b5ffb932so1067454137.0;
-        Fri, 23 May 2025 02:57:53 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747994271; x=1748599071;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=dOpTsqxLWECKPkArKUXl99v0o7bZ+EJjw6Rtwx3j45U=;
-        b=lue3UFOrrSSSSC+zEej3jV+eWKVg0Qin64rbFFMuswF4F8Jtwhs5MB0mQZCmkBXG16
-         aB1BaFB0699+jYBf5iwXosUtH2u4CoyMAJyoFMCjAMp/KjONn8VeSy5FZ6JSaO2X1Jdx
-         a4flWTqxxR7toM4uKAi+abE+vmh3OW5pwt2MyA13FbPXlJk1JlPm94X5PqjMjPIJ4fWQ
-         +tJiKihWE2bf2BJcS/Jmgh3LISolzVaWIyV4B9ejgAOjdepDXf1Cp/4SIhOAtf6xF9Bk
-         mpSPMfWnVx8zNWqgk0PYmuWxk/PDyzbTO05XVT2Iq9jYea3PsC8ZSmIcKR7zArWeyNb5
-         826Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVZBolRXZHmP3fvDLKprd8uk3dM/7tj+z97ni6nn6YIYjjR+XlZ2XfG/J1NQFQm1WiolLRlwb60AeCjsew=@vger.kernel.org, AJvYcCWpPD1W2Dej+UULo+3gUVWHeo7OUA3sGp5UpsrlCEtUt0kNMr+aKIyQnemBKneY17dfZmk/dvuCAYFmaMh7Kqdzkrg=@vger.kernel.org, AJvYcCXDVsyzfxa8K89LZpeHnLsKWPlVh/GnzuSGvv8mk2LS3V6kV4Ov6uL34V/0rGj2E5xDmd/LZFMT6+hddhpQ@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx2MHV3gNbOdfZq+3ZfjiU8lBAXqmfDVnasfnPbyfrZUkqcNoz6
-	FC0ymlmjikLV60jtW/rOUinN/AYY/xSAtODCH7ivzLPywnifoc4g9VwBHmDq4GBH
-X-Gm-Gg: ASbGncv7YLNiEFH+qn/M8Eu0ubsnvbVTrWEDt64OIW6G26IyBA9AsNnhuKj7BgZeSs8
-	uKDnnn8f5rvkqcb90ujyp03HEdj3qAmFgqUqKCaGuIZW+qUW2pU4adq/Xfzk/SPRTJ3iLQPakTS
-	p6r/gvJJBEhyNX0vjrOSv0I9nV5F0eZbm2FSxvTfeA7VSZHEIkyJOrT8BsOk2Ploh8KXfW71nEV
-	BFc9NUhaXaH5AE3RKfNOXpOKU94nICtpXeUoUaYlRRDPH1mO0v+y3fxPd1yfa8NtmiTQ1hbW7yU
-	dbXNCxbqUdQ0eiOGFjCro16d/vG/Du31Y4+BENIDKUnlh81m0kLlEYqEcGXaG4DgS8I/UbyouO4
-	WckenA4KU7M+CwerWXQ==
-X-Google-Smtp-Source: AGHT+IErEm1p66emtG23zmtX6IYikVXCh98rO9xeqwquTjV91rWvkBqKHgVLffSQ8t4REJVocOMIyQ==
-X-Received: by 2002:a05:6102:50a4:b0:4bb:e5bf:9c7d with SMTP id ada2fe7eead31-4dfa6c31c98mr25458123137.17.1747994270671;
-        Fri, 23 May 2025 02:57:50 -0700 (PDT)
-Received: from mail-vk1-f170.google.com (mail-vk1-f170.google.com. [209.85.221.170])
-        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4dfa66e2910sm12328267137.13.2025.05.23.02.57.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 23 May 2025 02:57:50 -0700 (PDT)
-Received: by mail-vk1-f170.google.com with SMTP id 71dfb90a1353d-52dc826204eso2317494e0c.1;
-        Fri, 23 May 2025 02:57:50 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCU/p6oGcOuCpHsZBJJG32iwhLE+bSwW9GxAjzu5vRHX8Ne+pCFQ2X8MqoaLyhQKmq+BNhqsuHlWJ6IYzkV4@vger.kernel.org, AJvYcCW9+/q/DUjN3QVREvJDt3ai1pI9h1b+WERkVO9LmxLPdiPJIUalLlQdcaS8Q6fFVSaLJKaxqwux4MRgH+A=@vger.kernel.org, AJvYcCXrHI8T841FT6tN7YEolXpYuoxS9puwcgIebpOtOQX/wPc6rIkVbu5+nYs/jyUL5ScYblF6uzttZc8scYfM2LuaYm4=@vger.kernel.org
-X-Received: by 2002:a05:6122:2529:b0:52a:791f:7e20 with SMTP id
- 71dfb90a1353d-52dba80d3e3mr25830440e0c.4.1747994269866; Fri, 23 May 2025
- 02:57:49 -0700 (PDT)
+	s=arc-20240116; t=1747994308; c=relaxed/simple;
+	bh=08fg3jpSPJOEN6w8dbd543RIPo/ty5tra/UHgFDBq9g=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=jvILEnWifyAcoRu0TyJP3NRQwedSTYzDjG0P2jVCY6LS1KJREjE97pJ3NRAgksd1BydX/SGHbtZne/wkxOKiexclqi13yEFeALdMDdUYXswlgxaeUVjcfeiIDsC8B7rFhx8L9HnCWb5yJiUkUZ69KEAsg/NPXv/clQqXNEWjW4M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=piap.pl; spf=pass smtp.mailfrom=piap.pl; arc=none smtp.client-ip=195.187.100.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=piap.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=piap.pl
+Received: from t19.piap.pl (OSB1819.piap.pl [10.0.9.19])
+	by ni.piap.pl (Postfix) with ESMTPS id 9A651C405A4C;
+	Fri, 23 May 2025 11:58:23 +0200 (CEST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 ni.piap.pl 9A651C405A4C
+From: =?utf-8?Q?Krzysztof_Ha=C5=82asa?= <khalasa@piap.pl>
+To: Jacopo Mondi <jacopo.mondi@ideasonboard.com>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>,  Rui Miguel Silva
+ <rmfrfs@gmail.com>,  Martin Kepplinger <martink@posteo.de>,  Purism Kernel
+ Team <kernel@puri.sm>,  Mauro Carvalho Chehab <mchehab@kernel.org>,  Shawn
+ Guo <shawnguo@kernel.org>,  Sascha Hauer <s.hauer@pengutronix.de>,
+  Pengutronix Kernel Team <kernel@pengutronix.de>,  Fabio Estevam
+ <festevam@gmail.com>,  linux-media@vger.kernel.org,  imx@lists.linux.dev,
+  linux-arm-kernel@lists.infradead.org,  linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] Enable MIPI filtering by DT on i.MX8M*
+In-Reply-To: <m31psg97dy.fsf@t19.piap.pl> ("Krzysztof =?utf-8?Q?Ha=C5=82as?=
+ =?utf-8?Q?a=22's?= message of
+	"Thu, 22 May 2025 14:06:49 +0200")
+References: <m3h61u9jy2.fsf@t19.piap.pl>
+	<20250509103733.GE28896@pendragon.ideasonboard.com>
+	<m3o6vn8np5.fsf@t19.piap.pl>
+	<iegnn5xoosqpk52hvipcr73aliwhqtsq6r6ctvt5756bhy6yen@rqcdongb7fdf>
+	<m31psg97dy.fsf@t19.piap.pl>
+Sender: khalasa@piap.pl
+Date: Fri, 23 May 2025 11:58:23 +0200
+Message-ID: <m3plfz7io0.fsf@t19.piap.pl>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250515141828.43444-1-thierry.bultel.yh@bp.renesas.com> <20250515141828.43444-8-thierry.bultel.yh@bp.renesas.com>
-In-Reply-To: <20250515141828.43444-8-thierry.bultel.yh@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Fri, 23 May 2025 11:57:37 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdWhq+o18hgBO7Kg_Rsq47WsEwV7-DWYcyJCM0h1wsMshg@mail.gmail.com>
-X-Gm-Features: AX0GCFutLZp2NjdVwF0AAwLhMEAFa6NnDGxnoo0-7WDTAMJFZVVCBRJ3x6pp41o
-Message-ID: <CAMuHMdWhq+o18hgBO7Kg_Rsq47WsEwV7-DWYcyJCM0h1wsMshg@mail.gmail.com>
-Subject: Re: [PATCH v9 07/10] serial: sh-sci: Add support for RZ/T2H SCI
-To: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
-Cc: thierry.bultel@linatsea.fr, linux-renesas-soc@vger.kernel.org, 
-	paul.barker.ct@bp.renesas.com, 
-	Wolfram Sang <wsa+renesas@sang-engineering.com>, linux-kernel@vger.kernel.org, 
-	linux-serial@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Hi Thierry,
+I wrote:
 
-On Thu, 15 May 2025 at 16:19, Thierry Bultel
-<thierry.bultel.yh@bp.renesas.com> wrote:
-> Define a new RSCI port type, and the RSCI 32 bits registers set.
-> The RZ/T2H SCI has a a fifo, and a quite different set of registers
-> from the original SH SCI ones.
-> DMA is not supported yet.
+> This produces (test_pattern=3D5 which starts with black, using ISP):
+> Y =3D  00 00 00 00  00 00 00 00  00 00 00 00  00 00 00 00...
+> UV =3D 80 80 80 80  80 80 80 80  80 80 80 80  80 80 80 80...
 >
-> Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-> Signed-off-by: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
-> ---
-> Changes v8->v9:
->   - Fixed some code formatting
->   - Renamed rzt2_sci_uart_ops to rsci_uart_ops
->   - Renamed of_sci_r9a09g077_data to of_sci_rsci_data
->   - Added EXPORT_SYMBOL for public functions
->   - Added MODULE_LICENSE & MODULE_DESCRIPTION
->   - Fixed RSCI clock names
->   - Fixed SCI_PORT_RSCI using BIT(7)
-
-Thanks for the update!
-
-> --- /dev/null
-> +++ b/drivers/tty/serial/rsci.h
-> @@ -0,0 +1,12 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +
-> +#ifndef __RSCI_H__
-> +#define __RSCI_H__
-> +
-> +#include "sh-sci-common.h"
-> +
-> +#ifdef CONFIG_SERIAL_RSCI
-> +extern struct sci_of_data of_sci_rsci_data;
-> +#endif
-
-The #ifdef isn't really needed.
-
-> +
-> +#endif /* __RSCI_H__ */
-
-> --- a/drivers/tty/serial/sh-sci.c
-> +++ b/drivers/tty/serial/sh-sci.c
-
-> @@ -2977,14 +2987,27 @@ static int sci_init_clocks(struct sci_port *sci_port, struct device *dev)
->         struct clk *clk;
->         unsigned int i;
+> Now I do (perhaps I should revert the patch instead):
+> ./devmem write32 0x32E50004 0x14305
 >
-> -       if (sci_port->type == PORT_HSCIF)
-> +       if (sci_port->type == PORT_HSCIF) {
->                 clk_names[SCI_SCK] = "hsck";
-> +       } else if (sci_port->type == SCI_PORT_RSCI) {
-> +               clk_names[SCI_FCK] = "operation";
-> +               clk_names[SCI_BRG_INT] = "bus";
-> +       }
->
->         for (i = 0; i < SCI_NUM_CLKS; i++) {
-> -               clk = devm_clk_get_optional(dev, clk_names[i]);
-> +               const char *name = clk_names[i];
-> +
-> +               clk = devm_clk_get_optional(dev, name);
->                 if (IS_ERR(clk))
->                         return PTR_ERR(clk);
->
-> +               if (!clk && sci_port->type == SCI_PORT_RSCI &&
-> +                   (i == SCI_FCK || i == SCI_BRG_INT)) {
-> +                       return dev_err_probe(dev, -ENODEV,
-> +                                            "failed to get '%s' clock\n",
+> and this does (=3D without DT filtering):
+> Y =3D  E6 FF 36 1B  00 00 00 00  00 00 00 00  00 00 00 00...
+> UV =3D 85 6A 74 B4  7D 8C 80 80  80 80 80 80  80 80 80 80...
 
-I would make the error message identical to the other cases below,
-so the format string can be shared by the compiler.
+The corruption is visible in ISP RAW-12 mode as well: CSI2 + ISP2 without
+DT filtering: IMX462 test patterns, Linux v6.14, 1280x720p25.
 
-> +                                            name);
-> +               }
-> +
->                 if (!clk && i == SCI_FCK) {
->                         /*
->                          * Not all SH platforms declare a clock lookup entry
-> @@ -2995,13 +3018,13 @@ static int sci_init_clocks(struct sci_port *sci_port, struct device *dev)
->                         if (IS_ERR(clk))
->                                 return dev_err_probe(dev, PTR_ERR(clk),
->                                                      "failed to get %s\n",
-> -                                                    clk_names[i]);
-> +                                                    name);
->                 }
->
->                 if (!clk)
-> -                       dev_dbg(dev, "failed to get %s\n", clk_names[i]);
-> +                       dev_dbg(dev, "failed to get %s\n", name);
->                 else
-> -                       dev_dbg(dev, "clk %s is %pC rate %lu\n", clk_names[i],
-> +                       dev_dbg(dev, "clk %s is %pC rate %lu\n", name,
->                                 clk, clk_get_rate(clk));
->                 sci_port->clks[i] = clk;
->         }
+Only 3 first 16-bit (12-bit on MIPI) RGGB values in each frame are
+changed (bits 3-0 of the third pixel aren't changed).
 
-The rest of the (generic; I didn't look at the RSCI low-level details)
-changes LGTM.
+32EC0060h          0 Gasket 0 output disabled
+32EC0090h          0 Gasket 1 output disabled
+32EC0138h    2D8000h ISP Dewarp Control Register (ISP_DEWARP_CONTROL)
+      ISP ID mode 0, ISP1: DT 0, ISP2: DT 2Ch (RAW12) left-just mode
 
-Gr{oetje,eeting}s,
+32E50040h        B0h ISP Configuration Register (MIPI_CSIS_ISPCONFIG_CH0)
+      DT 2Ch (RAW12)
 
-                        Geert
+pattern 1:   0 800   0 2AB changed into 2AA B02 B00 2AB
+pattern 2 and 3: FFF FFF FFF FFF... not altered at all
+pattern 4: 501 501 4C2 4C2 changed into FFF 7FF 7F2 4C2
+pattern 5:   0   0   0   0 changed into 7EF FF7 FF0   0
+pattern 6:   0   1   0 101 changed into FFF FFF FF0 101
+pattern 7:   0 2AB   0 2AB changed into BAA BAB BA0 2AB
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+RAW-12 on MIPI goes like this:
+ lane0    lane1   lane2 7:4   lane2 3:0   lane3
+----------- MIPI Header (all 4 lanes) ----------
+P1-11:4  P2-11:4    P1-3:0      P2-3:0   P3-11:4
+P4-11:4  ...
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+This means all the changed values are located in the first 4 bytes after
+the packet header (i.e., in the first byte after the header for each
+lane). Which IMHO smells like a hardware bug - especially given the
+problem manifests itself only on CSI2 (+ISP2, I haven't tried using
+ISI).
+
+Fortunately enabling DT filtering fixes it.
+
+I remember I was getting a bit different results on, I believe, the
+NXP's 5.15 kernels (with their =3D Verisilicon VVCam driver). Instead of
+simply changing the first 32 bits of the MIPI payload, the rest of the
+RGGB data was shifted a couple of pixels or so.
+
+
+Now, what do we do with it?
+Is anybody able to verify the CSIC version register value on i.MX8MM?
+Something like devmem read32 0x32E50000 (or 0x32E40000 for CSI1) WHILE
+RUNNING CAPTURE on that very CSI would do the trick (using your
+favorite instance of devmem/devmem2/etc). Alternatively one could add
+a debug printk to the csic module.
+
+And: is anybody able to check if the DT filtering works on i.MX8MM
+(=3D if my patch doesn't break it on 8MM)?
+
+Alternatively I guess we can add MIPI_CSIS_V3_6_3_1 for 8MP only.
+
+Anybody using i.MX8MM with ISP2 + CSI2 BTW? Is the corruption there as
+well? I understand it may be hard to spot, it's (usually a bright) dot
+in the left top corner.
+--=20
+Krzysztof "Chris" Ha=C5=82asa
+
+Sie=C4=87 Badawcza =C5=81ukasiewicz
+Przemys=C5=82owy Instytut Automatyki i Pomiar=C3=B3w PIAP
+Al. Jerozolimskie 202, 02-486 Warszawa
