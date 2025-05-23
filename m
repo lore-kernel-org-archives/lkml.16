@@ -1,35 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E921D296FC2;
-	Fri, 23 May 2025 14:52:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A542F296FC2;
+	Fri, 23 May 2025 14:52:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748011959; cv=none; b=WMfnsrJj2nqaRQqpi4lIGujRrYaos+BiX/MTMGRTRHo9URPrzJ01R1zsdaIsVM0xDZRB9UJye1FTvUoVyfmFdnYTHo1yDzWML0keruXhNEmcxiSQbCrmrlo6PIbMmZFecro9mDJOQB3Q+m0v7oBXDDvKRvAok/oC5HOhZmQYyno=
+	t=1748011963; cv=none; b=e5F9ue26BkN8eMM7x1sAz+ND4oTaoa9sEE2in+TjWVNuLkEyPBXMcTzyRsCsZcltjraXfNCRCAICYl5YNJDI8oCCdG6Ip74oWSXs2ZO4/UFqY+b4b2mn/3hqqotW4aC8OKZtz+5cpAt41fM32HbT0e1ZAC0fAKCO2mieifcl4eQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748011959; c=relaxed/simple;
-	bh=x0Lek28ZMNlzvwZKVUJCS7wJumpZZc8oLQJLQutlOqc=;
+	s=arc-20240116; t=1748011963; c=relaxed/simple;
+	bh=uDf18kPzGdXm2nIfij017Ap++yRaWCXs7zQ/AOF0vwM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=fhwqN9Rqvab2dHxRsewRZvP3zEPipp7VnGf5K1BMhvkFh2Iq0OjdUJGtb9+8iAmMA68zxv+HpEVnC7yF5XR6tc3UAw/opODKVA8NumgamTuagzS2rp/XwCFIXTX8X4KIDP6MbQGvo4clFSNi+KTdJByroBV1KVLuq6dmOtBFwWQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XZUej6Rv; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=OlLIKTDbvRlWzblIxpXc8tvSvzcsN95K2ttSB9Qw40dSY/pqJ+9k22Q6+XG7zPZC9yfW6hPdIL0Mi2I54olvqqcuj0b1ZX1rbk0sM0m1iP5/xVo+f9kOJ9VaKm3oiaTWHTTBnpx/+/lO3iE3nYJCKl2ZcE4rVsMGdswCoCFfWTg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ugKRHtmu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XZUej6Rv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08996C4CEED;
-	Fri, 23 May 2025 14:52:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ugKRHtmu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5397BC4CEE9;
+	Fri, 23 May 2025 14:52:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748011958;
-	bh=x0Lek28ZMNlzvwZKVUJCS7wJumpZZc8oLQJLQutlOqc=;
+	s=k20201202; t=1748011963;
+	bh=uDf18kPzGdXm2nIfij017Ap++yRaWCXs7zQ/AOF0vwM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=XZUej6RvKes+hto/R1QJOFJ2HzijXZCAEgnpnpAPZVeJtbAGf93VAuTp/j49Vmz7L
-	 Dm//ZcB53cfRAw4j5z1pJYMa6gCzWJRCl3ckiyq4GtTZ2fvRJBymTztM4uNql38Qjb
-	 NPVpoAMKQIPQwbZckJSfhQMs+eXRg8p+PvD/1J9sFCTmmtSf5FXkX7Zzo+IfSVaH9N
-	 44XCl7DY1O6jdT9CuQIDgJVfhc+gND/kom37eTAbEjfpSJMCLk/YB2GzLl6Vxijn0d
-	 FSwCvfzan1GLtxifDlcgjFb4rnrXh/FlB6hbN80hwpqdQWQprmfjQAVfVzdzHt4T6+
-	 WiGkWUGn5T7fg==
+	b=ugKRHtmuHxjni2xr9XxAUOVoK2NekJ9JM4gZhAwh6YL/L0UVmYoMxCVia9AM9ZdFU
+	 syrW8Ly8jTLRP7RSjwNWTQpRHL3mLReuW3E5k//wdbQBLsvop8Ows20BjviLfI8alt
+	 GcNgfSCgaj3A4VliYTYlN/dmQxtUsWIykebHzoQ/Eot0zMhi6jvyvxD42jM+/WNiIY
+	 ELISvMafUT6NCKXmcqZKD+ADxIQcqXvuilimxlCedgS+K8kSej3rdCOmPWoEKWdOhB
+	 f0xChRCyoCp4pX/IRLqeki02H/8Z0HY+f0oyI03zwlILbR698+wi7p9rY0zZ5floys
+	 yc6hbsCknVDAA==
 From: Benno Lossin <lossin@kernel.org>
-To: Rob Herring <robh@kernel.org>,
-	Saravana Kannan <saravanak@google.com>,
-	Miguel Ojeda <ojeda@kernel.org>,
+To: Miguel Ojeda <ojeda@kernel.org>,
 	Alex Gaynor <alex.gaynor@gmail.com>,
 	Boqun Feng <boqun.feng@gmail.com>,
 	Gary Guo <gary@garyguo.net>,
@@ -38,14 +36,16 @@ To: Rob Herring <robh@kernel.org>,
 	Andreas Hindborg <a.hindborg@kernel.org>,
 	Alice Ryhl <aliceryhl@google.com>,
 	Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>
+	Danilo Krummrich <dakr@kernel.org>,
+	Paul Moore <paul@paul-moore.com>,
+	Fiona Behrens <me@kloenk.dev>,
+	Martin Rodriguez Reboredo <yakoyoku@gmail.com>
 Cc: Lyude Paul <lyude@redhat.com>,
-	devicetree@vger.kernel.org,
 	rust-for-linux@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 12/13] rust: of: replace `core::mem::zeroed` with `pin_init::zeroed`
-Date: Fri, 23 May 2025 16:51:08 +0200
-Message-ID: <20250523145125.523275-13-lossin@kernel.org>
+Subject: [PATCH v2 13/13] rust: security: replace `core::mem::zeroed` with `pin_init::zeroed`
+Date: Fri, 23 May 2025 16:51:09 +0200
+Message-ID: <20250523145125.523275-14-lossin@kernel.org>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250523145125.523275-1-lossin@kernel.org>
 References: <20250523145125.523275-1-lossin@kernel.org>
@@ -65,24 +65,23 @@ the C side changed and is most likely incorrect.
 
 Signed-off-by: Benno Lossin <lossin@kernel.org>
 ---
- rust/kernel/of.rs | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ rust/kernel/security.rs | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/rust/kernel/of.rs b/rust/kernel/of.rs
-index 04f2d8ef29cb..c9a3f0521db4 100644
---- a/rust/kernel/of.rs
-+++ b/rust/kernel/of.rs
-@@ -30,9 +30,7 @@ impl DeviceId {
-     /// Create a new device id from an OF 'compatible' string.
-     pub const fn new(compatible: &'static CStr) -> Self {
-         let src = compatible.as_bytes_with_nul();
--        // Replace with `bindings::of_device_id::default()` once stabilized for `const`.
--        // SAFETY: FFI type is valid to be zero-initialized.
--        let mut of: bindings::of_device_id = unsafe { core::mem::zeroed() };
-+        let mut of: bindings::of_device_id = pin_init::zeroed();
+diff --git a/rust/kernel/security.rs b/rust/kernel/security.rs
+index 0c63e9e7e564..11a6493525f3 100644
+--- a/rust/kernel/security.rs
++++ b/rust/kernel/security.rs
+@@ -25,8 +25,7 @@ impl SecurityCtx {
+     /// Get the security context given its id.
+     #[inline]
+     pub fn from_secid(secid: u32) -> Result<Self> {
+-        // SAFETY: `struct lsm_context` can be initialized to all zeros.
+-        let mut ctx: bindings::lsm_context = unsafe { core::mem::zeroed() };
++        let mut ctx: bindings::lsm_context = pin_init::zeroed();
  
-         // TODO: Use `clone_from_slice` once the corresponding types do match.
-         let mut i = 0;
+         // SAFETY: Just a C FFI call. The pointer is valid for writes.
+         to_result(unsafe { bindings::security_secid_to_secctx(secid, &mut ctx) })?;
 -- 
 2.49.0
 
