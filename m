@@ -1,79 +1,118 @@
-Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CE0222839A;
-	Fri, 23 May 2025 10:40:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AD6C1C5D7B
+	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 10:41:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747996842; cv=none; b=NfTEblRRr2tE1qzSTUwuQxSJsEcSsIhwt+m0Ty/DfXloF003XYnOy4CIE6pjBbPgoJLaEHDa8BWwS3LYG6kPpIRl5DQAFwZAS6E4kGTVc+yagIhjNUynE1GqfS34fWUxoSYjutOH51GRokWtSpH97zknOREen5mU/T7JVwiHsbg=
+	t=1747996882; cv=none; b=sggwyvejsXMlFN3FbUgeDmcwDCeO9Zzd5nG8pJV6OiG9yktElj7KGvx4fL3TCs0XMPe0p3jninZn/KAR0JM0efHCim3xkUEOIRnBHkMvXETbLG6G6h3sJY+TMAnXoeyKUMbI91R4Ftsyqn0roi3ZsuBw8xnwi1MiJ+ihEinXpjo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747996842; c=relaxed/simple;
-	bh=K2JQO+uYU43rONsrKzctsDigqQZ79oxfKv9WnQ4M8rs=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=TVVI1DJnG68vVC+KaM4Ko28QwIV5lcs++PvcvWA/rwYSbV2yjO0oupYm6XSG/IvKYy0m/+6Qg3fDEH9a4KLt5pCzFu2cLLN4k8FzTZbkrrvVs1oK2XmiUPP6TzR8mkmFlhKDsjhdANk61QHwMidmM5qoq502wyF0AChKaHNWVDs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=qdU3KuMZ; arc=none smtp.client-ip=168.119.38.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
+	s=arc-20240116; t=1747996882; c=relaxed/simple;
+	bh=nEueIcfRiyFlM9JkkbxdtqIn/vSOGnTCKiQsAJa4RCU=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=rfdXPxS8fVKMJebXpvtAyeXtRM0sMnbbHkI9glINpGkPjTRcF1AH0l3egX/oc89wvsZDRzGw0Oe39CxgDB56+MTjiv9Uid0jtl0IVXQEh/NlQ+/xsGIPVlFCdDJlmgdPEbIAcAJ7LxD/0TBOidOcyzbna/7JzeiCdmR2YxUG9R8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cki2cogb; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="qdU3KuMZ"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
-	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
-	Resent-Cc:Resent-Message-ID; bh=K2JQO+uYU43rONsrKzctsDigqQZ79oxfKv9WnQ4M8rs=;
-	t=1747996840; x=1749206440; b=qdU3KuMZ9sweprsLMMsnuRdUYa5laczAF/iWMqExK+PNlyJ
-	c677zeHd97X1PK7EZWtGUh7fRRZneSmsFVYOWNmxtRoZWeUW+bE6YNr0tKr339HoSGALk73HQssEe
-	Me6S6+FPchv46CvtJE6UzDM9LLykPrQIKwbbhxzOAEpnbrnXcYDgaYvogcdzMdIlWEOnbg5n34Dn6
-	ywZuDVQsx7W0+b0Rw6imHHRZCKR0ug2sTo9qQKkWDxnUZSulv8t2p0BJRYlibX94khJQFs4bU+EqY
-	Osju0I3cb8GSyrBz5uaxzJ9VCbfBYiayFKUNaUPQ51IaYr+mp+fmUxaSoTmIxxIA==;
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.98.2)
-	(envelope-from <johannes@sipsolutions.net>)
-	id 1uIPp5-00000001O1N-1Ky4;
-	Fri, 23 May 2025 12:40:19 +0200
-Message-ID: <7e708dcc98c6f0f615b1b87d190464cfe78be668.camel@sipsolutions.net>
-Subject: Re: [PATCH v2 2/6] ASoC: aoa: Use helper function
- for_each_child_of_node_scoped()
-From: Johannes Berg <johannes@sipsolutions.net>
-To: =?UTF-8?Q?=E8=89=BE=E8=B6=85?= <aichao@kylinos.cn>, perex
- <perex@perex.cz>,  tiwai <tiwai@suse.com>, "kuninori.morimoto.gx"
- <kuninori.morimoto.gx@renesas.com>, lgirdwood	 <lgirdwood@gmail.com>,
- broonie <broonie@kernel.org>, jbrunet	 <jbrunet@baylibre.com>,
- "neil.armstrong" <neil.armstrong@linaro.org>, khilman	
- <khilman@baylibre.com>, "martin.blumenstingl"	
- <martin.blumenstingl@googlemail.com>, "shengjiu.wang"
- <shengjiu.wang@gmail.com>,  "Xiubo.Lee" <Xiubo.Lee@gmail.com>, festevam
- <festevam@gmail.com>, nicoleotsuka <nicoleotsuka@gmail.com>,  shawnguo
- <shawnguo@kernel.org>, "s.hauer" <s.hauer@pengutronix.de>,
- "srinivas.kandagatla"	 <srinivas.kandagatla@linaro.org>
-Cc: linux-sound <linux-sound@vger.kernel.org>, linux-kernel	
- <linux-kernel@vger.kernel.org>, linuxppc-dev
- <linuxppc-dev@lists.ozlabs.org>,  linux-renesas-soc
- <linux-renesas-soc@vger.kernel.org>, linux-arm-kernel
- <linux-arm-kernel@lists.infradead.org>,  linux-amlogic
- <linux-amlogic@lists.infradead.org>, imx <imx@lists.linux.dev>, kernel
- <kernel@pengutronix.de>,  linux-arm-msm <linux-arm-msm@vger.kernel.org>
-Date: Fri, 23 May 2025 12:40:18 +0200
-In-Reply-To: <2aq0nyvyf7t-2aq4hsc7kp6@nsmail7.0.0--kylin--1>
-References: <2aq0nyvyf7t-2aq4hsc7kp6@nsmail7.0.0--kylin--1>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cki2cogb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747996880; x=1779532880;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=nEueIcfRiyFlM9JkkbxdtqIn/vSOGnTCKiQsAJa4RCU=;
+  b=cki2cogbApLShAGHAqKl5TkeDkiTJ/SabpYZ3xHpflN5DHhL9rsGKQ86
+   7V10mgxwRpfuCjiR2J7C+2YAXLVDJdO801NuvxWfBhukSAfAwOwE/vy7U
+   uoJ95eQ2R3O1/a9HfiEZ9cuDqexL3ut952vDE787iO5+IPbus/AkiLGzw
+   8yX8JlY3KQyvo8n1sCdUEKKV6csVAgwuPcAexNmlqGzHLP0P5Wvznc4Ye
+   uB6KVSnbiTDGLBuHyrFHz7wZP/liBICTyQ8zxXefpxD+FXMtYgsL26eb3
+   FO+pGUUGxkmygQQ4tJhqRPSnftess4EsgmYNI6aQPxb34zC70zrfr+UmI
+   g==;
+X-CSE-ConnectionGUID: 6c/YkEY5RtueSbwOYr0dgA==
+X-CSE-MsgGUID: T7V/0SIdRJyYbr6O6ZckEA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11441"; a="53846623"
+X-IronPort-AV: E=Sophos;i="6.15,308,1739865600"; 
+   d="scan'208";a="53846623"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2025 03:41:20 -0700
+X-CSE-ConnectionGUID: QXrMci0mQIy2FUKp0YAN4g==
+X-CSE-MsgGUID: jixBy+B7TKeijkliPvQv3Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,308,1739865600"; 
+   d="scan'208";a="145050860"
+Received: from dprybysh-mobl.ger.corp.intel.com (HELO localhost) ([10.245.244.101])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2025 03:41:16 -0700
+From: Jani Nikula <jani.nikula@linux.intel.com>
+To: long.yunjian@zte.com.cn
+Cc: rodrigo.vivi@intel.com, joonas.lahtinen@linux.intel.com,
+ tursulin@ursulin.net, airlied@gmail.com, simona@ffwll.ch,
+ intel-gfx@lists.freedesktop.org, intel-xe@lists.freedesktop.org,
+ dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+ mou.yi@zte.com.cn, xu.lifeng1@zte.com.cn, fang.yumeng@zte.com.cn,
+ ouyang.maochun@zte.com.cn
+Subject: Re: [PATCH] drm/i915/display: Use str_true_false() helper
+In-Reply-To: <20250523141422844GEA-yzba-OvN0lZirDsS-@zte.com.cn>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20250523141422844GEA-yzba-OvN0lZirDsS-@zte.com.cn>
+Date: Fri, 23 May 2025 13:41:14 +0300
+Message-ID: <5ee0e214018c1a0cdf279cef5dabd4851a12a647@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-malware-bazaar: not-scanned
+Content-Type: text/plain
 
-Hi,
+On Fri, 23 May 2025, <long.yunjian@zte.com.cn> wrote:
+> From: Yumeng Fang <fang.yumeng@zte.com.cn>
+>
+> Remove hard-coded strings by using the str_true_false() helper.
+>
+> Signed-off-by: Yumeng Fang <fang.yumeng@zte.com.cn>
+> Signed-off-by: Yunjian Long <long.yunjian@zte.com.cn>
 
-[you should avoid HTML]
+Pushed to drm-intel-next, thanks for the patch.
 
-> "simplifies the code" is no need to callof_node_put() .
+BR,
+Jani.
 
-Fair. Except that's not what you _actually_ changed here. Like I said,
-either it's buggy before or after.
 
-johannes
+> ---
+>  drivers/gpu/drm/i915/display/intel_display_debugfs.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/i915/display/intel_display_debugfs.c b/drivers/gpu/drm/i915/display/intel_display_debugfs.c
+> index 8d0a1779dd19..0e3e62468902 100644
+> --- a/drivers/gpu/drm/i915/display/intel_display_debugfs.c
+> +++ b/drivers/gpu/drm/i915/display/intel_display_debugfs.c
+> @@ -5,6 +5,7 @@
+>
+>  #include <linux/debugfs.h>
+>  #include <linux/string_helpers.h>
+> +#include <linux/string_choices.h>
+>
+>  #include <drm/drm_debugfs.h>
+>  #include <drm/drm_drv.h>
+> @@ -972,7 +973,7 @@ static ssize_t i915_dsc_fec_support_write(struct file *file,
+>  		return ret;
+>
+>  	drm_dbg(display->drm, "Got %s for DSC Enable\n",
+> -		(dsc_enable) ? "true" : "false");
+> +		str_true_false(dsc_enable));
+>  	intel_dp->force_dsc_en = dsc_enable;
+>
+>  	*offp += len;
+> @@ -1183,7 +1184,7 @@ static ssize_t i915_dsc_fractional_bpp_write(struct file *file,
+>  		return ret;
+>
+>  	drm_dbg(display->drm, "Got %s for DSC Fractional BPP Enable\n",
+> -		(dsc_fractional_bpp_enable) ? "true" : "false");
+> +		str_true_false(dsc_fractional_bpp_enable));
+>  	intel_dp->force_dsc_fractional_bpp_en = dsc_fractional_bpp_enable;
+>
+>  	*offp += len;
+
+-- 
+Jani Nikula, Intel
