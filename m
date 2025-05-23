@@ -1,44 +1,36 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBDEB2566FC;
-	Fri, 23 May 2025 04:39:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE5852741A6;
+	Fri, 23 May 2025 04:39:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747975182; cv=none; b=bd3LfDMxjnf+C2vevDyX8c205WigWUWYbwgAwVMhsIVr4tLtht4591nGEijQ1TFCNkB6MaoKsMN59cediP8wQgEA5bJFluNcVpq4cKK2rg45E18uEHy9blvuALCePdXw8DKc+/WSi1cT3i7QkuQhZImJR/xELO56Y1n0Tf5M//c=
+	t=1747975183; cv=none; b=tqzqikWSmnawmnS9HAbpPveS66uiU603KuaNFz51iU4D9w1Y3izgUOOKjTqzCFsUYQFgafCHY+/FpXfo9Bd4TpeK8g6kBSG33VhvvotITgCDhTpKNAL+tlJm1SyvxYJd5oYJTSZR5NIOxblZ5b5Zbuleh31taUs0I8UMFhHBCPg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747975182; c=relaxed/simple;
-	bh=ukIvmUzCX4cqw7NZIKavKwcJ5OLiJ4po8qig+DsNSjY=;
+	s=arc-20240116; t=1747975183; c=relaxed/simple;
+	bh=qfrc6vYarbMRQKv1a7xZvSfoxfkNIKlLJL8wJGuWS5I=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Ta1ZM/OJ/sRxDYwVI42jhPqmSGuGbKOAYr1xCxNPgwzI29CPMU0YXRSgEa/hKTYP5NCfDv4SZDSygdhLcCtqVfSemaNTRsjpJYxn0YbB97Tejdv1YM3xrw4Rndq4raTA5X2p1vOY0Yqk2BeofRot1KcVPoRD3+um/h/02miXSyU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uUwE0i0m; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=hlL6b6KDXg+aEoBbifXdQBJQKV1PIu4b65nZ4zVbKQAK2Vty7DHgFCEyZjQFa4/HbJLA5X9emQ9NstRUwwm1Tkpheanv7LmcxbVOhTbWLpF18q9GhNtBNRibBK1wotRB0GMey7viWt1KeUGOls1ZKIiTTAOj3p9HBU8Hp4iYcsU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fbUGodwJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uUwE0i0m"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 420A4C4CEF3;
-	Fri, 23 May 2025 04:39:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fbUGodwJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 220CFC4CEEF;
+	Fri, 23 May 2025 04:39:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747975181;
-	bh=ukIvmUzCX4cqw7NZIKavKwcJ5OLiJ4po8qig+DsNSjY=;
+	s=k20201202; t=1747975183;
+	bh=qfrc6vYarbMRQKv1a7xZvSfoxfkNIKlLJL8wJGuWS5I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=uUwE0i0mzO0Zz+j7Us+A/yzvLL8wesT1b29aGk+XzYhm3jnxB0QmFL1bW3NDq2VBF
-	 mM/v6TzQA3enBRrrnZE8Gxfnke3DBVYhp8AJ54Jc49RzwDSVZJ2g2twPNnbe9bKjny
-	 WgMEbYki7U05FMp8iUIvdHvsYvY8fEkcjZxwO6cTEVw5NeusAprtjcombRsjl98E56
-	 Z7OsPJA2T4UOircixEEDM0HVPN8rL+TqdWgfWY8HXgPYU27uI1LsGRnihkuFz2JiQ1
-	 qTyO+NKnSW1jgPs/kwVYKXqqXGF2jO1cR+P0Cx0S7RMCBY+Zt1y19Z/2Tf8HdBUg5d
-	 55EgoqgS825Zg==
+	b=fbUGodwJRuPFbGj2rmb07LimNKiilPja/Re2UpMZrtv+LFKGOsocK4ASzPYnRWGAw
+	 h0UPFtLNzxHO+L/wp+cfVKPnCLznvwW696LzrGi8kwrTwrLK08IcXb6276wlGkceSF
+	 TDV+KhMod7MFWrUddTu1iu76mFX6e2noD89w4oKerMRogRRPXyEm20oO1zZNDq0oEm
+	 r3LyFDxJr6pfuSz0GIQzFfIlIWs82juw5aQvWE2KnLB1cbP4NsGPJl4m+29T1RmBvw
+	 0JBNjoPjcg4yhzhjheddU3GoWMuoYxlZphPGvXkkf8Nxmo1qxKKg8KoTFdlh1sQ9k5
+	 jZl4kmogyzHVA==
 From: Kees Cook <kees@kernel.org>
 To: Arnd Bergmann <arnd@arndb.de>
 Cc: Kees Cook <kees@kernel.org>,
-	Russell King <linux@armlinux.org.uk>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Nishanth Menon <nm@ti.com>,
-	Santosh Shilimkar <ssantosh@kernel.org>,
-	Lee Jones <lee@kernel.org>,
-	Allison Randal <allison@lohutok.net>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-arm-kernel@lists.infradead.org,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-hardening@vger.kernel.org,
 	Christoph Hellwig <hch@lst.de>,
 	Marco Elver <elver@google.com>,
 	Andrey Konovalov <andreyknvl@gmail.com>,
@@ -54,19 +46,19 @@ Cc: Kees Cook <kees@kernel.org>,
 	x86@kernel.org,
 	kasan-dev@googlegroups.com,
 	linux-doc@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
 	kvmarm@lists.linux.dev,
 	linux-riscv@lists.infradead.org,
 	linux-s390@vger.kernel.org,
 	linux-efi@vger.kernel.org,
-	linux-hardening@vger.kernel.org,
 	linux-kbuild@vger.kernel.org,
 	linux-security-module@vger.kernel.org,
 	linux-kselftest@vger.kernel.org,
 	sparclinux@vger.kernel.org,
 	llvm@lists.linux.dev
-Subject: [PATCH v2 05/14] arm: Handle KCOV __init vs inline mismatches
-Date: Thu, 22 May 2025 21:39:15 -0700
-Message-Id: <20250523043935.2009972-5-kees@kernel.org>
+Subject: [PATCH v2 14/14] configs/hardening: Enable CONFIG_INIT_ON_FREE_DEFAULT_ON
+Date: Thu, 22 May 2025 21:39:24 -0700
+Message-Id: <20250523043935.2009972-14-kees@kernel.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20250523043251.it.550-kees@kernel.org>
 References: <20250523043251.it.550-kees@kernel.org>
@@ -76,101 +68,35 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3494; i=kees@kernel.org; h=from:subject; bh=ukIvmUzCX4cqw7NZIKavKwcJ5OLiJ4po8qig+DsNSjY=; b=owGbwMvMwCVmps19z/KJym7G02pJDBn6v3/+eOy6cc/2RIGpN/7obJr+t2bVlidcXIkfP8xQ1 a3nOnpNqKOUhUGMi0FWTJElyM49zsXjbXu4+1xFmDmsTCBDGLg4BWAiy0QYGTon/Tmgw7nhdvo/ wRdnq6bd8LbuWrrlwoINcV8Xz6/XsQln+KeoVfztP/+eh4En7ucZ6kupZIYzLLs4sX6mv1rXt5y ayWwA
+X-Developer-Signature: v=1; a=openpgp-sha256; l=961; i=kees@kernel.org; h=from:subject; bh=qfrc6vYarbMRQKv1a7xZvSfoxfkNIKlLJL8wJGuWS5I=; b=owGbwMvMwCVmps19z/KJym7G02pJDBn6v/+stliQLFcnI3MhNuGpqrXlscsrPuZ2Pphw9PPty JK/tZMZOkpZGMS4GGTFFFmC7NzjXDzetoe7z1WEmcPKBDKEgYtTACZy9jUjwz9r0T3FG5uDw0+4 eXQIht/dYufivG1V+fbJC4R/a1xouMvIsO2lyatle/N4Tq8Kn/e280RHCuP9s5s4OE3DpW5fOpL 9jgkA
 X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 
-When KCOV is enabled all functions get instrumented, unless
-the __no_sanitize_coverage attribute is used. To prepare for
-__no_sanitize_coverage being applied to __init functions, we have to
-handle differences in how GCC's inline optimizations get resolved. For
-arm this exposed several places where __init annotations were missing
-but ended up being "accidentally correct". Fix these cases and force
-several functions to be inline with __always_inline.
+To reduce stale data lifetimes, enable CONFIG_INIT_ON_FREE_DEFAULT_ON as
+well. This matches the addition of CONFIG_STACKLEAK=y, which is doing
+similar for stack memory.
 
 Signed-off-by: Kees Cook <kees@kernel.org>
 ---
-Cc: Russell King <linux@armlinux.org.uk>
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Nishanth Menon <nm@ti.com>
-Cc: Santosh Shilimkar <ssantosh@kernel.org>
-Cc: Lee Jones <lee@kernel.org>
-Cc: Allison Randal <allison@lohutok.net>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: <linux-arm-kernel@lists.infradead.org>
+Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: <linux-hardening@vger.kernel.org>
 ---
- include/linux/mfd/dbx500-prcmu.h  | 2 +-
- arch/arm/mm/cache-feroceon-l2.c   | 2 +-
- arch/arm/mm/cache-tauros2.c       | 2 +-
- drivers/clocksource/timer-orion.c | 2 +-
- drivers/soc/ti/pm33xx.c           | 2 +-
- 5 files changed, 5 insertions(+), 5 deletions(-)
+ kernel/configs/hardening.config | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/include/linux/mfd/dbx500-prcmu.h b/include/linux/mfd/dbx500-prcmu.h
-index 98567623c9df..828362b7860c 100644
---- a/include/linux/mfd/dbx500-prcmu.h
-+++ b/include/linux/mfd/dbx500-prcmu.h
-@@ -213,7 +213,7 @@ struct prcmu_fw_version {
+diff --git a/kernel/configs/hardening.config b/kernel/configs/hardening.config
+index d24c2772d04d..64caaf997fc0 100644
+--- a/kernel/configs/hardening.config
++++ b/kernel/configs/hardening.config
+@@ -60,6 +60,9 @@ CONFIG_LIST_HARDENED=y
+ # Initialize all heap variables to zero on allocation.
+ CONFIG_INIT_ON_ALLOC_DEFAULT_ON=y
  
- #if defined(CONFIG_UX500_SOC_DB8500)
- 
--static inline void prcmu_early_init(void)
-+static inline void __init prcmu_early_init(void)
- {
- 	db8500_prcmu_early_init();
- }
-diff --git a/arch/arm/mm/cache-feroceon-l2.c b/arch/arm/mm/cache-feroceon-l2.c
-index 25dbd84a1aaf..2bfefb252ffd 100644
---- a/arch/arm/mm/cache-feroceon-l2.c
-+++ b/arch/arm/mm/cache-feroceon-l2.c
-@@ -295,7 +295,7 @@ static inline u32 read_extra_features(void)
- 	return u;
- }
- 
--static inline void write_extra_features(u32 u)
-+static inline void __init write_extra_features(u32 u)
- {
- 	__asm__("mcr p15, 1, %0, c15, c1, 0" : : "r" (u));
- }
-diff --git a/arch/arm/mm/cache-tauros2.c b/arch/arm/mm/cache-tauros2.c
-index b1e1aba602f7..bfe166ccace0 100644
---- a/arch/arm/mm/cache-tauros2.c
-+++ b/arch/arm/mm/cache-tauros2.c
-@@ -177,7 +177,7 @@ static inline void __init write_actlr(u32 actlr)
- 	__asm__("mcr p15, 0, %0, c1, c0, 1\n" : : "r" (actlr));
- }
- 
--static void enable_extra_feature(unsigned int features)
-+static void __init enable_extra_feature(unsigned int features)
- {
- 	u32 u;
- 
-diff --git a/drivers/clocksource/timer-orion.c b/drivers/clocksource/timer-orion.c
-index 49e86cb70a7a..61f1e27fc41e 100644
---- a/drivers/clocksource/timer-orion.c
-+++ b/drivers/clocksource/timer-orion.c
-@@ -43,7 +43,7 @@ static struct delay_timer orion_delay_timer = {
- 	.read_current_timer = orion_read_timer,
- };
- 
--static void orion_delay_timer_init(unsigned long rate)
-+static void __init orion_delay_timer_init(unsigned long rate)
- {
- 	orion_delay_timer.freq = rate;
- 	register_current_timer_delay(&orion_delay_timer);
-diff --git a/drivers/soc/ti/pm33xx.c b/drivers/soc/ti/pm33xx.c
-index dfdff186c805..dc52a2197d24 100644
---- a/drivers/soc/ti/pm33xx.c
-+++ b/drivers/soc/ti/pm33xx.c
-@@ -145,7 +145,7 @@ static int am33xx_do_sram_idle(u32 wfi_flags)
- 	return pm_ops->cpu_suspend(am33xx_do_wfi_sram, wfi_flags);
- }
- 
--static int __init am43xx_map_gic(void)
-+static int am43xx_map_gic(void)
- {
- 	gic_dist_base = ioremap(AM43XX_GIC_DIST_BASE, SZ_4K);
++# Initialize all heap variables to zero on free to reduce stale data lifetime.
++CONFIG_INIT_ON_FREE_DEFAULT_ON=y
++
+ # Initialize all stack variables to zero on function entry.
+ CONFIG_INIT_STACK_ALL_ZERO=y
  
 -- 
 2.34.1
