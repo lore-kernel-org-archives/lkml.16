@@ -1,93 +1,83 @@
-Received: from m16.mail.126.com (m16.mail.126.com [117.135.210.6])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7417742AB4;
-	Fri, 23 May 2025 03:47:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.6
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 280F82DCBE7;
+	Fri, 23 May 2025 03:48:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747972047; cv=none; b=tLDp/8Xuqkei3LL9bqm6aHAmEyju69iBujxSq4Hy7Sn9ZfBqjaf4tg5f/wAgOhALj2GTPil2Z/8T3VQF506S4VEJfol6xV3g9dF6+qfdTep44OaqXMYyDMhHTueMxU6wwwcLlSbYMCR1VuqanDdnsEH4YV1RrrEjsrvBouxp3QQ=
+	t=1747972128; cv=none; b=V/GJYdjkgJ1URUx13vfsZbxu0EW8Sr5jm7Ti5iu4TTuiqv2G3ryukSNzbfN4YG8g2azA8owWVeGxg4RFOmCOSyigk6ATscVbTErzH+yQHBNbdqE+sKL735hSPR5AG7+grdh7SpEMs9mIfLA36IkY6hUTS/GKOuatfV2TfXyusz8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747972047; c=relaxed/simple;
-	bh=IkdmFrSh2VwCtODceQe1mvxAb3VAK663r9TayBQV6g0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nSebJrIt4LuAVCIR5UGpptEworGirFWXRqk3GWTlf5AdTWvdTf7mJZi73pV2+ZDfh1e/i8Q83zVe3XiCiC9E+X8SCbiU6MnV7hgiyNVuqiU/VVJztq0bNO5NSI75pqyaG1YsqwSPLbxNPINqMstY2iLfitlTbKbqvWIWSYNP3sE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com; spf=pass smtp.mailfrom=126.com; dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b=j0CqrPB3; arc=none smtp.client-ip=117.135.210.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=126.com
+	s=arc-20240116; t=1747972128; c=relaxed/simple;
+	bh=hU4E11daZQRWPop+eXf7dItbrTLSr07eegr9d9rLyLc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=W/Ih2cb3aAAm/oUm+8JcqiLAK6YAKsQIDSndyLFlzvZgQcUEJgyApO6XvZy44UmzVFcZFygQoOHUk0g2Igt0p4uiY7R+3g98y4HL1w+o3VmQHbuDLlDK1x1Uecmr8IOVd+Xr4mYLuu1j/+nTCN4BxtyaajUed3DPzKnUxOsjobM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lj/rQ3Gi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="j0CqrPB3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
-	s=s110527; h=Message-ID:Date:MIME-Version:Subject:To:From:
-	Content-Type; bh=BRlhWrT2SoYXDlWZPjcJEikz+rURnIHTSURTtEo/7GI=;
-	b=j0CqrPB3BVJ2NkTWzNNJzTs2suu7ZY2L22yVmswZVziThaQUpJh9t9b4pblpVs
-	IFWdrQZMU8ehbQTkmMo1ChtK6BuZdCzFHAaH3jZEaw+tacAVzITJ4PXLQxo8XlXs
-	/SWybH5CWos2S04jMlGdC2HIdu7xn8Nax3cAAbQiaKIrg=
-Received: from [172.19.20.199] (unknown [])
-	by gzga-smtp-mtada-g1-2 (Coremail) with SMTP id _____wD3Xyar7y9oVPJEAg--.40133S2;
-	Fri, 23 May 2025 11:46:51 +0800 (CST)
-Message-ID: <4e408146-7c77-4f6d-90e8-bb311d7ab53d@126.com>
-Date: Fri, 23 May 2025 11:46:51 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lj/rQ3Gi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8AC07C4CEE9;
+	Fri, 23 May 2025 03:48:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747972127;
+	bh=hU4E11daZQRWPop+eXf7dItbrTLSr07eegr9d9rLyLc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=lj/rQ3GiGLdiau+P57zmneGhBgAfMwOjMvBLctFhT75R1EPvZ5B+giVnFwI5eHxa9
+	 RiMiquG8Ahu7fzGgL53Px/BnaD5MqSe+XkulE8WW3VtGLO3jgYvTq7mHJmnXO8HT0k
+	 IVlm+pa2SWgRZfx0S+157FDTqcymr66Laaajra42Cmav0gUZ5rF4VwxfkSUBOljdMj
+	 Zu+1bGtmcY67IjZpTYe/CyKwnE1FIQawVg8S5ZD4PBl0KY2UIPvReTE3pKq0rTvPqd
+	 l4BA/NIs6ebHPA4YP0vqH8f8LYR9cjI9h0XPmOzzN1clAgzBOWk0XqocxYh+JpDqIl
+	 CK9+q1olWtQ9g==
+Date: Thu, 22 May 2025 20:48:44 -0700
+From: Kees Cook <kees@kernel.org>
+To: Bhupesh <bhupesh@igalia.com>
+Cc: akpm@linux-foundation.org, kernel-dev@igalia.com,
+	linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	linux-mm@kvack.org, oliver.sang@intel.com, lkp@intel.com,
+	laoar.shao@gmail.com, pmladek@suse.com, rostedt@goodmis.org,
+	mathieu.desnoyers@efficios.com, arnaldo.melo@gmail.com,
+	alexei.starovoitov@gmail.com, andrii.nakryiko@gmail.com,
+	mirq-linux@rere.qmqm.pl, peterz@infradead.org, willy@infradead.org,
+	david@redhat.com, viro@zeniv.linux.org.uk, ebiederm@xmission.com,
+	brauner@kernel.org, jack@suse.cz, mingo@redhat.com,
+	juri.lelli@redhat.com, bsegall@google.com, mgorman@suse.de,
+	vschneid@redhat.com, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 3/3] exec: Add support for 64 byte 'tsk->comm_ext'
+Message-ID: <202505222041.B639D482FB@keescook>
+References: <20250521062337.53262-1-bhupesh@igalia.com>
+ <20250521062337.53262-4-bhupesh@igalia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] mm/hugetlb: fix kernel NULL pointer dereference when
- replacing free hugetlb folios
-To: Muchun Song <muchun.song@linux.dev>, Oscar Salvador <osalvador@suse.de>
-Cc: akpm@linux-foundation.org, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, stable@vger.kernel.org, 21cnbao@gmail.com,
- david@redhat.com, baolin.wang@linux.alibaba.com, liuzixing@hygon.cn
-References: <1747884137-26685-1-git-send-email-yangge1116@126.com>
- <644FF836-9DC7-42B4-BACE-C433E637B885@linux.dev>
- <aC63fmFKK84K7YiZ@localhost.localdomain>
- <ff6bd560-d249-418f-81f4-7cbe055a25ec@126.com>
- <aC8PRkyd3y74Ph5R@localhost.localdomain>
- <3B8641A1-5345-44A5-B610-9BCBC980493D@linux.dev>
- <aC974OtOuj9Tqzsa@localhost.localdomain>
- <DF103E57-601C-4CBB-99CA-088E1C29F517@linux.dev>
-From: Ge Yang <yangge1116@126.com>
-In-Reply-To: <DF103E57-601C-4CBB-99CA-088E1C29F517@linux.dev>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wD3Xyar7y9oVPJEAg--.40133S2
-X-Coremail-Antispam: 1Uf129KBjvdXoWruF1xWrykuFyrZry7Kr18Grg_yoWkGwc_ZF
-	W0vas7Gw4UZFy0kF4DGrn0qF98Kw45ZF1YvFWrWrWUCFyftF95Xr98tr4fZwsrWa1jkF45
-	tw1Yva93Ar12kjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IU8OJ55UUUUU==
-X-CM-SenderInfo: 51dqwwjhrrila6rslhhfrp/1tbidRxWG2gv70MMjAAAsP
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250521062337.53262-4-bhupesh@igalia.com>
 
-
-
-在 2025/5/23 11:27, Muchun Song 写道:
+On Wed, May 21, 2025 at 11:53:37AM +0530, Bhupesh wrote:
+> Historically due to the 16-byte length of TASK_COMM_LEN, the
+> users of 'tsk->comm' are restricted to use a fixed-size target
+> buffer also of TASK_COMM_LEN for 'memcpy()' like use-cases.
 > 
-> 
->> On May 23, 2025, at 03:32, Oscar Salvador <osalvador@suse.de> wrote:
->>
->> On Thu, May 22, 2025 at 08:39:39PM +0800, Muchun Song wrote:
->>> But I think we could use "folio_order() > MAX_PAGE_ORDER" to replace the check
->>> of hstate_is_gigantic(), right? Then ee could remove the first parameter of hstate
->>> from alloc_and_dissolve_hugetlb_folio() and obtain hstate in it.
->>
->> Yes, I think we can do that.
->> So something like the following (compily-tested only) maybe?
->>
->>  From d7199339e905f83b54d22849e8f21f631916ce94 Mon Sep 17 00:00:00 2001
->> From: Oscar Salvador <osalvador@suse.de>
->> Date: Thu, 22 May 2025 19:51:04 +0200
->> Subject: [PATCH] TMP
->>
->> ---
->>   mm/hugetlb.c | 38 +++++++++-----------------------------
->>   1 file changed, 9 insertions(+), 29 deletions(-)
-> 
-> Pretty simple. The code LGTM.
-> 
-> Thanks.
+> To fix the same, Linus suggested in [1] that we can add the
+> following union inside 'task_struct':
+>        union {
+>                char    comm[TASK_COMM_LEN];
+>                char    comm_ext[TASK_COMM_EXT_LEN];
+>        };
 
-Thanks.
+I remain unconvinced that this is at all safe. With the existing
+memcpy() and so many places using %s and task->comm, this feels very
+very risky to me.
 
-The implementation of alloc_and_dissolve_hugetlb_folio differs between 
-kernel 6.6 and kernel 6.15. To facilitate backporting, I'm planning to 
-submit another patch based on Oscar Salvador's suggestion.
+Can we just make it separate, instead of a union? Then we don't have to
+touch comm at all.
 
+> and then modify '__set_task_comm()' to pass 'tsk->comm_ext'
+> to the existing users.
+
+We can use set_task_comm() to set both still...
+
+-- 
+Kees Cook
