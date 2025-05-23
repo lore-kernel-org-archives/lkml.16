@@ -1,94 +1,134 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34C942DCBE7;
-	Fri, 23 May 2025 02:27:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BFE32DCC1B;
+	Fri, 23 May 2025 02:29:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747967271; cv=none; b=n/ZHgfjzVjho2p9NqyXTTNKS5sA21eISrgo8ixlRfiUvk9lLsw8IEOLzbujnm+UIqmxf71sk0CylGHAogNEz77BsSU/3bNK8Qmfy+6IpdaFmBlVDTUTb/VMgCf/kKjx/xCXEvZnOyq759omkr29Og+X7hn8NyCbHHLyyMS7VgnU=
+	t=1747967397; cv=none; b=Nq+pB1BcAZf6BYJKEjFvpyUdye2fvrPAuuBBPmwTrCkV8UnFZszXvYEI4ia1u5HoK70Zfq7IeJIeZwIWRyJ4+xA3oiVK+cTDohlGWK5SpsdSPRVF9SHBz+BHPJQ9riwD8if7tFEDIdGy9Aqo1DebWNoWZHrEUMqwCI4waw99Gv4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747967271; c=relaxed/simple;
-	bh=Kb1ndhhY2Sfz29ikvxUA4WsnJEdZhGEg0HU+XweW8xA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gFodlgwcWvLDUtfOKtvlaRNQTzMsBj/8Bms1UBzaZC2dbS4SxqyMLxw2flPB7ruz2TN8WfeSLjzZZnN22Z7iTMa4FQ2njrN3vsr+U1x3KEPt3QLmO7kFwS0qIY4TpjbYp0K1r3sepYsmxOGNX+9S3qVEuWDA1wsJEX5RaAonFuE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cH4BWnIM; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1747967397; c=relaxed/simple;
+	bh=/p5QOnAA5KJ7aDYcmscxs4NxE2/gHk0ljkfD71F1HIg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=tugTo3CHW87J3/7jE+ODocQufKyu1OG/S8x3gWSI8LrIsv4HyMI6baHiDPvYgv05tPdzExiXe437Ijp09c7wWVNQzzwJBZi/PwSheSjGmp31t2wO9r+y0M+R3dV0mPlMyrDOB7NXht8ydWvUk8IgYlx54aRKd8buMv28NCRoGFg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VzGAkXkm; arc=none smtp.client-ip=209.85.221.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cH4BWnIM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747967269; x=1779503269;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=Kb1ndhhY2Sfz29ikvxUA4WsnJEdZhGEg0HU+XweW8xA=;
-  b=cH4BWnIMDCMtkhuS+dJxfVF0hJQjyWJm+5iIY1O75vFF4R8DrDEKSJUy
-   EP7HNc9RmZeUU9prsIHj5jdMfEH8iVuQ/LOpv5bhIy29BaYZDNPl689Dm
-   RNCaE//Uz0j16aM6rSoFw0yZzy4U/7ZJRLl6z1WXF/+j9lP0NY/Q+Ld9W
-   rCEE9G+JVl2L3N8me3/2A9Gl9Xw9GmUnZ7fyUwYUDWfhQUSJ49Kp1gory
-   n65bl87PjKC/oG+WWH4qhaeHJAniMuCYc1zeGsmdLMUDE2t3hWGbZdgRf
-   6Esz9aseVesMwQEk8k7GIAzTdLeS3S/rvVzCT6TAd+pjI2OO5EjOa0FMm
-   w==;
-X-CSE-ConnectionGUID: foU8QiswROiUqvCy7SiEuA==
-X-CSE-MsgGUID: J/fPRCuFRd2wtjIJXHpG3w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11441"; a="67578588"
-X-IronPort-AV: E=Sophos;i="6.15,307,1739865600"; 
-   d="scan'208";a="67578588"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2025 19:27:48 -0700
-X-CSE-ConnectionGUID: L9gYIFxdTcK3TbugnOnPTQ==
-X-CSE-MsgGUID: jlP5GOQKSuiNyIM05ArIPg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,307,1739865600"; 
-   d="scan'208";a="171779502"
-Received: from xiaoyaol-hp-g830.ccr.corp.intel.com (HELO [10.124.247.1]) ([10.124.247.1])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2025 19:27:47 -0700
-Message-ID: <824cec81-768b-4216-968c-d36c59dac71d@intel.com>
-Date: Fri, 23 May 2025 10:27:19 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VzGAkXkm"
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-3a35c339e95so1062855f8f.3;
+        Thu, 22 May 2025 19:29:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747967393; x=1748572193; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=rLWLUox7Pkfq1ZKB7xdwPbjb4AeXZLvutu7IKPhQb5U=;
+        b=VzGAkXkmrS8cp7RlwRvGKH9offuchFSYlPEmYuZBKgCj0ilzS/lkn6s30UwsQt8INf
+         XMpaHIJ/QjVp5joooYjfmllMosopuLP8GbM9zjU6wqAm2YhoqOf76M+4YNUvga5F90W4
+         5rUHtajjnjEDck/cW+7lvWCpyhQu7kH7z4tI8oHgLCu8qC8ngLwOzi0KhxkAzRIXs90t
+         WXHLxJFNSHUJzGxxfjvU4eIhpEMqXBAHBpCPt+Oj6ftnvd7AnQf/oou5vo407EKDxhQL
+         qgYoSN8N0ctyVRGxusHcG2/w7mv8fQxoey5InQgVLuqI2OAr7zMlk1wkVZ2zFN15JaoS
+         AXZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747967393; x=1748572193;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=rLWLUox7Pkfq1ZKB7xdwPbjb4AeXZLvutu7IKPhQb5U=;
+        b=IAiZqfRC+Kf10LmjjHr7Y500CBt50tvg4TOIa6UHt6Q7OYgMxS9sv5LcCJcUnP+K/h
+         YyXutIAM/fTf1l9p9hF28r6+8L+YZ4yGneip1zhnclMrX2GchVHogB4YFt8+68sNe8sJ
+         vqxc/jaC+lMlNS/CGZav2sykywIcEYYWvHMB4RnpEhh3PlwyXECusHVCdhiconDBMyZN
+         RPHqqTeSAtDSO8CJ2eFMYqYjUtCsHqTvPn8VhjpzWlq6PeQTCmE/MWJF46IhLddYcenU
+         5u8pUj8eDxoGqP2sm/QEpHsUY/sP0ikRW04Zdr4eZY+aP2aHsunJDm3ldCwzheuiYxRI
+         KbuA==
+X-Forwarded-Encrypted: i=1; AJvYcCXEiqQ7oC3xUtHn6XbdARMqTxixi9f3dAZvLHF2ku5rMot1Z+9y5sdBeqTBrf1lA8LvFcqgWkGqy1p8WAk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YypO9jxiAXWztOSDaNto0S05/uaHwGIC/SUTJqEWc8rGgkqA3fX
+	z6MKgnPY/FDHkbRM9SLkL4WdV1A/hJIjOZYPhowabd6s4r+4fzCOEdfu
+X-Gm-Gg: ASbGnct97FTK9wNxpZIjudfTDz1ai37Vgm9/xWsay3je1igN81lZT0ak8Hyon8bHqi4
+	NED4+Va28mPeYvPaF8bOamsuI31O/Xxn+i42cbk+87zsB+ds5bkioHJTkPu/PvkeeBJ5atyAqSc
+	r6QbKPZjPQ2urSO9vpy9mO4M6lWnFCa2Wwo55TK/ZIIB9BYRvYezU2Mer8/67fUKW/jiOdDvp/d
+	529c6B/DnuEOoLfROundBRisp7N9UdOf0xnB9UUNen14gPaME6oPU5NRAWm7/tLfHBxDRfbQ+ZD
+	9mynzX6yTG9alQUScA9Hi4fRopsM2nw18EwKRZo5i4kBWpQXnCuTQuBYd2IZ0D7OfLt6/pkSIMu
+	ou3b/7+CIDWKME5j67hGO
+X-Google-Smtp-Source: AGHT+IHyEqUJdsoBYcocerfxCARePAv6el2lDNDKFk5koxOH+XVrvNdVbjPzhqS1h5b0QcBiIvnHZw==
+X-Received: by 2002:a05:6000:420b:b0:3a3:7769:4f8b with SMTP id ffacd0b85a97d-3a4c2e58654mr190445f8f.14.1747967393380;
+        Thu, 22 May 2025 19:29:53 -0700 (PDT)
+Received: from localhost.localdomain ([156.208.37.0])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a35ca5abaesm24983265f8f.39.2025.05.22.19.29.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 May 2025 19:29:53 -0700 (PDT)
+From: Abdelrahman Fekry <abdelrahmanfekry375@gmail.com>
+To: shuah@kernel.org,
+	skhan@linuxfoundation.org
+Cc: linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-kernel-mentees@lists.linux.dev,
+	Abdelrahman Fekry <abdelrahmanfekry375@gmail.com>
+Subject: [PATCH v2] selftests: ir_decoder: Convert header comment to proper multi-line block
+Date: Fri, 23 May 2025 05:29:49 +0300
+Message-Id: <20250523022949.11688-1-abdelrahmanfekry375@gmail.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 1/4] KVM: TDX: Move TDX hardware setup from main.c to
- tdx.c
-To: Sean Christopherson <seanjc@google.com>,
- Paolo Bonzini <pbonzini@redhat.com>
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
- Vipin Sharma <vipinsh@google.com>, James Houghton <jthoughton@google.com>
-References: <20250523001138.3182794-1-seanjc@google.com>
- <20250523001138.3182794-2-seanjc@google.com>
-Content-Language: en-US
-From: Xiaoyao Li <xiaoyao.li@intel.com>
-In-Reply-To: <20250523001138.3182794-2-seanjc@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 5/23/2025 8:11 AM, Sean Christopherson wrote:
-> Move TDX hardware setup to tdx.c, as the code is obviously TDX specific,
-> co-locating the setup with tdx_bringup() makes it easier to see and
-> document the success_disable_tdx "error" path, and configuring the TDX
-> specific hooks in tdx.c reduces the number of globally visible TDX symbols.
-> 
-> Signed-off-by: Sean Christopherson <seanjc@google.com>
+v2- fixed multiple trailing whitespace errors and
+the Signed-off-by mismatch
 
-...
+The test file for the IR decoder used single-line comments
+at the top to document its purpose and licensing,
+which is inconsistent with the style used throughout the
+Linux kernel.
 
-> diff --git a/arch/x86/kvm/vmx/tdx.h b/arch/x86/kvm/vmx/tdx.h
-> index 51f98443e8a2..ca39a9391db1 100644
-> --- a/arch/x86/kvm/vmx/tdx.h
-> +++ b/arch/x86/kvm/vmx/tdx.h
-> @@ -8,6 +8,7 @@
->   #ifdef CONFIG_KVM_INTEL_TDX
->   #include "common.h"
->   
-> +void tdx_hardware_setup(void);
+In this patch i converted the file header to
+a proper multi-line comment block
+(/*) that aligns with standard kernel practices.
+This improves readability, consistency across selftests,
+and ensures the license and documentation are
+clearly visible in a familiar format.
 
-we need define stub function for the case of !CONFIG_KVM_INTEL_TDX
+No functional changes have been made.
 
-with it fixed,
+Signed-off-by: Abdelrahman Fekry <abdelrahmanfekry375@gmail.com>
+---
+ tools/testing/selftests/ir/ir_loopback.c | 23 +++++++++++++----------
+ 1 file changed, 13 insertions(+), 10 deletions(-)
 
-Reviewed-by: Xiaoyao Li <xiaoyao.li@intel.com>
+diff --git a/tools/testing/selftests/ir/ir_loopback.c b/tools/testing/selftests/ir/ir_loopback.c
+index f4a15cbdd5ea..c94faa975630 100644
+--- a/tools/testing/selftests/ir/ir_loopback.c
++++ b/tools/testing/selftests/ir/ir_loopback.c
+@@ -1,14 +1,17 @@
+ // SPDX-License-Identifier: GPL-2.0
+-// test ir decoder
+-//
+-// Copyright (C) 2018 Sean Young <sean@mess.org>
+-
+-// When sending LIRC_MODE_SCANCODE, the IR will be encoded. rc-loopback
+-// will send this IR to the receiver side, where we try to read the decoded
+-// IR. Decoding happens in a separate kernel thread, so we will need to
+-// wait until that is scheduled, hence we use poll to check for read
+-// readiness.
+-
++/* Copyright (C) 2018 Sean Young <sean@mess.org>
++ *
++ * Selftest for IR decoder
++ *
++ *
++ * When sending LIRC_MODE_SCANCODE, the IR will be encoded.
++ * rc-loopback will send this IR to the receiver side,
++ * where we try to read the decoded IR.
++ * Decoding happens in a separate kernel thread,
++ * so we will need to wait until that is scheduled,
++ * hence we use poll to check for read
++ * readiness.
++ */
+ #include <linux/lirc.h>
+ #include <errno.h>
+ #include <stdio.h>
+-- 
+2.25.1
 
