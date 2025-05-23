@@ -1,171 +1,206 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A87B5218AC8
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 03:08:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 167B2218AC8;
+	Fri, 23 May 2025 03:10:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747969704; cv=none; b=MdS1uZMrqnB2MOK+qQVi/DZdHn0bb6JePmlapY9n5IRjMGukZl0uDierOcKpcf2HFw51R/iq387EBmEYDTrEI6DJYAdalcmPfIqrIQ24Aipjv88fnChhkb7jbtfBC8MNRE7AbneIDM5ILtXM0ZnCr9/FdaGb2R3HDCZ0e8K1cmo=
+	t=1747969849; cv=none; b=dt/Jub4qZdm5bovj+VmWMBXY4DwWtx/jHLPVBSLmHsiKNmTarG4P3ghPywbgfSzhI47ofWstOCWnCqxRAsfhhoAu2dyY3pDfxMMb+CAPZ5fEsDTba1NXAXHi5SZHS4rS6Y6HKI8KlUrzEoiuu6Hasey2pCLcZ1/7ctDjV7p1ls4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747969704; c=relaxed/simple;
-	bh=Sqz/278FdnOoqHsMnL1osxPoy3F6FDVCvwvqgyuiMm8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=riRz22AnyYGLpzsRq5AXx2i9bF53v6kCFKHSa8hTL3qexTpIuDWRSQQGIMp5MNKlOHuC4ew5AOCBvTR8OUXChW4VJrt+EDDVXHTCHYo4d2qJwO2iWc5slueAl/M8bmyFNkrFTcVm6cXvlD2mzUbZddD/p99K4AS5UObJEoflYBQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: 28623cb4378311f0b29709d653e92f7d-20250523
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.45,REQID:81d289c8-f117-40e5-9bad-d52e8f26d88c,IP:0,U
-	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
-	release,TS:0
-X-CID-META: VersionHash:6493067,CLOUDID:307a2bf67713fa1756139d6dab2a9bf5,BulkI
-	D:nil,BulkQuantity:0,Recheck:0,SF:80|81|82|83|102,TC:nil,Content:0|52,EDM:
-	-3,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,
-	AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0,NGT
-X-CID-BAS: 0,NGT,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-UUID: 28623cb4378311f0b29709d653e92f7d-20250523
-Received: from node4.com.cn [(10.44.16.170)] by mailgw.kylinos.cn
-	(envelope-from <xiaopei01@kylinos.cn>)
-	(Generic MTA)
-	with ESMTP id 1152663842; Fri, 23 May 2025 11:08:10 +0800
-Received: from node4.com.cn (localhost [127.0.0.1])
-	by node4.com.cn (NSMail) with SMTP id 6DCFB16003842;
-	Fri, 23 May 2025 11:08:10 +0800 (CST)
-X-ns-mid: postfix-682FE69A-3583511376
-Received: from [10.42.13.56] (unknown [10.42.13.56])
-	by node4.com.cn (NSMail) with ESMTPA id 9446116003841;
-	Fri, 23 May 2025 03:08:09 +0000 (UTC)
-Message-ID: <3abc216a-1af5-4cc2-a70c-e406943be274@kylinos.cn>
-Date: Fri, 23 May 2025 11:08:09 +0800
+	s=arc-20240116; t=1747969849; c=relaxed/simple;
+	bh=EDg1HtRdEKu2wx072cSUDWyclmRErO56Gv/XPdGs1ZM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=m6GWPCyqRyqzlkEPbhxEbA4gamvYZdzIF35qpLsrftZUlFC73UwLrurvXwTlywuVFo7QUDx3LeYoO/cg9QvQUbNow3eSlKjFvQI4O6+G9NWVugkQ6KIdDNpchgOztkPGDa5ynkxC8FCm3wxnugEYSunvnPzgWiq4wxe2xhCnwUs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lzReLTYK; arc=none smtp.client-ip=209.85.210.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lzReLTYK"
+Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-73c17c770a7so9257338b3a.2;
+        Thu, 22 May 2025 20:10:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747969847; x=1748574647; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=IQ+DvPxjKWEL7WwSCKI9gbi6R0NoaJVuMVX8JBqcEaw=;
+        b=lzReLTYKNmOdFdM6nlTEu1aHVWWKDa7BndxmAuLx3cosdTISirob1TX6YOf2WZDmXE
+         +QfuBxIg+c5NDfguQo5HvAtwbC0BDbxzPq9+Xkd9XQM0z2f+CrHTg5qoS2kAZ/scSnoa
+         B/9KkcuHa/+x9iqwz4GGsTYdJe5My9nAMK2yVhp+QxBLHmknl12bHUyBXDuDHM1+BYJX
+         n40ELEsRNO2a4RCAqBJzz3VBZe6De2m9R1wcl5ioHRs/jLe4GIW3nYdnSgpsvdBmqwoo
+         4WcCbxdMAswIiZEf7jn6KvKEjBnbxlZNEkykyQk60ZhDBk4dtEvmpga/lye+UqGtjOe0
+         mj0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747969847; x=1748574647;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=IQ+DvPxjKWEL7WwSCKI9gbi6R0NoaJVuMVX8JBqcEaw=;
+        b=X8DbINYluLnJQNnVlzKmy7K64qOJzR8Y1DQWSykxekfIXlR+ltYuE7GEMPd7bXLsQk
+         D5uGduYfzY9lfqGFW4BaFPrAiLDzzG4kjBWg2TMmcoYB1OBMQnzg1pa/EZ9ao0B2IPAv
+         jC/Ky2JgHEO6UUmqTEbifa1OmbrKeRHkAqZKruwWwkLRaTGidQ10oBUizSVu6ti3EWDB
+         UUNXnYjqY5ZwzcQBExXzQcV8PSEXvVcuKaQM6YmCwRmu5SN+iFFXGW4rElJihCecyEhf
+         P4na8368jnBlCSnFZ6DiUEMxtikCuiuHrqJk7mp76mL+XrgPA+E5t7oAswKyijbi2Yg3
+         yhAA==
+X-Forwarded-Encrypted: i=1; AJvYcCV6Os4dXdvW4rliLlYoky3DlgQP1DKnRejQ9zWtWy3coLe1AGaUOMKjJHhFEygnJVIBu3r+ssHY/Y3aOzAy@vger.kernel.org, AJvYcCXC29OVyrcD87YyLujn3EUbVVyZGGRWbwXvcNNzkzVqBgcEJf4gliokBsWuxWUPjPJwr1+TzTRc17Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz/JkNEVf49r2E4EazytmWqs1NHVL5snQ1zqS3M3z7NplLppNb0
+	/xmmsRPD7LCwgNcB1FGIHi0TEoQt3yZ/CfCoclH6z08+SGa8iiDJoJw/cIxV3Q==
+X-Gm-Gg: ASbGncvovvzlpCclsA2pA0WzLmUtZcdnTHcJ6HBHRys29tIgCFy4ELTpxwbpuZ+vq7I
+	vwshAQgvUhDuTqXF+PPTtaW2nt2DwJSwDBRu/zao2q7qMS8qzjlcCaOWbJftUac0e89+cm+GLtM
+	VLG5yxFbFAijafaRa83VNsvJI0QN5ejnA5aOROEumiU69Vv6PnHBI6/uvGPdVgN+g/p/Sp1kQ9t
+	zFpDG2CM9SjhBvGKsdbsVJcREiXbPREQiO4iGJ/oYeW9eR7GS9djNAE7MbQ5+pPnot37JknWuE1
+	RTesjYKIWjniMllIKB+aVaHjDERYIeZX0VUGy0vTLVrTp/j37hy9f/oKxYgPfw==
+X-Google-Smtp-Source: AGHT+IHakgt4Oo144LFlK0CdrZV/uiDMprRX9FVu7JhxaNdV3cktYYQ5oHfnfFpCIqZpXDB87tP8lw==
+X-Received: by 2002:a05:6a20:7d9a:b0:215:a9d5:1a46 with SMTP id adf61e73a8af0-21879eda720mr1812330637.12.1747969847013;
+        Thu, 22 May 2025 20:10:47 -0700 (PDT)
+Received: from archie.me ([103.124.138.155])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b26eb0a89edsm11828150a12.67.2025.05.22.20.10.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 May 2025 20:10:46 -0700 (PDT)
+Received: by archie.me (Postfix, from userid 1000)
+	id 6EDF642439C3; Fri, 23 May 2025 10:10:43 +0700 (WIB)
+Date: Fri, 23 May 2025 10:10:42 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Abdulrasaq Lawani <abdulrasaqolawani@gmail.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Jonathan Corbet <corbet@lwn.net>
+Cc: dri-devel@lists.freedesktop.org, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] drm: add overview diagram for drm stack
+Message-ID: <aC_nMs-hAyd8cpDJ@archie.me>
+References: <20250522-drm-doc-updates-v1-1-d1efd54740bd@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] devres: Move remaining devm_alloc_percpu and
- devm_device_add_group to devres.h
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
- rafael@kernel.org, dakr@kernel.org, bartosz.golaszewski@linaro.org
-References: <5ac1e2a127c9df7233ca8ba0696ebb08960d0fc3.1747903894.git.xiaopei01@kylinos.cn>
- <aC8en60QI0MwnXxM@smile.fi.intel.com>
-From: Pei Xiao <xiaopei01@kylinos.cn>
-In-Reply-To: <aC8en60QI0MwnXxM@smile.fi.intel.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="fFwlWSH1Re80NIG0"
+Content-Disposition: inline
+In-Reply-To: <20250522-drm-doc-updates-v1-1-d1efd54740bd@gmail.com>
+
+
+--fFwlWSH1Re80NIG0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
+On Thu, May 22, 2025 at 06:20:27PM -0400, Abdulrasaq Lawani wrote:
+> -[Insert diagram of typical DRM stack here]
+> +Overview of the Linux DRM Architecture
+> +-----------------------------------------------
+> ++-----------------------------+
+> +|     User-space Apps         |
+> +| (Games, Browsers, ML, etc.) |
+> ++-----------------------------+
+> +              |
+> +              v
+> ++---------------------------------------+
+> +|    Graphics APIs   |   Compute APIs   |
+> +|  (OpenGL, Vulkan)  |  (OpenCL, CUDA)  |
+> ++---------------------------------------+
+> +          |                   |
+> +          v                   v
+> ++---------------------+  +-----------------------+
+> +|  User-space Driver  |  |    Compute Runtime    |
+> +|  (Mesa, AMD/NVIDIA) |  |  (OpenCL, CUDA, ROCm) |
+> ++---------------------+  +-----------------------+
+> +          |                   |
+> +          +--------+----------+
+> +                   |
+> +                   v
+> +        +-----------------------+
+> +        |   libdrm (DRM API)    |
+> +        +-----------------------+
+> +                   |
+> +                   v
+> ++-------------------------------------------+
+> +|     Kernel DRM/KMS Driver (i915, amdgpu,  |
+> +|     nouveau, etc.)                        |
+> ++-------------------------------------------+
+> +        |                       |
+> +        v                       v
+> ++----------------+     +-------------------+
+> +| GPU Display HW |     | GPU Compute Units |
+> ++----------------+     +-------------------+
+> +
 
-=E5=9C=A8 2025/5/22 20:54, Andy Shevchenko =E5=86=99=E9=81=93:
-> On Thu, May 22, 2025 at 05:01:26PM +0800, Pei Xiao wrote:
->> Since commit f5e5631df596("devres: Move devm_*_action*() APIs to
->> devres.h"), But devm_alloc_percpu() and devm_device_add_group didn't b=
-e
->> moved.
->>
->> so move it.The changes improve header organization by keeping all
->> resource-managed device APIs in the dedicated devres.h header,
->> reducing cross-header dependencies and making the interfaces
->> easier to locate.
-> Thanks for the patch, my comments below.
->
-> ...
->
->> -/**
->> - * devm_alloc_percpu - Resource-managed alloc_percpu
->> - * @dev: Device to allocate per-cpu memory for
->> - * @type: Type to allocate per-cpu memory for
->> - *
->> - * Managed alloc_percpu. Per-cpu memory allocated with this function =
-is
->> - * automatically freed on driver detach.
->> - *
->> - * RETURNS:
->> - * Pointer to allocated memory on success, NULL on failure.
->> - */
->> -#define devm_alloc_percpu(dev, type)      \
->> -	((typeof(type) __percpu *)__devm_alloc_percpu((dev), sizeof(type), \
->> -						      __alignof__(type)))
->> -
->> -void __percpu *__devm_alloc_percpu(struct device *dev, size_t size,
->> -				   size_t align);
->> -void devm_free_percpu(struct device *dev, void __percpu *pdata);
-> Don't you need to cleanup the header inclusions as well?
->
-> ...
->
->> -int __must_check devm_device_add_group(struct device *dev,
->> -				       const struct attribute_group *grp);
-> I'm not sure about this. The percpu seems standalone piece, but this ha=
-s
-> relations with the other group related definitions just above.
->
-> ...
->
->> +#include <linux/sysfs.h>
->> +#include <asm/percpu.h>
-> What for are these new inclusions, please?
+I get multiple Sphinx indentation warnings and errors:
 
-I add these for build error:
+Documentation/gpu/introduction.rst:23: ERROR: Unexpected indentation. [docu=
+tils]
+Documentation/gpu/introduction.rst:22: WARNING: Block quote ends without a =
+blank line; unexpected unindent. [docutils]
+Documentation/gpu/introduction.rst:23: WARNING: Blank line required after t=
+able. [docutils]
+Documentation/gpu/introduction.rst:24: WARNING: Line block ends without a b=
+lank line. [docutils]
+Documentation/gpu/introduction.rst:25: WARNING: Block quote ends without a =
+blank line; unexpected unindent. [docutils]
+Documentation/gpu/introduction.rst:29: ERROR: Unexpected indentation. [docu=
+tils]
+Documentation/gpu/introduction.rst:28: WARNING: Block quote ends without a =
+blank line; unexpected unindent. [docutils]
+Documentation/gpu/introduction.rst:29: WARNING: Blank line required after t=
+able. [docutils]
+Documentation/gpu/introduction.rst:29: WARNING: Inline substitution_referen=
+ce start-string without end-string. [docutils]
+Documentation/gpu/introduction.rst:30: WARNING: Line block ends without a b=
+lank line. [docutils]
+Documentation/gpu/introduction.rst:31: WARNING: Block quote ends without a =
+blank line; unexpected unindent. [docutils]
+Documentation/gpu/introduction.rst:35: ERROR: Unexpected indentation. [docu=
+tils]
+Documentation/gpu/introduction.rst:35: WARNING: Inline substitution_referen=
+ce start-string without end-string. [docutils]
+Documentation/gpu/introduction.rst:36: WARNING: Line block ends without a b=
+lank line. [docutils]
+Documentation/gpu/introduction.rst:37: ERROR: Unexpected indentation. [docu=
+tils]
+Documentation/gpu/introduction.rst:37: WARNING: Blank line required after t=
+able. [docutils]
+Documentation/gpu/introduction.rst:38: WARNING: Line block ends without a b=
+lank line. [docutils]
+Documentation/gpu/introduction.rst:39: WARNING: Block quote ends without a =
+blank line; unexpected unindent. [docutils]
+Documentation/gpu/introduction.rst:42: ERROR: Unexpected indentation. [docu=
+tils]
+Documentation/gpu/introduction.rst:42: WARNING: Blank line required after t=
+able. [docutils]
+Documentation/gpu/introduction.rst:43: WARNING: Line block ends without a b=
+lank line. [docutils]
+Documentation/gpu/introduction.rst:44: WARNING: Block quote ends without a =
+blank line; unexpected unindent. [docutils]
+Documentation/gpu/introduction.rst:48: ERROR: Unexpected indentation. [docu=
+tils]
+Documentation/gpu/introduction.rst:48: WARNING: Blank line required after t=
+able. [docutils]
+Documentation/gpu/introduction.rst:48: WARNING: Inline substitution_referen=
+ce start-string without end-string. [docutils]
+Documentation/gpu/introduction.rst:49: WARNING: Line block ends without a b=
+lank line. [docutils]
+Documentation/gpu/introduction.rst:50: WARNING: Block quote ends without a =
+blank line; unexpected unindent. [docutils]
 
-In file included from drivers/gpio/gpiolib-devres.c:9:
-./include/linux/device/devres.h:189:15: error: expected =E2=80=98=3D=E2=80=
-=99, =E2=80=98,=E2=80=99, =E2=80=98;=E2=80=99, =E2=80=98asm=E2=80=99 or =E2=
-=80=98__attribute__=E2=80=99 before =E2=80=98*=E2=80=99 token
-=C2=A0 189 | void __percpu *__devm_alloc_percpu(struct device *dev, size_=
-t size,
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ^
-./include/linux/device/devres.h:191:57: error: expected =E2=80=98;=E2=80=99=
-, =E2=80=98,=E2=80=99 or =E2=80=98)=E2=80=99 before =E2=80=98*=E2=80=99 t=
-oken
-=C2=A0 191 | void devm_free_percpu(struct device *dev, void __percpu *pda=
-ta);
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ^
-./include/linux/device/devres.h:194:25: warning: =E2=80=98struct attribut=
-e_group=E2=80=99 declared inside parameter list will not be visible outsi=
-de of this definition or declaration
-=C2=A0 194 |=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 const struct attribute_group *grp);
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0 ^~~~~~~~~~~~~~~
+Please wrap the diagram above in literal code block.
 
-> ...
->
->> +/**
->> + * devm_alloc_percpu - Resource-managed alloc_percpu
->> + * @dev: Device to allocate per-cpu memory for
->> + * @type: Type to allocate per-cpu memory for
->> + *
->> + * Managed alloc_percpu. Per-cpu memory allocated with this function =
-is
->> + * automatically freed on driver detach.
->> + *
->> + * RETURNS:
-> Please, check that all of the kernel-doc are in align (using same style=
-).
-ok,get it
->> + * Pointer to allocated memory on success, NULL on failure.
->> + */
->> +#define devm_alloc_percpu(dev, type)      \
->> +	((typeof(type) __percpu *)__devm_alloc_percpu((dev), sizeof(type), \
->> +						      __alignof__(type)))
-> Just make it one line. it will be less than 100.
-ok
->> +void __percpu *__devm_alloc_percpu(struct device *dev, size_t size,
->> +				   size_t align);
-> Ditto.
-ok.
->> +void devm_free_percpu(struct device *dev, void __percpu *pdata);
-> Please, take your time to understand what is behind the __percpu and
-> why the asm/percpu.h is redundant here.
->
+Thanks.
+
+--=20
+An old man doll... just what I always wanted! - Clara
+
+--fFwlWSH1Re80NIG0
+Content-Type: application/pgp-signature; name=signature.asc
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCaC/nLwAKCRD2uYlJVVFO
+o0YoAPwP/GehTZZ/E4/JcMOdTC7wObkIe1OLa0lGTzgAjWND6AEApJP3MFdq+y9+
+RaJncUrLjmh4hjOHSxP5jQUoYmWL6wY=
+=++Ke
+-----END PGP SIGNATURE-----
+
+--fFwlWSH1Re80NIG0--
