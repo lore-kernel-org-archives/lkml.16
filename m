@@ -1,144 +1,119 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE9F32DCC0C;
-	Fri, 23 May 2025 14:31:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73ED21CB518
+	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 14:33:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748010698; cv=none; b=Y5BJ1cGDgpMsCb02K0TNtnG3UR8y+Jk7G3l/NQvIJKso21X/9ELu1IEgmYRer/+OBRzOx62cZNm4cLIZOXetiF1blkri8+JT3R6FPcQVWKlkR3qzSoQKlTGqeVQjsfISjvsayfRGJG594zmKBYS+Oelw1VEIG/uBmpDMyuYszMU=
+	t=1748010818; cv=none; b=DVXlHr+IZWwwf6dyyI74XxHpTb9gTgb1kyjLjIan6BBjKENRgHF0M9/jIG+vBdm0RVSkMa/jG7XCS6MmIe3QtBgYgQZfseQXgAvNsFgeAtM1SQtL51ehSb5KwGqS3gUD1+XEf+L7YoyLp376yHMqWe9vN+6YKxqBPQhDksHwjf0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748010698; c=relaxed/simple;
-	bh=F8AHXtmwckzlSUmmoc0BGi2VV71no0d0RwZD7r2sahA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=o194Wc0rvbpzd1CwWnUzI5NhYKaFNzxbwzOC9iqFw/wxRspij30SFBTFi0d2fdO8+ffSt5uHCSoyMpB7kvBtCoM5UpaUMDYyQrMZlZ1Sog5/kWzmOOjp0TNnmMZx8/Lqk+XvjJgrhzUkc52V9U5/78TrIHlyysEwAomTShsr6Bk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=4ihlR58X; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=lcyVzjQk; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1748010818; c=relaxed/simple;
+	bh=M0JM/iagUnyNnadh7PX4hbYGXfsli6u0A5pI6J9XwVs=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=Dussb7Mo1zpxVZ9rJSWUfMqC87xL6hm0Zz/P1oDAJi4HuxTinMYOiT7O2qQgNHLNoU5B66nVrV9fhf3d4NcQoRIeAyPRi1eWD4Htr9z3YIAJBPNRSlMTwKORZwFSq+fHiObjZGUNqLNukFCTA+/UcHoqgWZHbEt1Tjt8w+Xh4wU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=UGS2n06M; arc=none smtp.client-ip=209.85.216.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="4ihlR58X";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="lcyVzjQk"
-Date: Fri, 23 May 2025 16:31:32 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1748010694;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=fEZ6N6/GF0ZchnaYLlsA8GRq22FznhGXk6veRassrhY=;
-	b=4ihlR58X7u+FIL4yEadB/WP2vETM0c9pnq1Hl1akE8KY7Y/PXnw3AXEASUOQbcnaEupLN6
-	IwkZLCQtdyJHa4q/r4qW6t2zHvn3LvF000Nuv0KbmrbhKN640VHTZ3+B9qVojyz7jbQbIl
-	4guWTmqiT/t/gF4cxUozTGgPS54KHybNGABCzQTIEtbCF278035U3afRKFxYXClfwncV2v
-	eTCDB/UipuUgVhrQkuYnoDBtPmMhEHSw7tMuAuD3852Owmi7xlByE7W2oVZ3PNxMOK+x10
-	BRgVN+ahvnJmYy4SZnTg3UMsRjy1kqZAIfOeV+yjAdZjsPqHgBEcMVI6uavahg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1748010694;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=fEZ6N6/GF0ZchnaYLlsA8GRq22FznhGXk6veRassrhY=;
-	b=lcyVzjQklrUcJISkGY4WIZyKTwWqR2KcBF0PqUERD7JZg0Lc/A/0e54TsHZahAoya9o/nI
-	IB/9TxBVhUXaV8AQ==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: Nam Cao <namcao@linutronix.de>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-	John Ogness <john.ogness@linutronix.de>,
-	Clark Williams <clrkwllms@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>, linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev,
-	linux-rt-users@vger.kernel.org, Joe Damato <jdamato@fastly.com>,
-	Martin Karsten <mkarsten@uwaterloo.ca>,
-	Jens Axboe <axboe@kernel.dk>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Valentin Schneider <vschneid@redhat.com>
-Subject: Re: [PATCH v2] eventpoll: Fix priority inversion problem
-Message-ID: <20250523143132.i_YkS3R3@linutronix.de>
-References: <20250523061104.3490066-1-namcao@linutronix.de>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UGS2n06M"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-310efb64693so23256a91.0
+        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 07:33:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1748010817; x=1748615617; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=/uvu6aXDIrLF08vsxpzyNfXk0GOFzmWSaZdsX/BEX7c=;
+        b=UGS2n06M5/05ZUKItqdnuGPEzmo5dJVjlLUB3D1caODAOB+jKIETCgx1+O6aUiA/oQ
+         5GjzTv57ve4j7q1asD/bPaXFmgO5NYGTBtTLcDvAPBAG3DAqg44DGdk+0cnkZbfeuuQU
+         dZLfRz+SnHakvMSmI3Gymt50xhywAhJ5KngCpXd2KLIVFsIsjqdL3MvTd8fRUPgk6g6f
+         crqHNuEPL6QBfB0KDZ/NnT1LhGXZoMrA4vi/zvcONk6CNlJqBtcqkjyZall+guv04GxF
+         mq6QAIwK6HRjTPYTAPC9X9gyhLz8fI6BTod4q+GdXgVfaYg2icFqxe3q7huE1eA9CEgh
+         bquQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748010817; x=1748615617;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=/uvu6aXDIrLF08vsxpzyNfXk0GOFzmWSaZdsX/BEX7c=;
+        b=ZdlnZF408/xC4ZwKYH0jXliGu0ubpMmziTzfCxw2dZnjAtkbzwe6DndHKrDOODLSYl
+         lxbyv3jeu3KK40hr6lwWEaAXik+ff0RAsudnQ5E5zF/YeN/j+RYMRVZPJWCZm8BiB4dZ
+         wnCmge/eMG4+dWPnL63KQ/g+D/GTMMKdg7iJVlZOMEszlZcFQGAq92tLxc/cS4xFVz5h
+         2qgqKRzEgDTtid+RGcu9yVw6mX8+ioqf7NNlZ8Ql6ZLghx3/t5SFd/n9mdM14hxhvF0K
+         wHtQXndev4wC6vDJgXSU3fpPt7DgH4c329fjqupWq/k0F3N9Y63+PdSdp50C1VG4IMyv
+         W6xA==
+X-Forwarded-Encrypted: i=1; AJvYcCWQLJLaEWcw6A3Khob0EcHXS1y8aRTtVFuHAprSmSynoOXgNqr7OKiZitCFHUay/noh/7EwvQL8bjld5GM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyA6Jy1qlH6YwwOjURZOwwkIX2x7gREi3d0QxSC5wwokqu9xgvw
+	QLQ7cSQS652902hTH/XMOCAY8dg28V7PvZ72PZudSibIO7si6J+9XP1qBtkJZi6exvSfVnERpPw
+	4A46/6Q==
+X-Google-Smtp-Source: AGHT+IHsZ0QnOLBFT5oLqgFlsou+V6RqzdnkAMpT1uyTVqCC/FSYHIecluEf4Yy5p3wiVYxCHPutaUGV15c=
+X-Received: from pjbmf7.prod.google.com ([2002:a17:90b:1847:b0:30e:7b26:f68b])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:1846:b0:301:9f62:a944
+ with SMTP id 98e67ed59e1d1-30e7d5ca287mr50858908a91.33.1748010816755; Fri, 23
+ May 2025 07:33:36 -0700 (PDT)
+Date: Fri, 23 May 2025 07:33:30 -0700
+In-Reply-To: <2c52daad-0b64-48a9-8e73-d1aba977993b@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250523061104.3490066-1-namcao@linutronix.de>
+Mime-Version: 1.0
+References: <20250522235223.3178519-1-seanjc@google.com> <20250522235223.3178519-14-seanjc@google.com>
+ <2c52daad-0b64-48a9-8e73-d1aba977993b@amd.com>
+Message-ID: <aDB-2lcq4jJm9-OV@google.com>
+Subject: Re: [PATCH v3 13/13] KVM: selftests: Add a KVM_IRQFD test to verify
+ uniqueness requirements
+From: Sean Christopherson <seanjc@google.com>
+To: Sairaj Kodilkar <sarunkod@amd.com>
+Cc: "K. Y. Srinivasan" <kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>, 
+	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>, 
+	Juergen Gross <jgross@suse.com>, Stefano Stabellini <sstabellini@kernel.org>, 
+	Paolo Bonzini <pbonzini@redhat.com>, Ingo Molnar <mingo@redhat.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>, 
+	Vincent Guittot <vincent.guittot@linaro.org>, Shuah Khan <shuah@kernel.org>, 
+	Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, linux-kernel@vger.kernel.org, 
+	linux-hyperv@vger.kernel.org, xen-devel@lists.xenproject.org, 
+	kvm@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
+	K Prateek Nayak <kprateek.nayak@amd.com>, David Matlack <dmatlack@google.com>
+Content-Type: text/plain; charset="us-ascii"
 
-On 2025-05-23 08:11:04 [+0200], Nam Cao wrote:
-> @@ -867,10 +837,25 @@ static bool __ep_remove(struct eventpoll *ep, struct epitem *epi, bool force)
->  
->  	rb_erase_cached(&epi->rbn, &ep->rbr);
->  
-> -	write_lock_irq(&ep->lock);
-> -	if (ep_is_linked(epi))
-> -		list_del_init(&epi->rdllink);
-> -	write_unlock_irq(&ep->lock);
-> +	/*
-> +	 * ep->mtx is held, which means no waiter is touching the ready list. This item is also no
-> +	 * longer being added. Therefore, the ready flag can only mean one thing: this item is on
-> +	 * the ready list.
-> +	 */
-> +	if (smp_load_acquire(&epi->ready)) {
-> +		put_back_last = NULL;
-> +		while (true) {
-> +			struct llist_node *n = llist_del_first(&ep->rdllist);
-> +
-> +			if (&epi->rdllink == n || WARN_ON(!n))
-> +				break;
-> +			if (!put_back_last)
-> +				put_back_last = n;
-> +			llist_add(n, &put_back);
+On Fri, May 23, 2025, Sairaj Kodilkar wrote:
+> On 5/23/2025 5:22 AM, Sean Christopherson wrote:
+> 
+> > +
+> > +int main(int argc, char *argv[])
+> > +{
+> > +	pthread_t racing_thread;
+> > +	int r, i;
+> > +
+> > +	/* Create "full" VMs, as KVM_IRQFD requires an in-kernel IRQ chip. */
+> > +	vm1 = vm_create(1);
+> > +	vm2 = vm_create(1);
+> > +
+> > +	WRITE_ONCE(__eventfd, kvm_new_eventfd());
+> > +
+> > +	kvm_irqfd(vm1, 10, __eventfd, 0);
+> > +
+> > +	r = __kvm_irqfd(vm1, 11, __eventfd, 0);
+> > +	TEST_ASSERT(r && errno == EBUSY,
+> > +		    "Wanted EBUSY, r = %d, errno = %d", r, errno);
+> > +
+> > +	r = __kvm_irqfd(vm2, 12, __eventfd, 0);
+> > +	TEST_ASSERT(r && errno == EBUSY,
+> > +		    "Wanted EBUSY, r = %d, errno = %d", r, errno);
+> > +
+> > +	kvm_irqfd(vm1, 11, READ_ONCE(__eventfd), KVM_IRQFD_FLAG_DEASSIGN);
+> > +	kvm_irqfd(vm1, 12, READ_ONCE(__eventfd), KVM_IRQFD_FLAG_DEASSIGN);
+> > +	kvm_irqfd(vm1, 13, READ_ONCE(__eventfd), KVM_IRQFD_FLAG_DEASSIGN);
+> > +	kvm_irqfd(vm1, 14, READ_ONCE(__eventfd), KVM_IRQFD_FLAG_DEASSIGN);
+> 
+> Hi Sean,
+> I dont see any allocation for the GSI 13 and 14..
+> Is there any reason for the deassigning these two GSIs ?
 
-put_back is local, you cam use __llist_add()
-
-You could llist_del_all() and then you could use the non-atomic
-operations for the replacement. But you need to walk the whole list to
-know the first and last for the batch.
-the "wait" perf bench throws in "16320" items. Avoiding
-llist_del_first() makes hardly a different to, worse, to slight
-improvement. Since it is all random it depends when the atomic operation
-outweighs  
-
-The ctl case gets worse with this approach. On average it has to iterate
-over 45% items to find the right item and it adds less than 200 items.
-So the atomic does not outweigh the while iteration.
-
-> +		}
-> +		if (put_back_last)
-> +			llist_add_batch(put_back.first, put_back_last, &ep->rdllist);
-> +	}
->  
->  	wakeup_source_unregister(ep_wakeup_source(epi));
->  	/*
-> @@ -1867,19 +1767,20 @@ static int ep_send_events(struct eventpoll *ep,
->  	init_poll_funcptr(&pt, NULL);
->  
->  	mutex_lock(&ep->mtx);
-> -	ep_start_scan(ep, &txlist);
->  
-> -	/*
-> -	 * We can loop without lock because we are passed a task private list.
-> -	 * Items cannot vanish during the loop we are holding ep->mtx.
-> -	 */
-> -	list_for_each_entry_safe(epi, tmp, &txlist, rdllink) {
-> +	while (res < maxevents) {
->  		struct wakeup_source *ws;
-> +		struct llist_node *n;
->  		__poll_t revents;
->  
-> -		if (res >= maxevents)
-> +		n = llist_del_first(&ep->rdllist);
-> +		if (!n)
->  			break;
->  
-> +		epi = llist_entry(n, struct epitem, rdllink);
-> +		llist_add(n, &txlist);
-
-txlist is local, you can use __list_add()
-
-> +		smp_store_release(&epi->ready, false);
-> +
->  		/*
->  		 * Activate ep->ws before deactivating epi->ws to prevent
->  		 * triggering auto-suspend here (in case we reactive epi->ws
-
-Sebastian
+Yes, KVM's rather bizarre ABI is that DEASSIGN is allowed even if the VM doesn't
+have a corresponding assigned irqfd.  The reason I added these early DEASSIGN
+calls is so that there will be an easier-to-debug failure if KVM's behavior
+changes (the racing threads part of the test abuses KVM's ABI).  I didn't add a
+comment because the helpers already have comments, but looking at this again, I
+agree that main() needs a better comment.
