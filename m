@@ -1,199 +1,374 @@
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13D9B2DCBF3
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 03:36:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BCF621B909
+	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 03:42:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747971373; cv=none; b=eAE/cRlOZp7aGVBLmyr+5OwaC7zpjREaz57Asd6t8r/3PLaLP7kqKTThx5fVR5Hbb413dHj+J3sHJIU0a+V8i+h+5n+2e2ETMPcrL8NLtCKa2ivXYRlpuB4HLb6lzn795QRR7Dw9k7Y+NZ+qIc5lnB4M+EPhjGjKtSziscU9PxQ=
+	t=1747971768; cv=none; b=G99/GGKsFmzL8mJDgtoQG4iFImXokaozpp+QhdLKPubceJfWlU65+UAAGMmE4feP4sOErgjPo2hhR1hGiggQ0s+1V8+61/LGaHfmq+f68eoOwAthe+0TzyGkn8+fi2KczCoQcctTHrsCkmbRFMHPvQdsoGTXQ9twIwM2edHXwsM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747971373; c=relaxed/simple;
-	bh=azZRr4LBOgLYXx6bWZOfDQZuffYt4ZV2A6L6e7dWokA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=QYwSSEKaAJ1UyZtm+kGoR/UYks8+bDEl4jTlKhRRSkCEcajlPUo6LqNituk4xebxv/knUSWuv+JY/vvvg+0ZRI881Sm08cTNnZU14YrciZ1tD43MCrfBUr6v1dBIp/cpArg+g6pbaCgfDwrR/++wHIWIphg2kXAc42ekJMMV4sw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=E3kcP0UM; arc=none smtp.client-ip=209.85.221.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747971768; c=relaxed/simple;
+	bh=d5huQlXh1efRAppCXkTe3d+67Nij6wkb6lcWjYVptT8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=jJUzuqME3mQ7ctwbUY++hBwO6gDGZfZRJwq6dq69vtj+Ns8UT0QqoWBQoDndQ66hrFIj8ud0zWEgHvJ2ap3kyB17WphdtAt6IIxfqzT+RwR48dkNrUAbhKmS0kJNlsCtKFLWk/q67K2E1rCtvnZHtH0vq9YbAS+t0ihtaCPzMXE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=Awkyi31E; arc=none smtp.client-ip=209.85.215.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E3kcP0UM"
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-3a368259589so932725f8f.3
-        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 20:36:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="Awkyi31E"
+Received: by mail-pg1-f178.google.com with SMTP id 41be03b00d2f7-afc857702d1so7399909a12.3
+        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 20:42:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747971368; x=1748576168; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=bytedance.com; s=google; t=1747971766; x=1748576566; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=oMXqaCL87KXZTQ02q/1XgBkXjy1duBgR+/XofIDFZrk=;
-        b=E3kcP0UMQe7XQwWDaq9eI5i7JMwF2xAMfO6ldadTCxp7Dr8fXEGRWnKROzRhFa/g6Y
-         YMusaQW3GuSH38Y4y/m7bb63I4OCIbfe9u0/mhT4UDmFFS9vJg59I+DcYK1lMPzOp4h0
-         v5RWzfgZSVMW+7H+VrfcGz09yt2AEq9j5GNo0G2G66TEHDAuo9ReWchvdO/MPJGb3lqp
-         2FCNPkVxCWkzM+7be0ot5glLKQGeGFER81mEzxtXUGsbFyb/3HElhXut5y6EmjC6nNSQ
-         fw0+Qhi/BrRDgw8EiZK6hOU2N35DH4VkJfxGBem+kEv/WmkkznlAMDlDBHaPoqCtvXfm
-         jtmQ==
+        bh=brAyXchy3n3A0Nkwv5gIonlyt1rlot5eF557LcIjUwI=;
+        b=Awkyi31EFeK7NswFPiNuD/R9sQimcB3P9c4VG6xChiaiJtQlWyvmRCY3UVz1mFHPRz
+         2M7lzh40jy9H3PZ7XtWaRpw2AHwWpwpSUa1k2loaYPLdn2ilGK/sp9HmGvaRQ4Him6MU
+         MmGN47I7Q9Tecq8/iX+NRyH4TT2WoHGrYqhxYf0n7HA+sswTZQBiHWzusmFlqy5q3oV7
+         2n6e5Um/kUbsi4Wviojs5wLX1aXm7nD9inLW6ktl+l8GZdqriw4RgcKvC4eNJtl7Ko2a
+         OPBoAP6pBo3XB3hcOUwZHL4nWskkqaYfz+PzfFegJVG6nf38pUNWprZSNslb7IsLjSs1
+         eDlQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747971368; x=1748576168;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1747971766; x=1748576566;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=oMXqaCL87KXZTQ02q/1XgBkXjy1duBgR+/XofIDFZrk=;
-        b=v3pPqiRhGf3KLWspgcdnvjxdeYj4/D7iN/SHiXaQ/EP9kHAO1lvJy74lzd9DXpEBxa
-         1M0RtVqhQ8MYqIncuoIw5Bpjsk+iN2QrHYgevpzMZFH0ZJSxsiIZe2kbdb0tw+UkY+Z7
-         /Q14nz4rp6JNZLt7hu9OVtPUXTl4AH0qLO9uqmb/ariLvo93xXRP3GBAA02i11ElOMRr
-         7bHajWKQ4268mdXWwl2Vfy/ZrbyZouQc1dkP/wCOW3YclHBXb2wZS5EhHeFk/dgQkwCQ
-         bHaukmpdDL5jZwhOjok2e/Bx+MLnpVjeDHjRF+Kf75YTYicrhXGjNg/ErP2FsmuaKzkw
-         5qcg==
-X-Forwarded-Encrypted: i=1; AJvYcCWC3IwoSKQ2YfbYS8xeU9DLtgOsf42yHxqXeDburMF5vMIRPTsNMeH9ANDSwwkHLwzSytadOI5u84cOY2M=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzbF0KJJBWgOxxXD2Tm5zSc6EQ4bOtdtiHAYe0o/MQkjt4VJRX0
-	G1rC+AMpyCxZ+lacyEkxqOLHR6qZX1o9VKSgLlnrNdE0ngngUzbaLpQlUErjaJomT3o+CXHcq/y
-	lQaYpixKOsmmpuu42AgODzuQZnE6R1+Q=
-X-Gm-Gg: ASbGnctkdenhftgp3fX5ofDI3XUK9Pg6E6oQ/h0uDfrxBXo7Kcr1q/6NEDQic3iWjBy
-	el1kDrZgiZAzUPreroDG6idTANzIpTfwZ9imCrsu2c6uJ1zSmEK6UFmbtz35MeZPXe0M44QKCRl
-	bBZ/60TxoemqJbHc2gcKJ0AKB3Ay9N0JTCrA==
-X-Google-Smtp-Source: AGHT+IG8tDj9VUbVSSZCdOnpRLycP6PESNY5fDQ2iVNmW7wMk4wsbP81qGjQ8GGsn73OHPv2MraJUKNDkTFYkZxZCak=
-X-Received: by 2002:a05:600c:138c:b0:43b:c844:a4ba with SMTP id
- 5b1f17b1804b1-44b8ab9b6d3mr2394265e9.3.1747971367970; Thu, 22 May 2025
- 20:36:07 -0700 (PDT)
+        bh=brAyXchy3n3A0Nkwv5gIonlyt1rlot5eF557LcIjUwI=;
+        b=LtQk5ikHDxVHC4Rzf6aPTFw6MjQPczLh2vVR5+GPm5VjT6xRi3gMbbHWYmSjoXLUVo
+         UID7eeVfu3l2XduVRtl6gabEw34zacawCNH/sWYwMadQUg9lQPeAMyv7mw/ABqPHsin0
+         A6WsXhr0BLecwejK1K2UrPc08U5t1MZsBA1Vfds1YhMEWIiZ31soZabtCnlPm8oQtwp8
+         XgfLl+NFYaOAcNgSifNzQEVtS2Mxw9DqKBLo7jGbOtowOjOqhh4C5U7E/NxREHZiCu0K
+         kafCPlPfV951DqIxcqxGa21+jh0jQwWpoghOu1pKjfITGLa0wOZSvFAORT3XoztXsEOq
+         gKug==
+X-Forwarded-Encrypted: i=1; AJvYcCWh16jUpNTGIV9PUBYO+V9VuqE7YpQlKMlN+dCZZCK0fZXPKVYP1vdLhkddrUlml6XIJge7Y3uwHZ1zVmY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw7Zv95SiLql3TU+o5m+rk4ZEvAacnLykn66QdM6CxyDi5RDv+h
+	PLtGkzS2VT1ZH3w/+fQxzT0bNDbziOZVVLm3dsC3esGL70/bJhLv/Xa+lkH1+SYYO/Q=
+X-Gm-Gg: ASbGnctr8xBWaQxgsfR4GcbgRaukTvb5roi2qCGSWcf3l6H5paDsz4E3cmPbIW+O/4U
+	qwlhHo8BrIrUcjt+MWsHLQVUZvdxVAdY1kD9VReQpUZSgYA+jrQ1bXEXa73hjrhlfX0CTJ8LKJ0
+	SCHLq9LxoFuY2xkS5pyfOboquRD79ncb09l7jQme6jeFJ1Q3eeJ5YmgLaXsgAx3lJSDG0p2xrdF
+	oA6RnSciL1so8qqjMs+F7j61V5xxLOeG2AuqwV4dU/ljkzLPrZlhkei9Zgq4tbBJu40EqjpAF8s
+	UkRctjrxFDhk0Q9ssn2EMNwQWd8nfVpHIDSboOT4bwi1+dbzx7EiYrdivsd0aZGnpFd34BxZ5Co
+	eRyE=
+X-Google-Smtp-Source: AGHT+IFZqE9jOyZSfXutukv9I+Uu+19n0xB9UudX0/PzDm8KMUsJ1r5OLWeAJAanYYQMUDZq9+sbOw==
+X-Received: by 2002:a17:903:320e:b0:231:7399:7db8 with SMTP id d9443c01a7336-231d43dc996mr353089525ad.7.1747971765669;
+        Thu, 22 May 2025 20:42:45 -0700 (PDT)
+Received: from localhost.localdomain ([203.208.189.14])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-231d4ed4ecfsm115278405ad.234.2025.05.22.20.42.42
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Thu, 22 May 2025 20:42:45 -0700 (PDT)
+From: lizhe.67@bytedance.com
+To: alex.williamson@redhat.com
+Cc: david@redhat.com,
+	kvm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	lizhe.67@bytedance.com,
+	muchun.song@linux.dev,
+	peterx@redhat.com
+Subject: Re: [PATCH v4] vfio/type1: optimize vfio_pin_pages_remote() for large folio
+Date: Fri, 23 May 2025 11:42:38 +0800
+Message-ID: <20250523034238.35879-1-lizhe.67@bytedance.com>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20250522145207.01734386.alex.williamson@redhat.com>
+References: <20250522145207.01734386.alex.williamson@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250523032545.1392641-1-chao@kernel.org>
-In-Reply-To: <20250523032545.1392641-1-chao@kernel.org>
-From: Zhiguo Niu <niuzhiguo84@gmail.com>
-Date: Fri, 23 May 2025 11:35:56 +0800
-X-Gm-Features: AX0GCFs4AKTY9dD6cR9VFip4Is95mD1bH4fpqPkJIkd07O28bhyoBRQiQCkif7I
-Message-ID: <CAHJ8P3KVFDbOsSjdbA=LqcT2PGNbgNOibWEn6Y6cqGOgvkjO6Q@mail.gmail.com>
-Subject: Re: [f2fs-dev] [PATCH v3] f2fs: fix to skip f2fs_balance_fs() if
- checkpoint is disabled
-To: Chao Yu <chao@kernel.org>
-Cc: jaegeuk@kernel.org, syzbot+aa5bb5f6860e08a60450@syzkaller.appspotmail.com, 
-	Qi Han <hanqi@vivo.com>, linux-kernel@vger.kernel.org, 
-	linux-f2fs-devel@lists.sourceforge.net
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Chao Yu via Linux-f2fs-devel <linux-f2fs-devel@lists.sourceforge.net>
-=E4=BA=8E2025=E5=B9=B45=E6=9C=8823=E6=97=A5=E5=91=A8=E4=BA=94 11:30=E5=86=
-=99=E9=81=93=EF=BC=9A
->
-> Syzbot reports a f2fs bug as below:
->
-> INFO: task syz-executor328:5856 blocked for more than 144 seconds.
->       Not tainted 6.15.0-rc6-syzkaller-00208-g3c21441eeffc #0
-> "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-> task:syz-executor328 state:D stack:24392 pid:5856  tgid:5832  ppid:5826  =
- task_flags:0x400040 flags:0x00004006
-> Call Trace:
->  <TASK>
->  context_switch kernel/sched/core.c:5382 [inline]
->  __schedule+0x168f/0x4c70 kernel/sched/core.c:6767
->  __schedule_loop kernel/sched/core.c:6845 [inline]
->  schedule+0x165/0x360 kernel/sched/core.c:6860
->  io_schedule+0x81/0xe0 kernel/sched/core.c:7742
->  f2fs_balance_fs+0x4b4/0x780 fs/f2fs/segment.c:444
->  f2fs_map_blocks+0x3af1/0x43b0 fs/f2fs/data.c:1791
->  f2fs_expand_inode_data+0x653/0xaf0 fs/f2fs/file.c:1872
->  f2fs_fallocate+0x4f5/0x990 fs/f2fs/file.c:1975
->  vfs_fallocate+0x6a0/0x830 fs/open.c:338
->  ioctl_preallocate fs/ioctl.c:290 [inline]
->  file_ioctl fs/ioctl.c:-1 [inline]
->  do_vfs_ioctl+0x1b8f/0x1eb0 fs/ioctl.c:885
->  __do_sys_ioctl fs/ioctl.c:904 [inline]
->  __se_sys_ioctl+0x82/0x170 fs/ioctl.c:892
->  do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
->  do_syscall_64+0xf6/0x210 arch/x86/entry/syscall_64.c:94
->  entry_SYSCALL_64_after_hwframe+0x77/0x7f
->
-> The root cause is after commit 84b5bb8bf0f6 ("f2fs: modify
-> f2fs_is_checkpoint_ready logic to allow more data to be written with the
-> CP disable"), we will get chance to allow f2fs_is_checkpoint_ready() to
-> return true once below conditions are all true:
-> 1. checkpoint is disabled
-> 2. there are not enough free segments
-> 3. there are enough free blocks
->
-> Then it will cause f2fs_balance_fs() to trigger foreground GC.
->
-> void f2fs_balance_fs(struct f2fs_sb_info *sbi, bool need)
-> ...
->         if (!f2fs_is_checkpoint_ready(sbi))
->                 return;
->
-> And the testcase mounts f2fs image w/ gc_merge,checkpoint=3Ddisable, so d=
-eadloop
-> will happen through below race condition:
->
-> - f2fs_do_shutdown              - vfs_fallocate                         -=
- gc_thread_func
->                                  - file_start_write
->                                   - __sb_start_write(SB_FREEZE_WRITE)
->                                  - f2fs_fallocate
->                                   - f2fs_expand_inode_data
->                                    - f2fs_map_blocks
->                                     - f2fs_balance_fs
->                                      - prepare_to_wait
->                                      - wake_up(gc_wait_queue_head)
->                                      - io_schedule
->  - bdev_freeze
->   - freeze_super
->    - sb->s_writers.frozen =3D SB_FREEZE_WRITE;
->    - sb_wait_write(sb, SB_FREEZE_WRITE);
->                                                                          =
-- if (sbi->sb->s_writers.frozen >=3D SB_FREEZE_WRITE) continue;
->                                                                          =
-: cause deadloop
->
-> This patch fix to add check condition in f2fs_balance_fs(), so that if
-> checkpoint is disabled, we will just skip trigger foreground GC to
-> avoid such deadloop issue.
->
-> Meanwhile let's remove f2fs_is_checkpoint_ready() check condition in
-> f2fs_balance_fs(), since it's redundant, due to the main logic in the
-> function is to check:
-> a) whether checkpoint is disabled
-> b) there is enough free segments
->
-> f2fs_balance_fs() still has all logics after f2fs_is_checkpoint_ready()'s
-> removal.
->
-> Reported-by: syzbot+aa5bb5f6860e08a60450@syzkaller.appspotmail.com
-> Closes: https://lore.kernel.org/linux-f2fs-devel/682d743a.a00a0220.29bc26=
-.0289.GAE@google.com
-> Fixes: 84b5bb8bf0f6 ("f2fs: modify f2fs_is_checkpoint_ready logic to allo=
-w more data to be written with the CP disable")
-> Cc: Qi Han <hanqi@vivo.com>
-> Signed-off-by: Chao Yu <chao@kernel.org>
-> ---
-> v3:
-> - clean up the codes
->  fs/f2fs/segment.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
-> index 5ff0111ed974..24b4bb2a4b9b 100644
-> --- a/fs/f2fs/segment.c
-> +++ b/fs/f2fs/segment.c
-> @@ -433,7 +433,7 @@ void f2fs_balance_fs(struct f2fs_sb_info *sbi, bool n=
-eed)
->         if (need && excess_cached_nats(sbi))
->                 f2fs_balance_fs_bg(sbi, false);
->
-> -       if (!f2fs_is_checkpoint_ready(sbi))
-> +       if (unlikely(is_sbi_flag_set(sbi, SBI_CP_DISABLED)))
->                 return;
+On Thu, 22 May 2025 14:52:07 -0600, alex.williamson@redhat.com wrote: 
 
-Reviewed-by: Zhiguo Niu <zhiguo.niu@unisoc.com>
-thanks!
->
->         /*
-> --
-> 2.49.0
->
->
->
-> _______________________________________________
-> Linux-f2fs-devel mailing list
-> Linux-f2fs-devel@lists.sourceforge.net
-> https://lists.sourceforge.net/lists/listinfo/linux-f2fs-devel
+> On Thu, 22 May 2025 16:25:24 +0800
+> lizhe.67@bytedance.com wrote:
+> 
+> > On Thu, 22 May 2025 09:22:50 +0200, david@redhat.com wrote:
+> > 
+> > >On 22.05.25 05:49, lizhe.67@bytedance.com wrote:  
+> > >> On Wed, 21 May 2025 13:17:11 -0600, alex.williamson@redhat.com wrote:
+> > >>   
+> > >>>> From: Li Zhe <lizhe.67@bytedance.com>
+> > >>>>
+> > >>>> When vfio_pin_pages_remote() is called with a range of addresses that
+> > >>>> includes large folios, the function currently performs individual
+> > >>>> statistics counting operations for each page. This can lead to significant
+> > >>>> performance overheads, especially when dealing with large ranges of pages.
+> > >>>>
+> > >>>> This patch optimize this process by batching the statistics counting
+> > >>>> operations.
+> > >>>>
+> > >>>> The performance test results for completing the 8G VFIO IOMMU DMA mapping,
+> > >>>> obtained through trace-cmd, are as follows. In this case, the 8G virtual
+> > >>>> address space has been mapped to physical memory using hugetlbfs with
+> > >>>> pagesize=2M.
+> > >>>>
+> > >>>> Before this patch:
+> > >>>> funcgraph_entry:      # 33813.703 us |  vfio_pin_map_dma();
+> > >>>>
+> > >>>> After this patch:
+> > >>>> funcgraph_entry:      # 16071.378 us |  vfio_pin_map_dma();
+> > >>>>
+> > >>>> Signed-off-by: Li Zhe <lizhe.67@bytedance.com>
+> > >>>> Co-developed-by: Alex Williamson <alex.williamson@redhat.com>
+> > >>>> Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+> > >>>> ---  
+> > >>>
+> > >>> Given the discussion on v3, this is currently a Nak.  Follow-up in that
+> > >>> thread if there are further ideas how to salvage this.  Thanks,  
+> > >> 
+> > >> How about considering the solution David mentioned to check whether the
+> > >> pages or PFNs are actually consecutive?
+> > >> 
+> > >> I have conducted a preliminary attempt, and the performance testing
+> > >> revealed that the time consumption is approximately 18,000 microseconds.
+> > >> Compared to the previous 33,000 microseconds, this also represents a
+> > >> significant improvement.
+> > >> 
+> > >> The modification is quite straightforward. The code below reflects the
+> > >> changes I have made based on this patch.
+> > >> 
+> > >> diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
+> > >> index bd46ed9361fe..1cc1f76d4020 100644
+> > >> --- a/drivers/vfio/vfio_iommu_type1.c
+> > >> +++ b/drivers/vfio/vfio_iommu_type1.c
+> > >> @@ -627,6 +627,19 @@ static long vaddr_get_pfns(struct mm_struct *mm, unsigned long vaddr,
+> > >>          return ret;
+> > >>   }
+> > >>   
+> > >> +static inline long continuous_page_num(struct vfio_batch *batch, long npage)
+> > >> +{
+> > >> +       long i;
+> > >> +       unsigned long next_pfn = page_to_pfn(batch->pages[batch->offset]) + 1;
+> > >> +
+> > >> +       for (i = 1; i < npage; ++i) {
+> > >> +               if (page_to_pfn(batch->pages[batch->offset + i]) != next_pfn)
+> > >> +                       break;
+> > >> +               next_pfn++;
+> > >> +       }
+> > >> +       return i;
+> > >> +}  
+> > >
+> > >
+> > >What might be faster is obtaining the folio, and then calculating the 
+> > >next expected page pointer, comparing whether the page pointers match.
+> > >
+> > >Essentially, using folio_page() to calculate the expected next page.
+> > >
+> > >nth_page() is a simple pointer arithmetic with CONFIG_SPARSEMEM_VMEMMAP, 
+> > >so that might be rather fast.
+> > >
+> > >
+> > >So we'd obtain
+> > >
+> > >start_idx = folio_idx(folio, batch->pages[batch->offset]);  
+> > 
+> > Do you mean using folio_page_idx()?
+> > 
+> > >and then check for
+> > >
+> > >batch->pages[batch->offset + i] == folio_page(folio, start_idx + i)  
+> > 
+> > Thank you for your reminder. This is indeed a better solution.
+> > The updated code might look like this:
+> > 
+> > diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
+> > index bd46ed9361fe..f9a11b1d8433 100644
+> > --- a/drivers/vfio/vfio_iommu_type1.c
+> > +++ b/drivers/vfio/vfio_iommu_type1.c
+> > @@ -627,6 +627,20 @@ static long vaddr_get_pfns(struct mm_struct *mm, unsigned long vaddr,
+> >         return ret;
+> >  }
+> >  
+> > +static inline long continuous_pages_num(struct folio *folio,
+> > +               struct vfio_batch *batch, long npage)
+> 
+> Note this becomes long enough that we should just let the compiler
+> decide whether to inline or not.
+
+Thank you! The 'inline' here indeed needs to be removed.
+
+> > +{
+> > +       long i;
+> > +       unsigned long start_idx =
+> > +                       folio_page_idx(folio, batch->pages[batch->offset]);
+> > +
+> > +       for (i = 1; i < npage; ++i)
+> > +               if (batch->pages[batch->offset + i] !=
+> > +                               folio_page(folio, start_idx + i))
+> > +                       break;
+> > +       return i;
+> > +}
+> > +
+> >  /*
+> >   * Attempt to pin pages.  We really don't want to track all the pfns and
+> >   * the iommu can only map chunks of consecutive pfns anyway, so get the
+> > @@ -708,8 +722,12 @@ static long vfio_pin_pages_remote(struct vfio_dma *dma, unsigned long vaddr,
+> >                          */
+> >                         nr_pages = min_t(long, batch->size, folio_nr_pages(folio) -
+> >                                                 folio_page_idx(folio, batch->pages[batch->offset]));
+> > -                       if (nr_pages > 1 && vfio_find_vpfn_range(dma, iova, nr_pages))
+> > -                               nr_pages = 1;
+> > +                       if (nr_pages > 1) {
+> > +                               if (vfio_find_vpfn_range(dma, iova, nr_pages))
+> > +                                       nr_pages = 1;
+> > +                               else
+> > +                                       nr_pages = continuous_pages_num(folio, batch, nr_pages);
+> > +                       }
+> 
+> 
+> I think we can refactor this a bit better and maybe if we're going to
+> the trouble of comparing pages we can be a bit more resilient to pages
+> already accounted as vpfns.  I took a shot at it, compile tested only,
+> is there still a worthwhile gain?
+> 
+> diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
+> index 0ac56072af9f..e8bba32148f7 100644
+> --- a/drivers/vfio/vfio_iommu_type1.c
+> +++ b/drivers/vfio/vfio_iommu_type1.c
+> @@ -319,7 +319,13 @@ static void vfio_dma_bitmap_free_all(struct vfio_iommu *iommu)
+>  /*
+>   * Helper Functions for host iova-pfn list
+>   */
+> -static struct vfio_pfn *vfio_find_vpfn(struct vfio_dma *dma, dma_addr_t iova)
+> +
+> +/*
+> + * Find the first vfio_pfn that overlapping the range
+> + * [iova_start, iova_end) in rb tree.
+> + */
+> +static struct vfio_pfn *vfio_find_vpfn_range(struct vfio_dma *dma,
+> +		dma_addr_t iova_start, dma_addr_t iova_end)
+>  {
+>  	struct vfio_pfn *vpfn;
+>  	struct rb_node *node = dma->pfn_list.rb_node;
+> @@ -327,9 +333,9 @@ static struct vfio_pfn *vfio_find_vpfn(struct vfio_dma *dma, dma_addr_t iova)
+>  	while (node) {
+>  		vpfn = rb_entry(node, struct vfio_pfn, node);
+>  
+> -		if (iova < vpfn->iova)
+> +		if (iova_end <= vpfn->iova)
+>  			node = node->rb_left;
+> -		else if (iova > vpfn->iova)
+> +		else if (iova_start > vpfn->iova)
+>  			node = node->rb_right;
+>  		else
+>  			return vpfn;
+> @@ -337,6 +343,11 @@ static struct vfio_pfn *vfio_find_vpfn(struct vfio_dma *dma, dma_addr_t iova)
+>  	return NULL;
+>  }
+>  
+> +static inline struct vfio_pfn *vfio_find_vpfn(struct vfio_dma *dma, dma_addr_t iova)
+> +{
+> +	return vfio_find_vpfn_range(dma, iova, iova + PAGE_SIZE);
+> +}
+> +
+>  static void vfio_link_pfn(struct vfio_dma *dma,
+>  			  struct vfio_pfn *new)
+>  {
+> @@ -615,6 +626,43 @@ static long vaddr_get_pfns(struct mm_struct *mm, unsigned long vaddr,
+>  	return ret;
+>  }
+>  
+> +static long contig_pages(struct vfio_dma *dma,
+> +			 struct vfio_batch *batch, dma_addr_t iova)
+> +{
+> +	struct page *page = batch->pages[batch->offset];
+> +	struct folio *folio = page_folio(page);
+> +	long idx = folio_page_idx(folio, page);
+> +	long max = min_t(long, batch->size, folio_nr_pages(folio) - idx);
+> +	long nr_pages;
+> +
+> +	for (nr_pages = 1; nr_pages < max; nr_pages++) {
+> +		if (batch->pages[batch->offset + nr_pages] !=
+> +		    folio_page(folio, idx + nr_pages))
+> +			break;
+> +	}
+> +
+> +	return nr_pages;
+> +}
+> +
+> +static long vpfn_pages(struct vfio_dma *dma,
+> +		       dma_addr_t iova_start, long nr_pages)
+> +{
+> +	dma_addr_t iova_end = iova_start + (nr_pages << PAGE_SHIFT);
+> +	struct vfio_pfn *vpfn;
+> +	long count = 0;
+> +
+> +	do {
+> +		vpfn = vfio_find_vpfn_range(dma, iova_start, iova_end);
+
+I am somehow confused here. Function vfio_find_vpfn_range()is designed
+to find, through the rbtree, the node that is closest to the root node
+and satisfies the condition within the range [iova_start, iova_end),
+rather than the node closest to iova_start? Or perhaps I have
+misunderstood something?
+
+> +		if (likely(!vpfn))
+> +			break;
+> +
+> +		count++;
+> +		iova_start = vpfn->iova + PAGE_SIZE;
+> +	} while (iova_start < iova_end);
+> +
+> +	return count;
+> +}
+> +
+>  /*
+>   * Attempt to pin pages.  We really don't want to track all the pfns and
+>   * the iommu can only map chunks of consecutive pfns anyway, so get the
+> @@ -681,32 +729,40 @@ static long vfio_pin_pages_remote(struct vfio_dma *dma, unsigned long vaddr,
+>  		 * and rsvd here, and therefore continues to use the batch.
+>  		 */
+>  		while (true) {
+> +			long nr_pages, acct_pages = 0;
+> +
+>  			if (pfn != *pfn_base + pinned ||
+>  			    rsvd != is_invalid_reserved_pfn(pfn))
+>  				goto out;
+>  
+> +			nr_pages = contig_pages(dma, batch, iova);
+> +			if (!rsvd) {
+> +				acct_pages = nr_pages;
+> +				acct_pages -= vpfn_pages(dma, iova, nr_pages);
+> +			}
+> +
+>  			/*
+>  			 * Reserved pages aren't counted against the user,
+>  			 * externally pinned pages are already counted against
+>  			 * the user.
+>  			 */
+> -			if (!rsvd && !vfio_find_vpfn(dma, iova)) {
+> +			if (acct_pages) {
+>  				if (!dma->lock_cap &&
+> -				    mm->locked_vm + lock_acct + 1 > limit) {
+> +				    mm->locked_vm + lock_acct + acct_pages > limit) {
+>  					pr_warn("%s: RLIMIT_MEMLOCK (%ld) exceeded\n",
+>  						__func__, limit << PAGE_SHIFT);
+>  					ret = -ENOMEM;
+>  					goto unpin_out;
+>  				}
+> -				lock_acct++;
+> +				lock_acct += acct_pages;
+>  			}
+>  
+> -			pinned++;
+> -			npage--;
+> -			vaddr += PAGE_SIZE;
+> -			iova += PAGE_SIZE;
+> -			batch->offset++;
+> -			batch->size--;
+> +			pinned += nr_pages;
+> +			npage -= nr_pages;
+> +			vaddr += PAGE_SIZE * nr_pages;
+> +			iova += PAGE_SIZE * nr_pages;
+> +			batch->offset += nr_pages;
+> +			batch->size -= nr_pages;
+>  
+>  			if (!batch->size)
+>  				break;
+
+Thanks,
+Zhe
+
