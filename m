@@ -1,140 +1,115 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from fhigh-a7-smtp.messagingengine.com (fhigh-a7-smtp.messagingengine.com [103.168.172.158])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2349914885B;
-	Fri, 23 May 2025 13:12:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FFF62459F0;
+	Fri, 23 May 2025 13:14:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.158
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748005960; cv=none; b=tlNLByJ7L34/8fWljh6dDetkFkoMGPYEiyAB242WaY9gVWb+NBAQe7IVDs0dpxCqXHwztpddvhqRKS1b07zSrBxB8EATEtSs4QQoHX2nTHioBGFw4zkBVp6a/dy2qrgbZoOlN6ChrDtfpAfZl7tfquWwSpbr+y1+oID0AwxirIA=
+	t=1748006101; cv=none; b=dtc9X09/+9QHkh5RpoSrdQimSulWrp27s1Wve2AYXdC9Yor1S1zlrfOfoWfiKe5UGRzwchl1mFbZ3EIvJc1A63q3AL50RV9V7LZorVVae6LK0T3kPj52IWEmCqRrk52+rsOBepf6UlJlicNE7kNLgkh+htwYSEILW8Q03AW6WaI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748005960; c=relaxed/simple;
-	bh=9SugXRrE9PpqZwWLIG/qzbGhzadN0J1Xh2e9tSKDdFQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jOZVbtVoC/0jWkieM5vPeDRUrnbP3CLzZqMAnfNTwyy0ec4sjKQ04RyELlLeDScIF5AJdF5sbyOy28rRM/AQHuWb0Ec7aU/ic2ECKyqLN3xn1y0VqU74d3ZIWcJsbPSM4J5P2LdpRKgkVe8V67i+J69BebGMbck/3zIM1LttqOE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MPxVG9Do; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1748006101; c=relaxed/simple;
+	bh=nP4DCqI2FKwvIfEQkVkSafK1L7oY2AmjccjXGu8w8I4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=nl9ULqNLRcjgtggT4lkaf6FHtEs0jhVXa6RU6qQekdbBQYC6/5yhQkana11FaUTuYDDhfI7GeA+7GwuIXySuYXBsPB4iN6D61RgSFwv9Z8QLxY48s7TIFf5PiOE5N+w/DxDUuK4XqxQvxKChmUKRxCX48nXi3MBzNWslrbXz6qI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev; spf=none smtp.mailfrom=ljones.dev; dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b=w697mgEF; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=rHe6EB5Y; arc=none smtp.client-ip=103.168.172.158
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ljones.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MPxVG9Do"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748005958; x=1779541958;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=9SugXRrE9PpqZwWLIG/qzbGhzadN0J1Xh2e9tSKDdFQ=;
-  b=MPxVG9Dob5fYGZ0t77KCD8ESDvuZSr5wo0sBlfgWBr64GZ11OYWc/6/q
-   ngAzCK0gMIyq+WxuywE1lUftOxUyMIgJpmV1j9pjMhKMfndT0ZoAfnPQf
-   ciKJ9WcEupDda5awZoNUaRCVHayB7ImsVyNfMfmh4VdMsNeHiZ5OxUJdg
-   OUWgZ2sRwxGeH2zMvy2UXLN2IoWFQFkwkhE8k2Yjpc1O813sZ/nbE6MH6
-   YJBFchX2+KHcpupIANmg4JYbQgehpGSyFj3hB4erblDjgTT2//g9YYMTS
-   UVybV33I2jkxUWZ0aImCBfXqAnh5wNnNRqZlSSef4iIVkKRj5zZXbxPSp
-   Q==;
-X-CSE-ConnectionGUID: bSSJGygTTreFkJfZrwL4fw==
-X-CSE-MsgGUID: EuaUNaTWTMS48SiYhvJZaQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11441"; a="49766784"
-X-IronPort-AV: E=Sophos;i="6.15,308,1739865600"; 
-   d="scan'208";a="49766784"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2025 06:12:37 -0700
-X-CSE-ConnectionGUID: FS7zd6hQRtaKz/WmDWSIhw==
-X-CSE-MsgGUID: Zxpj9SUSS+SuYp4TB3pPog==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,308,1739865600"; 
-   d="scan'208";a="146126629"
-Received: from msatwood-mobl.amr.corp.intel.com (HELO [10.125.109.147]) ([10.125.109.147])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2025 06:12:36 -0700
-Message-ID: <509a5751-f2a4-45af-8bfb-1058dae549fb@intel.com>
-Date: Fri, 16 May 2025 08:19:18 -0700
+	dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b="w697mgEF";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="rHe6EB5Y"
+Received: from phl-compute-06.internal (phl-compute-06.phl.internal [10.202.2.46])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id E2438114010D;
+	Fri, 23 May 2025 09:14:57 -0400 (EDT)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-06.internal (MEProxy); Fri, 23 May 2025 09:14:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
+	:cc:content-transfer-encoding:content-type:date:date:from:from
+	:in-reply-to:message-id:mime-version:reply-to:subject:subject:to
+	:to; s=fm2; t=1748006097; x=1748092497; bh=onu9pSqOyo0uXFxfnI4FT
+	VRTqgcadMSK1+A57xxFnXo=; b=w697mgEFErnrhXal+vlUYUwA7VdoT4XqkI5cx
+	5vuk2tyhfs9A59WAQazMsRytAAgwr8XRR1rryDjeisfLdxvEXpK8Uv+2ZQn6L+9+
+	9qGEyUqdNxepBuYT/vuE4FJamHF/G/NDMrVXXpRJ52SiwniEpWYf1Gog+IChxq3Q
+	p1wfsvmTfafbTxanjQ/G5bI9sAVbvuBpQn6Gr2Igdw0xoLGifziL5Mmkv0SSLF8Z
+	ExaGmQZoi+W92N1Y3iBKBpt3EQR5fM04lfs+hvnbCBHI/4aP72mBb3M9fdQ6IyF/
+	M+uUAzshtCt4b1TMuLzMcB/kj0dT3HC7/WihLNskQRt2+306Q==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:date:date:feedback-id:feedback-id:from:from
+	:in-reply-to:message-id:mime-version:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
+	1748006097; x=1748092497; bh=onu9pSqOyo0uXFxfnI4FTVRTqgcadMSK1+A
+	57xxFnXo=; b=rHe6EB5YRfABUSJf/hlkF3SUW5BadxjpSJdDqDafVgJPJQ1Voe9
+	zHgJHX9nT1TcHn9rFJEsOP+VQ2LDiLqm+LJBzwZzKjLjxOs/VOT5cnAt1PNjlLc4
+	1jN/colujxbIa3fLi3hjB8z2Nx6JPV3pUXGJjy4JkuBTedBik/c6efc0TuTFL47r
+	k/JoFWy/S0nduHnbuSim8V8Vb41WE7KAjQXmXXpdis6bzPROs+b4B3ZNIv6y6nBG
+	c1e7mJ5lsyKjbM2Lwul6pwxK7nZUuCJyTlsXI7/PzP3o16S64q5i1QXP1IXViOBb
+	RJ7D/WaHAMoTNh1/jPFm10SoBM+CfbWMIBQ==
+X-ME-Sender: <xms:0HQwaCGGyaQevqsHWQ8o3Ll4Y5WhtsMSbJlrnlk44cJMFgp_4Wcu3g>
+    <xme:0HQwaDXescQZ_hCUsJt9ze2SD2v9vmF0ZJliIFXVWIBCNIfOqA-ztKZgfWnppfpNy
+    e7YgoOhcLDQcp9ZVCY>
+X-ME-Received: <xmr:0HQwaMKSm1MnZoniOauZWXTsigPqclGas4uVejbjeuCk6CKPZZWHwYGDjcnvUkHg1XEWZ0Ycm5iovY5gOx9QVHaF3toxtcFAY0YKKWDBxhM8X6AJXlTzdmTBs3as>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgdekleehucdltddurdegfedvrddttd
+    dmucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgf
+    nhhsuhgsshgtrhhisggvpdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttd
+    enucenucfjughrpefhvfevufffkffoggfgsedtkeertdertddtnecuhfhrohhmpefnuhhk
+    vgculfhonhgvshcuoehluhhkvgeslhhjohhnvghsrdguvghvqeenucggtffrrghtthgvrh
+    hnpeeihfefueeuiefggfdtfeegteegudeffeekkedtvedufeehtdfgheekjeevjedtffen
+    ucffohhmrghinhepkhgvrhhnvghlrdhorhhgpddtuddrohhrghdpghhithhhuhgsrdgtoh
+    hmnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheplhhu
+    khgvsehljhhonhgvshdruggvvhdpnhgspghrtghpthhtohepjedpmhhouggvpehsmhhtph
+    houhhtpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghl
+    rdhorhhgpdhrtghpthhtohephhguvghgohgvuggvsehrvgguhhgrthdrtghomhdprhgtph
+    htthhopehilhhpohdrjhgrrhhvihhnvghnsehlihhnuhigrdhinhhtvghlrdgtohhmpdhr
+    tghpthhtohepphhlrghtfhhorhhmqdgurhhivhgvrhdqgiekieesvhhgvghrrdhkvghrnh
+    gvlhdrohhrghdprhgtphhtthhopehmrghrihhordhlihhmohhntghivghllhhosegrmhgu
+    rdgtohhmpdhrtghpthhtoheprghnughrihihrdhshhgvvhgthhgvnhhkoheslhhinhhugi
+    drihhnthgvlhdrtghomhdprhgtphhtthhopehluhhkvgeslhhjohhnvghsrdguvghv
+X-ME-Proxy: <xmx:0HQwaME00yq8pb-Jv51axUFvaXGr71dphK1jvg0IW4iw9FtpD0gRSA>
+    <xmx:0HQwaIWggjlp9PFI7rmsZ5anS2Iw4md5bcqqhRYOE_IWbycLrKerlQ>
+    <xmx:0HQwaPNyWKp6pBq6vzM3kE4Sbf4gHkw8FD4giJTEDuhsZq8gln-Pvg>
+    <xmx:0HQwaP3UkCOdGvGfXjvF522Vycm-y6xpLhQ8rSKZvfs-NcReVdWFdQ>
+    <xmx:0XQwaP1kbYzhtZaTZLKZ4l1Ic_bBvbflZb1-1IU5X-Y2kSboKc6oTSW6>
+Feedback-ID: i5ec1447f:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
+ 23 May 2025 09:14:55 -0400 (EDT)
+From: Luke Jones <luke@ljones.dev>
+To: linux-kernel@vger.kernel.org
+Cc: hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com,
+	platform-driver-x86@vger.kernel.org,
+	mario.limonciello@amd.com,
+	andriy.shevchenko@linux.intel.com,
+	Luke Jones <luke@ljones.dev>
+Subject: [PATCH 0/1] platform/x86: asus-wmi: fix build without CONFIG_SUSPEND
+Date: Fri, 23 May 2025 15:14:50 +0200
+Message-ID: <20250523131451.1942578-1-luke@ljones.dev>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 0/6] Introduce CET supervisor state support
-To: Ingo Molnar <mingo@kernel.org>, Chao Gao <chao.gao@intel.com>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
- tglx@linutronix.de, seanjc@google.com, pbonzini@redhat.com,
- peterz@infradead.org, rick.p.edgecombe@intel.com, weijiang.yang@intel.com,
- john.allen@amd.com, bp@alien8.de, chang.seok.bae@intel.com,
- xin3.li@intel.com, Aruna Ramakrishna <aruna.ramakrishna@oracle.com>,
- Dave Hansen <dave.hansen@linux.intel.com>, Eric Biggers
- <ebiggers@google.com>, "H. Peter Anvin" <hpa@zytor.com>,
- Ingo Molnar <mingo@redhat.com>, Kees Cook <kees@kernel.org>,
- Maxim Levitsky <mlevitsk@redhat.com>, Mitchell Levy
- <levymitchell0@gmail.com>, Nikolay Borisov <nik.borisov@suse.com>,
- Oleg Nesterov <oleg@redhat.com>, Samuel Holland <samuel.holland@sifive.com>,
- Sohil Mehta <sohil.mehta@intel.com>, Stanislav Spassov <stanspas@amazon.de>,
- Uros Bizjak <ubizjak@gmail.com>, Vignesh Balasubramanian <vigbalas@amd.com>,
- Zhao Liu <zhao1.liu@intel.com>
-References: <20250512085735.564475-1-chao.gao@intel.com>
- <aCYLMY00dKbiIfsB@gmail.com>
-From: Dave Hansen <dave.hansen@intel.com>
-Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <aCYLMY00dKbiIfsB@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 5/15/25 08:41, Ingo Molnar wrote:
-> * Chao Gao <chao.gao@intel.com> wrote:
->> I kindly request your consideration for merging this series. Most of 
->> patches have received Reviewed-by/Acked-by tags.
-> I don't see anything objectionable in this series.
-> 
-> The upcoming v6.16 merge window is already quite crowded in terms of 
-> FPU changes, so I think at this point we are looking at a v6.17 merge, 
-> done shortly after v6.16-rc1 if everything goes well. Dave, what do you 
-> think?
+Fixes "platform/x86: asus-wmi: Refactor Ally suspend/resume".
 
-It's getting into shape, but it has a slight shortage of reviews. For
-now, it's an all-Intel patch even though I _thought_ AMD had this
-feature too. It's also purely for KVM and has some suggested-by's from
-Sean, but no KVM acks on it.
+Verified using the following details provided by test robot:
 
-I have the feeling Sean would speak up if this was going in a bad
-direction for KVM, but I do love to see acks accompanying suggested-by's
-to indicate that the suggestion was interpreted properly.
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git review-ilpo-next
+head:   83579675331059689e2869bf752ca9e17fadbd82
+commit: feea7bd6b02d43a794e3f065650d89cf8d8e8e59 [74/89] platform/x86: asus-wmi: Refactor Ally suspend/resume
+config: x86_64-buildonly-randconfig-004-20250509 (https://download.01.org/0day-ci/archive/20250509/202505090418.DaeaXe4i-lkp@intel.com/config)
+compiler: clang version 20.1.2 (https://github.com/llvm/llvm-project 58df0ef89dd64126512e4ee27b4ac3fd8ddf6247)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250509/202505090418.DaeaXe4i-lkp@intel.com/reproduce)
+
+I've not done anything fancy here and left asus_hotk_prepare() as is, as it is *incredibly* unlikely anyone would ever run a ROG Ally without suspend enabled.
+
+Luke Jones (1):
+  platform/x86: asus-wmi: fix build without CONFIG_SUSPEND
+
+ drivers/platform/x86/asus-wmi.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+-- 
+2.49.0
+
