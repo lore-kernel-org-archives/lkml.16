@@ -1,31 +1,67 @@
-Received: from out30-130.freemail.mail.aliyun.com (out30-130.freemail.mail.aliyun.com [115.124.30.130])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1735223709;
-	Fri, 23 May 2025 05:25:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD63422578D;
+	Fri, 23 May 2025 05:25:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747977945; cv=none; b=ia5veVzUuftih5ygVNNI75Blo8tYQWUn36USYxaorFfc5D5YlbpMokO6laE4XhMfwbr+iWCDpSAzuf9IlcwHWWPylFd+HHBIwSyzVGW6TecEAMcYPlPIOXxo+SKlIb2DUf/KeVm9cz3uj1RI+M1CtDeXUcRrqlvnOJKuWvkzZLI=
+	t=1747977951; cv=none; b=kg7btK8o3XSICJ71H+zoCN4EuXflY+mCEw8pYkvV+aXuDMlG1a5v1agpuop9uChJNkNqAEYjkUHb4jdo1s7+XLLa49xHfduX/XQI/txfXSQTfFDF+AOv4w9pwKT/NWox8J9sXHqaDsCpCQc6uMDm2Y/+8JTOijYiZHygJCxF65Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747977945; c=relaxed/simple;
-	bh=zqFBXNgJR6QPqujYBcu7eKwHqsY+GG/0ieJMWXaanzY=;
+	s=arc-20240116; t=1747977951; c=relaxed/simple;
+	bh=jj9BgReTvHeJe4y8jLSLUWxQCNxv1v3iTuGIjgBQl4I=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Q/fkIq41zx0r5sSu6fnSSA9YSWTakPIP/KOu2fjKaug5Nlql5b8YOVglpsiKbtoj0GX0FxFis9s4FrTWpMDOOU+4+DqmVrdyPRBrAPO8I8LBdQmLtVWvz9+rwoSNOaD/NzL3N+e3L8FfzT4pZstz5sDPj/Lr3jHjYG/H1NPNUXc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=CZtZcw+a; arc=none smtp.client-ip=115.124.30.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	 In-Reply-To:Content-Type; b=rvfvaoERXadhyCrbmVBve7ZiflVrMBS4bUT+9QUc8HOtLlEohdxz4rXfeA8ZOxO1p1WTpva76vnPAbobNuRQhpvKIhnUD5R2OPepZX7+YQ8xczY2lplmcLEVKvxOkXnmLHl23wRHlaqQCIf9QEwnoLt89ZEIUrLSeFIlaWx3Cgk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Got1i35A; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="CZtZcw+a"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1747977938; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=p9YLrwedFtwnpJG6tOJNl4XHicffoGD8uCwZAyB8uHI=;
-	b=CZtZcw+aEPe0HT/wUy3oVlOn/BgLogIzKK0fCEUuASBLkMkRKKfo46791/PMhn5h/yB41J9N22hiuoFHqV261lehUnabbQwV0/tV3I14WAaUq8iqQozgA2PaeC8EiEpq9KbT3pZImJtartFJfKY0jWVKTDWcmoWXC+bAPvZk1co=
-Received: from 30.246.160.208(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WbZ4I8V_1747977617 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Fri, 23 May 2025 13:20:18 +0800
-Message-ID: <b2153756-a57e-4054-bde2-deb8865c9e59@linux.alibaba.com>
-Date: Fri, 23 May 2025 13:20:16 +0800
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Got1i35A"
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54MNW4vw024648;
+	Fri, 23 May 2025 05:25:33 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=YxjC6Y
+	/cUxQss4M80L0v2JPy8dv2dlD/GJSo5/DNYrs=; b=Got1i35AonF7azkpcUu5tW
+	p0oDjpNscsn9AUO+S4aMs0Nbqiu8a9WEi0XkjFRW3HXETwZOChNRwAUmEcW6ZZwV
+	vUEbMQDo1UrGYLPsuB30Pr4uo8tgxMTfrFRbh00hY8wPdd6L+n9Rgfmq1Ax3A8i1
+	zx6ukMWaOofLC6SxbCCt+M57H2arzkq5euJPJStoMmYl2Hw81Sj6eynnEH0ajTgA
+	gluRIGpiMs7VLKNJKZECgSLliUtjbotR7AZ7vagCs/X74ZuBwbVNzpapDY4ivxfw
+	FZLd9vPQ0MdoS5bxlPjpd4QruumMMvb8Y1bPQJco/ZKV9+T9a3ojovPHHwDDFVvA
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46sxhwdu72-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 23 May 2025 05:25:33 +0000 (GMT)
+Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 54N5NwiK031978;
+	Fri, 23 May 2025 05:25:32 GMT
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46sxhwdu6x-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 23 May 2025 05:25:32 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 54N1OHSw032091;
+	Fri, 23 May 2025 05:25:31 GMT
+Received: from smtprelay02.wdc07v.mail.ibm.com ([172.16.1.69])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 46rwnmn25m-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 23 May 2025 05:25:31 +0000
+Received: from smtpav01.wdc07v.mail.ibm.com (smtpav01.wdc07v.mail.ibm.com [10.39.53.228])
+	by smtprelay02.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 54N5PVAA60948804
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 23 May 2025 05:25:31 GMT
+Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id E042058055;
+	Fri, 23 May 2025 05:25:30 +0000 (GMT)
+Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 7ED4E5804B;
+	Fri, 23 May 2025 05:25:26 +0000 (GMT)
+Received: from [9.109.245.113] (unknown [9.109.245.113])
+	by smtpav01.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Fri, 23 May 2025 05:25:26 +0000 (GMT)
+Message-ID: <ac3b8c16-1f2b-4f2f-8bcd-ef8da8544a20@linux.ibm.com>
+Date: Fri, 23 May 2025 10:55:24 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -33,153 +69,147 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 1/2] dmaengine: idxd: Fix race condition between WQ
- enable and reset paths
-To: Dave Jiang <dave.jiang@intel.com>, vinicius.gomes@intel.com,
- fenghuay@nvidia.com, vkoul@kernel.org
-Cc: dmaengine@vger.kernel.org, colin.i.king@gmail.com,
- linux-kernel@vger.kernel.org
-References: <20250522063329.51156-1-xueshuai@linux.alibaba.com>
- <20250522063329.51156-2-xueshuai@linux.alibaba.com>
- <a03e4f97-2289-4af7-8bfc-ad2d38ec8677@intel.com>
-From: Shuai Xue <xueshuai@linux.alibaba.com>
-In-Reply-To: <a03e4f97-2289-4af7-8bfc-ad2d38ec8677@intel.com>
+Subject: Re: [RFC PATCH] mm: fix the inaccurate memory statistics issue for
+ users
+To: Baolin Wang <baolin.wang@linux.alibaba.com>, akpm@linux-foundation.org,
+        david@redhat.com, shakeelb@google.com
+Cc: lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, vbabka@suse.cz,
+        rppt@kernel.org, surenb@google.com, mhocko@suse.com,
+        linux-mm@kvack.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <3dd21f662925c108cfe706c8954e8c201a327550.1747969935.git.baolin.wang@linux.alibaba.com>
+Content-Language: en-US
+From: Donet Tom <donettom@linux.ibm.com>
+In-Reply-To: <3dd21f662925c108cfe706c8954e8c201a327550.1747969935.git.baolin.wang@linux.alibaba.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIzMDA0MyBTYWx0ZWRfXxJRyzXsBHwPu ntI7I4Tfrkndp3EDwoJkzFtMFt1SrDrd4/OJZbkVsyFNhyXBqlWt5T60KgrRAvArIWyqbdojjLG xvVJUJdNJdVIVGHCaSNTyc3xl5x+5u23R45UgqRABKUzT59mII6631AnypDu8ziqwC5K08Awuvg
+ 6VpjHGcEG5Nmk1IRHV0xxuUMKApIVjqUQRxFaNUlnQuLz0ZmMU/X/hAwOKKSdKQWZ39Ygr8cKpH CSC1/iQEsdSZY89LbM1fYr2duU2XX4nj7/TRtaArr0AqZSd7zjIpZjtv+bEF1wQXTM88xCd9Y4t HedN3azxspFzNXi9Tj710bHdKQOOWBZvi1PrvwPMpfDp4w+BDdrFPtOMg7EbWSYZqXWKWRkrDcm
+ JJa8uz8xYd+Fp7cJDie6iAnYKNvPzhzQXWP2AJIBzYYxyRXBvlQPOJ+6cJnHrLC7pNaZMH5g
+X-Proofpoint-GUID: Fc8I8pRSBtQX3eEirUu-2IZEmgh7OJaG
+X-Authority-Analysis: v=2.4 cv=O685vA9W c=1 sm=1 tr=0 ts=683006cd cx=c_pps a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=SRrdq9N9AAAA:8 a=VnNF1IyMAAAA:8 a=bJgjvqlET6HPnKk_xIcA:9 a=3ZKOabzyN94A:10
+ a=QEXdDO2ut3YA:10
+X-Proofpoint-ORIG-GUID: LM8uU1SdoVM6B511od_tFrYjKP9VKcpO
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-23_02,2025-05-22_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxlogscore=999
+ spamscore=0 mlxscore=0 phishscore=0 bulkscore=0 priorityscore=1501
+ lowpriorityscore=0 impostorscore=0 clxscore=1011 malwarescore=0
+ suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
+ definitions=main-2505230043
 
 
+On 5/23/25 8:46 AM, Baolin Wang wrote:
+> On some large machines with a high number of CPUs running a 64K kernel,
+> we found that the 'RES' field is always 0 displayed by the top command
+> for some processes, which will cause a lot of confusion for users.
+>
+>      PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND
+>   875525 root      20   0   12480      0      0 R   0.3   0.0   0:00.08 top
+>        1 root      20   0  172800      0      0 S   0.0   0.0   0:04.52 systemd
+>
+> The main reason is that the batch size of the percpu counter is quite large
+> on these machines, caching a significant percpu value, since converting mm's
+> rss stats into percpu_counter by commit f1a7941243c1 ("mm: convert mm's rss
+> stats into percpu_counter"). Intuitively, the batch number should be optimized,
+> but on some paths, performance may take precedence over statistical accuracy.
+> Therefore, introducing a new interface to add the percpu statistical count
+> and display it to users, which can remove the confusion. In addition, this
+> change is not expected to be on a performance-critical path, so the modification
+> should be acceptable.
+>
+> Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+> ---
+>   fs/proc/task_mmu.c | 14 +++++++-------
+>   include/linux/mm.h |  5 +++++
+>   2 files changed, 12 insertions(+), 7 deletions(-)
+>
+> diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
+> index b9e4fbbdf6e6..f629e6526935 100644
+> --- a/fs/proc/task_mmu.c
+> +++ b/fs/proc/task_mmu.c
+> @@ -36,9 +36,9 @@ void task_mem(struct seq_file *m, struct mm_struct *mm)
+>   	unsigned long text, lib, swap, anon, file, shmem;
+>   	unsigned long hiwater_vm, total_vm, hiwater_rss, total_rss;
+>   
+> -	anon = get_mm_counter(mm, MM_ANONPAGES);
+> -	file = get_mm_counter(mm, MM_FILEPAGES);
+> -	shmem = get_mm_counter(mm, MM_SHMEMPAGES);
+> +	anon = get_mm_counter_sum(mm, MM_ANONPAGES);
 
-在 2025/5/22 22:55, Dave Jiang 写道:
-> 
-> 
-> On 5/21/25 11:33 PM, Shuai Xue wrote:
->> A device reset command disables all WQs in hardware. If issued while a WQ
->> is being enabled, it can cause a mismatch between the software and hardware
->> states.
->>
->> When a hardware error occurs, the IDXD driver calls idxd_device_reset() to
->> send a reset command and clear the state (wq->state) of all WQs. It then
->> uses wq_enable_map (a bitmask tracking enabled WQs) to re-enable them and
->> ensure consistency between the software and hardware states.
->>
->> However, a race condition exists between the WQ enable path and the
->> reset/recovery path. For example:
->>
->> A: WQ enable path                   B: Reset and recovery path
->> ------------------                 ------------------------
->> a1. issue IDXD_CMD_ENABLE_WQ
->>                                     b1. issue IDXD_CMD_RESET_DEVICE
->>                                     b2. clear wq->state
->>                                     b3. check wq_enable_map bit, not set
->> a2. set wq->state = IDXD_WQ_ENABLED
->> a3. set wq_enable_map
->>
->> In this case, b1 issues a reset command that disables all WQs in hardware.
->> Since b3 checks wq_enable_map before a2, it doesn't re-enable the WQ,
->> leading to an inconsistency between wq->state (software) and the actual
->> hardware state (IDXD_WQ_DISABLED).
-> 
-> 
-> Would it lessen the complication to just have wq enable path grab the device lock before proceeding?
-> 
-> DJ
 
-Yep, how about add a spin lock to enable wq and reset device path.
+Hi Baolin Wang,
 
-diff --git a/drivers/dma/idxd/device.c b/drivers/dma/idxd/device.c
-index 38633ec5b60e..c0dc904b2a94 100644
---- a/drivers/dma/idxd/device.c
-+++ b/drivers/dma/idxd/device.c
-@@ -203,6 +203,29 @@ int idxd_wq_enable(struct idxd_wq *wq)
-  }
-  EXPORT_SYMBOL_GPL(idxd_wq_enable);
-  
-+/*
-+ * This function enables a WQ in hareware and updates the driver maintained
-+ * wq->state to IDXD_WQ_ENABLED. It should be called with the dev_lock held
-+ * to prevent race conditions with IDXD_CMD_RESET_DEVICE, which could
-+ * otherwise disable the WQ without the driver's state being properly
-+ * updated.
-+ *
-+ * For IDXD_CMD_DISABLE_DEVICE, this function is safe because it is only
-+ * called after the WQ has been explicitly disabled, so no concurrency
-+ * issues arise.
-+ */
-+int idxd_wq_enable_locked(struct idxd_wq *wq)
-+{
-+       struct idxd_device *idxd = wq->idxd;
-+       int ret;
-+
-+       spin_lock(&idxd->dev_lock);
-+       ret = idxd_wq_enable_locked(wq);
-+       spin_unlock(&idxd->dev_lock);
-+
-+       return ret;
-+}
-+
-  int idxd_wq_disable(struct idxd_wq *wq, bool reset_config)
-  {
-         struct idxd_device *idxd = wq->idxd;
-@@ -330,7 +353,7 @@ int idxd_wq_set_pasid(struct idxd_wq *wq, int pasid)
-  
-         __idxd_wq_set_pasid_locked(wq, pasid);
-  
--       rc = idxd_wq_enable(wq);
-+       rc = idxd_wq_enable_locked(wq);
-         if (rc < 0)
-                 return rc;
-  
-@@ -380,7 +403,7 @@ int idxd_wq_disable_pasid(struct idxd_wq *wq)
-         iowrite32(wqcfg.bits[WQCFG_PASID_IDX], idxd->reg_base + offset);
-         spin_unlock(&idxd->dev_lock);
-  
--       rc = idxd_wq_enable(wq);
-+       rc = idxd_wq_enable_locked(wq);
-         if (rc < 0)
-                 return rc;
-  
-@@ -644,7 +667,11 @@ int idxd_device_disable(struct idxd_device *idxd)
-  
-  void idxd_device_reset(struct idxd_device *idxd)
-  {
-+
-+       spin_lock(&idxd->dev_lock);
-         idxd_cmd_exec(idxd, IDXD_CMD_RESET_DEVICE, 0, NULL);
-+       spin_unlock(&idxd->dev_lock);
-+
+We also observed the same issue where the RSS value in /proc/PID/status
+was 0 on machines with a high number of CPUs. With this patch, the issue
+got fixedl
 
-(The dev_lock should also apply to idxd_wq_enable(), I did not paste here)
+Rss value without this patch
+----------------------------
+  # cat /proc/87406/status
+.....
+VmRSS:           0 kB
+RssAnon:           0 kB
+RssFile:           0 k
 
-Also, I found a new bug that idxd_device_config() is called without
-hold idxd->dev_lock.
 
-idxd_device_config() explictly asserts the hold of idxd->dev_lock.
+Rss values with this patch
+--------------------------
+  # cat /proc/3055/status
+VmRSS:        2176 kB
+RssAnon:         512 kB
+RssFile:        1664 kB
+RssShmem:           0 kB
 
-+++ b/drivers/dma/idxd/irq.c
-@@ -33,12 +33,17 @@ static void idxd_device_reinit(struct work_struct *work)
-  {
-         struct idxd_device *idxd = container_of(work, struct idxd_device, work);
-         struct device *dev = &idxd->pdev->dev;
--       int rc, i;
-+       int rc = 0, i;
-  
-         idxd_device_reset(idxd);
--       rc = idxd_device_config(idxd);
--       if (rc < 0)
-+       spin_lock(&idxd->dev_lock);
-+       if (test_bit(IDXD_FLAG_CONFIGURABLE, &idxd->flags))
-+               rc = idxd_device_config(idxd);
-+       spin_unlock(&idxd->dev_lock);
-+       if (rc < 0) {
-+               dev_err(dev, "Reinit: %s config fails\n", dev_name(idxd_confdev(idxd)));
-                 goto out;
-+       }
-  
-         rc = idxd_device_enable(idxd);
-         if (rc < 0)
+Tested-by Donet Tom <donettom@linux.ibm.com>
 
-Please correct me if I missed anything.
 
-Thanks.
-Shuai
-
+> +	file = get_mm_counter_sum(mm, MM_FILEPAGES);
+> +	shmem = get_mm_counter_sum(mm, MM_SHMEMPAGES);
+>   
+>   	/*
+>   	 * Note: to minimize their overhead, mm maintains hiwater_vm and
+> @@ -59,7 +59,7 @@ void task_mem(struct seq_file *m, struct mm_struct *mm)
+>   	text = min(text, mm->exec_vm << PAGE_SHIFT);
+>   	lib = (mm->exec_vm << PAGE_SHIFT) - text;
+>   
+> -	swap = get_mm_counter(mm, MM_SWAPENTS);
+> +	swap = get_mm_counter_sum(mm, MM_SWAPENTS);
+>   	SEQ_PUT_DEC("VmPeak:\t", hiwater_vm);
+>   	SEQ_PUT_DEC(" kB\nVmSize:\t", total_vm);
+>   	SEQ_PUT_DEC(" kB\nVmLck:\t", mm->locked_vm);
+> @@ -92,12 +92,12 @@ unsigned long task_statm(struct mm_struct *mm,
+>   			 unsigned long *shared, unsigned long *text,
+>   			 unsigned long *data, unsigned long *resident)
+>   {
+> -	*shared = get_mm_counter(mm, MM_FILEPAGES) +
+> -			get_mm_counter(mm, MM_SHMEMPAGES);
+> +	*shared = get_mm_counter_sum(mm, MM_FILEPAGES) +
+> +			get_mm_counter_sum(mm, MM_SHMEMPAGES);
+>   	*text = (PAGE_ALIGN(mm->end_code) - (mm->start_code & PAGE_MASK))
+>   								>> PAGE_SHIFT;
+>   	*data = mm->data_vm + mm->stack_vm;
+> -	*resident = *shared + get_mm_counter(mm, MM_ANONPAGES);
+> +	*resident = *shared + get_mm_counter_sum(mm, MM_ANONPAGES);
+>   	return mm->total_vm;
+>   }
+>   
+> diff --git a/include/linux/mm.h b/include/linux/mm.h
+> index 185424858f23..15ec5cfe9515 100644
+> --- a/include/linux/mm.h
+> +++ b/include/linux/mm.h
+> @@ -2568,6 +2568,11 @@ static inline unsigned long get_mm_counter(struct mm_struct *mm, int member)
+>   	return percpu_counter_read_positive(&mm->rss_stat[member]);
+>   }
+>   
+> +static inline unsigned long get_mm_counter_sum(struct mm_struct *mm, int member)
+> +{
+> +	return percpu_counter_sum_positive(&mm->rss_stat[member]);
+> +}
+> +
+>   void mm_trace_rss_stat(struct mm_struct *mm, int member);
+>   
+>   static inline void add_mm_counter(struct mm_struct *mm, int member, long value)
