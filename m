@@ -1,17 +1,17 @@
 Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A53082DCBE7;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A538217A31E;
 	Fri, 23 May 2025 03:26:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747970786; cv=none; b=Uqx9VjEXCriEsmAe0SZfMU6eISGO2IO1ufCsPcajGNytWTALKSno8I/bkEjqs2bd+nHrsoMzhw642nUMOHSBFJLFHTw0vzTLUYWFect28IE1OIlZwYXqDXimWXeKTu8uXR7E7KnthH7ZpVkF8HLuADjr31vhfXg+IDRFj+huEBY=
+	t=1747970787; cv=none; b=fWtnu2R5Q82WD5LInI+KaK01BjKx6sXuUu1ANlycPzV+/gJ2X/2PtfNxSJxxdamXqVJQP53oO9Jqy0hSmT5dZ7xzNepFhZBkWlmmCA5re7/RTn5rEr7q47QvW2qNQUxUHSNkr64Q3bVlzMcUPolGoosHLS/Lb8HmcAO619ri+ls=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747970786; c=relaxed/simple;
-	bh=8EVazZ2kGcJ7wRFdcW84b44D5G++w+ZiAUGmm2O42Rk=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=AfIxe+mEwPKPUQVuxqez7Lm1/8wbbFHFq9BFG9JupBG+O9qCiJI/VXotpgmYHRMzf2cSDeenE/EzqSO9XZY1zNgYh733sMzKAdfn7w8cJt1rgy9icL1eo9jkziTEev6vgrccgLr2AovwJIaYccMbeQYqou8hzCcXXSO7yv4iDEo=
+	s=arc-20240116; t=1747970787; c=relaxed/simple;
+	bh=Gi6KTuSH5vQAjkQ6UtpKBJxOWz2N8Ui11sOKVlAzsUM=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=frYr2dD/+uPH+k0RT6IZ/oNWhQioLu/rFCeP0LTCoH/LPEFOzTZryWkzmg37wYS7TCSndceZPBzpv0eiINWe9x5iBCapU0SyUPGTyOsJF7QGh1qzworf06tr7mhzC2eNk7c5+LYIHoQV/W4bH9lYEmEM3yJDlwSLG2jFTTIoPXI=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-681ff7000002311f-6c-682feadb6dc4
+X-AuditID: a67dfc5b-681ff7000002311f-a7-682feadc47f5
 From: Byungchul Park <byungchul@sk.com>
 To: willy@infradead.org,
 	netdev@vger.kernel.org
@@ -47,37 +47,40 @@ Cc: linux-kernel@vger.kernel.org,
 	linux-rdma@vger.kernel.org,
 	bpf@vger.kernel.org,
 	vishal.moola@gmail.com
-Subject: [PATCH 00/18] Split netmem from struct page
-Date: Fri, 23 May 2025 12:25:51 +0900
-Message-Id: <20250523032609.16334-1-byungchul@sk.com>
+Subject: [PATCH 06/18] page_pool: rename page_pool_return_page() to page_pool_return_netmem()
+Date: Fri, 23 May 2025 12:25:57 +0900
+Message-Id: <20250523032609.16334-7-byungchul@sk.com>
 X-Mailer: git-send-email 2.17.1
-X-Brightmail-Tracker: H4sIAAAAAAAAAzXRXUhTcRgGcP87Z2dzOThMqZN9SAOphFyKxVtI2VWniz5Au0kwD+7gDm3T
-	pq5ZRmYj0dRCjVIXrTLzYzBd4qb5OecXFppizrTNFL0QM9QcTotyiXc/eJ7nvXmFmMSEBws5
-	dTqrUTNKKSHCRT8CXh+bXJApjk98OgUGs4mAunUdvJu28cFQ24Tgl3dSAKuOPgLevPJgYBjS
-	47Bm3sBgrndGAO6qeRxac60YzDzuJ6BQv4lBjq2aB8NNRXwo3XiLgTV7WgCjLQYCXKa/fJi3
-	F+IwUF6Dg7soBnqNu8EzuIjAYbbywFPwgoCSESMBs3o3gpHuGRwq7hchMLc7+bC5biBiDtGN
-	NRM8urn8m4A2WjLo99VhdL5zBKMttXkEbVkpFtBTX1oJuv/5Jk4321Z5dOGDJYJenvuK0z/b
-	xwja3DiG0x+NDgG9ajl4hbwmipazSk7LamRnEkUK72QXntoWolse4rLRMpWP/IUUGUXlNYzg
-	Oy4bHeT5TJCHKafTi/kcREZQqzN9Wx2RECOX+NScYfN/KXBrsObRI59xMpRyN+r5PovJE1T3
-	kpW3fTSEqqvvxHxjinQJqPz+DrQd7KW6qp34E7TLiPxqkYRTa1UMp4wKV2SqOV14UorKgrZ+
-	WHX3d7wNrQzH2hEpRNIAsU0kU0j4jDYtU2VHlBCTBol75sMVErGcybzNalKuazKUbJod7RPi
-	0j3iSM8tuYRMZtLZGyybymp2Up7QPzgblVZouwqrvekDCczJ8dieP+wzTjWWmSi/eTV53LUQ
-	FxnXUT57Pil6I++AIEr2WZdSbL/3ofIlV3+R8R7VPLU/tF4InS419S9kFZUVV3kcCY++G4cq
-	91MNXFbBkbN+yS2TOZ6SzqnTlyjp5XrXHZLytC0q4zckuQVtdSGB5/ySpHiagokIwzRpzD+o
-	Qvl5vwIAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAAwGiAl39CAMSjwQaCGludGVybmFsIgYKBApOO4Mt2+ovaDDKpCc4nK+sBjir
-	+Hg4p+C4BTicqrYBOPT52wc488THBjijofYDOJzPhAQ49a/6AzjlxuIHON+m5gQ4vIe3Azji
-	j8gGOI2E+wM4grioAjjDnckFONC2jgU4lPqlAzi3gOAHONO6nAY43qz/BTjmwo0EOMmaqQQ4
-	345AOMagFjj2y+wBOMSvtwI49oydBjiT0qAGOOOE3wE40sPiBDibgY4BOK++2AU4+/icBkAi
-	SLSp2QJIuZrdB0igsnVIs6gqSIrY0gNIsqqJBkiy8pIHSNzWvAZIyJj7BEi5uPMCSI2D7gZI
-	8eXaBEjvvtUGSKPo8AJIr7TVBEjMoMQHUBFaCjxkZWxpdmVyLz5gCmj528EEcL0fePHPaYAB
-	8RiKAQkIGBA0GJnTywKKAQkIBhAnGNjY+QOKAQkIFBAxGPPixwSKAQoIAxDuBRjlnPsCigEJ
-	CBMQNBj19oQBigEJCAQQJRjftIQFigEJCA0QNRjD7rcCigEJCBgQHxirsMADkAEIoAEAqgEU
-	aW52bWFpbDUuc2toeW5peC5jb22yAQYKBKZ9/JG4AfTTR8IBEAgBIgwNKG0vaBIFYXZzeW3C
-	ARgIAyIUDcXmLmgSDWRheXplcm9fcnVsZXPCARsIBCIXDUpXZWASEGdhdGVrZWVwZXJfcnVs
-	ZXPCAQIICRqAAXhzCpXZsJUENZo2iUQIK9C3VerNw271f56ZwvBIm9xQ9/Wzojv55zYahsFI
-	hp8eaPKpqK1POu5au6TwcFJq5MDco5Lh5btTAVLeb1IemYh5+5RL8K+Szqm4vL0Zk+fkEmKK
-	qmdIjnEUtnYhI3fZVCd5ZioI04z96wptHoShF9FVIgRzaGExKgNyc2E0Nn/SogIAAA==
+In-Reply-To: <20250523032609.16334-1-byungchul@sk.com>
+References: <20250523032609.16334-1-byungchul@sk.com>
+X-Brightmail-Tracker: H4sIAAAAAAAAAzWRa0hTYRzGOzvv3jOHi8PycjTKWkSwSjNU/laWQdEJ/BD5LTNdevAM55RN
+	zUuRlWCZ2rKgsFmz0HRasyk6L0gur6QlmrnM1BaKhBo5FW9hXvDbw3P5fXlEpLQVeYqU6kRO
+	o1aoZFiMxFPOLw8P/fbhj0x0uoLeVIGhfCEFXo9ahKA31hAwu/idAkdLO4ZXRfMk6D9nIpgz
+	LZEw1manYKRkHEFjVi0J9gcdGHIzl0m4bSkVQE9NnhAeLxWTUJsxSkFfvR7DcMWqEMatuQg6
+	C8oQjOQFQ5vBDeY/ThLQYqoVwHxOIYZHvQYMvzJHCOj9YEfw7FYeAaYmmxCWF/Q4eC9bXfZN
+	wNYV/KBYgzmJrSqVs9m2XpI1G+9h1jyTT7FDXxsx2/F0GbF1FoeAzb0zjdm/Y4OI/dPUj1lT
+	dT9iuwwtFOsw775AXxKfiOZUymRO43MyUszrpitRwhuvlNnVbGEGcd8zm3ASMbQf019UgLb0
+	3W4HXteYPsDYbIvkunahfRmHvX2tIxaR9LSQGdMvC9aDHXQ4k7dUvTFG9H5mKmdpw5fQ/kzX
+	5Du8CfViyivfb4Cc6ABGNzy34UvXOg1fBql1KEMvUky9uYHaHHgwzaU2pCMkBmKbkZAq1clx
+	CqXKz5tPVStTvKPi48zE2rklN1bCLMRMT6iVoEWEzFliEfvwUqEiWZsaZyUYESlzkbSOe/NS
+	SbQiNY3TxEdoklSc1krsFCGZu+To/LVoKR2jSORiOS6B02ylApGTZwahjUq/UtGCQ3y9VvJP
+	VRW/pZ+7+06QEllhLJMREPQPx/A3IxGsXnYz8BFB3d2R9sx921W6bBLVy9VndOYXbRfHDlme
+	IHXgngEd53G+pqwmS15XF9IcjnbR8qhzlddDz6a5Xi2xLvgHpofl8kzswdM98X0uicafxwY+
+	Paw/LkNaXuErJzVaxX+2gf9z2AIAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAAzWRa0hTYRzGe3fO3h1Ho+OyPCokraRS0gy1P5kiRfQSJfYhohs59OCWOmVT
+	0SjQFDSda5kfSmcsRPPKbIqXFLNpXkipvDHN1DStTK284Q1Mjb79+D0Pz5eHoaRFtCOjVMXw
+	apU8QobFtDjQN/no0JSH4liGmQGDqQxD6XI8vBitFYKhpBrBwsonEcy3tGHIf75EgeF9Cg2L
+	plUKJlrHRDBSOElDQ2oNBWMP2zFkpqxRcL+2SADNeR1C+FCtE0L2agEFNYmjIuh5ZcAwXLYh
+	hElLJg0dOcU0jOgCoNW4F5beTSNoMdUIYEmbh+FxtxHDeMoIgu7mMRpyk3QITI1WIawtG3CA
+	jFQVDwhIXc5nETGaY0llkStJt3ZTxFzyABPzXJaIDPU3YNL+ZI0mdbXzApKZPIvJn4lBmvxq
+	7MMk//tvATFV9dGk09giCrK9Jj4Vykco43i1h3+wWKGfraCjy53jFzbShYkowzEd2TAc68Wl
+	dc3jLcbsIc5qXaG22I715ObH2uh0JGYodlbITRjWBFvBbvYmp1utoreYZl24Ge3qtpew3lzn
+	9Ev8b9SZK61o2h6yYX04/fDitpdudup7B0V6JDaiHSXITqmKi5QrI7zdNeGKBJUy3j0kKtKM
+	Nv8rvLf+qBYt9JyzIJZBsp2Sw5EeCqlQHqdJiLQgjqFkdpK3k+4KqSRUnnCHV0fdUsdG8BoL
+	cmJomb3k/BU+WMqGyWP4cJ6P5tX/UwFj45iIum5/7a/061OJZrRah/xxPVadmZveVX9jqaah
+	7sLJidP25cXfYq0Sn6R9nsct/UG+HQEHFCfKrxdoRtUuLZemDpQe/NjppcwObHNrknz5Md61
+	xzP17DqO2/8mRe/n8FOykp92xK1fmnu3Ku1p2NVeMml/+bWTf1an7cVnjuKBkDCLjNYo5J6u
+	lFoj/wvFk5rouwIAAA==
 X-CFilter-Loop: Reflected
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -85,90 +88,117 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-The MM subsystem is trying to reduce struct page to a single pointer.
-The first step towards that is splitting struct page by its individual
-users, as has already been done with folio and slab.  This patchset does
-that for netmem which is used for page pools.
+Now that page_pool_return_page() is for returning netmem, not struct
+page, rename it to page_pool_return_netmem() to reflect what it does.
 
-Matthew Wilcox tried and stopped the same work, you can see in:
-
-   https://lore.kernel.org/linux-mm/20230111042214.907030-1-willy@infradead.org/
-
-Mina Almasry already has done a lot fo prerequisite works by luck, he
-said :).  I stacked my patches on the top of his work e.i. netmem.
-
-I focused on removing the page pool members in struct page this time,
-not moving the allocation code of page pool from net to mm.  It can be
-done later if needed.
-
-My rfc version of this work is:
-
-   https://lore.kernel.org/all/20250509115126.63190-1-byungchul@sk.com/
-
-There are still a lot of works to do, to remove the dependency on struct
-page in the network subsystem.  I will continue to work on this after
-this base patchset is merged.
-
+Signed-off-by: Byungchul Park <byungchul@sk.com>
 ---
+ net/core/page_pool.c | 22 +++++++++++-----------
+ 1 file changed, 11 insertions(+), 11 deletions(-)
 
-Changes from rfc:
-	1. Rebase on net-next's main branch
-	   https://git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next.git/
-	2. Fix a build error reported by kernel test robot
-	   https://lore.kernel.org/all/202505100932.uzAMBW1y-lkp@intel.com/
-	3. Add given 'Reviewed-by's, thanks to Mina and Ilias
-	4. Do static_assert() on the size of struct netmem_desc instead
-	   of placing place-holder in struct page, feedbacked by Matthew
-	5. Do struct_group_tagged(netmem_desc) on struct net_iov instead
-	   of wholly renaming it to strcut netmem_desc, feedbacked by
-	   Mina and Pavel
-
-Byungchul Park (18):
-  netmem: introduce struct netmem_desc struct_group_tagged()'ed on
-    struct net_iov
-  netmem: introduce netmem alloc APIs to wrap page alloc APIs
-  page_pool: use netmem alloc/put APIs in __page_pool_alloc_page_order()
-  page_pool: rename __page_pool_alloc_page_order() to
-    __page_pool_alloc_large_netmem()
-  page_pool: use netmem alloc/put APIs in __page_pool_alloc_pages_slow()
-  page_pool: rename page_pool_return_page() to page_pool_return_netmem()
-  page_pool: use netmem put API in page_pool_return_netmem()
-  page_pool: rename __page_pool_release_page_dma() to
-    __page_pool_release_netmem_dma()
-  page_pool: rename __page_pool_put_page() to __page_pool_put_netmem()
-  page_pool: rename __page_pool_alloc_pages_slow() to
-    __page_pool_alloc_netmems_slow()
-  mlx4: use netmem descriptor and APIs for page pool
-  page_pool: use netmem APIs to access page->pp_magic in
-    page_pool_page_is_pp()
-  mlx5: use netmem descriptor and APIs for page pool
-  netmem: use _Generic to cover const casting for page_to_netmem()
-  netmem: remove __netmem_get_pp()
-  page_pool: make page_pool_get_dma_addr() just wrap
-    page_pool_get_dma_addr_netmem()
-  netdevsim: use netmem descriptor and APIs for page pool
-  mm, netmem: remove the page pool members in struct page
-
- drivers/net/ethernet/mellanox/mlx4/en_rx.c    |  46 ++++----
- drivers/net/ethernet/mellanox/mlx4/en_tx.c    |   8 +-
- drivers/net/ethernet/mellanox/mlx4/mlx4_en.h  |   4 +-
- drivers/net/ethernet/mellanox/mlx5/core/en.h  |   4 +-
- .../net/ethernet/mellanox/mlx5/core/en/xdp.c  |  18 ++--
- .../net/ethernet/mellanox/mlx5/core/en/xdp.h  |   2 +-
- .../net/ethernet/mellanox/mlx5/core/en_main.c |  15 ++-
- .../net/ethernet/mellanox/mlx5/core/en_rx.c   |  66 ++++++------
- drivers/net/netdevsim/netdev.c                |  18 ++--
- drivers/net/netdevsim/netdevsim.h             |   2 +-
- include/linux/mm.h                            |   5 +-
- include/linux/mm_types.h                      |  11 --
- include/linux/skbuff.h                        |  14 +++
- include/net/netmem.h                          | 101 ++++++++++--------
- include/net/page_pool/helpers.h               |  11 +-
- net/core/page_pool.c                          |  97 +++++++++--------
- 16 files changed, 221 insertions(+), 201 deletions(-)
-
-
-base-commit: f44092606a3f153bb7e6b277006b1f4a5b914cfc
+diff --git a/net/core/page_pool.c b/net/core/page_pool.c
+index cec126e85eff..1106d4759fc6 100644
+--- a/net/core/page_pool.c
++++ b/net/core/page_pool.c
+@@ -371,7 +371,7 @@ struct page_pool *page_pool_create(const struct page_pool_params *params)
+ }
+ EXPORT_SYMBOL(page_pool_create);
+ 
+-static void page_pool_return_page(struct page_pool *pool, netmem_ref netmem);
++static void page_pool_return_netmem(struct page_pool *pool, netmem_ref netmem);
+ 
+ static noinline netmem_ref page_pool_refill_alloc_cache(struct page_pool *pool)
+ {
+@@ -409,7 +409,7 @@ static noinline netmem_ref page_pool_refill_alloc_cache(struct page_pool *pool)
+ 			 * (2) break out to fallthrough to alloc_pages_node.
+ 			 * This limit stress on page buddy alloactor.
+ 			 */
+-			page_pool_return_page(pool, netmem);
++			page_pool_return_netmem(pool, netmem);
+ 			alloc_stat_inc(pool, waive);
+ 			netmem = 0;
+ 			break;
+@@ -713,7 +713,7 @@ static __always_inline void __page_pool_release_page_dma(struct page_pool *pool,
+  * a regular page (that will eventually be returned to the normal
+  * page-allocator via put_page).
+  */
+-void page_pool_return_page(struct page_pool *pool, netmem_ref netmem)
++static void page_pool_return_netmem(struct page_pool *pool, netmem_ref netmem)
+ {
+ 	int count;
+ 	bool put;
+@@ -830,7 +830,7 @@ __page_pool_put_page(struct page_pool *pool, netmem_ref netmem,
+ 	 * will be invoking put_page.
+ 	 */
+ 	recycle_stat_inc(pool, released_refcnt);
+-	page_pool_return_page(pool, netmem);
++	page_pool_return_netmem(pool, netmem);
+ 
+ 	return 0;
+ }
+@@ -873,7 +873,7 @@ void page_pool_put_unrefed_netmem(struct page_pool *pool, netmem_ref netmem,
+ 	if (netmem && !page_pool_recycle_in_ring(pool, netmem)) {
+ 		/* Cache full, fallback to free pages */
+ 		recycle_stat_inc(pool, ring_full);
+-		page_pool_return_page(pool, netmem);
++		page_pool_return_netmem(pool, netmem);
+ 	}
+ }
+ EXPORT_SYMBOL(page_pool_put_unrefed_netmem);
+@@ -916,7 +916,7 @@ static void page_pool_recycle_ring_bulk(struct page_pool *pool,
+ 	 * since put_page() with refcnt == 1 can be an expensive operation.
+ 	 */
+ 	for (; i < bulk_len; i++)
+-		page_pool_return_page(pool, bulk[i]);
++		page_pool_return_netmem(pool, bulk[i]);
+ }
+ 
+ /**
+@@ -999,7 +999,7 @@ static netmem_ref page_pool_drain_frag(struct page_pool *pool,
+ 		return netmem;
+ 	}
+ 
+-	page_pool_return_page(pool, netmem);
++	page_pool_return_netmem(pool, netmem);
+ 	return 0;
+ }
+ 
+@@ -1013,7 +1013,7 @@ static void page_pool_free_frag(struct page_pool *pool)
+ 	if (!netmem || page_pool_unref_netmem(netmem, drain_count))
+ 		return;
+ 
+-	page_pool_return_page(pool, netmem);
++	page_pool_return_netmem(pool, netmem);
+ }
+ 
+ netmem_ref page_pool_alloc_frag_netmem(struct page_pool *pool,
+@@ -1080,7 +1080,7 @@ static void page_pool_empty_ring(struct page_pool *pool)
+ 			pr_crit("%s() page_pool refcnt %d violation\n",
+ 				__func__, netmem_ref_count(netmem));
+ 
+-		page_pool_return_page(pool, netmem);
++		page_pool_return_netmem(pool, netmem);
+ 	}
+ }
+ 
+@@ -1113,7 +1113,7 @@ static void page_pool_empty_alloc_cache_once(struct page_pool *pool)
+ 	 */
+ 	while (pool->alloc.count) {
+ 		netmem = pool->alloc.cache[--pool->alloc.count];
+-		page_pool_return_page(pool, netmem);
++		page_pool_return_netmem(pool, netmem);
+ 	}
+ }
+ 
+@@ -1253,7 +1253,7 @@ void page_pool_update_nid(struct page_pool *pool, int new_nid)
+ 	/* Flush pool alloc cache, as refill will check NUMA node */
+ 	while (pool->alloc.count) {
+ 		netmem = pool->alloc.cache[--pool->alloc.count];
+-		page_pool_return_page(pool, netmem);
++		page_pool_return_netmem(pool, netmem);
+ 	}
+ }
+ EXPORT_SYMBOL(page_pool_update_nid);
 -- 
 2.17.1
 
