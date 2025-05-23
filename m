@@ -1,71 +1,76 @@
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74D302045B5
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 16:06:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 751782045B5
+	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 16:07:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748016421; cv=none; b=o6Ca1+Y5AfO5qAhvM91AkxpofM+Lo2ehVRGQUgYEfkUDor3IY5IfRti+FCYNYH8hLXkZbVsi4n1cwSc2w5tp1758UlB+VkVOIYTKNPaBm/r1cIo5I1eRIPK0Vqbjt8c3OtTVM/74Ub51UearCHyDjcCkMPZFC4EyjfttPOxzCeM=
+	t=1748016459; cv=none; b=iAOCyj2KFn+bZVpfQVOSbKJmY9mo6JoOXWX7JsDuVVegesopTGmuVtdxcVpJ0E3YDsLRyHBA/M7iwCV3cwjOdthkoR/fFLh8QtMdClHdB/c2IsNSeeI/9TbFKJnqsp75g5iYndF8LA9ZLDd/efJBKerCX++ShJ6f2C1mmhqPYE0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748016421; c=relaxed/simple;
-	bh=WA5dqhze8NRn8+fhKp+DCFUWDEMVFNX6jxw+Hwyiv9I=;
+	s=arc-20240116; t=1748016459; c=relaxed/simple;
+	bh=y9OYzuX98oTB1Cnsu0UWtD1TX6DeKBLx6XvM4dg3M5E=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=DqHoGWYQA//Rk6gkjXNtIPMGaKj9amfLJtR8cVJgb0ljWL/o2/+ANd5HPffxx66i0w3xBnFw6gm4JhuFrhopB1MWyxVgFPZ2FwIWIKgnnR2hIP8Lai+dtgJrhimqeWTCfCxutiY5MViDfWyqc2bOWwUuvz3s5XBfR3Ug35jgihI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=yZzB1YIv; arc=none smtp.client-ip=209.85.221.49
+	 Content-Disposition; b=sx+WFb0lbruN4jlzfPr3ndldm4trCHROtwRBNqfp1aG73lXqUpRccDLaY+TgFnhYYrKeNzAGWa0Y6mKKCngAjrp5z6id/9gufge4kifJTL2ayA5vOUBC5wTF7krP6TDpl5rU6XFKOrbr0Lb3UlSrhbt2wPIOfpK7Pue8bNnKwoY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=UIwvPYqD; arc=none smtp.client-ip=209.85.128.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yZzB1YIv"
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-3a363d15c64so66664f8f.3
-        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 09:06:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UIwvPYqD"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-43cf257158fso72452105e9.2
+        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 09:07:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1748016418; x=1748621218; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1748016456; x=1748621256; darn=vger.kernel.org;
         h=content-disposition:mime-version:message-id:subject:cc:to:from:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=qVA1Wq02RwkJ8tKlxk+KwgWL1KTqqPjG9SMiOazJCzY=;
-        b=yZzB1YIvtdng6TWNstVm/zzhkQlF30/ijeSBTsOSwyCFqFGCOVaihTq5ysFVckeqz1
-         eCCp4Am1G6X92cHKXcpRCjf+wDlXzIP3X2KJrv6+Y0/Fvfj7AuMT+RROKVmpGTYr1Uoc
-         EwLRgjERzNdw4SuxsU45LwHTvzcJ2QPXLTSXEQQwabmixLew23PxlgSNOTmKPEMefK12
-         h56LlV+b5LkkZfePCgINh3hnlSunv5+JqDK2Dc/Fkj8BRl5SLJHHmQlsrXQ1Nex9AgBz
-         5lZg/2U1BWygkcGAsuqLMYN9wx7LcGyO+Yu95lJ/KiZaVEOgJPBkw/VS/PICikh/Dybu
-         MeaQ==
+        bh=ySA+I9x3ijxPrMXr+uDkaCBuOqoQX2Q5RgcLdxKb0qM=;
+        b=UIwvPYqDiFyE0KWOHtncKn5Vw0aWT9Ti8FGGSE2yvNynG/aUXuFkcOnI3ynFslgb+7
+         x7vruntiaqPwV0UG9TRiS1dTmxkPZ6OD6PMp9qelnciAi8+gaRrWJiaFcBN7BGSrpgDZ
+         Kdompbog9FvQl2i6JWTyI6YL6zv1rvHTRc/A1ZoF2Bw6J7KXTXbWAXTmtzFdpCeLNssx
+         qBXifebUeOGm08hLNxMr2v6KjfYihJRdt0QqeLR7RHLQhBi2YNV6OUGD9HuVJHKhGnT0
+         FdnExBQIzNMwkRMFr5gtJ6FyXn/KRCw0Ok2h3lzndR/0e+ZETnyljh72xYHKMmY03kjf
+         nXbQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748016418; x=1748621218;
+        d=1e100.net; s=20230601; t=1748016456; x=1748621256;
         h=content-disposition:mime-version:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=qVA1Wq02RwkJ8tKlxk+KwgWL1KTqqPjG9SMiOazJCzY=;
-        b=TQnBbzLoFgLMmMV3ZQ/qrqKgqqwZeI+OwOk9XzVsif/AGlw4OpoCI1OjOe2dYtrkAe
-         AbV5W1/oAkBwIv27LPrWyRrauyEq7FF08IzxAS7YpCWEDG68qz86nd6O0plWcOVE5t1W
-         jlZH3BWJHNvNsW6ycHQXfZ44/Q36mzpM/um5q8TMPW0Z7OSa1YoIwZZBlnbzTzUIS2Xq
-         HPE60FdCXZVfSBcfd+s9inDS4fzUv3qZKqXwblF5Bw8/QmyCq7lZbFzAJNS1cBdq3Umw
-         QlgvQ1CVNPP+hMl683kxvGgLYUkcQJpVFrB+jqntCMPJA1oOxhOjKN9iWGgYs+ALYoP8
-         +I/g==
-X-Forwarded-Encrypted: i=1; AJvYcCVKKblyPeG8WShcvfg8S+EyyRgSmOVah0LrGBqYjp0dcO+OLWvHwl8bVlfaeOFfVuX33CrvuUqYhvZSrdw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxlqPhJTUxyvid3P/JnwwFWr4itc2JUSB1NXdKy1lQFqcK8t1vA
-	+/mM59bjCTQR0NKtoL3fMpX6tpV5ZeqVuo1fPMuUJdXhU1cQxX8hX+kAxAgrygBPsn8=
-X-Gm-Gg: ASbGncurL0OCeo2YFPuXxyU816V63+oKmaxJVboq9FwH9dGTfPdBtkhnOzrD3qkxkll
-	pMABDl0Vg6aSnSB3PKnUWKp54nmovDx+AwPG9R1cOGMl32LZBkCrkEhij9d79Rl3OM2100oVtEl
-	Us9nbJU1aTANV7hqj/dOBZCSM5snfXxrinpZJbksgoS9czSavF9Cd/m83T4XiCbo3jCKE3b+73x
-	AENsIBi0VRQm5FtHSpodJANA7y6Gam4XMTKuTkWBWzKNKCie/Bqk/YyCsvxuIzYKpDMB21Vtn2C
-	ZcnPPq1xLnycPRacM0ciJKthR8AEEAOUxfXdEJPUo9R7+Dbg6UtNxsfzM60oVhlLUS4=
-X-Google-Smtp-Source: AGHT+IF56UQSCz5q5QoQKyBHSndYLKMFyKvT78EcNJOHgSCsSRrkaKawUqXQh0qLd3vhveIRpS1mOQ==
-X-Received: by 2002:a05:6000:2011:b0:3a3:6f1a:b8f9 with SMTP id ffacd0b85a97d-3a36f1aba52mr19442998f8f.15.1748016417661;
-        Fri, 23 May 2025 09:06:57 -0700 (PDT)
+        bh=ySA+I9x3ijxPrMXr+uDkaCBuOqoQX2Q5RgcLdxKb0qM=;
+        b=QK3ObZAwL3JB2Q4KzIGs9C89cVh7LLtINXSJngCHbSElqZWfKVzpz9AqIvVsLmKVLs
+         47YZUtsL+e/A4suLsOWz8zcB2LvWCQ4D2uFTZChBBn5qivW3Q1ebsoGCoSBU6b1rTVlz
+         v1GNMUvHf3bVPMT3eAIz3KTAdz35jUxNIPVZ3FVdkZu3eFZ6/BCtKej65wIgPVFO1ADk
+         fqrqm52j11q3WUXwFpT59Bymz0mCbewXTAMS0Z0feXwj5CP4x3JU+ERZna2oSDpZg9nt
+         dA5BweEChq5Hrm1A6cY3O7zM0ePD5K9/t5bo10aPGAfz1pF5jT7XtpxVJeZsNohgkk/1
+         /LSw==
+X-Forwarded-Encrypted: i=1; AJvYcCWaIiJ+k1gCPNjdbzEDDIO5PefTX3itfLql3DObWynglg9oQv//i8Xy0qnw1CHvFrE5GsL98AArzDrJQSY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz9iY1Ofd/Y8nR+2GYPmzmomKNHEiLVfHB+oLM1+Y1EdQRkrJFH
+	Ep8IMKuTTWiXWuoq/1gXU2ofzOqFUdh+1GxIV+KaZ/O/OA0oMY9rNH+8uyiSDxG6LVQ=
+X-Gm-Gg: ASbGncsE86sYFlnCKo6BF7P1dr6Fts+g02rq/ZNzYSYUScgFJU5S+zpyqBq73Rc3p+q
+	gGsPnRgVvS1n8Jp2yhCmDZeKaPtkF1s7Nw0u7TQtxXkEKjWtAvhG7rpTpR/pmU2iNYnvJ4bVA8j
+	wpvbm8la7qwXa53VYJKr0Jo+/vc/ECFp46DKWqMRdeHCjFLqmVZoi4X+5LFV1OJeFcPToqkhR7B
+	VBvYrJi+jYK93cy+L+16uyQcmaki0Q5hBndPKgadANSDTZl1pQeKwKOUK0wXDG8r2ULGjx1ODRl
+	JC7DGFtB016fWpbpwkZC6RMCLHtCtzZqTNWwsJD8j1Q/+xnd4qPJOYMM
+X-Google-Smtp-Source: AGHT+IGofrhPwUyQkmyigwaxUlF2xUHWhAZovkrgIBPkwqcSNQYKQBTR5Syeu5oZ8hxjg03O13Decw==
+X-Received: by 2002:a05:600c:528a:b0:43b:d0fe:b8ac with SMTP id 5b1f17b1804b1-442ff03c4edmr317016795e9.30.1748016455699;
+        Fri, 23 May 2025 09:07:35 -0700 (PDT)
 Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3a35ca5a8cfsm27334537f8f.37.2025.05.23.09.06.56
+        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-447f3dd94d1sm143921865e9.34.2025.05.23.09.07.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 May 2025 09:06:57 -0700 (PDT)
-Date: Fri, 23 May 2025 19:06:54 +0300
+        Fri, 23 May 2025 09:07:35 -0700 (PDT)
+Date: Fri, 23 May 2025 19:07:32 +0300
 From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Qiu-ji Chen <chenqiuji666@gmail.com>
-Cc: Sean Wang <sean.wang@mediatek.com>, Vinod Koul <vkoul@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org
-Subject: [PATCH] dmaengine: mediatek: Re-enable IRQs in mtk_cqdma_tx_status()
-Message-ID: <aDCdHh-G2ShU6uid@stanley.mountain>
+To: Arun R Murthy <arun.r.murthy@intel.com>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Chaitanya Kumar Borah <chaitanya.kumar.borah@intel.com>,
+	Harry Wentland <harry.wentland@amd.com>,
+	Suraj Kandpal <suraj.kandpal@intel.com>,
+	Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>,
+	Xaver Hugl <xaver.hugl@kde.org>, dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: [PATCH next] drm/plane: Fix error pointer vs NULL bug in
+ create_in_format_blob()
+Message-ID: <aDCdRKZHmCPwaJWp@stanley.mountain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -76,32 +81,38 @@ Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 X-Mailer: git-send-email haha only kidding
 
-This code calls spin_lock_irqsave() twice but obviously we can't store
-two sets of flags in the same "flags" variable.  The result is that we
-never re-enable IRQs in mtk_cqdma_tx_status().
+The callers expect to receive error pointers on error but
+create_in_format_blob() returns NULL.  Change it to return error
+pointers.
 
-Fixes: 157ae5ffd76a ("dmaengine: mediatek: Fix a possible deadlock error in mtk_cqdma_tx_status()")
+Fixes: 0d6dcd741c26 ("drm/plane: modify create_in_formats to acommodate async")
 Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
 ---
- drivers/dma/mediatek/mtk-cqdma.c | 4 ++--
+ drivers/gpu/drm/drm_plane.c | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/dma/mediatek/mtk-cqdma.c b/drivers/dma/mediatek/mtk-cqdma.c
-index 47c8adfdc155..9f0c41ca7770 100644
---- a/drivers/dma/mediatek/mtk-cqdma.c
-+++ b/drivers/dma/mediatek/mtk-cqdma.c
-@@ -449,9 +449,9 @@ static enum dma_status mtk_cqdma_tx_status(struct dma_chan *c,
- 		return ret;
+diff --git a/drivers/gpu/drm/drm_plane.c b/drivers/gpu/drm/drm_plane.c
+index 04992dfd4c79..75a7e8aa6611 100644
+--- a/drivers/gpu/drm/drm_plane.c
++++ b/drivers/gpu/drm/drm_plane.c
+@@ -209,7 +209,7 @@ static struct drm_property_blob *create_in_format_blob(struct drm_device *dev,
+ 	formats_size = sizeof(__u32) * plane->format_count;
+ 	if (WARN_ON(!formats_size)) {
+ 		/* 0 formats are never expected */
+-		return 0;
++		return ERR_PTR(-EINVAL);
+ 	}
  
- 	spin_lock_irqsave(&cvc->pc->lock, flags);
--	spin_lock_irqsave(&cvc->vc.lock, flags);
-+	spin_lock(&cvc->vc.lock);
- 	vd = mtk_cqdma_find_active_desc(c, cookie);
--	spin_unlock_irqrestore(&cvc->vc.lock, flags);
-+	spin_unlock(&cvc->vc.lock);
- 	spin_unlock_irqrestore(&cvc->pc->lock, flags);
+ 	modifiers_size =
+@@ -225,7 +225,7 @@ static struct drm_property_blob *create_in_format_blob(struct drm_device *dev,
  
- 	if (vd) {
+ 	blob = drm_property_create_blob(dev, blob_size, NULL);
+ 	if (IS_ERR(blob))
+-		return NULL;
++		return blob;
+ 
+ 	blob_data = blob->data;
+ 	blob_data->version = FORMAT_BLOB_CURRENT;
 -- 
 2.47.2
 
