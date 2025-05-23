@@ -1,88 +1,64 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82B86199FA2;
-	Fri, 23 May 2025 22:27:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEE283D76
+	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 22:34:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748039227; cv=none; b=oC4e24rk7/pTH+YUxAqTCHcd18zK634Jwf3iLDr6d/GEBl74QDtoiW73QsH6AkrNaXhJVca9ppkQhTahRYEyYVegPKP3ZLbTRDbnCOnMgl5OVYcChmYgDftTQS3kneF7C4BQi+vS7zeZLmBRfIsStufIJ/CYNPqO2zn3zNWPRAM=
+	t=1748039656; cv=none; b=H93O/fE4z42CM3Vqoo7ZKPNz3Vn4meVX29n3tH89E5xG83JrPcjJBtRm802NIuv8a2GMsoYChjv+N+4kUcb/dOb2DOJyFUawAVKpp4tY0brZtTJXhy93+xMhCAiXLU7GO1BXRuxEi8yMO3/W6izWmZcO7RVko/0qX10K3/dy6s0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748039227; c=relaxed/simple;
-	bh=JrmjUcUuCdLrFyFZQZQSWsHwlooK3iF/M77Hw8oBD4M=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=cJMuclTghSr6TjF3LoRSy7nYAtrJ4t9pWRlGGr/oufMP8me6SSMgvVuvx45YuTTnPkHWLUecrLkIEWGB3wGrPeqil+tSQYLX6HhNdTY87tLRaA2kUw9cKYLH6ruZvtovOvGxvwHHkBAgxTV1f3/fVteXQe2B+fzTrYWjfFD3ojk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=MAUxf4uN; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748039656; c=relaxed/simple;
+	bh=4r3UIicXzL93rez55y7jxvtvvH1snU3EFIPqLhkQ+4U=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=fYkcpwB/locqqYBxMT5+fC3uGCBgunkvsN1QgG3dU76JchLMIL8Z0RIALyVzUXbDUDansZws6S2DDkIR6R4TGu8wTQVHCt/Dz2gmpVtou2aUqJt9oIFzleWMG64tGfRWJbUnTdPIhRLEGR146WWtn7waVIiDJLuOs6c00x/dc78=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CfE5OUlo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="MAUxf4uN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A37D7C4CEE9;
-	Fri, 23 May 2025 22:27:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1748039225;
-	bh=JrmjUcUuCdLrFyFZQZQSWsHwlooK3iF/M77Hw8oBD4M=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=MAUxf4uN9muK+1RNCrui7Voj6noNO5+7v6fvwjsEVHyC7IHeZTMJXQqYkB4ZTxW7t
-	 rnrLj/H1ds7sl8o36C6RcGUOkVsxcecPnZxQAf+t6TTQoEt5z+CnCieabJYVyh1vFO
-	 Yw2uH9qwxW7uD+RpHuXhK/NJd3rZooMbIWmkyMqA=
-Date: Fri, 23 May 2025 15:27:05 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: oe-kbuild@lists.linux.dev, Yu Zhao <yuzhao@google.com>, lkp@intel.com,
- oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org, Linux Memory
- Management List <linux-mm@kvack.org>
-Subject: Re: mm/vmscan.c:3504 walk_pte_range() error: uninitialized symbol
- 'dirty'.
-Message-Id: <20250523152705.2ecae09e834c66e1327d6748@linux-foundation.org>
-In-Reply-To: <202505152339.fBOfDPsi-lkp@intel.com>
-References: <202505152339.fBOfDPsi-lkp@intel.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CfE5OUlo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C605AC4CEE9;
+	Fri, 23 May 2025 22:34:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748039655;
+	bh=4r3UIicXzL93rez55y7jxvtvvH1snU3EFIPqLhkQ+4U=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=CfE5OUlotypMdC7aZQESHIdfJoi09woAYw1GD/o36/g2FBvcBcj9iECmqCSaPk4Ki
+	 D7DlyMVqvi4hAHK9bRBaGiEDQrjIWQnllCQ6+76QsevdSFWcRlK2/whzBJL4UgiFsn
+	 dkmFVen+Dr5QznR9vthM3X9pcKV/yoBKAx0lLVWY3WLwrWrA42bmmJO0W5duKiXWqm
+	 /gIKwk1U3MkgyXEKBA809PO+leXZUuMDz2HKLndPwlgnT6cP7QcLzdNWPNqM1Ey2aw
+	 YEe7IMhzpH2bQ3zzKGoa2Do42gty2cE+OB0AgSROGERemjjAAk2/lvh8W81s8LrfqZ
+	 JW1+PBcy/P6cA==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 3416D380DBEB;
+	Fri, 23 May 2025 22:34:52 +0000 (UTC)
+Subject: Re: [git pull] drm fixes for 6.15-rc8/final
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <CAPM=9twqWSXu3sU+f7Z5WvnZhppvg2G4NkDkSRL8y02k2p+EoA@mail.gmail.com>
+References: <CAPM=9twqWSXu3sU+f7Z5WvnZhppvg2G4NkDkSRL8y02k2p+EoA@mail.gmail.com>
+X-PR-Tracked-List-Id: Direct Rendering Infrastructure - Development
+ <dri-devel.lists.freedesktop.org>
+X-PR-Tracked-Message-Id: <CAPM=9twqWSXu3sU+f7Z5WvnZhppvg2G4NkDkSRL8y02k2p+EoA@mail.gmail.com>
+X-PR-Tracked-Remote: https://gitlab.freedesktop.org/drm/kernel.git tags/drm-fixes-2025-05-24
+X-PR-Tracked-Commit-Id: fe1e5a1f2d1c2d4385a414dacca0e5275c0af281
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 4856ebd997159f198e3177e515bda01143727463
+Message-Id: <174803969072.3749917.5235088097409453205.pr-tracker-bot@kernel.org>
+Date: Fri, 23 May 2025 22:34:50 +0000
+To: Dave Airlie <airlied@gmail.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Simona Vetter <simona@ffwll.ch>, dri-devel <dri-devel@lists.freedesktop.org>, LKML <linux-kernel@vger.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
 
-On Fri, 23 May 2025 13:47:54 +0300 Dan Carpenter <dan.carpenter@linaro.org> wrote:
+The pull request you sent on Sat, 24 May 2025 08:15:22 +1000:
 
-> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-> head:   088d13246a4672bc03aec664675138e3f5bff68c
-> commit: a52dcec56c5b96250f15efbd7de3d3ea6ce863d9 mm/mglru: fix PTE-mapped large folios
-> config: sparc-randconfig-r073-20250515 (https://download.01.org/0day-ci/archive/20250515/202505152339.fBOfDPsi-lkp@intel.com/config)
-> compiler: sparc64-linux-gcc (GCC) 8.5.0
-> 
-> smatch warnings:
-> mm/vmscan.c:3504 walk_pte_range() error: uninitialized symbol 'dirty'.
-> mm/vmscan.c:3595 walk_pmd_range_locked() error: uninitialized symbol 'dirty'.
-> mm/vmscan.c:4215 lru_gen_look_around() error: uninitialized symbol 'dirty'.
-> 
-> ...
->
-> bd74fdaea14602 Yu Zhao        2022-09-18  3484  	for (i = pte_index(start), addr = start; addr != end; i++, addr += PAGE_SIZE) {
-> bd74fdaea14602 Yu Zhao        2022-09-18  3485  		unsigned long pfn;
-> bd74fdaea14602 Yu Zhao        2022-09-18  3486  		struct folio *folio;
-> c33c794828f212 Ryan Roberts   2023-06-12  3487  		pte_t ptent = ptep_get(pte + i);
-> bd74fdaea14602 Yu Zhao        2022-09-18  3488  
-> bd74fdaea14602 Yu Zhao        2022-09-18  3489  		total++;
-> bd74fdaea14602 Yu Zhao        2022-09-18  3490  		walk->mm_stats[MM_LEAF_TOTAL]++;
-> bd74fdaea14602 Yu Zhao        2022-09-18  3491  
-> 1d4832becdc2cd Yu Zhao        2024-10-19  3492  		pfn = get_pte_pfn(ptent, args->vma, addr, pgdat);
-> bd74fdaea14602 Yu Zhao        2022-09-18  3493  		if (pfn == -1)
-> bd74fdaea14602 Yu Zhao        2022-09-18  3494  			continue;
-> bd74fdaea14602 Yu Zhao        2022-09-18  3495  
-> 798c0330c2ca07 Yu Zhao        2024-12-30  3496  		folio = get_pfn_folio(pfn, memcg, pgdat);
-> bd74fdaea14602 Yu Zhao        2022-09-18  3497  		if (!folio)
-> bd74fdaea14602 Yu Zhao        2022-09-18  3498  			continue;
-> bd74fdaea14602 Yu Zhao        2022-09-18  3499  
-> 1d4832becdc2cd Yu Zhao        2024-10-19  3500  		if (!ptep_clear_young_notify(args->vma, addr, pte + i))
-> 1d4832becdc2cd Yu Zhao        2024-10-19  3501  			continue;
-> bd74fdaea14602 Yu Zhao        2022-09-18  3502  
-> a52dcec56c5b96 Yu Zhao        2024-12-30  3503  		if (last != folio) {
-> a52dcec56c5b96 Yu Zhao        2024-12-30 @3504  			walk_update_folio(walk, last, gen, dirty);
+> https://gitlab.freedesktop.org/drm/kernel.git tags/drm-fixes-2025-05-24
 
-Seems to be notabug because last==NULL on the first loop and in this
-case walk_update_folio() will immediately return without touching
-`dirty'.   But gee, I can't blame smatch from getting fooled by this.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/4856ebd997159f198e3177e515bda01143727463
 
-(oh look, mm/ has two walk_pte_range()s)
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
