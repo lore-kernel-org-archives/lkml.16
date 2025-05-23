@@ -1,198 +1,215 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF388223702;
-	Fri, 23 May 2025 09:03:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52141158874;
+	Fri, 23 May 2025 09:06:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747990998; cv=none; b=jUMLhdkCLmim3/TbQjm+ADi9YTP2/1N22/0bsC+BnibC8IribFSih/BmydxNTLSAZ2i74zFXHqSnuvQkjF7+mYQ9EHoQYIkgtVeI++4uh4V9w/VcIoXKIUUg5UQDEka14eqNfXYpRmjmeobNgANMMtsGcYn30rI+Ee3pgmkBy7A=
+	t=1747991167; cv=none; b=ML0/31E7TI+TX4oJRnR0xwjSetRBsWaOwNRNnbWMsdAoDeIJ2pDgARhuKzlRxP9DRVKnW2KZx6DA9RFr0VjwsqcZlwyC2SYdnuLeTeSL8dRNeoOIxu1O55wDtM58qQXFbrj1ubNsqkzAgpBvirFCJ2doe3mZxr3NQKdn+5ZGxhA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747990998; c=relaxed/simple;
-	bh=J3SxiOMpPZbohVP3HSSPnrrxas0MoAU8ASSoVi9x3+E=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=dkZOX6CaviON03RT9qmnEvPYZ8Ep8y5+4T4jwq05U6LZ73XJwtOMRqIIhRA12sP+t94RzvpfzZMVQg0gMqnpfqB2A6ta/4xMuT97dvo98FkohIYBEkFjaVse9xLeR3boJH64KWjXfOc03PUorkQ7i5XvGAXHtNxsbwySGFad7eA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4b3fLz2cvnz4f3jt8;
-	Fri, 23 May 2025 17:02:51 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 4D2A01A018D;
-	Fri, 23 May 2025 17:03:11 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP4 (Coremail) with SMTP id gCh0CgCH61_MOTBocBILNQ--.27999S5;
-	Fri, 23 May 2025 17:03:11 +0800 (CST)
-From: libaokun@huaweicloud.com
-To: linux-ext4@vger.kernel.org
-Cc: tytso@mit.edu,
-	adilger.kernel@dilger.ca,
-	jack@suse.cz,
-	linux-kernel@vger.kernel.org,
-	yi.zhang@huawei.com,
-	yangerkun@huawei.com,
-	libaokun1@huawei.com,
-	libaokun@huaweicloud.com
-Subject: [PATCH 1/4] ext4: add ext4_try_lock_group() to skip busy groups
-Date: Fri, 23 May 2025 16:58:18 +0800
-Message-Id: <20250523085821.1329392-2-libaokun@huaweicloud.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20250523085821.1329392-1-libaokun@huaweicloud.com>
-References: <20250523085821.1329392-1-libaokun@huaweicloud.com>
+	s=arc-20240116; t=1747991167; c=relaxed/simple;
+	bh=Rpjv0JrO41nivhlbI4+2a2+XIeOB7AFxjvb4ZS8YZhI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IVeJsUtxB/Av/UpBxhKv7FTr1Le+zb3xrR8+9rusp8JvP9e1cmGirrAV0nBgUfLixVATsxyg5rVF4rS9Qg5/1O1ECkEGkzRkYhqT3sTTmTytvhlDrOMQE6+bv+QE7vXiwZsEWldu/XqtbDab9V7HZidSiKIiTs4whBHNlFz+yRw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g39Ufm5E; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g39Ufm5E"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35C43C4CEE9;
+	Fri, 23 May 2025 09:06:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747991166;
+	bh=Rpjv0JrO41nivhlbI4+2a2+XIeOB7AFxjvb4ZS8YZhI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=g39Ufm5E8lorrUP13UNIN3Dvqo8VG9e7Vp4ShfSxgg7L/F0fKZoxFraX3VA7fwh8g
+	 6CGwi7+7CqCp8V5NBqQgXhi6mJJ6Z1PgM4OztWSZZMr7fwFGYlz3pC5ngys2C6xGUI
+	 oBVX0E/2dmBba/MyRK1cMpA8cKwFl/aXau9zlQaonTX8/GF4xu8+gRYkg6TjXii/yY
+	 GoB9HaLKDHtb3UeSegynYdJCLzQRliIXqKT11TLWsqNz008C7XsPLmFsW5kEGOaUZQ
+	 g/tcbNDSlr1/EvfwegLceoU1SavYq9JLquUp5U52vEAuqk0maQTpgmLzK2rpx9LAKt
+	 GaRyGJNJygA/Q==
+Date: Fri, 23 May 2025 11:06:04 +0200
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Stephan Gerhold <stephan.gerhold@linaro.org>
+Cc: Saravana Kannan <saravanak@google.com>, Rob Herring <robh@kernel.org>, 
+	Bjorn Andersson <andersson@kernel.org>, Jassi Brar <jassisinghbrar@gmail.com>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, linux-arm-msm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, 
+	Georgi Djakov <djakov@kernel.org>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: Re: [PATCH 1/4] dt-bindings: mailbox: qcom,apcs: Add separate node
+ for clock-controller
+Message-ID: <20250523-markhor-of-fortunate-experience-1f575e@kuoka>
+References: <20250506-qcom-apcs-mailbox-cc-v1-0-b54dddb150a5@linaro.org>
+ <20250506-qcom-apcs-mailbox-cc-v1-1-b54dddb150a5@linaro.org>
+ <7vszdea2djl43oojvw3vlrip23f7cfyxkyn6jw3wc2f7yowht5@bgsc2pqscujc>
+ <aCNGSwL7043GoJBz@linaro.org>
+ <20250514160841.GA2427890-robh@kernel.org>
+ <aCUHTJGktLFhXq4Q@linaro.org>
+ <20250521-psychedelic-cute-grouse-ee1291@kuoka>
+ <aC-AqDa8cjq2AYeM@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgCH61_MOTBocBILNQ--.27999S5
-X-Coremail-Antispam: 1UD129KBjvJXoWxCrWDWr1UZry5WrW3XryUGFg_yoW7GryUpw
-	srZ3Z8Ar45Wwn8uws7G3y0qw4Fkw40gFWUJrWfuw17Zry3Xrna9as7tF17AF9FgFs3JFnx
-	X3Wav3y7Cr13u37anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUPv14x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_Jr4l82xGYIkIc2
-	x26xkF7I0E14v26r1I6r4UM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
-	Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJw
-	A2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS
-	0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2
-	IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0
-	Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwAKzVCY07xG64k0F24lc7CjxV
-	Aaw2AFwI0_Jw0_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2Iq
-	xVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r
-	1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY
-	6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67
-	AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuY
-	vjfUegAzUUUUU
-X-CM-SenderInfo: 5olet0hnxqqx5xdzvxpfor3voofrz/1tbiAgARBWgwLIYF3AAAs9
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <aC-AqDa8cjq2AYeM@linaro.org>
 
-From: Baokun Li <libaokun1@huawei.com>
+On Thu, May 22, 2025 at 09:53:12PM GMT, Stephan Gerhold wrote:
+> +Saravana
+> 
+> On Wed, May 21, 2025 at 11:20:40AM +0200, Krzysztof Kozlowski wrote:
+> > On Wed, May 14, 2025 at 10:12:44PM GMT, Stephan Gerhold wrote:
+> > > > > > > The mailbox itself does not need any clocks and should probe early to
+> > 
+> > ... so probe it early.
+> > 
+> > > > > > > unblock the rest of the boot process. The "clocks" are only needed for the
+> > > > > > > separate clock controller. In Linux, these are already two separate drivers
+> > > > > > > that can probe independently.
+> > 
+> > They can probe later, no problem and DT does not stop that. Linux, not
+> > DT, controls the ways of probing of devices and their children.
+> > 
+> > > > > > > 
+> > > > > > 
+> > > > > > Why does this circular dependency need to be broken in the DeviceTree
+> > > > > > representation?
+> > > > > > 
+> > > > > > As you describe, the mailbox probes and register the mailbox controller
+> > > > > > and it registers the clock controller. The mailbox device isn't affected
+> > > > > > by the clock controller failing to find rpmcc...
+> > > > > > 
+> > > > > 
+> > > > > That's right, but the problem is that the probe() function of the
+> > > > > mailbox driver won't be called at all. The device tree *looks* like the
+> > > > > mailbox depends on the clock, so fw_devlink tries to defer probing until
+> > > > > the clock is probed (which won't ever happen, because the mailbox is
+> > > > > needed to make the clock available).
+> > > > > 
+> > > > > I'm not sure why fw_devlink doesn't detect this cycle and tries to probe
+> > > > > them anyway, but fact is that we need to split this up in order to avoid
+> > > > > warnings and have the supplies/consumers set up properly. Those device
+> > > > > links are created based on the device tree and not the drivers.
+> > > > 
+> > > > Does "post-init-providers" providers solve your problem?
+> > > > 
+> > > 
+> > > I would expect that it does, but it feels like the wrong solution to the
+> > > problem to me. The clock is not really a post-init provider: It's not
+> > > consumed at all by the mailbox and needed immediately to initialize the
+> > > clock controller. The real problem in my opinion is that we're
+> > > describing two essentially distinct devices/drivers in a single device
+> > > node, and there is no way to distinguish that.
+> > > 
+> > > By splitting up the two distinct components into separate device tree
+> > > nodes, the relation between the providers/consumers is clearly
+> > > described.
+> > 
+> > You can split devices without splitting the nodes. I do not see reason
+> > why the DT is the problem here.
+> > 
+> 
+> The Linux drivers for this particular mailbox/clock controller already
+> work exactly the way you propose. They are split into two devices that
+> can probe independently.
+> 
+> The problem is outside of the drivers, because fw_devlink in Linux
+> blocks probing until all resources specified in the device tree nodes
+> become available. fw_devlink has no knowledge that the mailbox described
+> by this peculiar device tree node does not actually need the clocks:
+> 
+> 	apcs1_mbox: mailbox@b011000 {
+> 		compatible = "qcom,msm8939-apcs-kpss-global", "syscon";
+> 		reg = <0x0b011000 0x1000>;
+> 		#mbox-cells = <1>;
+> 		clocks = <&a53pll_c1>, <&gcc GPLL0_VOTE>, <&rpmcc RPM_SMD_XO_CLK_SRC>;
+> 		clock-names = "pll", "aux", "ref";
+> 		#clock-cells = <0>;
+> 	};
+> 
+> Without device-specific quirks in fw_devlink, the fact that these clocks
+> are only used by an unrelated clock controller only becomes clear if we
+> split the device tree node like I propose in this series:
+> 
+> 	apcs1_mbox: mailbox@b011000 {
+> 		compatible = "qcom,msm8939-apcs-kpss-global", "syscon";
+> 		reg = <0x0b011000 0x1000>;
+> 		#mbox-cells = <1>;
+> 
+> 		apcs1_clk: clock-controller {
+> 			clocks = <&a53pll_c1>, <&gcc GPLL0_VOTE>, <&rpmcc RPM_SMD_XO_CLK_SRC>;
+> 			clock-names = "pll", "aux", "ref";
+> 			#clock-cells = <0>;
+> 		};
+> 	};
 
-When ext4 allocates blocks, we used to just go through the block groups
-one by one to find a good one. But when there are tons of block groups
-(like hundreds of thousands or even millions) and not many have free space
-(meaning they're mostly full), it takes a really long time to check them
-all, and performance gets bad. So, we added the "mb_optimize_scan" mount
-option (which is on by default now). It keeps track of some group lists,
-so when we need a free block, we can just grab a likely group from the
-right list. This saves time and makes block allocation much faster.
+Above code suggests that clocks are not needed for the mailbox at all.
+You need to be really sure of that. If that's the case, then this
+description looks like correct hardware description, more detailed then
+the first case, though.
 
-But when multiple processes or containers are doing similar things, like
-constantly allocating 8k blocks, they all try to use the same block group
-in the same list. Even just two processes doing this can cut the IOPS in
-half. For example, one container might do 300,000 IOPS, but if you run two
-at the same time, the total is only 150,000.
+> 
+> It is easy to say that the problem is in Linux (and not the DT), but
+> unless you are suggesting to remove fw_devlink from Linux, or to add
+> more device-specific quirks to the generic fw_devlink code, I'm only
+> aware of the following two options to make this work (both already
+> discussed in this email thread):
+> 
+>  1. post-init-providers (as suggested by Rob):
+> 
+> 		post-init-providers = <&a53pll_c1>, <&gcc>, <&rpmcc>;
+> 
+>     To repeat my previous email: IMHO this is a crude workaround for
+>     this situation. The clock is not really a post-init provider: It's
+>     not consumed at all by the mailbox and needed immediately to
+>     initialize the clock controller.
 
-Since we can already look at block groups in a non-linear way, the first
-and last groups in the same list are basically the same for finding a block
-right now. Therefore, add an ext4_try_lock_group() helper function to skip
-the current group when it is locked by another process, thereby avoiding
-contention with other processes. This helps ext4 make better use of having
-multiple block groups.
+Clock is a provider - it has clock-cells - and it is post-init, because
+mailbox (parent) does not need it to initialize itself. Only part of its
+functionality - clocks - need it.
 
-Also, to make sure we don't skip all the groups that have free space
-when allocating blocks, we won't try to skip busy groups anymore when
-ac_criteria is CR_ANY_FREE.
+> 
+>     With this approach, there are no device links created for the
+>     clocks, so we don't get the proper probe/suspend ordering that
+>     fw_devlink normally provides.
 
-Performance test data follows:
+This probably could be fixed in the Linux?
 
-CPU: HUAWEI Kunpeng 920
-Memory: 480GB
-Disk: 480GB SSD SATA 3.2
-Test: Running will-it-scale/fallocate2 on 64 CPU-bound containers.
-Observation: Average fallocate operations per container per second.
+> 
+>  2. Split up device tree node (this patch series): With this approach,
+>     the mailbox can probe early and the clock controller child device
+>     gets the expected consumer/supplier device links to the clocks. IMHO
+>     this is the cleanest solution to go for.
+> 
+> @Saravana: Is there any other option that I missed? Or perhaps you have
+> any other suggestions how we should handle this?
+> 
+> To summarize the series and previous emails, the dependency cycle that
+> was in msm8939.dtsi before commit d92e9ea2f0f9 ("arm64: dts: qcom:
+> msm8939: revert use of APCS mbox for RPM") is:
+> 
+>   1. The clock controller inside &apcs1_mbox needs
+>      clocks = <&rpmcc RPM_SMD_XO_CLK_SRC>.
+>   2. &rpmcc is a child of remoteproc &rpm
+>   3. remoteproc &rpm needs mboxes = <&apcs1_mbox 8>;
+> 
+> This is not a real dependency cycle, the clocks in the mailbox@ node are
+> not needed for the mailbox. They are only used and needed for the clock
+> controller child device that makes use of the same device tree node.
+> 
+> At runtime this cycle currently results in none of the devices probing:
+> 
+> [   13.281637] platform remoteproc: deferred probe pending: qcom-rpm-proc: Failed to register smd-edge
+> [   13.296257] platform b011000.mailbox: deferred probe pending: platform: supplier b016000.clock not ready
+> [   13.308397] platform b016000.clock: deferred probe pending: platform: wait for supplier /remoteproc/smd-edge/rpm-requests/clock-controller
+> 
 
-                      base    patched
-mb_optimize_scan=0    3588    6755 (+88.2%)
-mb_optimize_scan=1    3588    4302 (+19.8%)
+Except missing dev_links you mentioned, this feels for me like job for
+post-init-providers (option 1), but I am also fine with option 2,
+because it fees like more appropriate hardware description.
 
-Signed-off-by: Baokun Li <libaokun1@huawei.com>
----
- fs/ext4/ext4.h    | 23 ++++++++++++++---------
- fs/ext4/mballoc.c | 14 +++++++++++---
- 2 files changed, 25 insertions(+), 12 deletions(-)
-
-diff --git a/fs/ext4/ext4.h b/fs/ext4/ext4.h
-index 5a20e9cd7184..9c665a620a46 100644
---- a/fs/ext4/ext4.h
-+++ b/fs/ext4/ext4.h
-@@ -3494,23 +3494,28 @@ static inline int ext4_fs_is_busy(struct ext4_sb_info *sbi)
- 	return (atomic_read(&sbi->s_lock_busy) > EXT4_CONTENTION_THRESHOLD);
- }
- 
-+static inline bool ext4_try_lock_group(struct super_block *sb, ext4_group_t group)
-+{
-+	if (!spin_trylock(ext4_group_lock_ptr(sb, group)))
-+		return false;
-+	/*
-+	 * We're able to grab the lock right away, so drop the lock
-+	 * contention counter.
-+	 */
-+	atomic_add_unless(&EXT4_SB(sb)->s_lock_busy, -1, 0);
-+	return true;
-+}
-+
- static inline void ext4_lock_group(struct super_block *sb, ext4_group_t group)
- {
--	spinlock_t *lock = ext4_group_lock_ptr(sb, group);
--	if (spin_trylock(lock))
--		/*
--		 * We're able to grab the lock right away, so drop the
--		 * lock contention counter.
--		 */
--		atomic_add_unless(&EXT4_SB(sb)->s_lock_busy, -1, 0);
--	else {
-+	if (!ext4_try_lock_group(sb, group)) {
- 		/*
- 		 * The lock is busy, so bump the contention counter,
- 		 * and then wait on the spin lock.
- 		 */
- 		atomic_add_unless(&EXT4_SB(sb)->s_lock_busy, 1,
- 				  EXT4_MAX_CONTENTION);
--		spin_lock(lock);
-+		spin_lock(ext4_group_lock_ptr(sb, group));
- 	}
- }
- 
-diff --git a/fs/ext4/mballoc.c b/fs/ext4/mballoc.c
-index 1e98c5be4e0a..5c13d9f8a1cc 100644
---- a/fs/ext4/mballoc.c
-+++ b/fs/ext4/mballoc.c
-@@ -896,7 +896,8 @@ static void ext4_mb_choose_next_group_p2_aligned(struct ext4_allocation_context
- 				    bb_largest_free_order_node) {
- 			if (sbi->s_mb_stats)
- 				atomic64_inc(&sbi->s_bal_cX_groups_considered[CR_POWER2_ALIGNED]);
--			if (likely(ext4_mb_good_group(ac, iter->bb_group, CR_POWER2_ALIGNED))) {
-+			if (likely(ext4_mb_good_group(ac, iter->bb_group, CR_POWER2_ALIGNED)) &&
-+			    !spin_is_locked(ext4_group_lock_ptr(ac->ac_sb, iter->bb_group))) {
- 				*group = iter->bb_group;
- 				ac->ac_flags |= EXT4_MB_CR_POWER2_ALIGNED_OPTIMIZED;
- 				read_unlock(&sbi->s_mb_largest_free_orders_locks[i]);
-@@ -932,7 +933,8 @@ ext4_mb_find_good_group_avg_frag_lists(struct ext4_allocation_context *ac, int o
- 	list_for_each_entry(iter, frag_list, bb_avg_fragment_size_node) {
- 		if (sbi->s_mb_stats)
- 			atomic64_inc(&sbi->s_bal_cX_groups_considered[cr]);
--		if (likely(ext4_mb_good_group(ac, iter->bb_group, cr))) {
-+		if (likely(ext4_mb_good_group(ac, iter->bb_group, cr)) &&
-+		    !spin_is_locked(ext4_group_lock_ptr(ac->ac_sb, iter->bb_group))) {
- 			grp = iter;
- 			break;
- 		}
-@@ -2911,7 +2913,13 @@ ext4_mb_regular_allocator(struct ext4_allocation_context *ac)
- 			if (err)
- 				goto out;
- 
--			ext4_lock_group(sb, group);
-+			/* skip busy group */
-+			if (cr >= CR_ANY_FREE) {
-+				ext4_lock_group(sb, group);
-+			} else if (!ext4_try_lock_group(sb, group)) {
-+				ext4_mb_unload_buddy(&e4b);
-+				continue;
-+			}
- 
- 			/*
- 			 * We need to check again after locking the
--- 
-2.46.1
+Best regards,
+Krzysztof
 
