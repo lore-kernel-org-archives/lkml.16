@@ -1,71 +1,61 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f50.google.com (mail-io1-f50.google.com [209.85.166.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA9B01B4241
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 19:36:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E27971B4241
+	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 19:39:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748028988; cv=none; b=iOW5e8i7jdLHQZhijCAgpsHHgDDzD+RMo4cWxamcfxADiupevQIEcmFotn0Otq8GllmgnwzETbN3RKwwGc9xVk6iR4DrdjO1yJbbbKwEjgHf+sV4omqJpybMyevmHVG0Fb94EmEHXKty4UMk45d+Uf/kFlnLFfKH1MPPOQ6IEwk=
+	t=1748029146; cv=none; b=syh5GC5OVkYoraEWKmAvpdbsOwlBY+h72I2RvE5L8YOdj4i//AeBQXWZ1RTLaEU9zRHVweJdBwRj3paO86tW0/ykOY6/Xc8JyddwL9YNAhCJJDF9cV8yoXPgxFSgamkiTJkCMUrIesWMAZd+1XmZ1MJC49X15NeWqlG8cPF+Sss=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748028988; c=relaxed/simple;
-	bh=yqM4kYCDpAUqPTOIbrEf40vDqq2eOClb2DURvAkPXWQ=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=bcQCeNsDObFf8qh8938FMvr7EujIxISimuxK9WsNMO/RuV5m9ksyzvpWCtODXGLUZV5HQ3crSb899fhsH9xF3Zte2FBoei+WpXAnLb7V9W83xwxPwmt+2JyDu2tf17LFbE0g1c5+BJO2o2WUuHo16z0flO1VEa9lzfDjgPWV4LQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=E4/UGyeG; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1748029146; c=relaxed/simple;
+	bh=YNwPytqdIzXCb6Dbj/QZRhK3L6OYlfCpOdYMdfQBCdY=;
+	h=Content-Type:Message-ID:Date:MIME-Version:From:Subject:To:Cc; b=gIGWi3F43VhzZpcqpFFhfNOyJxj6OyTVOz4mIV4PDYgIwbnw6N+k2wSFRZAtouXaHez7GS+0ByuY487QLChs44NyeJepBtwXuyowvuLfEa7zrVWw08HXW9RsN1Rk5/h8/tUABKA+z+vzonCyttOALT70Jcd0r77buIBBKR5UrzQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=LC69EzI2; arc=none smtp.client-ip=209.85.166.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="E4/UGyeG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1748028985;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=kidTGWLf8HiPqYlSnvvASEQy1JGrgJc/URV408B3d04=;
-	b=E4/UGyeGvsIHDug87T+NwmrE9Rugg1L0cvdGXvDxIcmDVIAaz7U/9fqgkTiUjRBsIT5mYe
-	IRIZElQiQsjLZ6ApZawl3xZdHPpQEyLmd8pa4dSJjqjjbOgnWmPAQjsZ3PtX2PAYQCd5bd
-	fIi2M8n3AW4GG/XYSsTrtOZavmCg01k=
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com
- [209.85.222.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-573-u4l-ypEgNCeLwzigW2VVjg-1; Fri, 23 May 2025 15:36:24 -0400
-X-MC-Unique: u4l-ypEgNCeLwzigW2VVjg-1
-X-Mimecast-MFC-AGG-ID: u4l-ypEgNCeLwzigW2VVjg_1748028984
-Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7c5e28d0cc0so20604885a.3
-        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 12:36:24 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="LC69EzI2"
+Received: by mail-io1-f50.google.com with SMTP id ca18e2360f4ac-86142446f3fso5355339f.2
+        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 12:39:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google; t=1748029143; x=1748633943; darn=vger.kernel.org;
+        h=cc:to:subject:from:content-language:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=TSYaT5YyCnlhGvAeQksD3b6RZkgUC/+VazTkW+Ql7Jo=;
+        b=LC69EzI2hbwSunwV25rg76ONuvZnnyySf8AEtcfR96ZUby05PuA3PIo8jZTgK2m3Z9
+         Yw9HmkhkO3fpWmHWpBmJNO8CQ5JH4Gl1Bn5Fx+cASLTLSzlvbeBqd2BuRfXHDpxOa51s
+         5IRXmTGBqpzL/sF4zK8fhFFROailAxBhCHhO4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748028984; x=1748633784;
-        h=content-transfer-encoding:in-reply-to:references:cc:to:from
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=kidTGWLf8HiPqYlSnvvASEQy1JGrgJc/URV408B3d04=;
-        b=qA0Tq3CIO6TFxqLLn2qjvmAZTskKOq8NRT0QmY0mJOKLuke7IUOmBfXxq+q7/OhfJT
-         6vtqNs7bHXaHP2SpOZlVgvzdeKzRQaa88w/obBXAC54SmBcqgvt+aNjUCsauaiKSK+xq
-         fBvXp0VINBGgc5MSo1IuS0fFfIOoHWazEdW6fFg8IW5H9+M70LEVRkpUvglwHaI+6xw+
-         thg4FBi3b7ZhsBFQqs0CkcWdRRJhUM/azNuIsvbViTE3Ta5rnXNGgdD8qcblziP6cMiE
-         wFPCsOCq2FsVZJtt7WSz/KMNmnl//sbNzOrZlQWiGcYGy8X9Jb5i3r5/vorF7UPdyhR4
-         8uZQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXXb6vhwDSSQ9N3O5hfLszqeY0+4YaaBHCXKT5KQqnKZld0kAc9LMkxeODwFPBDxgBKLjhHZO5ArmN41Uw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzY0DYdWOiDq+S7CxiI3cFrHYFxJzQapF82Nb9BkEUjHnT3Jsez
-	+xfPF8nrSK95LXx4Bgt8hN8WAQ3SmQq8RaIOof4mkiUO95ls1LsGeE1YL/jibBEHRVZnTyw773A
-	1sSiKBWcr7GxqLgn0Dk3D3SCpWOBAdYnVKUh+vNljXmdInrNycC8HSPV+VnHhUwY6yg==
-X-Gm-Gg: ASbGncu5464P7w48zSEVBM+ecD3h1/ZNjZsDIlk+DWoU8U2mX3OC7pk3uVLqzD1AkX9
-	U25JoBCNsSnpoa/DMXkX8tdG7cqXg6uFCZ+RWLPj80kv7vtdKXd4JI6sFgBcw6xumt73lveemdb
-	NSdL/986ftXBPCh5m7AouTcWmpFE9AFqy0M30NrASQavtqnON4MUxMqYGcuREEmVbtMoxy4HEnB
-	G3sVeFdJOIQMj2uUTQ5rsii9alr2WybmMXGczioR8ASvKiRfQeKwBzwW+n3O68WkXxQScoYtFHj
-	LTFydV4ncThx
-X-Received: by 2002:a05:620a:3711:b0:7c5:aec7:7ecc with SMTP id af79cd13be357-7ceecba7654mr76808185a.13.1748028983747;
-        Fri, 23 May 2025 12:36:23 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFFJKxqzX44nUMqHLBCLT+KOS9BdkBLIZeUURW51Zp0jpVCGq7Lz+5dSD9ytJb95co0Y6Sxbg==
-X-Received: by 2002:a05:620a:3711:b0:7c5:aec7:7ecc with SMTP id af79cd13be357-7ceecba7654mr76804085a.13.1748028983347;
-        Fri, 23 May 2025 12:36:23 -0700 (PDT)
-Received: from [192.168.40.164] ([70.105.235.240])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7cd468ccd94sm1220015185a.109.2025.05.23.12.36.17
+        d=1e100.net; s=20230601; t=1748029143; x=1748633943;
+        h=cc:to:subject:from:content-language:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=TSYaT5YyCnlhGvAeQksD3b6RZkgUC/+VazTkW+Ql7Jo=;
+        b=RarAauRcez20AaR6WQcy4h7F8bYhT+dClPCU7DUz/pWCgWP2pz976fRBDoiNQ5vJGo
+         3KeWp6a13z0ReBZTpvo32X/MrsEP0qTTvJ6BZpLpTODUoSiUb1lZVi5W30rvfEQj3T5z
+         2p04YJqfraRsjcxOEif4NCUq24hMGxSxXJkfBbD/Lcse1iVI7NHVO2Uj0oFaxMAQlU40
+         Iz5HvwwJgLL7kNAuODos0NCkOJQpbVP+r7+5s3S++jSMzSXStXxyBIAP+knbIzx393qR
+         Nw898+MmeKFWNPcjTBzVROw0/dLm3oe9zwkKyGtQm/BWQHPJ9YxIaMdLhjLyqfWL8Ur5
+         ZeXw==
+X-Forwarded-Encrypted: i=1; AJvYcCVVaEr+DyGMTDe6ZxsAUAw0MI0re9K8L2DR71HGZxWnP0R4plnXY1cNAQS1wqE5afig+i6ZxutsL4TaxgU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyJBtXRr9Od7ERf7tmzsM7tBTdJlMwzMfdXOJvO3BWFo97YFXwu
+	beTq2jlhhgzhCZcUbpD/SXZYDOfBblIbti1BCmQoA31HYRN16h+HpS3Wj+ZBbJ1W+ZjHWP++OKt
+	Of8gE
+X-Gm-Gg: ASbGncuMKKFQWyHZ6CrLUX7VFmyao5O/j/i4oZHlvDHfDCCw/ockAGPC4tRPhllJ3X9
+	AvdTIiIH26n+R7IQ3BvoVEENKHCkE1U5tCd+Xw30lIDwsHZzwu9+czSScADnkmykh3/gjv0w0jR
+	oAbWsMDi0z1v6FBDOL/ZIwPM20rwxZnHXEePxpv68XP5NQiqu+/36yxmZpPqaGb2+e6635PJ99h
+	Y3FzJhTmtcS2U89rqr3nilgfqBqqXNMtB7IGJU0LIJoHwzZ0iLPmmVkgkD1Lp+sh1XeXv6ZqFKa
+	8gLNVZyTE3sk2kd8WF2OmJTLoFQhb9IFLLiceP5T91u0o1m4mW441apLkeRfjQ==
+X-Google-Smtp-Source: AGHT+IEtFR96KAft0blY/PutWzL551E5JYiKFBNXI7Q9jh7VeCljH5BFRRRFyvZU58UAeAumrIl4oA==
+X-Received: by 2002:a05:6e02:1b0e:b0:3db:86fc:d328 with SMTP id e9e14a558f8ab-3dc9b67097cmr3837105ab.5.1748029142916;
+        Fri, 23 May 2025 12:39:02 -0700 (PDT)
+Received: from [192.168.1.14] ([38.175.170.29])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4fbcc38a56esm3727986173.12.2025.05.23.12.39.02
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 23 May 2025 12:36:22 -0700 (PDT)
-Message-ID: <9b429da4-8db6-407e-9721-178e01fd1ebb@redhat.com>
-Date: Fri, 23 May 2025 15:36:16 -0400
+        Fri, 23 May 2025 12:39:02 -0700 (PDT)
+Content-Type: multipart/mixed; boundary="------------HRIk7LgMU2M3W6ui30NdDtq7"
+Message-ID: <ab676145-a8cb-4f0f-83e3-79e073c47380@linuxfoundation.org>
+Date: Fri, 23 May 2025 13:39:01 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -73,103 +63,287 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 2/5] KVM: arm64: New function to determine hardware
- cache management support
 Content-Language: en-US
-From: Donald Dutile <ddutile@redhat.com>
-To: ankita@nvidia.com, jgg@nvidia.com, maz@kernel.org,
- oliver.upton@linux.dev, joey.gouly@arm.com, suzuki.poulose@arm.com,
- yuzenghui@huawei.com, catalin.marinas@arm.com, will@kernel.org,
- ryan.roberts@arm.com, shahuang@redhat.com, lpieralisi@kernel.org,
- david@redhat.com
-Cc: aniketa@nvidia.com, cjia@nvidia.com, kwankhede@nvidia.com,
- kjaju@nvidia.com, targupta@nvidia.com, vsethi@nvidia.com,
- acurrid@nvidia.com, apopple@nvidia.com, jhubbard@nvidia.com,
- danw@nvidia.com, zhiw@nvidia.com, mochs@nvidia.com, udhoke@nvidia.com,
- dnigam@nvidia.com, alex.williamson@redhat.com, sebastianene@google.com,
- coltonlewis@google.com, kevin.tian@intel.com, yi.l.liu@intel.com,
- ardb@kernel.org, akpm@linux-foundation.org, gshan@redhat.com,
- linux-mm@kvack.org, tabba@google.com, qperret@google.com, seanjc@google.com,
- kvmarm@lists.linux.dev, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, maobibo@loongson.cn
-References: <20250523154445.3779-1-ankita@nvidia.com>
- <20250523154445.3779-3-ankita@nvidia.com>
- <9ffc7686-0dc0-4978-8cd8-f12a1c148b63@redhat.com>
-In-Reply-To: <9ffc7686-0dc0-4978-8cd8-f12a1c148b63@redhat.com>
+From: Shuah Khan <skhan@linuxfoundation.org>
+Subject: [GIT PULL] kunit next update for Linux 6.16-rc1
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: shuah <shuah@kernel.org>, Shuah Khan <skhan@linuxfoundation.org>,
+ Brendan Higgins <brendan.higgins@linux.dev>, David Gow
+ <davidgow@google.com>, Rae Moar <rmoar@google.com>,
+ linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+
+This is a multi-part message in MIME format.
+--------------HRIk7LgMU2M3W6ui30NdDtq7
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
+Hi Linus,
 
+Please pull the following kunit next update for Linux 6.16-rc1.
 
-On 5/23/25 3:30 PM, Donald Dutile wrote:
-> 
-> 
-> On 5/23/25 11:44 AM, ankita@nvidia.com wrote:
->> From: Ankit Agrawal <ankita@nvidia.com>
->>
->> The hardware supports safely mapping PFNMAP as cacheable if it
->> is capable of managing cache. This can be determined by the presence
->> of FWB (Force Write Back) and CACHE_DIC feature.
->>
->> When FWB is not enabled, the kernel expects to trivially do cache
->> management by flushing the memory by linearly converting a kvm_pte to
->> phys_addr to a KVA. The cache management thus relies on memory being
->> mapped. Since the GPU device memory is not kernel mapped, exit when
->> the FWB is not supported. Similarly, ARM64_HAS_CACHE_DIC allows KVM
->> to avoid flushing the icache and turns icache_inval_pou() into a NOP.
->> So the cacheable PFNMAP is contingent on these two hardware features.
->>
->> Introduce a new function to make the check for presence of those
->> features.
->>
->> CC: David Hildenbrand <david@redhat.com>
->> Signed-off-by: Ankit Agrawal <ankita@nvidia.com>
->> ---
->>   arch/arm64/kvm/mmu.c     | 12 ++++++++++++
->>   include/linux/kvm_host.h |  2 ++
->>   2 files changed, 14 insertions(+)
->>
->> diff --git a/arch/arm64/kvm/mmu.c b/arch/arm64/kvm/mmu.c
->> index 305a0e054f81..124655da02ca 100644
->> --- a/arch/arm64/kvm/mmu.c
->> +++ b/arch/arm64/kvm/mmu.c
->> @@ -1287,6 +1287,18 @@ void kvm_arch_mmu_enable_log_dirty_pt_masked(struct kvm *kvm,
->>       kvm_nested_s2_wp(kvm);
->>   }
->> +/**
->> + * kvm_arch_supports_cacheable_pfnmap() - Determine whether hardware
->> + *      supports cache management.
->> + *
->> + * Return: True if FWB and DIC is supported.
->> + */
->> +bool kvm_arch_supports_cacheable_pfnmap(void)
->> +{
->> +    return cpus_have_final_cap(ARM64_HAS_STAGE2_FWB) &&
->> +           cpus_have_final_cap(ARM64_HAS_CACHE_DIC);
->> +}
->> +
->>   static void kvm_send_hwpoison_signal(unsigned long address, short lsb)
->>   {
->>       send_sig_mceerr(BUS_MCEERR_AR, (void __user *)address, lsb, current);
->> diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
->> index 291d49b9bf05..3750d216d456 100644
->> --- a/include/linux/kvm_host.h
->> +++ b/include/linux/kvm_host.h
->> @@ -1231,6 +1231,8 @@ void kvm_arch_flush_shadow_all(struct kvm *kvm);
->>   /* flush memory translations pointing to 'slot' */
->>   void kvm_arch_flush_shadow_memslot(struct kvm *kvm,
->>                      struct kvm_memory_slot *slot);
->> +/* hardware support cache management */
->> +bool kvm_arch_supports_cacheable_pfnmap(void);
-> Won't this cause a build warning on non-ARM builds, b/c there is no
-> resolution of this function for the other arch's?
-> Need #ifdef or default-rtn-0 function for arch's that don't have this function?
-> 
-ah, I see you have the weak function in patch 5/5.
-But I think you have to move that hunk to this patch, so a bisect won't cause
-a build warning (or failure, depending on how a distro sets -W in its builds).
+- Enables qemu_config for riscv32, sparc 64-bit, PowerPC 32-bit BE and
+   64-bit LE.
+- Enables CONFIG_SPARC32 to clearly differentiate between sparc 32-bit
+   and 64-bit configurations.
+- Enables CONFIG_CPU_BIG_ENDIAN to clearly differentiate between powerpc
+   LE and BE configurations.
+- Adds feature to list available architectures to kunit tool.
+- Fixes to bugs and changes to documentation.
 
-- Don
->>   int kvm_prefetch_pages(struct kvm_memory_slot *slot, gfn_t gfn,
->>                  struct page **pages, int nr_pages);
+diff is attached.
 
+thanks,
+-- Shuah
+
+----------------------------------------------------------------
+The following changes since commit 8ffd015db85fea3e15a77027fda6c02ced4d2444:
+
+   Linux 6.15-rc2 (2025-04-13 11:54:49 -0700)
+
+are available in the Git repository at:
+
+   git://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest tags/linux_kselftest-kunit-6.16-rc1
+
+for you to fetch changes up to 772e50a76ee664e75581624f512df4e45582605a:
+
+   kunit: Fix wrong parameter to kunit_deactivate_static_stub() (2025-05-21 09:51:23 -0600)
+
+----------------------------------------------------------------
+linux_kselftest-kunit-6.16-rc1
+
+- Enables qemu_config for riscv32, sparc 64-bit, PowerPC 32-bit BE and
+   64-bit LE.
+- Enables CONFIG_SPARC32 to clearly differentiate between sparc 32-bit
+   and 64-bit configurations.
+- Enables CONFIG_CPU_BIG_ENDIAN to clearly differentiate between powerpc
+   LE and BE configurations.
+- Add feature to list available architectures to kunit tool.
+- Fixes to bugs and changes to documentation.
+
+----------------------------------------------------------------
+David Gow (1):
+       kunit: qemu_configs: Disable faulting tests on 32-bit SPARC
+
+Kees Cook (1):
+       kunit: executor: Remove const from kunit_filter_suites() allocation type
+
+Rae Moar (2):
+       Documentation: kunit: improve example on testing static functions
+       kunit: tool: add test counts to JSON output
+
+Richard Fitzgerald (1):
+       kunit: configs: Enable CONFIG_INIT_STACK_ALL_PATTERN in all_tests
+
+Thomas Weißschuh (6):
+       kunit: qemu_configs: Add riscv32 config
+       kunit: tool: Implement listing of available architectures
+       kunit: qemu_configs: powerpc: Explicitly enable CONFIG_CPU_BIG_ENDIAN=y
+       kunit: qemu_configs: Add PowerPC 32-bit BE and 64-bit LE
+       kunit: qemu_configs: sparc: Explicitly enable CONFIG_SPARC32=y
+       kunit: qemu_configs: Add 64-bit SPARC configuration
+
+Tzung-Bi Shih (1):
+       kunit: Fix wrong parameter to kunit_deactivate_static_stub()
+
+  Documentation/dev-tools/kunit/run_wrapper.rst |  2 ++
+  Documentation/dev-tools/kunit/usage.rst       | 38 +++++++++++++++++++++------
+  lib/kunit/executor.c                          |  2 +-
+  lib/kunit/static_stub.c                       |  2 +-
+  tools/testing/kunit/configs/all_tests.config  |  1 +
+  tools/testing/kunit/kunit_json.py             | 10 +++++++
+  tools/testing/kunit/kunit_kernel.py           |  8 ++++++
+  tools/testing/kunit/qemu_configs/powerpc.py   |  1 +
+  tools/testing/kunit/qemu_configs/powerpc32.py | 17 ++++++++++++
+  tools/testing/kunit/qemu_configs/powerpcle.py | 14 ++++++++++
+  tools/testing/kunit/qemu_configs/riscv32.py   | 17 ++++++++++++
+  tools/testing/kunit/qemu_configs/sparc.py     |  2 ++
+  tools/testing/kunit/qemu_configs/sparc64.py   | 16 +++++++++++
+  13 files changed, 120 insertions(+), 10 deletions(-)
+  create mode 100644 tools/testing/kunit/qemu_configs/powerpc32.py
+  create mode 100644 tools/testing/kunit/qemu_configs/powerpcle.py
+  create mode 100644 tools/testing/kunit/qemu_configs/riscv32.py
+  create mode 100644 tools/testing/kunit/qemu_configs/sparc64.py
+----------------------------------------------------------------
+--------------HRIk7LgMU2M3W6ui30NdDtq7
+Content-Type: text/x-patch; charset=UTF-8;
+ name="linux_kselftest-kunit-6.16-rc1.diff"
+Content-Disposition: attachment;
+ filename="linux_kselftest-kunit-6.16-rc1.diff"
+Content-Transfer-Encoding: base64
+
+ZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2LXRvb2xzL2t1bml0L3J1bl93cmFwcGVy
+LnJzdCBiL0RvY3VtZW50YXRpb24vZGV2LXRvb2xzL2t1bml0L3J1bl93cmFwcGVyLnJzdApp
+bmRleCAxOWRkZjVlMDcwMTMuLjY2OTdjNzFlZThjYSAxMDA2NDQKLS0tIGEvRG9jdW1lbnRh
+dGlvbi9kZXYtdG9vbHMva3VuaXQvcnVuX3dyYXBwZXIucnN0CisrKyBiL0RvY3VtZW50YXRp
+b24vZGV2LXRvb2xzL2t1bml0L3J1bl93cmFwcGVyLnJzdApAQCAtMTgyLDYgKzE4Miw4IEBA
+IHZpYSBVTUwuIFRvIHJ1biB0ZXN0cyBvbiBxZW11LCBieSBkZWZhdWx0IGl0IHJlcXVpcmVz
+IHR3byBmbGFnczoKICAgaXMgaWdub3JlZCksIHRoZSB0ZXN0cyB3aWxsIHJ1biB2aWEgVU1M
+LiBOb24tVU1MIGFyY2hpdGVjdHVyZXMsCiAgIGZvciBleGFtcGxlOiBpMzg2LCB4ODZfNjQs
+IGFybSBhbmQgc28gb247IHJ1biBvbiBxZW11LgogCisgIGBgLS1hcmNoIGhlbHBgYCBsaXN0
+cyBhbGwgdmFsaWQgYGAtLWFyY2hgYCB2YWx1ZXMuCisKIC0gYGAtLWNyb3NzX2NvbXBpbGVg
+YDogU3BlY2lmaWVzIHRoZSBLYnVpbGQgdG9vbGNoYWluLiBJdCBwYXNzZXMgdGhlCiAgIHNh
+bWUgYXJndW1lbnQgYXMgcGFzc2VkIHRvIHRoZSBgYENST1NTX0NPTVBJTEVgYCB2YXJpYWJs
+ZSB1c2VkIGJ5CiAgIEtidWlsZC4gQXMgYSByZW1pbmRlciwgdGhpcyB3aWxsIGJlIHRoZSBw
+cmVmaXggZm9yIHRoZSB0b29sY2hhaW4KZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2
+LXRvb2xzL2t1bml0L3VzYWdlLnJzdCBiL0RvY3VtZW50YXRpb24vZGV2LXRvb2xzL2t1bml0
+L3VzYWdlLnJzdAppbmRleCAyMjk1NWQ1NmIzNzkuLjAzOGY0ODAwNzRmZCAxMDA2NDQKLS0t
+IGEvRG9jdW1lbnRhdGlvbi9kZXYtdG9vbHMva3VuaXQvdXNhZ2UucnN0CisrKyBiL0RvY3Vt
+ZW50YXRpb24vZGV2LXRvb2xzL2t1bml0L3VzYWdlLnJzdApAQCAtNjcwLDI4ICs2NzAsNTAg
+QEAgd2l0aCBgYGt1bml0X3JlbW92ZV9hY3Rpb25gYC4KIFRlc3RpbmcgU3RhdGljIEZ1bmN0
+aW9ucwogLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tCiAKLUlmIHdlIGRvIG5vdCB3YW50IHRv
+IGV4cG9zZSBmdW5jdGlvbnMgb3IgdmFyaWFibGVzIGZvciB0ZXN0aW5nLCBvbmUgb3B0aW9u
+IGlzIHRvCi1jb25kaXRpb25hbGx5IGV4cG9ydCB0aGUgdXNlZCBzeW1ib2wuIEZvciBleGFt
+cGxlOgorSWYgeW91IHdhbnQgdG8gdGVzdCBzdGF0aWMgZnVuY3Rpb25zIHdpdGhvdXQgZXhw
+b3NpbmcgdGhvc2UgZnVuY3Rpb25zIG91dHNpZGUgb2YKK3Rlc3RpbmcsIG9uZSBvcHRpb24g
+aXMgY29uZGl0aW9uYWxseSBleHBvcnQgdGhlIHN5bWJvbC4gV2hlbiBLVW5pdCBpcyBlbmFi
+bGVkLAordGhlIHN5bWJvbCBpcyBleHBvc2VkIGJ1dCByZW1haW5zIHN0YXRpYyBvdGhlcndp
+c2UuIFRvIHVzZSB0aGlzIG1ldGhvZCwgZm9sbG93Cit0aGUgdGVtcGxhdGUgYmVsb3cuCiAK
+IC4uIGNvZGUtYmxvY2s6OiBjCiAKLQkvKiBJbiBteV9maWxlLmMgKi8KKwkvKiBJbiB0aGUg
+ZmlsZSBjb250YWluaW5nIGZ1bmN0aW9ucyB0byB0ZXN0ICJteV9maWxlLmMiICovCiAKLQlW
+SVNJQkxFX0lGX0tVTklUIGludCBkb19pbnRlcmVzdGluZ190aGluZygpOworCSNpbmNsdWRl
+IDxrdW5pdC92aXNpYmlsaXR5Lmg+CisJI2luY2x1ZGUgPG15X2ZpbGUuaD4KKwkuLi4KKwlW
+SVNJQkxFX0lGX0tVTklUIGludCBkb19pbnRlcmVzdGluZ190aGluZygpCisJeworCS4uLgor
+CX0KIAlFWFBPUlRfU1lNQk9MX0lGX0tVTklUKGRvX2ludGVyZXN0aW5nX3RoaW5nKTsKIAot
+CS8qIEluIG15X2ZpbGUuaCAqLworCS8qIEluIHRoZSBoZWFkZXIgZmlsZSAibXlfZmlsZS5o
+IiAqLwogCiAJI2lmIElTX0VOQUJMRUQoQ09ORklHX0tVTklUKQogCQlpbnQgZG9faW50ZXJl
+c3RpbmdfdGhpbmcodm9pZCk7CiAJI2VuZGlmCiAKLUFsdGVybmF0aXZlbHksIHlvdSBjb3Vs
+ZCBjb25kaXRpb25hbGx5IGBgI2luY2x1ZGVgYCB0aGUgdGVzdCBmaWxlIGF0IHRoZSBlbmQg
+b2YKLXlvdXIgLmMgZmlsZS4gRm9yIGV4YW1wbGU6CisJLyogSW4gdGhlIEtVbml0IHRlc3Qg
+ZmlsZSAibXlfZmlsZV90ZXN0LmMiICovCisKKwkjaW5jbHVkZSA8a3VuaXQvdmlzaWJpbGl0
+eS5oPgorCSNpbmNsdWRlIDxteV9maWxlLmg+CisJLi4uCisJTU9EVUxFX0lNUE9SVF9OUyhF
+WFBPUlRFRF9GT1JfS1VOSVRfVEVTVElORyk7CisJLi4uCisJLy8gVXNlIGRvX2ludGVyZXN0
+aW5nX3RoaW5nKCkgaW4gdGVzdHMKKworRm9yIGEgZnVsbCBleGFtcGxlLCBzZWUgdGhpcyBg
+cGF0Y2ggPGh0dHBzOi8vbG9yZS5rZXJuZWwub3JnL2FsbC8yMDIyMTIwNzAxNDAyNC4zNDAy
+MzAtMy1ybW9hckBnb29nbGUuY29tLz5gXword2hlcmUgYSB0ZXN0IGlzIG1vZGlmaWVkIHRv
+IGNvbmRpdGlvbmFsbHkgZXhwb3NlIHN0YXRpYyBmdW5jdGlvbnMgZm9yIHRlc3RpbmcKK3Vz
+aW5nIHRoZSBtYWNyb3MgYWJvdmUuCisKK0FzIGFuICoqYWx0ZXJuYXRpdmUqKiB0byB0aGUg
+bWV0aG9kIGFib3ZlLCB5b3UgY291bGQgY29uZGl0aW9uYWxseSBgYCNpbmNsdWRlYGAKK3Ro
+ZSB0ZXN0IGZpbGUgYXQgdGhlIGVuZCBvZiB5b3VyIC5jIGZpbGUuIFRoaXMgaXMgbm90IHJl
+Y29tbWVuZGVkIGJ1dCB3b3JrcworaWYgbmVlZGVkLiBGb3IgZXhhbXBsZToKIAogLi4gY29k
+ZS1ibG9jazo6IGMKIAotCS8qIEluIG15X2ZpbGUuYyAqLworCS8qIEluICJteV9maWxlLmMi
+ICovCiAKIAlzdGF0aWMgaW50IGRvX2ludGVyZXN0aW5nX3RoaW5nKCk7CiAKZGlmZiAtLWdp
+dCBhL2xpYi9rdW5pdC9leGVjdXRvci5jIGIvbGliL2t1bml0L2V4ZWN1dG9yLmMKaW5kZXgg
+M2YzOTk1NWNiMGYxLi4wMDYxZDRjN2UzNTEgMTAwNjQ0Ci0tLSBhL2xpYi9rdW5pdC9leGVj
+dXRvci5jCisrKyBiL2xpYi9rdW5pdC9leGVjdXRvci5jCkBAIC0xNzcsNyArMTc3LDcgQEAg
+a3VuaXRfZmlsdGVyX3N1aXRlcyhjb25zdCBzdHJ1Y3Qga3VuaXRfc3VpdGVfc2V0ICpzdWl0
+ZV9zZXQsCiAKIAljb25zdCBzaXplX3QgbWF4ID0gc3VpdGVfc2V0LT5lbmQgLSBzdWl0ZV9z
+ZXQtPnN0YXJ0OwogCi0JY29weSA9IGtjYWxsb2MobWF4LCBzaXplb2YoKmZpbHRlcmVkLnN0
+YXJ0KSwgR0ZQX0tFUk5FTCk7CisJY29weSA9IGtjYWxsb2MobWF4LCBzaXplb2YoKmNvcHkp
+LCBHRlBfS0VSTkVMKTsKIAlpZiAoIWNvcHkpIHsgLyogd29uJ3QgYmUgYWJsZSB0byBydW4g
+YW55dGhpbmcsIHJldHVybiBhbiBlbXB0eSBzZXQgKi8KIAkJcmV0dXJuIGZpbHRlcmVkOwog
+CX0KZGlmZiAtLWdpdCBhL2xpYi9rdW5pdC9zdGF0aWNfc3R1Yi5jIGIvbGliL2t1bml0L3N0
+YXRpY19zdHViLmMKaW5kZXggOTJiMmNjY2Q1ZTc2Li40ODRmZDg1MjUxYjQgMTAwNjQ0Ci0t
+LSBhL2xpYi9rdW5pdC9zdGF0aWNfc3R1Yi5jCisrKyBiL2xpYi9rdW5pdC9zdGF0aWNfc3R1
+Yi5jCkBAIC05Niw3ICs5Niw3IEBAIHZvaWQgX19rdW5pdF9hY3RpdmF0ZV9zdGF0aWNfc3R1
+YihzdHJ1Y3Qga3VuaXQgKnRlc3QsCiAKIAkvKiBJZiB0aGUgcmVwbGFjZW1lbnQgYWRkcmVz
+cyBpcyBOVUxMLCBkZWFjdGl2YXRlIHRoZSBzdHViLiAqLwogCWlmICghcmVwbGFjZW1lbnRf
+YWRkcikgewotCQlrdW5pdF9kZWFjdGl2YXRlX3N0YXRpY19zdHViKHRlc3QsIHJlcGxhY2Vt
+ZW50X2FkZHIpOworCQlrdW5pdF9kZWFjdGl2YXRlX3N0YXRpY19zdHViKHRlc3QsIHJlYWxf
+Zm5fYWRkcik7CiAJCXJldHVybjsKIAl9CiAKZGlmZiAtLWdpdCBhL3Rvb2xzL3Rlc3Rpbmcv
+a3VuaXQvY29uZmlncy9hbGxfdGVzdHMuY29uZmlnIGIvdG9vbHMvdGVzdGluZy9rdW5pdC9j
+b25maWdzL2FsbF90ZXN0cy5jb25maWcKaW5kZXggY2RkOTc4MmY5NjQ2Li40YTYwYmI3MWZl
+NzIgMTAwNjQ0Ci0tLSBhL3Rvb2xzL3Rlc3Rpbmcva3VuaXQvY29uZmlncy9hbGxfdGVzdHMu
+Y29uZmlnCisrKyBiL3Rvb2xzL3Rlc3Rpbmcva3VuaXQvY29uZmlncy9hbGxfdGVzdHMuY29u
+ZmlnCkBAIC0xMCw2ICsxMCw3IEBAIENPTkZJR19LVU5JVF9FWEFNUExFX1RFU1Q9eQogQ09O
+RklHX0tVTklUX0FMTF9URVNUUz15CiAKIENPTkZJR19GT1JUSUZZX1NPVVJDRT15CitDT05G
+SUdfSU5JVF9TVEFDS19BTExfUEFUVEVSTj15CiAKIENPTkZJR19JSU89eQogCmRpZmYgLS1n
+aXQgYS90b29scy90ZXN0aW5nL2t1bml0L2t1bml0X2pzb24ucHkgYi90b29scy90ZXN0aW5n
+L2t1bml0L2t1bml0X2pzb24ucHkKaW5kZXggMTBmZjY1Njg5ZGQ4Li44MGZhNGUzNTRhMTcg
+MTAwNjQ0Ci0tLSBhL3Rvb2xzL3Rlc3Rpbmcva3VuaXQva3VuaXRfanNvbi5weQorKysgYi90
+b29scy90ZXN0aW5nL2t1bml0L2t1bml0X2pzb24ucHkKQEAgLTM5LDEwICszOSwyMCBAQCBk
+ZWYgX2dldF9ncm91cF9qc29uKHRlc3Q6IFRlc3QsIGNvbW1vbl9maWVsZHM6IEpzb25PYmop
+IC0+IEpzb25PYmo6CiAJCXN0YXR1cyA9IF9zdGF0dXNfbWFwLmdldChzdWJ0ZXN0LnN0YXR1
+cywgIkZBSUwiKQogCQl0ZXN0X2Nhc2VzLmFwcGVuZCh7Im5hbWUiOiBzdWJ0ZXN0Lm5hbWUs
+ICJzdGF0dXMiOiBzdGF0dXN9KQogCisJdGVzdF9jb3VudHMgPSB0ZXN0LmNvdW50cworCWNv
+dW50c19qc29uID0geworCQkidGVzdHMiOiB0ZXN0X2NvdW50cy50b3RhbCgpLAorCQkicGFz
+c2VkIjogdGVzdF9jb3VudHMucGFzc2VkLAorCQkiZmFpbGVkIjogdGVzdF9jb3VudHMuZmFp
+bGVkLAorCQkiY3Jhc2hlZCI6IHRlc3RfY291bnRzLmNyYXNoZWQsCisJCSJza2lwcGVkIjog
+dGVzdF9jb3VudHMuc2tpcHBlZCwKKwkJImVycm9ycyI6IHRlc3RfY291bnRzLmVycm9ycywK
+Kwl9CiAJdGVzdF9ncm91cCA9IHsKIAkJIm5hbWUiOiB0ZXN0Lm5hbWUsCiAJCSJzdWJfZ3Jv
+dXBzIjogc3ViX2dyb3VwcywKIAkJInRlc3RfY2FzZXMiOiB0ZXN0X2Nhc2VzLAorCQkibWlz
+YyI6IGNvdW50c19qc29uCiAJfQogCXRlc3RfZ3JvdXAudXBkYXRlKGNvbW1vbl9maWVsZHMp
+CiAJcmV0dXJuIHRlc3RfZ3JvdXAKZGlmZiAtLWdpdCBhL3Rvb2xzL3Rlc3Rpbmcva3VuaXQv
+a3VuaXRfa2VybmVsLnB5IGIvdG9vbHMvdGVzdGluZy9rdW5pdC9rdW5pdF9rZXJuZWwucHkK
+aW5kZXggZDNmMzliYzFjZWVjLi4yNjBkOGQ5YWExZGIgMTAwNjQ0Ci0tLSBhL3Rvb2xzL3Rl
+c3Rpbmcva3VuaXQva3VuaXRfa2VybmVsLnB5CisrKyBiL3Rvb2xzL3Rlc3Rpbmcva3VuaXQv
+a3VuaXRfa2VybmVsLnB5CkBAIC0xNCw2ICsxNCw3IEBAIGltcG9ydCBvcwogaW1wb3J0IHNo
+bGV4CiBpbXBvcnQgc2h1dGlsCiBpbXBvcnQgc2lnbmFsCitpbXBvcnQgc3lzCiBpbXBvcnQg
+dGhyZWFkaW5nCiBmcm9tIHR5cGluZyBpbXBvcnQgSXRlcmF0b3IsIExpc3QsIE9wdGlvbmFs
+LCBUdXBsZQogZnJvbSB0eXBlcyBpbXBvcnQgRnJhbWVUeXBlCkBAIC0yMDEsNiArMjAyLDEz
+IEBAIGRlZiBfZGVmYXVsdF9xZW11X2NvbmZpZ19wYXRoKGFyY2g6IHN0cikgLT4gc3RyOgog
+CQlyZXR1cm4gY29uZmlnX3BhdGgKIAogCW9wdGlvbnMgPSBbZls6LTNdIGZvciBmIGluIG9z
+Lmxpc3RkaXIoUUVNVV9DT05GSUdTX0RJUikgaWYgZi5lbmRzd2l0aCgnLnB5JyldCisKKwlp
+ZiBhcmNoID09ICdoZWxwJzoKKwkJcHJpbnQoJ3VtJykKKwkJZm9yIG9wdGlvbiBpbiBvcHRp
+b25zOgorCQkJcHJpbnQob3B0aW9uKQorCQlzeXMuZXhpdCgpCisKIAlyYWlzZSBDb25maWdF
+cnJvcihhcmNoICsgJyBpcyBub3QgYSB2YWxpZCBhcmNoLCBvcHRpb25zIGFyZSAnICsgc3Ry
+KHNvcnRlZChvcHRpb25zKSkpCiAKIGRlZiBfZ2V0X3FlbXVfb3BzKGNvbmZpZ19wYXRoOiBz
+dHIsCmRpZmYgLS1naXQgYS90b29scy90ZXN0aW5nL2t1bml0L3FlbXVfY29uZmlncy9wb3dl
+cnBjLnB5IGIvdG9vbHMvdGVzdGluZy9rdW5pdC9xZW11X2NvbmZpZ3MvcG93ZXJwYy5weQpp
+bmRleCA3ZWMzOGQ0MTMxZjcuLjViNGM4OTVkNWQ1YSAxMDA2NDQKLS0tIGEvdG9vbHMvdGVz
+dGluZy9rdW5pdC9xZW11X2NvbmZpZ3MvcG93ZXJwYy5weQorKysgYi90b29scy90ZXN0aW5n
+L2t1bml0L3FlbXVfY29uZmlncy9wb3dlcnBjLnB5CkBAIC0zLDYgKzMsNyBAQCBmcm9tIC4u
+cWVtdV9jb25maWcgaW1wb3J0IFFlbXVBcmNoUGFyYW1zCiBRRU1VX0FSQ0ggPSBRZW11QXJj
+aFBhcmFtcyhsaW51eF9hcmNoPSdwb3dlcnBjJywKIAkJCSAgIGtjb25maWc9JycnCiBDT05G
+SUdfUFBDNjQ9eQorQ09ORklHX0NQVV9CSUdfRU5ESUFOPXkKIENPTkZJR19TRVJJQUxfODI1
+MD15CiBDT05GSUdfU0VSSUFMXzgyNTBfQ09OU09MRT15CiBDT05GSUdfSFZDX0NPTlNPTEU9
+eScnJywKZGlmZiAtLWdpdCBhL3Rvb2xzL3Rlc3Rpbmcva3VuaXQvcWVtdV9jb25maWdzL3Bv
+d2VycGMzMi5weSBiL3Rvb2xzL3Rlc3Rpbmcva3VuaXQvcWVtdV9jb25maWdzL3Bvd2VycGMz
+Mi5weQpuZXcgZmlsZSBtb2RlIDEwMDY0NAppbmRleCAwMDAwMDAwMDAwMDAuLjg4YmQ2MGRi
+Yjk0OAotLS0gL2Rldi9udWxsCisrKyBiL3Rvb2xzL3Rlc3Rpbmcva3VuaXQvcWVtdV9jb25m
+aWdzL3Bvd2VycGMzMi5weQpAQCAtMCwwICsxLDE3IEBACisjIFNQRFgtTGljZW5zZS1JZGVu
+dGlmaWVyOiBHUEwtMi4wCisKK2Zyb20gLi5xZW11X2NvbmZpZyBpbXBvcnQgUWVtdUFyY2hQ
+YXJhbXMKKworUUVNVV9BUkNIID0gUWVtdUFyY2hQYXJhbXMobGludXhfYXJjaD0ncG93ZXJw
+YycsCisJCQkgICBrY29uZmlnPScnJworQ09ORklHX1BQQzMyPXkKK0NPTkZJR19DUFVfQklH
+X0VORElBTj15CitDT05GSUdfQURCX0NVREE9eQorQ09ORklHX1NFUklBTF9QTUFDWklMT0c9
+eQorQ09ORklHX1NFUklBTF9QTUFDWklMT0dfVFRZUz15CitDT05GSUdfU0VSSUFMX1BNQUNa
+SUxPR19DT05TT0xFPXkKKycnJywKKwkJCSAgIHFlbXVfYXJjaD0ncHBjJywKKwkJCSAgIGtl
+cm5lbF9wYXRoPSd2bWxpbnV4JywKKwkJCSAgIGtlcm5lbF9jb21tYW5kX2xpbmU9J2NvbnNv
+bGU9dHR5UzAnLAorCQkJICAgZXh0cmFfcWVtdV9wYXJhbXM9WyctTScsICdnM2JlaWdlJywg
+Jy1jcHUnLCAnbWF4J10pCmRpZmYgLS1naXQgYS90b29scy90ZXN0aW5nL2t1bml0L3FlbXVf
+Y29uZmlncy9wb3dlcnBjbGUucHkgYi90b29scy90ZXN0aW5nL2t1bml0L3FlbXVfY29uZmln
+cy9wb3dlcnBjbGUucHkKbmV3IGZpbGUgbW9kZSAxMDA2NDQKaW5kZXggMDAwMDAwMDAwMDAw
+Li43ZGRlZThhZjRiZDcKLS0tIC9kZXYvbnVsbAorKysgYi90b29scy90ZXN0aW5nL2t1bml0
+L3FlbXVfY29uZmlncy9wb3dlcnBjbGUucHkKQEAgLTAsMCArMSwxNCBAQAorIyBTUERYLUxp
+Y2Vuc2UtSWRlbnRpZmllcjogR1BMLTIuMAorCitmcm9tIC4ucWVtdV9jb25maWcgaW1wb3J0
+IFFlbXVBcmNoUGFyYW1zCisKK1FFTVVfQVJDSCA9IFFlbXVBcmNoUGFyYW1zKGxpbnV4X2Fy
+Y2g9J3Bvd2VycGMnLAorCQkJICAga2NvbmZpZz0nJycKK0NPTkZJR19QUEM2ND15CitDT05G
+SUdfQ1BVX0xJVFRMRV9FTkRJQU49eQorQ09ORklHX0hWQ19DT05TT0xFPXkKKycnJywKKwkJ
+CSAgIHFlbXVfYXJjaD0ncHBjNjQnLAorCQkJICAga2VybmVsX3BhdGg9J3ZtbGludXgnLAor
+CQkJICAga2VybmVsX2NvbW1hbmRfbGluZT0nY29uc29sZT10dHlTMCcsCisJCQkgICBleHRy
+YV9xZW11X3BhcmFtcz1bJy1NJywgJ3BzZXJpZXMnLCAnLWNwdScsICdwb3dlcjgnXSkKZGlm
+ZiAtLWdpdCBhL3Rvb2xzL3Rlc3Rpbmcva3VuaXQvcWVtdV9jb25maWdzL3Jpc2N2MzIucHkg
+Yi90b29scy90ZXN0aW5nL2t1bml0L3FlbXVfY29uZmlncy9yaXNjdjMyLnB5Cm5ldyBmaWxl
+IG1vZGUgMTAwNjQ0CmluZGV4IDAwMDAwMDAwMDAwMC4uYjc5YmEwYWUzMGY4Ci0tLSAvZGV2
+L251bGwKKysrIGIvdG9vbHMvdGVzdGluZy9rdW5pdC9xZW11X2NvbmZpZ3MvcmlzY3YzMi5w
+eQpAQCAtMCwwICsxLDE3IEBACisjIFNQRFgtTGljZW5zZS1JZGVudGlmaWVyOiBHUEwtMi4w
+CisKK2Zyb20gLi5xZW11X2NvbmZpZyBpbXBvcnQgUWVtdUFyY2hQYXJhbXMKKworUUVNVV9B
+UkNIID0gUWVtdUFyY2hQYXJhbXMobGludXhfYXJjaD0ncmlzY3YnLAorCQkJICAga2NvbmZp
+Zz0nJycKK0NPTkZJR19OT05QT1JUQUJMRT15CitDT05GSUdfQVJDSF9SVjMyST15CitDT05G
+SUdfQVJDSF9WSVJUPXkKK0NPTkZJR19TRVJJQUxfODI1MD15CitDT05GSUdfU0VSSUFMXzgy
+NTBfQ09OU09MRT15CitDT05GSUdfU0VSSUFMX09GX1BMQVRGT1JNPXkKKycnJywKKwkJCSAg
+IHFlbXVfYXJjaD0ncmlzY3YzMicsCisJCQkgICBrZXJuZWxfcGF0aD0nYXJjaC9yaXNjdi9i
+b290L0ltYWdlJywKKwkJCSAgIGtlcm5lbF9jb21tYW5kX2xpbmU9J2NvbnNvbGU9dHR5UzAn
+LAorCQkJICAgZXh0cmFfcWVtdV9wYXJhbXM9WyctbWFjaGluZScsICd2aXJ0J10pCmRpZmYg
+LS1naXQgYS90b29scy90ZXN0aW5nL2t1bml0L3FlbXVfY29uZmlncy9zcGFyYy5weSBiL3Rv
+b2xzL3Rlc3Rpbmcva3VuaXQvcWVtdV9jb25maWdzL3NwYXJjLnB5CmluZGV4IDI1NmQ5NTcz
+YjQ0Ni4uMjAxOTU1MGExYjY5IDEwMDY0NAotLS0gYS90b29scy90ZXN0aW5nL2t1bml0L3Fl
+bXVfY29uZmlncy9zcGFyYy5weQorKysgYi90b29scy90ZXN0aW5nL2t1bml0L3FlbXVfY29u
+Zmlncy9zcGFyYy5weQpAQCAtMiw2ICsyLDggQEAgZnJvbSAuLnFlbXVfY29uZmlnIGltcG9y
+dCBRZW11QXJjaFBhcmFtcwogCiBRRU1VX0FSQ0ggPSBRZW11QXJjaFBhcmFtcyhsaW51eF9h
+cmNoPSdzcGFyYycsCiAJCQkgICBrY29uZmlnPScnJworQ09ORklHX0tVTklUX0ZBVUxUX1RF
+U1Q9bgorQ09ORklHX1NQQVJDMzI9eQogQ09ORklHX1NFUklBTF9TVU5aSUxPRz15CiBDT05G
+SUdfU0VSSUFMX1NVTlpJTE9HX0NPTlNPTEU9eQogJycnLApkaWZmIC0tZ2l0IGEvdG9vbHMv
+dGVzdGluZy9rdW5pdC9xZW11X2NvbmZpZ3Mvc3BhcmM2NC5weSBiL3Rvb2xzL3Rlc3Rpbmcv
+a3VuaXQvcWVtdV9jb25maWdzL3NwYXJjNjQucHkKbmV3IGZpbGUgbW9kZSAxMDA2NDQKaW5k
+ZXggMDAwMDAwMDAwMDAwLi41M2Q0ZTVhOGM5NzIKLS0tIC9kZXYvbnVsbAorKysgYi90b29s
+cy90ZXN0aW5nL2t1bml0L3FlbXVfY29uZmlncy9zcGFyYzY0LnB5CkBAIC0wLDAgKzEsMTYg
+QEAKKyMgU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IEdQTC0yLjAKKworZnJvbSAuLnFlbXVf
+Y29uZmlnIGltcG9ydCBRZW11QXJjaFBhcmFtcworCitRRU1VX0FSQ0ggPSBRZW11QXJjaFBh
+cmFtcyhsaW51eF9hcmNoPSdzcGFyYycsCisJCQkgICBrY29uZmlnPScnJworQ09ORklHXzY0
+QklUPXkKK0NPTkZJR19TUEFSQzY0PXkKK0NPTkZJR19QQ0k9eQorQ09ORklHX1NFUklBTF9T
+VU5TVT15CitDT05GSUdfU0VSSUFMX1NVTlNVX0NPTlNPTEU9eQorJycnLAorCQkJICAgcWVt
+dV9hcmNoPSdzcGFyYzY0JywKKwkJCSAgIGtlcm5lbF9wYXRoPSdhcmNoL3NwYXJjL2Jvb3Qv
+aW1hZ2UnLAorCQkJICAga2VybmVsX2NvbW1hbmRfbGluZT0nY29uc29sZT10dHlTMCBrdW5p
+dF9zaHV0ZG93bj1wb3dlcm9mZicsCisJCQkgICBleHRyYV9xZW11X3BhcmFtcz1bXSkK
+
+--------------HRIk7LgMU2M3W6ui30NdDtq7--
