@@ -1,339 +1,91 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03DEC225791;
-	Fri, 23 May 2025 09:42:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8B4A22688C;
+	Fri, 23 May 2025 09:42:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747993360; cv=none; b=M1NEjrGbs11SkcVezBFGBLu3a9We59yJIxjJcEDSDDANJ+WmubCFs0lfrVKRo7T1VRUfqDv58KfbHdIruge793DTYLUZPhdMeeGFkFtLBfHKvhKtPn+EkqV/YAlCYt7lPviVzQgaGJHfsUv6xpkZrlCpJtuWda6+p715a8IKoTc=
+	t=1747993365; cv=none; b=CQ7S6gjVIy7CLZCdi3/ERAwleuR9FZSpwMRj+WbKRmLIA8om3DhEKF+grCx2EEyUEWSFcbgGofbY8RxNwc9jtPdxasrGQGJ8lVi+a0u8/LEAlTHmGYfzPZOD8Q4PJaw0bBEgMyjISfv4aC4Cr5qG5UwF7PAtJNKwX+DZ/YHuIDQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747993360; c=relaxed/simple;
-	bh=HTv5n/07yQDXRcvHu7hgHboQDCuLAObub0zu/q5SUpQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=f9KkHMJ8hzdiQtiM0QNMrjOgr9xXHIrllrlnJatJ+jTTTHyXx1TBEnX6h6ibbfGkLKw7KW6r/pIqdlKnqa1SUT8D68lhhhxBzwmBiUOFRu28Q/3+UioROni1oif5qdUl/8lCbPqoAcD3HlLvnLSHoPdGtcMvNanl3FEH9+EXmxQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lGuDO/M6; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1747993365; c=relaxed/simple;
+	bh=vb3hnbNhPVqsqt7REDe0gUU38912UvdOm6JpMsOvinQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=iC23Qw2c4Er3qT61Fa2BS1lZcrYDmiq5RKt/itZnh64r+JqR2p69lQhI4WOAoEZgsvLS1MfjFLSnfjGpuZDIlgosxDQK4YC7zIyAr9y6tayEiK9wr4yuRVodyCS6SLZqKvInGp21SA7LjouNT/2M7bmoKG6+fRilOMZJEQ29HQk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fCMZG+DB; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lGuDO/M6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747993358; x=1779529358;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=HTv5n/07yQDXRcvHu7hgHboQDCuLAObub0zu/q5SUpQ=;
-  b=lGuDO/M6dPmMtmal2h1az0bXDpHY3e2mF9Yb5/MaxZZ5AlmxksMOjjYl
-   zUKbOiv54Z4hqaFTuV+QnUUNyFQP1Cz+zUl6Fy0qUNLSseGbLy662lde/
-   j8K7TIGlPF4AA3MrDPxgw0mK4XvOcIsKeaTIDsAFGAU0fP3oLtYUhRSHd
-   zS4SWYhcUuf2Yk9MzNuHu0VLvEk6hFi1SrP9hRtrv3aDNV5VnaEJsa3CP
-   h3w+XUNRVJwLPc+r9O4Kw+wIE0LBv4/u59my3i+uMawQOBE+AcuaHLW6l
-   7PulollS2+SxkwuoVXQf2nnuCqDLKNyumdEaPJEVNhJckS5TVpF0K3viL
-   g==;
-X-CSE-ConnectionGUID: ZLA8p51sSH+kXcQpvvC4iw==
-X-CSE-MsgGUID: 5Trn/YZhSryEbUzw7k2m5w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11441"; a="53708209"
-X-IronPort-AV: E=Sophos;i="6.15,308,1739865600"; 
-   d="scan'208";a="53708209"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2025 02:42:33 -0700
-X-CSE-ConnectionGUID: hOxvX2gASa28jbO31Jgjcg==
-X-CSE-MsgGUID: TyN87VgmSxKXY9jL14NPig==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,308,1739865600"; 
-   d="scan'208";a="145907308"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa005.fm.intel.com with ESMTP; 23 May 2025 02:42:29 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1000)
-	id CB8491F6; Fri, 23 May 2025 12:42:27 +0300 (EEST)
-Date: Fri, 23 May 2025 12:42:27 +0300
-From: "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>
-To: "Huang, Kai" <kai.huang@intel.com>
-Cc: "pbonzini@redhat.com" <pbonzini@redhat.com>, 
-	"seanjc@google.com" <seanjc@google.com>, "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>, 
-	"bp@alien8.de" <bp@alien8.de>, "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>, 
-	"x86@kernel.org" <x86@kernel.org>, "mingo@redhat.com" <mingo@redhat.com>, 
-	"Zhao, Yan Y" <yan.y.zhao@intel.com>, "tglx@linutronix.de" <tglx@linutronix.de>, 
-	"kvm@vger.kernel.org" <kvm@vger.kernel.org>, "linux-coco@lists.linux.dev" <linux-coco@lists.linux.dev>, 
-	"Yamahata, Isaku" <isaku.yamahata@intel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC, PATCH 05/12] KVM: TDX: Add tdx_pamt_get()/put() helpers
-Message-ID: <xjl4nloxtmp7jrfus5rnij6xz6ut6p7riixj7mwt32zlkc7k27@xvallgw2ei7r>
-References: <20250502130828.4071412-1-kirill.shutemov@linux.intel.com>
- <20250502130828.4071412-6-kirill.shutemov@linux.intel.com>
- <55c1c173bfb13d897eaaabcc04f38d010608a7e3.camel@intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fCMZG+DB"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-231b7b21535so6192215ad.1;
+        Fri, 23 May 2025 02:42:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747993363; x=1748598163; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xuYOwYNKkjdOui7VOKdqHSaUlWRq94p5a/W5tYRRzKs=;
+        b=fCMZG+DBf1iNZRQSRT/ytAHeJFBX7+dsleupK6jT2gAWbyBIewGlSFVgjDebCvz2Cs
+         IoD6oi7gwtFxFYYELlekiCO8u7vGBFD4Yt8USFL3zJj35fl+jNpxDt9VP9V7T850zZfU
+         E/HvBS946BFQZE0qa5L5K7V7xz+Z4z+h/naNRrUECw61LSFrJeUgPRdFyJFv3RS1VkFr
+         7EOa5C40hbPiKE/nPxvuAMgJlFxQbDRS+ZDuAeDDyedTmEqEtvfXAF9x82JqCVPNFi44
+         PC8WycIuUkFL2Gut4Jk72+p+yMsuNu351h2fWHpgVI3+9ofkRcZnS8h7Y1B64C8H1tpx
+         wKJw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747993363; x=1748598163;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=xuYOwYNKkjdOui7VOKdqHSaUlWRq94p5a/W5tYRRzKs=;
+        b=fxQ0kysPrVEcm25HWMdMr71I4fHR12/xdSbOOzq2nE4tMA9Vmq35O4ngvERuwk9aEI
+         4i91tRKG1nBtmSoDnKOs+0UcPUK107/IpQFp8wuUyg8LnkcPy7a0Tvrz6YLzR7TUjU0f
+         WWj0cae+XNk9dRyKkWDTwK1SLKuGnfHIigyC7rcw7DuzppZ9qaOGFfvaQBqJ83lPu0y0
+         pWYBp4ACBAMSSSDHdVCRZrRXLC2BT1V4LOdYibi0KWxCKeYXNxbyy2mlNd+q7MNKAL1B
+         FmAeujGHmZcGU5mR//qvIo+k/85mPrkxRxSz7Rk2oGU1aY2tJBKPNcN+i0H5GfQIkCIQ
+         6GRQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVbMAW/KH4+mG6gT4FUEr+dkQs8A7C1meQ7QrVUKjU6+Wo7pl98YlHfIanfUPVYhUx2rCyKt/Mx5EoGkQ==@vger.kernel.org, AJvYcCWgClMlt3WYwOeh/YWMMFKQ5kp0U2vUlcJGT6T7OpjWjdzWlMf6a5DTYg94aEv5kzFSlxZ7N1FN5uujivc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwkQAxUOgyr2XOP9WMO2sHXtqepQ21x/X+BSDPhTpyFv1GOwC9W
+	3qyh44d9WpzbkiCJw2njyhP945Z40pPPRaasW7VvspxcMFiRfu9keyKR9SYXP1SF3GL3FTYtglA
+	ad4EYJby7Jl7SZKZSbu5B+6glF+xYeJs=
+X-Gm-Gg: ASbGncu0wIxoOvEzCR5HRU2lA+0qPqQq6T5UY/F0pJuiizmh7R3e94KjVcqXxukmKTB
+	I9lHzKAGCv4+PvTrt2HnV+dS/zkremMEOu5rDmhlSkIbl/AVWPtWRZNpJLcmUL5fmgOahtVsFKQ
+	y4dQLckc2ElP9Jljkj7SKl0ErhEc8yXMrU
+X-Google-Smtp-Source: AGHT+IFe4aaL/Mp0H070EexcfB77wVMFn2+CLwqQYYEiTAgH1Pomvmo/SRpI1wyZnAbR19rOKvsY4ac93WCFcorj+hM=
+X-Received: by 2002:a17:903:1aec:b0:216:30f9:93c5 with SMTP id
+ d9443c01a7336-233f3667693mr10262275ad.6.1747993362953; Fri, 23 May 2025
+ 02:42:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <55c1c173bfb13d897eaaabcc04f38d010608a7e3.camel@intel.com>
+References: <20250523161352.20f0589a@canb.auug.org.au>
+In-Reply-To: <20250523161352.20f0589a@canb.auug.org.au>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Fri, 23 May 2025 11:42:30 +0200
+X-Gm-Features: AX0GCFuVagKgyX9ZdyEuk7oU823a5UTijwUK6Yx4xSHdAX67f5__CmWx2DVQEvk
+Message-ID: <CANiq72=Oi2DXMG1U439RHYbCgRAN9L5d-0Dkaffi1d=mec5LTg@mail.gmail.com>
+Subject: Re: linux-next: manual merge of the rust tree with the drm tree
+To: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Dave Airlie <airlied@redhat.com>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Asahi Lina <lina+kernel@asahilina.net>, 
+	Danilo Krummrich <dakr@kernel.org>, DRI <dri-devel@lists.freedesktop.org>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
+	Linux Next Mailing List <linux-next@vger.kernel.org>, Tamir Duberstein <tamird@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, May 05, 2025 at 12:44:26PM +0000, Huang, Kai wrote:
-> On Fri, 2025-05-02 at 16:08 +0300, Kirill A. Shutemov wrote:
-> > Introduce a pair of helpers to allocate and free memory for a given 2M
-> > range. The range is represented by struct page for any memory in the
-> > range and the PAMT memory by a list of pages.
-> > 
-> > Use per-2M refcounts to detect when PAMT memory has to be allocated and
-> > when it can be freed.
-> > 
-> > pamt_lock spinlock serializes against races between multiple
-> > tdx_pamt_add() as well as tdx_pamt_add() vs tdx_pamt_put().
-> 
-> Maybe elaborate a little bit on _why_ using spinlock?
-> 
-> > 
-> > Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-> > ---
-> >  arch/x86/include/asm/tdx.h   |   2 +
-> >  arch/x86/kvm/vmx/tdx.c       | 123 +++++++++++++++++++++++++++++++++++
-> >  arch/x86/kvm/vmx/tdx_errno.h |   1 +
-> >  3 files changed, 126 insertions(+)
-> > 
-> > diff --git a/arch/x86/include/asm/tdx.h b/arch/x86/include/asm/tdx.h
-> > index 8091bf5b43cc..42449c054938 100644
-> > --- a/arch/x86/include/asm/tdx.h
-> > +++ b/arch/x86/include/asm/tdx.h
-> > @@ -135,6 +135,8 @@ static inline int tdx_nr_pamt_pages(const struct tdx_sys_info *sysinfo)
-> >  	return sysinfo->tdmr.pamt_4k_entry_size * PTRS_PER_PTE / PAGE_SIZE;
-> >  }
-> >  
-> > +atomic_t *tdx_get_pamt_refcount(unsigned long hpa);
-> > +
-> 
-> This at least needs to be in the same patch which exports it.  But as replied to
-> patch 2, I think we should just move the code in this patch to TDX core code.
-> 
-> >  int tdx_guest_keyid_alloc(void);
-> >  u32 tdx_get_nr_guest_keyids(void);
-> >  void tdx_guest_keyid_free(unsigned int keyid);
-> > diff --git a/arch/x86/kvm/vmx/tdx.c b/arch/x86/kvm/vmx/tdx.c
-> > index b952bc673271..ea7e2d93fb44 100644
-> > --- a/arch/x86/kvm/vmx/tdx.c
-> > +++ b/arch/x86/kvm/vmx/tdx.c
-> > @@ -207,6 +207,10 @@ static bool tdx_operand_busy(u64 err)
-> >  	return (err & TDX_SEAMCALL_STATUS_MASK) == TDX_OPERAND_BUSY;
-> >  }
-> >  
-> > +static bool tdx_hpa_range_not_free(u64 err)
-> > +{
-> > +	return (err & TDX_SEAMCALL_STATUS_MASK) == TDX_HPA_RANGE_NOT_FREE;
-> > +}
-> >  
-> >  /*
-> >   * A per-CPU list of TD vCPUs associated with a given CPU.
-> > @@ -276,6 +280,125 @@ static inline void tdx_disassociate_vp(struct kvm_vcpu *vcpu)
-> >  	vcpu->cpu = -1;
-> >  }
-> >  
-> > +static DEFINE_SPINLOCK(pamt_lock);
-> > +
-> > +static void tdx_free_pamt_pages(struct list_head *pamt_pages)
-> > +{
-> > +	struct page *page;
-> > +
-> > +	while ((page = list_first_entry_or_null(pamt_pages, struct page, lru))) {
-> > +		list_del(&page->lru);
-> > +		__free_page(page);
-> > +	}
-> > +}
-> > +
-> > +static int tdx_alloc_pamt_pages(struct list_head *pamt_pages)
-> > +{
-> > +	for (int i = 0; i < tdx_nr_pamt_pages(tdx_sysinfo); i++) {
-> > +		struct page *page = alloc_page(GFP_KERNEL);
-> > +		if (!page)
-> > +			goto fail;
-> > +		list_add(&page->lru, pamt_pages);
-> > +	}
-> > +	return 0;
-> > +fail:
-> > +	tdx_free_pamt_pages(pamt_pages);
-> > +	return -ENOMEM;
-> > +}
-> > +
-> > +static int tdx_pamt_add(atomic_t *pamt_refcount, unsigned long hpa,
-> > +			struct list_head *pamt_pages)
-> > +{
-> > +	u64 err;
-> > +
-> > +	hpa = ALIGN_DOWN(hpa, SZ_2M);
-> > +
-> > +	spin_lock(&pamt_lock);
-> 
-> Just curious, Can the lock be per-2M-range?
-> 
-> > +
-> > +	/* Lost race to other tdx_pamt_add() */
-> > +	if (atomic_read(pamt_refcount) != 0) {
-> > +		atomic_inc(pamt_refcount);
-> > +		spin_unlock(&pamt_lock);
-> > +		tdx_free_pamt_pages(pamt_pages);
-> 
-> It's unfortunate multiple caller of tdx_pamt_add() needs to firstly allocate
-> PAMT pages by the caller out of the spinlock and then free them here.
-> 
-> I am thinking if we make tdx_pamt_add() return:
-> 
-> 	* > 0: PAMT pages already added (another tdx_pamt_add() won)
-> 	* = 0: PAMT pages added successfully
-> 	* < 0: error code
-> 
-> .. then we at least could move tdx_free_pamt_pages() to the caller too.
-> 
-> > +		return 0;
-> > +	}
-> > +
-> > +	err = tdh_phymem_pamt_add(hpa | TDX_PS_2M, pamt_pages);
-> > +
-> > +	if (err)
-> > +		tdx_free_pamt_pages(pamt_pages);
-> 
-> Seems we are calling tdx_free_pamt_pages() within spinlock, which is not
-> consistent with above when another tdx_pamt_add() has won the race.
-> 
-> > +
-> > +	/*
-> > +	 * tdx_hpa_range_not_free() is true if current task won race
-> > +	 * against tdx_pamt_put().
-> > +	 */
-> > +	if (err && !tdx_hpa_range_not_free(err)) {
-> > +		spin_unlock(&pamt_lock);
-> > +		pr_tdx_error(TDH_PHYMEM_PAMT_ADD, err);
-> > +		return -EIO;
-> > +	}
-> 
-> I had hard time to figure out why we need to handle tdx_hpa_range_not_free()
-> explicitly.  IIUC, it is because atomic_dec_and_test() is used in
-> tdx_pamt_put(), in which case the atomic_t can reach to 0 outside of the
-> spinlock thus tdh_phymem_pamt_add() can be called when there's still PAMT pages
-> populated.
-> 
-> But ...
-> 
-> > +
-> > +	atomic_set(pamt_refcount, 1);
-> > +	spin_unlock(&pamt_lock);
-> > +	return 0;
-> > +}
-> > +
-> > +static int tdx_pamt_get(struct page *page)
-> > +{
-> > +	unsigned long hpa = page_to_phys(page);
-> > +	atomic_t *pamt_refcount;
-> > +	LIST_HEAD(pamt_pages);
-> > +
-> > +	if (!tdx_supports_dynamic_pamt(tdx_sysinfo))
-> > +		return 0;
-> > +
-> > +	pamt_refcount = tdx_get_pamt_refcount(hpa);
-> > +	WARN_ON_ONCE(atomic_read(pamt_refcount) < 0);
-> > +
-> > +	if (atomic_inc_not_zero(pamt_refcount))
-> > +		return 0;
-> 
-> ... if we set the initial value of pamt_refcount to -1, and use
-> atomic_inc_unless_negetive() here:
-> 
-> 	if (atomic_inc_unless_negative(pamt_refcount))
-> 		return 0;
-> 
-> 	if (tdx_alloc_pamt_pages(&pamt_pages))
-> 		return -ENOMEM;
-> 
-> 	spin_lock(&pamt_lock);
-> 	ret = tdx_pamt_add(hpa, &pamt_pages);
-> 	if (ret >= 0)
-> 		atomic_inc(pamt_refcount, 0);
-> 	spin_unlock(&pamt_lock);
-> 	
-> 	/*
-> 	 * If another tdx_pamt_get() won the race, or in case of
-> 	 * error, PAMT pages are not used and can be freed.
-> 	 */
-> 	if (ret)
-> 		tdx_free_pamt_pages(&pamt_pages);
-> 
-> 	return ret >= 0 ? 0 : ret;
-> 
-> and ...
-> 
-> > +
-> > +	if (tdx_alloc_pamt_pages(&pamt_pages))
-> > +		return -ENOMEM;
-> > +
-> > +	return tdx_pamt_add(pamt_refcount, hpa, &pamt_pages);
-> > +}
-> > +
-> > +static void tdx_pamt_put(struct page *page)
-> > +{
-> > +	unsigned long hpa = page_to_phys(page);
-> > +	atomic_t *pamt_refcount;
-> > +	LIST_HEAD(pamt_pages);
-> > +	u64 err;
-> > +
-> > +	if (!tdx_supports_dynamic_pamt(tdx_sysinfo))
-> > +		return;
-> > +
-> > +	hpa = ALIGN_DOWN(hpa, SZ_2M);
-> > +
-> > +	pamt_refcount = tdx_get_pamt_refcount(hpa);
-> > +	if (!atomic_dec_and_test(pamt_refcount))
-> > +		return;
-> 
-> ... use atomic_dec_if_possible() here, we should be able to avoid the special
-> handling of tdx_hpa_range_not_free() in tdx_pamt_get().  Someething like:
-> 
-> 	if (atomic_dec_if_positive(pamt_refcount) >= 0)
-> 		return;
-> 
-> 	spin_lock(&pamt_lock);
-> 	
-> 	/* tdx_pamt_get() called more than once */
-> 	if (atomic_read(pamt_refcount) > 0) {
+On Fri, May 23, 2025 at 8:14=E2=80=AFAM Stephen Rothwell <sfr@canb.auug.org=
+.au> wrote:
+>
+> I fixed it up (see below) and can carry the fix as necessary. This
+> is now fixed as far as linux-next is concerned, but any non trivial
+> conflicts should be mentioned to your upstream maintainer when your tree
+> is submitted for merging.  You may also want to consider cooperating
+> with the maintainer of the conflicting tree to minimise any particularly
+> complex conflicts.
 
-This check would do nothing to protect you against parallel increase of
-the counter as we get here with pamt_refcount == 0 the parallel
-atomic_inc_unless_negative() is free to bump the counter in the fast path
-without taking the lock just after this condition.
+Looks OK to me, thanks!
 
-So, the code below will free PAMT memory when there is still user.
-
-> 		spin_unlock(&pamt_lock);
-> 		return;
-> 	}
-> 
-> 	err = tdh_phymem_pamt_remove(hpa | TDX_PS_2M, &pamt_pages);
-> 	atomic_set(pamt_refcount, -1);
-> 	spin_unlock(&pamt_lock);
-> 
-> 	tdx_free_pamt_pages(&pamt_pages);
-> 
-> Hmm.. am I missing anything?
-> 			
-> > +
-> > +	spin_lock(&pamt_lock);
-> > +
-> > +	/* Lost race against tdx_pamt_add()? */
-> > +	if (atomic_read(pamt_refcount) != 0) {
-> > +		spin_unlock(&pamt_lock);
-> > +		return;
-> > +	}
-> > +
-> > +	err = tdh_phymem_pamt_remove(hpa | TDX_PS_2M, &pamt_pages);
-> > +	spin_unlock(&pamt_lock);
-> > +
-> > +	if (err) {
-> > +		pr_tdx_error(TDH_PHYMEM_PAMT_REMOVE, err);
-> > +		return;
-> > +	}
-> > +
-> > +	tdx_free_pamt_pages(&pamt_pages);
-> > +}
-> > +
-> 
-
--- 
-  Kiryl Shutsemau / Kirill A. Shutemov
+Cheers,
+Miguel
