@@ -1,91 +1,91 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8B4A22688C;
-	Fri, 23 May 2025 09:42:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD51B2253AB;
+	Fri, 23 May 2025 09:43:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.244.123.138
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747993365; cv=none; b=CQ7S6gjVIy7CLZCdi3/ERAwleuR9FZSpwMRj+WbKRmLIA8om3DhEKF+grCx2EEyUEWSFcbgGofbY8RxNwc9jtPdxasrGQGJ8lVi+a0u8/LEAlTHmGYfzPZOD8Q4PJaw0bBEgMyjISfv4aC4Cr5qG5UwF7PAtJNKwX+DZ/YHuIDQ=
+	t=1747993416; cv=none; b=OiXlrE8IObqae7HnbcPOMoNXoxk6V4EBVYZo3L27k/qv6TmQ9tavePhr8WY79Ux7L4fIAVGe81xga4U2n15U25nMiAS7XCTESXfZzDLQql4+l8fsmeVTso+gNOueRdcuU26Cklv9mlMYrMM27kY8VuEG4Mey9zda03TbHVAGdts=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747993365; c=relaxed/simple;
-	bh=vb3hnbNhPVqsqt7REDe0gUU38912UvdOm6JpMsOvinQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=iC23Qw2c4Er3qT61Fa2BS1lZcrYDmiq5RKt/itZnh64r+JqR2p69lQhI4WOAoEZgsvLS1MfjFLSnfjGpuZDIlgosxDQK4YC7zIyAr9y6tayEiK9wr4yuRVodyCS6SLZqKvInGp21SA7LjouNT/2M7bmoKG6+fRilOMZJEQ29HQk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fCMZG+DB; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747993416; c=relaxed/simple;
+	bh=8O6CnSzPzolWxsU34liNKl4NFx4jJM+O5ROyYLtj+8w=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=adD44oLyT9SxCfsUZedrpYsfTiokWHixWLZdZDgW4KNp3B1RZ4q76/LDhjQwRahJtM5lMV9tToNoOr5ylQsTW2DvfloojW6DO3UoSPfDYNQuFLJUxkpjplUil55/WYaG4bs4cNIeNBDPuVoBDJYaSwdszwObck+xdZ0ycOEUAUY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=n5ufv5+R; arc=none smtp.client-ip=60.244.123.138
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fCMZG+DB"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-231b7b21535so6192215ad.1;
-        Fri, 23 May 2025 02:42:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747993363; x=1748598163; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xuYOwYNKkjdOui7VOKdqHSaUlWRq94p5a/W5tYRRzKs=;
-        b=fCMZG+DBf1iNZRQSRT/ytAHeJFBX7+dsleupK6jT2gAWbyBIewGlSFVgjDebCvz2Cs
-         IoD6oi7gwtFxFYYELlekiCO8u7vGBFD4Yt8USFL3zJj35fl+jNpxDt9VP9V7T850zZfU
-         E/HvBS946BFQZE0qa5L5K7V7xz+Z4z+h/naNRrUECw61LSFrJeUgPRdFyJFv3RS1VkFr
-         7EOa5C40hbPiKE/nPxvuAMgJlFxQbDRS+ZDuAeDDyedTmEqEtvfXAF9x82JqCVPNFi44
-         PC8WycIuUkFL2Gut4Jk72+p+yMsuNu351h2fWHpgVI3+9ofkRcZnS8h7Y1B64C8H1tpx
-         wKJw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747993363; x=1748598163;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=xuYOwYNKkjdOui7VOKdqHSaUlWRq94p5a/W5tYRRzKs=;
-        b=fxQ0kysPrVEcm25HWMdMr71I4fHR12/xdSbOOzq2nE4tMA9Vmq35O4ngvERuwk9aEI
-         4i91tRKG1nBtmSoDnKOs+0UcPUK107/IpQFp8wuUyg8LnkcPy7a0Tvrz6YLzR7TUjU0f
-         WWj0cae+XNk9dRyKkWDTwK1SLKuGnfHIigyC7rcw7DuzppZ9qaOGFfvaQBqJ83lPu0y0
-         pWYBp4ACBAMSSSDHdVCRZrRXLC2BT1V4LOdYibi0KWxCKeYXNxbyy2mlNd+q7MNKAL1B
-         FmAeujGHmZcGU5mR//qvIo+k/85mPrkxRxSz7Rk2oGU1aY2tJBKPNcN+i0H5GfQIkCIQ
-         6GRQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVbMAW/KH4+mG6gT4FUEr+dkQs8A7C1meQ7QrVUKjU6+Wo7pl98YlHfIanfUPVYhUx2rCyKt/Mx5EoGkQ==@vger.kernel.org, AJvYcCWgClMlt3WYwOeh/YWMMFKQ5kp0U2vUlcJGT6T7OpjWjdzWlMf6a5DTYg94aEv5kzFSlxZ7N1FN5uujivc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwkQAxUOgyr2XOP9WMO2sHXtqepQ21x/X+BSDPhTpyFv1GOwC9W
-	3qyh44d9WpzbkiCJw2njyhP945Z40pPPRaasW7VvspxcMFiRfu9keyKR9SYXP1SF3GL3FTYtglA
-	ad4EYJby7Jl7SZKZSbu5B+6glF+xYeJs=
-X-Gm-Gg: ASbGncu0wIxoOvEzCR5HRU2lA+0qPqQq6T5UY/F0pJuiizmh7R3e94KjVcqXxukmKTB
-	I9lHzKAGCv4+PvTrt2HnV+dS/zkremMEOu5rDmhlSkIbl/AVWPtWRZNpJLcmUL5fmgOahtVsFKQ
-	y4dQLckc2ElP9Jljkj7SKl0ErhEc8yXMrU
-X-Google-Smtp-Source: AGHT+IFe4aaL/Mp0H070EexcfB77wVMFn2+CLwqQYYEiTAgH1Pomvmo/SRpI1wyZnAbR19rOKvsY4ac93WCFcorj+hM=
-X-Received: by 2002:a17:903:1aec:b0:216:30f9:93c5 with SMTP id
- d9443c01a7336-233f3667693mr10262275ad.6.1747993362953; Fri, 23 May 2025
- 02:42:42 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="n5ufv5+R"
+X-UUID: 612d148837ba11f0813e4fe1310efc19-20250523
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+	h=Content-Type:Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=8JFy9P5cfXtLYBdVWIyXjRB3r7z+5ZYiGzT0NsfoK/M=;
+	b=n5ufv5+RBkh3X+5bg5bGKKtBj4V64a8OafQdNsYeFVpDc1Y2wM8LTlwfJLjHnpFxUugrl9ioG1JV54oEhc0N6v9TAxBUbU5UGwRlusJ436NV+hxUxQoCO8aP3SVSynxOT/HQmly0hfQvtWiCjOC0Boi4xZpXMH8l2bONuf4/0NM=;
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.2.1,REQID:38b7b516-f68c-4da6-85c4-2c10bae8b469,IP:0,UR
+	L:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:r
+	elease,TS:0
+X-CID-META: VersionHash:0ef645f,CLOUDID:ee7e0959-eac4-4b21-88a4-d582445d304a,B
+	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0|50,EDM:-3,IP:ni
+	l,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES
+	:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-UUID: 612d148837ba11f0813e4fe1310efc19-20250523
+Received: from mtkmbs11n1.mediatek.inc [(172.21.101.185)] by mailgw01.mediatek.com
+	(envelope-from <ot_cathy.xu@mediatek.com>)
+	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+	with ESMTP id 1439918142; Fri, 23 May 2025 17:43:28 +0800
+Received: from mtkmbs11n2.mediatek.inc (172.21.101.187) by
+ MTKMBS14N1.mediatek.inc (172.21.101.75) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.39; Fri, 23 May 2025 17:43:25 +0800
+Received: from mhfsdcap04.gcn.mediatek.inc (10.17.3.154) by
+ mtkmbs11n2.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
+ 15.2.1258.39 via Frontend Transport; Fri, 23 May 2025 17:43:24 +0800
+From: Cathy Xu <ot_cathy.xu@mediatek.com>
+To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>, AngeloGioacchino Del Regno
+	<angelogioacchino.delregno@collabora.com>, Sean Wang <sean.wang@kernel.org>,
+	Lei Xue <lei.xue@mediatek.com>
+CC: <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-mediatek@lists.infradead.org>, Yong Mao <yong.mao@mediatek.com>,
+	Wenbin Mei <Wenbin.Mei@mediatek.com>, Axe Yang <Axe.Yang@mediatek.com>, Cathy
+ Xu <ot_cathy.xu@mediatek.com>
+Subject: [PATCH 0/3] pinctrl: mediatek: Add pinctrl driver on mt8189
+Date: Fri, 23 May 2025 17:42:45 +0800
+Message-ID: <20250523094319.10377-1-ot_cathy.xu@mediatek.com>
+X-Mailer: git-send-email 2.46.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250523161352.20f0589a@canb.auug.org.au>
-In-Reply-To: <20250523161352.20f0589a@canb.auug.org.au>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Fri, 23 May 2025 11:42:30 +0200
-X-Gm-Features: AX0GCFuVagKgyX9ZdyEuk7oU823a5UTijwUK6Yx4xSHdAX67f5__CmWx2DVQEvk
-Message-ID: <CANiq72=Oi2DXMG1U439RHYbCgRAN9L5d-0Dkaffi1d=mec5LTg@mail.gmail.com>
-Subject: Re: linux-next: manual merge of the rust tree with the drm tree
-To: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Dave Airlie <airlied@redhat.com>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Asahi Lina <lina+kernel@asahilina.net>, 
-	Danilo Krummrich <dakr@kernel.org>, DRI <dri-devel@lists.freedesktop.org>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
-	Linux Next Mailing List <linux-next@vger.kernel.org>, Tamir Duberstein <tamird@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-On Fri, May 23, 2025 at 8:14=E2=80=AFAM Stephen Rothwell <sfr@canb.auug.org=
-.au> wrote:
->
-> I fixed it up (see below) and can carry the fix as necessary. This
-> is now fixed as far as linux-next is concerned, but any non trivial
-> conflicts should be mentioned to your upstream maintainer when your tree
-> is submitted for merging.  You may also want to consider cooperating
-> with the maintainer of the conflicting tree to minimise any particularly
-> complex conflicts.
+This patch series introduces support for the MT8189 pinctrl driver, include
+the driver implementation, new binding document and pinctrl header file.
 
-Looks OK to me, thanks!
+Cathy Xu (3):
+  dt-bindings: pinctrl: mediatek: Add support for mt8189
+  arm64: dts: mediatek: mt8189: Add pinmux macro header file
+  pinctrl: mediatek: Add pinctrl driver on mt8189
 
-Cheers,
-Miguel
+ .../pinctrl/mediatek,mt8189-pinctrl.yaml      |  217 ++
+ arch/arm64/boot/dts/mediatek/mt8189-pinfunc.h | 1125 ++++++++
+ drivers/pinctrl/mediatek/Kconfig              |   12 +
+ drivers/pinctrl/mediatek/Makefile             |    1 +
+ drivers/pinctrl/mediatek/pinctrl-mt8189.c     | 1700 ++++++++++++
+ drivers/pinctrl/mediatek/pinctrl-mtk-mt8189.h | 2452 +++++++++++++++++
+ 6 files changed, 5507 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/mediatek,mt8189-pinctrl.yaml
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt8189-pinfunc.h
+ create mode 100644 drivers/pinctrl/mediatek/pinctrl-mt8189.c
+ create mode 100644 drivers/pinctrl/mediatek/pinctrl-mtk-mt8189.h
+
+-- 
+2.45.2
+
