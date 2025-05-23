@@ -1,96 +1,587 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D882317583;
-	Fri, 23 May 2025 15:34:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E093217583
+	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 15:35:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748014483; cv=none; b=uQ7spRwSbtDmgGDlLzN+BxJikPMvnRCMvAA1gxjUE1vzHdquOh9/XulDx2DxZ+vWd2me2y+G4CrB0r61SCkOD6mITG4e9NmRF38k19L+Dj3qlQrr6tw0Ilw0CxBBwCljF+idJIJcdFMertrclMsUUdf/m6AqznRWPuu9xKxQ1gw=
+	t=1748014550; cv=none; b=c4MoK//5FhGVs1ZDGxoC6JqrRZQvfx+4lFo1+ODBwdabX6DgiEe9tYWKpXxtlJllba6FMO9I78Gn+mla2ARlrJ/Ddu2Jj8RB1V3iOM2MaQhRkCmZCvSvetuYLstLnkAU3FMPVTju3ebRaf2VqHKZZOK/1o2SY48TVLhsd5Sr6Og=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748014483; c=relaxed/simple;
-	bh=F6Qt9T9axDWKZdW0V8mxJy404waRLPFG48iRbR59dpk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hkP21164nOEQTJVdjSIM1YN/Z71fdrhaniuJESKIwbn5Qu/8qiNS6hcsFfG9Geb72wJCQqbIgG2ASLR3JWJYWgisA5+Jcc7JHc+ALxIFbQzR6RR1uLRNqHUqz43G27d5w8rD/lYyFaC9tBQEXcVP6AdBvNL5pAnW0wFy8C98yYE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B4ErdVDm; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748014550; c=relaxed/simple;
+	bh=ZLG/gQtpPmO2XqmaXwMeqFeaYSl+//kif1wl61Paq20=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=tZR+9l0YdxS1eEKuo6kw3uPRZ9YEilq0VF6mtH8RM196PMfDnqMDGbUeLrl6jorCrL2Vy7qBIItr5anqpV4qvh7JP8E+ZXqs61fWQ4ZbUJmFRndESS61MgtRW/Y5YYsW8nzzNWp3AnD0Bpj/LxnSkQHAk2kzv0myyRjCQtmPBV0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=VOK1pwMN; arc=none smtp.client-ip=213.97.179.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B4ErdVDm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AFE6DC4CEE9;
-	Fri, 23 May 2025 15:34:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748014482;
-	bh=F6Qt9T9axDWKZdW0V8mxJy404waRLPFG48iRbR59dpk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=B4ErdVDmid5x5FjBT7zdcDcwqvS6y2Zg1cGoX/3VCvsofX4TZd//EdBMLzQDfoEwX
-	 qhe2Gar4rUBt/791S01+eWFT/jBP0/uupI6DLb9sO9R+NgCIWcqATQmf/gXWhcvpKd
-	 ZobWmHRfj0Xl/JTccDihsbnCotdlWkgf1RAQ5Wqoz3FYBA/sH73Xp4nJ7aHjAg1ey1
-	 yASJAJ7xxKpRu0veigdDSC4RMYzVE3q0w2gcul7xQsjqSdFir9Z0yc5QNaV/WJp1/o
-	 x9Ujb4xNuqDZtkN0lG/dP1+x7a2jhFK09WU50SCjyIA+s9NP24yr03zyMsvy4R1En1
-	 zp8nGJZZwyd8Q==
-Date: Fri, 23 May 2025 16:34:35 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Christian Marangi <ansuelsmth@gmail.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, Vladimir Oltean <olteanv@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	"Chester A. Unal" <chester.a.unal@arinc9.com>,
-	Daniel Golle <daniel@makrotopia.org>,
-	DENG Qingfang <dqfext@gmail.com>,
-	Sean Wang <sean.wang@mediatek.com>,
-	SkyLake Huang <SkyLake.Huang@mediatek.com>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	=?utf-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>,
-	Landen Chao <Landen.Chao@mediatek.com>, netdev@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org
-Subject: Re: [net-next PATCH 1/3] dt-bindings: net: dsa: mediatek,mt7530: Add
- airoha,an7583-switch
-Message-ID: <20250523-poster-suffix-8a15978bc704@spud>
-References: <20250522165313.6411-1-ansuelsmth@gmail.com>
- <20250522165313.6411-2-ansuelsmth@gmail.com>
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="VOK1pwMN"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=fI8cvnf31gEuEY3hkPlTi1dDwqyiSA+yU/6dZPkYH2Y=; b=VOK1pwMNcMEB5Ztz6TR2WFgQTa
+	35LLdLC5joZEu8sVOGLDZpa18NKlD+JVGBTSVP0qA0UtcluAuAISNvZOGLS0gUazm7aGOqgKMKI4r
+	gBx1McKZ8Mp/cr85qObH8ixV/ybS/Yw03XkCR1N1BKd7mKZrf6vqysckVMYOuNsJO6Ye89cWHpTPU
+	1Jcym4QThHVWF4qnVpjZZXkuIfKnB95DA8dZD5ZoadFLtqTEquHw7Vj5swkLvrfADvMiws9oxaTiv
+	XMEbatnPnrKtzftifYg/loW93KJ9ALOhsDpgU0fk/9xAxm1/AUmlc6ywfDBV6P319X+MTowXQcVKh
+	zU00eXDg==;
+Received: from [81.79.92.254] (helo=[192.168.0.101])
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
+	id 1uIUQe-00CEoI-7a; Fri, 23 May 2025 17:35:24 +0200
+Message-ID: <f2edc29b-a9ae-46ac-bd4c-8b1cd20a4cd5@igalia.com>
+Date: Fri, 23 May 2025 16:35:23 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="aKTWQfuzzRjxJz4t"
-Content-Disposition: inline
-In-Reply-To: <20250522165313.6411-2-ansuelsmth@gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/5] drm/sched: Fix teardown leaks with waitqueue
+To: Philipp Stanner <pstanner@redhat.com>, Philipp Stanner
+ <phasta@kernel.org>, Lyude Paul <lyude@redhat.com>,
+ Danilo Krummrich <dakr@kernel.org>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>, Matthew Brost <matthew.brost@intel.com>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <ckoenig.leichtzumerken@gmail.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>
+Cc: dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org
+References: <20250522082742.148191-2-phasta@kernel.org>
+ <20250522082742.148191-3-phasta@kernel.org>
+ <1a15598f-da02-46a0-8c41-ef8b765dc177@igalia.com>
+ <44c318c704960c0d0732598773fd256bdfac2fc1.camel@redhat.com>
+Content-Language: en-GB
+From: Tvrtko Ursulin <tvrtko.ursulin@igalia.com>
+In-Reply-To: <44c318c704960c0d0732598773fd256bdfac2fc1.camel@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
 
---aKTWQfuzzRjxJz4t
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 22/05/2025 16:32, Philipp Stanner wrote:
+> On Thu, 2025-05-22 at 14:37 +0100, Tvrtko Ursulin wrote:
+>>
+>> On 22/05/2025 09:27, Philipp Stanner wrote:
+>>> From: Philipp Stanner <pstanner@redhat.com>
+>>>
+>>> The GPU scheduler currently does not ensure that its pending_list
+>>> is
+>>> empty before performing various other teardown tasks in
+>>> drm_sched_fini().
+>>>
+>>> If there are still jobs in the pending_list, this is problematic
+>>> because
+>>> after scheduler teardown, no one will call backend_ops.free_job()
+>>> anymore. This would, consequently, result in memory leaks.
+>>>
+>>> One way to solve this is to implement a waitqueue that
+>>> drm_sched_fini()
+>>> blocks on until the pending_list has become empty. That waitqueue
+>>> must
+>>> obviously not block for a significant time. Thus, it's necessary to
+>>> only
+>>> wait if it's guaranteed that all fences will get signaled quickly.
+>>>
+>>> This can be ensured by having the driver implement a new backend
+>>> ops,
+>>> cancel_pending_fences(), in which the driver shall signal all
+>>> unsignaled, in-flight fences with an error.
+>>>
+>>> Add a waitqueue to struct drm_gpu_scheduler. Wake up waiters once
+>>> the
+>>> pending_list becomes empty. Wait in drm_sched_fini() for that to
+>>> happen
+>>> if cancel_pending_fences() is implemented.
+>>>
+>>> Signed-off-by: Philipp Stanner <pstanner@redhat.com>
+>>> ---
+>>>    drivers/gpu/drm/scheduler/sched_main.c | 105
+>>> ++++++++++++++++++++-----
+>>>    include/drm/gpu_scheduler.h            |  19 +++++
+>>>    2 files changed, 105 insertions(+), 19 deletions(-)
+>>>
+>>> diff --git a/drivers/gpu/drm/scheduler/sched_main.c
+>>> b/drivers/gpu/drm/scheduler/sched_main.c
+>>> index f7118497e47a..406572f5168e 100644
+>>> --- a/drivers/gpu/drm/scheduler/sched_main.c
+>>> +++ b/drivers/gpu/drm/scheduler/sched_main.c
+>>> @@ -367,7 +367,7 @@ static void drm_sched_run_job_queue(struct
+>>> drm_gpu_scheduler *sched)
+>>>     */
+>>>    static void __drm_sched_run_free_queue(struct drm_gpu_scheduler
+>>> *sched)
+>>>    {
+>>> -	if (!READ_ONCE(sched->pause_submit))
+>>> +	if (!READ_ONCE(sched->pause_free))
+>>>    		queue_work(sched->submit_wq, &sched-
+>>>> work_free_job);
+>>>    }
+>>>    
+>>> @@ -1121,6 +1121,12 @@ drm_sched_get_finished_job(struct
+>>> drm_gpu_scheduler *sched)
+>>>    		/* remove job from pending_list */
+>>>    		list_del_init(&job->list);
+>>>    
+>>> +		/*
+>>> +		 * Inform tasks blocking in drm_sched_fini() that
+>>> it's now safe to proceed.
+>>> +		 */
+>>> +		if (list_empty(&sched->pending_list))
+>>> +			wake_up(&sched->pending_list_waitque);
+>>
+>> Wait what? ;) (pun intended)
+>>
+>> I think I mentioned in the last round that waitque looks dodgy.
+>> Either a
+>> typo or a very unusual and novel shorthand? I suggest a typical wq or
+>> waitqueue.
+> 
+> Ah right, I forgot about that.
+> 
+>>
+>> I also mentioned that one more advantage of the ->cancel_job()
+>> approach
+>> is there is no need for these extra calls on the normal path (non
+>> teardown) at all.
+> 
+> Yes, agreed, that's a tiny performance gain. But it's running in a
+> workqueue, so no big deal. But see below, too
+> 
+>>
+>>> +
+>>>    		/* cancel this job's TO timer */
+>>>    		cancel_delayed_work(&sched->work_tdr);
+>>>    		/* make the scheduled timestamp more accurate */
+>>> @@ -1326,6 +1332,7 @@ int drm_sched_init(struct drm_gpu_scheduler
+>>> *sched, const struct drm_sched_init_
+>>>    	init_waitqueue_head(&sched->job_scheduled);
+>>>    	INIT_LIST_HEAD(&sched->pending_list);
+>>>    	spin_lock_init(&sched->job_list_lock);
+>>> +	init_waitqueue_head(&sched->pending_list_waitque);
+>>>    	atomic_set(&sched->credit_count, 0);
+>>>    	INIT_DELAYED_WORK(&sched->work_tdr,
+>>> drm_sched_job_timedout);
+>>>    	INIT_WORK(&sched->work_run_job, drm_sched_run_job_work);
+>>> @@ -1333,6 +1340,7 @@ int drm_sched_init(struct drm_gpu_scheduler
+>>> *sched, const struct drm_sched_init_
+>>>    	atomic_set(&sched->_score, 0);
+>>>    	atomic64_set(&sched->job_id_count, 0);
+>>>    	sched->pause_submit = false;
+>>> +	sched->pause_free = false;
+>>>    
+>>>    	sched->ready = true;
+>>>    	return 0;
+>>> @@ -1350,33 +1358,90 @@ int drm_sched_init(struct drm_gpu_scheduler
+>>> *sched, const struct drm_sched_init_
+>>>    }
+>>>    EXPORT_SYMBOL(drm_sched_init);
+>>>    
+>>> +/**
+>>> + * drm_sched_submission_and_timeout_stop - stop everything except
+>>> for free_job
+>>> + * @sched: scheduler instance
+>>> + *
+>>> + * Helper for tearing down the scheduler in drm_sched_fini().
+>>> + */
+>>> +static void
+>>> +drm_sched_submission_and_timeout_stop(struct drm_gpu_scheduler
+>>> *sched)
+>>> +{
+>>> +	WRITE_ONCE(sched->pause_submit, true);
+>>> +	cancel_work_sync(&sched->work_run_job);
+>>> +	cancel_delayed_work_sync(&sched->work_tdr);
+>>> +}
+>>> +
+>>> +/**
+>>> + * drm_sched_free_stop - stop free_job
+>>> + * @sched: scheduler instance
+>>> + *
+>>> + * Helper for tearing down the scheduler in drm_sched_fini().
+>>> + */
+>>> +static void drm_sched_free_stop(struct drm_gpu_scheduler *sched)
+>>> +{
+>>> +	WRITE_ONCE(sched->pause_free, true);
+>>> +	cancel_work_sync(&sched->work_free_job);
+>>> +}
+>>> +
+>>> +/**
+>>> + * drm_sched_no_jobs_pending - check whether jobs are pending
+>>> + * @sched: scheduler instance
+>>> + *
+>>> + * Checks if jobs are pending for @sched.
+>>> + *
+>>> + * Return: true if jobs are pending, false otherwise.
+>>> + */
+>>> +static bool drm_sched_no_jobs_pending(struct drm_gpu_scheduler
+>>> *sched)
+>>> +{
+>>> +	bool empty;
+>>> +
+>>> +	spin_lock(&sched->job_list_lock);
+>>> +	empty = list_empty(&sched->pending_list);
+>>> +	spin_unlock(&sched->job_list_lock);
+>>> +
+>>> +	return empty;
+>>> +}
+>>> +
+>>> +/**
+>>> + * drm_sched_cancel_jobs_and_wait - trigger freeing of all pending
+>>> jobs
+>>> + * @sched: scheduler instance
+>>> + *
+>>> + * Must only be called if &struct
+>>> drm_sched_backend_ops.cancel_pending_fences is
+>>> + * implemented.
+>>> + *
+>>> + * Instructs the driver to kill the fence context associated with
+>>> this scheduler,
+>>> + * thereby signaling all pending fences. This, in turn, will
+>>> trigger
+>>> + * &struct drm_sched_backend_ops.free_job to be called for all
+>>> pending jobs.
+>>> + * The function then blocks until all pending jobs have been
+>>> freed.
+>>> + */
+>>> +static void drm_sched_cancel_jobs_and_wait(struct
+>>> drm_gpu_scheduler *sched)
+>>> +{
+>>> +	sched->ops->cancel_pending_fences(sched);
+>>> +	wait_event(sched->pending_list_waitque,
+>>> drm_sched_no_jobs_pending(sched));
+>>> +}
+>>> +
+>>>    /**
+>>>     * drm_sched_fini - Destroy a gpu scheduler
+>>>     *
+>>>     * @sched: scheduler instance
+>>>     *
+>>> - * Tears down and cleans up the scheduler.
+>>> - *
+>>> - * This stops submission of new jobs to the hardware through
+>>> - * drm_sched_backend_ops.run_job(). Consequently,
+>>> drm_sched_backend_ops.free_job()
+>>> - * will not be called for all jobs still in
+>>> drm_gpu_scheduler.pending_list.
+>>> - * There is no solution for this currently. Thus, it is up to the
+>>> driver to make
+>>> - * sure that:
+>>> - *
+>>> - *  a) drm_sched_fini() is only called after for all submitted
+>>> jobs
+>>> - *     drm_sched_backend_ops.free_job() has been called or that
+>>> - *  b) the jobs for which drm_sched_backend_ops.free_job() has not
+>>> been called
+>>> - *     after drm_sched_fini() ran are freed manually.
+>>> - *
+>>> - * FIXME: Take care of the above problem and prevent this function
+>>> from leaking
+>>> - * the jobs in drm_gpu_scheduler.pending_list under any
+>>> circumstances.
+>>> + * Tears down and cleans up the scheduler. Might leak memory if
+>>> + * &struct drm_sched_backend_ops.cancel_pending_fences is not
+>>> implemented.
+>>>     */
+>>>    void drm_sched_fini(struct drm_gpu_scheduler *sched)
+>>>    {
+>>>    	struct drm_sched_entity *s_entity;
+>>>    	int i;
+>>>    
+>>> -	drm_sched_wqueue_stop(sched);
+>>> +	if (sched->ops->cancel_pending_fences) {
+>>> +		drm_sched_submission_and_timeout_stop(sched);
+>>> +		drm_sched_cancel_jobs_and_wait(sched);
+>>> +		drm_sched_free_stop(sched);
+>>> +	} else {
+>>> +		/* We're in "legacy free-mode" and ignore
+>>> potential mem leaks */
+>>> +		drm_sched_wqueue_stop(sched);
+>>> +	}
+>>>    
+>>>    	for (i = DRM_SCHED_PRIORITY_KERNEL; i < sched->num_rqs;
+>>> i++) {
+>>>    		struct drm_sched_rq *rq = sched->sched_rq[i];
+>>> @@ -1464,7 +1529,7 @@ bool drm_sched_wqueue_ready(struct
+>>> drm_gpu_scheduler *sched)
+>>>    EXPORT_SYMBOL(drm_sched_wqueue_ready);
+>>>    
+>>>    /**
+>>> - * drm_sched_wqueue_stop - stop scheduler submission
+>>> + * drm_sched_wqueue_stop - stop scheduler submission and freeing
+>>>     * @sched: scheduler instance
+>>>     *
+>>>     * Stops the scheduler from pulling new jobs from entities. It
+>>> also stops
+>>> @@ -1473,13 +1538,14 @@ EXPORT_SYMBOL(drm_sched_wqueue_ready);
+>>>    void drm_sched_wqueue_stop(struct drm_gpu_scheduler *sched)
+>>>    {
+>>>    	WRITE_ONCE(sched->pause_submit, true);
+>>> +	WRITE_ONCE(sched->pause_free, true);
+>>>    	cancel_work_sync(&sched->work_run_job);
+>>>    	cancel_work_sync(&sched->work_free_job);
+>>>    }
+>>>    EXPORT_SYMBOL(drm_sched_wqueue_stop);
+>>>    
+>>>    /**
+>>> - * drm_sched_wqueue_start - start scheduler submission
+>>> + * drm_sched_wqueue_start - start scheduler submission and freeing
+>>>     * @sched: scheduler instance
+>>>     *
+>>>     * Restarts the scheduler after drm_sched_wqueue_stop() has
+>>> stopped it.
+>>> @@ -1490,6 +1556,7 @@ EXPORT_SYMBOL(drm_sched_wqueue_stop);
+>>>    void drm_sched_wqueue_start(struct drm_gpu_scheduler *sched)
+>>>    {
+>>>    	WRITE_ONCE(sched->pause_submit, false);
+>>> +	WRITE_ONCE(sched->pause_free, false);
+>>>    	queue_work(sched->submit_wq, &sched->work_run_job);
+>>>    	queue_work(sched->submit_wq, &sched->work_free_job);
+>>>    }
+>>> diff --git a/include/drm/gpu_scheduler.h
+>>> b/include/drm/gpu_scheduler.h
+>>> index d860db087ea5..d8bd5b605336 100644
+>>> --- a/include/drm/gpu_scheduler.h
+>>> +++ b/include/drm/gpu_scheduler.h
+>>> @@ -29,6 +29,7 @@
+>>>    #include <linux/completion.h>
+>>>    #include <linux/xarray.h>
+>>>    #include <linux/workqueue.h>
+>>> +#include <linux/wait.h>
+>>>    
+>>>    #define MAX_WAIT_SCHED_ENTITY_Q_EMPTY msecs_to_jiffies(1000)
+>>>    
+>>> @@ -508,6 +509,19 @@ struct drm_sched_backend_ops {
+>>>             * and it's time to clean it up.
+>>>    	 */
+>>>    	void (*free_job)(struct drm_sched_job *sched_job);
+>>> +
+>>> +	/**
+>>> +	 * @cancel_pending_fences: cancel all unsignaled hardware
+>>> fences
+>>> +	 *
+>>> +	 * This callback must signal all unsignaled hardware
+>>> fences associated
+>>> +	 * with @sched with an appropriate error code (e.g., -
+>>> ECANCELED). This
+>>> +	 * ensures that all jobs will get freed by the scheduler
+>>> before
+>>> +	 * teardown.
+>>> +	 *
+>>> +	 * This callback is optional, but it is highly recommended
+>>> to implement
+>>> +	 * it to avoid memory leaks.
+>>> +	 */
+>>> +	void (*cancel_pending_fences)(struct drm_gpu_scheduler
+>>> *sched);
+>>
+>> I still don't understand why insist to use a new term in the backend
+>> ops, and even the whole scheduler API. Nothing in the API so far has
+>> fences in the name. Something like cancel(_all|pending)_jobs or
+>> sched_fini would read more aligned with the rest to me.
+> 
+> Nothing has fences in the name, but they are the central concept of the
+> API: run_job() returns them, and they are the main mechanism through
+> which scheduler and driver communicate.
+> 
+> As mentioned in the other mail, the idea behind the callback is to get
+> all hardware fences signaled. Just that. That's a simple, well
+> established concept, easy to understand by drivers. In contrast, it
+> would be far less clear what "cancel" even means. That's evident from
+> the other patch where we're suddenly wondering whether the driver
+> should also cancel timers etc. in the callback.
 
-On Thu, May 22, 2025 at 06:53:09PM +0200, Christian Marangi wrote:
-> Add airoha,an7583-switch additional compatible to the mt7530 DSA Switch
-> Family. This is an exact match of the airoha,en7581-switch (based on
-> mt7988-switch) with the additional requirement of tweak on the
-> GEPHY_CONN_CFG registers to make the internal PHY actually work.
->=20
-> Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
+That mock scheduler uses the hrtimers to simulate a GPU and so that uses 
+hrtimer_cancel() to cancel a job is irrelevant for the discussion about 
+the name cancel in the DRM scheduler API. That is just implementation 
+detail. It could have been using a thread or a workqueue, or whatever.
 
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
+Besides, I don't see how you can argue against the name cancel if I 
+propose cancel_(all|pending_)jobs() and you are proposing 
+cancel_pending_fences().
 
---aKTWQfuzzRjxJz4t
-Content-Type: application/pgp-signature; name="signature.asc"
+> It should not. The contract is simple: "signal everything".
+> 
+> It's also more difficult to abuse, since signaling is always valid. But
+> when is canceling valid?
+> 
+> Considering how internal APIs have been abused in the past, I can very
+> well see some party using a cancel_job() callback in the future to
+> "cancel" single jobs, for example in our (still unsolved)
+> resubmit_jobs() problem.
 
------BEGIN PGP SIGNATURE-----
+I don't know but this feels a bit of a stretch. It would not be 
+scheduler internal API, but a vfunc driver provided to the scheduler. If 
+the driver then decides to call it outside the scheduler paths it can do 
+that today with other vfuncs too. Or worse.
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaDCViwAKCRB4tDGHoIJi
-0kQPAP9frHNQgSGAHPA5uunYjumQhgnmnzyhTpQjs9+iFOrwaQD/dJcW9+a4KFNn
-9Mou2j6ietaV+/YWiSjzhzjlzbUPAwM=
-=dZL2
------END PGP SIGNATURE-----
+And it would be well defined in the API contract as something scheduler 
+calls in order on scheduler shutdown.
+  >>>    };
+>>>    
+>>>    /**
+>>> @@ -533,6 +547,8 @@ struct drm_sched_backend_ops {
+>>>     *            timeout interval is over.
+>>>     * @pending_list: the list of jobs which are currently in the job
+>>> queue.
+>>>     * @job_list_lock: lock to protect the pending_list.
+>>> + * @pending_list_waitque: a waitqueue for drm_sched_fini() to
+>>> block on until all
+>>> + *		          pending jobs have been finished.
+>>>     * @hang_limit: once the hangs by a job crosses this limit then
+>>> it is marked
+>>>     *              guilty and it will no longer be considered for
+>>> scheduling.
+>>>     * @score: score to help loadbalancer pick a idle sched
+>>> @@ -540,6 +556,7 @@ struct drm_sched_backend_ops {
+>>>     * @ready: marks if the underlying HW is ready to work
+>>>     * @free_guilty: A hit to time out handler to free the guilty
+>>> job.
+>>>     * @pause_submit: pause queuing of @work_run_job on @submit_wq
+>>> + * @pause_free: pause queueing of @work_free_job on @submit_wq
+>>>     * @own_submit_wq: scheduler owns allocation of @submit_wq
+>>>     * @dev: system &struct device
+>>>     *
+>>> @@ -562,12 +579,14 @@ struct drm_gpu_scheduler {
+>>>    	struct delayed_work		work_tdr;
+>>>    	struct list_head		pending_list;
+>>>    	spinlock_t			job_list_lock;
+>>> +	wait_queue_head_t		pending_list_waitque;
+>>>    	int				hang_limit;
+>>>    	atomic_t                        *score;
+>>>    	atomic_t                        _score;
+>>>    	bool				ready;
+>>>    	bool				free_guilty;
+>>>    	bool				pause_submit;
+>>> +	bool				pause_free;
+>>>    	bool				own_submit_wq;
+>>>    	struct device			*dev;
+>>>    };
+>>
+>> And, as you know, another thing I don't understand is why would we
+>> choose to add more of the state machine when I have shown how it can
+>> be
+>> done more elegantly. You don't have to reply, this is more a for the
+>> record against v3.
+> 
+> I do like your approach to a degree, and I reimplemented and tested it
+> during the last days! Don't think I just easily toss aside a good idea;
+> in fact, weighing between both approaches did cause me some headache :)
+> 
+> The thing is that while implementing it for the unit tests (not even to
+> begin with Nouveau, where the implementation is a bit more difficult
+> because some helpers need to be moved), I ran into a ton of faults
+> because of how the tests are constructed. When do I have to cancel
+> which timer for which job, all before calling drm_sched_fini(), or each
+> one separately in cancel_job()? What about timedout jobs?
+> 
+> This [1] for exmaple is an implementation attempt I made which differs
+> only slightly from yours but does not work and causes all sorts of
+> issues with timer interrupts.
+> 
+> Now, that could obviously be fixed, and maybe I fail – but the thing
+> is, if I can fail, others can, too. And porting the unit tests is a
+> good beta-test.
 
---aKTWQfuzzRjxJz4t--
+Well you did not come up with the whole series also in a day, took quite 
+some time, so the fact converting unit tests also took some time is not 
+a red flag for any approach.
+
+> When you look at the waitqueue solution, it is easy to implement for
+> both Nouveau and sched/tests, with minimal adjustments. My approach
+> works for both and is already well tested in Nouveau.
+> 
+> The ease with which it can be used and the simplicity of the contract
+> ("signal all fences!") gives me confidence that this is, despite the
+> larger state machine, more maintainable and that it's easier to port
+> other drivers to the new cleanup method. I've had some success with
+> similar approaches when cleaning up 16 year old broken PCI code [2].
+> 
+> Moreover, our long term goal should anyways be to, ideally, port all
+> drivers to the new cleanup design and then make the callback mandatory.
+> Then some places in drm_sched_fini() can be cleaned up, too.
+> 
+> Besides, the above reasons like the resistence against abuse of a
+> cancel_job() also apply.
+> 
+> 
+> Does that sound convincing? :)
+
+Not yet I'm afraid.
+
+If I look at the nouveau implementation I see eventually this:
+
+nouveau_fence_context_kill(struct nouveau_fence_chan *fctx, int error)
+{
+	struct nouveau_fence *fence, *tmp;
+	unsigned long flags;
+
+	spin_lock_irqsave(&fctx->lock, flags);
+	list_for_each_entry_safe(fence, tmp, &fctx->pending, head) {
+		if (error && !dma_fence_is_signaled_locked(&fence->base))
+			dma_fence_set_error(&fence->base, error);
+
+		if (nouveau_fence_signal(fence))
+			nvif_event_block(&fctx->event);
+	}
+	fctx->killed = 1;
+	spin_unlock_irqrestore(&fctx->lock, flags);
+}
+
+
+While my proposal was to have this in the scheduler core:
+
+  void drm_sched_fini(struct drm_gpu_scheduler *sched)
+  {
+@@ -1397,6 +1395,15 @@ void drm_sched_fini(struct drm_gpu_scheduler *sched)
+         /* Confirm no work left behind accessing device structures */
+         cancel_delayed_work_sync(&sched->work_tdr);
+
++       if (sched->ops->cancel_job) {
++               struct drm_sched_job *job;
++
++               list_for_each_entry_reverse(job, &sched->pending_list, 
+list) {
++                       sched->ops->cancel_job(job);
++                       sched->ops->free_job(job);
++               }
++       }
+
+Really similar loops. Would it be good match to make 
+nouveau_cancel_job() simply like:
+
+	spin_lock_irqsave(&fctx->lock, flags);
+	if (!dma_fence_is_signaled_locked(&fence->base))
+		dma_fence_set_error(&fence->base, ECANCELED);
+
+	if (nouveau_fence_signal(fence))
+		nvif_event_block(&fctx->event);
+
+	spin_unlock_irqrestore(&fctx->lock, flags);
+
+Assuming you can get to fctx from the fence. That doesn't work?
+
+Or those chan->killed and fctx->killed are critical and have to happen 
+before/after canceling jobs?
+
+Regards,
+
+Tvrtko
+
+> P.
+> 
+> 
+> [1] https://paste.debian.net/1376021/
+> [2] https://lore.kernel.org/linux-pci/20250520085938.GB261485@rocinante/T/#m6e28eabdb22286238545c1fa6026445a4001d8e2
+> 
+> 
+> 
+>>
+>> Regards,
+>>
+>> Tvrtko
+>>
+> 
+
