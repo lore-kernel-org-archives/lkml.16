@@ -1,121 +1,195 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A593245008;
-	Fri, 23 May 2025 09:53:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5EBB24A061
+	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 09:54:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747994041; cv=none; b=mKs8VmmwBKBizOsytnJDPtn/MB8Cwi3chOXh/6DUpuXfL1lOCBvp+0sb6tDBlQD4ZH5RVSOYOKEXQD8UmLH5D+wsZPtKyW75ny2yKOM31H3kkDkoovOLYQ+Ho0+2W3iTTdDG+ieS7jzIsyvKni0vsh0FakKZg+Iu9Y2ZyKsLQqU=
+	t=1747994045; cv=none; b=CdwwlOeBdmaWAzAD3zYkBuMCSvEgTiVmzZH2cr0COS4V2S02HCCG4EWlFNNeWAv99N1NhtuTxD15Y3A/H5OjDJvO+a+f2Y4u/mdeWh7z/REH4QqAyIuCnQUPTZdmtAUKYdUbfatmmhnOVLcstNWVHb8iorPtbrCGNsliICmrZNY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747994041; c=relaxed/simple;
-	bh=z0i0/IXCqbcVFjIzw3ueLhZMcxcGtEoHNUIB6t7zan8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=AqshVlYtuHtKvmVg8uWLm1c8Ls5NJA+vazIemOhzTXAPxa4sTjqxqWqYPyV+Ct+tSzGBPCrxO8UxB31YqwnhgSJKzT1q0YA5qGM3Fdn0wADFJ5U4OwcsOLHRhpDL5j/1Do2XDprYXBA6WPCDvPSDjPFBx8IXAzOlL6CYZC4p99M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Vjvbg+YV; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1747994045; c=relaxed/simple;
+	bh=zK6+ZTQnzaaWJ4qRUX1F9g2rew1Hsksjxjet94iLYj4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YSSb1YVoZP28XdTbJ6X3iV1QhluAAIiQAMAK/gTy3K49YIddpf4HSxKIroAP1RFinJY1dcn75MEc7vPH1F0SW/38kZ4gdmNHnIy2pZLZ2SumamR28Evq80JdPVS/2c5NWRvsC7rW8gdNwihheZaSPXISF4wyNsG51+AbkDhuJ/Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=apH4C9pF; arc=none smtp.client-ip=209.85.210.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Vjvbg+YV"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747994039; x=1779530039;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=z0i0/IXCqbcVFjIzw3ueLhZMcxcGtEoHNUIB6t7zan8=;
-  b=Vjvbg+YVKoDKYcQbgF2ZfOLMndj9YVmtcB8XO6Mmf8czhlzN5/e3/YUG
-   7EbzTMTpH+ojxov3tIK1NhOeoQtdR4ZMXeVImyQTR7Y4rbpsr8fbuoGTj
-   fo0xeybSQXnXmgBsz3OZFQyiM8LEkEPmg/N92gnA05ATYgNkS6KRATRO3
-   xPdHfd/vFcqIjhL9dQ9NZqPXA0sYO5xSfqGswa8n+BIPoHrIJqvQu3+rE
-   X0HKFxVKiOOaj0SWEKfk9BA35WgkSnrcWMz0TKhcxR3PZfe4oGFPRTtHf
-   SYk7nB1HAYGSYh1Lw04u03qXI50GL4/wqfADAG5aRx5a/W9+qIKhogjc1
-   A==;
-X-CSE-ConnectionGUID: xkl3ryjSQRiUX2iDeGcEOQ==
-X-CSE-MsgGUID: 8WIWM7+dSLuBX8kpqQ8m1Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11441"; a="75444268"
-X-IronPort-AV: E=Sophos;i="6.15,308,1739865600"; 
-   d="scan'208";a="75444268"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2025 02:53:58 -0700
-X-CSE-ConnectionGUID: 9TZeUvwGS6S9vS7yl4WNcg==
-X-CSE-MsgGUID: obpdoiXhTq+asbZ9XygFYA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,308,1739865600"; 
-   d="scan'208";a="164315100"
-Received: from 984fee019967.jf.intel.com ([10.165.54.94])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2025 02:53:58 -0700
-From: Chao Gao <chao.gao@intel.com>
-To: linux-coco@lists.linux.dev,
-	x86@kernel.org,
-	kvm@vger.kernel.org
-Cc: seanjc@google.com,
-	pbonzini@redhat.com,
-	eddie.dong@intel.com,
-	kirill.shutemov@intel.com,
-	dave.hansen@intel.com,
-	dan.j.williams@intel.com,
-	kai.huang@intel.com,
-	isaku.yamahata@intel.com,
-	elena.reshetova@intel.com,
-	rick.p.edgecombe@intel.com,
-	Chao Gao <chao.gao@intel.com>,
-	Farrah Chen <farrah.chen@intel.com>,
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	linux-kernel@vger.kernel.org
-Subject: [RFC PATCH 20/20] x86/virt/seamldr: Enable TD-Preserving Updates
-Date: Fri, 23 May 2025 02:52:43 -0700
-Message-ID: <20250523095322.88774-21-chao.gao@intel.com>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <20250523095322.88774-1-chao.gao@intel.com>
-References: <20250523095322.88774-1-chao.gao@intel.com>
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="apH4C9pF"
+Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-7376e311086so10375660b3a.3
+        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 02:54:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1747994043; x=1748598843; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=FXXvkKtq4CoNP4NWa3r13aRKj9W3C7sTWo4d8Ry/et0=;
+        b=apH4C9pFNnaboHogAS4TE3iguMsLvyA8536mhFmZ2HvXoZ4+pupD8cEJqwagr+YaWE
+         wSr7qBQVrBx1qpV257JP+g2dnhN4AfN7N/W+QhM9T1wZZ4tVuy8qt4xfxUQB3PjWkyvR
+         vvuDLsIUg4fuRKvDWeeyjbPMMl7K8LajD1tuQMnes5fdE68uBlQOQBTTD61RW79rNQa8
+         0mKex7ogNPBNMCKVqFNUdvIf97zmzzMwxJLDHa2PLIY0h5vQ1EgQgpQrWXX5tQfMZ3jv
+         y6HoKVCjFfGbxSNygbjc1YGwQxZZyuTj7QZxJeYU8rYrBtoxfZuXZy287RGHwavqrqor
+         uRxQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747994043; x=1748598843;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=FXXvkKtq4CoNP4NWa3r13aRKj9W3C7sTWo4d8Ry/et0=;
+        b=CrmLZ2b4psafHTEskJsREPFeJycO1aRa8msuJPGQDtJq7Hncxvl6PR8xhO1rfCqzeI
+         ZqLUmjrpGbg+FUIc1qhXh7MwbtfW6vT4lA8s408M4P6oYeZ0kaCIIr/gbBQRC+xYvNAM
+         y8YAcIZSbA/4SciEAMq9hkEzPw/Z8+SWDlqV6WZNn3jTP0pgwahmnf9a2HRAisPwqbge
+         lvYbjHz98x7hB8u+duSJUkYUO85IltMkkRwQnI6ecJ5T7bQI98YKZYqcKeNSse0/rryX
+         SdRtegiSf4T4wWu6w4I3VNTOFJOHdTBxch7u1B5SrC5Kcagkvlf1IOTB2f2UVU9itFwv
+         C3sg==
+X-Forwarded-Encrypted: i=1; AJvYcCXkHm3Ac7gywJNpdmSJjY/lhvJpTZIF7+Qiui5cxioKt9QecL86Rx+8bS99Oef0IV18PvNbRYWW1gyTTbk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YytQSnYr2zi9JNl9pehiV7wTtCM/xwRdH+qMzgnS0bIqFyRxx2o
+	TnBMBNAy2kRAKz1APkkXHwo0OH0/ObmI3iaC4hCVCCh2JpVt0bEoBjSKFi5gTgVz7w==
+X-Gm-Gg: ASbGncv6J39OjzghsYD1ZjFk9QUFbfxz4jG8yNig/MXwEziMfVfnArmiNgP2c3S/nOy
+	xy3ihEz+AqgWehB64xHCN6ctRjoEebnNgAMyAT8bYTaaCgcH8sW8+Tpa6p5aG7ojMcDP/mdLpAL
+	BBV9oxdRA3I7r1PPJr10abTLFykWeQfqrJYXrR4G77/RpxwAuTylcrXX1Ek4vibV2sotsE+wvDs
+	3TsSFw6PUsvrgUYhdUEgG5BSvyrzt4nQ1FiFBR6MQJWw5AAESy0FAPnIpUVOdryKLbuoTNHfO11
+	vW0C0x71D+c0DXOB6fDTBjMmUXTil2a5cCciegGOfq+Ibnv0Jk8=
+X-Google-Smtp-Source: AGHT+IH00OofDg7l2hnAnCX4Bclt7TvCfcVPZYFW4nNycz9fudANPt8N+eNkMAgc31K/0sCw3nxMyQ==
+X-Received: by 2002:a05:6a00:c82:b0:73e:970:731 with SMTP id d2e1a72fcca58-745ed8f76d1mr3478990b3a.16.1747994042836;
+        Fri, 23 May 2025 02:54:02 -0700 (PDT)
+Received: from bytedance ([115.190.40.10])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-745f73f4b29sm311471b3a.21.2025.05.23.02.53.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 23 May 2025 02:54:02 -0700 (PDT)
+Date: Fri, 23 May 2025 17:53:50 +0800
+From: Aaron Lu <ziqianlu@bytedance.com>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Valentin Schneider <vschneid@redhat.com>,
+	Ben Segall <bsegall@google.com>,
+	K Prateek Nayak <kprateek.nayak@amd.com>,
+	Josh Don <joshdon@google.com>, Ingo Molnar <mingo@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Xi Wang <xii@google.com>, linux-kernel@vger.kernel.org,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>, Mel Gorman <mgorman@suse.de>,
+	Chengming Zhou <chengming.zhou@linux.dev>,
+	Chuyi Zhou <zhouchuyi@bytedance.com>,
+	Jan Kiszka <jan.kiszka@siemens.com>,
+	Florian Bezdeka <florian.bezdeka@siemens.com>
+Subject: Re: [PATCH 2/7] sched/fair: prepare throttle path for task based
+ throttle
+Message-ID: <20250523095350.GA1215853@bytedance>
+References: <20250520104110.3673059-1-ziqianlu@bytedance.com>
+ <20250520104110.3673059-3-ziqianlu@bytedance.com>
+ <20250522104843.GG39944@noisy.programming.kicks-ass.net>
+ <20250522114012.GA672414@bytedance>
+ <20250522115418.GI24938@noisy.programming.kicks-ass.net>
+ <20250522123750.GB672414@bytedance>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250522123750.GB672414@bytedance>
 
-All necessary steps for TD-Preserving updates have been integrated.
-Remove the temporary guard to enable TD-Preserving updates.
+On Thu, May 22, 2025 at 08:40:02PM +0800, Aaron Lu wrote:
+> On Thu, May 22, 2025 at 01:54:18PM +0200, Peter Zijlstra wrote:
+> > On Thu, May 22, 2025 at 07:44:55PM +0800, Aaron Lu wrote:
+> > > On Thu, May 22, 2025 at 12:48:43PM +0200, Peter Zijlstra wrote:
+> > > > On Tue, May 20, 2025 at 06:41:05PM +0800, Aaron Lu wrote:
+> > > > 
+> > > > >  static void throttle_cfs_rq_work(struct callback_head *work)
+> > > > >  {
+> > > > > +	struct task_struct *p = container_of(work, struct task_struct, sched_throttle_work);
+> > > > > +	struct sched_entity *se;
+> > > > > +	struct cfs_rq *cfs_rq;
+> > > > > +	struct rq *rq;
+> > > > > +
+> > > > > +	WARN_ON_ONCE(p != current);
+> > > > > +	p->sched_throttle_work.next = &p->sched_throttle_work;
+> > > > > +
+> > > > > +	/*
+> > > > > +	 * If task is exiting, then there won't be a return to userspace, so we
+> > > > > +	 * don't have to bother with any of this.
+> > > > > +	 */
+> > > > > +	if ((p->flags & PF_EXITING))
+> > > > > +		return;
+> > > > > +
+> > > > > +	scoped_guard(task_rq_lock, p) {
+> > > > > +		se = &p->se;
+> > > > > +		cfs_rq = cfs_rq_of(se);
+> > > > > +
+> > > > > +		/* Raced, forget */
+> > > > > +		if (p->sched_class != &fair_sched_class)
+> > > > > +			return;
+> > > > > +
+> > > > > +		/*
+> > > > > +		 * If not in limbo, then either replenish has happened or this
+> > > > > +		 * task got migrated out of the throttled cfs_rq, move along.
+> > > > > +		 */
+> > > > > +		if (!cfs_rq->throttle_count)
+> > > > > +			return;
+> > > > > +		rq = scope.rq;
+> > > > > +		update_rq_clock(rq);
+> > > > > +		WARN_ON_ONCE(!list_empty(&p->throttle_node));
+> > > > > +		dequeue_task_fair(rq, p, DEQUEUE_SLEEP | DEQUEUE_SPECIAL);
+> > > > > +		list_add(&p->throttle_node, &cfs_rq->throttled_limbo_list);
+> > > > > +		resched_curr(rq);
+> > > > > +	}
+> > > > > +
+> > > > > +	cond_resched_tasks_rcu_qs();
+> > > > >  }
+> > > > 
+> > > > What's that cond_resched thing about? The general plan is to make
+> > > > cond_resched go away.
+> > > 
+> > > Got it.
+> > > 
+> > > The purpose is to let throttled task schedule and also mark a task rcu
+> > > quiescent state. Without this cond_resched_tasks_rcu_qs(), this task
+> > > will be scheduled by cond_resched() in task_work_run() and since that is
+> > > a preempt schedule, it didn't mark a task rcu quiescent state.
+> > > 
+> > > Any suggestion here? Perhaps a plain schedule()? Thanks.
+> > 
+> > I am confused, this is task_work_run(), that is ran from
+> > exit_to_user_mode_loop(), which contains a schedule().
+>
 
-Signed-off-by: Chao Gao <chao.gao@intel.com>
-Tested-by: Farrah Chen <farrah.chen@intel.com>
----
- arch/x86/virt/vmx/tdx/seamldr.c | 9 ---------
- 1 file changed, 9 deletions(-)
+I should probably have added that the schedule() call contained in
+exit_to_user_mode_loop() is early in that loop, where the to-be-throttled
+task doesn't have need_resched bit set yet.
 
-diff --git a/arch/x86/virt/vmx/tdx/seamldr.c b/arch/x86/virt/vmx/tdx/seamldr.c
-index fe8f98701429..c6e40a7418d3 100644
---- a/arch/x86/virt/vmx/tdx/seamldr.c
-+++ b/arch/x86/virt/vmx/tdx/seamldr.c
-@@ -350,12 +350,6 @@ static int do_seamldr_install_module(void *params)
- 	return ret;
- }
- 
--/*
-- * Temporary flag to guard TD-Preserving updates. This will be removed once
-- * all necessary components for its support are integrated.
-- */
--static bool td_preserving_ready;
--
- DEFINE_FREE(free_seamldr_params, struct seamldr_params *,
- 	    if (!IS_ERR_OR_NULL(_T)) free_seamldr_params(_T))
- 
-@@ -365,9 +359,6 @@ static int seamldr_install_module(const u8 *data, u32 size)
- 							  GFP_KERNEL);
- 	int ret;
- 
--	if (!td_preserving_ready)
--		return -EOPNOTSUPP;
--
- 	if (!info)
- 		return -ENOMEM;
- 
--- 
-2.47.1
+> There is a cond_resched() in task_work_run() loop:
+> 
+> 		do {
+> 			next = work->next;
+> 			work->func(work);
+> 			work = next;
+> 			cond_resched();
+> 		} while (work);
+> 
+> And when this throttle work returns with need_resched bit set,
+> cond_resched() will cause a schedule but that didn't mark a task
+> quiescent state...
 
+Another approach I can think of is to add a test of task_is_throttled()
+in rcu_tasks_is_holdout(). I remembered when I tried this before, I can
+hit the following path:
+
+exit_to_user_mode_loop() -> get_signal() -> throttle_task_work() -> 
+do_exit() -> exit_signals() -> percpu_rwsem_wait() -> schedule() -> 
+try_to_block_task() -> dequeue_task_fair().
+
+I would like to avoid this path, because it doesn't feel right for a
+throttled task to go through another dequeue again(except for the cases
+like task group change, affinity change etc. are special cases that have
+to be dealed with though).
+
+It looks to me, a schedule() call(or any other form) that makes sure
+this throttled task gets scheduled in its task work is the safest thing
+to do.
+
+Thoughts?
+
+Thanks,
+Aaron
