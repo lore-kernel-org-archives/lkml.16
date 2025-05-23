@@ -1,251 +1,359 @@
-Received: from mx0a-009a6c02.pphosted.com (mx0a-009a6c02.pphosted.com [148.163.145.158])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB4CD20C47A;
-	Fri, 23 May 2025 07:40:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=148.163.145.158
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747986051; cv=fail; b=kpTS0Z1c9k5SIuhA4HxhiFoV5Pphu0VJcpOoFb858+KIzjq73eSuInxw9S4/wiOx3bqRENCXdUgO44rkFF9/oZZ182qJ/BDE229rW9Y/S81NqCn7OhlNlxtXhFho1oqzhCRPI4uVOgygRHkenHIG20EQT4g2gNkQginqslh+ve0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747986051; c=relaxed/simple;
-	bh=zTZpB2kN0MgYmjemU2VPPfZsRPfnwaCMf7aF9oe+sYY=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=i0zS6rLA1iQfCddLcGUC/Fq1h6QIWHgx6XVa71kE+kFhm5Bbi+hMChVM93IRdDE1amXSH1+9qTLH3B3svJJdF1VAs2qMKw0lyvXUgk6Gxc/mEucZkR/1MXxrwioJBf2Bi32SyU6rYUsQp6x2FmN1R9cjF/xaFHDLgL9Seu/7yoA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wiwynn.com; spf=pass smtp.mailfrom=wiwynn.com; dkim=pass (2048-bit key) header.d=wiwynn.com header.i=@wiwynn.com header.b=BfSLr7By; dkim=pass (2048-bit key) header.d=wiwynn.com header.i=@wiwynn.com header.b=EdFxhhGt; arc=fail smtp.client-ip=148.163.145.158
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wiwynn.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wiwynn.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76A8020C47A
+	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 07:41:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747986097; cv=none; b=JdTyuzpn71BRASPfQsNSYGDJRZH8hVAsLtx74Ot0oKFQBUt10DbbyG6BBotE0hF6eYcF+9Zd0oJRKjMGJYAhBdjQUFzT4s9NsuFjjANvDXtgjBrIf7N6k5UhpVpN8MBs53jlEtQ94sYxobx/I+Vqzci9ePwIYoixlMfANLqBHCI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747986097; c=relaxed/simple;
+	bh=Gcv7fQFjBsoA/VDKo34AnJZEVQyqgUBDLpgqJ7oE2cg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=sDhNDTMf7qwDr7kvXGv2E3nWS9dU8Cy1td/f3XBwJjILs0w5ZXJL89wDoCVG3giAeVZdJtTHJxWKORVz3C5kc00U/Q82otJfFQ2nFhAZWxrHKr1v9PB3sAR/y2VJetVPECOmGI37ThAmk6J8nVk10/H4Xj9v1Za0Kt/Dddtjfms=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=ol7Z2OOU; arc=none smtp.client-ip=209.85.218.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wiwynn.com header.i=@wiwynn.com header.b="BfSLr7By";
-	dkim=pass (2048-bit key) header.d=wiwynn.com header.i=@wiwynn.com header.b="EdFxhhGt"
-Received: from pps.filterd (m0462404.ppops.net [127.0.0.1])
-	by mx0a-009a6c02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54MNskHK002164;
-	Fri, 23 May 2025 15:32:31 +0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wiwynn.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=20250420; bh=4
-	wCbHCYqha3yMqSZvL86haP4dYP0y9XjdURhp7QNOTc=; b=BfSLr7BygcFIQpQnW
-	F0E9uBDcvQFbJnF5Aw+YDS2RQYQkmVBz9yUcz7r9M4+njoyriDqkfY4cNnlrh460
-	koOAttUXZbor8PPRa/cV12CzPLD/ww7y1lK0wE9QvUZa8t1HK1p9iGqgcUm+aWNn
-	tBfTp9mfvPyAkVz/FBCRQ8RXciUwSJawLAPyXLgOUXX1BTFhWugvyzEKlvRBwXVL
-	IP9HGSHenyA03KsD6rw8Usa5jABhEOzzgKGq/phTkc2AR0PQ06K7x/3FYRhvCl4n
-	/Lsz531dk/R40cUr1hcMU8t6maMtt7XPTKU+s0rBnrO4fg0eDM0//31HvczM3a+V
-	zNyYA==
-Received: from os8pr02cu002.outbound.protection.outlook.com (mail-japanwestazlp17012051.outbound.protection.outlook.com [40.93.130.51])
-	by mx0a-009a6c02.pphosted.com (PPS) with ESMTPS id 46rweyud7x-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 23 May 2025 15:32:30 +0800 (WST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Q1VAAw8dr1SxWVmzRYnxDhYU0tHQR9FcOhlN5EPWqaetzy4SAO+AoFC2l/4vkKYLlYCRbe/Ob2MRLXm+wZHYBW8+qU8FxEXqFnqDq/i3Re3JhF8Bpe6QrR0IRNxFDMxmh1mRVg2I64KvjF51S3NcyKmwQ23WhbkOBy2SkVAHa7jdavCDiN4jko8g6fvpFa7iCfK89KQu+248ftzy/RaoILOe/JCzYkcowxKAf0WLBTy8RPNRUrZtcdWhMFsTOyaY2v9TW/K79ukXQ+m6AJZcQ2jYz13M5wfVDOKlPfvBcBadiQYAfcTobAnyylnCvxr4cJfaKf8L4kFtkv5/SfRHzA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=4wCbHCYqha3yMqSZvL86haP4dYP0y9XjdURhp7QNOTc=;
- b=FQCN3hGqv6gcTQD+6i7jN3trqttfJ7jJz456vwLx6MoYhZDuSZZuy+zbUT5VqdckqwMAK0dHld0eeGJDv3RQqCnZ4cEzyAAnSkB+sPoFEakH/ifQwD6Hj/AiG47aSP2rBV2ESUmpfAQ4Jc1ZCAZR9ID1VH2sPUy85bvviBCXQOLKYXHau2hLpx/vNk/S5nBfjaC9Azc/VAnW31WQ+et801uL2pKCERYwVlhNv2Y7jIftOKiQaZlmdsUs/cYwaSyNg18IOOQtZseniP8vCYuqlP6ZpKLdNC3wLAJH5+kpfozydQ238PvQMeNa4s2QV8bTmiNgryB3DZetgZNElV6tJA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wiwynn.com; dmarc=pass action=none header.from=wiwynn.com;
- dkim=pass header.d=wiwynn.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wiwynn.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4wCbHCYqha3yMqSZvL86haP4dYP0y9XjdURhp7QNOTc=;
- b=EdFxhhGtoFD0RBknTozGLUVzN+m4XjZ3TxRWt+pA8RlgMKJ9HQLGmbLjZO6Fx5nBXjemr7aKZwxvMzDwYzwG4Cj1e3ITM9Qzj3Dqs6HgbOjaYWbZDWgKGBzAvPVL35qzto1chATsZqGVGIkhhTu3vi8Gca8e/z/3N5dlWlUC/V3JSMU3Md1NgCwdaTU7AL0ZOUQXxFVWNgnvk+L55l4icPJY0AGkA8j1Pe9S7eyHWfl45gaD/sm/PyFNGiTVQZ6O5CWzmnPB9c/RHevV4Mqn0XXCUwIVnRDw/kydoUU/PslDw33T+/yY1uRdjwdjfI67p4gysI02wzTzLxNMPgbG1g==
-Received: from SEZPR04MB6853.apcprd04.prod.outlook.com (2603:1096:101:f3::12)
- by KL1PR04MB7707.apcprd04.prod.outlook.com (2603:1096:820:118::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8746.31; Fri, 23 May
- 2025 07:32:26 +0000
-Received: from SEZPR04MB6853.apcprd04.prod.outlook.com
- ([fe80::2671:6554:520:7a2b]) by SEZPR04MB6853.apcprd04.prod.outlook.com
- ([fe80::2671:6554:520:7a2b%7]) with mapi id 15.20.8769.019; Fri, 23 May 2025
- 07:32:26 +0000
-From: Jerry C Chen/WYHQ/Wiwynn <Jerry_C_Chen@wiwynn.com>
-To: Paul Fertser <fercerpav@gmail.com>
-CC: "patrick@stwcx.xyz" <patrick@stwcx.xyz>,
-        Samuel Mendoza-Jonas
-	<sam@mendozajonas.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet
-	<edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni
-	<pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: RE: [PATCH v1] net/ncsi: fix buffer overflow in getting version id
-Thread-Topic: [PATCH v1] net/ncsi: fix buffer overflow in getting version id
-Thread-Index: AQHbxXQ9unMxMxdDJEejGFz5av66RrPTZbkAgAxVnEA=
-Date: Fri, 23 May 2025 07:32:26 +0000
-Message-ID:
- <SEZPR04MB685354203C242413D1EBE96CB098A@SEZPR04MB6853.apcprd04.prod.outlook.com>
-References: <20250515083448.3511588-1-Jerry_C_Chen@wiwynn.com>
- <aCWuCPsm+G5EBOt/@home.paul.comp>
-In-Reply-To: <aCWuCPsm+G5EBOt/@home.paul.comp>
-Accept-Language: zh-TW, en-US
-Content-Language: zh-TW
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SEZPR04MB6853:EE_|KL1PR04MB7707:EE_
-x-ms-office365-filtering-correlation-id: 7d3a55ec-5dc5-4f1d-be42-08dd99cbf74f
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|1800799024|366016|376014|7416014|38070700018;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?WsHvE7ypwn/b6ggIMJz+zRQyr8QGinr/QGKKyDqb76zCvPbAeT3VSDrwdfQK?=
- =?us-ascii?Q?awFTsf630Vw2t5kdOJWmAdmljhQ0fbmiARCdLMHtO0AKw9LsooxgTnu9p6uw?=
- =?us-ascii?Q?h+/IYxBoao1SDRYRmJGyOEa7LW9wvWFJjsM+ixyCWPFKASWFj8LxDhnN3qsA?=
- =?us-ascii?Q?ecpWEIwUV4tbUy4+hkaU77BCB6SOr+Y/uAX4EZwsqZausLoI+930c9q1/yGx?=
- =?us-ascii?Q?7Rw4QWW/hB4KBYFFSkGaORQqRCeqAcjcrUZ/sgmQD/jw51tu+b4Q+y0dkCVs?=
- =?us-ascii?Q?8LvznE8EjcJVjPXpy+iPYcjYQcFX6t8+xytYCrlpe9cwl8u1Uv7tVU7XnTab?=
- =?us-ascii?Q?Oo1Tk46tTliqczKv8AeUyjxe4BMuSAuFgkSAl38Po0gsF7ZRr0+iRYvjTaPj?=
- =?us-ascii?Q?mH2o23+jAxvgPct5wIZJPJDWFm7E8FB5ZTDfg+04VXwGnP//1T5YmuWoXks2?=
- =?us-ascii?Q?6u/4iPWziJldCMRFAddyFIz7bEYL/AGCN4JGEJTbxpYfRGMHyGWXnC6qEMSS?=
- =?us-ascii?Q?EZN9T2QyHT383B8DUrcudOcHqjV2r2LwS7WpKtRIrqGaslET54kXWCQE5ED+?=
- =?us-ascii?Q?IJRFIygQepy/GPiOLo+IeL4Rpb2MV1o/6j/wid6ly8UJ3HilkDxG7bDKVMRW?=
- =?us-ascii?Q?2y3Vn364eLq5p6IlVoytJ9oeaBBv9JB/kV0FRMQ72m7GL3+9zM5lQOdnfG7U?=
- =?us-ascii?Q?IHFg8fH1kVIBV0FicmxIYFP1HddpE41l+WQCxVunnQjHRKOP5IZutN5AoU4j?=
- =?us-ascii?Q?xYvvm5aLcZILrq1hapTfqFMJOmKKIj6IDjd8swxOuDuMXp2dK8WzM7uCEqGM?=
- =?us-ascii?Q?ZGJGigjpVWc287L6Al338BUqWhHcpq9MM1F9+NB93bY+NG1nwkVXrBv44BBM?=
- =?us-ascii?Q?YccqI11nbMTpYf9XN9cvar91vpLqQLETIP6cqWlbv1QQ9nYCo1+Nm1kmoQqf?=
- =?us-ascii?Q?HbngHh7P8RlvRfPLJKgKxhjzlRYo9EwGc7ZHk2JZxDfcmhAXJl6PjTs87dr5?=
- =?us-ascii?Q?YtHiVmeL5rXU8d76rSQjqiamI3lTl9nw/Ac3eZp+LXBiImhRAGk/qqfTYt10?=
- =?us-ascii?Q?UQhZg5Hol8/w5ksIvO1e8u/mQhJpVny6gYnYC5hMmUiaXgdw/t6LMx8pmsIv?=
- =?us-ascii?Q?inj9Zyeyz0611oigjyZeqPKKLbcyQLRH7n7q68dtSjKdHMsQ0yqm9KH8HOr/?=
- =?us-ascii?Q?2VibqjXDWTsANwEkMXTF7VsTIE26Y/wnsjHPc66BAttofjZB184r7ORoN2IH?=
- =?us-ascii?Q?ZJ9bLjxttktaCPMAmnQrDCvZCSjpNE5WopcQDqHk/Fe6HANb8VV8tL3K7uXr?=
- =?us-ascii?Q?TPDuz43+cTkSMSPzaKHqgBsQ76hYwpyHBF6IHJ0YXBXnundFBuujPLWrlY5g?=
- =?us-ascii?Q?O+90WyyfwUkfkH3FPMgg2XbS1I/q+cQqacn2RFdTUTI+ESIf+Tl0WqjXM6dC?=
- =?us-ascii?Q?eJEADTBrEeo=3D?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SEZPR04MB6853.apcprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?Odlm37iOGyd6Px8MuTmyziMXTwRse1RGWbgjwIcqUEKLiXMFoIQMUST68uj7?=
- =?us-ascii?Q?5E0HpDD/Rs67+yj45CuJGSUlNYsYtl4EeJJV4F6jw+695RV07CUf6+OBN5MD?=
- =?us-ascii?Q?rlKJfBbYRqKOJ8pIU/rYBnN5fhhYQAhni56eCTb5XuXdFADnGw3fITFQcOTf?=
- =?us-ascii?Q?I7LAiqMIi3z0ye6ig+o2ZRpw0+3Cdby9eL4aa0EkAmcXzqJ23ModR/b6ijGG?=
- =?us-ascii?Q?9Ztg3pK9VgsYy+Ujre4R/bvB+lnClX4MMEIpMguvnpKrtNwAhRgj5hQOcuAG?=
- =?us-ascii?Q?q3blE1Dk8AhLfb32pkV67ZYEQOitPYhyhDEzrww+gwvXaPLCIPTFLH6JGCje?=
- =?us-ascii?Q?r24XcCeafU71t0gXByvC3ca9fbcniNL+JxlrX7RL0e9ck4J8be4BYC0VltoG?=
- =?us-ascii?Q?yDQuxnd9PCS5pGmvjsnio47PI6thCvE9GiakGJ4BWbIM0IuI3J51AZ4mdxEN?=
- =?us-ascii?Q?FUMRg+UDQSCCccOI9kulc1GLlsOJS+Y8XeWiMO9BB523Eg5ILrZo5GUg+X4B?=
- =?us-ascii?Q?wVnKScKIdrcDSirsI9F0heH21fKw6cmcwSG53pB5+X/XtHeMw+LnffprO1Op?=
- =?us-ascii?Q?mx/Vvbmyw/NA8gR5zO0gCMgJuJhQUTbq6Ak6Na5Slm8JP9dYCkCCozTwLUvM?=
- =?us-ascii?Q?vOK/HBbq1jaUSxmjzo1leDBoNePTs6ldP/rKi56dabgKsmbuVDFPKDjNY0PV?=
- =?us-ascii?Q?SaeuMRrGIcTXz6pymLYuB037wUBDS0Ht3SsKVASS5DlWPCE1/zM+FkgJ2eno?=
- =?us-ascii?Q?8zvlknDew9xNdfIhBD9FsoNzmUrw/slucmY3pw0xdi4gvh6rQm3zQ8Ogu5Im?=
- =?us-ascii?Q?S7GS+UBEpX1XkyZ24fuFlEJq/oAr6mbJtMXYR3v4XhuRUZvFYrB6fnFSLk6b?=
- =?us-ascii?Q?hwbgAqEN9m0f0P7stjbkfmu/RnKBkss0xuvbIgl5jRJ21zJp+m01D5eeXZSp?=
- =?us-ascii?Q?4SV+E5qLLplRJwTN3Hb+MjalRHLw+7y98KMiDfLjX3wvFFzzrzxT0a1KewW/?=
- =?us-ascii?Q?aMhvMvwNPajSyoJbjRocwQxLSKhyUaGOr86+b6kEBflZ5Ifn4Rxa1vLkCjtz?=
- =?us-ascii?Q?jiM13waOl1tyiWBTpFO5zbmfuIWjiF/lVfpV8xXhqWxHTus/dIxY2Ntisqyt?=
- =?us-ascii?Q?d0hs7qNqupy5yjZSarqBrwYkoIgSl2oP3rR3LZBdGgE50PWs30Clc4CVjNCM?=
- =?us-ascii?Q?OFC7FJA3VNEG2YJjLOz9oizZHw9DV44Q8la5o1P3BryIjRA+8NfhimDCDgSK?=
- =?us-ascii?Q?g0l7qoLms80cn+PvrLiZrFhszExJiEHtbJyLw5yZGE+HsQU8z6xpWY/bx8vS?=
- =?us-ascii?Q?UM3oFxyOysL87gJlXqT1Ob84oDlWVG4Kj/ydVO+6wT8HzzvlSMCsiV3MUR/g?=
- =?us-ascii?Q?AlY2OdYiJPAsvpU335TdooYy6vp3OmDEj4AZmfLmuMF8iLP4ZbCEkxKymluY?=
- =?us-ascii?Q?SCiyCMMF22maYJZa1ZnZ8V+jzgaWzgaxMFfGGD1y4mFv4MYMSWIr1dvpf/Tf?=
- =?us-ascii?Q?+/TyWZ6/7XYtRi/Z8uqGI7qUUNb8gUdHKnR8PmwdDn2HhjZRcczfbBtONp/U?=
- =?us-ascii?Q?3n9WRZbr9s5/J660E4HP7Xsj9MZDRTpPrzuERdp+?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="ol7Z2OOU"
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-ad53a96baf9so1150041066b.3
+        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 00:41:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tuxon.dev; s=google; t=1747986093; x=1748590893; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=wfbz3z2R9vaxFE03HpNykyLrdDEX10Q8GHXcIKDKwck=;
+        b=ol7Z2OOUZLPExex2rIjl+jTFspk/mz8C8n5P1Yt33CpoD5WDBWT7LodxS9gI52SHsK
+         XK8+m/9c+/dc7HC/EnXuCJCI8sfaZD2RaYerMHaowMvneJ6Vo/l1/x7xhSuqSMjXNRf7
+         RPTYtYFo5+PAoEPiEbC0871XsKaCY41iKT5kyhpp2tWWcgjF2hfyW+3UDEEiJaNI6mXq
+         BJf50ljKrjv8/V10kAxlyJYpajwydqBFLYKWZx01XiR7G6StqfqZ0x3z1s3mGlRsRMtO
+         sgRFfvMssKk2c+0+DdOCLRUldN00pLBPS3aUSpp7Nv2N0iwEGerUmhGo/LVtNlH9dHUK
+         in7A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747986093; x=1748590893;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=wfbz3z2R9vaxFE03HpNykyLrdDEX10Q8GHXcIKDKwck=;
+        b=iJbhWAppNFwQSbQIGNfsU6XWIQ7de5+K2JgSa073ZIs7MVvTWMwZvzfG1swyDL5RCo
+         ckKOiVqo6BXl0FIdey6mXlBmW47m0XERRWNx6tvpFwdFqzVG++IwRjdVUutc7iauIcga
+         rYWgmgbPcEdWxyPXOmIaFuIArBQgVfXwHARLw4nQ57HdlBLI7WctOGp9CxhB6lMNJrdA
+         zN4preBLaPpfzObzXDXhE9Sy81G+imkbxoVtzzfkFdxRPY8jvTng/owhhZ/QA7KlMHRO
+         xtZ032piEV0priAA8pZheqJdr/+3G/jmoVNQOaj9xS9alYG98dAY/XM9o9rt8mmY22YD
+         6vVA==
+X-Forwarded-Encrypted: i=1; AJvYcCXaoUSAsoKRSKKV77XhDcXlH4Cy1mXxys4lq+/eozBdLKBn1Vskw+kakQBzeQAeYbWKZLBDzkxI53Muuoc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyZX1QRi7dWWUlFRyZssXXSDnyPixbk1vklw7QA5PmLWlOamLFy
+	jYLYI83d22r8Nt5XJHF5VlT4oNufvLIoBL6V2DvlBXRug8fIZTzBYuz8BPC0zGwuLyg=
+X-Gm-Gg: ASbGnct8t+ah/kGR8Wg8h+MR5Y7QJ9U34Scaf+XEFY7jZGZFoA5gAoSSqVwA6Gjh81i
+	2IamAG2yBhx4AlqdcBwOX4o3oIcjQ/lcfuuaVvoLu4etekShjNXyZIcUKmqqV7JH4tVv/wsf+Rp
+	l17zqBAlJ3TzbqIn28KXn/MNnkNdtPEFrF49NisI6p2+qbMZCrT5dde8oNMJGAhpRW6U5HmVrLh
+	pIApph4/HeI0b8k9rX1Kep/A6ZQdZkkoSrH8JvlaHpHzg96ZndUuc/Z/TNgLaHtBlqGnqoWpG1Z
+	WrKZ15Snif/EmitKQjaiRhKK2qGTCk2QCy8F5GlISye1vqGeimlPJFwzhPY=
+X-Google-Smtp-Source: AGHT+IFLWxVxo5oDe1VEFrnubK+bRZuRiU3pZfFFv6DnQEzoLbPR9OdPPq4oz3A7rx+fGDSHaEubkA==
+X-Received: by 2002:a17:907:3f96:b0:ad4:f5ef:84ae with SMTP id a640c23a62f3a-ad52d5afb41mr2810680366b.54.1747986092365;
+        Fri, 23 May 2025 00:41:32 -0700 (PDT)
+Received: from [192.168.50.4] ([82.78.167.58])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad52d443a0fsm1201993066b.97.2025.05.23.00.41.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 23 May 2025 00:41:31 -0700 (PDT)
+Message-ID: <b0d15a62-e164-4a8a-b4c7-77d9c3b2e7b2@tuxon.dev>
+Date: Fri, 23 May 2025 10:41:30 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	/qc9J9JxnZV7IJw2v62S4+qYzv6ZE1vpVg2MCTkJ9SdxmkDWpBzwd0L6QffScgEGonlo7nq3Qi1ErJWSD56/P+IMp7pcWsWJXqRLdeCjUz2b/OtZFwoynHI59Dnc2C4YzO1zR0GyvQkFzAJEi/JOfgug2iJixuYhEO+kDEe84x55odvx753gpqwvKwVSm9cv5KNMmKdjIQgWBY1Xb41TppQg5M34vxhImhFu5RO79fK0C3aGrFrIZrCo3D62xf9w7Gsxkqch37pfV1MsyWGac0ArpQvdXOomeZF6Wx8OrCIdbds1+sKOxpHIiZqjadSc+9WtSAf2Sz1HNZJMftmcZ+jXQ3jp03cUj2zTJnOjdduE7ynKCOdeByYQEj91eJqDgucvDkurG5dla904oNq6X76fRxci1A4gdvgogBvwGMSHTfWDNDH4o3SW1NOEEBzOI9w86foAFqq9D7fmyI89Vi61sVOF5sQ20xTj0MkOpT8rqpHA9n+xtcgIfmAMwER3esmtFkZZ8tJzkWee3FFwEmyMThpRB6VLJMFRupcC/jbGjtKh4TyXOHDvLkQjWtME4iaaz6lEZr+eUC0GL3+hnvdMeOz1FNC3WBDLvoCJHJZMgSRxrClVJSQNZoX07Hpd
-X-OriginatorOrg: wiwynn.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SEZPR04MB6853.apcprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7d3a55ec-5dc5-4f1d-be42-08dd99cbf74f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 May 2025 07:32:26.2806
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: da6e0628-fc83-4caf-9dd2-73061cbab167
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: LUSnWE29f6fNuKRtMiNOEh9oAf7/4hH8zxrADzZMCknzwW1bphn5nKRo0epdvHoO8bpZGSBq+nY6wV+V4BuEug==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: KL1PR04MB7707
-X-Authority-Analysis: v=2.4 cv=DcUXqutW c=1 sm=1 tr=0 ts=6830248e cx=c_pps a=NoeV5uI3RRAbvH9fnRMG+A==:117 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
- a=dt9VzEwgFbYA:10 a=4AL28aEVfeMA:10 a=NEAV23lmAAAA:8 a=uherdBYGAAAA:8 a=VwQbUJbxAAAA:8 a=pGLkceISAAAA:8 a=cPYzWk29AAAA:8 a=2VGnaFk_AAAA:8 a=jT_9lS9cAAAA:8 a=J1Y8HTJGAAAA:8 a=1XWaLZrsAAAA:8 a=20KFwNOVAAAA:8 a=7NKhIj1OJCfFSAS0NJEA:9 a=CjuIK1q_8ugA:10
- a=oSR2DF9YFqZEN4IGatwP:22 a=xuWaqJMTYXf3QM4Ho2sr:22 a=Ec8Bv2-zM_L_lWdDgjzK:22 a=y1Q9-5lHfBjTkpIzbSAN:22
-X-Proofpoint-GUID: WffH5azKyrsuSdwEiBgUFxlRPKLWF7zN
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIzMDA2OCBTYWx0ZWRfX7u4Ppk8+M33B bMTxA5QrlGSslLKEETv1pe+oykaxEPT5EiZ4TWqt08JmFljW2bgES2ytSg2/71LSJ6zaOhSk8Ps S5xjTJ+fQ6n/+jvgOWRwf+CPzd4aY3IycMks7MUS+mTonhaGanufBn9oFbHdH70QZ31qXl7RJcU
- Xe+XEy3D1OB/jPDRLlDSc6m3Q6rM4kPhu73SdgbhowINcuFyg1jjpJweFI+BlY3pE6aVHh7w95z LIQWeAcCFGAjFNrHGxcC3dwIFwyg/XdNC/rF8HalOnHaWAng2VhUoV3h5qxz9Yy5+nY2Rjtipzd QnM4ehOtN3vERw8AN9ydOqB10ltVFMHuuFk9ElqiAA9KNCYowfnAX7yHA7pTpPAkjwOiV7/n3NP N0gSNT6v
-X-Proofpoint-ORIG-GUID: WffH5azKyrsuSdwEiBgUFxlRPKLWF7zN
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-23_02,2025-05-22_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- clxscore=1011 impostorscore=0 spamscore=0 adultscore=0 suspectscore=0
- phishscore=0 mlxlogscore=999 bulkscore=0 lowpriorityscore=0 mlxscore=0
- malwarescore=0 classifier=spam authscore=0 adjust=0 reason=mlx scancount=1
- engine=8.21.0-2505160000 definitions=main-2505230068
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 4/8] clk: renesas: rzg2l-cpg: Add support for MSTOP in
+ clock enable/disable API
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: mturquette@baylibre.com, sboyd@kernel.org, robh@kernel.org,
+ krzk+dt@kernel.org, conor+dt@kernel.org, magnus.damm@gmail.com,
+ linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+References: <20250514090415.4098534-1-claudiu.beznea.uj@bp.renesas.com>
+ <20250514090415.4098534-5-claudiu.beznea.uj@bp.renesas.com>
+ <CAMuHMdWNrU=XOZr3dKKXQikzCzJ1oUPGQofWFdRX9x6rhYn3XA@mail.gmail.com>
+From: Claudiu Beznea <claudiu.beznea@tuxon.dev>
+Content-Language: en-US
+In-Reply-To: <CAMuHMdWNrU=XOZr3dKKXQikzCzJ1oUPGQofWFdRX9x6rhYn3XA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Paul,
+Hi, Geert,
 
-Sorry for late replay, it takes some effort to change company policy of the=
- proprietary.
-For the questions:
-1. What upstream tree did you intend it for and why?
- - Linux mainline
-  We are developing openBMC with kernel-6.6.
-  For submitting patch to kernel-6.6 stable tree, it should exist in mainli=
-ne first.
-  Reference: https://github.com/openbmc/linux/commits/dev-6.6/
+On 22.05.2025 17:46, Geert Uytterhoeven wrote:
+> Hi Claudiu,
+> 
+> On Wed, 14 May 2025 at 11:04, Claudiu <claudiu.beznea@tuxon.dev> wrote:
+>> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+>>
+>> The RZ/{G2L, V2L, G3S} CPG versions support a feature called MSTOP. Each
+>> module has one or more MSTOP bits associated with it, and these bits need
+>> to be configured along with the module clocks. Setting the MSTOP bits
+>> switches the module between normal and standby states.
+>>
+>> Previously, MSTOP support was abstracted through power domains
+>> (struct generic_pm_domain::{power_on, power_off} APIs). With this
+>> abstraction, the order of setting the MSTOP and CLKON bits was as follows:
+>>
+>> Previous Order:
+>> A/ Switching to Normal State (e.g., during probe):
+>> 1/ Clear module MSTOP bit
+>> 2/ Set module CLKON bit
+>>
+>> B/ Switching to Standby State (e.g., during remove):
+>> 1/ Clear CLKON bit
+>> 2/ Set MSTOP bit
+>>
+>> However, in some cases (when the clock is disabled through devres), the
+>> order may have been (due to the issue described in link section):
+>>
+>> 1/ Set MSTOP bit
+>> 2/ Clear CLKON bit
+>>
+>> Recently, the hardware team has suggested that the correct order to set
+>> the MSTOP and CLKON bits is:
+>>
+>> Updated Order:
+>> A/ Switching to Normal State (e.g., during probe):
+>> 1/ Set CLKON bit
+>> 2/ Clear MSTOP bit
+>>
+>> B/ Switching to Standby State (e.g., during remove):
+>> 1/ Set MSTOP bit
+>> 2/ Clear CLKON bit
+>>
+>> To prevent future issues due to incorrect ordering, the MSTOP setup has
+>> now been implemented in rzg2l_mod_clock_endisable(), ensuring compliance
+>> with the sequence suggested in Figure 41.5: Module Standby Mode Procedure
+>> from the RZ/G3S HW manual, Rev1.10.
+>>
+>> Additionally, since multiple clocks of a single module may be mapped to a
+>> single MSTOP bit, MSTOP setup is reference-counted.
+>>
+>> Furthermore, as all modules start in the normal state after reset, if the
+>> module clocks are disabled, the module state is switched to standby. This
+>> prevents keeping the module in an invalid state, as recommended by the
+>> hardware team.
+>>
+>> Link: https://lore.kernel.org/all/20250215130849.227812-1-claudiu.beznea.uj@bp.renesas.com/
+>> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+>> ---
+>>
+>> Changes in v2:
+>> - udpated patch description to avoid plural in the configuration
+>>   sequence description b/w MSTOP and CLK_ON
+>> - use atomic type to store the usage counter; s/refcnt/usecnt/g
+>> - moved MSTOP_OFF(), MSTOP_MASK() macros to rzg2l-cpg.c
+>> - dropped struct mstp_clock::critical and use clk_hw_get_flags()
+>>   instead to get the clock flags
+>> - used unsigned int iterators in for loops
+>> - keep memory allocated for a single list for clocks sharing the
+>>   same MSTOP by updating the rzg2l_mod_clock_add_shared_mstop_clk();
+>> - s/rzg2l_cpg_mstop_show/rzg2l_mod_clock_mstop_show/g,
+>>   s/rzg2l_cpg_mstop/rzg2l_mod_clock_mstop/g,
+>>   s/rzg2l_cpg_update_shared_mstop_clocks/rzg2l_mod_clock_update_shared_mstop_clks/g
+>>    to keep the same naming conventions for functions handling mod clock MSTOP
+>> - use the newly added for_each_mstp_clk() macro all over the code
+> 
+> Thanks for the update!
+> 
+>> --- a/drivers/clk/renesas/rzg2l-cpg.c
+>> +++ b/drivers/clk/renesas/rzg2l-cpg.c
+> 
+>> @@ -1209,6 +1232,94 @@ struct mstp_clock {
+>>                 else if (((hw) = __clk_get_hw((priv)->clks[(priv)->num_core_clks + i])) && \
+>>                          ((mstp_clk) = to_mod_clock(hw)))
+>>
+>> +/* Need to be called with a lock held to avoid concurrent access to mstop->usecnt. */
+>> +static void rzg2l_mod_clock_module_set_state(struct mstp_clock *clock,
+>> +                                            bool standby)
+>> +{
+>> +       struct rzg2l_cpg_priv *priv = clock->priv;
+>> +       struct mstop *mstop = clock->mstop;
+>> +       bool update = false;
+>> +       u32 value;
+>> +
+>> +       if (!mstop)
+>> +               return;
+>> +
+>> +       value = MSTOP_MASK(mstop->conf) << 16;
+>> +
+>> +       if (standby) {
+>> +               unsigned int criticals = 0;
+>> +
+>> +               for (unsigned int i = 0; i < clock->num_shared_mstop_clks; i++) {
+>> +                       struct mstp_clock *clk = clock->shared_mstop_clks[i];
+>> +
+>> +                       if (clk_hw_get_flags(&clk->hw) & CLK_IS_CRITICAL)
+>> +                               criticals++;
+>> +               }
+>> +
+>> +               /*
+>> +                * If this is a shared MSTOP and it is shared with critical clocks,
+>> +                * and the system boots up with this clock enabled but no driver
+>> +                * uses it the CCF will disable it (as it is unused). As we don't
+>> +                * increment reference counter for it at registration (to avoid
+>> +                * messing with clocks enabled at probe but later used by drivers)
+>> +                * do not set the MSTOP here too if it is shared with critical
+>> +                * clocks and ref counted only by those critical clocks.
+>> +                */
+>> +               if (criticals && criticals == atomic_read(&mstop->usecnt))
+>> +                       return;
+>> +
+>> +               value |= MSTOP_MASK(mstop->conf);
+>> +
+>> +               /* Allow updates on probe when usecnt = 0. */
+>> +               if (!atomic_read(&mstop->usecnt))
+>> +                       update = true;
+>> +               else
+>> +                       update = atomic_dec_and_test(&mstop->usecnt);
+>> +       } else {
+>> +               atomic_inc(&mstop->usecnt);
+>> +               update = true;
+> 
+> Shouldn't the update be conditional, i.e.:
+> 
+>     if (!atomic_read(&mstop->usecnt))
+>             update = true;
+>     atomic_inc(&mstop->usecnt);
+> 
+> ?
 
-2. Have you seen such cards in the wild? It wouldn't harm mentioning
-specific examples in the commit message to probably help people
-searching for problems specific to them later. You can also consider
-adding Fixes: and Cc: stable tags if this bugfix solves a real issue
-and should be backported to stable kernels.
- - This NIC is developed by META terminus team and the problematic string i=
-s:
- The channel Version Str : 24.12.08-000
- I will update it to commit message later.
+Indeed, it should be conditional as you suggested.
 
-> -----Original Message-----
-> From: Paul Fertser <fercerpav@gmail.com>
-> Sent: Thursday, May 15, 2025 5:04 PM
-> To: Jerry C Chen/WYHQ/Wiwynn <Jerry_C_Chen@wiwynn.com>
-> Cc: patrick@stwcx.xyz; Samuel Mendoza-Jonas <sam@mendozajonas.com>;
-> David S. Miller <davem@davemloft.net>; Eric Dumazet
-> <edumazet@google.com>; Jakub Kicinski <kuba@kernel.org>; Paolo Abeni
-> <pabeni@redhat.com>; Simon Horman <horms@kernel.org>;
-> netdev@vger.kernel.org; linux-kernel@vger.kernel.org
-> Subject: Re: [PATCH v1] net/ncsi: fix buffer overflow in getting version =
-id
->=20
->  [External Sender]
->=20
-> Hello Jerry,
->=20
-> This looks like an updated version of your previous patch[0] but you have
-> forgotten to increase the number in the Subject. You have also forgotten =
-to
-> reply and take into account /some/ of the points I raised in the review.
->=20
-> On Thu, May 15, 2025 at 04:34:47PM +0800, Jerry C Chen wrote:
-> > In NC-SI spec v1.2 section 8.4.44.2, the firmware name doesn't need to
-> > be null terminated while its size occupies the full size of the field.
-> > Fix the buffer overflow issue by adding one additional byte for null
-> > terminator.
-> ...
->=20
-> Please give an answer to every comment I made for your previous patch
-> version and either make a corresponding change or explain why exactly you
-> disagree.
->=20
-> Also please stop sending any and all "proprietary or confidential informa=
-tion".
->=20
-> [0]
-> https://urldefense.com/v3/__https://patchwork.kernel.org/project/netdevbp=
-f/p
-> atch/20250227055044.3878374-1-Jerry_C_Chen@wiwynn.com/__;!!ObgLwW8
-> oGsQ!nQ0Zkq6AxOKAJHbUUrTRnNI8fJNt7itufBwUXkkZU1-yfFo3h6Vm55K_mqr
-> 5Ur5kw9wE9cMVgIdoGCL3u2DhhqA$
+> 
+>> +       }
+>> +
+>> +       if (update)
+>> +               writel(value, priv->base + MSTOP_OFF(mstop->conf));
+>> +}
+> 
+>> +static int rzg2l_mod_clock_update_shared_mstop_clks(struct rzg2l_cpg_priv *priv,
+>> +                                                   struct mstp_clock *clock)
+>> +{
+>> +       struct mstp_clock *clk;
+>> +       struct clk_hw *hw;
+>> +
+>> +       if (!clock->mstop)
+>> +               return 0;
+>> +
+>> +       for_each_mstp_clk(clk, hw, priv) {
+>> +               struct mstp_clock **new_clks;
+>> +               int num_shared_mstop_clks;
+>> +               bool found = false;
+>> +
+>> +               if (clk->mstop != clock->mstop)
+>> +                       continue;
+>> +
+>> +               num_shared_mstop_clks = clk->num_shared_mstop_clks;
+>> +               for (unsigned int i = 0; i < num_shared_mstop_clks; i++) {
+>> +                       if (clk->shared_mstop_clks[i] == clock) {
+>> +                               found = true;
+>> +                               break;
+>> +                       }
+>> +               }
+>> +               if (found)
+>> +                       continue;
+> 
+> Can this happen? With your current code, the answer is yes.
+> But I think this loop and check can be removed...
+> 
+>> +
+>> +               if (!num_shared_mstop_clks)
+>> +                       new_clks = devm_kmalloc_array(priv->dev, 2, sizeof(*new_clks), GFP_KERNEL);
+>> +               else
+>> +                       new_clks = devm_krealloc(priv->dev, clk->shared_mstop_clks,
+>> +                                                (num_shared_mstop_clks + 1) * sizeof(*new_clks),
+>> +                                                GFP_KERNEL);
+>> +
+>> +               if (!new_clks)
+>> +                       return -ENOMEM;
+>> +
+>> +               if (!num_shared_mstop_clks)
+>> +                       new_clks[num_shared_mstop_clks++] = clk;
+>> +               if (clk != clock)
+> 
+> This check is always true
+
+If I'm not wrong now, when adding the clock to it's own list, and the list
+is empty (!num_shared_mstop_clks check above is true), if this condition is
+missing the clock it will be added twice in its own list.
+
+> 
+>> +                       new_clks[num_shared_mstop_clks++] = clock;
+>> +
+>> +               for (unsigned int i = 0; i < num_shared_mstop_clks; i++) {
+>> +                       new_clks[i]->shared_mstop_clks = new_clks;
+>> +                       new_clks[i]->num_shared_mstop_clks = num_shared_mstop_clks;
+>> +               }
+> 
+> ... by adding a "break" here.  The loop above has already updated the
+> shared_mstop_clks[] arrays for all clocks sharing the same mstop value.
+
+It may happen that the entries in the module clock array provided by the
+SoC specific drivers to not be sorted by module clock ID. That's the case
+with RZ/G2L IA55 clocks (from r9a07g044-cpg.c):
+
+static const struct {
+	struct rzg2l_mod_clk common[79];
+#ifdef CONFIG_CLK_R9A07G054
+	struct rzg2l_mod_clk drp[5];
+#endif
+} mod_clks = {
+  .common = {
+    // ...
+
+    DEF_MOD("ia55_pclk", R9A07G044_IA55_PCLK, R9A07G044_CLK_P2,
+			 0x518, 0, MSTOP(BUS_PERI_CPU, BIT(13))),
+    DEF_MOD("ia55_clk",	R9A07G044_IA55_CLK, R9A07G044_CLK_P1,
+                         0x518, 1, MSTOP(BUS_PERI_CPU, BIT(13))),
+
+    // ...
+};
+
+Where IDs are defined as:
+
+#define R9A07G044_IA55_CLK     8
+#define R9A07G044_IA55_PCLK    9
+
+These clocks share the same MSTOP bit.
+
+Because the ia55_pclk is the 1st clock registered (index 9) it will be
+added to priv->clks[base + 9].
+
+Next registered clock will be for ia55_clk, with index 8, it will be added
+to priv->clks[base + 8].
+
+for_each_mstp_clk() loops on clocks from priv->clks[] array. If a break
+will be done at the end of the for_each_mstp_clk() loop, at the end of the
+registration each of these clocks will have on it's shared_mstop_clks[]
+only references to itself.
+
+Thank you for your review,
+Claudiu
+
+> 
+>> +       }
+>> +
+>> +       return 0;
+>> +}
+> 
+> The rest LGTM.
+> 
+> Gr{oetje,eeting}s,
+> 
+>                         Geert
+> 
+> 
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+> 
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
+
