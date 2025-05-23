@@ -1,353 +1,296 @@
-Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com [209.85.222.45])
+Received: from mail-io1-f43.google.com (mail-io1-f43.google.com [209.85.166.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A39B220B7F4
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 02:30:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75D232DCBE7;
+	Fri, 23 May 2025 02:31:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747967408; cv=none; b=YHxCbcHt3+YnxpUvzjTosdOTBYG48sDO9oYcq3Jc07Xsmz5x5YrUZOzTk6E/mNmz7EZFocwMQKUCic2gOfWQhoG4SIrZMjFzPiX+iMCAL87tVjSkJci1Ys2Tfq5i/xCjxruLCp4vEiz2QtE23RKy/HNw28KBbopFRVQuLlKs+Wk=
+	t=1747967503; cv=none; b=WiUbwJBs0wBc8FoeLntESx/hv/1wzsZzn2TyO6hhXYjasm5xb2wqf6J9nm7OnoWq0kSW/ROC042hQha0vuLEkzJ6ffVo+DylTHa32LY4fNkkO8v0JOGxOlVhAOJzH/2K14jAL8LNgPYOdHa0N1OWSIr805W32dXz1QvzyC1ii0Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747967408; c=relaxed/simple;
-	bh=+H0N+2dpieRTqtEldskyi6xJTI4EBHnJKJWGHiI+RYU=;
+	s=arc-20240116; t=1747967503; c=relaxed/simple;
+	bh=9XFXmzgUB9cpxpVLkTmsmFEI6oIghNlCBWAFtcvFzWk=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JsuXK2bRf1SKJmUx4rndMnXTNOdTllTRjrpdYXuSqH/c6gytVgG175HXE3rV6NIi4HxEt+P3Ev+nm9zXgrG7fSqPyC4N6XwzxLbCfkZ4YORIvqp17c5LjM6c0d1muXqZczWJgOUp7q0o5WhoOpS5XLlpOelH1JgQtfc2tWHpOhI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FJg8rgMj; arc=none smtp.client-ip=209.85.222.45
+	 To:Cc:Content-Type; b=SOtGf5NbY46VbC3nlqs/qVQr+7PrGs70tlO7j4KkHtucfCBOacliVrRDcsywGnkzQ2JxCA5gH1L/f9RSQ/l4vsuGy6AoKQZw5U1P0c1MObqdMJoSgFi0YHquXmp/93POxMHd8SIFZl+FNs56MBxT4bprzOVVrkSGASxCGOxl9B4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JTvqlR0y; arc=none smtp.client-ip=209.85.166.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FJg8rgMj"
-Received: by mail-ua1-f45.google.com with SMTP id a1e0cc1a2514c-87bfa88c10eso1410336241.1
-        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 19:30:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JTvqlR0y"
+Received: by mail-io1-f43.google.com with SMTP id ca18e2360f4ac-85e46f5c50fso749668639f.3;
+        Thu, 22 May 2025 19:31:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747967405; x=1748572205; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1747967500; x=1748572300; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=6GhPFFEZ/yaEnJzF50m9SSS7QeXDm9lwGqgrysWtB0w=;
-        b=FJg8rgMjZSLLiGlwvBHpqmjcpetMNamwl1qE4f/qOzYBxrwUKvCWzh7GqHE4DpieUH
-         yrERlDnuNzI7ei1ZVP9J1hc1dvl0ZMhJmKM6eT2czGprLouBMGh3dXoahhk8+D1Zwlh3
-         R6UHrMSJH54f/iKInJTQNZS2w8BVyptKeUZauY9A30bw0ctoT9vYpOZlRAbVI+39I3X8
-         B8ZsJCOgD6t8Ukjv+iuac6utWVe5w0LS4cJI1le+/xeFKUssRq8ekoqtFL9ziYjbwalq
-         vJctf0vPzcQzVrW5r5n0UPnSNHux0p8euDUsXKSmwfbradypx7RDHCeA4ENtg0p54tiL
-         W5oA==
+        bh=v50Axd90kyfqH9mwJmj3TPd2cL5HaAzM6IzM1l9YKSU=;
+        b=JTvqlR0y9NkkDrSdYBJjFf5Sjo/sTFjCsBoe3uKMK1xVl7a8zBFalxoPQSQ99Ln53d
+         00C3FVHzVfGN0npuasWV1/Smc1M+eatk1FDthXmbsav5Z6qHc1x5+rQjB25/PSOrj07Q
+         yoIuKEFPN1T1qBClokAv5a7BTBZ9351C2h4R2vh9zbAgDVGuemR5gXXbIhX0bcf33zgx
+         G6503K1hqC+pwS3efQ7ay/yCg4xMkFxZlxl39wrJsxK/Lyo8kyS8k5gYAC1KOX+EHFQq
+         SdzkG/CRAUqcYWHoiUOFLkt97iIW8FUFi1F+zDoDCX7BmDfHsK2m93v+EuliDpHYf8GI
+         nung==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747967405; x=1748572205;
+        d=1e100.net; s=20230601; t=1747967500; x=1748572300;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=6GhPFFEZ/yaEnJzF50m9SSS7QeXDm9lwGqgrysWtB0w=;
-        b=Vw3sRQaHkBfbTC/U/r/PVI4lZo2fu9hVjxvYXtRR7imZ/RapOakqNivQ5oRIsB/Gsl
-         5ctSJ3xhqCYaO1Bw7QBP/cFkOeI/jRELHqEIAd6V4aU/ks2NxfpLzBfxYb29vtEOsaEl
-         +nmcPT27ysOQYuh7FJQ2HeccJ1r4UWsnK2na7kGkRGDZMLGnrMobIxhl7VYzmU/2iZRF
-         pt2liRmCGW0AFSUZaBPOHcI4GTFNmpGdHC+GYfr9y43b2YbORQ7Bd5+Dhf5+HZQ+7yNh
-         XslbAST1g0gN8xIZorx/UE0byabF6SuYMTt6h30L9G/AGHLFu7P+tZXggDWuA2GguwR7
-         /zXg==
-X-Forwarded-Encrypted: i=1; AJvYcCVtnB/FBhKCHzzoQQYCfhC+689Z292J4rL5Ih4KBaJy76Lmg/4k7j7D0JspTiyUwQUhyXhJt+EH9ssTNHw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwuvuF/i4tMKBG84Gr5AIZQpIYPh0y0+GGniDytLWQ7uBSymkGU
-	fo38qjvPHqIWd3aXPLcEFRmyY2gQnphqJg+0fGmShsuLELGafuLL/vinMMQOcw9JLyUALf7gATm
-	AoqO4JbIleTOMOA8AxjyhHJEsxPbYWmw=
-X-Gm-Gg: ASbGncu02jloN3Is/2o98fvnN5AQcondl3fwfok1v/A+J3rmN+FH4nB+kFZuNbBHopI
-	TTNfeOLfWpnTas0H7k/IJPFRb3emc1v1uT+3og5a2L6o5GQgbW9zBaeshssAHG8+X16nlufkJ5i
-	HalrmQrgPzQnX65rdZIh4JNEwxcYenKnEtQMEAr9GmWx5N
-X-Google-Smtp-Source: AGHT+IEq9gPg7TBQT68PBI1eRbqBOw3tolqXf12NdOLUbkQetSZohc5pynUajZiWXRwI9Qo3SZ74bG5Z/HkZJDs037A=
-X-Received: by 2002:a05:6102:a4a:b0:4da:70a8:73cf with SMTP id
- ada2fe7eead31-4e2f1a4be63mr1059238137.20.1747967405284; Thu, 22 May 2025
- 19:30:05 -0700 (PDT)
+        bh=v50Axd90kyfqH9mwJmj3TPd2cL5HaAzM6IzM1l9YKSU=;
+        b=o4stKvZ1kCGqQxTYrBI6Gjgm2icm8gTUWs+P/dE0m7/+05Hkzscb9gmxcSPJoOtSlY
+         +dpvIgmjNcjsBaMJVeobTrMtZz+RwjOVWoogTiqMNuCkDHwEC6+a8W5FbO2lukjmf2DK
+         ThW7c8Rcz4GhKTYH39YqDtkGXdOYHOzx3o2sC8mKNsLmkEKCoO22LN3Wx0k1581G6+xW
+         BElxs7/82PwNx7+psvde7grKSzQ9LfpT5blPAO2MW2kGwPZvPUqu1ZRz2f1zzKfRWx1z
+         OLOo0TXiWPaUbMe/0OzOP3THUw6OCazfmE+1p21vv0d4mNFIKx5gp8D4RD51rxLUWTm/
+         +gDw==
+X-Forwarded-Encrypted: i=1; AJvYcCWJ8E4PmKvEwbFZnfPtqbZ2xBESLBfxRp9Y3aRPXmiEEgvA0O36Kws7YxCnj3n5TZXScXIzsOdjk0rUGqwL@vger.kernel.org, AJvYcCWRh6qNj8DeE1XyhWs4kxzk2QGeDAMwufnLimOkepKngLLzSTzT9pqTPyXHWC85Opi3YaO0VBuINQaKRgSo@vger.kernel.org
+X-Gm-Message-State: AOJu0YxyODb6mlVVxYU2H1Zvepw1i+7BVD1iAyVQ/o7H/bAS4h8b9ecJ
+	v9viMs0m8qVkPEWLhLgUsuGvuY0deKb+2qyXA5vcG6V89Z5qyUi0MhX7fgJBnoHHxprwajMcNkF
+	zTzfdb/iAUSCen1pFSbbeSnbqIxBS+Io=
+X-Gm-Gg: ASbGncvrTZETcM923sjUnYj+i+mdbgcpiQQm3MQT/qjKrkyjSmRNv943m/sXXceN1cv
+	yibgdewakIqZrhwYzMAKvY+bp9T/hCntlYmdCJD768PospXE1BFKyLMbnjIWHwvgXCdGbFoJUBC
+	ys+rvydsCLVWwCXEoFs6JA/5Ek6w4KSexQyX8JKHOdd6nUoOGjOfC+AnmktbDGFrCv
+X-Google-Smtp-Source: AGHT+IEaJK0kE9SEAYYnpJd6uzCGrAqsmkLSUrMUnq8m5hUhwbfMok+9DiOmcNxk+puC6/eGlHTtg9rkqjOTtXuzEd4=
+X-Received: by 2002:a05:6602:6a87:b0:86a:24fe:c51f with SMTP id
+ ca18e2360f4ac-86caf092e03mr197060839f.7.1747967500384; Thu, 22 May 2025
+ 19:31:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250514201729.48420-6-ryncsn@gmail.com> <20250519043847.1806-1-21cnbao@gmail.com>
- <CAMgjq7BpfueOn9ms8apRX-6dF8rZGtbC=MuZzSD7hbZxtw=Kdg@mail.gmail.com>
- <CAGsJ_4wC5_YSMLNoY5q4hUsZTpD+YPHSBtzCAdWRFH65EJA_iw@mail.gmail.com>
- <CAMgjq7AO__8TFE8ibwQswWmmf4tTGg2NBEJp0aEn32vN+Dy8uw@mail.gmail.com>
- <CAGsJ_4z1cJfOCcpZDt4EuHK7+SON1r0ptRJNv1h=cDv+eOcdSQ@mail.gmail.com> <CAMgjq7CJ4_9bB=46TVzByFRuOwxNs4da=sN==x8cc++YsV+ETQ@mail.gmail.com>
-In-Reply-To: <CAMgjq7CJ4_9bB=46TVzByFRuOwxNs4da=sN==x8cc++YsV+ETQ@mail.gmail.com>
-From: Barry Song <21cnbao@gmail.com>
-Date: Fri, 23 May 2025 14:29:54 +1200
-X-Gm-Features: AX0GCFuYydVoYFYrBEc_fPYS_t8o99TqaZBkws0AaEyYaycI10vhz4vMxTOmyy8
-Message-ID: <CAGsJ_4wo6u1WSXdzj8RUUDNdk5_YCfLV_mcJtvhiv2UonXw+nw@mail.gmail.com>
-Subject: Re: [PATCH 05/28] mm, swap: sanitize swap cache lookup convention
-To: Kairui Song <ryncsn@gmail.com>
-Cc: akpm@linux-foundation.org, Baolin Wang <baolin.wang@linux.alibaba.com>, 
-	Baoquan He <bhe@redhat.com>, Chris Li <chrisl@kernel.org>, David Hildenbrand <david@redhat.com>, 
-	Johannes Weiner <hannes@cmpxchg.org>, Hugh Dickins <hughd@google.com>, 
-	Kalesh Singh <kaleshsingh@google.com>, LKML <linux-kernel@vger.kernel.org>, 
-	linux-mm <linux-mm@kvack.org>, Nhat Pham <nphamcs@gmail.com>, 
-	Ryan Roberts <ryan.roberts@arm.com>, Kemeng Shi <shikemeng@huaweicloud.com>, 
-	Tim Chen <tim.c.chen@linux.intel.com>, Matthew Wilcox <willy@infradead.org>, 
-	"Huang, Ying" <ying.huang@linux.alibaba.com>, Yosry Ahmed <yosryahmed@google.com>
+References: <aCYkk4Y7feltfp79@pollux> <CAF6AEGsoG_W3A3+BHV4n5EKZQazFubrCyfrtxVUH7+H4-j7i5A@mail.gmail.com>
+ <aCY42rgJC4sQ4tp4@pollux> <CAF6AEGubHkdhfJz=bAZvctO1aTKDLwRsRyPzkoVrQ7tA6dRbKw@mail.gmail.com>
+ <aCwqAGLLCC2ZLSBK@pollux> <CAF6AEGspvuTHU0t9z__p_HkdRNi=cXir3t453AbR6DFNzDpgvw@mail.gmail.com>
+ <aCyzyAPbQ1SYbo4q@pollux> <CAF6AEGs+WmTO_624A3Pek-1-SD6B4PFu4sDv3htko0ABhfHFzw@mail.gmail.com>
+ <aC8Dzgufa9E2MD6t@pollux> <CAF6AEGvkrN8H1ZPzrCQF+d_Y_Y5kRdeQjohDqcgpNd-uDKo9yQ@mail.gmail.com>
+ <aC9Iih1KN6xb9LrK@cassiopeiae>
+In-Reply-To: <aC9Iih1KN6xb9LrK@cassiopeiae>
+From: Rob Clark <robdclark@gmail.com>
+Date: Thu, 22 May 2025 19:31:28 -0700
+X-Gm-Features: AX0GCFun40Rc8pO0Ej4MXUSPpbpJxcZFCAbQh8QNhOuG0dSQLURQ6RgXeZ6gFMg
+Message-ID: <CAF6AEGvp6BCN14_n+Ot5KQrPbnDprKXcHT0s0ZLC2-JDV7D3TQ@mail.gmail.com>
+Subject: Re: [PATCH v4 04/40] drm/sched: Add enqueue credit limit
+To: Danilo Krummrich <dakr@kernel.org>
+Cc: Connor Abbott <cwabbott0@gmail.com>, Rob Clark <robdclark@chromium.org>, phasta@kernel.org, 
+	dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, 
+	linux-arm-msm@vger.kernel.org, Matthew Brost <matthew.brost@intel.com>, 
+	=?UTF-8?Q?Christian_K=C3=B6nig?= <ckoenig.leichtzumerken@gmail.com>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	open list <linux-kernel@vger.kernel.org>, 
+	Boris Brezillon <boris.brezillon@collabora.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, May 21, 2025 at 2:45=E2=80=AFPM Kairui Song <ryncsn@gmail.com> wrot=
-e:
->
-> Barry Song <21cnbao@gmail.com> =E4=BA=8E 2025=E5=B9=B45=E6=9C=8821=E6=97=
-=A5=E5=91=A8=E4=B8=89 06:33=E5=86=99=E9=81=93=EF=BC=9A
-> >
-> > On Wed, May 21, 2025 at 7:10=E2=80=AFAM Kairui Song <ryncsn@gmail.com> =
+On Thu, May 22, 2025 at 8:53=E2=80=AFAM Danilo Krummrich <dakr@kernel.org> =
 wrote:
-> > >
-> > > On Tue, May 20, 2025 at 12:41=E2=80=AFPM Barry Song <21cnbao@gmail.co=
-m> wrote:
-> > > >
-> > > > On Tue, May 20, 2025 at 3:31=E2=80=AFPM Kairui Song <ryncsn@gmail.c=
-om> wrote:
-> > > > >
-> > > > > On Mon, May 19, 2025 at 12:38=E2=80=AFPM Barry Song <21cnbao@gmai=
-l.com> wrote:
-> > > > > >
-> > > > > > > From: Kairui Song <kasong@tencent.com>
-> > > > > >
-> > > > > > > diff --git a/mm/userfaultfd.c b/mm/userfaultfd.c
-> > > > > > > index e5a0db7f3331..5b4f01aecf35 100644
-> > > > > > > --- a/mm/userfaultfd.c
-> > > > > > > +++ b/mm/userfaultfd.c
-> > > > > > > @@ -1409,6 +1409,10 @@ static int move_pages_pte(struct mm_st=
-ruct *mm, pmd_t *dst_pmd, pmd_t *src_pmd,
-> > > > > > >                               goto retry;
-> > > > > > >                       }
-> > > > > > >               }
-> > > > > > > +             if (!folio_swap_contains(src_folio, entry)) {
-> > > > > > > +                     err =3D -EBUSY;
-> > > > > > > +                     goto out;
-> > > > > > > +             }
-> > > > > >
-> > > > > > It seems we don't need this. In move_swap_pte(), we have been c=
-hecking pte pages
-> > > > > > are stable:
-> > > > > >
-> > > > > >         if (!is_pte_pages_stable(dst_pte, src_pte, orig_dst_pte=
-, orig_src_pte,
-> > > > > >                                  dst_pmd, dst_pmdval)) {
-> > > > > >                 double_pt_unlock(dst_ptl, src_ptl);
-> > > > > >                 return -EAGAIN;
-> > > > > >         }
-> > > > >
-> > > > > The tricky part is when swap_cache_get_folio returns the folio, b=
-oth
-> > > > > folio and ptes are unlocked. So is it possible that someone else
-> > > > > swapped in the entries, then swapped them out again using the sam=
-e
-> > > > > entries?
-> > > > >
-> > > > > The folio will be different here but PTEs are still the same valu=
-e to
-> > > > > they will pass the is_pte_pages_stable check, we previously saw
-> > > > > similar races with anon fault or shmem. I think more strict check=
-ing
-> > > > > won't hurt here.
-> > > >
-> > > > This doesn't seem to be the same case as the one you fixed in
-> > > > do_swap_page(). Here, we're hitting the swap cache, whereas in that
-> > > > case, there was no one hitting the swap cache, and you used
-> > > > swap_prepare() to set up the cache to fix the issue.
-> > > >
-> > > > By the way, if we're not hitting the swap cache, src_folio will be
-> > > > NULL. Also, it seems that folio_swap_contains(src_folio, entry) doe=
-s
-> > > > not guard against that case either.
-> > >
-> > > Ah, that's true, it should be moved inside the if (folio) {...} block
-> > > above. Thanks for catching this!
-> > >
-> > > > But I suspect we won't have a problem, since we're not swapping in =
-=E2=80=94
-> > > > we didn't read any stale data, right? Swap-in will only occur after=
- we
-> > > > move the PTEs.
-> > >
-> > > My concern is that a parallel swapin / swapout could result in the
-> > > folio to be a completely irrelevant or invalid folio.
-> > >
-> > > It's not about the dst, but in the move src side, something like:
-> > >
-> > > CPU1                             CPU2
-> > > move_pages_pte
-> > >   folio =3D swap_cache_get_folio(...)
-> > >     | Got folio A here
-> > >   move_swap_pte
-> > >                                  <swapin src_pte, using folio A>
-> > >                                  <swapout src_pte, put folio A>
-> > >                                    | Now folio A is no longer valid.
-> > >                                    | It's very unlikely but here SWAP
-> > >                                    | could reuse the same entry as ab=
-ove.
-> >
-> >
-> > swap_cache_get_folio() does increment the folio's refcount, but it seem=
-s this
-> > doesn't prevent do_swap_page() from freeing the swap entry after swappi=
-ng
-> > in src_pte with folio A, if it's a read fault.
-> > for write fault, folio_ref_count(folio) =3D=3D (1 + folio_nr_pages(foli=
-o))
-> > will be false:
-> >
-> > static inline bool should_try_to_free_swap(struct folio *folio,
-> >                                            struct vm_area_struct *vma,
-> >                                            unsigned int fault_flags)
-> > {
-> >        ...
-> >
-> >         /*
-> >          * If we want to map a page that's in the swapcache writable, w=
-e
-> >          * have to detect via the refcount if we're really the exclusiv=
-e
-> >          * user. Try freeing the swapcache to get rid of the swapcache
-> >          * reference only in case it's likely that we'll be the exlusiv=
-e user.
-> >          */
-> >         return (fault_flags & FAULT_FLAG_WRITE) && !folio_test_ksm(foli=
-o) &&
-> >                 folio_ref_count(folio) =3D=3D (1 + folio_nr_pages(folio=
-));
-> > }
-> >
-> > and for swapout, __removing_mapping does check refcount as well:
-> >
-> > static int __remove_mapping(struct address_space *mapping, struct folio=
- *folio,
-> >                             bool reclaimed, struct mem_cgroup *target_m=
-emcg)
-> > {
-> >         refcount =3D 1 + folio_nr_pages(folio);
-> >         if (!folio_ref_freeze(folio, refcount))
-> >                 goto cannot_free;
-> >
-> > }
-> >
-> > However, since __remove_mapping() occurs after pageout(), it seems
-> > this also doesn't prevent swapout from allocating a new swap entry to
-> > fill src_pte.
-> >
-> > It seems your concern is valid=E2=80=94unless I'm missing something.
-> > Do you have a reproducer? If so, this will likely need a separate fix
-> > patch rather than being hidden in this patchset.
 >
-> Thanks for the analysis. I don't have a reproducer yet, I did some
-> local experiments and that seems possible, but the race window is so
-> tiny and it's very difficult to make the swap entry reuse to collide
-> with that, I'll try more but in theory this seems possible, or at
-> least looks very fragile.
->
-> And yeah, let's patch the kernel first if that's a real issue.
->
-> >
-> > >     double_pt_lock
-> > >     is_pte_pages_stable
-> > >       | Passed because of entry reuse.
-> > >     folio_move_anon_rmap(...)
-> > >       | Moved invalid folio A.
-> > >
-> > > And could it be possible that the swap_cache_get_folio returns NULL
-> > > here, but later right before the double_pt_lock, a folio is added to
-> > > swap cache? Maybe we better check the swap cache after clear and
-> > > releasing dst lock, but before releasing src lock?
-> >
-> > It seems you're suggesting that a parallel swap-in allocates and adds
-> > a folio to the swap cache, but the PTE has not yet been updated from
-> > a swap entry to a present mapping?
-> >
-> > As long as do_swap_page() adds the folio to the swap cache
-> > before updating the PTE to present, this scenario seems possible.
->
-> Yes, that's two kinds of problems here. I suspected there could be an
-> ABA problem while working on the series, but wasn't certain. And just
-> realised there could be another missed cache read here thanks to your
-> review and discussion :)
->
-> >
-> > It seems we need to double-check:
-> >
-> > diff --git a/mm/userfaultfd.c b/mm/userfaultfd.c
-> > index bc473ad21202..976053bd2bf1 100644
-> > --- a/mm/userfaultfd.c
-> > +++ b/mm/userfaultfd.c
-> > @@ -1102,8 +1102,14 @@ static int move_swap_pte(struct mm_struct *mm,
-> > struct vm_area_struct *dst_vma,
-> >         if (src_folio) {
-> >                 folio_move_anon_rmap(src_folio, dst_vma);
-> >                 src_folio->index =3D linear_page_index(dst_vma, dst_add=
-r);
-> > +       } else {
-> > +               struct folio *folio =3D
-> > filemap_get_folio(swap_address_space(entry),
-> > +                                       swap_cache_index(entry));
-> > +               if (!IS_ERR_OR_NULL(folio)) {
-> > +                       double_pt_unlock(dst_ptl, src_ptl);
-> > +                       return -EAGAIN;
-> > +               }
-> >         }
-> > -
-> >         orig_src_pte =3D ptep_get_and_clear(mm, src_addr, src_pte);
-> >  #ifdef CONFIG_MEM_SOFT_DIRTY
-> >         orig_src_pte =3D pte_swp_mksoft_dirty(orig_src_pte);
->
-> Maybe it has to get even dirtier here to call swapcache_prepare too to
-> cover the SYNC_IO case?
->
-> >
-> > Let me run test case [1] to check whether this ever happens. I guess I =
-need to
-> > hack kernel a bit to always add folio to swapcache even for SYNC IO.
->
-> That will cause quite a performance regression I think. Good thing is,
-> that's exactly the problem this series is solving by dropping the SYNC
-> IO swapin path and never bypassing the swap cache, while improving the
-> performance, eliminating things like this. One more reason to justify
-> the approach :)
-
-I attempted to reproduce the scenario where a folio is added to the swapcac=
-he
-after filemap_get_folio() returns NULL but before move_swap_pte()
-moves the swap PTE
-using non-synchronized I/O. Technically, this seems possible; however,
-I was unable
-to reproduce it, likely because the time window between swapin_readahead an=
-d
-taking the page table lock within do_swap_page() is too short.
-
-Upon reconsideration, even if this situation occurs, it is not an issue bec=
-ause
-move_swap_pte() obtains both the source and destination page table locks,
-and *clears* the source PTE. Thus, when do_swap_page() subsequently acquire=
-s
-the source page table lock for src, it cannot map the new swapcache folio
-to the PTE since pte_same will return false.
-
->
-> >
-> > [1] https://lore.kernel.org/linux-mm/20250219112519.92853-1-21cnbao@gma=
-il.com/
->
-> I'll try this too.
->
-> >
-> > >
-> > >
-> > > >
-> > > > >
-> > > > > >
-> > > > > > Also, -EBUSY is somehow incorrect error code.
-> > > > >
-> > > > > Yes, thanks, I'll use EAGAIN here just like move_swap_pte.
-> > > > >
-> > > > >
-> > > > > >
-> > > > > > >               err =3D move_swap_pte(mm, dst_vma, dst_addr, sr=
-c_addr, dst_pte, src_pte,
-> > > > > > >                               orig_dst_pte, orig_src_pte, dst=
-_pmd, dst_pmdval,
-> > > > > > >                               dst_ptl, src_ptl, src_folio);
+> On Thu, May 22, 2025 at 07:47:17AM -0700, Rob Clark wrote:
+> > On Thu, May 22, 2025 at 4:00=E2=80=AFAM Danilo Krummrich <dakr@kernel.o=
+rg> wrote:
+> > > On Tue, May 20, 2025 at 10:22:54AM -0700, Rob Clark wrote:
+> > > > On Tue, May 20, 2025 at 9:54=E2=80=AFAM Danilo Krummrich <dakr@kern=
+el.org> wrote:
+> > > > > On Tue, May 20, 2025 at 09:07:05AM -0700, Rob Clark wrote:
+> > > > > > On Tue, May 20, 2025 at 12:06=E2=80=AFAM Danilo Krummrich <dakr=
+@kernel.org> wrote:
+> > > > > > > But let's assume we agree that we want to avoid that userspac=
+e can ever OOM itself
+> > > > > > > through async VM_BIND, then the proposed solution seems wrong=
+:
 > > > > > > >
+> > > > > > > Do we really want the driver developer to set an arbitrary bo=
+undary of a number
+> > > > > > > of jobs that can be submitted before *async* VM_BIND blocks a=
+nd becomes
+> > > > > > > semi-sync?
+> > > > > > >
+> > > > > > > How do we choose this number of jobs? A very small number to =
+be safe, which
+> > > > > > > scales badly on powerful machines? A large number that scales=
+ well on powerful
+> > > > > > > machines, but OOMs on weaker ones?
 > > > > > >
+> > > > > > The way I am using it in msm, the credit amount and limit are i=
+n units
+> > > > > > of pre-allocated pages in-flight.  I set the enqueue_credit_lim=
+it to
+> > > > > > 1024 pages, once there are jobs queued up exceeding that limit,=
+ they
+> > > > > > start blocking.
+> > > > > >
+> > > > > > The number of _jobs_ is irrelevant, it is # of pre-alloc'd page=
+s in flight.
+> > > > >
+> > > > > That doesn't make a difference for my question. How do you know 1=
+024 pages is a
+> > > > > good value? How do we scale for different machines with different=
+ capabilities?
+> > > > >
+> > > > > If you have a powerful machine with lots of memory, we might thro=
+ttle userspace
+> > > > > for no reason, no?
+> > > > >
+> > > > > If the machine has very limited resources, it might already be to=
+o much?
 > > > >
+> > > > It may be a bit arbitrary, but then again I'm not sure that userspa=
+ce
+> > > > is in any better position to pick an appropriate limit.
+> > > >
+> > > > 4MB of in-flight pages isn't going to be too much for anything that=
+ is
+> > > > capable enough to run vk, but still allows for a lot of in-flight
+> > > > maps.
+> > >
+> > > Ok, but what about the other way around? What's the performance impac=
+t if the
+> > > limit is chosen rather small, but we're running on a very powerful ma=
+chine?
+> > >
+> > > Since you already have the implementation for hardware you have acces=
+s to, can
+> > > you please check if and how performance degrades when you use a very =
+small
+> > > threshold?
 > >
+> > I mean, considering that some drivers (asahi, at least), _only_
+> > implement synchronous VM_BIND, I guess blocking in extreme cases isn't
+> > so bad.
+>
+> Which is not even upstream yet and eventually will support async VM_BIND =
+too,
+> AFAIK.
 
-Thanks
-Barry
+the uapi is upstream
+
+> > But I think you are overthinking this.  4MB of pagetables is
+> > enough to map ~8GB of buffers.
+> >
+> > Perhaps drivers would want to set their limit based on the amount of
+> > memory the GPU could map, which might land them on a # larger than
+> > 1024, but still not an order of magnitude more.
+>
+> Nouveau currently supports an address space width of 128TiB.
+>
+> In general, we have to cover the range of some small laptop or handheld d=
+evices
+> to huge datacenter machines.
+
+sure.. and?  It is still up to the user of sched to set their own
+limits, I'm not proposing that sched takes charge of that policy
+
+Maybe msm doesn't have to scale up quite as much (yet).. but it has to
+scale quite a bit further down (like watches).  In the end it is the
+same.  And also not really the point here.
+
+> > I don't really have a good setup for testing games that use this, atm,
+> > fex-emu isn't working for me atm.  But I think Connor has a setup with
+> > proton working?
+>
+> I just want to be sure that an arbitrary small limit doing the job for a =
+small
+> device to not fail VK CTS can't regress the performance on large machines=
+.
+
+why are we debating the limit I set outside of sched.. even that might
+be subject to some tuning for devices that have more memory, but that
+really outside the scope of this patch
+
+> So, kindly try to prove that we're not prone to extreme performance regre=
+ssion
+> with a static value as you propose.
+>
+> > > Also, I think we should probably put this throttle mechanism in a sep=
+arate
+> > > component, that just wraps a counter of bytes or rather pages that ca=
+n be
+> > > increased and decreased through an API and the increase just blocks a=
+t a certain
+> > > threshold.
+> >
+> > Maybe?  I don't see why we need to explicitly define the units for the
+> > credit.  This wasn't done for the existing credit mechanism.. which,
+> > seems like if you used some extra fences could also have been
+> > implemented externally.
+>
+> If you are referring to the credit mechanism in the scheduler for ring bu=
+ffers,
+> that's a different case. Drivers know the size of their ring buffers exac=
+tly and
+> the scheduler has the responsibility of when to submit tasks to the ring =
+buffer.
+> So the scheduler kind of owns the resource.
+>
+> However, the throttle mechanism you propose is independent from the sched=
+uler,
+> it depends on the available system memory, a resource the scheduler doesn=
+'t own.
+
+it is a distinction that is perhaps a matter of opinion.  I don't see
+such a big difference, it is all just a matter of managing physical
+resource usage in different stages of a scheduled job's lifetime.
+
+> I'm fine to make the unit credits as well, but in this case we really car=
+e about
+> the consumption of system memory, so we could just use an applicable unit=
+.
+>
+> > > This component can then be called by a driver from the job submit IOC=
+TL and the
+> > > corresponding place where the pre-allocated memory is actually used /=
+ freed.
+> > >
+> > > Depending on the driver, this might not necessarily be in the schedul=
+er's
+> > > run_job() callback.
+> > >
+> > > We could call the component something like drm_throttle or drm_submit=
+_throttle.
+> >
+> > Maybe?  This still has the same complaint I had about just
+> > implementing this in msm.. it would have to reach in and use the
+> > scheduler's job_scheduled wait-queue.  Which, to me at least, seems
+> > like more of an internal detail about how the scheduler works.
+>
+> Why? The component should use its own waitqueue. Subsequently, from your =
+code
+> that releases the pre-allocated memory, you can decrement the counter thr=
+ough
+> the drm_throttle API, which automatically kicks its the waitqueue.
+>
+> For instance from your VM_BIND IOCTL you can call
+>
+>         drm_throttle_inc(value)
+>
+> which blocks if the increment goes above the threshold. And when you rele=
+ase the
+> pre-allocated memory you call
+>
+>         drm_throttle_dec(value)
+>
+> which wakes the waitqueue and unblocks the drm_throttle_inc() call from y=
+our
+> VM_BIND IOCTL.
+
+ok, sure, we could introduce another waitqueue, but with my proposal
+that is not needed.  And like I said, the existing throttling could
+also be implemented externally to the scheduler..  so I'm not seeing
+any fundamental difference.
+
+> Another advantage is that, if necessary, we can make drm_throttle
+> (automatically) scale for the machines resources, which otherwise we'd ne=
+ed to
+> pollute the scheduler with.
+
+How is this different from drivers being more sophisticated about
+picking the limit we configure the scheduler with?
+
+Sure, maybe just setting a hard coded limit of 1024 might not be the
+final solution.. maybe we should take into consideration the size of
+the device.  But this is also entirely outside of the scheduler and I
+fail to understand why we are discussing this here?
+
+BR,
+-R
