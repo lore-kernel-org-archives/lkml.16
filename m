@@ -1,195 +1,185 @@
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-186.mta1.migadu.com (out-186.mta1.migadu.com [95.215.58.186])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5EBB24A061
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 09:54:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B23F42F3E
+	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 09:54:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.186
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747994045; cv=none; b=CdwwlOeBdmaWAzAD3zYkBuMCSvEgTiVmzZH2cr0COS4V2S02HCCG4EWlFNNeWAv99N1NhtuTxD15Y3A/H5OjDJvO+a+f2Y4u/mdeWh7z/REH4QqAyIuCnQUPTZdmtAUKYdUbfatmmhnOVLcstNWVHb8iorPtbrCGNsliICmrZNY=
+	t=1747994067; cv=none; b=CeI/Ql3V3Oa1fEWbH8eRZNH2aylvfIn+o01EcbUCI7e8yBlaK+Ak+olIwMFlM6oUjT73cgZxruFJrwYsARbT6YpuxAhofo77eu3nmKbnF0+pI//0GS+cjIQC5tpQkguaf+8xTvTv4XO5RW8RlGFQrwT3VBQupoHNLBgQ1RzDkOM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747994045; c=relaxed/simple;
-	bh=zK6+ZTQnzaaWJ4qRUX1F9g2rew1Hsksjxjet94iLYj4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YSSb1YVoZP28XdTbJ6X3iV1QhluAAIiQAMAK/gTy3K49YIddpf4HSxKIroAP1RFinJY1dcn75MEc7vPH1F0SW/38kZ4gdmNHnIy2pZLZ2SumamR28Evq80JdPVS/2c5NWRvsC7rW8gdNwihheZaSPXISF4wyNsG51+AbkDhuJ/Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=apH4C9pF; arc=none smtp.client-ip=209.85.210.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	s=arc-20240116; t=1747994067; c=relaxed/simple;
+	bh=E8gNIneXWGPjnI07iEOK/Byl8S2wW9tOYjihShZcXoY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=epFqo0Y5TEg2zjFeaDKrUmEed2HMLyT1qqUD8/DNeklBdDX2I108/pTUUXnjwLsppk6ipS+PlV+p9UAGA3VZWYgSfOS3+6RqBkz3Rlq0p1JNn6HurfLBS9DxVuN98IRQWtdKsNgTfWJwRZ/9pzYRrZfj08Wp33kEHIf73pRV8n8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=n4X9rZVe; arc=none smtp.client-ip=95.215.58.186
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="apH4C9pF"
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-7376e311086so10375660b3a.3
-        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 02:54:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1747994043; x=1748598843; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=FXXvkKtq4CoNP4NWa3r13aRKj9W3C7sTWo4d8Ry/et0=;
-        b=apH4C9pFNnaboHogAS4TE3iguMsLvyA8536mhFmZ2HvXoZ4+pupD8cEJqwagr+YaWE
-         wSr7qBQVrBx1qpV257JP+g2dnhN4AfN7N/W+QhM9T1wZZ4tVuy8qt4xfxUQB3PjWkyvR
-         vvuDLsIUg4fuRKvDWeeyjbPMMl7K8LajD1tuQMnes5fdE68uBlQOQBTTD61RW79rNQa8
-         0mKex7ogNPBNMCKVqFNUdvIf97zmzzMwxJLDHa2PLIY0h5vQ1EgQgpQrWXX5tQfMZ3jv
-         y6HoKVCjFfGbxSNygbjc1YGwQxZZyuTj7QZxJeYU8rYrBtoxfZuXZy287RGHwavqrqor
-         uRxQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747994043; x=1748598843;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FXXvkKtq4CoNP4NWa3r13aRKj9W3C7sTWo4d8Ry/et0=;
-        b=CrmLZ2b4psafHTEskJsREPFeJycO1aRa8msuJPGQDtJq7Hncxvl6PR8xhO1rfCqzeI
-         ZqLUmjrpGbg+FUIc1qhXh7MwbtfW6vT4lA8s408M4P6oYeZ0kaCIIr/gbBQRC+xYvNAM
-         y8YAcIZSbA/4SciEAMq9hkEzPw/Z8+SWDlqV6WZNn3jTP0pgwahmnf9a2HRAisPwqbge
-         lvYbjHz98x7hB8u+duSJUkYUO85IltMkkRwQnI6ecJ5T7bQI98YKZYqcKeNSse0/rryX
-         SdRtegiSf4T4wWu6w4I3VNTOFJOHdTBxch7u1B5SrC5Kcagkvlf1IOTB2f2UVU9itFwv
-         C3sg==
-X-Forwarded-Encrypted: i=1; AJvYcCXkHm3Ac7gywJNpdmSJjY/lhvJpTZIF7+Qiui5cxioKt9QecL86Rx+8bS99Oef0IV18PvNbRYWW1gyTTbk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YytQSnYr2zi9JNl9pehiV7wTtCM/xwRdH+qMzgnS0bIqFyRxx2o
-	TnBMBNAy2kRAKz1APkkXHwo0OH0/ObmI3iaC4hCVCCh2JpVt0bEoBjSKFi5gTgVz7w==
-X-Gm-Gg: ASbGncv6J39OjzghsYD1ZjFk9QUFbfxz4jG8yNig/MXwEziMfVfnArmiNgP2c3S/nOy
-	xy3ihEz+AqgWehB64xHCN6ctRjoEebnNgAMyAT8bYTaaCgcH8sW8+Tpa6p5aG7ojMcDP/mdLpAL
-	BBV9oxdRA3I7r1PPJr10abTLFykWeQfqrJYXrR4G77/RpxwAuTylcrXX1Ek4vibV2sotsE+wvDs
-	3TsSFw6PUsvrgUYhdUEgG5BSvyrzt4nQ1FiFBR6MQJWw5AAESy0FAPnIpUVOdryKLbuoTNHfO11
-	vW0C0x71D+c0DXOB6fDTBjMmUXTil2a5cCciegGOfq+Ibnv0Jk8=
-X-Google-Smtp-Source: AGHT+IH00OofDg7l2hnAnCX4Bclt7TvCfcVPZYFW4nNycz9fudANPt8N+eNkMAgc31K/0sCw3nxMyQ==
-X-Received: by 2002:a05:6a00:c82:b0:73e:970:731 with SMTP id d2e1a72fcca58-745ed8f76d1mr3478990b3a.16.1747994042836;
-        Fri, 23 May 2025 02:54:02 -0700 (PDT)
-Received: from bytedance ([115.190.40.10])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-745f73f4b29sm311471b3a.21.2025.05.23.02.53.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 May 2025 02:54:02 -0700 (PDT)
-Date: Fri, 23 May 2025 17:53:50 +0800
-From: Aaron Lu <ziqianlu@bytedance.com>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Valentin Schneider <vschneid@redhat.com>,
-	Ben Segall <bsegall@google.com>,
-	K Prateek Nayak <kprateek.nayak@amd.com>,
-	Josh Don <joshdon@google.com>, Ingo Molnar <mingo@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Xi Wang <xii@google.com>, linux-kernel@vger.kernel.org,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>, Mel Gorman <mgorman@suse.de>,
-	Chengming Zhou <chengming.zhou@linux.dev>,
-	Chuyi Zhou <zhouchuyi@bytedance.com>,
-	Jan Kiszka <jan.kiszka@siemens.com>,
-	Florian Bezdeka <florian.bezdeka@siemens.com>
-Subject: Re: [PATCH 2/7] sched/fair: prepare throttle path for task based
- throttle
-Message-ID: <20250523095350.GA1215853@bytedance>
-References: <20250520104110.3673059-1-ziqianlu@bytedance.com>
- <20250520104110.3673059-3-ziqianlu@bytedance.com>
- <20250522104843.GG39944@noisy.programming.kicks-ass.net>
- <20250522114012.GA672414@bytedance>
- <20250522115418.GI24938@noisy.programming.kicks-ass.net>
- <20250522123750.GB672414@bytedance>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="n4X9rZVe"
+Message-ID: <a0d4f499-1222-45da-a3ea-e9d445b81c87@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1747994061;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=rNzhlrTrgf6zoW1XzrBUaGQMb+etBo16vS9kQPgLQhQ=;
+	b=n4X9rZVee6YQEK15TmlRupOQhGROGs4wShiX52st6RNL3S4rjkXFlnuTSuEdiwG+M/4VlU
+	nm26hkGfFusbHhPrvHx62oSNMVqkUMnlZuLL2nttXng/BVu/JnQSBPIrhhf2toQKFjgY9s
+	d7qG9MgsBmwp+1pqlFysl2KGWTi/SVA=
+Date: Fri, 23 May 2025 17:53:55 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250522123750.GB672414@bytedance>
+Subject: Re: [PATCH 4/7] sched/fair: Take care of group/affinity/sched_class
+ change for throttled task
+To: Aaron Lu <ziqianlu@bytedance.com>
+Cc: Valentin Schneider <vschneid@redhat.com>, Ben Segall
+ <bsegall@google.com>, K Prateek Nayak <kprateek.nayak@amd.com>,
+ Peter Zijlstra <peterz@infradead.org>, Josh Don <joshdon@google.com>,
+ Ingo Molnar <mingo@redhat.com>, Vincent Guittot
+ <vincent.guittot@linaro.org>, Xi Wang <xii@google.com>,
+ linux-kernel@vger.kernel.org, Juri Lelli <juri.lelli@redhat.com>,
+ Dietmar Eggemann <dietmar.eggemann@arm.com>,
+ Steven Rostedt <rostedt@goodmis.org>, Mel Gorman <mgorman@suse.de>,
+ Chuyi Zhou <zhouchuyi@bytedance.com>, Jan Kiszka <jan.kiszka@siemens.com>,
+ Florian Bezdeka <florian.bezdeka@siemens.com>
+References: <20250520104110.3673059-1-ziqianlu@bytedance.com>
+ <20250520104110.3673059-5-ziqianlu@bytedance.com>
+ <63237b23-ae10-45f9-abdd-8ea4adb4d15e@linux.dev>
+ <20250523075640.GA1168183@bytedance>
+ <ad8197f1-548d-4fad-abd0-e8f6e9dbe12a@linux.dev>
+ <20250523094106.GA1210419@bytedance>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Chengming Zhou <chengming.zhou@linux.dev>
+In-Reply-To: <20250523094106.GA1210419@bytedance>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-On Thu, May 22, 2025 at 08:40:02PM +0800, Aaron Lu wrote:
-> On Thu, May 22, 2025 at 01:54:18PM +0200, Peter Zijlstra wrote:
-> > On Thu, May 22, 2025 at 07:44:55PM +0800, Aaron Lu wrote:
-> > > On Thu, May 22, 2025 at 12:48:43PM +0200, Peter Zijlstra wrote:
-> > > > On Tue, May 20, 2025 at 06:41:05PM +0800, Aaron Lu wrote:
-> > > > 
-> > > > >  static void throttle_cfs_rq_work(struct callback_head *work)
-> > > > >  {
-> > > > > +	struct task_struct *p = container_of(work, struct task_struct, sched_throttle_work);
-> > > > > +	struct sched_entity *se;
-> > > > > +	struct cfs_rq *cfs_rq;
-> > > > > +	struct rq *rq;
-> > > > > +
-> > > > > +	WARN_ON_ONCE(p != current);
-> > > > > +	p->sched_throttle_work.next = &p->sched_throttle_work;
-> > > > > +
-> > > > > +	/*
-> > > > > +	 * If task is exiting, then there won't be a return to userspace, so we
-> > > > > +	 * don't have to bother with any of this.
-> > > > > +	 */
-> > > > > +	if ((p->flags & PF_EXITING))
-> > > > > +		return;
-> > > > > +
-> > > > > +	scoped_guard(task_rq_lock, p) {
-> > > > > +		se = &p->se;
-> > > > > +		cfs_rq = cfs_rq_of(se);
-> > > > > +
-> > > > > +		/* Raced, forget */
-> > > > > +		if (p->sched_class != &fair_sched_class)
-> > > > > +			return;
-> > > > > +
-> > > > > +		/*
-> > > > > +		 * If not in limbo, then either replenish has happened or this
-> > > > > +		 * task got migrated out of the throttled cfs_rq, move along.
-> > > > > +		 */
-> > > > > +		if (!cfs_rq->throttle_count)
-> > > > > +			return;
-> > > > > +		rq = scope.rq;
-> > > > > +		update_rq_clock(rq);
-> > > > > +		WARN_ON_ONCE(!list_empty(&p->throttle_node));
-> > > > > +		dequeue_task_fair(rq, p, DEQUEUE_SLEEP | DEQUEUE_SPECIAL);
-> > > > > +		list_add(&p->throttle_node, &cfs_rq->throttled_limbo_list);
-> > > > > +		resched_curr(rq);
-> > > > > +	}
-> > > > > +
-> > > > > +	cond_resched_tasks_rcu_qs();
-> > > > >  }
-> > > > 
-> > > > What's that cond_resched thing about? The general plan is to make
-> > > > cond_resched go away.
-> > > 
-> > > Got it.
-> > > 
-> > > The purpose is to let throttled task schedule and also mark a task rcu
-> > > quiescent state. Without this cond_resched_tasks_rcu_qs(), this task
-> > > will be scheduled by cond_resched() in task_work_run() and since that is
-> > > a preempt schedule, it didn't mark a task rcu quiescent state.
-> > > 
-> > > Any suggestion here? Perhaps a plain schedule()? Thanks.
-> > 
-> > I am confused, this is task_work_run(), that is ran from
-> > exit_to_user_mode_loop(), which contains a schedule().
->
-
-I should probably have added that the schedule() call contained in
-exit_to_user_mode_loop() is early in that loop, where the to-be-throttled
-task doesn't have need_resched bit set yet.
-
-> There is a cond_resched() in task_work_run() loop:
+On 2025/5/23 17:42, Aaron Lu wrote:
+> On Fri, May 23, 2025 at 05:13:35PM +0800, Chengming Zhou wrote:
+>> On 2025/5/23 15:56, Aaron Lu wrote:
+>>> On Fri, May 23, 2025 at 10:43:53AM +0800, Chengming Zhou wrote:
+>>>> On 2025/5/20 18:41, Aaron Lu wrote:
+>>>>> On task group change, for tasks whose on_rq equals to TASK_ON_RQ_QUEUED,
+>>>>> core will dequeue it and then requeued it.
+>>>>>
+>>>>> The throttled task is still considered as queued by core because p->on_rq
+>>>>> is still set so core will dequeue it, but since the task is already
+>>>>> dequeued on throttle in fair, handle this case properly.
+>>>>>
+>>>>> Affinity and sched class change is similar.
+>>>>
+>>>> How about setting p->on_rq to 0 when throttled? which is the fact that
+>>>> the task is not on cfs queue anymore, does this method cause any problem?
+>>>>
+>>>
+>>> On task group change/affinity change etc. if the throttled task is
+>>> regarded as !on_rq, then it will miss the chance to be enqueued to the
+>>> new(and correct) cfs_rqs, instead, it will be enqueued back to its
+>>> original cfs_rq on unthrottle which breaks affinity or task group
+>>
+>> Yeah, this is indeed a problem, I was thinking to delete the throttled task
+>> from the cfs_rq limbo list, then add it to another cfs_rq limbo list or cfs_rq
+>> runnable tree based on the new cfs_rq's throttle status.
 > 
-> 		do {
-> 			next = work->next;
-> 			work->func(work);
-> 			work = next;
-> 			cond_resched();
-> 		} while (work);
+> Only work when the task is still handled by fair :)
 > 
-> And when this throttle work returns with need_resched bit set,
-> cond_resched() will cause a schedule but that didn't mark a task
-> quiescent state...
+>>
+>> But it's much complex compared with your current method.
+>>
+>>> settings. We may be able to do something in tg_unthrottle_up() to take
+>>> special care of these situations, but it seems a lot of headaches.
+>>>
+>>> Also, for task group change, if the new task group does not have throttle
+>>> setting, that throttled task should be allowed to run immediately instead
+>>> of waiting for its old cfs_rq's unthrottle event. Similar is true when
+>>> this throttled task changed its sched class, like from fair to rt.
+>>>
+>>> Makes sense?
+>>
+>> Ok, the another problem of the current method I can think of is the PELT maintenance,
+>> we skip the actual dequeue_task_fair() process, which includes PELT detach, we just
+>> delete it from the cfs_rq limbo list, so it can result in PELT maintenance error.
+>>
+> 
+> There are corresponding callbacks that handle this, e.g. for task group
+> change, there is task_change_group_fair() that handles PELT detach; for
+> affinity change, there is migrate_task_rq_fair() does that and for sched
+> class change, there is switched_from/to() does that.
+> 
+> Or do I miss anything?
 
-Another approach I can think of is to add a test of task_is_throttled()
-in rcu_tasks_is_holdout(). I remembered when I tried this before, I can
-hit the following path:
+migrate_task_rq_fair() only do it when !task_on_rq_migrating(p), which is wakeup migrate,
+because we already do detach in dequeue_task_fair() for on_rq task migration...
+You can see the DO_DETACH flag in update_load_avg() called from dequeue_entity().
 
-exit_to_user_mode_loop() -> get_signal() -> throttle_task_work() -> 
-do_exit() -> exit_signals() -> percpu_rwsem_wait() -> schedule() -> 
-try_to_block_task() -> dequeue_task_fair().
+Thanks!
 
-I would like to avoid this path, because it doesn't feel right for a
-throttled task to go through another dequeue again(except for the cases
-like task group change, affinity change etc. are special cases that have
-to be dealed with though).
-
-It looks to me, a schedule() call(or any other form) that makes sure
-this throttled task gets scheduled in its task work is the safest thing
-to do.
-
-Thoughts?
-
-Thanks,
-Aaron
+> 
+> Thanks,
+> Aaron
+>   
+>>>>>
+>>>>> Signed-off-by: Aaron Lu <ziqianlu@bytedance.com>
+>>>>> ---
+>>>>>     kernel/sched/fair.c | 24 ++++++++++++++++++++++++
+>>>>>     1 file changed, 24 insertions(+)
+>>>>>
+>>>>> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+>>>>> index 74bc320cbc238..4c66fd8d24389 100644
+>>>>> --- a/kernel/sched/fair.c
+>>>>> +++ b/kernel/sched/fair.c
+>>>>> @@ -5866,6 +5866,10 @@ static void throttle_cfs_rq_work(struct callback_head *work)
+>>>>>     		update_rq_clock(rq);
+>>>>>     		WARN_ON_ONCE(!list_empty(&p->throttle_node));
+>>>>>     		dequeue_task_fair(rq, p, DEQUEUE_SLEEP | DEQUEUE_SPECIAL);
+>>>>> +		/*
+>>>>> +		 * Must not add it to limbo list before dequeue or dequeue will
+>>>>> +		 * mistakenly regard this task as an already throttled one.
+>>>>> +		 */
+>>>>>     		list_add(&p->throttle_node, &cfs_rq->throttled_limbo_list);
+>>>>>     		resched_curr(rq);
+>>>>>     	}
+>>>>> @@ -5881,6 +5885,20 @@ void init_cfs_throttle_work(struct task_struct *p)
+>>>>>     	INIT_LIST_HEAD(&p->throttle_node);
+>>>>>     }
+>>>>> +static void dequeue_throttled_task(struct task_struct *p, int flags)
+>>>>> +{
+>>>>> +	/*
+>>>>> +	 * Task is throttled and someone wants to dequeue it again:
+>>>>> +	 * it must be sched/core when core needs to do things like
+>>>>> +	 * task affinity change, task group change, task sched class
+>>>>> +	 * change etc.
+>>>>> +	 */
+>>>>> +	WARN_ON_ONCE(p->se.on_rq);
+>>>>> +	WARN_ON_ONCE(flags & DEQUEUE_SLEEP);
+>>>>> +
+>>>>> +	list_del_init(&p->throttle_node);
+>>>>> +}
+>>>>> +
+>>>>>     static void enqueue_task_fair(struct rq *rq, struct task_struct *p, int flags);
+>>>>>     static int tg_unthrottle_up(struct task_group *tg, void *data)
+>>>>>     {
+>>>>> @@ -6834,6 +6852,7 @@ static inline void sync_throttle(struct task_group *tg, int cpu) {}
+>>>>>     static __always_inline void return_cfs_rq_runtime(struct cfs_rq *cfs_rq) {}
+>>>>>     static void task_throttle_setup_work(struct task_struct *p) {}
+>>>>>     static bool task_is_throttled(struct task_struct *p) { return false; }
+>>>>> +static void dequeue_throttled_task(struct task_struct *p, int flags) {}
+>>>>>     static inline int cfs_rq_throttled(struct cfs_rq *cfs_rq)
+>>>>>     {
+>>>>> @@ -7281,6 +7300,11 @@ static int dequeue_entities(struct rq *rq, struct sched_entity *se, int flags)
+>>>>>      */
+>>>>>     static bool dequeue_task_fair(struct rq *rq, struct task_struct *p, int flags)
+>>>>>     {
+>>>>> +	if (unlikely(task_is_throttled(p))) {
+>>>>> +		dequeue_throttled_task(p, flags);
+>>>>> +		return true;
+>>>>> +	}
+>>>>> +
+>>>>>     	if (!(p->se.sched_delayed && (task_on_rq_migrating(p) || (flags & DEQUEUE_SAVE))))
+>>>>>     		util_est_dequeue(&rq->cfs, p);
