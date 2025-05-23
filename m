@@ -1,105 +1,124 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 164B42957A2
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 14:59:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E9B520C465;
+	Fri, 23 May 2025 15:00:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748012397; cv=none; b=dO5Vl9zwBVn3xix6189rDgZ1EvFKidpbOGcGHdnjoPebvMLR0OqJgDWCNzmchqZ/PJAbnBAIDnvELmaTtvFm7YXhoZCyxJhGdOjEYGxBRWTj5hbKmZaMNWDyonVgl4jgAQjuu/7mQf3dwVBBxf5yJk1/fwAuGbQXzeuFUctvnLc=
+	t=1748012410; cv=none; b=Rpxct8zzWUgcAeYqP+lRAgovHa8bUTVXYBAwh1yELkWj2WOGi9QFMw1MkujEqSc0/e3nbgPL1lkKt8ExDoVgwC+axY9PtUo83snbjpqfytaL1eGAKqyi75FLJ/RudlgtRkiU9cBNmY1c0epLHQ+ddPnyHHucCGrEcLUrU10BBsM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748012397; c=relaxed/simple;
-	bh=+8Ajg9EfXpyP5RPVroAvxCL4iKT5Fy5qbsWRaTk1/3w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ffpzhF0m+O0UkZ6H8Mmwtto/UhU6fmRSmSYlKz4rrahBf+6w0XJRiBi46Kvjotg1QoXmeKuNIxes+5yw4dMKkmS30SddY/wwSaIiZNI1txW0sVGDgG7O7KIS59qlrop27ndcELXNgRRf2Y0buB7vEjmCHEjzXEZwuJ9TUgAeN28=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Ij7FFySu; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1748012410; c=relaxed/simple;
+	bh=Hk+9dxRaWTHmkirrqICnnV8gGlkcDt7jVcXhQiCkSjU=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=FS6VSorpcxWnc1Tft0nOZzM27mantfcz/LE5RT6spncZEgSRl+8JXOFV4pOmYyJpC9OO+GN4hLKZDHbjqIfMZDzcm+QRD04w4l5sdEp4WRodVeZm3xXGpSJ7DG1PbIFOvEgyjv58HE+PnteztwHaOZciYke2/cqEVivc99k34JA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d/+o3mto; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Ij7FFySu"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=8SJ9MmECmt2OQ6NAfufRcgcN3xsh1YD+k0QVipqDdIw=; b=Ij7FFySu4LCIfjOR9s+gtsB7S2
-	r2njHxqwa/zrpLh10tqcAowXq8PoQn6UpJGoVdp72rSOdVebeGeTiH4vJ+ak6Hog850ljQxFNxB0Z
-	s38bb2zye2fffYk6P8+pzQdqIzZmwlH0rbPgv1spnrgZCfxxnxFCZ/hVCf/MMMpWmSmVy1TXIC4xW
-	uTqqv60DRRVrix1ZoyABR5FrKQ+8yI7s8JHmgrh4uNWiVFRn12iPNPN/kzJwcgPeA3DGRovXS6wge
-	T2JwRmc2UZqaJq6GHNKeHK5BYvbKmB63RuFmorLFspWPTyluIzptqokTaOMwoQRCiJvgCHzx0ehww
-	mjTJzeYQ==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uITs7-00000007haw-3psy;
-	Fri, 23 May 2025 14:59:44 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 1086E300472; Fri, 23 May 2025 16:59:43 +0200 (CEST)
-Date: Fri, 23 May 2025 16:59:42 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Aaron Lu <ziqianlu@bytedance.com>
-Cc: Valentin Schneider <vschneid@redhat.com>,
-	Ben Segall <bsegall@google.com>,
-	K Prateek Nayak <kprateek.nayak@amd.com>,
-	Josh Don <joshdon@google.com>, Ingo Molnar <mingo@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Xi Wang <xii@google.com>, linux-kernel@vger.kernel.org,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>, Mel Gorman <mgorman@suse.de>,
-	Chengming Zhou <chengming.zhou@linux.dev>,
-	Chuyi Zhou <zhouchuyi@bytedance.com>,
-	Jan Kiszka <jan.kiszka@siemens.com>,
-	Florian Bezdeka <florian.bezdeka@siemens.com>
-Subject: Re: [PATCH 4/7] sched/fair: Take care of group/affinity/sched_class
- change for throttled task
-Message-ID: <20250523145942.GL39944@noisy.programming.kicks-ass.net>
-References: <20250520104110.3673059-1-ziqianlu@bytedance.com>
- <20250520104110.3673059-5-ziqianlu@bytedance.com>
- <20250522120336.GI39944@noisy.programming.kicks-ass.net>
- <20250522124840.GC672414@bytedance>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d/+o3mto"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 619EFC4CEE9;
+	Fri, 23 May 2025 15:00:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748012409;
+	bh=Hk+9dxRaWTHmkirrqICnnV8gGlkcDt7jVcXhQiCkSjU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=d/+o3mtoYralQyEh0EUfx4bdpAPZIB1gQu5iZ7n7kpjYmyg1KtY0lffY2QW6tj2YF
+	 rOMPRIgdRL3MPLDQFhOi0mu6G5SscqnFst5mRUkY9OMrK/MDhTGZo7eevtvMlkanuM
+	 ZFfAs+RDAMxb/WLvUFnXG8oqGxnV/UL9vCe196r5g/xgydLBJBC1NRKiKhqGu3/Sxw
+	 o7kcv/DJU5DG64wEOmNlsIlin/1aFX6zqay4GRLuQq38vllTnriQGhBeBXeOYD5y0t
+	 VTOPDQBjTjIrgUMfOAzWsnKYMGa1Unro72iRzteLBmZLfeq6meNQHpI1GtYxheCuHM
+	 d/r2YoY578qWQ==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=lobster-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1uITsU-0001Wm-UX;
+	Fri, 23 May 2025 16:00:07 +0100
+Date: Fri, 23 May 2025 16:00:06 +0100
+Message-ID: <87wma7e5jd.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Mark Brown <broonie@kernel.org>
+Cc: D Scott Phillips <scott@os.amperecomputing.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	James Clark <james.clark@linaro.org>,
+	James Morse <james.morse@arm.com>,
+	Joey Gouly <joey.gouly@arm.com>,
+	Kevin Brodsky <kevin.brodsky@arm.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	"Rob Herring  (Arm)" <robh@kernel.org>,
+	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
+	Shiqi Liu <shiqiliu@hust.edu.cn>,
+	Will Deacon <will@kernel.org>,
+	Yicong Yang <yangyicong@hisilicon.com>,
+	kvmarm@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4] arm64: errata: Work around AmpereOne's erratum AC04_CPU_23
+In-Reply-To: <aDCDGZ-G-nCP3hJI@finisterre.sirena.org.uk>
+References: <20250513184514.2678288-1-scott@os.amperecomputing.com>
+	<aDCDGZ-G-nCP3hJI@finisterre.sirena.org.uk>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250522124840.GC672414@bytedance>
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: broonie@kernel.org, scott@os.amperecomputing.com, catalin.marinas@arm.com, james.clark@linaro.org, james.morse@arm.com, joey.gouly@arm.com, kevin.brodsky@arm.com, mark.rutland@arm.com, oliver.upton@linux.dev, robh@kernel.org, shameerali.kolothum.thodi@huawei.com, shiqiliu@hust.edu.cn, will@kernel.org, yangyicong@hisilicon.com, kvmarm@lists.linux.dev, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-On Thu, May 22, 2025 at 08:49:43PM +0800, Aaron Lu wrote:
-> On Thu, May 22, 2025 at 02:03:36PM +0200, Peter Zijlstra wrote:
-
-> > This is asymmetric -- dequeue removes it from that throttle list, but
-> > the corresponding enqueue will not add it back, what gives?
-> > 
-> > Because now we have:
-> > 
-> >  p->on_rq=1
-> >  p->throttle_node on list
-> > 
-> > move_queued_task()
-> >   deactivate_task()
-> >     dequeue_task_fair()
-> >       list_del_init(throttle_node)
-> >     p->on_rq = 2
-> > 
-> >   activate_task()
-> >     enqueue_task_fair()
-> >       // nothing special, makes the thing runnable
-> >     p->on_rq = 1;
-> > 
-> > and we exit with a task that is on-rq and not throttled ?!?
-> >
-> > Why is this? Are we relying on pick_task_fair() to dequeue it again and
-> > fix up our inconsistencies? If so, that had better have a comment on.
+On Fri, 23 May 2025 15:15:53 +0100,
+Mark Brown <broonie@kernel.org> wrote:
 > 
-> Correct.
+> On Tue, May 13, 2025 at 11:45:14AM -0700, D Scott Phillips wrote:
+> > On AmpereOne AC04, updates to HCR_EL2 can rarely corrupt simultaneous
+> > translations for data addresses initiated by load/store instructions.
+> > Only instruction initiated translations are vulnerable, not translations
+> > from prefetches for example. A DSB before the store to HCR_EL2 is
+> > sufficient to prevent older instructions from hitting the window for
+> > corruption, and an ISB after is sufficient to prevent younger
+> > instructions from hitting the window for corruption.
+> 
+> This patch, which is in -next as fed55f49fad181be9dfb93c0, breaks the
+> build of at least the vDSO selftests:
+> 
+> $ make -C tools/testing/selftests ARCH=arm64 LLVM=1 TARGETS=vDSO
+> 
+>   CC       vdso_test_chacha
+> In file included from vgetrandom-chacha.S:9:
+> In file included from ./../../../../arch/arm64/kernel/vdso/vgetrandom-chacha.S:5:
+> In file included from /home/broonie/git/bisect/tools/testing/selftests/../../../arch/arm64/include/asm/assembler.h:21:
+> In file included from /home/broonie/git/bisect/tools/testing/selftests/../../../arch/arm64/include/asm/cpufeature.h:13:
+> /home/broonie/git/bisect/tools/testing/selftests/../../../arch/arm64/include/asm/sysreg.h:1097:5: error: function-like macro 'IS_ENABLED' is not defined
+>  1097 | #if IS_ENABLED(CONFIG_AMPERE_ERRATUM_AC04_CPU_23)
+>       |     ^
+> 1 error generated.
 
-But would it not be better to have enqueue bail when we're trying to
-enqueue an already throttled task into a throttled cfs_rq?
+This:
 
-It seems a waste to do the actual enqueue, pick, dequeue when we
-could've just avoided all that.
+diff --git a/arch/arm64/include/asm/assembler.h b/arch/arm64/include/asm/assembler.h
+index ad63457a05c5b..4389d3916426c 100644
+--- a/arch/arm64/include/asm/assembler.h
++++ b/arch/arm64/include/asm/assembler.h
+@@ -13,6 +13,7 @@
+ #define __ASM_ASSEMBLER_H
+ 
+ #include <linux/export.h>
++#include <linux/kconfig.h>
+ 
+ #include <asm/alternative.h>
+ #include <asm/asm-bug.h>
 
-The immediate problem seems to be that you destroy the
-task_is_throttled() state on dequeue, but surely that is trivially
-fixable by not keeping that state in the list.
+should solve it.
+
+But it also outlines that the vdso is getting built using stuff that
+is not meant for userspace code.
+
+	M.
+
+-- 
+Jazz isn't dead. It just smells funny.
