@@ -1,106 +1,126 @@
-Received: from out-178.mta1.migadu.com (out-178.mta1.migadu.com [95.215.58.178])
+Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41FF62DCBE7
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 03:56:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0C0D2DCBE7;
+	Fri, 23 May 2025 03:59:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747972619; cv=none; b=IHl9K+cmw3tTu1RPKjGdpRuk1uwh0FltLr34DFa1CaVd5vNqJiFHKvcBMSq5LRihSS8LDKyS2aScSiXf0+c+EdZbk/QQcyy8AwRd45n3iBhrEpVfir/GaijxoVlPBNJyyT83vXsddA6S3Wl//cX2sGzqm7EgXknu680SlDM/rVE=
+	t=1747972789; cv=none; b=r5UwI1fcWlvETG7/5fvLJz443HBjvVetf42j0E2Cpsk6vN30dRHIyqB1XpaN9f1hzrS2dxH5hlygSRlN9kF0JuTu3d9hpv93zNyQUcjX/joD2NprOz0GcqZT77Rxy7nyO8T7irZS157GRrumDXNBVSTyr5n8n+gcdXihYMeHTWw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747972619; c=relaxed/simple;
-	bh=1wmftH4+1CyP4uZ75vOAyuBVMc6P1BmvNKUb+IESNQc=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=ZIcZzFfeKzTIu5L5gt+6hJhCq12+GWha9onG3Q5Hc+2WAKbNJbkjOqEYSkoNGY/DYGgI4MWoOkHTuD5Lsw6h3aFs/lfFlb7sTBjQ1djxKvDOYxQ4mqtU7DLT3YlmAbUcYKd3uRxRCM7AHt6Zrs/6VqHFENriTSEJYJsUqN7IIE4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=S9OzoP15; arc=none smtp.client-ip=95.215.58.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1747972789; c=relaxed/simple;
+	bh=Xs3rciip3/QwToPd2I/zW+LQISuJ1+/fQ4kqCEMCjns=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LuI/uNSz4sKkG8NMF2rfd5fJEb06pMBN66LWGlVxBZF6eMF6Zv45jTtL2Vd8ulkMP8MjKRJoGMvTBmXlKz+ujuQoCjw79RwbmOq7wrgS7eXqKaiQgYSXFeirnYh1AHXeAFlpNewdXzQcABFa1Ub3dIQMG+ajRQvKAuIG11Ugwqc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=IY2U+qYQ; arc=none smtp.client-ip=144.6.53.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="S9OzoP15"
-Content-Type: text/plain;
-	charset=utf-8
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1747972614;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=u6qNdPv7J8gfgypOptH2B2wxSfGN00CcXcZhVQxMpKw=;
-	b=S9OzoP15OwVpDAPDuHOpq6gcuxnTztYLM95nwFD4B9AK0NZwuCkeMbRE0EBh8cROyAudfN
-	T88Cj2bQRKe0iodB9Lo34vZXtKv8Zoa2alqS/LtQ+5NS4kLuvg4xwkpuyC996wzkPdrQ1s
-	DL+c8yhMEtO6U1+kbnDaI1lCJxj1EMM=
+	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="IY2U+qYQ"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
+	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=MXZR828o5qZP9AxMXAMfCBjRO8UYgzLKwvAcmZi3aUg=; b=IY2U+qYQoaBOS4qRlR+YfASdh4
+	d7GUeIb6PNd7a4686vEFfUsP42AWD55gkWQSUXejcuNLtM9rhScop6vlq39LZ1SvrPqYZa93qO/Jw
+	SsbyCaW6KJG9IQcnirAJ9kCKahZBEJhrc399h7pXK3BZKe111JgllghYUwMHzvXoBRBxVbkgZiTzF
+	Az7ABkzPNolm36iFOl8q6xsD0YWvvfkCFEsvbQ1JInIYGd9Ll4L5pTX8Sdp+qA4g2TDS1Kr/2PKKo
+	+AHwWWWvt8UTSbWWWegWYxanBdXuucL1pv/8mfJOxZvLB/RMW/6+EiLkjgQv5kgwiRsMLpzux6ZsU
+	v315SN7w==;
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
+	id 1uIJZB-008GFT-1t;
+	Fri, 23 May 2025 11:59:30 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Fri, 23 May 2025 11:59:29 +0800
+Date: Fri, 23 May 2025 11:59:29 +0800
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: Chen Ridong <chenridong@huaweicloud.com>
+Cc: steffen.klassert@secunet.com, daniel.m.jordan@oracle.com,
+	nstange@suse.de, linux-crypto@vger.kernel.org,
+	linux-kernel@vger.kernel.org, chenridong@huawei.com,
+	wangweiyang2@huawei.com
+Subject: Re: [PATCH v2 3/3] padata: avoid UAF for reorder_work
+Message-ID: <aC_yoWXJcsLxfLR4@gondor.apana.org.au>
+References: <20250110061639.1280907-1-chenridong@huaweicloud.com>
+ <20250110061639.1280907-4-chenridong@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.500.181.1.5\))
-Subject: Re: [PATCH] mm/hugetlb: fix kernel NULL pointer dereference when
- replacing free hugetlb folios
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Muchun Song <muchun.song@linux.dev>
-In-Reply-To: <4e408146-7c77-4f6d-90e8-bb311d7ab53d@126.com>
-Date: Fri, 23 May 2025 11:56:11 +0800
-Cc: Oscar Salvador <osalvador@suse.de>,
- akpm@linux-foundation.org,
- linux-mm@kvack.org,
- linux-kernel@vger.kernel.org,
- stable@vger.kernel.org,
- 21cnbao@gmail.com,
- david@redhat.com,
- baolin.wang@linux.alibaba.com,
- liuzixing@hygon.cn
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <299A777D-DC94-4724-BAD7-DD02F7CDBAFA@linux.dev>
-References: <1747884137-26685-1-git-send-email-yangge1116@126.com>
- <644FF836-9DC7-42B4-BACE-C433E637B885@linux.dev>
- <aC63fmFKK84K7YiZ@localhost.localdomain>
- <ff6bd560-d249-418f-81f4-7cbe055a25ec@126.com>
- <aC8PRkyd3y74Ph5R@localhost.localdomain>
- <3B8641A1-5345-44A5-B610-9BCBC980493D@linux.dev>
- <aC974OtOuj9Tqzsa@localhost.localdomain>
- <DF103E57-601C-4CBB-99CA-088E1C29F517@linux.dev>
- <4e408146-7c77-4f6d-90e8-bb311d7ab53d@126.com>
-To: Ge Yang <yangge1116@126.com>
-X-Migadu-Flow: FLOW_OUT
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250110061639.1280907-4-chenridong@huaweicloud.com>
 
+On Fri, Jan 10, 2025 at 06:16:39AM +0000, Chen Ridong wrote:
+> From: Chen Ridong <chenridong@huawei.com>
+> 
+> Although the previous patch can avoid ps and ps UAF for _do_serial, it
+> can not avoid potential UAF issue for reorder_work. This issue can
+> happen just as below:
+> 
+> crypto_request			crypto_request		crypto_del_alg
+> padata_do_serial
+>   ...
+>   padata_reorder
+>     // processes all remaining
+>     // requests then breaks
+>     while (1) {
+>       if (!padata)
+>         break;
+>       ...
+>     }
+> 
+> 				padata_do_serial
+> 				  // new request added
+> 				  list_add
+>     // sees the new request
+>     queue_work(reorder_work)
+> 				  padata_reorder
+> 				    queue_work_on(squeue->work)
+> ...
+> 
+> 				<kworker context>
+> 				padata_serial_worker
+> 				// completes new request,
+> 				// no more outstanding
+> 				// requests
+> 
+> 							crypto_del_alg
+> 							  // free pd
+> 
+> <kworker context>
+> invoke_padata_reorder
+>   // UAF of pd
 
+Looking back this explanation is actually broken.  The call
+crypto_del_alg does not free anything immediately.  It can only
+start freeing things once the final tfm user goes away.  Any crypto
+request of that tfm must have completed before that happens.
 
-> On May 23, 2025, at 11:46, Ge Yang <yangge1116@126.com> wrote:
->=20
->=20
->=20
-> =E5=9C=A8 2025/5/23 11:27, Muchun Song =E5=86=99=E9=81=93:
->>> On May 23, 2025, at 03:32, Oscar Salvador <osalvador@suse.de> wrote:
->>>=20
->>> On Thu, May 22, 2025 at 08:39:39PM +0800, Muchun Song wrote:
->>>> But I think we could use "folio_order() > MAX_PAGE_ORDER" to =
-replace the check
->>>> of hstate_is_gigantic(), right? Then ee could remove the first =
-parameter of hstate
->>>> from alloc_and_dissolve_hugetlb_folio() and obtain hstate in it.
->>>=20
->>> Yes, I think we can do that.
->>> So something like the following (compily-tested only) maybe?
->>>=20
->>> =46rom d7199339e905f83b54d22849e8f21f631916ce94 Mon Sep 17 00:00:00 =
-2001
->>> From: Oscar Salvador <osalvador@suse.de>
->>> Date: Thu, 22 May 2025 19:51:04 +0200
->>> Subject: [PATCH] TMP
->>>=20
->>> ---
->>>  mm/hugetlb.c | 38 +++++++++-----------------------------
->>>  1 file changed, 9 insertions(+), 29 deletions(-)
->> Pretty simple. The code LGTM.
->> Thanks.
->=20
-> Thanks.
->=20
-> The implementation of alloc_and_dissolve_hugetlb_folio differs between =
-kernel 6.6 and kernel 6.15. To facilitate backporting, I'm planning to =
-submit another patch based on Oscar Salvador's suggestion.
+If not there is a serious bug in the Crypto API.
 
-A separate improving patch LGTM.
+So if crypto_del_alg is leading to a freeing of the pd while there
+are still outstanding users of that tfm, then this points to a bug
+in the Crypto API and not padata.
 
->=20
+Can you still reproduce this bug easily if you revert the patches
+in this series? If so we should be able to track down the real bug.
 
+To recap, every tfm holds a ref count on the underlying crypto_alg.
+All crypto requests must complete before a tfm can be freed, which
+then leads to a drop of the refcount on crypto_alg.
+
+A crypto_alg can only be freed when its ref count hits zero.  Only
+then will the associated pd be freed.
+
+So what's missing in the above picture is the entity that is freeing
+the tfm, thus leading to the actual freeing of the alg and pd.
+
+Thanks,
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
