@@ -1,221 +1,246 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F09F718FC86
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 06:19:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EA5F10A3E;
+	Fri, 23 May 2025 06:20:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747981172; cv=none; b=XWjbM11tMbaRApnco4VKaY1MEHqb86ROF/Th16WONBAVtYQBSq08jMYTVW28v0tWMm43/Qf2XIE1r0xNybpfg1Rlh79/5O4VE2W2rVRWxifvWaJS9dxP7kxrLwgqXdE30lDtYsXN7Wy8lZ2EeUx6BR3d/N9iG0X4WgGGftzK4nw=
+	t=1747981243; cv=none; b=pRiACJsKl7hE7ji+sfPjvwQ+2oe1aHpbJYL6aCqxWhGHIUpDxI7K5kmtRLRgKXOFgVM85Kkjv/OLaa+DJrPUBb9irm3jQOShnwMis/zLQCv+PAbtRuWToqHYMjeukU6ARCNMyPlHCo55cBIXIwq6LCW7EMk2T+xnEma4yrJ7U+Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747981172; c=relaxed/simple;
-	bh=UeKvgkmDNxf8u/XaW81EMlPeoAjlVIX5+/U2UtZ3PrM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qThy5REgN9TunysChH4+KT1Crr7Ed0GeojNz+NUKp6KlAp6RSON4PYJb65Kc613c0uSzujQj1PLPPm/yAnMFHunz9efRUhVanEC478I/40leFPFp8kOCsGoh+wMHDs20pDhdxOF9Z5SgVx92Any85YXCn+CvTdSKhxs8H8FZCuQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=IRZQV8+9; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=hdGwkoX2; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=IRZQV8+9; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=hdGwkoX2; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1747981243; c=relaxed/simple;
+	bh=mJlXIqaDSLJv2xahICj+/scxRlbgF0AGsJSa8Df/Onc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Qz/PExDpk9Rtd/qd1eIhkqPsTyR88bw3RqGeaDWoBGtQXWkbopLhp7S34FUmoft5f0Zel3xFBvsihSP5KyykyOXK+5qjJO5gBng96WZA7/yTY2A5A9DE8AwSqk7palQb4pxjK2pS492IF5k8l6zBZXNjSjItCwN6ktye/GJ7/ak=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JWJDTqQ6; arc=none smtp.client-ip=209.85.208.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="IRZQV8+9";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="hdGwkoX2";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="IRZQV8+9";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="hdGwkoX2"
-Received: from kitsune.suse.cz (unknown [10.100.12.127])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 29E431F7A8;
-	Fri, 23 May 2025 06:19:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1747981169; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=oLNt3RtdnKwFBR5q5jDcZxmQHHAKPZSgXtIxyhohpeU=;
-	b=IRZQV8+9L8Ns96iocdMPl3/WA43ZPmuDxsuN46noj7OtBcuG4YwCgkesfLAhr3gIaQ0gXw
-	UkJqMG888Uo7HczVfd38sRJpWiGuX9gffeiT+/GyEXH0r9E4R1RyJeCRIDQSgqmhEF7hvR
-	dzF9A9w/Gwr6gSfwBkVS/aeNL+QaYpk=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1747981169;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=oLNt3RtdnKwFBR5q5jDcZxmQHHAKPZSgXtIxyhohpeU=;
-	b=hdGwkoX2cFA7F2N97OZ+m6VAA65nInrPD3JlD5KaDrDNIAo5qE8Fm0J3JRs42J7uWQ9lS3
-	rWPq03TPzya3pGAw==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1747981169; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=oLNt3RtdnKwFBR5q5jDcZxmQHHAKPZSgXtIxyhohpeU=;
-	b=IRZQV8+9L8Ns96iocdMPl3/WA43ZPmuDxsuN46noj7OtBcuG4YwCgkesfLAhr3gIaQ0gXw
-	UkJqMG888Uo7HczVfd38sRJpWiGuX9gffeiT+/GyEXH0r9E4R1RyJeCRIDQSgqmhEF7hvR
-	dzF9A9w/Gwr6gSfwBkVS/aeNL+QaYpk=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1747981169;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=oLNt3RtdnKwFBR5q5jDcZxmQHHAKPZSgXtIxyhohpeU=;
-	b=hdGwkoX2cFA7F2N97OZ+m6VAA65nInrPD3JlD5KaDrDNIAo5qE8Fm0J3JRs42J7uWQ9lS3
-	rWPq03TPzya3pGAw==
-Date: Fri, 23 May 2025 08:19:22 +0200
-From: Michal =?iso-8859-1?Q?Such=E1nek?= <msuchanek@suse.de>
-To: Srish Srinivasan <ssrish@linux.ibm.com>
-Cc: linux-integrity@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	maddy@linux.ibm.com, mpe@ellerman.id.au, npiggin@gmail.com,
-	christophe.leroy@csgroup.eu, naveen@kernel.org, ajd@linux.ibm.com,
-	zohar@linux.ibm.com, nayna@linux.ibm.com,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/3] powerpc/secvar: Expose secvars relevant to the
- key management mode
-Message-ID: <aDATahmPIsOmiFAK@kitsune.suse.cz>
-References: <20250521105759.8408-1-ssrish@linux.ibm.com>
- <20250521105759.8408-3-ssrish@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JWJDTqQ6"
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-6020ff8d54bso6482978a12.2;
+        Thu, 22 May 2025 23:20:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747981239; x=1748586039; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SJKle3xhIDDR9OqTTDo3kadxyXGdGsylyJI+gVZs2nc=;
+        b=JWJDTqQ6CJqDkBb1YM6VTrjTdFGWGFaJxIcbPTlk1E9xtpqDhdeDypy4sfp9hk4K8f
+         0p2mm0F17vLEWiHHuQs0/i48JZvorzAeaPFbo3EkepazNc1123ptNgx7/qYVJeipSzQC
+         yWmdnPU5+0PbpBy062Cs8o2mpwfMP7mj2w8Gi0kbSLjtBNULoT20xdd7/q9+eptC6qho
+         7txwmJA2XxF5jVKyAUzPgtqbf7xD7doRM6b8fYPO+MB8X6QGaQ62uwfmO7xSPAOry1Y9
+         bVlfCQQ5GuA04AF0fA+sLEB7N53mFcqzlZcUd1VP04rF5QwWUC5L2H1KT5spc6Zj4ela
+         eEBA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747981239; x=1748586039;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=SJKle3xhIDDR9OqTTDo3kadxyXGdGsylyJI+gVZs2nc=;
+        b=JyDYkxRs3iIHYD9l2Lipi4PbbBRlEuLiWquXmEHJ5JuhEWDHIzVPiSY92ZfxpJ/PVh
+         PlHdkMzRHvDxp7TSa6SpkcP1U3DoxickZFwOvCDgsFKTiuuptNlT8IUJFxvvBCQEXXXP
+         E+f5/SgMpq3UdAJHOBXs0NG2BDbA6D8HPN2s0v4iEv2O8wI1OojZhR5gwWGrR9zuHuHt
+         SHYa95xlfBJI9ztH8EijXOt+FxAymm1YBVJRk2u+I3Ly5QYnD3T7KyZ+gRouQNmg1OUp
+         uJNuWbahK2N2TrDFW6V5t1bO7jtgCVWqsVz4FIGdk2k6ul664j7+ylSRpBWj/acTxjW8
+         YfXw==
+X-Forwarded-Encrypted: i=1; AJvYcCUCA6dTQ1bs3wPKKhqnzPBYZ+ypC/I0QN6mkWf5E1FxlC/8AgGyARBoaOCYHdkixDsJo4rvn6GpZ4lo2g==@vger.kernel.org, AJvYcCVOicHkFjD82nyEjz4lvwxYkMoHIqc/7wlkfaZvzNd6MIO+zSGmNCToE8raRdtutWXqlos6QMw88B58Sn7q@vger.kernel.org, AJvYcCVQ+Y0VZ6tEpeQH4kHy9FegZAgMI1lxHKJBmPMRjnZ5uh3s9XTPlNg7B3BFVftkD4AIEX1w/Web@vger.kernel.org, AJvYcCWXw/5u+nFbsSlc3TDbVnumSDzZJ9a2Cj+KZj5f/hKzKVQv+Td64toOdLxmr8AbdMLzVws=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yze22y6DsfATB8JTX72hKAV2crjRegMJgIb8nZEC+/zHkI6zoP9
+	4GTh/sMO5esH0OsroDu6Dbujwb4ia+1zYfh1r50NORGBQEz4lsF7BzkAB+EvlSsfCR4IIU9PY1+
+	xABz+QIVzFOnrROG8RNx5CTkJ+dcJ8O0=
+X-Gm-Gg: ASbGncvzD97iY1iMVKdbGd+EuWS4wO/4lUg+Wr/sYqIqYM6mYvropIBIKgL10AY560W
+	R6VMp1jz5Xz5vAI32hLzhs8O0XTM24zepKFnZLx4qMQs2j5IEqzFK6N4WwgKCkzJT7UlyfUIEHT
+	eMFGWkH8DQ6gF+kBg6a4LLjD4IyCwbNGeOhgpqw6hoXRdj2Q==
+X-Google-Smtp-Source: AGHT+IGbTR82/LzienQDKEDXoJF5IcGdBgl4Man5RPmJSQnxzH+IiU2ooaMYWOxIUaA7swrBIT0sR6ZoDWL2aYGtGtI=
+X-Received: by 2002:a05:6402:3494:b0:602:225e:1d46 with SMTP id
+ 4fb4d7f45d1cf-6029163eb6fmr1466817a12.3.1747981239301; Thu, 22 May 2025
+ 23:20:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250521105759.8408-3-ssrish@linux.ibm.com>
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Spam-Score: -1.30
-X-Spamd-Result: default: False [-1.30 / 50.00];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MIME_TRACE(0.00)[0:+];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	ARC_NA(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FREEMAIL_CC(0.00)[vger.kernel.org,lists.ozlabs.org,linux.ibm.com,ellerman.id.au,gmail.com,csgroup.eu,kernel.org];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	MISSING_XM_UA(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[12];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCVD_COUNT_ZERO(0.00)[0];
-	TO_DN_SOME(0.00)[]
+References: <20250523032609.16334-1-byungchul@sk.com>
+In-Reply-To: <20250523032609.16334-1-byungchul@sk.com>
+From: Taehee Yoo <ap420073@gmail.com>
+Date: Fri, 23 May 2025 15:20:27 +0900
+X-Gm-Features: AX0GCFubwjG0J56ovWaE10v3Q9RxO1SAGGmwA1wkCCPwSFKvPmaSkQrB3cPFVV4
+Message-ID: <CAMArcTWx+8GFzk4=A2-DCUZkMtyYRaDZSqf+HvOf2KyC80BqsA@mail.gmail.com>
+Subject: Re: [PATCH 00/18] Split netmem from struct page
+To: Byungchul Park <byungchul@sk.com>
+Cc: willy@infradead.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-mm@kvack.org, kernel_team@skhynix.com, kuba@kernel.org, 
+	almasrymina@google.com, ilias.apalodimas@linaro.org, harry.yoo@oracle.com, 
+	hawk@kernel.org, akpm@linux-foundation.org, davem@davemloft.net, 
+	john.fastabend@gmail.com, andrew+netdev@lunn.ch, asml.silence@gmail.com, 
+	toke@redhat.com, tariqt@nvidia.com, edumazet@google.com, pabeni@redhat.com, 
+	saeedm@nvidia.com, leon@kernel.org, ast@kernel.org, daniel@iogearbox.net, 
+	david@redhat.com, lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, 
+	vbabka@suse.cz, rppt@kernel.org, surenb@google.com, mhocko@suse.com, 
+	horms@kernel.org, linux-rdma@vger.kernel.org, bpf@vger.kernel.org, 
+	vishal.moola@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello,
+On Fri, May 23, 2025 at 12:36=E2=80=AFPM Byungchul Park <byungchul@sk.com> =
+wrote:
+>
 
-On Wed, May 21, 2025 at 04:27:58PM +0530, Srish Srinivasan wrote:
-> The PLPKS enabled PowerVM LPAR sysfs exposes all of the secure boot
-> secvars irrespective of the key management mode.
-> 
-> The PowerVM LPAR supports static and dynamic key management for secure
-> boot. The key management option can be updated in the management
-> console. Only in the dynamic key mode can the user modify the secure
-> boot secvars db, dbx, grubdb, grubdbx, and sbat, which are exposed via
-> the sysfs interface. But the sysfs interface exposes these secvars even
-> in the static key mode. This could lead to errors when reading them or
-> writing to them in the static key mode.
+Hi Byungchul,
+Thanks a lot for this work!
 
-would it cause an error when reading these variables or only when
-writing them?
+> The MM subsystem is trying to reduce struct page to a single pointer.
+> The first step towards that is splitting struct page by its individual
+> users, as has already been done with folio and slab.  This patchset does
+> that for netmem which is used for page pools.
+>
+> Matthew Wilcox tried and stopped the same work, you can see in:
+>
+>    https://lore.kernel.org/linux-mm/20230111042214.907030-1-willy@infrade=
+ad.org/
+>
+> Mina Almasry already has done a lot fo prerequisite works by luck, he
+> said :).  I stacked my patches on the top of his work e.i. netmem.
+>
+> I focused on removing the page pool members in struct page this time,
+> not moving the allocation code of page pool from net to mm.  It can be
+> done later if needed.
+>
+> My rfc version of this work is:
+>
+>    https://lore.kernel.org/all/20250509115126.63190-1-byungchul@sk.com/
+>
+> There are still a lot of works to do, to remove the dependency on struct
+> page in the network subsystem.  I will continue to work on this after
+> this base patchset is merged.
 
-Thanks
+There is a compile failure.
 
-Michal
+In file included from drivers/net/ethernet/intel/libeth/rx.c:4:
+./include/net/libeth/rx.h: In function =E2=80=98libeth_rx_sync_for_cpu=E2=
+=80=99:
+./include/net/libeth/rx.h:140:40: error: =E2=80=98struct page=E2=80=99 has =
+no member named =E2=80=98pp=E2=80=99
+  140 |         page_pool_dma_sync_for_cpu(page->pp, page, fqe->offset, len=
+);
+      |                                        ^~
+drivers/net/ethernet/intel/libeth/rx.c: In function =E2=80=98libeth_rx_recy=
+cle_slow=E2=80=99:
+drivers/net/ethernet/intel/libeth/rx.c:210:38: error: =E2=80=98struct page=
+=E2=80=99
+has no member named =E2=80=98pp=E2=80=99
+  210 |         page_pool_recycle_direct(page->pp, page);
+      |                                      ^~
+make[7]: *** [scripts/Makefile.build:203:
+drivers/net/ethernet/intel/libeth/rx.o] Error 1
+make[6]: *** [scripts/Makefile.build:461:
+drivers/net/ethernet/intel/libeth] Error 2
+make[5]: *** [scripts/Makefile.build:461: drivers/net/ethernet/intel] Error=
+ 2
+make[5]: *** Waiting for unfinished jobs....
 
+There are page->pp usecases in drivers/net
+./drivers/net/ethernet/marvell/octeontx2/nic/otx2_txrx.c:1574:
+ } else if (page->pp) {
+./drivers/net/ethernet/freescale/fec_main.c:1046:
+                 page_pool_put_page(page->pp, page, 0, false);
+./drivers/net/ethernet/freescale/fec_main.c:1584:
+ page_pool_put_page(page->pp, page, 0, true);
+./drivers/net/ethernet/freescale/fec_main.c:3351:
+         page_pool_put_page(page->pp, page, 0, false);
+./drivers/net/ethernet/ti/icssg/icssg_prueth_sr1.c:370:
+page_pool_recycle_direct(page->pp, page);
+./drivers/net/ethernet/ti/icssg/icssg_prueth_sr1.c:395:
+page_pool_recycle_direct(page->pp, page);
+./drivers/net/ethernet/ti/icssg/icssg_common.c:111:
+page_pool_recycle_direct(page->pp, swdata->data.page);
+./drivers/net/ethernet/intel/idpf/idpf_txrx.c:389:
+page_pool_put_full_page(rx_buf->page->pp, rx_buf->page, false);
+./drivers/net/ethernet/intel/idpf/idpf_txrx.c:3254:     u32 hr =3D
+rx_buf->page->pp->p.offset;
+./drivers/net/ethernet/intel/idpf/idpf_txrx.c:3286:     dst =3D
+page_address(hdr->page) + hdr->offset + hdr->page->pp->p.offset;
+./drivers/net/ethernet/intel/idpf/idpf_txrx.c:3287:     src =3D
+page_address(buf->page) + buf->offset + buf->page->pp->p.offset;
+./drivers/net/ethernet/intel/idpf/idpf_txrx.c:3305:     u32 hr =3D
+buf->page->pp->p.offset;
+./drivers/net/ethernet/intel/libeth/rx.c:210:
+page_pool_recycle_direct(page->pp, page);
+./drivers/net/ethernet/intel/iavf/iavf_txrx.c:1200:     u32 hr =3D
+rx_buffer->page->pp->p.offset;
+./drivers/net/ethernet/intel/iavf/iavf_txrx.c:1217:     u32 hr =3D
+rx_buffer->page->pp->p.offset;
+./drivers/net/wireless/mediatek/mt76/mt76.h:1800:
+page_pool_put_full_page(page->pp, page, allow_direct);
+./include/net/libeth/rx.h:140:  page_pool_dma_sync_for_cpu(page->pp,
+page, fqe->offset, len);
 
-> 
-> Expose only PK, trustedcadb, and moduledb in the static key mode to
-> enable loading of signed third-party kernel modules.
-> 
-> Co-developed-by: Souradeep <soura@imap.linux.ibm.com>
-> Signed-off-by: Souradeep <soura@imap.linux.ibm.com>
-> Signed-off-by: Srish Srinivasan <ssrish@linux.ibm.com>
-> Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
-> Reviewed-by: Stefan Berger <stefanb@linux.ibm.com>
-> Reviewed-by: Nayna Jain <nayna@linux.ibm.com>
-> Reviewed-by: Andrew Donnellan <ajd@linux.ibm.com>
+Thanks a lot!
+Taehee Yoo
+
+>
 > ---
->  Documentation/ABI/testing/sysfs-secvar        |  6 ++++
->  arch/powerpc/platforms/pseries/plpks-secvar.c | 28 ++++++++++++++++---
->  2 files changed, 30 insertions(+), 4 deletions(-)
-> 
-> diff --git a/Documentation/ABI/testing/sysfs-secvar b/Documentation/ABI/testing/sysfs-secvar
-> index 45281888e520..948df3446a03 100644
-> --- a/Documentation/ABI/testing/sysfs-secvar
-> +++ b/Documentation/ABI/testing/sysfs-secvar
-> @@ -37,6 +37,12 @@ Description:	Each secure variable is represented as a directory named as
->  		representation. The data and size can be determined by reading
->  		their respective attribute files.
->  
-> +		Only secvars relevant to the key management mode are exposed.
-> +		Only in the dynamic key mode can the user modify the secure boot
-> +		secvars db, dbx, grubdb, grubdbx, and sbat. PK, trustedcadb and
-> +		moduledb are the secvars common to both static and dynamic key
-> +		management modes.
-> +
->  What:		/sys/firmware/secvar/vars/<variable_name>/size
->  Date:		August 2019
->  Contact:	Nayna Jain <nayna@linux.ibm.com>
-> diff --git a/arch/powerpc/platforms/pseries/plpks-secvar.c b/arch/powerpc/platforms/pseries/plpks-secvar.c
-> index 767e5e8c6990..f9e9cc40c9d0 100644
-> --- a/arch/powerpc/platforms/pseries/plpks-secvar.c
-> +++ b/arch/powerpc/platforms/pseries/plpks-secvar.c
-> @@ -59,7 +59,14 @@ static u32 get_policy(const char *name)
->  		return PLPKS_SIGNEDUPDATE;
->  }
->  
-> -static const char * const plpks_var_names[] = {
-> +static const char * const plpks_var_names_static[] = {
-> +	"PK",
-> +	"moduledb",
-> +	"trustedcadb",
-> +	NULL,
-> +};
-> +
-> +static const char * const plpks_var_names_dynamic[] = {
->  	"PK",
->  	"KEK",
->  	"db",
-> @@ -213,21 +220,34 @@ static int plpks_max_size(u64 *max_size)
->  	return 0;
->  }
->  
-> +static const struct secvar_operations plpks_secvar_ops_static = {
-> +	.get = plpks_get_variable,
-> +	.set = plpks_set_variable,
-> +	.format = plpks_secvar_format,
-> +	.max_size = plpks_max_size,
-> +	.config_attrs = config_attrs,
-> +	.var_names = plpks_var_names_static,
-> +};
->  
-> -static const struct secvar_operations plpks_secvar_ops = {
-> +static const struct secvar_operations plpks_secvar_ops_dynamic = {
->  	.get = plpks_get_variable,
->  	.set = plpks_set_variable,
->  	.format = plpks_secvar_format,
->  	.max_size = plpks_max_size,
->  	.config_attrs = config_attrs,
-> -	.var_names = plpks_var_names,
-> +	.var_names = plpks_var_names_dynamic,
->  };
->  
->  static int plpks_secvar_init(void)
->  {
-> +	u8 mode;
-> +
->  	if (!plpks_is_available())
->  		return -ENODEV;
->  
-> -	return set_secvar_ops(&plpks_secvar_ops);
-> +	mode = plpks_get_sb_keymgmt_mode();
-> +	if (mode)
-> +		return set_secvar_ops(&plpks_secvar_ops_dynamic);
-> +	return set_secvar_ops(&plpks_secvar_ops_static);
->  }
->  machine_device_initcall(pseries, plpks_secvar_init);
-> -- 
-> 2.47.1
-> 
-> 
+>
+> Changes from rfc:
+>         1. Rebase on net-next's main branch
+>            https://git.kernel.org/pub/scm/linux/kernel/git/netdev/net-nex=
+t.git/
+>         2. Fix a build error reported by kernel test robot
+>            https://lore.kernel.org/all/202505100932.uzAMBW1y-lkp@intel.co=
+m/
+>         3. Add given 'Reviewed-by's, thanks to Mina and Ilias
+>         4. Do static_assert() on the size of struct netmem_desc instead
+>            of placing place-holder in struct page, feedbacked by Matthew
+>         5. Do struct_group_tagged(netmem_desc) on struct net_iov instead
+>            of wholly renaming it to strcut netmem_desc, feedbacked by
+>            Mina and Pavel
+>
+> Byungchul Park (18):
+>   netmem: introduce struct netmem_desc struct_group_tagged()'ed on
+>     struct net_iov
+>   netmem: introduce netmem alloc APIs to wrap page alloc APIs
+>   page_pool: use netmem alloc/put APIs in __page_pool_alloc_page_order()
+>   page_pool: rename __page_pool_alloc_page_order() to
+>     __page_pool_alloc_large_netmem()
+>   page_pool: use netmem alloc/put APIs in __page_pool_alloc_pages_slow()
+>   page_pool: rename page_pool_return_page() to page_pool_return_netmem()
+>   page_pool: use netmem put API in page_pool_return_netmem()
+>   page_pool: rename __page_pool_release_page_dma() to
+>     __page_pool_release_netmem_dma()
+>   page_pool: rename __page_pool_put_page() to __page_pool_put_netmem()
+>   page_pool: rename __page_pool_alloc_pages_slow() to
+>     __page_pool_alloc_netmems_slow()
+>   mlx4: use netmem descriptor and APIs for page pool
+>   page_pool: use netmem APIs to access page->pp_magic in
+>     page_pool_page_is_pp()
+>   mlx5: use netmem descriptor and APIs for page pool
+>   netmem: use _Generic to cover const casting for page_to_netmem()
+>   netmem: remove __netmem_get_pp()
+>   page_pool: make page_pool_get_dma_addr() just wrap
+>     page_pool_get_dma_addr_netmem()
+>   netdevsim: use netmem descriptor and APIs for page pool
+>   mm, netmem: remove the page pool members in struct page
+>
+>  drivers/net/ethernet/mellanox/mlx4/en_rx.c    |  46 ++++----
+>  drivers/net/ethernet/mellanox/mlx4/en_tx.c    |   8 +-
+>  drivers/net/ethernet/mellanox/mlx4/mlx4_en.h  |   4 +-
+>  drivers/net/ethernet/mellanox/mlx5/core/en.h  |   4 +-
+>  .../net/ethernet/mellanox/mlx5/core/en/xdp.c  |  18 ++--
+>  .../net/ethernet/mellanox/mlx5/core/en/xdp.h  |   2 +-
+>  .../net/ethernet/mellanox/mlx5/core/en_main.c |  15 ++-
+>  .../net/ethernet/mellanox/mlx5/core/en_rx.c   |  66 ++++++------
+>  drivers/net/netdevsim/netdev.c                |  18 ++--
+>  drivers/net/netdevsim/netdevsim.h             |   2 +-
+>  include/linux/mm.h                            |   5 +-
+>  include/linux/mm_types.h                      |  11 --
+>  include/linux/skbuff.h                        |  14 +++
+>  include/net/netmem.h                          | 101 ++++++++++--------
+>  include/net/page_pool/helpers.h               |  11 +-
+>  net/core/page_pool.c                          |  97 +++++++++--------
+>  16 files changed, 221 insertions(+), 201 deletions(-)
+>
+>
+> base-commit: f44092606a3f153bb7e6b277006b1f4a5b914cfc
+> --
+> 2.17.1
+>
+>
