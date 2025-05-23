@@ -1,152 +1,120 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+Received: from mail-vs1-f42.google.com (mail-vs1-f42.google.com [209.85.217.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB91A21C177
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 08:03:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76CAD21C177;
+	Fri, 23 May 2025 08:03:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747987410; cv=none; b=ndb04WMAdwCqaUAhkaMjZ6yexwkqkRytctMSCuLhbYtAExvBHxObbtHxUWAJ2xybdH7QZy5CcThMM1g3oNRB6l+Ito/auBAhnujAUSEBuAoEGSV0PF81V8sF6lWsm810Ke84TOIkdLiwUqVBDzH2fQEvdfH8IN7UiZsc1huahmY=
+	t=1747987419; cv=none; b=M4XwAG+BTNduvUZU2Y6+GKsDbiMp/WE1a65Tpzmiso2tPJhVlSYYhsDAghy3UoxxJ+OgaphQ7PcYVOrZ2URUzZfV+Q+l3L/lDGMcf+wVqIYJYtYFRACFmG73tHbI6GRb/O7tC1GawP2jZN0P7pJ5SuvzgMbYT1V5UbaIfAgIDmw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747987410; c=relaxed/simple;
-	bh=Zea9zgkE7j9TQmRJxh9RGikbH9+BKRVfnBdHUMT7lXk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=te+f6bbGeeJwETTL8o9JZatwm0orzrm3hflkoZzq6uHOrTLeOQc4/7xzVzg12l2E2yol605cb6KyxUnthKh3hEPSRKTqapzYCk27zNPZYEv0FJpRYY2quLTRt949E48tXO4VG54zTHiAvAvGpRN5oEmQkWMj+6v6+qgEOJgGAhQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=UfqU1LZN; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="UfqU1LZN"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-22e331215dbso4906525ad.1
-        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 01:03:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1747987408; x=1748592208; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=VWBbt0sxSAcpcSA0REXmuTjUDCFVmjAqDOchLNhLTLE=;
-        b=UfqU1LZNKKA6zwQF+DvK8IYK0kXyqk+DXXSy/dHCk6Wk1v4J1ylC7fHOn/XgzkR0vm
-         2Mfgy+88DWFU6GlLunOCBFHbh1MXycX2UgXIA1bCw0YI0n8f/+zknbUV/21YC/J8dxdF
-         at6iJGpHZ+vbg5vYkqAtqfPaHV9z2X0xiWItwO3G9XP6UiOUz0gB/MTuQaD6uEVH0FP2
-         fmuinzfVo3xoOP0tD7On+vEOCfNZAryCzr3TrU5JdH5+PYXDFsTxnm1Lh/GHF5eycxU9
-         WUbiTEOnYdjxfikHvRPeiVIVcuJUqULliXcobGablMFgc0KfKTD0Sfm4WH6sCa+PBAbf
-         8vFQ==
+	s=arc-20240116; t=1747987419; c=relaxed/simple;
+	bh=YuqaVAe7Y8up+DAPtDGPbElQ2EvWKfRjssdxAyS9cec=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=jvm0dZvlF1e/AcgyEtcXUXx/OFODU88jaBkOkjUA1HG2vkdCW12pYU8Jb4q8C5nSQWMegr65xAicLPHk4axXuCKZNHTTp4PN08jUZJb6qmsQhd/3xIpXtQyebzPF+MRF9TcH20fG19DEBEITexT/3IzOdm4WAgROkK87XU39yNU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.217.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vs1-f42.google.com with SMTP id ada2fe7eead31-4e149bf7f4eso2522192137.2;
+        Fri, 23 May 2025 01:03:37 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747987408; x=1748592208;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VWBbt0sxSAcpcSA0REXmuTjUDCFVmjAqDOchLNhLTLE=;
-        b=LdGuwCpV7i9XOYdv6pqA74SJFu+OrsNpNw2nhjGWkyMA81ynR11CJgW+vVynKQQam/
-         ypInPAItplWCelnEbd/TYf5SwbiG50Q86hgy28i1H0u8esXTS3iWmD+QuPkmJieEXFpq
-         bVk+E4XzxNH/jH68xVrToLVp+9xAVCT2nLv+jw3/6rRBB1CIAs4dVqDnYW+XPkc81HQC
-         EPcLB7t6tH5uR3DAJcQeaEGafJVs70yr0C7PaoVMW9TWUNRs9mK3Wy8iqOw8QkEYG4r6
-         UpOrifMLX105KTqaZkxIWFmX+hTEHEHUQfnYVN+JsNxwt0SUGFkmLVFzbsRlDHYB9hY5
-         FOHQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU7lBoGt/Jw4Fw7ygoQ6aokLndA2f/xRYQKC01Qu2CrUkr3IAgd6idklo8iW2uxl4pQZmlGUwp8FdjdtOw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz8MERsFCMmECCqsHlyAIvCnoqYHFpctLHv5Ox+VdswK0oil5mC
-	vYjrQocFm3R5badJ7tx8q918+/oZAF1JOt8Zz0I7YmB5+SjEibMpApYn4S5Jo3AnAg==
-X-Gm-Gg: ASbGncvfI6ubilNdRLFG3AyNwZftLU2mIxJkyg8PX2MreIfbfxVzihs0kKdDR5pXYjb
-	gvcuMhlvYgJgmJA3MEzMoxIpAiCKz5D0qIqrM3dlc/6ltsYdK9qhA1PHG179LReU1me8YKSBE1u
-	R9EDnHehdnVr5Bp++sHWYeDBVsY943dBZh75UY8yGYp58zOP3emh+L9uwdn1LGkfpffK+7ZqdaF
-	Vmih+6II2Lsp/2PJ18pq5nk7Mie0p2AVxjehBW4bQzMFqvIWdZPkD4KQnYH0+Z85wM6Zc/xM07M
-	dcjwrv5Z3+rWiio2y9UhO54LPvdJHZedxF6aI62IVHq+AEoc+Qc=
-X-Google-Smtp-Source: AGHT+IHlc/gNvORXeV6g+AuCy0RMVJS00Uun8VkbwhAnWdFrdLW2xbn+71hUFmFzw0o6wLO/n3L+Ug==
-X-Received: by 2002:a17:903:1786:b0:232:609:86c9 with SMTP id d9443c01a7336-233f0669b04mr35533635ad.9.1747987408018;
-        Fri, 23 May 2025 01:03:28 -0700 (PDT)
-Received: from bytedance ([115.190.40.12])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-231e2f57f0csm115269595ad.251.2025.05.23.01.03.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 May 2025 01:03:27 -0700 (PDT)
-Date: Fri, 23 May 2025 16:03:19 +0800
-From: Aaron Lu <ziqianlu@bytedance.com>
-To: Chengming Zhou <chengming.zhou@linux.dev>
-Cc: Valentin Schneider <vschneid@redhat.com>,
-	Ben Segall <bsegall@google.com>,
-	K Prateek Nayak <kprateek.nayak@amd.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Josh Don <joshdon@google.com>, Ingo Molnar <mingo@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Xi Wang <xii@google.com>, linux-kernel@vger.kernel.org,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>, Mel Gorman <mgorman@suse.de>,
-	Chuyi Zhou <zhouchuyi@bytedance.com>,
-	Jan Kiszka <jan.kiszka@siemens.com>,
-	Florian Bezdeka <florian.bezdeka@siemens.com>
-Subject: Re: [PATCH 2/7] sched/fair: prepare throttle path for task based
- throttle
-Message-ID: <20250523080319.GB1168183@bytedance>
-References: <20250520104110.3673059-1-ziqianlu@bytedance.com>
- <20250520104110.3673059-3-ziqianlu@bytedance.com>
- <871cf7c1-951c-4ddd-9800-db96e050c6d9@linux.dev>
- <20250521092155.GA24746@bytedance>
- <a129d146-755f-4559-9851-2babf173148a@linux.dev>
+        d=1e100.net; s=20230601; t=1747987416; x=1748592216;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=DQqNiV3npSztD91z3+Feib7p+1NeGfg4kgqNf6iyxIc=;
+        b=Gd+rQ+OKEBn5SnSabo9x8NzKeive7EY37XN3iVF9I46xkqpv5wnDALWtnM1yDpovIT
+         ZoZm8VGOqYQj1IFc26DQYhWfpw7Mq+oUdZiTrJAHkTYqwwwDshZdIYbuDdedIG6fKDeb
+         2tTb/KzJ5/pmdgF+CvPz5/UFHGG8nT32m0tLS9pPM2//q0F8+eCWR2Oj2829UivjViJa
+         vi3pucO+PbCsqPlfOog+hl2a0hOJbaHnLAx+TvcTsnKtU5X9cFQJcB/ljwXoTlQDOrQ7
+         1s1kG4JNDg7OcgM89KyzRZJs6KbGavN9CD0w1uTF6DYcoNVWJndsIgYaHiG6Dc7lFrJf
+         p8Lw==
+X-Forwarded-Encrypted: i=1; AJvYcCUQoeRhm7CN1giBaKzIQ0WlbGi1rAFXXqWjPYREAx6Fzvs0c2SUIKGi+4HdW1IY2mPcbyV/TBCYYeQ6iEvW@vger.kernel.org, AJvYcCWLvD9fPmOR3dFUGr884Os1HohA+ItDSuSl8UIswM6V3pO7r6SPqrliaHAjR675oUnfB9yO5OYI6ng3@vger.kernel.org, AJvYcCXLJqGsgCGf38r8mgJNqa5elyszCG97IdDhnKwuLL+NAXzpOdeEgsdVsPQxq3x0mOZq78f2XcEuEVIgny18yPrvhM0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YznkZyQRUjxpiEyX6exB0S1EKNhEaL6LkBr+eYm89pNokCzYpTt
+	rgQgLaYdP2wBQJOnGmcQwMA+2OWNsI3lZxT40ISg1tqnQ8YmcEGv0LRYF1XGDP6T
+X-Gm-Gg: ASbGncuing/eBdNLU/eS4RJjqeCrkW6DetBZ4sjBalW1FAUOE52UvPyccTZAhqkmVoc
+	ZROH4UoM2cRAKgnK43/SUFmNSPmI2t6xA43pelOwbvo5BJQ/PUFpWZZyVAqKlt5+pMDwnGADL5L
+	nZR1PLj2THL9wHo3iXIhpNcrDbgd9bWCvJxr4mIzMh3L44MGvzYj/Z4OZ83Y6z7YSZEn62/3zyf
+	Bjbs+7SLinmF2ckAskUagugGjoe320B23gH2k5jFIegafw2ohIlwCcGD4XyAuO1yTkm4J6UVwl/
+	mxUosW2eUPQpIl0LquO2JyzTu/ZztLM8dlQYBHYUfE+3u9Svv8k0GlMyWPPjZcC8rl/kzWlOiZs
+	NWsegN03QVovPV39qbg2ro1Ez
+X-Google-Smtp-Source: AGHT+IH0goiZMqcGa6abC2HBoeetfD7g+m3RkdCba6o7/QIT/PB6fLKADhaCYT53Pfmcdth7DS+FDg==
+X-Received: by 2002:a05:6102:f9d:b0:4e2:aaff:d5b9 with SMTP id ada2fe7eead31-4e2aaffd91amr12582608137.5.1747987415783;
+        Fri, 23 May 2025 01:03:35 -0700 (PDT)
+Received: from mail-vs1-f50.google.com (mail-vs1-f50.google.com. [209.85.217.50])
+        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-87bec155e2csm11614782241.16.2025.05.23.01.03.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 23 May 2025 01:03:35 -0700 (PDT)
+Received: by mail-vs1-f50.google.com with SMTP id ada2fe7eead31-4e149bf7f4eso2522182137.2;
+        Fri, 23 May 2025 01:03:35 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUvZpwBdWE35ySu4Ur4lKGZepUqL+uDNGKegl5seVBGk2ThEi0UaMYXwCLuMl0TNlWCezO9H44i5IEvSa+5WFRj3zo=@vger.kernel.org, AJvYcCVEGE3JsgqMtpOr18hlp67efdTn2csrlooFRBNEEBT/amSuk+7gmhQbchvaIB60pB0j2ZaKrAlFK1aoEmsZ@vger.kernel.org, AJvYcCWSCNGwibYx0z313hI+r4JLLW+XgwOj+7yAJKu0Ae7NxO+iePcVudK9So4mcMCSacvDCBUux5R7U6l5@vger.kernel.org
+X-Received: by 2002:a05:6102:3ca1:b0:4de:81a:7d42 with SMTP id
+ ada2fe7eead31-4dfa6af4f05mr30382735137.1.1747987414895; Fri, 23 May 2025
+ 01:03:34 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a129d146-755f-4559-9851-2babf173148a@linux.dev>
+References: <20250515183104.330964-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20250515183104.330964-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20250515183104.330964-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Fri, 23 May 2025 10:03:23 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdVv3abCx-FXMZFhfmc=5tk5-OA0mnxpcT=QYQGzaVZPjw@mail.gmail.com>
+X-Gm-Features: AX0GCFuNsEKlJdma0Ka385Soh812_nhoVH7XnvtNgnlD5t9mcfrr0O76hdjpaUo
+Message-ID: <CAMuHMdVv3abCx-FXMZFhfmc=5tk5-OA0mnxpcT=QYQGzaVZPjw@mail.gmail.com>
+Subject: Re: [PATCH 1/2] arm64: dts: renesas: r9a09g057: Add USB2.0 support
+To: Prabhakar <prabhakar.csengg@gmail.com>
+Cc: Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, May 22, 2025 at 07:43:40PM +0800, Chengming Zhou wrote:
-> On 2025/5/21 17:21, Aaron Lu wrote:
-> > On Wed, May 21, 2025 at 05:01:58PM +0800, Chengming Zhou wrote:
-> > > On 2025/5/20 18:41, Aaron Lu wrote:
-> > > > From: Valentin Schneider <vschneid@redhat.com>
-> > > > 
-> > > > In current throttle model, when a cfs_rq is throttled, its entity will
-> > > > be dequeued from cpu's rq, making tasks attached to it not able to run,
-> > > > thus achiveing the throttle target.
-> > > > 
-> > > > This has a drawback though: assume a task is a reader of percpu_rwsem
-> > > > and is waiting. When it gets wakeup, it can not run till its task group's
-> > > > next period comes, which can be a relatively long time. Waiting writer
-> > > > will have to wait longer due to this and it also makes further reader
-> > > > build up and eventually trigger task hung.
-> > > > 
-> > > > To improve this situation, change the throttle model to task based, i.e.
-> > > > when a cfs_rq is throttled, record its throttled status but do not remove
-> > > > it from cpu's rq. Instead, for tasks that belong to this cfs_rq, when
-> > > > they get picked, add a task work to them so that when they return
-> > > > to user, they can be dequeued. In this way, tasks throttled will not
-> > > > hold any kernel resources.
-> > > > 
-> > > > To avoid breaking bisect, preserve the current throttle behavior by
-> > > > still dequeuing throttled hierarchy from rq and because of this, no task
-> > > > can have that throttle task work added yet. The throttle model will
-> > > > switch to task based in a later patch.
-> > > > 
-> > > > Suggested-by: Chengming Zhou <chengming.zhou@linux.dev> # tag on pick
-> > > > Signed-off-by: Valentin Schneider <vschneid@redhat.com>
-> > > > Signed-off-by: Aaron Lu <ziqianlu@bytedance.com>
-> > > 
-> > > I'm wondering how about put 02-04 patches together, since it's strange
-> > > to setup task work in this patch but without changing throttle_cfs_rq(),
-> > 
-> > Do you mean 02-05?
-> > Because the actual change to throttle_cfs_rq() happens in patch5 :)
-> 
-> Ah, right.
-> 
-> > 
-> > > which makes the reviewing process a bit confused? WDYT?
-> > 
-> > Yes, I agree it looks a bit confused.
-> > 
-> > The point is to not break bisect while make review easier; if merging
-> > all task based throttle related patches together, that would be to put
-> > patch 02-05 together, which seems too big?
-> 
-> Yeah, a big patch but complete, instead of changing a bit on the same
-> function in each patch. Anyway, it's your call :-)
+Hi Prabhakar,
+
+On Thu, 15 May 2025 at 20:31, Prabhakar <prabhakar.csengg@gmail.com> wrote:
+> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 >
+> The Renesas RZ/V2H(P) ("R9A09G057") SoC supports 1x channel with OTG/DRD
+> and 1x channel with host interface.
+>
+> Add the ECHI, OHCI, USB2.0 PHY and reset control nodes for USB2.0 channels
+> in R9A09G057 SoC DTSI.
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-Thanks for the suggestion and I can try that in next version.
+Thanks for your patch!
 
-I'm thinking maybe one patch for newly added data structures and one
-patch for throttle related helper functions, than a complete patch to
-switch to task based throttle and the rest is the same.
+> --- a/arch/arm64/boot/dts/renesas/r9a09g057.dtsi
+> +++ b/arch/arm64/boot/dts/renesas/r9a09g057.dtsi
+> @@ -662,6 +662,119 @@ sdhi0_vqmmc: vqmmc-regulator {
+>                         };
+>                 };
+>
+> +               ohci0: usb@15800000 {
 
-Let's also see if others have opinions on this :)
+Moving above mmc@15c00000 to preserve sort order.
+
+[...]
+
+> +
+>                 sdhi1: mmc@15c10000 {
+>                         compatible = "renesas,sdhi-r9a09g057";
+>                         reg = <0x0 0x15c10000 0 0x10000>;
+
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i.e. will queue in renesas-devel for v6.17 with the above fixed.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
