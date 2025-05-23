@@ -1,55 +1,55 @@
-Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
+Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC570217679
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 23:05:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFA8E21C165
+	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 23:05:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748041534; cv=none; b=jTCS4t3E2sukebqmLb+Mc+H5vx+TpNu6twvFjadXTktZV7YMfzIt71WCM8emh/dHAF8MeknTxsg5CChnApRhMCnjuHPyFitOJ4fPnvdSuEkuY1nn+sOSNp+5Pt5vz9J0LxlK+4Dd8q3bYR3kOd4bHx8RDoFITH+3gF7eXJlgeTo=
+	t=1748041536; cv=none; b=nKY8460/pRZVOcxPyJ+Lpf08QWVhcGFqi+E7w8nciMZxI+0Hn7kmWEC4ZlPfsxJYcNR8ybOywlyyAp0rxBz1gxO6eI7uxqA3tQNKDIR3HEWo6krQMSdX/riO58F7AvCuhQqaB13Xp0Za2QN+apLX6WHuQVa33pCq96C+bir4bxo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748041534; c=relaxed/simple;
-	bh=XtpGf08mk62B/n49TMdckE7eT2mByGhUn/6TICm/3tc=;
+	s=arc-20240116; t=1748041536; c=relaxed/simple;
+	bh=0WyWdlblD1opyDXTAcioi+FN4eUkunAJc10HflKJZ/c=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=Oic9fwnMhDuOVPxQg4Q3GALyeuhccJbM4/6EMWu44G9XcE3t83pBUqfMfN3nd+lpL8qNVxYOqEDpaTrHk2SIhASwOmeOCfgAb+3v382GoqcKjjV1QFTuBo8TVMpjWdR0Ecxccm3ilq3fNTQ+9dKLoihzvy4v9QpNCp5Z7mufN0o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--almasrymina.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=S1237oP2; arc=none smtp.client-ip=209.85.214.201
+	 To:Cc:Content-Type; b=O1SspBEiV1q4WUxdicCz7zlavQ5tHHMlWEfO8GqY9qm/VQKdyhCkt5OHjof4giPUNtRdz9lnHA1JdBii8Zw37HxAbLTz29MtnK9AMD3znK6aYEDXA3kNO77cDeprXNMnZEKoxOfhSSxsfwt7XCg3eSHjIEajry+4k3v86mmMDwo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--almasrymina.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=lNUvomD7; arc=none smtp.client-ip=209.85.210.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--almasrymina.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="S1237oP2"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-23415056f5bso3559605ad.3
-        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 16:05:32 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lNUvomD7"
+Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-745fd5b7b65so230331b3a.0
+        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 16:05:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748041532; x=1748646332; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1748041534; x=1748646334; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=jo8oX10ObykGsTsR/s0quAt1NvrEp0Zt6nav8gqqDes=;
-        b=S1237oP2fGB8BGwvycGvidqRwF7caLEZhno4g/sGIAzWEhERoOrwkywBkX/aVjo9go
-         CR0aSPy8LbxaNs/AAVJkfVqTLLhl4LJHpAvo9lY13tXTjmVfSBpTSXflmka2EZvT3l0+
-         8ylq4qoJyNMZq9K32QqwcVSukaewJuklLv1k8AAunfhZ+iJZlvk/CHRa3TgHf7yeme1j
-         VZ3GMLqbjqSLmDtIobg2XjdQWVNuWNTuOp1UTCVaMemgOurEwwCsx0ORI4bd2APkZDCe
-         +x5+IHhp/tgnmeQXCXhLp89mYcx2JKz86+baKlvK9fEUdWUFN475C9yBFF04zIL1RdIR
-         ORzw==
+        bh=YGa5vpAckjVMn+DJyOLrdnNXFOJ4oaSqmPoGO5u/7eQ=;
+        b=lNUvomD7i7tGLs/vaOZUxg6uA6poEZN8LRuzYQd4pL/PAo4Fom3TB3R04f8MBjcyjA
+         N23tYzilqGHH/tRF79eP4vP+MUmxTg7TYp+LeTjxlo9zRaRLVu3SQ+CgUiTaK3KVsth3
+         43YN09MakutY9jpxGqONFlJSkpRniEjzBKINHDT9eEr/MrcU2mIEXMwLeqyXp/4cl+ML
+         gbGTGmWGEu/McnGQypnKZKAowzKwyxUZHXWOQ6zyg7W75upQnprlTuHdN3lw7CceQeGd
+         hoWrjv55FGZ16JYdHhBH5//EeZ91yOIaXy4TXl+5Pkf++CgsdCzPJImXlrse037JqBsR
+         0l1g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748041532; x=1748646332;
+        d=1e100.net; s=20230601; t=1748041534; x=1748646334;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=jo8oX10ObykGsTsR/s0quAt1NvrEp0Zt6nav8gqqDes=;
-        b=r30TX4kGDQtc1isBNhpUix/O7h6NcSfOCtmJzv99dOHfkjVxEy5mJHP3hxq0fzoi6k
-         NXDC5Fkd96ihayt3y/WTL0noxsWi4a9A+41LfVXLECyBbE8WQblDu585bOVL0vQw085m
-         D3hS2UL/AnjYHN0T8ibbgaxSjBRuQgxl/5a2sBV/u7SiBhZdbwHECoWPK/kk2dYS8T1u
-         gMEUo8S6WjPCuibKMN5FBd23EV02CGkbh/Vh+4+ZmWlbTyRolQIl78M8PySbpgBetg3O
-         D2Lgz/FKN3NXS96e1/d9KLNDegAiavGhoIlMejlfEgUBPMyAPXWvTKOMl0kKad94GZG9
-         SnQg==
-X-Forwarded-Encrypted: i=1; AJvYcCX7Mu9pPNQ1NPQn5msqjVLzrwJaWXCpJKT6HWgx3mcFMXQM9e3B/eoy/PirkfE4gE/4sxS213T3VYSy9lY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx79NcUWTRxyd1Z/sN7KvhfN9YTfIE4jvJB8JR+JwfVMtJSreLz
-	GBRObN5s5CF/TPIIsvSahIRBNHnQSSSjaIDIaLfr+ScS0XWmGuqPq3iiR+Zq5DOMTDXENkXlZq+
-	npEmLKeeFnvBUMyXabMvJVOy39Q==
-X-Google-Smtp-Source: AGHT+IFoBkGFwgLLGT5f3w3RDig2i1nIBH1FsoeWWmCb4h+IXnB8/EK5ds7LLf2qaCyDmHPMD3Aak1+RlQqHMg3FlQ==
-X-Received: from pliy11.prod.google.com ([2002:a17:903:3d0b:b0:232:4eb:e2c6])
+        bh=YGa5vpAckjVMn+DJyOLrdnNXFOJ4oaSqmPoGO5u/7eQ=;
+        b=VPcxcZHOiS3y1VK1aUlR2QZYlXy8jBdbl3AUGMiy+1vyGK1ETsjpBrhiQyUJ4fggBG
+         p1cDx2mCXb3FFlBkxTv/Ygu61AMDlkmQgnut31oavg0TUF8yB4tQHj3TCuCE+OogY4/n
+         XWsXsvubC2KTg9b6QCQJHDnACp3Do3lV0d+aVl64Tm/PUtUvYVtJy2l+YPczsxiakMdp
+         1EY1KCWHXBuk101WzXMigKsPpv0p3QOJYpWsz6rDRkL0VVuv0n8TMAXxa8JuxKWYxEVA
+         gGQyc4Qmk88rcf9kjmtvMl7qc/B6K8cSK7NObSHxI6vI1hIXJxG9vYeeOAY1opkPrOTQ
+         c/UA==
+X-Forwarded-Encrypted: i=1; AJvYcCVmSsK1BxR67oeqFLJRB36JV4EzFYUdl+QzjCKXSA48z2TyEKFFxfqZhcowUAvIh5XwY05VFVvCjoX4w+o=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzEov16muz4sBjlmEK3DsRPwfEgPydDK/KrsOLwgqcAoOdVgpj9
+	0glBtl1e7TIj71FU+dSH2Qh1jGWERVChyurbPTNPnFpiBtrZxTGH67go1frVzIRePgFQwEdhVw8
+	45b/tafHpgCn9Wbiuqfblw4chqw==
+X-Google-Smtp-Source: AGHT+IFiPOxxNaYi6AA9Ymvqa8x0QHUR555swbbPaDyHWJAxkZVauCz0orPrUoUSiBGG+ARldTE4WLtzf4erBOqE5w==
+X-Received: from pfpk9.prod.google.com ([2002:aa7:9d09:0:b0:742:a99a:ec59])
  (user=almasrymina job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:902:f609:b0:223:f408:c3e2 with SMTP id d9443c01a7336-23414f4b44fmr16343555ad.14.1748041532044;
- Fri, 23 May 2025 16:05:32 -0700 (PDT)
-Date: Fri, 23 May 2025 23:05:18 +0000
+ 2002:a05:6a00:a84:b0:736:6ecd:8e34 with SMTP id d2e1a72fcca58-745fe014bf1mr1931755b3a.18.1748041533972;
+ Fri, 23 May 2025 16:05:33 -0700 (PDT)
+Date: Fri, 23 May 2025 23:05:19 +0000
 In-Reply-To: <20250523230524.1107879-1-almasrymina@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250523230524.1107879-1-almasrymina@google.com>
 X-Mailer: git-send-email 2.49.0.1151.ga128411c76-goog
-Message-ID: <20250523230524.1107879-3-almasrymina@google.com>
-Subject: [PATCH net-next v2 2/8] page_pool: fix ugly page_pool formatting
+Message-ID: <20250523230524.1107879-4-almasrymina@google.com>
+Subject: [PATCH net-next v2 3/8] net: devmem: preserve sockc_err
 From: Mina Almasry <almasrymina@google.com>
 To: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
 	linux-kselftest@vger.kernel.org
@@ -73,29 +73,89 @@ Cc: Mina Almasry <almasrymina@google.com>, "David S. Miller" <davem@davemloft.ne
 	ap420073@gmail.com, praan@google.com, shivajikant@google.com
 Content-Type: text/plain; charset="UTF-8"
 
-Minor cleanup; this line is badly formatted.
+Preserve the error code returned by sock_cmsg_send and return that on
+err.
 
 Signed-off-by: Mina Almasry <almasrymina@google.com>
 
 ---
- net/core/page_pool.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/net/core/page_pool.c b/net/core/page_pool.c
-index 974f3eef2efa..4011eb305cee 100644
---- a/net/core/page_pool.c
-+++ b/net/core/page_pool.c
-@@ -867,8 +867,8 @@ void page_pool_put_unrefed_netmem(struct page_pool *pool, netmem_ref netmem,
- 	if (!allow_direct)
- 		allow_direct = page_pool_napi_local(pool);
+v2:
+- Remove unnecessary !! (Stan)
+---
+ net/ipv4/tcp.c | 24 ++++++++++--------------
+ 1 file changed, 10 insertions(+), 14 deletions(-)
+
+diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
+index b7b6ab41b496..f64f8276a73c 100644
+--- a/net/ipv4/tcp.c
++++ b/net/ipv4/tcp.c
+@@ -1067,7 +1067,7 @@ int tcp_sendmsg_locked(struct sock *sk, struct msghdr *msg, size_t size)
+ 	int flags, err, copied = 0;
+ 	int mss_now = 0, size_goal, copied_syn = 0;
+ 	int process_backlog = 0;
+-	bool sockc_valid = true;
++	int sockc_err = 0;
+ 	int zc = 0;
+ 	long timeo;
  
--	netmem =
--		__page_pool_put_page(pool, netmem, dma_sync_size, allow_direct);
-+	netmem = __page_pool_put_page(pool, netmem, dma_sync_size,
-+				      allow_direct);
- 	if (netmem && !page_pool_recycle_in_ring(pool, netmem)) {
- 		/* Cache full, fallback to free pages */
- 		recycle_stat_inc(pool, ring_full);
+@@ -1075,13 +1075,10 @@ int tcp_sendmsg_locked(struct sock *sk, struct msghdr *msg, size_t size)
+ 
+ 	sockc = (struct sockcm_cookie){ .tsflags = READ_ONCE(sk->sk_tsflags) };
+ 	if (msg->msg_controllen) {
+-		err = sock_cmsg_send(sk, msg, &sockc);
+-		if (unlikely(err))
+-			/* Don't return error until MSG_FASTOPEN has been
+-			 * processed; that may succeed even if the cmsg is
+-			 * invalid.
+-			 */
+-			sockc_valid = false;
++		sockc_err = sock_cmsg_send(sk, msg, &sockc);
++		/* Don't return error until MSG_FASTOPEN has been processed;
++		 * that may succeed even if the cmsg is invalid.
++		 */
+ 	}
+ 
+ 	if ((flags & MSG_ZEROCOPY) && size) {
+@@ -1092,7 +1089,7 @@ int tcp_sendmsg_locked(struct sock *sk, struct msghdr *msg, size_t size)
+ 		} else if (sock_flag(sk, SOCK_ZEROCOPY)) {
+ 			skb = tcp_write_queue_tail(sk);
+ 			uarg = msg_zerocopy_realloc(sk, size, skb_zcopy(skb),
+-						    sockc_valid && !!sockc.dmabuf_id);
++						    !sockc_err && sockc.dmabuf_id);
+ 			if (!uarg) {
+ 				err = -ENOBUFS;
+ 				goto out_err;
+@@ -1102,7 +1099,7 @@ int tcp_sendmsg_locked(struct sock *sk, struct msghdr *msg, size_t size)
+ 			else
+ 				uarg_to_msgzc(uarg)->zerocopy = 0;
+ 
+-			if (sockc_valid && sockc.dmabuf_id) {
++			if (!sockc_err && sockc.dmabuf_id) {
+ 				binding = net_devmem_get_binding(sk, sockc.dmabuf_id);
+ 				if (IS_ERR(binding)) {
+ 					err = PTR_ERR(binding);
+@@ -1116,7 +1113,7 @@ int tcp_sendmsg_locked(struct sock *sk, struct msghdr *msg, size_t size)
+ 			zc = MSG_SPLICE_PAGES;
+ 	}
+ 
+-	if (sockc_valid && sockc.dmabuf_id &&
++	if (!sockc_err && sockc.dmabuf_id &&
+ 	    (!(flags & MSG_ZEROCOPY) || !sock_flag(sk, SOCK_ZEROCOPY))) {
+ 		err = -EINVAL;
+ 		goto out_err;
+@@ -1160,9 +1157,8 @@ int tcp_sendmsg_locked(struct sock *sk, struct msghdr *msg, size_t size)
+ 		/* 'common' sending to sendq */
+ 	}
+ 
+-	if (!sockc_valid) {
+-		if (!err)
+-			err = -EINVAL;
++	if (sockc_err) {
++		err = sockc_err;
+ 		goto out_err;
+ 	}
+ 
 -- 
 2.49.0.1151.ga128411c76-goog
 
