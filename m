@@ -1,96 +1,210 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from neil.brown.name (neil.brown.name [103.29.64.221])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F15D221D87;
-	Fri, 23 May 2025 12:13:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C53BE1DD889;
+	Fri, 23 May 2025 12:13:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.29.64.221
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748002382; cv=none; b=rk3bt59RUPWwBufP5ozTB76CHbWOuGpcYZVaG1rXLa3XvPRvshbVbJWE4p++eN8NgHDJu2dM08h5atCiB+Q4nwmKKRX6cXB1+LWe4FXIFicl5wMU1m5DjdNUHngDzDgooFMQ/05b8b1412dXH6PSbH0dIc4ACeQ1h4NrwcEOUqk=
+	t=1748002419; cv=none; b=KggU96DG0sNwZf+dkIlUndo32gwDS3TO800/uwb6TYr4Gg2JecPg1O8AliP5eyBjB1xZc62MHbMAMcBdyl0jSBJxON8cZS0ikQDqlQX3thUb5H+6RqKGHRW1qHsomJR6Ey8ZWtFlC8ncVyxc9U0ww7pEnXfFdm5ubt6qYy1ncUQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748002382; c=relaxed/simple;
-	bh=hcgJywXUeqcfDYKiMg3vHV01/zX3zwztfEiViOg12aE=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=DbUXubBPboIYWM//OUzz8R8cbs0FR6ZGptYP9HCj8Nh9wUGqUvqRN1oj+O2HWCWOo/eCsq6Kbs8uxEa2AJbVyw6pKP6pfH3JHgwfRVmv3KpckaK3ePZ0FWtni+KalHj9DBzLx1uqE5j5+0XW6ExYknsELUoXnoSq8OvSNa+awlk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qcmuQ6FU; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qcmuQ6FU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A84FDC4CEE9;
-	Fri, 23 May 2025 12:12:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748002382;
-	bh=hcgJywXUeqcfDYKiMg3vHV01/zX3zwztfEiViOg12aE=;
-	h=From:To:Cc:Subject:Date:From;
-	b=qcmuQ6FUdDpddr5PnkdyEGBTodooVk9KnxKHBGspPYq9i7COvkSZe0MALo22vQ7M2
-	 4WO9QXIYgdFKj6M3pXQL0RlfPYeRsbNINEjxh+UamxbQPyXgvHSuHOZ8o8V1i+d0G0
-	 6j+wKXoMeIKHbJj0copuFoNuDcVOyn3CeqvNvC4p8rAEOfifwU7RdxzYijOnKCiTMG
-	 oRhrIi/XsJ0UAtrJ/82A3hFIK02EQECEi3QWJhQogroBDEKQLYoKaJfxEYF/nNAr0l
-	 W0EJqm5gQ9ljEZm3uCbdEhYl3+vUuYksaPc0QeffPw7Q4uJUTueqmBOJ1XM29wP10L
-	 iJiAOZG2movLA==
-From: Arnd Bergmann <arnd@kernel.org>
-To: Will Deacon <will@kernel.org>,
-	Joerg Roedel <joro@8bytes.org>,
-	Lu Baolu <baolu.lu@linux.intel.com>,
-	Rolf Eike Beer <eb@emlix.com>
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Nicolin Chen <nicolinc@nvidia.com>,
-	Nate Watterson <nwatterson@nvidia.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	linux-arm-kernel@lists.infradead.org,
-	iommu@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] iommu: arm: fix building smmuv3 as loadable module
-Date: Fri, 23 May 2025 14:12:53 +0200
-Message-Id: <20250523121257.2340274-1-arnd@kernel.org>
-X-Mailer: git-send-email 2.39.5
+	s=arc-20240116; t=1748002419; c=relaxed/simple;
+	bh=/7wwR4AGgKL5RHJnoGFvxZQNG16hhUNgZ0lkhkolwkw=;
+	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
+	 References:Date:Message-id; b=Tx8tBTkPDPwGbhLlM/x2fkjfvCFY9NVXOnCYClruZWzUm+mbTtVoRq5GMMBfDzPHlga5SEhRyo3OxSIdTlIBpg/JsTRIQQzOg0h7hqsqz8pJjIWgJYvgfQKRIJnrGiIDZSHORD+uH4Hs0bG/uIyPVP6uJPtSqrw3KXdEgIdZucY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name; spf=pass smtp.mailfrom=neil.brown.name; arc=none smtp.client-ip=103.29.64.221
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=neil.brown.name
+Received: from 196.186.233.220.static.exetel.com.au ([220.233.186.196] helo=home.neil.brown.name)
+	by neil.brown.name with esmtp (Exim 4.95)
+	(envelope-from <mr@neil.brown.name>)
+	id 1uIRHI-0095Z2-LV;
+	Fri, 23 May 2025 12:13:32 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From: "NeilBrown" <neil@brown.name>
+To: "Yan, Haixiao (CN)" <haixiao.yan.cn@windriver.com>
+Cc:
+ chuck.lever@oracle.com, stable@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: nfs mount failed with ipv6 addr
+In-reply-to: <ba4f9f5d-0688-4537-b721-7b2bda8ead8c@windriver.com>
+References: <>, <ba4f9f5d-0688-4537-b721-7b2bda8ead8c@windriver.com>
+Date: Fri, 23 May 2025 22:13:32 +1000
+Message-id: <174800241235.608730.3027057856480430075@noble.neil.brown.name>
 
-From: Arnd Bergmann <arnd@arndb.de>
+On Fri, 23 May 2025, Yan, Haixiao (CN) wrote:
+> On 5/23/2025 3:42 PM, NeilBrown wrote:
+> > CAUTION: This email comes from a non Wind River email account!
+> > Do not click links or open attachments unless you recognize the sender an=
+d know the content is safe.
+> >
+> > On Fri, 23 May 2025, Yan, Haixiao (CN) wrote:
+> >> On 5/23/2025 7:21 AM, NeilBrown wrote:
+> >>> CAUTION: This email comes from a non Wind River email account!
+> >>> Do not click links or open attachments unless you recognize the sender =
+and know the content is safe.
+> >>>
+> >>> On Thu, 22 May 2025, Haixiao Yan wrote:
+> >>>> On 2025/5/22 07:32, NeilBrown wrote:
+> >>>>> CAUTION: This email comes from a non Wind River email account!
+> >>>>> Do not click links or open attachments unless you recognize the sende=
+r and know the content is safe.
+> >>>>>
+> >>>>> On Thu, 22 May 2025, Yan, Haixiao (CN) wrote:
+> >>>>>> On linux-5.10.y, my testcase run failed:
+> >>>>>>
+> >>>>>> root@intel-x86-64:/opt/wr-test/testcases/userspace/nfs-utils_v6# mou=
+nt -t nfs [::1]:/mnt/nfs_root /mnt/v6 -o nfsvers=3D3
+> >>>>>> mount.nfs: requested NFS version or transport protocol is not suppor=
+ted
+> >>>>>>
+> >>>>>> The first bad commit is:
+> >>>>>>
+> >>>>>> commit 7229200f68662660bb4d55f19247eaf3c79a4217
+> >>>>>> Author: Chuck Lever <chuck.lever@oracle.com>
+> >>>>>> Date:   Mon Jun 3 10:35:02 2024 -0400
+> >>>>>>
+> >>>>>>       nfsd: don't allow nfsd threads to be signalled.
+> >>>>>>
+> >>>>>>       [ Upstream commit 3903902401451b1cd9d797a8c79769eb26ac7fe5 ]
+> >>>>>>
+> >>>>>>
+> >>>>>> Here is the test log:
+> >>>>>>
+> >>>>>> root@intel-x86-64:/opt/wr-test/testcases/userspace/nfs-utils_v6# dd =
+if=3D/dev/zero of=3D/tmp/nfs.img bs=3D1M count=3D100
+> >>>>>> 100+0 records in
+> >>>>>> 100+0 records out
+> >>>>>> 104857600 bytes (105 MB, 100 MiB) copied, 0.0386658 s, 2.7 GB/s
+> >>>>>> root@intel-x86-64:/opt/wr-test/testcases/userspace/nfs-utils_v6# mkf=
+s /tmp/nfs.img
+> >>>>>> mke2fs 1.46.1 (9-Feb-2021)
+> >>>>>> Discarding device blocks:   1024/102400=08=08=08=08=08=08=08=08=08=
+=08=08=08=08             =08=08=08=08=08=08=08=08=08=08=08=08=08done
+> >>>>>> Creating filesystem with 102400 1k blocks and 25688 inodes
+> >>>>>> Filesystem UUID: 77e3bc56-46bb-4e5c-9619-d9a0c0999958
+> >>>>>> Superblock backups stored on blocks:
+> >>>>>>          8193, 24577, 40961, 57345, 73729
+> >>>>>>
+> >>>>>> Allocating group tables:  0/13=08=08=08=08=08     =08=08=08=08=08done
+> >>>>>> Writing inode tables:  0/13=08=08=08=08=08     =08=08=08=08=08done
+> >>>>>> Writing superblocks and filesystem accounting information:  0/13=08=
+=08=08=08=08     =08=08=08=08=08done
+> >>>>>> root@intel-x86-64:/opt/wr-test/testcases/userspace/nfs-utils_v6# mou=
+nt /tmp/nfs.img /mnt
+> >>>>>>
+> >>>>>> root@intel-x86-64:/opt/wr-test/testcases/userspace/nfs-utils_v6# mkd=
+ir /mnt/nfs_root
+> >>>>>>
+> >>>>>> root@intel-x86-64:/opt/wr-test/testcases/userspace/nfs-utils_v6# tou=
+ch /etc/exports
+> >>>>>>
+> >>>>>> root@intel-x86-64:/opt/wr-test/testcases/userspace/nfs-utils_v6# ech=
+o '/mnt/nfs_root *(insecure,rw,async,no_root_squash)' >> /etc/exports
+> >>>>>>
+> >>>>>> root@intel-x86-64:/opt/wr-test/testcases/userspace/nfs-utils_v6# /op=
+t/wr-test/bin/svcwp.sh nfsserver restart
+> >>>>>> stopping mountd: done
+> >>>>>> stopping nfsd: ..........failed
+> >>>>>>      using signal 9:
+> >>>>>> ..........failed
+> >>>>> What does your "nfsserver" script do to try to stop/restart the nfsd?
+> >>>>> For a very long time the approved way to stop nfsd has been to run
+> >>>>> "rpc.nfsd 0".  My guess is that whatever script you are using still
+> >>>>> trying to send a signal to nfsd.  That no longer works.
+> >>>>>
+> >>>>> Unfortunately the various sysv-init scripts for starting/stopping nfsd
+> >>>>> have never been part of nfs-utils so we were not able to update them.
+> >>>>> nfs-utils *does* contain systemd unit files for sites which use syste=
+md.
+> >>>>>
+> >>>>> If you have a non-systemd way of starting/stopping nfsd, we would be
+> >>>>> happy to make the relevant scripts part of nfs-utils so that we can
+> >>>>> ensure they stay up to date.
+> >>>> Actually, we use  service nfsserver restart  =3D>
+> >>>> /etc/init.d/nfsserver =3D>
+> >>>>
+> >>>> stop_nfsd(){
+> >>>>        # WARNING: this kills any process with the executable
+> >>>>        # name 'nfsd'.
+> >>>>        echo -n 'stopping nfsd: '
+> >>>>        start-stop-daemon --stop --quiet --signal 1 --name nfsd
+> >>>>        if delay_nfsd || {
+> >>>>            echo failed
+> >>>>            echo ' using signal 9: '
+> >>>>            start-stop-daemon --stop --quiet --signal 9 --name nfsd
+> >>>>            delay_nfsd
+> >>>>        }
+> >>>>        then
+> >>>>            echo done
+> >>>>        else
+> >>>>            echo failed
+> >>>>        fi
+> >>> The above should all be changed to
+> >>>      echo -n 'stopping nfsd: '
+> >>>      rpc.nfsd 0
+> >>>      echo done
+> >>>
+> >>> or similar.  What distro are you using?
+> >>>
+> >>> I can't see how this would affect your problem with IPv6 but it would be
+> >>> nice if you could confirm that IPv6 still doesn't work even after
+> >>> changing the above.
+> >>> What version of nfs-utils are you using?
+> >>> Are you should that the kernel has IPv6 enabled?  Does "ping6 ::1" work?
+> >>>
+> >>> NeilBrown
+> >>>
+> >> It works as expected.
+> >>
+> >> My distro is Yocto and nfs-utils 2.5.3.
+> > Thanks.  I've sent a patch to openembedded to change the nfsserver
+> > script.
+> >
+> > Can you make the change to nfsserver and let me know if it fixes your
+> > problem?
+>=20
+> What's the version of your nfs-utils?
 
-The smmu-v3 kunit test fail to link when the SMMU driver is configured
-as a loadable mdoule:
+The patch isn't against nfs-utils.  It is against openembedded-core
+   https://git.openembedded.org/openembedded-core
+which is what yocto is based on.
 
-ERROR: modpost: "arm_smmu_make_cdtable_ste" [drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-test.ko] undefined!
-ERROR: modpost: "arm_smmu_make_s2_domain_ste" [drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-test.ko] undefined!
-ERROR: modpost: "arm_smmu_make_s1_cd" [drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-test.ko] undefined!
-ERROR: modpost: "arm_smmu_make_bypass_ste" [drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-test.ko] undefined!
-ERROR: modpost: "arm_smmu_make_abort_ste" [drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-test.ko] undefined!
-ERROR: modpost: "arm_smmu_make_sva_cd" [drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-test.ko] undefined!
-ERROR: modpost: "arm_smmu_get_ste_used" [drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-test.ko] undefined!
-ERROR: modpost: "arm_smmu_write_entry" [drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-test.ko] undefined!
-ERROR: modpost: "arm_smmu_get_cd_used" [drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-test.ko] undefined!
+I was expecting you to manually edit /etc/init.d/nfsserver to make the
+changes.
+Or you could possibly:
 
-The problem is that the drivers/iommu/arm/arm-smmu-v3/Makefile only gets
-parsed while building modules, but the driver itself is accidentally marked
-as built-in unconditionally, so not only does the kunit test fail, but the
-entire driver is missing.
+  patch /etc/init.d/nfssever < THE-PATCH
 
-Change the driver configuration back to $(CONFIG_ARM_SMMU_V3) so it
-actually gets build here.
+NeilBrown
 
-Fixes: e436576b0231 ("iommu: make inclusion of arm/arm-smmu-v3 directory conditional")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/iommu/arm/arm-smmu-v3/Makefile | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/iommu/arm/arm-smmu-v3/Makefile b/drivers/iommu/arm/arm-smmu-v3/Makefile
-index 6cc7c8557b9e..493a659cc66b 100644
---- a/drivers/iommu/arm/arm-smmu-v3/Makefile
-+++ b/drivers/iommu/arm/arm-smmu-v3/Makefile
-@@ -1,5 +1,5 @@
- # SPDX-License-Identifier: GPL-2.0
--obj-y += arm_smmu_v3.o
-+obj-$(CONFIG_ARM_SMMU_V3) += arm_smmu_v3.o
- arm_smmu_v3-y := arm-smmu-v3.o
- arm_smmu_v3-$(CONFIG_ARM_SMMU_V3_IOMMUFD) += arm-smmu-v3-iommufd.o
- arm_smmu_v3-$(CONFIG_ARM_SMMU_V3_SVA) += arm-smmu-v3-sva.o
--- 
-2.39.5
+>=20
+> The patch failed to apply.
+>=20
+> $ git am '[PATCH OE-core] nfs-utils don'\''t use signals to shut down=20
+> nfs server. - '\''NeilBrown '\'' (neil@brown.name) - 2025-05-23=20
+> 1541.eml' Applying: nfs-utils: don't use signals to shut down nfs=20
+> server. error: patch failed:=20
+> meta/recipes-connectivity/nfs-utils/nfs-utils/nfsserver:89 error:=20
+> meta/recipes-connectivity/nfs-utils/nfs-utils/nfsserver: patch does not=20
+> apply Patch failed at 0001 nfs-utils: don't use signals to shut down nfs=20
+> server. hint: Use 'git am --show-current-patch=3Ddiff' to see the failed=20
+> patch When you have resolved this problem, run "git am --continue". If=20
+> you prefer to skip this patch, run "git am --skip" instead. To restore=20
+> the original branch and stop patching, run "git am --abort".
+>=20
+> Thanks,
+>=20
+> Haixiao
+>=20
+> >
+> > Thanks,
+> > NeilBrown
+>=20
 
