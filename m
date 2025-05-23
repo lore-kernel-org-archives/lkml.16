@@ -1,213 +1,132 @@
-Received: from out-171.mta1.migadu.com (out-171.mta1.migadu.com [95.215.58.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BBB3292097
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 13:20:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F30913D539;
+	Fri, 23 May 2025 13:21:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748006412; cv=none; b=us42pEonMP65EHQi5qQ2QHgGUH02Yrwq8qx01H2OLJvIMo05uLQDwklATDH/uF7iTX8ECupAmCPdOWVSG+/FepIYUaOXxNYrn8fHjWBB3Hs48DzGDWvqqg2q0Djh7wonpr777+XwbMFvGKSS16YNLtnHHpc/JBtq2JGrBZhiAF0=
+	t=1748006493; cv=none; b=eiAZAdl+mnEBNizRYu4HOjlwGS9SmmvBOgdUrg5UUZzkuxzDIrLroFWaoUS4YnxhgmveZPUPFCnGNQsJWhs5e0uB82SJLsBg8HKYPwAcnKPaWIv1/mA3O1wVLx9uLQxsHWDbkfzd4hSRvEzvIuyAbJsvCIhsr9Q+nV7ZMMauwo0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748006412; c=relaxed/simple;
-	bh=iG0pvVHCIniSa6/K288JCYz9/zRHjQOB+W412xcg368=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=aQEY7Q+IcJBq275ug/Q9XpBfoIsitufcUx7BQQKIv7loIBH47T4pNVyfkKmHYQSnQ9bI5AJtxnPagirYW9kVGCOd3BXwlpxKbiMBjUjD9KUet6hM3O5CasmnSIpCgOX6/rONWKbyek9JltnfFEapP0HqvER0yZItgdVNh1vp5kg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=mNJCnvPW; arc=none smtp.client-ip=95.215.58.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="mNJCnvPW"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1748006408;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=TtCaT6fa/kicq1jIlhQVO8eyqlgwQfuRi8HxKyRVUBs=;
-	b=mNJCnvPW0SRYYq9/bPn+7gDbbXwuFmw/XqeoRrlNnuNwxkXrR33Fq+TYBFRRmNNsXbOAMb
-	NMs44y07xpu7A9dMFwAnKRQ4iizu+YN4XjF2lhiOe4vA5b1PXDjlEkowEe4/tGtE5vwvGa
-	kOss1VjTg9bRmXYsUswSwgR1DPKCweE=
-From: Jiayuan Chen <jiayuan.chen@linux.dev>
-To: bpf@vger.kernel.org
-Cc: Jiayuan Chen <jiayuan.chen@linux.dev>,
-	Boris Pismenny <borisp@nvidia.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	Mykola Lysenko <mykolal@fb.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	KP Singh <kpsingh@kernel.org>,
-	Stanislav Fomichev <sdf@fomichev.me>,
-	Hao Luo <haoluo@google.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Shuah Khan <shuah@kernel.org>,
-	Ihor Solodrai <isolodrai@meta.com>,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org
-Subject: [PATCH bpf-next v1 2/2] selftests/bpf: Add test to cover ktls with bpf_msg_pop_data
-Date: Fri, 23 May 2025 21:18:59 +0800
-Message-ID: <20250523131915.19349-3-jiayuan.chen@linux.dev>
-In-Reply-To: <20250523131915.19349-1-jiayuan.chen@linux.dev>
-References: <20250523131915.19349-1-jiayuan.chen@linux.dev>
+	s=arc-20240116; t=1748006493; c=relaxed/simple;
+	bh=/uUt2+APUt4s0Nz60O85gXCqiHDW+NUda7bgTQ9s4zA=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=qk1hJeGyLXZpQq4+OtFTMfURy7XpqMD1QF7fL1mT7JV9bfipXNHzNSsgxYoKSlvwIU0wxW7wFnE0EYoYO1/je0mBqdcaT/kSl0PueJf34aqtvGSsIiRSC86lfPmFRW1+21x5a6PvbN3/4Od73AhC6SFkXXykVhCWDUVzjFwp0Qc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
+Received: from [127.0.0.1] (unknown [116.232.18.143])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dlan)
+	by smtp.gentoo.org (Postfix) with ESMTPSA id 2C661341214;
+	Fri, 23 May 2025 13:21:24 +0000 (UTC)
+From: Yixun Lan <dlan@gentoo.org>
+Date: Fri, 23 May 2025 21:21:04 +0800
+Subject: [PATCH] riscv: dts: spacemit: enable eMMC for K1 SoC
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250523-22-k1-sdhci-v1-1-6e0adddf7494@gentoo.org>
+X-B4-Tracking: v=1; b=H4sIAD92MGgC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDUyMjXSDKNtQtTslIztS1NE02N7VMtDA3SzJVAuooKEpNy6wAmxYdW1s
+ LAKTyPGldAAAA
+X-Change-ID: 20250522-22-k1-sdhci-95c759a876b5
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Paul Walmsley <paul.walmsley@sifive.com>, 
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+ Alexandre Ghiti <alex@ghiti.fr>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, linux-mmc@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-riscv@lists.infradead.org, 
+ spacemit@lists.linux.dev, linux-kernel@vger.kernel.org, 
+ Yixun Lan <dlan@gentoo.org>
+X-Mailer: b4 0.15-dev
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2046; i=dlan@gentoo.org;
+ h=from:subject:message-id; bh=/uUt2+APUt4s0Nz60O85gXCqiHDW+NUda7bgTQ9s4zA=;
+ b=owEBzQIy/ZANAwAKATGq6kdZTbvtAcsmYgBoMHZRXIKtowFCnagfr9Rq++0L2B169bs0Js09E
+ u79NhUnKKWJApMEAAEKAH0WIQS1urjJwxtxFWcCI9wxqupHWU277QUCaDB2UV8UgAAAAAAuAChp
+ c3N1ZXItZnByQG5vdGF0aW9ucy5vcGVucGdwLmZpZnRoaG9yc2VtYW4ubmV0QjVCQUI4QzlDMzF
+ CNzExNTY3MDIyM0RDMzFBQUVBNDc1OTREQkJFRAAKCRAxqupHWU277agqEACEg1JERuzP6GAAfe
+ +/iOIQofq6ZZHkvXp8Ex5h4rWrCz5Qc+PeSiVr86NAaueGn/eCdbOu2HOxmR2EbfDCXeRBSRwv5
+ ygzktFwRVDpy5cHa3mtBKUWJLGQWrAYafFeS63cfDctwCf/NzRKxO6rr9zVZzMHZPcgD3zdbw4w
+ PTE91toi733KC5fClm7+KXm+uBX3+aP9sGD5T985J1RoOjseWmk6O4ubX35ID3YEMvZV67aBYjK
+ N2fPaAL6F8jweW4uZg+hBCnskT8oZLtjFZC3WKF7KM/6HBorSRvSWnAQ4YZvKtKZIlyW36aQjE0
+ wxCz6DZfoncaiki0kvqEhfrQ5pRh5Tk1blFWS1gChSKBXODBTUAmiyPPFinOhTPm/Cj3hO55XYe
+ VFEycSiwa/lUlSGiyP7CC9YYm/2F6kaGLvNnfm/I5TGZj+0wfpxTPCeio6lZQiEqwsIgOjmWQBK
+ 2tez2ZGxANDjNVbxJ+l1gSZuG2VQFM7IVuSzrgRoId70cc0GKIL56A0r9uV/T8Fv+gwAhN36Kfz
+ cECmBNH59D8iKh+7tMuXGsYTFy4sFokiSoB/qMhnxoNWFvQke+iZvd3DFy4zZ1SPXjOUir0bJHV
+ IC0l/FaS5t9bPPjkq5Q6ymq3puIBw3FUwsHzQoLsHvQcsqdB6uzJAwhiggi2XvW+raNw==
+X-Developer-Key: i=dlan@gentoo.org; a=openpgp;
+ fpr=50B03A1A5CBCD33576EF8CD7920C0DBCAABEFD55
 
-The selftest can reproduce an issue where using bpf_msg_pop_data() in
-ktls causes errors on the receiving end.
+Enable eMMC support for SpacemiT K1 SoC, successfully tested on
+Bananapi-F3 board which shipped with a 16GB eMMC chip - KLMAG1JETD-B041.
 
-Signed-off-by: Jiayuan Chen <jiayuan.chen@linux.dev>
+Signed-off-by: Yixun Lan <dlan@gentoo.org>
 ---
- .../selftests/bpf/prog_tests/sockmap_ktls.c   | 91 +++++++++++++++++++
- .../selftests/bpf/progs/test_sockmap_ktls.c   |  4 +
- 2 files changed, 95 insertions(+)
+Adjust DTS to enable eMMC support for K1 SoC, tested on Bananapi-F3
+board.
 
-diff --git a/tools/testing/selftests/bpf/prog_tests/sockmap_ktls.c b/tools/testing/selftests/bpf/prog_tests/sockmap_ktls.c
-index b6c471da5c28..b87e7f39e15a 100644
---- a/tools/testing/selftests/bpf/prog_tests/sockmap_ktls.c
-+++ b/tools/testing/selftests/bpf/prog_tests/sockmap_ktls.c
-@@ -314,6 +314,95 @@ static void test_sockmap_ktls_tx_no_buf(int family, int sotype, bool push)
- 	test_sockmap_ktls__destroy(skel);
- }
+This patch is currently based on SpacemiT SoC tree[1] for-next branch.
+
+Link: https://github.com/spacemit-com/linux/ [1]
+---
+ arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts | 10 ++++++++++
+ arch/riscv/boot/dts/spacemit/k1.dtsi            |  9 +++++++++
+ 2 files changed, 19 insertions(+)
+
+diff --git a/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts b/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
+index 816ef1bc358ec490aff184d5915d680dbd9f00cb..fe22c747c5012fe56d42ac8a7efdbbdb694f31b6 100644
+--- a/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
++++ b/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
+@@ -30,6 +30,16 @@ led1 {
+ 	};
+ };
  
-+static void test_sockmap_ktls_tx_pop(int family, int sotype)
-+{
-+	char msg[37] = "0123456789abcdefghijklmnopqrstuvwxyz\0";
-+	int c = 0, p = 0, one = 1, sent, recvd;
-+	struct test_sockmap_ktls *skel;
-+	int prog_fd, map_fd;
-+	char rcv[50] = {0};
-+	int err;
-+	int i, m, r;
++&emmc {
++	bus-width = <8>;
++	mmc-hs400-1_8v;
++	mmc-hs400-enhanced-strobe;
++	non-removable;
++	no-sd;
++	no-sdio;
++	status = "okay";
++};
 +
-+	skel = test_sockmap_ktls__open_and_load();
-+	if (!ASSERT_TRUE(skel, "open ktls skel"))
-+		return;
-+
-+	err = create_pair(family, sotype, &c, &p);
-+	if (!ASSERT_OK(err, "create_pair()"))
-+		goto out;
-+
-+	prog_fd = bpf_program__fd(skel->progs.prog_sk_policy);
-+	map_fd = bpf_map__fd(skel->maps.sock_map);
-+
-+	err = bpf_prog_attach(prog_fd, map_fd, BPF_SK_MSG_VERDICT, 0);
-+	if (!ASSERT_OK(err, "bpf_prog_attach sk msg"))
-+		goto out;
-+
-+	err = bpf_map_update_elem(map_fd, &one, &c, BPF_NOEXIST);
-+	if (!ASSERT_OK(err, "bpf_map_update_elem(c)"))
-+		goto out;
-+
-+	err = init_ktls_pairs(c, p);
-+	if (!ASSERT_OK(err, "init_ktls_pairs(c, p)"))
-+		goto out;
-+
-+	struct {
-+		int	pop_start;
-+		int	pop_len;
-+	} pop_policy[] = {
-+		/* trim the start */
-+		{0, 2},
-+		{0, 10},
-+		{1, 2},
-+		{1, 10},
-+		/* trim the end */
-+		{35, 2},
-+		/* New entries should be added before this line */
-+		{-1, -1},
-+	};
-+
-+	i = 0;
-+	while (pop_policy[i].pop_start >= 0) {
-+		skel->bss->pop_start = pop_policy[i].pop_start;
-+		skel->bss->pop_end =  pop_policy[i].pop_len;
-+
-+		sent = send(c, msg, sizeof(msg), 0);
-+		if (!ASSERT_EQ(sent, sizeof(msg), "send(msg)"))
-+			goto out;
-+
-+		recvd = recv_timeout(p, rcv, sizeof(rcv), MSG_DONTWAIT, 1);
-+		if (!ASSERT_EQ(recvd, sizeof(msg) - pop_policy[i].pop_len, "pop len mismatch"))
-+			goto out;
-+
-+		/* verify the data
-+		 * msg: 0123456789a bcdefghij klmnopqrstuvwxyz
-+		 *                  |       |
-+		 *                  popped data
-+		 */
-+		for (m = 0, r = 0; m < sizeof(msg);) {
-+			/* skip checking the data that has been popped */
-+			if (m >= pop_policy[i].pop_start &&
-+			    m <= pop_policy[i].pop_start + pop_policy[i].pop_len - 1) {
-+				m++;
-+				continue;
-+			}
-+
-+			if (!ASSERT_EQ(msg[m], rcv[r], "data mismatch"))
-+				goto out;
-+			m++;
-+			r++;
-+		}
-+		i++;
-+	}
-+out:
-+	if (c)
-+		close(c);
-+	if (p)
-+		close(p);
-+	test_sockmap_ktls__destroy(skel);
-+}
-+
- static void run_tests(int family, enum bpf_map_type map_type)
- {
- 	int map;
-@@ -338,6 +427,8 @@ static void run_ktls_test(int family, int sotype)
- 		test_sockmap_ktls_tx_cork(family, sotype, true);
- 	if (test__start_subtest("tls tx egress with no buf"))
- 		test_sockmap_ktls_tx_no_buf(family, sotype, true);
-+	if (test__start_subtest("tls tx with pop"))
-+		test_sockmap_ktls_tx_pop(family, sotype);
- }
+ &uart0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&uart0_2_cfg>;
+diff --git a/arch/riscv/boot/dts/spacemit/k1.dtsi b/arch/riscv/boot/dts/spacemit/k1.dtsi
+index c0f8c5fca975d73b6ea6886da13fcf55289cb16c..14097f1f6f447bd33ff3aaa07382d27ca8e59a48 100644
+--- a/arch/riscv/boot/dts/spacemit/k1.dtsi
++++ b/arch/riscv/boot/dts/spacemit/k1.dtsi
+@@ -511,6 +511,15 @@ pll: clock-controller@d4090000 {
+ 			#clock-cells = <1>;
+ 		};
  
- void test_sockmap_ktls(void)
-diff --git a/tools/testing/selftests/bpf/progs/test_sockmap_ktls.c b/tools/testing/selftests/bpf/progs/test_sockmap_ktls.c
-index 8bdb9987c0c7..83df4919c224 100644
---- a/tools/testing/selftests/bpf/progs/test_sockmap_ktls.c
-+++ b/tools/testing/selftests/bpf/progs/test_sockmap_ktls.c
-@@ -7,6 +7,8 @@ int cork_byte;
- int push_start;
- int push_end;
- int apply_bytes;
-+int pop_start;
-+int pop_end;
- 
- struct {
- 	__uint(type, BPF_MAP_TYPE_SOCKMAP);
-@@ -22,6 +24,8 @@ int prog_sk_policy(struct sk_msg_md *msg)
- 		bpf_msg_cork_bytes(msg, cork_byte);
- 	if (push_start > 0 && push_end > 0)
- 		bpf_msg_push_data(msg, push_start, push_end, 0);
-+	if (pop_start >= 0 && pop_end > 0)
-+		bpf_msg_pop_data(msg, pop_start, pop_end, 0);
- 
- 	return SK_PASS;
- }
++		emmc: mmc@d4281000 {
++			compatible = "spacemit,k1-sdhci";
++			reg = <0x0 0xd4281000 0x0 0x200>;
++			clocks = <&syscon_apmu CLK_SDH_AXI>, <&syscon_apmu CLK_SDH2>;
++			clock-names = "core", "io";
++			interrupts = <101>;
++			status = "disabled";
++		};
++
+ 		syscon_apmu: system-controller@d4282800 {
+ 			compatible = "spacemit,k1-syscon-apmu";
+ 			reg = <0x0 0xd4282800 0x0 0x400>;
+
+---
+base-commit: 3aa64cd126b4fd298ba5d28227ea3f82cd6f541c
+change-id: 20250522-22-k1-sdhci-95c759a876b5
+
+Best regards,
 -- 
-2.47.1
+Yixun Lan
 
