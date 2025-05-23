@@ -1,67 +1,46 @@
-Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 453221EFFAC;
-	Fri, 23 May 2025 03:59:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 572E8367;
+	Fri, 23 May 2025 04:06:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747972801; cv=none; b=IM2+R541DSYo+UsZhFdOrPDNMJ+s9g+1o9G1zhxaIv4Y230CLV3JcnXChFfyHie5IBvxpk+JE4yRMbBhy501ppBXR7dA3dqM+z9hVgeWSxy8MCSMhVT+xuLk6RLFoDy3dIf5wFlhA+CODpSezJ9UHivMwUBX9cu4w/APf9qM+kw=
+	t=1747973174; cv=none; b=DGHy8RNLIT5lwu5gDPB08gSUAPCD+CIapmej8GpKXdTn3b6qmz52Swnn8uUBB3iN9KgQZAL2gIV8dmXSx1TRLS3owE/bHjT7fjGioh2n1AmdUYIIoNSxwmWHYCmmSYW8dpRxf3zmW+XVYlnQlyJDRkmq6LEtyoR81M8HDx6NBZs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747972801; c=relaxed/simple;
-	bh=Sj7m6EM7kndCHsPvRtfATw9pHhcHJtt1zDi6ri9XT5E=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=bqoRpgmMJSN6di+c6tUH9h3QhqxQjEkVD1VzbyXQISHaclOCxdn3B7Cuiocc6F0qYxAB7Zuo/kJYaCNgIdrJPwZkSsJpf7AIQwdQ7BW8Xc3UEhHZcRHlzRAkq+T5fhfACAFeZHECupwm8QtIivBd7mwGiHNdC5GiVYh3IY7hvl0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OsY5Zht2; arc=none smtp.client-ip=209.85.216.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747973174; c=relaxed/simple;
+	bh=Dd6hg5anYs4NDvtjZ+7fjfMWyb/P3mJi/lIxyob4a0o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MW0jwiBID1s5SaoEvzWpeaYjuJUR9+YYN6tWP7VSlA4V+5xgEotFPvKr+MlSsrc67+IhBcz/YhrJq+xzBspclIxlP3qHMJ5qqQfu0hn+73i70O+x4epp3aBMii6rWfIxGLyqrae4TWRDiKxboSU+qgo5HjAs1jpfVQxg1juX5pw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=qteADHn1; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OsY5Zht2"
-Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-30e542e4187so6437906a91.3;
-        Thu, 22 May 2025 20:59:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747972799; x=1748577599; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=DoUaDf9sklz66/nXsi99JBqWi7v39+C/PJqdOEBvY4c=;
-        b=OsY5Zht2j8SdCN+JWjK4bRCbZgdhCW+MxDsrdRKyeY5GsIEVU1svjhVFG0Xho25yTi
-         2kwYwmkVrrnI+ehrKzl2RDb8Y1T1iyw/D6KZcrb7KBZ9+HDp/Lm/qogiajj00GnpVKFG
-         Dnxd/iatxADTYnePLmbWFHQb6Hsaft2IBd2EExioaa8KdC/84d3FfzcdWTdFG80VKx8J
-         rip4hioNsgOBxTNiNXbns27x1zg/T9W0DQCewAUEScMYVVjl1mPUp3Fu1iL9uYJ/OWlT
-         +ArXcicxgZVIkIiKJUoOwP9Wfv0Fvi5FnYBu4q2zvnVfpb5YVB1NCkv6V532x2GvvrR0
-         nGnw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747972799; x=1748577599;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=DoUaDf9sklz66/nXsi99JBqWi7v39+C/PJqdOEBvY4c=;
-        b=ov0IJMtTGLa2OsC20mIc8qE/5iH33OpmwkDFWGBY5IjUcWgKSMftM98Uv2+qTNcijt
-         tyt+1rgDrKikSpuv4Bt9JoVammhJ6mBVgJY6/wtRwW5ueWAvp3WULAvffwd5KJWXkWGV
-         yLXUDa0J4IIM2OdWHvpZ1DGo3aw3yvjV/IYeZZMqBrqNpVRD/mCWQHClJeDxU8mG1mfd
-         ea8D8iBiyfpidzPNF0beT69mNg+I/wu0NGXNrrLT3IFEVv8R3FXn5vLu48/HT+owvXTA
-         SB6u95583kGcJOodkkLyp8GcPUE6jKSbJrEnYKh6ihKGcSVUooqNDAS762wT7NHk6Rzc
-         heNg==
-X-Forwarded-Encrypted: i=1; AJvYcCV7QKHEbb5oChqxV6YnrJxJEswPsye5zo5HMalsiMvV3XYopMLXx8UYXeFA386pdYfyJLppAvQfHtUjklRH42s=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwYsIXHC9a13zHGVeZHPklDOBuHI2kL8kpMMFFinHH5JO1+15XE
-	m/YU8h9Y4GGq1lWQtan68tVmJq4gCTVK0sx4gorn/nSrWt7U4YTAmFG2
-X-Gm-Gg: ASbGncufM7e9KxtWt6JSZbsls/9iPlLhWzI/B2yh6BnqHP1d5MceuO1ktTkGaFW+Ljd
-	J4wiz2Q3U1m05o9/Ke2n3NLh4YjvcnaWqZbh1tES1V018ChB1yra4/sqixHJfAFdXCGr0s+6WOm
-	epgfkhgoYX8TrI/+LXcErMksfJAaKrXtnKpcDjgs4hi5Z2zltwowpILeahAit5yjNcy1a2Q4Ypn
-	qV1YsV4XTPYBM/JIlO14NgU2lDQHgjkdYiBaR8/mOlngNBD0Qonstzkh5rl3uAGBjvs4hB82jos
-	cLT7JwUJTUoVbmIsbziiw0TVvc3/qUdjLu1anS5taLhdcUyddWu/kLvwfh6roVzHazZo
-X-Google-Smtp-Source: AGHT+IEIiA+D0qQyxvTOmBXHIAVCDDhXMSPK+IhMRA0cF96xdqi3Y/mxBxAyjZlzOIhAF3ZkrM3lqg==
-X-Received: by 2002:a17:90b:1ccc:b0:30e:823f:ef3a with SMTP id 98e67ed59e1d1-30e823ff012mr41569578a91.30.1747972799271;
-        Thu, 22 May 2025 20:59:59 -0700 (PDT)
-Received: from brak3r-Ubuntu ([2401:4900:4e66:e488:f144:96a:edee:4588])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30f365b158fsm6328162a91.8.2025.05.22.20.59.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 May 2025 20:59:58 -0700 (PDT)
-Date: Fri, 23 May 2025 09:29:55 +0530
-From: Rujra Bhatt <braker.noob.kernel@gmail.com>
-To: shuah@kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	linux-kernel-mentees@lists.linux.dev
-Subject: [PATCH v2] selftests: timers: valid-adjtimex: fix coding style issues
-Message-ID: <aC_yu6Ll2E-3qRHj@brak3r-Ubuntu>
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="qteADHn1"
+Received: by linux.microsoft.com (Postfix, from userid 1127)
+	id DD8C5201DB37; Thu, 22 May 2025 21:06:06 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com DD8C5201DB37
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1747973166;
+	bh=NAc+eegSvTa3ay9n8M4zgkCmIydrJCYRiYijS0bKWHY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=qteADHn1rWU9VHl2Z/C4U8p+yUZcUHpD1HTu6F5tS2wBexDJ3bi5X9adO6ru9agQ6
+	 3ksSh2+9mxpgeP5AK491vtaBbjHdzBmbrEMLo4D3JEGN1S/gRXNEWItDhKAk1Siuw9
+	 oA+4VyzttcT6utUrI+yZWEe8O2iLUhyLdpZjHBgI=
+Date: Thu, 22 May 2025 21:06:06 -0700
+From: Saurabh Singh Sengar <ssengar@linux.microsoft.com>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+	decui@microsoft.com, andrew+netdev@lunn.ch, davem@davemloft.net,
+	edumazet@google.com, pabeni@redhat.com, horms@kernel.org,
+	ast@kernel.org, daniel@iogearbox.net, hawk@kernel.org,
+	john.fastabend@gmail.com, sdf@fomichev.me, kuniyu@amazon.com,
+	ahmed.zaki@intel.com, aleksander.lobakin@intel.com,
+	linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+	ssengar@microsoft.com, stable@vger.kernel.org
+Subject: Re: [PATCH net,v2] hv_netvsc: fix potential deadlock in
+ netvsc_vf_setxdp()
+Message-ID: <20250523040606.GA25497@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+References: <1747823103-3420-1-git-send-email-ssengar@linux.microsoft.com>
+ <20250522151346.57390f40@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -70,60 +49,66 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20250522151346.57390f40@kernel.org>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 
+On Thu, May 22, 2025 at 03:13:46PM -0700, Jakub Kicinski wrote:
+> On Wed, 21 May 2025 03:25:03 -0700 Saurabh Sengar wrote:
+> > The MANA driver's probe registers netdevice via the following call chain:
+> > 
+> > mana_probe()
+> >   register_netdev()
+> >     register_netdevice()
+> > 
+> > register_netdevice() calls notifier callback for netvsc driver,
+> > holding the netdev mutex via netdev_lock_ops().
+> > 
+> > Further this netvsc notifier callback end up attempting to acquire the
+> > same lock again in dev_xdp_propagate() leading to deadlock.
+> > 
+> > netvsc_netdev_event()
+> >   netvsc_vf_setxdp()
+> >     dev_xdp_propagate()
+> > 
+> > This deadlock was not observed so far because net_shaper_ops was never set,
+> 
+> The lock is on the VF, I think you meant to say that no device you use
+> in Azure is ops locked?
+> 
+> There's also the call to netvsc_register_vf() on probe path, please
+> fix or explain why it doesn't need locking in the commit message.
 
-This patch corrects minor coding style issues to comply with the Linux kernel coding style:
+This patch specifically addresses the netvsc_register_vf() path only.
+I omitted the mention of netvsc_register_vf() in the commit message
+to keep the function path shorter. The full stack trace is provided below:
 
-- Align closing parentheses to match opening ones in printf statements.
-- Break long lines to keep them within the 100-column limit.
+[   92.542180]  dev_xdp_propagate+0x2c/0x1b0
+[   92.542185]  netvsc_vf_setxdp+0x10d/0x180 [hv_netvsc]
+[   92.542192]  netvsc_register_vf.part.0+0x179/0x200 [hv_netvsc]
+[   92.542196]  netvsc_netdev_event+0x267/0x340 [hv_netvsc]
+[   92.542200]  notifier_call_chain+0x5f/0xc0
+[   92.542203]  raw_notifier_call_chain+0x16/0x20
+[   92.542205]  call_netdevice_notifiers_info+0x52/0xa0
+[   92.542209]  register_netdevice+0x7c8/0xaa0
+[   92.542211]  register_netdev+0x1f/0x40
+[   92.542214]  mana_probe+0x6e2/0x8e0 [mana]
+[   92.542220]  mana_gd_probe+0x187/0x220 [mana]
 
-These changes address warnings reported by checkpatch.pl and do not
-affect functionality.
+If you prefer I can update the stack trace in commit meesage
+From:
 
-changes in v2 : 
-- Resubmitted the patch with a properly formatted commit message,
-following patch submission guidelines, as suggested by Shuah Khan.
+netvsc_netdev_event()
+  netvsc_vf_setxdp()
+    dev_xdp_propagate()
 
-Signed-off-by: Rujra Bhatt <braker.noob.kernel@gmail.com>
----
- tools/testing/selftests/timers/valid-adjtimex.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+To:
 
-diff --git a/tools/testing/selftests/timers/valid-adjtimex.c
-b/tools/testing/selftests/timers/valid-adjtimex.c
-index 6b7801055ad1..5110f9ee285c 100644
---- a/tools/testing/selftests/timers/valid-adjtimex.c
-+++ b/tools/testing/selftests/timers/valid-adjtimex.c
-@@ -157,7 +157,7 @@ int validate_freq(void)
-                if (tx.freq == outofrange_freq[i]) {
-                        printf("[FAIL]\n");
-                        printf("ERROR: out of range value %ld actually set!\n",
--                                       tx.freq);
-+                              tx.freq);
-                        pass = -1;
-                        goto out;
-                }
-@@ -172,7 +172,7 @@ int validate_freq(void)
-                        if (ret >= 0) {
-                                printf("[FAIL]\n");
-                                printf("Error: No failure on invalid
-ADJ_FREQUENCY %ld\n",
--                                       invalid_freq[i]);
-+                                      invalid_freq[i]);
-                                pass = -1;
-                                goto out;
-                        }
-@@ -238,7 +238,8 @@ int set_bad_offset(long sec, long usec, int use_nano)
-        tmx.time.tv_usec = usec;
-        ret = clock_adjtime(CLOCK_REALTIME, &tmx);
-        if (ret >= 0) {
--               printf("Invalid (sec: %ld  usec: %ld) did not fail! ",
-tmx.time.tv_sec, tmx.time.tv_usec);
-+               printf("Invalid (sec: %ld  usec: %ld) did not fail! ",
-+                      tmx.time.tv_sec, tmx.time.tv_usec);
-                printf("[FAIL]\n");
-                return -1;
-        }
---
-2.43.0
+netvsc_netdev_event()
+  netvsc_register_vf()
+    netvsc_vf_setxdp()
+      dev_xdp_propagate()
 
+- Saurabh
+
+> -- 
+> pw-bot: cr
