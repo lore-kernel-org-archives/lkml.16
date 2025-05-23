@@ -1,129 +1,133 @@
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D48B19ADBF
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 16:31:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A91FEC2;
+	Fri, 23 May 2025 16:31:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748017866; cv=none; b=FFXCUezXsejTTv79mvZ1ii8TTTQAhc+7YDVxQof7Zd78boyjaD8N5phwBYpdyVF9YjhRfIS0xfZyiCL8eRtIGLjYftiWapqsjXGgiTefbRDAicso5oi5x07UNhTtJhTlWCJOKqUgV7zgy6cVfXXXoeEQTzAr4+tBUOiQ2LzI3mA=
+	t=1748017910; cv=none; b=ZTi/H6iM4cQ/79aPrQuEfnxZwiArCtlyela+TequxPqPcVMTZGxjrcSv6S268jq+pyFXj1s/37bbXteRLuK2fTlygOOzYBczmBn4epcRvS0FUy2a8IMdqQxJQ0U3T1FZpR2tKqWX3vqzk4ftldRX2cs4BgqLlzZBkb8LdLRbJEA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748017866; c=relaxed/simple;
-	bh=Gnya4kZJNaiLXSzvh+buuhUU5zQHKYGxGFiSUVggn2U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VkzTxdkEAIuPKjmdBya7OJj0CkVdrd1wFJaOesWqahmTj0EGTu/u03kYQuzNaBbkiwSUfC5mXgNuHMhdekY4qqHqelgOF7BSiWQiry65WBiYW8gKhCaPw6bpmgx5jhOSfGz2EeWQ79IY258xIorLdLRZyMPGZeC+jCtqIsDgQ68=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=EzTYcsH+; arc=none smtp.client-ip=209.85.221.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1748017910; c=relaxed/simple;
+	bh=soAT5mZi84ierpWzAHJRM96N2N0UFw9a+qmc9EgFlOE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=CDBUN/Y+XZ7DwK4rGS7BuLaPnoQSHNcA82iKY5hPfKFrMjJRhR+lHzCiPpQ/BP4djr/yNzVatn5MYC3ex7SD9AXKns21z4xLcVfjZHA2JyLJK9GD3wtuxihFGdLf0uGadxQa7y4kQ64w6grGRVcvI8ejqK8UUder9BGoLXnBIms=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=mtOl8AnF; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EzTYcsH+"
-Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-3a363ccac20so77617f8f.2
-        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 09:31:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1748017863; x=1748622663; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=igC70o8ybU294XiVgv2dCfqybHERyfthoQG4v5gTf+k=;
-        b=EzTYcsH+ieJ5fX2NllerQTXMyQxKFnWPU+3zbOOEnfQRiaq/jJXyscLGoeTWraIOC4
-         QkLYHyUABa1nYZdp8fpa5m1pa6qmn0aD7NZz/x2egfiXx+MY757sj23oAJfqVR8ly0dW
-         iY5Pntf2btt5gHlj91fM5gALOTBgrT969EUKzobzzflnRwpvjjLnvInc0rkXeOwoo8ug
-         iDNuInh8VmHqnATrgiOxdSbWT2xwLbOsvNh26Lp6KKmdrL9ZRocxF1EP4yZmjb7hhM6A
-         hIythVqCjncip4OfeWhRSYAl/xFrdzW9QCla7qUrMoD9owVgwrHnPzFSwRptVKKrlBcl
-         aR5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748017863; x=1748622663;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=igC70o8ybU294XiVgv2dCfqybHERyfthoQG4v5gTf+k=;
-        b=D1pDNxP5nao0xE4E5AEoitOJuE6Yai/16UIv8WWztb9QHD89odF/WcPlpmXhFMX/AM
-         nmUHrg+ttyMyh5SBY2lxjbo29Kdq2fW8nogPG421gH44LGEsnp3qItYtDBXvIJmmpgmY
-         WbBG0MYuQ5qtB5Dx5xNKQPJYBUn78irVVJSCnZX950SVuuCfi4IxyfwhA22WQnDL9ntP
-         Gd2EGBAp2tPgwrHJKRuq5CndbsjUfaT3has8BiJuJcEX5aC8CuY3LK6//gKeS38CPAwi
-         BeIDoNL0XBm65E/go2Np6+pnRctahE7NIfdkPZQaYBjKCFb8j+HYaRqhms++wnsUHyUI
-         kErg==
-X-Forwarded-Encrypted: i=1; AJvYcCUfx3VuZMGkdk8Dbm3MCDvwpPmUJtYS7iro9JzUbI2MubqdRsTDtwyeftZI1L8adHIJ/mouYJLkitSkvpQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyqk0A7QY59zq0OQg/ug5TWY6zTIYBRmv1mHhsvrmHFk5H9d66I
-	ph89FQn19GckzIa0Dd/ksk09vTaNpJlRi35Ds+fBYrwVee+Isc6ZNH3S04iuahzlk80=
-X-Gm-Gg: ASbGncs6N/F7K2Rrjp2xRlt0S4xHCgCLXE9VoJ4hoqTIEC1Fzc6XrkChddvdoFZYKpK
-	VjWOYprQw2ksgrQ9Pfh32Q1iPzDbkiqwt4D1t8JhWIyZuYvM7hI3ib4Z0BDUFEOTqATfpfS3WKe
-	/LG9REfwUi2NU0m6AhQKDJaHEU44sJo3wnz9Ku1PSn6GEOONh2a1oE4+x3LHz474QlvWkgeALyN
-	CYoEpAafCiriDtCP4QME84H12HW84CQMMrpwWKs7La5fBqOOwR1I1PgN8grmv51FjhGUIjJO4AT
-	fOmJfyNTDZ20jZiIotsszPtE3Molyzvmcmt+QPoTnbRB4fpcSSk06SZm
-X-Google-Smtp-Source: AGHT+IGGTvjpF7sv2w5zjZ0EW0X+dRfZsZNJ1QvwQmRtd2GPgdBA3IhgoeMEt8+gF3DgVzVaSIQ1fw==
-X-Received: by 2002:a05:6000:4202:b0:3a3:61b8:a637 with SMTP id ffacd0b85a97d-3a4c20f8dedmr3518632f8f.22.1748017862887;
-        Fri, 23 May 2025 09:31:02 -0700 (PDT)
-Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-44804e89c42sm153252035e9.21.2025.05.23.09.31.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 May 2025 09:31:02 -0700 (PDT)
-Date: Fri, 23 May 2025 19:30:58 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: long.yunjian@zte.com.cn
-Cc: sudeep.holla@arm.com, cristian.marussi@arm.com, peng.fan@nxp.com,
-	florian.fainelli@broadcom.com, fang.yumeng@zte.com.cn,
-	arm-scmi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, christophe.jaillet@wanadoo.fr,
-	mou.yi@zte.com.cn, ouyang.maochun@zte.com.cn, xu.lifeng1@zte.com.cn
-Subject: Re: [PATCH v2] firmware: arm_scmi: Use dev_err_probe() simplify the
- code
-Message-ID: <aDCiwqwez8nzk5F8@stanley.mountain>
-References: <20250521161449954uFxEsoI6Zg_7wDu6IAfWk@zte.com.cn>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="mtOl8AnF"
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54NFSlY9028753;
+	Fri, 23 May 2025 16:31:33 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	l/GrWp4HULjcDXYDW8Gpf3PiKQTF8RUOBLQlrUOZL18=; b=mtOl8AnFmq61+wmp
+	uKLg76S63Ks7G3gGRC1zmZ1B8UlAXDQ6MXDxWR9q+19ihrc2iOK3ogLGI++7VOwF
+	JKjq3teBGnbbca0ZRlB4MLlHypXj2KtBtNDfY6ckNaCehe0+Ji0JolVdofT3oP8/
+	RSgppDs5VdIUjfwpMIuJhETw3pm4BIGAQ7avczPCX5fRgdAN9OPN1bCVB73QuNjj
+	LZyU0m35bjEmHjizXv70K/HK/jCub7H/bUE/3g2ixRb69SZtAz23hK2c4e6EfPSc
+	eNZyVMaYTGSXdNpcClWvdtz1uZwtf2Hz7tzCg9Va+B3Gxr3MxMWAjRU42z0s2mk3
+	vHWCdg==
+Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46s8c299hv-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 23 May 2025 16:31:32 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54NGVWKm019916
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 23 May 2025 16:31:32 GMT
+Received: from [10.110.22.10] (10.80.80.8) by nasanex01b.na.qualcomm.com
+ (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 23 May
+ 2025 09:31:30 -0700
+Message-ID: <bdd44c38-24dc-4775-88cd-c96696e6bb4b@quicinc.com>
+Date: Fri, 23 May 2025 09:31:29 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250521161449954uFxEsoI6Zg_7wDu6IAfWk@zte.com.cn>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH next] drm/panel: nt37801: Fix IS_ERR() vs NULL check in
+ probe()
+To: Dan Carpenter <dan.carpenter@linaro.org>,
+        Krzysztof Kozlowski
+	<krzysztof.kozlowski@linaro.org>
+CC: Krzysztof Kozlowski <krzk@kernel.org>,
+        Neil Armstrong
+	<neil.armstrong@linaro.org>,
+        Maarten Lankhorst
+	<maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
+        <kernel-janitors@vger.kernel.org>
+References: <aDCdn9r_ZAUTRpWn@stanley.mountain>
+Content-Language: en-US
+From: Jessica Zhang <quic_jesszhan@quicinc.com>
+In-Reply-To: <aDCdn9r_ZAUTRpWn@stanley.mountain>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIzMDE1MCBTYWx0ZWRfXx0q0YYhFtXxQ
+ zVgrtrowFCrjpL3XfIOZ8uLoBMzCOK9dcnyHjwXQInvLiVItMheszQpxUsA8YaYijtpNqUR2nGG
+ 5Y/NFgGXxaz0l0aSXAhKaPD3sQoCpPpUVN05dQB09ohWbXtywrkUMce5umFWJjVcwi7wdgCc3ch
+ tdJvP/wg26BA+VXI0QWoj1xmHUGRPTacBwQOE7VkHIF1IzOlc7K+DM/WY2aiyOeQ7y9yLPsoPfY
+ i9Y0LFzokA0CRWbFscCWijoMVZJ3922cTPvnAUh7i5r/ziA7bK7phgnbOIHcufHvvaev2f7zjcw
+ hJVjFtAkrLVt8ji53vhPDxDkEYqnIRG9sVqGeidPe4ExNe98p1O7uzCAOxbN6FXz/Jyr7O1PFDH
+ EAjDL/7np9BzbkCCQKzI3bdbzGWpobrydI37BkevAi7mqeWRRf/p7UTnrj4ORhoaALFFvUmU
+X-Authority-Analysis: v=2.4 cv=RIuzH5i+ c=1 sm=1 tr=0 ts=6830a2e4 cx=c_pps
+ a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=KKAkSRfTAAAA:8
+ a=COk6AnOGAAAA:8 a=XMHdZpqdGEBm9EcGwjcA:9 a=QEXdDO2ut3YA:10
+ a=cvBusfyB2V15izCimMoJ:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-ORIG-GUID: l51ohz8uEy-T7YCnPHWwGRVsnyd7SAcg
+X-Proofpoint-GUID: l51ohz8uEy-T7YCnPHWwGRVsnyd7SAcg
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-23_05,2025-05-22_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ clxscore=1011 phishscore=0 suspectscore=0 malwarescore=0 bulkscore=0
+ mlxlogscore=999 spamscore=0 lowpriorityscore=0 mlxscore=0 priorityscore=1501
+ adultscore=0 impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
+ definitions=main-2505230150
 
-On Wed, May 21, 2025 at 04:14:49PM +0800, long.yunjian@zte.com.cn wrote:
-> From: Yumeng Fang <fang.yumeng@zte.com.cn>
+
+
+On 5/23/2025 9:09 AM, Dan Carpenter wrote:
+> The devm_drm_panel_alloc() function returns error pointers, it doesn't
+> return NULL.  Update the check to match.
 > 
-> In the probe path, dev_err() can be replaced with dev_err_probe()
-> which will check if error code is -EPROBE_DEFER and prints the
-> error name. It also sets the defer probe reason which can be
-> checked later through debugfs.
-> 
-> Signed-off-by: Yumeng Fang <fang.yumeng@zte.com.cn>
+> Fixes: 4fca6849864d ("drm/panel: Add Novatek NT37801 panel driver")
+> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+
+Reviewed-by: Jessica Zhang <quic_jesszhan@quicinc.com>
+
 > ---
-> v1 -> v2
-> (1) Order the includes alphabetically.
-> (2) Delete "ret = PTR_ERR(*)", and then replace ret in dev_err_probe with "PTR_ERR(*)".
+>   drivers/gpu/drm/panel/panel-novatek-nt37801.c | 4 ++--
+>   1 file changed, 2 insertions(+), 2 deletions(-)
 > 
->  .../firmware/arm_scmi/transports/mailbox.c    | 20 +++++++------------
->  1 file changed, 7 insertions(+), 13 deletions(-)
-> 
-> diff --git a/drivers/firmware/arm_scmi/transports/mailbox.c b/drivers/firmware/arm_scmi/transports/mailbox.c
-> index bd041c99b92b..764cbeac2492 100644
-> --- a/drivers/firmware/arm_scmi/transports/mailbox.c
-> +++ b/drivers/firmware/arm_scmi/transports/mailbox.c
-> @@ -8,6 +8,7 @@
-> 
->  #include <linux/err.h>
->  #include <linux/device.h>
-> +#include <linux/dev_printk.h>
->  #include <linux/mailbox_client.h>
->  #include <linux/of.h>
->  #include <linux/of_address.h>
-> @@ -214,31 +215,24 @@ static int mailbox_chan_setup(struct scmi_chan_info *cinfo, struct device *dev,
-> 
->  	smbox->chan = mbox_request_channel(cl, tx ? 0 : p2a_chan);
->  	if (IS_ERR(smbox->chan)) {
-> -		ret = PTR_ERR(smbox->chan);
-> -		if (ret != -EPROBE_DEFER)
-> -			dev_err(cdev,
-> -				"failed to request SCMI %s mailbox\n", desc);
-> -		return ret;
-> +		return dev_err_probe(cdev, PTR_ERR(smbox->chan),
-> +				     "failed to request SCMI %s mailbox\n", desc);
->  	}
-
-Remove the { } braces as well.  They will cause a checkpatch problem if
-you re-run checkpatch.pl --strict on the resulting file.  Same for the
-other two as well.
-
-regards,
-dan carpenter
+> diff --git a/drivers/gpu/drm/panel/panel-novatek-nt37801.c b/drivers/gpu/drm/panel/panel-novatek-nt37801.c
+> index 84d367eab058..d6a37d7e0cc6 100644
+> --- a/drivers/gpu/drm/panel/panel-novatek-nt37801.c
+> +++ b/drivers/gpu/drm/panel/panel-novatek-nt37801.c
+> @@ -257,8 +257,8 @@ static int novatek_nt37801_probe(struct mipi_dsi_device *dsi)
+>   	ctx = devm_drm_panel_alloc(dev, struct novatek_nt37801, panel,
+>   				   &novatek_nt37801_panel_funcs,
+>   				   DRM_MODE_CONNECTOR_DSI);
+> -	if (!ctx)
+> -		return -ENOMEM;
+> +	if (IS_ERR(ctx))
+> +		return PTR_ERR(ctx);
+>   
+>   	ret = devm_regulator_bulk_get_const(dev,
+>   					    ARRAY_SIZE(novatek_nt37801_supplies),
 
