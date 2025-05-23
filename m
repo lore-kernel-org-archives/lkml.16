@@ -1,140 +1,121 @@
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E9B0202C3E;
-	Fri, 23 May 2025 01:52:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3894C2DCBE1;
+	Fri, 23 May 2025 01:54:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747965146; cv=none; b=l1GqPmAcqIHY6zEhHjx7m6nI3q3eQmAs7x7OjVUNVgbYobpXVc9N/L+wIrGwN7MSLDj8Gr/3JfjVxus/SlSmSMYWtHLX8LGRixLQB7PzrFAw9DeXiz76TwFXcZ5P4blj66G+jdsjbZ59xgD+dNYtH8Ax3VUumERQfNjPh1FsK7Q=
+	t=1747965271; cv=none; b=hhXcMNLa9nQK111paTnpiiR22Lj6kk6E77ROAnFzs0XvKmTzri1nJykB2tjYpYlftT+nuas96nQfW0/Zfy1bHUJWbEA+stDl9fB4UFaTeT9qqiXEL5uDmuUqvnTh6kcCirDtcw+j4p+GEHW/9twVP6XFZ1+q1Yykg8GcYzaYYy0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747965146; c=relaxed/simple;
-	bh=uouMkHQJEv9eK/Egv5tzPhNwrlsLTqqkNAi24xHuPlc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=iBtnC12rEILquEFov3HmCz47K7uS5/3dgaV/NMDcW1taBFyc0uZ0x5qdXmjRG3xk2uXdewq76k5yjLd+DrZighq1UYEQLNvwJzb9kLf+acDx/w/F+3hCW/O6I7ESkYjRJ9vqDU2+iaM4cMQPXh9+uJfO04DlInL4Bporvr3ndHc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.174])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4b3SmL4bFmz13LFD;
-	Fri, 23 May 2025 09:50:42 +0800 (CST)
-Received: from dggemv706-chm.china.huawei.com (unknown [10.3.19.33])
-	by mail.maildlp.com (Postfix) with ESMTPS id 1B6721400E3;
-	Fri, 23 May 2025 09:52:20 +0800 (CST)
-Received: from kwepemq200002.china.huawei.com (7.202.195.90) by
- dggemv706-chm.china.huawei.com (10.3.19.33) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Fri, 23 May 2025 09:52:19 +0800
-Received: from [10.174.177.223] (10.174.177.223) by
- kwepemq200002.china.huawei.com (7.202.195.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Fri, 23 May 2025 09:52:19 +0800
-Message-ID: <722186ce-174e-4201-acdf-ebf731fff7a3@huawei.com>
-Date: Fri, 23 May 2025 09:52:18 +0800
+	s=arc-20240116; t=1747965271; c=relaxed/simple;
+	bh=yHNn1kpmygwg53ZHi34KtfiW/yfFROg8GODehdXTALE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=QNDwIwuTD7ngxkOOWHV/xeKifHyKYtilRvI3SvM26c2nkQjeZ8Dpzxv8xJG3SVM7ca4LOPBOTTTHBgw+dbajZVg6+T/QlutoQE8wlnXOkBs1AUO+yY199eT5t8dwaIzBMzXB/VJl/NE66URWFCsJghTO8SlJNHT06iUkWqaNY04=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nXkF3ou3; arc=none smtp.client-ip=209.85.221.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nXkF3ou3"
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-3a37b5de515so651825f8f.2;
+        Thu, 22 May 2025 18:54:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747965268; x=1748570068; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=79V167OlWoOMjxF5WYVMw8k6BQD80P80B7UPNjk48/Q=;
+        b=nXkF3ou32sC6OzMu6Ck6l3B0bOM9mxdlwpO9pjU6DE/bpEfpLol62re8PLwymGsDOp
+         BrU+nVThOPokVd1hW1ndeP7NLUxBk7FlYPmtfPORQovTXqep8qyufkbg3/NSPLe2WQ9U
+         Jy4z9m7cv+DCxZ4+pK3+EGofVJZM8CTTs/7VfMZK8FBdjuCA/MF/8xU5X2Zgn0J8dOu2
+         XOn0VPUZ23q3260Acb42DHGwgtgPPLD5V88jNFiWeZkVVtAd5dMmhZU1rXK2wVPZk5wa
+         2/2PHb+kwgeB3KaZSPf5+A5raNEushUBt2IKvlf/SEIN7ufdg8x9IZGd4V4c08J3KysW
+         Ky/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747965268; x=1748570068;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=79V167OlWoOMjxF5WYVMw8k6BQD80P80B7UPNjk48/Q=;
+        b=P36yheaR5U76h09jM+6V7WOMXlEUT6hXTDoeVWscTzLR46oFBnJI9uCsI4/IK7S2Yp
+         A8bmmwWvrNQUabjqMwR7hpyZtgW+46W2I7cvExXyVj6ZVt6tMmouwpKKGaqFcGBIeUna
+         VD+317kWDQ6Tj+AIVnUbfQDB7Yc9oNqjZXZ9UjTs/YJoHLOwAKtVi8apJ9lj2eL379dW
+         anA68QISGcoyZKUmd7JUwm8qCbKcBqhhTjtH7Z+R2degdUNh3dGyogsI/kRpGwYlCuNu
+         u1l6MPWaEb6HLcuJMq6A6RP/Ptkfk5KVsObbbHBRW1SrfriBbMraftZnXMwQYlt61MM6
+         0pXg==
+X-Forwarded-Encrypted: i=1; AJvYcCWYwJf1arJ7Azud7ZX7bejCcF/iE/x/od5Tq1KsSmwkIrsYpePJVj+zcPGP/frdOPKSIyZZ0wddwvpl3jk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw0kmSCDY3hZ3T+E/pH8vf4nBUGOpmFVvDGWMFwmBsqyOqLdTP8
+	2mnzNmo0QnRVpSQEQQ19bZpFZuxu7LbSHLgwYXSS4iVzZiGTmHHVfeXX61ZdTJb+
+X-Gm-Gg: ASbGncsmEUFDC9JKsVU3yKFiBAhcqYT/Csucq8yjqBMEQEIxmfD6dXYOUZuC+J1yO9x
+	H9ZXzfB/TFTcnCOK/20OgcLZX4yAFSVv/z9ae6cVHc2McXb29nfMtbzu4ancmI2KsoxWEqknKaP
+	fWUihFNby4Eanq6EGpTcTbjT2K7OQFljpxNh3Bt1qCQP/69jmw0FY7dU0/nDF5dfIjX1CER0Uip
+	ZqjVAe6Re5buhAnuAvEDsq3VoBXDpLBIxs0qZfTihyNMw7XsIK5Kox3Z5MBhBCH9I1cplo+aTEf
+	QxLsdYNBZUwY75VBBFUX8UDK51JmWXPQ5Iou/qkf1CTcJz3C5XmLw5YY8Fvavasw4W7d7AANYv4
+	MiCMFxzRavA==
+X-Google-Smtp-Source: AGHT+IGP/OcQmZ+8Rez1eXPN6RCO//j5OyG61fsbXNCAyeBF66j+q2Pl5U4WUL+7/oxCe6xrEteKQA==
+X-Received: by 2002:a05:600c:350c:b0:442:e0e0:24d with SMTP id 5b1f17b1804b1-44b8cc9bf92mr1760595e9.7.1747965268035;
+        Thu, 22 May 2025 18:54:28 -0700 (PDT)
+Received: from localhost.localdomain ([156.208.37.0])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-447f1ef032esm130309995e9.9.2025.05.22.18.54.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 May 2025 18:54:27 -0700 (PDT)
+From: Abdelrahman Fekry <abdelrahmanfekry375@gmail.com>
+To: shuah@kernel.org,
+	skhan@linuxfoundation.org
+Cc: linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-kernel-mentees@lists.linux.dev,
+	Abdelrahman Fekry <abdelrahmanfekry375@gmail.com>
+Subject: [PATCH v2] selftests: acct: fix grammar and clarify output messages - Fixed email case mismatch in Signed-off-by
+Date: Fri, 23 May 2025 04:54:01 +0300
+Message-Id: <20250523015401.9712-1-abdelrahmanfekry375@gmail.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [BUG Report] KASAN: slab-use-after-free in
- page_pool_recycle_in_ring
-To: Jakub Kicinski <kuba@kernel.org>
-CC: Mina Almasry <almasrymina@google.com>, <hawk@kernel.org>,
-	<ilias.apalodimas@linaro.org>, <davem@davemloft.net>, <edumazet@google.com>,
-	<pabeni@redhat.com>, <horms@kernel.org>, <netdev@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <zhangchangzhong@huawei.com>
-References: <20250513083123.3514193-1-dongchenchen2@huawei.com>
- <CAHS8izOio0bnLp3+Vzt44NVgoJpmPTJTACGjWvOXvxVqFKPSwQ@mail.gmail.com>
- <34f06847-f0d8-4ff3-b8a1-0b1484e27ba8@huawei.com>
- <CAHS8izPh5Z-CAJpQzDjhLVN5ye=5i1zaDqb2xQOU3QP08f+Y0Q@mail.gmail.com>
- <20250519154723.4b2243d2@kernel.org>
- <CAHS8izMenFPVAv=OT-PiZ-hLw899JwVpB-8xu+XF+_Onh_4KEw@mail.gmail.com>
- <20250520110625.60455f42@kernel.org>
- <29d3e8fa-8cd0-4c93-a685-619758ab5af4@huawei.com>
- <20250522084759.6cfe3f6d@kernel.org>
-From: "dongchenchen (A)" <dongchenchen2@huawei.com>
-In-Reply-To: <20250522084759.6cfe3f6d@kernel.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: kwepems100002.china.huawei.com (7.221.188.206) To
- kwepemq200002.china.huawei.com (7.202.195.90)
+Content-Transfer-Encoding: 8bit
 
+This patch improves the clarity and grammar of output messages in the acct()
+selftest. Minor changes were made to user-facing strings and comments to make
+them easier to understand and more consistent with the kselftest style.
 
-> On Thu, 22 May 2025 23:17:32 +0800 dongchenchen (A) wrote:
->> Hi, Jakub
->> Maybe we can fix the problem as follow:
-> Yes! a couple of minor nit picks below..
->
->> diff --git a/net/core/page_pool.c b/net/core/page_pool.c
->> index 7745ad924ae2..de3fa33d6775 100644
->> --- a/net/core/page_pool.c
->> +++ b/net/core/page_pool.c
->> @@ -707,19 +707,18 @@ void page_pool_return_page(struct page_pool *pool, netmem_ref netmem)
->>    
->>    static bool page_pool_recycle_in_ring(struct page_pool *pool, netmem_ref netmem)
->>    {
->> +	bool in_softirq;
->>    	int ret;
->> -	/* BH protection not needed if current is softirq */
->> -	if (in_softirq())
->> -		ret = ptr_ring_produce(&pool->ring, (__force void *)netmem);
->> -	else
->> -		ret = ptr_ring_produce_bh(&pool->ring, (__force void *)netmem);
->>    
->> -	if (!ret) {
->> +	/* BH protection not needed if current is softirq */
->> +	in_softirq = page_pool_producer_lock(pool);
->> +	ret = __ptr_ring_produce(&pool->ring, (__force void *)netmem);
-> Maybe we can flip the return value here we won't have to negate it below
-> and at return? Like this:
->
-> 	ret = !__ptr_ring_produce(&pool->ring, (__force void *)netmem);
->
-> and adjust subsequent code
+Changes include:
+- Fixing grammar in printed messages and comments.
+- Rewording error and success outputs for clarity and professionalism.
+- Making the "root check" message more direct.
 
-Hi,Jakub
-Thanks for your suggestions!
+These updates improve readability without affecting test logic or behavior.
 
->> +	if (!ret)
->>    		recycle_stat_inc(pool, ring);
->> -		return true;
->> -	}
->>    
->> -	return false;
->> +	page_pool_producer_unlock(pool, in_softirq);
->> +
->> +	return ret ? false : true;
->>    }
->>    
->>    /* Only allow direct recycling in special circumstances, into the
->>
->> @@ -1091,10 +1090,16 @@ static void page_pool_scrub(struct page_pool *pool)
->>    
->>    static int page_pool_release(struct page_pool *pool)
->>    {
->> +	bool in_softirq;
->>    	int inflight;
->>    
->> +	/* Acquire producer lock to make sure we don't race with another thread
->> +	 * returning a netmem to the ptr_ring.
->> +	 */
->> +	in_softirq = page_pool_producer_lock(pool);
->>    	page_pool_scrub(pool);
->>    	inflight = page_pool_inflight(pool, true);
->> +	page_pool_producer_unlock(pool, in_softirq);
-> As I suggested earlier we don't have to lock the consumer, taking both
-> locks has lock ordering implications. My preference would be:
->
->    	page_pool_scrub(pool);
->    	inflight = page_pool_inflight(pool, true);
-> +	/* Acquire producer lock to make sure producers have exited. */
-> +	in_softirq = page_pool_producer_lock(pool);
-> +	page_pool_producer_unlock(pool, in_softirq);
+Signed-off-by: Abdelrahman Fekry <abdelrahmanfekry375@gmail.com>
+---
+ tools/testing/selftests/acct/acct_syscall.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-Yes! there is no need to hold lock for page_pool_inflight(). The lock can
-be used as a barrier for the completion of the recycle process.
-I have tested this patch. The patch will be sent later.
------ Best Regards,
-Dong Chenchen
+diff --git a/tools/testing/selftests/acct/acct_syscall.c b/tools/testing/selftests/acct/acct_syscall.c
+index 87c044fb9293..2c120a527574 100644
+--- a/tools/testing/selftests/acct/acct_syscall.c
++++ b/tools/testing/selftests/acct/acct_syscall.c
+@@ -22,9 +22,9 @@ int main(void)
+ 	ksft_print_header();
+ 	ksft_set_plan(1);
+ 
+-	// Check if test is run a root
++	// Check if test is run as root
+ 	if (geteuid()) {
+-		ksft_exit_skip("This test needs root to run!\n");
++		ksft_exit_skip("This test must be run as root!\n");
+ 		return 1;
+ 	}
+ 
+@@ -52,7 +52,7 @@ int main(void)
+ 	child_pid = fork();
+ 
+ 	if (child_pid < 0) {
+-		ksft_test_result_error("Creating a child process to log failed\n");
++		ksft_test_result_error("Failed to create child process for logging\n");
+ 		acct(NULL);
+ 		return 1;
+ 	} else if (child_pid > 0) {
+-- 
+2.25.1
 
