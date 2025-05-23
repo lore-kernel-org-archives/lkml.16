@@ -1,118 +1,99 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1C23213235
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 03:43:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4745F2DCC02;
+	Fri, 23 May 2025 03:43:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747971817; cv=none; b=nVCBb5v/Br1+SgOq2TYoBok8YhLlcWJ1uzKtnW/y9Vusm9PwSiAPa/j9T3Gz3p8bFqHk4LMNgYG5l0NAXRzH0FAoNyIrYBlrO1GSaFhkN1qJNYRnmVDlSQJnf2vxAKekrOON0wn1DTSVd/iqryMo0qX7yy/8SG8WqRROc8KQio0=
+	t=1747971841; cv=none; b=A/CiCIcfZ6i1jQ6JVs+vBfQh1jon94r8XQb2snAswCwlLeQuXg1jANkhVSk1Kscp8T9baWr63wdFYJdH52QEL1GZGSMuYAbd/5xLRPdRdiw0kZu4JgaIA4XZsgJe4c+JlYbkMIdcERjOkqTqHQEj324xqqrVR3ZJaMj5ogTYih0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747971817; c=relaxed/simple;
-	bh=HrlWj+7xjE+GxEjW2W381e1FRH0QZe7LDhNlyqrk0CA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GfMm2if+Ju+gVsdmk5RnokKG7tu8BVxJDeOXseGsJ0ONyO8bEV6Rl5t3fuEH2qINAbN4HKtmvwT+9ktldjLKgGwI71J/tolgYpaUuzwapK9DBsvGkMw58q82uBRjHbGlWmlN4zthKI2G39lGKHWQ7u1pa6as1PtmA1ixEcYzm8Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=U0m0ZwOA; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="U0m0ZwOA"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-2320d06b728so48512685ad.1
-        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 20:43:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1747971815; x=1748576615; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=J05dvsnqUxHvTInzLD4bICl0NDkAyj3stBB+zRj5LSA=;
-        b=U0m0ZwOATm4UGzoruj1RqRQwGmevtSJFGpgYuLgVtWtM8ZHDbCHiBEH8riKZkgRcDV
-         0GB41KGoDA6aaftvOQErwWmSQps+aPeUfDOGEkOg02jRxI4zOkX5km0O3FCf1YVaMTTK
-         ZnVqz7cwJfJTp0X9L51SQFczkIGT6nXTRT2G+i0/JfpF2C9ZNmTGUvMszqju4ldKuM7/
-         R5uOCSjw1QbQMi6/RU/LOTSFrKRw7ptGp/04t9qc2fNx1AX3N2Sz1jcTO/o7ive0wPn6
-         +mFB2X4ePXj4Nl1H3NMaUYcvOTcU5ct5XA/ku53fKf38Fn5YjKFlqiiMn+BtLkT5NAQk
-         K2Ig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747971815; x=1748576615;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=J05dvsnqUxHvTInzLD4bICl0NDkAyj3stBB+zRj5LSA=;
-        b=pMOmPLkXr247WQqLaA+yvuyw1LIW0XqyT0STyaornDvdFVkgtkXBgfXDpB8kY4szbn
-         Uod7CwLY5fQpHEsqjr+vlvLj4PeMdNloZRwxtiCYN1KydJxcOK7VYAc+J4JkC0tMZLoJ
-         VFDtkDyqaivbT0St47QJ6Znj3LpYzhSLjlrXfXEn8H6cRAfn4p7zZ7XQQoJ3b5trj0t9
-         UdY5Rw1D4gXK/Pt/KF899FGp8E3fXJfeTt24yTX5axSHa/67+NbdaeziDthQ397HdtFU
-         MGlDbQ4W0+OAUNJYwmmO3xpi2RoAUgT+yig0yD6e1+G02t6KzCZVQCQup5TPIM9/zFy4
-         IN+w==
-X-Forwarded-Encrypted: i=1; AJvYcCXnEfJsWPtmhJyYe2obGDvg3TFmmIeYpMCYHTY2qDJ9bc+ciV64lqLAKivw/yMmjm5zqj7W/CnwbW7OiPQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzbrIpGMNjsZ86HSxALSqlzZ1QYutg6I/XuNJpg6ijOJHJUOSda
-	icMh5LaS5ei7XbTAJK5xKj6eoxzmv/Ft/6C43b5r673MT1CEEY2vSreeOSwB3tRoENQ=
-X-Gm-Gg: ASbGncv2N6KIye4cvJqoUnCqH+XvyErPX51veZZeJ2bHLxSsuKqCL3x1lRQCqRsER8K
-	4eGJHIt8DQa2m7BOf1zkZU8oY3Jlcle087cxcJBUt/ScY2drc9CF1dxIWJB2rqQgzivr60HM08r
-	+D44W1k3d+nPDiZGtKWyrbyOPGrt5HVbyHrPoSyZNO+TeyC9q0lB0hRi7s9MvQRgOoIRXsiK5ux
-	g11YcxoMWPHQNYfXpN8/dPP7eUr6GsA8Nu8S/Q6C5zMSRpLlrs4M0LLeyZLJxnOGB07QgoIMql1
-	5nkmUftZULNK536hNt/g35IcqP5AvKZa3FLX8qnRSA17OZxXMW79mZdW+AHjTj3WT9Ce8Og8ILW
-	yyBCEzE1rIw==
-X-Google-Smtp-Source: AGHT+IFJUa2ZA4G+IYco+Be+FUJVLivd3f5/OkH9AHpXW8S/SRBQ8SwylmKbpKD7GepKWMTvQ7YN5g==
-X-Received: by 2002:a17:902:c951:b0:220:c911:3f60 with SMTP id d9443c01a7336-231d454eb37mr342440245ad.47.1747971815006;
-        Thu, 22 May 2025 20:43:35 -0700 (PDT)
-Received: from [10.68.122.90] ([63.216.146.178])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-231d4ac948asm115132435ad.22.2025.05.22.20.43.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 22 May 2025 20:43:34 -0700 (PDT)
-Message-ID: <0cdf967f-9606-4d12-9ea3-140f9bffe516@bytedance.com>
-Date: Fri, 23 May 2025 11:43:30 +0800
+	s=arc-20240116; t=1747971841; c=relaxed/simple;
+	bh=pvtNNF3h+3VSF0hj81ZgGrG4VIQvL8NxH6ruZPJeRYc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=URjwzwU4mGCRUMiSDxqAY7lA8HgUoasYIStFWL7bP0DwixR1hin2lYQ1YhoQj7Y2cqy8Q/zRjP9prUA9VZljRKjR4glRS+VDCRhqJ001Vvm+C/MZ/C4BtSe6QbrJ+F8gtOSbqYuBZxUuTLdXjbFyvTHEm1bOqKiu0X7SwNBkBeE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: 24637060378811f0b29709d653e92f7d-20250523
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.45,REQID:cee2b758-5df6-4ad5-b3b3-f9722e7e2662,IP:0,U
+	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
+	release,TS:0
+X-CID-META: VersionHash:6493067,CLOUDID:fcf36063a7b938f265164793eaa8fa7a,BulkI
+	D:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0|50,EDM:-3,IP:nil,UR
+	L:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,S
+	PR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-UUID: 24637060378811f0b29709d653e92f7d-20250523
+Received: from mail.kylinos.cn [(10.44.16.175)] by mailgw.kylinos.cn
+	(envelope-from <zhangzihuan@kylinos.cn>)
+	(Generic MTA)
+	with ESMTP id 1571438718; Fri, 23 May 2025 11:43:51 +0800
+Received: from mail.kylinos.cn (localhost [127.0.0.1])
+	by mail.kylinos.cn (NSMail) with SMTP id 3AD6BE003505;
+	Fri, 23 May 2025 11:43:51 +0800 (CST)
+X-ns-mid: postfix-682FEEF7-47407982
+Received: from localhost.localdomain (unknown [172.25.120.24])
+	by mail.kylinos.cn (NSMail) with ESMTPA id 57348E003505;
+	Fri, 23 May 2025 11:43:50 +0800 (CST)
+From: Zihuan Zhang <zhangzihuan@kylinos.cn>
+To: rafael@kernel.org,
+	len.brown@intel.com,
+	pavel@kernel.org
+Cc: linux-pm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Zihuan Zhang <zhangzihuan@kylinos.cn>
+Subject: [PATCH v2] PM / Freezer: Skip dead/zombie processes
+Date: Fri, 23 May 2025 11:42:53 +0800
+Message-Id: <20250523034253.88083-1-zhangzihuan@kylinos.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] mmu_notifiers: remove leftover stub macros
-To: Jann Horn <jannh@google.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
- Alistair Popple <apopple@nvidia.com>, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, Jason Gunthorpe <jgg@ziepe.ca>
-References: <20250523-mmu-notifier-cleanup-unused-v1-1-cc1f47ebec33@google.com>
-From: Qi Zheng <zhengqi.arch@bytedance.com>
-In-Reply-To: <20250523-mmu-notifier-cleanup-unused-v1-1-cc1f47ebec33@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
 
+ZOMBIE (exit_state =3D=3D EXIT_ZOMBIE) and DEAD (exit_state =3D=3D EXIT_D=
+EAD)
+processes have already finished execution and will not be scheduled again=
+.
 
+In the context of system suspend (e.g., S3), attempting to freeze such
+processes is unnecessary. Moreover, freezing them can obscure suspend
+diagnostics and delay resume if they appear "stuck" in logs.
 
-On 5/23/25 6:30 AM, Jann Horn wrote:
-> Commit ec8832d007cb ("mmu_notifiers: don't invalidate secondary TLBs as
-> part of mmu_notifier_invalidate_range_end()") removed the main definitions
-> of {ptep,pmdp_huge,pudp_huge}_clear_flush_notify; just their
-> !CONFIG_MMU_NOTIFIER stubs are left behind, remove them.
-> 
-> Signed-off-by: Jann Horn <jannh@google.com>
-> ---
->   include/linux/mmu_notifier.h | 3 ---
->   1 file changed, 3 deletions(-)
-> 
-> diff --git a/include/linux/mmu_notifier.h b/include/linux/mmu_notifier.h
-> index bc2402a45741..d1094c2d5fb6 100644
-> --- a/include/linux/mmu_notifier.h
-> +++ b/include/linux/mmu_notifier.h
-> @@ -654,9 +654,6 @@ static inline void mmu_notifier_subscriptions_destroy(struct mm_struct *mm)
->   #define pmdp_clear_flush_young_notify pmdp_clear_flush_young
->   #define ptep_clear_young_notify ptep_test_and_clear_young
->   #define pmdp_clear_young_notify pmdp_test_and_clear_young
-> -#define	ptep_clear_flush_notify ptep_clear_flush
-> -#define pmdp_huge_clear_flush_notify pmdp_huge_clear_flush
-> -#define pudp_huge_clear_flush_notify pudp_huge_clear_flush
+This patch introduces an early check for `p->exit_state !=3D 0` in
+`try_to_freeze_tasks()` and skips freezing for such tasks. This is a safe
+optimization because:
 
-Reviewed-by: Qi Zheng <zhengqi.arch@bytedance.com>
+ - They hold no running resources
+ - Their `task_struct` is only waiting to be collected or freed
 
-Thanks!
+Signed-off-by: Zihuan Zhang <zhangzihuan@kylinos.cn>
 
->   
->   static inline void mmu_notifier_synchronize(void)
->   {
-> 
-> ---
-> base-commit: e85dea591fbf900330c796579314bfb7cc399d31
-> change-id: 20250523-mmu-notifier-cleanup-unused-238762302a66
-> 
+Changes in v2:
+- Simplified code, added judgment of dead processes
+- Rewrite changelogs
+---
+ kernel/power/process.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/kernel/power/process.c b/kernel/power/process.c
+index 66ac067d9ae6..82528a79d46a 100644
+--- a/kernel/power/process.c
++++ b/kernel/power/process.c
+@@ -51,7 +51,7 @@ static int try_to_freeze_tasks(bool user_only)
+ 		todo =3D 0;
+ 		read_lock(&tasklist_lock);
+ 		for_each_process_thread(g, p) {
+-			if (p =3D=3D current || !freeze_task(p))
++			if (p =3D=3D current || p->exit_state || !freeze_task(p))
+ 				continue;
+=20
+ 			todo++;
+--=20
+2.25.1
 
