@@ -1,222 +1,88 @@
-Received: from mxhk.zte.com.cn (mxhk.zte.com.cn [63.216.63.35])
+Received: from outbound.pv.icloud.com (p-west1-cluster1-host8-snip4-1.eps.apple.com [57.103.64.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03EA9130A73;
-	Fri, 23 May 2025 08:55:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=63.216.63.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D67C130A73
+	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 08:56:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=57.103.64.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747990516; cv=none; b=awEq8hrE3c9EU2ET0PQmLXWV/8YquGgZM+bnvYUw3kRqrfgdQcqcfnVDK0rzkvVygcVpxBKYo7Igjweb4tPaGqKNtZx+t5xppl2sdmplHtNQzJ6rIiPow2rU6f6AEbDGHSkEaUcw5DrHA5gzDyy9TN5IhXlZ08Ik5kDsecnH7RQ=
+	t=1747990585; cv=none; b=HlMuzLn80vw0YN9CQCOXSUd/nGlegPpzA/Y0hSbG8o6l7PFPuJUj5SjqJEuUbgagiatwtij2kOJyEM8oCQpvqwf6j2RFQGaS3q7WVpiSQfD7CBHXMkpmz5zzxP2pEvD0sofAyZQrQiNf83L1LLchi9e/hbKi8XfYN7kH/mQEa3A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747990516; c=relaxed/simple;
-	bh=WuYWKSM/26vX+BnazJK6j8NxJkKFj+uIw8YHL5OYIWE=;
-	h=Date:Message-ID:Mime-Version:From:To:Cc:Subject:Content-Type; b=rL41l8eeBkxQ9KRGLYKOimWzKA7OPiLuBprpON6ye59ISEfcdRV/VKLl2NI5LIiQJdQAq29/FaBiTED+Xe81kIm3x4lBejVITAiq5XA9QJv8uvNwpMJsiun5bWWE22nTjvRiFXjNXlU/XdzL2mwJt+WpafW/5TXoCBPA9u8CpJU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=63.216.63.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zte.com.cn
-Received: from mse-fl1.zte.com.cn (unknown [10.5.228.132])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mxhk.zte.com.cn (FangMail) with ESMTPS id 4b3f9y56Llz5B1J6;
-	Fri, 23 May 2025 16:55:02 +0800 (CST)
-Received: from njb2app05.zte.com.cn ([10.55.22.121])
-	by mse-fl1.zte.com.cn with SMTP id 54N8sg6h069796;
-	Fri, 23 May 2025 16:54:42 +0800 (+08)
-	(envelope-from long.yunjian@zte.com.cn)
-Received: from mapi (njy2app04[null])
-	by mapi (Zmail) with MAPI id mid201;
-	Fri, 23 May 2025 16:54:45 +0800 (CST)
-Date: Fri, 23 May 2025 16:54:45 +0800 (CST)
-X-Zmail-TransId: 2afc683037d5ffffffffaf2-ab6b4
-X-Mailer: Zmail v1.0
-Message-ID: <20250523165445002hUV3RCqhv6Xng7_bbUxlJ@zte.com.cn>
+	s=arc-20240116; t=1747990585; c=relaxed/simple;
+	bh=1iTWbYs077VKyvs3vZv19qAfY6J3LzqMV+LLxQJYbag=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Q1J2HlwibATazgitTvs2bbZ/ikBzIBeLhn2dUx1z7n6NGiNnrmDuhppRKlRp3+29I2NOrjXsAJspWyw7Wxxq2q/BT/clpaRhIWX1H489tnWEqysze79VrCA8UN4edEihXu7AghoCJpP2M4pmiSlKAvZ5/ONMa5H9Z6nNQxFsKuE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ai-sast.com; spf=pass smtp.mailfrom=ai-sast.com; dkim=pass (2048-bit key) header.d=ai-sast.com header.i=@ai-sast.com header.b=D09E9oQj; arc=none smtp.client-ip=57.103.64.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ai-sast.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ai-sast.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ai-sast.com header.i=@ai-sast.com header.b="D09E9oQj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ai-sast.com; s=sig1;
+	bh=BykeWOFG8Ty7ohO6Jd2gflf8OkLQ78fEPhw+xt4LCjE=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:x-icloud-hme;
+	b=D09E9oQjj2/ot+d5WMgfQJb7ft36rJTXB2iRCzuZL51TYto/Z+c/N0+RPyk9odiKa
+	 50gbdu8v8ulFh/uRvQ+/qEUJwHU/urW7Edixgro8fA7Hc7JavVa011EsZi1KYN2sEl
+	 GpeDstRQz4HmkSWPbtEZgJZYfPMjzNJnZsRYRlhWlzyULgaoC0XM1vVdLTw258se3r
+	 18myxUPSbxSDGnYWWgXSHQpCcEOg6muxlYrLHO4mzEP4FQknqwgGPltYl/jE3N2ckq
+	 KNKrzMfYT+5EcvSN0B19IBPA6mVZAsKVs/oQZL9zACK0+MQK1FVxO9QtZAeAlx2M3B
+	 841FR6tsSZBfA==
+Received: from outbound.pv.icloud.com (localhost [127.0.0.1])
+	by outbound.pv.icloud.com (Postfix) with ESMTPS id 1B1151801EE2;
+	Fri, 23 May 2025 08:56:19 +0000 (UTC)
+Received: from localhost.localdomain (pv-asmtp-me-k8s.p00.prod.me.com [17.56.9.36])
+	by outbound.pv.icloud.com (Postfix) with ESMTPSA id 50FDA1801EC1;
+	Fri, 23 May 2025 08:56:17 +0000 (UTC)
+From: Ye Chey <yechey@ai-sast.com>
+To: philipp.reisner@linbit.com,
+	lars.ellenberg@linbit.com,
+	christoph.boehmwalder@linbit.com,
+	axboe@kernel.dk
+Cc: linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Ye Chey <yechey@ai-sast.com>
+Subject: [PATCH] drbd: fix potential NULL pointer dereference in drbd_md_sync_page_io
+Date: Fri, 23 May 2025 16:55:29 +0800
+Message-ID: <20250523085529.85368-1-yechey@ai-sast.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-From: <long.yunjian@zte.com.cn>
-To: <andi.shyti@kernel.org>
-Cc: <codrin.ciubotariu@microchip.com>, <nicolas.ferre@microchip.com>,
-        <alexandre.belloni@bootlin.com>, <claudiu.beznea@tuxon.dev>,
-        <wsa+renesas@sang-engineering.com>, <till@harbaum.org>,
-        <linux-i2c@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-renesas-soc@vger.kernel.org>, <mou.yi@zte.com.cn>,
-        <xu.lifeng1@zte.com.cn>, <fang.yumeng@zte.com.cn>,
-        <ouyang.maochun@zte.com.cn>
-Subject: =?UTF-8?B?W1BBVENIIHYyXSBpMmM6IFVzZSBzdHJfcmVhZF93cml0ZSgpIGhlbHBlcg==?=
-Content-Type: text/plain;
-	charset="UTF-8"
-X-MAIL:mse-fl1.zte.com.cn 54N8sg6h069796
-X-Fangmail-Anti-Spam-Filtered: true
-X-Fangmail-MID-QID: 683037E6.003/4b3f9y56Llz5B1J6
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-ORIG-GUID: AyTumcuuQawnp_KXmgcN_gJ6zBcgBl3o
+X-Proofpoint-GUID: AyTumcuuQawnp_KXmgcN_gJ6zBcgBl3o
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-23_02,2025-05-22_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0
+ mlxlogscore=999 phishscore=0 mlxscore=0 adultscore=0 suspectscore=0
+ bulkscore=0 clxscore=1030 malwarescore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.22.0-2503310001 definitions=main-2505230079
 
-From: Yumeng Fang <fang.yumeng@zte.com.cn>
+Under memory pressure, bio_alloc_bioset() may fail and return NULL. Add a
+check to handle this case gracefully by returning -ENOMEM instead of
+dereferencing a NULL pointer.
 
-Remove hard-coded strings by using the str_read_write() helper.
-
-Signed-off-by: Yumeng Fang <fang.yumeng@zte.com.cn>
-Signed-off-by: Yunjian Long <long.yunjian@zte.com.cn>
+Signed-off-by: Ye Chey <yechey@ai-sast.com>
 ---
-v1 -> v2
-Fix this in the whole i2c subsystem.
+ drivers/block/drbd/drbd_actlog.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
- drivers/i2c/algos/i2c-algo-pcf.c     | 3 ++-
- drivers/i2c/busses/i2c-at91-master.c | 3 ++-
- drivers/i2c/busses/i2c-sh_mobile.c   | 3 ++-
- drivers/i2c/busses/i2c-tiny-usb.c    | 3 ++-
- drivers/i2c/busses/i2c-viperboard.c  | 3 ++-
- drivers/i2c/i2c-core-base.c          | 3 ++-
- drivers/i2c/i2c-core-smbus.c         | 3 ++-
- 7 files changed, 14 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/i2c/algos/i2c-algo-pcf.c b/drivers/i2c/algos/i2c-algo-pcf.c
-index 7a01f2687b4c..740066ceaea3 100644
---- a/drivers/i2c/algos/i2c-algo-pcf.c
-+++ b/drivers/i2c/algos/i2c-algo-pcf.c
-@@ -19,6 +19,7 @@
- #include <linux/errno.h>
- #include <linux/i2c.h>
- #include <linux/i2c-algo-pcf.h>
-+#include <linux/string_choices.h>
- #include "i2c-algo-pcf.h"
-
-
-@@ -316,7 +317,7 @@ static int pcf_xfer(struct i2c_adapter *i2c_adap,
- 		pmsg = &msgs[i];
-
- 		DEB2(printk(KERN_DEBUG "i2c-algo-pcf.o: Doing %s %d bytes to 0x%02x - %d of %d messages\n",
--		     pmsg->flags & I2C_M_RD ? "read" : "write",
-+		     str_read_write(pmsg->flags & I2C_M_RD),
- 		     pmsg->len, pmsg->addr, i + 1, num);)
-
- 		ret = pcf_doAddress(adap, pmsg);
-diff --git a/drivers/i2c/busses/i2c-at91-master.c b/drivers/i2c/busses/i2c-at91-master.c
-index ee3b469ddfb9..374fc50bb205 100644
---- a/drivers/i2c/busses/i2c-at91-master.c
-+++ b/drivers/i2c/busses/i2c-at91-master.c
-@@ -26,6 +26,7 @@
- #include <linux/pinctrl/consumer.h>
- #include <linux/platform_device.h>
- #include <linux/pm_runtime.h>
-+#include <linux/string_choices.h>
-
- #include "i2c-at91.h"
-
-@@ -523,7 +524,7 @@ static int at91_do_twi_transfer(struct at91_twi_dev *dev)
- 	 */
-
- 	dev_dbg(dev->dev, "transfer: %s %zu bytes.\n",
--		(dev->msg->flags & I2C_M_RD) ? "read" : "write", dev->buf_len);
-+		str_read_write(dev->msg->flags & I2C_M_RD), dev->buf_len);
-
- 	reinit_completion(&dev->cmd_complete);
- 	dev->transfer_status = 0;
-diff --git a/drivers/i2c/busses/i2c-sh_mobile.c b/drivers/i2c/busses/i2c-sh_mobile.c
-index efe29621b8d7..adfcee6c9fdc 100644
---- a/drivers/i2c/busses/i2c-sh_mobile.c
-+++ b/drivers/i2c/busses/i2c-sh_mobile.c
-@@ -24,6 +24,7 @@
- #include <linux/platform_device.h>
- #include <linux/pm_runtime.h>
- #include <linux/slab.h>
-+#include <linux/string_choices.h>
-
- /* Transmit operation:                                                      */
- /*                                                                          */
-@@ -409,7 +410,7 @@ static irqreturn_t sh_mobile_i2c_isr(int irq, void *dev_id)
- 	pd->sr |= sr; /* remember state */
-
- 	dev_dbg(pd->dev, "i2c_isr 0x%02x 0x%02x %s %d %d!\n", sr, pd->sr,
--	       (pd->msg->flags & I2C_M_RD) ? "read" : "write",
-+	       str_read_write(pd->msg->flags & I2C_M_RD),
- 	       pd->pos, pd->msg->len);
-
- 	/* Kick off TxDMA after preface was done */
-diff --git a/drivers/i2c/busses/i2c-tiny-usb.c b/drivers/i2c/busses/i2c-tiny-usb.c
-index 0f2ed181b266..a18eab0992a1 100644
---- a/drivers/i2c/busses/i2c-tiny-usb.c
-+++ b/drivers/i2c/busses/i2c-tiny-usb.c
-@@ -10,6 +10,7 @@
- #include <linux/errno.h>
- #include <linux/module.h>
- #include <linux/slab.h>
-+#include <linux/string_choices.h>
- #include <linux/types.h>
-
- /* include interfaces to usb layer */
-@@ -71,7 +72,7 @@ static int usb_xfer(struct i2c_adapter *adapter, struct i2c_msg *msgs, int num)
-
- 		dev_dbg(&adapter->dev,
- 			"  %d: %s (flags %d) %d bytes to 0x%02x\n",
--			i, pmsg->flags & I2C_M_RD ? "read" : "write",
-+			i, str_read_write(pmsg->flags & I2C_M_RD),
- 			pmsg->flags, pmsg->len, pmsg->addr);
-
- 		/* and directly send the message */
-diff --git a/drivers/i2c/busses/i2c-viperboard.c b/drivers/i2c/busses/i2c-viperboard.c
-index 7523e7c02271..1bd602852e35 100644
---- a/drivers/i2c/busses/i2c-viperboard.c
-+++ b/drivers/i2c/busses/i2c-viperboard.c
-@@ -11,6 +11,7 @@
- #include <linux/errno.h>
- #include <linux/module.h>
- #include <linux/slab.h>
-+#include <linux/string_choices.h>
- #include <linux/types.h>
- #include <linux/mutex.h>
- #include <linux/platform_device.h>
-@@ -278,7 +279,7 @@ static int vprbrd_i2c_xfer(struct i2c_adapter *i2c, struct i2c_msg *msgs,
-
- 		dev_dbg(&i2c->dev,
- 			"  %d: %s (flags %d) %d bytes to 0x%02x\n",
--			i, pmsg->flags & I2C_M_RD ? "read" : "write",
-+			i, str_read_write(pmsg->flags & I2C_M_RD),
- 			pmsg->flags, pmsg->len, pmsg->addr);
-
- 		mutex_lock(&vb->lock);
-diff --git a/drivers/i2c/i2c-core-base.c b/drivers/i2c/i2c-core-base.c
-index 5f6ff35a2707..2ad2b1838f0f 100644
---- a/drivers/i2c/i2c-core-base.c
-+++ b/drivers/i2c/i2c-core-base.c
-@@ -41,6 +41,7 @@
- #include <linux/property.h>
- #include <linux/rwsem.h>
- #include <linux/slab.h>
-+#include <linux/string_choices.h>
-
- #include "i2c-core.h"
-
-@@ -2144,7 +2145,7 @@ static int i2c_quirk_error(struct i2c_adapter *adap, struct i2c_msg *msg, char *
- {
- 	dev_err_ratelimited(&adap->dev, "adapter quirk: %s (addr 0x%04x, size %u, %s)\n",
- 			    err_msg, msg->addr, msg->len,
--			    msg->flags & I2C_M_RD ? "read" : "write");
-+			    str_read_write(msg->flags & I2C_M_RD));
- 	return -EOPNOTSUPP;
- }
-
-diff --git a/drivers/i2c/i2c-core-smbus.c b/drivers/i2c/i2c-core-smbus.c
-index e73afbefe222..71eb1ef56f0c 100644
---- a/drivers/i2c/i2c-core-smbus.c
-+++ b/drivers/i2c/i2c-core-smbus.c
-@@ -16,6 +16,7 @@
- #include <linux/i2c-smbus.h>
- #include <linux/property.h>
- #include <linux/slab.h>
-+#include <linux/string_choices.h>
-
- #include "i2c-core.h"
-
-@@ -433,7 +434,7 @@ static s32 i2c_smbus_xfer_emulated(struct i2c_adapter *adapter, u16 addr,
- 	case I2C_SMBUS_I2C_BLOCK_DATA:
- 		if (data->block[0] > I2C_SMBUS_BLOCK_MAX) {
- 			dev_err(&adapter->dev, "Invalid block %s size %d\n",
--				read_write == I2C_SMBUS_READ ? "read" : "write",
-+				str_read_write(read_write == I2C_SMBUS_READ),
- 				data->block[0]);
- 			return -EINVAL;
- 		}
+diff --git a/drivers/block/drbd/drbd_actlog.c b/drivers/block/drbd/drbd_actlog.c
+index 742b2908f..68b925b49 100644
+--- a/drivers/block/drbd/drbd_actlog.c
++++ b/drivers/block/drbd/drbd_actlog.c
+@@ -141,6 +141,10 @@ static int _drbd_md_sync_page_io(struct drbd_device *device,
+ 
+ 	bio = bio_alloc_bioset(bdev->md_bdev, 1, op | op_flags, GFP_NOIO,
+ 			       &drbd_md_io_bio_set);
++	if (!bio) {
++		err = -ENOMEM;
++		goto out;
++	}
+ 	bio->bi_iter.bi_sector = sector;
+ 	err = -EIO;
+ 	if (bio_add_page(bio, device->md_io.page, size, 0) != size)
 -- 
-2.25.1
+2.44.0
+
