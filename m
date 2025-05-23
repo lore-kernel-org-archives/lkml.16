@@ -1,89 +1,100 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88592143748;
-	Fri, 23 May 2025 08:35:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E75B623F27B;
+	Fri, 23 May 2025 08:35:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747989330; cv=none; b=ECG2GLzMGIYgI/0R4y4ASJo0c46ZY/d7NvsYRcQMVG8CjXlwG9vGqPWQKtQ7cPEVQe6q3zQ4nftoTyIa98jQuqOy5uiNlm6GtuiizoKmqpzDNaEOGOYdoiDp/t+yOJR1hld7UGsx65KOHPXEcTvM46DPhC+HZ+/MYJqTYNHfAB4=
+	t=1747989335; cv=none; b=r4pmshwfBpclYCFHOX9oIjiRn9d8b+sbysOddimupXv/dnCXfqubwycmlvVr5szCBjT6GLHfgqoYRvg+cSys6CIZy5UHPRwznqVVnqIyvN8Mqn1lMjLAIFKNR4jnnCtjf7PHYqx1Nc2fLNyobo6rXEqVHSWdyhzVacM0sLzm8TI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747989330; c=relaxed/simple;
-	bh=aaYZ1roJQALwLOCDStlA1iSIFgYsVkGtdj7Sg7WhRg0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=LNGbd0sJe6Jxm+7jeyQKc9YFcrztnYLp6BSPsAa3SQoAoVahZMdVJxPYlovXfs19iB8PrlkAsTT+LARL93sAV1k7Slr9s7J6d/3TnmL+SXup25Ssaz1SwB3ZJ8E6b99cKcfVi+WuuT7J8HTLmevBpEji4lbquH480xzPCBjIJsg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XcRl5Kfk; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747989335; c=relaxed/simple;
+	bh=iEx80n8fgG/89TBgoMUIAJYHS9tPKdASg/vwQc+vbVg=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ud0eJzOSRhM5jfjvCIDb28Xrfh5n1r5mSkFWtT2PlR6wZRr5PSbe6roRQMu9dwzHVF15P9eDvQBRnNPlkj+thv8ds+aZhAsC91KFrXA5idAMRMqQ7kjEweyF3uvDBviUm4PNI9599rN4HGm9URfIaY20/bPoLQzkkqYCdQvDxY0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=a89jG/QS; arc=none smtp.client-ip=68.232.153.233
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XcRl5Kfk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2820AC4CEE9;
-	Fri, 23 May 2025 08:35:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747989330;
-	bh=aaYZ1roJQALwLOCDStlA1iSIFgYsVkGtdj7Sg7WhRg0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=XcRl5Kfk0LErS6d8DWAJDv0260N7QeO09U2nEFy+/POSGuCKNcjXuTRL0y6iQAms+
-	 gufkd6wsGs2pwGAfTTTeqykAQJSG3C9QMqDlczk12XUK8b+gnUv39dzAs+z+h0L9KU
-	 dFmNH9hN4SUxUnrSmfRCxsKQPdLr6cCcoy656aBC1W/wE/N9u+bAtp071aSh5VFXrz
-	 WJtXbFOeZWq0QZdlLbFa8iWq98vVMUNbRD5mf5u12jUsRXe1g45rdOeEwXKTllwLpA
-	 3PSQLEBw3ZwbknFRHyf2d/jwQlcLoLv/+KHFE3+7KsGGW2+zCXKKLsn6xXRMvWEl13
-	 YalaMnrvpCNlg==
-From: Christian Brauner <brauner@kernel.org>
-To: David Howells <dhowells@redhat.com>
-Cc: Christian Brauner <brauner@kernel.org>,
-	Paulo Alcantara <pc@manguebit.com>,
-	Steve French <sfrench@samba.org>,
-	Viacheslav Dubeyko <Slava.Dubeyko@ibm.com>,
-	netfs@lists.linux.dev,
-	v9fs@lists.linux.dev,
-	linux-afs@lists.infradead.org,
-	linux-cifs@vger.kernel.org,
-	ceph-devel@vger.kernel.org,
-	linux-nfs@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] netfs: Fix undifferentiation of DIO reads from unbuffered reads
-Date: Fri, 23 May 2025 10:35:21 +0200
-Message-ID: <20250523-audienz-brotkrumen-039bac60ea9c@brauner>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <3444961.1747987072@warthog.procyon.org.uk>
-References: <3444961.1747987072@warthog.procyon.org.uk>
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="a89jG/QS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1747989335; x=1779525335;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=iEx80n8fgG/89TBgoMUIAJYHS9tPKdASg/vwQc+vbVg=;
+  b=a89jG/QSoR8iNavr92Q0uJKr2LxOlTKYsfjppzX3CM6WHYNURqGEydJZ
+   0cPhhsz3K7tiKtbf9ALezvkYZp33DPEfTCi7aLzbEjkyX+bled1PUZiDY
+   mgGAhuf465vUELrbUsnzpc0jwDXe9+Ewj90+yO8ka6JNZG3PTaMw7aqcG
+   gfpaZ5uWxq4FSaOwTPENLvXD/Hc7O1Kuo7itP4meu9EdVZp60zKLyjeRD
+   lNZq6oGVZyJX+XuPlo6ug+UWw7BUcADDRtnO2iH6kUHt/GFD89j1zLQMS
+   dBKGWvNb5HB/oBE0IRMTwNA+QgiohAlUPBhx1hYyeIzXAb1Vt24j8nSUm
+   Q==;
+X-CSE-ConnectionGUID: rV4OX+4HSQ+r696EVeXuxw==
+X-CSE-MsgGUID: jK41x6mXQJmu38my/w8XNA==
+X-IronPort-AV: E=Sophos;i="6.15,308,1739862000"; 
+   d="scan'208";a="41989874"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa3.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 23 May 2025 01:34:31 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.44; Fri, 23 May 2025 01:34:28 -0700
+Received: from DEN-DL-M31836.microchip.com (10.10.85.11) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server id
+ 15.1.2507.44 via Frontend Transport; Fri, 23 May 2025 01:34:25 -0700
+From: Horatiu Vultur <horatiu.vultur@microchip.com>
+To: <andrew@lunn.ch>, <hkallweit1@gmail.com>, <linux@armlinux.org.uk>,
+	<davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
+	<pabeni@redhat.com>, <richardcochran@gmail.com>, <kory.maincent@bootlin.com>,
+	<wintera@linux.ibm.com>, <viro@zeniv.linux.org.uk>,
+	<quentin.schulz@bootlin.com>, <atenart@kernel.org>
+CC: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Horatiu Vultur
+	<horatiu.vultur@microchip.com>
+Subject: [PATCH net] net: phy: mscc: Stop clearing the the UDPv4 checksum for L2 frames
+Date: Fri, 23 May 2025 10:27:16 +0200
+Message-ID: <20250523082716.2935895-1-horatiu.vultur@microchip.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1377; i=brauner@kernel.org; h=from:subject:message-id; bh=aaYZ1roJQALwLOCDStlA1iSIFgYsVkGtdj7Sg7WhRg0=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWQYGHu/SDHY357Z8Vnt0kvnnd5Pl3f7Mby3s230lQmyW iYw5/2CjlIWBjEuBlkxRRaHdpNwueU8FZuNMjVg5rAygQxh4OIUgIks38vwT0H9fHuqkaemTEaT jfn5xW8rPt7zu6F+QEBTKqFnj+vLKQz/C9Xiw1OmmKf0fDXx/Lpto3rrw5Pspt38p9YeZml/+/0 cNwA=
-X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-On Fri, 23 May 2025 08:57:52 +0100, David Howells wrote:
-> On cifs, "DIO reads" (specified by O_DIRECT) need to be differentiated from
-> "unbuffered reads" (specified by cache=none in the mount parameters).  The
-> difference is flagged in the protocol and the server may behave
-> differently: Windows Server will, for example, mandate that DIO reads are
-> block aligned.
-> 
-> Fix this by adding a NETFS_UNBUFFERED_READ to differentiate this from
-> NETFS_DIO_READ, parallelling the write differentiation that already exists.
-> cifs will then do the right thing.
-> 
-> [...]
+We have noticed that when PHY timestamping is enabled, L2 frames seems
+to be modified by changing two 2 bytes with a value of 0. The place were
+these 2 bytes seems to be random(or I couldn't find a pattern).  In most
+of the cases the userspace can ignore these frames but if for example
+those 2 bytes are in the correction field there is nothing to do.  This
+seems to happen when configuring the HW for IPv4 even that the flow is
+not enabled.
+These 2 bytes correspond to the UDPv4 checksum and once we don't enable
+clearing the checksum when using L2 frames then the frame doesn't seem
+to be changed anymore.
 
-Applied to the vfs-6.16.netfs branch of the vfs/vfs.git tree.
-Patches in the vfs-6.16.netfs branch should appear in linux-next soon.
+Fixes: 7d272e63e0979d ("net: phy: mscc: timestamping and PHC support")
+Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
+---
+ drivers/net/phy/mscc/mscc_ptp.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-Please report any outstanding bugs that were missed during review in a
-new review to the original patch series allowing us to drop it.
+diff --git a/drivers/net/phy/mscc/mscc_ptp.c b/drivers/net/phy/mscc/mscc_ptp.c
+index 6f96f2679f0bf..6b800081eed52 100644
+--- a/drivers/net/phy/mscc/mscc_ptp.c
++++ b/drivers/net/phy/mscc/mscc_ptp.c
+@@ -946,7 +946,9 @@ static int vsc85xx_ip1_conf(struct phy_device *phydev, enum ts_blk blk,
+ 	/* UDP checksum offset in IPv4 packet
+ 	 * according to: https://tools.ietf.org/html/rfc768
+ 	 */
+-	val |= IP1_NXT_PROT_UDP_CHKSUM_OFF(26) | IP1_NXT_PROT_UDP_CHKSUM_CLEAR;
++	val |= IP1_NXT_PROT_UDP_CHKSUM_OFF(26);
++	if (enable)
++		val |= IP1_NXT_PROT_UDP_CHKSUM_CLEAR;
+ 	vsc85xx_ts_write_csr(phydev, blk, MSCC_ANA_IP1_NXT_PROT_UDP_CHKSUM,
+ 			     val);
+ 
+-- 
+2.34.1
 
-It's encouraged to provide Acked-bys and Reviewed-bys even though the
-patch has now been applied. If possible patch trailers will be updated.
-
-Note that commit hashes shown below are subject to change due to rebase,
-trailer updates or similar. If in doubt, please check the listed branch.
-
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
-branch: vfs-6.16.netfs
-
-[1/1] netfs: Fix undifferentiation of DIO reads from unbuffered reads
-      https://git.kernel.org/vfs/vfs/c/db26d62d79e4
