@@ -1,71 +1,131 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4CCA229B1C;
-	Fri, 23 May 2025 11:14:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B645221DB7;
+	Fri, 23 May 2025 11:15:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747998864; cv=none; b=JIFGfssbAQc8MypDOeyiXbqVcuBwDgfPUjUVX0xgEF8oENHaHNPmPy0iXtyZBahSq4gLW4VHDlVnCQ/XQZiArLXczrEWwut5ETTYMlTvt+D2jJyhlPRIeaNydRpRlrFHttLj8LdoKzSUGFKiG68VpFHjY5rvq2eu3X/Lfpg/ng4=
+	t=1747998907; cv=none; b=U9mYIjoi8rKKyPNZ0Eea4DnVD76umme70r9k8cODc2otbqwAFCX1GcuMPgP1E7DLngP7C4ZrwhAAoRcdzznZtjcNxiTq98ACRi3qOZr4WKRqQUmYcJdXzwijVm1Ysn0AZsAufbs1O3GQtxZvep8GZjmJtlmARC2yzxxZXFIY/fc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747998864; c=relaxed/simple;
-	bh=fQM36qxJEofH550SYEql58cMFaL0cbMQSEGt5673CDE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sriaRVd5IdO/W1mQ3F7C8H0WSN8xBLyrZLdFZiA/3pdQM6B/dSWr6u1mT1hZ4rGAPyISYgcKUte+JVXZiG5aIfbctmWyFfht5wCgttPb79Qwv3ASzFgq0orKbJqMt01Iz97X19K3S7auhW1bM5PgKYKo9EdTHHU2b15CPvFNK/8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=VTm6YpXt; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1747998907; c=relaxed/simple;
+	bh=uLBLtxOJYDYA8ZKK3hhgGuqxa2VSzPJe0qY4w9hbLA0=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=UPRGGw8O6tJED5NdxxWFHc2s85fkZn5noVdoOxv0OfsgnBMJcoERBoXIIoi3wYf3lWb9lXWcs4hWGqPbonJT4xwAwa8ZMKVKFdsE3OCANycfqUxwUg2/EQ5G/GdK2dNyMdT4qf8qrx7pZW1igHUC/UZ/EzzYo1vsMsdnm7E2UaM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OiPZf+2+; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="VTm6YpXt"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=qFE8tg2hkqL/QDMRDxBmyrXVviTv054S7EmAHGK1Cu8=; b=VTm6YpXt+rg+boo/Y2XlDLHfjF
-	uTUdFDuv7CRduVt0vgcpt1H3qXyWcKOUKwBJyBzjyRnEO9SE7JRpGZOhTfBBSEBXLgYIEYKbXlZDB
-	tpsVGBoReZXjDVnjHYqsbdp3l9lenZI0uN4sGBmjoTHFC/oSTcCk06BRBBvKukbRvtHnIoQOohxFp
-	AAk2xVkEy/ZUzR6Fa5IR24TYqZXrrQUCbpTsXVqK4NnKuLMx7BbaRzGqb7TLhfaz4cV5tvbk6Bwys
-	vuAtkKS5Ar3GY61i/vpDcdclGEPpTbtP7i+0lOv6wFveWet/d/4Gtx0J7aORLDJMVameaAuX32RZ0
-	m/g+9Shg==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uIQLx-00000007VFJ-22r2;
-	Fri, 23 May 2025 11:14:17 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 10E13300583; Fri, 23 May 2025 13:14:17 +0200 (CEST)
-Date: Fri, 23 May 2025 13:14:16 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Sean Christopherson <seanjc@google.com>
-Cc: "K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	Juergen Gross <jgross@suse.com>,
-	Stefano Stabellini <sstabellini@kernel.org>,
-	Paolo Bonzini <pbonzini@redhat.com>, Ingo Molnar <mingo@redhat.com>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Shuah Khan <shuah@kernel.org>, Marc Zyngier <maz@kernel.org>,
-	Oliver Upton <oliver.upton@linux.dev>, linux-kernel@vger.kernel.org,
-	linux-hyperv@vger.kernel.org, xen-devel@lists.xenproject.org,
-	kvm@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
-	K Prateek Nayak <kprateek.nayak@amd.com>,
-	David Matlack <dmatlack@google.com>
-Subject: Re: [PATCH v3 00/13] KVM: Make irqfd registration globally unique
-Message-ID: <20250523111416.GJ39944@noisy.programming.kicks-ass.net>
-References: <20250522235223.3178519-1-seanjc@google.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OiPZf+2+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747998906; x=1779534906;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=uLBLtxOJYDYA8ZKK3hhgGuqxa2VSzPJe0qY4w9hbLA0=;
+  b=OiPZf+2+fCd+ffgHwgXz5apZ04BKVfljz1AAbgU546EYI2Hm2lW4nEXA
+   VNBBhiU/cbVH0JIPTjPZAxQsEdHcW9vM40cu5jnn6X/2BDa5qdZdqVlUO
+   yAlnINhcz4VmqmpLNASfRRhiiPsUUKVyupFBdeRSuHyc1ToI0cN1xxW9p
+   DAwHKI74HS+Zc9diDJ62vJ0WUXYC+Mkc3qEt5yerY3WmPoPX4AriXa/5i
+   0jymltHROn0tMfmD2oJMYX/XSJKNnQLrtmkGSBCmOfRjdXxYDNwWOT3/6
+   /yEFGwMT21o2OSYFySH7twZUS+dQdHPEtlBEHOpuVL/uHoUplTyIjvUzO
+   w==;
+X-CSE-ConnectionGUID: +jSRvJb+S9aENZKSYkdMgw==
+X-CSE-MsgGUID: obqtnUS3SkKEqmT44t0qeA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11441"; a="72579764"
+X-IronPort-AV: E=Sophos;i="6.15,308,1739865600"; 
+   d="scan'208";a="72579764"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2025 04:15:04 -0700
+X-CSE-ConnectionGUID: Vtg0ZHwRQnaaq6htq1XEYA==
+X-CSE-MsgGUID: Qtk9mCUPRiWTvSmmhHzOkA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,308,1739865600"; 
+   d="scan'208";a="141165383"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.150])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2025 04:14:56 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Fri, 23 May 2025 14:14:53 +0300 (EEST)
+To: Bjorn Helgaas <helgaas@kernel.org>
+cc: linux-pci@vger.kernel.org, Jon Pan-Doh <pandoh@google.com>, 
+    Karolina Stolarek <karolina.stolarek@oracle.com>, 
+    Weinan Liu <wnliu@google.com>, 
+    Martin Petersen <martin.petersen@oracle.com>, 
+    Ben Fuller <ben.fuller@oracle.com>, Drew Walton <drewwalton@microsoft.com>, 
+    Anil Agrawal <anilagrawal@meta.com>, Tony Luck <tony.luck@intel.com>, 
+    Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>, 
+    Lukas Wunner <lukas@wunner.de>, 
+    Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
+    Sargun Dhillon <sargun@meta.com>, "Paul E . McKenney" <paulmck@kernel.org>, 
+    Mahesh J Salgaonkar <mahesh@linux.ibm.com>, 
+    Oliver O'Halloran <oohall@gmail.com>, Kai-Heng Feng <kaihengf@nvidia.com>, 
+    Keith Busch <kbusch@kernel.org>, Robert Richter <rrichter@amd.com>, 
+    Terry Bowman <terry.bowman@amd.com>, Shiju Jose <shiju.jose@huawei.com>, 
+    Dave Jiang <dave.jiang@intel.com>, LKML <linux-kernel@vger.kernel.org>, 
+    linuxppc-dev@lists.ozlabs.org, Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH v8 17/20] PCI/AER: Simplify add_error_device()
+In-Reply-To: <20250522232339.1525671-18-helgaas@kernel.org>
+Message-ID: <68ea56e6-f4d2-9521-9f89-e6e9246eb1b7@linux.intel.com>
+References: <20250522232339.1525671-1-helgaas@kernel.org> <20250522232339.1525671-18-helgaas@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250522235223.3178519-1-seanjc@google.com>
+Content-Type: multipart/mixed; boundary="8323328-1191482443-1747998893=:21466"
 
-On Thu, May 22, 2025 at 04:52:10PM -0700, Sean Christopherson wrote:
->   sched/wait: Drop WQ_FLAG_EXCLUSIVE from add_wait_queue_priority()
->   sched/wait: Add a waitqueue helper for fully exclusive priority
->     waiters
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+--8323328-1191482443-1747998893=:21466
+Content-Type: text/plain; charset=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+
+On Thu, 22 May 2025, Bjorn Helgaas wrote:
+
+> From: Bjorn Helgaas <bhelgaas@google.com>
+>=20
+> Return -ENOSPC error early so the usual path through add_error_device() i=
+s
+> the straightline code.
+>=20
+> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+> ---
+>  drivers/pci/pcie/aer.c | 15 +++++++++------
+>  1 file changed, 9 insertions(+), 6 deletions(-)
+>=20
+> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+> index 237741e66d28..24f0f5c55256 100644
+> --- a/drivers/pci/pcie/aer.c
+> +++ b/drivers/pci/pcie/aer.c
+> @@ -816,12 +816,15 @@ EXPORT_SYMBOL_NS_GPL(pci_print_aer, "CXL");
+>   */
+>  static int add_error_device(struct aer_err_info *e_info, struct pci_dev =
+*dev)
+>  {
+> -=09if (e_info->error_dev_num < AER_MAX_MULTI_ERR_DEVICES) {
+> -=09=09e_info->dev[e_info->error_dev_num] =3D pci_dev_get(dev);
+> -=09=09e_info->error_dev_num++;
+> -=09=09return 0;
+> -=09}
+> -=09return -ENOSPC;
+> +=09int i =3D e_info->error_dev_num;
+> +
+> +=09if (i >=3D AER_MAX_MULTI_ERR_DEVICES)
+> +=09=09return -ENOSPC;
+> +
+> +=09e_info->dev[i] =3D pci_dev_get(dev);
+> +=09e_info->error_dev_num++;
+> +
+> +=09return 0;
+>  }
+> =20
+>  /**
+>=20
+
+Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
+
+--=20
+ i.
+
+--8323328-1191482443-1747998893=:21466--
