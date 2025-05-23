@@ -1,198 +1,195 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEDF71FECBD
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 14:35:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F14BA1CB518;
+	Fri, 23 May 2025 14:36:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748010953; cv=none; b=i2tG0YbqEKx47eSpoHyRf6Rk0tNoxWe+E+Z1l8fhhqT8YoOxMPkh/x6SmYbtoi4ERbQ4vtZXGd9qWAVda7iNJ+LSvoJFgwSh0pv48lzFW06aMIZ9V0FuVyyDHgJ+nmb5/B40d5wEamGE71f7Qdb9zBhmK2ftN5sajTnYJHx7Foo=
+	t=1748010979; cv=none; b=lqbmzeqHPCVDB7OBZxitPMtyF7DHl9IWZOq7n0RO19dHN5y+50sqpEjec6bZ2GjaJ76zIzzcrBPMLykOIgYh3ZblkI2Sm246jIi/+OQR2TuY2f14SAAyKogMO/pSLNnautb7dvS8ygQ3ZTw3POWZ0+SZx4w27G7rZM+OruC1/E0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748010953; c=relaxed/simple;
-	bh=nb5MIHzZQoB8mXGv0L0rC6FlGJoqw4TAeRfHD8H751Y=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qobdl7TTeKEJ+AxFYwBnMFSEb4w5+gM5UwEgqwuzoXQpurs9Te09X1I39FsEd56RB228mejUDh4r6NEbqMt7T4KOrBSk+rSPc4xbcU7nL8eHgKsUjzC+htwfiCSXinpno7g4YR7+/Y0fNgIvqCmp8JzN3sLaF0Fdd6/V3pVsFJY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=SoaTJP8C; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1748010979; c=relaxed/simple;
+	bh=KWjfocBxHv0bliWXrGCrCB211qPT4vJ7witqppzAMPQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZErwMIOoQ3170mZU/ZZJPeiWOCGsbVRssWFFp/MTaYN6BAW1aidC9rwFaO2liOXL9eUTl7xbKUC20gzmOhoKOCIICrmAfxWzqjzdvDoIRMOVoDS6f4fhdaCx7F89UF9JrHp5k5pV0wTu7+RaLjDJEEXhREOtniRFNI2Pv8ylkNM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AYJ2cpm6; arc=none smtp.client-ip=209.85.210.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="SoaTJP8C"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54NCFZ1a023047
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 14:35:50 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	n6Mmle5qkluUPd0ScbLmNz4p82STRkadMEldLmYpYHM=; b=SoaTJP8C+BEEZnpN
-	UXakJEZoCSdSIucXnSRvs65Lyskrt0FGeNzyhwYJZ2wCVqK4OqXDoNs66V6PMK8b
-	sMun1t8JcQ/BMmMFwKTZ+1F8tAV2E59SA5HIzRdZiQdy69c5+3rOzEF8x7ORTAU3
-	ff9F2keYEuHK8tFxOI8+m4zpfaUMpcN84fxpb1fSrcq3UwMAtfY14lF186+JpN0D
-	IwxplXQ5Ru0h0W8W/e9nJEKCzKQO1Iw33Mqa88HhHKmmq77c72IlBbnB4+lWSiJ/
-	KpeGnasqVggY7fImSaDCPEAQ7tQmfwq0mJy06FvOXyz9Xn3/h3yt0bHcL5IQHwww
-	5HEkjQ==
-Received: from mail-pl1-f198.google.com (mail-pl1-f198.google.com [209.85.214.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46rwf52815-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 14:35:50 +0000 (GMT)
-Received: by mail-pl1-f198.google.com with SMTP id d9443c01a7336-23222fdb4f2so99352425ad.3
-        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 07:35:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AYJ2cpm6"
+Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-742caef5896so18654b3a.3;
+        Fri, 23 May 2025 07:36:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748010977; x=1748615777; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=sZS6KKAxkfiJ47UQ2g7848YiBd6r9R46LhHeN/beZvg=;
+        b=AYJ2cpm6o1kA7abJlLquYva7rN9mrdRi/8MfnzZXatZyFq2tNCYV1rr64pslXYur7V
+         Gq2rLL37CMjFvRS9dTr8npl/vwQF2LhTlDtxSAdVTJQUhIsz9Rm7SxSjupa3s1HxVDKF
+         OrcuK8BTMZBfKDcsDbyPkq3a/8ij9yMwICQAUD/pVmSD09szm5UY5MhrPUjWnvf03Qtx
+         rsfTyuAsbJkVFJ+3CsZh+iBlcujt/p26iXY6OnArCk/exEYGIsM6qoQhjCRqWfnZNCaa
+         SRtXBQ7C0gkHO8dI+yD1aARJ/HlS55aBuPauRNVs1/6AVKYo26bBWUXzThrptwZWyqW0
+         +IDA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748010949; x=1748615749;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=n6Mmle5qkluUPd0ScbLmNz4p82STRkadMEldLmYpYHM=;
-        b=uZTnWUIy6BmBY0QqG4CIpxvhpJZ+581dFHxfqiYmvZSWQbKE9Y/KTRPCNMdpz0uoyC
-         tDM3IgLAa5JhNENV81vzLJexjlsp9DivRrANnxfXSbE5g/zaRaoriVgZ/gvuzG8bKiql
-         sD0LTqURIacoLM5sAACt08R2ocC0/Bl+kcVhShCWioOr3VlflP2KpthevAWWo1WgBviP
-         xNXehY7qRzj4v+UXI2FWcWlF5M0PlccLStUYUQaimQbNtnACWzQd6W+o+4vGq/ogc9x6
-         mV79424yc3Q2Q6dZYGpyZJRnE6ZanobSqjKCVfMmuAPmgnhaABIqzNp3edE1vWSv7PyA
-         E1hA==
-X-Forwarded-Encrypted: i=1; AJvYcCXGztwfkIo4dyfx2BvI2QGpX3afjBUsiiraE3LRrdvaHEo46m3qkvCHt0ypht6KGnuLuPqPmqE9KK5HKtY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzjp1EcM9m5pTh1zHIX3O4a8ipuLlI7OOlOHftQrljGZ3Jv86vr
-	lE/Kh4g3821q4oyaI0Un+u1C9uIKWc9wzDhpAcVewAxwR+moJfPVBUObIjyZxofCtnaS08NFhAh
-	c1MBAg9MeAw8oOoRswtiBAiEkDdEzznxLxF41Oy6/eEA7uBE8dG0ufIoh7qViOePlwpvGOpEie1
-	Q=
-X-Gm-Gg: ASbGnctt6+l5VxJKyVXGnH4C2lGaOVvvJz+XYCBT7rWphN4dWFdBaA2ogXwyMfoguri
-	oDVXAnme8HXKXZZ1fbVRfMayMbKnTWNSZs6DVa9eJkvu1dZTtBaH0uEkHRksOG2+TsQLDE6hG4P
-	cq9WYw/fiH2+wu3L9xp27pli1YdwAI5gZX+euAk0S87C9kzlW65I0MLZVu5hbYtHi79Dz+M8r3O
-	13jvfDU7Ke8szRfEbvlOA4Z8/UJjHnbqscNcy03sU3QCLWZp8YwUMmVYlb9/JxCqkfR+j1ZGb87
-	EjnaIqqph8+5Tp9hehuY7tTM1odb95t0Jb6Ar8aE5QeRI9DZqw==
-X-Received: by 2002:a17:902:e846:b0:22e:4586:e33f with SMTP id d9443c01a7336-231de3bb190mr397101935ad.45.1748010948719;
-        Fri, 23 May 2025 07:35:48 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGvKQ06+PnrffVM4A+mUFpR2nXICQWZtK2Hi5nSL3adjam4W93/m7zrZV9zAU4Ml3ZwGTFO2A==
-X-Received: by 2002:a17:902:f706:b0:224:1ef:1e00 with SMTP id d9443c01a7336-231de36b29fmr404812985ad.19.1748010937955;
-        Fri, 23 May 2025 07:35:37 -0700 (PDT)
-Received: from [192.168.1.38] ([61.3.77.187])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23401ab6c20sm5827495ad.66.2025.05.23.07.35.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 23 May 2025 07:35:37 -0700 (PDT)
-Message-ID: <8efa9abd-bf7d-4f9d-969b-70c0452fc2b5@oss.qualcomm.com>
-Date: Fri, 23 May 2025 20:05:30 +0530
+        d=1e100.net; s=20230601; t=1748010977; x=1748615777;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=sZS6KKAxkfiJ47UQ2g7848YiBd6r9R46LhHeN/beZvg=;
+        b=MQNEMjWt0uQ3Cd4CqQhTZUJYOVF9qYfm+Jsr7UXu7Bo9vuaFMervPtVVEguCG8m0zZ
+         6JH0dwqn2lVRi1pbPKvpMbn9lrwpStU2zxM+MouvjtRv7l2K980imp8uRyR5ggeCtMKp
+         4xmnGQ1TLz9RU4V3QbD0kz1gVSpdjJFuIfz42jWF+3nes5U5ZUZKqt9hwH95h59uK1QJ
+         CCOqx1Uhkq4vkOz25EMIsJ4pq97bedI39VwdEutMuQ0GTHetJxsJuNMcIC9aa+/gxi3a
+         CfCccPalJwQE+Js4+1n+MWeVcxfFYUOhlwbDxxSoI43jZrjxBhhiL1HFIMMAgE9f5wdu
+         XuSw==
+X-Forwarded-Encrypted: i=1; AJvYcCUW1Vh1H9VJfHImNaqTbkdPYT7kc4rgCgO2o+Znb9/oB39ce7JH2aUh774agTmp0vWELUhqHh+j/Tk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzRfTH6U1362PzavIZJalbEVqN7rtQQQJyOvmlcaIHkTyceSzKj
+	LH+78modQ4YFlslaY8dn0/wGy6pf0DGJ1P78XyIXvao6lkfn+JHVx5tUWpkfQmCB
+X-Gm-Gg: ASbGncv/Tcq6gGkIXfu42apbtDhS3RGeF7+yTgxOc3C8QYPjQ4hTlEEzakx4B11I+iv
+	kfXSC/l42vfIj4rzYU+INZ4NyZVNFwuGwjjXs5p1lJv6gwxDRPSan+V0V55Tl+14yD04TsvDBvk
+	jM0yIkXsbG3MmzMsCDL7yL7U0nzd73WrZLi7nScnsRiGMu8mh1ApOtMgYnnwMZhtXPjBgk3dUi2
+	vxYiLtCTPP0Tbj7N5jxPSUJZVOfABSJ8a/pp7iQNTyhw//PRtOo9N1GfuDK49IqAkAWzPCXF3ZQ
+	1dDKRX72qQEW3ygas2LwizEKOYFJO9l763XXeN+yFX0qSX5RjI40z33x0NJ24Rh07KiOW4UDHav
+	P92z+aQ==
+X-Google-Smtp-Source: AGHT+IGBJ66/Pp0yFSs6RBfnlTgO0ld5hemSj0mUVbSrfLUVYezMJRqXOgHPvfEZXDDQere6Gt/CIQ==
+X-Received: by 2002:a05:6a20:9d91:b0:1f5:619a:7f4c with SMTP id adf61e73a8af0-216219b250fmr45645240637.29.1748010977056;
+        Fri, 23 May 2025 07:36:17 -0700 (PDT)
+Received: from trigkey.. (FL1-119-244-79-106.tky.mesh.ad.jp. [119.244.79.106])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b26eaf5a2cesm12884264a12.9.2025.05.23.07.36.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 23 May 2025 07:36:16 -0700 (PDT)
+From: Daisuke Matsuda <dskmtsd@gmail.com>
+To: linux-rdma@vger.kernel.org,
+	linux-mm@kvack.org,
+	leon@kernel.org,
+	jgg@ziepe.ca,
+	akpm@linux-foundation.org,
+	jglisse@redhat.com
+Cc: linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	zyjzyj2000@gmail.com,
+	Daisuke Matsuda <dskmtsd@gmail.com>
+Subject: [PATCH] mm/hmm: Allow hmm_dma_map_alloc() to tolerate NULL device
+Date: Fri, 23 May 2025 14:35:37 +0000
+Message-ID: <20250523143537.10362-1-dskmtsd@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 3/5] dt-bindings: watchdog: qcom-wdt: Document
- qcom,imem property
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck
- <linux@roeck-us.net>,
-        Rajendra Nayak <quic_rjendra@quicinc.com>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org
-References: <20250519-wdt_reset_reason-v4-0-d59d21275c75@oss.qualcomm.com>
- <20250519-wdt_reset_reason-v4-3-d59d21275c75@oss.qualcomm.com>
- <20250520-portable-anteater-of-respect-c7be5c@kuoka>
- <37bd619d-242e-4488-8d45-c2c85612bee9@oss.qualcomm.com>
- <b8003fdf-66a1-47e1-8c78-069f0739ea37@kernel.org>
- <85e30c0c-ea77-47da-9fd9-4293c7a78c75@oss.qualcomm.com>
-Content-Language: en-US
-From: Kathiravan Thirumoorthy <kathiravan.thirumoorthy@oss.qualcomm.com>
-In-Reply-To: <85e30c0c-ea77-47da-9fd9-4293c7a78c75@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-GUID: i6bz3PZpHAh8Xyp7vheLVd17scltCn-e
-X-Proofpoint-ORIG-GUID: i6bz3PZpHAh8Xyp7vheLVd17scltCn-e
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIzMDEzMSBTYWx0ZWRfX0Bib2UpzobJk
- MzVlJFDCWGNw/8/mZ6HVYQP5WbSl7hkVR1Jov00bybG98cYWiziKg9ChtP2QjpgmwAlEGEh6nyT
- AZ5MfVQYsvcnOv6Xma2i5OBk67cfwwnZOy1yDJ3pIFuKcDHcPGNhUvySo/P+J2PYrPVpj7xShjx
- vZNr0To8CM7ynsmIFiI0Y5UcbI80Suge2Ypbl6ybltiBYqTwWN6jnkgLLQSmDt2YNIFkJXFvvBN
- UjeI0waWIz9e4/SsvYLHW/eV1OSbAQsJnL77g07CENyZuPoWsZIqG+A0wtfjhcdjcxXBq9lVDaM
- nuN4JtjFjCAK+jV+eLqzmwFPuJowOK9h4Ofmi9/EOd1CizZdpziTmezrE9negrK+jSLmG2jNyAx
- Qua6y4gcJjtSw1pyrSYiJ6qgUZND/6YK5M+jDYS+X9MKtRbKPJCtN8Gl1j7sfm4YWDQO/kbk
-X-Authority-Analysis: v=2.4 cv=R7UDGcRX c=1 sm=1 tr=0 ts=683087c6 cx=c_pps
- a=MTSHoo12Qbhz2p7MsH1ifg==:117 a=r29b3dQpSJuOyoiVDjf7vg==:17
- a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=EUspDBNiAAAA:8
- a=U33IDs7WUbLw9VpaiQwA:9 a=QEXdDO2ut3YA:10 a=GvdueXVYPmCkWapjIL-Q:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-23_04,2025-05-22_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- phishscore=0 clxscore=1015 mlxlogscore=999 priorityscore=1501 spamscore=0
- bulkscore=0 lowpriorityscore=0 malwarescore=0 suspectscore=0 mlxscore=0
- impostorscore=0 adultscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
- definitions=main-2505230131
+Content-Transfer-Encoding: 8bit
 
+Some drivers (such as rxe) may legitimately call hmm_dma_map_alloc() with a
+NULL device pointer, which leads to a NULL pointer dereference. This patch
+adds NULL checks to safely bypass device-specific DMA features when no
+device is provided.
 
-On 5/22/2025 9:15 PM, Konrad Dybcio wrote:
-> On 5/21/25 8:53 AM, Krzysztof Kozlowski wrote:
->> On 20/05/2025 18:00, Konrad Dybcio wrote:
->>> On 5/20/25 9:25 AM, Krzysztof Kozlowski wrote:
->>>> On Mon, May 19, 2025 at 02:04:03PM GMT, Kathiravan Thirumoorthy wrote:
->>>>> Document the "qcom,imem" property for the watchdog device on Qualcomm
->>>>> IPQ platforms. Use this property to extract the restart reason from
->>>>> IMEM, which is updated by XBL. Populate the watchdog's bootstatus sysFS
->>>>> entry with this information, when the system reboots due to a watchdog
->>>>> timeout.
->>>>>
->>>>> Describe this property for the IPQ5424 watchdog device and extend support
->>>>> to other targets subsequently.
->>>>>
->>>>> Signed-off-by: Kathiravan Thirumoorthy <kathiravan.thirumoorthy@oss.qualcomm.com>
->>>>> ---
->>>>> Changes in v4:
->>>>> 	- New patch
->>>>> ---
->>>>>   .../devicetree/bindings/watchdog/qcom-wdt.yaml       | 20 ++++++++++++++++++++
->>>>>   1 file changed, 20 insertions(+)
->>>>>
->>>>> diff --git a/Documentation/devicetree/bindings/watchdog/qcom-wdt.yaml b/Documentation/devicetree/bindings/watchdog/qcom-wdt.yaml
->>>>> index 49e2b807db0bc9d3edfc93ec41ad0df0b74ed032..bbe9b68ff4c8b813744ffd86bb52303943366fa2 100644
->>>>> --- a/Documentation/devicetree/bindings/watchdog/qcom-wdt.yaml
->>>>> +++ b/Documentation/devicetree/bindings/watchdog/qcom-wdt.yaml
->>>>> @@ -81,6 +81,16 @@ properties:
->>>>>       minItems: 1
->>>>>       maxItems: 5
->>>>>   
->>>>> +  qcom,imem:
->>>> Shoouldn't this be existing 'sram' property? If IMEM is something
->>>> similar to OCMEM, then we already use sram for that.
->>> We specifically want a handle to a predefined byte in IMEM, something akin
->>> to qcom,4ln-config-sel in
->>>
->>> Documentation/devicetree/bindings/phy/qcom,sc8280xp-qmp-pcie-phy.yaml
->> Nothing stops that with sram. Above example is poor, because it mentions
->> syscon. There is no hardware as syscon. Does not exist. What is IMEM
->> here, what is this relationship?
-> IMEM is indeed a small block of on-die SRAM. In this context, another subsystem
-> may write a magic value at a known offset that would correspond to the platform
-> having been rebooted by the watchdog. Now why the wdt register is cleared in the
-> first place, I have no clue.
+This fixes the following kernel oops:
 
+ BUG: kernel NULL pointer dereference, address: 00000000000002fc
+ #PF: supervisor read access in kernel mode
+ #PF: error_code(0x0000) - not-present page
+ PGD 1028eb067 P4D 1028eb067 PUD 105da0067 PMD 0
+ Oops: Oops: 0000 [#1] SMP NOPTI
+ CPU: 3 UID: 1000 PID: 1854 Comm: python3 Tainted: G        W           6.15.0-rc1+ #11 PREEMPT(voluntary)
+ Tainted: [W]=WARN
+ Hardware name: Trigkey Key N/Key N, BIOS KEYN101 09/02/2024
+ RIP: 0010:hmm_dma_map_alloc+0x25/0x100
+ Code: 90 90 90 90 90 0f 1f 44 00 00 55 48 89 e5 41 57 41 56 49 89 d6 49 c1 e6 0c 41 55 41 54 53 49 39 ce 0f 82 c6 00 00 00 49 89 fc <f6> 87 fc 02 00 00 20 0f 84 af 00 00 00 49 89 f5 48 89 d3 49 89 cf
+ RSP: 0018:ffffd3d3420eb830 EFLAGS: 00010246
+ RAX: 0000000000001000 RBX: ffff8b727c7f7400 RCX: 0000000000001000
+ RDX: 0000000000000001 RSI: ffff8b727c7f74b0 RDI: 0000000000000000
+ RBP: ffffd3d3420eb858 R08: 0000000000000000 R09: 0000000000000000
+ R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
+ R13: 00007262a622a000 R14: 0000000000001000 R15: ffff8b727c7f74b0
+ FS:  00007262a62a1080(0000) GS:ffff8b762ac3e000(0000) knlGS:0000000000000000
+ CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+ CR2: 00000000000002fc CR3: 000000010a1f0004 CR4: 0000000000f72ef0
+ PKRU: 55555554
+ Call Trace:
+  <TASK>
+  ib_init_umem_odp+0xb6/0x110 [ib_uverbs]
+  ib_umem_odp_get+0xf0/0x150 [ib_uverbs]
+  rxe_odp_mr_init_user+0x71/0x170 [rdma_rxe]
+  rxe_reg_user_mr+0x217/0x2e0 [rdma_rxe]
+  ib_uverbs_reg_mr+0x19e/0x2e0 [ib_uverbs]
+  ib_uverbs_handler_UVERBS_METHOD_INVOKE_WRITE+0xd9/0x150 [ib_uverbs]
+  ib_uverbs_cmd_verbs+0xd19/0xee0 [ib_uverbs]
+  ? mmap_region+0x63/0xd0
+  ? __pfx_ib_uverbs_handler_UVERBS_METHOD_INVOKE_WRITE+0x10/0x10 [ib_uverbs]
+  ib_uverbs_ioctl+0xba/0x130 [ib_uverbs]
+  __x64_sys_ioctl+0xa4/0xe0
+  x64_sys_call+0x1178/0x2660
+  do_syscall_64+0x7e/0x170
+  ? syscall_exit_to_user_mode+0x4e/0x250
+  ? do_syscall_64+0x8a/0x170
+  ? do_syscall_64+0x8a/0x170
+  ? syscall_exit_to_user_mode+0x4e/0x250
+  ? do_syscall_64+0x8a/0x170
+  ? syscall_exit_to_user_mode+0x4e/0x250
+  ? do_syscall_64+0x8a/0x170
+  ? do_user_addr_fault+0x1d2/0x8d0
+  ? irqentry_exit_to_user_mode+0x43/0x250
+  ? irqentry_exit+0x43/0x50
+  ? exc_page_fault+0x93/0x1d0
+  entry_SYSCALL_64_after_hwframe+0x76/0x7e
+ RIP: 0033:0x7262a6124ded
+ Code: 04 25 28 00 00 00 48 89 45 c8 31 c0 48 8d 45 10 c7 45 b0 10 00 00 00 48 89 45 b8 48 8d 45 d0 48 89 45 c0 b8 10 00 00 00 0f 05 <89> c2 3d 00 f0 ff ff 77 1a 48 8b 45 c8 64 48 2b 04 25 28 00 00 00
+ RSP: 002b:00007fffd08c3960 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+ RAX: ffffffffffffffda RBX: 00007fffd08c39f0 RCX: 00007262a6124ded
+ RDX: 00007fffd08c3a10 RSI: 00000000c0181b01 RDI: 0000000000000007
+ RBP: 00007fffd08c39b0 R08: 0000000014107820 R09: 00007fffd08c3b44
+ R10: 000000000000000c R11: 0000000000000246 R12: 00007fffd08c3b44
+ R13: 000000000000000c R14: 00007fffd08c3b58 R15: 0000000014107960
+  </TASK>
 
-Thanks, Konrad for chiming in and providing the background information. 
-With respect to the WDT register, when the interrupt is triggered, I see 
-the expire bit is set in the watchdog register. The bite interrupt is 
-handled by TZ and TZ does the system reboot. After the system reboots, 
-bit is cleared. I have cross checked with the design team and they 
-confirmed that the behavior is expected one.
+Fixes: 1efe8c0670d6 ("RDMA/core: Convert UMEM ODP DMA mapping to caching IOVA and page linkage")
+Closes: https://lore.kernel.org/all/3e8f343f-7d66-4f7a-9f08-3910623e322f@gmail.com/
+Signed-off-by: Daisuke Matsuda <dskmtsd@gmail.com>
+---
+ mm/hmm.c | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
 
-Krzysztof, Based on the discussions from the previous versions, I have 
-made the changes. Can you help to guide me on how to handle this? Should 
-I just name the property as "sram" and point to the sub block in the 
-IMEM region like how it is done at [1][2], which is more or like similar 
-to what I have submitted in V1 of this series[3] Or is the current 
-approach acceptable? Or some other way to handle this?
+diff --git a/mm/hmm.c b/mm/hmm.c
+index a8bf097677f3..311141124e67 100644
+--- a/mm/hmm.c
++++ b/mm/hmm.c
+@@ -638,7 +638,7 @@ int hmm_dma_map_alloc(struct device *dev, struct hmm_dma_map *map,
+ 		      size_t nr_entries, size_t dma_entry_size)
+ {
+ 	bool dma_need_sync = false;
+-	bool use_iova;
++	bool use_iova = false;
+ 
+ 	if (!(nr_entries * PAGE_SIZE / dma_entry_size))
+ 		return -EINVAL;
+@@ -649,9 +649,9 @@ int hmm_dma_map_alloc(struct device *dev, struct hmm_dma_map *map,
+ 	 * best approximation to ensure no swiotlb buffering happens.
+ 	 */
+ #ifdef CONFIG_DMA_NEED_SYNC
+-	dma_need_sync = !dev->dma_skip_sync;
++	dma_need_sync = dev ? !dev->dma_skip_sync : false;
+ #endif /* CONFIG_DMA_NEED_SYNC */
+-	if (dma_need_sync || dma_addressing_limited(dev))
++	if (dev && (dma_need_sync || dma_addressing_limited(dev)))
+ 		return -EOPNOTSUPP;
+ 
+ 	map->dma_entry_size = dma_entry_size;
+@@ -660,9 +660,11 @@ int hmm_dma_map_alloc(struct device *dev, struct hmm_dma_map *map,
+ 	if (!map->pfn_list)
+ 		return -ENOMEM;
+ 
+-	use_iova = dma_iova_try_alloc(dev, &map->state, 0,
+-			nr_entries * PAGE_SIZE);
+-	if (!use_iova && dma_need_unmap(dev)) {
++	if (dev)
++		use_iova = dma_iova_try_alloc(dev, &map->state, 0,
++					      nr_entries * PAGE_SIZE);
++
++	if (!dev || (!use_iova && dma_need_unmap(dev))) {
+ 		map->dma_list = kvcalloc(nr_entries, sizeof(*map->dma_list),
+ 					 GFP_KERNEL | __GFP_NOWARN);
+ 		if (!map->dma_list)
+-- 
+2.43.0
 
-[1] 
-https://lore.kernel.org/linux-arm-msm/20250523-topic-ipa_imem-v1-1-b5d536291c7f@oss.qualcomm.com/T/#u
-
-[2] 
-https://lore.kernel.org/linux-arm-msm/20250523-topic-ipa_imem-v1-2-b5d536291c7f@oss.qualcomm.com/T/#u
-
-[3] 
-https://lore.kernel.org/linux-arm-msm/20250408-wdt_reset_reason-v1-0-e6ec30c2c926@oss.qualcomm.com/
-
-
->
-> Konrad
