@@ -1,118 +1,131 @@
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D015221D87;
-	Fri, 23 May 2025 11:38:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A23D18DB2A
+	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 11:39:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748000318; cv=none; b=X8AgxuNtFtyF2OlH0KV8sE0cGtgc8yf6D7EfYrB7EfCG54gBFlPniPvMhZ24zcfmzHfwXm0DwZeDzqNSaY7bpwDD3S7/V2Hf4I3KmfwVY6GANlXa8xPpZZDPlkt+Qv780/Fiu5lPiwqEm6Geufcbz6SNpHOGea4YyI0ptxHJfEY=
+	t=1748000353; cv=none; b=joK41YH6lPbI8TWxq6hUAHfDvcRKEovrXTn24ACAfMkscLeDTQKR6KAE2ddZlM3aUa+7LaSduD9XfapS1LozhmEfgdgBTt/mK0brubRnr0ptnZc2mQQGEZrvv6jpeyL8FMb3AZO3VOk8LvYplfb7qB152IM/U58qQ/IHAoQbqpk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748000318; c=relaxed/simple;
-	bh=C8l6K1eDGx1IOwbMAVrLHUZ6g+1rGq8hIcwKEz+RO24=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=cTky9oAYj3P6DmO/Y6wGrg6S+mPoj61vbQb/wrGIKtgJJgysaCSwXkKh6yCScK/smtTxovnxbEma5qh7v+u9FK7HzDEDDDlWrF09gJ/9k7T1Nz1afHXIcPmAKTVjBSQAYWkvZH6y+0z+BODSLIGHnsuyYssg4e8MX6SSUSFZO8A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=draigBrady.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Okuq+63N; arc=none smtp.client-ip=209.85.221.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=draigBrady.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748000353; c=relaxed/simple;
+	bh=4c6XCcGeGI3Iz42ETVD1kWDpnOaknLRaew23lcoOgaw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=GZcwc2rIL4zIk+CCBiCaa47To0ciKp60rzDu2XZ3rpmKEWGS3tTla5jWqGfg7SGwfaxw6ZsPPyl/T8qs7CNkIT8Qkams5wta3Wu5Kgi/3qXzr8gcyWbfSlHWQ+EgSM1jeVR9ZHpt/5PRDOdrBkratVw3BQmKQo9RnkWpkkirRA8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=iqt2JCiD; arc=none smtp.client-ip=209.85.208.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Okuq+63N"
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-3a36efcadb8so4839751f8f.0;
-        Fri, 23 May 2025 04:38:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="iqt2JCiD"
+Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-3290ae9b011so62079601fa.0
+        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 04:39:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748000314; x=1748605114; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id:sender
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=nV44RYFzgQCSPTYPIbcTRtzMraX+Xrj0AC4YMAinlic=;
-        b=Okuq+63No6WnIwAyL2N9sRYPac1l0Pr3rNK3obDozHIJJdP12IePPtXPJAPYuMAr5x
-         Co6Acx9Qz//yK+TUbvd15B/aKPCWFw2KTds8eV1KMACVx5BWGxT4A8n++Rwa+Iz7k5r+
-         yqUNJKNlEZOKbrnwYH44wbc1fZjKxsBWbzONYAORtJlCyJ6IWN7m10duE1P9lDLKaKRz
-         DLfwgtvcMOugGrlxVsZdPdb+06UA7Ns8rg2iPzOnYuEK1X7/vbAUxxBGPJ4Cc9pHrSIW
-         nADLEMWGnUoAwyiN3oPsnIpVALua7dxa9rVt5j6vOJxA7tiPrJ5/Z/KNBjG5X5NDNOuH
-         BsAQ==
+        d=ventanamicro.com; s=google; t=1748000349; x=1748605149; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4c6XCcGeGI3Iz42ETVD1kWDpnOaknLRaew23lcoOgaw=;
+        b=iqt2JCiD0yZhix7cKkZGkGIt7KPbjUPQa7M/o+1OAdMDz6hgpQDqt6kjx8vHb+FCfG
+         l4m3y/plCGg6oIf20G6NiVN2/fWdF4BT6ntRTygyc2C0ktOtySZfDwI1Kk6p7gLJrlxt
+         Yk30ZY6gW6FAGy/r9gkyXjRhq0Xsc9yg7cWL8IgTKfhNA/QpXd6nEAo1OVWyRFKFXPCU
+         NknyrlzTj3sa8l0bieqOHtvXypLPdyCUP/6HM7fpvCq7K3zNcjHwZp32XAAUhyfTO7FL
+         r88tuv8JSv29aPPMOtvj05DOfW/pGRfxitUIP4IMQF0RSXqYHe/WhxZA6PY/re6gSEep
+         7pBQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748000314; x=1748605114;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id:sender
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=nV44RYFzgQCSPTYPIbcTRtzMraX+Xrj0AC4YMAinlic=;
-        b=fdrW5wDzPXTH3jduaM9aSWngNX7FWiqTTzsIlCq7QLRLyCOb+dEtU14Ac8pu9T+VRZ
-         0ktF5r59lwUD/I1PZHcOosWVrdXzgR/N2aksKEpoof+q67KnmaAALXQtWuzaMXyl56ro
-         9T7LSqCwmfX2Xb9f8X4ETaBF/TPw1+AF2+yJl7igCIp2G+BNijdK7xHlYNmp5tBeFlpg
-         0P4MrCasJavpeG8yiKrQGODD9wFoI8OKjiX+ZEFw23RCI7TSgl+CDTkLyuZT8z0sThmT
-         aBdZCsw6FrJlNzik88Cd3Ji3JxJJmpUBDv/xI5edrK0K87xZzCjH6MA477BeNu8N45Pj
-         Oy+Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXYSe9mBMdDYP9V3sxRgE5IKV8hoSp7XpweXCtGyrrdPToJQdgHBwybaysrU9Ce5mHgeSNMAdjVfUuXkOQyxuHJxtOB7Go=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywnr1Bi4JQWKIK1s+hV1JlZItbhM27E0QEu1SbC1VUah2frTBwv
-	6bJnSb7sfjFYwzKsPE6C53hicyz9XzIIHNXflsnInkVkHQJadmPYHwKJd7WXTA==
-X-Gm-Gg: ASbGnctfSGX9zbsv6QksoIzaF9FHjZXvuX2QW1TAETTGjTgQHJw0lcTKPsnu4Dlfn4D
-	TBaTiF8i2gzU4GUUWsrr2BjB231v47BozVAw7DW9z/oU0D4qiHn7m8VwnTdE/jgw3SUZViy3ULV
-	C+y3mhpJcHuKhd1zKMSCeigdfVrIClDWVIZBeoRRM6pPDh5dOzzMqo2U6WS2e1aCEj2gm7gAK/C
-	ShQUm62w1GiVmDQfchegcn/RzCzU3GTw6MMtaX9ncj5ctpxpvCp9s01g6vZAbJs2eimnKheY7rH
-	6E3Ekq44TmOYXMsEKtLpxu0lxOcF0UQpZ7Ppp9iQEMNSGdfrNOiIlccd9MxrYwOUnIpvN9mOWBW
-	OegrrKkOkLWjsZbJfRdE9mdwOZQfR29AveDKKZIDmGw==
-X-Google-Smtp-Source: AGHT+IGSymWAI4/j9vDmQlzt/sPc9Dh/0VDwaExNYUv64bsna5U4XuMSwwnbvHdZIplpAKkpEPMSXw==
-X-Received: by 2002:a05:6000:400f:b0:39f:175b:a68d with SMTP id ffacd0b85a97d-3a35c808b3dmr26578121f8f.11.1748000314259;
-        Fri, 23 May 2025 04:38:34 -0700 (PDT)
-Received: from [192.168.1.31] (86-44-211-146-dynamic.agg2.lod.rsl-rtd.eircom.net. [86.44.211.146])
-        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-3a4c002e937sm3816448f8f.29.2025.05.23.04.38.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 23 May 2025 04:38:33 -0700 (PDT)
-Sender: =?UTF-8?Q?P=C3=A1draig_Brady?= <pixelbeat@gmail.com>
-Message-ID: <c0a1f475-b973-40a8-a7cc-6947791af38a@draigBrady.com>
-Date: Fri, 23 May 2025 12:38:32 +0100
+        d=1e100.net; s=20230601; t=1748000349; x=1748605149;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4c6XCcGeGI3Iz42ETVD1kWDpnOaknLRaew23lcoOgaw=;
+        b=uXlyEiLPCJaXV8UISdhzcQT1VtpfG3xmeDQhge2yDhQx6PCcZ357rNBMRFpgQD+/tu
+         0NLv4jWaINN23ymZubLV9tG2QErLYkB+1AGdEKncBS04DyIewgaGaPZo/XNe2hgwu+Xb
+         2RjttN8rG4b3EDgnQz0m6U0bA3lo2g3A9Qre2X0ngDgldQaEJ/hOacto1CL4K4GA99u4
+         fBD2RKZ73GGj6vmsMjK/QJNUyALXZGPc/HtlthQcbMnufr78lJJiU5Hs37CfqXLTSnuO
+         vTJgzPmyKNSo1dZUq9ZDsrtIIYeq6wurGcTcxnZ2l4axQd7QAbQ1ETpsijgek5EbQva+
+         /NzQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUZBeGHUUsMh+NK6QBWP9LrbH7nVma8u6yxFuoWVhj7pht8z21BVMzGhy6yW2KKAg/F6YISPYV8+SWeWNo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywl1nmupqN9zovx4uw9BrXUPPcTBP9xkObLpKvmWCETyi9N+YqI
+	SL6fPHdfETIknOTyyc1caWRg4nTMHi+TTrYq6JSQIikF4tUXlLsUuecMucOUCZuHzN1Sc/5mj2B
+	TumrdC74QQtUi0Ev1TfB5sgnPUB3a2iHk7A/QznwKdw==
+X-Gm-Gg: ASbGncsxPn59KYDECp2Iyg5PrQvSRGdYVt7vzKTo9pKyOTaELbjmNBZaFwjI/gKjMqR
+	6g9CoIIDG7AX0BFL+KQMYFOAg9EB/AGhO3nD6Cq+8Yy9hYhb2few7IOmg5zbOi6ypBfD3aQtYmz
+	NLjx5Fj/r2vKGxlboqe6TLKkNZA3LmPgb0
+X-Google-Smtp-Source: AGHT+IF2LOIg4O1xHRyi86CCrwvgJ2OS7m73hlziSd4ebNFqUGMO5r7pRVz549vYj95zmX/EW8KpI62SWz8WryNi6o8=
+X-Received: by 2002:a05:651c:304f:b0:30b:b956:53e5 with SMTP id
+ 38308e7fff4ca-328096b7830mr78162091fa.12.1748000349503; Fri, 23 May 2025
+ 04:39:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: bug#77597: listxattr() should return ENOTSUP for sysfs / tmpfs
- entries, not 0
-From: =?UTF-8?Q?P=C3=A1draig_Brady?= <P@draigBrady.com>
-To: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- linux-security-module@vger.kernel.org
-Cc: 77597@debbugs.gnu.org, Paul Eggert <eggert@CS.UCLA.EDU>,
- Rahul Sandhu <nvraxn@gmail.com>
-References: <D8Z6FP3UZG2G.I8H42ZV6DM08@gmail.com>
- <41067aa3-0e72-456f-b3f2-7bd713242457@cs.ucla.edu>
- <c7d16a13-79c9-4e81-996a-0f32bcff79cc@draigBrady.com>
- <2e24f40d-b475-4199-b53b-e4c266d0d314@cs.ucla.edu>
- <60b2252d-9295-4d03-921e-a596444da960@draigBrady.com>
- <64b14829-381d-4295-8878-f6b06906ef3c@draigBrady.com>
-Content-Language: en-US
-In-Reply-To: <64b14829-381d-4295-8878-f6b06906ef3c@draigBrady.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20250511133939.801777-1-apatel@ventanamicro.com>
+ <20250511133939.801777-14-apatel@ventanamicro.com> <aCGaKXOOWyM4JQMg@smile.fi.intel.com>
+ <CAK9=C2U1rzSa42qMNqxfTtjAC5RiJrhwg_32_B86nT2+xJ4Qow@mail.gmail.com> <aC3e-IXYb68RoIyu@smile.fi.intel.com>
+In-Reply-To: <aC3e-IXYb68RoIyu@smile.fi.intel.com>
+From: Anup Patel <apatel@ventanamicro.com>
+Date: Fri, 23 May 2025 17:08:57 +0530
+X-Gm-Features: AX0GCFuikFsTk4gG8kf6GKZUp9UJZvUrFZuYjcduLBrZd3gwT8GH2kdzFPFBAPw
+Message-ID: <CAK9=C2WMxdmGEY=4BSeR_20JXoLkYK-t55qd0K7w=qOqnAkkOQ@mail.gmail.com>
+Subject: Re: [PATCH v3 13/23] irqchip: Add driver for the RPMI system MSI
+ service group
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Jassi Brar <jassisinghbrar@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, 
+	"Rafael J . Wysocki" <rafael@kernel.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, 
+	Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Len Brown <lenb@kernel.org>, Sunil V L <sunilvl@ventanamicro.com>, 
+	Rahul Pathak <rpathak@ventanamicro.com>, Leyfoon Tan <leyfoon.tan@starfivetech.com>, 
+	Atish Patra <atish.patra@linux.dev>, Andrew Jones <ajones@ventanamicro.com>, 
+	Samuel Holland <samuel.holland@sifive.com>, Anup Patel <anup@brainfault.org>, 
+	linux-clk@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 23/04/2025 13:22, Pádraig Brady wrote:
-> Older coreutils was less efficient and always called getxattr("security.selinux"),
-> and thus shows the SELinux context as expected:
-> 
->     $ coreutils-9.3/src/ls -lZd /run/initramfs
->     drwxr-xr-x. 3 root root system_u:object_r:tmpfs_t:s0 60 Apr 19 14:52 /run/initramfs
->     $ coreutils-9.3/src/ls -lZd /sys/block
->     drwxr-xr-x. 2 root root system_u:object_r:sysfs_t:s0 0 Apr 23 12:54 /sys/block
-> 
-> However newer coreutils is more efficient, and does not call getxattr()
-> if listxattr() returns 0 indicating that there are no xattrs.
-> 
->     $ coreutils-9.7/src/ls -lZd /run/initramfs
->     drwxr-xr-x 3 root root ? 60 Apr 19 14:52 /run/initramfs
->     $ coreutils-9.7/src/ls -lZd /sys/block
->     drwxr-xr-x 2 root root ? 0 Apr 23 12:54 /sys/block
-> 
-> I also noticed the same issue with the exa utility for example.
-> For coreutils to maintain efficient processing and to fix the issue centrally,
-> it would be more correct for listxattr() to return ENOTSUP,
-> in which case ls will try the getxattr() call and operate as expected.
-> Otherwise I can't see a way for coreutils to be both efficient and always correct.
-> 
-> I'm currently testing on kernel 6.14.2-300.fc42.x86_64
+On Wed, May 21, 2025 at 7:41=E2=80=AFPM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> On Wed, May 21, 2025 at 05:07:05PM +0530, Anup Patel wrote:
+> > On Mon, May 12, 2025 at 12:20=E2=80=AFPM Andy Shevchenko
+> > <andriy.shevchenko@linux.intel.com> wrote:
+> > > On Sun, May 11, 2025 at 07:09:29PM +0530, Anup Patel wrote:
+>
+> ...
+>
+> > > > +#include <linux/bitfield.h>
+> > > > +#include <linux/bitops.h>
+> > > > +#include <linux/cpu.h>
+> > > > +#include <linux/interrupt.h>
+> > > > +#include <linux/irqchip.h>
+> > > > +#include <linux/mailbox_client.h>
+> > > > +#include <linux/mailbox/riscv-rpmi-message.h>
+> > > > +#include <linux/module.h>
+> > > > +#include <linux/msi.h>
+> > > > +#include <linux/of_irq.h>
+> > > > +#include <linux/platform_device.h>
+> > > > +#include <linux/printk.h>
+> > > > +#include <linux/smp.h>
+> > >
+> > > + types.h
+> > >
+> > > Actually this one is most clean, the rest of the patches where the ne=
+w code
+> > > is introduced has semi-random list of the inclusions, please, follow =
+the IWYU
+> > > principle.
+> >
+> > Sure, I will simplify the #includes
+>
+> Oh, IWYU (Include What You Use) is not about simplification. It's about
+> comprehension. It usually means that *more* headers need to be included
+> and *only some* of the existing will be dropped.
+>
 
-FYI this should be addressed with:
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=8b0ba61d
+Okay, I will update accordingly.
 
-cheers,
-Pádraig
+Regards,
+Anup
