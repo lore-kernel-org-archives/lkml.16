@@ -1,120 +1,74 @@
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-180.mta1.migadu.com (out-180.mta1.migadu.com [95.215.58.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CFB21E8320
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 23:52:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA7F01E04AC
+	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 23:53:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748044372; cv=none; b=Unstj3viMH7aRzKc0Add18fGLhOGvDgV/TjJCo1Dz1lw0CC3DUNPXS7VsExzrdjU1FUysz1lRQFJ4THeHKWEGG+I+jCmdkYgs31oFIT/6tFWqi89uxbY+D1vzjnz4lkjLpHYODyHoMCys1oaJw3kzbCA36mdvrnOEtnWdb9GkbQ=
+	t=1748044402; cv=none; b=A7eACECnCfk5kXIlchD09JnmSuNOs7M78cx+2FuG7QzSeEXeMbU7JPt1kJ6NeRhBez1zGj9igugo5a5O0CYbawPv6uwxK8REi1xxDaRF0+GxeXXDQmtNOrTiAZxwRQuqBVdTiqAEEQvM2CDuWlkdY5LKVwAPpLTZzOOUi4DSEPo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748044372; c=relaxed/simple;
-	bh=M9hXUG12dQEzCbLn0FttmzohKmhmYluNMb8mwDu8KaM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dvMCEn2PcLYCtmw6lNsbtu46NGVbJJDteYjZihS1BXjIO0CjudWAuU0PkhMOj+1//atp6JhS3KdRczyRTqerbI36hnxtZ5X/Nqtd1fMase0GzgMakNTXQ6v/+UqwW+j1TD1rMDfO9tY0ZV77OrzwLSuNpXsuja+OMcctbkrXKnU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=DgYjQqdb; arc=none smtp.client-ip=209.85.208.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1748044402; c=relaxed/simple;
+	bh=FNaoXQ/DWBGXP+tPBYyfn9WkOJ19EQKKbiBGnBrLFJM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WCuBqiN4Jz1OYUB07R59O2b2Rpa73eFnpA71bPSp0Q/Cko+c+0wy71scAGVxEKEpI7XmMGVgsW6veaTVb9An5Yzweo0VdlGuuJV/nN8ByK1e5kp7giNeoZBsmxSngUcWlAi96So4lyZQvLRTYmCUEfRFsgBNCd7MotF6GdAShBc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=P6IbL15D; arc=none smtp.client-ip=95.215.58.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DgYjQqdb"
-Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-329157c9f79so1589601fa.1
-        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 16:52:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748044368; x=1748649168; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=S0Fs7pz/z0EIB4gIzQ5oUac1XgvPmbJA7QXLi0jslE0=;
-        b=DgYjQqdb59Hi2azpuFqbKyuLgbbc48aVe5/am3tWG3zkKXHvj7ht4qcZyozvZahoeV
-         pdHeXHX3vUE9zU1EA4KbXwXq6TgHJP43HXuXOUMq/N8pJAWpMA12zTxzpoTovSdUYsZ/
-         BCSLnqKN7YqtW7kg02ApyT68BEeT0wcGmAQZqqJ91UmBec1rzXRZHmPNzyTlQjY4sysw
-         xdO7aA7sR4dtpEh5U5xJFK6hWCinuehG8Ff7mXflDJh5MSjwsD9nLIXo532VWlBC7njt
-         5eisrpTVzqXH89NSLCoJGR1N9PHoChMFmeoMAqR1FKCP1IuwMBbmN8kTqBW9BZdz4HLB
-         pzYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748044368; x=1748649168;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=S0Fs7pz/z0EIB4gIzQ5oUac1XgvPmbJA7QXLi0jslE0=;
-        b=rBrvm/43Db7KvcKDn/hSmeqC5h1sx3GYOrlGkQ/M+CZSnMMPFtROOmgwRwBtpXDu50
-         0DosmLotEHUlE4OQfDxGuSBIxfZMAZ2LhmJJlu31Z+rvTzzFnaoNl2+mzDf6soBhqV/d
-         jAETFm41qBLeBEsrJMllCtXxVTfF8Fz3LDdWirmkRN7pgFBLRtGJ8GKHYPz5mt5eR4Od
-         9zKSlkVAFPIvNJGuuuIgXdgldY+6CKZE0T4nwTzNprPHWVTT1LJKnS1Qk/5Ug5/MUL2v
-         35h7ymG7bE33dggbJR+A7i39zIaqrebkvC+F63vieRFLoZTmjchFS0rcInFKaPsmoqz6
-         xNXg==
-X-Forwarded-Encrypted: i=1; AJvYcCUxkzX7bfyTI0ZfJsx/HxQP0RH9sKwvnii8e+i/lytfUqkRBKe7LP69GLxLxmov+i55wZYPF858s0tbZvs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxmpvAh7Xj9sItekWizZfJ1iedCTh5+rD9V7YK+ZU8VK99NGZR2
-	NMfsfhAe0MvqNqtwDcKcOh8OIOCwNYDEXPazrJ5lANLIlzPN3+VLIbYjKrI1Tax0VKjFKU3LYQ8
-	1gu1AjMnZ4K+CwTTM4RSSyyE5bw/Q0eLyT8y7YSR8
-X-Gm-Gg: ASbGncuJHqVUPY1dJXUMH3w+RYdnLMKvnn15bLTEH9bLg1qEWrEDzO6YNPKuvRC9iV1
-	+vU+15qwc6DhDF3nub6cVabfo1ltWvBdivy5z0zwDZoxCnwybFm8FQsI3Wii9DeKodo1h6P6B94
-	EqVo0ELPzFuOdUfdPuxAxLAq2DV7CXmF1M46RwHE3Dxyo=
-X-Google-Smtp-Source: AGHT+IH8NaXciis2Ap4OiAGLGhnQ9Gb49M8mILiHND/efN8rg1+lP6OwzfG1AqHxHePd1mY4UTi2wwWCDeKWqQoTLAs=
-X-Received: by 2002:a05:651c:2109:b0:30c:1358:6400 with SMTP id
- 38308e7fff4ca-3295b9aaa59mr2604071fa.5.1748044368078; Fri, 23 May 2025
- 16:52:48 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="P6IbL15D"
+Date: Fri, 23 May 2025 16:52:46 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1748044395;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=dwhu4z2b7XnDz5DmFRgSfvRvsvme49qnGrnKAviEMhI=;
+	b=P6IbL15DSmtaZaqqU1boExvqggqPvwfVbNZr7VVj/axwdnNVCBm52eaJ54bjJBb5h6xlAK
+	vWXyo6Z0KCnnLOK9jqyITnUYt8sAYC6drgxLM7j+EwB7fWlRMTAXw9sKtmYdFLp9wY/H73
+	rFyMWrg9o7eYVuUzklIREXTjjgdXRlc=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Shakeel Butt <shakeel.butt@linux.dev>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Chen Yu <yu.c.chen@intel.com>, peterz@infradead.org, mkoutny@suse.com, 
+	mingo@redhat.com, tj@kernel.org, hannes@cmpxchg.org, corbet@lwn.net, 
+	mgorman@suse.de, mhocko@kernel.org, muchun.song@linux.dev, 
+	roman.gushchin@linux.dev, tim.c.chen@intel.com, aubrey.li@intel.com, libo.chen@oracle.com, 
+	kprateek.nayak@amd.com, vineethr@linux.ibm.com, venkat88@linux.ibm.com, ayushjai@amd.com, 
+	cgroups@vger.kernel.org, linux-doc@vger.kernel.org, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, yu.chen.surf@foxmail.com
+Subject: Re: [PATCH v5 0/2] sched/numa: add statistics of numa balance task
+ migration
+Message-ID: <qob64enpuewivcne2b7prnuahs3nr6v6kuil7suskcsfgdoqew@pdxpbd4ghrxk>
+References: <cover.1748002400.git.yu.c.chen@intel.com>
+ <20250523150635.5901dbb92b8379c9d88f88ca@linux-foundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250404193923.1413163-1-seanjc@google.com> <CALzav=dMSLy7kt6sJtRqAK8tOZwFz9Ktp3vzqggdD+J_aPVycg@mail.gmail.com>
-In-Reply-To: <CALzav=dMSLy7kt6sJtRqAK8tOZwFz9Ktp3vzqggdD+J_aPVycg@mail.gmail.com>
-From: David Matlack <dmatlack@google.com>
-Date: Fri, 23 May 2025 16:52:20 -0700
-X-Gm-Features: AX0GCFuV-LnW4e9goCqhdbKeeGQfbApHZTPlR-dVtjKEnQHhsOcPMKn8qNDcilc
-Message-ID: <CALzav=d22zi4zzebPJthKGF-uiD3qRTeTJM3Q-LB6UVBiwaAvg@mail.gmail.com>
-Subject: Re: [PATCH 00/67] KVM: iommu: Overhaul device posted IRQs support
-To: Sean Christopherson <seanjc@google.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>, Joerg Roedel <joro@8bytes.org>, 
-	David Woodhouse <dwmw2@infradead.org>, Lu Baolu <baolu.lu@linux.intel.com>, kvm@vger.kernel.org, 
-	iommu@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	Maxim Levitsky <mlevitsk@redhat.com>, Joao Martins <joao.m.martins@oracle.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250523150635.5901dbb92b8379c9d88f88ca@linux-foundation.org>
+X-Migadu-Flow: FLOW_OUT
 
-On Tue, Apr 8, 2025 at 10:13=E2=80=AFAM David Matlack <dmatlack@google.com>=
- wrote:
->
-> On Fri, Apr 4, 2025 at 12:39=E2=80=AFPM Sean Christopherson <seanjc@googl=
-e.com> wrote:
-> >
-> > This series is well tested except for one notable gap: I was not able t=
-o
-> > fully test the AMD IOMMU changes.  Long story short, getting upstream
-> > kernels into our full test environments is practically infeasible.  And
-> > exposing a device or VF on systems that are available to developers is =
-a
-> > bit of a mess.
-> >
-> > The device the selftest (see the last patch) uses is an internel test V=
-F
-> > that's hosted on a smart NIC using non-production (test-only) firmware.
-> > Unfortunately, only some of our developer systems have the right NIC, a=
-nd
-> > for unknown reasons I couldn't get the test firmware to install cleanly=
- on
-> > Rome systems.  I was able to get it functional on Milan (and Intel CPUs=
-),
-> > but APIC virtualization is disabled on Milan.  Thanks to KVM's force_av=
-ic
-> > I could test the KVM flows, but the IOMMU was having none of my attempt=
-s
-> > to force enable APIC virtualization against its will.
->
-> (Sean already knows this but just sharing for the broader visibility.)
->
-> I am working on a VFIO selftests framework and helper library that we
-> can link into the KVM selftests to make this kind of testing much
-> easier. It will support a driver framework so we can support testing
-> against different devices in a common way. Developers/companies can
-> carry their own out-of-tree drivers for non-standard/custom test
-> devices, e.g. the "Mercury device" used in this series.
->
-> I will send an RFC in the coming weeks. If/when my proposal is merged,
-> then I think we'll have a clean way to get the vfio_irq_test merged
-> upstream as well.
+On Fri, May 23, 2025 at 03:06:35PM -0700, Andrew Morton wrote:
+> On Fri, 23 May 2025 20:48:02 +0800 Chen Yu <yu.c.chen@intel.com> wrote:
+> 
+> > Introducing the task migration and swap statistics in the following places:
+> > /sys/fs/cgroup/{GROUP}/memory.stat
+> > /proc/{PID}/sched
+> > /proc/vmstat
+> > 
+> > These statistics facilitate a rapid evaluation of the performance and resource
+> > utilization of the target workload.
+> 
+> Thanks.  I added this.
+> 
+> We're late in -rc7 but an earlier verison of this did have a run in
+> linux-next.  Could reviewers please take a look relatively soon, let us
+> know whether they believe this looks suitable for 6.16-rc1?
+> 
 
-This RFC can be found here:
-https://lore.kernel.org/kvm/20250523233018.1702151-1-dmatlack@google.com/
+The stats seems valuable but I am not convinced that memcg is the right
+home for these stats. So, please hold until that is resolved.
