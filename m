@@ -1,158 +1,208 @@
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 533B7225791
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 09:20:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5336120A5C4
+	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 09:20:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747992025; cv=none; b=ecKuLbkrNFZnT98KrLLv9d8woBC37RtvCgLDtrE52D3T85z2BeJ8RVU4mBVXGHkOsw59tFuLtCP20pxAA+/49HqxboCHLw3QzCcXSNOcDFq/9LltKl5Aq2kIQvaDlzvAo6hRNoykoNx05agBtxw6blc21KPoe0uiTqyyLD7GPGs=
+	t=1747992041; cv=none; b=pumoJQMlZ5dVP3UVtg1Of7Li7aWPQfg+c2QtwTTlmSxJ6NUeYdpRGMkH8tmBY3w1gsdzWmOaA6jPMifqB9mnmOzqSkvb7ctth2pBb88rfzFMsKKhyJa+VhIJ6hw/V8g/W/2cAH+/u4ApIMa585mG9g/mhd4sRFlQ+FJkEl0adr8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747992025; c=relaxed/simple;
-	bh=H6jCMhovcKvXnJaFVFncaQ9ZSSarjarBVGBLD/TKfc0=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:To:From:Subject:
-	 References:In-Reply-To; b=uJAVoP3pGn6DT7UINZiggAZ1VpIEO4BINGA8M0ewbmp7UsbtEVfjMVmCN8ESJQ25FqGMbDdRkoQHe5SF090d6HfSfp72Bn3QBU4KI47IxBMOjekPyxYkaLSCJDaLPDnZUa1/qfxca9hvMpCyVIemt7XeMw3OS53QCHQu5E6Bzm8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=Vy4Hcxtr; arc=none smtp.client-ip=209.85.221.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
+	s=arc-20240116; t=1747992041; c=relaxed/simple;
+	bh=/EkxK+M2AMYeKqef5dtTIUrZK0FP6bFrkqka0DXQUnc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=p6qircFcyyvNS4mim9AVlBvyxbzdFevD70xyWna4xgQxZ8+P2DMcFUrVibhqeOkpIXSsAx2mV08n2HiwDs3ezbqNtn+KApNI+SkLpN71oVN8nMlW397ba1Sjk0YfoUbvsVAfv0Lz61q96TKZW4wFL6k1VJEJFF3YfoEDJYUv1EU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=YN0IA3On; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=cBR3AZxY; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=YN0IA3On; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=cBR3AZxY; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="Vy4Hcxtr"
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-3a4c2e42ce0so55713f8f.3
-        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 02:20:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1747992021; x=1748596821; darn=vger.kernel.org;
-        h=in-reply-to:references:subject:from:to:cc:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KpJiR9jmmCdIglXVSKgEoS5Pv74wpHne5sRyii9bqBU=;
-        b=Vy4Hcxtrp8hQ2cNP7NAW9PdfyqoK9R/tauaN3UB2Qru69KzJ90JmOD0fsw9A4kZPxc
-         y74HJ7cxIUBsBXIbPinFV930kJuc0vIz6boQYQpyY9h0OHBMd0qNl5N0GUKcPf+329MZ
-         DB4jtvAj7BE0CBHl0vLMm0agDyEt89Y11l7uSKaS23/ceoA2wymvO0PTistrghgxIps1
-         fGDMyeMVBwMtKATHpnjfouWX0HYi1t6B0eaKLtAevXcLNsF3GwO0sQw6pEl8aVpPLYV6
-         zed7h+WQNKJ0pCrFdLhqs8lWRjcUUJGQHIz9wJc5xImRpaQusBHyLab72O2liSdIdXo2
-         D6Ag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747992021; x=1748596821;
-        h=in-reply-to:references:subject:from:to:cc:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=KpJiR9jmmCdIglXVSKgEoS5Pv74wpHne5sRyii9bqBU=;
-        b=ErdMmMKfxaLAovdVo/CNW6QRy65+M58HrxAkB2RBv+hj3f5DBh3rlHoBVrT4Crfso2
-         V7qavo2Xc8yWwzCQfd28rcX4QXaPjD7lkCopaZKQFa8jCxf7VztabbnuGV7mUGbKdPYR
-         yEknI/yjg7D/eP3xb+Y6MAahJ111MvvF5wNRm3wAhFlB0vXa5/LwsWKSuK+rq2OaBrhR
-         Fxpzm/t8JiCs4s1kc/kMSZ20IRe8Fpy1+CGJANNrcQ0es3d1pHxJT0ZCA/KXfYTJg7jQ
-         mfwmdPa/7Btv2TZ214uX7RliHCyUmutfhN0GJ5PJZHgQlLLzHQK1FeOSeyjdzWour8kc
-         qmyw==
-X-Forwarded-Encrypted: i=1; AJvYcCUihPtUt/Nt1UzZ7pfkOu3Vo8P4lBxM9ux0iyBZrmG9lg5As50tBXkX0nuSAgMKM8alrLRzXfZdPMv2s7U=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw5PI/q7OBah8e0lkWcsc4pogbcjW+Q2z1lDG0N/tUFXd2msLeJ
-	jXO9bg8E6NtHv3TFDkEYThfsEsfQl7Ml6czbe5DtfViC9KY/9EK1GIItFXB6dm47I18=
-X-Gm-Gg: ASbGncsD7LkRRKtQdO/ps4GpQsQ1/y/qC+gk35GKZUhskbWyVADSvKfUeAETHWVhGjW
-	JgVP3rHptwQRSTDtdbllyKwgX/sQTZdp2qNoxctZ/d0C2pXvq5yi84QTDbku8n6ABcmy/Wq+Yso
-	lhH8d1qWzdktHjefz1lZ5di2n0KlRAevccXp6BUlrboBaqeuXgX1fJnwVQ2DQInF/aUOyH3GmfM
-	ymYIWzOy0vhVxCTtQ/RYxlGUSsqd9gftKfWWZSnK+7dv2FzEqWS3YwNe9R3K2331wdKR1OOvh34
-	xypNTLKYpZWdhWSl6VC1TmB7clGl8DMsEtGRz31TpZNEE63h13yDL4fkdhC/4mJcEysnpw==
-X-Google-Smtp-Source: AGHT+IEMU9a6aZGz+kLhPKpDgsPP465aof0p3jZZCP5dmiHATC63+CKThZDo4xy3NUbvdUIjkoiEdw==
-X-Received: by 2002:a05:600c:4f8e:b0:439:a1c7:7b3a with SMTP id 5b1f17b1804b1-442fd60ee47mr80699975e9.1.1747992021455;
-        Fri, 23 May 2025 02:20:21 -0700 (PDT)
-Received: from localhost ([2a02:8308:a00c:e200:be84:d9ad:e5e6:f60b])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-447f1ef0aadsm132780315e9.12.2025.05.23.02.20.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 May 2025 02:20:21 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="YN0IA3On";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="cBR3AZxY";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="YN0IA3On";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="cBR3AZxY"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 52AB21F821;
+	Fri, 23 May 2025 09:20:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1747992037; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=HhocMSSXD2Ob4YbeI+06yEIZuiMpJcrclTZN4rAvaTA=;
+	b=YN0IA3OnH294PXpXi5dDe00kzw9uu8MzxlzJIvvIMeAdWoZoHcJjpDqTzW7DGsgNUeWcOY
+	l7CxoxCrx05CHkag6MSt2bg+6w5w72IqBq4i9LC2zk6D+yqQ9GRzmmvIM+nWpnsz8siHe9
+	ByI9YP/xomosUoLSK+5I96RpDViYEyo=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1747992037;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=HhocMSSXD2Ob4YbeI+06yEIZuiMpJcrclTZN4rAvaTA=;
+	b=cBR3AZxYlhc0linbdmpXVLkmWYbFS3BRxGGCGZ6LxeHg7U9Jk0E4DNj+m90tV5Fe7bapOD
+	VocegoYBxStLaLCA==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=YN0IA3On;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=cBR3AZxY
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1747992037; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=HhocMSSXD2Ob4YbeI+06yEIZuiMpJcrclTZN4rAvaTA=;
+	b=YN0IA3OnH294PXpXi5dDe00kzw9uu8MzxlzJIvvIMeAdWoZoHcJjpDqTzW7DGsgNUeWcOY
+	l7CxoxCrx05CHkag6MSt2bg+6w5w72IqBq4i9LC2zk6D+yqQ9GRzmmvIM+nWpnsz8siHe9
+	ByI9YP/xomosUoLSK+5I96RpDViYEyo=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1747992037;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=HhocMSSXD2Ob4YbeI+06yEIZuiMpJcrclTZN4rAvaTA=;
+	b=cBR3AZxYlhc0linbdmpXVLkmWYbFS3BRxGGCGZ6LxeHg7U9Jk0E4DNj+m90tV5Fe7bapOD
+	VocegoYBxStLaLCA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 691E2137B8;
+	Fri, 23 May 2025 09:20:36 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id q32/FuQ9MGjqPQAAD6G6ig
+	(envelope-from <osalvador@suse.de>); Fri, 23 May 2025 09:20:36 +0000
+Date: Fri, 23 May 2025 11:20:34 +0200
+From: Oscar Salvador <osalvador@suse.de>
+To: David Hildenbrand <david@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	virtualization@lists.linux.dev,
+	"Michael S. Tsirkin" <mst@redhat.com>,
+	Jason Wang <jasowang@redhat.com>,
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+	Eugenio =?iso-8859-1?Q?P=E9rez?= <eperezma@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>,
+	Brendan Jackman <jackmanb@google.com>,
+	Johannes Weiner <hannes@cmpxchg.org>, Zi Yan <ziy@nvidia.com>,
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>
+Subject: Re: [PATCH v2 1/1] mm/memory_hotplug: PG_offline_skippable for
+ offlining memory blocks with PageOffline pages
+Message-ID: <aDA94oHm1k-I01dv@localhost.localdomain>
+References: <20250520164216.866543-1-david@redhat.com>
+ <20250520164216.866543-2-david@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Fri, 23 May 2025 11:20:20 +0200
-Message-Id: <DA3FGGI5PEZG.3T26KJXT2QO8M@ventanamicro.com>
-Cc: "Atish Patra" <atish.patra@linux.dev>, <kvm-riscv@lists.infradead.org>,
- <kvm@vger.kernel.org>, <linux-riscv@lists.infradead.org>,
- <linux-kernel@vger.kernel.org>, "Anup Patel" <anup@brainfault.org>, "Atish
- Patra" <atishp@atishpatra.org>, "Paul Walmsley" <paul.walmsley@sifive.com>,
- "Palmer Dabbelt" <palmer@dabbelt.com>, "Albert Ou" <aou@eecs.berkeley.edu>,
- "Alexandre Ghiti" <alex@ghiti.fr>, "Andrew Jones" <ajones@ventanamicro.com>
-To: "Anup Patel" <apatel@ventanamicro.com>
-From: =?utf-8?q?Radim_Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@ventanamicro.com>
-Subject: Re: [PATCH v3 0/2] RISC-V: KVM: VCPU reset fixes
-References: <20250515143723.2450630-4-rkrcmar@ventanamicro.com>
- <1a7a81fd-cf15-4b54-a805-32d66ced4517@linux.dev>
- <DA3CUGMQXZNW.2BF5WWE4ANFS0@ventanamicro.com>
- <CAK9=C2Xi3=9JL5f=0as2nEYKuRVTtJoL6Vdt_y2E06ta6G_07A@mail.gmail.com>
-In-Reply-To: <CAK9=C2Xi3=9JL5f=0as2nEYKuRVTtJoL6Vdt_y2E06ta6G_07A@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250520164216.866543-2-david@redhat.com>
+X-Rspamd-Action: no action
+X-Spam-Level: 
+X-Rspamd-Queue-Id: 52AB21F821
+X-Spam-Score: -1.51
+X-Spam-Flag: NO
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Spamd-Result: default: False [-1.51 / 50.00];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	MISSING_XM_UA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[16];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,localhost.localdomain:mid,suse.de:email,suse.de:dkim,nvidia.com:email];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DKIM_TRACE(0.00)[suse.de:+]
 
-2025-05-23T13:38:26+05:30, Anup Patel <apatel@ventanamicro.com>:
-> On Fri, May 23, 2025 at 12:47=E2=80=AFPM Radim Kr=C4=8Dm=C3=A1=C5=99 <rkr=
-cmar@ventanamicro.com> wrote:
->>
->> 2025-05-22T14:43:40-07:00, Atish Patra <atish.patra@linux.dev>:
->> > On 5/15/25 7:37 AM, Radim Kr=C3=84m=C3=83=C2=A1=C3=85 wrote:
->> >> Hello,
->> >>
->> >> the design still requires a discussion.
->> >>
->> >> [v3 1/2] removes most of the additional changes that the KVM capabili=
-ty
->> >> was doing in v2.  [v3 2/2] is new and previews a general solution to =
-the
->> >> lack of userspace control over KVM SBI.
->> >>
->> >
->> > I am still missing the motivation behind it. If the motivation is SBI
->> > HSM suspend, the PATCH2 doesn't achieve that as it forwards every call
->> > to the user space. Why do you want to control hsm start/stop from the
->> > user space ?
->>
->> HSM needs fixing, because KVM doesn't know what the state after
->> sbi_hart_start should be.
->> For example, we had a discussion about scounteren and regardless of what
->> default we choose in KVM, the userspace might want a different value.
->> I don't think that HSM start/stop is a hot path, so trapping to
->> userspace seems better than adding more kernel code.
->
-> There are no implementation specific S-mode CSR reset values
-> required at the moment.
+On Tue, May 20, 2025 at 06:42:11PM +0200, David Hildenbrand wrote:
+> A long-term goal is supporting frozen PageOffline pages, and later
+> PageOffline pages that don't have a refcount at all. Some more work for
+> that is needed -- in particular around non-folio page migration and
+> memory ballooning drivers -- but let's start by handling PageOffline pages
+> that can be skipped during memory offlining differently.
+> 
+> Note that PageOffline is used to mark pages that are logically offline
+> in an otherwise online memory block (e.g., 128 MiB). If a memory
+> block is offline, the memmap is considered compeltely uninitialized
+> and stale (see pfn_to_online_page()).
+> 
+> Let's introduce a PageOffline specific page flag (PG_offline_skippable)
+> that for now reuses PG_owner_2. In the memdesc future, it will be one of
+> a small number of per-memdesc flags stored alongside the type.
+> 
+> By setting PG_offline_skippable, a driver indicates that it can
+> restore the PageOffline state of these specific pages when re-onlining a
+> memory block: it knows that these pages are supposed to be PageOffline()
+> without the information in the vmemmap, so it can filter them out and
+> not expose them to the buddy -> they stay PageOffline().
+> 
+> While PG_offline_offlineable might be clearer, it is also super
+> confusing. Alternatives (PG_offline_sticky?) also don't quite feel right.
+> So let's use "skippable" for now.
+> 
+> The flag is not supposed to be used for movable PageOffline pages as
+> used for balloon compaction; movable PageOffline() pages can simply be
+> migrated during the memory offlining stage, turning the migration
+> destination page PageOffline() and turning the migration source page
+> into a free buddy page.
+> 
+> Let's convert the single user from our MEM_GOING_OFFLINE approach
+> to the new PG_offline_skippable approach: virtio-mem. Fortunately,
+> this simplifies the code quite a lot. The only corner case we have to
+> take care of is when force-unloading the virtio-mem driver: we have to
+> prevent partially-plugged memory blocks from getting offlined by
+> clearing PG_offline_skippable again.
+> 
+> What if someone decides to grab a reference on these pages although they
+> really shouldn't? After all, we'll now keep the refcount at 1 (until we
+> can properly stop using the refcount completely).
+> 
+> Well, less worse things will happen than would currently: currently,
+> if someone would grab a reference to these pages, in MEM_GOING_OFFLINE
+> we would run into the
+> 		if (WARN_ON(!page_ref_dec_and_test(page)))
+> 			dump_page(page, "fake-offline page referenced");
+> 
+> And once that unexpected reference would get dropped, we would end up
+> freeing that page to the buddy: ouch.
+> 
+> Now, we'll allow for offlining that memory, and when that unexpected
+> reference would get dropped, we would not end up freeing that page to
+> the buddy. Once we have frozen PageOffline() pages, it will all get a
+> lot cleaner.
+> 
+> Note that we didn't see the existing WARN_ON so far, because nobody
+> should ever be referencing such pages.
+> 
+> An alternative might be to have another callback chain from memory hotplug
+> code, where a driver that owns that page could agree to skip the
+> PageOffline() page. However, we would have to repeatedly issue these
+> callbacks for individual PageOffline() pages, which does not sound
+> compelling. As we have spare bits, let's use this simpler approach for
+> now.
+> 
+> Acked-by: Zi Yan <ziy@nvidia.com>
+> Signed-off-by: David Hildenbrand <david@redhat.com>
 
-Jessica mentioned that BSD requires scounteren to be non-zero, so
-userspace should be able to provide that value.
+Acked-by: Oscar Salvador <osalvador@suse.de>
 
-I would prefer if KVM could avoid getting into those discussions.
-We can just just let userspace be as crazy as it wants.
+ 
 
->                         Whenever the need arises, we will extend
-> the ONE_REG interface so that user space can specify custom
-> CSR reset values at Guest/VM creation time. We don't need to
-> forward SBI HSM calls to user space for custom S-mode CSR
-> reset values.
-
-The benefits of adding a new ONE_REG interface seem very small compared
-to the drawbacks of having extra kernel code.
-
-If userspace would want to reset or setup new multi-VCPUs VMs often, we
-could add an interface that loads the whole register state from
-userspace in a single IOCTL, because ONE_REG is not the best interface
-for bulk data transfer either.
-
->> Forwarding all the unimplemented SBI ecalls shouldn't be a performance
->> issue, because S-mode software would hopefully learn after the first
->> error and stop trying again.
->>
->> Allowing userspace to fully implement the ecall instruction one of the
->> motivations as well -- SBI is not a part of RISC-V ISA, so someone might
->> be interested in accelerating a different M-mode software with KVM.
->>
->> I'll send v4 later today -- there is a missing part in [2/2], because
->> userspace also needs to be able to emulate the base SBI extension.
->>
->
-> [...]          The best approach is to selectively forward SBI
-> calls to user space where needed (e.g. SBI system reset,
-> SBI system suspend, SBI debug console, etc.).
-
-That is exactly what my proposal does, it's just that the userspace says
-what is "needed".
-
-If we started with this mechanism, KVM would not have needed to add
-SRST/SUSP/DBCN SBI emulation at all -- they would be forwarded as any
-other unhandled ecall.
+-- 
+Oscar Salvador
+SUSE Labs
