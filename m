@@ -1,122 +1,65 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48872158874
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 09:06:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2053919C540;
+	Fri, 23 May 2025 09:07:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747991216; cv=none; b=c3NR02Mj1b8TA1Hdr4SG8de2FYY+84KPmxUfPcW1XAAkPh8Ho3dSeOueF7SDacZhOE4jYTdy3g+/A52nvhk/+YaW7fTDC1316W5LAxsQlqb2UkvScrVNDubNsRupRbKP6/PvOQhC4HNmZD3nReKhyOFiX3JT05iOm4QHqk8ewDI=
+	t=1747991230; cv=none; b=b4iyUAOubmONlehHpd7xqnmha/yOCTVw2mhLaDKuRsTuiw89LnsArXl+JtZwpThF0Fl8rhjv8TdR7BPeSlO0o5PdjGucqEtNkW5d3f942iyXc9UV90JvVhiQ6/urQ/jfv0wk2O3SZJKLalDwZ8cI5iXjyrR5t7fBu/c4ZVJ/KDk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747991216; c=relaxed/simple;
-	bh=y58D5o2WeeI79/6c3GDc1hkPTe1ukMuyCQePGAsny4w=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=G53foBbS+k79e9xyHLSw2gf0KgmzfYpk5qzi009QoMBfACWpAkAf3IWBBG7mWK05YhZ2VSbQcSpv6k4XDjIj2hNSs07UHqC+CU6temfA1gdX6QO58XWBkHwhitq44DJ2gs1qUQDS2StP1lPDWbRHzbRM58PD9aw2PxfXiL0nq5g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mkMqqaj8; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747991230; c=relaxed/simple;
+	bh=w43p4EyL6FCtdgKjiMG+C9dLXe1q27wYjQ2eiZtJ6iA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Pv9QLVoq/EIYmpb1Wn2+RmDj6PR4llc6FatRzRJAI0BwSF5ef27IBCmWXSy40lvfQesoYhs6EnZufK9dU6yHcnJxp1DUYmUp/cX57+hOwuegOjZKwAPHiI0hWRkE3BbfmEB1tsW0Un4DRrKAKOjEZ5SBtJUhnYYoFE0NkCxEGG4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e34o0JUu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mkMqqaj8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7F33C4CEE9;
-	Fri, 23 May 2025 09:06:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e34o0JUu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04A69C4CEEB;
+	Fri, 23 May 2025 09:07:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747991215;
-	bh=y58D5o2WeeI79/6c3GDc1hkPTe1ukMuyCQePGAsny4w=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=mkMqqaj8qqVUg/i8Ibnp0GiFcnYVqp9L6/uu99NNxg9pT9bZdw0crjneUZM4rVCxn
-	 iYQ9lFVjf1l63O03aHGbXJJy/pYaL0Lhwlt4KgosM+fNc0kxfJVa707gxZfD17QmEg
-	 czWMNXCJOFzXdvNob0WtqwZ4Bbq/hJZPg2g4oy8htK4tCKLGCFANH1Ygf60mDuH2Mk
-	 2S1jG37p14cLGuytRfK07jmp1Z42e0xl0EPEaJf/OLPXWNc8srmwnWKHseSNfKGdfW
-	 Wby40wcqfbPSbvVt3IF1EZo2jKY2ovrKWyyvVBs/cs9knr3Xu8/OitWQs+quppRx29
-	 Ac9wgXC2k1fBg==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1uIOMf-00HWek-Hc;
-	Fri, 23 May 2025 10:06:53 +0100
-Date: Fri, 23 May 2025 10:06:53 +0100
-Message-ID: <86o6vjelw2.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] irqchip/msi-lib: Honor the MSI_FLAG_PCI_MSI_MASK_PARENT flag
-In-Reply-To: <875xhzhuup.ffs@tglx>
-References: <20250517103011.2573288-1-maz@kernel.org>
-	<875xhzhuup.ffs@tglx>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	s=k20201202; t=1747991229;
+	bh=w43p4EyL6FCtdgKjiMG+C9dLXe1q27wYjQ2eiZtJ6iA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=e34o0JUu10QDuA0rVdjVZLPAacJRZlQ2ll9Sec9sJW23uGr3dhRR2bX7b4ZRcr8RN
+	 PuLYnYYcUWTIQYqby17/jcYiPpr4LrBRUw5MmEigGyiUEDJMaY4GkWzUytD8749yg3
+	 jov6+UTaRBxGiDJbMzj78IJ74ocWCRhWa5RkGDxqggqdYGkHtMROB5+s0+caOPqNEG
+	 fNAE3wCP4G22dNV0ZynfwvSubNezX6Yb3/gjMT8B2WO+QN0eYib9mPRrFaqgVjlKwW
+	 J6vqao9VP5k6AQ5OS8zJRE8eJDcvsmmr0z6OuzKSKjNyZdpPWhOWk18SguU4FM4IWl
+	 yE5A/yWEjJzdA==
+Date: Fri, 23 May 2025 11:07:06 +0200
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Stephan Gerhold <stephan.gerhold@linaro.org>
+Cc: Jassi Brar <jassisinghbrar@gmail.com>, 
+	Bjorn Andersson <andersson@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, linux-arm-msm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, 
+	Georgi Djakov <djakov@kernel.org>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: Re: [PATCH 1/4] dt-bindings: mailbox: qcom,apcs: Add separate node
+ for clock-controller
+Message-ID: <20250523-cunning-pearl-rottweiler-1a79d9@kuoka>
+References: <20250506-qcom-apcs-mailbox-cc-v1-0-b54dddb150a5@linaro.org>
+ <20250506-qcom-apcs-mailbox-cc-v1-1-b54dddb150a5@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: tglx@linutronix.de, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250506-qcom-apcs-mailbox-cc-v1-1-b54dddb150a5@linaro.org>
 
-On Sat, 17 May 2025 20:59:10 +0100,
-Thomas Gleixner <tglx@linutronix.de> wrote:
+On Tue, May 06, 2025 at 03:10:08PM GMT, Stephan Gerhold wrote:
+> APCS "global" is sort of a "miscellaneous" hardware block that combines
+> multiple registers inside the application processor subsystem. Two distinct
+> use cases are currently stuffed together in a single device tree node:
 > 
-> On Sat, May 17 2025 at 11:30, Marc Zyngier wrote:
-> > +	/*
-> > +	 * If the parent domain insists on being in charge of masking, obey
-> > +	 * blindly. The default mask/unmask become the shutdown/enable
-> > +	 * callbacks, ensuring that we correctly start/stop the interrupt.
-> > + 	 * We make a point in not using the irq_disable() in order to
-> > +	 * preserve the "lazy disable" behaviour.
-> > +	 */
-> > +	if (info->flags & MSI_FLAG_PCI_MSI_MASK_PARENT) {
-> > +		chip->irq_shutdown	= chip->irq_mask;
-> > +		chip->irq_enable	= chip->irq_unmask;
-> 
-> This is only correct, when the chip does not have dedicated
-> irq_shutdown/enable callbacks.
+>  - Mailbox: to communicate with other remoteprocs in the system.
+>  - Clock: for controlling the CPU frequency.
 
-The chip structure provided by the PCI MSI code doesn't provide such
-callback, meaning that they are unused for the whole hierarchy.
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-> And I really hate the asymmetry of this.
+Best regards,
+Krzysztof
 
-So do I, but that's how the lazy disable thing currently works. Drop
-the bizarre asymmetry on irq_disable, and we can make this nicely
-symmetric as well.
-
-> 
-> > +		chip->irq_mask		= irq_chip_mask_parent;
-> > +		chip->irq_unmask	= irq_chip_unmask_parent;
-> > +	}
-> 
-> I'm still trying to understand, what's the actual problem is you are
-> trying to solve.
-
-I'm trying to remove some overhead from machines that don't need to
-suffer from this nonsense double masking. Specially in VMs when
-masking/unmasking requires *two* extremely costly exits (write +
-synchronising read-back). This change reduces the overhead
-significantly by only masking where it actually matters.
-
-> MSIs are edge type interrupts, so the interrupt handling hotpath usually
-> does not mask at all. The only time masking happens is when it's lazy
-> disabled or during affinity changes, which is not the end of the world.
-
-And that's part of the problem. The lazy disable ends up being way
-more costly than it should when the interrupt fires during the
-"disabled but not quite" phase, and in turn makes the critical section
-delineated by disable_irq()/enable_irq() more expensive.
-
-So while, as you put it, it's "not the end of the world", this seems
-to me like a valuable optimisation.
-
-Another possible improvement would be to teach the PCI code it can
-still rely on masking even when the endpoint is not capable of masking
-individual MSIs.
-
-Thanks,
-
-	M.
-
--- 
-Without deviation from the norm, progress is not possible.
