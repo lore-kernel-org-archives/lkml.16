@@ -1,129 +1,288 @@
-Received: from mail-vk1-f170.google.com (mail-vk1-f170.google.com [209.85.221.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.smtpout.orange.fr (smtp-18.smtpout.orange.fr [80.12.242.18])
+	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93EAF222578
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 16:40:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0F164120B;
+	Fri, 23 May 2025 16:42:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748018450; cv=none; b=WUKdv52fqUGwrzu99BM3LhnCYW3TyvhjQaeFJQQeL0e4dr79a1BwpRk1UUnVNUql0wisb990Sq2ou8SFQE+f+0d8ldFA5xOfmvHi7aEenH+jtLTNU+yTRncWqO0uCLfKzxJJ8khqdDIGjhc6WDCe/6SWALVbChK4ZH/ra1+/VL4=
+	t=1748018563; cv=none; b=iLMZRYuJ1qhVnsO7uY1C3yVx4867sR8EkCyRiD9P7oro99gq53fGKnBygYHPTsm9bsUco+LTZCsCpCV2gH8ByPsgnfAxrsxHMBLKOtKok94IrPuuI8QfyBZHdsLrctyIT1c9hwxnrdOH8t1v7YvMLwSDl4bXeyXLQ0rFiHd3LkU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748018450; c=relaxed/simple;
-	bh=l2TFir+vNb/vrID6aQMq17jFX6ZrzDNcaOSKkZFY7k8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tUBb8hUyaaFiN9SCjmeefnccgLcNCg7dIg+Yjo2y5x4V9ciPpb8qFA2t8+H8fwmrznruP72vrMhWNRmGNQ/OvyE++y966ATi+ZHI7Ck/Gkv8YZF2jV7/AVrJVec07Hp7M6zABNWCmKr0c4i7HRVmgKSuEhcLTeBm2YkZ9Cjds60=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PA1sjQ7D; arc=none smtp.client-ip=209.85.221.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748018563; c=relaxed/simple;
+	bh=tq4TuVSZAIRjvQu1VdJ2ys6D+exC6+GZ9V4Q2kNeeZA=;
+	h=Message-ID:Date:MIME-Version:Subject:References:From:To:Cc:
+	 In-Reply-To:Content-Type; b=UdIbiIshgkvA9f20cig7bjJcYFnibaTn8oTw12+e5SWOhdsKpCA3YOFeSk5kW2xUd8pVLypN5u9Squdrj5Dy7vNteR5IR+5IuUnVHs96bMRLBtLh3iNKq5/VtGgqoO2zQtC0qjlmlTVpt1CM11fbX12adyVdwUVDFXw7G53QHUQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=pOlCfneW; arc=none smtp.client-ip=80.12.242.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PA1sjQ7D"
-Received: by mail-vk1-f170.google.com with SMTP id 71dfb90a1353d-52934f4fb23so29209e0c.1
-        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 09:40:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748018447; x=1748623247; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rQrF9YRsflR7/GINj2+0t5pNix1EimXCUknfwsemFCk=;
-        b=PA1sjQ7D8MpY2sQSvhvN86Fkzko6lfbzGq3w2aEzSUcQQk6C74jAwxhV6deIELaGkY
-         YbQBpGt4UlnT1jH/dbdZPOuQuuerQ8G9JM6yAz36Ws09QE8VE0868eoT/3Y0zc65Ws1d
-         iXPYw3mRburCl0Wvyiwnn4yHKExQeg8Ey13J5tNHZA4jzN0v3af4NiB7zCE8xxERowo8
-         a7+F7AwR/r42NRaPMkigjOM03gFXN2aPfPve7t+fuPbkA0MZScXZLanLT2r0mqyho7Zf
-         LWJ4a+qehrIPIY6ucdwLUe3goPgwT0KFuma3YHz7SVYOCUYvkBpcreintWOL+VOKUn++
-         QsGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748018447; x=1748623247;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=rQrF9YRsflR7/GINj2+0t5pNix1EimXCUknfwsemFCk=;
-        b=mQ2O4Ek/G80TO1JxLHw4EJlZvgM1OXBhBX1ArWTIzFJ5MdiBZcH3cVCzYKXVl/w+Pa
-         O30k1JJfCR6Or/O2YfSVrsqZsS/igezwBg1PRkX5bFmzTPOkaDCS8ANGDHmh9ab0keSO
-         J5l7Jr027DeNxhBSYYmzig1/jdPGg2Y/Act6DcfZvS50pVpGVV72d+cXHwBrC5ONrTRY
-         LvlPFGEZhnEavDyzLLHj7Qs4sjZNaaml9jLtnDvO8WJP1qi7VzrZd3im0z4Y7xz4AdxM
-         Rk+WijMwFOJhnOL5Tbe4sHQbkC0sdR4DLoVeRuu2GrzSIgPpLHI37ivAgMranj8xmL38
-         +8UA==
-X-Gm-Message-State: AOJu0Yw/X8DyaNc5DLmYw/+ZsouzzvSSZ1A6cVFK7msxrdp6AnwTVKbK
-	GnzQt3SykfDAp1u37Dm+IS9BpzYCzeYvPm6XG9RDKLKkwfzIlxjJiMYQslmbbqwgWcT+Pb/M1RD
-	IbpY2YeAm9d3tfsFo2gUKLiFF0b0ofOI=
-X-Gm-Gg: ASbGncvoaGX2/mKt3NmGuFXv2WyZTyK3oKH9F9KSRFTMcF3fDjZcLtdAKDgP+hP4T/A
-	y+cU8bkvMCmjdKq+V8mNRBTHG+uHW00xoG15rs0LQzkt03IpAU0+Wv2Cpe9k4tbsFF6mcS2UCL4
-	OU0AUTzH+1AvXcuUfZoKA1JoyoPPfvABvHjcHzCSZ/lSjrHGVStTZ9bDzCPKfKrkCcxg==
-X-Google-Smtp-Source: AGHT+IFJF3StJDxqiD0vWnc7KLhQkAqadAul90UhKf0HXRlPlhBzdYYdqyDiUxyvUltGjZEPkuIt8u8b9yB5Haiq2Kw=
-X-Received: by 2002:a05:6122:1d48:b0:526:2210:5b68 with SMTP id
- 71dfb90a1353d-52dba80aa18mr29570055e0c.4.1748018447322; Fri, 23 May 2025
- 09:40:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="pOlCfneW"
+Received: from [IPV6:2a01:cb10:785:b00:8347:f260:7456:7662]
+ ([IPv6:2a01:cb10:785:b00:8347:f260:7456:7662])
+	by smtp.orange.fr with ESMTPA
+	id IVSSurGNEpEs6IVSSuRRWF; Fri, 23 May 2025 18:41:24 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1748018484;
+	bh=3+QxL/ee61ufD+4tquQWli5spOHmHSP5ezjYfdkKTd8=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To;
+	b=pOlCfneWdXLFPaZIu5XSYv4nRFQa/8oQomownlOpjHGyymEnk4FjHH1e/0j8vaK+U
+	 OiJmXmq3gSxgBRYKJ9BQAOF6c13sDc+Vn3uHi66h7HrnVF9w0QvGXr/oo4L5siH8SQ
+	 vC1ZPCpI8UVRHVDtHpHTKR+4wDO1IpOWf2whW4oaMyxI3+rdXM5rsdSitn4aVFh2j2
+	 SyVZj2CgjWU6m9sIkB6bNWJvUNoBN4T7njXh2p1LDW+tQxwVJoOqsV9GIA1itB0qhW
+	 Kyvn47CfThH7z2dcWf7xwvtus4SFDhCCSTysUdKcZo6Yc80v7I2Ee4F1NOtTkfJoWa
+	 pnlFxycmQ3lig==
+X-ME-Helo: [IPV6:2a01:cb10:785:b00:8347:f260:7456:7662]
+X-ME-Auth: bWFyaW9uLmphaWxsZXRAd2FuYWRvby5mcg==
+X-ME-Date: Fri, 23 May 2025 18:41:24 +0200
+X-ME-IP: 2a01:cb10:785:b00:8347:f260:7456:7662
+Message-ID: <29b547b3-8adc-4c14-b8e6-431a1f2e6849@wanadoo.fr>
+Date: Fri, 23 May 2025 18:41:20 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250522182644.2176645-1-daeho43@gmail.com> <52eee781-f53c-46a9-8ce4-96c5a0589240@kernel.org>
-In-Reply-To: <52eee781-f53c-46a9-8ce4-96c5a0589240@kernel.org>
-From: Daeho Jeong <daeho43@gmail.com>
-Date: Fri, 23 May 2025 09:40:36 -0700
-X-Gm-Features: AX0GCFuDGCRC94xkoWEBxrP6Skv4W0yvPLEXQKva3_rO-JHqoXHFhlWGlpJD-LI
-Message-ID: <CACOAw_xCQpmiRRuhjpGbB4mKzonE24Uyg=jtrxge-hFZrn5dXg@mail.gmail.com>
-Subject: Re: [f2fs-dev] [PATCH v2] mkfs.f2fs: ensure zone size is equal or
- bigger than segment size
-To: Chao Yu <chao@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net, 
-	kernel-team@android.com, Daeho Jeong <daehojeong@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 2/2] ASoC: codecs: add support for ES8375
+References: <20250523025502.23214-1-zhangyi@everest-semi.com>
+ <20250523025502.23214-3-zhangyi@everest-semi.com>
+Content-Language: en-US, fr-FR
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To: zhangyi@everest-semi.com
+Cc: amadeuszx.slawinski@linux.intel.com, broonie@kernel.org,
+ conor+dt@kernel.org, devicetree@vger.kernel.org, krzk+dt@kernel.org,
+ krzk@kernel.org, lgirdwood@gmail.com, linux-kernel@vger.kernel.org,
+ linux-sound@vger.kernel.org, perex@perex.cz, robh@kernel.org, tiwai@suse.com
+In-Reply-To: <20250523025502.23214-3-zhangyi@everest-semi.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Thu, May 22, 2025 at 7:06=E2=80=AFPM Chao Yu <chao@kernel.org> wrote:
->
-> On 5/23/25 02:26, Daeho Jeong wrote:
-> > From: Daeho Jeong <daehojeong@google.com>
-> >
-> > Otherwise, it doesn't work with a crash.
-> >
-> > Signed-off-by: Daeho Jeong <daehojeong@google.com>
-> > ---
-> > v2: relocate the code
-> > ---
-> >  lib/libf2fs.c | 5 +++++
-> >  1 file changed, 5 insertions(+)
-> >
-> > diff --git a/lib/libf2fs.c b/lib/libf2fs.c
-> > index d2579d7..148dc12 100644
-> > --- a/lib/libf2fs.c
-> > +++ b/lib/libf2fs.c
-> > @@ -1347,6 +1347,11 @@ int f2fs_get_f2fs_info(void)
-> >                       }
-> >                       c.zone_blocks =3D c.devices[i].zone_blocks;
-> >               }
-> > +             if (c.zone_blocks < DEFAULT_BLOCKS_PER_SEGMENT) {
->
-> If c.zone_blocks can not be aligned to DEFAULT_BLOCKS_PER_SEGMENT, do we =
-need to
-> handle below code?
+Le 23/05/2025 à 04:55, Zhang Yi a écrit :
+> The driver is for codec es8375 of everest
 
-We need to make sure that c.zone_blocks is a multiple of
-DEFAULT_BLOCKS_PER_SEGMENT, right?
+...
 
->
->                 /*
->                  * Align sections to the device zone size and align F2FS =
-zones
->                  * to the device zones. For F2FS_ZONED_HA model without t=
-he
->                  * BLKZONED feature set at format time, this is only an
->                  * optimization as sequential writes will not be enforced=
-.
->                  */
->                 c.segs_per_sec =3D c.zone_blocks / DEFAULT_BLOCKS_PER_SEG=
-MENT;
->
-> Thanks,
->
-> > +                     MSG(0, "\tError: zone size should not be less "
-> > +                             "than segment size\n");
-> > +                     return -1;
-> > +             }
-> >
-> >               /*
-> >                * Align sections to the device zone size and align F2FS =
-zones
->
+> +#include <linux/gpio/consumer.h>
+> +#include <linux/clk.h>
+> +#include <linux/module.h>
+> +#include <linux/kernel.h>
+> +#include <linux/delay.h>
+> +#include <linux/i2c.h>
+> +#include <linux/regmap.h>
+> +#include <linux/regulator/consumer.h>
+> +#include <sound/core.h>
+> +#include <sound/pcm.h>
+> +#include <sound/pcm_params.h>
+> +#include <sound/tlv.h>
+> +#include <sound/soc.h>
+> +#include <linux/acpi.h>
+
+Sometimes, it is preferred to keep includes in alphabetic order.
+
+> +#include "es8375.h"
+> +
+> +struct	es8375_priv {
+> +	struct regmap *regmap;
+> +	struct clk *mclk;
+> +	struct regulator_bulk_data core_supply[2];
+> +	unsigned int  mclk_freq;
+> +	int mastermode;
+> +	u8 mclk_src;
+> +	u8 vddd;
+> +	enum snd_soc_bias_level bias_level;
+> +};
+> +
+> +static const char * const es8375_core_supplies[] = {
+> +	"vddd",
+> +	"vdda",
+> +};
+> +
+> +static const DECLARE_TLV_DB_SCALE(es8375_adc_osr_gain_tlv, -3100, 100, 0);
+> +static const DECLARE_TLV_DB_SCALE(es8375_adc_volume_tlv, -9550, 50, 0);
+> +static const DECLARE_TLV_DB_SCALE(es8375_adc_automute_attn_tlv, 0, 100, 0);
+> +static const DECLARE_TLV_DB_SCALE(es8375_adc_dmic_volume_tlv, 0, 600, 0);
+> +static const DECLARE_TLV_DB_SCALE(es8375_dac_volume_tlv, -9550, 50, 0);
+> +static const DECLARE_TLV_DB_SCALE(es8375_dac_vppscale_tlv, -388, 12, 0);
+> +static const DECLARE_TLV_DB_SCALE(es8375_dac_automute_attn_tlv, 0, 400, 0);
+> +static const DECLARE_TLV_DB_SCALE(es8375_automute_ng_tlv, -9600, 600, 0);
+> +
+> +static const char *const es8375_ramprate_txt[] = {
+
+Missing space after *?
+(or extra space above in es8375_core_supplies)
+
+> +	"0.125dB/LRCK",
+> +	"0.125dB/2LRCK",
+> +	"0.125dB/4LRCK",
+> +	"0.125dB/8LRCK",
+> +	"0.125dB/16LRCK",
+> +	"0.125dB/32LRCK",
+> +	"0.125dB/64LRCK",
+> +	"0.125dB/128LRCK",
+> +	"disable softramp",
+> +};
+> +static SOC_ENUM_SINGLE_DECL(es8375_adc_ramprate, ES8375_ADC2,
+> +		ADC_RAMPRATE_SHIFT_0, es8375_ramprate_txt);
+> +static SOC_ENUM_SINGLE_DECL(es8375_dac_ramprate, ES8375_DAC2,
+> +		DAC_RAMPRATE_SHIFT_0, es8375_ramprate_txt);
+> +
+> +static const char *const es8375_automute_ws_txt[] = {
+
+Missing space after *?
+(or extra space above in es8375_core_supplies)
+
+... same several times below ...
+
+> +	"256 samples",
+> +	"512 samples",
+> +	"1024 samples",
+> +	"2048 samples",
+> +	"4096 samples",
+> +	"8192 samples",
+> +	"16384 samples",
+> +	"32768 samples",
+> +};
+
+...
+
+> +static struct regmap_config es8375_regmap_config = {
+
+I think this could be const.
+
+> +	.reg_bits = 8,
+> +	.val_bits = 8,
+> +	.max_register = ES8375_REG_MAX,
+> +	.cache_type = REGCACHE_MAPLE,
+> +	.use_single_read = true,
+> +	.use_single_write = true,
+> +	.writeable_reg = es8375_writeable_register,
+> +};
+
+...
+
+> +static int es8375_read_device_properities(struct device *dev, struct es8375_priv *es8375)
+> +{
+> +	int ret, i;
+> +
+> +	ret = device_property_read_u8(dev, "everest,mclk-src", &es8375->mclk_src);
+> +	if (ret != 0)
+> +		es8375->mclk_src = ES8375_MCLK_SOURCE;
+> +	dev_dbg(dev, "mclk-src %x", es8375->mclk_src);
+> +
+> +	for (i = 0; i < ARRAY_SIZE(es8375_core_supplies); i++)
+> +		es8375->core_supply[i].supply = es8375_core_supplies[i];
+> +	ret = devm_regulator_bulk_get(dev, ARRAY_SIZE(es8375_core_supplies), es8375->core_supply);
+> +	if (ret) {
+> +		dev_err(dev, "Failed to request core supplies %d\n", ret);
+
+dev_err_probe() in the whole function maybe, as already used just below.
+
+> +		return ret;
+> +	}
+> +
+> +	es8375->mclk = devm_clk_get(dev, "mclk");
+
+devm_clk_get_enabled() maybe?
+
+> +	if (IS_ERR(es8375->mclk))
+> +		return dev_err_probe(dev, PTR_ERR(es8375->mclk), "unable to get mclk\n");
+> +
+> +	if (!es8375->mclk)
+> +		dev_warn(dev, "assuming static mclk\n");
+> +
+> +	ret = clk_prepare_enable(es8375->mclk);
+
+If kept as-is, clk_disable_unprepare() should be called in the probe if 
+devm_snd_soc_register_component() fails, and a removed function looks 
+needed.
+
+> +	if (ret) {
+> +		dev_err(dev, "unable to enable mclk\n");
+> +		return ret;
+> +	}
+> +	ret = regulator_bulk_enable(ARRAY_SIZE(es8375_core_supplies), es8375->core_supply);
+> +	if (ret) {
+> +		dev_err(dev, "Failed to enable core supplies: %d\n", ret);
+> +		clk_disable_unprepare(es8375->mclk);
+> +		return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int es8375_i2c_probe(struct i2c_client *i2c_client)
+> +{
+> +	struct es8375_priv *es8375;
+> +	struct device *dev = &i2c_client->dev;
+> +	int ret;
+> +	unsigned int val;
+> +
+> +	es8375 = devm_kzalloc(&i2c_client->dev, sizeof(*es8375), GFP_KERNEL);
+> +	if (!es8375)
+> +		return -ENOMEM;
+> +
+> +	es8375->regmap = devm_regmap_init_i2c(i2c_client,
+> +			&es8375_regmap_config);
+> +	if (IS_ERR(es8375->regmap))
+> +		return dev_err_probe(&i2c_client->dev, PTR_ERR(es8375->regmap),
+> +			"regmap_init() failed\n");
+> +
+> +	i2c_set_clientdata(i2c_client, es8375);
+> +
+> +	ret = regmap_read(es8375->regmap, ES8375_CHIP_ID1, &val);
+> +	if (ret < 0) {
+> +		dev_err(&i2c_client->dev, "failed to read i2c at addr %X\n",
+> +				i2c_client->addr);
+> +		return ret;
+> +	}
+> +
+> +	if (val != 0x83) {
+> +		dev_err(&i2c_client->dev, "device at addr %X is not an es8375\n",
+> +				i2c_client->addr);
+> +		return -ENODEV;
+> +	}
+> +
+> +	ret = regmap_read(es8375->regmap, ES8375_CHIP_ID0, &val);
+> +	if (val != 0x75) {
+> +		dev_err(&i2c_client->dev, "device at addr %X is not an es8375\n",
+> +				i2c_client->addr);
+> +		return -ENODEV;
+> +	}
+> +
+> +	ret = es8375_read_device_properities(dev, es8375);
+
+Typo? Change the fct name to es8375_read_device_properties()?
+
+> +	if (ret != 0) {
+> +		dev_err(&i2c_client->dev, "get an error from dts info %X\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	return devm_snd_soc_register_component(&i2c_client->dev, &es8375_codec_driver,
+> +			&es8375_dai, 1);
+> +}
+
+...
+
+> +static const struct i2c_device_id es8375_id[] = {
+> +	{"es8375"},
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(i2c, es8375_id);
+> +
+> +#ifdef CONFIG_ACPI
+> +static const struct acpi_device_id es8375_acpi_match[] = {
+> +	{"ESSX8375", 0},
+> +	{},
+
+Unneeded , after a terminator
+
+> +};
+> +
+> +MODULE_DEVICE_TABLE(acpi, es8375_acpi_match);
+> +#endif
+
+...
+
+CJ
+
