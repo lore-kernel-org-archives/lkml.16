@@ -1,63 +1,63 @@
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26A002949F9
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 13:41:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6F08297A51
+	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 13:41:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748007675; cv=none; b=RQi1w8M585/INuXKkbBqz7I46samjqDcbsfnMgl8VlBzenR50Vbo8NUrRho4dM1uRy9HY2EcDPWkXMvD4MWAaMrn7ew6yHeLJFTcX7L0MdbAPMnNngQRE4Mc02kxDwLVQwJDcsP1Aw2RbnY42ejmmrzq6cmDKTFFaLFJxpN1Dq0=
+	t=1748007676; cv=none; b=mnMebA7vKGrbJUkddQngbU/LGeGqDVcQewU6mZb+8fANpmR1nrV9HYUjn3K2xq1SPJ3USuz1s33Sr3G78COhXJnzoajvzgOdHuRb7YktDpsG3ZEQI07nShSiuxwyVHCmrH+sZOp/uFRiGyMNnts45IIJLI151GJ1pCRG7rME/q8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748007675; c=relaxed/simple;
-	bh=eMWGIDGG2xlLJR/Z5iDFdeDcOa6riWNWL1MAhPqMtR0=;
+	s=arc-20240116; t=1748007676; c=relaxed/simple;
+	bh=cUPVPfOLqbKbGTZ9buOjuzMp47UCVQpzZR5BzbuI17A=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=SsrTCPPVgbahm6Lf0HjVXKVhW+3HS0ynGGI/rHTW5xv1mKBvm3MkLDV5Mm/M/GM5Duk2aMr5G53hMTt4tD04zffMTapJHJACSH5n7psLXKwJz4E23iuOoPgOOAHeW9KvnceCKkzNbNUZzxGhGSQMjDiuc6MS6tSpDzAcrwfnOf4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=k0WKNeD2; arc=none smtp.client-ip=209.85.167.41
+	 MIME-Version; b=K3dgeoA6jIW8gBpNJy1E0PTnuc9fs2jVfapqE3FTdtONalPXp2hy4OtCGIO/F4724NTuz/gjiQa1UurWz6+bc0EmchWm2oiI2kL/Os/Pri4r0PeqPUEIG01mjBGqDI3jG2AVoP7b637s6voeWfPW+ihQCacmIpDgjXE4PmWOZCY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=rQH4OHk2; arc=none smtp.client-ip=209.85.167.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="k0WKNeD2"
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-551efcb745eso7555204e87.2
-        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 06:41:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rQH4OHk2"
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-551f0072119so1145151e87.0
+        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 06:41:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1748007671; x=1748612471; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1748007673; x=1748612473; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=hOoCE0j0+Nf7/A2FNrnJbBGarUG82qfn+WjoD3EiQd8=;
-        b=k0WKNeD21YN74k0exTzTpTbMPhRc10L7moFPRP50QQsYfOYFQ77tOAzP7HbGCXGVBC
-         kwnPCp7iYG6sDIghCtdPQD1ZrtFsj1BQboLgvP8U/hStz1NmfL9EkoWGg5vhgQAjC3da
-         uOn6aCOpytU1y0SyPGocTk/RDLBlw/daMpMeiWKd+c/TMR4llZM+LF/+p7U+FbvCn7OI
-         lnnq171366JCIbW3BSy+JQl5P9g8ig0T4g0ah6o2ebKks1++uCq4a/ev3uns/OAHmuxl
-         DeC4kNqpZRTvzCRt2PyACkL8TPK8A1/r+rr0Kl0G/vyYiqoGnvSfCsRzxW8vgvfnzsfk
-         3rLQ==
+        bh=HGyEwCJhPN1ZKDIimFxnLW+xEyMfXf8H84gi9aCiP1o=;
+        b=rQH4OHk27026Huv+aUSNiCciMgwT+9NnCTPgwT2sr/OmHh5/Ly3bGay9CeMIOyRnvi
+         zajmFV19CXTV1qVVg/gY69fAjeJMtdsMwHSovJrm4L8P+kyJAIZ5Qvru2A4e6VdcZWi4
+         C1CJN5lk14bLW2cdRsWshYVEkSiGFje/+dxz3qyBIrOWc1pQixhSnMVcwmYB2bNGBA3h
+         49Mqon4rlfzL7hml/Gwbkx3OFgktBwDjZFTYUJD9co4M9lUnXxU/OIrQ6NLrMnI4kLa6
+         i6/m4Zt1yNNdRstCv4h5l0a6s+URja6+KCEyjUVdOZJMJ/84kwdXFxTpw85laeDR+fo2
+         cYMA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748007671; x=1748612471;
+        d=1e100.net; s=20230601; t=1748007673; x=1748612473;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=hOoCE0j0+Nf7/A2FNrnJbBGarUG82qfn+WjoD3EiQd8=;
-        b=X5NsSW4mOCPxISJer4JAwrthkMdkfUA1HljhMQwTiZqBjzRBqcSvuz4m4cMH6Rk/aL
-         bRH1tl4X9+FL9yCdRMao/zE7iKZ9ac3snH5tDxxB1ekuN1XiNDaez2n62DvVaDENV1fv
-         4C5AJ0crcjVN5rmnPo2CH7er0ODDPmKGnIEFBJ7Hb56RbXIzya3W1FNlvFDqByuHR7cZ
-         zzyRuoqTuVadLl01uZIiqFnCZ//jDgDq4lhhz52s7+ppCyhm2rdyawK1lxFoN7k4XpMr
-         NQv8oOHFC0Teo6s766T0kOWMgVtMHlV+vihui6ibchQi60HH1zp23Et68G/l0wepjlTW
-         rC8w==
-X-Forwarded-Encrypted: i=1; AJvYcCXmEaMXkOlDeQH6TCTjNZjls25RBJpLyBoobrHBb8NtRM5/zk5pGW9vOyaQ3m80E2HaK67C3bDHBGFVEqQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyHPKgtJLK0mpokPkLkLFC6fZLL2gLXVIkSodZ7DW4O1OWmSi5E
-	ZQRTvZ95Q0iUFiOqWzDqK/w6HycFw/w25K2kE+/6pS2VmRWgGWfcHPXAHU0bZyAqs3A=
-X-Gm-Gg: ASbGnctTqzZmBBMojCIvlOZUjWg+GLj5aQuk9jMjeEEinsR7wUQljQy3Q/JpcoKmuEz
-	AESghy15WPrXVkm7IwTgqVWk0FEW/nU6RsdWT5we6u1LB1XcdcnUjzboAHyMqJSHa+tx0plyvNt
-	YiUVNHUJT3jj1heDaiTD62rZHQz/1uRYQMjbLhwKodaHs20lnGupmLXEQtE83jujgCyuxqWuJR9
-	6Uh7fF/meXovyib37MjWEDuAaXOTnYPRL885dqryG3QXmSV0kpizAFT9ITjGzac+6OUwY+pB1fS
-	KjNzEwugIMZF6lqh3yg1DLsyYW4oPAWioWznWZvBQnai/jfg3IhNAOwUNvbzhSGtdtpfH4EKaTM
-	n4CUmidDoxZezr8an/CWzxiRGGw==
-X-Google-Smtp-Source: AGHT+IEVVVIanD+SM8PaeTS5BPNrUZEt3qImxQaWobI9SebxfHyiMxLEusYRHx51DE+mAPmIootadg==
-X-Received: by 2002:a05:6512:438c:b0:54e:a23f:82d9 with SMTP id 2adb3069b0e04-550e71d1472mr7232899e87.25.1748007671215;
-        Fri, 23 May 2025 06:41:11 -0700 (PDT)
+        bh=HGyEwCJhPN1ZKDIimFxnLW+xEyMfXf8H84gi9aCiP1o=;
+        b=evuSFLdeojzqa8P+cGWvhbtuHoNcE8p+Sqf3Wg64QKqKvurgrGlQUZwU0DkFEWd415
+         xEyHndo3UwFxX3uQiLAHOtNU3ye2lxWaP9kxHZ+LSlSFxeLyeCqWhuB6CFn4GiwGmcoE
+         wzunW3/6u6pMHKyYGHHV4iB+Q4ssSHRqoj9IBFgL6dKPEQpTWK4SRQpc6mQVSCLrw7Mr
+         Ue46KQr8UvDFTPJI6UZnIiu8kq0CnpVsOY54XTrqDWkqpnUp6wxeFSG5W0DzKV4crw6G
+         kpDu8pjzEdKTM7nDNRLc6niq6TyS1NXDL8kI6m4htosW0eyQyQKUf8ANRHlaK9rxJp5F
+         Zj+w==
+X-Forwarded-Encrypted: i=1; AJvYcCWRmFARdPFwWVhdgm5+60YwOgT7DkgCN8wAMk87cBGXPn+4r7p440fgxDz6rx/jFS7sUAk9Nyt6glVnZvg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyu3jldy46XtmFtQWTIj7NkETSN2zZ509jcvq45fmfzmkMv06Rj
+	7LUhvjb2kOVhjJArtqy6/WyZVF3jgVj+C5OtOOscrm3MjByzDE0tlfCuo72EsJPX+Ww=
+X-Gm-Gg: ASbGncsQCYujlofnx7lWm1ATy+CkAa4iyfzdhvZUytKs6N4aKdeQM+wd+MhIlY45gBs
+	stmNKihPAwvsUyQWHX0VcmbijNoNJOJGoqvfp0vBInViWoKliJl/ziqMHKWDCQTGgGS31tdR1r7
+	vyzTu6sBPH0Y8OIPRfJrALrjqM56ZSrs9zI0ikh7vwTNi4SSAymhRdfyZedd3ZWqlqX43SZN45Z
+	3P7kE0bDw4HPgO6XPqIS/4NEaQfPN99D/26t5ZJvj1UXMh092/S8E6LEJLBhrRBOZlcH4VI/6Sk
+	MH8PBuybpJxiw/f5b0tCgpCh/8DulxOvkAljoUXws1Kue34zyFCyIaRjuTemhVW+orYByO4EwF2
+	VzYyt1wxm7LIo1A19lrD47Mhp1g==
+X-Google-Smtp-Source: AGHT+IGPyCQFUdzHIALfteU0vTerPpV7oILLzxQIlLInZMqH94Tb+MaxZdvt9CEg2iCH7sWV6l9Bng==
+X-Received: by 2002:a05:6512:3ba7:b0:54f:c1cc:1241 with SMTP id 2adb3069b0e04-552156cc6a3mr1224907e87.25.1748007672736;
+        Fri, 23 May 2025 06:41:12 -0700 (PDT)
 Received: from uffe-tuxpro14.. (h-178-174-189-39.A498.priv.bahnhof.se. [178.174.189.39])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-551fc0d473bsm1950609e87.244.2025.05.23.06.41.10
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-551fc0d473bsm1950609e87.244.2025.05.23.06.41.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 May 2025 06:41:10 -0700 (PDT)
+        Fri, 23 May 2025 06:41:12 -0700 (PDT)
 From: Ulf Hansson <ulf.hansson@linaro.org>
 To: Saravana Kannan <saravanak@google.com>,
 	Stephen Boyd <sboyd@kernel.org>,
@@ -77,10 +77,12 @@ Cc: "Rafael J . Wysocki" <rafael@kernel.org>,
 	Jonathan Hunter <jonathanh@nvidia.com>,
 	Ulf Hansson <ulf.hansson@linaro.org>,
 	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 20/21] cpuidle: psci: Drop redundant sync_state support
-Date: Fri, 23 May 2025 15:40:17 +0200
-Message-ID: <20250523134025.75130-21-ulf.hansson@linaro.org>
+	linux-kernel@vger.kernel.org,
+	Anup Patel <anup@brainfault.org>,
+	linux-riscv@lists.infradead.org
+Subject: [PATCH v2 21/21] cpuidle: riscv-sbi: Drop redundant sync_state support
+Date: Fri, 23 May 2025 15:40:18 +0200
+Message-ID: <20250523134025.75130-22-ulf.hansson@linaro.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250523134025.75130-1-ulf.hansson@linaro.org>
 References: <20250523134025.75130-1-ulf.hansson@linaro.org>
@@ -93,41 +95,64 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
 The recent updates to the genpd core, can entirely manage the sync_state
-support for the cpuidle-psci-domain. More precisely, genpd prevents our
-->power_off() callback from being invoked, until all of our consumers are
-ready for it.
+support for the cpuidle-riscv-sbi-domain. More precisely, genpd prevents
+our ->power_off() callback from being invoked, until all of our consumers
+are ready for it.
 
-Let's therefore drop the sync_state support for the cpuidle-psci-domain as
-it has become redundant.
+Let's therefore drop the sync_state support for the
+cpuidle-riscv-sbi-domain as it has become redundant.
 
+Cc: Anup Patel <anup@brainfault.org>
+Cc: linux-riscv@lists.infradead.org
 Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 ---
- drivers/cpuidle/cpuidle-psci-domain.c | 22 +---------------------
+ drivers/cpuidle/cpuidle-riscv-sbi.c | 22 +---------------------
  1 file changed, 1 insertion(+), 21 deletions(-)
 
-diff --git a/drivers/cpuidle/cpuidle-psci-domain.c b/drivers/cpuidle/cpuidle-psci-domain.c
-index b880ce2df8b5..37c41209eaf9 100644
---- a/drivers/cpuidle/cpuidle-psci-domain.c
-+++ b/drivers/cpuidle/cpuidle-psci-domain.c
-@@ -28,7 +28,6 @@ struct psci_pd_provider {
- };
+diff --git a/drivers/cpuidle/cpuidle-riscv-sbi.c b/drivers/cpuidle/cpuidle-riscv-sbi.c
+index 83d58d00872f..a360bc4d20b7 100644
+--- a/drivers/cpuidle/cpuidle-riscv-sbi.c
++++ b/drivers/cpuidle/cpuidle-riscv-sbi.c
+@@ -44,7 +44,6 @@ static DEFINE_PER_CPU_READ_MOSTLY(struct sbi_cpuidle_data, sbi_cpuidle_data);
+ static DEFINE_PER_CPU(struct sbi_domain_state, domain_state);
+ static bool sbi_cpuidle_use_osi;
+ static bool sbi_cpuidle_use_cpuhp;
+-static bool sbi_cpuidle_pd_allow_domain_state;
  
- static LIST_HEAD(psci_pd_providers);
--static bool psci_pd_allow_domain_state;
- 
- static int psci_pd_power_off(struct generic_pm_domain *pd)
+ static inline void sbi_set_domain_state(u32 state)
  {
-@@ -38,9 +37,6 @@ static int psci_pd_power_off(struct generic_pm_domain *pd)
+@@ -345,20 +344,6 @@ static int sbi_cpuidle_init_cpu(struct device *dev, int cpu)
+ 	return ret;
+ }
+ 
+-static void sbi_cpuidle_domain_sync_state(struct device *dev)
+-{
+-	struct sbi_pd_provider *pd_provider;
+-
+-	/*
+-	 * All devices have now been attached/probed to the PM domain
+-	 * topology, hence it's fine to allow domain states to be picked.
+-	 */
+-	sbi_cpuidle_pd_allow_domain_state = true;
+-
+-	list_for_each_entry(pd_provider, &sbi_pd_providers, link)
+-		of_genpd_sync_state(pd_provider->node);
+-}
+-
+ #ifdef CONFIG_DT_IDLE_GENPD
+ 
+ static int sbi_cpuidle_pd_power_off(struct generic_pm_domain *pd)
+@@ -369,9 +354,6 @@ static int sbi_cpuidle_pd_power_off(struct generic_pm_domain *pd)
  	if (!state->data)
  		return 0;
  
--	if (!psci_pd_allow_domain_state)
+-	if (!sbi_cpuidle_pd_allow_domain_state)
 -		return -EBUSY;
 -
  	/* OSI mode is enabled, set the corresponding domain state. */
  	pd_state = state->data;
- 	psci_set_domain_state(pd, pd->state_idx, *pd_state);
-@@ -63,8 +59,7 @@ static int psci_pd_init(struct device_node *np, bool use_osi)
+ 	sbi_set_domain_state(*pd_state);
+@@ -401,8 +383,7 @@ static int sbi_pd_init(struct device_node *np)
  	if (!pd_provider)
  		goto free_pd;
  
@@ -135,34 +160,13 @@ index b880ce2df8b5..37c41209eaf9 100644
 -		     GENPD_FLAG_NO_SYNC_STATE;
 +	pd->flags |= GENPD_FLAG_IRQ_SAFE | GENPD_FLAG_CPU_DOMAIN;
  
- 	/*
- 	 * Allow power off when OSI has been successfully enabled.
-@@ -127,20 +122,6 @@ static void psci_pd_remove(void)
- 	}
- }
- 
--static void psci_cpuidle_domain_sync_state(struct device *dev)
--{
--	struct psci_pd_provider *pd_provider;
--
--	/*
--	 * All devices have now been attached/probed to the PM domain topology,
--	 * hence it's fine to allow domain states to be picked.
--	 */
--	psci_pd_allow_domain_state = true;
--
--	list_for_each_entry(pd_provider, &psci_pd_providers, link)
--		of_genpd_sync_state(pd_provider->node);
--}
--
- static const struct of_device_id psci_of_match[] = {
- 	{ .compatible = "arm,psci-1.0" },
- 	{}
-@@ -201,7 +182,6 @@ static struct platform_driver psci_cpuidle_domain_driver = {
+ 	/* Allow power off when OSI is available. */
+ 	if (sbi_cpuidle_use_osi)
+@@ -570,7 +551,6 @@ static struct platform_driver sbi_cpuidle_driver = {
+ 	.probe = sbi_cpuidle_probe,
  	.driver = {
- 		.name = "psci-cpuidle-domain",
- 		.of_match_table = psci_of_match,
--		.sync_state = psci_cpuidle_domain_sync_state,
+ 		.name = "sbi-cpuidle",
+-		.sync_state = sbi_cpuidle_domain_sync_state,
  	},
  };
  
