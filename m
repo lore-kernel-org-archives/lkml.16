@@ -1,103 +1,89 @@
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
+Received: from mail-m155101.qiye.163.com (mail-m155101.qiye.163.com [101.71.155.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8158322A1CD;
-	Fri, 23 May 2025 11:46:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C56422126D;
+	Fri, 23 May 2025 11:47:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=101.71.155.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748000821; cv=none; b=QYXM45F07d+feXe0uVU5Sr8vXASaMxmkjyMT/ELWrmtLbPZ6t4Ff5kOG4DyBcOWQvqRDyfyBm1UTAbvjgIoZQWDgnyxA3+qGMk9LHRR3gXkQKAUKI/gnLxoeZ19CTvmvputilYgtN2Rp6y/J0V+3gVoCSdjKrZgIGY+PzoJcehA=
+	t=1748000859; cv=none; b=FyI6sThtclQ8WhZ401xOehSAEnZm2AHBcBnCaFYuTBcfqWiFZsjOz6PEk+hQtd7oC/CpC2TtH8hVwzJEIXOiyuacCnAFErhR3ICszxQ6TOsiGQtnBOPtx4LaTbpjvoiBKxp9US/oXPMoRuF+na2fLjLNOrNjPikcrmdmYvL6gdw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748000821; c=relaxed/simple;
-	bh=iilGz8MoBUyc28UMKp9IgK8+RSi7l9OI2Zl2mfOWTP8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=o2/8JCbZ7e9r0E424VHV6waWGibWjwBAcnlLZ4H07dJSEJyPxUPJKm/NVX8Bl3jUWcbrTaRwYzjF4+UeIAmIqmA0620oWDLgEd/ENBpvZI36y3wFyGczEIRDUjcHXm8DMDL9brVGNuawOYlXDklAXNuRGtaojx5FXOGN+Wj8W4c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=XYwOxyyT; arc=none smtp.client-ip=144.6.53.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+	s=arc-20240116; t=1748000859; c=relaxed/simple;
+	bh=ZR5kz7d36d8yCLqbSg4vLkBvfTbFkjuBbM5sJ1CHLDM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=EopfUhkTr4a0lG9Ycqh2TzB1K6nCA+H/UPX7S1TkM4QEkvgM9OIwasS0qk71nh9jtsWUNl58zizL9T8j8+OaqrUOHp2nVOeTBLU27Vwl2RB2wAp8dEn5Cn1gVvWwOAW3CqKsxkbVsz/CtxvaX/s/g714ktza+WqUsFN9DsHaE4c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=seu.edu.cn; spf=pass smtp.mailfrom=seu.edu.cn; dkim=pass (1024-bit key) header.d=seu.edu.cn header.i=@seu.edu.cn header.b=mTcVVqj4; arc=none smtp.client-ip=101.71.155.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=seu.edu.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=seu.edu.cn
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="XYwOxyyT"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
-	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=wIdXErGXsrFY4QCEB5L0jrLHlVOWgstSIRw8ZMVvmkQ=; b=XYwOxyyTjoGBsZ7b1kq8f2s14X
-	p3SbovIInZiMptWY2VglCKGYbGAv9SH85wSeBHb15eroAfg8uhh9KCqjAkC4Ps237MBqhkMbP19x7
-	cDYRYTCwSgRajpZibzU9IvMueCKNoOS5To6GMjnzsNkbSHv+tdAfgqmvij+vSTdCPwCxXQUAw5NrP
-	CGt4b7HCv0T/v4sG4Tm9OqI3SYUwusV3aNqQKHypRw6Jx6zj8ekk3iWReKIjxMaAkQYo904cCMwAc
-	TgjuMdZ/dBN/+DGsCJVrQn7cM5rQjDAR9FV/hf39kg207lpP4sRibrpyMDrEpEMbx+hy0fMMpnOIj
-	k1AUM7Ow==;
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
-	id 1uIQrV-008LEG-2h;
-	Fri, 23 May 2025 19:46:54 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Fri, 23 May 2025 19:46:53 +0800
-Date: Fri, 23 May 2025 19:46:53 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: Corentin Labbe <clabbe.montjoie@gmail.com>
-Cc: Klaus Kudielka <klaus.kudielka@gmail.com>,
-	Eric Biggers <ebiggers@kernel.org>, regressions@lists.linux.dev,
+	dkim=pass (1024-bit key) header.d=seu.edu.cn header.i=@seu.edu.cn header.b="mTcVVqj4"
+Received: from localhost.localdomain (unknown [202.119.23.198])
+	by smtp.qiye.163.com (Hmail) with ESMTP id 162e370a0;
+	Fri, 23 May 2025 19:47:25 +0800 (GMT+08:00)
+From: Zilin Guan <zilin@seu.edu.cn>
+To: jmaloy@redhat.com
+Cc: davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	horms@kernel.org,
+	netdev@vger.kernel.org,
+	tipc-discussion@lists.sourceforge.net,
 	linux-kernel@vger.kernel.org,
-	Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-	Boris Brezillon <bbrezillon@kernel.org>,
-	EBALARD Arnaud <Arnaud.Ebalard@ssi.gouv.fr>,
-	Romain Perier <romain.perier@gmail.com>,
-	Arnd Bergmann <arnd@arndb.de>, Andrew Lunn <andrew@lunn.ch>,
-	Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-	Gregory Clement <gregory.clement@bootlin.com>,
-	Christoph Hellwig <hch@infradead.org>,
-	Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: Re: crypto: marvell/cesa - dma_alloc_coherent broken but kmalloc +
- dma_map_single works
-Message-ID: <aDBgLT7NsMaG6ylh@gondor.apana.org.au>
-References: <aChx_ODF_hYKL8XO@Red>
- <aCmTQoJw6XG1CkuZ@gondor.apana.org.au>
- <aC1fY6IP-8MzVIbx@gondor.apana.org.au>
- <aC2aAvX07Aaho08d@gondor.apana.org.au>
- <aC2uvvzlR89iVFGW@Red>
- <aC2xTI1ZuXoZjgjX@gondor.apana.org.au>
- <aC3cF0-bWb-Jiz4i@Red>
- <aC6TkPM6mOuFwvkD@gondor.apana.org.au>
- <aC7UbAIDA46olNJL@gondor.apana.org.au>
- <aC-EGr50MIVJqwVn@Red>
+	jianhao.xu@seu.edu.cn,
+	Zilin Guan <zilin@seu.edu.cn>
+Subject: [PATCH] tipc: use kfree_sensitive() for aead cleanup
+Date: Fri, 23 May 2025 11:47:17 +0000
+Message-Id: <20250523114717.4021518-1-zilin@seu.edu.cn>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aC-EGr50MIVJqwVn@Red>
+Content-Transfer-Encoding: 8bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVkZH0IeVh4dH0oaTkpMT0lNTlYeHw5VEwETFhoSFy
+	QUDg9ZV1kYEgtZQVlJS0lVSkpCVUlIVUpCQ1lXWRYaDxIVHRRZQVlPS0hVSktJT09PS1VKS0tVS1
+	kG
+X-HM-Tid: 0a96fcf82f9d03a1kunm474f0ff82a1fbd
+X-HM-MType: 10
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Nyo6Lyo6HTE*DBQ#PhFJEUhO
+	HSEKCT1VSlVKTE9DS0tLQ09NQk1LVTMWGhIXVQESFxIVOwgeDlUeHw5VGBVFWVdZEgtZQVlJS0lV
+	SkpCVUlIVUpCQ1lXWQgBWUFKTEpPNwY+
+DKIM-Signature:a=rsa-sha256;
+	b=mTcVVqj4sUnDZeCJT5yutYFBLElqi3h0XPxjibifhIBbBFAGvD0ES7F0e+3mchL16Cx71lyYVvEcj5Cm9VaNeuQYQrUUFRHKIZNbqv8bSBoEdyWGx6gkJje2MrDLlknqehPF8x5EnOEa3d9qMlwPliiuxBvpH4L0uehHzuxes5U=; s=default; c=relaxed/relaxed; d=seu.edu.cn; v=1;
+	bh=FtFNpINy3v4709RDNflSnbTarNaggYuhoYDtYThRXVY=;
+	h=date:mime-version:subject:message-id:from;
 
-On Thu, May 22, 2025 at 10:07:54PM +0200, Corentin Labbe wrote:
->
-> Here is the result:
-> http://kernel.montjoie.ovh/479404.log
+The tipc_aead_free() function currently uses kfree() to release the aead
+structure. However, this structure contains sensitive information, such
+as key's SALT value, which should be securely erased from memory to
+prevent potential leakage.
 
-So the corruptions have come back, although somewhat less than
-before as one algorithm managed to pass all the tests.
+To enhance security, replace kfree() with kfree_sensitive() when freeing
+the aead structure. This change ensures that sensitive data is explicitly
+cleared before memory deallocation, aligning with the approach used in
+tipc_aead_init() and adhering to best practices for handling confidential
+information.
 
-At least we've proven that adding the printk's makes the errors
-a lot more frequent :)
+Signed-off-by: Zilin Guan <zilin@seu.edu.cn>
+---
+ net/tipc/crypto.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> I have built by adding also your "crypto: marvell/cesa - Fix engine load inaccuracy"
-
-That shouldn't affect things either way.
-
-So now all the corruptions are all on the final hash.
-
-Can you boot this a few times to see if the errors are always
-the same? I'm particularly interested to see if we've managed
-to crush the errors on the partial hashes or was it just pure
-luck.
-
-Intriguingly the one error that went away (sha256) was actually
-a partial hash corruption, and sha256 now passes all the tests.
-
-Thanks,
+diff --git a/net/tipc/crypto.c b/net/tipc/crypto.c
+index 8584893b4785..f4cfe88670f5 100644
+--- a/net/tipc/crypto.c
++++ b/net/tipc/crypto.c
+@@ -425,7 +425,7 @@ static void tipc_aead_free(struct rcu_head *rp)
+ 	}
+ 	free_percpu(aead->tfm_entry);
+ 	kfree_sensitive(aead->key);
+-	kfree(aead);
++	kfree_sensitive(aead);
+ }
+ 
+ static int tipc_aead_users(struct tipc_aead __rcu *aead)
 -- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+2.34.1
+
