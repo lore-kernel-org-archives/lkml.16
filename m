@@ -1,213 +1,163 @@
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2080.outbound.protection.outlook.com [40.107.244.80])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A075D223DEF
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 09:16:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.80
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747991784; cv=fail; b=pXSCE3FtOCa5UGrafABHM8Wgmfod7B2PCSoggFesS8gCqX2CgFh3BQWrFFTDyExMsK6YNVwU8A29wrcoeRlhh1fyOtcTkUcInX2Z+fwqwoIgA+mVPPErJvLfNN3oXkcb3dohJBmRVLhBLhYWW2WkUZnXemt4FHkxd6QHdufmrLo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747991784; c=relaxed/simple;
-	bh=ayitEm2qjO6sQhd1Ic7bPkZ3adiBCljy4qMbBsX+AJ4=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qTxg3vuHLnNPRkvKkjp2LS5ikTmVcZVUnRRcSWZm86TLw+WuWtLwRirl/n/9slUgE6YdStYPnN71wwKOiWnuw/bDSLg7B36+b6U+6eo2b3PRg2tcowXIEitxIpYOaSMGv04yjTatH7gEA3WOXc3emfztBusjZtl5zXvWnOikf8w=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=pG7XibBq; arc=fail smtp.client-ip=40.107.244.80
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8126223338
+	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 09:16:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747991794; cv=none; b=u0A5FaqqLFM3rwMI1Zgh+xjZVQlXgPXuKLc+lzQbVnsFhrzOo3yYzvgsA+MUyMGGlhctXkINf0bcgqCe9v83XcP2Ig6mbYsWw3l36VGkUn+EDKuaTHOhUjm4Lpl0vButnoM38YCXbZHdP/wxIXK8Czfy8xoVQUGCam8LBz++9qk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747991794; c=relaxed/simple;
+	bh=vL9xiQyaqTcBSYY/w7En11UOo/roA4GtozLLtwoJd5g=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=ocp5ch4f30GLBUnvfYp53cA+W3Kt0ZKSXAt5AAaBYroLLZGK9nolNgQpMyqAswK04MWsaub1mN0wR2KES1s+RQ4EtS5A5az9ZoMP9Ru4e8//IfDxawMHLAQBTjsQ0vLZ+Hou1LQo0G9BBwGSnVGr3yBdqvgaxGk5GNQvUQtYjco=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=XAyvzm5l; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="pG7XibBq"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=gRJ1ymLnlidxpPZiyUsgoi+rfKszmlxV97rUVdQj3DGlv7qqw+QsD2obvN4wzOv8eDgPhgTBl5kbTNyFxtV5D2v/C92+jJ7OoAWCzN7+zeThaXHIrNtFYigluxOpVKSU7pLOr45j3ZsaeGQ4j5LwfRLNilvTzbYBjjNgdVBhlOJkGlUKERwmgYWyFDOIrfKu4lQhVafF96Bh/rVG3LLdCHXzn95Mzy/xjCE27oVHinJIcRKi2FCzF7L9F5NXOUD5zncmsknwbNuNIrdeF8nwiTzpuBa7EPQGtczs97imB3ItTylhLjJNmSVreUUwTQUJZCmAb+QZlhDDo//AG29apg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=AAzfTKqh0DqMc5/o6rZDZ2MKKMyZCiSkUtvJV4HYEuw=;
- b=UgdZJW4yS9oI1lIeJiIkM80qQ0trQnsAUfEs+RJQIZ/+m13aAthKPUbP+M3LPFkNx9QjgPF+3n4Ast9XmrcdRfh0mJyWI5Dk4qIsWz2aJrhIjO0H7BXJuSNocQqXrxneDAquQ5wzyanP7NdYdIN628dtNstLC+CE9PqCl+HC5ffRJFkeIliV8/IXbhITmhaPy3virz1tpxNiGPAN4X3zX8LtYJDhOBfg+jBjvitm6Uvy4PyvKK9q72GKWK/9EGXbUgoCm1IXtawTpRd5Tc0wUSqJD3UpeFMakNtKZcwTErSP9U/xlGrls+PIL5bxrCoCvygxEUdhoAb/a6lJw2VUgQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=linux-foundation.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=AAzfTKqh0DqMc5/o6rZDZ2MKKMyZCiSkUtvJV4HYEuw=;
- b=pG7XibBqFboyAkDEkNbdlSg5531NSfyKxWVeFJfeILSDTVpIEqL7twpwkpqeuUas4uykxVkknblt5PJlxxxa8UJJb5HP/6v2vYeTmwR1V/9TGGkywiOBnaZVKLE4x/oDEzMBUrDfKnAaRjoWC8ziGKwfwk43U+slQr2KWb6xqag=
-Received: from BN9PR03CA0118.namprd03.prod.outlook.com (2603:10b6:408:fd::33)
- by IA0PR12MB8714.namprd12.prod.outlook.com (2603:10b6:208:488::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.20; Fri, 23 May
- 2025 09:16:15 +0000
-Received: from BN1PEPF0000468A.namprd05.prod.outlook.com
- (2603:10b6:408:fd:cafe::2a) by BN9PR03CA0118.outlook.office365.com
- (2603:10b6:408:fd::33) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8769.18 via Frontend Transport; Fri,
- 23 May 2025 09:16:15 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- BN1PEPF0000468A.mail.protection.outlook.com (10.167.243.135) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8769.18 via Frontend Transport; Fri, 23 May 2025 09:16:15 +0000
-Received: from kaveri.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 23 May
- 2025 04:16:10 -0500
-From: Shivank Garg <shivankg@amd.com>
-To: <akpm@linux-foundation.org>, <david@redhat.com>, <linux-mm@kvack.org>,
-	<linux-kernel@vger.kernel.org>
-CC: <ziy@nvidia.com>, <baolin.wang@linux.alibaba.com>,
-	<lorenzo.stoakes@oracle.com>, <Liam.Howlett@oracle.com>, <npache@redhat.com>,
-	<ryan.roberts@arm.com>, <dev.jain@arm.com>, <fengwei.yin@intel.com>,
-	<shivankg@amd.com>, <bharata@amd.com>,
-	<syzbot+2b99589e33edbe9475ca@syzkaller.appspotmail.com>
-Subject: [PATCH V2 2/2] mm/khugepaged: fix race with folio split/free using temporary reference
-Date: Fri, 23 May 2025 09:14:35 +0000
-Message-ID: <20250523091432.17588-2-shivankg@amd.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250523091432.17588-1-shivankg@amd.com>
-References: <20250523091432.17588-1-shivankg@amd.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XAyvzm5l"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1747991791;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=4h+Yy62ZlA2qwCk7aDUUsgmb3Ggi1tOTOzIVVOOKlg0=;
+	b=XAyvzm5laLirS/Z7eO44n3PD10k/j24L65VhCKZ2bSSaTRheS7HT+/BWoLSa2cWnzco1fV
+	9NVYs28mvS6Q25YQSXqzV4/N6QCPPlKmiXXs/pn8MtkaBJ6zr6vELJqd2ztH6XPFviNknb
+	IBkCow3WQKytgwyv4Iwd9C68ONHG1+8=
+Received: from mail-lf1-f70.google.com (mail-lf1-f70.google.com
+ [209.85.167.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-403-IYn3_tWUM3Wytp9m3w3z1w-1; Fri, 23 May 2025 05:16:29 -0400
+X-MC-Unique: IYn3_tWUM3Wytp9m3w3z1w-1
+X-Mimecast-MFC-AGG-ID: IYn3_tWUM3Wytp9m3w3z1w_1747991788
+Received: by mail-lf1-f70.google.com with SMTP id 2adb3069b0e04-550ea994962so3694846e87.3
+        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 02:16:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747991788; x=1748596588;
+        h=content-transfer-encoding:mime-version:message-id:date:references
+         :in-reply-to:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4h+Yy62ZlA2qwCk7aDUUsgmb3Ggi1tOTOzIVVOOKlg0=;
+        b=ggCTzaffA5YHUc7/blZeodR23c2WqyBFSYBLMk2z0XPOmSwmgLnGsry/QRXV7XPKQ6
+         K4Jkke1kE4krPQqw/qyrsnxZPa8i/2yFWF/d4nOJK+Nif66/VjqvN9MLwsk2ffvx5B8R
+         sbISvVARcT3W2ToAD/K4SaOiWsLI2Mtc0jgFq3e6ypQP0LY0OZyGLW4qnJBqpNbfzC5/
+         ZW0dKpv1faawbsZ6Bs9jZpcHiyWsoAydf5T/Rwucw7rJJB6Hvp4Wc+8SOG2TaKjyqm9f
+         XKICkZKqhXnIEzw0Ta9fKfFdD0VFxVZQPCo00K0Njybj8eNtlZS+2ipGKz10nChn572B
+         4PlA==
+X-Forwarded-Encrypted: i=1; AJvYcCVClXuMP7Z7iemoGxk/Jp4ST2sihNwGhIn6XJJSPn6GxfC+qm2eFBXoA33J+dykjvxrs/KZ12+NobebHOc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyY9eWt8hqmnE1kkG1YCvTlhN3cwoLjMgrOmmq2/0xXl5IONHFu
+	f9keoTDkzGPdprdeTEStJ1uJAsD4QgagdBMyYuY8SwzcZN/WHJxK8OjotzvD/+C8dO5O1972T+2
+	FZoeMEYxcQGhdWN2KkZFAh1JRvjL6VETOexLNODfI23SC4UAByMajkHELjPktjbW61w==
+X-Gm-Gg: ASbGncsTwQkyfijAdxdwjo8YF5NwKALStM5y+quzfARtbU4eGrqgv4MHX3mZwqgVeB5
+	dqstFGF+txphD60chRXItqt21yVPLykRGTLYP2AHf91Jdf/8orwEPE3gDqdGctYHPq5IAK5dzJY
+	z5tlqPrd/SMNCohNp7G5vxxr7L3XUHTMO4VuKYZq7DEIAyEcGpcPQ4a0K+tByspaAJ7zZVjB4Iy
+	P9yMscNUmBuXwLzPqui3bUribf1kwoX2MeI91beBo5D3YnMFuT8R1Jchq4V1q+xF16KIiI6IGEY
+	bETrDXRf
+X-Received: by 2002:a05:6512:3e02:b0:54f:c049:4a5b with SMTP id 2adb3069b0e04-550e7250abfmr9351890e87.47.1747991787857;
+        Fri, 23 May 2025 02:16:27 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHaQ8huunxoEwtFAoZuCgaFT5mLEdvGiJVduPobo6lkNXw2BcUK9t7VQv5UbiSdEGhNk4eBJA==
+X-Received: by 2002:a05:6512:3e02:b0:54f:c049:4a5b with SMTP id 2adb3069b0e04-550e7250abfmr9351877e87.47.1747991787407;
+        Fri, 23 May 2025 02:16:27 -0700 (PDT)
+Received: from alrua-x1.borgediget.toke.dk ([2a0c:4d80:42:443::2])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-550eb6c7155sm3573232e87.22.2025.05.23.02.16.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 23 May 2025 02:16:26 -0700 (PDT)
+Received: by alrua-x1.borgediget.toke.dk (Postfix, from userid 1000)
+	id B2C911AA3B94; Fri, 23 May 2025 11:16:25 +0200 (CEST)
+From: Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
+To: Dong Chenchen <dongchenchen2@huawei.com>, hawk@kernel.org,
+ ilias.apalodimas@linaro.org, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com, horms@kernel.org,
+ almasrymina@google.com
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ zhangchangzhong@huawei.com, Dong Chenchen <dongchenchen2@huawei.com>,
+ syzbot+204a4382fcb3311f3858@syzkaller.appspotmail.com
+Subject: Re: [PATCH net] page_pool: Fix use-after-free in
+ page_pool_recycle_in_ring
+In-Reply-To: <20250523064524.3035067-1-dongchenchen2@huawei.com>
+References: <20250523064524.3035067-1-dongchenchen2@huawei.com>
+X-Clacks-Overhead: GNU Terry Pratchett
+Date: Fri, 23 May 2025 11:16:25 +0200
+Message-ID: <878qmnn0uu.fsf@toke.dk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN1PEPF0000468A:EE_|IA0PR12MB8714:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2eaa3422-f99e-46fa-317e-08dd99da7812
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|1800799024|376014|36860700013|82310400026|13003099007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?cTIIG0SGheHVUyMENNouZrbWsqj1Z4x5mEHAN9bg4DnoBxDG69wJOboR8LdG?=
- =?us-ascii?Q?At84o8xiQs9mEcxInBjn3bPqmlbRNwIRyNCF2rjdXWYgBUe2+kHSuCEpf0/j?=
- =?us-ascii?Q?yfS6YKhdj+qUzPtpHfSkGvM6tfuJmTgbHxf5CPuSzJCeEU9ZCxuwTsQA95Io?=
- =?us-ascii?Q?LGyjdDElsNwSNIf3fv2YpCVWY1axLbyunOfG+NXlgb43lpdrVbIE+9S7WlvL?=
- =?us-ascii?Q?yNyHvEMRWYVU6y/QIt+d1LpPqoW5Stbd/Jk1YHs4t6bAt48+nhwH7xvbJetE?=
- =?us-ascii?Q?ERfp1X/Stv3s0z4k0rJ9tFm2B9Zj23O5iWAv12N9KRXpYUsI+DRhDsJaRv3s?=
- =?us-ascii?Q?SlKnvhJwW1ZqAfCPQVz8Q963qtQp2d/gRqRavxZ+lVi7VxJV5yYFQnk2zEEk?=
- =?us-ascii?Q?1pDZj4KvcRS61c2ZntPZjccnF8F2GEa9E7Z+aUPotCQ9lgUK7CzJYOIcHXlj?=
- =?us-ascii?Q?VJufseaPtTh+3sw1ZEQk6ZnhhDYJBwLlamwc6pUuFZpyRUhsWLqwvEPVlBEW?=
- =?us-ascii?Q?dd6hHFr3z6qaMEYWEamzA2Dcr3YTUystwP53m4QoBzBEB2PPHbiQyLuplA4K?=
- =?us-ascii?Q?0FlcRJc878pMTxJoMVW1gENG6RWaQjwo/LZwwZ7PHkMmkIUqGkFCw0HUye8f?=
- =?us-ascii?Q?pM4RwYtS2oBhhRYy32y8oFR8HyP6nHOocGX61T3qfuZ/+1NOnna6MGTE+JO2?=
- =?us-ascii?Q?ftl4D3AY0v7ZZZ28QkUHB/laG5A2ToGi7xMTCmdYzkAmbGUO1jDUhqYc8cFE?=
- =?us-ascii?Q?5a8rzr77Lr45mlgRlLEep+PJ5DbAUGfdAzmkrkgZpJmBbJ5JSFfPzh6ICN0f?=
- =?us-ascii?Q?ptrRQyohEEUi8wB1w6U4r8U/EamEcTAuGLvZfM+J8cpmakL0qPzdbRSxnVkG?=
- =?us-ascii?Q?kw7ejvvtDcofx1rAd4eyhXrYO2Re/rncWbI/fxm+zWo7C8DZ+JhaxD8O4g1Q?=
- =?us-ascii?Q?LmLZ/CDL23yXsNOZ0dj/w3M5aBWhtLyse0MDHtpOm5ECfFCGsU1Ie6oOv5L0?=
- =?us-ascii?Q?MFB5S0p8o/N0uyJ1Fo5/sneRB6JubwPk7VNtR1/PSi/af1wnyRDLljTkiZHB?=
- =?us-ascii?Q?+MIyj56ABFk2o+Nb/Q1QuiQUdRriYyNzptlnmGJsj4xpTXjnhXeASBWpPw3U?=
- =?us-ascii?Q?nIfvmEDKmVs2phjZ0ofX8MIr+XSiBLj0N+R7KhUYz+elScXKlOqAJ0OBK9Nr?=
- =?us-ascii?Q?6amMi9595CIejNGG/W7LdEM4n0nxaz3zwfcVKML6Qukr18US8NAfrNoS7dbW?=
- =?us-ascii?Q?hfdhXiRo9VcVWY8xpixeGx0DhF3CC15QU1WwXzxa8VFuvlw9fJEEUU6SZYkR?=
- =?us-ascii?Q?x9FRulzW8JoLQkP3LGyDnbwhKuXVaKSG9VciYANouL1fKKVvIjx3KOennABp?=
- =?us-ascii?Q?kkcYnHgxzOnvDQPopFJs1TeF+XcECNosDeQgf6yD2phYYS76+RwTTtDk2xZU?=
- =?us-ascii?Q?5jNhJY+uNKz40nuIa41Uh3nHZuuAkzamv6IHn3O/mgJTS1DdYD7Njg=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(7416014)(1800799024)(376014)(36860700013)(82310400026)(13003099007);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 May 2025 09:16:15.2388
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2eaa3422-f99e-46fa-317e-08dd99da7812
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BN1PEPF0000468A.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR12MB8714
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-hpage_collapse_scan_file() calls folio_expected_ref_count(), which in turn
-calls folio_mapcount(). folio_mapcount() checks folio_test_large() before
-proceeding to folio_large_mapcount(), but there is a race window where the
-folio may get split/freed between these checks, triggering:
+Dong Chenchen <dongchenchen2@huawei.com> writes:
 
-  VM_WARN_ON_FOLIO(!folio_test_large(folio), folio)
+> syzbot reported a uaf in page_pool_recycle_in_ring:
+>
+> BUG: KASAN: slab-use-after-free in lock_release+0x151/0xa30 kernel/lockin=
+g/lockdep.c:5862
+> Read of size 8 at addr ffff8880286045a0 by task syz.0.284/6943
+>
+> CPU: 0 UID: 0 PID: 6943 Comm: syz.0.284 Not tainted 6.13.0-rc3-syzkaller-=
+gdfa94ce54f41 #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS G=
+oogle 09/13/2024
+> Call Trace:
+>  <TASK>
+>  __dump_stack lib/dump_stack.c:94 [inline]
+>  dump_stack_lvl+0x241/0x360 lib/dump_stack.c:120
+>  print_address_description mm/kasan/report.c:378 [inline]
+>  print_report+0x169/0x550 mm/kasan/report.c:489
+>  kasan_report+0x143/0x180 mm/kasan/report.c:602
+>  lock_release+0x151/0xa30 kernel/locking/lockdep.c:5862
+>  __raw_spin_unlock_bh include/linux/spinlock_api_smp.h:165 [inline]
+>  _raw_spin_unlock_bh+0x1b/0x40 kernel/locking/spinlock.c:210
+>  spin_unlock_bh include/linux/spinlock.h:396 [inline]
+>  ptr_ring_produce_bh include/linux/ptr_ring.h:164 [inline]
+>  page_pool_recycle_in_ring net/core/page_pool.c:707 [inline]
+>  page_pool_put_unrefed_netmem+0x748/0xb00 net/core/page_pool.c:826
+>  page_pool_put_netmem include/net/page_pool/helpers.h:323 [inline]
+>  page_pool_put_full_netmem include/net/page_pool/helpers.h:353 [inline]
+>  napi_pp_put_page+0x149/0x2b0 net/core/skbuff.c:1036
+>  skb_pp_recycle net/core/skbuff.c:1047 [inline]
+>  skb_free_head net/core/skbuff.c:1094 [inline]
+>  skb_release_data+0x6c4/0x8a0 net/core/skbuff.c:1125
+>  skb_release_all net/core/skbuff.c:1190 [inline]
+>  __kfree_skb net/core/skbuff.c:1204 [inline]
+>  sk_skb_reason_drop+0x1c9/0x380 net/core/skbuff.c:1242
+>  kfree_skb_reason include/linux/skbuff.h:1263 [inline]
+>  __skb_queue_purge_reason include/linux/skbuff.h:3343 [inline]
+>
+> root cause is:
+>
+> page_pool_recycle_in_ring
+>   ptr_ring_produce
+>     spin_lock(&r->producer_lock);
+>     WRITE_ONCE(r->queue[r->producer++], ptr)
+>       //recycle last page to pool
+> 				page_pool_release
+> 				  page_pool_scrub
+> 				    page_pool_empty_ring
+> 				      ptr_ring_consume
+> 				      page_pool_return_page  //release all page
+> 				  __page_pool_destroy
+> 				     free_percpu(pool->recycle_stats);
+> 				     free(pool) //free
+>
+>      spin_unlock(&r->producer_lock); //pool->ring uaf read
+>   recycle_stat_inc(pool, ring);
+>
+> page_pool can be free while page pool recycle the last page in ring.
+> Add producer-lock barrier to page_pool_release to prevent the page
+> pool from being free before all pages have been recycled.
+>
+> Suggested-by: Jakub Kacinski <kuba@kernel.org>
+> Link: https://lore.kernel.org/netdev/20250513083123.3514193-1-dongchenche=
+n2@huawei.com
+> Fixes: ff7d6b27f894 ("page_pool: refurbish version of page_pool code")
+> Reported-by: syzbot+204a4382fcb3311f3858@syzkaller.appspotmail.com
+> Closes: https://syzkaller.appspot.com/bug?extid=3D204a4382fcb3311f3858
+> Signed-off-by: Dong Chenchen <dongchenchen2@huawei.com>
 
-Take a temporary reference to the folio in hpage_collapse_scan_file().
-This stabilizes the folio during refcount check and prevents incorrect
-large folio detection due to concurrent split/free.
-
-Fixes: 05c5323b2a34 ("mm: track mapcount of large folios in single value")
-Reported-by: syzbot+2b99589e33edbe9475ca@syzkaller.appspotmail.com
-Closes: https://lore.kernel.org/all/6828470d.a70a0220.38f255.000c.GAE@google.com
-Suggested-by: David Hildenbrand <david@redhat.com>
-Signed-off-by: Shivank Garg <shivankg@amd.com>
----
-V1: https://lore.kernel.org/linux-mm/20250522093452.6379-1-shivankg@amd.com
----
- mm/khugepaged.c | 18 +++++++++++++++++-
- 1 file changed, 17 insertions(+), 1 deletion(-)
-
-diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-index 19aa4142bb99..685eb949f4ce 100644
---- a/mm/khugepaged.c
-+++ b/mm/khugepaged.c
-@@ -2282,6 +2282,17 @@ static int hpage_collapse_scan_file(struct mm_struct *mm, unsigned long addr,
- 			continue;
- 		}
- 
-+		if (!folio_try_get(folio)) {
-+			xas_reset(&xas);
-+			continue;
-+		}
-+
-+		if (unlikely(folio != xas_reload(&xas))) {
-+			folio_put(folio);
-+			xas_reset(&xas);
-+			continue;
-+		}
-+
- 		if (folio_order(folio) == HPAGE_PMD_ORDER &&
- 		    folio->index == start) {
- 			/* Maybe PMD-mapped */
-@@ -2292,23 +2303,27 @@ static int hpage_collapse_scan_file(struct mm_struct *mm, unsigned long addr,
- 			 * it's safe to skip LRU and refcount checks before
- 			 * returning.
- 			 */
-+			folio_put(folio);
- 			break;
- 		}
- 
- 		node = folio_nid(folio);
- 		if (hpage_collapse_scan_abort(node, cc)) {
- 			result = SCAN_SCAN_ABORT;
-+			folio_put(folio);
- 			break;
- 		}
- 		cc->node_load[node]++;
- 
- 		if (!folio_test_lru(folio)) {
- 			result = SCAN_PAGE_LRU;
-+			folio_put(folio);
- 			break;
- 		}
- 
--		if (folio_expected_ref_count(folio) != folio_ref_count(folio)) {
-+		if (folio_expected_ref_count(folio) + 1 != folio_ref_count(folio)) {
- 			result = SCAN_PAGE_COUNT;
-+			folio_put(folio);
- 			break;
- 		}
- 
-@@ -2320,6 +2335,7 @@ static int hpage_collapse_scan_file(struct mm_struct *mm, unsigned long addr,
- 		 */
- 
- 		present += folio_nr_pages(folio);
-+		folio_put(folio);
- 
- 		if (need_resched()) {
- 			xas_pause(&xas);
--- 
-2.34.1
+Reviewed-by: Toke H=C3=B8iland-J=C3=B8rgensen <toke@redhat.com>
 
