@@ -1,138 +1,106 @@
-Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-178.mta1.migadu.com (out-178.mta1.migadu.com [95.215.58.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A20C227E9E;
-	Fri, 23 May 2025 09:55:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A2CF22577E
+	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 09:56:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747994148; cv=none; b=BH/npvpoSqWSts4BCVqVV8Z2ya6+YOP3nmJxjSxPPk65ZzgAP/zewjKhH22P8yQIk5wOW3mCQWlP7bMmTeyjpalPU3MAnG+GZIsUGE/k5vwUGbMEl7q1wP5tlnjuIYdQ0ESxDtJGW1EgZ58UHMh7bsXWsWF77AdrttLim/HOGJQ=
+	t=1747994185; cv=none; b=CpoiairI2zWDoJRrMxK9I269YQSpn02Vn502HTi0qJIrFvetyaLHlebSFL+IrSLa6q8mlfAJII55mF5BGUomK5O8cUbteimaP/49mQ2dlYJfb+bXfvBPiOjyH9wwr5ppTZBSX1oJw63SRI7uz+FkM0U8wIpGhMqoL5c6sQG4xUQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747994148; c=relaxed/simple;
-	bh=KI9W0PaJOZE+WeFTaHv7gChpyhppsRJpx6lgKEplro0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=gdQh+5Loi78L+vx/On/j/wGPqvZ4yh+z7JM7c+Gh0HgI5ourx4i9YOmtxehINiFJ3OjN6d3rasjsAF+bVpQ/cBEo4s27YXxRnc0/zf4Rbcu3RBa4UWH172QqAxKsQPbIO8+gbXhmwWT3n8OIHu8sUmO/tb7HY4kjnNUEi76KK1c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=UbxLhciA; arc=none smtp.client-ip=178.21.23.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
+	s=arc-20240116; t=1747994185; c=relaxed/simple;
+	bh=PANqLNE4Hy9PQHvQ48fm/8QdTFQug/Qz4dlUcnk+x/Y=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=oAIYrvicXrUK7h67B+Br28szOcOsexbsWMDpkYfiBq1TBIw6YBE57euJ1eePp+X8p9NPGQENC7x2vDrw1UG+LY0q/mWtzsO2lr7iro3ofwrn10fxSexhGP87Cx13psMp6qpG09mGdjgA4gpqRkoDY5nC2+x3rSsPZc04dfgCT5s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=ngtwQ28S; arc=none smtp.client-ip=95.215.58.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="UbxLhciA"
-Received: from mail01.disroot.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id 8C05B260B3;
-	Fri, 23 May 2025 11:55:45 +0200 (CEST)
-X-Virus-Scanned: SPAM Filter at disroot.org
-Received: from layka.disroot.org ([127.0.0.1])
- by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id Aw79C621TUhH; Fri, 23 May 2025 11:55:45 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1747994135; bh=KI9W0PaJOZE+WeFTaHv7gChpyhppsRJpx6lgKEplro0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=UbxLhciApViRIkpz0p5I057PCtNTKj6gecYXv83Nag3ui55ix6swl5De41Ne6A3IG
-	 S4VCqK+iXxKRe+nLvpBFLEl+qz1QyQ9oLdPe6thDnPgXHQJ8M1vzVzB2xAdgZSrq4a
-	 NeoMqJD0ccmCyDJCT887mnUaeHxlZR63WRJ4aTN/BVESYgJTnpH3TzKjaNCGezqTR0
-	 tsjuxmQqMwKNUj0ozdhaKlUsGhhPZzxwYYWXT1/CS/e79Y4UUyAL+YxHcZmZuA87Sc
-	 nIGsbQuIpcVcNndkR/1V44JJhplniYwRxaEJD1rWbeglMx0nSUnC8cwpLfRqESqcLU
-	 7EhYrI+dhe+pQ==
-From: Yao Zi <ziyao@disroot.org>
-To: Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Yao Zi <ziyao@disroot.org>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Junhao Xie <bigfoot@classfun.cn>,
-	=?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>,
-	Aradhya Bhatia <a-bhatia1@ti.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Binbin Zhou <zhoubinbin@loongson.cn>
-Cc: devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	Mingcong Bai <jeffbai@aosc.io>,
-	Kexy Biscuit <kexybiscuit@aosc.io>
-Subject: [PATCH v3 4/4] LoongArch: dts: Add initial devicetree for CTCISZ Forever Pi
-Date: Fri, 23 May 2025 09:54:08 +0000
-Message-ID: <20250523095408.25919-5-ziyao@disroot.org>
-In-Reply-To: <20250523095408.25919-1-ziyao@disroot.org>
-References: <20250523095408.25919-1-ziyao@disroot.org>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="ngtwQ28S"
+Message-ID: <1328ff08-1de7-4c62-b8f7-b09e15f50737@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1747994181;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=3es2sUYLu5Dzmw+V1ZC3XbDJRR2Hn2vugSOxxMimAl0=;
+	b=ngtwQ28SgIPRfxIM+X5gDQunmPRyT2N0rTU6Xo+bVv3pK8vljLIKw/giIwz6B3TOzrPHaz
+	YvNzCjG7r8+pulYXliUEFynvKE1BMKtpWeAIJYgZD6N+tAuia5M1T+GD+jzvOkXUP2rqzC
+	4/bz5zV2huRUUmwY8Pf8LiYhG0a1kBM=
+Date: Fri, 23 May 2025 11:55:48 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Subject: Re: [RFC PATCH v2] ASoC: soc-pcm: Optimize hw_params() BE DAI call
+To: =?UTF-8?Q?P=C3=A9ter_Ujfalusi?= <peter.ujfalusi@linux.intel.com>,
+ "Sheetal ." <sheetal@nvidia.com>, broonie@kernel.org, lgirdwood@gmail.com,
+ perex@perex.cz, tiwai@suse.com, linux-sound@vger.kernel.org
+Cc: linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+ jonathanh@nvidia.com, thierry.reding@gmail.com, mkumard@nvidia.com,
+ spujar@nvidia.com
+References: <20250408083022.3671283-1-sheetal@nvidia.com>
+ <52681983-2fe2-45da-b0ee-1e9452ed469e@linux.intel.com>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>
+In-Reply-To: <52681983-2fe2-45da-b0ee-1e9452ed469e@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-Enable UART0 as it's the boot UART used by firmware.
+On 5/13/25 13:10, Péter Ujfalusi wrote:
+> 
+> 
+> On 08/04/2025 11:30, Sheetal . wrote:
+>> From: Sheetal <sheetal@nvidia.com>
+>>
+>> The hw_params() function for BE DAI was being called multiple times due
+>> to an unnecessary SND_SOC_DPCM_STATE_HW_PARAMS state check.
+>>
+>> Remove the redundant state check to ensure hw_params() is called only once
+>> per BE DAI configuration.
+> 
+> The first sentence tells that the hw_params() of the BE is called
+> multiple times.
+> 
+> The second sentence states that the check is redundant then tells that
+> it is removed to not call the hw_params() of the BE, so the check was
+> not redundant, it got exercised.
+> 
+> Which one is true?
+> 
+> Under what circumstance the __soc_pcm_hw_params() got called multiple
+> times? Was it normal or was it error? What causes it?
 
-Signed-off-by: Yao Zi <ziyao@disroot.org>
----
- arch/loongarch/boot/dts/Makefile              |  1 +
- .../dts/loongson-2k0300-ctcisz-forever-pi.dts | 45 +++++++++++++++++++
- 2 files changed, 46 insertions(+)
- create mode 100644 arch/loongarch/boot/dts/loongson-2k0300-ctcisz-forever-pi.dts
+I share Peter's question. The code has been around since 2016, in what case would the existing logic need to be updated?
 
-diff --git a/arch/loongarch/boot/dts/Makefile b/arch/loongarch/boot/dts/Makefile
-index 15d5e14fe418..cf7f74d4b1a4 100644
---- a/arch/loongarch/boot/dts/Makefile
-+++ b/arch/loongarch/boot/dts/Makefile
-@@ -1,3 +1,4 @@
- # SPDX-License-Identifier: GPL-2.0-only
- 
- dtb-y = loongson-2k0500-ref.dtb loongson-2k1000-ref.dtb loongson-2k2000-ref.dtb
-+dtb-y += loongson-2k0300-ctcisz-forever-pi.dtb
-diff --git a/arch/loongarch/boot/dts/loongson-2k0300-ctcisz-forever-pi.dts b/arch/loongarch/boot/dts/loongson-2k0300-ctcisz-forever-pi.dts
-new file mode 100644
-index 000000000000..a033c086461f
---- /dev/null
-+++ b/arch/loongarch/boot/dts/loongson-2k0300-ctcisz-forever-pi.dts
-@@ -0,0 +1,45 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2025 Yao Zi <ziyao@disroot.org>
-+ */
-+
-+/dts-v1/;
-+
-+#include "loongson-2k0300.dtsi"
-+
-+/ {
-+	compatible = "ctcisz,forever-pi", "loongson,ls2k0300";
-+	model = "CTCISZ Forever Pi";
-+
-+	aliases {
-+		serial0 = &uart0;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+
-+	memory@200000 {
-+		device_type = "memory";
-+		reg = <0 0x00200000 0 0x0ee00000>,
-+		      <0 0x90000000 0 0x10000000>;
-+	};
-+
-+	reserved-memory {
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		linux,cma {
-+			compatible = "shared-dma-pool";
-+			reusable;
-+			size = <0 0x02000000>;
-+			linux,cma-default;
-+		};
-+	};
-+};
-+
-+&uart0 {
-+	clock-frequency = <100000000>;
-+	status = "okay";
-+};
--- 
-2.49.0
+One key point is that hw_params() may be called multiple times with different parameters, it's a feature and not a bug. If a call to hw_params() changes an internal state, a follow-up call to hw_params() shall undo the initial state change and rerun the appropriate configuration.
+
+>> Signed-off-by: Sheetal <sheetal@nvidia.com>
+>> ---
+>> Changes in v2:
+>> - Update commit message as its not a fix.
+>> - Marked as RFC patch as it requires feedback from other users
+>>   perspective as well.
+>> - The patch is being sent separately as other patch is not RFC.
+>>
+>>  sound/soc/soc-pcm.c | 1 -
+>>  1 file changed, 1 deletion(-)
+>>
+>> diff --git a/sound/soc/soc-pcm.c b/sound/soc/soc-pcm.c
+>> index d7f6d3a6d312..c73be27c4ecb 100644
+>> --- a/sound/soc/soc-pcm.c
+>> +++ b/sound/soc/soc-pcm.c
+>> @@ -2123,7 +2123,6 @@ int dpcm_be_dai_hw_params(struct snd_soc_pcm_runtime *fe, int stream)
+>>  			continue;
+>>  
+>>  		if ((be->dpcm[stream].state != SND_SOC_DPCM_STATE_OPEN) &&
+>> -		    (be->dpcm[stream].state != SND_SOC_DPCM_STATE_HW_PARAMS) &&
+>>  		    (be->dpcm[stream].state != SND_SOC_DPCM_STATE_HW_FREE))
+>>  			continue;
+>>  
+> 
 
