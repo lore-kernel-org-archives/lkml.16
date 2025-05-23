@@ -1,91 +1,114 @@
-Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDB66128819;
-	Fri, 23 May 2025 14:39:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CBD3128819;
+	Fri, 23 May 2025 14:40:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748011180; cv=none; b=lhKgFoucKN5DTATTt6b30Bor+PWx4+4p3/CPa3V+x9QunZiqkY9Oi9PJwDc7/EFD60AGQmBlRDe1NQ7+tVkknOsG23hf8X96WzOqr4ymTxocZS22MeJUd7fddV0DZnydPY2PhDDtqbyY+vXiy8W7rTindrk45AZhrx716LTGCR8=
+	t=1748011212; cv=none; b=iDwXRK0J9aFbF318X4w9CjB1vI3ebO1A62o4Se6mYnucZOtPAaarL/j2lYpBIWrRvrQKm/gbJlvqNqPCm1PDa//9oOz+T0kW+gD7NQBTe9XPws2Z04yt8udpuBJ7OKKlYwA3t9HE9WQXwvKZGWFudzy5ODoIkJqjc6tJFohedGs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748011180; c=relaxed/simple;
-	bh=ZOCK6JsdZd/ExEyqrEPPTB1IZhrxIX3Mph1RiKKr0VI=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=g8DBV9N+674cuk9Kw2Jn70cAmge3zXu6Vcvc9DyuGiwpPmCAy+Omll0ZfeOB3ugD+8C+o0zYOCzTbWlfaYmAqqPYO/oQdeEaXcswJhWS9xVHPj+JgkgAPUUuLT5RGFFI7YXCAa3VgrnPy+Cie6WVcloEP0EXWqJFS873R4az/ds=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=OBVIR7YF; arc=none smtp.client-ip=217.70.183.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1748011212; c=relaxed/simple;
+	bh=kDH8jZXV99RD2+zo4pJD6EuCbMiuvvhMAXVAdMZ2zbw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=RItPO3D03uzAgjKzQDo/EvYziz6SiYT0VifBNZjEI931Ob5qyzK4bbPhUmG2Kw2StnHJQfUYS7ICY71wMH+WvkG+Ay/FU5CvFQZaS8lBNu+CwDcY2R/sAvx3dIG6HP8xJW7u+KuVKU3TCIaQnjqAZLHNFhMsXvp8nZ23wPukZCY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C9PP/tB3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="OBVIR7YF"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 9CD534397D;
-	Fri, 23 May 2025 14:39:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1748011176;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ZOCK6JsdZd/ExEyqrEPPTB1IZhrxIX3Mph1RiKKr0VI=;
-	b=OBVIR7YFZYAUkFrhZKMUINmFTYrEstapjIs7fISyxAuP6w6BZeuHjCzzh2WzYmq/RDOvK0
-	qSo+jIEmhlJo1ptMCBgSzlIeCevKk2ejF4fpyJPQK2fQrqPE3inng3jBTQHjihbaTAHUR7
-	Wfku5P8ArQRpTqmoskd15GoP1wkQrBXqscUxBh1FSH7P4YTTCsH8op/L5rub8Q4lEpOOPe
-	IxNNjYjmwAjiyQ6BBOU7RNONEQmj4doZdwbkYyiKqAh0wqVAvKt5a4NcyqNHcrjHrJq2VX
-	2/fFDa9SjE8340EeZ62B2SIs0qXboBRweqI/NMb5GWwhysh0y9gJzvM9D7KVkg==
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-To: Gabor Juhos <j4g8y7@gmail.com>
-Cc: Mark Brown <broonie@kernel.org>,  Md Sadre Alam
- <quic_mdalam@quicinc.com>,  Varadarajan Narayanan
- <quic_varada@quicinc.com>,  Sricharan Ramabadhran
- <quic_srichara@quicinc.com>,  linux-spi@vger.kernel.org,
-  linux-mtd@lists.infradead.org,  linux-arm-msm@vger.kernel.org,
-  linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC] spi: spi-qpic-snand: overestimate corrected bitflips
-In-Reply-To: <20250522-qpic-snand-overestimate-bitflips-v1-1-35c65c05068e@gmail.com>
-	(Gabor Juhos's message of "Thu, 22 May 2025 19:33:26 +0200")
-References: <20250522-qpic-snand-overestimate-bitflips-v1-1-35c65c05068e@gmail.com>
-User-Agent: mu4e 1.12.7; emacs 29.4
-Date: Fri, 23 May 2025 16:39:33 +0200
-Message-ID: <875xhr5r2y.fsf@bootlin.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C9PP/tB3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0C47C4CEF0;
+	Fri, 23 May 2025 14:40:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748011211;
+	bh=kDH8jZXV99RD2+zo4pJD6EuCbMiuvvhMAXVAdMZ2zbw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=C9PP/tB3z2cPIk8KO7Voz9zSN9IifDuiLJW1bZFUM2duas3p+MVzI9a7UdbyOGuLE
+	 QrsJn5NdMhn20n6vkV8eRqE5W7qcbnB8W71vfExJDVAvOLVFTU2vSYgrkPYaOvRQxK
+	 0mHMmUV6VKh1njsd9BKfv/z9Wfprdu7jFDczUMlSo2+6e1KVf3WAyCfNcopJAvEnq1
+	 0/fAPA3GrxBd/dFh2+8YfJ/BpPxhv9FfC8ShEBUrykCKEpj6ilYZRI2ZDc9i71eice
+	 slioYRE+rtrZC4eE4cG7aTAvyjU6JVyyy9q+2bh/mstbQ8/YjU3UDPU8U5YWgBY4CU
+	 50r66APadVNBA==
+Received: by mail-oi1-f181.google.com with SMTP id 5614622812f47-3f6eaa017d0so24350b6e.0;
+        Fri, 23 May 2025 07:40:11 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVZQY+K3Uv9epWqob5cBiP/oKpuIMgn5Z6VZ1fD/0S8xrENorp/e+vcm81CN60lO9mBYHzaow0uu9rR@vger.kernel.org, AJvYcCXnegxQ4fOiHvxW8MCeLy2XDSDlisQCbr/ok5cQbKpMBPP3Qa4WQf0HHkhGxbpSVGbLrB7lZmwB0OmRvCG6@vger.kernel.org
+X-Gm-Message-State: AOJu0YxWvbvv8DU2+bxU/AK3Swivov/u+/LI4pOpoGBctT3UCGErFL11
+	c5Yknubo5qHBtPpeZmfJUEQrX7t0fCH7ARwk1AHh6gyxazNiih0UB5n9+MKLKAtdiR1JL0J3/h9
+	a3OfQX8Jx86qJulFQG8XyVEUHDL02Cmo=
+X-Google-Smtp-Source: AGHT+IGQr3P7AfTvLgKRXbD5diVDb27jmEpvVaCwm8ZbA9G70HeOVXC3cf8q9SLWdxAV3FDrKgW5kaCx+NPnWIcHZjM=
+X-Received: by 2002:a05:6808:6f95:b0:3f8:e55c:16ea with SMTP id
+ 5614622812f47-4063da9ff85mr2239014b6e.24.1748011210939; Fri, 23 May 2025
+ 07:40:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+References: <20250518185111.3560-1-W_Armin@gmx.de> <CAJZ5v0hNmMtR4V0tYqD1dV2BqAKJ2sCOyBadkVtG3sS3V90uvw@mail.gmail.com>
+ <a6d92cdd-4dc3-4080-9ed9-5b1f02f247e0@gmx.de>
+In-Reply-To: <a6d92cdd-4dc3-4080-9ed9-5b1f02f247e0@gmx.de>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Fri, 23 May 2025 16:39:59 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0icRdTSToaKbdf=MdRin4NyB2MstUVaQo8VR6-n7DkVMQ@mail.gmail.com>
+X-Gm-Features: AX0GCFvijkBoIWEzV6Uh8N85l6IpPkZxi-mYiFPeR4aMvrQfCV2VB0rGHojPkw0
+Message-ID: <CAJZ5v0icRdTSToaKbdf=MdRin4NyB2MstUVaQo8VR6-n7DkVMQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2] ACPI: platform_profile: Add support for non-ACPI platforms
+To: Armin Wolf <W_Armin@gmx.de>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, lenb@kernel.org, j@jannau.net, 
+	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Arnd Bergmann <arnd@arndb.de>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgdeluddvucdltddurdegfedvrddttddmucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufgjfhgffffkgggtgfesthhqredttderjeenucfhrhhomhepofhiqhhuvghlucftrgihnhgrlhcuoehmihhquhgvlhdrrhgrhihnrghlsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeejgeeftdefledvieegvdejlefgleegjefhgfeuleevgfdtjeehudffhedvheegueenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecukfhppeelvddrudekgedrleekrddtnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledvrddukeegrdelkedrtddphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomhepmhhiqhhuvghlrdhrrgihnhgrlhessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepledprhgtphhtthhopehjgehgkeihjeesghhmrghilhdrtghomhdprhgtphhtthhopegsrhhoohhnihgvsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehquhhitggpmhgurghlrghmsehquhhitghinhgtrdgtohhmpdhrtghpthhtohepqhhuihgtpghvrghrrggurgesqhhuihgtihhntgdrtghomhdprhgtphhtthhopehquhhitggps
- hhrihgthhgrrhgrsehquhhitghinhgtrdgtohhmpdhrtghpthhtoheplhhinhhugidqshhpihesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhmthgusehlihhsthhsrdhinhhfrhgruggvrggurdhorhhgpdhrtghpthhtoheplhhinhhugidqrghrmhdqmhhsmhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-X-GND-Sasl: miquel.raynal@bootlin.com
 
-On 22/05/2025 at 19:33:26 +02, Gabor Juhos <j4g8y7@gmail.com> wrote:
-
-> The QPIC hardware is not capable of reporting the exact number of the
-> corrected bitflips, it only reports the number of the corrected bytes.
-> However the current code treats that as corrected bitflips which is
-> quite inaccurate in most cases. For example, even if the hardware reports
-> only one byte as corrected, that byte may have contained multiple bit
-> errors from one up to the maximum number of correctable bits.
+On Thu, May 22, 2025 at 6:34=E2=80=AFAM Armin Wolf <W_Armin@gmx.de> wrote:
 >
-> Change the code to report the maximum of the possibly corrected bits,
-> thus allowing upper layers to do certain actions before the data gets
-> lost due to uncorrectable errors.
+> Am 21.05.25 um 22:17 schrieb Rafael J. Wysocki:
 >
-> Signed-off-by: Gabor Juhos <j4g8y7@gmail.com>
-> ---
-> The patch tries to address Miquel's concerns [1] about the corrected bit
-> error reporting capabilities of the QPIC hardware.
+> > On Sun, May 18, 2025 at 8:51=E2=80=AFPM Armin Wolf <W_Armin@gmx.de> wro=
+te:
+> >> Currently the platform profile subsystem assumes that all supported
+> >> (i.e. ACPI-capable) platforms always run with ACPI being enabled.
+> >> However some ARM64 notebooks do not support ACPI and are instead
+> >> using devicetree for booting.
+> >>
+> >> Do not register the legacy sysfs interface on such devices as it
+> >> depends on the acpi_kobj (/sys/firmware/acpi/) being present. Users
+> >> are encouraged to use the new platform-profile class interface
+> >> instead.
+> > So how does it work in this case?
+> >
+> The platform profile subsystem also exposes a more modern class-based sys=
+fs interface,
+> see Documentation/ABI/testing/sysfs-class-platform-profile for details.
 >
-> [1] https://lore.kernel.org/all/87h61e8kow.fsf@bootlin.com
+> This interface does not depend on /sys/firmware/acpi being present, so us=
+erspace
+> programs can still control the platform profiles using the class-based in=
+terface.
+>
+> This will become very important once we have platform profile drivers not=
+ depending on
+> some sort of ACPI interface. I suspect that sooner or later some drivers =
+for the embedded
+> controllers on ARM64 notebooks (devicetree!) will register with the platf=
+orm profile subsystem.
+>
+> Apart from that this allows input drivers using platform_profile_cycle() =
+to work on non-ACPI
+> platforms (like ARm64 devices using devicetree).
 
-Thank you very much for attempting to improve the situation. Giving this
-a second look, it will not work either and will be even worse, forcing
-wear levelling after each read. So let's not change the returned value,
-hopefully the real life is different as the test case and most bitflips
-will be spread and not concentrated in a single byte. However I'd
-welcome either a pr_warn_once() or at least a comment somewhere about
-this.
+This driver though is located in drivers/acpi/ and depends on
+CONFIG_ACPI.  Moreover, the platform profile provider drivers need to
+select ACPI_PLATFORM_PROFILE so it gets built.  This means that there
+are no non-ACPI platform profile providers currently in the tree.
 
-Thanks,
-Miqu=C3=A8l
+While the observation that the code in the driver, other than the
+legacy sysfs interface, doesn't really depend on ACPI is valid, if you
+want it to be used on systems without ACPI, it needs to be properly
+converted to a generic driver.
+
+For now, it is better to simply make it fail to initialize without
+ACPI, so I'm going to apply this patch:
+
+https://patchwork.kernel.org/project/linux-acpi/patch/20250522141410.31315-=
+1-alexghiti@rivosinc.com/
+
+Thanks!
