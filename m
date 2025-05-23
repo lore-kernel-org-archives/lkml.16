@@ -1,173 +1,130 @@
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BBEC228C92
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 10:30:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFB8F2030A;
+	Fri, 23 May 2025 10:32:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747996247; cv=none; b=VWohDMMeflcdwAqQPVXrGDuNeMXQlJJy3TIlqdepoH2V2uZM81jHoJ3g1Ge8jaAu7MKLrmR924XK2UhmnzoiP81E0GguGU7CAYp3PShG1602lomFzAL7WzGCV8PVyQtfzmjSC0qbPVhBasKtBotAzyo2l3+C38V7aMt8S6uAJzk=
+	t=1747996334; cv=none; b=Goftkp+AFJy31jZJcUw/UdCG2fqS6AIYhKCyRC7M78B6XzDG4zezLWqRhldta2AvlOYAzMr2u37HunYTlHGUXr+pTqIQW+eNbOEI5jxvcRvY0ujlvfFERKK40Eo48uoHwoBtN4+YB7y5sPkM/BUEd+pcFdEny8qixh4ublwyt7o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747996247; c=relaxed/simple;
-	bh=uQxd1eLHfjaOj5/ATW0gmniRkoigc06Od2hWFZtdlR4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BDDvPE1Hi09XGcODyndSa4AXJVYbAO4tcGyvQT6PxQ9zOF2ZARMm0UxISLJSLekIhNyp2NjpRaMrnFCtm93WD5SLKQjTfvtzhKp+ycBs+AwZuIys4LqQHOwqYvi9F1TQKJpHrOwE8NbjmhmMlxj/6XNfu507KfG+ZYhLhwMoelo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=VpL8eX29; arc=none smtp.client-ip=209.85.221.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1747996334; c=relaxed/simple;
+	bh=jIYh/6bc4wL9vcfvlEIvB9D5jxaJ78Mjtur15kqQS+E=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=RvPN/8hWbdCqQflAJRF489/1trKjPQoxKMtToeDiqphSQ3FX7u7fqfa+2EbEvg7bUVFN1yvOpSIlDr1GgJsryufXp500GsXCdXwh7Km9aqZg7ASNgFJjLLCDHjnR5c8EAy4nF/eNoqgdnqoVqBgY/Os9XQXueq544zWKXrPKG1g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TC2ZhyUF; arc=none smtp.client-ip=209.85.210.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VpL8eX29"
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-3a3673e12c4so4099837f8f.2
-        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 03:30:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TC2ZhyUF"
+Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-742af848148so5439871b3a.1;
+        Fri, 23 May 2025 03:32:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1747996243; x=1748601043; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=xGc072gf7bPSnQp+Zk/9Ye6hdE1HV449ldZxHQ4WGd4=;
-        b=VpL8eX29zBL3bEM5XCwfulyPN3Vx3/P3pSHtyoa1WTiwz4HYuG6T+rq9hECKpAWYWf
-         PqermofcTJRQuzpbxytkfeiVO90VWdBDjMvMGLH1c64yLC9HKz+g+r5kBCqM82aKYu1v
-         s1eZpysaIvGDomPPjney4eHsYKGUNVEJlwKvsWZ1NyLSOaalMXC+cviuVZJcZfiFLI8p
-         uuobytPOqYWD58qp2/eNh9T6wYkWD+xc1ozH7M2cglPqQ+ntT95dE0X1DBXCu0JOoqpp
-         BUYXwLcrd/mqVxKRUmUqF1WNzOfVypnG3xD2FQ9R9QZVOWTx2aRPa7SjuGdl/iqGJ2Yr
-         CCbg==
+        d=gmail.com; s=20230601; t=1747996332; x=1748601132; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=THc8iOaJlRsjCnvhYfuHbJ12u/7t2Oz03yFyxpoGts0=;
+        b=TC2ZhyUFYDM+nMNH7MHI8K7qbPdMLB/+r90ke9Shso6fYoAUsq7b/n5FFje2YYGYWN
+         HcaAJKhvaSAghhsjGoc+FsSj0o3zciRWS4cuXo0jd/4pys/yp/V7s+/VqHU+HztuQMR/
+         a02yudq1Yt3dIEDcvUdqU4X1p9cW+l6UF45G8yRdGzMBGauOGfkDlJf6qFT++ze/pCEt
+         Vt93dXV/eK59F6L86RbtbMeZInmZDyNA5wJax00Pj49f/lF6xy18rkjs5mtSQ0OVwXen
+         119A6f4aF5udGZOO5wAS1nUDkTr8p9jDYTSYoQ2Hkpzr0iBZBdtB4lWkSkM5YcVd+qlB
+         7dtA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747996243; x=1748601043;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=xGc072gf7bPSnQp+Zk/9Ye6hdE1HV449ldZxHQ4WGd4=;
-        b=DsHph6rIASfZnW4yy2ne3jgUbRiLyaNZUeIwm+q29QLbidkONvG7jt9mIjfaKwarq8
-         a9CWjt5XmvSJb88HR+25q+75xG0IRVupQFha2N9b+jb8PY6aBTJbOt4C/LtfqLme/MLY
-         Tb8x1MV0F1w4zPNKU88HquYhdoMROQX/b1HYlf/Sj9ceAcOxCGup0kcaAwmaK6D8FLsu
-         TVdAG5TBEun8B38NdUmOd9PikW5NnU6DLZ0Wpm9aenQkQX7Pb7sTeM6AX1ZKGCAAUY00
-         rgxCWemeX7NzXmvUv0YapHPdNyy8enDmdiyDq9iOsNPzVxyh1fWaGMQaYcseSFwXgGGT
-         1InQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU9ZCHzmnJP7K/ARU1O5drYKXWLMyQVV8wqWPVBRAdPZq0m7M+QMKjglovH22O9etnCqjAFYlulY1HlrPw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzh82QnCbC7EAiwREELnBDFS0KP+AyDOO2F6SrOYUafNNYS9IqM
-	ss8tz1tLwo0oAOotyviP+C9kpgz9KE2WjbTnnJQX8KM+USjjpgSz7+83xW5+nUXEnK4=
-X-Gm-Gg: ASbGncukOpBbbnUf1hocwOD6E81U7MDuarYVvOO4AOSXsI5EcQYa9T1cESWz/9C8k2m
-	nWXpHcwQcvabNiitAViZ8hquQud5bZztjZfLXSrrTHZhPrge7YR4HnVtSTROayohcS3nmd/a0uM
-	1V5fqsWfBtK43nWS+ceK7AA05BVmu5A3irwjF4tTfnrYqcvzU2C/NyxIhZWPm2MLUneAl5uvcG9
-	kxWFHGi/yb1sV/7spqTGHplEWaFaWX2NbNJg9DDh1vLfykMHt7qucqX6ykRIVAreKvY4DuC3frb
-	QKXwvqZ0hfl57Y+NWFhevJRPIov1NNGyNvV+sX1jqt5SAFGXz21iKrvg
-X-Google-Smtp-Source: AGHT+IFFW4ht9GhSqBTvucu9XUBb928PNMBRUk/fhSs5hhgU9QRwrO+U6oC+bSVQuoohGmB6W/ygxw==
-X-Received: by 2002:a05:6000:200f:b0:3a3:6e44:eb5f with SMTP id ffacd0b85a97d-3a36e44ecc7mr17073175f8f.46.1747996243422;
-        Fri, 23 May 2025 03:30:43 -0700 (PDT)
-Received: from [192.168.1.3] ([37.18.136.128])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4bfdec3cfsm3862513f8f.45.2025.05.23.03.30.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 23 May 2025 03:30:43 -0700 (PDT)
-Message-ID: <4bc8f1ae-5392-4b9a-a67a-391f3e93b22c@linaro.org>
-Date: Fri, 23 May 2025 11:30:42 +0100
+        d=1e100.net; s=20230601; t=1747996332; x=1748601132;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=THc8iOaJlRsjCnvhYfuHbJ12u/7t2Oz03yFyxpoGts0=;
+        b=wqlbGq4gqd1BL1EqDpv5ZJIqJ6yy2T16DubksWczixSJ1nzf5nvzjgzwZvsM1aYr2s
+         fSX5VX1ZR++jg0CAoiOeGRd6aKE/yyCxmsvUGfY7h0vIi0RpO+3M3qMIl+SJ8eHovHMP
+         OkfdxT/utR75T7bk4jq98Uzh73gxJ1tnIc7KBPfXC7qQMBO2TQBYl63zIc0FbhPe4CSG
+         UqqQCOAdFKuBKkcA7CRZtx/P9yBtnLzw40sjDC4O1SWFwgO0/vzcGSTQ8ghgBuQeO0ZE
+         mWDbyqEY0P2DhIcgIxJnGcUPbGDNyNWoWpeY5yd6tPyxztlD/FCP2HeGzgpMCX0OVaSR
+         WdgA==
+X-Forwarded-Encrypted: i=1; AJvYcCVQtQKvZpaXsDqM6wpnOIdt05eXAz7fnWN6vEMhYi3mJxutbQikNVeWGYUU/cYnOMSEDdqkqU4+JKK4cVc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwrBJmdV5pUrrbjpXvMnAeu50vxIed/K1DNwwm/vsS/ANQHzfDq
+	hyw/96845uZUP+czL5AxfEvhkJ3mirJEEs+r1BZuVWjDJul+k2RXMAJbtI/MiA==
+X-Gm-Gg: ASbGncv2JKQqpbrENbNYwFXNw7piTHbTSAgrII8nkKr2Qy0w6lxl7NUd7v7Kg47M426
+	xZAl6mHuGOeLPiqadXYsK5fceLIZFcKKhVQeVJjrqjsmEVcNw/EDG7KUK40t5HZl0g55Df2WTW4
+	PzQZqnbP35vikJDkZLHxx4yjEOHoVq9srta2C/t+05XFw4XtejCnHhaEZ9LpQmbRu2io18ZD4Xq
+	PYJgj9rf7DLlT11y1TV4WwRsgw/kX9cISklBTE1azDd01pyQAJKGnMc0HterCBhTvehVzVoYYLr
+	M4nUqf6q4o5uE5KaOTu9hAvRF/U79dnF37GfuiUNIaPoEMvcvNqHb5q0Xgc=
+X-Google-Smtp-Source: AGHT+IGDZOYZ1jIZrHrn9ZVQHI6uGlPbZ1eT4Zz6ihDrB4t+V8r8iOO6IjES6v3dP1iNd719hH8ayA==
+X-Received: by 2002:a05:6a00:3c86:b0:730:75b1:7219 with SMTP id d2e1a72fcca58-745ed87cc07mr4164866b3a.12.1747996331847;
+        Fri, 23 May 2025 03:32:11 -0700 (PDT)
+Received: from victorshih.. ([2402:7500:577:397a:c299:a1bd:2b60:56b8])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-742a970c882sm13066424b3a.55.2025.05.23.03.32.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 23 May 2025 03:32:11 -0700 (PDT)
+From: Victor Shih <victorshihgli@gmail.com>
+To: ulf.hansson@linaro.org,
+	adrian.hunter@intel.com
+Cc: linux-mmc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	benchuanggli@gmail.com,
+	HL.Liu@genesyslogic.com.tw,
+	Greg.tu@genesyslogic.com.tw,
+	Ben.Chuang@genesyslogic.com.tw,
+	Victor Shih <victor.shih@genesyslogic.com.tw>
+Subject: [PATCH V2 0/2] Adjust some error messages for SD UHS-II initialization process
+Date: Fri, 23 May 2025 18:31:50 +0800
+Message-ID: <20250523103152.6210-1-victorshihgli@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/3] perf test: Move some ARM tests to
- arch/arm64/tests/shell
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
- LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org,
- Leo Yan <leo.yan@arm.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>
-References: <20250522171044.1075583-1-namhyung@kernel.org>
- <20250522171044.1075583-2-namhyung@kernel.org>
-Content-Language: en-US
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <20250522171044.1075583-2-namhyung@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+From: Victor Shih <victor.shih@genesyslogic.com.tw>
 
+Summary
+=======
+It is normal that errors will occur when using non-UHS-II card to enter
+the UHS-II card initialization process. We should not be producing error
+messages and register dumps. Therefore, switch the error messages to debug
+mode and register dumps to dynamic debug mode.
 
-On 22/05/2025 6:10 pm, Namhyung Kim wrote:
-> The test_arm_callgraph_fp.sh checks with aarch64 so it should belong to
-> there.  And IIRC ARM SPE is supported on 64-bit platforms so move the
-> tests too.  But I'm not sure about coresight so left them.
+Patch structure
+===============
+patch#1: for core
+patch#2: for sdhci
 
-Coresight is also supported on arm32 which is why 
-tools/perf/arch/arm/util/cs-etm.c is built for both platforms. Having 
-said that, I'm not sure if the tests pass on arm32 because we're not 
-running them, but they should pass and if someone is running them this 
-change could break that.
+Changes in v2 (May. 23, 2025)
+* Rebase on latest mmc/next.
+* Patch#1: Drop the use of DBG macro and use pr_debug() instead.
+* Patch#2: Drop the use of DBG macro in some function
+           and use pr_debug() instead.
 
-We could symlink "arch/arm64/tests/shell" to "arch/arm/tests/shell" or 
-have a condition in the code that forces one folder for both. Or just 
-continue with only arm64. Considering I haven't seen a test failure 
-report from there and we've only really been adding tests for arm64 
-stuff it could be reasonable.
+----------------- original cover letter from v1 -----------------
+Summary
+=======
+It is normal that errors will occur when using non-UHS-II card to enter
+the UHS-II card initialization process. We should not be producing error
+messages and register dumps. Therefore, switch the error messages to debug
+mode and register dumps to dynamic debug mode.
 
-> 
-> Also please test it with shellcheck as I couldn't run it actually.
-> 
+Patch structure
+===============
+patch#1: for core
+patch#2: for sdhci
 
-Shellcheck is working on these scripts for me.
+Changes in v1 (May. 16, 2025)
+* Rebase on latest mmc/next.
+* Patch#1: Adjust some error messages for SD UHS-II cards.
+* Patch#2: Adjust some error messages and register dump for SD UHS-II card
 
-Reviewed-by: James Clark <james.clark@linaro.org>
+Victor Shih (2):
+  mmc: core: Adjust some error messages for SD UHS-II cards
+  mmc: sdhci-uhs2: Adjust some error messages and register dump for SD
+    UHS-II card
 
-> Cc: Leo Yan <leo.yan@arm.com>
-> Cc: James Clark <james.clark@linaro.org>
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> ---
->   tools/perf/arch/arm64/tests/Build                  | 14 ++++++++++++++
->   .../arm64}/tests/shell/test_arm_callgraph_fp.sh    |  4 ++--
->   .../{ => arch/arm64}/tests/shell/test_arm_spe.sh   |  0
->   .../arm64}/tests/shell/test_arm_spe_fork.sh        |  0
->   4 files changed, 16 insertions(+), 2 deletions(-)
->   rename tools/perf/{ => arch/arm64}/tests/shell/test_arm_callgraph_fp.sh (89%)
->   rename tools/perf/{ => arch/arm64}/tests/shell/test_arm_spe.sh (100%)
->   rename tools/perf/{ => arch/arm64}/tests/shell/test_arm_spe_fork.sh (100%)
-> 
-> diff --git a/tools/perf/arch/arm64/tests/Build b/tools/perf/arch/arm64/tests/Build
-> index d44c9de92d425c62..6c73720cb0ffa99d 100644
-> --- a/tools/perf/arch/arm64/tests/Build
-> +++ b/tools/perf/arch/arm64/tests/Build
-> @@ -3,3 +3,17 @@ perf-test-$(CONFIG_DWARF_UNWIND) += dwarf-unwind.o
->   
->   perf-test-y += arch-tests.o
->   perf-test-y += cpuid-match.o
-> +
-> +ifdef SHELLCHECK
-> +  SHELL_TESTS := $(shell find shell -executable -type f -name '*.sh')
-> +  SHELL_TEST_LOGS := $(SHELL_TESTS:tests/shell/%=shell/%.shellcheck_log)
-> +else
-> +  SHELL_TESTS :=
-> +  SHELL_TEST_LOGS :=
-> +endif
-> +
-> +$(OUTPUT)%.shellcheck_log: %
-> +	$(call rule_mkdir)
-> +	$(Q)$(call echo-cmd,test)shellcheck -a -S warning "$<" > $@ || (cat $@ && rm $@ && false)
-> +
-> +perf-test-y += $(SHELL_TEST_LOGS)
-> diff --git a/tools/perf/tests/shell/test_arm_callgraph_fp.sh b/tools/perf/arch/arm64/tests/shell/test_arm_callgraph_fp.sh
-> similarity index 89%
-> rename from tools/perf/tests/shell/test_arm_callgraph_fp.sh
-> rename to tools/perf/arch/arm64/tests/shell/test_arm_callgraph_fp.sh
-> index 9caa36130175964e..f59ab293d67b9f9c 100755
-> --- a/tools/perf/tests/shell/test_arm_callgraph_fp.sh
-> +++ b/tools/perf/arch/arm64/tests/shell/test_arm_callgraph_fp.sh
-> @@ -3,8 +3,8 @@
->   # SPDX-License-Identifier: GPL-2.0
->   
->   shelldir=$(dirname "$0")
-> -# shellcheck source=lib/perf_has_symbol.sh
-> -. "${shelldir}"/lib/perf_has_symbol.sh
-> +# shellcheck source=../../../../tests/shell/lib/perf_has_symbol.sh
-> +. "${shelldir}"/../../../../tests/shell/lib/perf_has_symbol.sh
->   
->   if [ "$(uname -m)" != "aarch64" ]; then
->   	exit 2
-> diff --git a/tools/perf/tests/shell/test_arm_spe.sh b/tools/perf/arch/arm64/tests/shell/test_arm_spe.sh
-> similarity index 100%
-> rename from tools/perf/tests/shell/test_arm_spe.sh
-> rename to tools/perf/arch/arm64/tests/shell/test_arm_spe.sh
-> diff --git a/tools/perf/tests/shell/test_arm_spe_fork.sh b/tools/perf/arch/arm64/tests/shell/test_arm_spe_fork.sh
-> similarity index 100%
-> rename from tools/perf/tests/shell/test_arm_spe_fork.sh
-> rename to tools/perf/arch/arm64/tests/shell/test_arm_spe_fork.sh
+ drivers/mmc/core/sd_uhs2.c    |  8 ++++++--
+ drivers/mmc/host/sdhci-uhs2.c | 18 +++++++++---------
+ drivers/mmc/host/sdhci.h      | 16 ++++++++++++++++
+ 3 files changed, 31 insertions(+), 11 deletions(-)
+
+-- 
+2.43.0
 
