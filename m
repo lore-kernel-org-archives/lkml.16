@@ -1,57 +1,57 @@
-Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C05D12040B6
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 01:18:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC10621E0B7
+	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 01:18:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747963087; cv=none; b=Qa5tnKlZn7OMydK9pmlLq3rhu6tF85c8qd/l73TOR4MjDzEK7r/DrvXk80bTDAfVWoCYkSMwa4a+rYKL1Qb64dhwu6IPbencrZq0PVJjBH+5ZOdfShYeXhZA+5lEWwekocXZws/DM7A/+2Tx6jLM3CHMhpyo6LrKCH2lEsWofKY=
+	t=1747963090; cv=none; b=Ev5URa144H6MRij8t7d0o7Mvl//rSIgxqglR7jP13Lp/2lWtEdu07WzBPHlxcCrv5RFhbsI7MEsY2cOiTn200nd00iaEE3VB0RI5M6HIplIK1diy9xmyRXNAvmsEof7jDfmnjzYvf3MlhR8H3jBZw8PwZoMFBF8lUzM/n2GyV0A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747963087; c=relaxed/simple;
-	bh=y8TDpZKk7aB10UFoOK8n344XpdWL97IbthgkYf0JuKQ=;
+	s=arc-20240116; t=1747963090; c=relaxed/simple;
+	bh=dX8nq0dpc2EQQRTZJEyJJGSZKFyoPAvHvk+9J9cF//A=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=YRw4ZWwubJI+/+f0liMi0ANJ3V4R66YFPzmT4v7HD+3pLrrWiEepHmgU6/dEnfIvXJjXBa8xxU+cQbVf8VoZHvWu9Oriejd6+pXcEerDpm348KqsisUHfT/maRo+kyBMuXSyMl9hyJeZ/S9AO6I2ya2f+6KWJd01qBeycHRRY94=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=oOBXs11A; arc=none smtp.client-ip=209.85.215.201
+	 To:Cc:Content-Type; b=r7/4n0FRXFt/n5RtK6grXBF45lcCxFgHgwZ41l4RYIMT0Xj4tNXsbJFTHo5zSkGvllr1egG3KRyHsXXj5vD/3+tSmaaxfz+Eplj1X2lABH9B2cMO/fkJmXEx03Y1a5yp80qdnoZ2K8TRRRu7pI9ECsuNQdCWg8V3dzgSRmxyggQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=QEWAt09y; arc=none smtp.client-ip=209.85.216.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oOBXs11A"
-Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-b26f30486f0so8049900a12.2
-        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 18:18:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QEWAt09y"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-310e7c24158so490657a91.3
+        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 18:18:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747963085; x=1748567885; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1747963088; x=1748567888; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=YuMGLHcCivRBl+VtofjiQzXDjtOgKsnDLWsQSOS9M50=;
-        b=oOBXs11AR6PgE8N+YnIZjImyxdSDfadsR2zzt92q8PC2nrHUDAbhxTy3n1TFHL+u4f
-         uR5fGh/PVm/FXJOkDbJ0HQ5wP3y0QBuI0jBRtMC3QYqURIN2kp5SZuxJ7CYf347DJh5E
-         5mWkj8VwWjq1edASbVR6Q9TmPEbdRMISJmCnb/VWOVz47yn1+9qxYPKKOEgFFP3lEs2X
-         0V+oM0kq0yHjFC4MrL0jU2Ut6qa/a/Q6t4mHNNRYCKZPBOW0khpKIhrYfrQsy69EXCk/
-         9msQyATS8Z38jGQhu2i2TmEDJNZIPXnovCJ+4U5duWET4CyKOXmbRDU/xhQlVmqyPBiS
-         qCqQ==
+        bh=fufLLC396JAskRTF6ENXv8IgKQdaTngu642No/aWLio=;
+        b=QEWAt09y2pL8xG9VRU4461w6qLuofwC+yLiRdknAL0xtWwFAqHZ8VjRVDIohbbYNEc
+         B6Jj5GjKuWuwI1aPUhbe4+C5w03MKf27Ofzqc68/1TcK3+lXV/hVvo3XnJJ8OsLTl9FX
+         240RvsUP5t2IX9sOCLrYyua54J7NsWt+T82AYpbRC7eh2UYkdtGS+K+esKqZgpURd/WJ
+         5f8d/3J1fjAO0fZb1ZHwM8l7Oe13taCnWrERktiuJhXRcSN3QrlCOfTGoUc1hOJ78LWG
+         wQZu0l1d6vuyqHJHAvTasiwsaQQBRk/7De3OiUMMx3ZV26nr6hbq4EERN7gWp3Ny+k2l
+         QxgQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747963085; x=1748567885;
+        d=1e100.net; s=20230601; t=1747963088; x=1748567888;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=YuMGLHcCivRBl+VtofjiQzXDjtOgKsnDLWsQSOS9M50=;
-        b=YDMvwaymHVofdHo7FNzKOKPzQhl7R9Z/Lq17Y1DGHBf9v1aYokaqO9HiSPL8dblymi
-         Q0Qz2bVarOGPEXf8Y5jF5w9pm1SqkEuJj268mFksDdGmls0HhgzBfu22JGRici1LT1oJ
-         M3NxFjvX82STieZ2QPjESaYmvVSUjDf8N+LrorP4K9dWmYLJHxu7fRjNnPSkvrhjSC/1
-         i+Dng7cY2n60lI6pn9aiqFLi+O63tcwUQd7Godz5Y50XNcbYthlTzGqwoIr8IRtIxkkC
-         KwhMZ/sOK5gYoCMJVnycm5mssUVrg27zcmTPtYx1w89zZSSBLkgJo/50eP5Oogm9dIYh
-         AkHw==
-X-Forwarded-Encrypted: i=1; AJvYcCXqzglODVGfmdIJPQY6p6DWkGBN2ZG8e6GzmGIFpJAXlWFvZE0HFanIiowkjnqyhbUTRec99SSxCFiEz6s=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzOJIY+sJWaK2k3TihF1wdiUgYgNtqSFLLSxtx+l6HKa7A1+jwK
-	HAqVd4/GgB/mCj8Bs4n4Tu7SiwVcTP6M/SBL0xIt4oyhcfXn6rrF4cREOsf1c0BHJYb/1fBRce4
-	Hp5litg==
-X-Google-Smtp-Source: AGHT+IEMoSdvAqq5gy38p0MEs35p+JrBTqeXvKk4+bxVzHgPqe9zQDnWpFzFQm7IXYyhXA7CIorXuUED+Po=
-X-Received: from pjbeu5.prod.google.com ([2002:a17:90a:f945:b0:2ef:d136:17fc])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:350e:b0:310:8d7a:cece
- with SMTP id 98e67ed59e1d1-3108d7acedbmr13311760a91.35.1747963085039; Thu, 22
- May 2025 18:18:05 -0700 (PDT)
+        bh=fufLLC396JAskRTF6ENXv8IgKQdaTngu642No/aWLio=;
+        b=vKKVeogRcxRuwuBywlQn9B/cW6NDZqbKEC1ZLf7xXx+p3xn2OD42a7ZHVp4DTHN0CW
+         22qWzxyPiJ5JdGvB6/pf5fr9WN3d+wMM75COLoIlGWafGqhB6OTIVJSpSlW472HDDL9G
+         wwdAkcTScabk/YaUUJ6BWYh7b4ZQW0GdXgDgWGJ/sV1txoPg3A0gWKT4RTcSZjXyk+fY
+         pkyO54S7QfGSDDI4YViGThi1aW8uCNPklty2zb61r1u5f0dIJfpWxk1Z7eBOVr1vb8P0
+         28k1wpjOVYVcqbr+x9BiiP2cTj4A25U7kjVdRaxzddwlODJpFY/M4W2OoZ1VkGlSW/XE
+         VghQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWk/ZMevTgNci+t3OKpNAWYFSyYQsBsxsRh3PfpY/HNqQuPylxhSjxcmL3d6vjxX84n+zYk+nuSUoiaM+8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxM3YSZh/rhd/IqlJF0fTdJYHPrQopbrSnQUTlog3yhld9p6Ux4
+	MiENrEONXZ5duHg6ekKLDp/8DdZKA2wz8s0X5JqEZ4CixzneZISiEiMHcvYBDN2IlY2xvtUPWo6
+	PZYN8nQ==
+X-Google-Smtp-Source: AGHT+IFCOYwtizzYjOTae6Mj32F46dgD0uJVDssen2HZ7KTZkiFj54SwRB8bSELTYoqvR+qs9H39zDVz/wg=
+X-Received: from pjbsl8.prod.google.com ([2002:a17:90b:2e08:b0:301:1bf5:2f07])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90a:fc4f:b0:2ff:4f04:4266
+ with SMTP id 98e67ed59e1d1-30e83216290mr31617531a91.23.1747963088080; Thu, 22
+ May 2025 18:18:08 -0700 (PDT)
 Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Thu, 22 May 2025 18:17:54 -0700
+Date: Thu, 22 May 2025 18:17:56 -0700
 In-Reply-To: <20250523011756.3243624-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -61,9 +61,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250523011756.3243624-1-seanjc@google.com>
 X-Mailer: git-send-email 2.49.0.1151.ga128411c76-goog
-Message-ID: <20250523011756.3243624-4-seanjc@google.com>
-Subject: [PATCH 3/5] KVM: VMX: Apply MMIO Stale Data mitigation if KVM maps
- MMIO into the guest
+Message-ID: <20250523011756.3243624-6-seanjc@google.com>
+Subject: [PATCH 5/5] VFIO: KVM: x86: Drop kvm_arch_{start,end}_assignment()
 From: Sean Christopherson <seanjc@google.com>
 To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>
 Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
@@ -71,184 +70,126 @@ Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
 	Jim Mattson <jmattson@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Enforce the MMIO State Data mitigation if KVM has ever mapped host MMIO
-into the VM, not if the VM has an assigned device.  VFIO is but one of
-many ways to map host MMIO into a KVM guest, and even within VFIO,
-formally attaching a device to a VM via KVM_DEV_VFIO_FILE_ADD is entirely
-optional.
+Drop kvm_arch_{start,end}_assignment() and all associated code now that
+KVM x86 no longer consumes assigned_device_count.  Tracking whether or not
+a VFIO-assigned device is formally associated with a VM is fundamentally
+flawed, as such an association is optional for general usage, i.e. is prone
+to false negatives.  E.g. prior to commit 2edd9cb79fb3 ("kvm: detect
+assigned device via irqbypass manager"), device passthrough via VFIO would
+fail to enable IRQ bypass if userspace omitted the formal VFIO<=>KVM
+binding.
 
-Track whether or not the guest can access host MMIO on a per-MMU basis,
-i.e. based on whether or not the vCPU has a mapping to host MMIO.  For
-simplicity, track MMIO mappings in "special" rools (those without a
-kvm_mmu_page) at the VM level, as only Intel CPUs are vulnerable, and so
-only legacy 32-bit shadow paging is affected, i.e. lack of precise
-tracking is a complete non-issue.
+And device drivers that *need* the VFIO<=>KVM connection, e.g. KVM-GT,
+shouldn't be relying on generic x86 tracking infrastructure.
 
-Make the per-MMU and per-VM flags sticky.  Detecting when *all* MMIO
-mappings have been removed would be absurdly complex.  And in practice,
-removing MMIO from a guest will be done by deleting the associated memslot,
-which by default will force KVM to re-allocate all roots.  Special roots
-will forever be mitigated, but as above, the affected scenarios are not
-expected to be performance sensitive.
-
-Use a VMX_RUN flag to communicate the need for a buffers flush to
-vmx_vcpu_enter_exit() so that kvm_vcpu_can_access_host_mmio() and all its
-dependencies don't need to be marked __always_inline, e.g. so that KASAN
-doesn't trigger a noinstr violation.
-
-Cc: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Fixes: 8cb861e9e3c9 ("x86/speculation/mmio: Add mitigation for Processor MMIO Stale Data")
+Cc: Jim Mattson <jmattson@google.com>
 Signed-off-by: Sean Christopherson <seanjc@google.com>
 ---
- arch/x86/include/asm/kvm_host.h |  1 +
- arch/x86/kvm/mmu/mmu_internal.h |  3 +++
- arch/x86/kvm/mmu/spte.c         | 21 +++++++++++++++++++++
- arch/x86/kvm/mmu/spte.h         | 10 ++++++++++
- arch/x86/kvm/vmx/run_flags.h    | 10 ++++++----
- arch/x86/kvm/vmx/vmx.c          |  8 +++++++-
- 6 files changed, 48 insertions(+), 5 deletions(-)
+ arch/x86/include/asm/kvm_host.h |  2 --
+ arch/x86/kvm/x86.c              | 18 ------------------
+ include/linux/kvm_host.h        | 18 ------------------
+ virt/kvm/vfio.c                 |  3 ---
+ 4 files changed, 41 deletions(-)
 
 diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index 01edcefbd937..043be00ec5b8 100644
+index 043be00ec5b8..3cb57f6ef730 100644
 --- a/arch/x86/include/asm/kvm_host.h
 +++ b/arch/x86/include/asm/kvm_host.h
-@@ -1458,6 +1458,7 @@ struct kvm_arch {
- 	bool x2apic_format;
- 	bool x2apic_broadcast_quirk_disabled;
+@@ -1380,8 +1380,6 @@ struct kvm_arch {
  
-+	bool has_mapped_host_mmio;
- 	bool guest_can_read_msr_platform_info;
- 	bool exception_payload_enabled;
+ #define __KVM_HAVE_ARCH_NONCOHERENT_DMA
+ 	atomic_t noncoherent_dma_count;
+-#define __KVM_HAVE_ARCH_ASSIGNED_DEVICE
+-	atomic_t assigned_device_count;
+ 	unsigned long nr_possible_bypass_irqs;
  
-diff --git a/arch/x86/kvm/mmu/mmu_internal.h b/arch/x86/kvm/mmu/mmu_internal.h
-index db8f33e4de62..65f3c89d7c5d 100644
---- a/arch/x86/kvm/mmu/mmu_internal.h
-+++ b/arch/x86/kvm/mmu/mmu_internal.h
-@@ -103,6 +103,9 @@ struct kvm_mmu_page {
- 		int root_count;
- 		refcount_t tdp_mmu_root_count;
- 	};
-+
-+	bool has_mapped_host_mmio;
-+
- 	union {
- 		/* These two members aren't used for TDP MMU */
- 		struct {
-diff --git a/arch/x86/kvm/mmu/spte.c b/arch/x86/kvm/mmu/spte.c
-index 3f16c91aa042..5fb43a834d48 100644
---- a/arch/x86/kvm/mmu/spte.c
-+++ b/arch/x86/kvm/mmu/spte.c
-@@ -138,6 +138,22 @@ static bool kvm_is_mmio_pfn(kvm_pfn_t pfn, int *is_host_mmio)
- 	return *is_host_mmio;
+ #ifdef CONFIG_KVM_IOAPIC
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 3969e439a6bb..2a1563f2ee97 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -13561,24 +13561,6 @@ bool kvm_arch_can_dequeue_async_page_present(struct kvm_vcpu *vcpu)
+ 		return kvm_lapic_enabled(vcpu) && apf_pageready_slot_free(vcpu);
  }
  
-+static void kvm_track_host_mmio_mapping(struct kvm_vcpu *vcpu)
-+{
-+	struct kvm_mmu_page *root = root_to_sp(vcpu->arch.mmu->root.hpa);
-+
-+	if (root)
-+		WRITE_ONCE(root->has_mapped_host_mmio, true);
-+	else
-+		WRITE_ONCE(vcpu->kvm->arch.has_mapped_host_mmio, true);
-+
-+	/*
-+	 * Force vCPUs to exit and flush CPU buffers if the vCPU is using the
-+	 * affected root(s).
-+	 */
-+	kvm_make_all_cpus_request(vcpu->kvm, KVM_REQ_OUTSIDE_GUEST_MODE);
-+}
-+
- /*
-  * Returns true if the SPTE needs to be updated atomically due to having bits
-  * that may be changed without holding mmu_lock, and for which KVM must not
-@@ -276,6 +292,11 @@ bool make_spte(struct kvm_vcpu *vcpu, struct kvm_mmu_page *sp,
- 		mark_page_dirty_in_slot(vcpu->kvm, slot, gfn);
+-void kvm_arch_start_assignment(struct kvm *kvm)
+-{
+-	atomic_inc(&kvm->arch.assigned_device_count);
+-}
+-EXPORT_SYMBOL_GPL(kvm_arch_start_assignment);
+-
+-void kvm_arch_end_assignment(struct kvm *kvm)
+-{
+-	atomic_dec(&kvm->arch.assigned_device_count);
+-}
+-EXPORT_SYMBOL_GPL(kvm_arch_end_assignment);
+-
+-bool noinstr kvm_arch_has_assigned_device(struct kvm *kvm)
+-{
+-	return raw_atomic_read(&kvm->arch.assigned_device_count);
+-}
+-EXPORT_SYMBOL_GPL(kvm_arch_has_assigned_device);
+-
+ static void kvm_noncoherent_dma_assignment_start_or_stop(struct kvm *kvm)
+ {
+ 	/*
+diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
+index 706f2402ae8e..31f183c32f9a 100644
+--- a/include/linux/kvm_host.h
++++ b/include/linux/kvm_host.h
+@@ -1686,24 +1686,6 @@ static inline bool kvm_arch_has_noncoherent_dma(struct kvm *kvm)
+ 	return false;
+ }
+ #endif
+-#ifdef __KVM_HAVE_ARCH_ASSIGNED_DEVICE
+-void kvm_arch_start_assignment(struct kvm *kvm);
+-void kvm_arch_end_assignment(struct kvm *kvm);
+-bool kvm_arch_has_assigned_device(struct kvm *kvm);
+-#else
+-static inline void kvm_arch_start_assignment(struct kvm *kvm)
+-{
+-}
+-
+-static inline void kvm_arch_end_assignment(struct kvm *kvm)
+-{
+-}
+-
+-static __always_inline bool kvm_arch_has_assigned_device(struct kvm *kvm)
+-{
+-	return false;
+-}
+-#endif
+ 
+ static inline struct rcuwait *kvm_arch_vcpu_get_wait(struct kvm_vcpu *vcpu)
+ {
+diff --git a/virt/kvm/vfio.c b/virt/kvm/vfio.c
+index 196a102e34fb..be50514bbd11 100644
+--- a/virt/kvm/vfio.c
++++ b/virt/kvm/vfio.c
+@@ -175,7 +175,6 @@ static int kvm_vfio_file_add(struct kvm_device *dev, unsigned int fd)
+ 	kvf->file = get_file(filp);
+ 	list_add_tail(&kvf->node, &kv->file_list);
+ 
+-	kvm_arch_start_assignment(dev->kvm);
+ 	kvm_vfio_file_set_kvm(kvf->file, dev->kvm);
+ 	kvm_vfio_update_coherency(dev);
+ 
+@@ -205,7 +204,6 @@ static int kvm_vfio_file_del(struct kvm_device *dev, unsigned int fd)
+ 			continue;
+ 
+ 		list_del(&kvf->node);
+-		kvm_arch_end_assignment(dev->kvm);
+ #ifdef CONFIG_SPAPR_TCE_IOMMU
+ 		kvm_spapr_tce_release_vfio_group(dev->kvm, kvf);
+ #endif
+@@ -336,7 +334,6 @@ static void kvm_vfio_release(struct kvm_device *dev)
+ 		fput(kvf->file);
+ 		list_del(&kvf->node);
+ 		kfree(kvf);
+-		kvm_arch_end_assignment(dev->kvm);
  	}
  
-+	if (static_branch_unlikely(&mmio_stale_data_clear) &&
-+	    !kvm_vcpu_can_access_host_mmio(vcpu) &&
-+	    kvm_is_mmio_pfn(pfn, &is_host_mmio))
-+		kvm_track_host_mmio_mapping(vcpu);
-+
- 	*new_spte = spte;
- 	return wrprot;
- }
-diff --git a/arch/x86/kvm/mmu/spte.h b/arch/x86/kvm/mmu/spte.h
-index 1e94f081bdaf..3133f066927e 100644
---- a/arch/x86/kvm/mmu/spte.h
-+++ b/arch/x86/kvm/mmu/spte.h
-@@ -280,6 +280,16 @@ static inline bool is_mirror_sptep(tdp_ptep_t sptep)
- 	return is_mirror_sp(sptep_to_sp(rcu_dereference(sptep)));
- }
- 
-+static inline bool kvm_vcpu_can_access_host_mmio(struct kvm_vcpu *vcpu)
-+{
-+	struct kvm_mmu_page *root = root_to_sp(vcpu->arch.mmu->root.hpa);
-+
-+	if (root)
-+		return READ_ONCE(root->has_mapped_host_mmio);
-+
-+	return READ_ONCE(vcpu->kvm->arch.has_mapped_host_mmio);
-+}
-+
- static inline bool is_mmio_spte(struct kvm *kvm, u64 spte)
- {
- 	return (spte & shadow_mmio_mask) == kvm->arch.shadow_mmio_value &&
-diff --git a/arch/x86/kvm/vmx/run_flags.h b/arch/x86/kvm/vmx/run_flags.h
-index 6a9bfdfbb6e5..2f20fb170def 100644
---- a/arch/x86/kvm/vmx/run_flags.h
-+++ b/arch/x86/kvm/vmx/run_flags.h
-@@ -2,10 +2,12 @@
- #ifndef __KVM_X86_VMX_RUN_FLAGS_H
- #define __KVM_X86_VMX_RUN_FLAGS_H
- 
--#define VMX_RUN_VMRESUME_SHIFT		0
--#define VMX_RUN_SAVE_SPEC_CTRL_SHIFT	1
-+#define VMX_RUN_VMRESUME_SHIFT				0
-+#define VMX_RUN_SAVE_SPEC_CTRL_SHIFT			1
-+#define VMX_RUN_CLEAR_CPU_BUFFERS_FOR_MMIO_SHIFT	2
- 
--#define VMX_RUN_VMRESUME		BIT(VMX_RUN_VMRESUME_SHIFT)
--#define VMX_RUN_SAVE_SPEC_CTRL		BIT(VMX_RUN_SAVE_SPEC_CTRL_SHIFT)
-+#define VMX_RUN_VMRESUME			BIT(VMX_RUN_VMRESUME_SHIFT)
-+#define VMX_RUN_SAVE_SPEC_CTRL			BIT(VMX_RUN_SAVE_SPEC_CTRL_SHIFT)
-+#define VMX_RUN_CLEAR_CPU_BUFFERS_FOR_MMIO	BIT(VMX_RUN_CLEAR_CPU_BUFFERS_FOR_MMIO_SHIFT)
- 
- #endif /* __KVM_X86_VMX_RUN_FLAGS_H */
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index f79604bc0127..27e870d83122 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -74,6 +74,8 @@
- #include "vmx_onhyperv.h"
- #include "posted_intr.h"
- 
-+#include "mmu/spte.h"
-+
- MODULE_AUTHOR("Qumranet");
- MODULE_DESCRIPTION("KVM support for VMX (Intel VT-x) extensions");
- MODULE_LICENSE("GPL");
-@@ -959,6 +961,10 @@ unsigned int __vmx_vcpu_run_flags(struct vcpu_vmx *vmx)
- 	if (!msr_write_intercepted(vmx, MSR_IA32_SPEC_CTRL))
- 		flags |= VMX_RUN_SAVE_SPEC_CTRL;
- 
-+	if (static_branch_unlikely(&mmio_stale_data_clear) &&
-+	    kvm_vcpu_can_access_host_mmio(&vmx->vcpu))
-+		flags |= VMX_RUN_CLEAR_CPU_BUFFERS_FOR_MMIO;
-+
- 	return flags;
- }
- 
-@@ -7282,7 +7288,7 @@ static noinstr void vmx_vcpu_enter_exit(struct kvm_vcpu *vcpu,
- 	if (static_branch_unlikely(&vmx_l1d_should_flush))
- 		vmx_l1d_flush(vcpu);
- 	else if (static_branch_unlikely(&mmio_stale_data_clear) &&
--		 kvm_arch_has_assigned_device(vcpu->kvm))
-+		 (flags & VMX_RUN_CLEAR_CPU_BUFFERS_FOR_MMIO))
- 		mds_clear_cpu_buffers();
- 
- 	vmx_disable_fb_clear(vmx);
+ 	kvm_vfio_update_coherency(dev);
 -- 
 2.49.0.1151.ga128411c76-goog
 
