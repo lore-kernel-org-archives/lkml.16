@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCCEFEC2;
-	Fri, 23 May 2025 16:33:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E77FEC2;
+	Fri, 23 May 2025 16:33:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748017997; cv=none; b=qy/oZMLfB5y6tup+K7msSgkfPVqGz6EhEgdN01CCvWbnZUxRGi8ItaapdmmRRl5QMxmuPe+b5HhZ7OfdS0BMtbeW7zREHZ+4CdsInHK88Mkp3Ff2JN6QKEX7YOkMRhGn/U825o7aZyeCoyi33jM4yTZroJ0YEZxxXxGDfzoafKo=
+	t=1748018032; cv=none; b=M9/MgrtlL3+E+xcbJFI7FeQF8XqnN6qzp2V1JfQjoFSCPn0vkioIp5s/95ikI5u6EzAKTyE2l1fScNs0s0XNBZbt71vP6Ple7Ew8uPbkeE/mHQN/946X1f8O+hA2kW26yM1qsvea8fquLZjGr0XXzaFFD2LUaU07INMI9/Lz6Ic=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748017997; c=relaxed/simple;
-	bh=4zfQnOiULpwXWGPMbg6e4kANc/Y8MGte30pOZkJ8pPU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=exfU4LhlEKamkvVs76YCcooXGjmQY8G4odZTGzdp2sM5mFyqTLrS6lLV/p/OHoRoDDpsMpAqvkXHC1oAjYBMjsB3+RUjcsbaAWhOjIbBcVHSzOvmdBspxsXUoXkmSo70MEYmGM02QBdYrCMXdwGFMkW0uY01eLCdCXzYMenXay0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=egaWM7UZ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748018032; c=relaxed/simple;
+	bh=TUwV5DtK2nuZFfbaXwitecvMLPb7B0LHIHp+CdFEYnM=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=bQMLmoF1cws5oRjjeRSfp9ITOT9mrOxpQvZ9ONLkGUyx7/HCTQovy5LRcoyIooiq8fmnWReHTEnEqb27hbgxuKgZPmT9RjlUm7sAzR0oqogePAVkouk3+cC77gNSoS/z6V99hRra3qi7uRF7bUdmYXGU7Pa77dQt14MpNCasfDk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Tejpb5wF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="egaWM7UZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1AB34C4CEE9;
-	Fri, 23 May 2025 16:33:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Tejpb5wF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9769C4CEE9;
+	Fri, 23 May 2025 16:33:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748017995;
-	bh=4zfQnOiULpwXWGPMbg6e4kANc/Y8MGte30pOZkJ8pPU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=egaWM7UZGPW7OAMUcDPCi3C17nWRS6hiJ+t04Cs1P5Tsl9A2fOHQRjX3tXguokXM3
-	 75wP9+Pt4NU7XQfzlYfnNWO9ptlJrzxUkL6peFBMNYKCJNZiWoQkM8lOyjzW67D0u5
-	 gBwemx9MUP8mrMbZyJTwqpjDnW14Zdnde53tSBbkROWPLQkhoKdm8gXcbC5li1NTMy
-	 KO4I8YfbzfEXKYg3F2ZwWubB2frH6VGJszlu70HmJEgxfDwGXKFUbMoiBaGmRSlOaN
-	 nHQJyDngKvii2nLNqZlLpzEYMguY+FdLNjulhOry5+F6WVs1A6dUvw8zuhgl59u9Vt
-	 ANbyaVPOtDlRw==
-Date: Fri, 23 May 2025 16:33:13 +0000
-From: Wei Liu <wei.liu@kernel.org>
-To: mhklinux@outlook.com
-Cc: haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
-	kys@microsoft.com, linux-kernel@vger.kernel.org,
-	linux-hyperv@vger.kernel.org
-Subject: Re: [PATCH 1/1] Drivers: hv: vmbus: Add comments about races with
- "channels" sysfs dir
-Message-ID: <aDCjSc4w79IuHfD6@liuwe-devbox-ubuntu-v2.tail21d00.ts.net>
-References: <20250514225508.52629-1-mhklinux@outlook.com>
+	s=k20201202; t=1748018031;
+	bh=TUwV5DtK2nuZFfbaXwitecvMLPb7B0LHIHp+CdFEYnM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=Tejpb5wFbSO4TIH9TFf8Fbi0332ZKxLYqrPFS6UV+ejxMl42h2+0TBkILAFJg6uLD
+	 dwGhRoItD1Ci4i/T3yq4hASEzumOtp44FKJCcWK8UGakDeTb2lOmRMeSF8CnRVx8gE
+	 i2YqoLjBDH8A4oI+Ixm31DcN3EbdYDlRkcLgQCbtOVE81g8osAJQn9Kgu8Izis1q3d
+	 PvNtU2ZfI0LUc5ghwWlFdilUqk5fDFLU9WSDqIUAH5FwVWC2dogbH4BBlW1KHnYOzP
+	 pmJE6bKYKtW0QvaUPGcm+eJuFD+9KOyEWt0lKLfI1E2y/AWiuQgVgb9GS5IxtGwjxa
+	 RjkHw34IxJkmQ==
+Date: Fri, 23 May 2025 11:33:50 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Arnd Bergmann <arnd@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Arnd Bergmann <arnd@arndb.de>,
+	Joyce Ooi <joyce.ooi@intel.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	"Jiri Slaby (SUSE)" <jirislaby@kernel.org>,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] pci: altera: remove unused 'node' variable
+Message-ID: <20250523163350.GA1566256@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -44,16 +44,47 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250514225508.52629-1-mhklinux@outlook.com>
+In-Reply-To: <20250521163329.2137973-1-arnd@kernel.org>
 
-On Wed, May 14, 2025 at 03:55:08PM -0700, mhkelley58@gmail.com wrote:
-> From: Michael Kelley <mhklinux@outlook.com>
+On Wed, May 21, 2025 at 06:29:48PM +0200, Arnd Bergmann wrote:
+> From: Arnd Bergmann <arnd@arndb.de>
 > 
-> The VMBus driver code has some inherent races in the creation of the
-> "channels" sysfs subdirectory and its per-channel numbered subdirectories.
-> These races have not generally been recognized or understood. Add some
-> comments to call them out. No code changes.
+> This variable is only used when CONFIG_OF is enabled:
 > 
-> Signed-off-by: Michael Kelley <mhklinux@outlook.com>
+> drivers/pci/controller/pcie-altera.c: In function 'altera_pcie_init_irq_domain':
+> drivers/pci/controller/pcie-altera.c:855:29: error: unused variable 'node' [-Werror=unused-variable]
+>   855 |         struct device_node *node = dev->of_node;
+> 
+> Use dev_fwnode() in place of of_node_to_fwnode() to avoid this.
+> 
+> Fixes: bbc94e6f72f2 ("PCI: Switch to irq_domain_create_linear()")
 
-Applied to hyperv-next-staging. Thanks.
+Deferring this until bbc94e6f72f2 is merged.
+
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ----
+> I checked the other PCI host bridge drivers as well, this is the
+> only one with that problem.
+> ---
+>  drivers/pci/controller/pcie-altera.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/pcie-altera.c b/drivers/pci/controller/pcie-altera.c
+> index 0fc77176a52e..3dbb7adc421c 100644
+> --- a/drivers/pci/controller/pcie-altera.c
+> +++ b/drivers/pci/controller/pcie-altera.c
+> @@ -852,10 +852,9 @@ static void aglx_isr(struct irq_desc *desc)
+>  static int altera_pcie_init_irq_domain(struct altera_pcie *pcie)
+>  {
+>  	struct device *dev = &pcie->pdev->dev;
+> -	struct device_node *node = dev->of_node;
+>  
+>  	/* Setup INTx */
+> -	pcie->irq_domain = irq_domain_create_linear(of_fwnode_handle(node), PCI_NUM_INTX,
+> +	pcie->irq_domain = irq_domain_create_linear(dev_fwnode(dev), PCI_NUM_INTX,
+>  					&intx_domain_ops, pcie);
+>  	if (!pcie->irq_domain) {
+>  		dev_err(dev, "Failed to get a INTx IRQ domain\n");
+> -- 
+> 2.39.5
+> 
