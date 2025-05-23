@@ -1,98 +1,180 @@
-Received: from mail-io1-f50.google.com (mail-io1-f50.google.com [209.85.166.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A72F0221D87;
-	Fri, 23 May 2025 11:37:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE8A922422E;
+	Fri, 23 May 2025 11:37:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748000255; cv=none; b=gqvQ9ywY4UB/PlA9EaDr4hgxUGDK94YzdDIdDkeEc42Z3cwX7KaEurPcCQDKE7Qn9UeKOq7H75r0R6njWljPG6Xfcjdt3XgyfhGVcsSXiY5JxZylqyZNBlhSLQdx80T9yccNfLvNVL7H1HW3mBZHCs1x3ulsYlTBZsAwBq8wbWk=
+	t=1748000253; cv=none; b=Dmg8X4sAIiRxzjxVZ8aCk2fXb3wEC7dRaF4dBJ3rpBVTHVfWiKxVnd4R6GVgZC5V/lSvZPbZ2msdqEeUf+QZYBhq5/9Je8C5gANnH3EB1XnZEnNnN1kHBS1wkrHS8K/7ga4wOFjTsTielTwTRWcvywGg5EPERPNgBvHRrE9Zkvs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748000255; c=relaxed/simple;
-	bh=RPNi1QDrDr0oLkHY3jiUnnyxRMbcBwEqM+TlcWJLhmU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BuuLdVjkHp5HfwuF5kyzvINkAXFz7jdJcRGYX5X15+f0fXTPnw1g/EJVzTbi3cLAVbttLjaad0a89scd5d014aTIG22a8lckr4gB0u/ckY0AikPclrXlx9lMjZMCNYGuKrHY+iEgzp8p/vuElbYB2fleKpVtUZNcw16uBbDiMtE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.166.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-io1-f50.google.com with SMTP id ca18e2360f4ac-85dac9729c3so866195139f.2;
-        Fri, 23 May 2025 04:37:32 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748000250; x=1748605050;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=7wlzvB2Q8r8iVI++Q756y7sEw+0J/OE0zl08HpFQmKI=;
-        b=IFZwEXCBSidXRRD9LqASXnje2ptY/TbQOkgvAe/cUKR9wjcBO7R//JCYxLQjs6m2mI
-         orLVcu+DLa5qWRdxMrWW0xJj4Odgw7AuHVGtdBEXpWfRK1p2krzm71ozd9pfm8/Y0GaD
-         0rkKf4CEXxZ1J9yK/uFlPCXbldK4YrSOfVYSV7xN853zjmLdR4/eH4sNlsnZtU7gFr4y
-         df4InMuR23AhkxvPuDBnD8Ly9VowdvgyPwXixebb8T0eFNwM0DNWxZj81yuw8833lIWO
-         y/y9+CkC12ncZYpgWbwfxxYK0dGj+pvAHUjgjDWhWfVHG+txWoUB2Ob5xnSAhM5l482X
-         1tVQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWzRNUn6oJgsMYUR5PBBkbeDR9Ro3iJQ+LbehagzEzyuVWbKXYliGgS8nLnQXx+g8anitvYwER1SeZ0mng=@vger.kernel.org, AJvYcCXu8E7zVBpTz6nHQGa3MrmTbxMswPgzp7Mqq/MTJ3FwzaV7JZHDwgzxwEDhFVrqA2bZppaYo1XxALu4bwQxH/5rFRc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw1xSX+/2GNRZOTw4V0sLZ/tpIxkfbGZ7CkANp/7S2xZsgD1iOu
-	K/MNsGJr8R1mYE5BWuVAEJHcnxhYdTu0mJF8Qn5AVxK0rvi5odI3YBrcpWNE1O9f
-X-Gm-Gg: ASbGncu+oLVmUeR+L59Zcnvz5BPYyBOs63qsPpmkaatix+93wdpboX3QmuXGjQHBwSB
-	zztLBfX5ose2MhkFALvMEFs5im59YBV46yyiOnJOsg8TXI0ZYP5ejM2jP+9gRsNWFO0vQC57GI3
-	uApmFqGMz/TnA5qCBNgrnuto4jyDiNkvInS9o23KkP8vJUWEQuagxJ2xD1ECyDmNLXiyCbKv5oj
-	1AdcmQgT0K4G0gjG6kmBLQr6u7+irczPgQEu3DxnAYcySkNlKBXT2YzehFQWhkEa7ex1z/t6ZUN
-	QIHLX1cXX1/sVe8a2thg+ZeNEf4RzeLrhlkCumcTmA3Pz700gHUG09ZO1fwZezx4FFI+k9U0S12
-	m3ttRQqrcur7m1SmAbQ==
-X-Google-Smtp-Source: AGHT+IH2uEsHE/YAObvEt/LSD6+nx4WMqZ1snpyvAr5Jwsf7Iwj2NQBWE5VLPgWfDFloVuIKNExfuQ==
-X-Received: by 2002:a05:6602:4186:b0:85c:c7f9:9a1c with SMTP id ca18e2360f4ac-86a23283c78mr3814209339f.13.1748000250611;
-        Fri, 23 May 2025 04:37:30 -0700 (PDT)
-Received: from mail-il1-f175.google.com (mail-il1-f175.google.com. [209.85.166.175])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4fbcc48c5cdsm3585753173.84.2025.05.23.04.37.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 23 May 2025 04:37:30 -0700 (PDT)
-Received: by mail-il1-f175.google.com with SMTP id e9e14a558f8ab-3dc6dbb3d58so45312415ab.3;
-        Fri, 23 May 2025 04:37:30 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCU5bT7uPu2u449LTaor+TXGV+xQnMEd4p/hQxeo9erZgTmx3mlC4k1g5Y9mNly4tW0WL6qZFhgGgSuI0kAs377D6y0=@vger.kernel.org, AJvYcCVfwBaPgjZQrKPv6q66Bv9eaS5wHYqGDvl0ueD/rR0oyzk16Sow40A7sugEq9nlohIP141m31UV7RBnU58=@vger.kernel.org
-X-Received: by 2002:a05:6102:370a:b0:4c1:9b88:5c30 with SMTP id
- ada2fe7eead31-4dfa6c62d03mr28083060137.19.1748000239515; Fri, 23 May 2025
- 04:37:19 -0700 (PDT)
+	s=arc-20240116; t=1748000253; c=relaxed/simple;
+	bh=ypW0g4GCfFC5qMTXKecIvDxCY9VbAXYdDGLlPMYxsgc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ooR741jxX8VTxhEy/6ecKBV0hceggNQB+Y71sGJ6vfd+7G6+NSBeHP5XUd9JHrEDa5WsvMkVEY+6stcgIbGWTqy4TrBqD53B2XXBO6pJMZJDjAxKvnEWYvVVWEaena5ZRd/aZX15PpabNXWCgBOd8X/Mpc4XgBmornyh/jvh/YQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XYao0zL0; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XYao0zL0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2AC0C4CEE9;
+	Fri, 23 May 2025 11:37:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748000253;
+	bh=ypW0g4GCfFC5qMTXKecIvDxCY9VbAXYdDGLlPMYxsgc=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=XYao0zL0eGBsy4gYEv5M2EQ+0PTussn2jUP/Ysmyx5cjTZ0PpRweg8hxna9lH0c10
+	 IdNRWUqURMzyDAe7mYG1D2J1jdtHD0+3zAmpXVR/r9nBy6sGDmGRJso/eb1D5Ifu6Q
+	 Jg5MVeL7zJGsuBDSiNqR0FKmcv8DW1kUxWpdsK5umQ55Fs0rRDa4FlHeaXnqjbzVFc
+	 jKsZFexrumw/2Wg6r1N8Td17V0g29a3WoOxubz4HCIF7AZRiV/pe+egm+P2B3sM1Sy
+	 6mY6e799d2ULqjIgbkHkl9FlgZrdZ14npFho89FgmW8xk7ePYOIjYfbjluX+i2vyPx
+	 zCd1Z7i/6KTWg==
+Message-ID: <e5a09a55-844b-4045-9459-e61abda255f3@kernel.org>
+Date: Fri, 23 May 2025 13:37:28 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250513125858.251064-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20250513125858.251064-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Fri, 23 May 2025 13:37:06 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdWLYuwVU=9FnXoYYXzA+XYoSc89MBsTzAyZQAGF2cVvFA@mail.gmail.com>
-X-Gm-Features: AX0GCFsYAsYC7rTS4r0G9iHcLPTnjlp95PDD1ysnF-SrRgCKFmwYpC3XJI0oK_c
-Message-ID: <CAMuHMdWLYuwVU=9FnXoYYXzA+XYoSc89MBsTzAyZQAGF2cVvFA@mail.gmail.com>
-Subject: Re: [PATCH] arm64: defconfig: Enable RZ/V2H(P) USB2 PHY controller
- reset driver
-To: Prabhakar <prabhakar.csengg@gmail.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, linux-arm-kernel@lists.infradead.org, 
-	linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Biju Das <biju.das.jz@bp.renesas.com>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/8] dt-bindings: clock: Document Loongson 2K0300 clock
+ controller
+To: Yao Zi <ziyao@disroot.org>, Michael Turquette <mturquette@baylibre.com>,
+ Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
+ WANG Xuerui <kernel@xen0n.name>, Yinbo Zhu <zhuyinbo@loongson.cn>
+Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+ Mingcong Bai <jeffbai@aosc.io>, Kexy Biscuit <kexybiscuit@aosc.io>
+References: <20250523104552.32742-1-ziyao@disroot.org>
+ <20250523104552.32742-2-ziyao@disroot.org>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <20250523104552.32742-2-ziyao@disroot.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, 13 May 2025 at 14:59, Prabhakar <prabhakar.csengg@gmail.com> wrote:
-> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->
-> Enable the `CONFIG_RESET_RZV2H_USB2PHY` option in the arm64 defconfig to
-> support the USB2 PHY controller reset driver on the Renesas RZ/V2H(P) SoC.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+On 23/05/2025 12:45, Yao Zi wrote:
+> +maintainers:
+> +  - Yao Zi <ziyao@disroot.org>
+> +
+> +description: |
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in renesas-devel for v6.17.
+Do not need '|' unless you need to preserve formatting.
 
-Gr{oetje,eeting}s,
+> +  The Loongson 2K0300 clock controller generates various clocks for SoC
+> +  peripherals. See include/dt-bindings/clock/loongson,ls2k0300-clk.h for
+> +  valid clock IDs.
+> +
+> +properties:
+> +  compatible:
+> +    const: loongson,ls2k0300-clk
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    items:
+> +      - description: External 120MHz reference clock
+> +
+> +  clock-names:
+> +    items:
+> +      - const: ref_120m
 
-                        Geert
+Just ref or drop the clock-names completely.
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+> +
+> +  '#clock-cells':
+> +    const: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +  - clock-names
+> +  - '#clock-cells'
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    clk: clock-controller@16000400 {
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Drop unused label
+
+> +        compatible = "loongson,ls2k0300-clk";
+> +        reg = <0x16000400 0x100>;
+> +        clocks = <&ref_120m>;
+> +        clock-names = "ref_120m";
+> +        #clock-cells = <1>;
+
+
+With above changes:
+
+
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+
+<form letter>
+This is an automated instruction, just in case, because many review tags
+are being ignored. If you know the process, you can skip it (please do
+not feel offended by me posting it here - no bad intentions intended).
+If you do not know the process, here is a short explanation:
+
+Please add Acked-by/Reviewed-by/Tested-by tags when posting new versions
+of patchset, under or above your Signed-off-by tag, unless patch changed
+significantly (e.g. new properties added to the DT bindings). Tag is
+"received", when provided in a message replied to you on the mailing
+list. Tools like b4 can help here. However, there's no need to repost
+patches *only* to add the tags. The upstream maintainer will do that for
+tags received on the version they apply.
+
+Full context and explanation:
+https://elixir.bootlin.com/linux/v6.12-rc3/source/Documentation/process/submitting-patches.rst#L577
+</form letter>
+
+
+
+Best regards,
+Krzysztof
