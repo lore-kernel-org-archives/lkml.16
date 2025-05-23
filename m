@@ -1,147 +1,103 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75AA018E1A
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 16:06:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3F5A2DCC07;
+	Fri, 23 May 2025 16:07:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748016365; cv=none; b=AHTQTiPsCIfA9yPNH/HGvI4ViDwTm8H4JbB7xES6RSV1L1W37wp8L5gCdlEIkLcN8TL9D1Zbnsbq/na3lMF63ZPGw6B2gogzfM9hTQEw1chGMt85srZQMZjLmBAhOqLPEY+sZLTYZUIDjOOCr9hSUL+HK2zastMan+/vMke7fqw=
+	t=1748016421; cv=none; b=CdcxjopGP9gD3QhY8Kbz5M7fcUaBk7YEIPjVgvuwH+N/Bm0YbmqmJ9L9kYib2+HIdsp+g/l7nC7QdOWH80isbmItWzPSddTKM2iZUb51tYjLMHoIWe6faLGWjkTI6xWyqArUVx7VpjuROcu9e13DbFcJZ9eubm7XX7htbNMKI7M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748016365; c=relaxed/simple;
-	bh=jVrjFU+9I/Crz5h30CzwkjrvZVdhY6m4bkGyhy25dtg=;
+	s=arc-20240116; t=1748016421; c=relaxed/simple;
+	bh=U5OXlf+RyqrwgHycF2mts31Fb7vitn7wTynxz3ykuCU=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=BqndvSki+ruKzAPPrdv1EbZ2gkWa30/uef87cvrz8CLVCAX81pSlpsvXtuzmc3olF1crMYxMe+D3M0rUkyWay691psusILXGQbOIUSj+G/1Py+0KDvo4TUWE7YdHMvGniftnidYcFHF2etTTnrJNAbJrzLwradPut3J6C/Yd5Es=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=gaqZG0Yf; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 Content-Disposition:In-Reply-To; b=Y1BWurFjD4qHmghYkQH8E63eZ6TE8xx2Xfrd+aXFOSf7IS9uiu57Zjc36F/vMrsil1oULaVkrAgLq+MqZdmQJ5M25NAPYYIyAMiA836AI1x917a2dxvF7UgUyQKzXM2B6FPnId9DoCMQhc6YpdqLykvfDpPVZspkbsgRXu/tf+8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HJ4BTRSD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gaqZG0Yf"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-43cec5cd73bso65129815e9.3
-        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 09:06:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1748016362; x=1748621162; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=M3PqxfXynfBYuWj+aBPHCbylQDdPJlTEN/Ktqk3XEWc=;
-        b=gaqZG0YfQVTtXky9B6SERccgUHkTrRyRC5xRZwI33eRe5vJuE2mwzX6ubbyY8Ph2pU
-         4Ij/TRES8tMSqZMZtPgNzm/DygatYWqNQBSr+3mVUqooHobm+Fa8c00V+1OsfjKwuU4d
-         PzB623DktQA2teDISnhvbD2fSNHvHHZSxSXSPBUNDPbfE9I3WymojqFiuGksBaFyQmFx
-         q3QiM0fot+h200BCPja6MnyfgfEJ/VjI/qoD65PzMjQEme2BxyxbbD5z6V5EBjJpQe3m
-         aCRyEa+ay/jnd7pc0Xq3RczjKxUmv0YIE+UIKSrY2D3V8wBMcj5FlR1kjkJkBrQFF/3q
-         xeUw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748016362; x=1748621162;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=M3PqxfXynfBYuWj+aBPHCbylQDdPJlTEN/Ktqk3XEWc=;
-        b=qHem27cStrH3A0Js26m7eZJX0fB0WKD4PE6eb/r0HtXc8yDVplR5eyaf9QWZKYwevz
-         xBMB65q9u7ZHpKZwJYuxnb78eJl0nHmRcejq9Mx5kzQrj76leiDDrTUu69HMos0Uue64
-         56XNTGSG3CqL931fIOyUrLYMhqpxhlwpAic4AYM7SJr+3Teu/+PNLnjgit5gucHyFvnI
-         Abpat1GvC6cco244zsUgttKXZesq4sW6KCZ88aOFt5xURAroa5N0tzwQZqnZ7sI77/sj
-         MxDff5h+kTZJC3q/YkUgf7yd3I3esLiRnw2Gvgf6BbrKAKoZnppHbHlvDKJsjmwQY3oZ
-         eeBA==
-X-Forwarded-Encrypted: i=1; AJvYcCVr29W5noxsQRy7z0ce6BuxOFrokddcBliDp1iY10y66XmhJTkw9u8vzNGnpiN7XdOfwEv5Zk0w9kHZ/Eg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyud2k52eV8jfBnrj5z694Sa/caQMhD3JLaZ89MCQkDt2oYChsL
-	YXrPwABpvFN9LFZnt8jbYptVHsnaZoQmCLUdmENanKeiDPbzxcNEgFGeea2Ak5MtiCE=
-X-Gm-Gg: ASbGnctvGoATt8ok5+GkbXRW5IhGPL9VkuevycYhyLuNwrO9Tknb6245m1c0cMnPN1k
-	htjA/eAUk/DM7qF9tD10e5ogklzRaVcDmafdgGDrso2vbi/xfo5sa8mr6I1yW2blzhSshHt+G2c
-	91/XmXiFXPEznWUIaz30savq4SH1kT60lNS8iIi4H9gh0CeAoPuoyb11TC1Y543WsXaTTSQELq3
-	2PpxfEJNt2UddkGtfUUhVl3xqRS2Bz/kOtkejJs0cewLJv6UAlkXOfMlCOe1fre8C/mSOZarndY
-	0mMKYQ3oPF8rMDMWZSErZZSa6jLWWhDhHt85i5B/GsJy1ONBGcrS3hxc
-X-Google-Smtp-Source: AGHT+IFJ5XQsT7wDZaHxzFgw6dPrlGsnDhIqeTPzVlX0Fk5sLByi/O7PehwjP3rV11vD6uhtm2P9yg==
-X-Received: by 2002:a05:600c:548c:b0:43d:fa58:700e with SMTP id 5b1f17b1804b1-442fd6759c0mr247232745e9.33.1748016361628;
-        Fri, 23 May 2025 09:06:01 -0700 (PDT)
-Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-447f73d3edcsm150813565e9.20.2025.05.23.09.06.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 May 2025 09:06:01 -0700 (PDT)
-Date: Fri, 23 May 2025 19:05:58 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Arunpravin Paneer Selvam <Arunpravin.PaneerSelvam@amd.com>
-Cc: Alex Deucher <alexander.deucher@amd.com>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Arvind Yadav <Arvind.Yadav@amd.com>,
-	Shashank Sharma <shashank.sharma@amd.com>,
-	amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: [PATCH] drm/amdgpu: Fix integer overflow issues in
- amdgpu_userq_fence.c
-Message-ID: <aDCc5kawU4cWj-Cx@stanley.mountain>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HJ4BTRSD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CDD81C4CEEB;
+	Fri, 23 May 2025 16:06:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748016420;
+	bh=U5OXlf+RyqrwgHycF2mts31Fb7vitn7wTynxz3ykuCU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=HJ4BTRSD/0E+TS5UteGvWOxf6R8OzJOt1+4nzoXPvNCXRD/8S/RNGcPwi58jotavi
+	 +4tTV8FqgSGUtL4GoCwxkaJlgejTdf4aMBX+IvZvWOvMGbFhSXdQDkVOjBmkXvR+S0
+	 A9qINpvL88R5Q+bWhPSmHHFrdVJ+9gSC/jPZH+EcX4uP/DMIfwsHCfFm9iq1abQET6
+	 gC/+8VnoGgTxoCZucgiciaTMBy20nqlu9TLHLQhvg72dAthv2ZWiMbew4qxHxAyn8+
+	 SzSxhptlarY55XjN3O70l0VVUIkvlIvZApk9gVoyDSbZldmkqtr6C0gwS5Jw4QzCt1
+	 chp6pa8W4pWGQ==
+Date: Fri, 23 May 2025 11:06:58 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>
+Cc: linux-pci@vger.kernel.org, Jon Pan-Doh <pandoh@google.com>,
+	Karolina Stolarek <karolina.stolarek@oracle.com>,
+	Weinan Liu <wnliu@google.com>,
+	Martin Petersen <martin.petersen@oracle.com>,
+	Ben Fuller <ben.fuller@oracle.com>,
+	Drew Walton <drewwalton@microsoft.com>,
+	Anil Agrawal <anilagrawal@meta.com>,
+	Tony Luck <tony.luck@intel.com>,
+	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
+	Lukas Wunner <lukas@wunner.de>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Sargun Dhillon <sargun@meta.com>,
+	"Paul E . McKenney" <paulmck@kernel.org>,
+	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+	Oliver O'Halloran <oohall@gmail.com>,
+	Kai-Heng Feng <kaihengf@nvidia.com>,
+	Keith Busch <kbusch@kernel.org>, Robert Richter <rrichter@amd.com>,
+	Terry Bowman <terry.bowman@amd.com>,
+	Shiju Jose <shiju.jose@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>, linux-kernel@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH v8 18/20] PCI/AER: Ratelimit correctable and non-fatal
+ error logging
+Message-ID: <20250523160658.GA1559366@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-X-Mailer: git-send-email haha only kidding
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <eb9bca3e-cb0a-41e9-bf7f-0889eb3f3c47@linux.intel.com>
 
-This patch only affects 32bit systems.  There are several integer
-overflows bugs here but only the "sizeof(u32) * num_syncobj"
-multiplication is a problem at runtime.  (The last lines of this patch).
+On Thu, May 22, 2025 at 04:56:56PM -0700, Sathyanarayanan Kuppuswamy wrote:
+> On 5/22/25 4:21 PM, Bjorn Helgaas wrote:
+> > From: Jon Pan-Doh <pandoh@google.com>
+> > 
+> > Spammy devices can flood kernel logs with AER errors and slow/stall
+> > execution. Add per-device ratelimits for AER correctable and non-fatal
+> > uncorrectable errors that use the kernel defaults (10 per 5s).  Logging of
+> > fatal errors is not ratelimited.
 
-These variables are u32 variables that come from the user.  The issue
-is the multiplications can overflow leading to us allocating a smaller
-buffer than intended.  For the first couple integer overflows, the
-syncobj_handles = memdup_user() allocation is immediately followed by
-a kmalloc_array():
+> > +static int aer_ratelimit(struct pci_dev *dev, unsigned int severity)
+> > +{
+> > +	struct ratelimit_state *ratelimit;
+> > +
+> > +	if (severity == AER_FATAL)
+> > +		return 1;	/* AER_FATAL not ratelimited */
+> > +
+> > +	if (severity == AER_CORRECTABLE)
+> > +		ratelimit = &dev->aer_info->correctable_ratelimit;
+> > +	else
+> > +		ratelimit = &dev->aer_info->nonfatal_ratelimit;
+> > +
+> > +	return __ratelimit(ratelimit);
+> > +}
+> > +
+> 
+> Why not combine severity checks? May be something like below:
+> 
+>     switch (severity) {
+>     case AER_NONFATAL:
+>         return __ratelimit(&dev->aer_info->nonfatal_ratelimit);
+>     case AER_CORRECTABLE:
+>         return __ratelimit(&dev->aer_info->correctable_ratelimit);
+>     default:
+>         return 1; /* Don't rate-limit fatal errors */
+>     }
 
-	syncobj = kmalloc_array(num_syncobj_handles, sizeof(*syncobj), GFP_KERNEL);
-
-In that situation the kmalloc_array() works as a bounds check and we
-haven't accessed the syncobj_handlesp[] array yet so the integer overflow
-is harmless.
-
-But the "num_syncobj" multiplication doesn't have that and the integer
-overflow could lead to an out of bounds access.
-
-Fixes: a292fdecd728 ("drm/amdgpu: Implement userqueue signal/wait IOCTL")
-Cc: stable@vger.kernel.org
-Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
----
- drivers/gpu/drm/amd/amdgpu/amdgpu_userq_fence.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_userq_fence.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_userq_fence.c
-index 029cb24c28b3..bd79f105d77f 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_userq_fence.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_userq_fence.c
-@@ -430,7 +430,7 @@ int amdgpu_userq_signal_ioctl(struct drm_device *dev, void *data,
- 
- 	num_syncobj_handles = args->num_syncobj_handles;
- 	syncobj_handles = memdup_user(u64_to_user_ptr(args->syncobj_handles),
--				      sizeof(u32) * num_syncobj_handles);
-+				      size_mul(sizeof(u32), num_syncobj_handles));
- 	if (IS_ERR(syncobj_handles))
- 		return PTR_ERR(syncobj_handles);
- 
-@@ -612,13 +612,13 @@ int amdgpu_userq_wait_ioctl(struct drm_device *dev, void *data,
- 
- 	num_read_bo_handles = wait_info->num_bo_read_handles;
- 	bo_handles_read = memdup_user(u64_to_user_ptr(wait_info->bo_read_handles),
--				      sizeof(u32) * num_read_bo_handles);
-+				      size_mul(sizeof(u32), num_read_bo_handles));
- 	if (IS_ERR(bo_handles_read))
- 		return PTR_ERR(bo_handles_read);
- 
- 	num_write_bo_handles = wait_info->num_bo_write_handles;
- 	bo_handles_write = memdup_user(u64_to_user_ptr(wait_info->bo_write_handles),
--				       sizeof(u32) * num_write_bo_handles);
-+				       size_mul(sizeof(u32), num_write_bo_handles));
- 	if (IS_ERR(bo_handles_write)) {
- 		r = PTR_ERR(bo_handles_write);
- 		goto free_bo_handles_read;
-@@ -626,7 +626,7 @@ int amdgpu_userq_wait_ioctl(struct drm_device *dev, void *data,
- 
- 	num_syncobj = wait_info->num_syncobj_handles;
- 	syncobj_handles = memdup_user(u64_to_user_ptr(wait_info->syncobj_handles),
--				      sizeof(u32) * num_syncobj);
-+				      size_mul(sizeof(u32), num_syncobj));
- 	if (IS_ERR(syncobj_handles)) {
- 		r = PTR_ERR(syncobj_handles);
- 		goto free_bo_handles_write;
--- 
-2.47.2
-
+Beautiful, adopted, thank you!
