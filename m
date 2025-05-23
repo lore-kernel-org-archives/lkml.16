@@ -1,72 +1,142 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-171.mta1.migadu.com (out-171.mta1.migadu.com [95.215.58.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3B1F1F3B87;
-	Fri, 23 May 2025 21:28:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D41A1F3B87
+	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 21:29:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748035690; cv=none; b=IcutdnHMBduvepHJLL65KoGctjCSHDOKnoslacLI/YtN3VLfByv1umvaN1AFBKHCK+3DoF8ky48GNH1cNbGasRDxFOM6SuLNcEWZNCeW65KfzHKXhIKPEK/mBF2PSa1IRpLVS/v3ZrHyxafe9/utoFvydCMSZ243t0y/HKQBNIA=
+	t=1748035793; cv=none; b=bdEO/pzSe9KSawD405BSaTJBzDk95q7F5+W69sKdpsz2Lq5AZUty+9B5jLlOsCKHLMOioGbgiCVj8P992Kv4lTHAvzwjVmrHnO3150hRkjcLcR86swrEM9e3NxJ4Ymo6StrAT1dHwOGbk2cK4RhuMGpfz7wk82dKTsGyCTh7XwU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748035690; c=relaxed/simple;
-	bh=USlj8qHFdcuihLb7PKYsyoiTFuu/IQ7ZLoTDyKwO35E=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=bRxE1+lB5EvFUK/dNBi8owu/pH+XKH9nIlh5BYt2CI/zZyuXQXeTptXMokDfms0LmhJXaJufGjXr+I0FmGE0SzLlncqOA7auurh3kDH2KjPhX6IJp77X6Jj8zBjECY5z5y5oLtOI2STP5dTxOBt34Twk3Zf6XmfMXEaKoZoWnC0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA480C4CEE9;
-	Fri, 23 May 2025 21:28:08 +0000 (UTC)
-Date: Fri, 23 May 2025 17:28:57 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/2] tracing: ring_buffer: Rewind persistent ring
- buffer when reboot
-Message-ID: <20250523172857.02ab4a75@gandalf.local.home>
-In-Reply-To: <20250523165425.0275c9a1@gandalf.local.home>
-References: <174792927500.496143.10668210464102033012.stgit@mhiramat.tok.corp.google.com>
-	<174792928413.496143.17979267710069360561.stgit@mhiramat.tok.corp.google.com>
-	<20250523165425.0275c9a1@gandalf.local.home>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1748035793; c=relaxed/simple;
+	bh=lJ5zSiF4j5yND5YdgyhzUPswF8T6nSe0Wmp93OX0+8c=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=pnqKKuipzGfK20/BZLhTdfYZpx6+MZEEgprtSAQmH06O0vdshobwhs+7fb8QYXLeADwE/d5hPfWv238flSorTA8mrD260mgxq51ApzGjFJ6ep3KcNNqwjK2Vfc6cB+LHcP+qiPFVxfJyUZT3lDcObVauUNTWEJ28f4FxWFp9LFE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kuruczgy.com; spf=pass smtp.mailfrom=kuruczgy.com; dkim=pass (1024-bit key) header.d=kuruczgy.com header.i=@kuruczgy.com header.b=h15mx+PW; arc=none smtp.client-ip=95.215.58.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kuruczgy.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kuruczgy.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=kuruczgy.com header.i=@kuruczgy.com header.b="h15mx+PW"
+Message-ID: <db0e40b6-22f3-46aa-b35d-7a8729370ddf@kuruczgy.com>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kuruczgy.com;
+	s=default; t=1748035788;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=4PqGEGzZ/UWkkbwLFFz4q788oyBfBlkNqJFmpYxsCts=;
+	b=h15mx+PW2loABxmZdtwGKR+muslpE1BVAm8saqAqGA6Z1A9B3fcHmagAGsgW3ia3MmiDNW
+	gycCXK08S3kipGXZ1mSMi7lzWcUSyfihn7JxC0VcT3CpFNvo5I+OxWLcKv0Nu+pTCjAU9P
+	sK+l7Y3V4o3qIXhY0rnGwrcgMcajA9c=
+Date: Fri, 23 May 2025 23:29:41 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH 5/5] power: supply: qcom-battmgr: Add charge control
+ support
+To: fenglin.wu@oss.qualcomm.com, Sebastian Reichel <sre@kernel.org>,
+ Bjorn Andersson <andersson@kernel.org>
+Cc: Subbaraman Narayanamurthy <subbaraman.narayanamurthy@oss.qualcomm.com>,
+ David Collins <david.collins@oss.qualcomm.com>, linux-pm@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ kernel@oss.qualcomm.com
+References: <20250523-qcom_battmgr_update-v1-0-2bb6d4e0a56e@oss.qualcomm.com>
+ <20250523-qcom_battmgr_update-v1-5-2bb6d4e0a56e@oss.qualcomm.com>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: =?UTF-8?Q?Gy=C3=B6rgy_Kurucz?= <me@kuruczgy.com>
+In-Reply-To: <20250523-qcom_battmgr_update-v1-5-2bb6d4e0a56e@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Fri, 23 May 2025 16:54:25 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+Hi!
 
-> I think we also need this:
-> 
-> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-> index 7d837963dd1e..456efebc396a 100644
-> --- a/kernel/trace/ring_buffer.c
-> +++ b/kernel/trace/ring_buffer.c
-> @@ -3638,6 +3638,9 @@ rb_move_tail(struct ring_buffer_per_cpu *cpu_buffer,
->  
->  	rb_reset_tail(cpu_buffer, tail, info);
->  
-> +	/* The new page should have zero committed */
-> +	rb_init_page(next_page->page);
+> +static int qcom_battmgr_set_charge_control(struct qcom_battmgr *battmgr,
+> +					   u32 target_soc, u32 delta_soc)
+> +{
+> +	struct qcom_battmgr_charge_ctrl_request request = {
+> +		.hdr.owner = cpu_to_le32(PMIC_GLINK_OWNER_BATTMGR),
+> +		.hdr.type = cpu_to_le32(PMIC_GLINK_REQ_RESP),
+> +		.hdr.opcode = cpu_to_le32(BATTMGR_CHG_CTRL_LIMIT_EN),
+> +		.enable = cpu_to_le32(1),
+> +		.target_soc = cpu_to_le32(target_soc),
+> +		.delta_soc = cpu_to_le32(delta_soc),
+> +	};
 > +
->  	/* Commit what we have for now. */
->  	rb_end_commit(cpu_buffer);
->  	/* rb_end_commit() decs committing */
+> +	return qcom_battmgr_request(battmgr, &request, sizeof(request));
+> +}
+> +
+> +static int qcom_battmgr_set_charge_start_threshold(struct qcom_battmgr *battmgr, int soc)
+> +{
+> +	u32 target_soc, delta_soc;
+> +	int ret;
+> +
+> +	if (soc < CHARGE_CTRL_START_THR_MIN ||
+> +			soc > CHARGE_CTRL_START_THR_MAX) {
+> +		dev_err(battmgr->dev, "charge control start threshold exceed range: [%u - %u]\n",
+> +				CHARGE_CTRL_START_THR_MIN, CHARGE_CTRL_START_THR_MAX);
+> +		return -EINVAL;
+> +	}
+> +
+> +	/*
+> +	 * If the new start threshold is larger than the old end threshold,
+> +	 * move the end threshold one step (DELTA_SOC) after the new start
+> +	 * threshold.
+> +	 */
+> +	if (soc > battmgr->info.charge_ctrl_end) {
+> +		target_soc = soc + CHARGE_CTRL_DELTA_SOC;
+> +		target_soc = min_t(u32, target_soc, CHARGE_CTRL_END_THR_MAX);
+> +		delta_soc = target_soc - soc;
+> +		delta_soc = min_t(u32, delta_soc, CHARGE_CTRL_DELTA_SOC);
+> +	} else {
+> +		target_soc =  battmgr->info.charge_ctrl_end;
+> +		delta_soc = battmgr->info.charge_ctrl_end - soc;
+> +	}
+> +
+> +	mutex_lock(&battmgr->lock);
+> +	ret = qcom_battmgr_set_charge_control(battmgr, target_soc, delta_soc);
+> +	mutex_unlock(&battmgr->lock);
+> +	if (!ret) {
+> +		battmgr->info.charge_ctrl_start = soc;
+> +		battmgr->info.charge_ctrl_end = target_soc;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int qcom_battmgr_set_charge_end_threshold(struct qcom_battmgr *battmgr, int soc)
+> +{
+> +	u32 delta_soc = CHARGE_CTRL_DELTA_SOC;
+> +	int ret;
+> +
+> +	if (soc < CHARGE_CTRL_END_THR_MIN ||
+> +			soc > CHARGE_CTRL_END_THR_MAX) {
+> +		dev_err(battmgr->dev, "charge control end threshold exceed range: [%u - %u]\n",
+> +				CHARGE_CTRL_END_THR_MIN, CHARGE_CTRL_END_THR_MAX);
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (battmgr->info.charge_ctrl_start && soc > battmgr->info.charge_ctrl_start)
+> +		delta_soc = soc - battmgr->info.charge_ctrl_start;
+> +
+> +	mutex_lock(&battmgr->lock);
+> +	ret = qcom_battmgr_set_charge_control(battmgr, soc, delta_soc);
+> +	mutex_unlock(&battmgr->lock);
+> +	if (!ret) {
+> +		battmgr->info.charge_ctrl_start = soc - delta_soc;
+> +		battmgr->info.charge_ctrl_end = soc;
+> +	}
+> +
+> +	return 0;
+> +}
 
-No we don't need it ;-)
+These function names sound quite generic, but AFAIU this patch is only 
+adding charge control support for the SM8550. Is sc8280xp and x1e80100 
+also expected to be supported using the same 
+qcom_battmgr_charge_ctrl_request format?
 
-I'm looking deeper into the code and we have this:
-
-		/*
-		 * No need to worry about races with clearing out the commit.
-		 * it only can increment when a commit takes place. But that
-		 * only happens in the outer most nested commit.
-		 */
-		local_set(&next_page->page->commit, 0);
-
-When the tail page gets moved.
-
--- Steve
+Thanks,
+György
