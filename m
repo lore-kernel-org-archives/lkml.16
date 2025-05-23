@@ -1,49 +1,98 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF208212FB7;
-	Fri, 23 May 2025 08:42:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6BBA153BF0
+	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 08:47:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747989724; cv=none; b=gN0DW6pftVeMsMqZd//CP7AYk1AjXdXXa9kf0xAJrlabx5/PPsXwJF6MgPdiT0NYpv/p4jlSfVpZM+PqKmdCU1zZsAZo3UkNYsGMJMawaytKSq5ssGZyeMjfEHE+KcyeMZmStJy72FVqkxcOUVXsjNRYktOC9YkN0d4dumhnokI=
+	t=1747990025; cv=none; b=mDri7TcG4KnrIAoqSBsIRUejUQY0MoFQ56l9DdC4VWy681UtW1s/O9iaV+ZRuLSpUmY/E4Y5v+GuNpirPI7gdR488PrWEKQDQyekDY90CSeAiCGJu4k82c+eUC01TyQ0pINGEulcAzntAM3FeU+rRRP2ct4l/Zpv+Bvy40J2WH0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747989724; c=relaxed/simple;
-	bh=Ge0vUo3iweL/SBw+DVpHfGAAJGT74IYcsdhrQ6AoAiU=;
+	s=arc-20240116; t=1747990025; c=relaxed/simple;
+	bh=2vECnlVMKvbz1Hpbw4+NHpo2EGbe+uyUyROWguNpYQ8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lxyM3w8KwkuT++ve6mWxRWyZVBRel5yJVi+QzVRkybxnVL/QXCICSWzzNcZfxhoEaDzOdHsGKqBTZOgxBUu0jbrfomHRwlg8hGkWPl0G1TBT6e0U1q9B+kqjnNejDiCQzJdyJhlFc5iOSXVyyHpdpl1XOjK7kuVwi9SMCPslCiY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uh5nX+iF; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=Hlg+hjtkwGCDpXrUMaGJZBBbNX8EqImvmjk/U4yRJBuomBmc4AUBo873nwaAUhjO/YChsQdCtWtK46AWG/1Xso9krePp6OQRDkBqvPsVTuQF/Xn1wRhJ0A0af0WcbKdB6Rwk32kAc05zhRILG3YCjNL3gZv7+ZReMcqdFUayrWY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=u76QZsxA; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Uk3keI+g; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=u76QZsxA; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Uk3keI+g; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uh5nX+iF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B224AC4CEE9;
-	Fri, 23 May 2025 08:42:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747989724;
-	bh=Ge0vUo3iweL/SBw+DVpHfGAAJGT74IYcsdhrQ6AoAiU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=uh5nX+iFF8tXYLcWdaKY9DPHl8AVO2/UA8qeqouKj7CJnkR1Mw3rpwq/GkAfii9SP
-	 vqvlS2K/gjAKP8xOKyAyVZFV1DIDzlNuo4yoPs0i/0cpwcHqIPRgzqLMEDJ/MXg/By
-	 BFL2fO0LDayKZFB4/is+Zh85zDpOsFUZWleAXwk28dKOrm1c3F33wXNEJC3Uto+R0L
-	 W4FF0Msy/4PhuoXr6r8GLv7G6E9Hkgv5UaqV9Mj1kt6VXZTiKdjO9Q1LGOFBsem+EB
-	 CO9mLOag9PgLEsT8mJBdETDdNamZkUSt+nSrMyqMlG85L3gfbni8XAVRYBDDtkwkDf
-	 4SyRTvEV4NqVQ==
-Date: Fri, 23 May 2025 10:42:01 +0200
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Stephan Gerhold <stephan.gerhold@linaro.org>
-Cc: Rob Herring <robh@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
-	Jassi Brar <jassisinghbrar@gmail.com>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Michael Turquette <mturquette@baylibre.com>, 
-	Stephen Boyd <sboyd@kernel.org>, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-clk@vger.kernel.org, Georgi Djakov <djakov@kernel.org>, 
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: Re: [PATCH 1/4] dt-bindings: mailbox: qcom,apcs: Add separate node
- for clock-controller
-Message-ID: <20250523-curvy-ubiquitous-cicada-eac1a1@kuoka>
-References: <20250506-qcom-apcs-mailbox-cc-v1-0-b54dddb150a5@linaro.org>
- <20250506-qcom-apcs-mailbox-cc-v1-1-b54dddb150a5@linaro.org>
- <7vszdea2djl43oojvw3vlrip23f7cfyxkyn6jw3wc2f7yowht5@bgsc2pqscujc>
- <aCNGSwL7043GoJBz@linaro.org>
- <20250514160841.GA2427890-robh@kernel.org>
- <aCUHTJGktLFhXq4Q@linaro.org>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="u76QZsxA";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Uk3keI+g";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="u76QZsxA";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Uk3keI+g"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 47A6B2119D;
+	Fri, 23 May 2025 08:46:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1747990016; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=LXyI3AqMFJC1J5JkLvRZl2d+NL/z02K5Xn/OXPOt4UI=;
+	b=u76QZsxA9gh3Tix/qZxJ/tjAc9JpgcS3CXwEn4PTNnDYDeuzXw7zt0lWe2HCIO6wsr6BgV
+	jzC8ocOJdsg+Nj0NjGm/rW3+i41yOUGqtevzUhMVrxyXXYvDLnWqGTKrvRQk8XTkH6xWaa
+	XLyrtJY1NHNVhafjoPcbbzHV/vzJTio=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1747990016;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=LXyI3AqMFJC1J5JkLvRZl2d+NL/z02K5Xn/OXPOt4UI=;
+	b=Uk3keI+g8KDbmmqm66Uu0NL+zWGuPqok1uPFSc5XmOJK8MLUCGICwfbFkarpYt9nW8tUTm
+	CUGXnKAvrlTNNlDg==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=u76QZsxA;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=Uk3keI+g
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1747990016; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=LXyI3AqMFJC1J5JkLvRZl2d+NL/z02K5Xn/OXPOt4UI=;
+	b=u76QZsxA9gh3Tix/qZxJ/tjAc9JpgcS3CXwEn4PTNnDYDeuzXw7zt0lWe2HCIO6wsr6BgV
+	jzC8ocOJdsg+Nj0NjGm/rW3+i41yOUGqtevzUhMVrxyXXYvDLnWqGTKrvRQk8XTkH6xWaa
+	XLyrtJY1NHNVhafjoPcbbzHV/vzJTio=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1747990016;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=LXyI3AqMFJC1J5JkLvRZl2d+NL/z02K5Xn/OXPOt4UI=;
+	b=Uk3keI+g8KDbmmqm66Uu0NL+zWGuPqok1uPFSc5XmOJK8MLUCGICwfbFkarpYt9nW8tUTm
+	CUGXnKAvrlTNNlDg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 63225137B8;
+	Fri, 23 May 2025 08:46:55 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id e5NKFf81MGgINAAAD6G6ig
+	(envelope-from <osalvador@suse.de>); Fri, 23 May 2025 08:46:55 +0000
+Date: Fri, 23 May 2025 10:46:49 +0200
+From: Oscar Salvador <osalvador@suse.de>
+To: Donet Tom <donettom@linux.ibm.com>
+Cc: David Hildenbrand <david@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Mike Rapoport <rppt@kernel.org>, Zi Yan <ziy@nvidia.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Ritesh Harjani <ritesh.list@gmail.com>, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Yury Norov <yury.norov@gmail.com>,
+	Dave Jiang <dave.jiang@intel.com>
+Subject: Re: [PATCH v5 1/4] drivers/base/node: Optimize memory block
+ registration to reduce boot time
+Message-ID: <aDA1-TupYDhUZ_c1@localhost.localdomain>
+References: <d2490e807b2c13950bc1d4199f22ec078cc4c56a.1747904868.git.donettom@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,69 +101,57 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <aCUHTJGktLFhXq4Q@linaro.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <d2490e807b2c13950bc1d4199f22ec078cc4c56a.1747904868.git.donettom@linux.ibm.com>
+X-Spam-Level: 
+X-Spamd-Bar: /
+X-Spam-Flag: NO
+X-Spam-Score: -0.01
+X-Rspamd-Action: no action
+X-Rspamd-Queue-Id: 47A6B2119D
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Spamd-Result: default: False [-0.01 / 50.00];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	RCVD_TLS_ALL(0.00)[];
+	TAGGED_RCPT(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[15];
+	MISSING_XM_UA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	ARC_NA(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[redhat.com,linux-foundation.org,kernel.org,nvidia.com,linuxfoundation.org,gmail.com,kvack.org,vger.kernel.org,huawei.com,intel.com];
+	TO_DN_SOME(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,localhost.localdomain:mid,suse.de:email,suse.de:dkim,nvidia.com:email];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	DKIM_TRACE(0.00)[suse.de:+]
 
-On Wed, May 14, 2025 at 10:12:44PM GMT, Stephan Gerhold wrote:
-> On Wed, May 14, 2025 at 11:08:41AM -0500, Rob Herring wrote:
-> > On Tue, May 13, 2025 at 02:16:59PM +0100, Stephan Gerhold wrote:
-> > > On Sun, May 11, 2025 at 05:48:11PM -0500, Bjorn Andersson wrote:
-> > > > On Tue, May 06, 2025 at 03:10:08PM +0200, Stephan Gerhold wrote:
-> > > > > APCS "global" is sort of a "miscellaneous" hardware block that combines
-> > > > > multiple registers inside the application processor subsystem. Two distinct
-> > > > > use cases are currently stuffed together in a single device tree node:
-> > > > > 
-> > > > >  - Mailbox: to communicate with other remoteprocs in the system.
-> > > > >  - Clock: for controlling the CPU frequency.
-> > > > > 
-> > > > > These two use cases have unavoidable circular dependencies: the mailbox is
-> > > > > needed as early as possible during boot to start controlling shared
-> > > > > resources like clocks and power domains, while the clock controller needs
-> > > > > one of these shared clocks as its parent. Currently, there is no way to
-> > > > > distinguish these two use cases for generic mechanisms like fw_devlink.
-> > > > > 
-> > > > > This is currently blocking conversion of the deprecated custom "qcom,ipc"
-> > > > > properties to the standard "mboxes", see e.g. commit d92e9ea2f0f9
-> > > > > ("arm64: dts: qcom: msm8939: revert use of APCS mbox for RPM"):
-> > > > >   1. remoteproc &rpm needs mboxes = <&apcs1_mbox 8>;
-> > > > >   2. The clock controller inside &apcs1_mbox needs
-> > > > >      clocks = <&rpmcc RPM_SMD_XO_CLK_SRC>.
-> > > > >   3. &rpmcc is a child of remoteproc &rpm
-> > > > > 
-> > > > > The mailbox itself does not need any clocks and should probe early to
-> > > > > unblock the rest of the boot process. The "clocks" are only needed for the
-> > > > > separate clock controller. In Linux, these are already two separate drivers
-> > > > > that can probe independently.
-> > > > > 
-> > > > 
-> > > > Why does this circular dependency need to be broken in the DeviceTree
-> > > > representation?
-> > > > 
-> > > > As you describe, the mailbox probes and register the mailbox controller
-> > > > and it registers the clock controller. The mailbox device isn't affected
-> > > > by the clock controller failing to find rpmcc...
-> > > > 
-> > > 
-> > > That's right, but the problem is that the probe() function of the
-> > > mailbox driver won't be called at all. The device tree *looks* like the
-> > > mailbox depends on the clock, so fw_devlink tries to defer probing until
-> > > the clock is probed (which won't ever happen, because the mailbox is
-> > > needed to make the clock available).
-> > > 
-> > > I'm not sure why fw_devlink doesn't detect this cycle and tries to probe
-> > > them anyway, but fact is that we need to split this up in order to avoid
-> > > warnings and have the supplies/consumers set up properly. Those device
-> > > links are created based on the device tree and not the drivers.
-> > 
-> > Does "post-init-providers" providers solve your problem?
-> > 
+On Thu, May 22, 2025 at 04:17:28AM -0500, Donet Tom wrote:
+> During node device initialization, `memory blocks` are registered under
+> each NUMA node. The `memory blocks` to be registered are identified using
+> the node’s start and end PFNs, which are obtained from the node's pg_data
 > 
-> I would expect that it does, but it feels like the wrong solution to the
-> problem to me. The clock is not really a post-init provider: It's not
+... 
+> Acked-by: Zi Yan <ziy@nvidia.com>
+> Signed-off-by: Donet Tom <donettom@linux.ibm.com>
 
-But the entire node (so the mbox containing clocks) is a provider. This
-looks exactly like the case for post-init or do I miss here something.
-First, I do not see circular dependencies in the DT.
+With the fixup from Mike:
 
-Best regards,
-Krzysztof
+Acked-by: Oscar Salvador <osalvador@suse.de>
 
+ 
+
+-- 
+Oscar Salvador
+SUSE Labs
