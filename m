@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97145295DBA;
-	Fri, 23 May 2025 14:52:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E033296723;
+	Fri, 23 May 2025 14:52:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748011920; cv=none; b=a0i7l0oimTRTAz1iSOUd2qq0Q20GNf6IGIQxnqFwtojzQp78aQ85+6WFRFHHcOjCtkA2EFquW4sG/LBU2GyUeg9tuZ5dohXBy33X3AvLxzH9kJ6Usz8GUQhP3bQBojknDjcDmU1ND6p4QwToZi9BGBsl/bdn1wgHB4Lxe9Xb6uE=
+	t=1748011925; cv=none; b=aD/9eR+bGT9GJjhATXMQlyi/a6HL9EhY2/20nDOM6oMQIfR4prvNDc/ekQCdu/tlmOQQ49/cvxS5ywv+fbbywNETMARj6VEnHq9bjrlpQ3fCFkAqaKj1P+ImuXhKAmJMNVZ5ARn0La/fM5UkMQZT+gfgp32IIYWEcM2Ca7OxaIg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748011920; c=relaxed/simple;
-	bh=35hmwCZSPFILaYgIUCG1i2om61jYSDQK3Ta1u25w0kA=;
+	s=arc-20240116; t=1748011925; c=relaxed/simple;
+	bh=Z9Jx4p+CmBHDNdpiv8pTq2nkjvdxScH3hf9IlZY91CM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=LQA6ItWi+vLx/CG51xtKV37Q7Ad58xsyz6sOFhD5jMzeyL37MlhgzWyUbDxVROnrd2iD0KkKncNcZgPJ0tNj4It57cu1AswFolPdod7lRc1hW63xq7wxi7ryUDO9IaA2BALPCWviCoWVcs87SD4k+kuOkAUBcjW6n5BPljfstRs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pbYeE8vR; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=ZViHkbwFAeAe/MTUEsiAIlcQ2tc+Y7y7TNAM3M9+YQ77lCuV5I+0Ig+lJgkm4tXSG2P9n7mMw47dvfWIvM/8asEa3fsjkKHu9w2MZa1bNE5ZjQkcjrirL3e4EBvnTNceNDNYK7XLihy6xSjFSDSI6ZOBOrLT/YyCZOhDG/XQg/A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hcrgfRL7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pbYeE8vR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E444C4CEF3;
-	Fri, 23 May 2025 14:51:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hcrgfRL7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA35EC4CEED;
+	Fri, 23 May 2025 14:52:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748011920;
-	bh=35hmwCZSPFILaYgIUCG1i2om61jYSDQK3Ta1u25w0kA=;
+	s=k20201202; t=1748011924;
+	bh=Z9Jx4p+CmBHDNdpiv8pTq2nkjvdxScH3hf9IlZY91CM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=pbYeE8vR3FWk4ThoYE/ocnkT2LD9qBNO7UBbD5zL/stGurkcZPon4yfr4nfOCdCxr
-	 ehpklZo4i5hKVj+kMbNiHREPGyxFErYPD+xZ9+AlaPMvEpaZMGcVUl1f4AUK7dd19C
-	 00M4qpkOJytLhq2/8eBxZXcc+0hh07yUBYOQAGCzE5EgEvNz44pOkiGIMjUSLfpT7e
-	 7mRt6ybMvJUp2EKoxP4SAb6rH9drYJXauAQ7xHk8Am6xK8IglPisBnOXt9J2Er2jJl
-	 qxFq8IxAfRBz/dRFyAIJY578RC4G7mrbDdAvLvEETCp8BTL6e80O/KVlR1w7GqV2Lx
-	 KRgB7PoDkYlRA==
+	b=hcrgfRL7J6+xiEKJzQX/bYsr4m+1biJsZSohEMmpM0+VFUOJdBZPL7fQHSTMid0Eb
+	 sQI6uAJRw0jL3k8pSltawTQUl4zmpIQWjmz6jZkUNEwq1Bd062NhsPZgqW+0TjJIv7
+	 BzFYWQZUXbLaU1uwZ7ktHIVv2AMmABZhLNCefXpjYi3+axu/ng+AQ0bYd/+n5yAYGX
+	 dv7c0yLq9Xwny1wHToyXXWvjdmr0HKelPM5or4IJRtXfTofa6atc23jt8oVmUkCgmp
+	 W7l1VYwaQKrAv220tdPElhb0XxpGKz2KJJZU8rA8OChlzyp1PMY4Guh97hkg0ycBC0
+	 Z6jztplW7Vaug==
 From: Benno Lossin <lossin@kernel.org>
 To: Benno Lossin <lossin@kernel.org>,
 	Miguel Ojeda <ojeda@kernel.org>,
@@ -42,9 +42,9 @@ To: Benno Lossin <lossin@kernel.org>,
 Cc: Lyude Paul <lyude@redhat.com>,
 	rust-for-linux@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 04/13] rust: pin-init: implement `ZeroableOption` for `&T` and `&mut T`
-Date: Fri, 23 May 2025 16:51:00 +0200
-Message-ID: <20250523145125.523275-5-lossin@kernel.org>
+Subject: [PATCH v2 05/13] rust: pin-init: change `impl Zeroable for Option<NonNull<T>>` to `ZeroableOption for NonNull<T>`
+Date: Fri, 23 May 2025 16:51:01 +0200
+Message-ID: <20250523145125.523275-6-lossin@kernel.org>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250523145125.523275-1-lossin@kernel.org>
 References: <20250523145125.523275-1-lossin@kernel.org>
@@ -56,34 +56,37 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-`Option<&T>` and `Option<&mut T>` are documented [1] to have the `None`
-variant be all zeroes.
+This brings it in line with references. It too is listed in [1].
 
-Link: https://doc.rust-lang.org/stable/std/option/index.html#representation [1]
-Link: https://github.com/Rust-for-Linux/pin-init/pull/56/commits/5ef1638c79e019d3dc0c62db5905601644c2e60a
+Link: https://doc.rust-lang.org/stable/std/option/index.html#representation
+Link: https://github.com/Rust-for-Linux/pin-init/pull/56/commits/8e52bf56ddc2190ce901d2f7c008ab8a64f653a9
 Signed-off-by: Benno Lossin <lossin@kernel.org>
 ---
- rust/pin-init/src/lib.rs | 7 +++++++
- 1 file changed, 7 insertions(+)
+ rust/pin-init/src/lib.rs | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
 diff --git a/rust/pin-init/src/lib.rs b/rust/pin-init/src/lib.rs
-index 7535c3fcc961..bdd2a050f7c8 100644
+index bdd2a050f7c8..e46be80bd344 100644
 --- a/rust/pin-init/src/lib.rs
 +++ b/rust/pin-init/src/lib.rs
-@@ -1522,6 +1522,13 @@ pub unsafe trait ZeroableOption {}
- // SAFETY: by the safety requirement of `ZeroableOption`, this is valid.
- unsafe impl<T: ZeroableOption> Zeroable for Option<T> {}
+@@ -1528,6 +1528,9 @@ unsafe impl<T> ZeroableOption for &T {}
+ // SAFETY: `Option<&mut T>` is part of the option layout optimization guarantee:
+ // <https://doc.rust-lang.org/stable/std/option/index.html#representation>.
+ unsafe impl<T> ZeroableOption for &mut T {}
++// SAFETY: `Option<NonNull<T>>` is part of the option layout optimization guarantee:
++// <https://doc.rust-lang.org/stable/std/option/index.html#representation>.
++unsafe impl<T> ZeroableOption for NonNull<T> {}
  
-+// SAFETY: `Option<&T>` is part of the option layout optimization guarantee:
-+// <https://doc.rust-lang.org/stable/std/option/index.html#representation>.
-+unsafe impl<T> ZeroableOption for &T {}
-+// SAFETY: `Option<&mut T>` is part of the option layout optimization guarantee:
-+// <https://doc.rust-lang.org/stable/std/option/index.html#representation>.
-+unsafe impl<T> ZeroableOption for &mut T {}
-+
  /// Create an initializer for a zeroed `T`.
  ///
- /// The returned initializer will write `0x00` to every byte of the given `slot`.
+@@ -1606,7 +1609,6 @@ macro_rules! impl_zeroable {
+     Option<NonZeroU128>, Option<NonZeroUsize>,
+     Option<NonZeroI8>, Option<NonZeroI16>, Option<NonZeroI32>, Option<NonZeroI64>,
+     Option<NonZeroI128>, Option<NonZeroIsize>,
+-    {<T>} Option<NonNull<T>>,
+ 
+     // SAFETY: `null` pointer is valid.
+     //
 
 base-commit: ae8b3a83fb9de394f609035041cd7a668fda2ab3
 prerequisite-patch-id: https://lore.kernel.org/all/20250523125424.192843-2-lossin@kernel.org
