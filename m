@@ -1,192 +1,415 @@
-Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7168729899F
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 18:14:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A85351C8631
+	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 18:14:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748024061; cv=none; b=Gpv5WJxjO8OMQ9NIHO3HKRe8hrHz+ykf8amY4Lz8iO12yL0LXjguXZKzLNjjLBon4LMUDl/DlFJZXaJtXxT11g29GaJuFdKknVBEOhCuZn2Qsj5vaKvMh/0baRd3NLe86D/dDpIlM9Q3FQmUkPVdGBAsfTUEkHZu8BlOVJfKaok=
+	t=1748024096; cv=none; b=jFeV2fRnwJmHeFetgTJ8iW5kKWvbhgrVOvUKOOdikpC1aQYQSSqMOvfFDBMcO4dw0w1AI0RDA9uFNxo6CUHCSxe/wgz90zp7mwv79WRNITyyc0DAZyUkUTiyDU8XIfj+y51wti9ftSg9I8OfWEXchmKd0+bILIplI2iKCuyskD0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748024061; c=relaxed/simple;
-	bh=RQB31qFVL6VtyYD/q8h3xheIj6fbkAcOVPAePkY2WOI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=aBdnDKKz9MzDO3FI3VK/VT9OrrHUOjKX9OBHOtYxYUaJ28zNI4Fsft2hi9PoE6lPd1AnnOeZM5NSxq6NqxrCF4Dt4fmEOp32+UaSrkklHv+UygslQ3AqYrQXKZmW/5TL+0PYrkQl5fb+GjWUaM4HTa0EX/IvEDp75FFjTm3mvAo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hUnjOVAH; arc=none smtp.client-ip=209.85.216.52
+	s=arc-20240116; t=1748024096; c=relaxed/simple;
+	bh=s85zEFx000MgdgA5PhcGQg6Ost75ZtASD5Zeo3ZI4uM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=XTCt8Rcc/Ve/ooG9hAGS1TzZRYtGylOFpqknzDHOjlobgb62iTqd5ChjFLZf2rpA32qMnt2vd4jnjKkx92FlyixgNw+bP6STt64rXHRPCSios6BsWdNu0L2piGoxRTmuc9drUpWIgGCLXNlcMUZJXZOf0EqZxCqDtgHNckvzysE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XX/5pxhE; arc=none smtp.client-ip=209.85.128.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hUnjOVAH"
-Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-30ec226b7d6so212361a91.2
-        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 11:14:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XX/5pxhE"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-445b11306abso405835e9.3
+        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 11:14:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748024060; x=1748628860; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=kzFJW90w481Ie2sxBC9R+vr/rXdbG7y4vnmCcu5qDdw=;
-        b=hUnjOVAHyi3c2Ru1NIGtHo1kqb1A8DMDRickptKeg6ZprWQFp4aE4q8bDN+ViUXQd8
-         DiiSx9y8skwlbM+BkHfa8HGce5UaT+/CJ5RCY4ocwqZY8wDpansX5UgcPDLy3wxZWNaZ
-         v5VnTXpRi/upuwyc8W4WsVhNdeHvVjG+FEh57z+iP5OL2GEntIX0oNR6GU+EKzwKqvdP
-         kE+bTcZ/ZI8/BGtjrV1SgsgLXCTQdX3AHBfFAgoFLMXrLfJj1saMWyEr46JKQyDcxuyf
-         GHo/gsVksyPhwkv693b0p5md0/2Jf+EEObc3lzTcrumGhyRnnSf01PDYfAqWHio/j9C0
-         WuMQ==
+        d=gmail.com; s=20230601; t=1748024093; x=1748628893; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZW1jttOPNJ06RdYrWP6ScVpFMjz9flIrlDAiLpOrirs=;
+        b=XX/5pxhEsevEcZ3wyAby+0/eUw6Yu0l4xKArLfbIGvLKgj5gf2BtyHY2cmDnjEf2wM
+         IEfYF9B/RNsDxRxw6eXQ5So+SzykPgSa91EKyVjW3/ZIA/YbNJ4ArjXOvg1DEWz0nsvq
+         prGAjV2k62VEkwbER/ciLp2XLd84Tlus7LCllYcRYhwp76Wh/uIKWI0FsEtBvEyRyyuf
+         sfkfiZqsvxNGcwYw6ENz58V0KVequ8cLnaT462bU2QCfqqClcP2Jo9drLnMxxkem/fCY
+         wJ+93t5WDVwu9z6gxUkbsum/kxsIfSB8tWJ/Uuo1IugeHF91XGKRfGyI+B8MHlGj79b0
+         HwSw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748024060; x=1748628860;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kzFJW90w481Ie2sxBC9R+vr/rXdbG7y4vnmCcu5qDdw=;
-        b=Q8N67H+uvNV2HBbnkC7x6Yi5W/UMqpjdslzpd8H4Fp4yfpCu70M0atpOKgNU7BEb1I
-         Bc7zQpwbMwkNI2+IVufZ0xKmnJp1BUwPXApO8DrVMdYXapGNA+DaAnET8v+fc/DVii1Y
-         NBaAkipgORl4V/8mhTgt3A3syHbrHl+FNFdd3k98IeJZ4MOBBSGjSWaGeDG4rsKd8eCH
-         ogV5pNHGSRKSP4dO4SqhZhsLn9+JszgkkaMjhVwxp3SVOnKjC2EsSji46N9iomXan69W
-         S7b026ZSIcJ4MvcrgS9TjyHm890Dh7XNotH6Nm3Mc0hUnRuRIj4bhF/faKxFdQcZAAnm
-         hpkg==
-X-Forwarded-Encrypted: i=1; AJvYcCXFcfklR0h7zDWEj1UZgWjEHzevVOtUR95nJslb3NLT5qttLWi7XCcXwm4tyM10zPhKrMpuZbBx/vWXdhU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw/JcWNRRSh0Z17/m7JfS07QoDS5mbEL0xJd6lnYFG0sHKQuCWj
-	7u0iU3p2q3Yu0mZUVNnj0+Q5i4o5ix+b9cvHUgOAPtiQ/l4XbINNRpdZ
-X-Gm-Gg: ASbGncu7EBnhyG14DhH4J47mCQd+bBC5XyWyNEjX71vdt63MZI4j/E08zTu2rHp2SZ4
-	sxqZHaekXvm3+Pwez5HfRpxbumWcaUuy8sREEFwjkXczkT9D2XQq/yF7QT1zMCu8agC4acT4Osy
-	9lA4NiMtbd7Y79MAIjdx2+HZA5/JluXe1ac5JrzGOi7VUYXnLDkn9h4As5gV6NuBb7NJ+/4cqWB
-	Vwv2Pg2jfeuh2jJD5VI9UZLy04afKNPtS+8mSwIepCnTnNomGpVXz8/AJySwF60e9yVjK4tA1W7
-	grYanEX5YCoxojiUOoz12Fb/JWqdhaJlvk5fEQSGUcUtX2pz5pF6YJD5x4NfHI5qSd5v99pkmsL
-	KonA=
-X-Google-Smtp-Source: AGHT+IHEb1qIm4dgm5SiPpsjIXRHMZuuOcVTFciAKrVULppe1jRjRhW46xCzA68xc84k6mE0xTyLOQ==
-X-Received: by 2002:a17:90b:3851:b0:308:5273:4dee with SMTP id 98e67ed59e1d1-3110f20df3amr126230a91.15.1748024059484;
-        Fri, 23 May 2025 11:14:19 -0700 (PDT)
-Received: from [10.67.48.245] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30f365f49e9sm7638092a91.43.2025.05.23.11.14.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 23 May 2025 11:14:18 -0700 (PDT)
-Message-ID: <bc44f895-3df4-41c4-bf93-d56e6ed203f3@gmail.com>
-Date: Fri, 23 May 2025 11:14:17 -0700
+        d=1e100.net; s=20230601; t=1748024093; x=1748628893;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ZW1jttOPNJ06RdYrWP6ScVpFMjz9flIrlDAiLpOrirs=;
+        b=YtUjcOXDbn/nW/Bnwg3QWfrpIWLgev3iVXXynlkrPo8eO5Pe7f5RH3e7UgI852TH5u
+         clIVZLSrGT6zjpfd1pLYlTsFlZLKA1Ekpr49F5zvs0SBlug2ls8+jmzs5oqKuUuSJEZB
+         DJjnMpT+3W5b/8FoUygcJrOK+EOl2+TpIrYIKg3BlVZfBjCpdj4kyiyr4Xu3lySzrL8N
+         HL7OOV3gPWghCStNx+WkOPRbqtNx6A6dy+DyfyqYkC5HEv3Var4UQx4Z1ayynfgJDTLy
+         gBBU4trhw7NyA6xya/kXd3lUunU/QM5JqCv/R9spps9WRKX+2EinQXALaVnfIJ3jMmzE
+         9Sqg==
+X-Forwarded-Encrypted: i=1; AJvYcCVsRePjDOxSEYYMvV1lI5+4vEi8Sz1bwv2oH6Aes54dp5bEpGG5lxdk6mUaoS719r9DEb+4xtAQRAuAq3s=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxKmP4rDuT8gnxjFO767NR40GefvPUgDH6O+/q6S2C5IICcUhMI
+	OlMkmK3zuCRH2BZHHas9QZcveRtcnGB0jESgJgZV9QE2Il+vLxPrwQND
+X-Gm-Gg: ASbGncuz2L/jEMXV8BvbWYqA3kvVvdkrxFs8FNzG5OppqLSIia2K8RoKOTmF1PoVraD
+	kxzfFcXEuEv17FIKrd3Upsl9gQDojlqSRvEdrVEUoPdJwFLLCuH/4KRtspvXzP7GD+h3dj35abS
+	VRfFa+/0h90CMcg0KJvFeyw8ctDgCdX66E0Xob6zUcMdsGGn5YDidpOCX/DysgB9CIWSKtsnMUh
+	qA4vTy9jHkz9Ao0c2zBNSF7UaTFRQhQN589tozUKc2EU670IxuIpsIDXyDV90chWlist8JcsDqc
+	LUtNjlKxsT9VPyfvHP+ACqaDDvR5OVidWR8wPBnAcrTfPPGGaSzqG95WeEgCZpjRTo1g7haNIoZ
+	URjAgePXZeQ0PH1POilUsMaMnEJLxEzjefqt/72tOnB6g6xiVq3o=
+X-Google-Smtp-Source: AGHT+IGB19drkN0Qe2GohVK/9BT2BrTvom1tn1tIMOVKQXd9Cpdj6elPYPYCXAlTOzLddnOoR3UGxg==
+X-Received: by 2002:a05:600c:3e84:b0:43d:7588:667b with SMTP id 5b1f17b1804b1-44c935dd592mr686215e9.10.1748024092612;
+        Fri, 23 May 2025 11:14:52 -0700 (PDT)
+Received: from skynet.lan (2a02-9142-4580-0a00-0000-0000-0000-0008.red-2a02-914.customerbaf.ipv6.rima-tde.net. [2a02:9142:4580:a00::8])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-447f38142b8sm147078285e9.30.2025.05.23.11.14.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 23 May 2025 11:14:52 -0700 (PDT)
+From: =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= <noltari@gmail.com>
+To: linux-mtd@lists.infradead.org,
+	dregan@broadcom.com,
+	bcm-kernel-feedback-list@broadcom.com,
+	florian.fainelli@broadcom.com,
+	rafal@milecki.pl,
+	computersforpeace@gmail.com,
+	kamal.dasu@broadcom.com,
+	dan.beygelman@broadcom.com,
+	william.zhang@broadcom.com,
+	frieder.schrempf@kontron.de,
+	linux-kernel@vger.kernel.org,
+	vigneshr@ti.com,
+	richard@nod.at,
+	bbrezillon@kernel.org,
+	kdasu.kdev@gmail.com,
+	jaimeliao.tw@gmail.com,
+	kilobyte@angband.pl,
+	jonas.gorski@gmail.com,
+	dgcbueu@gmail.com
+Cc: =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= <noltari@gmail.com>
+Subject: [PATCH v6] mtd: rawnand: brcmnand: legacy exec_op implementation
+Date: Fri, 23 May 2025 20:14:48 +0200
+Message-Id: <20250523181448.1181256-1-noltari@gmail.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] sched/topology: clear freecpu bit on detach
-To: Juri Lelli <juri.lelli@redhat.com>,
- Florian Fainelli <f.fainelli@gmail.com>, Ingo Molnar <mingo@redhat.com>,
- Peter Zijlstra <peterz@infradead.org>,
- Vincent Guittot <vincent.guittot@linaro.org>,
- Dietmar Eggemann <dietmar.eggemann@arm.com>, Ben Segall
- <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
- Steven Rostedt <rostedt@goodmis.org>,
- Valentin Schneider <vschneid@redhat.com>
-Cc: Doug Berger <opendmb@gmail.com>, linux-kernel@vger.kernel.org
-References: <20250422194853.1636334-1-opendmb@gmail.com>
- <609e6fe5-2893-4c13-8e52-e9df05146ffb@gmail.com>
- <aBTCWPSXgu9cId6D@jlelli-thinkpadt14gen4.remote.csb>
-Content-Language: en-US
-From: Florian Fainelli <f.fainelli@gmail.com>
-Autocrypt: addr=f.fainelli@gmail.com; keydata=
- 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
- WlfRzlpjIPmdjgoicA==
-In-Reply-To: <aBTCWPSXgu9cId6D@jlelli-thinkpadt14gen4.remote.csb>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Moving CC list to To
+Commit 3c8260ce7663 ("mtd: rawnand: brcmnand: exec_op implementation")
+removed legacy interface functions, breaking < v5.0 controllers support.
+In order to fix older controllers we need to add an alternative exec_op
+implementation which doesn't rely on low level registers.
 
-On 5/2/25 06:02, Juri Lelli wrote:
-> Hi,
-> 
-> On 29/04/25 10:15, Florian Fainelli wrote:
->>
->>
->> On 4/22/2025 9:48 PM, Doug Berger wrote:
->>> There is a hazard in the deadline scheduler where an offlined CPU
->>> can have its free_cpus bit left set in the def_root_domain when
->>> the schedutil cpufreq governor is used. This can allow a deadline
->>> thread to be pushed to the runqueue of a powered down CPU which
->>> breaks scheduling. The details can be found here:
->>> https://lore.kernel.org/lkml/20250110233010.2339521-1-opendmb@gmail.com
->>>
->>> The free_cpus mask is expected to be cleared by set_rq_offline();
->>> however, the hazard occurs before the root domain is made online
->>> during CPU hotplug so that function is not invoked for the CPU
->>> that is being made active.
->>>
->>> This commit works around the issue by ensuring the free_cpus bit
->>> for a CPU is always cleared when the CPU is removed from a
->>> root_domain. This likely makes the call of cpudl_clear_freecpu()
->>> in rq_offline_dl() fully redundant, but I have not removed it
->>> here because I am not certain of all flows.
->>>
->>> It seems likely that a better solution is possible from someone
->>> more familiar with the scheduler implementation, but this
->>> approach is minimally invasive from someone who is not.
->>>
->>> Signed-off-by: Doug Berger <opendmb@gmail.com>
->>> ---
->>
->> FWIW, we were able to reproduce this with the attached hotplug.sh script
->> which would just randomly hot plug/unplug CPUs (./hotplug.sh 4). Within a
->> few hundred of iterations you could see the lock up occur, it's unclear why
->> this has not been seen by more people.
->>
->> Since this is not the first posting or attempt at fixing this bug [1] and we
->> consider it to be a serious one, can this be reviewed/commented on/applied?
->> Thanks!
->>
->> [1]: https://lkml.org/lkml/2025/1/14/1687
-> 
-> So, going back to the initial report, the thing that makes me a bit
-> uncomfortable with the suggested change is the worry that it might be
-> plastering over a more fundamental issue. Not against it, though, and I
-> really appreciate Doug's analysis and proposed fixes!
-> 
-> Doug wrote:
-> 
-> "Initially, CPU0 and CPU1 are active and CPU2 and CPU3 have been
-> previously offlined so their runqueues are attached to the
-> def_root_domain.
-> 1) A hot plug is initiated on CPU2.
-> 2) The cpuhp/2 thread invokes the cpufreq governor driver during
->     the CPUHP_AP_ONLINE_DYN step.
-> 3) The sched util cpufreq governor creates the "sugov:2" thread to
->     execute on CPU2 with the deadline scheduler.
-> 4) The deadline scheduler clears the free_cpus mask for CPU2 within
->     the def_root_domain when "sugov:2" is scheduled."
-> 
-> I wonder if it's OK to schedule sugov:2 on a CPU that didn't reach yet
-> complete online state. Peter, others, what do you think?
+Fixes: 3c8260ce7663 ("mtd: rawnand: brcmnand: exec_op implementation")
+Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
+Reviewed-by: David Regan <dregan@broadcom.com>
+Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
+Reviewed-by: William Zhang <william.zhang@broadcom.com>
+---
+ drivers/mtd/nand/raw/brcmnand/brcmnand.c | 223 ++++++++++++++++++++++-
+ 1 file changed, 216 insertions(+), 7 deletions(-)
 
-Peter, can you please review this patch? Thank you
+ v6: add changes requested by David Regan:
+  - add braces in flash_cache for loop.
+
+ v5: add changes requested by Miquèl Raynal:
+  - Mention and explain legacy in native_cmd_conv.
+  - EOPNOTSUPP instead of EINVAL for instr->type else.
+  - Implement missing check_only functionality.
+
+ v4: add changes requested by Jonas Gorski:
+  - Add missing breaks in brcmnand_exec_instructions_legacy.
+  - Restore missing ret assignment in brcmnand_exec_op.
+
+ v3: add changes requested by Florian and other improvements:
+  - Add associative array for native command conversion.
+  - Add function pointer to brcmnand_controller for exec_instr
+    functionality.
+  - Fix CMD_BLOCK_ERASE address.
+  - Drop NAND_CMD_READOOB support.
+
+ v2: multiple improvements:
+  - Use proper native commands for checks.
+  - Fix NAND_CMD_PARAM/NAND_CMD_RNDOUT addr calculation.
+  - Remove host->last_addr usage.
+  - Remove sector_size_1k since it only applies to v5.0+ controllers.
+  - Remove brcmnand_wp since it doesn't exist for < v5.0 controllers.
+  - Use j instead of i for flash_cache loop.
+
+diff --git a/drivers/mtd/nand/raw/brcmnand/brcmnand.c b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
+index b43281b8204f6..610e8557acafe 100644
+--- a/drivers/mtd/nand/raw/brcmnand/brcmnand.c
++++ b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
+@@ -65,6 +65,7 @@ module_param(wp_on, int, 0444);
+ #define CMD_PARAMETER_READ		0x0e
+ #define CMD_PARAMETER_CHANGE_COL	0x0f
+ #define CMD_LOW_LEVEL_OP		0x10
++#define CMD_NOT_SUPPORTED		0xff
+ 
+ struct brcm_nand_dma_desc {
+ 	u32 next_desc;
+@@ -199,6 +200,30 @@ static const u16 flash_dma_regs_v4[] = {
+ 	[FLASH_DMA_CURRENT_DESC_EXT]	= 0x34,
+ };
+ 
++/* Native command conversion for legacy controllers (< v5.0) */
++static const u8 native_cmd_conv[] = {
++	[NAND_CMD_READ0]	= CMD_NOT_SUPPORTED,
++	[NAND_CMD_READ1]	= CMD_NOT_SUPPORTED,
++	[NAND_CMD_RNDOUT]	= CMD_PARAMETER_CHANGE_COL,
++	[NAND_CMD_PAGEPROG]	= CMD_NOT_SUPPORTED,
++	[NAND_CMD_READOOB]	= CMD_NOT_SUPPORTED,
++	[NAND_CMD_ERASE1]	= CMD_BLOCK_ERASE,
++	[NAND_CMD_STATUS]	= CMD_NOT_SUPPORTED,
++	[NAND_CMD_SEQIN]	= CMD_NOT_SUPPORTED,
++	[NAND_CMD_RNDIN]	= CMD_NOT_SUPPORTED,
++	[NAND_CMD_READID]	= CMD_DEVICE_ID_READ,
++	[NAND_CMD_ERASE2]	= CMD_NULL,
++	[NAND_CMD_PARAM]	= CMD_PARAMETER_READ,
++	[NAND_CMD_GET_FEATURES]	= CMD_NOT_SUPPORTED,
++	[NAND_CMD_SET_FEATURES]	= CMD_NOT_SUPPORTED,
++	[NAND_CMD_RESET]	= CMD_NOT_SUPPORTED,
++	[NAND_CMD_READSTART]	= CMD_NOT_SUPPORTED,
++	[NAND_CMD_READCACHESEQ]	= CMD_NOT_SUPPORTED,
++	[NAND_CMD_READCACHEEND]	= CMD_NOT_SUPPORTED,
++	[NAND_CMD_RNDOUTSTART]	= CMD_NULL,
++	[NAND_CMD_CACHEDPROG]	= CMD_NOT_SUPPORTED,
++};
++
+ /* Controller feature flags */
+ enum {
+ 	BRCMNAND_HAS_1K_SECTORS			= BIT(0),
+@@ -237,6 +262,12 @@ struct brcmnand_controller {
+ 	/* List of NAND hosts (one for each chip-select) */
+ 	struct list_head host_list;
+ 
++	/* Functions to be called from exec_op */
++	int (*check_instr)(struct nand_chip *chip,
++			   const struct nand_operation *op);
++	int (*exec_instr)(struct nand_chip *chip,
++			  const struct nand_operation *op);
++
+ 	/* EDU info, per-transaction */
+ 	const u16               *edu_offsets;
+ 	void __iomem            *edu_base;
+@@ -2478,18 +2509,191 @@ static int brcmnand_op_is_reset(const struct nand_operation *op)
+ 	return 0;
+ }
+ 
++static int brcmnand_check_instructions(struct nand_chip *chip,
++				       const struct nand_operation *op)
++{
++	return 0;
++}
++
++static int brcmnand_exec_instructions(struct nand_chip *chip,
++				      const struct nand_operation *op)
++{
++	struct brcmnand_host *host = nand_get_controller_data(chip);
++	unsigned int i;
++	int ret = 0;
++
++	for (i = 0; i < op->ninstrs; i++) {
++		ret = brcmnand_exec_instr(host, i, op);
++		if (ret)
++			break;
++	}
++
++	return ret;
++}
++
++static int brcmnand_check_instructions_legacy(struct nand_chip *chip,
++					      const struct nand_operation *op)
++{
++	const struct nand_op_instr *instr;
++	unsigned int i;
++	u8 cmd;
++
++	for (i = 0; i < op->ninstrs; i++) {
++		instr = &op->instrs[i];
++
++		switch (instr->type) {
++		case NAND_OP_CMD_INSTR:
++			cmd = native_cmd_conv[instr->ctx.cmd.opcode];
++			if (cmd == CMD_NOT_SUPPORTED)
++				return -EOPNOTSUPP;
++			break;
++		case NAND_OP_ADDR_INSTR:
++		case NAND_OP_DATA_IN_INSTR:
++		case NAND_OP_WAITRDY_INSTR:
++			break;
++		default:
++			return -EOPNOTSUPP;
++		}
++	}
++
++	return 0;
++}
++
++static int brcmnand_exec_instructions_legacy(struct nand_chip *chip,
++					     const struct nand_operation *op)
++{
++	struct mtd_info *mtd = nand_to_mtd(chip);
++	struct brcmnand_host *host = nand_get_controller_data(chip);
++	struct brcmnand_controller *ctrl = host->ctrl;
++	const struct nand_op_instr *instr;
++	unsigned int i, j;
++	u8 cmd = CMD_NULL, last_cmd = CMD_NULL;
++	int ret = 0;
++	u64 last_addr;
++
++	for (i = 0; i < op->ninstrs; i++) {
++		instr = &op->instrs[i];
++
++		if (instr->type == NAND_OP_CMD_INSTR) {
++			cmd = native_cmd_conv[instr->ctx.cmd.opcode];
++			if (cmd == CMD_NOT_SUPPORTED) {
++				dev_err(ctrl->dev, "unsupported cmd=%d\n",
++					instr->ctx.cmd.opcode);
++				ret = -EOPNOTSUPP;
++				break;
++			}
++		} else if (instr->type == NAND_OP_ADDR_INSTR) {
++			u64 addr = 0;
++
++			if (cmd == CMD_NULL)
++				continue;
++
++			if (instr->ctx.addr.naddrs > 8) {
++				dev_err(ctrl->dev, "unsupported naddrs=%u\n",
++					instr->ctx.addr.naddrs);
++				ret = -EOPNOTSUPP;
++				break;
++			}
++
++			for (j = 0; j < instr->ctx.addr.naddrs; j++)
++				addr |= (instr->ctx.addr.addrs[j]) << (j << 3);
++
++			if (cmd == CMD_BLOCK_ERASE)
++				addr <<= chip->page_shift;
++			else if (cmd == CMD_PARAMETER_CHANGE_COL)
++				addr &= ~((u64)(FC_BYTES - 1));
++
++			brcmnand_set_cmd_addr(mtd, addr);
++			brcmnand_send_cmd(host, cmd);
++			last_addr = addr;
++			last_cmd = cmd;
++			cmd = CMD_NULL;
++			brcmnand_waitfunc(chip);
++
++			if (last_cmd == CMD_PARAMETER_READ ||
++			    last_cmd == CMD_PARAMETER_CHANGE_COL) {
++				/* Copy flash cache word-wise */
++				u32 *flash_cache = (u32 *)ctrl->flash_cache;
++
++				brcmnand_soc_data_bus_prepare(ctrl->soc, true);
++
++				/*
++				 * Must cache the FLASH_CACHE now, since changes in
++				 * SECTOR_SIZE_1K may invalidate it
++				 */
++				for (j = 0; j < FC_WORDS; j++) {
++					/*
++					 * Flash cache is big endian for parameter pages, at
++					 * least on STB SoCs
++					 */
++					flash_cache[j] = be32_to_cpu(brcmnand_read_fc(ctrl, j));
++				}
++
++				brcmnand_soc_data_bus_unprepare(ctrl->soc, true);
++			}
++		} else if (instr->type == NAND_OP_DATA_IN_INSTR) {
++			u8 *in = instr->ctx.data.buf.in;
++
++			if (last_cmd == CMD_DEVICE_ID_READ) {
++				u32 val;
++
++				if (instr->ctx.data.len > 8) {
++					dev_err(ctrl->dev, "unsupported len=%u\n",
++						instr->ctx.data.len);
++					ret = -EOPNOTSUPP;
++					break;
++				}
++
++				for (j = 0; j < instr->ctx.data.len; j++) {
++					if (j == 0)
++						val = brcmnand_read_reg(ctrl, BRCMNAND_ID);
++					else if (j == 4)
++						val = brcmnand_read_reg(ctrl, BRCMNAND_ID_EXT);
++
++					in[j] = (val >> (24 - ((j % 4) << 3))) & 0xff;
++				}
++			} else if (last_cmd == CMD_PARAMETER_READ ||
++				   last_cmd == CMD_PARAMETER_CHANGE_COL) {
++				u64 addr;
++				u32 offs;
++
++				for (j = 0; j < instr->ctx.data.len; j++) {
++					addr = last_addr + j;
++					offs = addr & (FC_BYTES - 1);
++
++					if (j > 0 && offs == 0)
++						nand_change_read_column_op(chip, addr, NULL, 0,
++									   false);
++
++					in[j] = ctrl->flash_cache[offs];
++				}
++			}
++		} else if (instr->type == NAND_OP_WAITRDY_INSTR) {
++			ret = bcmnand_ctrl_poll_status(host, NAND_CTRL_RDY, NAND_CTRL_RDY, 0);
++			if (ret)
++				break;
++		} else {
++			dev_err(ctrl->dev, "unsupported instruction type: %d\n", instr->type);
++			ret = -EOPNOTSUPP;
++			break;
++		}
++	}
++
++	return ret;
++}
++
+ static int brcmnand_exec_op(struct nand_chip *chip,
+ 			    const struct nand_operation *op,
+ 			    bool check_only)
+ {
+ 	struct brcmnand_host *host = nand_get_controller_data(chip);
++	struct brcmnand_controller *ctrl = host->ctrl;
+ 	struct mtd_info *mtd = nand_to_mtd(chip);
+ 	u8 *status;
+-	unsigned int i;
+ 	int ret = 0;
+ 
+ 	if (check_only)
+-		return 0;
++		return ctrl->check_instr(chip, op);
+ 
+ 	if (brcmnand_op_is_status(op)) {
+ 		status = op->instrs[1].ctx.data.buf.in;
+@@ -2513,11 +2717,7 @@ static int brcmnand_exec_op(struct nand_chip *chip,
+ 	if (op->deassert_wp)
+ 		brcmnand_wp(mtd, 0);
+ 
+-	for (i = 0; i < op->ninstrs; i++) {
+-		ret = brcmnand_exec_instr(host, i, op);
+-		if (ret)
+-			break;
+-	}
++	ret = ctrl->exec_instr(chip, op);
+ 
+ 	if (op->deassert_wp)
+ 		brcmnand_wp(mtd, 1);
+@@ -3130,6 +3330,15 @@ int brcmnand_probe(struct platform_device *pdev, struct brcmnand_soc *soc)
+ 	if (ret)
+ 		goto err;
+ 
++	/* Only v5.0+ controllers have low level ops support */
++	if (ctrl->nand_version >= 0x0500) {
++		ctrl->check_instr = brcmnand_check_instructions;
++		ctrl->exec_instr = brcmnand_exec_instructions;
++	} else {
++		ctrl->check_instr = brcmnand_check_instructions_legacy;
++		ctrl->exec_instr = brcmnand_exec_instructions_legacy;
++	}
++
+ 	/*
+ 	 * Most chips have this cache at a fixed offset within 'nand' block.
+ 	 * Some must specify this region separately.
 -- 
-Florian
+2.39.5
 
