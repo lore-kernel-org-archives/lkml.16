@@ -1,184 +1,135 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAA732957B6
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 16:57:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CF3529711A
+	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 17:00:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748019457; cv=none; b=bSNxZ5frerG6PJetKRgTIF1K6bhuMjekE5W7HThwr4zKGo9UQUlVhoU/7oNnjWNjRNl3OHi6vbkrqTUZ/G4t8FjR2HZfHuNLcZsrAgsi+6gltohKXxuZQOjwl47LhMil8vSQ0o7ETN/pZ6gyBWcgaaYHQsxKyac1yJNMbA99eAk=
+	t=1748019608; cv=none; b=hlKP3l4Zoa1lF9sGJ6Qq1k/IrKLmehXfgHXPDR3eE7WuoIJw36U5l0fqO+aufJRpNFVSrd941ZQ0lxev1Z1IE02JYuDUr+hm32RuWsQj+uetew8Ga83mxRbfbYImAQOsagw12cj/5nRnQAtR0VSyQe1RqI3vPgdCXxYTAzaBpYg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748019457; c=relaxed/simple;
-	bh=dzcmhlnVKKdWYCIX3XHmBq2cR+Pxheb4XJE7tjG3Mno=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=U8lBrVIK34q68Rh1hESKsfd4fZk/+gcVW5JexXENZNv4aDWDLRkMBLeWYnWtAWbanSgaCe1PIxAZmXhqNiNgQ5hEiyWzPYMhqSLLUzWBpbG/0ChAmOuegOcf43nObGFWeIrNVsl9E+hw/1rnXveFXHgDKPf/WASjgdkSLmYWOho=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=aC0XGSlh; arc=none smtp.client-ip=209.85.216.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1748019608; c=relaxed/simple;
+	bh=PqAUDpTHg12/haxztSOdHwLW4aW3aRIP8fiQ1P4X6jY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bEVjxJ810T1Yfz5zEyO/zAp2+htvYXwFgR0Ax1kWCf+j50PYoIQEpPXWjnyDsdw8tEEWM3iajlxMNTxD++Q5REU+8fDPIOoETa495WizUhnRvRwieMFXyX96uweaV1OEwNbu5tm5Q7NGIEzXOCz4RohGIQ/PeIkbFJLtIUeoVog=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=RodJLXA7; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aC0XGSlh"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-3108d5123c4so101674a91.1
-        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 09:57:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748019455; x=1748624255; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Tg6VPPI8kv2xdiChglqqkBYvwi/LLRExk2X0fxJWCgo=;
-        b=aC0XGSlhtWE2p1SBXcUFqTBIyEslxhQbxhTbqWc65pgs9ngy2N5CFaQ5RkOOsnDP/+
-         mDWcX5s+uh+L0rG6AWTeu05j9k5dCygdfkFSqoc5XLrwEn6aXTCbcYtBJnS4SETq1WZ0
-         iMRxncMW71rCsyjCSrIQMh/zYAq085UBCWbCGt9K4ZksUqrrsLd+heFJUvIzEi2xzePe
-         Xe86gBkTyVUYwp5HzOlyaEgd+ctSeJ0edMqTBS5e3EeNJKeAhWSHwQGXLSA5Bj6flSI6
-         yRlKXE0LHcChR0BUw1y6Hyu5pUNQnPqwYhUwIsJJZJwCZRuK0sAc5kHqovtbLfhXk0DC
-         JwoQ==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="RodJLXA7"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54NDKs1f024757
+	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 17:00:05 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=maOR1rPHKMjhU6q4YVbFSzEd
+	jGLm86V7mh+z2Dssfhk=; b=RodJLXA7sxKKqUjE7fZ1XL8GGX5MZDuJodF3bNjV
+	+hBLj/uhAA9Aaxbc7VEGvBPlHkRTYN8TpgwfDdMGgYu+9syM/t4JerfrgxDosajl
+	VHJkJaGGS848/wrQjLJarXprVSKC/8Fn4F81gViF192SAP/+juDbU9jCt4cZvRVC
+	to6DXaz2FK9PoVNmY9k16l74amWNEK1N3OlH6x+Th+IQL1U4ac9a6+sQCRahNh7b
+	tVoTtayd2cj+QgZhRFrXnXwlAByXS7VDe66fk3fCR/1os6m4QMc/QdPfQaGN0ZX/
+	u+wWy/xpMkh2TH5CoUVn7C6edA6obfN3CA3q40EC2UMlMQ==
+Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com [209.85.219.69])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46rwf52kyd-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 17:00:05 +0000 (GMT)
+Received: by mail-qv1-f69.google.com with SMTP id 6a1803df08f44-6f8c8a36d8eso1042586d6.0
+        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 10:00:05 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748019455; x=1748624255;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Tg6VPPI8kv2xdiChglqqkBYvwi/LLRExk2X0fxJWCgo=;
-        b=ejVFyy/D0QTaZ58e0jVZnmnOMrYttBMeV5BzTLOyZz1OmWjjyj1CyhItuPMU7x5oAl
-         otc5Bcf77mnyITyCgKm1LyrDNAAoTAub3NUaMEEPR2PEFVt4nWjOoayfZbW19nItBxvG
-         KuY8+fbMETLgiZgpxNgjTrfBnIs+ilvCNE8Mx9eacZs2QDWKf7sukyAINJXGuI91zRxB
-         PEVg0B+Vmy6fvunyF6XLHqf8Kn9iPgqsp7EPRar7hKmc9Lo0rnW0Odi+ZtFdqTunDRNa
-         dDCd8Ud23d9apRkQ6H7G/zaEBdnfEWDHrFlJa9dIeXq0JS6C/gO6JmFohHgvNfpeicbV
-         P/lA==
-X-Forwarded-Encrypted: i=1; AJvYcCW+b1+VVYJ5lQvT6DQTkp/Aap7Ox35ehV90TIYwlNC1pJl0BzZgzWeoh86YDkRRcVFHAZJPoscr7BA7Zk0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxyN+OQuRw0/baGbGUZJLaPHnVaQKJKNQZkgnEczUAc5bXT+zYK
-	G+z89xynGl4A3JHj9jJ3WRfYEKV7+pZw9Diqordb8yrY5XVmXrorVVRd6zI1as+qJiggHzdfCO0
-	uSPrlZA==
-X-Google-Smtp-Source: AGHT+IEHfCYOjZsuRb/M8TPESis6ZI0dnDFaK77moTYHdMcRaVyF428KvmMqQTyXTjdclRuzgfc1Xfc0P2U=
-X-Received: from pjb6.prod.google.com ([2002:a17:90b:2f06:b0:2f8:49ad:406c])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:528d:b0:2fa:15ab:4de7
- with SMTP id 98e67ed59e1d1-30e830ebd92mr52401611a91.12.1748019454866; Fri, 23
- May 2025 09:57:34 -0700 (PDT)
-Date: Fri, 23 May 2025 09:57:33 -0700
-In-Reply-To: <20250522151031.426788-1-chao.gao@intel.com>
+        d=1e100.net; s=20230601; t=1748019604; x=1748624404;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=maOR1rPHKMjhU6q4YVbFSzEdjGLm86V7mh+z2Dssfhk=;
+        b=F1st8KRu6ZpMgFLpDP8SmQvyYAWhVtshaWwED+BGaz3deYcsICtIHnlpToCcjso3mK
+         n+KIZa1z0Q7cppGMvYFELAbJpQXTzw6YUe6jOsISBWuot/AoPGvzoWaKSpLK3IrXiy+d
+         59IYd4enQhh9RXJeSyZQZreF0jbl+eQm2DKz3V88VnKKv/IDsnTr0j/NZuNRoYVKob+g
+         vUzKLzI4bkqVxj5B7IjwEk9kOOZnTg+bz3AiGMp/rpiQYxvudZP8rw8ukXMRHUIYaa4L
+         sDNyQ2BzGhpPDgbU3B03V3JdcXmfulysyU1bxoJikzZDLH+6s1oCr5zYFo7EE9YHdLNC
+         uxhA==
+X-Forwarded-Encrypted: i=1; AJvYcCUBT3RzCd8XjWve1WcrrlEkloWesR5jlZqOncjAPccKKQJAeUCwwczz0uSTYpseXS1bbaWT9GugWYEMTGg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyUfbET8B1R6gWKX2PpF4XmUoivgDKDdsqZBICKddcbBpt6fbhm
+	14VNYkCR4U3AodZuyqzrzgHwOIZwidkM8j3iMkqWDx0K7SseCVieAAK8lJ04pp2ZotX/s42Iial
+	u+tq46bccRbiKhkxcN75dJt/+Vcs1GK8Wr01PX9w6LXEzEB070cdeQplfKgq+LPNoN7I=
+X-Gm-Gg: ASbGncs3+Dv/oXkPvdqCruyM1Pahj77wZdrb24mlcN7fohfQDBkMwwCPsse69s2kgwS
+	cnZrmkhko1ptkDCZ3rqVHwvHRiPIH/Fz/3CD31kbE+qlUygMK2FTB/uI9Tu+7EKPaN0jJLc6Qot
+	KfToG0DD2DYLBe7U45ZAmilU+7XWQKKqyLrcn8YreUpJZ5AdH7Y58xYBcp+DwZZGC7PwiT2d66f
+	UhUeXCsARRNGJ0iYKEvIiH+TFlpNUhTfEMwm27oUyMqF+iFUeWg7/oTUXCpf26LuNjsmOObd88S
+	UsZmYX7IVqlb0bxCBltZxdD3D9SwNmb4Y/rxb0rZqo7djQrtveA0Bt8imY3UMjP0FjLnapFtMlg
+	=
+X-Received: by 2002:a05:6214:2025:b0:6f5:4079:3189 with SMTP id 6a1803df08f44-6fa9cff2ef4mr5010246d6.2.1748019604276;
+        Fri, 23 May 2025 10:00:04 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFCYdw0GZtJvLCfXO1X8zZftyGhiXHFblI6F3g2GPsnCAihhW1dYilfd6/MVO03PSiywr0fMA==
+X-Received: by 2002:a05:6214:2025:b0:6f5:4079:3189 with SMTP id 6a1803df08f44-6fa9cff2ef4mr5009886d6.2.1748019603916;
+        Fri, 23 May 2025 10:00:03 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-550e6f3666fsm3935508e87.104.2025.05.23.10.00.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 23 May 2025 10:00:03 -0700 (PDT)
+Date: Fri, 23 May 2025 20:00:01 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Viswanath Kraleti <viswanath.kraleti@oss.qualcomm.com>
+Cc: Rob Clark <robdclark@gmail.com>, Abhinav Kumar <quic_abhinavk@quicinc.com>,
+        Sean Paul <sean@poorly.run>,
+        Marijn Suijten <marijn.suijten@somainline.org>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        Ryan Eatmon <reatmon@ti.com>, linux-arm-msm@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org,
+        Bruce Ashfield <bruce.ashfield@gmail.com>
+Subject: Re: [PATCH] drivers: gpu: drm: msm: registers: improve
+ reproducibility
+Message-ID: <76xrcy5lvic7mucwuph7a5mgq47atuoocukanjf2q7g5ov6ffa@wbfks6f4hvpk>
+References: <20250523-binrep-v1-1-c3a446518847@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250522151031.426788-1-chao.gao@intel.com>
-Message-ID: <aDCo_SczQOUaB2rS@google.com>
-Subject: Re: [PATCH v8 0/6] Introduce CET supervisor state support
-From: Sean Christopherson <seanjc@google.com>
-To: Chao Gao <chao.gao@intel.com>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org, 
-	tglx@linutronix.de, dave.hansen@intel.com, pbonzini@redhat.com, 
-	peterz@infradead.org, rick.p.edgecombe@intel.com, weijiang.yang@intel.com, 
-	john.allen@amd.com, bp@alien8.de, chang.seok.bae@intel.com, xin3.li@intel.com, 
-	Dave Hansen <dave.hansen@linux.intel.com>, Eric Biggers <ebiggers@google.com>, 
-	"H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>, Kees Cook <kees@kernel.org>, 
-	Maxim Levitsky <mlevitsk@redhat.com>, Mitchell Levy <levymitchell0@gmail.com>, 
-	Nikolay Borisov <nik.borisov@suse.com>, Oleg Nesterov <oleg@redhat.com>, 
-	Sohil Mehta <sohil.mehta@intel.com>, Stanislav Spassov <stanspas@amazon.de>, 
-	Vignesh Balasubramanian <vigbalas@amd.com>
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250523-binrep-v1-1-c3a446518847@oss.qualcomm.com>
+X-Proofpoint-GUID: a_lMqiNl2PUmvYJTNjWiLDi0eBViO2st
+X-Proofpoint-ORIG-GUID: a_lMqiNl2PUmvYJTNjWiLDi0eBViO2st
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIzMDE1NSBTYWx0ZWRfXx18kzBAudqMK
+ qRSnq2mAFA8ill6IPGHucXlhXQ5EyRehfAlcuE348P8HjORH8V8WkFzxWT8tl1KUvCgmIX45vVi
+ hdrFtiF5MPDaA8+HWCKlir+njxGBy4DwZ1YDZ7HUfWUMzadK6q9jBqGEnJty7Yjpvp3Qp3c90BQ
+ DLBXqM9ZnUq5VQbkWjqAorm22yBOYLb1rV5d7S8QCqLt4P8jiAevfbJV7iQTR0JvdL6I0UNtxU6
+ ppI7VEs/8JDaINy2Z/xVko3MVqGuqcMAH3Es2EGRcKWw2/1ePZQRenubG6Ac/ZxYrLpJq3EoW7K
+ IvlQKi2AP5MMrRe5q3Kdbn9hJu6tmUjgZ52aUEF4QMu6hZk6PJL6whJTh2vG0av8x2X5QgDAYHx
+ 9NZDdv9CuaS/KgM5U3uNZaOfOjZM9ppDNeq9eRMbqnWcgsjiOnK8r2od236rCqcvGoFMX9Lx
+X-Authority-Analysis: v=2.4 cv=R7UDGcRX c=1 sm=1 tr=0 ts=6830a995 cx=c_pps
+ a=wEM5vcRIz55oU/E2lInRtA==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
+ a=dt9VzEwgFbYA:10 a=sozttTNsAAAA:8 a=pGLkceISAAAA:8 a=EUspDBNiAAAA:8
+ a=dkGs_W1-f6rb9hiwgxYA:9 a=CjuIK1q_8ugA:10 a=OIgjcC2v60KrkQgK7BGD:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-23_05,2025-05-22_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ phishscore=0 clxscore=1015 mlxlogscore=348 priorityscore=1501 spamscore=0
+ bulkscore=0 lowpriorityscore=0 malwarescore=0 suspectscore=0 mlxscore=0
+ impostorscore=0 adultscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
+ definitions=main-2505230155
 
-On Thu, May 22, 2025, Chao Gao wrote:
-> Chao Gao (4):
->   x86/fpu/xstate: Differentiate default features for host and guest FPUs
->   x86/fpu: Initialize guest FPU permissions from guest defaults
->   x86/fpu: Initialize guest fpstate and FPU pseudo container from guest
->     defaults
->   x86/fpu: Remove xfd argument from __fpstate_reset()
+On Fri, May 23, 2025 at 06:36:16PM +0530, Viswanath Kraleti wrote:
+> The files generated by gen_header.py capture the source path to the
+> input files and the date.  While that can be informative, it varies
+
+You are not the author of this patch. Why did you drop authorshop
+information when picking it up and resending?
+
+> based on where and when the kernel was built as the full path is
+> captured.
 > 
-> Yang Weijiang (2):
->   x86/fpu/xstate: Introduce "guest-only" supervisor xfeature set
->   x86/fpu/xstate: Add CET supervisor xfeature support as a guest-only
->     feature
+> Since all of the files that this tool is run on is under the drivers
+> directory, this modifies the application to strip all of the path before
+> drivers.  Additionally it prints <stripped> instead of the date.
+> 
+> Signed-off-by: Ryan Eatmon <reatmon@ti.com>
+> Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
+> Signed-off-by: Viswanath Kraleti <viswanath.kraleti@oss.qualcomm.com>
 
-Acked-by: Sean Christopherson <seanjc@google.com>
-
-Side topic, and *probably* unrelated to this series, I tripped the following
-WARN when running it through the KVM tests (though I don't think it has anything
-to do with KVM?).  The WARN is the version of xfd_validate_state() that's guarded
-by CONFIG_X86_DEBUG_FPU=y.
-
-   WARNING: CPU: 232 PID: 15391 at arch/x86/kernel/fpu/xstate.c:1543 xfd_validate_state+0x65/0x70
-   Modules linked in: kvm_intel kvm irqbypass vfat fat dummy bridge stp llc intel_vsec cdc_acm cdc_ncm cdc_eem cdc_ether usbnet mii xhci_pci xhci_hcd ehci_pci ehci_hcd [last unloaded: kvm_intel]
-   CPU: 232 UID: 0 PID: 15391 Comm: DefaultEventMan Tainted: G S                  6.15.0-smp--3542d5d75b5c-cet #678 NONE 
-   Tainted: [S]=CPU_OUT_OF_SPEC
-   Hardware name: Google Izumi-EMR/izumi, BIOS 0.20240807.2-0 10/09/2024
-   RIP: 0010:xfd_validate_state+0x65/0x70
-   Code: 10 4c 3b 60 18 74 23 49 81 fe 80 c4 45 ab 74 15 4d 0b 7e 08 49 f7 d7 49 85 df 75 0e 5b 41 5c 41 5e 41 5f 5d c3 40 84 ed 75 f2 <0f> 0b eb ee 0f 1f 80 00 00 00 00 66 0f 1f 00 0f 1f 44 00 00 48 89
-   RSP: 0018:ff7ada85584a3e08 EFLAGS: 00010246
-   RAX: ff2c5d2908a53940 RBX: 00000000000e00ff RCX: ff2c5d2908a53940
-   RDX: 0000000000000001 RSI: 00000000000e00ff RDI: ff2c5d2908a521c0
-   RBP: 0000000000000001 R08: 0000000000000001 R09: 0000000000000000
-   R10: ffffffffaa56fa4d R11: 0000000000000000 R12: 0000000000040000
-   R13: ff2c5d2908a521c0 R14: ffffffffab45c480 R15: 0000000000000000
-   FS:  00007f21084d6700(0000) GS:ff2c5da752b41000(0000) knlGS:0000000000000000
-   CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-   CR2: 0000000000000000 CR3: 00000001ca832006 CR4: 0000000000f73ef0
-   DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-   DR3: 0000000000000000 DR6: 00000000fffe07f0 DR7: 0000000000000400
-   PKRU: 00000000
-   Call Trace:
-    <TASK>
-    fpu__clear_user_states+0x9c/0x100
-    arch_do_signal_or_restart+0x142/0x210
-    exit_to_user_mode_loop+0x55/0x100
-    do_syscall_64+0x205/0x2c0
-    entry_SYSCALL_64_after_hwframe+0x4b/0x53
-   RIP: 0033:0x55ad185f2ee0
-   Code: 8c fc 48 8d 0d 6e d5 8e fc 4c 8d 05 64 cb 78 fc bf 03 00 00 00 ba 25 03 00 00 49 89 c1 31 c0 e8 e6 2e 08 00 cc cc cc cc cc cc <55> 48 89 e5 41 57 41 56 41 55 41 54 53 48 83 ec 28 49 89 d7 49 89
-   RSP: 002b:00007f21084d3e38 EFLAGS: 00000246 ORIG_RAX: 00000000000001b9
-   RAX: 0000000000000000 RBX: 0000000000000000 RCX: 000055ad18136f73
-   RDX: 00007f21084d3e40 RSI: 00007f21084d3f70 RDI: 000000000000001b
-   RBP: 00007f21084d4f90 R08: 0000000000000000 R09: 0000000000000000
-   R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000001
-   R13: 000011f03fbc2f00 R14: ffffffffffffffff R15: 0000000000000000
-    </TASK>
-   irq event stamp: 368
-   hardirqs last  enabled at (367): [<ffffffffaaf5f1b8>] _raw_write_unlock_irq+0x28/0x40
-   hardirqs last disabled at (368): [<ffffffffaaf5487d>] __schedule+0x1bd/0xea0
-   softirqs last  enabled at (0): [<ffffffffaa2aa1ca>] copy_process+0x38a/0x1350
-   softirqs last disabled at (0): [<0000000000000000>] 0x0
-   ---[ end trace 0000000000000000 ]---
-
-But I've hit the WARN once before, so whatever is going on is pre-existing.  I
-haven't done any experiments to see if the WARN fires more frequently with this
-series.  I mentioned it here purely out of convenience.
-
-  ------------[ cut here ]------------
-  WARNING: CPU: 77 PID: 14821 at arch/x86/kernel/fpu/xstate.c:1466 xfd_validate_state+0x4a/0x50
-  Modules linked in: kvm_intel kvm irqbypass vfat fat dummy bridge stp llc intel_vsec cdc_acm cdc_ncm cdc_eem cdc_ether usbnet mii xhci_pci xhci_hcd ehci_pci ehci_hcd sr_mod cdrom loop [last unloaded: kvm]
-  CPU: 77 UID: 0 PID: 14821 Comm: futex-default-S Tainted: G S      W           6.15.0-smp--a2104d5ba341-sink #605 NONE 
-  Tainted: [S]=CPU_OUT_OF_SPEC, [W]=WARN
-  Hardware name: Google Izumi-EMR/izumi, BIOS 0.20240807.2-0 10/09/2024
-  RIP: 0010:xfd_validate_state+0x4a/0x50
-  Code: 50 0a a9 4d 8b 80 90 17 00 00 49 3b 48 18 74 1a 48 81 ff 80 a4 65 a7 74 0d 48 0b 47 08 48 f7 d0 48 85 f0 75 05 c3 84 d2 75 fb <0f> 0b c3 0f 1f 00 66 0f 1f 00 0f 1f 44 00 00 48 89 f8 48 8b 7f 10
-  RSP: 0018:ff1ba89ef124fe58 EFLAGS: 00010246
-  RAX: 0000000000000000 RBX: ffffffffa644871e RCX: 0000000000040000
-  RDX: 0000000000000001 RSI: 00000000000600ff RDI: ffffffffa765a480
-  RBP: 0000000000000000 R08: ff137abd4db65bc0 R09: 0000000000000000
-  R10: ffffffffa6775f8d R11: 0000000000000000 R12: 0000000000000000
-  R13: 0000000000000000 R14: ff137abd4db65b80 R15: 0000000000000000
-  FS:  00007fea8bce7700(0000) GS:ff137afc151b3000(0000) knlGS:0000000000000000
-  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-  CR2: 0000000000000000 CR3: 00000001a87c0004 CR4: 0000000000f73ef0
-  DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-  DR3: 0000000000000000 DR6: 00000000fffe07f0 DR7: 0000000000000400
-  PKRU: 00000000
-  Call Trace:
-   <TASK>
-   fpu__clear_user_states+0x92/0xf0
-   arch_do_signal_or_restart+0x134/0x200
-   syscall_exit_to_user_mode+0x8a/0x110
-   do_syscall_64+0x8b/0x160
-   entry_SYSCALL_64_after_hwframe+0x4b/0x53
-  RIP: 0033:0x563afb5588c0
-  Code: f0 e9 df fc ff ff 48 8b 5d 88 4d 89 f0 e9 b5 fe ff ff cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc <55> 48 89 e5 41 57 41 56 41 55 41 54 53 50 49 89 d7 e8 0a 6f f2 01
-  RSP: 002b:00007fea8bce4e78 EFLAGS: 00000202 ORIG_RAX: 00000000000000e8
-  RAX: 0000000000000000 RBX: 000011fcd50a6dd0 RCX: 0000563af84d6b30
-  RDX: 00007fea8bce4e80 RSI: 00007fea8bce4fb0 RDI: 000000000000001e
-  RBP: 00007fea8bce5c30 R08: 0000000000000000 R09: 00007fea8bce6ca0
-  R10: 00000000000007d0 R11: 0000000000000202 R12: 0000000063239328
-  R13: 00000000680b9c83 R14: 00000000000007d0 R15: 000011fcd5c46150
-   </TASK>
-  irq event stamp: 496018
-  hardirqs last  enabled at (496017): [<ffffffffa7158965>] _raw_spin_unlock_irqrestore+0x35/0x50
-  hardirqs last disabled at (496018): [<ffffffffa714e6fd>] __schedule+0x1bd/0xe90
-  softirqs last  enabled at (495074): [<ffffffffa64c02ec>] __irq_exit_rcu+0x6c/0x130
-  softirqs last disabled at (495065): [<ffffffffa64c02ec>] __irq_exit_rcu+0x6c/0x130
-  ---[ end trace 0000000000000000 ]---
+-- 
+With best wishes
+Dmitry
