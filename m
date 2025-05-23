@@ -1,72 +1,72 @@
 Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC4232980B0
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 19:39:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17E461531F0
+	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 19:42:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748029157; cv=none; b=mBOw8ayNBQSPJlQdfeDkl1+Hvawp0hMjWVVeTi5CP8RNZTfsBf+5ug3jChyHRFWjevQBxTUwH17N0xxaFNIHC/fzew4FZMBiHyOeneXL5ZkGSZTTABCIwaC/6ZqnzIDTsRhNZ7CEpL93FQ9PSd0ZqHhHi6F0/+RAUtevyrdFDi0=
+	t=1748029338; cv=none; b=QIuoh4oCJGXU5KWdavI7DMBkgb8qrgltaBGs+QDQ5agydICFWeiLIIey2nxlRFMzPNUR307UT8pDyLnQrfll0VUlXGENRZJIeLpJ3Peyh79jHMz8ZCeA5+IXDbvnvDT5wS8nmyQkjEwcN3bdUDbM2rV9E95jZSsIx8J22c4XA4c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748029157; c=relaxed/simple;
-	bh=UwjCwu+hoD5QvbENA5EagwHCA8S9dgr+/m5BQ31GkaQ=;
+	s=arc-20240116; t=1748029338; c=relaxed/simple;
+	bh=vggqRB8K93h/m3cLIrF81JSPM1zQ3Hx9nwM19BYafhY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RGC7KFSWEps+3/dEp3mxRrf+ldoHUhHcW9yDIsT9TEME0mh0fwiFKk9vFsh7vRz4xzyhG16XY6LF7VGUcvyNql20x6EWXq6hXSLPKstbxTj59pTvEJgV0bo7IzxUJEx64PuoE7OediAI/uy4D8GcHv9CacL1SAbVNVJHE0ljwJ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=ZtyZr2yr; arc=none smtp.client-ip=205.220.168.131
+	 In-Reply-To:Content-Type; b=XL8AhrwQI3LMJ+cPdUq7rwir24aPosxibR9fYUDCtvyoW0p2VPh4oXS3G6HE7CaD5SupMQDE3VsnS9U4daSPXb+f5yVeLOH/JuP1OuUtAcmZi8ach5nGk1x/ruo5odhKsB73lVQ3W80XbAXzmjxJiz0HWFm4CRqUi2SM08d63o0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=G1O7VeWc; arc=none smtp.client-ip=205.220.168.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="ZtyZr2yr"
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54NAmI3p020973
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 19:39:15 GMT
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="G1O7VeWc"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54NAaiCP013519
+	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 19:42:16 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	Z9XB99CT/fAlMSiqksbkH8KqSrgQ0U0y6auihnvVBOU=; b=ZtyZr2yr5RVArOcm
-	8nBdyIX9wsKyw2R0Injxps3ytEooWWxhiMs9+O96j1MSkwXYFYzmkxuitdDjbfYq
-	vYu3FCMcwUipDcbyT8CSYuPHJIHyJLg13YeNNMxQQamR24N1DYo9yeXMgdVJ3Qbb
-	d2UejA9PSFktGRqVc5lf/3xNQxa9x/LwRd6xp8Rl21G6U4SXXNHyYJ0g38eI0VZN
-	6W8nSnQI14TnIubBbB0Zs2eSNyyc/WhvGyAXRduAG8iJoy8t9cEp5Cx+CfE3QYe6
-	DXT562RkCHduDgdsVBFPFZgkaZbpAUIwGj+Qk9JPXHftYKENlLd65Y1f8DU109SU
-	uvKusw==
-Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com [209.85.160.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46rwf0b79w-1
+	rDD8GO02V6xisZvlrexGxwobQQAXnk3SkEUC/8wzeJ4=; b=G1O7VeWcf0aMeNX9
+	pvSRtOwpkX4xqzzI2UsHomt54kNwd9dYjxzXQ20gQjs6Vb+gFmuxxyP27kLoWcch
+	GPJ7Hu5xTh3cpdy8JScSkc2J5gg+BAcKiJsYYPoCRDD66WIz31ajrgwRDhzRJwZ9
+	5pedIktCpyqS96szL/MVzxmM1y8MeoVb22z7oMdRrGDnctvloLyRI2/Vf/4mc507
+	jwkFZEq+FBobA1aDf14M9sEjJKVPuDjS6hPS+HC2ifuJx5/xRugMD9QMrVAHHd5Z
+	Ef5kOjf9BWnlDM4oA+gO2KcWDG2OSqqM7FTMHf5FUxcLnnmjYYGKL9dVwjECg3Fz
+	Khn1pw==
+Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com [209.85.219.69])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46rwh5k9ve-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 19:39:14 +0000 (GMT)
-Received: by mail-qt1-f199.google.com with SMTP id d75a77b69052e-4767b8e990fso139671cf.0
-        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 12:39:14 -0700 (PDT)
+	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 19:42:15 +0000 (GMT)
+Received: by mail-qv1-f69.google.com with SMTP id 6a1803df08f44-6f2c8929757so354406d6.3
+        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 12:42:15 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748029153; x=1748633953;
+        d=1e100.net; s=20230601; t=1748029334; x=1748634134;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Z9XB99CT/fAlMSiqksbkH8KqSrgQ0U0y6auihnvVBOU=;
-        b=UfrFFLNOZUwN3SyvFeP4UTtjaSaOCHa7QIdLLrtPHZwX6FiUMlIJRunfTKtqExBFd8
-         u4lKoMTlNRsz58mxLtmDn7w5yKWW+O6VQeImgkXjxQbOcydoFyQU2M6kLsbd9nQtV1CA
-         jx2usUnb1ZZ37zfJd9JhOHHMp1l+scC3GiMBx94V5X1eZN/cA4F0HUmp3XJzSzV82YaP
-         EiT149uJbZ13XmmSvF5A/97VYg/S/dETdpEr9gf8AJTa+Fr8oKSKHPO5sPBy9pjozRe1
-         7d7aguVgcoJeds7LJSHZdfO7647/BJ/pzj0Ds7yaDU67Z1opVXx7gwAUAGkFO4QIpnbY
-         uTiA==
-X-Forwarded-Encrypted: i=1; AJvYcCXoM5UOppyMhyK9efZJ1ve1sQV2dgrfaogAntTexKb52uVRt7CVu132BPLgw7Fi+X4yiE1fUsAz+LOvEzQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyzcn/wjt23PxCCNh7J9mm4x9kItJaATKNU1gsLe+PiC552ey+C
-	Tg4jFdPHzXNCetp7AQaYTLoVIS1HShfzAldRI5tzbLLcjixFzbgsx/xVDm8xdRlU59MSc0FED7U
-	jNZN5gi/mW0fUxgIc/SVduy38qe38ldCYu0eMDv3GqF/d9A8Ve1aktNfde0a3xIr79A8=
-X-Gm-Gg: ASbGncvCFVRdn2dVDgGpJVLIGtCsBa/ZpxVR7XwRYz5QKQeNPG2jIaSWQwUBO/exRNz
-	Wg9QpCd10PUeLdL2U56RoV3CrBiW0S5qTQe/WC/GUEaUfswkWmpQSlTjkR+AcixFeUakEdr8gN4
-	tbCWjI/lksbH24KDz2pfZq/VazHDW/A9BB9n8GEYmwrXhx2VS2uLcQ9ruwL70Ds8XfHrZeWv//t
-	w+nvgTcuVcaTHgVxiaxggoC6zKWEEgmWRfUQvzZbXq8JlOKPeKbPEZDwoKccLI32EO1eYBoP8f3
-	3FIvzuNj5YdPy08v5WsVNYjekolCC2chTNWUuLlJ3E9RHlQxqBnXrUhxlrDXFQiUHw==
-X-Received: by 2002:a05:622a:408:b0:472:58b:463f with SMTP id d75a77b69052e-49f4625a717mr2814061cf.3.1748029153119;
-        Fri, 23 May 2025 12:39:13 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFnPTlDiHsFRsc/53DfqBHHewY94m5nSrjK/NZWsZOAvwCTZUQy5z9CnHlIfIbegggC4dKHNQ==
-X-Received: by 2002:a05:622a:408:b0:472:58b:463f with SMTP id d75a77b69052e-49f4625a717mr2813871cf.3.1748029152757;
-        Fri, 23 May 2025 12:39:12 -0700 (PDT)
+        bh=rDD8GO02V6xisZvlrexGxwobQQAXnk3SkEUC/8wzeJ4=;
+        b=Q1GiNb5VKzA8/uGr3LrePSKHw6KjINixzGrCFWoo31kKrr91MOKk/5yWlyofiLNZ9w
+         P+7LR1Ht5EcpzOVIJh3+FG9FZ3q+J4l3sujBRWXOPpoewgBK41htwytr+zFKiL6Ro6ZB
+         znC85rWckX2i/Mhfb+45P9dH4DRrkAukmaD5l2DVVxWZoyKasks3fSV+nCj0eyMhGHgU
+         yKgshA5iYYHGGMtArwMT+hG9r8Kh+ettk3hidOqxo4OfgVk23l3QTHttz8pIwKNIBrbJ
+         oeQ3v5BFv/AfFZ3ml/oCPFbqr4S+XPey+pJGWvSlk1+H01nqe5KS/7GnfeadC9m/Zq5f
+         x9NQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVh4Sk7/8m6XMghXom3/dLwT13kd/6acK5uQEKY0DQVLekWGpSppkh7UQequc9DivQ7PXkEYjQPGIz1s8U=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyjY9JDH6JzEtqVy17B68oUrgVz3srkGaHA1LD1CgYeNTaCK9nQ
+	78yNyk6sW7+0dC4o5JUteteg21epoJstW4bi7XIOnz5qdBmwTK6FJtFWpj031EyvJLoFMK4pzQu
+	kWstUzqczvV8Hb4AKdhpUE/9UX9anzji6wff4bMoyamS3exh/1XRjo7D8FUwL1EVoAXs=
+X-Gm-Gg: ASbGncviTtW6HePegwqkjRLOuh+ZXOv81xyjJAHcvRMHIRZBd603U8xQQ1sDq2LSPpG
+	IrC6MXbQS/ShBKNuhFcYcqlSmYA+pRu3N5on6np9OuTK+M3kEmeTQHvH9JAgxS7eWqHYJj0HEV0
+	Uvtl2dyTIWJBryPWa+LOwfKtIaOfpe3INWxNpJv3l1z3HO/uLh+r1h3cn/4Ve5Nf2tfaVuPIlfe
+	gZKZUx3bJeSCCG2Vt4XMLQrEvbUuspQgCH1ooLVvD8r1KiTM5NI5TFERudyiga9STenqBBeI9xe
+	jHpCxKfxhoW6QMSuFgI0w5OrKRH19+sB6ZWKqEpLtrKl+txXx72VziINpmmS8QlRGQ==
+X-Received: by 2002:a05:6214:529d:b0:6f8:471a:9fd8 with SMTP id 6a1803df08f44-6fa9d28fd01mr3864376d6.8.1748029334668;
+        Fri, 23 May 2025 12:42:14 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEakNeqD7PjHCb2lw3PkVQBGbw2mv8vCsbXcVbucJNPHi/LLt7DhFiJHbVdrvpunQbrFKGGPg==
+X-Received: by 2002:a05:6214:529d:b0:6f8:471a:9fd8 with SMTP id 6a1803df08f44-6fa9d28fd01mr3864236d6.8.1748029334246;
+        Fri, 23 May 2025 12:42:14 -0700 (PDT)
 Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad52d438c3csm1266798466b.88.2025.05.23.12.39.11
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad52d4b6d18sm1268078866b.153.2025.05.23.12.42.11
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 23 May 2025 12:39:12 -0700 (PDT)
-Message-ID: <76267be1-1ace-437f-9394-ee56d4e8ffb2@oss.qualcomm.com>
-Date: Fri, 23 May 2025 21:39:10 +0200
+        Fri, 23 May 2025 12:42:13 -0700 (PDT)
+Message-ID: <4a0ec467-b81e-4282-8e09-b7adc67eba97@oss.qualcomm.com>
+Date: Fri, 23 May 2025 21:42:11 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,119 +74,65 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] arm64: dts: qcom: qcm2290: Add IPA nodes
-To: Wojciech Slenska <wojciech.slenska@gmail.com>,
-        Andrew Lunn <andrew+netdev@lunn.ch>,
-        "David S . Miller"
- <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>, Alex Elder <elder@kernel.org>,
+Subject: Re: [PATCH v2 09/21] pmdomain: qcom: rpmhpd: Use
+ of_genpd_sync_state()
+To: Ulf Hansson <ulf.hansson@linaro.org>,
+        Saravana Kannan <saravanak@google.com>,
+        Stephen Boyd <sboyd@kernel.org>, linux-pm@vger.kernel.org
+Cc: "Rafael J . Wysocki" <rafael@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Michael Grzeschik <m.grzeschik@pengutronix.de>,
         Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-References: <20241220073540.37631-1-wojciech.slenska@gmail.com>
- <20241220073540.37631-3-wojciech.slenska@gmail.com>
+        Abel Vesa <abel.vesa@linaro.org>, Peng Fan <peng.fan@oss.nxp.com>,
+        Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
+        Johan Hovold <johan@kernel.org>,
+        Maulik Shah <maulik.shah@oss.qualcomm.com>,
+        Michal Simek <michal.simek@amd.com>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20250523134025.75130-1-ulf.hansson@linaro.org>
+ <20250523134025.75130-10-ulf.hansson@linaro.org>
 Content-Language: en-US
 From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <20241220073540.37631-3-wojciech.slenska@gmail.com>
+In-Reply-To: <20250523134025.75130-10-ulf.hansson@linaro.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Proofpoint-GUID: _HPmNmk8h2mczXHLERYOobx1_gVvHaTw
-X-Proofpoint-ORIG-GUID: _HPmNmk8h2mczXHLERYOobx1_gVvHaTw
-X-Authority-Analysis: v=2.4 cv=ZP3XmW7b c=1 sm=1 tr=0 ts=6830cee2 cx=c_pps
- a=WeENfcodrlLV9YRTxbY/uA==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
- a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=pGLkceISAAAA:8 a=wQ2JREbYfKbkpeN3qpUA:9
- a=fFxRHlyTGdwQsMLX:21 a=QEXdDO2ut3YA:10 a=kacYvNCVWA4VmyqE58fU:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIzMDE4MCBTYWx0ZWRfX3ktuw5DqLcOe
- P1VhCPe9V/vkw7j59p1uMQ1z0KoTye7C4SLsp1X4zvtxJHplBgAPkOkpY8ftL4RSswQSRxhVfyO
- GAsK5dSG37Gll4PIeKZzbKXwrLAe0x6q20DnZJljv5hnskVwIGSyKNVAvatS+hJJaffEY/j3d8C
- z2kZirjs+wH0bpbEZxdtcEGeJsACBWx/IEgZzw/lzQkZQi6ylDFfNANP5g5cvc2kX/Ii27I5r6R
- lDCE/fPHqiOif9G0rAciJ4nCigej//ufd/rEoQq0fR1yr9uA+hwI3ilsWu2OqE7iOEI0IwAv81A
- ebO5yRRRZIF04HaP9twMwyCUCe3V+Xuc1QNqJAGvAQpSy6e7xP13T4oiw22JvgJtNrugBThhCKP
- TYZ5LxS7lU30GV8UDT/AaBZ5JY4UhshebRRPOWE8TovzHEa9vh4DU64B0aJhlzw9nh926O4b
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIzMDE4MCBTYWx0ZWRfXxrajQoLSHxw+
+ h4RYJyR7j4PQRSHYAkdfAa2rwgIxwWYUZG1PYbJCgr0bAGwgC8HsJhSloSSegKeljKKKW3Mv+BM
+ gC3zDQXqYYRteQujXoSh5hYdsYStKneHZ8IJR9sjnir3Urcq0hILUp/idkoq/GfF867/WUE3CwX
+ 5m9Q3SPkcKIijVSvOkDebpEA1OYTYDreu7Nf1if4n2+DwbGVHh0Yl37JMTTcULcs+UkP5yx6BM+
+ 8Op21uP2OSH1fGXqN8uX3Vy49Y66wMARwE1AivgRlUqFxBXv2CCeQfmZh4r5pIuJZ+cfFvziorV
+ 0j12R0BK2MJRN8HqEBAbhw9MabHxV7C7UWAy/qzkR2kZTNNqXeB2k3utqqL/2+etBZ+343pf3mE
+ bfg3ZPqeUbbysKvbSXgQtkyuT+RwjgsYYs0gj9PYVYKNjwPn6yHTj9EnDUjH1laErvb2esTF
+X-Authority-Analysis: v=2.4 cv=XeWJzJ55 c=1 sm=1 tr=0 ts=6830cf97 cx=c_pps
+ a=wEM5vcRIz55oU/E2lInRtA==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
+ a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=KKAkSRfTAAAA:8
+ a=_nM6lhH5BCRQepSfEGgA:9 a=QEXdDO2ut3YA:10 a=OIgjcC2v60KrkQgK7BGD:22
+ a=cvBusfyB2V15izCimMoJ:22
+X-Proofpoint-GUID: kiM_-rn15WbwThZJoudfrmx4u2QTwTn3
+X-Proofpoint-ORIG-GUID: kiM_-rn15WbwThZJoudfrmx4u2QTwTn3
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
  definitions=2025-05-23_06,2025-05-22_01,2025-03-28_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- priorityscore=1501 adultscore=0 mlxlogscore=999 suspectscore=0 bulkscore=0
- impostorscore=0 phishscore=0 spamscore=0 mlxscore=0 lowpriorityscore=0
- clxscore=1015 malwarescore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ phishscore=0 clxscore=1015 mlxlogscore=999 mlxscore=0 bulkscore=0 spamscore=0
+ suspectscore=0 impostorscore=0 adultscore=0 malwarescore=0 lowpriorityscore=0
+ priorityscore=1501 classifier=spam authscore=0 authtc=n/a authcc=
  route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
  definitions=main-2505230180
 
-On 12/20/24 8:35 AM, Wojciech Slenska wrote:
-> Added IPA nodes and definitions.
+On 5/23/25 3:40 PM, Ulf Hansson wrote:
+> To make sure genpd tries to power off unused PM domains, let's call
+> of_genpd_sync_state() from our own ->sync_state() callback.
 > 
-> Signed-off-by: Wojciech Slenska <wojciech.slenska@gmail.com>
+> Cc: Bjorn Andersson <andersson@kernel.org>
+> Cc: Konrad Dybcio <konradybcio@kernel.org>
+> Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 > ---
->  arch/arm64/boot/dts/qcom/qcm2290.dtsi | 52 +++++++++++++++++++++++++++
->  1 file changed, 52 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/qcm2290.dtsi b/arch/arm64/boot/dts/qcom/qcm2290.dtsi
-> index 79bc42ffb6a1..0d39fd73888a 100644
-> --- a/arch/arm64/boot/dts/qcom/qcm2290.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/qcm2290.dtsi
-> @@ -428,6 +428,17 @@ wlan_smp2p_in: wlan-wpss-to-ap {
->  			interrupt-controller;
->  			#interrupt-cells = <2>;
->  		};
-> +
-> +		ipa_smp2p_out: ipa-ap-to-modem {
-> +			qcom,entry-name = "ipa";
-> +			#qcom,smem-state-cells = <1>;
-> +		};
-> +
-> +		ipa_smp2p_in: ipa-modem-to-ap {
-> +			qcom,entry-name = "ipa";
-> +			interrupt-controller;
-> +			#interrupt-cells = <2>;
-> +		};
->  	};
->  
->  	soc: soc@0 {
-> @@ -1431,6 +1442,47 @@ usb_dwc3_ss: endpoint {
->  			};
->  		};
->  
-> +		ipa: ipa@5840000 {
-> +			compatible = "qcom,qcm2290-ipa", "qcom,sc7180-ipa";
-> +
-> +			iommus = <&apps_smmu 0x140 0x0>;
-> +			reg = <0x0 0x5840000 0x0 0x7000>,
-> +			      <0x0 0x5847000 0x0 0x2000>,
-> +			      <0x0 0x5804000 0x0 0x2c000>;
 
-Please pad the address parts to 8 hex digits with leading zeroes
-
-> +			reg-names = "ipa-reg",
-> +				    "ipa-shared",
-> +				    "gsi";
-> +
-> +			interrupts-extended = <&intc GIC_SPI 257 IRQ_TYPE_EDGE_RISING>,
-> +					      <&intc GIC_SPI 259 IRQ_TYPE_LEVEL_HIGH>,
-> +					      <&ipa_smp2p_in 0 IRQ_TYPE_EDGE_RISING>,
-> +					      <&ipa_smp2p_in 1 IRQ_TYPE_EDGE_RISING>;
-> +			interrupt-names = "ipa",
-> +					  "gsi",
-> +					  "ipa-clock-query",
-> +					  "ipa-setup-ready";
-> +
-> +			clocks = <&rpmcc RPM_SMD_IPA_CLK>;
-> +			clock-names = "core";
-> +
-> +			interconnects = <&system_noc MASTER_IPA RPM_ALWAYS_TAG
-> +					 &bimc SLAVE_EBI1 RPM_ALWAYS_TAG>,
-> +					<&system_noc MASTER_IPA RPM_ALWAYS_TAG
-> +					 &system_noc SLAVE_IMEM RPM_ALWAYS_TAG>,
-> +					<&bimc MASTER_APPSS_PROC RPM_ALWAYS_TAG
-> +					 &config_noc SLAVE_IPA_CFG RPM_ALWAYS_TAG>;
-
-this last path should be RPM_ACTIVE_TAG - that makes paths involving the
-CPU automatically collapse (as per the power management uC's decision)
-whenever it's possible
-
+note: the subject is wrong - this driver is rpmpd, the other
+one is rpm*h*pd (patch 10 has the correct subject)
 
 Konrad
