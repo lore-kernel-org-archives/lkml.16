@@ -1,115 +1,86 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4FFE191F6D
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 11:34:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE0285D8F0;
+	Fri, 23 May 2025 11:36:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.61.82.184
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748000055; cv=none; b=e/zfzuc03JLdoj5+0Hp26+j2HayN/1WpvsWzGF1xzDFFYjxB1v9swZu+7fZg9PjN9tFSBtEDBLvBqqj8G56tVwpMYDUCIaKFQfOM7u8mgwH09BrRQ43YbWeA1N/GY0KjBtkR0kTDIqitEZtjowmRy9icnpVy+pYHRJW6VMINbJ4=
+	t=1748000171; cv=none; b=XHiF6nC52k/S5Zs+ZnmhEOWt1LRvOaIeYlp19N5u6ThHFh1gTcNIqCH0uUiPEEvzwwgKzJPD77bjBy7FlrEOlFm7Pb8GmG/06leDYwK7sTS3RN1ONhISUAwx/7NGlQnepRBAF3tesLFNItPzQNBHRjOkwFkGrBtszMoVmLhIeY0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748000055; c=relaxed/simple;
-	bh=MYfWXPtNFQT1KOOqC822XoD8Ig+VivQ64udlyOM9YfI=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=cpk+r0K7P6Z9MVXWKvfzS6iwlilMGOKRxUbyGOxjCgujqpZdywHHl3qRsxfvOxRWYr8+ae7seNSRkEgaaMmT5XZNW4ouv+v8V4OdStDnvRG+SKSM5xndAyGq8S2WVEB/xa8DX+WY+3+HsCCmlG4kwfAJTGXbUbe9P4ElN1CSmuo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iv8YGNCR; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1748000171; c=relaxed/simple;
+	bh=uXNU0NtsMBAb+zFHnNSWxwAJ193VCHniibeEdiXy4NM=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Ak5xDTIxIgfy5xORnHJXkI+ZTltt8vQ3W2xTgbzRX1IbBX6FfeHe6rxtW8WPx2HkbDRSpoUMFIQ0J9Atavb/JZ/gJigzmaBBtpeZJCD+bjvhOls21g2ZUtkmrY4N12U173kLw2E94kqUEcLlkPSb2FUTlaIJE+GDO87+rWXz/IE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=a7fis9FR; arc=none smtp.client-ip=210.61.82.184
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iv8YGNCR"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748000052; x=1779536052;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=MYfWXPtNFQT1KOOqC822XoD8Ig+VivQ64udlyOM9YfI=;
-  b=iv8YGNCRrjwKxQ1G8xlqQbCyrQM/Ulea+/h+R2Y4dgAmFpcOt5llWLrq
-   OtLQirTtgX/SibS7DbEG9X3fUl41wl+55OAPOIIUKOhV7p+xvvI/d7g7l
-   COS7k2+R2zMlE/+4/6SjqhVr8qzJP7az5zURLiwCRPbZ/NQj7SWLrXoAw
-   vWB/ip+1/siKYyA8/8WkqQEk/AJi4ErX5BuVmN2KO5YZjKqVPUsdoYbTJ
-   b6M3T99tV7VzA1xzNVdolkttpnMNJOPY8l+D/uBBF3tzCLJiT6tFWOPrv
-   JH/uWtre2ctgZf6uSmvSpLZKGnWDPQZAfFMeXWZDlEb11Sx9BUxT2JR7T
-   g==;
-X-CSE-ConnectionGUID: WHTAhFKASEOMmiNwC6/oGQ==
-X-CSE-MsgGUID: Q3+9p2cKTeiAZ369H7uZUA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11441"; a="50169903"
-X-IronPort-AV: E=Sophos;i="6.15,308,1739865600"; 
-   d="scan'208";a="50169903"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2025 04:34:08 -0700
-X-CSE-ConnectionGUID: ievo+qiXQgGpHVyjzx9xew==
-X-CSE-MsgGUID: lI09kxVaQOGWLQCmjpcNJw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,308,1739865600"; 
-   d="scan'208";a="141606037"
-Received: from dprybysh-mobl.ger.corp.intel.com (HELO localhost) ([10.245.244.101])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2025 04:34:07 -0700
-From: Jani Nikula <jani.nikula@linux.intel.com>
-To: Maxime Ripard <mripard@kernel.org>
-Cc: Anusha Srivatsa <asrivats@redhat.com>, Neil Armstrong
- <neil.armstrong@linaro.org>, Jessica Zhang <quic_jesszhan@quicinc.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann
- <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter
- <simona@ffwll.ch>, dri-devel@lists.freedesktop.org,
- linux-kernel@vger.kernel.org, Luca Ceresoli <luca.ceresoli@bootlin.com>
-Subject: Re: [PATCH v4 2/4] drm/panel: Add refcount support
-In-Reply-To: <87sekztwyc.fsf@intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <87y0vkw8ll.fsf@intel.com>
- <20250429-benign-sidewinder-of-defense-6dd4d8@houat>
- <87o6wfwcef.fsf@intel.com> <20250505-slim-bizarre-marten-a674ac@houat>
- <CAN9Xe3RLazpAXdxxJmyF2QAShDtMSgdoxMdo6ecdYd7aZiP9kA@mail.gmail.com>
- <874ixvtbxy.fsf@intel.com>
- <20250509-rapid-flounder-of-devotion-6b26bb@houat>
- <87r00yj6kv.fsf@intel.com>
- <molexnyjkiryvhetfdc66gmzecrf6f7kxl656qn46djdkixrkb@fdgnp5hispbf>
- <875xi3im1r.fsf@intel.com> <20250519-singing-silent-stingray-fe5c9b@houat>
- <87sekztwyc.fsf@intel.com>
-Date: Fri, 23 May 2025 14:34:05 +0300
-Message-ID: <8210f7fc0dbcfc5b1eea47ccb762c7e53b45236a@intel.com>
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="a7fis9FR"
+X-UUID: 1bf7466237ca11f082f7f7ac98dee637-20250523
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+	h=Content-Type:Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=bpH39SBux/FnTvU2Mj/izFWlhWacqOVNUYyzk61rexs=;
+	b=a7fis9FRrkmHg6cxiVXIDFOphGPXDIcxhvHWITARDHzV/QOkHFIHTOu29gvhD8o6vA2WE+utiCO7b/XQpLfiDgnUW6/L9ENMZeV23ZNJJ7iNQx2YYWHTFRyr+nb+wer9PEuLrMbzIobRFLLaf6xJMnLUP8GeaSQ3qkGBgU4u+/w=;
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.2.1,REQID:b6088f32-e915-4281-9970-10dc072fc477,IP:0,UR
+	L:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:r
+	elease,TS:0
+X-CID-META: VersionHash:0ef645f,CLOUDID:c029e757-abad-4ac2-9923-3af0a8a9a079,B
+	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0|50,EDM:-3,IP:ni
+	l,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES
+	:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-UUID: 1bf7466237ca11f082f7f7ac98dee637-20250523
+Received: from mtkmbs09n2.mediatek.inc [(172.21.101.94)] by mailgw02.mediatek.com
+	(envelope-from <skylake.huang@mediatek.com>)
+	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+	with ESMTP id 524666907; Fri, 23 May 2025 19:36:04 +0800
+Received: from mtkmbs11n1.mediatek.inc (172.21.101.185) by
+ MTKMBS14N1.mediatek.inc (172.21.101.75) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.39; Fri, 23 May 2025 19:36:01 +0800
+Received: from mtksitap99.mediatek.inc (10.233.130.16) by
+ mtkmbs11n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
+ 15.2.1258.39 via Frontend Transport; Fri, 23 May 2025 19:36:01 +0800
+From: Sky Huang <SkyLake.Huang@mediatek.com>
+To: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>, "David S. Miller"
+	<davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
+	<kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Daniel Golle
+	<daniel@makrotopia.org>, Qingfang Deng <dqfext@gmail.com>, SkyLake Huang
+	<SkyLake.Huang@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	<linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-mediatek@lists.infradead.org>
+CC: Sky Huang <skylake.huang@mediatek.com>
+Subject: [PATCH net-next 0/2] Add LED support/fix to MediaTek 2.5Gphy & Gphy
+Date: Fri, 23 May 2025 19:35:59 +0800
+Message-ID: <20250523113601.3627781-1-SkyLake.Huang@mediatek.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
+X-MTK: N
 
-On Tue, 20 May 2025, Jani Nikula <jani.nikula@linux.intel.com> wrote:
-> Maxime -
->
-> I'm cutting a lot of context here. Not because I don't think it deserves
-> an answer, but because I seem to be failing at communication.
->
-> On Mon, 19 May 2025, Maxime Ripard <mripard@kernel.org> wrote:
->> You still haven't explained why it would take anything more than
->> registering a dumb device at probe time though.
->
-> With that, do you mean a dumb struct device, or any struct device with a
-> suitable lifetime, that we'd pass to devm_drm_panel_alloc()?
+From: Sky Huang <skylake.huang@mediatek.com>
 
-I'm no expert in ACPI, but I think it needs to be a struct device
-embedded inside struct acpi_device to implement the
-drm_panel_add_follower() lookup for ACPI.
+This patchset adds LED support to MediaTek's built-in 2.5G phy, which
+basically hooks the same helper function with built-in Gphy. Also, fix
+LED behavior when blinking(delay_on & delay_off are both zero) is not set.
 
-It would be natural to embed struct drm_panel inside struct intel_panel,
-except we need struct intel_panel way before we have figured out the
-acpi device. We need struct intel_panel at connector register time, acpi
-devices currently get figured out after all connectors have been
-registered. I'm trying to see if we can change that, but it doesn't look
-easy. Separate allocation and initialization would cover that.
+Sky Huang (2):
+  net: phy: mtk-2p5ge: Add LED support for MT7988
+  net: phy: mtk-ge-soc: Fix LED behavior if blinking is not set.
 
-> Is using devm_drm_panel_alloc() like that instead of our own allocation
-> with drm_panel_init() the main point of contention for you? If yes, we
-> can do that.
-
-As devm_drm_panel_alloc() forces embedding, and we can't easily embed
-drm_panel inside intel_panel, even that would need a dummy wrapper
-struct.
-
-
-BR,
-Jani.
-
+ drivers/net/phy/mediatek/mtk-2p5ge.c  | 104 ++++++++++++++++++++++++--
+ drivers/net/phy/mediatek/mtk-ge-soc.c |   7 +-
+ 2 files changed, 103 insertions(+), 8 deletions(-)
 
 -- 
-Jani Nikula, Intel
+2.45.2
+
