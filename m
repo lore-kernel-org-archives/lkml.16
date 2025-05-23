@@ -1,114 +1,69 @@
-Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
+Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A77F2DCBED;
-	Fri, 23 May 2025 07:58:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 391B828135B;
+	Fri, 23 May 2025 07:59:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747987105; cv=none; b=rIAlezlmH6aekmc46eh/j8x7nCsHYP66EoqR/E02eb+ku/+rw/9ld7H+9ipyehQ8kGDdi0J7nGmJIEzJsr4xl3KDb2RuxiqYzwUc4COLM4fTT2JkFaC8ZVhnjKPkVFyZIjx5dxw7QAmIDtOUA+E3zqqtKYx04H8P++6yMorR+Ao=
+	t=1747987180; cv=none; b=MfYBxUZVkRqNJVJc+jmi0NIHkvfFjGJKzaKHkdt9VnpZniYK4VmAy/8AA4bCjPYhDNeXQMdV51U4PQw3Mo1Zjmu24/S1WoDUnIVyzGqy06gdDAj5MOfDRr5Bczz0gmcaWW5RKfA3DHEi8W7K8jZHfE1SfvV3PvxvedtdPiunyhA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747987105; c=relaxed/simple;
-	bh=hc/ZEJUpZIM7Kp61qjmy8Q6sFDNCRKW/ZMjLsf22VZ0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=KWYiza+CxZD8BhCgJy/0ylwihcXuNdr+RI8T4Zmu625mLkfQhKzPWlP3LwqmGwZS/vBe5MN3s5Eoaxmlw2RE2WxOdjo6FsaSnbL96D8R6MKwZQ/Ny9VziW4EFsyelmE7qEUlxdbYu2V5MaW+QGnd+8bsnPZg+vxBPK9aPVjlwM8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=extPZGgM; arc=none smtp.client-ip=217.70.183.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1747987180; c=relaxed/simple;
+	bh=Q+6gyGuaEfvX1dxFKRrt/yKar6tHpO3QdgHv799wGOs=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=D2pbBN8Znc/oefKAJxaKgaADZaDRlijb2EKUl6EV8oNSTcElkGc098LOGiuLK+yINzXjIJY4esdvW5uovK2swUVzGlU5BArwbOOw3rSUZnVwUdaTb3RWyVdeRZvik6eob4gJG3h1z1MeiDItD+MKdILbYIadnQvbW/Uursq0sEQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=pjG2LAG8; arc=none smtp.client-ip=168.119.38.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="extPZGgM"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id C2349439C9;
-	Fri, 23 May 2025 07:58:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1747987101;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=f4jg6TJM9rfnd81xJwrBimjVOQPPhbLnaiJRLysszsA=;
-	b=extPZGgM8PhcDiuh42PxWIDf5nlOx6CcJsqIGigOsobNYzs8jMJ1z27J9yOwX/GwLHy5Dv
-	wNX/kbaYBtOd4HK0xPjvIepuhZtJX9hj1rt8eHOYnAKcYTQHMMvscRAMswlgZ+Ec1g1B9V
-	R1Il3bQBjotseGgXN3Nl0fusD0o4/5W4NmP4hninYKoT3pvdJeOKwitEBUP4EYrBmUwkEY
-	xbF1yxEiglKYryBxXQdr6h0iWNHm9PkGS/PVfwMTaaXjE1XLwxkPesMwgf3Zbt3xgMV3EI
-	orqERXz1rvc9HPpTulXxuSW4meuyz80zetTDS2KGGcrEj/6NpAPl/FwAZD2/UQ==
-From: Gregory CLEMENT <gregory.clement@bootlin.com>
-Date: Fri, 23 May 2025 09:58:15 +0200
-Subject: [PATCH] MIPS: SMP: Move the AP sync point before the calibration
- delay
+	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="pjG2LAG8"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
+	Content-Type:References:In-Reply-To:Date:To:From:Subject:Message-ID:Sender:
+	Reply-To:Cc:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
+	Resent-Cc:Resent-Message-ID; bh=12et8CCEtfUUjxDBHQEY1rs4kI0cJQPuZMMyHCY8V1Y=;
+	t=1747987179; x=1749196779; b=pjG2LAG8UgjzU7s5A9X7sYqCzlJj2apb65F3WwqFMa2JMTM
+	ybu8PlChozEZYGn6N8W9iNhKOJ//dPvnxRw06QchSAEUCsbtXNshu0yDcONi5T7MFGtanevL0aVRL
+	GoakUVjplyF3X3uVqWRDjmM9EaYsyhOJDOSlXX+4zRUCA8oK6JNid5+i/wmrE0MHxRtM57iOzWIsB
+	R6o+0SOj8I3Xe+EOA2npPsQ561LZw9Yd738fBoqyfG4HRTuhtGpIopLopwMwIBbBc7pC0vx6b3zFt
+	MJgzdku9UaKdKNGc0TakRTZZGx8mmkOhbjSNCK16zfaMSbim1vFDTD6vvrlihHuQ==;
+Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.98.2)
+	(envelope-from <johannes@sipsolutions.net>)
+	id 1uINJW-000000011g7-3beq;
+	Fri, 23 May 2025 09:59:35 +0200
+Message-ID: <af7b544920184403a22f326c3c8f0d560bf1b4d0.camel@sipsolutions.net>
+Subject: Re: [PATCH] wifi: iwlwifi: cfg:  Limit cb_size to valid range
+From: Johannes Berg <johannes@sipsolutions.net>
+To: Pei Xiao <xiaopei01@kylinos.cn>, miriam.rachel.korenblit@intel.com, 
+	emmanuel.grumbach@intel.com, linux-wireless@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Date: Fri, 23 May 2025 09:59:34 +0200
+In-Reply-To: <5a603a35a2d05ac9bd44c87efc605d35051d5d12.1747980220.git.xiaopei01@kylinos.cn>
+References: 
+	<5a603a35a2d05ac9bd44c87efc605d35051d5d12.1747980220.git.xiaopei01@kylinos.cn>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20250523-hotplug-paralell-fix2-v1-1-45a9f84587fd@bootlin.com>
-X-B4-Tracking: v=1; b=H4sIAJYqMGgC/x2MQQqAMAzAviI9W5iFHfQr4qFqtxWGjk1FEP/u8
- JhA8kCRrFJgaB7IcmnRfavQtQ0sgTcvqGtlIEPWWCIM+5Hi6TFx5igxotObsJudY0PcW+qhtil
- L9f93nN73A1u43CZnAAAA
-X-Change-ID: 20250522-hotplug-paralell-fix2-1bffa02a9529
-To: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc: Huacai Chen <chenhuacai@kernel.org>, 
- Jiaxun Yang <jiaxun.yang@flygoat.com>, 
- Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>, 
- =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>, 
- Tawfik Bayouk <tawfik.bayouk@mobileye.com>, 
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-mips@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Gregory CLEMENT <gregory.clement@bootlin.com>
-X-Mailer: b4 0.14.2
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgdekfeduucdltddurdegfedvrddttddmucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhfffugggtgffkvfevofesthekredtredtjeenucfhrhhomhepifhrvghgohhrhicuvefngffogffpvfcuoehgrhgvghhorhihrdgtlhgvmhgvnhhtsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeetleefudeikeetjeejkeeuleeuvefhhfduudehjeefudfgtdeufeegheeggfevteenucffohhmrghinhepkhgvrhhnvghlrdhorhhgpdgsohhothhlihhnrdgtohhmnecukfhppedvrgdtudemtggsudegmeehheeimeejrgdttdemjeguvddumeduvdeileemvggtughfmegtjeeijeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemtggsudegmeehheeimeejrgdttdemjeguvddumeduvdeileemvggtughfmegtjeeijedphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomhepghhrvghgohhrhidrtghlvghmvghnthessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepuddtpdhrtghpthhtohepjhhirgiguhhnrdihrghnghesfhhlhihgohgrthdrtghomhdprhgtphhtthhopehgrhgvghhorhihrdgtlhgvmhgvnhhts
- egsohhothhlihhnrdgtohhmpdhrtghpthhtoheplhhinhhugidqmhhiphhssehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepthhhohhmrghsrdhpvghtrgiiiihonhhisegsohhothhlihhnrdgtohhmpdhrtghpthhtohepthhhvghordhlvggsrhhunhessghoohhtlhhinhdrtghomhdprhgtphhtthhopehvlhgrughimhhirhdrkhhonhgurhgrthhivghvsehmohgsihhlvgihvgdrtghomhdprhgtphhtthhopehtshgsohhgvghnugesrghlphhhrgdrfhhrrghnkhgvnhdruggvpdhrtghpthhtoheptghhvghnhhhurggtrghisehkvghrnhgvlhdrohhrgh
-X-GND-Sasl: gregory.clement@bootlin.com
+X-malware-bazaar: not-scanned
 
-In the calibration delay process, some resources are shared, so it's
-better to move it after the parallel execution part. Thanks to the
-patch optimizing CPU delay calibration, this change has no impact on
-the boot time improvements gained from CPU parallel boot.
+On Fri, 2025-05-23 at 14:04 +0800, Pei Xiao wrote:
+>=20
+> =20
+> -	WARN_ON(RX_QUEUE_CB_SIZE(iwl_trans_get_num_rbds(trans)) > 12);
+> +	cb_size =3D RX_QUEUE_CB_SIZE(iwl_trans_get_num_rbds(trans));
+> +	if (unlikely(cb_size > 12)) {
+> +		WARN_ON(1);
+>=20
 
-Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
----
-Hello,
+What's wrong with "if (WARN_ON(...))"?!?
 
-After a thorough review, as reported in [1], the CPU delay calibration
-is the last potential issue area. However, I believe that with this
-patch [2] applied, the source of concurrency will disappear.
+Not that I think it even really needs to be there but I guess working
+around a compiler warning could be worth it.
 
-Gregory
-
-[1]: https://lore.kernel.org/linux-mips/87frgvokga.fsf@BLaptop.bootlin.com/
-[2] :https://lore.kernel.org/linux-mips/20250520-smp_calib-v1-1-cd04f0a78648@bootlin.com/
----
- arch/mips/kernel/smp.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/arch/mips/kernel/smp.c b/arch/mips/kernel/smp.c
-index 7901b59d8f60eddefc020cf2a137716af963f09e..4868e79f3b30e9d80fe6390785b297c35d8c02a3 100644
---- a/arch/mips/kernel/smp.c
-+++ b/arch/mips/kernel/smp.c
-@@ -371,12 +371,12 @@ asmlinkage void start_secondary(void)
- 	 * to an option instead of something based on .cputype
- 	 */
- 
--	calibrate_delay();
--	cpu_data[cpu].udelay_val = loops_per_jiffy;
--
- #ifdef CONFIG_HOTPLUG_PARALLEL
- 	cpuhp_ap_sync_alive();
- #endif
-+	calibrate_delay();
-+	cpu_data[cpu].udelay_val = loops_per_jiffy;
-+
- 	set_cpu_sibling_map(cpu);
- 	set_cpu_core_map(cpu);
- 
-
----
-base-commit: faefb0a59c5914b7b8f737e2ec5c82822e5bc4c7
-change-id: 20250522-hotplug-paralell-fix2-1bffa02a9529
-
-Best regards,
--- 
-Grégory CLEMENT, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
+johannes
