@@ -1,183 +1,102 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+Received: from mail-vk1-f172.google.com (mail-vk1-f172.google.com [209.85.221.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE7A618C00B
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 09:46:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B48582253AB;
+	Fri, 23 May 2025 09:46:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747993570; cv=none; b=G5P3/vnOM2/U9z3ZHz3H2UNFEMvyJXbuicVF90ec0qiVilu1UaYiTrYG9icryhVXO1lesOkzjQDWs0mp+qqpJqallnXHURtqOugi0y4gNxt5EFVLyYofvpBkD9jt4Y8z6bqCwIhwp2Bp8bV43TQuQ6NvrlcyfiUJKi+NfOry6zg=
+	t=1747993602; cv=none; b=s+EBzZ4d2G04j5SZC1yaJ5eiEe8LVbHKhhV0ybz/9sK1NG004I5SdJJ4OATEJm71E2v6vJDYiGF+0++pHiqyywMKLXu/Oo/RyH5rtCbPWcloH+pug53e/f0Ya4JdBM9SEeMyTd3dZAx2mzP+BORCkDY1N//La94s5qV7gV2FyKE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747993570; c=relaxed/simple;
-	bh=g0CqvvMKzLeMKYjz7hRE+LMOROw08soSCEk9jR0MjeI=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=lusX+toYNeOImjZb1iNimWKFNPj1is0ako7qXKM4v+qO5nYAFZXfv7EOoMwiaEue6D4BX2Ot+FlDccdDvMFdhF0c2f5MVVns1xdKWsmynXBpTWXmpap23O04qyrcp9Y1dFvWayBz7ZW9tKMpceV+xhCBvBvV+TR/Vcj1xN5Sh4s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=RsPUVxUP; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RsPUVxUP"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-43cfe574976so65600705e9.1
-        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 02:46:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1747993566; x=1748598366; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:message-id:subject:cc
-         :to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=foNTOHpzt5e+CVfMRgO4/fjIO/6hBNq5r7JEJPhTgRc=;
-        b=RsPUVxUPMOJVXlJCNjJXgbN6GtVcxrEogzF+Fte6ugjwsujVAqvTFTvM+oTce/F1aB
-         9j9cIfEbgaM8jyZMJDqEmCfOUF/TuIoZ9nAMFwhxyG4+27+kgPsfLDyAgX9nw+b9lR36
-         hiSbLqRkInPYpHc1ceHRfugACkIpX1G8yq93mD2wGeSK1W7OMG07dJrtqivgxnJMXVg0
-         Kiiu3/hLwC+/inELHqvV7GQ//8NyasMB6wBCARu40nuvb6UV8NayVoMLskvBjvR6jsnT
-         Ui6+8DJFQv+FTZdY9hy/HtzPOiRBUNvLVUBoPpA8fHjlYfIk2Piu08dZrNaZdn3JxXgQ
-         ApNQ==
+	s=arc-20240116; t=1747993602; c=relaxed/simple;
+	bh=xqa/HSFlliZVLQFtzZUC+BUP3sUivsPlNaXidDaf0sY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=GvGDn06lqNo4xipWM72Jtkx8Hfm3j/iouFDaHyv4njv4AZO7r0y4UGVUlaCiEDPm1b8iXRfKLRcWFmiiGQmk8zrhOqkc/c17nWEEFSpIkCNLUzksKpjRVFwyOUeUiZ9csUBogw9TODf1ztK43Ksl/KMDPJZE8FjVSlfNfImqaVY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vk1-f172.google.com with SMTP id 71dfb90a1353d-5242f137a1eso2780482e0c.1;
+        Fri, 23 May 2025 02:46:40 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747993566; x=1748598366;
-        h=in-reply-to:content-disposition:mime-version:message-id:subject:cc
-         :to:from:date:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1747993599; x=1748598399;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=foNTOHpzt5e+CVfMRgO4/fjIO/6hBNq5r7JEJPhTgRc=;
-        b=jkyZLDWz2V0P2E1FqKXtAEMBOGCOJtYfpz1rnK8gFLqvyf6Q7gnVMeG6+2MzshA8Li
-         Xae9/6/ZlLPSbBncxCvPinGeBq/t0yzepJt1702j8+aLYJw0nirbDbTC+YGjLGyfJGqW
-         lZQdA78VSSjaChfBmusjygYIVERBl7yeo6EYiAMIi9MRYniCQkvGL1nMmjVNdyfUcWgz
-         bfKXG9+xXPC9uGjAZjhegpr28OU3sHN6y/su4HaINsU7IEy4jO5naCM6tTsU9UvAm5Q7
-         oXlRlatSMOqKojr2A5l+MBiM4sukKPQvS2dk/aFbmdH0y3V8g3+XVNOsCO97OPRqZcOj
-         ib5Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVig4ttSJIuJZou0KABcNkzVDWEk/1Dy7zKMFsoFjb81Z0oGh9cL3VvB8CyiH60NwEXtDKEqvoO3P3YyGc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxLUqXnwwZYKt7kqSr5Hb5e7/4fAeYiXhkzEJvRAH+z1HGYXAxj
-	DFqZx5Q2gzzqNQMLC1pOD7iBF5MKcnpL9S4W5q+GFvVsBjviubNl1/HXRYH3PEhFEt0=
-X-Gm-Gg: ASbGncv0aYFRRW2zvnkIqWWAB5HqI5l8ok4FqqKEyNTRT/NDrtCJIU6xbL5B2wJGtcn
-	H6Y1QRlOB/N4hWP9mmCSSqGIdwrvnmnHYSRiU4qMQYuMn0vr7gLx1VqPLK5tc3+H3OYk6BkdXnW
-	jnpcoMsufpIdITlxvKE4iolczcbqpDsOwNr8J9Q8O+VU8Pyp+e4imf1vhf7vw7226ZbaDlnkcEo
-	gYq4PXsTZ78kHXtpFUDyVRBin894DVYHp4Up1CvGP7aYZ4n/0pNxuZ5ouSvEg4e0KRTrL1D84hK
-	048GOUVDNl0IvLy9tuQ6dg89Rt+541Z7QWPfprfFdTjmGxp+qs9W6Qk0
-X-Google-Smtp-Source: AGHT+IFeXuzRSP3te/4kJrabY82cymAda1Ah/IMjxYAHTLxROVr9nV9wVlqZWpQQfGQ7Ndx2j/Asnw==
-X-Received: by 2002:a05:600c:3114:b0:43c:fa24:8721 with SMTP id 5b1f17b1804b1-442fd6445bdmr296392075e9.17.1747993566028;
-        Fri, 23 May 2025 02:46:06 -0700 (PDT)
-Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-447f6f062fcsm131130745e9.15.2025.05.23.02.46.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 May 2025 02:46:05 -0700 (PDT)
-Date: Fri, 23 May 2025 12:46:01 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: oe-kbuild@lists.linux.dev, Wentao Liang <vulab@iscas.ac.cn>,
-	andi.shyti@kernel.org
-Cc: lkp@intel.com, oe-kbuild-all@lists.linux.dev,
-	linux-arm-msm@vger.kernel.org, linux-i2c@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Wentao Liang <vulab@iscas.ac.cn>,
-	stable@vger.kernel.org
-Subject: Re: [PATCH] i2c: qup: Add error handling in qup_i2c_xfer_v2()
-Message-ID: <202505221445.quJVHqSz-lkp@intel.com>
+        bh=lMXBch1hfTjYIe9g9/nID/K1NoViF4Bz1jBWL1za1do=;
+        b=P8NhqScVZ4lxT6gkfAnQV1g+NYpxVSwsILJDujIU8o6nfusquXY5riMA2uPJMc+qal
+         /UljWC+S7R1RWnb+bspnQxu+HVunre5tp7sd8oNiATgm3fqDKLs0d7IP2FKSKGy/dW00
+         Y6aA5P3MXnUz8hNSIMQuG5LHmkVGKfK3PJSVajUtgdXEjXwHkUxLL4SRYWJ6wC9YMs30
+         1wo2W/m9OEFFzKlRdxrjYKkuFiKYdYJl4FyGe6cdZ7/wpFeTh4v0v7q5CRwhwOIrwegk
+         0zLhGPSzMo/0n+R21NapYPMISq5PJkUracPAAXZ3CYFq7tZ9wAWrGfyh1q8PDX6++c67
+         AE3g==
+X-Forwarded-Encrypted: i=1; AJvYcCVeVWcSqIbZEsiphw8BZUXkO5ATrL2+DhKLefS79mpNxK5pwtNplwAnls4L6qJh/iRWkUNjDUBA2XKFQVg=@vger.kernel.org, AJvYcCVqU7VgWK6hiWXEq/vs/WNJjQeOX9+zES8IzrcW7X9/azwWUGpPSefYNyhZasrApeXsCr/iqYQUs/THu6l8@vger.kernel.org, AJvYcCWeRpK92gkqB7EV7SnRG7XWx42llM9Tcjo+JQ1pgUviUBSEXKOGtNDWF/9gpaEoxo+iVu/uF6XydGRVSNDoSDATT7I=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw54BOyktwXn+2sDOs3AQ2SlN5bMVMgK2Fck6D9LwX5HI3h4Jaq
+	SVBv+XdOM82SeR8eokRgEQJBJSTF57+VtBnQYtwgPyEtSWstj6CJeaJRkzwAjJBg
+X-Gm-Gg: ASbGncttcJuY7EAZ+qLhzxnxxq9xbBOgD/z0/FCM4vHH9VeI5YNunx8TKB3iGAJcwds
+	51rzdfsOj6FYPOsF8f0bdyhSuhBTvO+oscD2qvDyjO+MLT8hqI38A8S4N8ZqPCBWnjUe1EqsgRJ
+	ESUeq88pIjl/W/gu3PHWI7suhZ0xAbiQkITLi9dmENS8B2BqwuFoXTjEMrRvYX8B4FbazXz0qcJ
+	b/BkuMNfn9fVcZwxe68T+zjv3a9ynMWkUAkATIZquxkU9bn0d39RBvMeGT/vVOH99Cr6bnsunbh
+	0vlnlCEifattoui2f0ncUdITapjGWJDCqy3DiMqhMQ1GPMudIryeJJjf8Rb+Hq9z3HY00WVtvDo
+	pf7NihRBF35qzKFL+Rw==
+X-Google-Smtp-Source: AGHT+IGhm1uIBMRMAbnuZ3NK9nAI+quuaR/3sPDNfHLG3Z7LZLlb1/SbBXdeDIqk0C8QbZro6A86YA==
+X-Received: by 2002:a05:6122:ec9:b0:52a:c0db:29e3 with SMTP id 71dfb90a1353d-52dbce1e5a3mr21890570e0c.10.1747993599006;
+        Fri, 23 May 2025 02:46:39 -0700 (PDT)
+Received: from mail-vk1-f175.google.com (mail-vk1-f175.google.com. [209.85.221.175])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-52dba7584dcsm13435722e0c.0.2025.05.23.02.46.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 23 May 2025 02:46:38 -0700 (PDT)
+Received: by mail-vk1-f175.google.com with SMTP id 71dfb90a1353d-525b44b7720so2668411e0c.0;
+        Fri, 23 May 2025 02:46:38 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUpVco+BbaeWB4A1h1uv9/Xzr20jLs6RQCnCAXNhGQyi1qEXHoDmFoZp963wYdlf7B69q9fOc8Y7ySKwUMWIPO09iw=@vger.kernel.org, AJvYcCV7KEVhNBwR8/1q6enlXxMAtejvN71KOjsxd1Yd5poyYSBTClhHm5W3+IRWoLw8YU/eh89iK5dfnaBTfDjR@vger.kernel.org, AJvYcCX9oQS/BdQxvlhF0Tt8OAO5nAEH9EfVaFZmr0/r4P+/K68tg72J94Y42u6H/T9laFSMAKYxJcE6y9ymH2M=@vger.kernel.org
+X-Received: by 2002:a05:6122:1b07:b0:52c:49b6:7f05 with SMTP id
+ 71dfb90a1353d-52dbcd6d4a1mr25286007e0c.6.1747993598445; Fri, 23 May 2025
+ 02:46:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250519141918.2522-1-vulab@iscas.ac.cn>
+References: <20250515141828.43444-1-thierry.bultel.yh@bp.renesas.com> <20250515141828.43444-7-thierry.bultel.yh@bp.renesas.com>
+In-Reply-To: <20250515141828.43444-7-thierry.bultel.yh@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Fri, 23 May 2025 11:46:26 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdUShe091nRnAqkL4RKwe21Oj7O95fK7UG_JcJ-aH72Cdg@mail.gmail.com>
+X-Gm-Features: AX0GCFvlOG4fTS9H4cNoeEJRhlYFUJpsRVO_9sQ-rvGJRjgTg2PY8_QrCilW0x0
+Message-ID: <CAMuHMdUShe091nRnAqkL4RKwe21Oj7O95fK7UG_JcJ-aH72Cdg@mail.gmail.com>
+Subject: Re: [PATCH v9 06/10] serial: sh-sci: Use private port ID
+To: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
+Cc: thierry.bultel@linatsea.fr, linux-renesas-soc@vger.kernel.org, 
+	paul.barker.ct@bp.renesas.com, linux-kernel@vger.kernel.org, 
+	linux-serial@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Wentao,
+On Thu, 15 May 2025 at 16:19, Thierry Bultel
+<thierry.bultel.yh@bp.renesas.com> wrote:
+> New port types cannot be added in serial_core.h, which is shared with
+> userspace.
+> In order to support new port types, the coming new ones will have
+> BIT(7) set in the id value, and in this case, uartport->type is
+> set to PORT_GENERIC.
+> This commit therefore changes all the places where the port type is
+> read, by not relying on uartport->type but on the private
+> value stored in struct sci_port.
+>
+> Signed-off-by: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
+> ---
+> Changes v8->v9:
+>  - Shrunk length od type & regtype
+>  - Uses BIT(7) in id value
+>  - Set sci_ports[0].type & sci_ports[0].regtype in scix_early_console_setup
 
-kernel test robot noticed the following build warnings:
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Gr{oetje,eeting}s,
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Wentao-Liang/i2c-qup-Add-error-handling-in-qup_i2c_xfer_v2/20250519-222137
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/andi.shyti/linux.git i2c/i2c-host
-patch link:    https://lore.kernel.org/r/20250519141918.2522-1-vulab%40iscas.ac.cn
-patch subject: [PATCH] i2c: qup: Add error handling in qup_i2c_xfer_v2()
-config: powerpc64-randconfig-r071-20250522 (https://download.01.org/0day-ci/archive/20250522/202505221445.quJVHqSz-lkp@intel.com/config)
-compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project f819f46284f2a79790038e1f6649172789734ae8)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
-| Closes: https://lore.kernel.org/r/202505221445.quJVHqSz-lkp@intel.com/
-
-smatch warnings:
-drivers/i2c/busses/i2c-qup.c:1621 qup_i2c_xfer_v2() error: uninitialized symbol 'err'.
-
-vim +/err +1621 drivers/i2c/busses/i2c-qup.c
-
-191424bb6166f6 Sricharan Ramabadhran 2016-01-19  1565  static int qup_i2c_xfer_v2(struct i2c_adapter *adap,
-191424bb6166f6 Sricharan Ramabadhran 2016-01-19  1566  			   struct i2c_msg msgs[],
-191424bb6166f6 Sricharan Ramabadhran 2016-01-19  1567  			   int num)
-191424bb6166f6 Sricharan Ramabadhran 2016-01-19  1568  {
-191424bb6166f6 Sricharan Ramabadhran 2016-01-19  1569  	struct qup_i2c_dev *qup = i2c_get_adapdata(adap);
-61f647e9d36d67 Wentao Liang          2025-05-19  1570  	int ret, err, idx = 0;
-191424bb6166f6 Sricharan Ramabadhran 2016-01-19  1571  
-fbf9921f8b35d9 Sricharan Ramabadhran 2016-06-10  1572  	qup->bus_err = 0;
-fbf9921f8b35d9 Sricharan Ramabadhran 2016-06-10  1573  	qup->qup_err = 0;
-fbf9921f8b35d9 Sricharan Ramabadhran 2016-06-10  1574  
-191424bb6166f6 Sricharan Ramabadhran 2016-01-19  1575  	ret = pm_runtime_get_sync(qup->dev);
-191424bb6166f6 Sricharan Ramabadhran 2016-01-19  1576  	if (ret < 0)
-191424bb6166f6 Sricharan Ramabadhran 2016-01-19  1577  		goto out;
-191424bb6166f6 Sricharan Ramabadhran 2016-01-19  1578  
-7545c7dba169c4 Abhishek Sahu         2018-03-12  1579  	ret = qup_i2c_determine_mode_v2(qup, msgs, num);
-7545c7dba169c4 Abhishek Sahu         2018-03-12  1580  	if (ret)
-7545c7dba169c4 Abhishek Sahu         2018-03-12  1581  		goto out;
-7545c7dba169c4 Abhishek Sahu         2018-03-12  1582  
-191424bb6166f6 Sricharan Ramabadhran 2016-01-19  1583  	writel(1, qup->base + QUP_SW_RESET);
-191424bb6166f6 Sricharan Ramabadhran 2016-01-19  1584  	ret = qup_i2c_poll_state(qup, QUP_RESET_STATE);
-191424bb6166f6 Sricharan Ramabadhran 2016-01-19  1585  	if (ret)
-191424bb6166f6 Sricharan Ramabadhran 2016-01-19  1586  		goto out;
-191424bb6166f6 Sricharan Ramabadhran 2016-01-19  1587  
-191424bb6166f6 Sricharan Ramabadhran 2016-01-19  1588  	/* Configure QUP as I2C mini core */
-191424bb6166f6 Sricharan Ramabadhran 2016-01-19  1589  	writel(I2C_MINI_CORE | I2C_N_VAL_V2, qup->base + QUP_CONFIG);
-191424bb6166f6 Sricharan Ramabadhran 2016-01-19  1590  	writel(QUP_V2_TAGS_EN, qup->base + QUP_I2C_MASTER_GEN);
-191424bb6166f6 Sricharan Ramabadhran 2016-01-19  1591  
-191424bb6166f6 Sricharan Ramabadhran 2016-01-19  1592  	if (qup_i2c_poll_state_i2c_master(qup)) {
-191424bb6166f6 Sricharan Ramabadhran 2016-01-19  1593  		ret = -EIO;
-191424bb6166f6 Sricharan Ramabadhran 2016-01-19  1594  		goto out;
-191424bb6166f6 Sricharan Ramabadhran 2016-01-19  1595  	}
-191424bb6166f6 Sricharan Ramabadhran 2016-01-19  1596  
-eb422b539c1f39 Abhishek Sahu         2018-03-12  1597  	if (qup->use_dma) {
-7545c7dba169c4 Abhishek Sahu         2018-03-12  1598  		reinit_completion(&qup->xfer);
-7545c7dba169c4 Abhishek Sahu         2018-03-12  1599  		ret = qup_i2c_bam_xfer(adap, &msgs[0], num);
-eb422b539c1f39 Abhishek Sahu         2018-03-12  1600  		qup->use_dma = false;
-9cedf3b2f09946 Sricharan Ramabadhran 2016-02-22  1601  	} else {
-7545c7dba169c4 Abhishek Sahu         2018-03-12  1602  		qup_i2c_conf_mode_v2(qup);
-7545c7dba169c4 Abhishek Sahu         2018-03-12  1603  
-7545c7dba169c4 Abhishek Sahu         2018-03-12  1604  		for (idx = 0; idx < num; idx++) {
-7545c7dba169c4 Abhishek Sahu         2018-03-12  1605  			qup->msg = &msgs[idx];
-7545c7dba169c4 Abhishek Sahu         2018-03-12  1606  			qup->is_last = idx == (num - 1);
-7545c7dba169c4 Abhishek Sahu         2018-03-12  1607  
-7545c7dba169c4 Abhishek Sahu         2018-03-12  1608  			ret = qup_i2c_xfer_v2_msg(qup, idx,
-7545c7dba169c4 Abhishek Sahu         2018-03-12  1609  					!!(msgs[idx].flags & I2C_M_RD));
-7545c7dba169c4 Abhishek Sahu         2018-03-12  1610  			if (ret)
-7545c7dba169c4 Abhishek Sahu         2018-03-12  1611  				break;
-7545c7dba169c4 Abhishek Sahu         2018-03-12  1612  		}
-7545c7dba169c4 Abhishek Sahu         2018-03-12  1613  		qup->msg = NULL;
-191424bb6166f6 Sricharan Ramabadhran 2016-01-19  1614  	}
-191424bb6166f6 Sricharan Ramabadhran 2016-01-19  1615  
-f74187932d30e4 Sricharan Ramabadhran 2016-01-19  1616  	if (!ret)
-7545c7dba169c4 Abhishek Sahu         2018-03-12  1617  		ret = qup_i2c_bus_active(qup, ONE_BYTE);
-7545c7dba169c4 Abhishek Sahu         2018-03-12  1618  
-7545c7dba169c4 Abhishek Sahu         2018-03-12  1619  	if (!ret)
-61f647e9d36d67 Wentao Liang          2025-05-19  1620  		err = qup_i2c_change_state(qup, QUP_RESET_STATE);
-
-if ret was already set then err isn't initialized.
-
-61f647e9d36d67 Wentao Liang          2025-05-19 @1621  	if (err)
-                                                            ^^^
-Uninitialized.  In production obviously the only sane choice is
-CONFIG_INIT_STACK_ALL_ZERO but I really encourage developers to set
-CONFIG_INIT_STACK_ALL_PATTERN=y so that we catch these sorts of
-bugs in testing.
-
-61f647e9d36d67 Wentao Liang          2025-05-19  1622  		return err;
-f74187932d30e4 Sricharan Ramabadhran 2016-01-19  1623  
-191424bb6166f6 Sricharan Ramabadhran 2016-01-19  1624  	if (ret == 0)
-191424bb6166f6 Sricharan Ramabadhran 2016-01-19  1625  		ret = num;
-191424bb6166f6 Sricharan Ramabadhran 2016-01-19  1626  out:
-191424bb6166f6 Sricharan Ramabadhran 2016-01-19  1627  	pm_runtime_mark_last_busy(qup->dev);
-191424bb6166f6 Sricharan Ramabadhran 2016-01-19  1628  	pm_runtime_put_autosuspend(qup->dev);
-191424bb6166f6 Sricharan Ramabadhran 2016-01-19  1629  
-191424bb6166f6 Sricharan Ramabadhran 2016-01-19  1630  	return ret;
-191424bb6166f6 Sricharan Ramabadhran 2016-01-19  1631  }
+                        Geert
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
