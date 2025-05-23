@@ -1,232 +1,210 @@
-Received: from mail-il1-f179.google.com (mail-il1-f179.google.com [209.85.166.179])
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2404823956A
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 17:54:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8646B298988
+	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 17:56:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748022859; cv=none; b=hVAtdPYBfEXmcHbvE08+yRkQV5T4tnyq5IUG3AX6eSx3D2whWAWaXccGG7I208+a89LFTdqO+e/9ZxYw78H/e2dsfuEIrQSuYYNsWBNytsYWXqKyXFESdqAlVGpKsJO8KYnt8ZyxGAir8PUsbsqeGX/GyBbMXLN41uetbaCyip4=
+	t=1748022970; cv=none; b=G8dr7FRu6QLIe+blZlFB+LIlEsXamuHpqppyQebVvORofOEY0VLp54sByYKXcmfLUjT+/tz0Y3Kr5PG0e4QP1KXB/UjRP5ItaaKHmiNAgJg8rAT7H3E8euoafvgpa2bmwuSkbwI53mov+a0pgWlxf2tB36kWCErA5z0LCZROlKo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748022859; c=relaxed/simple;
-	bh=mHx9nrqeslMmeOqW9EqCQiUHsNIyWWN9PxW0Wy4QUxI=;
+	s=arc-20240116; t=1748022970; c=relaxed/simple;
+	bh=WRdnaGverlu7vTJ/60vt4tPf27macSfbJ1NcFaxcNBY=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=G5KCz1pY3eK5HnVQc23Q3wUiB7qxnAyimRnZjXc2flD+1R0uKHm6yDZuGhASbdd1+jnLaHns0tzOn7l1H70QlurxzG1tw+JPpWWaHiBZNm8Zz/vAcJ4IjwQUIZB/+8EEzEQU2piAjnUOIcp9baygmO7R1KEdJh9SFoORg+TSeMo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=f+P/0FQO; arc=none smtp.client-ip=209.85.166.179
+	 To:Cc:Content-Type; b=Rs67c7Kwf96W9YMrUVH5uKRQZMXO9O18wHk/8gga0IbqDZPCfGTsS0eYky580CDj+Whqs+kXtKMMU3OzmfOqStXJcFqKPZj1cUxg5u5xr6mCcBb1yYBRxLfgSYiqy+l8vfDU/pZw3sgdUzAmA1LtuOZAgs4YHjZgOiA/nAMDn28=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=yOUs8Z8s; arc=none smtp.client-ip=209.85.214.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="f+P/0FQO"
-Received: by mail-il1-f179.google.com with SMTP id e9e14a558f8ab-3da76aea6d5so19145ab.1
-        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 10:54:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="yOUs8Z8s"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-231f6c0b692so20455ad.0
+        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 10:56:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748022856; x=1748627656; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1748022967; x=1748627767; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=PcE201KoRNJYhD4feI9Zb+U9J1PL6BFh8gHFJfl+wqk=;
-        b=f+P/0FQOD74M30xGM+HQadVRLy4NVVOWHAiEqzk2vQfeo5BMSLgTQTFAFqqalHtkAw
-         OhwT2jHWS7eoxdFDFApJxbZf6+WHCtYy3KIw3g5fp2K8U2Gzc0IUAiqwfVTQyS1aYtfw
-         vzarKhBYlJ/ya9AYsq+TldkM5a6HCUr7QKtUSRsAt//3aYAkdRy1NlISqb5TF2of5mlt
-         UgoOWxVxIGi2kQbWkgMzJd7tsaouo0DwoidcI7v3m6PBpTtxFNzeMLov8/YvRpYwZBQI
-         U8N/ON5ZsRBox+Kpuk+iN2C6X3jtEfZ5p9ZOj/WQavzf/9vHUvLqVzTNE0dbrskZVX4H
-         K6wQ==
+        bh=qKcG0kIzVQf2DFouXJTY346ztiLo6ETHd82n5f0p1Bw=;
+        b=yOUs8Z8s6c/C4RQQNv1FU7Guh1Tu1dVHcoYHiuG11x0R9RnzkCP+r/ZNI5iHnw37LN
+         m+juLUTs2ui4CerCmTy3zw8bLSwGx25B2eiFBftZhkPyh9onz72r8sj75Vo5kdAoBZm2
+         BX98Jp7mA7kdd99V+ATBsssAaprGsFPpzqpeCnp3+G1OgTjM2IiwZJzvXNlpErLBTRRB
+         dPmO89NzU6yeIuTM9Nwo2ozlNf/S4TD1U2Rm+zwvpaguzcbO6TzYoPZQLex6OypDF9m4
+         7K/6pjFiiNi9787QNNorvKP3tXyr65d5nclf26p38Kr7mMHElWtumnxpu5iRgsMANTuW
+         zjcw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748022856; x=1748627656;
+        d=1e100.net; s=20230601; t=1748022967; x=1748627767;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=PcE201KoRNJYhD4feI9Zb+U9J1PL6BFh8gHFJfl+wqk=;
-        b=nYmeEk4GNytsDmxw0CorVp7XLGrn2zWUHOKnElaAB5FBZBZh6EotR0wSV4g62nVheg
-         /6rM+dNhojmBdD33Vvr1Mky3HShMOJ6Q/SDeIuMzxeSsNf8s/1HFOWuiwQASfUYYvLF4
-         1W9ytwfeMexjq7Af0esvFxoegCgLxlXs35hx3eFu1VLnPeRLrsXWARYjNJas/9OfE++4
-         ZF6OjdmkgRuAD3R1oC0IiJ0pR8MzwLsxNVtEZ6suy6YJLZmaf/rDsAdprwpvWS1ZRfNC
-         QhlkN7stbyYFEwFGGdtSINShJ73Z9clgM1zTNGRy3VaLJDqA9VVHaH0+ATMLickXiPUH
-         o25g==
-X-Forwarded-Encrypted: i=1; AJvYcCVNv3/fbXBNglu35+dq8zEJcsglzSJpia4askSQkHYMTL8FoLwB4zsE4IJ/si52nFn2MLNmz4tO64pOc50=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzTqK7BYp6NvguBVhHSmLO06dgYF44yKrPywwKna93fBEbQE4GL
-	aFT5HVho+IJdkZCcfwUP/JD+RqSHzN6p8G4J9UTj+ll2GZ8OxtaYDrlGuRZOXJY4gpNsBKPENup
-	0BhsFuJ3WytoUEljHGFOfd63t3jFGSbtjKbjS+QsF
-X-Gm-Gg: ASbGncuPXQp8Ve/alY0xahcoFkGYc3UXU3DMRVoFzY9zO7VaeaDxyWYOLe/teJlxbM1
-	eKXprbVlN1jNEqI5VV5fGv6wAtDhhCDAOENk1LnK0UxAHo9RfGHU7yYInFwNvXUI9kLmHw/z+fV
-	3rmUbc1TkZaPWtqv2UqCqBx4z695dv1/yCcVQzO32pRzQE
-X-Google-Smtp-Source: AGHT+IG5pJa6XNSEbq3AwCPNtrUfQOv1uHdn1F546Kd1DuB4oclakA7CB0Ovhv8zyPXbUxN2tE+LNNJLyOP3Ctk1zc0=
-X-Received: by 2002:a92:cda7:0:b0:3dc:7be3:2712 with SMTP id
- e9e14a558f8ab-3dc942d4f30mr4135655ab.29.1748022855717; Fri, 23 May 2025
- 10:54:15 -0700 (PDT)
+        bh=qKcG0kIzVQf2DFouXJTY346ztiLo6ETHd82n5f0p1Bw=;
+        b=QWAeRuxzlv4StjGR0DSL92zjs6A5IZ2Xpn+TIZq7ufSU+orGJnK+iyzCbOCGDwzz7P
+         vceacs5kGQcNAO2VNNAJ7gI4BVVpIO1sWEPfmk6ttAUtBp9C9c394CSUeBgdY1ZkNZqO
+         0Ciq2Ga2llr3/x9Ec1DICnTpvKeyg3+bFBRqErnFlmB3jvVUtMZaFSk4nElCpDVZ73KE
+         +23pOS/imlMGd7rLwC4rPzuJ3UcmL2ukvKtgOa/FX+WSQhExNsQ5Yvv4XZphpkcYvkQ4
+         y8EotZgbsx1oB6ggaayHnj8wJyLVa9QnNw9yP6IK8pI6zD0YU3pD5MvSa9ILtbTLzQnb
+         OP4w==
+X-Forwarded-Encrypted: i=1; AJvYcCXSzlYs9BzdCvrlncu7iVR+5XLy89lQOW0hp8e/ShfNBvAIaMxRoQ5xPPElXX8eFJpZqZUTRkZERPPR/9w=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz87iT5GqFKvXTYG12jNDfJuaKFKyPAYji4IxS3TpgqB/VrFzUD
+	3TDljhKNLjwgBoGClis6QpDJxV+iV8a//31TtzfCsbnL4hjrK33UPo9Enry3R43jBQhe0RklFcJ
+	+2n4REH84HV1G+FWt7tiOBKeKRUPn4bJeecu+rzql
+X-Gm-Gg: ASbGncu4bN7zTSq67N5tKzcQdJknCQwl8K8LCxYxQWNEypr1BELojKIIx8f+10IY9TT
+	I2WKoZu3zoumCGNDkAJ8/eNDPQpXea5clHilM9oCfnedcs8y6FP5IYy8kq+cNh2y3ztopxpqPOn
+	R3ta4DDYEz1XCPMMNdM137Iwt0SiyG62JUa07y9Oe/XHgHl0rLt/Ks03PV5/T1ukhWbq+fNDrKJ
+	g==
+X-Google-Smtp-Source: AGHT+IHG7QjmSnQi5VQF7H68jYu342TfgU01VfBj8sRrando2xNin21bTuvUh2YHtW/IvW4mbUWhDr+UVPFZB1gCm/k=
+X-Received: by 2002:a17:902:dad2:b0:215:f0c6:4dbf with SMTP id
+ d9443c01a7336-2341808c7d7mr64375ad.14.1748022966452; Fri, 23 May 2025
+ 10:56:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250522171044.1075583-1-namhyung@kernel.org> <CAP-5=fXDaKueO9HE-Gr3Q7R6qm2EjwnL845nh7R2OU+DCfrhyA@mail.gmail.com>
- <4763aca8-a140-4291-b12e-e03cc0d82bdd@linaro.org>
-In-Reply-To: <4763aca8-a140-4291-b12e-e03cc0d82bdd@linaro.org>
-From: Ian Rogers <irogers@google.com>
-Date: Fri, 23 May 2025 10:54:02 -0700
-X-Gm-Features: AX0GCFv5o_BFbcay3SpWqv2Ef3jWnyQrNSCxEBiptddIrv5ki4ovE1puhXHTsuA
-Message-ID: <CAP-5=fWUZ78s1DMzQV8SP0U8Hb=TnCwB1_t2_o+3UcoJeyi=0Q@mail.gmail.com>
-Subject: Re: [PATCH 1/3] perf test: Support arch-specific shell tests
-To: James Clark <james.clark@linaro.org>
-Cc: Namhyung Kim <namhyung@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
-	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	linux-perf-users@vger.kernel.org
+References: <20250523032609.16334-1-byungchul@sk.com> <20250523032609.16334-19-byungchul@sk.com>
+In-Reply-To: <20250523032609.16334-19-byungchul@sk.com>
+From: Mina Almasry <almasrymina@google.com>
+Date: Fri, 23 May 2025 10:55:54 -0700
+X-Gm-Features: AX0GCFsYNuzYJlporwz1mSapGXVg6LAugMmId4ntk8vawow7YJm9vkQ7qXBE0cE
+Message-ID: <CAHS8izM-ee5C8W2D2x9ChQz667PQEaYFOtgKZcFCMT4HRHL0fQ@mail.gmail.com>
+Subject: Re: [PATCH 18/18] mm, netmem: remove the page pool members in struct page
+To: Byungchul Park <byungchul@sk.com>
+Cc: willy@infradead.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-mm@kvack.org, kernel_team@skhynix.com, kuba@kernel.org, 
+	ilias.apalodimas@linaro.org, harry.yoo@oracle.com, hawk@kernel.org, 
+	akpm@linux-foundation.org, davem@davemloft.net, john.fastabend@gmail.com, 
+	andrew+netdev@lunn.ch, asml.silence@gmail.com, toke@redhat.com, 
+	tariqt@nvidia.com, edumazet@google.com, pabeni@redhat.com, saeedm@nvidia.com, 
+	leon@kernel.org, ast@kernel.org, daniel@iogearbox.net, david@redhat.com, 
+	lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, vbabka@suse.cz, 
+	rppt@kernel.org, surenb@google.com, mhocko@suse.com, horms@kernel.org, 
+	linux-rdma@vger.kernel.org, bpf@vger.kernel.org, vishal.moola@gmail.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, May 23, 2025 at 3:48=E2=80=AFAM James Clark <james.clark@linaro.org=
-> wrote:
+On Thu, May 22, 2025 at 8:26=E2=80=AFPM Byungchul Park <byungchul@sk.com> w=
+rote:
 >
-> On 22/05/2025 9:09 pm, Ian Rogers wrote:
-> > On Thu, May 22, 2025 at 10:10=E2=80=AFAM Namhyung Kim <namhyung@kernel.=
-org> wrote:
-> >>
-> >> This is a preparation for shell tests belong to an arch.
-> >
-> > I keep repeating that I don't like arch and I think ideally we'd be
-> > getting rid of the C arch tests. I just sent out a patch doing this
-> > for 1 test:
-> > https://lore.kernel.org/lkml/20250521165317.713463-2-irogers@google.com=
-/
-> > We should be able to make perf, tests, etc. dependent on a PMU rather
-> > than an architecture. This means that running perf built for ARM will
-> > be able to do things running on an instruction emulator on x86. It
+> Now that all the users of the page pool members in struct page have been
+> gone, the members can be removed from struct page.
 >
-> In this case for Arm SPE and Coresight you can only generate trace by
-> running on a full model or a real CPU, so I'm not sure if we could ever
-> get close to running on just an emulator.
-
-Ok, that's the SPE and coresight PMUs, shouldn't the bulk of "perf
-test" pass under an emulator and those tests skip when the PMUs aren't
-there?
-
-> > means the tool, the kernel APIs, etc. are generic and new
-> > architectures like RISC-V can test things. It means cross-platform
-> > (record on 1 machine type, report on another) can work without
-> > tripping over load bearing architecture ifdefs. It means that we
+> However, since struct netmem_desc might still use the space in struct
+> page, the size of struct netmem_desc should be checked, until struct
+> netmem_desc has its own instance from slab, to avoid conficting with
+> other members within struct page.
 >
-> I have thought about adding some generic decoding side tests for SPE and
-> Coresight, but couldn't really get past the fact that you need to put
-> the trace dump _and_ the binaries traced into the git repo. Not only
-> would this benefit testing on other arches like you say, but it would
-> also lock down that decoding of a known file doesn't regress which we
-> can't currently do by generating new trace every time the test runs.
+> Remove the page pool members in struct page and add a static checker for
+> the size.
 >
-> If we ever added this they would be separate tests though so they could
-> go in the top level folder, where the ones in the arch folder would
-> continue to do record and decode. Maybe naming the folders by PMU could
-> work, but you could also have both PMU name and arch name folders like:
+> Signed-off-by: Byungchul Park <byungchul@sk.com>
+> ---
+>  include/linux/mm_types.h | 11 -----------
+>  include/net/netmem.h     | 28 +++++-----------------------
+>  2 files changed, 5 insertions(+), 34 deletions(-)
 >
-> Recording/requires hardware:
+> diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
+> index 873e820e1521..5a7864eb9d76 100644
+> --- a/include/linux/mm_types.h
+> +++ b/include/linux/mm_types.h
+> @@ -119,17 +119,6 @@ struct page {
+>                          */
+>                         unsigned long private;
+>                 };
+> -               struct {        /* page_pool used by netstack */
+> -                       unsigned long _pp_mapping_pad;
+> -                       /**
+> -                        * @pp_magic: magic value to avoid recycling non
+> -                        * page_pool allocated pages.
+> -                        */
+> -                       unsigned long pp_magic;
+> -                       struct page_pool *pp;
+> -                       unsigned long dma_addr;
+> -                       atomic_long_t pp_ref_count;
+> -               };
+>                 struct {        /* Tail pages of compound page */
+>                         unsigned long compound_head;    /* Bit zero is se=
+t */
+>                 };
+> diff --git a/include/net/netmem.h b/include/net/netmem.h
+> index c63a7e20f5f3..257c22398d7a 100644
+> --- a/include/net/netmem.h
+> +++ b/include/net/netmem.h
+> @@ -77,30 +77,12 @@ struct net_iov_area {
+>         unsigned long base_virtual;
+>  };
 >
->    tools/perf/arch/arm64/tests/shell/cs_etm/
+> -/* These fields in struct page are used by the page_pool and net stack:
+> - *
+> - *        struct {
+> - *                unsigned long _pp_mapping_pad;
+> - *                unsigned long pp_magic;
+> - *                struct page_pool *pp;
+> - *                unsigned long dma_addr;
+> - *                atomic_long_t pp_ref_count;
+> - *        };
+> - *
+> - * We mirror the page_pool fields here so the page_pool can access these=
+ fields
+> - * without worrying whether the underlying fields belong to a page or ne=
+t_iov.
+> - *
+> - * The non-net stack fields of struct page are private to the mm stack a=
+nd must
+> - * never be mirrored to net_iov.
+> +/* XXX: The page pool fields in struct page have been removed but they
+> + * might still use the space in struct page.  Thus, the size of struct
+> + * netmem_desc should be under control until struct netmem_desc has its
+> + * own instance from slab.
+>   */
+> -#define NET_IOV_ASSERT_OFFSET(pg, iov)             \
+> -       static_assert(offsetof(struct page, pg) =3D=3D \
+> -                     offsetof(struct net_iov, iov))
+> -NET_IOV_ASSERT_OFFSET(pp_magic, pp_magic);
+> -NET_IOV_ASSERT_OFFSET(pp, pp);
+> -NET_IOV_ASSERT_OFFSET(dma_addr, dma_addr);
+> -NET_IOV_ASSERT_OFFSET(pp_ref_count, pp_ref_count);
+> -#undef NET_IOV_ASSERT_OFFSET
+> +static_assert(sizeof(struct netmem_desc) <=3D offsetof(struct page, _ref=
+count));
 >
-> Cross platform decode tests:
->
->    tools/perf/tests/shell/cs_etm/
->
-> Which would mirror how the source files are currently laid out:
->
->   tools/perf/arch/arm/util/cs-etm.c
->   tools/perf/util/cs-etm.c
 
-So this a digression, I don't necessarily disagree with it. Back to
-adding arch-specific shell tests, we should be working hard to not
-target work to a particular architecture. Making code, tests, etc.
-specific to an architecture means someone, quite often myself, has to
-come along later and undo the damage. Hybrid being a very large and
-long case in point where >1 core PMU was hard coded to only work
-within the tool for two specific PMUs. To be specific as to why
-notions of architecture in the code base are actively harmful (off the
-top of my head):
+Removing these asserts is actually a bit dangerous. Functions like
+netmem_or_pp_magic() rely on the fact that the offsets are the same
+between struct page and struct net_iov to access these fields without
+worrying about the type of the netmem. What we do in these helpers is
+we we clear the least significant bit of the netmem, and then  access
+the field. This works only because we verified at build time that the
+offset is the same.
 
-1) architecture isn't a specific enough term as PMUs are always
-evolving so we need to support figuring this out, not just hiding the
-affected code by an ifdef or build option;
+I think we have 3 options here:
 
-2) lower and more problematic test coverage (will we shellcheck an ARM
-test on x86? we're lowering the container coverage or requiring it to
-be run on multiple architectures);
+1. Keep the asserts as-is, then in the follow up patch where we remove
+netmem_desc from struct page, we update the asserts to make sure
+struct page and struct net_iov can grab the netmem_desc in a uniform
+way.
 
-3) the tests need to be able to handle being on the architecture with
-or without the PMU (such as under a hypervisor);
-3.1) the without PMU case is a very frequent source of my patching
-tests as most people test on a bare metal development machines and
-forget continuous testing environments;
-3.2) this kind of support can enable continuous testing efforts that
-are run under an emulator. If a cloud has no ARM offering they can at
-least emulator test, and SuSE have at least offered this. Google may
-or may not run testing through emulators and tests need to handle it,
-we have and do carry patches for this;
+2. We remove the asserts, but all the helpers that rely on
+__netmem_clear_lsb need to be modified to do custom handling of
+net_iov vs page. Something like:
 
-4) broken cross-platform support, such as with sample parsing where
-decoding a sample is missing pieces when not done on x86 (come on,
-this is terrible and we don't want more of it);
+static inline void netmem_or_pp_magic(netmem_ref netmem, unsigned long pp_m=
+agic)
+{
+  if (netmem_is_net_iov(netmem)
+     netmem_to_net_iov(netmem)->pp_magic |=3D pp_magic;
+  else
+    netmem_to_page(netmem)->pp_magic |=3D pp_magic;
+}
 
-5) the tests do and should make use of common library code for things
-like checking the perf event permissions, this code lives in
-tools/perf/tests/shell/lib but the arch dependencies go where? We
-shouldn't reinvent the shell testing environment per architecture.
+Option #2 requires extra checks, which may affect the performance
+reported by page_pool_bench_simple that I pointed you to before.
 
+3. We could swap out all the individual asserts for one assert, if
+both page and net_iov have a netmem_desc subfield. This will also need
+to be reworked when netmem_desc is eventually moved out of struct page
+and is slab allocated:
 
-I get that vendors would quite like things not to work on other
-architectures, or for event parsing [1], testing, etc. to be in some
-way crippled and require architecture specific reinvention. Why should
-their engineers invest in infrastructure and testing that could
-benefit someone else? Heck sometimes it feels like vendors may be
-doing everything in their power via broken PMU names, event names,
-etc. to make common infrastructure break when not run in their arch
-specific way [2]? I see things differently and indeed when things go
-wrong vendors argue that the generic code/behaviors needs to be
-changed (I'm thinking of Mark Rutland on Apple PMU support and the
-generic behavior changes made at that time that are now not carried
-through leading to event parsing and display inconsistencies as well
-as RISC-V needing to adopt a different event lookup strategy).
+NET_IOV_ASSERT_OFFSET(netmem_desc, netmem_desc);
 
-I want the perf tool to have its behavior be generic. The kernel has
-an arch directory for understandable reasons, for the perf tool the
-key thing is the PMU and we've been building out the infrastructure
-for this. Should the perf tool have every event, metric or syscall
-number for every architecture? For cross-platform work it doesn't seem
-like a completely terrible idea. I'm sensitive to binary size [3] so
-I'm not pushing on it.
-
-Anyway, this change is unnecessary as the current skipping behavior
-works and is better for the reasons enumerated above. This change gets
-a very large nack from me. I'm supportive of more IBS coverage in the
-rest of the series, but this change isn't required for that.
-
+--=20
 Thanks,
-Ian
-
-[1] https://lore.kernel.org/lkml/20250416045117.876775-1-irogers@google.com=
-/
-[2] https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-nex=
-t.git/tree/drivers/perf/arm_cspmu/arm_cspmu.c?h=3Dperf-tools-next#n150
-- please call it cpu_cycles to avoid ambiguity with the legacy event.
-[3] https://lore.kernel.org/lkml/20250417230740.86048-1-irogers@google.com/
-
-
-
-> Thanks
-> James
->
-> > benefit from more testing on generic pieces of code on all
-> > architectures - like sample parsing. We can always strcmp the PMU name
-> > or the architecture at runtime.
-> >
-> > Structure wise we could have:
-> > tools/perf/pmu/ibs_op/tests/
-> > tools/perf/pmu/ibs_op/tests/shell
-> >
-> > It feels noisy compared to just having the shell test in
-> > tools/perf/tests/shell skip when the PMU isn't present. There are also
-> > things like library dependencies that aren't clear when we have >1
-> > directory. I'd prefer if new testing followed the existing model
-> > rather than this.
-> >
-> > Thanks,
-> > Ian
-> >
+Mina
