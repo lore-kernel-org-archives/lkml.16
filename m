@@ -1,80 +1,80 @@
 Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8ECEE18E1A
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 17:25:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B9E818C011
+	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 17:27:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748021146; cv=none; b=TMkDiJP4uCCAepO8L7TRsDfyoz+EY3N/4ab61lk9b6JLiOT6Ct0WO2Y8MqRhKBmxfQ1lSOX3YXY39XQyeIYuiN8SAiB/qSlzNTCW0lSz/vxifh0O2M6IiQb9iu7dSUSLzpDRzZUL7zYV3h1OkFevZGpBMAT0DoIWtzUOg865Wdg=
+	t=1748021262; cv=none; b=au2N5ZO9VjKOCYDSjVHt66BwmydwEoiheiSgZ+NQlA70Q0rOjm6+4QBDL7L78sBs4EZo/kU87+2noeIBJ6DS6Ttd6+cWHM6iUwHVjpLgZBUmdVsnsBEZ5VNB6sEXzwiOeka/ISWUwAo7kAV37RIFR06DR7uwiRiCvjpK8vswOpA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748021146; c=relaxed/simple;
-	bh=7rcCNSJVSwEq1xrZ1u5/+ky+mLguy6zK/o7fp7M5HSY=;
+	s=arc-20240116; t=1748021262; c=relaxed/simple;
+	bh=UX9OZhcnhcNzoqUQz9+KX55OzNsT07DmDs9dne+IrQE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LjBNpPOtvL2vJxXXC5ZvOcd7pTv7gx4CKVRlE8HPxhs+xp2AS1x6GfJltLpyRjCPF50mP+rdy/MqxBsLz/vaqLGX4u7pF1+CTpSRP/1Hpej5Lru4p0Zg3njS3pE6k5nv7dCcqTt4ifeCKa70ArssOdckQJUEQ4WCWJlDlnYQzYE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=U6nUPANF; arc=none smtp.client-ip=205.220.180.131
+	 Content-Type:Content-Disposition:In-Reply-To; b=iFKRLN6Ihw7V+l+clqT7cldUx45ARVLpirwmEQOeAyKtK5LFeYJOMSha+VGkwU5Vx0X9wiBqVeXN3O3cJJ7OedQiTPR1FJUNOTlhp7beM6q1XLgQMPCMmk5RJ1X7W00vnACdA0s62+hax9YEwaYzhepYTD1D9EU2g2jel7qfFog=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=cI6R9VFS; arc=none smtp.client-ip=205.220.180.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="U6nUPANF"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54NBbAxB024842
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 17:25:43 GMT
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="cI6R9VFS"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54NCXuvF001325
+	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 17:27:40 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
 	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=HT0F8cGHWEQc238afO9TzLz/
-	3SBoXaCqVeKXpo6ggCQ=; b=U6nUPANFVoIfiIjVAy1DYa/qEGq5CTqTkPzfytOb
-	vuZaF/v8H1JQzFY9x5XaSVNhyS/X6m+fKK8W6f+oS0eDHdIVw9As/VSiE3+3E7VO
-	UsfEg8WVkI+u3Vn1xdESU/35fmlgqaQCEv0O0nwKqxx85bPButM8M5kOKyYr1LBG
-	MOkXhzv3U4Dz3pvVFEVPxkkoIqYqOE1ALP5Oa7QSj1wefkbhTIFTrggq9pavBZm/
-	R4kZoGjzly7rwYK37F/+0HzyZPPnz5lmBA0Ak/y+ivx1MHZ+lYrOQgbW3+wxLFha
-	bU1F0HPFDcauw5QQ5l3hNnk2IQVCXWTBFT6OCw6ruNcHBQ==
-Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com [209.85.219.70])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46rwf52ny2-1
+	:references:subject:to; s=qcppdkim1; bh=BVf8E7Hm0j7X/OZWTJXCmK0q
+	4KOUyKl7xvwHfOg/+ZQ=; b=cI6R9VFS7p77NVjciGQsr62WTLBi9NhIpbe/t49O
+	6RWfC2bamhuC3sE1aIxspGBb5vTebhyUmrkLdQuiaHnCn9Dq0e2E6GMD3VDXwsjJ
+	6M7KsuNwcHDN8NUzFZI5o5rx10e4xoexn08LpLdHMOnr+N8q+MExfGPmpD3For5w
+	duqCE5PKoPvehCiMl2vEEWmYd6Up3SMPMWPcHX5yZaVzv2qRAM3vX418qko7tWF9
+	tv70jVPjAMRzssTadWp7j44WOKB84PuErxYTm128i6lRiTTLo1JZVApNgNbgOYdJ
+	oEtp/ft4hpajzDcrd6Beae7kZCNDtvLSDTtOxZd++2oqJw==
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46s95ts2r7-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 17:25:43 +0000 (GMT)
-Received: by mail-qv1-f70.google.com with SMTP id 6a1803df08f44-6f8b2d2fef5so1217566d6.1
-        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 10:25:43 -0700 (PDT)
+	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 17:27:39 +0000 (GMT)
+Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7caee990721so11452085a.1
+        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 10:27:39 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748021143; x=1748625943;
+        d=1e100.net; s=20230601; t=1748021259; x=1748626059;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=HT0F8cGHWEQc238afO9TzLz/3SBoXaCqVeKXpo6ggCQ=;
-        b=WNLcmCj9oNyOyjhJBCsZeN3gWpaQ618D2RgT1jDotTehMvN9bcP2J7ZYQ+ky9zs/s4
-         U+575INCOIzJczcqqACNfGoYv6TrtVhoxhRF+YFey/4BPXh6GYTKrlmEuiIdwNti8tzy
-         8ar751OgpW0PU5ZALylWqxHkl+lxRRMPUXHq+CJAUfIG2PTYtZBaqqASZ9SEf3Hcuykb
-         ZYkR1X+1rAOOO/b6hc4C91VFeuw7a3uUIIejiHY6npvWj5flGFJIjtePRrX5hpKX8ZI3
-         bWiP+UHPan6zpVCkJLNF6sd3tc9xnZwXOHYOQb0wjoh8LuOOgDlSu3XCzFL2Qpoihd8B
-         z2EQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXvFC9PLTpuXQRZcX719VmRBiSEqelYmaGhRvuqlejMJ1vK8xxp3dT1WtsJiMXDG3+U19Pl95lSFfS1rfo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YydkukEDbrmnC1CQgT90dUATZB4YLMCTCWlyu8nZyY++v2a8MEj
-	ywtl7H0h2gO6HZjk2lwyLMYh69dMLKVQbHvX/yn8beW2SpBiJG5pIv0lYnCLDzqsGckoHpV9vYE
-	9URxeECKAbpSkWuXo6batykk39OUFx6iKFa5YcF7fpyNlVOhslQZiEGSubmkiJ/Fw8BY=
-X-Gm-Gg: ASbGncvWs3mlBx5qJGPyOb4CrgehFYHCUVeJ/DKqHznSQTBnxX/RMXNsExDIsTwM2Bq
-	Ka0jP+VmRhgUgqLQ1xG12T0b/+0ABQBAVvRnv+jL7c6Dl/7r6ubZyDaaTU6k6AolIByliCfqXz3
-	+8s0/pwMKWv+lQ+0pGQYz5HQEFx2mEJOP+34lKpaNXHAbar1xW5RseWOZEj2kzuM3m0nlytxNNd
-	JEoyEEKS7ITjLUcHnry0hmsTjN9+8Rne4f5NQvs/ESNOdeWcikv9sgksrqpJsvsTSXMXY0UgzwP
-	JTikIaYJQTlZUOxq+gUnJXZwwRUI1H6SM742Dq7JTFJx1At3GMZYuvEID5+ZQaIzYIIUAX1nxXA
+        bh=BVf8E7Hm0j7X/OZWTJXCmK0q4KOUyKl7xvwHfOg/+ZQ=;
+        b=S24b9GecB1yR04soNDDTizht7VJPdv73YYsUMtw9KbhTun5TBSGhKyzxDrLVPU09Mw
+         O7GrgEkpKggmIW5q/t5K3q7ExMOyxyPtoqF73D4sxpdkImsc/kRs0e8zSshhmzV2oceM
+         HKQgyNE1f2YvEOqAovRkgDtNx1Py2b6PTCvJgJBGuTYhut2KHDPRvvkoBSBg/4LsOUFX
+         nSLNi4Ko10vugR0lEnyVmGKBz0AWhhdsn5zIX2Sb6YShcTRP4M4pbb8Lx7sg+vNx/nUZ
+         8cUi9oqGE+Ep0ScDT91hIOAZxeQ1606XbSs9HarDFNrN0Pg+aqxMSXMhyg8g2DB/32h6
+         Ptbw==
+X-Forwarded-Encrypted: i=1; AJvYcCVO9vYlva45VMlxYsg2jSWxqX4HMJnqnd/woFUHgFrJ/ZtBYDOxXHMVixnDkGVgEltFEHr9M+8VMYSulFM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzVRmgTQoqPWh3nFd03ktpP7Up/IicXhXaQBsf3J4cMclwsaa+Z
+	CxMyNSRjX3BM5r/YfYIwQiY2FzjSSBf2m6dqkp5pTKB2xqr39CprzeDYjX2TSBto4RPHeu5Uwit
+	ITiHXaYGJn8QeS6o+lN+9xmBOhWa5eWJtRnYIUe4dZIGoNpmjOwnw7XMhY2NHs0ge8Lw=
+X-Gm-Gg: ASbGncvsoiy9fq0C3Pdkqc6NnL4bvd/Gz70aldvDqNLjOEeV6ZOZYUJamuQu5+quGGD
+	EUYuxignZ5WrYKIYpwlyZiZO0riFHcc528CERSsSguvcleYM1Sq+vTf8/FY5576Ei/p/MaOXRgA
+	o9T7WrhtIQ5vX2yoBsDEZmsL7aVk83c6RJZ/RgT9O761+nlolhogVi8n9tvnK1lfjm/SuT8Wnef
+	stKk4Tes9Cacp8kwuGPcYVB/LkX1kBNscS6ykUSP+njrYOQZ01Jqs07DD2vtdqXPU5bWRNSz1eQ
+	q/UqMzSIjBj7fE6Z8dASV0Cp4HVoMsThN+UG917zNRNzGlFVICDvyKOS19RMMwZdflzoSr48y5g
 	=
-X-Received: by 2002:a05:6214:1d0d:b0:6f8:e2ab:cb8a with SMTP id 6a1803df08f44-6fa9cfff18fmr5886666d6.5.1748021142758;
-        Fri, 23 May 2025 10:25:42 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IF1fuehJqloS19yc8HH7Owq/jk518Mad4i90LYUjgFgeJsI99YBxj75Y2MxKlxrFuXWwV/Y8Q==
-X-Received: by 2002:a05:6214:1d0d:b0:6f8:e2ab:cb8a with SMTP id 6a1803df08f44-6fa9cfff18fmr5886246d6.5.1748021142385;
-        Fri, 23 May 2025 10:25:42 -0700 (PDT)
+X-Received: by 2002:a05:620a:2416:b0:7c5:405e:e88f with SMTP id af79cd13be357-7ceecbd70d0mr10150885a.21.1748021258978;
+        Fri, 23 May 2025 10:27:38 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEF4v4FFYt2KJcqNPAHKwwKQS5uP0VM4a7TB6GLuNQGEXytudQve/yAzT3dTU2seJ6C3/uT+A==
+X-Received: by 2002:a05:620a:2416:b0:7c5:405e:e88f with SMTP id af79cd13be357-7ceecbd70d0mr10147185a.21.1748021258637;
+        Fri, 23 May 2025 10:27:38 -0700 (PDT)
 Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-328085b9033sm40183991fa.80.2025.05.23.10.25.41
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-3280d820443sm35986171fa.7.2025.05.23.10.27.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 May 2025 10:25:41 -0700 (PDT)
-Date: Fri, 23 May 2025 20:25:40 +0300
+        Fri, 23 May 2025 10:27:37 -0700 (PDT)
+Date: Fri, 23 May 2025 20:27:36 +0300
 From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Jyothi Kumar Seerapu <quic_jseerapu@quicinc.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jirislaby@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
-        quic_msavaliy@quicinc.com, quic_vtanuku@quicinc.com
-Subject: Re: [PATCH v1] serial: qcom-geni: Add support for 8 Mbps baud rate
-Message-ID: <fmt3prey5rrm5pqz7wn3p4g6lqpupazbbcahuzp6giod7l2v5j@u64bykj7pi7j>
-References: <20250523103721.5042-1-quic_jseerapu@quicinc.com>
+To: Johan Hovold <johan+linaro@kernel.org>
+Cc: Vinod Koul <vkoul@kernel.org>, Bard Liao <yung-chuan.liao@linux.intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>,
+        Sanyog Kale <sanyog.r.kale@intel.com>, linux-arm-msm@vger.kernel.org,
+        linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] soundwire: qcom: demote probe registration printk
+Message-ID: <wbpucxl3kf7kmob6bbhexivtgrsn5ehgh7zfuebx2vxjcg46ws@gfhdgi7yd24o>
+References: <20250523085317.11439-1-johan+linaro@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -83,38 +83,45 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250523103721.5042-1-quic_jseerapu@quicinc.com>
-X-Proofpoint-GUID: ebwqvKpM6Q_ryPeLQLFblA0k4cQxcghU
-X-Proofpoint-ORIG-GUID: ebwqvKpM6Q_ryPeLQLFblA0k4cQxcghU
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIzMDE1OSBTYWx0ZWRfX5t3Xi+vcXUCa
- fdSMjJnU5q1DlcB1/jxAi+yBq+Os6Z/whL3I6tJ8qV3nJKDf7bzB/WHwGVg9ekdhA7ZSGplLHdD
- riokUPMIVX56/N5oaIDRf44vZvykMtsautSQG9Dd5+7/epxhsqhRSseEH5zd9RdPEKdDrJIWh4v
- lvHugIWDy7vEiHj8AhAc+xwVSEMOJJOHYNZ9iZ+hzMlLeRW6UMImtqP4HTM7dzdqvdiL5jBgJoX
- rQGqIcjzQujCZYj+sG7MVr60SzJ8giLsAa3fsfw0lQC4aa9mqLjn4HMr/qA9ajOZ0Ou00F7oKCv
- hQKlUc3JSmbiGltC19JCVvpvpea873tSIFkfT9pZIk/G+/4wiezfjec5NG18scBYXjxvbT07Asz
- td4vYHfGZwsPXsNaDJe7js/jYnaH46UkpgDxj+K7wQ35jn+LkjSrSBuW7hwMCcV2209UcAKC
-X-Authority-Analysis: v=2.4 cv=R7UDGcRX c=1 sm=1 tr=0 ts=6830af97 cx=c_pps
- a=oc9J++0uMp73DTRD5QyR2A==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
- a=dt9VzEwgFbYA:10 a=COk6AnOGAAAA:8 a=EUspDBNiAAAA:8 a=yKaScz8-J4BNzvBwqzMA:9
- a=CjuIK1q_8ugA:10 a=iYH6xdkBrDN1Jqds4HTS:22 a=TjNXssC_j7lpFel5tvFf:22
+In-Reply-To: <20250523085317.11439-1-johan+linaro@kernel.org>
+X-Authority-Analysis: v=2.4 cv=QKBoRhLL c=1 sm=1 tr=0 ts=6830b00b cx=c_pps
+ a=qKBjSQ1v91RyAK45QCPf5w==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
+ a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=EUspDBNiAAAA:8 a=RZT9l893yBoyBf-nb0IA:9
+ a=CjuIK1q_8ugA:10 a=NFOGd7dJGGMPyQGDc5-O:22
+X-Proofpoint-ORIG-GUID: igz0J24WqtMLNYU020DmCiNy8KMkEjVN
+X-Proofpoint-GUID: igz0J24WqtMLNYU020DmCiNy8KMkEjVN
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIzMDE1OSBTYWx0ZWRfXwqudnM2dZUWW
+ NAP7gFTjLBCKXQO9X7xZp6Qrt3IWzt5xE+p3hSMBoii125b0tE1eN3DGpii5dz6ve0G87O3rxky
+ AZokzah3RHGWqoJBvr7mCsEqxRtz4zv7YOQZH1ZUwqXHfYwUjQ078IRvkNkCz8RhiB7rFhYR5fh
+ j9v51GgJeogmJUw6vai2CdcGFJQdZZLqAUYM5cENyJfEUZG3i2fr/dILhhvV14Up4elJzqc8AYg
+ 5uU1bbWS6MXpoBYsHvLEKsY755syt4HQzj8eDdr8RiQZEA5eIa+54Nck0Bt7ysxbNG2dqkiPfEs
+ tCWMrdj6vxwHNLpL9SSmayIv7PNpJ0Da4EVRp9vBvwDKSIYvmnfU1XyCHejAyMXAZos2ZHLszz+
+ n9vJwvUm1Tt4vA1M82nWC/6w0UasCsUY3Z6f+Dvzhc0Isv8knTsp8MGvNTduxpJnqrGYHEnF
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
  definitions=2025-05-23_06,2025-05-22_01,2025-03-28_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- phishscore=0 clxscore=1015 mlxlogscore=881 priorityscore=1501 spamscore=0
- bulkscore=0 lowpriorityscore=0 malwarescore=0 suspectscore=0 mlxscore=0
- impostorscore=0 adultscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
- definitions=main-2505230159
+ mlxscore=0 spamscore=0 clxscore=1015 phishscore=0 lowpriorityscore=0
+ adultscore=0 mlxlogscore=999 suspectscore=0 bulkscore=0 impostorscore=0
+ priorityscore=1501 malwarescore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505160000 definitions=main-2505230159
 
-On Fri, May 23, 2025 at 04:07:21PM +0530, Jyothi Kumar Seerapu wrote:
-> Current GENI UART driver supports Max Baud rate up to 4 Mbps.
-> Add support to increase maximum baud rate to 8 Mbps.
+On Fri, May 23, 2025 at 10:53:17AM +0200, Johan Hovold wrote:
+> Driver should generally by quiet on successful probe.
 > 
-> Signed-off-by: Jyothi Kumar Seerapu <quic_jseerapu@quicinc.com>
+> Demote the Qualcomm controller registration info message to debug level
+> to make boot logs a little less noisy:
+> 
+> qcom-soundwire 6ab0000.soundwire: Qualcomm Soundwire controller v2.0.0 Registered
+> qcom-soundwire 6ad0000.soundwire: Qualcomm Soundwire controller v2.0.0 Registered
+> qcom-soundwire 6b10000.soundwire: Qualcomm Soundwire controller v2.0.0 Registered
+> qcom-soundwire 6d30000.soundwire: Qualcomm Soundwire controller v2.0.0 Registered
+> 
+> Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
 > ---
->  drivers/tty/serial/qcom_geni_serial.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  drivers/soundwire/qcom.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
 > 
 
 Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
