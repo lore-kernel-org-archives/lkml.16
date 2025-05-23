@@ -1,109 +1,120 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from 3.mo576.mail-out.ovh.net (3.mo576.mail-out.ovh.net [188.165.52.203])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2252E1DACB1;
-	Fri, 23 May 2025 20:19:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26D8D22338
+	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 20:21:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.165.52.203
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748031580; cv=none; b=rYjg+lBEFxMEWMD33FYvzKjwcUBu1GAD9fRDaSL6qsrzhNZYHwEwbz2NXFDEeNly36SZrQA30Z+hgXjPlMJuMnp3ZP6CmyQRJ+ih92gLPXId7v6/4PneIG19A5jVvt95+Stg6sKQcx/93n4AbXWhxnzklgrfCUDm0HnvGc3D2j8=
+	t=1748031720; cv=none; b=DYueexsOLYpxh9IvRWr/wfqp+Z6q/N15DGtTRFocxLtkxoOiYRILKQhJGDmQumn+CQO3qeamiyOQrOpxslxXLzA6OYjxrxohBN/+XvKsCb3/oYPcZ9NgLlSz0FNcUQ4AqiTLOUrVL931W5R+S2eRnjnDhpf8R+OAm8QjpqhB71c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748031580; c=relaxed/simple;
-	bh=J39Tu8C1B1Ew13gSMOZ+Aoe329Y7AmIvYP41Spj66gI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YkzAfjxQWDdQ8JUUvjdCPaddYq9zuu8C/wjDedOkl+Dkgv4ag8VqemcSEEf0kI5k1vafH4UH+WQGoY0O0+09QMqfnyGyeqCvQ/mVJrUR5wF+87aVZ+G4xiBT0JbNObilGq2o/YqAjeo6lBhztegXrcglnQYC6ucqR7yctxi01fo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J3Wl17+B; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748031720; c=relaxed/simple;
+	bh=xuueZm23eh49YiSgqxfgFZPFyU4JQVsCTAJLi+OWt98=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=WJceSSv9VLHgci2JEcMNROZtTcp/pfrHe45UvO5BChAPPtkHfYYpneNbKRZRpmZoXFEhEcEhqv0Ndeg5XIa3l/HRO0y4xTGujaSxwi5IRr8NmnvthQiErVWez1UtREnDcQGxPa3KIbW82kouyYi6LBTI1IlrrOuXuaWNXaFSzME=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=armadeus.com; spf=pass smtp.mailfrom=armadeus.com; dkim=pass (2048-bit key) header.d=armadeus.com header.i=@armadeus.com header.b=Ao/o+l/x; arc=none smtp.client-ip=188.165.52.203
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=armadeus.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=armadeus.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J3Wl17+B"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 649CBC4CEE9;
-	Fri, 23 May 2025 20:19:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748031579;
-	bh=J39Tu8C1B1Ew13gSMOZ+Aoe329Y7AmIvYP41Spj66gI=;
-	h=From:To:Cc:Subject:Date:From;
-	b=J3Wl17+BgntjwUucfpOuLVig3LlcFG6us+myWqo8okhujzSosvpfYfIwT13qhiwbm
-	 cs+L5o7nly32VPrkqGpWgOulnU1ru2vkVbrHYZH2vv+vlZhXgOJAkrx+xcmq2tE7cN
-	 FOrovO+fCZ5TUN/e10dMDt7q0MK1nQSVQepXdUJSVVIJHh04x7mzinrXOnQEp9gXTF
-	 SPPd8B6pHPVOIb5Z/tSAW82jfU3WwiO/uuCDxlu3uWttFM+oqi2goWg2er//JFxOHM
-	 OrPnZAmie6EncJ1GrcZmxF3Kbx5sMRldjWw53Ft78p++uPXd1xKsIRo5Rlj1Xkmwau
-	 VTXPfayA9FyfA==
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: linux-pci@vger.kernel.org
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Cyril Brulebois <kibi@debian.org>,
-	Nicolas Saenz Julienne <nsaenz@kernel.org>,
-	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Jim Quinlan <james.quinlan@broadcom.com>,
-	bcm-kernel-feedback-list@broadcom.com,
-	linux-kernel@vger.kernel.org,
-	Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH] PCI/pwrctrl: Skip creating platform device unless CONFIG_PCI_PWRCTL enabled
-Date: Fri, 23 May 2025 15:17:59 -0500
-Message-ID: <20250523201935.1586198-1-helgaas@kernel.org>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=armadeus.com header.i=@armadeus.com header.b="Ao/o+l/x"
+Received: from director6.ghost.mail-out.ovh.net (unknown [10.108.17.147])
+	by mo576.mail-out.ovh.net (Postfix) with ESMTP id 4b3q2P11WNz32GR
+	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 15:34:05 +0000 (UTC)
+Received: from ghost-submission-5b5ff79f4f-fwdt7 (unknown [10.108.54.213])
+	by director6.ghost.mail-out.ovh.net (Postfix) with ESMTPS id 8C56190E15;
+	Fri, 23 May 2025 15:34:02 +0000 (UTC)
+Received: from armadeus.com ([37.59.142.106])
+	by ghost-submission-5b5ff79f4f-fwdt7 with ESMTPSA
+	id 48OmEWqVMGjaMwEAmS5tiw
+	(envelope-from <sebastien.szymanski@armadeus.com>); Fri, 23 May 2025 15:34:02 +0000
+Authentication-Results:garm.ovh; auth=pass (GARM-106R00618957c2c-41e2-45dd-a874-a02a4f70d8a2,
+                    E55FAF7D42BA6FEE76EB3B6A0F061FDB1FCDFC7F) smtp.auth=sebastien.szymanski@armadeus.com
+X-OVh-ClientIp:86.243.209.203
+Message-ID: <65670a02-e217-4d0f-955d-d13ca0240819@armadeus.com>
+Date: Fri, 23 May 2025 17:34:01 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] Enable MIPI filtering by DT on i.MX8M*
+To: =?UTF-8?Q?Krzysztof_Ha=C5=82asa?= <khalasa@piap.pl>,
+ Jacopo Mondi <jacopo.mondi@ideasonboard.com>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+ Rui Miguel Silva <rmfrfs@gmail.com>, Martin Kepplinger <martink@posteo.de>,
+ Purism Kernel Team <kernel@puri.sm>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+ Sascha Hauer <s.hauer@pengutronix.de>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>, linux-media@vger.kernel.org,
+ imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+References: <m3h61u9jy2.fsf@t19.piap.pl>
+ <20250509103733.GE28896@pendragon.ideasonboard.com>
+ <m3o6vn8np5.fsf@t19.piap.pl>
+ <iegnn5xoosqpk52hvipcr73aliwhqtsq6r6ctvt5756bhy6yen@rqcdongb7fdf>
+ <m31psg97dy.fsf@t19.piap.pl> <m3plfz7io0.fsf@t19.piap.pl>
+Content-Language: en-US
+From: =?UTF-8?Q?S=C3=A9bastien_Szymanski?= <sebastien.szymanski@armadeus.com>
+Autocrypt: addr=sebastien.szymanski@armadeus.com; keydata=
+ xsBNBFNfZLEBCACv1lqSePHJNpRgcnER+3emy+Arjz84zFax3XkogjY/e3ZneihIgWrVKe5M
+ ql16pX4KTkzNgMUKz4bG/XwT3kjcrXshxFLlg7KrHMl287C+W+QOUjnjVeRi/su+SPmjz8VD
+ yr11h+ZkVLAWhS+uQJ93jy1NwG8M4t1kBLAVHHD5Vw4FJ+3ouaVYIp1X1Cr8bVKQw33Q1aTd
+ ro0kMBb96B9vNu7ciJZ3gvlaBzUEKOgNnq9KaywuLnqrqr4HUIn5JuxZjCjJzt9kTAKcTfp2
+ cJM8qpp+2FF5qtbkse9fZ6M64qozgOPr9Tk4Amf9fZEUQ6UNw14mmBZuXSzoHe75gI7TABEB
+ AAHNN1PDqWJhc3RpZW4gU1pZTUFOU0tJIDxzZWJhc3RpZW4uc3p5bWFuc2tpQGFybWFkZXVz
+ LmNvbT7CwJAEEwEIADoCGyMHCwkIBwMCAQYVCAIJCgsEFgIDAQIeAQIXgBYhBJwGygpYm/1C
+ /GCmwbCaKeiBMmTiBQJdhIHLAAoJELCaKeiBMmTixXIH/2W3kbzRG0UF81jtRRnp0H83rjDT
+ v0H+8fgFMRL/7HCJ1QPArkfRJlM2wlJkN+ChP09CCarYfUEHfRCHlTb7At6Yyrz1jziD7ZwX
+ 8IWHYRXnZkY5eZc5DsiUgq6JH49kt+GPzK8UVP9MTa6zkBpPCUf7LzZ4pD3FihdkT52BU3gI
+ d9P49fSI0TYySlb/VKn815aOhvwEr7+Dh3mZUjSh7saofbRmVUOr7p+R3MvvGI19/IJZjeOE
+ ZWliODDOt6HnBOtoGSXMcNIFF6snH52D5N5gY88njZjTwhgGGUBix1bsgf/EY0v4R5itZBXB
+ B/Ze4Tm++YHaB75hZK6PQu/YRv7OwE0EU19ksQEIALo7jhXddrXBTRu5SAjelV53jyHBJTX/
+ vN4nL/VbbW/saca+NJjDSxx5DBmotZbQdWIyZiSIjU/xnTREvtDrl6ZeSsKWd7ZqiuiY4fSR
+ zwuQp9rd0yqRuxesrWeyJB1zCSdEvLyKASERt+nxkOA+IzJ4y1qLtvnWr+SL1AXgTMw+Tkyw
+ KIDCRWHTIYas11ldGj82gOIpYeXnapeNLHfT4EQwg0NeWYHynJxAQWiX5aPlw0uSpAQSsBXQ
+ FIe3fpoveMSnXK+PG2BBOzexYv7r4S70a6sF9sgTTPpfKqUaqqC+u1+bUX6alTAKhGKJywaF
+ 6ViqLlgY8PfwohSyAlqlTRMAEQEAAcLAdgQYAQgAIAIbDBYhBJwGygpYm/1C/GCmwbCaKeiB
+ MmTiBQJdhIHSAAoJELCaKeiBMmTitU8IAK7NQM3fEwaF5XaKtepYWsVka44CD8A9e4r7NVK9
+ ugirKvXirIxBSDmN/Db862NmVpITsZ6ERNSNZLm/7k55N+TexKYiFZeU7G92TEfAM6qPElvx
+ DLEcrkNMq9r08YZeUloacsq31AL5fK4LW+xdvXudkdiKRMJsdTpmff3x5kIziGOHjwFP9wve
+ ZgEH52gpbRsP8Whx/Z2lNX/BBRmFM8OnEXFsjjqDzYThdxTq85wGPpkgvvUGyPNRD7TpbB1C
+ pajOUUkPxgj5LKt77HD1afeZNudWhgcdkbtT5PMQTT0WY6wvMEj9S1+bGPeXRGWLYB7gHQ+L
+ JNoSD7Kz6Y9qnKo=
+In-Reply-To: <m3plfz7io0.fsf@t19.piap.pl>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-Ovh-Tracer-Id: 10767262288169724891
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: -100
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgdelvdefucdltddurdegfedvrddttddmucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepkfffgggfuffvvehfhfgjtgfgsehtkeertddtvdejnecuhfhrohhmpefurogsrghsthhivghnucfuiiihmhgrnhhskhhiuceoshgvsggrshhtihgvnhdrshiihihmrghnshhkihesrghrmhgruggvuhhsrdgtohhmqeenucggtffrrghtthgvrhhnpedtgeehtdduledtudevveekveevveefffdthedtieekgeeukeevtdffieegteekhfenucfkphepuddvjedrtddrtddruddpkeeirddvgeefrddvtdelrddvtdefpdefjedrheelrddugedvrddutdeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepuddvjedrtddrtddruddpmhgrihhlfhhrohhmpehsvggsrghsthhivghnrdhsiiihmhgrnhhskhhisegrrhhmrgguvghushdrtghomhdpnhgspghrtghpthhtohepuddprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdpoffvtefjohhsthepmhhoheejiegmpdhmohguvgepshhmthhpohhuth
+DKIM-Signature: a=rsa-sha256; bh=l5StDh65JnrKX3boH0CcwErYPyl25P8m60tElznRk+w=;
+ c=relaxed/relaxed; d=armadeus.com; h=From; s=ovhmo103079-selector1;
+ t=1748014445; v=1;
+ b=Ao/o+l/xZNPvZ518fBJ3ik06H2HDn2vcsaVQP3ik/XBaVb+Lui0D/KE2wImz5uiJNwNrxw0M
+ S1LgXSY9mR6CRVVcIjAFCEGjTMzGCcM2UYtZ24n5zxfOSb8SoijOv6oXeEe2Y+rPR1Lh7SDDJdw
+ dQv2g4aaCzcYgaR0TYd71WMTiyS82u7088wPo5S2srNBjiGXRnpA6cZMjbRrYOWTipejim1yq6W
+ yNF/BVQQ4RSnt7l88AK4X9k4Et8yExKTMYYxYDotP2JtEHILBRV0o8FUgQNCdh6YseCAIpUVlka
+ sxhfqDHidl2AaGy3SbWD/j18CE7rBjjAj2HM1lu7ZazbA==
 
-From: Bjorn Helgaas <bhelgaas@google.com>
+Hello,
 
-If devicetree describes power supplies related to a PCI device,
-pci_pwrctrl_create_device() previously created a pwrctrl platform device
-even if CONFIG_PCI_PWRCTL was not enabled.
+On 5/23/25 11:58 AM, Krzysztof Hałasa wrote:
+> Now, what do we do with it?
+> Is anybody able to verify the CSIC version register value on i.MX8MM?
+> Something like devmem read32 0x32E50000 (or 0x32E40000 for CSI1) WHILE
+> RUNNING CAPTURE on that very CSI would do the trick (using your
+> favorite instance of devmem/devmem2/etc). Alternatively one could add
+> a debug printk to the csic module.
 
-When pci_pwrctrl_create_device() creates a pwrctrl device and returns it,
-pci_scan_device() doesn't enumerating the PCI device on the assumption that
-the pwrctrl core will rescan the bus after turning on the power.  If
-CONFIG_PCI_PWRCTL is not enabled, the rescan never happens.
+On i.MX8MM mipi_csi is at 32e30000. NXP kernel (6.12.3) with ov5640 camera:
 
-This breaks PCI enumeration on any system that describes power supplies in
-devicetree but does not use pwrctrl.  Jim reported that some brcmstb
-platforms break this way.
+# devmem 0x32E30000 32
+0x03060301
 
-If CONFIG_PCI_PWRCTL is not enabled, skip creating the pwrctrl platform
-device and scan the device normally.
+Regards,
 
-Fixes: 957f40d039a9 ("PCI/pwrctrl: Move creation of pwrctrl devices to pci_scan_device()")
-Reported-by: Jim Quinlan <james.quinlan@broadcom.com>
-Closes: https://lore.kernel.org/r/CA+-6iNwgaByXEYD3j=-+H_PKAxXRU78svPMRHDKKci8AGXAUPg@mail.gmail.com
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
----
-This an alternate to
-https://lore.kernel.org/r/20250522140326.93869-1-manivannan.sadhasivam@linaro.org
-
-It should accomplish the same thing but I think using #ifdef makes it a
-little more visible and easier to see that pci_pwrctrl_create_device() is
-only relevant when CONFIG_PCI_PWRCTL is enabled.
-
- drivers/pci/probe.c | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index 364fa2a514f8..855da472b608 100644
---- a/drivers/pci/probe.c
-+++ b/drivers/pci/probe.c
-@@ -2510,6 +2510,7 @@ EXPORT_SYMBOL(pci_bus_read_dev_vendor_id);
- 
- static struct platform_device *pci_pwrctrl_create_device(struct pci_bus *bus, int devfn)
- {
-+#if defined(CONFIG_PCI_PWRCTL) || defined(CONFIG_PCI_PWRCTL_MODULE)
- 	struct pci_host_bridge *host = pci_find_host_bridge(bus);
- 	struct platform_device *pdev;
- 	struct device_node *np;
-@@ -2536,6 +2537,9 @@ static struct platform_device *pci_pwrctrl_create_device(struct pci_bus *bus, in
- 	}
- 
- 	return pdev;
-+#else
-+	return NULL;
-+#endif
- }
- 
- /*
 -- 
-2.43.0
-
+Sébastien Szymanski, Armadeus Systems
+Software engineer
