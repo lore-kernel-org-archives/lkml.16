@@ -1,513 +1,363 @@
-Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FEAC19A
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 00:03:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 887DC14286
+	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 00:04:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747958631; cv=none; b=bjXGXC+GDMH7krmXbzjnp0iU+Xnbws64DdfKXwKwkUf/4bphmdCAfp5ARTj3ZMQYjt7Tpz8zlzyMFDeP7Atd7z5KGtgocX47c90omSPlS3zoxkFI/+45AIPnWSqLi1UGSUj/SBQ/D76wtxhsTHMgMXUdNps46KZcXYM1Vs+eMtw=
+	t=1747958648; cv=none; b=bhN+GX8YGvNuwEaDy/ayHa1m7FTIoyEc0Te/7sLICkApSTyjO5x05G1pICdS73te/nlc0xHS2JAljtutXDKst6Q52oBSUbgKMrTS+4d6P6PeT+s8HtubccieNLaGf6jDYiHkUIZYfBKDoPAMFtxAmxyj//YHVt/TiqfvIy+iNJw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747958631; c=relaxed/simple;
-	bh=+9u1SK4z2fhRkG/BcHJvgYtCLM4UZXnXdrOpWJz6ET4=;
-	h=From:References:In-Reply-To:MIME-Version:Date:Message-ID:Subject:
-	 To:Content-Type; b=Ul/j7wQu59iIg4mL3sHEuTmuM/NGy7uHySF6+Ewne7F7gRN7CYlRuND7Wsh7wr5A5k/+/wzztUOAL5v3MOFF4TBmzDpHLm2WhmyVao2ZEw/IZI+kr0ntGDFCsyGyLM7wTZjfvZcq0nfMeNmwFxChOl581Kfe50zqXOHDNiGqWmY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=Eh7uTdv2; arc=none smtp.client-ip=209.85.222.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+	s=arc-20240116; t=1747958648; c=relaxed/simple;
+	bh=vKCf4eXr12kYRxAx2Qu/jGrqXJTrV9G9aGm1c2GR+xU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=owkbIPtywYtYKvVaO9S5atIyH/6TDjl7Fy/4pRI7SCkH6jyK4sQtcuYB3ZIcIDOAgdLYheELDJDmDnUKQ6WCE3ZFxSlZ5Dl5G3x/Woo5eunCkPaNo8CsqYhBA7V+VOUFIuo887emZAhfTwQZWTs/2rKzGU5W8nA3fNv4+1YkwWk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=SS8HY5wd; arc=none smtp.client-ip=209.85.208.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="Eh7uTdv2"
-Received: by mail-qk1-f171.google.com with SMTP id af79cd13be357-7c560c55bc1so835840285a.1
-        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 17:03:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SS8HY5wd"
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-6000791e832so2727a12.1
+        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 17:04:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1747958628; x=1748563428; darn=vger.kernel.org;
-        h=to:subject:message-id:date:thread-index:mime-version:in-reply-to
-         :references:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=L57r33p6RdR4V1cblXnd8KW+jMhipzE+3Bd3o8t/hg0=;
-        b=Eh7uTdv2ys/i64Nu4Kn7Stp5dW5JUAdZG5hQ91//NM3nv8X8xr/IFRSNtfoASHqd/u
-         cOuwC+pRhzQ1VEbV0mCuZAYZA8/obi3od6lA8ud+NTrZpqW5XXavZ0gFWZlfAEwZzOGT
-         LHAAzV0d9/+CDAJD9xCsrA4Z6846XkrMR3kuo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747958628; x=1748563428;
-        h=to:subject:message-id:date:thread-index:mime-version:in-reply-to
-         :references:from:x-gm-message-state:from:to:cc:subject:date
+        d=google.com; s=20230601; t=1747958645; x=1748563445; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=L57r33p6RdR4V1cblXnd8KW+jMhipzE+3Bd3o8t/hg0=;
-        b=jhHWNknOcpEgwUCWRRRxz2gRv4p6OsPIAU9T4p3tPH6iDjZghOvH4nU3GH98Z54RRe
-         C51QT2bfrY16fyjhf58lIn9BlqCSgRpG1vWOwEGMfFb+m5KSQi7y4dzkXpzN/q3FvO0c
-         IAzJ16N7ndMbgMUiYL3M4WFdicK5H6SPAHE3DH7vzTFXo7OFCY/fzu+5xy3sMh8W0eke
-         JCZKwZQFCceNP3hejpGkTDQn0MlcJDh6Cnkp751xDTTdKxbz2m2SvJFFhPbM9w/35L2o
-         iRnnLmPjX54ABtLLNhJTf59vhaUzInVmDKimhbE67FUIR+5U/HRwiYkzT9zMFbBP17LZ
-         gYSQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWXfnk/L+6w1H8mXNZQ8dqWoYgYw9N9Wyjmz78OVKD8Orwh+F3GePeer4ZsfACvERw0tTVqzsAuck8g6RU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz7FxFy/FcGTaL+hAle49DBIUCYssnyPdhwEIOZ+Vh4H8uvkVpT
-	Mb3SjI3WeyPis+oKx7e14blCsNkiQ1n2YhrOFMa8daqI99tL8t3MnW7Pt/j9yHTexVeI+BDlxDR
-	RgSVjCtUX2lFP81cqjPl8r2uj4XTH8qpozupVZFoC
-X-Gm-Gg: ASbGncv84y+umlr9CwVrSJqq+z0H3EoiTuBQ0FiuS0EzBbhWV3MQH1+qPey+z7099nk
-	tddAZ2S1IvDlSCl6woTrRMFwMNsaFze0V+pvzmByNM59E1aqADtZ7xtvFklhR0heKstNgqj2qyr
-	FvFHBB9RAQ2qLVojOaEP7wFMsCRc50atNnzfWQVvKoMaku
-X-Google-Smtp-Source: AGHT+IHi9XsOKbk7IF//vrYaviFV99YOSxxu+OUOCYnSN6cXsi1Ha0iKoNp1o6aW7SiL6xcmJXoYfGjNXSX1IUn8DuM=
-X-Received: by 2002:a05:620a:17a2:b0:7c5:50ab:de07 with SMTP id
- af79cd13be357-7cd46722387mr4138264485a.21.1747958628061; Thu, 22 May 2025
- 17:03:48 -0700 (PDT)
-From: William Zhang <william.zhang@broadcom.com>
-References: <20250521080325.581366-1-noltari@gmail.com>
-In-Reply-To: <20250521080325.581366-1-noltari@gmail.com>
+        bh=lVD8X8AUvyybzarXJ5GC2U4oMyc/mzPDkV97mugri4c=;
+        b=SS8HY5wdqfxTW5z8/lf6BH9nv2rWfjU9yeQ2W79EahdmhzjUQ3kOcsG9ga1ZgAkki9
+         DFf6aWJH9wg0hCNNU92lOqA9ISOQXloTwLIPVxJFz8ylMGnU6/01giif+j4KtkCYBgHK
+         9J7gBYXl04DSqvkpVwsUQ+HSiQ3th8+MGhPW4pFrFHCimZ8NuVE0io/UH+o8r1O2INAF
+         SF3X8ACpEaaEqaOrH6/u9CQta+6s28S4kHRd+T5kJXEyFHSlfl4+8bRgyoef8WLvuKH5
+         v/lc28cG7HJV3B4RieXwCHz+01ggdY5HleieIpth49G+6+BgciGprn5EuyjVgZ0YOOjf
+         ULwA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747958645; x=1748563445;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=lVD8X8AUvyybzarXJ5GC2U4oMyc/mzPDkV97mugri4c=;
+        b=o7My0VreblSNWKBfrRqN2wfUzEbZK/xU2NK9bza6znsO3orYQg+QfaxqlMDU/Iopo0
+         aA9uBmgtZtdR+ojRoKiqM+tgPybEW+BavYcPsw2jNyI984XOBCvWwkAm9FbOwNh0tPPZ
+         w7zC+YtJl6EJRRFGqZ2ybnQ08aHNWQflXYx1BciJzLeCU6OYBUUmhqYc6tbzMqwtURmg
+         /Kiv7t7ENP+GTCUs5Q3SNcj0Oq5+R59YtGHmzXYLoO9tSLv9fch2LaJJYckocu3rMv8R
+         PAu2Nsxq7AOh8em5Fk5Z+m/E4rkQ3hjS+EqW3gBDIb2Wfb9i983YU6vlFtgSGQpYV3m4
+         XzrA==
+X-Forwarded-Encrypted: i=1; AJvYcCVtueJB4NCXIiH2OpK9cJzBJnnCVWe0Hp9Js7dkbyjLjlwo0Zeuwa7btZ92mh5XhXhl/zD00EaH/iUEReE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwRemIR1eWYj7VvUfYyqAe/J7CaoTQiZAOz3+sNV+KPYHAGeaqg
+	bH/cyIiBFOV5rcXBLqqbCyGM9wESpDuS8K7EMSXGPoRleft6WpWHPGTSzfHiwtTxbRyX2Z8X+4e
+	H+AScSG+LmP7W5qD4LkAgDAlR8E3T9GOVrjWb19Cx
+X-Gm-Gg: ASbGncuqDbUmHLEat2BYKjabb8qj2Lxi8gdRY2yOqcnWAFk3NMX+E/nWGNlilgT6F7C
+	9lnU078DycRqFgtcG+yqoXuuD0lfRYBrwiVJOA3u+IMiBbQyx0K30Ndhv5vscZ6HkGdnZxvsNCB
+	/SuM4xtcg5JeNQhLg87eIGVDtmGGX0PTpL3+uf0LMSdBn9EX4LvfCEMhOS1dWxgxuXaYa2dwHhZ
+	LNNrG06HaLu
+X-Google-Smtp-Source: AGHT+IGtOPOFXtk1qE/7IEW4P2AJsydCtXrkOUOUl0Enemtp8TWCRM8K7TT/r/fI+huGk4Dy+j0mrDWosz8K71gJVTs=
+X-Received: by 2002:aa7:d402:0:b0:601:7b94:b80e with SMTP id
+ 4fb4d7f45d1cf-60293687eebmr19829a12.3.1747958644620; Thu, 22 May 2025
+ 17:04:04 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQEau4l2NieTobi/jvpPRXRGx/ckD7VhdRpg
-Date: Thu, 22 May 2025 17:03:46 -0700
-X-Gm-Features: AX0GCFuncgF1XPgtLCJIcLqgZHOWWtWNB8O4WMzDpDY2GTxQfZTMmWysLGcd2i8
-Message-ID: <7cfd86d84bec5522dec4292605d6828e@mail.gmail.com>
-Subject: RE: [PATCH v5] mtd: rawnand: brcmnand: legacy exec_op implementation
-To: =?UTF-8?B?w4FsdmFybyBGZXJuw6FuZGV6IFJvamFz?= <noltari@gmail.com>, 
-	linux-mtd@lists.infradead.org, dregan@broadcom.com, miquel.raynal@bootlin.com, 
-	bcm-kernel-feedback-list@broadcom.com, 
-	Florian Fainelli <florian.fainelli@broadcom.com>, rafal@milecki.pl, 
-	computersforpeace@gmail.com, Kamal Dasu <kamal.dasu@broadcom.com>, 
-	Dan Beygelman <dan.beygelman@broadcom.com>, frieder.schrempf@kontron.de, 
-	linux-kernel@vger.kernel.org, vigneshr@ti.com, richard@nod.at, 
-	bbrezillon@kernel.org, kdasu.kdev@gmail.com, jaimeliao.tw@gmail.com, 
-	kilobyte@angband.pl, jonas.gorski@gmail.com, dgcbueu@gmail.com
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-	boundary="000000000000216afa0635c25594"
-
---000000000000216afa0635c25594
+References: <CAGsJ_4zMNaNjRXbtDD6xYfDhckcDCnTvv+4-yB1xpuYcur=fyw@mail.gmail.com>
+ <CA+EESO5BafvOpcbEX1g3ELPMCUdVQ9TFBGKH-sD3OiJvofMkAg@mail.gmail.com> <CAGsJ_4zKZKjABBXGnPbfudPN0ShnKEsNozaSQHtwDFj_-vv7bA@mail.gmail.com>
+In-Reply-To: <CAGsJ_4zKZKjABBXGnPbfudPN0ShnKEsNozaSQHtwDFj_-vv7bA@mail.gmail.com>
+From: Lokesh Gidra <lokeshgidra@google.com>
+Date: Thu, 22 May 2025 17:03:53 -0700
+X-Gm-Features: AX0GCFub2LNXdE27Lps7e6Sh6Q4ceuCxqOiksfPw9_HxO430FqsU3Za9VZxlalg
+Message-ID: <CA+EESO6VgQaHqZq9earDSMyxg2pqjPtUAL74ndN8TUOnLY=c7g@mail.gmail.com>
+Subject: Re: [BUG]userfaultfd_move fails to move a folio when swap-in occurs
+ concurrently with swap-out
+To: Barry Song <21cnbao@gmail.com>
+Cc: Peter Xu <peterx@redhat.com>, David Hildenbrand <david@redhat.com>, 
+	Suren Baghdasaryan <surenb@google.com>, Andrea Arcangeli <aarcange@redhat.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, Linux-MM <linux-mm@kvack.org>, 
+	Kairui Song <ryncsn@gmail.com>, LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-> -----Original Message-----
-> From: =C3=81lvaro Fern=C3=A1ndez Rojas <noltari@gmail.com>
-> Sent: Wednesday, May 21, 2025 1:03 AM
-> To: linux-mtd@lists.infradead.org; dregan@broadcom.com;
-> miquel.raynal@bootlin.com; bcm-kernel-feedback-list@broadcom.com;
-> florian.fainelli@broadcom.com; rafal@milecki.pl;
-> computersforpeace@gmail.com; kamal.dasu@broadcom.com;
-> dan.beygelman@broadcom.com; william.zhang@broadcom.com;
-> frieder.schrempf@kontron.de; linux-kernel@vger.kernel.org;
-> vigneshr@ti.com;
-> richard@nod.at; bbrezillon@kernel.org; kdasu.kdev@gmail.com;
-> jaimeliao.tw@gmail.com; kilobyte@angband.pl; jonas.gorski@gmail.com;
-> dgcbueu@gmail.com
-> Cc: =C3=81lvaro Fern=C3=A1ndez Rojas <noltari@gmail.com>
-> Subject: [PATCH v5] mtd: rawnand: brcmnand: legacy exec_op implementation
+On Thu, May 22, 2025 at 4:53=E2=80=AFPM Barry Song <21cnbao@gmail.com> wrot=
+e:
 >
-> Commit 3c8260ce7663 ("mtd: rawnand: brcmnand: exec_op implementation")
-> removed legacy interface functions, breaking < v5.0 controllers support.
-> In order to fix older controllers we need to add an alternative exec_op
-> implementation which doesn't rely on low level registers.
+> On Fri, May 23, 2025 at 11:44=E2=80=AFAM Lokesh Gidra <lokeshgidra@google=
+.com> wrote:
+> >
+> > Thanks Barry for stress testing MOVE ioctl. It's really helpful :)
+> >
+> > On Thu, May 22, 2025 at 4:23=E2=80=AFPM Barry Song <21cnbao@gmail.com> =
+wrote:
+> > >
+> > > Hi All,
+> > >
+> > > I'm encountering another bug that can be easily reproduced using the =
+small
+> > > program below[1], which performs swap-out and swap-in in parallel.
+> > >
+> > > The issue occurs when a folio is being swapped out while it is access=
+ed
+> > > concurrently. In this case, do_swap_page() handles the access. Howeve=
+r,
+> > > because the folio is under writeback, do_swap_page() completely remov=
+es
+> > > its exclusive attribute.
+> > >
+> > > do_swap_page:
+> > >                } else if (exclusive && folio_test_writeback(folio) &&
+> > >                           data_race(si->flags & SWP_STABLE_WRITES)) {
+> > >                         ...
+> > >                         exclusive =3D false;
+> > >
+> > > As a result, userfaultfd_move() will return -EBUSY, even though the
+> > > folio is not shared and is in fact exclusively owned.
+> > >
+> > >                         folio =3D vm_normal_folio(src_vma, src_addr,
+> > > orig_src_pte);
+> > >                         if (!folio || !PageAnonExclusive(&folio->page=
+)) {
+> > >                                 spin_unlock(src_ptl);
+> > > +                               pr_err("%s %d folio:%lx exclusive:%d
+> > > swapcache:%d\n",
+> > > +                                       __func__, __LINE__, folio,
+> > > PageAnonExclusive(&folio->page),
+> > > +                                       folio_test_swapcache(folio));
+> > >                                 err =3D -EBUSY;
+> > >                                 goto out;
+> > >                         }
+> > >
+> > > I understand that shared folios should not be moved. However, in this
+> > > case, the folio is not shared, yet its exclusive flag is not set.
+> > >
+> > > Therefore, I believe PageAnonExclusive is not a reliable indicator of
+> > > whether a folio is truly exclusive to a process.
+> > >
+> > > The kernel log output is shown below:
+> > > [   23.009516] move_pages_pte 1285 folio:fffffdffc01bba40 exclusive:0
+> > > swapcache:1
+> > >
+> > > I'm still struggling to find a real fix; it seems quite challenging.
+> > > Please let me know if you have any ideas. In any case It seems
+> > > userspace should fall back to userfaultfd_copy.
+> > >
+> > I'm not sure this is really a bug. A page under write-back is in a way
+> > 'busy' isn't it? I am not an expert of anon-exclusive, but it seems to
+> > me that an exclusively mapped anonymous page would have it true. So,
+> > isn't it expected that a page under write-back will not have it set as
+> > the page isn't mapped?
 >
-> Fixes: 3c8260ce7663 ("mtd: rawnand: brcmnand: exec_op implementation")
-> Signed-off-by: =C3=81lvaro Fern=C3=A1ndez Rojas <noltari@gmail.com>
-> Reviewed-by: David Regan <dregan@broadcom.com>
-> ---
->  drivers/mtd/nand/raw/brcmnand/brcmnand.c | 222
-> ++++++++++++++++++++++-
->  1 file changed, 215 insertions(+), 7 deletions(-)
+> We have two return codes: -EAGAIN and -EBUSY. In many cases, we return
+> -EAGAIN, which is transparent to userspace because the syscall is retried=
+.
 >
->  v5: add changes requested by Miqu=C3=A8l Raynal:
->   - Mention and explain legacy in native_cmd_conv.
->   - EOPNOTSUPP instead of EINVAL for instr->type else.
->   - Implement missing check_only functionality.
->
->  v4: add changes requested by Jonas Gorski:
->   - Add missing breaks in brcmnand_exec_instructions_legacy.
->   - Restore missing ret assignment in brcmnand_exec_op.
->
->  v3: add changes requested by Florian and other improvements:
->   - Add associative array for native command conversion.
->   - Add function pointer to brcmnand_controller for exec_instr
->     functionality.
->   - Fix CMD_BLOCK_ERASE address.
->   - Drop NAND_CMD_READOOB support.
->
->  v2: multiple improvements:
->   - Use proper native commands for checks.
->   - Fix NAND_CMD_PARAM/NAND_CMD_RNDOUT addr calculation.
->   - Remove host->last_addr usage.
->   - Remove sector_size_1k since it only applies to v5.0+ controllers.
->   - Remove brcmnand_wp since it doesn't exist for < v5.0 controllers.
->   - Use j instead of i for flash_cache loop.
->
-> diff --git a/drivers/mtd/nand/raw/brcmnand/brcmnand.c
-> b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
-> index 299dd2bca5b4..5ed79ffa271c 100644
-> --- a/drivers/mtd/nand/raw/brcmnand/brcmnand.c
-> +++ b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
-> @@ -65,6 +65,7 @@ module_param(wp_on, int, 0444);
->  #define CMD_PARAMETER_READ		0x0e
->  #define CMD_PARAMETER_CHANGE_COL	0x0f
->  #define CMD_LOW_LEVEL_OP		0x10
-> +#define CMD_NOT_SUPPORTED		0xff
->
->  struct brcm_nand_dma_desc {
->  	u32 next_desc;
-> @@ -199,6 +200,30 @@ static const u16 flash_dma_regs_v4[] =3D {
->  	[FLASH_DMA_CURRENT_DESC_EXT]	=3D 0x34,
->  };
->
-> +/* Native command conversion for legacy controllers (< v5.0) */
-> +static const u8 native_cmd_conv[] =3D {
-> +	[NAND_CMD_READ0]	=3D CMD_NOT_SUPPORTED,
-> +	[NAND_CMD_READ1]	=3D CMD_NOT_SUPPORTED,
-> +	[NAND_CMD_RNDOUT]	=3D CMD_PARAMETER_CHANGE_COL,
-> +	[NAND_CMD_PAGEPROG]	=3D CMD_NOT_SUPPORTED,
-> +	[NAND_CMD_READOOB]	=3D CMD_NOT_SUPPORTED,
-> +	[NAND_CMD_ERASE1]	=3D CMD_BLOCK_ERASE,
-> +	[NAND_CMD_STATUS]	=3D CMD_NOT_SUPPORTED,
-> +	[NAND_CMD_SEQIN]	=3D CMD_NOT_SUPPORTED,
-> +	[NAND_CMD_RNDIN]	=3D CMD_NOT_SUPPORTED,
-> +	[NAND_CMD_READID]	=3D CMD_DEVICE_ID_READ,
-> +	[NAND_CMD_ERASE2]	=3D CMD_NULL,
-> +	[NAND_CMD_PARAM]	=3D CMD_PARAMETER_READ,
-> +	[NAND_CMD_GET_FEATURES]	=3D CMD_NOT_SUPPORTED,
-> +	[NAND_CMD_SET_FEATURES]	=3D CMD_NOT_SUPPORTED,
-> +	[NAND_CMD_RESET]	=3D CMD_NOT_SUPPORTED,
-> +	[NAND_CMD_READSTART]	=3D CMD_NOT_SUPPORTED,
-> +	[NAND_CMD_READCACHESEQ]	=3D CMD_NOT_SUPPORTED,
-> +	[NAND_CMD_READCACHEEND]	=3D CMD_NOT_SUPPORTED,
-> +	[NAND_CMD_RNDOUTSTART]	=3D CMD_NULL,
-> +	[NAND_CMD_CACHEDPROG]	=3D CMD_NOT_SUPPORTED,
-> +};
-> +
->  /* Controller feature flags */
->  enum {
->  	BRCMNAND_HAS_1K_SECTORS			=3D BIT(0),
-> @@ -237,6 +262,12 @@ struct brcmnand_controller {
->  	/* List of NAND hosts (one for each chip-select) */
->  	struct list_head host_list;
->
-> +	/* Functions to be called from exec_op */
-> +	int (*check_instr)(struct nand_chip *chip,
-> +			   const struct nand_operation *op);
-> +	int (*exec_instr)(struct nand_chip *chip,
-> +			  const struct nand_operation *op);
-> +
->  	/* EDU info, per-transaction */
->  	const u16               *edu_offsets;
->  	void __iomem            *edu_base;
-> @@ -2478,18 +2509,190 @@ static int brcmnand_op_is_reset(const struct
-> nand_operation *op)
->  	return 0;
->  }
->
-> +static int brcmnand_check_instructions(struct nand_chip *chip,
-> +				       const struct nand_operation *op)
-> +{
-> +	return 0;
-> +}
-> +
-> +static int brcmnand_exec_instructions(struct nand_chip *chip,
-> +				      const struct nand_operation *op)
-> +{
-> +	struct brcmnand_host *host =3D nand_get_controller_data(chip);
-> +	unsigned int i;
-> +	int ret =3D 0;
-> +
-> +	for (i =3D 0; i < op->ninstrs; i++) {
-> +		ret =3D brcmnand_exec_instr(host, i, op);
-> +		if (ret)
-> +			break;
-> +	}
-> +
-> +	return ret;
-> +}
-> +
-> +static int brcmnand_check_instructions_legacy(struct nand_chip *chip,
-> +					      const struct nand_operation *op)
-> +{
-> +	const struct nand_op_instr *instr;
-> +	unsigned int i;
-> +	u8 cmd;
-> +
-> +	for (i =3D 0; i < op->ninstrs; i++) {
-> +		instr =3D &op->instrs[i];
-> +
-> +		switch (instr->type) {
-> +		case NAND_OP_CMD_INSTR:
-> +			cmd =3D native_cmd_conv[instr->ctx.cmd.opcode];
-> +			if (cmd =3D=3D CMD_NOT_SUPPORTED)
-> +				return -EOPNOTSUPP;
-> +			break;
-> +		case NAND_OP_ADDR_INSTR:
-> +		case NAND_OP_DATA_IN_INSTR:
-> +		case NAND_OP_WAITRDY_INSTR:
-> +			break;
-> +		default:
-> +			return -EOPNOTSUPP;
-> +		}
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int brcmnand_exec_instructions_legacy(struct nand_chip *chip,
-> +					     const struct nand_operation *op)
-> +{
-> +	struct mtd_info *mtd =3D nand_to_mtd(chip);
-> +	struct brcmnand_host *host =3D nand_get_controller_data(chip);
-> +	struct brcmnand_controller *ctrl =3D host->ctrl;
-> +	const struct nand_op_instr *instr;
-> +	unsigned int i, j;
-> +	u8 cmd =3D CMD_NULL, last_cmd =3D CMD_NULL;
-> +	int ret =3D 0;
-> +	u64 last_addr;
-> +
-> +	for (i =3D 0; i < op->ninstrs; i++) {
-> +		instr =3D &op->instrs[i];
-> +
-> +		if (instr->type =3D=3D NAND_OP_CMD_INSTR) {
-> +			cmd =3D native_cmd_conv[instr->ctx.cmd.opcode];
-> +			if (cmd =3D=3D CMD_NOT_SUPPORTED) {
-> +				dev_err(ctrl->dev, "unsupported cmd=3D%d\n",
-> +					instr->ctx.cmd.opcode);
-> +				ret =3D -EOPNOTSUPP;
-> +				break;
-> +			}
-> +		} else if (instr->type =3D=3D NAND_OP_ADDR_INSTR) {
-> +			u64 addr =3D 0;
-> +
-> +			if (cmd =3D=3D CMD_NULL)
-> +				continue;
-> +
-> +			if (instr->ctx.addr.naddrs > 8) {
-> +				dev_err(ctrl->dev, "unsupported naddrs=3D%u\n",
-> +					instr->ctx.addr.naddrs);
-> +				ret =3D -EOPNOTSUPP;
-> +				break;
-> +			}
-> +
-> +			for (j =3D 0; j < instr->ctx.addr.naddrs; j++)
-> +				addr |=3D (instr->ctx.addr.addrs[j]) << (j << 3);
-> +
-> +			if (cmd =3D=3D CMD_BLOCK_ERASE)
-> +				addr <<=3D chip->page_shift;
-> +			else if (cmd =3D=3D CMD_PARAMETER_CHANGE_COL)
-> +				addr &=3D ~((u64)(FC_BYTES - 1));
-> +
-> +			brcmnand_set_cmd_addr(mtd, addr);
-> +			brcmnand_send_cmd(host, cmd);
-> +			last_addr =3D addr;
-> +			last_cmd =3D cmd;
-> +			cmd =3D CMD_NULL;
-> +			brcmnand_waitfunc(chip);
-> +
-> +			if (last_cmd =3D=3D CMD_PARAMETER_READ ||
-> +			    last_cmd =3D=3D CMD_PARAMETER_CHANGE_COL) {
-> +				/* Copy flash cache word-wise */
-> +				u32 *flash_cache =3D (u32 *)ctrl->flash_cache;
-> +
-> +				brcmnand_soc_data_bus_prepare(ctrl->soc, true);
-> +
-> +				/*
-> +				 * Must cache the FLASH_CACHE now, since
-> changes in
-> +				 * SECTOR_SIZE_1K may invalidate it
-> +				 */
-> +				for (j =3D 0; j < FC_WORDS; j++)
-> +					/*
-> +					 * Flash cache is big endian for parameter
-> pages, at
-> +					 * least on STB SoCs
-> +					 */
-> +					flash_cache[j] =3D
-> be32_to_cpu(brcmnand_read_fc(ctrl, j));
-> +
-> +				brcmnand_soc_data_bus_unprepare(ctrl->soc,
-> true);
-> +			}
-> +		} else if (instr->type =3D=3D NAND_OP_DATA_IN_INSTR) {
-> +			u8 *in =3D instr->ctx.data.buf.in;
-> +
-> +			if (last_cmd =3D=3D CMD_DEVICE_ID_READ) {
-> +				u32 val;
-> +
-> +				if (instr->ctx.data.len > 8) {
-> +					dev_err(ctrl->dev, "unsupported
-> len=3D%u\n",
-> +						instr->ctx.data.len);
-> +					ret =3D -EOPNOTSUPP;
-> +					break;
-> +				}
-> +
-> +				for (j =3D 0; j < instr->ctx.data.len; j++) {
-> +					if (j =3D=3D 0)
-> +						val =3D brcmnand_read_reg(ctrl,
-> BRCMNAND_ID);
-> +					else if (j =3D=3D 4)
-> +						val =3D brcmnand_read_reg(ctrl,
-> BRCMNAND_ID_EXT);
-> +
-> +					in[j] =3D (val >> (24 - ((j % 4) << 3))) & 0xff;
-> +				}
-> +			} else if (last_cmd =3D=3D CMD_PARAMETER_READ ||
-> +				   last_cmd =3D=3D CMD_PARAMETER_CHANGE_COL) {
-> +				u64 addr;
-> +				u32 offs;
-> +
-> +				for (j =3D 0; j < instr->ctx.data.len; j++) {
-> +					addr =3D last_addr + j;
-> +					offs =3D addr & (FC_BYTES - 1);
-> +
-> +					if (j > 0 && offs =3D=3D 0)
-> +
-> 	nand_change_read_column_op(chip, addr, NULL, 0,
-> +									   false);
-> +
-> +					in[j] =3D ctrl->flash_cache[offs];
-> +				}
-> +			}
-> +		} else if (instr->type =3D=3D NAND_OP_WAITRDY_INSTR) {
-> +			ret =3D bcmnand_ctrl_poll_status(host, NAND_CTRL_RDY,
-> NAND_CTRL_RDY, 0);
-> +			if (ret)
-> +				break;
-> +		} else {
-> +			dev_err(ctrl->dev, "unsupported instruction type: %d\n",
-> instr->type);
-> +			ret =3D -EOPNOTSUPP;
-> +			break;
-> +		}
-> +	}
-> +
-> +	return ret;
-> +}
-> +
->  static int brcmnand_exec_op(struct nand_chip *chip,
->  			    const struct nand_operation *op,
->  			    bool check_only)
->  {
->  	struct brcmnand_host *host =3D nand_get_controller_data(chip);
-> +	struct brcmnand_controller *ctrl =3D host->ctrl;
->  	struct mtd_info *mtd =3D nand_to_mtd(chip);
->  	u8 *status;
-> -	unsigned int i;
->  	int ret =3D 0;
->
->  	if (check_only)
-> -		return 0;
-> +		return ctrl->check_instr(chip, op);
->
->  	if (brcmnand_op_is_status(op)) {
->  		status =3D op->instrs[1].ctx.data.buf.in;
-> @@ -2513,11 +2716,7 @@ static int brcmnand_exec_op(struct nand_chip *chip=
-,
->  	if (op->deassert_wp)
->  		brcmnand_wp(mtd, 0);
->
-> -	for (i =3D 0; i < op->ninstrs; i++) {
-> -		ret =3D brcmnand_exec_instr(host, i, op);
-> -		if (ret)
-> -			break;
-> -	}
-> +	ret =3D ctrl->exec_instr(chip, op);
->
->  	if (op->deassert_wp)
->  		brcmnand_wp(mtd, 1);
-> @@ -3130,6 +3329,15 @@ int brcmnand_probe(struct platform_device *pdev,
-> struct brcmnand_soc *soc)
->  	if (ret)
->  		goto err;
->
-> +	/* Only v5.0+ controllers have low level ops support */
-> +	if (ctrl->nand_version >=3D 0x0500) {
-> +		ctrl->check_instr =3D brcmnand_check_instructions;
-> +		ctrl->exec_instr =3D brcmnand_exec_instructions;
-> +	} else {
-> +		ctrl->check_instr =3D brcmnand_check_instructions_legacy;
-> +		ctrl->exec_instr =3D brcmnand_exec_instructions_legacy;
-> +	}
-> +
->  	/*
->  	 * Most chips have this cache at a fixed offset within 'nand' block.
->  	 * Some must specify this region separately.
-> --
-> 2.39.5
+> Therefore, I expect -EAGAIN or a similar code here to avoid userspace noi=
+se,
+> since we handle other cases where folios are undergoing transitions to
+> become stable again by -EAGAIN.
 
-Reviewed-by: William Zhang <william.zhang@broadcom.com>
+I agree, this case probably should be -EAGAIN. OTOH, with -EBUSY, we
+know that a userfaultfd_copy fallback or some other operation needs to
+be performed before retrying. In most of the -EAGAIN cases, we simply
+have to retry without taking any additional steps.
+>
+> >
+> > I have observed this in my testing as well, and there are a couple of
+> > ways to deal with it in userspace. As you suggested, falling back to
+> > userfaultfd_copy on receiving -EBUSY is one option. In my case, making
+> > a fake store on the src page and then retrying has been working fine.
+>
+> Good to know you have some fallbacks implemented in userspace.
+> That makes the issue less serious now.
 
---000000000000216afa0635c25594
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: S/MIME Cryptographic Signature
-
-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
-YDZuuBJwnyCzevMoPtVYPharioL5H3BRnQi8YoTXH7/uRo33dewYFm474yFjwwnt82TFtveVZkVq
-6h4WIQ4wTcwFfET8zMkELnGzS5SHCl8sPD+lNxxJ1JDZYwIDAQABo4IB2zCCAdcwDgYDVR0PAQH/
-BAQDAgWgMIGjBggrBgEFBQcBAQSBljCBkzBOBggrBgEFBQcwAoZCaHR0cDovL3NlY3VyZS5nbG9i
-YWxzaWduLmNvbS9jYWNlcnQvZ3NnY2NyM3BlcnNvbmFsc2lnbjJjYTIwMjAuY3J0MEEGCCsGAQUF
-BzABhjVodHRwOi8vb2NzcC5nbG9iYWxzaWduLmNvbS9nc2djY3IzcGVyc29uYWxzaWduMmNhMjAy
-MDBNBgNVHSAERjBEMEIGCisGAQQBoDIBKAowNDAyBggrBgEFBQcCARYmaHR0cHM6Ly93d3cuZ2xv
-YmFsc2lnbi5jb20vcmVwb3NpdG9yeS8wCQYDVR0TBAIwADBJBgNVHR8EQjBAMD6gPKA6hjhodHRw
-Oi8vY3JsLmdsb2JhbHNpZ24uY29tL2dzZ2NjcjNwZXJzb25hbHNpZ24yY2EyMDIwLmNybDAlBgNV
-HREEHjAcgRp3aWxsaWFtLnpoYW5nQGJyb2FkY29tLmNvbTATBgNVHSUEDDAKBggrBgEFBQcDBDAf
-BgNVHSMEGDAWgBSWM9HmWBdbNHWKgVZk1b5I3qGPzzAdBgNVHQ4EFgQUq65GzwZxydFHjjYEU/9h
-xHhPWlwwDQYJKoZIhvcNAQELBQADggEBAA2hGG3JPAdGPH0ZdohGUCIVjKz+U+EFuIDbS6A/5jqX
-VhYAxZlzj7tSjUIM7G7IhyfqPC46GKJ/4x+Amz1Z6YxNGy71L68kYD6hIbBcA5AM42QBUufly6Oa
-/ppSz3WoflVyFFQ5YXniZ+eU+2/cdnYZg4aVUnFjimOF5o3NfMLzOkhQNxbaDjFUfUYD8hKmU6v4
-0vUBj8KZ9Gi1LIagLKUREn8jku0lcLsRbnJ5Ey5ScajC/FESPyYWasOW8j8/1EoJksmhbYGKNS6C
-urb/KlmDGfVrIRYDbL0ckhGQIP5c6L+kSQZ2sHnQK0e0WgIaZYxaPYeY5u0GLCOze+3vyRMxggJg
-MIICXAIBATBrMFsxCzAJBgNVBAYTAkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52LXNhMTEwLwYD
-VQQDEyhHbG9iYWxTaWduIEdDQyBSMyBQZXJzb25hbFNpZ24gMiBDQSAyMDIwAgwxuh2XG3FXRL1W
-JOEwDQYJYIZIAWUDBAIBBQCggccwLwYJKoZIhvcNAQkEMSIEII3EZravAMUiV0kMsWmRXdQa388Y
-ZGLnw7GlGAj9wfI7MBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI1
-MDUyMzAwMDM0OFowXAYJKoZIhvcNAQkPMU8wTTALBglghkgBZQMEASowCwYJYIZIAWUDBAEWMAsG
-CWCGSAFlAwQBAjAKBggqhkiG9w0DBzALBgkqhkiG9w0BAQcwCwYJYIZIAWUDBAIBMA0GCSqGSIb3
-DQEBAQUABIIBAG8+10CVDsaOhrnY685GaKP/W1UyVYq3dhjypAQm+XxBxh8gvb0Uji2KVvgCoXTz
-5IcWsuLvjQKmo/XTBNrH545LfeMvv2BoW2IEmyOdADqcRlF1xV9SbNVhWpI5zhu0OGURPOH4n2qz
-4YDB2tdypeoJVieyIwB2e5iK5aiODXbr17zriYSBw4wLAOFWfgqZ75GQibHVmmwVAXYIQC4mNLZM
-kPbG7+xA+Q+B2aeRdD3m2OHjHC8i0gtqYOPV2UqbWiyLa9OjWlg+0BNHNGlYsZllHybc1A2C2CP6
-4UqXcbAvwvrk172bsVqWVcNOT26tPrJ4G+64pjFVGxzli9LSfxM=
---000000000000216afa0635c25594--
+I have been assuming so far that the reason I'm getting -EBUSY is
+because somehow the page is COW shared with zygote. But what you
+pointed out makes a lot more sense.
+>
+> > >
+> > >
+> > > [1] The small program:
+> > >
+> > > //Just in a couple of seconds, we are running into
+> > > //"UFFDIO_MOVE: Device or resource busy"
+> > >
+> > > #define _GNU_SOURCE
+> > > #include <stdio.h>
+> > > #include <stdlib.h>
+> > > #include <string.h>
+> > > #include <sys/mman.h>
+> > > #include <sys/ioctl.h>
+> > > #include <sys/syscall.h>
+> > > #include <linux/userfaultfd.h>
+> > > #include <fcntl.h>
+> > > #include <pthread.h>
+> > > #include <unistd.h>
+> > > #include <poll.h>
+> > > #include <errno.h>
+> > >
+> > > #define PAGE_SIZE 4096
+> > > #define REGION_SIZE (512 * 1024)
+> > >
+> > > #ifndef UFFDIO_MOVE
+> > > struct uffdio_move {
+> > >     __u64 dst;
+> > >     __u64 src;
+> > >     __u64 len;
+> > >     #define UFFDIO_MOVE_MODE_DONTWAKE        ((__u64)1<<0)
+> > >     #define UFFDIO_MOVE_MODE_ALLOW_SRC_HOLES ((__u64)1<<1)
+> > >     __u64 mode;
+> > >     __s64 move;
+> > > };
+> > >
+> > > #define _UFFDIO_MOVE  (0x05)
+> > > #define UFFDIO_MOVE   _IOWR(UFFDIO, _UFFDIO_MOVE, struct uffdio_move)
+> > > #endif
+> > >
+> > >
+> > > void *src, *dst;
+> > > int uffd;
+> > >
+> > > void *madvise_thread(void *arg) {
+> > >     for (size_t i =3D 0; i < REGION_SIZE; i +=3D PAGE_SIZE) {
+> > >     madvise(src + i, PAGE_SIZE, MADV_PAGEOUT);
+> > >     usleep(100);
+> > >     }
+> > >     return NULL;
+> > > }
+> > >
+> > > void *swapin_thread(void *arg) {
+> > >     volatile char dummy;
+> > >     for (size_t i =3D 0; i < REGION_SIZE; i +=3D PAGE_SIZE) {
+> > >         dummy =3D ((char *)src)[i];
+> > >         usleep(100);
+> > >     }
+> > >     return NULL;
+> > > }
+> > >
+> > >
+> > > void *fault_handler_thread(void *arg) {
+> > >
+> > >     struct uffd_msg msg;
+> > >     struct uffdio_move move;
+> > >     struct pollfd pollfd =3D { .fd =3D uffd, .events =3D POLLIN };
+> > >     pthread_setcancelstate(PTHREAD_CANCEL_ENABLE, NULL);
+> > >     pthread_setcanceltype(PTHREAD_CANCEL_DEFERRED, NULL);
+> > >
+> > >     while (1) {
+> > >         if (poll(&pollfd, 1, -1) =3D=3D -1) {
+> > >             perror("poll");
+> > >             exit(EXIT_FAILURE);
+> > >         }
+> > >
+> > >         if (read(uffd, &msg, sizeof(msg)) <=3D 0) {
+> > >             perror("read");
+> > >             exit(EXIT_FAILURE);
+> > >         }
+> > >
+> > >
+> > >         if (msg.event !=3D UFFD_EVENT_PAGEFAULT) {
+> > >             fprintf(stderr, "Unexpected event\n");
+> > >             exit(EXIT_FAILURE);
+> > >         }
+> > >
+> > >         move.src =3D (unsigned long)src + (msg.arg.pagefault.address =
+-
+> > > (unsigned long)dst);
+> > >         move.dst =3D msg.arg.pagefault.address & ~(PAGE_SIZE - 1);
+> > >         move.len =3D PAGE_SIZE;
+> > >         move.mode =3D 0;
+> > >
+> > >         if (ioctl(uffd, UFFDIO_MOVE, &move) =3D=3D -1) {
+> > >             perror("UFFDIO_MOVE");
+> > >             exit(EXIT_FAILURE);
+> > >         }
+> > >     }
+> > >     return NULL;
+> > > }
+> > >
+> > > int main() {
+> > > again:
+> > >     pthread_t thr, madv_thr, swapin_thr;
+> > >     struct uffdio_api uffdio_api =3D { .api =3D UFFD_API, .features =
+=3D 0 };
+> > >     struct uffdio_register uffdio_register;
+> > >
+> > >     src =3D mmap(NULL, REGION_SIZE, PROT_READ | PROT_WRITE, MAP_PRIVA=
+TE
+> > > | MAP_ANONYMOUS, -1, 0);
+> > >
+> > >     if (src =3D=3D MAP_FAILED) {
+> > >         perror("mmap src");
+> > >         exit(EXIT_FAILURE);
+> > >     }
+> > >
+> > >     memset(src, 1, REGION_SIZE);
+> > >
+> > >     dst =3D mmap(NULL, REGION_SIZE, PROT_READ | PROT_WRITE, MAP_PRIVA=
+TE
+> > > | MAP_ANONYMOUS, -1, 0);
+> > >
+> > >     if (dst =3D=3D MAP_FAILED) {
+> > >         perror("mmap dst");
+> > >         exit(EXIT_FAILURE);
+> > >     }
+> > >
+> > >
+> > >     uffd =3D syscall(SYS_userfaultfd, O_CLOEXEC | O_NONBLOCK);
+> > >     if (uffd =3D=3D -1) {
+> > >         perror("userfaultfd");
+> > >         exit(EXIT_FAILURE);
+> > >     }
+> > >
+> > >
+> > >     if (ioctl(uffd, UFFDIO_API, &uffdio_api) =3D=3D -1) {
+> > >         perror("UFFDIO_API");
+> > >         exit(EXIT_FAILURE);
+> > >     }
+> > >
+> > >     uffdio_register.range.start =3D (unsigned long)dst;
+> > >     uffdio_register.range.len =3D REGION_SIZE;
+> > >     uffdio_register.mode =3D UFFDIO_REGISTER_MODE_MISSING;
+> > >
+> > >     if (ioctl(uffd, UFFDIO_REGISTER, &uffdio_register) =3D=3D -1) {
+> > >         perror("UFFDIO_REGISTER");
+> > >         exit(EXIT_FAILURE);
+> > >
+> > >     }
+> > >
+> > >     if (pthread_create(&madv_thr, NULL, madvise_thread, NULL) !=3D 0)=
+ {
+> > >         perror("pthread_create madvise_thread");
+> > >         exit(EXIT_FAILURE);
+> > >     }
+> > >
+> > >     if (pthread_create(&swapin_thr, NULL, swapin_thread, NULL) !=3D 0=
+) {
+> > >         perror("pthread_create swapin_thread");
+> > >         exit(EXIT_FAILURE);
+> > >     }
+> > >
+> > >     if (pthread_create(&thr, NULL, fault_handler_thread, NULL) !=3D 0=
+) {
+> > >         perror("pthread_create fault_handler_thread");
+> > >         exit(EXIT_FAILURE);
+> > >     }
+> > >
+> > >     for (size_t i =3D 0; i < REGION_SIZE; i +=3D PAGE_SIZE) {
+> > >         char val =3D ((char *)dst)[i];
+> > >         printf("Accessing dst at offset %zu, value: %d\n", i, val);
+> > >     }
+> > >
+> > >     pthread_join(madv_thr, NULL);
+> > >     pthread_join(swapin_thr, NULL);
+> > >     pthread_cancel(thr);
+> > >     pthread_join(thr, NULL);
+> > >     munmap(src, REGION_SIZE);
+> > >     munmap(dst, REGION_SIZE);
+> > >     close(uffd);
+> > >     goto again;
+> > >
+> > >     return 0;
+> > > }
+> > >
+>
+> Thanks
+> Barry
