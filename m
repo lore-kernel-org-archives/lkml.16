@@ -1,106 +1,145 @@
-Received: from outgoing.mit.edu (outgoing-auth-1.mit.edu [18.9.28.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC23921018A
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 22:07:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.9.28.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26B6A1F1515;
+	Fri, 23 May 2025 22:12:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748038068; cv=none; b=MkssTvEOIuK7W3Tef6AlRzslK1XD6fjjOmSzw8mlv10o2HUBe688EoPHtjG89zRalUE7lAg7/Wwo/WXKh7ML/ohSf9HWRjTX2X8YHp5hHN8eb7hWqDJKpMwdXL49498inlfPGQE5upEoKTmKjfZCE6fa3LxgXY13aQqygfUBJ74=
+	t=1748038371; cv=none; b=Wea6VLCUFaqrrdduX5J4tgj2Qz7vXKxy8og+7Ok4RymIimgbDiZ0YJW4+CoWHlIRq7cnQaxyLyJKeoyi1iL6KFcLqKhziFqafR21fWUHyvkihfqHo7cly8Dcm4issNkSMm/7Re+h/Y3jMNvjxueHow4fEHDfTbw2fBazubW+zqc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748038068; c=relaxed/simple;
-	bh=/Vv1WmyqouccS68NScFLocNcJemiPcN41TARbtmKYJs=;
+	s=arc-20240116; t=1748038371; c=relaxed/simple;
+	bh=9WyQqSWjAAcGh6XVufAk5F1cOpB4idI+YrLCGrlVTig=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SWZCPLN6BW2a7tYgb/jxjDAPUoeDLXWNc5O52zRWsn2lGga67xPRvc4oP0g8koeYiEOJnmnSeAiAxTFHgFP7B7Nbva7I/yWjUkI2K3gQ8hPIZEl2i21pf/c1XbXhDfMqfNYiEBK5Mzc+QBhqSp4Fp0oLfr7A45gGmadYrn+5AcA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu; spf=pass smtp.mailfrom=mit.edu; arc=none smtp.client-ip=18.9.28.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mit.edu
-Received: from trampoline.thunk.org (pool-173-48-111-173.bstnma.fios.verizon.net [173.48.111.173])
-	(authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-	by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 54NM7JSh006027
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 23 May 2025 18:07:22 -0400
-Received: by trampoline.thunk.org (Postfix, from userid 15806)
-	id 3AFC12E00DD; Fri, 23 May 2025 18:07:19 -0400 (EDT)
-Date: Fri, 23 May 2025 18:07:19 -0400
-From: "Theodore Ts'o" <tytso@mit.edu>
-To: Kees Cook <kees@kernel.org>
-Cc: David Laight <david.laight.linux@gmail.com>,
-        Ethan Carter Edwards <ethan@ethancedwards.com>,
-        Andreas Dilger <adilger.kernel@dilger.ca>, linux-ext4@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2] ext4: replace strcpy() with '.' assignment
-Message-ID: <20250523220719.GC332467@mit.edu>
-References: <20250518-ext4-strcpy-v2-1-80d316325046@ethancedwards.com>
- <202505190651.943F729@keescook>
- <20250519145930.GB38098@mit.edu>
- <20250523133100.1b023a6e@pumpkin>
- <20250523142449.GB1414791@mit.edu>
- <85A9A687-D5E0-4EE4-8FFE-ED70C8CCE863@kernel.org>
+	 Content-Type:Content-Disposition:In-Reply-To; b=Tu6QUVux5h6evXFRaytqq4zleVumBNYUahGFzNHcRNAXtFUph9uIIbk5tFeSJZwV6Cdab/vRbQWnwWWIr8kpE9OcQ/+uH1S1tgD8RO5jfaTM/L+fVgoSNaUvjZ4GuZ9C29bacIfknLe4ZuLbXIzDzIp67dT+NqFaYLdQRPt/C4E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OxurQF/h; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OxurQF/h"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 493CAC4CEE9;
+	Fri, 23 May 2025 22:12:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748038370;
+	bh=9WyQqSWjAAcGh6XVufAk5F1cOpB4idI+YrLCGrlVTig=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=OxurQF/hE4k1ifsHzwo0IEg4GWCF8VSb7k2Wq5wd+C6vmRl13/SOb6CbD5Jfr2i6G
+	 yIt5f4Rjc3U45Sk6oQD83oXAW+WGosaUhTLlOxDTei1YJNc5M/TL0687+jNQ1ZKMyy
+	 boMVpoa7AkR4f7xJzerJe9sblAby3NTxQz2HRLxi1W9xI2lKNdioE1Q5tVo5MzMMKh
+	 LEFu3e0gBkvzArWuQ+OSFwmmmbZKO3X9nNaNEcvnk5EARJaJwPqf8Ok/F/QVNthTSf
+	 a2z9gBN0b4zpvIMeCGM54m0SPUY4Ee8KM09ad1QcmC3bnwGapPhLB1fdiVtOrUa98n
+	 nSiIgLs40Q3Zg==
+Date: Fri, 23 May 2025 15:12:48 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Howard Chu <howardchu95@gmail.com>, Ian Rogers <irogers@google.com>,
+	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH] perf test: Add cgroup summary test case for perf trace
+Message-ID: <aDDy4FQe7sBwECL8@google.com>
+References: <20250522142551.1062417-1-namhyung@kernel.org>
+ <CAH0uvoiZ2difXdPsjkdLikHTRwYROYUeuCdZ+gQ5uRfQ2rzwGQ@mail.gmail.com>
+ <aC9VoTL_Cv4R7J-j@x1>
+ <aC-hHTgArwlF_zu9@x1>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <85A9A687-D5E0-4EE4-8FFE-ED70C8CCE863@kernel.org>
+In-Reply-To: <aC-hHTgArwlF_zu9@x1>
 
-On Fri, May 23, 2025 at 10:14:04AM -0700, Kees Cook wrote:
+On Thu, May 22, 2025 at 07:11:41PM -0300, Arnaldo Carvalho de Melo wrote:
+> On Thu, May 22, 2025 at 01:49:37PM -0300, Arnaldo Carvalho de Melo wrote:
+> > On Thu, May 22, 2025 at 08:33:16AM -0700, Howard Chu wrote:
+> > > $ sudo /tmp/perf/perf test -vv 112
+> > > 112: perf trace summary:
+> > > 112: perf trace summary
+> > > --- start ---
+> > > test child forked, pid 1574993
+> > > testing: perf trace -s -- true
+> > > testing: perf trace -S -- true
+> > > testing: perf trace -s --summary-mode=thread -- true
+> > > testing: perf trace -S --summary-mode=total -- true
+> > > testing: perf trace -as --summary-mode=thread --no-bpf-summary -- true
+> > > testing: perf trace -as --summary-mode=total --no-bpf-summary -- true
+> > > testing: perf trace -as --summary-mode=thread --bpf-summary -- true
+> > > testing: perf trace -as --summary-mode=total --bpf-summary -- true
+> > > testing: perf trace -aS --summary-mode=total --bpf-summary -- true
+> > > testing: perf trace -as --summary-mode=cgroup --bpf-summary -- true
+> > > testing: perf trace -aS --summary-mode=cgroup --bpf-summary -- true
+> > > ---- end(0) ----
+> > > 112: perf trace summary                                              : Ok
+>  
+> > Thanks, tested and applied to perf-tools-next,
 > 
+> But then when running all the tests, since this does system wide
+> tracing, it fails:
 > 
-> On May 23, 2025 7:24:49 AM PDT, Theodore Ts'o <tytso@mit.edu> wrote:
-> >On Fri, May 23, 2025 at 01:31:00PM +0100, David Laight wrote:
-> >> 
-> >> The compiler (or headers files) can also allow strcpy() of constant
-> >> length strings into arrays (known size). Erroring requests that are too long.
-> >> The strcpy() is then converted to a memcpy() which can then be optimised
-> >> into writes of constants.
-> >> 
-> >> So using strcpy() under those conditions 'isn't all bad' and can generate
-> >> better (and less bug prone) code than trying to hand-optimise it.
-> >> 
-> >> So even through strcpy() is usually a bad idea, there is not need to
-> >> remove the calls that the compiler can validate as safe.
-> >
-> >I assume that what the hardening folks want to do is to assert that
-> >strcpy is always evil(tm) so they can detect potential security bugs
-> >by doing "git grep strcpy".
+> 112: perf trace summary                                              : FAILED!
 > 
-> FWIW, what I'd like is a lack of ambiguity for both humans and
-> compilers. "Get rid of strcpy" is the Big Hammer solution for
-> strcpy. The more precise version is "disallow strcpy of a src or dst
-> where either lack a compile-time buffer size".
+> It works with the following patch applied, please check and ack/review:
+> 
+> From 8c868979d886e2e88aa89f4e3d884e1b6450a7b2 Mon Sep 17 00:00:00 2001
+> From: Arnaldo Carvalho de Melo <acme@redhat.com>
+> Date: Thu, 22 May 2025 19:01:47 -0300
+> Subject: [PATCH 1/1] perf tests trace_summary.sh: Run in exclusive mode
+> 
+> And it is being successfull only when running alone, probably because
+> there are some tests that add the vfs_getname probe that gets used by
+> 'perf trace' and alter how it does syscall arg pathname resolution.
+> 
+> This should be removed or made a fallback to the preferred BPF mode of
+> getting syscall parameters, but till then, run this in exclusive mode.
+> 
+> For reference, here are some of the tests that run close to this one:
+> 
+>   127: perf record offcpu profiling tests                              : Ok
+>   128: perf all PMU test                                               : Ok
+>   129: perf stat --bpf-counters test                                   : Ok
+>   130: Check Arm CoreSight trace data recording and synthesized samples: Skip
+>   131: Check Arm CoreSight disassembly script completes without errors : Skip
+>   132: Check Arm SPE trace data recording and synthesized samples      : Skip
+>   133: Test data symbol                                                : Ok
+>   134: Miscellaneous Intel PT testing                                  : Skip
+>   135: test Intel TPEBS counting mode                                  : Skip
+>   136: perf script task-analyzer tests                                 : Ok
+>   137: Check open filename arg using perf trace + vfs_getname          : Ok
+>   138: perf trace summary                                              : Ok
+> 
+> Cc: Adrian Hunter <adrian.hunter@intel.com>
+> Cc: Howard Chu <howardchu95@gmail.com>
+> Cc: Ian Rogers <irogers@google.com>
+> Cc: James Clark <james.clark@linaro.org>
+> Cc: Jiri Olsa <jolsa@kernel.org>
+> Cc: Kan Liang <kan.liang@linux.intel.com>
+> Cc: Namhyung Kim <namhyung@kernel.org>
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Well, technically speaking struct ext4_dir_entry.name has a fixed
-compile-time buffer size:
+Looks good to me.
 
-struct ext4_dir_entry {
-	__le32	inode;			/* Inode number */
-	__le16	rec_len;		/* Directory entry length */
-	__le16	name_len;		/* Name length */
-	char	name[EXT4_NAME_LEN];	/* File name */
-};
+Acked-by: Namhyung Kim <namhyung@kernel.org>
 
-And what we're copying into name here is also fixed.  It's either "."
-or "..".   As far as optimization is concerned, whether
+Thanks,
+Namhyung
 
-   de->name[0] = de->name[1] = '.';
-
-could be better optimized by the compiler than:
-
-   strcpy(de->name, "..");
-or
-   memcpy(de->name, "..", 2);
-(which is all that is required)
-
-Meh.  Probably the compiler could optimized it into a 2-byte word
-store, but it's not like mkdir is a hot path.  :-)
-
-It's probably easier to patch the code path and as opposed to having
-the conversation about how "no, really, it's safe, and I can prove
-it."  If this was a performance hot path, I might care more, but it
-isn't, so I don't.
-
-           	   	    	       - Ted
+> ---
+>  tools/perf/tests/shell/trace_summary.sh | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/tests/shell/trace_summary.sh b/tools/perf/tests/shell/trace_summary.sh
+> index bb350dfabdc2bf5e..49766524dc21b534 100755
+> --- a/tools/perf/tests/shell/trace_summary.sh
+> +++ b/tools/perf/tests/shell/trace_summary.sh
+> @@ -1,5 +1,5 @@
+>  #!/bin/sh
+> -# perf trace summary
+> +# perf trace summary (exclusive)
+>  # SPDX-License-Identifier: GPL-2.0
+>  
+>  # Check that perf trace works with various summary mode
+> -- 
+> 2.49.0
+> 
