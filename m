@@ -1,110 +1,117 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0F23224AE9;
-	Fri, 23 May 2025 09:11:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 666C72253A9
+	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 09:11:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747991468; cv=none; b=bV6rFyBcGM3P83qAczXnTMMLx4sZO8oMc8nGcg3w++q0IqvD/lqDphnOgrRUVyQLPVUg8H0QK0wi9WQPiCXzV3DJvLYSUJ/uKqhFjQmF8ugHtc9glKBGrTV88ODPCi/lT40MqMxXX1uu+FUbuam1SdVTiFTENjysa2yBZiMpuDU=
+	t=1747991472; cv=none; b=Whv8Ur/a/xbtjQrmvmZ44dWxwk6QipDAv+OATKw4NHYBz/+sNQkfxzT41AEMIfaE7IC9Iwp2VOSZet3qy/VuskYzu5bWcbfGV3JoTqD3Z3Qon1VdlZczdm1vNpElbJZE1m0GLjI3k/7ilhBRnK/UdfgCPILs2mMMg8YLpvpK8x4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747991468; c=relaxed/simple;
-	bh=zyvUBsqt4e5/DgESqerFaKiM8S1NutcrQ3tAQuvzeHw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fwK1rsr3QqyhnuL5Xf7eMvnlc1qECAhZaCuQcbG+YbqQblbSjd73fR84nW2wgg1DhvGb+3ZCX8myzjODdeu+4QPkUH3LzXfkZSBI7lY1tbCgNdl+ZWdkeIRiFSrgRAqtlEuWLNDkftIMbpG+v4w7Bng4RePyZmcABz3lKanCtMA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B/m8brEE; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B/m8brEE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26CA6C4CEE9;
-	Fri, 23 May 2025 09:11:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747991468;
-	bh=zyvUBsqt4e5/DgESqerFaKiM8S1NutcrQ3tAQuvzeHw=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=B/m8brEErYauni2Uzcfd1XANs9d+utl3cIklOWsS0zbHXHmY0xvCAtO9jLNXP9e73
-	 qxFrFTWjUcuDLf72Sa7mge7VjI6rOA/tlbmyaBfvftvBLY8ttP5i71tfJHbgKaoHq7
-	 J+R+q641UJuGKTbmHBdxe3s9T0XjOJzXEUBzXB1TMQwaOE9+/a31FxGZzI+Jc6V7tI
-	 jY+Zhf/oHFpPzwUL97xp7YiSbzJYTD9tyq6/RzxkwEHnAZycI4+KNTlQRmzxIH71bJ
-	 eMPIessehPZjUtjhvRRmResJ1HFrHrRf8KK2j4FT4DMgvvuTEt8fsAcXBMpjW2qPko
-	 +HUN2krbWd4zg==
-Message-ID: <8e955eb3-5b61-4229-925f-cf938ea94a2d@kernel.org>
-Date: Fri, 23 May 2025 11:11:03 +0200
+	s=arc-20240116; t=1747991472; c=relaxed/simple;
+	bh=eexH6QMbd2Kh/Ok2YWOCEhjR9QzioGxm6Cv/En2atvU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JaC1d2Yxg4/QHArFZfvMrMlL+hfw7/7XWgZM3TFAcnN2Bsxr8YlkpRmw/rQRntLojnNhlHwdNITy4YITnLp3K4WD1JIXwSusbg3rQivkPY9UUgOhEzbcAhUcX1kDb6F+MbensmfSljLD07p3qhPxN/F4M5eU/gLMD5CJKHkNpVw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <mkl@pengutronix.de>)
+	id 1uIOQI-0005Zj-48; Fri, 23 May 2025 11:10:38 +0200
+Received: from moin.white.stw.pengutronix.de ([2a0a:edc0:0:b01:1d::7b] helo=bjornoya.blackshift.org)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <mkl@pengutronix.de>)
+	id 1uIOQH-000sRD-1o;
+	Fri, 23 May 2025 11:10:37 +0200
+Received: from pengutronix.de (unknown [IPv6:2a03:2260:2009:2000::])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange x25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	(Authenticated sender: mkl-all@blackshift.org)
+	by smtp.blackshift.org (Postfix) with ESMTPSA id 840C141822A;
+	Fri, 23 May 2025 09:10:36 +0000 (UTC)
+Date: Fri, 23 May 2025 11:10:33 +0200
+From: Marc Kleine-Budde <mkl@pengutronix.de>
+To: Elaine Zhang <zhangqing@rock-chips.com>
+Cc: kernel@pengutronix.de, mailhol.vincent@wanadoo.fr, robh@kernel.org, 
+	krzk+dt@kernel.org, conor+dt@kernel.org, heiko@sntech.de, cl@rock-chips.com, 
+	kever.yang@rock-chips.com, linux-can@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v5 4/4] net: can: rockchip: support dma for rk3576 rx
+Message-ID: <20250523-shrewd-berserk-sheep-315ac5-mkl@pengutronix.de>
+References: <20250523075422.4010083-1-zhangqing@rock-chips.com>
+ <20250523075422.4010083-5-zhangqing@rock-chips.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/2] dt-bindings: clock: eswin: Documentation for
- eic7700 SoC
-To: dongxuyang@eswincomputing.com, mturquette@baylibre.com, sboyd@kernel.org,
- robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
- linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Cc: ningyu@eswincomputing.com, linmin@eswincomputing.com,
- huangyifeng@eswincomputing.com
-References: <20250523090747.1830-1-dongxuyang@eswincomputing.com>
- <20250523090905.1885-1-dongxuyang@eswincomputing.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <20250523090905.1885-1-dongxuyang@eswincomputing.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="el4f565f524arurf"
+Content-Disposition: inline
+In-Reply-To: <20250523075422.4010083-5-zhangqing@rock-chips.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: mkl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-On 23/05/2025 11:09, dongxuyang@eswincomputing.com wrote:
-> From: Xuyang Dong <dongxuyang@eswincomputing.com>
-> 
-> Add device tree binding documentation and header file for
-> the ESWIN EIC7700 clock controller module.
-> 
-> Signed-off-by: Yifeng Huang <huangyifeng@eswincomputing.com>
-> Signed-off-by: Xuyang Dong <dongxuyang@eswincomputing.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
 
-NAK, this never happened. Otherwise please point us where you received it.
+--el4f565f524arurf
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v5 4/4] net: can: rockchip: support dma for rk3576 rx
+MIME-Version: 1.0
 
-Best regards,
-Krzysztof
+On 23.05.2025 15:54:22, Elaine Zhang wrote:
+> The new can controller of rk3576 supports rx dma.
+
+| drivers/net/can/rockchip/rockchip_canfd-rx.c:297:47: warning: incorrect t=
+ype in argument 1 (different address spaces)
+| drivers/net/can/rockchip/rockchip_canfd-rx.c:297:47:    expected void con=
+st volatile [noderef] __iomem *addr
+| drivers/net/can/rockchip/rockchip_canfd-rx.c:297:47:    got unsigned int =
+[usertype] *
+| drivers/net/can/rockchip/rockchip_canfd-rx.c:299:44: warning: incorrect t=
+ype in argument 1 (different address spaces)
+| drivers/net/can/rockchip/rockchip_canfd-rx.c:299:44:    expected void con=
+st volatile [noderef] __iomem *addr
+| drivers/net/can/rockchip/rockchip_canfd-rx.c:299:44:    got unsigned int =
+[usertype] *
+| drivers/net/can/rockchip/rockchip_canfd-rx.c:302:58: warning: incorrect t=
+ype in argument 1 (different address spaces)
+| drivers/net/can/rockchip/rockchip_canfd-rx.c:302:58:    expected void con=
+st volatile [noderef] __iomem *addr
+| drivers/net/can/rockchip/rockchip_canfd-rx.c:302:58:    got unsigned int =
+[usertype] *
+
+Install "sparse" and compile with C=3D1.
+
+regards,
+Marc
+
+--=20
+Pengutronix e.K.                 | Marc Kleine-Budde          |
+Embedded Linux                   | https://www.pengutronix.de |
+Vertretung N=C3=BCrnberg              | Phone: +49-5121-206917-129 |
+Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-9   |
+
+--el4f565f524arurf
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEn/sM2K9nqF/8FWzzDHRl3/mQkZwFAmgwO4UACgkQDHRl3/mQ
+kZz30Af/SIdkXHiO0CuLJro2DVr7juoDO/LnF1KqldXc/haDI6pxWfU2dx8oBmQm
+x1wOLu5MWD0dvDB/R8ZBirZ87apAG+9QHJuaUHtiYAcwTzR4WWnRFPaqwonwNd7H
+x4b/Rs5FcRhd+zeisoHMz9siFjTtTI7I5n6w/1jW5u6Tr/6xxLOhbWbhaNM74G+n
+pSczJTP7HSSR/umMuVMEV53owHa3pK05izJCdENRzg2iLSrBR2/51jBW3IpRwq5f
+3VvSodv67x1rpip453K0NUU43qqoqa04E/XPH5WP4Lt5llHVNqbh/1f8F0TMMe2p
+KoEaxA4D3GmHFgFUM+0BIPa2aFFhGA==
+=e387
+-----END PGP SIGNATURE-----
+
+--el4f565f524arurf--
