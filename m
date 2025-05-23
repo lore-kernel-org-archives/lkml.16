@@ -1,133 +1,188 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2073.outbound.protection.outlook.com [40.107.94.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C05EC19D890
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 21:46:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748036770; cv=none; b=owDOyhCb5+Ja5YyXr749MuTo4HwLIvYz7ynb04m9KxdzfzHnYhFJTIVHDp6FjSgXhurkA5XwB8fJF/2MFV0Vfn1BjkdPklLjCITK9rDCpcXKjlqZauEKw1+YKReJOfvYbgONvcNsmiftC/urtUYxBsSGZofIJ4ZirR3MRrpqjQU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748036770; c=relaxed/simple;
-	bh=A51K5xpUMPokLjesXE6eLxcMndNUwGr0B0lfZyozeKo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=f3WUlojEgbIJTHYTnhIPPZRQwSoTpZX1OY+mfpDpnl5do1MwtH68wcBaDbwWKSvXGLbuNkwn9puqW7UJIvKKFNrzM8Xw/0mnmxvCOOPCcWyqplyO5b6eHrhiTxSYd2EqZY92IFDGd8WTIgDSvpYN/V6C8BIpft+xhC1Gov7kbQI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=PL1jbfw+; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EC6720E313;
+	Fri, 23 May 2025 21:46:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.73
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748036775; cv=fail; b=S4rQ7h/d/JIMYRXMhplyIUFMh+6CCnB9fdkjmHctrZriIkpeiSaypOkEdDPg2cCwogGTXFIgPv4DLUUC5IW6XrGU+4elAulQXmAsKZc1DxI14vKOLkzEMUF7yZq2mIcLVYws4czQP7ncyPumW2J2qnooWE8j3G4tA4gViOiH89c=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748036775; c=relaxed/simple;
+	bh=AjPuI0gup1fNCxmuJaMqHBy2VZXAVdMMcNwXdCU908g=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rXRBVuoMDAg/FXksTSJ/kYyVje6y0kys+KM6xqyWcDHjKtUwJ6U1nUo9tfPnBskNJw69O3FF8yZmsaz3VNwTbqaQ/7AKCQeWD/64ppgAw40hu+Kd70teMO0iMBq3KbdLwLeIx+9X/kMiGD8QKFnJgRSKqpiplB6Mnf+kVGSlc1I=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=JjOEil85; arc=fail smtp.client-ip=40.107.94.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="PL1jbfw+"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54NKqESN001686
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 21:46:08 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=YG4viRd+J1gzU3tCz8abXTyB
-	kGIHyRuIeHUgXDp7eMs=; b=PL1jbfw+LKLtOs2zzBvEF0XU/8hYi6C0bic4cTPv
-	U+qDupbcgkokUUiF8pxbx1BBk957jn/MITWdwvjI1/oA4IniBzKpxovm1cXkJL6H
-	o0+ilAqG3AqauWdDUZxp7DdBcC6sl6qBgWR+J1eArlUYvpGPegiffFYffSL+vDi6
-	sFsaMCunWn8rxAGSTR1Kx+VbWWtp6bJFdc2QZFHDcYhCYBpDYbLMhzSjnuFsM/Ef
-	lZFg8aSCWJz84DpGq9/jpWIz4Q6wRKRY5TE3+CeavRpZhX+r9j2XcORnaoMzP3Qx
-	+y1E09AozHyVH1GJOHyO7DVyj8UYwMZVwJcNsXlj2TmsMw==
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46rwf0ud8c-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 21:46:07 +0000 (GMT)
-Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-7c5bb68b386so78614185a.3
-        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 14:46:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748036766; x=1748641566;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YG4viRd+J1gzU3tCz8abXTyBkGIHyRuIeHUgXDp7eMs=;
-        b=U7lUlGNFputWc+7KUw3zhJZvxbWzQypPCmPsi8yUALNNNiBsy12mxp6Q03ZuBB4X59
-         TP2T+b7mwiaJqpkYsF4P3kTpA+fgNkVOYgmde+tifXtLrnPw4UZ8TThGrTz9C7VH118d
-         JhmyVFamHXwb2+Xd1CKdwkfNbchnabs5SqxgGjiier3vaO4oM1vg2bjwDvKvFpbUCNv1
-         vO3Uaqsn4eSlr92WW3l8NyNs4emBAKVYd6FHQHvMeZtK1eL4BtyQYr+Sf1DpFHGh4BxC
-         rcgGuF5E9PJNxvxndVZnqt4jp2GJ6IL6hMw9T/V0oQQ+zGo4POqQ7r2NkmTVIsdtlE1l
-         RpkA==
-X-Forwarded-Encrypted: i=1; AJvYcCWEHndnSYyzhV3lT/dy+kzD98RoJei1q34bJErFonv4jBaMwBtc1S+zKQhYaEVxgnk0vq1xl4Kd1xQ1XGc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzmZqeWdKx65xhIEcv1CYWrbNw2HXjsPsQ2cRjFMLiCLyUGqtB2
-	Dm9u54rlL1tSa7/JY0hvbOVTCRPSay6oByHPLL8vjfQLabdQnQLm5EyGEHDhzMpjIjQQMiwaeCT
-	pdqKbuTax1grEyZ5CPm3Fs7N/lMPe7NQhr/Xs+ZDWgzOZlMSeQ83SFR43dr449APljZ4=
-X-Gm-Gg: ASbGncuWNfVRte9ze13rkmfvrW3hic5HwH9xysaZth1lOvvykECoQNZwIMLLD9umzUE
-	88U/rP91Alf7Y0RCNMQZxuT2uxiC0Dgy044oRh/VmK0sewoRNNbjKx/rhdQyJoX739ntnvYwc6E
-	tKP9NyZ74vOvkAjhO/+qycY/pFR+KCVk4tbIR8HfErwonh/JcPc/oBegCk+bhqVwMHPtihYVhDd
-	sAuCuk/ursbIC/sDF0an6Po1Idq7WP+lGlio85jE3xNNj7oLX9dOO9RoHIkVOQ/chbpXDPmjUZH
-	lyzKg3S/Pun74xLZfrJV3ePU5XVIGXYdeJ1A8XN8DXe5FdtnAvHslNkqi6/pPF5QLHnRC/EfhM0
-	=
-X-Received: by 2002:a05:620a:27c3:b0:7ce:ca97:a6bf with SMTP id af79cd13be357-7ceecc166b2mr146501785a.41.1748036766398;
-        Fri, 23 May 2025 14:46:06 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGtKjp4VMExAhHDbSXwWDUa9R+2e6ssRs7xky+iVHD5hTNFkKSYPwh2y5Pdk3RKrIoEHeQZ1A==
-X-Received: by 2002:a05:620a:27c3:b0:7ce:ca97:a6bf with SMTP id af79cd13be357-7ceecc166b2mr146499685a.41.1748036766120;
-        Fri, 23 May 2025 14:46:06 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-550e6f34d56sm3971854e87.80.2025.05.23.14.46.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 May 2025 14:46:05 -0700 (PDT)
-Date: Sat, 24 May 2025 00:46:03 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: Arun R Murthy <arun.r.murthy@intel.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        Chaitanya Kumar Borah <chaitanya.kumar.borah@intel.com>,
-        Harry Wentland <harry.wentland@amd.com>,
-        Suraj Kandpal <suraj.kandpal@intel.com>,
-        Ville =?utf-8?B?U3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
-        Xaver Hugl <xaver.hugl@kde.org>, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH next] drm/plane: Fix error pointer vs NULL bug in
- create_in_format_blob()
-Message-ID: <r3rars6vn5wubijcixmpb753dv7vrg7h6yukbpsgl2svn5pudq@xbnkzn6euh3u>
-References: <aDCdRKZHmCPwaJWp@stanley.mountain>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="JjOEil85"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=U9noV+DjAwq5rfL7ukcYGcoQMtmA7a5FDcIccu9xlt6LVeY8Ch+61i2EZOq+uIoNp2qEjYxklaco1v86DGb2CuwUCtHTdh79iotnfxNoiJHWz/v57hrFC8ipnM3nN43LWiN9Wo+s0MHPgQyzYNTvkS1cSzMhYA02FpH86/7S6lqMDVLJ4QKrvwBqfAskf5l4UJ7ONyP9LgyWM9sTKK6ts0ja6g4/ue/Z9FBhAd65+H7CEh+wkxfjZdFvlPjO56q2S17Bte1j+BVQ5MXiyeaZG4obSwFV9Eq3wp4qpRvu+q0+WXgk/ITloAhCORqlY9Rb2IBX6AqaUPWgimitr4ltDg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=teiDQPJLspsSCPoDqpuhkmQED3A9zkVPcTKiFcDSU14=;
+ b=qUH/UdPy3mqKvm096a7tWEZex6z/T6D34gP3TlKojDN5aqI8HUKp2kyjPuLN3scyYuyFPcnvO4+wFj2JzfgiM2bG0MsRaYKNBXFF4mbez2EbCdwyLrcZYEPMbmw5zQKfqOKNvwqlOJmNrnhCclSejl1jNHfYluF+tuBjz/LRo+fiEKRnFwE4x+Tp4zRkFzqy+T/yV0DW6EGOXT8wzX0GVlUrt2qK+3LtzmI1XniiT2/Q/JwrhncxAy4IRFXkCv1pQOZtGpAzi5XHfajTvd5XEu71xW6WVuy5A+ExXikhXC6Er/XbVfj3rqwwr/QDI4HzH0znf/8VWcBmoTmxzRA6kg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.117.160) smtp.rcpttodomain=intel.com smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=teiDQPJLspsSCPoDqpuhkmQED3A9zkVPcTKiFcDSU14=;
+ b=JjOEil85J8Uij1Fc307wWih5LFH4H3Mw5N0uiRlfUr0pMMl5Wo1V7S8Kp+tSEi4vK+A2lx/G87ZmqsWpNDgbKfWIyfYYDw54RgalFSJwb3vWj9xcFeNNmVlrzCSPVY9GybJpYw9Rj8qwl+43gd0OO6+2FqybYyljzlTKDg/+KLxTrBWNqbTT6uPhNCEyFXe8NCQ2aJz+v6Ni4miIySkhe8oatj1enKiSTpVy802sZFo3xQhxz+R43/FTWXrzUu5IuIkFQNLCrGUjHoEPJBYjlL/p8qPjupC1fJW1K/lDJJlVFMbRcRdOLPSaB3POIzyvyaY6K3sGdyyZzxMynH/vsg==
+Received: from SJ0PR03CA0279.namprd03.prod.outlook.com (2603:10b6:a03:39e::14)
+ by PH8PR12MB8430.namprd12.prod.outlook.com (2603:10b6:510:259::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.21; Fri, 23 May
+ 2025 21:46:09 +0000
+Received: from SJ5PEPF000001C9.namprd05.prod.outlook.com
+ (2603:10b6:a03:39e:cafe::e7) by SJ0PR03CA0279.outlook.office365.com
+ (2603:10b6:a03:39e::14) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8769.19 via Frontend Transport; Fri,
+ 23 May 2025 21:46:09 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.117.160) by
+ SJ5PEPF000001C9.mail.protection.outlook.com (10.167.242.37) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8769.18 via Frontend Transport; Fri, 23 May 2025 21:46:09 +0000
+Received: from rnnvmail202.nvidia.com (10.129.68.7) by mail.nvidia.com
+ (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Fri, 23 May
+ 2025 14:46:01 -0700
+Received: from rnnvmail205.nvidia.com (10.129.68.10) by rnnvmail202.nvidia.com
+ (10.129.68.7) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Fri, 23 May
+ 2025 14:46:00 -0700
+Received: from Asurada-Nvidia (10.127.8.12) by mail.nvidia.com (10.129.68.10)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14 via Frontend
+ Transport; Fri, 23 May 2025 14:45:59 -0700
+Date: Fri, 23 May 2025 14:45:57 -0700
+From: Nicolin Chen <nicolinc@nvidia.com>
+To: "Tian, Kevin" <kevin.tian@intel.com>
+CC: "jgg@nvidia.com" <jgg@nvidia.com>, "corbet@lwn.net" <corbet@lwn.net>,
+	"will@kernel.org" <will@kernel.org>, "bagasdotme@gmail.com"
+	<bagasdotme@gmail.com>, "robin.murphy@arm.com" <robin.murphy@arm.com>,
+	"joro@8bytes.org" <joro@8bytes.org>, "thierry.reding@gmail.com"
+	<thierry.reding@gmail.com>, "vdumpa@nvidia.com" <vdumpa@nvidia.com>,
+	"jonathanh@nvidia.com" <jonathanh@nvidia.com>, "shuah@kernel.org"
+	<shuah@kernel.org>, "jsnitsel@redhat.com" <jsnitsel@redhat.com>,
+	"nathan@kernel.org" <nathan@kernel.org>, "peterz@infradead.org"
+	<peterz@infradead.org>, "Liu, Yi L" <yi.l.liu@intel.com>,
+	"mshavit@google.com" <mshavit@google.com>, "praan@google.com"
+	<praan@google.com>, "zhangzekun11@huawei.com" <zhangzekun11@huawei.com>,
+	"iommu@lists.linux.dev" <iommu@lists.linux.dev>, "linux-doc@vger.kernel.org"
+	<linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "linux-tegra@vger.kernel.org"
+	<linux-tegra@vger.kernel.org>, "linux-kselftest@vger.kernel.org"
+	<linux-kselftest@vger.kernel.org>, "patches@lists.linux.dev"
+	<patches@lists.linux.dev>, "mochs@nvidia.com" <mochs@nvidia.com>,
+	"alok.a.tiwari@oracle.com" <alok.a.tiwari@oracle.com>, "vasant.hegde@amd.com"
+	<vasant.hegde@amd.com>, "dwmw2@infradead.org" <dwmw2@infradead.org>,
+	"baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>
+Subject: Re: [PATCH v5 13/29] iommufd/viommu: Introduce IOMMUFD_OBJ_HW_QUEUE
+ and its related struct
+Message-ID: <aDDslV6ZJpxJNuaG@Asurada-Nvidia>
+References: <cover.1747537752.git.nicolinc@nvidia.com>
+ <580a36f629402506d232052ddd20ef21ec91d5bc.1747537752.git.nicolinc@nvidia.com>
+ <BN9PR11MB5276C599F23964E423CCA2738C98A@BN9PR11MB5276.namprd11.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <aDCdRKZHmCPwaJWp@stanley.mountain>
-X-Proofpoint-GUID: TqKA92Vi2Z1bMK7JepH_pCaYACJ8M8F3
-X-Authority-Analysis: v=2.4 cv=J/Sq7BnS c=1 sm=1 tr=0 ts=6830ec9f cx=c_pps
- a=hnmNkyzTK/kJ09Xio7VxxA==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
- a=dt9VzEwgFbYA:10 a=KKAkSRfTAAAA:8 a=EUspDBNiAAAA:8 a=2C2ebHZnuNSfagipGo4A:9
- a=CjuIK1q_8ugA:10 a=PEH46H7Ffwr30OY-TuGO:22 a=cvBusfyB2V15izCimMoJ:22
-X-Proofpoint-ORIG-GUID: TqKA92Vi2Z1bMK7JepH_pCaYACJ8M8F3
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIzMDE5OSBTYWx0ZWRfX6sG3T5OfZSBe
- jYUn1+lKozwc2ZxO0hU0s3KXysvmSJ+lFH9KglQQjCZLybdxve1sboXj/F56kJwSBAgDi7WbxF8
- cleaNX1aECDXLzjNUIZr9cK7K1sN3y3hE0OJ2HZgzWALEKuSZl/4CxvWWOkZAt915e2B55VnrCN
- whM8Fryerpkx65mWP5A7nVhonghTen8QZYn41onrI42+VGzPpP7MSJTj3b1FfQggYm44w6HgdiO
- mlML9qp35ITvnZ9gvVALhRO6vM7vCJvv5u/6lLb82mQPZIxPOtqR9LaKQdzIJZ3RRAeTGb8R34f
- 9xFbyDYJYwQiuk6OwswuJNDI5KlDn7PWm52wvyAWYYndoMMLJ8X8VedRqwj2tiFgzdy407IeZ07
- zq7hIXzsChf8ycYjSNbQQfP84BLaX6etIJ6DfUlmq43C0i6U6FJRAIPZPxOTWUsMvbBC4X0t
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-23_07,2025-05-22_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- mlxscore=0 clxscore=1015 mlxlogscore=831 suspectscore=0 spamscore=0
- priorityscore=1501 bulkscore=0 phishscore=0 impostorscore=0
- lowpriorityscore=0 malwarescore=0 adultscore=0 classifier=spam authscore=0
- authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505160000 definitions=main-2505230199
+In-Reply-To: <BN9PR11MB5276C599F23964E423CCA2738C98A@BN9PR11MB5276.namprd11.prod.outlook.com>
+X-NV-OnPremToCloud: AnonymousSubmission
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ5PEPF000001C9:EE_|PH8PR12MB8430:EE_
+X-MS-Office365-Filtering-Correlation-Id: d548050d-5c44-40a5-9851-08dd9a433add
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|7416014|36860700013|82310400026|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?U/oNoknTln29t3ukD0/iWJStKMX1c018hR6asxRPpsEo0QBhPzdMxOz9ySxY?=
+ =?us-ascii?Q?mcFSRtZXypS/rXNrq5vpGS5Q+UI8Bdh4dMUmOwBlfTLgiJInCobrLaeQDJVH?=
+ =?us-ascii?Q?QTzhKPRrZ6AD+D4Vf6k63NtIco6kaki9MNLC9k+nF+EGl0oVORh4ZjpADIM4?=
+ =?us-ascii?Q?ctTRwaGfDp4E7tf7FLMMcLfU9lTb9xj2PVONydldtAS4QtD8rFqdh9twPTYc?=
+ =?us-ascii?Q?51HB2yCJKCgulfUtdxnC3+RPjoVeyYAFds8csS+T23qYb1Gytvo1j1roiS1S?=
+ =?us-ascii?Q?tmUIPjc01P3xFDveY3CK7gRGF28Sa2en+MR2Eju1HEqbYalPvGtk1iwDfxwC?=
+ =?us-ascii?Q?28FcmeGyBzScAGZHZmCyZb3dv67vrUywIMoulwhyEP3Rb7BH20wcRdxsFSPQ?=
+ =?us-ascii?Q?19RlJvnRQ+6WYgYOQk8O5zaVaCqmizYJZXemgsM1jpbQo/EHelpjIwcUKlJD?=
+ =?us-ascii?Q?G+vtIaeIC0D+3k1c7UDVLjV8emK0+yftKfLI2aX0V0+HybqZE8AM6dKvDEh3?=
+ =?us-ascii?Q?2lnu2OgsE/D0EfKf/61+W7EkbzbS87UjyBJDIvyoUINJZG4f8umI6ESqdMGA?=
+ =?us-ascii?Q?YPlpd7McVfABFq0ZG9UAmxYDG0SzR8fHr63EZTW3UDWAQwXayiYU4dpSrbXw?=
+ =?us-ascii?Q?xHvtRucr1c0F2BuTObsLnKCrf4RUsDX7yiMzVlFo8uEQTsNh3RYm4g2vGkDA?=
+ =?us-ascii?Q?+h+ZHsSQG3as0j6o4CrCAwmZZ6eNEdj9kUNgg0tnTTN8FLa8Ms1SkU3qFSqA?=
+ =?us-ascii?Q?Q0mc0gqxEuYno9wodQyGTZ3cGOs4/wE8srkgxq59zMNfgOsZ+SBpoaEmBuSO?=
+ =?us-ascii?Q?vINJpshNIMlqg7rrEYsqS9FMroGv4aj4fxBi/dyPOjUirVqsWiTpS75Mpb2S?=
+ =?us-ascii?Q?SGY0mMaWabq3INV9wiWkwFgghiKiyJ5+jtrW7XzbrC4b/X3TxYJvKyCSpevI?=
+ =?us-ascii?Q?gptxgz2GUsislgvR8kniWSy+SUQDbCYDXZl30h3aOr4GwSc3P9qzv/ag/xsh?=
+ =?us-ascii?Q?SbQcVQAirpDr5KWtS5jOZLKlPG+2KFA7nagfmJPERW9Z9YLXNhjgqlN7NFFp?=
+ =?us-ascii?Q?0/CtEGwbfVyJjMivh/hlczRNEZUfd/AFkEYRa1BsatK6HjmMHmjZPRlcBNxV?=
+ =?us-ascii?Q?/v/sCtSH1cGYjjv/Mgqkpc6Yap0Fjtr/pPwbAE0jMFnFSflxfjD6/68bOMiR?=
+ =?us-ascii?Q?SvsCEEX0VG67zeqyAPTxtFVpHVY+vYG6g5Bypm34TZv4YFRrRVxVb+Dc1Qca?=
+ =?us-ascii?Q?n7XUrsb+saVBJrmVwLvxCABUDrvGXMLRGywoy1tuy3XN0Fq54prq6DyezsSr?=
+ =?us-ascii?Q?Vxx3js8l2urf4d/Lk1fBRkfi7nWjvfRHTpfUf/D0p0HCKj/Z0TkFbywjAV3y?=
+ =?us-ascii?Q?e2Lqus9VMdAdnELxLUOQCXt0GPN17azK6GvUFMtM1HD86LHr48tZ1kB2I4jW?=
+ =?us-ascii?Q?p3dLdtPtB4S8VIdaeWA8CTYeKLbIgjXtmnkNF6RBqtMualSj84vwMsjuKgnx?=
+ =?us-ascii?Q?7q6IpjfUQpFX8Swd/EeA5euOz5osWpJfPsLv?=
+X-Forefront-Antispam-Report:
+	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230040)(376014)(7416014)(36860700013)(82310400026)(1800799024);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 May 2025 21:46:09.6946
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: d548050d-5c44-40a5-9851-08dd9a433add
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SJ5PEPF000001C9.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR12MB8430
 
-On Fri, May 23, 2025 at 07:07:32PM +0300, Dan Carpenter wrote:
-> The callers expect to receive error pointers on error but
-> create_in_format_blob() returns NULL.  Change it to return error
-> pointers.
+On Fri, May 23, 2025 at 07:55:18AM +0000, Tian, Kevin wrote:
+> > From: Nicolin Chen <nicolinc@nvidia.com>
+> > Sent: Sunday, May 18, 2025 11:22 AM
+> > 
+> > +
+> > +enum iommufd_viommu_flags {
+> > +	/*
+> > +	 * The HW does not go through an address translation table but
+> > reads the
+> > +	 * physical address space directly: iommufd core should pin the
+> > physical
+> > +	 * pages backing the queue memory that's allocated for the HW
+> > QUEUE, and
+> > +	 * ensure those physical pages are contiguous in the physical space.
+> > +	 */
+> > +	IOMMUFD_VIOMMU_FLAG_HW_QUEUE_READS_PA = 1 << 0,
+> > +};
 > 
-> Fixes: 0d6dcd741c26 ("drm/plane: modify create_in_formats to acommodate async")
-> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
-> ---
->  drivers/gpu/drm/drm_plane.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+> The queue itself doesn't read an address.
+>
+> What about 'QUEUE_BASE_PA'?
 
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+But the HW queue object represents the HW feature, not the guest
+queue memory. So, it is accurate to say that it reads an address?
 
--- 
-With best wishes
-Dmitry
+We have this in doc:
+- IOMMUFD_OBJ_HW_QUEUE, representing a hardware accelerated queue, as a subset
+  of IOMMU's virtualization features, for the IOMMU HW to directly read or write
+  the virtual queue memory owned by a guest OS. This HW-acceleration feature can
+  ...
+
+Thanks
+Nic
