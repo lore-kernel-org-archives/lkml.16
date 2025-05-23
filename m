@@ -1,106 +1,176 @@
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D3C2286A1
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 13:05:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4E7C79F5
+	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 13:06:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748005559; cv=none; b=puuQolDXk21OnfkBlxu68M5F+pD+EUCX+CHaYEtd4kesPYRj/xuVlk3Tyz7KqB3hbPD3vf9R1M7QGtoZO3D38xAy1pl7Fl/VKE283OG/6G7adL7MDPripbiPucU64SUkuwoOOK8AwZYEJgk3sYcSOyw0O+KW4fVNSt+Q+hD1R98=
+	t=1748005587; cv=none; b=tu6j+XpR4Z6kKe/uyZgazCG+ym3XiBLeYJPcZCoxvE3U7OBwtl0W82g4o3ZMhUgRqmVNyYtAdEYBcvdVWWu2zXBmPJ3sV6uGXNlY1WaQyN4KsAclA5259wU9VjGeahdMJgQ8eOKnSfnrVD47dAyMYRfyAlDj4on5Iw5934rCkbw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748005559; c=relaxed/simple;
-	bh=xcdAazkrufWuzaju7No3ced2/sH583+qifVFJh+ynvw=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:To:From:
-	 References:In-Reply-To; b=Z2vzQ1wdJvQxvfiW1+GzdfoD4rgC/a40J/twUZd+CVWktnSJoGZU3S5ctbdI5yYBr6OzosVecKGyj6V08DvdzoS0uviK1x8cbpT3G0E0Zw6mpviu4sHf7JVGOw9tbrEGmA6Cvuc7lMSNV7NITuz1O+DsdfvnJBiarTeLDloI71A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=mOZoM7C6; arc=none smtp.client-ip=209.85.221.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
+	s=arc-20240116; t=1748005587; c=relaxed/simple;
+	bh=NqsQKoyH5XwgFnrjy2QDwdy0aFDN0jlWu+yux8ynH4I=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=pMKG2dmlLgeBW6GnzpNSVD//Od3vVPliMI6iGhuHWACbHySRFtuQTHIdaYE0qh+LzLhhRBD7eUnEEDybOdOo43Jpwn0qqaY83KtGzhmDCey62mDB4AVGA/Y4XygEkIrPSbgIj0mzOD+bKQnccq4LRXsmRMmKJTdW/+gZD3OmjPY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=Pshbatds; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="mOZoM7C6"
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-3a367226ad2so709208f8f.0
-        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 06:05:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1748005556; x=1748610356; darn=vger.kernel.org;
-        h=in-reply-to:references:from:to:cc:subject:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gFewfZjNIOlnKjbSqghMjET5KPXnaKP3RNtWcft+NNM=;
-        b=mOZoM7C6z57lpCL4aUH3bkfyDirbWMGziUkqBUGZNEmBdfhrSVnKTutiuzGlefah5u
-         1FACWiwN6mjq5orq25WvIFHmes4LOUGwBVQXhe+Ri+e7BG+ToZIbYg862ajC4xo7vFsG
-         67TUV2ek5whv0r4Ul28LxmFXXJIgmwW+pSJu+RbeRGtCUI/TnJ+TZ41DGyEv8f6avqOW
-         kiw5AhtyVDHhQtfXVhzvc6zEP9kEum2GPVLICFXNq9+dpWXwQMMFBamMa14qEL3Nck2g
-         +B6oneJmhRji4i1WWSRzX8o6P9HimpoHC8xTzTjOHzTbv3RdTagJ5SAZUB1aO8uogpaa
-         YaYA==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="Pshbatds"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54NCwmJY024983
+	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 13:06:24 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=D2ZwAv3+/k8jq5bB/r8jN+
+	Yh3nUziGncMv3EzvPlvAA=; b=PshbatdsvJ3uQjQ8BnuYeX81N/+IFW0dRTLdX4
+	w5g6Dxn4NWdF4XqWbnxdlc/VHyirTbr/S3oyOIz7ywde21qp/YyPkzAYVdJHqj4+
+	+mjHQlYodHPgljgsECGsNEvV3+9qrl/rQsAv2gH+SNpE0a+HYzxsKHMqJkPPk7WB
+	0HMewcrb0W34cLzNsqLgNW/tdCkexABUbSnZvJB71XlMy7WqTZ2JRiqBEWspd8bq
+	cIwngnleKUIwVcKBvQnlQrPOcitClg9xSjoUS9tqaOYyrFKVR0i3EAizIhHToE3B
+	jUrvmuF7e4NNatwboAXN6J4ZE4p+ITESac/WQ8S5xDbyS/GQ==
+Received: from mail-pj1-f71.google.com (mail-pj1-f71.google.com [209.85.216.71])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46rwf520ay-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 13:06:24 +0000 (GMT)
+Received: by mail-pj1-f71.google.com with SMTP id 98e67ed59e1d1-310f8615a3eso247478a91.1
+        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 06:06:24 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748005556; x=1748610356;
-        h=in-reply-to:references:from:to:cc:subject:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=gFewfZjNIOlnKjbSqghMjET5KPXnaKP3RNtWcft+NNM=;
-        b=tNj6HBbFU5GDRsrXd9JYy2GapcH9nfKYQ/jmbP3K8jva7M/YiOhgmukkNWuAaIFdJD
-         K3YleK9u0WohvN/ZQLwBKHfHw0W5zfs2hAEMZK7V9wJh6wwYQpbh/ZfShwNcy+Y0OxEw
-         cqpopcMDA9vztIAyIiiBwNWGe8/IVqtr2y+fS9KBO98E2khzQ+tSdlCX2YvGVw6uPqiW
-         0okseEDUZOTsXQbhXCgjDw+OXj6CKgvpUfr/MCXvyVAu9dQ5zECsc16uO/7ibfgpAQ1/
-         b1NmT3+RDwm5sJDVJPsXdlbFYCNaG88XTDsX4OtMFPb838j4jPUdqhCGVGlPAttikB5F
-         7mJA==
-X-Forwarded-Encrypted: i=1; AJvYcCVfly0e7NUSN46iER0Zqs8iVVFDUQJaBuxw8KxL9O42B35Ysny7rj5FnzLCKsemX+ExpptY9IpqNEyYAtk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxecZBDGtud4PuzHruBWAl5tpK2aOaQoDP1Ot4HKJxr4LJ3CnfS
-	liPMbUDKe5TOvdMcGQku8WJB13eqVDtWWEXfqsKxFSMsoboWj5JyZPZ5QswIx2efIAE=
-X-Gm-Gg: ASbGncvRfbhKa6CwLFuvAk5f6fWfGRfsY3UbwHcUlCnPqRNvTg5h2j/VHbdXBB3VvwW
-	aNfVtCAamvOzkrGVsYxpaWhguE3TRWNl8R6Hk1RlPeMQXWN1cOxA2PC3uaegHzILj6FFfAt3zZM
-	2VJiL+tZ5LVjyNziZLlRAmYAKor3J8AqOJbx+Fi3ON1p+T3TgoIs6q46LW69HvkYUzmWU51KDSu
-	QaADBoxyE6/C+2/+xTk7CEkgsLMHU93iHKoNoq+DNzkDvCYrNAwfE4+tcWbMfEQEdtyXx5TeBGO
-	UCZxbdwPR1RYygqcP6fUXnlSfJ9+HfyRYVLrBvV4RXYRZf/gABMl5WdpvHI=
-X-Google-Smtp-Source: AGHT+IEYIo39joB/0uuiMCLZj0X9kGxap7PQ8MzBUGOeMKLVyBYJHZJSgGJhoZMNlP15r1mU9RPZpQ==
-X-Received: by 2002:a05:6000:4285:b0:3a3:5c97:70c with SMTP id ffacd0b85a97d-3a4c2e5707cmr874240f8f.14.1748005555660;
-        Fri, 23 May 2025 06:05:55 -0700 (PDT)
-Received: from localhost ([2a02:8308:a00c:e200:be84:d9ad:e5e6:f60b])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a35ca8899bsm26390515f8f.62.2025.05.23.06.05.55
+        d=1e100.net; s=20230601; t=1748005583; x=1748610383;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=D2ZwAv3+/k8jq5bB/r8jN+Yh3nUziGncMv3EzvPlvAA=;
+        b=UPiIBj3pBuZEQkiIlfTV6yRnVlqqE9pAFpOdHih2H//0D6Vv8n+JBFeXhXvyDlscRe
+         IozgKqHEbBcpJq2D0X4RgQCu8qC3FOffkleVdB1GxY0qRBZUWy/VqTxta3TQclvQPqw5
+         xSzhmdDBXs8+mBsPU/a1slZC9AwZ2WIXQ04cU7Ti74eaTrel6Pe61O3jQlM94QDrpreR
+         EXJtHmMGc1RzNaPp/njvPkG7Xw1CULZerBzrOCacySvPF1wHw9h47mqD4UZGXzn1asEl
+         yGoALqWtCJJd+xs5TD4j4LvyrkAh5R0l2wE3Z0jFJpusXagUQBURLW54Fb+kJFPxg0ws
+         Q0kg==
+X-Forwarded-Encrypted: i=1; AJvYcCWU3h5MJYWe639JFVXkg8xoWr33v1Qyqw1VAC4BbZ6wFZxGObVkUWg1I54clpv8oLhbw3XqWviMjX6GOa8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzWg8+zqfWLI0Y8ZVjOFDJ4SXkEBpaiPl2XqoF3V0Z1im/QqPnS
+	HYDsuM8wTpSbk6Q57jufzXg6f7LSSHkaQrC5woLnSUtCyk0oh1HB0bWqClyFw1kyxKPkRdfIg38
+	nWd5WZUw0afTfUFyEmLxSCBKTWwaBT0O1bPga9PqYV/REO+ydtL7MM+26Y8PS0cW76kk=
+X-Gm-Gg: ASbGncvAZr/xZna+InrQUNwYCJ5R+my6rPANpHo7rmvl+768HK0LHZFtfdSibH/XL3p
+	IJB1LAfof8UVWURmQmcahpyeXMTxWsVkI51BrPu9TIgOTNvwJ7EQbdKVlP41GXFXaGmFQQlnxr8
+	9s7KkPARoiQgxFE6Zs405iaBLgRbBWUYJsT0TDASiv0Tf2FE6mRsZ9a+pBVvDzrkeB4TmERlbgV
+	e/tUbEBvHhlZMqalEkXFuHntM0DJ4GZlJ/ELeKoQO+h+1cPrNavxcSoMcvsuMk229zh80ODlwME
+	kCu2uzKv7pJkBYvjcIcyf3vumz4Y3tYVgPNsdLv4YTflrga6nNc=
+X-Received: by 2002:a17:90b:1b03:b0:2ff:58e1:2bb4 with SMTP id 98e67ed59e1d1-310e972afd0mr4224639a91.22.1748005583127;
+        Fri, 23 May 2025 06:06:23 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGdJsIyMKqkXweP/UYp5yhqH8qznBRczsJ+cQdN4PhNXmYJdgeETzFaBLjNJrPAKxxcvN1ZUQ==
+X-Received: by 2002:a17:90b:1b03:b0:2ff:58e1:2bb4 with SMTP id 98e67ed59e1d1-310e972afd0mr4224601a91.22.1748005582662;
+        Fri, 23 May 2025 06:06:22 -0700 (PDT)
+Received: from hu-vkraleti-hyd.qualcomm.com ([202.46.23.25])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-310f1544d30sm816165a91.15.2025.05.23.06.06.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 May 2025 06:05:55 -0700 (PDT)
+        Fri, 23 May 2025 06:06:22 -0700 (PDT)
+From: Viswanath Kraleti <viswanath.kraleti@oss.qualcomm.com>
+Date: Fri, 23 May 2025 18:36:16 +0530
+Subject: [PATCH] drivers: gpu: drm: msm: registers: improve reproducibility
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Fri, 23 May 2025 15:05:54 +0200
-Message-Id: <DA3K95ZYJ52S.1K6O3LN6WEI0N@ventanamicro.com>
-Subject: Re: [PATCH v8 13/14] RISC-V: KVM: add support for FWFT SBI
- extension
-Cc: "Samuel Holland" <samuel.holland@sifive.com>, "Andrew Jones"
- <ajones@ventanamicro.com>, "Deepak Gupta" <debug@rivosinc.com>, "Charlie
- Jenkins" <charlie@rivosinc.com>, "Atish Patra" <atishp@rivosinc.com>,
- "linux-riscv" <linux-riscv-bounces@lists.infradead.org>
-To: =?utf-8?q?Cl=C3=A9ment_L=C3=A9ger?= <cleger@rivosinc.com>, "Paul
- Walmsley" <paul.walmsley@sifive.com>, "Palmer Dabbelt"
- <palmer@dabbelt.com>, "Anup Patel" <anup@brainfault.org>, "Atish Patra"
- <atishp@atishpatra.org>, "Shuah Khan" <shuah@kernel.org>, "Jonathan Corbet"
- <corbet@lwn.net>, <linux-riscv@lists.infradead.org>,
- <linux-kernel@vger.kernel.org>, <linux-doc@vger.kernel.org>,
- <kvm@vger.kernel.org>, <kvm-riscv@lists.infradead.org>,
- <linux-kselftest@vger.kernel.org>
-From: =?utf-8?q?Radim_Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@ventanamicro.com>
-References: <20250523101932.1594077-1-cleger@rivosinc.com>
- <20250523101932.1594077-14-cleger@rivosinc.com>
-In-Reply-To: <20250523101932.1594077-14-cleger@rivosinc.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250523-binrep-v1-1-c3a446518847@oss.qualcomm.com>
+X-B4-Tracking: v=1; b=H4sIAMdyMGgC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDUyNj3aTMvKLUAt00i2QLw7REgxRjwxQloOKCotS0zAqwQdGxtbUAkV5
+ 3W1gAAAA=
+X-Change-ID: 20250523-binrep-f8c81fa0d31d
+To: Rob Clark <robdclark@gmail.com>, Abhinav Kumar <quic_abhinavk@quicinc.com>,
+        Dmitry Baryshkov <lumag@kernel.org>, Sean Paul <sean@poorly.run>,
+        Marijn Suijten <marijn.suijten@somainline.org>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
+Cc: Ryan Eatmon <reatmon@ti.com>, linux-arm-msm@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org,
+        Bruce Ashfield <bruce.ashfield@gmail.com>,
+        Viswanath Kraleti <viswanath.kraleti@oss.qualcomm.com>
+X-Mailer: b4 0.14.2
+X-Proofpoint-GUID: EoewesVbJZAsA0DSR6EBUBij9fwyo9q1
+X-Proofpoint-ORIG-GUID: EoewesVbJZAsA0DSR6EBUBij9fwyo9q1
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIzMDExNiBTYWx0ZWRfX0lyL/9zt2ozD
+ Z2rmkqELWHVqveYBmiL2/ZmBzMuubsmhbjwCo4hDk4oSNTk1ORLwXfvmO5vSnYEUwBHPIMp7eZE
+ Xt1J1NFWlgWOs9Lz/JnPdKEFJiP49e1KK0RHK+7rj5YxmtULym//+1bBO0jvZV1DiAh+E2UZGgh
+ bQfOXcpMEHAeAHVgb2+eSsMzH0kt971DSh50Z3HwtRc9UiP4JbykejgNB7B4RzeKqe5K3Tkxus1
+ fzKDH8sA0TWSTlUssoANEDJyu2uUjXH2Jejo3xr7R931xXbuV7eh0fYxaHsmZJzELN1+vfZEC8I
+ B3ArSdlKq6lo1bbfOM0qVPbQJk+5hUawkllOj6EEHc8Lfbrc+iyBDEtt1NRpy1pMY+gfv/PuyMH
+ jOMTaoIKT/A+wtwK+kIACU/OL4k+OZ64vHopa6zQL3lVjcUlWcSPL9DcGzwRz0Be6eSfjZiT
+X-Authority-Analysis: v=2.4 cv=R7UDGcRX c=1 sm=1 tr=0 ts=683072d0 cx=c_pps
+ a=UNFcQwm+pnOIJct1K4W+Mw==:117 a=ZePRamnt/+rB5gQjfz0u9A==:17
+ a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=sozttTNsAAAA:8 a=pGLkceISAAAA:8
+ a=EUspDBNiAAAA:8 a=k2a8_r_j4jiI5Xvw-VoA:9 a=QEXdDO2ut3YA:10
+ a=uKXjsCUrEbL0IQVhDsJ9:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-23_04,2025-05-22_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ phishscore=0 clxscore=1011 mlxlogscore=691 priorityscore=1501 spamscore=0
+ bulkscore=0 lowpriorityscore=0 malwarescore=0 suspectscore=0 mlxscore=0
+ impostorscore=0 adultscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
+ definitions=main-2505230116
 
-2025-05-23T12:19:30+02:00, Cl=C3=A9ment L=C3=A9ger <cleger@rivosinc.com>:
-> +++ b/arch/riscv/kvm/vcpu_sbi_fwft.c
-> +static const enum sbi_fwft_feature_t kvm_fwft_defined_features[] =3D {
-> +	SBI_FWFT_MISALIGNED_EXC_DELEG,
-> +	SBI_FWFT_LANDING_PAD,
-> +	SBI_FWFT_SHADOW_STACK,
-> +	SBI_FWFT_DOUBLE_TRAP,
-> +	SBI_FWFT_PTE_AD_HW_UPDATING,
-> +	SBI_FWFT_POINTER_MASKING_PMLEN,
-> +};
+The files generated by gen_header.py capture the source path to the
+input files and the date.  While that can be informative, it varies
+based on where and when the kernel was built as the full path is
+captured.
 
-How will userspace control which subset of these features is allowed in
-the guest?
+Since all of the files that this tool is run on is under the drivers
+directory, this modifies the application to strip all of the path before
+drivers.  Additionally it prints <stripped> instead of the date.
 
-(We can reuse the KVM SBI extension interface if we don't want to add a
- FWFT specific ONE_REG.)
+Signed-off-by: Ryan Eatmon <reatmon@ti.com>
+Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
+Signed-off-by: Viswanath Kraleti <viswanath.kraleti@oss.qualcomm.com>
+---
+The files generated by gen_header.py include the source path to the
+input files and the build date. While this information can be useful,
+it inadvertently exposes build system configuration details in the
+binaries. This hinders binary reproducibility, as the output will
+vary if the build environment changes.
+---
+ drivers/gpu/drm/msm/registers/gen_header.py | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-Thanks.
+diff --git a/drivers/gpu/drm/msm/registers/gen_header.py b/drivers/gpu/drm/msm/registers/gen_header.py
+index 3926485bb197b0992232447cb71bf1c1ebd0968c..a409404627c7180d5b0626f0ce6255d7d0df5113 100644
+--- a/drivers/gpu/drm/msm/registers/gen_header.py
++++ b/drivers/gpu/drm/msm/registers/gen_header.py
+@@ -11,6 +11,7 @@ import collections
+ import argparse
+ import time
+ import datetime
++import re
+ 
+ class Error(Exception):
+ 	def __init__(self, message):
+@@ -877,13 +878,14 @@ The rules-ng-ng source files this header was generated from are:
+ """)
+ 	maxlen = 0
+ 	for filepath in p.xml_files:
+-		maxlen = max(maxlen, len(filepath))
++		new_filepath = re.sub("^.+drivers","drivers",filepath)
++		maxlen = max(maxlen, len(new_filepath))
+ 	for filepath in p.xml_files:
+-		pad = " " * (maxlen - len(filepath))
++		pad = " " * (maxlen - len(new_filepath))
+ 		filesize = str(os.path.getsize(filepath))
+ 		filesize = " " * (7 - len(filesize)) + filesize
+ 		filetime = time.ctime(os.path.getmtime(filepath))
+-		print("- " + filepath + pad + " (" + filesize + " bytes, from " + filetime + ")")
++		print("- " + new_filepath + pad + " (" + filesize + " bytes, from <stripped>)")
+ 	if p.copyright_year:
+ 		current_year = str(datetime.date.today().year)
+ 		print()
+
+---
+base-commit: fc5c669c902c3039aa41731b6c58c0960d0b1bbf
+change-id: 20250523-binrep-f8c81fa0d31d
+
+Best regards,
+-- 
+Viswanath Kraleti <viswanath.kraleti@oss.qualcomm.com>
+
