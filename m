@@ -1,63 +1,63 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB8F3221264;
-	Fri, 23 May 2025 22:36:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F6FE214A74;
+	Fri, 23 May 2025 22:36:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748039766; cv=none; b=N5EySiAyAGbxpNs/Fe2DFhqfn4G7uEIwwWCC0eSeEm7weMJo4tsK3TUkEZ/0U/vOQmfaYqt0f8zk8DB3XvfAcBdWwAowfNu1VE/4LuBX8PSfK/pe33fpiR5eTV8owVHe9nWaHRhcw0FFPzLIRpHNb7Ux0449ZlaEhURJBjw/UhY=
+	t=1748039769; cv=none; b=Ui5T7aOyhqT4vD/mK84GAc4Jmm1eXkt0G/6CvPj8rvNBIOhRurE9Syhrrn6IW+C5t8Ew5xmLGbP5chX2EVBv5OkC20dlenadVR0Rn8uxvXAH7U1ATQTAfoCoUrWXF9P+3TmOaJU1w3nQ2Il3UgFIgDxeX80JX7np5I8aFtRGfvA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748039766; c=relaxed/simple;
-	bh=rrbLsyU2u49meinO/TkASP7pAqwIfEaeD0GzK/lkINs=;
+	s=arc-20240116; t=1748039769; c=relaxed/simple;
+	bh=h8H53WstQAHtKB7BqisUydwF30h1NlWHqWKS0j9d0QU=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Ryzx1m3r/fwMBKcLqJt4jlbMdu0Tc4ISrQGTNmKXIyiyxH6lHFEQ67YeRJmNL6l/EELx4Rax/yjsDi+x10riBW9NvigjMZwrZ9J/ydv66Se3Wmat2v5wpi9V7aYSVvi1WQZPeBbqqB57yTHt3che1TKkOndx56vXqassE7Xpdc0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Dml5wMJB; arc=none smtp.client-ip=209.85.221.54
+	 MIME-Version:Content-Type; b=ax+8NKBXyDb8/gbRoqXk7cvVQb87U23ekg2bHgfQT5413qlbyqX3yx8HCWl4+SMEdAlNXZfeFtsX0KhtXNEN/Awg8CACyKNWGJh92dpGKNHkU92xb1TpUZl/pG5rYM2grR+duZtaLaoSYn7Iqmbvui/xdAnKN51bDcxhBlehhlA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KiQaHWH4; arc=none smtp.client-ip=209.85.221.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Dml5wMJB"
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-3a37b5de515so59811f8f.2;
-        Fri, 23 May 2025 15:36:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KiQaHWH4"
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-3a4c58df045so52704f8f.1;
+        Fri, 23 May 2025 15:36:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748039763; x=1748644563; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1748039766; x=1748644566; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=KB/N79A1bIujUdbyiBjqb32NKTK8A93/X+NHfWL089s=;
-        b=Dml5wMJBTCs2uzYtNc3U0LFt9hzkoy2VjvpoI0JpmAHML0Kt46WxCnc2u12OXoSv5+
-         0rSB2alO+2Fmfu5sH5PGmsiSmQMDdNoqVHRUNnFNjUbJKjhxUMM6OALJq9QeWO5ulEQx
-         SxvpMS3ofHoerjPy3C3jDGkV0EhQNkNmrn1X1vm8RCqX4K9JM/ajAdgS3GJYP7R6RgDa
-         k628jAw5NFEc38Tx3gnnGVsa4XqWl5A0RhKiTs/NwmvH7Nvv3k55K359q73JQLv7Ywdx
-         /oIhlcjpJTDkxNCXCQh/PeKN9payft3wM+hN4qeMKg520z1NgzF4X7qGRF/Ef25fkRha
-         LYNA==
+        bh=DgqBxuRnRBCBlpgOJitYe+JYUaYesgoujNN7Mj4ZDPA=;
+        b=KiQaHWH4NPadu3RlkBSnZNnJlV6L0KLw6XRT+aUwPkxeJ2nspKKIGaosvj7zS934Ia
+         /vKPkV6YvknKnUMZs9FgUnK97xmvLFQh5ibDxEAqGfNnWW9f4HqCN/P5teH12hkdA86f
+         2F6iYjFd0DOTwa4rOvCQO9Lq7C46fykZUw7MxqVqz86Ts8fzCwaJVrs1YNbTSRX/BZpO
+         Tqd+4KfUtv4Kc3aim8smlWoizEQYlYakd8Nj3w4SfETBv6uf9dvLJJskWACYeeADfxQd
+         aPi4VDmCA6vbKrcKb4a38DXJA0dl8WIvHqv4eIU3quNIzlTXKA1KQBDvsGM/upYHJHP0
+         ACjQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748039763; x=1748644563;
+        d=1e100.net; s=20230601; t=1748039766; x=1748644566;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=KB/N79A1bIujUdbyiBjqb32NKTK8A93/X+NHfWL089s=;
-        b=BGX34BkdzOtrMdn5kENEV8sh9wYCenR2R1iz8d8730MwQOahCCip467Y93QxfZeXBG
-         BUkwu1Q+na8NcxIwqot4qjYQV6BRyrZPxcohUnmeO8TEhhdc4SM8PN8kj02NbbWDAgwk
-         3yFxKc95vOwQ3/yoBG22SzttoxXfiooyA+zEUku25aLAuBFLPoroEDAjPVjxtxGXB70g
-         2RuC5l8hEiP2e1D6t5Uts9RaZmQP0vhkN502R/bSYQfl2odB0albb9bJWN9COO1FmgnZ
-         w7HjPg6nJbeQIZBD37Y2xCw81Jn1b9dkZApLhoyjeq2KIE2K5ZYRePtyhD860nCbl29B
-         bOlQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUJH5LFdURPtd+yDO7RDwGyQZEtZgDHb15G1ctxGMQ2b1FJWAWgnGCnYkBwPF0G3zcairwLOwbZbVpuHHK1@vger.kernel.org, AJvYcCUoTyZY9vMlS/RWe+VybYHlcV77jwPuWW1Rj9gaDN92EAcVZiiPbpLuWHrF4qEzL3N8AzsqEmhwba5W@vger.kernel.org, AJvYcCVuZEaZNeKIgL1Tf5b3yvxr+hYKIrt6yPzCYubUbPIaUgVU5E+cWmgEZN8qat8+VtCReWGHSIh5FtQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwPyB3SEqTyMVkERx1T8cdiyiQimwoqTkz5Xyi9lacjecklj51H
-	UDro3ii/9dZWcxtPVODb3PFQ1nywNPBPhjCbgrSlSW49eWuOriq1m7WDmTpn1XiD
-X-Gm-Gg: ASbGncvnYJHFeQsmYoOa90yAfOFDGVwZxJHGuR7dbWrT5Oeh1FFjKYJ0AIlWP8ribck
-	B95iUcrm5JrEhPZlbUrYVQ6pT1SfIoEKeWgCWyg8MZGmrbHpVUfL+Avtk0l8wy/pFo2j6HwdUhJ
-	dq3LUkVJaJ8g1QBC/rhsppF0hulPym1N+ixYKCsLQ3O61JjlLs+fNmsIygK3wcLbID5xaVh0qJ3
-	SAlaM3o0j3nCRI+IWSvB80J4tdDPbc8kJ/JbJ2sB4CbHBB4Qry5lWobyoCOpKbFAS4k6uUxuvr4
-	LuUFnBBzHWK2ACBfydhKPWiVPqqHoB2+3X0uz8J2gx0NADVKjmGsRKpXsabRdOV5D7uDXurNSmJ
-	vcdgWBPrTY+4ssGI1oNhplg==
-X-Google-Smtp-Source: AGHT+IHTemefUyS6YnRl4lfHtFoIINTY2RndonTHs2vdWzL0nxCrLCqR3zy6fJ42HiVHttByl2Kjvw==
-X-Received: by 2002:a05:600c:c0c3:10b0:439:94f8:fc7b with SMTP id 5b1f17b1804b1-44c90f4ccb1mr1498025e9.0.1748039762688;
-        Fri, 23 May 2025 15:36:02 -0700 (PDT)
+        bh=DgqBxuRnRBCBlpgOJitYe+JYUaYesgoujNN7Mj4ZDPA=;
+        b=NHTwYILNtzKXNv6Ri/UXvrQwAFdBjOXr85rtrZ4RKr9KZcP7IRfK8dimk7Uhpp/7rh
+         pyy4UkDjqz6XnUIXBGoyC2Us4seFVPEnWyEGqOYvHkuyj/gm3cG3NuBof5bpMUAmSRPs
+         9mxDcuoSeqCCMNPbTzMyn2IuiHr+fCjZbaZBs8p9282AiekACwhyokmF5jECem6eOIQu
+         JAQYk6SoH9RAG0SA35xdJqcbn9ZbZDZX1uuVV/J8P3INd3yVvEYPgRszjzL6bpxZj14d
+         0k4yuK11KIa2EHoZxOL7sNd0CkFPfXDsseW6n8yc19g2ocou3aBjk8g0RlIh6lhXLqa9
+         77WQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUAvzBhnc6GojUub+5I6vj4T77xi0ybB+IivapIwAG8+2GmWt34qA4jCLXg3NF089Z1iVa9fqFX7PLdMWqF@vger.kernel.org, AJvYcCUI0kX6d82P2Ocvo92QaaUwkdX6SD5j+pxsSEp/DhORjEL+Je5AD6LW79TFDPEp4q6hwlGlDKwhknQU@vger.kernel.org, AJvYcCVed7co+vNfO6EBUclXKJPJdOAcgk/O8rgRR47KfB1KYCgZ0lWmiQLGSEbdSsJcSmDv6uz1RADxfqI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzSB7bgf4BU0kuoaIQ2V128Mi2yLyci86NPyFNGe0Me191UeyDC
+	rz3Ts/Vqq81oAiu/4bKV0ACRKRWHXuvhDkQc5UfXuGymQKVGEO43kaoB
+X-Gm-Gg: ASbGncuC1ieQsjTetxy+3SN4Wvwm0NzMHh3rhhowBq5rJu5RaFgXZSjCVhNetEfqWNR
+	FeG9MtfxmDa5IUxl+M/2G09R1mUgCTfQ8MU7inC0ycj6i7ByZCAINHgsI8xeBBQokxUNAbAF4Px
+	Ygxpw4yD1dMruKUcYi6WXvd/I4oMhncF3Vc4YYJtswolB60ZzfhhwO0zds6+08ddaLvIaYzZDez
+	eoSJcMhdcNLkMRrP6WkqebHkcgFVnrOrUtjjWsatClWuN/gK8JwelzbC3kbf9jfEXbG3YmDsoMd
+	kEhyJaJe00Wx1v7VADn0wUO5kyzONCyWXBoSr/ojngdD0DE0iCHRqOzp3cI5hjYqCE4e7gQYJ+t
+	f8akTCvHw8GymzoIbtN6rxg==
+X-Google-Smtp-Source: AGHT+IH/GZdAZkTaBi/kiiSkP/j5SFtXpZ/rqheO2fODZCfFWDOvWxVFoj6aMabTImiCBTS68iFtdA==
+X-Received: by 2002:a05:600c:1c24:b0:439:9ec5:dfa with SMTP id 5b1f17b1804b1-44c938cb1e6mr2131675e9.7.1748039765729;
+        Fri, 23 May 2025 15:36:05 -0700 (PDT)
 Received: from localhost.localdomain (84-72-156-211.dclient.hispeed.ch. [84.72.156.211])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-447f6b29672sm165202375e9.3.2025.05.23.15.36.01
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-447f6b29672sm165202375e9.3.2025.05.23.15.36.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 May 2025 15:36:02 -0700 (PDT)
+        Fri, 23 May 2025 15:36:05 -0700 (PDT)
 From: Lothar Rubusch <l.rubusch@gmail.com>
 To: jic23@kernel.org,
 	dlechner@baylibre.com,
@@ -71,9 +71,9 @@ Cc: l.rubusch@gmail.com,
 	linux-iio@vger.kernel.org,
 	linux-doc@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 10/12] iio: accel: adxl313: add inactivity sensing
-Date: Fri, 23 May 2025 22:35:21 +0000
-Message-Id: <20250523223523.35218-11-l.rubusch@gmail.com>
+Subject: [PATCH v3 12/12] docs: iio: add ADXL313 accelerometer
+Date: Fri, 23 May 2025 22:35:23 +0000
+Message-Id: <20250523223523.35218-13-l.rubusch@gmail.com>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250523223523.35218-1-l.rubusch@gmail.com>
 References: <20250523223523.35218-1-l.rubusch@gmail.com>
@@ -83,294 +83,232 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=y
 Content-Transfer-Encoding: 8bit
 
-Extend the interrupt handler to process interrupts as inactivity events.
-Add functions to set threshold and period registers for inactivity. Add
-functions to enable / disable inactivity. Extend the fake iio channel to
-deal with inactivity events on x, y and z combined with AND.
+Add documentation for the ADXL313 accelerometer driver.
 
 Signed-off-by: Lothar Rubusch <l.rubusch@gmail.com>
 ---
- drivers/iio/accel/adxl313.h      |   2 +
- drivers/iio/accel/adxl313_core.c | 149 ++++++++++++++++++++++++-------
- 2 files changed, 121 insertions(+), 30 deletions(-)
+ Documentation/iio/adxl313.rst | 196 ++++++++++++++++++++++++++++++++++
+ Documentation/iio/index.rst   |   1 +
+ 2 files changed, 197 insertions(+)
+ create mode 100644 Documentation/iio/adxl313.rst
 
-diff --git a/drivers/iio/accel/adxl313.h b/drivers/iio/accel/adxl313.h
-index 8c68cff7569c..374e4bfe6e05 100644
---- a/drivers/iio/accel/adxl313.h
-+++ b/drivers/iio/accel/adxl313.h
-@@ -18,6 +18,8 @@
- #define ADXL313_REG_SOFT_RESET		0x18
- #define ADXL313_REG_OFS_AXIS(index)	(0x1E + (index))
- #define ADXL313_REG_THRESH_ACT		0x24
-+#define ADXL313_REG_THRESH_INACT	0x25
-+#define ADXL313_REG_TIME_INACT		0x26
- #define ADXL313_REG_ACT_INACT_CTL	0x27
- #define ADXL313_REG_BW_RATE		0x2C
- #define ADXL313_REG_POWER_CTL		0x2D
-diff --git a/drivers/iio/accel/adxl313_core.c b/drivers/iio/accel/adxl313_core.c
-index 74bb7cfe8a55..f7baca814da7 100644
---- a/drivers/iio/accel/adxl313_core.c
-+++ b/drivers/iio/accel/adxl313_core.c
-@@ -30,18 +30,22 @@
- #define ADXL313_REG_XYZ_BASE			ADXL313_REG_DATA_AXIS(0)
- 
- #define ADXL313_ACT_XYZ_EN			GENMASK(6, 4)
-+#define ADXL313_INACT_XYZ_EN			GENMASK(2, 0)
- 
- /* activity/inactivity */
- enum adxl313_activity_type {
- 	ADXL313_ACTIVITY,
-+	ADXL313_INACTIVITY,
- };
- 
- static const unsigned int adxl313_act_int_reg[] = {
- 	[ADXL313_ACTIVITY] = ADXL313_INT_ACTIVITY,
-+	[ADXL313_INACTIVITY] = ADXL313_INT_INACTIVITY,
- };
- 
- static const unsigned int adxl313_act_thresh_reg[] = {
- 	[ADXL313_ACTIVITY] = ADXL313_REG_THRESH_ACT,
-+	[ADXL313_INACTIVITY] = ADXL313_REG_THRESH_INACT,
- };
- 
- static const struct regmap_range adxl312_readable_reg_range[] = {
-@@ -254,6 +258,14 @@ static const struct iio_event_spec adxl313_fake_chan_events[] = {
- 		.mask_separate = BIT(IIO_EV_INFO_ENABLE),
- 		.mask_shared_by_type = BIT(IIO_EV_INFO_VALUE),
- 	},
-+	{
-+		/* inactivity */
-+		.type = IIO_EV_TYPE_MAG,
-+		.dir = IIO_EV_DIR_FALLING,
-+		.mask_separate = BIT(IIO_EV_INFO_ENABLE),
-+		.mask_shared_by_type = BIT(IIO_EV_INFO_VALUE) |
-+			BIT(IIO_EV_INFO_PERIOD),
-+	},
- };
- 
- enum adxl313_chans {
-@@ -334,6 +346,15 @@ static int adxl313_read_freq_avail(struct iio_dev *indio_dev,
- 	}
- }
- 
-+static int adxl313_set_inact_time_s(struct adxl313_data *data,
-+				    unsigned int val_s)
-+{
-+	unsigned int max_boundary = 255;
-+	unsigned int val = min(val_s, max_boundary);
+diff --git a/Documentation/iio/adxl313.rst b/Documentation/iio/adxl313.rst
+new file mode 100644
+index 000000000000..8c4e2d141594
+--- /dev/null
++++ b/Documentation/iio/adxl313.rst
+@@ -0,0 +1,196 @@
++.. SPDX-License-Identifier: GPL-2.0
 +
-+	return regmap_write(data->regmap, ADXL313_REG_TIME_INACT, val);
-+}
++===============
++ADXL313 driver
++===============
 +
- static int adxl313_is_act_inact_en(struct adxl313_data *data,
- 				   enum adxl313_activity_type type)
- {
-@@ -346,10 +367,10 @@ static int adxl313_is_act_inact_en(struct adxl313_data *data,
- 		return ret;
- 
- 	/* Check if axis for activity are enabled */
--	if (type != ADXL313_ACTIVITY)
--		return 0;
--
--	axis_en = FIELD_GET(ADXL313_ACT_XYZ_EN, axis_ctrl);
-+	if (type == ADXL313_ACTIVITY)
-+		axis_en = FIELD_GET(ADXL313_ACT_XYZ_EN, axis_ctrl);
-+	else
-+		axis_en = FIELD_GET(ADXL313_INACT_XYZ_EN, axis_ctrl);
- 
- 	/* The axis are enabled, now check if specific interrupt is enabled */
- 	ret = regmap_read(data->regmap, ADXL313_REG_INT_ENABLE, &regval);
-@@ -367,12 +388,14 @@ static int adxl313_set_act_inact_en(struct adxl313_data *data,
- {
- 	unsigned int axis_ctrl;
- 	unsigned int threshold;
-+	unsigned int inact_time_s;
-+	bool en;
- 	int ret;
- 
--	if (type != ADXL313_ACTIVITY)
--		return 0;
--
--	axis_ctrl = ADXL313_ACT_XYZ_EN;
-+	if (type == ADXL313_ACTIVITY)
-+		axis_ctrl = ADXL313_ACT_XYZ_EN;
-+	else
-+		axis_ctrl = ADXL313_INACT_XYZ_EN;
- 
- 	ret = regmap_assign_bits(data->regmap, ADXL313_REG_ACT_INACT_CTL,
- 				 axis_ctrl, cmd_en);
-@@ -383,9 +406,17 @@ static int adxl313_set_act_inact_en(struct adxl313_data *data,
- 	if (ret)
- 		return ret;
- 
-+	en = cmd_en && threshold;
-+	if (type == ADXL313_INACTIVITY) {
-+		ret = regmap_read(data->regmap, ADXL313_REG_TIME_INACT, &inact_time_s);
-+		if (ret)
-+			return ret;
++This driver supports Analog Device's ADXL313 on SPI/I2C bus.
 +
-+		en = en && inact_time_s;
-+	}
++1. Supported devices
++====================
 +
- 	return regmap_assign_bits(data->regmap, ADXL313_REG_INT_ENABLE,
--				  adxl313_act_int_reg[type],
--				  cmd_en && threshold);
-+				  adxl313_act_int_reg[type], en);
- }
- 
- static int adxl313_read_raw(struct iio_dev *indio_dev,
-@@ -474,6 +505,8 @@ static int adxl313_read_event_config(struct iio_dev *indio_dev,
- 	switch (dir) {
- 	case IIO_EV_DIR_RISING:
- 		return adxl313_is_act_inact_en(data, ADXL313_ACTIVITY);
-+	case IIO_EV_DIR_FALLING:
-+		return adxl313_is_act_inact_en(data, ADXL313_INACTIVITY);
- 	default:
- 		return -EINVAL;
- 	}
-@@ -493,6 +526,8 @@ static int adxl313_write_event_config(struct iio_dev *indio_dev,
- 	switch (dir) {
- 	case IIO_EV_DIR_RISING:
- 		return adxl313_set_act_inact_en(data, ADXL313_ACTIVITY, state);
-+	case IIO_EV_DIR_FALLING:
-+		return adxl313_set_act_inact_en(data, ADXL313_INACTIVITY, state);
- 	default:
- 		return -EINVAL;
- 	}
-@@ -507,6 +542,8 @@ static int adxl313_read_event_value(struct iio_dev *indio_dev,
- {
- 	struct adxl313_data *data = iio_priv(indio_dev);
- 	unsigned int act_threshold;
-+	unsigned int inact_threshold;
-+	unsigned int inact_time_s;
- 	int ret;
- 
- 	/* Measurement stays enabled, reading from regmap cache */
-@@ -514,19 +551,38 @@ static int adxl313_read_event_value(struct iio_dev *indio_dev,
- 	if (type != IIO_EV_TYPE_MAG)
- 		return -EINVAL;
- 
--	if (info != IIO_EV_INFO_VALUE)
--		return -EINVAL;
--
--	switch (dir) {
--	case IIO_EV_DIR_RISING:
-+	switch (info) {
-+	case IIO_EV_INFO_VALUE:
-+		switch (dir) {
-+		case IIO_EV_DIR_RISING:
-+			ret = regmap_read(data->regmap,
-+					  adxl313_act_thresh_reg[ADXL313_ACTIVITY],
-+					  &act_threshold);
-+			if (ret)
-+				return ret;
-+			*val = act_threshold * 15625;
-+			*val2 = MICRO;
-+			return IIO_VAL_FRACTIONAL;
-+		case IIO_EV_DIR_FALLING:
-+			ret = regmap_read(data->regmap,
-+					  adxl313_act_thresh_reg[ADXL313_INACTIVITY],
-+					  &inact_threshold);
-+			if (ret)
-+				return ret;
-+			*val = inact_threshold * 15625;
-+			*val2 = MICRO;
-+			return IIO_VAL_FRACTIONAL;
-+		default:
-+			return -EINVAL;
-+		}
-+	case IIO_EV_INFO_PERIOD:
- 		ret = regmap_read(data->regmap,
--				  adxl313_act_thresh_reg[ADXL313_ACTIVITY],
--				  &act_threshold);
-+				  ADXL313_REG_TIME_INACT,
-+				  &inact_time_s);
- 		if (ret)
- 			return ret;
--		*val = act_threshold * 15625;
--		*val2 = MICRO;
--		return IIO_VAL_FRACTIONAL;
-+		*val = inact_time_s;
-+		return IIO_VAL_INT;
- 	default:
- 		return -EINVAL;
- 	}
-@@ -550,16 +606,30 @@ static int adxl313_write_event_value(struct iio_dev *indio_dev,
- 	if (type != IIO_EV_TYPE_MAG)
- 		return -EINVAL;
- 
--	if (info != IIO_EV_INFO_VALUE)
--		return -EINVAL;
--
--	/* Scale factor 15.625 mg/LSB */
--	regval = DIV_ROUND_CLOSEST(MICRO * val + val2, 15625);
--	switch (dir) {
--	case IIO_EV_DIR_RISING:
--		ret = regmap_write(data->regmap,
--				   adxl313_act_thresh_reg[ADXL313_ACTIVITY],
--				   regval);
-+	switch (info) {
-+	case IIO_EV_INFO_VALUE:
-+		/* The scale factor is 15.625 mg/LSB */
-+		regval = DIV_ROUND_CLOSEST(MICRO * val + val2, 15625);
-+		switch (dir) {
-+		case IIO_EV_DIR_RISING:
-+			ret = regmap_write(data->regmap,
-+					   adxl313_act_thresh_reg[ADXL313_ACTIVITY],
-+					   regval);
-+			if (ret)
-+				return ret;
-+			return adxl313_set_measure_en(data, true);
-+		case IIO_EV_DIR_FALLING:
-+			ret = regmap_write(data->regmap,
-+					   adxl313_act_thresh_reg[ADXL313_INACTIVITY],
-+					   regval);
-+			if (ret)
-+				return ret;
-+			return adxl313_set_measure_en(data, true);
-+		default:
-+			return -EINVAL;
-+		}
-+	case IIO_EV_INFO_PERIOD:
-+		ret = adxl313_set_inact_time_s(data, val);
- 		if (ret)
- 			return ret;
- 		return adxl313_set_measure_en(data, true);
-@@ -720,6 +790,17 @@ static int adxl313_push_event(struct iio_dev *indio_dev, int int_stat)
- 			return ret;
- 	}
- 
-+	if (FIELD_GET(ADXL313_INT_INACTIVITY, int_stat)) {
-+		ret = iio_push_event(indio_dev,
-+				     IIO_MOD_EVENT_CODE(IIO_ACCEL, 0,
-+							IIO_MOD_X_AND_Y_AND_Z,
-+							IIO_EV_TYPE_MAG,
-+							IIO_EV_DIR_FALLING),
-+				     ts);
-+		if (ret)
-+			return ret;
-+	}
++* `ADXL313 <https://www.analog.com/ADXL313>`_
 +
- 	if (FIELD_GET(ADXL313_INT_WATERMARK, int_stat)) {
- 		samples = adxl313_get_samples(data);
- 		if (samples < 0)
-@@ -890,6 +971,14 @@ int adxl313_core_probe(struct device *dev,
- 		if (ret)
- 			return ret;
- 
-+		ret = regmap_write(data->regmap, ADXL313_REG_TIME_INACT, 5);
-+		if (ret)
-+			return ret;
++The ADXL313is a low noise density, low power, 3-axis accelerometer with
++selectable measurement ranges. The ADXL313 supports the ±0.5 g, ±1 g, ±2 g and
++±4 g ranges.
 +
-+		ret = regmap_write(data->regmap, ADXL313_REG_THRESH_INACT, 0x4f);
-+		if (ret)
-+			return ret;
++2. Device attributes
++====================
 +
- 		ret = regmap_write(data->regmap, ADXL313_REG_THRESH_ACT, 0x52);
- 		if (ret)
- 			return ret;
++Accelerometer measurements are always provided.
++
++Temperature data are also provided. This data can be used to monitor the
++internal system temperature or to improve the temperature stability of the
++device via calibration.
++
++Each IIO device, has a device folder under ``/sys/bus/iio/devices/iio:deviceX``,
++where X is the IIO index of the device. Under these folders reside a set of
++device files, depending on the characteristics and features of the hardware
++device in questions. These files are consistently generalized and documented in
++the IIO ABI documentation.
++
++The following tables show the adxl313 related device files, found in the
++specific device folder path ``/sys/bus/iio/devices/iio:deviceX``.
++
+++---------------------------------------------------+----------------------------------------------------------+
++| 3-Axis Accelerometer related device files         | Description                                              |
+++---------------------------------------------------+----------------------------------------------------------+
++| in_accel_scale                                    | Scale for the accelerometer channels.                    |
+++---------------------------------------------------+----------------------------------------------------------+
++| in_accel_x_calibbias                              | Calibration offset for the X-axis accelerometer channel. |
+++---------------------------------------------------+----------------------------------------------------------+
++| in_accel_x_raw                                    | Raw X-axis accelerometer channel value.                  |
+++---------------------------------------------------+----------------------------------------------------------+
++| in_accel_y_calibbias                              | y-axis acceleration offset correction                    |
+++---------------------------------------------------+----------------------------------------------------------+
++| in_accel_y_raw                                    | Raw Y-axis accelerometer channel value.                  |
+++---------------------------------------------------+----------------------------------------------------------+
++| in_accel_z_calibbias                              | Calibration offset for the Z-axis accelerometer channel. |
+++---------------------------------------------------+----------------------------------------------------------+
++| in_accel_z_raw                                    | Raw Z-axis accelerometer channel value.                  |
+++---------------------------------------------------+----------------------------------------------------------+
++
+++---------------------------------------+----------------------------------------------+
++| Miscellaneous device files            | Description                                  |
+++---------------------------------------+----------------------------------------------+
++| name                                  | Name of the IIO device.                      |
+++---------------------------------------+----------------------------------------------+
++| in_accel_sampling_frequency           | Currently selected sample rate.              |
+++---------------------------------------+----------------------------------------------+
++| in_accel_sampling_frequency_available | Available sampling frequency configurations. |
+++---------------------------------------+----------------------------------------------+
++
++Channels processed values
++-------------------------
++
++A channel value can be read from its _raw attribute. The value returned is the
++raw value as reported by the devices. To get the processed value of the channel,
++apply the following formula:
++
++.. code-block:: bash
++
++        processed value = (_raw + _offset) * _scale
++
++Where _offset and _scale are device attributes. If no _offset attribute is
++present, simply assume its value is 0.
++
++The ADXL313 driver offers data for a single types of channels, the table below
++shows the measurement units for the processed value, which are defined by the
++IIO framework:
++
+++-------------------------------------+---------------------------+
++| Channel type                        | Measurement unit          |
+++-------------------------------------+---------------------------+
++| Acceleration on X, Y, and Z axis    | Meters per Second squared |
+++-------------------------------------+---------------------------+
++
++Usage examples
++--------------
++
++Show device name:
++
++.. code-block:: bash
++
++        root:/sys/bus/iio/devices/iio:device0> cat name
++        adxl313
++
++Show accelerometer channels value:
++
++.. code-block:: bash
++
++        root:/sys/bus/iio/devices/iio:device0> cat in_accel_x_raw
++        2
++        root:/sys/bus/iio/devices/iio:device0> cat in_accel_y_raw
++        -57
++        root:/sys/bus/iio/devices/iio:device0> cat in_accel_z_raw
++        2
++        root:/sys/bus/iio/devices/iio:device0> cat in_accel_scale
++        0.009576806
++
++- X-axis acceleration = in_accel_x_raw * in_accel_scale = 0.0191536 m/s^2
++- Y-axis acceleration = in_accel_y_raw * in_accel_scale = -0.5458779 m/s^2
++- Z-axis acceleration = in_accel_z_raw * in_accel_scale = 0.0191536 m/s^2
++
++Set calibration offset for accelerometer channels. Note, the calibration will be
++rounded according to the graduation of LSB units:
++
++.. code-block:: bash
++
++        root:/sys/bus/iio/devices/iio:device0> cat in_accel_x_calibbias
++        0
++
++        root:/sys/bus/iio/devices/iio:device0> echo 50 > in_accel_x_calibbias
++        root:/sys/bus/iio/devices/iio:device0> cat in_accel_x_calibbias
++        48
++
++Set sampling frequency:
++
++.. code-block:: bash
++
++        root:/sys/bus/iio/devices/iio:device0> cat in_accel_sampling_frequency
++        100.000000
++        root:/sys/bus/iio/devices/iio:device0> cat in_accel_sampling_frequency_available
++        6.250000 12.500000 25.000000 50.000000 100.000000 200.000000 400.000000 800.000000 1600.000000 3200.000000
++
++        root:/sys/bus/iio/devices/iio:device0> echo 400 > in_accel_sampling_frequency
++        root:/sys/bus/iio/devices/iio:device0> cat in_accel_sampling_frequency
++        400.000000
++
++3. Device buffers
++=================
++
++This driver supports IIO buffers.
++
++All devices support retrieving the raw acceleration measurements using buffers.
++
++Usage examples
++--------------
++
++Select channels for buffer read:
++
++.. code-block:: bash
++
++        root:/sys/bus/iio/devices/iio:device0> echo 1 > scan_elements/in_accel_x_en
++        root:/sys/bus/iio/devices/iio:device0> echo 1 > scan_elements/in_accel_y_en
++        root:/sys/bus/iio/devices/iio:device0> echo 1 > scan_elements/in_accel_z_en
++
++Set the number of samples to be stored in the buffer:
++
++.. code-block:: bash
++
++        root:/sys/bus/iio/devices/iio:device0> echo 10 > buffer/length
++
++Enable buffer readings:
++
++.. code-block:: bash
++
++        root:/sys/bus/iio/devices/iio:device0> echo 1 > buffer/enable
++
++Obtain buffered data:
++
++.. code-block:: bash
++
++        root:/sys/bus/iio/devices/iio:device0> hexdump -C /dev/iio\:device0
++        ...
++        000000d0  01 fc 31 00 c7 ff 03 fc  31 00 c7 ff 04 fc 33 00  |..1.....1.....3.|
++        000000e0  c8 ff 03 fc 32 00 c5 ff  ff fc 32 00 c7 ff 0a fc  |....2.....2.....|
++        000000f0  30 00 c8 ff 06 fc 33 00  c7 ff 01 fc 2f 00 c8 ff  |0.....3...../...|
++        00000100  02 fc 32 00 c6 ff 04 fc  33 00 c8 ff 05 fc 33 00  |..2.....3.....3.|
++        00000110  ca ff 02 fc 31 00 c7 ff  02 fc 30 00 c9 ff 09 fc  |....1.....0.....|
++        00000120  35 00 c9 ff 08 fc 35 00  c8 ff 02 fc 31 00 c5 ff  |5.....5.....1...|
++        00000130  03 fc 32 00 c7 ff 04 fc  32 00 c7 ff 02 fc 31 00  |..2.....2.....1.|
++        00000140  c7 ff 08 fc 30 00 c7 ff  02 fc 32 00 c5 ff ff fc  |....0.....2.....|
++        00000150  31 00 c5 ff 04 fc 31 00  c8 ff 03 fc 32 00 c8 ff  |1.....1.....2...|
++        00000160  01 fc 31 00 c7 ff 05 fc  31 00 c3 ff 04 fc 31 00  |..1.....1.....1.|
++        00000170  c5 ff 04 fc 30 00 c7 ff  03 fc 31 00 c9 ff 03 fc  |....0.....1.....|
++        ...
++
++See ``Documentation/iio/iio_devbuf.rst`` for more information about how buffered
++data is structured.
++
++4. IIO Interfacing Tools
++========================
++
++See ``Documentation/iio/iio_tools.rst`` for the description of the available IIO
++interfacing tools.
+diff --git a/Documentation/iio/index.rst b/Documentation/iio/index.rst
+index 2d6afc5a8ed5..c106402a91f7 100644
+--- a/Documentation/iio/index.rst
++++ b/Documentation/iio/index.rst
+@@ -31,6 +31,7 @@ Industrial I/O Kernel Drivers
+    adis16475
+    adis16480
+    adis16550
++   adxl313
+    adxl380
+    bno055
+    ep93xx_adc
 -- 
 2.39.5
 
