@@ -1,103 +1,82 @@
-Received: from mail-qv1-f48.google.com (mail-qv1-f48.google.com [209.85.219.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9205297A68
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 17:14:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE2F129710F;
+	Fri, 23 May 2025 17:14:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748020443; cv=none; b=OYN3dm1Mld2YEfPO4+1kroBlkm96B3Im+bf83gsmcH43v/cx2lhCi8KqLWTUECI+AVzXYNTtcnq6rrPSI/5+V7M5zOU89UU4ig00iJA392lc811aDHqMZIplRwUI+mLdKW6iLHOEeDWeqNxEc1ZLb9weI0Bl1nOFuWiz1FflruA=
+	t=1748020450; cv=none; b=ZXcGsgxIavoL3vC8CBcOInnpOirUh84byXO9c4e5qju1Q8xEKCVDEKlzDSOgvq1TIF5PS/xO3qfW4KRnRSMscLvftce9sInUatEAOwMgPalKZCt/xMfBD4bom++eFjcZMmI+RuaoF6V+yB2rHGESrULrpuaMwmEiAGd8hvzqQRk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748020443; c=relaxed/simple;
-	bh=q70KRtP/Ls/EnPfjY52Cg7+ufdVGyh9iPZ62lGJOoDc=;
-	h=Date:From:To:cc:Subject:Message-ID:MIME-Version:Content-Type; b=iyA7+JPRy5C3vE31mJZeob5iieFlVrQ8vhZCcPuJRrH0+GBy8vJ0UFLSnEt53acD3zeUwNgyB16wLmJinwFrJM791PlJpx4xP9sO035P0WsHItcX5vDpwmDzmPaRILp/Y+ACl0B9lnB1f6IZJF0MAWDQQinGGbIPWViMYHN/B4w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=cRmn2osA; arc=none smtp.client-ip=209.85.219.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1748020450; c=relaxed/simple;
+	bh=AzgF5BgUJ7lQrMRuuYu4dNdTY7bbknsYrXVYOMg9kTY=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=JMOH0jf083B+yYKCodEhMhE4Ube32/uDV013dMNjrigDkOQdrnbvJ3r1MtFqCweMg9a3GZ7MmAfPQZjzgVGoLcRNsrk4lL2BPT6yi5uGmB3dZxgYfV3yb3v3dKIxS+DcqDFK9juRaIybvjCNM7hhaaeV8LmV1+Nu2lswTcnY76A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a9eMlINF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="cRmn2osA"
-Received: by mail-qv1-f48.google.com with SMTP id 6a1803df08f44-6f8c53aeedbso1100006d6.2
-        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 10:14:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1748020439; x=1748625239; darn=vger.kernel.org;
-        h=mime-version:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=6u9v9rOB7wDSHj6qtz/FEqNxQ/3givq7zBFPK6aaZeU=;
-        b=cRmn2osAYRU5wL9NyNSmhj/NzV+WHj70LaKZOl9KV7MnCbdts5++EiMK4bdaXhkj7G
-         o6hsQm27Dy9+ISVcd87ZFaT6GNhE19biilGQ8rNGroFsBceHF0xS4QOV3fkCy7XEx1Tz
-         uzz1dtgLl+ub13go+TCvoMiKiNj/gSXUaIZySMajYCJfcS0J7Smifonr/+J6bhgMOCaT
-         w5i1bLtcORUoup8ttMzq9DM0bq75ikO//WdHzSWDY5VQg/xIpYK3oEs7YyOPpzmSDmvL
-         aDyzVI+Zynk+SUqjR9PaIjoV4dvyrjKp5KT2gL1X6fqkjbMhpcwvIIUEWErKmJ7Zn37q
-         WLHA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748020439; x=1748625239;
-        h=mime-version:message-id:subject:cc:to:from:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=6u9v9rOB7wDSHj6qtz/FEqNxQ/3givq7zBFPK6aaZeU=;
-        b=MZN/wUydU6CWHj8IwojZiuwSk+8roG3Q3bRmBhPcqiuRz33/pR3MJGAgwCTV0Zd7Jt
-         hzE0NajQeStvoLPyYJ5kUrEwP8zyx5l8QVhGooNXl+EYfxvzYxgCSuT23FLs3qOQK7oJ
-         jm0ImMEF6sNvIHWnkGH7BazwI4Vq5mdAgReBmoA3xfxDJJO7U3vKKbdKRr5je9y+jI+Q
-         +Zafc01y75DR04fi6Zl6MySp57vb+rjAHxFMcUVqtW5zt3I88ef0p+8NEH7v4x7kX00H
-         /4ZPJmwacsqwDlSZEO09wkynLSIvLW4mwacGW69yob7pnNcg3jjurU5IMP04mwPtG+BM
-         Q/vQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWLAq8/DzkGV0MNwpNWoniq84/exDFYVzmZHvdsEjhF248pagXHdDnX17naPiUOCcAx4q48Bc+qIVrohKg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzeouxJxBsKXyredhD2KdZbuFh+L7OLF0Xz3ppaq1C7/OWI3yBG
-	mIYzMhmkH5yTWQ17Ua/xsj2k7TUyLWDnD5kgKXRNmBouf1lsTiVu4lKtTBzCdL5Kdrs=
-X-Gm-Gg: ASbGnctdMakz/DkBfaucJ99Q80AD/pVWX6Z/thdKQGxi8UltjwQUYb4N4+x3KAaAKtq
-	QfwTnB1dIESkO9oeVhciOrSSnrlCpSu3B172onKVGQUltbbqu3UvrCU6xzbD8KS4lkvTgYZyVGo
-	dU/KVFBb6GiP9CI6CvHHwWXd43ukEnKDRzY8izS8JP3BDJVmmYMaKOCB08zv9QidigyfBIsneI3
-	57vbb1XYcRBamKflfaPr3cWub3XSUKW4kcdW0BF1Of/l9OHdQM8nnuceq0H3a8tF9xDpIVuLp40
-	XxnYV8W/DQ5WNFYmJMw5DiZWAX3cBDr5/cxnKDZFiO2226eRuYADZaMELRJzw6yOTDT7ZdwyzI5
-	E8jApJxoqVZ7tNA==
-X-Google-Smtp-Source: AGHT+IGJzuu4ZXXeX5BlecuVuFVZZwA/bCwL7vxRk1fOvReZtV8zdHQ/t63ghPaOuxghJs5IcqbiTw==
-X-Received: by 2002:a05:6214:764:b0:6f5:e0c:b203 with SMTP id 6a1803df08f44-6fa9d176d43mr5501356d6.11.1748020439667;
-        Fri, 23 May 2025 10:13:59 -0700 (PDT)
-Received: from xanadu (modemcable179.17-162-184.mc.videotron.ca. [184.162.17.179])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fa99a641cesm5782186d6.53.2025.05.23.10.13.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 May 2025 10:13:59 -0700 (PDT)
-Date: Fri, 23 May 2025 13:13:58 -0400 (EDT)
-From: Nicolas Pitre <npitre@baylibre.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-    Jiri Slaby <jirislaby@kernel.org>
-cc: linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] vt: remove redundant condition from redraw_screen()
-Message-ID: <n58o097s-s20p-4222-nqo5-2qp26843rs35@onlyvoer.pbz>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a9eMlINF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35B76C4CEE9;
+	Fri, 23 May 2025 17:14:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748020449;
+	bh=AzgF5BgUJ7lQrMRuuYu4dNdTY7bbknsYrXVYOMg9kTY=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+	b=a9eMlINFytFCp4WBBx8lfP3cnrulZV3v9boZOzeTSO2YFDV/vigpSjyCNuTwe/J5c
+	 u4hAx+g8zr8YTKqYyZeo0GlsiJAobHQ3H9KRB7K+xXZrZ2TADPfKo/r3z8I0Ganlv+
+	 BFw9XSq3F/cj9wJCMOHXgfFwXjlCuLSDWg6YcmQNF9JPd1RK7scmTRC5uD0AoCWv26
+	 KAOq3zUpgDtQYv+8wdXlZJ21evvR7ogUvi+h11lcAY7Z8o+3tAoRUF8HWysriC5fxf
+	 kXTqTEk3uexCSnsilgcMWagr5Z7N6Hcptw4Wdsw48y3Fio4SpucVvhdp9gXnKFIV8O
+	 gAkMhEIRQRvkQ==
+Date: Fri, 23 May 2025 10:14:04 -0700
+From: Kees Cook <kees@kernel.org>
+To: Theodore Ts'o <tytso@mit.edu>, David Laight <david.laight.linux@gmail.com>
+CC: Ethan Carter Edwards <ethan@ethancedwards.com>,
+ Andreas Dilger <adilger.kernel@dilger.ca>, linux-ext4@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2] ext4: replace strcpy() with '.' assignment
+User-Agent: K-9 Mail for Android
+In-Reply-To: <20250523142449.GB1414791@mit.edu>
+References: <20250518-ext4-strcpy-v2-1-80d316325046@ethancedwards.com> <202505190651.943F729@keescook> <20250519145930.GB38098@mit.edu> <20250523133100.1b023a6e@pumpkin> <20250523142449.GB1414791@mit.edu>
+Message-ID: <85A9A687-D5E0-4EE4-8FFE-ED70C8CCE863@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Given !con_is_visible(vc) is the equivalent of *vc->vc_display_fg != vc
-we have:
 
-	struct vc_data *old_vc = vc_cons[fg_console].d;
-	if (old_vc == vc)
-		return;
-	*vc->vc_display_fg = vc;
-	if (*vc->vc_display_fg != old_vc) /* !con_is_visible(old_vc) */
-		...
 
-Therefore the last if condition is always true.
+On May 23, 2025 7:24:49 AM PDT, Theodore Ts'o <tytso@mit=2Eedu> wrote:
+>On Fri, May 23, 2025 at 01:31:00PM +0100, David Laight wrote:
+>>=20
+>> The compiler (or headers files) can also allow strcpy() of constant
+>> length strings into arrays (known size)=2E Erroring requests that are t=
+oo long=2E
+>> The strcpy() is then converted to a memcpy() which can then be optimise=
+d
+>> into writes of constants=2E
+>>=20
+>> So using strcpy() under those conditions 'isn't all bad' and can genera=
+te
+>> better (and less bug prone) code than trying to hand-optimise it=2E
+>>=20
+>> So even through strcpy() is usually a bad idea, there is not need to
+>> remove the calls that the compiler can validate as safe=2E
+>
+>I assume that what the hardening folks want to do is to assert that
+>strcpy is always evil(tm) so they can detect potential security bugs
+>by doing "git grep strcpy"=2E
 
-Signed-off-by: Nicolas Pitre <npitre@baylibre.com>
+FWIW, what I'd like is a lack of ambiguity for both humans and compilers=
+=2E "Get rid of strcpy" is the Big Hammer solution for strcpy=2E The more p=
+recise version is "disallow strcpy of a src or dst where either lack a comp=
+ile-time buffer size"=2E
 
-diff --git a/drivers/tty/vt/vt.c b/drivers/tty/vt/vt.c
-index ed39d9cb4432..af5186d2c219 100644
---- a/drivers/tty/vt/vt.c
-+++ b/drivers/tty/vt/vt.c
-@@ -946,10 +946,8 @@ void redraw_screen(struct vc_data *vc, int is_switch)
- 		*vc->vc_display_fg = vc;
- 		fg_console = vc->vc_num;
- 		hide_cursor(old_vc);
--		if (!con_is_visible(old_vc)) {
--			save_screen(old_vc);
--			set_origin(old_vc);
--		}
-+		save_screen(old_vc);
-+		set_origin(old_vc);
- 		if (tty0dev)
- 			sysfs_notify(&tty0dev->kobj, NULL, "active");
- 	} else {
+-Kees
+
+
+--=20
+Kees Cook
