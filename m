@@ -1,65 +1,48 @@
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B9BA19C55E
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 10:29:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01104227E9E;
+	Fri, 23 May 2025 10:29:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747996143; cv=none; b=geIv4fbrnpUgQxbE77UH4HnKKyKsq0QPoaljSC/8+IKAiAZmekzxwtIsowXitgR3tVsqAm6FVJCsHIX9dTGhYthkl5pLAvHnsOoXwUbES+6Tj7UaYesw5R7vdqT+AdWAXKHEuSfbEYnX5bmhXG9jdN+Eqa2tE0K71FEHu/t5W0Q=
+	t=1747996158; cv=none; b=X2DTI7mxzkMkFnfmiICM77Bml3RfNhuIZOnXKeEl8LYv0HFiwhYB7g8vlT55/1RZ63eTDzyb7rb69OhE11bOspcE0CiAR4NYFczWWw8ZgXsuuFpgTZZkf9zZ08IX+tH61Xn8z+1Bbix9kvmmLh3xnoltqbx1IpkDJuqy6KM5hSo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747996143; c=relaxed/simple;
-	bh=5JzwlqkolPm2EcSa+Ah0yUAqI1LpO3RCuE3ykB/szKE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YNPcryqmJ6FnrRjIoZJWrC4PhGX5D//eC5u5aZlpwWpzgHZp/NM/O49knj6SKBxjcQkQ1S/eebS4JYy12Oudqw8GkmqcOws+4NvLEzVwTv8k7e4m3+glUad5b31ixlisNfKZKENXPQCJSnDPJHJHsEenK8xxlr0Eaf30yqpCRh4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=TYu7vh1O; arc=none smtp.client-ip=209.85.218.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1747996158; c=relaxed/simple;
+	bh=69dBOB9t5w6+DiXnD4zLoDAgDAyiYK0UYmfZGxLAz/4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=OHMfYZX/pHtyTi1QOi1yOjhZik/0MzQUnVXsJIBoJtU8e/q9OoKe/PCZha6Bp37EiuuXkr12ep4+fm54MM0UhbtG55m8bzT0F2YcLL3iveK4jOf8+HMmyfPxJoelSfil68oXrPePGxdGn07H3mkqXk5UUgGCvyiyzN7GOQw22Yw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=SVpGnTvc; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="TYu7vh1O"
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-ad560321ed9so787986966b.1
-        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 03:29:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1747996139; x=1748600939; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=BzGAigETPIfWl6iT0iJbVmtUXXVpdULIPq60Yri3qb8=;
-        b=TYu7vh1OLHlT1XvltZIE7g8RSqgT3ZDbuUf9YOHvuhG9C6anO1PQnxkL6k6M6YT8fe
-         QoPNupgJQHgXhmXcX6uCz/i7lXvTZad+DnK2qXpvjEEphdFvlLOx01+Dc0k7YZQ+WROY
-         keYUYPzjUccDDWKPTKxcXMjKssC2gXwpot/k+ZWp02WxYBe07PX8eBb8e+IdzdHim7UO
-         qDPNr1KnAUg9kgquNq8HKJ2Zv3uoQWgv3r0DRgJLoCgwQ9Jo3LuXWPHLBBntyLxVFMRF
-         mXGRT+DuPTfa/mEsaU2cHEIUhu1Y0gX36xZTkg6DJzMyM99afK0jUjJ1RCVznRj0W3Kw
-         qHpw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747996139; x=1748600939;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=BzGAigETPIfWl6iT0iJbVmtUXXVpdULIPq60Yri3qb8=;
-        b=e4b5wLSmKTvOdqjyqBXbuerxTaNeI3jPOeWf843cxruTS8/v2M+tEVndE0gagDqwIr
-         0k0/kTQnTHWVmuRAdlPPcRU84qCsWXux8X0KbhfKQmjkjp6S6bximClBdg1KkCHx93Jr
-         cnTIuFMH3DtLsER6E3/eakMo/nEUkgoIySL51oI13PwSStIdvW5C+u2PsDySnsw2A3v3
-         d/f48xHLuMExlmhPDlzUaHrd5L1xc8uxJMyh6LQ9wCqFN9YUPuKbYkAdn65x0CVEteQV
-         dYXvS+zU9zoq88835xwM8xvlCJ9VByn21vjFlNV0TIVvh7SSWQVrjnrSsDVbfaqG5Wx9
-         8rRg==
-X-Forwarded-Encrypted: i=1; AJvYcCWTtUU8NlIZea8NHJekotvcK7x32yNCQPt1nhr3Gx3Dqrdhvl3kKraey1ujRWwqs/Xd8mC5zN6eIMM12P8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwvRvTlARC1bUuJx7BnFxFpPLcoz+NTIGcpOvkc/KMKOTv/+bPf
-	3M1aF1ZcI+LFi82s4T9qZeD7Q5r1F+N6ta/gFXQHCU8S/6+PrAj9R3CQadaKgcE4x9M=
-X-Gm-Gg: ASbGncv1k3Iu3vcepAB67ovx0B0Y8uIV6WvRhD7kgZgP214JFOUARIRleVEoqgbrDni
-	MP0KXfuA7GMM5iMMyWnvGvxQDFMsaAQcHM2DyKJ8rc1psfZkfkhemMQu72M5Y5l2bCdh7PkIEvL
-	qSZi2iHNPhJSh20uvKABUqpTJ6aINVtoQDV25MLi5DsODpqq/kb0K/ep2BtQLcHEYLc7FZO7qOR
-	PB27/NqV6UiIgi2u7Mx34zNGpg0pSBnGCFMhJosRHI/Etx/CywrgVVScHH+PW4U4MUYdQ4+JeJ1
-	LXdRweKg9CXf2iTVRKCOI4w0NelLWdnRvmY8ADmxLoTck4LAuZQtislq
-X-Google-Smtp-Source: AGHT+IHA1Af3uxH7nD2C8Y7C2Mbs6IBAPEqK35HKI23T2B8JwFGNrjXFiHlEpM/Z4qPEaBRl17T2Sw==
-X-Received: by 2002:a17:907:3da5:b0:ad5:8182:de9c with SMTP id a640c23a62f3a-ad58182e07amr1679844366b.38.1747996139533;
-        Fri, 23 May 2025 03:28:59 -0700 (PDT)
-Received: from [192.168.0.20] ([212.21.159.167])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad5b192cb0asm419270166b.170.2025.05.23.03.28.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 23 May 2025 03:28:59 -0700 (PDT)
-Message-ID: <6b4a225e-c7ff-45e9-a2bb-62454927de57@suse.com>
-Date: Fri, 23 May 2025 13:28:58 +0300
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="SVpGnTvc"
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54N67iam021071;
+	Fri, 23 May 2025 10:28:52 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	KDRRLq7VC2NTZWRaWPaOjv8BPHkEbqS5eOTo89pXTfQ=; b=SVpGnTvcUoNo43oV
+	nbAN5tgpBbUIrdI39tY9EmRdXYxUIl58jImYrnfIixKte/dHRnNQw+KbHLhQMUmu
+	f6kq3cayRFgHau5bZzhaN8B/G3+mjZKsMOnzuzaCTuVei8xf+41LW6VEikHSlErz
+	WzlPWyuHpGhUOiOYzR4m/tXnIjDzVtPNltXn0gdHF1/RtNKg5QMie0PGKPWepwi0
+	OyYONarTm+RGdwoa6sWl9eXJFpwq2foI54UocM7Ql3w0lfPgzgaTmclG8TVKV9cH
+	diDU4SwKmc3lgmWkZv3L22BGQVK1qyiyarmll0m00o9yqxjQi7Fz9YsfSJd23kT5
+	MZC9oA==
+Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46rwfa1rb1-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 23 May 2025 10:28:52 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54NASY4W011410
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 23 May 2025 10:28:34 GMT
+Received: from [10.253.12.254] (10.80.80.8) by nasanex01b.na.qualcomm.com
+ (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 23 May
+ 2025 03:28:28 -0700
+Message-ID: <a182df27-5b0d-42d1-8f58-4e7a913bb12d@quicinc.com>
+Date: Fri, 23 May 2025 18:28:26 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,90 +50,223 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 3/7] x86/bugs: Exit early if return thunk is already
- set
-To: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, x86@kernel.org
-Cc: David Kaplan <david.kaplan@amd.com>, linux-kernel@vger.kernel.org,
- "H. Peter Anvin" <hpa@zytor.com>, Josh Poimboeuf <jpoimboe@kernel.org>
-References: <20250522-eibrs-fix-v3-0-12704e291e1e@linux.intel.com>
- <20250522-eibrs-fix-v3-3-12704e291e1e@linux.intel.com>
-From: Nikolay Borisov <nik.borisov@suse.com>
+Subject: Re: [PATCH net-next v4 01/14] dt-bindings: net: Add PPE for Qualcomm
+ IPQ9574 SoC
+To: Krzysztof Kozlowski <krzk@kernel.org>
+CC: Andrew Lunn <andrew+netdev@lunn.ch>,
+        "David S. Miller"
+	<davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>, Jakub Kicinski
+	<kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>, Rob Herring
+	<robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>, Lei Wei <quic_leiwei@quicinc.com>,
+        Suruchi Agarwal
+	<quic_suruchia@quicinc.com>,
+        Pavithra R <quic_pavir@quicinc.com>,
+        "Simon
+ Horman" <horms@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook
+	<kees@kernel.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        "Philipp
+ Zabel" <p.zabel@pengutronix.de>,
+        <linux-arm-msm@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-doc@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
+        <quic_kkumarcs@quicinc.com>, <quic_linchen@quicinc.com>,
+        <srinivas.kandagatla@linaro.org>, <bartosz.golaszewski@linaro.org>,
+        <john@phrozen.org>
+References: <20250513-qcom_ipq_ppe-v4-0-4fbe40cbbb71@quicinc.com>
+ <20250513-qcom_ipq_ppe-v4-1-4fbe40cbbb71@quicinc.com>
+ <20250519-garrulous-monumental-shrimp-94ad70@kuoka>
 Content-Language: en-US
-Autocrypt: addr=nik.borisov@suse.com; keydata=
- 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
-In-Reply-To: <20250522-eibrs-fix-v3-3-12704e291e1e@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+From: Luo Jie <quic_luoj@quicinc.com>
+In-Reply-To: <20250519-garrulous-monumental-shrimp-94ad70@kuoka>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=V9990fni c=1 sm=1 tr=0 ts=68304de4 cx=c_pps
+ a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=gEfo2CItAAAA:8
+ a=VwQbUJbxAAAA:8 a=COk6AnOGAAAA:8 a=Prh-tzD87P_o6MH7a5AA:9 a=QEXdDO2ut3YA:10
+ a=HtAgjdVYPwQA:10 a=sptkURWiP4Gy88Gu7hUp:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-ORIG-GUID: GtcXkqmuuM1ynK2KNuUbAyDpRkW5s3MV
+X-Proofpoint-GUID: GtcXkqmuuM1ynK2KNuUbAyDpRkW5s3MV
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIzMDA5MyBTYWx0ZWRfX5H5lP9vRMAOB
+ UDYRnaKYEXzsEh6wm4eFMj0HlpSBRTVspvJ/D1I/3cEq1JCev7eDvasAJwjAlqD20Daj7jTw80L
+ W1aGpUAfvAf/m4LdRpvgYg36bVUgnvUlR6QqejYCl1urz8Gdnq196PbY5MuKwDqfaC++s8dY9og
+ 9/uEMRfVkDir5PLFvC2UAmfhDfB27JwSlvY4QGG37bGNGCl/n2RRwG1yBdI3FdtUaRiiAf4g+VF
+ 3CxCqWZWEQUck3hJoRtB8ka7UrgsiqJNDJpG2mGqKBF530U/vWjploYG1Kzhak1/UqeeQ7AUlmH
+ q+O94dLUKTKu2N6YvmVA0X843uqAKLwzCO6XzUTSe+tP/Q6Fcso9+TDv7DY14D75UatWnGOQOW3
+ 96V8OhRMJwuwki70TMKVroY4PjcJsF4CZtu+gFUNjnalxeAq6dtgiAACH8hECAzpwQDQvPdl
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-23_03,2025-05-22_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ mlxlogscore=999 bulkscore=0 impostorscore=0 clxscore=1015 priorityscore=1501
+ lowpriorityscore=0 mlxscore=0 spamscore=0 phishscore=0 suspectscore=0
+ adultscore=0 malwarescore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
+ definitions=main-2505230093
 
 
 
-On 5/23/25 04:21, Pawan Gupta wrote:
-> When the exact same return thunk is already set, avoid the warning and exit
-> early. This is to prepare for ITS to also set CDT return thunk independent
-> of retbleed.
+On 5/19/2025 4:16 PM, Krzysztof Kozlowski wrote:
+> On Tue, May 13, 2025 at 05:58:21PM GMT, Luo Jie wrote:
+>> The PPE (packet process engine) hardware block is available in Qualcomm
+>> IPQ chipsets that support PPE architecture, such as IPQ9574. The PPE in
+>> the IPQ9574 SoC includes six ethernet ports (6 GMAC and 6 XGMAC), which
+>> are used to connect with external PHY devices by PCS. It includes an L2
+>> switch function for bridging packets among the 6 ethernet ports and the
+>> CPU port. The CPU port enables packet transfer between the ethernet
+>> ports and the ARM cores in the SoC, using the ethernet DMA.
+>>
+>> The PPE also includes packet processing offload capabilities for various
+>> networking functions such as route and bridge flows, VLANs, different
+>> tunnel protocols and VPN.
+>>
+>> Signed-off-by: Luo Jie <quic_luoj@quicinc.com>
+>> ---
+>>   .../devicetree/bindings/net/qcom,ipq9574-ppe.yaml  | 406 +++++++++++++++++++++
+>>   1 file changed, 406 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/net/qcom,ipq9574-ppe.yaml b/Documentation/devicetree/bindings/net/qcom,ipq9574-ppe.yaml
+>> new file mode 100644
+>> index 000000000000..f36f4d180674
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/net/qcom,ipq9574-ppe.yaml
+>> @@ -0,0 +1,406 @@
+>> +# SPDX-License-Identifier: GPL-2.0 OR BSD-2-Clause
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/net/qcom,ipq9574-ppe.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: Qualcomm IPQ packet process engine (PPE)
+>> +
+>> +maintainers:
+>> +  - Luo Jie <quic_luoj@quicinc.com>
+>> +  - Lei Wei <quic_leiwei@quicinc.com>
+>> +  - Suruchi Agarwal <quic_suruchia@quicinc.com>
+>> +  - Pavithra R <quic_pavir@quicinc.com>>
+> 
+> Double >>
 
-Reviewed-by: Nikolay Borisov <nik.borisov@suse.com>
+Thanks, will fix it.
 
 > 
-> Signed-off-by: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-> ---
->   arch/x86/kernel/cpu/bugs.c | 3 +++
->   1 file changed, 3 insertions(+)
+>> +
+>> +description:
 > 
-> diff --git a/arch/x86/kernel/cpu/bugs.c b/arch/x86/kernel/cpu/bugs.c
-> index 94d0de3e61aec32b3b67c8d21f89a8c67b93dff3..354593065025fd7c5727e955d76523777b3da9ee 100644
-> --- a/arch/x86/kernel/cpu/bugs.c
-> +++ b/arch/x86/kernel/cpu/bugs.c
-> @@ -113,6 +113,9 @@ void (*x86_return_thunk)(void) __ro_after_init = __x86_return_thunk;
->   
->   static void __init set_return_thunk(void *thunk)
->   {
-> +	if (thunk == x86_return_thunk)
-> +		return;
-> +
->   	if (x86_return_thunk != __x86_return_thunk)
->   		pr_warn("x86/bugs: return thunk changed\n");
->   
+> You got here comment didn't you?
+> 
+
+Yes. We initially believed the '|' marker may not be required
+since the format of hardware diagram in the description is
+preserved with a specific '|' already. However we relooked
+at this again, and will go ahead will add the marker based
+on the below documentation reference.
+
+https://docs.kernel.org/devicetree/bindings/writing-schema.html#example-schema
+
+>> +  The Ethernet functionality in the PPE (Packet Process Engine) is comprised
+>> +  of three components, the switch core, port wrapper and Ethernet DMA.
+>> +
+>> +  The Switch core in the IPQ9574 PPE has maximum of 6 front panel ports and
+>> +  two FIFO interfaces. One of the two FIFO interfaces is used for Ethernet
+>> +  port to host CPU communication using Ethernet DMA. The other is used
+>> +  communicating to the EIP engine which is used for IPsec offload. On the
+>> +  IPQ9574, the PPE includes 6 GMAC/XGMACs that can be connected with external
+>> +  Ethernet PHY. Switch core also includes BM (Buffer Management), QM (Queue
+>> +  Management) and SCH (Scheduler) modules for supporting the packet processing.
+> 
+> ...
+> 
+>> +  clock-names:
+>> +    items:
+>> +      - const: ppe
+>> +      - const: apb
+>> +      - const: ipe
+>> +      - const: btq
+>> +
+>> +  resets:
+>> +    maxItems: 1
+>> +    description: PPE reset, which is necessary before configuring PPE hardware
+>> +
+>> +  interconnects:
+>> +    items:
+>> +      - description: Clock path leading to PPE switch core function
+>> +      - description: Clock path leading to PPE register access
+>> +      - description: Clock path leading to QoS generation
+>> +      - description: Clock path leading to timeout reference
+>> +      - description: Clock path leading to NSS NOC from memory NOC
+>> +      - description: Clock path leading to memory NOC from NSS NOC
+>> +      - description: Clock path leading to enhanced memory NOC from NSS NOC
+>> +
+>> +  interconnect-names:
+>> +    items:
+>> +      - const: ppe
+>> +      - const: ppe_cfg
+>> +      - const: qos_gen
+>> +      - const: timeout_ref
+>> +      - const: nssnoc_memnoc
+>> +      - const: memnoc_nssnoc
+>> +      - const: memnoc_nssnoc_1
+>> +
+>> +  ethernet-dma:
+> 
+> I don't get why this is a separate node.
+> 
+
+We used a separate node because the EDMA (Ethernet DMA)
+is a separate block within the PPE block, with specific
+functions like ports-to-host-CPU packet transfer and
+hardware packet steering. We felt that a separate node
+would depict the hierarchy more clearly. Could you please
+suggest if a single node is recommended instead?
+
+>> +    type: object
+>> +    additionalProperties: false
+>> +    description:
+>> +      EDMA (Ethernet DMA) is used to transmit packets between PPE and ARM
+>> +      host CPU. There are 32 TX descriptor rings, 32 TX completion rings,
+>> +      24 RX descriptor rings and 8 RX fill rings supported.
+>> +
+>> +    properties:
+>> +      clocks:
+>> +        items:
+>> +          - description: EDMA system clock from NSS Clock Controller
+>> +          - description: EDMA APB (Advanced Peripheral Bus) clock from
+>> +              NSS Clock Controller
+>> +
+>> +      clock-names:
+>> +        items:
+>> +          - const: sys
+>> +          - const: apb
+>> +
+>> +      resets:
+>> +        maxItems: 1
+>> +        description: EDMA reset from NSS clock controller
+>> +
+>> +      interrupts:
+>> +        minItems: 29
+>> +        maxItems: 57
+> 
+> Why is this flexible on the same SoC?
+
+Thanks for pointing to this. I reviewed this again and agree
+that this need not be a flexible setting. I will fix this in
+the next update by setting 'minItems' and 'maxItems' here to
+the count of all available EDMA interrupts.
+
+> 
+> Best regards,
+> Krzysztof
 > 
 
