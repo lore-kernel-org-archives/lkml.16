@@ -1,103 +1,145 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C50CF21FF35;
-	Fri, 23 May 2025 01:00:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36040221F11
+	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 01:00:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747962025; cv=none; b=ramHjCl0DZ938SBtE/NHauKkNLR/EcpWwY7aSFoinnb9p1HsZxapm988C+avBQn6NXemwXgcdW/Xhben1cNTk4QmPJZjzzsLWBTwiMUNDFm9L14rVYJOEx8x35pdGJKhIO3nl4T6WXJc9P92KVrKhUu+XEa07u5Gv/OEZt4C9nI=
+	t=1747962027; cv=none; b=gdmv0dAz3UUxrdeB5wNmPAcQ3TvPFbEBB+BHjStLAyeSs8RQtyaCQscc1RzC8rr65HNbXsxWsu05w6fhMC/Vhf6nSK8gq6NAVcDEYo6jRTXkxied8QERKESi8umJzQ9FRa7TFqRdRzpTN9h6naX0CMahfzG7zE2kX9iK03sJg14=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747962025; c=relaxed/simple;
-	bh=mBllmWspxUb6WMZ6UgK2YeCavB2WwSWS5l+56LBR2Sg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dgbASe+6WQdWwbPa84SnMHriMvnd71Pbv4r0dQfTtYp+NS7slHvIwtWEH90/6gXBv44wiTT7kGXfaXM4iNAzN/eeGAVzQNQMV0xPsL/m+sSlNm2L44EbYEePJ5SiR0VlalrY04s13HhzLLQd48hkTbBuwfRj1thsmDZDWzP4tZo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=EuBPmj2f; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1747962027; c=relaxed/simple;
+	bh=5virlWR1yyo4ENo07jjtWumRwvWVsFnmiSwna+Ulx/0=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=K6R5CkJjuSZ2OfPU6KMTIbpQ1FRDbwoQ1QrYCQPsVnIKgXrusgDJC18zd+YXxqmMaXD+BO7htH/pn0QmoW5DiyKdgP+UKUJ7IwV5XQcltXyNi59ASqoK7XrkJCIMBheHB5VHTHvTWwlHCZSTSY8doJcCopSO2z5vJllKDD6ZCH0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=clHUS3DJ; arc=none smtp.client-ip=209.85.215.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="EuBPmj2f"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
-	:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=JQsG2xym9H00ve0pF5UnE9P2+sIgGX1YRykP3ytbG4A=; b=EuBPmj2f/169O1QWRM8OH0oEg4
-	ErDjjMvJ0JkGLK6eWwWcNtvIPebe0phapWl7re5RBSxmdWOKf3TGAmlNmuQs9LUMADckZl+k652Bh
-	YPYj5y5LNPWRl+3NCPBg6o/2s9YcHFgEd9ZuvDYZzUxBT+eIE8xMdEq8ok2TNp1BtLl0P/cfwMLAE
-	bfcjummeMYWjGrmfWZoqBObaxXjj3bSJDC4hEPhsxqttWnYK97QmHCR0DLi2n+KpKFF+f9oceR3+e
-	1xi4vRgPxHPRfwo/e7/g8FxEQL/n57G15bVpMqv1jm7Yr9WYvJDmOrc6EMxb/oAmu640LaRb764LZ
-	TbwDeW+A==;
-Received: from [50.53.25.54] (helo=[192.168.254.17])
-	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1uIGlE-000000016zC-1qFs;
-	Fri, 23 May 2025 01:00:15 +0000
-Message-ID: <5e9ccdad-a9f4-4c8f-85b0-430edd910590@infradead.org>
-Date: Thu, 22 May 2025 17:59:39 -0700
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="clHUS3DJ"
+Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-6c8f99fef10so8792584a12.3
+        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 18:00:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1747962024; x=1748566824; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
+        bh=sR1Ojn0ohf6sLFNiGoBcbnqontvMAHQrTSIwGVP+aHg=;
+        b=clHUS3DJjwPSb5VKK97ivpeGC4yfOFif6cN8GTHd5nP8Nj+pSowyn8D8whQ+FvLPPC
+         KN2R8XJRpNNMTA1po1sqTPP9cQD5vMAj/8spUGtEIXosIRNHDt1R6Mx4RHQ9PH6NHBG/
+         jy/nZtE+ufIV4n4r+p6JsZkxNzAu29XqlfxR9PGbRCdhKb142xyTgfDMTEPR2nNBmmET
+         FJMei434m8RsQOplWET/ohY5jDlbXh4F1q0kAOFOwKQaZ7FVjsuNbSwFtk5Ya5z3h2iV
+         cET1igAkucgjAX0sEtY9SIEKa8vwrG01xkNTjWiLyyFxitiPGtRIMBmqEXFBCZz89fmS
+         AgdA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747962024; x=1748566824;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=sR1Ojn0ohf6sLFNiGoBcbnqontvMAHQrTSIwGVP+aHg=;
+        b=mQDg/EckW8cNjG7Cyb/Ryb0nx95mp2XvlgcXhzoZdc2B4GCn315Noadahg7Qj1uzTu
+         Kz9XVxDmh6Zttu8SeAeIGCUMLDz5batub3eQ7rufFJP0dsiCnwg82Vs10Q5TsuY610Kq
+         IhSPJhq9RXxLjE86hKr/meJa5oJ+zjQ2lQq9cpZzmzKgj8Wx6aKtIj0Afg+ytUnN1guz
+         iCh1Y1zmjBWwjMiuaxQcUqH0yPW0T7VkbwHFdWrUiEp5Cd6LuhgwQVaLgYi8JfOEAZLF
+         iqcr4QBV4BvcVkSPq8cGlP6fa+h8CEoSZfqHvITPilhFe+xwLfMKKgF0aQHyMsOgunKi
+         ff8g==
+X-Forwarded-Encrypted: i=1; AJvYcCUB1gvQ4BmKKVhB82rNoNa2cCyvK+8StT26YYOpcQCohGBr1ko614/EwUFRRr08xjMok03gJtTcgCOX1lA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywc/j5q8fYMkleH8y/MllSNZapIJwn2O0o/vzRs6v+uqCupo2GW
+	1Usa1uQfnECdCv2lRYDVzeckchdYlPxvpIdet9Qed6eH89jzERTPtQDBtTFpFZbm90UhaRt68cC
+	CJRka0w==
+X-Google-Smtp-Source: AGHT+IG7kjhiAPt1VbCwrIgMAeCdVOr8h4q7zUqtkF3UVUBioDojmu3vxag2uDQB19/1vOdzds+ONUhBcgo=
+X-Received: from pgar17.prod.google.com ([2002:a05:6a02:2e91:b0:b21:868e:36fd])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:9012:b0:1f5:9175:2596
+ with SMTP id adf61e73a8af0-2170cb260edmr38962920637.13.1747962024381; Thu, 22
+ May 2025 18:00:24 -0700 (PDT)
+Reply-To: Sean Christopherson <seanjc@google.com>
+Date: Thu, 22 May 2025 17:59:13 -0700
+In-Reply-To: <20250523010004.3240643-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 4/9] coredump: add coredump socket
-To: Christian Brauner <brauner@kernel.org>, linux-fsdevel@vger.kernel.org,
- Jann Horn <jannh@google.com>, Daniel Borkmann <daniel@iogearbox.net>,
- Kuniyuki Iwashima <kuniyu@amazon.com>,
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>, linux-mips@vger.kernel.org
-Cc: Eric Dumazet <edumazet@google.com>, Oleg Nesterov <oleg@redhat.com>,
- "David S. Miller" <davem@davemloft.net>,
- Alexander Viro <viro@zeniv.linux.org.uk>,
- Daan De Meyer <daan.j.demeyer@gmail.com>,
- David Rheinsberg <david@readahead.eu>, Jakub Kicinski <kuba@kernel.org>,
- Jan Kara <jack@suse.cz>, Lennart Poettering <lennart@poettering.net>,
- Luca Boccassi <luca.boccassi@gmail.com>, Mike Yuan <me@yhndnzj.com>,
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
- =?UTF-8?Q?Zbigniew_J=C4=99drzejewski-Szmek?= <zbyszek@in.waw.pl>,
- linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
- linux-security-module@vger.kernel.org,
- Alexander Mikhalitsyn <alexander@mihalicyn.com>
-References: <20250516-work-coredump-socket-v8-0-664f3caf2516@kernel.org>
- <20250516-work-coredump-socket-v8-4-664f3caf2516@kernel.org>
-Content-Language: en-US
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <20250516-work-coredump-socket-v8-4-664f3caf2516@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+References: <20250523010004.3240643-1-seanjc@google.com>
+X-Mailer: git-send-email 2.49.0.1151.ga128411c76-goog
+Message-ID: <20250523010004.3240643-9-seanjc@google.com>
+Subject: [PATCH v2 08/59] KVM: SVM: Add helper to deduplicate code for getting
+ AVIC backing page
+From: Sean Christopherson <seanjc@google.com>
+To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, 
+	Joerg Roedel <joro@8bytes.org>, David Woodhouse <dwmw2@infradead.org>, 
+	Lu Baolu <baolu.lu@linux.intel.com>
+Cc: kvm@vger.kernel.org, iommu@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	Sairaj Kodilkar <sarunkod@amd.com>, Vasant Hegde <vasant.hegde@amd.com>, 
+	Maxim Levitsky <mlevitsk@redhat.com>, Joao Martins <joao.m.martins@oracle.com>, 
+	Francesco Lavra <francescolavra.fl@gmail.com>, David Matlack <dmatlack@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Hi,
+Add a helper to get the physical address of the AVIC backing page, both
+to deduplicate code and to prepare for getting the address directly from
+apic->regs, at which point it won't be all that obvious that the address
+in question is what SVM calls the AVIC backing page.
 
-On 5/16/25 4:25 AM, Christian Brauner wrote:
-> Coredumping currently supports two modes:
-> 
+No functional change intended.
 
-> ---
->  fs/coredump.c       | 118 ++++++++++++++++++++++++++++++++++++++++++++++++++--
->  include/linux/net.h |   1 +
->  net/unix/af_unix.c  |  54 ++++++++++++++++++------
->  3 files changed, 156 insertions(+), 17 deletions(-)
-> 
+Reviewed-by: Maxim Levitsky <mlevitsk@redhat.com>
+Tested-by: Sairaj Kodilkar <sarunkod@amd.com>
+Signed-off-by: Sean Christopherson <seanjc@google.com>
+---
+ arch/x86/kvm/svm/avic.c | 14 +++++++++-----
+ 1 file changed, 9 insertions(+), 5 deletions(-)
 
-[snip]
-
-git a/include/linux/net.h b/include/linux/net.h> index 0ff950eecc6b..139c85d0f2ea 100644
-> --- a/include/linux/net.h
-> +++ b/include/linux/net.h
-> @@ -81,6 +81,7 @@ enum sock_type {
->  #ifndef SOCK_NONBLOCK
->  #define SOCK_NONBLOCK	O_NONBLOCK
->  #endif
-> +#define SOCK_COREDUMP	O_NOCTTY
->  
->  #endif /* ARCH_HAS_SOCKET_TYPES */
-
-MIPS sets ARCH_HAS_SOCKET_TYPES so the new define above is not used,
-causing:
-
-
-net/unix/af_unix.c:1152:21: error: 'SOCK_COREDUMP' undeclared (f
-irst use in this function); did you mean 'SOCK_RDM'?
-
-
+diff --git a/arch/x86/kvm/svm/avic.c b/arch/x86/kvm/svm/avic.c
+index 4b882148f2c0..c36f7db9252e 100644
+--- a/arch/x86/kvm/svm/avic.c
++++ b/arch/x86/kvm/svm/avic.c
+@@ -234,14 +234,18 @@ int avic_vm_init(struct kvm *kvm)
+ 	return err;
+ }
+ 
++static phys_addr_t avic_get_backing_page_address(struct vcpu_svm *svm)
++{
++	return __sme_set(page_to_phys(svm->avic_backing_page));
++}
++
+ void avic_init_vmcb(struct vcpu_svm *svm, struct vmcb *vmcb)
+ {
+ 	struct kvm_svm *kvm_svm = to_kvm_svm(svm->vcpu.kvm);
+-	phys_addr_t bpa = __sme_set(page_to_phys(svm->avic_backing_page));
+ 	phys_addr_t lpa = __sme_set(page_to_phys(kvm_svm->avic_logical_id_table_page));
+ 	phys_addr_t ppa = __sme_set(page_to_phys(kvm_svm->avic_physical_id_table_page));
+ 
+-	vmcb->control.avic_backing_page = bpa;
++	vmcb->control.avic_backing_page = avic_get_backing_page_address(svm);
+ 	vmcb->control.avic_logical_id = lpa;
+ 	vmcb->control.avic_physical_id = ppa;
+ 	vmcb->control.avic_vapic_bar = APIC_DEFAULT_PHYS_BASE;
+@@ -305,7 +309,7 @@ static int avic_init_backing_page(struct kvm_vcpu *vcpu)
+ 	BUILD_BUG_ON(__PHYSICAL_MASK_SHIFT >
+ 		     fls64(AVIC_PHYSICAL_ID_ENTRY_BACKING_PAGE_MASK));
+ 
+-	new_entry = __sme_set(page_to_phys(svm->avic_backing_page)) |
++	new_entry = avic_get_backing_page_address(svm) |
+ 		    AVIC_PHYSICAL_ID_ENTRY_VALID_MASK;
+ 	WRITE_ONCE(*entry, new_entry);
+ 
+@@ -845,7 +849,7 @@ get_pi_vcpu_info(struct kvm *kvm, struct kvm_kernel_irq_routing_entry *e,
+ 	pr_debug("SVM: %s: use GA mode for irq %u\n", __func__,
+ 		 irq.vector);
+ 	*svm = to_svm(vcpu);
+-	vcpu_info->pi_desc_addr = __sme_set(page_to_phys((*svm)->avic_backing_page));
++	vcpu_info->pi_desc_addr = avic_get_backing_page_address(*svm);
+ 	vcpu_info->vector = irq.vector;
+ 
+ 	return 0;
+@@ -906,7 +910,7 @@ int avic_pi_update_irte(struct kvm_kernel_irqfd *irqfd, struct kvm *kvm,
+ 			enable_remapped_mode = false;
+ 
+ 			/* Try to enable guest_mode in IRTE */
+-			pi.base = __sme_set(page_to_phys(svm->avic_backing_page));
++			pi.base = avic_get_backing_page_address(svm);
+ 			pi.ga_tag = AVIC_GATAG(to_kvm_svm(kvm)->avic_vm_id,
+ 						     svm->vcpu.vcpu_id);
+ 			pi.is_guest_mode = true;
 -- 
-~Randy
+2.49.0.1151.ga128411c76-goog
 
