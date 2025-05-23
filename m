@@ -1,120 +1,101 @@
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
+Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C380D246793
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 15:36:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9840714286;
+	Fri, 23 May 2025 15:38:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748014600; cv=none; b=p/Qv0qrn9lNR530BGfAbmxqNBqM+iiAVFYLQMcoONK6Dr13zOWPOSATOOf8hBb2yJ9AMDiby9HodD0BPx6vwZW3Q00FyR3lnwjbbmsfKayUkcaZ/4z/U+z0XK9FEnNQrXE+zkWWXoR2hF25GVgJFIVMIeO1HHxp7oxcmK1jqVtI=
+	t=1748014730; cv=none; b=GMTJct5woD0Jx4VU8ElYEybl9LML8WnAmC9aNKJM7M4fKYMQi9dZBFYCdKAcniXd0K41LiqzdjeLa4WF+mIvjOiNGhe9iLviphkJzpTHDm9bqJ9MOzKTyxkOWIx1YswunR8SrU/k8/eGq49e/JyGO4wN+vBvqqh+1MG6Ji7JNw8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748014600; c=relaxed/simple;
-	bh=mBoyiUX6cNGmBI/RVAoVtGY+TJHKe8LjzoZW8vjRCY4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LLw5Z3KnFIctxS2oZm0DIgHVzzwNN1Tc4mrll3wifpZEXc3vuuMZmg+XNnj1uRfVgUB8fT6MS0oiy/HZo/oDbqFk6wUuToh60YcysL2BMBAYqjjpQeKltgVUgktckNsBoVBuwfg4FjBvrPDd6NtZqf9q3wUKbF8vEy8ns9fp9Us=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=DYNG3rqR; arc=none smtp.client-ip=209.85.167.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	s=arc-20240116; t=1748014730; c=relaxed/simple;
+	bh=esKPzyKTo7EyhBPeYFjR099taB5F7qTmeYFSJEtpeUM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=DPoSpL+ES5SK4LhS6xPDgEJuk1xZtyMwkEuaCLI0vJtqazshj62kkEY2cTqMrtBqo9oRi9k2JJ7SOuzLkItQYelBpn+R8cCIcWmLXRe96LigJtxueZBCZHqpShAylBoHtlPYK8U0KymZDwpSBTF24hNU1VqX2jmZk3BWfDbC2Pg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=a0rM6f3Q; arc=none smtp.client-ip=209.85.215.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="DYNG3rqR"
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-551f00720cfso23726e87.0
-        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 08:36:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a0rM6f3Q"
+Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-b1f7357b5b6so5841836a12.0;
+        Fri, 23 May 2025 08:38:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1748014597; x=1748619397; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=aBTug0/NeMZd6Qk9EUzJxCkzpzI4b0/AjBa3843O+Gk=;
-        b=DYNG3rqRk8pJAfG7sGnOkJsid4jRlus793Hi4KqUHsbwV+4rcsggO3l24pEmtnR4DO
-         OG31/RC/GJFuByJjRT7LaEP+OYr2NHJbrD4pj5qCoPHTKLPY6xTnO7u+SD278QpEItcC
-         9ic0RaLFG2WidDn6y/IHAN5XrhG5Nt+aw+zBs8GJSUGAd7c4WfsNv5EbbCEGkNm6LBnn
-         R0Ete8dTFqIZncVrz06rI/n/UAbu6EgsttL6byxJs1SPUbUOL4uYDePC7xuRmGWDC7qi
-         xCkFwaccDk97wPEnnNtUaxiNi85JklHiJUTe1T01yMR9stTegBgN5BmAzzwZ5vKxhBXs
-         jzsg==
+        d=gmail.com; s=20230601; t=1748014728; x=1748619528; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=i9By7081c2CRgn2t4xnecIrtE4ESQao/xPs7l46E2ec=;
+        b=a0rM6f3QBM8UqSdNCTF3yv/XhWpcBk6CgvWPUXVMJ7gco2a5YmtgPQufd/bcQfJvOz
+         ws01Ama/t9wMXj/mfqZ6dC5jX5fofJcRapity7O1Pwj1nW9kZoO1cw3m1vqDLxcW7Mf5
+         lQ1T2PSjFDTZ3TP5LXMdPzkZn+TAxGHpi3SKC/43BNmqNogWnG5vLw3+A611cP6k/L5a
+         ccmmkvGN/gkkMbQPiF/8RzPDeTMHiotM4W37FK/trRMSjVWq/Rz5mcE/Hfopcf72jaou
+         vWbquyA4qJhIWSP5jZsySetJDAF8zq0xDw1vco5G41FKrdBjUJiwqZEKMFLV072D9ceI
+         uPdw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748014597; x=1748619397;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=aBTug0/NeMZd6Qk9EUzJxCkzpzI4b0/AjBa3843O+Gk=;
-        b=MT5OZKRLQKykYZhQ+NglYnua8iatyTpK4PZTBreQ2C2wyoawHN2mg7ZAvalR7we7+O
-         c0CMUezW/r+9R7nzoNRk/oEPkxAcvgYmLDhpFqg3rpLq9d8J1CMyf3+20cGI8wt5rOqZ
-         k63/KHzjXyknnCKLpnN6mYKbZ10Hbi/qY61d8JEA8sg6kb9SzGq8FSnR64mxtlb6HY/7
-         fnhAzqdqgoyuZRcwnBoyD9Vf3uss4MtEVJZMx5CCSdBRYGkLY0yy0K7W17m9SX0QgD8q
-         fX32YAsMs24NsnbTeVTv37DYjwHS9T7jKhiHaI2Tfwew5Cney6AGi9R44yWdMEDusJvL
-         UMzA==
-X-Forwarded-Encrypted: i=1; AJvYcCWyAgna7rP4QMOxKo9TVmK6bhVf3ML1pxIEdlHD902YNlhvQjcmexnxT5Yqtq7l4RT6UQCfq96foa1NRbM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwRqHzKXTD3wrmUFJK95Jo1C686m926yMuP3MOpxutExMufMBI0
-	DBmSb5+YL/cP5oHQBT3qxrOemJiJg4M4xYO+oMkytCNNFJvxJAXlpOqWKD0L84JleKgAHk8oZFN
-	aVdgtw9+YZNqR/fn9cHpg9yenOvXG8HnvKVSR7wHp4A==
-X-Gm-Gg: ASbGncubpAZp2HwP8Mh0/xSQsFkZDjrTQNjsOIeIa85FgcNlgEdUF95527Ik0G5IzzS
-	kAfKmVMnOOcXQNekTWQigmpcAos4A2bpMo5URcx7mVlk6A/EDf8vFL38R4aiZY4H5F+8ngQ7v5A
-	ek3jbLDhZxHryHPIp6O8/pmHlJANI/LVaa+po=
-X-Google-Smtp-Source: AGHT+IHAij+IkAtUHU5WlmmWLtmmWgHF+NpmCZ7ttFYGpc17RlUZBN41Ag3XoQmzFn5988CXaFljyU58oThRKVVdiT8=
-X-Received: by 2002:a05:6512:650e:b0:549:8cbb:5443 with SMTP id
- 2adb3069b0e04-550e724a21emr9751477e87.47.1748014596646; Fri, 23 May 2025
- 08:36:36 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1748014728; x=1748619528;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=i9By7081c2CRgn2t4xnecIrtE4ESQao/xPs7l46E2ec=;
+        b=qUxMOPmFMk0WARcgXpXS+lCjW0mwDZu78IcAMSAIN1Tn7NLCjwo/r7bdr1kFRvpmkt
+         TcT/KSutyHVxJkoCZYGPtb4hbZXdK0ZaAhmJqOp11ShcLSLkNIpxtszaSNFwiQNr3Rf0
+         UrmFa9FzwWBq7WiN//oGaFrBaQocovOAMsqb0BiB7ruNYrJYV9zlW3T9mu6f4AXQxfKO
+         EbdnH8rRtowgOaLxkxbEKAZDj54aiWfZEM4aWtwaEUB9Sst/xV83d/OUg9hUFkPm0m7z
+         3LmqqAY0xMsaIwZY5421HZuR1jvnf5hhjKnz1PvVbINMIf97c2uFAYDjgXxppBp9mFSH
+         LqUg==
+X-Forwarded-Encrypted: i=1; AJvYcCW/T2/+pJHPQGQWaWY0+FfDA5L90/UtC4/AvQuTBkcIXLo+EglQzXKeOFoh4G7u6wy9koKxHg85nfQdks0=@vger.kernel.org, AJvYcCWjM2uJK2J0lMyWKeQdhumeWTpBfxG4qT4XYbOGlhIRAdUXts2qoye1I90cH6Ae9y6V5zXETBQtwPQr@vger.kernel.org
+X-Gm-Message-State: AOJu0YwS8a9jfshx4bUkq3yMCz7u6bOpGmnAWiDgCAajEwGqJdSFhVQG
+	rXpEdACKoCapurYxyYhrgimZQJoUdgBPJBht3lLGhrLIThfY3WUlQeY3
+X-Gm-Gg: ASbGncu4MPWjklGilwPl09yWFxb3TFAeTfMqrbv0iroD2mx6l7IVZ9yy5kMFUcGQJ+w
+	r0ORgm5TVmyypbxOSdep/M0MbfUmbvDJ85nzAOAPPqcv4dSDr4JljHsV6cvAqnJ9+mOv7YYtkI6
+	3Hia1nj+PJFJYWaRVywlxsKBCMjspFRFo3aYNAqDVumO6zImGTGtso7QvXQ4LN2YJT64SpbkX4/
+	fV7ejuJoOhq63BAvW17GDBh5DzctlBrKwj24PWm6bGJZzSho7IajYeRo8fLj2gOC2gUISyQeHkh
+	oLskRAnQiuiTfJPhz8hsorUDPltEJ1EfG8gYy0Fy2s0D6Eu/YKK4uKKVZegpGGtYCsyEACTE/mU
+	O2ATG120uZ2JURrY/aiDVnLcAO1s=
+X-Google-Smtp-Source: AGHT+IE+ZIequO6IEewOv6/npkzSIgcVfoP+JyEutRg58NuQQxakWelr4YYr4N2RGALZuFbYJsZAUA==
+X-Received: by 2002:a17:90b:3682:b0:310:eea1:1c1 with SMTP id 98e67ed59e1d1-310eea10349mr2961466a91.16.1748014727610;
+        Fri, 23 May 2025 08:38:47 -0700 (PDT)
+Received: from [192.168.11.2] (FL1-119-244-79-106.tky.mesh.ad.jp. [119.244.79.106])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30e11e33c2esm12871188a91.1.2025.05.23.08.38.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 23 May 2025 08:38:47 -0700 (PDT)
+Message-ID: <63702a66-4cc6-4562-89f4-857fe3f044e8@gmail.com>
+Date: Sat, 24 May 2025 00:38:43 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250520031552.1931598-1-hezhongkun.hzk@bytedance.com>
- <8029d719-9dc2-4c7d-af71-4f6ae99fe256@redhat.com> <CACSyD1Mmt54dVRiBibcGsum_rRV=_SwP=dxioAxq=EDmPRnY2Q@mail.gmail.com>
- <aC4J9HDo2LKXYG6l@slm.duckdns.org> <CACSyD1MvwPT7i5_PnEp32seeb7X_svdCeFtN6neJ0=QPY1hDsw@mail.gmail.com>
- <aC90-jGtD_tJiP5K@slm.duckdns.org>
-In-Reply-To: <aC90-jGtD_tJiP5K@slm.duckdns.org>
-From: Zhongkun He <hezhongkun.hzk@bytedance.com>
-Date: Fri, 23 May 2025 23:35:57 +0800
-X-Gm-Features: AX0GCFt0sS7VYPB52zeUI_3_ZpYBGiasCDtLJweGgJzUP78rp8YvdTmx5WfX8CE
-Message-ID: <CACSyD1P+wuSP2jhMsLHBAXDxGoBkWzK54S5BRzh63yby4g0OHw@mail.gmail.com>
-Subject: Re: [External] Re: [PATCH] cpuset: introduce non-blocking cpuset.mems
- setting option
-To: Tejun Heo <tj@kernel.org>
-Cc: Waiman Long <llong@redhat.com>, hannes@cmpxchg.org, cgroups@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, muchun.song@linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] mm/hmm: Allow hmm_dma_map_alloc() to tolerate NULL device
+To: Christoph Hellwig <hch@infradead.org>
+Cc: linux-rdma@vger.kernel.org, linux-mm@kvack.org, leon@kernel.org,
+ jgg@ziepe.ca, akpm@linux-foundation.org, jglisse@redhat.com,
+ linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, zyjzyj2000@gmail.com
+References: <20250523143537.10362-1-dskmtsd@gmail.com>
+ <aDCKsK2-zRkqge64@infradead.org>
+Content-Language: en-US
+From: Daisuke Matsuda <dskmtsd@gmail.com>
+In-Reply-To: <aDCKsK2-zRkqge64@infradead.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, May 23, 2025 at 3:03=E2=80=AFAM Tejun Heo <tj@kernel.org> wrote:
->
-> Hello,
->
-> On Thu, May 22, 2025 at 11:37:44AM +0800, Zhongkun He wrote:
-> > > I don't think this is a good idea. O_NONBLOCK means "don't wait", not=
- "skip
-> > > this".
-> >
-> > Yes, I agree.  However, we have been experiencing this issue for a long=
- time,
-> > so we hope to have an option to disable memory migration in v2.
-> >
-> > Would it be possible to re-enable the memory.migrate interface and
-> > disable memory migration by default in v2?
-> >
-> > Alternatively, could we introduce an option in cpuset.mems to explicitl=
-y
-> > indicate that memory migration should not occur?
-> >
-> > Please feel free to share any suggestions you might have.
->
-> Is this something you want on the whole machine? If so, would global cgro=
-up
-> mount option work?
+On 2025/05/23 23:48, Christoph Hellwig wrote:
+> On Fri, May 23, 2025 at 02:35:37PM +0000, Daisuke Matsuda wrote:
+>> Some drivers (such as rxe) may legitimately call hmm_dma_map_alloc() with a
+>> NULL device pointer,
+> 
+> No, they may not.  If something has no device with physical DMA
+> capabilities, it has not business calling into it.
+> 
 
-It doesn't apply to the whole machine. It is only relevant to the pod
-with huge pages,
-where the service will be unavailable for over ten seconds if modify
-the cpuset.mems.
-Therefore, it would be ideal if there were an option to disable the migrati=
-on
-for this special case.
+Hi Christoph,
 
-Thanks.
+RXE is a software emulator of IBTA RoCEv2, designed to allow systems equipped with standard Ethernet adapters to interoperate with other RoCEv2-capable nodes.
 
->
-> Thanks.
->
-> --
-> tejun
->
+Like other Infiniband subsystem drivers (under drivers/infiniband/{hw,sw}), RXE depends on the ib_core and ib_uverbs layers in drivers/infiniband/core. These common RDMA layers, in turn, rely on the HMM infrastructure for specific features such as On-Demand Paging.
+
+As a result, even though RXE lacks physical DMA capabilities, it still needs to interact with hmm_dma_map_alloc() through the shared RDMA core paths. This patch ensures that such software-only use cases do not trigger unintended null pointer dereferences.
+
+Thanks,
+Daisuke
