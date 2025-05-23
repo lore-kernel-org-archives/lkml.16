@@ -1,72 +1,66 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FF8C28EC
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 18:13:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7168729899F
+	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 18:14:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748024028; cv=none; b=mdu+0yUiXnD245//IPS+Db80E11a5KoQg0VmJ6hwLeu3rVXg63Dcj+66XCS7VGrUkUJeU75vxENKYnZpI8P2JjqQeAd2UjtOQ+xYE5s8QpaYlXPGhiiagyy0ZfYkGGD7DvFrnquZFMuLVI6lg9iVgCwjSkMhCvKEUBabpHTUO30=
+	t=1748024061; cv=none; b=Gpv5WJxjO8OMQ9NIHO3HKRe8hrHz+ykf8amY4Lz8iO12yL0LXjguXZKzLNjjLBon4LMUDl/DlFJZXaJtXxT11g29GaJuFdKknVBEOhCuZn2Qsj5vaKvMh/0baRd3NLe86D/dDpIlM9Q3FQmUkPVdGBAsfTUEkHZu8BlOVJfKaok=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748024028; c=relaxed/simple;
-	bh=4Paog+YoKvP2+bQwGVWBOgtwOdz6A7hOVN1mgB+zfiM=;
+	s=arc-20240116; t=1748024061; c=relaxed/simple;
+	bh=RQB31qFVL6VtyYD/q8h3xheIj6fbkAcOVPAePkY2WOI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sliqrm4+8/+yfduIVd26+6BapZl2yxtGW6YGppLIXJsEE/bZgxmsZHYxWEZK558st3fUegucjVINeghv/qOpMe7mEwzgTUNeSChPEXBpXpGH65CZ1T0vwB3AUjIRHEb6d664vjW+WDNDjj+2yzRgvnWCr+uHFEGhgqaXUTUWzHc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=IMUOR2y9; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	 In-Reply-To:Content-Type; b=aBdnDKKz9MzDO3FI3VK/VT9OrrHUOjKX9OBHOtYxYUaJ28zNI4Fsft2hi9PoE6lPd1AnnOeZM5NSxq6NqxrCF4Dt4fmEOp32+UaSrkklHv+UygslQ3AqYrQXKZmW/5TL+0PYrkQl5fb+GjWUaM4HTa0EX/IvEDp75FFjTm3mvAo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hUnjOVAH; arc=none smtp.client-ip=209.85.216.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="IMUOR2y9"
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54NBjZiZ020943
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 18:13:46 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	GxYGuWGE7teroSpXw9B8EXIpMo9GtkoYzPs+37tNI9I=; b=IMUOR2y9gMKhgXS6
-	SlruDTVk9FfgokmM6AAGRhYO7FkmpGIDOKOiJCs1/cfuFrQ7b946pDPP1GbpxTzO
-	nLA85WYwUlwJwWBEbHtqG5Lzb9ifzAb//7jYmi7nA60HXuUqUytc7BhcIs+/K8Xl
-	a4VLjimqZiwNFY+okLh4oStNNtbzAkzRwfJjN8hiKH9F+iyQfQnMQP6AchO8qls6
-	mUQQxlDc7iGaGEW+YGkz1WMW7FAiqagH1Or0WXhHkYeIq2k1P73o1qDmDmMpX6lW
-	HMKT8Z4PX4mv77UMXNKMssUUkNEihsvrs1Ok1khkPX9ujeQMk53pZc9aCmDpobva
-	T4P8Ng==
-Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com [209.85.219.70])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46rwf0b195-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 18:13:45 +0000 (GMT)
-Received: by mail-qv1-f70.google.com with SMTP id 6a1803df08f44-6fa9136c2f2so226596d6.0
-        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 11:13:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hUnjOVAH"
+Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-30ec226b7d6so212361a91.2
+        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 11:14:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748024060; x=1748628860; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=kzFJW90w481Ie2sxBC9R+vr/rXdbG7y4vnmCcu5qDdw=;
+        b=hUnjOVAHyi3c2Ru1NIGtHo1kqb1A8DMDRickptKeg6ZprWQFp4aE4q8bDN+ViUXQd8
+         DiiSx9y8skwlbM+BkHfa8HGce5UaT+/CJ5RCY4ocwqZY8wDpansX5UgcPDLy3wxZWNaZ
+         v5VnTXpRi/upuwyc8W4WsVhNdeHvVjG+FEh57z+iP5OL2GEntIX0oNR6GU+EKzwKqvdP
+         kE+bTcZ/ZI8/BGtjrV1SgsgLXCTQdX3AHBfFAgoFLMXrLfJj1saMWyEr46JKQyDcxuyf
+         GHo/gsVksyPhwkv693b0p5md0/2Jf+EEObc3lzTcrumGhyRnnSf01PDYfAqWHio/j9C0
+         WuMQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748024019; x=1748628819;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=GxYGuWGE7teroSpXw9B8EXIpMo9GtkoYzPs+37tNI9I=;
-        b=LWZ89enh3po1qGKiuHAVhwce00gwExvBBvOk7nZZgqCnqgroXwZOl+AbR+DS+OA+Ao
-         p1ekqQKnPBXG20JbNfZfQONGXUD/ask+7slVBVEAqDog0EyLBk7rPnfm+TM8SkT49gFo
-         er/v1i1aH7yPrTh/u87onjVjeYsUMsmOEqTCay2FP3CdxCO7m2f2K5oU+VpNIhosZdQd
-         MbmKlpCEzX5l6ZQhW03oXSM1jAJJc5MomoCvcKdbu21LaSHgCd8/a0+TlpKpujDmk3sk
-         kaPyvYmGT/4Z1Q89uXR9evuhmVbIAjzJRCkilqt4YffLEUiKm0GDEEsMsWQl2VMHdqxZ
-         ze2g==
-X-Forwarded-Encrypted: i=1; AJvYcCXl41HIJZ8C3r5Mb/H5ZfQ4x6TwhA1/E+8VwTxXYWwVYQg+epkX29jbfEA78NqOy5RTRh9EPx0F6USHWsc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy1jjAM77LMGaxfLeY3u5PvtxKorvc7epOr3JylDw/e4hdAmo3Q
-	X85qBwPIURb4pBZpkUJbEs2drytOqY3sQ4MDydgg6GiTFvMCX34kmxVnznPWGOHixWyk09+qBnk
-	XcHRrwqKzPaSYb7g80uFZtskWg05l1d+PzyaCRFyX/nBwqmbhd2r6H9bwrB1CSc+zxOk=
-X-Gm-Gg: ASbGncsWiIoYn8IxvaBIZO613JIcEWfS5UrSVlt7gDyId6ZhXYqZaD1zqn+oL2TdkOd
-	C2wXIjzQarQ9RWtyto/f9wsE6q40Ap8cqQgrfjxQR3CfJ/1fh76Qwu+nVhOvni/UI+TqxhHPRZi
-	nKzfLLvxJgVMx7FIaczRQPJiBY/yMRcXtqnzVS7hRETkirMBP5XQvsmShsqTJwAabhOKFghvGKK
-	VPXn20ZVXb3jf9vFB0CVGADzDS7DE+xt+sB92BvaZePJPdJv2VOBwLtCc8l+Trit00v4SkQ2Bh1
-	XSiKp9jlCDA7d72vKU3O/T4MYdNzjFBVqhbnU+mssWdiFnKGAeQSIn4L8JyBQhHMxw==
-X-Received: by 2002:a05:6214:5192:b0:6f8:e1d8:fa9c with SMTP id 6a1803df08f44-6fa9d2a6a1amr2331746d6.9.1748024019494;
-        Fri, 23 May 2025 11:13:39 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFv7GPWwXXj2LlrS9GHOVViHjRzQLINpDyj6uWz8zl7Oz/ZeHI6Gl4oFnbSRXMtGdcwoHLU9g==
-X-Received: by 2002:a05:6214:5192:b0:6f8:e1d8:fa9c with SMTP id 6a1803df08f44-6fa9d2a6a1amr2331556d6.9.1748024019160;
-        Fri, 23 May 2025 11:13:39 -0700 (PDT)
-Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-602c2080534sm391575a12.63.2025.05.23.11.13.37
+        d=1e100.net; s=20230601; t=1748024060; x=1748628860;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=kzFJW90w481Ie2sxBC9R+vr/rXdbG7y4vnmCcu5qDdw=;
+        b=Q8N67H+uvNV2HBbnkC7x6Yi5W/UMqpjdslzpd8H4Fp4yfpCu70M0atpOKgNU7BEb1I
+         Bc7zQpwbMwkNI2+IVufZ0xKmnJp1BUwPXApO8DrVMdYXapGNA+DaAnET8v+fc/DVii1Y
+         NBaAkipgORl4V/8mhTgt3A3syHbrHl+FNFdd3k98IeJZ4MOBBSGjSWaGeDG4rsKd8eCH
+         ogV5pNHGSRKSP4dO4SqhZhsLn9+JszgkkaMjhVwxp3SVOnKjC2EsSji46N9iomXan69W
+         S7b026ZSIcJ4MvcrgS9TjyHm890Dh7XNotH6Nm3Mc0hUnRuRIj4bhF/faKxFdQcZAAnm
+         hpkg==
+X-Forwarded-Encrypted: i=1; AJvYcCXFcfklR0h7zDWEj1UZgWjEHzevVOtUR95nJslb3NLT5qttLWi7XCcXwm4tyM10zPhKrMpuZbBx/vWXdhU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw/JcWNRRSh0Z17/m7JfS07QoDS5mbEL0xJd6lnYFG0sHKQuCWj
+	7u0iU3p2q3Yu0mZUVNnj0+Q5i4o5ix+b9cvHUgOAPtiQ/l4XbINNRpdZ
+X-Gm-Gg: ASbGncu7EBnhyG14DhH4J47mCQd+bBC5XyWyNEjX71vdt63MZI4j/E08zTu2rHp2SZ4
+	sxqZHaekXvm3+Pwez5HfRpxbumWcaUuy8sREEFwjkXczkT9D2XQq/yF7QT1zMCu8agC4acT4Osy
+	9lA4NiMtbd7Y79MAIjdx2+HZA5/JluXe1ac5JrzGOi7VUYXnLDkn9h4As5gV6NuBb7NJ+/4cqWB
+	Vwv2Pg2jfeuh2jJD5VI9UZLy04afKNPtS+8mSwIepCnTnNomGpVXz8/AJySwF60e9yVjK4tA1W7
+	grYanEX5YCoxojiUOoz12Fb/JWqdhaJlvk5fEQSGUcUtX2pz5pF6YJD5x4NfHI5qSd5v99pkmsL
+	KonA=
+X-Google-Smtp-Source: AGHT+IHEb1qIm4dgm5SiPpsjIXRHMZuuOcVTFciAKrVULppe1jRjRhW46xCzA68xc84k6mE0xTyLOQ==
+X-Received: by 2002:a17:90b:3851:b0:308:5273:4dee with SMTP id 98e67ed59e1d1-3110f20df3amr126230a91.15.1748024059484;
+        Fri, 23 May 2025 11:14:19 -0700 (PDT)
+Received: from [10.67.48.245] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30f365f49e9sm7638092a91.43.2025.05.23.11.14.18
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 23 May 2025 11:13:38 -0700 (PDT)
-Message-ID: <81093c19-a6f7-4653-9688-ca891fd2548b@oss.qualcomm.com>
-Date: Fri, 23 May 2025 20:13:36 +0200
+        Fri, 23 May 2025 11:14:18 -0700 (PDT)
+Message-ID: <bc44f895-3df4-41c4-bf93-d56e6ed203f3@gmail.com>
+Date: Fri, 23 May 2025 11:14:17 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,72 +68,125 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/3] dt-bindings: sram: qcom,imem: Allow modem-tables
-To: Alex Elder <elder@ieee.org>, Konrad Dybcio <konradybcio@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Andrew Lunn <andrew+netdev@lunn.ch>,
-        "David S. Miller"
- <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, Alex Elder <elder@kernel.org>
-Cc: Marijn Suijten <marijn.suijten@somainline.org>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-References: <20250523-topic-ipa_imem-v1-0-b5d536291c7f@oss.qualcomm.com>
- <20250523-topic-ipa_imem-v1-1-b5d536291c7f@oss.qualcomm.com>
- <7707b574-6fcf-487d-909a-d24874f9d686@ieee.org>
+Subject: Re: [PATCH] sched/topology: clear freecpu bit on detach
+To: Juri Lelli <juri.lelli@redhat.com>,
+ Florian Fainelli <f.fainelli@gmail.com>, Ingo Molnar <mingo@redhat.com>,
+ Peter Zijlstra <peterz@infradead.org>,
+ Vincent Guittot <vincent.guittot@linaro.org>,
+ Dietmar Eggemann <dietmar.eggemann@arm.com>, Ben Segall
+ <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+ Steven Rostedt <rostedt@goodmis.org>,
+ Valentin Schneider <vschneid@redhat.com>
+Cc: Doug Berger <opendmb@gmail.com>, linux-kernel@vger.kernel.org
+References: <20250422194853.1636334-1-opendmb@gmail.com>
+ <609e6fe5-2893-4c13-8e52-e9df05146ffb@gmail.com>
+ <aBTCWPSXgu9cId6D@jlelli-thinkpadt14gen4.remote.csb>
 Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <7707b574-6fcf-487d-909a-d24874f9d686@ieee.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-GUID: 7g2w-lPYSKM5Rrt935B8K5atseiCXjBZ
-X-Proofpoint-ORIG-GUID: 7g2w-lPYSKM5Rrt935B8K5atseiCXjBZ
-X-Authority-Analysis: v=2.4 cv=ZP3XmW7b c=1 sm=1 tr=0 ts=6830bad9 cx=c_pps
- a=oc9J++0uMp73DTRD5QyR2A==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
- a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=EUspDBNiAAAA:8 a=JUd7tuONK7MPmK3lb4kA:9
- a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=iYH6xdkBrDN1Jqds4HTS:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIzMDE2NiBTYWx0ZWRfX0jC12b62bPXI
- YXx20IRBpaKb73ZtCyqGYp9YjzIkqgbftPPDB5HFKO129KbSNUzyTUR9x85z1E4fa1VNoglG9DP
- wwh2GrV5CKY926uDWas7PCt0rBTgKc74eyq767X+wVhyDFCIBre2f5vpDDORm+E33+zBBea8Jas
- QS24wqmYBooJQf1G8M+lb+I5thGS8PIi4ibzi0KNhoQRNy91VMj7snJv4l+K/vL0M2+DjBlZRqX
- /Du9k92tEb+9OMxeANq4LEmuxK+/1A1XblbvP1GXFivKKXVSKun+NOxw6P/pY6JK3WX25RfzKJy
- 9gLzw5SLfluV7PvecOt51k+2cRwfOF6Zw2HPSyxx1Fv1XRQPA9Ib3ss5pNxC6JhO0Wxe1SjkIR3
- coIZb3q0JPtkU2lLfCotSAJh69UkQxhcs4eX1qDGq8oQROyMi+LE//wJJ5/I1CPzYt5QHV+a
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-23_06,2025-05-22_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- priorityscore=1501 adultscore=0 mlxlogscore=939 suspectscore=0 bulkscore=0
- impostorscore=0 phishscore=0 spamscore=0 mlxscore=0 lowpriorityscore=0
- clxscore=1015 malwarescore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
- definitions=main-2505230166
+From: Florian Fainelli <f.fainelli@gmail.com>
+Autocrypt: addr=f.fainelli@gmail.com; keydata=
+ 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
+ WlfRzlpjIPmdjgoicA==
+In-Reply-To: <aBTCWPSXgu9cId6D@jlelli-thinkpadt14gen4.remote.csb>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On 5/23/25 7:59 PM, Alex Elder wrote:
-> On 5/22/25 6:08 PM, Konrad Dybcio wrote:
->> From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
->>
->> The IP Accelerator hardware/firmware owns a sizeable region within the
->> IMEM, ominously named 'modem-tables', presumably having to do with some
->> internal IPA-modem specifics.
->>
->> It's not actually accessed by the OS, although we have to IOMMU-map it
->> with the IPA device, so that presumably the firmware can act upon it.
->>
->> Allow it as a subnode of IMEM.
->>
->> Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Moving CC list to To
+
+On 5/2/25 06:02, Juri Lelli wrote:
+> Hi,
 > 
-> So this will just show up as a subnode of an sram@... node,
-> the way "qcom,pil-reloc-info" does.  This is great.
+> On 29/04/25 10:15, Florian Fainelli wrote:
+>>
+>>
+>> On 4/22/2025 9:48 PM, Doug Berger wrote:
+>>> There is a hazard in the deadline scheduler where an offlined CPU
+>>> can have its free_cpus bit left set in the def_root_domain when
+>>> the schedutil cpufreq governor is used. This can allow a deadline
+>>> thread to be pushed to the runqueue of a powered down CPU which
+>>> breaks scheduling. The details can be found here:
+>>> https://lore.kernel.org/lkml/20250110233010.2339521-1-opendmb@gmail.com
+>>>
+>>> The free_cpus mask is expected to be cleared by set_rq_offline();
+>>> however, the hazard occurs before the root domain is made online
+>>> during CPU hotplug so that function is not invoked for the CPU
+>>> that is being made active.
+>>>
+>>> This commit works around the issue by ensuring the free_cpus bit
+>>> for a CPU is always cleared when the CPU is removed from a
+>>> root_domain. This likely makes the call of cpudl_clear_freecpu()
+>>> in rq_offline_dl() fully redundant, but I have not removed it
+>>> here because I am not certain of all flows.
+>>>
+>>> It seems likely that a better solution is possible from someone
+>>> more familiar with the scheduler implementation, but this
+>>> approach is minimally invasive from someone who is not.
+>>>
+>>> Signed-off-by: Doug Berger <opendmb@gmail.com>
+>>> ---
+>>
+>> FWIW, we were able to reproduce this with the attached hotplug.sh script
+>> which would just randomly hot plug/unplug CPUs (./hotplug.sh 4). Within a
+>> few hundred of iterations you could see the lock up occur, it's unclear why
+>> this has not been seen by more people.
+>>
+>> Since this is not the first posting or attempt at fixing this bug [1] and we
+>> consider it to be a serious one, can this be reviewed/commented on/applied?
+>> Thanks!
+>>
+>> [1]: https://lkml.org/lkml/2025/1/14/1687
 > 
-> Is it called "modem-tables" in internal documentation?  Or
-> did you choose this ominous name?
+> So, going back to the initial report, the thing that makes me a bit
+> uncomfortable with the suggested change is the worry that it might be
+> plastering over a more fundamental issue. Not against it, though, and I
+> really appreciate Doug's analysis and proposed fixes!
+> 
+> Doug wrote:
+> 
+> "Initially, CPU0 and CPU1 are active and CPU2 and CPU3 have been
+> previously offlined so their runqueues are attached to the
+> def_root_domain.
+> 1) A hot plug is initiated on CPU2.
+> 2) The cpuhp/2 thread invokes the cpufreq governor driver during
+>     the CPUHP_AP_ONLINE_DYN step.
+> 3) The sched util cpufreq governor creates the "sugov:2" thread to
+>     execute on CPU2 with the deadline scheduler.
+> 4) The deadline scheduler clears the free_cpus mask for CPU2 within
+>     the def_root_domain when "sugov:2" is scheduled."
+> 
+> I wonder if it's OK to schedule sugov:2 on a CPU that didn't reach yet
+> complete online state. Peter, others, what do you think?
 
-Downstream. It's hard to find accurate information on this.
+Peter, can you please review this patch? Thank you
+-- 
+Florian
 
-Konrad
