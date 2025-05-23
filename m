@@ -1,286 +1,1038 @@
-Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
+Received: from mail78-50.sinamail.sina.com.cn (mail78-50.sinamail.sina.com.cn [219.142.78.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F10E92DCC18;
-	Fri, 23 May 2025 02:55:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=210.61.82.184
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747968946; cv=fail; b=sNRPo9wquMsZPVmjHdy+3GBP8zTCAaS8lJhKatjl2M6UDYepjtCr/uK4vD8Ztffa0zyvbfDI+iW45Ll7ZfLgog1rXFDNvDGIeD2lM2LPY+FrV4OTHyhTousJZwdw4pxHFjo3IThBxqdEus9LwAr8k+1XwZU0Q4e6fXFUXBBAthQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747968946; c=relaxed/simple;
-	bh=a4dibPfWiBNUSSIWVim3AHWgoWlXOrlXGGpX9qnKd98=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=RAhLE9atGe9tlqENV8uHJM7Lkdo/DTIRKqVAPqM9y/4ZlGHw+EGvhYwGJS1XoliLxLCYbibVkdC8x3oot8xpU4xqS1KU08vgoDIm+yZnCr49+oeLb6UkyTJ+XsESPiTuba1DjOomMgUsHT5sxnNDKg6gy0F/OyEl/GhBtbwLYE0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=qsncPp6s; dkim=pass (1024-bit key) header.d=mediateko365.onmicrosoft.com header.i=@mediateko365.onmicrosoft.com header.b=byUE4hhV; arc=fail smtp.client-ip=210.61.82.184
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="qsncPp6s";
-	dkim=pass (1024-bit key) header.d=mediateko365.onmicrosoft.com header.i=@mediateko365.onmicrosoft.com header.b="byUE4hhV"
-X-UUID: 630c5dce378111f082f7f7ac98dee637-20250523
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=MIME-Version:Content-Transfer-Encoding:Content-ID:Content-Type:In-Reply-To:References:Message-ID:Date:Subject:CC:To:From; bh=a4dibPfWiBNUSSIWVim3AHWgoWlXOrlXGGpX9qnKd98=;
-	b=qsncPp6s1rRJihRxIjxFo5SvHtvxjJu4wvXNhP6Ok7BBd3u+FFCCtQWGA7V9z1VjpaoB7ypjMmY5sPx6o+kfi8MVyPyNn4J6jEfJ4pg0Po0xTWZPpzjiYFSgoupTqN/L0LdY5c7p6KYs//i1ylAxQhTWwWylWVO4bmzbPiO9Rto=;
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.2.1,REQID:ab264a9e-f911-4c86-a87a-085ac8a423d4,IP:0,UR
-	L:12,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
-	release,TS:12
-X-CID-META: VersionHash:0ef645f,CLOUDID:7efce157-abad-4ac2-9923-3af0a8a9a079,B
-	ulkID:nil,BulkQuantity:0,Recheck:0,SF:80|81|82|83|102|110|111,TC:nil,Conte
-	nt:0|50,EDM:-3,IP:nil,URL:99|11|97|83|80|1,File:nil,RT:nil,Bulk:nil,QS:nil
-	,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0,NGT
-X-CID-BAS: 0,NGT,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_ULN
-X-UUID: 630c5dce378111f082f7f7ac98dee637-20250523
-Received: from mtkmbs10n1.mediatek.inc [(172.21.101.34)] by mailgw02.mediatek.com
-	(envelope-from <ck.hu@mediatek.com>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 405536978; Fri, 23 May 2025 10:55:30 +0800
-Received: from mtkmbs10n1.mediatek.inc (172.21.101.34) by
- mtkmbs11n2.mediatek.inc (172.21.101.187) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.39; Fri, 23 May 2025 10:55:27 +0800
-Received: from HK3PR03CU002.outbound.protection.outlook.com (172.21.101.237)
- by mtkmbs10n1.mediatek.inc (172.21.101.34) with Microsoft SMTP Server id
- 15.2.1258.39 via Frontend Transport; Fri, 23 May 2025 10:55:27 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ZBn+AImhtIsWaMnRAGmS7qXt8EQ6WWZeLj1b+NS/2+Q5PEEVKYmq9F/8fbUw3TlEL2uaeABoA8RHm0b0zgOUQDWChwYjnC3UP6DqH/6ESzkqHbPxP7Sfyxr9HeQiJWHTKfXUwrg2OVRJ16lXPhIGqQIxIj+5q9nhiRXLQr4O3w4RYiMeqV+IImgrM84kojUUXFrvdGD7/QlsLpV0qyD7BlG0qrN1WFSjx8yzQr8YY5zgJoTU9wBbRea8Mnjog3qaLZ4svDD3i62Jp4C467mkCAgS9cfddXqSGR1xD2ap710eGDWXRcTEfuNQ74WHVM5GWT5VMcHBDG8l7C08jyZvJQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=a4dibPfWiBNUSSIWVim3AHWgoWlXOrlXGGpX9qnKd98=;
- b=UIN8fkoIFp1o+CW0rkYsFnuYbOQW3pQpaoON77kkTwOJIZ+JCXGur5iWeBogfgteTB7YZzQlF0vgkvqXI4Xu7m6M186YOwMjoCdd4jjVzabGD/RliDCei5g0wXM9SqyTx3MW6OGqJolTPDGw/NfQyXCkJbQJMYZcCcNN6/Iq4eyV173MLZCSWnl1jhku3GsmAoEYGbI9e7VLg+2Dn3nGErz6Qajoex/jGrF/CTW05TuGkh+H02zRFHLkLI/nQyowNMQ00t/hV0HYnn7KGlIoRqoOal6vMjhxto+C2WErXuyi0cNh7oxvOxkf0GoR+GwoIgpQ9dSqwmdDMQMLUYEI3A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mediatek.com; dmarc=pass action=none header.from=mediatek.com;
- dkim=pass header.d=mediatek.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mediateko365.onmicrosoft.com; s=selector2-mediateko365-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=a4dibPfWiBNUSSIWVim3AHWgoWlXOrlXGGpX9qnKd98=;
- b=byUE4hhV4GiCGTFu71SuJgN7HQ3e1WTz+0an6Y0bKm+gID2gQx5Yno2gt7QA28fal8iDAFOKsF33KkrrmrF9ox9M+z4wAqtLlmoK7u8BIc3ORxVVLLLIseF15JdDK9ygMFXrdRtul6IlToHkN5OWVL4AwG6brqZuVG8LPQp1nII=
-Received: from TYZPR03MB6624.apcprd03.prod.outlook.com (2603:1096:400:1f4::13)
- by KU2PPF9D6AFF433.apcprd03.prod.outlook.com (2603:1096:d18::41c) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.21; Fri, 23 May
- 2025 02:55:25 +0000
-Received: from TYZPR03MB6624.apcprd03.prod.outlook.com
- ([fe80::9ce6:1e85:c4a7:2a54]) by TYZPR03MB6624.apcprd03.prod.outlook.com
- ([fe80::9ce6:1e85:c4a7:2a54%5]) with mapi id 15.20.8746.030; Fri, 23 May 2025
- 02:55:24 +0000
-From: =?utf-8?B?Q0sgSHUgKOiDoeS/iuWFiSk=?= <ck.hu@mediatek.com>
-To: "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "robh@kernel.org"
-	<robh@kernel.org>, "chunkuang.hu@kernel.org" <chunkuang.hu@kernel.org>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	=?utf-8?B?TmFuY3kgTGluICjmnpfmrKPonqIp?= <Nancy.Lin@mediatek.com>,
-	"matthias.bgg@gmail.com" <matthias.bgg@gmail.com>, "krzk+dt@kernel.org"
-	<krzk+dt@kernel.org>
-CC: =?utf-8?B?U2luZ28gQ2hhbmcgKOW8teiIiOWciyk=?= <Singo.Chang@mediatek.com>,
-	"broonie@kernel.org" <broonie@kernel.org>,
-	Project_Global_Chrome_Upstream_Group
-	<Project_Global_Chrome_Upstream_Group@mediatek.com>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	=?utf-8?B?SmFzb24tSkggTGluICjmnpfnnb/npaUp?= <Jason-JH.Lin@mediatek.com>,
-	"linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>,
-	=?utf-8?B?UGF1bC1wbCBDaGVuICjpmbPmn4/pnJYp?= <Paul-pl.Chen@mediatek.com>,
-	"linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>,
-	"conor+dt@kernel.org" <conor+dt@kernel.org>
-Subject: Re: [PATCH 1/2] dt-bindings: regulator: mediatek: Add MT8196 vmm
- controller
-Thread-Topic: [PATCH 1/2] dt-bindings: regulator: mediatek: Add MT8196 vmm
- controller
-Thread-Index: AQHbyy/XhwEoa98C3ESnGkjdlfg3IrPfheIA
-Date: Fri, 23 May 2025 02:55:24 +0000
-Message-ID: <caab284a85ad5906d1d2befd6a3bd2ef77301758.camel@mediatek.com>
-References: <20250522150426.3418225-1-nancy.lin@mediatek.com>
-	 <20250522150426.3418225-2-nancy.lin@mediatek.com>
-In-Reply-To: <20250522150426.3418225-2-nancy.lin@mediatek.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-user-agent: Evolution 3.52.3-0ubuntu1 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=mediatek.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: TYZPR03MB6624:EE_|KU2PPF9D6AFF433:EE_
-x-ms-office365-filtering-correlation-id: 4eb1c070-7cee-4211-dfae-08dd99a5441f
-x-ld-processed: a7687ede-7a6b-4ef6-bace-642f677fbe31,ExtAddr
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|1800799024|366016|7416014|376014|38070700018;
-x-microsoft-antispam-message-info: =?utf-8?B?UzBqSzhsdnJxN2dIRUNlY3RkVHFnTHdKR2EvUHpGaTZDcTF4TzVsRk5Tbnpr?=
- =?utf-8?B?RHd3SnFxYjJ5cVlKSGVnY2dGRkJrY0p2NmF3Nk9rSHdXTVI2S09UWFJrM1Mr?=
- =?utf-8?B?T3dVTXY4WElPNEF5WHZUU1h6YnNPL1BWNUJqelgvUHB4SU9HM0lLa0IzdXpZ?=
- =?utf-8?B?eXNxRjNaWW1IYnEyNHdRUkI1anF3ZGxjS290YW9ocGFsZlJENG9LR0xKQUlC?=
- =?utf-8?B?T3hpZmxEcUtqVkRwdW11WjRldzRHcDNxQit4MitjclNTT0xoU21iYlRuQWo5?=
- =?utf-8?B?NUVyQW91REFDOEFWbC91ZnNhNkVVNkdpTTBCTnFCRTFiVWlHdEJiNE5zSElB?=
- =?utf-8?B?VlFuWXF6YmZaVkZIYlBjbC84Qjg5ZE9WU1pvWUN4dkRtWG9BK1p2VE1LWmlW?=
- =?utf-8?B?Vjk0TE5yK2lVUU16Zjd5K2hibTA3Um9pTkFJMjBRYUdqOUJreUFTNnpvRWth?=
- =?utf-8?B?QVRCN2FCNDdicmJYbzRyKzFuZGhNdzFPQ054NW5xVWQzci9nMnZrbHRwUEVz?=
- =?utf-8?B?eWFyUkVJZVBPeGU5SStrQkErcUFqWmFPUEVhbU9xanBPRVV2ZCtPcFAySDdS?=
- =?utf-8?B?RGsvQUVUSkg5TVlNMHpoVjk4SXhDWEl1R05rNXdCZU9pNXhYTEN6UFJtbDRB?=
- =?utf-8?B?T3dtTlpydDROU2ozaVNwMm1pUlIvVkNuUlIxWDRRd2RsanB3V1UxNktseGU4?=
- =?utf-8?B?NGpubTRSZjVBWU0wMy83VEc4TFJjTEhPZ0t6VkZEcVRtQkVacjJqc1FQREZU?=
- =?utf-8?B?ZVNHQUV0N2tjZHdaNEdid1pvSFk4VEJCQUNVZ2ZES2l1YjNYRFRnbzVxbkNZ?=
- =?utf-8?B?dEltYW41SXRWRlBWcXVWdW1JbmpxdExpcUkxSGYzZ3Vhc2hHaWN5T1kvRmlJ?=
- =?utf-8?B?SmwzSU45QW1SRVNRUzAwNnduUTVsUmdhWEZHdWp2dUs1NkdHU2ltOEkvTW1V?=
- =?utf-8?B?YU14MzlBTU8wSm5XbVBIbDIrTGxVSGx5OWsrRjcydi95SDFEMmtvODJ6Zktq?=
- =?utf-8?B?SmJ3Rzc3TU9iVkdMYXMvSjZGMUZ0bktESDQvN3pEVXhHUHJsVC9LRFY4bWxL?=
- =?utf-8?B?c2srbVBoU1ZiL3pMK2krS2lDMGx1M1NrZmJoazBaNThyWG1UZ2VyOVpCa3l0?=
- =?utf-8?B?TFIrWmdmZFhNMndkNU1rTXY5YVU4OXRvdmNyMVJMdjNDYVFseUh3d09vNWNC?=
- =?utf-8?B?WU9xa0syVlNyL2JhTGcxMTN5bTJzdC9aYSttQkxJZ213OGdWWGJoYkhsZTAv?=
- =?utf-8?B?MXAvcFdBSlJ1OHBYWXdVUnIrNXNUYncvZnBJZTBLNnYvdStWTE55dVAyMXI3?=
- =?utf-8?B?NVozd2FDeEptMWRMK3IrVHpxa1IzVG1ocVJhMFJSeFh3bCtwWkNhSnhiaW1s?=
- =?utf-8?B?Unl4YmlkM0gxR3F6MVp1WXEzdUFRQllRYTZTeUZEbW9sWTY0OEhYVlFoWTZV?=
- =?utf-8?B?dGdzSlJ5WjdzVS9qUVRua1ZNelk0Z1RyZGl2elBCVUU5SjFGdER2QXAwTUlX?=
- =?utf-8?B?di9sQXRWaWo0SW82R0JnRE5JUWhhRWJqdUI1R3BUbzBEZ1pwY09VMkNNNmQw?=
- =?utf-8?B?K2l5Vi9TM3BpRUZqWlk2dERNWEtpdWt3UDFxQ3B5ck9sTndwMC9vQ05EaEFu?=
- =?utf-8?B?MWpWdjdXR3Rjd1UyV052SVVuUDFTNkFBM3hhcytCTmxrMWJzUnAzbThsUi9Y?=
- =?utf-8?B?KzRXUjJaUWpXekV4TVViS2tpczBreVpoUUt6VDYwamd0VTZSWlhsR3NOVks0?=
- =?utf-8?B?dlVCVzAyRm5KNjVlaWhnNjQybjE5R0JmVHhqRDJtVGlJNHFlVXVIWVA4TlZq?=
- =?utf-8?B?VzJUZklGcUFkL3IyNjV4K1J4eEI2dEd5SGc3U29nUnNZMm1sdzZjZHhCTWtn?=
- =?utf-8?B?c3hFUHhsRVdpTFlyaUU3SEJJZ2NmY1gyUVdqVGJaOGh4bTZrOHpPWWoxczg5?=
- =?utf-8?Q?UGZMhTGqO5Q=3D?=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYZPR03MB6624.apcprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?bFVpY1JEWG9SZjF3dlFLckR6T21IbEUvanR6ZjI1QW1oZW9BU1NzUzdhKzlw?=
- =?utf-8?B?LytSMUtpbUsybnRFNE1VR1hFdVZSYnMvREw5SENyc3VJam0wNjZtTVpvbjlu?=
- =?utf-8?B?VjRKamV6em5RaXNLaEVNMXd3UVdSQUh2ZVNqT2N0V2xHVUJkMnpYMVhQaVFl?=
- =?utf-8?B?azNQaXRHYnpISm1yWmZiUjREeDluYmgrVjhWeEEvM1FwY3JzdXoxUTNwQll0?=
- =?utf-8?B?ei9nWGNTZ2dxdmdsWFZ6LzVJbmlBdCtRTGo3RzRtVHNXelhrQzJaY3hEVXgy?=
- =?utf-8?B?cmRjMm5aZDZtTk1uZjNZM0xwT0h2bkdNOTNySWZrT3lmbUhaeU9RbmV0SDUw?=
- =?utf-8?B?YmNrSzA3YVJqb3RlaUYyQmVjczhwRkRXWUhnbUxRVkNLbTBOTVFSRitobXpG?=
- =?utf-8?B?NUJMWTZVdGZuM1JPWHJ0a1FEbVo1YzI1OVpQZjhFOVQ3YUQzVmYycTVBUTg4?=
- =?utf-8?B?YnFDOVBuS0dLL1JjRHY1RDZLZFo2WVpXWHZhT1djZXV3c2dJWDRaZ1RLZHo0?=
- =?utf-8?B?N01oQXJoU3QvMzczK0FhbXRjcXVuNTJWQmxQYitSMkl0K245R1hpVnMzaEFp?=
- =?utf-8?B?cGo5azhMVzlZMWV1QWhkL0d2OHFsWWNPclB5YjBGcXlTeVBzajJpdWl6cWNB?=
- =?utf-8?B?ZXlMdXJwaTZYMjBpVnVyaCtSajVEUXFQZng0S0ZOM2hxMUZwMUZWNzZrODR1?=
- =?utf-8?B?RjdiZUY5ZnRrRUVlVWU1aGcrYUx5ZmJaaElZMjJ0MkltOHdNUkNyTE9WdTRW?=
- =?utf-8?B?QXd2VU5vVFZOazJUMXQ0VHFaMGpzN1pwRUZ5M0RPSzJtV01FeSs1Nm1MeVQr?=
- =?utf-8?B?clFrTHdpSkF3YmJnQmRCUXlZbXR6a2Z1aHZnMW5KRGc2QkhVVENYSDZsYkdn?=
- =?utf-8?B?WGRoUVBtc2pyMUsvblBxT2VaUGhaQUlTYUFoT1F4cG9XYW1uVVRRYXB1UXRu?=
- =?utf-8?B?d0J1eDNMZ2xGL0gxN0FqNXdYK09FRWRIVGEraTRaTkwyY3pmNDArM1FFRm1P?=
- =?utf-8?B?WUZLV282c2NUZXdFS01PamNjTjdOdCtkanZ0Z0ZUOGh4amhmZVZmbkhjWDFt?=
- =?utf-8?B?OEdSem9tRlMxYzBzbEM5aUpFQkZSUW1CdTNUckNIeVJiV1FDTUJGaHc2UHpR?=
- =?utf-8?B?Y3dkL3o1MWlud29VNnhkdUdnQWhodkg3Si9tbk9pbmhCcUdKZUlZSWNhWDdQ?=
- =?utf-8?B?ZjZGcTlFQlhKMnVrcjdrTWlrYW1ob0p6SmZBSnpaRmZRUWVZcW9ySjFRdC9E?=
- =?utf-8?B?enpmQ2w3S0MzSXlEcllsMjhTeG9Jd1Uva1hHazR3ZkwvMUhTZnFnLzlqTWxM?=
- =?utf-8?B?YU9EYlplRU1FY2dycGNpd2dQOFNWa0tFWG5jblV5OWgrREVtZkYwQzAxTExr?=
- =?utf-8?B?bFVXUFpobDBpaFQ3bDlHRmVqQVlVL1FMdHRFZGVhNGI5SFk5Mkh6azM1Ukww?=
- =?utf-8?B?UzVWOEZyVmhuMkxsb3NmRWNJU1VhY1N5OGxDWXUwSnM2ZVgxMW4ydlMrcWw5?=
- =?utf-8?B?TUtpUDViQXZtNFl6NXVRNFdWbEhHWWtWd0gxZkpvYWJDc0luRE84YUJRa1J2?=
- =?utf-8?B?SXduNXErOStIUzlXNklnQ0JtajJsR2l0WEh4aVg5QmF6N01vbWVDWHJUTDNo?=
- =?utf-8?B?NWZJNThqRVhKMk9pdXBrNTRQREFtQUN6VGd2Rm1XcTZXT0pJUVVaYXdMK3Fs?=
- =?utf-8?B?RUU1aElqVmRYNzVFK2Q1RURGWHNieTNGZTVPMmhOY05uc2lMV2ZtUkttMDJ1?=
- =?utf-8?B?N2ZoMWMxRHNjZFFoTTArWGJyeVZJQk9uWTZRa1poSFFqRTJ3REtyRUJSdENq?=
- =?utf-8?B?SDh2VnZSNTZySEZMQzR4VFFkK2pWV1djMnBqQzZOUi9hMHJYSTNIeXFvZmdh?=
- =?utf-8?B?K3EzaFFrQUdGa25vZU85OGxjMVVpTUtKczkvckxzWUxROUp6YzhHUXFvay9P?=
- =?utf-8?B?Ym53a056U1ZEa28wV2ZRNEZPMVBMWUpueEJuZFVTWDR0WDlyWlFlTWhWRTFO?=
- =?utf-8?B?dDV4UWQ5M0pHS2ZxUEtNMlhuZVdieHAwLzMveTZjRG9scjA2S213TmNsQmRO?=
- =?utf-8?B?WHdVVDRCVmFPcStJUkNMTUgxMTBSbkVtdGJvU3RYRnhmRFB4MVhabDlFdEJ2?=
- =?utf-8?Q?hsi1p6t+4Ie/p3K80Pe0/T8VM?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <B20BF4C4F278AF4A878116862BC59F24@apcprd03.prod.outlook.com>
-Content-Transfer-Encoding: base64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53B262054E4
+	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 02:55:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=219.142.78.50
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747968950; cv=none; b=Kk/5P13gr4AKqL8wO3rnhrATbGMTh4cYsiqWD29dmTb5nRLZ78Tz9U9PbWIsz/VvBwsIe5fHw6idzZch6C5rjt1f93Obj+jAzQEMx+7d3h9u1sbScARLP5dsj6BQ4nUGrULtnhs6K+KgxipGl6tKXKTeKuduc6gQYNkASZl32es=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747968950; c=relaxed/simple;
+	bh=onf9/6nuP/970fbOfg4gllUCRYBMCYrVyep3r62D05E=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=OBpqCAecevPcVBnmBlCMRdz1bFEHnnLv1E/JjVVwdrf8HxKOEI9z5s3VPD1oqfM0ntHh0tPbb0YoMuzCwo9zhpO888i8VJVb/z5pPhaRLvI5B4ZKAW3HUGY3dJ9sEgOvS/5F0wLvy8PZWt54UwMFNh7mMQG+HYoDYK16Vkm5U9c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=everest-semi.com; spf=pass smtp.mailfrom=everest-semi.com; arc=none smtp.client-ip=219.142.78.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=everest-semi.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=everest-semi.com
+Received: from unknown (HELO zy-virtual-machine.localdomain)([180.172.39.205])
+	by sina.net (10.185.250.30) with ESMTP
+	id 682FE38700005A34; Fri, 23 May 2025 10:55:07 +0800 (CST)
+X-Sender: zhangyi@everest-semi.com
+X-Auth-ID: zhangyi@everest-semi.com
+Authentication-Results: sina.net;
+	 spf=none smtp.mailfrom=zhangyi@everest-semi.com;
+	 dkim=none header.i=none;
+	 dmarc=none action=none header.from=zhangyi@everest-semi.com
+X-SMAIL-MID: 0DFF9BFB6F2C4C75A15B587AEF0F6CF1
+X-SMAIL-UIID: 0DFF9BFB6F2C4C75A15B587AEF0F6CF1-20250523-105507
+From: Zhang Yi <zhangyi@everest-semi.com>
+To: broonie@kernel.org,
+	robh@kernel.org,
+	tiwai@suse.com,
+	devicetree@vger.kernel.org,
+	conor+dt@kernel.org,
+	lgirdwood@gmail.com,
+	linux-kernel@vger.kernel.org,
+	linux-sound@vger.kernel.org,
+	perex@perex.cz,
+	krzk+dt@kernel.org
+Cc: amadeuszx.slawinski@linux.intel.com,
+	krzk@kernel.org,
+	Zhang Yi <zhangyi@everest-semi.com>
+Subject: [PATCH v3 2/2] ASoC: codecs: add support for ES8375
+Date: Fri, 23 May 2025 10:55:02 +0800
+Message-Id: <20250523025502.23214-3-zhangyi@everest-semi.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20250523025502.23214-1-zhangyi@everest-semi.com>
+References: <20250523025502.23214-1-zhangyi@everest-semi.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: TYZPR03MB6624.apcprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4eb1c070-7cee-4211-dfae-08dd99a5441f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 May 2025 02:55:24.7732
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a7687ede-7a6b-4ef6-bace-642f677fbe31
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: CFTY327UuZI+ce+riM3coFjFLrX3yrkgzP3b8Pr/9FXvZWJOy6t0AhAhl4gsa7GhB5Te04mXVTqWsE1dDz7EvQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: KU2PPF9D6AFF433
 
-T24gVGh1LCAyMDI1LTA1LTIyIGF0IDIzOjAzICswODAwLCBOYW5jeS5MaW4gd3JvdGU6DQo+IEZy
-b206IE5hbmN5IExpbiA8bmFuY3kubGluQG1lZGlhdGVrLmNvbT4NCj4gDQo+IEFkZCBhIGRldmlj
-ZSB0cmVlIGJpbmRpbmcgZG9jdW1lbnQgZm9yIHRoZSBNZWRpYVRlayBNVDgxOTYgVk1NIChWY29y
-ZQ0KPiBmb3IgTXVsdGlNZWRpYSkgcmVndWxhdG9yIGNvbnRyb2xsZXIuIFRoZSBWTU0gY29udHJv
-bGxlciBhY3RzIGFzIHRoZQ0KPiBtYWluIHBvd2VyIHN1cHBsaWVyIGZvciBtdWx0aW1lZGlhIHBv
-d2VyIGRvbWFpbnMsIHN1Y2ggYXMgdGhvc2UgdXNlZA0KPiBieSBkaXNwbGF5LCB2aWRlbyBlbmNv
-ZGUgYW5kIGRlY29kZSBzdWJzeXN0ZW1zLiBJdCBwcm92aWRlcyB2aXJ0dWFsDQo+IHJlZ3VsYXRv
-cnMgdGhhdCBzZXJ2ZSBhcyB0aGUgcG93ZXIgc291cmNlcyBmb3IgdmFyaW91cyBtdWx0aW1lZGlh
-IElQcywNCj4gYW5kIGNvb3JkaW5hdGVzIHdpdGggdGhlIGhhcmR3YXJlIGNvbW1vbiBjbG9jayBm
-cmFtZXdvcmsgKGh3Y2NmKSBhbmQNCj4gdGhlIFZpZGVvIENvbXBhbmlvbiBQcm9jZXNzb3IgKFZD
-UCkgdG8gbWFuYWdlIHRoZSBwb3dlciBkb21haW5zIG9mDQo+IHRoZXNlIGNvbXBvbmVudHMuIFRo
-ZSByZWd1bGF0b3IgaXMgY29udHJvbGxlZCBieSB0aGUgVkNQIGZpcm13YXJlLA0KPiBhbmQgdGhl
-IG9wZXJhdGluZyBzeXN0ZW0gc2lnbmFscyBpdHMgcmVxdWlyZW1lbnQgdGhyb3VnaCBhIHZvdGlu
-Zw0KPiBoYXJkd2FyZSBibG9jayAoaHdjY2YpLg0KPiANCj4gU2lnbmVkLW9mZi1ieTogTmFuY3kg
-TGluIDxuYW5jeS5saW5AbWVkaWF0ZWsuY29tPg0KPiAtLS0NCj4gIC4uLi9tZWRpYXRlayxtdDgx
-OTYtdm1tLXJlZ3VsYXRvci55YW1sICAgICAgICB8IDcwICsrKysrKysrKysrKysrKysrKysNCj4g
-IDEgZmlsZSBjaGFuZ2VkLCA3MCBpbnNlcnRpb25zKCspDQo+ICBjcmVhdGUgbW9kZSAxMDA2NDQg
-RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3JlZ3VsYXRvci9tZWRpYXRlayxtdDgx
-OTYtdm1tLXJlZ3VsYXRvci55YW1sDQo+IA0KPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9k
-ZXZpY2V0cmVlL2JpbmRpbmdzL3JlZ3VsYXRvci9tZWRpYXRlayxtdDgxOTYtdm1tLXJlZ3VsYXRv
-ci55YW1sIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3JlZ3VsYXRvci9tZWRp
-YXRlayxtdDgxOTYtdm1tLXJlZ3VsYXRvci55YW1sDQo+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0DQo+
-IGluZGV4IDAwMDAwMDAwMDAwMC4uYTUwZTM1YzJlMjM4DQo+IC0tLSAvZGV2L251bGwNCj4gKysr
-IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3JlZ3VsYXRvci9tZWRpYXRlayxt
-dDgxOTYtdm1tLXJlZ3VsYXRvci55YW1sDQo+IEBAIC0wLDAgKzEsNzAgQEANCj4gKyMgU1BEWC1M
-aWNlbnNlLUlkZW50aWZpZXI6IChHUEwtMi4wIE9SIEJTRC0yLUNsYXVzZSkNCj4gKyVZQU1MIDEu
-Mg0KPiArLS0tDQo+ICskaWQ6ICJodHRwczovL3VybGRlZmVuc2UuY29tL3YzL19faHR0cDovL2Rl
-dmljZXRyZWUub3JnL3NjaGVtYXMvcmVndWxhdG9yL21lZGlhdGVrLG10ODE5Ni12bW0tcmVndWxh
-dG9yLnlhbWwqX187SXchIUNUUk5LQTl3TWcwQVJidyFnYXdBVE5PVDN1NlVCdFR3dGdub1pnZ3dk
-d1ZMM1ZCdUZaUXlmLWJhVjhqMXdVTUlWMXNJYXFCdmhjcXRmblpTbG1YRmVzZW5ndFphWXhDV3RE
-byQgIg0KPiArJHNjaGVtYTogaHR0cHM6Ly91cmxkZWZlbnNlLmNvbS92My9fX2h0dHA6Ly9kZXZp
-Y2V0cmVlLm9yZy9tZXRhLXNjaGVtYXMvY29yZS55YW1sKl9fO0l3ISFDVFJOS0E5d01nMEFSYnch
-Z2F3QVROT1QzdTZVQnRUd3Rnbm9aZ2d3ZHdWTDNWQnVGWlF5Zi1iYVY4ajF3VU1JVjFzSWFxQnZo
-Y3F0Zm5aU2xtWEZlc2VuZ3RaYUxjbkdMbXckIA0KPiArDQo+ICt0aXRsZTogTWVkaWFUZWsgTVQ4
-MTk2IFZNTSAoVmNvcmUgZm9yIE11bHRpTWVkaWEpIFJlZ3VsYXRvciBDb250cm9sbGVyDQo+ICsN
-Cj4gK21haW50YWluZXJzOg0KPiArICAtIE5hbmN5IExpbiA8bmFuY3kubGluQG1lZGlhdGVrLmNv
-bT4NCj4gKw0KPiArZGVzY3JpcHRpb246IHwNCj4gKyAgVGhlIE1lZGlhVGVrIE1UODE5NiBWTU0g
-KFZjb3JlIGZvciBNdWx0aSBNZWRpYSkgY29udHJvbGxlciBhY3RzIGFzIHRoZQ0KPiArICBtYWlu
-IHBvd2VyIHN1cHBsaWVyIGZvciBtdWx0aW1lZGlhIHBvd2VyIGRvbWFpbnMsIHN1Y2ggYXMgdGhv
-c2UgdXNlZCBieQ0KPiArICBkaXNwbGF5LCB2aWRlbyBlbmNvZGUgYW5kIGRlY29kZSBzdWJzeXN0
-ZW1zLiBUaGUgVk1NIGhhcmR3YXJlIGJsb2NrDQo+ICsgIHByb3ZpZGVzIHZpcnR1YWwgcmVndWxh
-dG9ycyB0aGF0IHNlcnZlIGFzIHRoZSBwb3dlciBzb3VyY2VzIChzdXBwbGllcnMpDQo+ICsgIGZv
-ciB2YXJpb3VzIG11bHRpbWVkaWEgSVBzLiBJdCBjb29yZGluYXRlcyB3aXRoIHRoZSBNZWRpYVRl
-ayBoYXJkd2FyZQ0KPiArICBjb21tb24gY2xvY2sgZnJhbWV3b3JrIChIV0NDRikgYW5kIHRoZSBW
-aWRlbyBDb21wYW5pb24gUHJvY2Vzc29yIChWQ1ApDQo+ICsgIHRvIG1hbmFnZSB0aGUgcG93ZXIg
-ZG9tYWlucyBvZiB0aGVzZSBtdWx0aW1lZGlhIGNvbXBvbmVudHMuDQo+ICsNCj4gKyAgRWFjaCBj
-aGlsZCBub2RlIHVuZGVyIHRoZSBWTU0gbm9kZSByZXByZXNlbnRzIGEgdmlydHVhbCByZWd1bGF0
-b3INCj4gKyAgKGUuZy4sIHZkaXNwLCB2ZGVjLXZjb3JlKSBhbmQgbXVzdCBzcGVjaWZ5IGEgJ3Jl
-Z3VsYXRvci1uYW1lJy4NCj4gKw0KPiArcHJvcGVydGllczoNCj4gKyAgY29tcGF0aWJsZToNCj4g
-KyAgICBjb25zdDogIm1lZGlhdGVrLG10ODE5Ni12bW0iDQo+ICsNCj4gKyAgbWVkaWF0ZWssaHct
-Y2NmOg0KPiArICAgICRyZWY6IC9zY2hlbWFzL3R5cGVzLnlhbWwjL2RlZmluaXRpb25zL3BoYW5k
-bGUNCj4gKyAgICBkZXNjcmlwdGlvbjogUGhhbmRsZSB0byB0aGUgaGFyZHdhcmUgY29tbW9uIGNs
-b2NrIGZyYW1ld29yayBzeXNjb24gY29udHJvbGxlci4NCj4gKw0KPiArICBtZWRpYXRlayx2Y3A6
-DQo+ICsgICAgJHJlZjogL3NjaGVtYXMvdHlwZXMueWFtbCMvZGVmaW5pdGlvbnMvcGhhbmRsZQ0K
-PiArICAgIGRlc2NyaXB0aW9uOiBQaGFuZGxlIHRvIHRoZSBWaWRlbyBDby1Qcm9jZXNzb3IgKFZD
-UCkgbm9kZS4NCj4gKw0KPiArcGF0dGVyblByb3BlcnRpZXM6DQo+ICsgICJeKHZkaXNwfHZkZWMt
-dmNvcmUpJCI6DQo+ICsgICAgdHlwZTogb2JqZWN0DQo+ICsgICAgZGVzY3JpcHRpb246IHwNCj4g
-KyAgICAgIFZpcnR1YWwgcmVndWxhdG9yIGZvciBhIHNwZWNpZmljIG11bHRpbWVkaWEgZG9tYWlu
-Lg0KPiArICAgICAgVGhlIG5vZGUgbmFtZSBzaG91bGQgbWF0Y2ggdGhlIHN1cHBvcnRlZCByZWd1
-bGF0b3IgKGUuZy4sIHZkaXNwLCB2ZGVjLXZjb3JlKS4NCj4gKyAgICBwcm9wZXJ0aWVzOg0KPiAr
-ICAgICAgcmVndWxhdG9yLW5hbWU6DQo+ICsgICAgICAgIHR5cGU6IHN0cmluZw0KPiArICAgICAg
-ICBkZXNjcmlwdGlvbjogVGhlIG5hbWUgb2YgdGhlIHZpcnR1YWwgcmVndWxhdG9yLg0KPiArICAg
-IHJlcXVpcmVkOg0KPiArICAgICAgLSByZWd1bGF0b3ItbmFtZQ0KPiArICAgIGFkZGl0aW9uYWxQ
-cm9wZXJ0aWVzOiBmYWxzZQ0KPiArDQo+ICtyZXF1aXJlZDoNCj4gKyAgLSBjb21wYXRpYmxlDQo+
-ICsgIC0gbWVkaWF0ZWssaHctY2NmDQo+ICsgIC0gbWVkaWF0ZWssdmNwDQo+ICsNCj4gK2FkZGl0
-aW9uYWxQcm9wZXJ0aWVzOiBmYWxzZQ0KPiArDQo+ICtleGFtcGxlczoNCj4gKyAgLSB8DQo+ICsg
-ICAgdm1tOiB2bW0gew0KPiArICAgICAgY29tcGF0aWJsZSA9ICJtZWRpYXRlayxtdDgxOTYtdm1t
-IjsNCj4gKyAgICAgIG1lZGlhdGVrLGh3LWNjZiA9IDwmbW1faHd2PjsNCj4gKyAgICAgIG1lZGlh
-dGVrLHZjcCA9IDwmdmNwPjsNCj4gKw0KPiArICAgICAgdmRpc3A6IHZkaXNwIHsNCj4gKyAgICAg
-ICAgcmVndWxhdG9yLW5hbWUgPSAidmRpc3AiOw0KPiArICAgICAgfTsNCj4gKyAgICAgIHZkZWNf
-dmNvcmU6IHZkZWMtdmNvcmUgew0KPiArICAgICAgICByZWd1bGF0b3ItbmFtZSA9ICJ2ZGVjLXZj
-b3JlIjsNCj4gKyAgICAgIH07DQo+ICsgICAgfTsNCg0KZGV2aWNlIHRyZWUgaXMgdXNlZCB0byBk
-ZXNjcmliZSByZWFsIGhhcmR3YXJlLg0Kdm1tIGlzIGEgdmlydHVhbCBkZXZpY2Ugd2hpY2ggaXMg
-dXNlZCBmb3Igc29mdHdhcmUgdG8gaW50ZWdyYXRlIHRoZSByZWxhdGVkIGRyaXZlciwNCnNvIGl0
-IHNob3VsZCBub3QgaGF2ZSB0aGlzIHZpcnR1YWwgZGV2aWNlLg0KQWNjb3JkaW5nIHRvIHlvdXIg
-ZGVzY3JpcHRpb24sIHZjcCBpcyB0aGUgbWFzdGVyIHRvIGNvbnRyb2wgcmVndWxhdG9yLA0Kc28g
-SSB0aGluayB0aGUgZGV2aWNlIHRyZWUgd291bGQgYmUNCg0KdmNwIHsNCglyZWd1bGF0b3ItbmFt
-ZSA9ICJ2ZGlzcCIsICJ2ZGVjLXZjb3JlIjsNCn07DQoNCkFuZCB2Y3AgZHJpdmVyIGNvbnRyb2wg
-dGhlc2UgcmVndWxhdG9yLg0KDQpJJ20gbm90IHN1cmUgd2hhdCBkb2VzIGh3LWNjZiBkbywgaWYg
-aXQncyBhbHNvIGNvbnRyb2xsZWQgYnkgdmNwLCB0aGUgbm9kZSBzaG91bGQgYmUNCg0KdmNwIHsN
-CgltZWRpYXRlayxody1jY2YgPSA8Jm1tX2h3dj47DQoJcmVndWxhdG9yLW5hbWUgPSAidmRpc3Ai
-LCAidmRlYy12Y29yZSI7DQp9Ow0KDQpSZWdhcmRzLA0KQ0sNCg0KDQo=
+The driver is for codec es8375 of everest
+
+Signed-off-by: Zhang Yi <zhangyi@everest-semi.com>
+---
+ sound/soc/codecs/Kconfig  |   5 +
+ sound/soc/codecs/Makefile |   2 +
+ sound/soc/codecs/es8375.c | 793 ++++++++++++++++++++++++++++++++++++++
+ sound/soc/codecs/es8375.h | 123 ++++++
+ 4 files changed, 923 insertions(+)
+ create mode 100644 sound/soc/codecs/es8375.c
+ create mode 100644 sound/soc/codecs/es8375.h
+
+diff --git a/sound/soc/codecs/Kconfig b/sound/soc/codecs/Kconfig
+index 8fe795504dbb..126f897312d4 100644
+--- a/sound/soc/codecs/Kconfig
++++ b/sound/soc/codecs/Kconfig
+@@ -120,6 +120,7 @@ config SND_SOC_ALL_CODECS
+ 	imply SND_SOC_ES8326
+ 	imply SND_SOC_ES8328_SPI
+ 	imply SND_SOC_ES8328_I2C
++	imply SND_SOC_ES8375
+ 	imply SND_SOC_ES8389
+ 	imply SND_SOC_ES7134
+ 	imply SND_SOC_ES7241
+@@ -1212,6 +1213,10 @@ config SND_SOC_ES8328_SPI
+ 	depends on SPI_MASTER
+ 	select SND_SOC_ES8328
+ 
++config SND_SOC_ES8375
++	tristate "Everest Semi ES8375 CODEC"
++	depends on I2C
++
+ config SND_SOC_ES8389
+ 	tristate "Everest Semi ES8389 CODEC"
+ 	depends on I2C
+diff --git a/sound/soc/codecs/Makefile b/sound/soc/codecs/Makefile
+index c92824713df0..6d7aa109ede7 100644
+--- a/sound/soc/codecs/Makefile
++++ b/sound/soc/codecs/Makefile
+@@ -134,6 +134,7 @@ snd-soc-es8326-y := es8326.o
+ snd-soc-es8328-y := es8328.o
+ snd-soc-es8328-i2c-y := es8328-i2c.o
+ snd-soc-es8328-spi-y := es8328-spi.o
++snd-soc-es8375-y := es8375.o
+ snd-soc-es8389-y := es8389.o
+ snd-soc-framer-y := framer-codec.o
+ snd-soc-gtm601-y := gtm601.o
+@@ -557,6 +558,7 @@ obj-$(CONFIG_SND_SOC_ES8326)    += snd-soc-es8326.o
+ obj-$(CONFIG_SND_SOC_ES8328)	+= snd-soc-es8328.o
+ obj-$(CONFIG_SND_SOC_ES8328_I2C)+= snd-soc-es8328-i2c.o
+ obj-$(CONFIG_SND_SOC_ES8328_SPI)+= snd-soc-es8328-spi.o
++obj-$(CONFIG_SND_SOC_ES8375)    += snd-soc-es8375.o
+ obj-$(CONFIG_SND_SOC_ES8389)    += snd-soc-es8389.o
+ obj-$(CONFIG_SND_SOC_FRAMER)	+= snd-soc-framer.o
+ obj-$(CONFIG_SND_SOC_GTM601)    += snd-soc-gtm601.o
+diff --git a/sound/soc/codecs/es8375.c b/sound/soc/codecs/es8375.c
+new file mode 100644
+index 000000000000..decc86c92427
+--- /dev/null
++++ b/sound/soc/codecs/es8375.c
+@@ -0,0 +1,793 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * es8375.c  --  ES8375 ALSA SoC Audio Codec
++ *
++ * Copyright Everest Semiconductor Co., Ltd
++ *
++ * Authors:  Michael Zhang (zhangyi@everest-semi.com)
++ */
++
++#include <linux/gpio/consumer.h>
++#include <linux/clk.h>
++#include <linux/module.h>
++#include <linux/kernel.h>
++#include <linux/delay.h>
++#include <linux/i2c.h>
++#include <linux/regmap.h>
++#include <linux/regulator/consumer.h>
++#include <sound/core.h>
++#include <sound/pcm.h>
++#include <sound/pcm_params.h>
++#include <sound/tlv.h>
++#include <sound/soc.h>
++#include <linux/acpi.h>
++#include "es8375.h"
++
++struct	es8375_priv {
++	struct regmap *regmap;
++	struct clk *mclk;
++	struct regulator_bulk_data core_supply[2];
++	unsigned int  mclk_freq;
++	int mastermode;
++	u8 mclk_src;
++	u8 vddd;
++	enum snd_soc_bias_level bias_level;
++};
++
++static const char * const es8375_core_supplies[] = {
++	"vddd",
++	"vdda",
++};
++
++static const DECLARE_TLV_DB_SCALE(es8375_adc_osr_gain_tlv, -3100, 100, 0);
++static const DECLARE_TLV_DB_SCALE(es8375_adc_volume_tlv, -9550, 50, 0);
++static const DECLARE_TLV_DB_SCALE(es8375_adc_automute_attn_tlv, 0, 100, 0);
++static const DECLARE_TLV_DB_SCALE(es8375_adc_dmic_volume_tlv, 0, 600, 0);
++static const DECLARE_TLV_DB_SCALE(es8375_dac_volume_tlv, -9550, 50, 0);
++static const DECLARE_TLV_DB_SCALE(es8375_dac_vppscale_tlv, -388, 12, 0);
++static const DECLARE_TLV_DB_SCALE(es8375_dac_automute_attn_tlv, 0, 400, 0);
++static const DECLARE_TLV_DB_SCALE(es8375_automute_ng_tlv, -9600, 600, 0);
++
++static const char *const es8375_ramprate_txt[] = {
++	"0.125dB/LRCK",
++	"0.125dB/2LRCK",
++	"0.125dB/4LRCK",
++	"0.125dB/8LRCK",
++	"0.125dB/16LRCK",
++	"0.125dB/32LRCK",
++	"0.125dB/64LRCK",
++	"0.125dB/128LRCK",
++	"disable softramp",
++};
++static SOC_ENUM_SINGLE_DECL(es8375_adc_ramprate, ES8375_ADC2,
++		ADC_RAMPRATE_SHIFT_0, es8375_ramprate_txt);
++static SOC_ENUM_SINGLE_DECL(es8375_dac_ramprate, ES8375_DAC2,
++		DAC_RAMPRATE_SHIFT_0, es8375_ramprate_txt);
++
++static const char *const es8375_automute_ws_txt[] = {
++	"256 samples",
++	"512 samples",
++	"1024 samples",
++	"2048 samples",
++	"4096 samples",
++	"8192 samples",
++	"16384 samples",
++	"32768 samples",
++};
++static SOC_ENUM_SINGLE_DECL(es8375_adc_automute_ws, ES8375_ADC_AUTOMUTE,
++		ADC_AUTOMUTE_WS_SHIFT_3, es8375_automute_ws_txt);
++static SOC_ENUM_SINGLE_DECL(es8375_dac_automute_ws, ES8375_DAC_AUTOMUTE,
++		DAC_AUTOMUTE_WS_SHIFT_5, es8375_automute_ws_txt);
++
++static const char *const es8375_dmic_pol_txt[] = {
++	"Low",
++	"High",
++};
++
++static SOC_ENUM_SINGLE_DECL(es8375_dmic_pol, ES8375_ADC1,
++		DMIC_POL_SHIFT_4, es8375_dmic_pol_txt);
++
++static const char *const es8375_adc_hpf_txt[] = {
++	"Freeze Offset",
++	"Dynamic HPF",
++};
++
++static SOC_ENUM_SINGLE_DECL(es8375_adc_hpf, ES8375_HPF1,
++		ADC_HPF_SHIFT_5, es8375_adc_hpf_txt);
++
++static const char *const es8375_dmic_mux_txt[] = {
++	"AMIC",
++	"DMIC",
++};
++static const struct soc_enum es8375_dmic_mux_enum =
++	SOC_ENUM_SINGLE(ES8375_ADC1, ADC_SRC_SHIFT_7,
++			ARRAY_SIZE(es8375_dmic_mux_txt), es8375_dmic_mux_txt);
++
++static const struct snd_kcontrol_new es8375_dmic_mux_controls =
++	SOC_DAPM_ENUM("ADC MUX", es8375_dmic_mux_enum);
++
++static const struct snd_kcontrol_new es8375_snd_controls[] = {
++	SOC_SINGLE_TLV("ADC OSR Volume", ES8375_ADC_OSR_GAIN,
++			ADC_OSR_GAIN_SHIFT_0, ES8375_ADC_OSR_GAIN_MAX, 0,
++			es8375_adc_osr_gain_tlv),
++	SOC_SINGLE("ADC Invert Switch", ES8375_ADC1, ADC_INV_SHIFT_6, 1, 0),
++	SOC_SINGLE("ADC RAM Clear", ES8375_ADC1, ADC_RAMCLR_SHIFT_5, 1, 0),
++	SOC_ENUM("DMIC Polarity", es8375_dmic_pol),
++	SOC_SINGLE_TLV("DMIC Volume", ES8375_ADC1,
++		DMIC_GAIN_SHIFT_2, ES8375_DMIC_GAIN_MAX,
++		0, es8375_adc_dmic_volume_tlv),
++	SOC_ENUM("ADC Ramp Rate", es8375_adc_ramprate),
++	SOC_SINGLE_TLV("ADC Volume", ES8375_ADC_VOLUME,
++			ADC_VOLUME_SHIFT_0, ES8375_ADC_VOLUME_MAX,
++			0, es8375_adc_volume_tlv),
++	SOC_SINGLE("ADC Automute Switch", ES8375_ADC_AUTOMUTE,
++			ADC_AUTOMUTE_SHIFT_7, 1, 0),
++	SOC_ENUM("ADC Automute Winsize", es8375_adc_automute_ws),
++	SOC_SINGLE_TLV("ADC Automute Noise Gate", ES8375_ADC_AUTOMUTE,
++		ADC_AUTOMUTE_NG_SHIFT_0, ES8375_AUTOMUTE_NG_MAX,
++		0, es8375_automute_ng_tlv),
++	SOC_SINGLE_TLV("ADC Automute Volume", ES8375_ADC_AUTOMUTE_ATTN,
++			ADC_AUTOMUTE_ATTN_SHIFT_0, ES8375_ADC_AUTOMUTE_ATTN_MAX,
++			0, es8375_adc_automute_attn_tlv),
++	SOC_ENUM("ADC HPF", es8375_adc_hpf),
++
++	SOC_SINGLE("DAC DSM Mute Switch", ES8375_DAC1, DAC_DSMMUTE_SHIFT_7, 1, 0),
++	SOC_SINGLE("DAC DEM Mute Switch", ES8375_DAC1, DAC_DEMMUTE_SHIFT_6, 1, 0),
++	SOC_SINGLE("DAC Invert Switch", ES8375_DAC1, DAC_INV_SHIFT_5, 1, 0),
++	SOC_SINGLE("DAC RAM Clear", ES8375_DAC1, DAC_RAMCLR_SHIFT_4, 1, 0),
++	SOC_ENUM("DAC Ramp Rate", es8375_dac_ramprate),
++	SOC_SINGLE_TLV("DAC Volume", ES8375_DAC_VOLUME,
++			DAC_VOLUME_SHIFT_0, ES8375_DAC_VOLUME_MAX,
++			0, es8375_dac_volume_tlv),
++	SOC_SINGLE_TLV("DAC VPP Scale", ES8375_DAC_VPPSCALE,
++			DAC_VPPSCALE_SHIFT_0, ES8375_DAC_VPPSCALE_MAX,
++			0, es8375_dac_vppscale_tlv),
++	SOC_SINGLE("DAC Automute Switch", ES8375_DAC_AUTOMUTE1,
++			DAC_AUTOMUTE_EN_SHIFT_7, 1, 0),
++	SOC_SINGLE_TLV("DAC Automute Noise Gate", ES8375_DAC_AUTOMUTE1,
++		DAC_AUTOMUTE_NG_SHIFT_0, ES8375_AUTOMUTE_NG_MAX,
++		0, es8375_automute_ng_tlv),
++	SOC_ENUM("DAC Automute Winsize", es8375_dac_automute_ws),
++	SOC_SINGLE_TLV("DAC Automute Volume", ES8375_DAC_AUTOMUTE,
++			DAC_AUTOMUTE_ATTN_SHIFT_0, ES8375_DAC_AUTOMUTE_ATTN_MAX,
++			0, es8375_dac_automute_attn_tlv),
++};
++
++static const struct snd_soc_dapm_widget es8375_dapm_widgets[] = {
++	SND_SOC_DAPM_INPUT("MIC1"),
++	SND_SOC_DAPM_INPUT("DMIC"),
++	SND_SOC_DAPM_PGA("PGA", SND_SOC_NOPM, 0, 0, NULL, 0),
++	SND_SOC_DAPM_ADC("Mono ADC", NULL, SND_SOC_NOPM, 0, 0),
++	SND_SOC_DAPM_AIF_OUT("AIF1TX", "AIF1 Capture", 0, ES8375_SDP2,
++			ES8375_ADC_P2S_MUTE_SHIFT_5, 1),
++
++	SND_SOC_DAPM_MUX("ADC MUX", SND_SOC_NOPM, 0, 0, &es8375_dmic_mux_controls),
++
++	SND_SOC_DAPM_AIF_IN("AIF1RX", "AIF1 Playback", 0, ES8375_SDP,
++		SND_SOC_NOPM, 0),
++	SND_SOC_DAPM_DAC("Mono DAC", NULL, SND_SOC_NOPM, 0, 0),
++	SND_SOC_DAPM_OUTPUT("OUT"),
++};
++
++static const struct snd_soc_dapm_route es8375_dapm_routes[] = {
++	{"ADC MUX", "AMIC", "MIC1"},
++	{"ADC MUX", "DMIC", "DMIC"},
++	{"PGA", NULL, "ADC MUX"},
++	{"Mono ADC", NULL, "PGA"},
++	{"AIF1TX", NULL, "Mono ADC"},
++
++	{"Mono DAC", NULL, "AIF1RX"},
++	{"OUT", NULL, "Mono DAC"},
++};
++
++struct _coeff_div {
++	u16 mclk_lrck_ratio;
++	u32 mclk;
++	u32 rate;
++	u8 Reg0x04;
++	u8 Reg0x05;
++	u8 Reg0x06;
++	u8 Reg0x07;
++	u8 Reg0x08;
++	u8 Reg0x09;
++	u8 Reg0x0A;
++	u8 Reg0x0B;
++	u8 Reg0x19;
++	u8 dvdd_vol;
++	u8 dmic_sel;
++};
++
++static const struct _coeff_div coeff_div[] = {
++	{32, 256000, 8000, 0x05, 0x34, 0xDD, 0x55, 0x1F, 0x00, 0x95, 0x00, 0x1F, 2, 2},
++	{32, 512000, 16000, 0x05, 0x34, 0xDD, 0x55, 0x1F, 0x00, 0x94, 0x00, 0x1F, 2, 2},
++	{32, 1536000, 48000, 0x05, 0x33, 0xD5, 0x55, 0x1F, 0x00, 0x93, 0x00, 0x1F, 2, 2},
++	{36, 288000, 8000, 0x05, 0x34, 0xDD, 0x55, 0x23, 0x08, 0x95, 0x00, 0x1F, 2, 2},
++	{36, 576000, 16000, 0x05, 0x34, 0xDD, 0x55, 0x23, 0x08, 0x94, 0x00, 0x1F, 2, 2},
++	{36, 1728000, 48000, 0x05, 0x33, 0xD5, 0x55, 0x23, 0x08, 0x93, 0x00, 0x1F, 2, 2},
++	{48, 384000, 8000, 0x05, 0x14, 0x5D, 0x55, 0x17, 0x20, 0x94, 0x00, 0x28, 2, 2},
++	{48, 768000, 16000, 0x05, 0x14, 0x5D, 0x55, 0x17, 0x20, 0x94, 0x00, 0x28, 2, 2},
++	{48, 2304000, 48000, 0x05, 0x11, 0x53, 0x55, 0x17, 0x20, 0x92, 0x00, 0x28, 2, 2},
++	{50, 400000, 8000, 0x05, 0x14, 0x5D, 0x55, 0x18, 0x24, 0x94, 0x00, 0x27, 2, 2},
++	{50, 800000, 16000, 0x05, 0x14, 0x5D, 0x55, 0x18, 0x24, 0x94, 0x00, 0x27, 2, 2},
++	{50, 2400000, 48000, 0x05, 0x11, 0x53, 0x55, 0x18, 0x24, 0x92, 0x00, 0x27, 2, 2},
++	{64, 512000, 8000, 0x05, 0x14, 0x5D, 0x33, 0x1F, 0x00, 0x94, 0x00, 0x1F, 2, 2},
++	{64, 1024000, 16000, 0x05, 0x13, 0x55, 0x33, 0x1F, 0x00, 0x93, 0x00, 0x1F, 2, 2},
++	{64, 3072000, 48000, 0x05, 0x11, 0x53, 0x33, 0x1F, 0x00, 0x92, 0x00, 0x1F, 2, 2},
++	{72, 576000, 8000, 0x05, 0x14, 0x5D, 0x33, 0x23, 0x08, 0x94, 0x00, 0x1F, 2, 2},
++	{72, 1152000, 16000, 0x05, 0x13, 0x55, 0x33, 0x23, 0x08, 0x93, 0x00, 0x1F, 2, 2},
++	{72, 3456000, 48000, 0x05, 0x11, 0x53, 0x33, 0x23, 0x08, 0x92, 0x00, 0x1F, 2, 2},
++	{96, 768000, 8000, 0x15, 0x34, 0xDD, 0x55, 0x1F, 0x00, 0x94, 0x00, 0x1F, 2, 2},
++	{96, 1536000, 16000, 0x15, 0x34, 0xDD, 0x55, 0x1F, 0x00, 0x93, 0x00, 0x1F, 2, 2},
++	{96, 4608000, 48000, 0x15, 0x33, 0xD5, 0x55, 0x1F, 0x00, 0x92, 0x00, 0x1F, 2, 2},
++	{100, 800000, 8000, 0x05, 0x03, 0x35, 0x33, 0x18, 0x24, 0x94, 0x00, 0x27, 2, 2},
++	{100, 1600000, 16000, 0x05, 0x03, 0x35, 0x33, 0x18, 0x24, 0x93, 0x00, 0x27, 2, 2},
++	{100, 4800000, 48000, 0x03, 0x00, 0x31, 0x33, 0x18, 0x24, 0x92, 0x00, 0x27, 2, 2},
++	{128, 1024000, 8000, 0x05, 0x03, 0x35, 0x11, 0x1F, 0x00, 0x93, 0x01, 0x1F, 2, 2},
++	{128, 2048000, 16000, 0x03, 0x01, 0x33, 0x11, 0x1F, 0x00, 0x92, 0x01, 0x1F, 2, 2},
++	{128, 6144000, 48000, 0x03, 0x00, 0x31, 0x11, 0x1F, 0x00, 0x92, 0x01, 0x1F, 2, 2},
++	{144, 1152000, 8000, 0x05, 0x03, 0x35, 0x11, 0x23, 0x08, 0x93, 0x01, 0x1F, 2, 2},
++	{144, 2304000, 16000, 0x03, 0x01, 0x33, 0x11, 0x23, 0x08, 0x92, 0x01, 0x1F, 2, 2},
++	{144, 6912000, 48000, 0x03, 0x00, 0x31, 0x11, 0x23, 0x08, 0x92, 0x01, 0x1F, 2, 2},
++	{192, 1536000, 8000, 0x15, 0x14, 0x5D, 0x33, 0x1F, 0x00, 0x93, 0x02, 0x1F, 2, 2},
++	{192, 3072000, 16000, 0x15, 0x13, 0x55, 0x33, 0x1F, 0x00, 0x92, 0x02, 0x1F, 2, 2},
++	{192, 9216000, 48000, 0x15, 0x11, 0x53, 0x33, 0x1F, 0x00, 0x92, 0x02, 0x1F, 2, 2},
++	{250, 12000000, 48000, 0x25, 0x11, 0x53, 0x55, 0x18, 0x24, 0x92, 0x04, 0x27, 2, 2},
++	{256, 2048000, 8000, 0x0D, 0x03, 0x35, 0x11, 0x1F, 0x00, 0x92, 0x03, 0x1F, 2, 2},
++	{256, 4096000, 16000, 0x0B, 0x01, 0x33, 0x11, 0x1F, 0x00, 0x92, 0x03, 0x1F, 2, 2},
++	{256, 12288000, 48000, 0x0B, 0x00, 0x31, 0x11, 0x1F, 0x00, 0x92, 0x03, 0x1F, 2, 2},
++	{384, 3072000, 8000, 0x15, 0x03, 0x35, 0x11, 0x1F, 0x00, 0x92, 0x05, 0x1F, 2, 2},
++	{384, 6144000, 16000, 0x13, 0x01, 0x33, 0x11, 0x1F, 0x00, 0x92, 0x05, 0x1F, 2, 2},
++	{384, 18432000, 48000, 0x13, 0x00, 0x31, 0x11, 0x1F, 0x00, 0x92, 0x05, 0x1F, 2, 2},
++	{400, 19200000, 48000, 0x1B, 0x00, 0x31, 0x33, 0x18, 0x24, 0x92, 0x04, 0x27, 2, 2},
++	{500, 24000000, 48000, 0x23, 0x00, 0x31, 0x33, 0x18, 0x24, 0x92, 0x04, 0x27, 2, 2},
++	{512, 4096000, 8000, 0x1D, 0x03, 0x35, 0x11, 0x1F, 0x00, 0x92, 0x07, 0x1F, 2, 2},
++	{512, 8192000, 16000, 0x1B, 0x01, 0x33, 0x11, 0x1F, 0x00, 0x92, 0x07, 0x1F, 2, 2},
++	{512, 24576000, 48000, 0x1B, 0x00, 0x31, 0x11, 0x1F, 0x00, 0x92, 0x07, 0x1F, 2, 2},
++	{768, 6144000, 8000, 0x2D, 0x03, 0x35, 0x11, 0x1F, 0x00, 0x92, 0x0B, 0x1F, 2, 2},
++	{768, 12288000, 16000, 0x2B, 0x01, 0x33, 0x11, 0x1F, 0x00, 0x92, 0x0B, 0x1F, 2, 2},
++	{1024, 8192000, 8000, 0x3D, 0x03, 0x35, 0x11, 0x1F, 0x00, 0x92, 0x0F, 0x1F, 2, 2},
++	{1024, 16384000, 16000, 0x3B, 0x01, 0x33, 0x11, 0x1F, 0x00, 0x92, 0x0F, 0x1F, 2, 2},
++	{1152, 9216000, 8000, 0x45, 0x03, 0x35, 0x11, 0x1F, 0x00, 0x92, 0x0F, 0x1F, 2, 2},
++	{1152, 18432000, 16000, 0x43, 0x01, 0x33, 0x11, 0x1F, 0x00, 0x92, 0x0F, 0x1F, 2, 2},
++	{1200, 9600000, 8000, 0x5D, 0x03, 0x35, 0x33, 0x18, 0x24, 0x92, 0x11, 0x27, 2, 2},
++	{1200, 19200000, 16000, 0x5D, 0x03, 0x35, 0x33, 0x18, 0x24, 0x92, 0x11, 0x27, 2, 2},
++	{1536, 12288000, 8000, 0x5D, 0x03, 0x35, 0x11, 0x1F, 0x00, 0x92, 0x17, 0x1F, 2, 2},
++	{1536, 24576000, 16000, 0x5B, 0x01, 0x33, 0x11, 0x1F, 0x00, 0x92, 0x17, 0x1F, 2, 2},
++	{2048, 16384000, 8000, 0x7D, 0x03, 0x35, 0x11, 0x1F, 0x00, 0x92, 0x1F, 0x1F, 2, 2},
++	{2304, 18432000, 8000, 0x8D, 0x03, 0x35, 0x11, 0x1F, 0x00, 0x92, 0x23, 0x1F, 2, 2},
++	{2400, 19200000, 8000, 0xBD, 0x03, 0x35, 0x33, 0x18, 0x24, 0x92, 0x25, 0x27, 2, 2},
++	{3072, 24576000, 8000, 0xBD, 0x03, 0x35, 0x11, 0x1F, 0x00, 0x92, 0x2F, 0x1F, 2, 2},
++	{32, 3072000, 96000, 0x05, 0x11, 0x53, 0x55, 0x0F, 0x00, 0x92, 0x00, 0x37, 2, 2},
++	{64, 6144000, 96000, 0x03, 0x00, 0x31, 0x33, 0x0F, 0x00, 0x92, 0x00, 0x37, 2, 2},
++	{96, 9216000, 96000, 0x15, 0x11, 0x53, 0x55, 0x0F, 0x00, 0x92, 0x00, 0x37, 2, 2},
++	{128, 12288000, 96000, 0x0B, 0x00, 0x31, 0x33, 0x0F, 0x00, 0x92, 0x01, 0x37, 2, 2},
++};
++
++static inline int get_coeff(u8 vddd, u8 dmic, int mclk, int rate)
++{
++	int i;
++	u8 dmic_det, vddd_det;
++
++	for (i = 0; i < ARRAY_SIZE(coeff_div); i++) {
++		if (coeff_div[i].rate == rate && coeff_div[i].mclk == mclk) {
++			vddd_det = ~(coeff_div[i].dvdd_vol ^ vddd) & 0x01;
++			dmic_det = ~(coeff_div[i].dmic_sel ^ dmic) & 0x01;
++			vddd_det |= ~(coeff_div[i].dvdd_vol % 2) & 0x01;
++			dmic_det |= ~(coeff_div[i].dmic_sel % 2) & 0x01;
++
++			if (vddd_det && dmic_det)
++				return i;
++		}
++	}
++
++	return -EINVAL;
++}
++
++static int es8375_hw_params(struct snd_pcm_substream *substream,
++		struct snd_pcm_hw_params *params, struct snd_soc_dai *dai)
++{
++	struct snd_soc_component *component = dai->component;
++	struct es8375_priv *es8375 = snd_soc_component_get_drvdata(component);
++	int par_width = params_width(params);
++	u8 dmic_enable, iface = 0;
++	unsigned int regv;
++	int coeff, ret;
++
++	if (es8375->mclk_src == ES8375_BCLK_PIN) {
++		regmap_update_bits(es8375->regmap,
++				ES8375_MCLK_SEL, 0x80, 0x80);
++
++		es8375->mclk_freq = 2 * (unsigned int)par_width * params_rate(params);
++	}
++
++	regmap_read(es8375->regmap, ES8375_ADC1, &regv);
++	dmic_enable = regv >> 7 & 0x01;
++
++	ret = regulator_get_voltage(es8375->core_supply[ES8375_SUPPLY_VD].consumer);
++	switch (ret) {
++	case 1800000 ... 2000000:
++		es8375->vddd = ES8375_1V8;
++		break;
++	case 2500000 ... 3300000:
++		es8375->vddd = ES8375_3V3;
++		break;
++	default:
++		es8375->vddd = ES8375_3V3;
++		break;
++	}
++
++	coeff = get_coeff(es8375->vddd, dmic_enable, es8375->mclk_freq, params_rate(params));
++	if (coeff < 0) {
++		dev_warn(component->dev, "Clock coefficients do not match");
++	}
++	regmap_write(es8375->regmap, ES8375_CLK_MGR4,
++			coeff_div[coeff].Reg0x04);
++	regmap_write(es8375->regmap, ES8375_CLK_MGR5,
++			coeff_div[coeff].Reg0x05);
++	regmap_write(es8375->regmap, ES8375_CLK_MGR6,
++			coeff_div[coeff].Reg0x06);
++	regmap_write(es8375->regmap, ES8375_CLK_MGR7,
++			coeff_div[coeff].Reg0x07);
++	regmap_write(es8375->regmap, ES8375_CLK_MGR8,
++			coeff_div[coeff].Reg0x08);
++	regmap_write(es8375->regmap, ES8375_CLK_MGR9,
++			coeff_div[coeff].Reg0x09);
++	regmap_write(es8375->regmap, ES8375_CLK_MGR10,
++			coeff_div[coeff].Reg0x0A);
++	regmap_write(es8375->regmap, ES8375_CLK_MGR11,
++			coeff_div[coeff].Reg0x0B);
++	regmap_write(es8375->regmap, ES8375_ADC_OSR_GAIN,
++			coeff_div[coeff].Reg0x19);
++
++	switch (params_format(params)) {
++	case SNDRV_PCM_FORMAT_S16_LE:
++		iface |= 0x0c;
++		break;
++	case SNDRV_PCM_FORMAT_S20_3LE:
++		iface |= 0x04;
++		break;
++	case SNDRV_PCM_FORMAT_S24_LE:
++		break;
++	case SNDRV_PCM_FORMAT_S32_LE:
++		iface |= 0x10;
++		break;
++	}
++
++	regmap_update_bits(es8375->regmap, ES8375_SDP, 0x1c, iface);
++
++	return 0;
++}
++
++static int es8375_set_sysclk(struct snd_soc_dai *dai, int clk_id,
++		unsigned int freq, int dir)
++{
++	struct snd_soc_component *component = dai->component;
++	struct es8375_priv *es8375 = snd_soc_component_get_drvdata(component);
++
++	es8375->mclk_freq = freq;
++
++	return 0;
++}
++
++static int es8375_set_dai_fmt(struct snd_soc_dai *dai, unsigned int fmt)
++{
++	struct snd_soc_component *component = dai->component;
++	struct es8375_priv *es8375 = snd_soc_component_get_drvdata(component);
++	unsigned int iface, codeciface;
++
++	regmap_read(es8375->regmap, ES8375_SDP, &codeciface);
++
++	switch (fmt & SND_SOC_DAIFMT_CLOCK_PROVIDER_MASK) {
++	case SND_SOC_DAIFMT_CBC_CFP:
++		es8375->mastermode = 1;
++		regmap_update_bits(es8375->regmap, ES8375_RESET1,
++				0x80, 0x80);
++		break;
++	case SND_SOC_DAIFMT_CBC_CFC:
++		es8375->mastermode = 0;
++		regmap_update_bits(es8375->regmap, ES8375_RESET1,
++				0x80, 0x00);
++		break;
++	default:
++		return -EINVAL;
++	}
++
++	switch (fmt & SND_SOC_DAIFMT_FORMAT_MASK) {
++	case SND_SOC_DAIFMT_I2S:
++		codeciface &= 0xFC;
++		break;
++	case SND_SOC_DAIFMT_RIGHT_J:
++		return -EINVAL;
++	case SND_SOC_DAIFMT_LEFT_J:
++		codeciface &= 0xFC;
++		codeciface |= 0x01;
++		break;
++	case SND_SOC_DAIFMT_DSP_A:
++		codeciface &= 0xDC;
++		codeciface |= 0x03;
++		break;
++	case SND_SOC_DAIFMT_DSP_B:
++		codeciface &= 0xDC;
++		codeciface |= 0x23;
++		break;
++	default:
++		return -EINVAL;
++	}
++
++	regmap_read(es8375->regmap, ES8375_CLK_MGR3, &iface);
++
++	switch (fmt & SND_SOC_DAIFMT_INV_MASK) {
++	case SND_SOC_DAIFMT_NB_NF:
++		iface      &= 0xFE;
++		codeciface &= 0xDF;
++		break;
++	case SND_SOC_DAIFMT_IB_IF:
++		iface      |= 0x01;
++		codeciface |= 0x20;
++		break;
++	case SND_SOC_DAIFMT_IB_NF:
++		iface      |= 0x01;
++		codeciface &= 0xDF;
++		break;
++	case SND_SOC_DAIFMT_NB_IF:
++		iface      &= 0xFE;
++		codeciface |= 0x20;
++		break;
++	default:
++		return -EINVAL;
++	}
++
++	regmap_write(es8375->regmap, ES8375_CLK_MGR3, iface);
++	regmap_write(es8375->regmap, ES8375_SDP, codeciface);
++
++	return 0;
++}
++
++static int es8375_set_bias_level(struct snd_soc_component *component,
++		enum snd_soc_bias_level level)
++{
++	struct es8375_priv *es8375 = snd_soc_component_get_drvdata(component);
++	int ret;
++
++	switch (level) {
++	case SND_SOC_BIAS_ON:
++		ret = clk_prepare_enable(es8375->mclk);
++		if (ret) {
++			dev_err(component->dev, "unable to prepare mclk\n");
++			return  ret;
++		}
++		regmap_write(es8375->regmap, ES8375_CSM1, 0xA6);
++		break;
++	case SND_SOC_BIAS_PREPARE:
++		break;
++	case SND_SOC_BIAS_STANDBY:
++		regmap_write(es8375->regmap, ES8375_CSM1, 0x96);
++		clk_disable_unprepare(es8375->mclk);
++		break;
++	case SND_SOC_BIAS_OFF:
++		break;
++	}
++	return 0;
++}
++
++static int es8375_mute(struct snd_soc_dai *dai, int mute, int stream)
++{
++	struct snd_soc_component *component = dai->component;
++	struct es8375_priv *es8375 = snd_soc_component_get_drvdata(component);
++
++	if (mute) {
++		if (stream == SNDRV_PCM_STREAM_PLAYBACK)
++			regmap_update_bits(es8375->regmap, ES8375_SDP, 0x40, 0x40);
++		else
++			regmap_update_bits(es8375->regmap, ES8375_SDP2, 0x20, 0x20);
++	} else {
++		if (stream == SNDRV_PCM_STREAM_PLAYBACK)
++			regmap_update_bits(es8375->regmap, ES8375_SDP, 0x40, 0x00);
++		else
++			regmap_update_bits(es8375->regmap, ES8375_SDP2, 0x20, 0x00);
++	}
++
++	return 0;
++}
++
++#define es8375_RATES SNDRV_PCM_RATE_8000_96000
++
++#define es8375_FORMATS (SNDRV_PCM_FMTBIT_S16_LE | SNDRV_PCM_FMTBIT_S20_3LE |\
++		SNDRV_PCM_FMTBIT_S24_LE | SNDRV_PCM_FMTBIT_S24_3LE | SNDRV_PCM_FMTBIT_S32_LE)
++
++static const struct snd_soc_dai_ops es8375_ops = {
++	.hw_params = es8375_hw_params,
++	.mute_stream = es8375_mute,
++	.set_sysclk = es8375_set_sysclk,
++	.set_fmt = es8375_set_dai_fmt,
++};
++
++static struct snd_soc_dai_driver es8375_dai = {
++	.name = "ES8375 HiFi",
++	.playback = {
++		.stream_name = "AIF1 Playback",
++		.channels_min = 1,
++		.channels_max = 2,
++		.rates = es8375_RATES,
++		.formats = es8375_FORMATS,
++	},
++	.capture = {
++		.stream_name = "AIF1 Capture",
++		.channels_min = 1,
++		.channels_max = 2,
++		.rates = es8375_RATES,
++		.formats = es8375_FORMATS,
++	},
++	.ops = &es8375_ops,
++	.symmetric_rate = 1,
++};
++
++static void es8375_init(struct snd_soc_component *component)
++{
++	struct es8375_priv *es8375 = snd_soc_component_get_drvdata(component);
++
++	regmap_write(es8375->regmap, ES8375_CLK_MGR10, 0x95);
++	regmap_write(es8375->regmap, ES8375_CLK_MGR3, 0x48);
++	regmap_write(es8375->regmap, ES8375_DIV_SPKCLK, 0x18);
++	regmap_write(es8375->regmap, ES8375_CLK_MGR4, 0x02);
++	regmap_write(es8375->regmap, ES8375_CLK_MGR5, 0x05);
++	regmap_write(es8375->regmap, ES8375_CSM1, 0x82);
++	regmap_write(es8375->regmap, ES8375_VMID_CHARGE2, 0x20);
++	regmap_write(es8375->regmap, ES8375_VMID_CHARGE3, 0x20);
++	regmap_write(es8375->regmap, ES8375_DAC_CAL, 0x28);
++	regmap_write(es8375->regmap, ES8375_ANALOG_SPK1, 0xFC);
++	regmap_write(es8375->regmap, ES8375_ANALOG_SPK2, 0xE0);
++	regmap_write(es8375->regmap, ES8375_VMID_SEL, 0xFE);
++	regmap_write(es8375->regmap, ES8375_ANALOG1, 0xB8);
++	regmap_write(es8375->regmap, ES8375_SYS_CTRL2, 0x03);
++	regmap_write(es8375->regmap, ES8375_CLK_MGR2, 0x16);
++	regmap_write(es8375->regmap, ES8375_RESET1, 0x00);
++	msleep(80);
++	regmap_write(es8375->regmap, ES8375_CLK_MGR3, 0x00);
++	regmap_write(es8375->regmap, ES8375_CSM1, 0x86);
++	regmap_write(es8375->regmap, ES8375_CLK_MGR4, 0x0B);
++	regmap_write(es8375->regmap, ES8375_CLK_MGR5, 0x00);
++	regmap_write(es8375->regmap, ES8375_CLK_MGR6, 0x31);
++	regmap_write(es8375->regmap, ES8375_CLK_MGR7, 0x11);
++	regmap_write(es8375->regmap, ES8375_CLK_MGR8, 0x1F);
++	regmap_write(es8375->regmap, ES8375_CLK_MGR9, 0x00);
++	regmap_write(es8375->regmap, ES8375_ADC_OSR_GAIN, 0x1F);
++	regmap_write(es8375->regmap, ES8375_ADC2, 0x00);
++	regmap_write(es8375->regmap, ES8375_DAC2, 0x00);
++	regmap_write(es8375->regmap, ES8375_DAC_OTP, 0x88);
++	regmap_write(es8375->regmap, ES8375_ANALOG_SPK2, 0xE7);
++	regmap_write(es8375->regmap, ES8375_ANALOG2, 0xF0);
++	regmap_write(es8375->regmap, ES8375_ANALOG3, 0x40);
++	regmap_write(es8375->regmap, ES8375_CLK_MGR2, 0xFE);
++
++	regmap_update_bits(es8375->regmap, ES8375_SDP, 0x40, 0x40);
++	regmap_update_bits(es8375->regmap, ES8375_SDP2, 0x20, 0x20);
++}
++
++static int es8375_suspend(struct snd_soc_component *component)
++{
++	struct es8375_priv *es8375 = snd_soc_component_get_drvdata(component);
++
++	regmap_write(es8375->regmap, ES8375_CSM1, 0x96);
++	regcache_cache_only(es8375->regmap, true);
++	regcache_mark_dirty(es8375->regmap);
++	return 0;
++}
++
++static int es8375_resume(struct snd_soc_component *component)
++{
++	struct es8375_priv *es8375 = snd_soc_component_get_drvdata(component);
++	unsigned int reg;
++
++	regcache_cache_only(es8375->regmap, false);
++	regcache_cache_bypass(es8375->regmap, true);
++	regmap_read(es8375->regmap, ES8375_CLK_MGR2, &reg);
++	regcache_cache_bypass(es8375->regmap, false);
++
++	if (reg == 0x00)
++		es8375_init(component);
++	else
++		es8375_set_bias_level(component, SND_SOC_BIAS_ON);
++
++	regcache_sync(es8375->regmap);
++
++	return 0;
++}
++
++static int es8375_codec_probe(struct snd_soc_component *component)
++{
++	struct es8375_priv *es8375 = snd_soc_component_get_drvdata(component);
++
++	es8375->mastermode = 0;
++
++	es8375_init(component);
++
++	return 0;
++}
++
++static bool es8375_writeable_register(struct device *dev, unsigned int reg)
++{
++	switch (reg) {
++	case ES8375_CHIP_VERSION:
++	case ES8375_CHIP_ID0:
++	case ES8375_CHIP_ID1:
++	case ES8375_SPK_OFFSET:
++	case ES8375_FLAGS2:
++		return false;
++	default:
++		return true;
++	}
++}
++
++static struct regmap_config es8375_regmap_config = {
++	.reg_bits = 8,
++	.val_bits = 8,
++	.max_register = ES8375_REG_MAX,
++	.cache_type = REGCACHE_MAPLE,
++	.use_single_read = true,
++	.use_single_write = true,
++	.writeable_reg = es8375_writeable_register,
++};
++
++static struct snd_soc_component_driver es8375_codec_driver = {
++	.probe = es8375_codec_probe,
++	.suspend = es8375_suspend,
++	.resume = es8375_resume,
++	.set_bias_level = es8375_set_bias_level,
++	.controls = es8375_snd_controls,
++	.num_controls = ARRAY_SIZE(es8375_snd_controls),
++	.dapm_widgets = es8375_dapm_widgets,
++	.num_dapm_widgets = ARRAY_SIZE(es8375_dapm_widgets),
++	.dapm_routes = es8375_dapm_routes,
++	.num_dapm_routes = ARRAY_SIZE(es8375_dapm_routes),
++
++	.idle_bias_on = 1,
++	.suspend_bias_off = 1,
++};
++
++static int es8375_read_device_properities(struct device *dev, struct es8375_priv *es8375)
++{
++	int ret, i;
++
++	ret = device_property_read_u8(dev, "everest,mclk-src", &es8375->mclk_src);
++	if (ret != 0)
++		es8375->mclk_src = ES8375_MCLK_SOURCE;
++	dev_dbg(dev, "mclk-src %x", es8375->mclk_src);
++
++	for (i = 0; i < ARRAY_SIZE(es8375_core_supplies); i++)
++		es8375->core_supply[i].supply = es8375_core_supplies[i];
++	ret = devm_regulator_bulk_get(dev, ARRAY_SIZE(es8375_core_supplies), es8375->core_supply);
++	if (ret) {
++		dev_err(dev, "Failed to request core supplies %d\n", ret);
++		return ret;
++	}
++
++	es8375->mclk = devm_clk_get(dev, "mclk");
++	if (IS_ERR(es8375->mclk))
++		return dev_err_probe(dev, PTR_ERR(es8375->mclk), "unable to get mclk\n");
++
++	if (!es8375->mclk)
++		dev_warn(dev, "assuming static mclk\n");
++
++	ret = clk_prepare_enable(es8375->mclk);
++	if (ret) {
++		dev_err(dev, "unable to enable mclk\n");
++		return ret;
++	}
++	ret = regulator_bulk_enable(ARRAY_SIZE(es8375_core_supplies), es8375->core_supply);
++	if (ret) {
++		dev_err(dev, "Failed to enable core supplies: %d\n", ret);
++		clk_disable_unprepare(es8375->mclk);
++		return ret;
++	}
++
++	return 0;
++}
++
++static int es8375_i2c_probe(struct i2c_client *i2c_client)
++{
++	struct es8375_priv *es8375;
++	struct device *dev = &i2c_client->dev;
++	int ret;
++	unsigned int val;
++
++	es8375 = devm_kzalloc(&i2c_client->dev, sizeof(*es8375), GFP_KERNEL);
++	if (!es8375)
++		return -ENOMEM;
++
++	es8375->regmap = devm_regmap_init_i2c(i2c_client,
++			&es8375_regmap_config);
++	if (IS_ERR(es8375->regmap))
++		return dev_err_probe(&i2c_client->dev, PTR_ERR(es8375->regmap),
++			"regmap_init() failed\n");
++
++	i2c_set_clientdata(i2c_client, es8375);
++
++	ret = regmap_read(es8375->regmap, ES8375_CHIP_ID1, &val);
++	if (ret < 0) {
++		dev_err(&i2c_client->dev, "failed to read i2c at addr %X\n",
++				i2c_client->addr);
++		return ret;
++	}
++
++	if (val != 0x83) {
++		dev_err(&i2c_client->dev, "device at addr %X is not an es8375\n",
++				i2c_client->addr);
++		return -ENODEV;
++	}
++
++	ret = regmap_read(es8375->regmap, ES8375_CHIP_ID0, &val);
++	if (val != 0x75) {
++		dev_err(&i2c_client->dev, "device at addr %X is not an es8375\n",
++				i2c_client->addr);
++		return -ENODEV;
++	}
++
++	ret = es8375_read_device_properities(dev, es8375);
++	if (ret != 0) {
++		dev_err(&i2c_client->dev, "get an error from dts info %X\n", ret);
++		return ret;
++	}
++
++	return devm_snd_soc_register_component(&i2c_client->dev, &es8375_codec_driver,
++			&es8375_dai, 1);
++}
++
++static void es8375_i2c_shutdown(struct i2c_client *i2c)
++{
++	struct es8375_priv *es8375;
++
++	es8375 = i2c_get_clientdata(i2c);
++
++	regmap_write(es8375->regmap, ES8375_CSM1, 0x3C);
++	regmap_write(es8375->regmap, ES8375_CLK_MGR3, 0x48);
++	regmap_write(es8375->regmap, ES8375_CSM2, 0x80);
++	regmap_write(es8375->regmap, ES8375_CSM1, 0x3E);
++	regmap_write(es8375->regmap, ES8375_CLK_MGR10, 0x15);
++	regmap_write(es8375->regmap, ES8375_SYS_CTRL2, 0x0C);
++	regmap_write(es8375->regmap, ES8375_RESET1, 0x00);
++	regmap_write(es8375->regmap, ES8375_CSM2, 0x00);
++
++	regulator_bulk_disable(ARRAY_SIZE(es8375_core_supplies), es8375->core_supply);
++	clk_disable_unprepare(es8375->mclk);
++}
++
++static const struct i2c_device_id es8375_id[] = {
++	{"es8375"},
++	{ }
++};
++MODULE_DEVICE_TABLE(i2c, es8375_id);
++
++#ifdef CONFIG_ACPI
++static const struct acpi_device_id es8375_acpi_match[] = {
++	{"ESSX8375", 0},
++	{},
++};
++
++MODULE_DEVICE_TABLE(acpi, es8375_acpi_match);
++#endif
++
++#ifdef CONFIG_OF
++static const struct of_device_id es8375_of_match[] = {
++	{.compatible = "everest,es8375",},
++	{}
++};
++
++MODULE_DEVICE_TABLE(of, es8375_of_match);
++#endif
++
++static struct i2c_driver es8375_i2c_driver = {
++	.driver = {
++		.name	= "es8375",
++		.of_match_table = of_match_ptr(es8375_of_match),
++		.acpi_match_table = ACPI_PTR(es8375_acpi_match),
++	},
++	.shutdown = es8375_i2c_shutdown,
++	.probe = es8375_i2c_probe,
++	.id_table = es8375_id,
++};
++module_i2c_driver(es8375_i2c_driver);
++
++MODULE_DESCRIPTION("ASoC ES8375 driver");
++MODULE_AUTHOR("Michael Zhang <zhangyi@everest-semi.com>");
++MODULE_LICENSE("GPL");
+diff --git a/sound/soc/codecs/es8375.h b/sound/soc/codecs/es8375.h
+new file mode 100644
+index 000000000000..11e3ceec9b68
+--- /dev/null
++++ b/sound/soc/codecs/es8375.h
+@@ -0,0 +1,123 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++/*
++* ES8375.h  --  ES8375 ALSA SoC Audio Codec
++*
++* Authors:
++*
++* Based on ES8375.h by Michael Zhang
++*/
++#ifndef _ES8375_H
++#define _ES8375_H
++
++// Registors
++#define ES8375_RESET1              0x00
++#define ES8375_MCLK_SEL            0x01
++#define ES8375_CLK_MGR2            0x02
++#define ES8375_CLK_MGR3            0x03
++#define ES8375_CLK_MGR4            0x04
++#define ES8375_CLK_MGR5            0x05
++#define ES8375_CLK_MGR6            0x06
++#define ES8375_CLK_MGR7            0x07
++#define ES8375_CLK_MGR8            0x08
++#define ES8375_CLK_MGR9            0x09
++#define ES8375_CLK_MGR10           0x0A
++#define ES8375_CLK_MGR11           0x0B
++#define ES8375_CLK_MGR12           0x0C
++#define ES8375_DIV_SPKCLK          0x0E
++#define ES8375_CSM1                0x0F
++#define ES8375_CSM2                0x10
++#define ES8375_VMID_CHARGE2        0x11
++#define ES8375_VMID_CHARGE3        0x12
++#define ES8375_SDP                 0x15
++#define ES8375_SDP2                0x16
++#define ES8375_ADC1                0x17
++#define ES8375_ADC2                0x18
++#define ES8375_ADC_OSR_GAIN        0x19
++#define ES8375_ADC_VOLUME          0x1A
++#define ES8375_ADC_AUTOMUTE        0x1B
++#define ES8375_ADC_AUTOMUTE_ATTN   0x1C
++#define ES8375_HPF1                0x1D
++#define ES8375_DAC1                0x1F
++#define ES8375_DAC2                0x20
++#define ES8375_DAC_VOLUME          0x21
++#define ES8375_DAC_VPPSCALE        0x22
++#define ES8375_DAC_AUTOMUTE1       0x23
++#define ES8375_DAC_AUTOMUTE        0x24
++#define ES8375_DAC_CAL             0x25
++#define ES8375_DAC_OTP             0x27
++#define ES8375_ANALOG_SPK1         0x28
++#define ES8375_ANALOG_SPK2         0x29
++#define ES8375_VMID_SEL            0x2D
++#define ES8375_ANALOG1             0x2E
++#define ES8375_ANALOG2             0x32
++#define ES8375_ANALOG3             0x37
++#define ES8375_ADC2DAC_CLKTRI      0xF8
++#define ES8375_SYS_CTRL2           0xF9
++#define ES8375_FLAGS2              0xFB
++#define ES8375_SPK_OFFSET          0xFC
++#define ES8375_CHIP_ID1            0xFD
++#define ES8375_CHIP_ID0            0xFE
++#define ES8375_CHIP_VERSION        0xFF
++
++// Bit Shifts
++#define ADC_OSR_GAIN_SHIFT_0        0
++#define ADC_RAMPRATE_SHIFT_0        0
++#define ADC_VOLUME_SHIFT_0          0
++#define ADC_AUTOMUTE_NG_SHIFT_0     0
++#define ADC_AUTOMUTE_ATTN_SHIFT_0   0
++#define DAC_RAMPRATE_SHIFT_0        0
++#define DAC_VOLUME_SHIFT_0          0
++#define DAC_VPPSCALE_SHIFT_0        0
++#define DAC_AUTOMUTE_NG_SHIFT_0     0
++#define DAC_AUTOMUTE_ATTN_SHIFT_0   0
++#define DMIC_GAIN_SHIFT_2           2
++#define ADC_AUTOMUTE_WS_SHIFT_3     3
++#define DMIC_POL_SHIFT_4            4
++#define DAC_RAMCLR_SHIFT_4          4
++#define ES8375_EN_MODL_SHIFT_4      4
++#define ADC_RAMCLR_SHIFT_5          5
++#define ADC_HPF_SHIFT_5             5
++#define DAC_INV_SHIFT_5             5
++#define DAC_AUTOMUTE_WS_SHIFT_5     5
++#define ES8375_EN_PGAL_SHIFT_5      5
++#define ES8375_ADC_P2S_MUTE_SHIFT_5 5
++#define ADC_INV_SHIFT_6             6
++#define DAC_DEMMUTE_SHIFT_6         6
++#define ES8375_DAC_S2P_MUTE_SHIFT_6 6
++#define ADC_SRC_SHIFT_7             7
++#define ADC_AUTOMUTE_SHIFT_7        7
++#define DAC_DSMMUTE_SHIFT_7         7
++#define DAC_AUTOMUTE_EN_SHIFT_7     7
++
++// Function values
++#define ES8375_ADC_OSR_GAIN_MAX         0x3F
++#define ES8375_DMIC_GAIN_MAX            0x04
++#define ES8375_ADC_AUTOMUTE_ATTN_MAX    0x1F
++#define ES8375_AUTOMUTE_NG_MAX          0x07
++#define ES8375_ADC_VOLUME_MAX           0xFF
++#define ES8375_DAC_VOLUME_MAX           0xFF
++#define ES8375_DAC_VPPSCALE_MAX         0x3F
++#define ES8375_DAC_AUTOMUTE_ATTN_MAX    0x17
++#define ES8375_REG_MAX                  0xFF
++
++enum ES8375_supplies {
++	ES8375_SUPPLY_VD = 0,
++	ES8375_SUPPLY_VA,
++};
++
++// Properties
++#define ES8375_3V3  1
++#define ES8375_1V8  0
++
++#define ES8375_MCLK_PIN	0
++#define ES8375_BCLK_PIN 1
++#define ES8375_MCLK_SOURCE	ES8375_MCLK_PIN
++
++#define DMIC_POSITIVE_EDGE  0
++#define DMIC_NEGATIVE_EDGE  1
++#define DMIC_POL  DMIC_POSITIVE_EDGE
++
++#define PA_SHUTDOWN     0
++#define PA_ENABLE       1
++
++#endif
+-- 
+2.17.1
+
