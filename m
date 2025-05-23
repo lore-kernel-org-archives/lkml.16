@@ -1,477 +1,136 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6CBB221D87
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 12:13:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEFD1221D87;
+	Fri, 23 May 2025 12:14:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748002427; cv=none; b=HnCiXq1f8Bs8iTtF82c/EMkGy3XeICh1v75Azrpb27Hk0zTvUeLgfk9yvcbfFDuQNeJ2/EliW1z8TxIBijKEDoTNjgYlRfHBkoa1JQw+lAKOrSWIW6MWFw7TZEV88oDH74SLCJojmArKDMTIOWzmv27ZTny1UTqA33v8dHalD4w=
+	t=1748002455; cv=none; b=R8CVF+RfOrxdim0t8yYkf3i36YVvO3MRNDwVkTt2FjId4S1KEnM5rULR1ggC9jRdm2vR2ug9DxvnT6PvmV3Xs0UWaVAEXZ+jV9hXCAJrZvZGQdH3dz57nNuC5E6yyjnI4NPzlpLMhUOu8ZgUCfHeaZIKmFiy4BEvuOrMMzeNFkI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748002427; c=relaxed/simple;
-	bh=QwnM0CAVFEMq5AF+Q3d9i2AyovIT3v6pbtbAkQmXxXk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=us2R+ELP4ABVejSRr5xOPzenidyyRnfb4wZ7c2KEsBP+d3DW4UXEM99mYF5wTWuxnm9zKQnzNc2crIJKw9x0+o6vd5TfcekeIs+VuktAPx/k6M/W5Ab0vJWpajamlUgP23p5irZQhzsXDb4k0rMqQsroXgv/dKZrY2soaW61B9M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us; spf=none smtp.mailfrom=resnulli.us; dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b=mESv5129; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=resnulli.us
+	s=arc-20240116; t=1748002455; c=relaxed/simple;
+	bh=9KHFCK51wlKg6eWT4vrHrBHoBQTzfxk81ECyzC/o33U=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=ClbcGsrX3++oVupEKKjyB8SIiOYY19Aesr/s5juc2pr3p8xdYoMzFuIRzOAm7AJvqTMSdifoAT2ha9/D5KAuDbTYtw2rn9n9QVVdn/GcfJv7RhP1xowTSGSxLMeJlPUDBj7An0jGHRQwxEY3CskWXwPEmrusVb505+Tc+xDUR1k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=HDmYlkPw; arc=none smtp.client-ip=168.119.38.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b="mESv5129"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-441d1ed82dbso91877335e9.0
-        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 05:13:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=resnulli-us.20230601.gappssmtp.com; s=20230601; t=1748002422; x=1748607222; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=fcMMazqETMFBjpqAXtEjk8AFpIIhwiLrmwH6TDT81Xc=;
-        b=mESv5129nr8eW9p2uje1ijmcrLD/7sXxCz8PvVSIKj6+R1AcRUPGIAZwNt5Fs9BACB
-         UsTcK41KYHGwtklfZ143yDVkK15CuxOFn/A/8tuZbzgx4J1r86CyqCXgfn0GyCDaPh7X
-         To1KHesvTucDqQY9WVX+W4mgf2mQ62cUWo2a+68idmLz1ZwLW/2Jlr48qlXZwVEea2JZ
-         lCqpkPNBpxiTXq3kKOOJBqMEFBFZYma+ircSkzHJQgEWsP0NeXPsD65//ZIIf/BQYq/U
-         8ruHg1GDqF0mSPInhP6rydgakXbFoecjKMWGVqFuy39AVXPLSWpHc/V/hsbAAWLov5Ey
-         4KLg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748002422; x=1748607222;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fcMMazqETMFBjpqAXtEjk8AFpIIhwiLrmwH6TDT81Xc=;
-        b=mB5iUAIbaknLHhfarCUtDqj0FIIALUU++Uerc+nJhJRMPb3eXwfnEPLhhRgvliZs1r
-         sWs3aVFruVfoRq25RLrQO+Zqn8pU6omPg0rHFwIos/PxbTXtDe66UaC2E1E5wLNyndf1
-         /XngGv/pFLYmAQODDesfNwx+e6i08XKB2IAY12x6jXdkI1W58AJNEP1MpV3QnOVBTYDt
-         NMIeDlRm2ODFPVE3LMZW7oLiiWKqt4Q+X491mbX5LGAR36G7PDYMshsYGemq5gp0XS8u
-         bsYCke1HSMfItItJLU8cfHzBsO+IdzwZGVk4hBYyLVZvpqmEWrETYAAYrRlmSgesnIBa
-         GNTA==
-X-Forwarded-Encrypted: i=1; AJvYcCU9xAUZq8sBb/ex6bNl9gSvDXDlNjpHKeNBwOCMiEBFge1caTRfj/yVydO4GfAl3c4LXGEgg7XoCRH8IBo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxkDVgJgdaIp4yU2MClXSF71RoYLGz1ToH0vFFYaqOOR2AnuXaX
-	C05o5qDmvSPQb3aYKtBO00eiXB+RiGnL/HaJZD3bWyUyBw8Gb11AmpN5awxnqKChGBGctH0v85J
-	7HA9o
-X-Gm-Gg: ASbGncuhEjE0o1vywZl0JH5HgoQyB4P6H4p9Lztv1u0MgYBlQtoioC5asYno5A7qtiY
-	K8uA9qeUGWa3iIh8wSfMaqHNtV2yilKv5JJFkBv3ewwV17c9zJMVvkXQeNTBiFiVY3WhdHYWiQs
-	J2mFwTTVTU1uwHMj4lLBvJRIsW6Y31vfUgkJvvm8lTa7T00sdUvP5Nv4TeATE3mY0SmZ/bP1Ggz
-	PX26kWOF/X6FuNlfB1Y9KEkOAFJg8vwMrNBEp32fS2wcoPXczhiFVuao4qGKByRHrFPSp4QuMku
-	bSyMQM5l9rRn18dNZTBFDNAz39kF0k0DlnOjQNHSzJFDTlX+MNAuhVkUlfGqgcErYVlGkuHWtCS
-	+Hqw=
-X-Google-Smtp-Source: AGHT+IFWpuJ+LGIYOg0ukSHD3MDEX+F5KEHQMJa0aTYMPEXLHnq293emw2qfMGaBfuv1xqKajS7f1w==
-X-Received: by 2002:a05:600c:64cd:b0:43d:745a:5a50 with SMTP id 5b1f17b1804b1-442fd6313demr219563725e9.19.1748002421719;
-        Fri, 23 May 2025 05:13:41 -0700 (PDT)
-Received: from jiri-mlt (37-48-1-197.nat.epc.tmcz.cz. [37.48.1.197])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a369140048sm22111829f8f.57.2025.05.23.05.13.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 May 2025 05:13:41 -0700 (PDT)
-Date: Fri, 23 May 2025 14:13:37 +0200
-From: Jiri Pirko <jiri@resnulli.us>
-To: Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>
-Cc: donald.hunter@gmail.com, kuba@kernel.org, davem@davemloft.net, 
-	edumazet@google.com, pabeni@redhat.com, horms@kernel.org, vadim.fedorenko@linux.dev, 
-	anthony.l.nguyen@intel.com, przemyslaw.kitszel@intel.com, andrew+netdev@lunn.ch, 
-	aleksandr.loktionov@intel.com, corbet@lwn.net, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, intel-wired-lan@lists.osuosl.org, linux-rdma@vger.kernel.org, 
-	linux-doc@vger.kernel.org, Milena Olech <milena.olech@intel.com>
-Subject: Re: [PATCH net-next v3 2/3] dpll: add reference sync get/set
-Message-ID: <yklt5svyyahn56bynp7b2ba4ceonyo2ivddtr3fr2ye5ubyjjj@jpnmxnsweyf5>
-References: <20250522162938.1490791-1-arkadiusz.kubalewski@intel.com>
- <20250522162938.1490791-3-arkadiusz.kubalewski@intel.com>
+	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="HDmYlkPw"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
+	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
+	Resent-Cc:Resent-Message-ID; bh=ekv9cqIQOQ/6GI/BKfxSdxc8wDhUIaB1EUea43SuH1A=;
+	t=1748002454; x=1749212054; b=HDmYlkPwmixhV0nGyAUHSVSRZeGeX/GQ1d/bwo6fUHq+EFJ
+	VNW0H4nwXxNh7gJXnhACxlf3zf5Aw0UIg9d4Rt4i3zGFK7bTKkbqmA4rzWG28Dc8v3HYnCY9UBl9d
+	FhKS0RDrivaexgq+KmT9hCH8hnvxOVFKrNtBwDs4Byf/e37AeQbjpb6m4JxbBIJs8r7psyegbL9YX
+	jH+qrh/M92iI9sbPfx7uO1vljFgclGjcwXs9+b0n6CWeLR+jvaBQ1Skgvv8UKwjq1PnDCPsa4p83G
+	CO4/KBRIAf/kp3SBXMQSGiMPWHcxPFyau/rfXZ3hmyZjt1oL169wSQt+0XCUSn9Q==;
+Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.98.2)
+	(envelope-from <johannes@sipsolutions.net>)
+	id 1uIRHu-00000001ZBN-3D09;
+	Fri, 23 May 2025 14:14:10 +0200
+Message-ID: <d7b656f2e44833f17cb4d15dc7fd985db8c9b485.camel@sipsolutions.net>
+Subject: Re: [PATCH] wifi: iwlwifi: fix iwlmld-test link failure
+From: Johannes Berg <johannes@sipsolutions.net>
+To: Arnd Bergmann <arnd@kernel.org>, Miri Korenblit	
+ <miriam.rachel.korenblit@intel.com>, Avraham Stern
+ <avraham.stern@intel.com>,  Yedidya Benshimol
+ <yedidya.ben.shimol@intel.com>, Benjamin Berg <benjamin.berg@intel.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, Daniel Gabay <daniel.gabay@intel.com>, 
+ Anjaneyulu <pagadala.yesu.anjaneyulu@intel.com>,
+ linux-wireless@vger.kernel.org, 	linux-kernel@vger.kernel.org
+Date: Fri, 23 May 2025 14:14:09 +0200
+In-Reply-To: <20250523121019.2196490-1-arnd@kernel.org>
+References: <20250523121019.2196490-1-arnd@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250522162938.1490791-3-arkadiusz.kubalewski@intel.com>
+X-malware-bazaar: not-scanned
 
-Thu, May 22, 2025 at 06:29:37PM +0200, arkadiusz.kubalewski@intel.com wrote:
->Define function for reference sync pin registration and callback ops to
->set/get current feature state.
+On Fri, 2025-05-23 at 14:10 +0200, Arnd Bergmann wrote:
+> From: Arnd Bergmann <arnd@arndb.de>
+>=20
+> If the driver is built-in but the test is in a loadable module, the symbo=
+ls
+> are not exported, resulting in a link failure:
+>=20
+> ERROR: modpost: "iwl_get_cmd_string" [drivers/net/wireless/intel/iwlwifi/=
+mld/tests/iwlmld-tests.ko] undefined!
+> ERROR: modpost: "__iwl_dbg" [drivers/net/wireless/intel/iwlwifi/mld/tests=
+/iwlmld-tests.ko] undefined!
+>=20
+> Enable CONFIG_IWLWIFI_OPMODE_MODULAR in this configuration, to
+> make those symbols visible.
+
+Hah, thanks. We were just debating exactly this fix, but I think if
+CONFIG_INET is _also_ turned off, we still have another link issue, so
+what we have now is actually the below (maybe the Fixes: is wrong then
+though)
+
+
+
+commit 800fe085168e073910d8a0b758df0399d3c38323
+Author: Benjamin Berg <benjamin.berg@intel.com>
+Date:   Mon May 12 14:04:33 2025 +0200
+
+    [BUGFIX] wifi: iwlwifi: ensure iwl_average_neg_dbm is available for kun=
+it
+   =20
+    The function was not compiled if CONFIG_INET was not enabled. Change it
+    to always be compiled in. Also update the IWLWIFI_OPMODE_MODULAR check
+    so that the symbol is exported even if only the kunit tests are build
+    as a module.
+   =20
+    Change-Id: I02014d338de26768533cd07225780563393b4591
+    Signed-off-by: Benjamin Berg <benjamin.berg@intel.com>
+    Reported-by: kernel test robot <lkp@intel.com>
+    Closes: https://lore.kernel.org/oe-kbuild-all/202505120905.ceWoI4rO-lkp=
+@intel.com/
+    Fixes: 1f52f7f0abe2 ("wifi: iwlwifi: move dBm averaging function into u=
+tils")
+    Reviewed-by: Miriam Rachel Korenblit <miriam.rachel.korenblit@intel.com=
 >
->Implement netlink handler to fill netlink messages with reference sync
->pin configuration of capable pins (pin-get).
->
->Implement netlink handler to call proper ops and configure reference
->sync pin state (pin-set).
->
->Reviewed-by: Przemek Kitszel <przemyslaw.kitszel@intel.com>
->Reviewed-by: Milena Olech <milena.olech@intel.com>
->Signed-off-by: Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>
->---
-> v3:
->- fix kdoc missing ':' after argument name ref_sync_pins,
->- propagate ret in dpll_pin_ref_sync_state_set().
->---
-> drivers/dpll/dpll_core.c    |  27 ++++++
-> drivers/dpll/dpll_core.h    |   2 +
-> drivers/dpll/dpll_netlink.c | 188 ++++++++++++++++++++++++++++++++----
-> include/linux/dpll.h        |  10 ++
-> 4 files changed, 209 insertions(+), 18 deletions(-)
->
->diff --git a/drivers/dpll/dpll_core.c b/drivers/dpll/dpll_core.c
->index 20bdc52f63a5..805c7aca58c5 100644
->--- a/drivers/dpll/dpll_core.c
->+++ b/drivers/dpll/dpll_core.c
->@@ -506,6 +506,7 @@ dpll_pin_alloc(u64 clock_id, u32 pin_idx, struct module *module,
-> 	refcount_set(&pin->refcount, 1);
-> 	xa_init_flags(&pin->dpll_refs, XA_FLAGS_ALLOC);
-> 	xa_init_flags(&pin->parent_refs, XA_FLAGS_ALLOC);
->+	xa_init_flags(&pin->ref_sync_pins, XA_FLAGS_ALLOC);
-> 	ret = xa_alloc_cyclic(&dpll_pin_xa, &pin->id, pin, xa_limit_32b,
-> 			      &dpll_pin_xa_id, GFP_KERNEL);
-> 	if (ret < 0)
->@@ -514,6 +515,7 @@ dpll_pin_alloc(u64 clock_id, u32 pin_idx, struct module *module,
-> err_xa_alloc:
-> 	xa_destroy(&pin->dpll_refs);
-> 	xa_destroy(&pin->parent_refs);
->+	xa_destroy(&pin->ref_sync_pins);
-> 	dpll_pin_prop_free(&pin->prop);
-> err_pin_prop:
-> 	kfree(pin);
->@@ -595,6 +597,7 @@ void dpll_pin_put(struct dpll_pin *pin)
-> 		xa_erase(&dpll_pin_xa, pin->id);
-> 		xa_destroy(&pin->dpll_refs);
-> 		xa_destroy(&pin->parent_refs);
->+		xa_destroy(&pin->ref_sync_pins);
-> 		dpll_pin_prop_free(&pin->prop);
-> 		kfree_rcu(pin, rcu);
-> 	}
->@@ -783,6 +786,30 @@ void dpll_pin_on_pin_unregister(struct dpll_pin *parent, struct dpll_pin *pin,
-> }
-> EXPORT_SYMBOL_GPL(dpll_pin_on_pin_unregister);
-> 
->+/**
->+ * dpll_pin_ref_sync_pair_add - create a reference sync signal pin pair
->+ * @base: pin which produces the base frequency
->+ * @sync: pin which produces the sync signal
->+ *
->+ * Once pins are paired, the user-space configuration of reference sync pair
->+ * is possible.
->+ * Context: Acquires a lock (dpll_lock)
->+ * Return:
->+ * * 0 on success
->+ * * negative - error value
->+ */
->+int dpll_pin_ref_sync_pair_add(struct dpll_pin *base, struct dpll_pin *sync)
 
-Perhaps call it "pin" and "ref_sync_pin"?
+diff --git a/drivers/net/wireless/intel/iwlwifi/Kconfig b/drivers/net/wirel=
+ess/intel/iwlwifi/Kconfig
+index b2fb1dee59c0..e4a3fe2eaf57 100644
+--- a/drivers/net/wireless/intel/iwlwifi/Kconfig
++++ b/drivers/net/wireless/intel/iwlwifi/Kconfig
+@@ -105,6 +105,7 @@ config IWLWIFI_OPMODE_MODULAR
+ 	default y if IWLMVM=3Dm
+ 	default y if IWLXVT=3Dm
+ 	default y if IWLMLD=3Dm
++	default y if IWLWIFI_KUNIT_TESTS=3Dm
+=20
+ comment "WARNING: iwlwifi is useless without IWLDVM or IWLMVM or IWLMLD"
+ 	depends on IWLDVM=3Dn && IWLMVM=3Dn && IWLMLD=3Dn
+diff --git a/drivers/net/wireless/intel/iwlwifi/iwl-utils.c b/drivers/net/w=
+ireless/intel/iwlwifi/iwl-utils.c
+index 9edb8f512058..0049a8ca60f3 100644
+--- a/drivers/net/wireless/intel/iwlwifi/iwl-utils.c
++++ b/drivers/net/wireless/intel/iwlwifi/iwl-utils.c
+@@ -82,6 +82,7 @@ int iwl_tx_tso_segment(struct sk_buff *skb, unsigned int =
+num_subframes,
+ 	return 0;
+ }
+ IWL_EXPORT_SYMBOL(iwl_tx_tso_segment);
++#endif /* CONFIG_INET */
+=20
+ static u32 iwl_div_by_db(u32 value, u8 db)
+ {
+@@ -193,5 +194,3 @@ s8 iwl_average_neg_dbm(const u8 *neg_dbm_values, u8 len=
+)
+ 	return clamp(average_magnitude - i, -128, 0);
+ }
+ IWL_EXPORT_SYMBOL(iwl_average_neg_dbm);
+-
+-#endif /* CONFIG_INET */
 
-
->+{
->+	int ret;
->+
->+	mutex_lock(&dpll_lock);
->+	ret = xa_insert(&base->ref_sync_pins, sync->pin_idx, sync, GFP_KERNEL);
->+	mutex_unlock(&dpll_lock);
->+
->+	return ret;
->+}
->+EXPORT_SYMBOL_GPL(dpll_pin_ref_sync_pair_add);
-
-How do you handle remove?
-
-
->+
-> static struct dpll_device_registration *
-> dpll_device_registration_first(struct dpll_device *dpll)
-> {
->diff --git a/drivers/dpll/dpll_core.h b/drivers/dpll/dpll_core.h
->index 2b6d8ef1cdf3..93c68e78b351 100644
->--- a/drivers/dpll/dpll_core.h
->+++ b/drivers/dpll/dpll_core.h
->@@ -44,6 +44,7 @@ struct dpll_device {
->  * @module:		module of creator
->  * @dpll_refs:		hold referencees to dplls pin was registered with
->  * @parent_refs:	hold references to parent pins pin was registered with
->+ * @ref_sync_pins:	hold references to pins for Reference SYNC feature
->  * @prop:		pin properties copied from the registerer
->  * @rclk_dev_name:	holds name of device when pin can recover clock from it
->  * @refcount:		refcount
->@@ -56,6 +57,7 @@ struct dpll_pin {
-> 	struct module *module;
-> 	struct xarray dpll_refs;
-> 	struct xarray parent_refs;
->+	struct xarray ref_sync_pins;
-> 	struct dpll_pin_properties prop;
-> 	refcount_t refcount;
-> 	struct rcu_head rcu;
->diff --git a/drivers/dpll/dpll_netlink.c b/drivers/dpll/dpll_netlink.c
->index c130f87147fa..854bd46a7d27 100644
->--- a/drivers/dpll/dpll_netlink.c
->+++ b/drivers/dpll/dpll_netlink.c
->@@ -48,6 +48,24 @@ dpll_msg_add_dev_parent_handle(struct sk_buff *msg, u32 id)
-> 	return 0;
-> }
-> 
->+static bool dpll_pin_available(struct dpll_pin *pin)
->+{
->+	struct dpll_pin_ref *par_ref;
->+	unsigned long i;
->+
->+	if (!xa_get_mark(&dpll_pin_xa, pin->id, DPLL_REGISTERED))
->+		return false;
->+	xa_for_each(&pin->parent_refs, i, par_ref)
->+		if (xa_get_mark(&dpll_pin_xa, par_ref->pin->id,
->+				DPLL_REGISTERED))
->+			return true;
->+	xa_for_each(&pin->dpll_refs, i, par_ref)
->+		if (xa_get_mark(&dpll_device_xa, par_ref->dpll->id,
->+				DPLL_REGISTERED))
->+			return true;
->+	return false;
->+}
->+
-> /**
->  * dpll_msg_add_pin_handle - attach pin handle attribute to a given message
->  * @msg: pointer to sk_buff message to attach a pin handle
->@@ -408,6 +426,47 @@ dpll_msg_add_pin_esync(struct sk_buff *msg, struct dpll_pin *pin,
-> 	return -EMSGSIZE;
-> }
-> 
->+static int
->+dpll_msg_add_pin_ref_sync(struct sk_buff *msg, struct dpll_pin *pin,
->+			  struct dpll_pin_ref *ref,
->+			  struct netlink_ext_ack *extack)
->+{
->+	const struct dpll_pin_ops *ops = dpll_pin_ops(ref);
->+	struct dpll_device *dpll = ref->dpll;
->+	enum dpll_pin_state state;
->+	void *pin_priv, *sp_priv;
->+	struct dpll_pin *sp;
-
-Make sure you are consistent in variables naming. You call this "sync"
-whan you add it.
-
-
->+	struct nlattr *nest;
->+	unsigned long index;
->+	int ret;
->+
->+	pin_priv = dpll_pin_on_dpll_priv(dpll, pin);
->+	xa_for_each(&pin->ref_sync_pins, index, sp) {
->+		if (!dpll_pin_available(sp))
->+			continue;
->+		sp_priv = dpll_pin_on_dpll_priv(dpll, sp);
->+		if (WARN_ON(!ops->ref_sync_get))
->+			return -EOPNOTSUPP;
->+		ret = ops->ref_sync_get(pin, pin_priv, sp, sp_priv,
->+					&state, extack);
->+		if (ret)
->+			return ret;
->+		nest = nla_nest_start(msg, DPLL_A_PIN_REFERENCE_SYNC);
->+		if (!nest)
->+			return -EMSGSIZE;
->+		if (nla_put_s32(msg, DPLL_A_PIN_ID, sp->id))
->+			goto nest_cancel;
->+		if (nla_put_s32(msg, DPLL_A_PIN_STATE, state))
->+			goto nest_cancel;
->+		nla_nest_end(msg, nest);
->+	}
->+	return 0;
->+
->+nest_cancel:
->+	nla_nest_cancel(msg, nest);
->+	return -EMSGSIZE;
->+}
->+
-> static bool dpll_pin_is_freq_supported(struct dpll_pin *pin, u32 freq)
-> {
-> 	int fs;
->@@ -550,6 +609,10 @@ dpll_cmd_pin_get_one(struct sk_buff *msg, struct dpll_pin *pin,
-> 	if (ret)
-> 		return ret;
-> 	ret = dpll_msg_add_pin_esync(msg, pin, ref, extack);
->+	if (ret)
->+		return ret;
->+	if (!xa_empty(&pin->ref_sync_pins))
->+		ret = dpll_msg_add_pin_ref_sync(msg, pin, ref, extack);
-> 	if (ret)
-> 		return ret;
-> 	if (xa_empty(&pin->parent_refs))
->@@ -642,24 +705,6 @@ __dpll_device_change_ntf(struct dpll_device *dpll)
-> 	return dpll_device_event_send(DPLL_CMD_DEVICE_CHANGE_NTF, dpll);
-> }
-> 
->-static bool dpll_pin_available(struct dpll_pin *pin)
->-{
->-	struct dpll_pin_ref *par_ref;
->-	unsigned long i;
->-
->-	if (!xa_get_mark(&dpll_pin_xa, pin->id, DPLL_REGISTERED))
->-		return false;
->-	xa_for_each(&pin->parent_refs, i, par_ref)
->-		if (xa_get_mark(&dpll_pin_xa, par_ref->pin->id,
->-				DPLL_REGISTERED))
->-			return true;
->-	xa_for_each(&pin->dpll_refs, i, par_ref)
->-		if (xa_get_mark(&dpll_device_xa, par_ref->dpll->id,
->-				DPLL_REGISTERED))
->-			return true;
->-	return false;
->-}
->-
-> /**
->  * dpll_device_change_ntf - notify that the dpll device has been changed
->  * @dpll: registered dpll pointer
->@@ -887,6 +932,108 @@ dpll_pin_esync_set(struct dpll_pin *pin, struct nlattr *a,
-> 	return ret;
-> }
-> 
->+static int
->+dpll_pin_ref_sync_state_set(struct dpll_pin *pin, unsigned long sync_pin_idx,
->+			    const enum dpll_pin_state state,
->+			    struct netlink_ext_ack *extack)
->+
->+{
->+	struct dpll_pin_ref *ref, *failed;
->+	const struct dpll_pin_ops *ops;
->+	enum dpll_pin_state old_state;
->+	struct dpll_pin *sync_pin;
-
-Again, please name this consistently...
-
-
->+	struct dpll_device *dpll;
->+	unsigned long i;
->+	int ret;
->+
->+	if (state != DPLL_PIN_STATE_CONNECTED &&
->+	    state != DPLL_PIN_STATE_DISCONNECTED)
-
-Extack message? But, isn't this sanitized already by policy? Then,
-please remove.
-
-
->+		return -EINVAL;
->+	sync_pin = xa_find(&pin->ref_sync_pins, &sync_pin_idx, ULONG_MAX,
->+			   XA_PRESENT);
->+	if (!sync_pin) {
->+		NL_SET_ERR_MSG(extack, "reference sync pin not found");
->+		return -EINVAL;
->+	}
->+	if (!dpll_pin_available(sync_pin)) {
->+		NL_SET_ERR_MSG(extack, "reference sync pin not available");
->+		return -EINVAL;
->+	}
->+	ref = dpll_xa_ref_dpll_first(&pin->dpll_refs);
->+	ASSERT_NOT_NULL(ref);
->+	ops = dpll_pin_ops(ref);
->+	if (!ops->ref_sync_set || !ops->ref_sync_get) {
->+		NL_SET_ERR_MSG(extack, "reference sync not supported by this pin");
->+		return -EOPNOTSUPP;
->+	}
->+	dpll = ref->dpll;
->+	ret = ops->ref_sync_get(pin, dpll_pin_on_dpll_priv(dpll, pin), sync_pin,
->+				dpll_pin_on_dpll_priv(dpll, sync_pin),
->+				&old_state, extack);
->+	if (ret) {
->+		NL_SET_ERR_MSG(extack, "unable to get old reference sync state");
->+		return ret;
->+	}
->+	if (state == old_state)
->+		return 0;
->+	xa_for_each(&pin->dpll_refs, i, ref) {
->+		ops = dpll_pin_ops(ref);
->+		dpll = ref->dpll;
->+		ret = ops->ref_sync_set(pin, dpll_pin_on_dpll_priv(dpll, pin),
->+					sync_pin,
->+					dpll_pin_on_dpll_priv(dpll, sync_pin),
->+					state, extack);
->+		if (ret) {
->+			failed = ref;
->+			NL_SET_ERR_MSG_FMT(extack, "reference sync set failed for dpll_id:%u",
->+					   dpll->id);
->+			goto rollback;
->+		}
->+	}
->+	__dpll_pin_change_ntf(pin);
->+
->+	return 0;
->+
->+rollback:
->+	xa_for_each(&pin->dpll_refs, i, ref) {
->+		if (ref == failed)
->+			break;
->+		ops = dpll_pin_ops(ref);
->+		dpll = ref->dpll;
->+		if (ops->ref_sync_set(pin, dpll_pin_on_dpll_priv(dpll, pin),
->+				      sync_pin,
->+				      dpll_pin_on_dpll_priv(dpll, sync_pin),
->+				      old_state, extack))
->+			NL_SET_ERR_MSG(extack, "set reference sync rollback failed");
->+	}
->+	return ret;
->+}
->+
->+static int
->+dpll_pin_ref_sync_set(struct dpll_pin *pin, struct nlattr *nest,
->+		      struct netlink_ext_ack *extack)
->+{
->+	struct nlattr *tb[DPLL_A_PIN_MAX + 1];
->+	enum dpll_pin_state state;
->+	u32 sync_pin_id;
->+
->+	nla_parse_nested(tb, DPLL_A_PIN_MAX, nest,
->+			 dpll_reference_sync_nl_policy, extack);
->+	if (!tb[DPLL_A_PIN_ID]) {
->+		NL_SET_ERR_MSG(extack, "sync pin id expected");
->+		return -EINVAL;
->+	}
->+	sync_pin_id = nla_get_u32(tb[DPLL_A_PIN_ID]);
->+
->+	if (!tb[DPLL_A_PIN_STATE]) {
->+		NL_SET_ERR_MSG(extack, "sync pin state expected");
->+		return -EINVAL;
->+	}
->+	state = nla_get_u32(tb[DPLL_A_PIN_STATE]);
->+
->+	return dpll_pin_ref_sync_state_set(pin, sync_pin_id, state, extack);
->+}
->+
-> static int
-> dpll_pin_on_pin_state_set(struct dpll_pin *pin, u32 parent_idx,
-> 			  enum dpll_pin_state state,
->@@ -1193,6 +1340,11 @@ dpll_pin_set_from_nlattr(struct dpll_pin *pin, struct genl_info *info)
-> 			if (ret)
-> 				return ret;
-> 			break;
->+		case DPLL_A_PIN_REFERENCE_SYNC:
->+			ret = dpll_pin_ref_sync_set(pin, a, info->extack);
->+			if (ret)
->+				return ret;
->+			break;
-> 		}
-> 	}
-> 
->diff --git a/include/linux/dpll.h b/include/linux/dpll.h
->index 5e4f9ab1cf75..f1f1fdda67fe 100644
->--- a/include/linux/dpll.h
->+++ b/include/linux/dpll.h
->@@ -95,6 +95,14 @@ struct dpll_pin_ops {
-> 			 const struct dpll_device *dpll, void *dpll_priv,
-> 			 struct dpll_pin_esync *esync,
-> 			 struct netlink_ext_ack *extack);
->+	int (*ref_sync_set)(const struct dpll_pin *pin, void *pin_priv,
->+			    const struct dpll_pin *ref_pin, void *ref_pin_priv,
->+			    const enum dpll_pin_state state,
->+			    struct netlink_ext_ack *extack);
->+	int (*ref_sync_get)(const struct dpll_pin *pin, void *pin_priv,
->+			    const struct dpll_pin *ref_pin, void *ref_pin_priv,
-
-"ref_pin". This is 4th name of the same variable. Weird...
-
-
->+			    enum dpll_pin_state *state,
->+			    struct netlink_ext_ack *extack);
-> };
-> 
-> struct dpll_pin_frequency {
->@@ -194,6 +202,8 @@ int dpll_pin_on_pin_register(struct dpll_pin *parent, struct dpll_pin *pin,
-> void dpll_pin_on_pin_unregister(struct dpll_pin *parent, struct dpll_pin *pin,
-> 				const struct dpll_pin_ops *ops, void *priv);
-> 
->+int dpll_pin_ref_sync_pair_add(struct dpll_pin *base, struct dpll_pin *sync);
->+
-> int dpll_device_change_ntf(struct dpll_device *dpll);
-> 
-> int dpll_pin_change_ntf(struct dpll_pin *pin);
->-- 
->2.38.1
->
