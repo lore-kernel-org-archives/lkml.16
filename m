@@ -1,55 +1,55 @@
 Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37396214A6E
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 23:05:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC570217679
+	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 23:05:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748041532; cv=none; b=cZQjCiWjUZkayOEiXTXGy49CdE0GwfzM9eIYdyxSR7wiGtcEq/B5SaXe4MBXZ+son66lg8nWpaUBqtEqWi+89nlJ4bXSiuiFxbCtI1rCq/AtQMZq+jxK0m+6Y2QseFixvl5QfhFKBaXbIEhrvWl7Ox8eNSHHtcsmN9THRok6z/4=
+	t=1748041534; cv=none; b=jTCS4t3E2sukebqmLb+Mc+H5vx+TpNu6twvFjadXTktZV7YMfzIt71WCM8emh/dHAF8MeknTxsg5CChnApRhMCnjuHPyFitOJ4fPnvdSuEkuY1nn+sOSNp+5Pt5vz9J0LxlK+4Dd8q3bYR3kOd4bHx8RDoFITH+3gF7eXJlgeTo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748041532; c=relaxed/simple;
-	bh=9bBgqUTKUTvL8dGZ7fOUimIIQDGeubiMLtI87rh+SaI=;
+	s=arc-20240116; t=1748041534; c=relaxed/simple;
+	bh=XtpGf08mk62B/n49TMdckE7eT2mByGhUn/6TICm/3tc=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=RrrnY/UJMUlz9ALrm35BgU96lv9710lV1iTamg01PFe2q0u21MT13D3YyLZbMZr1ck1olzpk6ZXiw+/akoizO5tOhRYL/4HneBoFdaGEHF32zWwuG63zKfiFxoUalNGmk6vKI/mY8C3vruoYvpDO+LjZ2LxGkZTGM6O5t6NmvX4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--almasrymina.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=F1QLlBBn; arc=none smtp.client-ip=209.85.214.201
+	 To:Cc:Content-Type; b=Oic9fwnMhDuOVPxQg4Q3GALyeuhccJbM4/6EMWu44G9XcE3t83pBUqfMfN3nd+lpL8qNVxYOqEDpaTrHk2SIhASwOmeOCfgAb+3v382GoqcKjjV1QFTuBo8TVMpjWdR0Ecxccm3ilq3fNTQ+9dKLoihzvy4v9QpNCp5Z7mufN0o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--almasrymina.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=S1237oP2; arc=none smtp.client-ip=209.85.214.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--almasrymina.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="F1QLlBBn"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-231d7f590ffso2178825ad.1
-        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 16:05:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="S1237oP2"
+Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-23415056f5bso3559605ad.3
+        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 16:05:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748041530; x=1748646330; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1748041532; x=1748646332; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=A3Y8BwizNgJ8oalQ93WgymucSdo1pRhF9lv1bG0FZic=;
-        b=F1QLlBBneBeoElw7DJswg/g5uXYv9TFmvDrqhKzxQUfws2IsMC916485EaxFTM96Oa
-         fZLQ52K/8SjCvPUZOt/mMeXfHvLi0dErA4lS/PmFYBYCaK2444GN1ITxuG9tN1p40TbU
-         XQbe4KHujYF/XKSKubK8LcufP8fALHCWt7fAV9bREvkyYip9z/zUembynr1+iztHD/KL
-         NQUTNinrdr/ZL9RxeSSEKQi0bINZroJr1bYLDO2GvxS2i31ei/C0T6sZPMVZM9PbiiII
-         YJV/1WzCBpAP2aYhI204toJ0YcmZxE4GK4FySlFbCmwKZI3fM9nYWQgW6daXjb174A2Y
-         L08Q==
+        bh=jo8oX10ObykGsTsR/s0quAt1NvrEp0Zt6nav8gqqDes=;
+        b=S1237oP2fGB8BGwvycGvidqRwF7caLEZhno4g/sGIAzWEhERoOrwkywBkX/aVjo9go
+         CR0aSPy8LbxaNs/AAVJkfVqTLLhl4LJHpAvo9lY13tXTjmVfSBpTSXflmka2EZvT3l0+
+         8ylq4qoJyNMZq9K32QqwcVSukaewJuklLv1k8AAunfhZ+iJZlvk/CHRa3TgHf7yeme1j
+         VZ3GMLqbjqSLmDtIobg2XjdQWVNuWNTuOp1UTCVaMemgOurEwwCsx0ORI4bd2APkZDCe
+         +x5+IHhp/tgnmeQXCXhLp89mYcx2JKz86+baKlvK9fEUdWUFN475C9yBFF04zIL1RdIR
+         ORzw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748041530; x=1748646330;
+        d=1e100.net; s=20230601; t=1748041532; x=1748646332;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=A3Y8BwizNgJ8oalQ93WgymucSdo1pRhF9lv1bG0FZic=;
-        b=nmq501XHOdVmM9c0+NN7XcCX8SUrPdDp7BCOLnN9lyq1lyIZtHTNGBgQ/mAnatXKS+
-         1O63EC4LCiy96zI5KNrnyv64mRe0oGyNIYyazruaLmvoaaEVUHtWkLszEluDigG3RRUu
-         GaVcGVijckzHulbdJQRLI+K4ZEysDDWdW7MlAU3Qsx7i904IsMNqZDUJ+srR3pqWuKso
-         f9AI9/u6hl52QJfjTPeWh7msmsvmIPu2OgAo0uf+b9UbHJ0moBAbQKnkYkyr5bX/pHbu
-         f4SK/MOE+mY0SsxIqGuDt8gp9OqYvLeycCPbFtQZKgpQJQBGHgCGu96Y79NoUBlYRuR2
-         Y/OQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXv+nyvXcmqobdGdwZwc+nkvNt6390g2F3wVNwKhCFnDZCMlzqMJrQAUWGreRS+NTtGSBE4fot0Zu2aHYg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyr0hFZ0Gy4gkjcXX5cH7GTVxr8dPdMfI6ozNkbOMTK9c6IDScR
-	440hUdJ374BzVDqHeJcheBVqW65L1xiC3+T6bw7UrZwYsCzdJ6qBsoktBxLn8CTAouBxIhXr2uE
-	ZQAJGLUFzsLEbiUo6CJidDrwLTw==
-X-Google-Smtp-Source: AGHT+IH4Fzn2Wn5un9IcegOD3XvdTAfnS/c9KAmp12UOskBBU8tWlxhI3ZaVLU3vOkIU9iaEtUmCYsqbvBCAu6Fdxg==
-X-Received: from plil14.prod.google.com ([2002:a17:903:17ce:b0:21f:4f0a:c7e2])
+        bh=jo8oX10ObykGsTsR/s0quAt1NvrEp0Zt6nav8gqqDes=;
+        b=r30TX4kGDQtc1isBNhpUix/O7h6NcSfOCtmJzv99dOHfkjVxEy5mJHP3hxq0fzoi6k
+         NXDC5Fkd96ihayt3y/WTL0noxsWi4a9A+41LfVXLECyBbE8WQblDu585bOVL0vQw085m
+         D3hS2UL/AnjYHN0T8ibbgaxSjBRuQgxl/5a2sBV/u7SiBhZdbwHECoWPK/kk2dYS8T1u
+         gMEUo8S6WjPCuibKMN5FBd23EV02CGkbh/Vh+4+ZmWlbTyRolQIl78M8PySbpgBetg3O
+         D2Lgz/FKN3NXS96e1/d9KLNDegAiavGhoIlMejlfEgUBPMyAPXWvTKOMl0kKad94GZG9
+         SnQg==
+X-Forwarded-Encrypted: i=1; AJvYcCX7Mu9pPNQ1NPQn5msqjVLzrwJaWXCpJKT6HWgx3mcFMXQM9e3B/eoy/PirkfE4gE/4sxS213T3VYSy9lY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx79NcUWTRxyd1Z/sN7KvhfN9YTfIE4jvJB8JR+JwfVMtJSreLz
+	GBRObN5s5CF/TPIIsvSahIRBNHnQSSSjaIDIaLfr+ScS0XWmGuqPq3iiR+Zq5DOMTDXENkXlZq+
+	npEmLKeeFnvBUMyXabMvJVOy39Q==
+X-Google-Smtp-Source: AGHT+IFoBkGFwgLLGT5f3w3RDig2i1nIBH1FsoeWWmCb4h+IXnB8/EK5ds7LLf2qaCyDmHPMD3Aak1+RlQqHMg3FlQ==
+X-Received: from pliy11.prod.google.com ([2002:a17:903:3d0b:b0:232:4eb:e2c6])
  (user=almasrymina job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:902:d2d1:b0:234:e88:f23 with SMTP id d9443c01a7336-23414f34dd5mr16574955ad.6.1748041530499;
- Fri, 23 May 2025 16:05:30 -0700 (PDT)
-Date: Fri, 23 May 2025 23:05:17 +0000
+ 2002:a17:902:f609:b0:223:f408:c3e2 with SMTP id d9443c01a7336-23414f4b44fmr16343555ad.14.1748041532044;
+ Fri, 23 May 2025 16:05:32 -0700 (PDT)
+Date: Fri, 23 May 2025 23:05:18 +0000
 In-Reply-To: <20250523230524.1107879-1-almasrymina@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250523230524.1107879-1-almasrymina@google.com>
 X-Mailer: git-send-email 2.49.0.1151.ga128411c76-goog
-Message-ID: <20250523230524.1107879-2-almasrymina@google.com>
-Subject: [PATCH net-next v2 1/8] net: devmem: move list_add to net_devmem_bind_dmabuf.
+Message-ID: <20250523230524.1107879-3-almasrymina@google.com>
+Subject: [PATCH net-next v2 2/8] page_pool: fix ugly page_pool formatting
 From: Mina Almasry <almasrymina@google.com>
 To: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
 	linux-kselftest@vger.kernel.org
@@ -73,112 +73,29 @@ Cc: Mina Almasry <almasrymina@google.com>, "David S. Miller" <davem@davemloft.ne
 	ap420073@gmail.com, praan@google.com, shivajikant@google.com
 Content-Type: text/plain; charset="UTF-8"
 
-It's annoying for the list_add to be outside net_devmem_bind_dmabuf, but
-the list_del is in net_devmem_unbind_dmabuf. Make it consistent by
-having both the list_add/del be inside the net_devmem_[un]bind_dmabuf.
+Minor cleanup; this line is badly formatted.
 
-Cc: ap420073@gmail.com
 Signed-off-by: Mina Almasry <almasrymina@google.com>
-Tested-by: Taehee Yoo <ap420073@gmail.com>
 
 ---
- net/core/devmem.c      | 5 ++++-
- net/core/devmem.h      | 5 ++++-
- net/core/netdev-genl.c | 8 ++------
- 3 files changed, 10 insertions(+), 8 deletions(-)
+ net/core/page_pool.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/net/core/devmem.c b/net/core/devmem.c
-index 0dba26baae18..b3a62ca0df65 100644
---- a/net/core/devmem.c
-+++ b/net/core/devmem.c
-@@ -178,7 +178,8 @@ int net_devmem_bind_dmabuf_to_queue(struct net_device *dev, u32 rxq_idx,
- struct net_devmem_dmabuf_binding *
- net_devmem_bind_dmabuf(struct net_device *dev,
- 		       enum dma_data_direction direction,
--		       unsigned int dmabuf_fd, struct netlink_ext_ack *extack)
-+		       unsigned int dmabuf_fd, struct netdev_nl_sock *priv,
-+		       struct netlink_ext_ack *extack)
- {
- 	struct net_devmem_dmabuf_binding *binding;
- 	static u32 id_alloc_next;
-@@ -299,6 +300,8 @@ net_devmem_bind_dmabuf(struct net_device *dev,
- 	if (err < 0)
- 		goto err_free_chunks;
+diff --git a/net/core/page_pool.c b/net/core/page_pool.c
+index 974f3eef2efa..4011eb305cee 100644
+--- a/net/core/page_pool.c
++++ b/net/core/page_pool.c
+@@ -867,8 +867,8 @@ void page_pool_put_unrefed_netmem(struct page_pool *pool, netmem_ref netmem,
+ 	if (!allow_direct)
+ 		allow_direct = page_pool_napi_local(pool);
  
-+	list_add(&binding->list, &priv->bindings);
-+
- 	return binding;
- 
- err_free_chunks:
-diff --git a/net/core/devmem.h b/net/core/devmem.h
-index 58d8d3c1b945..e7ba77050b8f 100644
---- a/net/core/devmem.h
-+++ b/net/core/devmem.h
-@@ -11,6 +11,7 @@
- #define _NET_DEVMEM_H
- 
- #include <net/netmem.h>
-+#include <net/netdev_netlink.h>
- 
- struct netlink_ext_ack;
- 
-@@ -82,7 +83,8 @@ void __net_devmem_dmabuf_binding_free(struct work_struct *wq);
- struct net_devmem_dmabuf_binding *
- net_devmem_bind_dmabuf(struct net_device *dev,
- 		       enum dma_data_direction direction,
--		       unsigned int dmabuf_fd, struct netlink_ext_ack *extack);
-+		       unsigned int dmabuf_fd, struct netdev_nl_sock *priv,
-+		       struct netlink_ext_ack *extack);
- struct net_devmem_dmabuf_binding *net_devmem_lookup_dmabuf(u32 id);
- void net_devmem_unbind_dmabuf(struct net_devmem_dmabuf_binding *binding);
- int net_devmem_bind_dmabuf_to_queue(struct net_device *dev, u32 rxq_idx,
-@@ -170,6 +172,7 @@ static inline void __net_devmem_dmabuf_binding_free(struct work_struct *wq)
- static inline struct net_devmem_dmabuf_binding *
- net_devmem_bind_dmabuf(struct net_device *dev, unsigned int dmabuf_fd,
- 		       enum dma_data_direction direction,
-+		       struct netdev_nl_sock *priv,
- 		       struct netlink_ext_ack *extack)
- {
- 	return ERR_PTR(-EOPNOTSUPP);
-diff --git a/net/core/netdev-genl.c b/net/core/netdev-genl.c
-index 762570dcda61..2afa7b2141aa 100644
---- a/net/core/netdev-genl.c
-+++ b/net/core/netdev-genl.c
-@@ -908,7 +908,7 @@ int netdev_nl_bind_rx_doit(struct sk_buff *skb, struct genl_info *info)
- 	}
- 
- 	binding = net_devmem_bind_dmabuf(netdev, DMA_FROM_DEVICE, dmabuf_fd,
--					 info->extack);
-+					 priv, info->extack);
- 	if (IS_ERR(binding)) {
- 		err = PTR_ERR(binding);
- 		goto err_unlock;
-@@ -943,8 +943,6 @@ int netdev_nl_bind_rx_doit(struct sk_buff *skb, struct genl_info *info)
- 			goto err_unbind;
- 	}
- 
--	list_add(&binding->list, &priv->bindings);
--
- 	nla_put_u32(rsp, NETDEV_A_DMABUF_ID, binding->id);
- 	genlmsg_end(rsp, hdr);
- 
-@@ -1020,15 +1018,13 @@ int netdev_nl_bind_tx_doit(struct sk_buff *skb, struct genl_info *info)
- 		goto err_unlock_netdev;
- 	}
- 
--	binding = net_devmem_bind_dmabuf(netdev, DMA_TO_DEVICE, dmabuf_fd,
-+	binding = net_devmem_bind_dmabuf(netdev, DMA_TO_DEVICE, dmabuf_fd, priv,
- 					 info->extack);
- 	if (IS_ERR(binding)) {
- 		err = PTR_ERR(binding);
- 		goto err_unlock_netdev;
- 	}
- 
--	list_add(&binding->list, &priv->bindings);
--
- 	nla_put_u32(rsp, NETDEV_A_DMABUF_ID, binding->id);
- 	genlmsg_end(rsp, hdr);
- 
+-	netmem =
+-		__page_pool_put_page(pool, netmem, dma_sync_size, allow_direct);
++	netmem = __page_pool_put_page(pool, netmem, dma_sync_size,
++				      allow_direct);
+ 	if (netmem && !page_pool_recycle_in_ring(pool, netmem)) {
+ 		/* Cache full, fallback to free pages */
+ 		recycle_stat_inc(pool, ring_full);
 -- 
 2.49.0.1151.ga128411c76-goog
 
