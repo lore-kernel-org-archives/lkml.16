@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E033296723;
-	Fri, 23 May 2025 14:52:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94D30296723;
+	Fri, 23 May 2025 14:52:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748011925; cv=none; b=aD/9eR+bGT9GJjhATXMQlyi/a6HL9EhY2/20nDOM6oMQIfR4prvNDc/ekQCdu/tlmOQQ49/cvxS5ywv+fbbywNETMARj6VEnHq9bjrlpQ3fCFkAqaKj1P+ImuXhKAmJMNVZ5ARn0La/fM5UkMQZT+gfgp32IIYWEcM2Ca7OxaIg=
+	t=1748011929; cv=none; b=r6LaWnacv8oS6Dpwp4QdXLzT1ELubHLxiPxumR9vuYkWK69UYcb+/v8Nqx1BfAL+1S0jzA5v0lA/Km3svhGsfppJwem8aYYLuI+EdQrIan06TZNQSmIoBhSZqOuS+WFlautxCDJZCWDjYmfjRRNWCUSMoEHPbQLx8xfoRKL6LFs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748011925; c=relaxed/simple;
-	bh=Z9Jx4p+CmBHDNdpiv8pTq2nkjvdxScH3hf9IlZY91CM=;
+	s=arc-20240116; t=1748011929; c=relaxed/simple;
+	bh=h1EAbAQm5zTjrP/xtZUJqPFk4Y8UuAD+BbM2X3wU6Ds=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ZViHkbwFAeAe/MTUEsiAIlcQ2tc+Y7y7TNAM3M9+YQ77lCuV5I+0Ig+lJgkm4tXSG2P9n7mMw47dvfWIvM/8asEa3fsjkKHu9w2MZa1bNE5ZjQkcjrirL3e4EBvnTNceNDNYK7XLihy6xSjFSDSI6ZOBOrLT/YyCZOhDG/XQg/A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hcrgfRL7; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=tqfZV9NjRgFBRLu+jEj7H0VABdtEvsvetVdI55ZeV/ht4dzf4AOqLVzmo6oR5XME728wCrgImMELFVXG8cjyX97LS0Ztve0PGctbW0H+8z4ZgSXPFvMQOXtMj9F8K4+CUFaUfRne61X0EP6fHuJagTv6s0yHit4SrdVeDdwUNr0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KzfvwSRY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hcrgfRL7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA35EC4CEED;
-	Fri, 23 May 2025 14:52:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KzfvwSRY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15BD7C4CEF2;
+	Fri, 23 May 2025 14:52:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748011924;
-	bh=Z9Jx4p+CmBHDNdpiv8pTq2nkjvdxScH3hf9IlZY91CM=;
+	s=k20201202; t=1748011929;
+	bh=h1EAbAQm5zTjrP/xtZUJqPFk4Y8UuAD+BbM2X3wU6Ds=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=hcrgfRL7J6+xiEKJzQX/bYsr4m+1biJsZSohEMmpM0+VFUOJdBZPL7fQHSTMid0Eb
-	 sQI6uAJRw0jL3k8pSltawTQUl4zmpIQWjmz6jZkUNEwq1Bd062NhsPZgqW+0TjJIv7
-	 BzFYWQZUXbLaU1uwZ7ktHIVv2AMmABZhLNCefXpjYi3+axu/ng+AQ0bYd/+n5yAYGX
-	 dv7c0yLq9Xwny1wHToyXXWvjdmr0HKelPM5or4IJRtXfTofa6atc23jt8oVmUkCgmp
-	 W7l1VYwaQKrAv220tdPElhb0XxpGKz2KJJZU8rA8OChlzyp1PMY4Guh97hkg0ycBC0
-	 Z6jztplW7Vaug==
+	b=KzfvwSRYx6H5wW/q9aoLQGbx/srZe9YGzBKKgeguDaZqG9BuLilaIniqj41jR63Gy
+	 xxzCOAvfVTtUIvwNEPbpoJNg+1nOYlxrWURVYZvEWYb4KQdpuVW+8E7UsL+WBBnDcd
+	 1C3e0OOqBvwKStLwAdJGNPDNIPxbql25mE22tYId/fdj5p6z0213s9KE8A2rhmGAh4
+	 86wDoBTdhlKdapVXfD+YxNWvQHkrL+CdvrGmAlq/TwJwJsSMH/Lwdf0JFYj8FtB2u7
+	 M2+4ZQ2G4EjvJrbcjpfpKIYsVe2ewxiESXFEeb6W28iPhJVnnkgwNHPxezN5Wk2JLU
+	 n38NaxMsxDnWg==
 From: Benno Lossin <lossin@kernel.org>
 To: Benno Lossin <lossin@kernel.org>,
 	Miguel Ojeda <ojeda@kernel.org>,
@@ -42,9 +42,9 @@ To: Benno Lossin <lossin@kernel.org>,
 Cc: Lyude Paul <lyude@redhat.com>,
 	rust-for-linux@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 05/13] rust: pin-init: change `impl Zeroable for Option<NonNull<T>>` to `ZeroableOption for NonNull<T>`
-Date: Fri, 23 May 2025 16:51:01 +0200
-Message-ID: <20250523145125.523275-6-lossin@kernel.org>
+Subject: [PATCH v2 06/13] rust: pin-init: implement `ZeroableOption` for function pointers with up to 20 arguments
+Date: Fri, 23 May 2025 16:51:02 +0200
+Message-ID: <20250523145125.523275-7-lossin@kernel.org>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250523145125.523275-1-lossin@kernel.org>
 References: <20250523145125.523275-1-lossin@kernel.org>
@@ -56,37 +56,43 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This brings it in line with references. It too is listed in [1].
+`Option<[unsafe] [extern "abi"] fn(...args...) -> ret>` is documented
+[1] to also have the `None` variant equal all zeroes.
 
-Link: https://doc.rust-lang.org/stable/std/option/index.html#representation
-Link: https://github.com/Rust-for-Linux/pin-init/pull/56/commits/8e52bf56ddc2190ce901d2f7c008ab8a64f653a9
+Link: https://doc.rust-lang.org/stable/std/option/index.html#representation [1]
+Link: https://github.com/Rust-for-Linux/pin-init/pull/56/commits/b6c1ab4fb3699765f81ae512ecac5a2f032d8d51
 Signed-off-by: Benno Lossin <lossin@kernel.org>
 ---
- rust/pin-init/src/lib.rs | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ rust/pin-init/src/lib.rs | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
 diff --git a/rust/pin-init/src/lib.rs b/rust/pin-init/src/lib.rs
-index bdd2a050f7c8..e46be80bd344 100644
+index e46be80bd344..645633de0f6c 100644
 --- a/rust/pin-init/src/lib.rs
 +++ b/rust/pin-init/src/lib.rs
-@@ -1528,6 +1528,9 @@ unsafe impl<T> ZeroableOption for &T {}
- // SAFETY: `Option<&mut T>` is part of the option layout optimization guarantee:
- // <https://doc.rust-lang.org/stable/std/option/index.html#representation>.
- unsafe impl<T> ZeroableOption for &mut T {}
-+// SAFETY: `Option<NonNull<T>>` is part of the option layout optimization guarantee:
-+// <https://doc.rust-lang.org/stable/std/option/index.html#representation>.
-+unsafe impl<T> ZeroableOption for NonNull<T> {}
+@@ -1638,6 +1638,22 @@ unsafe impl<$first: Zeroable, $($t: Zeroable),*> Zeroable for ($first, $($t),*)
  
- /// Create an initializer for a zeroed `T`.
+ impl_tuple_zeroable!(A, B, C, D, E, F, G, H, I, J);
+ 
++macro_rules! impl_fn_zeroable_option {
++    ([$($abi:literal),* $(,)?] $args:tt) => {
++        $(impl_fn_zeroable_option!({extern $abi} $args);)*
++        $(impl_fn_zeroable_option!({unsafe extern $abi} $args);)*
++    };
++    ({$($prefix:tt)*} {$(,)?}) => {};
++    ({$($prefix:tt)*} {$ret:ident, $($rest:ident),* $(,)?}) => {
++        // SAFETY: function pointers are part of the option layout optimization:
++        // <https://doc.rust-lang.org/stable/std/option/index.html#representation>.
++        unsafe impl<$ret, $($rest),*> ZeroableOption for $($prefix)* fn($($rest),*) -> $ret {}
++        impl_fn_zeroable_option!({$($prefix)*} {$($rest),*,});
++    };
++}
++
++impl_fn_zeroable_option!(["Rust", "C"] { A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U });
++
+ /// This trait allows creating an instance of `Self` which contains exactly one
+ /// [structurally pinned value](https://doc.rust-lang.org/std/pin/index.html#projections-and-structural-pinning).
  ///
-@@ -1606,7 +1609,6 @@ macro_rules! impl_zeroable {
-     Option<NonZeroU128>, Option<NonZeroUsize>,
-     Option<NonZeroI8>, Option<NonZeroI16>, Option<NonZeroI32>, Option<NonZeroI64>,
-     Option<NonZeroI128>, Option<NonZeroIsize>,
--    {<T>} Option<NonNull<T>>,
- 
-     // SAFETY: `null` pointer is valid.
-     //
 
 base-commit: ae8b3a83fb9de394f609035041cd7a668fda2ab3
 prerequisite-patch-id: https://lore.kernel.org/all/20250523125424.192843-2-lossin@kernel.org
