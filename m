@@ -1,63 +1,63 @@
-Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
+Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B2151F0E37;
-	Fri, 23 May 2025 16:15:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94549297104;
+	Fri, 23 May 2025 16:15:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748016946; cv=none; b=eoVcsb+e71KmrUnik8ojfeDbG5Uf2EQH5UTHZHjpXVenJH2OW647CQva32XnjLgjv70+fji6Ns120NH04y9sNMhL5t7Seb1liKdT/EdpBROD0zmDkJ7UZwhTJr+bTLUhPk1b63tJl/tZbvir92K/2tdZRWQW6JJjvewxt2OXBG0=
+	t=1748016949; cv=none; b=nahlCNz/lLafHCI6rsWGKZOc2c92wNonkaOmmXxpG5JSVc+VFN5yIutuvM/Pkc3mKpM1H2hf+4tlGsLuHDocbY8esFyzSR1lQhDnj10r9QTYcVeqqfxX4IZtWBypmhXnxa51BnLC0MfaMlpGQ5GcSudYxX+k6J/5HoKQo4+qERs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748016946; c=relaxed/simple;
-	bh=hz0JB9pzXQpSDr6pAMFPj1hF1BZKOfjGC0sQ6kmOQIs=;
+	s=arc-20240116; t=1748016949; c=relaxed/simple;
+	bh=UqNvfT8UNcQF1ajewAq/dch5PAUIobvrkdEpLmAZ7wA=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=fwqL3P46HSgsyJTvYVHryasHf7+Y311tanhjXUEBNP6Scq9njZ3GhZVaKWVkad/I9F+0HSC6lF1RoJW9OTbZOBPHauPv5q5DRdKOd6SFLsnV6oN+R1nQwT9H9JvEhTXWiJF2yeF3Z6gcloJrYwQzxFolj/EDudRajwtRVlFqaI0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LpoufZkw; arc=none smtp.client-ip=209.85.216.54
+	 MIME-Version; b=c5zpNeFPHfSY/BQUKuwqHR2jDBt3X5kYvZo+Chiqd33Jaad9gne3BMI/xtu5Whgh7uHfN+yxKut1EsZoB6jB62C88+2wnDl/i9nGDOmH3XWVn58F54oaOKV42qkkss8ux3R4at1VS4H4wwgDZB3XWqRqo6Yp14GzPp3gy9a5OyY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Cu7XiHdo; arc=none smtp.client-ip=209.85.216.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LpoufZkw"
-Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-30ea8b7c5c2so115259a91.3;
-        Fri, 23 May 2025 09:15:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Cu7XiHdo"
+Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-30ea7770bd2so155607a91.0;
+        Fri, 23 May 2025 09:15:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748016944; x=1748621744; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1748016947; x=1748621747; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:reply-to:references
          :in-reply-to:message-id:date:subject:cc:to:from:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=fcO9TXDJbv0PnpLhAYEgKHbgViS8WVoRG/IIez/PTTM=;
-        b=LpoufZkwN19VCywWq9GHD9nNqlitZwRXJqamadrGJvNhd+6Ky8MYfEU4yLGhHhteyE
-         1pc9UWwjRT0xznLWBANzfyB7tv3YHMnT9Zf2JsGFCDLj0D1hp1IXp/HHTNqYPFE2NI4w
-         9S5PnrKjG6T+ViM+ev18HH9r79No43bdwsb5cwQPYd6a9H1RVPlCfxVrlG9B7DQHt9OS
-         WomxwLGmW7yJoMiTH1x6BGAW3NsC5Y/0th/OB64Ct7/e+/mnJFIwaWpkziFsoJ0PULIC
-         JGiAuZrHHZ8Wc7VcksmotMK6H6oisauAaGO8HHnIOZqneZM/119zCI2xy/mWPf5rWscE
-         FBEQ==
+        bh=GNk2zZpC65xRherJZoi8fazJtKf8aShkVrAnPTjrn2Y=;
+        b=Cu7XiHdoJy9Zr3DyJmFBzr7/ZWGBucsF/KnfVoOUReqlubC7o6HzBUSLeGWF3K2ZVm
+         f2i9u6jkOVgnU8bntVWMX30O3mLH28sl2EhR3n7RoqP+qmf1c1ILoFK329/dH5rqHojl
+         jEK4i2GHgvfBA29kD+/km+FfJUAtDfN1iI9Uyp4l1gmjjV92bSoG4WSD/rjxaOHOu9Vv
+         UTSU6mwp/uE2cvkMWcr3d31jCZOM78kOpKL1Bup/uivjpS53OQjJ5Z49ebbm8Y0bRVqA
+         VtxXhUJ9W6ScKXc9uRnRsj2e3dUh5LlTxIODDj3Je62fYFE6A1i+Kv0DF3h+r5d2jNYf
+         s6KA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748016944; x=1748621744;
+        d=1e100.net; s=20230601; t=1748016947; x=1748621747;
         h=content-transfer-encoding:mime-version:reply-to:references
          :in-reply-to:message-id:date:subject:cc:to:from:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=fcO9TXDJbv0PnpLhAYEgKHbgViS8WVoRG/IIez/PTTM=;
-        b=DxDJ4rf0PdxyrHaZVPD7UUX50Q0/c6XAHdeVyrDmL8AM5kPSgf4tMENxx8wdgxw1rE
-         ReIFQKs9aPFf3qeLxkEc42m7nR6HD4DLD0yGdQ3MeLCEtGr2GpS3sIJC27QdDFlrt5fF
-         keIOBJpe5wjlbHW8li/dsqtScbCmc1OSavnz9C9rXy/36KJm46DNmgZbZVbLvIyTXfs1
-         TZGhs7ZruYkqPnv0+vq+P+dij/bkyRqTxYpgcUTi6BdBFi5KNktZdiaZl4OqMmJtYq3q
-         rUY9pMsRkChY/CIFXnoXCGoBSTB12JG4PiZh/WSM8TZipFMrdLWduJAg62MhzMWSlqTX
-         ALbw==
-X-Forwarded-Encrypted: i=1; AJvYcCVr+MtDsMxTuLS5e6k7fWCSmkypSAArjhGq1Lbv/CnkUnb1dKXjlUqjMGfkYqvwDcLAnbmu19ETXzZmpryz@vger.kernel.org, AJvYcCWF262j+WK4Vw/d2AnH1CjtbvGX6pQqDaXGvjeATWudnLE0he/MSodNFiWGHYdk80V5SyXFir1RTRTVRQ==@vger.kernel.org, AJvYcCXnhOZX2VioUW+N/zQbvKUxWC0rPMh9TijOXVPPlqaG7e0mQVEv9fKnZmV9zCNHpZpjsB0NKAWognaca+0f@vger.kernel.org
-X-Gm-Message-State: AOJu0YwpkMCflZ41FbC2CtCm8MBLoB93LX2d0MTzFURuwLRv6MAZbD1s
-	4FIMWVvtIRXqg4FyLwC5lLJB6+4FkRIjHIwU+FsrURN3HnVBDnnZPP8R
-X-Gm-Gg: ASbGnctdTXjCN0vJNl4qzP4HvVUmElQTDENnZDeut4ladVqi0AJMf5h7GIxDDU2aerr
-	XLQzPCoJC6ry3F4kXzkZbfLpxz/x5iIzOsL08rXY6HHCEsTdEDX0S1LQXQDQDrKoYeSwclrAKlk
-	Cnz0iGPFBAtgMvZAHref5Rh7nobIFHgVdp372yWQOL35Ujf//1njojQ8vURfOgkjuXS9hbTnOok
-	n1tLj8rxkFw+gp4sZinHgEVYzQmWfQvYYCLzTwmSsVInETGKgrMIrtfdYfXObe0h+e0YDzwIx5a
-	ZcDBZvHqXwarvYZ88eG03bg/sKQ6opeQawgCQB867jg8hCj0uh6hNwmOZsL6iNVRaYrNsgdTr7h
-	r+l+vzkfltRjV3jHJBFZVeTOYYY4bZEVmRO+wkc4q
-X-Google-Smtp-Source: AGHT+IEBtJgfUd9PfG81gZCPku8xlj3yj9p8H5N/t60M0ZS5vpK6dBsg3ehnSMHrskKHTMOTXKcvtw==
-X-Received: by 2002:a17:90b:48ce:b0:2ee:d371:3227 with SMTP id 98e67ed59e1d1-30e7d53fedcmr53004820a91.17.1748016944385;
-        Fri, 23 May 2025 09:15:44 -0700 (PDT)
+        bh=GNk2zZpC65xRherJZoi8fazJtKf8aShkVrAnPTjrn2Y=;
+        b=ZQZhapoMprdv7kyStv4C8JcjW1o1/nXwZSOc7z0m4bfeZglWoI+VpAl94r3L6XHq5Y
+         fziFVYy/tTOT4/rB826CDiusvENIIpyv590dx9+FeCd/SapNpFvDisdLa1Rii8t+qY2Y
+         Bm/4ttIMb4NIdKvG06SZSLtemTukPZ/Dfzeo3e2FatWKDypNA3ggboS0sDahQBY0lPn3
+         yTX/7BBxPf7+/1sR4WMfxU3baDLP6o/AjsFC9Ayg3t8NT/Eup+GriubPmQp8Qmy4oKVO
+         tZZTfQqFd9KZMM+7KQKAxfwwx3rgKcBB6k7t0YSWUsOz/j/rRcT5W0/C0a1IkUJqIN/N
+         wp1w==
+X-Forwarded-Encrypted: i=1; AJvYcCU6Zeo6gTj2VdQza/PGr0kbtiXTz0SWUbLymWuz4ZCG9SpndoLpsAM8hT7e4ByjU1i/miRULI8wIUEVGuOB@vger.kernel.org, AJvYcCUfTMS6keZu6X0izDgNi2Dk+FhihLpgBeZTIIX8aKinwbNuErmsvt7tUcxZNrPaOAXJKCwXZl9YdRXRtQDg@vger.kernel.org, AJvYcCWTVlZnEwuU/S+KhRV1NHrUKzfco2gJuP7UOa3kYW1ChDW4uLzySuUbVg4GFK59e2cX8Tbli3HmlODnew==@vger.kernel.org
+X-Gm-Message-State: AOJu0YzP9db3TlLAFVQQ1CY5N/S1V7XD7O2VOyrVi/x4rbVXfTbZ9jA4
+	g74y5/U/8d6QraiUOm+MwPfsCC5AahHpY6gNNiSRrYdmwu0NwfurS3r5
+X-Gm-Gg: ASbGnctab+ht3+C0P9Wd2uKC0kMh8FEjjULW3mtvsL9Dfv9PtjRTYCfk/47HDWCR/o9
+	kph3Kwv9IHzg7fet5B8OID9q3H69z+Lzpbzr/QEak/QnbQSRgF8pO8ZyRdXgpoi5oto+ToX7Vrf
+	SIh1oFPdYq4T+h24+G717aKkVqCT90nhjysb++5UqimZO14Uim8VpfNIWq5wx/yOufNEnCZVS6C
+	Ywlb7Kd16q8sHOaY5PWFbBFwlhSTZYJf3qvhuCwR0TPA94iIHKUz8ziRMCHrW+cRmWXNEilcwq4
+	7W8VRSAVoomGq2GgNeg9wfao+KIfecoKprSbAkNCbGLitvK0RfBHDdO2wuw+UQKHxZPZ1KgZH8U
+	m39V6TkQzWXSl/Ge9wBcQp1RYoPBt0g==
+X-Google-Smtp-Source: AGHT+IFx/FJsdG8AnNi6eg+BilBglUFlrj6JEqa2pyvzhIeq+c199ROzKQxdHjIHsfWSCrtByMxf5Q==
+X-Received: by 2002:a17:90b:394d:b0:2ee:d024:e4fc with SMTP id 98e67ed59e1d1-30e7d5bb433mr53256647a91.33.1748016946693;
+        Fri, 23 May 2025 09:15:46 -0700 (PDT)
 Received: from localhost.localdomain (c-67-160-120-253.hsd1.wa.comcast.net. [67.160.120.253])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30f365d46ffsm7526565a91.25.2025.05.23.09.15.43
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30f365d46ffsm7526565a91.25.2025.05.23.09.15.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 May 2025 09:15:44 -0700 (PDT)
+        Fri, 23 May 2025 09:15:46 -0700 (PDT)
 From: mhkelley58@gmail.com
 X-Google-Original-From: mhklinux@outlook.com
 To: simona@ffwll.ch,
@@ -75,9 +75,9 @@ Cc: weh@microsoft.com,
 	linux-kernel@vger.kernel.org,
 	linux-hyperv@vger.kernel.org,
 	linux-mm@kvack.org
-Subject: [PATCH v3 2/4] fbdev: Add flag indicating framebuffer is allocated from kernel memory
-Date: Fri, 23 May 2025 09:15:20 -0700
-Message-Id: <20250523161522.409504-3-mhklinux@outlook.com>
+Subject: [PATCH v3 4/4] fbdev: hyperv_fb: Fix mmap of framebuffers allocated using alloc_pages()
+Date: Fri, 23 May 2025 09:15:22 -0700
+Message-Id: <20250523161522.409504-5-mhklinux@outlook.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20250523161522.409504-1-mhklinux@outlook.com>
 References: <20250523161522.409504-1-mhklinux@outlook.com>
@@ -92,32 +92,36 @@ Content-Transfer-Encoding: 8bit
 
 From: Michael Kelley <mhklinux@outlook.com>
 
-Add a flag that fbdev drivers can set to indicate that the framebuffer
-memory comes from alloc_pages() or similar as opposed to vmalloc()
-memory. The flag is to be used by fbdev deferred I/O.
+Framebuffer memory allocated using alloc_pages() was added to hyperv_fb in
+commit 3a6fb6c4255c ("video: hyperv: hyperv_fb: Use physical memory for fb
+on HyperV Gen 1 VMs.") in kernel version 5.6. But mmap'ing such
+framebuffers into user space has never worked due to limitations in the
+kind of memory that fbdev deferred I/O works with. As a result of the
+limitation, hyperv_fb's usage results in memory free lists becoming corrupt
+and Linux eventually panics.
 
+With support for framebuffers allocated using alloc_pages() recently added
+to fbdev deferred I/O, fix the problem by setting the flag telling fbdev
+deferred I/O to use the new support.
+
+Fixes: 3a6fb6c4255c ("video: hyperv: hyperv_fb: Use physical memory for fb on HyperV Gen 1 VMs.")
 Signed-off-by: Michael Kelley <mhklinux@outlook.com>
 ---
-Changes in v3:
-* This patch is new in v3. The definition of FBINFO_KMEMFB
-  was previously combined into the next patch of the series.
-  [Helge Deller]
-
- include/linux/fb.h | 1 +
+ drivers/video/fbdev/hyperv_fb.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/include/linux/fb.h b/include/linux/fb.h
-index 05cc251035da..a1121116eef0 100644
---- a/include/linux/fb.h
-+++ b/include/linux/fb.h
-@@ -396,6 +396,7 @@ struct fb_tile_ops {
+diff --git a/drivers/video/fbdev/hyperv_fb.c b/drivers/video/fbdev/hyperv_fb.c
+index 75338ffc703f..1698221f857e 100644
+--- a/drivers/video/fbdev/hyperv_fb.c
++++ b/drivers/video/fbdev/hyperv_fb.c
+@@ -1020,6 +1020,7 @@ static int hvfb_getmem(struct hv_device *hdev, struct fb_info *info)
+ 			info->fix.smem_len = screen_fb_size;
+ 			info->screen_base = par->mmio_vp;
+ 			info->screen_size = screen_fb_size;
++			info->flags |= FBINFO_KMEMFB;
  
- /* hints */
- #define FBINFO_VIRTFB		0x0004 /* FB is System RAM, not device. */
-+#define FBINFO_KMEMFB		0x0008 /* FB is allocated in contig kernel mem */
- #define FBINFO_PARTIAL_PAN_OK	0x0040 /* otw use pan only for double-buffering */
- #define FBINFO_READS_FAST	0x0080 /* soft-copy faster than rendering */
- 
+ 			par->need_docopy = false;
+ 			goto getmem_done;
 -- 
 2.25.1
 
