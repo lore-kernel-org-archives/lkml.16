@@ -1,203 +1,185 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A34BD22A4D5;
-	Fri, 23 May 2025 10:22:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FAD123D2A0
+	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 10:22:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747995753; cv=none; b=fOhBzQk6aqRCdBasxjOPD2n1TeHuqYUCBCdC3iTjLMoabn997mE++LMxIwvFXuTk1iRpNnUbWEI+58kS4XWGznxptzDZrVaESABPNjx2exNL96wI0ujt6XOOYmf8+o+piHNFNb7YC12XRoIRgBYT/rSO4L8moeMohERtKjApDII=
+	t=1747995756; cv=none; b=rKWr8MF33Yc3T+BSZ9jGSDYWbRP/zlJD3Yy6ZcBaliyAbQetNWxgZuXNPmI02dDRrrgtJSpgQqqQ1iX2sBTeHl856ivTwFmUed2FIOp0EMRBqwOs/YFq02yvkZV2QfFLYDwD8DPao8uE/dsADUqEm9jptDAQFfo4XWhPdFb1sxo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747995753; c=relaxed/simple;
-	bh=+JYOMkeWnVnRrJhVoVfAH1CACiCVT0JUkk6MrQcQbRc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RWLDcwVmfCbAqweqokyXR1cZ0mCW3RHOaBPJBkEcuCVEoKePesLbcS/0O7anLRM0wJTOFcVEqtiQJKxZw5XQePVgYOiuCK9Foa9NgmQmOiooHgyySoI5CYS9mhvZYubxcT1+KqLIrK0x3z55O0x3pIqJXDNQR6Jl2ksrO9Qp3Hc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=xOhbt5Z9; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747995756; c=relaxed/simple;
+	bh=3+zyVKqir6lmor6lBqgW/Ph3RSN0Yf9mQOjdau7kAZ0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=C+FCUox1euFPgMICT4Jdj3hASHFsZglu4YqoZIAsF78XcARJmMfN6g6/VkrKljXKNSeHARVo5Wmb/LHPIoiNRL3dpl32jZV7ilJKJch+msJC6kzGnPVD0BCpKTnvkXZ5zEiuim/0GTDUL/VpLSzJtDrQsZ7B0+5Y3hCOcUYhAj8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=Td/jiRBi; arc=none smtp.client-ip=209.85.210.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="xOhbt5Z9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0902C4CEEA;
-	Fri, 23 May 2025 10:22:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1747995752;
-	bh=+JYOMkeWnVnRrJhVoVfAH1CACiCVT0JUkk6MrQcQbRc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=xOhbt5Z90KQpYKm90yX0JgBbHHRe2L2z3AM8N4sWGnefKWsqSQ98HaelYIu/EDlCn
-	 Bmi/piC2SkLnm/ETAxlBpGzhVOHfacXAwo2fIGt0zGV9AmcIA3cg/SvcJU0tvBgWQj
-	 diLZ/o0AMm9gxpny5BGhG+HoCBdPx2et43lOXxUk=
-Date: Fri, 23 May 2025 12:22:29 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Danilo Krummrich <dakr@kernel.org>
-Cc: Alice Ryhl <aliceryhl@google.com>, Benno Lossin <lossin@kernel.org>,
-	Matthew Maurer <mmaurer@google.com>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Trevor Gross <tmgross@umich.edu>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Sami Tolvanen <samitolvanen@google.com>,
-	Timur Tabi <ttabi@nvidia.com>, linux-kernel@vger.kernel.org,
-	rust-for-linux@vger.kernel.org
-Subject: Re: [PATCH v5 4/4] rust: samples: Add debugfs sample
-Message-ID: <2025052323-glacier-shaded-e6a0@gregkh>
-References: <2025051524-festival-afterglow-8483@gregkh>
- <aCzzBT96ktapP03e@google.com>
- <aC2HacSU7j5d9bzu@pollux>
- <aC5XDi7SaDJeUaAC@google.com>
- <aC7DVewqqWIKetmk@pollux>
- <aC8uNmrLUSS8sxHU@google.com>
- <2025052201-return-reprogram-add9@gregkh>
- <aC9krUYJmJqu0xVR@cassiopeiae>
- <2025052330-reverence-slideshow-d498@gregkh>
- <aDBC__rflS8625Vb@cassiopeiae>
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="Td/jiRBi"
+Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-742af84818cso5528736b3a.1
+        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 03:22:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1747995754; x=1748600554; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7Pxqge87zPhTrwo0PySrFAhV25ryh/dqXEpJhdjy2V4=;
+        b=Td/jiRBi2OKn6jSkX8mpPpGuYYxfI0jGr5EU10qdTYkfBgWRlCnzzZVeD8XrTeOMXC
+         f4Iki56cTa3fRqV0Dalzud6c2NM7UZE8fMN7fEw7LSWVlkWwfnrXfU/yp7KtA60ETQRn
+         0o1n5wU8Dn/5F5aP720ZZAS6kGAE008iPf5gb0MIawbFltLBAgFYneXd2bFfNWuP7CdJ
+         ajTgRJYX93ml4w0bVBjGvsceuZIGH538MEwW+Zj3v3zVmozuSlglo6caXIwPqM01+Xna
+         5HoRJLL3IR+ojqXEdEdioaePBm0WJleQNKTXYUDcD96irR5gcN6Q3KU7DGIZ1M0bEAqQ
+         Q/BA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747995754; x=1748600554;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=7Pxqge87zPhTrwo0PySrFAhV25ryh/dqXEpJhdjy2V4=;
+        b=VIv69sjxGUSCK+B2LNLKxJ27aoDybAZoKbQISKcFJVO5h0cQaeI/Jywnl9ZXpk3NO9
+         lhZQXQkefl4F7t6y5b+lP1VG3uDAYaFO+3E/eEXVOKI50ntRjm0ICkoSQhABbk1J+rCf
+         DQO3Eo8ZrjG/mmRqWLFcGVcDWCrQmaFfxq4G1B3Bqkd7nHD4Pni23mdGyuohj05cLV87
+         A6wKJCKCgh9PyFvMascjKi/Try8b9zEer2g3EVmV/8nMOsTYBAkCRDR8VFjRW7q4KtRT
+         Tq+58VIgLBA41DnbUqJUjkU/YYO4QxpaO/Plp/sVo/7c5a8HRKGUk/wu0Oo900OxQPLx
+         SpdQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX5IEKb8DCBNCveulFLnliZ3XJMDYI4L2gYaMwtD3tpbPWATYMattFgmXbbtfBNl3SBgYvMXRBaCpRchZg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyJKEMP8Qg0Qmf9beh1eQ+lQ5++WtUtet8O74V6Ph/xWnNgYwt1
+	/0zYyQzskTmhIffz0x/tz0V3aaOdfuvWWdfaOUL3AoHxILmg1cTSZ3j92oOEbwpYee0=
+X-Gm-Gg: ASbGncsx916pCt2zuC4Ic98XoLR2mkiV8asl3AJwACd8uI1obAaVG4VmQK2B3ipSmmV
+	SZ54vUxOwy12Ov6kEP/UtTfOonoyej+I9S5CB1MyI9d7FQKp9xRDArecuBGCeH+oxFYBHM+kkEh
+	37zECP5iXLl2/yWWhVDQKQKYWqq9DGrZnWL/O2MN4WJeOB+fR1z4xtVznOD5QAEYZrbNQVo94pr
+	zLtelAMuqXxXuI4Koka3CYl96cZkpN54cbIXspsi/yOtGhuv/FbQL0Rr0J0TXTjPdJf2JH5Z0iP
+	+XO1mYymBOMeXarze5iveVUo87lOw0ajLRh0hnK++1KYXGeYyHcU
+X-Google-Smtp-Source: AGHT+IE1gzTYiMm9OIAjWx1ABZw0Jx+guEhp6+UHAyUqExFCs1x+5gRpocDwFkted+eu2d1RJUlKew==
+X-Received: by 2002:a05:6a20:7f9b:b0:1ee:dcd3:80d7 with SMTP id adf61e73a8af0-21621663910mr40638738637.0.1747995754383;
+        Fri, 23 May 2025 03:22:34 -0700 (PDT)
+Received: from carbon-x1.. ([2a01:e0a:e17:9700:16d2:7456:6634:9626])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-742a9829ce8sm12466688b3a.118.2025.05.23.03.22.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 23 May 2025 03:22:33 -0700 (PDT)
+From: =?UTF-8?q?Cl=C3=A9ment=20L=C3=A9ger?= <cleger@rivosinc.com>
+To: Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Anup Patel <anup@brainfault.org>,
+	Atish Patra <atishp@atishpatra.org>,
+	Shuah Khan <shuah@kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	kvm@vger.kernel.org,
+	kvm-riscv@lists.infradead.org,
+	linux-kselftest@vger.kernel.org
+Cc: =?UTF-8?q?Cl=C3=A9ment=20L=C3=A9ger?= <cleger@rivosinc.com>,
+	Samuel Holland <samuel.holland@sifive.com>,
+	Andrew Jones <ajones@ventanamicro.com>,
+	Deepak Gupta <debug@rivosinc.com>,
+	Charlie Jenkins <charlie@rivosinc.com>,
+	Atish Patra <atishp@rivosinc.com>
+Subject: [PATCH v8 11/14] RISC-V: KVM: add SBI extension init()/deinit() functions
+Date: Fri, 23 May 2025 12:19:28 +0200
+Message-ID: <20250523101932.1594077-12-cleger@rivosinc.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250523101932.1594077-1-cleger@rivosinc.com>
+References: <20250523101932.1594077-1-cleger@rivosinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aDBC__rflS8625Vb@cassiopeiae>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Fri, May 23, 2025 at 11:42:23AM +0200, Danilo Krummrich wrote:
-> On Fri, May 23, 2025 at 11:14:23AM +0200, Greg Kroah-Hartman wrote:
-> > On Thu, May 22, 2025 at 07:53:49PM +0200, Danilo Krummrich wrote:
-> > > On Thu, May 22, 2025 at 04:15:46PM +0200, Greg Kroah-Hartman wrote:
-> > > > If you really want to delete a debugfs file that you have created in the
-> > > > past, then look it up and delete it with the call that is present for
-> > > > that.
-> > > 
-> > > This is promoting a C pattern (which for C code obviously makes a lot of sense),
-> > > i.e. we have a function that creates a thing and another function that removes
-> > > the thing given a handle of the created thing. Whether the handle is valid is
-> > > the responsibility of the caller.
-> > > 
-> > > In this case the handle would be the filename. For instance:
-> > > 
-> > > 	debugfs_create_file("foo", parent, ...);
-> > > 	debugfs_remove(debugfs_lookup("foo", parent));
-> > > 
-> > > This leaves room to the caller for making mistakes, e.g. if the caller makes a
-> > > typo in the filename. In this case we wouldn't even recognize it from the return
-> > > value, since there is none.
-> > > 
-> > > In Rust, we do things differently, i.e. we wrap things into an object that
-> > > cleans up itself, once it goes out of scope. For instance:
-> > > 
-> > > 	let file = debugfs::File::new("foo", parent);
-> > > 
-> > > Subsequently we store file in a structure that represents the time we want this
-> > > file to exist. Once it goes out of scope, it's removed automatically.
-> > > 
-> > > This is better, since we can't make any mistakes anymore, i.e. we can't mess up
-> > > the filename or pass the wrong parent to clean things up.
-> > > 
-> > > Depending on whether the above was a misunderstanding and depending on how you
-> > > think about it with this rationale, I have quite some more reasons why we don't
-> > > want to have files / directories around in the filesystem without a
-> > > corresponding object representation in Rust.
-> > > 
-> > > But before I write up a lot more text, I'd like to see if we're not already on
-> > > the same page. :-)
-> > 
-> > Ok, let's knock up the api here first before worrying about the
-> > implementation, as we seem to all be a bit confused as to what we want
-> > to do.
-> > 
-> > Ideally, yes, I would like to NOT have any rust structure represent a
-> > debugfs file, as that is the way the C api has been evolving.  We are
-> > one step away from debugfs_create_file() being a void function that
-> > doesn't return anything, and I don't want to see us go "backwards" here.
-> > 
-> > But the main reason I did that work was to keep people from trying to
-> > determine if a file creation worked or not and to do different logic
-> > based on that.  I think the Rust api CAN do both here, as you and Alice
-> > have explained, so we should be ok.
-> > 
-> > So how about this for an example api, two structures, debugfs::Directory
-> > and debugfs::File, which have only two types of operations that can be
-> > done on them:
-> > 
-> > To create a debugfs directory, we do:
-> > 
-> > 	let my_dir = debugfs::Directory::new("foo_dir", parent);
-> > 
-> > There is no other Directory method, other than "drop", when the object
-> > goes out of scope, which will clean up the directory and ALL child
-> > objects at the same time (implementation details to be figured out
-> > later.)
-> > 
-> > That will ALWAYS succeed no matter if the backend debugfs call failed or
-> > not, and you have no way of knowing if it really did create something or
-> > not.  That directory you can then use to pass into debugfs file or
-> > directory creation functions.
-> > 
-> > Same for creating a debugfs file, you would do something like:
-> > 
-> > 	let my_file = debugfs::File::new("foo_file", my_dir);
-> > 
-> > depending on the "file type" you want to create, there will be different
-> > new_* methods (new_u32, new_u64, etc.).
-> > 
-> > which also ALWAYS succeeds.  And again, as you want to keep objects
-> > around, you have to have a reference on it at all times for it to exist
-> > in the filesystem.  If you drop it, then it too will be removed from
-> > debugfs.
-> 
-> Great! That's exactly what I think the API should look like as well. :-)
-> 
-> > And again, that's the only operation you can do on this object, there
-> > are no other methods for it other than "new" and "drop".
-> 
-> We probably still want
-> 
-> 	let foo_dir = my_dir.subdir("foo_dir")
-> 	foo_dir.file("foo_file")
-> 
-> for convinience, rather than having to call
-> 
-> 	let bar_dir = Dir::new("foo_dir", my_dir)
-> 	File::new("bar_file", bar_dir)
-> 
-> all the time. But otherwise, sounds reasonable to me.
+The FWFT SBI extension will need to dynamically allocate memory and do
+init time specific initialization. Add an init/deinit callbacks that
+allows to do so.
 
-That would be very convenient, but given that we have 20+ different
-types of debugfs files that we can create, that might get complex to
-define that way.  But that's just an implementation detail to work
-out...
+Signed-off-by: Clément Léger <cleger@rivosinc.com>
+Reviewed-by: Andrew Jones <ajones@ventanamicro.com>
+Reviewed-by: Atish Patra <atishp@rivosinc.com>
+---
+ arch/riscv/include/asm/kvm_vcpu_sbi.h |  9 +++++++++
+ arch/riscv/kvm/vcpu.c                 |  2 ++
+ arch/riscv/kvm/vcpu_sbi.c             | 26 ++++++++++++++++++++++++++
+ 3 files changed, 37 insertions(+)
 
-> > Now there are issues with implementation details here like:
-> >   - Do you want to keep the list of file and dir objects in the rust
-> >     structure to manually clean them up when we go to drop the
-> >     directory?
-> >   - Do we want to force all files to be dropped before the directory?
-> >     Or do we want to just let the C side clean it all up automagically
-> >     instead?
-> > and other things like that, but we can argue about that once we settle
-> > on the outward-facing api first.
-> 
-> The only thing I don't want to is to allow to leak files or directories, i.e.
-> 
-> 	File::new("bar_file", bar_dir).leak()
-> 
-> which keeps the file in the filesystem, but takes away the handle from the Rust
-> side, such that it won't be removed from the filesystem anymore when the handle
-> goes out of scope, which can cause nasty bugs. But I think there isn't any
-> benefit to allow this anyways and it isn't needed with reference counting.
+diff --git a/arch/riscv/include/asm/kvm_vcpu_sbi.h b/arch/riscv/include/asm/kvm_vcpu_sbi.h
+index 4ed6203cdd30..bcb90757b149 100644
+--- a/arch/riscv/include/asm/kvm_vcpu_sbi.h
++++ b/arch/riscv/include/asm/kvm_vcpu_sbi.h
+@@ -49,6 +49,14 @@ struct kvm_vcpu_sbi_extension {
+ 
+ 	/* Extension specific probe function */
+ 	unsigned long (*probe)(struct kvm_vcpu *vcpu);
++
++	/*
++	 * Init/deinit function called once during VCPU init/destroy. These
++	 * might be use if the SBI extensions need to allocate or do specific
++	 * init time only configuration.
++	 */
++	int (*init)(struct kvm_vcpu *vcpu);
++	void (*deinit)(struct kvm_vcpu *vcpu);
+ };
+ 
+ void kvm_riscv_vcpu_sbi_forward(struct kvm_vcpu *vcpu, struct kvm_run *run);
+@@ -69,6 +77,7 @@ const struct kvm_vcpu_sbi_extension *kvm_vcpu_sbi_find_ext(
+ bool riscv_vcpu_supports_sbi_ext(struct kvm_vcpu *vcpu, int idx);
+ int kvm_riscv_vcpu_sbi_ecall(struct kvm_vcpu *vcpu, struct kvm_run *run);
+ void kvm_riscv_vcpu_sbi_init(struct kvm_vcpu *vcpu);
++void kvm_riscv_vcpu_sbi_deinit(struct kvm_vcpu *vcpu);
+ 
+ int kvm_riscv_vcpu_get_reg_sbi_sta(struct kvm_vcpu *vcpu, unsigned long reg_num,
+ 				   unsigned long *reg_val);
+diff --git a/arch/riscv/kvm/vcpu.c b/arch/riscv/kvm/vcpu.c
+index 02635bac91f1..2259717e3b89 100644
+--- a/arch/riscv/kvm/vcpu.c
++++ b/arch/riscv/kvm/vcpu.c
+@@ -187,6 +187,8 @@ void kvm_arch_vcpu_postcreate(struct kvm_vcpu *vcpu)
+ 
+ void kvm_arch_vcpu_destroy(struct kvm_vcpu *vcpu)
+ {
++	kvm_riscv_vcpu_sbi_deinit(vcpu);
++
+ 	/* Cleanup VCPU AIA context */
+ 	kvm_riscv_vcpu_aia_deinit(vcpu);
+ 
+diff --git a/arch/riscv/kvm/vcpu_sbi.c b/arch/riscv/kvm/vcpu_sbi.c
+index d1c83a77735e..3139f171c20f 100644
+--- a/arch/riscv/kvm/vcpu_sbi.c
++++ b/arch/riscv/kvm/vcpu_sbi.c
+@@ -508,5 +508,31 @@ void kvm_riscv_vcpu_sbi_init(struct kvm_vcpu *vcpu)
+ 		scontext->ext_status[idx] = ext->default_disabled ?
+ 					KVM_RISCV_SBI_EXT_STATUS_DISABLED :
+ 					KVM_RISCV_SBI_EXT_STATUS_ENABLED;
++
++		if (ext->init && ext->init(vcpu) != 0)
++			scontext->ext_status[idx] = KVM_RISCV_SBI_EXT_STATUS_UNAVAILABLE;
++	}
++}
++
++void kvm_riscv_vcpu_sbi_deinit(struct kvm_vcpu *vcpu)
++{
++	struct kvm_vcpu_sbi_context *scontext = &vcpu->arch.sbi_context;
++	const struct kvm_riscv_sbi_extension_entry *entry;
++	const struct kvm_vcpu_sbi_extension *ext;
++	int idx, i;
++
++	for (i = 0; i < ARRAY_SIZE(sbi_ext); i++) {
++		entry = &sbi_ext[i];
++		ext = entry->ext_ptr;
++		idx = entry->ext_idx;
++
++		if (idx < 0 || idx >= ARRAY_SIZE(scontext->ext_status))
++			continue;
++
++		if (scontext->ext_status[idx] == KVM_RISCV_SBI_EXT_STATUS_UNAVAILABLE ||
++		    !ext->deinit)
++			continue;
++
++		ext->deinit(vcpu);
+ 	}
+ }
+-- 
+2.49.0
 
-I agree, I can live with that too.
-
-> I'm open on things like having "ghost" objects as proposed by Alice or force all
-> files to be dropped before the directory, etc. though.
-
-"ghost" objects will get messy I think, and yes, cleaning up will be a
-bit tricky here, which is why at the C level I am taking away the idea
-of a file that can be controlled as an individual object entirely.  If
-you want the Rust code to have objects for the files, that's something
-that the bindings are going to have to handle well.  Somehow :)
-
-thanks,
-
-greg k-h
