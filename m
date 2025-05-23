@@ -1,108 +1,89 @@
-Received: from mail-vk1-f172.google.com (mail-vk1-f172.google.com [209.85.221.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F075420C482;
-	Fri, 23 May 2025 08:12:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22D3314A627;
+	Fri, 23 May 2025 08:12:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747987928; cv=none; b=K9rDeFMoxvLVTXIIivkoLqzLLv53IeiUJf+hBzo4bs+Xrg4kLV13hT8q4x41KeoHBgY+1fRIvLcCRk0DKbMcQk36m8L0mDmOq7SgXZoIEci8YgF8majbcJC/9fGRlvcZ27zS6Xp0C2ekFoCM1QjOaxRL6igo6+KeaFNV41ct4Q4=
+	t=1747987966; cv=none; b=cOL1LQ4aF4tZo4OSKq2eH/xeuUOp3VC157vCEqD5VzLnjVHiTqkGDIr3IotY1daIUTxQ30tS6dX+RmGryogVkqYs7VL3UIIhgupsksF692f14V5AmO1CcId/smt1Z8dL4CsRJCfgEWwKyG0ZxRFKrO8ilvIhBqV8DlCaRn9U+1I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747987928; c=relaxed/simple;
-	bh=+TDhoikyMIzmEsOgdHd9FVrqZYGX201X7Z53Q9q6+I0=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=SPFERqH35maa8SPPIRL2E0NQnaYpYnchRqYscMXm2795T1nkszARTk3XHZu2doESnvFUfHUPGgPDLhaxJBozI4apkBagXMu55xN1t4rbwhMRHQOrF+fs83ldmuzr6j4BAvp3IZ3x7KCF8+UaFz6i5UQO24tRF12yr461Ou+sPvk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hxxy7rh5; arc=none smtp.client-ip=209.85.221.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hxxy7rh5"
-Received: by mail-vk1-f172.google.com with SMTP id 71dfb90a1353d-52dc131419cso2047494e0c.2;
-        Fri, 23 May 2025 01:12:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747987925; x=1748592725; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=+TDhoikyMIzmEsOgdHd9FVrqZYGX201X7Z53Q9q6+I0=;
-        b=hxxy7rh5fFGYYcjM5veatCSAIgl6Yq0YLc7nOVEHZKjqhZwIJyeAh8H00gP3B/+IIP
-         IWKM6EKxh+vWck3naXE/3vvjbkBdEK2mv9SYjiuwRJkpyevgpVOmeJ9orrXbL7Z31FNA
-         +GlYqwCMC7vyXUSR1jOuGaCUvPESDdKCWgSTZtPguD3selqbKIPJkn3P+Zpzh6Z4YgSf
-         7Vo/C0gLjLHAusDBfvJFpUPGOBqNMKCOKN8Z0KpM1LP7tyAk9n6pyEYwV0cHzZqtMdHL
-         yJ5iw71u0KjVn7GUYCDFKoC9jF+loC9zO1M8ieo6bcpJgsBmhCdvJ+RFdcRQloONigJC
-         RJuw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747987925; x=1748592725;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=+TDhoikyMIzmEsOgdHd9FVrqZYGX201X7Z53Q9q6+I0=;
-        b=iYW/W6ILAerhF16R9rqtM/q8DeafbHlohXYnP4DmvbcPUC2mQhUbu5w8r5r58GcZ1E
-         JbirghnmXnMIP4Ntu2uvsvHdTFR8C6SCTZPBai7YzCXjcDph6yVV75yVIIJfMd90Ikq+
-         sBB5L+JgtA905wM7azMfN6UabkZ8bUgH9A0Zh+kHqdmtY2TgBeg2ZxAlS06MbC+UEdqi
-         i+/6wWE3z5TV64YyuJ1lav7wj2HnOrJjhWDYFK5JD0PCiQHRTvssyNq2V4tG0Q6VqT/9
-         WoCgzZ9EPB+mVhIk3pyUuVfMsptyUuNKaxLCCycjvOhQMcICPvGqERh93VzPCACjooA7
-         1s8g==
-X-Forwarded-Encrypted: i=1; AJvYcCW0l2jvr7gzD04jvCcrF0l5rvRMFDu51rQv6oKhp+09dM8X2QmC7Pap0ihCG/MrL02G+MAIILhkejamRNoN@vger.kernel.org, AJvYcCW6eLpEmNHc+UkQ9czQ0fgD2eCIa0DZhvMeYi++U9zXUMMLw2b08hH1KP8z8dPXLgVo/OwnBg47npuz@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx9Q3KIe8hV5PV/5in2svsLZo0UhHx+YhgmEt/eiw37AvEhaxmb
-	3R5rawOA/cT7mOPSyafCW33XDbFHjjyVDZFYHEbn7EQfV7/FfE15tk+F8n3Woti4NkUUxKbR9c1
-	NMtPWsPcrHcEkS6NShVY9EH3XKUIO4mvj7kdM
-X-Gm-Gg: ASbGncsz6GPxChuNmqHI88D4f1C5wG49wbeUxmjIouDST4GtXmCj4IzmQ0jJ2I36ocC
-	tL48JO0poMlIB0m5MNp+sTLo7iNYqaaExnbi/1pHHzRF2aB2VV8vQS8+wE+hMY4OE/bFmU4AzL+
-	ddEy8/NMCWsdCLwByuJAv9HfWvw/SNyvW5sw==
-X-Google-Smtp-Source: AGHT+IHeC+WH5oaa1bydeoZxnMwXnoppTQct5XbOcd+9ZdMreh4NTLcst9yDwsInfTNHI8dMCKV+xWG4GROCik1hZGs=
-X-Received: by 2002:a05:6122:ec9:b0:52a:c0db:29e3 with SMTP id
- 71dfb90a1353d-52dbce1e5a3mr21773108e0c.10.1747987924729; Fri, 23 May 2025
- 01:12:04 -0700 (PDT)
+	s=arc-20240116; t=1747987966; c=relaxed/simple;
+	bh=/L47K031fNCntmHXTti7FA4/p7PJPFyTm/d5Sjeqwkw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DciNf7fFAkspVNBa9sT7XVmAKewxROaLVkau854uFENgBKCqnlny1vqMW4hdMHIq0KFLasC57ftHr8w/NrxrebI1gtlIsVZKaAzBg3DP8aVp/EBMZ1phdUE6NElC+cMpiEZMYQ5lJfhxQTjyljMp3F6eSwbsfZ0gE6B2HXwoklk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05945C4CEE9;
+	Fri, 23 May 2025 08:12:44 +0000 (UTC)
+Date: Fri, 23 May 2025 10:12:43 +0200
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: Alexey Klimov <alexey.klimov@linaro.org>
+Cc: Srinivas Kandagatla <srini@kernel.org>, 
+	Mark Brown <broonie@kernel.org>, linux-sound@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
+	Dmitry Baryshkov <lumag@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
+	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
+	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v3 02/12] dt-bindings: arm: qcom-soc: ignore "wsa" from
+ being selected as SoC component
+Message-ID: <20250523-fancy-upbeat-stoat-e9ecbd@kuoka>
+References: <20250522-rb2_audio_v3-v3-0-9eeb08cab9dc@linaro.org>
+ <20250522-rb2_audio_v3-v3-2-9eeb08cab9dc@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Xianying Wang <wangxianying546@gmail.com>
-Date: Fri, 23 May 2025 16:11:53 +0800
-X-Gm-Features: AX0GCFs4P0QyWh7o-IpM0QozTogBYkENxUA3Fz5fk7j9rV2GGl50AAblpywsG-0
-Message-ID: <CAOU40uBdtsGgG9mi1sZvLSa9rdh_SVAeQkv6B5gjMubcmTDgTQ@mail.gmail.com>
-Subject: [BUG] kernel BUG in mb_mark_used
-To: tytso@mit.edu
-Cc: adilger.kernel@dilger.ca, linux-ext4@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250522-rb2_audio_v3-v3-2-9eeb08cab9dc@linaro.org>
 
-Hi,
+On Thu, May 22, 2025 at 06:40:52PM GMT, Alexey Klimov wrote:
+> The pattern matching incorrectly selects "wsa" because of "sa" substring
+> and evaluates it as a SoC component or block.
+> 
+> Wsa88xx are family of amplifiers and should not be evaluated here.
+> 
+> Signed-off-by: Alexey Klimov <alexey.klimov@linaro.org>
+> ---
+>  Documentation/devicetree/bindings/arm/qcom-soc.yaml | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/qcom-soc.yaml b/Documentation/devicetree/bindings/arm/qcom-soc.yaml
+> index a77d68dcad4e52e4fee43729ac8dc1caf957262e..99521813a04ca416fe90454a811c4a13143efce3 100644
+> --- a/Documentation/devicetree/bindings/arm/qcom-soc.yaml
+> +++ b/Documentation/devicetree/bindings/arm/qcom-soc.yaml
+> @@ -23,7 +23,7 @@ description: |
+>  select:
+>    properties:
+>      compatible:
+> -      pattern: "^qcom,.*(apq|ipq|mdm|msm|qcm|qcs|q[dr]u|sa|sar|sc|sd[amx]|sm|x1[ep])[0-9]+.*$"
+> +      pattern: "^qcom,(?!.*wsa)(apq|ipq|mdm|msm|qcm|qcs|q[dr]u|sa|sar|sc|sd[amx]|smx1[ep])[0-9]+.*$"
 
-I discovered a kernel crash described as "kernel BUG in mb_mark_used",
-which is triggered by a BUG_ON() in the ext4 function
-mb_mark_used()(fs/ext4/mballoc.c:2051). The crash occurs when the
-expression start + len > (e4b->bd_sb->s_blocksize << 3) evaluates
-true, indicating that the block range to be marked as used exceeds the
-size of the bitmap. This suggests that an invalid or corrupted block
-extent was passed to the allocator, potentially due to inconsistent
-internal state or a logic flaw in the extent calculation.
+Why dropping front .*? Are you sure this matches what we want - so
+incorrect compatibles? To me it breaks the entire point of this select,
+so I am sure you did not test whether it still works. To remind: this is
+to select incorrect compatibles.
 
-The call trace shows the crash is triggered via a direct I/O write
-operation (ext4_dio_write_iter), which ultimately invokes
-ext4_mb_new_blocks() and its subroutine mb_mark_used(). The crash is
-reproducible using a crafted workload involving mounting an ext4
-loopback device and issuing writes.
+(?!wsa)
+Because qcom,x-wsa8845 should be matched and cause warnings.
 
-This may indicate a latent inconsistency in ext4's multiblock
-allocation logic (mballoc.c), especially under specific block size or
-extent configurations. Further investigation is recommended in the
-validation of input to mb_mark_used() and in protecting against block
-range overflows.
+And probably we are getting past the point of readability, so could you
+try:
 
-This can be reproduced on:
+compatible:
+  anyOf:
+    - pattern: "^qcom,.*(apq|ipq|mdm|msm|qcm|qcs|q[dr]u|sar|sc|sd[amx]|sm|x1[ep])[0-9]+.*$"
+    - pattern: "^qcom,.*(?!wsa)sa[0-9]+.*$"
 
-HEAD commit:
 
-commit e8f897f4afef0031fe618a8e94127a0934896aba
 
-report: https://pastebin.com/raw/EHJyW2Ev
-
-console output : https://pastebin.com/raw/vKPznSCn
-
-kernel config : https://pastebin.com/raw/aJ9rUnhG
-
-C reproducer : https://pastebin.com/raw/rZ5xcbt5
-
-Best regards,
-
-Xianying
+>    required:
+>      - compatible
+>  
+> 
+> -- 
+> 2.47.2
+> 
