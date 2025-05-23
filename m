@@ -1,104 +1,167 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8212C2036ED
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 07:42:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FC2F20FAB0;
+	Fri, 23 May 2025 07:42:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747986178; cv=none; b=ECM2ZcNbyqxFZrfGZCUI311wYH748QbROvYdX6izNyva4FsTko09tvGpZ0Zi4NHDCyWcIc1J4PIaEyaRX813qD5VpbC6qc/JRxZYQxEchuZ2emOUK1M2WQVwn5vbLLmM6vngBn+d/no2y3TEHatXT2xnQHU6c7vKlOEHRmK6jng=
+	t=1747986178; cv=none; b=jbIlOza5VCekcRZp71sSI8fsCCU/DX3S6xzCzX9RNm66ryjpiIGPGwQ2cVYc2blgoJOwzplZqJ+LbX3bdME3SrErjBMoy8sMPQNW4HasJHSSKiqUDPnW19d+CuyI/U6/kJ/oBy395RIFXuuQmYYjBO35gWS0d38fM4UEfR1/bwI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1747986178; c=relaxed/simple;
-	bh=o8Z9F+s3H5s+WHRu8VrEBEw3xQJt57LQ6mx6MD0qMFo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=EfrQOPM6h44YXyACaDTdJzbxqhHjETUOlEfo6wbKVRk3nz3i5g5kqrc0EXZc3sWv845jvQ1qChvCZ6M2eWCJz8wUCjaDIJhjlp/knBYgRsmUa9UR7i2gXxqfS0qPTHpXIN7+Z5gwiOktKaqIMni2s33ELgR3QPTLWJUXYdEiG+0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hammernet.be; spf=fail smtp.mailfrom=hammernet.be; dkim=pass (2048-bit key) header.d=hammernet-be.20230601.gappssmtp.com header.i=@hammernet-be.20230601.gappssmtp.com header.b=PTptsFHZ; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hammernet.be
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=hammernet.be
+	bh=nO5bS3m889863mTMqoB3Tw6lBy3U+hB0upXUCnQInyE=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=ji/qaHZNlGABG/dDF8QFmE12S/DnD/W74MILD7/JYjyGlUGdbKVnD4AUE+fhr2uhRLt2+q8LRytZJl9E/R9F+KKJR3jb/iA1leFYmDeYMYhJ0IYlzGQ3J6q1eVJm9yeA7eEeLGjjawXh7ET3AUt96FoImM5fjj6u1NZgxqg6CZY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=a6nfq8v7; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hammernet-be.20230601.gappssmtp.com header.i=@hammernet-be.20230601.gappssmtp.com header.b="PTptsFHZ"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-442d146a1aaso87749505e9.1
-        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 00:42:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=hammernet-be.20230601.gappssmtp.com; s=20230601; t=1747986173; x=1748590973; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=sf5oVq0p4V1KNu2SAoViuAhUyDDrJF+OTYRvlB2marA=;
-        b=PTptsFHZm8IP5q2doJKqNchdsqFNMVl5fv90piuiMgkSYyHvPjPS2/KHSrk8UWwRQf
-         7VBWlsoFp+i1XMCFiNtRd7Hm05CPNYhgom23q0/yYraUPHwZdc9ZZ2B3R/wvcR4tKfnL
-         YwyQ/mfq6Hr2euJhGOblWiDP37vP23GN9PG4cC9eHHijXXETCay4vDQHaNe7q3Jm5jpO
-         1HtiK4mcS/iPH77Q5nalfwAeRQB7R30NhzyQ6Jg2vYwTbHd/4UmMkdDf5FnWH+RwQP81
-         x1fUzrrHiulzc/Ung4lsY+/1cnycCWgz1lQUqrg4WzsW41RmbAxMwiwLo6ycj7KyiN1G
-         ZyXg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747986173; x=1748590973;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=sf5oVq0p4V1KNu2SAoViuAhUyDDrJF+OTYRvlB2marA=;
-        b=AdYmkolHCoSzszLg2pxuymcYPUoFPhNZBN3gPPEQLMSuhTl/JlPN3vu7ZQzgGtcUe0
-         0zdJoouI7CkgJt1QCLMHz0pw7Wew5rRL7K3N7i/bImRlwhWBLKs5iBF5QnYhU23F+ZV/
-         cetLF5c8tJwwFb1UTsI7ALLRfDu+4REouOAbI70EpgVfdtBH7ehnWJ45VTIDaHoVxUsj
-         x8odUjyuYArLKtYJtm3oeBQXAtwGhV3C1sxA9pzTQ1S4cqYYNgpr/GqiWv7U7xu6wrLz
-         KLoF+zpH61FP/nN4v3vx/Ik1LbT1RNMsEf+tyGF+AHSwA4UCsVAodi7Ik7zaZRBtcbXm
-         qPuQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXj6ndu/fv/sOBDhLyTNEAQkezOq1VY8+LxbFE9enoIxqOmnOjst0aS1b1729yyTk+smy+OS9q/iSMXN5E=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzcbk7W4nam7ALAemRWTkMakicxaWggvxXSwA01E++4MOT87qmY
-	sF3mccdK7IzmpkvDkMDonS/ptFhQDvCsYB7Rp48h7fYCbOdYJ/uMPMgKdh1CbtMw7sw=
-X-Gm-Gg: ASbGncupDgYnTrY1tZVgCKyef3oy1myYGkzVNPeqJLGdh5fhBamasSLw9QpC7f8X2de
-	1wnvxBtVuQlPH4unCDTY2eLiA5n9Izo9hIhlmNDQhgdPIRzL7ZytbKWmAZWyMRzEPvDVj7ER/YV
-	qkKw90pWU0bNZoPTY2R8ZyeDBtHehdRsv9BJOMsFbGeTCywlC+7ZNCL0GjyY6UKSuLWPKxurROo
-	dRNsFwxgq+wxbFkDN7KWdVT20BnunXAXamuJ4oIMmmxWH6MFi5Chh8VtQ2mMyAtc8Dcy2mFlH8t
-	qrSh5JacEZQCruJhDJ9+qyrQ5Ser7I2O2SHLsz0V0HW+re7DF48DQcu1tY3BZUpT6uCZrCwXVJA
-	b4wM=
-X-Google-Smtp-Source: AGHT+IGZ+zW9xJjdx7/pyHegoY0b4cvGq/St5kfIPDWd2+jyQJwKX8XOdYUArgxgNbWKJ8peo6soWg==
-X-Received: by 2002:a05:600c:34d5:b0:441:b3eb:574e with SMTP id 5b1f17b1804b1-442fefd77eamr257454705e9.5.1747986173415;
-        Fri, 23 May 2025 00:42:53 -0700 (PDT)
-Received: from pop-os.telenet.be ([2a02:1807:2a00:3400:aeb5:4cbf:e382:76a8])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-447f23bfd54sm137616955e9.17.2025.05.23.00.42.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 May 2025 00:42:53 -0700 (PDT)
-From: Hendrik Hamerlinck <hendrik.hamerlinck@hammernet.be>
-To: shuah@kernel.org
-Cc: skhan@linuxfoundation.org,
-	linux-kernel-mentees@lists.linux.dev,
-	linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Hendrik Hamerlinck <hendrik.hamerlinck@hammernet.be>
-Subject: [PATCH v2] selftests: filesystems: fix "memebers" typo in mount-notify
-Date: Fri, 23 May 2025 09:42:32 +0200
-Message-ID: <20250523074232.15274-1-hendrik.hamerlinck@hammernet.be>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="a6nfq8v7"
+Received: from [127.0.0.1] ([76.133.66.138])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 54N7gK7d3364546
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Fri, 23 May 2025 00:42:20 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 54N7gK7d3364546
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025052101; t=1747986141;
+	bh=aDMCxKnUjVpfH+Z6QVUbrzej9Ot/D3RMUg29EMy0pV4=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+	b=a6nfq8v7yVU7GUBZeX57FsM8kQJp4lMfy2951or1z87WQ0NyqOfcMsnBsViIqYhI/
+	 cKG4UlJoJaGNhBH82P4+KWGW8WGExCQKoW3xTau2AuqX3YfZliudd4FVEZjhTq5UN4
+	 iqCbwXygldOxihvlZK9lvAxP68N6Zt30wNfWl2bfScU9DEFln8vC+Y1dDqGS0Fk4kk
+	 24v8hOCJWnREV76ALvQSU+G6HUy4Ti/QBOKNFwZumpaNz4DyQ4qNzpLAzWCEKSyraj
+	 B6i9RjiMz1WWMz2Jq2h5LUK+cZhZ4NRQup3uyzdVf+FwWi8TmshXsHzlWKfixzcQTz
+	 EdE4HPbTRehcQ==
+Date: Fri, 23 May 2025 00:42:18 -0700
+From: "H. Peter Anvin" <hpa@zytor.com>
+To: Xin Li <xin@zytor.com>, Andrew Cooper <andrew.cooper3@citrix.com>,
+        Dave Hansen <dave.hansen@intel.com>, linux-kernel@vger.kernel.org
+CC: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, peterz@infradead.org,
+        stable@vger.kernel.org
+Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v2_1/1=5D_x86/fred/signal=3A_Pr?=
+ =?US-ASCII?Q?event_single-step_upon_ERETU_completion?=
+User-Agent: K-9 Mail for Android
+In-Reply-To: <97a86550-844d-41c8-bc5e-b3b7b20ef6c9@zytor.com>
+References: <20250522171754.3082061-1-xin@zytor.com> <e4f1120b-0bff-4f01-8fe7-5e394a254020@intel.com> <ad8d3a12-25f3-4d57-8f34-950b7967f92b@citrix.com> <97a86550-844d-41c8-bc5e-b3b7b20ef6c9@zytor.com>
+Message-ID: <F535D469-6B77-47CC-8D04-FA6D8D7E937D@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Corrects a spelling mistake "memebers" instead of "members" in 
-tools/testing/selftests/filesystems/mount-notify/mount-notify_test.c 
+On May 22, 2025 5:57:31 PM PDT, Xin Li <xin@zytor=2Ecom> wrote:
+>On 5/22/2025 10:53 AM, Andrew Cooper wrote:
+>> This was a behaviour intentionally changed in FRED so traps wouldn't ge=
+t
+>> lost if an exception where to occur=2E
+>>=20
+>> What precise case is triggering this?
+>
+>Following is the test code:
+>
+>// SPDX-License-Identifier: GPL-2=2E0-or-later
+>/*
+> *  Copyright (C) 2025 Intel Corporation
+> */
+>#define _GNU_SOURCE
+>
+>#include <err=2Eh>
+>#include <signal=2Eh>
+>#include <stdio=2Eh>
+>#include <stdlib=2Eh>
+>#include <string=2Eh>
+>#include <sys/ucontext=2Eh>
+>
+>static void sethandler(int sig, void (*handler)(int, siginfo_t *, void *)=
+, int flags)
+>{
+>	struct sigaction sa;
+>
+>	memset(&sa, 0, sizeof(sa));
+>	sa=2Esa_sigaction =3D handler;
+>	sa=2Esa_flags =3D SA_SIGINFO | flags;
+>	sigemptyset(&sa=2Esa_mask);
+>
+>	if (sigaction(sig, &sa, 0))
+>		err(1, "sigaction");
+>
+>	return;
+>}
+>
+>static void sigtrap(int sig, siginfo_t *info, void *ctx_void)
+>{
+>	ucontext_t *ctx =3D (ucontext_t *)ctx_void;
+>	static unsigned long last_trap_ip;
+>	static unsigned int loop_count_on_same_ip;
+>
+>	if (last_trap_ip =3D=3D ctx->uc_mcontext=2Egregs[REG_RIP]) {
+>		printf("trapped on %016lx\n", last_trap_ip);
+>
+>		if (++loop_count_on_same_ip > 10) {
+>			printf("trap loop detected, test failed\n");
+>			exit(2);
+>		}
+>
+>		return;
+>	}
+>
+>	loop_count_on_same_ip =3D 0;
+>	last_trap_ip =3D ctx->uc_mcontext=2Egregs[REG_RIP];
+>	printf("trapped on %016lx\n", last_trap_ip);
+>}
+>
+>int main(int argc, char *argv[])
+>{
+>	sethandler(SIGTRAP, sigtrap, 0);
+>
+>	asm volatile("push $0x302\n\t"
+>		     "popf\n\t"
+>		     "nop\n\t"
+>		     "nop\n\t"
+>		     "push $0x202\n\t"
+>		     "popf\n\t");
+>
+>	printf("test passed\n");
+>}
+>
+>
+>W/o the fix when FRED enabled, I get:
+>xin@fred-ubt:~$ =2E/lass_test
+>trapped on 00000000004012fe
+>trapped on 00000000004012fe
+>trapped on 00000000004012fe
+>trapped on 00000000004012fe
+>trapped on 00000000004012fe
+>trapped on 00000000004012fe
+>trapped on 00000000004012fe
+>trapped on 00000000004012fe
+>trapped on 00000000004012fe
+>trapped on 00000000004012fe
+>trapped on 00000000004012fe
+>trapped on 00000000004012fe
+>trap loop detected, test failed
+>
+>
+>W/ the fix when FRED enabled:
+>[xin@dev ~]$ =2E/lass_test
+>trapped on 00000000004012fe
+>trapped on 00000000004012ff
+>trapped on 0000000000401304
+>trapped on 0000000000401305
+>test passed
+>
+>Obviously the test passes on IDT=2E
+>
+>As Dave asked, I will integrate this test into selftests=2E
+>
+>Thanks!
+>    Xin
 
-Signed-off-by: Hendrik Hamerlinck <hendrik.hamerlinck@hammernet.be>
----
-Changes since v1:
-Improved commit message to be consistent with other commit messages.
-
- .../selftests/filesystems/mount-notify/mount-notify_test.c      | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/tools/testing/selftests/filesystems/mount-notify/mount-notify_test.c b/tools/testing/selftests/filesystems/mount-notify/mount-notify_test.c
-index 59a71f22fb11..af2b61224a61 100644
---- a/tools/testing/selftests/filesystems/mount-notify/mount-notify_test.c
-+++ b/tools/testing/selftests/filesystems/mount-notify/mount-notify_test.c
-@@ -230,7 +230,7 @@ static void verify_mount_ids(struct __test_metadata *const _metadata,
- 			}
- 		}
- 	}
--	// Check that all list1 memebers can be found in list2. Together with
-+	// Check that all list1 members can be found in list2. Together with
- 	// the above it means that the list1 and list2 represent the same sets.
- 	for (i = 0; i < num; i++) {
- 		for (j = 0; j < num; j++) {
--- 
-2.43.0
-
+Btw, make the test work on 32 bits as well (just a matter of using a diffe=
+rent ucontext=2E) 
