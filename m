@@ -1,76 +1,72 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C27C1F582F;
-	Fri, 23 May 2025 21:26:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3B1F1F3B87;
+	Fri, 23 May 2025 21:28:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748035594; cv=none; b=gz9iSwN/mR47wqv5BS043oT8bBeyTgl/13nPGldZShV4aByi0UFmLT5RQTmFzY3dzsnHL347UUkjpK0LJVmGmS87jODMjlq3j2Nd2bGYOrTs1sCeXSHeETErpDNwGeiQCkchawRrifIF6dXVpRilkby9OiZuppiJAdNXZ3UE5Ks=
+	t=1748035690; cv=none; b=IcutdnHMBduvepHJLL65KoGctjCSHDOKnoslacLI/YtN3VLfByv1umvaN1AFBKHCK+3DoF8ky48GNH1cNbGasRDxFOM6SuLNcEWZNCeW65KfzHKXhIKPEK/mBF2PSa1IRpLVS/v3ZrHyxafe9/utoFvydCMSZ243t0y/HKQBNIA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748035594; c=relaxed/simple;
-	bh=yW5i9tOGdIxs0IhrA0Hmi1ous7kRqD8vZyPP9v1q7jk=;
-	h=Message-ID:Subject:From:To:Date:Content-Type:MIME-Version; b=iYvynIYlUVkn5dA7BZ43n6CwLUMIHPJ+huy3dt0eCJo7j7/52/xyXnJ6A4p335sBWOGxr/NV6K8dniEdikf9cbsMTrDENI/xIfQLzIaUQCx/spswomPQ4EpW/bwd1sKu6jMLAypo4NczA9NB6sL4Ldpx4h3nex4xJGb1tN2GJ78=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cghMzfYH; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cghMzfYH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 200C4C4CEE9;
-	Fri, 23 May 2025 21:26:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748035594;
-	bh=yW5i9tOGdIxs0IhrA0Hmi1ous7kRqD8vZyPP9v1q7jk=;
-	h=Subject:From:To:Date:From;
-	b=cghMzfYHT561kRuLRFIgNd1rFknERP6Xp1PqyzVzdKZLpVGDy87ce7OObKPHXxbxW
-	 PGu/ke4bhcWcyFcrFUGwe48QikoYcC3lj95YVf3kZ58bqXL9uLNIV1pdxyoou1iHCL
-	 9j4tIVJl5qwtizw78xUpfPTkTpmeCqS2gGfGnyQOcz4xHyhvKmZstaFGSPyKVdvAci
-	 ePbm5iaopkPQ7aKcq/JhaR7Hp3oav4U4Wp3tMCOTkoI6fVyx30EZUn/B4ccHtfHte4
-	 jDuuyW3P2Qz7a3S7tvVQRy/3/Az22Q2xr/3iDv+Lo/57CdYLxh+yRKrcsAv4yR1QXo
-	 W1jSV2aGhvb9w==
-Message-ID: <4421c5e1450b7264b85deaa913df35018601bb19.camel@kernel.org>
-Subject: [ANNOUNCE] 5.4.293-rt98
-From: Tom Zanussi <zanussi@kernel.org>
-To: LKML <linux-kernel@vger.kernel.org>, linux-rt-users
- <linux-rt-users@vger.kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
- Thomas Gleixner <tglx@linutronix.de>, Carsten Emde <C.Emde@osadl.org>, John
- Kacur <jkacur@redhat.com>, Sebastian Andrzej Siewior
- <bigeasy@linutronix.de>, Daniel Wagner <wagi@monom.org>, Clark Williams
- <williams@redhat.com>,  "Luis Claudio R. Goncalves" <lgoncalv@redhat.com>,
- Joseph Salisbury <joseph.salisbury@oracle.com>, Tom Zanussi
- <zanussi@kernel.org>
-Date: Fri, 23 May 2025 16:26:32 -0500
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.3-0ubuntu1 
+	s=arc-20240116; t=1748035690; c=relaxed/simple;
+	bh=USlj8qHFdcuihLb7PKYsyoiTFuu/IQ7ZLoTDyKwO35E=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=bRxE1+lB5EvFUK/dNBi8owu/pH+XKH9nIlh5BYt2CI/zZyuXQXeTptXMokDfms0LmhJXaJufGjXr+I0FmGE0SzLlncqOA7auurh3kDH2KjPhX6IJp77X6Jj8zBjECY5z5y5oLtOI2STP5dTxOBt34Twk3Zf6XmfMXEaKoZoWnC0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA480C4CEE9;
+	Fri, 23 May 2025 21:28:08 +0000 (UTC)
+Date: Fri, 23 May 2025 17:28:57 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/2] tracing: ring_buffer: Rewind persistent ring
+ buffer when reboot
+Message-ID: <20250523172857.02ab4a75@gandalf.local.home>
+In-Reply-To: <20250523165425.0275c9a1@gandalf.local.home>
+References: <174792927500.496143.10668210464102033012.stgit@mhiramat.tok.corp.google.com>
+	<174792928413.496143.17979267710069360561.stgit@mhiramat.tok.corp.google.com>
+	<20250523165425.0275c9a1@gandalf.local.home>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hello RT Folks!
+On Fri, 23 May 2025 16:54:25 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-I'm pleased to announce the 5.4.293-rt98 stable release.
+> I think we also need this:
+> 
+> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+> index 7d837963dd1e..456efebc396a 100644
+> --- a/kernel/trace/ring_buffer.c
+> +++ b/kernel/trace/ring_buffer.c
+> @@ -3638,6 +3638,9 @@ rb_move_tail(struct ring_buffer_per_cpu *cpu_buffer,
+>  
+>  	rb_reset_tail(cpu_buffer, tail, info);
+>  
+> +	/* The new page should have zero committed */
+> +	rb_init_page(next_page->page);
+> +
+>  	/* Commit what we have for now. */
+>  	rb_end_commit(cpu_buffer);
+>  	/* rb_end_commit() decs committing */
 
-This release is just an update to the new stable 5.4.293
-version and no RT specific changes have been made.
+No we don't need it ;-)
 
-You can get this release via the git tree at:
+I'm looking deeper into the code and we have this:
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-stable-rt.git
+		/*
+		 * No need to worry about races with clearing out the commit.
+		 * it only can increment when a commit takes place. But that
+		 * only happens in the outer most nested commit.
+		 */
+		local_set(&next_page->page->commit, 0);
 
-  branch: v5.4-rt
-  Head SHA1: b0414bb960796a924d2769a6f4010d98f19ddde8
+When the tail page gets moved.
 
-Or to build 5.4.293-rt98 directly, the following patches should be applied:
-
-  https://www.kernel.org/pub/linux/kernel/v5.x/linux-5.4.tar.xz
-
-  https://www.kernel.org/pub/linux/kernel/v5.x/patch-5.4.293.xz
-
-  https://www.kernel.org/pub/linux/kernel/projects/rt/5.4/patch-5.4.293-rt9=
-8.patch.xz
-
-Enjoy!
-
-   Tom
-
+-- Steve
