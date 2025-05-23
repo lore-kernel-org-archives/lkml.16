@@ -1,188 +1,229 @@
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2073.outbound.protection.outlook.com [40.107.94.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f173.google.com (mail-yb1-f173.google.com [209.85.219.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EC6720E313;
-	Fri, 23 May 2025 21:46:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.73
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748036775; cv=fail; b=S4rQ7h/d/JIMYRXMhplyIUFMh+6CCnB9fdkjmHctrZriIkpeiSaypOkEdDPg2cCwogGTXFIgPv4DLUUC5IW6XrGU+4elAulQXmAsKZc1DxI14vKOLkzEMUF7yZq2mIcLVYws4czQP7ncyPumW2J2qnooWE8j3G4tA4gViOiH89c=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748036775; c=relaxed/simple;
-	bh=AjPuI0gup1fNCxmuJaMqHBy2VZXAVdMMcNwXdCU908g=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rXRBVuoMDAg/FXksTSJ/kYyVje6y0kys+KM6xqyWcDHjKtUwJ6U1nUo9tfPnBskNJw69O3FF8yZmsaz3VNwTbqaQ/7AKCQeWD/64ppgAw40hu+Kd70teMO0iMBq3KbdLwLeIx+9X/kMiGD8QKFnJgRSKqpiplB6Mnf+kVGSlc1I=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=JjOEil85; arc=fail smtp.client-ip=40.107.94.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 973C63D76;
+	Fri, 23 May 2025 21:47:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.173
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748036854; cv=none; b=BRV0z2ezXVonB4YCvzQxhIr2OGaSgBHy8EIyxbG2RDR4bM9Ajj7t3NsgW+X7Ef2imtL89gdwr5zHCckmXr/tZksb0MhhaGrNresov90XyD+FL4A2LnmlN5mMGRADftKj1eAdG3gYGPz1bhRHQK6E3reh9Mj+ODc0XoxLTkU+Lqg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748036854; c=relaxed/simple;
+	bh=fhPAlDbOG5HyAawH7JLmusZbx+86SF4MxmwX95wKXpE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=oWEsBAJTxo1evYrAjIZeV1SmkoELMvIJMN14Mr9L13kCTr8NmO5KD7BzqopG7ruNgkETAREKIBMDFRNgYETz9LCRGVNfxocVylNwLd9PP+6amyzQcAzkZJlHrWJzfPJu+Z8PfXl/7+/I1iEBwG53RWV2wlTfblHlnBwmVqwvBF0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MzQXetTV; arc=none smtp.client-ip=209.85.219.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="JjOEil85"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=U9noV+DjAwq5rfL7ukcYGcoQMtmA7a5FDcIccu9xlt6LVeY8Ch+61i2EZOq+uIoNp2qEjYxklaco1v86DGb2CuwUCtHTdh79iotnfxNoiJHWz/v57hrFC8ipnM3nN43LWiN9Wo+s0MHPgQyzYNTvkS1cSzMhYA02FpH86/7S6lqMDVLJ4QKrvwBqfAskf5l4UJ7ONyP9LgyWM9sTKK6ts0ja6g4/ue/Z9FBhAd65+H7CEh+wkxfjZdFvlPjO56q2S17Bte1j+BVQ5MXiyeaZG4obSwFV9Eq3wp4qpRvu+q0+WXgk/ITloAhCORqlY9Rb2IBX6AqaUPWgimitr4ltDg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=teiDQPJLspsSCPoDqpuhkmQED3A9zkVPcTKiFcDSU14=;
- b=qUH/UdPy3mqKvm096a7tWEZex6z/T6D34gP3TlKojDN5aqI8HUKp2kyjPuLN3scyYuyFPcnvO4+wFj2JzfgiM2bG0MsRaYKNBXFF4mbez2EbCdwyLrcZYEPMbmw5zQKfqOKNvwqlOJmNrnhCclSejl1jNHfYluF+tuBjz/LRo+fiEKRnFwE4x+Tp4zRkFzqy+T/yV0DW6EGOXT8wzX0GVlUrt2qK+3LtzmI1XniiT2/Q/JwrhncxAy4IRFXkCv1pQOZtGpAzi5XHfajTvd5XEu71xW6WVuy5A+ExXikhXC6Er/XbVfj3rqwwr/QDI4HzH0znf/8VWcBmoTmxzRA6kg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.160) smtp.rcpttodomain=intel.com smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=teiDQPJLspsSCPoDqpuhkmQED3A9zkVPcTKiFcDSU14=;
- b=JjOEil85J8Uij1Fc307wWih5LFH4H3Mw5N0uiRlfUr0pMMl5Wo1V7S8Kp+tSEi4vK+A2lx/G87ZmqsWpNDgbKfWIyfYYDw54RgalFSJwb3vWj9xcFeNNmVlrzCSPVY9GybJpYw9Rj8qwl+43gd0OO6+2FqybYyljzlTKDg/+KLxTrBWNqbTT6uPhNCEyFXe8NCQ2aJz+v6Ni4miIySkhe8oatj1enKiSTpVy802sZFo3xQhxz+R43/FTWXrzUu5IuIkFQNLCrGUjHoEPJBYjlL/p8qPjupC1fJW1K/lDJJlVFMbRcRdOLPSaB3POIzyvyaY6K3sGdyyZzxMynH/vsg==
-Received: from SJ0PR03CA0279.namprd03.prod.outlook.com (2603:10b6:a03:39e::14)
- by PH8PR12MB8430.namprd12.prod.outlook.com (2603:10b6:510:259::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.21; Fri, 23 May
- 2025 21:46:09 +0000
-Received: from SJ5PEPF000001C9.namprd05.prod.outlook.com
- (2603:10b6:a03:39e:cafe::e7) by SJ0PR03CA0279.outlook.office365.com
- (2603:10b6:a03:39e::14) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8769.19 via Frontend Transport; Fri,
- 23 May 2025 21:46:09 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.160) by
- SJ5PEPF000001C9.mail.protection.outlook.com (10.167.242.37) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8769.18 via Frontend Transport; Fri, 23 May 2025 21:46:09 +0000
-Received: from rnnvmail202.nvidia.com (10.129.68.7) by mail.nvidia.com
- (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Fri, 23 May
- 2025 14:46:01 -0700
-Received: from rnnvmail205.nvidia.com (10.129.68.10) by rnnvmail202.nvidia.com
- (10.129.68.7) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Fri, 23 May
- 2025 14:46:00 -0700
-Received: from Asurada-Nvidia (10.127.8.12) by mail.nvidia.com (10.129.68.10)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14 via Frontend
- Transport; Fri, 23 May 2025 14:45:59 -0700
-Date: Fri, 23 May 2025 14:45:57 -0700
-From: Nicolin Chen <nicolinc@nvidia.com>
-To: "Tian, Kevin" <kevin.tian@intel.com>
-CC: "jgg@nvidia.com" <jgg@nvidia.com>, "corbet@lwn.net" <corbet@lwn.net>,
-	"will@kernel.org" <will@kernel.org>, "bagasdotme@gmail.com"
-	<bagasdotme@gmail.com>, "robin.murphy@arm.com" <robin.murphy@arm.com>,
-	"joro@8bytes.org" <joro@8bytes.org>, "thierry.reding@gmail.com"
-	<thierry.reding@gmail.com>, "vdumpa@nvidia.com" <vdumpa@nvidia.com>,
-	"jonathanh@nvidia.com" <jonathanh@nvidia.com>, "shuah@kernel.org"
-	<shuah@kernel.org>, "jsnitsel@redhat.com" <jsnitsel@redhat.com>,
-	"nathan@kernel.org" <nathan@kernel.org>, "peterz@infradead.org"
-	<peterz@infradead.org>, "Liu, Yi L" <yi.l.liu@intel.com>,
-	"mshavit@google.com" <mshavit@google.com>, "praan@google.com"
-	<praan@google.com>, "zhangzekun11@huawei.com" <zhangzekun11@huawei.com>,
-	"iommu@lists.linux.dev" <iommu@lists.linux.dev>, "linux-doc@vger.kernel.org"
-	<linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "linux-tegra@vger.kernel.org"
-	<linux-tegra@vger.kernel.org>, "linux-kselftest@vger.kernel.org"
-	<linux-kselftest@vger.kernel.org>, "patches@lists.linux.dev"
-	<patches@lists.linux.dev>, "mochs@nvidia.com" <mochs@nvidia.com>,
-	"alok.a.tiwari@oracle.com" <alok.a.tiwari@oracle.com>, "vasant.hegde@amd.com"
-	<vasant.hegde@amd.com>, "dwmw2@infradead.org" <dwmw2@infradead.org>,
-	"baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>
-Subject: Re: [PATCH v5 13/29] iommufd/viommu: Introduce IOMMUFD_OBJ_HW_QUEUE
- and its related struct
-Message-ID: <aDDslV6ZJpxJNuaG@Asurada-Nvidia>
-References: <cover.1747537752.git.nicolinc@nvidia.com>
- <580a36f629402506d232052ddd20ef21ec91d5bc.1747537752.git.nicolinc@nvidia.com>
- <BN9PR11MB5276C599F23964E423CCA2738C98A@BN9PR11MB5276.namprd11.prod.outlook.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MzQXetTV"
+Received: by mail-yb1-f173.google.com with SMTP id 3f1490d57ef6-e7c5d470a8bso303263276.0;
+        Fri, 23 May 2025 14:47:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748036850; x=1748641650; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=hGy2ccPh/CViJ6eWW2JFWtauMqcjGtl82E9Hd+SYN9U=;
+        b=MzQXetTVgIdXoVhRfXcUheyruR9DI+cnqCZ+0OmkhI++cNMDiWszNU/9ADJHvlf3Gk
+         MDM18mYSbC0fa0gZ1Dt7cvwLKIZLLLyHEjiWGAfPAV5Xw4mqaUATGL3R0i1BO0hkGSA3
+         DBghrLlTtQ5CV7VijPJ4ogp+4iLHRl1udX/vVFWkDGpw1Yb3f4gxE0BWxKpi+b+CI7Lv
+         f9p5fOwiVUyk5DZG97LkwqudI/3aJjuz/t5D6vbjRLIEozb2moaCMj6058PX2L8LtIEZ
+         cgsiVJ/vth8F9lXo81Wo7aBBz/K1tSJ2r7CO2cZinKrSWr90hDn+d/6HSalHLML71vM6
+         cqwg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748036850; x=1748641650;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=hGy2ccPh/CViJ6eWW2JFWtauMqcjGtl82E9Hd+SYN9U=;
+        b=IiV/mS6RqnLDFQZPrCReejPGwInTbEKmVipQFoZTj2124BwWrTu7JWHdm6J+QIPe6v
+         6XUR7YNb6dvUSIo4cciRxjzcvOgMu78y2PPzHkebHu30SAykMBclyVxawsR7xyT80G4v
+         bY/PjSspGFeS/bNU7QdQTidGDGVM0EaCvjA9L314wH0Oqp4aVkKGD1pZWRV7Wy3iSfpI
+         WJv7raioANJszX9wgtgoVYrk17kZdWBoyhlKvgNOqDNdvKzun6gMRav+nF0jBRiknmv2
+         WC0403ufLoxLi2KbEpeTXoKieiTmJ5A5BlwRKWPWXYIgTq6VZTT4AVN2tJx7nCpaGmHt
+         UVPg==
+X-Forwarded-Encrypted: i=1; AJvYcCWftpNZgBmQSHZ07T5rEEOjvlsA345/D5TOn7Zd+LcfN4pApthf7cKmd5sCD+71axzgNo+k+D+wz/Q=@vger.kernel.org, AJvYcCXaXucLMoWdUszwiDsQy27hEY3AxGNuEXb4h6VTaBXs0YT0GfKWhbHI/L1Oht9NxExE3c6HFccMWmo=@vger.kernel.org, AJvYcCXmpAgliCdGayUg/ujCjX4dUrdWeQGgTfuQy+KP3MIPogdkJKqLBR0bAxa2ZXNRBFcijG4wz5tkrjj6PefB@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx/FrrE/KjB3Y93Oxzc7B+4VEqh5H9MkVu0Pwt53r+uTMX4Daqn
+	mU7M7TWfjgS4BFP3Ayvj+3KDRuBeRszUCYznyLgKmqT43zEzUuqGkqqU
+X-Gm-Gg: ASbGncux/zTVdSPCz7z3/R+rb083VbZjRg+FkZWw2kotjGDiPl4bXIS/u2eNt3JrLEJ
+	pGUCl3YMa5JMJW+fBF7SeJJE0+tLkUICD8dCmZJq8fY6p601BL8lcTsly+pe+/5GlLU80ebuqOn
+	I2pZ3qYhK18g/WmSVLGXTJCqMAFWR7sYB1/1sSA0bDnABVbwBa6GdtZtCMvn6NnG9p7Nfxd5V8x
+	d1L8uFCt8dGmooGDycJFqmN/cmz2YN00cwFqe2DzFipQhqqnqHVHMJ4KFba7P8r/VDUcrmlVLOd
+	6f5gtlJgTv5F7mg4lxVlaLH++B76aXLObEz+llJOHiArSK19RjCxPJ45gRUFSJjlg4Y=
+X-Google-Smtp-Source: AGHT+IEK2ofhGIZM2ngoU8KxP4VorOYY4yaj08SlJ8NBjEZfjg6fX/L29sdxg6et0J1FWHwQ+3AfUA==
+X-Received: by 2002:a05:6902:1587:b0:e7d:6ee0:17ac with SMTP id 3f1490d57ef6-e7d9176d4c3mr1400817276.9.1748036850364;
+        Fri, 23 May 2025 14:47:30 -0700 (PDT)
+Received: from ?IPV6:2600:6c56:7d00:582f::64e? ([2600:6c56:7d00:582f::64e])
+        by smtp.googlemail.com with ESMTPSA id 3f1490d57ef6-e7b6adcce03sm5506559276.50.2025.05.23.14.47.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 23 May 2025 14:47:29 -0700 (PDT)
+Message-ID: <60d84153-9ccf-45c1-8b5b-71d51a59aacd@gmail.com>
+Date: Fri, 23 May 2025 16:47:28 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <BN9PR11MB5276C599F23964E423CCA2738C98A@BN9PR11MB5276.namprd11.prod.outlook.com>
-X-NV-OnPremToCloud: AnonymousSubmission
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ5PEPF000001C9:EE_|PH8PR12MB8430:EE_
-X-MS-Office365-Filtering-Correlation-Id: d548050d-5c44-40a5-9851-08dd9a433add
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|7416014|36860700013|82310400026|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?U/oNoknTln29t3ukD0/iWJStKMX1c018hR6asxRPpsEo0QBhPzdMxOz9ySxY?=
- =?us-ascii?Q?mcFSRtZXypS/rXNrq5vpGS5Q+UI8Bdh4dMUmOwBlfTLgiJInCobrLaeQDJVH?=
- =?us-ascii?Q?QTzhKPRrZ6AD+D4Vf6k63NtIco6kaki9MNLC9k+nF+EGl0oVORh4ZjpADIM4?=
- =?us-ascii?Q?ctTRwaGfDp4E7tf7FLMMcLfU9lTb9xj2PVONydldtAS4QtD8rFqdh9twPTYc?=
- =?us-ascii?Q?51HB2yCJKCgulfUtdxnC3+RPjoVeyYAFds8csS+T23qYb1Gytvo1j1roiS1S?=
- =?us-ascii?Q?tmUIPjc01P3xFDveY3CK7gRGF28Sa2en+MR2Eju1HEqbYalPvGtk1iwDfxwC?=
- =?us-ascii?Q?28FcmeGyBzScAGZHZmCyZb3dv67vrUywIMoulwhyEP3Rb7BH20wcRdxsFSPQ?=
- =?us-ascii?Q?19RlJvnRQ+6WYgYOQk8O5zaVaCqmizYJZXemgsM1jpbQo/EHelpjIwcUKlJD?=
- =?us-ascii?Q?G+vtIaeIC0D+3k1c7UDVLjV8emK0+yftKfLI2aX0V0+HybqZE8AM6dKvDEh3?=
- =?us-ascii?Q?2lnu2OgsE/D0EfKf/61+W7EkbzbS87UjyBJDIvyoUINJZG4f8umI6ESqdMGA?=
- =?us-ascii?Q?YPlpd7McVfABFq0ZG9UAmxYDG0SzR8fHr63EZTW3UDWAQwXayiYU4dpSrbXw?=
- =?us-ascii?Q?xHvtRucr1c0F2BuTObsLnKCrf4RUsDX7yiMzVlFo8uEQTsNh3RYm4g2vGkDA?=
- =?us-ascii?Q?+h+ZHsSQG3as0j6o4CrCAwmZZ6eNEdj9kUNgg0tnTTN8FLa8Ms1SkU3qFSqA?=
- =?us-ascii?Q?Q0mc0gqxEuYno9wodQyGTZ3cGOs4/wE8srkgxq59zMNfgOsZ+SBpoaEmBuSO?=
- =?us-ascii?Q?vINJpshNIMlqg7rrEYsqS9FMroGv4aj4fxBi/dyPOjUirVqsWiTpS75Mpb2S?=
- =?us-ascii?Q?SGY0mMaWabq3INV9wiWkwFgghiKiyJ5+jtrW7XzbrC4b/X3TxYJvKyCSpevI?=
- =?us-ascii?Q?gptxgz2GUsislgvR8kniWSy+SUQDbCYDXZl30h3aOr4GwSc3P9qzv/ag/xsh?=
- =?us-ascii?Q?SbQcVQAirpDr5KWtS5jOZLKlPG+2KFA7nagfmJPERW9Z9YLXNhjgqlN7NFFp?=
- =?us-ascii?Q?0/CtEGwbfVyJjMivh/hlczRNEZUfd/AFkEYRa1BsatK6HjmMHmjZPRlcBNxV?=
- =?us-ascii?Q?/v/sCtSH1cGYjjv/Mgqkpc6Yap0Fjtr/pPwbAE0jMFnFSflxfjD6/68bOMiR?=
- =?us-ascii?Q?SvsCEEX0VG67zeqyAPTxtFVpHVY+vYG6g5Bypm34TZv4YFRrRVxVb+Dc1Qca?=
- =?us-ascii?Q?n7XUrsb+saVBJrmVwLvxCABUDrvGXMLRGywoy1tuy3XN0Fq54prq6DyezsSr?=
- =?us-ascii?Q?Vxx3js8l2urf4d/Lk1fBRkfi7nWjvfRHTpfUf/D0p0HCKj/Z0TkFbywjAV3y?=
- =?us-ascii?Q?e2Lqus9VMdAdnELxLUOQCXt0GPN17azK6GvUFMtM1HD86LHr48tZ1kB2I4jW?=
- =?us-ascii?Q?p3dLdtPtB4S8VIdaeWA8CTYeKLbIgjXtmnkNF6RBqtMualSj84vwMsjuKgnx?=
- =?us-ascii?Q?7q6IpjfUQpFX8Swd/EeA5euOz5osWpJfPsLv?=
-X-Forefront-Antispam-Report:
-	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230040)(376014)(7416014)(36860700013)(82310400026)(1800799024);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 May 2025 21:46:09.6946
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: d548050d-5c44-40a5-9851-08dd9a433add
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SJ5PEPF000001C9.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR12MB8430
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] cpufreq, docs: (userspace governor) add that actual freq
+ is >= scaling_setspeed
+To: "Rafael J. Wysocki" <rafael@kernel.org>,
+ Shashank Balaji <shashank.mahadasyam@sony.com>
+Cc: Viresh Kumar <viresh.kumar@linaro.org>, Jonathan Corbet <corbet@lwn.net>,
+ linux-pm@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Shinya Takumi <shinya.takumi@sony.com>
+References: <20250522-userspace-governor-doc-v1-1-c8a038e39084@sony.com>
+ <15871c67-0d18-430f-935e-261b2cda855b@gmail.com>
+ <CAJZ5v0gz3Y+RGqBf9E1hzq9rwfrryd98Xpk51DtLd-uck5y-rw@mail.gmail.com>
+ <b62c0462-8185-4eb8-8ac6-7f2abc387768@gmail.com>
+ <aC_4yLsFVVszI_FA@JPC00244420>
+ <CAJZ5v0g1o03La9aWJF1rheC9CM8SU2iC52auEAnaBpUCMunpJA@mail.gmail.com>
+Content-Language: en-US
+From: Russell Haley <yumpusamongus@gmail.com>
+In-Reply-To: <CAJZ5v0g1o03La9aWJF1rheC9CM8SU2iC52auEAnaBpUCMunpJA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Fri, May 23, 2025 at 07:55:18AM +0000, Tian, Kevin wrote:
-> > From: Nicolin Chen <nicolinc@nvidia.com>
-> > Sent: Sunday, May 18, 2025 11:22 AM
-> > 
-> > +
-> > +enum iommufd_viommu_flags {
-> > +	/*
-> > +	 * The HW does not go through an address translation table but
-> > reads the
-> > +	 * physical address space directly: iommufd core should pin the
-> > physical
-> > +	 * pages backing the queue memory that's allocated for the HW
-> > QUEUE, and
-> > +	 * ensure those physical pages are contiguous in the physical space.
-> > +	 */
-> > +	IOMMUFD_VIOMMU_FLAG_HW_QUEUE_READS_PA = 1 << 0,
-> > +};
+
+
+On 5/23/25 2:06 PM, Rafael J. Wysocki wrote:
+> On Fri, May 23, 2025 at 6:25 AM Shashank Balaji
+> <shashank.mahadasyam@sony.com> wrote:
+>>
+>> Hi Russell,
+>>
+>> On Thu, May 22, 2025 at 06:15:24AM -0500, Russell Haley wrote:
+>>>> The userspace governor requests a frequency between policy->min and
+>>>> policy->max on behalf of user space.  In intel_pstate this translates
+>>>> to setting DESIRED_PERF to the requested value which is also the case
+>>>> for the other governors.
+>>>
+>>> Huh.  On this Skylake box with kernel 6.14.6, it seems to be setting
+>>> Minimum_Performance, and leaving desired at 0.
+>>>
+>>>> echo userspace | sudo tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
+>>> userspace
+>>>> echo 1400000 | sudo tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_setspeed
+>>> 1400000
+>>>> sudo x86_energy_perf_policy &| grep REQ
+>>> cpu0: HWP_REQ: min 14 max 40 des 0 epp 128 window 0x0 (0*10^0us) use_pkg 0
+>>
+>> Oh cool, I didn't know about x86_energy_perf_policy.
+>>
+>> Consider the following on a Raptor Lake machine:
+>>
+>> 1. HWP_REQUEST MSR set by intel_pstate in active mode:
+>>
+>>         # echo active > intel_pstate/status
+>>         # x86_energy_perf_policy -c 0 2>&1 | grep REQ
+>>         cpu0: HWP_REQ: min 11 max 68 des 0 epp 128 window 0x0 (0*10^0us) use_pkg 0
+>>         pkg0: HWP_REQ_PKG: min 1 max 255 des 0 epp 128 window 0x0 (0*10^0us)
+>>         # echo 2000000 > cpufreq/policy0/scaling_min_freq
+>>         # echo 3000000 > cpufreq/policy0/scaling_max_freq
+>>         # x86_energy_perf_policy -c 0 2>&1 | grep REQ
+>>         cpu0: HWP_REQ: min 26 max 39 des 0 epp 128 window 0x0 (0*10^0us) use_pkg 0
+>>         pkg0: HWP_REQ_PKG: min 1 max 255 des 0 epp 128 window 0x0 (0*10^0us)
+>>
+>>         scaling_{min,max}_freq just affect the min and max frequencies
+>>         set in HWP_REQEST. desired_freq is left at 0.
+>>
+>> 2. HWP_REQUEST MSR set by intel_pstate in passive mode with userspace
+>> governor:
+>>
+>>         # echo passive > intel_pstate/status
+>>         # echo userspace > cpufreq/policy0/scaling_governor
+>>         # cat cpufreq/policy0/scaling_setspeed
+>>         866151
+>>         # x86_energy_perf_policy -c 0 2>&1 | grep REQ
+>>         cpu0: HWP_REQ: min 11 max 68 des 0 epp 128 window 0x0 (0*10^0us) use_pkg 0
+>>         pkg0: HWP_REQ_PKG: min 1 max 255 des 0 epp 128 window 0x0 (0*10^0us)
+>>         # echo 2000000 > cpufreq/policy0/scaling_setspeed
+>>         # x86_energy_perf_policy -c 0 2>&1 | grep REQ
+>>         cpu0: HWP_REQ: min 26 max 68 des 0 epp 128 window 0x0 (0*10^0us) use_pkg 0
+>>         pkg0: HWP_REQ_PKG: min 1 max 255 des 0 epp 128 window 0x0 (0*10^0us)
+>>
+>>         scaling_setspeed only changes the min frequency in HWP_REQUEST.
+>>         Meaning, software is explicitly allowing the hardware to choose
+>>         higher frequencies.
+>>
+>> 3. Same as above, except with strictuserspace governor, which is a
+>> custom kernel module which is exactly the same as the userspace
+>> governor, except it has the CPUFREQ_GOV_STRICT_TARGET flag set:
+>>
+>>         # echo strictuserspace > cpufreq/policy0/scaling_governor
+>>         # x86_energy_perf_policy -c 0 2>&1 | grep REQ
+>>         cpu0: HWP_REQ: min 26 max 26 des 0 epp 128 window 0x0 (0*10^0us) use_pkg 0
+>>         pkg0: HWP_REQ_PKG: min 1 max 255 des 0 epp 128 window 0x0 (0*10^0us)
+>>         # echo 3000000 > cpufreq/policy0/scaling_setspeed
+>>         # x86_energy_perf_policy -c 0 2>&1 | grep REQ
+>>         cpu0: HWP_REQ: min 39 max 39 des 0 epp 128 window 0x0 (0*10^0us) use_pkg 0
+>>         pkg0: HWP_REQ_PKG: min 1 max 255 des 0 epp 128 window 0x0 (0*10^0us)
+>>
+>>         With the strict flag set, intel_pstate honours this by setting
+>>         the min and max freq same.
+>>
+>> desired_perf is always 0 in the above cases. The strict flag check is done in
+>> intel_cpufreq_update_pstate, which sets max_pstate to target_pstate if policy
+>> has strict target, and cpu->max_perf_ratio otherwise.
+>>
+>> As Russell and Rafael have noted, CPU frequency is subject to hardware
+>> coordination and optimizations. While I get that, shouldn't software try
+>> its best with whatever interface it has available? If a user sets the
+>> userspace governor, that's because they want to have manual control over
+>> CPU frequency, for whatever reason. The kernel should honor this by
+>> setting the min and max freq in HWP_REQUEST equal. The current behaviour
+>> explicitly lets the hardware choose higher frequencies.
 > 
-> The queue itself doesn't read an address.
->
-> What about 'QUEUE_BASE_PA'?
+> Well, the userspace governor ends up calling the same function,
+> intel_cpufreq_target(), as other cpufreq governors except for
+> schedutil.  This function needs to work for all of them and for some
+> of them setting HWP_MIN_PERF to the same value as HWP_MAX_PERF would
+> be too strict.  HWP_DESIRED_PERF can be set to the same value as
+> HWP_MIN_PERF, though (please see the attached patch).
 
-But the HW queue object represents the HW feature, not the guest
-queue memory. So, it is accurate to say that it reads an address?
+The other governors have been around a lot longer than HWP, though, and
+and are used on non-Intel hardware, which may not have a, "this
+frequency or higher subject to firmware heuristics," interface.
 
-We have this in doc:
-- IOMMUFD_OBJ_HW_QUEUE, representing a hardware accelerated queue, as a subset
-  of IOMMU's virtualization features, for the IOMMU HW to directly read or write
-  the virtual queue memory owned by a guest OS. This HW-acceleration feature can
-  ...
+I tried this on a non-HWP Haswell machine, and there it works like
+DESIRED=MIN. Or maybe DESIRED=MAX=MIN; I don't understand when or why
+hardware would choose frequencies between DESIRED and MAX (before module
+coordination).
 
-Thanks
-Nic
+IMO, intel_cpufreq_target() being wired up to HWP_MIN_PERF is actually
+*more* strange for the other governors than for userspace, because at
+least with userspace governor, the userspace program is free to write to
+scaling_{min,max}_freq instead of scaling_setspeed if it wants.
+
+The conservative governor on HWP hardware, for example, will cause
+strictly higher frequencies (and typically, higher energy consumption)
+than HWP powersave. But on non-HWP hardware, conservative is an
+efficient, slow-ramping governor.
+
+Changing the behavior of the old-style cpufreq governors is fraught,
+because the defaults are schedutil and HWP-powersave, so users of the
+other governors likely made an intentional choice, presumably after
+tests on a specific platform. A change would invalidate those tests.
+
+But on the other hand, they might *already* be invalid because of an
+upgrade from non-HWP hardware. In that case, changing to DES=MIN would
+move closer to the tested behavior.
+
+And then there's churn coming from other parts of the stack. For
+example, until recently [1] tuned would select conservative for its
+"balanced" profile and ondemand for its "powersave" profile, based on
+very old data. But that didn't matter until Redhat stopped funding work
+on power-profiles-daemon, and the desktop environments' power-profile
+selectors got wired up to tuned in Fedora. Hector Martin fixed that,
+switching both to schedutil (unless CONFIG_CPU_FREQ_GOV_SCHEDUTIL=n,
+which is rare I think). That is at least not terrible on non-HWP
+hardware, but given what he was working on at the time, it might not
+have been tested on x86.
+
+[1]
+https://github.com/redhat-performance/tuned/commit/e24bfef651aa7f4da95727815b2cacbf571b59af
+
+Cheers,
+Russell
+
