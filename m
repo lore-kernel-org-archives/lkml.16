@@ -1,78 +1,111 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A61354120B;
-	Fri, 23 May 2025 16:37:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C25EF4120B;
+	Fri, 23 May 2025 16:37:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748018229; cv=none; b=JSDpgVIvSUGbv5Rd6QURdBx2CyKBaWyiTe43QZj7RjkRl2RpkAoP+2+RGB8j5M8nGSjYgZi2DYHtvYWO1ZOjTV5CYEsVaywaXCvasqGoA7bDXpt6ftNTCp5WoXvJpG+3uXmkxxxsCamBFonhKtOtmo7FlJ1DMADrdPQ67KeNlno=
+	t=1748018256; cv=none; b=EVFTPaedWuhhvSrhD40s0PvtyadCN2T7dn38qVwP8ILpxfgNUplQgD4DfFu8RyFiy/kn14mV4VVE+ApvQjHTfjgtkW07jMtB+hwk3fXE2QkUTysErigI+U9hK3S4Nnss0p7bDqG4QxUTJqve0bJxlCxj0CF1K2VmSzujgMFUNKI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748018229; c=relaxed/simple;
-	bh=dmHeudZ8AGy/xI/AEk31iJlaO7kmIqxc51ySVcOcXGw=;
+	s=arc-20240116; t=1748018256; c=relaxed/simple;
+	bh=m5gwN4NjdOfkUkmLGul4JQ7Ns2AXDme3VMTGdkNGO/M=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Wj+SxkF/RRsuQ7Y2ZoS+G6O7SREkshqs3Pni66w5M2+/Caddq2rbyd6OPWXbZjA+4VMaLVlfySdgqNBNsWs/fjqKgGxDiZuwyqqNHXCTj9owqlku5j4IfQ3qWOv3v07/3HclYdgZKZulAMwuOcF8W5Kk17L4VmjSElJdRxNDE6o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
-X-CSE-ConnectionGUID: Q0Iey56jTviAJAlvRRWfcg==
-X-CSE-MsgGUID: ybUalon0T72g3EM+V6jE0g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11441"; a="67642067"
-X-IronPort-AV: E=Sophos;i="6.15,309,1739865600"; 
-   d="scan'208";a="67642067"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2025 09:37:07 -0700
-X-CSE-ConnectionGUID: T+r6XEMfRp2A8N5KEZbVIw==
-X-CSE-MsgGUID: X8CPCvm+STu0IWSwsapyeA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,309,1739865600"; 
-   d="scan'208";a="146184994"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by orviesa004.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2025 09:37:05 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andy@kernel.org>)
-	id 1uIVOI-000000006VW-1Hm2;
-	Fri, 23 May 2025 19:37:02 +0300
-Date: Fri, 23 May 2025 19:37:02 +0300
-From: Andy Shevchenko <andy@kernel.org>
-To: Angelo Dureghello <adureghello@baylibre.com>
-Cc: Nuno Sa <nuno.sa@analog.com>, Lars-Peter Clausen <lars@metafoo.de>,
-	Michael Hennerich <Michael.Hennerich@analog.com>,
-	Jonathan Cameron <jic23@kernel.org>,
-	David Lechner <dlechner@baylibre.com>, linux-iio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] iio: dac: adi-axi-dac: fix bus free check
-Message-ID: <aDCkLhsKDgN_hF2N@smile.fi.intel.com>
-References: <20250522-iio-dac-adi-axi-dac-fix-bus-read-v1-1-26ec358c57bf@baylibre.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=iTpZAy6FgmA50jZX8S2NIcdgjctcU9b8bHQtIm2DJkGnzn9IH8K8LyZ0bjZT70ZCwO6yj0CoeWnmmHHBuT+fcESIwbbOsmvzN38tXmO1Q5jyzIRlxnETMbqBRecpePBKaCBVn+Y98PKTTrrLXuo6YNJS0W302r4K7lqFQDRaekM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NjCR/1Sa; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NjCR/1Sa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4274DC4CEE9;
+	Fri, 23 May 2025 16:37:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748018256;
+	bh=m5gwN4NjdOfkUkmLGul4JQ7Ns2AXDme3VMTGdkNGO/M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=NjCR/1SahfzIbyb5y0+WTlPnVoV0T9SNuWpLo+byH/LIe0AipjfzoOsYsYJQPt7Ac
+	 hpN/n8fu97s7McFZ0WrKZuh+ALY4/0d1EB+p/8kW6Ru22FrgobSjZ3Jy1SpmPH6Hhd
+	 Y4niM+QxxNCTtkumoGq1xFPNgFUZb4niPmay24+dLJE28Kr+5lvI5EZw/K+JYOiG8F
+	 YApJB19VCDOJg+adEBAdjBowFygjulwzOWr/tO6LwnKCzIDuEyNBXK2xf52uYZXTQ5
+	 95LlNh2f9DqwuePAonQvXLJ/bJHPmUPWY1RdPfs+nlSDNkS8xAR9IgB71u7d2aGBmA
+	 ghNM3ctttk4aQ==
+Date: Fri, 23 May 2025 17:37:31 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: Frank Li <Frank.Li@nxp.com>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Noah Wang <noahwang.wang@outlook.com>,
+	Naresh Solanki <naresh.solanki@9elements.com>,
+	Michal Simek <michal.simek@amd.com>,
+	Fabio Estevam <festevam@gmail.com>,
+	Rodrigo Gobbi <rodrigo.gobbi.7@gmail.com>,
+	Grant Peltier <grantpeltier93@gmail.com>,
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>,
+	open list <linux-kernel@vger.kernel.org>, imx@lists.linux.dev
+Subject: Re: [PATCH 1/1] dt-bindings: trivial-devices: Add compatible string
+ adi,adt7411
+Message-ID: <20250523-enactment-basics-ceb5ae318611@spud>
+References: <20250523151338.541529-1-Frank.Li@nxp.com>
+ <20250523-fridge-scarecrow-982578c16bf0@spud>
+ <e11aade8-f646-4d94-942c-6186f06fe783@roeck-us.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="b6+YlcjOA3JGlAsN"
+Content-Disposition: inline
+In-Reply-To: <e11aade8-f646-4d94-942c-6186f06fe783@roeck-us.net>
+
+
+--b6+YlcjOA3JGlAsN
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250522-iio-dac-adi-axi-dac-fix-bus-read-v1-1-26ec358c57bf@baylibre.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, May 22, 2025 at 06:47:31PM +0200, Angelo Dureghello wrote:
-> From: Angelo Dureghello <adureghello@baylibre.com>
-> 
-> This patch is intended to fix [1] that looks not yet accepted in any
-> upstream branch.
-> 
-> Poll function must check for a value equal to 0 (bus free condition).
+On Fri, May 23, 2025 at 09:02:12AM -0700, Guenter Roeck wrote:
+> On 5/23/25 08:30, Conor Dooley wrote:
+> > On Fri, May 23, 2025 at 11:13:37AM -0400, Frank Li wrote:
+> > > Add compatible string adi,adt7411, which is temperature sensor and
+> > > 8-Channel ADC.
+> >=20
+> > Usually for iio devices supplies are meant to be documented, and this
+> > device has one.
+> >=20
+>=20
+> FWIW, the driver supporting this chip is some 15 years old. I don't think
+> anyone was talking about supplies at that time.
 
-> [1] https://lore.kernel.org/linux-iio/l6vu54ltxd7pydkzl6xbbq55gedumzbsllfxnljyngwcg4c6zd@w6qxgn2vby75/
-> 
+That extra context is helpful.
 
-Make these two lines to be a Link tag
+> Also, this is currently implemented as hwmon driver. Is there an effort
+> to move the driver out of hwmon and into iio ? Fine with me if this is
+> where things are going (one less driver to maintain), but I would caution
+> that this will result in an ABI break for users of the hwmon driver.
 
-Link: https://... [1]
+What subsystem doesn't really matter, particularly the difference
+between what is a hwmon or not seems to be up to the whims of the first
+submitter for some devices. I don't know anything about moving drivers
+or w/e, I am literally just reviewing this one patch that landed in my
+inbox that had a supply missing.
 
-> Signed-off-by: Angelo Dureghello <adureghello@baylibre.com>
+If this is some 15 year old device, then I can live without the supply
+I suppose.
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
+Really trivial-devices should have an optional supply in it, if someone
+comes along with a generic name for that supply..
 
--- 
-With Best Regards,
-Andy Shevchenko
+--b6+YlcjOA3JGlAsN
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
 
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaDCkSgAKCRB4tDGHoIJi
+0hAIAQCY7UdN5zM+5S7oFgE5QxFmBFbfQlc4LZeoZ6XyXaMIfwEA7ZYDor3Q/sjX
+dITUvgxMifquqX5H5dV1Yg7dcLM1nAM=
+=BWpj
+-----END PGP SIGNATURE-----
+
+--b6+YlcjOA3JGlAsN--
