@@ -1,231 +1,227 @@
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAB192356A8
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 11:36:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DCF6231839;
+	Fri, 23 May 2025 11:36:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.244.123.138
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748000175; cv=none; b=GskWvIVoeU13MC+zXejNQ7TLtWUxX4hz/9yFHLe8bUFZkkngA/YESlGQVYQx3jU08ZRLE5F0zh6GXuv3soYQ3oSps+nk2IXFkZszfnWN7mKNbFDbBDPzudhhajGyZFpS30xW9I7NMz3qLB7MYGXzNm8B5nsdX/DMVZ3EB3M7dpU=
+	t=1748000195; cv=none; b=bKJWFKh6W4faZCDhGQvN4l7bE7miFkb6mqa0I2VcKdYobZM+uzfCMxMeVhn3Vnr8BAJgrnA9O0tDrMpOJob9xgoTW11EDxNAeLp/vLa3/ncsMT3lZ/l25rZTKfSdY3HSce5SmDxjoGo7B4wlami06LnPPnhSnLhhKrylYoYbMHI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748000175; c=relaxed/simple;
-	bh=5osHyV21by3EPnFM/B87KOZI5Ors1zitCYB5PcM/luk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=HBWkt/jMa+u0f4uxs/y4qzsnXqjgLxjuSb9eyDhwbXP0LjOV/5pAsFXTz+J1xD9K4OFbgBqfm0NbXsjXmiYjRt2d4mRSfLlWpU44Q0nrx1MG5TqTuIAurYS6wH5LiKByqo2MlsfQt4x14dM1Nd4kGJRdh8wTxy2jaQafoktUQws=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=Xrh4wYB9; arc=none smtp.client-ip=209.85.221.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
+	s=arc-20240116; t=1748000195; c=relaxed/simple;
+	bh=jw47wGt/cC+EuWS9FJrYqNevnua/6TghvFDUnK5WJSg=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=f8d1lpNB9sIHo9e+27wGDphMuVqM9wEGBH08u9xkQ7VD0PubYhQ+uUMS3TishQTUGxWmQRD7dstef2moHiZdISNJ7mO0kwsv/+AtBmg/uzcEjJa1rwLCHr8LHItvSnIsEvWOY8HX7dr55qOAAxYEOu0jdyd0boF/7YxQeJapg0M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=hhOWTUt1; arc=none smtp.client-ip=60.244.123.138
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="Xrh4wYB9"
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-3a361a54454so1141823f8f.0
-        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 04:36:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1748000172; x=1748604972; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=VPjovNDjW6+EQ4LMpESmH+B/L0gygzy/uxelrXjYBg8=;
-        b=Xrh4wYB9eJtr9DWwSS4xd5adpaYq9zmg89Jhn8G/8wD1IH468nKEPdS+etZcsfXube
-         CvoErKsdwtLpjrzTrhX0r72c5Qv1bzFEsQ0Fm4+1RvqGY/I/SEwR2fI+wv8bFMRLKH+6
-         9XaxCBAqy021IVcUcOfLF97C3N+bhWhHqmWJ+PB2Wq7qbIr5lSlbHopi4lSSDce4vwQS
-         yk2AD7eKljt3EjfUCUNgt8HyXlgQ/GNisg8jf/aPGTw45BZ8nfPmcBVqLU0eJ+wADcF4
-         QhsLH2EplMFIvPVvsos9PApgWFsZtfr1p1+n9UpDSMiQaPn9yWuezyHuH1ir+ip+xGJL
-         y4lg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748000172; x=1748604972;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=VPjovNDjW6+EQ4LMpESmH+B/L0gygzy/uxelrXjYBg8=;
-        b=SbfacoPWR01PSa7zwMEfP/mFN8uGqUJxhv2o7yIaFWSa8KohAEuqNjK0+Nl7fUbrgD
-         Gt9jKjpTgbwYMi5JT0njFTQfGxVCc76tATufMC/UkK+O1QE4RvLbY/D5h03GV4K3xSx+
-         bL9/Uilp+iU1ySHPSBsTwWQlm3XpuQaXdFfFXVw+vT8fVBJZpslwy4umZ3dLcVrK3d3A
-         mqdIyB7SNnrkJzIrsa5A/x0GBr+SLWuNI8BTog30Dw+3bQ20hblCaJBa1JNyIRNlWGyd
-         VFgS11xxg7VvHHgz58W/G7Fu2qIMQc4pz45znf3eCG6Nb5Uul2ijFqS7E6+U53Rc8lQW
-         UQkg==
-X-Forwarded-Encrypted: i=1; AJvYcCWVfN14Mqx40ZEH4P8gkSeRun9zMJYStVq/G5GegDWIb4dTOlNaJMwMklswvQJJgSB5+8CNFL0anxIsfZ0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwSIUeBEgbEeDXwFKmmcr4xs/iHsKdaR4cWzaence1K91B4fUqV
-	JNQK2pb8tS8e3QQ/ZC0RABGD27ZkvdRRf4v+aZ60USOOXgburG63R4+AelY3aqMeVVo=
-X-Gm-Gg: ASbGnctv80vsoubLIXFrc3vJjrGrEsZr42JMw35Xnbd9p6GsjqOoVzP+ts4+6VyBlBS
-	WLw5e0QMPrQklkGQ5lhqd5zRMV49b1DiBybSCwIbTgtaIbBnqkDl0ucjKjz/tZ89jNqnXyhH8/Q
-	/+HvmacAGbc3XgWxMGkwlx+zbSCOG2pLvBb+HjHiJTcCS/82GY6lCHDdsSKbSREnClUuRT4fDaG
-	PCmX+LOjG4KiH9qMrBVJoWFZhjd+oHUrTWXRKRyxacbusq6eBfnqwYKovRao7HpgE7ZgicC2AM7
-	NcvGuIbshUCkd43QZEJ3WD00msBu6rZcU9AKq2O7rPPqKvL1uSHzxEbZEo8=
-X-Google-Smtp-Source: AGHT+IF2ZQShD6Bzg9HopdSxCvsBVk+Vm5DBLVCqW0pMilB6flZ85+PDQSUHNACKnOikFlZ7WJIovg==
-X-Received: by 2002:a05:6000:188f:b0:3a3:71fb:7903 with SMTP id ffacd0b85a97d-3a371fb829emr6202649f8f.10.1748000171649;
-        Fri, 23 May 2025 04:36:11 -0700 (PDT)
-Received: from localhost ([2a02:8308:a00c:e200:be84:d9ad:e5e6:f60b])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-447f3814262sm136898265e9.25.2025.05.23.04.36.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 May 2025 04:36:11 -0700 (PDT)
-From: =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@ventanamicro.com>
-To: kvm-riscv@lists.infradead.org
-Cc: kvm@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Anup Patel <anup@brainfault.org>,
-	Atish Patra <atishp@atishpatra.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Alexandre Ghiti <alex@ghiti.fr>,
-	Andrew Jones <ajones@ventanamicro.com>
-Subject: [PATCH v4] RISC-V: KVM: add KVM_CAP_RISCV_USERSPACE_SBI
-Date: Fri, 23 May 2025 13:33:49 +0200
-Message-ID: <20250523113347.2898042-3-rkrcmar@ventanamicro.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="hhOWTUt1"
+X-UUID: 250891de37ca11f0813e4fe1310efc19-20250523
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+	h=Content-Type:Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=AGEcvDBfYeZBjwUC/CCx28OaHYTCv9ycCaOblUmx3bM=;
+	b=hhOWTUt1NH4pfuqOuUvkgSj+37Z2bArepHJi6y/XGa/+qwMwBAWP27ijsESo9s+jO38fsgNusrG3kStex7uyqjavz+PbLDaQZ326Vo1MpiuYjQ1aZVP0aVs+SiG6eSaOuF/sECz7AMrhU/qpwMHn2/qgakxY5djbqdmMGTTIRdw=;
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.2.1,REQID:b4a0ec3f-bc9b-4a20-9bc1-3ee229fad5b1,IP:0,UR
+	L:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:r
+	elease,TS:0
+X-CID-META: VersionHash:0ef645f,CLOUDID:462ae757-abad-4ac2-9923-3af0a8a9a079,B
+	ulkID:nil,BulkQuantity:0,Recheck:0,SF:81|82|102,TC:nil,Content:0|50,EDM:-3
+	,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV
+	:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0,NGT
+X-CID-BAS: 0,NGT,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-UUID: 250891de37ca11f0813e4fe1310efc19-20250523
+Received: from mtkmbs09n2.mediatek.inc [(172.21.101.94)] by mailgw01.mediatek.com
+	(envelope-from <skylake.huang@mediatek.com>)
+	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+	with ESMTP id 585869507; Fri, 23 May 2025 19:36:19 +0800
+Received: from mtkmbs11n1.mediatek.inc (172.21.101.185) by
+ mtkmbs13n1.mediatek.inc (172.21.101.193) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.39; Fri, 23 May 2025 19:36:16 +0800
+Received: from mtksitap99.mediatek.inc (10.233.130.16) by
+ mtkmbs11n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
+ 15.2.1258.39 via Frontend Transport; Fri, 23 May 2025 19:36:16 +0800
+From: Sky Huang <SkyLake.Huang@mediatek.com>
+To: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>, "David S. Miller"
+	<davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
+	<kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Daniel Golle
+	<daniel@makrotopia.org>, Qingfang Deng <dqfext@gmail.com>, SkyLake Huang
+	<SkyLake.Huang@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	<linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-mediatek@lists.infradead.org>
+CC: Sky Huang <skylake.huang@mediatek.com>
+Subject: [PATCH net-next 1/2] net: phy: mtk-2p5ge: Add LED support for MT7988
+Date: Fri, 23 May 2025 19:36:00 +0800
+Message-ID: <20250523113601.3627781-2-SkyLake.Huang@mediatek.com>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20250523113601.3627781-1-SkyLake.Huang@mediatek.com>
+References: <20250523113601.3627781-1-SkyLake.Huang@mediatek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-MTK: N
 
-The new capability allows userspace to implement SBI extensions that KVM
-does not handle.  This allows userspace to implement any SBI ecall as
-userspace already has the ability to disable acceleration of selected
-SBI extensions.
-The base extension is made controllable as well, but only with the new
-capability, because it was previously handled specially for some reason.
-*** The related compatibility TODO in the code needs addressing. ***
+From: Sky Huang <skylake.huang@mediatek.com>
 
-This is a VM capability, because userspace will most likely want to have
-the same behavior for all VCPUs.  We can easily make it both a VCPU and
-a VM capability if there is demand in the future.
+Add LED support for MT7988's built-in 2.5Gphy. LED hardware has almost
+the same design with MT7981's/MT7988's built-in GbE. So hook the same
+helper function here.
 
-Signed-off-by: Radim Krčmář <rkrcmar@ventanamicro.com>
+Before mtk_phy_leds_state_init(), set correct default values of LED0
+and LED1.
+
+Signed-off-by: Sky Huang <skylake.huang@mediatek.com>
 ---
-v4:
-* forward base extension as well
-* change the id to 242, because 241 is already taken in linux-next
-* QEMU example: https://github.com/radimkrcmar/qemu/tree/mp_state_reset
-v3: new
----
- Documentation/virt/kvm/api.rst    | 11 +++++++++++
- arch/riscv/include/asm/kvm_host.h |  3 +++
- arch/riscv/include/uapi/asm/kvm.h |  1 +
- arch/riscv/kvm/vcpu_sbi.c         | 17 ++++++++++++++---
- arch/riscv/kvm/vm.c               |  5 +++++
- include/uapi/linux/kvm.h          |  1 +
- 6 files changed, 35 insertions(+), 3 deletions(-)
+ drivers/net/phy/mediatek/mtk-2p5ge.c | 104 +++++++++++++++++++++++++--
+ 1 file changed, 98 insertions(+), 6 deletions(-)
 
-diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
-index e107694fb41f..c9d627d13a5e 100644
---- a/Documentation/virt/kvm/api.rst
-+++ b/Documentation/virt/kvm/api.rst
-@@ -8507,6 +8507,17 @@ given VM.
- When this capability is enabled, KVM resets the VCPU when setting
- MP_STATE_INIT_RECEIVED through IOCTL.  The original MP_STATE is preserved.
+diff --git a/drivers/net/phy/mediatek/mtk-2p5ge.c b/drivers/net/phy/mediatek/mtk-2p5ge.c
+index e147eab52..de8a41a18 100644
+--- a/drivers/net/phy/mediatek/mtk-2p5ge.c
++++ b/drivers/net/phy/mediatek/mtk-2p5ge.c
+@@ -249,8 +249,80 @@ static int mt798x_2p5ge_phy_get_rate_matching(struct phy_device *phydev,
+ 	return RATE_MATCH_PAUSE;
+ }
  
-+7.44 KVM_CAP_RISCV_USERSPACE_SBI
-+--------------------------------
++static const unsigned long supported_triggers =
++	BIT(TRIGGER_NETDEV_FULL_DUPLEX) |
++	BIT(TRIGGER_NETDEV_LINK)        |
++	BIT(TRIGGER_NETDEV_LINK_10)     |
++	BIT(TRIGGER_NETDEV_LINK_100)    |
++	BIT(TRIGGER_NETDEV_LINK_1000)   |
++	BIT(TRIGGER_NETDEV_LINK_2500)   |
++	BIT(TRIGGER_NETDEV_RX)          |
++	BIT(TRIGGER_NETDEV_TX);
 +
-+:Architectures: riscv
-+:Type: VM
-+:Parameters: None
-+:Returns: 0 on success, -EINVAL if arg[0] is not zero
++static int mt798x_2p5ge_phy_led_blink_set(struct phy_device *phydev, u8 index,
++					  unsigned long *delay_on,
++					  unsigned long *delay_off)
++{
++	bool blinking = false;
++	int err = 0;
 +
-+When this capability is enabled, KVM forwards ecalls from disabled or unknown
-+SBI extensions to userspace.
++	err = mtk_phy_led_num_dly_cfg(index, delay_on, delay_off, &blinking);
++	if (err < 0)
++		return err;
 +
- 8. Other capabilities.
- ======================
++	err = mtk_phy_hw_led_blink_set(phydev, index, blinking);
++	if (err)
++		return err;
++
++	if (blinking)
++		mtk_phy_hw_led_on_set(phydev, index, MTK_2P5GPHY_LED_ON_MASK,
++				      false);
++
++	return 0;
++}
++
++static int mt798x_2p5ge_phy_led_brightness_set(struct phy_device *phydev,
++					       u8 index,
++					       enum led_brightness value)
++{
++	int err;
++
++	err = mtk_phy_hw_led_blink_set(phydev, index, false);
++	if (err)
++		return err;
++
++	return mtk_phy_hw_led_on_set(phydev, index, MTK_2P5GPHY_LED_ON_MASK,
++				     (value != LED_OFF));
++}
++
++static int mt798x_2p5ge_phy_led_hw_is_supported(struct phy_device *phydev,
++						u8 index, unsigned long rules)
++{
++	return mtk_phy_led_hw_is_supported(phydev, index, rules,
++					   supported_triggers);
++}
++
++static int mt798x_2p5ge_phy_led_hw_control_get(struct phy_device *phydev,
++					       u8 index, unsigned long *rules)
++{
++	return mtk_phy_led_hw_ctrl_get(phydev, index, rules,
++				       MTK_2P5GPHY_LED_ON_SET,
++				       MTK_2P5GPHY_LED_RX_BLINK_SET,
++				       MTK_2P5GPHY_LED_TX_BLINK_SET);
++};
++
++static int mt798x_2p5ge_phy_led_hw_control_set(struct phy_device *phydev,
++					       u8 index, unsigned long rules)
++{
++	return mtk_phy_led_hw_ctrl_set(phydev, index, rules,
++				       MTK_2P5GPHY_LED_ON_SET,
++				       MTK_2P5GPHY_LED_RX_BLINK_SET,
++				       MTK_2P5GPHY_LED_TX_BLINK_SET);
++};
++
+ static int mt798x_2p5ge_phy_probe(struct phy_device *phydev)
+ {
++	struct mtk_socphy_priv *priv;
+ 	struct pinctrl *pinctrl;
+ 	int ret;
  
-diff --git a/arch/riscv/include/asm/kvm_host.h b/arch/riscv/include/asm/kvm_host.h
-index 85cfebc32e4c..6f17cd923889 100644
---- a/arch/riscv/include/asm/kvm_host.h
-+++ b/arch/riscv/include/asm/kvm_host.h
-@@ -122,6 +122,9 @@ struct kvm_arch {
+@@ -273,19 +345,34 @@ static int mt798x_2p5ge_phy_probe(struct phy_device *phydev)
+ 	if (ret < 0)
+ 		return ret;
  
- 	/* KVM_CAP_RISCV_MP_STATE_RESET */
- 	bool mp_state_reset;
+-	/* Setup LED */
++	/* Setup LED. On default, LED0 is on/off when link is up/down. As for
++	 * LED1, it blinks as tx/rx transmission takes place.
++	 */
+ 	phy_set_bits_mmd(phydev, MDIO_MMD_VEND2, MTK_PHY_LED0_ON_CTRL,
+-			 MTK_PHY_LED_ON_POLARITY | MTK_PHY_LED_ON_LINK10 |
+-			 MTK_PHY_LED_ON_LINK100 | MTK_PHY_LED_ON_LINK1000 |
+-			 MTK_PHY_LED_ON_LINK2500);
+-	phy_set_bits_mmd(phydev, MDIO_MMD_VEND2, MTK_PHY_LED1_ON_CTRL,
+-			 MTK_PHY_LED_ON_FDX | MTK_PHY_LED_ON_HDX);
++			 MTK_PHY_LED_ON_POLARITY | MTK_2P5GPHY_LED_ON_SET);
++	phy_clear_bits_mmd(phydev, MDIO_MMD_VEND2, MTK_PHY_LED0_BLINK_CTRL,
++			   MTK_2P5GPHY_LED_TX_BLINK_SET |
++			   MTK_2P5GPHY_LED_RX_BLINK_SET);
++	phy_clear_bits_mmd(phydev, MDIO_MMD_VEND2, MTK_PHY_LED1_ON_CTRL,
++			   MTK_PHY_LED_ON_FDX | MTK_PHY_LED_ON_HDX |
++			   MTK_2P5GPHY_LED_ON_SET);
++	phy_set_bits_mmd(phydev, MDIO_MMD_VEND2, MTK_PHY_LED1_BLINK_CTRL,
++			 MTK_2P5GPHY_LED_TX_BLINK_SET |
++			 MTK_2P5GPHY_LED_RX_BLINK_SET);
+ 
+ 	/* Switch pinctrl after setting polarity to avoid bogus blinking */
+ 	pinctrl = devm_pinctrl_get_select(&phydev->mdio.dev, "i2p5gbe-led");
+ 	if (IS_ERR(pinctrl))
+ 		dev_err(&phydev->mdio.dev, "Fail to set LED pins!\n");
+ 
++	priv = devm_kzalloc(&phydev->mdio.dev, sizeof(struct mtk_socphy_priv),
++			    GFP_KERNEL);
++	if (!priv)
++		return -ENOMEM;
++	phydev->priv = priv;
 +
-+	/* KVM_CAP_RISCV_USERSPACE_SBI */
-+	bool userspace_sbi;
++	mtk_phy_leds_state_init(phydev);
++
+ 	return 0;
+ }
+ 
+@@ -303,6 +390,11 @@ static struct phy_driver mtk_2p5gephy_driver[] = {
+ 		.resume = genphy_resume,
+ 		.read_page = mtk_phy_read_page,
+ 		.write_page = mtk_phy_write_page,
++		.led_blink_set = mt798x_2p5ge_phy_led_blink_set,
++		.led_brightness_set = mt798x_2p5ge_phy_led_brightness_set,
++		.led_hw_is_supported = mt798x_2p5ge_phy_led_hw_is_supported,
++		.led_hw_control_get = mt798x_2p5ge_phy_led_hw_control_get,
++		.led_hw_control_set = mt798x_2p5ge_phy_led_hw_control_set,
+ 	},
  };
  
- struct kvm_cpu_trap {
-diff --git a/arch/riscv/include/uapi/asm/kvm.h b/arch/riscv/include/uapi/asm/kvm.h
-index 5f59fd226cc5..dd3a5dc53d34 100644
---- a/arch/riscv/include/uapi/asm/kvm.h
-+++ b/arch/riscv/include/uapi/asm/kvm.h
-@@ -204,6 +204,7 @@ enum KVM_RISCV_SBI_EXT_ID {
- 	KVM_RISCV_SBI_EXT_DBCN,
- 	KVM_RISCV_SBI_EXT_STA,
- 	KVM_RISCV_SBI_EXT_SUSP,
-+	KVM_RISCV_SBI_EXT_BASE,
- 	KVM_RISCV_SBI_EXT_MAX,
- };
- 
-diff --git a/arch/riscv/kvm/vcpu_sbi.c b/arch/riscv/kvm/vcpu_sbi.c
-index 31fd3cc98d66..497d5b023153 100644
---- a/arch/riscv/kvm/vcpu_sbi.c
-+++ b/arch/riscv/kvm/vcpu_sbi.c
-@@ -39,7 +39,7 @@ static const struct kvm_riscv_sbi_extension_entry sbi_ext[] = {
- 		.ext_ptr = &vcpu_sbi_ext_v01,
- 	},
- 	{
--		.ext_idx = KVM_RISCV_SBI_EXT_MAX, /* Can't be disabled */
-+		.ext_idx = KVM_RISCV_SBI_EXT_BASE,
- 		.ext_ptr = &vcpu_sbi_ext_base,
- 	},
- 	{
-@@ -217,6 +217,11 @@ static int riscv_vcpu_set_sbi_ext_single(struct kvm_vcpu *vcpu,
- 	if (!sext || scontext->ext_status[sext->ext_idx] == KVM_RISCV_SBI_EXT_STATUS_UNAVAILABLE)
- 		return -ENOENT;
- 
-+	// TODO: probably remove, the extension originally couldn't be
-+	// disabled, but it doesn't seem necessary
-+	if (!vcpu->kvm->arch.userspace_sbi && sext->ext_id == KVM_RISCV_SBI_EXT_BASE)
-+		return -ENOENT;
-+
- 	scontext->ext_status[sext->ext_idx] = (reg_val) ?
- 			KVM_RISCV_SBI_EXT_STATUS_ENABLED :
- 			KVM_RISCV_SBI_EXT_STATUS_DISABLED;
-@@ -471,8 +476,14 @@ int kvm_riscv_vcpu_sbi_ecall(struct kvm_vcpu *vcpu, struct kvm_run *run)
- #endif
- 		ret = sbi_ext->handler(vcpu, run, &sbi_ret);
- 	} else {
--		/* Return error for unsupported SBI calls */
--		cp->a0 = SBI_ERR_NOT_SUPPORTED;
-+		if (vcpu->kvm->arch.userspace_sbi) {
-+			next_sepc = false;
-+			ret = 0;
-+			kvm_riscv_vcpu_sbi_forward(vcpu, run);
-+		} else {
-+			/* Return error for unsupported SBI calls */
-+			cp->a0 = SBI_ERR_NOT_SUPPORTED;
-+		}
- 		goto ecall_done;
- 	}
- 
-diff --git a/arch/riscv/kvm/vm.c b/arch/riscv/kvm/vm.c
-index b27ec8f96697..0b6378b83955 100644
---- a/arch/riscv/kvm/vm.c
-+++ b/arch/riscv/kvm/vm.c
-@@ -217,6 +217,11 @@ int kvm_vm_ioctl_enable_cap(struct kvm *kvm, struct kvm_enable_cap *cap)
- 			return -EINVAL;
- 		kvm->arch.mp_state_reset = true;
- 		return 0;
-+	case KVM_CAP_RISCV_USERSPACE_SBI:
-+		if (cap->flags)
-+			return -EINVAL;
-+		kvm->arch.userspace_sbi = true;
-+		return 0;
- 	default:
- 		return -EINVAL;
- 	}
-diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
-index 454b7d4a0448..bf23deb6679e 100644
---- a/include/uapi/linux/kvm.h
-+++ b/include/uapi/linux/kvm.h
-@@ -931,6 +931,7 @@ struct kvm_enable_cap {
- #define KVM_CAP_X86_GUEST_MODE 238
- #define KVM_CAP_ARM_WRITABLE_IMP_ID_REGS 239
- #define KVM_CAP_RISCV_MP_STATE_RESET 240
-+#define KVM_CAP_RISCV_USERSPACE_SBI 242
- 
- struct kvm_irq_routing_irqchip {
- 	__u32 irqchip;
 -- 
-2.49.0
+2.45.2
 
