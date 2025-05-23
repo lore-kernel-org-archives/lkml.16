@@ -1,156 +1,99 @@
-Received: from jpms-ob02.noc.sony.co.jp (jpms-ob02.noc.sony.co.jp [211.125.140.165])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 621492DCBEE;
-	Fri, 23 May 2025 04:25:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.125.140.165
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD7CA2DCBEE;
+	Fri, 23 May 2025 04:26:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747974358; cv=none; b=Gzdip6E7DrYHZlCPXz55/Aez+zW0PSguFQ5z22zuBMaKoFt9zwsQpd4fqZXe+KOKvqUczr5IWUTizxJgZZnd8TusFJ6etmfBeV7n2CuxbclYMbF4DtBIt6NxX7WApiXK1RY8oeNi8qYOoue/XhOdZMZPh7ED9MhmfwWXsweIq54=
+	t=1747974406; cv=none; b=uvT+e695WmSCsLHNiJ1Ph1IBzJUU65O38QT1F4J1QXvCIGRcoxhpJvFkcbNm3rRdABZyobY0SDmDBryMQjzsNgjaS+JpqsDgn6eS0n69z3VHioWzy778GilPQL4dtaTTUHDzXUpdN3qd46Su9wGPV3ZkysgReLijcFzVhm6VzF4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747974358; c=relaxed/simple;
-	bh=BzdyDwDeJv2F5cDzsWzhnvqe+JoeKHLuUefOZkQJHIw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iswoc3KfNLWGrNcw/pnP903I+B+eF3CawRmY1U43jRTU9AjmYVjXPi+3k10Ihnft7IbxhySVzqjP2bimit7iV8A6fDjwcJ+78GWmbcDGw1BpEgg+i3EsUDrn6Wjdv78rZX1Qf5EfDh7YHyC2ca3eUTqueVnsUwWjBoaLKOGmboA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sony.com; spf=pass smtp.mailfrom=sony.com; dkim=pass (2048-bit key) header.d=sony.com header.i=@sony.com header.b=acRWXqCT; arc=none smtp.client-ip=211.125.140.165
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sony.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sony.com
+	s=arc-20240116; t=1747974406; c=relaxed/simple;
+	bh=EiExo/O1G1E1SOUp1zjWSOI7ZyzWY/boZSXRjtlQQKU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=OIpTEWGjYAh/smfzzabvGRue/J6DHz7f8sNbkrxOxaTQB/IA28CvFOh8i7wY+N5i3iUYpFChGdQXTWR8owAZ1ovrgV4Rp0dzjEsYTRwtvbDxPOSGmXh2n+shyYjOih8KK0bQf8+SCkQz1OP/ZqBhCqUbpnp12VVmSfXv401x/Gk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gd0cPxQ0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sony.com header.i=@sony.com header.b="acRWXqCT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=sony.com; s=s1jp; t=1747974356; x=1779510356;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=gar/FB2757pqFBaQ0cGxeTWivVdQr0YcZQ+QVR8jFjk=;
-  b=acRWXqCTvNAyyD66Fv1Ln+kGhiWuCNJVBjy7ngGgRvC4BYuMlfWcLnSg
-   p10ti+1Jp7NUZlmn2yt1UArcIapTPGtjuBT/8cqnVqhY65U6Gf8EXLezM
-   NrZxEPUcm4xUJOCO87jVb4IzH19KQoXSunT5fMeXkL3q7coye9DVNEfEk
-   RjkU8rtSWCyPhNW/mVVupYSDQRfSkaMUZxtlYxJyVSb63Y3PCq10OcbJN
-   FTTz3p+wVnP/SV0kt63LgtYi4xTQ2agejySOUrmOOr3dGjo7FBzwZm7M9
-   GblIsJUq7p1r8q1zM5cchxlDbsAfFO0rmJw0eSnIQpODWyP1ng6lgF2s/
-   g==;
-Received: from unknown (HELO jpmta-ob1.noc.sony.co.jp) ([IPv6:2001:cf8:0:6e7::6])
-  by jpms-ob02.noc.sony.co.jp with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2025 13:25:47 +0900
-X-IronPort-AV: E=Sophos;i="6.15,307,1739804400"; 
-   d="scan'208";a="562996545"
-Received: from unknown (HELO JPC00244420) ([IPv6:2001:cf8:1:573:0:dddd:6b3e:119e])
-  by jpmta-ob1.noc.sony.co.jp with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2025 13:25:48 +0900
-Date: Fri, 23 May 2025 13:25:44 +0900
-From: Shashank Balaji <shashank.mahadasyam@sony.com>
-To: Russell Haley <yumpusamongus@gmail.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
-	Jonathan Corbet <corbet@lwn.net>, linux-pm@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Shinya Takumi <shinya.takumi@sony.com>
-Subject: Re: [PATCH] cpufreq, docs: (userspace governor) add that actual freq
- is >= scaling_setspeed
-Message-ID: <aC_4yLsFVVszI_FA@JPC00244420>
-References: <20250522-userspace-governor-doc-v1-1-c8a038e39084@sony.com>
- <15871c67-0d18-430f-935e-261b2cda855b@gmail.com>
- <CAJZ5v0gz3Y+RGqBf9E1hzq9rwfrryd98Xpk51DtLd-uck5y-rw@mail.gmail.com>
- <b62c0462-8185-4eb8-8ac6-7f2abc387768@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gd0cPxQ0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2819CC4CEE9;
+	Fri, 23 May 2025 04:26:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747974406;
+	bh=EiExo/O1G1E1SOUp1zjWSOI7ZyzWY/boZSXRjtlQQKU=;
+	h=From:To:Cc:Subject:Date:From;
+	b=gd0cPxQ0zoquo9jIgV+uoBAHduYSKgrAdT0roCiDt9NE4yqILo1P9983Vp6MFLPxz
+	 KP8H6jFX9tizAmoAbtIAFDe8zauGFb/FZic9N7z5rNQ6QGOo1xe2p2saEEbUhh09Cp
+	 5rY/hFw/47tM15sFF4g7Nq2eueH8XmfjCRAtsWec0eoV9IEZM7YpsdBgXryjV2wjRV
+	 fpThYZb3TUkVoAM8dKrPb9FHxMoG7Fhg7lOwY7PJA7Qf++V922+Z7hWeDQ/FypdKWi
+	 WseVHaD/YWiKMqvDxWvt1JQUrP3LP4/vJTEwlrkuh2Vs+JXdhxNdK605va6zeBVgqZ
+	 weR8av0wI9BQg==
+From: Kees Cook <kees@kernel.org>
+To: Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>
+Cc: Kees Cook <kees@kernel.org>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH] x86: string_32.h: Provide basic sanity checks for fallback memcpy()
+Date: Thu, 22 May 2025 21:26:40 -0700
+Message-Id: <20250523042635.work.579-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b62c0462-8185-4eb8-8ac6-7f2abc387768@gmail.com>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1719; i=kees@kernel.org; h=from:subject:message-id; bh=EiExo/O1G1E1SOUp1zjWSOI7ZyzWY/boZSXRjtlQQKU=; b=owGbwMvMwCVmps19z/KJym7G02pJDBn6P/4LaVfbv6sK5RDKfeB1aV+eQpL12qdCf5LfLbjeG 7hrnePjjlIWBjEuBlkxRZYgO/c4F4+37eHucxVh5rAygQxh4OIUgIlYfGL4n/RZf/rOoKiqvSu4 ju2y8k3w1xFe3b7GY1ly0aZ90kUb2xn+mdgJ39awud3Mxne/2rB2/vX56xZPXXAkN5z50gq7IFZ nBgA=
+X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-Hi Russell,
+Add basic sanity checking for pathological "size" arguments to
+memcpy(). Besides the run-time checking benefit, this avoids
+GCC trying to be very smart about value range tracking[1] when
+CONFIG_PROFILE_ALL_BRANCHES=y but FORTIFY_SOURCE=n.
 
-On Thu, May 22, 2025 at 06:15:24AM -0500, Russell Haley wrote:
-> > The userspace governor requests a frequency between policy->min and
-> > policy->max on behalf of user space.  In intel_pstate this translates
-> > to setting DESIRED_PERF to the requested value which is also the case
-> > for the other governors.
-> 
-> Huh.  On this Skylake box with kernel 6.14.6, it seems to be setting
-> Minimum_Performance, and leaving desired at 0.
-> 
-> > echo userspace | sudo tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
-> userspace
-> > echo 1400000 | sudo tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_setspeed
-> 1400000
-> > sudo x86_energy_perf_policy &| grep REQ
-> cpu0: HWP_REQ: min 14 max 40 des 0 epp 128 window 0x0 (0*10^0us) use_pkg 0
+Link: https://lore.kernel.org/all/202505191117.C094A90F88@keescook/ [1]
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
+Closes: https://lore.kernel.org/all/e3754f69-1dea-4542-8de0-a567a14fb95b@infradead.org/
+Tested-by: Randy Dunlap <rdunlap@infradead.org>
+Signed-off-by: Kees Cook <kees@kernel.org>
+---
+ v2: isolate this specifically to 32-bit x86 -- doing this generally is much more work
+ v1: https://lore.kernel.org/lkml/20250520163320.work.924-kees@kernel.org/
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: <x86@kernel.org>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Randy Dunlap <rdunlap@infradead.org>
+---
+ arch/x86/include/asm/string_32.h | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-Oh cool, I didn't know about x86_energy_perf_policy.
+diff --git a/arch/x86/include/asm/string_32.h b/arch/x86/include/asm/string_32.h
+index 32c0d981a82a..6e8d100d1301 100644
+--- a/arch/x86/include/asm/string_32.h
++++ b/arch/x86/include/asm/string_32.h
+@@ -147,7 +147,14 @@ extern void *memcpy(void *, const void *, size_t);
+ 
+ #ifndef CONFIG_FORTIFY_SOURCE
+ 
+-#define memcpy(t, f, n) __builtin_memcpy(t, f, n)
++#define memcpy(t, f, n)					\
++	({						\
++		typeof(n) __n = (n);			\
++		/* Skip impossible sizes. */		\
++		if (!(__n < 0 || __n == SIZE_MAX))	\
++			__builtin_memcpy(t, f, __n);	\
++		(t);					\
++	})
+ 
+ #endif /* !CONFIG_FORTIFY_SOURCE */
+ 
+-- 
+2.34.1
 
-Consider the following on a Raptor Lake machine:
-
-1. HWP_REQUEST MSR set by intel_pstate in active mode:
-
-	# echo active > intel_pstate/status
-	# x86_energy_perf_policy -c 0 2>&1 | grep REQ
-	cpu0: HWP_REQ: min 11 max 68 des 0 epp 128 window 0x0 (0*10^0us) use_pkg 0
-	pkg0: HWP_REQ_PKG: min 1 max 255 des 0 epp 128 window 0x0 (0*10^0us)
-	# echo 2000000 > cpufreq/policy0/scaling_min_freq 
-	# echo 3000000 > cpufreq/policy0/scaling_max_freq 
-	# x86_energy_perf_policy -c 0 2>&1 | grep REQ
-	cpu0: HWP_REQ: min 26 max 39 des 0 epp 128 window 0x0 (0*10^0us) use_pkg 0
-	pkg0: HWP_REQ_PKG: min 1 max 255 des 0 epp 128 window 0x0 (0*10^0us)
-
-	scaling_{min,max}_freq just affect the min and max frequencies
-	set in HWP_REQEST. desired_freq is left at 0.
-
-2. HWP_REQUEST MSR set by intel_pstate in passive mode with userspace
-governor:
-
-	# echo passive > intel_pstate/status
-	# echo userspace > cpufreq/policy0/scaling_governor 
-	# cat cpufreq/policy0/scaling_setspeed 
-	866151
-	# x86_energy_perf_policy -c 0 2>&1 | grep REQ
-	cpu0: HWP_REQ: min 11 max 68 des 0 epp 128 window 0x0 (0*10^0us) use_pkg 0
-	pkg0: HWP_REQ_PKG: min 1 max 255 des 0 epp 128 window 0x0 (0*10^0us)
-	# echo 2000000 > cpufreq/policy0/scaling_setspeed 
-	# x86_energy_perf_policy -c 0 2>&1 | grep REQ
-	cpu0: HWP_REQ: min 26 max 68 des 0 epp 128 window 0x0 (0*10^0us) use_pkg 0
-	pkg0: HWP_REQ_PKG: min 1 max 255 des 0 epp 128 window 0x0 (0*10^0us)
-
-	scaling_setspeed only changes the min frequency in HWP_REQUEST.
-	Meaning, software is explicitly allowing the hardware to choose
-	higher frequencies.
-
-3. Same as above, except with strictuserspace governor, which is a
-custom kernel module which is exactly the same as the userspace
-governor, except it has the CPUFREQ_GOV_STRICT_TARGET flag set:
-
-	# echo strictuserspace > cpufreq/policy0/scaling_governor 
-	# x86_energy_perf_policy -c 0 2>&1 | grep REQ
-	cpu0: HWP_REQ: min 26 max 26 des 0 epp 128 window 0x0 (0*10^0us) use_pkg 0
-	pkg0: HWP_REQ_PKG: min 1 max 255 des 0 epp 128 window 0x0 (0*10^0us)
-	# echo 3000000 > cpufreq/policy0/scaling_setspeed 
-	# x86_energy_perf_policy -c 0 2>&1 | grep REQ
-	cpu0: HWP_REQ: min 39 max 39 des 0 epp 128 window 0x0 (0*10^0us) use_pkg 0
-	pkg0: HWP_REQ_PKG: min 1 max 255 des 0 epp 128 window 0x0 (0*10^0us)
-
-	With the strict flag set, intel_pstate honours this by setting
-	the min and max freq same.
-
-desired_perf is always 0 in the above cases. The strict flag check is done in
-intel_cpufreq_update_pstate, which sets max_pstate to target_pstate if policy
-has strict target, and cpu->max_perf_ratio otherwise.
-
-As Russell and Rafael have noted, CPU frequency is subject to hardware
-coordination and optimizations. While I get that, shouldn't software try
-its best with whatever interface it has available? If a user sets the
-userspace governor, that's because they want to have manual control over
-CPU frequency, for whatever reason. The kernel should honor this by
-setting the min and max freq in HWP_REQUEST equal. The current behaviour
-explicitly lets the hardware choose higher frequencies.
-
-Since Russell pointed out that the "actual freq >= target freq" can be
-achieved by leaving intel_pstate active and setting scaling_{min,max}_freq
-instead (for some reason this slipped my mind), I now think the strict target
-flag should be added to the userspace governor, leaving the documentation as
-is. Maybe a warning like "you may want to set this exact frequency, but it's
-subject to hardware coordination, so beware" can be added.
-
-Thanks
-
-Regards,
-Shashank
