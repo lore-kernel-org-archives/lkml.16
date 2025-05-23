@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0588214286;
-	Fri, 23 May 2025 14:23:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28DC62957C0;
+	Fri, 23 May 2025 14:23:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748010207; cv=none; b=Rz48IgUmZmefyxlweeX4DwJdOOCvFb4vv7OngRWDXaVnxgz2NVQgV56ATmwwSoHEzxTcvnFpX2TVuY3x3whCxKOlO0HKWntq6CryiANsWefyoeTSAOfPtubdR7EDmQDJP3ZuzqogryQUI9sZ4EMotioZF8qwazUbLzxTEIv6/pc=
+	t=1748010209; cv=none; b=PFW3xQGuXF57LKY6aKDKO/y5QSvr0XEonjyCym86IQJY7tN2lpexSi3Y2UdRpN48L7w7vOfaw8EMHRNQa/BYQvTACUgycGLKlQdN0o0nBinRxWaSCFjwN8lmDapOKHy0IwbExa/9BI3XfivWOMmxPtuRe6YGZsaiWZmbcdzNEdE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748010207; c=relaxed/simple;
-	bh=pR9fA4NdXQryYOB0kCjJuwhWY+v7ZXFuSKqfZ1iPpXY=;
+	s=arc-20240116; t=1748010209; c=relaxed/simple;
+	bh=Bp/ucb/GTjVrDZZD7rUyDOj4GMDaNKCX21mkeadmdjY=;
 	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=HuKqT5UaYf0xVIL3hRfoMbkUrGSEOsNrWvh527Z8yzV5TzeXsJjL/U0J0hphGKIdMM2G5wIbXHSTDGHgEDfPa1weDOeXLdhdegWO9NGEXNbNh12NtXeJ+6v0UR/uaki+Azbx4mJSF3d9hliWRiDncEUeLCoSr/kp4Z2S7jykeMc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=goAQq1FS; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id:Subject; b=cj0D3OhEjNULRVs/zLuC574MKz/h3HpOINYmwUPaSJDfN3IsaHS2HRQl4evaoqs7Zfx0zuYJGZYgiOtjXGsuXBgB1AU0iPi+NQM59y0DjTRSVVeWTtUUK0+eB0Xq5sHAankYzgLn2dqtS8/qODFH0Ge2MVh7x953NDMcBFtyouU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qKl5oe0E; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="goAQq1FS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC8F2C4CEE9;
-	Fri, 23 May 2025 14:23:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qKl5oe0E"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74677C4CEE9;
+	Fri, 23 May 2025 14:23:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748010206;
-	bh=pR9fA4NdXQryYOB0kCjJuwhWY+v7ZXFuSKqfZ1iPpXY=;
+	s=k20201202; t=1748010208;
+	bh=Bp/ucb/GTjVrDZZD7rUyDOj4GMDaNKCX21mkeadmdjY=;
 	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=goAQq1FSEeTn60D4goiuky385GlbCKp/cuANcZdpE55R5AzKlNc2mfFQLVwjp5yP4
-	 30ORao35sm4F03Mt0G9gMNE03eS7cQewA/JuuS8kM2wEbjRJ9gKWf4UH+gOD+maak8
-	 i3d39A84sJfy4PIq7mXK9e0FawzTOMjcb3ZvbbCN2XRXj4IKW0ka84gGbfj2Hytw2L
-	 z6jtmNQf9FfaULjoBABVQ4yU5BKGgBf649sKb+b/bMi5mZDlVsq4deWn+Swls0KjWz
-	 2xl/z7rR0jCcTwFl1vGZMC/LCPieqc5w9YTxmELuJRMqi/euLqjqTDNuIbmm4CD13S
-	 D5Py+xMQ78J8w==
-Date: Fri, 23 May 2025 09:23:23 -0500
+	b=qKl5oe0ETeD+POG4Zxk/4FSBGnnuze7xxrZwHMCOwa8vbZIDtedHy47PYkI9T319L
+	 eLvGVEEiadWGWc9rbeGJpdthDtnj18pLjtHUY6NHJqxvssrOQ+TRYeJOr8scU9NxiW
+	 sbAkA4nXOc1KfJj53cH6/9qZxdsdVCq+MnA1N75zeRluRkpNyxkhmpilh4vHPvFKmf
+	 wr0QX3EuxtpCT2ksuQYM4iWN3alcipTfH/m4Tai6aQE+ZViJY8Jq4ph3GtGI4pKlPd
+	 jIZNjemc/m5UVwAKMt+ANALKZYjZecX9kjRXHzMCwBCkKqr3bP9jCNlugj7GmnhxKg
+	 aQ6LKOwRTgPSg==
+Date: Fri, 23 May 2025 09:23:26 -0500
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -36,43 +36,33 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>, 
- Will Deacon <will@kernel.org>, Tudor Ambarus <tudor.ambarus@linaro.org>, 
- linux-kernel@vger.kernel.org, Peter Griffin <peter.griffin@linaro.org>, 
- Dimitri Fedrau <dima.fedrau@gmail.com>, 
- Alim Akhtar <alim.akhtar@samsung.com>, Sebastian Reichel <sre@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, devicetree@vger.kernel.org, 
- linux-samsung-soc@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>, 
- Catalin Marinas <catalin.marinas@arm.com>
-To: Thomas Antoine <t.antoine@uclouvain.be>
-In-Reply-To: <20250523-b4-gs101_max77759_fg-v4-3-b49904e35a34@uclouvain.be>
-References: <20250523-b4-gs101_max77759_fg-v4-0-b49904e35a34@uclouvain.be>
- <20250523-b4-gs101_max77759_fg-v4-3-b49904e35a34@uclouvain.be>
-Message-Id: <174801020213.1711113.345093338339691791.robh@kernel.org>
-Subject: Re: [PATCH v4 3/5] dt-bindings: power: supply: add max77759-fg
- flavor
+Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Robin Gong <yibin.gong@nxp.com>, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Martijn de Gouw <martijn.de.gouw@prodrive-technologies.com>
+In-Reply-To: <20250523131214.955970-1-martijn.de.gouw@prodrive-technologies.com>
+References: <20250523131214.955970-1-martijn.de.gouw@prodrive-technologies.com>
+Message-Id: <174801020316.1711348.10193654747801258488.robh@kernel.org>
+Subject: Re: [PATCH v2 1/2] dt-bindings: regulator: add pca9450: Add
+ regulator-allowed-modes
 
 
-On Fri, 23 May 2025 14:51:46 +0200, Thomas Antoine wrote:
-> The Maxim MAX77759 is an IC used to manage the power supply of the battery
-> and the USB-C. Based on drivers from google, it contains at least a PMIC,
-> a fuel gauge, a TCPCI and a charger.
+On Fri, 23 May 2025 15:12:11 +0200, Martijn de Gouw wrote:
+> Make the PWM mode on the buck controllers configurable from devicetree.
+> Some boards require forced PWM mode to keep the supply ripple within
+> acceptable limits under light load conditions.
 > 
-> Use max77759-fg compatible to avoid conflict with drivers for other
-> functions.
-> 
-> The Maxim MAX77759 has no non-volatile memory so it doesn't require an
-> address and instead requires a value for the current sensing resistor.
-> 
-> Keep shunt-resistor-micro-ohms optional for the MAX17201/MAX17205 as it is
-> not be used at the moment but could be in the future. (e.g. as a default
-> value to be used in case of nvmem failure)
-> 
-> Signed-off-by: Thomas Antoine <t.antoine@uclouvain.be>
+> Signed-off-by: Martijn de Gouw <martijn.de.gouw@prodrive-technologies.com>
 > ---
->  .../bindings/power/supply/maxim,max17201.yaml      | 42 ++++++++++++++++++++--
->  1 file changed, 39 insertions(+), 3 deletions(-)
+> Changes in v2:
+>   - Add the header to the binding patch
+>   - Improve commit message
+> 
+>  .../regulator/nxp,pca9450-regulator.yaml       | 14 ++++++++++++++
+>  .../regulator/nxp,pca9450-regulator.h          | 18 ++++++++++++++++++
+>  2 files changed, 32 insertions(+)
+>  create mode 100644 include/dt-bindings/regulator/nxp,pca9450-regulator.h
 > 
 
 My bot found errors running 'make dt_binding_check' on your patch:
@@ -80,16 +70,12 @@ My bot found errors running 'make dt_binding_check' on your patch:
 yamllint warnings/errors:
 
 dtschema/dtc warnings/errors:
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/power/supply/maxim,max17201.yaml: properties:reg: {'items': [{'description': 'ModelGauge m5 registers'}, {'description': 'Nonvolatile registers'}], 'minItems': 1, 'maxItems': 2} should not be valid under {'required': ['maxItems']}
-	hint: "maxItems" is not needed with an "items" list
-	from schema $id: http://devicetree.org/meta-schemas/items.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/power/supply/maxim,max17201.yaml: properties:reg-names: {'items': [{'const': 'm5'}, {'const': 'nvmem'}], 'minItems': 1, 'maxItems': 2} should not be valid under {'required': ['maxItems']}
-	hint: "maxItems" is not needed with an "items" list
-	from schema $id: http://devicetree.org/meta-schemas/items.yaml#
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/regulator/nxp,pca9450-regulator.example.dtb: pmic@25 (nxp,pca9450b): regulators:BUCK4: Unevaluated properties are not allowed ('regulator-inital-mode' was unexpected)
+	from schema $id: http://devicetree.org/schemas/regulator/nxp,pca9450-regulator.yaml#
 
 doc reference errors (make refcheckdocs):
 
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250523-b4-gs101_max77759_fg-v4-3-b49904e35a34@uclouvain.be
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250523131214.955970-1-martijn.de.gouw@prodrive-technologies.com
 
 The base for the series is generally the latest rc1. A different dependency
 should be noted in *this* patch.
