@@ -1,104 +1,132 @@
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6053323956A
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 17:53:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5156E81749;
+	Fri, 23 May 2025 17:54:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748022826; cv=none; b=AK+07qL5MZE81Lhqbn3noSfN88cLdONqdT5+Zj55Qo9Eev3fCLNnZMlDvRoFLPpy6u9egJzK13OyELGOWx/YgATBtux4fix39LCaTXrBm+b3LpKHDIx/2WvgKyqXMpS6iQK0mJWVUFY0DCOJgHnC9gGFaYMsfZx6ek1YWJDv2YM=
+	t=1748022845; cv=none; b=ETE50DYYfaiMKyDTTgoiatlDagoqHRQQSGs8zQ4rm9bGt5+0iIA3Q2sYEbc0sBHFySJ+hbrd7VsRHSmmPYV23UiPX0NYEqrsoDA3ZmAn4k9aTldj1I0s/4LDy3Fk6JY2BBnYC5+Ssa6qGNCGfVKJA3QMecbGkWS518J5lJAQ4n4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748022826; c=relaxed/simple;
-	bh=vXYq8BB2rUVZGOa5wTp+SSLFH2/G2/wBeCcy6/RZFME=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AOI7XqXCG9NZ/f9csH8KwMAIgY/jmZeLxwUQsCVG1SnqC555/7ToEYoNLQJIwNfvlc85egLI0BjtARqsMeNt8ApAN7SwbUpvVB9di7kc2yrwKC41ODOSPpDLpsymHuRx3QM/0jCOxNu1wS4PAdCli9mfDB51BHqLGrxX108fT+4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=UeQZgAd2; arc=none smtp.client-ip=209.85.221.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UeQZgAd2"
-Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-3a36e950e41so122472f8f.0
-        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 10:53:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1748022822; x=1748627622; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=j27xIbPdujh3p9oIQQHW3FhXdAxHTtSk1vtfWEm1vCU=;
-        b=UeQZgAd2HrqhaiP88Cl9RsbD/oVetoumGUq1fACbHoMCLg/5GKxHbK7nMP+FahuYTJ
-         H+QZ6Qf4XKw6zz3lBSTcnZInj/dGSr+GwxBXJQeimyZGt5T+SIu8mFmtjvIySx7CECEX
-         E2po0Nl+fPJMto8S03dSoDxUFH8fdjbjEKj3iq8+/lZuRUhN2say9UykBPa4I4RWGWpY
-         2V9gbRxEo1SGAAIgeuBep5oaCWKAP9E8bKG4QmU0BA8JGrtt7EL+4tWhmcN/1MfeKK+Q
-         cNMp9G7+eQXUz5HmqgxnjBVPhjzs7yNgPXDWETlNiwx0Kcf2xJU6BdlkPeRU79MJ+uM4
-         9LVg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748022822; x=1748627622;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=j27xIbPdujh3p9oIQQHW3FhXdAxHTtSk1vtfWEm1vCU=;
-        b=N3NIViWCNwbKu2iJTHULZ0NywrJpYNyz86155eVuRMJbsIt3bFKDfBACDJp54cGdRC
-         xe5LZGyU27mvy54Pqmq9PV6mUjTfkA8YWD3AOFyXOt1bHdhLo1KyQtTOz2AZ78UNgQH0
-         GKLymMhuufuerbsAZbRn87SqoBcoUGHvySCwoKv0zoOsWTZM6AKWSNoyqJoxjWSSOu2k
-         MIZ4L689KSrsK3sptTy0xaqtKMrbQSnZEUYhj4OgBo5Z4kXsuEbTl4kSb9/Pu32XxCXK
-         i4/bMLZ1Qk1SlcRDVuaw7ByoF9MB1oCDEHX085mxp83FpwGJGrNeZegKgzF5PXPlNXfy
-         D1NA==
-X-Gm-Message-State: AOJu0YzHpUILZiaatZu9N5JjOY/rfH7InLfFkZVKL7wuCTFHTCxv1GT+
-	bL/G1GnRfpsHW08S6Z9AHLqhcbRhsd68JNFjc2ryouUkdJhgstbyOWKFy7t/CBECCuGICS7Lo/C
-	EH69uniQ=
-X-Gm-Gg: ASbGncu4PqLJ3Cbbo2/OeI5Nec1WpTInAmd/r735obkbwP0dtUL+OU/lt8EJtqPKRnF
-	Pt/eKkqRAJdEWAzFBXsV8maeYS450cSDDJeg2rRwI07VJofz0tU3RqPmHcy3dxPXXFt7ukB1z/S
-	EEH+4WJMeYNJPGfzjtjEkJylABYf9yusmSDBwMz8sNo+PAXlWaKozhUi3Mj7hvHPaopFAZQwOBq
-	Bm6cd+DSQ6ba6V4zdJZrlIVKdyKIn+djDTZ75R2pAUJEtSTdCfZxj/CbdnPP6GJMygMeP8CL0N8
-	aaIaGD5WP3llkM6uH14rRlJbP/j80GLbOP1MvJEaRPQNn0r389NVglZ4Cg8Mu76IuYSiZwwl1Qk
-	FwBHpSb4uxTQLGyc=
-X-Google-Smtp-Source: AGHT+IF+pCJEN6fAtU2OQjQiLzZXS6kTu/snWPWn3LeFtwjKkIRXZRDAPlOO0y0AgoCanNs6EZta+A==
-X-Received: by 2002:a05:6000:2489:b0:3a1:f653:85dc with SMTP id ffacd0b85a97d-3a4cb4a9ef5mr231518f8f.58.1748022822647;
-        Fri, 23 May 2025 10:53:42 -0700 (PDT)
-Received: from [192.168.10.46] (146725694.box.freepro.com. [130.180.211.218])
-        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-3a35ca5a8cfsm27604102f8f.37.2025.05.23.10.53.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 23 May 2025 10:53:42 -0700 (PDT)
-Message-ID: <9e494704-6098-463a-932e-f1b8311c4cf8@linaro.org>
-Date: Fri, 23 May 2025 19:53:41 +0200
+	s=arc-20240116; t=1748022845; c=relaxed/simple;
+	bh=db42/PxwgTCfK0dtD0B0pORObzB+Jtsp7PplyAvnh44=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=RGyQ0DuvKfLUb4ccYloS4yLjj+5j5QMT0kax+rYeEuF9uvh0NEacLux5P9QS45kdu9CONgsr7Y+es9i3qxF/8osaO//jHi3/zyuDIk92cgH8X5itYrY3rXW6z/A5KArNcr6ewwSQtsVyJsD9SoJVrYdvtzw3AuT/yqdeGnBLDv4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EBFCEC4CEE9;
+	Fri, 23 May 2025 17:54:03 +0000 (UTC)
+Date: Fri, 23 May 2025 13:54:52 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Ye Bin <yebin@huaweicloud.com>
+Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+ mark.rutland@arm.com, linux-trace-kernel@vger.kernel.org,
+ linux-kernel@vger.kernel.org, yebin10@huawei.com
+Subject: Re: [PATCH 1/2] ftrace: fix UAF when lookup kallsym after ftrace
+ disabled
+Message-ID: <20250523135452.626d8dcd@gandalf.local.home>
+In-Reply-To: <20250523083945.3390587-2-yebin@huaweicloud.com>
+References: <20250523083945.3390587-1-yebin@huaweicloud.com>
+	<20250523083945.3390587-2-yebin@huaweicloud.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 2/2] selftests: Add perf_qos selftests
-To: Eric Smith <eric.smith@oss.qualcomm.com>, rafael@kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
- ulf.hansson@linaro.org, arnd@linaro.org, saravanak@google.com,
- deepti.jaggi@oss.qualcomm.com, prasad.sodagudi@oss.qualcomm.com
-References: <20250505161928.475030-1-daniel.lezcano@linaro.org>
- <20250505161928.475030-2-daniel.lezcano@linaro.org>
- <36608326-52c6-4d82-a51a-b802920312b0@oss.qualcomm.com>
-Content-Language: en-US
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-In-Reply-To: <36608326-52c6-4d82-a51a-b802920312b0@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On 23/05/2025 19:43, Eric Smith wrote:
-> Hi Daniel,
+On Fri, 23 May 2025 16:39:44 +0800
+Ye Bin <yebin@huaweicloud.com> wrote:
+
+> Above issue may happens as follow:
+> (1) Add kprobe trace point;
+> (2) insmod test.ko;
+> (3) Trigger ftrace disabled;
+
+This is the bug. How was ftrace_disabled triggered? That should never
+happen. Was test.ko buggy?
+
+> (4) rmmod test.ko;
+> (5) cat /proc/kallsyms; --> Will trigger UAF as test.ko already removed;
+> ftrace_mod_get_kallsym()
+> ...
+> strscpy(module_name, mod_map->mod->name, MODULE_NAME_LEN);
+> ...
 > 
-> On 5/5/2025 9:19 AM, Daniel Lezcano wrote:
+> As ftrace_release_mod() judge 'ftrace_disabled' is true will return, and
+> 'mod_map' will remaining in ftrace_mod_maps. 'mod_map' has no chance to
+> release. Therefore, this also causes residual resources to accumulate.
+> To solve above issue, unconditionally clean up'mod_map'.
 > 
->> This patch provides somes tests which depend on a kernel module
->> creating a dummy performance QoS device. More tests will be added
->> later.
+> Fixes: aba4b5c22cba ("ftrace: Save module init functions kallsyms symbols for tracing")
+
+This is *not* a fix. ftrace_disabled gets set when a bug is triggered. If
+this prevents ftrace_disabled from getting set, then it would be a fix. But
+if something else happens when ftrace_disabled is set, it just fixes a
+symptom and not the bug itself.
+
+
+> Signed-off-by: Ye Bin <yebin10@huawei.com>
+> ---
+>  kernel/trace/ftrace.c | 3 ---
+>  1 file changed, 3 deletions(-)
 > 
-> Thanks, I did not see a test where the perf_qos_is_allowed API is used.
-> In future patches, can you add a test using the perf_qos_is_allowed API?
+> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+> index a3d4dfad0cbc..ff5d9d73a4a7 100644
+> --- a/kernel/trace/ftrace.c
+> +++ b/kernel/trace/ftrace.c
+> @@ -7438,9 +7438,6 @@ void ftrace_release_mod(struct module *mod)
+>  
+>  	mutex_lock(&ftrace_lock);
+>  
+> -	if (ftrace_disabled)
+> -		goto out_unlock;
+> -
 
-Sure, thanks for pointing this out
+Here you delete the check, and the next patch you have:
+
++	if (ftrace_disabled || (mod && !mod->num_ftrace_callsites)) {
++		mutex_unlock(&ftrace_lock);
++		return;
++	}
++
+
+Why the two patches where the second patch just adds back the check and
+then adds some more stuff around it. This should be a single patch.
+
+Also, why not just keep the goto unlock, that has:
+
+ out_unlock:
+	mutex_unlock(&ftrace_lock);
+
+	/* Need to synchronize with ftrace_location_range() */
+	if (tmp_page)
+		synchronize_rcu();
+	for (pg = tmp_page; pg; pg = tmp_page) {
+
+		/* Needs to be called outside of ftrace_lock */
+		clear_mod_from_hashes(pg);
+
+		if (pg->records) {
+			free_pages((unsigned long)pg->records, pg->order);
+			ftrace_number_of_pages -= 1 << pg->order;
+		}
+		tmp_page = pg->next;
+		kfree(pg);
+		ftrace_number_of_groups--;
+	}
+}
+
+And tmp_page is set to NULL before that jump, so the if and for loop will
+both be nops.
+
+Why all this extra churn?
+
+-- Steve
 
 
--- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+>  	list_for_each_entry_safe(mod_map, n, &ftrace_mod_maps, list) {
+>  		if (mod_map->mod == mod) {
+>  			list_del_rcu(&mod_map->list);
 
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
