@@ -1,135 +1,106 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtp-fw-6002.amazon.com (smtp-fw-6002.amazon.com [52.95.49.90])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAD02296157;
-	Fri, 23 May 2025 15:10:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 014C6294A04;
+	Fri, 23 May 2025 15:13:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.95.49.90
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748013039; cv=none; b=tbeUqBQHEGYVYjv1uNaJ5E97ULxqBD9e2hs6sd2u6vfE6NTmV+fU6OOUnOA+e6c6O777DNxkcIAojjWVTSSyOiYtyj6IYBHw/6gedPu4DPwa+OBPfJpHDtEr1rtgq1mD7Uz3njc4vOEb+HCdqnRDHQaKvQCWm7IuBpOVL76z/e4=
+	t=1748013221; cv=none; b=O1ugJW7z4KQ/s+nuVZadUVgczVEz2FxdBbvii77TU+B9EEu82120AkJgJMFQPONCPKdNyCnLDhPNBp59Up0wIAEJNUDgwK5gqLtlg9Bolxosa39zyqyLcaGUkYdQnuWfTZKoYX9rv2LxqCG8UR2wO9Sw1sicMq2MwMKoBsd/eGY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748013039; c=relaxed/simple;
-	bh=1ZER5+aBDnuBoSCbc6x2pQIeNK9vhs5kJnMpDiT/9fs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DQRQAzeiNFjScrGKw7sgBi4SvwimTEt07UH/P4Hj5iC3TztWhjepYyx9b5KVtKKRvI4ltr7T3eli1dEoJVkdIQAv3YFdyrNv64B1ehivHfIl0dz+uTHRUqZQ6hk1iWKVpXQvydhaFtmkaCK4qPobsH68Nzf2/w3oIpehq10BWs4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R3dWmpa+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748013221; c=relaxed/simple;
+	bh=uOyGonm8yfbgp7OskrM4idTKpYUF1yuzrPmOindvKvQ=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=seWxPKhggnPPq1nRAkVdim5WS/aUZ+M3ApTF+p0JToCNeQvedg14BcJRg9Q6roY0HxtJwqj6HJOOCrSOMGobTQscamfncDKXsN6Gg5Ow6x2sXc0blE2aJ6rntM4SWCIAd07239QjWBZF8fLo3gy/jL8zxDF84y4Yt+yJqpWf2qk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.co.uk; spf=pass smtp.mailfrom=amazon.co.uk; dkim=pass (2048-bit key) header.d=amazon.co.uk header.i=@amazon.co.uk header.b=OfFpnZrb; arc=none smtp.client-ip=52.95.49.90
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.co.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R3dWmpa+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 252A0C4AF09;
-	Fri, 23 May 2025 15:10:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748013039;
-	bh=1ZER5+aBDnuBoSCbc6x2pQIeNK9vhs5kJnMpDiT/9fs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=R3dWmpa+N6hoP1CvxOlu7roVfC0AUxUOaWgjSz6F494dkA8FOYefcqv5UB1NzwZqI
-	 NbukgXJpjvESBL9dVUh6NlIes4velVCUs5su850T1sl52Dmeifsa2c8EBEloJRbdgt
-	 zs87hovmw6rFkT2ijz8y+ZnIwVUpbhKQXjPIdSCeu3LhX83OwlUhc1su8/qpqUCXgN
-	 K3jVsNwrXv5GK+PzERDd4xLEg1OyrJqkWg8VWBiPKJrbMInRBqTVuwYUONpwhENcoJ
-	 2un1sIrEbTflbMxGT55N4D5xeBoVh8FznJ5XCcy0olhkVsGMe4o5/nCuduLOsiARth
-	 fenNjjSFxf9Vg==
-Received: by mail-oi1-f175.google.com with SMTP id 5614622812f47-3fbaa18b810so22716b6e.2;
-        Fri, 23 May 2025 08:10:39 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCV2Wqj9E2oQTx5upBLO7tOFraiYeixFKlIBWvmx2z532Wd9TrlJwEcPOgpbvmEgZKNdZmX+xgylB3HrRzA=@vger.kernel.org, AJvYcCWXock+oX5vtrMpGH3H4ffVmpClh53KpIhYnTIVTLswEUAaM8ISAfdnb/xqZPFgm5lwTZ0Ny7ibYEE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YynjSOEzWk1Ef9aI+ZrTWXaqIVFVdZOvZctGsnqW3WybygbJUWM
-	HZvu84qBmUrcvaaeGJpzpofI8YNQulNjZ5TZmpBcYTxR84HXmt78Rd2iXxpR06pHX+h+6i9r1+1
-	Z3QyeYPzYK5ISnx/4MJPXEl5/ViJHPl8=
-X-Google-Smtp-Source: AGHT+IGxAsxnD6gRCOZG/OvzSCsWfF12hBV27JMmE4jSskt0tjlXticiu9aTvNs0YstL5t0Yzc58hit/7oCtAlCQmNE=
-X-Received: by 2002:a05:6808:2f0d:b0:403:31a4:f406 with SMTP id
- 5614622812f47-404da735919mr19019904b6e.10.1748013038448; Fri, 23 May 2025
- 08:10:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=amazon.co.uk header.i=@amazon.co.uk header.b="OfFpnZrb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.co.uk; i=@amazon.co.uk; q=dns/txt;
+  s=amazoncorp2; t=1748013220; x=1779549220;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=kMQVGktvP85IOY8wbmsxvLHMIbtjRyeUimHH5aWtTag=;
+  b=OfFpnZrbgYP/G7YxW/xDd4896gmeKlKDLSQtQdg6JQDOdZKcaYjiAGsD
+   KTjgd8TYRvd40+fp+LP3/52OaF4cvguNgOWLgLqDjU/rXAS1xUDufR2A/
+   2bNzv6mpiq3JkegVN5dGfPFLojHuvuddHiIlXHVzpGCqwU2irLX/bdZJN
+   sGKYMZPE/8iJaoCJzxBrMumL9d2QbT6XzLcNlGRuLdcqeqLFYXiqZJ7Hk
+   DOE1yMJDVlL97aPj+cHMvMwEw5UpY5fkUqP8f3ygSLyJKBWTOnCNKcH2m
+   XMaCBL1h2mKalHaSLg2bCJsfSJBatO/YcyhPOYI0FJ61SyWSQX8rJXKwo
+   w==;
+X-IronPort-AV: E=Sophos;i="6.15,309,1739836800"; 
+   d="scan'208";a="501964899"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.6])
+  by smtp-border-fw-6002.iad6.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2025 15:13:35 +0000
+Received: from EX19MTAEUC002.ant.amazon.com [10.0.10.100:56144]
+ by smtpin.naws.eu-west-1.prod.farcaster.email.amazon.dev [10.0.46.128:2525] with esmtp (Farcaster)
+ id adef3589-d368-455d-826d-d2152f3e5521; Fri, 23 May 2025 15:13:31 +0000 (UTC)
+X-Farcaster-Flow-ID: adef3589-d368-455d-826d-d2152f3e5521
+Received: from EX19D031EUB002.ant.amazon.com (10.252.61.105) by
+ EX19MTAEUC002.ant.amazon.com (10.252.51.181) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Fri, 23 May 2025 15:13:31 +0000
+Received: from dev-dsk-hmushi-1a-0c348132.eu-west-1.amazon.com
+ (172.19.124.218) by EX19D031EUB002.ant.amazon.com (10.252.61.105) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14; Fri, 23 May 2025
+ 15:13:23 +0000
+From: Mushahid Hussain <hmushi@amazon.co.uk>
+To: <efault@gmx.de>
+CC: <akpm@linux-foundation.org>, <anders.roxell@linaro.org>, <arnd@arndb.de>,
+	<broonie@kernel.org>, <conor@kernel.org>, <dan.carpenter@linaro.org>,
+	<f.fainelli@gmail.com>, <gregkh@linuxfoundation.org>, <hargar@microsoft.com>,
+	<jonathanh@nvidia.com>, <linux-kernel@vger.kernel.org>, <linux@roeck-us.net>,
+	<lkft-triage@lists.linaro.org>, <naresh.kamboju@linaro.org>,
+	<patches@kernelci.org>, <patches@lists.linux.dev>, <pavel@denx.de>,
+	<peterz@infradead.org>, <re@w6rz.net>, <rwarsow@gmx.de>, <shuah@kernel.org>,
+	<srw@sladewatkins.net>, <stable@vger.kernel.org>,
+	<sudipm.mukherjee@gmail.com>, <torvalds@linux-foundation.org>,
+	<vincent.guittot@linaro.org>, <hmushi@amazon.co.uk>,
+	<nh-open-source@amazon.com>, <sieberf@amazon.com>
+Subject: Re: [PATCH 6.12 000/122] 6.12.11-rc1 review
+Date: Fri, 23 May 2025 15:13:10 +0000
+Message-ID: <20250523151310.59864-1-hmushi@amazon.co.uk>
+X-Mailer: git-send-email 2.47.1
+In-Reply-To: <b51f217d565609ae87395c8e23e62b15e489a0a4.camel@gmx.de>
+References: <b51f217d565609ae87395c8e23e62b15e489a0a4.camel@gmx.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250516084011.29309-1-tuhaowen@uniontech.com> <20250523085645.17695-1-tuhaowen@uniontech.com>
-In-Reply-To: <20250523085645.17695-1-tuhaowen@uniontech.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Fri, 23 May 2025 17:10:27 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0jazfh7A8-6werFtsQ=XOYzDioYh19p4S4v=0to2Na4Hw@mail.gmail.com>
-X-Gm-Features: AX0GCFvuvqReknQ5QffB20GDXZFmKM5klmigewjIpnkzgVP6BJSMJXA1EGYV_H8
-Message-ID: <CAJZ5v0jazfh7A8-6werFtsQ=XOYzDioYh19p4S4v=0to2Na4Hw@mail.gmail.com>
-Subject: Re: [PATCH v2 RESEND] PM/console: Fix the black screen issue
-To: tuhaowen <tuhaowen@uniontech.com>
-Cc: pavel@kernel.org, len.brown@intel.com, rafael@kernel.org, 
-	huangbibo@uniontech.com, linux-kernel@vger.kernel.org, 
-	linux-pm@vger.kernel.org, wangyuli@uniontech.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: EX19D036UWB003.ant.amazon.com (10.13.139.172) To
+ EX19D031EUB002.ant.amazon.com (10.252.61.105)
 
-On Fri, May 23, 2025 at 10:57=E2=80=AFAM tuhaowen <tuhaowen@uniontech.com> =
-wrote:
->
-> When the computer enters sleep status without a monitor
-> connected, the system switches the console to the virtual
-> terminal tty63(SUSPEND_CONSOLE).
->
-> If a monitor is subsequently connected before waking up,
-> the system skips the required VT restoration process
-> during wake-up, leaving the console on tty63 instead of
-> switching back to tty1.
->
-> To fix this issue, a global flag vt_switch_done is introduced
-> to record whether the system has successfully switched to
-> the suspend console via vt_move_to_console() during suspend.
->
-> If the switch was completed, vt_switch_done is set to 1.
-> Later during resume, this flag is checked to ensure that
-> the original console is restored properly by calling
-> vt_move_to_console(orig_fgconsole, 0).
->
-> This prevents scenarios where the resume logic skips console
-> restoration due to incorrect detection of the console state,
-> especially when a monitor is reconnected before waking up.
->
-> Signed-off-by: tuhaowen <tuhaowen@uniontech.com>
-> ---
-> Changes in v2:
-> - Added explanation in the commit message on how the issue is fixed.
-> - Link to v1: https://lore.kernel.org/all/20250516034643.22355-1-tuhaowen=
-@uniontech.com
-> ---
->  kernel/power/console.c | 7 ++++++-
->  1 file changed, 6 insertions(+), 1 deletion(-)
->
-> diff --git a/kernel/power/console.c b/kernel/power/console.c
-> index fcdf0e14a47d..832e04bf5439 100644
-> --- a/kernel/power/console.c
-> +++ b/kernel/power/console.c
-> @@ -16,6 +16,7 @@
->  #define SUSPEND_CONSOLE        (MAX_NR_CONSOLES-1)
->
->  static int orig_fgconsole, orig_kmsg;
-> +static int vt_switch_done;
+> On Tue, 2025-01-28 at 15:39 +0100, Peter Zijlstra wrote:
+> > On Tue, Jan 28, 2025 at 12:46:07PM +0100, Mike Galbraith wrote:
+> >
+> >> Seems 6.13 is gripe free thanks to it containing 4423af84b297.
+> >>
+> >> I stumbled upon a reproducer for my x86_64 desktop box: all I need do
+> >> is fire up a kvm guest in an enterprise configured host.  That inspires
+> >> libvirt goop to engage group scheduling, splat follows instantly.
+> >>
+> >> Back 4423af84b297 out of 6.13, it starts griping, add it to a 6.12 tree
+> >> containing 6d71a9c61604, it stops doing so.
+> >
+> > Ooh, does something like the below (+- reverse-renames as applicable to
+> > .12) also help?
 
-Better use bool for this.
+>Yup, seems to, 6.13 sans 4423af84b297 stopped griping.
 
-Thanks!
+Hi Peter,
+Are there any plans to backport this patch and 6d71a9c61604 into LTS versions
+as well? I'm seeing the exact same issue on 6.6 as well, where the bug in
+reweight results in incorrect vruntime calculation, leading to the deadline
+always being in future, rather than decreasing on each scheduler tick. This
+causes a task to run for a longer amount of time, starving other tasks on
+the runqueue.
 
->
->  static DEFINE_MUTEX(vt_switch_mutex);
->
-> @@ -136,15 +137,19 @@ void pm_prepare_console(void)
->         if (orig_fgconsole < 0)
->                 return;
->
-> +       vt_switch_done =3D 1;
-> +
->         orig_kmsg =3D vt_kmsg_redirect(SUSPEND_CONSOLE);
->         return;
->  }
->
->  void pm_restore_console(void)
->  {
-> -       if (!pm_vt_switch())
-> +       if (!pm_vt_switch() && !vt_switch_done)
->                 return;
->
-> +       vt_switch_done =3D 0;
-> +
->         if (orig_fgconsole >=3D 0) {
->                 vt_move_to_console(orig_fgconsole, 0);
->                 vt_kmsg_redirect(orig_kmsg);
-> --
-> 2.20.1
->
+The issue disappears when testing with 4423af84b297 and your patch to avoid
+tripping on WARN in place_entity(). I'm happy to push the backported patches
+into 6.12 and 6.6, if that's alright.
