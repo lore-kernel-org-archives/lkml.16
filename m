@@ -1,32 +1,32 @@
-Received: from out-170.mta0.migadu.com (out-170.mta0.migadu.com [91.218.175.170])
+Received: from out-184.mta0.migadu.com (out-184.mta0.migadu.com [91.218.175.184])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D37B8202F79
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 20:34:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5F3F20FABC
+	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 20:34:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.184
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748032478; cv=none; b=k8XxZ7q9W76Z5GuaDyMLsftdxeJUG7hbq3FPEuk2oN//eDc22Uonm0q/zcItLbElyZoP577gDxThHIzm/ge5vgTERqx4lHg6plKam4DNY5F/xCjcTMdEtQ9oTeweIpUJxQKXD9oNsv+ScpgEnioof6p4vDLjkmKDdxVQI8OXHHA=
+	t=1748032483; cv=none; b=WLI2HdAygDJfhKprVQvpwDhDiCszLSwJPdWWPSDUSOYLFLd2AS1tSXk/ao+CA/iNwvFI6120Bl6xziZBc+hQHkmk4cEBp66LVZLTkBSe1+F8eG0CmNpfHLqsUCxlxWX7VbiGE7Om2Wsn1l5wNiZ7NQeSJY38hJn/WlADpx1YMr8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748032478; c=relaxed/simple;
-	bh=SqYTrDvGIKtKV1jaqoXsL8oeVBq3vvm0eznr+7yISOc=;
+	s=arc-20240116; t=1748032483; c=relaxed/simple;
+	bh=viYdFTRf5zkPD6nrOL5UmiZoEyMaT4H8SQk8Bo37ZSE=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=mZnhdzHX0rH0VO/ajtYKDUoDMgwagU8HK2uOc08YIfHLU9/QaX7/4CCpWTr/+gpmzW+TUSLmDMGW1AUXNi3h74UyOFqhyovFoDrQt3nrZeAybndUVVM4cuOKvHEIBZh4IWNbdjgFy7yCSK8RXlnxJxMDut+1SQualK1lf0j4fY4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=EpnKM1kG; arc=none smtp.client-ip=91.218.175.170
+	 MIME-Version; b=sUWwTmktMnqtaXmF6TM33PuoCIzOA3Vx1WIlqh6ySuOfCcHnMfSkpI4rYrLNA4hAAYOom76Fkld9Ll5Gb7/FACZG/YwpBCSBmj3XkD1isLWOYfpkvbbqZHmgD5484e7O3pjJxwhP6U4z3Wg6/BXyv4FxsGyjnwQC1p65JswkmWo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=AtmqG6fM; arc=none smtp.client-ip=91.218.175.184
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="EpnKM1kG"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="AtmqG6fM"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1748032473;
+	t=1748032478;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=qkGvjNiTNu2tspXEqAyZfxG912QtKaDd0tfYAUC6KYg=;
-	b=EpnKM1kG8cKyvbihuZFPLcObrCoo3GylFnSpTfOxM57LzXSf3nFzHkeaUeLIdzWd5A0Y5Q
-	7UD48Ts+jl/RLkDAtt0d4l+CYp7jtO6E7KeQo/l1Go29b0Hf8KdmpP1KguWqK/lGecz4Ns
-	+Uk1oEDrobdg/tiJlb9ZRqszyOvv7W4=
+	bh=dL6+i5QA3yo+v7I6pIkLXzqhTBxoo5/kgLYhQkKFsyM=;
+	b=AtmqG6fM3/fZdst1bPGLcWCXaAd1tTtdQYWIG13gX0aoMjCCuUedki2Y9whcXg06z4zdh2
+	GS2Ho7gAoQZ0jPmHYZ9uMUN31y+Io9bi10idmcDBTYzWwYQ/8g0tFcBbz0oYDJxSZd8cLg
+	bQfEigXkr5508ZAybc8iRlTnlhQp91M=
 From: Sean Anderson <sean.anderson@linux.dev>
 To: netdev@vger.kernel.org,
 	Andrew Lunn <andrew+netdev@lunn.ch>,
@@ -44,11 +44,13 @@ Cc: Lei Wei <quic_leiwei@quicinc.com>,
 	Vineeth Karumanchi <vineeth.karumanchi@amd.com>,
 	linux-kernel@vger.kernel.org,
 	Sean Anderson <sean.anderson@linux.dev>,
-	Jonathan Corbet <corbet@lwn.net>,
-	linux-doc@vger.kernel.org
-Subject: [net-next PATCH v5 03/10] net: pcs: Add subsystem
-Date: Fri, 23 May 2025 16:33:32 -0400
-Message-Id: <20250523203339.1993685-4-sean.anderson@linux.dev>
+	Ioana Ciornei <ioana.ciornei@nxp.com>,
+	Vladimir Oltean <vladimir.oltean@nxp.com>,
+	imx@lists.linux.dev,
+	linux-stm32@st-md-mailman.stormreply.com
+Subject: [net-next PATCH v5 05/10] net: pcs: lynx: Convert to an MDIO driver
+Date: Fri, 23 May 2025 16:33:34 -0400
+Message-Id: <20250523203339.1993685-6-sean.anderson@linux.dev>
 In-Reply-To: <20250523203339.1993685-1-sean.anderson@linux.dev>
 References: <20250523203339.1993685-1-sean.anderson@linux.dev>
 Precedence: bulk
@@ -60,1181 +62,715 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 
-This adds support for getting PCS devices from the device tree. PCS
-drivers must first register with phylink_register_pcs. After that, MAC
-drivers may look up their PCS using phylink_get_pcs.
+This converts the lynx PCS driver to a proper MDIO driver.
+This allows using a more conventional driver lifecycle (e.g. with a
+probe and remove). It will also make it easier to add interrupt support.
 
-We wrap registered PCSs in another PCS. This wrapper PCS is refcounted
-and can outlive the wrapped PCS (such as if the wrapped PCS's driver is
-unbound). The wrapper forwards all PCS callbacks to the wrapped PCS,
-first checking to make sure the wrapped PCS still exists. This design
-was inspired by Bartosz Golaszewski's talk at LPC [1].
+The existing helpers are converted to bind the MDIO driver instead of
+creating the PCS directly. As lynx_pcs_create_mdiodev creates the PCS
+device, we can just set the modalias. For lynx_pcs_create_fwnode, we try
+to get the PCS the usual way, and if that fails we edit the devicetree
+to add a compatible and reprobe the device.
 
-One downside of this approach is that if a PCS provider gets rebound,
-the consumer must put the old PCS and re-get it. Typically this means
-rebinding the consumer as well. I don't consider this a major downside:
-
-- There is no guarantee that the PCS provider will support the same
-  PHY interfaces as before. At the moment there is no way to handle this
-  other than rebinding the consumer.
-- Unbinding a PCS can generally happen in three ways:
-  - The entire MAC and PCS is on a removable bus and everything is
-    getting unbound because the whole thing is being removed. In this
-    case we do not need to worry about the PCS coming back without the
-    MAC having been unbound.
-  - The PCS is on an FPGA that is being reconfigured but the MAC is not.
-    This is a legitimate (if uncommon) use case. However, given that
-    such arrangements were not possible at all before this series I
-    think this is an acceptible limitation (at least initially).
-  - The user has manually rebound the PCS (directly or indirectly)
-    through sysfs. In this case I think it is fine to require them to
-    manually rebind the MACs as well.
-
-pcs_get_by_fwnode_compat is a bit hairy, but it's necessary for
-compatibility with existing drivers, which often attach to (devicetree)
-nodes directly. We use the devicetree changeset system instead of
-adding a (secondary) software node because mdio_bus_match calls
-of_driver_match_device to match devices, and that function only works on
-devicetree nodes.
-
-[1] https://lpc.events/event/17/contributions/1627/
+To ensure my contributions remain free software, remove the BSD option
+from the license. This is permitted because the SPDX uses "OR".
 
 Signed-off-by: Sean Anderson <sean.anderson@linux.dev>
 ---
 
-(no changes since v4)
+Changes in v5:
+- Use MDIO_BUS instead of MDIO_DEVICE
 
 Changes in v4:
-- Adjust variable ordering in pcs_find_fwnode
-- Annotate pcs_wrapper.wrapped with __rcu
-- Fix PCS lookup functions missing ERR_PTR casts
-- Fix documentation for devm_pcs_register_full
-- Fix incorrect condition in pcs_post_config
-- Fix linking when PCS && !OF_DYNAMIC
-- Fix linking when PCS && OF_DYNAMIC && PHYLIB=m
-- Reduce line lengths to under 80 characters
-- Remove unused dev parameter to pcs_put
-- Use a spinlock instead of a mutex to protect pcs_wrappers
+- Add a note about the license
+- Convert to dev-less pcs_put
 
 Changes in v3:
-- Remove support for #pcs-cells. Upon further investigation, the
-  requested functionality can be accomplished by specifying the PCS's
-  fwnode manually.
+- Call devm_pcs_register instead of devm_pcs_register_provider
 
 Changes in v2:
-- Add fallbacks for pcs_get* and pcs_put
 - Add support for #pcs-cells
-- Remove outdated comment
-- Remove unused variable
+- Remove unused variable lynx_properties
 
- Documentation/networking/index.rst |   1 +
- Documentation/networking/kapi.rst  |   4 +
- Documentation/networking/pcs.rst   | 102 +++++
- MAINTAINERS                        |   2 +
- drivers/net/pcs/Kconfig            |  13 +
- drivers/net/pcs/Makefile           |   2 +
- drivers/net/pcs/core.c             | 686 +++++++++++++++++++++++++++++
- include/linux/pcs.h                | 205 +++++++++
- 8 files changed, 1015 insertions(+)
- create mode 100644 Documentation/networking/pcs.rst
- create mode 100644 drivers/net/pcs/core.c
- create mode 100644 include/linux/pcs.h
+ drivers/net/dsa/ocelot/Kconfig                |   4 +
+ drivers/net/dsa/ocelot/felix_vsc9959.c        |  11 +-
+ drivers/net/dsa/ocelot/seville_vsc9953.c      |  11 +-
+ drivers/net/ethernet/altera/Kconfig           |   2 +
+ drivers/net/ethernet/altera/altera_tse_main.c |   7 +-
+ drivers/net/ethernet/freescale/dpaa/Kconfig   |   2 +-
+ drivers/net/ethernet/freescale/dpaa2/Kconfig  |   3 +
+ .../net/ethernet/freescale/dpaa2/dpaa2-mac.c  |  11 +-
+ drivers/net/ethernet/freescale/enetc/Kconfig  |   2 +
+ .../net/ethernet/freescale/enetc/enetc_pf.c   |   8 +-
+ .../net/ethernet/freescale/enetc/enetc_pf.h   |   1 -
+ .../freescale/enetc/enetc_pf_common.c         |   4 +-
+ drivers/net/ethernet/freescale/fman/Kconfig   |   4 +-
+ .../net/ethernet/freescale/fman/fman_memac.c  |  25 ++--
+ drivers/net/ethernet/stmicro/stmmac/Kconfig   |   3 +
+ .../ethernet/stmicro/stmmac/dwmac-socfpga.c   |   6 +-
+ drivers/net/pcs/Kconfig                       |  11 +-
+ drivers/net/pcs/pcs-lynx.c                    | 110 ++++++++++--------
+ include/linux/pcs-lynx.h                      |  13 ++-
+ 19 files changed, 128 insertions(+), 110 deletions(-)
 
-diff --git a/Documentation/networking/index.rst b/Documentation/networking/index.rst
-index ac90b82f3ce9..ff0e5968850b 100644
---- a/Documentation/networking/index.rst
-+++ b/Documentation/networking/index.rst
-@@ -30,6 +30,7 @@ Contents:
-    page_pool
-    phy
-    sfp-phylink
-+   pcs
-    alias
-    bridge
-    snmp_counter
-diff --git a/Documentation/networking/kapi.rst b/Documentation/networking/kapi.rst
-index 98682b9a13ee..7a48178649de 100644
---- a/Documentation/networking/kapi.rst
-+++ b/Documentation/networking/kapi.rst
-@@ -146,6 +146,10 @@ PHYLINK
+diff --git a/drivers/net/dsa/ocelot/Kconfig b/drivers/net/dsa/ocelot/Kconfig
+index 081e7a88ea02..907c29d61c14 100644
+--- a/drivers/net/dsa/ocelot/Kconfig
++++ b/drivers/net/dsa/ocelot/Kconfig
+@@ -42,7 +42,9 @@ config NET_DSA_MSCC_FELIX
+ 	select NET_DSA_TAG_OCELOT_8021Q
+ 	select NET_DSA_TAG_OCELOT
+ 	select FSL_ENETC_MDIO
++	select PCS
+ 	select PCS_LYNX
++	select MDIO_BUS
+ 	help
+ 	  This driver supports the VSC9959 (Felix) switch, which is embedded as
+ 	  a PCIe function of the NXP LS1028A ENETC RCiEP.
+@@ -58,7 +60,9 @@ config NET_DSA_MSCC_SEVILLE
+ 	select NET_DSA_MSCC_FELIX_DSA_LIB
+ 	select NET_DSA_TAG_OCELOT_8021Q
+ 	select NET_DSA_TAG_OCELOT
++	select PCS
+ 	select PCS_LYNX
++	select MDIO_BUS
+ 	help
+ 	  This driver supports the VSC9953 (Seville) switch, which is embedded
+ 	  as a platform device on the NXP T1040 SoC.
+diff --git a/drivers/net/dsa/ocelot/felix_vsc9959.c b/drivers/net/dsa/ocelot/felix_vsc9959.c
+index 087d368a59e0..6feae845af10 100644
+--- a/drivers/net/dsa/ocelot/felix_vsc9959.c
++++ b/drivers/net/dsa/ocelot/felix_vsc9959.c
+@@ -12,6 +12,7 @@
+ #include <net/tc_act/tc_gate.h>
+ #include <soc/mscc/ocelot.h>
+ #include <linux/dsa/ocelot.h>
++#include <linux/pcs.h>
+ #include <linux/pcs-lynx.h>
+ #include <net/pkt_sched.h>
+ #include <linux/iopoll.h>
+@@ -1033,7 +1034,7 @@ static int vsc9959_mdio_bus_alloc(struct ocelot *ocelot)
+ 		if (ocelot_port->phy_mode == PHY_INTERFACE_MODE_INTERNAL)
+ 			continue;
  
- .. kernel-doc:: include/linux/phylink.h
-    :internal:
-+   :no-identifiers: phylink_pcs phylink_pcs_ops pcs_validate pcs_inband_caps
-+      pcs_enable pcs_disable pcs_pre_config pcs_post_config pcs_get_state
-+      pcs_config pcs_an_restart pcs_link_up pcs_disable_eee pcs_enable_eee
-+      pcs_pre_init
+-		phylink_pcs = lynx_pcs_create_mdiodev(felix->imdio, port);
++		phylink_pcs = lynx_pcs_create_mdiodev(dev, felix->imdio, port);
+ 		if (IS_ERR(phylink_pcs))
+ 			continue;
  
- .. kernel-doc:: drivers/net/phy/phylink.c
+@@ -1050,12 +1051,8 @@ static void vsc9959_mdio_bus_free(struct ocelot *ocelot)
+ 	struct felix *felix = ocelot_to_felix(ocelot);
+ 	int port;
  
-diff --git a/Documentation/networking/pcs.rst b/Documentation/networking/pcs.rst
-new file mode 100644
-index 000000000000..4b41ba884160
---- /dev/null
-+++ b/Documentation/networking/pcs.rst
-@@ -0,0 +1,102 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+=============
-+PCS Subsystem
-+=============
-+
-+The PCS (Physical Coding Sublayer) subsystem handles the registration and lookup
-+of PCS devices. These devices contain the upper sublayers of the Ethernet
-+physical layer, generally handling framing, scrambling, and encoding tasks. PCS
-+devices may also include PMA (Physical Medium Attachment) components. PCS
-+devices transfer data between the Link-layer MAC device, and the rest of the
-+physical layer, typically via a serdes. The output of the serdes may be
-+connected more-or-less directly to the medium when using fiber-optic or
-+backplane connections (1000BASE-SX, 1000BASE-KX, etc). It may also communicate
-+with a separate PHY (such as over SGMII) which handles the connection to the
-+medium (such as 1000BASE-T).
-+
-+Looking up PCS Devices
-+----------------------
-+
-+There are generally two ways to look up a PCS device. If the PCS device is
-+internal to a larger device (such as a MAC or switch), and it does not share an
-+implementation with an existing PCS, then it does not need to be registered with
-+the PCS subsystem. Instead, you can populate a :c:type:`phylink_pcs`
-+in your probe function. Otherwise, you must look up the PCS.
-+
-+If your device has a :c:type:`fwnode_handle`, you can add a PCS using the
-+``pcs-handle`` property::
-+
-+    ethernet-controller {
-+        // ...
-+        pcs-handle = <&pcs>;
-+        pcs-handle-names = "internal";
-+    };
-+
-+Then, during your probe function, you can get the PCS using :c:func:`pcs_get`::
-+
-+    mac->pcs = pcs_get(dev, "internal");
-+    if (IS_ERR(mac->pcs)) {
-+        err = PTR_ERR(mac->pcs);
-+        return dev_err_probe(dev, "Could not get PCS\n");
-+    }
-+
-+If your device doesn't have a :c:type:`fwnode_handle`, you can get the PCS
-+based on the providing device using :c:func:`pcs_get_by_dev`. Typically, you
-+will create the device and bind your PCS driver to it before calling this
-+function. This allows reuse of an existing PCS driver.
-+
-+Once you are done using the PCS, you must call :c:func:`pcs_put`.
-+
-+Using PCS Devices
-+-----------------
-+
-+To select the PCS from a MAC driver, implement the ``mac_select_pcs`` callback
-+of :c:type:`phylink_mac_ops`. In this example, the PCS is selected for SGMII
-+and 1000BASE-X, and deselected for other interfaces::
-+
-+    static struct phylink_pcs *mac_select_pcs(struct phylink_config *config,
-+                                              phy_interface_t iface)
-+    {
-+        struct mac *mac = config_to_mac(config);
-+
-+        switch (iface) {
-+        case PHY_INTERFACE_MODE_SGMII:
-+        case PHY_INTERFACE_MODE_1000BASEX:
-+            return mac->pcs;
-+        default:
-+            return NULL;
-+        }
-+    }
-+
-+To do the same from a DSA driver, implement the ``phylink_mac_select_pcs``
-+callback of :c:type:`dsa_switch_ops`.
-+
-+Writing PCS Drivers
-+-------------------
-+
-+To write a PCS driver, first implement :c:type:`phylink_pcs_ops`. Then,
-+register your PCS in your probe function using :c:func:`pcs_register`. If you
-+need to provide multiple PCSs for the same device, then you can pass specific
-+firmware nodes using :c:macro:`pcs_register_full`.
-+
-+You must call :c:func:`pcs_unregister` from your remove function. You can avoid
-+this step by registering with :c:func:`devm_pcs_unregister`.
-+
-+API Reference
-+-------------
-+
-+.. kernel-doc:: include/linux/phylink.h
-+   :identifiers: phylink_pcs phylink_pcs_ops pcs_validate pcs_inband_caps
-+      pcs_enable pcs_disable pcs_pre_config pcs_post_config pcs_get_state
-+      pcs_config pcs_an_restart pcs_link_up pcs_disable_eee pcs_enable_eee
-+      pcs_pre_init
-+
-+.. kernel-doc:: include/linux/pcs.h
-+   :internal:
-+
-+.. kernel-doc:: drivers/net/pcs/core.c
-+   :export:
-+
-+.. kernel-doc:: drivers/net/pcs/core.c
-+   :internal:
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 4e31726aa8d0..f098406db6ff 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -8789,6 +8789,7 @@ F:	Documentation/ABI/testing/sysfs-class-net-phydev
- F:	Documentation/devicetree/bindings/net/ethernet-phy.yaml
- F:	Documentation/devicetree/bindings/net/mdio*
- F:	Documentation/devicetree/bindings/net/qca,ar803x.yaml
-+F:	Documentation/networking/pcs.rst
- F:	Documentation/networking/phy.rst
- F:	drivers/net/mdio/
- F:	drivers/net/mdio/acpi_mdio.c
-@@ -8802,6 +8803,7 @@ F:	include/linux/linkmode.h
- F:	include/linux/mdio/*.h
- F:	include/linux/mii.h
- F:	include/linux/of_net.h
-+F:	include/linux/pcs.h
- F:	include/linux/phy.h
- F:	include/linux/phy_fixed.h
- F:	include/linux/phy_link_topology.h
+-	for (port = 0; port < ocelot->num_phys_ports; port++) {
+-		struct phylink_pcs *phylink_pcs = felix->pcs[port];
+-
+-		if (phylink_pcs)
+-			lynx_pcs_destroy(phylink_pcs);
+-	}
++	for (port = 0; port < ocelot->num_phys_ports; port++)
++		pcs_put(felix->pcs[port]);
+ 	mdiobus_unregister(felix->imdio);
+ 	mdiobus_free(felix->imdio);
+ }
+diff --git a/drivers/net/dsa/ocelot/seville_vsc9953.c b/drivers/net/dsa/ocelot/seville_vsc9953.c
+index 28bcdef34a6c..627c0bd7a777 100644
+--- a/drivers/net/dsa/ocelot/seville_vsc9953.c
++++ b/drivers/net/dsa/ocelot/seville_vsc9953.c
+@@ -10,6 +10,7 @@
+ #include <linux/mdio/mdio-mscc-miim.h>
+ #include <linux/mod_devicetable.h>
+ #include <linux/of_mdio.h>
++#include <linux/pcs.h>
+ #include <linux/pcs-lynx.h>
+ #include <linux/dsa/ocelot.h>
+ #include <linux/iopoll.h>
+@@ -926,7 +927,7 @@ static int vsc9953_mdio_bus_alloc(struct ocelot *ocelot)
+ 		if (ocelot_port->phy_mode == PHY_INTERFACE_MODE_INTERNAL)
+ 			continue;
+ 
+-		phylink_pcs = lynx_pcs_create_mdiodev(felix->imdio, addr);
++		phylink_pcs = lynx_pcs_create_mdiodev(dev, felix->imdio, addr);
+ 		if (IS_ERR(phylink_pcs))
+ 			continue;
+ 
+@@ -943,12 +944,8 @@ static void vsc9953_mdio_bus_free(struct ocelot *ocelot)
+ 	struct felix *felix = ocelot_to_felix(ocelot);
+ 	int port;
+ 
+-	for (port = 0; port < ocelot->num_phys_ports; port++) {
+-		struct phylink_pcs *phylink_pcs = felix->pcs[port];
+-
+-		if (phylink_pcs)
+-			lynx_pcs_destroy(phylink_pcs);
+-	}
++	for (port = 0; port < ocelot->num_phys_ports; port++)
++		pcs_put(felix->pcs[port]);
+ 
+ 	/* mdiobus_unregister and mdiobus_free handled by devres */
+ }
+diff --git a/drivers/net/ethernet/altera/Kconfig b/drivers/net/ethernet/altera/Kconfig
+index 4ef819a9a1ad..9b68321e8b86 100644
+--- a/drivers/net/ethernet/altera/Kconfig
++++ b/drivers/net/ethernet/altera/Kconfig
+@@ -5,7 +5,9 @@ config ALTERA_TSE
+ 	depends on HAS_IOMEM
+ 	select PHYLIB
+ 	select PHYLINK
++	select PCS
+ 	select PCS_LYNX
++	select MDIO_BUS
+ 	select MDIO_REGMAP
+ 	select REGMAP_MMIO
+ 	help
+diff --git a/drivers/net/ethernet/altera/altera_tse_main.c b/drivers/net/ethernet/altera/altera_tse_main.c
+index 3f6204de9e6b..8bd4753a04bc 100644
+--- a/drivers/net/ethernet/altera/altera_tse_main.c
++++ b/drivers/net/ethernet/altera/altera_tse_main.c
+@@ -32,6 +32,7 @@
+ #include <linux/of.h>
+ #include <linux/of_mdio.h>
+ #include <linux/of_net.h>
++#include <linux/pcs.h>
+ #include <linux/pcs-lynx.h>
+ #include <linux/phy.h>
+ #include <linux/platform_device.h>
+@@ -1412,7 +1413,7 @@ static int altera_tse_probe(struct platform_device *pdev)
+ 		goto err_init_pcs;
+ 	}
+ 
+-	priv->pcs = lynx_pcs_create_mdiodev(pcs_bus, 0);
++	priv->pcs = lynx_pcs_create_mdiodev(&pdev->dev, pcs_bus, 0);
+ 	if (IS_ERR(priv->pcs)) {
+ 		ret = PTR_ERR(priv->pcs);
+ 		goto err_init_pcs;
+@@ -1444,7 +1445,7 @@ static int altera_tse_probe(struct platform_device *pdev)
+ 
+ 	return 0;
+ err_init_phylink:
+-	lynx_pcs_destroy(priv->pcs);
++	pcs_put(priv->pcs);
+ err_init_pcs:
+ 	unregister_netdev(ndev);
+ err_register_netdev:
+@@ -1466,7 +1467,7 @@ static void altera_tse_remove(struct platform_device *pdev)
+ 	altera_tse_mdio_destroy(ndev);
+ 	unregister_netdev(ndev);
+ 	phylink_destroy(priv->phylink);
+-	lynx_pcs_destroy(priv->pcs);
++	pcs_put(priv->pcs);
+ 
+ 	free_netdev(ndev);
+ }
+diff --git a/drivers/net/ethernet/freescale/dpaa/Kconfig b/drivers/net/ethernet/freescale/dpaa/Kconfig
+index 2b560661c82a..bb658f1db129 100644
+--- a/drivers/net/ethernet/freescale/dpaa/Kconfig
++++ b/drivers/net/ethernet/freescale/dpaa/Kconfig
+@@ -3,7 +3,7 @@ menuconfig FSL_DPAA_ETH
+ 	tristate "DPAA Ethernet"
+ 	depends on FSL_DPAA && FSL_FMAN
+ 	select PHYLINK
+-	select PCS_LYNX
++	select MDIO_BUS
+ 	help
+ 	  Data Path Acceleration Architecture Ethernet driver,
+ 	  supporting the Freescale QorIQ chips.
+diff --git a/drivers/net/ethernet/freescale/dpaa2/Kconfig b/drivers/net/ethernet/freescale/dpaa2/Kconfig
+index d029b69c3f18..806931b2b9fa 100644
+--- a/drivers/net/ethernet/freescale/dpaa2/Kconfig
++++ b/drivers/net/ethernet/freescale/dpaa2/Kconfig
+@@ -2,8 +2,11 @@
+ config FSL_DPAA2_ETH
+ 	tristate "Freescale DPAA2 Ethernet"
+ 	depends on FSL_MC_BUS && FSL_MC_DPIO
++	select OF_DYNAMIC
+ 	select PHYLINK
++	select PCS
+ 	select PCS_LYNX
++	select MDIO_BUS
+ 	select FSL_XGMAC_MDIO
+ 	select NET_DEVLINK
+ 	help
+diff --git a/drivers/net/ethernet/freescale/dpaa2/dpaa2-mac.c b/drivers/net/ethernet/freescale/dpaa2/dpaa2-mac.c
+index 422ce13a7c94..0dc0a265db51 100644
+--- a/drivers/net/ethernet/freescale/dpaa2/dpaa2-mac.c
++++ b/drivers/net/ethernet/freescale/dpaa2/dpaa2-mac.c
+@@ -2,6 +2,7 @@
+ /* Copyright 2019 NXP */
+ 
+ #include <linux/acpi.h>
++#include <linux/pcs.h>
+ #include <linux/pcs-lynx.h>
+ #include <linux/phy/phy.h>
+ #include <linux/property.h>
+@@ -262,7 +263,7 @@ static int dpaa2_pcs_create(struct dpaa2_mac *mac,
+ 		return 0;
+ 	}
+ 
+-	pcs = lynx_pcs_create_fwnode(node);
++	pcs = lynx_pcs_create_fwnode(&mac->mc_dev->dev, node);
+ 	fwnode_handle_put(node);
+ 
+ 	if (pcs == ERR_PTR(-EPROBE_DEFER)) {
+@@ -288,12 +289,8 @@ static int dpaa2_pcs_create(struct dpaa2_mac *mac,
+ 
+ static void dpaa2_pcs_destroy(struct dpaa2_mac *mac)
+ {
+-	struct phylink_pcs *phylink_pcs = mac->pcs;
+-
+-	if (phylink_pcs) {
+-		lynx_pcs_destroy(phylink_pcs);
+-		mac->pcs = NULL;
+-	}
++	pcs_put(mac->pcs);
++	mac->pcs = NULL;
+ }
+ 
+ static void dpaa2_mac_set_supported_interfaces(struct dpaa2_mac *mac)
+diff --git a/drivers/net/ethernet/freescale/enetc/Kconfig b/drivers/net/ethernet/freescale/enetc/Kconfig
+index e917132d3714..f3ac430c9d4f 100644
+--- a/drivers/net/ethernet/freescale/enetc/Kconfig
++++ b/drivers/net/ethernet/freescale/enetc/Kconfig
+@@ -30,7 +30,9 @@ config FSL_ENETC
+ 	select FSL_ENETC_MDIO
+ 	select NXP_ENETC_PF_COMMON
+ 	select PHYLINK
++	select PCS
+ 	select PCS_LYNX
++	select MDIO_BUS
+ 	select DIMLIB
+ 	help
+ 	  This driver supports NXP ENETC gigabit ethernet controller PCIe
+diff --git a/drivers/net/ethernet/freescale/enetc/enetc_pf.c b/drivers/net/ethernet/freescale/enetc/enetc_pf.c
+index f63a29e2e031..8d0950c28190 100644
+--- a/drivers/net/ethernet/freescale/enetc/enetc_pf.c
++++ b/drivers/net/ethernet/freescale/enetc/enetc_pf.c
+@@ -34,12 +34,7 @@ static void enetc_pf_set_primary_mac_addr(struct enetc_hw *hw, int si,
+ static struct phylink_pcs *enetc_pf_create_pcs(struct enetc_pf *pf,
+ 					       struct mii_bus *bus)
+ {
+-	return lynx_pcs_create_mdiodev(bus, 0);
+-}
+-
+-static void enetc_pf_destroy_pcs(struct phylink_pcs *pcs)
+-{
+-	lynx_pcs_destroy(pcs);
++	return lynx_pcs_create_mdiodev(&pf->si->pdev->dev, bus, 0);
+ }
+ 
+ static void enetc_set_vlan_promisc(struct enetc_hw *hw, char si_map)
+@@ -914,7 +909,6 @@ static const struct enetc_pf_ops enetc_pf_ops = {
+ 	.set_si_primary_mac = enetc_pf_set_primary_mac_addr,
+ 	.get_si_primary_mac = enetc_pf_get_primary_mac_addr,
+ 	.create_pcs = enetc_pf_create_pcs,
+-	.destroy_pcs = enetc_pf_destroy_pcs,
+ 	.enable_psfp = enetc_psfp_enable,
+ };
+ 
+diff --git a/drivers/net/ethernet/freescale/enetc/enetc_pf.h b/drivers/net/ethernet/freescale/enetc/enetc_pf.h
+index ae407e9e9ee7..be22b036df42 100644
+--- a/drivers/net/ethernet/freescale/enetc/enetc_pf.h
++++ b/drivers/net/ethernet/freescale/enetc/enetc_pf.h
+@@ -32,7 +32,6 @@ struct enetc_pf_ops {
+ 	void (*set_si_primary_mac)(struct enetc_hw *hw, int si, const u8 *addr);
+ 	void (*get_si_primary_mac)(struct enetc_hw *hw, int si, u8 *addr);
+ 	struct phylink_pcs *(*create_pcs)(struct enetc_pf *pf, struct mii_bus *bus);
+-	void (*destroy_pcs)(struct phylink_pcs *pcs);
+ 	int (*enable_psfp)(struct enetc_ndev_priv *priv);
+ };
+ 
+diff --git a/drivers/net/ethernet/freescale/enetc/enetc_pf_common.c b/drivers/net/ethernet/freescale/enetc/enetc_pf_common.c
+index edf14a95cab7..1c53036d17df 100644
+--- a/drivers/net/ethernet/freescale/enetc/enetc_pf_common.c
++++ b/drivers/net/ethernet/freescale/enetc/enetc_pf_common.c
+@@ -4,6 +4,7 @@
+ #include <linux/fsl/enetc_mdio.h>
+ #include <linux/of_mdio.h>
+ #include <linux/of_net.h>
++#include <linux/pcs.h>
+ 
+ #include "enetc_pf_common.h"
+ 
+@@ -248,8 +249,7 @@ static int enetc_imdio_create(struct enetc_pf *pf)
+ 
+ static void enetc_imdio_remove(struct enetc_pf *pf)
+ {
+-	if (pf->pcs && pf->ops->destroy_pcs)
+-		pf->ops->destroy_pcs(pf->pcs);
++	pcs_put(pf->pcs);
+ 
+ 	if (pf->imdio) {
+ 		mdiobus_unregister(pf->imdio);
+diff --git a/drivers/net/ethernet/freescale/fman/Kconfig b/drivers/net/ethernet/freescale/fman/Kconfig
+index a55542c1ad65..2b51b223716b 100644
+--- a/drivers/net/ethernet/freescale/fman/Kconfig
++++ b/drivers/net/ethernet/freescale/fman/Kconfig
+@@ -3,10 +3,12 @@ config FSL_FMAN
+ 	tristate "FMan support"
+ 	depends on FSL_SOC || ARCH_LAYERSCAPE || COMPILE_TEST
+ 	select GENERIC_ALLOCATOR
++	select OF_DYNAMIC
++	select MDIO_BUS
+ 	select PHYLINK
++	select PCS
+ 	select PCS_LYNX
+ 	select CRC32
+-	default n
+ 	help
+ 		Freescale Data-Path Acceleration Architecture Frame Manager
+ 		(FMan) support
+diff --git a/drivers/net/ethernet/freescale/fman/fman_memac.c b/drivers/net/ethernet/freescale/fman/fman_memac.c
+index 3925441143fa..a6064bc80ce7 100644
+--- a/drivers/net/ethernet/freescale/fman/fman_memac.c
++++ b/drivers/net/ethernet/freescale/fman/fman_memac.c
+@@ -11,6 +11,7 @@
+ 
+ #include <linux/slab.h>
+ #include <linux/io.h>
++#include <linux/pcs.h>
+ #include <linux/pcs-lynx.h>
+ #include <linux/phy.h>
+ #include <linux/phy_fixed.h>
+@@ -972,21 +973,21 @@ static int memac_init(struct fman_mac *memac)
+ 	return 0;
+ }
+ 
+-static void pcs_put(struct phylink_pcs *pcs)
++static void memac_pcs_put(struct phylink_pcs *pcs)
+ {
+ 	if (IS_ERR_OR_NULL(pcs))
+ 		return;
+ 
+-	lynx_pcs_destroy(pcs);
++	pcs_put(pcs);
+ }
+ 
+ static int memac_free(struct fman_mac *memac)
+ {
+ 	free_init_resources(memac);
+ 
+-	pcs_put(memac->sgmii_pcs);
+-	pcs_put(memac->qsgmii_pcs);
+-	pcs_put(memac->xfi_pcs);
++	memac_pcs_put(memac->sgmii_pcs);
++	memac_pcs_put(memac->qsgmii_pcs);
++	memac_pcs_put(memac->xfi_pcs);
+ 	kfree(memac->memac_drv_param);
+ 	kfree(memac);
+ 
+@@ -1033,7 +1034,8 @@ static struct fman_mac *memac_config(struct mac_device *mac_dev,
+ 	return memac;
+ }
+ 
+-static struct phylink_pcs *memac_pcs_create(struct device_node *mac_node,
++static struct phylink_pcs *memac_pcs_create(struct device *dev,
++					    struct device_node *mac_node,
+ 					    int index)
+ {
+ 	struct device_node *node;
+@@ -1043,7 +1045,7 @@ static struct phylink_pcs *memac_pcs_create(struct device_node *mac_node,
+ 	if (!node)
+ 		return ERR_PTR(-ENODEV);
+ 
+-	pcs = lynx_pcs_create_fwnode(of_fwnode_handle(node));
++	pcs = lynx_pcs_create_fwnode(dev, of_fwnode_handle(node));
+ 	of_node_put(node);
+ 
+ 	return pcs;
+@@ -1100,7 +1102,7 @@ int memac_initialization(struct mac_device *mac_dev,
+ 
+ 	err = of_property_match_string(mac_node, "pcs-handle-names", "xfi");
+ 	if (err >= 0) {
+-		memac->xfi_pcs = memac_pcs_create(mac_node, err);
++		memac->xfi_pcs = memac_pcs_create(mac_dev->dev, mac_node, err);
+ 		if (IS_ERR(memac->xfi_pcs)) {
+ 			err = PTR_ERR(memac->xfi_pcs);
+ 			dev_err_probe(mac_dev->dev, err, "missing xfi pcs\n");
+@@ -1112,7 +1114,8 @@ int memac_initialization(struct mac_device *mac_dev,
+ 
+ 	err = of_property_match_string(mac_node, "pcs-handle-names", "qsgmii");
+ 	if (err >= 0) {
+-		memac->qsgmii_pcs = memac_pcs_create(mac_node, err);
++		memac->qsgmii_pcs = memac_pcs_create(mac_dev->dev, mac_node,
++						     err);
+ 		if (IS_ERR(memac->qsgmii_pcs)) {
+ 			err = PTR_ERR(memac->qsgmii_pcs);
+ 			dev_err_probe(mac_dev->dev, err,
+@@ -1128,11 +1131,11 @@ int memac_initialization(struct mac_device *mac_dev,
+ 	 */
+ 	err = of_property_match_string(mac_node, "pcs-handle-names", "sgmii");
+ 	if (err == -EINVAL || err == -ENODATA)
+-		pcs = memac_pcs_create(mac_node, 0);
++		pcs = memac_pcs_create(mac_dev->dev, mac_node, 0);
+ 	else if (err < 0)
+ 		goto _return_fm_mac_free;
+ 	else
+-		pcs = memac_pcs_create(mac_node, err);
++		pcs = memac_pcs_create(mac_dev->dev, mac_node, err);
+ 
+ 	if (IS_ERR(pcs)) {
+ 		err = PTR_ERR(pcs);
+diff --git a/drivers/net/ethernet/stmicro/stmmac/Kconfig b/drivers/net/ethernet/stmicro/stmmac/Kconfig
+index 67fa879b1e52..170ec691d090 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/Kconfig
++++ b/drivers/net/ethernet/stmicro/stmmac/Kconfig
+@@ -182,9 +182,12 @@ config DWMAC_SOCFPGA
+ 	tristate "SOCFPGA dwmac support"
+ 	default ARCH_INTEL_SOCFPGA
+ 	depends on OF && (ARCH_INTEL_SOCFPGA || COMPILE_TEST)
++	select OF_DYNAMIC
+ 	select MFD_SYSCON
++	select MDIO_BUS
+ 	select MDIO_REGMAP
+ 	select REGMAP_MMIO
++	select PCS
+ 	select PCS_LYNX
+ 	help
+ 	  Support for ethernet controller on Altera SOCFPGA
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-socfpga.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-socfpga.c
+index 72b50f6d72f4..325486c06511 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac-socfpga.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-socfpga.c
+@@ -8,6 +8,7 @@
+ #include <linux/of.h>
+ #include <linux/of_address.h>
+ #include <linux/of_net.h>
++#include <linux/pcs.h>
+ #include <linux/phy.h>
+ #include <linux/regmap.h>
+ #include <linux/mdio/mdio-regmap.h>
+@@ -414,7 +415,7 @@ static int socfpga_dwmac_pcs_init(struct stmmac_priv *priv)
+ 	if (IS_ERR(pcs_bus))
+ 		return PTR_ERR(pcs_bus);
+ 
+-	pcs = lynx_pcs_create_mdiodev(pcs_bus, 0);
++	pcs = lynx_pcs_create_mdiodev(priv->device, pcs_bus, 0);
+ 	if (IS_ERR(pcs))
+ 		return PTR_ERR(pcs);
+ 
+@@ -424,8 +425,7 @@ static int socfpga_dwmac_pcs_init(struct stmmac_priv *priv)
+ 
+ static void socfpga_dwmac_pcs_exit(struct stmmac_priv *priv)
+ {
+-	if (priv->hw->phylink_pcs)
+-		lynx_pcs_destroy(priv->hw->phylink_pcs);
++	pcs_put(priv->hw->phylink_pcs);
+ }
+ 
+ static struct phylink_pcs *socfpga_dwmac_select_pcs(struct stmmac_priv *priv,
 diff --git a/drivers/net/pcs/Kconfig b/drivers/net/pcs/Kconfig
-index f6aa437473de..6d19625b696d 100644
+index 6d19625b696d..f274ebffaae3 100644
 --- a/drivers/net/pcs/Kconfig
 +++ b/drivers/net/pcs/Kconfig
-@@ -5,6 +5,19 @@
+@@ -26,10 +26,15 @@ config PCS_XPCS
+ 	  DesignWare XPCS controllers.
  
- menu "PCS device drivers"
+ config PCS_LYNX
+-	tristate
++	tristate "NXP Lynx PCS driver"
++	depends on PCS && MDIO_BUS
+ 	help
+-	  This module provides helpers to phylink for managing the Lynx PCS
+-	  which is part of the Layerscape and QorIQ Ethernet SERDES.
++	  This module provides driver support for the PCSs in Lynx 10g and 28g
++	  SerDes devices. These devices are present in NXP QorIQ SoCs,
++	  including the Layerscape series.
++
++	  If you want to use Ethernet on a QorIQ SoC, say "Y". If compiled as a
++	  module, it will be called "pcs-lynx".
  
-+config PCS
-+	bool "PCS subsystem"
-+	select PHYLIB if OF_DYNAMIC
-+	help
-+	  This provides common helper functions for registering and looking up
-+	  Physical Coding Sublayer (PCS) devices. PCS devices translate between
-+	  different interface types. In some use cases, they may either
-+	  translate between different types of Medium-Independent Interfaces
-+	  (MIIs), such as translating GMII to SGMII. This allows using a fast
-+	  serial interface to talk to the phy which translates the MII to the
-+	  Medium-Dependent Interface. Alternatively, they may translate a MII
-+	  directly to an MDI, such as translating GMII to 1000Base-X.
-+
- config PCS_XPCS
- 	tristate "Synopsys DesignWare Ethernet XPCS"
- 	select PHYLINK
-diff --git a/drivers/net/pcs/Makefile b/drivers/net/pcs/Makefile
-index 4f7920618b90..35e3324fc26e 100644
---- a/drivers/net/pcs/Makefile
-+++ b/drivers/net/pcs/Makefile
-@@ -1,6 +1,8 @@
- # SPDX-License-Identifier: GPL-2.0
- # Makefile for Linux PCS drivers
+ config PCS_MTK_LYNXI
+ 	tristate
+diff --git a/drivers/net/pcs/pcs-lynx.c b/drivers/net/pcs/pcs-lynx.c
+index 23b40e9eacbb..bacba1dd52e2 100644
+--- a/drivers/net/pcs/pcs-lynx.c
++++ b/drivers/net/pcs/pcs-lynx.c
+@@ -1,11 +1,15 @@
+-// SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause)
+-/* Copyright 2020 NXP
++// SPDX-License-Identifier: GPL-2.0+
++/* Copyright (C) 2022 Sean Anderson <seanga2@gmail.com>
++ * Copyright 2020 NXP
+  * Lynx PCS MDIO helpers
+  */
  
-+obj-$(CONFIG_PCS)		+= core.o
-+
- pcs_xpcs-$(CONFIG_PCS_XPCS)	:= pcs-xpcs.o pcs-xpcs-plat.o \
- 				   pcs-xpcs-nxp.o pcs-xpcs-wx.o
- 
-diff --git a/drivers/net/pcs/core.c b/drivers/net/pcs/core.c
-new file mode 100644
-index 000000000000..133df15483f0
---- /dev/null
-+++ b/drivers/net/pcs/core.c
-@@ -0,0 +1,686 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2022-25 Sean Anderson <sean.anderson@seco.com>
-+ */
-+
-+#define pr_fmt(fmt) "pcs-core: " fmt
-+
-+#include <linux/fwnode.h>
-+#include <linux/list.h>
+ #include <linux/mdio.h>
+ #include <linux/phylink.h>
 +#include <linux/of.h>
 +#include <linux/pcs.h>
+ #include <linux/pcs-lynx.h>
 +#include <linux/phylink.h>
-+#include <linux/property.h>
-+#include <linux/rcupdate.h>
-+#include <linux/spinlock.h>
-+
-+static LIST_HEAD(pcs_wrappers);
-+/* Protects PCS (un)registration i.e. pcs_wrappers */
-+static DEFINE_SPINLOCK(pcs_lock);
-+/* Protects pcs_wrapper.pcs from being unregistered while we are operating on
-+ * it. One SRCU is shared by all PCSs, so drivers may wait on other drivers'
-+ * PCSs. If this becomes a problem the SRCU can be made per-PCS.
-+ */
-+DEFINE_STATIC_SRCU(pcs_srcu);
-+
-+/**
-+ * struct pcs_wrapper - Wrapper for a registered PCS
-+ * @pcs: the wrapping PCS
-+ * @refcnt: refcount for the wrapper
-+ * @list: list head for pcs_wrappers
-+ * @dev: the device associated with this PCS
-+ * @fwnode: this PCS's firmware node; typically @dev.fwnode
-+ * @wrapped: the backing PCS
-+ */
-+struct pcs_wrapper {
-+	struct phylink_pcs pcs;
-+	refcount_t refcnt;
-+	struct list_head list;
-+	struct device *dev;
-+	struct fwnode_handle *fwnode;
-+	struct phylink_pcs __rcu *wrapped;
-+};
-+
-+static const struct phylink_pcs_ops pcs_ops;
-+
-+static struct pcs_wrapper *pcs_to_wrapper(struct phylink_pcs *pcs)
-+{
-+	WARN_ON(pcs->ops != &pcs_ops);
-+	return container_of(pcs, struct pcs_wrapper, pcs);
-+}
-+
-+static int pcs_validate(struct phylink_pcs *pcs, unsigned long *supported,
-+			const struct phylink_link_state *state)
-+{
-+	struct pcs_wrapper *wrapper = pcs_to_wrapper(pcs);
-+	struct phylink_pcs *wrapped;
-+	int ret, idx;
-+
-+	if (!wrapper)
-+		return 0;
-+
-+	idx = srcu_read_lock(&pcs_srcu);
-+
-+	wrapped = srcu_dereference(wrapper->wrapped, &pcs_srcu);
-+	if (wrapped) {
-+		if (wrapped->ops->pcs_validate)
-+			ret = wrapped->ops->pcs_validate(wrapped, supported,
-+							 state);
-+		else
-+			ret = 0;
-+	} else {
-+		ret = -ENODEV;
-+	}
-+
-+	srcu_read_unlock(&pcs_srcu, idx);
-+	return ret;
-+}
-+
-+static unsigned int pcs_inband_caps(struct phylink_pcs *pcs,
-+				    phy_interface_t interface)
-+{
-+	struct pcs_wrapper *wrapper = pcs_to_wrapper(pcs);
-+	struct phylink_pcs *wrapped;
-+	int ret, idx;
-+
-+	idx = srcu_read_lock(&pcs_srcu);
-+
-+	wrapped = srcu_dereference(wrapper->wrapped, &pcs_srcu);
-+	if (wrapped && wrapped->ops->pcs_inband_caps)
-+		ret = wrapped->ops->pcs_inband_caps(wrapped, interface);
-+	else
-+		ret = 0;
-+
-+	srcu_read_unlock(&pcs_srcu, idx);
-+	return ret;
-+}
-+
-+static int pcs_enable(struct phylink_pcs *pcs)
-+{
-+	struct pcs_wrapper *wrapper = pcs_to_wrapper(pcs);
-+	struct phylink_pcs *wrapped;
-+	int ret, idx;
-+
-+	if (!wrapper)
-+		return 0;
-+
-+	idx = srcu_read_lock(&pcs_srcu);
-+
-+	wrapped = srcu_dereference(wrapper->wrapped, &pcs_srcu);
-+	if (wrapped) {
-+		if (wrapped->ops->pcs_enable)
-+			ret = wrapped->ops->pcs_enable(wrapped);
-+		else
-+			ret = 0;
-+	} else {
-+		ret = -ENODEV;
-+	}
-+
-+	srcu_read_unlock(&pcs_srcu, idx);
-+	return ret;
-+}
-+
-+static void pcs_disable(struct phylink_pcs *pcs)
-+{
-+	struct pcs_wrapper *wrapper = pcs_to_wrapper(pcs);
-+	struct phylink_pcs *wrapped;
-+	int idx;
-+
-+	idx = srcu_read_lock(&pcs_srcu);
-+
-+	wrapped = srcu_dereference(wrapper->wrapped, &pcs_srcu);
-+	if (wrapped && wrapped->ops->pcs_disable)
-+		wrapped->ops->pcs_disable(wrapped);
-+
-+	srcu_read_unlock(&pcs_srcu, idx);
-+}
-+
-+static void pcs_get_state(struct phylink_pcs *pcs, unsigned int neg_mode,
-+			  struct phylink_link_state *state)
-+{
-+	struct pcs_wrapper *wrapper = pcs_to_wrapper(pcs);
-+	struct phylink_pcs *wrapped;
-+	int idx;
-+
-+	idx = srcu_read_lock(&pcs_srcu);
-+
-+	wrapped = srcu_dereference(wrapper->wrapped, &pcs_srcu);
-+	if (wrapped)
-+		wrapped->ops->pcs_get_state(wrapped, neg_mode, state);
-+	else
-+		state->link = 0;
-+
-+	srcu_read_unlock(&pcs_srcu, idx);
-+}
-+
-+static void pcs_pre_config(struct phylink_pcs *pcs,
-+			   phy_interface_t interface)
-+{
-+	struct pcs_wrapper *wrapper = pcs_to_wrapper(pcs);
-+	struct phylink_pcs *wrapped;
-+	int idx;
-+
-+	idx = srcu_read_lock(&pcs_srcu);
-+
-+	wrapped = srcu_dereference(wrapper->wrapped, &pcs_srcu);
-+	if (wrapped && wrapped->ops->pcs_pre_config)
-+		wrapped->ops->pcs_pre_config(wrapped, interface);
-+
-+	srcu_read_unlock(&pcs_srcu, idx);
-+}
-+
-+static int pcs_post_config(struct phylink_pcs *pcs,
-+			   phy_interface_t interface)
-+{
-+	struct pcs_wrapper *wrapper = pcs_to_wrapper(pcs);
-+	struct phylink_pcs *wrapped;
-+	int ret, idx;
-+
-+	idx = srcu_read_lock(&pcs_srcu);
-+
-+	wrapped = srcu_dereference(wrapper->wrapped, &pcs_srcu);
-+	if (wrapped && wrapped->ops->pcs_post_config)
-+		ret = wrapped->ops->pcs_post_config(wrapped, interface);
-+	else
-+		ret = 0;
-+
-+	srcu_read_unlock(&pcs_srcu, idx);
-+	return ret;
-+}
-+
-+static int pcs_config(struct phylink_pcs *pcs, unsigned int neg_mode,
-+		      phy_interface_t interface,
-+		      const unsigned long *advertising,
-+		      bool permit_pause_to_mac)
-+{
-+	struct pcs_wrapper *wrapper = pcs_to_wrapper(pcs);
-+	struct phylink_pcs *wrapped;
-+	int ret, idx;
-+
-+	idx = srcu_read_lock(&pcs_srcu);
-+
-+	wrapped = srcu_dereference(wrapper->wrapped, &pcs_srcu);
-+	if (wrapped)
-+		ret = wrapped->ops->pcs_config(wrapped, neg_mode, interface,
-+					       advertising, permit_pause_to_mac);
-+	else
-+		ret = -ENODEV;
-+
-+	srcu_read_unlock(&pcs_srcu, idx);
-+	return ret;
-+}
-+
-+static void pcs_an_restart(struct phylink_pcs *pcs)
-+{
-+	struct pcs_wrapper *wrapper = pcs_to_wrapper(pcs);
-+	struct phylink_pcs *wrapped;
-+	int idx;
-+
-+	idx = srcu_read_lock(&pcs_srcu);
-+
-+	wrapped = srcu_dereference(wrapper->wrapped, &pcs_srcu);
-+	if (wrapped)
-+		wrapped->ops->pcs_an_restart(wrapped);
-+
-+	srcu_read_unlock(&pcs_srcu, idx);
-+}
-+
-+static void pcs_link_up(struct phylink_pcs *pcs, unsigned int neg_mode,
-+			phy_interface_t interface, int speed, int duplex)
-+{
-+	struct pcs_wrapper *wrapper = pcs_to_wrapper(pcs);
-+	struct phylink_pcs *wrapped;
-+	int idx;
-+
-+	idx = srcu_read_lock(&pcs_srcu);
-+
-+	wrapped = srcu_dereference(wrapper->wrapped, &pcs_srcu);
-+	if (wrapped && wrapped->ops->pcs_link_up)
-+		wrapped->ops->pcs_link_up(wrapped, neg_mode, interface, speed,
-+					  duplex);
-+
-+	srcu_read_unlock(&pcs_srcu, idx);
-+}
-+
-+static void pcs_disable_eee(struct phylink_pcs *pcs)
-+{
-+	struct pcs_wrapper *wrapper = pcs_to_wrapper(pcs);
-+	struct phylink_pcs *wrapped;
-+	int idx;
-+
-+	idx = srcu_read_lock(&pcs_srcu);
-+
-+	wrapped = srcu_dereference(wrapper->wrapped, &pcs_srcu);
-+	if (wrapped && wrapped->ops->pcs_disable_eee)
-+		wrapped->ops->pcs_disable_eee(wrapped);
-+
-+	srcu_read_unlock(&pcs_srcu, idx);
-+}
-+
-+static void pcs_enable_eee(struct phylink_pcs *pcs)
-+{
-+	struct pcs_wrapper *wrapper = pcs_to_wrapper(pcs);
-+	struct phylink_pcs *wrapped;
-+	int idx;
-+
-+	idx = srcu_read_lock(&pcs_srcu);
-+
-+	wrapped = srcu_dereference(wrapper->wrapped, &pcs_srcu);
-+	if (wrapped && wrapped->ops->pcs_enable_eee)
-+		wrapped->ops->pcs_enable_eee(wrapped);
-+
-+	srcu_read_unlock(&pcs_srcu, idx);
-+}
-+
-+static int pcs_pre_init(struct phylink_pcs *pcs)
-+{
-+	struct pcs_wrapper *wrapper = pcs_to_wrapper(pcs);
-+	struct phylink_pcs *wrapped;
-+	int ret, idx;
-+
-+	idx = srcu_read_lock(&pcs_srcu);
-+
-+	wrapped = srcu_dereference(wrapper->wrapped, &pcs_srcu);
-+	if (wrapped) {
-+		wrapped->rxc_always_on = pcs->rxc_always_on;
-+		if (wrapped->ops->pcs_pre_init)
-+			ret = wrapped->ops->pcs_pre_init(wrapped);
-+		else
-+			ret = 0;
-+	} else {
-+		ret = -ENODEV;
-+	}
-+
-+	srcu_read_unlock(&pcs_srcu, idx);
-+	return ret;
-+}
-+
-+static const struct phylink_pcs_ops pcs_ops = {
-+	.pcs_validate = pcs_validate,
-+	.pcs_inband_caps = pcs_inband_caps,
-+	.pcs_enable = pcs_enable,
-+	.pcs_disable = pcs_disable,
-+	.pcs_pre_config = pcs_pre_config,
-+	.pcs_post_config = pcs_post_config,
-+	.pcs_get_state = pcs_get_state,
-+	.pcs_config = pcs_config,
-+	.pcs_an_restart = pcs_an_restart,
-+	.pcs_link_up = pcs_link_up,
-+	.pcs_disable_eee = pcs_disable_eee,
-+	.pcs_enable_eee = pcs_enable_eee,
-+	.pcs_pre_init = pcs_pre_init,
-+};
-+
-+static void pcs_change_callback(void *priv, bool up)
-+{
-+	struct pcs_wrapper *wrapper = priv;
-+
-+	phylink_pcs_change(&wrapper->pcs, up);
-+}
-+
-+/**
-+ * pcs_register_full() - register a new PCS
-+ * @dev: The device requesting the PCS
-+ * @fwnode: The PCS's firmware node; typically @dev.fwnode
-+ * @pcs: The PCS to register
-+ *
-+ * Registers a new PCS which can be attached to a phylink.
-+ *
-+ * Return: 0 on success, or -errno on error
-+ */
-+int pcs_register_full(struct device *dev, struct fwnode_handle *fwnode,
-+		      struct phylink_pcs *pcs)
-+{
-+	struct pcs_wrapper *wrapper;
-+
-+	if (!dev || !pcs->ops)
-+		return -EINVAL;
-+
-+	if (!pcs->ops->pcs_an_restart || !pcs->ops->pcs_config ||
-+	    !pcs->ops->pcs_get_state)
-+		return -EINVAL;
-+
-+	wrapper = kzalloc(sizeof(*wrapper), GFP_KERNEL);
-+	if (!wrapper)
+ #include <linux/property.h>
+ 
+ #define SGMII_CLOCK_PERIOD_NS		8 /* PCS is clocked at 125 MHz */
+@@ -343,16 +347,16 @@ static const phy_interface_t lynx_interfaces[] = {
+ 	PHY_INTERFACE_MODE_USXGMII,
+ };
+ 
+-static struct phylink_pcs *lynx_pcs_create(struct mdio_device *mdio)
++static int lynx_pcs_probe(struct mdio_device *mdio)
+ {
++	struct device *dev = &mdio->dev;
+ 	struct lynx_pcs *lynx;
+-	int i;
++	int i, ret;
+ 
+-	lynx = kzalloc(sizeof(*lynx), GFP_KERNEL);
++	lynx = devm_kzalloc(dev, sizeof(*lynx), GFP_KERNEL);
+ 	if (!lynx)
+-		return ERR_PTR(-ENOMEM);
 +		return -ENOMEM;
-+
-+	refcount_set(&wrapper->refcnt, 1);
-+	INIT_LIST_HEAD(&wrapper->list);
-+	wrapper->dev = get_device(dev);
-+	wrapper->fwnode = fwnode_handle_get(fwnode);
-+	RCU_INIT_POINTER(wrapper->wrapped, pcs);
-+
-+	wrapper->pcs.ops = &pcs_ops;
-+	wrapper->pcs.poll = pcs->poll;
-+	bitmap_copy(wrapper->pcs.supported_interfaces,
-+		    pcs->supported_interfaces, PHY_INTERFACE_MODE_MAX);
-+
-+	pcs->link_change = pcs_change_callback;
-+	pcs->link_change_priv = wrapper;
-+
-+	spin_lock(&pcs_lock);
-+	list_add(&wrapper->list, &pcs_wrappers);
-+	spin_unlock(&pcs_lock);
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(pcs_register_full);
-+
-+/**
-+ * pcs_unregister() - unregister a PCS
-+ * @pcs: a PCS previously registered with pcs_register()
-+ */
-+void pcs_unregister(struct phylink_pcs *pcs)
-+{
-+	struct pcs_wrapper *wrapper;
-+
-+	spin_lock(&pcs_lock);
-+	list_for_each_entry(wrapper, &pcs_wrappers, list) {
-+		if (rcu_access_pointer(wrapper->wrapped) == pcs)
-+			goto found;
-+	}
-+
-+	spin_unlock(&pcs_lock);
-+	WARN(1, "trying to unregister an already-unregistered PCS\n");
-+	return;
-+
-+found:
-+	list_del(&wrapper->list);
-+	spin_unlock(&pcs_lock);
-+
-+	put_device(wrapper->dev);
-+	fwnode_handle_put(wrapper->fwnode);
-+	rcu_replace_pointer(wrapper->wrapped, NULL, true);
-+	synchronize_srcu(&pcs_srcu);
-+
-+	if (!wrapper->pcs.poll)
-+		phylink_pcs_change(&wrapper->pcs, false);
-+	if (refcount_dec_and_test(&wrapper->refcnt))
-+		kfree(wrapper);
-+}
-+EXPORT_SYMBOL_GPL(pcs_unregister);
-+
-+static void devm_pcs_unregister(void *pcs)
-+{
-+	pcs_unregister(pcs);
-+}
-+
-+/**
-+ * devm_pcs_register_full - resource managed pcs_register()
-+ * @dev: device that is registering this PCS
-+ * @fwnode: The PCS's firmware node; typically @dev.fwnode
-+ * @pcs: the PCS to register
-+ *
-+ * Managed pcs_register(). For PCSs registered by this function,
-+ * pcs_unregister() is automatically called on driver detach. See
-+ * pcs_register() for more information.
-+ *
-+ * Return: 0 on success, or -errno on failure
-+ */
-+int devm_pcs_register_full(struct device *dev, struct fwnode_handle *fwnode,
-+			   struct phylink_pcs *pcs)
-+{
-+	int ret;
-+
-+	ret = pcs_register_full(dev, fwnode, pcs);
+ 
+-	mdio_device_get(mdio);
+ 	lynx->mdio = mdio;
+ 	lynx->pcs.ops = &lynx_pcs_phylink_ops;
+ 	lynx->pcs.poll = true;
+@@ -360,32 +364,64 @@ static struct phylink_pcs *lynx_pcs_create(struct mdio_device *mdio)
+ 	for (i = 0; i < ARRAY_SIZE(lynx_interfaces); i++)
+ 		__set_bit(lynx_interfaces[i], lynx->pcs.supported_interfaces);
+ 
+-	return lynx_to_phylink_pcs(lynx);
++	ret = devm_pcs_register(dev, &lynx->pcs);
 +	if (ret)
-+		return ret;
++		return dev_err_probe(dev, ret, "could not register PCS\n");
++	dev_info(dev, "probed\n");
++	return 0;
+ }
+ 
+-struct phylink_pcs *lynx_pcs_create_mdiodev(struct mii_bus *bus, int addr)
++static const struct of_device_id lynx_pcs_of_match[] = {
++	{ .compatible = "fsl,lynx-pcs" },
++	{ },
++};
++MODULE_DEVICE_TABLE(of, lynx_pcs_of_match);
 +
-+	return devm_add_action_or_reset(dev, devm_pcs_unregister, pcs);
-+}
-+EXPORT_SYMBOL_GPL(devm_pcs_register_full);
++static struct mdio_driver lynx_pcs_driver = {
++	.probe = lynx_pcs_probe,
++	.mdiodrv.driver = {
++		.name = "lynx-pcs",
++		.of_match_table = of_match_ptr(lynx_pcs_of_match),
++	},
++};
++mdio_module_driver(lynx_pcs_driver);
 +
-+/**
-+ * _pcs_get_tail() - Look up and request a PCS
-+ * @dev: The device requesting the PCS
-+ * @fwnode: The PCS's fwnode
-+ * @pcs_dev: The PCS's device
-+ *
-+ * Search PCSs registered with pcs_register() for one with a matching
-+ * fwnode or device. Either @fwnode or @pcs_dev may be %NULL if matching
-+ * against a fwnode or device is not desired (respectively).
-+ *
-+ * Once a PCS is found, perform common operations necessary when getting a PCS
-+ * (increment reference counts, etc).
-+ *
-+ * You should probably call one of the pcs_get* functions instead of this one.
-+ *
-+ * Return: A PCS, or an error pointer on failure. If both @fwnode and @pcs_dev
-+ *         are %NULL, returns %NULL to allow easier chaining.
-+ */
-+struct phylink_pcs *_pcs_get_tail(struct device *dev,
-+				  const struct fwnode_handle *fwnode,
-+				  const struct device *pcs_dev)
-+{
-+	struct pcs_wrapper *wrapper;
-+
-+	if (!fwnode && !pcs_dev)
-+		return NULL;
-+
-+	pr_debug("looking for %pfwf or %s %s...\n", fwnode,
-+		 pcs_dev ? dev_driver_string(pcs_dev) : "(null)",
-+		 pcs_dev ? dev_name(pcs_dev) : "(null)");
-+
-+	spin_lock(&pcs_lock);
-+	list_for_each_entry(wrapper, &pcs_wrappers, list) {
-+		if (pcs_dev && wrapper->dev == pcs_dev)
-+			goto found;
-+		if (fwnode && wrapper->fwnode == fwnode)
-+			goto found;
-+	}
-+	spin_unlock(&pcs_lock);
-+	pr_debug("...not found\n");
-+	return ERR_PTR(-EPROBE_DEFER);
-+
-+found:
-+	refcount_inc(&wrapper->refcnt);
-+	spin_unlock(&pcs_lock);
-+	pr_debug("...found\n");
-+	return &wrapper->pcs;
-+}
-+EXPORT_SYMBOL_GPL(_pcs_get_tail);
-+
-+/**
-+ * pcs_find_fwnode() - Find a PCS's fwnode
-+ * @mac_node: The fwnode referencing the PCS
-+ * @id: The name of the PCS to get. May be %NULL to get the first PCS.
-+ * @fallback: An optional fallback property to use if pcs-handle is absent
-+ * @optional: Whether the PCS is optional
-+ *
-+ * Find a PCS's fwnode, as referenced by @mac_node. This fwnode can later be
-+ * used with _pcs_get_tail() to get the actual PCS. ``pcs-handle-names`` is
-+ * used to match @id, then the fwnode is found using ``pcs-handle``.
-+ *
-+ * This function is internal to the PCS subsystem from a consumer
-+ * point-of-view. However, it may be used to implement fallbacks for legacy
-+ * behavior in PCS providers.
-+ *
-+ * Return: %NULL if @optional is set and the PCS cannot be found. Otherwise,
-+ *         returns a PCS if found or an error pointer on failure.
-+ */
-+struct fwnode_handle *pcs_find_fwnode(const struct fwnode_handle *mac_node,
-+				      const char *id, const char *fallback,
-+				      bool optional)
-+{
-+	struct fwnode_handle *pcs_fwnode;
-+	int index;
-+
-+	if (!mac_node)
-+		return optional ? NULL : ERR_PTR(-ENODEV);
-+
-+	if (id)
-+		index = fwnode_property_match_string(mac_node,
-+						     "pcs-handle-names", id);
-+	else
-+		index = 0;
-+
-+	if (index < 0) {
-+		if (optional && (index == -EINVAL || index == -ENODATA))
-+			return NULL;
-+		return ERR_PTR(index);
-+	}
-+
-+	/* First try pcs-handle, and if that doesn't work try the fallback */
-+	pcs_fwnode = fwnode_find_reference(mac_node, "pcs-handle", index);
-+	if (PTR_ERR(pcs_fwnode) == -ENOENT && fallback)
-+		pcs_fwnode = fwnode_find_reference(mac_node, fallback, index);
-+	if (optional && !id && PTR_ERR(pcs_fwnode) == -ENOENT)
-+		return NULL;
-+	return pcs_fwnode;
-+}
-+EXPORT_SYMBOL_GPL(pcs_find_fwnode);
-+
-+/**
-+ * _pcs_get() - Get a PCS from a fwnode property
-+ * @dev: The device to get a PCS for
-+ * @fwnode: The fwnode to find the PCS with
-+ * @id: The name of the PCS to get. May be %NULL to get the first PCS.
-+ * @fallback: An optional fallback property to use if pcs-handle is absent
-+ * @optional: Whether the PCS is optional
-+ *
-+ * Find a PCS referenced by @fwnode and return a reference to it. Every call
-+ * to _pcs_get_by_fwnode() must be balanced with one to pcs_put().
-+ *
-+ * Return: a PCS if found, %NULL if not, or an error pointer on failure
-+ */
-+struct phylink_pcs *_pcs_get(struct device *dev, struct fwnode_handle *fwnode,
-+			     const char *id, const char *fallback,
-+			     bool optional)
-+{
-+	struct fwnode_handle *pcs_fwnode;
-+	struct phylink_pcs *pcs;
-+
-+	pcs_fwnode = pcs_find_fwnode(fwnode, id, fallback, optional);
-+	if (IS_ERR(pcs_fwnode))
-+		return ERR_CAST(pcs_fwnode);
-+
-+	pcs = _pcs_get_tail(dev, pcs_fwnode, NULL);
-+	fwnode_handle_put(pcs_fwnode);
-+	return pcs;
-+}
-+EXPORT_SYMBOL_GPL(_pcs_get);
-+
-+#ifdef CONFIG_OF_DYNAMIC
-+static void of_changeset_cleanup(void *data)
-+{
-+	struct of_changeset *ocs = data;
-+
-+	if (WARN(of_changeset_revert(ocs),
-+		 "could not revert changeset; leaking memory\n"))
-+		return;
-+
-+	of_changeset_destroy(ocs);
-+	kfree(ocs);
-+}
-+
-+/**
-+ * pcs_get_by_fwnode_compat() - Get a PCS with a compatibility fallback
-+ * @dev: The device requesting the PCS
-+ * @fwnode: The &struct fwnode_handle of the PCS itself
-+ * @fixup: Callback to fix up @fwnode for compatibility
-+ * @data: Passed to @fixup
-+ *
-+ * This function looks up a PCS and retries on failure after fixing up @fwnode.
-+ * It is intended to assist in backwards-compatible behavior for drivers that
-+ * used to create a PCS directly from a &struct device_node. This function
-+ * should NOT be used in new drivers.
-+ *
-+ * @fixup modifies a devicetree changeset to create any properties necessary to
-+ * bind the PCS's &struct device_node. At the very least, it should use
-+ * of_changeset_add_prop_string() to add a compatible property.
-+ *
-+ * Note that unlike pcs_get_by_fwnode, @fwnode is the &struct fwnode_handle of
-+ * the PCS itself, and not that of the requesting device. @fwnode could be
-+ * looked up with pcs_find_fwnode() or determined by some other means for
-+ * compatibility.
-+ *
-+ * Return: A PCS on success or an error pointer on failure
-+ */
-+struct phylink_pcs *
-+pcs_get_by_fwnode_compat(struct device *dev, struct fwnode_handle *fwnode,
-+			 int (*fixup)(struct of_changeset *ocs,
-+				      struct device_node *np, void *data),
-+			 void *data)
-+{
-+	struct mdio_device *mdiodev;
-+	struct of_changeset *ocs;
-+	struct phylink_pcs *pcs;
-+	struct device_node *np;
-+	struct device *pcsdev;
++struct phylink_pcs *lynx_pcs_create_mdiodev(struct device *dev,
++					    struct mii_bus *bus, int addr)
+ {
+ 	struct mdio_device *mdio;
+ 	struct phylink_pcs *pcs;
 +	int err;
-+
-+	/* First attempt */
-+	pcs = _pcs_get_tail(dev, fwnode, NULL);
-+	if (PTR_ERR(pcs) != -EPROBE_DEFER)
-+		return pcs;
-+
-+	/* No luck? Maybe there's no compatible... */
-+	np = to_of_node(fwnode);
-+	if (!np || of_property_present(np, "compatible"))
-+		return pcs;
-+
-+	/* OK, let's try fixing things up */
-+	pr_warn("%pOF is missing a compatible\n", np);
-+	ocs = kmalloc(sizeof(*ocs), GFP_KERNEL);
-+	if (!ocs)
-+		return ERR_PTR(-ENOMEM);
-+
-+	of_changeset_init(ocs);
-+	err = fixup(ocs, np, data);
-+	if (err)
-+		goto err_ocs;
-+
-+	err = of_changeset_apply(ocs);
-+	if (err)
-+		goto err_ocs;
-+
-+	err = devm_add_action_or_reset(dev, of_changeset_cleanup, ocs);
-+	if (err)
+ 
+ 	mdio = mdio_device_create(bus, addr);
+ 	if (IS_ERR(mdio))
+ 		return ERR_CAST(mdio);
+ 
+-	pcs = lynx_pcs_create(mdio);
+-
+-	/* lynx_create() has taken a refcount on the mdiodev if it was
+-	 * successful. If lynx_create() fails, this will free the mdio
+-	 * device here. In any case, we don't need to hold our reference
+-	 * anymore, and putting it here will allow mdio_device_put() in
+-	 * lynx_destroy() to automatically free the mdio device.
+-	 */
+-	mdio_device_put(mdio);
++	mdio->bus_match = mdio_device_bus_match;
++	strscpy(mdio->modalias, "lynx-pcs");
++	err = mdio_device_register(mdio);
++	if (err) {
++		mdio_device_free(mdio);
 +		return ERR_PTR(err);
-+
-+	mdiodev = fwnode_mdio_find_device(fwnode);
-+	if (mdiodev) {
-+		/* Clear that pesky PHY flag so we can match PCS drivers */
-+		device_lock(&mdiodev->dev);
-+		mdiodev->flags &= ~MDIO_DEVICE_FLAG_PHY;
-+		device_unlock(&mdiodev->dev);
-+		pcsdev = &mdiodev->dev;
-+	} else {
-+		pcsdev = get_device(fwnode->dev);
-+		if (!pcsdev)
-+			return ERR_PTR(-EPROBE_DEFER);
 +	}
-+
-+	err = device_reprobe(pcsdev);
-+	put_device(pcsdev);
-+	if (err)
-+		return ERR_PTR(err);
-+
-+	return _pcs_get_tail(dev, fwnode, NULL);
-+
-+err_ocs:
-+	of_changeset_destroy(ocs);
-+	kfree(ocs);
-+	return ERR_PTR(err);
-+}
-+EXPORT_SYMBOL_GPL(pcs_get_by_fwnode_compat);
-+#endif
-+
-+/**
-+ * pcs_put() - Release a previously-acquired PCS
-+ * @pcs: The PCS to put
-+ *
-+ * This frees resources associated with the PCS which were acquired when it was
-+ * gotten.
-+ */
-+void pcs_put(struct phylink_pcs *pcs)
+ 
++	pcs = pcs_get_by_dev(dev, &mdio->dev);
++	mdio_device_free(mdio);
+ 	return pcs;
+ }
+ EXPORT_SYMBOL(lynx_pcs_create_mdiodev);
+ 
++static int lynx_pcs_fixup(struct of_changeset *ocs,
++			  struct device_node *np, void *data)
 +{
-+	struct pcs_wrapper *wrapper;
-+
-+	if (!pcs)
-+		return;
-+
-+	wrapper = pcs_to_wrapper(pcs);
-+	if (refcount_dec_and_test(&wrapper->refcnt))
-+		kfree(wrapper);
-+}
-+EXPORT_SYMBOL_GPL(pcs_put);
-diff --git a/include/linux/pcs.h b/include/linux/pcs.h
-new file mode 100644
-index 000000000000..6f04a3d22669
---- /dev/null
-+++ b/include/linux/pcs.h
-@@ -0,0 +1,205 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Copyright (C) 2022 Sean Anderson <sean.anderson@seco.com>
-+ */
-+
-+#ifndef _PCS_H
-+#define _PCS_H
-+
-+#include <linux/property.h>
-+
-+struct device_node;
-+struct of_changeset;
-+struct phylink_pcs;
-+
-+int pcs_register_full(struct device *dev, struct fwnode_handle *fwnode,
-+		      struct phylink_pcs *pcs);
-+void pcs_unregister(struct phylink_pcs *pcs);
-+int devm_pcs_register_full(struct device *dev, struct fwnode_handle *fwnode,
-+			   struct phylink_pcs *pcs);
-+
-+/**
-+ * pcs_register() - register a new PCS
-+ * @dev: The device requesting the PCS
-+ * @pcs: The PCS to register
-+ *
-+ * Registers a new PCS which can be attached to a phylink.
-+ *
-+ * Return: 0 on success, or -errno on error
-+ */
-+static inline int pcs_register(struct device *dev, struct phylink_pcs *pcs)
-+{
-+	return pcs_register_full(dev, dev_fwnode(dev), pcs);
-+}
-+
-+/**
-+ * devm_pcs_register - resource managed pcs_register()
-+ * @dev: device that is registering this PCS
-+ * @pcs: the PCS to register
-+ *
-+ * Managed pcs_register(). For PCSs registered by this function,
-+ * pcs_unregister() is automatically called on driver detach. See
-+ * pcs_register() for more information.
-+ *
-+ * Return: 0 on success, or -errno on failure
-+ */
-+static inline int devm_pcs_register(struct device *dev, struct phylink_pcs *pcs)
-+{
-+	return devm_pcs_register_full(dev, dev_fwnode(dev), pcs);
-+}
-+
-+struct fwnode_handle *pcs_find_fwnode(const struct fwnode_handle *mac_node,
-+				      const char *id, const char *fallback,
-+				      bool optional);
-+
-+#ifdef CONFIG_PCS
-+struct phylink_pcs *_pcs_get_tail(struct device *dev,
-+				  const struct fwnode_handle *fwnode,
-+				  const struct device *pcs_dev);
-+struct phylink_pcs *_pcs_get(struct device *dev, struct fwnode_handle *fwnode,
-+			     const char *id, const char *fallback,
-+			     bool optional);
-+void pcs_put(struct phylink_pcs *handle);
-+
-+/**
-+ * pcs_get() - Get a PCS based on a fwnode
-+ * @dev: The device requesting the PCS
-+ * @id: The name of the PCS
-+ *
-+ * Find and get a PCS, as referenced by @dev's &struct fwnode_handle. See
-+ * pcs_find_fwnode() for details. Each call to this function must be balanced
-+ * with one to pcs_put().
-+ *
-+ * Return: A PCS on success or an error pointer on failure
-+ */
-+static inline struct phylink_pcs *pcs_get(struct device *dev, const char *id)
-+{
-+	return _pcs_get(dev, dev_fwnode(dev), id, NULL, false);
-+}
-+
-+/**
-+ * pcs_get_optional() - Optionally get a PCS based on a fwnode
-+ * @dev: The device requesting the PCS
-+ * @id: The name of the PCS
-+ *
-+ * Optionally find and get a PCS, as referenced by @dev's &struct
-+ * fwnode_handle. See pcs_find_fwnode() for details. Each call to this function
-+ * must be balanced with one to pcs_put().
-+ *
-+ * Return: A PCS on success, %NULL if none was found, or an error pointer on
-+ * *       failure
-+ */
-+static inline struct phylink_pcs *pcs_get_optional(struct device *dev,
-+						   const char *id)
-+{
-+	return _pcs_get(dev, dev_fwnode(dev), id, NULL, true);
-+}
-+
-+/**
-+ * pcs_get_by_fwnode() - Get a PCS based on a fwnode
-+ * @dev: The device requesting the PCS
-+ * @fwnode: The &struct fwnode_handle referencing the PCS
-+ * @id: The name of the PCS
-+ *
-+ * Find and get a PCS, as referenced by @fwnode. See pcs_find_fwnode() for
-+ * details. Each call to this function must be balanced with one to pcs_put().
-+ *
-+ * Return: A PCS on success or an error pointer on failure
-+ */
-+static inline struct phylink_pcs
-+*pcs_get_by_fwnode(struct device *dev, struct fwnode_handle *fwnode,
-+		   const char *id)
-+{
-+	return _pcs_get(dev, fwnode, id, NULL, false);
-+}
-+
-+/**
-+ * pcs_get_by_fwnode_optional() - Optionally get a PCS based on a fwnode
-+ * @dev: The device requesting the PCS
-+ * @fwnode: The &struct fwnode_handle referencing the PCS
-+ * @id: The name of the PCS
-+ *
-+ * Optionally find and get a PCS, as referenced by @fwnode. See
-+ * pcs_find_fwnode() for details. Each call to this function must be balanced
-+ * with one to pcs_put().
-+ *
-+ * Return: A PCS on success, %NULL if none was found, or an error pointer on
-+ * *       failure
-+ */
-+static inline struct phylink_pcs
-+*pcs_get_by_fwnode_optional(struct device *dev, struct fwnode_handle *fwnode,
-+			    const char *id)
-+{
-+	return _pcs_get(dev, fwnode, id, NULL, true);
-+}
-+
-+/**
-+ * pcs_get_by_dev() - Get a PCS from its providing device
-+ * @dev: The device requesting the PCS
-+ * @pcs_dev: The device providing the PCS
-+ *
-+ * Get the first PCS registered by @pcs_dev. Each call to this function must be
-+ * balanced with one to pcs_put().
-+ *
-+ * Return: A PCS on success or an error pointer on failure
-+ */
-+static inline struct phylink_pcs *pcs_get_by_dev(struct device *dev,
-+						 const struct device *pcs_dev)
-+{
-+	return _pcs_get_tail(dev, NULL, pcs_dev);
-+}
-+#else /* CONFIG_PCS */
-+static inline void pcs_put(struct phylink_pcs *handle)
-+{
-+}
-+
-+static inline struct phylink_pcs *pcs_get(struct device *dev, const char *id)
-+{
-+	return ERR_PTR(-EOPNOTSUPP);
-+}
-+
-+static inline struct phylink_pcs *pcs_get_optional(struct device *dev,
-+						   const char *id)
-+{
-+	return NULL;
-+}
-+
-+static inline struct phylink_pcs
-+*pcs_get_by_fwnode(struct device *dev, struct fwnode_handle *fwnode,
-+		   const char *id)
-+{
-+	return ERR_PTR(-EOPNOTSUPP);
-+}
-+
-+static inline struct phylink_pcs
-+*pcs_get_by_fwnode_optional(struct device *dev, struct fwnode_handle *fwnode,
-+			    const char *id)
-+{
-+	return NULL;
-+}
-+
-+static inline struct phylink_pcs *pcs_get_by_dev(struct device *dev,
-+						 const struct device *pcs_dev)
-+{
-+	return ERR_PTR(-EOPNOTSUPP);
-+}
-+#endif
-+
 +#ifdef CONFIG_OF_DYNAMIC
-+struct phylink_pcs *
-+pcs_get_by_fwnode_compat(struct device *dev, struct fwnode_handle *fwnode,
-+			 int (*fixup)(struct of_changeset *ocs, struct device_node *np,
-+				      void *data),
-+			 void *data);
++	return of_changeset_add_prop_string(ocs, np, "compatible",
++					    "fsl,lynx-pcs");
 +#else
-+static inline struct phylink_pcs *
-+pcs_get_by_fwnode_compat(struct device *dev, struct fwnode_handle *fwnode,
-+			 int (*fixup)(struct of_changeset *ocs, struct device_node *np,
-+				      void *data),
-+			 void *data)
-+{
-+	return _pcs_get_tail(dev, fwnode, NULL);
-+}
++	return -ENODEV;
 +#endif
++}
 +
-+#endif /* PCS_H */
+ /*
+  * lynx_pcs_create_fwnode() creates a lynx PCS instance from the fwnode
+  * device indicated by node.
+@@ -396,40 +432,12 @@ EXPORT_SYMBOL(lynx_pcs_create_mdiodev);
+  *  -ENOMEM if we fail to allocate memory
+  *  pointer to a phylink_pcs on success
+  */
+-struct phylink_pcs *lynx_pcs_create_fwnode(struct fwnode_handle *node)
++struct phylink_pcs *lynx_pcs_create_fwnode(struct device *dev,
++					   struct fwnode_handle *node)
+ {
+-	struct mdio_device *mdio;
+-	struct phylink_pcs *pcs;
+-
+-	if (!fwnode_device_is_available(node))
+-		return ERR_PTR(-ENODEV);
+-
+-	mdio = fwnode_mdio_find_device(node);
+-	if (!mdio)
+-		return ERR_PTR(-EPROBE_DEFER);
+-
+-	pcs = lynx_pcs_create(mdio);
+-
+-	/* lynx_create() has taken a refcount on the mdiodev if it was
+-	 * successful. If lynx_create() fails, this will free the mdio
+-	 * device here. In any case, we don't need to hold our reference
+-	 * anymore, and putting it here will allow mdio_device_put() in
+-	 * lynx_destroy() to automatically free the mdio device.
+-	 */
+-	mdio_device_put(mdio);
+-
+-	return pcs;
++	return pcs_get_by_fwnode_compat(dev, node, lynx_pcs_fixup, NULL);
+ }
+ EXPORT_SYMBOL_GPL(lynx_pcs_create_fwnode);
+ 
+-void lynx_pcs_destroy(struct phylink_pcs *pcs)
+-{
+-	struct lynx_pcs *lynx = phylink_pcs_to_lynx(pcs);
+-
+-	mdio_device_put(lynx->mdio);
+-	kfree(lynx);
+-}
+-EXPORT_SYMBOL(lynx_pcs_destroy);
+-
+-MODULE_DESCRIPTION("NXP Lynx PCS phylink library");
+-MODULE_LICENSE("Dual BSD/GPL");
++MODULE_DESCRIPTION("NXP Lynx PCS phylink driver");
++MODULE_LICENSE("GPL");
+diff --git a/include/linux/pcs-lynx.h b/include/linux/pcs-lynx.h
+index 7958cccd16f2..a95801337205 100644
+--- a/include/linux/pcs-lynx.h
++++ b/include/linux/pcs-lynx.h
+@@ -6,12 +6,13 @@
+ #ifndef __LINUX_PCS_LYNX_H
+ #define __LINUX_PCS_LYNX_H
+ 
+-#include <linux/mdio.h>
+-#include <linux/phylink.h>
++struct device;
++struct mii_bus;
++struct phylink_pcs;
+ 
+-struct phylink_pcs *lynx_pcs_create_mdiodev(struct mii_bus *bus, int addr);
+-struct phylink_pcs *lynx_pcs_create_fwnode(struct fwnode_handle *node);
+-
+-void lynx_pcs_destroy(struct phylink_pcs *pcs);
++struct phylink_pcs *lynx_pcs_create_mdiodev(struct device *dev,
++					    struct mii_bus *bus, int addr);
++struct phylink_pcs *lynx_pcs_create_fwnode(struct device *dev,
++					   struct fwnode_handle *node);
+ 
+ #endif /* __LINUX_PCS_LYNX_H */
 -- 
 2.35.1.1320.gc452695387.dirty
 
