@@ -1,56 +1,96 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 704432288C3;
-	Fri, 23 May 2025 12:12:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F15D221D87;
+	Fri, 23 May 2025 12:13:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748002352; cv=none; b=oHI4fQaFSm3C4E2e/bib7dbrp/Mp0HudCLBkYlWrB852W7KzKvmdyBmo2+CpkCbuyjyQ+1ZNKQUXqkqrG+MfdiuVY5WPYPLkBdtMOEwWlw6/Ty2ov81W/4F5F02pAkNSnhnLRrV7gzblwWerbL9RmNtUw+yJ7urZc4l5dPnKGlc=
+	t=1748002382; cv=none; b=rk3bt59RUPWwBufP5ozTB76CHbWOuGpcYZVaG1rXLa3XvPRvshbVbJWE4p++eN8NgHDJu2dM08h5atCiB+Q4nwmKKRX6cXB1+LWe4FXIFicl5wMU1m5DjdNUHngDzDgooFMQ/05b8b1412dXH6PSbH0dIc4ACeQ1h4NrwcEOUqk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748002352; c=relaxed/simple;
-	bh=U3QyEuYpXOaWaZWhA06kcXEGXAnt7jNsFPYg2v0zqYo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kZwMApk2Ip8q4Rg4JZAF5sFt/tVQcQIdD6OpDoM4MaRCprUR/UESQWdHZ+VlofoaTg+0DZFSeAyB8Nco+FGLUi0NLkXaY13UdZFgeNGRcAsDmW+WfYoq1ZLiEVbVUxChkAeteFK3OTkX4fSJ9TmDNBGRw4P0x9ifH0tXuPtIkAc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=frkRgo8F; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+	s=arc-20240116; t=1748002382; c=relaxed/simple;
+	bh=hcgJywXUeqcfDYKiMg3vHV01/zX3zwztfEiViOg12aE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=DbUXubBPboIYWM//OUzz8R8cbs0FR6ZGptYP9HCj8Nh9wUGqUvqRN1oj+O2HWCWOo/eCsq6Kbs8uxEa2AJbVyw6pKP6pfH3JHgwfRVmv3KpckaK3ePZ0FWtni+KalHj9DBzLx1uqE5j5+0XW6ExYknsELUoXnoSq8OvSNa+awlk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qcmuQ6FU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="frkRgo8F"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=NGmWLKp5PIfl8R7L3jvzHZZajb1ZReYtp2VEVc8pBjo=; b=frkRgo8F+9f7PMd3S+VHqVwpx5
-	YUS3WHXk1PDMgebh4vSpJXUwqU8CLOHyi+DT8c/M9wG+ZwHFG1AveyimWuYDlrjcFg+TvkGxTFgUs
-	zMh5EJCCxBsyvNu/TNuK8gvZE92vxID6KDUr4EfgpaOdAeQiTdqyA6ul9O7VI/A5TJLVQxSOJlBKF
-	Y6dNXuXNDCDNU8ovjCvRHQAZbfQOVe3gj5xyF7aSQ3JPTGdws497mGfa2tMZZYtxQ4P1p2or4ioCS
-	TgpRQUXPoQBLfA/xouhkGPqZpCrFDb94g543n9zr+X36hfvWmKG/wc1LgRtNMmZzYAm0EdP8SpYRH
-	4UX6mgNA==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uIRGG-00000003mjm-2YQ7;
-	Fri, 23 May 2025 12:12:28 +0000
-Date: Fri, 23 May 2025 05:12:28 -0700
-From: Christoph Hellwig <hch@infradead.org>
-To: Ye Chey <yechey@ai-sast.com>
-Cc: brauner@kernel.org, djwong@kernel.org, linux-xfs@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] iomap: fix potential NULL pointer dereference in
- iomap_alloc_ioend
-Message-ID: <aDBmLIFtndFpOfsu@infradead.org>
-References: <20250523091417.2825-1-yechey@ai-sast.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qcmuQ6FU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A84FDC4CEE9;
+	Fri, 23 May 2025 12:12:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748002382;
+	bh=hcgJywXUeqcfDYKiMg3vHV01/zX3zwztfEiViOg12aE=;
+	h=From:To:Cc:Subject:Date:From;
+	b=qcmuQ6FUdDpddr5PnkdyEGBTodooVk9KnxKHBGspPYq9i7COvkSZe0MALo22vQ7M2
+	 4WO9QXIYgdFKj6M3pXQL0RlfPYeRsbNINEjxh+UamxbQPyXgvHSuHOZ8o8V1i+d0G0
+	 6j+wKXoMeIKHbJj0copuFoNuDcVOyn3CeqvNvC4p8rAEOfifwU7RdxzYijOnKCiTMG
+	 oRhrIi/XsJ0UAtrJ/82A3hFIK02EQECEi3QWJhQogroBDEKQLYoKaJfxEYF/nNAr0l
+	 W0EJqm5gQ9ljEZm3uCbdEhYl3+vUuYksaPc0QeffPw7Q4uJUTueqmBOJ1XM29wP10L
+	 iJiAOZG2movLA==
+From: Arnd Bergmann <arnd@kernel.org>
+To: Will Deacon <will@kernel.org>,
+	Joerg Roedel <joro@8bytes.org>,
+	Lu Baolu <baolu.lu@linux.intel.com>,
+	Rolf Eike Beer <eb@emlix.com>
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	Nicolin Chen <nicolinc@nvidia.com>,
+	Nate Watterson <nwatterson@nvidia.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	linux-arm-kernel@lists.infradead.org,
+	iommu@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] iommu: arm: fix building smmuv3 as loadable module
+Date: Fri, 23 May 2025 14:12:53 +0200
+Message-Id: <20250523121257.2340274-1-arnd@kernel.org>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250523091417.2825-1-yechey@ai-sast.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Transfer-Encoding: 8bit
 
-On Fri, May 23, 2025 at 05:14:17PM +0800, Ye Chey wrote:
-> Under memory pressure, bio_alloc_bioset() may fail and return NULL.
+From: Arnd Bergmann <arnd@arndb.de>
 
-It won't.  Please stop sending all these bogus patches.
+The smmu-v3 kunit test fail to link when the SMMU driver is configured
+as a loadable mdoule:
+
+ERROR: modpost: "arm_smmu_make_cdtable_ste" [drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-test.ko] undefined!
+ERROR: modpost: "arm_smmu_make_s2_domain_ste" [drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-test.ko] undefined!
+ERROR: modpost: "arm_smmu_make_s1_cd" [drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-test.ko] undefined!
+ERROR: modpost: "arm_smmu_make_bypass_ste" [drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-test.ko] undefined!
+ERROR: modpost: "arm_smmu_make_abort_ste" [drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-test.ko] undefined!
+ERROR: modpost: "arm_smmu_make_sva_cd" [drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-test.ko] undefined!
+ERROR: modpost: "arm_smmu_get_ste_used" [drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-test.ko] undefined!
+ERROR: modpost: "arm_smmu_write_entry" [drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-test.ko] undefined!
+ERROR: modpost: "arm_smmu_get_cd_used" [drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-test.ko] undefined!
+
+The problem is that the drivers/iommu/arm/arm-smmu-v3/Makefile only gets
+parsed while building modules, but the driver itself is accidentally marked
+as built-in unconditionally, so not only does the kunit test fail, but the
+entire driver is missing.
+
+Change the driver configuration back to $(CONFIG_ARM_SMMU_V3) so it
+actually gets build here.
+
+Fixes: e436576b0231 ("iommu: make inclusion of arm/arm-smmu-v3 directory conditional")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ drivers/iommu/arm/arm-smmu-v3/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/iommu/arm/arm-smmu-v3/Makefile b/drivers/iommu/arm/arm-smmu-v3/Makefile
+index 6cc7c8557b9e..493a659cc66b 100644
+--- a/drivers/iommu/arm/arm-smmu-v3/Makefile
++++ b/drivers/iommu/arm/arm-smmu-v3/Makefile
+@@ -1,5 +1,5 @@
+ # SPDX-License-Identifier: GPL-2.0
+-obj-y += arm_smmu_v3.o
++obj-$(CONFIG_ARM_SMMU_V3) += arm_smmu_v3.o
+ arm_smmu_v3-y := arm-smmu-v3.o
+ arm_smmu_v3-$(CONFIG_ARM_SMMU_V3_IOMMUFD) += arm-smmu-v3-iommufd.o
+ arm_smmu_v3-$(CONFIG_ARM_SMMU_V3_SVA) += arm-smmu-v3-sva.o
+-- 
+2.39.5
 
