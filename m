@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6D4E2DCBF9;
-	Fri, 23 May 2025 06:25:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7700B2DCBF9;
+	Fri, 23 May 2025 06:26:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747981543; cv=none; b=MArwd63Gc4QhAZf4Q3ok+nap1OLXM6vUEErFMyqW2ay4x8Zpd2eA4R+pGdFU0azJyTV4lntEI4yuNxxN6kK8IbhRuZp1Gajpb+RHwWJaNUc99F/sXJYRP9Tm65zwLoUpQgJojEvRh/ZlwAtDiP8jDP1i6Z6gMFA0hboT0yUMTik=
+	t=1747981614; cv=none; b=TTWbtqc47JfHWw49+2SPBH/gvlgbHhP+ivWRR5mz8g168UP6lZmahZZCQpliI+63/CIo3eoHwRnrdfQLSdEIOHiiCy1idWJpv0lH5NM9ZndzdLKYNqMYYIWP5dxeEL3zBUWOtOozvTB1kksblgi2ZOjQLnORj1WahrrJHYloALE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747981543; c=relaxed/simple;
-	bh=JGpCq/ZRP8rK458O/7RLMNDdUkcfnrplMiNOlT76Sug=;
+	s=arc-20240116; t=1747981614; c=relaxed/simple;
+	bh=9RRRJiwd63HL4K7jOmP+FJ18nT2s+/+YmRDVJugPIPQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=j+j5ylJBklJQR/LBEuDJHqNxwlBEugIlvms+1dcTtLz6ZUSTLqDvRbdvHngxxB/NY17y8jMffgyY8EQH78HzYHFg0V6aOAi6reUhShYwxYws/45e+Hjdg68Duf19umXjNkRPLXMkoYiFyJfUCeCIeKvjFbmHpIpkshcE3ZFrPrk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jw7XbDEn; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=PLtR2f3rSL21APo9erXBTxAsZ/B2bYpcVAi5aQk2D5QRu3zKcmNtD0AOTMvtjjSF9g+Sd4yBAiOMtEij5nuhTsAyPlWBre8/DzkbPrB0IxKLW4CvkCLr9ZfWOYJbOkUgUKGs7um29NMy7JiRVff4g88xyIVb/qQkPVLxazM726E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NEKQWCHi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jw7XbDEn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE2EBC4CEE9;
-	Fri, 23 May 2025 06:25:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NEKQWCHi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A5A2C4CEE9;
+	Fri, 23 May 2025 06:26:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747981543;
-	bh=JGpCq/ZRP8rK458O/7RLMNDdUkcfnrplMiNOlT76Sug=;
+	s=k20201202; t=1747981613;
+	bh=9RRRJiwd63HL4K7jOmP+FJ18nT2s+/+YmRDVJugPIPQ=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=jw7XbDEnEoEWgt/RlCOWLC409AxZoZDKA0qV4AkpvOaYpgZNKSkccQ3fJUSBs0oTP
-	 XhxdxKD9vPvir1bpaOSxi8Q8cKCSH+ik3LfRFWRKEM3OYY/HIR/esFVvf6XFwcjE62
-	 5gAlPMATNaoQ5OkUxD4fcLAEJiXV7n8QBbBhw1rLzuZln26P5NZyAhotnCknVm7xep
-	 yTn0DNP0HiruVc/cyi+1hkNUYcvdbMoJfUoBLS9fzO/6imB+oIfVmNzHJhYFljnEri
-	 5IfS13gTv5H397ehqkYXliYqh5cgaoKhi6yVxSMI56296wuP/m84ExFYONCLw2HRPX
-	 mzAIyBbnXfeaQ==
-Message-ID: <655ea20d-ed2a-4727-b7c1-65fd69d3c027@kernel.org>
-Date: Fri, 23 May 2025 08:25:38 +0200
+	b=NEKQWCHiesLYD8YskB+bB5tXVlXgJJtT/RiuTViDi0/MIjW1ReE33+DNkZRRkRZqX
+	 W4sgM2kowh9hYVcC3vaGiAA9cigacXBx07VVcZ8uBnT40SyN+GHExcMzFXLCo7RNPR
+	 Y3Z2qI5daCGcS//MqK8YNItwShwXK3Sf0vBW7t8Dq+30qInICmSq+ssgN1GTzl79DR
+	 7gvYKajhUWKD7IPQ9u43xoLH5f5lYCTwmFC01/AjO18QuLUvuyPdMtnGxjGxZrA76O
+	 f1A7dWNjM+pF6xMPzop2//lKk9lIU/+SphVf+8EYJvC8MXCl/w8QPd60mHJdIRtkAz
+	 mrWG5ULEU+qJQ==
+Message-ID: <0b09b4ba-341f-4c22-a9b9-5f49f15787c4@kernel.org>
+Date: Fri, 23 May 2025 08:26:50 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,18 +35,14 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [GIT PULL] clk: thead: Updates for v6.16
-To: Drew Fustini <drew@pdp7.com>, Stephen Boyd <sboyd@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
- Michael Turquette <mturquette@baylibre.com>,
- Conor Dooley <conor+dt@kernel.org>, Krzysztof Kozlowski
- <krzk+dt@kernel.org>, Rob Herring <robh@kernel.org>, Fu Wei
- <wefu@redhat.com>, Guo Ren <guoren@kernel.org>,
- Jisheng Zhang <jszhang@kernel.org>, Palmer Dabbelt <palmer@rivosinc.com>,
- Michal Wilczynski <m.wilczynski@samsung.com>
-References: <aBus+Yc7kf/H2HE5@x1>
- <018214f410632eb3dc6c6bd6ab58cba1@kernel.org> <aC+mJ560HbscG38R@x1>
+Subject: Re: [PATCH] gpio: palmas: Allow building as a module
+To: Aaron Kling <webgeek1234@gmail.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+ Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250522-gpio-palmas-gpio-v1-1-d6b1a3776ef5@gmail.com>
+ <805d0d65-9391-463f-9cbc-bca8dcbd5aa3@kernel.org>
+ <CALHNRZ9Hkz3_yJZmzJJR9jaJdYpxO2FddrXG_V1GZMLp=jGCuQ@mail.gmail.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -92,28 +88,40 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <aC+mJ560HbscG38R@x1>
+In-Reply-To: <CALHNRZ9Hkz3_yJZmzJJR9jaJdYpxO2FddrXG_V1GZMLp=jGCuQ@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 23/05/2025 00:33, Drew Fustini wrote:
-> On Thu, May 22, 2025 at 03:24:02PM -0700, Stephen Boyd wrote:
->> Quoting Drew Fustini (2025-05-07 11:56:57)
->>> The following changes since commit 0af2f6be1b4281385b618cb86ad946eded089ac8:
+On 23/05/2025 00:04, Aaron Kling wrote:
+>>> +++ b/drivers/gpio/gpio-palmas.c
+>>> @@ -191,9 +191,9 @@ static struct platform_driver palmas_gpio_driver = {
+>>>       .driver.of_match_table = of_palmas_gpio_match,
+>>>       .probe          = palmas_gpio_probe,
+>>>  };
+>>> +module_platform_driver(palmas_gpio_driver);
 >>>
->>>   Linux 6.15-rc1 (2025-04-06 13:11:33 -0700)
->>>
->>> are available in the Git repository at:
->>>
->>>   git@github.com:pdp7/linux.git tags/thead-clk-for-v6.16
+>>> -static int __init palmas_gpio_init(void)
+>>> -{
+>>> -     return platform_driver_register(&palmas_gpio_driver);
+>>> -}
+>>> -subsys_initcall(palmas_gpio_init);
+>>> +MODULE_ALIAS("platform:palmas_gpio");
 >>
->> I changed this to https://github.com/pdp7/linux.git but please fix it
->> next time.
+>>
+>> Drop. You miss proper MODULE_DEVICE_TABLE instead. You should not need
+>> MODULE_ALIAS() in normal cases. If you need it, usually it means your
+>> device ID table is wrong (e.g. misses either entries or
+>> MODULE_DEVICE_TABLE()). MODULE_ALIAS() is not a substitute for
+>> incomplete ID table.
 > 
-> Sorry about that. I'll use https in the future.
-This should be kernel.org. I remember Drew we meet few times and you
-never asked for signing your key. Just get in touch next time on a
-conference to get it signed (and bring printed fingerprints).
+> I just copied from the other drivers for this mfd, like clk-palmas,
+> palmas-regulator, etc. I don't know if there's a reason these others
+> have aliases or not, but they all have it. I'll update this patch per
+> the suggestions and send a v2.
+
+They might be coming from old board files, so the alias was needed, but
+if board files were removed then this does not apply anymore. And I
+checked - no user of the alias.
 
 Best regards,
 Krzysztof
