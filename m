@@ -1,24 +1,24 @@
 Received: from relmlie5.idc.renesas.com (relmlor1.renesas.com [210.160.252.171])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5C7E514286;
-	Fri, 23 May 2025 14:24:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 902EC2951D6;
+	Fri, 23 May 2025 14:24:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748010276; cv=none; b=Db6v+FrdxZL7vm7IrlauDeLd2sDWPZ/he6/Yn15pRCspGp3MAOn+6nb2idYfejcq5e5rGLtAG940ozxP2Ey5NLyS6Ba9EPPGTtTfKlsqvd0l/D7z1Jm7EuiNSROWYlDdkvuWHK1yQE0R76aCSb9NrX70YAHO9BDqXWWxUpDdwWY=
+	t=1748010278; cv=none; b=BbRBA29V4GkRznwciu2raBRswdVk+LUBq89zNYAlrrBB8x702PVID9sxgEQMSht8wseaBT8UVXeWcqvcGwSphdOLT5zKEkVYBNTj95tkZbeso2pNsrUJUFR1yt5gzsBMYE8hL70dZWPQG81EoSKDEGEPWAelL8SNcbR2VuZKEYw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748010276; c=relaxed/simple;
-	bh=Vf+auSoeFf6uL/0+48TV95yQilu/xyEfOWUvRHJ7Egc=;
+	s=arc-20240116; t=1748010278; c=relaxed/simple;
+	bh=bol4Rub4XFqYKuwqpXb+Qd/jta/6wrroqbyigaDt27o=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mIE/giAyBUWlHFF9Cuy+ECM4/L7yLJNd0D+HhPUqWFj4GTey1810CIWsSLYMbMpn8r4aGVLozxEETu1eJEl8uFwwTUErlPomJrllmL77byHvpQoiVC337Cz2UcPVKX/gm/gVsBaYQx1yNNyNK33uS9UgVkDeH49DdM6V+uwrRhQ=
+	 MIME-Version; b=KhpZYBLxgJ5y/L7zPQPGa1kQCEaD9WNZGA6hiHTrUXyQ/qC8JNT3GA7J+d00jw3tpOJ48h0Nh7htRBMT9GMTFTEXwceuJTA5EEcEawz1goJuzUeih0B5zElwzmtsQQJvBKNDsYt2QYql2xavEM6T2klQzkaoxJMx/eFn37keupE=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; arc=none smtp.client-ip=210.160.252.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
-X-CSE-ConnectionGUID: ZR+O8YDJSZWevl+j9Z39IA==
-X-CSE-MsgGUID: ECrIav6VR0CszXy0VsgiKQ==
+X-CSE-ConnectionGUID: 13l6cdWPQUayk5iCCI8YKg==
+X-CSE-MsgGUID: qmR7IpmxRmKH7cXTuY0uEQ==
 Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie5.idc.renesas.com with ESMTP; 23 May 2025 23:24:27 +0900
+  by relmlie5.idc.renesas.com with ESMTP; 23 May 2025 23:24:35 +0900
 Received: from superbuilder.administration.lan (unknown [10.226.92.97])
-	by relmlir5.idc.renesas.com (Postfix) with ESMTP id 2CD5E4010DE6;
-	Fri, 23 May 2025 23:24:23 +0900 (JST)
+	by relmlir5.idc.renesas.com (Postfix) with ESMTP id 8AE4C4010DE6;
+	Fri, 23 May 2025 23:24:32 +0900 (JST)
 From: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
 To: thierry.bultel@linatsea.fr
 Cc: linux-renesas-soc@vger.kernel.org,
@@ -26,12 +26,10 @@ Cc: linux-renesas-soc@vger.kernel.org,
 	paul.barker.ct@bp.renesas.com,
 	Thierry Bultel <thierry.bultel.yh@bp.renesas.com>,
 	Geert Uytterhoeven <geert+renesas@glider.be>,
-	linux-kernel@vger.kernel.org,
-	linux-serial@vger.kernel.org,
-	devicetree@vger.kernel.org
-Subject: [PATCH v10 01/10] dt-bindings: serial: Added secondary clock for RZ/T2H RSCI
-Date: Fri, 23 May 2025 16:24:05 +0200
-Message-ID: <20250523142417.2840797-2-thierry.bultel.yh@bp.renesas.com>
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v10 03/10] soc: renesas: Add RZ/T2H (R9A09G077) config option
+Date: Fri, 23 May 2025 16:24:07 +0200
+Message-ID: <20250523142417.2840797-4-thierry.bultel.yh@bp.renesas.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250523142417.2840797-1-thierry.bultel.yh@bp.renesas.com>
 References: <20250523142417.2840797-1-thierry.bultel.yh@bp.renesas.com>
@@ -43,72 +41,40 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-At boot, the default clock is the PCLKM core clock (synchronous
-clock, which is enabled by the bootloader).
-For different baudrates, the asynchronous clock input must be used.
-Clock selection is made by an internal register of RCSI.
+Add a configuration option for the RZ/T2H SoC.
 
-Add the optional "sck", external clock input.
-
-Also remove the unneeded serial0 alias from the dts example.
-
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 Signed-off-by: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
 ---
-Changes v9->v10:
- - mention sck in description
- - no maxItems on clock-names
- - fixed the #include dependency in dts example
-Changes v8->v9:
- - typo in description
- - named clocks 'operational' and 'bus', and added optional 'sck' clock
- - uses value of 2nd core clock in example to break the dependency on cpg patch
+Changes v10->v11: none
+Changes v8->v9: none
+Changes v7->v8: none
+Changes v6->v7: none
+Changes v5->v6: none
+Changes v4->v5: none
+Changes v3->v4:
+  - Sets ARCH_R9A09G077 to Y by default.
 ---
- .../bindings/serial/renesas,rsci.yaml           | 17 +++++++++--------
- 1 file changed, 9 insertions(+), 8 deletions(-)
+ drivers/soc/renesas/Kconfig | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/serial/renesas,rsci.yaml b/Documentation/devicetree/bindings/serial/renesas,rsci.yaml
-index ea879db5f485..1bf255407df0 100644
---- a/Documentation/devicetree/bindings/serial/renesas,rsci.yaml
-+++ b/Documentation/devicetree/bindings/serial/renesas,rsci.yaml
-@@ -35,10 +35,15 @@ properties:
-       - const: tei
+diff --git a/drivers/soc/renesas/Kconfig b/drivers/soc/renesas/Kconfig
+index fbc3b69d21a7..7f4b4088a14e 100644
+--- a/drivers/soc/renesas/Kconfig
++++ b/drivers/soc/renesas/Kconfig
+@@ -408,6 +408,12 @@ config ARCH_R9A09G057
+ 	help
+ 	  This enables support for the Renesas RZ/V2H(P) SoC variants.
  
-   clocks:
--    maxItems: 1
-+    minItems: 2
-+    maxItems: 3
++config ARCH_R9A09G077
++	bool "ARM64 Platform support for RZ/T2H"
++	default y if ARCH_RENESAS
++	help
++	  This enables support for the Renesas RZ/T2H SoC variants.
++
+ endif # ARM64
  
-   clock-names:
--    const: fck # UART functional clock
-+    minItems: 2
-+    items:
-+      - const: operation
-+      - const: bus
-+      - const: sck # optional external clock input
- 
-   power-domains:
-     maxItems: 1
-@@ -60,10 +65,6 @@ examples:
-     #include <dt-bindings/interrupt-controller/arm-gic.h>
-     #include <dt-bindings/clock/renesas-cpg-mssr.h>
- 
--    aliases {
--        serial0 = &sci0;
--    };
--
-     sci0: serial@80005000 {
-         compatible = "renesas,r9a09g077-rsci";
-         reg = <0x80005000 0x400>;
-@@ -72,7 +73,7 @@ examples:
-                      <GIC_SPI 592 IRQ_TYPE_EDGE_RISING>,
-                      <GIC_SPI 593 IRQ_TYPE_LEVEL_HIGH>;
-         interrupt-names = "eri", "rxi", "txi", "tei";
--        clocks = <&cpg CPG_MOD 108>;
--        clock-names = "fck";
-+        clocks = <&cpg CPG_MOD 8>, <&cpg CPG_CORE 13>;
-+        clock-names = "operation", "bus";
-         power-domains = <&cpg>;
-     };
+ if RISCV
 -- 
 2.43.0
 
