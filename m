@@ -1,61 +1,39 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDF6F222580
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 16:38:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EA874120B;
+	Fri, 23 May 2025 16:39:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748018310; cv=none; b=Y052z/yczU8NF8QlyaraElJNpti/Nk5SL/OAoYY/C4DUEinQdwLqvNHEFxvvKzkqx5soGXzKjR86mFbFR3+VsKOmWbzq/gyDQjbEjJhqhyhibchzIUHNwcLXQ9852aoDgeknrCVGgVG69nEY6P9tmpbr2JcwHBfbV7CfSuTmtlw=
+	t=1748018374; cv=none; b=CYagrjqGngy4CfJA5JbZBctjttcmQ0V+BDYwxJpJ++h4dDw7U0Rb0AwtEGjOFkTFRpGb4IB1wU77lT3Uas8F6AuPXPhi9NBcI+IcOrr9G+T6r+6gaJ9FnFoaCDZi2C+pRElQlRcZTysir8BUDcBxuybnTWdNsmyC000WGPxIFJ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748018310; c=relaxed/simple;
-	bh=HrRqZ3z9algFA+rzVPcUIWUy8j5aB8T+U6MVf1o87+w=;
+	s=arc-20240116; t=1748018374; c=relaxed/simple;
+	bh=4E4NkvJq/R7U01X4XIKDFjPJuXJax6DDUhPYflAvPOo=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=jcMbZUcWTLik0Cshyz+MzT/qbeco5BAt1BVb3hEMkRlYnPlRaAQJv1RtGx7aDaAaRmgr1Vgb0QRlF+D1Lb8jeO+ohZWkZUk9REXVe9wKNcLH1kQm1O8mohl7Xv4Av5RK0ScabnpEOHOcZMXSGE0/Suril72OoCWwY2jpVLwSHD0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VBlIl/hW; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Disposition:In-Reply-To; b=DBCP7+SvB5AmBmFw4uMbPHKFdKVb/e7N3ilhMtPs/KrA7dhwWOB/ECR8zQNk6vVt93AGaa7iuNmvUNX8Lu53oqgOGax7naSlZr3/1quV6Na7Gp4A0ZiWW7AIZehMwIkwADqh8SC7HbtwlasUUp6xjfqZceCXumMnZwJDhNh1JMM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mX3UR/6K; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VBlIl/hW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748018308; x=1779554308;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=HrRqZ3z9algFA+rzVPcUIWUy8j5aB8T+U6MVf1o87+w=;
-  b=VBlIl/hW7N/veh/mM0kvQ1rq7HIh6zW/zMok63Xkjl9i5xm5Xa9r7LrE
-   YKEbrl/4iq8rzzMVK+Uhe7+9Urwxj54O0dTaer78os43GLkfuTrPzsPNV
-   wBK0oCpoaVmcuWEG+D1al8qEpbthAY8YONR5Xz4UcNsdJ6tBObtKuYw6T
-   XNeJ7JmXt1CHqS8G5BLQOmXFKqTldaCra0hVDwzpEUqPZdNt01gAg1YzA
-   H8J3db+aRBpJ1pZtPVBIKukeyzyy8dQhJ/tt8SsmmsyDy8m1/uJgLQ73m
-   GS3I2ok3Sl3iG1IAXtwuQiXqxa5flf7BPKL1eXgpQ0/G3sm6M8xrr+HFh
-   g==;
-X-CSE-ConnectionGUID: TYfpl9b9RCqnNVW/eQDexQ==
-X-CSE-MsgGUID: WpFAsJiwREK2aOaTzWISLQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11441"; a="67642128"
-X-IronPort-AV: E=Sophos;i="6.15,309,1739865600"; 
-   d="scan'208";a="67642128"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2025 09:38:27 -0700
-X-CSE-ConnectionGUID: ee/54DF8S/mif2719jjHJA==
-X-CSE-MsgGUID: WgDBmkwsTVuUhtnD5QDUzA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,309,1739865600"; 
-   d="scan'208";a="172106683"
-Received: from igk-lkp-server01.igk.intel.com (HELO a1decbf9c5f9) ([10.211.3.150])
-  by orviesa002.jf.intel.com with ESMTP; 23 May 2025 09:38:25 -0700
-Received: from kbuild by a1decbf9c5f9 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uIVPa-0001Xz-2p;
-	Fri, 23 May 2025 16:38:22 +0000
-Date: Sat, 24 May 2025 00:37:55 +0800
-From: kernel test robot <lkp@intel.com>
-To: Benjamin Berg <benjamin.berg@intel.com>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Johannes Berg <johannes.berg@intel.com>
-Subject: arch/um/kernel/um_arch.c:336:16: warning: result of comparison of
- constant 4294967296 with expression of type 'typeof (task_size)' (aka
- 'unsigned long') is always false
-Message-ID: <202505240038.q8Dcx2LG-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mX3UR/6K"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96C05C4CEE9;
+	Fri, 23 May 2025 16:39:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748018373;
+	bh=4E4NkvJq/R7U01X4XIKDFjPJuXJax6DDUhPYflAvPOo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=mX3UR/6Kl0MmdPgCRRIWz3uPT1hCf139/OspEcnnVyh2KlN2NZ/LRYlVV0R4upLEC
+	 a6XrVyVUo0PqQ4GB1irujOO6r45TY9UiZDlCXNOt+gz8iYXbBIMdWk912XwQOFPmcD
+	 oLjzcm7gCSY53ZFbSxdze68Z1b05jyrIpWMffj4eNUQQJJbY7sTpFhZeD7JvqNr5o2
+	 GL/m9N/UD+GHuy2QDdV8UO3+byUZY4WIs27bvFCliqYDw4ly8hjd7W/miCl0unoAZ4
+	 076tMCY3PJkl8kcEwc5Q+1We02OjL/clI8Ij5J/bFqkbaWaEwJKrgKjeYiwj/J+ACK
+	 V0xTNVv6JXFhQ==
+Date: Fri, 23 May 2025 11:39:32 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: grwhyte@linux.microsoft.com
+Cc: linux-pci@vger.kernel.org, shyamsaini@linux.microsoft.com,
+	code@tyhicks.com, Okaya@kernel.org, bhelgaas@google.com,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: Reduce delay after FLR of Microsoft MANA devices
+Message-ID: <20250523163932.GA1566378@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,219 +42,141 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20250521231539.815264-1-grwhyte@linux.microsoft.com>
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   3d0ebc36b0b3e8486ceb6e08e8ae173aaa6d1221
-commit: 830003c73d190259e45d0a99a0e3d14cb73e0af0 um: Limit TASK_SIZE to the addressable range
-date:   8 months ago
-config: um-randconfig-2006-20250515 (https://download.01.org/0day-ci/archive/20250524/202505240038.q8Dcx2LG-lkp@intel.com/config)
-compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project f819f46284f2a79790038e1f6649172789734ae8)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250524/202505240038.q8Dcx2LG-lkp@intel.com/reproduce)
+On Wed, May 21, 2025 at 11:15:39PM +0000, grwhyte@linux.microsoft.com wrote:
+> From: Graham Whyte <grwhyte@linux.microsoft.com>
+> 
+> Add a device-specific reset for Microsoft MANA devices with the FLR
+> delay reduced from 100ms to 10ms. While this is not compliant with the pci
+> spec, these devices safely complete the FLR much quicker than 100ms and
+> this can be reduced to optimize certain scenarios
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505240038.q8Dcx2LG-lkp@intel.com/
+It looks like this could be done generically if the device advertised
+the Readiness Time Reporting Capability (PCIe r6.0, sec 7.9.16) and
+Linux supported that Capability (which it currently does not)?
 
-All warnings (new ones prefixed by >>):
+From 7.9.16.3:
 
-   In file included from arch/um/kernel/um_arch.c:9:
-   In file included from include/linux/mm.h:2213:
-   include/linux/vmstat.h:518:36: warning: arithmetic between different enumeration types ('enum node_stat_item' and 'enum lru_list') [-Wenum-enum-conversion]
-     518 |         return node_stat_name(NR_LRU_BASE + lru) + 3; // skip "nr_"
-         |                               ~~~~~~~~~~~ ^ ~~~
-   In file included from arch/um/kernel/um_arch.c:19:
-   In file included from include/linux/suspend.h:5:
-   In file included from include/linux/swap.h:9:
-   In file included from include/linux/memcontrol.h:13:
-   In file included from include/linux/cgroup.h:26:
-   In file included from include/linux/kernel_stat.h:8:
-   In file included from include/linux/interrupt.h:11:
-   In file included from include/linux/hardirq.h:11:
-   In file included from arch/um/include/asm/hardirq.h:5:
-   In file included from include/asm-generic/hardirq.h:17:
-   In file included from include/linux/irq.h:20:
-   In file included from include/linux/io.h:14:
-   In file included from arch/um/include/asm/io.h:24:
-   include/asm-generic/io.h:548:31: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     548 |         val = __raw_readb(PCI_IOBASE + addr);
-         |                           ~~~~~~~~~~ ^
-   include/asm-generic/io.h:561:61: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     561 |         val = __le16_to_cpu((__le16 __force)__raw_readw(PCI_IOBASE + addr));
-         |                                                         ~~~~~~~~~~ ^
-   include/uapi/linux/byteorder/little_endian.h:37:51: note: expanded from macro '__le16_to_cpu'
-      37 | #define __le16_to_cpu(x) ((__force __u16)(__le16)(x))
-         |                                                   ^
-   In file included from arch/um/kernel/um_arch.c:19:
-   In file included from include/linux/suspend.h:5:
-   In file included from include/linux/swap.h:9:
-   In file included from include/linux/memcontrol.h:13:
-   In file included from include/linux/cgroup.h:26:
-   In file included from include/linux/kernel_stat.h:8:
-   In file included from include/linux/interrupt.h:11:
-   In file included from include/linux/hardirq.h:11:
-   In file included from arch/um/include/asm/hardirq.h:5:
-   In file included from include/asm-generic/hardirq.h:17:
-   In file included from include/linux/irq.h:20:
-   In file included from include/linux/io.h:14:
-   In file included from arch/um/include/asm/io.h:24:
-   include/asm-generic/io.h:574:61: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     574 |         val = __le32_to_cpu((__le32 __force)__raw_readl(PCI_IOBASE + addr));
-         |                                                         ~~~~~~~~~~ ^
-   include/uapi/linux/byteorder/little_endian.h:35:51: note: expanded from macro '__le32_to_cpu'
-      35 | #define __le32_to_cpu(x) ((__force __u32)(__le32)(x))
-         |                                                   ^
-   In file included from arch/um/kernel/um_arch.c:19:
-   In file included from include/linux/suspend.h:5:
-   In file included from include/linux/swap.h:9:
-   In file included from include/linux/memcontrol.h:13:
-   In file included from include/linux/cgroup.h:26:
-   In file included from include/linux/kernel_stat.h:8:
-   In file included from include/linux/interrupt.h:11:
-   In file included from include/linux/hardirq.h:11:
-   In file included from arch/um/include/asm/hardirq.h:5:
-   In file included from include/asm-generic/hardirq.h:17:
-   In file included from include/linux/irq.h:20:
-   In file included from include/linux/io.h:14:
-   In file included from arch/um/include/asm/io.h:24:
-   include/asm-generic/io.h:585:33: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     585 |         __raw_writeb(value, PCI_IOBASE + addr);
-         |                             ~~~~~~~~~~ ^
-   include/asm-generic/io.h:595:59: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     595 |         __raw_writew((u16 __force)cpu_to_le16(value), PCI_IOBASE + addr);
-         |                                                       ~~~~~~~~~~ ^
-   include/asm-generic/io.h:605:59: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     605 |         __raw_writel((u32 __force)cpu_to_le32(value), PCI_IOBASE + addr);
-         |                                                       ~~~~~~~~~~ ^
-   include/asm-generic/io.h:693:20: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     693 |         readsb(PCI_IOBASE + addr, buffer, count);
-         |                ~~~~~~~~~~ ^
-   include/asm-generic/io.h:701:20: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     701 |         readsw(PCI_IOBASE + addr, buffer, count);
-         |                ~~~~~~~~~~ ^
-   include/asm-generic/io.h:709:20: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     709 |         readsl(PCI_IOBASE + addr, buffer, count);
-         |                ~~~~~~~~~~ ^
-   include/asm-generic/io.h:718:21: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     718 |         writesb(PCI_IOBASE + addr, buffer, count);
-         |                 ~~~~~~~~~~ ^
-   include/asm-generic/io.h:727:21: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     727 |         writesw(PCI_IOBASE + addr, buffer, count);
-         |                 ~~~~~~~~~~ ^
-   include/asm-generic/io.h:736:21: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     736 |         writesl(PCI_IOBASE + addr, buffer, count);
-         |                 ~~~~~~~~~~ ^
->> arch/um/kernel/um_arch.c:336:16: warning: result of comparison of constant 4294967296 with expression of type 'typeof (task_size)' (aka 'unsigned long') is always false [-Wtautological-constant-out-of-range-compare]
-     336 |         if (task_size > (unsigned long long) PTRS_PER_PGD * PGDIR_SIZE)
-         |             ~~~~~~~~~ ^ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   14 warnings generated.
+  FLR Time - is the time that the Function requires to become
+  Configuration-Ready after it was issued an FLR.
 
+Does the device advertise that capability?  It would be much nicer if
+we didn't have to add a device-specific quirk for this.
 
-vim +336 arch/um/kernel/um_arch.c
-
-   304	
-   305	int __init linux_main(int argc, char **argv)
-   306	{
-   307		unsigned long avail, diff;
-   308		unsigned long virtmem_size, max_physmem;
-   309		unsigned long stack;
-   310		unsigned int i;
-   311		int add;
-   312	
-   313		for (i = 1; i < argc; i++) {
-   314			if ((i == 1) && (argv[i][0] == ' '))
-   315				continue;
-   316			add = 1;
-   317			uml_checksetup(argv[i], &add);
-   318			if (add)
-   319				add_arg(argv[i]);
-   320		}
-   321		if (have_root == 0)
-   322			add_arg(DEFAULT_COMMAND_LINE_ROOT);
-   323	
-   324		if (have_console == 0)
-   325			add_arg(DEFAULT_COMMAND_LINE_CONSOLE);
-   326	
-   327		host_task_size = os_get_top_address();
-   328		/* reserve a few pages for the stubs */
-   329		stub_start = host_task_size - STUB_DATA_PAGES * PAGE_SIZE;
-   330		/* another page for the code portion */
-   331		stub_start -= PAGE_SIZE;
-   332		host_task_size = stub_start;
-   333	
-   334		/* Limit TASK_SIZE to what is addressable by the page table */
-   335		task_size = host_task_size;
- > 336		if (task_size > (unsigned long long) PTRS_PER_PGD * PGDIR_SIZE)
-   337			task_size = PTRS_PER_PGD * PGDIR_SIZE;
-   338	
-   339		/*
-   340		 * TASK_SIZE needs to be PGDIR_SIZE aligned or else exit_mmap craps
-   341		 * out
-   342		 */
-   343		task_size = task_size & PGDIR_MASK;
-   344	
-   345		/* OS sanity checks that need to happen before the kernel runs */
-   346		os_early_checks();
-   347	
-   348		get_host_cpu_features(parse_host_cpu_flags, parse_cache_line);
-   349	
-   350		brk_start = (unsigned long) sbrk(0);
-   351	
-   352		/*
-   353		 * Increase physical memory size for exec-shield users
-   354		 * so they actually get what they asked for. This should
-   355		 * add zero for non-exec shield users
-   356		 */
-   357	
-   358		diff = UML_ROUND_UP(brk_start) - UML_ROUND_UP(&_end);
-   359		if (diff > 1024 * 1024) {
-   360			os_info("Adding %ld bytes to physical memory to account for "
-   361				"exec-shield gap\n", diff);
-   362			physmem_size += UML_ROUND_UP(brk_start) - UML_ROUND_UP(&_end);
-   363		}
-   364	
-   365		uml_physmem = (unsigned long) __binary_start & PAGE_MASK;
-   366	
-   367		/* Reserve up to 4M after the current brk */
-   368		uml_reserved = ROUND_4M(brk_start) + (1 << 22);
-   369	
-   370		setup_machinename(init_utsname()->machine);
-   371	
-   372		physmem_size = (physmem_size + PAGE_SIZE - 1) & PAGE_MASK;
-   373		iomem_size = (iomem_size + PAGE_SIZE - 1) & PAGE_MASK;
-   374	
-   375		max_physmem = TASK_SIZE - uml_physmem - iomem_size - MIN_VMALLOC;
-   376	
-   377		if (physmem_size + iomem_size > max_physmem) {
-   378			physmem_size = max_physmem - iomem_size;
-   379			os_info("Physical memory size shrunk to %llu bytes\n",
-   380				physmem_size);
-   381		}
-   382	
-   383		high_physmem = uml_physmem + physmem_size;
-   384		end_iomem = high_physmem + iomem_size;
-   385		high_memory = (void *) end_iomem;
-   386	
-   387		start_vm = VMALLOC_START;
-   388	
-   389		virtmem_size = physmem_size;
-   390		stack = (unsigned long) argv;
-   391		stack &= ~(1024 * 1024 - 1);
-   392		avail = stack - start_vm;
-   393		if (physmem_size > avail)
-   394			virtmem_size = avail;
-   395		end_vm = start_vm + virtmem_size;
-   396	
-   397		if (virtmem_size < physmem_size)
-   398			os_info("Kernel virtual memory size shrunk to %lu bytes\n",
-   399				virtmem_size);
-   400	
-   401		os_flush_stdout();
-   402	
-   403		return start_uml();
-   404	}
-   405	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> Signed-off-by: Graham Whyte <grwhyte@linux.microsoft.com>
+> ---
+>  drivers/pci/pci.c    |  3 ++-
+>  drivers/pci/pci.h    |  1 +
+>  drivers/pci/quirks.c | 55 ++++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 58 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index 9cb1de7658b5..ad2960117acd 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -1262,7 +1262,7 @@ void pci_resume_bus(struct pci_bus *bus)
+>  		pci_walk_bus(bus, pci_resume_one, NULL);
+>  }
+>  
+> -static int pci_dev_wait(struct pci_dev *dev, char *reset_type, int timeout)
+> +int pci_dev_wait(struct pci_dev *dev, char *reset_type, int timeout)
+>  {
+>  	int delay = 1;
+>  	bool retrain = false;
+> @@ -1344,6 +1344,7 @@ static int pci_dev_wait(struct pci_dev *dev, char *reset_type, int timeout)
+>  
+>  	return 0;
+>  }
+> +EXPORT_SYMBOL_GPL(pci_dev_wait);
+>  
+>  /**
+>   * pci_power_up - Put the given device into D0
+> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> index f2958318d259..3a98e00eb02a 100644
+> --- a/drivers/pci/pci.h
+> +++ b/drivers/pci/pci.h
+> @@ -109,6 +109,7 @@ void pci_init_reset_methods(struct pci_dev *dev);
+>  int pci_bridge_secondary_bus_reset(struct pci_dev *dev);
+>  int pci_bus_error_reset(struct pci_dev *dev);
+>  int __pci_reset_bus(struct pci_bus *bus);
+> +int pci_dev_wait(struct pci_dev *dev, char *reset_type, int timeout);
+>  
+>  struct pci_cap_saved_data {
+>  	u16		cap_nr;
+> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> index c354276d4bac..94bd2c82cbbd 100644
+> --- a/drivers/pci/quirks.c
+> +++ b/drivers/pci/quirks.c
+> @@ -4205,6 +4205,55 @@ static int reset_hinic_vf_dev(struct pci_dev *pdev, bool probe)
+>  	return 0;
+>  }
+>  
+> +#define MSFT_PCIE_RESET_READY_POLL_MS 60000 /* msec */
+> +#define MICROSOFT_2051_SVC 0xb210
+> +#define MICROSOFT_2051_MANA_MGMT 0x00b8
+> +#define MICROSOFT_2051_MANA_MGMT_GFT 0xb290
+> +
+> +/* Device specific reset for msft GFT and gdma devices */
+> +static int msft_pcie_flr(struct pci_dev *dev)
+> +{
+> +	if (!pci_wait_for_pending_transaction(dev))
+> +		pci_err(dev, "timed out waiting for pending transaction; "
+> +			"performing function level reset anyway\n");
+> +
+> +	pcie_capability_set_word(dev, PCI_EXP_DEVCTL, PCI_EXP_DEVCTL_BCR_FLR);
+> +
+> +	if (dev->imm_ready)
+> +		return 0;
+> +
+> +	/*
+> +	 * Per PCIe r4.0, sec 6.6.2, a device must complete an FLR within
+> +	 * 100ms, but may silently discard requests while the FLR is in
+> +	 * progress. However, 100ms is much longer than required for modern
+> +	 * devices, so we can afford to reduce the timeout to 10ms.
+> +	 */
+> +	usleep_range(10000, 10001);
+> +
+> +	return pci_dev_wait(dev, "FLR", MSFT_PCIE_RESET_READY_POLL_MS);
+> +}
+> +
+> +/*
+> + * msft_pcie_reset_flr - initiate a PCIe function level reset
+> + * @dev: device to reset
+> + * @probe: if true, return 0 if device can be reset this way
+> + *
+> + * Initiate a function level reset on @dev.
+> + */
+> +static int msft_pcie_reset_flr(struct pci_dev *dev, bool probe)
+> +{
+> +	if (dev->dev_flags & PCI_DEV_FLAGS_NO_FLR_RESET)
+> +		return -ENOTTY;
+> +
+> +	if (!(dev->devcap & PCI_EXP_DEVCAP_FLR))
+> +		return -ENOTTY;
+> +
+> +	if (probe)
+> +		return 0;
+> +
+> +	return msft_pcie_flr(dev);
+> +}
+> +
+>  static const struct pci_dev_reset_methods pci_dev_reset_methods[] = {
+>  	{ PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_82599_SFP_VF,
+>  		 reset_intel_82599_sfp_virtfn },
+> @@ -4220,6 +4269,12 @@ static const struct pci_dev_reset_methods pci_dev_reset_methods[] = {
+>  		reset_chelsio_generic_dev },
+>  	{ PCI_VENDOR_ID_HUAWEI, PCI_DEVICE_ID_HINIC_VF,
+>  		reset_hinic_vf_dev },
+> +	{ PCI_VENDOR_ID_MICROSOFT, MICROSOFT_2051_SVC,
+> +		msft_pcie_reset_flr},
+> +	{ PCI_VENDOR_ID_MICROSOFT, MICROSOFT_2051_MANA_MGMT,
+> +		msft_pcie_reset_flr},
+> +	{ PCI_VENDOR_ID_MICROSOFT, MICROSOFT_2051_MANA_MGMT_GFT,
+> +		msft_pcie_reset_flr},
+>  	{ 0 }
+>  };
+>  
+> -- 
+> 2.25.1
+> 
