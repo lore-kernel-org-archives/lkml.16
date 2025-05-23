@@ -1,127 +1,103 @@
-Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
+Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A32F1EE02F;
-	Fri, 23 May 2025 11:46:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8158322A1CD;
+	Fri, 23 May 2025 11:46:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748000811; cv=none; b=K0q0eOxhhIfMND8Khi5kp3JhPZiH8bCAk9D92LYt+g5QSVTSpnZYCc65gfrLgX1BCHh7KduzB6SqB6KOm8H/VlZGIWlXODIxngUN1lPb6ibp+Y1MPpfUw2cV0Oi+0FdIKtsILUcoT+KN7y5svYF0+gxMU326TjSBhNg6W12LgAY=
+	t=1748000821; cv=none; b=QYXM45F07d+feXe0uVU5Sr8vXASaMxmkjyMT/ELWrmtLbPZ6t4Ff5kOG4DyBcOWQvqRDyfyBm1UTAbvjgIoZQWDgnyxA3+qGMk9LHRR3gXkQKAUKI/gnLxoeZ19CTvmvputilYgtN2Rp6y/J0V+3gVoCSdjKrZgIGY+PzoJcehA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748000811; c=relaxed/simple;
-	bh=41ZMNv9DZfWMf6Rr7Dfo1K3B4T7MWWsD7qyxjxJCH+M=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=JH3P5G0irCxNGWXVp+cBPP6Fv5i+VYJ1FLE/GjH3naUjXQwGvdd8J0ZwPWk0GFK3eA/fmalvB9LlEVrOi9asvhu5OXC/bR2vH8YsCxKIHnsQGp4IkPByhOGEltUOtERtmRh1hHUUOMB2zoWaLInkaGsWRLhcJw3t8/+EoNVT8m0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=gQ0QqYFn; arc=none smtp.client-ip=217.70.183.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1748000821; c=relaxed/simple;
+	bh=iilGz8MoBUyc28UMKp9IgK8+RSi7l9OI2Zl2mfOWTP8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=o2/8JCbZ7e9r0E424VHV6waWGibWjwBAcnlLZ4H07dJSEJyPxUPJKm/NVX8Bl3jUWcbrTaRwYzjF4+UeIAmIqmA0620oWDLgEd/ENBpvZI36y3wFyGczEIRDUjcHXm8DMDL9brVGNuawOYlXDklAXNuRGtaojx5FXOGN+Wj8W4c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=XYwOxyyT; arc=none smtp.client-ip=144.6.53.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="gQ0QqYFn"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 9C47C43295;
-	Fri, 23 May 2025 11:46:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1748000801;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=mDq6MieyiMr43NuOWTLdL0EFY12TTvHhRagxM34k8EA=;
-	b=gQ0QqYFnk9rZG9v1uNDabbudjF8lmrEkamaDERL3owhT5l1lEXeEeiDLkZWrTlZjIbdftK
-	YhYFaRMlToVaQzQqLkKEUfVckqMZmXJWuyR2gSCCRBvDd1gMvCwD37tEPc0e6XogAOLzU8
-	4QhXenD1cL2qTdRj5oh1MenLyAen378EJQH7AHwYQFEvRTJaf5knDP8/kaWbbEfQM4qr6z
-	456/lDSLnd3+1/ukgP+eVu7UCXooOM76pde0n3pTLTtSSs5O8CV1bneZAGw7cq+BYN1B30
-	naK1UQZHYDz8AT596kQQDR5KZ3EA97lUifpSXFLqmJZtqtfSaU+3azD9v9/afw==
-From: =?utf-8?q?Alexis_Lothor=C3=A9?= <alexis.lothore@bootlin.com>
-Date: Fri, 23 May 2025 13:46:32 +0200
-Subject: [PATCH] net: stmmac: add explicit check and error on invalid PTP
- clock rate
+	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="XYwOxyyT"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
+	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=wIdXErGXsrFY4QCEB5L0jrLHlVOWgstSIRw8ZMVvmkQ=; b=XYwOxyyTjoGBsZ7b1kq8f2s14X
+	p3SbovIInZiMptWY2VglCKGYbGAv9SH85wSeBHb15eroAfg8uhh9KCqjAkC4Ps237MBqhkMbP19x7
+	cDYRYTCwSgRajpZibzU9IvMueCKNoOS5To6GMjnzsNkbSHv+tdAfgqmvij+vSTdCPwCxXQUAw5NrP
+	CGt4b7HCv0T/v4sG4Tm9OqI3SYUwusV3aNqQKHypRw6Jx6zj8ekk3iWReKIjxMaAkQYo904cCMwAc
+	TgjuMdZ/dBN/+DGsCJVrQn7cM5rQjDAR9FV/hf39kg207lpP4sRibrpyMDrEpEMbx+hy0fMMpnOIj
+	k1AUM7Ow==;
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
+	id 1uIQrV-008LEG-2h;
+	Fri, 23 May 2025 19:46:54 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Fri, 23 May 2025 19:46:53 +0800
+Date: Fri, 23 May 2025 19:46:53 +0800
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: Corentin Labbe <clabbe.montjoie@gmail.com>
+Cc: Klaus Kudielka <klaus.kudielka@gmail.com>,
+	Eric Biggers <ebiggers@kernel.org>, regressions@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+	Boris Brezillon <bbrezillon@kernel.org>,
+	EBALARD Arnaud <Arnaud.Ebalard@ssi.gouv.fr>,
+	Romain Perier <romain.perier@gmail.com>,
+	Arnd Bergmann <arnd@arndb.de>, Andrew Lunn <andrew@lunn.ch>,
+	Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+	Gregory Clement <gregory.clement@bootlin.com>,
+	Christoph Hellwig <hch@infradead.org>,
+	Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Subject: Re: crypto: marvell/cesa - dma_alloc_coherent broken but kmalloc +
+ dma_map_single works
+Message-ID: <aDBgLT7NsMaG6ylh@gondor.apana.org.au>
+References: <aChx_ODF_hYKL8XO@Red>
+ <aCmTQoJw6XG1CkuZ@gondor.apana.org.au>
+ <aC1fY6IP-8MzVIbx@gondor.apana.org.au>
+ <aC2aAvX07Aaho08d@gondor.apana.org.au>
+ <aC2uvvzlR89iVFGW@Red>
+ <aC2xTI1ZuXoZjgjX@gondor.apana.org.au>
+ <aC3cF0-bWb-Jiz4i@Red>
+ <aC6TkPM6mOuFwvkD@gondor.apana.org.au>
+ <aC7UbAIDA46olNJL@gondor.apana.org.au>
+ <aC-EGr50MIVJqwVn@Red>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20250523-stmmac_tstamp_div-v1-1-bca8a5a3a477@bootlin.com>
-X-B4-Tracking: v=1; b=H4sIABdgMGgC/x3MQQqAIBBA0avErBN0wKCuEhFiY81CC0ciCO+et
- HyL/18QykwCU/dCppuFz9Rg+g784dJOirdmQI1WW0QlJUbn1yLFxWvd+FbBWmMw6EHjCK27MgV
- +/ue81PoBTtWoOGMAAAA=
-X-Change-ID: 20250522-stmmac_tstamp_div-f55112f06029
-To: Alexandre Torgue <alexandre.torgue@foss.st.com>, 
- Jose Abreu <joabreu@synopsys.com>, Andrew Lunn <andrew+netdev@lunn.ch>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
- Richard Cochran <richardcochran@gmail.com>
-Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
- Maxime Chevallier <maxime.chevallier@bootlin.com>, netdev@vger.kernel.org, 
- linux-stm32@st-md-mailman.stormreply.com, 
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
- =?utf-8?q?Alexis_Lothor=C3=A9?= <alexis.lothore@bootlin.com>
-X-Mailer: b4 0.14.2
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgdekjeejucdltddurdegfedvrddttddmucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhfffugggtgffkvfevofesthekredtredtjeenucfhrhhomheptehlvgigihhsucfnohhthhhorhoruceorghlvgigihhsrdhlohhthhhorhgvsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeetudekvdffieehueeugfdujefgtddvgeekvddtieffffelvedtgeffjeekjeelgfenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepvdgrtddvmeekgedvkeemfhelgegtmegvtddtmeemfhekheenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtvdemkeegvdekmehfleegtgemvgdttdemmehfkeehpdhhvghloheplgduledvrdduieekrddurdduleejngdpmhgrihhlfhhrohhmpegrlhgvgihishdrlhhothhhohhrvgessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepudeipdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqshhtmhefvdesshhtqdhmugdqmhgrihhlmhgrnhdrshhtohhrmhhrvghplhihrdgtohhmpdhrtghpthhtohepk
- hhusggrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdgrrhhmqdhkvghrnhgvlheslhhishhtshdrihhnfhhrrgguvggrugdrohhrghdprhgtphhtthhopehthhhomhgrshdrphgvthgriiiiohhnihessghoohhtlhhinhdrtghomhdprhgtphhtthhopegrlhgvgihishdrlhhothhhohhrvgessghoohhtlhhinhdrtghomhdprhgtphhtthhopegrnhgurhgvfidonhgvthguvghvsehluhhnnhdrtghhpdhrtghpthhtohepmhgtohhquhgvlhhinhdrshhtmhefvdesghhmrghilhdrtghomh
-X-GND-Sasl: alexis.lothore@bootlin.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aC-EGr50MIVJqwVn@Red>
 
-While some platforms implementing dwmac open-code the clk_ptp_rate
-value, some others dynamically retrieve the value at runtime. If the
-retrieved value happens to be 0 for any reason, it will eventually
-propagate up to PTP initialization when bringing up the interface,
-leading to a divide by 0:
+On Thu, May 22, 2025 at 10:07:54PM +0200, Corentin Labbe wrote:
+>
+> Here is the result:
+> http://kernel.montjoie.ovh/479404.log
 
- Division by zero in kernel.
- CPU: 1 UID: 0 PID: 1 Comm: swapper/0 Not tainted 6.12.30-00001-g48313bd5768a #22
- Hardware name: STM32 (Device Tree Support)
- Call trace:
-  unwind_backtrace from show_stack+0x18/0x1c
-  show_stack from dump_stack_lvl+0x6c/0x8c
-  dump_stack_lvl from Ldiv0_64+0x8/0x18
-  Ldiv0_64 from stmmac_init_tstamp_counter+0x190/0x1a4
-  stmmac_init_tstamp_counter from stmmac_hw_setup+0xc1c/0x111c
-  stmmac_hw_setup from __stmmac_open+0x18c/0x434
-  __stmmac_open from stmmac_open+0x3c/0xbc
-  stmmac_open from __dev_open+0xf4/0x1ac
-  __dev_open from __dev_change_flags+0x1cc/0x224
-  __dev_change_flags from dev_change_flags+0x24/0x60
-  dev_change_flags from ip_auto_config+0x2e8/0x11a0
-  ip_auto_config from do_one_initcall+0x84/0x33c
-  do_one_initcall from kernel_init_freeable+0x1b8/0x214
-  kernel_init_freeable from kernel_init+0x24/0x140
-  kernel_init from ret_from_fork+0x14/0x28
- Exception stack(0xe0815fb0 to 0xe0815ff8)
+So the corruptions have come back, although somewhat less than
+before as one algorithm managed to pass all the tests.
 
-Prevent this division by 0 by adding an explicit check and error log
-about the actual issue.
+At least we've proven that adding the printk's makes the errors
+a lot more frequent :)
 
-Signed-off-by: Alexis Lothoré <alexis.lothore@bootlin.com>
----
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 5 +++++
- 1 file changed, 5 insertions(+)
+> I have built by adding also your "crypto: marvell/cesa - Fix engine load inaccuracy"
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-index 918d7f2e8ba992208d7d6521a1e9dba01086058f..f68e3ece919cc88d0bf199a394bc7e44b5dee095 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-@@ -835,6 +835,11 @@ int stmmac_init_tstamp_counter(struct stmmac_priv *priv, u32 systime_flags)
- 	if (!(priv->dma_cap.time_stamp || priv->dma_cap.atime_stamp))
- 		return -EOPNOTSUPP;
- 
-+	if (!priv->plat->clk_ptp_rate) {
-+		netdev_err(priv->dev, "Invalid PTP clock rate");
-+		return -EINVAL;
-+	}
-+
- 	stmmac_config_hw_tstamping(priv, priv->ptpaddr, systime_flags);
- 	priv->systime_flags = systime_flags;
- 
+That shouldn't affect things either way.
 
----
-base-commit: e0e2f78243385e7188a57fcfceb6a19f723f1dff
-change-id: 20250522-stmmac_tstamp_div-f55112f06029
+So now all the corruptions are all on the final hash.
 
-Best regards,
+Can you boot this a few times to see if the errors are always
+the same? I'm particularly interested to see if we've managed
+to crush the errors on the partial hashes or was it just pure
+luck.
+
+Intriguingly the one error that went away (sha256) was actually
+a partial hash corruption, and sha256 now passes all the tests.
+
+Thanks,
 -- 
-Alexis Lothoré, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
