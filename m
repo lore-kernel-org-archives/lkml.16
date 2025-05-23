@@ -1,101 +1,145 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08C7513D539;
-	Fri, 23 May 2025 13:24:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 752C31FDD;
+	Fri, 23 May 2025 13:25:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748006653; cv=none; b=r2kIgzdRh2ktMZKR9MpVM1fUqh/yg+veArbIdF6PpQwi9GTbT5bsvZZ4hp5m6pjgvD7rVsWcakBV8pvVfIgGOcAyVOKMTFI3m+n/AxwM8ZxcwBpGJi7zJkkMOOMCCe5lLPyxQ2zvSoe3tNqaCys3R1Ta8shV7PhhNAX3urwzx5c=
+	t=1748006740; cv=none; b=c4YpW1UrylH7O4JJsMwZPEV16L8FFr6J6XZEXFYxbTYTTWMVxbFqJKqRk/IAA9KrkhrsS3QAiRqwJv7vE2iAXzJzw2zAzufD6KD7iJibngTyup75xpg+bHKzvTwdOoHVgmKVD/GLS7srvKfsZQ48aEFtIOfBtiZu+jQaiTAh1+U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748006653; c=relaxed/simple;
-	bh=QWwG59g5MU2yUcdEwHwb3pj0woEQNNX3BJXpMdxaGdw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TdH8Dl55vPDljzfolteAUjPCGP4OtBC6hzY6MMGW7lmPen4J8aFCGmhDx+uGLBpQYddKWh+lKckr/SDY3gzUd99VE615BkTzBCt12J54S94mNdf6HY0nZkKiC9C7GgMepkqVSHuF4MFrOFUVIS/koyRfbMHymA+NPlZDlxftloM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=bL4/7YsZ; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1748006740; c=relaxed/simple;
+	bh=8e6tWzdQJXuLNBOdzFHbtTb0QEiAelckLJoP29jrl+U=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=nTNPDYKLJFJuC1KAXjNzegmSdNewAcE4Z/hUo/mAAAi4cqhMaClozfTFfmfN8gf9rgBVEl7Bo3WJXQ605mP96nIz15Fo/OGO9wkht8KA7XLhrtT9yN5n2gBmpCyGAWspekTaN83qmPPx1hCNGWpY3PG4B+Wi2qlxU/6f4SN8elQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=j2CnBNvT; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="bL4/7YsZ"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Transfer-Encoding:Content-Disposition:
-	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:From:
-	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Content-Disposition:
-	In-Reply-To:References; bh=9PPnvysXCe7nzpl2dlq+yYzcvu67I28jfeZX7VT12P0=; b=bL
-	4/7YsZC73DTlJZDPOpH6yqzgpyOF3021NjeoxBga9DgVV4B2V1TxU1qUt9ndN6uFuuHpWrZgsBB2z
-	2VPUAUl8WMAh7r+MPq1yg+YSoIdNA+cc668P5Ocohltm5UO7JE5uuPTwLb3LPLeJs60/7BckmpOPO
-	w2jlB6cyGEKXUwg=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1uISNX-00Dc47-JO; Fri, 23 May 2025 15:24:03 +0200
-Date: Fri, 23 May 2025 15:24:03 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Jonas Gorski <jonas.gorski@gmail.com>
-Cc: Florian Fainelli <florian.fainelli@broadcom.com>,
-	Vladimir Oltean <olteanv@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Vivien Didelot <vivien.didelot@gmail.com>,
-	=?iso-8859-1?Q?=C1lvaro_Fern=E1ndez?= Rojas <noltari@gmail.com>,
-	Florian Fainelli <f.fainelli@gmail.com>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net 2/3] net: dsa: b53: fix configuring RGMII delay on
- bcm63xx
-Message-ID: <a1197a9b-48c3-4dce-866e-287f5cd30865@lunn.ch>
-References: <20250519174550.1486064-1-jonas.gorski@gmail.com>
- <20250519174550.1486064-3-jonas.gorski@gmail.com>
- <ed75677c-c3fb-41d1-a2cd-dd84d224ffe3@lunn.ch>
- <CAOiHx=nwbs7030GKZHLc6Pc6LA6Hqq0NYfNSt=3zOgnj5zpAYQ@mail.gmail.com>
- <2e5e16a1-e59e-470d-a1d9-618a1b9efdd4@lunn.ch>
- <CAOiHx=mQ8z1CO1V-8b=7pjK-Hm9_4-tcvucKXpM1i+eOOB4axg@mail.gmail.com>
- <e0d25a68-057b-4839-a8cd-affe458bfea3@lunn.ch>
- <CAOiHx==NzwF3mXfkf+mS0AZzb-FTR0SHwG9n0Hw9nRiR4k-z6w@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="j2CnBNvT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748006739; x=1779542739;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=8e6tWzdQJXuLNBOdzFHbtTb0QEiAelckLJoP29jrl+U=;
+  b=j2CnBNvT/MST0o1vfUiV32lrSMy74k9Ba8FLTyesH1bq9OyW/HpEzaWA
+   +i5QDw38SqVIOY0UupMlJ+EQ8bgFQyH0TfwseLmKK+eybd2Awwys3e/Vu
+   bxZaltOEu47FJvx/0ZORWfQwGwUKoGUcaYI+DFi7aIBkNOBROlL6BJ0Ci
+   UuvU0QAz1NJVMM0gIljtJBkd2Zd3Z+OhqJlhr+eGSeqPdL9BzDriFPDPu
+   +GATkJH7P7jHtQ0HjcJWEEQLaKGevTQEJA/dF7cZBKSrs2/w1R9+QX/NT
+   87khxOwZQlvK7uc5sJJGyIT6wNyRV3i+4xPRCorZbQkR5b178wHAmFU1t
+   g==;
+X-CSE-ConnectionGUID: G5SB0E9KQnyZErVUomY+aw==
+X-CSE-MsgGUID: CEVkEYpyQeaBbHKc9leuQw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11441"; a="49768319"
+X-IronPort-AV: E=Sophos;i="6.15,308,1739865600"; 
+   d="scan'208";a="49768319"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2025 06:25:38 -0700
+X-CSE-ConnectionGUID: SW+QVMFFT/yjKHkSk+e7nQ==
+X-CSE-MsgGUID: rfXuwkf5RYOZEFHgl4l6Ew==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,308,1739865600"; 
+   d="scan'208";a="146130694"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.150])
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2025 06:25:35 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Fri, 23 May 2025 16:25:31 +0300 (EEST)
+To: Luke Jones <luke@ljones.dev>
+cc: LKML <linux-kernel@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>, 
+    platform-driver-x86@vger.kernel.org, mario.limonciello@amd.com, 
+    Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+    kernel test robot <lkp@intel.com>
+Subject: Re: [PATCH 1/1] platform/x86: asus-wmi: fix build without
+ CONFIG_SUSPEND
+In-Reply-To: <20250523131451.1942578-2-luke@ljones.dev>
+Message-ID: <0dc0316d-a9ae-c152-3737-be1c73a415b1@linux.intel.com>
+References: <20250523131451.1942578-1-luke@ljones.dev> <20250523131451.1942578-2-luke@ljones.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAOiHx==NzwF3mXfkf+mS0AZzb-FTR0SHwG9n0Hw9nRiR4k-z6w@mail.gmail.com>
+Content-Type: text/plain; charset=US-ASCII
 
-On Fri, May 23, 2025 at 11:08:55AM +0200, Jonas Gorski wrote:
-> On Tue, May 20, 2025 at 2:15 AM Andrew Lunn <andrew@lunn.ch> wrote:
-> >
-> > > Without this change no mode/port works, since there is always either a
-> > > 0 ns delay or a 4 ns delay in the rx/tx paths (I assume, I have no
-> > > equipment to measure).
-> > >
-> > > With this change all modes/ports work.
-> >
-> > Which is wrong.
-> >
-> > > With "rgmii-id" the mac doesn't
-> > > configure any delays (and the phy does instead), with "rgmii" it's
-> > > vice versa, so there is always the expected 2 ns delay. Same for rxid
-> > > and txid.
-> >
-> > If you read the description of what these four modes mean, you should
-> > understand why only one should work. And given the most likely PCB
-> > design, the only mode that should work is rgmii-id. You would have to
-> > change the PCB design, to make the other modes work.
+On Fri, 23 May 2025, Luke Jones wrote:
+
+> The patch "Refactor Ally suspend/resume" introduced an
+
+The commit feea7bd6b02d ("...")
+
+> acpi_s2idle_dev_ops for use with ROG Ally which caused a build error
+> if CONFIG_SUSPEND was not defined.
 > 
-> Since I also have BCM6368 with a BCM53115 connected to one of the
-> RGMII ports lying around, I played around with it, and it was
-> surprisingly hard to make it *not* work. Only if I enabled delay on
-> *both* sides it stopped working, no delay or delay only on one side
-> continued working (and I used iperf to try if larger amounts of
-> traffic break it).
+> Signed-off-by: Luke Jones <luke@ljones.dev>
+> Reported-by: kernel test robot <lkp@intel.com>
+> Closes: https://lore.kernel.org/oe-kbuild-all/202505090418.DaeaXe4i-lkp@intel.com/
+> Fixes: feea7bd6b02d ("platform/x86: asus-wmi: Refactor Ally suspend/resume")
+> ---
+>  drivers/platform/x86/asus-wmi.c | 9 +++++++++
+>  1 file changed, 9 insertions(+)
+> 
+> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+> index 27f11643a00d..087318e0d595 100644
+> --- a/drivers/platform/x86/asus-wmi.c
+> +++ b/drivers/platform/x86/asus-wmi.c
+> @@ -5005,6 +5005,7 @@ static int asus_hotk_restore(struct device *device)
+>  	return 0;
+>  }
+>  
+> +#if defined(CONFIG_SUSPEND)
+>  static void asus_ally_s2idle_restore(void)
+>  {
+>  	if (use_ally_mcu_hack == ASUS_WMI_ALLY_MCU_HACK_ENABLED) {
+> @@ -5013,6 +5014,7 @@ static void asus_ally_s2idle_restore(void)
+>  		msleep(ASUS_USB0_PWR_EC0_CSEE_WAIT);
+>  	}
+>  }
+> +#endif /* CONFIG_SUSPEND */
 
-Interesting. You see the Rockchip people insisting their devices need
-fine tuning, 2ns is not good enough, it needs to be 1.9ns. And then
-they end up in a mess with interpreting what phy-mode actually means.
+Move this function below asus_hotk_prepare() next to ops, so that only one 
+#if block is needed for them.
 
-In some ways, this just as bad. You can get away with using 'rgmii'
-which is wrong, when it should be 'rgmii-id'. It would be better if
-only just one mode worked, then DT developers would get it correct.
+>  
+>  static int asus_hotk_prepare(struct device *device)
+>  {
+> @@ -5025,9 +5027,11 @@ static int asus_hotk_prepare(struct device *device)
+>  }
+>  
+>  /* Use only for Ally devices due to the wake_on_ac */
+> +#if defined(CONFIG_SUSPEND)
+>  static struct acpi_s2idle_dev_ops asus_ally_s2idle_dev_ops = {
+>  	.restore = asus_ally_s2idle_restore,
+>  };
+> +#endif /* CONFIG_SUSPEND */
+>  
+>  static const struct dev_pm_ops asus_pm_ops = {
+>  	.thaw = asus_hotk_thaw,
+> @@ -5060,9 +5064,11 @@ static int asus_wmi_probe(struct platform_device *pdev)
+>  			return ret;
+>  	}
+>  
+> +	#if defined(CONFIG_SUSPEND)
+>  	ret = acpi_register_lps0_dev(&asus_ally_s2idle_dev_ops);
+>  	if (ret)
+>  		pr_warn("failed to register LPS0 sleep handler in asus-wmi\n");
+> +	#endif /* CONFIG_SUSPEND */
+>  
+>  	return asus_wmi_add(pdev);
+>  }
+> @@ -5096,7 +5102,10 @@ EXPORT_SYMBOL_GPL(asus_wmi_register_driver);
+>  
+>  void asus_wmi_unregister_driver(struct asus_wmi_driver *driver)
+>  {
+> +	#if defined(CONFIG_SUSPEND)
+>  	acpi_unregister_lps0_dev(&asus_ally_s2idle_dev_ops);
+> +	#endif /* CONFIG_SUSPEND */
 
-	Andrew
+I'd have preferred these reg/unreg be solved with wrappers (see 
+pmc_atom.c).
+
+
+-- 
+ i.
+
