@@ -1,23 +1,23 @@
-Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
+Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A5E31C75E2
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 20:00:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 849F53AC1C;
+	Fri, 23 May 2025 20:01:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748030424; cv=none; b=SRCfasTS+8aIOc05dE+BAPxfXALP7g2/p/7OKh/+H3RzCmf43lo4RdHBgVPs3AOhvwDQwF66VFJxJAjkFYcpB+4fbe8iy/XIB4kNBbjoe78AzdF0Ym5bg6JljtplXpJR1f9oml5g6HAdyP/3sNI9UEaNh5jkqyT9rxPcHs5r6hM=
+	t=1748030484; cv=none; b=HUf6C2bCMnddNcOM5b/08kYWfsG6sKfwTGkjh8yZzbwItmCPmx2WDP4bC++A51n2x2TDWiJuycHtAUZBzlVdM7cIpGPX32pTAjWw1KOiwakELqVUuLjJsgbTIk4XcYiM1qCik//VM0uKTHiqkSxlpDbpF0FKz9DBvWmFj3tXshc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748030424; c=relaxed/simple;
-	bh=P5XdMaPQvysNn24kUJb2Qp7p72yXf/qFHhgdHrp6VIQ=;
+	s=arc-20240116; t=1748030484; c=relaxed/simple;
+	bh=34dqfWtBp6Yko0qKlSwbOVTBh+Tukl6NJLu9DPOn/CI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JdlkxcnQAtxnGO+PlL9ISTO/c/oXL2P+1kD+GYPztB87tCraTbqvklURWAR1MMMc1TvAYyanxmde16gcEgfuQ4zEaWbnOyVQyh5/ZGFkSoAqUkJ+5FC9gdLf9GTqzVOccnwlo3NjCFmoCg1I60MMYir6ZBWapvY3ZQo6wHa1xJY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.197
+	 In-Reply-To:Content-Type; b=QMcdAhPKU2vSDz+9dSIkQlR03AW6FP2Y4ONGVfJc41ytRIdCFGX4pwO8vy5pkcKykIBRNiVzPpWmPyd7osaObX9IX28SaH/ABPys53UWj/hS46czagNnp7FGQoaGctEecVxuvCP7UJ/QN1S2PexW0XUCkNRRYGf4Ioh6fhCHKYU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.198
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
-Received: by mail.gandi.net (Postfix) with ESMTPSA id B1C2743A71;
-	Fri, 23 May 2025 20:00:11 +0000 (UTC)
-Message-ID: <1c49479f-d925-47b9-a373-6fd2ca90e68b@ghiti.fr>
-Date: Fri, 23 May 2025 22:00:11 +0200
+Received: by mail.gandi.net (Postfix) with ESMTPSA id A969C43987;
+	Fri, 23 May 2025 20:01:17 +0000 (UTC)
+Message-ID: <f12632df-927e-4bdd-930e-5724e142af77@ghiti.fr>
+Date: Fri, 23 May 2025 22:01:16 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -25,589 +25,116 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 1/5] riscv: save the SR_SUM status over switches
-To: Deepak Gupta <debug@rivosinc.com>
-Cc: Andy Chiu <andybnac@gmail.com>, Ben Dooks <ben.dooks@codethink.co.uk>,
- Cyril Bur <cyrilbur@tenstorrent.com>, palmer@dabbelt.com,
- aou@eecs.berkeley.edu, paul.walmsley@sifive.com, charlie@rivosinc.com,
- jrtc27@jrtc27.com, linux-riscv@lists.infradead.org,
- linux-kernel@vger.kernel.org, jszhang@kernel.org,
- syzbot+e74b94fe601ab9552d69@syzkaller.appspotmail.com
-References: <20250410070526.3160847-1-cyrilbur@tenstorrent.com>
- <20250410070526.3160847-2-cyrilbur@tenstorrent.com>
- <aAgfz69K7wSkKsyJ@debug.ba.rivosinc.com>
- <aCyythZJ2u0SbXVb@debug.ba.rivosinc.com>
- <b39891f0-1e1a-4559-b35b-5262fe5af93c@codethink.co.uk>
- <aC85d8Hnstck-_gx@debug.ba.rivosinc.com>
- <CAFTtA3MMx+fAk6DsV5tT9HkeW67zstp-Lrge9kZMW0Z60SVi0A@mail.gmail.com>
- <aC-oelGP53vtpuJG@debug.ba.rivosinc.com>
- <54d63ebf-b66f-41d4-85b1-ec0fa3401333@ghiti.fr>
- <aDCtATl2N21fBsyT@debug.ba.rivosinc.com>
+Subject: Re: [PATCH] drivers: acpi: Fix platform profile driver on !acpi
+ platforms
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Armin Wolf <W_Armin@gmx.de>, Alexandre Ghiti <alexghiti@rivosinc.com>,
+ Len Brown <lenb@kernel.org>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?=
+ <ilpo.jarvinen@linux.intel.com>,
+ Mario Limonciello <mario.limonciello@amd.com>,
+ Mark Pearson <mpearson-lenovo@squebb.ca>, Arnd Bergmann <arnd@arndb.de>,
+ linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-riscv@lists.infradead.org
+References: <20250522141410.31315-1-alexghiti@rivosinc.com>
+ <91458376-dfc7-46fc-8523-aa176907d703@gmx.de>
+ <83e02a52-86ad-45e5-ba87-6c17dc6f59b5@ghiti.fr>
+ <CAJZ5v0iPVx0KXB5qQ46iQ7CKG6KJC1CnXogQ=e8or24vZuytrw@mail.gmail.com>
+ <CAJZ5v0iwH3p_A=f0g7+EsPbP7KBJS_LbT9+_gXNLBbXqW8vMFg@mail.gmail.com>
 Content-Language: en-US
 From: Alexandre Ghiti <alex@ghiti.fr>
-In-Reply-To: <aDCtATl2N21fBsyT@debug.ba.rivosinc.com>
+In-Reply-To: <CAJZ5v0iwH3p_A=f0g7+EsPbP7KBJS_LbT9+_gXNLBbXqW8vMFg@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 X-GND-State: clean
 X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgdeljeehucdltddurdegfedvrddttddmucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkffggfgfuvfevfhfhjggtgfesthekredttddvjeenucfhrhhomheptehlvgigrghnughrvgcuifhhihhtihcuoegrlhgvgiesghhhihhtihdrfhhrqeenucggtffrrghtthgvrhhnpeffjedugeehjeehfeegkedtlefhvdfggfeukeelteevvdelfeeuvdeludevheelteenucffohhmrghinhepvghnthhrhidrshgspdhinhhfrhgruggvrggurdhorhhgpdgtohguvghthhhinhhkrdgtohdruhhknecukfhppedvtddtudemkeeiudemfeefkedvmegvfheltdemvgeljedvmegutgdumeejvdduugemiedtsgdtnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvddttddumeekiedumeeffeekvdemvghfledtmegvleejvdemuggtudemjedvudgumeeitdgstddphhgvlhhopeglkffrggeimedvtddtudemkeeiudemfeefkedvmegvfheltdemvgeljedvmegutgdumeejvdduugemiedtsgdtngdpmhgrihhlfhhrohhmpegrlhgvgiesghhhihhtihdrfhhrpdhnsggprhgtphhtthhopedufedprhgtphhtthhopeguvggsuhhgsehrihhvohhsihhntgdrtghomhdprhgtphhtt
- hhopegrnhguhigsnhgrtgesghhmrghilhdrtghomhdprhgtphhtthhopegsvghnrdguohhokhhssegtohguvghthhhinhhkrdgtohdruhhkpdhrtghpthhtoheptgihrhhilhgsuhhrsehtvghnshhtohhrrhgvnhhtrdgtohhmpdhrtghpthhtohepphgrlhhmvghrsegurggssggvlhhtrdgtohhmpdhrtghpthhtoheprghouhesvggvtghsrdgsvghrkhgvlhgvhidrvgguuhdprhgtphhtthhopehprghulhdrfigrlhhmshhlvgihsehsihhfihhvvgdrtghomhdprhgtphhtthhopegthhgrrhhlihgvsehrihhvohhsihhntgdrtghomh
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgdeljeeiucdltddurdegfedvrddttddmucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkffggfgfuvfevfhfhjggtgfesthekredttddvjeenucfhrhhomheptehlvgigrghnughrvgcuifhhihhtihcuoegrlhgvgiesghhhihhtihdrfhhrqeenucggtffrrghtthgvrhhnpeduffeugedvtdegleeuhfeuteetueegfeefkefhheffvdduhfegvdehuddukeffgeenucffohhmrghinhepkhgvrhhnvghlrdhorhhgpdhinhhfrhgruggvrggurdhorhhgnecukfhppedvtddtudemkeeiudemfeefkedvmegvfheltdemvgeljedvmegutgdumeejvdduugemiedtsgdtnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvddttddumeekiedumeeffeekvdemvghfledtmegvleejvdemuggtudemjedvudgumeeitdgstddphhgvlhhopeglkffrggeimedvtddtudemkeeiudemfeefkedvmegvfheltdemvgeljedvmegutgdumeejvdduugemiedtsgdtngdpmhgrihhlfhhrohhmpegrlhgvgiesghhhihhtihdrfhhrpdhnsggprhgtphhtthhopeduuddprhgtphhtthhopehrrghfrggvlheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohephggptehrmhhinhesghhmgidru
+ ggvpdhrtghpthhtoheprghlvgigghhhihhtihesrhhivhhoshhinhgtrdgtohhmpdhrtghpthhtoheplhgvnhgssehkvghrnhgvlhdrohhrghdprhgtphhtthhopehilhhpohdrjhgrrhhvihhnvghnsehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtohepmhgrrhhiohdrlhhimhhonhgtihgvlhhlohesrghmugdrtghomhdprhgtphhtthhopehmphgvrghrshhonhdqlhgvnhhovhhosehsqhhuvggssgdrtggrpdhrtghpthhtoheprghrnhgusegrrhhnuggsrdguvg
 X-GND-Sasl: alex@ghiti.fr
 
+Hi Rafael,
 
-On 5/23/25 19:14, Deepak Gupta wrote:
-> On Fri, May 23, 2025 at 02:22:21PM +0200, Alexandre Ghiti wrote:
->> Hi Andy, Deepak,
->>
->> On 5/23/25 00:43, Deepak Gupta wrote:
->>> On Fri, May 23, 2025 at 01:42:49AM +0800, Andy Chiu wrote:
->>>> On Thu, May 22, 2025 at 11:09 PM Deepak Gupta <debug@rivosinc.com> 
->>>> wrote:
->>>>>
->>>>> On Thu, May 22, 2025 at 07:23:32AM +0100, Ben Dooks wrote:
->>>>>> On 20/05/2025 17:49, Deepak Gupta wrote:
->>>>>>> I did give this patch my RB and had planned to come back to it 
->>>>>>> to see
->>>>>>> if it impacts cfi related patches. Thanks to alex for brinigng 
->>>>>>> to my
->>>>>>> attention again. As it stands today, it doesn't impact cfi related
->>>>>>> changes but I've some concerns.
->>>>>>>
->>>>>>> Overall I do agree we should reduce number of SSTATUS accesses.
->>>>>>>
->>>>>>> Couple of questions on introducing new `sstatus` field (inline)
->>>>>>>
->>>>>>> On Tue, Apr 22, 2025 at 04:01:35PM -0700, Deepak Gupta wrote:
->>>>>>>> On Thu, Apr 10, 2025 at 07:05:22AM +0000, Cyril Bur wrote:
->>>>>>>>> From: Ben Dooks <ben.dooks@codethink.co.uk>
->>>>>>>>>
->>>>>>>>> When threads/tasks are switched we need to ensure the old 
->>>>> execution's
->>>>>>>>> SR_SUM state is saved and the new thread has the old SR_SUM state
->>>>>>>>> restored.
->>>>>>>>>
->>>>>>>>> The issue was seen under heavy load especially with the 
->>>>> syz-stress tool
->>>>>>>>> running, with crashes as follows in schedule_tail:
->>>>>>>>>
->>>>>>>>> Unable to handle kernel access to user memory without 
->>>>> uaccess routines
->>>>>>>>> at virtual address 000000002749f0d0
->>>>>>>>> Oops [#1]
->>>>>>>>> Modules linked in:
->>>>>>>>> CPU: 1 PID: 4875 Comm: syz-executor.0 Not tainted
->>>>>>>>> 5.12.0-rc2-syzkaller-00467-g0d7588ab9ef9 #0
->>>>>>>>> Hardware name: riscv-virtio,qemu (DT)
->>>>>>>>> epc : schedule_tail+0x72/0xb2 kernel/sched/core.c:4264
->>>>>>>>> ra : task_pid_vnr include/linux/sched.h:1421 [inline]
->>>>>>>>> ra : schedule_tail+0x70/0xb2 kernel/sched/core.c:4264
->>>>>>>>> epc : ffffffe00008c8b0 ra : ffffffe00008c8ae sp : 
->>>>>>>>> ffffffe025d17ec0
->>>>>>>>> gp : ffffffe005d25378 tp : ffffffe00f0d0000 t0 : 0000000000000000
->>>>>>>>> t1 : 0000000000000001 t2 : 00000000000f4240 s0 : ffffffe025d17ee0
->>>>>>>>> s1 : 000000002749f0d0 a0 : 000000000000002a a1 : 0000000000000003
->>>>>>>>> a2 : 1ffffffc0cfac500 a3 : ffffffe0000c80cc a4 : 5ae9db91c19bbe00
->>>>>>>>> a5 : 0000000000000000 a6 : 0000000000f00000 a7 : ffffffe000082eba
->>>>>>>>> s2 : 0000000000040000 s3 : ffffffe00eef96c0 s4 : ffffffe022c77fe0
->>>>>>>>> s5 : 0000000000004000 s6 : ffffffe067d74e00 s7 : ffffffe067d74850
->>>>>>>>> s8 : ffffffe067d73e18 s9 : ffffffe067d74e00 s10: ffffffe00eef96e8
->>>>>>>>> s11: 000000ae6cdf8368 t3 : 5ae9db91c19bbe00 t4 : ffffffc4043cafb2
->>>>>>>>> t5 : ffffffc4043cafba t6 : 0000000000040000
->>>>>>>>> status: 0000000000000120 badaddr: 000000002749f0d0 cause:
->>>>>>>>> 000000000000000f
->>>>>>>>> Call Trace:
->>>>>>>>> [<ffffffe00008c8b0>] schedule_tail+0x72/0xb2 
->>>>> kernel/sched/core.c:4264
->>>>>>>>> [<ffffffe000005570>] ret_from_exception+0x0/0x14
->>>>>>>>> Dumping ftrace buffer:
->>>>>>>>> (ftrace buffer empty)
->>>>>>>>> ---[ end trace b5f8f9231dc87dda ]---
->>>>>>>>>
->>>>>>>>> The issue comes from the put_user() in schedule_tail
->>>>>>>>> (kernel/sched/core.c) doing the following:
->>>>>>>>>
->>>>>>>>> asmlinkage __visible void schedule_tail(struct task_struct *prev)
->>>>>>>>> {
->>>>>>>>> ...
->>>>>>>>>       if (current->set_child_tid)
->>>>>>>>>               put_user(task_pid_vnr(current), 
->>>>> current->set_child_tid);
->>>>>>>>> ...
->>>>>>>>> }
->>>>>>>>>
->>>>>>>>> the put_user() macro causes the code sequence to come out as 
->>>>> follows:
->>>>>>>>>
->>>>>>>>> 1:    __enable_user_access()
->>>>>>>>> 2:    reg = task_pid_vnr(current);
->>>>>>>>> 3:    *current->set_child_tid = reg;
->>>>>>>>> 4:    __disable_user_access()
->>>>>>>>>
->>>>>>>>> The problem is that we may have a sleeping function as 
->>>>> argument which
->>>>>>>>> could clear SR_SUM causing the panic above. This was fixed by
->>>>>>>>> evaluating the argument of the put_user() macro outside the 
->>>>> user-enabled
->>>>>>>>> section in commit 285a76bb2cf5 ("riscv: evaluate put_user() 
->>>>> arg before
->>>>>>>>> enabling user access")"
->>>>>>>>>
->>>>>>>>> In order for riscv to take advantage of unsafe_get/put_XXX() 
->>>>> macros and
->>>>>>>>> to avoid the same issue we had with put_user() and sleeping 
->>>>> functions we
->>>>>>>>> must ensure code flow can go through switch_to() from within 
->>>>> a region of
->>>>>>>>> code with SR_SUM enabled and come back with SR_SUM still 
->>>>> enabled. This
->>>>>>>>> patch addresses the problem allowing future work to enable 
->>>>> full use of
->>>>>>>>> unsafe_get/put_XXX() macros without needing to take a CSR 
->>>>> bit flip cost
->>>>>>>>> on every access. Make switch_to() save and restore SR_SUM.
->>>>>>>>>
->>>>>>>>> Reported-by: 
->>>>>>>>> syzbot+e74b94fe601ab9552d69@syzkaller.appspotmail.com
->>>>>>>>> Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
->>>>>>>>> Signed-off-by: Cyril Bur <cyrilbur@tenstorrent.com>
->>>>>>>>> ---
->>>>>>>>> arch/riscv/include/asm/processor.h | 1 +
->>>>>>>>> arch/riscv/kernel/asm-offsets.c    | 5 +++++
->>>>>>>>> arch/riscv/kernel/entry.S          | 8 ++++++++
->>>>>>>>> 3 files changed, 14 insertions(+)
->>>>>>>>>
->>>>>>>>> diff --git a/arch/riscv/include/asm/processor.h
->>>>>>>>> b/arch/riscv/include/ asm/processor.h
->>>>>>>>> index 5f56eb9d114a..58fd11c89fe9 100644
->>>>>>>>> --- a/arch/riscv/include/asm/processor.h
->>>>>>>>> +++ b/arch/riscv/include/asm/processor.h
->>>>>>>>> @@ -103,6 +103,7 @@ struct thread_struct {
->>>>>>>>>     struct __riscv_d_ext_state fstate;
->>>>>>>>>     unsigned long bad_cause;
->>>>>>>>>     unsigned long envcfg;
->>>>>>>>> +    unsigned long status;
->>>>>>>
->>>>>>> Do we really need a new member field in `thread_struct`. We 
->>>>> already have
->>>>>>> `sstatus` in `pt_regs` which reflects overall execution environment
->>>>>>> situation
->>>>>>> for current thread. This gets saved and restored on trap entry 
->>>>> and exit.
->>>>>>>
->>>>>>> If we put `status` in `thread_struct` it creates ambiguity in terms
->>>>>>> of which
->>>>>>> `status` to save to and pick from from future maintainibility
->>>>>>> purposes as the
->>>>>>> fields get introduced to this CSR.
->>>>>>>
->>>>>>> Why can't we access current trap frame's `sstatus` image in
->>>>>>> `__switch_to` to
->>>>>>> save and restore?
->>>>>>>
->>>>>>> Let me know if I am missing something obvious here. If there is a
->>>>>>> complication,
->>>>>>> I am missing here and we do end up using this member field, I would
->>>>>>> rename it
->>>>>>> to something like `status_kernel` to reflect that. So that future
->>>>>>> changes are
->>>>>>> cognizant of the fact that we have split `status`. One for kernel
->>>>>>> execution env
->>>>>>> per thread and one for controlling user execution env per thread.
->>>>>>
->>>>>> This is so long ago now I cannot remember if there was any 
->>>>>> sstatus in
->>>>>> the pt_regs field,
->>>>>
->>>>> FS/VS bits encode status of floating point and vector on 
->>>>> per-thread basis.
->>>>> So `status` has been part of `pt_regs` for quite a while.
->>>>>
->>>>>> and if kernel threads have the same context as their
->>>>>> userland parts.
->>>>>
->>>>> I didn't mean kernel thread. What I meant was kernel execution 
->>>>> environment
->>>>> per-thread. A userland thread does spend sometime in kernel and 
->>>>> kernel does
->>>>> things on its behalf. One of those thing is touching user memory 
->>>>> and that
->>>>> requires mucking with this CSR. So what I meant was are we 
->>>>> splitting `status`
->>>>> on per-thread basis for their time spent in user and kernel.
->>>>>
->>>>> Getting back to original question--
->>>>> As I said, each thread spends sometime in user or in kernel. 
->>>>> `status` in
->>>>> `pt_regs` is saved on trap entry and restored on trap exit. In a 
->>>>> sense,
->>>>> `status` field in `pt_regs` is reflecting execution status of the 
->>>>> thread on per
->>>>> trap basis. Introducing `status` in `thread_struct` creates a 
->>>>> confusion (if not
->>>>> for today, certainly for future) of which `status` to pick from 
->>>>> when we are
->>>>> doing save/restore.
+On 5/23/25 16:46, Rafael J. Wysocki wrote:
+> On Fri, May 23, 2025 at 12:50 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
+>> On Fri, May 23, 2025 at 12:11 PM Alexandre Ghiti <alex@ghiti.fr> wrote:
+>>> On 5/22/25 22:04, Armin Wolf wrote:
+>>>> Am 22.05.25 um 16:13 schrieb Alexandre Ghiti:
 >>>>
->>>> I agree that it's a confusion. sstatus is already saved on pt_regs on
->>>> trap entries/return, adding another entry adds code complexity and
->>>> makes data inconsistent. But, perhaps we'd eventually need something
->>>> like this (I will explain why). Still, there might be a better
->>>> approach.
->>>>
->>>> Yes, we can always reflect pt_regs for sstatus. We all know that
->>>> pt_regs reflects sstatus at trap entry, and the pt_regs at scheduler
->>>> point refers to "user's" pt_regs whenever it first enters kernel 
->>>> mode. Here
->>>> are reasons why SR_SUM here may or may not be properly tracked. First,
->>>> if this is a trap introduced context switch (such as interrupting in a
->>>> preemptible context after we manually enable user access in put_user),
->>>> then SR_SUM is saved somewhere in the kernel stack, and is not
->>>> reference-able with task_pt_reg during context switch. But we are safe
->>>> because the trap exit asm would help us restore the correct SR_SUM
->>>> back. However, if this is a self-initiating context switch (calling
->>>> into schedule()), then SR_SUM is not saved anywhere, and possibly
->>>> causing this error.
->>>>
->>>> Preemptible Vector in the kernel mode also had this problem where a
->>>> self-initiating context switch loses the track of sstatus.vs. The way
->>>> I managed it is to track the VS bit at context switch time. However,
->>>> this bug shows that people are repeatedly facing the problem, and
->>>> maybe it suggests that we'd need a better way of managing sstatus
->>>> across context switches. Given the complex nature of this register,
->>>> which also touches the interrupt enable status, I don't think naively
->>>> saving/restoring the entire register is the way to go. Maybe the
->>>> variable deserves a more specific naming and documentation. And if
->>>> we'd need a centralized place for managing these statuses, then it
->>>> also has to take care of sstatus.VS.
->>
->>
->> Andy, thanks for the precise explanation of the problem :)
->>
->> So it took me some time but here are my thoughts on this. We should 
->> treat pt_regs and thread_struct differently as they do not represent 
->> the same thing:
->> - pt_regs represents the context of a thread when it takes a trap
->> - thread_struct represents a "kernel-induced" (or a "in-kernel") 
->> context not caused by traps
->
-> Exactly they represent different context of execution. Trap represents a
-> non-linear control flow change and thus a fresh start of execution 
-> control
-> flow into kernel while `kernel-induced` one's are again non-linear but
-> fully a kernel/software construct.
->
-> A fresh trapped execution context shouldn't have SUM set which is how 
-> it is
-> currently in kernel. This bit gets cleared in trap entry and `sstatus` 
-> gets
-> saved in `pt_regs` (including SR_IE) so that it could be restored 
-> whenever
-> `sret` happens.
->
-> The problem we'are seeing here is two fold--
->
-> 1) We don't want to set and clear when we are accessing array/string 
-> for each
->    word. This is software problem and this entire series is addressing 
-> it.
->
-> 2) To avoid first problem we are optimizing the access to CSR by 
-> setting it
->    once and clearing it once. But now we don't want to loose this bit 
-> if there
->    were:
->
->     a) trap in between         b) kernel induced schedule out
->         c) a) followed by b)
->         d) a) followed by another a)
->         e) nested traps
->
-> If a) occurs, we are definitley loosing the bit as per current code.
-
-
-If a trap occurs while the SUM bit is set, the SUM bit will be saved in 
-pt_regs and restored when we come back so we don't lose it when a) occurs.
-
-
-> If b)
-> happens then also the same situation.
-
-
-Currently, we do lose it in that case indeed.
-
-
->
-> Saving it in `thread_struct` only addresses `b`. And not `a`, `c`, `d` 
-> and
-> `e`. IMHO `e` is far-fetched situation but I believe `a`, `b`, `c` and 
-> `d` happen
-> during normal runtime of kernel.
->
-> So it all depends on nesting level of traps supported by riscv kernel.
->
-> Illustraing `c + d` example, if kernel can take 2 nested level of 
-> traps with
-> first trap context having had the SUM bit set, but the second trap had 
-> it clear
-> and now comes the switch out of this thread, at this point if it were 
-> saved in
-> `thread_struct` SUM would be lost for the first trap.
->
-> Later when the thread gets switched in again, you would go in 2nd trap
-> context without SUM (because `thread_context` didnt had it saved), 
-> which is
-> fine. Although when 2nd trap context eventually performs `sret`, it will
-> go back to first trap context where SUM was expected to be set because it
-> touching a user memory.
->
-> A good example would be a syscall, so that's the first trap. SUM bit 
-> is set,
-> touched user memory and took a trap (page fault). Now code is in 
-> second trap
-> which should clear the SUM bit. Somewhere in memory manager stack, 
-> thread is
-> scheduled out and now `sstatus` is saved in `thread_struct`. This is only
-> serving current trap context needs and not the one where `SUM` needed 
-> to be
-> set.
-
-
-Hmm to me we don't lose the SUM bit in case of a trap, only when eager 
-schedule happens:
-
-thread A
-|
-|-> syscall
-       |
-       SUM bit is set
-       |
-        -> page fault (trap)
-             |
-              sstatus with SUM bit set is saved on pt_regs
-              SUM bit is cleared
-             |
-              -> eager schedule
-                  |
-                  -> we save SUM bit cleared in thread_struct
-                      |
-                      |
-                       schedule thread B....
-                      |
-                      |
-                     <- switch_to thread A again
-                  |
-                  we restore SUM bit cleared from thread_struct
-                  |
-                <- we resume execution of page fault trap
-               |
-               so we restore SUM bit saved on pt_regs which *has* SUM 
-bit set
-               |
-             <- sret
-           |
-           SUM bit is set and we continue the first syscall.
-
-So based on my wonderful ascii art, it works :) Or did I miss something?
-
-
->
-> We can support such nesting only by ensuring below
->
-> On trap entry do - save `status` in `pt_regs` or some other FILO data 
-> structure
-> - clear SUM (and other bits needed to be cleared)
->
-> On trap return do
-> - reload `status` from `pt_regs` or some FILO data structure
->
-> Quite analogous to what we do for SR_IE as well.
->
->>
->> That's why I don't really like Deepak's proposal below as it mixes 
->> both and I find it tricky.
->>
->> I can't find a situation where saving/restoring the entire sstatus at 
->> context-switch is a problem though, does anyone have such thing in mind?
->>
->> Finally I understand that having another copy of sstatus in 
->> thread_struct is not intuitive and we should, either explain why or 
->> only store the SUM bit (like for sstatus.VS).
->>
->> Please continue the discussion as we need to find a solution that 
->> pleases everyone soon :)
->>
->> Thanks all for jumping in,
->>
->> Alex
->>
->>
->>>
->>>
->>> IMHO, the problem we are trying to solve in this patch is easily 
->>> solvable in
->>> below manner.
->>>
->>>
->>> diff --git a/arch/riscv/include/asm/switch_to.h 
->>> b/arch/riscv/include/asm/switch_to.h
->>> index 0e71eb82f920..499d00a6fb67 100644
->>> --- a/arch/riscv/include/asm/switch_to.h
->>> +++ b/arch/riscv/include/asm/switch_to.h
->>> @@ -58,6 +58,20 @@ static inline void __switch_to_fpu(struct 
->>> task_struct *prev,
->>>         fstate_restore(next, task_pt_regs(next));
->>>  }
->>>
->>> +static inline void __switch_to_status(struct task_struct *prev,
->>> +                                  struct task_struct *next)
->>> +{
->>> +       struct pt_regs *regs;
->>> +
->>> +       /* save status */
->>> +       regs = task_pt_regs(prev);
->>> +       regs->status = csr_read(CSR_STATUS);
->>> +
->>> +       /* restore status */
->>> +       regs = task_pt_regs(next);
->>> +       csr_write(CSR_STATUS, regs->status);
->>> +}
->>> +
->>>  static __always_inline bool has_fpu(void)
->>>  {
->>>         return riscv_has_extension_likely(RISCV_ISA_EXT_f) ||
->>> @@ -115,6 +129,7 @@ do 
->>> {                                                        \
->>>         struct task_struct *__prev = (prev);            \
->>>         struct task_struct *__next = (next);            \
->>>         __set_prev_cpu(__prev->thread);                 \
->>> +       __switch_to_status(__prev, __next)              \
->>>         if (has_fpu())                                  \
->>>                 __switch_to_fpu(__prev, __next);        \
->>>         if (has_vector() || has_xtheadvector())         \
->>> diff --git a/arch/riscv/kernel/entry.S b/arch/riscv/kernel/entry.S
->>> index 8d25837a9384..a3b98c1be055 100644
->>> --- a/arch/riscv/kernel/entry.S
->>> +++ b/arch/riscv/kernel/entry.S
->>> @@ -162,17 +162,8 @@ SYM_CODE_START(handle_exception)
->>>         REG_S x5,  PT_T0(sp)
->>>         save_from_x6_to_x31
->>>
->>> -       /*
->>> -        * Disable user-mode memory access as it should only be set 
->>> in the
->>> -        * actual user copy routines.
->>> -        *
->>> -        * Disable the FPU/Vector to detect illegal usage of 
->>> floating point
->>> -        * or vector in kernel space.
->>> -        */
->>> -       li t0, SR_SUM | SR_FS_VS | SR_ELP
->>> -
->>>         REG_L s0, TASK_TI_USER_SP(tp)
->>> -       csrrc s1, CSR_STATUS, t0
->>> +       csrr s1, CSR_STATUS
->>>         save_userssp s2, s1
->>>         csrr s2, CSR_EPC
->>>         csrr s3, CSR_TVAL
->>> @@ -185,6 +176,16 @@ SYM_CODE_START(handle_exception)
->>>         REG_S s4, PT_CAUSE(sp)
->>>         REG_S s5, PT_TP(sp)
->>>
->>> +       /*
->>> +        * It is fresh trap entry. Disable user-mode memory access 
->>> as it should only be set in the
->>> +        * actual user copy routines.
->>> +        *
->>> +        * Disable the FPU/Vector to detect illegal usage of 
->>> floating point
->>> +        * or vector in kernel space.
->>> +        */
->>> +       li t0, SR_SUM | SR_FS_VS | SR_ELP
->>> +       csrrc s1, CSR_STATUS, t0
->>> +
->>>         /*
->>>          * Set the scratch register to 0, so that if a recursive 
->>> exception
->>>          * occurs, the exception vector knows it came from the kernel
->>>
->>>
->>>
->>> During the time spent in kernel if sets SUM bit in status then, above
->>> `__switch_to_status` will ensure that `status` will get saved for 
->>> current
->>> thread and restored for next thread.
->>>
->>> Furthermore, current trap entry code clears FS/VS/SUM (for right 
->>> reasons). It
->>> represents non-linear change of control flow and thus whatever will 
->>> execute next
->>> shouldn't need SUM/FS/VS unless it wants to set it). This patch 
->>> slightly
->>> modifies the flow by first saving the `status` on trap frame (thus 
->>> if previous
->>> trap frame had SUM=1, it will be saved and restored). And then it
->>> unconditionally clears the SUM/FS/VS to ensure that this new trap 
->>> context runs
->>> without needing SUM=1. This ensures nesting of trap frames without 
->>> diluting
->>> security properties of SUM.
->>>
->>>>
->>>> Thanks,
->>>> Andy
->>>>
->>>>
->>>>
->>>>
+>>>>> The platform profile driver is loaded even on platforms that do not have
+>>>>> acpi enabled. The initialization of the sysfs entries was recently moved
+>>>>> from platform_profile_register() to the module init call, and those
+>>>>> entries need acpi_kobj to be initialized which is not the case when acpi
+>>>>> is disabled.
 >>>>>
->>>>> So my first question was why not to use `status` in `pt_regs`. It 
->>>>> is granular
->>>>> as it can get (it is available per thread context per trap basis).
+>>>>> This results in the following warning:
 >>>>>
+>>>>>    WARNING: CPU: 5 PID: 1 at fs/sysfs/group.c:131
+>>>>> internal_create_group+0xa22/0xdd8
+>>>>>    Modules linked in:
+>>>>>    CPU: 5 UID: 0 PID: 1 Comm: swapper/0 Tainted: G W
+>>>>> 6.15.0-rc7-dirty #6 PREEMPT
+>>>>>    Tainted: [W]=WARN
+>>>>>    Hardware name: riscv-virtio,qemu (DT)
+>>>>>    epc : internal_create_group+0xa22/0xdd8
+>>>>>     ra : internal_create_group+0xa22/0xdd8
 >>>>>
->>>>> I did ask Alex as well. I'll ping him again.
+>>>>>    Call Trace:
 >>>>>
->>>>>>
->>>>>> Does anyone else have any comment on this?
->>>>>>
->>>>>>>
->>>>>>>>>     u32 riscv_v_flags;
->>>>>>>>>     u32 vstate_ctrl;
->>>>>>>>>     struct __riscv_v_ext_state vstate;
->>>>>>>>> diff --git a/arch/riscv/kernel/asm-offsets.c
->>>>>>>>> b/arch/riscv/kernel/asm- offsets.c
->>>>>>>>> index 16490755304e..969c65b1fe41 100644
->>>>>>>>> --- a/arch/riscv/kernel/asm-offsets.c
->>>>>>>>> +++ b/arch/riscv/kernel/asm-offsets.c
->>>>>>>>> @@ -34,6 +34,7 @@ void asm_offsets(void)
->>>>>>>>>     OFFSET(TASK_THREAD_S9, task_struct, thread.s[9]);
->>>>>>>>>     OFFSET(TASK_THREAD_S10, task_struct, thread.s[10]);
->>>>>>>>>     OFFSET(TASK_THREAD_S11, task_struct, thread.s[11]);
->>>>>>>
->>>>>>> _______________________________________________
->>>>>>> linux-riscv mailing list
->>>>>>> linux-riscv@lists.infradead.org
->>>>>>> http://lists.infradead.org/mailman/listinfo/linux-riscv
->>>>>>>
->>>>>>
->>>>>>
->>>>>> -- 
->>>>>> Ben Dooks http://www.codethink.co.uk/
->>>>>> Senior Engineer                                Codethink - 
->>>>> Providing Genius
->>>>>>
->>>>>> https://www.codethink.co.uk/privacy.html
+>>>>>    internal_create_group+0xa22/0xdd8
+>>>>>    sysfs_create_group+0x22/0x2e
+>>>>>    platform_profile_init+0x74/0xb2
+>>>>>    do_one_initcall+0x198/0xa9e
+>>>>>    kernel_init_freeable+0x6d8/0x780
+>>>>>    kernel_init+0x28/0x24c
+>>>>>    ret_from_fork+0xe/0x18
 >>>>>
->>>>> _______________________________________________
->>>>> linux-riscv mailing list
->>>>> linux-riscv@lists.infradead.org
->>>>> http://lists.infradead.org/mailman/listinfo/linux-riscv
+>>>>> Fix this by checking if acpi is enabled before trying to create sysfs
+>>>>> entries.
+>>>> I already submitted a patch for this problem (see
+>>>> https://lore.kernel.org/linux-acpi/a6d92cdd-4dc3-4080-9ed9-5b1f02f247e0@gmx.de/T/)
+>>>> that only disables the legacy sysfs interface while keeping the
+>>>> class-based interface functional
+>>>> as it does not depend on ACPI at all.
 >>>
->>> _______________________________________________
->>> linux-riscv mailing list
->>> linux-riscv@lists.infradead.org
->>> http://lists.infradead.org/mailman/listinfo/linux-riscv
+>>> Great, I understand if your patchset is not merged for rc1 but it would
+>>> be nice to have it merged in 6.16 though to fix riscv syzkaller
+>>> instance. Perhaps you could add the Fixes tag that Arnd mentioned too?
+>> I actually prefer your patch to the Armin's one because there are
+>> questions regarding the latter (see the most recent message from Arnd
+>> in this thread).
+> And so it has been applied as 6.16 material now, thanks!
+
+
+Thank you very much!
+
+Alex
+
+
 >
+>>>>> Fixes: 77be5cacb2c2 ("ACPI: platform_profile: Create class for ACPI
+>>>>> platform profile")
+>>>>> Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+>>>>> ---
+>>>>>    drivers/acpi/platform_profile.c | 3 +++
+>>>>>    1 file changed, 3 insertions(+)
+>>>>>
+>>>>> diff --git a/drivers/acpi/platform_profile.c
+>>>>> b/drivers/acpi/platform_profile.c
+>>>>> index ffbfd32f4cf1..b43f4459a4f6 100644
+>>>>> --- a/drivers/acpi/platform_profile.c
+>>>>> +++ b/drivers/acpi/platform_profile.c
+>>>>> @@ -688,6 +688,9 @@ static int __init platform_profile_init(void)
+>>>>>    {
+>>>>>        int err;
+>>>>>    +    if (acpi_disabled)
+>>>>> +        return -EOPNOTSUPP;
+>>>>> +
+>>>>>        err = class_register(&platform_profile_class);
+>>>>>        if (err)
+>>>>>            return err;
+>>>> _______________________________________________
+>>>> linux-riscv mailing list
+>>>> linux-riscv@lists.infradead.org
+>>>> http://lists.infradead.org/mailman/listinfo/linux-riscv
 > _______________________________________________
 > linux-riscv mailing list
 > linux-riscv@lists.infradead.org
