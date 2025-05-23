@@ -1,149 +1,247 @@
-Received: from mail-il1-f176.google.com (mail-il1-f176.google.com [209.85.166.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38B7122A4C2
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 11:11:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 411AE2DCC02;
+	Fri, 23 May 2025 11:14:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747998700; cv=none; b=rhK+aPvCW8OYhplBOZWEG8MnrhHTkLDe1prNtwvMj3FIup/ux8vUuRQM4liVmBS9Yd3YUjN2v/GqU2HNespJlM3EemGOhBrOVG6/oDv2UkzjwIYAdu8u/0xlOsaxeWwPmYC3c2XqF0ZHL0HB3fDEpyBDALBPth/XQg9Usnv3z1s=
+	t=1747998845; cv=none; b=jK+QU9PJ70Hh/GXW20hxpsXrGpPzYuNwq2vO2q0G2Gh0n1XSLgsN15dWmtu6SVoyxqcN1SvvFBDhJ0whJSj0fvx77kA86oOyAF0I9RIMS3IKIx8pI7jvriziOY4qVdJ6AwYcJ6/dlkwswHq3tZquKkX2IauxYzcIEOgUNj7Asz0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747998700; c=relaxed/simple;
-	bh=q4FL8KKjQQJN0U0NoEUGRoU4Z3BCiVEiPjPeQldDjiI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=V967/ENjRGv8tGlPvABTMg85Ldvr97J5zX1/lKIcj4eWsXNZ+RPpjgM9hkKlfkeyg5zZjs2ekWTOZJzm+VfThD1UAJCcqIGgfuCvKELldGnlzxokqQPveaVQEx550QF8u5IE0h4g4rZGOuSgkSr5geGyWk65CB6hsa2p9eNYp9o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=geotab.com; spf=pass smtp.mailfrom=geotab.com; dkim=pass (2048-bit key) header.d=geotab.com header.i=@geotab.com header.b=AJEVxlkj; arc=none smtp.client-ip=209.85.166.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=geotab.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=geotab.com
+	s=arc-20240116; t=1747998845; c=relaxed/simple;
+	bh=awPgKAtbs09VBvJjTCS50PNvg1VAMdB8tjpi4ROCuFc=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=UVjtAat3Yjsxm+vI2CHxxNpRPYyAUXVG2rdBRUOFHqhCCXojhnV2ozQhVSFSsMpikaqORATu8F8hwZNp4NLn3vkIh3mV2KJFdiiIleaaJKtnbCcQDH/W/3sPYTMoMyHqBvn6NEN5O9hxI1pjXjimj+MsIBYOVgvZX/VvBu2uXe4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FwFhp9jf; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=geotab.com header.i=@geotab.com header.b="AJEVxlkj"
-Received: by mail-il1-f176.google.com with SMTP id e9e14a558f8ab-3d948ce7d9dso29465665ab.2
-        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 04:11:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=geotab.com; s=google; t=1747998697; x=1748603497; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=g4WC61RiFkUHVQjkxgX1BdafAxF8AO9xUQHu1X/p/I8=;
-        b=AJEVxlkjnr/EhS7wqHR8SpuMWpdAiWUZ2cSTXsXDgNw/LY4da/fL3uhzfpYDcWVJy6
-         FuGUa+C6YBeDBNarZwxLdHNtnda+GYbAWbH6tW0OeKELn0guAtjlTLetLnpwrQtjGDd4
-         Z3sdgAnsYwTUJKu6j6XQAQ2PYZPKgcf07xy8SuS0snaSozLiThq415k47y0rQOBFA9qL
-         9kNnlDuEsEfxc2z1BTUA/Nw6Zz6URWbX7ZOSd7jzvP+4Kkg4dz+GDEBfiilQBE89iCHT
-         njpRqxdVm1bpxRwrhY3B4IgZzjbmhbUVNUBG1ypz3qrQinOp8Eg2hBrgp5SW93aM7JZS
-         +WEg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747998697; x=1748603497;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=g4WC61RiFkUHVQjkxgX1BdafAxF8AO9xUQHu1X/p/I8=;
-        b=vHZ5SrLFBdUZ17rwDtUrnUFmE0bMX8EV2jgfwPIXvTWxCUODsJVmi2yLXPmUhYc1Fo
-         rxNetJXArAuY3pwylKGxrruELj8FKhs/fsMCkL+SQ3GZJeYiwKqQc0NoifC+57Od0A1c
-         l+XWMmq2Dc1XnzIUtRMWydnlfFMq6xl10O+vPatlBvIn6xbizMb64odc0yPrKdNCr/fw
-         b/um+A+jlYzjdVjoo8QSQSbmrxKkggzlWYbOZbStzsY8y7KFvwbfl4Whh/Mai3HYJn1d
-         d+5WFoLQ+lItxKT3g2PoDaBk9SDgZl2kwMxtVuZkUWkRMmehZVty13qHZ2xk1bCJf+pI
-         QVmQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUXmx67q3Q2I/3UPjMqkdZhp0M++qH6XmVLvV/s9XCt4QnXQxVoqGiBxPqLIkhHFPOQSGkJOiQN3VLl97A=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzIbf+oBGdRC+sMlJpWYkCsVzSgCNTc1LqqnWXANHiAJ1VkE70N
-	/jtg0W+jTBE0p/+zQuXXYGIdh/DOqhOtT1JT0GJkOB1caSmd0NnyGm45901SytRlqV7jcxX2xWP
-	m9/EfU8T0718VWLeNJZCHiBRaakdWm0b1fdy/DAsZGQ==
-X-Gm-Gg: ASbGncu+pzmR5JnVqgFqQ/VNgKD7Wqj1NZuPQxLS2RxAx14t1VHpElU4c+uLYned0k9
-	1LdpskDGCdhQn9f3duhU4IMiq14XqQRfcK7UKKNZi5FOoHNrYi0wO5NWJCcPuPD8sOQZpsCMzZe
-	/f09TUiheut9EyQthk1SBzmHgD1ljVnQJ31VpH15LrIwipLLywytnLL5TpNbVoV0WAOA==
-X-Google-Smtp-Source: AGHT+IFRNZi7miN9KtJnFvnUc4Zy/s6cGHuPblLIqkAt0lFI6V+NU3+HwApQoOry4bUApfroElgEDbBR1r2MaDtDQzE=
-X-Received: by 2002:a92:ca0d:0:b0:3d8:1ea5:26d1 with SMTP id
- e9e14a558f8ab-3dc932db875mr29989355ab.18.1747998695075; Fri, 23 May 2025
- 04:11:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FwFhp9jf"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747998844; x=1779534844;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=awPgKAtbs09VBvJjTCS50PNvg1VAMdB8tjpi4ROCuFc=;
+  b=FwFhp9jfC6qQ6lu15sQz6wsY5IhfluCFQ11luWD/or1fUZepmhteSj7w
+   lhviH34ZDPH8Ce7pMreSRARvvyjMu/aRu8d7ECDl91khmzLBdcGptzH90
+   PxV6c+qUe8jzcYCIFPNA19LepXJ8CqM26joyMQerl+Q+IuXw7gIfukdWG
+   7QGzGcHOnTV58NnYm00VnsScznqZxF2SsZLK4HxCvOPgXjVAPIGYFsvNL
+   gSk+iszV43hGs7lahApnaYy2aWX68aFDJgbWELV1/ARQZI6WXVU1h4Pvp
+   zVFL64Q6r7o3M/oWXbsuEv0qPK6zhcSFeJCZHQl2kXy1bUROy4t8cL4Xk
+   Q==;
+X-CSE-ConnectionGUID: 96ibRHdkTamowrMYyYCPoA==
+X-CSE-MsgGUID: rV8xtclSSVGar9GzYuE+hA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11441"; a="50216281"
+X-IronPort-AV: E=Sophos;i="6.15,308,1739865600"; 
+   d="scan'208";a="50216281"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2025 04:14:04 -0700
+X-CSE-ConnectionGUID: kVB90jRXQLejrPr2/iMbUQ==
+X-CSE-MsgGUID: Ch5Ov7+kS/aSdw6fhA38tQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,308,1739865600"; 
+   d="scan'208";a="142055114"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.150])
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2025 04:13:56 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Fri, 23 May 2025 14:13:52 +0300 (EEST)
+To: Bjorn Helgaas <helgaas@kernel.org>
+cc: linux-pci@vger.kernel.org, Jon Pan-Doh <pandoh@google.com>, 
+    Karolina Stolarek <karolina.stolarek@oracle.com>, 
+    Weinan Liu <wnliu@google.com>, 
+    Martin Petersen <martin.petersen@oracle.com>, 
+    Ben Fuller <ben.fuller@oracle.com>, Drew Walton <drewwalton@microsoft.com>, 
+    Anil Agrawal <anilagrawal@meta.com>, Tony Luck <tony.luck@intel.com>, 
+    Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>, 
+    Lukas Wunner <lukas@wunner.de>, 
+    Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
+    Sargun Dhillon <sargun@meta.com>, "Paul E . McKenney" <paulmck@kernel.org>, 
+    Mahesh J Salgaonkar <mahesh@linux.ibm.com>, 
+    Oliver O'Halloran <oohall@gmail.com>, Kai-Heng Feng <kaihengf@nvidia.com>, 
+    Keith Busch <kbusch@kernel.org>, Robert Richter <rrichter@amd.com>, 
+    Terry Bowman <terry.bowman@amd.com>, Shiju Jose <shiju.jose@huawei.com>, 
+    Dave Jiang <dave.jiang@intel.com>, LKML <linux-kernel@vger.kernel.org>, 
+    linuxppc-dev@lists.ozlabs.org, Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH v8 16/20] PCI/AER: Convert aer_get_device_error_info(),
+ aer_print_error() to index
+In-Reply-To: <20250522232339.1525671-17-helgaas@kernel.org>
+Message-ID: <b7e7a308-713f-d89b-cccd-8f397e097bae@linux.intel.com>
+References: <20250522232339.1525671-1-helgaas@kernel.org> <20250522232339.1525671-17-helgaas@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250522-ubx-m9-v2-1-6ecd470527bc@geotab.com> <ab6bfdd7-13af-4abd-94e1-25fb3d0edb1c@kernel.org>
-In-Reply-To: <ab6bfdd7-13af-4abd-94e1-25fb3d0edb1c@kernel.org>
-From: Alejandro Enrique <alejandroe1@geotab.com>
-Date: Fri, 23 May 2025 13:11:24 +0200
-X-Gm-Features: AX0GCFsbE7ylggvJ-1DAkpSiD9h8OYkmNPdxG5wpCpBuy3Q0w-pEjfIGUIf7K7I
-Message-ID: <CAN=L63rNgrO1T8t2qfCUxphr_TDA3gSpR2LL=e6oFwore7SV2g@mail.gmail.com>
-Subject: Re: [PATCH v2] dt-bindings: gnss: add u-blox,neo-9m compatible
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Johan Hovold <johan@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, linux-kernel@vger.kernel.org, 
-	devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/mixed; boundary="8323328-767706868-1747998832=:21466"
 
-On Thu, May 22, 2025 at 7:36=E2=80=AFPM Krzysztof Kozlowski <krzk@kernel.or=
-g> wrote:
->
-> On 22/05/2025 18:18, Alejandro Enrique via B4 Relay wrote:
-> > From: Alejandro Enrique <alejandroe1@geotab.com>
-> >
-> > Add compatible for u-blox NEO-9M GPS module.
-> >
-> > Signed-off-by: Alejandro Enrique <alejandroe1@geotab.com>
-> > ---
-> > This series just add the compatible string for u-blox NEO-9M module,
-> > using neo-m8 as fallback. I have tested the driver with such a module
-> > and it is working fine.
-> > ---
-> > Changes in v2:
-> > - Modify the binding to allow falling back to neo-m8
-> > - Remove compatible string from u-blox driver
-> > - Link to v1: https://lore.kernel.org/r/20250514-ubx-m9-v1-0-193973a4f3=
-ca@geotab.com
-> > ---
-> >  Documentation/devicetree/bindings/gnss/u-blox,neo-6m.yaml | 25 +++++++=
-++++++++++++++----
-> >  1 file changed, 21 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/Documentation/devicetree/bindings/gnss/u-blox,neo-6m.yaml =
-b/Documentation/devicetree/bindings/gnss/u-blox,neo-6m.yaml
-> > index 7d4b6d49e5eea2201ac05ba6d54b1c1721172f26..215f8931ca08c1b0954fc2f=
-70eabe3ec8d89edea 100644
-> > --- a/Documentation/devicetree/bindings/gnss/u-blox,neo-6m.yaml
-> > +++ b/Documentation/devicetree/bindings/gnss/u-blox,neo-6m.yaml
-> > @@ -18,10 +18,16 @@ description: >
-> >
-> >  properties:
-> >    compatible:
-> > -    enum:
-> > -      - u-blox,neo-6m
-> > -      - u-blox,neo-8
-> > -      - u-blox,neo-m8
-> > +    oneOf:
-> > +      - items:
->
-> Drop items here, just enum directly.
->
-> > +          - enum:
-> > +              - u-blox,neo-6m
-> > +              - u-blox,neo-8
-> > +              - u-blox,neo-m8
-> > +
->
-> Drop blank line.
->
-> > +      - items:
-> > +          - const: u-blox,neo-m9
-> > +          - const: u-blox,neo-m8
-> >
-> >    reg:
-> >      description: >
-> > @@ -63,3 +69,14 @@ examples:
-> >              reset-gpios =3D <&gpio 1 GPIO_ACTIVE_LOW>;
-> >          };
-> >      };
-> > +  - |
-> > +    #include <dt-bindings/gpio/gpio.h>
-> > +
-> > +    serial {
-> > +        gnss {
-> > +            compatible =3D "u-blox,neo-m9", "u-blox,neo-m8";
->
-> No need for new example, it's the same as previous.
->
->
-> Best regards,
-> Krzysztof
-Thanks. I will apply the changes.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
+
+--8323328-767706868-1747998832=:21466
+Content-Type: text/plain; charset=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+
+On Thu, 22 May 2025, Bjorn Helgaas wrote:
+
+> From: Bjorn Helgaas <bhelgaas@google.com>
+>=20
+> Previously aer_get_device_error_info() and aer_print_error() took a point=
+er
+> to struct aer_err_info and a pointer to a pci_dev.  Typically the pci_dev
+> was one of the elements of the aer_err_info.dev[] array (DPC was an
+> exception, where the dev[] array was unused).
+>=20
+> Convert aer_get_device_error_info() and aer_print_error() to take an inde=
+x
+> into the aer_err_info.dev[] array instead.  A future patch will add
+> per-device ratelimit information, so the index makes it convenient to fin=
+d
+> the ratelimit associated with the device.
+>=20
+> To accommodate DPC, set info->dev[0] to the DPC port before using these
+> interfaces.
+>=20
+> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+> ---
+>  drivers/pci/pci.h      |  4 ++--
+>  drivers/pci/pcie/aer.c | 33 +++++++++++++++++++++++----------
+>  drivers/pci/pcie/dpc.c |  8 ++++++--
+>  3 files changed, 31 insertions(+), 14 deletions(-)
+>=20
+> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> index 1a9bfc708757..e1a28215967f 100644
+> --- a/drivers/pci/pci.h
+> +++ b/drivers/pci/pci.h
+> @@ -605,8 +605,8 @@ struct aer_err_info {
+>  =09struct pcie_tlp_log tlp;=09/* TLP Header */
+>  };
+> =20
+> -int aer_get_device_error_info(struct pci_dev *dev, struct aer_err_info *=
+info);
+> -void aer_print_error(struct pci_dev *dev, struct aer_err_info *info);
+> +int aer_get_device_error_info(struct aer_err_info *info, int i);
+> +void aer_print_error(struct aer_err_info *info, int i);
+> =20
+>  int pcie_read_tlp_log(struct pci_dev *dev, int where, int where2,
+>  =09=09      unsigned int tlp_len, bool flit,
+> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+> index 787a953fb331..237741e66d28 100644
+> --- a/drivers/pci/pcie/aer.c
+> +++ b/drivers/pci/pcie/aer.c
+> @@ -705,12 +705,18 @@ static void aer_print_source(struct pci_dev *dev, s=
+truct aer_err_info *info,
+>  =09=09 found ? "" : " (no details found");
+>  }
+> =20
+> -void aer_print_error(struct pci_dev *dev, struct aer_err_info *info)
+> +void aer_print_error(struct aer_err_info *info, int i)
+>  {
+> -=09int layer, agent;
+> -=09int id =3D pci_dev_id(dev);
+> +=09struct pci_dev *dev;
+> +=09int layer, agent, id;
+>  =09const char *level =3D info->level;
+> =20
+> +=09if (i >=3D AER_MAX_MULTI_ERR_DEVICES)
+> +=09=09return;
+
+Are these OoB checks actually indication of a logic error in the caller=20
+side which would perhaps warrant using
+=09if (WARN_ON_ONCE(i >=3D AER_MAX_MULTI_ERR_DEVICES))
+?
+
+Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
+
+> +
+> +=09dev =3D info->dev[i];
+> +=09id =3D pci_dev_id(dev);
+> +
+>  =09pci_dev_aer_stats_incr(dev, info);
+>  =09trace_aer_event(pci_name(dev), (info->status & ~info->mask),
+>  =09=09=09info->severity, info->tlp_header_valid, &info->tlp);
+> @@ -1193,19 +1199,26 @@ EXPORT_SYMBOL_GPL(aer_recover_queue);
+> =20
+>  /**
+>   * aer_get_device_error_info - read error status from dev and store it t=
+o info
+> - * @dev: pointer to the device expected to have an error record
+>   * @info: pointer to structure to store the error record
+> + * @i: index into info->dev[]
+>   *
+>   * Return: 1 on success, 0 on error.
+>   *
+>   * Note that @info is reused among all error devices. Clear fields prope=
+rly.
+>   */
+> -int aer_get_device_error_info(struct pci_dev *dev, struct aer_err_info *=
+info)
+> +int aer_get_device_error_info(struct aer_err_info *info, int i)
+>  {
+> -=09int type =3D pci_pcie_type(dev);
+> -=09int aer =3D dev->aer_cap;
+> +=09struct pci_dev *dev;
+> +=09int type, aer;
+>  =09u32 aercc;
+> =20
+> +=09if (i >=3D AER_MAX_MULTI_ERR_DEVICES)
+> +=09=09return 0;
+> +
+> +=09dev =3D info->dev[i];
+> +=09aer =3D dev->aer_cap;
+> +=09type =3D pci_pcie_type(dev);
+> +
+>  =09/* Must reset in this function */
+>  =09info->status =3D 0;
+>  =09info->tlp_header_valid =3D 0;
+> @@ -1257,11 +1270,11 @@ static inline void aer_process_err_devices(struct=
+ aer_err_info *e_info)
+> =20
+>  =09/* Report all before handling them, to not lose records by reset etc.=
+ */
+>  =09for (i =3D 0; i < e_info->error_dev_num && e_info->dev[i]; i++) {
+> -=09=09if (aer_get_device_error_info(e_info->dev[i], e_info))
+> -=09=09=09aer_print_error(e_info->dev[i], e_info);
+> +=09=09if (aer_get_device_error_info(e_info, i))
+> +=09=09=09aer_print_error(e_info, i);
+>  =09}
+>  =09for (i =3D 0; i < e_info->error_dev_num && e_info->dev[i]; i++) {
+> -=09=09if (aer_get_device_error_info(e_info->dev[i], e_info))
+> +=09=09if (aer_get_device_error_info(e_info, i))
+>  =09=09=09handle_error_source(e_info->dev[i], e_info);
+>  =09}
+>  }
+> diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
+> index 7ae1590ea1da..fc18349614d7 100644
+> --- a/drivers/pci/pcie/dpc.c
+> +++ b/drivers/pci/pcie/dpc.c
+> @@ -253,6 +253,10 @@ static int dpc_get_aer_uncorrect_severity(struct pci=
+_dev *dev,
+>  =09=09info->severity =3D AER_NONFATAL;
+> =20
+>  =09info->level =3D KERN_ERR;
+> +
+> +=09info->dev[0] =3D dev;
+> +=09info->error_dev_num =3D 1;
+> +
+>  =09return 1;
+>  }
+> =20
+> @@ -270,8 +274,8 @@ void dpc_process_error(struct pci_dev *pdev)
+>  =09=09pci_warn(pdev, "containment event, status:%#06x: unmasked uncorrec=
+table error detected\n",
+>  =09=09=09 status);
+>  =09=09if (dpc_get_aer_uncorrect_severity(pdev, &info) &&
+> -=09=09    aer_get_device_error_info(pdev, &info)) {
+> -=09=09=09aer_print_error(pdev, &info);
+> +=09=09    aer_get_device_error_info(&info, 0)) {
+> +=09=09=09aer_print_error(&info, 0);
+>  =09=09=09pci_aer_clear_nonfatal_status(pdev);
+>  =09=09=09pci_aer_clear_fatal_status(pdev);
+>  =09=09}
+>=20
+
+--=20
+ i.
+
+--8323328-767706868-1747998832=:21466--
