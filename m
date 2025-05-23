@@ -1,206 +1,132 @@
-Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
+Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 167B2218AC8;
-	Fri, 23 May 2025 03:10:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1EDB2DCBE7
+	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 03:15:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747969849; cv=none; b=dt/Jub4qZdm5bovj+VmWMBXY4DwWtx/jHLPVBSLmHsiKNmTarG4P3ghPywbgfSzhI47ofWstOCWnCqxRAsfhhoAu2dyY3pDfxMMb+CAPZ5fEsDTba1NXAXHi5SZHS4rS6Y6HKI8KlUrzEoiuu6Hasey2pCLcZ1/7ctDjV7p1ls4=
+	t=1747970132; cv=none; b=ZWq84X0NIjNNy4xH9DxbeDhJEnWgnRsveD12BhK60W4RRLHYrzq5cQnYDy4mAlH3q4ySe6SuqUSeFCwN6nqAfRVK/1ee9WXwEwOTJcHDsezUeq+4xQJz6HJywWgFR89t9OwGGdjv21paXKK+KqWYz94e0jfOBkM1p8G3R5ZDbjk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747969849; c=relaxed/simple;
-	bh=EDg1HtRdEKu2wx072cSUDWyclmRErO56Gv/XPdGs1ZM=;
+	s=arc-20240116; t=1747970132; c=relaxed/simple;
+	bh=LhNY0BxXuM4HdG4W9fFANPxQdVM0xhwalC4VKXm0rcY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=m6GWPCyqRyqzlkEPbhxEbA4gamvYZdzIF35qpLsrftZUlFC73UwLrurvXwTlywuVFo7QUDx3LeYoO/cg9QvQUbNow3eSlKjFvQI4O6+G9NWVugkQ6KIdDNpchgOztkPGDa5ynkxC8FCm3wxnugEYSunvnPzgWiq4wxe2xhCnwUs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lzReLTYK; arc=none smtp.client-ip=209.85.210.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=QIMZafIU9Ye/cE4ynGaDR/bCuGq3L6VrPdmJFKacHBwHhzKC0VdHTOTWFPvw+Kt8TcldXxLCl4RjbQhgLPOLn8AGxyEcc9XbOyfDh+Lxmzwq6J1lt+p5F6uHoKEInJTFX2Of16Q7Sxd04i59h3silnwhlddDPEvHo3fZNW6zv9Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=Hynr+nki; arc=none smtp.client-ip=209.85.216.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lzReLTYK"
-Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-73c17c770a7so9257338b3a.2;
-        Thu, 22 May 2025 20:10:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="Hynr+nki"
+Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-30e542e4187so6419873a91.3
+        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 20:15:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747969847; x=1748574647; darn=vger.kernel.org;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1747970129; x=1748574929; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=IQ+DvPxjKWEL7WwSCKI9gbi6R0NoaJVuMVX8JBqcEaw=;
-        b=lzReLTYKNmOdFdM6nlTEu1aHVWWKDa7BndxmAuLx3cosdTISirob1TX6YOf2WZDmXE
-         +QfuBxIg+c5NDfguQo5HvAtwbC0BDbxzPq9+Xkd9XQM0z2f+CrHTg5qoS2kAZ/scSnoa
-         B/9KkcuHa/+x9iqwz4GGsTYdJe5My9nAMK2yVhp+QxBLHmknl12bHUyBXDuDHM1+BYJX
-         n40ELEsRNO2a4RCAqBJzz3VBZe6De2m9R1wcl5ioHRs/jLe4GIW3nYdnSgpsvdBmqwoo
-         4WcCbxdMAswIiZEf7jn6KvKEjBnbxlZNEkykyQk60ZhDBk4dtEvmpga/lye+UqGtjOe0
-         mj0w==
+        bh=zf4cQwVYXNPOaen5hCKSUgiQvAl4J3+F/oWEnqL3rNw=;
+        b=Hynr+nkiRVvKvXjcDK+V6Am1iNwJALIgzTDOImoJdFkXS1oGNidf2f7DzLBvZ0e8KL
+         DT+ZBiFBnq4Z1i0McBS6VaL5PRIqGneKoNoLQqt0dxubinmGfn8lNg2gknUSuQAWpuRP
+         z6TZCfGyoFEvRnwooadI8uuM97q7zG0luDrkdfXtdmc/xaQcyy0xnvfYzIAIQgqxFuU9
+         dpzQldblSUeDP5XTM0Z5BxhUIAutRxUl64SrFAhoYpuij9uqWuwlsDK9agWHFyje/ydI
+         7XFTGoPdPCp3/CQ5N7MBSPSDKy3v8neqtDtq3hjvXtMDF942EJxxD6TZeM/0Qjme6tCZ
+         vrWg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747969847; x=1748574647;
+        d=1e100.net; s=20230601; t=1747970129; x=1748574929;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=IQ+DvPxjKWEL7WwSCKI9gbi6R0NoaJVuMVX8JBqcEaw=;
-        b=X8DbINYluLnJQNnVlzKmy7K64qOJzR8Y1DQWSykxekfIXlR+ltYuE7GEMPd7bXLsQk
-         D5uGduYfzY9lfqGFW4BaFPrAiLDzzG4kjBWg2TMmcoYB1OBMQnzg1pa/EZ9ao0B2IPAv
-         jC/Ky2JgHEO6UUmqTEbifa1OmbrKeRHkAqZKruwWwkLRaTGidQ10oBUizSVu6ti3EWDB
-         UUNXnYjqY5ZwzcQBExXzQcV8PSEXvVcuKaQM6YmCwRmu5SN+iFFXGW4rElJihCecyEhf
-         P4na8368jnBlCSnFZ6DiUEMxtikCuiuHrqJk7mp76mL+XrgPA+E5t7oAswKyijbi2Yg3
-         yhAA==
-X-Forwarded-Encrypted: i=1; AJvYcCV6Os4dXdvW4rliLlYoky3DlgQP1DKnRejQ9zWtWy3coLe1AGaUOMKjJHhFEygnJVIBu3r+ssHY/Y3aOzAy@vger.kernel.org, AJvYcCXC29OVyrcD87YyLujn3EUbVVyZGGRWbwXvcNNzkzVqBgcEJf4gliokBsWuxWUPjPJwr1+TzTRc17Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz/JkNEVf49r2E4EazytmWqs1NHVL5snQ1zqS3M3z7NplLppNb0
-	/xmmsRPD7LCwgNcB1FGIHi0TEoQt3yZ/CfCoclH6z08+SGa8iiDJoJw/cIxV3Q==
-X-Gm-Gg: ASbGncvovvzlpCclsA2pA0WzLmUtZcdnTHcJ6HBHRys29tIgCFy4ELTpxwbpuZ+vq7I
-	vwshAQgvUhDuTqXF+PPTtaW2nt2DwJSwDBRu/zao2q7qMS8qzjlcCaOWbJftUac0e89+cm+GLtM
-	VLG5yxFbFAijafaRa83VNsvJI0QN5ejnA5aOROEumiU69Vv6PnHBI6/uvGPdVgN+g/p/Sp1kQ9t
-	zFpDG2CM9SjhBvGKsdbsVJcREiXbPREQiO4iGJ/oYeW9eR7GS9djNAE7MbQ5+pPnot37JknWuE1
-	RTesjYKIWjniMllIKB+aVaHjDERYIeZX0VUGy0vTLVrTp/j37hy9f/oKxYgPfw==
-X-Google-Smtp-Source: AGHT+IHakgt4Oo144LFlK0CdrZV/uiDMprRX9FVu7JhxaNdV3cktYYQ5oHfnfFpCIqZpXDB87tP8lw==
-X-Received: by 2002:a05:6a20:7d9a:b0:215:a9d5:1a46 with SMTP id adf61e73a8af0-21879eda720mr1812330637.12.1747969847013;
-        Thu, 22 May 2025 20:10:47 -0700 (PDT)
-Received: from archie.me ([103.124.138.155])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b26eb0a89edsm11828150a12.67.2025.05.22.20.10.45
+        bh=zf4cQwVYXNPOaen5hCKSUgiQvAl4J3+F/oWEnqL3rNw=;
+        b=vVeBTxkLq5TSjqahW3osJ13mXu5M9trvNerDQyzDmUWMMPfe2Kuht5tBSDkuihn0I4
+         xZCe/V8w7ArOtliMZPHgBAcfROaECpRaa8c6/fGO+/S73q5SroHL4M1zI2Z/Nxv6QNuB
+         FzJPo5BmnkCOclJLN+GGoo/uv7BIlzn9P9ywcsl/KOtzZGxB/KpCrGUaxPyKjed2rJVi
+         vVR/Uz0Z2aYedktMzWAeiSe4tJ/SIKKUZJSMdinc81D2npEpg2JHq6mI7rBvvoPRSxXp
+         WsV8PkXXcqr3P4sEjDcQ6THy0MRhlV99bE+s7qZRO/NGEDtCmhVjtm4t5Vb7nRJgNs6m
+         +f+w==
+X-Forwarded-Encrypted: i=1; AJvYcCW4nvnZgpFBk9lleT+jf3IbDbQ7sHEbNtyk3kEpUU9eTwpiZeX44WUlP6XWK3g0xJ3SKxPe4REuPGybyNg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw0CaNbHo6a7MypqklHIeg1DHqefCT/gSriTDsDpQpvVP7T5xXe
+	WTRXCY2n4x42OCGUiBmQq66h9oTaxzuqAlwNSsH62wlJkdcyJUQy2vXyAbh/L8z4OuA=
+X-Gm-Gg: ASbGnctYHlOV7TBMWq5E26jwVRLcAfUMz7ZhgjDsSOiwL2UrSVJzq882YfoS5CLWs0g
+	vnex90MjbUPDzflYdfY6scVlgexu1ohwqSmEeQD2Agk8azTUCJjeev0LkOTM84NmhlBmo1WNZqd
+	ZwnbwXtzsjq5z1ZCbeoIu1RQqqqD0ovOqUbLeNuXgo17V5m03Oi++tfaGbYfZ/zzlqtORgBdDg7
+	5QezwkzPUO17nCVqgHO9TZO2vQu/3+zTZdm1YLFlMwl8bk8n6DON4t33vH7mcEu9QtY/phI+lOd
+	WA2NJaf5bn6i+KkkpJ+wRSz/5scbHREbh0ZNcT6m2qG/hIQ=
+X-Google-Smtp-Source: AGHT+IH9g1UYXJOSTj47YTF5i+3BMDAkYSeXiUVwIW9JAnWRQLqmnr8cIxWa5eVMHVjEfljqT4Hirg==
+X-Received: by 2002:a17:90b:4a50:b0:2fa:157e:c790 with SMTP id 98e67ed59e1d1-30e7d4fe8c3mr36468278a91.5.1747970128754;
+        Thu, 22 May 2025 20:15:28 -0700 (PDT)
+Received: from ghost ([2601:647:6700:64d0:45bc:d2a6:c583:3b04])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30f365f7a27sm6292567a91.48.2025.05.22.20.15.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 May 2025 20:10:46 -0700 (PDT)
-Received: by archie.me (Postfix, from userid 1000)
-	id 6EDF642439C3; Fri, 23 May 2025 10:10:43 +0700 (WIB)
-Date: Fri, 23 May 2025 10:10:42 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Abdulrasaq Lawani <abdulrasaqolawani@gmail.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Jonathan Corbet <corbet@lwn.net>
-Cc: dri-devel@lists.freedesktop.org, linux-doc@vger.kernel.org,
+        Thu, 22 May 2025 20:15:27 -0700 (PDT)
+Date: Thu, 22 May 2025 20:15:25 -0700
+From: Charlie Jenkins <charlie@rivosinc.com>
+To: Han Gao <rabenda.cn@gmail.com>
+Cc: linux-riscv@lists.infradead.org,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
+	Jesse Taube <jesse@rivosinc.com>, Andy Chiu <andybnac@gmail.com>,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drm: add overview diagram for drm stack
-Message-ID: <aC_nMs-hAyd8cpDJ@archie.me>
-References: <20250522-drm-doc-updates-v1-1-d1efd54740bd@gmail.com>
+Subject: Re: [PATCH] riscv: vector: fix xtheadvector save/restore
+Message-ID: <aC_oTWjLMUfgKeIK@ghost>
+References: <c221c98dc2369ea691e3eb664bf084dc909496f6.1747934680.git.rabenda.cn@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="fFwlWSH1Re80NIG0"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250522-drm-doc-updates-v1-1-d1efd54740bd@gmail.com>
+In-Reply-To: <c221c98dc2369ea691e3eb664bf084dc909496f6.1747934680.git.rabenda.cn@gmail.com>
 
+On Fri, May 23, 2025 at 01:27:01AM +0800, Han Gao wrote:
+> Fix [1] save/restore vector register error
+> 
+> Link: https://lore.kernel.org/all/20241113-xtheadvector-v11-9-236c22791ef9@rivosinc.com/ [1]
+> 
+> Signed-off-by: Han Gao <rabenda.cn@gmail.com>
 
---fFwlWSH1Re80NIG0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Thank you!
 
-On Thu, May 22, 2025 at 06:20:27PM -0400, Abdulrasaq Lawani wrote:
-> -[Insert diagram of typical DRM stack here]
-> +Overview of the Linux DRM Architecture
-> +-----------------------------------------------
-> ++-----------------------------+
-> +|     User-space Apps         |
-> +| (Games, Browsers, ML, etc.) |
-> ++-----------------------------+
-> +              |
-> +              v
-> ++---------------------------------------+
-> +|    Graphics APIs   |   Compute APIs   |
-> +|  (OpenGL, Vulkan)  |  (OpenCL, CUDA)  |
-> ++---------------------------------------+
-> +          |                   |
-> +          v                   v
-> ++---------------------+  +-----------------------+
-> +|  User-space Driver  |  |    Compute Runtime    |
-> +|  (Mesa, AMD/NVIDIA) |  |  (OpenCL, CUDA, ROCm) |
-> ++---------------------+  +-----------------------+
-> +          |                   |
-> +          +--------+----------+
-> +                   |
-> +                   v
-> +        +-----------------------+
-> +        |   libdrm (DRM API)    |
-> +        +-----------------------+
-> +                   |
-> +                   v
-> ++-------------------------------------------+
-> +|     Kernel DRM/KMS Driver (i915, amdgpu,  |
-> +|     nouveau, etc.)                        |
-> ++-------------------------------------------+
-> +        |                       |
-> +        v                       v
-> ++----------------+     +-------------------+
-> +| GPU Display HW |     | GPU Compute Units |
-> ++----------------+     +-------------------+
-> +
+Reviewed-by: Charlie Jenkins <charlie@rivosinc.com>
 
-I get multiple Sphinx indentation warnings and errors:
-
-Documentation/gpu/introduction.rst:23: ERROR: Unexpected indentation. [docu=
-tils]
-Documentation/gpu/introduction.rst:22: WARNING: Block quote ends without a =
-blank line; unexpected unindent. [docutils]
-Documentation/gpu/introduction.rst:23: WARNING: Blank line required after t=
-able. [docutils]
-Documentation/gpu/introduction.rst:24: WARNING: Line block ends without a b=
-lank line. [docutils]
-Documentation/gpu/introduction.rst:25: WARNING: Block quote ends without a =
-blank line; unexpected unindent. [docutils]
-Documentation/gpu/introduction.rst:29: ERROR: Unexpected indentation. [docu=
-tils]
-Documentation/gpu/introduction.rst:28: WARNING: Block quote ends without a =
-blank line; unexpected unindent. [docutils]
-Documentation/gpu/introduction.rst:29: WARNING: Blank line required after t=
-able. [docutils]
-Documentation/gpu/introduction.rst:29: WARNING: Inline substitution_referen=
-ce start-string without end-string. [docutils]
-Documentation/gpu/introduction.rst:30: WARNING: Line block ends without a b=
-lank line. [docutils]
-Documentation/gpu/introduction.rst:31: WARNING: Block quote ends without a =
-blank line; unexpected unindent. [docutils]
-Documentation/gpu/introduction.rst:35: ERROR: Unexpected indentation. [docu=
-tils]
-Documentation/gpu/introduction.rst:35: WARNING: Inline substitution_referen=
-ce start-string without end-string. [docutils]
-Documentation/gpu/introduction.rst:36: WARNING: Line block ends without a b=
-lank line. [docutils]
-Documentation/gpu/introduction.rst:37: ERROR: Unexpected indentation. [docu=
-tils]
-Documentation/gpu/introduction.rst:37: WARNING: Blank line required after t=
-able. [docutils]
-Documentation/gpu/introduction.rst:38: WARNING: Line block ends without a b=
-lank line. [docutils]
-Documentation/gpu/introduction.rst:39: WARNING: Block quote ends without a =
-blank line; unexpected unindent. [docutils]
-Documentation/gpu/introduction.rst:42: ERROR: Unexpected indentation. [docu=
-tils]
-Documentation/gpu/introduction.rst:42: WARNING: Blank line required after t=
-able. [docutils]
-Documentation/gpu/introduction.rst:43: WARNING: Line block ends without a b=
-lank line. [docutils]
-Documentation/gpu/introduction.rst:44: WARNING: Block quote ends without a =
-blank line; unexpected unindent. [docutils]
-Documentation/gpu/introduction.rst:48: ERROR: Unexpected indentation. [docu=
-tils]
-Documentation/gpu/introduction.rst:48: WARNING: Blank line required after t=
-able. [docutils]
-Documentation/gpu/introduction.rst:48: WARNING: Inline substitution_referen=
-ce start-string without end-string. [docutils]
-Documentation/gpu/introduction.rst:49: WARNING: Line block ends without a b=
-lank line. [docutils]
-Documentation/gpu/introduction.rst:50: WARNING: Block quote ends without a =
-blank line; unexpected unindent. [docutils]
-
-Please wrap the diagram above in literal code block.
-
-Thanks.
-
---=20
-An old man doll... just what I always wanted! - Clara
-
---fFwlWSH1Re80NIG0
-Content-Type: application/pgp-signature; name=signature.asc
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCaC/nLwAKCRD2uYlJVVFO
-o0YoAPwP/GehTZZ/E4/JcMOdTC7wObkIe1OLa0lGTzgAjWND6AEApJP3MFdq+y9+
-RaJncUrLjmh4hjOHSxP5jQUoYmWL6wY=
-=++Ke
------END PGP SIGNATURE-----
-
---fFwlWSH1Re80NIG0--
+> ---
+>  arch/riscv/include/asm/vector.h | 12 ++++++------
+>  1 file changed, 6 insertions(+), 6 deletions(-)
+> 
+> diff --git a/arch/riscv/include/asm/vector.h b/arch/riscv/include/asm/vector.h
+> index e8a83f55be2b..7df6355023a3 100644
+> --- a/arch/riscv/include/asm/vector.h
+> +++ b/arch/riscv/include/asm/vector.h
+> @@ -200,11 +200,11 @@ static inline void __riscv_v_vstate_save(struct __riscv_v_ext_state *save_to,
+>  			THEAD_VSETVLI_T4X0E8M8D1
+>  			THEAD_VSB_V_V0T0
+>  			"add		t0, t0, t4\n\t"
+> -			THEAD_VSB_V_V0T0
+> +			THEAD_VSB_V_V8T0
+>  			"add		t0, t0, t4\n\t"
+> -			THEAD_VSB_V_V0T0
+> +			THEAD_VSB_V_V16T0
+>  			"add		t0, t0, t4\n\t"
+> -			THEAD_VSB_V_V0T0
+> +			THEAD_VSB_V_V24T0
+>  			: : "r" (datap) : "memory", "t0", "t4");
+>  	} else {
+>  		asm volatile (
+> @@ -236,11 +236,11 @@ static inline void __riscv_v_vstate_restore(struct __riscv_v_ext_state *restore_
+>  			THEAD_VSETVLI_T4X0E8M8D1
+>  			THEAD_VLB_V_V0T0
+>  			"add		t0, t0, t4\n\t"
+> -			THEAD_VLB_V_V0T0
+> +			THEAD_VLB_V_V8T0
+>  			"add		t0, t0, t4\n\t"
+> -			THEAD_VLB_V_V0T0
+> +			THEAD_VLB_V_V16T0
+>  			"add		t0, t0, t4\n\t"
+> -			THEAD_VLB_V_V0T0
+> +			THEAD_VLB_V_V24T0
+>  			: : "r" (datap) : "memory", "t0", "t4");
+>  	} else {
+>  		asm volatile (
+> -- 
+> 2.47.2
+> 
