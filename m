@@ -1,158 +1,129 @@
-Received: from fout-b4-smtp.messagingengine.com (fout-b4-smtp.messagingengine.com [202.12.124.147])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 959FC221DA8;
-	Fri, 23 May 2025 16:29:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.147
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D48B19ADBF
+	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 16:31:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748017763; cv=none; b=BgpeXHiMXJqIsE0tArmaCZ7PehpOpauGKLwBi6fH9AZdpOmbYyKmr8XwABY0zJ2JmljjiFIUij72PokICmK2QsDOYdntY/05GdPLfUmT9BxlnFrVQ936BD/w6rApdGDvHBjjZN+JmBYXSdpvPbaksCJY1uido9jyAEPz2I45xxE=
+	t=1748017866; cv=none; b=FFXCUezXsejTTv79mvZ1ii8TTTQAhc+7YDVxQof7Zd78boyjaD8N5phwBYpdyVF9YjhRfIS0xfZyiCL8eRtIGLjYftiWapqsjXGgiTefbRDAicso5oi5x07UNhTtJhTlWCJOKqUgV7zgy6cVfXXXoeEQTzAr4+tBUOiQ2LzI3mA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748017763; c=relaxed/simple;
-	bh=Kw6bWuaiyS3+hflqZXKFnnrzeY0NQuNKqxzLWMI8hCk=;
+	s=arc-20240116; t=1748017866; c=relaxed/simple;
+	bh=Gnya4kZJNaiLXSzvh+buuhUU5zQHKYGxGFiSUVggn2U=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=utuFc//aeyguVWqWKydR08dLGINwbrKBBxLziZdF/t91TifF49riQuADtX305BJS3PNo6nlQ25kMm4Fyh26QT72VdaXPcqn5RNzvBKEjkh+Fp6JHbxhHf+ukvaFVbAEI3juwMKgAiQ3h/7p/PixnBPot3nw7nPtSlA8jrq/InrY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jannau.net; spf=pass smtp.mailfrom=jannau.net; dkim=pass (2048-bit key) header.d=jannau.net header.i=@jannau.net header.b=agsAbmY3; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=IP7+WWPm; arc=none smtp.client-ip=202.12.124.147
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jannau.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jannau.net
+	 Content-Type:Content-Disposition:In-Reply-To; b=VkzTxdkEAIuPKjmdBya7OJj0CkVdrd1wFJaOesWqahmTj0EGTu/u03kYQuzNaBbkiwSUfC5mXgNuHMhdekY4qqHqelgOF7BSiWQiry65WBiYW8gKhCaPw6bpmgx5jhOSfGz2EeWQ79IY258xIorLdLRZyMPGZeC+jCtqIsDgQ68=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=EzTYcsH+; arc=none smtp.client-ip=209.85.221.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=jannau.net header.i=@jannau.net header.b="agsAbmY3";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="IP7+WWPm"
-Received: from phl-compute-12.internal (phl-compute-12.phl.internal [10.202.2.52])
-	by mailfout.stl.internal (Postfix) with ESMTP id 4AC521140115;
-	Fri, 23 May 2025 12:29:20 -0400 (EDT)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-12.internal (MEProxy); Fri, 23 May 2025 12:29:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jannau.net; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1748017760;
-	 x=1748104160; bh=/jlfPNouODknHqpqkHZeeFhINTA3VzKs1lAxLlE+jls=; b=
-	agsAbmY33GMWvWyNeAaz6utYRbBJfT3Ry4Jq8JESCeXlyPhOJYokhBeY6M0X/Rsg
-	Kem9qxXzOthnAOfSEen8pC7bds9o1CLHcQqwJjz4OGBGDgQNcXZeIX6S26z+E+N4
-	Ml6n69RI5s2GieN6BqZQsMBCTlYYbc9ixYd6ufLP5SD0YEyhjYsPBWe1ayPYpOKv
-	P6u+GU3Hao0WZoMuncTZ4aphvH3DFTF7vo52JMy3xfwrX0UphuwIYr9fSgjcYxd3
-	s40ypq18yK1QxVrm1Pxhqgf8TLVWtJxF2KFIUuGGbt2WoPhKOZwQ9qEbXyF7wnwq
-	IpYpPUvbEfOSwgl+M1gW5w==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1748017760; x=
-	1748104160; bh=/jlfPNouODknHqpqkHZeeFhINTA3VzKs1lAxLlE+jls=; b=I
-	P7+WWPmfAGkSo1ldXj/sdRVvNyyFulS7EJZzeLDfDwPbEHj/WAOvvMJxAPes3JJN
-	oTPsGFAX9waXsOkTBAb60Exojg5sN2qgyD5nAuLuLs6WAYeMA8Oom1EEK+bwtZPi
-	ylNqDxfH2Zb5yTPSWEzLXIoWZhc3XpGVcHOboxWwAgDFycfv2r/ikp1aXIJIT7Sq
-	hkQVuGaMweOuekbC7h/mDkCg1Fie5cJF52F6WXcp1B5TQjdTVjCMfNxQcdsKaIx8
-	U7cPFuiqkOBJdeEdPVnC343CxAFDJTblh9D0XJPq+4UlB3zj604nXJ9IQ8AwNdP4
-	O95LHXo01JxQ7BDWmR1HQ==
-X-ME-Sender: <xms:X6IwaFWHPctf93jQ6FEg67qFg4cyLbR1Y3lf47CePyykrmt_jCMHDA>
-    <xme:X6IwaFkZG5GxWlJpYmR2UDSJt-9FGi22AEnoiorD3HgV0bhKukLbJhSfodpnSDsA6
-    MPJkTcY5YqoRR3o1iU>
-X-ME-Received: <xmr:X6IwaBYZvKTIf4NsR8Gb6Z56QbeYwjjkDHsUAp5lsfv7ux534iBg4aXjW6O5fEOrEKtuXOaP7IBoGZ57fwHj66djSRaltKS3G2E>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgdelfeegucdltddurdegfedvrddttd
-    dmucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgf
-    nhhsuhgsshgtrhhisggvpdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttd
-    enucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhgg
-    tggugfgjsehtkeertddttdejnecuhfhrohhmpeflrghnnhgvucfirhhunhgruhcuoehjse
-    hjrghnnhgruhdrnhgvtheqnecuggftrfgrthhtvghrnhepuefgfefhvdeuvdffteegueev
-    lefhtdffgeefhefgffehtdegffefveetieeutdetnecuffhomhgrihhnpehkvghrnhgvlh
-    drohhrghenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhm
-    pehjsehjrghnnhgruhdrnhgvthdpnhgspghrtghpthhtohepiedpmhhouggvpehsmhhtph
-    houhhtpdhrtghpthhtoheprhgrfhgrvghlsehkvghrnhgvlhdrohhrghdprhgtphhtthho
-    peifpggrrhhmihhnsehgmhigrdguvgdprhgtphhtthhopehlvghnsgeskhgvrhhnvghlrd
-    horhhgpdhrtghpthhtoheplhhinhhugidqrggtphhisehvghgvrhdrkhgvrhhnvghlrdho
-    rhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrd
-    horhhgpdhrtghpthhtoheprghrnhgusegrrhhnuggsrdguvg
-X-ME-Proxy: <xmx:X6IwaIXey5ugv4zkfWpdPRU1ccUIRNBkCtk92rxWUsQK6VZJZBzMqQ>
-    <xmx:X6IwaPkAmTRSf7fyM4iBDIXJTrZq45ybrsOMZXhsRoX-YKNT9MJs7g>
-    <xmx:X6IwaFe8dzDt7oALnJAGbSTTfu_DU4u0ojhsxpu784x4e5qYuDqYEA>
-    <xmx:X6IwaJHsAruKQ1rSPXbSK_p0LBQEnRzLTp0UCjTUoycPkvH0GR8ZGw>
-    <xmx:YKIwaONIxjOB8CBz6Ha4sBVid0pI8usgKKyBuE-FzCD_Z9dWgXtO76oU>
-Feedback-ID: i47b949f6:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 23 May 2025 12:29:19 -0400 (EDT)
-Date: Fri, 23 May 2025 18:29:17 +0200
-From: Janne Grunau <j@jannau.net>
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Armin Wolf <W_Armin@gmx.de>, lenb@kernel.org,
-	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 1/2] ACPI: platform_profile: Add support for non-ACPI
- platforms
-Message-ID: <20250523162917.GC2575813@robin.jannau.net>
-References: <20250518185111.3560-1-W_Armin@gmx.de>
- <CAJZ5v0hNmMtR4V0tYqD1dV2BqAKJ2sCOyBadkVtG3sS3V90uvw@mail.gmail.com>
- <a6d92cdd-4dc3-4080-9ed9-5b1f02f247e0@gmx.de>
- <CAJZ5v0icRdTSToaKbdf=MdRin4NyB2MstUVaQo8VR6-n7DkVMQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EzTYcsH+"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-3a363ccac20so77617f8f.2
+        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 09:31:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1748017863; x=1748622663; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=igC70o8ybU294XiVgv2dCfqybHERyfthoQG4v5gTf+k=;
+        b=EzTYcsH+ieJ5fX2NllerQTXMyQxKFnWPU+3zbOOEnfQRiaq/jJXyscLGoeTWraIOC4
+         QkLYHyUABa1nYZdp8fpa5m1pa6qmn0aD7NZz/x2egfiXx+MY757sj23oAJfqVR8ly0dW
+         iY5Pntf2btt5gHlj91fM5gALOTBgrT969EUKzobzzflnRwpvjjLnvInc0rkXeOwoo8ug
+         iDNuInh8VmHqnATrgiOxdSbWT2xwLbOsvNh26Lp6KKmdrL9ZRocxF1EP4yZmjb7hhM6A
+         hIythVqCjncip4OfeWhRSYAl/xFrdzW9QCla7qUrMoD9owVgwrHnPzFSwRptVKKrlBcl
+         aR5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748017863; x=1748622663;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=igC70o8ybU294XiVgv2dCfqybHERyfthoQG4v5gTf+k=;
+        b=D1pDNxP5nao0xE4E5AEoitOJuE6Yai/16UIv8WWztb9QHD89odF/WcPlpmXhFMX/AM
+         nmUHrg+ttyMyh5SBY2lxjbo29Kdq2fW8nogPG421gH44LGEsnp3qItYtDBXvIJmmpgmY
+         WbBG0MYuQ5qtB5Dx5xNKQPJYBUn78irVVJSCnZX950SVuuCfi4IxyfwhA22WQnDL9ntP
+         Gd2EGBAp2tPgwrHJKRuq5CndbsjUfaT3has8BiJuJcEX5aC8CuY3LK6//gKeS38CPAwi
+         BeIDoNL0XBm65E/go2Np6+pnRctahE7NIfdkPZQaYBjKCFb8j+HYaRqhms++wnsUHyUI
+         kErg==
+X-Forwarded-Encrypted: i=1; AJvYcCUfx3VuZMGkdk8Dbm3MCDvwpPmUJtYS7iro9JzUbI2MubqdRsTDtwyeftZI1L8adHIJ/mouYJLkitSkvpQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyqk0A7QY59zq0OQg/ug5TWY6zTIYBRmv1mHhsvrmHFk5H9d66I
+	ph89FQn19GckzIa0Dd/ksk09vTaNpJlRi35Ds+fBYrwVee+Isc6ZNH3S04iuahzlk80=
+X-Gm-Gg: ASbGncs6N/F7K2Rrjp2xRlt0S4xHCgCLXE9VoJ4hoqTIEC1Fzc6XrkChddvdoFZYKpK
+	VjWOYprQw2ksgrQ9Pfh32Q1iPzDbkiqwt4D1t8JhWIyZuYvM7hI3ib4Z0BDUFEOTqATfpfS3WKe
+	/LG9REfwUi2NU0m6AhQKDJaHEU44sJo3wnz9Ku1PSn6GEOONh2a1oE4+x3LHz474QlvWkgeALyN
+	CYoEpAafCiriDtCP4QME84H12HW84CQMMrpwWKs7La5fBqOOwR1I1PgN8grmv51FjhGUIjJO4AT
+	fOmJfyNTDZ20jZiIotsszPtE3Molyzvmcmt+QPoTnbRB4fpcSSk06SZm
+X-Google-Smtp-Source: AGHT+IGGTvjpF7sv2w5zjZ0EW0X+dRfZsZNJ1QvwQmRtd2GPgdBA3IhgoeMEt8+gF3DgVzVaSIQ1fw==
+X-Received: by 2002:a05:6000:4202:b0:3a3:61b8:a637 with SMTP id ffacd0b85a97d-3a4c20f8dedmr3518632f8f.22.1748017862887;
+        Fri, 23 May 2025 09:31:02 -0700 (PDT)
+Received: from localhost ([196.207.164.177])
+        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-44804e89c42sm153252035e9.21.2025.05.23.09.31.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 23 May 2025 09:31:02 -0700 (PDT)
+Date: Fri, 23 May 2025 19:30:58 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: long.yunjian@zte.com.cn
+Cc: sudeep.holla@arm.com, cristian.marussi@arm.com, peng.fan@nxp.com,
+	florian.fainelli@broadcom.com, fang.yumeng@zte.com.cn,
+	arm-scmi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, christophe.jaillet@wanadoo.fr,
+	mou.yi@zte.com.cn, ouyang.maochun@zte.com.cn, xu.lifeng1@zte.com.cn
+Subject: Re: [PATCH v2] firmware: arm_scmi: Use dev_err_probe() simplify the
+ code
+Message-ID: <aDCiwqwez8nzk5F8@stanley.mountain>
+References: <20250521161449954uFxEsoI6Zg_7wDu6IAfWk@zte.com.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJZ5v0icRdTSToaKbdf=MdRin4NyB2MstUVaQo8VR6-n7DkVMQ@mail.gmail.com>
+In-Reply-To: <20250521161449954uFxEsoI6Zg_7wDu6IAfWk@zte.com.cn>
 
-On Fri, May 23, 2025 at 04:39:59PM +0200, Rafael J. Wysocki wrote:
-> On Thu, May 22, 2025 at 6:34 AM Armin Wolf <W_Armin@gmx.de> wrote:
-> >
-> > Am 21.05.25 um 22:17 schrieb Rafael J. Wysocki:
-> >
-> > > On Sun, May 18, 2025 at 8:51 PM Armin Wolf <W_Armin@gmx.de> wrote:
-> > >> Currently the platform profile subsystem assumes that all supported
-> > >> (i.e. ACPI-capable) platforms always run with ACPI being enabled.
-> > >> However some ARM64 notebooks do not support ACPI and are instead
-> > >> using devicetree for booting.
-> > >>
-> > >> Do not register the legacy sysfs interface on such devices as it
-> > >> depends on the acpi_kobj (/sys/firmware/acpi/) being present. Users
-> > >> are encouraged to use the new platform-profile class interface
-> > >> instead.
-> > > So how does it work in this case?
-> > >
-> > The platform profile subsystem also exposes a more modern class-based sysfs interface,
-> > see Documentation/ABI/testing/sysfs-class-platform-profile for details.
-> >
-> > This interface does not depend on /sys/firmware/acpi being present, so userspace
-> > programs can still control the platform profiles using the class-based interface.
-> >
-> > This will become very important once we have platform profile drivers not depending on
-> > some sort of ACPI interface. I suspect that sooner or later some drivers for the embedded
-> > controllers on ARM64 notebooks (devicetree!) will register with the platform profile subsystem.
-> >
-> > Apart from that this allows input drivers using platform_profile_cycle() to work on non-ACPI
-> > platforms (like ARm64 devices using devicetree).
+On Wed, May 21, 2025 at 04:14:49PM +0800, long.yunjian@zte.com.cn wrote:
+> From: Yumeng Fang <fang.yumeng@zte.com.cn>
 > 
-> This driver though is located in drivers/acpi/ and depends on
-> CONFIG_ACPI.  Moreover, the platform profile provider drivers need to
-> select ACPI_PLATFORM_PROFILE so it gets built.  This means that there
-> are no non-ACPI platform profile providers currently in the tree.
+> In the probe path, dev_err() can be replaced with dev_err_probe()
+> which will check if error code is -EPROBE_DEFER and prints the
+> error name. It also sets the defer probe reason which can be
+> checked later through debugfs.
 > 
-> While the observation that the code in the driver, other than the
-> legacy sysfs interface, doesn't really depend on ACPI is valid, if you
-> want it to be used on systems without ACPI, it needs to be properly
-> converted to a generic driver.
+> Signed-off-by: Yumeng Fang <fang.yumeng@zte.com.cn>
+> ---
+> v1 -> v2
+> (1) Order the includes alphabetically.
+> (2) Delete "ret = PTR_ERR(*)", and then replace ret in dev_err_probe with "PTR_ERR(*)".
 > 
-> For now, it is better to simply make it fail to initialize without
-> ACPI, so I'm going to apply this patch:
+>  .../firmware/arm_scmi/transports/mailbox.c    | 20 +++++++------------
+>  1 file changed, 7 insertions(+), 13 deletions(-)
 > 
-> https://patchwork.kernel.org/project/linux-acpi/patch/20250522141410.31315-1-alexghiti@rivosinc.com/
+> diff --git a/drivers/firmware/arm_scmi/transports/mailbox.c b/drivers/firmware/arm_scmi/transports/mailbox.c
+> index bd041c99b92b..764cbeac2492 100644
+> --- a/drivers/firmware/arm_scmi/transports/mailbox.c
+> +++ b/drivers/firmware/arm_scmi/transports/mailbox.c
+> @@ -8,6 +8,7 @@
+> 
+>  #include <linux/err.h>
+>  #include <linux/device.h>
+> +#include <linux/dev_printk.h>
+>  #include <linux/mailbox_client.h>
+>  #include <linux/of.h>
+>  #include <linux/of_address.h>
+> @@ -214,31 +215,24 @@ static int mailbox_chan_setup(struct scmi_chan_info *cinfo, struct device *dev,
+> 
+>  	smbox->chan = mbox_request_channel(cl, tx ? 0 : p2a_chan);
+>  	if (IS_ERR(smbox->chan)) {
+> -		ret = PTR_ERR(smbox->chan);
+> -		if (ret != -EPROBE_DEFER)
+> -			dev_err(cdev,
+> -				"failed to request SCMI %s mailbox\n", desc);
+> -		return ret;
+> +		return dev_err_probe(cdev, PTR_ERR(smbox->chan),
+> +				     "failed to request SCMI %s mailbox\n", desc);
+>  	}
 
-That unfortunately does not help with the hid-lenovo regression. Commit
-84c9d2a968c8 ("HID: lenovo: Support for ThinkPad-X12-TAB-1/2 Kbd Fn
-keys") added a platform_profile_cycle() call and thus a dependency on
-platform_profile. hid-lenovo is used for USB and Bluetooth devices and
-not just for Lenovo laptop/tablet specific devices.
-Above patch just avoids the warning splat but still prevents loading
-hid-lenovo when ACPI is enabled in the kernel (like Distro kernels) on
-a non-ACPI system. This breaks devices like "Lenovo ThinkPad Compact
-Keyboard with TrackPoint" on such systems.
+Remove the { } braces as well.  They will cause a checkpatch problem if
+you re-run checkpatch.pl --strict on the resulting file.  Same for the
+other two as well.
 
-I will send a patch to remove platform_profile_cycle() call as short
-term regression fix and tell the original author to to resubmit once the
-platform_profile dependency on non-ACPI systems is worked out.
+regards,
+dan carpenter
 
-Janne
