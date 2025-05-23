@@ -1,393 +1,143 @@
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8CC619F11B
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 07:10:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1FEE19D8B7
+	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 07:12:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747984221; cv=none; b=KzVX2peZyVktn/TRutLNO7yTAQik/JICA02RJFaVbFN0fpJ/jVveEhDosSBHBZGcd6kxA0jzityDZuZrApO6S8chVs0JZYWWI7xx8+DeirSS0ZrS8NNhzay/hb2niQ9VnlCmUyHRRLOIypEQJn+0klrCM+44llTuC8TL/LBDEcE=
+	t=1747984334; cv=none; b=I76sk6amGhNxDDrsrxrrW8XsSzHdORvb8UGZDY9mVRNYSX8TkQVt2lpaPXHZJka5Na+aJbKB9i/r1DupoF6SyySuzalBRueUqzpk9cFUSU0KOHNmnpOQOsXscVqnheIebQFo2xwM/OfoLvRwPqNhft0oZAYabfz+ta3ty5lR58Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747984221; c=relaxed/simple;
-	bh=s0qj1HYVUZC1F16YM/EAqBluZl24qRKoyx4kOGu0q8M=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=EX7ZYQdyKd4DgUwzhvzj7qgrsFmXtyqUbWhgwfiiqEPlAPJhi32mW8L4aiZKXSOQ6bja7wWAkmf7LgYd5QF5DMWB3dDUy8BgYhhZjroOp2w6x5P72sMD0zMSPyRBvwoKoq60GJXuWSjQe5/CTWcf2mAEvliibgvuOQmX5QrNjY0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cEDO75yN; arc=none smtp.client-ip=209.85.218.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747984334; c=relaxed/simple;
+	bh=Ht+UV6Z7aQptFNwpD9iPRdTfJSkZpFJfOXbrFp82SPo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZPyVEEqL8MHxSAHACNYUw2V3ZMUFMPXdpTWjVpRMGd8GEu0FwbcZDf2ZGyY0EzKZvxdZ/WJchxZCvbo2Brbjeta/xXbRusYJ7Iv7F2AtiE/vL/kCPlFD7auMbDQqYUdicPhRs0CcuHePP1OqHzYiXq08kR8s1W26omXIyY2MPmA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=yTyZ2We+; arc=none smtp.client-ip=209.85.221.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cEDO75yN"
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-ad5574b59c0so1097410766b.2
-        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 00:10:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yTyZ2We+"
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-3a367b6ad08so755891f8f.2
+        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 00:12:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747984218; x=1748589018; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=psWq3z8m85bqv4VpT7bLMSWTFKID89rBSYBA4nH9rFw=;
-        b=cEDO75yNF0QtMyzyM5ZPHuSQe92rCaerQxN96CwdUpp22ld3UUw43GZhh9zw2TNL+f
-         QUrQv9OrP2MZ6aH8ZIlAchPTBM+AhpdDGTASPhRt73WFNvMtqYwQTD00wQNaZQx/toqS
-         7ycdkVauzltTRsSQIszm7qcZov/tvfZHkGicJ48SWTLpuY5OFYyrxrnkZnGRLxIgQR3o
-         heaHaFxVDrlmFZSXZqI7jeWPD5rXNt2U3adE/4QGEjJ+ltoDVyE/6uXdON5tlGOQ0wP9
-         esyo+ZteRUsU5KjrM5KI2Aht+1hvNZVDP5U5w4j5yHG8gK4bYc1vGL+zd7Fr2Dn48LyO
-         9I9g==
+        d=linaro.org; s=google; t=1747984331; x=1748589131; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=y9wcJktofqVWI3CDj0WY+uIWHsaWsvQJKV0vHBPO+mo=;
+        b=yTyZ2We+/slR2m/cCBouCjdMEoH9cy2iklMzPapt9TWWBlqaX2j6Vud1IM1BFYxqpF
+         PzPyrc0PcEb7l3RRwSdSWzUdCGnygdANUBh+7q4KQMv3TH8ZBLGatVkiEALidnHU5Gf3
+         77bkv8WwgBzTMmE/7YAfxAaahr7iXGd/yIPwmhy4xJKuCMFXakdVRQ687+hOd3GGBEmb
+         13d0l7GtpzmuOa+o+0MDPJ5bMK5mKv7GXEfRDOZYC3FlXGKOPDxJvjkRYioW5PiR2N1o
+         sfJ9RUR//KQmg7D7vDpO538aDMY3y7nMJFOcIiALsRHDc0608FYN3lNZvIa+zgmzeNvT
+         wXbA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747984218; x=1748589018;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=psWq3z8m85bqv4VpT7bLMSWTFKID89rBSYBA4nH9rFw=;
-        b=lX917jsl7BPw3H76WFhRmRT6wUm9SOdM4JLhmGS7ojVvD3UyVNe+Dkg9jNRXFJzk41
-         9qHcub5vzFy4A+rSYHCOkgdJCIDQoxz/qQNB4XNYb+oB/UnZI5jGHToTBSqtfc77TzTA
-         FPjbTTDixaQs24pl4Z1VsNxnQk9uVtSnJ045RGVYDsrtuOEZhtcNq9ab3kcsLPX0EBhq
-         /9maTeM1Sps1ENQHHgkcJr8z2jLaVGQqxZHQUEZ4UlCgzJsTPy5Jk3JeecoUpak5chCX
-         Xmzm6pUPACz4Xoht2+bgDO0TEUSuVM893DXaivoOBxnzZFg5yeXvHto7vhjyTENd6OcG
-         m5XA==
-X-Forwarded-Encrypted: i=1; AJvYcCXfXBvtEeYNa7YyjVXLb/0c/JyjA5qftvmqdby5W+l8sPMJSIAAeZQXXo+kHkNuKhYO4Po1RPykw4tI32c=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwdyZxyBcmNW/ZRqyC3O92MxvEMNPPWvA6koteSn/meBaljvPz5
-	5tpdSSZI35RgBnYM17Xeui7FzD/qprjH2lNGrFjC+kRB3kX7ajudbjt+pXO86SiqVpA6DalDY+D
-	4HuLjDSo2ydZI55FuCJJACrMGj1XGX4ITfCfnivZjXg==
-X-Gm-Gg: ASbGncvYyqsqZvLbFp4MOllCgZHbfAzWC9QVkKXNQLyJk+hrxvbKg71T/5fF44y/udu
-	AFvIP58JLgxZw2rw5NksE0mpU9k8+Rx53y5xlc8EROkQ8dwdcDwmCbVMyO02TDEDuxwFOKeuRbL
-	7jD0TODpfNyy1Mdp5HvzyKh/ataC5pkT7kC5Y=
-X-Google-Smtp-Source: AGHT+IGAUWXACG5WwPLjQk0XIMVgHZ2GR2I0S2finLg9ytbRe6xt7N0y1Qz8suntOMz2kmChuw+V3HIoS4AE+EzWjbM=
-X-Received: by 2002:a17:907:3d10:b0:acb:33c6:5c71 with SMTP id
- a640c23a62f3a-ad536c1a834mr2408937866b.29.1747984217646; Fri, 23 May 2025
- 00:10:17 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1747984331; x=1748589131;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=y9wcJktofqVWI3CDj0WY+uIWHsaWsvQJKV0vHBPO+mo=;
+        b=tyzMAjzoqC5MNkkzxgK6xR1+tlVz+uw7pClbdzalr+DwrdQuTPfUhMyRQuIEUawCwZ
+         CPP/pb9CCQD8HuQEcmYLZSue6hEGAlKPjfkRnguLJm2UGRtZ/FMjZEnwB668+fP5r+xs
+         KkCtm5156Nrgg821ZcbPydNNCOLl//CspgIuCQy+qSX390dB+ld0JqkNPkzz/GPBNwLF
+         /Bv2CM3L/yeQrVKMd3AZ6UCXV+QJfueHeHdYN7UJYvNJIJDgVrwLZUyuC0/7x9ZWAoRG
+         H+MNshr4/lAg8A31Dhewu6hREgicP8DWtvtO04e3BYSnPhH/gPP2FOu6BoW+flsdgc/y
+         UETA==
+X-Forwarded-Encrypted: i=1; AJvYcCVnMmSnmEaRkV9uDpbboxIkfxHKaVs9PwTV35/2YLVt8Pexiu6QPle/rvNnkZRkEHmL7+1mFMoX6y2SoM4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyp9rrfugBd4vwxrWBYnV6SrHpBVVL1vWsyvqDrYP3Uemj69YrW
+	T4YZpEih+bZewK2bpnbVl9VmqnW3rXRGkyL+EFs68EQj5wGdB9Vu9PwNcJqibsctgVw=
+X-Gm-Gg: ASbGncv+jvYSZEA/uuS2ioxRWp3uofcm4zoy6KW80SgFtPvvaB3lCYthTjOnOaGUW1R
+	9n6JSFLzY62RjutPOz7RUd5G8tBoGB037w3OHhzlvU8bo08iBXrbaBGKkC//uh3SMAyBIJ8jkGO
+	Ska/zuBag+S8SsHoyg4t/uuOXiA5BuM0b3pHjRuqsTb0yV/JXK5w3vldo7Fixtn8InQp1NsXOiT
+	j+AbrAVIgwSl7AV1VKeZGLanABAIF+LM5cRxFbFiaUf4RxhRXiAMxuZmU5CgSU8Os+A13b9UFHa
+	N2RJ6MwkPTtVjGNoAqznfQ7s1cZb7NVd3ErCAoyzL2BrOLAy5NLaq/lZQzW4MH6Husomq/g=
+X-Google-Smtp-Source: AGHT+IGTK8IKeBlrlL85CwrhvZIeTflby+PuZV9bWjkME8T/VeEXqBiD4WNMgdtjoxnbqZZ/5+yCsQ==
+X-Received: by 2002:a05:600c:1c8f:b0:441:d244:1463 with SMTP id 5b1f17b1804b1-44b87a0eeefmr4609045e9.0.1747984330803;
+        Fri, 23 May 2025 00:12:10 -0700 (PDT)
+Received: from [192.168.1.29] ([178.197.223.125])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-447f3ce483bsm129076335e9.33.2025.05.23.00.12.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 23 May 2025 00:12:09 -0700 (PDT)
+Message-ID: <65f95a57-64cb-4815-8ff2-9021ab7b7ae3@linaro.org>
+Date: Fri, 23 May 2025 09:12:08 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1747276047.git.zhoubinbin@loongson.cn> <778675bfe1040cd1bf4d281dc5c5f20edc4145c1.1747276047.git.zhoubinbin@loongson.cn>
- <20250522092208.GB1199143@google.com>
-In-Reply-To: <20250522092208.GB1199143@google.com>
-From: Binbin Zhou <zhoubb.aaron@gmail.com>
-Date: Fri, 23 May 2025 15:10:04 +0800
-X-Gm-Features: AX0GCFvIEPoY7TLdSh637kUPlWeIADhqYAt7EMIVJ2WvSxjuFhKsIiRg_NoYNP0
-Message-ID: <CAMpQs4+dZjEzaBOrzknL2+5B5kkz5weZ2zWKu8GwHUoQZqPJ5A@mail.gmail.com>
-Subject: Re: [PATCH v2 1/3] mfd: ls2kbmc: Introduce Loongson-2K BMC MFD Core driver
-To: Lee Jones <lee@kernel.org>
-Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>, 
-	Corey Minyard <minyard@acm.org>, Huacai Chen <chenhuacai@kernel.org>, Xuerui Wang <kernel@xen0n.name>, 
-	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	openipmi-developer@lists.sourceforge.net, Chong Qiao <qiaochong@loongson.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 2/2] arm64: dts: rockchip: add DTs for Firefly
+ ROC-RK3588S-PC
+To: Chukun Pan <amadeus@jmu.edu.cn>, i@chainsx.cn
+Cc: devicetree@vger.kernel.org, heiko@sntech.de, krzk+dt@kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-rockchip@lists.infradead.org
+References: <20250519075432.2239713-3-i@chainsx.cn>
+ <20250523070026.50263-1-amadeus@jmu.edu.cn>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Content-Language: en-US
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
+ cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
+ JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
+ gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
+ J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
+ NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
+ BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
+ vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
+ Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
+ TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzTRLcnp5c3p0b2Yg
+ S296bG93c2tpIDxrcnp5c3p0b2Yua296bG93c2tpQGxpbmFyby5vcmc+wsGUBBMBCgA+AhsD
+ BQsJCAcCBhUKCQgLAgQWAgMBAh4BAheAFiEEm9B+DgxR+NWWd7dUG5NDfTtBYpsFAmgXUEoF
+ CRaWdJoACgkQG5NDfTtBYpudig/+Inb3Kjx1B7w2IpPKmpCT20QQQstx14Wi+rh2FcnV6+/9
+ tyHtYwdirraBGGerrNY1c14MX0Tsmzqu9NyZ43heQB2uJuQb35rmI4dn1G+ZH0BD7cwR+M9m
+ lSV9YlF7z3Ycz2zHjxL1QXBVvwJRyE0sCIoe+0O9AW9Xj8L/dmvmRfDdtRhYVGyU7fze+lsH
+ 1pXaq9fdef8QsAETCg5q0zxD+VS+OoZFx4ZtFqvzmhCs0eFvM7gNqiyczeVGUciVlO3+1ZUn
+ eqQnxTXnqfJHptZTtK05uXGBwxjTHJrlSKnDslhZNkzv4JfTQhmERyx8BPHDkzpuPjfZ5Jp3
+ INcYsxgttyeDS4prv+XWlT7DUjIzcKih0tFDoW5/k6OZeFPba5PATHO78rcWFcduN8xB23B4
+ WFQAt5jpsP7/ngKQR9drMXfQGcEmqBq+aoVHobwOfEJTErdku05zjFmm1VnD55CzFJvG7Ll9
+ OsRfZD/1MKbl0k39NiRuf8IYFOxVCKrMSgnqED1eacLgj3AWnmfPlyB3Xka0FimVu5Q7r1H/
+ 9CCfHiOjjPsTAjE+Woh+/8Q0IyHzr+2sCe4g9w2tlsMQJhixykXC1KvzqMdUYKuE00CT+wdK
+ nXj0hlNnThRfcA9VPYzKlx3W6GLlyB6umd6WBGGKyiOmOcPqUK3GIvnLzfTXR5DOwU0EVUNc
+ NAEQAM2StBhJERQvgPcbCzjokShn0cRA4q2SvCOvOXD+0KapXMRFE+/PZeDyfv4dEKuCqeh0
+ hihSHlaxTzg3TcqUu54w2xYskG8Fq5tg3gm4kh1Gvh1LijIXX99ABA8eHxOGmLPRIBkXHqJY
+ oHtCvPc6sYKNM9xbp6I4yF56xVLmHGJ61KaWKf5KKWYgA9kfHufbja7qR0c6H79LIsiYqf92
+ H1HNq1WlQpu/fh4/XAAaV1axHFt/dY/2kU05tLMj8GjeQDz1fHas7augL4argt4e+jum3Nwt
+ yupodQBxncKAUbzwKcDrPqUFmfRbJ7ARw8491xQHZDsP82JRj4cOJX32sBg8nO2N5OsFJOcd
+ 5IE9v6qfllkZDAh1Rb1h6DFYq9dcdPAHl4zOj9EHq99/CpyccOh7SrtWDNFFknCmLpowhct9
+ 5ZnlavBrDbOV0W47gO33WkXMFI4il4y1+Bv89979rVYn8aBohEgET41SpyQz7fMkcaZU+ok/
+ +HYjC/qfDxT7tjKXqBQEscVODaFicsUkjheOD4BfWEcVUqa+XdUEciwG/SgNyxBZepj41oVq
+ FPSVE+Ni2tNrW/e16b8mgXNngHSnbsr6pAIXZH3qFW+4TKPMGZ2rZ6zITrMip+12jgw4mGjy
+ 5y06JZvA02rZT2k9aa7i9dUUFggaanI09jNGbRA/ABEBAAHCwXwEGAEKACYCGwwWIQSb0H4O
+ DFH41ZZ3t1Qbk0N9O0FimwUCaBdQXwUJFpZbKgAKCRAbk0N9O0Fim07TD/92Vcmzn/jaEBcq
+ yT48ODfDIQVvg2nIDW+qbHtJ8DOT0d/qVbBTU7oBuo0xuHo+MTBp0pSTWbThLsSN1AuyP8wF
+ KChC0JPcwOZZRS0dl3lFgg+c+rdZUHjsa247r+7fvm2zGG1/u+33lBJgnAIH5lSCjhP4VXiG
+ q5ngCxGRuBq+0jNCKyAOC/vq2cS/dgdXwmf2aL8G7QVREX7mSl0x+CjWyrpFc1D/9NV/zIWB
+ G1NR1fFb+oeOVhRGubYfiS62htUQjGLK7qbTmrd715kH9Noww1U5HH7WQzePt/SvC0RhQXNj
+ XKBB+lwwM+XulFigmMF1KybRm7MNoLBrGDa3yGpAkHMkJ7NM4iSMdSxYAr60RtThnhKc2kLI
+ zd8GqyBh0nGPIL+1ZVMBDXw1Eu0/Du0rWt1zAKXQYVAfBLCTmkOnPU0fjR7qVT41xdJ6KqQM
+ NGQeV+0o9X91X6VBeK6Na3zt5y4eWkve65DRlk1aoeBmhAteioLZlXkqu0pZv+PKIVf+zFKu
+ h0At/TN/618e/QVlZPbMeNSp3S3ieMP9Q6y4gw5CfgiDRJ2K9g99m6Rvlx1qwom6QbU06ltb
+ vJE2K9oKd9nPp1NrBfBdEhX8oOwdCLJXEq83vdtOEqE42RxfYta4P3by0BHpcwzYbmi/Et7T
+ 2+47PN9NZAOyb771QoVr8A==
+In-Reply-To: <20250523070026.50263-1-amadeus@jmu.edu.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Lee:
+On 23/05/2025 09:00, Chukun Pan wrote:
+> 
+>> +&gmac1 {
+>> +	clock_in_out = "output";
+>> +	phy-handle = <&rgmii_phy1>;
+>> +	phy-mode = "rgmii-id";
+>> +	pinctrl-0 = ...
+>> +	pinctrl-names = "default";
+> 
+> pinctrl-names should be placed before pinctrl-0
 
-Thanks for your detailed review.
+That's unusual - not inline with common coding style and with most of
+SoCs. Is this some kind of known rule valid in Rockchip?
 
-On Thu, May 22, 2025 at 5:22=E2=80=AFPM Lee Jones <lee@kernel.org> wrote:
->
-> Just "core driver" in the subject line, rather than "MFD core driver".
->
-> > The Loongson-2K Board Management Controller provides an PCIe
-> > interface to the host to access the feature implemented in the BMC.
-> >
-> > The BMC is assembled on a server similar to the server machine with
-> > Loongson-3C6000 CPUs. It supports multiple sub-devices like DRM.
-> >
-> > Co-developed-by: Chong Qiao <qiaochong@loongson.cn>
-> > Signed-off-by: Chong Qiao <qiaochong@loongson.cn>
-> > Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
-> > ---
-> >  drivers/mfd/Kconfig       |  13 ++++
-> >  drivers/mfd/Makefile      |   2 +
-> >  drivers/mfd/ls2kbmc-mfd.c | 156 ++++++++++++++++++++++++++++++++++++++
-> >  3 files changed, 171 insertions(+)
-> >  create mode 100644 drivers/mfd/ls2kbmc-mfd.c
-> >
-> > diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-> > index 22b936310039..04e40085441d 100644
-> > --- a/drivers/mfd/Kconfig
-> > +++ b/drivers/mfd/Kconfig
-> > @@ -2422,5 +2422,18 @@ config MFD_UPBOARD_FPGA
-> >         To compile this driver as a module, choose M here: the module w=
-ill be
-> >         called upboard-fpga.
-> >
-> > +config MFD_LS2K_BMC
-> > +     tristate "Loongson-2K Board Management Controller Support"
-> > +     depends on LOONGARCH
-> > +     default y if LOONGARCH
-> > +     select MFD_CORE
-> > +     help
-> > +       Say yes here to add support for the Loongson-2K BMC
-> > +       which is a Board Management Controller connected to the PCIe bu=
-s.
-> > +       The device supports multiple sub-devices like DRM.
-> > +       This driver provides common support for accessing the devices;
-> > +       additional drivers must be enabled in order to use the
-> > +       functionality of the BMC device.
->
-> This paragraph has some odd line breaks.  Please re-align.
->
-> >  endmenu
-> >  endif
-> > diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-> > index 948cbdf42a18..18960ea13b64 100644
-> > --- a/drivers/mfd/Makefile
-> > +++ b/drivers/mfd/Makefile
-> > @@ -290,3 +290,5 @@ obj-$(CONFIG_MFD_RSMU_I2C)        +=3D rsmu_i2c.o r=
-smu_core.o
-> >  obj-$(CONFIG_MFD_RSMU_SPI)   +=3D rsmu_spi.o rsmu_core.o
-> >
-> >  obj-$(CONFIG_MFD_UPBOARD_FPGA)       +=3D upboard-fpga.o
-> > +
-> > +obj-$(CONFIG_MFD_LS2K_BMC)   +=3D ls2kbmc-mfd.o
-> > diff --git a/drivers/mfd/ls2kbmc-mfd.c b/drivers/mfd/ls2kbmc-mfd.c
-> > new file mode 100644
-> > index 000000000000..b309f6132c24
-> > --- /dev/null
-> > +++ b/drivers/mfd/ls2kbmc-mfd.c
-> > @@ -0,0 +1,156 @@
-> > +// SPDX-License-Identifier: GPL-2.0-only
-> > +/*
-> > + * Loongson-2K Board Management Controller (BMC) MFD Core Driver.
->
-> Remove the MFD part.  It's not a thing - we made it up.
->
-> > + * Copyright (C) 2024 Loongson Technology Corporation Limited.
->
-> No changes since 2024?
->
-> > + *
-> > + * Originally written by Chong Qiao <qiaochong@loongson.cn>
-> > + * Rewritten for mainline by Binbin Zhou <zhoubinbin@loongson.cn>
->
-> "Mainline"
->
-> Typically we just do:
->
-> Authors:
->         Author One <one@corp.com>
->         Author Two <two@corp.com>
->
-> > + */
-> > +
-> > +#include <linux/aperture.h>
-> > +#include <linux/errno.h>
-> > +#include <linux/init.h>
-> > +#include <linux/kernel.h>
-> > +#include <linux/mfd/core.h>
-> > +#include <linux/module.h>
-> > +#include <linux/pci.h>
-> > +#include <linux/pci_ids.h>
-> > +#include <linux/platform_data/simplefb.h>
-> > +#include <linux/platform_device.h>
-> > +
-> > +#define LS2K_DISPLAY_RES_START (SZ_16M + SZ_2M)
-> > +#define LS2K_IPMI_RES_SIZE   0x1c
-> > +#define LS2K_IPMI0_RES_START (SZ_16M + 0xf00000)
-> > +#define LS2K_IPMI1_RES_START (LS2K_IPMI0_RES_START + LS2K_IPMI_RES_SIZ=
-E)
-> > +#define LS2K_IPMI2_RES_START (LS2K_IPMI1_RES_START + LS2K_IPMI_RES_SIZ=
-E)
-> > +#define LS2K_IPMI3_RES_START (LS2K_IPMI2_RES_START + LS2K_IPMI_RES_SIZ=
-E)
-> > +#define LS2K_IPMI4_RES_START (LS2K_IPMI3_RES_START + LS2K_IPMI_RES_SIZ=
-E)
->
-> Line them _all_ up please.  One more tab should do it.
->
-> > +static struct resource ls2k_display_resources[] =3D {
-> > +     DEFINE_RES_MEM_NAMED(LS2K_DISPLAY_RES_START, SZ_4M, "simpledrm-re=
-s"),
-> > +};
-> > +
-> > +static struct resource ls2k_ipmi0_resources[] =3D {
-> > +     DEFINE_RES_MEM_NAMED(LS2K_IPMI0_RES_START, LS2K_IPMI_RES_SIZE, "i=
-pmi0-res"),
-> > +};
-> > +
-> > +static struct resource ls2k_ipmi1_resources[] =3D {
-> > +     DEFINE_RES_MEM_NAMED(LS2K_IPMI1_RES_START, LS2K_IPMI_RES_SIZE, "i=
-pmi1-res"),
-> > +};
-> > +
-> > +static struct resource ls2k_ipmi2_resources[] =3D {
-> > +     DEFINE_RES_MEM_NAMED(LS2K_IPMI2_RES_START, LS2K_IPMI_RES_SIZE, "i=
-pmi2-res"),
-> > +};
-> > +
-> > +static struct resource ls2k_ipmi3_resources[] =3D {
-> > +     DEFINE_RES_MEM_NAMED(LS2K_IPMI3_RES_START, LS2K_IPMI_RES_SIZE, "i=
-pmi3-res"),
-> > +};
-> > +
-> > +static struct resource ls2k_ipmi4_resources[] =3D {
-> > +     DEFINE_RES_MEM_NAMED(LS2K_IPMI4_RES_START, LS2K_IPMI_RES_SIZE, "i=
-pmi4-res"),
-> > +};
-> > +
-> > +static struct mfd_cell ls2k_bmc_cells[] =3D {
-> > +     MFD_CELL_RES("simple-framebuffer", ls2k_display_resources),
-> > +     MFD_CELL_RES("ls2k-ipmi-si", ls2k_ipmi0_resources),
-> > +     MFD_CELL_RES("ls2k-ipmi-si", ls2k_ipmi1_resources),
-> > +     MFD_CELL_RES("ls2k-ipmi-si", ls2k_ipmi2_resources),
-> > +     MFD_CELL_RES("ls2k-ipmi-si", ls2k_ipmi3_resources),
-> > +     MFD_CELL_RES("ls2k-ipmi-si", ls2k_ipmi4_resources),
-> > +};
-> > +
-> > +/*
-> > + * Currently the Loongson-2K0500 BMC hardware does not have an i2c int=
-erface to
->
-> I2C
->
-> > + * adapt to the resolution.
->
-> Remove the line break here.
->
-> > + * We set the resolution by presetting "video=3D1280x1024-16@2M" to th=
-e bmc memory.
->
-> BMC
->
-> > + */
-> > +static int ls2k_bmc_get_video_mode(struct pci_dev *pdev, struct simple=
-fb_platform_data *pd)
-> > +{
-> > +     char *mode;
-> > +     int depth, ret;
-> > +
-> > +     /* The pci mem bar last 16M is used to store the string. */
->
-> PCI
->
-> BAR's (maybe?)
-
-/* The last 16M of PCI BAR0 is used to store the resolution string. */
->
-> > +     mode =3D devm_ioremap(&pdev->dev, pci_resource_start(pdev, 0) + S=
-Z_16M, SZ_16M);
-> > +     if (!mode)
-> > +             return -ENOMEM;
-> > +
-> > +     /* env at last 16M's beginning, first env is "video=3D" */
->
-> This doesn't make sense to me - please reword.
-
-How about:
-
-/* The resolution field starts with the flag =E2=80=9Cvideo=3D=E2=80=9D. */
->
-> > +     if (!strncmp(mode, "video=3D", 6))
-> > +             mode =3D mode + 6;
-> > +
-> > +     ret =3D kstrtoint(strsep(&mode, "x"), 10, &pd->width);
-> > +     if (ret)
-> > +             return ret;
-> > +
-> > +     ret =3D kstrtoint(strsep(&mode, "-"), 10, &pd->height);
-> > +     if (ret)
-> > +             return ret;
-> > +
-> > +     ret =3D kstrtoint(strsep(&mode, "@"), 10, &depth);
-> > +     if (ret)
-> > +             return ret;
-> > +
-> > +     pd->stride =3D pd->width * depth / 8;
-> > +     pd->format =3D depth =3D=3D 32 ? "a8r8g8b8" : "r5g6b5";
-> > +
-> > +     return 0;
-> > +}
->
-> Surely there is a standard format / API for this already?
->
->
-Now, simplefb_platform_data is mainly described in DTS and parsed by simple=
-drm.
-And when it is used as platform_data, there doesn't seem to be a
-unified API to populate simplefb_platform_data. e.g. in
-sysfb_simplefb[1], it is parsed using sysfb_parse_mode().
-
-[1]: https://elixir.bootlin.com/linux/v6.15-rc1/source/drivers/firmware/sys=
-fb_simplefb.c#L27
->
-> > +static int ls2k_bmc_probe(struct pci_dev *dev, const struct pci_device=
-_id *id)
-> > +{
-> > +     int ret =3D 0;
->
-> There is no need to pre-initialise this.
->
-> > +     resource_size_t base;
-> > +     struct simplefb_platform_data pd;
->
-> Reverse these please (reverse Christmas tree is preferred).
-> > +
-> > +     ret =3D pci_enable_device(dev);
-> > +     if (ret)
-> > +             return ret;
-> > +
-> > +     ret =3D ls2k_bmc_get_video_mode(dev, &pd);
-> > +     if (ret)
-> > +             goto disable_pci;
-> > +
-> > +     ls2k_bmc_cells[0].platform_data =3D &pd;
-> > +     ls2k_bmc_cells[0].pdata_size =3D sizeof(pd);
-> > +     base =3D dev->resource[0].start + LS2K_DISPLAY_RES_START;
-> > +
-> > +     /* Remove conflicting efifb device */
-> > +     ret =3D aperture_remove_conflicting_devices(base, SZ_4M, "simple-=
-framebuffer");
-> > +     if (ret) {
-> > +             dev_err(&dev->dev, "Remove firmware framebuffers failed: =
-%d\n", ret);
->
-> "Failed to removed firmware framebuffers"
->
-> > +             goto disable_pci;
-> > +     }
-> > +
-> > +     return devm_mfd_add_devices(&dev->dev, PLATFORM_DEVID_AUTO,
-> > +                                 ls2k_bmc_cells, ARRAY_SIZE(ls2k_bmc_c=
-ells),
-> > +                                 &dev->resource[0], 0, NULL);
-> > +
-> > +disable_pci:
-> > +     pci_disable_device(dev);
-> > +     return ret;
-> > +}
-> > +
-> > +static void ls2k_bmc_remove(struct pci_dev *dev)
-> > +{
-> > +     pci_disable_device(dev);
-> > +}
-> > +
-> > +static struct pci_device_id ls2k_bmc_devices[] =3D {
-> > +     { PCI_DEVICE(PCI_VENDOR_ID_LOONGSON, 0x1a05) },
-> > +     { }
-> > +};
-> > +MODULE_DEVICE_TABLE(pci, ls2k_bmc_devices);
-> > +
-> > +static struct pci_driver ls2k_bmc_driver =3D {
-> > +     .name =3D "ls2k-bmc",
-> > +     .id_table =3D ls2k_bmc_devices,
-> > +     .probe =3D ls2k_bmc_probe,
-> > +     .remove =3D ls2k_bmc_remove,
-> > +};
-> > +
->
-> Remove this line.
-
-All comments about code formatting will be changed in the next version.
->
-> > +module_pci_driver(ls2k_bmc_driver);
-> > +
-> > +MODULE_DESCRIPTION("Loongson-2K BMC driver");
-> > +MODULE_AUTHOR("Loongson Technology Corporation Limited");
-> > +MODULE_LICENSE("GPL");
-> > --
-> > 2.47.1
-> >
->
-> --
-> Lee Jones [=E6=9D=8E=E7=90=BC=E6=96=AF]
-
---=20
-Thanks.
-Binbin
+Best regards,
+Krzysztof
