@@ -1,153 +1,138 @@
-Received: from fout-a5-smtp.messagingengine.com (fout-a5-smtp.messagingengine.com [103.168.172.148])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B07F23BF8F;
-	Fri, 23 May 2025 13:50:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.148
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAAADC2F2;
+	Fri, 23 May 2025 13:52:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748008228; cv=none; b=OoU5+vPsrib+55RouNoAfXVX9XlgEtMlj74KNVRoPiN9uYCRT9he7QAy+eZoFi059giOBdJVRzHsKcH8tiDmPdNhfNPkZ3PpjuQG9jpwpNSA/XoHpsWZZvx4yisV2f6wg4fB97Tk4wO+/ZGTP5pw/WpIct+jXswa5O6mCv6dHf0=
+	t=1748008332; cv=none; b=Mbu7flWamKGU9BRh7NnOFw3FF8epPmLlUjBpahLUCUS/gRFq/ua3j1JCX0pPePkrpmXY/9xJ/DiYBfZEuXCoXpVm7uvCUM8aSYUL3fbFnnvBEmJAyFiEommuEBU/nTcPC9/HAejrlDNmA4yGplw+mw98WEfoehsI8/zC29HMxm0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748008228; c=relaxed/simple;
-	bh=gvDSFMftq2xvBxLAPiKF4U6sgwwEgE5IbEI/MR89zMg=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=tLZEcj8gmecRc9oWlRD8aKTrzOszNk9OIYTh1Dk8yWl/hrNvbI1idJqs9O9yh40WzP6XV7UU/656xhvbhBtJzEziYYdS8l7xi2MxT9BmvaKilQRYR65e/ORLompvp84VObiYy3vKBLEv0OvswCTrAgkzrODR0hIsMFyDVkvgqys=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=nhBlbk2c; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=dDnM+kpu; arc=none smtp.client-ip=103.168.172.148
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1748008332; c=relaxed/simple;
+	bh=okXktSXXKlwWCc+wTRfTeTOzXuBVh67f+79xzSw5UCA=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 Mime-Version:Content-Type; b=YBPVzjiTFXLPk567ggoooMUiCfKtroKn4oJtm1slywNwtKmImXPMlyd/EdrsTHR/MY/Pl6kuVb/oCcSy44XRUY6AGxvbsapdOWw6SX/kLoz9lv7mrYNVRiIz140UYPmseahPBTxK/NNrm7deM3OlEN+4pGKFPdDsWbNu8y3NDws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AEPsRVuL; arc=none smtp.client-ip=209.85.222.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="nhBlbk2c";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="dDnM+kpu"
-Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
-	by mailfout.phl.internal (Postfix) with ESMTP id 818A61380430;
-	Fri, 23 May 2025 09:50:25 -0400 (EDT)
-Received: from phl-imap-12 ([10.202.2.86])
-  by phl-compute-05.internal (MEProxy); Fri, 23 May 2025 09:50:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1748008225;
-	 x=1748094625; bh=+GVMWy7OrkM+vnJGAFlSms2EGq4iQQRcyXCmmXQgscg=; b=
-	nhBlbk2cCVe6mzid/dfALYxotsUGBbHlr9LyRVdc8N9SJ9JowaW/2WRqyo/MsRWs
-	dKIrlU/obH6bIpj1Vh0iOzRmfUVkHAjtcZqpHJ+nRk3s480DsvjXLjlx0Bk9vqhs
-	0ccbhkRKL1wFXGu1fPpB+vi4F9cxkmq0EZR3PTBThLbo+GPAIcuH1Km9O9hs8OPx
-	7iXGvD3hLRgjAEGnQxxTujzePL0U6vi38ZmgXDlGaxGzuaM1hDk3uf30rIweVKpT
-	3tarX2e96x+NZw3l/nwEcr32vTolIuVaUBMOzb2dDABj+1YbQlA0VguOboSiJAVH
-	2ohARpIsKK+LbXZFKVmJWA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1748008225; x=
-	1748094625; bh=+GVMWy7OrkM+vnJGAFlSms2EGq4iQQRcyXCmmXQgscg=; b=d
-	DnM+kpuKMDgLosPDAu7oo2jxJyRoBVFFH2iQkTlEtMQef8Zo+1nOZ00hzgOLlJ+i
-	wLPDWzC13urorrRrtiVZWGJQBjks+mP71JCWJQB9tYkOi8frGvPuHtJUWUXZWkjj
-	jvTvIIeLnFSciMeXXnReUVhaWgHIoKjGwm6SXKT01OByHkPMSj6cRi3SVltjR+62
-	zoic1rEc0ks/x0/Hbq/GwyZxsOBAyZqFwwVc3WCB7O4e+xdxV3vkqpc3z8kIBdme
-	FOnyIXHOF5J1nqKlSF9mJFBkKQzMH5Yha7+zaiHO6/s5e9hwGPSGaoWrnzZuFXye
-	3JuuGhBEPmUBXJSs725MQ==
-X-ME-Sender: <xms:IX0waMgUMb-o54dXNBq5s4jK4er7iTVbqZPPgJSv4dZGJN5i1lBalA>
-    <xme:IX0waFCl52CqZiJaOfId6BXaPdGS8N_GEiZt3LlRtm5j8BXKLcdQRJYtVj8DkblnW
-    wI_9ntQTF5OkrbqmrI>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgdeltddvucdltddurdegfedvrddttd
-    dmucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgf
-    nhhsuhgsshgtrhhisggvpdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttd
-    enucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgj
-    fhfutgfgsehtjeertdertddtnecuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuc
-    eorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrthhtvghrnhephfdthfdvtdefhedu
-    keetgefggffhjeeggeetfefggfevudegudevledvkefhvdeinecuvehluhhsthgvrhfuih
-    iivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvgdp
-    nhgspghrtghpthhtohepkedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtoheprghnug
-    gvrhhsrdhrohigvghllheslhhinhgrrhhordhorhhgpdhrtghpthhtohepuggrnhdrtggr
-    rhhpvghnthgvrheslhhinhgrrhhordhorhhgpdhrtghpthhtohepnhgrrhgvshhhrdhkrg
-    hmsghojhhusehlihhnrghrohdrohhrghdprhgtphhtthhopehkvghnthdrohhvvghrshht
-    rhgvvghtsehlihhnuhigrdguvghvpdhrtghpthhtoheplhhkfhhtqdhtrhhirghgvgeslh
-    hishhtshdrlhhinhgrrhhordhorhhgpdhrtghpthhtoheprhgvghhrvghsshhiohhnshes
-    lhhishhtshdrlhhinhhugidruggvvhdprhgtphhtthhopehlihhnuhigqdgstggrtghhvg
-    esvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgv
-    lhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:IX0waEGbRx6_44RMxP5zm6ixDdwcLqiNm5RoLrN4kPNk15D8zdLu_g>
-    <xmx:IX0waNTsyPz-Ani2Bd9WO8-fTk1aYvifLNb9zL4QGuFSJbXNNvbELA>
-    <xmx:IX0waJwSB45iN4X_Pr7eNEzeMLOBf1FHG1rmc1JnM8BaRgEFYg25VA>
-    <xmx:IX0waL6wccRI3HD-SU6M8ogfQtMQt3wMrQj3kkuLJC3bRutFZ3oEPA>
-    <xmx:IX0waB4WRM5_OXIncPJKkQO57U01ApJvWO_ARH0pfIFPRV1RKcWu4rFs>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 32AD81060060; Fri, 23 May 2025 09:50:25 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AEPsRVuL"
+Received: by mail-qk1-f169.google.com with SMTP id af79cd13be357-7cd0a7b672bso619438285a.2;
+        Fri, 23 May 2025 06:52:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748008329; x=1748613129; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RemTPIobewrO6gBHjEJRlgNmZpEaAhVrFdbsi5eaHYI=;
+        b=AEPsRVuLtV1vbE9NM2fhIZA6tMWgjz4Dq/d+1W7AiPvntEvCVnn7xUeeT1Si7mW7fj
+         5DF85C7JiNRcsbnQS2dDx3EAuAJyd2F7ijQybK+h+kvLQmsyd/zV+fD5ahEBXw/sqniV
+         F1sQ1FYhAOznxjvVD4ValUSmu84o9lmCDP2Y9/+Kw8I4x4a6cOn16X1duMUvjPNRbW/H
+         cQfGyB3Yb0llhqzxuSESrI0FUfroh/aSd2Xu6PKFTVKCAsT7KGgd0skhIq6Sg7SkgceQ
+         HdETdHxGfohir5uEOvm9XFCCrWMSeRkhfv4nhlkWR7esnAyPn0iWSO9x0fp7CI6pUkmy
+         oVzA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748008329; x=1748613129;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:cc:to:from:date:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=RemTPIobewrO6gBHjEJRlgNmZpEaAhVrFdbsi5eaHYI=;
+        b=jlJVlEZWPbWmTaTd8rzMI5DKfBf7hyCdm/80AisuRO30Au21L/15oarNZ7C1iGmzgL
+         ituT47PAqMqiAgozM/G17DE03BUCXpCRl5z1ckJ0EjcYS41dCRg70YadyxXDGnCpH25p
+         cwjMPjH/RSfC8jx1a1w+Tk1B8uyR7Gd8UlS5+V/YmPyMMXyOgDLARUvHe/Ook/A/bMx+
+         UcvwIiO/9JhcO/KlPbt512kIKoaG6AuR0CPWtt/WQzFf8dxhLx74M+0LdO4B1tV++koQ
+         dF1GFskk5AmfKdlItYv7Bw7NK3ylP4MLR8ABVe3/gelUM6zJX//bvvhxWCbuujHtkKIb
+         4flA==
+X-Forwarded-Encrypted: i=1; AJvYcCVxFnaGMT2SHFF35pqrzRYAxQ45U6X5SEZd6Ni5+u9O3zTBs+lG04MrRV4ELXzSMKSN8Qj64gho@vger.kernel.org, AJvYcCW4/mo1ocE3nWKoJKuYww5bA8T6z5Tr7S/Yq+QWLdw6cAX3/7Z4vslnLRelRDq9wD1Y3pF/mlEwY00peF8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxfl5GAjQ3Hi0Y/OXdW03DSSMzD7/1Sfiyg0iKUComIPYG7m3NP
+	aAmkH52bYZZcpfSJIMtZ6XByR5xSAWuouCV4Cz44fexJ6Cx88Jz+//v6
+X-Gm-Gg: ASbGncsvxGlUtsb8XpxMrpHWDGuHVqqrAN10llKexKo7iTCEOrV59ylnZlZ2YXe+mSP
+	P2YqYAlKj33JU8UYLYUxvInaNoaePAryRmMwoBMWodLG6S7IufmKepBu2lALh3f/dR8X7mA/da3
+	71BYz8JWeB/q1mI58wz1iSZ50QF+9/fi4ymFArEBt7+wqU5jx//3uFPXP1rZUDwlBJB88mt77sH
+	eqJjyyVHVq7zfMX1BgBART690/5cqaaHLl/TvEdtGdt5BLix3DsIyo06s7KXsAWOtqdz9m0nwAZ
+	zGwubX7GUk6RLLEGelZwJvcVuT53am1AQx3g6fzy0RW7sVF9OBKY+8jal8TFHSCWB1EF+f54Iva
+	ixW4GAA8ZGAWI5HX5BSqRsy4=
+X-Google-Smtp-Source: AGHT+IHqLbATUy/WFPl30772cHKchFOV8vW/thCCQHyPMvtyml4xGVHEDLLvB0GjHW9MepKaGc74xQ==
+X-Received: by 2002:a05:620a:25c6:b0:7ca:df2c:e112 with SMTP id af79cd13be357-7cee326c929mr433516485a.45.1748008328640;
+        Fri, 23 May 2025 06:52:08 -0700 (PDT)
+Received: from localhost (23.67.48.34.bc.googleusercontent.com. [34.48.67.23])
+        by smtp.gmail.com with UTF8SMTPSA id af79cd13be357-7cd47c2d217sm1159876485a.92.2025.05.23.06.52.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 23 May 2025 06:52:08 -0700 (PDT)
+Date: Fri, 23 May 2025 09:52:07 -0400
+From: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+To: Jakub Kicinski <kuba@kernel.org>, 
+ Shiming Cheng <shiming.cheng@mediatek.com>
+Cc: willemdebruijin.kernel@gmail.com, 
+ edumazet@google.com, 
+ davem@davemloft.net, 
+ pabeni@redhat.com, 
+ matthias.bgg@gmail.com, 
+ linux-kernel@vger.kernel.org, 
+ netdev@vger.kernel.org, 
+ lena.wang@mediatek.com
+Message-ID: <68307d87d58f8_180c7829432@willemb.c.googlers.com.notmuch>
+In-Reply-To: <20250522094954.2f8090ce@kernel.org>
+References: <20250522031835.4395-1-shiming.cheng@mediatek.com>
+ <20250522094954.2f8090ce@kernel.org>
+Subject: Re: [PATCH] net: fix udp gso skb_segment after pull from frag_list
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-ThreadId: Tddf37e9d72974a2b
-Date: Fri, 23 May 2025 15:49:54 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Naresh Kamboju" <naresh.kamboju@linaro.org>,
- "Kent Overstreet" <kent.overstreet@linux.dev>
-Cc: linux-bcache@vger.kernel.org, "open list" <linux-kernel@vger.kernel.org>,
- lkft-triage@lists.linaro.org,
- "Linux Regressions" <regressions@lists.linux.dev>,
- "Dan Carpenter" <dan.carpenter@linaro.org>,
- "Anders Roxell" <anders.roxell@linaro.org>
-Message-Id: <6247de76-d1f5-4357-83bd-4dd9268f44aa@app.fastmail.com>
-In-Reply-To: 
- <CA+G9fYsjBXvm9NNKRbVo_7heX1537K8yOjH7OaSEQhGRmkLvgA@mail.gmail.com>
-References: 
- <CA+G9fYv08Rbg4f8ZyoZC9qseKdRygy8y86qFvts5D=BoJg888g@mail.gmail.com>
- <6tgxbull5sqlxbpiw3jafxtio2a3kc53yh27td4g2otb6kae5t@lr6wjawp6vfa>
- <CA+G9fYsjBXvm9NNKRbVo_7heX1537K8yOjH7OaSEQhGRmkLvgA@mail.gmail.com>
-Subject: Re: riscv gcc-13 allyesconfig error the frame size of 2064 bytes is larger
- than 2048 bytes [-Werror=frame-larger-than=]
-Content-Type: text/plain
+Mime-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
 Content-Transfer-Encoding: 7bit
 
-On Fri, May 23, 2025, at 15:19, Naresh Kamboju wrote:
-> On Thu, 22 May 2025 at 22:18, Kent Overstreet <kent.overstreet@linux.dev> wrote:
->>
->> On Thu, May 22, 2025 at 06:59:53PM +0530, Naresh Kamboju wrote:
->> > Regressions on riscv allyesconfig build failed with gcc-13 on the Linux next
->> > tag next-20250516 and next-20250522.
->> >
->> > First seen on the next-20250516
->> >  Good: next-20250515
->> >  Bad:  next-20250516
->> >
->> > Regressions found on riscv:
->> >  - build/gcc-13-allyesconfig
->> >
->> > Regression Analysis:
->> >  - New regression? Yes
->> >  - Reproducible? Yes
->> >
->> > Build regression: riscv gcc-13 allyesconfig error the frame size of
->> > 2064 bytes is larger than 2048 bytes [-Werror=frame-larger-than=]
->>
->> Is this a kmsan build? kmsan seems to inflate stack usage by quite a
->> lot.
+Jakub Kicinski wrote:
+> On Thu, 22 May 2025 11:18:04 +0800 Shiming Cheng wrote:
+> >     Detect invalid geometry due to pull from frag_list, and pass to
+> >     regular skb_segment. if only part of the fraglist payload is pulled
+> >     into head_skb, When splitting packets in the skb_segment function,
+> >     it will always cause exception as below.
+> > 
+> >     Valid SKB_GSO_FRAGLIST skbs
+> >     - consist of two or more segments
+> >     - the head_skb holds the protocol headers plus first gso_size
+> >     - one or more frag_list skbs hold exactly one segment
+> >     - all but the last must be gso_size
+> > 
+> >     Optional datapath hooks such as NAT and BPF (bpf_skb_pull_data) can
+> >     modify fraglist skbs, breaking these invariants.
+> > 
+> >     In extreme cases they pull one part of data into skb linear. For UDP,
+> >     this  causes three payloads with lengths of (11,11,10) bytes were
+> >     pulled tail to become (12,10,10) bytes.
+> > 
+> >     When splitting packets in the skb_segment function, the first two
+> >     packets of (11,11) bytes are split using skb_copy_bits. But when
+> >     the last packet of 10 bytes is split, because hsize becomes nagative,
+> >     it enters the skb_clone process instead of continuing to use
+> >     skb_copy_bits. In fact, the data for skb_clone has already been
+> >     copied into the second packet.
+> > 
+> >     when hsize < 0,  the payload of the fraglist has already been copied
+> >     (with skb_copy_bits), so there is no need to enter skb_clone to
+> >     process this packet. Instead, continue using skb_copy_bits to process
+> >     the next packet.
+> 
+> nit: please un-indent the text, you can keep the stack trace indented
+> but the commit message explanation should not be. And if you can
+> run the stack trace thru decode_stacktrace to add source code
+> references.
 
-KMSAN is currently a clang-only feature.
+Most of this quotes my earlier patch, but without saying so.
 
-> This is allyesconfig build which has KASAN builds.
->
-> CONFIG_HAVE_ARCH_KASAN=y
-> CONFIG_HAVE_ARCH_KASAN_VMALLOC=y
-> CONFIG_CC_HAS_KASAN_GENERIC=y
-> CONFIG_CC_HAS_WORKING_NOSANITIZE_ADDRESS=y
-> CONFIG_KASAN=y
-> CONFIG_CC_HAS_KASAN_MEMINTRINSIC_PREFIX=y
-> CONFIG_KASAN_GENERIC=y
-> # CONFIG_KASAN_OUTLINE is not set
-> CONFIG_KASAN_INLINE=y
-> CONFIG_KASAN_STACK=y
+https://lore.kernel.org/netdev/20241001171752.107580-1-willemdebruijn.kernel@gmail.com/
 
-I reproduced the problem locally and found this to go down to
-1440 bytes after I turn off KASAN_STACK. next-20250523 has
-some changes that take the number down further to 1136 with
-KASAN_STACK and or 1552 with KASAN_STACK.
+Btw, my email address was misspelled.
 
-I've turned bcachefs with kasan-stack on for my randconfig
-builds again to see if there are any remaining corner cases.
+> 
+> This patch seems to be causing regressions for SCTP, see:
+> https://lore.kernel.org/all/aC82JEehNShMjW8-@strlen.de/
+> If you send a v2 please make sure you add test cases to
+> net/core/net_test.c for both the geometry you're trying to fix,
+> and the geometry you got wrong in v1.
 
-     Arnd
+
