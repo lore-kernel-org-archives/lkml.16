@@ -1,70 +1,104 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82D923234;
-	Fri, 23 May 2025 23:45:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 585E61D5ACF;
+	Fri, 23 May 2025 23:48:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748043940; cv=none; b=H9ZsIgKkK2JCpCs7MBDzfSuZ5DCEptvC/Fan8Nb44Tuhq6h+8Fp+1o025Gku7FhbIDu4NuVgET6w5BGScPbyN0eEr23XR+I7kpvv7dZlU2fdtTwPf6r3jaPimOFWmsLe79x7+lRuJrb5rFo1SN6LjNRFMbfVhFCWDpwJRg3hA74=
+	t=1748044085; cv=none; b=Y+b9IxJ3UJywSbA+hNmrvTDdi1MYwK2cp52bmpqXU2yOKH8K+KHLpNnv/YbqZ1yIop/7UPg8ZHvSiWbK7rXo8i/5roy7mS6JhSiIJwLQrv438RS6IL+vaPuTp16ORk2Duk8c2KGbCRjR24quiQN4B+jYVeaKfVOl7+gMagpJSXs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748043940; c=relaxed/simple;
-	bh=SEXK0VK+JQU/bOtW0FBQ1kj27ypF75gXMt/6JeftB+0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Sks87qflK/EDJDy6ZY6Hc3JhCZ7xF62caJKhBRZyINmBBGVH5q+oNb6sXP7LeM/UNAE3edScZKDpl7pGxkl4g36gd2skoYNrYcn7KUUq+Q65eG0vHQk8ud+XtDu8oj5+FQdWzA8HVtJpoKAjjggo0nr5ELtyNL/cRtC2xuwDuDY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QfVSJRNz; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748044085; c=relaxed/simple;
+	bh=lHaP83suIFYyQ1ig1OtTgzH1yujgMPzW7GPw+NcqmS0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=YSUWYsmLDrpwsrVaxYFqvfaJ9xqiLpAgkqgkKnOUfkEsv5BOXFeWsfA6PQfRP7r4SA/pVRXeQFTkvhe2TIZI8eyQYV8qDoLYV0yveSiGjhWGdut1ATI8K4zJBniUV7zGmnoGxvgVaT3BALtk+Aft79Pvh1Q4unE1z9aohRqvkw8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=eU8E0csM; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QfVSJRNz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D13BC4CEE9;
-	Fri, 23 May 2025 23:45:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748043939;
-	bh=SEXK0VK+JQU/bOtW0FBQ1kj27ypF75gXMt/6JeftB+0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=QfVSJRNzUG1hW3jU1qF0ubSxdC6GTmQkbo6jbd/3DcXog/evrLgMrmYMBoXfUXEZH
-	 ntnubQA/zydqiY4LJGxnvbbX29vsj5ZMZ06VcSvwfjoATGWgS/Yeb68GYz3g6a69ZG
-	 FefxKmwLSeQR8kR90/qxxDxLlEFzgcyOQ71o5XEEJlU3ct2IyjEaetTev0mY+uWUuP
-	 3oWHbi1GVMrV5dJ1Y7h5ep2cKr2MPR8+RcZQYFrFsCo4iER9cLE4gIotKV6zPaenVt
-	 dbIQGmNOlUuXLT7AHVqXZZHD7aB+jadMYFDGjlZKPpNYgPOYazP1qznvWnO/gVvw+q
-	 Z0g7oTNHyHtyQ==
-Date: Sat, 24 May 2025 02:45:35 +0300
-From: Jarkko Sakkinen <jarkko@kernel.org>
-To: Dave Hansen <dave.hansen@intel.com>
-Cc: Elena Reshetova <elena.reshetova@intel.com>, seanjc@google.com,
-	kai.huang@intel.com, mingo@kernel.org, linux-sgx@vger.kernel.org,
-	linux-kernel@vger.kernel.org, x86@kernel.org,
-	asit.k.mallick@intel.com, vincent.r.scarlata@intel.com,
-	chongc@google.com, erdemaktas@google.com, vannapurve@google.com,
-	dionnaglaze@google.com, bondarn@google.com, scott.raynor@intel.com
-Subject: Re: [PATCH v6 1/5] x86/sgx: Introduce a counter to count the
- sgx_(vepc_)open()
-Message-ID: <aDEIn4Ra6HMEVy9R@kernel.org>
-References: <20250522092237.7895-1-elena.reshetova@intel.com>
- <20250522092237.7895-2-elena.reshetova@intel.com>
- <aDCaH2WAMhLhFAVE@kernel.org>
- <d7ae8e13-2b44-4466-b345-fb06b40a24d3@intel.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="eU8E0csM"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
+	:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=byV3YVghOZ9bzSjQPVyhFRoEpn0ha/aLdxlgBQZeuCc=; b=eU8E0csMefFMP2za5MQLop+U6I
+	HFiIi5ulGtFFkENytoFCWYNPFtdLX4AvQ3JYdc2kGQsW1ZPN6p30UCymoM/D+JS3J4c9B5MDuH2ec
+	gejZ8mY+558j2CSbFieWYtiFXwP0QoesYEfLP8Ar6c+5cbXaHzFt2d+BGS20OeOz9yUWgmarJyEv9
+	Yw9VuNg/Smj5b7cf4igmjLg5LaUB5ITfCPzXmuYp5F1ygwVC0+gypZb211fdUDldj+Tyhd1EAuXEp
+	F1OG8mxuJ5r+LFtNznNHRCvhiqg+Ho4BsuqWh9F8cyVlxXegHD43dUt0BbT/jTLLUHXmqracJZ3Q8
+	t2A2kItw==;
+Received: from [50.53.25.54] (helo=[192.168.254.17])
+	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
+	id 1uIc7L-00000001OGP-49AO;
+	Fri, 23 May 2025 23:48:00 +0000
+Message-ID: <998f5987-12ea-4bdc-b86a-35b904a34acf@infradead.org>
+Date: Fri, 23 May 2025 16:47:52 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d7ae8e13-2b44-4466-b345-fb06b40a24d3@intel.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] kconfig: check for a NULL pointer before access
+To: Bill Wendling <morbo@google.com>
+Cc: Masahiro Yamada <masahiroy@kernel.org>,
+ Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+ LKML <linux-kernel@vger.kernel.org>
+References: <CAGG=3QU5Yi2AfHS_poi8SgmatedRg-X8Ct74FOCJUc9iJNPnhg@mail.gmail.com>
+ <2f6201d1-4e18-43ab-aadd-27643d57dab6@infradead.org>
+ <CAGG=3QXQkJ6n0J1gZcgxfEb68NWN2y200ZCuxxDtqPRgWPci=A@mail.gmail.com>
+Content-Language: en-US
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <CAGG=3QXQkJ6n0J1gZcgxfEb68NWN2y200ZCuxxDtqPRgWPci=A@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Fri, May 23, 2025 at 08:58:54AM -0700, Dave Hansen wrote:
-> On 5/23/25 08:54, Jarkko Sakkinen wrote:
-> >> +void sgx_dec_usage_count(void)
-> >> +{
-> >> +	atomic64_dec(&sgx_usage_count);
-> >> +}
-> > I think these both should be static inlines in arch/x86/kernel/cpu/sgx.h.
-> > Global symbols is over the top. Even if I think disassembly (when doing
-> > debugging, bug hunting or similar tasks), it'd nicer that way.
-> 
-> If they're just used in a single file, make them 'static' and let the
-> compiler decide whether to inline them or not.
 
-This would be totally fine.
 
-BR, Jarkko
+On 5/23/25 3:56 PM, Bill Wendling wrote:
+> On Thu, May 22, 2025 at 5:16 PM Randy Dunlap <rdunlap@infradead.org> wrote:
+>>
+>> Hi,
+>>
+>> On 5/22/25 5:07 PM, Bill Wendling wrote:
+>>> The call to 'prop_get_symbol' may return NULL in some cases. The if-then
+>>> statement accesses the returned value without checking if it's
+>>> non-NULL. After inlining, the compiler may treat the conditional as
+>>> 'undefined behavior', which the compiler may take the opportunity to do
+>>> whatever it wants with the UB path. This patch simply adds a check to
+>>> ensure that 'def_sym' is non-NULL to avoid this behavior.
+>>>
+>>> Signed-off-by: Bill Wendling <morbo@google.com>
+>>> ---
+>>> Cc: Masahiro Yamada <masahiroy@kernel.org>
+>>> Cc: linux-kbuild@vger.kernel.org
+>>> Cc: linux-kernel@vger.kernel.org
+>>> ---
+>>>  scripts/kconfig/symbol.c | 2 +-
+>>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>>
+>>> diff --git a/scripts/kconfig/symbol.c b/scripts/kconfig/symbol.c
+>>> index d57f8cbba291..9c5068225328 100644
+>>> --- a/scripts/kconfig/symbol.c
+>>> +++ b/scripts/kconfig/symbol.c
+>>> @@ -272,7 +272,7 @@ struct symbol *sym_choice_default(struct menu *choice)
+>>>   if (prop->visible.tri == no)
+>>>   continue;
+>>>   def_sym = prop_get_symbol(prop);
+>>> - if (def_sym->visible != no)
+>>> + if (def_sym && def_sym->visible != no)
+>>>   return def_sym;
+>>>   }
+>>>
+>>
+>> The patch is missing the source file's indentation.
+>> (spaces/tabs are lost)
+>>
+> Crud! My mailer borked. I sent v2 and it looks to have kept the whitespaces.
+
+I don't think v2 worked either.
+See  https://lore.kernel.org/linux-kbuild/CAGG=3QXQkJ6n0J1gZcgxfEb68NWN2y200ZCuxxDtqPRgWPci=A@mail.gmail.com/T/#mf64c7afd19235d3dee4e572f96ff76936f921c6e
+
+-- 
+~Randy
+
