@@ -1,104 +1,132 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10472294A1D;
-	Fri, 23 May 2025 15:55:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8589D295526;
+	Fri, 23 May 2025 15:56:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748015743; cv=none; b=Gn72iqVH0JekAGa5g9tcT9XoSrLh1tL0ge8S9TcnK1XYRghRG2J8NTw8Byk2c0qIkyjlkxBhHmradRmv7+tYYnckI+6Gt/xFXdOUQwkmbXueUvDxAKWNaoVDoHV3cN9Lkrt5OOgVi0vbVTVsLNQ2PT132aR8L6YY8MS9tb9psVg=
+	t=1748015770; cv=none; b=N5trEj5zurzs96PRTZHVKzE1y80mx+ZsLa/BrDgr+S2Eg3FUohPEs2axBxZi+tYWxVBGTjPEBxmCZG+TagRh6xFbajWeR2HsXzmVC6IfSd2emvlABFAZRrTUvdwveVdEZuqorRxUbgjsBSUVubJRSVjnPetpOYsPtQ7QGZYooCs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748015743; c=relaxed/simple;
-	bh=02S++/GnMLzXCwbjOabyD4L7obDi6EOlhMd/z4qvnZg=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=IEh0nacU5VFA2PfcRvKQWknqw2AEX5B4rzrLApBZukpVXkDW017GbrY7XVmc0rKWg9AkmHjAJNzzwOCLub82ndGJz7pvw//5tR83YJ8uUpaL8SlVnf35yVq3OMtt+a5ti2CK+Z+VYgt06AAp0sCLDvgggho8OFbY3ZPhKkZoCuo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jh5zVPui; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748015770; c=relaxed/simple;
+	bh=msMY44I5D2WOxn90GS5QAIas+pFq1JbP1cWedc0Hu9E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EGjhGFiyyvQLGd68TMtEmbZZGWoBXj9AllWs5Wcea9w+wnxngaMeYZT7ZWeNkPjbyG1KPx7RgGNLEO4aAlsW/d14F36wYQXqJLkcZtcIrbyGHXOw0ImAaN4TVxmMguDCWqrQe7dBSB975Y7YE6+LDUgakzeMf2pjJtfD9DJM/xQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Su9E6vCM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jh5zVPui"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 551FFC4CEEF;
-	Fri, 23 May 2025 15:55:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Su9E6vCM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77087C4CEE9;
+	Fri, 23 May 2025 15:56:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748015742;
-	bh=02S++/GnMLzXCwbjOabyD4L7obDi6EOlhMd/z4qvnZg=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=jh5zVPuiOna6z5tzNx9kqq7oe9bzgSsF1g6n/TK3adC8oGF7KBsuLoiiPt7otzI9R
-	 pkODmT8kDsaWRQT9hkIdTab9+5tmzRAmVN+G97qz+ylrDWEx5MhhM4OwZuTdOgo+Rl
-	 Vmrnyp/BXukO10ycqVZwYszs6dTuVxYSUr/3u2mxekfxdkhOEbo7YP/FNVsIiyL+/u
-	 wsn6JKM1RtdK/4RCwRsFgSDOmfUJirKnJv1HuRPZMHg7tAlxqV3GDcw8DRi5VCh3Me
-	 zoF1JoWEYv37tcJhYz2iS4bU3r9rYwwXApbXUrBQT+nZMicZ2OaOP2PE/Ucv6qwqCZ
-	 QgfoV7LW4iD2Q==
-From: Mark Brown <broonie@kernel.org>
-To: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Kamel Bouhara <kamel.bouhara@bootlin.com>, 
- Linus Walleij <linus.walleij@linaro.org>, 
- Bartosz Golaszewski <brgl@bgdev.pl>, 
- Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
- =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
- Michael Walle <mwalle@kernel.org>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, 
- Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-gpio@vger.kernel.org, linux-input@vger.kernel.org, 
- linux-pwm@vger.kernel.org, andriy.shevchenko@intel.com, 
- =?utf-8?q?Gr=C3=A9gory_Clement?= <gregory.clement@bootlin.com>, 
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-In-Reply-To: <20250509-mdb-max7360-support-v8-0-bbe486f6bcb7@bootlin.com>
-References: <20250509-mdb-max7360-support-v8-0-bbe486f6bcb7@bootlin.com>
-Subject: Re: (subset) [PATCH v8 00/11] Add support for MAX7360
-Message-Id: <174801573711.565639.2548650361543550224.b4-ty@kernel.org>
-Date: Fri, 23 May 2025 16:55:37 +0100
+	s=k20201202; t=1748015770;
+	bh=msMY44I5D2WOxn90GS5QAIas+pFq1JbP1cWedc0Hu9E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Su9E6vCMgrwa4hxGHNupMUsl2A5/FezmCf9fVdfQf4omOsgGLEL7dVm8dvC3zxP0k
+	 E2GZ0lqDnR1TLRCoAV15Df5Vob/KBEOoyIKYRmG7YXzrYr1VBPOGCcoiQpODBawSkM
+	 kmNKmf+ehm1D6dmtYwgbKqayvf+A7lG7yyP5bbWYdfOiCC1ABP58WMO3T6A9DGJZHN
+	 Tlhy6jWxXpw+pwTIfJc5dVMtMS04hfreys4S2apClHNleB4h25h7kJF8KenqLVcdo7
+	 MyW5Vsf9AZ1IjJWTHRffQK3a3Y3hRNi9p45+Yo4KR4+f6ZY6n8rZKykzStfpSZFLvt
+	 WNLcHfvsXdA5A==
+Date: Fri, 23 May 2025 18:56:05 +0300
+From: Jarkko Sakkinen <jarkko@kernel.org>
+To: Elena Reshetova <elena.reshetova@intel.com>
+Cc: dave.hansen@intel.com, seanjc@google.com, kai.huang@intel.com,
+	mingo@kernel.org, linux-sgx@vger.kernel.org,
+	linux-kernel@vger.kernel.org, x86@kernel.org,
+	asit.k.mallick@intel.com, vincent.r.scarlata@intel.com,
+	chongc@google.com, erdemaktas@google.com, vannapurve@google.com,
+	dionnaglaze@google.com, bondarn@google.com, scott.raynor@intel.com
+Subject: Re: [PATCH v6 3/5] x86/sgx: Define error codes for use by
+ ENCLS[EUPDATESVN]
+Message-ID: <aDCalY6qL0lhBiwo@kernel.org>
+References: <20250522092237.7895-1-elena.reshetova@intel.com>
+ <20250522092237.7895-4-elena.reshetova@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.15-dev-c25d1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250522092237.7895-4-elena.reshetova@intel.com>
 
-On Fri, 09 May 2025 11:14:34 +0200, Mathieu Dubois-Briand wrote:
-> This series implements a set of drivers allowing to support the Maxim
-> Integrated MAX7360 device.
+On Thu, May 22, 2025 at 12:21:36PM +0300, Elena Reshetova wrote:
+> Add error codes for ENCLS[EUPDATESVN], then SGX CPUSVN update
+> process can know the execution state of EUPDATESVN and notify
+> userspace.
 > 
-> The MAX7360 is an I2C key-switch and led controller, with following
-> functionalities:
-> - Keypad controller for a key matrix of up to 8 rows and 8 columns.
-> - Rotary encoder support, for a single rotary encoder.
-> - Up to 8 PWM outputs.
-> - Up to 8 GPIOs with support for interrupts and 6 GPOs.
+> Signed-off-by: Elena Reshetova <elena.reshetova@intel.com>
+> ---
+>  arch/x86/include/asm/sgx.h | 37 ++++++++++++++++++++++---------------
+>  1 file changed, 22 insertions(+), 15 deletions(-)
 > 
-> [...]
+> diff --git a/arch/x86/include/asm/sgx.h b/arch/x86/include/asm/sgx.h
+> index 6a0069761508..1abf1461fab6 100644
+> --- a/arch/x86/include/asm/sgx.h
+> +++ b/arch/x86/include/asm/sgx.h
+> @@ -28,21 +28,22 @@
+>  #define SGX_CPUID_EPC_MASK	GENMASK(3, 0)
+>  
+>  enum sgx_encls_function {
+> -	ECREATE	= 0x00,
+> -	EADD	= 0x01,
+> -	EINIT	= 0x02,
+> -	EREMOVE	= 0x03,
+> -	EDGBRD	= 0x04,
+> -	EDGBWR	= 0x05,
+> -	EEXTEND	= 0x06,
+> -	ELDU	= 0x08,
+> -	EBLOCK	= 0x09,
+> -	EPA	= 0x0A,
+> -	EWB	= 0x0B,
+> -	ETRACK	= 0x0C,
+> -	EAUG	= 0x0D,
+> -	EMODPR	= 0x0E,
+> -	EMODT	= 0x0F,
+> +	ECREATE		= 0x00,
+> +	EADD		= 0x01,
+> +	EINIT		= 0x02,
+> +	EREMOVE		= 0x03,
+> +	EDGBRD		= 0x04,
+> +	EDGBWR		= 0x05,
+> +	EEXTEND		= 0x06,
+> +	ELDU		= 0x08,
+> +	EBLOCK		= 0x09,
+> +	EPA		= 0x0A,
+> +	EWB		= 0x0B,
+> +	ETRACK		= 0x0C,
+> +	EAUG		= 0x0D,
+> +	EMODPR		= 0x0E,
+> +	EMODT		= 0x0F,
+> +	EUPDATESVN	= 0x18,
+>  };
+>  
+>  /**
+> @@ -73,6 +74,10 @@ enum sgx_encls_function {
+>   *				public key does not match IA32_SGXLEPUBKEYHASH.
+>   * %SGX_PAGE_NOT_MODIFIABLE:	The EPC page cannot be modified because it
+>   *				is in the PENDING or MODIFIED state.
+> + * %SGX_INSUFFICIENT_ENTROPY:	Insufficient entropy in RNG.
+> + * %SGX_NO_UPDATE:		EUPDATESVN was successful, but CPUSVN was not
+> + *				updated because current SVN was not newer than
+> + *				CPUSVN.
+>   * %SGX_UNMASKED_EVENT:		An unmasked event, e.g. INTR, was received
+>   */
+>  enum sgx_return_code {
+> @@ -81,6 +86,8 @@ enum sgx_return_code {
+>  	SGX_CHILD_PRESENT		= 13,
+>  	SGX_INVALID_EINITTOKEN		= 16,
+>  	SGX_PAGE_NOT_MODIFIABLE		= 20,
+> +	SGX_INSUFFICIENT_ENTROPY	= 29,
+> +	SGX_NO_UPDATE				= 31,
+>  	SGX_UNMASKED_EVENT		= 128,
+>  };
+>  
+> -- 
+> 2.45.2
+> 
 
-Applied to
+Saving reviewed-by up until head of the series looks good to me but
+in principle this is as good as it can get ;-)
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regmap.git for-next
-
-Thanks!
-
-[05/11] regmap: irq: Add support for chips without separate IRQ status
-        commit: 1c12fbdf40e17df2efc24bf2009a0c3bfa75bfa7
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
+BR, Jarkko
