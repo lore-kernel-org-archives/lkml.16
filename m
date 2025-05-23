@@ -1,149 +1,218 @@
-Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-177.mta0.migadu.com (out-177.mta0.migadu.com [91.218.175.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14E9A1F2BA7
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 20:32:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8F5E1EB36
+	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 20:34:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748032370; cv=none; b=e88YHLrf4GaQ6SbFJLqRqJYPWNKtCau3mH0QiOKO2nGBHL8952t9hxu07VxO1UQN4Edx5w3JS+DWx9/ee9AwTxYgoN4I5fLZJudpmU5lGAL+64b2OmR24swHUpZiJFTySy7iygbPdHqO0ngW0q4pu5PotnUCE0eSVZOOZxK8ocE=
+	t=1748032470; cv=none; b=H3o4RdZTjtRTEf0xBuixCEcou6h8zcOp7ndvGv/M+7kdgNSX72+UN5rvVaDRy95lHGS+17eXG8BxWDmo6OdLsUNfx3DU1IJwkz0CkSwAcV/aL9vHsLX78Caer6lVi0ak+ndM3uBFSE3UJidCv3l5u3b34oA78A5gKtdowZHx1cQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748032370; c=relaxed/simple;
-	bh=G9czfRWtK5GpAW80nG2ZBUs8aoQ0XZnEuKIEThGW+Ho=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TuVlDxfd47gGMUN9xGw+qiJtbNn59fq0/u2ZRKJEt6yEY3b98qOyvFtHa+kyK+SzkYLrRqqRfSAzQBqGW8J5cq5uUdTx3NGzk8vnTc4iRr/JGsPipKjsV5tw5ZMQB1rwKDXmCDZjrDokS9NT34+ZOidt9CclMd56SUhPTP0yOUA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=iHgCllZ1; arc=none smtp.client-ip=209.85.160.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1748032470; c=relaxed/simple;
+	bh=ueLlCxB7kHsCzS+FKlXBXUv0Z3mrWh3ka723h09LaP0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=cdSF0jSD+B0wIZ339X0pAW/5UwadVS8bwyFwRnJDJtVsDqtGnX13AyEyOl7df1Z+sQ6Lfu3s4s99RvHrShBFHcJ0GL/brf4AJGdg5fzqMATRNugUvo8pHDhSqyL0qTsMtJaXtZBGEs1DN1x896mKueEbyv//NtL2Mh8epUFLOtc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=HY9t8SWX; arc=none smtp.client-ip=91.218.175.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iHgCllZ1"
-Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-48b7747f881so18211cf.1
-        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 13:32:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748032368; x=1748637168; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2pMiDeMVs0fzVOomIpahcrje2YzoGJzAVTfniCnIw70=;
-        b=iHgCllZ1TtgNoX/7FTqLNMVSsOssV+j6w/Rf4Cn1Q/wIT2XuV0em8jOcOfds3HAgS7
-         wQWa+sqK7dGNt6XwyDwWEaBWXT8h0PXbtsDsNCSqIz6Oql3XVXDOepnt9WWPFNkDZW/d
-         k1rg955+EyGRvAEUG3SUAur04qy7A98cSCs8OF6ftMdb53xFuM8vqC3ZBPaC1Wxlry3Q
-         hLZ2BcZx9ScoatuPwmYthcuSah9KJ9u6BKfzDPgGhWPkbSprhbyPMGaVQrTp7CD/o2Kk
-         FofmvRbCRz8b5uQk6kVGLyJzC4oUnZLjKJLCQngQ/2mGXsheRTvwGQhKqfnSGrYMIT02
-         sN7Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748032368; x=1748637168;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2pMiDeMVs0fzVOomIpahcrje2YzoGJzAVTfniCnIw70=;
-        b=kSse5GL7F5v9dhY0yxtayBn9gKi6G4jwS0Esh5djB0wnwWvqNgm8dOLqK6183wcxJG
-         4UvlAm3b8UjQuBd8vrM0aYnkehVloLD2cUVJSeoN6XB8w6jl5wXikVL5yPkDxm1Qd1hJ
-         V5P0JsoB9y96DwauOkzfzFLhDhQsVNpjXYI+Zvlh8Mv6JZZny3/sCGYKKAYXrJVzeQN5
-         e5SO5xLPxg5cxar9fIPGwuxNSbioQkZ0uLNT6QYzeXY6af9a7nI/k7PHWCf4V+59ogke
-         DB0zIuQStehjrkLkYTc4qPP7s5Xmkb1X6pam+f+dPgV3G+35Q+lEVd77zW3DoAZXSUrs
-         zFSw==
-X-Forwarded-Encrypted: i=1; AJvYcCXvt6UWK8YTQ8wDD2LIAs1epnqwrMLLKT8FfkQorEcR7tFRdYjhwlUkAumzZeemAVHtJAAvdJ5kWbioj3Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx6CQ8z9gwaECn08qDJ0j+bu3zdlbdDqCyGgK4IIkqKXODem7kx
-	axSCh3y3bd/atIBAiLUoE7psbraJiEOG5IkEeklc2w+7stz9k2UbJDizeC4ZZLoOzdnZDBetWz2
-	TizUg7djv5TN4WP70DeFBFv32He2jRRyBUFckY/h/g77K0vCmgtKYF8a5
-X-Gm-Gg: ASbGncvuFwYZ5IAMRnvCXS7hlfsh0lZAws7+JAbSqNevId1jR2QpcvpIGGab+eLCwLS
-	6bnVEZDQ7xCbX9SnDfjlUMhDkvJ6SBdYV4FK0rGy2A2nHr+EtZ3BitYFZ2y5+ZaIQfdphU306Cf
-	VOoc/ZjCYhad8g1sc8Hp7Lad9QcNNRKOC3wCmSBDCoKaakkkwSPHiLktVgN/2ktcW0H6OnX/ck
-X-Google-Smtp-Source: AGHT+IGrVZM04XvgPaseySOZs3bNAx9IWsIGdKJgbBIh7931NB51szk/oOGmgDnpT1nAaRLP3Tcbk8fCMZNDMwITH9M=
-X-Received: by 2002:a05:622a:50a:b0:47e:a6ff:a215 with SMTP id
- d75a77b69052e-49f48a80470mr730551cf.0.1748032367629; Fri, 23 May 2025
- 13:32:47 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="HY9t8SWX"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1748032465;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=Gkv6Aih8tfghpst1uOH/eaz1x5tS9HCDhXSpL/WAh5g=;
+	b=HY9t8SWXCaYWANdK08qiXmlWPmaGNC2TNu0c9PqGHlgs7qquMJYGR4f26C5TJ49QNTrPaN
+	NNi6GEc/DC11QFbl6ZQPIq1VHdUAKM3QT4V3ImX9e9aAS60+xhwMoFCg5uor09ghFB/5EI
+	LkCDX/i3P4ksKXfWXFLLC7+cP8YIA0M=
+From: Sean Anderson <sean.anderson@linux.dev>
+To: netdev@vger.kernel.org,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Russell King <linux@armlinux.org.uk>
+Cc: Lei Wei <quic_leiwei@quicinc.com>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Christian Marangi <ansuelsmth@gmail.com>,
+	Kory Maincent <kory.maincent@bootlin.com>,
+	Simon Horman <horms@kernel.org>,
+	Daniel Golle <daniel@makrotopia.org>,
+	Vineeth Karumanchi <vineeth.karumanchi@amd.com>,
+	linux-kernel@vger.kernel.org,
+	Sean Anderson <sean.anderson@linux.dev>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	Claudiu Beznea <claudiu.beznea@microchip.com>,
+	Claudiu Manoil <claudiu.manoil@nxp.com>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Ioana Ciornei <ioana.ciornei@nxp.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Michal Simek <michal.simek@amd.com>,
+	Nicolas Ferre <nicolas.ferre@microchip.com>,
+	Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>,
+	Rob Herring <robh+dt@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Robert Hancock <robert.hancock@calian.com>,
+	Saravana Kannan <saravanak@google.com>,
+	UNGLinuxDriver@microchip.com,
+	Vladimir Oltean <vladimir.oltean@nxp.com>,
+	devicetree@vger.kernel.org,
+	imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	linux-doc@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com
+Subject: [net-next PATCH v5 00/10] Add PCS core support
+Date: Fri, 23 May 2025 16:33:29 -0400
+Message-Id: <20250523203339.1993685-1-sean.anderson@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAP045Ap3e6x52TvB8WyBHBjJ8HYtAmnKnGgj_fog3P+F5igP-A@mail.gmail.com>
- <aBkaDN7N_6qDGdIz@x1.local> <CAP045ArAVtR6_Y-WWcqpB54Z+fwNYSWSyrTZKjctocwA0sK5eg@mail.gmail.com>
- <CAP045AoWZQZvLR8B0h09XL=cS2aD3yDwtthdeZ64JWEOPkZ_=w@mail.gmail.com>
- <aCIZqV6mEQZftFvA@x1.local> <CAP045Ao-onmzcVSic+4D+aDc_M9HTF7UK3NAdC5BcZvDmN370g@mail.gmail.com>
- <aCNIKm5OJ2h12z2j@x1.local>
-In-Reply-To: <aCNIKm5OJ2h12z2j@x1.local>
-From: Axel Rasmussen <axelrasmussen@google.com>
-Date: Fri, 23 May 2025 13:32:11 -0700
-X-Gm-Features: AX0GCFuei6DlMWnYUe6pjJG86zq4kdI3WzoC1j39chgxgqjWjmM9AKKx8Ot51F0
-Message-ID: <CAJHvVcjLecujsDCQ2AK89C5HJ7LLYc8ez1VEpG5m9yP8eJtnHg@mail.gmail.com>
-Subject: Re: Suppress pte soft-dirty bit with UFFDIO_COPY?
-To: Peter Xu <peterx@redhat.com>
-Cc: Kyle Huey <me@kylehuey.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	open list <linux-kernel@vger.kernel.org>, linux-mm@kvack.org, criu@lists.linux.dev, 
-	"Robert O'Callahan" <robert@ocallahan.org>, Mike Rapoport <rppt@kernel.org>, 
-	Andrea Arcangeli <aarcange@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Tue, May 13, 2025 at 6:25=E2=80=AFAM Peter Xu <peterx@redhat.com> wrote:
->
-> On Mon, May 12, 2025 at 10:16:12AM -0700, Kyle Huey wrote:
-> > Personally I don't think it's a real issue to have to create a
-> > sacrificial fd once at process initialization to see what features are
-> > available. I wouldn't have even said anything if the man page hadn't
-> > explicitly told me there was another way.
->
-> Yes, that's indeed the part that could be confusing and needs fixing.  Ju=
-st
-> to keep a record (I have you copied), I sent the man-pages changes here:
->
-> https://lore.kernel.org/r/20250512171922.356408-1-peterx@redhat.com
+This series adds support for creating PCSs as devices on a bus with a
+driver (patch 3). As initial users,
 
-Agreed, at a high level I think this is the right fix. I believe I
-just forgot the probing required a separate FD when I wrote that
-version of the man page. :)
+- The Lynx PCS (and all of its users) is converted to this system
+  (patches 4-5)
+- The Xilinx PCS is broken out from the AXI Ethernet driver (patches 6-7)
+- The Cadence MACB driver is converted to support external PCSs (namely
+  the Xilinx PCS) (patches 8-9).
 
->
-> We can stick with the sacrificial fd until there's a solid clue showing
-> that we should introduce a new way to probe.
+Care has been taken to ensure backwards-compatibility. The main source
+of this is that many PCS devices lack compatibles and get detected as
+PHYs. To address this, pcs_get_by_fwnode_compat allows drivers to edit
+the devicetree to add appropriate compatibles.
 
-For what it's worth, I'm still convinced the whole handshake / probing
-thing is overcomplicated, and it would be simpler to just do:
+There is another series [1] with the same goal by Christian Marangi. In
+comparison, I believe this series
 
-1. Userspace asks for the features it wants (UFFDIO_API)
-2. Kernel responds (fills in the struct) with the (possibly subset) of
-features it supports
-3. Userspace can react as it sees fit if it gets a subset (fail with
-error, gracefully degrade, ...)
+- Implements a simpler and more-robust method of PCS access.
+- Provides a more-direct upgrade path for existing MAC and PCS drivers.
 
-But, based on previous discussion of that I believe I'm in the minority. :)
+Sending v5 to run CI after rebasing; there are no other major changes.
 
-If we are sticking with the handshake approach, I agree needing a
-second uffd is no big deal. We could add an ioctl to just probe
-without configuring, but that would purely be for convenience, and I
-don't think it saves many lines of code in userspace. So, on balance /
-considering the small benefit I would probably prefer keeping the
-kernel simpler.
+[1] https://lore.kernel.org/netdev/20250511201250.3789083-1-ansuelsmth@gmail.com/
 
->
-> Thanks,
->
-> --
-> Peter Xu
->
+Changes in v5:
+- Export get_phy_c22_id when it is used
+- Expose bind attributes, since there is no issue in doing so
+- Rebase onto net-next
+- Use MDIO_BUS instead of MDIO_DEVICE
 
-On Tue, May 13, 2025 at 6:25=E2=80=AFAM Peter Xu <peterx@redhat.com> wrote:
->
-> On Mon, May 12, 2025 at 10:16:12AM -0700, Kyle Huey wrote:
-> > Personally I don't think it's a real issue to have to create a
-> > sacrificial fd once at process initialization to see what features are
-> > available. I wouldn't have even said anything if the man page hadn't
-> > explicitly told me there was another way.
->
-> Yes, that's indeed the part that could be confusing and needs fixing.  Ju=
-st
-> to keep a record (I have you copied), I sent the man-pages changes here:
->
-> https://lore.kernel.org/r/20250512171922.356408-1-peterx@redhat.com
->
-> We can stick with the sacrificial fd until there's a solid clue showing
-> that we should introduce a new way to probe.
->
-> Thanks,
->
-> --
-> Peter Xu
->
+Changes in v4:
+- Add a note about the license
+- Adjust variable ordering in pcs_find_fwnode
+- Annotate pcs_wrapper.wrapped with __rcu
+- Fix PCS lookup functions missing ERR_PTR casts
+- Fix documentation for devm_pcs_register_full
+- Fix incorrect condition in pcs_post_config
+- Fix linking when PCS && !OF_DYNAMIC
+- Fix linking when PCS && OF_DYNAMIC && PHYLIB=m
+- Re-add documentation for axienet_xilinx_pcs_get that was accidentally
+  removed
+- Reduce line lengths to under 80 characters
+- Remove unused dev parameter to pcs_put
+- Use a spinlock instead of a mutex to protect pcs_wrappers
+
+Changes in v3:
+- Add '>' modifier for paragraph to description
+- Adjust axienet_xilinx_pcs_get for changes to pcs_find_fwnode API
+- Drop patches destined for other trees, as they have either already
+  been applied or are no longer necessary.
+- Edit description to reference clocks instead of resets
+- Remove support for #pcs-cells. Upon further investigation, the
+  requested functionality can be accomplished by specifying the PCS's
+  fwnode manually.
+- Select PCS_XILINX unconditionally
+
+Changes in v2:
+- Add fallbacks for pcs_get* and pcs_put
+- Add support for #pcs-cells
+- Change base compatible to just xlnx,pcs
+- Change compatible to just xlnx,pcs
+- Defer devicetree updates for another series
+- Drop #clock-cells description
+- Drop PCS_ALTERA_TSE which was accidentally added while rebasing
+- Move #clock-cells after compatible
+- Move update to macb_pcs_get_state to previous patch
+- Remove outdated comment
+- Remove second example
+- Remove unused variable
+- Remove unused variable lynx_properties
+- Rename pcs-modes to xlnx,pcs-modes
+- Reorder pcs_handle to come before suffix props
+- Reword commit message
+- Rework xilinx_pcs_validate to just clear out half-duplex modes instead
+  of constraining modes based on the interface.
+
+Sean Anderson (9):
+  dt-bindings: net: Add Xilinx PCS
+  net: phylink: Support setting PCS link change callbacks
+  net: pcs: Add subsystem
+  net: pcs: lynx: Convert to an MDIO driver
+  net: pcs: Add Xilinx PCS driver
+  net: axienet: Convert to use PCS subsystem
+  net: macb: Move most of mac_config to mac_prepare
+  net: macb: Support external PCSs
+  of: property: Add device link support for PCS
+
+Vladimir Oltean (1):
+  net: dsa: ocelot: suppress PHY device scanning on the internal MDIO
+    bus
+
+ .../devicetree/bindings/net/xilinx,pcs.yaml   | 114 +++
+ Documentation/networking/index.rst            |   1 +
+ Documentation/networking/kapi.rst             |   4 +
+ Documentation/networking/pcs.rst              | 102 +++
+ MAINTAINERS                                   |   8 +
+ drivers/net/dsa/ocelot/Kconfig                |   4 +
+ drivers/net/dsa/ocelot/felix_vsc9959.c        |  15 +-
+ drivers/net/dsa/ocelot/seville_vsc9953.c      |  16 +-
+ drivers/net/ethernet/altera/Kconfig           |   2 +
+ drivers/net/ethernet/altera/altera_tse_main.c |   7 +-
+ drivers/net/ethernet/cadence/macb.h           |   1 +
+ drivers/net/ethernet/cadence/macb_main.c      | 229 ++++--
+ drivers/net/ethernet/freescale/dpaa/Kconfig   |   2 +-
+ drivers/net/ethernet/freescale/dpaa2/Kconfig  |   3 +
+ .../net/ethernet/freescale/dpaa2/dpaa2-mac.c  |  11 +-
+ drivers/net/ethernet/freescale/enetc/Kconfig  |   2 +
+ .../net/ethernet/freescale/enetc/enetc_pf.c   |   8 +-
+ .../net/ethernet/freescale/enetc/enetc_pf.h   |   1 -
+ .../freescale/enetc/enetc_pf_common.c         |   4 +-
+ drivers/net/ethernet/freescale/fman/Kconfig   |   4 +-
+ .../net/ethernet/freescale/fman/fman_memac.c  |  25 +-
+ drivers/net/ethernet/stmicro/stmmac/Kconfig   |   3 +
+ .../ethernet/stmicro/stmmac/dwmac-socfpga.c   |   6 +-
+ drivers/net/ethernet/xilinx/Kconfig           |   7 +
+ drivers/net/ethernet/xilinx/xilinx_axienet.h  |   4 +-
+ .../net/ethernet/xilinx/xilinx_axienet_main.c | 104 +--
+ drivers/net/pcs/Kconfig                       |  45 +-
+ drivers/net/pcs/Makefile                      |   4 +
+ drivers/net/pcs/core.c                        | 686 ++++++++++++++++++
+ drivers/net/pcs/pcs-lynx.c                    | 110 +--
+ drivers/net/pcs/pcs-xilinx.c                  | 484 ++++++++++++
+ drivers/net/phy/phy_device.c                  |   3 +-
+ drivers/net/phy/phylink.c                     |  24 +-
+ drivers/of/property.c                         |   2 +
+ include/linux/pcs-lynx.h                      |  13 +-
+ include/linux/pcs-xilinx.h                    |  15 +
+ include/linux/pcs.h                           | 205 ++++++
+ include/linux/phy.h                           |   1 +
+ include/linux/phylink.h                       |  27 +-
+ 39 files changed, 2010 insertions(+), 296 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/net/xilinx,pcs.yaml
+ create mode 100644 Documentation/networking/pcs.rst
+ create mode 100644 drivers/net/pcs/core.c
+ create mode 100644 drivers/net/pcs/pcs-xilinx.c
+ create mode 100644 include/linux/pcs-xilinx.h
+ create mode 100644 include/linux/pcs.h
+
+-- 
+2.35.1.1320.gc452695387.dirty
+
