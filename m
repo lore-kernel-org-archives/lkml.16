@@ -1,209 +1,114 @@
-Received: from out-186.mta0.migadu.com (out-186.mta0.migadu.com [91.218.175.186])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from cstnet.cn (smtp81.cstnet.cn [159.226.251.81])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77DC32DCC08
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 02:40:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.186
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29CF62036EC;
+	Fri, 23 May 2025 02:43:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747968053; cv=none; b=Ecf6ZfDjiQKosgcAo46IbnYDbxhAAjUgFahYKEiNwYgMOrY88fMvFSLY0sysClt95gA73iERre33gC5iuv20lCheIhvnOmORdcdu0CGxwQ/N19/mqmjIr23vpNhB+pB2h5IdFr0l4g8okFG3ELEyXSFfcgDOtped37EREYaYDFU=
+	t=1747968231; cv=none; b=MpPyIXb4wjD2w/4gFsOcvV/NSUgXSG/Cmq9ijt5qPGur1B42q8UOnmrAd0LkptLfa+Bq5XzOuCXQUZyFmJ3EdTRY2d645KektyE9rseqwGaqCyNEcCTohSdtzkZnMCaSRRbCT9BkJgIjurNy3oP1Z58BBb+0VooMe9+dktjiKGk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747968053; c=relaxed/simple;
-	bh=z8DCYt8LI8PKx6Er4leJ+unqZrPaxylMfSdyLfKl2No=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=ZDIITZYlOKPn9sNgyPC8uaYPFKZsBtDr+jYmzGcU7IEseb4GNHn++VLsROnQQ9pVi0cCHkiTZU2IK54pIkhubSrmx9KGDN/D/p47en+nA4HvEz523v7EfKd5COhKvgS/E8DmngTayl1PujhpnpgmAUqT7D95k3A9iN99LnP54zM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=AHPdndVK; arc=none smtp.client-ip=91.218.175.186
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="AHPdndVK"
-Content-Type: text/plain;
-	charset=us-ascii
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1747968039;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ExKQDu/QVAaNGZZ21ymKeIRIUkQjlnYFZrthUN5LOOg=;
-	b=AHPdndVKjx22GhUixbVWcTUUBkt5txacCmcxOn9eShMc5ije1MuX0G5n/frWJNEAHPUtMO
-	mypLklg11EbPqp+r2tzrQbbspQVz1WRUe1jLE7s/cFsDC5YNSSbvFC4x+BXeV5UdOfYPfs
-	0OV/QFgG89cdblHTqXtTYf2od+RpktY=
+	s=arc-20240116; t=1747968231; c=relaxed/simple;
+	bh=R8lOQ3fgmIDT6B3qCyZt9+V0MTvZUd4Z8lh1XJTmVgo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=bGKOy2Kki1UFTrOvzbWiCxVoA1Y0zWP1kzGh1hWxMQrXhdDRVm8NmZIHmOXHNk6TyOF/2z3gt+H6lNIiGaZI8Q/CAs/JXZvI1nQh74gpZbgC9KD9V/89LGiU9i3MU0LEg05KloufdI3V2FpHC92J+WVUY3P/X0zBB4eZLeVT3cY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from localhost.localdomain (unknown [124.16.141.245])
+	by APP-03 (Coremail) with SMTP id rQCowADHETHN4C9o+dNcAA--.174S2;
+	Fri, 23 May 2025 10:43:30 +0800 (CST)
+From: Wentao Liang <vulab@iscas.ac.cn>
+To: saeedm@nvidia.com,
+	leon@kernel.org,
+	tariqt@nvidia.com,
+	andrew+netdev@lunn.ch,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com
+Cc: netdev@vger.kernel.org,
+	linux-rdma@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Wentao Liang <vulab@iscas.ac.cn>,
+	stable@vger.kernel.org
+Subject: [PATCH v4] net/mlx5: Add error handling in mlx5_query_nic_vport_node_guid()
+Date: Fri, 23 May 2025 10:43:04 +0800
+Message-ID: <20250523024304.1216-1-vulab@iscas.ac.cn>
+X-Mailer: git-send-email 2.42.0.windows.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.500.181.1.5\))
-Subject: Re: [PATCH RFC 00/28] Eliminate Dying Memory Cgroup
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Muchun Song <muchun.song@linux.dev>
-In-Reply-To: <aC_OF2hYWawIdb-_@harry>
-Date: Fri, 23 May 2025 10:39:58 +0800
-Cc: Muchun Song <songmuchun@bytedance.com>,
- hannes@cmpxchg.org,
- mhocko@kernel.org,
- roman.gushchin@linux.dev,
- shakeel.butt@linux.dev,
- akpm@linux-foundation.org,
- david@fromorbit.com,
- zhengqi.arch@bytedance.com,
- yosry.ahmed@linux.dev,
- nphamcs@gmail.com,
- chengming.zhou@linux.dev,
- linux-kernel@vger.kernel.org,
- cgroups@vger.kernel.org,
- linux-mm@kvack.org,
- hamzamahfooz@linux.microsoft.com,
- apais@linux.microsoft.com
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <F626EF89-1EA4-4A4E-85D6-93691B681E66@linux.dev>
-References: <20250415024532.26632-1-songmuchun@bytedance.com>
- <aC_OF2hYWawIdb-_@harry>
-To: Harry Yoo <harry.yoo@oracle.com>
-X-Migadu-Flow: FLOW_OUT
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:rQCowADHETHN4C9o+dNcAA--.174S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxJr4rCF1DWr1DGF48uw4xXrb_yoW8ArW8pF
+	47tr9rCrykJa4rX3409FWrZrn5u3yjyayj9a47tw13Xr4ktr4qyr4Ykr9FgrWUuFW0ka9Y
+	yr42y3Z8AFn8C37anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9014x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
+	6r4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
+	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628v
+	n2kIc2xKxwCY1x0262kKe7AKxVWUtVW8ZwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7x
+	kEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E
+	67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCw
+	CI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1x
+	MIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIda
+	VFxhVjvjDU0xZFpf9x0JUd-B_UUUUU=
+X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiBwsLA2gvpLnHvQAAsk
 
+The function mlx5_query_nic_vport_node_guid() calls the function
+mlx5_query_nic_vport_context() but does not check its return value.
+A proper implementation can be found in mlx5_nic_vport_query_local_lb().
 
+Add error handling for mlx5_query_nic_vport_context(). If it fails, free
+the out buffer via kvfree() and return error code.
 
-> On May 23, 2025, at 09:23, Harry Yoo <harry.yoo@oracle.com> wrote:
->=20
-> On Tue, Apr 15, 2025 at 10:45:04AM +0800, Muchun Song wrote:
->> This patchset is based on v6.15-rc2. It functions correctly only when
->> CONFIG_LRU_GEN (Multi-Gen LRU) is disabled. Several issues were =
-encountered
->> during rebasing onto the latest code. For more details and =
-assistance, refer
->> to the "Challenges" section. This is the reason for adding the RFC =
-tag.
->>=20
->=20
-> [...snip...]
->=20
->> ## Fundamentals
->>=20
->> A folio will no longer pin its corresponding memory cgroup. It is =
-necessary
->> to ensure that the memory cgroup or the lruvec associated with the =
-memory
->> cgroup is not released when a user obtains a pointer to the memory =
-cgroup
->> or lruvec returned by folio_memcg() or folio_lruvec(). Users are =
-required
->> to hold the RCU read lock or acquire a reference to the memory cgroup
->> associated with the folio to prevent its release if they are not =
-concerned
->> about the binding stability between the folio and its corresponding =
-memory
->> cgroup. However, some users of folio_lruvec() (i.e., the lruvec lock)
->> desire a stable binding between the folio and its corresponding =
-memory
->> cgroup. An approach is needed to ensure the stability of the binding =
-while
->> the lruvec lock is held, and to detect the situation of holding the
->> incorrect lruvec lock when there is a race condition during memory =
-cgroup
->> reparenting. The following four steps are taken to achieve these =
-goals.
->>=20
->> 1. The first step  to be taken is to identify all users of both =
-functions
->>   (folio_memcg() and folio_lruvec()) who are not concerned about =
-binding
->>   stability and implement appropriate measures (such as holding a RCU =
-read
->>   lock or temporarily obtaining a reference to the memory cgroup for =
-a
->>   brief period) to prevent the release of the memory cgroup.
->>=20
->> 2. Secondly, the following refactoring of folio_lruvec_lock() =
-demonstrates
->>   how to ensure the binding stability from the user's perspective of
->>   folio_lruvec().
->>=20
->>   struct lruvec *folio_lruvec_lock(struct folio *folio)
->>   {
->>           struct lruvec *lruvec;
->>=20
->>           rcu_read_lock();
->>   retry:
->>           lruvec =3D folio_lruvec(folio);
->>           spin_lock(&lruvec->lru_lock);
->>           if (unlikely(lruvec_memcg(lruvec) !=3D folio_memcg(folio))) =
-{
->>                   spin_unlock(&lruvec->lru_lock);
->>                   goto retry;
->>           }
->>=20
->>           return lruvec;
->>   }
->=20
-> Is it still required to hold RCU read lock after binding stability
-> between folio and memcg?
+Fixes: 9efa75254593 ("net/mlx5_core: Introduce access functions to query vport RoCE fields")
+Cc: stable@vger.kernel.org # v4.5
+Target: net
+Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
+---
+v4: Fix code error.
+v3: Explicitly mention target branch. Change improper code.
+v2: Remove redundant reassignment. Fix typo error.
 
-No. The spin lock is enough. The reason is because the introducing
-of lock assertion in commit:
+ drivers/net/ethernet/mellanox/mlx5/core/vport.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-  02f4bbefcada ("mm: kmem: add lockdep assertion to obj_cgroup_memcg")
-
-The user may unintentionally call obj_cgroup_memcg() with holding
-lruvec lock, if we do not hold rcu read lock, then obj_cgroup_memcg()
-will complain about this.
-
->=20
-> In the previous version of this series, folio_lruvec_lock() is =
-implemented:
->=20
-> struct lruvec *folio_lruvec_lock(struct folio *folio)
-> {
-> 	struct lruvec *lruvec;
->=20
-> 	rcu_read_lock();
-> retry:
-> 	lruvec =3D folio_lruvec(folio);
-> 	spin_lock(&lruvec->lru_lock);
->=20
-> 	if (unlikely(lruvec_memcg(lruvec) !=3D folio_memcg(folio))) {
-> 		spin_unlock(&lruvec->lru_lock);
-> 		goto retry;
-> 	}
-> 	rcu_read_unlock();
->=20
-> 	return lruvec;
-> }
->=20
-> And then this version calls rcu_read_unlock() in lruvec_unlock(),
-> instead of folio_lruvec_lock().
->=20
-> I wonder if this is because the memcg or objcg can be released without
-> rcu_read_lock(), or just to silence the warning in
-> =
-folio_memcg()->obj_cgroup_memcg()->lockdep_assert_once(rcu_read_lock_is_he=
-ld())?
-
-The latter is right.
-
-Muchun,
-Thanks.
-
->=20
->>   =46rom the perspective of memory cgroup removal, the entire =
-reparenting
->>   process (altering the binding relationship between folio and its =
-memory
->>   cgroup and moving the LRU lists to its parental memory cgroup) =
-should be
->>   carried out under both the lruvec lock of the memory cgroup being =
-removed
->>   and the lruvec lock of its parent.
->>=20
->> 3. Thirdly, another lock that requires the same approach is the =
-split-queue
->>   lock of THP.
->>=20
->> 4. Finally, transfer the LRU pages to the object cgroup without =
-holding a
->>   reference to the original memory cgroup.
->=20
-> --=20
-> Cheers,
-> Harry / Hyeonggon
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/vport.c b/drivers/net/ethernet/mellanox/mlx5/core/vport.c
+index 0d5f750faa45..c34cd9a1a79b 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/vport.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/vport.c
+@@ -465,19 +465,22 @@ int mlx5_query_nic_vport_node_guid(struct mlx5_core_dev *mdev, u64 *node_guid)
+ {
+ 	u32 *out;
+ 	int outlen = MLX5_ST_SZ_BYTES(query_nic_vport_context_out);
++	int err;
+ 
+ 	out = kvzalloc(outlen, GFP_KERNEL);
+ 	if (!out)
+ 		return -ENOMEM;
+ 
+-	mlx5_query_nic_vport_context(mdev, 0, out);
++	err = mlx5_query_nic_vport_context(mdev, 0, out);
++	if (err)
++		goto out;
+ 
+ 	*node_guid = MLX5_GET64(query_nic_vport_context_out, out,
+ 				nic_vport_context.node_guid);
+-
++out:
+ 	kvfree(out);
+ 
+-	return 0;
++	return err;
+ }
+ EXPORT_SYMBOL_GPL(mlx5_query_nic_vport_node_guid);
+ 
+-- 
+2.42.0.windows.2
 
