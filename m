@@ -1,122 +1,136 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 976BD21CC71;
-	Fri, 23 May 2025 07:22:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1908F3FBA7
+	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 07:23:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747984956; cv=none; b=Yzgq5mZmhtXkG+HFgP+bQGvjQqrGPHBSjMa8Wbj+bPrEtpS2wDvZac/jwvfdVWSrKHIafIfR56p34KG2GM5WA2qYAbFE71OlMbX3bVvIh7sNYrGin9rz8APHN1orj7ib3GzWJlkyX6fziQaA4eopq/dRBndJOnCERdqxfDMG1XI=
+	t=1747985013; cv=none; b=PLgLgtIkzZvXfxOyDrytdKrbhBpF82P6tSTQ2Yjg5zNHDRPJnnDcrheRbPXxRqNvqkn8DcSeFSmyld1vmejVINoaPSSDaU7YsGhIWTGlVGqYZizEMjdP1OEim7tqR+CLabZ468/0mB1m0xXZBsYRHtoCIohbteaoSBDoqyERGOA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747984956; c=relaxed/simple;
-	bh=elC2pAs4xYAwBeGsItYc+FrvHT6+mPhpV9/O/G6n8WI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RUIBYjEl40W6ar19Wy4UFASJOhc4d8YHZbLr3aOdAzKOMrnBT73Wtntq/NuHkSKuqKdfuW7F1NBRY+RE4yHXbvvo0Czt9RVd//gfG1YzmhFdb+Kh+oRRXdrve0OKT2ruJvBMCN+bOZ0cXHwDcab+pB70n8p4rEV9bvS/on8GEsw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kEjt1u5l; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747985013; c=relaxed/simple;
+	bh=ihoBSshL0YGNXRQl56dbipBQPrtOpSxEgiCWKUyk9SM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nByH3jKplGCYZDI8Y0DNELMDvrzS9vKKbVBjUJyb9jQx0MQ23hRaTQ5yZYscD4WG4m824YfouKlKqmIvAyJv+C4b5D95z2tZbE7W/5NclcVrYO5IIhZuaNWe5Nn88DvAamwE1rW9KGEAfU0xFTuMOIhjE5nbHMpOwo1sKSkdbos=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=ZSApMKd/; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kEjt1u5l"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC1B1C4CEF5;
-	Fri, 23 May 2025 07:22:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747984956;
-	bh=elC2pAs4xYAwBeGsItYc+FrvHT6+mPhpV9/O/G6n8WI=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=kEjt1u5lwFFzVnAaLPcDWOYpi8nzGN+/vuH95b3F4WtZskN14EpI5R2aBLWxo22DT
-	 KcZMQHHy1X27L3YSChIacYwT6osv9nWbDtiHGEZc1oqdgfsvUBG8Aj1XjUvIiCh2/z
-	 ztablMRY5+ablYCpy7N397MmeCAbTnPNvu4SFJYLKuqdOFLc0qAfqVkaezcPMHRGzS
-	 6nIqYCrHyOxVOsidBoM2CLFypfd7ROSHQ09M/jh74aFMIh8g6k5keqSmuoGVLhgkCY
-	 zMCVK9z3z27/x1zL3/pGgas8ZTdsKK71tpRatqSL9dKgzvZxYJD1/MnolmysCxDoZg
-	 KaRWcxOAx8BIQ==
-Message-ID: <a8c6efba-103e-4760-9d49-0b3cf7bd1edf@kernel.org>
-Date: Fri, 23 May 2025 09:22:31 +0200
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ZSApMKd/"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-232054aa4ebso50049915ad.1
+        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 00:23:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1747985011; x=1748589811; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=9oFOTJY+jM52XUB7bJEkukbArm9m+yq0+hVZWj+z6wQ=;
+        b=ZSApMKd/qXasRPEv96HmP7k/98vVq6536qVucvH8vxog9RWDEf7spQauOjwmkwHmBx
+         gUmxF7DR2GL+JLeIzD7NQj0N/X4Tx4ddnS8+nucnGF+N14V8ICvbsR9DMI5vOAQBEcpO
+         zde+VvdBU3hcXQ/MpSvrLCAcsKYrITRKhfWls=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747985011; x=1748589811;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=9oFOTJY+jM52XUB7bJEkukbArm9m+yq0+hVZWj+z6wQ=;
+        b=j+qIW6GlzdJ5yVbLErp8sXv84kG8vAo+A2EheYJmwxDjprCcrMsMVV9mR2MFrZZ9vD
+         u7/aUPoCIOcSOwjDtQXY2FaHVOYhcIB2HbVpcJuIpaWA9agoLuLE6pJ7G6fGw6VRhj2n
+         7WZcF/SKKFxYme6MSNsRRzSdtvc2VNZc4bYBD6TAk5Af9OJdO52SXJ2jrsyLka3DGd0Q
+         LjX2M3hBsWstM+FOmOqJ3ID78uwL65NBWSS+ND5bTkaFZFkwvOprE7be/2smwxEj+jDe
+         oaPw9tPhwN3jUpb40CwRvl/3+7BxENfQNA35wL4F70gc9xapQBrPY1pmtKfr54euA1Wz
+         D3ZA==
+X-Forwarded-Encrypted: i=1; AJvYcCVIK+819cCN9lcYJie9E9IZzBELO5ayuqR6v/RLDwF7v4kRZ+rWaCvJ7263Mv/szWTxTjIJ34rsOKRMTt8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxzKoZ7gEbVCk2Zy0DKqjgbNkehUqDVWbOTeaZEXMkALoQloWDX
+	SDWJoDJnF0q/2+aTuMH3ZOtLQ1zRh7wzrETqpZ1O9iBzuXwlajE0n6LNDWgO1GwTbw==
+X-Gm-Gg: ASbGncuhbnbGmu90lkTojXQMW/2OGQDcOMYjw/SpHaUciz98zsB0S1MbgBhDGefJuOB
+	CYxEAjwPs1ejTbfbfxfSbc6E9zF1jr5iYKQvMD3TW2AjZf3wHFMLlMJfjkx5t14Cvex2xdTClwk
+	b0xqFvA++XFblyNwj2au9bXSi00jQ0ucuVTswSge8filQkFsMB9LsJIp6haeX3O/X+5ukWCCsHA
+	Jcni4qEXugUJtou8lvr8Nr1b+QTAx8UJ6nUoyw//t0GDj+u0+XqiJLDD3OEleVCoRICmENvY28G
+	VlC3IAi6VseNvxtRO/5qB72a+NEOlr8JtsaENaU9J5wMcGttAspi/vk=
+X-Google-Smtp-Source: AGHT+IGV7jMy68tNUPRjmOEfAPOqB8BQm0nYihPU/YOpSm86JVssQhjOtx/DD3XxmepL/d4sIa0A8g==
+X-Received: by 2002:a17:903:3d04:b0:223:f9a4:3f9c with SMTP id d9443c01a7336-233f21c7ccamr28916195ad.9.1747985011352;
+        Fri, 23 May 2025 00:23:31 -0700 (PDT)
+Received: from google.com ([2401:fa00:8f:203:17f7:e82e:5533:af02])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-231d4ed897asm118688185ad.250.2025.05.23.00.23.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 23 May 2025 00:23:30 -0700 (PDT)
+Date: Fri, 23 May 2025 16:23:25 +0900
+From: Sergey Senozhatsky <senozhatsky@chromium.org>
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Sergey Senozhatsky <senozhatsky@chromium.org>, 
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	John Fastabend <john.fastabend@gmail.com>, Martin KaFai Lau <martin.lau@linux.dev>, 
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Matt Bobrowski <mattbobrowski@google.com>, bpf@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCHv2] bpf: add bpf_msleep_interruptible() kfunc
+Message-ID: <z4gvqyk3ktqhd4wmi7ju3qw67c56brf5klxcer3vqmp3v6sujn@2xq7j3ji4kic>
+References: <20250515064800.2201498-1-senozhatsky@chromium.org>
+ <CAEf4BzYTiPuOUbQgkNvT2haAupeep79q0pVu=fcD5fEgnAjR_A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] dt-bindings: vendor-prefixes: Add Mayqueen name
-To: Wig Cheng <onlywig@gmail.com>, robh@kernel.org
-Cc: krzk+dt@kernel.org, conor+dt@kernel.org, neil.armstrong@linaro.org,
- heiko@sntech.de, kever.yang@rock-chips.com,
- manivannan.sadhasivam@linaro.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250522163142.3421893-1-onlywig@gmail.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <20250522163142.3421893-1-onlywig@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAEf4BzYTiPuOUbQgkNvT2haAupeep79q0pVu=fcD5fEgnAjR_A@mail.gmail.com>
 
-On 22/05/2025 18:31, Wig Cheng wrote:
-> Mayqueen is a Taiwan-based company primarily focused on the development
-> of arm64 development boards and e-paper displays. They will be working on
-> mainlining the DTS for their boards and e-paper DRM drivers,
-> necessitating the addition of their vendor prefix.
-
-No, "they will" is not "necessitating". I do not see implementing
-Conor's comment. Such patch ALWAYS comes with an user in upstream project.
-
-
-Please version your patches correctly, e.g. use b4 or git format-patch
--vX, and add changelog in cover letter or under '---' of individual
-patches describing changes from previous version.
-
+On (25/05/20 16:26), Andrii Nakryiko wrote:
+> On Wed, May 14, 2025 at 11:48 PM Sergey Senozhatsky
+> <senozhatsky@chromium.org> wrote:
+> >
+> > bpf_msleep_interruptible() puts a calling context into an
+> > interruptible sleep.  This function is expected to be used
+> > for testing only (perhaps in conjunction with fault-injection)
+> > to simulate various execution delays or timeouts.
+> >
+> > Signed-off-by: Sergey Senozhatsky <senozhatsky@chromium.org>
+> > ---
+> >
+> > v2:
+> > -- switched to kfunc (Matt)
+> >
+> >  kernel/bpf/helpers.c | 7 +++++++
+> >  1 file changed, 7 insertions(+)
+> >
+> > diff --git a/kernel/bpf/helpers.c b/kernel/bpf/helpers.c
+> > index fed53da75025..a7404ab3b0b8 100644
+> > --- a/kernel/bpf/helpers.c
+> > +++ b/kernel/bpf/helpers.c
+> > @@ -24,6 +24,7 @@
+> >  #include <linux/bpf_mem_alloc.h>
+> >  #include <linux/kasan.h>
+> >  #include <linux/bpf_verifier.h>
+> > +#include <linux/delay.h>
+> >
+> >  #include "../../lib/kstrtox.h"
+> >
+> > @@ -3283,6 +3284,11 @@ __bpf_kfunc void bpf_local_irq_restore(unsigned long *flags__irq_flag)
+> >         local_irq_restore(*flags__irq_flag);
+> >  }
+> >
+> > +__bpf_kfunc unsigned long bpf_msleep_interruptible(unsigned int msecs)
+> > +{
+> > +       return msleep_interruptible(msecs);
+> > +}
+> > +
 > 
-> This vendor prefix will be used in upcoming DRM driver patches for their
-> e-paper displays, such as the pixpaper-213-c and future models.
+> What happened to the trying out custom kernel module for
+> fuzzing/testing use case you have?
+
+Oh, my bad.  I think it wasn't clear to me that this was the final
+conclusion, it looked to me that the conversation ended up with a
+number of open questions.
+
+> I'll repeat my concerns. BPF maps and progs are all interdependent
+> between each other by global RCU Tasks Trace "domain". Delay one RCU
+> tasks trace grace period through the use of msleep() will delay
+> everything BPF-related in the entire kernel.
 > 
-> Website: https://www.mayqueentech.com
-> 
+> Until we have some way to give some of BPF programs and its isolated
+> BPF maps its own RCU domain, I don't think we should allow arbitrary
+> sleeps inside BPF programs.
 
-> pixpaper-213-c e-paper:
-> https://github.com/MayQueenTechCommunity/PIXPAPER-213-C
-
-That's not upstream.
-
-
-Best regards,
-Krzysztof
+I see.  How are sleepable BPF programs operate wrt RCU currently?
