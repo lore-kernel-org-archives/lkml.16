@@ -1,366 +1,292 @@
-Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
+Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07932224B08
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 06:01:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5E9817A2F6;
+	Fri, 23 May 2025 06:03:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747980068; cv=none; b=qvnWCSkqOQaEHk3ZdNsyh3E+YdNxpJWhIAjOyNpHr3SiqORsvpe1xv65U0kgxQEj6KF9X5TsZaURmFmFXnU7v2oXD2yueuz+QS8cY1egjhDekLuRNHgfdG8jzt6ob3v2WMm9QulAWvYK8s+69ZTz3ESqPADPo5AM6fRCdyAm4TQ=
+	t=1747980220; cv=none; b=SOsE9ufz1kbjfpXCVo+pZo0cyNI2BX1DkRvkoR9aKlin2tx0kjLl6ov38zgss+2XBVH7R9CCxaC7w42Sdj/5TChbS2nMMYP5oWrroJ5+bSkH3d3vbNLnWizD6LE07+DKkrCconAR0B8q6eBMs1Ts6tb2HNlq4KxmnoDm089yOA4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747980068; c=relaxed/simple;
-	bh=VEwefDlpzyTDgxySnKoI464DIi5+w8elqlGS6qhyW3c=;
+	s=arc-20240116; t=1747980220; c=relaxed/simple;
+	bh=I5qguV0L/tA+Xwh2AMUys0D4J77U+VviyWoODICSkD4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZeMSc3o0Cn7i7AtHAAGPsJy5oedfgsp6Ntui//F+H6FuTJlcg7/3Qrh5DN0vyFeN4Vnl94yYSh004uW5ZBrwQWcrS+W6QNADiq1w9Ngq3jsytQv/f0T/pNtlzXBw4V7OxhNmapZCZj3kascg7DHDCD+IhFVRywN9ySyiZIDqVxI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=p8pfEUne; arc=none smtp.client-ip=209.85.215.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=ozdBIt+JxiwiR9b5EDW+vC6i/rUvZ4Q1ZPvPT7djtiIZwgn4l/Dt1yI9Hh4l4KBeC9xq1IFn+Esq//K407C7Gvybl9jsKR2b8i2CBaBlvWjlEjJG/wWFZ8g5CpQknYmBXy7lHZl/2NXceyecyybItXum5kVvoGSl8BptAqTGJVE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eoFDU5If; arc=none smtp.client-ip=209.85.210.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="p8pfEUne"
-Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-b07d607dc83so6711573a12.1
-        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 23:01:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eoFDU5If"
+Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-742c7a52e97so4921418b3a.3;
+        Thu, 22 May 2025 23:03:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1747980065; x=1748584865; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1747980218; x=1748585018; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=MM8qECzGuabOnUf85/QEm4aqRBTZg6DD4xWO9Ub0wak=;
-        b=p8pfEUnebpPG3gKUUyouwKQN/uoJGRPGY+sYOGClWTky3UHrYzw5oVa4u5rRzPldmq
-         NLv1a+L2FwZzzkYjmPXZzp1kIgQ0LMeaOiJanoIrcVI57a2N724o4Wf8Ex1aJ4jvHeMP
-         p9mWXs1jHUZgf7GK5Ll/PA6+m9B3pLsDqtnqBmNMpWrfaAdXYVBOM4hazmiOVTR46ypk
-         m2xfbDY9+tAv1muEL0XbEfjLnkSYLxZdMYfMyczhjhufzGymW+Cjez+ltj4GYCh2IcMe
-         UT2vZ3Dq/NDjA2fs4rqKnsC6X/Q3E2zA0AeBdep2fLiG7MXJBAnhtstkNlZ2uWHk1y+6
-         lMyw==
+        bh=S/coq0/Ft/GqaFo4CSoc7RYMxYKYlx891WXrsKT4Ajk=;
+        b=eoFDU5Ifp0JzKl7nYBA41xyoKvZPJo6c73ac4zkb4jRVkjE2X4Dhpy9WqTgc3t3zr9
+         qeky/tSK2SiBUha+P8k9zoBfRCcKzb4Znj2MbKuzzk/wQj8GPgeUVPbnQc+kcEFp6vOH
+         IRZ4wRbp40Dt0lZ5QnA2K3/0/W7AWg6IOSA9JJU+ChOTOQ46HPOjmnBSEkPSAWQF843y
+         Y9WXvUelMcfIoQ/JqvmBSfGeQaPEBxsB8qvLRDEjnOnucb6hIEJKwTatCey1sdw1Skue
+         tkgo9s5iOtxSxeBORnV2JZP4xQkPWLRq3/MmGWdx7P8w8pohu22SHtvNbUY8d72Y9vff
+         Y9mg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747980065; x=1748584865;
+        d=1e100.net; s=20230601; t=1747980218; x=1748585018;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=MM8qECzGuabOnUf85/QEm4aqRBTZg6DD4xWO9Ub0wak=;
-        b=djZ5nv3SYI6stM+K2wR37oTGh/Ul2sfWTKr2I1pmjvhtvC7eh3ynKlu2sMnnUZNXLD
-         MUksPbcNZbegZSOhQQmNt/yI0zJG1QNIGuQs/gQ1aaF5q6UNv1bjm3vCn0//Gb19Cr7A
-         54x6YOoxHTmxkMJLO8B36jrRBbDPJ7PpyHm+EkA3hxEH3zf1kq/g92bITWkhYz6QC6qQ
-         I3U9/6Ct+TsKPO76svajUb+jKsGDae/E+bywcwz9IXkQUU8P5xoVokhW6dG+bF7h7bxA
-         WIf+tPIdCZ8WadZG/Jq2u+/3iFdfmpZAT+LFiKVDmuDCczQ2I0aUnyLx/8ECkDc5rNGY
-         wY4Q==
-X-Gm-Message-State: AOJu0YxE8T3wkg6IcF748Ji/ig5qoRoOWXdA2PqCdWIA1m2WXOUMBNt/
-	ZEfqxSuUxQNrmkdfYlPrBibqlO1dNrhTN35aUk2xemMpM0crqApL1oFbc4U/HQO8KDw=
-X-Gm-Gg: ASbGncukfJP6v6DMZinhtEOyUPNEF8BpNWFEC0Fclpc3zFskiikVFgGZtLBaYE09Qff
-	Kgd8ib0DO7jJsSgGbubwSINnbW8jmQbjIQ5zVGnbWoZeUaJ1VCsCJB8pF9sh/IeoVkLLrWBNnvi
-	vJfZf/1aXn3wCH9LB/7nIKhpsFdmyAN+EIAbnm7eYzKVMdEuHqIrS9PMeGVfIqzU+sxYbw8esAW
-	rBuLXGKROAOnMcj7Ekbg2gqkvlEDgx++/fvS4qdwYqfoL2j9WRC8W0NZXf71gO7JPKJDQ5+8/cY
-	vvj6kL5WgCyGvhyGlb3+M3f87Uc1IMHCj/8cUnKUZ3mWGgorYXn0ol1teXEwmQ==
-X-Google-Smtp-Source: AGHT+IH2GKe/Xm4Ppo32AJJr6pQEKHz5ShbLWceyV6lc/d0LTWPehEZJe6GO4uOPRwS1AloDMoJLOw==
-X-Received: by 2002:a17:902:d4c1:b0:223:54aa:6d15 with SMTP id d9443c01a7336-233f21ccb31mr27879805ad.12.1747980064763;
-        Thu, 22 May 2025 23:01:04 -0700 (PDT)
-Received: from debug.ba.rivosinc.com ([64.71.180.162])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30f365f7a32sm6495296a91.49.2025.05.22.23.01.01
+        bh=S/coq0/Ft/GqaFo4CSoc7RYMxYKYlx891WXrsKT4Ajk=;
+        b=dpZIwEDIHwA3oYZu5Uzxypd0G7twsv+jALMfKLxIzm2RZ9oQAb1EUNERtB1BVtgaz2
+         TUDDEV4Atf2SVdARL4MGCA6OjzlprPeVy/kI7A3ysW8bXM1VYn2oe8wsWBudNuEF0kCT
+         ZWPurQ8uJ08kf5rZdtHD3pIkbwYtwf+sT2P646/y8JI5OgC+gi5Hn2EURcMNaFcTtCvP
+         oPH9Hch+6VbvTKFAK+8ZVzpn+fuAx+ba1Tgp9dTsG3pBdqkzaQ09C33Y+dix6rVTi2Iq
+         /xsgwOzyReajpZedLJt215FFQ3WWkNV6Vka+3lv1HryvX6fgtcucnPwq17xsaKfGILy7
+         bTOA==
+X-Forwarded-Encrypted: i=1; AJvYcCWI4dkSqw7V7UcAlmkUt0Wd33fjgf57BCMZxAwg6XUbxNPiwuxExLoBSDHMy6ReXNhx9OF5Xyl5R4YFSpI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyd7saPxL6L8Lh06ZJuP/4jBhIBIEGMMxK0ERpcxt7GiUMUKH+R
+	cTqTaTxgCxu+7ZSkiQTRB0RbuWumooI0HHL4IREY3qXzk7sUHDUVchqq
+X-Gm-Gg: ASbGnctmDjwXNMBiOGx3Atn0RPc43dUAPsqInVy7NFsNr+5Dz/3bpejcRXyyqbaUB2W
+	VY4ND9g2rmHSd0f5TW8/KCdGEppW+sds1eRMLFYcr8u5A+0gu0PLENoipRwQy95t5MzodmnWVbG
+	vGHyM2T+0hMbVbkMiMwMYZUdKWgpObWOSscsJwNVmC/Gq+xumvktQquLWgWOCrg/kz51376uyDT
+	88wMfb1tp8gg0YlvbEMrmAdWhgND3hF7XYwaEaU3SotF+6JAaTM3+yRqc32EpF7LTb3Ae4eCuIC
+	aC711pQyiQkR29A/C8f4g/BOkUlE5jq68AsxZLKJGziO8wh1gD0=
+X-Google-Smtp-Source: AGHT+IFIJEFHoKjH5yEQALdGWxi4lQlcAObqnu0RIN3kI9jd1GsqNKPY/0Iv6JATgsNYZY/FOEa9Bg==
+X-Received: by 2002:a05:6a00:66d8:b0:740:9d6b:db1a with SMTP id d2e1a72fcca58-742acd507ccmr32710267b3a.15.1747980217570;
+        Thu, 22 May 2025 23:03:37 -0700 (PDT)
+Received: from archie.me ([103.124.138.155])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-742adad3d7fsm12247963b3a.15.2025.05.22.23.03.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 May 2025 23:01:04 -0700 (PDT)
-Date: Thu, 22 May 2025 23:01:00 -0700
-From: Deepak Gupta <debug@rivosinc.com>
-To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Conor Dooley <conor@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Christian Brauner <brauner@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Oleg Nesterov <oleg@redhat.com>,
-	Eric Biederman <ebiederm@xmission.com>, Kees Cook <kees@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <shuah@kernel.org>,
-	Jann Horn <jannh@google.com>, Conor Dooley <conor+dt@kernel.org>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>
-Cc: linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	linux-mm@kvack.org, linux-riscv@lists.infradead.org,
-	devicetree@vger.kernel.org, linux-arch@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	alistair.francis@wdc.com, richard.henderson@linaro.org,
-	jim.shu@sifive.com, andybnac@gmail.com, kito.cheng@sifive.com,
-	charlie@rivosinc.com, atishp@rivosinc.com, evan@rivosinc.com,
-	cleger@rivosinc.com, alexghiti@rivosinc.com,
-	samitolvanen@google.com, broonie@kernel.org,
-	rick.p.edgecombe@intel.com, rust-for-linux@vger.kernel.org,
-	Zong Li <zong.li@sifive.com>
-Subject: Re: [PATCH v16 23/27] arch/riscv: compile vdso with landing pad
-Message-ID: <aDAPHHN0yRgmqSOI@debug.ba.rivosinc.com>
-References: <20250522-v5_user_cfi_series-v16-0-64f61a35eee7@rivosinc.com>
- <20250522-v5_user_cfi_series-v16-23-64f61a35eee7@rivosinc.com>
+        Thu, 22 May 2025 23:03:36 -0700 (PDT)
+Received: by archie.me (Postfix, from userid 1000)
+	id BBFF942439C3; Fri, 23 May 2025 13:03:34 +0700 (WIB)
+Date: Fri, 23 May 2025 13:03:34 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Hanne-Lotta =?utf-8?B?TcOkZW5ww6TDpA==?= <hannelotta@gmail.com>,
+	mchehab@kernel.org, ribalda@chromium.org, hverkuil@xs4all.nl,
+	sebastian.fricke@collabora.com, hljunggr@cisco.com,
+	dave.jiang@intel.com, jgg@ziepe.ca, saeedm@nvidia.com,
+	Jonathan.Cameron@huawei.com, corbet@lwn.net,
+	ilpo.jarvinen@linux.intel.com, mario.limonciello@amd.com,
+	W_Armin@gmx.de, mpearson-lenovo@squebb.ca,
+	skhan@linuxfoundation.org
+Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-kernel-mentees@lists.linux.dev
+Subject: Re: [PATCH v2 2/4] docs: Improve grammar, formatting in Video4Linux
+Message-ID: <aDAPtpE-5mkZ6P9y@archie.me>
+References: <20250522115255.137450-1-hannelotta@gmail.com>
+ <20250522115255.137450-2-hannelotta@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="BsexJJInFepDDmfr"
 Content-Disposition: inline
-In-Reply-To: <20250522-v5_user_cfi_series-v16-23-64f61a35eee7@rivosinc.com>
+In-Reply-To: <20250522115255.137450-2-hannelotta@gmail.com>
 
-On the topic of vDSO generation, I wanted to have a discussion thread. So
-I'll use this patch and create a discussion thread.
 
-Binaries in address space can call into vDSO and thus in order to have
-homogenous cfi policies, vDSO is also compiled with cfi extensions enabled.
-Thus it has shadow stack and landing pad instructions in it. Shadow stack
-instructions encodings are from zimop/zcmop encodings while landing pad is
-from HINT space of `auipc x0, imm`. Thus landing pad is truly backward
-compatible with existing and future hardware both.
+--BsexJJInFepDDmfr
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-zimop/zcmop encodings are illegal instruction on existing hardware and any
-future hardware that will not implement zimop/zcmop encodings. RVA23 profile
-mandates zimop/zcmop encodings and thus any RVA23 compatible hardware should
-be compatible with libraries (including vDSOs) with zimop/zcmop instructions
-in them.
+On Thu, May 22, 2025 at 02:52:53PM +0300, Hanne-Lotta M=C3=A4enp=C3=A4=C3=
+=A4 wrote:
+> diff --git a/Documentation/userspace-api/media/v4l/biblio.rst b/Documenta=
+tion/userspace-api/media/v4l/biblio.rst
+> index 35674eeae20d..856acf6a890c 100644
+> --- a/Documentation/userspace-api/media/v4l/biblio.rst
+> +++ b/Documentation/userspace-api/media/v4l/biblio.rst
+> @@ -150,7 +150,7 @@ ITU-T.81
+>  =3D=3D=3D=3D=3D=3D=3D=3D
+> =20
+> =20
+> -:title:     ITU-T Recommendation T.81 "Information Technology --- Digita=
+l Compression and Coding of Continous-Tone Still Images --- Requirements an=
+d Guidelines"
+> +:title:     ITU-T Recommendation T.81 "Information Technology --- Digita=
+l Compression and Coding of Continuous-Tone Still Images --- Requirements a=
+nd Guidelines"
+> =20
+>  :author:    International Telecommunication Union (http://www.itu.int)
+> =20
+> diff --git a/Documentation/userspace-api/media/v4l/dev-sliced-vbi.rst b/D=
+ocumentation/userspace-api/media/v4l/dev-sliced-vbi.rst
+> index 42cdb0a9f786..96e0e85a822c 100644
+> --- a/Documentation/userspace-api/media/v4l/dev-sliced-vbi.rst
+> +++ b/Documentation/userspace-api/media/v4l/dev-sliced-vbi.rst
+> @@ -48,7 +48,7 @@ capabilities, and they may support :ref:`control` ioctl=
+s.
+>  The :ref:`video standard <standard>` ioctls provide information vital
+>  to program a sliced VBI device, therefore must be supported.
+> =20
+> -.. _sliced-vbi-format-negotitation:
+> +.. _sliced-vbi-format-negotiation:
+> =20
+>  Sliced VBI Format Negotiation
+>  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D
+> @@ -377,7 +377,7 @@ Sliced VBI Data in MPEG Streams
+> =20
+>  If a device can produce an MPEG output stream, it may be capable of
+>  providing
+> -:ref:`negotiated sliced VBI services <sliced-vbi-format-negotitation>`
+> +:ref:`negotiated sliced VBI services <sliced-vbi-format-negotiation>`
+>  as data embedded in the MPEG stream. Users or applications control this
+>  sliced VBI data insertion with the
+>  :ref:`V4L2_CID_MPEG_STREAM_VBI_FMT <v4l2-mpeg-stream-vbi-fmt>`
+> diff --git a/Documentation/userspace-api/media/v4l/ext-ctrls-fm-rx.rst b/=
+Documentation/userspace-api/media/v4l/ext-ctrls-fm-rx.rst
+> index b6cfc0e823d2..ccd439e9e0e3 100644
+> --- a/Documentation/userspace-api/media/v4l/ext-ctrls-fm-rx.rst
+> +++ b/Documentation/userspace-api/media/v4l/ext-ctrls-fm-rx.rst
+> @@ -64,17 +64,12 @@ FM_RX Control IDs
+>      broadcasts speech. If the transmitter doesn't make this distinction,
+>      then it will be set.
+> =20
+> -``V4L2_CID_TUNE_DEEMPHASIS``
+> -    (enum)
+> -
+> -enum v4l2_deemphasis -
+> +``V4L2_CID_TUNE_DEEMPHASIS (enum)``
+>      Configures the de-emphasis value for reception. A de-emphasis filter
+>      is applied to the broadcast to accentuate the high audio
+>      frequencies. Depending on the region, a time constant of either 50
+> -    or 75 useconds is used. The enum v4l2_deemphasis defines possible
+> -    values for de-emphasis. Here they are:
+> -
+> -
+> +    or 75 microseconds is used. The enum v4l2_deemphasis defines possible
+> +    values for de-emphasis. They are:
+> =20
+>  .. flat-table::
+>      :header-rows:  0
+> diff --git a/Documentation/userspace-api/media/v4l/ext-ctrls-fm-tx.rst b/=
+Documentation/userspace-api/media/v4l/ext-ctrls-fm-tx.rst
+> index 04c997c9a4c3..cb40cf4cc3ec 100644
+> --- a/Documentation/userspace-api/media/v4l/ext-ctrls-fm-tx.rst
+> +++ b/Documentation/userspace-api/media/v4l/ext-ctrls-fm-tx.rst
+> @@ -104,7 +104,7 @@ FM_TX Control IDs
+> =20
+>  ``V4L2_CID_AUDIO_LIMITER_RELEASE_TIME (integer)``
+>      Sets the audio deviation limiter feature release time. Unit is in
+> -    useconds. Step and range are driver-specific.
+> +    microseconds. Step and range are driver-specific.
+> =20
+>  ``V4L2_CID_AUDIO_LIMITER_DEVIATION (integer)``
+>      Configures audio frequency deviation level in Hz. The range and step
+> @@ -121,16 +121,16 @@ FM_TX Control IDs
+>      range and step are driver-specific.
+> =20
+>  ``V4L2_CID_AUDIO_COMPRESSION_THRESHOLD (integer)``
+> -    Sets the threshold level for audio compression freature. It is a dB
+> +    Sets the threshold level for audio compression feature. It is a dB
+>      value. The range and step are driver-specific.
+> =20
+>  ``V4L2_CID_AUDIO_COMPRESSION_ATTACK_TIME (integer)``
+> -    Sets the attack time for audio compression feature. It is a useconds
+> +    Sets the attack time for audio compression feature. It is a microsec=
+onds
+>      value. The range and step are driver-specific.
+> =20
+>  ``V4L2_CID_AUDIO_COMPRESSION_RELEASE_TIME (integer)``
+>      Sets the release time for audio compression feature. It is a
+> -    useconds value. The range and step are driver-specific.
+> +    microseconds value. The range and step are driver-specific.
+> =20
+>  ``V4L2_CID_PILOT_TONE_ENABLED (boolean)``
+>      Enables or disables the pilot tone generation feature.
+> @@ -143,17 +143,12 @@ FM_TX Control IDs
+>      Configures pilot tone frequency value. Unit is in Hz. The range and
+>      step are driver-specific.
+> =20
+> -``V4L2_CID_TUNE_PREEMPHASIS``
+> -    (enum)
+> -
+> -enum v4l2_preemphasis -
+> +``V4L2_CID_TUNE_PREEMPHASIS (enum)``
+>      Configures the pre-emphasis value for broadcasting. A pre-emphasis
+>      filter is applied to the broadcast to accentuate the high audio
+>      frequencies. Depending on the region, a time constant of either 50
+> -    or 75 useconds is used. The enum v4l2_preemphasis defines possible
+> -    values for pre-emphasis. Here they are:
+> -
+> -
+> +    or 75 microseconds is used. The enum v4l2_preemphasis defines possib=
+le
+> +    values for pre-emphasis. They are:
+> =20
+>  .. flat-table::
+>      :header-rows:  0
+> @@ -166,8 +161,6 @@ enum v4l2_preemphasis -
+>      * - ``V4L2_PREEMPHASIS_75_uS``
+>        - A pre-emphasis of 75 uS is used.
+> =20
+> -
+> -
+>  ``V4L2_CID_TUNE_POWER_LEVEL (integer)``
+>      Sets the output power level for signal transmission. Unit is in
+>      dBuV. Range and step are driver-specific.
+> diff --git a/Documentation/userspace-api/media/v4l/pixfmt-srggb12p.rst b/=
+Documentation/userspace-api/media/v4l/pixfmt-srggb12p.rst
+> index 7c3810ff783c..8c03aedcc00e 100644
+> --- a/Documentation/userspace-api/media/v4l/pixfmt-srggb12p.rst
+> +++ b/Documentation/userspace-api/media/v4l/pixfmt-srggb12p.rst
+> @@ -6,7 +6,7 @@
+>  .. _v4l2-pix-fmt-sgrbg12p:
+> =20
+>  ************************************************************************=
+*******************************************************
+> -V4L2_PIX_FMT_SRGGB12P ('pRCC'), V4L2_PIX_FMT_SGRBG12P ('pgCC'), V4L2_PIX=
+_FMT_SGBRG12P ('pGCC'), V4L2_PIX_FMT_SBGGR12P ('pBCC'),
+> +V4L2_PIX_FMT_SRGGB12P ('pRCC'), V4L2_PIX_FMT_SGRBG12P ('pgCC'), V4L2_PIX=
+_FMT_SGBRG12P ('pGCC'), V4L2_PIX_FMT_SBGGR12P ('pBCC')
+>  ************************************************************************=
+*******************************************************
+> =20
+> =20
+> @@ -20,7 +20,7 @@ Description
+>  These four pixel formats are packed raw sRGB / Bayer formats with 12
+>  bits per colour. Every two consecutive samples are packed into three
+>  bytes. Each of the first two bytes contain the 8 high order bits of
+> -the pixels, and the third byte contains the four least significants
+> +the pixels, and the third byte contains the four least significant
+>  bits of each pixel, in the same order.
+> =20
+>  Each n-pixel row contains n/2 green samples and n/2 blue or red
+> diff --git a/Documentation/userspace-api/media/v4l/pixfmt-srggb14p.rst b/=
+Documentation/userspace-api/media/v4l/pixfmt-srggb14p.rst
+> index 3572e42adb22..f4f53d7dbdeb 100644
+> --- a/Documentation/userspace-api/media/v4l/pixfmt-srggb14p.rst
+> +++ b/Documentation/userspace-api/media/v4l/pixfmt-srggb14p.rst
+> @@ -24,7 +24,7 @@ These four pixel formats are packed raw sRGB / Bayer fo=
+rmats with 14
+>  bits per colour. Every four consecutive samples are packed into seven
+>  bytes. Each of the first four bytes contain the eight high order bits
+>  of the pixels, and the three following bytes contains the six least
+> -significants bits of each pixel, in the same order.
+> +significant bits of each pixel, in the same order.
+> =20
+>  Each n-pixel row contains n/2 green samples and n/2 blue or red samples,
+>  with alternating green-red and green-blue rows. They are conventionally
 
-Kernel which is built doesn't know upfront which hardware it is going to run
-on. It can be placed on top of a existing hardware, RVA23 compatible hardware
-or any future hardware which is not RVA23 compatible but has not implemented
-zimop/zcmop extensions. Question is should kernel be building two different
-vDSOs (one with cfi/shadow stack instructions compiled and another without
-cfi instructions inthem) and expose the one depending on underlying CPU
-supports zimop/zcmop or not.
+LGTM, thanks!
 
-My initial hunch was to go with two different vDSOs in kernel and expose only
-one depending on whether zimop/zcmop is implemented by platform or not.
+Reviewed-by: Bagas Sanjaya <bagasdotme@gmail.com>
 
-However as ziciflp and zicfiss toolchain support is trickling into gnu-
-toolchain, shadow stack instructions are part of libgcc and all small object
-files that gets generated as part of toolchain creation (and eventually libc
-too). So eventually anyone running on a hardware without zimop/zcmop must be
-first building toolchain from scratch in order to build userspace rootfs and
-later packages. This sounds like a significant chunk of work and at that point
-they might as well just build kernel without `CONFIG_RISCV_USER_CFI` and should
-get vDSO without any cfi instructions in them.
+--=20
+An old man doll... just what I always wanted! - Clara
 
-Thus I did not decide to provide multi-vDSO support in kernel considering it a
-futile exercise. I wanted to put my thought process here so that there is some
-discussion on this.
+--BsexJJInFepDDmfr
+Content-Type: application/pgp-signature; name=signature.asc
 
-On Thu, May 22, 2025 at 10:31:26PM -0700, Deepak Gupta wrote:
->From: Jim Shu <jim.shu@sifive.com>
->
->user mode tasks compiled with zicfilp may call indirectly into vdso (like
->hwprobe indirect calls). Add landing pad compile support in vdso. vdso
->with landing pad in it will be nop for tasks which have not enabled
->landing pad.
->This patch allows to run user mode tasks with cfi eanbled and do no harm.
->
->Future work can be done on this to do below
-> - labeled landing pad on vdso functions (whenever labeling support shows
->   up in gnu-toolchain)
-> - emit shadow stack instructions only in vdso compiled objects as part of
->   kernel compile.
->
->Signed-off-by: Jim Shu <jim.shu@sifive.com>
->Reviewed-by: Zong Li <zong.li@sifive.com>
->Signed-off-by: Deepak Gupta <debug@rivosinc.com>
->---
-> arch/riscv/Makefile                   |  5 +++-
-> arch/riscv/include/asm/assembler.h    | 44 +++++++++++++++++++++++++++++++++++
-> arch/riscv/kernel/vdso/Makefile       |  6 +++++
-> arch/riscv/kernel/vdso/flush_icache.S |  4 ++++
-> arch/riscv/kernel/vdso/getcpu.S       |  4 ++++
-> arch/riscv/kernel/vdso/rt_sigreturn.S |  4 ++++
-> arch/riscv/kernel/vdso/sys_hwprobe.S  |  4 ++++
-> 7 files changed, 70 insertions(+), 1 deletion(-)
->
->diff --git a/arch/riscv/Makefile b/arch/riscv/Makefile
->index 539d2aef5cab..c2dd09bb9db3 100644
->--- a/arch/riscv/Makefile
->+++ b/arch/riscv/Makefile
->@@ -88,9 +88,12 @@ riscv-march-$(CONFIG_TOOLCHAIN_HAS_ZACAS) := $(riscv-march-y)_zacas
-> # Check if the toolchain supports Zabha
-> riscv-march-$(CONFIG_TOOLCHAIN_HAS_ZABHA) := $(riscv-march-y)_zabha
->
->+KBUILD_BASE_ISA = -march=$(shell echo $(riscv-march-y) | sed -E 's/(rv32ima|rv64ima)fd([^v_]*)v?/\1\2/')
->+export KBUILD_BASE_ISA
->+
-> # Remove F,D,V from isa string for all. Keep extensions between "fd" and "v" by
-> # matching non-v and non-multi-letter extensions out with the filter ([^v_]*)
->-KBUILD_CFLAGS += -march=$(shell echo $(riscv-march-y) | sed -E 's/(rv32ima|rv64ima)fd([^v_]*)v?/\1\2/')
->+KBUILD_CFLAGS += $(KBUILD_BASE_ISA)
->
-> KBUILD_AFLAGS += -march=$(riscv-march-y)
->
->diff --git a/arch/riscv/include/asm/assembler.h b/arch/riscv/include/asm/assembler.h
->index 44b1457d3e95..a058ea5e9c58 100644
->--- a/arch/riscv/include/asm/assembler.h
->+++ b/arch/riscv/include/asm/assembler.h
->@@ -80,3 +80,47 @@
-> 	.endm
->
-> #endif	/* __ASM_ASSEMBLER_H */
->+
->+#if defined(CONFIG_RISCV_USER_CFI) && (__riscv_xlen == 64)
->+.macro vdso_lpad
->+lpad 0
->+.endm
->+#else
->+.macro vdso_lpad
->+.endm
->+#endif
->+
->+/*
->+ * This macro emits a program property note section identifying
->+ * architecture features which require special handling, mainly for
->+ * use in assembly files included in the VDSO.
->+ */
->+#define NT_GNU_PROPERTY_TYPE_0  5
->+#define GNU_PROPERTY_RISCV_FEATURE_1_AND 0xc0000000
->+
->+#define GNU_PROPERTY_RISCV_FEATURE_1_ZICFILP      (1U << 0)
->+#define GNU_PROPERTY_RISCV_FEATURE_1_ZICFISS      (1U << 1)
->+
->+#if defined(CONFIG_RISCV_USER_CFI) && (__riscv_xlen == 64)
->+#define GNU_PROPERTY_RISCV_FEATURE_1_DEFAULT \
->+	(GNU_PROPERTY_RISCV_FEATURE_1_ZICFILP)
->+#endif
->+
->+#ifdef GNU_PROPERTY_RISCV_FEATURE_1_DEFAULT
->+.macro emit_riscv_feature_1_and, feat = GNU_PROPERTY_RISCV_FEATURE_1_DEFAULT
->+	.pushsection .note.gnu.property, "a"
->+	.p2align        3
->+	.word           4
->+	.word           16
->+	.word           NT_GNU_PROPERTY_TYPE_0
->+	.asciz          "GNU"
->+	.word           GNU_PROPERTY_RISCV_FEATURE_1_AND
->+	.word           4
->+	.word           \feat
->+	.word           0
->+	.popsection
->+.endm
->+#else
->+.macro emit_riscv_feature_1_and, feat = 0
->+.endm
->+#endif
->diff --git a/arch/riscv/kernel/vdso/Makefile b/arch/riscv/kernel/vdso/Makefile
->index ad73607abc28..441c5431d27e 100644
->--- a/arch/riscv/kernel/vdso/Makefile
->+++ b/arch/riscv/kernel/vdso/Makefile
->@@ -13,12 +13,18 @@ vdso-syms += flush_icache
-> vdso-syms += hwprobe
-> vdso-syms += sys_hwprobe
->
->+ifdef CONFIG_RISCV_USER_CFI
->+LPAD_MARCH = _zicfilp_zicfiss -fcf-protection=full
->+endif
->+
-> # Files to link into the vdso
-> obj-vdso = $(patsubst %, %.o, $(vdso-syms)) note.o
->
-> ccflags-y := -fno-stack-protector
-> ccflags-y += -DDISABLE_BRANCH_PROFILING
-> ccflags-y += -fno-builtin
->+ccflags-y += $(KBUILD_BASE_ISA)$(LPAD_MARCH)
->+asflags-y += $(KBUILD_BASE_ISA)$(LPAD_MARCH)
->
-> ifneq ($(c-gettimeofday-y),)
->   CFLAGS_vgettimeofday.o += -fPIC -include $(c-gettimeofday-y)
->diff --git a/arch/riscv/kernel/vdso/flush_icache.S b/arch/riscv/kernel/vdso/flush_icache.S
->index 8f884227e8bc..e4c56970905e 100644
->--- a/arch/riscv/kernel/vdso/flush_icache.S
->+++ b/arch/riscv/kernel/vdso/flush_icache.S
->@@ -5,11 +5,13 @@
->
-> #include <linux/linkage.h>
-> #include <asm/unistd.h>
->+#include <asm/assembler.h>
->
-> 	.text
-> /* int __vdso_flush_icache(void *start, void *end, unsigned long flags); */
-> SYM_FUNC_START(__vdso_flush_icache)
-> 	.cfi_startproc
->+	vdso_lpad
-> #ifdef CONFIG_SMP
-> 	li a7, __NR_riscv_flush_icache
-> 	ecall
->@@ -20,3 +22,5 @@ SYM_FUNC_START(__vdso_flush_icache)
-> 	ret
-> 	.cfi_endproc
-> SYM_FUNC_END(__vdso_flush_icache)
->+
->+emit_riscv_feature_1_and
->diff --git a/arch/riscv/kernel/vdso/getcpu.S b/arch/riscv/kernel/vdso/getcpu.S
->index 9c1bd531907f..5c1ecc4e1465 100644
->--- a/arch/riscv/kernel/vdso/getcpu.S
->+++ b/arch/riscv/kernel/vdso/getcpu.S
->@@ -5,14 +5,18 @@
->
-> #include <linux/linkage.h>
-> #include <asm/unistd.h>
->+#include <asm/assembler.h>
->
-> 	.text
-> /* int __vdso_getcpu(unsigned *cpu, unsigned *node, void *unused); */
-> SYM_FUNC_START(__vdso_getcpu)
-> 	.cfi_startproc
->+	vdso_lpad
-> 	/* For now, just do the syscall. */
-> 	li a7, __NR_getcpu
-> 	ecall
-> 	ret
-> 	.cfi_endproc
-> SYM_FUNC_END(__vdso_getcpu)
->+
->+emit_riscv_feature_1_and
->diff --git a/arch/riscv/kernel/vdso/rt_sigreturn.S b/arch/riscv/kernel/vdso/rt_sigreturn.S
->index 3dc022aa8931..e82987dc3739 100644
->--- a/arch/riscv/kernel/vdso/rt_sigreturn.S
->+++ b/arch/riscv/kernel/vdso/rt_sigreturn.S
->@@ -5,12 +5,16 @@
->
-> #include <linux/linkage.h>
-> #include <asm/unistd.h>
->+#include <asm/assembler.h>
->
-> 	.text
-> SYM_FUNC_START(__vdso_rt_sigreturn)
-> 	.cfi_startproc
-> 	.cfi_signal_frame
->+	vdso_lpad
-> 	li a7, __NR_rt_sigreturn
-> 	ecall
-> 	.cfi_endproc
-> SYM_FUNC_END(__vdso_rt_sigreturn)
->+
->+emit_riscv_feature_1_and
->diff --git a/arch/riscv/kernel/vdso/sys_hwprobe.S b/arch/riscv/kernel/vdso/sys_hwprobe.S
->index 77e57f830521..f1694451a60c 100644
->--- a/arch/riscv/kernel/vdso/sys_hwprobe.S
->+++ b/arch/riscv/kernel/vdso/sys_hwprobe.S
->@@ -3,13 +3,17 @@
->
-> #include <linux/linkage.h>
-> #include <asm/unistd.h>
->+#include <asm/assembler.h>
->
-> .text
-> SYM_FUNC_START(riscv_hwprobe)
-> 	.cfi_startproc
->+	vdso_lpad
-> 	li a7, __NR_riscv_hwprobe
-> 	ecall
-> 	ret
->
-> 	.cfi_endproc
-> SYM_FUNC_END(riscv_hwprobe)
->+
->+emit_riscv_feature_1_and
->
->-- 
->2.43.0
->
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCaDAPtgAKCRD2uYlJVVFO
+o3fvAQDs1BsfrMrlMWjpOY5ChsMQIfp+JDgAINOVN9oM+uxWGwD7BbAp4WJR/sZe
+TrbuxSWQRqeAjSaf4X8a6aSlx2lXUAU=
+=KaiC
+-----END PGP SIGNATURE-----
+
+--BsexJJInFepDDmfr--
