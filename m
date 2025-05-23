@@ -1,92 +1,114 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28DC62957C0;
-	Fri, 23 May 2025 14:23:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from relmlie5.idc.renesas.com (relmlor1.renesas.com [210.160.252.171])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5C7E514286;
+	Fri, 23 May 2025 14:24:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748010209; cv=none; b=PFW3xQGuXF57LKY6aKDKO/y5QSvr0XEonjyCym86IQJY7tN2lpexSi3Y2UdRpN48L7w7vOfaw8EMHRNQa/BYQvTACUgycGLKlQdN0o0nBinRxWaSCFjwN8lmDapOKHy0IwbExa/9BI3XfivWOMmxPtuRe6YGZsaiWZmbcdzNEdE=
+	t=1748010276; cv=none; b=Db6v+FrdxZL7vm7IrlauDeLd2sDWPZ/he6/Yn15pRCspGp3MAOn+6nb2idYfejcq5e5rGLtAG940ozxP2Ey5NLyS6Ba9EPPGTtTfKlsqvd0l/D7z1Jm7EuiNSROWYlDdkvuWHK1yQE0R76aCSb9NrX70YAHO9BDqXWWxUpDdwWY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748010209; c=relaxed/simple;
-	bh=Bp/ucb/GTjVrDZZD7rUyDOj4GMDaNKCX21mkeadmdjY=;
-	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=cj0D3OhEjNULRVs/zLuC574MKz/h3HpOINYmwUPaSJDfN3IsaHS2HRQl4evaoqs7Zfx0zuYJGZYgiOtjXGsuXBgB1AU0iPi+NQM59y0DjTRSVVeWTtUUK0+eB0Xq5sHAankYzgLn2dqtS8/qODFH0Ge2MVh7x953NDMcBFtyouU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qKl5oe0E; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qKl5oe0E"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74677C4CEE9;
-	Fri, 23 May 2025 14:23:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748010208;
-	bh=Bp/ucb/GTjVrDZZD7rUyDOj4GMDaNKCX21mkeadmdjY=;
-	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=qKl5oe0ETeD+POG4Zxk/4FSBGnnuze7xxrZwHMCOwa8vbZIDtedHy47PYkI9T319L
-	 eLvGVEEiadWGWc9rbeGJpdthDtnj18pLjtHUY6NHJqxvssrOQ+TRYeJOr8scU9NxiW
-	 sbAkA4nXOc1KfJj53cH6/9qZxdsdVCq+MnA1N75zeRluRkpNyxkhmpilh4vHPvFKmf
-	 wr0QX3EuxtpCT2ksuQYM4iWN3alcipTfH/m4Tai6aQE+ZViJY8Jq4ph3GtGI4pKlPd
-	 jIZNjemc/m5UVwAKMt+ANALKZYjZecX9kjRXHzMCwBCkKqr3bP9jCNlugj7GmnhxKg
-	 aQ6LKOwRTgPSg==
-Date: Fri, 23 May 2025 09:23:26 -0500
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	s=arc-20240116; t=1748010276; c=relaxed/simple;
+	bh=Vf+auSoeFf6uL/0+48TV95yQilu/xyEfOWUvRHJ7Egc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=mIE/giAyBUWlHFF9Cuy+ECM4/L7yLJNd0D+HhPUqWFj4GTey1810CIWsSLYMbMpn8r4aGVLozxEETu1eJEl8uFwwTUErlPomJrllmL77byHvpQoiVC337Cz2UcPVKX/gm/gVsBaYQx1yNNyNK33uS9UgVkDeH49DdM6V+uwrRhQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; arc=none smtp.client-ip=210.160.252.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
+X-CSE-ConnectionGUID: ZR+O8YDJSZWevl+j9Z39IA==
+X-CSE-MsgGUID: ECrIav6VR0CszXy0VsgiKQ==
+Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
+  by relmlie5.idc.renesas.com with ESMTP; 23 May 2025 23:24:27 +0900
+Received: from superbuilder.administration.lan (unknown [10.226.92.97])
+	by relmlir5.idc.renesas.com (Postfix) with ESMTP id 2CD5E4010DE6;
+	Fri, 23 May 2025 23:24:23 +0900 (JST)
+From: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
+To: thierry.bultel@linatsea.fr
+Cc: linux-renesas-soc@vger.kernel.org,
+	geert@linux-m68k.org,
+	paul.barker.ct@bp.renesas.com,
+	Thierry Bultel <thierry.bultel.yh@bp.renesas.com>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	linux-kernel@vger.kernel.org,
+	linux-serial@vger.kernel.org,
+	devicetree@vger.kernel.org
+Subject: [PATCH v10 01/10] dt-bindings: serial: Added secondary clock for RZ/T2H RSCI
+Date: Fri, 23 May 2025 16:24:05 +0200
+Message-ID: <20250523142417.2840797-2-thierry.bultel.yh@bp.renesas.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250523142417.2840797-1-thierry.bultel.yh@bp.renesas.com>
+References: <20250523142417.2840797-1-thierry.bultel.yh@bp.renesas.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Robin Gong <yibin.gong@nxp.com>, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-To: Martijn de Gouw <martijn.de.gouw@prodrive-technologies.com>
-In-Reply-To: <20250523131214.955970-1-martijn.de.gouw@prodrive-technologies.com>
-References: <20250523131214.955970-1-martijn.de.gouw@prodrive-technologies.com>
-Message-Id: <174801020316.1711348.10193654747801258488.robh@kernel.org>
-Subject: Re: [PATCH v2 1/2] dt-bindings: regulator: add pca9450: Add
- regulator-allowed-modes
+Content-Transfer-Encoding: 8bit
 
+At boot, the default clock is the PCLKM core clock (synchronous
+clock, which is enabled by the bootloader).
+For different baudrates, the asynchronous clock input must be used.
+Clock selection is made by an internal register of RCSI.
 
-On Fri, 23 May 2025 15:12:11 +0200, Martijn de Gouw wrote:
-> Make the PWM mode on the buck controllers configurable from devicetree.
-> Some boards require forced PWM mode to keep the supply ripple within
-> acceptable limits under light load conditions.
-> 
-> Signed-off-by: Martijn de Gouw <martijn.de.gouw@prodrive-technologies.com>
-> ---
-> Changes in v2:
->   - Add the header to the binding patch
->   - Improve commit message
-> 
->  .../regulator/nxp,pca9450-regulator.yaml       | 14 ++++++++++++++
->  .../regulator/nxp,pca9450-regulator.h          | 18 ++++++++++++++++++
->  2 files changed, 32 insertions(+)
->  create mode 100644 include/dt-bindings/regulator/nxp,pca9450-regulator.h
-> 
+Add the optional "sck", external clock input.
 
-My bot found errors running 'make dt_binding_check' on your patch:
+Also remove the unneeded serial0 alias from the dts example.
 
-yamllint warnings/errors:
+Signed-off-by: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
+---
+Changes v9->v10:
+ - mention sck in description
+ - no maxItems on clock-names
+ - fixed the #include dependency in dts example
+Changes v8->v9:
+ - typo in description
+ - named clocks 'operational' and 'bus', and added optional 'sck' clock
+ - uses value of 2nd core clock in example to break the dependency on cpg patch
+---
+ .../bindings/serial/renesas,rsci.yaml           | 17 +++++++++--------
+ 1 file changed, 9 insertions(+), 8 deletions(-)
 
-dtschema/dtc warnings/errors:
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/regulator/nxp,pca9450-regulator.example.dtb: pmic@25 (nxp,pca9450b): regulators:BUCK4: Unevaluated properties are not allowed ('regulator-inital-mode' was unexpected)
-	from schema $id: http://devicetree.org/schemas/regulator/nxp,pca9450-regulator.yaml#
-
-doc reference errors (make refcheckdocs):
-
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250523131214.955970-1-martijn.de.gouw@prodrive-technologies.com
-
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
+diff --git a/Documentation/devicetree/bindings/serial/renesas,rsci.yaml b/Documentation/devicetree/bindings/serial/renesas,rsci.yaml
+index ea879db5f485..1bf255407df0 100644
+--- a/Documentation/devicetree/bindings/serial/renesas,rsci.yaml
++++ b/Documentation/devicetree/bindings/serial/renesas,rsci.yaml
+@@ -35,10 +35,15 @@ properties:
+       - const: tei
+ 
+   clocks:
+-    maxItems: 1
++    minItems: 2
++    maxItems: 3
+ 
+   clock-names:
+-    const: fck # UART functional clock
++    minItems: 2
++    items:
++      - const: operation
++      - const: bus
++      - const: sck # optional external clock input
+ 
+   power-domains:
+     maxItems: 1
+@@ -60,10 +65,6 @@ examples:
+     #include <dt-bindings/interrupt-controller/arm-gic.h>
+     #include <dt-bindings/clock/renesas-cpg-mssr.h>
+ 
+-    aliases {
+-        serial0 = &sci0;
+-    };
+-
+     sci0: serial@80005000 {
+         compatible = "renesas,r9a09g077-rsci";
+         reg = <0x80005000 0x400>;
+@@ -72,7 +73,7 @@ examples:
+                      <GIC_SPI 592 IRQ_TYPE_EDGE_RISING>,
+                      <GIC_SPI 593 IRQ_TYPE_LEVEL_HIGH>;
+         interrupt-names = "eri", "rxi", "txi", "tei";
+-        clocks = <&cpg CPG_MOD 108>;
+-        clock-names = "fck";
++        clocks = <&cpg CPG_MOD 8>, <&cpg CPG_CORE 13>;
++        clock-names = "operation", "bus";
+         power-domains = <&cpg>;
+     };
+-- 
+2.43.0
 
