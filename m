@@ -1,292 +1,119 @@
-Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5E9817A2F6;
-	Fri, 23 May 2025 06:03:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 794317DA8C;
+	Fri, 23 May 2025 06:05:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747980220; cv=none; b=SOsE9ufz1kbjfpXCVo+pZo0cyNI2BX1DkRvkoR9aKlin2tx0kjLl6ov38zgss+2XBVH7R9CCxaC7w42Sdj/5TChbS2nMMYP5oWrroJ5+bSkH3d3vbNLnWizD6LE07+DKkrCconAR0B8q6eBMs1Ts6tb2HNlq4KxmnoDm089yOA4=
+	t=1747980306; cv=none; b=f3PHwEesrZ1r/v6cWeCKki4TlkCoNMkHqwPzFs75Sw8VYfaj9PtfC2q8byaZ3zjCSwP+QH8+O2CqlSQVWG2LhiSoPogNrLsl8IfX4Rb2A32A/+g0Aa5SlsNaI40xT4sXfCY+C3QUXnElSOicxT7O9gy9tC8xFRMeW2MjpBxJPbk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747980220; c=relaxed/simple;
-	bh=I5qguV0L/tA+Xwh2AMUys0D4J77U+VviyWoODICSkD4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ozdBIt+JxiwiR9b5EDW+vC6i/rUvZ4Q1ZPvPT7djtiIZwgn4l/Dt1yI9Hh4l4KBeC9xq1IFn+Esq//K407C7Gvybl9jsKR2b8i2CBaBlvWjlEjJG/wWFZ8g5CpQknYmBXy7lHZl/2NXceyecyybItXum5kVvoGSl8BptAqTGJVE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eoFDU5If; arc=none smtp.client-ip=209.85.210.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eoFDU5If"
-Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-742c7a52e97so4921418b3a.3;
-        Thu, 22 May 2025 23:03:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747980218; x=1748585018; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=S/coq0/Ft/GqaFo4CSoc7RYMxYKYlx891WXrsKT4Ajk=;
-        b=eoFDU5Ifp0JzKl7nYBA41xyoKvZPJo6c73ac4zkb4jRVkjE2X4Dhpy9WqTgc3t3zr9
-         qeky/tSK2SiBUha+P8k9zoBfRCcKzb4Znj2MbKuzzk/wQj8GPgeUVPbnQc+kcEFp6vOH
-         IRZ4wRbp40Dt0lZ5QnA2K3/0/W7AWg6IOSA9JJU+ChOTOQ46HPOjmnBSEkPSAWQF843y
-         Y9WXvUelMcfIoQ/JqvmBSfGeQaPEBxsB8qvLRDEjnOnucb6hIEJKwTatCey1sdw1Skue
-         tkgo9s5iOtxSxeBORnV2JZP4xQkPWLRq3/MmGWdx7P8w8pohu22SHtvNbUY8d72Y9vff
-         Y9mg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747980218; x=1748585018;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=S/coq0/Ft/GqaFo4CSoc7RYMxYKYlx891WXrsKT4Ajk=;
-        b=dpZIwEDIHwA3oYZu5Uzxypd0G7twsv+jALMfKLxIzm2RZ9oQAb1EUNERtB1BVtgaz2
-         TUDDEV4Atf2SVdARL4MGCA6OjzlprPeVy/kI7A3ysW8bXM1VYn2oe8wsWBudNuEF0kCT
-         ZWPurQ8uJ08kf5rZdtHD3pIkbwYtwf+sT2P646/y8JI5OgC+gi5Hn2EURcMNaFcTtCvP
-         oPH9Hch+6VbvTKFAK+8ZVzpn+fuAx+ba1Tgp9dTsG3pBdqkzaQ09C33Y+dix6rVTi2Iq
-         /xsgwOzyReajpZedLJt215FFQ3WWkNV6Vka+3lv1HryvX6fgtcucnPwq17xsaKfGILy7
-         bTOA==
-X-Forwarded-Encrypted: i=1; AJvYcCWI4dkSqw7V7UcAlmkUt0Wd33fjgf57BCMZxAwg6XUbxNPiwuxExLoBSDHMy6ReXNhx9OF5Xyl5R4YFSpI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyd7saPxL6L8Lh06ZJuP/4jBhIBIEGMMxK0ERpcxt7GiUMUKH+R
-	cTqTaTxgCxu+7ZSkiQTRB0RbuWumooI0HHL4IREY3qXzk7sUHDUVchqq
-X-Gm-Gg: ASbGnctmDjwXNMBiOGx3Atn0RPc43dUAPsqInVy7NFsNr+5Dz/3bpejcRXyyqbaUB2W
-	VY4ND9g2rmHSd0f5TW8/KCdGEppW+sds1eRMLFYcr8u5A+0gu0PLENoipRwQy95t5MzodmnWVbG
-	vGHyM2T+0hMbVbkMiMwMYZUdKWgpObWOSscsJwNVmC/Gq+xumvktQquLWgWOCrg/kz51376uyDT
-	88wMfb1tp8gg0YlvbEMrmAdWhgND3hF7XYwaEaU3SotF+6JAaTM3+yRqc32EpF7LTb3Ae4eCuIC
-	aC711pQyiQkR29A/C8f4g/BOkUlE5jq68AsxZLKJGziO8wh1gD0=
-X-Google-Smtp-Source: AGHT+IFIJEFHoKjH5yEQALdGWxi4lQlcAObqnu0RIN3kI9jd1GsqNKPY/0Iv6JATgsNYZY/FOEa9Bg==
-X-Received: by 2002:a05:6a00:66d8:b0:740:9d6b:db1a with SMTP id d2e1a72fcca58-742acd507ccmr32710267b3a.15.1747980217570;
-        Thu, 22 May 2025 23:03:37 -0700 (PDT)
-Received: from archie.me ([103.124.138.155])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-742adad3d7fsm12247963b3a.15.2025.05.22.23.03.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 May 2025 23:03:36 -0700 (PDT)
-Received: by archie.me (Postfix, from userid 1000)
-	id BBFF942439C3; Fri, 23 May 2025 13:03:34 +0700 (WIB)
-Date: Fri, 23 May 2025 13:03:34 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Hanne-Lotta =?utf-8?B?TcOkZW5ww6TDpA==?= <hannelotta@gmail.com>,
-	mchehab@kernel.org, ribalda@chromium.org, hverkuil@xs4all.nl,
-	sebastian.fricke@collabora.com, hljunggr@cisco.com,
-	dave.jiang@intel.com, jgg@ziepe.ca, saeedm@nvidia.com,
-	Jonathan.Cameron@huawei.com, corbet@lwn.net,
-	ilpo.jarvinen@linux.intel.com, mario.limonciello@amd.com,
-	W_Armin@gmx.de, mpearson-lenovo@squebb.ca,
-	skhan@linuxfoundation.org
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-kernel-mentees@lists.linux.dev
-Subject: Re: [PATCH v2 2/4] docs: Improve grammar, formatting in Video4Linux
-Message-ID: <aDAPtpE-5mkZ6P9y@archie.me>
-References: <20250522115255.137450-1-hannelotta@gmail.com>
- <20250522115255.137450-2-hannelotta@gmail.com>
+	s=arc-20240116; t=1747980306; c=relaxed/simple;
+	bh=4LSJK/iO+HdCrJDa0TaXMhGIbIu/V57f7n1KE8GmDeQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=aEFY/rpJPtEKT3Jju5W8q6/zLJedwDQ1WEmbJRd0LjqvuHYk/Rl6/iSYqjOyADXeg7IG/h31ilivOQx1e86cqALY/AdarHtVxzxkFTO8QbMnmIai2kG+Y7Ef8zKedS/GUZAX0NuRCbGESAddQLIm/oKcWYV0CZ+CRSyRdau54N4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: d90fbf74379b11f0b29709d653e92f7d-20250523
+X-CTIC-Tags:
+	HR_CC_AS_FROM, HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NAME, HR_CTE_8B
+	HR_CTT_MISS, HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_DIGIT_LEN
+	HR_FROM_NAME, HR_SJ_LANG, HR_SJ_LEN, HR_SJ_LETTER, HR_SJ_NOR_SYM
+	HR_SJ_PHRASE, HR_SJ_PHRASE_LEN, HR_SJ_WS, HR_TO_COUNT, HR_TO_DOMAIN_COUNT
+	HR_TO_NO_NAME, IP_TRUSTED, SRC_TRUSTED, DN_TRUSTED, SA_TRUSTED
+	SA_EXISTED, SN_TRUSTED, SN_EXISTED, SPF_NOPASS, DKIM_NOPASS
+	DMARC_NOPASS, CIE_BAD, CIE_GOOD_SPF, GTI_FG_BS, GTI_RG_INFO
+	GTI_C_BU, AMN_T1, AMN_GOOD, AMN_C_TI, AMN_C_BU
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.45,REQID:8e9eb471-4bd8-4b90-bb80-e6e9e87fb85a,IP:0,U
+	RL:0,TC:0,Content:0,EDM:-30,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTI
+	ON:release,TS:-35
+X-CID-INFO: VERSION:1.1.45,REQID:8e9eb471-4bd8-4b90-bb80-e6e9e87fb85a,IP:0,URL
+	:0,TC:0,Content:0,EDM:-30,RT:0,SF:-5,FILE:0,BULK:0,RULE:EDM_GN8D19FE,ACTIO
+	N:release,TS:-35
+X-CID-META: VersionHash:6493067,CLOUDID:da64e96358f60d14b2c95ea56af8eb48,BulkI
+	D:25052314045684Q7ZX7A,BulkQuantity:0,Recheck:0,SF:17|19|38|66|78|102,TC:n
+	il,Content:0|50,EDM:2,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil
+	,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD
+X-UUID: d90fbf74379b11f0b29709d653e92f7d-20250523
+X-User: xiaopei01@kylinos.cn
+Received: from localhost.localdomain [(10.44.16.150)] by mailgw.kylinos.cn
+	(envelope-from <xiaopei01@kylinos.cn>)
+	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
+	with ESMTP id 1243160250; Fri, 23 May 2025 14:04:54 +0800
+From: Pei Xiao <xiaopei01@kylinos.cn>
+To: miriam.rachel.korenblit@intel.com,
+	johannes.berg@intel.com,
+	emmanuel.grumbach@intel.com,
+	linux-wireless@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Pei Xiao <xiaopei01@kylinos.cn>
+Subject: [PATCH] wifi: iwlwifi: cfg:  Limit cb_size to valid range
+Date: Fri, 23 May 2025 14:04:50 +0800
+Message-Id: <5a603a35a2d05ac9bd44c87efc605d35051d5d12.1747980220.git.xiaopei01@kylinos.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="BsexJJInFepDDmfr"
-Content-Disposition: inline
-In-Reply-To: <20250522115255.137450-2-hannelotta@gmail.com>
+Content-Transfer-Encoding: 8bit
 
+on arm64 defconfig build failed with gcc-8:
 
---BsexJJInFepDDmfr
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+drivers/net/wireless/intel/iwlwifi/pcie/ctxt-info.c:208:3:
+include/linux/bitfield.h:195:3: error: call to '__field_overflow'
+declared with attribute error: value doesn't fit into mask
+   __field_overflow();     \
+   ^~~~~~~~~~~~~~~~~~
+include/linux/bitfield.h:215:2: note: in expansion of macro '____MAKE_OP'
+  ____MAKE_OP(u##size,u##size,,)
+  ^~~~~~~~~~~
+include/linux/bitfield.h:218:1: note: in expansion of macro '__MAKE_OP'
+ __MAKE_OP(32)
 
-On Thu, May 22, 2025 at 02:52:53PM +0300, Hanne-Lotta M=C3=A4enp=C3=A4=C3=
-=A4 wrote:
-> diff --git a/Documentation/userspace-api/media/v4l/biblio.rst b/Documenta=
-tion/userspace-api/media/v4l/biblio.rst
-> index 35674eeae20d..856acf6a890c 100644
-> --- a/Documentation/userspace-api/media/v4l/biblio.rst
-> +++ b/Documentation/userspace-api/media/v4l/biblio.rst
-> @@ -150,7 +150,7 @@ ITU-T.81
->  =3D=3D=3D=3D=3D=3D=3D=3D
-> =20
-> =20
-> -:title:     ITU-T Recommendation T.81 "Information Technology --- Digita=
-l Compression and Coding of Continous-Tone Still Images --- Requirements an=
-d Guidelines"
-> +:title:     ITU-T Recommendation T.81 "Information Technology --- Digita=
-l Compression and Coding of Continuous-Tone Still Images --- Requirements a=
-nd Guidelines"
-> =20
->  :author:    International Telecommunication Union (http://www.itu.int)
-> =20
-> diff --git a/Documentation/userspace-api/media/v4l/dev-sliced-vbi.rst b/D=
-ocumentation/userspace-api/media/v4l/dev-sliced-vbi.rst
-> index 42cdb0a9f786..96e0e85a822c 100644
-> --- a/Documentation/userspace-api/media/v4l/dev-sliced-vbi.rst
-> +++ b/Documentation/userspace-api/media/v4l/dev-sliced-vbi.rst
-> @@ -48,7 +48,7 @@ capabilities, and they may support :ref:`control` ioctl=
-s.
->  The :ref:`video standard <standard>` ioctls provide information vital
->  to program a sliced VBI device, therefore must be supported.
-> =20
-> -.. _sliced-vbi-format-negotitation:
-> +.. _sliced-vbi-format-negotiation:
-> =20
->  Sliced VBI Format Negotiation
->  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D
-> @@ -377,7 +377,7 @@ Sliced VBI Data in MPEG Streams
-> =20
->  If a device can produce an MPEG output stream, it may be capable of
->  providing
-> -:ref:`negotiated sliced VBI services <sliced-vbi-format-negotitation>`
-> +:ref:`negotiated sliced VBI services <sliced-vbi-format-negotiation>`
->  as data embedded in the MPEG stream. Users or applications control this
->  sliced VBI data insertion with the
->  :ref:`V4L2_CID_MPEG_STREAM_VBI_FMT <v4l2-mpeg-stream-vbi-fmt>`
-> diff --git a/Documentation/userspace-api/media/v4l/ext-ctrls-fm-rx.rst b/=
-Documentation/userspace-api/media/v4l/ext-ctrls-fm-rx.rst
-> index b6cfc0e823d2..ccd439e9e0e3 100644
-> --- a/Documentation/userspace-api/media/v4l/ext-ctrls-fm-rx.rst
-> +++ b/Documentation/userspace-api/media/v4l/ext-ctrls-fm-rx.rst
-> @@ -64,17 +64,12 @@ FM_RX Control IDs
->      broadcasts speech. If the transmitter doesn't make this distinction,
->      then it will be set.
-> =20
-> -``V4L2_CID_TUNE_DEEMPHASIS``
-> -    (enum)
-> -
-> -enum v4l2_deemphasis -
-> +``V4L2_CID_TUNE_DEEMPHASIS (enum)``
->      Configures the de-emphasis value for reception. A de-emphasis filter
->      is applied to the broadcast to accentuate the high audio
->      frequencies. Depending on the region, a time constant of either 50
-> -    or 75 useconds is used. The enum v4l2_deemphasis defines possible
-> -    values for de-emphasis. Here they are:
-> -
-> -
-> +    or 75 microseconds is used. The enum v4l2_deemphasis defines possible
-> +    values for de-emphasis. They are:
-> =20
->  .. flat-table::
->      :header-rows:  0
-> diff --git a/Documentation/userspace-api/media/v4l/ext-ctrls-fm-tx.rst b/=
-Documentation/userspace-api/media/v4l/ext-ctrls-fm-tx.rst
-> index 04c997c9a4c3..cb40cf4cc3ec 100644
-> --- a/Documentation/userspace-api/media/v4l/ext-ctrls-fm-tx.rst
-> +++ b/Documentation/userspace-api/media/v4l/ext-ctrls-fm-tx.rst
-> @@ -104,7 +104,7 @@ FM_TX Control IDs
-> =20
->  ``V4L2_CID_AUDIO_LIMITER_RELEASE_TIME (integer)``
->      Sets the audio deviation limiter feature release time. Unit is in
-> -    useconds. Step and range are driver-specific.
-> +    microseconds. Step and range are driver-specific.
-> =20
->  ``V4L2_CID_AUDIO_LIMITER_DEVIATION (integer)``
->      Configures audio frequency deviation level in Hz. The range and step
-> @@ -121,16 +121,16 @@ FM_TX Control IDs
->      range and step are driver-specific.
-> =20
->  ``V4L2_CID_AUDIO_COMPRESSION_THRESHOLD (integer)``
-> -    Sets the threshold level for audio compression freature. It is a dB
-> +    Sets the threshold level for audio compression feature. It is a dB
->      value. The range and step are driver-specific.
-> =20
->  ``V4L2_CID_AUDIO_COMPRESSION_ATTACK_TIME (integer)``
-> -    Sets the attack time for audio compression feature. It is a useconds
-> +    Sets the attack time for audio compression feature. It is a microsec=
-onds
->      value. The range and step are driver-specific.
-> =20
->  ``V4L2_CID_AUDIO_COMPRESSION_RELEASE_TIME (integer)``
->      Sets the release time for audio compression feature. It is a
-> -    useconds value. The range and step are driver-specific.
-> +    microseconds value. The range and step are driver-specific.
-> =20
->  ``V4L2_CID_PILOT_TONE_ENABLED (boolean)``
->      Enables or disables the pilot tone generation feature.
-> @@ -143,17 +143,12 @@ FM_TX Control IDs
->      Configures pilot tone frequency value. Unit is in Hz. The range and
->      step are driver-specific.
-> =20
-> -``V4L2_CID_TUNE_PREEMPHASIS``
-> -    (enum)
-> -
-> -enum v4l2_preemphasis -
-> +``V4L2_CID_TUNE_PREEMPHASIS (enum)``
->      Configures the pre-emphasis value for broadcasting. A pre-emphasis
->      filter is applied to the broadcast to accentuate the high audio
->      frequencies. Depending on the region, a time constant of either 50
-> -    or 75 useconds is used. The enum v4l2_preemphasis defines possible
-> -    values for pre-emphasis. Here they are:
-> -
-> -
-> +    or 75 microseconds is used. The enum v4l2_preemphasis defines possib=
-le
-> +    values for pre-emphasis. They are:
-> =20
->  .. flat-table::
->      :header-rows:  0
-> @@ -166,8 +161,6 @@ enum v4l2_preemphasis -
->      * - ``V4L2_PREEMPHASIS_75_uS``
->        - A pre-emphasis of 75 uS is used.
-> =20
-> -
-> -
->  ``V4L2_CID_TUNE_POWER_LEVEL (integer)``
->      Sets the output power level for signal transmission. Unit is in
->      dBuV. Range and step are driver-specific.
-> diff --git a/Documentation/userspace-api/media/v4l/pixfmt-srggb12p.rst b/=
-Documentation/userspace-api/media/v4l/pixfmt-srggb12p.rst
-> index 7c3810ff783c..8c03aedcc00e 100644
-> --- a/Documentation/userspace-api/media/v4l/pixfmt-srggb12p.rst
-> +++ b/Documentation/userspace-api/media/v4l/pixfmt-srggb12p.rst
-> @@ -6,7 +6,7 @@
->  .. _v4l2-pix-fmt-sgrbg12p:
-> =20
->  ************************************************************************=
-*******************************************************
-> -V4L2_PIX_FMT_SRGGB12P ('pRCC'), V4L2_PIX_FMT_SGRBG12P ('pgCC'), V4L2_PIX=
-_FMT_SGBRG12P ('pGCC'), V4L2_PIX_FMT_SBGGR12P ('pBCC'),
-> +V4L2_PIX_FMT_SRGGB12P ('pRCC'), V4L2_PIX_FMT_SGRBG12P ('pgCC'), V4L2_PIX=
-_FMT_SGBRG12P ('pGCC'), V4L2_PIX_FMT_SBGGR12P ('pBCC')
->  ************************************************************************=
-*******************************************************
-> =20
-> =20
-> @@ -20,7 +20,7 @@ Description
->  These four pixel formats are packed raw sRGB / Bayer formats with 12
->  bits per colour. Every two consecutive samples are packed into three
->  bytes. Each of the first two bytes contain the 8 high order bits of
-> -the pixels, and the third byte contains the four least significants
-> +the pixels, and the third byte contains the four least significant
->  bits of each pixel, in the same order.
-> =20
->  Each n-pixel row contains n/2 green samples and n/2 blue or red
-> diff --git a/Documentation/userspace-api/media/v4l/pixfmt-srggb14p.rst b/=
-Documentation/userspace-api/media/v4l/pixfmt-srggb14p.rst
-> index 3572e42adb22..f4f53d7dbdeb 100644
-> --- a/Documentation/userspace-api/media/v4l/pixfmt-srggb14p.rst
-> +++ b/Documentation/userspace-api/media/v4l/pixfmt-srggb14p.rst
-> @@ -24,7 +24,7 @@ These four pixel formats are packed raw sRGB / Bayer fo=
-rmats with 14
->  bits per colour. Every four consecutive samples are packed into seven
->  bytes. Each of the first four bytes contain the eight high order bits
->  of the pixels, and the three following bytes contains the six least
-> -significants bits of each pixel, in the same order.
-> +significant bits of each pixel, in the same order.
-> =20
->  Each n-pixel row contains n/2 green samples and n/2 blue or red samples,
->  with alternating green-red and green-blue rows. They are conventionally
+Limit cb_size to valid range to fix it.
 
-LGTM, thanks!
+Signed-off-by: Pei Xiao <xiaopei01@kylinos.cn>
+---
+ drivers/net/wireless/intel/iwlwifi/pcie/ctxt-info.c | 13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
 
-Reviewed-by: Bagas Sanjaya <bagasdotme@gmail.com>
+diff --git a/drivers/net/wireless/intel/iwlwifi/pcie/ctxt-info.c b/drivers/net/wireless/intel/iwlwifi/pcie/ctxt-info.c
+index cb36baac14da..8437763dcf5a 100644
+--- a/drivers/net/wireless/intel/iwlwifi/pcie/ctxt-info.c
++++ b/drivers/net/wireless/intel/iwlwifi/pcie/ctxt-info.c
+@@ -166,7 +166,7 @@ int iwl_pcie_ctxt_info_init(struct iwl_trans *trans,
+ 	struct iwl_trans_pcie *trans_pcie = IWL_TRANS_GET_PCIE_TRANS(trans);
+ 	struct iwl_context_info *ctxt_info;
+ 	struct iwl_context_info_rbd_cfg *rx_cfg;
+-	u32 control_flags = 0, rb_size;
++	u32 control_flags = 0, rb_size, cb_size;
+ 	dma_addr_t phys;
+ 	int ret;
+ 
+@@ -202,11 +202,14 @@ int iwl_pcie_ctxt_info_init(struct iwl_trans *trans,
+ 		rb_size = IWL_CTXT_INFO_RB_SIZE_4K;
+ 	}
+ 
+-	WARN_ON(RX_QUEUE_CB_SIZE(iwl_trans_get_num_rbds(trans)) > 12);
++	cb_size = RX_QUEUE_CB_SIZE(iwl_trans_get_num_rbds(trans));
++	if (unlikely(cb_size > 12)) {
++		WARN_ON(1);
++		cb_size = 12;
++	}
++
+ 	control_flags = IWL_CTXT_INFO_TFD_FORMAT_LONG;
+-	control_flags |=
+-		u32_encode_bits(RX_QUEUE_CB_SIZE(iwl_trans_get_num_rbds(trans)),
+-				IWL_CTXT_INFO_RB_CB_SIZE);
++	control_flags |= u32_encode_bits(cb_size, IWL_CTXT_INFO_RB_CB_SIZE);
+ 	control_flags |= u32_encode_bits(rb_size, IWL_CTXT_INFO_RB_SIZE);
+ 	ctxt_info->control.control_flags = cpu_to_le32(control_flags);
+ 
+-- 
+2.25.1
 
---=20
-An old man doll... just what I always wanted! - Clara
-
---BsexJJInFepDDmfr
-Content-Type: application/pgp-signature; name=signature.asc
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCaDAPtgAKCRD2uYlJVVFO
-o3fvAQDs1BsfrMrlMWjpOY5ChsMQIfp+JDgAINOVN9oM+uxWGwD7BbAp4WJR/sZe
-TrbuxSWQRqeAjSaf4X8a6aSlx2lXUAU=
-=KaiC
------END PGP SIGNATURE-----
-
---BsexJJInFepDDmfr--
