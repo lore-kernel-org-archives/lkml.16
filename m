@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 873B71754B;
-	Fri, 23 May 2025 19:17:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34CCA1D130E;
+	Fri, 23 May 2025 19:17:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748027827; cv=none; b=MGNIZtlLK1hKNdPCxgt8fKiSLKbjF4cJ3VlFVMuFB75O6vPVXz9Jlyy4lgb4+9FgQSgPqYGrstMKPE6aTgh9LRoBfC8YLXnKOB0G9DzBVZpNOpfsicwGum8d3jjOZHBpFJdvnb69pyJ8sEiUecV+5xuYWsF2XgYGAvXonrSDtgI=
+	t=1748027831; cv=none; b=fSHPSuUkdoTJeJoUHVqrHtzIrVNSRGvgde9SLbKGb4yjnGwytSs7ZdAecx/QThKqczfnVYfkhnWUXQ82GPr1rXRitiZAiZko75Pb+Pc5jUDTJYkxf+bBrkEOqJgO9xE89fGiGf8IltHztFklypL35gJ1W/im2qVmlrkrGb7X0nA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748027827; c=relaxed/simple;
-	bh=gBfMLerdA5uGEJsXX7pnRE9TlsqxHi90e+Ifj4So1HM=;
+	s=arc-20240116; t=1748027831; c=relaxed/simple;
+	bh=JuPUQZHZmst0YQeF37wUUV/+HL+i6FkH+REzgyhCD/M=;
 	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=ZbhjHYBN8slhoqLXwJMEhiTy5WTL4sFczeYq5mmbddYP2JVHVi26Rt24VE7rJCkrV/yJZZv0zhUBLKXzxGd5fR+KYHpxNZ7/Viv9I46wFJ6tziwif5LGC8NuP5YdrRzwntajcWzS3CXYQn9Anc3EtDySWjM6t7zFhz4PQ8usebk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qJ0qWRGP; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id:Subject; b=VP2pHkh44mOfa2gMKxbhNKamQKcoBo4Km/kxoOHr5JZ/wCkiPbs8ut29ICDO658giNsu2QqLyqjjqzM1BcAvWhLTaJwB8ROvqjKJ30OYE6Gr6+MK2NgcO/60MzN55Q261nL1o1dzg7U6aePfyv/U7Ng3NiZhDurhHAnXcrf/DXo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c3s6c3fp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qJ0qWRGP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27074C4CEE9;
-	Fri, 23 May 2025 19:17:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c3s6c3fp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 186DDC4CEE9;
+	Fri, 23 May 2025 19:17:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748027826;
-	bh=gBfMLerdA5uGEJsXX7pnRE9TlsqxHi90e+Ifj4So1HM=;
+	s=k20201202; t=1748027830;
+	bh=JuPUQZHZmst0YQeF37wUUV/+HL+i6FkH+REzgyhCD/M=;
 	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=qJ0qWRGP8QYMj3VZ133JLVkPWemzvD+sP39PsfVw7VC1NYH7p9klArS0PbeeJSOwE
-	 G1sL3/6PVV68KWn4vICeEThcALx9gffx9eFZZq0zc0AM9/lEQBVsy/pyr37FRMjPJV
-	 iCFsLTzd1MxYfmHGfNXH+0Yw8d6Q1rTX53gm+Wndbln/fdaRbNPR9Pcx78YzjeNmii
-	 oJSRWEiqNDVxYxIEIqgGEaENnIPtNHCWahJvK3JCWureJLdTKSDqSjh8XHmw+Vsn9Y
-	 kpgdEpebxmZIQq+ih0m1VpmCA5Hqxd9yuhP9oFOThIINXLVIi9oO/tmzXnR6xRJ/vt
-	 plaQth2Nb5sDA==
-Date: Fri, 23 May 2025 14:16:55 -0500
+	b=c3s6c3fp4O+kCDxk1P7Zg4v+F5MDRPrHzM9ZKcsJlC28ZvOM/NPZhJgyVLQAB4QlD
+	 FyB6CjUnNb/CrrHY6aIp9v90/8bI8Yrfe+ErVlsBZxrVjGqnpvhPtE6BYsPed7IH1D
+	 7xX3CdIx+oOfABG/3o3cI0VWHG47bkuxUDmJGSwK42Xcs0p0Pw2r8v1ZTdjuD4iDla
+	 1rqjG/mGUZ3QwR60kTWRiA12nKUDjrP5X++ds9tjIi1b9nXpcwKOhwL0prXK5MQiWM
+	 K8x4VzOH/6l2u6YCMXB/pfP8udN0qWkq1jNS5h5aSD5oR8SFPgDXtObhKP96RP9bvi
+	 L+FNGoFJuBI+w==
+Date: Fri, 23 May 2025 14:17:06 -0500
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -36,112 +36,47 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: devicetree@vger.kernel.org, dmitry.baryshkov@oss.qualcomm.com, 
- Nikita Travkin <nikita@trvn.ru>, linux-arm-msm@vger.kernel.org, 
- Bjorn Andersson <andersson@kernel.org>, maud_spierings@hotmail.com, 
- Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, 
- Konrad Dybcio <konradybcio@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
- linux-kernel@vger.kernel.org, Krzysztof Kozlowski <krzk+dt@kernel.org>
-To: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>
-In-Reply-To: <20250523131605.6624-1-alex.vinarskis@gmail.com>
-References: <20250523131605.6624-1-alex.vinarskis@gmail.com>
-Message-Id: <174802762673.2701077.451474042042716200.robh@kernel.org>
-Subject: Re: [PATCH v5 0/1] X1E Asus Zenbook A14 support
+Cc: Conor Dooley <conor+dt@kernel.org>, Bajjuri Praneeth <praneeth@ti.com>, 
+ Tony Lindgren <tony@atomide.com>, 
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+ Andreas Kemnade <andreas@kemnade.info>, 
+ Aaro Koskinen <aaro.koskinen@iki.fi>, linux-arm-kernel@lists.infradead.org, 
+ Mark Brown <broonie@kernel.org>, linux-omap@vger.kernel.org, 
+ Kevin Hilman <khilman@baylibre.com>, linux-kernel@vger.kernel.org, 
+ devicetree@vger.kernel.org, Russell King <linux@armlinux.org.uk>, 
+ Liam Girdwood <lgirdwood@gmail.com>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Roger Quadros <rogerq@kernel.org>
+To: Kory Maincent <kory.maincent@bootlin.com>
+In-Reply-To: <20250523-bbg-v1-0-ef4a9e57eeee@bootlin.com>
+References: <20250523-bbg-v1-0-ef4a9e57eeee@bootlin.com>
+Message-Id: <174802762814.2701142.18240955701897278423.robh@kernel.org>
+Subject: Re: [PATCH 0/2] Add support for BeagleBone Green Eco board
 
 
-On Fri, 23 May 2025 15:15:07 +0200, Aleksandrs Vinarskis wrote:
-> As requested, 1/4 was merged to linux-next by USB maintainers.
-> Resending 4/4 rebased on top of latest linux-next. 2/4, 3/4 already
-> landed.
+On Fri, 23 May 2025 17:57:41 +0200, Kory Maincent wrote:
+> SeeedStudio BeagleBone Green Eco (BBGE) is a clone of the BeagleBone Green
+> (BBG). It has minor differences from the BBG, such as a different PMIC,
+> a different Ethernet PHY, and a larger eMMC.
 > 
+> Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
 > ---
+> Kory Maincent (2):
+>       arm: dts: omap: Add support for BeagleBone Green Eco board
+>       arm: omap2plus_defconfig: Enable TPS65219 regulator
 > 
-> Introduce support for the mentioned laptop.
+>  arch/arm/boot/dts/ti/omap/Makefile                 |   1 +
+>  arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dts | 170 +++++++++++++++++++++
+>  arch/arm/configs/omap2plus_defconfig               |   3 +
+>  3 files changed, 174 insertions(+)
+> ---
+> base-commit: a02c7665c216471413ed5442637a34364221e91c
+> change-id: 20250523-bbg-769018d1f2a7
 > 
-> Particular device exists in two model numbers:
-> * UX3407QA: X1P-42-100 or X1-26-100 (as tested)
-> * UX3407RA: X1E-78-100
-> 
-> Mostly similar to other X1-based laptops. Notable differences are:
-> * Wifi/Bluetooth combo being Qualcomm FastConnect 6900 on UX3407QA
->   and Qualcomm FastConnect 7800 on UX3407RA
-> * USB Type-C retimers are Parade PS8833, appear to behave identical
->   to Parade PS8830
-> * gpio90 is TZ protected
-> 
-> When comparing device firmware between UX3407QA, UX3407RA, it seems
-> that only ADSP firmware is different, CDSP and GPU firmware appears to
-> be the same. (At least assuming the GPU firmware name in both cases is
-> `qcdxkmsuc8380.mbn`). Since at least some blobs are different betweeen
-> X1E and X1/X1P, define new firmware directory for `qcom/x1p42100`. This
-> also makes it easier for distros to automatically extract firmware from
-> Windows and place all blobs for the model under the same path. If/When
-> firmware blobs make it to linux-firmware, same blobs can be easily
-> symlinked between `qcom/x1e80100` and `qcom/x1p42100`.
-> 
-> NVMe SSD depends on [1]. USB Type-A over USB MP controller  depends on
-> [2], or equivalent proposed solution.
-> 
-> Qualcomm FastConnect 6900 on UX3407QA did not work out of the box, and
-> additionally required both newer firmware and patches to `board-2.bin`.
-> I added a short how-to [3], as it is not exactly trivial.
-> 
-> ACPI dumps can be found on aarch64-laptops' github [4]. HWids on
-> dtbloader's github [5].
-> 
-> [1] https://lore.kernel.org/linux-arm-msm/20250319094544.3980357-1-quic_wenbyao@quicinc.com/
-> [2] https://lore.kernel.org/all/20250318-xps13-fingerprint-v1-1-fbb02d5a34a7@oss.qualcomm.com/
-> [3] https://github.com/alexVinarskis/linux-x1e80100-zenbook-a14?tab=readme-ov-file#wcn688x-wifi
-> [4] https://github.com/aarch64-laptops/build/pull/134/files
-> [5] https://github.com/TravMurav/dtbloader/pull/4/files
-> [6] https://lore.kernel.org/all/20250429-x1e80100-dts-drop-useless-dp-compatible-override-v1-0-058847814d70@linaro.org/
-> 
-> Changes to v4:
-> * _Only sending 4/4 as other patches are already applied_
-> * Rebase 4/4 on `for-next` of qcom tree, adjust makefile to generate el2 dtbs
-> * Picked Konrad's R-by for 4/4
-> * Droped 'qcom,x1e80100-dp' as per [6]
-> Link to v4: https://lore.kernel.org/all/20250426130203.37659-1-alex.vinarskis@gmail.com/
-> 
-> Changes to v3:
-> * Drop redundant comments
-> * Drop incomplete wcn7850 as it is causing dt errors
-> * Picked a-by
-> Link to v3: https://lore.kernel.org/all/20250416232345.5240-1-alex.vinarskis@gmail.com/
-> 
-> Changes to v2:
-> * Fix/re-add PS8833 as fallback
-> * Add EC's i2c address
-> * Add pwrseq for wcn6855, placeholder for wcn7850 until its tested
-> * Rename x1-zenbook.dtsi to x1-asus-zenbook.dtsi
-> Link to v2: https://lore.kernel.org/all/20250402084646.10098-1-alex.vinarskis@gmail.com/
-> 
-> Changes to v1:
-> * Drop PS8833 variant, fallback to PS8830 as they behave the same
-> * Drop wrong pcie6a_phy compatible revert
-> * Drop redundant comments, fix order of properties in the device-tree
-> * Fix device name bindings, express in model names instead of the soc
-> * Fix GPU firmware name for UX3407QA
-> * Fix model string, enclose variant in parenthesis
-> * Added missing new lines before 'status = "okay";'
-> * Updated cover letter to reflect some of the above changes
-> * Left SPI10 disabled as it is unknown how/what for to use it as of now
-> Link to v1: https://lore.kernel.org/all/20250331215720.19692-1-alex.vinarskis@gmail.com/
-> 
-> Aleksandrs Vinarskis (1):
->   arm64: dts: qcom: Add support for X1-based Asus Zenbook A14
-> 
->  arch/arm64/boot/dts/qcom/Makefile             |    4 +
->  .../boot/dts/qcom/x1-asus-zenbook-a14.dtsi    | 1306 +++++++++++++++++
->  .../dts/qcom/x1e80100-asus-zenbook-a14.dts    |   33 +
->  .../dts/qcom/x1p42100-asus-zenbook-a14.dts    |  137 ++
->  4 files changed, 1480 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/qcom/x1-asus-zenbook-a14.dtsi
->  create mode 100644 arch/arm64/boot/dts/qcom/x1e80100-asus-zenbook-a14.dts
->  create mode 100644 arch/arm64/boot/dts/qcom/x1p42100-asus-zenbook-a14.dts
-> 
+> Best regards,
 > --
-> 2.45.2
+> Köry Maincent, Bootlin
+> Embedded Linux and kernel engineering
+> https://bootlin.com
 > 
 > 
 > 
@@ -162,134 +97,249 @@ make sure dt-schema is up to date:
 
 
 This patch series was applied (using b4) to base:
- Base: attempting to guess base-commit...
- Base: tags/next-20250523 (exact match)
+ Base: using specified base-commit a02c7665c216471413ed5442637a34364221e91c
 
 If this is not the correct base, please add 'base-commit' tag
 (or use b4 which does this automatically)
 
-New warnings running 'make CHECK_DTBS=y for arch/arm64/boot/dts/qcom/' for 20250523131605.6624-1-alex.vinarskis@gmail.com:
+New warnings running 'make CHECK_DTBS=y for arch/arm/boot/dts/ti/' for 20250523-bbg-v1-0-ef4a9e57eeee@bootlin.com:
 
-arch/arm64/boot/dts/qcom/x1e80100-asus-zenbook-a14.dtb: cpu@0 (qcom,oryon): power-domain-names: ['psci', 'perf'] is too long
-	from schema $id: http://devicetree.org/schemas/arm/cpus.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-asus-zenbook-a14.dtb: cpu@0 (qcom,oryon): power-domains: [[4], [5, 0]] is too long
-	from schema $id: http://devicetree.org/schemas/arm/cpus.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-asus-zenbook-a14.dtb: cpu@0 (qcom,oryon): Unevaluated properties are not allowed ('power-domain-names', 'power-domains' were unexpected)
-	from schema $id: http://devicetree.org/schemas/arm/cpus.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-asus-zenbook-a14.dtb: cpu@100 (qcom,oryon): power-domain-names: ['psci', 'perf'] is too long
-	from schema $id: http://devicetree.org/schemas/arm/cpus.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-asus-zenbook-a14.dtb: cpu@100 (qcom,oryon): power-domains: [[7], [5, 0]] is too long
-	from schema $id: http://devicetree.org/schemas/arm/cpus.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-asus-zenbook-a14.dtb: cpu@100 (qcom,oryon): Unevaluated properties are not allowed ('power-domain-names', 'power-domains' were unexpected)
-	from schema $id: http://devicetree.org/schemas/arm/cpus.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-asus-zenbook-a14.dtb: cpu@200 (qcom,oryon): power-domain-names: ['psci', 'perf'] is too long
-	from schema $id: http://devicetree.org/schemas/arm/cpus.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-asus-zenbook-a14.dtb: cpu@200 (qcom,oryon): power-domains: [[8], [5, 0]] is too long
-	from schema $id: http://devicetree.org/schemas/arm/cpus.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-asus-zenbook-a14.dtb: cpu@200 (qcom,oryon): Unevaluated properties are not allowed ('power-domain-names', 'power-domains' were unexpected)
-	from schema $id: http://devicetree.org/schemas/arm/cpus.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-asus-zenbook-a14.dtb: cpu@300 (qcom,oryon): power-domain-names: ['psci', 'perf'] is too long
-	from schema $id: http://devicetree.org/schemas/arm/cpus.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-asus-zenbook-a14.dtb: cpu@300 (qcom,oryon): power-domains: [[9], [5, 0]] is too long
-	from schema $id: http://devicetree.org/schemas/arm/cpus.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-asus-zenbook-a14.dtb: cpu@300 (qcom,oryon): Unevaluated properties are not allowed ('power-domain-names', 'power-domains' were unexpected)
-	from schema $id: http://devicetree.org/schemas/arm/cpus.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-asus-zenbook-a14.dtb: cpu@10000 (qcom,oryon): power-domain-names: ['psci', 'perf'] is too long
-	from schema $id: http://devicetree.org/schemas/arm/cpus.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-asus-zenbook-a14.dtb: cpu@10000 (qcom,oryon): power-domains: [[11], [5, 1]] is too long
-	from schema $id: http://devicetree.org/schemas/arm/cpus.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-asus-zenbook-a14.dtb: cpu@10000 (qcom,oryon): Unevaluated properties are not allowed ('power-domain-names', 'power-domains' were unexpected)
-	from schema $id: http://devicetree.org/schemas/arm/cpus.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-asus-zenbook-a14.dtb: cpu@10100 (qcom,oryon): power-domain-names: ['psci', 'perf'] is too long
-	from schema $id: http://devicetree.org/schemas/arm/cpus.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-asus-zenbook-a14.dtb: cpu@10100 (qcom,oryon): power-domains: [[12], [5, 1]] is too long
-	from schema $id: http://devicetree.org/schemas/arm/cpus.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-asus-zenbook-a14.dtb: cpu@10100 (qcom,oryon): Unevaluated properties are not allowed ('power-domain-names', 'power-domains' were unexpected)
-	from schema $id: http://devicetree.org/schemas/arm/cpus.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-asus-zenbook-a14.dtb: cpu@10200 (qcom,oryon): power-domain-names: ['psci', 'perf'] is too long
-	from schema $id: http://devicetree.org/schemas/arm/cpus.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-asus-zenbook-a14.dtb: cpu@10200 (qcom,oryon): power-domains: [[13], [5, 1]] is too long
-	from schema $id: http://devicetree.org/schemas/arm/cpus.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-asus-zenbook-a14.dtb: cpu@10200 (qcom,oryon): Unevaluated properties are not allowed ('power-domain-names', 'power-domains' were unexpected)
-	from schema $id: http://devicetree.org/schemas/arm/cpus.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-asus-zenbook-a14.dtb: cpu@10300 (qcom,oryon): power-domain-names: ['psci', 'perf'] is too long
-	from schema $id: http://devicetree.org/schemas/arm/cpus.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-asus-zenbook-a14.dtb: cpu@10300 (qcom,oryon): power-domains: [[14], [5, 1]] is too long
-	from schema $id: http://devicetree.org/schemas/arm/cpus.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-asus-zenbook-a14.dtb: cpu@10300 (qcom,oryon): Unevaluated properties are not allowed ('power-domain-names', 'power-domains' were unexpected)
-	from schema $id: http://devicetree.org/schemas/arm/cpus.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-asus-zenbook-a14.dtb: cpu@20000 (qcom,oryon): power-domain-names: ['psci', 'perf'] is too long
-	from schema $id: http://devicetree.org/schemas/arm/cpus.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-asus-zenbook-a14.dtb: cpu@20000 (qcom,oryon): power-domains: [[16], [5, 2]] is too long
-	from schema $id: http://devicetree.org/schemas/arm/cpus.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-asus-zenbook-a14.dtb: cpu@20000 (qcom,oryon): Unevaluated properties are not allowed ('power-domain-names', 'power-domains' were unexpected)
-	from schema $id: http://devicetree.org/schemas/arm/cpus.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-asus-zenbook-a14.dtb: cpu@20100 (qcom,oryon): power-domain-names: ['psci', 'perf'] is too long
-	from schema $id: http://devicetree.org/schemas/arm/cpus.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-asus-zenbook-a14.dtb: cpu@20100 (qcom,oryon): power-domains: [[17], [5, 2]] is too long
-	from schema $id: http://devicetree.org/schemas/arm/cpus.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-asus-zenbook-a14.dtb: cpu@20100 (qcom,oryon): Unevaluated properties are not allowed ('power-domain-names', 'power-domains' were unexpected)
-	from schema $id: http://devicetree.org/schemas/arm/cpus.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-asus-zenbook-a14.dtb: cpu@20200 (qcom,oryon): power-domain-names: ['psci', 'perf'] is too long
-	from schema $id: http://devicetree.org/schemas/arm/cpus.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-asus-zenbook-a14.dtb: cpu@20200 (qcom,oryon): power-domains: [[18], [5, 2]] is too long
-	from schema $id: http://devicetree.org/schemas/arm/cpus.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-asus-zenbook-a14.dtb: cpu@20200 (qcom,oryon): Unevaluated properties are not allowed ('power-domain-names', 'power-domains' were unexpected)
-	from schema $id: http://devicetree.org/schemas/arm/cpus.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-asus-zenbook-a14.dtb: cpu@20300 (qcom,oryon): power-domain-names: ['psci', 'perf'] is too long
-	from schema $id: http://devicetree.org/schemas/arm/cpus.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-asus-zenbook-a14.dtb: cpu@20300 (qcom,oryon): power-domains: [[19], [5, 2]] is too long
-	from schema $id: http://devicetree.org/schemas/arm/cpus.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-asus-zenbook-a14.dtb: cpu@20300 (qcom,oryon): Unevaluated properties are not allowed ('power-domain-names', 'power-domains' were unexpected)
-	from schema $id: http://devicetree.org/schemas/arm/cpus.yaml#
-arch/arm64/boot/dts/qcom/x1p42100-asus-zenbook-a14.dtb: cpu@0 (qcom,oryon): power-domain-names: ['psci', 'perf'] is too long
-	from schema $id: http://devicetree.org/schemas/arm/cpus.yaml#
-arch/arm64/boot/dts/qcom/x1p42100-asus-zenbook-a14.dtb: cpu@0 (qcom,oryon): power-domains: [[4], [5, 0]] is too long
-	from schema $id: http://devicetree.org/schemas/arm/cpus.yaml#
-arch/arm64/boot/dts/qcom/x1p42100-asus-zenbook-a14.dtb: cpu@0 (qcom,oryon): Unevaluated properties are not allowed ('power-domain-names', 'power-domains' were unexpected)
-	from schema $id: http://devicetree.org/schemas/arm/cpus.yaml#
-arch/arm64/boot/dts/qcom/x1p42100-asus-zenbook-a14.dtb: cpu@100 (qcom,oryon): power-domain-names: ['psci', 'perf'] is too long
-	from schema $id: http://devicetree.org/schemas/arm/cpus.yaml#
-arch/arm64/boot/dts/qcom/x1p42100-asus-zenbook-a14.dtb: cpu@100 (qcom,oryon): power-domains: [[7], [5, 0]] is too long
-	from schema $id: http://devicetree.org/schemas/arm/cpus.yaml#
-arch/arm64/boot/dts/qcom/x1p42100-asus-zenbook-a14.dtb: cpu@100 (qcom,oryon): Unevaluated properties are not allowed ('power-domain-names', 'power-domains' were unexpected)
-	from schema $id: http://devicetree.org/schemas/arm/cpus.yaml#
-arch/arm64/boot/dts/qcom/x1p42100-asus-zenbook-a14.dtb: cpu@200 (qcom,oryon): power-domain-names: ['psci', 'perf'] is too long
-	from schema $id: http://devicetree.org/schemas/arm/cpus.yaml#
-arch/arm64/boot/dts/qcom/x1p42100-asus-zenbook-a14.dtb: cpu@200 (qcom,oryon): power-domains: [[8], [5, 0]] is too long
-	from schema $id: http://devicetree.org/schemas/arm/cpus.yaml#
-arch/arm64/boot/dts/qcom/x1p42100-asus-zenbook-a14.dtb: cpu@200 (qcom,oryon): Unevaluated properties are not allowed ('power-domain-names', 'power-domains' were unexpected)
-	from schema $id: http://devicetree.org/schemas/arm/cpus.yaml#
-arch/arm64/boot/dts/qcom/x1p42100-asus-zenbook-a14.dtb: cpu@300 (qcom,oryon): power-domain-names: ['psci', 'perf'] is too long
-	from schema $id: http://devicetree.org/schemas/arm/cpus.yaml#
-arch/arm64/boot/dts/qcom/x1p42100-asus-zenbook-a14.dtb: cpu@300 (qcom,oryon): power-domains: [[9], [5, 0]] is too long
-	from schema $id: http://devicetree.org/schemas/arm/cpus.yaml#
-arch/arm64/boot/dts/qcom/x1p42100-asus-zenbook-a14.dtb: cpu@300 (qcom,oryon): Unevaluated properties are not allowed ('power-domain-names', 'power-domains' were unexpected)
-	from schema $id: http://devicetree.org/schemas/arm/cpus.yaml#
-arch/arm64/boot/dts/qcom/x1p42100-asus-zenbook-a14.dtb: cpu@10000 (qcom,oryon): power-domain-names: ['psci', 'perf'] is too long
-	from schema $id: http://devicetree.org/schemas/arm/cpus.yaml#
-arch/arm64/boot/dts/qcom/x1p42100-asus-zenbook-a14.dtb: cpu@10000 (qcom,oryon): power-domains: [[11], [5, 1]] is too long
-	from schema $id: http://devicetree.org/schemas/arm/cpus.yaml#
-arch/arm64/boot/dts/qcom/x1p42100-asus-zenbook-a14.dtb: cpu@10000 (qcom,oryon): Unevaluated properties are not allowed ('power-domain-names', 'power-domains' were unexpected)
-	from schema $id: http://devicetree.org/schemas/arm/cpus.yaml#
-arch/arm64/boot/dts/qcom/x1p42100-asus-zenbook-a14.dtb: cpu@10100 (qcom,oryon): power-domain-names: ['psci', 'perf'] is too long
-	from schema $id: http://devicetree.org/schemas/arm/cpus.yaml#
-arch/arm64/boot/dts/qcom/x1p42100-asus-zenbook-a14.dtb: cpu@10100 (qcom,oryon): power-domains: [[12], [5, 1]] is too long
-	from schema $id: http://devicetree.org/schemas/arm/cpus.yaml#
-arch/arm64/boot/dts/qcom/x1p42100-asus-zenbook-a14.dtb: cpu@10100 (qcom,oryon): Unevaluated properties are not allowed ('power-domain-names', 'power-domains' were unexpected)
-	from schema $id: http://devicetree.org/schemas/arm/cpus.yaml#
-arch/arm64/boot/dts/qcom/x1p42100-asus-zenbook-a14.dtb: cpu@10200 (qcom,oryon): power-domain-names: ['psci', 'perf'] is too long
-	from schema $id: http://devicetree.org/schemas/arm/cpus.yaml#
-arch/arm64/boot/dts/qcom/x1p42100-asus-zenbook-a14.dtb: cpu@10200 (qcom,oryon): power-domains: [[13], [5, 1]] is too long
-	from schema $id: http://devicetree.org/schemas/arm/cpus.yaml#
-arch/arm64/boot/dts/qcom/x1p42100-asus-zenbook-a14.dtb: cpu@10200 (qcom,oryon): Unevaluated properties are not allowed ('power-domain-names', 'power-domains' were unexpected)
-	from schema $id: http://devicetree.org/schemas/arm/cpus.yaml#
-arch/arm64/boot/dts/qcom/x1p42100-asus-zenbook-a14.dtb: cpu@10300 (qcom,oryon): power-domain-names: ['psci', 'perf'] is too long
-	from schema $id: http://devicetree.org/schemas/arm/cpus.yaml#
-arch/arm64/boot/dts/qcom/x1p42100-asus-zenbook-a14.dtb: cpu@10300 (qcom,oryon): power-domains: [[14], [5, 1]] is too long
-	from schema $id: http://devicetree.org/schemas/arm/cpus.yaml#
-arch/arm64/boot/dts/qcom/x1p42100-asus-zenbook-a14.dtb: cpu@10300 (qcom,oryon): Unevaluated properties are not allowed ('power-domain-names', 'power-domains' were unexpected)
-	from schema $id: http://devicetree.org/schemas/arm/cpus.yaml#
+arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dtb: / (ti,am335x-bone-green-eco): compatible: 'oneOf' conditional failed, one must be fixed:
+	['ti,am335x-bone-green-eco', 'ti,am335x-bone-green', 'ti,am335x-bone-black', 'ti,am335x-bone', 'ti,am33xx'] is too long
+	'ti,am335x-bone-green-eco' is not one of ['nokia,n800', 'nokia,n810', 'nokia,n810-wimax', 'ti,omap2420-h4']
+	'ti,am335x-bone-green-eco' is not one of ['ti,omap2430-sdp']
+	'ti,am335x-bone-green-eco' is not one of ['compulab,omap3-cm-t3530', 'logicpd,dm3730-som-lv-devkit', 'logicpd,dm3730-torpedo-devkit', 'nokia,omap3-n900', 'openpandora,omap3-pandora-600mhz', 'ti,omap3430-sdp', 'ti,omap3-beagle', 'ti,omap3-evm', 'ti,omap3-ldp', 'timll,omap3-devkit8000']
+	'ti,omap3-beagle-ab4' was expected
+	'ti,am335x-bone-green-eco' is not one of ['gumstix,omap3-overo-alto35', 'gumstix,omap3-overo-chestnut43', 'gumstix,omap3-overo-gallop43', 'gumstix,omap3-overo-palo35', 'gumstix,omap3-overo-palo43', 'gumstix,omap3-overo-summit', 'gumstix,omap3-overo-tobi', 'gumstix,omap3-overo-tobiduo']
+	'ti,am335x-bone-green-eco' is not one of ['amazon,omap3-echo', 'compulab,omap3-cm-t3730', 'goldelico,gta04', 'lg,omap3-sniper', 'logicpd,dm3730-som-lv-devkit', 'logicpd,dm3730-torpedo-devkit', 'nokia,omap3-n9', 'nokia,omap3-n950', 'openpandora,omap3-pandora-1ghz', 'ti,omap3-beagle-xm', 'ti,omap3-evm-37xx', 'ti,omap3-zoom3']
+	'ti,am335x-bone-green-eco' is not one of ['compulab,omap3-sbc-t3517', 'teejet,mt_ventoux', 'ti,am3517-craneboard', 'ti,am3517-evm']
+	'ti,am335x-bone-green-eco' is not one of ['compulab,cm-t335', 'moxa,uc-8100-me-t', 'novatech,am335x-lxm', 'ti,am335x-bone', 'ti,am335x-evm', 'ti,am3359-icev2']
+	'ti,am335x-bone-green-eco' is not one of ['compulab,sbc-t335']
+	'ti,am335x-bone-green-eco' is not one of ['phytec,am335x-wega', 'phytec,am335x-pcm-953', 'phytec,am335x-regor']
+	'ti,am335x-bone-green-eco' is not one of ['amazon,omap4-kc1', 'motorola,droid4', 'motorola,droid-bionic', 'motorola,xyboard-mz609', 'motorola,xyboard-mz617', 'ti,omap4-panda', 'ti,omap4-sdp']
+	'ti,omap4-panda-a4' was expected
+	'gumstix,omap4-duovero-parlor' was expected
+	'ti,am335x-bone-green-eco' is not one of ['epson,embt2ws', 'ti,omap4-panda-es']
+	'ti,am335x-bone-green-eco' is not one of ['variscite,var-dvk-om44', 'variscite,var-stk-om44']
+	'ti,am335x-bone-green-eco' is not one of ['compulab,omap5-cm-t54', 'isee,omap5-igep0050', 'ti,omap5-uevm']
+	'ti,omap2420' was expected
+	'ti,omap2430' was expected
+	'ti,omap3430' was expected
+	'ti,omap3-beagle' was expected
+	'gumstix,omap3-overo' was expected
+	'ti,omap3630' was expected
+	'ti,am3517' was expected
+	'ti,am33xx' was expected
+	'compulab,cm-t335' was expected
+	'phytec,am335x-phycore-som' was expected
+	'ti,omap4430' was expected
+	'ti,omap4-panda' was expected
+	'gumstix,omap4-duovero' was expected
+	'ti,omap4460' was expected
+	'variscite,var-som-om44' was expected
+	'ti,omap5' was expected
+	'ti,omap2' was expected
+	'ti,omap3' was expected
+	'ti,am335x-bone-black' is not one of ['ti,omap3430', 'ti,omap3630']
+	'ti,omap4' was expected
+	from schema $id: http://devicetree.org/schemas/arm/ti/omap.yaml#
+arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dtb: /: failed to match any schema with compatible: ['ti,am335x-bone-green-eco', 'ti,am335x-bone-green', 'ti,am335x-bone-black', 'ti,am335x-bone', 'ti,am33xx']
+arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dtb: /: failed to match any schema with compatible: ['ti,am335x-bone-green-eco', 'ti,am335x-bone-green', 'ti,am335x-bone-black', 'ti,am335x-bone', 'ti,am33xx']
+arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dtb: /: failed to match any schema with compatible: ['ti,am335x-bone-green-eco', 'ti,am335x-bone-green', 'ti,am335x-bone-black', 'ti,am335x-bone', 'ti,am33xx']
+arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dtb: idle-states: 'mpu_gate' does not match any of the regexes: '^(cpu|cluster)-', '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/cpu/idle-states.yaml#
+arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dtb: /soc: failed to match any schema with compatible: ['ti,omap-infra']
+arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dtb: ocp (simple-pm-bus): $nodename:0: 'ocp' does not match '^bus(@[0-9a-f]+)?$'
+	from schema $id: http://devicetree.org/schemas/bus/simple-pm-bus.yaml#
+arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dtb: interconnect@44c00000 (ti,am33xx-l4-wkup): $nodename:0: 'interconnect@44c00000' does not match '^bus(@[0-9a-f]+)?$'
+	from schema $id: http://devicetree.org/schemas/bus/simple-pm-bus.yaml#
+arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dtb: /ocp/interconnect@44c00000: failed to match any schema with compatible: ['ti,am33xx-l4-wkup', 'simple-pm-bus']
+arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dtb: segment@0 (simple-pm-bus): 'anyOf' conditional failed, one must be fixed:
+	'clocks' is a required property
+	'power-domains' is a required property
+	from schema $id: http://devicetree.org/schemas/bus/simple-pm-bus.yaml#
+arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dtb: segment@0 (simple-pm-bus): $nodename:0: 'segment@0' does not match '^bus(@[0-9a-f]+)?$'
+	from schema $id: http://devicetree.org/schemas/bus/simple-pm-bus.yaml#
+arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dtb: segment@100000 (simple-pm-bus): 'anyOf' conditional failed, one must be fixed:
+	'clocks' is a required property
+	'power-domains' is a required property
+	from schema $id: http://devicetree.org/schemas/bus/simple-pm-bus.yaml#
+arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dtb: segment@100000 (simple-pm-bus): $nodename:0: 'segment@100000' does not match '^bus(@[0-9a-f]+)?$'
+	from schema $id: http://devicetree.org/schemas/bus/simple-pm-bus.yaml#
+arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dtb: /ocp/interconnect@44c00000/segment@100000/target-module@0/cpu@0: failed to match any schema with compatible: ['ti,am3352-wkup-m3']
+arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dtb: segment@200000 (simple-pm-bus): 'anyOf' conditional failed, one must be fixed:
+	'clocks' is a required property
+	'power-domains' is a required property
+	from schema $id: http://devicetree.org/schemas/bus/simple-pm-bus.yaml#
+arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dtb: segment@200000 (simple-pm-bus): $nodename:0: 'segment@200000' does not match '^bus(@[0-9a-f]+)?$'
+	from schema $id: http://devicetree.org/schemas/bus/simple-pm-bus.yaml#
+arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dtb: prcm@0 (ti,am3-prcm): clocks: 'ranges' is a required property
+	from schema $id: http://devicetree.org/schemas/simple-bus.yaml#
+arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dtb: prcm@0 (ti,am3-prcm): clockdomains: 'ranges' is a required property
+	from schema $id: http://devicetree.org/schemas/simple-bus.yaml#
+arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dtb: prcm@0 (ti,am3-prcm): $nodename:0: 'prcm@0' does not match '^([a-z][a-z0-9\-]+-bus|bus|localbus|soc|axi|ahb|apb)(@.+)?$'
+	from schema $id: http://devicetree.org/schemas/simple-bus.yaml#
+arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dtb: /ocp/interconnect@44c00000/segment@200000/target-module@0/prcm@0: failed to match any schema with compatible: ['ti,am3-prcm', 'simple-bus']
+arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dtb: /ocp/interconnect@44c00000/segment@200000/target-module@0/prcm@0/clocks/clock@490: failed to match any schema with compatible: ['ti,am3-dpll-core-clock']
+arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dtb: /ocp/interconnect@44c00000/segment@200000/target-module@0/prcm@0/clocks/clock-dpll-core-x2: failed to match any schema with compatible: ['ti,am3-dpll-x2-clock']
+arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dtb: /ocp/interconnect@44c00000/segment@200000/target-module@0/prcm@0/clocks/clock@488: failed to match any schema with compatible: ['ti,am3-dpll-clock']
+arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dtb: /ocp/interconnect@44c00000/segment@200000/target-module@0/prcm@0/clocks/clock@494: failed to match any schema with compatible: ['ti,am3-dpll-no-gate-clock']
+arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dtb: /ocp/interconnect@44c00000/segment@200000/target-module@0/prcm@0/clocks/clock@498: failed to match any schema with compatible: ['ti,am3-dpll-no-gate-clock']
+arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dtb: /ocp/interconnect@44c00000/segment@200000/target-module@0/prcm@0/clocks/clock@48c: failed to match any schema with compatible: ['ti,am3-dpll-no-gate-j-type-clock']
+arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dtb: /ocp/interconnect@44c00000/segment@200000/target-module@0/prcm@0/clock@0: failed to match any schema with compatible: ['ti,omap4-cm']
+arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dtb: clock@0 (ti,omap4-cm): '#clock-cells' is a dependency of 'clock-output-names'
+	from schema $id: http://devicetree.org/schemas/clock/clock.yaml#
+arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dtb: /ocp/interconnect@44c00000/segment@200000/target-module@0/prcm@0/clock@400: failed to match any schema with compatible: ['ti,omap4-cm']
+arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dtb: clock@400 (ti,omap4-cm): '#clock-cells' is a dependency of 'clock-output-names'
+	from schema $id: http://devicetree.org/schemas/clock/clock.yaml#
+arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dtb: /ocp/interconnect@44c00000/segment@200000/target-module@0/prcm@0/clock@600: failed to match any schema with compatible: ['ti,omap4-cm']
+arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dtb: clock@600 (ti,omap4-cm): '#clock-cells' is a dependency of 'clock-output-names'
+	from schema $id: http://devicetree.org/schemas/clock/clock.yaml#
+arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dtb: /ocp/interconnect@44c00000/segment@200000/target-module@0/prcm@0/clock@800: failed to match any schema with compatible: ['ti,omap4-cm']
+arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dtb: clock@800 (ti,omap4-cm): '#clock-cells' is a dependency of 'clock-output-names'
+	from schema $id: http://devicetree.org/schemas/clock/clock.yaml#
+arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dtb: /ocp/interconnect@44c00000/segment@200000/target-module@0/prcm@0/clock@900: failed to match any schema with compatible: ['ti,omap4-cm']
+arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dtb: clock@900 (ti,omap4-cm): '#clock-cells' is a dependency of 'clock-output-names'
+	from schema $id: http://devicetree.org/schemas/clock/clock.yaml#
+arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dtb: /ocp/interconnect@44c00000/segment@200000/target-module@0/prcm@0/clock@a00: failed to match any schema with compatible: ['ti,omap4-cm']
+arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dtb: clock@a00 (ti,omap4-cm): '#clock-cells' is a dependency of 'clock-output-names'
+	from schema $id: http://devicetree.org/schemas/clock/clock.yaml#
+arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dtb: /ocp/interconnect@44c00000/segment@200000/target-module@0/prcm@0/prm@c00: failed to match any schema with compatible: ['ti,am3-prm-inst', 'ti,omap-prm-inst']
+arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dtb: /ocp/interconnect@44c00000/segment@200000/target-module@0/prcm@0/prm@c00: failed to match any schema with compatible: ['ti,am3-prm-inst', 'ti,omap-prm-inst']
+arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dtb: /ocp/interconnect@44c00000/segment@200000/target-module@0/prcm@0/prm@d00: failed to match any schema with compatible: ['ti,am3-prm-inst', 'ti,omap-prm-inst']
+arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dtb: /ocp/interconnect@44c00000/segment@200000/target-module@0/prcm@0/prm@d00: failed to match any schema with compatible: ['ti,am3-prm-inst', 'ti,omap-prm-inst']
+arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dtb: /ocp/interconnect@44c00000/segment@200000/target-module@0/prcm@0/prm@e00: failed to match any schema with compatible: ['ti,am3-prm-inst', 'ti,omap-prm-inst']
+arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dtb: /ocp/interconnect@44c00000/segment@200000/target-module@0/prcm@0/prm@e00: failed to match any schema with compatible: ['ti,am3-prm-inst', 'ti,omap-prm-inst']
+arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dtb: /ocp/interconnect@44c00000/segment@200000/target-module@0/prcm@0/prm@f00: failed to match any schema with compatible: ['ti,am3-prm-inst', 'ti,omap-prm-inst']
+arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dtb: /ocp/interconnect@44c00000/segment@200000/target-module@0/prcm@0/prm@f00: failed to match any schema with compatible: ['ti,am3-prm-inst', 'ti,omap-prm-inst']
+arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dtb: /ocp/interconnect@44c00000/segment@200000/target-module@0/prcm@0/prm@1000: failed to match any schema with compatible: ['ti,am3-prm-inst', 'ti,omap-prm-inst']
+arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dtb: /ocp/interconnect@44c00000/segment@200000/target-module@0/prcm@0/prm@1000: failed to match any schema with compatible: ['ti,am3-prm-inst', 'ti,omap-prm-inst']
+arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dtb: /ocp/interconnect@44c00000/segment@200000/target-module@0/prcm@0/prm@1100: failed to match any schema with compatible: ['ti,am3-prm-inst', 'ti,omap-prm-inst']
+arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dtb: /ocp/interconnect@44c00000/segment@200000/target-module@0/prcm@0/prm@1100: failed to match any schema with compatible: ['ti,am3-prm-inst', 'ti,omap-prm-inst']
+arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dtb: /ocp/interconnect@44c00000/segment@200000/target-module@0/prcm@0/prm@1200: failed to match any schema with compatible: ['ti,am3-prm-inst', 'ti,omap-prm-inst']
+arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dtb: /ocp/interconnect@44c00000/segment@200000/target-module@0/prcm@0/prm@1200: failed to match any schema with compatible: ['ti,am3-prm-inst', 'ti,omap-prm-inst']
+arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dtb: serial@0 (ti,am3352-uart): compatible: 'oneOf' conditional failed, one must be fixed:
+	['ti,am3352-uart', 'ti,omap3-uart'] is too long
+	'ti,am3352-uart' is not one of ['ti,am64-uart', 'ti,j721e-uart']
+	'ti,am654-uart' was expected
+	from schema $id: http://devicetree.org/schemas/serial/8250_omap.yaml#
+arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dtb: scm@0 (ti,am3-scm): clockdomains: 'ranges' is a required property
+	from schema $id: http://devicetree.org/schemas/simple-bus.yaml#
+arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dtb: scm@0 (ti,am3-scm): $nodename:0: 'scm@0' does not match '^([a-z][a-z0-9\-]+-bus|bus|localbus|soc|axi|ahb|apb)(@.+)?$'
+	from schema $id: http://devicetree.org/schemas/simple-bus.yaml#
+arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dtb: /ocp/interconnect@44c00000/segment@200000/target-module@10000/scm@0: failed to match any schema with compatible: ['ti,am3-scm', 'simple-bus']
+arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dtb: scm_conf@0 (syscon): clocks: 'ranges' is a required property
+	from schema $id: http://devicetree.org/schemas/simple-bus.yaml#
+arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dtb: scm_conf@0 (syscon): phy-gmii-sel: 'ranges' is a required property
+	from schema $id: http://devicetree.org/schemas/simple-bus.yaml#
+arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dtb: scm_conf@0 (syscon): $nodename:0: 'scm_conf@0' does not match '^([a-z][a-z0-9\-]+-bus|bus|localbus|soc|axi|ahb|apb)(@.+)?$'
+	from schema $id: http://devicetree.org/schemas/simple-bus.yaml#
+arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dtb: /ocp/interconnect@44c00000/segment@200000/target-module@10000/scm@0/control@620: failed to match any schema with compatible: ['ti,am335x-usb-ctrl-module']
+arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dtb: /ocp/interconnect@44c00000/segment@200000/target-module@10000/scm@0/dma-router@f90: failed to match any schema with compatible: ['ti,am335x-edma-crossbar']
+arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dtb: /ocp/interconnect@44c00000/segment@200000/target-module@35000/wdt@0: failed to match any schema with compatible: ['ti,omap3-wdt']
+arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dtb: /ocp/interconnect@44c00000/segment@200000/target-module@3e000/rtc@0: failed to match any schema with compatible: ['ti,am3352-rtc', 'ti,da830-rtc']
+arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dtb: /ocp/interconnect@44c00000/segment@200000/target-module@3e000/rtc@0: failed to match any schema with compatible: ['ti,am3352-rtc', 'ti,da830-rtc']
+arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dtb: interconnect@48000000 (ti,am33xx-l4-per): $nodename:0: 'interconnect@48000000' does not match '^bus(@[0-9a-f]+)?$'
+	from schema $id: http://devicetree.org/schemas/bus/simple-pm-bus.yaml#
+arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dtb: /ocp/interconnect@48000000: failed to match any schema with compatible: ['ti,am33xx-l4-per', 'simple-pm-bus']
+arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dtb: segment@0 (simple-pm-bus): 'anyOf' conditional failed, one must be fixed:
+	'clocks' is a required property
+	'power-domains' is a required property
+	from schema $id: http://devicetree.org/schemas/bus/simple-pm-bus.yaml#
+arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dtb: segment@0 (simple-pm-bus): $nodename:0: 'segment@0' does not match '^bus(@[0-9a-f]+)?$'
+	from schema $id: http://devicetree.org/schemas/bus/simple-pm-bus.yaml#
+arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dtb: serial@0 (ti,am3352-uart): compatible: 'oneOf' conditional failed, one must be fixed:
+	['ti,am3352-uart', 'ti,omap3-uart'] is too long
+	'ti,am3352-uart' is not one of ['ti,am64-uart', 'ti,j721e-uart']
+	'ti,am654-uart' was expected
+	from schema $id: http://devicetree.org/schemas/serial/8250_omap.yaml#
+arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dtb: serial@0 (ti,am3352-uart): compatible: 'oneOf' conditional failed, one must be fixed:
+	['ti,am3352-uart', 'ti,omap3-uart'] is too long
+	'ti,am3352-uart' is not one of ['ti,am64-uart', 'ti,j721e-uart']
+	'ti,am654-uart' was expected
+	from schema $id: http://devicetree.org/schemas/serial/8250_omap.yaml#
+arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dtb: /ocp/interconnect@48000000/segment@0/target-module@60000/mmc@0: failed to match any schema with compatible: ['ti,am335-sdhci']
+arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dtb: segment@100000 (simple-pm-bus): 'anyOf' conditional failed, one must be fixed:
+	'clocks' is a required property
+	'power-domains' is a required property
+	from schema $id: http://devicetree.org/schemas/bus/simple-pm-bus.yaml#
+arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dtb: segment@100000 (simple-pm-bus): $nodename:0: 'segment@100000' does not match '^bus(@[0-9a-f]+)?$'
+	from schema $id: http://devicetree.org/schemas/bus/simple-pm-bus.yaml#
+arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dtb: serial@0 (ti,am3352-uart): compatible: 'oneOf' conditional failed, one must be fixed:
+	['ti,am3352-uart', 'ti,omap3-uart'] is too long
+	'ti,am3352-uart' is not one of ['ti,am64-uart', 'ti,j721e-uart']
+	'ti,am654-uart' was expected
+	from schema $id: http://devicetree.org/schemas/serial/8250_omap.yaml#
+arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dtb: serial@0 (ti,am3352-uart): compatible: 'oneOf' conditional failed, one must be fixed:
+	['ti,am3352-uart', 'ti,omap3-uart'] is too long
+	'ti,am3352-uart' is not one of ['ti,am64-uart', 'ti,j721e-uart']
+	'ti,am654-uart' was expected
+	from schema $id: http://devicetree.org/schemas/serial/8250_omap.yaml#
+arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dtb: serial@0 (ti,am3352-uart): compatible: 'oneOf' conditional failed, one must be fixed:
+	['ti,am3352-uart', 'ti,omap3-uart'] is too long
+	'ti,am3352-uart' is not one of ['ti,am64-uart', 'ti,j721e-uart']
+	'ti,am654-uart' was expected
+	from schema $id: http://devicetree.org/schemas/serial/8250_omap.yaml#
+arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dtb: /ocp/interconnect@48000000/segment@100000/target-module@d8000/mmc@0: failed to match any schema with compatible: ['ti,am335-sdhci']
+arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dtb: segment@200000 (simple-pm-bus): 'anyOf' conditional failed, one must be fixed:
+	'clocks' is a required property
+	'power-domains' is a required property
+	from schema $id: http://devicetree.org/schemas/bus/simple-pm-bus.yaml#
+arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dtb: segment@200000 (simple-pm-bus): $nodename:0: 'segment@200000' does not match '^bus(@[0-9a-f]+)?$'
+	from schema $id: http://devicetree.org/schemas/bus/simple-pm-bus.yaml#
+arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dtb: /ocp/interconnect@48000000/segment@200000/target-module@0/mpu@0: failed to match any schema with compatible: ['ti,omap3-mpu']
+arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dtb: segment@300000 (simple-pm-bus): 'anyOf' conditional failed, one must be fixed:
+	'clocks' is a required property
+	'power-domains' is a required property
+	from schema $id: http://devicetree.org/schemas/bus/simple-pm-bus.yaml#
+arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dtb: segment@300000 (simple-pm-bus): $nodename:0: 'segment@300000' does not match '^bus(@[0-9a-f]+)?$'
+	from schema $id: http://devicetree.org/schemas/bus/simple-pm-bus.yaml#
+arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dtb: /ocp/interconnect@48000000/segment@300000/target-module@0/epwmss@0: failed to match any schema with compatible: ['ti,am33xx-pwmss']
+arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dtb: /ocp/interconnect@48000000/segment@300000/target-module@2000/epwmss@0: failed to match any schema with compatible: ['ti,am33xx-pwmss']
+arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dtb: /ocp/interconnect@48000000/segment@300000/target-module@4000/epwmss@0: failed to match any schema with compatible: ['ti,am33xx-pwmss']
+arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dtb: /ocp/interconnect@48000000/segment@300000/target-module@e000/lcdc@0: failed to match any schema with compatible: ['ti,am33xx-tilcdc']
+arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dtb: interconnect@47c00000 (ti,am33xx-l4-fw): $nodename:0: 'interconnect@47c00000' does not match '^([a-z][a-z0-9\-]+-bus|bus|localbus|soc|axi|ahb|apb)(@.+)?$'
+	from schema $id: http://devicetree.org/schemas/simple-bus.yaml#
+arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dtb: /ocp/interconnect@47c00000: failed to match any schema with compatible: ['ti,am33xx-l4-fw', 'simple-bus']
+arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dtb: segment@0 (simple-bus): $nodename:0: 'segment@0' does not match '^([a-z][a-z0-9\-]+-bus|bus|localbus|soc|axi|ahb|apb)(@.+)?$'
+	from schema $id: http://devicetree.org/schemas/simple-bus.yaml#
+arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dtb: interconnect@4a000000 (ti,am33xx-l4-fast): $nodename:0: 'interconnect@4a000000' does not match '^bus(@[0-9a-f]+)?$'
+	from schema $id: http://devicetree.org/schemas/bus/simple-pm-bus.yaml#
+arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dtb: /ocp/interconnect@4a000000: failed to match any schema with compatible: ['ti,am33xx-l4-fast', 'simple-pm-bus']
+arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dtb: segment@0 (simple-pm-bus): 'anyOf' conditional failed, one must be fixed:
+	'clocks' is a required property
+	'power-domains' is a required property
+	from schema $id: http://devicetree.org/schemas/bus/simple-pm-bus.yaml#
+arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dtb: segment@0 (simple-pm-bus): $nodename:0: 'segment@0' does not match '^bus(@[0-9a-f]+)?$'
+	from schema $id: http://devicetree.org/schemas/bus/simple-pm-bus.yaml#
+arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dtb: /ocp/interconnect@4a000000/segment@0/target-module@100000/ethernet@0: failed to match any schema with compatible: ['ti,am335x-cpsw', 'ti,cpsw']
+arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dtb: /ocp/interconnect@4a000000/segment@0/target-module@100000/ethernet@0: failed to match any schema with compatible: ['ti,am335x-cpsw', 'ti,cpsw']
+arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dtb: interconnect@4b140000 (ti,am33xx-l4-mpuss): $nodename:0: 'interconnect@4b140000' does not match '^([a-z][a-z0-9\-]+-bus|bus|localbus|soc|axi|ahb|apb)(@.+)?$'
+	from schema $id: http://devicetree.org/schemas/simple-bus.yaml#
+arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dtb: /ocp/interconnect@4b140000: failed to match any schema with compatible: ['ti,am33xx-l4-mpuss', 'simple-bus']
+arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dtb: segment@0 (simple-bus): $nodename:0: 'segment@0' does not match '^([a-z][a-z0-9\-]+-bus|bus|localbus|soc|axi|ahb|apb)(@.+)?$'
+	from schema $id: http://devicetree.org/schemas/simple-bus.yaml#
+arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dtb: /ocp/interrupt-controller@48200000: failed to match any schema with compatible: ['ti,am33xx-intc']
+arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dtb: /ocp/target-module@49000000/dma@0: failed to match any schema with compatible: ['ti,edma3-tpcc']
+arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dtb: /ocp/target-module@49800000/dma@0: failed to match any schema with compatible: ['ti,edma3-tptc']
+arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dtb: /ocp/target-module@49900000/dma@0: failed to match any schema with compatible: ['ti,edma3-tptc']
+arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dtb: /ocp/target-module@49a00000/dma@0: failed to match any schema with compatible: ['ti,edma3-tptc']
+arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dtb: /ocp/target-module@47810000/mmc@0: failed to match any schema with compatible: ['ti,am335-sdhci']
+arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dtb: /ocp/target-module@47400000/usb-phy@1300: failed to match any schema with compatible: ['ti,am335x-usb-phy']
+arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dtb: /ocp/target-module@47400000/usb@1400: failed to match any schema with compatible: ['ti,musb-am33xx']
+arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dtb: usb@1400 (ti,musb-am33xx): {'compatible': ['ti,musb-am33xx'], 'reg': [[5120, 1024], [4096, 512]], 'reg-names': ['mc', 'control'], 'interrupts': [[18]], 'interrupt-names': ['mc'], 'dr_mode': ['peripheral'], 'mentor,multipoint': [1], 'mentor,num-eps': [16], 'mentor,ram-bits': [12], 'mentor,power': [500], 'phys': [[90]], 'dmas': [[91, 0, 0], [91, 1, 0], [91, 2, 0], [91, 3, 0], [91, 4, 0], [91, 5, 0], [91, 6, 0], [91, 7, 0], [91, 8, 0], [91, 9, 0], [91, 10, 0], [91, 11, 0], [91, 12, 0], [91, 13, 0], [91, 14, 0], [91, 0, 1], [91, 1, 1], [91, 2, 1], [91, 3, 1], [91, 4, 1], [91, 5, 1], [91, 6, 1], [91, 7, 1], [91, 8, 1], [91, 9, 1], [91, 10, 1], [91, 11, 1], [91, 12, 1], [91, 13, 1], [91, 14, 1]], 'dma-names': ['rx1', 'rx2', 'rx3', 'rx4', 'rx5', 'rx6', 'rx7', 'rx8', 'rx9', 'rx10', 'rx11', 'rx12', 'rx13', 'rx14', 'rx15', 'tx1', 'tx2', 'tx3', 'tx4', 'tx5', 'tx6', 'tx7', 'tx8', 'tx9', 'tx10', 'tx11', 'tx12', 'tx13', 'tx14', 'tx15'], 'interrupts-extended': [[1, 18]], '$nodename': ['usb@1400']} is valid under each of {'required': ['interrupts-extended']}, {'required': ['interrupts']}
+	from schema $id: http://devicetree.org/schemas/interrupts.yaml#
+arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dtb: /ocp/target-module@47400000/usb-phy@1b00: failed to match any schema with compatible: ['ti,am335x-usb-phy']
+arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dtb: /ocp/target-module@47400000/usb@1800: failed to match any schema with compatible: ['ti,musb-am33xx']
+arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dtb: /ocp/target-module@47400000/dma-controller@2000: failed to match any schema with compatible: ['ti,am3359-cppi41']
+arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dtb: sram@0 (mmio-sram): 'pm-code-sram@0', 'pm-data-sram@1000' do not match any of the regexes: '^([a-z0-9]*-)?sram(-section)?@[a-f0-9]+$', '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/sram/sram.yaml#
+arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dtb: /ocp/target-module@40300000/sram@0/pm-code-sram@0: failed to match any schema with compatible: ['ti,sram']
+arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dtb: /ocp/target-module@40300000/sram@0/pm-data-sram@1000: failed to match any schema with compatible: ['ti,sram']
+arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dtb: /ocp/target-module@4c000000/emif@0: failed to match any schema with compatible: ['ti,emif-am3352']
+arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dtb: sham@0 (ti,omap4-sham): 'ti,hwmods' is a required property
+	from schema $id: http://devicetree.org/schemas/crypto/ti,omap-sham.yaml#
+arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dtb: /ocp/target-module@53500000/aes@0: failed to match any schema with compatible: ['ti,omap4-aes']
 
 
 
