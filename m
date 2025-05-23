@@ -1,101 +1,95 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3E421F4CA1;
-	Fri, 23 May 2025 20:24:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B191C22338;
+	Fri, 23 May 2025 20:27:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748031868; cv=none; b=abJzaMnkJkHP52/f14Z96x0LfopAI+EgOQMLGXu0LtZkjFZbO73AxtiT6jfh60NKjKN0ahFCbqKxmKp0S3s1s+vG+OEfDUz0V9uxOjcli7l9aDHNLTknYdVaunPrLnPbpI7DBlpO3ebANVR3pqgLrdWHukMbIYtFsbyxMOv+RAA=
+	t=1748032079; cv=none; b=qIMcX14JZ//iPdMb01abOoXDMX7A6YBTZgN1gfxAeu8JIfeKunmkHuwTC2mYglKZnPYvun25LeW2oh12CNpBR+BAKuDmiZ4XiABpaAD9Nsq1j05kWb2g2g+TZHvtG7h2Z4d/BHxUrJsmb7DGy7lLiL0rOGC+BWaGVfR25n8MIoo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748031868; c=relaxed/simple;
-	bh=slgQ4tGw0dIzbPUtpd9MpwQXa0+Hq2+4GkuyaOoSWEw=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=pdC6Vh/YFyfUPOmKrMwonf1+bTb9yzC9ArRWIq3G1xbMM5K4Eai8b2WrmJKWOc7a0fbxshW5tulFsjXjEhPkNeGNFUZRedWuWtR8IlHdoTP3Ln0RYtZ93o3wdIZlz8Tv5tRPPJgd4JI20OEgCxdgZtl9uKtXisbJzoTgI1+99m0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=ss0M6cHX; arc=none smtp.client-ip=68.232.153.233
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	s=arc-20240116; t=1748032079; c=relaxed/simple;
+	bh=5pRFCoeXqhY0UnsQRr8ozHb8xSRhaMoVu7vfsBGA6tA=;
+	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=BNYsxLMVwNoLOzoinYvFbN1wOw4Ydbf2nNHfyK6jo/ktTHVlR+1MppfHFDwXAy3bNbELzYkX20TR6OEy4ORLwTuUH4nUgx1C4xikTrlSWC5UPZ4GnYkCZuWXCSuXs5sAj0Y10P2yw+LuJxRvYP85oHTp5xkj9gPM3i2RKsCjcsY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UNkc/+PC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="ss0M6cHX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1748031867; x=1779567867;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=slgQ4tGw0dIzbPUtpd9MpwQXa0+Hq2+4GkuyaOoSWEw=;
-  b=ss0M6cHXMdxVLphil/F/DPKUBGl7sl3zn+NQFJLF+3fE9f8l5qYNpPxL
-   eSecLoArq2lXl7C4X2aSVECVxFxNkrAH2tvmxo8fImDHbSVHeUXYhlIT6
-   QKmx00a95ePecXy1QxBRMXuNMwzbM+mOxKNOyWC3DgtGVNDqlMOHpvKjD
-   Yv1YIopNv/4OWfyHvui6xCvm8eCP0DUJ5VDPzQBLccyeJdovRNMtqIM2O
-   6n7ILuaqnohJlEYdSCTERnO5Uaao/dCQ5snJnxdn4rMIRELMYTlMA8RzV
-   92bAjg2ayFMIYSFi0cJqeqIZXvV13Fkot/QTmwIRMj+h0sZnqbbvb7Lmj
-   Q==;
-X-CSE-ConnectionGUID: KBUIaMEtQL+E9GaMz9Liiw==
-X-CSE-MsgGUID: MjZoIeOOQDCXgZgMCuSc1Q==
-X-IronPort-AV: E=Sophos;i="6.15,309,1739862000"; 
-   d="scan'208";a="46850862"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa1.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 23 May 2025 13:24:18 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Fri, 23 May 2025 13:23:58 -0700
-Received: from ryan-Precision-3630-Tower.microchip.com (10.10.85.11) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server id
- 15.1.2507.44 via Frontend Transport; Fri, 23 May 2025 13:23:58 -0700
-From: <Ryan.Wanner@microchip.com>
-To: <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-	<nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
-	<claudiu.beznea@tuxon.dev>
-CC: <devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-kernel@vger.kernel.org>, Ryan Wanner <Ryan.Wanner@microchip.com>
-Subject: [PATCH v4 2/2] ARM: dts: microchip: sama7d65: Add clock name property
-Date: Fri, 23 May 2025 13:24:31 -0700
-Message-ID: <f6ae8a38a005e1a4e025b25ddb29113c5e65dead.1748030737.git.Ryan.Wanner@microchip.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <cover.1748030737.git.Ryan.Wanner@microchip.com>
-References: <cover.1748030737.git.Ryan.Wanner@microchip.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UNkc/+PC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9CA4C4CEE9;
+	Fri, 23 May 2025 20:27:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748032079;
+	bh=5pRFCoeXqhY0UnsQRr8ozHb8xSRhaMoVu7vfsBGA6tA=;
+	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
+	b=UNkc/+PCjIXYzEG7BSY6uIKfD3quwXneLAnthfgZi+klBMDAvmu/IHcGb+5R68ESc
+	 bork2SiHf4qJBO05XZNcaqs0OsaQhONpUIJWGu2UxhsSUfjHHbxmePycm1yW21N2NP
+	 /QhalNQgaXSJ6hRMGJYd87619xZb5QM+Lsp8s8fknQyWuUujhxppPvBq/sKFQjY+t/
+	 Fabg9htfgMbgGXHQ9/HsSgd+MAtEIKAXzitiokDAnKrPONhEV5DKSyS0Lr1il1ITyz
+	 Ax8gSrAFfZRGkNXpFt9AIcPEq6z7Igd6hnX4TBGk7/c9nxC7okYDUiBQFuXNZp5FkJ
+	 bMDv7+8JCz4wg==
+Date: Fri, 23 May 2025 15:27:56 -0500
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: Fabio Estevam <festevam@gmail.com>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Sascha Hauer <s.hauer@pengutronix.de>, Conor Dooley <conor+dt@kernel.org>, 
+ Lee Jones <lee@kernel.org>, devicetree@vger.kernel.org, imx@lists.linux.dev, 
+ Pengutronix Kernel Team <kernel@pengutronix.de>, 
+ Shawn Guo <shawnguo@kernel.org>, linux-arm-kernel@lists.infradead.org, 
+ linux-kernel@vger.kernel.org
+To: Frank Li <Frank.Li@nxp.com>
+In-Reply-To: <20250523191844.563177-1-Frank.Li@nxp.com>
+References: <20250523191844.563177-1-Frank.Li@nxp.com>
+Message-Id: <174803207693.2936926.13970067014189882058.robh@kernel.org>
+Subject: Re: [PATCH 1/1] dt-bindings: mfd: convert mxs-lradc.txt to yaml
+ format
 
-From: Ryan Wanner <Ryan.Wanner@microchip.com>
 
-Add clock-output-names to the xtal nodes, so the driver can correctly
-register the main and slow xtal.
+On Fri, 23 May 2025 15:18:43 -0400, Frank Li wrote:
+> Convert mxs-lradc.txt to yaml format.
+> 
+> Additional changes:
+> - Only keep one example.
+> - Change node name to adc.
+> - Add clocks and #io-channel-cells.
+> 
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> ---
+>  .../bindings/mfd/fsl,imx28-lradc.yaml         | 85 +++++++++++++++++++
+>  .../devicetree/bindings/mfd/mxs-lradc.txt     | 45 ----------
+>  2 files changed, 85 insertions(+), 45 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/fsl,imx28-lradc.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/mfd/mxs-lradc.txt
+> 
 
-This fixes the issue of the SoC clock driver not being able to find
-the main xtal and slow xtal correctly causing a bad clock tree.
+My bot found errors running 'make dt_binding_check' on your patch:
 
-Fixes: 261dcfad1b59 ("ARM: dts: microchip: add sama7d65 SoC DT")
-Signed-off-by: Ryan Wanner <Ryan.Wanner@microchip.com>
----
- arch/arm/boot/dts/microchip/sama7d65.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
+yamllint warnings/errors:
 
-diff --git a/arch/arm/boot/dts/microchip/sama7d65.dtsi b/arch/arm/boot/dts/microchip/sama7d65.dtsi
-index b6710ccd4c36..7b1dd28a2cfa 100644
---- a/arch/arm/boot/dts/microchip/sama7d65.dtsi
-+++ b/arch/arm/boot/dts/microchip/sama7d65.dtsi
-@@ -38,11 +38,13 @@ cpu0: cpu@0 {
- 	clocks {
- 		main_xtal: clock-mainxtal {
- 			compatible = "fixed-clock";
-+			clock-output-names = "main_xtal";
- 			#clock-cells = <0>;
- 		};
- 
- 		slow_xtal: clock-slowxtal {
- 			compatible = "fixed-clock";
-+			clock-output-names = "slow_xtal";
- 			#clock-cells = <0>;
- 		};
- 	};
--- 
-2.43.0
+dtschema/dtc warnings/errors:
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/mfd/fsl,imx28-lradc.example.dtb: fake-interrupt-controller: #interrupt-cells: 9 is greater than the maximum of 8
+	from schema $id: http://devicetree.org/schemas/dt-core.yaml#
+
+doc reference errors (make refcheckdocs):
+
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250523191844.563177-1-Frank.Li@nxp.com
+
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
 
