@@ -1,132 +1,148 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D86B2DCBE7;
-	Fri, 23 May 2025 03:23:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B44C1C6FF6
+	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 03:25:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747970633; cv=none; b=WsSkfsec3rGHWdekb0zulladqYXZU8hP7lrHpd4ya9MC8I3l/kvuyvKQVG8HCYaPiyebh0ugW23i9iyyFKiK8l0Yez/YvndVwKcCd7+0PNRtotJkmhsby2oTUF2/uM+MjNSUPzEQYlr4Puf5KDRksRFDvjv8rDYlCBvv89WLRyQ=
+	t=1747970750; cv=none; b=W+n5srVTcIdTLgufgbyiIf/ob1c5K/nk2JGY4ekSULiRPpIPcoxBiIA7Yc1Gvb8wqL8xvsniW465TdXe0mv0U0sAHCSlsHv3tF5SPmttRuGpd0HSiCAbArb8QdVqLN/tzUn2cEyH5BaNUBBiUKsvZbImV9QFgzOTnSgB/uhPwx8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747970633; c=relaxed/simple;
-	bh=iyWz/fXuH0R7TlOwsw4fx5qxRfUBjcvlYeTAUH0oq5U=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=kmSGqYkwLQWYlNOaC/fznc3s+VyWItB1HLcPm8HawBzF22v+1W4cMyZI3hL3fg/GoaAG+tqzOU1B4BWZlvMlSpGqDNLm/pG/JUXcWWAfU+1HGdoCmHNOEiN4GqpC2wO8+zPuU9R+EoTqe6+0GPMShkp/IMtVcFvHkIFj21qGYcw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=Y6SM0pXE; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1747970750; c=relaxed/simple;
+	bh=zs8r39vbFN2or9MqJTpefToKt3xi9idBEwDckvz2KwE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=IfUGitk5TLzLnHpOAH5+F1O5N7ATzNSZ1oioJ9Z6+NLN9NSbvhZV6v731RQHiromxhIBkYu26clu/1ItWbG2e6Tnri5Du3iWRhZ2COgbH70yNHqcQ+zYQ1kRocQYPEWCSBkLYKSwbPUTNuguzw34SLCH6lyxKQicQaq8CzObnB0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RDLkN5U8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Y6SM0pXE"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1747970625;
-	bh=eBuTKXWoJ65Z6cyACn+klnCL2HucQeD9omFwYBo3AyY=;
-	h=Date:From:To:Cc:Subject:From;
-	b=Y6SM0pXElwt89qEX1gwhZKE6BemeF6c65ZYX0wGdajOrhilDTtGR4o40UoqdRt9AM
-	 9REZtfmqpzIYzhg1CNUVM/dU46P4o/U6RRMkIMf2WKscORwMoyaNG9PyJlxjamMGRC
-	 e1O4Gl82CTKVqkmUOPv8DFqO7JhFemkp56Xf7FRwL/4r9ayEawPl0ar2jZUY1FarIj
-	 8gcU3hq/WMaaCmCjYz5Tsxi25BMjwc4greC9nzkUjXb4dGW6Qp4QrxvYHPH32UZmVG
-	 EjqkGXCcNNT/MT3cEgtzr1rG697qgefWVF+TwLynuLnsbztNaSrl7ZOhPnj1Acsbzl
-	 KheN6i1bOWvWQ==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4b3Vqh5mTYz4xfH;
-	Fri, 23 May 2025 13:23:44 +1000 (AEST)
-Date: Fri, 23 May 2025 13:23:43 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@kernel.org>,
- "H. Peter Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>,
- Bjorn Helgaas <bhelgaas@google.com>, Lorenzo Pieralisi
- <lpieralisi@kernel.org>, Krzysztof =?UTF-8?B?V2lsY3p5xYRza2k=?=
- <kwilczynski@kernel.org>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
- Mailing List <linux-next@vger.kernel.org>, Philipp Stanner
- <phasta@kernel.org>
-Subject: linux-next: manual merge of the tip tree with the pci tree
-Message-ID: <20250523132343.6f33b625@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RDLkN5U8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0021C4CEE9;
+	Fri, 23 May 2025 03:25:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747970749;
+	bh=zs8r39vbFN2or9MqJTpefToKt3xi9idBEwDckvz2KwE=;
+	h=From:To:Cc:Subject:Date:From;
+	b=RDLkN5U8S0h0uFcNamFboMXudFbJhQc8QAf3cr+uRhghhFNDHhun8aEUAm1nP4Qz2
+	 rFZSWF2yCW026/4xDW44AG2ngCgkP/dEPvr7Ro4zwH2M3PYk1FgSA/rvBu0AJBSXfS
+	 FxFI+l0dnWuS6VkcIRREzrs7uhqndFZrunEtPFhoQgMMYIMs+Vjmw0hRLl7jJOTvuo
+	 3S1TkRVeVBI3uAK4ppsodeKDJl67+lQMUl3jCY4uGtjA2b2ofyfkE9Gwvai8Fzox4k
+	 duY0BuLGywslGToY01i6pmyX4xt2Tq/Kvll+2l+zLfGBr2p7xjRosazBI8jdcIuk9a
+	 a92XCKLuQUV/Q==
+From: Chao Yu <chao@kernel.org>
+To: jaegeuk@kernel.org
+Cc: linux-f2fs-devel@lists.sourceforge.net,
+	linux-kernel@vger.kernel.org,
+	Chao Yu <chao@kernel.org>,
+	syzbot+aa5bb5f6860e08a60450@syzkaller.appspotmail.com,
+	Qi Han <hanqi@vivo.com>
+Subject: [PATCH v3] f2fs: fix to skip f2fs_balance_fs() if checkpoint is disabled
+Date: Fri, 23 May 2025 11:25:45 +0800
+Message-ID: <20250523032545.1392641-1-chao@kernel.org>
+X-Mailer: git-send-email 2.49.0.1151.ga128411c76-goog
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/ADs_KDf/ECZz2ci6q1vhCHu";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 8bit
 
---Sig_/ADs_KDf/ECZz2ci6q1vhCHu
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Syzbot reports a f2fs bug as below:
 
-Hi all,
+INFO: task syz-executor328:5856 blocked for more than 144 seconds.
+      Not tainted 6.15.0-rc6-syzkaller-00208-g3c21441eeffc #0
+"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+task:syz-executor328 state:D stack:24392 pid:5856  tgid:5832  ppid:5826   task_flags:0x400040 flags:0x00004006
+Call Trace:
+ <TASK>
+ context_switch kernel/sched/core.c:5382 [inline]
+ __schedule+0x168f/0x4c70 kernel/sched/core.c:6767
+ __schedule_loop kernel/sched/core.c:6845 [inline]
+ schedule+0x165/0x360 kernel/sched/core.c:6860
+ io_schedule+0x81/0xe0 kernel/sched/core.c:7742
+ f2fs_balance_fs+0x4b4/0x780 fs/f2fs/segment.c:444
+ f2fs_map_blocks+0x3af1/0x43b0 fs/f2fs/data.c:1791
+ f2fs_expand_inode_data+0x653/0xaf0 fs/f2fs/file.c:1872
+ f2fs_fallocate+0x4f5/0x990 fs/f2fs/file.c:1975
+ vfs_fallocate+0x6a0/0x830 fs/open.c:338
+ ioctl_preallocate fs/ioctl.c:290 [inline]
+ file_ioctl fs/ioctl.c:-1 [inline]
+ do_vfs_ioctl+0x1b8f/0x1eb0 fs/ioctl.c:885
+ __do_sys_ioctl fs/ioctl.c:904 [inline]
+ __se_sys_ioctl+0x82/0x170 fs/ioctl.c:892
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xf6/0x210 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
 
-Today's linux-next merge of the tip tree got a conflict in:
+The root cause is after commit 84b5bb8bf0f6 ("f2fs: modify
+f2fs_is_checkpoint_ready logic to allow more data to be written with the
+CP disable"), we will get chance to allow f2fs_is_checkpoint_ready() to
+return true once below conditions are all true:
+1. checkpoint is disabled
+2. there are not enough free segments
+3. there are enough free blocks
 
-  drivers/pci/pci.h
+Then it will cause f2fs_balance_fs() to trigger foreground GC.
 
-between commits:
+void f2fs_balance_fs(struct f2fs_sb_info *sbi, bool need)
+...
+	if (!f2fs_is_checkpoint_ready(sbi))
+		return;
 
-  51f6aec99cb0 ("PCI: Remove hybrid devres nature from request functions")
-  8e9987485d9a ("PCI: Remove pcim_request_region_exclusive()")
-  dfc970ad6197 ("PCI: Remove function pcim_intx() prototype from pci.h")
+And the testcase mounts f2fs image w/ gc_merge,checkpoint=disable, so deadloop
+will happen through below race condition:
 
-from the pci tree and commit:
+- f2fs_do_shutdown		- vfs_fallocate				- gc_thread_func
+				 - file_start_write
+				  - __sb_start_write(SB_FREEZE_WRITE)
+				 - f2fs_fallocate
+				  - f2fs_expand_inode_data
+				   - f2fs_map_blocks
+				    - f2fs_balance_fs
+				     - prepare_to_wait
+				     - wake_up(gc_wait_queue_head)
+				     - io_schedule
+ - bdev_freeze
+  - freeze_super
+   - sb->s_writers.frozen = SB_FREEZE_WRITE;
+   - sb_wait_write(sb, SB_FREEZE_WRITE);
+									 - if (sbi->sb->s_writers.frozen >= SB_FREEZE_WRITE) continue;
+									 : cause deadloop
 
-  d5124a9957b2 ("PCI/MSI: Provide a sane mechanism for TPH")
+This patch fix to add check condition in f2fs_balance_fs(), so that if
+checkpoint is disabled, we will just skip trigger foreground GC to
+avoid such deadloop issue.
 
-from the tip tree.
+Meanwhile let's remove f2fs_is_checkpoint_ready() check condition in
+f2fs_balance_fs(), since it's redundant, due to the main logic in the
+function is to check:
+a) whether checkpoint is disabled
+b) there is enough free segments
 
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
+f2fs_balance_fs() still has all logics after f2fs_is_checkpoint_ready()'s
+removal.
 
---=20
-Cheers,
-Stephen Rothwell
+Reported-by: syzbot+aa5bb5f6860e08a60450@syzkaller.appspotmail.com
+Closes: https://lore.kernel.org/linux-f2fs-devel/682d743a.a00a0220.29bc26.0289.GAE@google.com
+Fixes: 84b5bb8bf0f6 ("f2fs: modify f2fs_is_checkpoint_ready logic to allow more data to be written with the CP disable")
+Cc: Qi Han <hanqi@vivo.com>
+Signed-off-by: Chao Yu <chao@kernel.org>
+---
+v3:
+- clean up the codes
+ fs/f2fs/segment.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --cc drivers/pci/pci.h
-index e39a2a5df587,39f368d2f26d..000000000000
---- a/drivers/pci/pci.h
-+++ b/drivers/pci/pci.h
-@@@ -1105,6 -1059,20 +1105,15 @@@ static inline pci_power_t mid_pci_get_p
-  }
-  #endif
- =20
- -int pcim_intx(struct pci_dev *dev, int enable);
- -int pcim_request_region_exclusive(struct pci_dev *pdev, int bar,
- -				  const char *name);
- -void pcim_release_region(struct pci_dev *pdev, int bar);
- -
-+ #ifdef CONFIG_PCI_MSI
-+ int pci_msix_write_tph_tag(struct pci_dev *pdev, unsigned int index, u16 =
-tag);
-+ #else
-+ static inline int pci_msix_write_tph_tag(struct pci_dev *pdev, unsigned i=
-nt index, u16 tag)
-+ {
-+ 	return -ENODEV;
-+ }
-+ #endif
-+=20
-  /*
-   * Config Address for PCI Configuration Mechanism #1
-   *
+diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
+index 5ff0111ed974..24b4bb2a4b9b 100644
+--- a/fs/f2fs/segment.c
++++ b/fs/f2fs/segment.c
+@@ -433,7 +433,7 @@ void f2fs_balance_fs(struct f2fs_sb_info *sbi, bool need)
+ 	if (need && excess_cached_nats(sbi))
+ 		f2fs_balance_fs_bg(sbi, false);
+ 
+-	if (!f2fs_is_checkpoint_ready(sbi))
++	if (unlikely(is_sbi_flag_set(sbi, SBI_CP_DISABLED)))
+ 		return;
+ 
+ 	/*
+-- 
+2.49.0
 
---Sig_/ADs_KDf/ECZz2ci6q1vhCHu
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgv6j8ACgkQAVBC80lX
-0GzuFAf+I4NsjHtzzXHUpckyCMm7E44o1YLUDyJUsLxQXoe10a3m27c24QIs+Uht
-otilrA43ltv/dZrST9bCF91pKQZHuMn0a393uxS22LfLvJgUKyLpHP0QwDQUYlsu
-Om+OoAqWcCBP7eAlY8+hq8EmMDShknVPgeB9Mwviu08z4JbWlFNMVsGiKN7JJyY5
-9iCPSVzOA9z/oqpocee7OtRGikZSEa0HZArl3acxU/t1N5RDspz/UN6AWIWHusiu
-xgcUuh3J5sFEMot3eBXNJlD9YobK2gnKujwOR1p5YW90d1zgVhQcPClAbHnNPZDC
-USRwLVT+00Bo+qXhIUeDwj3YSuYBSw==
-=afDw
------END PGP SIGNATURE-----
-
---Sig_/ADs_KDf/ECZz2ci6q1vhCHu--
