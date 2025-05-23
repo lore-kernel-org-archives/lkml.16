@@ -1,280 +1,151 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5D8D22CBE9
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 12:16:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5433C23BD05
+	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 12:16:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748002583; cv=none; b=CMQhY/QI7/4I3O83z4XC1xR6fbKRnzRA+TTSE7qdwJUhsxwQlFOb/A7+fp3Rmn7AXunA8rE0PqL/BveY8ZQN1ExhApNQ6fIW880vSOquhYHIxbNlwZXCEX8nbew1gmQhJm6SdlflrNp0z9XkXqXlvYuTyzWQe3yKcXNgxs8ig9g=
+	t=1748002588; cv=none; b=nrJ+G+E6GOeKp6IvOTplS+fvfMvnZdX7QNvD5Fsy/PsW9apPQeu6JzDmzT4pHGCfHK7I/8suMKtAz4USCSlj2gYLK3SNqY0CkwrekMNCh40uNJQ1vfZ8Ig8KuirNfksPgvXLRDZsMRFuTBHaac8ERQGs+E3DhMHpgIU8w3Cl0zo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748002583; c=relaxed/simple;
-	bh=jBZMg+IQcsVgsl8wdECZuEm5vz1GHrzjws56Jq1ZGjQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DP3yw3Cp1QApF0VUWXSYFyssoLLl8MKg6i/HtsMiQ1YaGBV/JqHZ9SGjY2yUCbUJ9fJ5T3EWlINqds54shJqr0cuRzb9UXKH3QvzLl1bTfXtmopZM4vLmYmf7VVEQM5GLWXBsehXWLBJljP7gVczy2KX9g23//t4u90fstdrRUY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us; spf=none smtp.mailfrom=resnulli.us; dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b=nG3rRsCd; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=resnulli.us
+	s=arc-20240116; t=1748002588; c=relaxed/simple;
+	bh=G+6zcE8n1H0QKOAPIWbD5AEsQ7oZyOVolZnBASiye9Y=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=aLcQftXWqDHRNbeUDJfEI2oWGhTOo3r/OK3l1eZ1mO7rdDX6p27xJJFgb9AeNOiVhKsah2sVgCPjUwpqndgMy7MOVgUytFIat5fIsXgujzArbiHJ0mebUo+bd2fU8Dq+Q0UeTzcvra248BWM1TCVdBtjbz/LcUYU4X6fA5MRCZ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=bgDPgaQf; arc=none smtp.client-ip=209.85.218.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b="nG3rRsCd"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-442ccf0e1b3so112343405e9.3
-        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 05:16:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bgDPgaQf"
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-ad53bcef8c2so92377866b.0
+        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 05:16:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=resnulli-us.20230601.gappssmtp.com; s=20230601; t=1748002579; x=1748607379; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=UVs+40bTDiF7EnRvr0lzQVjEjCbory2b3GEFHaMHFi0=;
-        b=nG3rRsCdtaUrIcw2pucw5sPQz4yykBHQpjnlsNb0EVTSVHgTQRAEGPfuKQAtIDzRbG
-         nlicV38eY5fB75BukDDLVErKVLqeYpgaMH6MbgfHKbI1Xak9yRyqc5KcT+Eyyua7GrUG
-         XAE26+LhVdhBY7w5q5Qg9AZu5Bz5AuhpFW4SIPUP6k2FtuYySq+PQItPTDXOfNqrvAm0
-         /Y+rWtrvTfF3vuQMRae2ZABmfMKypFvgRygsxAcshYUeL0wptVIo9ehxe9+YbmQdx+iV
-         TQctwIkZHSjC9vS8//Kbu2fBGzCES/lxwO7T8X9LZSo1kyOu2Wlg/7zhK8Schj7XUg6P
-         GZgQ==
+        d=linaro.org; s=google; t=1748002584; x=1748607384; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=M/iRRgF6jwuXH/Fk5crV9qCMV1n+ZqnM5fPwtxmvV98=;
+        b=bgDPgaQfWlypJtOHS7GPmGeM86TmyYIr73BSwilzHfaG/x4AH1g9wCWX109t+JMDbh
+         PhzQuFNE1GfFWd9pI8ZW2kj6yq/Ya0BTiEPK4nCg8e08gGBVkvfqX6i6assOwuQXnBtq
+         otaD8Iv6ZnY449KpkApPSbjzKwA275aZ6+DMsPhjQyCcZM/40vUJvjjaaSMkH56lfaOY
+         iExkyGJBq1WNJnoNGmWg1zMye3frGg1ZaiAPG0s6nRg+oIR/U3TyEbC/w/NpU7TpEdCo
+         rvk91pZj4x/REIPvyKTsqteSmfXLUIpmYN6YSZca5/zNbPh8Ryw+XNca05pi6nsTFrNJ
+         nq4A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748002579; x=1748607379;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=UVs+40bTDiF7EnRvr0lzQVjEjCbory2b3GEFHaMHFi0=;
-        b=EZzUEQBZ6y8E66XxvRcLeqaOzSaAj+7FqZW++mfPJqzT2XHU43ByNqwMhmuGdrv0Av
-         lXzjocS3yfqiDlwpXXxqkUjDM1k0mtZ5ME1WZo/PAJs+6yTtgbCAGRU7WGJTQHgxkasS
-         H3Nje+2i2WZfZLzLOCibUblB8PQqQ6QX4rwFMP5rl56CUrtvjc0L3T8sZiyReeGXSJfw
-         JswH+ZkUu4r0qNMkcerlM2jsSurvdFI1ku14KHuWOg2rH5Y4kZzItpVqIlGa2zeLB07i
-         NjmLdlXt+ce+vUPVFULy5dttF8CIzlGeNE2Wpvk7cuTJefMQNU1vF9Dkwe5mMAgD7LzG
-         N2LA==
-X-Forwarded-Encrypted: i=1; AJvYcCUfAIfX4ZS3+bU2Gz44INo+71mB8K/cGXlMoDkv2lbHESIPyguN8Sad7qUABbv+ZHSdKOrr5JX3r4jnFCY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywsykx2Cx7ECxlZTmC2W9GAWaF4i4YNvVWstL1XS1JbHWDfthqS
-	eM/+t/yVDgNbCi2LGYKEPFyP+HpirNDvmyL7nXPgWLfbSyg9GwnO1lTiF6SNgfWEuDU=
-X-Gm-Gg: ASbGncuXMJiCPfCGtsRcv+zk9LBSrP8DXx9vn4nknKOoDRP6B+jis9kEWiJkRCbzwzT
-	PnFNUCJ8n2BVoA/tjarCGofc+ta0GMvzjh+wCpGlJdksuf4ItOBlur3TxsK9h/eRQQZpr2ghkmQ
-	PIEtRKNF6nXm0gWxB+5FlbT2pzOW1vadyZEyOMCpbYQk7a4NeWCF5xsmckihSaRGmkr3vpCAaxM
-	OC+QrF5dCtJwubc0dPbHrBTxfZmNtMaz0cJsq6pzjIdWvYzZ7xqZgyujvRVG71d1cgLYC425yT9
-	4uXhvQizIokV9KP84IJGHZ1iENQMSmI/f1OAtMoyC/wWdWHPu1/vcNTbIGqW7VYulDmqd3BUCuJ
-	WVvg=
-X-Google-Smtp-Source: AGHT+IFHQ5u5SVMHD2atXwAihGnBWqM0BV44tFIPABcerUSfvuw7HC46EhyErks5GY3aIXUfMPmPcQ==
-X-Received: by 2002:a05:6000:2f87:b0:3a3:62c6:d2cd with SMTP id ffacd0b85a97d-3a4c20fe8f6mr3242914f8f.14.1748002578824;
-        Fri, 23 May 2025 05:16:18 -0700 (PDT)
-Received: from jiri-mlt (37-48-1-197.nat.epc.tmcz.cz. [37.48.1.197])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a35ca5a04csm26001714f8f.23.2025.05.23.05.16.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 May 2025 05:16:18 -0700 (PDT)
-Date: Fri, 23 May 2025 14:16:15 +0200
-From: Jiri Pirko <jiri@resnulli.us>
-To: "Kubalewski, Arkadiusz" <arkadiusz.kubalewski@intel.com>
-Cc: "donald.hunter@gmail.com" <donald.hunter@gmail.com>, 
-	"kuba@kernel.org" <kuba@kernel.org>, "davem@davemloft.net" <davem@davemloft.net>, 
-	"edumazet@google.com" <edumazet@google.com>, "pabeni@redhat.com" <pabeni@redhat.com>, 
-	"horms@kernel.org" <horms@kernel.org>, "vadim.fedorenko@linux.dev" <vadim.fedorenko@linux.dev>, 
-	"Nguyen, Anthony L" <anthony.l.nguyen@intel.com>, "Kitszel, Przemyslaw" <przemyslaw.kitszel@intel.com>, 
-	"andrew+netdev@lunn.ch" <andrew+netdev@lunn.ch>, "saeedm@nvidia.com" <saeedm@nvidia.com>, 
-	"leon@kernel.org" <leon@kernel.org>, "tariqt@nvidia.com" <tariqt@nvidia.com>, 
-	"jonathan.lemon@gmail.com" <jonathan.lemon@gmail.com>, "richardcochran@gmail.com" <richardcochran@gmail.com>, 
-	"Loktionov, Aleksandr" <aleksandr.loktionov@intel.com>, "Olech, Milena" <milena.olech@intel.com>, 
-	"netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"intel-wired-lan@lists.osuosl.org" <intel-wired-lan@lists.osuosl.org>, "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>
-Subject: Re: [PATCH net-next v3 2/3] dpll: add phase_offset_monitor_get/set
- callback ops
-Message-ID: <35nkufpaaljicqt22ta4ysj3zvursnnu5efpjzf7fdih4y5otx@q2o5puhnd3pa>
-References: <20250508122128.1216231-1-arkadiusz.kubalewski@intel.com>
- <20250508122128.1216231-3-arkadiusz.kubalewski@intel.com>
- <rwterkiyhdjcedboj773zc5s3d6purz6yaccfowco7m5zd7q3c@or4r33ay2dxh>
- <SJ2PR11MB8452820F6BDF445F29D368C99B8BA@SJ2PR11MB8452.namprd11.prod.outlook.com>
- <we7ev4qegycbn6vp2epoeq45kulkpurdh2dga7zgmx6xq5hy2e@nkjmo3njtwo7>
- <SA1PR11MB84468A82953226F3C16D9CCB9B98A@SA1PR11MB8446.namprd11.prod.outlook.com>
+        d=1e100.net; s=20230601; t=1748002584; x=1748607384;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=M/iRRgF6jwuXH/Fk5crV9qCMV1n+ZqnM5fPwtxmvV98=;
+        b=iLFD1LUr8DEDRZ2jP6KyBJxk9BdiXyROLjlMoSy7BO4TMt3bBH9r+KWTepJqBZwt/D
+         jbcvjrrNkEGIpXwP4u2C1l61t9T16hfrtu2bbu0aYjKU7cmfONen85RMIRjEKCcc+O0l
+         /Z1jULENo3dQtusTVgLamH6RrWIVg+tUeDaeC7rIZTVdSIbA/IcCNzopnz4mi9ETslps
+         sNzKpM48WXN8YVQuA8bLZLQg/2J+13XPi8wFp42DK9eplwscu9lrptrlv2tpy3KzB29F
+         as3BvwytaLzshNcq5yHqBjcCRGoSQPXSTFPCdATvl9XWsz+2OIq5ewzuib1bWeedJtCX
+         v6BA==
+X-Forwarded-Encrypted: i=1; AJvYcCVFX25ABV6vjo84YGc+4Y3Z2h3EOz5wsdC4WPn+uTaSng16N3FXN5t5xbZv9hgtv76VG+bVyNk45zUcOCs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwgOWBytVoHVkdGvQyaZwBQDtQ7I7GffyBUSqv1l1W0pAEKsDmi
+	HMViuoFNtNE6OHY233IwEx+JAdHYwHjf3evRQxeFn3mT97lIMPPYKOO7trYDwicf6lY=
+X-Gm-Gg: ASbGnct+iLcTGBbd9mM8uZPSanIqh4TAG2lspdr+C+BYM+6IajLxGGNNf9Xx1K8XsO6
+	p8TNFLf5uQsOwPC2u0oLj4nOnt9UNosNrtqILUqoNThebB9/wwh65W/3cVdXXahYukGOHqVo5eg
+	IiO4coXQ5rjSFSAyLiq2bi1c84CAGnDd/lBoa8py+G7gVjXv/HkgSAJZkiEIF18JAbWpvV0cF6R
+	+KjAxblehTIjKGHNl9o83jtU3QpMDcjB/lTYjSzXAG43lrb1a9GYVjRvYC+HCMqEK8tSKBNnAfb
+	q/WGZOIymYFFIh0pUc/5CwQvHkghsm052LNzAvEoQLSa/gxglcMNTLrFCDDFCzzeK9NEa3A=
+X-Google-Smtp-Source: AGHT+IEBPy5BoYPmhgc+svPT9StZwncZf69U6mVl4FOT5ipdtTmJlC0XKXOU+PjzgmR2xKtRS9sM4g==
+X-Received: by 2002:a17:906:8465:b0:ad4:dca3:5b66 with SMTP id a640c23a62f3a-ad84cd1a2edmr55502666b.15.1748002584533;
+        Fri, 23 May 2025 05:16:24 -0700 (PDT)
+Received: from [192.168.1.29] ([178.197.223.125])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad52d04e80asm1216438266b.2.2025.05.23.05.16.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 23 May 2025 05:16:23 -0700 (PDT)
+Message-ID: <542e254b-5feb-456f-98b5-fa1d74418e37@linaro.org>
+Date: Fri, 23 May 2025 14:16:22 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <SA1PR11MB84468A82953226F3C16D9CCB9B98A@SA1PR11MB8446.namprd11.prod.outlook.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] drm/panel: nt37801: select CONFIG_DRM_DISPLAY_DSC_HELPER
+To: Arnd Bergmann <arnd@kernel.org>,
+ Neil Armstrong <neil.armstrong@linaro.org>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Linus Walleij <linus.walleij@linaro.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, Jessica Zhang <quic_jesszhan@quicinc.com>,
+ Dmitry Baryshkov <lumag@kernel.org>, Danila Tikhonov <danila@jiaxyga.com>,
+ Jakob Hauser <jahau@rocketmail.com>, Jerome Brunet <jbrunet@baylibre.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ Sebastian Reichel <sebastian.reichel@collabora.com>,
+ Hironori KIKUCHI <kikuchan98@gmail.com>, dri-devel@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org
+References: <20250523121127.2269693-1-arnd@kernel.org>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Content-Language: en-US
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ 2+47PN9NZAOyb771QoVr8A==
+In-Reply-To: <20250523121127.2269693-1-arnd@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Fri, May 23, 2025 at 09:45:29AM +0200, arkadiusz.kubalewski@intel.com wrote:
->>From: Jiri Pirko <jiri@resnulli.us>
->>Sent: Friday, May 9, 2025 8:15 AM
->>
->>Thu, May 08, 2025 at 05:20:24PM +0200, arkadiusz.kubalewski@intel.com
->>wrote:
->>>>From: Jiri Pirko <jiri@resnulli.us>
->>>>Sent: Thursday, May 8, 2025 4:31 PM
->>>>
->>>>Thu, May 08, 2025 at 02:21:27PM +0200, arkadiusz.kubalewski@intel.com
->>>>wrote:
->>>>>Add new callback operations for a dpll device:
->>>>>- phase_offset_monitor_get(..) - to obtain current state of phase offset
->>>>>  monitor feature from dpll device,
->>>>>- phase_offset_monitor_set(..) - to allow feature configuration.
->>>>>
->>>>>Obtain the feature state value using the get callback and provide it to
->>>>>the user if the device driver implements callbacks.
->>>>>
->>>>>Execute the set callback upon user requests.
->>>>>
->>>>>Reviewed-by: Milena Olech <milena.olech@intel.com>
->>>>>Signed-off-by: Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>
->>>>>---
->>>>>v3:
->>>>>- remove feature flags and capabilities,
->>>>>- add separated (per feature) callback ops,
->>>>>- use callback ops to determine feature availability.
->>>>>---
->>>>> drivers/dpll/dpll_netlink.c | 76 ++++++++++++++++++++++++++++++++++++-
->>>>> include/linux/dpll.h        |  8 ++++
->>>>> 2 files changed, 82 insertions(+), 2 deletions(-)
->>>>>
->>>>>diff --git a/drivers/dpll/dpll_netlink.c b/drivers/dpll/dpll_netlink.c
->>>>>index c130f87147fa..6d2980455a46 100644
->>>>>--- a/drivers/dpll/dpll_netlink.c
->>>>>+++ b/drivers/dpll/dpll_netlink.c
->>>>>@@ -126,6 +126,26 @@ dpll_msg_add_mode_supported(struct sk_buff *msg,
->>>>>struct dpll_device *dpll,
->>>>> 	return 0;
->>>>> }
->>>>>
->>>>>+static int
->>>>>+dpll_msg_add_phase_offset_monitor(struct sk_buff *msg, struct
->>>>>dpll_device
->>>>>*dpll,
->>>>>+				  struct netlink_ext_ack *extack)
->>>>>+{
->>>>>+	const struct dpll_device_ops *ops = dpll_device_ops(dpll);
->>>>>+	enum dpll_feature_state state;
->>>>>+	int ret;
->>>>>+
->>>>>+	if (ops->phase_offset_monitor_set && ops->phase_offset_monitor_get) {
->>>>>+		ret = ops->phase_offset_monitor_get(dpll, dpll_priv(dpll),
->>>>>+						    &state, extack);
->>>>>+		if (ret)
->>>>>+			return -EINVAL;
->>>>
->>>>Why you don't propagate "ret"?
->>>>
->>>
->>>My bad, will fix that.
->>>
->>>>
->>>>>+		if (nla_put_u32(msg, DPLL_A_PHASE_OFFSET_MONITOR, state))
->>>>>+			return -EMSGSIZE;
->>>>>+	}
->>>>>+
->>>>>+	return 0;
->>>>>+}
->>>>>+
->>>>> static int
->>>>> dpll_msg_add_lock_status(struct sk_buff *msg, struct dpll_device *dpll,
->>>>> 			 struct netlink_ext_ack *extack)
->>>>>@@ -591,6 +611,9 @@ dpll_device_get_one(struct dpll_device *dpll, struct
->>>>>sk_buff *msg,
->>>>> 		return ret;
->>>>> 	if (nla_put_u32(msg, DPLL_A_TYPE, dpll->type))
->>>>> 		return -EMSGSIZE;
->>>>>+	ret = dpll_msg_add_phase_offset_monitor(msg, dpll, extack);
->>>>>+	if (ret)
->>>>>+		return ret;
->>>>>
->>>>> 	return 0;
->>>>> }
->>>>>@@ -746,6 +769,31 @@ int dpll_pin_change_ntf(struct dpll_pin *pin)
->>>>> }
->>>>> EXPORT_SYMBOL_GPL(dpll_pin_change_ntf);
->>>>>
->>>>>+static int
->>>>>+dpll_phase_offset_monitor_set(struct dpll_device *dpll, struct nlattr
->>>>>*a,
->>>>>+			      struct netlink_ext_ack *extack)
->>>>>+{
->>>>>+	const struct dpll_device_ops *ops = dpll_device_ops(dpll);
->>>>>+	enum dpll_feature_state state = nla_get_u32(a), old_state;
->>>>>+	int ret;
->>>>>+
->>>>>+	if (!(ops->phase_offset_monitor_set && ops-
->>>>>phase_offset_monitor_get)) {
->>>>>+		NL_SET_ERR_MSG_ATTR(extack, a, "dpll device not capable of
->>>>>phase offset monitor");
->>>>>+		return -EOPNOTSUPP;
->>>>>+	}
->>>>>+	ret = ops->phase_offset_monitor_get(dpll, dpll_priv(dpll),
->>>>>&old_state,
->>>>>+					    extack);
->>>>>+	if (ret) {
->>>>>+		NL_SET_ERR_MSG(extack, "unable to get current state of phase
->>>>>offset monitor");
->>>>>+		return -EINVAL;
->>
->>Propagate ret.
->>
->
->Sure, will do.
->
->>
->>>>>+	}
->>>>>+	if (state == old_state)
->>>>>+		return 0;
->>>>>+
->>>>>+	return ops->phase_offset_monitor_set(dpll, dpll_priv(dpll), state,
->>>>>+					     extack);
->>>>
->>>>Why you need to do this get/set dance? I mean, just call the driver
->>>>set() op and let it do what is needed there, no?
->>>>
->>>
->>>We did it this way from the beginning (during various pin-set related
->>>flows).
->>
->>Hmm, idk if it is absolutelly necessary to stick with this pattern all
->>the time. I mean, what's the benefit here? I don't see any.
->>
->
->Driver implementing callback could do that, or can be done here. Here is
->earlier/better, right?
->
->Why would we remove this pattern for one flow, and use different for
->other flows? Doesn't make much sense to me, we could change for all to
->make it consistent.
+On 23/05/2025 14:11, Arnd Bergmann wrote:
+> From: Arnd Bergmann <arnd@arndb.de>
+> 
+> The newly added driver uses the DSC helper module, but does not
+> select its Kconfig symbol, so configurations are possible that
+> cause a link failure:
+> 
+> ERROR: modpost: "drm_dsc_pps_payload_pack" [drivers/gpu/drm/panel/panel-novatek-nt37801.ko] undefined!
+> 
+> Fixes: 4fca6849864d ("drm/panel: Add Novatek NT37801 panel driver")
 
-Fair.
+Indeed, I wrote the driver first without DSC and forgot about it later.
 
->
->>
->>>
->>>>
->>>>>+}
->>>>>+
->>>>> static int
->>>>> dpll_pin_freq_set(struct dpll_pin *pin, struct nlattr *a,
->>>>> 		  struct netlink_ext_ack *extack)
->>>>>@@ -1533,10 +1581,34 @@ int dpll_nl_device_get_doit(struct sk_buff *skb,
->>>>>struct genl_info *info)
->>>>> 	return genlmsg_reply(msg, info);
->>>>> }
->>>>>
->>>>>+static int
->>>>>+dpll_set_from_nlattr(struct dpll_device *dpll, struct genl_info *info)
->>>>>+{
->>>>>+	struct nlattr *a;
->>>>>+	int rem, ret;
->>>>>+
->>>>>+	nla_for_each_attr(a, genlmsg_data(info->genlhdr),
->>>>>+			  genlmsg_len(info->genlhdr), rem) {
->>>>
->>>>Hmm, why you iterate? Why you just don't parse to attr array, as it is
->>>>usually done?
->>>>
->>>
->>>Hmm, AFAIR there are issues when you parse nested stuff with the array
->>>approach, here nothing is nested, but we already have the same approach on
->>>parsing pin related stuff (dpll_pin_set_from_nlattr(..)), just did the
->>>same
->>>here.
->>
->>The only reason to iterate over attrs is then you have multiattr. Is
->>ever attr is there only once, no need for iteration.
->>
->
->Ok, will do.
->
->Thank you!
->Arkadiusz
->
->[...]
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+
+Best regards,
+Krzysztof
