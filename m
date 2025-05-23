@@ -1,123 +1,85 @@
-Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-m49197.qiye.163.com (mail-m49197.qiye.163.com [45.254.49.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 796E7292098;
-	Fri, 23 May 2025 13:29:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E615292911;
+	Fri, 23 May 2025 13:31:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.49.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748006945; cv=none; b=RU2c+2PcNX9w+Sd9VFEvPwLXvTp65Z/JavPL78FBeNtwIg3Erd1WBRMAYMPzb0xG9trC9+4IskwqRlOx6+976zX8QHq8x3685WFuM6ejcE1JA1NdcUOj7pXJkj4M1TGQRQnUtKPjRRCtfrCEpPR/su4C1DtUSG7incJXs8vqLXc=
+	t=1748007069; cv=none; b=CT0iM8PNz1nvXWfz7LB32r/tzYEqKYIACNb9qs5trvak1C2vKdRP61Wy7nqVjKJjM4cMNyVtxTp8EyVqG6EgJEVdDC0U4MIm7gC/Vgd8vM133tPPx41cE5VRo/GOW7wQMVvZdRnOB4YswwEZkdQiAS0xg3isqARgQ78lu3ubrT4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748006945; c=relaxed/simple;
-	bh=HoDzFFvTt+7MIu4vOoIJxdfsGPzEEGuPpV1OfsMUwZ0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=H2+h9xleAYhQeX7x9GE7vtAFIsis3IsKwrCVZg6QJo5BPFkP6DziOyj5+wB4P7X4/vtZLzdS4Do+KdxrKoPYFzo7rMFrque0x3B5p0pmIv+W4QXQgA+vNwG95ULk0EonlJs1Hw2NbQF4KLA1vxzqWIV5MqNUNi1ow/lZ0lNnOaM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=gmJU6Eob; arc=none smtp.client-ip=178.21.23.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
+	s=arc-20240116; t=1748007069; c=relaxed/simple;
+	bh=nnZRK8lPl9SyiDMJbFJSArxBQ5vkLzLDfP3ZLzu1lVA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=sRmjUcUz11X3JvjPlC81VWQBOA+cdqMgdA5YL7kDPVA9hjBrpAkjt6Cu3CdoFrF448jNe80kHBEO9xrFx2+5kFIrP/XNP3kvfFDaMQs56ue9apWpTVd449hfu8SedwIL+ImAQ97OyX3y4aenxvIX0SK+3guBc0ZAdF4dzt60Q7U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=seu.edu.cn; spf=pass smtp.mailfrom=seu.edu.cn; dkim=pass (1024-bit key) header.d=seu.edu.cn header.i=@seu.edu.cn header.b=ON1CM0cs; arc=none smtp.client-ip=45.254.49.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=seu.edu.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=seu.edu.cn
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="gmJU6Eob"
-Received: from mail01.disroot.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id 7B4D02627A;
-	Fri, 23 May 2025 15:29:00 +0200 (CEST)
-X-Virus-Scanned: SPAM Filter at disroot.org
-Received: from layka.disroot.org ([127.0.0.1])
- by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id oF88uI5vZrak; Fri, 23 May 2025 15:28:59 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1748006939; bh=HoDzFFvTt+7MIu4vOoIJxdfsGPzEEGuPpV1OfsMUwZ0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=gmJU6EobsLP4eJiaUqwCoFGR+N1kFtqfuourF2s7eKDL2AbKi3spkZo8n4Cf/DcRH
-	 cjLlTH30DNvGVM4cjV6EBMbAmgAsVZ++3Up+O0jTkS8J2TNIpn03fIUxwIEXZZBh5x
-	 +078vGLPycx1G1odmPKmiMh/V+k+x4nLECjVlw9PhbPDMXj5U/6zRZjE3V1iIl7eNe
-	 Nz7hVS5PLXEwbcuEBLD4oP4EZ8eRjw3kwDnKpRys8tPDM7sHfBVVw43tEIcIYBnAaj
-	 2s3zAG5aPXbsukgu76U0mKapArBLhjcmJ4HlTd4Mk6BU8GB+kVuNuKBv/kbpj5avHb
-	 uyKhypTxwJ53Q==
-Date: Fri, 23 May 2025 13:28:45 +0000
-From: Yao Zi <ziyao@disroot.org>
-To: Binbin Zhou <zhoubb.aaron@gmail.com>
-Cc: Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>, Yinbo Zhu <zhuyinbo@loongson.cn>,
-	linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
-	Mingcong Bai <jeffbai@aosc.io>, Kexy Biscuit <kexybiscuit@aosc.io>
-Subject: Re: [PATCH 1/8] dt-bindings: clock: Document Loongson 2K0300 clock
- controller
-Message-ID: <aDB4DTd1Y29lJlyM@pie.lan>
-References: <20250523104552.32742-1-ziyao@disroot.org>
- <20250523104552.32742-2-ziyao@disroot.org>
- <CAMpQs4JRy+Q2D5B9cOLyuD=8EcWNqqyhJcm+X5wiqTgjy5cikA@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=seu.edu.cn header.i=@seu.edu.cn header.b="ON1CM0cs"
+Received: from localhost.localdomain (unknown [202.119.23.198])
+	by smtp.qiye.163.com (Hmail) with ESMTP id 163121437;
+	Fri, 23 May 2025 21:31:00 +0800 (GMT+08:00)
+From: Zilin Guan <zilin@seu.edu.cn>
+To: qianweili@huawei.com
+Cc: wangzhou1@hisilicon.com,
+	herbert@gondor.apana.org.au,
+	davem@davemloft.net,
+	linux-crypto@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	jianhao.xu@seu.edu.cn,
+	Zilin Guan <zilin@seu.edu.cn>
+Subject: [PATCH] crypto: hisilicon: use kfree_sensitive() for pool cleanup
+Date: Fri, 23 May 2025 13:30:57 +0000
+Message-Id: <20250523133057.4025075-1-zilin@seu.edu.cn>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMpQs4JRy+Q2D5B9cOLyuD=8EcWNqqyhJcm+X5wiqTgjy5cikA@mail.gmail.com>
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVlDQ00YVk4ZTk9KT00aTU4fGFYeHw5VEwETFhoSFy
+	QUDg9ZV1kYEgtZQVlJS0lVSkpCVUlIVUpCQ1lXWRYaDxIVHRRZQVlPS0hVSktISk9ITFVKS0tVSk
+	JLS1kG
+X-HM-Tid: 0a96fd57027f03a1kunmd10b84c92accc8
+X-HM-MType: 10
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6MTo6Lio6HzEzDBRLFksCAxdW
+	TBQKFD5VSlVKTE9DS0tMS01KSU9MVTMWGhIXVQESFxIVOwgeDlUeHw5VGBVFWVdZEgtZQVlJS0lV
+	SkpCVUlIVUpCQ1lXWQgBWUFKTU5ONwY+
+DKIM-Signature:a=rsa-sha256;
+	b=ON1CM0csT+ZFX3d7Kk/uaRI+fOv7MXWaytkLpuV5P8aebPyPD7jwwfd4ubE7b66Xe0zEBFHQauhTwOtJYUJkIA/k0/0AkbtBsz1xRT9x0OWKNIRT3exZoXvz6Eq+LZn7WczLoD3+g28B77e0ZVpX5gwZVRUPtmuXZIIzhamwvMY=; s=default; c=relaxed/relaxed; d=seu.edu.cn; v=1;
+	bh=jRFn8bu4n2o4gj3EMfZ9WV2kRTdw4d7yf31Z8DlFERQ=;
+	h=date:mime-version:subject:message-id:from;
 
-On Fri, May 23, 2025 at 08:30:57PM +0800, Binbin Zhou wrote:
-> On Fri, May 23, 2025 at 6:46 PM Yao Zi <ziyao@disroot.org> wrote:
-> >
-> > Document the clock controller shipped in Loongson 2K0300 SoC, which
-> > generates various clock signals for SoC peripherals.
-> >
-> > Signed-off-by: Yao Zi <ziyao@disroot.org>
-> > ---
-> >  .../bindings/clock/loongson,ls2k0300-clk.yaml | 52 ++++++++++++++++++
-> >  .../dt-bindings/clock/loongson,ls2k0300-clk.h | 54 +++++++++++++++++++
-> >  2 files changed, 106 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/clock/loongson,ls2k0300-clk.yaml
-> 
-> I don't think a new binding file for 2K0300 is needed. Adding
-> compatible entries to loongson,ls2k-clk.yaml would be more appropriate
-> as they are almost all similar.
+The error path of hisi_acc_create_sgl_pool() already calls
+kfree_sensitive() to wipe sensitive data before freeing the pool.
+However, hisi_acc_free_sgl_pool() currently uses plain kfree(), which
+may leave secrets behind in memory and undo the protection applied
+during creation.
 
-Originally I've tried to integrate the 2K0300 stuff with
-loongson,ls2k-clk.yaml, but found it's hard to describe some properties.
+This patch replaces kfree() with kfree_sensitive() in
+hisi_acc_free_sgl_pool(), ensuring that all SGL pool deallocations
+securely clear their contents.
 
-For example, currently in loongson,ls2k-clk.yaml, the clocks property is
-described as
+Signed-off-by: Zilin Guan <zilin@seu.edu.cn>
+---
+ drivers/crypto/hisilicon/sgl.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-  clocks:
-    items:
-      - description: 100m ref
+diff --git a/drivers/crypto/hisilicon/sgl.c b/drivers/crypto/hisilicon/sgl.c
+index c974f95cd126..6a88a2056708 100644
+--- a/drivers/crypto/hisilicon/sgl.c
++++ b/drivers/crypto/hisilicon/sgl.c
+@@ -151,7 +151,7 @@ void hisi_acc_free_sgl_pool(struct device *dev, struct hisi_acc_sgl_pool *pool)
+ 		dma_free_coherent(dev, block[i].size, block[i].sgl,
+ 				  block[i].sgl_dma);
+ 
+-	kfree(pool);
++	kfree_sensitive(pool);
+ }
+ EXPORT_SYMBOL_GPL(hisi_acc_free_sgl_pool);
+ 
+-- 
+2.34.1
 
-what should the description look like with 2K0300 introduced, whose
-reference clock runs at 120MHz instead of 100MHz? It'll be hard to
-describe things correctly without losing existing information. "120MHz
-reference clock for Loongson 2K0300, or 100MHz reference clock for other
-SoCs" sounds even a worse idea.
-
-Another example is about the description of clock IDs. loongson,ls2k-clk.yaml
-describes available clock IDs as
-
-  '#clock-cells':
-    const: 1
-    description:
-      The clock consumer should specify the desired clock by having the clock
-      ID in its "clocks" phandle cell. See include/dt-bindings/clock/loongson,ls2k-clk.h
-      for the full list of Loongson-2 SoC clock IDs.
-
-what should the description look like if we add 2K0300 support? With a
-different header being introduced, the description will be messy.
-
-I think keeping SoCs peripherals that are different in hardware design
-in the same binding is really a bad idea. Yes, these clock controllers
-are similar enough to reuse the clock hardware driver, but they have
-different clock tree structures and register definitions, making them
-essentially different things. Trying to keep everything in the same
-place only makes the binding messy.
-
-For the reason to introduce a new binding header: loongson,ls2k-clk.h
-contains clocks that aren't present in 2K0300 and misses IDs for ones
-present. It's just messy if we mix everything in the same place, so here
-comes loongson,ls2k0300-clk.h.
-
-Thanks,
-Yao Zi
