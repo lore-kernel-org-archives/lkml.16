@@ -1,103 +1,107 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3F5A2DCC07;
-	Fri, 23 May 2025 16:07:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74D302045B5
+	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 16:06:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748016421; cv=none; b=CdcxjopGP9gD3QhY8Kbz5M7fcUaBk7YEIPjVgvuwH+N/Bm0YbmqmJ9L9kYib2+HIdsp+g/l7nC7QdOWH80isbmItWzPSddTKM2iZUb51tYjLMHoIWe6faLGWjkTI6xWyqArUVx7VpjuROcu9e13DbFcJZ9eubm7XX7htbNMKI7M=
+	t=1748016421; cv=none; b=o6Ca1+Y5AfO5qAhvM91AkxpofM+Lo2ehVRGQUgYEfkUDor3IY5IfRti+FCYNYH8hLXkZbVsi4n1cwSc2w5tp1758UlB+VkVOIYTKNPaBm/r1cIo5I1eRIPK0Vqbjt8c3OtTVM/74Ub51UearCHyDjcCkMPZFC4EyjfttPOxzCeM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1748016421; c=relaxed/simple;
-	bh=U5OXlf+RyqrwgHycF2mts31Fb7vitn7wTynxz3ykuCU=;
+	bh=WA5dqhze8NRn8+fhKp+DCFUWDEMVFNX6jxw+Hwyiv9I=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=Y1BWurFjD4qHmghYkQH8E63eZ6TE8xx2Xfrd+aXFOSf7IS9uiu57Zjc36F/vMrsil1oULaVkrAgLq+MqZdmQJ5M25NAPYYIyAMiA836AI1x917a2dxvF7UgUyQKzXM2B6FPnId9DoCMQhc6YpdqLykvfDpPVZspkbsgRXu/tf+8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HJ4BTRSD; arc=none smtp.client-ip=10.30.226.201
+	 Content-Disposition; b=DqHoGWYQA//Rk6gkjXNtIPMGaKj9amfLJtR8cVJgb0ljWL/o2/+ANd5HPffxx66i0w3xBnFw6gm4JhuFrhopB1MWyxVgFPZ2FwIWIKgnnR2hIP8Lai+dtgJrhimqeWTCfCxutiY5MViDfWyqc2bOWwUuvz3s5XBfR3Ug35jgihI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=yZzB1YIv; arc=none smtp.client-ip=209.85.221.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HJ4BTRSD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CDD81C4CEEB;
-	Fri, 23 May 2025 16:06:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748016420;
-	bh=U5OXlf+RyqrwgHycF2mts31Fb7vitn7wTynxz3ykuCU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=HJ4BTRSD/0E+TS5UteGvWOxf6R8OzJOt1+4nzoXPvNCXRD/8S/RNGcPwi58jotavi
-	 +4tTV8FqgSGUtL4GoCwxkaJlgejTdf4aMBX+IvZvWOvMGbFhSXdQDkVOjBmkXvR+S0
-	 A9qINpvL88R5Q+bWhPSmHHFrdVJ+9gSC/jPZH+EcX4uP/DMIfwsHCfFm9iq1abQET6
-	 gC/+8VnoGgTxoCZucgiciaTMBy20nqlu9TLHLQhvg72dAthv2ZWiMbew4qxHxAyn8+
-	 SzSxhptlarY55XjN3O70l0VVUIkvlIvZApk9gVoyDSbZldmkqtr6C0gwS5Jw4QzCt1
-	 chp6pa8W4pWGQ==
-Date: Fri, 23 May 2025 11:06:58 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>
-Cc: linux-pci@vger.kernel.org, Jon Pan-Doh <pandoh@google.com>,
-	Karolina Stolarek <karolina.stolarek@oracle.com>,
-	Weinan Liu <wnliu@google.com>,
-	Martin Petersen <martin.petersen@oracle.com>,
-	Ben Fuller <ben.fuller@oracle.com>,
-	Drew Walton <drewwalton@microsoft.com>,
-	Anil Agrawal <anilagrawal@meta.com>,
-	Tony Luck <tony.luck@intel.com>,
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
-	Lukas Wunner <lukas@wunner.de>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Sargun Dhillon <sargun@meta.com>,
-	"Paul E . McKenney" <paulmck@kernel.org>,
-	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-	Oliver O'Halloran <oohall@gmail.com>,
-	Kai-Heng Feng <kaihengf@nvidia.com>,
-	Keith Busch <kbusch@kernel.org>, Robert Richter <rrichter@amd.com>,
-	Terry Bowman <terry.bowman@amd.com>,
-	Shiju Jose <shiju.jose@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>, linux-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v8 18/20] PCI/AER: Ratelimit correctable and non-fatal
- error logging
-Message-ID: <20250523160658.GA1559366@bhelgaas>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yZzB1YIv"
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-3a363d15c64so66664f8f.3
+        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 09:06:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1748016418; x=1748621218; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=qVA1Wq02RwkJ8tKlxk+KwgWL1KTqqPjG9SMiOazJCzY=;
+        b=yZzB1YIvtdng6TWNstVm/zzhkQlF30/ijeSBTsOSwyCFqFGCOVaihTq5ysFVckeqz1
+         eCCp4Am1G6X92cHKXcpRCjf+wDlXzIP3X2KJrv6+Y0/Fvfj7AuMT+RROKVmpGTYr1Uoc
+         EwLRgjERzNdw4SuxsU45LwHTvzcJ2QPXLTSXEQQwabmixLew23PxlgSNOTmKPEMefK12
+         h56LlV+b5LkkZfePCgINh3hnlSunv5+JqDK2Dc/Fkj8BRl5SLJHHmQlsrXQ1Nex9AgBz
+         5lZg/2U1BWygkcGAsuqLMYN9wx7LcGyO+Yu95lJ/KiZaVEOgJPBkw/VS/PICikh/Dybu
+         MeaQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748016418; x=1748621218;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=qVA1Wq02RwkJ8tKlxk+KwgWL1KTqqPjG9SMiOazJCzY=;
+        b=TQnBbzLoFgLMmMV3ZQ/qrqKgqqwZeI+OwOk9XzVsif/AGlw4OpoCI1OjOe2dYtrkAe
+         AbV5W1/oAkBwIv27LPrWyRrauyEq7FF08IzxAS7YpCWEDG68qz86nd6O0plWcOVE5t1W
+         jlZH3BWJHNvNsW6ycHQXfZ44/Q36mzpM/um5q8TMPW0Z7OSa1YoIwZZBlnbzTzUIS2Xq
+         HPE60FdCXZVfSBcfd+s9inDS4fzUv3qZKqXwblF5Bw8/QmyCq7lZbFzAJNS1cBdq3Umw
+         QlgvQ1CVNPP+hMl683kxvGgLYUkcQJpVFrB+jqntCMPJA1oOxhOjKN9iWGgYs+ALYoP8
+         +I/g==
+X-Forwarded-Encrypted: i=1; AJvYcCVKKblyPeG8WShcvfg8S+EyyRgSmOVah0LrGBqYjp0dcO+OLWvHwl8bVlfaeOFfVuX33CrvuUqYhvZSrdw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxlqPhJTUxyvid3P/JnwwFWr4itc2JUSB1NXdKy1lQFqcK8t1vA
+	+/mM59bjCTQR0NKtoL3fMpX6tpV5ZeqVuo1fPMuUJdXhU1cQxX8hX+kAxAgrygBPsn8=
+X-Gm-Gg: ASbGncurL0OCeo2YFPuXxyU816V63+oKmaxJVboq9FwH9dGTfPdBtkhnOzrD3qkxkll
+	pMABDl0Vg6aSnSB3PKnUWKp54nmovDx+AwPG9R1cOGMl32LZBkCrkEhij9d79Rl3OM2100oVtEl
+	Us9nbJU1aTANV7hqj/dOBZCSM5snfXxrinpZJbksgoS9czSavF9Cd/m83T4XiCbo3jCKE3b+73x
+	AENsIBi0VRQm5FtHSpodJANA7y6Gam4XMTKuTkWBWzKNKCie/Bqk/YyCsvxuIzYKpDMB21Vtn2C
+	ZcnPPq1xLnycPRacM0ciJKthR8AEEAOUxfXdEJPUo9R7+Dbg6UtNxsfzM60oVhlLUS4=
+X-Google-Smtp-Source: AGHT+IF56UQSCz5q5QoQKyBHSndYLKMFyKvT78EcNJOHgSCsSRrkaKawUqXQh0qLd3vhveIRpS1mOQ==
+X-Received: by 2002:a05:6000:2011:b0:3a3:6f1a:b8f9 with SMTP id ffacd0b85a97d-3a36f1aba52mr19442998f8f.15.1748016417661;
+        Fri, 23 May 2025 09:06:57 -0700 (PDT)
+Received: from localhost ([196.207.164.177])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3a35ca5a8cfsm27334537f8f.37.2025.05.23.09.06.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 23 May 2025 09:06:57 -0700 (PDT)
+Date: Fri, 23 May 2025 19:06:54 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Qiu-ji Chen <chenqiuji666@gmail.com>
+Cc: Sean Wang <sean.wang@mediatek.com>, Vinod Koul <vkoul@kernel.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org
+Subject: [PATCH] dmaengine: mediatek: Re-enable IRQs in mtk_cqdma_tx_status()
+Message-ID: <aDCdHh-G2ShU6uid@stanley.mountain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <eb9bca3e-cb0a-41e9-bf7f-0889eb3f3c47@linux.intel.com>
+X-Mailer: git-send-email haha only kidding
 
-On Thu, May 22, 2025 at 04:56:56PM -0700, Sathyanarayanan Kuppuswamy wrote:
-> On 5/22/25 4:21 PM, Bjorn Helgaas wrote:
-> > From: Jon Pan-Doh <pandoh@google.com>
-> > 
-> > Spammy devices can flood kernel logs with AER errors and slow/stall
-> > execution. Add per-device ratelimits for AER correctable and non-fatal
-> > uncorrectable errors that use the kernel defaults (10 per 5s).  Logging of
-> > fatal errors is not ratelimited.
+This code calls spin_lock_irqsave() twice but obviously we can't store
+two sets of flags in the same "flags" variable.  The result is that we
+never re-enable IRQs in mtk_cqdma_tx_status().
 
-> > +static int aer_ratelimit(struct pci_dev *dev, unsigned int severity)
-> > +{
-> > +	struct ratelimit_state *ratelimit;
-> > +
-> > +	if (severity == AER_FATAL)
-> > +		return 1;	/* AER_FATAL not ratelimited */
-> > +
-> > +	if (severity == AER_CORRECTABLE)
-> > +		ratelimit = &dev->aer_info->correctable_ratelimit;
-> > +	else
-> > +		ratelimit = &dev->aer_info->nonfatal_ratelimit;
-> > +
-> > +	return __ratelimit(ratelimit);
-> > +}
-> > +
-> 
-> Why not combine severity checks? May be something like below:
-> 
->     switch (severity) {
->     case AER_NONFATAL:
->         return __ratelimit(&dev->aer_info->nonfatal_ratelimit);
->     case AER_CORRECTABLE:
->         return __ratelimit(&dev->aer_info->correctable_ratelimit);
->     default:
->         return 1; /* Don't rate-limit fatal errors */
->     }
+Fixes: 157ae5ffd76a ("dmaengine: mediatek: Fix a possible deadlock error in mtk_cqdma_tx_status()")
+Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+---
+ drivers/dma/mediatek/mtk-cqdma.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Beautiful, adopted, thank you!
+diff --git a/drivers/dma/mediatek/mtk-cqdma.c b/drivers/dma/mediatek/mtk-cqdma.c
+index 47c8adfdc155..9f0c41ca7770 100644
+--- a/drivers/dma/mediatek/mtk-cqdma.c
++++ b/drivers/dma/mediatek/mtk-cqdma.c
+@@ -449,9 +449,9 @@ static enum dma_status mtk_cqdma_tx_status(struct dma_chan *c,
+ 		return ret;
+ 
+ 	spin_lock_irqsave(&cvc->pc->lock, flags);
+-	spin_lock_irqsave(&cvc->vc.lock, flags);
++	spin_lock(&cvc->vc.lock);
+ 	vd = mtk_cqdma_find_active_desc(c, cookie);
+-	spin_unlock_irqrestore(&cvc->vc.lock, flags);
++	spin_unlock(&cvc->vc.lock);
+ 	spin_unlock_irqrestore(&cvc->pc->lock, flags);
+ 
+ 	if (vd) {
+-- 
+2.47.2
+
