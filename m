@@ -1,120 +1,112 @@
-Received: from 3.mo576.mail-out.ovh.net (3.mo576.mail-out.ovh.net [188.165.52.203])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26D8D22338
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 20:21:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.165.52.203
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AFE822338;
+	Fri, 23 May 2025 20:22:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748031720; cv=none; b=DYueexsOLYpxh9IvRWr/wfqp+Z6q/N15DGtTRFocxLtkxoOiYRILKQhJGDmQumn+CQO3qeamiyOQrOpxslxXLzA6OYjxrxohBN/+XvKsCb3/oYPcZ9NgLlSz0FNcUQ4AqiTLOUrVL931W5R+S2eRnjnDhpf8R+OAm8QjpqhB71c=
+	t=1748031774; cv=none; b=JS8090hByO3CE8FiSn/6B83h8afZZa66r89eDvkYrXwq/mBXUposoXD+bwz9HrVKfmkUJv2BhUZ+7j6oNmZEc7gGzX6EYEC25H/EBWKrAFz3bGizsi1HiVhXY/7mMRqRs97Q8ACP/GA637vJteYeeWLmwfJHkBimHp2Z+AQqIGk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748031720; c=relaxed/simple;
-	bh=xuueZm23eh49YiSgqxfgFZPFyU4JQVsCTAJLi+OWt98=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WJceSSv9VLHgci2JEcMNROZtTcp/pfrHe45UvO5BChAPPtkHfYYpneNbKRZRpmZoXFEhEcEhqv0Ndeg5XIa3l/HRO0y4xTGujaSxwi5IRr8NmnvthQiErVWez1UtREnDcQGxPa3KIbW82kouyYi6LBTI1IlrrOuXuaWNXaFSzME=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=armadeus.com; spf=pass smtp.mailfrom=armadeus.com; dkim=pass (2048-bit key) header.d=armadeus.com header.i=@armadeus.com header.b=Ao/o+l/x; arc=none smtp.client-ip=188.165.52.203
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=armadeus.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=armadeus.com
+	s=arc-20240116; t=1748031774; c=relaxed/simple;
+	bh=gdGOZhES5ZVdb0Ry/4gXsJos5Ia7PWWzwWxwDVw7X1Y=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=QsrKzVcjFGZAniju6LJBrXSVwtP5WJkjtkSPNR8DdkD48RimAocOXnPve8T4yECDXRTOko4+W6kiX+dQzMWxd8Lt8q6bvYZxXIMga0N1+KKGI1eBFRIV+XS3mK1xysJly11fmjS5lniuXR5i34CjsN8bDDfXW3IrG25bfLcZqgc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CDKFhX9X; arc=none smtp.client-ip=209.85.208.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armadeus.com header.i=@armadeus.com header.b="Ao/o+l/x"
-Received: from director6.ghost.mail-out.ovh.net (unknown [10.108.17.147])
-	by mo576.mail-out.ovh.net (Postfix) with ESMTP id 4b3q2P11WNz32GR
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 15:34:05 +0000 (UTC)
-Received: from ghost-submission-5b5ff79f4f-fwdt7 (unknown [10.108.54.213])
-	by director6.ghost.mail-out.ovh.net (Postfix) with ESMTPS id 8C56190E15;
-	Fri, 23 May 2025 15:34:02 +0000 (UTC)
-Received: from armadeus.com ([37.59.142.106])
-	by ghost-submission-5b5ff79f4f-fwdt7 with ESMTPSA
-	id 48OmEWqVMGjaMwEAmS5tiw
-	(envelope-from <sebastien.szymanski@armadeus.com>); Fri, 23 May 2025 15:34:02 +0000
-Authentication-Results:garm.ovh; auth=pass (GARM-106R00618957c2c-41e2-45dd-a874-a02a4f70d8a2,
-                    E55FAF7D42BA6FEE76EB3B6A0F061FDB1FCDFC7F) smtp.auth=sebastien.szymanski@armadeus.com
-X-OVh-ClientIp:86.243.209.203
-Message-ID: <65670a02-e217-4d0f-955d-d13ca0240819@armadeus.com>
-Date: Fri, 23 May 2025 17:34:01 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CDKFhX9X"
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-60236e3d093so359209a12.3;
+        Fri, 23 May 2025 13:22:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748031771; x=1748636571; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=LQGGRhDFzfYXAwRufYqCszOLJOQpXO5dLAyeYhV8EXg=;
+        b=CDKFhX9X3xqANwLTcvJ6DPDK+nLFQjYiQ79Ni9mnAlCr20bMH89SUSJQmcXDrlT6Ud
+         PAqRci6ewLVfmGAVi9gh46J1m5vakBLKsolH76Fcd8z0n86BA274Z5we2dpaiUJB7Cnm
+         2Uir0IVpFN9PLX48VZjmSAZKuMTOXl3PiiHZbauZtszmYm5kx4tB/E55hp5t5h00lxl9
+         63AjNxhjuk7CX+3HhJvSf93Xr2bkd8ImcwDfJEET6VsRKxlJoJkUL4HuccdAAKXq6wou
+         08A5U20AcxngFz2rHh5qKrMgpDvOkytIzOEcAtEuJdf2LXBNSbXMn6D96c3C76eYmXS1
+         Ne+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748031771; x=1748636571;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=LQGGRhDFzfYXAwRufYqCszOLJOQpXO5dLAyeYhV8EXg=;
+        b=ZtM1qsqXe+bSSUbw2N/tyD+tLqxEIvUv8xC8sXdC+mDqlp+LpMy1FdhbtP3igs6wZR
+         WBlICotOccJXd8N8AhFFhfUzSasRSUIV73g8VScu3eyxtTKfo8EfayEnQfFkglk5uhrX
+         ZD4C6eTU9iSdcgISfXsJbAttRkP0b8+s2GnZXIh6Qw5TEpWeDVPzz/D8/CXxSAoUGoIo
+         RNSpxZyTiYzXJmGj13nAyGNOFlEAD5mr1fZVImV89UjxNd6g4HxDAi0uEpCkLinjrD9M
+         FxjO6cLr9vxMdFttcwv1ZOqZsqNrdyFV0sfym+XfUCp6gKyQf5YCMWAiYRDuQ9VXYTW3
+         Qk7g==
+X-Forwarded-Encrypted: i=1; AJvYcCUs5YnedrZtSWaAA6lcJjNyHxvlpXFzzmIYg31wSC1NSnuhErfAEach6cjFx61APWGuOWQdZhheI1TM/Ow=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyhLq8KXncxRPJ16oxu9usQOrbSThgiitv7xjM6Sr+VvgEtusFd
+	JA3TWd+3wC+AlwA0NtkDr65M0ZWWYRoh7ixI2t7GyGNFvTxzherhttc=
+X-Gm-Gg: ASbGncv0dQ5fUbiC07sT99tTk6cvvI+TpLLqNJQPUNLvv9WjhI8UKI3OoJxlHM5sSCK
+	sg/F0ZVAdNY7VTgTtttFtOfCgW19rKhia2SoJJhQUxTFcRB6A7KaXs4MVFj17jUMWGnt9Qktz8M
+	iXP6vhrEDbdlrdksUGnHl9bJSp/fzmvXxCNBRHOAjXy43BaW5J6cycZWGkZ/+EOebm1IKc1NZfT
+	eHFoyC2XGlbJVLhtS1NKqWsdXvZ17ipZBd7Qudff1ra4n6grCJiCi3cYjl9oTWXi3GqnA91wzMJ
+	QwNpGvSl2YVMeNpU7qbk0PhJQGG8e0JH5uJ65R/Rm+hEB/CQCxl/Po7Oo8rcgq6clmeW4r0=
+X-Google-Smtp-Source: AGHT+IFaJs+4iZ7OReznLn2Mt6fklkBCNbKteZfnNxAJkKtYhynt4wiC7/6CVaTQFRcQSDTdg40P+A==
+X-Received: by 2002:a17:907:9718:b0:ac7:3912:5ea5 with SMTP id a640c23a62f3a-ad85b2a6042mr49141166b.58.1748031770318;
+        Fri, 23 May 2025 13:22:50 -0700 (PDT)
+Received: from localhost.localdomain ([2a0d:e487:42f:b2e:ea5a:d342:ee:1a7a])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad52d278290sm1274299466b.78.2025.05.23.13.22.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 23 May 2025 13:22:49 -0700 (PDT)
+From: Jihed Chaibi <jihed.chaibi.dev@gmail.com>
+To: shuah@kernel.org,
+	skhan@linuxfoundation.org
+Cc: linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-kernel-mentees@lists.linux.dev,
+	jihed.chaibi.dev@gmail.com
+Subject: [PATCH v2] selftests/cpu-hotplug: fix typo in hotplaggable_offline_cpus function name
+Date: Fri, 23 May 2025 22:22:39 +0200
+Message-Id: <20250523202239.276760-1-jihed.chaibi.dev@gmail.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] Enable MIPI filtering by DT on i.MX8M*
-To: =?UTF-8?Q?Krzysztof_Ha=C5=82asa?= <khalasa@piap.pl>,
- Jacopo Mondi <jacopo.mondi@ideasonboard.com>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
- Rui Miguel Silva <rmfrfs@gmail.com>, Martin Kepplinger <martink@posteo.de>,
- Purism Kernel Team <kernel@puri.sm>,
- Mauro Carvalho Chehab <mchehab@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
- Sascha Hauer <s.hauer@pengutronix.de>,
- Pengutronix Kernel Team <kernel@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>, linux-media@vger.kernel.org,
- imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org
-References: <m3h61u9jy2.fsf@t19.piap.pl>
- <20250509103733.GE28896@pendragon.ideasonboard.com>
- <m3o6vn8np5.fsf@t19.piap.pl>
- <iegnn5xoosqpk52hvipcr73aliwhqtsq6r6ctvt5756bhy6yen@rqcdongb7fdf>
- <m31psg97dy.fsf@t19.piap.pl> <m3plfz7io0.fsf@t19.piap.pl>
-Content-Language: en-US
-From: =?UTF-8?Q?S=C3=A9bastien_Szymanski?= <sebastien.szymanski@armadeus.com>
-Autocrypt: addr=sebastien.szymanski@armadeus.com; keydata=
- xsBNBFNfZLEBCACv1lqSePHJNpRgcnER+3emy+Arjz84zFax3XkogjY/e3ZneihIgWrVKe5M
- ql16pX4KTkzNgMUKz4bG/XwT3kjcrXshxFLlg7KrHMl287C+W+QOUjnjVeRi/su+SPmjz8VD
- yr11h+ZkVLAWhS+uQJ93jy1NwG8M4t1kBLAVHHD5Vw4FJ+3ouaVYIp1X1Cr8bVKQw33Q1aTd
- ro0kMBb96B9vNu7ciJZ3gvlaBzUEKOgNnq9KaywuLnqrqr4HUIn5JuxZjCjJzt9kTAKcTfp2
- cJM8qpp+2FF5qtbkse9fZ6M64qozgOPr9Tk4Amf9fZEUQ6UNw14mmBZuXSzoHe75gI7TABEB
- AAHNN1PDqWJhc3RpZW4gU1pZTUFOU0tJIDxzZWJhc3RpZW4uc3p5bWFuc2tpQGFybWFkZXVz
- LmNvbT7CwJAEEwEIADoCGyMHCwkIBwMCAQYVCAIJCgsEFgIDAQIeAQIXgBYhBJwGygpYm/1C
- /GCmwbCaKeiBMmTiBQJdhIHLAAoJELCaKeiBMmTixXIH/2W3kbzRG0UF81jtRRnp0H83rjDT
- v0H+8fgFMRL/7HCJ1QPArkfRJlM2wlJkN+ChP09CCarYfUEHfRCHlTb7At6Yyrz1jziD7ZwX
- 8IWHYRXnZkY5eZc5DsiUgq6JH49kt+GPzK8UVP9MTa6zkBpPCUf7LzZ4pD3FihdkT52BU3gI
- d9P49fSI0TYySlb/VKn815aOhvwEr7+Dh3mZUjSh7saofbRmVUOr7p+R3MvvGI19/IJZjeOE
- ZWliODDOt6HnBOtoGSXMcNIFF6snH52D5N5gY88njZjTwhgGGUBix1bsgf/EY0v4R5itZBXB
- B/Ze4Tm++YHaB75hZK6PQu/YRv7OwE0EU19ksQEIALo7jhXddrXBTRu5SAjelV53jyHBJTX/
- vN4nL/VbbW/saca+NJjDSxx5DBmotZbQdWIyZiSIjU/xnTREvtDrl6ZeSsKWd7ZqiuiY4fSR
- zwuQp9rd0yqRuxesrWeyJB1zCSdEvLyKASERt+nxkOA+IzJ4y1qLtvnWr+SL1AXgTMw+Tkyw
- KIDCRWHTIYas11ldGj82gOIpYeXnapeNLHfT4EQwg0NeWYHynJxAQWiX5aPlw0uSpAQSsBXQ
- FIe3fpoveMSnXK+PG2BBOzexYv7r4S70a6sF9sgTTPpfKqUaqqC+u1+bUX6alTAKhGKJywaF
- 6ViqLlgY8PfwohSyAlqlTRMAEQEAAcLAdgQYAQgAIAIbDBYhBJwGygpYm/1C/GCmwbCaKeiB
- MmTiBQJdhIHSAAoJELCaKeiBMmTitU8IAK7NQM3fEwaF5XaKtepYWsVka44CD8A9e4r7NVK9
- ugirKvXirIxBSDmN/Db862NmVpITsZ6ERNSNZLm/7k55N+TexKYiFZeU7G92TEfAM6qPElvx
- DLEcrkNMq9r08YZeUloacsq31AL5fK4LW+xdvXudkdiKRMJsdTpmff3x5kIziGOHjwFP9wve
- ZgEH52gpbRsP8Whx/Z2lNX/BBRmFM8OnEXFsjjqDzYThdxTq85wGPpkgvvUGyPNRD7TpbB1C
- pajOUUkPxgj5LKt77HD1afeZNudWhgcdkbtT5PMQTT0WY6wvMEj9S1+bGPeXRGWLYB7gHQ+L
- JNoSD7Kz6Y9qnKo=
-In-Reply-To: <m3plfz7io0.fsf@t19.piap.pl>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Ovh-Tracer-Id: 10767262288169724891
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgdelvdefucdltddurdegfedvrddttddmucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepkfffgggfuffvvehfhfgjtgfgsehtkeertddtvdejnecuhfhrohhmpefurogsrghsthhivghnucfuiiihmhgrnhhskhhiuceoshgvsggrshhtihgvnhdrshiihihmrghnshhkihesrghrmhgruggvuhhsrdgtohhmqeenucggtffrrghtthgvrhhnpedtgeehtdduledtudevveekveevveefffdthedtieekgeeukeevtdffieegteekhfenucfkphepuddvjedrtddrtddruddpkeeirddvgeefrddvtdelrddvtdefpdefjedrheelrddugedvrddutdeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepuddvjedrtddrtddruddpmhgrihhlfhhrohhmpehsvggsrghsthhivghnrdhsiiihmhgrnhhskhhisegrrhhmrgguvghushdrtghomhdpnhgspghrtghpthhtohepuddprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdpoffvtefjohhsthepmhhoheejiegmpdhmohguvgepshhmthhpohhuth
-DKIM-Signature: a=rsa-sha256; bh=l5StDh65JnrKX3boH0CcwErYPyl25P8m60tElznRk+w=;
- c=relaxed/relaxed; d=armadeus.com; h=From; s=ovhmo103079-selector1;
- t=1748014445; v=1;
- b=Ao/o+l/xZNPvZ518fBJ3ik06H2HDn2vcsaVQP3ik/XBaVb+Lui0D/KE2wImz5uiJNwNrxw0M
- S1LgXSY9mR6CRVVcIjAFCEGjTMzGCcM2UYtZ24n5zxfOSb8SoijOv6oXeEe2Y+rPR1Lh7SDDJdw
- dQv2g4aaCzcYgaR0TYd71WMTiyS82u7088wPo5S2srNBjiGXRnpA6cZMjbRrYOWTipejim1yq6W
- yNF/BVQQ4RSnt7l88AK4X9k4Et8yExKTMYYxYDotP2JtEHILBRV0o8FUgQNCdh6YseCAIpUVlka
- sxhfqDHidl2AaGy3SbWD/j18CE7rBjjAj2HM1lu7ZazbA==
 
-Hello,
+"hotplaggable" is replaced by "hotpluggable"
 
-On 5/23/25 11:58 AM, Krzysztof Hałasa wrote:
-> Now, what do we do with it?
-> Is anybody able to verify the CSIC version register value on i.MX8MM?
-> Something like devmem read32 0x32E50000 (or 0x32E40000 for CSI1) WHILE
-> RUNNING CAPTURE on that very CSI would do the trick (using your
-> favorite instance of devmem/devmem2/etc). Alternatively one could add
-> a debug printk to the csic module.
+Signed-off-by: Jihed Chaibi <jihed.chaibi.dev@gmail.com>
+---
+ Changes in v2:
+ - specify the subsusystem in the change log
+ - Link to v1: https://lore.kernel.org/all/20250517011928.673585-1-jihed.chaibi.dev@gmail.com/
+---
+ tools/testing/selftests/cpu-hotplug/cpu-on-off-test.sh | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-On i.MX8MM mipi_csi is at 32e30000. NXP kernel (6.12.3) with ov5640 camera:
-
-# devmem 0x32E30000 32
-0x03060301
-
-Regards,
-
+diff --git a/tools/testing/selftests/cpu-hotplug/cpu-on-off-test.sh b/tools/testing/selftests/cpu-hotplug/cpu-on-off-test.sh
+index d5dc7e0dc..6232a46ca 100755
+--- a/tools/testing/selftests/cpu-hotplug/cpu-on-off-test.sh
++++ b/tools/testing/selftests/cpu-hotplug/cpu-on-off-test.sh
+@@ -67,7 +67,7 @@ hotpluggable_cpus()
+ 	done
+ }
+ 
+-hotplaggable_offline_cpus()
++hotpluggable_offline_cpus()
+ {
+ 	hotpluggable_cpus 0
+ }
+@@ -151,7 +151,7 @@ offline_cpu_expect_fail()
+ 
+ online_all_hot_pluggable_cpus()
+ {
+-	for cpu in `hotplaggable_offline_cpus`; do
++	for cpu in `hotpluggable_offline_cpus`; do
+ 		online_cpu_expect_success $cpu
+ 	done
+ }
 -- 
-Sébastien Szymanski, Armadeus Systems
-Software engineer
+2.39.5
+
