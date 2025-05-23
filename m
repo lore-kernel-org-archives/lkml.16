@@ -1,103 +1,69 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6E0B296FA0;
-	Fri, 23 May 2025 16:24:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3926A296FA0
+	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 16:25:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748017499; cv=none; b=k9utD48hW3mR4ZaJW52uf4L13EmN8f5OqIOM13o5Xx9BqwiwqDngxpsIGoZfFS/JGOjHoJBK1f0CV3Qf/zFiWFqJalkaZTh9GQ9FIWBIMHPmPo+pFPM7iuKdwui6qPAklbR+axOiN/ptQDF7ckEHLhrfpJTvJ4BTDQiNB+6o6tc=
+	t=1748017508; cv=none; b=s7oe+Nz9jHGHE4KGZTNl41Y04Gxpuci5FPN+soBq5ALQrM/AsivU6nKKEPsbQidZtGWIZjNhmci3MXilg4WVcSwDyxDgX5P2E7Q0R4Ved76H1WZTynn+CLSLcwpX+8TkPrkjzvDZozAHpRYxfyCHDQE/Lgo6lFJFgZZnkBPTgqc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748017499; c=relaxed/simple;
-	bh=2iHX86bcccGOrn/j3Ad570mI9WPJYIQ++L9qb0jLXZE=;
-	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=q4jvoe6d/EZ/OQGRNsscp8+FQAJEDC9OHq+25jG6znXPsjp640KjnB5U8MkNtvz6Gn1TraHFZgV3otiMjiegjLBrDTvoj+lWTk456+sYEZFWkBVDCSLBQ5phxt/4jZH+7tUg7A2X3BiTMsw38espOL3dm1nTzUZZ8VuxBW0JcGs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bkyZzxOz; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748017508; c=relaxed/simple;
+	bh=JWHVlr/Ls9C10fiO6U79Jyr0qMlaTUUpOON0NgjUO7k=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=SvYlCjvvvKo9K+fKYf89nn5cnGHGdwWRoh5XcPIQNYvcVCmDzt2jCa8bVAq9ASsUsZu3uby8QRHPpR7P4se5xgTn75WKeDIbzZR1ImYKwdelAnJWs1uWYCVLOO1BKBEobfTj4ZdNDOWwuAPAWlrafmkE+IiCmn+8kjrVm2DnXjs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dvZp7A3U; arc=none smtp.client-ip=209.85.210.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bkyZzxOz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3431AC4CEE9;
-	Fri, 23 May 2025 16:24:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748017498;
-	bh=2iHX86bcccGOrn/j3Ad570mI9WPJYIQ++L9qb0jLXZE=;
-	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=bkyZzxOzSqcc8hMu8gP1JhJpx84kLV9kuHECMnWcStPZ/J1svGA7/2rjpRB67IZCK
-	 h+bJe194yFMLudcdtYxWPWlzkcJ9N/Ke+O7Be6V9XGsrejq2/0td36ln7lNlKzk34m
-	 HAqohriDfV5nm/tTBX9cQ+7YgG7clZdQVj26DOunhFiDMfZS1Y4z2ejo2FM3MZJ/yA
-	 iIUGDQE7h7fwa7g2e4yPYj5we1nA1urej2Fxks98ArCWT1Ofl0TRS6weO+HzIvyyHa
-	 PQQon0TatkhZkZT6WwRhbngNAYd+WYq0zks3yKZGCoKhEs4wbEmSdfofsIUzeSdMoL
-	 PBHmOyG4NrG/Q==
-Date: Fri, 23 May 2025 11:24:56 -0500
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dvZp7A3U"
+Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-742c03c0272so125199b3a.1
+        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 09:25:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1748017506; x=1748622306; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:reply-to:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=EcrsTyXD2AmllXYsewYY5PNh38B0agH4kXs5sFaesvE=;
+        b=dvZp7A3UrEBLkIG+W3gihx/RzCHm5IlP+qX9ybrjMvlDsf3l5KTCXmNaSZtmJejNI+
+         PwRSJG//u+JGvQ7pmRIv8ddaq/jiVJjcVJtOCwsS+XWa/Y6ffESgqhdhMIEnERaqN80O
+         CcZePgnasSZjijup9NzmXv/4M2O9+vV/HOm25OjkQlkAVhsXCDE22aGV2+DLr1aRCe7i
+         4EfI2ZfqiZYhtuyFmkA8oQmg5bsU/U4y1k2YGCE9e3A5uvrBKo3xGim2YPegFvMB0Kn9
+         QFxGAwdpdLl2O1SjJr6UqFtQiVlFZXXQiEMmWbu9uYfLC8smxOrNE2Zoe91aYd/G/txE
+         zULw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748017506; x=1748622306;
+        h=cc:to:from:subject:message-id:mime-version:date:reply-to
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=EcrsTyXD2AmllXYsewYY5PNh38B0agH4kXs5sFaesvE=;
+        b=aUnkXfKMi+vyGKnqJyvcUiQ6q9fu3Q4Pfb5wMKolmIvbKsNlAKZ6kw86oC6IWk7OGX
+         /j/94y48IidCtWJ2K1uKFXpDZjpQ8IXlrMo7D+dM6WgtBAAhpzIwEUz6mD6kZ9BQcffk
+         Z5sYNc+Oywd/WER2wGFlJy5VOF2NrckgtBNFmRDxWXFhyB1qN8Ye2ODaSgGRFcHFJHgl
+         SpZLFoU750E5EYe++Oll4P6bD0S+OGYvZ7hpBEY8G/tGlSAQjidkXWXKzvgV5PDRRObp
+         4UFjr/Fc20VD70rC9fOHK3ZsPqL4mB+qAgfmStAz0RPYM6qmnDmBCBFig++F9Nyi6MVJ
+         48cg==
+X-Forwarded-Encrypted: i=1; AJvYcCWF+QCJxbBV+UixWWRRWCisyxb9t/8vZ6HwGHoDOPrxuBFfyRn6ZDqMwOV6vlfUGnLOA/Q3EzNEdJb6Xn4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwtW8LJRqZ/XnMIa8bu0QLjZElV9PdtmVj+twgAff9RyFZHTaax
+	GLb2ok+vqBdp7Ice7q1BdR2uCEODnt/WQRNqG/qiWUVAx3+cCGvBaI/nSRP2iiBp4qIiWMusGug
+	lTs/iXg==
+X-Google-Smtp-Source: AGHT+IHk49mAVdXvYnsz2eilwbCzpnHcQBFR4G/t2LPTQT8ljntMBxaca5pu76Vd5OUhYIPpw2hjarZpA08=
+X-Received: from pfbho1.prod.google.com ([2002:a05:6a00:8801:b0:741:2a97:6ae2])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:728e:b0:1f5:6e71:e55
+ with SMTP id adf61e73a8af0-21621876d2dmr47062666637.6.1748017506395; Fri, 23
+ May 2025 09:25:06 -0700 (PDT)
+Reply-To: Sean Christopherson <seanjc@google.com>
+Date: Fri, 23 May 2025 09:24:57 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: linux-leds@vger.kernel.org, Pavel Machek <pavel@kernel.org>, 
- linux-kernel@vger.kernel.org, Andrew Davis <afd@ti.com>, 
- Conor Dooley <conor+dt@kernel.org>, kernel@axis.com, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Lee Jones <lee@kernel.org>, 
- Jacek Anaszewski <jacek.anaszewski@gmail.com>, devicetree@vger.kernel.org
-To: Johan Adolfsson <johan.adolfsson@axis.com>
-In-Reply-To: <20250523-led-fix-v3-2-86d2690d2698@axis.com>
-References: <20250523-led-fix-v3-0-86d2690d2698@axis.com>
- <20250523-led-fix-v3-2-86d2690d2698@axis.com>
-Message-Id: <174801749606.2187789.2422753786565500556.robh@kernel.org>
-Subject: Re: [PATCH RFC v3 2/2] dt-bindings: leds: lp50xx: Document child
- reg, fix example
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.49.0.1151.ga128411c76-goog
+Message-ID: <20250523162504.3281680-1-seanjc@google.com>
+Subject: [GIT PULL] KVM: x86: Changes for 6.16
+From: Sean Christopherson <seanjc@google.com>
+To: Paolo Bonzini <pbonzini@redhat.com>
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Sean Christopherson <seanjc@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-
-On Fri, 23 May 2025 17:26:28 +0200, Johan Adolfsson wrote:
-> The led child reg node is the index within the bank, document that
-> and update the example accordingly.
-> 
-> Signed-off-by: Johan Adolfsson <johan.adolfsson@axis.com>
-> ---
->  .../devicetree/bindings/leds/leds-lp50xx.yaml          | 18 ++++++++++++------
->  1 file changed, 12 insertions(+), 6 deletions(-)
-> 
-
-My bot found errors running 'make dt_binding_check' on your patch:
-
-yamllint warnings/errors:
-
-dtschema/dtc warnings/errors:
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/leds/leds-lp50xx.yaml: patternProperties:^multi-led@[0-9a-f]$:patternProperties:^led@[0-9a-f]+$:properties:reg: 'minimum' should not be valid under {'enum': ['const', 'enum', 'exclusiveMaximum', 'exclusiveMinimum', 'minimum', 'maximum', 'multipleOf', 'pattern']}
-	hint: Scalar and array keywords cannot be mixed
-	from schema $id: http://devicetree.org/meta-schemas/keywords.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/leds/leds-lp50xx.yaml: patternProperties:^multi-led@[0-9a-f]$:patternProperties:^led@[0-9a-f]+$:properties:reg: 'maximum' should not be valid under {'enum': ['const', 'enum', 'exclusiveMaximum', 'exclusiveMinimum', 'minimum', 'maximum', 'multipleOf', 'pattern']}
-	hint: Scalar and array keywords cannot be mixed
-	from schema $id: http://devicetree.org/meta-schemas/keywords.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/leds/leds-lp50xx.yaml: patternProperties:^multi-led@[0-9a-f]$:patternProperties:^led@[0-9a-f]+$:properties:reg: 'anyOf' conditional failed, one must be fixed:
-	'minimum' is not one of ['maxItems', 'description', 'deprecated']
-		hint: Only "maxItems" is required for a single entry if there are no constraints defined for the values.
-	'maximum' is not one of ['maxItems', 'description', 'deprecated']
-		hint: Only "maxItems" is required for a single entry if there are no constraints defined for the values.
-	Additional properties are not allowed ('maximum', 'minimum' were unexpected)
-		hint: Arrays must be described with a combination of minItems/maxItems/items
-	'maxItems' is not one of ['description', 'deprecated', 'const', 'enum', 'minimum', 'maximum', 'multipleOf', 'default', '$ref', 'oneOf']
-	1 is less than the minimum of 2
-		hint: Arrays must be described with a combination of minItems/maxItems/items
-	hint: cell array properties must define how many entries and what the entries are when there is more than one entry.
-	from schema $id: http://devicetree.org/meta-schemas/core.yaml#
-
-doc reference errors (make refcheckdocs):
-
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250523-led-fix-v3-2-86d2690d2698@axis.com
-
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
-
+The calm before the storm...  Though I suppose you already weathered a major
+TDX storm :-)
