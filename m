@@ -1,59 +1,65 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4044B17ADF8;
-	Fri, 23 May 2025 09:42:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03DEC225791;
+	Fri, 23 May 2025 09:42:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747993350; cv=none; b=JrPpGSoTOCzXLzcsqqVN09bBPJGC4y1cYpmv29WZFjb7MkNqCRoyBlgI7eenlMlcrOPBwlc9LRDFYPytsGUYKVhFrWC5FsAp67JCSJ2V7+NbVOeYWZj2DGPyXZ99Ff/q/iXfOMN0osF0+pmwRUZd8VpN7sgQODfr1F/Ueq5owhQ=
+	t=1747993360; cv=none; b=M1NEjrGbs11SkcVezBFGBLu3a9We59yJIxjJcEDSDDANJ+WmubCFs0lfrVKRo7T1VRUfqDv58KfbHdIruge793DTYLUZPhdMeeGFkFtLBfHKvhKtPn+EkqV/YAlCYt7lPviVzQgaGJHfsUv6xpkZrlCpJtuWda6+p715a8IKoTc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747993350; c=relaxed/simple;
-	bh=XNXKo/RPiQ814/o/UWpNkyQwCkjwbB85286mFRDM1LI=;
+	s=arc-20240116; t=1747993360; c=relaxed/simple;
+	bh=HTv5n/07yQDXRcvHu7hgHboQDCuLAObub0zu/q5SUpQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FCPzfoiAMaVf8c1jsPCunREmoYlekHKLPz6XIu8cn9YMia33RiJbCdjDtMnIvWeLUdREcEdC/7sR6OoYJ1ItsRMnWg1V+ykVGM9aoVQsL44gyDDIbU7XJ+Jj8G9P/yVnY2eyrkrHfilevrOWO79IxeOey7Ip9PE5PSya+VREcUs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dXjUknD1; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=f9KkHMJ8hzdiQtiM0QNMrjOgr9xXHIrllrlnJatJ+jTTTHyXx1TBEnX6h6ibbfGkLKw7KW6r/pIqdlKnqa1SUT8D68lhhhxBzwmBiUOFRu28Q/3+UioROni1oif5qdUl/8lCbPqoAcD3HlLvnLSHoPdGtcMvNanl3FEH9+EXmxQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lGuDO/M6; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dXjUknD1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D6F5C4CEEB;
-	Fri, 23 May 2025 09:42:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747993349;
-	bh=XNXKo/RPiQ814/o/UWpNkyQwCkjwbB85286mFRDM1LI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=dXjUknD16jQBXoRDPaiu/oyiNasV99h8bZ+828zDnR/rXKgQbEXCDuSt2katqNdyn
-	 zwVkVQJ48cH4yC3Lx9ahC6WABA2vtRwEs8t+RWU2wsnV7HCR4ObR9J/m2FsPh8pWAV
-	 d8OWowHn6oyb4FJcrSXPDyY7MRIhK4Bi/Pod2iekKhTzTOjtnul/YNeYXauaYRhGWe
-	 qEZpfbCftFf+4xyfzRV+PQ2CtqcJsXI4nslfzDk3BOnVuCOGVnBgBtWh8dH7DZ8OYg
-	 1+MqeKMHaku43laK8aZOm2ekSNl7pxs+k9A66Q2EOrQbYbXtZgVTOjpLg7GyUFHPsm
-	 9gydGis+PllYg==
-Date: Fri, 23 May 2025 11:42:23 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Alice Ryhl <aliceryhl@google.com>, Benno Lossin <lossin@kernel.org>,
-	Matthew Maurer <mmaurer@google.com>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Trevor Gross <tmgross@umich.edu>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Sami Tolvanen <samitolvanen@google.com>,
-	Timur Tabi <ttabi@nvidia.com>, linux-kernel@vger.kernel.org,
-	rust-for-linux@vger.kernel.org
-Subject: Re: [PATCH v5 4/4] rust: samples: Add debugfs sample
-Message-ID: <aDBC__rflS8625Vb@cassiopeiae>
-References: <D9WM0BP5446N.1NVNDCZ4Y2QN1@kernel.org>
- <2025051524-festival-afterglow-8483@gregkh>
- <aCzzBT96ktapP03e@google.com>
- <aC2HacSU7j5d9bzu@pollux>
- <aC5XDi7SaDJeUaAC@google.com>
- <aC7DVewqqWIKetmk@pollux>
- <aC8uNmrLUSS8sxHU@google.com>
- <2025052201-return-reprogram-add9@gregkh>
- <aC9krUYJmJqu0xVR@cassiopeiae>
- <2025052330-reverence-slideshow-d498@gregkh>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lGuDO/M6"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747993358; x=1779529358;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=HTv5n/07yQDXRcvHu7hgHboQDCuLAObub0zu/q5SUpQ=;
+  b=lGuDO/M6dPmMtmal2h1az0bXDpHY3e2mF9Yb5/MaxZZ5AlmxksMOjjYl
+   zUKbOiv54Z4hqaFTuV+QnUUNyFQP1Cz+zUl6Fy0qUNLSseGbLy662lde/
+   j8K7TIGlPF4AA3MrDPxgw0mK4XvOcIsKeaTIDsAFGAU0fP3oLtYUhRSHd
+   zS4SWYhcUuf2Yk9MzNuHu0VLvEk6hFi1SrP9hRtrv3aDNV5VnaEJsa3CP
+   h3w+XUNRVJwLPc+r9O4Kw+wIE0LBv4/u59my3i+uMawQOBE+AcuaHLW6l
+   7PulollS2+SxkwuoVXQf2nnuCqDLKNyumdEaPJEVNhJckS5TVpF0K3viL
+   g==;
+X-CSE-ConnectionGUID: ZLA8p51sSH+kXcQpvvC4iw==
+X-CSE-MsgGUID: 5Trn/YZhSryEbUzw7k2m5w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11441"; a="53708209"
+X-IronPort-AV: E=Sophos;i="6.15,308,1739865600"; 
+   d="scan'208";a="53708209"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2025 02:42:33 -0700
+X-CSE-ConnectionGUID: hOxvX2gASa28jbO31Jgjcg==
+X-CSE-MsgGUID: TyN87VgmSxKXY9jL14NPig==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,308,1739865600"; 
+   d="scan'208";a="145907308"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa005.fm.intel.com with ESMTP; 23 May 2025 02:42:29 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1000)
+	id CB8491F6; Fri, 23 May 2025 12:42:27 +0300 (EEST)
+Date: Fri, 23 May 2025 12:42:27 +0300
+From: "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>
+To: "Huang, Kai" <kai.huang@intel.com>
+Cc: "pbonzini@redhat.com" <pbonzini@redhat.com>, 
+	"seanjc@google.com" <seanjc@google.com>, "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>, 
+	"bp@alien8.de" <bp@alien8.de>, "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>, 
+	"x86@kernel.org" <x86@kernel.org>, "mingo@redhat.com" <mingo@redhat.com>, 
+	"Zhao, Yan Y" <yan.y.zhao@intel.com>, "tglx@linutronix.de" <tglx@linutronix.de>, 
+	"kvm@vger.kernel.org" <kvm@vger.kernel.org>, "linux-coco@lists.linux.dev" <linux-coco@lists.linux.dev>, 
+	"Yamahata, Isaku" <isaku.yamahata@intel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC, PATCH 05/12] KVM: TDX: Add tdx_pamt_get()/put() helpers
+Message-ID: <xjl4nloxtmp7jrfus5rnij6xz6ut6p7riixj7mwt32zlkc7k27@xvallgw2ei7r>
+References: <20250502130828.4071412-1-kirill.shutemov@linux.intel.com>
+ <20250502130828.4071412-6-kirill.shutemov@linux.intel.com>
+ <55c1c173bfb13d897eaaabcc04f38d010608a7e3.camel@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,140 +68,272 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <2025052330-reverence-slideshow-d498@gregkh>
+In-Reply-To: <55c1c173bfb13d897eaaabcc04f38d010608a7e3.camel@intel.com>
 
-On Fri, May 23, 2025 at 11:14:23AM +0200, Greg Kroah-Hartman wrote:
-> On Thu, May 22, 2025 at 07:53:49PM +0200, Danilo Krummrich wrote:
-> > On Thu, May 22, 2025 at 04:15:46PM +0200, Greg Kroah-Hartman wrote:
-> > > If you really want to delete a debugfs file that you have created in the
-> > > past, then look it up and delete it with the call that is present for
-> > > that.
+On Mon, May 05, 2025 at 12:44:26PM +0000, Huang, Kai wrote:
+> On Fri, 2025-05-02 at 16:08 +0300, Kirill A. Shutemov wrote:
+> > Introduce a pair of helpers to allocate and free memory for a given 2M
+> > range. The range is represented by struct page for any memory in the
+> > range and the PAMT memory by a list of pages.
 > > 
-> > This is promoting a C pattern (which for C code obviously makes a lot of sense),
-> > i.e. we have a function that creates a thing and another function that removes
-> > the thing given a handle of the created thing. Whether the handle is valid is
-> > the responsibility of the caller.
+> > Use per-2M refcounts to detect when PAMT memory has to be allocated and
+> > when it can be freed.
 > > 
-> > In this case the handle would be the filename. For instance:
+> > pamt_lock spinlock serializes against races between multiple
+> > tdx_pamt_add() as well as tdx_pamt_add() vs tdx_pamt_put().
+> 
+> Maybe elaborate a little bit on _why_ using spinlock?
+> 
 > > 
-> > 	debugfs_create_file("foo", parent, ...);
-> > 	debugfs_remove(debugfs_lookup("foo", parent));
+> > Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+> > ---
+> >  arch/x86/include/asm/tdx.h   |   2 +
+> >  arch/x86/kvm/vmx/tdx.c       | 123 +++++++++++++++++++++++++++++++++++
+> >  arch/x86/kvm/vmx/tdx_errno.h |   1 +
+> >  3 files changed, 126 insertions(+)
 > > 
-> > This leaves room to the caller for making mistakes, e.g. if the caller makes a
-> > typo in the filename. In this case we wouldn't even recognize it from the return
-> > value, since there is none.
-> > 
-> > In Rust, we do things differently, i.e. we wrap things into an object that
-> > cleans up itself, once it goes out of scope. For instance:
-> > 
-> > 	let file = debugfs::File::new("foo", parent);
-> > 
-> > Subsequently we store file in a structure that represents the time we want this
-> > file to exist. Once it goes out of scope, it's removed automatically.
-> > 
-> > This is better, since we can't make any mistakes anymore, i.e. we can't mess up
-> > the filename or pass the wrong parent to clean things up.
-> > 
-> > Depending on whether the above was a misunderstanding and depending on how you
-> > think about it with this rationale, I have quite some more reasons why we don't
-> > want to have files / directories around in the filesystem without a
-> > corresponding object representation in Rust.
-> > 
-> > But before I write up a lot more text, I'd like to see if we're not already on
-> > the same page. :-)
+> > diff --git a/arch/x86/include/asm/tdx.h b/arch/x86/include/asm/tdx.h
+> > index 8091bf5b43cc..42449c054938 100644
+> > --- a/arch/x86/include/asm/tdx.h
+> > +++ b/arch/x86/include/asm/tdx.h
+> > @@ -135,6 +135,8 @@ static inline int tdx_nr_pamt_pages(const struct tdx_sys_info *sysinfo)
+> >  	return sysinfo->tdmr.pamt_4k_entry_size * PTRS_PER_PTE / PAGE_SIZE;
+> >  }
+> >  
+> > +atomic_t *tdx_get_pamt_refcount(unsigned long hpa);
+> > +
 > 
-> Ok, let's knock up the api here first before worrying about the
-> implementation, as we seem to all be a bit confused as to what we want
-> to do.
+> This at least needs to be in the same patch which exports it.  But as replied to
+> patch 2, I think we should just move the code in this patch to TDX core code.
 > 
-> Ideally, yes, I would like to NOT have any rust structure represent a
-> debugfs file, as that is the way the C api has been evolving.  We are
-> one step away from debugfs_create_file() being a void function that
-> doesn't return anything, and I don't want to see us go "backwards" here.
+> >  int tdx_guest_keyid_alloc(void);
+> >  u32 tdx_get_nr_guest_keyids(void);
+> >  void tdx_guest_keyid_free(unsigned int keyid);
+> > diff --git a/arch/x86/kvm/vmx/tdx.c b/arch/x86/kvm/vmx/tdx.c
+> > index b952bc673271..ea7e2d93fb44 100644
+> > --- a/arch/x86/kvm/vmx/tdx.c
+> > +++ b/arch/x86/kvm/vmx/tdx.c
+> > @@ -207,6 +207,10 @@ static bool tdx_operand_busy(u64 err)
+> >  	return (err & TDX_SEAMCALL_STATUS_MASK) == TDX_OPERAND_BUSY;
+> >  }
+> >  
+> > +static bool tdx_hpa_range_not_free(u64 err)
+> > +{
+> > +	return (err & TDX_SEAMCALL_STATUS_MASK) == TDX_HPA_RANGE_NOT_FREE;
+> > +}
+> >  
+> >  /*
+> >   * A per-CPU list of TD vCPUs associated with a given CPU.
+> > @@ -276,6 +280,125 @@ static inline void tdx_disassociate_vp(struct kvm_vcpu *vcpu)
+> >  	vcpu->cpu = -1;
+> >  }
+> >  
+> > +static DEFINE_SPINLOCK(pamt_lock);
+> > +
+> > +static void tdx_free_pamt_pages(struct list_head *pamt_pages)
+> > +{
+> > +	struct page *page;
+> > +
+> > +	while ((page = list_first_entry_or_null(pamt_pages, struct page, lru))) {
+> > +		list_del(&page->lru);
+> > +		__free_page(page);
+> > +	}
+> > +}
+> > +
+> > +static int tdx_alloc_pamt_pages(struct list_head *pamt_pages)
+> > +{
+> > +	for (int i = 0; i < tdx_nr_pamt_pages(tdx_sysinfo); i++) {
+> > +		struct page *page = alloc_page(GFP_KERNEL);
+> > +		if (!page)
+> > +			goto fail;
+> > +		list_add(&page->lru, pamt_pages);
+> > +	}
+> > +	return 0;
+> > +fail:
+> > +	tdx_free_pamt_pages(pamt_pages);
+> > +	return -ENOMEM;
+> > +}
+> > +
+> > +static int tdx_pamt_add(atomic_t *pamt_refcount, unsigned long hpa,
+> > +			struct list_head *pamt_pages)
+> > +{
+> > +	u64 err;
+> > +
+> > +	hpa = ALIGN_DOWN(hpa, SZ_2M);
+> > +
+> > +	spin_lock(&pamt_lock);
 > 
-> But the main reason I did that work was to keep people from trying to
-> determine if a file creation worked or not and to do different logic
-> based on that.  I think the Rust api CAN do both here, as you and Alice
-> have explained, so we should be ok.
+> Just curious, Can the lock be per-2M-range?
 > 
-> So how about this for an example api, two structures, debugfs::Directory
-> and debugfs::File, which have only two types of operations that can be
-> done on them:
+> > +
+> > +	/* Lost race to other tdx_pamt_add() */
+> > +	if (atomic_read(pamt_refcount) != 0) {
+> > +		atomic_inc(pamt_refcount);
+> > +		spin_unlock(&pamt_lock);
+> > +		tdx_free_pamt_pages(pamt_pages);
 > 
-> To create a debugfs directory, we do:
+> It's unfortunate multiple caller of tdx_pamt_add() needs to firstly allocate
+> PAMT pages by the caller out of the spinlock and then free them here.
 > 
-> 	let my_dir = debugfs::Directory::new("foo_dir", parent);
+> I am thinking if we make tdx_pamt_add() return:
 > 
-> There is no other Directory method, other than "drop", when the object
-> goes out of scope, which will clean up the directory and ALL child
-> objects at the same time (implementation details to be figured out
-> later.)
+> 	* > 0: PAMT pages already added (another tdx_pamt_add() won)
+> 	* = 0: PAMT pages added successfully
+> 	* < 0: error code
 > 
-> That will ALWAYS succeed no matter if the backend debugfs call failed or
-> not, and you have no way of knowing if it really did create something or
-> not.  That directory you can then use to pass into debugfs file or
-> directory creation functions.
+> .. then we at least could move tdx_free_pamt_pages() to the caller too.
 > 
-> Same for creating a debugfs file, you would do something like:
+> > +		return 0;
+> > +	}
+> > +
+> > +	err = tdh_phymem_pamt_add(hpa | TDX_PS_2M, pamt_pages);
+> > +
+> > +	if (err)
+> > +		tdx_free_pamt_pages(pamt_pages);
 > 
-> 	let my_file = debugfs::File::new("foo_file", my_dir);
+> Seems we are calling tdx_free_pamt_pages() within spinlock, which is not
+> consistent with above when another tdx_pamt_add() has won the race.
 > 
-> depending on the "file type" you want to create, there will be different
-> new_* methods (new_u32, new_u64, etc.).
+> > +
+> > +	/*
+> > +	 * tdx_hpa_range_not_free() is true if current task won race
+> > +	 * against tdx_pamt_put().
+> > +	 */
+> > +	if (err && !tdx_hpa_range_not_free(err)) {
+> > +		spin_unlock(&pamt_lock);
+> > +		pr_tdx_error(TDH_PHYMEM_PAMT_ADD, err);
+> > +		return -EIO;
+> > +	}
 > 
-> which also ALWAYS succeeds.  And again, as you want to keep objects
-> around, you have to have a reference on it at all times for it to exist
-> in the filesystem.  If you drop it, then it too will be removed from
-> debugfs.
+> I had hard time to figure out why we need to handle tdx_hpa_range_not_free()
+> explicitly.  IIUC, it is because atomic_dec_and_test() is used in
+> tdx_pamt_put(), in which case the atomic_t can reach to 0 outside of the
+> spinlock thus tdh_phymem_pamt_add() can be called when there's still PAMT pages
+> populated.
+> 
+> But ...
+> 
+> > +
+> > +	atomic_set(pamt_refcount, 1);
+> > +	spin_unlock(&pamt_lock);
+> > +	return 0;
+> > +}
+> > +
+> > +static int tdx_pamt_get(struct page *page)
+> > +{
+> > +	unsigned long hpa = page_to_phys(page);
+> > +	atomic_t *pamt_refcount;
+> > +	LIST_HEAD(pamt_pages);
+> > +
+> > +	if (!tdx_supports_dynamic_pamt(tdx_sysinfo))
+> > +		return 0;
+> > +
+> > +	pamt_refcount = tdx_get_pamt_refcount(hpa);
+> > +	WARN_ON_ONCE(atomic_read(pamt_refcount) < 0);
+> > +
+> > +	if (atomic_inc_not_zero(pamt_refcount))
+> > +		return 0;
+> 
+> ... if we set the initial value of pamt_refcount to -1, and use
+> atomic_inc_unless_negetive() here:
+> 
+> 	if (atomic_inc_unless_negative(pamt_refcount))
+> 		return 0;
+> 
+> 	if (tdx_alloc_pamt_pages(&pamt_pages))
+> 		return -ENOMEM;
+> 
+> 	spin_lock(&pamt_lock);
+> 	ret = tdx_pamt_add(hpa, &pamt_pages);
+> 	if (ret >= 0)
+> 		atomic_inc(pamt_refcount, 0);
+> 	spin_unlock(&pamt_lock);
+> 	
+> 	/*
+> 	 * If another tdx_pamt_get() won the race, or in case of
+> 	 * error, PAMT pages are not used and can be freed.
+> 	 */
+> 	if (ret)
+> 		tdx_free_pamt_pages(&pamt_pages);
+> 
+> 	return ret >= 0 ? 0 : ret;
+> 
+> and ...
+> 
+> > +
+> > +	if (tdx_alloc_pamt_pages(&pamt_pages))
+> > +		return -ENOMEM;
+> > +
+> > +	return tdx_pamt_add(pamt_refcount, hpa, &pamt_pages);
+> > +}
+> > +
+> > +static void tdx_pamt_put(struct page *page)
+> > +{
+> > +	unsigned long hpa = page_to_phys(page);
+> > +	atomic_t *pamt_refcount;
+> > +	LIST_HEAD(pamt_pages);
+> > +	u64 err;
+> > +
+> > +	if (!tdx_supports_dynamic_pamt(tdx_sysinfo))
+> > +		return;
+> > +
+> > +	hpa = ALIGN_DOWN(hpa, SZ_2M);
+> > +
+> > +	pamt_refcount = tdx_get_pamt_refcount(hpa);
+> > +	if (!atomic_dec_and_test(pamt_refcount))
+> > +		return;
+> 
+> ... use atomic_dec_if_possible() here, we should be able to avoid the special
+> handling of tdx_hpa_range_not_free() in tdx_pamt_get().  Someething like:
+> 
+> 	if (atomic_dec_if_positive(pamt_refcount) >= 0)
+> 		return;
+> 
+> 	spin_lock(&pamt_lock);
+> 	
+> 	/* tdx_pamt_get() called more than once */
+> 	if (atomic_read(pamt_refcount) > 0) {
 
-Great! That's exactly what I think the API should look like as well. :-)
+This check would do nothing to protect you against parallel increase of
+the counter as we get here with pamt_refcount == 0 the parallel
+atomic_inc_unless_negative() is free to bump the counter in the fast path
+without taking the lock just after this condition.
 
-> And again, that's the only operation you can do on this object, there
-> are no other methods for it other than "new" and "drop".
+So, the code below will free PAMT memory when there is still user.
 
-We probably still want
+> 		spin_unlock(&pamt_lock);
+> 		return;
+> 	}
+> 
+> 	err = tdh_phymem_pamt_remove(hpa | TDX_PS_2M, &pamt_pages);
+> 	atomic_set(pamt_refcount, -1);
+> 	spin_unlock(&pamt_lock);
+> 
+> 	tdx_free_pamt_pages(&pamt_pages);
+> 
+> Hmm.. am I missing anything?
+> 			
+> > +
+> > +	spin_lock(&pamt_lock);
+> > +
+> > +	/* Lost race against tdx_pamt_add()? */
+> > +	if (atomic_read(pamt_refcount) != 0) {
+> > +		spin_unlock(&pamt_lock);
+> > +		return;
+> > +	}
+> > +
+> > +	err = tdh_phymem_pamt_remove(hpa | TDX_PS_2M, &pamt_pages);
+> > +	spin_unlock(&pamt_lock);
+> > +
+> > +	if (err) {
+> > +		pr_tdx_error(TDH_PHYMEM_PAMT_REMOVE, err);
+> > +		return;
+> > +	}
+> > +
+> > +	tdx_free_pamt_pages(&pamt_pages);
+> > +}
+> > +
+> 
 
-	let foo_dir = my_dir.subdir("foo_dir")
-	foo_dir.file("foo_file")
-
-for convinience, rather than having to call
-
-	let bar_dir = Dir::new("foo_dir", my_dir)
-	File::new("bar_file", bar_dir)
-
-all the time. But otherwise, sounds reasonable to me.
-
-> Now there are issues with implementation details here like:
->   - Do you want to keep the list of file and dir objects in the rust
->     structure to manually clean them up when we go to drop the
->     directory?
->   - Do we want to force all files to be dropped before the directory?
->     Or do we want to just let the C side clean it all up automagically
->     instead?
-> and other things like that, but we can argue about that once we settle
-> on the outward-facing api first.
-
-The only thing I don't want to is to allow to leak files or directories, i.e.
-
-	File::new("bar_file", bar_dir).leak()
-
-which keeps the file in the filesystem, but takes away the handle from the Rust
-side, such that it won't be removed from the filesystem anymore when the handle
-goes out of scope, which can cause nasty bugs. But I think there isn't any
-benefit to allow this anyways and it isn't needed with reference counting.
-
-I'm open on things like having "ghost" objects as proposed by Alice or force all
-files to be dropped before the directory, etc. though.
-
-> I can live with this type of api.  It's simple and seems hard to abuse
-> or get wrong from a user point-of-view, and should be pretty
-> straight-forward on the binding side as well.  It will take a bit more
-> work on the user when creating debugfs files than the C api did, but
-> that's something that you want to impose on this api, not me :)
-
-Let's see if it actually does, I'm not sure it will be, at least not for all
-use-cases. But even if, it's probably worth the extra robustness.
-
-> Sound reasonable?  Or am I missing something else here?
-
-Yes, sounds good to me.
+-- 
+  Kiryl Shutsemau / Kirill A. Shutemov
