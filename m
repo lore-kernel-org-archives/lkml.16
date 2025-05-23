@@ -1,55 +1,55 @@
-Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82710220F4F
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 23:05:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59756221731
+	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 23:05:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748041541; cv=none; b=qgHFEqQ823KHDZ8f+pcpYpM2u1mEapCXTSE8j46MMc2gMGoKcV5APaiT6oWozN+oW2auLgrIo9DwUt6aX3kwdBemMu3th/TJ9dKDVS7aFDa5Mv/yMdQY9Gas6xINFFF2hSi0cQIQGbSZREApT7DLMrGYNoWnFCwKoVJEw0v1HnA=
+	t=1748041542; cv=none; b=JrDlhIaA0uzr3a6mDzgaAcDocTtojoRLzaznN6jM1uE0T6dzprjLfJpSG7riof6zthBhLw6iCxOZYWlDr1oHaYY5lVJ6q3prSMkpLWSrv9kiNVQcVt2oF/gfDODmWH3Q5z09CO2Zff7Q7/tkFW+mKvFlSGE879XFzdM9silgbOM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748041541; c=relaxed/simple;
-	bh=PGtt9R/6JfJeszrvD0Vt1f7tbDi7oeGP/GPYQOO0a24=;
+	s=arc-20240116; t=1748041542; c=relaxed/simple;
+	bh=ldkQQKsDkGAhHJXZx571WMeCR3RMcX+z4Wvjc5zN2jE=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=dDPLb1BKMwJbaPoi7cM+TAHxiSiwQ8p8MKyxbce8xO6S6PfoW/nVYqmVdMU1awfA6aXPIclEvbaTDNr8m2oNOg8FdMMf5Tp4k/ozL51UGnmnrZ6zYzfWymupnELRkupo+N4cICz96u5RXyTFyhm/YCpULXQksWPqhox0iTf1NVA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--almasrymina.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=kp46d2K5; arc=none smtp.client-ip=209.85.214.201
+	 To:Cc:Content-Type; b=TwjhPmUTYWpTH//v6yoNOkGqu0ve1XMQT/HBTJvMyG0N4yLAifDpLsZiO8Nq+J9dIdFa3VrQBU8xq1X6ZmTVfTy0/aUEV56Nbo1imNL9VC/6iRdJ9Ir3jVFrLLTnVaSg8k97MAn5p5G4pQteE/8PuMxYidkxeDWM1pX3rhkUtgg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--almasrymina.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=u2lWaYOg; arc=none smtp.client-ip=209.85.214.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--almasrymina.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kp46d2K5"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-231e059b34dso2384575ad.0
-        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 16:05:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="u2lWaYOg"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-23415056f5bso3560695ad.3
+        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 16:05:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748041539; x=1748646339; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1748041540; x=1748646340; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=d2RRh+/pmMlr+/9c1WquG879UR6TlmrH7OSbqN+4ntc=;
-        b=kp46d2K5MO/6fpHTzUqPey1AgIt7Nlto1zldFf2T08vuHrjrNFWWNqFxqrrXqT9QG+
-         GBPcQARoJShygE0crgOUndm/vEyPMnGwe36bHgs/eqqzN2HvT4T5REmNUjxxu7cjjarv
-         Lm4vwpKa/Rz68TZokH4aiglAHizxOnycL51jP26yXybr1YEh3PkU/JyNSCu2rInYzjIZ
-         q2nfT4WXVFJZ8NUmt7E83Zy3KVHb6EcpHNZAe6OQpLcT05srzK1SlUqD8EI4JGMOAXj/
-         FBjy+0m85wX6KWKN8L4B9seIu6wJg417qtG6Nr/OKrnDCbGLhPjiaEC7B5AphVQ4oHTt
-         ckkg==
+        bh=eFit4se3dsmsa9HWMx2TSuaow40Adh4DQRq38+N1c8s=;
+        b=u2lWaYOgHBWCiq0wl9OU39MUFic1B98eONiguqSoOin8Z7JukLMe2piVpvaoOy4Rn/
+         0pjxhG5axvb1o2fMVao6JAn/SAXyF8LQk4FgWICu465WNaTn/obZm+UTB9UK5foe2C0F
+         HSaM/egLdHwuHAtaHvz6kt5Au2C3TuFQ7jCrS8ozkQ6JT79D1uQIYRjk4dN1LJsi7IAh
+         IY69lPbTcmQ4ZfDMqYZOx9iFmHxPeRy4PNsQEhXxbWewgr4RiVkSm2knC8Qrrc0IJjEE
+         o6Rl6yi8eR1LtUg2+C2VfhX9ESKxu9OWGbhRxOKe/GqvWfHoIbeytWRglnSsQfzHKoXJ
+         MLnA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748041539; x=1748646339;
+        d=1e100.net; s=20230601; t=1748041540; x=1748646340;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=d2RRh+/pmMlr+/9c1WquG879UR6TlmrH7OSbqN+4ntc=;
-        b=wQMy2WLBQvIpVJv3mqMgA2NFGhdGNL2cXi6xnaD5pl9p5ZObkLGfVi5m/w6q31ios2
-         cCG2va0rpND2o0tMXPJ9yn8GrXPea7S+fmilQzswTXeart0zJQeZySQDg/M7gyW5flNI
-         YQuqej3HWFfcr2is0uV56IlwDlcrsTnyNNkU2p9TFfhaIgcDa9x3VSSS85meGrgISGVr
-         AAts8/hGnqIayx9YsQe5uUfytLIvQ3Ju0QRtZmK+vvmQ5g8DmqUvDdzSipX0JOonAehD
-         XHjXrUZUSA256jxvugOfga07HZ2QN4ItcXf//s3BbVwzNDfPJNlQtZVpC2ShehR1n4qc
-         43KQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXxaW2liv5y9I75QxCMQ3EQ0F7ICKPDCQ8DLDBcibK9bV/2yLEfCQfIoX1KVMmO1T5EUiv5bghPG2/Gsno=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx4+Ag50ICZ0+tNQcKqKbAjvSmyVjlOS/J9tJzG5wLR+pFtmB+S
-	tfQmELOp96HkpzH/VGPuGQji/7EzqnE1u+LUuAaWN8DxH2Vf2S1tq1g4gF22zc915jRamTqo2dl
-	OVjcFV0vuw+nnz3d0As3eo6vSYg==
-X-Google-Smtp-Source: AGHT+IHVsH+9q9leeBNnpPJqS1fD8D2RsLmkgZl1oWqFMbkXUFg3g4wWlhT0WJZW0fnCAI5MdSjgKwrRZzAv4AbXjA==
-X-Received: from plhk15.prod.google.com ([2002:a17:902:d58f:b0:22e:1633:9684])
+        bh=eFit4se3dsmsa9HWMx2TSuaow40Adh4DQRq38+N1c8s=;
+        b=l5BFcoULR/o/goYVvT0VRNXsjyuHBbEdljbq2sSmRo3RvcCN/TtSs7F7GExNglJBP0
+         mP3SVXjHLC3FhB3pBjsfWnR5+f3tUHcM0zAzv9jiH527fppAbg51OOuYtRLMCvdEai+J
+         MhvxIPiC5gSQnz+Wo3iAjqZ8SKvVX8lZ5k7zkvlbRLa7iO17u9GUmJ/6abHQLOciHrAW
+         MipAW3jAVxdFrQY+UngltWxRtD/Wl9Oe1BlbM3L1yH3EFW/yfoak8HUoJwuP3GW7i4SD
+         +4StDNQrYU9lJkBI+jLxZ8tUixPU5q7+NrqxfWfEUFjTo2v6IWJy/cspozRcUiYj91DH
+         O+2Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXBOly/Y7bk+NErCLdCPZhIyfAAh54k670ruCrP56cQO6Pi+yWILAfaB+9Y0dMHxhswpTCdb+Pi6DEcegQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwF2/XbzS5mFLSvziE2GGjOy+7aYABhLLbVhxHWTckC5Fi4lvk6
+	6jIGp4wHI8EUxtrukjM6BJ+kuAjxzFxSLu5BCLzzIMbi0op5SJdUbfIKaBnDwW3FJXCzO/p4vyj
+	7WsHb74khIW/aRPqkHBVfL/fLqg==
+X-Google-Smtp-Source: AGHT+IHVEbxlP+HY5bODAxLKx8PUqiPk9HlkasKey/MBvVDDURED0/am87bZ3OsPQT+WnaEFbk9KFBHAAnfm2vQgGQ==
+X-Received: from plbjk15.prod.google.com ([2002:a17:903:330f:b0:233:fdae:780f])
  (user=almasrymina job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:903:228d:b0:224:1157:6d26 with SMTP id d9443c01a7336-23414f3a8d9mr19684705ad.4.1748041538874;
- Fri, 23 May 2025 16:05:38 -0700 (PDT)
-Date: Fri, 23 May 2025 23:05:22 +0000
+ 2002:a17:903:3d0e:b0:231:7f29:bda0 with SMTP id d9443c01a7336-23414fca909mr16630345ad.52.1748041540566;
+ Fri, 23 May 2025 16:05:40 -0700 (PDT)
+Date: Fri, 23 May 2025 23:05:23 +0000
 In-Reply-To: <20250523230524.1107879-1-almasrymina@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250523230524.1107879-1-almasrymina@google.com>
 X-Mailer: git-send-email 2.49.0.1151.ga128411c76-goog
-Message-ID: <20250523230524.1107879-7-almasrymina@google.com>
-Subject: [PATCH net-next v2 6/8] net: devmem: ksft: add 5 tuple FS support
+Message-ID: <20250523230524.1107879-8-almasrymina@google.com>
+Subject: [PATCH net-next v2 7/8] net: devmem: ksft: upgrade rx test to send 1K data
 From: Mina Almasry <almasrymina@google.com>
 To: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
 	linux-kselftest@vger.kernel.org
@@ -73,74 +73,48 @@ Cc: Mina Almasry <almasrymina@google.com>, "David S. Miller" <davem@davemloft.ne
 	ap420073@gmail.com, praan@google.com, shivajikant@google.com
 Content-Type: text/plain; charset="UTF-8"
 
-ncdevmem supports drivers that are limited to either 3-tuple or 5-tuple
-FS support, but the ksft is currently 3-tuple only. Support drivers that
-have 5-tuple FS supported by adding a ksft arg.
+The current test just sends "hello\nworld" and verifies that is the
+string received on the RX side. That is fine, but improve the test a bit
+by sending 1K data. The test should be improved further to send more
+data, but for now this should be a welcome improvement.
+
+The test will send a repeating pattern of 0x01, 0x02, ... 0x06. The
+ncdevmem `-v 7` flag will verify this pattern. ncdevmem will provide
+useful debugging info when the test fails, such as the frags received
+and verified fine, and which frag exactly failed, what was the expected
+byte pattern, and what is the actual byte pattern received. All this
+debug information will be useful when the test fails.
 
 Signed-off-by: Mina Almasry <almasrymina@google.com>
-
-
-fix 5-tuple
-
-
-fix 5-tuple
+Acked-by: Stanislav Fomichev <sdf@fomichev.me>
 
 ---
- tools/testing/selftests/drivers/net/hw/devmem.py  |  4 ++--
- tools/testing/selftests/drivers/net/hw/ncdevmem.c | 15 +++++++++++++--
- 2 files changed, 15 insertions(+), 4 deletions(-)
+ tools/testing/selftests/drivers/net/hw/devmem.py | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
 diff --git a/tools/testing/selftests/drivers/net/hw/devmem.py b/tools/testing/selftests/drivers/net/hw/devmem.py
-index 6effb9e33fd8..553ebf669a71 100755
+index 553ebf669a71..0484bda63886 100755
 --- a/tools/testing/selftests/drivers/net/hw/devmem.py
 +++ b/tools/testing/selftests/drivers/net/hw/devmem.py
-@@ -24,11 +24,11 @@ def check_rx(cfg) -> None:
+@@ -24,13 +24,15 @@ def check_rx(cfg) -> None:
      require_devmem(cfg)
  
      port = rand_port()
--    listen_cmd = f"{cfg.bin_local} -l -f {cfg.ifname} -s {cfg.addr} -p {port}"
-+    listen_cmd = f"{cfg.bin_local} -l -f {cfg.ifname} -s {cfg.addr} -p {port} -c {cfg.remote_addr}"
+-    listen_cmd = f"{cfg.bin_local} -l -f {cfg.ifname} -s {cfg.addr} -p {port} -c {cfg.remote_addr}"
++    socat = f"socat -u - TCP{cfg.addr_ipver}:{cfg.addr}:{port},bind={cfg.remote_addr}:{port}"
++    listen_cmd = f"{cfg.bin_local} -l -f {cfg.ifname} -s {cfg.addr} -p {port} -c {cfg.remote_addr} -v 7"
  
      with bkg(listen_cmd, exit_wait=True) as ncdevmem:
          wait_port_listen(port)
--        cmd(f"echo -e \"hello\\nworld\"| socat -u - TCP{cfg.addr_ipver}:{cfg.addr}:{port}", host=cfg.remote, shell=True)
-+        cmd(f"echo -e \"hello\\nworld\"| socat -u - TCP{cfg.addr_ipver}:{cfg.addr}:{port},bind={cfg.remote_addr}:{port}", host=cfg.remote, shell=True)
+-        cmd(f"echo -e \"hello\\nworld\"| socat -u - TCP{cfg.addr_ipver}:{cfg.addr}:{port},bind={cfg.remote_addr}:{port}", host=cfg.remote, shell=True)
++        cmd(f"yes $(echo -e \x01\x02\x03\x04\x05\x06) | \
++            head -c 1K | {socat}", host=cfg.remote, shell=True)
  
-     ksft_eq(ncdevmem.stdout.strip(), "hello\nworld")
+-    ksft_eq(ncdevmem.stdout.strip(), "hello\nworld")
++    ksft_eq(ncdevmem.ret, 0)
  
-diff --git a/tools/testing/selftests/drivers/net/hw/ncdevmem.c b/tools/testing/selftests/drivers/net/hw/ncdevmem.c
-index ca723722a810..3c7529de8d48 100644
---- a/tools/testing/selftests/drivers/net/hw/ncdevmem.c
-+++ b/tools/testing/selftests/drivers/net/hw/ncdevmem.c
-@@ -370,7 +370,8 @@ static int configure_flow_steering(struct sockaddr_in6 *server_sin)
- 		server_addr = strrchr(server_addr, ':') + 1;
- 	}
  
--	return run_command("sudo ethtool -N %s flow-type %s %s %s dst-ip %s %s %s dst-port %s queue %d >&2",
-+	/* Try configure 5-tuple */
-+	if (run_command("sudo ethtool -N %s flow-type %s %s %s dst-ip %s %s %s dst-port %s queue %d >&2",
- 			   ifname,
- 			   type,
- 			   client_ip ? "src-ip" : "",
-@@ -378,7 +379,17 @@ static int configure_flow_steering(struct sockaddr_in6 *server_sin)
- 			   server_addr,
- 			   client_ip ? "src-port" : "",
- 			   client_ip ? port : "",
--			   port, start_queue);
-+			   port, start_queue))
-+		/* If that fails, try configure 3-tuple */
-+		if (run_command("sudo ethtool -N %s flow-type %s dst-ip %s dst-port %s queue %d >&2",
-+				ifname,
-+				type,
-+				server_addr,
-+				port, start_queue))
-+			/* If that fails, return error */
-+			return -1;
-+
-+	return 0;
- }
- 
- static int bind_rx_queue(unsigned int ifindex, unsigned int dmabuf_fd,
+ @ksft_disruptive
 -- 
 2.49.0.1151.ga128411c76-goog
 
