@@ -1,185 +1,158 @@
-Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05on2063.outbound.protection.outlook.com [40.107.22.63])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 618A4227E82;
-	Fri, 23 May 2025 18:53:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.22.63
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748026399; cv=fail; b=Si87qu7I4gEBpKzkjMfQ1d0CJPzu0N1CkUSnrO5fB9xlq6VvwfrWgoBDh4Y1195WmJXTJu4hnjgfFQ9WGvyaguR/1J6i3pnIJb3R6i/9aOqmIWPD+TZFJDhgmdQBjU/lah7z2xlEzQWa/SeYTYNA1Eeo9LFxb8HGKh0jmXRQdDY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748026399; c=relaxed/simple;
-	bh=8o2/P3+EJkmkgE5pbY0Ww8bx+QGujR0iVNz4sX1xa20=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=YSKg3ZOz+HHZt4iCBM7oOsIavusXZ5TPpTBu1MuYM4X7OewUmeeieDvLxTMtT28Pku7BOoYGmFf/Sckk/YrDYbckOxjXcpmga4Wd0WNFckB8Y4lYW/FQiSXxJnTr4s39wadl1SmJGYHbudLEpK2gf9g6VyD+EDFIfXTYqMozflI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=K30SXaqb; arc=fail smtp.client-ip=40.107.22.63
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4138298C00;
+	Fri, 23 May 2025 18:57:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748026679; cv=none; b=Cs3JMbHTYwAyJURbJTuCTw8V/xtQU7CqDZNYf0nx0pfZS1xdl/yfEGjGeSBF1RszJFu7/5TjdxS03po153US/HKFptiNTdEEHwPNKVBznMNTlSOf+Z/FZgj5P8mYQfCHHv12boDd6MV22ByEbvyOtUXZBvEQbwqmkhXbhwzVCZM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748026679; c=relaxed/simple;
+	bh=cqvuXw8JxQP2yg9gluUQbHRnjg9G6e/x6ASyX8Gfs1M=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=TTbrSkSIcOdCcuS+5vd7PGZgyE+sxg17bPnWDtLCIqzyo1OcW9/yzgE9gj9dSY0biOti0h6lZzQzOzE0jpHcsJGxvHwRJTOf5OTsvHm3ohPpkWrhWBK4pD/2O8HPR+KE1UXdYkMIO7o6DGgvQCucuue0Fdtg1CWyfDL/GcQ68Qs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b2rPxkwA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="K30SXaqb"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=B5VHfan4A/czimuhJqKQSLlWpnaR1NKFGALWb1NrKE4qxzPT8YltwgCfz19nQdHpPkTYGwiiXtaKbTd4uLsV675wLOhtXe9vk49Z2QdSqSpkSUuFy/5cwS2OWjQaBTFrY7DCfe8BuTD9eM86ISGEf+EYfBz9P9ql1vx4Xd5ajbr8f3I9Y8uOJl3Wc1hbz//AqlYjRarUbE3cUXsTzSWmAy9Q6B6exorRVBcNKcKkwazIv7MHLZPJU4G5LZhQi+UyUbViK7Hoy0v1B1pQ8C7jWZcoc7J9JLLZYlKvf5N1U1+Rpv9LWqmRMaqs7s3biqPvNHLik020/G9tQtAlVMEutA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=l5vCfoIraXSZbKgf5sxlAur5joa25OqF8eoVqlpSdUA=;
- b=Pz5k4lRK01DKc56W0EwoDqM6fLqayS5bq9VfJ5gVyBS6A8P/BjwEG8rFIeaODCMa3rZzPgh6osLA3aSiaZ/jf0S8oCv3X9PkgC+KwjdTyzQd3IsBZvbhGIr2CEcVbTq5UNI9YsDvaAuw6TiKRo/EnD564lWz+NprIhXHC8zJkBSLqMXSgG9JaQRGcRJmWNBZVEre1zuTaFzMzd8vkwbHb+mEK61+EZoh+Ta8wESObHoSQkY+DNWYXcHhkd4rSydYwMfuWq7CCkAxSfLFRi+DKeErJGubMXnJ3Kkmsz0D6qqSIwFNI+fkZi0N+RNL6W4683/QYOw6Vl+cxvD1Wskt8A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=l5vCfoIraXSZbKgf5sxlAur5joa25OqF8eoVqlpSdUA=;
- b=K30SXaqbFVIZd5FdIEC2QCeWKsHyiJzWnYoJuFVhR2/pRXWwADUCRTV5zLtr+lWJyGtI7mvQOwXsVbgrlGKVVKdEXRWXSl95vGuWo29RR3EUN/aM8DaOljvozvpyyq+k1+8uaFeUa3bPT0dUxnURbsvkZPTjNxbraUKaxfEZxi8YB1cxAP9FHdfZ7tJxFOEPq4U+HTeZc35s9tGA/p76hnOt2wwNiKpvOyu6hJ3gmsNqaNYsV4UmPc0KRYNojylRcbd8n34E5e4Hl4pzALXdQHv4BokHYleQnpDsZfs7UmDoTpmXypVuCKIlTRPFqUs7o/cs94ydqGxdt4vaHikENg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by DB9PR04MB9775.eurprd04.prod.outlook.com (2603:10a6:10:4ce::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.20; Fri, 23 May
- 2025 18:53:11 +0000
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06%2]) with mapi id 15.20.8746.030; Fri, 23 May 2025
- 18:53:11 +0000
-Date: Fri, 23 May 2025 14:53:02 -0400
-From: Frank Li <Frank.li@nxp.com>
-To: Siddharth Vadapalli <s-vadapalli@ti.com>, tony@atomide.com
-Cc: bhelgaas@google.com, conor+dt@kernel.org, devicetree@vger.kernel.org,
-	krzk+dt@kernel.org, kw@linux.com,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-omap@vger.kernel.org, linux-pci@vger.kernel.org,
-	lpieralisi@kernel.org, manivannan.sadhasivam@linaro.org,
-	robh@kernel.org, tony@atomide.com, vigneshr@ti.com
-Subject: Re: [PATCH v2 1/1] Revert "ARM: dts: Update pcie ranges for dra7"
-Message-ID: <aDDEDrHz4PNOY4Gk@lizhi-Precision-Tower-5810>
-References: <20250411153454.3258098-1-Frank.Li@nxp.com>
- <aC97HguxSt56BkHa@lizhi-Precision-Tower-5810>
- <5a8a4f18-d5cc-4fd1-aeda-2e739502e0eb@ti.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5a8a4f18-d5cc-4fd1-aeda-2e739502e0eb@ti.com>
-X-ClientProxiedBy: BYAPR02CA0019.namprd02.prod.outlook.com
- (2603:10b6:a02:ee::32) To PAXPR04MB9642.eurprd04.prod.outlook.com
- (2603:10a6:102:240::14)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b2rPxkwA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1BE77C4CEF0;
+	Fri, 23 May 2025 18:57:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748026679;
+	bh=cqvuXw8JxQP2yg9gluUQbHRnjg9G6e/x6ASyX8Gfs1M=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=b2rPxkwAH2/lLJrIrqAWjtilm/iXN88KmU3qqT5Rll3+jJ3FITeO/KDpkwxS8ClmZ
+	 GwjTg6ru+RbuCIhG2uzgsoWO2Z9KK6n6X81nioSBhRLUQp73VZif3JisHTpU/kEk61
+	 /xRZEcefAq0QeatKS8bJOR+AMDRJZailLa1GcxkukzAtylOC6HenNUp+l7KKuMCcQm
+	 Zr2V5RBpzX8yt7TWPLgBC2BPHXBElVt27dZUEHkPlb18WT4PL2vAasKebxbWjmcgvC
+	 4PHQqNXshk+RJl/yTnmFwi9YewJTZSmXGxQREbdBC7LfE69usR7av2fMSuLSNMo8We
+	 dXUgbix8gqQ9A==
+Received: by mail-oa1-f54.google.com with SMTP id 586e51a60fabf-2e3dea42465so175206fac.0;
+        Fri, 23 May 2025 11:57:59 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVJj0atvYJkxbPrZCiAZGG29Tj6EDFPXC58T26lajdVwFnX/4voPvITT0rJZlFbl4aljFowZWf3cnU=@vger.kernel.org, AJvYcCWjmmo530kTfl7UeIe3/OGtayNxWtkb/IDPDG2v/KQ/apatBNKXYHqJq06SlhisNsfFK278lKQJ4PdSWdH4@vger.kernel.org, AJvYcCWwhHfQ6PWsY3L05y/iDx6hzGcy59ay+g8b920O+86ThW0GbhbWIGulJVe2S0m25NLITc2sRkWl/rU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxsVcJbMCM8R1ih9i93w8DhgljKIh1T54HNA/K16n/qOBi9NS4F
+	kudgrtaIdrYhZF0sy90Y3e83iyoLJAnZRs39bNMl9TEAumJ85B1H1YGXnvEfYJirS4KS2Fj40zC
+	YJmPw9eX7zdzobiB0hLGkDmeAl0UmqCc=
+X-Google-Smtp-Source: AGHT+IGAKC9cTRLYyIRGCJjK5YQhhthRN+7EesmVWQybzqqwbFt9swBhieXOoFYYQLDMfpntR97g4JTzG2xigQ7c70c=
+X-Received: by 2002:a05:6871:d68c:b0:2d6:8eb:8918 with SMTP id
+ 586e51a60fabf-2e83e2a76admr2849461fac.7.1748026678340; Fri, 23 May 2025
+ 11:57:58 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|DB9PR04MB9775:EE_
-X-MS-Office365-Filtering-Correlation-Id: 149f92f3-c254-4dde-0c88-08dd9a2b10de
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|7416014|366016|52116014|1800799024|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?IOCLmhJSA8v/x5L7WklErxlCM0AdFT7ObC+yb6k41TlwcPFzjlCjJZ3EVj/q?=
- =?us-ascii?Q?nVnIdP50t2l6IH6pABJ2AGWLcffVVvELb2o/U37BnrSjvGQGdJk93phHQ7js?=
- =?us-ascii?Q?BXWwbLFKYNkQke7h+NmdFbbF49R6SvEEwfZHSRcOS1XWNbI0EUsVt+brxlC2?=
- =?us-ascii?Q?6FaZq+69GtE9U2TsG+i94zeXIDfu+qSU1EtFc2vRDNQwRe0JwDQBEEkbVmt4?=
- =?us-ascii?Q?Th96hMB0vQr9vAUEGn2tgzgNIg+yYr2MuZoHQFsNWrR6sLoC3JjNoWEKQcxF?=
- =?us-ascii?Q?YM2IqZdkFvMs+ovG300x5yav/0zbyz6fJLQSwPD2ciuc9QbSqBHD0SmNzKaG?=
- =?us-ascii?Q?isiSKfP8YYq7VJtwdt/Ay0deFBi7qTeJVVloyp4g2ihi8FTWz347T3/vLLrz?=
- =?us-ascii?Q?xn8hnJYj+5g1gfwZtJFv1jrjHcJ31fvEvfc1G+LVzt6x2ZzDTaGsQVF7IwZk?=
- =?us-ascii?Q?t6Qht/300bv8ztoPbeAjRAIyPuUdpDFFV1K1aUYjmsuFupy8DiaPOG9S659R?=
- =?us-ascii?Q?/dRKpon+sKc7z7YjUbm9o46rrGzX85TdLXo5ozKrSfNcIBmR5r6muppg8ZUq?=
- =?us-ascii?Q?jS6wOeK+9W74uAPoWy9pH6fAuRP74Ld0X9F6MeYMZ3iw7G0AaRuxu565kZ9A?=
- =?us-ascii?Q?2vWyk5cGZVmYv7bC/PdbnBw6hPiLKl6NVkSTnJ+aF75JUEyoZpuyjBGpRzOg?=
- =?us-ascii?Q?6qUpEOltBxBi9SprRCfHolT6I7618lyvzLg+nwoOIdhu7p/KFdMcaBKiDLni?=
- =?us-ascii?Q?wIl2M8C2hpUFqMR5MHx8cp4kQ2VSvVUHs2T07BhXsxyy8umGcnx3gr6ciGvc?=
- =?us-ascii?Q?B1Uj4XbQb7DLm7Gm0dwupaiAcGbI1QtCv7EApjf16nnsuxh2MZHDrwz7DLcB?=
- =?us-ascii?Q?nnwmDGAtG5HybGibFoZzD5cvmKDCjq0KdGwiIDgw19V/RuQLpMYuRg9kv2Xt?=
- =?us-ascii?Q?0DLZE9H9eieLMKmMVif0izoA84ytEbEAzJACappKmVtzATK6shrnxSgISqRy?=
- =?us-ascii?Q?RchfOShFTMykG3hY8A1rX08xZ/udUH3u7PUojOhfeQf/UGupYHA/jlcxM07s?=
- =?us-ascii?Q?lUfLuHA1WunmtwdekA4la6PhlPpqxt2u/x5GktSH1/4Dznl0l+RPsMwYVxHB?=
- =?us-ascii?Q?zJ60BJGAlYPFDaz4fw9h6rb0nDjjjNnnSWjSRT/kQEdyt3//4unjImNkPbTo?=
- =?us-ascii?Q?kGGt37HvU74uTDKrDQrrfNnABNUo47PWYIdZRM8SLZUHw+XTgLR5DMxN2gnY?=
- =?us-ascii?Q?2mQlhL7nHaJ3J8EqPY0Gp922jiL1Y6cYBb2CSmxw2pTo+grgyFhIz1r/RZp7?=
- =?us-ascii?Q?3kBHH9+m2KPlaBF57vU42y3XBjV9VMInulc1NxUOyGi68uEFNQ0HQkXPaeoy?=
- =?us-ascii?Q?o0HQzF6MZl3JigdXx7xDnOp1M2E4sbdY+4bS0GJZ/nxcMwCRyBvz/PXaDsDb?=
- =?us-ascii?Q?eUnILMRljTxyBTrUzMygjvEVUyssZzXsLMtxeIrAtFVpkliN3srhyA=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(52116014)(1800799024)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?+Kajt4/cMSbvO/IORlh9TecioNr+n67moP5lo6QZOM2iahrKNJ3aNxaZHOBJ?=
- =?us-ascii?Q?aQN/DswAv9hpJgzHC175y6+oMUabHiYBDwCG5LGN85iwvElSY887F3SBjaNl?=
- =?us-ascii?Q?wAp0Ge1D/qD8A9QZqTCa3YIYGYc5Y+PzFqQlkDCGC24tFZjYZLsb/gEfhC7t?=
- =?us-ascii?Q?fmY1nR3z1yseE9eYbYr/AcdJBc0o4ssirSVnfoZAGQ2kKX2ubjRg6C0yLeXR?=
- =?us-ascii?Q?Er4PfkJFVQIFcfvg/vXMl0y7SAjOOXya9BrJJlKIwI+CYgvMIB2XD4fkI+GX?=
- =?us-ascii?Q?MdLGPA8v+oCMYwlRk9AsYNCpfR65Mnh8x8rn9EbSX0V8ZGWgPdeRJQvzhazE?=
- =?us-ascii?Q?X2vVt56lHpXGNZvUZdw/bkcFaRnyW56Bj5BomVZ5bvuFvp+M0q38E9/2h3sS?=
- =?us-ascii?Q?T6mkpXRUYgpEux54cw014Tvpxf5MRXZ8W92HdCmDWARV7H/kaLzX21AhjRdF?=
- =?us-ascii?Q?qk2CfAgbjCnFb5rLLyL3OaeX5uGO2nBXcfhuhyV+2u6UMaJAWuH2fN1xJrR6?=
- =?us-ascii?Q?QYxSg0IcV3yLs/ckxB9A0UfQigqGlXueFIvonSCr3u0rgV1GGK5eacGh9r48?=
- =?us-ascii?Q?Oq3lv3YUPENOVNl1bNI5g+AbcXlMQ1IGYWrDpDpaJvCf6SecocPOHCLctxQI?=
- =?us-ascii?Q?vZP+cDNZTroJS03oQwGyWF+YsX53jC+cyLVSesulI/a01gRtsfpbxHD0eu5R?=
- =?us-ascii?Q?b1HLfbZa5eFSK4F7dDL7aGNGUxulzN0ggZhgTw5OgymBahcpxi09n+VdR4DG?=
- =?us-ascii?Q?KbD74UwMk5D7r+1EXZgxxJ8XfWpE69fyB+8uHak0XNuFrF+cW+aAevrL5SPA?=
- =?us-ascii?Q?j5KDCb7A5K6I/3UMzIR5SK1sOxFCz6uXB8PEK94/fSll9D306oIpi5gu3ZbN?=
- =?us-ascii?Q?t+s9XPjsCvopS0UqVQQiY884L8xKpphm1PtsoPzQdNJOXzmyE50eDnR+7/68?=
- =?us-ascii?Q?Tsu6YuDEI6ofQJ6xOD47x6MLh87K49+RoXdU5pBQIEAyccR90K2epfuUkA7D?=
- =?us-ascii?Q?R9BAEQq/mthn4ERwPDinfNtWD9EHnQNR9T51yr5+r+5CcmUAkc5F58KS27S1?=
- =?us-ascii?Q?QyOkp4a/pJXw2HKr1B09caepiKZ8UgDtprxFudtZ1Aeg9/oHAZj3IH5/LenB?=
- =?us-ascii?Q?bmZNCspIah8OXnjWFa7A4gxd11H0TEet4fDkBEF7fLwLy7qkaVjDwIse3Toq?=
- =?us-ascii?Q?VxwHRaAS+luwJIpW/EelpMRNWFxpbNLG4bY6S08p/AIoGdtzyW3VTGGdf9Dl?=
- =?us-ascii?Q?dm/xc8dsBF8GQmmXjFIurZJMEv/zI8nGRslmllaNmPzQmrkjILc45+fO5gK6?=
- =?us-ascii?Q?o6emX2PDeoxUoqXgzM6dpqwGHFbyi954o6bTnrSo1u/MqLcPFHfti3mxUQre?=
- =?us-ascii?Q?684iCh9gpKj4UNRjGC98tGz32w6PWqmsWo293gPE1/u1YtlvppQPC+Fnm842?=
- =?us-ascii?Q?1rSHxMMUglpGvN9j7XHiYNVvFzqXVxsF4nP5xqNnIh9dYqRcJIk/II8vsO+2?=
- =?us-ascii?Q?Me0x73gsCkgyRxOJZf8BW3GlUyju/Akz2J3B+Iw835O7tU7b7pNn2xMxhhrj?=
- =?us-ascii?Q?2RX8PjTAbsCV48Ab4EtnWe4b9h2j5qsBmB9sx6so?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 149f92f3-c254-4dde-0c88-08dd9a2b10de
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 May 2025 18:53:11.4832
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: RO8oEfjJZjnTS1vdKQyd69Lokskl656LjJsS2NeRNBoznuK8BBUNF6cloCyJ7CthPZC2yLgbyEnnU+Fwt58wgw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB9PR04MB9775
+References: <20250522-userspace-governor-doc-v1-1-c8a038e39084@sony.com>
+ <15871c67-0d18-430f-935e-261b2cda855b@gmail.com> <CAJZ5v0gz3Y+RGqBf9E1hzq9rwfrryd98Xpk51DtLd-uck5y-rw@mail.gmail.com>
+ <b62c0462-8185-4eb8-8ac6-7f2abc387768@gmail.com> <CAJZ5v0jrwDJ-TQuay_OkwfsWr2z9COg=oDY7q0FqRBC-3_br2Q@mail.gmail.com>
+In-Reply-To: <CAJZ5v0jrwDJ-TQuay_OkwfsWr2z9COg=oDY7q0FqRBC-3_br2Q@mail.gmail.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Fri, 23 May 2025 20:57:46 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0i_u7ds4sO-UdQ4gfX-8-z1-3NOOWAd3DS0b7E3uma0dA@mail.gmail.com>
+X-Gm-Features: AX0GCFsmu84jWApvusyzlX9DbY-yDpT3dGz3j-GMy0KXKoQujzk_4lQKDXmHuGw
+Message-ID: <CAJZ5v0i_u7ds4sO-UdQ4gfX-8-z1-3NOOWAd3DS0b7E3uma0dA@mail.gmail.com>
+Subject: Re: [PATCH] cpufreq, docs: (userspace governor) add that actual freq
+ is >= scaling_setspeed
+To: Russell Haley <yumpusamongus@gmail.com>
+Cc: Shashank Balaji <shashank.mahadasyam@sony.com>, Viresh Kumar <viresh.kumar@linaro.org>, 
+	Jonathan Corbet <corbet@lwn.net>, linux-pm@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Shinya Takumi <shinya.takumi@sony.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, May 23, 2025 at 11:02:38AM +0530, Siddharth Vadapalli wrote:
-> On Thu, May 22, 2025 at 03:29:34PM -0400, Frank Li wrote:
+On Thu, May 22, 2025 at 1:54=E2=80=AFPM Rafael J. Wysocki <rafael@kernel.or=
+g> wrote:
 >
-> Hello Frank,
->
-> > On Fri, Apr 11, 2025 at 11:34:54AM -0400, Frank Li wrote:
-> > > This reverts commit c761028ef5e27f477fe14d2b134164c584fc21ee.
-> > >
-> > > The commit being reverted updated the "ranges" property for the sake of
-> > > readability. However, this change is no longer appropriate due to the
-> > > following reasons:
-> > >
-> > > - On many SoCs, the PCIe parent bus translates CPU addresses to different
-> > > values before passing them to the PCIe controller.
-> > > - The reverted commit introduced a fake address translation, which violates
-> > > the fundamental DTS principle: the device tree should reflect actual
-> > > hardware behavior.
-> > >
-> > > Reverting this change prepares for the cleanup of the driver's
-> > > cpu_addr_fixup() hook.
-> > >
-> > > Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> > > ---
+> On Thu, May 22, 2025 at 1:15=E2=80=AFPM Russell Haley <yumpusamongus@gmai=
+l.com> wrote:
 > >
-> > s-vadapalli:
 > >
-> > 	Any update about this patch? it prepare to remove cpu_addr_fixes()!
+> >
+> > On 5/22/25 4:47 AM, Rafael J. Wysocki wrote:
+> > > On Thu, May 22, 2025 at 10:51=E2=80=AFAM Russell Haley <yumpusamongus=
+@gmail.com> wrote:
+> > >>
+> > >>
+> > >> On 5/22/25 3:05 AM, Shashank Balaji wrote:
+> > >>> The userspace governor does not have the CPUFREQ_GOV_STRICT_TARGET =
+flag, which
+> > >>> means the requested frequency may not strictly be followed. This is=
+ true in the
+> > >>> case of the intel_pstate driver with HWP enabled. When programming =
+the
+> > >>> HWP_REQUEST MSR, the min_perf is set to `scaling_setspeed`, and the=
+ max_perf
+> > >>> is set to the policy's max. So, the hardware is free to increase th=
+e frequency
+> > >>> beyond the requested frequency.
+> > >>>
+> > >>> This behaviour can be slightly surprising, given the current wordin=
+g "allows
+> > >>> userspace to set the CPU frequency". Hence, document this.
+> > >>>
+> > >>
+> > >> In my opinion, the documentation is correct, and it is the
+> > >> implementation in intel_pstate that is wrong. If the user wanted two
+> > >> separate knobs that control the minimum and maximum frequencies, the=
+y
+> > >> could leave intel_pstate in "active" mode and change scaling_min_fre=
+q
+> > >> and scaling_max_freq.
+> > >>
+> > >> If the user asks for the frequency to be set from userspace, the
+> > >> frequency had damn well better be set from userspace.
+> > >
+> > > The userspace governor requests a frequency between policy->min and
+> > > policy->max on behalf of user space.  In intel_pstate this translates
+> > > to setting DESIRED_PERF to the requested value which is also the case
+> > > for the other governors.
+> >
+> > Huh.  On this Skylake box with kernel 6.14.6, it seems to be setting
+> > Minimum_Performance, and leaving desired at 0.
+> >
+> > > echo userspace | sudo tee /sys/devices/system/cpu/cpu*/cpufreq/scalin=
+g_governor
+> > userspace
+> > > echo 1400000 | sudo tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_=
+setspeed
+> > 1400000
+> > > sudo x86_energy_perf_policy &| grep REQ
+> > cpu0: HWP_REQ: min 14 max 40 des 0 epp 128 window 0x0 (0*10^0us) use_pk=
+g 0
+> > cpu1: HWP_REQ: min 14 max 40 des 0 epp 128 window 0x0 (0*10^0us) use_pk=
+g 0
+> > cpu2: HWP_REQ: min 14 max 40 des 0 epp 128 window 0x0 (0*10^0us) use_pk=
+g 0
+> > cpu3: HWP_REQ: min 14 max 40 des 0 epp 128 window 0x0 (0*10^0us) use_pk=
+g 0
+> > cpu4: HWP_REQ: min 14 max 40 des 0 epp 128 window 0x0 (0*10^0us) use_pk=
+g 0
+> > cpu5: HWP_REQ: min 14 max 40 des 0 epp 128 window 0x0 (0*10^0us) use_pk=
+g 0
+> > cpu6: HWP_REQ: min 14 max 40 des 0 epp 128 window 0x0 (0*10^0us) use_pk=
+g 0
+> > cpu7: HWP_REQ: min 14 max 40 des 0 epp 128 window 0x0 (0*10^0us) use_pk=
+g 0
 >
-> This patch looks good to me, but I was hoping that Tony Lindgren, who is
-> the author of the commit being reverted, would provide feedback as well.
+> OK, let me double check the code.
 
-Move tony to list.
+I stand corrected, HWP_MIN_PERF is indeed set in accordance with the
+target frequency, not HWP_DESIRED_PERF.
 
-Tony Lindgren:
-	Do you have any comments about this one?
+The reason why is because running at a frequency below the target
+might cause insufficient performance to be delivered which would break
+the assumptions of the schedutil governor.
 
-Frank
->
-> Regards,
-> Siddharth.
+However, setting HWP_DESIRED_PERF to 0 may be a mistake because it may
+cause the CPU to always run above the target frequency which is not
+desirable from the power perspective.
+
+What can be done is to set HWP_MIN_PERF and HWP_DESIRED_PERF to the same va=
+lue.
+
+[Note that intel_cpufreq_adjust_perf() used by the schedutil governor
+actually sets HWP_DESIRED_PERF in accordance with the target
+frequency, but it also sets HWP_MIN_PERF to the minimum sufficient
+perf value supplied by schedutil.  Since intel_cpufreq_fast_switch()
+and intel_cpufreq_target() only get one target frequency, they cannot
+really say if any frequency below the target will be sufficient.]
