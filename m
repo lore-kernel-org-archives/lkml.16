@@ -1,120 +1,129 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22FB12C859;
-	Fri, 23 May 2025 12:51:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A1999478;
+	Fri, 23 May 2025 12:52:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748004700; cv=none; b=uFw7CLzk2Qolj+eaTMSEySL1/DWP0cDdI1+0V1w2mnPZmvZo4UyO7z1yz5gQXBDnfdk1Wplpahm+AAUnIhAuPY+O/FFcb/xEmmq7rux5cWp9iD1XSM65osZT/lApMCpcPfZC3fr/3vxJK/QPU9eVTxyXIK8sZKFmHNsL2TRxIYo=
+	t=1748004725; cv=none; b=gIPx/0KIxGMFDWZHxiOf3iH5cvMEhyL2xtUU2H7AqMc0EDXYRSzbbWBkACXI/IvjrvcS7HPtZt+N4r6ity98+JfQsWwh9bKRBeutHMU7Xa/c1dKMNW++U6bpbkJ4Dteuw00Ucb85KmNRupCJFSII6ukZGp8NY1hq0RUXHlNVWow=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748004700; c=relaxed/simple;
-	bh=ERCJFPy9xb2x/AryG7RPgoZDCoQB8wDUtk86IGkNxsI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ds9dzp6xo0/ZQCMkBayxAZ5DZBcmdC+AwoeCTDN06EYvzMcpWb0UK546fS+16Lwc0iCAb5ps76EyRGZgOLKN7LyrF0cAiG0rUxXmDV363z0a1pJgSoY254XfP6kL/yc/SjfQ/GdfslZgs+4uFQqzV+29I+83g2F33Rf4M6Fthc4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=vTJ05k+j; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748004725; c=relaxed/simple;
+	bh=ZiOqMUDN7gDQRGBJ9S3lJOWMapimTDHrW/d3CnLHWlQ=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=nDxxSuMgXOssV4plILYUD3Y6/l6Lhe/IFHicaCopPk+Z0r6ok34MlJGLb7ycuzQwGKTbvHtSZOVjmNW1tvBxdOBB094A+ufSyzEfODSwsKtdUEKITXF+hRc3dGMgu7QfZntQFGC9xuEOgbQ8SklMp3HJ3skFB8rCJDJJbtqguGs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lsSLSlFL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="vTJ05k+j"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49898C4CEE9;
-	Fri, 23 May 2025 12:51:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1748004699;
-	bh=ERCJFPy9xb2x/AryG7RPgoZDCoQB8wDUtk86IGkNxsI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=vTJ05k+jeYSFpa5lxlNyXiM5d8L6QkDiZwxQmIkcE8MjAScLtDGNs+ljl0UxkiZKp
-	 l5SRYtkbY74H69CZe7qSEiAPNRwq+whj4yBmDn6HPINVwGZkKU79RcgRiQOQ0KPJll
-	 tMvf4EfAvvJJQ9Y2G0C29TypwJ2vszEybuJSfMd4=
-Date: Fri, 23 May 2025 14:51:37 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Dmitry Vyukov <dvyukov@google.com>
-Cc: cve@kernel.org, linux-cve-announce@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: REJECTED: CVE-2025-0927: heap overflow in the hfs and hfsplus
- filesystems with manually crafted filesystem
-Message-ID: <2025052308-brittle-unbroken-888b@gregkh>
-References: <2025040820-REJECTED-6695@gregkh>
- <20250509072033.1335321-1-dvyukov@google.com>
- <2025050940-marrow-roundish-8b98@gregkh>
- <CACT4Y+aiQcbHfj2rB6pGKevUbUoYwrHMu+aC-xh0BCKE8D-8sQ@mail.gmail.com>
- <2025050924-marmalade-overfill-fc5a@gregkh>
- <CACT4Y+az8zu+n_z=amp1Z_ezni-UVTrd0GgUvSzjji2RsjexQQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lsSLSlFL"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id CD65CC4CEEF;
+	Fri, 23 May 2025 12:52:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748004724;
+	bh=ZiOqMUDN7gDQRGBJ9S3lJOWMapimTDHrW/d3CnLHWlQ=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=lsSLSlFLtz1bVXQrwgmsk9wT0AYbuFskA5/c641ikfUX8mH6jnA+qoiMqRCSBUAQw
+	 VpIFfRT5Smf43CMEnTeL7A2fTuKUBp6Po1gyzsDilJFM7qMNUuUHGK4H+bsfe1ESA5
+	 VrrDtxWzH4wRyQyY5yrcfvs2QabdE2uiOR6cPXwc49RW1+OiE9cxGNTxskph/haAB6
+	 vXVmHiwOIIvl1m0VMJEBgRbfT8yncoPkU72vJrA6h+y6/Bx2qELs3aw0qurmxe/tQ1
+	 Vk2wTY+/6twfexoTujc2ffQBEJ93YjGfLZsWpBLx0KuzYgDKXvNxUYZKCp0LYihOuF
+	 xiMfQYkVQbnKA==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA374C54ED0;
+	Fri, 23 May 2025 12:52:04 +0000 (UTC)
+From: Thomas Antoine via B4 Relay <devnull+t.antoine.uclouvain.be@kernel.org>
+Date: Fri, 23 May 2025 14:51:44 +0200
+Subject: [PATCH v4 1/5] power: supply: max1720x correct capacity
+ computation
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACT4Y+az8zu+n_z=amp1Z_ezni-UVTrd0GgUvSzjji2RsjexQQ@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20250523-b4-gs101_max77759_fg-v4-1-b49904e35a34@uclouvain.be>
+References: <20250523-b4-gs101_max77759_fg-v4-0-b49904e35a34@uclouvain.be>
+In-Reply-To: <20250523-b4-gs101_max77759_fg-v4-0-b49904e35a34@uclouvain.be>
+To: Sebastian Reichel <sre@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Dimitri Fedrau <dima.fedrau@gmail.com>, 
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+ Peter Griffin <peter.griffin@linaro.org>, 
+ =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>, 
+ Tudor Ambarus <tudor.ambarus@linaro.org>, 
+ Alim Akhtar <alim.akhtar@samsung.com>
+Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-samsung-soc@vger.kernel.org, Thomas Antoine <t.antoine@uclouvain.be>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1748004727; l=2215;
+ i=t.antoine@uclouvain.be; s=20241202; h=from:subject:message-id;
+ bh=eC7BjQT0ON0eLj1BHeNmcDKE6aFWeTYyXf1R0uFKWNU=;
+ b=u72BzfqomX49C/S2gr/GbMspbY67y8FvftX3344pxMav8E91Kbxtx06+Ycy1Ar4vUSw7B6fAR
+ 7cyUOcdgcxPBN8eRzTOtB2LREJJjjfJzpnAvYamLmywQoKw6Qc8LebC
+X-Developer-Key: i=t.antoine@uclouvain.be; a=ed25519;
+ pk=sw7UYl31W1LTpgWRiX4xIF5x6ok7YWZ6XZnHqy/d3dY=
+X-Endpoint-Received: by B4 Relay for t.antoine@uclouvain.be/20241202 with
+ auth_id=289
+X-Original-From: Thomas Antoine <t.antoine@uclouvain.be>
+Reply-To: t.antoine@uclouvain.be
 
-On Wed, May 21, 2025 at 10:20:10AM +0200, Dmitry Vyukov wrote:
-> On Fri, 9 May 2025 at 09:55, Greg KH <gregkh@linuxfoundation.org> wrote:
-> >
-> > On Fri, May 09, 2025 at 09:47:20AM +0200, Dmitry Vyukov wrote:
-> > > On Fri, 9 May 2025 at 09:34, Greg KH <gregkh@linuxfoundation.org> wrote:
-> > > >
-> > > > On Fri, May 09, 2025 at 09:20:33AM +0200, Dmitry Vyukov wrote:
-> > > > > > CVE-2025-0927 has now been rejected and is no longer a valid CVE.
-> > > > >
-> > > > > > Filesystem bugs due to corrupt images are not considered a CVE for any
-> > > > > > filesystem that is only mountable by CAP_SYS_ADMIN in the initial user
-> > > > > > namespace. That includes delegated mounting.
-> > > > >
-> > > > > I wonder if this should be the case only if the image is flagged by fsck
-> > > > > as corrupted? Otherwise I am not sure what's "trusted". It's not about
-> > > > > somebody's "honest eyes", right. E.g. in the context of insider risks
-> > > > > the person providing an image may be considered "trusted", or in the
-> > > > > context of Zero Trust Architecture nothing at all is considered trusted,
-> > > > > or a trusted image may be tampered with while stored somewhere.
-> > > > >
-> > > > > Without any formal means to classify an image as corrupted or not,
-> > > > > this approach does not look very practical to me. While flagging by fsck
-> > > > > gives concrete workflow for any context that requires more security.
-> > > >
-> > > > And how do we know of fsck can flag anything,
-> > >
-> > > By running fsck on the image. Or what do you mean?
-> >
-> > That requires us to attempt to reproduce stuff when assigning CVEs?
-> >
-> > And what architecture/target?  How do we do this for all of them?
-> >
-> > Remember, we are averaging 13 CVE assignments a day, this has to be
-> > automated in order for us to be able to manage this with the volunteer
-> > staff we have.
-> >
-> > > > AND which version of fsck?
-> > >
-> > > This needs to be answered as part of establishing the vulnerability
-> > > triage process. I would go for a relatively fresh version. That will
-> > > remove bugs fixed a long time ago, and if users rely on it for
-> > > security purposes they have to update it.
-> >
-> > Remember older kernels are updated but userspace isn't on many
-> > platforms, so the combinations of userspace tools and the kernel
-> > versions is not anything we are going to even be aware of.
-> >
-> > > > We'll defer to the fs developers as to what they want here, but note, we
-> > > > do not determine "trusted" or not, that is a use case that is outside of
-> > > > our scope entirely.
-> > >
-> > > I think classification should be tied to users and use cases in the
-> > > first place. I, as a developer, wouldn't want any CVEs assigned to my
-> > > code, if I could just wish so :)
-> >
-> > This is open source, we can not, and do not, dictate use.  It is up to
-> > the users of our software to determine if their use case matches up with
-> > the reported vulnerability or not.  We can not do it the other way
-> > around, that is impossible from our side.
-> 
-> So based on this, and Ted's confirmation that using fsck to validate
-> images is valid [1], it looks like we should create CVEs for such
-> bugs, right?
+From: Thomas Antoine <t.antoine@uclouvain.be>
 
-If you know of any that we have missed, please let us know.
+From the datasheet of the MAX17201/17205, the LSB should be
+"5.0μVh/RSENSE". The current computation sets it at 0.5mAh=5.0μVh/10mOhm
+which does not take into account the value of rsense which can be
+different from 10mOhm.
 
-So yes, we can assign them if people ask for them.
+Change the computation to fit the specs.
 
-thanks,
+Signed-off-by: Thomas Antoine <t.antoine@uclouvain.be>
+---
+ drivers/power/supply/max1720x_battery.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-greg k-h
+diff --git a/drivers/power/supply/max1720x_battery.c b/drivers/power/supply/max1720x_battery.c
+index ea3912fd1de8bfd0d029c16f276316d06e1b105c..68b5314ecf3a234f906ec8fe400e586855b69cd9 100644
+--- a/drivers/power/supply/max1720x_battery.c
++++ b/drivers/power/supply/max1720x_battery.c
+@@ -288,9 +288,10 @@ static int max172xx_voltage_to_ps(unsigned int reg)
+ 	return reg * 1250;	/* in uV */
+ }
+ 
+-static int max172xx_capacity_to_ps(unsigned int reg)
++static int max172xx_capacity_to_ps(unsigned int reg,
++				   struct max1720x_device_info *info)
+ {
+-	return reg * 500;	/* in uAh */
++	return reg * (500000 / info->rsense);	/* in uAh */
+ }
+ 
+ /*
+@@ -394,11 +395,11 @@ static int max1720x_battery_get_property(struct power_supply *psy,
+ 		break;
+ 	case POWER_SUPPLY_PROP_CHARGE_FULL_DESIGN:
+ 		ret = regmap_read(info->regmap, MAX172XX_DESIGN_CAP, &reg_val);
+-		val->intval = max172xx_capacity_to_ps(reg_val);
++		val->intval = max172xx_capacity_to_ps(reg_val, info);
+ 		break;
+ 	case POWER_SUPPLY_PROP_CHARGE_AVG:
+ 		ret = regmap_read(info->regmap, MAX172XX_REPCAP, &reg_val);
+-		val->intval = max172xx_capacity_to_ps(reg_val);
++		val->intval = max172xx_capacity_to_ps(reg_val, info);
+ 		break;
+ 	case POWER_SUPPLY_PROP_TIME_TO_EMPTY_AVG:
+ 		ret = regmap_read(info->regmap, MAX172XX_TTE, &reg_val);
+@@ -422,7 +423,7 @@ static int max1720x_battery_get_property(struct power_supply *psy,
+ 		break;
+ 	case POWER_SUPPLY_PROP_CHARGE_FULL:
+ 		ret = regmap_read(info->regmap, MAX172XX_FULL_CAP, &reg_val);
+-		val->intval = max172xx_capacity_to_ps(reg_val);
++		val->intval = max172xx_capacity_to_ps(reg_val, info);
+ 		break;
+ 	case POWER_SUPPLY_PROP_MODEL_NAME:
+ 		ret = regmap_read(info->regmap, MAX172XX_DEV_NAME, &reg_val);
+
+-- 
+2.49.0
+
+
