@@ -1,108 +1,82 @@
-Received: from plesk.hostmyservers.fr (plesk.hostmyservers.fr [45.145.164.37])
+Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63555220F4A;
-	Fri, 23 May 2025 07:25:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.145.164.37
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16D4614B08E;
+	Fri, 23 May 2025 07:26:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.194.8.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747985128; cv=none; b=noaAkSIAOl/olBHPgXBmmL66fm15ChP5BSDBid8bm3Fzsl7pYiHbdfqlXoJs19l9ezYXY/aSQ/EpBBH7sP7I6tc1UJZ2+2egjDrU6EFmCk9kF9ay4Bs/OBhHKTBdvi05sI0w9kmcDtb9dR9qduiKeR/bLeumf+OCXUFVSJVSozI=
+	t=1747985180; cv=none; b=uW1yBAximkXX1M5IEmOWhHBI25t0s1pstGPmErV2KLqyiz4eyXQno6NGyhdlGt+CVNv/x9sh2LhH828UHbyz9GhrgrEPV4QPNChRmPQygCGYLcMXudfHL5l2WkVqgEPq9ZcvVA8zN55Ezs2kdJNS4eISJUxbGkVzIJzLiPYeShs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747985128; c=relaxed/simple;
-	bh=L5hwYD2GMGyVP6SnLZsdCyv/4gTl9d7s2F5LvXkL4x0=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=jaxG0FwuJIJhwdoaFR4ELOfALJqhGEZAZD21EJiB4Ujvham2G7i8OpQbryrDcun8BUVOmSY1BbFsJerM4Jxf3WF2RebwfJbfn+0zaJvz1yF1dQcww+16vvbBtUBEGU/zWqvOeajdHGt/0xCzYT8FZ9x4ThWHB0Ao+BaFW86Qa90=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=arnaud-lcm.com; spf=pass smtp.mailfrom=arnaud-lcm.com; arc=none smtp.client-ip=45.145.164.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=arnaud-lcm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arnaud-lcm.com
-Received: from [IPV6:2a02:8084:255b:aa00:6055:15d5:ba02:27bb] (unknown [IPv6:2a02:8084:255b:aa00:6055:15d5:ba02:27bb])
-	by plesk.hostmyservers.fr (Postfix) with ESMTPSA id C500940A0F;
-	Fri, 23 May 2025 07:15:23 +0000 (UTC)
-Authentication-Results: Plesk;
-        spf=pass (sender IP is 2a02:8084:255b:aa00:6055:15d5:ba02:27bb) smtp.mailfrom=contact@arnaud-lcm.com smtp.helo=[IPV6:2a02:8084:255b:aa00:6055:15d5:ba02:27bb]
-Received-SPF: pass (Plesk: connection is authenticated)
-Message-ID: <8ff76bf6-b5a5-4030-ad02-e0e56acdb730@arnaud-lcm.com>
-Date: Fri, 23 May 2025 08:15:25 +0100
+	s=arc-20240116; t=1747985180; c=relaxed/simple;
+	bh=DwnQfnSMOItXUm+nDKLtGVpXrHoxllqSJGKceJyda0Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=O6RaoJCBxLQtfKtrJcODkYcP4VOzUCwGm+R0ZmkTJkHQcQKqDBTbPaDPKLgSgShYgrmfu1Rb/yvmQ44hWTxzLvA1szrZS7V+5KUGvG63xKYB473VRJTW50vHlcy/9AgnnidEfLaDRXNN/vI1aG2V5mzos5rdTjRyi9RiAO5YAxQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it; spf=pass smtp.mailfrom=dolcini.it; dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b=lFcWqwSi; arc=none smtp.client-ip=217.194.8.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b="lFcWqwSi"
+Received: from francesco-nb (93-49-2-63.ip317.fastwebnet.it [93.49.2.63])
+	by mail11.truemail.it (Postfix) with ESMTPA id 27DD41F9B6;
+	Fri, 23 May 2025 09:26:08 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dolcini.it;
+	s=default; t=1747985168;
+	bh=921gKtORq+R00la3WfxZeEyYE8YC1dY4t7ERpznsFU0=; h=From:To:Subject;
+	b=lFcWqwSiYiEPiN1D0BU2e1wIPO6VVj/aYmou/mIubn7twAkGr8htcnakAAObQ4u7K
+	 hWsbWXlNHOQ1/MvUhs5CcQcFjbP5l8ZNivmJ8iBiA6QP+mivAo5XCobcCgmuMJefPM
+	 t5TRYAketgCZIQKJ0yd3/ymezcfFaxJ5Lq5HU0KsW/IS2mpB06a0/tdTlGP9XAsyMT
+	 SF6ClGMtSIAdCJuK9rp8xSeZxGtP38I+hQc/ixiJqXV+bQn4y9UgmijrsNYVwI2GK3
+	 QuD3NQI3yt/NmvFxLpSn/p4juC+XMMU3oTmRGDG7AlM949oe3JMAkak/1Lslq4ZqaU
+	 MaJDsvOLUb83A==
+Date: Fri, 23 May 2025 09:26:04 +0200
+From: Francesco Dolcini <francesco@dolcini.it>
+To: Brian Norris <briannorris@chromium.org>
+Cc: rafael@beims.me, Francesco Dolcini <francesco@dolcini.it>,
+	Rafael Beims <rafael.beims@toradex.com>,
+	linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] wifi: mwifiex: enable host mlme on sdio W8997 chipsets
+Message-ID: <20250523072604.GA14001@francesco-nb>
+References: <20250521101950.1220793-1-rafael@beims.me>
+ <aC9dvv6Ki1T5RsHF@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/2] checkpatch.pl: warn about // comments on private
- Rust items
-From: Arnaud Lecomte <contact@arnaud-lcm.com>
-To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Cc: Andy Whitcroft <apw@canonical.com>, Joe Perches <joe@perches.com>,
- Dwaipayan Ray <dwaipayanray1@gmail.com>,
- Lukas Bulwahn <lukas.bulwahn@gmail.com>, Miguel Ojeda <ojeda@kernel.org>,
- Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>,
- Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?=
- <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>,
- Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
- Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>,
- Nathan Chancellor <nathan@kernel.org>,
- Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
- Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
- linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
- llvm@lists.linux.dev, skhan@linuxfoundation.org
-References: <20250422125633.30413-1-contact@arnaud-lcm.com>
- <20250422125824.30525-1-contact@arnaud-lcm.com>
- <CANiq72n41Oj4K-yZCWbNXJQEEjTqjXHYgrkffAg_mUg8dKLWQg@mail.gmail.com>
- <06dde2dd-5d88-49d4-9e46-72a2e12ab1c2@arnaud-lcm.com>
- <CANiq72=UOOyf-esnRUCR0_gxFptdpNOymCz02vgesdNL7zTvHg@mail.gmail.com>
- <32293daf-a6ce-49cc-b41d-1001037444da@arnaud-lcm.com>
-Content-Language: en-US
-In-Reply-To: <32293daf-a6ce-49cc-b41d-1001037444da@arnaud-lcm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-PPP-Message-ID: <174798452510.11144.1771928608104289286@Plesk>
-X-PPP-Vhost: arnaud-lcm.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aC9dvv6Ki1T5RsHF@google.com>
 
-Hi everyone !
-Is there any update so far ?
+Hello Brian,
 
-Best regards,
-Arnaud
+On Thu, May 22, 2025 at 10:24:14AM -0700, Brian Norris wrote:
+> On Wed, May 21, 2025 at 07:19:34AM -0300, rafael@beims.me wrote:
+> > From: Rafael Beims <rafael.beims@toradex.com>
+> > 
+> > Enable the host mlme flag for W8997 chipsets so WPA3 can be used.
+> > This feature depends on firmware support (V2 API key), which may not be
+> > available in all available firmwares.
+> 
+> Is it available in *any* W8997 firmware? Or particularly, is it
+> available in the firmware in linux-firmware.git? Judging by its git
+> history, the answer is "no", in which case this is definitely NAK'd.
 
-On 23/04/2025 12:33, Arnaud Lecomte wrote:
-> On 22/04/2025 17:32, Miguel Ojeda wrote:
->
->> On Tue, Apr 22, 2025 at 4:37 PM Arnaud Lecomte 
->> <contact@arnaud-lcm.com> wrote:
->>> As mentioned earlier, we can reduce the score of any heuristic which
->>> could lead to any important false positive.
->>> In my opinion, as long as the heuristic is relevant, we always have the
->>> possibility to diminish the score associated with the heuristic, hence
->>> preventing unnecessary false positives.
->> Definitely (my comment above for this one was just a note, i.e. there
->> may be nothing to change -- I just thought the commit message referred
->> to just checking "Return" and not "Returns", since it said
->> "imperative").
->>
->>> I think that you are definitely more experienced with what's done
->>> commonly in rust code. Let's maybe change this heuristic definition 
->>> with
->>> @ related to types or some other annotation. Do you have some example I
->>> could have a look to come in the next version with a relevant list of @
->>> we can encounter.
->> What does "references" mean in that heuristic? If you mean external
->> links to some URL, then we typically use Markdown for those. The
->> inline ones like `<https://...>`happen in both comments and docs. The
->> `[...]: https://...` ones are way less common in comments I think (I
->> can't find one).
-> We should then remove it. I'll wait for other reviewers for their 
-> feedback and then send a new version of the patch serie. Thanks :)
->> As for `@`, if you mean the actual character, I grepped for it in Rust
->> files with the /.*@ regex and found just ~13 matches, and all were the
->> emails and disambiguators I mentioned. So I don't think we really use
->> it for "references" (assuming I understand what that means).
->>
->> I guess you already looked in some `rust/kernel/` files -- some of
->> those are really the best examples of how docs and comments should
->> generally be written.
->> Thanks!
->>
->> Cheers,
->> Miguel
->>
+mrvl/sdsd8997_combo_v4.bin, from linux-firmware GIT, 16.92.21.p137
+version. From an off-list chat with Rafael he confirmed me that this is
+what he used for testing.
+
+> users on the old FW version. So, we'd need to teach the driver to know
+> the difference between v1 and v2 API here, and choose accordingly.
+
+This is already implemented. From mwifiex_ret_get_hw_spec()
+
+```
+        if (adapter->key_api_major_ver != KEY_API_VER_MAJOR_V2)
+                adapter->host_mlme_enabled = false;
+```
+
+To me the patch is ok.
+
+Francesco
+
