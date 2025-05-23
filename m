@@ -1,77 +1,83 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-174.mta1.migadu.com (out-174.mta1.migadu.com [95.215.58.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E84C20C489
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 17:15:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6C891B4139
+	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 17:16:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748020551; cv=none; b=vEucGOea65vEZ2TL9Ls0KIDL9Q9kaPqvKW0jwFyETDTDQPnscerIZLTZ5uNruQBoMoC7C6O5juz+YS0Xs132DXfqfjR/XJMyB9W+gwlM4KnJnRmuei2oa0iMDWMo4HajoCd+5Zm+9YPopyq9e5C6+xA1UTpGDwA9GJxSwmwy4sc=
+	t=1748020583; cv=none; b=ZakBsjv7GIWQaWpyn6iGZnfp9aEwrLAMY3ObtJp/VYxNhzZgJQtzyu8u3cO/9urgOn3xADl936F1XYjwv0ttTWxgjtMMYlSjL0l7Z7q3dE9o7YMA9KtiUTgMO8VOm8k08yVJsymg/ZPcFWrzZMLGJ7COrthUO3E5S0GKMFTdL3g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748020551; c=relaxed/simple;
-	bh=ZqIwFnMlZ57L5F4L1qbjy7ifZde3b0cHMcvppKVO3QI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=dkimr4+IZSYJ4JhEUvOEuq2f9jQoEPu5qIeTOTG6MnjhyBmedxuSnfpQifPnSSon8pytdl0nKRypuI5ZWAU5qJGdNQMDBcbFad0IA52GpT3ZYEDwhIY1+RYNn0R02jP+YSnvrKhw1d/9yJXTuzHbDKx7CJN6YH5s3KcAfrofLRo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eiH4zMPi; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748020583; c=relaxed/simple;
+	bh=Drp5lZRk4LA7SqjWH3KK6QjUHA5tD8wxZElSKSZPax4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=fb7V4norVSjFFINbEpFNaw94WO3ArwsMf4YkaV50MBdmc5XXmRErkMarXvvMw0mmerSssIhDmK8wfF6cJ6U8n8otf7YZ5w6x/7JhCyV0cVUfnAEQI0KZ/Ze2HPVJEfnyV0v1DMyT6I52EKHxS4PvfiAhDBiU0ovKkUOMYIgKE9A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=p4ygCmn0; arc=none smtp.client-ip=95.215.58.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eiH4zMPi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75B9EC4CEE9;
-	Fri, 23 May 2025 17:15:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748020550;
-	bh=ZqIwFnMlZ57L5F4L1qbjy7ifZde3b0cHMcvppKVO3QI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=eiH4zMPiC0vZGJOFwMRvCKkv/BwFsfu88Sggg3pKZkh+JmWDDb6zRqqihJGliu/a5
-	 bTaE/c6rr1wX1y8P4/2rRq1deolO/QaBEMzVR/CUygE0LXotk3z1yQvJ3Usxt2l/Kk
-	 CJACH5gzSeGEwAG6of/HDzPn8rWorBV+EIrR6jxKN+nzWh3ZmjhgCg5upgrm5L4zKv
-	 Fr6njXdtf6k4n911UmCck4btGcQJU7c86/pqdvnd/LGo14kslmHPQ7Dvh1UHkK6qOe
-	 XKAjrLgnVV+a2CAk9QfvjImnGSfKiMDYaBVCmVVKX2S8o0n9KQDI6Plq5xTRXC1Unw
-	 1N18Arpt7OOLA==
-From: SeongJae Park <sj@kernel.org>
-To: Usama Arif <usamaarif642@gmail.com>
-Cc: SeongJae Park <sj@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	surenb@google.com,
-	hannes@cmpxchg.org,
-	shakeel.butt@linux.dev,
-	vlad.wing@gmail.com,
-	linux-mm@kvack.org,
-	kent.overstreet@linux.dev,
-	cl@gentwo.org,
-	rientjes@google.com,
-	vbabka@suse.cz,
-	roman.gushchin@linux.dev,
-	harry.yoo@oracle.com,
-	linux-kernel@vger.kernel.org,
-	kernel-team@meta.com
-Subject: Re: [PATCH v3] mm: slub: only warn once when allocating slab obj extensions fails
-Date: Fri, 23 May 2025 10:15:48 -0700
-Message-Id: <20250523171548.57624-1-sj@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250523165240.1477006-1-usamaarif642@gmail.com>
-References: 
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="p4ygCmn0"
+Message-ID: <61627296-6f94-45ea-9410-ed0ea2251870@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1748020578;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=NwSnBgPFez8PLTovNHh7DO/HqAHVQL0w4mtppSLYja0=;
+	b=p4ygCmn0/SgSUw/j+FUlcInOw5bcP3qQpAP+WTRtVHCq8zqDVxfsG3vreS7WCBAJhRjcTY
+	CNS0wuI2Zor/NqLA6i4HP+ByVNwTy/KZWyPRvH4hhejZLNvTG/9jo7xnLQXl37V2+/wL9Q
+	eok6kr9D3cEhlTaruAu9Wmz5VZIJWYI=
+Date: Fri, 23 May 2025 10:16:11 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Subject: Re: [PATCH v3 9/9] RISC-V: KVM: Upgrade the supported SBI version to
+ 3.0
+To: =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@ventanamicro.com>,
+ Anup Patel <anup@brainfault.org>, Will Deacon <will@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>, Paul Walmsley
+ <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>,
+ Mayuresh Chitale <mchitale@ventanamicro.com>
+Cc: linux-riscv@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, Palmer Dabbelt <palmer@rivosinc.com>,
+ kvm@vger.kernel.org, kvm-riscv@lists.infradead.org,
+ linux-riscv <linux-riscv-bounces@lists.infradead.org>
+References: <20250522-pmu_event_info-v3-0-f7bba7fd9cfe@rivosinc.com>
+ <20250522-pmu_event_info-v3-9-f7bba7fd9cfe@rivosinc.com>
+ <DA3KSSN3MJW5.2CM40VEWBWDHQ@ventanamicro.com>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Atish Patra <atish.patra@linux.dev>
+In-Reply-To: <DA3KSSN3MJW5.2CM40VEWBWDHQ@ventanamicro.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-
-On Fri, 23 May 2025 17:52:40 +0100 Usama Arif <usamaarif642@gmail.com> wrote:
-
-> In memory bound systems, a large number of warnings for failing this
-> allocation repeatedly may mask any real issues in the system
-> during memory pressure being reported in dmesg. Change this to
-> warning only once.
-> 
-> Signed-off-by: Usama Arif <usamaarif642@gmail.com>
-> Reported-by: Vlad Poenaru <vlad.wing@gmail.com>
-> Closes: https://lore.kernel.org/all/17fab2d6-5a74-4573-bcc3-b75951508f0a@gmail.com/
-
-Reviewed-by: SeongJae Park <sj@kernel.org>
+X-Migadu-Flow: FLOW_OUT
 
 
-Thanks,
-SJ
+On 5/23/25 6:31 AM, Radim Krčmář wrote:
+> 2025-05-22T12:03:43-07:00, Atish Patra <atishp@rivosinc.com>:
+>> Upgrade the SBI version to v3.0 so that corresponding features
+>> can be enabled in the guest.
+>>
+>> Signed-off-by: Atish Patra <atishp@rivosinc.com>
+>> ---
+>> diff --git a/arch/riscv/include/asm/kvm_vcpu_sbi.h b/arch/riscv/include/asm/kvm_vcpu_sbi.h
+>> -#define KVM_SBI_VERSION_MAJOR 2
+>> +#define KVM_SBI_VERSION_MAJOR 3
+> I think it's time to add versioning to KVM SBI implementation.
+> Userspace should be able to select the desired SBI version and KVM would
+> tell the guest that newer features are not supported.
 
-[...]
+We can achieve that through onereg interface by disabling individual SBI 
+extensions.
+We can extend the existing onereg interface to disable a specific SBI 
+version directly
+instead of individual ones to save those IOCTL as well.
+
+> We could somewhat get away with the userspace_sbi patch I posted,
+> because userspace would at least be in control of the SBI version, but
+> it would still be incorrect without a KVM enforcement, because a
+> misbehaving guest could use features that should not be supported.
