@@ -1,185 +1,110 @@
-Received: from out-186.mta1.migadu.com (out-186.mta1.migadu.com [95.215.58.186])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B23F42F3E
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 09:54:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.186
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A11B622A1FA;
+	Fri, 23 May 2025 09:54:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747994067; cv=none; b=CeI/Ql3V3Oa1fEWbH8eRZNH2aylvfIn+o01EcbUCI7e8yBlaK+Ak+olIwMFlM6oUjT73cgZxruFJrwYsARbT6YpuxAhofo77eu3nmKbnF0+pI//0GS+cjIQC5tpQkguaf+8xTvTv4XO5RW8RlGFQrwT3VBQupoHNLBgQ1RzDkOM=
+	t=1747994083; cv=none; b=tI41xjdgE/5DiRehX3jCIoarrb692OUx26Z1tmelqdcIQDcbxPvYKSFA6CMtfBYY6YNQzNyeznrExeaVqCh88hyI/E/S8zkC0Es9pkmKLw/YdxPzf43dISSezlggaA7pYJ5kFRLCsO4igt9JGW/SnwhJWheIk08ZqXtHP5iWKjs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747994067; c=relaxed/simple;
-	bh=E8gNIneXWGPjnI07iEOK/Byl8S2wW9tOYjihShZcXoY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=epFqo0Y5TEg2zjFeaDKrUmEed2HMLyT1qqUD8/DNeklBdDX2I108/pTUUXnjwLsppk6ipS+PlV+p9UAGA3VZWYgSfOS3+6RqBkz3Rlq0p1JNn6HurfLBS9DxVuN98IRQWtdKsNgTfWJwRZ/9pzYRrZfj08Wp33kEHIf73pRV8n8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=n4X9rZVe; arc=none smtp.client-ip=95.215.58.186
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1747994083; c=relaxed/simple;
+	bh=RB99VirsIdmb8I1X4vyoUiocrkXLO/yI71p/wSx579I=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=PksB4qey0RjK10bd9L4Tknldc12vGzesUdAkEFBA1ufaIqK/It4tzHIrVpSkzbWjx6I1Giq9KdAAQFU/6Izcd73isnA49bE22bbzdf5a77sOtR28bTaHNeWn66B8eyRT/+2gpC+9HeYyCRRPTnwCcj7rsxB15ELy4HKL5BBUCM8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=Y8RkrZWb; arc=none smtp.client-ip=178.21.23.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="n4X9rZVe"
-Message-ID: <a0d4f499-1222-45da-a3ea-e9d445b81c87@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1747994061;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=rNzhlrTrgf6zoW1XzrBUaGQMb+etBo16vS9kQPgLQhQ=;
-	b=n4X9rZVee6YQEK15TmlRupOQhGROGs4wShiX52st6RNL3S4rjkXFlnuTSuEdiwG+M/4VlU
-	nm26hkGfFusbHhPrvHx62oSNMVqkUMnlZuLL2nttXng/BVu/JnQSBPIrhhf2toQKFjgY9s
-	d7qG9MgsBmwp+1pqlFysl2KGWTi/SVA=
-Date: Fri, 23 May 2025 17:53:55 +0800
+	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="Y8RkrZWb"
+Received: from mail01.disroot.lan (localhost [127.0.0.1])
+	by disroot.org (Postfix) with ESMTP id 78B282627E;
+	Fri, 23 May 2025 11:54:33 +0200 (CEST)
+X-Virus-Scanned: SPAM Filter at disroot.org
+Received: from layka.disroot.org ([127.0.0.1])
+ by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
+ id ve9O3ZYTPBAa; Fri, 23 May 2025 11:54:32 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
+	t=1747994072; bh=RB99VirsIdmb8I1X4vyoUiocrkXLO/yI71p/wSx579I=;
+	h=From:To:Cc:Subject:Date;
+	b=Y8RkrZWbGSJkM8qBV/68W9AEjnbkIDlEhrMZYfXdMEfseV91XuxwoKC+xNU2JNs99
+	 ltG+1qHMolkvM6c019/T26rm3wQaz3bO67j7m8j/u7wVKc6mDR9tZpwHhbHAJlxBYN
+	 CVYa5UeL6vvrAkV5zwkZz8u3w/2gckdSB4e/Dh9jiGI2h6Yjnz/OghkbhmLakMCDPi
+	 pmq2ajY8JpXvEICHyNEsf3Z9e0LGyd6u0mjqnvhNU9ANshm1W3IAZb3iezameRSir6
+	 dti429KFoEdnsM4NmkL9E1QPG9w7tYInX9ze9jNxssupVNMa7gFXRsvKHbPhgku9N/
+	 uNol6QbZhbUKA==
+From: Yao Zi <ziyao@disroot.org>
+To: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Yao Zi <ziyao@disroot.org>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Junhao Xie <bigfoot@classfun.cn>,
+	=?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>,
+	Aradhya Bhatia <a-bhatia1@ti.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Binbin Zhou <zhoubinbin@loongson.cn>
+Cc: devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	Mingcong Bai <jeffbai@aosc.io>,
+	Kexy Biscuit <kexybiscuit@aosc.io>
+Subject: [PATCH v3 0/4] Initial support for CTCISZ Forever Pi
+Date: Fri, 23 May 2025 09:54:04 +0000
+Message-ID: <20250523095408.25919-1-ziyao@disroot.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH 4/7] sched/fair: Take care of group/affinity/sched_class
- change for throttled task
-To: Aaron Lu <ziqianlu@bytedance.com>
-Cc: Valentin Schneider <vschneid@redhat.com>, Ben Segall
- <bsegall@google.com>, K Prateek Nayak <kprateek.nayak@amd.com>,
- Peter Zijlstra <peterz@infradead.org>, Josh Don <joshdon@google.com>,
- Ingo Molnar <mingo@redhat.com>, Vincent Guittot
- <vincent.guittot@linaro.org>, Xi Wang <xii@google.com>,
- linux-kernel@vger.kernel.org, Juri Lelli <juri.lelli@redhat.com>,
- Dietmar Eggemann <dietmar.eggemann@arm.com>,
- Steven Rostedt <rostedt@goodmis.org>, Mel Gorman <mgorman@suse.de>,
- Chuyi Zhou <zhouchuyi@bytedance.com>, Jan Kiszka <jan.kiszka@siemens.com>,
- Florian Bezdeka <florian.bezdeka@siemens.com>
-References: <20250520104110.3673059-1-ziqianlu@bytedance.com>
- <20250520104110.3673059-5-ziqianlu@bytedance.com>
- <63237b23-ae10-45f9-abdd-8ea4adb4d15e@linux.dev>
- <20250523075640.GA1168183@bytedance>
- <ad8197f1-548d-4fad-abd0-e8f6e9dbe12a@linux.dev>
- <20250523094106.GA1210419@bytedance>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Chengming Zhou <chengming.zhou@linux.dev>
-In-Reply-To: <20250523094106.GA1210419@bytedance>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 8bit
 
-On 2025/5/23 17:42, Aaron Lu wrote:
-> On Fri, May 23, 2025 at 05:13:35PM +0800, Chengming Zhou wrote:
->> On 2025/5/23 15:56, Aaron Lu wrote:
->>> On Fri, May 23, 2025 at 10:43:53AM +0800, Chengming Zhou wrote:
->>>> On 2025/5/20 18:41, Aaron Lu wrote:
->>>>> On task group change, for tasks whose on_rq equals to TASK_ON_RQ_QUEUED,
->>>>> core will dequeue it and then requeued it.
->>>>>
->>>>> The throttled task is still considered as queued by core because p->on_rq
->>>>> is still set so core will dequeue it, but since the task is already
->>>>> dequeued on throttle in fair, handle this case properly.
->>>>>
->>>>> Affinity and sched class change is similar.
->>>>
->>>> How about setting p->on_rq to 0 when throttled? which is the fact that
->>>> the task is not on cfs queue anymore, does this method cause any problem?
->>>>
->>>
->>> On task group change/affinity change etc. if the throttled task is
->>> regarded as !on_rq, then it will miss the chance to be enqueued to the
->>> new(and correct) cfs_rqs, instead, it will be enqueued back to its
->>> original cfs_rq on unthrottle which breaks affinity or task group
->>
->> Yeah, this is indeed a problem, I was thinking to delete the throttled task
->> from the cfs_rq limbo list, then add it to another cfs_rq limbo list or cfs_rq
->> runnable tree based on the new cfs_rq's throttle status.
-> 
-> Only work when the task is still handled by fair :)
-> 
->>
->> But it's much complex compared with your current method.
->>
->>> settings. We may be able to do something in tg_unthrottle_up() to take
->>> special care of these situations, but it seems a lot of headaches.
->>>
->>> Also, for task group change, if the new task group does not have throttle
->>> setting, that throttled task should be allowed to run immediately instead
->>> of waiting for its old cfs_rq's unthrottle event. Similar is true when
->>> this throttled task changed its sched class, like from fair to rt.
->>>
->>> Makes sense?
->>
->> Ok, the another problem of the current method I can think of is the PELT maintenance,
->> we skip the actual dequeue_task_fair() process, which includes PELT detach, we just
->> delete it from the cfs_rq limbo list, so it can result in PELT maintenance error.
->>
-> 
-> There are corresponding callbacks that handle this, e.g. for task group
-> change, there is task_change_group_fair() that handles PELT detach; for
-> affinity change, there is migrate_task_rq_fair() does that and for sched
-> class change, there is switched_from/to() does that.
-> 
-> Or do I miss anything?
+This series adds support for CTCISZ Forever Pi, which ships an Loongson
+2K0300 SoC and various peripherals. The vendor prefix and the board are
+documented and basic SoC/board devicetrees are added.
 
-migrate_task_rq_fair() only do it when !task_on_rq_migrating(p), which is wakeup migrate,
-because we already do detach in dequeue_task_fair() for on_rq task migration...
-You can see the DO_DETACH flag in update_load_avg() called from dequeue_entity().
+I've successfully booted into console with vendor U-Boot, a bootlog
+could be obtained here[1]. DTB and initramfs must be built into the
+kernel as the vendor bootloader cannot pass them and upstream U-Boot
+support for LoongArch is still WIP.
 
-Thanks!
+Thanks for your time and review.
 
-> 
-> Thanks,
-> Aaron
->   
->>>>>
->>>>> Signed-off-by: Aaron Lu <ziqianlu@bytedance.com>
->>>>> ---
->>>>>     kernel/sched/fair.c | 24 ++++++++++++++++++++++++
->>>>>     1 file changed, 24 insertions(+)
->>>>>
->>>>> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
->>>>> index 74bc320cbc238..4c66fd8d24389 100644
->>>>> --- a/kernel/sched/fair.c
->>>>> +++ b/kernel/sched/fair.c
->>>>> @@ -5866,6 +5866,10 @@ static void throttle_cfs_rq_work(struct callback_head *work)
->>>>>     		update_rq_clock(rq);
->>>>>     		WARN_ON_ONCE(!list_empty(&p->throttle_node));
->>>>>     		dequeue_task_fair(rq, p, DEQUEUE_SLEEP | DEQUEUE_SPECIAL);
->>>>> +		/*
->>>>> +		 * Must not add it to limbo list before dequeue or dequeue will
->>>>> +		 * mistakenly regard this task as an already throttled one.
->>>>> +		 */
->>>>>     		list_add(&p->throttle_node, &cfs_rq->throttled_limbo_list);
->>>>>     		resched_curr(rq);
->>>>>     	}
->>>>> @@ -5881,6 +5885,20 @@ void init_cfs_throttle_work(struct task_struct *p)
->>>>>     	INIT_LIST_HEAD(&p->throttle_node);
->>>>>     }
->>>>> +static void dequeue_throttled_task(struct task_struct *p, int flags)
->>>>> +{
->>>>> +	/*
->>>>> +	 * Task is throttled and someone wants to dequeue it again:
->>>>> +	 * it must be sched/core when core needs to do things like
->>>>> +	 * task affinity change, task group change, task sched class
->>>>> +	 * change etc.
->>>>> +	 */
->>>>> +	WARN_ON_ONCE(p->se.on_rq);
->>>>> +	WARN_ON_ONCE(flags & DEQUEUE_SLEEP);
->>>>> +
->>>>> +	list_del_init(&p->throttle_node);
->>>>> +}
->>>>> +
->>>>>     static void enqueue_task_fair(struct rq *rq, struct task_struct *p, int flags);
->>>>>     static int tg_unthrottle_up(struct task_group *tg, void *data)
->>>>>     {
->>>>> @@ -6834,6 +6852,7 @@ static inline void sync_throttle(struct task_group *tg, int cpu) {}
->>>>>     static __always_inline void return_cfs_rq_runtime(struct cfs_rq *cfs_rq) {}
->>>>>     static void task_throttle_setup_work(struct task_struct *p) {}
->>>>>     static bool task_is_throttled(struct task_struct *p) { return false; }
->>>>> +static void dequeue_throttled_task(struct task_struct *p, int flags) {}
->>>>>     static inline int cfs_rq_throttled(struct cfs_rq *cfs_rq)
->>>>>     {
->>>>> @@ -7281,6 +7300,11 @@ static int dequeue_entities(struct rq *rq, struct sched_entity *se, int flags)
->>>>>      */
->>>>>     static bool dequeue_task_fair(struct rq *rq, struct task_struct *p, int flags)
->>>>>     {
->>>>> +	if (unlikely(task_is_throttled(p))) {
->>>>> +		dequeue_throttled_task(p, flags);
->>>>> +		return true;
->>>>> +	}
->>>>> +
->>>>>     	if (!(p->se.sched_delayed && (task_on_rq_migrating(p) || (flags & DEQUEUE_SAVE))))
->>>>>     		util_est_dequeue(&rq->cfs, p);
+[1]: https://gist.github.com/ziyao233/f42c5058d83ae45222fbd0b8524f3e59
+
+Changed from v2:
+- Collect review tags
+- Add a unitname for "soc" node
+- Rename SoC devicetree to loongson-2k0300-ctcisz-forever-pi.dts for
+  consistency
+- Link to v2: https://lore.kernel.org/all/20250518080356.43885-1-ziyao@disroot.org/
+
+Changed from v1 ("Initial support for CTCISZ Ninenine Pi")
+- Board binding:
+  - Use "Forever Pi" instead of "Ninenine Pi" as translation of the
+    board model
+- SoC devicetree:
+  - Move UART aliases to the board dt
+  - Add the missing space in definition of liointc0
+- Link to v1: https://lore.kernel.org/all/20250501044239.9404-2-ziyao@disroot.org/
+
+Yao Zi (4):
+  dt-bindings: vendor-prefixes: Add CTCISZ Technology Co., LTD.
+  dt-bindings: LoongArch: Add CTCISZ Forever Pi
+  LoongArch: dts: Add initial SoC devicetree for Loongson 2K0300
+  LoongArch: dts: Add initial devicetree for CTCISZ Forever Pi
+
+ .../bindings/loongarch/loongson.yaml          |   5 +
+ .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
+ arch/loongarch/boot/dts/Makefile              |   1 +
+ .../dts/loongson-2k0300-ctcisz-forever-pi.dts |  45 +++++
+ arch/loongarch/boot/dts/loongson-2k0300.dtsi  | 184 ++++++++++++++++++
+ 5 files changed, 237 insertions(+)
+ create mode 100644 arch/loongarch/boot/dts/loongson-2k0300-ctcisz-forever-pi.dts
+ create mode 100644 arch/loongarch/boot/dts/loongson-2k0300.dtsi
+
+-- 
+2.49.0
+
