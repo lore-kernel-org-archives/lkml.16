@@ -1,443 +1,228 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f205.google.com (mail-il1-f205.google.com [209.85.166.205])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDECB2DCC11;
-	Fri, 23 May 2025 04:45:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.7
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747975544; cv=fail; b=DNpI/Cao/aJaiDZw6220NsQiv12PjnfNN4V+bQWeFyGiDrgEFXbtm+4BQFsqdSBrJnmSB2tfFL6HCqOVDECErniX8zJQ5G4UFTUbOUw8mwk4dpJhTJ0ukYPcn8WTxqBFys5QEYzaR62X2TdE8C3HuHrG2Zjg4Nuzpu9e3jz/ygU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747975544; c=relaxed/simple;
-	bh=ALTjS+5UEf4gsKv4YVrsGquNJvESG2Nw0m/J/Oczl9U=;
-	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=UUJUx91B3UWPK1MhTpzBmboCmPKMAPF+JxVVWBqCfhPe60B1UwkDLzuYTAh0MC5DMXt1WrqHRW1vL7YYzl8iOpkfhJ9ZRSSQ4fwFenWCRfxv7MZJRqtflTh+IhyiETwGW33EDGR9FvKo76iDXpH8vK1rqDJR+3ZUWz7hP2fL/iM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PZcWDSEh; arc=fail smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PZcWDSEh"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747975543; x=1779511543;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=ALTjS+5UEf4gsKv4YVrsGquNJvESG2Nw0m/J/Oczl9U=;
-  b=PZcWDSEhG/FFyYqxx4TdSTp748J5fT5apj2X6qsT02+dFm4wYl48+swt
-   isEYzl8xRbj7pBH6C9jZazHm/I5/+0yMH//uKkedBTKgemJiA/KbHyIHm
-   XdrGBhJFYWR9J4/jlapYbjyBF6mIQ/Zib422lHyVLiT/IceHwQPIDBazL
-   Lyp9qjqbg0vUOMSR8aQDz5TLYDllmkNBeHaWESs5Xg0h7Qa4+XPpoKYZZ
-   A6kdBo5y15cS4h7kSSAaeadReYaP+Di9lqY5S3nf6suXo3F05hyC8QPDI
-   jdmcJD/XNZYi4Sg1pUtnROrioDkeGggv/L1N5sLNSyEvEx90O3L5gS3B+
-   Q==;
-X-CSE-ConnectionGUID: btCOfW06QlyeQs5BqqIaIw==
-X-CSE-MsgGUID: lkH2orRPQmOilbbSps9k9w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11441"; a="75422282"
-X-IronPort-AV: E=Sophos;i="6.15,307,1739865600"; 
-   d="scan'208";a="75422282"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2025 21:45:42 -0700
-X-CSE-ConnectionGUID: RmsJ7X+DSryWrhO5g1KdLw==
-X-CSE-MsgGUID: tKgRuoXZQ7WMTOm7WJJjXw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,307,1739865600"; 
-   d="scan'208";a="141003531"
-Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
-  by fmviesa007.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2025 21:45:41 -0700
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Thu, 22 May 2025 21:45:40 -0700
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25 via Frontend Transport; Thu, 22 May 2025 21:45:40 -0700
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (40.107.243.88)
- by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.55; Thu, 22 May 2025 21:45:40 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=oq3nNZG3VlcunOhlr7ntFAiNdmtwEORsA8s8/7BIdccPRbG8Achmarj4jKI42n628FDg6FOL141M9ZOYwX9MqLhYKBbG9S26as2/U0ae5CjBL1UqheSmeZzmohPXlcfQ84fsLSrFHOwphRcfDueLn/9KS9S8ISDXlAMBidZs3axCJJr8ftLUv2l16cIug88+FkAxKtOSiq4qCfNO86I2gwxCT5QQjNyF+kPUYF6ebohzqxkJr3mNgWWvjnLiotJwuogtqEIco/vChUm9XUhnh45vYuhO1mQkdkzviYYpRymVqld2KEBgAWTgUTpbYerD2ymjtog+4dS6TEXuFj6jUA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=7rpYQ1EyOL6UREASTdN2BT6sO4WgNYNKPRz7bHQAwEo=;
- b=rX8GiwJWi7IWNTGEEjlzqfkSSXjfjr3yGZp+cOezVlptiE+JTCOp5xdIt+WGh9NO2kiGHRX9pyMgngsD2ZWg2eJfSXsgb84RxQT5w8HxjHHn8Wdx9s/rXJNK/AapR+K7PSxj1uaZCboZvSvXKAH8fKUybtaZoq7lit49Sm8QWgZEB1CdW502FrnerwXmWijtepXacY08ipQdMtcoMCvBrrf7wU6RJthYq9EcIrA57Fsck1W7qWi5L34jK9hU0viNY0xZbtUdwPFYeDGKJvKOUyVW7VLwhE8SGCs/qBfibmovqD11+tw9ZkBbLeirNcIo1aVUNFlcEH0nMT+ObizeLQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from SJ2PR11MB7573.namprd11.prod.outlook.com (2603:10b6:a03:4d2::10)
- by LV8PR11MB8582.namprd11.prod.outlook.com (2603:10b6:408:1f7::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.20; Fri, 23 May
- 2025 04:45:37 +0000
-Received: from SJ2PR11MB7573.namprd11.prod.outlook.com
- ([fe80::61a:aa57:1d81:a9cf]) by SJ2PR11MB7573.namprd11.prod.outlook.com
- ([fe80::61a:aa57:1d81:a9cf%3]) with mapi id 15.20.8746.030; Fri, 23 May 2025
- 04:45:31 +0000
-Message-ID: <32b93fc9-db36-459f-8b8f-ac38cc156837@intel.com>
-Date: Thu, 22 May 2025 21:45:28 -0700
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v13 20/27] x86/resctrl: Provide interface to update the
- event configurations
-To: Babu Moger <babu.moger@amd.com>, <corbet@lwn.net>, <tony.luck@intel.com>,
-	<tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
-	<dave.hansen@linux.intel.com>
-CC: <james.morse@arm.com>, <dave.martin@arm.com>, <fenghuay@nvidia.com>,
-	<x86@kernel.org>, <hpa@zytor.com>, <paulmck@kernel.org>,
-	<akpm@linux-foundation.org>, <thuth@redhat.com>, <rostedt@goodmis.org>,
-	<ardb@kernel.org>, <gregkh@linuxfoundation.org>,
-	<daniel.sneddon@linux.intel.com>, <jpoimboe@kernel.org>,
-	<alexandre.chartre@oracle.com>, <pawan.kumar.gupta@linux.intel.com>,
-	<thomas.lendacky@amd.com>, <perry.yuan@amd.com>, <seanjc@google.com>,
-	<kai.huang@intel.com>, <xiaoyao.li@intel.com>, <kan.liang@linux.intel.com>,
-	<xin3.li@intel.com>, <ebiggers@google.com>, <xin@zytor.com>,
-	<sohil.mehta@intel.com>, <andrew.cooper3@citrix.com>,
-	<mario.limonciello@amd.com>, <linux-doc@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <peternewman@google.com>,
-	<maciej.wieczor-retman@intel.com>, <eranian@google.com>,
-	<Xiaojian.Du@amd.com>, <gautham.shenoy@amd.com>
-References: <cover.1747349530.git.babu.moger@amd.com>
- <ed1ae013a2aa8216444d1b716a1bffc7979a8883.1747349530.git.babu.moger@amd.com>
-From: Reinette Chatre <reinette.chatre@intel.com>
-Content-Language: en-US
-In-Reply-To: <ed1ae013a2aa8216444d1b716a1bffc7979a8883.1747349530.git.babu.moger@amd.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SJ0PR05CA0092.namprd05.prod.outlook.com
- (2603:10b6:a03:334::7) To SJ2PR11MB7573.namprd11.prod.outlook.com
- (2603:10b6:a03:4d2::10)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 411B01F17F7
+	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 04:46:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.205
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747975597; cv=none; b=nrvvFSqgsD1tRqBwVIeAll5NXqucBgUXWuB7ZragBOum1GHcCuS/b+36WUfrlIG+oc+prrlecbbSaDRIVwpRIRubFj4uvP6WycpsBwEdz8ZP3JzUIIrw1PQOZBmJ45oPP9eY2S86cj7p0uT873+gZ+QhDDhRgxkvKydRazqD7uQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747975597; c=relaxed/simple;
+	bh=XAqPNcQTWX91zcH2mVA5CqsMow38DbgaVvBjBUe0TDo=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=Cc3Sc28/HIDtyEPyLM6SWzh1NfNVM6Oqw3y12YPIEQNqFt69QO0WzIM3AfQsvXVou2eq6gtOkrkf5vgcOuxAbUsMpo5LdM86i0XHNHJxiDc6hOTbSfG/atK5iRJrHXiA19S4LcgYSxD7tujP6b/oPIHGvyyjTWx6wbpj0+cd2jA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.205
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f205.google.com with SMTP id e9e14a558f8ab-3dc7bc950ceso41574645ab.1
+        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 21:46:35 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747975594; x=1748580394;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=xbWOPZAgkoPSb2bLTKcY8Iaj/okxhf05Cpg7L2qKMFs=;
+        b=gig2Mxo878n2PDXNNzw0++PXqMc0TeyPsBYKQ9oKVkiA71qGOmQKndVVrdMPpvkGXt
+         949qOqQ6HgplLNXodP9SmvEU4zGcepHA41PSbuLe2P3mWrKXSWWf8Qu3xx1bBUhdpnGP
+         sZWrlB1l5rW3RarNEPYrTQlsg1pkP0bCkDSBH9S1rZRr6N5ZDZDgNiUj/D6Wv/aSyo3M
+         zTNk4dTjiRecU6OKdEH61et60q133FWNkmdmz+T9aL7+YocDBqUKWqKw8DriDSMI4uGA
+         oaBK3B2CKt6bx+weLvjnPyS78aBY3qZwoJdFo7t67RvVTjyaM+9cdVsykUmAPHs7Psfz
+         GoDg==
+X-Forwarded-Encrypted: i=1; AJvYcCXRkPrWzndqg4Dfiw12MdfeL5If5pmzc4MRVMne0SvtDPp3sDjl+Lrlji80mqXZjvW+XhXM4FINyF0xyNA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwyBWWVIcLT9MzKAGBYZ4kAyxOJw3rW4xLIN/FQNngkFeEw5wWu
+	cnlWAXmNFj6QSPjf1jd7usI81Pp1pLd+49r5PMvnKiaveRpRSOrr+ePvcLug856thAhGhOo3gXP
+	N45YubYhby4ogoFxkYWv0lChOpjqxg2do/fagKoN+xVqBiMwoVg6hgpp9Mio=
+X-Google-Smtp-Source: AGHT+IGnYULwd6+EAnWNTWM0zxMUrJYcKL/b/3KprQheG4Ilx0uvk8CYbzsaxTdqbvfzzzJnXsbooSyMhwtja4j4AVeD293W+Nb3
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ2PR11MB7573:EE_|LV8PR11MB8582:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2d34f736-e8d6-498b-8f43-08dd99b4a5ea
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|1800799024|366016|7053199007;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?Z0tsc2QzSmhrcEVnN0hldVhuZjgxMlorQmRUU1psanpSS05GV2p4UERoVXhD?=
- =?utf-8?B?eE1mVzVzRmhIR2gvVzB3VnllQjVzTzRVNlV2WXlnZjlKTU9ybURuUTllRlA1?=
- =?utf-8?B?OVJDOVZFQUpZUXlsSWVlc2lyS0t5M1dmem95a0tucUpHZllRdjdEeTREQnd0?=
- =?utf-8?B?R1FQT2ZHWk0wSjFmbkJrdTZySEJWcnFmRHNocWJSK1ZHVURxNVlCQThMV0hX?=
- =?utf-8?B?cTBvR3k2eXRSaGtOL25XY1Bya2dGbU5WdFFDQzFhaHVVMURpdmt4UHZnVW9z?=
- =?utf-8?B?MWlaNnZMTTIxWGJOWHdPL3RpRDhPSkRzMm45RnNEQ0JEN2hIcVY0eHJCWUI2?=
- =?utf-8?B?VmFMTGtZWWRSNjdhMElJQnJEVXBocWI0VFU3dlFpczRPRHpWNVhpTzFLcVQ0?=
- =?utf-8?B?QzBCNHNIZVh1L1VwVEFJSGFhaHIwQzZKMFR6cjF4ZjNUUzNoZDc1WU1ndCt1?=
- =?utf-8?B?SmF6aStrQjFHeUdEVFlNQUlJYXdrTkRaL2dRdmMxV0NSVVdSY3c5cU15TUNa?=
- =?utf-8?B?a2V4Q3JrT1ZSMTZVWlRUYUxqYURPdVFVTkU1REh2ZkxLRWFEZjN5T1JLN0JE?=
- =?utf-8?B?YUlKMW5DcFhveStJWlduNjRZUUtPZzE3VDdROGNIeTZuM0ZWNlBieHhtWlh0?=
- =?utf-8?B?encrazhiVVhaYVNBSzEvamZ4cVJwVys3eW5SUy9peitDYTV6UmNBZUk4bWg0?=
- =?utf-8?B?ZGxZN3Y5bGNvSFo0UEFVK1AzeUl0eEZOU29KQVk0QUVtVERuaUw1OVhYMndn?=
- =?utf-8?B?SkhHT0NiYlQ4S3ZZK0VsL0V5OE00TDVCNnUwU1NvV2FGTDM4bGowZ1NzQzM0?=
- =?utf-8?B?TFd0UW9aZ2JQbzVkWHUxczh6d1IxYW9TUzVzbGhxelpDZlozSFhWWStYYUk4?=
- =?utf-8?B?WExDZE9IUTFrM3NaVlF5MlBYN2E0a1k4ZDdFQU5UemEyamczUVNmcEFWK0Zv?=
- =?utf-8?B?dk8xek8rVGdVbW5WamZJVVdOZ3psa21ITjBGL24zNlFVY3dlc1VpRWk2YUNH?=
- =?utf-8?B?MkN6SWM5RXp4bUZTY1BBbXZ5blhGNDBuU3RxYzdIUlFKUG9GckxtNWFPdDg0?=
- =?utf-8?B?R0pIVjNsdktIalllTmk1TlZDYXRaTHJiVHh6amc2UFJOdzhXQVM1S1pIMGdt?=
- =?utf-8?B?dW9NK2J4aDN6M0tieStBaXAxak9xME55QUNOOUxpMFFnR1BUdFFhU0tORzdz?=
- =?utf-8?B?MFFIRlphQUszb2dDaC9pVlRsWkFFRHNXUVFSNlJleFdNcU51WDZkdW1YT0xS?=
- =?utf-8?B?WkRWYUYwK2JoNmNCVk1WdHZCMWI2bnlCTkxEK2tnRjhsSzQ4dnJraDNXdkpC?=
- =?utf-8?B?ajhJSmdXdjcyV25zWFBqYTdOY20xa3hzMmJHWkZZSmxJb2hDc3o2cVk4eFBa?=
- =?utf-8?B?ekRtOWJQSGVHM0EyVkxPVzNLTmRPS2ZUclc4YU5pTFJWSXlNWTdYbS84TXlI?=
- =?utf-8?B?OUJRdjROYys0SmR3SGxwd1NqKzRRaGNhKzEranRTbExweVRhdkI2UWNFa0J4?=
- =?utf-8?B?NnJjY2s2VDU0SlZobmFlaC9zSktsQzJhOWxFZ3RidnZJaGxWYStmQXFzTStH?=
- =?utf-8?B?UlFETGZlVUpKZm92UXExY2NsREIvMGRlUlhzOElBUzcxMjlTdTE5ZEI4OXEz?=
- =?utf-8?B?Vy9jeTE3a1R3OVZKNmJJMFduaHhKdHNuYUM1TmNDc0hKWmVCR1lBTGlYelBJ?=
- =?utf-8?B?MTBxbml6dW9lc2wrSWZMWkE0Y3NjSTEwdUpEck1saWw1Znk4UWtzSFpLRHRp?=
- =?utf-8?B?UFduU09oMjBtejUyUmZvc1ZYa1plMDk1a0QvcnIyT0QybkJHSGtYNDcyS1NV?=
- =?utf-8?B?L1dtdXRLSXR3VytvS3dkU2p4eXgwMGVZdkRpZDU1ekE1ZkR1ejdLY3Rhb3pT?=
- =?utf-8?B?bkE3NjNzdzFCTytvVkRPVmtzRE0vTUpVTTV6N2tGUWo2Y05oTTljL3VmT1lu?=
- =?utf-8?Q?zi989+bRwCo=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ2PR11MB7573.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?VnBCeW5EWWd0ZXFHMXNPNU9kWEhRUEF1cTc0TGNBd05JeE9mSC9JNzh2N3JX?=
- =?utf-8?B?Y1VKR1RNNXBYdE1MVFU1SWgya0F2TFZyQUs4S3lwQk9oa3Y3cmx6MEpEaER5?=
- =?utf-8?B?TkRwNUdPRktsOTdhdnBrQVZPS1U1Vkt5M0pxWUFZQTl1c0dQdUpob3dFSE5O?=
- =?utf-8?B?VWRSVDNmZEZnOWtYUHhpUmNGWU5UazlRTEp5NStKbkUvM0VqV3c0TUdlN0Rw?=
- =?utf-8?B?eTNQSGtsMi9KS05FZEpOUXU4VmorNTZXZVg3V0JFMDIyWkFnaW5YNGxIRlBv?=
- =?utf-8?B?U2liQnk5Vjk2VHFQb3VEVi8zRVpEL2VuVklSRkxOVUlhZ083Y3B1VVk0b3Rm?=
- =?utf-8?B?UHRVaFI0YjhwN2x2aTZaVjhBR2dIYmZzRkJrRVlRZUdUTkNZanh6RXRtV3hG?=
- =?utf-8?B?L0RkelQwalZNait5cEtuN0dWL0haa2RUQy9kMnRndmhxNFo1TnhEeHlBU0M4?=
- =?utf-8?B?TWlSV0VEVE12Y2hpdVVrdHVaSlNoNzNUYTFKSVkyTlhEVVd0eGtJK2NKTmFP?=
- =?utf-8?B?Nm9QM1p5cGFlSVJwNjVzSWJQSUtRbVQ1Y0c0blhWWWxEVHp5SGNIRHNDelRr?=
- =?utf-8?B?WVV4RFVOTUlCZFZLOWkwY1J0TW5aa0JqUTBTT3E3Qm1WN3RYNDJGN1RhYkh0?=
- =?utf-8?B?K28zTXRQYWJ4ZkYwaFlKclVQaWszZFpQUlFWU1p1U3JFWFZWK0VrNXVJN3o2?=
- =?utf-8?B?T1lnczQ5RTZDOGJXTU1xRjQwSE5vbnAzUXoray8wa1BibmJ3bFB4d01LT2pr?=
- =?utf-8?B?MkRrQkltODdURTR6YzZoRmR0Rnc4NmRYVEJVL3JTQ3dJaVdDaENqYTRLTEJh?=
- =?utf-8?B?RitUNmkyd1c4Y3J2Q3VrOGxta3JQT1VVS2xscWQ2QUxKc2RlTVMyWFppZkJI?=
- =?utf-8?B?YzRMQWlvZjlzbHpnelBnd3BiY2JyeFovUnpRbCtDbWxCVVVPY1c5TXR4QzBM?=
- =?utf-8?B?OEg1MTR4MXhNUER2ZVNLUW9jeE5DcFU4Ym5lSGxMdmRFWUFJVkVvWkptODZX?=
- =?utf-8?B?d0xGTkswUlcyN3ZoTUxTemFocDNrWThCTi9ZMkswUU9GSWpMYXJ0NVp0TW5N?=
- =?utf-8?B?UTJPYWlvVmFYV2FjZ0J4NWZKR3FRcVJWRDBJN1Q2OFBDTENERFNuZkROcmlY?=
- =?utf-8?B?bDVxdXBFWEgrVjdaS21JVVRzcVNrV3dTdXhEb2pvb0ZZQkV1QzZXaTg1YXBV?=
- =?utf-8?B?aWdFZjJMYXBqY2hDTXpJZzlCTUJtbHVybG9Fa2pyMktLaGhza2FKS3draFJQ?=
- =?utf-8?B?K1BNS3hvajhJMFA1SkdoTXl2NXMzZXhWTU5wK2lndXgydWxzUHRXWTNDZXlx?=
- =?utf-8?B?K1ovVzFORkZYVlh4YWFINk5NRzRhWDBSdUxWdU5FelIxMm0rdG9oOWNUVkc5?=
- =?utf-8?B?TFlvVi9FVHNLblFnOUo1eE8wQWZCU3c0U04wa254VlFYVXc2M3BMRzZOaGdo?=
- =?utf-8?B?bDVVNEs3T21pOCtRZVBmdVMrVXdiekFLYVpZVjN5ckNhbFdGL2VBNkNRempq?=
- =?utf-8?B?WDJkdDFCVTJsRmdJeHVmUzVsT1pDb3NIajVHb1UyWnVQNW9saVliTU5LU2du?=
- =?utf-8?B?Skp6QWMvYnc2YyttVkorc0t0S3pQWFVKZm9wRk5mQmlPeklDcllzbXNOT2Fz?=
- =?utf-8?B?OGRvUzVBVEZYa3B5UVp3OE56MjJ0d1A2eUR3NEQvckRvYk1CekszajhnMk5U?=
- =?utf-8?B?NUhNUW53eTJiVzJLWUZTWlZCWVVqeVFiT2FOZzlKOUEzY09KYkFwaFA4NTQx?=
- =?utf-8?B?Zng2K1ZEK1pyNUYxSjBjalJGVE5ZMEExbkJNdEx2TUpGVHY0V1RtaGRmNnNF?=
- =?utf-8?B?NWZuVURGaVF3WnhGVno0L3pmNzVxNFVFNzI3SE1IQnk1YXlxMVpMVmZmMm0z?=
- =?utf-8?B?OVhocVJWVmFRV1EzUXJWaGp3UmhwMklDanZNVzZjUEQvT0dvNi9ZYWJWOXVJ?=
- =?utf-8?B?NnplcnNoa0xUYTZ6MW1VbXBlUGFkZ2QyWHRSa2VIM3lPS1pzWE5zTHJuQlZ1?=
- =?utf-8?B?V2lXVU1KeWp4Ym5JbGJyVkNJNWNjR1FsMENPbzJLVUNQR1dCcHU3RDhnWlk1?=
- =?utf-8?B?TzlKWFBac2NaTzZsME82OVVRZStHd1pscHBWVjhwYTdjaEFLWTdSQTU4dUl2?=
- =?utf-8?B?NEtnYjAzRHpjWktlL0FmYzRrbm1PRG9yYmtITWVQZURhV3o5SWlUYy9TaEF1?=
- =?utf-8?B?VVE9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2d34f736-e8d6-498b-8f43-08dd99b4a5ea
-X-MS-Exchange-CrossTenant-AuthSource: SJ2PR11MB7573.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 May 2025 04:45:31.4308
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 9Tdfll2ePpqJqtixBV4omGczn4Zn01W1yLyVxkv/0L0S1h3AZZHQqh3Z680wxT/Z2cnZgA1Hz5RPUNfADaMAOzgL+zOPJrVu+YxkriJQ3Xo=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV8PR11MB8582
-X-OriginatorOrg: intel.com
+X-Received: by 2002:a05:6e02:174b:b0:3dc:7f3b:aca9 with SMTP id
+ e9e14a558f8ab-3dc7f3bae28mr124342205ab.14.1747975594321; Thu, 22 May 2025
+ 21:46:34 -0700 (PDT)
+Date: Thu, 22 May 2025 21:46:34 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <682ffdaa.a70a0220.253bc2.0061.GAE@google.com>
+Subject: [syzbot] [jfs?] [xfs?] [bcachefs?] INFO: task hung in sb_start_write (2)
+From: syzbot <syzbot+b3fba2e269970207b61d@syzkaller.appspotmail.com>
+To: brauner@kernel.org, cem@kernel.org, jack@suse.cz, 
+	jfs-discussion@lists.sourceforge.net, kent.overstreet@linux.dev, 
+	linux-bcachefs@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org, shaggy@kernel.org, 
+	syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Babu,
+Hello,
 
-On 5/15/25 3:52 PM, Babu Moger wrote:
-> Users can modify the event configuration by writing to the event_filter
-> interface file. The event configurations for mbm_cntr_assign mode are
-> located in /sys/fs/resctrl/info/event_configs/.
+syzbot found the following issue on:
 
-heh ... looks like you also started thinking that "event_configs"
-is a better name (also missing L3_MON).
+HEAD commit:    a5806cd506af Linux 6.15-rc7
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=11923f68580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=3340af1a8845dd35
+dashboard link: https://syzkaller.appspot.com/bug?extid=b3fba2e269970207b61d
+compiler:       Debian clang version 20.1.2 (++20250402124445+58df0ef89dd6-1~exp1~20250402004600.97), Debian LLD 20.1.2
 
-> 
-> Update the assignments of all groups when the event configuration is
-> modified.
-> 
-> Example:
-> $ cd /sys/fs/resctrl/
-> 
-> $ cat info/L3_MON/counter_configs/mbm_local_bytes/event_filter
->   local_reads,local_non_temporal_writes,local_reads_slow_memory
-> 
-> $ echo "local_reads,local_non_temporal_writes" >
->   info/L3_MON/counter_configs/mbm_total_bytes/event_filter
-> 
-> $ cat info/L3_MON/counter_configs/mbm_total_bytes/event_filter
->   local_reads,local_non_temporal_writes
-> 
-> Signed-off-by: Babu Moger <babu.moger@amd.com>
-> ---
-> v13: Updated changelog for imperative mode.
->      Added function description in the prototype.
->      Updated the user doc resctrl.rst to address few feedback.
->      Resolved conflicts caused by the recent FS/ARCH code restructure.
->      The rdtgroup.c/monitor.c file has now been split between the FS and ARCH directories.
-> 
-> v12: New patch to modify event configurations.
-> ---
->  Documentation/filesystems/resctrl.rst |  12 +++
->  fs/resctrl/rdtgroup.c                 | 120 +++++++++++++++++++++++++-
->  2 files changed, 131 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/filesystems/resctrl.rst b/Documentation/filesystems/resctrl.rst
-> index 4eb9f007ba3d..9923276826db 100644
-> --- a/Documentation/filesystems/resctrl.rst
-> +++ b/Documentation/filesystems/resctrl.rst
+Unfortunately, I don't have any reproducer for this issue yet.
 
-...
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/652000eacd92/disk-a5806cd5.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/2b445a74e31e/vmlinux-a5806cd5.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/0a4ef01f165f/bzImage-a5806cd5.xz
 
-> diff --git a/fs/resctrl/rdtgroup.c b/fs/resctrl/rdtgroup.c
-> index cf84e3a382ac..8c498b41be5d 100644
-> --- a/fs/resctrl/rdtgroup.c
-> +++ b/fs/resctrl/rdtgroup.c
-> @@ -1930,6 +1930,123 @@ static int event_filter_show(struct kernfs_open_file *of, struct seq_file *seq,
->  	return 0;
->  }
->  
-> +/**
-> + * resctrl_group_assign - Update the counter assignments for the event in
-> + *			  a group.
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+b3fba2e269970207b61d@syzkaller.appspotmail.com
 
-This name is very generic with an unexpected namespace. "rdtgroup_" prefix
-is often used for a function that operates on a rdtgroup. This can thus be
-"rdtgroup_assign_cntr()".
+INFO: task syz.9.533:10335 blocked for more than 143 seconds.
+      Not tainted 6.15.0-rc7-syzkaller #0
+"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+task:syz.9.533       state:D stack:24344 pid:10335 tgid:10334 ppid:7718   task_flags:0x400140 flags:0x00000004
+Call Trace:
+ <TASK>
+ context_switch kernel/sched/core.c:5382 [inline]
+ __schedule+0x168f/0x4c70 kernel/sched/core.c:6767
+ __schedule_loop kernel/sched/core.c:6845 [inline]
+ schedule+0x165/0x360 kernel/sched/core.c:6860
+ percpu_rwsem_wait+0x2ab/0x300 kernel/locking/percpu-rwsem.c:162
+ __percpu_down_read+0xe3/0x120 kernel/locking/percpu-rwsem.c:177
+ percpu_down_read include/linux/percpu-rwsem.h:66 [inline]
+ __sb_start_write include/linux/fs.h:1783 [inline]
+ sb_start_write+0x185/0x1c0 include/linux/fs.h:1919
+ mnt_want_write+0x41/0x90 fs/namespace.c:556
+ open_last_lookups fs/namei.c:3789 [inline]
+ path_openat+0x85d/0x3830 fs/namei.c:4036
+ do_filp_open+0x1fa/0x410 fs/namei.c:4066
+ do_sys_openat2+0x121/0x1c0 fs/open.c:1429
+ do_sys_open fs/open.c:1444 [inline]
+ __do_sys_openat fs/open.c:1460 [inline]
+ __se_sys_openat fs/open.c:1455 [inline]
+ __x64_sys_openat+0x138/0x170 fs/open.c:1455
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xf6/0x210 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f8e2a18e969
+RSP: 002b:00007f8e2b0be038 EFLAGS: 00000246 ORIG_RAX: 0000000000000101
+RAX: ffffffffffffffda RBX: 00007f8e2a3b5fa0 RCX: 00007f8e2a18e969
+RDX: 000000000000275a RSI: 0000200000000100 RDI: ffffffffffffff9c
+RBP: 00007f8e2a210ab1 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 0000000000000000 R14: 00007f8e2a3b5fa0 R15: 00007fffe529a348
+ </TASK>
 
-> + * @r:		Resource to which update needs to be done.
-> + * @rdtgrp:	Resctrl group.
-> + * @evtid:	Event ID.
-> + * @evt_cfg:	Event configuration value.
-> + */
-> +static int resctrl_group_assign(struct rdt_resource *r, struct rdtgroup *rdtgrp,
-> +				enum resctrl_event_id evtid, u32 evt_cfg)
-> +{
-> +	struct rdt_mon_domain *d;
-> +	int cntr_id;
-> +
-> +	list_for_each_entry(d, &r->mon_domains, hdr.list) {
-> +		cntr_id = mbm_cntr_get(r, d, rdtgrp, evtid);
-> +		if (cntr_id >= 0 && d->cntr_cfg[cntr_id].evt_cfg != evt_cfg) {
-> +			d->cntr_cfg[cntr_id].evt_cfg = evt_cfg;
-> +			resctrl_arch_config_cntr(r, d, evtid, rdtgrp->mon.rmid,
-> +						 rdtgrp->closid, cntr_id, evt_cfg, true);
-> +		}
-> +	}
-> +
-> +	return 0;
+Showing all locks held in the system:
+1 lock held by khungtaskd/31:
+ #0: ffffffff8df3dee0 (rcu_read_lock){....}-{1:3}, at: rcu_lock_acquire include/linux/rcupdate.h:331 [inline]
+ #0: ffffffff8df3dee0 (rcu_read_lock){....}-{1:3}, at: rcu_read_lock include/linux/rcupdate.h:841 [inline]
+ #0: ffffffff8df3dee0 (rcu_read_lock){....}-{1:3}, at: debug_show_all_locks+0x2e/0x180 kernel/locking/lockdep.c:6764
+5 locks held by kworker/u8:2/36:
+2 locks held by kworker/u8:6/1089:
+2 locks held by getty/5583:
+ #0: ffff88803055e0a0 (&tty->ldisc_sem){++++}-{0:0}, at: tty_ldisc_ref_wait+0x25/0x70 drivers/tty/tty_ldisc.c:243
+ #1: ffffc90002ffe2f0 (&ldata->atomic_read_lock){+.+.}-{4:4}, at: n_tty_read+0x43e/0x1400 drivers/tty/n_tty.c:2222
+1 lock held by udevd/9862:
+2 locks held by udevd/10189:
+ #0: ffff888022a2e3a0 (&sb->s_type->i_mutex_key#7){++++}-{4:4}, at: inode_lock_shared include/linux/fs.h:877 [inline]
+ #0: ffff888022a2e3a0 (&sb->s_type->i_mutex_key#7){++++}-{4:4}, at: blkdev_read_iter+0x2f8/0x440 block/fops.c:808
+ #1: ffff8880b88399d8 (&rq->__lock){-.-.}-{2:2}, at: raw_spin_rq_lock_nested+0x2a/0x140 kernel/sched/core.c:605
+1 lock held by syz.9.533/10335:
+ #0: ffff88802f0e0420 (sb_writers#25){++++}-{0:0}, at: mnt_want_write+0x41/0x90 fs/namespace.c:556
+3 locks held by syz-executor/12892:
+ #0: ffff8880b89399d8 (&rq->__lock){-.-.}-{2:2}, at: raw_spin_rq_lock_nested+0x2a/0x140 kernel/sched/core.c:605
+ #1: ffff8880b8923b08 (&per_cpu_ptr(group->pcpu, cpu)->seq){-.-.}-{0:0}, at: psi_task_switch+0x39e/0x6d0 kernel/sched/psi.c:987
+ #2: ffff88807a093758 (&sb->s_type->i_lock_key#9){+.+.}-{3:3}, at: spin_trylock include/linux/spinlock.h:361 [inline]
+ #2: ffff88807a093758 (&sb->s_type->i_lock_key#9){+.+.}-{3:3}, at: lock_for_kill+0x84/0x210 fs/dcache.c:705
+2 locks held by syz.2.1023/13285:
+2 locks held by dhcpcd-run-hook/13307:
+ #0: ffff8880b89399d8 (&rq->__lock){-.-.}-{2:2}, at: raw_spin_rq_lock_nested+0x2a/0x140 kernel/sched/core.c:605
+ #1: ffff8880b8923b08 (&per_cpu_ptr(group->pcpu, cpu)->seq){-.-.}-{0:0}, at: psi_task_switch+0x39e/0x6d0 kernel/sched/psi.c:987
 
-Can just return void?
+=============================================
 
-> +}
-> +
-> +/**
-> + * resctrl_update_assign - Update the counter assignments for the event for all
-> + *			   the groups.
+NMI backtrace for cpu 0
+CPU: 0 UID: 0 PID: 31 Comm: khungtaskd Not tainted 6.15.0-rc7-syzkaller #0 PREEMPT(full) 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
+Call Trace:
+ <TASK>
+ dump_stack_lvl+0x189/0x250 lib/dump_stack.c:120
+ nmi_cpu_backtrace+0x39e/0x3d0 lib/nmi_backtrace.c:113
+ nmi_trigger_cpumask_backtrace+0x17a/0x300 lib/nmi_backtrace.c:62
+ trigger_all_cpu_backtrace include/linux/nmi.h:158 [inline]
+ check_hung_uninterruptible_tasks kernel/hung_task.c:274 [inline]
+ watchdog+0xfee/0x1030 kernel/hung_task.c:437
+ kthread+0x711/0x8a0 kernel/kthread.c:464
+ ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:153
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
+Sending NMI from CPU 0 to CPUs 1:
+NMI backtrace for cpu 1
+CPU: 1 UID: 0 PID: 13310 Comm: rm Not tainted 6.15.0-rc7-syzkaller #0 PREEMPT(full) 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
+RIP: 0010:file_ref_inc include/linux/file_ref.h:121 [inline]
+RIP: 0010:get_file include/linux/fs.h:1133 [inline]
+RIP: 0010:__mmap_new_file_vma mm/vma.c:2352 [inline]
+RIP: 0010:__mmap_new_vma mm/vma.c:2417 [inline]
+RIP: 0010:__mmap_region mm/vma.c:2519 [inline]
+RIP: 0010:mmap_region+0xf23/0x1e50 mm/vma.c:2597
+Code: 24 18 01 00 00 48 89 44 24 50 49 8d be 60 01 00 00 be 08 00 00 00 e8 1c 3f 0e 00 41 bf 01 00 00 00 f0 4d 0f c1 be 60 01 00 00 <31> ff 4c 89 fe e8 83 6c ae ff 4d 85 ff 78 74 e8 99 67 ae ff 4c 8b
+RSP: 0018:ffffc9000418f2c0 EFLAGS: 00000202
+RAX: ffffc9000418f301 RBX: ffff88806733f2a0 RCX: ffffffff82118924
+RDX: 0000000000000001 RSI: 0000000000000008 RDI: ffff88807e407820
+RBP: ffffc9000418f730 R08: ffff88807e407827 R09: 1ffff1100fc80f04
+R10: dffffc0000000000 R11: ffffed100fc80f05 R12: ffff88806733f280
+R13: ffffc9000418f3d0 R14: ffff88807e4076c0 R15: 0000000000000000
+FS:  0000000000000000(0000) GS:ffff8881261f6000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 000055aa8d186008 CR3: 000000007f374000 CR4: 00000000003526f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ do_mmap+0xc68/0x1100 mm/mmap.c:561
+ vm_mmap_pgoff+0x31b/0x4c0 mm/util.c:579
+ elf_map fs/binfmt_elf.c:387 [inline]
+ elf_load+0x140/0x6c0 fs/binfmt_elf.c:414
+ load_elf_interp+0x469/0xaf0 fs/binfmt_elf.c:681
+ load_elf_binary+0x19d2/0x27a0 fs/binfmt_elf.c:1246
+ search_binary_handler fs/exec.c:1778 [inline]
+ exec_binprm fs/exec.c:1810 [inline]
+ bprm_execve+0x999/0x1440 fs/exec.c:1862
+ do_execveat_common+0x510/0x6a0 fs/exec.c:1968
+ do_execve fs/exec.c:2042 [inline]
+ __do_sys_execve fs/exec.c:2118 [inline]
+ __se_sys_execve fs/exec.c:2113 [inline]
+ __x64_sys_execve+0x94/0xb0 fs/exec.c:2113
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xf6/0x210 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f6e5ef70107
+Code: Unable to access opcode bytes at 0x7f6e5ef700dd.
+RSP: 002b:00007fff92965db8 EFLAGS: 00000246 ORIG_RAX: 000000000000003b
+RAX: ffffffffffffffda RBX: 00005577b8e42fe0 RCX: 00007f6e5ef70107
+RDX: 00005577b8e43000 RSI: 00005577b8e42fe0 RDI: 00005577b8e43088
+RBP: 00005577b8e43088 R08: 00007fff92968e28 R09: 0000000000000000
+R10: 0000000000000008 R11: 0000000000000246 R12: 00005577b8e43000
+R13: 00007f6e5f135e8b R14: 00005577b8e43000 R15: 0000000000000000
+ </TASK>
 
-Again very generic with "update" and "assign" that seem redundant? How about
-"resctrl_assign_cntr_allrdtgrp()"?
 
-> + * @r:		Resource to which update needs to be done.
-> + * @evtid:	Event ID.
-> + * @evt_cfg:	Event configuration value.
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-Why are both event ID and evt_cfg needed? Could just passing mon_evt simplify this?
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
-> + */
-> +static int resctrl_update_assign(struct rdt_resource *r, enum resctrl_event_id evtid,
-> +				 u32 evt_cfg)
-> +{
-> +	struct rdtgroup *prgrp, *crgrp;
-> +
-> +	/* Check if the cntr_id is associated to the event type updated */
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
 
-Comment does not match code.
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
 
-> +	list_for_each_entry(prgrp, &rdt_all_groups, rdtgroup_list) {
-> +		resctrl_group_assign(r, prgrp, evtid, evt_cfg);
-> +
-> +		list_for_each_entry(crgrp, &prgrp->mon.crdtgrp_list, mon.crdtgrp_list) {
-> +			resctrl_group_assign(r, crgrp, evtid, evt_cfg);
-> +		}
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
 
-Unnecessary braces?
-
-> +	}
-> +
-> +	return 0;
-
-return void?
-
-> +}
-> +
-> +static int resctrl_process_configs(char *tok, u32 *val)
-> +{
-> +	char *evt_str;
-> +	bool found;
-> +	int i;
-> +
-> +next_config:
-> +	if (!tok || tok[0] == '\0')
-> +		return 0;
-> +
-> +	/* Start processing the strings for each event type */
-
-Does comment intend to describe one iteration or all iterations?
-Also, "event type" -> "memory transaction"?
-
-> +	evt_str = strim(strsep(&tok, ","));
-> +	found = false;
-> +	for (i = 0; i < NUM_MBM_EVT_VALUES; i++) {
-> +		if (!strcmp(mbm_evt_values[i].evt_name, evt_str)) {
-> +			*val |=  mbm_evt_values[i].evt_val;
-
-check spacing.
-
-> +			found = true;
-> +			break;
-> +		}
-> +	}
-> +
-> +	if (!found) {
-> +		rdt_last_cmd_printf("Invalid event type %s\n", evt_str);
-> +		return -EINVAL;
-
-Looks like this will return partially initialized data. Please use a local
-variable in which to gather the new configuration and only assign that
-to provided pointer on success.
-
-> +	}
-> +
-> +	goto next_config;
-> +}
-> +
-> +static ssize_t event_filter_write(struct kernfs_open_file *of, char *buf,
-> +				  size_t nbytes, loff_t off)
-> +{
-> +	struct rdt_resource *r = resctrl_arch_get_resource(RDT_RESOURCE_L3);
-> +	struct mon_evt *mevt = rdt_kn_parent_priv(of->kn);
-> +	u32 evt_cfg = 0;
-> +	int ret = 0;
-> +
-> +	/* Valid input requires a trailing newline */
-> +	if (nbytes == 0 || buf[nbytes - 1] != '\n')
-> +		return -EINVAL;
-> +
-> +	buf[nbytes - 1] = '\0';
-> +
-> +	cpus_read_lock();
-> +	mutex_lock(&rdtgroup_mutex);
-> +
-> +	rdt_last_cmd_clear();
-> +
-> +	if (!resctrl_arch_mbm_cntr_assign_enabled(r)) {
-> +		rdt_last_cmd_puts("mbm_cntr_assign mode is not enabled\n");
-> +		ret = -EINVAL;
-> +		goto unlock_out;
-
-"grep goto fs/resctrl/rdtgroup.c"
-
-> +	}
-> +
-> +	ret = resctrl_process_configs(buf, &evt_cfg);
-> +	if (!ret && mevt->evt_val != evt_cfg) {
-> +		mevt->evt_val = evt_cfg;
-
-ah ... here it is. hmmm ... but it is mon_evt::evt_cfg, no? ah,
-fixed in next patch.
-
-I still seem to be missing something because I expected mon_evt::evt_cfg
-of mbm_total_bytes and mbm_local_bytes to be initialized with a starting
-default. I missed where this is done in this series.
-
-> +		resctrl_update_assign(r, mevt->evtid, evt_cfg);
-> +	}
-> +
-> +unlock_out:
-> +	mutex_unlock(&rdtgroup_mutex);
-> +	cpus_read_unlock();
-> +
-> +	return ret ?: nbytes;
-> +}
-> +
->  /* rdtgroup information files for one cache resource. */
->  static struct rftype res_common_files[] = {
->  	{
-> @@ -2056,9 +2173,10 @@ static struct rftype res_common_files[] = {
->  	},
->  	{
->  		.name		= "event_filter",
-> -		.mode		= 0444,
-> +		.mode		= 0644,
->  		.kf_ops		= &rdtgroup_kf_single_ops,
->  		.seq_show	= event_filter_show,
-> +		.write		= event_filter_write,
->  	},
->  	{
->  		.name		= "mbm_assign_mode",
-
-Reinette
+If you want to undo deduplication, reply with:
+#syz undup
