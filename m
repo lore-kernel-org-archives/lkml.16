@@ -1,80 +1,153 @@
-Received: from mail.mleia.com (mleia.com [178.79.152.223])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB4132DCBE6;
-	Fri, 23 May 2025 05:23:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.79.152.223
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CFD42DCBE6;
+	Fri, 23 May 2025 05:25:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747977809; cv=none; b=n6f+tyoWw/QsIryH0odZqraxiuAXDMMc/gBU3WiP17jtm/pdgijNeBZfHtTbCc38hCCJNez8JsflvzFTho/+hAU/gp/q4RSxmZVZfxMbfdz72/tMpSKw+J7R13Nf5eWkMArDlki1xjEDdsSVv3IrYNJ3MEqGP5aC7na6jRfuiBk=
+	t=1747977924; cv=none; b=rs3TWeUZOLt44Zgoxha0woc75QhlJsfYh4ppNC0RqXfAXLt5i5yrIfPdEe8kptkwyf7LKl12RzgE+YYBURQNKGSEGM65BGE+gwXAM8jWA0O/5pWbOnGMKzojPgRYYQGD2qnD3oginQTNmaLgbkhf/WCVcccuXziRukKEmh4dehY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747977809; c=relaxed/simple;
-	bh=80uw1jtsGwj/gVLOr/qpryNr7XC5WgtbEKNJMb6eUdA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=c/6lchw7170u+bynBxzf4LbCCtX9d1mACcsjZe//WD3BXT5fd6egRVIEGImJ3mwTidk9qAxp0pr+nR5EL9qwD/o1mzru+ZtB9ahHzDw1A6AnBRNYbJvU6MXRG7W7ZLXEaBnngjc892Z2T+Yofy8rAi3zet9WubB2i0/YBEwkJBA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mleia.com; spf=none smtp.mailfrom=mleia.com; dkim=pass (2048-bit key) header.d=mleia.com header.i=@mleia.com header.b=AP50QTXo; dkim=pass (2048-bit key) header.d=mleia.com header.i=@mleia.com header.b=AP50QTXo; arc=none smtp.client-ip=178.79.152.223
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mleia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=mleia.com
+	s=arc-20240116; t=1747977924; c=relaxed/simple;
+	bh=sHCHau5V2Ia+Ul8jz8STWNXfBt/x/iwthPVTBpu6WaA=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=fi1Gza9LJHT1PxtWaXmTShBekgB6hjMPNg36EdtTruY+srj4Bw6mSljxqFtunpKIrjoHJnuwUZBWXdeKAIeL8pTAbmwDKAx2iX2esCiYspHgk+OoZfv+eYDi821oApSbGBcVqN+JyX3FxxqlVHqdXJxDVkrV9LCKnchsvkZeSkM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=gkPzzSJS; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mleia.com header.i=@mleia.com header.b="AP50QTXo";
-	dkim=pass (2048-bit key) header.d=mleia.com header.i=@mleia.com header.b="AP50QTXo"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mleia.com; s=mail;
-	t=1747977798; bh=80uw1jtsGwj/gVLOr/qpryNr7XC5WgtbEKNJMb6eUdA=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=AP50QTXomI2u5Pop2hS2ZUPAfeqqkxe6DqgFo7B0yUSQ2pC7zaUh1KAnq4an2K3s3
-	 CaqhkbP5WuK5qAS2YZB72wo/z+5u7CKf8+RhNAOcm2Rk1M7dtmxXd/zDbzTSIc8U+2
-	 Oyp0nPVrB267Ch6rxr/5bwzf5dUaLRVeaDc1zvpl/2VFd8Ty+F09lGE4qxJqL4xLBR
-	 4hE90LeGHk4Jg/2edUdkd6IO4jzd8VHT/PDGWa5hhBUHV/4m37eUuxrS0htjPMswBI
-	 MDCiZRu4uiFi/1bI4X9RySUaUtGO798TXnUjEwJjvShnQn3Ni49G3yHdxKYc0aeSyH
-	 YFxClyECtcvyA==
-Received: from mail.mleia.com (localhost [127.0.0.1])
-	by mail.mleia.com (Postfix) with ESMTP id BC61E3BC59C;
-	Fri, 23 May 2025 05:23:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mleia.com; s=mail;
-	t=1747977798; bh=80uw1jtsGwj/gVLOr/qpryNr7XC5WgtbEKNJMb6eUdA=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=AP50QTXomI2u5Pop2hS2ZUPAfeqqkxe6DqgFo7B0yUSQ2pC7zaUh1KAnq4an2K3s3
-	 CaqhkbP5WuK5qAS2YZB72wo/z+5u7CKf8+RhNAOcm2Rk1M7dtmxXd/zDbzTSIc8U+2
-	 Oyp0nPVrB267Ch6rxr/5bwzf5dUaLRVeaDc1zvpl/2VFd8Ty+F09lGE4qxJqL4xLBR
-	 4hE90LeGHk4Jg/2edUdkd6IO4jzd8VHT/PDGWa5hhBUHV/4m37eUuxrS0htjPMswBI
-	 MDCiZRu4uiFi/1bI4X9RySUaUtGO798TXnUjEwJjvShnQn3Ni49G3yHdxKYc0aeSyH
-	 YFxClyECtcvyA==
-Message-ID: <13217ada-43e0-449b-b623-98f7adde75a2@mleia.com>
-Date: Fri, 23 May 2025 08:23:17 +0300
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="gkPzzSJS"
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54MNWEn5006420;
+	Fri, 23 May 2025 05:24:43 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=T9QR0v
+	Rv/b0B11JDYax3wCR+tNiJcsp+EMocfpzOxi8=; b=gkPzzSJS3ymffrtpxcB5vm
+	v0s0Gt+0xedPFAF4Q0SBMgwUo01yMH5OqoDNtugNOwneyxcvMf5JVIm1y0T08Re7
+	EmJ6QdZ6GthLPsjQ11Y8uXW7sj+Eeyb8WqKlexTBXqcCpntaCyNC/X7hKpXH2JUj
+	tiWuD0uZqTjnvmBQRioWrY0breTha8OmZHdV8IDZEYMicTaNWm94EHTL/osOLYVd
+	iuLvSdTpZmyAtPpzaNMZw/bBFpt41IbV5Ua0ZuIpLPTk4wDsHISYTDhuqr1lanD2
+	vG9gQ6KwGs17vxJDgNiDQL5N9JmAxrZi3uqj2fVPEF8IGqrxh/bDnF+01ZlmwWWQ
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46t9m7t7sq-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 23 May 2025 05:24:43 +0000 (GMT)
+Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 54N5Ogd1008988;
+	Fri, 23 May 2025 05:24:42 GMT
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46t9m7t7sh-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 23 May 2025 05:24:42 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 54N1ugL2015431;
+	Fri, 23 May 2025 05:24:41 GMT
+Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 46rwnnn2at-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 23 May 2025 05:24:41 +0000
+Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
+	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 54N5OdfJ51446136
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 23 May 2025 05:24:40 GMT
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id DFC2C20043;
+	Fri, 23 May 2025 05:24:39 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 6FB4920040;
+	Fri, 23 May 2025 05:24:39 +0000 (GMT)
+Received: from ozlabs.au.ibm.com (unknown [9.63.197.14])
+	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Fri, 23 May 2025 05:24:39 +0000 (GMT)
+Received: from jarvis.ozlabs.ibm.com (haven.au.ibm.com [9.63.198.114])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by ozlabs.au.ibm.com (Postfix) with ESMTPSA id A792F60213;
+	Fri, 23 May 2025 15:24:35 +1000 (AEST)
+Message-ID: <e50abba6c962772c73342bacf20fb87dc99dd542.camel@linux.ibm.com>
+Subject: Re: [PATCH v2 08/14] powerpc: Handle KCOV __init vs inline
+ mismatches
+From: Andrew Donnellan <ajd@linux.ibm.com>
+To: Kees Cook <kees@kernel.org>, Arnd Bergmann <arnd@arndb.de>
+Cc: Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Michael Ellerman	
+ <mpe@ellerman.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Christophe Leroy
+	 <christophe.leroy@csgroup.eu>,
+        Naveen N Rao <naveen@kernel.org>,
+        "Ritesh
+ Harjani (IBM)" <ritesh.list@gmail.com>,
+        "Aneesh Kumar K.V"
+ <aneesh.kumar@linux.ibm.com>,
+        Andrew Morton	 <akpm@linux-foundation.org>,
+        linuxppc-dev@lists.ozlabs.org,
+        "Gustavo A. R. Silva"
+ <gustavoars@kernel.org>,
+        Christoph Hellwig <hch@lst.de>, Marco Elver
+ <elver@google.com>,
+        Andrey Konovalov <andreyknvl@gmail.com>,
+        Andrey
+ Ryabinin <ryabinin.a.a@gmail.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Nathan Chancellor
+ <nathan@kernel.org>,
+        Nicolas Schier	 <nicolas.schier@linux.dev>,
+        Nick
+ Desaulniers <nick.desaulniers+lkml@gmail.com>,
+        Bill Wendling
+ <morbo@google.com>,
+        Justin Stitt <justinstitt@google.com>, linux-kernel@vger.kernel.org,
+        x86@kernel.org, kasan-dev@googlegroups.com, linux-doc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
+        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+        linux-efi@vger.kernel.org, linux-hardening@vger.kernel.org,
+        linux-kbuild@vger.kernel.org, linux-security-module@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, sparclinux@vger.kernel.org,
+        llvm@lists.linux.dev
+Date: Fri, 23 May 2025 15:24:30 +1000
+In-Reply-To: <20250523043935.2009972-8-kees@kernel.org>
+References: <20250523043251.it.550-kees@kernel.org>
+	 <20250523043935.2009972-8-kees@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.1 (3.56.1-1.fc42) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/4] gpio: lpc18xx: select GPIOLIB_IRQCHIP
-Content-Language: ru-RU
-To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>,
- Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
- Peng Fan <peng.fan@nxp.com>
-References: <20250522-gpio-fix-v1-0-98ceae7c4c3c@nxp.com>
- <20250522-gpio-fix-v1-3-98ceae7c4c3c@nxp.com>
-From: Vladimir Zapolskiy <vz@mleia.com>
-In-Reply-To: <20250522-gpio-fix-v1-3-98ceae7c4c3c@nxp.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-49551924 
-X-CRM114-CacheID: sfid-20250523_052318_785453_CD22CDA5 
-X-CRM114-Status: UNSURE (   4.82  )
-X-CRM114-Notice: Please train this message. 
+X-TM-AS-GCONF: 00
+X-Authority-Analysis: v=2.4 cv=SMZCVPvH c=1 sm=1 tr=0 ts=6830069b cx=c_pps a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VnNF1IyMAAAA:8 a=REYBSQJbgk_QW_Jsg8sA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-GUID: oQb5v6M7wutfrMtk1qvZQMEXsUNMAS6C
+X-Proofpoint-ORIG-GUID: 5IyYPtP_M7W6sx6jcc6-H4GkEZFAEAEb
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIzMDA0MyBTYWx0ZWRfX8CeyVmgZNEOz 8pmB+9RdT5ZsQ98qxplPqvRkrNpOOYwsSTFPDm5ofvI1Vh4bbudIby6HA8NmTGhtWKTGCbPb+Vc ncpDniBcH8eQ2V6TvH4/WOR7hWwc72H7W3tmeVLVHUbkift9S50W47R4EZG5vRt+eQh2UiWAsBK
+ iE2vMgtZCKgIB8ryEScHd2O4ZVBu+fZQ71R6KP7ZepPiveo0szKoP5GtVDvnlETC92QyKZ6dJPA 9F354NXkUaazXC5GwoeLMpIeHZomJ+1xdeYZUMVAtJ78BfchmFk42UaDhV8BLvtV9oREWNDxTxG /JkwdDWhrq02gBuo/giLPxFbLNIIh1tgMIxMCWOWwczwEbDPV9zml+heRweY+Jd/oul5iu2Dl1O
+ bQSsYl9qhOX4fnuFfAi63sra+qJkyo0qkV3/wv1tj0wVD9FBgFyh3pEhli53wYP0l6epaDcF
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-23_02,2025-05-22_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ mlxlogscore=480 suspectscore=0 bulkscore=0 clxscore=1011 adultscore=0
+ phishscore=0 mlxscore=0 impostorscore=0 spamscore=0 lowpriorityscore=0
+ malwarescore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
+ definitions=main-2505230043
 
-On 5/22/25 10:11, Peng Fan (OSS) wrote:
-> From: Peng Fan <peng.fan@nxp.com>
-> 
-> This driver uses gpiochip_irq_reqres() and gpiochip_irq_relres() which
-> are only built with GPIOLIB_IRQCHIP=y. Add the missing Kconfig select.
-> 
-> Fixes: 289e42df1358 ("gpio: lpc18xx: Make irq_chip immutable")
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+On Thu, 2025-05-22 at 21:39 -0700, Kees Cook wrote:
+> When KCOV is enabled all functions get instrumented, unless
+> the __no_sanitize_coverage attribute is used. To prepare for
+> __no_sanitize_coverage being applied to __init functions, we have to
+> handle differences in how GCC's inline optimizations get resolved.
+> For
+> s390 this requires forcing a couple functions to be inline with
 
-Reviewed-by: Vladimir Zapolskiy <vz@mleia.com>
+I assume you mean powerpc here, though I'm sure my employer is happy
+that you're at least confusing us with IBM's other architecture :)
 
---
-Best wishes,
-Vladimir
+--=20
+Andrew Donnellan    OzLabs, ADL Canberra
+ajd@linux.ibm.com   IBM Australia Limited
