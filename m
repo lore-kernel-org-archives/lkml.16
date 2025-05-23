@@ -1,238 +1,245 @@
-Received: from OS0P286CU011.outbound.protection.outlook.com (mail-japanwestazon11010015.outbound.protection.outlook.com [52.101.228.15])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8672D130A73
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 08:50:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.228.15
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747990254; cv=fail; b=cTlUCTm7d3Qrawk7ONlmHcaAP8Fay42An5RtIyCfkfmmZH+TUJkr8m6OeWc3n9en6Zi8KAW7r6SgNoPp+AGW4Egc19yq19LTHNK2shYd4bZy0CRb2ELi2yFj5Q24r4yy9AgrQFWkWWUjxr3n0fhFmj4RKVVGZu3LVEh5ECFnWAQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747990254; c=relaxed/simple;
-	bh=xzec43eRfWk95KXMUvHOznhZaIwDL3QVqojtMiJ3jBg=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=VS/7JMVQCLgWLZkZhapCm+2vnMR1zZidQ0Cj0qihVUqIIJ5f4bc6IfmuX1qOKchNDoBfUfFYNqH8Qv3DaTY4jOkvtP7TmyCRkKmOCpsHKMwBHHWU3rOCckiQfGH/pPLigWeWpne4ekzCJN/9dd9MwaEz4S3WXsHiRowVCBa7S3U=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; dkim=pass (1024-bit key) header.d=bp.renesas.com header.i=@bp.renesas.com header.b=Nt7owswX; arc=fail smtp.client-ip=52.101.228.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EA0F130A73
+	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 08:51:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747990314; cv=none; b=WPPBAZcPUjIp0M0HMdl8nT1ZC7iz5L++7oHnoRj5US8zJkoQbai1j1Uia8nImH4KBRqqPacS3CdzjzlANDIUxD16B2/1t+shvVKEvu1WW4WqEZl0yXOaZk82EYNbIBAexvA8zC+PopBN1wtnJRPQh96IYU39glaC+FL+8vzpIMc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747990314; c=relaxed/simple;
+	bh=KINVIsIATKZd8A1FMOQaMq6QpbTB56FlK2LkAKI2V/Y=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=CW9WtGn6qHhOZz/pEorKi/GXR7H0valqVmefXwbJi/gFWqqqWZUiFSUiPAPg+lr/IeXBHKcO6tefofagi5DIrBK8jFpxkEtGcSVMMjhlPUevb/5lnI8zrTgSaJgy+9Jcu9GgsEjRqHe8l6o77e4scIHj8IW3N8AX5N/goyPe59Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aBtjSvQw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=bp.renesas.com header.i=@bp.renesas.com header.b="Nt7owswX"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=h6yvalE/iyfV3bToe/+0B8yFZhH60asm04471mfCIFpECcdLHtA9utgLua2j8mLRPDsi4FG1DGQdyTqlaYIGREqlUPOLjGg59NqQZ8MtdC/i2+m9CADr6Va5sxNIThlZkcXtdrPYJ8TTRkIg+gCwbO/V64VpzbzPW5g/YJ1sBn1dV+kS4laOn7OHzAzQjCGEgsbsvvrHVBu9cZlP3KYxCYj3TOq4fz1hix/tCNTfIlYmrpRz+biaHf8S95Wsw2ud6JsHDNcjJsRxAbZTbFYzbAb0+6sbDmYC1GonmxM4Mxaj1SFSfs8vd1s0JULVadeFMJjA0aJWVSh0HsmNlJoeyQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=xzec43eRfWk95KXMUvHOznhZaIwDL3QVqojtMiJ3jBg=;
- b=PyMxjISam5zcohsuhLDVkpaBbqZ8gOhAKjAXx0TKbXHV/cqYSFpnDtJUnccPx9jx1wVpiwHy2OVFgF55quSNCWt+tjYlxcqN/ZUCx17uxo8SrwMvMdIL/79BlpDqNRcyqo9QExdpb5Dmn6c8tpuWnc2cl4/vX8zjW5iyIj2LCX5XTRfQh4AZ6Bk55QXvPQv0gFPNGW/Fxdu1FN/GOyh8SIWHm/5DxVDvtpUpgmQpOrhKGyfBfsUU1hxajk0nVXau7Qa0GBZdvI9UP6mY1buxZwoRMXv8nhurSrgQmXXsnvKCMTIcf3rWWF/7UTR1M28TnA+pzb42/uxWQaMLLSi72g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=bp.renesas.com; dmarc=pass action=none
- header.from=bp.renesas.com; dkim=pass header.d=bp.renesas.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bp.renesas.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xzec43eRfWk95KXMUvHOznhZaIwDL3QVqojtMiJ3jBg=;
- b=Nt7owswXthloqwDfyc26IWtAUpAtF/dCmm0SnZCXfZi0Ac5TkG5C2f2WvTbHVqPYMsOPVNEPPxju4+19kr9vuPsN23Tv5keacHaBnIIzeYQXCqpyzPwHKm5M/bt2tvOFci5lo1moE/6/Elz4o/ochhLY1YcMmFnN2MMwkaMxfcE=
-Received: from TY3PR01MB11346.jpnprd01.prod.outlook.com (2603:1096:400:3d0::7)
- by TYVPR01MB10845.jpnprd01.prod.outlook.com (2603:1096:400:29a::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.22; Fri, 23 May
- 2025 08:50:47 +0000
-Received: from TY3PR01MB11346.jpnprd01.prod.outlook.com
- ([fe80::86ef:ca98:234d:60e1]) by TY3PR01MB11346.jpnprd01.prod.outlook.com
- ([fe80::86ef:ca98:234d:60e1%4]) with mapi id 15.20.8769.021; Fri, 23 May 2025
- 08:50:47 +0000
-From: Biju Das <biju.das.jz@bp.renesas.com>
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-CC: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
-	<mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie
-	<airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Dave Stevenson
-	<dave.stevenson@raspberrypi.com>, =?utf-8?B?TWHDrXJhIENhbmFs?=
-	<mcanal@igalia.com>, Raspberry Pi Kernel Maintenance
-	<kernel-list@raspberrypi.com>, Andrzej Hajda <andrzej.hajda@intel.com>, Neil
- Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>,
-	laurent.pinchart <laurent.pinchart@ideasonboard.com>, Jonas Karlman
-	<jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>,
-	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Dmitry
- Baryshkov <lumag@kernel.org>, Tommaso Merciai
-	<tommaso.merciai.xr@bp.renesas.com>, Adam Ford <aford173@gmail.com>
-Subject: RE: (subset) [PATCH v6 00/10] drm/display: generic HDMI CEC helpers
-Thread-Topic: (subset) [PATCH v6 00/10] drm/display: generic HDMI CEC helpers
-Thread-Index: AQHbxs9ir1hJF42rS02+yM7B24cENLPcIpWAgAOfSiCAAArFgIAAJQHg
-Date: Fri, 23 May 2025 08:50:47 +0000
-Message-ID:
- <TY3PR01MB11346B18033508EDAA458C25A8698A@TY3PR01MB11346.jpnprd01.prod.outlook.com>
-References:
- <20250517-drm-hdmi-connector-cec-v6-0-35651db6f19b@oss.qualcomm.com>
- <174778079318.1447836.14176996867060604138.b4-ty@oss.qualcomm.com>
- <TY3PR01MB1134687A2A762FE803EFA04F28698A@TY3PR01MB11346.jpnprd01.prod.outlook.com>
- <CAO9ioeUf_nQXfP490fDx0Ord55z6EsR+3SOhcee2B-ymewkuCg@mail.gmail.com>
-In-Reply-To:
- <CAO9ioeUf_nQXfP490fDx0Ord55z6EsR+3SOhcee2B-ymewkuCg@mail.gmail.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=bp.renesas.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: TY3PR01MB11346:EE_|TYVPR01MB10845:EE_
-x-ms-office365-filtering-correlation-id: 096ee3b6-0a0a-4d68-8cde-08dd99d6e975
-x-ld-processed: 53d82571-da19-47e4-9cb4-625a166a4a2a,ExtAddr
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|1800799024|366016|7416014|376014|38070700018;
-x-microsoft-antispam-message-info:
- =?utf-8?B?UGsvamp2YmNUanQydEhyVkJsRmdDNlF6Zit3TXE1MU5oRnp3RHd5WjFic3Jn?=
- =?utf-8?B?dFZLd3hJNHUvZzhJUEN4NUJNb3JrR3Vzck9tK1hpY3RSMHVGdEs0T1NWRnhu?=
- =?utf-8?B?NUZGLzQ4QmtBNHZ3SWdxWUlzUnFuY3JEWWdVV0d1a05aWG1tSlhPQUtMMno0?=
- =?utf-8?B?SkM3TGREYlVuYWR2cWQ4QnR5a21oUWVTemo0UzQ5WGZJZDNGNTZGYzFVaVhF?=
- =?utf-8?B?ZXlObVFSYXBvUTV4MmNOakFoZXV1b3JWYlpqNDAvMTlIM0pEZ0pVVmJjNVp0?=
- =?utf-8?B?ejNlVjhNMTlnNlVQSjdtanRIaytlQTAvdFoxdU1za1VVejhtdVNRSXQvc2do?=
- =?utf-8?B?dVowWTEzV284anlqUER5aXMzWWQ2NVN4YUlXcXVPWTJWS2VvUE4rMzZwa3V6?=
- =?utf-8?B?WTk1OEpXdXhJTVlHZ1FITzMyRHU1TmNRMC92czl6cHZyRDljZzhITnJDYVc4?=
- =?utf-8?B?MkIvZjl2TkdENU5QTnRXazE1YkpSd3VZd1gvOExqdlZFME9WNkh2NXV4ZGpl?=
- =?utf-8?B?UDVtOWFoUVFGNWRSSi83cWRSRkwvUWduMUcxYlk2L3Y4SnFYS2IrTlN4T1RJ?=
- =?utf-8?B?WTNBWU5JbzhUZGVOTkdQWTlQVUJGUVR5YTdxenhQN25USXA2RzdXcXhlLzNR?=
- =?utf-8?B?Zzd3ckF1Sm1DM25sSjhidlZZWXY0YWxmcjY3bmd1QlpVRmZJZytJeGJhdlgy?=
- =?utf-8?B?Z3k3QzhiWEpNV1Exb2ErMkNoM1lKN1QzVy9ndjZJSG1DQjcwZVhOYnpMeWUy?=
- =?utf-8?B?SXVzNTZPK3RLUnNDdUlpdkFQeCszSzZvRitySTJHMUIvUTV1WTNBN1BxQ1VK?=
- =?utf-8?B?cDJqaXFOM054R2RJSjVCa2ZRZjNJa0kzZC9zMUVqVFBVMnZOQzVjN0JKR01C?=
- =?utf-8?B?RWdqRFN4VjlBSE5nV0FsV3ErK29uTEMyUmZyajhRNjJuU1ZHdXR3VGpRdGpZ?=
- =?utf-8?B?SEhSMTJWeU0zUU9LamQxdzVHQW5UTENaSzJQRHMyeXN3V2YrZjJrbUNacDEr?=
- =?utf-8?B?V2tyQnJLVXBXOHd0M0I2UnEvZXJBWTBjNmVOVmNVa3J2dk5BcHNmbmd2Rms1?=
- =?utf-8?B?VU5hK3BiZ2pWRkpaVTc2bTlKZ3lQUDc0dm1oZFRpYUJGQlZuckhhZmhxSitW?=
- =?utf-8?B?bll1VFhRTlVjaXRRZlkxZlljQU96SXFsQ1VXVURlQTRQQ3FKNUYwSHNOdEwv?=
- =?utf-8?B?dGxDbVlFdUh4RTh5RTFwa090MWNNR01TUGk1UTNVYU03VjFqbkVKSmcya01T?=
- =?utf-8?B?dnZySFFZeVoxNFpxTTdtamxUT05FNk1sQkdpMHhJdXNsTUhIVzRFZ3RYZ0Rl?=
- =?utf-8?B?U0FrQ2lVNkd0enVhcDN3c1hPV0prdnlsTGlBbzdkTW93cFVkRk1xam5vakxF?=
- =?utf-8?B?M3hkQU5paTNjRUVRMWFwbzFsQ2R6TFJIS3RpdXJ1R2Z0NFB3NllTUHpQTnRq?=
- =?utf-8?B?ZGs2c0hUS0Z6Z0lXbzFmaWxXY0JzY0J0dXJzQnJJQ0FodW9ySkRoTDZ6TlFL?=
- =?utf-8?B?VkZjSVZ1eFR6R1dvMlY5WnVyNVJ1WERCSkg0SGNvbHphYVJnelVHdWpsRDVy?=
- =?utf-8?B?Vm1IaWx4c2ZlaGRncGt6bjVTOEE1M2VPclk0LzFkcnVqMGdCYUhMRzdUZ2kr?=
- =?utf-8?B?WFZBd0lQcWFmUmVkNGpyMzFreWRUbUhsWXdycG9UOUF4KytHcWwybWN3VERo?=
- =?utf-8?B?Si9GUEVUdDZuYXBsMEJ5SnBFOTVqdTlSZzhoaUI1TmlXWUl5TlJBQkVyRXVt?=
- =?utf-8?B?SnVjTUdFZWhMbmd0VXMzMDF1R2xPS3dzb1g4UHNXbWdVbGFycnVGY1hwZ0hr?=
- =?utf-8?B?NnZQNkFYNFVlUEpjbVgvYm92NloybVBreXdFZTFSNXdoQWw2QlJLK0dHbkhq?=
- =?utf-8?B?UkdvbFdselhvbzlwTnoyb0p5MDhFWHVETlpIMVo0YS9kaTkyZElPQTlhRVpq?=
- =?utf-8?B?MW1wVkJMbDAycGg5VkpCZGlyU0ZOOHFKYmhhZllvVjZrRk4vR1BTdkRBRlUw?=
- =?utf-8?B?UWxEcnNNMG1BPT0=?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY3PR01MB11346.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?V2RXano1U2VmVjdvMWRyZWpsNE96ZHhaRVVYQmNUbHRCZDI3UnIrblFYWVRt?=
- =?utf-8?B?bHd6M0dPalQ2TUpQb2F1SC9RL01FNEVlMXkwK2dLSURZQjZUdnRSMTZHVWc2?=
- =?utf-8?B?ODFCK1A0WUxsT0ZFamhCYW8zOTZnRDY5S1FZV2FQWjVEdFU1V0crZXVtUEdZ?=
- =?utf-8?B?TloxQ05MTklXMFA0azIxdUI1NVlCZGo4dENkWDVibk1ZK3FNZkZOTWEvSXR1?=
- =?utf-8?B?MVRsS21DZG1td1YrZ254MkRsZEF5U0JuYkpKU01aejRwV3UyZWxIVWZNZmQx?=
- =?utf-8?B?UGdJTU5TRlEvRmFyVXg3WDFXaWtmYkhwclZDRTR1bk5OTGhMQTVaUWxKUVY1?=
- =?utf-8?B?Y3IxU21nWVgyMlhlSkdTWkNhcWJqMFdCNDg2dExuZ0V5SDBsQnV2QmcyZnZy?=
- =?utf-8?B?cmg2dVArTmRUQ1lONGh5UzBpeldQMXRZYThJZ3hHcW11RXBXMUhxTERRZU9t?=
- =?utf-8?B?Qzg4RDVvZjBlVWNDMUVYSXcrRWU0dUNNWkJKbkNSZCtYS0ZRMHBtZHVrNkxT?=
- =?utf-8?B?VWVLS2RhWGRBbUdUZjk5SW55cU5rRTk4MGQzOTV2Wm83dTVDZW1Ea01KMWRU?=
- =?utf-8?B?M0kwbTdtbEkxczV4NjN4bDBHUllMZENWQ0h6Q21PbWtsaFd5VG9vTHRFQmk3?=
- =?utf-8?B?UHVqL0g3eGQ5Qi9ubUpONXV6QlAyK1o5RGhCbkw1bExIMjdsVnNaYnFLcmZu?=
- =?utf-8?B?Um9jalNmTjBQZDlsRUFsTVEvaS9jWm5OY096WTR3YkhrVk5pclFhTTdNTXl1?=
- =?utf-8?B?RlJJM0ovZ3VNei85ZlpDMVlIcDE0UXVEMldMK3ZqMnVzR05pRjJ4MzJLaTIy?=
- =?utf-8?B?VTlvNkdOSHcvaU1wUkJmcVBQYVhlYXhnK2JlcmVOb2xoa1dyQnBnd2t5YWFL?=
- =?utf-8?B?emZvZWsrVzZBZzFxbWJXQkxDanRMMWVGNTh6S1FRWGpYTzkreXE2UFBHRUR3?=
- =?utf-8?B?R1hSeVZyUFRzLzhoTVEydEh5V2FjdnBGcE9lQ3ExZzl1bXpmdkNxdVJsNlpz?=
- =?utf-8?B?OUhLQUIyZktwaTdBenJVM3ZWL2V3ZEptbWpzYytzRWJ5N2VMWmFWdmFRdlhj?=
- =?utf-8?B?Wlg1YWdWL1NpVHRPa1lIZnlkTXJQdXg0aGlTeURrMUhtVS9qTEZwdndLVjVT?=
- =?utf-8?B?bmgwL3hCWVM0dWdZMi9kZlBnMnBpTXRZUndqRG9ZMlUrMFRydzNTNVcyMm50?=
- =?utf-8?B?bVpxVXhacEdMTHZ0VWNhUWpSQTJGQXNxeFVRTXpIcFk1YzRyNUp0QS9Idmw0?=
- =?utf-8?B?bnlnZHlxUDNDdW11b0dmVFJuSXNYZ2lycjk2R2xGakNlczFvYm16amVhbExU?=
- =?utf-8?B?ZU5zeEdSUDhhSGhQSUtGRDR5WndEdGhkODRmR211MjRqcGZydVdadDNXWkhn?=
- =?utf-8?B?eW1QVFd0c3NzZmt2djdiOGFmSDBPRkJZQ0xhQ1BDNXR4WkxlRnZTbGZMTnM1?=
- =?utf-8?B?aFRCc29ybDNWb1I4bS9QejBTQi8yTXY1cDJ4K3JOSHBxMzkxNkl6RVlUckc2?=
- =?utf-8?B?NmlIcWViaHZnSkxsYS9WeGtVS0lvUlNoajlBYmtSSlZOVzJOY2VwYVRFMmdZ?=
- =?utf-8?B?aDh0d3JOejJtT0pGWUFCMHZTbFp2Y3BnV1BlTFFDMlhubTYyR2g2Wkw0M1pt?=
- =?utf-8?B?MkRWZWV1c0VrbGM0L040WDFuQkpGVVF4Qis3OHJyQm00S3A1N0QrVzdBeGtv?=
- =?utf-8?B?T0JMTkU5UkNoQ3d6WlNFdWo2UHdQYWJzZFAwbmx3ZEZ2WUdYR3lWRU9TcTBM?=
- =?utf-8?B?Wk5pY3M5clRyckd5Z3cwMDZoSUtDWUNPTGlpSVBqNFhLWGRrOWtiUU9yYWVk?=
- =?utf-8?B?MDlEV3dVOGVPYVlNRW54VGtwSGNxeFF4d3d1WC9KMG1ZVHRld0kwL0pLVlNX?=
- =?utf-8?B?VFRocE9KdENvV05ySXZCZ0RuTGFoVmIyeUJtdkppRkNXQXpMSGZLZVM4YllF?=
- =?utf-8?B?Y0E2U0YyQjRjb2FrQ21wMlhqZVcycXIzb0JiZDdVdW5qaWVIQnZUYk8zd3g5?=
- =?utf-8?B?TEhQcVVpU0VGQVNtMkFEQUZ5UDFCSW50NEE4ZExHNGY1UWQyTWNQSjVGKzhs?=
- =?utf-8?B?dHB6QndiRmxTc0VGZ3FWaVVPbCs3cVljZlJlNnVVcW1HdkVKWGVOaU5nVnZV?=
- =?utf-8?B?U29QTVBMWU1vQm9WOXBZejllTy92QU83clFHRk04WEZXaFNRNDJtZFprYi9y?=
- =?utf-8?B?a0E9PQ==?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aBtjSvQw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CEC86C4CEE9;
+	Fri, 23 May 2025 08:51:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747990314;
+	bh=KINVIsIATKZd8A1FMOQaMq6QpbTB56FlK2LkAKI2V/Y=;
+	h=From:To:Cc:Subject:Date:From;
+	b=aBtjSvQwXrD1pwfoJeCoG5adpVJWBllTPmNKg5k6d9s3hYNxw5bOI5Vv1dssJYKfM
+	 nMgkGldk1R7x4Gg/MnOeq0lW5HKt/k5kmHUfnxGnpRLtVe16rMAkYtSPNAeM8omjSl
+	 9yuFgWSQVK1bP0BgE9tXZkFDKHmr7q2mN/IyZLAIczJ6Kfp50XvmF+mR+bDpHoPwl/
+	 wQGrfEtOQOV+nfNXJf1wXmtlnfPX6foqw/Qg/JVJZjLgHv52X+l4uXKKLnC7EnXFlj
+	 bPo6zDgWCYKGQHMFphktupx4rUTVnAbLBvRtdtQq0LQYKO1WNrSdRvZABPriX0SVm9
+	 3hp2ImekxnLSA==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan+linaro@kernel.org>)
+	id 1uIO87-000000002ws-3Xnh;
+	Fri, 23 May 2025 10:51:51 +0200
+From: Johan Hovold <johan+linaro@kernel.org>
+To: Vinod Koul <vkoul@kernel.org>
+Cc: Kishon Vijay Abraham I <kishon@kernel.org>,
+	Lubomir Rintel <lkundrak@v3.sk>,
+	Patrice Chotard <patrice.chotard@foss.st.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	linux-phy@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Johan Hovold <johan+linaro@kernel.org>
+Subject: [PATCH] phy: drop probe registration printks
+Date: Fri, 23 May 2025 10:51:12 +0200
+Message-ID: <20250523085112.11287-1-johan+linaro@kernel.org>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: bp.renesas.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: TY3PR01MB11346.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 096ee3b6-0a0a-4d68-8cde-08dd99d6e975
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 May 2025 08:50:47.4859
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Q+/AKrxA3mdo5s18CmpsI5x2dwUcOLhPlh3aKsLE50CadBzx54wGA0CsL5YHlMn2FLCZ0uvLFdrFBsb0c9QLjc7YJ7baLW/tLr/V/Uc/Qy8=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYVPR01MB10845
+Content-Transfer-Encoding: 8bit
 
-SGkgRG1pdHJ5IEJhcnlzaGtvdiwNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBG
-cm9tOiBEbWl0cnkgQmFyeXNoa292IDxkbWl0cnkuYmFyeXNoa292QG9zcy5xdWFsY29tbS5jb20+
-DQo+IFNlbnQ6IDIzIE1heSAyMDI1IDA3OjM3DQo+IFN1YmplY3Q6IFJlOiAoc3Vic2V0KSBbUEFU
-Q0ggdjYgMDAvMTBdIGRybS9kaXNwbGF5OiBnZW5lcmljIEhETUkgQ0VDIGhlbHBlcnMNCj4gDQo+
-IEhpIEJpanUNCj4gDQo+IE9uIEZyaSwgMjMgTWF5IDIwMjUgYXQgMDk6MTcsIEJpanUgRGFzIDxi
-aWp1LmRhcy5qekBicC5yZW5lc2FzLmNvbT4gd3JvdGU6DQo+ID4NCj4gPiBIaSBEbWl0cnkgQmFy
-eXNoa292LA0KPiA+DQo+ID4gVGhhbmtzIGZvciB0aGUgc2VyaWVzLg0KPiA+DQo+ID4gTG9va3Mg
-bGlrZSwgQWZ0ZXIgdGhpcyBwYXRjaCwgd2hlbiBJIGNoYW5nZSByZXNvbHV0aW9uIHVzaW5nIG1v
-ZGV0ZXN0IGl0IGlzIG5vdCB3b3JraW5nLg0KPiA+IE1vbml0b3IgaXMgc2hvd2luZyBvdXQgb2Yg
-cmFuZ2UvTm8gc2lnbmFsIG9uIFJaL1YyTCBTTUFSQyBFVksgY29ubmVjdGVkIHRvIEFEVjc1MzUu
-DQo+ID4NCj4gPiBOb3Qgc3VyZSwgSSBhbSB0aGUgb25seSBvbmUgZmFjaW5nIHRoaXMgaXNzdWU/
-DQo+IA0KPiBJIGhhdmUgYmVlbiB0ZXN0aW5nIHRoZSBzZXJpZXMgb24gZGI0MTBjIC8gYWR2NzUz
-MywgYnV0IHNvbWV0aGluZyBtaWdodCBoYXZlIGNoYW5nZWQgYmV0d2VlbiB0aGUNCj4gdGVzdGlu
-ZyB0aW1lIGFuZCB0aGUgcHJlc2VudCB0aW1lLiBJIHdpbGwgdHJ5IGNoZWNraW5nIGl0IG5leHQg
-d2Vlay4NCj4gDQo+IEluIHRoZSBtZWFudGltZSwgeW91IGNhbiBwcm9iYWJseSB0cnkgY29tcGFy
-aW5nIHdoYXQgZ2V0cyBwcm9ncmFtbWVkIGluIGFkdjc1MTFfbW9kZV9zZXQoKS4NCg0KU3VyZSwg
-V2UgYXJlIGxvb2tpbmcgaW50byB0aGlzLg0KDQpDaGVlcnMsDQpCaWp1DQoNCj4gDQo+ID4NCj4g
-PiBNb2RldGVzdCB3b3JrcyBmaW5lIHdpdGggNi4xNS4wLXJjNi1uZXh0LTIwMjUwNTE2LCB3aGVy
-ZSB0aGlzIHBhdGNoDQo+ID4gc2VyaWVzIGlzIG5vdCBwcmVzZW50Lg0KPiA+DQo+ID4gQ2hlZXJz
-LA0KPiA+IEJpanUNCj4gPg0KPiA+ID4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gPiA+
-IEZyb206IGRyaS1kZXZlbCA8ZHJpLWRldmVsLWJvdW5jZXNAbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
-PiBPbiBCZWhhbGYNCj4gPiA+IE9mIERtaXRyeSBCYXJ5c2hrb3YNCj4gPiA+IFNlbnQ6IDIwIE1h
-eSAyMDI1IDIzOjQwDQo+ID4gPiBTdWJqZWN0OiBSZTogKHN1YnNldCkgW1BBVENIIHY2IDAwLzEw
-XSBkcm0vZGlzcGxheTogZ2VuZXJpYyBIRE1JIENFQw0KPiA+ID4gaGVscGVycw0KPiA+ID4NCj4g
-PiA+DQo+ID4gPiBPbiBTYXQsIDE3IE1heSAyMDI1IDA0OjU5OjM2ICswMzAwLCBEbWl0cnkgQmFy
-eXNoa292IHdyb3RlOg0KPiA+ID4gPiBDdXJyZW50bHkgaXQgaXMgbmV4dCB0byBpbXBvc3NpYmxl
-IHRvIGltcGxlbWVudCBDRUMgaGFuZGxpbmcgZm9yDQo+ID4gPiA+IHRoZSBzZXR1cCB1c2luZyBk
-cm1fYnJpZGdlcyBhbmQgZHJtX2JyaWRnZV9jb25uZWN0b3I6IGJyaWRnZXMNCj4gPiA+ID4gZG9u
-J3QgaGF2ZSBhIGhvbGQgb2YgdGhlIGNvbm5lY3RvciBhdCB0aGUgcHJvcGVyIHRpbWUgdG8gYmUg
-YWJsZSB0byByb3V0ZSBDRUMgZXZlbnRzLg0KPiA+ID4gPg0KPiA+ID4gPiBBdCB0aGUgc2FtZSB0
-aW1lIGl0IG5vdCB2ZXJ5IGVhc3kgYW5kIG9idmlvdXMgdG8gZ2V0IHRoZSBDRUMNCj4gPiA+ID4g
-cGh5c2ljYWwgYWRkcmVzcyBoYW5kbGluZyBjb3JyZWN0bHkuIERyaXZlcnMgaGFuZGxlIGl0IGF0
-IHZhcmlvdXMNCj4gPiA+ID4gcGxhY2VzLCBlbmRpbmcgdXAgd2l0aCB0aGUgc2xpZ2h0IGRpZmZl
-cmVuY2VzIGluIGJlaGF2aW91ci4NCj4gPiA+ID4NCj4gPiA+ID4gWy4uLl0NCj4gPiA+DQo+ID4g
-PiBBcHBsaWVkLCB0aGFua3MhDQo+ID4gPg0KPiA+ID4gWzAxLzEwXSBkcm0vYnJpZGdlOiBtb3Zl
-IHByaXZhdGUgZGF0YSB0byB0aGUgZW5kIG9mIHRoZSBzdHJ1Y3QNCj4gPiA+ICAgICAgICAgY29t
-bWl0OiBmYTM3NjllMDliZTc2MTQyZDUxYzYxN2Q3ZDBjNzJkOWM3MjVhNDlkDQo+ID4gPiBbMDIv
-MTBdIGRybS9icmlkZ2U6IGFsbG93IGxpbWl0aW5nIEkyUyBmb3JtYXRzDQo+ID4gPiAgICAgICAg
-IGNvbW1pdDogZDlmOWJhZTY3NTJmNWEwMjgwYTgwZDFiYzUyNGNhYmQwZDYwYzg4Ng0KPiA+ID4g
-WzAzLzEwXSBkcm0vY29ubmVjdG9yOiBhZGQgQ0VDLXJlbGF0ZWQgZmllbGRzDQo+ID4gPiAgICAg
-ICAgIGNvbW1pdDogZTcyY2Q1OTdjMzUwMTIxNDZiZmU3N2I3MzZhMzBmZWUzZTc3ZTYxZQ0KPiA+
-ID4gWzA0LzEwXSBkcm0vZGlzcGxheTogbW92ZSBDRUNfQ09SRSBzZWxlY3Rpb24gdG8gRFJNX0RJ
-U1BMQVlfSEVMUEVSDQo+ID4gPiAgICAgICAgIGNvbW1pdDogYmNjODU1M2I2MjI4ZDAzODdmZjY0
-OTc4YTAzZWZhM2M4OTgzZGQyZg0KPiA+ID4gWzA1LzEwXSBkcm0vZGlzcGxheTogYWRkIENFQyBo
-ZWxwZXJzIGNvZGUNCj4gPiA+ICAgICAgICAgY29tbWl0OiA4YjFhOGY4YjIwMDJkMzExMzZkODNl
-NGQ3MzBiNGNiNDFlOWVlODY4DQo+ID4gPiBbMDYvMTBdIGRybS9kaXNwbGF5OiBoZG1pLXN0YXRl
-LWhlbHBlcjogaGFuZGxlIENFQyBwaHlzaWNhbCBhZGRyZXNzDQo+ID4gPiAgICAgICAgIGNvbW1p
-dDogNjAzY2U4NTQyNzA0M2VjYjI5ZWY3MzdjMWIzNTA5MDFjZTNlYmYwOQ0KPiA+ID4gWzA4LzEw
-XSBkcm0vZGlzcGxheTogYnJpZGdlLWNvbm5lY3RvcjogaG9vayBpbiBDRUMgbm90aWZpZXIgc3Vw
-cG9ydA0KPiA+ID4gICAgICAgICBjb21taXQ6IDY1YTI1NzVhNjhlNGZmMDNiYTg4N2I1YWVmNjc5
-ZmM5NTQwNWZjZDINCj4gPiA+IFswOS8xMF0gZHJtL2Rpc3BsYXk6IGJyaWRnZS1jb25uZWN0b3I6
-IGhhbmRsZSBDRUMgYWRhcHRlcnMNCj4gPiA+ICAgICAgICAgY29tbWl0OiBhNzQyODhjOGRlZDdj
-MzQ2MjRlNTBiNGFhOGNhMzdhZTZjYzAzZGY0DQo+ID4gPiBbMTAvMTBdIGRybS9icmlkZ2U6IGFk
-djc1MTE6IHN3aXRjaCB0byB0aGUgSERNSSBjb25uZWN0b3IgaGVscGVycw0KPiA+ID4gICAgICAg
-ICBjb21taXQ6IGFlMDFkMzE4M2QyNzYzZWQyN2FiNzFmNGVmNTQwMmI2ODNkOWFkOGENCj4gPiA+
-DQo+ID4gPiBCZXN0IHJlZ2FyZHMsDQo+ID4gPiAtLQ0KPiA+ID4gRG1pdHJ5IEJhcnlzaGtvdiA8
-ZG1pdHJ5LmJhcnlzaGtvdkBvc3MucXVhbGNvbW0uY29tPg0KPiA+DQo+IA0KPiANCj4gLS0NCj4g
-V2l0aCBiZXN0IHdpc2hlcw0KPiBEbWl0cnkNCg==
+Drivers should generally be quiet on successful probe, but this is not
+followed by some PHY drivers, for example:
+
+	snps-eusb2-hsphy 88e1000.phy: Registered Snps-eUSB2 phy
+	qcom-eusb2-repeater c432000.spmi:pmic@7:phy@fd00: Registered Qcom-eUSB2 repeater
+	qcom-eusb2-repeater c432000.spmi:pmic@a:phy@fd00: Registered Qcom-eUSB2 repeater
+	qcom-eusb2-repeater c432000.spmi:pmic@b:phy@fd00: Registered Qcom-eUSB2 repeater
+	snps-eusb2-hsphy fd3000.phy: Registered Snps-eUSB2 phy
+	snps-eusb2-hsphy fd9000.phy: Registered Snps-eUSB2 phy
+	snps-eusb2-hsphy fde000.phy: Registered Snps-eUSB2 phy
+	snps-eusb2-hsphy 88e0000.phy: Registered Snps-eUSB2 phy
+	snps-eusb2-hsphy 88e2000.phy: Registered Snps-eUSB2 phy
+
+Drop (or demote to debug level) unnecessary registration info messages
+to make boot logs a little less noisy.
+
+Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
+---
+ drivers/phy/broadcom/phy-bcm-ns2-pcie.c        | 2 --
+ drivers/phy/broadcom/phy-bcm-ns2-usbdrd.c      | 1 -
+ drivers/phy/broadcom/phy-bcm-sr-pcie.c         | 2 --
+ drivers/phy/broadcom/phy-brcm-sata.c           | 2 +-
+ drivers/phy/marvell/phy-pxa-usb.c              | 1 -
+ drivers/phy/phy-snps-eusb2.c                   | 2 --
+ drivers/phy/qualcomm/phy-qcom-eusb2-repeater.c | 2 --
+ drivers/phy/qualcomm/phy-qcom-m31.c            | 2 --
+ drivers/phy/qualcomm/phy-qcom-qusb2.c          | 4 +---
+ drivers/phy/st/phy-stih407-usb.c               | 2 --
+ drivers/phy/st/phy-stm32-usbphyc.c             | 4 ++--
+ drivers/phy/ti/phy-twl4030-usb.c               | 1 -
+ 12 files changed, 4 insertions(+), 21 deletions(-)
+
+diff --git a/drivers/phy/broadcom/phy-bcm-ns2-pcie.c b/drivers/phy/broadcom/phy-bcm-ns2-pcie.c
+index 2eaa41f8fc70..67a6ae5ecba0 100644
+--- a/drivers/phy/broadcom/phy-bcm-ns2-pcie.c
++++ b/drivers/phy/broadcom/phy-bcm-ns2-pcie.c
+@@ -61,8 +61,6 @@ static int ns2_pci_phy_probe(struct mdio_device *mdiodev)
+ 		return PTR_ERR(provider);
+ 	}
+ 
+-	dev_info(dev, "%s PHY registered\n", dev_name(dev));
+-
+ 	return 0;
+ }
+ 
+diff --git a/drivers/phy/broadcom/phy-bcm-ns2-usbdrd.c b/drivers/phy/broadcom/phy-bcm-ns2-usbdrd.c
+index 36ad02c33ac5..8473fa574529 100644
+--- a/drivers/phy/broadcom/phy-bcm-ns2-usbdrd.c
++++ b/drivers/phy/broadcom/phy-bcm-ns2-usbdrd.c
+@@ -395,7 +395,6 @@ static int ns2_drd_phy_probe(struct platform_device *pdev)
+ 
+ 	platform_set_drvdata(pdev, driver);
+ 
+-	dev_info(dev, "Registered NS2 DRD Phy device\n");
+ 	queue_delayed_work(system_power_efficient_wq, &driver->wq_extcon,
+ 			   driver->debounce_jiffies);
+ 
+diff --git a/drivers/phy/broadcom/phy-bcm-sr-pcie.c b/drivers/phy/broadcom/phy-bcm-sr-pcie.c
+index ff9b3862bf7a..706e1d83b4ce 100644
+--- a/drivers/phy/broadcom/phy-bcm-sr-pcie.c
++++ b/drivers/phy/broadcom/phy-bcm-sr-pcie.c
+@@ -277,8 +277,6 @@ static int sr_pcie_phy_probe(struct platform_device *pdev)
+ 		return PTR_ERR(provider);
+ 	}
+ 
+-	dev_info(dev, "Stingray PCIe PHY driver initialized\n");
+-
+ 	return 0;
+ }
+ 
+diff --git a/drivers/phy/broadcom/phy-brcm-sata.c b/drivers/phy/broadcom/phy-brcm-sata.c
+index 228100357054..d52dd065e862 100644
+--- a/drivers/phy/broadcom/phy-brcm-sata.c
++++ b/drivers/phy/broadcom/phy-brcm-sata.c
+@@ -832,7 +832,7 @@ static int brcm_sata_phy_probe(struct platform_device *pdev)
+ 		return PTR_ERR(provider);
+ 	}
+ 
+-	dev_info(dev, "registered %d port(s)\n", count);
++	dev_dbg(dev, "registered %d port(s)\n", count);
+ 
+ 	return 0;
+ }
+diff --git a/drivers/phy/marvell/phy-pxa-usb.c b/drivers/phy/marvell/phy-pxa-usb.c
+index 6c98eb9608e9..c0bb71f80c04 100644
+--- a/drivers/phy/marvell/phy-pxa-usb.c
++++ b/drivers/phy/marvell/phy-pxa-usb.c
+@@ -325,7 +325,6 @@ static int pxa_usb_phy_probe(struct platform_device *pdev)
+ 		phy_create_lookup(pxa_usb_phy->phy, "usb", "mv-otg");
+ 	}
+ 
+-	dev_info(dev, "Marvell PXA USB PHY");
+ 	return 0;
+ }
+ 
+diff --git a/drivers/phy/phy-snps-eusb2.c b/drivers/phy/phy-snps-eusb2.c
+index cf62f2221366..87f323e758d6 100644
+--- a/drivers/phy/phy-snps-eusb2.c
++++ b/drivers/phy/phy-snps-eusb2.c
+@@ -599,8 +599,6 @@ static int snps_eusb2_hsphy_probe(struct platform_device *pdev)
+ 	if (IS_ERR(phy_provider))
+ 		return PTR_ERR(phy_provider);
+ 
+-	dev_info(dev, "Registered Snps-eUSB2 phy\n");
+-
+ 	return 0;
+ }
+ 
+diff --git a/drivers/phy/qualcomm/phy-qcom-eusb2-repeater.c b/drivers/phy/qualcomm/phy-qcom-eusb2-repeater.c
+index 6bd1b3c75c77..260894b6932c 100644
+--- a/drivers/phy/qualcomm/phy-qcom-eusb2-repeater.c
++++ b/drivers/phy/qualcomm/phy-qcom-eusb2-repeater.c
+@@ -264,8 +264,6 @@ static int eusb2_repeater_probe(struct platform_device *pdev)
+ 	if (IS_ERR(phy_provider))
+ 		return PTR_ERR(phy_provider);
+ 
+-	dev_info(dev, "Registered Qcom-eUSB2 repeater\n");
+-
+ 	return 0;
+ }
+ 
+diff --git a/drivers/phy/qualcomm/phy-qcom-m31.c b/drivers/phy/qualcomm/phy-qcom-m31.c
+index 20d4c020a83c..7caeea1b109e 100644
+--- a/drivers/phy/qualcomm/phy-qcom-m31.c
++++ b/drivers/phy/qualcomm/phy-qcom-m31.c
+@@ -305,8 +305,6 @@ static int m31usb_phy_probe(struct platform_device *pdev)
+ 	phy_set_drvdata(qphy->phy, qphy);
+ 
+ 	phy_provider = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
+-	if (!IS_ERR(phy_provider))
+-		dev_info(dev, "Registered M31 USB phy\n");
+ 
+ 	return PTR_ERR_OR_ZERO(phy_provider);
+ }
+diff --git a/drivers/phy/qualcomm/phy-qcom-qusb2.c b/drivers/phy/qualcomm/phy-qcom-qusb2.c
+index 1f5f7df14d5a..18cdd017bf3f 100644
+--- a/drivers/phy/qualcomm/phy-qcom-qusb2.c
++++ b/drivers/phy/qualcomm/phy-qcom-qusb2.c
+@@ -1139,9 +1139,7 @@ static int qusb2_phy_probe(struct platform_device *pdev)
+ 	phy_set_drvdata(generic_phy, qphy);
+ 
+ 	phy_provider = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
+-	if (!IS_ERR(phy_provider))
+-		dev_info(dev, "Registered Qcom-QUSB2 phy\n");
+-	else
++	if (IS_ERR(phy_provider))
+ 		pm_runtime_disable(dev);
+ 
+ 	return PTR_ERR_OR_ZERO(phy_provider);
+diff --git a/drivers/phy/st/phy-stih407-usb.c b/drivers/phy/st/phy-stih407-usb.c
+index ebb1d0858aa3..7a3e4584895c 100644
+--- a/drivers/phy/st/phy-stih407-usb.c
++++ b/drivers/phy/st/phy-stih407-usb.c
+@@ -139,8 +139,6 @@ static int stih407_usb2_picophy_probe(struct platform_device *pdev)
+ 	if (IS_ERR(phy_provider))
+ 		return PTR_ERR(phy_provider);
+ 
+-	dev_info(dev, "STiH407 USB Generic picoPHY driver probed!");
+-
+ 	return 0;
+ }
+ 
+diff --git a/drivers/phy/st/phy-stm32-usbphyc.c b/drivers/phy/st/phy-stm32-usbphyc.c
+index b917cd413de7..27fe92f73f33 100644
+--- a/drivers/phy/st/phy-stm32-usbphyc.c
++++ b/drivers/phy/st/phy-stm32-usbphyc.c
+@@ -757,8 +757,8 @@ static int stm32_usbphyc_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	version = readl_relaxed(usbphyc->base + STM32_USBPHYC_VERSION);
+-	dev_info(dev, "registered rev:%lu.%lu\n",
+-		 FIELD_GET(MAJREV, version), FIELD_GET(MINREV, version));
++	dev_dbg(dev, "registered rev: %lu.%lu\n",
++		FIELD_GET(MAJREV, version), FIELD_GET(MINREV, version));
+ 
+ 	return 0;
+ 
+diff --git a/drivers/phy/ti/phy-twl4030-usb.c b/drivers/phy/ti/phy-twl4030-usb.c
+index 6f12b38cd894..a26aec3ab29e 100644
+--- a/drivers/phy/ti/phy-twl4030-usb.c
++++ b/drivers/phy/ti/phy-twl4030-usb.c
+@@ -784,7 +784,6 @@ static int twl4030_usb_probe(struct platform_device *pdev)
+ 	pm_runtime_mark_last_busy(&pdev->dev);
+ 	pm_runtime_put_autosuspend(twl->dev);
+ 
+-	dev_info(&pdev->dev, "Initialized TWL4030 USB module\n");
+ 	return 0;
+ }
+ 
+-- 
+2.49.0
+
