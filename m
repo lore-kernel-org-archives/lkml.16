@@ -1,52 +1,76 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3AC92045B5;
-	Fri, 23 May 2025 16:08:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 596492949E9
+	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 16:08:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748016484; cv=none; b=Tp5DjGJY2aFOZoYZ1bNaZrJ9xnLPrXHictI02hJPMHvmochsBt4v6zJjGTC1ML3x1SnSPaQeG809ay7kZm5O79kCyhEU55jqCVNZiE1h1gNLMg5QM2RSzaZkx/WqlJNs+8lFDCGAhtDc3XxLjKd6kinXb6B56DYAMJ+PcafihNY=
+	t=1748016500; cv=none; b=D14ULLYKnt9SGna8ZPfQo55+kzTuSLG61QHOXf62/2La51eJPqt87BehSjujYjVczK5K/cPd0fqCeGquIYiZXf8CQmym/ALxlDIaeJkwba3g9EaoeNKNAyI8GSGwZfpKfaEbub1BARVpOBzwYlhE8JjaRkUnqx2j8ZkF2NMxRmQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748016484; c=relaxed/simple;
-	bh=4ikHnQHH1c+C1GtGvR5xgCWyoWZOd7YFiZTkJF9gAUA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=n1unBrfI+AV4QOw4igtleB9E5Ni+7rPGhhyhc6V7T2waY5SVOifO6Bey8h7ACo7boRIwI1P3T7feTd06cKCayF8eTgRguKw1M98L/9q8Nmb2itV52QL89tz1Nq4By49Iz0g9sSQQ5MEuonwMnGGmyC2fHY80T8VTSUhHAL1fyBA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=jkq3ytWe; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1748016500; c=relaxed/simple;
+	bh=sOSd52a5sFsFjNwgnP65YA7nbCno1YCXhcKexikeCZM=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=b9FUgtN39lSwhGC+MjYWyfEEDONIHvV/nmo+I/iE1X/Y48s+FBhjSvl97kK1p20j6dmGzSRigIF8XCEUtf3OT3X43CVm0EqXqh/a8np6gIgWQdT7Bnd0K65k7Zhfqpaho0J5tuI2JEJfD6putYIQUs6lZefpKa2mDCUFuUE4f1s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=bzPNEBgV; arc=none smtp.client-ip=209.85.208.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="jkq3ytWe"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=S6Ip/EGBVi6qARnvgxZC7YGNzlBftLG+VPwtRvZjRDs=; b=jkq3ytWedokPjdjZjKAIp5/xdl
-	H3VUwiycazQtojv+4ajmUDoFRq6IhH/xb3AvQqGoGsSHQVogjbZcRj53KX9YV3phb4VwuaEmDYyUK
-	aykPsQrPLpamYPXtgdrOfjS/Tb+NHzDUpyVOkQDKzY7/QUwZUdLciExd7yZG6CpcmizI=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1uIUw1-00Dczn-O9; Fri, 23 May 2025 18:07:49 +0200
-Date: Fri, 23 May 2025 18:07:49 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Sky Huang <SkyLake.Huang@mediatek.com>
-Cc: Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Daniel Golle <daniel@makrotopia.org>,
-	Qingfang Deng <dqfext@gmail.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH net-next 2/2] net: phy: mtk-ge-soc: Fix LED behavior if
- blinking is not set.
-Message-ID: <39d5d8af-0bac-4b91-85df-4e04a5835f53@lunn.ch>
-References: <20250523113601.3627781-1-SkyLake.Huang@mediatek.com>
- <20250523113601.3627781-3-SkyLake.Huang@mediatek.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bzPNEBgV"
+Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-3290ae9b011so158461fa.0
+        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 09:08:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1748016493; x=1748621293; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=hGF7HsXVnOrqTUKvr0Dj/ZLjMe7xNdGfL36SW0iFLZk=;
+        b=bzPNEBgVxyGsYJJ7eQHtLerihWTYCCEkDyX9cuKt6YisD0fR0xk5rhH4jBPfJz4Yeq
+         7D1qaq3ekppC0wUGiz5vUdTM3U/DK6ZEJSD/CdPu82WFFoic4Se6SzyHhtftRwxdJRHS
+         Qyk8WhHMjxUOLs8e7iq7sGzgVdE5S93I4Wtqqh4Ycuqi9x3s9ZsUV3dF9Jniqc78e6z3
+         +nIzV+bzmraVqMJymNgxAWQ7nMU1E32dWgs55v0pA+JFdjzXs297pffPnOZn04a9ka/k
+         +dpiJUuyzlgNowCeng52k8FD78fyigYaOzmMAPhTGVi0wffKG1y8vr7MfdSWZ9WByNon
+         WK/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748016493; x=1748621293;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=hGF7HsXVnOrqTUKvr0Dj/ZLjMe7xNdGfL36SW0iFLZk=;
+        b=wUAEqVNTlHKD9/lXnwhx6BnSrSvc3QbBOx6YsLA16vmrObrIXOL3GmQeY4LyZf29YU
+         jeFzatUv1j2IhqB9T2ZIf7g++8wmlUbMbNO59RKwLUj9VcwMHXG50UiZ/LA0xeIZ2Lq5
+         pndLhc8bmEycvw3Kk/XDRDEftQVtf/A+Ms0r+ikz0LX78x7nts+z7EKsnrMsJ/dCs7eq
+         cPJGFbaTpsxA79npSUT2kyL5WYg1E/TFHnY3jf/TDLDOEr3HbEW1XrNpkGux+3F3UHjp
+         Zr55MSM+hjRAyTyOwZrzPQIWj3KiraYt20RBdHP96pfMJ6x3NsZm1Es6PQIr4wVpbHMC
+         2m1A==
+X-Forwarded-Encrypted: i=1; AJvYcCUgAcamUti3HyVKWSQSifxtKmD8Pfx2y31HnaoTB2bq2y5eJX49xq6/nrjNsgTzX0TZvVvGOpIuubdPKH8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxPfYEoZ3cU6yi01yc1kTuBgrTLXo2tkYgh9P/8QbXSFX5vjmF3
+	O1ElaT4/nDFW6GGHzc9oGM0bf8LRT3sF+ii81PMeMMLWvFEt0o8eVUa5JpklTmERYda9vlToaAs
+	Hgkii
+X-Gm-Gg: ASbGncsZ+WRQdpqQ2ZubIUqdGPxdzip8NDQM+mbVbIJb+aTUGQZIOY8kvdhRUcPI8Ro
+	IjIxuJ3pEpuT00cJccjQGPDwc6Dw2H9l/fJ3HkNxvLmH8XJGWDWBY5+3G9QfBDDg7s8OfkLKtIH
+	N3IiGydHIckQmIS3vc324edJ+k9YYD2PJ7e64EES1wh64ZFzt70iECIO68HcQ6EeseKSLDWy4tn
+	HEec3EANv9fQTg9X7LxA36Mjm9RzRe8SD4jpLANBbwnaDEWJ2814eCcNmEtnlMUrbM+ajA8vn2Q
+	Mx0eW4XDXbRUdQAsUS/5zUlw1fnteow+qYamaE4iYQMkPHwKNPg37c8y
+X-Google-Smtp-Source: AGHT+IEgnqQ89pTDpIiXTK+5YoVr8iR1h5pIE/WFcVljNceH6shNrv9ACEId9Fo5qIq8B9APct4R0g==
+X-Received: by 2002:a05:600c:3b21:b0:441:b3eb:5720 with SMTP id 5b1f17b1804b1-442ff0396b5mr274072555e9.29.1748016482352;
+        Fri, 23 May 2025 09:08:02 -0700 (PDT)
+Received: from localhost ([196.207.164.177])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3a368136014sm22978069f8f.92.2025.05.23.09.08.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 23 May 2025 09:08:01 -0700 (PDT)
+Date: Fri, 23 May 2025 19:07:58 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Ben Skeggs <bskeggs@nvidia.com>
+Cc: Lyude Paul <lyude@redhat.com>, Danilo Krummrich <dakr@kernel.org>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Jonathan Hunter <jonathanh@nvidia.com>,
+	Dave Airlie <airlied@redhat.com>,
+	Lu Baolu <baolu.lu@linux.intel.com>, Timur Tabi <ttabi@nvidia.com>,
+	dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
+	linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org
+Subject: [PATCH next] drm/nouveau/tegra: Fix error pointer vs NULL return in
+ nvkm_device_tegra_resource_addr()
+Message-ID: <aDCdXk98AhLBcWvK@stanley.mountain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -55,29 +79,31 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250523113601.3627781-3-SkyLake.Huang@mediatek.com>
+X-Mailer: git-send-email haha only kidding
 
-On Fri, May 23, 2025 at 07:36:01PM +0800, Sky Huang wrote:
-> From: Sky Huang <skylake.huang@mediatek.com>
-> 
-> If delay_on==0 and delay_off==0 are passed to
-> mt798x_2p5ge_phy_led_blink_set() and mtk_phy_led_num_dly_cfg(),
-> blinking is actually not set. So don't clean "LED on" status under
-> this circumstance.
+The nvkm_device_tegra_resource() function returns a mix of error pointers
+and NULL.  The callers only expect it to return NULL on error.  Change it
+to only return NULL.
 
-Actually, i think mtk_phy_led_num_dly_cfg() is wrong.
-
-https://docs.kernel.org/leds/leds-class.html#hardware-accelerated-blink-of-leds
-
-   The blink_set() function should choose a user friendly blinking
-   value if it is called with *delay_on==0 && *delay_off==0
-   parameters. In this case the driver should give back the chosen
-   value through delay_on and delay_off parameters to the leds
-   subsystem.
-
-That is not what mtk_phy_led_num_dly_cfg() does.
-
-    Andrew
-
+Fixes: 76b8f81a5b92 ("drm/nouveau: improve handling of 64-bit BARs")
+Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
 ---
-pw-bot: cr
+ drivers/gpu/drm/nouveau/nvkm/engine/device/tegra.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/gpu/drm/nouveau/nvkm/engine/device/tegra.c b/drivers/gpu/drm/nouveau/nvkm/engine/device/tegra.c
+index 0ca2dfe99676..114e50ca1827 100644
+--- a/drivers/gpu/drm/nouveau/nvkm/engine/device/tegra.c
++++ b/drivers/gpu/drm/nouveau/nvkm/engine/device/tegra.c
+@@ -196,7 +196,7 @@ nvkm_device_tegra_resource(struct nvkm_device *device, enum nvkm_bar_id bar)
+ 	case NVKM_BAR1_FB : idx = 1; break;
+ 	default:
+ 		WARN_ON(1);
+-		return ERR_PTR(-EINVAL);
++		return NULL;
+ 	}
+ 
+ 	return platform_get_resource(tdev->pdev, IORESOURCE_MEM, idx);
+-- 
+2.47.2
+
