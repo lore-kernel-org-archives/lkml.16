@@ -1,99 +1,65 @@
-Received: from mail-io1-f52.google.com (mail-io1-f52.google.com [209.85.166.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-172.mta1.migadu.com (out-172.mta1.migadu.com [95.215.58.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C6D819F12D
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 21:09:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84DBD7482
+	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 21:10:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748034545; cv=none; b=oA+xVScJYITZ/WK5LkNk8LZhNPOEZhbH9DUw+6g3atmK9hLaKgG2KP3kypCgnf3dqKcZ+hfQBE+rNlJXB07xbLl9ANsWnYlKiz7d7UQggcPQAtb8Nt5MhV+pPbG7A2ner1yMyIU4ejD6fgqkTXuAALVEqeQVSzRD+1VrMtFrIXY=
+	t=1748034613; cv=none; b=cMo67xsB6mtSzisUZg0zmz9UkSzG9qOvOteFR6BNbPU++9OLJdST6K4ffYAupD3FaTiGmtZYGded17SN7AUa3FhEHFwmkbSLHI2IC5BGw0L/ayuKVnE99h5HitID55e12Jxf+rHZQJc0JHDPjyila+0OpyzXT1zruSmvg6e6hBk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748034545; c=relaxed/simple;
-	bh=Ug/0cek0liAmIOALkolnnoBQY2EBqu8WIDEwQsDxrN4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WY4sZTr6NGTQ8CkZsph1o/7MiYjotVOoRIhXel+q2JM4Rvqlz/gokn/yuLOq9SFAKzWCX8mxM8YSYo3XNVzrH05J47dj+ddooPdVlha2F4bTqI+sMyx6CzllwE28nbLVtwm+og3egt8Ao4tBpK7rxohFJVHYcjdTHv+hcDpQ/f0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=iTc2mQ0+; arc=none smtp.client-ip=209.85.166.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1748034613; c=relaxed/simple;
+	bh=EZX+iloKE1202xeqiX3o/fp74KwDa+hl9tuC6RdD61A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BEwZ4mLK4YlRiEOBPIK2lEHEDZJEaem+e+F/veEptqtnR+GJS7Ijl6qHpXNnGvVavLa3+wsG7uhF7KuO0190Rg4G1Og0shYw/F4Tt8syhpkuf1BGyIugiM0Czsdz1lxdF3EdkO5OixiaNkjVZPMAsxrgTLD4MCNqQCDc1p2h8gs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=xqf5x82b; arc=none smtp.client-ip=95.215.58.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="iTc2mQ0+"
-Received: by mail-io1-f52.google.com with SMTP id ca18e2360f4ac-85b3f92c8f8so23852839f.1
-        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 14:09:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1748034542; x=1748639342; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=XHsikEp0hoaPHHq7HEUUN56dIOFIBGPuhUpxjcOnZLo=;
-        b=iTc2mQ0+hzDpeE7wmS00+/+bh3MlPwFklfRNOUcXNSZfeRxQou4ReQeARrNEZWq6K6
-         G59zFlrjDipTeJ2MYGsvd8ShjmO1p7ApLFwQHK1OW5RHTRraLobi0cxAiG8iXFrFNGgy
-         JzyP3TnsGBtznU0JFwDNpzLY1dgsWPTYDKcTc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748034542; x=1748639342;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=XHsikEp0hoaPHHq7HEUUN56dIOFIBGPuhUpxjcOnZLo=;
-        b=LPzHHgSx0WjtntPg3X/7OhQXMz5LUkl47O27aZJzfsXtzBuozmfjKFU8/ayodGVvhF
-         mRV0CwelOElFmPibNXmvRpQEwpJ64hTF4+MZj7ibw1CQfwsY8OwsWKnttB+WlAo/F/SX
-         mCFqqeYt6PfoLTn6AyFEfilWEH2FquhePWyBfxB4RgCL9vpB8G8nm83V0EE/XDgBL+Dq
-         ZAkmTlI3lwEjaH+AlgfnHSeg5d8rpZ1m+EvEVw33YuVfD2Tx+U2ihpSfLDX6EbuNs4Dh
-         P+4438eaMuj+SYz5GpZ+Vl4lBYpAcXEKMFKm5l5slkGtTvjQCyA0zfn2JtAMLfd0JaMP
-         8byQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWEsIMb1mI2j+dDa46TZ479So+y3Hxkmf533uO4dm02FIipg3wNT2bbjwX2G9KN++a8tKHSIMPyMb4MUJA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwBhYfvfBnM0Rz/H2DdJEPmgEDcx8fixnw+ycdJg60EoqZaROwS
-	4b98RaGj0Px6ZMVAXkcEjJTzYeEV9kLV3KYvDMgR25xqm+Yk6gHMTEFejUs7qL96YGE=
-X-Gm-Gg: ASbGnctJtf/B1iZ+C82G+dGKAypZqO6jYFAjWjq4Exxmt1AahzZoHpbDrp8Jlp8sQvv
-	UndN8rezLDalD8alv4Mm+QfLrIiQr07t3/dMEBCmywX8iJKtgj73Ex4nCrtppdzy3eXGVlI4cYZ
-	4mOCi3FLvd9+tOUrET6kN2Q5sugh6xKOqPYW+HJ7fGkrvniXZCSjFoSDFJn1KLofHPjDH5AbI9V
-	6qMy6LWesmJRjQyOHpTJFcwya/8Gv3kJW8ng8LmKSeO2M56ekjPk/RPKeMXIXkNW+08hbTWG4O6
-	TRg1D9PvjU34R85bE3wjFBe1R6dyprBm8Ylav9YjqLBpxPv5NBLntxapPhA1Jg==
-X-Google-Smtp-Source: AGHT+IGBmLj6tWLPVP17kacCv1bkeh5vDkEH9/sWNCuGqF6TfQj4uoU0k1NisoF3nK/aBveUbZIr8w==
-X-Received: by 2002:a05:6602:399c:b0:869:d4df:c2a6 with SMTP id ca18e2360f4ac-86cbb8cd7fbmr116734339f.14.1748034542354;
-        Fri, 23 May 2025 14:09:02 -0700 (PDT)
-Received: from [192.168.1.14] ([38.175.170.29])
-        by smtp.gmail.com with ESMTPSA id ca18e2360f4ac-86a236e800esm359673339f.29.2025.05.23.14.09.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 23 May 2025 14:09:01 -0700 (PDT)
-Message-ID: <41d3b11b-d269-4ee5-a118-6608c804e068@linuxfoundation.org>
-Date: Fri, 23 May 2025 15:09:01 -0600
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="xqf5x82b"
+Date: Fri, 23 May 2025 17:09:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1748034605;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=EZX+iloKE1202xeqiX3o/fp74KwDa+hl9tuC6RdD61A=;
+	b=xqf5x82bYXC9hs9HwTlrsdIgorVip1Qv26Q+6zUDn5V/PjT6HSL4uY45RPITPpgXTqkOPb
+	spIwk0SdoX+Ez80bXv/JXy56xTLYmv8bMewW3qcW4J46HUmd+jrvaXGoxcMGkJ/s+vtG0c
+	Q3nyfUBDejpwXSRSfeu+VcjR4BnpW8k=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Kent Overstreet <kent.overstreet@linux.dev>
+To: Amir Goldstein <amir73il@gmail.com>
+Cc: linux-fsdevel@vger.kernel.org, linux-bcachefs@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-unionfs@vger.kernel.org, 
+	Miklos Szeredi <miklos@szeredi.hu>, Alexander Viro <viro@zeniv.linux.org.uk>, 
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>
+Subject: Re: [PATCH 0/6] overlayfs + casefolding
+Message-ID: <ltzdzvmycohkgvmr3bd6f2ve4a4faxuvkav3d7wt2zoo5gkote@47o5yfse2mzn>
+References: <osbsqlzkc4zttz4gxa25exm5bhqog3tpyirsezcbcdesaucd7g@4sltqny4ybnz>
+ <CAOQ4uxjUC=1MinjDCOfY5t89N3ga6msLmpVXL1p23qdQax6fSg@mail.gmail.com>
+ <gdvg6zswvq4zjzo6vntggoacrgxxh33zmejo72yusp7aqkqzic@kaibexik7lvh>
+ <CAOQ4uxg9sKC_8PLARkN6aB3E_U62_S3kfnBuRbAvho9BNzGAsQ@mail.gmail.com>
+ <rkbkjp7xvefmtutkwtltyd6xch2pbw47x5czx6ctldemus2bvj@2ukfdmtfjjbw>
+ <CAOQ4uxgOM83u1SOd4zxpDmWFsGvrgqErKRwea=85_drpF6WESA@mail.gmail.com>
+ <q6o6jrgwpdt67xsztsqjmewt66kjv6btyayazk7zlk4zjoww4n@2zzowgibx5ka>
+ <CAOQ4uxisCFNuHtSJoP19525BDdfeN2ukehj_-7PxepSTDOte9w@mail.gmail.com>
+ <CAOQ4uxhnOMPTBd+k4UVPvAWYLhJWOdV4FbyKa_+a=cqK9Chr2A@mail.gmail.com>
+ <CAOQ4uxhnOMPTBd+k4UVPvAWYLhJWOdV4FbyKa_+a=cqK9Chr2A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC] selftests/mm: Skip tests dependent on a binary not built
-To: Khaled Elnaggar <khaledelnaggarlinux@gmail.com>, linux-mm@kvack.org
-Cc: linux-kernel-mentees@lists.linux.dev, akpm@linux-foundation.org,
- shuah@kernel.org, linux-kselftest@vger.kernel.org,
- linux-kernel@vger.kernel.org, Shuah Khan <skhan@linuxfoundation.org>
-References: <20250523184312.2647781-1-khaledelnaggarlinux@gmail.com>
-Content-Language: en-US
-From: Shuah Khan <skhan@linuxfoundation.org>
-In-Reply-To: <20250523184312.2647781-1-khaledelnaggarlinux@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAOQ4uxhnOMPTBd+k4UVPvAWYLhJWOdV4FbyKa_+a=cqK9Chr2A@mail.gmail.com>
+ <CAOQ4uxhnOMPTBd+k4UVPvAWYLhJWOdV4FbyKa_+a=cqK9Chr2A@mail.gmail.com>
+X-Migadu-Flow: FLOW_OUT
 
-On 5/23/25 12:43, Khaled Elnaggar wrote:
-> Hello.
-> 
+On Fri, May 23, 2025 at 10:30:16PM +0200, Amir Goldstein wrote:
 
-The above doesn't belong in change log. Refer to a few change logs
-in the repo to learn  how to write them.
+That makes fstests generic/631 pass.
 
-You can also check the kernel documentation - this change log
-is way too long. It doesn't clearly state what is being fixed.
-
-In this case, "write_to_hugetlbfs" is missing because the right
-config isn't enabled. Test stalls waiting for write_to_hugetlbfs
-to run.
-
-You are fixing this by checking if write_to_hugetlbfs exixts
-from /mm/run_vmtests.sh
-
-Summarize this in short description so people can understand
-the change.
-
-thanks,
--- Shuah
+We really should be logging something in dmesg on error due to
+casefolded directory, though.
