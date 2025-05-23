@@ -1,124 +1,130 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E9B520C465;
-	Fri, 23 May 2025 15:00:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85681157A6C;
+	Fri, 23 May 2025 15:00:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748012410; cv=none; b=Rpxct8zzWUgcAeYqP+lRAgovHa8bUTVXYBAwh1yELkWj2WOGi9QFMw1MkujEqSc0/e3nbgPL1lkKt8ExDoVgwC+axY9PtUo83snbjpqfytaL1eGAKqyi75FLJ/RudlgtRkiU9cBNmY1c0epLHQ+ddPnyHHucCGrEcLUrU10BBsM=
+	t=1748012433; cv=none; b=ggOKfDMFhwSO+l9jdC65EhuVyX8K3RsOIBaUH9JZdl+0AXNzl8J8mXRI9eQ+jR0Ou/3j+lcYD39wvGsK0jWCv3r8Boe57LEaIUmXBVRjCG7uGwZaISFHXdDj6Rib/qdAVAhvU5xeKRK2xIWD4w9Kal4rS4yCvGYgYrL4ZzUE+VM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748012410; c=relaxed/simple;
-	bh=Hk+9dxRaWTHmkirrqICnnV8gGlkcDt7jVcXhQiCkSjU=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=FS6VSorpcxWnc1Tft0nOZzM27mantfcz/LE5RT6spncZEgSRl+8JXOFV4pOmYyJpC9OO+GN4hLKZDHbjqIfMZDzcm+QRD04w4l5sdEp4WRodVeZm3xXGpSJ7DG1PbIFOvEgyjv58HE+PnteztwHaOZciYke2/cqEVivc99k34JA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d/+o3mto; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748012433; c=relaxed/simple;
+	bh=8LaSKHYLrGNtZRPW5U5KGJGcYBammh0wxgBbB9yaJEA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PeHLGUjT3ORvZT1I4JYn+zwMYJN7Zur0/YkAQH5ymoujwRwHu2RoSXXAXFehNtNs3cwaFdpBjrxiGMFL2Th4STPp2W4OzKLrydHJKSNrutsEdkVfO4MKoQ0J6cAkVnsvXn41MFbws2hMttTGXu9Utakz62TJpAlbVmO/kS0F8O0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=rJTaBtcI; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=1+IUjOwf; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d/+o3mto"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 619EFC4CEE9;
-	Fri, 23 May 2025 15:00:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748012409;
-	bh=Hk+9dxRaWTHmkirrqICnnV8gGlkcDt7jVcXhQiCkSjU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=d/+o3mtoYralQyEh0EUfx4bdpAPZIB1gQu5iZ7n7kpjYmyg1KtY0lffY2QW6tj2YF
-	 rOMPRIgdRL3MPLDQFhOi0mu6G5SscqnFst5mRUkY9OMrK/MDhTGZo7eevtvMlkanuM
-	 ZFfAs+RDAMxb/WLvUFnXG8oqGxnV/UL9vCe196r5g/xgydLBJBC1NRKiKhqGu3/Sxw
-	 o7kcv/DJU5DG64wEOmNlsIlin/1aFX6zqay4GRLuQq38vllTnriQGhBeBXeOYD5y0t
-	 VTOPDQBjTjIrgUMfOAzWsnKYMGa1Unro72iRzteLBmZLfeq6meNQHpI1GtYxheCuHM
-	 d/r2YoY578qWQ==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=lobster-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1uITsU-0001Wm-UX;
-	Fri, 23 May 2025 16:00:07 +0100
-Date: Fri, 23 May 2025 16:00:06 +0100
-Message-ID: <87wma7e5jd.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Mark Brown <broonie@kernel.org>
-Cc: D Scott Phillips <scott@os.amperecomputing.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	James Clark <james.clark@linaro.org>,
-	James Morse <james.morse@arm.com>,
-	Joey Gouly <joey.gouly@arm.com>,
-	Kevin Brodsky <kevin.brodsky@arm.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	"Rob Herring  (Arm)" <robh@kernel.org>,
-	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
-	Shiqi Liu <shiqiliu@hust.edu.cn>,
-	Will Deacon <will@kernel.org>,
-	Yicong Yang <yangyicong@hisilicon.com>,
-	kvmarm@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4] arm64: errata: Work around AmpereOne's erratum AC04_CPU_23
-In-Reply-To: <aDCDGZ-G-nCP3hJI@finisterre.sirena.org.uk>
-References: <20250513184514.2678288-1-scott@os.amperecomputing.com>
-	<aDCDGZ-G-nCP3hJI@finisterre.sirena.org.uk>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="rJTaBtcI";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="1+IUjOwf"
+Date: Fri, 23 May 2025 17:00:28 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1748012429;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1m7V+4ADDQzTpXOvpXf66IydzWsoghTpN0KKBhwdRXg=;
+	b=rJTaBtcI45CCUYyjzn1nUm/z6/+BT8JyGKXSdYngJSZu2gqpEkOCB2Oc4ZiyiWKpuEBkiz
+	DjZkRpppTibCLt3fOGWDZbKXH+Ve7h6kxFe5eO/miGysp/pX8PgIIvjhmh4peaLm2eKJbb
+	5cgJwuqHUQxet2bi2P8Vc++bQCEUb3wgcsU7GN/mc+UgRjqMTEN+eKFuq4i8Y93GDeV3Dm
+	WVQunUkEL0s6AlU35/JjNnNirojKhbfEquglr8sOfgygGbOqm6r/Um1N2Ph80s1uPG3EbN
+	Cy9PceKLvipsk7uA+U+rVvL8AlV6kiW37Y9P5DQjkzfzyRTp6ke9c3rth80j7A==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1748012429;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1m7V+4ADDQzTpXOvpXf66IydzWsoghTpN0KKBhwdRXg=;
+	b=1+IUjOwfwt4CerviJW4ALkZLtLQii30D53dPTJF3aM9lO5bj1c+jg1Y6htk2br5uiaBEBP
+	5+5wq+bJdCXm9pBQ==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: Alison Chaiken <alison@she-devel.com>
+Cc: corbet@lwn.net, gratian.crisan@ni.com, triegel@redhat.com,
+	rostedt@goodmis.org, linux-kernel@vger.kernel.org,
+	linux-rt-users@vger.kernel.org, achaiken@aurora.tech
+Subject: Re: [PATCH] Documentation: locking: update libc support status of PI
+ futexes
+Message-ID: <20250523150028.62N5N42-@linutronix.de>
+References: <20241228181546.1315328-1-alison@she-devel.com>
+ <20250107153121.wAL-TfKG@linutronix.de>
+ <619bfa123308eeb3a548fae36a3f9e4c@she-devel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: broonie@kernel.org, scott@os.amperecomputing.com, catalin.marinas@arm.com, james.clark@linaro.org, james.morse@arm.com, joey.gouly@arm.com, kevin.brodsky@arm.com, mark.rutland@arm.com, oliver.upton@linux.dev, robh@kernel.org, shameerali.kolothum.thodi@huawei.com, shiqiliu@hust.edu.cn, will@kernel.org, yangyicong@hisilicon.com, kvmarm@lists.linux.dev, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <619bfa123308eeb3a548fae36a3f9e4c@she-devel.com>
 
-On Fri, 23 May 2025 15:15:53 +0100,
-Mark Brown <broonie@kernel.org> wrote:
-> 
-> On Tue, May 13, 2025 at 11:45:14AM -0700, D Scott Phillips wrote:
-> > On AmpereOne AC04, updates to HCR_EL2 can rarely corrupt simultaneous
-> > translations for data addresses initiated by load/store instructions.
-> > Only instruction initiated translations are vulnerable, not translations
-> > from prefetches for example. A DSB before the store to HCR_EL2 is
-> > sufficient to prevent older instructions from hitting the window for
-> > corruption, and an ISB after is sufficient to prevent younger
-> > instructions from hitting the window for corruption.
-> 
-> This patch, which is in -next as fed55f49fad181be9dfb93c0, breaks the
-> build of at least the vDSO selftests:
-> 
-> $ make -C tools/testing/selftests ARCH=arm64 LLVM=1 TARGETS=vDSO
-> 
->   CC       vdso_test_chacha
-> In file included from vgetrandom-chacha.S:9:
-> In file included from ./../../../../arch/arm64/kernel/vdso/vgetrandom-chacha.S:5:
-> In file included from /home/broonie/git/bisect/tools/testing/selftests/../../../arch/arm64/include/asm/assembler.h:21:
-> In file included from /home/broonie/git/bisect/tools/testing/selftests/../../../arch/arm64/include/asm/cpufeature.h:13:
-> /home/broonie/git/bisect/tools/testing/selftests/../../../arch/arm64/include/asm/sysreg.h:1097:5: error: function-like macro 'IS_ENABLED' is not defined
->  1097 | #if IS_ENABLED(CONFIG_AMPERE_ERRATUM_AC04_CPU_23)
->       |     ^
-> 1 error generated.
+On 2025-01-11 10:55:55 [-0800], Alison Chaiken wrote:
+> > Are you sure? My memory is that glibc avoided using the internal mutex.
+> > The old problem should be gone and pthread_cond_signal() and
+> > pthread_cond_wait() should work.
+>=20
+> Ignoring support for 64-bit time, the last substantive change to
+> pthread_cond_wait() and pthread_cond_signal() was Torvald Riegel's  commit
+> ed19993b5b0d05d62cc883571519a67dae481a14 "New condvar implementation that
+> provides stronger ordering guarantees," which fixed problems with waking =
+of
+> ineligible futex waiters and with ABA issues concerning the futex word.
+> What the patch does not do is made clear by the commit message:
+>=20
+>      This condvar doesn't yet use a requeue optimization (ie, on a
+> broadcast,
+>      waking just one thread and requeueing all others on the futex of the
+>      mutex supplied by the program).
+>=20
+> What futex-requeue-pi.rst directs is
+>=20
+>      In order to support PI-aware pthread_condvar's, the kernel needs to
+>      be able to requeue tasks to PI futexes.
+>=20
+> Riegel and Darren Hart discussed Riegel's patch in at length at the 2016 =
+RT
+> Summit:
+>=20
+> https://wiki.linuxfoundation.org/realtime/events/rt-summit2016/schedule
+>=20
+> The related glibc bug report by Darren may be found at
+>=20
+>     https://sourceware.org/bugzilla/show_bug.cgi?id=3D11588
+>=20
+> The last comment on the bug from 2017 is by Riegel:
+>=20
+>     So far, there is no known solution for how to achieve PI support given
+> the current constraints we have (eg, available futex operations, POSIX
+> requirements, ...).
+>=20
+> I ran the bug reproducer posted by Darren in Qemu and found that it did n=
+ot
+> fail.   I'm not sure if the result is valid given the peculiarities of Qe=
+mu,
+> or whether I made some other mistake.
 
-This:
+I've been looking at this again for other reasons and looked at the
+code again=E2=80=A6
 
-diff --git a/arch/arm64/include/asm/assembler.h b/arch/arm64/include/asm/assembler.h
-index ad63457a05c5b..4389d3916426c 100644
---- a/arch/arm64/include/asm/assembler.h
-+++ b/arch/arm64/include/asm/assembler.h
-@@ -13,6 +13,7 @@
- #define __ASM_ASSEMBLER_H
- 
- #include <linux/export.h>
-+#include <linux/kconfig.h>
- 
- #include <asm/alternative.h>
- #include <asm/asm-bug.h>
+Back then we use futex-requeue API and required both futex-object to
+have the PI bit set. This wasn't the case originally, hence the patch by
+Darren which did not make it into the official libc.
 
-should solve it.
+With the rework by Riegel, the mutex within pthread's condvar
+implementation is gone also the usage of the requeue API. The
+pthread_cond_wait()/ pthread_cond_signal() API is back to use futex'
+wait/ wake.
+The glibc comments write something about important ordering constrains.
+The futex wait enqueues the waiter according to its priority. So the
+task with highest priority gets always a front seat. The futex wake
+function wakes always the first waiter in the queue.
 
-But it also outlines that the vdso is getting built using stuff that
-is not meant for userspace code.
+With all this I would say that the glib'c condvar implementation does
+not have any issues since the rework.
+There were a few loops, with a 0 retry counter (basically dead) and they
+have been removed.
 
-	M.
-
--- 
-Jazz isn't dead. It just smells funny.
+Sebastian
