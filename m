@@ -1,153 +1,189 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AE9D221F02;
-	Fri, 23 May 2025 04:38:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F072722331C;
+	Fri, 23 May 2025 04:39:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747975110; cv=none; b=fsSUo6XdyOPXxlkBg+4uCJQuT2rar0vILJKGoKVf5IO5O6iYz5za2c/4MgeBHl6HAkXktCnchG2S4QCaHRAmy6tkFtRbqKyYf3OMEnXNxmMgNljFQVSq1M7rWlCJpf/qT//UETaT4hktHQImEa3hd6c4I8Kn8WIsxouMGpXtAP8=
+	t=1747975179; cv=none; b=AKHBp7/3Hk7I3GVacuEKp9P6G1X3OH15iciL8EZTyX0/XDLsgxq3TvDohhUTNnDb8IW0M/x0lk1J+AjV09LJDFUKJ1T+LAPVJ5OyywErqF3iu5MqSHvEuxijxGRZhgCM7pF6K01/+syQCC9znBioXsL6gZEc+iM4m/kaahnEyaQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747975110; c=relaxed/simple;
-	bh=a/JZyFcVbDdMl3wBLht2H1TNeRlXkJpXprbZXB72vPg=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=nMxrYmCtPU7x75FLlgNwAPlg9MEb5s89SRiYLs18MxFdCubxz3AkEkInbkASWdVcg9xzhMZ7WuSDskL8A/U+C/vh/yT9Ou99gGaaBRs4RhkwuZIypmaoA0znimDndw6V3NpOijr9JLxqOAjZnnwtvAGO1PWr7mZHSCbB3BHLK6k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=VrnK9DOF; arc=none smtp.client-ip=89.208.246.23
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
+	s=arc-20240116; t=1747975179; c=relaxed/simple;
+	bh=XVwkrc3glEUjTIVHxhgADYvS6InRhqZwcVUoNmb8gLs=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=U5pJTOStoqqY6gTLrXUWuAWRQiSiy/+7Rron68ZxI5sl+cLAF5KnZ1o9mEXmc5cszsJJPe9f6CxAlfPBYKaqpTjuUtjdIpjBA3jZnWLNMTxBe6+Ek/pcdljRWa/mX+T721LTtZncXyp7IQcQxvgvAu3mKO+XjhrPkfUdE1i1+S0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KqTkaNur; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="VrnK9DOF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xry111.site;
-	s=default; t=1747975099;
-	bh=P3GbIFecJCf5r7y3U16vrNGC62olL5+u/CI+cmj67mU=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=VrnK9DOFdx7wVwvZ4le7YsuTqT6unP62HPiAzPOGFnQgQHck9y6OwpPNlPmW4SyaB
-	 IajtjSItFCgXr4eisgkTObonJZYFHpJOQBw8v9GZ21CDZPhmMJp9tqjtN/e9bJyZ+X
-	 7oO1mZLtC1zhqY3O6yshYKWfAeLPvDf4LCar/yUw=
-Received: from [192.168.124.38] (unknown [113.200.174.7])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature ECDSA (secp384r1) server-digest SHA384)
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id 0EE7865F62;
-	Fri, 23 May 2025 00:38:17 -0400 (EDT)
-Message-ID: <fa882110d20bd824aca690ba5dfea8c0bd303fc3.camel@xry111.site>
-Subject: Re: [PATCH] LoongArch: Avoid using $r0/$r1 as "mask" for csrxchg
-From: Xi Ruoyao <xry111@xry111.site>
-To: Huacai Chen <chenhuacai@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev, Xuefeng Li <lixuefeng@loongson.cn>, Guo Ren	
- <guoren@kernel.org>, Xuerui Wang <kernel@xen0n.name>, Jiaxun Yang	
- <jiaxun.yang@flygoat.com>, linux-kernel@vger.kernel.org,
- stable@vger.kernel.org,  WANG Rui <wangrui@loongson.cn>
-Date: Fri, 23 May 2025 12:38:15 +0800
-In-Reply-To: <20250522125050.2215157-1-chenhuacai@loongson.cn>
-References: <20250522125050.2215157-1-chenhuacai@loongson.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.1 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KqTkaNur"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66D66C4AF09;
+	Fri, 23 May 2025 04:39:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747975178;
+	bh=XVwkrc3glEUjTIVHxhgADYvS6InRhqZwcVUoNmb8gLs=;
+	h=From:To:Cc:Subject:Date:From;
+	b=KqTkaNurs9FhJf2xVT2AAgHgZfsZLI22JZrnjsUUd3dLV4GIqcY/egNqMcrSdZ7KY
+	 Qoe1xFjyvbHFLLwX8ltHL+UpEgH2pwDrHXGVG+gI/ZXCJ/PiG9bEf2d8W+XPMqCPxS
+	 t7/QNPmTyrPco7X6qhPfaX8HwI7V5XMmTaddqEdLhPnbgxtzwoZVUVrHAupH5HXUWC
+	 uJs8xAoP8DhUEFmLxMG2167yDtwxbVR5eXKMzN/8qSh6Y2P0fAEW0W27jJaqa0EEmQ
+	 aqWuakzIBlY2iT7g7eX7sCheOJj+u51pIrSHjL9O7SZk51OYxQaixUP2zLbVkjOfiA
+	 pVI4tIZzEwhLA==
+From: Kees Cook <kees@kernel.org>
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Christoph Hellwig <hch@lst.de>,
+	Marco Elver <elver@google.com>,
+	Andrey Konovalov <andreyknvl@gmail.com>,
+	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nicolas Schier <nicolas.schier@linux.dev>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	linux-kernel@vger.kernel.org,
+	x86@kernel.org,
+	kasan-dev@googlegroups.com,
+	linux-doc@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	kvmarm@lists.linux.dev,
+	linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org,
+	linux-efi@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	linux-kbuild@vger.kernel.org,
+	linux-security-module@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	sparclinux@vger.kernel.org,
+	llvm@lists.linux.dev
+Subject: [PATCH v2 00/14] stackleak: Support Clang stack depth tracking
+Date: Thu, 22 May 2025 21:39:10 -0700
+Message-Id: <20250523043251.it.550-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5806; i=kees@kernel.org; h=from:subject:message-id; bh=XVwkrc3glEUjTIVHxhgADYvS6InRhqZwcVUoNmb8gLs=; b=owGbwMvMwCVmps19z/KJym7G02pJDBn6v7/zd349lB4js43v/P8PVhOrZ671qt7bkPjchC/4n VqhgOyjjlIWBjEuBlkxRZYgO/c4F4+37eHucxVh5rAygQxh4OIUgIm8qWdkeLn+6AuHlaaR0h8X HD0uxWndd9xPfAPD46tHXz3TfCnRVcDwTy94qstMZtfd7Myfr9qe83KzmFlVcIJ9CYvupkfljK9 kmQE=
+X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-On Thu, 2025-05-22 at 20:50 +0800, Huacai Chen wrote:
-> When building kernel with LLVM there are occasionally such errors:
->=20
-> In file included from ./include/linux/spinlock.h:59:
-> In file included from ./include/linux/irqflags.h:17:
-> arch/loongarch/include/asm/irqflags.h:38:3: error: must not be $r0 or $r1
-> =C2=A0=C2=A0 38 |=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 "csrxchg %[val], %[mask], %[reg]=
-\n\t"
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ^
-> <inline asm>:1:16: note: instantiated into assembly here
-> =C2=A0=C2=A0=C2=A0 1 |=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 cs=
-rxchg $a1, $ra, 0
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 ^
->=20
-> The "mask" of the csrxchg instruction should not be $r0 or $r1, but the
-> compiler cannot avoid generating such code currently.
+ v2:
+  - rename stackleak to kstack_erase (mingo)
+  - address __init vs inline with KCOV changes
+ v1:  https://lore.kernel.org/lkml/20250507180852.work.231-kees@kernel.org/
+ RFC: https://lore.kernel.org/lkml/20250502185834.work.560-kees@kernel.org/
 
-Maybe "to prevent the compiler from allocating $r0 or $r1, the 'q'
-constraint must be used but Clang < 22 does not support it.  So force to
-use t0 in order to avoid using $r0/$r1 while keeping the backward
-compatibility."
+Hi,
 
-And Link: https://github.com/llvm/llvm-project/pull/141037
+As part of looking at what GCC plugins could be replaced with Clang
+implementations, this series uses the recently landed stack depth tracking
+callback in Clang[1] to implement the stackleak feature. Since the Clang
+feature is now landed, I'm moving this out of RFC to a v1.
 
-> So force to use t0
-> in the inline asm, in order to avoid using $r0/$r1.
->=20
-> Cc: stable@vger.kernel.org
-> Suggested-by: WANG Rui <wangrui@loongson.cn>
-> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-> ---
-> =C2=A0arch/loongarch/include/asm/irqflags.h | 16 ++++++++++++----
-> =C2=A01 file changed, 12 insertions(+), 4 deletions(-)
->=20
-> diff --git a/arch/loongarch/include/asm/irqflags.h b/arch/loongarch/inclu=
-de/asm/irqflags.h
-> index 319a8c616f1f..003172b8406b 100644
-> --- a/arch/loongarch/include/asm/irqflags.h
-> +++ b/arch/loongarch/include/asm/irqflags.h
-> @@ -14,40 +14,48 @@
-> =C2=A0static inline void arch_local_irq_enable(void)
-> =C2=A0{
-> =C2=A0	u32 flags =3D CSR_CRMD_IE;
-> +	register u32 mask asm("t0") =3D CSR_CRMD_IE;
-> +
-> =C2=A0	__asm__ __volatile__(
-> =C2=A0		"csrxchg %[val], %[mask], %[reg]\n\t"
-> =C2=A0		: [val] "+r" (flags)
-> -		: [mask] "r" (CSR_CRMD_IE), [reg] "i" (LOONGARCH_CSR_CRMD)
-> +		: [mask] "r" (mask), [reg] "i" (LOONGARCH_CSR_CRMD)
-> =C2=A0		: "memory");
-> =C2=A0}
-> =C2=A0
-> =C2=A0static inline void arch_local_irq_disable(void)
-> =C2=A0{
-> =C2=A0	u32 flags =3D 0;
-> +	register u32 mask asm("t0") =3D CSR_CRMD_IE;
-> +
-> =C2=A0	__asm__ __volatile__(
-> =C2=A0		"csrxchg %[val], %[mask], %[reg]\n\t"
-> =C2=A0		: [val] "+r" (flags)
-> -		: [mask] "r" (CSR_CRMD_IE), [reg] "i" (LOONGARCH_CSR_CRMD)
-> +		: [mask] "r" (mask), [reg] "i" (LOONGARCH_CSR_CRMD)
-> =C2=A0		: "memory");
-> =C2=A0}
-> =C2=A0
-> =C2=A0static inline unsigned long arch_local_irq_save(void)
-> =C2=A0{
-> =C2=A0	u32 flags =3D 0;
-> +	register u32 mask asm("t0") =3D CSR_CRMD_IE;
-> +
-> =C2=A0	__asm__ __volatile__(
-> =C2=A0		"csrxchg %[val], %[mask], %[reg]\n\t"
-> =C2=A0		: [val] "+r" (flags)
-> -		: [mask] "r" (CSR_CRMD_IE), [reg] "i" (LOONGARCH_CSR_CRMD)
-> +		: [mask] "r" (mask), [reg] "i" (LOONGARCH_CSR_CRMD)
-> =C2=A0		: "memory");
-> =C2=A0	return flags;
-> =C2=A0}
-> =C2=A0
-> =C2=A0static inline void arch_local_irq_restore(unsigned long flags)
-> =C2=A0{
-> +	register u32 mask asm("t0") =3D CSR_CRMD_IE;
-> +
-> =C2=A0	__asm__ __volatile__(
-> =C2=A0		"csrxchg %[val], %[mask], %[reg]\n\t"
-> =C2=A0		: [val] "+r" (flags)
-> -		: [mask] "r" (CSR_CRMD_IE), [reg] "i" (LOONGARCH_CSR_CRMD)
-> +		: [mask] "r" (mask), [reg] "i" (LOONGARCH_CSR_CRMD)
-> =C2=A0		: "memory");
-> =C2=A0}
-> =C2=A0
+Since this touches a lot of arch-specific Makefiles, I tried to trim
+the CC list down to just mailing lists in those cases, otherwise the CC
+was giant.
 
---=20
-Xi Ruoyao <xry111@xry111.site>
-School of Aerospace Science and Technology, Xidian University
+Thanks!
+
+-Kees
+
+[1] https://clang.llvm.org/docs/SanitizerCoverage.html#tracing-stack-depth
+
+Kees Cook (14):
+  stackleak: Rename STACKLEAK to KSTACK_ERASE
+  stackleak: Rename stackleak_track_stack to __sanitizer_cov_stack_depth
+  stackleak: Split KSTACK_ERASE_CFLAGS from GCC_PLUGINS_CFLAGS
+  x86: Handle KCOV __init vs inline mismatches
+  arm: Handle KCOV __init vs inline mismatches
+  arm64: Handle KCOV __init vs inline mismatches
+  s390: Handle KCOV __init vs inline mismatches
+  powerpc: Handle KCOV __init vs inline mismatches
+  mips: Handle KCOV __init vs inline mismatches
+  loongarch: Handle KCOV __init vs inline mismatches
+  init.h: Disable sanitizer coverage for __init and __head
+  kstack_erase: Support Clang stack depth tracking
+  configs/hardening: Enable CONFIG_KSTACK_ERASE
+  configs/hardening: Enable CONFIG_INIT_ON_FREE_DEFAULT_ON
+
+ arch/Kconfig                                  |  4 +-
+ arch/arm/Kconfig                              |  2 +-
+ arch/arm64/Kconfig                            |  2 +-
+ arch/riscv/Kconfig                            |  2 +-
+ arch/s390/Kconfig                             |  2 +-
+ arch/x86/Kconfig                              |  2 +-
+ security/Kconfig.hardening                    | 45 +++++++++-------
+ Makefile                                      |  1 +
+ arch/arm/boot/compressed/Makefile             |  2 +-
+ arch/arm/vdso/Makefile                        |  2 +-
+ arch/arm64/kernel/pi/Makefile                 |  2 +-
+ arch/arm64/kernel/vdso/Makefile               |  3 +-
+ arch/arm64/kvm/hyp/nvhe/Makefile              |  2 +-
+ arch/riscv/kernel/pi/Makefile                 |  2 +-
+ arch/riscv/purgatory/Makefile                 |  2 +-
+ arch/sparc/vdso/Makefile                      |  3 +-
+ arch/x86/entry/vdso/Makefile                  |  3 +-
+ arch/x86/purgatory/Makefile                   |  2 +-
+ drivers/firmware/efi/libstub/Makefile         |  8 +--
+ drivers/misc/lkdtm/Makefile                   |  2 +-
+ kernel/Makefile                               | 10 ++--
+ lib/Makefile                                  |  2 +-
+ scripts/Makefile.gcc-plugins                  | 16 +-----
+ scripts/Makefile.kstack_erase                 | 21 ++++++++
+ scripts/gcc-plugins/stackleak_plugin.c        | 52 +++++++++----------
+ Documentation/admin-guide/sysctl/kernel.rst   |  4 +-
+ Documentation/arch/x86/x86_64/mm.rst          |  2 +-
+ Documentation/security/self-protection.rst    |  2 +-
+ .../zh_CN/security/self-protection.rst        |  2 +-
+ arch/arm64/include/asm/acpi.h                 |  2 +-
+ arch/loongarch/include/asm/smp.h              |  2 +-
+ arch/mips/include/asm/time.h                  |  2 +-
+ arch/s390/hypfs/hypfs.h                       |  2 +-
+ arch/s390/hypfs/hypfs_diag.h                  |  2 +-
+ arch/x86/entry/calling.h                      |  4 +-
+ arch/x86/include/asm/acpi.h                   |  4 +-
+ arch/x86/include/asm/init.h                   |  2 +-
+ arch/x86/include/asm/realmode.h               |  2 +-
+ include/linux/acpi.h                          |  4 +-
+ include/linux/bootconfig.h                    |  2 +-
+ include/linux/efi.h                           |  2 +-
+ include/linux/init.h                          |  4 +-
+ include/linux/{stackleak.h => kstack_erase.h} | 20 +++----
+ include/linux/memblock.h                      |  2 +-
+ include/linux/mfd/dbx500-prcmu.h              |  2 +-
+ include/linux/sched.h                         |  4 +-
+ arch/arm/kernel/entry-common.S                |  2 +-
+ arch/arm64/kernel/entry.S                     |  2 +-
+ arch/riscv/kernel/entry.S                     |  2 +-
+ arch/s390/kernel/entry.S                      |  2 +-
+ arch/arm/mm/cache-feroceon-l2.c               |  2 +-
+ arch/arm/mm/cache-tauros2.c                   |  2 +-
+ arch/loongarch/kernel/time.c                  |  2 +-
+ arch/loongarch/mm/ioremap.c                   |  4 +-
+ arch/powerpc/mm/book3s64/hash_utils.c         |  2 +-
+ arch/powerpc/mm/book3s64/radix_pgtable.c      |  2 +-
+ arch/s390/mm/init.c                           |  2 +-
+ arch/x86/kernel/kvm.c                         |  2 +-
+ drivers/clocksource/timer-orion.c             |  2 +-
+ .../lkdtm/{stackleak.c => kstack_erase.c}     | 26 +++++-----
+ drivers/platform/x86/thinkpad_acpi.c          |  4 +-
+ drivers/soc/ti/pm33xx.c                       |  2 +-
+ fs/proc/base.c                                |  6 +--
+ kernel/fork.c                                 |  2 +-
+ kernel/{stackleak.c => kstack_erase.c}        | 22 ++++----
+ tools/objtool/check.c                         |  4 +-
+ tools/testing/selftests/lkdtm/config          |  2 +-
+ MAINTAINERS                                   |  6 ++-
+ kernel/configs/hardening.config               |  6 +++
+ 69 files changed, 203 insertions(+), 171 deletions(-)
+ create mode 100644 scripts/Makefile.kstack_erase
+ rename include/linux/{stackleak.h => kstack_erase.h} (81%)
+ rename drivers/misc/lkdtm/{stackleak.c => kstack_erase.c} (89%)
+ rename kernel/{stackleak.c => kstack_erase.c} (87%)
+
+-- 
+2.34.1
+
