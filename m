@@ -1,143 +1,123 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 879CF10A3E;
-	Fri, 23 May 2025 06:20:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9239D634;
+	Fri, 23 May 2025 06:24:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747981255; cv=none; b=oh3IFZVz6ngV50HjCheeEZIurexyJa4mAJUfHjy9+RIOF3yW3j2hoimWoxdjX7oRLHUOqkhFoa7+Vs79gv07alJxUn/foIZdjFIpZAySVS+NJoRdVnZGaAK+AqjbieWKHfeeQcBq9RsFtoLxSSQruBRlSTUSyE23gZu0fYOOMVE=
+	t=1747981445; cv=none; b=gCNdDTpUt7q6g2rRjHl1odZEylbkX44f9CuqvxijLVfnAE7CBgijqb0Kj/3txg047p4/SzdwKpq9d3b3D+dar4K+OFmd0HfJ3aJtwzScwOquohU5dli24O79j2zoF/uAE4al6xfzdxwHddd1dYPbuqDm2i0QW2JRp2x+k/NoGuI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747981255; c=relaxed/simple;
-	bh=F0kflT/vTWmAarM6iewjP67S0Y8wMv5V+01Q9qxutqs=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=RqilJYAf4sPmNqH0QaACWpx3NIIO93yb2CxbxtVmP4JwL+bQjQKZvhPIZErML3VEtukCINEfG8Wmc3eVtRtB3XyOkT8wlsYj4ptB74fivolwpOGfCf3RJfoLdtRzLLjDM8sZou5B4Ipd4OEBbdC8jKnYT3ncxPmGdWPgDldrybs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=jUXyX6fM; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1747981445; c=relaxed/simple;
+	bh=PIYLxqCyjw+4aCqAW27AXRd6ZQCdzIB4GNC0BzN1GP0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dJPfsdvzGj6/2wXpN+YS54AkBn/qhYpiz696d5kam6Wt090bsnCvcxoFEHJKrAv6llwbAjVcHn6neUvFYnmHbStdxvP5t6WxRdkseohgXvLYNHF/gqZ98clkIcdRKzXIh3udB3otE/4ThHV2Tu/DS4fpE8Z0ZFGdt7ni4+G5TQo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BC4sgF7y; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="jUXyX6fM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1747981250;
-	bh=1J25KpE/Y/ujxEEv8kZMM6QytkvTqtIcOsDNls/ZTLw=;
-	h=Date:From:To:Cc:Subject:From;
-	b=jUXyX6fMby8yxzJL2nLGR5Owr52nDnoA8WokPOg/6tNtDS10fGdUByLCEqqo15F29
-	 jABEiAxz59QPhfiLCrow41NBAciriPz8keK4m9oM0YKAHDu51UaEOpjbeDjjFCOaKU
-	 LnmbyuyWC/aJkYyO1YB9fiYFTbv7eJORzAd4EPvbrmtD8IECFLU6UJ71WPWQ01+afo
-	 54ugflYYQJt2HADnhiq5PWd/D/LkKH/dXCytHwcEkU8/wOnSi4StQRELzbjb90Ktju
-	 SsXqEEUPhLxUDR0TK+5w2Ok0Sa7E6+GebZCL53sXkuEZDMXKChW5LD8+0KvoizI7GA
-	 S+fcAO1YXyBNQ==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4b3Zm211BGz4wyk;
-	Fri, 23 May 2025 16:20:50 +1000 (AEST)
-Date: Fri, 23 May 2025 16:20:49 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Miguel Ojeda <ojeda@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Anisse Astier <anisse@astier.eu>, Igor Korotin
- <igor.korotin.linux@gmail.com>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>
-Subject: linux-next: manual merge of the rust tree with the pm tree
-Message-ID: <20250523162049.7cee0ca8@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BC4sgF7y"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C5D6C4CEE9;
+	Fri, 23 May 2025 06:24:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747981445;
+	bh=PIYLxqCyjw+4aCqAW27AXRd6ZQCdzIB4GNC0BzN1GP0=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=BC4sgF7y+evOPoAhcLFKLfTQwBlnXPq9nnsmi3NuvoBWeuFfiX2UkLlX6Af/jWeaq
+	 fAFxkLZuZiPq9U7JiEAauYZYBdjUsx+3mbIWzWxV6Cji5f4dCdUY1GZJjwU/bfe5yz
+	 V9LnlDHC0xAhrkfnnV/IA33rapFy1/5tT/bzwOIw1JZFLyESlDhjNLURatUSU7FDxI
+	 RMrbpUngOG4R4DvNLWz2bkXk4/f6+K9lLEi5SLqT8n114ZnGev61d3cbTke7FmFDFE
+	 Eg4Si9pGlmJp51/wFJXNBNnbM8QSwPD/R8YWzOuKGmN+u/QnqMLR1MBo3BOdmgzata
+	 o2sg5CqnFjKZQ==
+Message-ID: <4b1960f2-95e4-41c3-9723-04d77c6c27d4@kernel.org>
+Date: Fri, 23 May 2025 08:24:00 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/HfCc7IHarcynxaXQigHFf1K";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCHv2 4/5] dt-bindings: net: wireless: ath9k: add OF bindings
+To: Rosen Penev <rosenp@gmail.com>
+Cc: linux-wireless@vger.kernel.org, =?UTF-8?Q?Toke_H=C3=B8iland-J=C3=B8rgens?=
+ =?UTF-8?Q?en?= <toke@toke.dk>, Johannes Berg <johannes@sipsolutions.net>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+ "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
+ <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>,
+ "open list:MIPS" <linux-mips@vger.kernel.org>
+References: <20250522184516.13176-1-rosenp@gmail.com>
+ <20250522184516.13176-5-rosenp@gmail.com>
+ <871d18ab-a696-4141-bc3a-7b6e968fc649@kernel.org>
+ <CAKxU2N8uZ+q1aE42+e65tVMr=ji0RTx5wZssFBnQN29OzsFXVA@mail.gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <CAKxU2N8uZ+q1aE42+e65tVMr=ji0RTx5wZssFBnQN29OzsFXVA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
---Sig_/HfCc7IHarcynxaXQigHFf1K
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On 23/05/2025 02:04, Rosen Penev wrote:
+> On Thu, May 22, 2025 at 12:54 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+>>
+>> On 22/05/2025 20:45, Rosen Penev wrote:
+>>> Now that support was added to the driver, document it.
+>>
+>> That's not appropriate commit msg. Binding must be before the user (see
+>> submitting patches in DT directory). Describe the hardware, what are you
+>> adding here.
+>>
+>> Subject: OF bindings is redundant. It duplicates dt-bindings. Instead:
+>> "Add Atheros AR9-foo-bar on AHB bus" or something similar
+> At this point I wonder if my approach is wrong. The other ath drivers
+> use a qcom, prefix and a -wifi suffix. Might make sense to do the same
+> here to avoid typing qca twice.
 
-Hi all,
 
-Today's linux-next merge of the rust tree got a conflict in:
 
-  rust/macros/module.rs
+Yes, probably this should be qcom.
 
-between commit:
 
-  a4e3b76e4d5c ("rust: macros: enable use of hyphens in module names")
-
-from the pm tree and commit:
-
-  de7cd3e4d638 ("rust: use absolute paths in macros referencing core and ke=
-rnel")
-
-from the rust tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc rust/macros/module.rs
-index c4afdd69e490,de9304498a97..000000000000
---- a/rust/macros/module.rs
-+++ b/rust/macros/module.rs
-@@@ -303,15 -302,15 +304,15 @@@ pub(crate) fn module(ts: TokenStream) -
-                      #[doc(hidden)]
-                      #[link_section =3D \"{initcall_section}\"]
-                      #[used]
- -                    pub static __{name}_initcall: extern \"C\" fn() -> ::=
-kernel::ffi::c_int =3D
- -                        __{name}_init;
- +                    pub static __{ident}_initcall: extern \"C\" fn() ->
--                         kernel::ffi::c_int =3D __{ident}_init;
-++                        ::kernel::ffi::c_int =3D __{ident}_init;
- =20
-                      #[cfg(not(MODULE))]
-                      #[cfg(CONFIG_HAVE_ARCH_PREL32_RELOCATIONS)]
--                     core::arch::global_asm!(
-+                     ::core::arch::global_asm!(
-                          r#\".section \"{initcall_section}\", \"a\"
- -                        __{name}_initcall:
- -                            .long   __{name}_init - .
- +                        __{ident}_initcall:
- +                            .long   __{ident}_init - .
-                              .previous
-                          \"#
-                      );
-@@@ -319,7 -318,7 +320,7 @@@
-                      #[cfg(not(MODULE))]
-                      #[doc(hidden)]
-                      #[no_mangle]
--                     pub extern \"C\" fn __{ident}_init() -> kernel::ffi::=
-c_int {{
- -                    pub extern \"C\" fn __{name}_init() -> ::kernel::ffi:=
-:c_int {{
-++                    pub extern \"C\" fn __{ident}_init() -> ::kernel::ffi=
-::c_int {{
-                          // SAFETY: This function is inaccessible to the o=
-utside due to the double
-                          // module wrapping it. It is called exactly once =
-by the C side via its
-                          // placement above in the initcall section.
-
---Sig_/HfCc7IHarcynxaXQigHFf1K
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgwE8EACgkQAVBC80lX
-0GyJ6QgAhN3HwB3D4oI4XwVLfiT7mDD58VzCWV6h9xwf75RATWoW5ZWyCunwsRNR
-m33C4x+gHJ5QexpaAR3Byirqni0mEHf9P/f7Co40elbku0gpp8ZWPAy7YYeqUNX2
-mVqP3BCSoaKspnKus2GSaWUC+4gIU32xiar2D+X53n5GkYvi4wvoSpFoLcwJc8Ay
-qDR8MSE24ayf2E1NyIF5X+EkUt5o7iTarJUxYVHWS7VjVC6XAmyzUWlLnsY2RAtp
-cWVJcLggxCXbOwHp1HJCSMTSlrAa82kNy19K8TQUZsZqahRtO/c0rLOso4tJBZyL
-CSL0f+Kv+uGPrX4BD1ie9jFgGxBnUw==
-=iq2m
------END PGP SIGNATURE-----
-
---Sig_/HfCc7IHarcynxaXQigHFf1K--
+Best regards,
+Krzysztof
