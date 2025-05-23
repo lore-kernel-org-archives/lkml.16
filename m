@@ -1,165 +1,121 @@
-Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FB022DCBE6;
-	Fri, 23 May 2025 06:42:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07E932DCBE6;
+	Fri, 23 May 2025 06:43:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747982545; cv=none; b=LY8QghsO1ZqfhhkI7t+SAI2S4ADTiVutfLIV+uBpx/g3MmjsLrP2vLXfeK/YEMIpVCq7XVOFblSx0wHqWwvWJ9C8hEAqA61VEdEeNo64dVeBSew2M1YF7vK+6QcNrMKH2b/83igq4hpniRO9VuSsAsgRBTRpYSRqul3hxq160Uc=
+	t=1747982583; cv=none; b=oeSmR/V5velupbg9BCSbAKWXV9T2J6g0DKThL9+2Z3sCNpSPWYMOwX1XbJc8G01c7C6mNcv3vVdusK0+PkhSzkilKtS+bf3EFHFrRNzW5UoY8YJNNt+RZF136wI6TOju68ckWXOMFZbZ0ZH9eJ3uHClKMlKSQOiEydathpUiPj8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747982545; c=relaxed/simple;
-	bh=66QFhD7kmJl7WAmCsI/KS1mdTvy7vY+BmbpPLpgTLLk=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=AYPt3LOu/P21dPW/D/K35W70no/2ApLLykbvdwNwr/S/tJdca54dao4ZlZk6PfHhgk8DDVcSzOGn130XEguyoYH+3bgAcXVVuA6LxoTeklrAEj9v5UaHyXtJv15N6RBMz4+eVFhmFlIjMiiCu+9ACBr9Kg0MELwBlUMY8Ey2AGY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.162.112])
-	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4b3bCf2Ps1z2RVqV;
-	Fri, 23 May 2025 14:41:18 +0800 (CST)
-Received: from dggemv712-chm.china.huawei.com (unknown [10.1.198.32])
-	by mail.maildlp.com (Postfix) with ESMTPS id 24C7C140279;
-	Fri, 23 May 2025 14:42:13 +0800 (CST)
-Received: from kwepemq200002.china.huawei.com (7.202.195.90) by
- dggemv712-chm.china.huawei.com (10.1.198.32) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Fri, 23 May 2025 14:42:12 +0800
-Received: from localhost.localdomain (10.175.104.82) by
- kwepemq200002.china.huawei.com (7.202.195.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Fri, 23 May 2025 14:42:11 +0800
-From: Dong Chenchen <dongchenchen2@huawei.com>
-To: <hawk@kernel.org>, <ilias.apalodimas@linaro.org>, <davem@davemloft.net>,
-	<edumazet@google.com>, <kuba@kernel.org>, <pabeni@redhat.com>,
-	<horms@kernel.org>, <almasrymina@google.com>
-CC: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<zhangchangzhong@huawei.com>, Dong Chenchen <dongchenchen2@huawei.com>,
-	<syzbot+204a4382fcb3311f3858@syzkaller.appspotmail.com>
-Subject: [PATCH net] page_pool: Fix use-after-free in page_pool_recycle_in_ring
-Date: Fri, 23 May 2025 14:45:24 +0800
-Message-ID: <20250523064524.3035067-1-dongchenchen2@huawei.com>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1747982583; c=relaxed/simple;
+	bh=NzjiJxC8jVl17UOebTa1jr+peldNBbgfvVc5tPO1QtU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=t+luJARO46ZLqLHEekrX/W7v6RtknehW7S/OXOLyj7ie0HPoCv8JxiaOi8oiGSP4bALFCVG+sIpTqu/A3s6NfN92zCCc5fpoFkiLNXGOgIVZjWl9USGR7fN3g4O06s2BT/qnW7U90O3XZeozfxK882CQJdO8UF1W9e7ugZfaUO0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h3Ubjd/M; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h3Ubjd/M"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C775BC4CEE9;
+	Fri, 23 May 2025 06:42:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747982582;
+	bh=NzjiJxC8jVl17UOebTa1jr+peldNBbgfvVc5tPO1QtU=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=h3Ubjd/MRn7yHtvjFmlSK+OcMe/SbkySxxcO0EfHrWkp5FK2usQtYPHGNIYEIf9Pq
+	 n9YO/krxi1L3b9CIWjpPmdyKgNXjlges1ykryzeadMUGbMOal19aEF0vTCuMxPVFOW
+	 XjnRr97k9sjQFpGAkGPB3bohUYqzM/kP2D4wa7gDip5bEedv99C7xRQog1jS8AIliy
+	 OIWFQvBCUmAfNYkiU7DjJLPKPZdyZSpp6WI+HJ11OriIwHztv/XzdWWZQb+EfRXI45
+	 /99jE2+tRUlPEw8nnoXJZL83apDBr5Z/2rQTVoFT/QHUya9Q64MEn1f/PELRZDmDoc
+	 R/5TS0hKIjhNQ==
+Message-ID: <574cd2c2-8201-4182-b372-da518a9b1972@kernel.org>
+Date: Fri, 23 May 2025 08:42:57 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- kwepemq200002.china.huawei.com (7.202.195.90)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCHv3 3/5] dt-bindings: net: wireless: ath9k: add WIFI
+ bindings
+To: Rosen Penev <rosenp@gmail.com>, linux-wireless@vger.kernel.org
+Cc: =?UTF-8?Q?Toke_H=C3=B8iland-J=C3=B8rgensen?= <toke@toke.dk>,
+ nbd@ndb.name, Johannes Berg <johannes@sipsolutions.net>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+ "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
+ <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>,
+ "open list:MIPS" <linux-mips@vger.kernel.org>
+References: <20250523063207.10040-1-rosenp@gmail.com>
+ <20250523063207.10040-4-rosenp@gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <20250523063207.10040-4-rosenp@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-syzbot reported a uaf in page_pool_recycle_in_ring:
+On 23/05/2025 08:32, Rosen Penev wrote:
+>    reg:
+>      maxItems: 1
+> @@ -88,3 +94,15 @@ examples:
+>          nvmem-cell-names = "mac-address", "calibration";
+>        };
+>      };
+> +  - |
+> +    ahb {
+> +      compatible = "simple-bus";
+> +      ranges;
 
-BUG: KASAN: slab-use-after-free in lock_release+0x151/0xa30 kernel/locking/lockdep.c:5862
-Read of size 8 at addr ffff8880286045a0 by task syz.0.284/6943
+Not much improved... Code is now actually wrong. Remember to notice
+where the comments appear. We are using here mailing list style of
+communication.
 
-CPU: 0 UID: 0 PID: 6943 Comm: syz.0.284 Not tainted 6.13.0-rc3-syzkaller-gdfa94ce54f41 #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 09/13/2024
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:94 [inline]
- dump_stack_lvl+0x241/0x360 lib/dump_stack.c:120
- print_address_description mm/kasan/report.c:378 [inline]
- print_report+0x169/0x550 mm/kasan/report.c:489
- kasan_report+0x143/0x180 mm/kasan/report.c:602
- lock_release+0x151/0xa30 kernel/locking/lockdep.c:5862
- __raw_spin_unlock_bh include/linux/spinlock_api_smp.h:165 [inline]
- _raw_spin_unlock_bh+0x1b/0x40 kernel/locking/spinlock.c:210
- spin_unlock_bh include/linux/spinlock.h:396 [inline]
- ptr_ring_produce_bh include/linux/ptr_ring.h:164 [inline]
- page_pool_recycle_in_ring net/core/page_pool.c:707 [inline]
- page_pool_put_unrefed_netmem+0x748/0xb00 net/core/page_pool.c:826
- page_pool_put_netmem include/net/page_pool/helpers.h:323 [inline]
- page_pool_put_full_netmem include/net/page_pool/helpers.h:353 [inline]
- napi_pp_put_page+0x149/0x2b0 net/core/skbuff.c:1036
- skb_pp_recycle net/core/skbuff.c:1047 [inline]
- skb_free_head net/core/skbuff.c:1094 [inline]
- skb_release_data+0x6c4/0x8a0 net/core/skbuff.c:1125
- skb_release_all net/core/skbuff.c:1190 [inline]
- __kfree_skb net/core/skbuff.c:1204 [inline]
- sk_skb_reason_drop+0x1c9/0x380 net/core/skbuff.c:1242
- kfree_skb_reason include/linux/skbuff.h:1263 [inline]
- __skb_queue_purge_reason include/linux/skbuff.h:3343 [inline]
+In any case: 1 patchset per 24h.
 
-root cause is:
 
-page_pool_recycle_in_ring
-  ptr_ring_produce
-    spin_lock(&r->producer_lock);
-    WRITE_ONCE(r->queue[r->producer++], ptr)
-      //recycle last page to pool
-				page_pool_release
-				  page_pool_scrub
-				    page_pool_empty_ring
-				      ptr_ring_consume
-				      page_pool_return_page  //release all page
-				  __page_pool_destroy
-				     free_percpu(pool->recycle_stats);
-				     free(pool) //free
 
-     spin_unlock(&r->producer_lock); //pool->ring uaf read
-  recycle_stat_inc(pool, ring);
-
-page_pool can be free while page pool recycle the last page in ring.
-Add producer-lock barrier to page_pool_release to prevent the page
-pool from being free before all pages have been recycled.
-
-Suggested-by: Jakub Kacinski <kuba@kernel.org>
-Link: https://lore.kernel.org/netdev/20250513083123.3514193-1-dongchenchen2@huawei.com
-Fixes: ff7d6b27f894 ("page_pool: refurbish version of page_pool code")
-Reported-by: syzbot+204a4382fcb3311f3858@syzkaller.appspotmail.com
-Closes: https://syzkaller.appspot.com/bug?extid=204a4382fcb3311f3858
-Signed-off-by: Dong Chenchen <dongchenchen2@huawei.com>
----
- net/core/page_pool.c | 19 ++++++++++---------
- 1 file changed, 10 insertions(+), 9 deletions(-)
-
-diff --git a/net/core/page_pool.c b/net/core/page_pool.c
-index 7745ad924ae2..08f1b000ebc1 100644
---- a/net/core/page_pool.c
-+++ b/net/core/page_pool.c
-@@ -707,19 +707,16 @@ void page_pool_return_page(struct page_pool *pool, netmem_ref netmem)
- 
- static bool page_pool_recycle_in_ring(struct page_pool *pool, netmem_ref netmem)
- {
-+	bool in_softirq;
- 	int ret;
- 	/* BH protection not needed if current is softirq */
--	if (in_softirq())
--		ret = ptr_ring_produce(&pool->ring, (__force void *)netmem);
--	else
--		ret = ptr_ring_produce_bh(&pool->ring, (__force void *)netmem);
--
--	if (!ret) {
-+	in_softirq = page_pool_producer_lock(pool);
-+	ret = !__ptr_ring_produce(&pool->ring, (__force void *)netmem);
-+	if (ret)
- 		recycle_stat_inc(pool, ring);
--		return true;
--	}
-+	page_pool_producer_unlock(pool, in_softirq);
- 
--	return false;
-+	return ret;
- }
- 
- /* Only allow direct recycling in special circumstances, into the
-@@ -1091,10 +1088,14 @@ static void page_pool_scrub(struct page_pool *pool)
- 
- static int page_pool_release(struct page_pool *pool)
- {
-+	bool in_softirq;
- 	int inflight;
- 
- 	page_pool_scrub(pool);
- 	inflight = page_pool_inflight(pool, true);
-+	/* Acquire producer lock to make sure producers have exited. */
-+	in_softirq = page_pool_producer_lock(pool);
-+	page_pool_producer_unlock(pool, in_softirq);
- 	if (!inflight)
- 		__page_pool_destroy(pool);
- 
--- 
-2.25.1
-
+Best regards,
+Krzysztof
