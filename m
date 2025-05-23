@@ -1,128 +1,87 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from jabberwock.ucw.cz (jabberwock.ucw.cz [46.255.230.98])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9F5A22154F;
-	Fri, 23 May 2025 11:52:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54D1420CCD3;
+	Fri, 23 May 2025 11:53:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.255.230.98
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748001130; cv=none; b=h3B013T2JyBywcodb5gfWg99Nzq3JyhcA1Tsvx7l2COljpOX8aTPiMoW3R/TR2tdmYf7i5/yeXbjMmwac3fTqUQTiiTiNdE90vY+0vkpDN7oOop0fNCqTe6EXaMkPNrtZzbelyQ9KyoFvpB32VMXXoEvG3YcdJ1pkwtt3IOIYlo=
+	t=1748001227; cv=none; b=UmfJ8OEx8fgejRWK3DfMTdpS5yjRkbELbc0LEqLpUMWw44YYKV6hNMMOtfhbYuaSmw6dl1h3PUf1EFBY1FpYrxp2u+XsYUWMwcIenz169cPgZLol9XymAJ2QL2IBaxXkC9ISeRSAPyXpzcoaKOFU4xcmEov/IOqzxY8rJAnuots=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748001130; c=relaxed/simple;
-	bh=iwYCrwIiJcYTenOOgGvOCAQJcg/1q/21fK8veCWXxBc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=X0E1Q9nLRCgI6D++RMXVI5YvntziUiU9Wc4aEduvTMzOsqS825foJ19HQGwRyyeD19JkbU3Utc7yuTaCq+aJkz7LAXcuXlnx2SPm6BfPVgO8QBQd36MdtF7OZGFn/1BCEcZmhNQuVVfqe7AgdA4KqxBDMNguYJaZHehyBMIzuag=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SghJKbVH; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748001227; c=relaxed/simple;
+	bh=ImDTQZgR/Uit525GqvbBcjyPL4xY113MaIn+BFA55g4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oawceaGooDVi9uTTezeXCHGVLRcfnFzohHXUcL2Ndf1NEA1lPaI8A795IedP7ELTWMhsbcIVmK0wCaCst9T6Kyexxb4D2QE/pg7/IQ9M0xAtC3gK1nvXsfAtrIPCLwfcjgKfDoU4fzg7oW9uV6UuJmmKFE6Xdem55pHpZ622lfY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ucw.cz; spf=pass smtp.mailfrom=ucw.cz; dkim=pass (1024-bit key) header.d=ucw.cz header.i=@ucw.cz header.b=lxoCzArn; arc=none smtp.client-ip=46.255.230.98
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ucw.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ucw.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SghJKbVH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D223C4CEE9;
-	Fri, 23 May 2025 11:52:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748001130;
-	bh=iwYCrwIiJcYTenOOgGvOCAQJcg/1q/21fK8veCWXxBc=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=SghJKbVHCy5dTBy2b6uHrCmUaQVAEwm+TvP1ljpWl0LVmEhIbwtHX4IxfqNNmdH1Q
-	 pDHsv9eoZVmWb8WPznJDZ6kC32fuapXwHy4eqaW5Z2h+/NPb20KeI1ZCtFxr+Lx5+9
-	 LpoBvtuRLip4PRBH3TbB3QgPF6wmAkoBTZRAr6KND88kK0l5duhZMAATQlmeo5nx6n
-	 mjGLVJcJfAqpqFEuHhp4Q9m0PAT4glf/iVG/jU6ZQqxt6eHu0FiGQtDMsoaKEyneo5
-	 2SBE35pJRutJ/ztfT3uDzbyGW8ALrRGEoRIyocVSfzTYrUwDuR/qjr2XqjiCFioStZ
-	 Tcygez7vBa4Aw==
-Message-ID: <dfd63c64-184e-4e48-9344-a3db0612036b@kernel.org>
-Date: Fri, 23 May 2025 13:52:06 +0200
+	dkim=pass (1024-bit key) header.d=ucw.cz header.i=@ucw.cz header.b="lxoCzArn"
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+	id 5A8711C01F1; Fri, 23 May 2025 13:53:36 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ucw.cz; s=gen1;
+	t=1748001216;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Avs7y+xIjkRaGZOHuMIkcp4QqOg+TJXDVU5xS64kDGY=;
+	b=lxoCzArnUlkwtVvJZzfnyp9fFb86CZuNJCa/4mBVtUwyIjCc52BGYh3MHdefr/PdA/oZxA
+	iw5vsW92vcvCLVpPQVpqUKeIeumsFi1qwTGem64Ed1IeqLRpwi/YepS1JFgN7IBEuHrn+P
+	XQ/jFRtoK28maLYOQsBM0dSm770ovmg=
+Date: Fri, 23 May 2025 13:53:35 +0200
+From: Pavel Machek <pavel@ucw.cz>
+To: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Steffen Trumtrar <kernel@pengutronix.de>,
+	linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/4] LED: Add basic LP5860 LED matrix driver
+Message-ID: <aDBhv2fhMVUXNaqV@duo.ucw.cz>
+References: <20250514-v6-14-topic-ti-lp5860-v2-0-72ecc8fa4ad7@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] dt-bindings: gnss: add u-blox,neo-9m compatible
-To: alejandroe1@geotab.com, Johan Hovold <johan@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-References: <20250523-ubx-m9-v3-1-6fa4ef5b7d4a@geotab.com>
-Content-Language: en-US
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Autocrypt: addr=krzk@kernel.org; keydata=
- xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
- cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
- JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
- gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
- J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
- NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
- BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
- vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
- Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
- TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
- S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
- FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJoF1BKBQkWlnSaAAoJEBuTQ307
- QWKbHukP/3t4tRp/bvDnxJfmNdNVn0gv9ep3L39IntPalBFwRKytqeQkzAju0whYWg+R/rwp
- +r2I1Fzwt7+PTjsnMFlh1AZxGDmP5MFkzVsMnfX1lGiXhYSOMP97XL6R1QSXxaWOpGNCDaUl
- ajorB0lJDcC0q3xAdwzRConxYVhlgmTrRiD8oLlSCD5baEAt5Zw17UTNDnDGmZQKR0fqLpWy
- 786Lm5OScb7DjEgcA2PRm17st4UQ1kF0rQHokVaotxRM74PPDB8bCsunlghJl1DRK9s1aSuN
- hL1Pv9VD8b4dFNvCo7b4hfAANPU67W40AaaGZ3UAfmw+1MYyo4QuAZGKzaP2ukbdCD/DYnqi
- tJy88XqWtyb4UQWKNoQqGKzlYXdKsldYqrLHGoMvj1UN9XcRtXHST/IaLn72o7j7/h/Ac5EL
- 8lSUVIG4TYn59NyxxAXa07Wi6zjVL1U11fTnFmE29ALYQEXKBI3KUO1A3p4sQWzU7uRmbuxn
- naUmm8RbpMcOfa9JjlXCLmQ5IP7Rr5tYZUCkZz08LIfF8UMXwH7OOEX87Y++EkAB+pzKZNNd
- hwoXulTAgjSy+OiaLtuCys9VdXLZ3Zy314azaCU3BoWgaMV0eAW/+gprWMXQM1lrlzvwlD/k
- whyy9wGf0AEPpLssLVt9VVxNjo6BIkt6d1pMg6mHsUEVzsFNBFVDXDQBEADNkrQYSREUL4D3
- Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
- MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
- OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
- GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
- 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
- YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
- 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
- BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
- JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
- 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
- YpsFAmgXUF8FCRaWWyoACgkQG5NDfTtBYptO0w//dlXJs5/42hAXKsk+PDg3wyEFb4NpyA1v
- qmx7SfAzk9Hf6lWwU1O6AbqNMbh6PjEwadKUk1m04S7EjdQLsj/MBSgoQtCT3MDmWUUtHZd5
- RYIPnPq3WVB47GtuO6/u375tsxhtf7vt95QSYJwCB+ZUgo4T+FV4hquZ4AsRkbgavtIzQisg
- Dgv76tnEv3YHV8Jn9mi/Bu0FURF+5kpdMfgo1sq6RXNQ//TVf8yFgRtTUdXxW/qHjlYURrm2
- H4kutobVEIxiyu6m05q3e9eZB/TaMMNVORx+1kM3j7f0rwtEYUFzY1ygQfpcMDPl7pRYoJjB
- dSsm0ZuzDaCwaxg2t8hqQJBzJCezTOIkjHUsWAK+tEbU4Z4SnNpCyM3fBqsgYdJxjyC/tWVT
- AQ18NRLtPw7tK1rdcwCl0GFQHwSwk5pDpz1NH40e6lU+NcXSeiqkDDRkHlftKPV/dV+lQXiu
- jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
- zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
- XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <20250523-ubx-m9-v3-1-6fa4ef5b7d4a@geotab.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="RZ2I2pXh5M5YoMQO"
+Content-Disposition: inline
+In-Reply-To: <20250514-v6-14-topic-ti-lp5860-v2-0-72ecc8fa4ad7@pengutronix.de>
 
-On 23/05/2025 13:19, Alejandro Enrique via B4 Relay wrote:
-> From: Alejandro Enrique <alejandroe1@geotab.com>
-> 
-> Add compatible for u-blox NEO-9M GPS module.
-> 
-> Signed-off-by: Alejandro Enrique <alejandroe1@geotab.com>
-> ---
-> This series just add the compatible string for u-blox NEO-9M module,
-> using neo-m8 as fallback. I have tested the driver with such a module
-> and it is working fine.
-> ---
 
-I assume there is a user somewhere?
+--RZ2I2pXh5M5YoMQO
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Hi!
 
-<form letter>
-This is an automated instruction, just in case, because many review tags
-are being ignored. If you know the process, you can skip it (please do
-not feel offended by me posting it here - no bad intentions intended).
-If you do not know the process, here is a short explanation:
+> The lp5860 is a LED matrix driver with 18 constant current sinks and 11
+> scan switches which allows controlling up to 198 LED dots.
 
-Please add Acked-by/Reviewed-by/Tested-by tags when posting new versions
-of patchset, under or above your Signed-off-by tag, unless patch changed
-significantly (e.g. new properties added to the DT bindings). Tag is
-"received", when provided in a message replied to you on the mailing
-list. Tools like b4 can help here. However, there's no need to repost
-patches *only* to add the tags. The upstream maintainer will do that for
-tags received on the version they apply.
+200 points. Is it likely to be used as individual LEDs?
 
-Full context and explanation:
-https://elixir.bootlin.com/linux/v6.12-rc3/source/Documentation/process/submitting-patches.rst#L577
-</form letter>
+>  Documentation/ABI/testing/sysfs-class-spi-lp5860   |  73 ++++
+
+I'm not big fan of new ABI. Should currents / per channel dimming be
+configured from dts (and not sysfs)?
 
 Best regards,
-Krzysztof
+								Pavel
+--=20
+I don't work for Nazis and criminals, and neither should you.
+Boycott Putin, Trump, and Musk!
+
+--RZ2I2pXh5M5YoMQO
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCaDBhvwAKCRAw5/Bqldv6
+8keoAKCOMrigr3SrHxVWq0aItP2NREDxjQCgtFztYaeZfcwdYws2AqoZUeFgys8=
+=SoZ8
+-----END PGP SIGNATURE-----
+
+--RZ2I2pXh5M5YoMQO--
