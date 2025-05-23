@@ -1,94 +1,177 @@
-Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC65F28E57E
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 13:15:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDB4128F520;
+	Fri, 23 May 2025 13:16:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748006162; cv=none; b=Wo5YvdScVFNZXKYmuRi8fiJDAoIADuDfPGwjImmhxxwasQfvPalXW+N0437kbUFv5oY7RaBzIwH6DGlAsnSi//8LV4iF1k2kGFdXs8/H4mgcNRmOZGYKNCx4QZipMz09FGNJKw8Dhx4RymHyTxLc30vEFnfyOr/ZDaBuWkRoo0M=
+	t=1748006179; cv=none; b=ewVdxBB0k9mRFnuQPxYy2BabmdgEaUr+ub3IGakJRKdLs4A7CZb7ORmD8J5r3963lYtDBnyH2/cEOGJpxybFZRqlM12c25oLYkpititgpUmCsp7KCoXS0m+xBR3Ds+2STUrLDscSwSGbNiJp6dxAnPImio2gxO7zIjMj5laOiQs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748006162; c=relaxed/simple;
-	bh=wrPM53to5XZACUy4zMzTiK9ky1x1walXJTeIVv3PPuY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HoaSczCS3k11At5PrJSA4fxNtWoArbu664uFMOKM1/vOHgGYJohv0MM0nmAMFO5gsacWzbWVfDCYTiRaCPvn3Vhi1bAqtQvtbJawkrKpHczKdjxAs3fF94C/IuVE91CtpoAcJ6rKZwDQHSTErW+H46oqSwuUWQVm+aWPIK6Nr0g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=PHANUYEV; arc=none smtp.client-ip=194.117.254.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
+	s=arc-20240116; t=1748006179; c=relaxed/simple;
+	bh=nv3ji6GhM3232GWbKU0OV+YBbB2uBzaazpJM0DI4Vbk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=guV0xvC1KGxlpx27OCzyAJHO/Jmgb4WRM7QVY+4H46XAsjvnJKelEb2G3QWEI4pUz9tY2fIy0ISkXcdEdXSQAWwbuAU59znXjv78LXBuOlg8EIumyMdSSgQJ6N20jzvo3rUzySrSC9OxQ9Rt6Ha+Uz8E1lf8/D9zYJJZ9HDhKtk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XSdkdaAd; arc=none smtp.client-ip=209.85.128.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="PHANUYEV"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	sang-engineering.com; h=date:from:to:cc:subject:message-id
-	:references:mime-version:content-type:in-reply-to; s=k1; bh=wrPM
-	53to5XZACUy4zMzTiK9ky1x1walXJTeIVv3PPuY=; b=PHANUYEVtQ/+C3C4EweO
-	q/6Z6y/BwXBxbjgzcxCeNZuWxZ4Lvwf4/RbMFFt5aHPJKye1JpRGKPhSyq2cgAaX
-	+6vEhlrjF0kRCfuM3yog4Y+gMKHQIMQXBpNWk2sjcqTx48B/KkBI0xA5qhU0xZHS
-	SMhiXWC+Sx+v4Df5VqXHl9MvGqF2+j/xkXjDRxHRPQV2oXqBjODkajo3D/B8hwmp
-	+uwuQrhyZFf2+A2bihBBy+Rtfn4TD4PsmiLmDVsiIq0Kk5NO/T7gCLp+1UrlXJjD
-	vneRpfvGsjvI/i+hAK3nfTBwCTTBb82hwnjn2a1Qlx/hJLkW9krnpRWlWU1a/OcH
-	RQ==
-Received: (qmail 4052070 invoked from network); 23 May 2025 15:15:52 +0200
-Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 23 May 2025 15:15:52 +0200
-X-UD-Smtp-Session: l3s3148p1@mxTIZc01Jo9ehhrS
-Date: Fri, 23 May 2025 15:15:52 +0200
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
-To: Thierry Bultel <thierry.bultel@linatsea.fr>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>,
-	linux-renesas-soc@vger.kernel.org, paul.barker.ct@bp.renesas.com,
-	linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org
-Subject: Re: [PATCH v9 06/10] serial: sh-sci: Use private port ID
-Message-ID: <aDB1CDYiY_XF62UF@ninjato>
-Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Thierry Bultel <thierry.bultel@linatsea.fr>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	linux-renesas-soc@vger.kernel.org, paul.barker.ct@bp.renesas.com,
-	linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org
-References: <20250515141828.43444-1-thierry.bultel.yh@bp.renesas.com>
- <20250515141828.43444-7-thierry.bultel.yh@bp.renesas.com>
- <aC2yYDpsv7ef9IVA@shikoro>
- <CAMuHMdVPn3adKZMiLqoEz9ANNyekmB9WRFyz++49+FeEOkrSSA@mail.gmail.com>
- <aDBoLr-uPxxHgzEU@ninjato>
- <4b9e63e8-388e-4b24-98dd-05bd9e73731f@linatsea.fr>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XSdkdaAd"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-43ea40a6e98so95889225e9.1;
+        Fri, 23 May 2025 06:16:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748006176; x=1748610976; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=utqnLfDssfwdK24IQm7Ksa5DHrbNYTlQ4HwsK42xQtY=;
+        b=XSdkdaAdXUMv+QQsDxO6zRNoA1iA6Wye/59zlLKVewjEvaz4P3IiOsBHTmWjqLu0H5
+         q75lbvDM5VNCpYagfSEVA7ezl1fSco+QAmF7IyPgLMaLLnDMgRRkIiIOIfw20BWyqi7z
+         4hVTDR3KaPQSnSy9ZJRhDEND/Ttls1bFw6//U/XYh8Jyq0IoZcysjA74VMHg8OANzsBE
+         4mxV35et4Z9tirpB+zEm+hAiJDtMzCtuSv7k8zx2YC1QS7ojnV/z2AKfnnVra5wVcFlp
+         i2IUim2rklTOZTyJCetu7km7kfxy48mkVJJhzeu/4dlO+6Xp3I81W0OTvREIz/ZqA1Vl
+         j/8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748006176; x=1748610976;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=utqnLfDssfwdK24IQm7Ksa5DHrbNYTlQ4HwsK42xQtY=;
+        b=k7Eng1xenBnerZD2JyU1o67CTjrPKTAhhNmt1oqVWkNYmZbD/xhKLG1JFoYm/JLvOY
+         pAvIOhhfXesjW2ndePRl8QgfjpYG2ZQCA6X12PC+ZPpVFdvD2R2bE6CHG/N8GVwqqldw
+         rAMvdHM5KtW6/+qUS1MGLJ2SAQ+p/nktJ959BaITqRpd/l0/0MXNMIPkWt164Lhkkz6n
+         Y5zFSgNNnBlwuHLcCAkZzqCYRj2hZoxqFt/zOmtsQ14ld2gRVy1alG66KFwYXlPKXNKi
+         /JTGfMURgjTUqk4IObITtae1EqMw5j49rY0RFuHpU11PtF5wTD3H0tkyc5H9ZzfZ5hGG
+         xHqg==
+X-Forwarded-Encrypted: i=1; AJvYcCVMojW7yZ9S+IOJ7vSnqJIz/v+JHaxAFRU6kmlKRTqzcqONznV7viJGpbAsMmwniYM+90+lADdn+JrktCntLw==@vger.kernel.org, AJvYcCXYwZrwfizVGsEzTWhGudlXKZKQxpC2yO3a2T+U8d7V16Vf4LebYqoC0DoKAXXv8IeVN0Jy6iU7SaNj@vger.kernel.org, AJvYcCXq+vRNhw/rcX4EqD1t34o00mvf8qByzRmJgdS7pX7ZbyFl2vmGr+LGWyfSkI7MsTf3Otsy+ko5SRduRxoK@vger.kernel.org
+X-Gm-Message-State: AOJu0YzKzGmpHk+UhZWPl8kbKlA8OSrLatw9wSsOyn9d4/uj8QbueDZA
+	5jehLtymN2OErwUo2uYfTTpW5Z3PU7ODKeHQ1Pzcqpta7MQq0tEXk8k=
+X-Gm-Gg: ASbGncs/Em71Bfg8hyZ8w5DPuMJF+mPLhqx6rOGCGMl+PmQ7Gu4lIPY5MRAhRXOPMfH
+	u5ztXXmJx+VIFjKYsVHaL3hVANf8Lr4PQNLhmqtaf7N8mKtDnOmIRuZTzufb1G1Uv6mCfLlb9qF
+	UhZq0puA7Q1NPxOVSIrEOy3Sal/qJU+AMWenf5LrcejazNPFOR+aDSWoPW27RxoZT6mBrl4Ffcm
+	0fzO3xtztd7DgakJ30s1SjZS84A1b1IW14f3zkpY3FIqpR0MiywUN8p/eaPXQ2Wsz+AvLYCWpra
+	YKwxgzJVJlWL1m3kOS6uDEFve3aSgB23jpX4otQTGqePDYskMdDQR3WLl+MYZOhVc6I6PNmA/jx
+	zxqzwHbBE2rJyCuKv
+X-Google-Smtp-Source: AGHT+IG4Az0AhnIzEpthrhva2c1DnQOSAYmSSilx7Ymuwyx3a5QJ/0FhgSunYo0+APRzSkeyCqp34g==
+X-Received: by 2002:a05:600d:19:b0:442:f97f:8174 with SMTP id 5b1f17b1804b1-442fd6313f4mr214830665e9.18.1748006175519;
+        Fri, 23 May 2025 06:16:15 -0700 (PDT)
+Received: from alex-x1.. (mob-194-230-148-12.cgn.sunrise.net. [194.230.148.12])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442eb85a8f8sm189177055e9.0.2025.05.23.06.16.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 23 May 2025 06:16:15 -0700 (PDT)
+From: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>
+To: Bjorn Andersson <andersson@kernel.org>,
+	Nikita Travkin <nikita@trvn.ru>,
+	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+	Aleksandrs Vinarskis <alex.vinarskis@gmail.com>,
+	linux-arm-msm@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Konrad Dybcio <konradybcio@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	dmitry.baryshkov@oss.qualcomm.com,
+	maud_spierings@hotmail.com
+Subject: [PATCH v5 0/1] X1E Asus Zenbook A14 support
+Date: Fri, 23 May 2025 15:15:07 +0200
+Message-ID: <20250523131605.6624-1-alex.vinarskis@gmail.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="mqAi+Bx2hFZjh1sj"
-Content-Disposition: inline
-In-Reply-To: <4b9e63e8-388e-4b24-98dd-05bd9e73731f@linatsea.fr>
+Content-Transfer-Encoding: 8bit
 
+As requested, 1/4 was merged to linux-next by USB maintainers.
+Resending 4/4 rebased on top of latest linux-next. 2/4, 3/4 already
+landed.
 
---mqAi+Bx2hFZjh1sj
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+---
 
+Introduce support for the mentioned laptop.
 
-> but is this something wanted now in PATCH v10 or can this be in a later
-> patch ?
+Particular device exists in two model numbers:
+* UX3407QA: X1P-42-100 or X1-26-100 (as tested)
+* UX3407RA: X1E-78-100
 
-I don't mind.
+Mostly similar to other X1-based laptops. Notable differences are:
+* Wifi/Bluetooth combo being Qualcomm FastConnect 6900 on UX3407QA
+  and Qualcomm FastConnect 7800 on UX3407RA
+* USB Type-C retimers are Parade PS8833, appear to behave identical
+  to Parade PS8830
+* gpio90 is TZ protected
 
+When comparing device firmware between UX3407QA, UX3407RA, it seems
+that only ADSP firmware is different, CDSP and GPU firmware appears to
+be the same. (At least assuming the GPU firmware name in both cases is
+`qcdxkmsuc8380.mbn`). Since at least some blobs are different betweeen
+X1E and X1/X1P, define new firmware directory for `qcom/x1p42100`. This
+also makes it easier for distros to automatically extract firmware from
+Windows and place all blobs for the model under the same path. If/When
+firmware blobs make it to linux-firmware, same blobs can be easily
+symlinked between `qcom/x1e80100` and `qcom/x1p42100`.
 
---mqAi+Bx2hFZjh1sj
-Content-Type: application/pgp-signature; name="signature.asc"
+NVMe SSD depends on [1]. USB Type-A over USB MP controller  depends on
+[2], or equivalent proposed solution.
 
------BEGIN PGP SIGNATURE-----
+Qualcomm FastConnect 6900 on UX3407QA did not work out of the box, and
+additionally required both newer firmware and patches to `board-2.bin`.
+I added a short how-to [3], as it is not exactly trivial.
 
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmgwdQQACgkQFA3kzBSg
-KbZ19g/+Kl9xKhEY2I7CVfKxmSOmrtdh+834J+QkiIV5g6A2uRpYw573cFFiYeuY
-hZBl4tsD4m37n9tDkaMN6z2luw06WAP+KKEpOY+4k0WyARhvmtWhSGWIzUyeg/y+
-zxpF+wYmdDmjfFQDBc/Q7DloJB7Nv7k1aPdbxQ7nW9P7D/BkvHHZRyC6VCphl4Jy
-J+jvkxkBChmiTsEMIG0MfA7dESfVtgJudtcm2WOBEgDvYziGkLhdZb/nvGJzW7b/
-uXyFgOAqsaVA1SxG/dliAAAgUs22pE2F8MjQcvcvufGCD818zF/8sVSlkaADkpQa
-RDdZcrHn/Knm+ZfWzMr473nQ0wnxC/1yEOctA8PTus29YR5l3VGvp8Bts5x5dfaY
-J5Td82xtFG7rOv7VJR+WLX7CGzrenN4l/urETt7Z5JQrOqBNxf4zT6iYVDX2gA4m
-uAZm7efI668DqQCVbOXOaAXL8Jt+et9W11+YOsKVWEzDW0sca6IFwh2YCCUO4ZUm
-+Yd5zFix/RQ0jqKxUnvNLSCDwpQW8AKEXgkvutZL4DfpnCz3aR6balH/UFGH/Z2c
-wgzpD8c5U9q5LTGWImSz3hIv/CrrztuqK2BadbqJFIx/bSunBE837beS0pGQ4P24
-kY+e7OXPfcwW+IvFN1ID3QKiLbDmr9woLkB/BwfN0ETyQJBjY40=
-=zvZO
------END PGP SIGNATURE-----
+ACPI dumps can be found on aarch64-laptops' github [4]. HWids on
+dtbloader's github [5].
 
---mqAi+Bx2hFZjh1sj--
+[1] https://lore.kernel.org/linux-arm-msm/20250319094544.3980357-1-quic_wenbyao@quicinc.com/
+[2] https://lore.kernel.org/all/20250318-xps13-fingerprint-v1-1-fbb02d5a34a7@oss.qualcomm.com/
+[3] https://github.com/alexVinarskis/linux-x1e80100-zenbook-a14?tab=readme-ov-file#wcn688x-wifi
+[4] https://github.com/aarch64-laptops/build/pull/134/files
+[5] https://github.com/TravMurav/dtbloader/pull/4/files
+[6] https://lore.kernel.org/all/20250429-x1e80100-dts-drop-useless-dp-compatible-override-v1-0-058847814d70@linaro.org/
+
+Changes to v4:
+* _Only sending 4/4 as other patches are already applied_
+* Rebase 4/4 on `for-next` of qcom tree, adjust makefile to generate el2 dtbs
+* Picked Konrad's R-by for 4/4
+* Droped 'qcom,x1e80100-dp' as per [6]
+Link to v4: https://lore.kernel.org/all/20250426130203.37659-1-alex.vinarskis@gmail.com/
+
+Changes to v3:
+* Drop redundant comments
+* Drop incomplete wcn7850 as it is causing dt errors
+* Picked a-by
+Link to v3: https://lore.kernel.org/all/20250416232345.5240-1-alex.vinarskis@gmail.com/
+
+Changes to v2:
+* Fix/re-add PS8833 as fallback
+* Add EC's i2c address
+* Add pwrseq for wcn6855, placeholder for wcn7850 until its tested
+* Rename x1-zenbook.dtsi to x1-asus-zenbook.dtsi
+Link to v2: https://lore.kernel.org/all/20250402084646.10098-1-alex.vinarskis@gmail.com/
+
+Changes to v1:
+* Drop PS8833 variant, fallback to PS8830 as they behave the same
+* Drop wrong pcie6a_phy compatible revert
+* Drop redundant comments, fix order of properties in the device-tree
+* Fix device name bindings, express in model names instead of the soc
+* Fix GPU firmware name for UX3407QA
+* Fix model string, enclose variant in parenthesis
+* Added missing new lines before 'status = "okay";'
+* Updated cover letter to reflect some of the above changes
+* Left SPI10 disabled as it is unknown how/what for to use it as of now
+Link to v1: https://lore.kernel.org/all/20250331215720.19692-1-alex.vinarskis@gmail.com/
+
+Aleksandrs Vinarskis (1):
+  arm64: dts: qcom: Add support for X1-based Asus Zenbook A14
+
+ arch/arm64/boot/dts/qcom/Makefile             |    4 +
+ .../boot/dts/qcom/x1-asus-zenbook-a14.dtsi    | 1306 +++++++++++++++++
+ .../dts/qcom/x1e80100-asus-zenbook-a14.dts    |   33 +
+ .../dts/qcom/x1p42100-asus-zenbook-a14.dts    |  137 ++
+ 4 files changed, 1480 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/qcom/x1-asus-zenbook-a14.dtsi
+ create mode 100644 arch/arm64/boot/dts/qcom/x1e80100-asus-zenbook-a14.dts
+ create mode 100644 arch/arm64/boot/dts/qcom/x1p42100-asus-zenbook-a14.dts
+
+-- 
+2.45.2
+
