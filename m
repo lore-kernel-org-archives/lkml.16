@@ -1,39 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EA874120B;
-	Fri, 23 May 2025 16:39:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D80CA4120B;
+	Fri, 23 May 2025 16:40:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748018374; cv=none; b=CYagrjqGngy4CfJA5JbZBctjttcmQ0V+BDYwxJpJ++h4dDw7U0Rb0AwtEGjOFkTFRpGb4IB1wU77lT3Uas8F6AuPXPhi9NBcI+IcOrr9G+T6r+6gaJ9FnFoaCDZi2C+pRElQlRcZTysir8BUDcBxuybnTWdNsmyC000WGPxIFJ8=
+	t=1748018412; cv=none; b=LlQPnH6CXt+sz7NYPjoaCUubZLyzPOHn92UesrNUxe4HhiO8w8lpE3G3EbUgyMylZT74L/6ukHh65o4wMixOdZ9FoBHT9g2GH1BtRYRmE7d4pofrsaUMO6lgOFd6wJc2oWP3R4sgLrEw+hIEqxnMrYSxhMQz/A0IHAnZwfyIdnU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748018374; c=relaxed/simple;
-	bh=4E4NkvJq/R7U01X4XIKDFjPJuXJax6DDUhPYflAvPOo=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=DBCP7+SvB5AmBmFw4uMbPHKFdKVb/e7N3ilhMtPs/KrA7dhwWOB/ECR8zQNk6vVt93AGaa7iuNmvUNX8Lu53oqgOGax7naSlZr3/1quV6Na7Gp4A0ZiWW7AIZehMwIkwADqh8SC7HbtwlasUUp6xjfqZceCXumMnZwJDhNh1JMM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mX3UR/6K; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748018412; c=relaxed/simple;
+	bh=UyjBgLtWr0fpH7g7Zr6wHBl8CiqKBfacyA4jE6n0eeU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dJeDQeCac5j+foyVZg/mBRf+FUz4RGaTyXJxpgn+T1qmhHUf9sX2FZQw9CIny5l1UN3Wx27sij8mA+EzEOJcPbYlccSJrVDCGyhXaEOE/RE+aJVfv4PCSAhi5wTawwZAwCDIoWniDTvQ8AzyXjAUqGouCt4y+t3GjzQ5j8T6EbQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bFReMnH7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mX3UR/6K"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96C05C4CEE9;
-	Fri, 23 May 2025 16:39:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bFReMnH7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D1D9C4CEE9;
+	Fri, 23 May 2025 16:40:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748018373;
-	bh=4E4NkvJq/R7U01X4XIKDFjPJuXJax6DDUhPYflAvPOo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=mX3UR/6Kl0MmdPgCRRIWz3uPT1hCf139/OspEcnnVyh2KlN2NZ/LRYlVV0R4upLEC
-	 a6XrVyVUo0PqQ4GB1irujOO6r45TY9UiZDlCXNOt+gz8iYXbBIMdWk912XwQOFPmcD
-	 oLjzcm7gCSY53ZFbSxdze68Z1b05jyrIpWMffj4eNUQQJJbY7sTpFhZeD7JvqNr5o2
-	 GL/m9N/UD+GHuy2QDdV8UO3+byUZY4WIs27bvFCliqYDw4ly8hjd7W/miCl0unoAZ4
-	 076tMCY3PJkl8kcEwc5Q+1We02OjL/clI8Ij5J/bFqkbaWaEwJKrgKjeYiwj/J+ACK
-	 V0xTNVv6JXFhQ==
-Date: Fri, 23 May 2025 11:39:32 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: grwhyte@linux.microsoft.com
-Cc: linux-pci@vger.kernel.org, shyamsaini@linux.microsoft.com,
-	code@tyhicks.com, Okaya@kernel.org, bhelgaas@google.com,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: Reduce delay after FLR of Microsoft MANA devices
-Message-ID: <20250523163932.GA1566378@bhelgaas>
+	s=k20201202; t=1748018411;
+	bh=UyjBgLtWr0fpH7g7Zr6wHBl8CiqKBfacyA4jE6n0eeU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=bFReMnH7Q5k8LTkjFz1GAsaPX728ggISMg0J5V4sL5Op2cCdV+eEKYqOButPOLX7+
+	 9Nvd4dRpb3PuNFb8Vo2CFybeemqE1e5g8Bk4eyxtXzLGiPK3pFG1q+TXTKdczn751F
+	 3WwkzYhSydqWogDUiz3rMm7gbbohY4a2OuH5EcaS+LZe7xmREnI4iq2rUMXKa+DeQB
+	 ELrifydnLe2s3QZ+/1aSAsAwR6VEaWsrMHmlYWUgqj4FtAdkDRCH3ZDKKKrVNESccg
+	 UWSgnSx/dCdWg9rcYyy5KjR8TzaMo4n7oEWU8r4TOXoONPyUDKPJyTWxm4vKw4duSW
+	 Re0xjsydG7H4A==
+Date: Fri, 23 May 2025 16:40:10 +0000
+From: Wei Liu <wei.liu@kernel.org>
+To: mhklinux@outlook.com
+Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+	decui@microsoft.com, deller@gmx.de, javierm@redhat.com,
+	arnd@arndb.de, linux-kernel@vger.kernel.org,
+	linux-hyperv@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH v2 1/1] Drivers: hv: Always select CONFIG_SYSFB for
+ Hyper-V guests
+Message-ID: <aDCk6haZF4fjRHf4@liuwe-devbox-ubuntu-v2.tail21d00.ts.net>
+References: <20250520040143.6964-1-mhklinux@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,141 +45,51 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250521231539.815264-1-grwhyte@linux.microsoft.com>
+In-Reply-To: <20250520040143.6964-1-mhklinux@outlook.com>
 
-On Wed, May 21, 2025 at 11:15:39PM +0000, grwhyte@linux.microsoft.com wrote:
-> From: Graham Whyte <grwhyte@linux.microsoft.com>
+On Mon, May 19, 2025 at 09:01:43PM -0700, mhkelley58@gmail.com wrote:
+> From: Michael Kelley <mhklinux@outlook.com>
 > 
-> Add a device-specific reset for Microsoft MANA devices with the FLR
-> delay reduced from 100ms to 10ms. While this is not compliant with the pci
-> spec, these devices safely complete the FLR much quicker than 100ms and
-> this can be reduced to optimize certain scenarios
-
-It looks like this could be done generically if the device advertised
-the Readiness Time Reporting Capability (PCIe r6.0, sec 7.9.16) and
-Linux supported that Capability (which it currently does not)?
-
-From 7.9.16.3:
-
-  FLR Time - is the time that the Function requires to become
-  Configuration-Ready after it was issued an FLR.
-
-Does the device advertise that capability?  It would be much nicer if
-we didn't have to add a device-specific quirk for this.
-
-> Signed-off-by: Graham Whyte <grwhyte@linux.microsoft.com>
-> ---
->  drivers/pci/pci.c    |  3 ++-
->  drivers/pci/pci.h    |  1 +
->  drivers/pci/quirks.c | 55 ++++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 58 insertions(+), 1 deletion(-)
+> The Hyper-V host provides guest VMs with a range of MMIO addresses
+> that guest VMBus drivers can use. The VMBus driver in Linux manages
+> that MMIO space, and allocates portions to drivers upon request. As
+> part of managing that MMIO space in a Generation 2 VM, the VMBus
+> driver must reserve the portion of the MMIO space that Hyper-V has
+> designated for the synthetic frame buffer, and not allocate this
+> space to VMBus drivers other than graphics framebuffer drivers. The
+> synthetic frame buffer MMIO area is described by the screen_info data
+> structure that is passed to the Linux kernel at boot time, so the
+> VMBus driver must access screen_info for Generation 2 VMs. (In
+> Generation 1 VMs, the framebuffer MMIO space is communicated to
+> the guest via a PCI pseudo-device, and access to screen_info is
+> not needed.)
 > 
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index 9cb1de7658b5..ad2960117acd 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -1262,7 +1262,7 @@ void pci_resume_bus(struct pci_bus *bus)
->  		pci_walk_bus(bus, pci_resume_one, NULL);
->  }
->  
-> -static int pci_dev_wait(struct pci_dev *dev, char *reset_type, int timeout)
-> +int pci_dev_wait(struct pci_dev *dev, char *reset_type, int timeout)
->  {
->  	int delay = 1;
->  	bool retrain = false;
-> @@ -1344,6 +1344,7 @@ static int pci_dev_wait(struct pci_dev *dev, char *reset_type, int timeout)
->  
->  	return 0;
->  }
-> +EXPORT_SYMBOL_GPL(pci_dev_wait);
->  
->  /**
->   * pci_power_up - Put the given device into D0
-> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> index f2958318d259..3a98e00eb02a 100644
-> --- a/drivers/pci/pci.h
-> +++ b/drivers/pci/pci.h
-> @@ -109,6 +109,7 @@ void pci_init_reset_methods(struct pci_dev *dev);
->  int pci_bridge_secondary_bus_reset(struct pci_dev *dev);
->  int pci_bus_error_reset(struct pci_dev *dev);
->  int __pci_reset_bus(struct pci_bus *bus);
-> +int pci_dev_wait(struct pci_dev *dev, char *reset_type, int timeout);
->  
->  struct pci_cap_saved_data {
->  	u16		cap_nr;
-> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> index c354276d4bac..94bd2c82cbbd 100644
-> --- a/drivers/pci/quirks.c
-> +++ b/drivers/pci/quirks.c
-> @@ -4205,6 +4205,55 @@ static int reset_hinic_vf_dev(struct pci_dev *pdev, bool probe)
->  	return 0;
->  }
->  
-> +#define MSFT_PCIE_RESET_READY_POLL_MS 60000 /* msec */
-> +#define MICROSOFT_2051_SVC 0xb210
-> +#define MICROSOFT_2051_MANA_MGMT 0x00b8
-> +#define MICROSOFT_2051_MANA_MGMT_GFT 0xb290
-> +
-> +/* Device specific reset for msft GFT and gdma devices */
-> +static int msft_pcie_flr(struct pci_dev *dev)
-> +{
-> +	if (!pci_wait_for_pending_transaction(dev))
-> +		pci_err(dev, "timed out waiting for pending transaction; "
-> +			"performing function level reset anyway\n");
-> +
-> +	pcie_capability_set_word(dev, PCI_EXP_DEVCTL, PCI_EXP_DEVCTL_BCR_FLR);
-> +
-> +	if (dev->imm_ready)
-> +		return 0;
-> +
-> +	/*
-> +	 * Per PCIe r4.0, sec 6.6.2, a device must complete an FLR within
-> +	 * 100ms, but may silently discard requests while the FLR is in
-> +	 * progress. However, 100ms is much longer than required for modern
-> +	 * devices, so we can afford to reduce the timeout to 10ms.
-> +	 */
-> +	usleep_range(10000, 10001);
-> +
-> +	return pci_dev_wait(dev, "FLR", MSFT_PCIE_RESET_READY_POLL_MS);
-> +}
-> +
-> +/*
-> + * msft_pcie_reset_flr - initiate a PCIe function level reset
-> + * @dev: device to reset
-> + * @probe: if true, return 0 if device can be reset this way
-> + *
-> + * Initiate a function level reset on @dev.
-> + */
-> +static int msft_pcie_reset_flr(struct pci_dev *dev, bool probe)
-> +{
-> +	if (dev->dev_flags & PCI_DEV_FLAGS_NO_FLR_RESET)
-> +		return -ENOTTY;
-> +
-> +	if (!(dev->devcap & PCI_EXP_DEVCAP_FLR))
-> +		return -ENOTTY;
-> +
-> +	if (probe)
-> +		return 0;
-> +
-> +	return msft_pcie_flr(dev);
-> +}
-> +
->  static const struct pci_dev_reset_methods pci_dev_reset_methods[] = {
->  	{ PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_82599_SFP_VF,
->  		 reset_intel_82599_sfp_virtfn },
-> @@ -4220,6 +4269,12 @@ static const struct pci_dev_reset_methods pci_dev_reset_methods[] = {
->  		reset_chelsio_generic_dev },
->  	{ PCI_VENDOR_ID_HUAWEI, PCI_DEVICE_ID_HINIC_VF,
->  		reset_hinic_vf_dev },
-> +	{ PCI_VENDOR_ID_MICROSOFT, MICROSOFT_2051_SVC,
-> +		msft_pcie_reset_flr},
-> +	{ PCI_VENDOR_ID_MICROSOFT, MICROSOFT_2051_MANA_MGMT,
-> +		msft_pcie_reset_flr},
-> +	{ PCI_VENDOR_ID_MICROSOFT, MICROSOFT_2051_MANA_MGMT_GFT,
-> +		msft_pcie_reset_flr},
->  	{ 0 }
->  };
->  
-> -- 
-> 2.25.1
+> In commit a07b50d80ab6 ("hyperv: avoid dependency on screen_info")
+> the VMBus driver's access to screen_info is restricted to when
+> CONFIG_SYSFB is enabled. CONFIG_SYSFB is typically enabled in kernels
+> built for Hyper-V by virtue of having at least one of CONFIG_FB_EFI,
+> CONFIG_FB_VESA, or CONFIG_SYSFB_SIMPLEFB enabled, so the restriction
+> doesn't usually affect anything. But it's valid to have none of these
+> enabled, in which case CONFIG_SYSFB is not enabled, and the VMBus driver
+> is unable to properly reserve the framebuffer MMIO space for graphics
+> framebuffer drivers. The framebuffer MMIO space may be assigned to
+> some other VMBus driver, with undefined results. As an example, if
+> a VM is using a PCI pass-thru NVMe controller to host the OS disk,
+> the PCI NVMe controller is probed before any graphics devices, and the
+> NVMe controller is assigned a portion of the framebuffer MMIO space.
+> Hyper-V reports an error to Linux during the probe, and the OS disk
+> fails to get setup. Then Linux fails to boot in the VM.
 > 
+> Fix this by having CONFIG_HYPERV always select SYSFB. Then the
+> VMBus driver in a Gen 2 VM can always reserve the MMIO space for the
+> graphics framebuffer driver, and prevent the undefined behavior. But
+> don't select SYSFB when building for HYPERV_VTL_MODE as VTLs other
+> than VTL 0 don't have a framebuffer and aren't subject to the issue.
+> Adding SYSFB in such cases is harmless, but would increase the image
+> size for no purpose.
+> 
+> Fixes: a07b50d80ab6 ("hyperv: avoid dependency on screen_info")
+> Signed-off-by: Michael Kelley <mhklinux@outlook.com>
+> Reviewed-by: Saurabh Sengar <ssengar@linux.microsoft.com>
+
+Applied.
