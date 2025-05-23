@@ -1,267 +1,208 @@
-Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on2072.outbound.protection.outlook.com [40.107.20.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64C6D248F73;
-	Fri, 23 May 2025 14:04:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.173
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748009086; cv=none; b=YIF6LJAZtYO8bGOAtOyoYiSoiUIZjSI7fYosIWzZiy7HIDQwEQ2ct2WjrgTCxP3QDvv4ZUjzwTz4bHYmGtH6vZ50FKV46tUkkeG9GgW7DWlB+OTa2h0Mg0KUcTZ+5xBcw1reJKE598Ql6lS0MOAfAxJ6GH/zPgWlX+gV5xLhepA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748009086; c=relaxed/simple;
-	bh=6lpWK6Drr5+vgLOx0u+DvG+Bvx3CrrEBBgCjEtzjwkM=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 Mime-Version:Content-Type; b=o+mRoC3StdhUJId3QpunhbHZCLdDz9LDYMKpr/V5r21yGBrhWG7JnBJ76yn3HmdGKljZfXeBEMFnujSs9i/Z92/Z9eKcKGMlcdfY+EtmzGWoSk8Rx06cGbvyh4O1VrGebFCuvi4NFgZ4pqDOTUMBnXso3ST3L3/NJThGmNGpCSg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jH5OtQBR; arc=none smtp.client-ip=209.85.222.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAF12231850;
+	Fri, 23 May 2025 14:07:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.20.72
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748009254; cv=fail; b=ahORxn8EIviZsT7VriWRqj9LVGvqVB9LPhPnepf+vz+ET+8wT1F4r2gTAFerA+sBHbB9VZX0zEUtoCSgdtOARQi6SAOHREYKjFgOwf7KUlHZxim4AD6QkuCU4+wgSqR2LcErgIEC/XZ15woSFddF7+u3//+B6r/LACy3CisHk14=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748009254; c=relaxed/simple;
+	bh=OcPUvWfnTAygzKGGyLahSpSVqWgHuFhTpiocnKUWXsY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=mRICaMQWUkFsiGjbvzVyY7zBYUyeavKjRozgB6yv70MsKsS5MKiwBwH6crRSGZXiQMUGYJN8zzWQdNBcHjsIcW0tGkk9fH+WyDzGlbTQ2FROebZaPfvc8pwUN4ECySXfhDBDybycSmGGYHI1woW4zr++Ysl/lk8WdnZEoW9Umuk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=J76994HH; arc=fail smtp.client-ip=40.107.20.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jH5OtQBR"
-Received: by mail-qk1-f173.google.com with SMTP id af79cd13be357-7c53b9d66fdso1247588085a.3;
-        Fri, 23 May 2025 07:04:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748009083; x=1748613883; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:subject:references
-         :in-reply-to:message-id:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6SPYA6KKr4FKQPVcBeIbQ/FN9mi6kl/TZynKGB3TdfU=;
-        b=jH5OtQBRx5200qoamF4fwdIcEYl/uVnROqynsQSWQb2h8/ai4PaXosokboSMAmXwyS
-         CpQqMu+oXyubfCMYn+uaH+a6M32xbrdGZCo+kQ/63g48Na0PV0jBNwS/iMc0PYOVKX9u
-         KfUmgd8lXDw7NNCSBEgsOVWzEBVnVnEOVmQUuaI2CsHBrU33vIUzEO9pTcGYKOyQPB7a
-         S4PUKgNkX4qoUN9lyJ4clAEuYdJ3pibyOrAIDC4fdgcBJpFeoZzlyGITC54fOMRgLMJY
-         mQQF3UzXpM5pPkas3hpVlEybg45b8S/QEzMixyX8UOA46Tz7PvM2GsIjhx3uJZNSro2i
-         hpOw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748009083; x=1748613883;
-        h=content-transfer-encoding:mime-version:subject:references
-         :in-reply-to:message-id:cc:to:from:date:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=6SPYA6KKr4FKQPVcBeIbQ/FN9mi6kl/TZynKGB3TdfU=;
-        b=nBTiJjUek5VTGLaaSNWknxXdoqTfHEcflV4QYgUlXexdxhkIRBqNvsK8aHs9HOYG7a
-         NS4QMpHaPG2XBEMrWeMfLTQirI5EyIQHkl/32orvk90rMzyfCZSkyb1XTbwBPZW125Hk
-         W/C7KaZtej7yB3U8npb801il87qaVd18Mf2LNGz5cPgwnIYyHI4/t7VWQuKTAhQKFC5d
-         huIbJ5rOKD+IhosxbAmpUshbpBZSf9rYQjNC4LSm3R/FLZcQlZfzVv/ajaffYUxMmOAs
-         D1GimRKzueNbNDrpOkpKtnEKQneOOF+y74Wp+Q3h7ME9qmN1OYpyTYqtpipFQuHPFX84
-         xFrQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVf4TPV17ffk6RGlBKUyr3sE6ZA4+VV1WnBTGleFE6ZUABLe3bnTjutEh5pSudVRhK5AF/s0gg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwfUIo7ID7acH8JzI3JWvT2f/wLN7z2kbzq6u0QcZ36lcl/d6by
-	raUZfc9ka+vhzNZBcmsCtLOy53DwKAxBSlaDS8fTVWq9jqjTK0uOhzpE
-X-Gm-Gg: ASbGncujACRVVU8TvdWEEzVYN4mUhQHPrhpgBIfcxAGyL5XNm3UQaFBGwjASFWGyfGl
-	QMOuGoa4Py5RDKbFwY8b0eFp0A3k7dcqNy7VA8xCgE8aWwaVcDexREd4qac+hzERqFRj4+TdNu2
-	BqoMXUnst56W6vNwUx7QchOyOPM4QEgZcxwS9FcerWsdyC9GpOwk7NkZr1/tf0oodEQA2x6FqxF
-	Gam4ddYXH0SzFS/dh2wkAUCB6C5Vs+0eHYcZ24muDG76CV7gwXCh7Zzh5P50luifQHrKuRLZYAd
-	nA/eJbUq6TYzHX5IIKDCwKvOiFrqVHRVZlfYn0JAV7msKXJ7/07XNsPsRrCuNqUnqtGuVqiqrfN
-	rnGesbAIoqmZs8g9kr1C+Tc+4eg1G2i5R6w==
-X-Google-Smtp-Source: AGHT+IGaymca1YezxsOIulTSN/Q8v3bR9qw2SFi/1IXzriNtN485FsSdroLT5pauvjI/40BAAf6kLw==
-X-Received: by 2002:ad4:404d:0:b0:6fa:9a6a:7d03 with SMTP id 6a1803df08f44-6fa9a6a7db2mr11984946d6.7.1748009083128;
-        Fri, 23 May 2025 07:04:43 -0700 (PDT)
-Received: from localhost (23.67.48.34.bc.googleusercontent.com. [34.48.67.23])
-        by smtp.gmail.com with UTF8SMTPSA id 6a1803df08f44-6f8b0883ef7sm116259006d6.21.2025.05.23.07.04.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 May 2025 07:04:42 -0700 (PDT)
-Date: Fri, 23 May 2025 10:04:42 -0400
-From: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-To: Shiming Cheng <shiming.cheng@mediatek.com>, 
- willemdebruijin.kernel@gmail.com, 
- edumazet@google.com, 
- davem@davemloft.net, 
- kuba@kernel.org, 
- pabeni@redhat.com, 
- matthias.bgg@gmail.com
-Cc: linux-kernel@vger.kernel.org, 
- netdev@vger.kernel.org, 
- shiming.cheng@mediatek.com, 
- lena.wang@mediatek.com
-Message-ID: <6830807a4a4b1_180c78294e7@willemb.c.googlers.com.notmuch>
-In-Reply-To: <20250522031835.4395-1-shiming.cheng@mediatek.com>
-References: <20250522031835.4395-1-shiming.cheng@mediatek.com>
-Subject: Re: [PATCH] net: fix udp gso skb_segment after pull from frag_list
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="J76994HH"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=R/715FO+FBeQDaPFOCosUe7f3NzdX7h6wvlOIwFZ0k76fhw/gzPFjk/wmJFH33JvNKzPOq4Dryqz5QZxmKU3g3864Q3kd2qcD0yjDAqju6dOTpcWwcVI//qORs3NYcBTpdQayUIBMEsklnI0HxDBf8LH7cIuQ51zZr1K04Ox6V3pABITRETOuFC+Xb3u9xU1yCLLFY+QwWrGan+jcIEJ4/yBMfkiEbM4cyOKe46PGiDAa6XyF7EPAytI/1mhEv7BzE8vemvJlfSIFXjxC06YB+7SqnUFXb2ZEpe3uR5iQWV4myh3SyJoXL7IYoGPeFtflPS6Q2V0vR4eQxqIVWJ+RA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=u7WghztzaYMcbxh+SzIWTACCEyqEyN3FQX5xLI5KunY=;
+ b=dv5Uxb9s3guzqqcPSZ3n5ciwlUXwWK3e/4fFCt+bVatuAAFWClaMr3xfZ4PQZ02/xzv8fThvOy2VjNjz5Z2X50Cu2uDvjhtcYIF5WbJYpOVSTG6yHetd3MNA9D5kOkNjGQmkcxwuc6U21G1AVQ8Bvw84L/l7f2ZzcTsMVWeoOFHm69FqZh0SekaMgGUHEpESYNzskEFMlJ9fqBF3jeBX3suFS8pN+tyEa3wPUjaNvSKkhWlHGBXRvBoD1exYpbQyJrkEfrHRjQWe00CwErGJp51fdmkmhoc/IxWIfIk2PTlSJDa5JJoaZ92guEd5JyMo6xM1ng9dfRk9IM1IGUZUaQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=u7WghztzaYMcbxh+SzIWTACCEyqEyN3FQX5xLI5KunY=;
+ b=J76994HH1v0uZTKl8HyhoLs6p9alcRQKxFwQqECL/ZTHEtvJHpBqbtwLcN12T8Ke7BqPwSjALQgjn3fDwrXp2Wz5o6wU1BpgcZ1f+qFVYOdfsdYD08CVusAEYjf+CkQZ00a034xnpdxUth+7CnQvLI6BsNR9H9UfTXqTkhX4zAuqrP9M9lQxz5lPMm7NnvPOn0nJja33dg/P/eIbx+SBoS6tNZ5FSbdpf8WNfnedseDfLTbOP9diWHnXjq85gUxExi19Sz02DevOdy9KMBjDpp1MNbhxc3wj55MbLghG4BtuemivYDhAnvKMG0mYXEl3TuWwlSRdl4l3SJlI6zdO/g==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
+ by PAWPR04MB9886.eurprd04.prod.outlook.com (2603:10a6:102:37f::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8746.30; Fri, 23 May
+ 2025 14:07:29 +0000
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06%2]) with mapi id 15.20.8746.030; Fri, 23 May 2025
+ 14:07:29 +0000
+Date: Fri, 23 May 2025 10:07:20 -0400
+From: Frank Li <Frank.li@nxp.com>
+To: John Ernberg <john.ernberg@actia.se>
+Cc: Horia =?utf-8?Q?Geant=C4=83?= <horia.geanta@nxp.com>,
+	Pankaj Gupta <pankaj.gupta@nxp.com>,
+	Gaurav Jain <gaurav.jain@nxp.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	"David S . Miller" <davem@davemloft.net>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Thomas Richard <thomas.richard@bootlin.com>,
+	"linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"imx@lists.linux.dev" <imx@lists.linux.dev>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH 3/4] dt-bindings: crypto: fsl,sec-v4.0: Allow supplying
+ power-domains
+Message-ID: <aDCBGMmdGLcBoSjy@lizhi-Precision-Tower-5810>
+References: <20250523131814.1047662-1-john.ernberg@actia.se>
+ <20250523131814.1047662-4-john.ernberg@actia.se>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250523131814.1047662-4-john.ernberg@actia.se>
+X-ClientProxiedBy: BYAPR04CA0022.namprd04.prod.outlook.com
+ (2603:10b6:a03:40::35) To PAXPR04MB9642.eurprd04.prod.outlook.com
+ (2603:10a6:102:240::14)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|PAWPR04MB9886:EE_
+X-MS-Office365-Filtering-Correlation-Id: 91a88bb6-1236-489e-245e-08dd9a032760
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|7416014|376014|52116014|1800799024|366016|7053199007|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?otKpwE44vCD6fswfKKabRFeaWpo6AbSdFaPjz4npLjddKPCqdBNzvNJHPC0j?=
+ =?us-ascii?Q?kmePkoMIlFBa0I5/Ni7h5qmbX2Po9xI66pR2Cvaw3oXy2Cu9KsnF8Yui/bgV?=
+ =?us-ascii?Q?j9EzDu0/KNfxuCQxtXiSbQvS0jybJJ7U/Mg79/XhNE628uSfHccpDh5b3jYk?=
+ =?us-ascii?Q?fvuViXgwNad5e63kWGdsnAt+ZjDUi2FP6Sff7Ng1ryGWJXfZoHZ35reiFpvl?=
+ =?us-ascii?Q?R/BojmHCsN26jMFGJ19rNcfSo+CI5Z/nQi2fq/0/F90JlyQsDOBTym6E8f7y?=
+ =?us-ascii?Q?5o8kLjNZaKoiEkQ3Lmg2UGWChzCYY71TkjoFl1OIjzU3kQsqTsD5YQuS50Ui?=
+ =?us-ascii?Q?9+3KQaVmXj+P5pL4skSQg1aPYQGxwDS1ulX0zlNtWqGHFi24aE/kr7LpIgpk?=
+ =?us-ascii?Q?SFaU0CN01tdX4t3J1SSiQr7JCJUus4grgj31WfsE6M5kj+wQLm5Vx9vyVRhn?=
+ =?us-ascii?Q?qqqe4UwTtTPG45fAgQ2CvgYiNKfTeiMgxxbKdvR63EW0VyAY80ZnPAODAf9E?=
+ =?us-ascii?Q?yVWMl3tvICgpt1znqEblTuSeHUexLe+5r1o6B8oR9RbP8fYYOv4eObFj3aP6?=
+ =?us-ascii?Q?HWQqI53S2bY2/dvOY5tsSaOP4LgyPTNGFQpAYWiBqhErQUK08kSuy6+8QV19?=
+ =?us-ascii?Q?bsBHhEu5JK6dk5uungrL3Qnz9ukhOLBfMoBi1F2mJQQFgwXi+gvvWyQxMTng?=
+ =?us-ascii?Q?1w2iFbHQ6ChT+dvfxMpNNcyJ02cj7RmPLySOxksEGziVh0jMo4p3NaU2gd8z?=
+ =?us-ascii?Q?3H5qXNDcf+lyVjdWtCn3sEQgla5YlqXmdIggTmwp6PVuPua+Kk99l4PQMujy?=
+ =?us-ascii?Q?zWQCNZs3AF5O3/aa2dwqITqrH5+3zxIGv4ItdmYpHlz0pPmDp+iyBvltM5vJ?=
+ =?us-ascii?Q?IAEq//O3M2vWVUwAdVe89SGwpqzTptI7wUKYLL4A0GyMaCZ2/LSZDPXSDo/b?=
+ =?us-ascii?Q?7h2QZO+xrlRpHbVIF2gP4hP48q+OrPBJIHy1v1abkwQDq3IOvMOktwKfWE9j?=
+ =?us-ascii?Q?XKsq6XjI3WzWzAdW5bpzffhIlF0WSgl/1r/zRyaS1/2oTAxV+r+mY9LmR0zf?=
+ =?us-ascii?Q?c4iX7qV8DvZfGyqMvj4/0RS1X9PC3+RLZEZU6jxhJgk8ETNV3CscbtowaMfT?=
+ =?us-ascii?Q?83+nIx35Fp8FZcbxQd13yRw+EqEGlsXspoQ+Iw7yd8GUjsBzjm91r9kGekSE?=
+ =?us-ascii?Q?VDAIBCm6S69BEuch9sSzBQHns6ECv0o0Nnc9dgqtFKf5AN2+p1kcZOeVzwzF?=
+ =?us-ascii?Q?rSRsSs2HrdiqN9yimQt++p5m8GWlRlTNACjLapEgWi8hsh1RmgdBjmfP0qUn?=
+ =?us-ascii?Q?LvvZS1dxS6wfFv3Ed9GyxTcjMguBMFP+kC2raCA5o8bgKdype1A7/ANITA9F?=
+ =?us-ascii?Q?Z/qq2hADIW9sg85hxckPGytLf96WHjBXc0DI1CfmqUPuiGly3ttnzU9KiIzr?=
+ =?us-ascii?Q?gAw/5RmbUrdu1/sE+ZYehGmw70h27kfk5dmqZZe1RyygWX6CqpHkVg=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(52116014)(1800799024)(366016)(7053199007)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?SoDO8WtgZXAYTChyRQrZeK50OkC22iuJGHkFOmEHuNSdJzgblfkNgfEpsfkK?=
+ =?us-ascii?Q?JAClLos/2Nf9DfoiWVcFGnk+JlmMDr/jJdzq3kXEk6EuSVlzOHiICGjLnaGd?=
+ =?us-ascii?Q?Ft43KVkpQSuf7nvrY1ZX6ALFPJ6OtZANcQzEi8hAzKZWZwOQlA3KRAdePeX+?=
+ =?us-ascii?Q?p7cuFtpwFeczNQQJmzjlb3dwCMm+a+dHBfVgdEjLdZxri//lwrEkrkJ4y5pu?=
+ =?us-ascii?Q?N1vbqhjxiBPQ/RUCe5szhOL1LsasygZehrO6IEj+9ylL2/e/jnQalbLX5CAv?=
+ =?us-ascii?Q?29d0mBstRyTvMma6/3UQE9cYQ7hC2Lx3i7obghcH92R5YAQsS8jGFxyOiws4?=
+ =?us-ascii?Q?NmflRhHpUBN458155q2XLquYUIwzrP1L7PD3AYdJ4DX8jfl1+PSM2HmtJZ0p?=
+ =?us-ascii?Q?RzT124Xtdt5Tzvt2edP9FTVA2XxH4XLtOlZ+vk4DEsKy8Wu0kZEiGXKS/pGG?=
+ =?us-ascii?Q?CAz1T8Limm6yvxAqnb1zTokei0mSCuXxXz/miZIizo80hSY7jVdHDgJanJsb?=
+ =?us-ascii?Q?dDnYEFhy92B17eiw6KiCdHMc+epUcgXgm3ZNS6k+EFHEQBNr+9BqvCJGTXLG?=
+ =?us-ascii?Q?Y+H5AKTKkRyEP+V1BGrAAJ5QWjs91oh2BKM/dETQ/+OrdwYGPmyC45MZs9pY?=
+ =?us-ascii?Q?BmlzK2E3nnI95GFE6IP95MIhTogm3mMKJK3YDbQ5hoXrgvVjJv2rcbQeWVF+?=
+ =?us-ascii?Q?4Kd+0rBQ9Hho1v78K9rIp3VMpf+YNS22qymf106gAesCm7WJyjTaNntfufyM?=
+ =?us-ascii?Q?vALiDodfV4gYkP4cf/Ig7wStVOf56GERYP2J5vTODRyZsTlSjp+0CJ4GTusl?=
+ =?us-ascii?Q?UmkOvm0cYebe7bSis4b7vId2te7G1VYIEPvYfDh+JQjZZSOd/TYX2G4I3Q8p?=
+ =?us-ascii?Q?vun5HQcxizZLgj9EjpfdvRg04+CQwebsaREvOG5iKopox4bTCWVRs0kJl/p4?=
+ =?us-ascii?Q?qpptF4i8Sbau2bQE40Jl+kD8VCEA7ooaKbOpbhwdcOfkObWyl5i9b7R8m1nR?=
+ =?us-ascii?Q?kNfbR6Sx+C8dU58mxDfbpGj+nYvNM2jg2Ff8PMW9huTUK6U1Mutith7vQ1wO?=
+ =?us-ascii?Q?Q8x8vOLnevX3S7Otsfz7ryuE+2BZehlemPiaPAOnLxnU8qW8O6mYzjJ8dPdg?=
+ =?us-ascii?Q?6Fmy8pYsHry8SccSInc510cErZlNRg0zX0sV3HYiJevbbGJCB+oBgczKzht3?=
+ =?us-ascii?Q?yRSknmHBQ4GGkkZg5/j6OKGGfMlevj8Z1hAtvyPNqsDMDo8jDPub11EJKbZP?=
+ =?us-ascii?Q?przYeymwiUxmsbSqpd0ixbgmhom5DEyxZn4G3HOLIP9l8eXQ6pY3i+LjnlTk?=
+ =?us-ascii?Q?vOVoC9qjuCC1rO+IpqXRss4pjcHSgmIhnnjB0BAXvPfYw6wzfOWJp5hx/acJ?=
+ =?us-ascii?Q?25tR/3H9ge9OY64vzb0JL7fjfqKgWJhscIVxddnZbQfc3KOg+Lix1QiJHWem?=
+ =?us-ascii?Q?dWprbKKW/L/aZVsOpKIJpaRbFrih/QOg4V3SsYWmKbVoSbAnyGLwHmNIz74H?=
+ =?us-ascii?Q?jLRgvqWQAIhFe0Ojl+ozBHsvkBmWCjPfqRR0IRzn0WXqO0L0yGNaMKjmTxU3?=
+ =?us-ascii?Q?9RzxEem3Y86sCSP9/PE=3D?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 91a88bb6-1236-489e-245e-08dd9a032760
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 May 2025 14:07:29.5797
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: MtQfWBllyPwwFTRAY9V/S/wvLOLw8Zj3KB/sHUdUefq51Sxlay11gdS75Hr7Ne+KU8+b8extEcdW4ok3grAgOA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAWPR04MB9886
 
-Shiming Cheng wrote:
->     Detect invalid geometry due to pull from frag_list, and pass to
->     regular skb_segment. if only part of the fraglist payload is pulled=
+On Fri, May 23, 2025 at 01:18:32PM +0000, John Ernberg wrote:
+> NXP SoCs like the iMX8QM, iMX8QXP or iMX8DXP use power domains for
+> resource management.
 
+Add power-domains for iMX8QM and iMX8QXP.
 
-This does not match the patch.
+Need keep the same restriction with other platform.
 
-This is quoted from another patch that moves skb handling from
-skb_segment_list to skb_segment.
-
-This patch does not do that.
-
-Btw, don't forget to target the right list. [PATCH net]
-
->     into head_skb, When splitting packets in the skb_segment function,
->     it will always cause exception as below.
-> =
-
->     Valid SKB_GSO_FRAGLIST skbs
->     - consist of two or more segments
->     - the head_skb holds the protocol headers plus first gso_size
->     - one or more frag_list skbs hold exactly one segment
->     - all but the last must be gso_size
-> =
-
->     Optional datapath hooks such as NAT and BPF (bpf_skb_pull_data) can=
-
->     modify fraglist skbs, breaking these invariants.
-> =
-
->     In extreme cases they pull one part of data into skb linear. For UD=
-P,
->     this  causes three payloads with lengths of (11,11,10) bytes were
->     pulled tail to become (12,10,10) bytes.
-> =
-
->     When splitting packets in the skb_segment function, the first two
->     packets of (11,11) bytes are split using skb_copy_bits. But when
->     the last packet of 10 bytes is split, because hsize becomes nagativ=
-e,
->     it enters the skb_clone process instead of continuing to use
->     skb_copy_bits. In fact, the data for skb_clone has already been
->     copied into the second packet.
-> =
-
->     when hsize < 0,  the payload of the fraglist has already been copie=
-d
->     (with skb_copy_bits), so there is no need to enter skb_clone to
->     process this packet. Instead, continue using skb_copy_bits to proce=
-ss
->     the next packet.
-
-I don't fully follow this. And as always with skb_segment am concerned
-that changing this condition may break other valid uses of this code.
-
-If this is a fraglist gso packet (SKB_GSO_FRAGLIST), I have a mind to
-just flag those that fail to meet the four invariants at the top, and
-in that case take a slow path that linearizes the skb and passes that
-to skb_segment.
-
-That should take care of a whole host of such bad fraglist gso skbs,
-without possibly breaking existing gso skb handling.
-
->     el1h_64_sync_handler+0x3c/0x90
->     el1h_64_sync+0x68/0x6c
->     skb_segment+0xcd0/0xd14
->     __udp_gso_segment+0x334/0x5f4
->     udp4_ufo_fragment+0x118/0x15c
->     inet_gso_segment+0x164/0x338
->     skb_mac_gso_segment+0xc4/0x13c
->     __skb_gso_segment+0xc4/0x124
->     validate_xmit_skb+0x9c/0x2c0
->     validate_xmit_skb_list+0x4c/0x80
->     sch_direct_xmit+0x70/0x404
->     __dev_queue_xmit+0x64c/0xe5c
->     neigh_resolve_output+0x178/0x1c4
->     ip_finish_output2+0x37c/0x47c
->     __ip_finish_output+0x194/0x240
->     ip_finish_output+0x20/0xf4
->     ip_output+0x100/0x1a0
->     NF_HOOK+0xc4/0x16c
->     ip_forward+0x314/0x32c
->     ip_rcv+0x90/0x118
->     __netif_receive_skb+0x74/0x124
->     process_backlog+0xe8/0x1a4
->     __napi_poll+0x5c/0x1f8
->     net_rx_action+0x154/0x314
->     handle_softirqs+0x154/0x4b8
->     __do_softirq+0x14/0x20
-> =
-
->     [  118.376811] [C201134] dpmaif_rxq0_pus: [name:bug&]kernel BUG at =
-net/core/skbuff.c:4278!
->     [  118.376829] [C201134] dpmaif_rxq0_pus: [name:traps&]Internal err=
-or: Oops - BUG: 00000000f2000800 [#1] PREEMPT SMP
->     [  118.376858] [C201134] dpmaif_rxq0_pus: [name:mediatek_cpufreq_hw=
-&]cpufreq stop DVFS log done
->     [  118.470774] [C201134] dpmaif_rxq0_pus: [name:mrdump&]Kernel Offs=
-et: 0x178cc00000 from 0xffffffc008000000
->     [  118.470810] [C201134] dpmaif_rxq0_pus: [name:mrdump&]PHYS_OFFSET=
-: 0x40000000
->     [  118.470827] [C201134] dpmaif_rxq0_pus: [name:mrdump&]pstate: 604=
-00005 (nZCv daif +PAN -UAO)
->     [  118.470848] [C201134] dpmaif_rxq0_pus: [name:mrdump&]pc : [0xfff=
-fffd79598aefc] skb_segment+0xcd0/0xd14
->     [  118.470900] [C201134] dpmaif_rxq0_pus: [name:mrdump&]lr : [0xfff=
-fffd79598a5e8] skb_segment+0x3bc/0xd14
->     [  118.470928] [C201134] dpmaif_rxq0_pus: [name:mrdump&]sp : ffffff=
-c008013770
->     [  118.470941] [C201134] dpmaif_rxq0_pus: [name:mrdump&]x29: ffffff=
-c008013810 x28: 0000000000000040
->     [  118.470961] [C201134] dpmaif_rxq0_pus: [name:mrdump&]x27: 000000=
-000000002a x26: faffff81338f5500
->     [  118.470976] [C201134] dpmaif_rxq0_pus: [name:mrdump&]x25: f9ffff=
-800c87e000 x24: 0000000000000000
->     [  118.470991] [C201134] dpmaif_rxq0_pus: [name:mrdump&]x23: 000000=
-000000004b x22: f4ffff81338f4c00
->     [  118.471005] [C201134] dpmaif_rxq0_pus: [name:mrdump&]x21: 000000=
-000000000b x20: 0000000000000000
->     [  118.471019] [C201134] dpmaif_rxq0_pus: [name:mrdump&]x19: fdffff=
-8077db5dc8 x18: 0000000000000000
->     [  118.471033] [C201134] dpmaif_rxq0_pus: [name:mrdump&]x17: 000000=
-00ad6b63b6 x16: 00000000ad6b63b6
->     [  118.471047] [C201134] dpmaif_rxq0_pus: [name:mrdump&]x15: ffffff=
-d795aa59d4 x14: ffffffd795aa7bc4
->     [  118.471061] [C201134] dpmaif_rxq0_pus: [name:mrdump&]x13: f4ffff=
-806d40bc00 x12: 0000000100000000
->     [  118.471075] [C201134] dpmaif_rxq0_pus: [name:mrdump&]x11: 005400=
-0800000000 x10: 0000000000000040
->     [  118.471089] [C201134] dpmaif_rxq0_pus: [name:mrdump&]x9 : 000000=
-0000000040 x8 : 0000000000000055
->     [  118.471104] [C201134] dpmaif_rxq0_pus: [name:mrdump&]x7 : ffffff=
-d7959b0868 x6 : ffffffd7959aeebc
->     [  118.471118] [C201134] dpmaif_rxq0_pus: [name:mrdump&]x5 : f8ffff=
-8132ac5720 x4 : ffffffc0080134a8
->     [  118.471131] [C201134] dpmaif_rxq0_pus: [name:mrdump&]x3 : 000000=
-0000000a20 x2 : 0000000000000001
->     [  118.471145] [C201134] dpmaif_rxq0_pus: [name:mrdump&]x1 : 000000=
-000000000a x0 : faffff81338f5500
-> =
-
->     BUG_ON=EF=BC=9A
->          pos +=3D skb_headlen(list_skb);
->          while (pos < offset + len) {
->             BUG_ON(i >=3D nfrags);
->             size =3D skb_frag_size(frag);
-> =
-
-> Fixes: dbd50f238dec ("net: move the hsize check to the else block in sk=
-b_segment")
-> Signed-off-by: Shiming Cheng <shiming.cheng@mediatek.com>
+>
+> Signed-off-by: John Ernberg <john.ernberg@actia.se>
 > ---
->  net/core/skbuff.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> =
+>  Documentation/devicetree/bindings/crypto/fsl,sec-v4.0.yaml | 6 ++++++
+>  1 file changed, 6 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/crypto/fsl,sec-v4.0.yaml b/Documentation/devicetree/bindings/crypto/fsl,sec-v4.0.yaml
+> index 75afa441e019..47bbf87a5a5a 100644
+> --- a/Documentation/devicetree/bindings/crypto/fsl,sec-v4.0.yaml
+> +++ b/Documentation/devicetree/bindings/crypto/fsl,sec-v4.0.yaml
+> @@ -77,6 +77,9 @@ properties:
+>    interrupts:
+>      maxItems: 1
+>
+> +  power-domains:
+> +    maxItems: 1
+> +
+>    fsl,sec-era:
+>      description: Defines the 'ERA' of the SEC device.
+>      $ref: /schemas/types.yaml#/definitions/uint32
+> @@ -116,6 +119,9 @@ patternProperties:
+>        interrupts:
+>          maxItems: 1
+>
+> +      power-domains:
+> +        maxItems: 1
+> +
+>        fsl,liodn:
+>          description:
+>            Specifies the LIODN to be used in conjunction with the ppid-to-liodn
 
-> diff --git a/net/core/skbuff.c b/net/core/skbuff.c
-> index 6841e61a6bd0..f9888f8dc3fa 100644
-> --- a/net/core/skbuff.c
-> +++ b/net/core/skbuff.c
-> @@ -4808,7 +4808,7 @@ struct sk_buff *skb_segment(struct sk_buff *head_=
-skb,
->  =
 
->  		hsize =3D skb_headlen(head_skb) - offset;
->  =
+Need add new compatible string for 8qm and 8qxp and fall back to exist one.
 
-> -		if (hsize <=3D 0 && i >=3D nfrags && skb_headlen(list_skb) &&
-> +		if (hsize =3D=3D 0 && i >=3D nfrags && skb_headlen(list_skb) &&
->  		    (skb_headlen(list_skb) =3D=3D len || sg)) {
->  			BUG_ON(skb_headlen(list_skb) > len);
->  =
+Add allOf
 
-> -- =
+allOf:
+  - if not contain 8qm and 8qxp
+  - then
+      property:
+        power-domains: false
 
-> 2.45.2
-> =
-
-
-
+> --
+> 2.49.0
