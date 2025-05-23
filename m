@@ -1,164 +1,210 @@
-Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99DC23B7A8;
-	Fri, 23 May 2025 02:23:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4D051684AE;
+	Fri, 23 May 2025 02:23:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747967005; cv=none; b=ejAjiO16IzxmQGXtm41gJbzWFJYnw0P3LWQKD/j976xkkFnFajBTtat1ROFyh69Bstw0dZaAlmRG+p81uYv7MtnRviKi3nPjedYLhT9iUXNS72bgmPZyYtI+J+UNjUVwrvAkMbNysBmC9tVL1dbolIwDbjktKsyEW9lvuHF994I=
+	t=1747967029; cv=none; b=E+Pt4cu+rMziZa+2612UaND833rB4naqyBDyGcBuYnXfTZwBODTltEGsi9wdwz/zsDV3JjMO3JSdO++SJJ2oUk+NjgBUUApmcmUkNgcZ/LKQ2IeQrkuSSTzXozvrDiiESD8j7wvtkDQbVruhla3jjI0SftlB6wO5jMNYvrC8fc4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747967005; c=relaxed/simple;
-	bh=TF+xokCPhoXV3uQH9vkP5LG3jLW10BUQ6yKU+QJC6Zw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FdW3VDmpMHCpu/Zn0MX5wS9XbkRYpLV4gzm+IS8v0r5NYvfx5ZMjQY0m/b3MNTSyT9Da77M3h6bVB88EgsF4s5LtTCE9EEwee3k2TInnTsmWlhIZwvGYvoza6RW59OIe6/d01GYeXVcv2e3UETLq3X67OWKUB9999YJ3m68Zbi4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CPxJLOqu; arc=none smtp.client-ip=209.85.215.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747967029; c=relaxed/simple;
+	bh=Rgr8NCRmE3Jueb7ajS1oFMH7dV8ETtQ40tJClbz/pQU=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=a+0uyl3EHeEq6rD0/hSe2yje2dZDwdt/UzYWFJEBgcAWiqwnWxjXpUMe8UPnYQ/ycC4P0wGmIIsFVFvkMEMEFXD42ZQIRjeZ8Gks64UYeEXLpQ7NB6FSE5orhtfzDwiTZjddrb/zdTLhzOc8DD3OnxhCZmk/wOEbb0yypWybj3Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=K0X98Ydg; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CPxJLOqu"
-Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-b1f7357b5b6so5493387a12.0;
-        Thu, 22 May 2025 19:23:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747967002; x=1748571802; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=PFQ//U4oIhIXdrjEYifV2TUXSUu8792YPU9aygo692Y=;
-        b=CPxJLOquTLYbzvwUHmvgRBdNYXgtNQcbv23cl8dtX52yuuI4wJ5lwDzNiAZDOktuDx
-         au+eXz7qkns08h51PnxZTFjIyGY0FFZl5SulTloNyj7s9WzjUnhf9KORSd0DFSN7P93U
-         +qNjL9RM7rVoZKR8UW4xU5fo1n5SZ6YpKAGrxw+awdinGNIlBwWGAGtGsImIY6zNiG0O
-         /yrDypL1/ttc/QavjNHZuSHPOzLeQL4NRmFQiQ4Bq8FN+prrVchQo4PCs9Qss/TJmMxo
-         Cj9k7lol2FIgWEOhpJnqI3B3M6PA7KjfWYZdoJGqozFdy5/oWHSlBhRue9JdcdY4Cmdr
-         ZvCQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747967002; x=1748571802;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=PFQ//U4oIhIXdrjEYifV2TUXSUu8792YPU9aygo692Y=;
-        b=fZ6skZCYnMS4hxHual4LeBqxWslbokC1wS/ePHGKbOFIHW9kGZ7Fh8Yi7qydSn3AMa
-         c5CPhGnKafg5mEiUq1eoGuQuzFr3ucV7kMUEvxdy2TSwb3iI/pBr3vkU2vKbsMy+8rIO
-         mzlsHw3Z7uFwnyum59MVF05ZPaZsTznDaclA814UEjbqShKMN1CG7YZstsIhMf7AGdhQ
-         E4xT54UfW7CQEQCzauKg4Ubw+F+fm+zS4i5EBJQTI/+yGJZCXxsPcmfNt6r7+0weBz3u
-         ROWelI6H3EDjN1yiXOrIgIDtjVKhabXnC0QyUdf5zg4NORDfjdf42YiFxmZrtv2Id3nq
-         zr7g==
-X-Forwarded-Encrypted: i=1; AJvYcCVYV7Ge0eYsS4ANahXTl30/9/dnUGSvCyQtRlHhhIOkIi69LixgS+QO+2KI1XJ3n2t7yIvcRq02mxHGZMU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzg+BRajtVVXGqcM77qCwhqdhnyQPRU2EJDasYw+qF6kqKQJB7o
-	l4wB7xHRuf+LWgippOjMj0tJvn+KaAs6y377cm0j7BVS5mTNuWCb55zjPH6+eRwFDAvvxQ==
-X-Gm-Gg: ASbGncv1gtcKU/4iAbvUcHvvmsC/8pCBw2yGOLMuW59Dv7G1K/RKvfbhusAhOo439Xd
-	AE0cC+YgKpVj4+L0L53RD9v0wxARMoWqLJFp9J3VIN9WLUNK96+ikxM3NYEwnShUtXHvcTDYrCI
-	uKL1KqMLuB0j8yRIg+pqwY4oXd5PYD3XgoD5kW6iqa4xFDbV9hU66nE+C30pBHdVnfEPi25W8b6
-	VJN0E3WP1piJevCNte4t1epiV2/tjv8lZ3E0frxyc+ay0g6gOHstWH4HHKz7W9aaW5HnKbFuK/0
-	Ar+VoaVgMhFV5rZVmv3Yes8WkZhjtOqKGpREDAkMKEFBKF8jRqEQbB6fq2ykkTKbeq0Z7XQ=
-X-Google-Smtp-Source: AGHT+IF+vdL+C7aa2hcNhReRVwiOAXc03EchlafM5myjN7kJ5idf22mz1Phve5rX0+oMHMIie71tww==
-X-Received: by 2002:a17:903:1987:b0:223:5e76:637a with SMTP id d9443c01a7336-231d451906dmr410903445ad.23.1747967002497;
-        Thu, 22 May 2025 19:23:22 -0700 (PDT)
-Received: from fedora.dns.podman ([209.132.188.88])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-231d4e988c3sm115034915ad.120.2025.05.22.19.23.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 May 2025 19:23:21 -0700 (PDT)
-From: Hangbin Liu <liuhangbin@gmail.com>
-To: netdev@vger.kernel.org
-Cc: Jay Vosburgh <jv@jvosburgh.net>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Nikolay Aleksandrov <razor@blackwall.org>,
-	Simon Horman <horms@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	Hangbin Liu <liuhangbin@gmail.com>,
-	Liang Li <liali@redhat.com>
-Subject: [PATCH net] bonding: fix multicast MAC address synchronization
-Date: Fri, 23 May 2025 02:23:13 +0000
-Message-ID: <20250523022313.906-1-liuhangbin@gmail.com>
-X-Mailer: git-send-email 2.46.0
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="K0X98Ydg"
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54MFjkWi006644;
+	Fri, 23 May 2025 02:23:42 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=Qm/zpUE17rTqamHO4SZcJ5
+	Lmb1rLzay2FNmK5jqLorc=; b=K0X98YdgG1/vOH0ZzsNivGpAuOIyBe5XNJ9ueX
+	dS39vMV4rS6qd7zLPlaHi69SSrPG/HtUwWVt02R2cQPh1JjWWZK0FTFI0RwK09zv
+	jOU2xl2+Jim5LB2QcyY53ADooVS2Gw6t6BMLyznC8nVaRWY869ySMICGjU462jkF
+	1U+FSy2V9uVTf0ngR7H6U0L0Xftr4VbgNfHSjIZHeuvdm/ANJk9gN6wurL0INZSl
+	MnLOtdOHgaPOxf2CeAiEAO0PWajH9tF0qipQ808AGx34rVLjWbhvRCuUJ/spzCDs
+	lNMWbvDzSNllqlgp9GruH/vm7ug6FuLx6yjEGt6kSZ9EwBEQ==
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46rwf0rf17-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 23 May 2025 02:23:41 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54N2Nfpx027952
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 23 May 2025 02:23:41 GMT
+Received: from [127.0.1.1] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 22 May
+ 2025 19:23:38 -0700
+From: Baochen Qiang <quic_bqiang@quicinc.com>
+Date: Fri, 23 May 2025 10:23:05 +0800
+Subject: [PATCH ath-next] wifi: ath12k: fix GCC_GCC_PCIE_HOT_RST definition
+ for WCN7850
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-ID: <20250523-ath12k-wrong-global-reset-addr-v1-1-3b06eb556196@quicinc.com>
+X-B4-Tracking: v=1; b=H4sIAAjcL2gC/43NzQ7CIBAE4FdpOLsGUPrjyfcwHii7bYkKCrXWN
+ H13sSc96XEymW8mFilYimyXTSzQYKP1LgWxypjptGsJLKbMJJeKK56D7jshT/AI3rXQnn2tzxA
+ oUg8aMUBdKESTU1EqzhJyDdTYcTk4sLQFR2PPjqnpbOx9eC7Pg1j6f08GAQIUaV2XBSGi3N/u1
+ lhn1sZfFnyQH6CofoLyDVaaN7XBakubb3Ce5xcaWwZqKQEAAA==
+X-Change-ID: 20250506-ath12k-wrong-global-reset-addr-b75ddc6e7850
+To: Jeff Johnson <jjohnson@kernel.org>,
+        Pradeep Kumar Chitrapu
+	<quic_pradeepc@quicinc.com>,
+        Wen Gong <quic_wgong@quicinc.com>,
+        "Vasanthakumar Thiagarajan" <quic_vthiagar@quicinc.com>,
+        Bhagavathi Perumal S
+	<quic_bperumal@quicinc.com>,
+        P Praneesh <quic_ppranees@quicinc.com>
+CC: Sriram R <quic_srirrama@quicinc.com>, <linux-wireless@vger.kernel.org>,
+        <ath12k@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        Parth Panchoil
+	<parth105105@gmail.com>,
+        Baochen Qiang <quic_bqiang@quicinc.com>
+X-Mailer: b4 0.14.2
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: FafOzhXsl19cEKoVXck6HQSpZUDIBrgb
+X-Authority-Analysis: v=2.4 cv=J/Sq7BnS c=1 sm=1 tr=0 ts=682fdc2d cx=c_pps
+ a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8
+ a=pGLkceISAAAA:8 a=COk6AnOGAAAA:8 a=C5NdG746629Tomd590AA:9 a=QEXdDO2ut3YA:10
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-ORIG-GUID: FafOzhXsl19cEKoVXck6HQSpZUDIBrgb
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIzMDAyMCBTYWx0ZWRfX5fk2eVBKVSAF
+ 8kqriWm0Os1kST5k02lw1RVHoXeUdHYHYwc3GwGmAXJpq205ad55DbAb4e2iP3lTbL8MnbCRu0Q
+ D8sxrQ/bZGDJIFmkb7BmJB8pcv4JBzVOvsaNf8+RclBVwp60wR7qaVe0XgIa+CNN4WqKjVl+82A
+ e9XRfyg7Jq2URKzIF1KojhoJTcJGiwyw3XJb2V5T4gvtIsW6+8CY9FRT5nCovzZhUNazfH9zrnh
+ WcXjZOgqk4xns+Hn5nJsyswTdnFhqFPlikRcEWYJJtLRT4uJuvZsSQZ6KZZsQA5niM2XcphAheh
+ wlJVyLDt1zOWwI3DXgRNkAR7c+wOR6IinDsnDZkriNp51xszRMoo85Xs4+cIjtvb5vC4LhvfBP5
+ UQMxALY6MSpfGYy9VoCUOOzmQzSXgVrqf/px2u9CRRvDePkjpzULylr/1ZJCMe8Um38yWFGc
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-23_01,2025-05-22_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ mlxscore=0 clxscore=1015 mlxlogscore=695 suspectscore=0 spamscore=0
+ priorityscore=1501 bulkscore=0 phishscore=0 impostorscore=0
+ lowpriorityscore=0 malwarescore=0 adultscore=0 classifier=spam authscore=0
+ authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505160000 definitions=main-2505230020
 
-There is a corner case where the NS (Neighbor Solicitation) target is set to
-an invalid or unreachable address. In such cases, all the slave links are
-marked as down and set to backup. This causes the bond to add multicast MAC
-addresses to all slaves.
+GCC_GCC_PCIE_HOT_RST is wrongly defined for WCN7850, causing kernel crash
+on some specific platforms.
 
-However, bond_ab_arp_probe() later tries to activate a carrier on slave and
-sets it as active. If we subsequently change or clear the NS targets, the
-call to bond_slave_ns_maddrs_del() on this interface will fail because it
-is still marked active, and the multicast MAC address will remain.
+Since this register is divergent for WCN7850 and QCN9274, move it to
+register table to allow different definitions. Then correct the register
+address for WCN7850 to fix this issue.
 
-To fix this issue, move the NS multicast address add/remove logic into
-bond_set_slave_state() to ensure multicast MAC addresses are updated
-synchronously whenever the slave state changes.
+Note IPQ5332 is not affected as it is not PCIe based device.
 
-Note: The call to bond_slave_ns_maddrs_del() in __bond_release_one() is
-kept, as it is still required to clean up multicast MAC addresses when
-a slave is removed.
+Tested-on: WCN7850 hw2.0 PCI WLAN.HMT.1.0.c5-00481-QCAHMTSWPL_V1.0_V2.0_SILICONZ-3
 
-Fixes: 8eb36164d1a6 ("bonding: add ns target multicast address to slave device")
-Reported-by: Liang Li <liali@redhat.com>
-Signed-off-by: Hangbin Liu <liuhangbin@gmail.com>
+Reported-by: Parth Panchoil <parth105105@gmail.com>
+Closes: https://lore.kernel.org/all/86899b2235a59c9134603beebe08f2bb0b244ea0.camel@gmail.com
+Fixes: d889913205cf ("wifi: ath12k: driver for Qualcomm Wi-Fi 7 devices")
+Signed-off-by: Baochen Qiang <quic_bqiang@quicinc.com>
 ---
- drivers/net/bonding/bond_main.c | 9 ---------
- include/net/bonding.h           | 7 +++++++
- 2 files changed, 7 insertions(+), 9 deletions(-)
+---
+ drivers/net/wireless/ath/ath12k/hw.c  | 6 ++++++
+ drivers/net/wireless/ath/ath12k/hw.h  | 2 ++
+ drivers/net/wireless/ath/ath12k/pci.c | 6 +++---
+ drivers/net/wireless/ath/ath12k/pci.h | 4 +++-
+ 4 files changed, 14 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/bonding/bond_main.c b/drivers/net/bonding/bond_main.c
-index 8ea183da8d53..6dde6f870ee2 100644
---- a/drivers/net/bonding/bond_main.c
-+++ b/drivers/net/bonding/bond_main.c
-@@ -1004,8 +1004,6 @@ static void bond_hw_addr_swap(struct bonding *bond, struct slave *new_active,
- 
- 		if (bond->dev->flags & IFF_UP)
- 			bond_hw_addr_flush(bond->dev, old_active->dev);
--
--		bond_slave_ns_maddrs_add(bond, old_active);
- 	}
- 
- 	if (new_active) {
-@@ -1022,8 +1020,6 @@ static void bond_hw_addr_swap(struct bonding *bond, struct slave *new_active,
- 			dev_mc_sync(new_active->dev, bond->dev);
- 			netif_addr_unlock_bh(bond->dev);
- 		}
--
--		bond_slave_ns_maddrs_del(bond, new_active);
- 	}
- }
- 
-@@ -2350,11 +2346,6 @@ int bond_enslave(struct net_device *bond_dev, struct net_device *slave_dev,
- 	bond_compute_features(bond);
- 	bond_set_carrier(bond);
- 
--	/* Needs to be called before bond_select_active_slave(), which will
--	 * remove the maddrs if the slave is selected as active slave.
--	 */
--	bond_slave_ns_maddrs_add(bond, new_slave);
--
- 	if (bond_uses_primary(bond)) {
- 		block_netpoll_tx();
- 		bond_select_active_slave(bond);
-diff --git a/include/net/bonding.h b/include/net/bonding.h
-index 95f67b308c19..0041f7a2bd18 100644
---- a/include/net/bonding.h
-+++ b/include/net/bonding.h
-@@ -385,7 +385,14 @@ static inline void bond_set_slave_state(struct slave *slave,
- 	if (slave->backup == slave_state)
- 		return;
- 
-+	if (slave_state == BOND_STATE_ACTIVE)
-+		bond_slave_ns_maddrs_del(slave->bond, slave);
+diff --git a/drivers/net/wireless/ath/ath12k/hw.c b/drivers/net/wireless/ath/ath12k/hw.c
+index 7e2cf0fb2085ab014fc14a5c81074802674b154e..8254dc10b53bbfb54a44c7ff2f705c72461d1031 100644
+--- a/drivers/net/wireless/ath/ath12k/hw.c
++++ b/drivers/net/wireless/ath/ath12k/hw.c
+@@ -951,6 +951,8 @@ static const struct ath12k_hw_regs qcn9274_v1_regs = {
+ 	.hal_umac_ce0_dest_reg_base = 0x01b81000,
+ 	.hal_umac_ce1_src_reg_base = 0x01b82000,
+ 	.hal_umac_ce1_dest_reg_base = 0x01b83000,
 +
- 	slave->backup = slave_state;
++	.gcc_gcc_pcie_hot_rst = 0x1e38338,
+ };
+ 
+ static const struct ath12k_hw_regs qcn9274_v2_regs = {
+@@ -1042,6 +1044,8 @@ static const struct ath12k_hw_regs qcn9274_v2_regs = {
+ 	.hal_umac_ce0_dest_reg_base = 0x01b81000,
+ 	.hal_umac_ce1_src_reg_base = 0x01b82000,
+ 	.hal_umac_ce1_dest_reg_base = 0x01b83000,
 +
-+	if (slave_state == BOND_STATE_BACKUP)
-+		bond_slave_ns_maddrs_add(slave->bond, slave);
++	.gcc_gcc_pcie_hot_rst = 0x1e38338,
+ };
+ 
+ static const struct ath12k_hw_regs ipq5332_regs = {
+@@ -1215,6 +1219,8 @@ static const struct ath12k_hw_regs wcn7850_regs = {
+ 	.hal_umac_ce0_dest_reg_base = 0x01b81000,
+ 	.hal_umac_ce1_src_reg_base = 0x01b82000,
+ 	.hal_umac_ce1_dest_reg_base = 0x01b83000,
 +
- 	if (notify) {
- 		bond_lower_state_changed(slave);
- 		bond_queue_slave_event(slave);
++	.gcc_gcc_pcie_hot_rst = 0x1e40304,
+ };
+ 
+ static const struct ath12k_hw_hal_params ath12k_hw_hal_params_qcn9274 = {
+diff --git a/drivers/net/wireless/ath/ath12k/hw.h b/drivers/net/wireless/ath/ath12k/hw.h
+index 0fbc17649df463334aa0ebb3da407115985335ca..0a75bc5abfa2410ab3c7b6ce038f4d5f6445ecf9 100644
+--- a/drivers/net/wireless/ath/ath12k/hw.h
++++ b/drivers/net/wireless/ath/ath12k/hw.h
+@@ -375,6 +375,8 @@ struct ath12k_hw_regs {
+ 	u32 hal_reo_cmd_ring_base;
+ 
+ 	u32 hal_reo_status_ring_base;
++
++	u32 gcc_gcc_pcie_hot_rst;
+ };
+ 
+ static inline const char *ath12k_bd_ie_type_str(enum ath12k_bd_ie_type type)
+diff --git a/drivers/net/wireless/ath/ath12k/pci.c b/drivers/net/wireless/ath/ath12k/pci.c
+index 489d546390fcdab8f615cc9184006a958d9f140a..1f3cfd9b89fdcfd84731ec90c9c678b0c477a2af 100644
+--- a/drivers/net/wireless/ath/ath12k/pci.c
++++ b/drivers/net/wireless/ath/ath12k/pci.c
+@@ -292,10 +292,10 @@ static void ath12k_pci_enable_ltssm(struct ath12k_base *ab)
+ 
+ 	ath12k_dbg(ab, ATH12K_DBG_PCI, "pci ltssm 0x%x\n", val);
+ 
+-	val = ath12k_pci_read32(ab, GCC_GCC_PCIE_HOT_RST);
++	val = ath12k_pci_read32(ab, GCC_GCC_PCIE_HOT_RST(ab));
+ 	val |= GCC_GCC_PCIE_HOT_RST_VAL;
+-	ath12k_pci_write32(ab, GCC_GCC_PCIE_HOT_RST, val);
+-	val = ath12k_pci_read32(ab, GCC_GCC_PCIE_HOT_RST);
++	ath12k_pci_write32(ab, GCC_GCC_PCIE_HOT_RST(ab), val);
++	val = ath12k_pci_read32(ab, GCC_GCC_PCIE_HOT_RST(ab));
+ 
+ 	ath12k_dbg(ab, ATH12K_DBG_PCI, "pci pcie_hot_rst 0x%x\n", val);
+ 
+diff --git a/drivers/net/wireless/ath/ath12k/pci.h b/drivers/net/wireless/ath/ath12k/pci.h
+index 0b4c459d6d8eabb0773162e6bb3ca666c0a8f15a..d1ec8aad7f6c3b6f5cbdf8ce57a4106733686521 100644
+--- a/drivers/net/wireless/ath/ath12k/pci.h
++++ b/drivers/net/wireless/ath/ath12k/pci.h
+@@ -28,7 +28,9 @@
+ #define PCIE_PCIE_PARF_LTSSM			0x1e081b0
+ #define PARM_LTSSM_VALUE			0x111
+ 
+-#define GCC_GCC_PCIE_HOT_RST			0x1e38338
++#define GCC_GCC_PCIE_HOT_RST(ab) \
++	((ab)->hw_params->regs->gcc_gcc_pcie_hot_rst)
++
+ #define GCC_GCC_PCIE_HOT_RST_VAL		0x10
+ 
+ #define PCIE_PCIE_INT_ALL_CLEAR			0x1e08228
+
+---
+base-commit: 3d933084a072fd5fb5da54c06a017abc0412c86f
+change-id: 20250506-ath12k-wrong-global-reset-addr-b75ddc6e7850
+
+Best regards,
 -- 
-2.46.0
+Baochen Qiang <quic_bqiang@quicinc.com>
 
