@@ -1,105 +1,91 @@
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+Received: from out-177.mta1.migadu.com (out-177.mta1.migadu.com [95.215.58.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B3E02DCBE0;
-	Fri, 23 May 2025 01:29:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D25252DCBF4
+	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 01:32:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747963790; cv=none; b=mpdYBEMvDq5wua2OvOFykBndi9Sr7CkU0Xjvk5NHVID7nMkFCNjaDuCqW3pBOr4v839cZhqANY5BpGfcBa9de0aUYKgbnbWfnsbguxx94PNqCRq43XbZ5FLXfrtR3dssUiM9+KDNVEqcNBMxd+an1jM7bF9siWsacR1p/reCpWg=
+	t=1747963942; cv=none; b=tDeDLV78lQ/vQOQQilh1bkAD+8lOPsdYg7wYI1DXPu9EQ8k9uqlvxEdH5daR6+CxskKCODy3fKhVBS/kTm6BWERdielVyyRFgsKPOgmirrNtVMmtmF39HalmdOMnRGMr6wayndPG6ytdXCOvwlF/kDeIx1ru8Q7UIZw0DlXm3WA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747963790; c=relaxed/simple;
-	bh=O+hUIWP8sqbo2B16dVbYBn0GNPjiXFkJsYcdWxxh0LM=;
-	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=iMimTJ8WyXxQI/tUROIu8KGhqbLMuROnO9MTQifWVzM+HlrPIQu81W+JB00cR3fZ3iyupp8ppyPbz+nuPOvS2uT4gGwMEERq1UtE3QI4J+4mOWpS+4BvpsSDWvu72Lqak2FQQeh64F8SPL4HZuhlWKcHu3d6LepU3bSLCONVcvo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.174])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4b3SGZ72CDznfdq;
-	Fri, 23 May 2025 09:28:22 +0800 (CST)
-Received: from kwepemg500006.china.huawei.com (unknown [7.202.181.43])
-	by mail.maildlp.com (Postfix) with ESMTPS id 471EE1400E3;
-	Fri, 23 May 2025 09:29:38 +0800 (CST)
-Received: from [10.67.121.110] (10.67.121.110) by
- kwepemg500006.china.huawei.com (7.202.181.43) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Fri, 23 May 2025 09:29:37 +0800
-Subject: Re: [PATCH v8 0/6] bugfix some driver issues
-To: Alex Williamson <alex.williamson@redhat.com>
-CC: <jgg@nvidia.com>, <shameerali.kolothum.thodi@huawei.com>,
-	<jonathan.cameron@huawei.com>, <kvm@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linuxarm@openeuler.org>
-References: <20250510081155.55840-1-liulongfang@huawei.com>
- <20250520093948.7885dbe0.alex.williamson@redhat.com>
-From: liulongfang <liulongfang@huawei.com>
-Message-ID: <5b68caec-dfae-8711-6e93-8728a9ad095b@huawei.com>
-Date: Fri, 23 May 2025 09:29:37 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+	s=arc-20240116; t=1747963942; c=relaxed/simple;
+	bh=43GG+nK/VP9J/MxR3VCZtwb69ooU0HThuyCeYdCYyJ0=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=Dx4kiXvWD3ZQBbv7GbsEJAD4BK2MEu8owvP6um4C4Pbo56+rdlVqLWacJiazaZjzORFk2sTMVU3jAmqBtWjj6ge/06DPY61bWzf9GQiQUQDcQRzzzoSN1at1EapDCSH7yD3RKkot0zyrEcu4XhqxQHG9uQja4lZSv7QzUTZhJGA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=bUnf6NJN; arc=none smtp.client-ip=95.215.58.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="bUnf6NJN"
+Date: Thu, 22 May 2025 21:31:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1747963927;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+	bh=tmBs0a0pY9TPVe9tBCids2CPMpLMPxoSQO7RwsamZdU=;
+	b=bUnf6NJN+el8tZkTwfZD92KGAqUXxujzzxWeXCIOSUhR1fDlSXQCKDuD00s9l40t07RK1c
+	fwMoGY0sSYTG93DkLtgaEpszrpAen8N1Lf2C8smWabB52Vf4HgPvYOvwvM9ac6iKyQnLBy
+	Hk0TFPOLiKnSO4RsRaSW39dRIDLaZ8o=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Kent Overstreet <kent.overstreet@linux.dev>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-bcachefs@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Subject: [GIT PULL] bcachefs fixes for 6.15
+Message-ID: <t4kz463dyrlych7ags2fczrgeyafkkjdppe2zmk7zxdmvdywmb@cs2b2txhexje>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20250520093948.7885dbe0.alex.williamson@redhat.com>
-Content-Type: text/plain; charset="gbk"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: kwepems200002.china.huawei.com (7.221.188.68) To
- kwepemg500006.china.huawei.com (7.202.181.43)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Migadu-Flow: FLOW_OUT
 
-On 2025/5/20 23:39, Alex Williamson write:
-> On Sat, 10 May 2025 16:11:49 +0800
-> Longfang Liu <liulongfang@huawei.com> wrote:
-> 
->> As the test scenarios for the live migration function become
->> more and more extensive. Some previously undiscovered driver
->> issues were found.
->> Update and fix through this patchset.
->>
->> Change v7 -> v8
->> 	Handle the return value of sub-functions.
->>
->> Change v6 -> v7
->> 	Update function return values.
->>
->> Change v5 -> v6
->> 	Remove redundant vf_qm_state status checks.
->>
->> Change v4 -> v5
->> 	Update version matching strategy
->>
->> Change v3 -> v4
->> 	Modify version matching scheme
->>
->> Change v2 -> v3
->> 	Modify the magic digital field segment
->>
->> Change v1 -> v2
->> 	Add fixes line for patch comment
->>
->> Longfang Liu (6):
->>   hisi_acc_vfio_pci: fix XQE dma address error
->>   hisi_acc_vfio_pci: add eq and aeq interruption restore
->>   hisi_acc_vfio_pci: bugfix cache write-back issue
->>   hisi_acc_vfio_pci: bugfix the problem of uninstalling driver
->>   hisi_acc_vfio_pci: bugfix live migration function without VF device
->>     driver
->>   hisi_acc_vfio_pci: update function return values.
->>
->>  .../vfio/pci/hisilicon/hisi_acc_vfio_pci.c    | 121 +++++++++++++-----
->>  .../vfio/pci/hisilicon/hisi_acc_vfio_pci.h    |  14 +-
->>  2 files changed, 101 insertions(+), 34 deletions(-)
->>
-> 
-> Applied to vfio next branch for v6.16.  Thanks,
-> 
-> Alex
->
+The following changes since commit 9c09e59cc55cdf7feb29971fd792fc1947010b79:
 
-Thank you very much!
-Longfang.
+  bcachefs: fix wrong arg to fsck_err() (2025-05-14 18:59:15 -0400)
 
-> 
-> .
-> 
+are available in the Git repository at:
+
+  git://evilpiepirate.org/bcachefs.git tags/bcachefs-2025-05-22
+
+for you to fetch changes up to 010c89468134d1991b87122379f86feae23d512f:
+
+  bcachefs: Check for casefolded dirents in non casefolded dirs (2025-05-21 20:13:14 -0400)
+
+----------------------------------------------------------------
+bcachefs fixes for 6.15
+
+Small stuff, main ones users will be interested in:
+
+- Couple more casefolding fixes; we can now detect and repair casefolded
+  dirents in non-casefolded dir and vice versa
+- Fix for massive write inflation with mmapped io, which hit certain
+  databases
+
+----------------------------------------------------------------
+Kent Overstreet (6):
+      bcachefs: Fix bch2_btree_path_traverse_cached() when paths realloced
+      bcachefs: fix extent_has_stripe_ptr()
+      bcachefs: mkwrite() now only dirties one page
+      bcachefs: Fix casefold opt via xattr interface
+      bcachefs: Fix bch2_dirent_create_snapshot() for casefolding
+      bcachefs: Check for casefolded dirents in non casefolded dirs
+
+ fs/bcachefs/btree_iter.c       |  2 +-
+ fs/bcachefs/btree_key_cache.c  | 25 +++++++++++++++++--------
+ fs/bcachefs/btree_key_cache.h  |  3 +--
+ fs/bcachefs/dirent.c           | 33 +++++++++++++++------------------
+ fs/bcachefs/dirent.h           |  2 +-
+ fs/bcachefs/ec.c               | 20 +++++++-------------
+ fs/bcachefs/extents.h          |  7 -------
+ fs/bcachefs/fs-io-pagecache.c  | 18 +++++++++++-------
+ fs/bcachefs/fs.c               | 26 +-------------------------
+ fs/bcachefs/fsck.c             | 37 +++++++++++++++++++++++++++++++++++++
+ fs/bcachefs/inode.c            | 36 ++++++++++++++++++++++++++++++++++++
+ fs/bcachefs/inode.h            |  4 +++-
+ fs/bcachefs/namei.c            |  2 --
+ fs/bcachefs/sb-errors_format.h |  8 +++++++-
+ fs/bcachefs/xattr.c            |  6 ++++++
+ 15 files changed, 143 insertions(+), 86 deletions(-)
