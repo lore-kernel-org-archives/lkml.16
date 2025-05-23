@@ -1,125 +1,98 @@
-Received: from ni.piap.pl (ni.piap.pl [195.187.100.5])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9B26238179;
-	Fri, 23 May 2025 09:58:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.187.100.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDBD7228CA3;
+	Fri, 23 May 2025 09:59:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747994308; cv=none; b=Y180Nsx5vBWY+Zvpmo6f20aFUskP4s7KHvTt1C2SVNYn3qssdEUCgSFdLwD56h69LTQfrcvtWIJ89XEzhx0UMtuRHkKUJE05IVVBHuyUzRdb+z6K5esAKIMmNsFB/tqhAIPhDboWcXa1JfLZKjsGdxm8WGWay7/B0lOrQKAmI9w=
+	t=1747994357; cv=none; b=rShS7IiK2SUhuNjlz4L1d6hewKmkoniZYqW1avAFT4ZPI5UvS0t5Ll+5H5uc9uWrnpieDrVB4iFRqJP3JPs6Hug7uDaNIbqD1KVIC4Hm2he/ps+IwVqdWJ9HguFtwKaPD+uVhhFxhCBnE9Ql6CzPUJWdR6pIbozn/UWskoKQTmk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747994308; c=relaxed/simple;
-	bh=08fg3jpSPJOEN6w8dbd543RIPo/ty5tra/UHgFDBq9g=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=jvILEnWifyAcoRu0TyJP3NRQwedSTYzDjG0P2jVCY6LS1KJREjE97pJ3NRAgksd1BydX/SGHbtZne/wkxOKiexclqi13yEFeALdMDdUYXswlgxaeUVjcfeiIDsC8B7rFhx8L9HnCWb5yJiUkUZ69KEAsg/NPXv/clQqXNEWjW4M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=piap.pl; spf=pass smtp.mailfrom=piap.pl; arc=none smtp.client-ip=195.187.100.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=piap.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=piap.pl
-Received: from t19.piap.pl (OSB1819.piap.pl [10.0.9.19])
-	by ni.piap.pl (Postfix) with ESMTPS id 9A651C405A4C;
-	Fri, 23 May 2025 11:58:23 +0200 (CEST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 ni.piap.pl 9A651C405A4C
-From: =?utf-8?Q?Krzysztof_Ha=C5=82asa?= <khalasa@piap.pl>
-To: Jacopo Mondi <jacopo.mondi@ideasonboard.com>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>,  Rui Miguel Silva
- <rmfrfs@gmail.com>,  Martin Kepplinger <martink@posteo.de>,  Purism Kernel
- Team <kernel@puri.sm>,  Mauro Carvalho Chehab <mchehab@kernel.org>,  Shawn
- Guo <shawnguo@kernel.org>,  Sascha Hauer <s.hauer@pengutronix.de>,
-  Pengutronix Kernel Team <kernel@pengutronix.de>,  Fabio Estevam
- <festevam@gmail.com>,  linux-media@vger.kernel.org,  imx@lists.linux.dev,
-  linux-arm-kernel@lists.infradead.org,  linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Enable MIPI filtering by DT on i.MX8M*
-In-Reply-To: <m31psg97dy.fsf@t19.piap.pl> ("Krzysztof =?utf-8?Q?Ha=C5=82as?=
- =?utf-8?Q?a=22's?= message of
-	"Thu, 22 May 2025 14:06:49 +0200")
-References: <m3h61u9jy2.fsf@t19.piap.pl>
-	<20250509103733.GE28896@pendragon.ideasonboard.com>
-	<m3o6vn8np5.fsf@t19.piap.pl>
-	<iegnn5xoosqpk52hvipcr73aliwhqtsq6r6ctvt5756bhy6yen@rqcdongb7fdf>
-	<m31psg97dy.fsf@t19.piap.pl>
-Sender: khalasa@piap.pl
-Date: Fri, 23 May 2025 11:58:23 +0200
-Message-ID: <m3plfz7io0.fsf@t19.piap.pl>
+	s=arc-20240116; t=1747994357; c=relaxed/simple;
+	bh=L3kgv+1AXVcfkAUiGth6DfjiW7WzYFWp7E7HAOljHHw=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=pb7j0FmyYIdnGJhLEe0Y+G0hvKPslUk3a/iUD6FbB9037HWEwPnp6ND9YhsgEh9aw3RWMHIS5uPtslnSLp7jLWsF7pFqUvlknhq/h2cd/RYVTenHyz/thCMYS187R3x9yhByAlg+k/Hb/iweV5z3H+VpTAgiKCprxVu7llYQ0e8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4b3gbS5jBDz4f3lCf;
+	Fri, 23 May 2025 17:58:44 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id 6935F1A12E3;
+	Fri, 23 May 2025 17:59:11 +0800 (CST)
+Received: from [10.174.179.143] (unknown [10.174.179.143])
+	by APP4 (Coremail) with SMTP id gCh0CgD3Wl_tRjBoDxMPNQ--.30170S3;
+	Fri, 23 May 2025 17:59:11 +0800 (CST)
+Subject: Re: [PATCH] md: fix potential NULL pointer dereference in
+ md_super_write
+To: Ye Chey <yechey@ai-sast.com>, song@kernel.org
+Cc: linux-raid@vger.kernel.org, linux-kernel@vger.kernel.org,
+ "yukuai (C)" <yukuai3@huawei.com>
+References: <20250523093554.23182-1-yechey@ai-sast.com>
+From: Yu Kuai <yukuai1@huaweicloud.com>
+Message-ID: <daf88fa3-f87e-a0c7-b93c-a4d150be8afc@huaweicloud.com>
+Date: Fri, 23 May 2025 17:59:09 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20250523093554.23182-1-yechey@ai-sast.com>
+Content-Type: text/plain; charset=gbk; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:gCh0CgD3Wl_tRjBoDxMPNQ--.30170S3
+X-Coremail-Antispam: 1UD129KBjvdXoW7Gw15JF15ArWDJr4rArW7twb_yoWfZFX_Wr
+	43ur9rXw1UCrn0yF1UurWSyrWFyFs7urn7uFyIqayfGrZ5Zr18Kry8Z3s8Jw1fuFyxAFn8
+	G34v9ryftr4xGjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUb4kYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20E
+	Y4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwV
+	A0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x02
+	67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxV
+	AFwI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2
+	j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7x
+	kEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67vIY487MxkF7I0En4kS14v2
+	6r126r1DMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrV
+	AFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCI
+	c40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267
+	AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_
+	Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU7IJmUU
+	UUU
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
-I wrote:
+Hi,
 
-> This produces (test_pattern=3D5 which starts with black, using ISP):
-> Y =3D  00 00 00 00  00 00 00 00  00 00 00 00  00 00 00 00...
-> UV =3D 80 80 80 80  80 80 80 80  80 80 80 80  80 80 80 80...
->
-> Now I do (perhaps I should revert the patch instead):
-> ./devmem write32 0x32E50004 0x14305
->
-> and this does (=3D without DT filtering):
-> Y =3D  E6 FF 36 1B  00 00 00 00  00 00 00 00  00 00 00 00...
-> UV =3D 85 6A 74 B4  7D 8C 80 80  80 80 80 80  80 80 80 80...
+ÔÚ 2025/05/23 17:35, Ye Chey Ð´µÀ:
+> The bio_alloc_bioset() call in md_super_write() could fail under memory
+> pressure and return NULL. Add a check to handle this case gracefully by
+> returning early, preventing a potential NULL pointer dereference.
 
-The corruption is visible in ISP RAW-12 mode as well: CSI2 + ISP2 without
-DT filtering: IMX462 test patterns, Linux v6.14, 1280x720p25.
+NAK, if you read the comments of bio_alloc_bioset(), you'll know there
+are cases bio_alloc_bioset() will never return NULL.
 
-Only 3 first 16-bit (12-bit on MIPI) RGGB values in each frame are
-changed (bits 3-0 of the third pixel aren't changed).
+Thanks,
+Kuai
 
-32EC0060h          0 Gasket 0 output disabled
-32EC0090h          0 Gasket 1 output disabled
-32EC0138h    2D8000h ISP Dewarp Control Register (ISP_DEWARP_CONTROL)
-      ISP ID mode 0, ISP1: DT 0, ISP2: DT 2Ch (RAW12) left-just mode
+> 
+> Signed-off-by: Ye Chey <yechey@ai-sast.com>
+> ---
+>   drivers/md/md.c | 2 ++
+>   1 file changed, 2 insertions(+)
+> 
+> diff --git a/drivers/md/md.c b/drivers/md/md.c
+> index 9daa78c5f..a0e2d90d4 100644
+> --- a/drivers/md/md.c
+> +++ b/drivers/md/md.c
+> @@ -1002,6 +1002,8 @@ void md_super_write(struct mddev *mddev, struct md_rdev *rdev,
+>   			      REQ_OP_WRITE | REQ_SYNC | REQ_IDLE | REQ_META
+>   				  | REQ_PREFLUSH | REQ_FUA,
+>   			      GFP_NOIO, &mddev->sync_set);
+> +	if (!bio)
+> +		return;
+>   
+>   	atomic_inc(&rdev->nr_pending);
+>   
+> 
 
-32E50040h        B0h ISP Configuration Register (MIPI_CSIS_ISPCONFIG_CH0)
-      DT 2Ch (RAW12)
-
-pattern 1:   0 800   0 2AB changed into 2AA B02 B00 2AB
-pattern 2 and 3: FFF FFF FFF FFF... not altered at all
-pattern 4: 501 501 4C2 4C2 changed into FFF 7FF 7F2 4C2
-pattern 5:   0   0   0   0 changed into 7EF FF7 FF0   0
-pattern 6:   0   1   0 101 changed into FFF FFF FF0 101
-pattern 7:   0 2AB   0 2AB changed into BAA BAB BA0 2AB
-
-RAW-12 on MIPI goes like this:
- lane0    lane1   lane2 7:4   lane2 3:0   lane3
------------ MIPI Header (all 4 lanes) ----------
-P1-11:4  P2-11:4    P1-3:0      P2-3:0   P3-11:4
-P4-11:4  ...
-
-This means all the changed values are located in the first 4 bytes after
-the packet header (i.e., in the first byte after the header for each
-lane). Which IMHO smells like a hardware bug - especially given the
-problem manifests itself only on CSI2 (+ISP2, I haven't tried using
-ISI).
-
-Fortunately enabling DT filtering fixes it.
-
-I remember I was getting a bit different results on, I believe, the
-NXP's 5.15 kernels (with their =3D Verisilicon VVCam driver). Instead of
-simply changing the first 32 bits of the MIPI payload, the rest of the
-RGGB data was shifted a couple of pixels or so.
-
-
-Now, what do we do with it?
-Is anybody able to verify the CSIC version register value on i.MX8MM?
-Something like devmem read32 0x32E50000 (or 0x32E40000 for CSI1) WHILE
-RUNNING CAPTURE on that very CSI would do the trick (using your
-favorite instance of devmem/devmem2/etc). Alternatively one could add
-a debug printk to the csic module.
-
-And: is anybody able to check if the DT filtering works on i.MX8MM
-(=3D if my patch doesn't break it on 8MM)?
-
-Alternatively I guess we can add MIPI_CSIS_V3_6_3_1 for 8MP only.
-
-Anybody using i.MX8MM with ISP2 + CSI2 BTW? Is the corruption there as
-well? I understand it may be hard to spot, it's (usually a bright) dot
-in the left top corner.
---=20
-Krzysztof "Chris" Ha=C5=82asa
-
-Sie=C4=87 Badawcza =C5=81ukasiewicz
-Przemys=C5=82owy Instytut Automatyki i Pomiar=C3=B3w PIAP
-Al. Jerozolimskie 202, 02-486 Warszawa
