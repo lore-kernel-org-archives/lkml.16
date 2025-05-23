@@ -1,122 +1,148 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1C710145B27;
-	Fri, 23 May 2025 15:04:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-ua1-f53.google.com (mail-ua1-f53.google.com [209.85.222.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F152145B27;
+	Fri, 23 May 2025 15:05:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748012649; cv=none; b=VD4btFh6F+vAjMFnXR+N6N27xVv3r0de2znhJbTYOkFCpRPSRUuuj+xjxTFUKay/OhqAGG/rADzYFNRyghzabiRYaDPDncET9rjz6J60HGvIhDQiEREaOM3BN1/8P/arA5Z/U3DUZRIFS7ZTJdT/XovywLePA+gRRBCM01ZwToc=
+	t=1748012715; cv=none; b=qMWKMOt8iGMvJizbrkiOLvvcmMulUGTEs+Wsj4DnvSl4RJpETqmNFmW1+GXCTn7qQ27fas4YOpqu8UaRzrSbFoUJ91EReJG19VbPUrZVJovPWtq1eIWiGzflO+ko8E92ON5LOBtxcb9xhufhbEo1Y05kQEaIWAbf+m1DibFX9kQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748012649; c=relaxed/simple;
-	bh=LgzZzvYlCla4L/rFHSdbF/gMPO8RB3+Aboi8mlRGv9Q=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iwT0FGXoi/AT8ZJNAQHJWh0SzfzyWUjcgk/4y9JUbtY0xjT3Nmik4jR5AuddEAAI0+GJw5ooFnB674mB4Cov0Dd4wq3ZZgiL7LjDyeGcRM9M8BfOaxymQG2G1Gs/uxTDxgUV5KaNmCvmWBIltCTjqYU4staKZsVFSWUKfNy0GY4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AFB781758;
-	Fri, 23 May 2025 08:03:51 -0700 (PDT)
-Received: from [192.168.20.16] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7CD2E3F5A1;
-	Fri, 23 May 2025 08:04:04 -0700 (PDT)
-Message-ID: <d97d3229-110f-4aee-93ad-e4499ef4133e@arm.com>
-Date: Fri, 23 May 2025 10:03:58 -0500
+	s=arc-20240116; t=1748012715; c=relaxed/simple;
+	bh=IvZjz67TtM02MU3/MnsuVyjFE8j+g6IyR+ugdwoN3KM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=t1JuygueEfM7DOAIIBVuLF2bHNgiDPEe98kr9JgE9jY2uMjlhtw0VtKm0PPIXxUCE5asZG96YBb2vq+11qyjEsb4M4eHVYmr7Z2iGJiNHOGqWKk5qf/1hqHujmF6wgUupZfXl4EldFE6/jSTtoF9FZCcwt3ItSumKnDJGu7Xtbk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ua1-f53.google.com with SMTP id a1e0cc1a2514c-87bf1348838so1754403241.2;
+        Fri, 23 May 2025 08:05:14 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748012713; x=1748617513;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Z7q5VOWPHTLyk2rAGQ6nFq+sdmA8F0+9sYOybYBqTFg=;
+        b=OUzAWH2uYwf+9ikl9k+q8DuPD8aXNCIqJTajWTYXjBRmduQf/j+XjAx9DzewKAHFMm
+         Kg1AoHCx4kng0kLRMn1mgU6vpIUI8csF7Pd5gZrusIJuByH/YQcgt76Igq1fPAwA1MY8
+         ipo/ErX5oXNnmTK27rDzmLO0b2aEg5N0k+IDVKyjelA8Vygyzlq/mWnmjDDe0AU6Vrh1
+         oROmcxyYTKEw2xfKtz159Mlmj8+LsFlAgA2wit2BT7FosZ8oyQKH6SjmOf+4IpGZThTg
+         4HjaMN3qspdL/S4DzftESX971uhI4fEXvl8RaYsQXZhNq3on50jTi7degFFYw0tIfo+3
+         QH+w==
+X-Forwarded-Encrypted: i=1; AJvYcCUOV1j6dmx4txs5fXAOJVhC1+F9voa+YKW03VjNnFMt3PZ/Y5FjC1M+cVJ7VfodjRg5N4A5G44gxqUtTpHrWXnBrC4=@vger.kernel.org, AJvYcCV1UFkWpne6CyUkWeRL8P2iz6IDQZzB7ujqkMwnhlPtg0MK0FIm+txL0+osUT2GdHg+aHt3qbmXUs6FC5GX@vger.kernel.org, AJvYcCVSdFTRROZYdWOYgddoNOBOTWDzuqIHmaHtwveGzKxBbN4gB/RrK0F9pGDmCAThEmttY8yT+x17fStg@vger.kernel.org, AJvYcCW7sg1j46ZJR+CjTp96LklyCi/c0e4NmNJiyjC3n522aYT1I8QlM4XQI6yuhr3w/jLLBq/mBk2jSWGl@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw39HvHd1Onjav0cJyKUK77H+D8n3j5Mm2lS1GXAPZfy+zbRJZQ
+	5gJLJz7cLup4vo6b/HaM5qlfGo38UWTWPPmqot/0YXpfbtfkUzYES8EHFnVeujWqViA=
+X-Gm-Gg: ASbGnctjp3OdOIxWe2eyx3Pu/9SNmoRd9L7G0F2Tm703dzbRjlFAsbJZvNAT4BHuDCZ
+	t8tYf+43vFt4BN+1V76kTbaIpUwmIEPm8RItKqfti+kfGPGI5R2uuNLM7ukN18KRerx63Dqd5PG
+	LVdCmpBWrkJyZf2CWZa78SEhoo1JJyv01CDpxpEOsPUuP6r5MIGAoiDJZppsx+lTTdlVv66H4iI
+	FXR1RBWC1Q8wDM8FZk+uKrz9kkzj+OrOM/PtC/z2pDaf34c+6f0dQYWuLjS5smPlp0ccckNyZgD
+	c5k1vyc7VyChMIl9ZhWObGoRXEhAG7AEgM1SSiKDmO3jfeF4hp6SmpQasJd+HgDcJ/1KazB2sOe
+	o6HGrlRCQ+t0P5g==
+X-Google-Smtp-Source: AGHT+IGpTcQltr5JdidOWCx+aFZVnqU8+pIwt1rOvJNJGlxSQy2LIw9bd8arC40WmuYJzNqVVlUPHQ==
+X-Received: by 2002:a05:6122:d19:b0:529:2644:8c with SMTP id 71dfb90a1353d-52dbcdfccb7mr23054062e0c.8.1748012712580;
+        Fri, 23 May 2025 08:05:12 -0700 (PDT)
+Received: from mail-vs1-f42.google.com (mail-vs1-f42.google.com. [209.85.217.42])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-52f19bb4c76sm2221857e0c.43.2025.05.23.08.05.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 23 May 2025 08:05:12 -0700 (PDT)
+Received: by mail-vs1-f42.google.com with SMTP id ada2fe7eead31-4e2900db5f1so3319137.3;
+        Fri, 23 May 2025 08:05:12 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCW4PQzaHN6hS+JeLbPQ7cC6h/b2VgZ6s2TxOF6++4767zj1AfPPffxEo+G4qYXKa1k9N7s+X/XNqqjZgnb2q1qibpM=@vger.kernel.org, AJvYcCWNVPjWL0Tnh1DYz7MFNo6LquFfw/aIwSveJInfM2Eew11Zpkm/sfMrfvrD9U+rmKhRvE7rMJBNMZknAJGP@vger.kernel.org, AJvYcCWS7cOPAbD0ojC38XjeY73zIuov0vjnoXhexj0Qs962+tW3R2rWBxDzyxwjad92enSrqTV0cf6zH0gr@vger.kernel.org, AJvYcCXRSRedHFSG4yMGgZtYRIrV1oQJOjDMiImGNaefp3ri6wHB1/O88pUeE2THM+k/ZhqOJXWhbjhA6aQR@vger.kernel.org
+X-Received: by 2002:a05:6102:3f06:b0:4e2:bacd:9f02 with SMTP id
+ ada2fe7eead31-4e2bacda0c0mr10649290137.16.1748012320563; Fri, 23 May 2025
+ 07:58:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] scripts: add zboot support to extract-vmlinux
-To: Nathan Chancellor <nathan@kernel.org>
-Cc: linux-kbuild@vger.kernel.org, masahiroy@kernel.org,
- nicolas.schier@linux.dev, linux-kernel@vger.kernel.org,
- Ard Biesheuvel <ardb@kernel.org>
-References: <20250522172941.1669424-1-jeremy.linton@arm.com>
- <20250522231009.GA2020750@ax162>
-Content-Language: en-US
-From: Jeremy Linton <jeremy.linton@arm.com>
-In-Reply-To: <20250522231009.GA2020750@ax162>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250512184302.241417-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20250512184302.241417-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20250512184302.241417-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Fri, 23 May 2025 16:58:28 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdU__dxi4wvS3ikBQefM7uwWWK0bCcHv=TL-Td678pEi9Q@mail.gmail.com>
+X-Gm-Features: AX0GCFt82q4LbUN8wOO1SOIRH6DyQiAH55lXfwgWzPo4hKmY_3p-dAhsTJpdcck
+Message-ID: <CAMuHMdU__dxi4wvS3ikBQefM7uwWWK0bCcHv=TL-Td678pEi9Q@mail.gmail.com>
+Subject: Re: [PATCH v5 3/4] dt-bindings: display: bridge: renesas,dsi: Add
+ support for RZ/V2H(P) SoC
+To: Prabhakar <prabhakar.csengg@gmail.com>
+Cc: Andrzej Hajda <andrzej.hajda@intel.com>, Neil Armstrong <neil.armstrong@linaro.org>, 
+	Robert Foss <rfoss@kernel.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
+	Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
+	Biju Das <biju.das.jz@bp.renesas.com>, Magnus Damm <magnus.damm@gmail.com>, 
+	dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
+	linux-clk@vger.kernel.org, Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 
-Hi,
+Hi Prabhakar,
 
-Thanks for looking at this.
+On Mon, 12 May 2025 at 20:43, Prabhakar <prabhakar.csengg@gmail.com> wrote:
+> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+>
+> The MIPI DSI interface on the RZ/V2H(P) SoC is nearly identical to that of
+> the RZ/G2L SoC. While the LINK registers are the same for both SoCs, the
+> D-PHY registers differ. Additionally, the number of resets for DSI on
+> RZ/V2H(P) is two compared to three on the RZ/G2L.
+>
+> To accommodate these differences, a SoC-specific
+> `renesas,r9a09g057-mipi-dsi` compatible string has been added for the
+> RZ/V2H(P) SoC.
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-On 5/22/25 6:10 PM, Nathan Chancellor wrote:
-> Hi Jeremy,
-> 
-> On Thu, May 22, 2025 at 12:29:41PM -0500, Jeremy Linton wrote:
->> Zboot compressed kernel images are used for arm kernels on various
->> distros.
->>
->> extract-vmlinux fails with those kernels because the wrapped image is
->> another PE. While this could be a bit confusing, the tools primary
->> purpose of unwrapping and decompressing the contained vmlinux image
->> makes it the obvious place for this functionality.
->>
->> Add a 'file' check in check_vmlinux() that detects a contained PE
->> image before trying readelf. Recent file implementations output
->> something like:
->>
->> "Linux kernel ARM64 boot executable Image, little-endian, 4K pages"
->>
->> Which is also a stronger statement than readelf provides so drop that
->> part of the comment. At the same time this means that kernel images
->> which don't appear to contain a compressed image will be returned
->> rather than reporting an error. Which matches the behavior for
->> existing ELF files.
->>
->> Signed-off-by: Jeremy Linton <jeremy.linton@arm.com>
->> Cc: Ard Biesheuvel <ardb@kernel.org>
->> ---
->>   scripts/extract-vmlinux | 9 +++++----
->>   1 file changed, 5 insertions(+), 4 deletions(-)
->>
->> diff --git a/scripts/extract-vmlinux b/scripts/extract-vmlinux
->> index 8995cd304e6e..edda1abe226c 100755
->> --- a/scripts/extract-vmlinux
->> +++ b/scripts/extract-vmlinux
->> @@ -12,10 +12,11 @@
->>   
->>   check_vmlinux()
->>   {
->> -	# Use readelf to check if it's a valid ELF
->> -	# TODO: find a better to way to check that it's really vmlinux
->> -	#       and not just an elf
->> -	readelf -h $1 > /dev/null 2>&1 || return 1
->> +	file $1 |grep 'Linux kernel.*boot executable Image' > /dev/null
->> +	if [ "$?" -ne "0" ]; then
-> 
-> Could these two lines be simplified to:
-> 
->    if file $1 | grep 'Linux kernel.*boot executable Image' > /dev/null; then
+Thanks for your patch!
 
-Yes, but it needs, a '!', which applies to the last operator in the 
-pipeline and for clarity should probably drop the redirection, so I 
-think it ends up:
+> --- a/Documentation/devicetree/bindings/display/bridge/renesas,dsi.yaml
+> +++ b/Documentation/devicetree/bindings/display/bridge/renesas,dsi.yaml
+> @@ -14,16 +14,17 @@ description: |
+>    RZ/G2L alike family of SoC's. The encoder can operate in DSI mode, with
+>    up to four data lanes.
+>
+> -allOf:
+> -  - $ref: /schemas/display/dsi-controller.yaml#
+> -
+>  properties:
+>    compatible:
+> -    items:
+> +    oneOf:
+>        - enum:
+> -          - renesas,r9a07g044-mipi-dsi # RZ/G2{L,LC}
+> -          - renesas,r9a07g054-mipi-dsi # RZ/V2L
+> -      - const: renesas,rzg2l-mipi-dsi
+> +          - renesas,r9a09g057-mipi-dsi # RZ/V2H(P)
 
-if ! file $1 | grep -q 'Linux kernel.*boot executable Image'; then
+Nit: I would add the new entry after all the old entries, to preserve
+sort order (by part number).
 
-But it mixes the condition checking and the execution, which is common 
-but maybe not the best idea.
+> +
+> +      - items:
+> +          - enum:
+> +              - renesas,r9a07g044-mipi-dsi # RZ/G2{L,LC}
+> +              - renesas,r9a07g054-mipi-dsi # RZ/V2L
+> +          - const: renesas,rzg2l-mipi-dsi
+>
+>    reg:
+>      maxItems: 1
 
-Although, if I'm going to reroll this, i think the " Image" should be 
-dropped since it can also have zImage and possibly other reports in the 
-future and AFAIK there isn't any reason to exclude them.
+The rest LGTM, so
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
+Gr{oetje,eeting}s,
 
+                        Geert
 
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-> 
->> +		# Use readelf to check if it's a valid ELF, if 'file' fails
->> +		readelf -h $1 > /dev/null 2>&1 || return 1
->> +	fi
->>   
->>   	cat $1
->>   	exit 0
->> -- 
->> 2.49.0
->>
-
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
