@@ -1,109 +1,175 @@
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E13F72F3E
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 10:52:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A4402F3E
+	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 10:52:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747997544; cv=none; b=lE5AlV0tPwKzeYERiWnoMy75ND0FKPT7TNZC6ReO/tjKnVUgqJJgx3uOZPS4OTVgw8aYNmfpYPUal4eIIs6P9AlurRLr3HaKGUcjIlwLWpTAMgy+S2zeEnPpqWCTTT3PDgLCGuElOOFu/xiSLRT3Eh14gyFONEi8OhbFQHKvXyE=
+	t=1747997567; cv=none; b=u7D7uE37IcP2gHHiR75YCXMS4JFuyvB7isMDfVkdp3zzzacNhWDryFyrccNUgG7MUT5ZBdCJDLd/JMOlgJkcFLbkP9YrbdVhuxDB5GMiad7qGbRZUQ20D5CxQ6o2WoxS4MvgMDXbbRiNiVTATYuTV3dB6MLgKXqdRahe71zBRX0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747997544; c=relaxed/simple;
-	bh=Ekl+hGAB44Rldtp80MChpA/wZATRMQ1Vak431vW9/qk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=q9Kc55sY1DitpwJ1Fwv/rhcULeye5fAOghCnUkpUqISj1V0gqtfnSW4cQXkft/+Eub74roacCneLSG/i7Xb5CG97UbSwv8YdMBtGpY3cc8eFG8akIU+Ue/2K0y4Dn9+BCdJ6CF79vVhuorBZlLbF8JoKfRcWwsfoO3tn/4PG7q4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=m6Eq7HnK; arc=none smtp.client-ip=209.85.221.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
+	s=arc-20240116; t=1747997567; c=relaxed/simple;
+	bh=f5BlxR9wBw2h2vR59F6mzFvs/sivfufffWwQlk2+iK4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OmknAICLSR04chcVhgrTmV/9pEChpSQ8yAGOETJhyPfYOSUEBAPyI6ivQJKcxaKUWhxksreIw1SqZcj2K8S89OdF43Ves/AlYd5PDmeps8y6mYnVjypKNKWxiVFh6ZaloENJDsoIT1AZoShDmkB+b0TQIR+lOUwyE4S9yDp9uE4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Umgan0wy; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="m6Eq7HnK"
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-3a374754e03so409767f8f.1
-        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 03:52:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1747997541; x=1748602341; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=qMi4ApElv9UTRXKLCAFiLHeHw33aLOhDiUIk/Js8sWU=;
-        b=m6Eq7HnKZoBo8XLjvhH83fOPp+KwcyUNJTp4kT5iGDUFP6XrhZZi5IQk0Z45udZDpD
-         H1gAkac9vUx2xvQbEPU+lYJfV+KBjUHVUqZyUM93voBBT/XtJYcBcywEtFf8QvithBgw
-         bsaEFwBNHu63bWlHgWf3W5GeqDC8ozJ+teEWwz8rfiqJoYriRifT6alPxIe9l6Kgxgq8
-         wrJ+NYyebIWUNOMLj6OEK/HO354+KLdJCpFBIhGXUshBqM8UriMr3wkIZvkiEzr0AfFX
-         OG7SexElzwLeC2NwVT6rc3Bp5X4wvlZSY01v0K1gr700u/RWADygBIco8ehKzLKUg151
-         13RQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747997541; x=1748602341;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=qMi4ApElv9UTRXKLCAFiLHeHw33aLOhDiUIk/Js8sWU=;
-        b=NuiX4vQ/qJUf7ewlJKNNSJXVLXwChqx/mfBFFAX6XAsbTyEtkvXfkveeb8MAmEEnSz
-         4RJO5YAeaoPb4OdROqXAhWuhPl3lAs5O9xk6a8Lbyf9ApXZM/+4ygpYswP1RrdBZnExw
-         1v5U4h7t+dbmG8EoVL3PTg68HSxdHBlvUUsKRa4i9+RhPt7X+hd0PPAC4/JKvaOeqYKq
-         q9tod7CAVAA4GOq7CMvcmWBpEqQm2gf4H3TJs7ra9v8kAjo8PXE6D2hx7j+J5W2SB0+A
-         2UulNaERQHk4SPIjavIQFk6wj7HShze85V/Qo9GmiaSQ1vccjb6bKqLptJTDCiWCaJ3T
-         0aMA==
-X-Forwarded-Encrypted: i=1; AJvYcCWVlgDyr/iV2uOLd0fzDaFE7z6o9ES/2U0EaZ3AWdMadERYdK9Z1DVpqbnzmv77/h9Dz/X6xzRiaRVfTuo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyJq+LtfVFziIJD53A82gTIGh2LmlvuDcLZs1wi47/qoP1IDKYM
-	0tTRl6CMT2W15GLTDCmBiMqfoGKJfc4OyBTUDEzdDHtP0HGaFOUU8TZ5UKF9iLZD/Fg=
-X-Gm-Gg: ASbGncvK5Z90MJMnMO3U+NHzxmTFJ887KQsVCPWFN+NYvEmRJIcKyLE4+oqzBc1ex1l
-	z8PQDO69WRAhMHf0B/Y/yREE6PRoEqPB1SAMRLF3WiNTTtsbVc9HZjOr97bPnPvXZnZa7iSuMuQ
-	Fu4M/SLvWqOx4E23MwlaZGjmt52vnnFriOkufQ1zXGtmFxNHxOUzz8qxf4J/HuqFalRCBvMjruQ
-	VaUJTNPjWCgCI97OJUEXTJ9su6uZqvD+M/lHHsKKDTGdVAcT1GBYaW9+pMYd+r+KdIfNbiyrxts
-	7X5VI2jQRl9s1tPc/GIjke9xim9Ri1jXoinpQsVJQrgRDpTKUnvJEIZ1Eq0=
-X-Google-Smtp-Source: AGHT+IEZmpBdHidSmMll0Tt/cMd2jy3jhCSZ/4z88K5W2YuxN+ezZzGMi4M3/53vgB32or4XtWGoCA==
-X-Received: by 2002:a05:6000:1acc:b0:3a4:7373:7a6a with SMTP id ffacd0b85a97d-3a4c2e443a3mr745998f8f.10.1747997541137;
-        Fri, 23 May 2025 03:52:21 -0700 (PDT)
-Received: from localhost ([2a02:8308:a00c:e200:be84:d9ad:e5e6:f60b])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a35ca8cf66sm25590521f8f.87.2025.05.23.03.52.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 May 2025 03:52:20 -0700 (PDT)
-From: =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@ventanamicro.com>
-To: kvm-riscv@lists.infradead.org
-Cc: kvm@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Anup Patel <anup@brainfault.org>,
-	Atish Patra <atishp@atishpatra.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Alexandre Ghiti <alex@ghiti.fr>,
-	Yong-Xuan Wang <yongxuan.wang@sifive.com>
-Subject: [PATCH] RISC-V: KVM: lock the correct mp_state during reset
-Date: Fri, 23 May 2025 12:47:28 +0200
-Message-ID: <20250523104725.2894546-4-rkrcmar@ventanamicro.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Umgan0wy"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=DfmDuuNEnX6j6GnweS6tLf57qKsRUaBkTAkp14jbMlI=; b=Umgan0wyXJ0eCX7JOiY9CSNwLg
+	iJYcW7AewywSTzWJPf8mJ6veEZp/51BrVJWVoGTzv4yNcByqx+kzF1YkIew7JV2SHDYCnDzbV33Wi
+	Jyz2KBXxl2w00h0JkAWdT4GwokEf9Vvo1J/a3H6tEtHwcjL7k46ZzktjwUx3oLuIuEU7KOWo5mLLh
+	w9gfyFlRd0/tdTUtAsUoT73Nw40do4OBVP4E4JXu88AfnwhXsVCNIqo7i196MrQgrxCIilVmpch02
+	OfieppB8fnFCqj0tSQ4WU4t5mfe3+cROPPiYRp4ZJ3vxf0YDTmKYTwWNuUyfY13o44UKM3+rcMuYM
+	VyC5aCsw==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uIQ0l-00000007TtK-2X5x;
+	Fri, 23 May 2025 10:52:23 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id BFE9C300583; Fri, 23 May 2025 12:52:22 +0200 (CEST)
+Date: Fri, 23 May 2025 12:52:22 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Aaron Lu <ziqianlu@bytedance.com>
+Cc: Valentin Schneider <vschneid@redhat.com>,
+	Ben Segall <bsegall@google.com>,
+	K Prateek Nayak <kprateek.nayak@amd.com>,
+	Josh Don <joshdon@google.com>, Ingo Molnar <mingo@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Xi Wang <xii@google.com>, linux-kernel@vger.kernel.org,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>, Mel Gorman <mgorman@suse.de>,
+	Chengming Zhou <chengming.zhou@linux.dev>,
+	Chuyi Zhou <zhouchuyi@bytedance.com>,
+	Jan Kiszka <jan.kiszka@siemens.com>,
+	Florian Bezdeka <florian.bezdeka@siemens.com>,
+	Paul McKenney <paulmck@kernel.org>
+Subject: Re: [PATCH 2/7] sched/fair: prepare throttle path for task based
+ throttle
+Message-ID: <20250523105222.GJ24938@noisy.programming.kicks-ass.net>
+References: <20250520104110.3673059-1-ziqianlu@bytedance.com>
+ <20250520104110.3673059-3-ziqianlu@bytedance.com>
+ <20250522104843.GG39944@noisy.programming.kicks-ass.net>
+ <20250522114012.GA672414@bytedance>
+ <20250522115418.GI24938@noisy.programming.kicks-ass.net>
+ <20250522123750.GB672414@bytedance>
+ <20250523095350.GA1215853@bytedance>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250523095350.GA1215853@bytedance>
 
-We're writing to *tmp, but locking *vcpu.
+On Fri, May 23, 2025 at 05:53:50PM +0800, Aaron Lu wrote:
+> On Thu, May 22, 2025 at 08:40:02PM +0800, Aaron Lu wrote:
+> > On Thu, May 22, 2025 at 01:54:18PM +0200, Peter Zijlstra wrote:
+> > > On Thu, May 22, 2025 at 07:44:55PM +0800, Aaron Lu wrote:
+> > > > On Thu, May 22, 2025 at 12:48:43PM +0200, Peter Zijlstra wrote:
+> > > > > On Tue, May 20, 2025 at 06:41:05PM +0800, Aaron Lu wrote:
+> > > > > 
+> > > > > >  static void throttle_cfs_rq_work(struct callback_head *work)
+> > > > > >  {
+> > > > > > +	struct task_struct *p = container_of(work, struct task_struct, sched_throttle_work);
+> > > > > > +	struct sched_entity *se;
+> > > > > > +	struct cfs_rq *cfs_rq;
+> > > > > > +	struct rq *rq;
+> > > > > > +
+> > > > > > +	WARN_ON_ONCE(p != current);
+> > > > > > +	p->sched_throttle_work.next = &p->sched_throttle_work;
+> > > > > > +
+> > > > > > +	/*
+> > > > > > +	 * If task is exiting, then there won't be a return to userspace, so we
+> > > > > > +	 * don't have to bother with any of this.
+> > > > > > +	 */
+> > > > > > +	if ((p->flags & PF_EXITING))
+> > > > > > +		return;
+> > > > > > +
+> > > > > > +	scoped_guard(task_rq_lock, p) {
+> > > > > > +		se = &p->se;
+> > > > > > +		cfs_rq = cfs_rq_of(se);
+> > > > > > +
+> > > > > > +		/* Raced, forget */
+> > > > > > +		if (p->sched_class != &fair_sched_class)
+> > > > > > +			return;
+> > > > > > +
+> > > > > > +		/*
+> > > > > > +		 * If not in limbo, then either replenish has happened or this
+> > > > > > +		 * task got migrated out of the throttled cfs_rq, move along.
+> > > > > > +		 */
+> > > > > > +		if (!cfs_rq->throttle_count)
+> > > > > > +			return;
+> > > > > > +		rq = scope.rq;
+> > > > > > +		update_rq_clock(rq);
+> > > > > > +		WARN_ON_ONCE(!list_empty(&p->throttle_node));
+> > > > > > +		dequeue_task_fair(rq, p, DEQUEUE_SLEEP | DEQUEUE_SPECIAL);
+> > > > > > +		list_add(&p->throttle_node, &cfs_rq->throttled_limbo_list);
+> > > > > > +		resched_curr(rq);
+> > > > > > +	}
+> > > > > > +
+> > > > > > +	cond_resched_tasks_rcu_qs();
+> > > > > >  }
+> > > > > 
+> > > > > What's that cond_resched thing about? The general plan is to make
+> > > > > cond_resched go away.
+> > > > 
+> > > > Got it.
+> > > > 
+> > > > The purpose is to let throttled task schedule and also mark a task rcu
+> > > > quiescent state. Without this cond_resched_tasks_rcu_qs(), this task
+> > > > will be scheduled by cond_resched() in task_work_run() and since that is
+> > > > a preempt schedule, it didn't mark a task rcu quiescent state.
+> > > > 
+> > > > Any suggestion here? Perhaps a plain schedule()? Thanks.
+> > > 
+> > > I am confused, this is task_work_run(), that is ran from
+> > > exit_to_user_mode_loop(), which contains a schedule().
+> >
+> 
+> I should probably have added that the schedule() call contained in
+> exit_to_user_mode_loop() is early in that loop, where the to-be-throttled
+> task doesn't have need_resched bit set yet.
 
-Fixes: 2121cadec45a ("RISCV: KVM: Introduce mp_state_lock to avoid lock inversion")
-Signed-off-by: Radim Krčmář <rkrcmar@ventanamicro.com>
----
- arch/riscv/kvm/vcpu_sbi.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+No, but if it does get set, it will get picked up at:
 
-diff --git a/arch/riscv/kvm/vcpu_sbi.c b/arch/riscv/kvm/vcpu_sbi.c
-index 31fd3cc98d66..6e09b518a5d1 100644
---- a/arch/riscv/kvm/vcpu_sbi.c
-+++ b/arch/riscv/kvm/vcpu_sbi.c
-@@ -143,9 +143,9 @@ void kvm_riscv_vcpu_sbi_system_reset(struct kvm_vcpu *vcpu,
- 	struct kvm_vcpu *tmp;
- 
- 	kvm_for_each_vcpu(i, tmp, vcpu->kvm) {
--		spin_lock(&vcpu->arch.mp_state_lock);
-+		spin_lock(&tmp->arch.mp_state_lock);
- 		WRITE_ONCE(tmp->arch.mp_state.mp_state, KVM_MP_STATE_STOPPED);
--		spin_unlock(&vcpu->arch.mp_state_lock);
-+		spin_unlock(&tmp->arch.mp_state_lock);
- 	}
- 	kvm_make_all_cpus_request(vcpu->kvm, KVM_REQ_SLEEP);
- 
--- 
-2.49.0
+	ti_work = read_thread_flags();
 
+and since TIF_NEED_RESCHED is part of EXIT_TO_USER_MODE_WORK, we'll get
+another cycle, and do the schedule() thing.
+
+> > There is a cond_resched() in task_work_run() loop:
+> > 
+> > 		do {
+> > 			next = work->next;
+> > 			work->func(work);
+> > 			work = next;
+> > 			cond_resched();
+> > 		} while (work);
+
+That cond_resched() is equally going away.
+
+> > And when this throttle work returns with need_resched bit set,
+> > cond_resched() will cause a schedule but that didn't mark a task
+> > quiescent state...
+> 
+> Another approach I can think of is to add a test of task_is_throttled()
+> in rcu_tasks_is_holdout(). I remembered when I tried this before, I can
+> hit the following path:
+
+So this really is about task_rcu needing something? Let me go look at
+task-rcu.
+
+So AFAICT, exit_to_user_mode_loop() will do schedule(), which will call
+__schedule(SM_NONE), which then will have preempt = false and call:
+rcu_note_context_switch(false) which in turn will do:
+rcu_task_rq(current, false).
+
+This should be sufficient, no?
