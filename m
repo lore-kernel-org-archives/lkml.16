@@ -1,141 +1,131 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out30-99.freemail.mail.aliyun.com (out30-99.freemail.mail.aliyun.com [115.124.30.99])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EFAB10A3E
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 06:55:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4A7E2F41;
+	Fri, 23 May 2025 06:55:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.99
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747983307; cv=none; b=L1O/QO3dWPNBq3MA+xi7S2Z5KYfM3ZIF5NJciWLaiq4E5ryhXx5Hb19kxv09LHp1XbWzsi6KyaYQrGCAV3WBZN3On2YqTwfJmCPHIwGMobDK6/B3/cuEMTclCjAEMKsFEyPpBxptEoXjT5Tm+lPs4LOJnkPXKG3RGwSfh9UItjA=
+	t=1747983346; cv=none; b=iOxbbZwVEGwOBY+uS/MgcdEz1TckT0UDx7gbe1VJQFRXsmDzc7gA8hOiPc4k0swVQLQjPldvhJ8FopU4MbkmMLBBKqjN2kj0sw/7vPX7zmFlfkngRnGUc3nGj6FBPi5ky9ekaMOOHKPr9TVuxAAvjEEaduA3UHQREaFBL/Qh6ws=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747983307; c=relaxed/simple;
-	bh=U20oBW7Rv6lgEPsP0GX95por6oX52DQoUY7ib1Yx1bc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BBrecQT5XPh+VVpwcG2lgXbSdZe1P9aBuFlCgEI/dEZEGgB47Px0vT9dsM7BW6UxBGf0vPYVa5HKdZOQX4spsIhBErppYWodjsrrK99sIFtHUtntfUct+7a95vngxYfGTFRcRU4VFS+bo1tdVLQ4ZkDjpPjmRDr4WUlDnFGvQFY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=f59BtNMF; arc=none smtp.client-ip=209.85.221.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1747983346; c=relaxed/simple;
+	bh=pVHutlHjk19bDsR5XHyrVEKz0M1o9YrQaWRutQHH+7g=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gyrExshWC0WrKDVHLh3GeQSqqHR1KE7sBVD74jRW5sz9mi1uA8esTjPsQc5Gkkl/qapETKaf01DYs1tnpW2IKa/WNtNn8+KkDC+UXq2h/P34uZbpCW6zU6827u/XRfXQwWVoqOa5ws2ybQx0i5g5LxVa27g+w6zCvL/0hjXxRsI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=O4AMrPff; arc=none smtp.client-ip=115.124.30.99
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="f59BtNMF"
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3a361b8a664so6853722f8f.3
-        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 23:55:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1747983303; x=1748588103; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=69oCtQFtFuIhATn7nt7tT3JoQ8RLcM/FthzOv16zp9Y=;
-        b=f59BtNMFez59EXrzk3AfHvpLLVZp8dVZqJD/sC5KP9jgnljUNZd2XQDXOYLrYcctWY
-         qTgPc01LYuW5HRRi9oqmQHc9Ixcl6HIlCzF/IeUJg+QlOxDNwJPQxhwNTeIpJZsSjUVt
-         LFuYgi4Mw6tqf6TNOKohDWb3nOyCrQGzc+UOLAQZIu4uQuCX6IKSvtRIO02XO6NMCM0m
-         lVufifWZ1Vs0vDEPBZplJnzRV6+BFKUX36rQzAOoscHgnk22T+TeFlmaic7YAb3+QQyb
-         3AZnA9WFPzP28ujsY9CfvZLNgG15ddhn8WKhZUZDZBrQprmD3qIGGdQHJ/yM8IXCgusM
-         Wz+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747983303; x=1748588103;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=69oCtQFtFuIhATn7nt7tT3JoQ8RLcM/FthzOv16zp9Y=;
-        b=cn9fI5lWAKrxqtFpmjO69p+5VGj/rl3CK9zefjx1ybyfQwDYL/ZvtvFOJ9O2bG+Qc6
-         lVISBwfrXN6jDyAOgcoFlTHbdBTcaxnOIsLk8mhBgy5wrF+DK8pa2EUGasRqBw+0GPGy
-         g25Ea/3L2zna1wF2QiKfVMDUGkkhQP9I5S+Nu9FP2U53+XXnbYTM4zEVVV63S7IWoRdj
-         3IqIpQy7uLf6KMhzc9qvxs+AlzBn3OPGtJ1TPtfiFrEmfA4n50878k0scOvhXzHZ3Uw9
-         G9VZP34bfNeG9b850bSwJRJ+2NHG4BW/Q2V09bzfzrkvR8W9Xki6oaKzDbO9OHNFSCqj
-         VlIw==
-X-Forwarded-Encrypted: i=1; AJvYcCW4hKTSUILeLsaWAekKwodoXohfqkVpm8EpX4k9AooBMZMidfddEjgruJKkuX8Brk+Q1uH5bwd4TYq3EQc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyF1Bz2JxhnZcgUyEGBP0IOgKH9gIyhXWA68qa/8sHjObA8FT4/
-	Pj0x4kofAAY4So6cPRnzwqUYDCH9CKjIEBNhRPo/P9Rw5HbznRX2o0Yamrk2MCTAcno=
-X-Gm-Gg: ASbGncv8CcvIL0nGwF4cj2seEnKxjrV7eaJOnj4rEvJ7SY54ZzXpyi9AeRjwrV3T8dz
-	sDIBCukOiaU5J9mUIIbn++v2XU+r1cfFRzYYbnMnK94OkxjCbn/3/XnXBSODQH1Vn0lb9UneDbj
-	oNAligO/63iMUKC+fec8qc5AjJPv8p6dc8GfleFlmLlQ/YqCmc0M6iKjOLlpUKulNyHKrSN8LXA
-	ySn8K0bslJLQ4/Z8E/hfZe+jo4g4bXzhwI08EinfGeyqFDA0FhdluqiK7A2LsbWubW/miCgNHSH
-	Cd+iGEI+Gqqt/o2ZnZi/i8w/3p/+weTnExc6XZT1hw/WIbGO
-X-Google-Smtp-Source: AGHT+IH75aOsRJMnyheDQH5VfJc94Xc0jentcmMf8E7Zp2ROIEwHjqRlngeR8WzATqUqYD8xScblVw==
-X-Received: by 2002:a05:6000:2903:b0:3a3:6e62:d8d5 with SMTP id ffacd0b85a97d-3a36e62d9afmr15906729f8f.58.1747983303480;
-        Thu, 22 May 2025 23:55:03 -0700 (PDT)
-Received: from linaro.org ([62.231.96.41])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a35ca88941sm25904629f8f.61.2025.05.22.23.55.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 May 2025 23:55:02 -0700 (PDT)
-Date: Fri, 23 May 2025 09:55:00 +0300
-From: Abel Vesa <abel.vesa@linaro.org>
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Abhinav Kumar <quic_abhinavk@quicinc.com>, Sean Paul <sean@poorly.run>,
-	Marijn Suijten <marijn.suijten@somainline.org>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Krishna Manikandan <quic_mkrishn@quicinc.com>,
-	Jonathan Marek <jonathan@marek.ca>,
-	Kuogee Hsieh <quic_khsieh@quicinc.com>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Dmitry Baryshkov <lumag@kernel.org>,
-	Rob Clark <robdclark@gmail.com>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, linux-arm-msm@vger.kernel.org,
-	dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Rob Clark <robdclark@chromium.org>, linux-clk@vger.kernel.org,
-	Srinivas Kandagatla <srini@kernel.org>,
-	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Subject: Re: [PATCH v5 21/24] drm/msm/dpu: Implement 10-bit color alpha for
- v12.0 DPU
-Message-ID: <aDAbxAnCN1lGGcGH@linaro.org>
-References: <20250430-b4-sm8750-display-v5-0-8cab30c3e4df@linaro.org>
- <20250430-b4-sm8750-display-v5-21-8cab30c3e4df@linaro.org>
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="O4AMrPff"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1747983339; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=kEIfINKZejvJZsMGvS6UgezRdxkkGcgt66QsjivJra8=;
+	b=O4AMrPffGEWRuSIQeLSJqdnJxh2sjB1i+nk8zjVX7OVQ5mua7SQUFPudGG8EP3PVWq4FwL78CMEFToTOU7FsuYmMFcIHvneYymAUI+5zQboAOJjN10Gn6+PZFHlNeKn8t43pDTqCi3c4k3ZLwNLhX4yv4lb4lX3f7Z2scRou0UU=
+Received: from 30.74.144.180(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0WbZKq8c_1747983335 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Fri, 23 May 2025 14:55:36 +0800
+Message-ID: <469db7d1-ba99-4dc7-af13-b5fe850d4031@linux.alibaba.com>
+Date: Fri, 23 May 2025 14:55:34 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250430-b4-sm8750-display-v5-21-8cab30c3e4df@linaro.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 03/12] khugepaged: generalize hugepage_vma_revalidate
+ for mTHP support
+To: Nico Pache <npache@redhat.com>, linux-mm@kvack.org,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Cc: david@redhat.com, ziy@nvidia.com, lorenzo.stoakes@oracle.com,
+ Liam.Howlett@oracle.com, ryan.roberts@arm.com, dev.jain@arm.com,
+ corbet@lwn.net, rostedt@goodmis.org, mhiramat@kernel.org,
+ mathieu.desnoyers@efficios.com, akpm@linux-foundation.org,
+ baohua@kernel.org, willy@infradead.org, peterx@redhat.com,
+ wangkefeng.wang@huawei.com, usamaarif642@gmail.com, sunnanyong@huawei.com,
+ vishal.moola@gmail.com, thomas.hellstrom@linux.intel.com,
+ yang@os.amperecomputing.com, kirill.shutemov@linux.intel.com,
+ aarcange@redhat.com, raquini@redhat.com, anshuman.khandual@arm.com,
+ catalin.marinas@arm.com, tiwai@suse.de, will@kernel.org,
+ dave.hansen@linux.intel.com, jack@suse.cz, cl@gentwo.org,
+ jglisse@google.com, surenb@google.com, zokeefe@google.com,
+ hannes@cmpxchg.org, rientjes@google.com, mhocko@suse.com,
+ rdunlap@infradead.org
+References: <20250515032226.128900-1-npache@redhat.com>
+ <20250515032226.128900-4-npache@redhat.com>
+From: Baolin Wang <baolin.wang@linux.alibaba.com>
+In-Reply-To: <20250515032226.128900-4-npache@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On 25-04-30 15:00:51, Krzysztof Kozlowski wrote:
-> v12.0 DPU on SM8750 comes with 10-bit color alpha.  Add register
-> differences and new implementations of setup_alpha_out(),
-> setup_border_color() and setup_blend_config().
-> 
-> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> 
-> ---
-> 
-> Changes in v4:
-> 1. Lowercase hex, use spaces for define indentation
-> 2. _dpu_crtc_setup_blend_cfg(): pass mdss_ver instead of ctl
-> 
-> Changes in v3:
-> 1. New patch, split from previous big DPU v12.0.
-> ---
->  drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c  | 19 ++++---
->  drivers/gpu/drm/msm/disp/dpu1/dpu_hw_lm.c | 84 +++++++++++++++++++++++++++++--
->  2 files changed, 94 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
-> index a4b0fe0d9899b32141928f0b6a16503a49b3c27a..90f47fc15ee5708795701d78a1380f4ab01c1427 100644
-> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
-> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
-> @@ -320,14 +320,20 @@ static bool dpu_crtc_get_scanout_position(struct drm_crtc *crtc,
->  }
->  
->  static void _dpu_crtc_setup_blend_cfg(struct dpu_crtc_mixer *mixer,
-> -		struct dpu_plane_state *pstate, const struct msm_format *format)
-> +				      struct dpu_plane_state *pstate,
-> +				      const struct msm_format *format,
-> +				      const struct dpu_mdss_version *mdss_ver)
->  {
->  	struct dpu_hw_mixer *lm = mixer->hw_lm;
->  	uint32_t blend_op;
-> -	uint32_t fg_alpha, bg_alpha;
-> +	uint32_t fg_alpha, bg_alpha, max_alpha;
->  
->  	fg_alpha = pstate->base.alpha >> 8;
 
-For the 10-bit alpha, you need to shift here by 5 instead of 8.
+
+On 2025/5/15 11:22, Nico Pache wrote:
+> For khugepaged to support different mTHP orders, we must generalize this
+> to check if the PMD is not shared by another VMA and the order is
+> enabled.
+> 
+> No functional change in this patch.
+> 
+> Reviewed-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+> Co-developed-by: Dev Jain <dev.jain@arm.com>
+> Signed-off-by: Dev Jain <dev.jain@arm.com>
+> Signed-off-by: Nico Pache <npache@redhat.com>
+> ---
+>   mm/khugepaged.c | 10 +++++-----
+>   1 file changed, 5 insertions(+), 5 deletions(-)
+> 
+> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+> index 5457571d505a..0c4d6a02d59c 100644
+> --- a/mm/khugepaged.c
+> +++ b/mm/khugepaged.c
+> @@ -920,7 +920,7 @@ static int khugepaged_find_target_node(struct collapse_control *cc)
+>   static int hugepage_vma_revalidate(struct mm_struct *mm, unsigned long address,
+>   				   bool expect_anon,
+>   				   struct vm_area_struct **vmap,
+> -				   struct collapse_control *cc)
+> +				   struct collapse_control *cc, int order)
+>   {
+>   	struct vm_area_struct *vma;
+>   	unsigned long tva_flags = cc->is_khugepaged ? TVA_ENFORCE_SYSFS : 0;
+> @@ -934,7 +934,7 @@ static int hugepage_vma_revalidate(struct mm_struct *mm, unsigned long address,
+>   
+>   	if (!thp_vma_suitable_order(vma, address, PMD_ORDER))
+
+Sorry, I missed this before. Should we also change 'PMD_ORDER' to 
+'order' for the thp_vma_suitable_order()?
+
+>   		return SCAN_ADDRESS_RANGE;
+> -	if (!thp_vma_allowable_order(vma, vma->vm_flags, tva_flags, PMD_ORDER))
+> +	if (!thp_vma_allowable_order(vma, vma->vm_flags, tva_flags, order))
+>   		return SCAN_VMA_CHECK;
+>   	/*
+>   	 * Anon VMA expected, the address may be unmapped then
+> @@ -1130,7 +1130,7 @@ static int collapse_huge_page(struct mm_struct *mm, unsigned long address,
+>   		goto out_nolock;
+>   
+>   	mmap_read_lock(mm);
+> -	result = hugepage_vma_revalidate(mm, address, true, &vma, cc);
+> +	result = hugepage_vma_revalidate(mm, address, true, &vma, cc, HPAGE_PMD_ORDER);
+>   	if (result != SCAN_SUCCEED) {
+>   		mmap_read_unlock(mm);
+>   		goto out_nolock;
+> @@ -1164,7 +1164,7 @@ static int collapse_huge_page(struct mm_struct *mm, unsigned long address,
+>   	 * mmap_lock.
+>   	 */
+>   	mmap_write_lock(mm);
+> -	result = hugepage_vma_revalidate(mm, address, true, &vma, cc);
+> +	result = hugepage_vma_revalidate(mm, address, true, &vma, cc, HPAGE_PMD_ORDER);
+>   	if (result != SCAN_SUCCEED)
+>   		goto out_up_write;
+>   	/* check if the pmd is still valid */
+> @@ -2782,7 +2782,7 @@ int madvise_collapse(struct vm_area_struct *vma, struct vm_area_struct **prev,
+>   			mmap_read_lock(mm);
+>   			mmap_locked = true;
+>   			result = hugepage_vma_revalidate(mm, addr, false, &vma,
+> -							 cc);
+> +							 cc, HPAGE_PMD_ORDER);
+>   			if (result  != SCAN_SUCCEED) {
+>   				last_fail = result;
+>   				goto out_nolock;
