@@ -1,1126 +1,243 @@
-Received: from mail-m1973184.qiye.163.com (mail-m1973184.qiye.163.com [220.197.31.84])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0555E27FD7D;
-	Fri, 23 May 2025 07:59:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.84
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747987191; cv=none; b=XFMzJfY+vl3wKIw3wlRPfje4s+BHBaUr/wx4V3tFNqgXZiSQg18M+A+2GU25pMFutrLdm7EkNN/f56pEPBvF7fidwzl+ys3y7GRMt+4lIZSNsc2Z00BQqajh/fKKiXwGyTP38356g7icmUhi7P024Hb4sgcsmzVvfOHJAlkGd20=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747987191; c=relaxed/simple;
-	bh=YFMdNDDsF9apCaM1pb7GxF0m7sCwFDQbaNq5hO1ROtg=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=uin3YXLRiFjPP04gKxJjncnn2SSK4g/0m8liFB6fhwfuKYBeURzf6unBuC9QcWFqPpw+1e63CNV7310RHlneCYycbzf29uNHMUZpO1Uot8RDMgay2vJCw+y+B2rQsZ0viWw+88sHVLYwvHgkhyikX/9YXVmO8bMfOESiWCIzUuo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=XqoeilKp; arc=none smtp.client-ip=220.197.31.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 479092DCBE6;
+	Fri, 23 May 2025 08:00:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.15
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747987229; cv=fail; b=VX5hDJGVbHmb8juKrGpkbjPGqWdfz+ACidcHbvDUjgPqmH9xBYBXV43XRsnBeIXOcfRA2X8zRbiBQtxW/0zfgHVkgbFekbEUaRI5tWz8sFLyvM5kWpiCAKEqOIO1E42hd71gijObRDeAXBP+DEHIH+wFeuglIXKQltUet5NnHJE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747987229; c=relaxed/simple;
+	bh=mocace3oQ1u22gHeoIcX+zEGxBUOT/41xW+MzDjsObk=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=It4J0yv5dHWExl9RKRcYqw65nXdXtvEoBv3VLpIkJxF+ndcCwpo6VDDhhKUvxib+VKIb33Qx00M638DK/SZSDvDLGBItrrp7RBq9twE5Y2/uCq6FRsJ4Heg+UbiY7G/vT02RcjIIqR5CO2Bsy9A3vw5nyO0LiuqoxFms6ERdpsk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CnqzCAQO; arc=fail smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="XqoeilKp"
-Received: from rockchip.. (unknown [58.22.7.114])
-	by smtp.qiye.163.com (Hmail) with ESMTP id 1628045db;
-	Fri, 23 May 2025 15:54:29 +0800 (GMT+08:00)
-From: Elaine Zhang <zhangqing@rock-chips.com>
-To: zhangqing@rock-chips.com,
-	mkl@pengutronix.de,
-	kernel@pengutronix.de,
-	mailhol.vincent@wanadoo.fr,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	heiko@sntech.de,
-	cl@rock-chips.com,
-	kever.yang@rock-chips.com
-Cc: linux-can@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org
-Subject: [PATCH v5 3/4] net: can: rockchip: add can for RK3576 Soc
-Date: Fri, 23 May 2025 15:54:21 +0800
-Message-Id: <20250523075422.4010083-4-zhangqing@rock-chips.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250523075422.4010083-1-zhangqing@rock-chips.com>
-References: <20250523075422.4010083-1-zhangqing@rock-chips.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CnqzCAQO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747987227; x=1779523227;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=mocace3oQ1u22gHeoIcX+zEGxBUOT/41xW+MzDjsObk=;
+  b=CnqzCAQOuzE74O9+NnXKISFEuPZXmOguk8lHYOJLRrFpF1/uhO4vabM8
+   ULIutsh7jiU+ePAnpJWGlnT1H4JPHfLSJU4z34QeC0Q4rShJVprUi+UVN
+   zBK9FMYdd5EkeziNtax6ipDb9WPoYrxA6qUOU1qaNBj/Hdgs+Wp1exR6f
+   YTUI1YJOxUgcpHlu2H+P9AbzMDCuXK2VfyRRaGBnqlY8G/JCzksQcr8kP
+   OeyECxgto1aZ+dP5pP5jX3aVw9v9OSiv7UdfwZYWHhuKESKVsxmGlFCst
+   ps4IB0qRg8d7JBl8IF8I3fg14XKD699UjpGEw2RWvEIk3AtvxA6cCGjiF
+   g==;
+X-CSE-ConnectionGUID: rECNBTU+Qe2PKZvhzYrObg==
+X-CSE-MsgGUID: 3GUtJmhhSU+snn/gfILHdQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11441"; a="50181837"
+X-IronPort-AV: E=Sophos;i="6.15,308,1739865600"; 
+   d="scan'208";a="50181837"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2025 01:00:24 -0700
+X-CSE-ConnectionGUID: XH/KZ+/rSfqPkcgcPtpcgA==
+X-CSE-MsgGUID: UYhr7+QhSlKTBKaHV+Zq0A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,308,1739865600"; 
+   d="scan'208";a="145870158"
+Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
+  by fmviesa005.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2025 01:00:11 -0700
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Fri, 23 May 2025 01:00:11 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25 via Frontend Transport; Fri, 23 May 2025 01:00:11 -0700
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (40.107.237.73)
+ by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.55; Fri, 23 May 2025 01:00:10 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=oJ6PaAOrFNzqcUBnAaQoKYRJtIxxB2GX0HeatUwFmXyx04pbsj0NEya/NF8U1xJbLax3XsABKA+6hKY5xauPoAHjTrKLYjfA8ms5D0WhHiipI8SwcvvE1k3Zop1aH0n8sXnTUCXtAQzVuNiUZWFjG1zsm832+hetkedloP6ftS02dW5IYCCjm1kXF+umosXjczsEpsedjAKFGyakAhjE8s/mgGqeWSvU1XHu0V6qvhXNaMXYq+RTmbU7gOsvq91KAG21ZwIXZWF4SIGU5CExFaf8GVoadSYPyE5IJ4qu1fzQSNnS3ilEne0/r4YLIMyLA1WzXLWoZlFf2vvsuqGtRQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Pvuum9kReJV4BPQVFowh7Kg4vun78YXv4pzL3TL5qZI=;
+ b=eNAOMFrQPo7SZKfdVjq1CsOATbhAC6gHYJ+I8OQyBFkghN3jfAfu9GYm7W7kCy7yYkuNVJxNOI0Mi8eQ+ZbkCZY11/Ufj88rPr7oCu43lnvs7Jhey+p+O/WeyWI4EUHx3mUrhusqiq2cxeT9qJ/7VG9QFtE7lA+OjeFzSX4+Djp5lDvJUr0FDf6P/P40vEs6CzhwQoZrZl/BOkJGVriRMVxWTUZydCRJePdxAA3bFwNmI8DAlpBqq/fSfXiPusq/lr7Xz5jC3sVSxbN4oqClajCf3juYN7Hme32dZyUE+1ma3jZwlsQ6BYYlnVlINzZ88OkqfZOMUyJuExpLDVttaA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from BN9PR11MB5276.namprd11.prod.outlook.com (2603:10b6:408:135::18)
+ by SJ0PR11MB4896.namprd11.prod.outlook.com (2603:10b6:a03:2dd::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.20; Fri, 23 May
+ 2025 08:00:02 +0000
+Received: from BN9PR11MB5276.namprd11.prod.outlook.com
+ ([fe80::b576:d3bd:c8e0:4bc1]) by BN9PR11MB5276.namprd11.prod.outlook.com
+ ([fe80::b576:d3bd:c8e0:4bc1%4]) with mapi id 15.20.8769.021; Fri, 23 May 2025
+ 08:00:02 +0000
+From: "Tian, Kevin" <kevin.tian@intel.com>
+To: Nicolin Chen <nicolinc@nvidia.com>, "jgg@nvidia.com" <jgg@nvidia.com>,
+	"corbet@lwn.net" <corbet@lwn.net>, "will@kernel.org" <will@kernel.org>
+CC: "bagasdotme@gmail.com" <bagasdotme@gmail.com>, "robin.murphy@arm.com"
+	<robin.murphy@arm.com>, "joro@8bytes.org" <joro@8bytes.org>,
+	"thierry.reding@gmail.com" <thierry.reding@gmail.com>, "vdumpa@nvidia.com"
+	<vdumpa@nvidia.com>, "jonathanh@nvidia.com" <jonathanh@nvidia.com>,
+	"shuah@kernel.org" <shuah@kernel.org>, "jsnitsel@redhat.com"
+	<jsnitsel@redhat.com>, "nathan@kernel.org" <nathan@kernel.org>,
+	"peterz@infradead.org" <peterz@infradead.org>, "Liu, Yi L"
+	<yi.l.liu@intel.com>, "mshavit@google.com" <mshavit@google.com>,
+	"praan@google.com" <praan@google.com>, "zhangzekun11@huawei.com"
+	<zhangzekun11@huawei.com>, "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
+	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "linux-tegra@vger.kernel.org"
+	<linux-tegra@vger.kernel.org>, "linux-kselftest@vger.kernel.org"
+	<linux-kselftest@vger.kernel.org>, "patches@lists.linux.dev"
+	<patches@lists.linux.dev>, "mochs@nvidia.com" <mochs@nvidia.com>,
+	"alok.a.tiwari@oracle.com" <alok.a.tiwari@oracle.com>, "vasant.hegde@amd.com"
+	<vasant.hegde@amd.com>, "dwmw2@infradead.org" <dwmw2@infradead.org>,
+	"baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>
+Subject: RE: [PATCH v5 14/29] iommufd/viommu: Add IOMMUFD_CMD_HW_QUEUE_ALLOC
+ ioctl
+Thread-Topic: [PATCH v5 14/29] iommufd/viommu: Add IOMMUFD_CMD_HW_QUEUE_ALLOC
+ ioctl
+Thread-Index: AQHbx6Qgpfst1pCMt0ifWZ2pxAOpnLPf4Msg
+Date: Fri, 23 May 2025 08:00:02 +0000
+Message-ID: <BN9PR11MB5276B1C7B8827EE2102824998C98A@BN9PR11MB5276.namprd11.prod.outlook.com>
+References: <cover.1747537752.git.nicolinc@nvidia.com>
+ <5c509f092ba61d4c0852ba57b530888ffb864ccb.1747537752.git.nicolinc@nvidia.com>
+In-Reply-To: <5c509f092ba61d4c0852ba57b530888ffb864ccb.1747537752.git.nicolinc@nvidia.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: BN9PR11MB5276:EE_|SJ0PR11MB4896:EE_
+x-ms-office365-filtering-correlation-id: f4da8511-29d1-430d-b06b-08dd99cfd24e
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|366016|7416014|1800799024|376014|38070700018;
+x-microsoft-antispam-message-info: =?us-ascii?Q?BCxC8k24KO6oDuASCk5IwxOh43CvMGBDpEMYL6gVIwp621zzA/Gq4LB/JHEl?=
+ =?us-ascii?Q?bEVVEWrYU+12baqzqcmqnF/O6ieGvpD1zGELX39GZVzlzk9/zrCTw6fDa44r?=
+ =?us-ascii?Q?NMl2rLUkcaQItTsJtg7nC2rCMrPCWyTg9Qi90LEAmsJ8cu1iYlgrZoGe9uqi?=
+ =?us-ascii?Q?Ma3CcHh8RFbvpVhytuqkr6gx0pvC6CNLfHlDk6kZHLtVbxTC436vEQxlFf6n?=
+ =?us-ascii?Q?LzQaAJq+DqW2SD6L3J1tfv06wrVHu19QWovYH7ED74GJo9yvib+y5z2g7YWm?=
+ =?us-ascii?Q?jDYzd3Q75lm6ZGjAPUyB/BJpfZuR7/zgykfvqhqc9w5QaaGNVFcuo91ZiDkM?=
+ =?us-ascii?Q?6kyHoFhbpW9hN+Dr7IZu4Rp38h8NfNg30zBsOlSl2xOWSSen2C4DlG7Rx6J9?=
+ =?us-ascii?Q?TO2Kopi3l9mXRbKX54/GzX38EzbzStwNY0e+Nzrzl9eJN0sh19271ilfFbYi?=
+ =?us-ascii?Q?xh7+ZNsDho/Ae7eOkeUg2Aj9orumJ9vNSLTeSq0tryCsNOyq5pLiDYqD0dVX?=
+ =?us-ascii?Q?a7TablqZfDMTqr4NjFjhEJt9ctGk+2LeF96L5vgkgcFRVUz8Cp1+QlNObK6B?=
+ =?us-ascii?Q?A2KBQDjWmviyuQUpjOFql83qGFJc2yRbsvdM44ctxGi/UitNn+m3hpKpJIyA?=
+ =?us-ascii?Q?l/E8HhoOZqyB/ZfvIFQ0MNV5uveAS04QIF5vYaaD8q0QwXKBrWDNF55b1BQ9?=
+ =?us-ascii?Q?Mf2r4c3BKt69aM8vfm6fjXr2vzmtPOHI+Hai5XONmP1BbzEI2FH3ezlQvd6d?=
+ =?us-ascii?Q?8xuBvAlgOx/FjjmDmi1osYZOt+2YuSr+fPWRhXpE4BYbL9rbm18Qj3zVMetP?=
+ =?us-ascii?Q?g4oJsjV3JJyM6BryFAGCk1iuryArpfpoce8onhFcxRIxRQYVOVpn2qB6EMt1?=
+ =?us-ascii?Q?FY+KLc7SAG145pP6nuU9YIPsAap4PaCGdSu6MVzX4UK676MMTtRkA+mf3hB+?=
+ =?us-ascii?Q?QCxvOBRN513gYoecBEz4STAiMC7o494dD59bLX42wAU4Dxzjcowqorvpx5XO?=
+ =?us-ascii?Q?R5XLwvTmSr8s47VriviWzKuO7f2I264dOrNNI/Mhw1sB0lOYivF5YEFnWBoZ?=
+ =?us-ascii?Q?dtyrMenVuOlGxcqJnyZOosIdBDeGG+q3JG8yaS/0NOYh3n31iYpLu+laHrUy?=
+ =?us-ascii?Q?B+nhHwn21HPCsw19GRPkeXBsKdtJiB0JQvD5NBDo7I0NpoigxrwIoudXlBC1?=
+ =?us-ascii?Q?MENByEjlsXF9QHVezBCzORWQN7acpFLcZHd4WYHIeqy3Qe2WYC6+KHi3CZTf?=
+ =?us-ascii?Q?uHJdVTCiXOR64xAD0OCFO4BsgZMxCeOL3ttgsnREFz3t20ZJyohvBJjOiSrr?=
+ =?us-ascii?Q?5XksZ3NQJ+uVWbbzl3eItMnGtZkmdlyeywgvqHfIuhnoaiAjheEkobLuy0MY?=
+ =?us-ascii?Q?h2lhDGFr22CGIxVIavf/IlQ4oKKZ9huF6n1rMGdN5m3nEIAQdsAw8k+5++4k?=
+ =?us-ascii?Q?oJlPpF1vvwjBGdTZGgxgRY+0ue+4y8yh9dFLQULrx4/SYn0caistJA=3D=3D?=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN9PR11MB5276.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(1800799024)(376014)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?LHdeqlraw13VvQr8W8A1tQD/weFc7v7PwT4SCuYaw8givHJQuQkNR3Y/ceX8?=
+ =?us-ascii?Q?pJQu4AZcNKHtaGMEE2iaWiRR4LfQ28q3iKYDxgLIAAPy9oDFSbxkghEGg2es?=
+ =?us-ascii?Q?LCql8kUIGuJoH0eYRloBNXYY4LTrvYfv+v3QFteoQlS3fSr4FARg2plCxEBm?=
+ =?us-ascii?Q?sQDsx6/YKlsmTS2ASN2HuwIOnam33DALqhTWjXz0AoCKVeY6S0wLuhUTP9ic?=
+ =?us-ascii?Q?7+cy+uTKK3yRfkeJaZpzxmOi3i4yqPbRz2AOgri7njQAddsBYEM0SmoJpEPG?=
+ =?us-ascii?Q?ycGfQKz8KPAufYFSzGW3ZXHWTZb5fLy7kN9jiJ6u7ZSWl7oHzgAAfz/ce4Ov?=
+ =?us-ascii?Q?/BjoLyLcmCrRFNivGUK9aDKDsAJ6pp8+L3sLAXzqQH6N8pxTLvlr3c5oHP0B?=
+ =?us-ascii?Q?mXsPMae4JnJjn2ccnb+p965tt0XndJGNHSYwaTyyceTNx48iXwLzOA40sZkZ?=
+ =?us-ascii?Q?fVsuJkRUIWa2VFGDVTDFqb2A0RLATL48419+EAc41KRlBcDLPJ/EDZ6cLHBS?=
+ =?us-ascii?Q?8VZL4N77pbp9QTjFdMtic8uux/BxR0gBfHkNRDwrZYjaixh2Mq5pV0ILElNI?=
+ =?us-ascii?Q?BODFfw60wwQxsR1KNP390C4aJbG+FZ4CVa4i5SaZATBXFTRIvK00pQ9e/mgT?=
+ =?us-ascii?Q?DCbIv+ZaVLeGux37FGsQ3XEK4EdFivKYjdzy+/5IZpIDeyuDJ/6eVKyw/4Ta?=
+ =?us-ascii?Q?QBvy/m2jylVJ03YwOkZeGRjK7rCkesECOPvkpK7eVDU+vr+EiV/K/xRhhBeL?=
+ =?us-ascii?Q?nLaz6zM7glTXQhPXOOxI8JNtk0r2lmM1Re28g4wgLP85T7FDgngETXzu38MP?=
+ =?us-ascii?Q?S1ab0k5lGMfC04AqhaE3k1a/fZPUGW1D+JiK62W5zsYXFEYbNfZMTLBs+7VH?=
+ =?us-ascii?Q?QmtFfYsAdTl+O9oLxXY6Juu0RCr9p9Rj6mnlVE1ZpCbPQtchio/xix+tfEfH?=
+ =?us-ascii?Q?F9u4UXaqfiuqc93TVUjoeTe1jICFtYufUHdjtqon57f6f6hZDca5O4Zkm3OR?=
+ =?us-ascii?Q?3yLk/wXvsu3Bo+Hq55jKGtH/1Si2Z/v+JTv+afXuSSZCi6jM62yDdP8dTOGZ?=
+ =?us-ascii?Q?y2OZ/7aEP4rTcmCWqVyxRC5BXGW9AKpA97NAgiTDIYfrKOh0BiO+Q1MdL5W8?=
+ =?us-ascii?Q?29yr34Kyjdm4cvIb9bsPYoZjyBvuORyXBzkFQNfsYDiFbXtFIEm6fFtYJsg5?=
+ =?us-ascii?Q?XULy3VO/VPB7ZRPyRWSiygJz5fqi+dcgUxF86Cqx3m9sVh3dsAHUH3ymlUDN?=
+ =?us-ascii?Q?JWgtbJbI8Eptsqg8UZMwotS1Nk5maFMPdd505Q5LNUNGwfVpLOu+VqHR3GX9?=
+ =?us-ascii?Q?7IngExFLTS29RhS4HF1u+EsjdH5OaCjjwihOKpQK1hNCBwlScU+aJDf2TIw9?=
+ =?us-ascii?Q?83IcwuxacW/RAgWMaq/2Kr7g4D5PhdBkTTHxI2Pn6RhCf+QrXI7Kr87jkGsh?=
+ =?us-ascii?Q?TawpgVDcqZeql4WP95QGVoB1BYr5yu2X6pUAfl1Cbxye2X0NiH0Hnb4MCviw?=
+ =?us-ascii?Q?aH4LLncT+Ahk1cADdhXStYhWwrscoTugKFcy69IlneQDNX29U1FlflARmp3i?=
+ =?us-ascii?Q?675WuAAbCUrcHJ5v2jZQ+1EM5C/PlH8PiE0sfv06?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZQ0hPGVZLHkhKGE9KS0tPSR5WFRQJFh
-	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSU9PT0
-	hVSktLVUpCS0tZBg++
-X-HM-Tid: 0a96fc22ecae03a3kunm893a9d4d11db30
-X-HM-MType: 1
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6PBg6HCo5NjE*OhUTOBYLEAkN
-	VhEKChNVSlVKTE9MQkNNQ0xKSU1OVTMWGhIXVQETGhUcChIVHDsJFBgQVhgTEgsIVRgUFkVZV1kS
-	C1lBWU5DVUlJVUxVSkpPWVdZCAFZQUhCTU1DNwY+
-DKIM-Signature:a=rsa-sha256;
-	b=XqoeilKpenfmyrAJFLrVaOzvZOvZ6MoFhJFxqzll56jykTPfUk74H4RCpRmKF0DqoqVOEfYvP9xTUcXanFo6erizNVNywndehHFG5VdTHC0hvCUu0HV5Nro3KRkb2vMd6lPm+FQ7yGyvdV1V6FRShyx0HF4oIj2oqwaLp4ApllQ=; s=default; c=relaxed/relaxed; d=rock-chips.com; v=1;
-	bh=CJKE6ef1DhIDYI8WT+jU9yNt/7xCISscs/imMi3YHnc=;
-	h=date:mime-version:subject:message-id:from;
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BN9PR11MB5276.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f4da8511-29d1-430d-b06b-08dd99cfd24e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 May 2025 08:00:02.1634
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: fZsvAaTR85WA8G34LaYyjHrb+glP1RhrTCP5Tk79iX1SIWsztC0r+rwqkA1jTCBAls1tNYZ+ZQHQ9EtAtgdRfw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR11MB4896
+X-OriginatorOrg: intel.com
 
-Is new controller, new register layout and Bit position definition:
-Support CAN and CANFD protocol, ISO 11898-1
-Support transmit or receive error count
-Support acceptance filter, more functional
-Support interrupt and all interrupt can be masked
-Support error code check
-Support self test\silent\loop-back mode
-Support auto retransmission mode
-Support auto bus on after bus-off state
-Support 2 transmit buffers
-Support Internal Storage Mode
-Support DMA
+> From: Nicolin Chen <nicolinc@nvidia.com>
+> Sent: Sunday, May 18, 2025 11:22 AM
+>=20
+> + * @nesting_parent_iova: Base address of the queue memory in the guest
+> physical
+> + *                       address space
 
-Signed-off-by: Elaine Zhang <zhangqing@rock-chips.com>
----
- .../net/can/rockchip/rockchip_canfd-core.c    | 453 ++++++++++++++++++
- drivers/net/can/rockchip/rockchip_canfd-rx.c  | 111 +++++
- drivers/net/can/rockchip/rockchip_canfd-tx.c  |  29 ++
- drivers/net/can/rockchip/rockchip_canfd.h     | 267 +++++++++++
- 4 files changed, 860 insertions(+)
+'nesting_parent' is a bit redundant. 'iova' should be sufficient as it
+implies a s2 input address.
 
-diff --git a/drivers/net/can/rockchip/rockchip_canfd-core.c b/drivers/net/can/rockchip/rockchip_canfd-core.c
-index c21ca4c1fb9a..92e260cb2527 100644
---- a/drivers/net/can/rockchip/rockchip_canfd-core.c
-+++ b/drivers/net/can/rockchip/rockchip_canfd-core.c
-@@ -31,6 +31,8 @@ static const char *__rkcanfd_get_model_str(enum rkcanfd_model model)
- 		return "rk3568v2";
- 	case RKCANFD_MODEL_RK3568V3:
- 		return "rk3568v3";
-+	case RKCANFD_MODEL_RK3576:
-+		return "rk3576";
- 	}
- 
- 	return "<unknown>";
-@@ -176,6 +178,30 @@ static void rkcanfd_get_berr_counter_corrected(struct rkcanfd_priv *priv,
- 		    !!(reg_state & RKCANFD_REG_STATE_ERROR_WARNING_STATE));
- }
- 
-+static void rk3576canfd_get_berr_counter_corrected(struct rkcanfd_priv *priv,
-+						   struct can_berr_counter *bec)
-+{
-+	struct can_berr_counter bec_raw;
-+	u32 reg_state;
-+
-+	bec->rxerr = rkcanfd_read(priv, RK3576CANFD_REG_RXERRORCNT);
-+	bec->txerr = rkcanfd_read(priv, RK3576CANFD_REG_TXERRORCNT);
-+	bec_raw = *bec;
-+
-+	if (!bec->rxerr && !bec->txerr)
-+		*bec = priv->bec;
-+	else
-+		priv->bec = *bec;
-+
-+	reg_state = rkcanfd_read(priv, RKCANFD_REG_STATE);
-+	netdev_vdbg(priv->ndev,
-+		    "%s: Raw/Cor: txerr=%3u/%3u rxerr=%3u/%3u Bus Off=%u Warning=%u\n",
-+		    __func__,
-+		    bec_raw.txerr, bec->txerr, bec_raw.rxerr, bec->rxerr,
-+		    !!(reg_state & RK3576CANFD_REG_STATE_BUS_OFF_STATE),
-+		    !!(reg_state & RK3576CANFD_REG_STATE_ERROR_WARNING_STATE));
-+}
-+
- static int rkcanfd_get_berr_counter(const struct net_device *ndev,
- 				    struct can_berr_counter *bec)
- {
-@@ -206,6 +232,11 @@ static void rkcanfd_chip_interrupts_disable(const struct rkcanfd_priv *priv)
- 	rkcanfd_write(priv, RKCANFD_REG_INT_MASK, RKCANFD_REG_INT_ALL);
- }
- 
-+static void rk3576canfd_chip_interrupts_disable(const struct rkcanfd_priv *priv)
-+{
-+	rkcanfd_write(priv, RK3576CANFD_REG_INT_MASK, RK3576CANFD_REG_INT_ALL);
-+}
-+
- static void rkcanfd_chip_fifo_setup(struct rkcanfd_priv *priv)
- {
- 	u32 reg;
-@@ -220,6 +251,72 @@ static void rkcanfd_chip_fifo_setup(struct rkcanfd_priv *priv)
- 	netdev_reset_queue(priv->ndev);
- }
- 
-+static void rk3576canfd_chip_fifo_setup(struct rkcanfd_priv *priv)
-+{
-+	u32 ism = 0, water = 0;
-+
-+	ism = RK3576CANFD_REG_STR_CTL_ISM_SEL_CANFD_FIXED;
-+	water = RK3576CANFD_ISM_WATERMASK_CANFD;
-+
-+	/* internal sram mode */
-+	rkcanfd_write(priv, RK3576CANFD_REG_STR_CTL,
-+		      (FIELD_PREP(RK3576CANFD_REG_STR_CTL_ISM_SEL, ism) |
-+		      RK3576CANFD_REG_STR_CTL_STORAGE_TIMEOUT_MODE));
-+	rkcanfd_write(priv, RK3576CANFD_REG_STR_WTM, water);
-+	WRITE_ONCE(priv->tx_head, 0);
-+	WRITE_ONCE(priv->tx_tail, 0);
-+	netdev_reset_queue(priv->ndev);
-+}
-+
-+static int rk3576canfd_atf_config(struct rkcanfd_priv *priv, int mode)
-+{
-+	u32 id[10] = {0};
-+	u32 dlc = 0, dlc_over = 0;
-+
-+	switch (mode) {
-+	case RK3576CANFD_REG_ATFM_MASK_SEL_MASK_MODE:
-+		rkcanfd_write(priv, RK3576CANFD_REG_ATF0, id[0]);
-+		rkcanfd_write(priv, RK3576CANFD_REG_ATF1, id[1]);
-+		rkcanfd_write(priv, RK3576CANFD_REG_ATF2, id[2]);
-+		rkcanfd_write(priv, RK3576CANFD_REG_ATF3, id[3]);
-+		rkcanfd_write(priv, RK3576CANFD_REG_ATF4, id[4]);
-+		rkcanfd_write(priv, RK3576CANFD_REG_ATFM0, RK3576CANFD_REG_ATFM_ID);
-+		rkcanfd_write(priv, RK3576CANFD_REG_ATFM1, RK3576CANFD_REG_ATFM_ID);
-+		rkcanfd_write(priv, RK3576CANFD_REG_ATFM2, RK3576CANFD_REG_ATFM_ID);
-+		rkcanfd_write(priv, RK3576CANFD_REG_ATFM3, RK3576CANFD_REG_ATFM_ID);
-+		rkcanfd_write(priv, RK3576CANFD_REG_ATFM4, RK3576CANFD_REG_ATFM_ID);
-+		break;
-+	case RK3576CANFD_REG_ATFM_MASK_SEL_LIST_MODE:
-+		rkcanfd_write(priv, RK3576CANFD_REG_ATF0, id[0]);
-+		rkcanfd_write(priv, RK3576CANFD_REG_ATF1, id[1]);
-+		rkcanfd_write(priv, RK3576CANFD_REG_ATF2, id[2]);
-+		rkcanfd_write(priv, RK3576CANFD_REG_ATF3, id[3]);
-+		rkcanfd_write(priv, RK3576CANFD_REG_ATF4, id[4]);
-+		rkcanfd_write(priv, RK3576CANFD_REG_ATFM0, id[5] | RK3576CANFD_REG_ATFM_MASK_SEL);
-+		rkcanfd_write(priv, RK3576CANFD_REG_ATFM1, id[6] | RK3576CANFD_REG_ATFM_MASK_SEL);
-+		rkcanfd_write(priv, RK3576CANFD_REG_ATFM2, id[7] | RK3576CANFD_REG_ATFM_MASK_SEL);
-+		rkcanfd_write(priv, RK3576CANFD_REG_ATFM3, id[8] | RK3576CANFD_REG_ATFM_MASK_SEL);
-+		rkcanfd_write(priv, RK3576CANFD_REG_ATFM4, id[9] | RK3576CANFD_REG_ATFM_MASK_SEL);
-+		break;
-+	default:
-+		rkcanfd_write(priv, RK3576CANFD_REG_ATF_CTL, RK3576CANFD_REG_ATF_CTL_ATF_DIS_ALL);
-+		return -EINVAL;
-+	}
-+
-+	if (dlc) {
-+		if (dlc_over)
-+			rkcanfd_write(priv, RK3576CANFD_REG_ATF_DLC,
-+				      dlc | RK3576CANFD_REG_ATF_DLC_ATF_DLC_EN);
-+		else
-+			rkcanfd_write(priv, RK3576CANFD_REG_ATF_DLC,
-+				      dlc | RK3576CANFD_REG_ATF_DLC_ATF_DLC_EN |
-+				      RK3576CANFD_REG_ATF_DLC_ATF_DLC_MODE);
-+	}
-+	rkcanfd_write(priv, RK3576CANFD_REG_ATF_CTL, 0);
-+
-+	return 0;
-+}
-+
- static void rkcanfd_chip_start(struct rkcanfd_priv *priv)
- {
- 	u32 reg;
-@@ -285,6 +382,68 @@ static void rkcanfd_chip_start(struct rkcanfd_priv *priv)
- 		   rkcanfd_read(priv, RKCANFD_REG_MODE));
- }
- 
-+static void rk3576canfd_chip_start(struct rkcanfd_priv *priv)
-+
-+{
-+	u32 reg;
-+
-+	rkcanfd_chip_set_reset_mode(priv);
-+
-+	/* Receiving Filter: accept all */
-+	rk3576canfd_atf_config(priv, RK3576CANFD_REG_ATFM_MASK_SEL_MASK_MODE);
-+
-+	/* enable:
-+	 * - CAN_FD: enable CAN-FD
-+	 * - AUTO_RETX_MODE: auto retransmission on TX error
-+	 * - COVER_MODE: RX-FIFO overwrite mode, do not send OVERLOAD frames
-+	 * - RXSTX_MODE: Receive Self Transmit data mode
-+	 * - WORK_MODE: transition from reset to working mode
-+	 */
-+	reg = rkcanfd_read(priv, RKCANFD_REG_MODE);
-+	priv->reg_mode_default = reg | RKCANFD_REG_MODE_WORK_MODE;
-+
-+	if (priv->can.ctrlmode & CAN_CTRLMODE_LOOPBACK) {
-+		priv->reg_mode_default |= RKCANFD_REG_MODE_LBACK_MODE;
-+		rkcanfd_write(priv, RK3576CANFD_REG_ERROR_MASK,
-+			      RK3576CANFD_REG_ERROR_MASK_ACK_ERROR);
-+	}
-+
-+	/* mask, i.e. ignore:
-+	 * - TIMESTAMP_COUNTER_OVERFLOW_INT - timestamp counter overflow interrupt
-+	 * - TX_ARBIT_FAIL_INT - TX arbitration fail interrupt
-+	 * - OVERLOAD_INT - CAN bus overload interrupt
-+	 * - TX_FINISH_INT - Transmit finish interrupt
-+	 */
-+	priv->reg_int_mask_default = RK3576CANFD_REG_INT_RX_FINISH_INT;
-+
-+	/* Do not mask the bus error interrupt if the bus error
-+	 * reporting is requested.
-+	 */
-+	if (!(priv->can.ctrlmode & CAN_CTRLMODE_BERR_REPORTING))
-+		priv->reg_int_mask_default |= RKCANFD_REG_INT_ERROR_INT;
-+
-+	memset(&priv->bec, 0x0, sizeof(priv->bec));
-+
-+	priv->devtype_data.fifo_setup(priv);
-+
-+	rkcanfd_write(priv, RK3576CANFD_REG_AUTO_RETX_CFG,
-+		      RK3576CANFD_REG_AUTO_RETX_CFG_AUTO_RETX_EN);
-+
-+	rkcanfd_write(priv, RK3576CANFD_REG_BRS_CFG,
-+		      RK3576CANFD_REG_BRS_CFG_BRS_NEGSYNC_EN |
-+		      RK3576CANFD_REG_BRS_CFG_BRS_POSSYNC_EN);
-+
-+	rkcanfd_set_bittiming(priv);
-+
-+	priv->devtype_data.interrupts_disable(priv);
-+	rkcanfd_chip_set_work_mode(priv);
-+
-+	priv->can.state = CAN_STATE_ERROR_ACTIVE;
-+
-+	netdev_dbg(priv->ndev, "%s: reg_mode=0x%08x\n", __func__,
-+		   rkcanfd_read(priv, RKCANFD_REG_MODE));
-+}
-+
- static void __rkcanfd_chip_stop(struct rkcanfd_priv *priv, const enum can_state state)
- {
- 	priv->can.state = state;
-@@ -301,6 +460,13 @@ static void rkcanfd_chip_stop(struct rkcanfd_priv *priv, const enum can_state st
- 	__rkcanfd_chip_stop(priv, state);
- }
- 
-+static void rk3576canfd_chip_stop(struct rkcanfd_priv *priv, const enum can_state state)
-+{
-+	priv->can.state = state;
-+
-+	__rkcanfd_chip_stop(priv, state);
-+}
-+
- static void rkcanfd_chip_stop_sync(struct rkcanfd_priv *priv, const enum can_state state)
- {
- 	priv->can.state = state;
-@@ -309,6 +475,13 @@ static void rkcanfd_chip_stop_sync(struct rkcanfd_priv *priv, const enum can_sta
- 	__rkcanfd_chip_stop(priv, state);
- }
- 
-+static void rk3576canfd_chip_stop_sync(struct rkcanfd_priv *priv, const enum can_state state)
-+{
-+	priv->can.state = state;
-+
-+	__rkcanfd_chip_stop(priv, state);
-+}
-+
- static int rkcanfd_set_mode(struct net_device *ndev,
- 			    enum can_mode mode)
- {
-@@ -364,6 +537,9 @@ static const char *rkcanfd_get_error_type_str(unsigned int type)
- #define RKCAN_ERROR_CODE(reg_ec, code) \
- 	((reg_ec) & RKCANFD_REG_ERROR_CODE_##code ? __stringify(code) " " : "")
- 
-+#define RK3576CAN_ERROR_CODE(reg_ec, code) \
-+	((reg_ec) & RK3576CANFD_REG_ERROR_CODE_##code ? __stringify(code) " " : "")
-+
- static void
- rkcanfd_handle_error_int_reg_ec(struct rkcanfd_priv *priv, struct can_frame *cf,
- 				const u32 reg_ec)
-@@ -493,6 +669,128 @@ rkcanfd_handle_error_int_reg_ec(struct rkcanfd_priv *priv, struct can_frame *cf,
- 	}
- }
- 
-+static void
-+rk3576canfd_handle_error_int_reg_ec(struct rkcanfd_priv *priv, struct can_frame *cf,
-+				    const u32 reg_ec)
-+{
-+	struct net_device_stats *stats = &priv->ndev->stats;
-+	unsigned int type;
-+	u32 reg_state, reg_cmd;
-+
-+	type = FIELD_GET(RK3576CANFD_REG_ERROR_CODE_TYPE, reg_ec);
-+	reg_cmd = rkcanfd_read(priv, RK3576CANFD_REG_CMD);
-+	reg_state = rkcanfd_read(priv, RK3576CANFD_REG_STATE);
-+
-+	netdev_dbg(priv->ndev, "%s Error in %s %s Phase: %s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s(0x%08x) CMD=%u RX=%u TX=%u Error-Warning=%u Bus-Off=%u\n",
-+		   rkcanfd_get_error_type_str(type),
-+		   reg_ec & RK3576CANFD_REG_ERROR_CODE_DIRECTION_RX ? "RX" : "TX",
-+		   reg_ec & RK3576CANFD_REG_ERROR_CODE_PHASE ? "Data" : "Arbitration",
-+		   RK3576CAN_ERROR_CODE(reg_ec, TX_ACK_EOF),
-+		   RK3576CAN_ERROR_CODE(reg_ec, TX_CRC),
-+		   RK3576CAN_ERROR_CODE(reg_ec, TX_STUFF_COUNT),
-+		   RK3576CAN_ERROR_CODE(reg_ec, TX_DATA),
-+		   RK3576CAN_ERROR_CODE(reg_ec, TX_SOF_DLC),
-+		   RK3576CAN_ERROR_CODE(reg_ec, TX_IDLE),
-+		   RK3576CAN_ERROR_CODE(reg_ec, RX_ERROR),
-+		   RK3576CAN_ERROR_CODE(reg_ec, RX_OVERLOAD),
-+		   RK3576CAN_ERROR_CODE(reg_ec, RX_SPACE),
-+		   RK3576CAN_ERROR_CODE(reg_ec, RX_EOF),
-+		   RK3576CAN_ERROR_CODE(reg_ec, RX_ACK_LIM),
-+		   RK3576CAN_ERROR_CODE(reg_ec, RX_ACK),
-+		   RK3576CAN_ERROR_CODE(reg_ec, RX_CRC_LIM),
-+		   RK3576CAN_ERROR_CODE(reg_ec, RX_CRC),
-+		   RK3576CAN_ERROR_CODE(reg_ec, RX_STUFF_COUNT),
-+		   RK3576CAN_ERROR_CODE(reg_ec, RX_DATA),
-+		   RK3576CAN_ERROR_CODE(reg_ec, RX_DLC),
-+		   RK3576CAN_ERROR_CODE(reg_ec, RX_BRS_ESI),
-+		   RK3576CAN_ERROR_CODE(reg_ec, RX_RES),
-+		   RK3576CAN_ERROR_CODE(reg_ec, RX_FDF),
-+		   RK3576CAN_ERROR_CODE(reg_ec, RX_ID2_RTR),
-+		   RK3576CAN_ERROR_CODE(reg_ec, RX_SOF_IDE),
-+		   RK3576CAN_ERROR_CODE(reg_ec, RX_BUS_IDLE),
-+		   RK3576CAN_ERROR_CODE(reg_ec, RX_BUS_INT),
-+		   RK3576CAN_ERROR_CODE(reg_ec, RX_STOP),
-+		   reg_ec, reg_cmd,
-+		   !!(reg_state & RK3576CANFD_REG_STATE_RX_PERIOD),
-+		   !!(reg_state & RK3576CANFD_REG_STATE_TX_PERIOD),
-+		   !!(reg_state & RK3576CANFD_REG_STATE_ERROR_WARNING_STATE),
-+		   !!(reg_state & RK3576CANFD_REG_STATE_BUS_OFF_STATE));
-+
-+	priv->can.can_stats.bus_error++;
-+
-+	if (reg_ec & RK3576CANFD_REG_ERROR_CODE_DIRECTION_RX)
-+		stats->rx_errors++;
-+	else
-+		stats->tx_errors++;
-+
-+	if (!cf)
-+		return;
-+
-+	if (reg_ec & RK3576CANFD_REG_ERROR_CODE_DIRECTION_RX) {
-+		if (reg_ec & RK3576CANFD_REG_ERROR_CODE_RX_SOF_IDE)
-+			cf->data[3] = CAN_ERR_PROT_LOC_SOF;
-+		else if (reg_ec & RK3576CANFD_REG_ERROR_CODE_RX_ID2_RTR)
-+			cf->data[3] = CAN_ERR_PROT_LOC_RTR;
-+		/* RKCANFD_REG_ERROR_CODE_RX_FDF */
-+		else if (reg_ec & RK3576CANFD_REG_ERROR_CODE_RX_RES)
-+			cf->data[3] = CAN_ERR_PROT_LOC_RES0;
-+		/* RKCANFD_REG_ERROR_CODE_RX_BRS_ESI */
-+		else if (reg_ec & RK3576CANFD_REG_ERROR_CODE_RX_DLC)
-+			cf->data[3] = CAN_ERR_PROT_LOC_DLC;
-+		else if (reg_ec & RK3576CANFD_REG_ERROR_CODE_RX_DATA)
-+			cf->data[3] = CAN_ERR_PROT_LOC_DATA;
-+		/* RKCANFD_REG_ERROR_CODE_RX_STUFF_COUNT */
-+		else if (reg_ec & RK3576CANFD_REG_ERROR_CODE_RX_CRC)
-+			cf->data[3] = CAN_ERR_PROT_LOC_CRC_SEQ;
-+		else if (reg_ec & RK3576CANFD_REG_ERROR_CODE_RX_CRC_LIM)
-+			cf->data[3] = CAN_ERR_PROT_LOC_ACK_DEL;
-+		else if (reg_ec & RK3576CANFD_REG_ERROR_CODE_RX_ACK)
-+			cf->data[3] = CAN_ERR_PROT_LOC_ACK;
-+		else if (reg_ec & RK3576CANFD_REG_ERROR_CODE_RX_ACK_LIM)
-+			cf->data[3] = CAN_ERR_PROT_LOC_ACK_DEL;
-+		else if (reg_ec & RK3576CANFD_REG_ERROR_CODE_RX_EOF)
-+			cf->data[3] = CAN_ERR_PROT_LOC_EOF;
-+		else if (reg_ec & RK3576CANFD_REG_ERROR_CODE_RX_SPACE)
-+			cf->data[3] = CAN_ERR_PROT_LOC_EOF;
-+	} else {
-+		cf->data[2] |= CAN_ERR_PROT_TX;
-+
-+		if (reg_ec & RK3576CANFD_REG_ERROR_CODE_TX_SOF_DLC)
-+			cf->data[3] = CAN_ERR_PROT_LOC_SOF;
-+		else if (reg_ec & RK3576CANFD_REG_ERROR_CODE_TX_DATA)
-+			cf->data[3] = CAN_ERR_PROT_LOC_DATA;
-+		/* RKCANFD_REG_ERROR_CODE_TX_STUFF_COUNT */
-+		else if (reg_ec & RK3576CANFD_REG_ERROR_CODE_TX_CRC)
-+			cf->data[3] = CAN_ERR_PROT_LOC_CRC_SEQ;
-+		else if (reg_ec & RK3576CANFD_REG_ERROR_CODE_TX_ACK_EOF)
-+			cf->data[3] = CAN_ERR_PROT_LOC_ACK_DEL;
-+	}
-+
-+	switch (reg_ec & RK3576CANFD_REG_ERROR_CODE_TYPE) {
-+	case FIELD_PREP_CONST(RK3576CANFD_REG_ERROR_CODE_TYPE,
-+			      RK3576CANFD_REG_ERROR_CODE_TYPE_BIT):
-+
-+		cf->data[2] |= CAN_ERR_PROT_BIT;
-+		break;
-+	case FIELD_PREP_CONST(RK3576CANFD_REG_ERROR_CODE_TYPE,
-+			      RK3576CANFD_REG_ERROR_CODE_TYPE_STUFF):
-+		cf->data[2] |= CAN_ERR_PROT_STUFF;
-+		break;
-+	case FIELD_PREP_CONST(RK3576CANFD_REG_ERROR_CODE_TYPE,
-+			      RK3576CANFD_REG_ERROR_CODE_TYPE_FORM):
-+		cf->data[2] |= CAN_ERR_PROT_FORM;
-+		break;
-+	case FIELD_PREP_CONST(RK3576CANFD_REG_ERROR_CODE_TYPE,
-+			      RK3576CANFD_REG_ERROR_CODE_TYPE_ACK):
-+		cf->can_id |= CAN_ERR_ACK;
-+		break;
-+	case FIELD_PREP_CONST(RK3576CANFD_REG_ERROR_CODE_TYPE,
-+			      RK3576CANFD_REG_ERROR_CODE_TYPE_CRC):
-+		cf->data[3] = CAN_ERR_PROT_LOC_CRC_SEQ;
-+		break;
-+	}
-+}
-+
- static int rkcanfd_handle_error_int(struct rkcanfd_priv *priv)
- {
- 	struct net_device_stats *stats = &priv->ndev->stats;
-@@ -530,6 +828,41 @@ static int rkcanfd_handle_error_int(struct rkcanfd_priv *priv)
- 	return 0;
- }
- 
-+static int rkcanfd_handle_rk3576_error_int(struct rkcanfd_priv *priv)
-+{
-+	struct net_device_stats *stats = &priv->ndev->stats;
-+	struct can_frame *cf = NULL;
-+	u32 reg_ec;
-+	struct sk_buff *skb;
-+	int err;
-+
-+	reg_ec = rkcanfd_read(priv, RK3576CANFD_REG_ERROR_CODE);
-+	if (!reg_ec)
-+		return 0;
-+
-+	if (priv->can.ctrlmode & CAN_CTRLMODE_BERR_REPORTING) {
-+		skb = alloc_can_err_skb(priv->ndev, &cf);
-+		if (cf) {
-+			struct can_berr_counter bec;
-+
-+			priv->devtype_data.get_berr_counter(priv, &bec);
-+			cf->can_id |= CAN_ERR_PROT | CAN_ERR_BUSERROR | CAN_ERR_CNT;
-+			cf->data[6] = bec.txerr;
-+			cf->data[7] = bec.rxerr;
-+		}
-+	}
-+
-+	rk3576canfd_handle_error_int_reg_ec(priv, cf, reg_ec);
-+	if (!cf)
-+		return 0;
-+
-+	err = can_rx_offload_queue_tail(&priv->offload, skb);
-+	if (err)
-+		stats->rx_fifo_errors++;
-+
-+	return 0;
-+}
-+
- static int rkcanfd_handle_state_error_int(struct rkcanfd_priv *priv)
- {
- 	struct net_device_stats *stats = &priv->ndev->stats;
-@@ -575,6 +908,50 @@ static int rkcanfd_handle_state_error_int(struct rkcanfd_priv *priv)
- 	return 0;
- }
- 
-+static int rkcanfd_handle_rk3576_state_error_int(struct rkcanfd_priv *priv)
-+{
-+	struct net_device_stats *stats = &priv->ndev->stats;
-+	enum can_state new_state, rx_state, tx_state;
-+	struct net_device *ndev = priv->ndev;
-+	struct can_berr_counter bec;
-+	struct can_frame *cf = NULL;
-+	struct sk_buff *skb;
-+	int err;
-+
-+	priv->devtype_data.get_berr_counter(priv, &bec);
-+	can_state_get_by_berr_counter(ndev, &bec, &tx_state, &rx_state);
-+
-+	new_state = max(tx_state, rx_state);
-+	if (new_state == priv->can.state)
-+		return 0;
-+
-+	/* The skb allocation might fail, but can_change_state()
-+	 * handles cf == NULL.
-+	 */
-+	skb = alloc_can_err_skb(priv->ndev, &cf);
-+	can_change_state(ndev, cf, tx_state, rx_state);
-+
-+	if (new_state == CAN_STATE_BUS_OFF) {
-+		priv->devtype_data.chip_stop(priv, CAN_STATE_BUS_OFF);
-+		can_bus_off(ndev);
-+	}
-+
-+	if (!skb)
-+		return 0;
-+
-+	if (new_state != CAN_STATE_BUS_OFF) {
-+		cf->can_id |= CAN_ERR_CNT;
-+		cf->data[6] = bec.txerr;
-+		cf->data[7] = bec.rxerr;
-+	}
-+
-+	err = can_rx_offload_queue_tail(&priv->offload, skb);
-+	if (err)
-+		stats->rx_fifo_errors++;
-+
-+	return 0;
-+}
-+
- static int
- rkcanfd_handle_rx_fifo_overflow_int(struct rkcanfd_priv *priv)
- {
-@@ -621,6 +998,55 @@ rkcanfd_handle_rx_fifo_overflow_int(struct rkcanfd_priv *priv)
- 	err; \
- })
- 
-+static irqreturn_t rk3576canfd_irq(int irq, void *dev_id)
-+{
-+	struct rkcanfd_priv *priv = dev_id;
-+	u32 reg_int_unmasked, reg_int;
-+
-+	reg_int_unmasked = rkcanfd_read(priv, RK3576CANFD_REG_INT);
-+	reg_int = reg_int_unmasked & ~priv->reg_int_mask_default;
-+
-+	if (!reg_int)
-+		return IRQ_NONE;
-+
-+	rkcanfd_write(priv, RK3576CANFD_REG_INT, reg_int);
-+
-+	if (reg_int & (RK3576CANFD_REG_INT_RXSTR_TIMEOUT_INT |
-+		       RK3576CANFD_REG_INT_ISM_WTM_INT |
-+		       RK3576CANFD_REG_INT_RX_FIFO_FULL_INT)) {
-+		rkcanfd_write(priv, RK3576CANFD_REG_INT_MASK,
-+			      priv->reg_int_mask_default | RK3576CANFD_REG_INT_ISM_WTM_INT |
-+			      RK3576CANFD_REG_INT_RXSTR_TIMEOUT_INT |
-+			      RK3576CANFD_REG_INT_RX_FINISH_INT);
-+		rkcanfd_handle(priv, rk3576_rx_int);
-+	}
-+
-+	if (reg_int & RK3576CANFD_REG_INT_TX_FINISH_INT)
-+		rkcanfd_handle(priv, rk3576_tx_int);
-+
-+	if (reg_int & RK3576CANFD_REG_INT_ERROR_INT)
-+		rkcanfd_handle(priv, rk3576_error_int);
-+
-+	if (reg_int & (RK3576CANFD_REG_INT_BUS_OFF_INT |
-+		       RK3576CANFD_REG_INT_PASSIVE_ERROR_INT |
-+		       RK3576CANFD_REG_INT_ERROR_WARNING_INT) ||
-+	    priv->can.state > CAN_STATE_ERROR_ACTIVE)
-+		rkcanfd_handle(priv, rk3576_state_error_int);
-+
-+	if (reg_int & RK3576CANFD_REG_INT_WAKEUP_INT)
-+		netdev_info(priv->ndev, "%s: WAKEUP_INT\n", __func__);
-+
-+	if (reg_int & RK3576CANFD_REG_INT_BUS_OFF_RECOVERY_INT)
-+		netdev_info(priv->ndev, "%s: BUS_OFF_RECOVERY_INT\n", __func__);
-+
-+	if (reg_int & RK3576CANFD_REG_INT_OVERLOAD_INT)
-+		netdev_info(priv->ndev, "%s: OVERLOAD_INT\n", __func__);
-+
-+	can_rx_offload_irq_finish(&priv->offload);
-+
-+	return IRQ_HANDLED;
-+}
-+
- static irqreturn_t rkcanfd_irq(int irq, void *dev_id)
- {
- 	struct rkcanfd_priv *priv = dev_id;
-@@ -775,6 +1201,16 @@ static void rkcanfd_register_done(const struct rkcanfd_priv *priv)
- 			    RKCANFD_ERRATUM_5_SYSCLOCK_HZ_MIN / MEGA);
- }
- 
-+static void rk3576canfd_register_done(const struct rkcanfd_priv *priv)
-+{
-+	u32 dev_id;
-+
-+	dev_id = rkcanfd_read(priv, RK3576CANFD_REG_RTL_VERSION);
-+	netdev_info(priv->ndev,
-+		    "Rockchip-CANFD %s rev%u.\n",
-+		    rkcanfd_get_model_str(priv), dev_id);
-+}
-+
- static int rkcanfd_register(struct rkcanfd_priv *priv)
- {
- 	struct net_device *ndev = priv->ndev;
-@@ -858,6 +1294,20 @@ static const struct rkcanfd_devtype_data rkcanfd_devtype_data_rk3568v3 = {
- 	.register_done = rkcanfd_register_done,
- };
- 
-+/* The rk3576 CAN-FD */
-+static const struct rkcanfd_devtype_data rkcanfd_devtype_data_rk3576 = {
-+	.model = RKCANFD_MODEL_RK3576,
-+	.get_berr_counter = rk3576canfd_get_berr_counter_corrected,
-+	.interrupts_enable = rkcanfd_chip_interrupts_enable,
-+	.interrupts_disable = rk3576canfd_chip_interrupts_disable,
-+	.fifo_setup = rk3576canfd_chip_fifo_setup,
-+	.chip_start = rk3576canfd_chip_start,
-+	.chip_stop = rk3576canfd_chip_stop,
-+	.chip_stop_sync = rk3576canfd_chip_stop_sync,
-+	.irq = rk3576canfd_irq,
-+	.register_done = rk3576canfd_register_done,
-+};
-+
- static const struct of_device_id rkcanfd_of_match[] = {
- 	{
- 		.compatible = "rockchip,rk3568v2-canfd",
-@@ -865,6 +1315,9 @@ static const struct of_device_id rkcanfd_of_match[] = {
- 	}, {
- 		.compatible = "rockchip,rk3568v3-canfd",
- 		.data = &rkcanfd_devtype_data_rk3568v3,
-+	},  {
-+		.compatible = "rockchip,rk3576-canfd",
-+		.data = &rkcanfd_devtype_data_rk3576,
- 	}, {
- 		/* sentinel */
- 	},
-diff --git a/drivers/net/can/rockchip/rockchip_canfd-rx.c b/drivers/net/can/rockchip/rockchip_canfd-rx.c
-index 475c0409e215..8a383cabd9d2 100644
---- a/drivers/net/can/rockchip/rockchip_canfd-rx.c
-+++ b/drivers/net/can/rockchip/rockchip_canfd-rx.c
-@@ -91,6 +91,47 @@ rkcanfd_fifo_header_to_cfd_header(const struct rkcanfd_priv *priv,
- 	return len + cfd->len;
- }
- 
-+static unsigned int
-+rk3576canfd_fifo_header_to_cfd_header(const struct rkcanfd_priv *priv,
-+				      const struct rk3576canfd_fifo_header *header,
-+				      struct canfd_frame *cfd)
-+{
-+	unsigned int len = sizeof(*cfd) - sizeof(cfd->data);
-+	u8 dlc;
-+
-+	if (header->frameinfo & RK3576CANFD_REG_RXFRD_FRAMEINFO_FRAME_FORMAT)
-+		cfd->can_id = FIELD_GET(RKCANFD_REG_FD_ID_EFF, header->id) |
-+			CAN_EFF_FLAG;
-+	else
-+		cfd->can_id = FIELD_GET(RKCANFD_REG_FD_ID_SFF, header->id);
-+
-+	dlc = FIELD_GET(RK3576CANFD_REG_RXFRD_FRAMEINFO_DATA_LENGTH,
-+			header->frameinfo);
-+
-+	/* CAN-FD */
-+	if (header->frameinfo & RK3576CANFD_REG_RXFRD_FRAMEINFO_FDF) {
-+		cfd->len = can_fd_dlc2len(dlc);
-+
-+		/* The cfd is not allocated by alloc_canfd_skb(), so
-+		 * set CANFD_FDF here.
-+		 */
-+		cfd->flags |= CANFD_FDF;
-+
-+		if (header->frameinfo & RK3576CANFD_REG_RXFRD_FRAMEINFO_BRS)
-+			cfd->flags |= CANFD_BRS;
-+	} else {
-+		cfd->len = can_cc_dlc2len(dlc);
-+
-+		if (header->frameinfo & RK3576CANFD_REG_RXFRD_FRAMEINFO_RTR) {
-+			cfd->can_id |= CAN_RTR_FLAG;
-+
-+			return len;
-+		}
-+	}
-+
-+	return len + cfd->len;
-+}
-+
- static int rkcanfd_rxstx_filter(struct rkcanfd_priv *priv,
- 				const struct canfd_frame *cfd_rx, const u32 ts,
- 				bool *tx_done)
-@@ -198,6 +239,52 @@ rkcanfd_fifo_header_empty(const struct rkcanfd_fifo_header *header)
- 		header->frameinfo == header->ts;
- }
- 
-+static int rk3576canfd_handle_rx_int_one(struct rkcanfd_priv *priv)
-+{
-+	struct net_device_stats *stats = &priv->ndev->stats;
-+	struct canfd_frame cfd[1] = { }, *skb_cfd;
-+	struct rk3576canfd_fifo_header header[1] = { };
-+	struct sk_buff *skb;
-+	unsigned int len;
-+	int err;
-+
-+	/* read header into separate struct and convert it later */
-+	rkcanfd_read_rep(priv, RKCANFD_REG_RX_FIFO_RDATA,
-+			 header, sizeof(*header));
-+	/* read data directly into cfd */
-+	rkcanfd_read_rep(priv, RKCANFD_REG_RX_FIFO_RDATA,
-+			 cfd->data, sizeof(cfd->data));
-+
-+	len = rk3576canfd_fifo_header_to_cfd_header(priv, header, cfd);
-+
-+	/* Manual handling of CAN Bus Error counters. See
-+	 * rkcanfd_get_corrected_berr_counter() for detailed
-+	 * explanation.
-+	 */
-+	if (priv->bec.rxerr)
-+		priv->bec.rxerr = min(CAN_ERROR_PASSIVE_THRESHOLD,
-+				      priv->bec.rxerr) - 1;
-+
-+	if (header->frameinfo & RK3576CANFD_REG_RXFRD_FRAMEINFO_FDF)
-+		skb = alloc_canfd_skb(priv->ndev, &skb_cfd);
-+	else
-+		skb = alloc_can_skb(priv->ndev, (struct can_frame **)&skb_cfd);
-+
-+	if (!skb) {
-+		stats->rx_dropped++;
-+
-+		return 0;
-+	}
-+
-+	memcpy(skb_cfd, cfd, len);
-+
-+	err = can_rx_offload_queue_tail(&priv->offload, skb);
-+	if (err)
-+		stats->rx_fifo_errors++;
-+
-+	return 0;
-+}
-+
- static int rkcanfd_handle_rx_int_one(struct rkcanfd_priv *priv)
- {
- 	struct net_device_stats *stats = &priv->ndev->stats;
-@@ -284,6 +371,15 @@ rkcanfd_rx_fifo_get_len(const struct rkcanfd_priv *priv)
- 	return FIELD_GET(RKCANFD_REG_RX_FIFO_CTRL_RX_FIFO_CNT, reg);
- }
- 
-+static inline unsigned int
-+rk3576canfd_rx_fifo_get_len(const struct rkcanfd_priv *priv)
-+{
-+	const u32 reg = rkcanfd_read(priv, RK3576CANFD_REG_STR_STATE);
-+	int val = FIELD_GET(RK3576CANFD_REG_STR_STATE_INTM_LEFT_CNT, reg);
-+
-+	return DIV_ROUND_UP(val, RK3576CANFD_REG_STR_STATE_INTM_LEFT_CNT_UNIT);
-+}
-+
- int rkcanfd_handle_rx_int(struct rkcanfd_priv *priv)
- {
- 	unsigned int len;
-@@ -297,3 +393,18 @@ int rkcanfd_handle_rx_int(struct rkcanfd_priv *priv)
- 
- 	return 0;
- }
-+
-+int rkcanfd_handle_rk3576_rx_int(struct rkcanfd_priv *priv)
-+{
-+	unsigned int len;
-+	int err;
-+
-+	while ((len = rk3576canfd_rx_fifo_get_len(priv))) {
-+		err = rk3576canfd_handle_rx_int_one(priv);
-+		if (err)
-+			return err;
-+	}
-+	rkcanfd_write(priv, RK3576CANFD_REG_INT_MASK, priv->reg_int_mask_default);
-+	return 0;
-+}
-+
-diff --git a/drivers/net/can/rockchip/rockchip_canfd-tx.c b/drivers/net/can/rockchip/rockchip_canfd-tx.c
-index 865a15e033a9..c19b97cb2296 100644
---- a/drivers/net/can/rockchip/rockchip_canfd-tx.c
-+++ b/drivers/net/can/rockchip/rockchip_canfd-tx.c
-@@ -165,3 +165,32 @@ void rkcanfd_handle_tx_done_one(struct rkcanfd_priv *priv, const u32 ts,
- 							    frame_len_p);
- 	stats->tx_packets++;
- }
-+
-+int rkcanfd_handle_rk3576_tx_int(struct rkcanfd_priv *priv)
-+{
-+	struct net_device_stats *stats = &priv->ndev->stats;
-+	unsigned int tx_tail;
-+	struct sk_buff *skb;
-+	unsigned int frame_len = 0;
-+
-+	tx_tail = rkcanfd_get_tx_tail(priv);
-+	skb = priv->can.echo_skb[tx_tail];
-+
-+	/* Manual handling of CAN Bus Error counters. See
-+	 * rkcanfd_get_corrected_berr_counter() for detailed
-+	 * explanation.
-+	 */
-+	if (priv->bec.txerr)
-+		priv->bec.txerr--;
-+
-+	stats->tx_bytes +=
-+		can_rx_offload_get_echo_skb_queue_tail(&priv->offload,
-+						       tx_tail, &frame_len);
-+	stats->tx_packets++;
-+	WRITE_ONCE(priv->tx_tail, priv->tx_tail + 1);
-+	netif_subqueue_completed_wake(priv->ndev, 0, 1, frame_len,
-+				      rkcanfd_get_effective_tx_free(priv),
-+				      RKCANFD_TX_START_THRESHOLD);
-+	return 0;
-+}
-+
-diff --git a/drivers/net/can/rockchip/rockchip_canfd.h b/drivers/net/can/rockchip/rockchip_canfd.h
-index d898260794aa..ef46837ed573 100644
---- a/drivers/net/can/rockchip/rockchip_canfd.h
-+++ b/drivers/net/can/rockchip/rockchip_canfd.h
-@@ -287,6 +287,265 @@
- #define RKCANFD_REG_RX_FIFO_RDATA 0x400
- #define RKCANFD_REG_TXE_FIFO_RDATA 0x500
- 
-+#define RK3576CANFD_REG_MODE 0x000
-+#define RK3576CANFD_REG_CMD 0x004
-+
-+#define RK3576CANFD_REG_STATE 0x008
-+#define RK3576CANFD_REG_STATE_SLEEP_STATE BIT(5)
-+#define RK3576CANFD_REG_STATE_BUS_OFF_STATE BIT(4)
-+#define RK3576CANFD_REG_STATE_ERROR_WARNING_STATE BIT(3)
-+#define RK3576CANFD_REG_STATE_TX_PERIOD BIT(2)
-+#define RK3576CANFD_REG_STATE_RX_PERIOD BIT(1)
-+#define RK3576CANFD_REG_STATE_TX_BUFFER_FULL BIT(0)
-+
-+#define RK3576CANFD_REG_INT 0x00c
-+#define RK3576CANFD_REG_INT_BUSOFF_RCY_INT BIT(19)
-+#define RK3576CANFD_REG_INT_ESM_WTM_INT BIT(18)
-+#define RK3576CANFD_REG_INT_ISM_WTM_INT BIT(17)
-+#define RK3576CANFD_REG_INT_BUSINT_INT BIT(16)
-+#define RK3576CANFD_REG_INT_RXSTR_TIMEOUT_INT BIT(15)
-+#define RK3576CANFD_REG_INT_MFI_TIMEOUT_INT BIT(14)
-+#define RK3576CANFD_REG_INT_MFI_INT BIT(13)
-+#define RK3576CANFD_REG_INT_AUTO_RETX_FAIL_INT BIT(12)
-+#define RK3576CANFD_REG_INT_WAKEUP_INT BIT(11)
-+#define RK3576CANFD_REG_INT_BUS_OFF_RECOVERY_INT BIT(10)
-+#define RK3576CANFD_REG_INT_BUS_OFF_INT BIT(9)
-+#define RK3576CANFD_REG_INT_RX_FIFO_OVERFLOW_INT BIT(8)
-+#define RK3576CANFD_REG_INT_RX_FIFO_FULL_INT BIT(7)
-+#define RK3576CANFD_REG_INT_ERROR_INT BIT(6)
-+#define RK3576CANFD_REG_INT_TX_ARBIT_FAIL_INT BIT(5)
-+#define RK3576CANFD_REG_INT_PASSIVE_ERROR_INT BIT(4)
-+#define RK3576CANFD_REG_INT_OVERLOAD_INT BIT(3)
-+#define RK3576CANFD_REG_INT_ERROR_WARNING_INT BIT(2)
-+#define RK3576CANFD_REG_INT_TX_FINISH_INT BIT(1)
-+#define RK3576CANFD_REG_INT_RX_FINISH_INT BIT(0)
-+
-+#define RK3576CANFD_REG_INT_ALL \
-+	(RK3576CANFD_REG_INT_BUSOFF_RCY_INT | \
-+	 RK3576CANFD_REG_INT_ESM_WTM_INT | \
-+	 RK3576CANFD_REG_INT_ISM_WTM_INT | \
-+	 RK3576CANFD_REG_INT_BUSINT_INT | \
-+	 RK3576CANFD_REG_INT_RXSTR_TIMEOUT_INT | \
-+	 RK3576CANFD_REG_INT_MFI_TIMEOUT_INT | \
-+	 RK3576CANFD_REG_INT_MFI_INT | \
-+	 RK3576CANFD_REG_INT_AUTO_RETX_FAIL_INT | \
-+	 RK3576CANFD_REG_INT_WAKEUP_INT | \
-+	 RK3576CANFD_REG_INT_BUS_OFF_RECOVERY_INT | \
-+	 RK3576CANFD_REG_INT_BUS_OFF_INT | \
-+	 RK3576CANFD_REG_INT_RX_FIFO_OVERFLOW_INT | \
-+	 RK3576CANFD_REG_INT_RX_FIFO_FULL_INT | \
-+	 RK3576CANFD_REG_INT_ERROR_INT | \
-+	 RK3576CANFD_REG_INT_TX_ARBIT_FAIL_INT | \
-+	 RK3576CANFD_REG_INT_PASSIVE_ERROR_INT | \
-+	 RK3576CANFD_REG_INT_OVERLOAD_INT | \
-+	 RK3576CANFD_REG_INT_ERROR_WARNING_INT | \
-+	 RK3576CANFD_REG_INT_TX_FINISH_INT | \
-+	 RK3576CANFD_REG_INT_RX_FINISH_INT)
-+
-+#define RK3576CANFD_REG_INT_ALL_ERROR \
-+	(RK3576CANFD_REG_INT_BUS_OFF_INT | \
-+	 RK3576CANFD_REG_INT_ERROR_INT | \
-+	 RK3576CANFD_REG_INT_PASSIVE_ERROR_INT | \
-+	 RK3576CANFD_REG_INT_ERROR_WARNING_INT)
-+
-+#define RK3576CANFD_REG_INT_MASK 0x010
-+
-+#define RK3576CANFD_REG_FD_NOMINAL_BITTIMING 0x100
-+#define RK3576CANFD_REG_FD_NOMINAL_BITTIMING_SAMPLE_MODE BIT(31)
-+#define RK3576CANFD_REG_FD_NOMINAL_BITTIMING_SJW GENMASK(30, 24)
-+#define RK3576CANFD_REG_FD_NOMINAL_BITTIMING_BRP GENMASK(23, 16)
-+#define RK3576CANFD_REG_FD_NOMINAL_BITTIMING_TSEG2 GENMASK(14, 8)
-+#define RK3576CANFD_REG_FD_NOMINAL_BITTIMING_TSEG1 GENMASK(7, 0)
-+
-+#define RK3576CANFD_REG_FD_DATA_BITTIMING 0x104
-+#define RK3576CANFD_REG_FD_DATA_BITTIMING_BRS_TSEG1 GENMASK(31, 24)
-+#define RK3576CANFD_REG_FD_DATA_BITTIMING_BRS_MODE BIT(23)
-+#define RK3576CANFD_REG_FD_DATA_BITTIMING_ACKSLOT_SYNC_DIS BIT(22)
-+#define RK3576CANFD_REG_FD_DATA_BITTIMING_SJW GENMASK(20, 17)
-+#define RK3576CANFD_REG_FD_DATA_BITTIMING_BRP GENMASK(16, 9)
-+#define RK3576CANFD_REG_FD_DATA_BITTIMING_TSEG2 GENMASK(8, 5)
-+#define RK3576CANFD_REG_FD_DATA_BITTIMING_TSEG1 GENMASK(4, 0)
-+
-+#define RK3576CANFD_REG_TRANSMIT_DELAY_COMPENSATION 0x108
-+#define RK3576CANFD_REG_TRANSMIT_DELAY_COMPENSATION_TDC_OFFSET GENMASK(6, 1)
-+#define RK3576CANFD_REG_TRANSMIT_DELAY_COMPENSATION_TDC_ENABLE BIT(0)
-+
-+#define RK3576CANFD_REG_BRS_CFG 0x10c
-+#define RK3576CANFD_REG_BRS_CFG_TRIPLE_SYNC_MODE BIT(31)
-+#define RK3576CANFD_REG_BRS_CFG_SP2_DTSEG1 GENMASK(30, 26)
-+#define RK3576CANFD_REG_BRS_CFG_SP2_NTSEG1 GENMASK(25, 18)
-+#define RK3576CANFD_REG_BRS_CFG_SP1_DTSEG1 GENMASK(17, 13)
-+#define RK3576CANFD_REG_BRS_CFG_SP1_NTSEG1 GENMASK(12, 5)
-+#define RK3576CANFD_REG_BRS_CFG_RESYNC_MODE BIT(3)
-+#define RK3576CANFD_REG_BRS_CFG_BRS_POSSYNC_EN BIT(1)
-+#define RK3576CANFD_REG_BRS_CFG_BRS_NEGSYNC_EN BIT(0)
-+
-+#define RK3576CANFD_REG_LOOP_CNT 0x110
-+
-+#define RK3576CANFD_REG_DMA_CTRL 0x11c
-+#define RK3576CANFD_REG_DMA_CTRL_DMA_RX_EN BIT(9)
-+#define RK3576CANFD_REG_DMA_CTRL_DMA_THR GENMASK(8, 0)
-+
-+#define RK3576CANFD_REG_FD_TXFRAMEINFO 0x200
-+
-+#define RK3576CANFD_REG_FD_TXID 0x204
-+#define RK3576CANFD_REG_FD_ID_EFF GENMASK(28, 0)
-+#define RK3576CANFD_REG_FD_ID_SFF GENMASK(11, 0)
-+
-+#define RK3576CANFD_REG_FD_TXDATA0 0x208
-+#define RK3576CANFD_REG_FD_TXDATA1 0x20c
-+#define RK3576CANFD_REG_FD_TXDATA2 0x210
-+#define RK3576CANFD_REG_FD_TXDATA3 0x214
-+#define RK3576CANFD_REG_FD_TXDATA4 0x218
-+#define RK3576CANFD_REG_FD_TXDATA5 0x21c
-+#define RK3576CANFD_REG_FD_TXDATA6 0x220
-+#define RK3576CANFD_REG_FD_TXDATA7 0x224
-+#define RK3576CANFD_REG_FD_TXDATA8 0x228
-+#define RK3576CANFD_REG_FD_TXDATA9 0x22c
-+#define RK3576CANFD_REG_FD_TXDATA10 0x230
-+#define RK3576CANFD_REG_FD_TXDATA11 0x234
-+#define RK3576CANFD_REG_FD_TXDATA12 0x238
-+#define RK3576CANFD_REG_FD_TXDATA13 0x23c
-+#define RK3576CANFD_REG_FD_TXDATA14 0x240
-+#define RK3576CANFD_REG_FD_TXDATA15 0x244
-+
-+#define RK3576CANFD_REG_RXFRD 0x400
-+#define RK3576CANFD_REG_RXFRD_FRAMEINFO_FRAME_FORMAT BIT(23)
-+#define RK3576CANFD_REG_RXFRD_FRAMEINFO_RTR BIT(22)
-+#define RK3576CANFD_REG_RXFRD_FRAMEINFO_FDF BIT(21)
-+#define RK3576CANFD_REG_RXFRD_FRAMEINFO_BRS BIT(20)
-+#define RK3576CANFD_REG_RXFRD_FRAMEINFO_DATA_LENGTH GENMASK(27, 24)
-+
-+#define RK3576CANFD_REG_STR_CTL 0x600
-+#define RK3576CANFD_REG_STR_CTL_STORAGE_TIMEOUT_MODE BIT(8)
-+#define RK3576CANFD_REG_STR_CTL_ESM_SEL_MASK GENMASK(7, 6)
-+#define RK3576CANFD_REG_STR_CTL_RX_STORAGE_RESET BIT(4)
-+#define RK3576CANFD_REG_STR_CTL_ISM_SEL GENMASK(3, 2)
-+#define RK3576CANFD_REG_STR_CTL_ISM_SEL_FLEXIBLE 0x0
-+#define RK3576CANFD_REG_STR_CTL_ISM_SEL_CAN_FIXED 0x1
-+#define RK3576CANFD_REG_STR_CTL_ISM_SEL_CANFD_FIXED 0x2
-+#define RK3576CANFD_REG_STR_CTL_EXT_STORAGE_MODE BIT(1)
-+#define RK3576CANFD_REG_STR_CTL_BUFFER_MODE_ENABLE BIT(0)
-+
-+#define RK3576CANFD_REG_STR_STATE 0x604
-+#define RK3576CANFD_REG_STR_STATE_INTM_FRAME_CNT GENMASK(25, 17)
-+#define RK3576CANFD_REG_STR_STATE_INTM_LEFT_CNT GENMASK(16, 8)
-+#define RK3576CANFD_REG_STR_STATE_INTM_LEFT_CNT_UNIT 18
-+#define RK3576CANFD_REG_STR_STATE_EXTM_FULL BIT(3)
-+#define RK3576CANFD_REG_STR_STATE_EXTM_EMPTY BIT(2)
-+#define RK3576CANFD_REG_STR_STATE_INTM_FULL BIT(1)
-+#define RK3576CANFD_REG_STR_STATE_INTM_EMPTY BIT(0)
-+
-+#define RK3576CANFD_REG_STR_TIMEOUT 0x608
-+
-+#define RK3576CANFD_REG_STR_WTM 0x60c
-+#define RK3576CANFD_REG_ATF0 0x700
-+#define RK3576CANFD_REG_ATF1 0x704
-+#define RK3576CANFD_REG_ATF2 0x708
-+#define RK3576CANFD_REG_ATF3 0x70c
-+#define RK3576CANFD_REG_ATF4 0x710
-+#define RK3576CANFD_REG_ATFM0 0x714
-+#define RK3576CANFD_REG_ATFM1 0x718
-+#define RK3576CANFD_REG_ATFM2 0x71c
-+#define RK3576CANFD_REG_ATFM3 0x720
-+
-+#define RK3576CANFD_REG_ATFM4 0x724
-+#define RK3576CANFD_REG_ATFM_MASK_SEL BIT(31)
-+#define RK3576CANFD_REG_ATFM_RTR_EN BIT(30)
-+#define RK3576CANFD_REG_ATFM_RTR BIT(29)
-+#define RK3576CANFD_REG_ATFM_MASK_SEL_MASK_MODE 0x0
-+#define RK3576CANFD_REG_ATFM_MASK_SEL_LIST_MODE 0x1
-+#define RK3576CANFD_REG_ATFM_ID GENMASK(28, 0)
-+
-+#define RK3576CANFD_REG_ATF_DLC 0x728
-+#define RK3576CANFD_REG_ATF_DLC_ATF_DLC_MODE BIT(5)
-+#define RK3576CANFD_REG_ATF_DLC_ATF_DLC_EN BIT(4)
-+#define RK3576CANFD_REG_ATF_DLC_ATF_DLC GENMASK(3, 0)
-+
-+#define RK3576CANFD_REG_ATF_CTL 0x72c
-+#define RK3576CANFD_REG_ATF_CTL_ATF_DIS(n) BIT(n)
-+#define RK3576CANFD_REG_ATF_CTL_ATF_DIS_ALL GENMASK(15, 0)
-+
-+#define RK3576CANFD_REG_SPACE_CTRL 0x800
-+
-+#define RK3576CANFD_REG_AUTO_RETX_CFG 0x808
-+#define RK3576CANFD_REG_AUTO_RETX_CFG_RETX_TIME_LIMIT GENMASK(18, 3)
-+#define RK3576CANFD_REG_AUTO_RETX_CFG_RETX_LIMIT_EN BIT(1)
-+#define RK3576CANFD_REG_AUTO_RETX_CFG_AUTO_RETX_EN BIT(0)
-+
-+#define RK3576CANFD_REG_AUTO_RETX_STATE0 0x80c
-+#define RK3576CANFD_REG_AUTO_RETX_STATE0_AUTO_RETX_CNT GENMASK(15, 0)
-+
-+#define RK3576CANFD_REG_AUTO_RETX_STATE1 0x810
-+#define RK3576CANFD_REG_OLF_CFG 0x814
-+#define RK3576CANFD_REG_RXINT_CTRL 0x818
-+#define RK3576CANFD_REG_RXINT_TIMEOUT 0x81c
-+#define RK3576CANFD_REG_OTHER_CFG 0x820
-+#define RK3576CANFD_REG_WAVE_FILTER_CFG 0x824
-+#define RK3576CANFD_REG_RBC_CFG 0x828
-+#define RK3576CANFD_REG_TXCRC_CFG 0x82c
-+
-+#define RK3576CANFD_REG_BUSOFFRCY_CFG 0x830
-+#define RK3576CANFD_REG_BUSOFF_RCY_THR 0x834
-+
-+#define RK3576CANFD_REG_ERROR_CODE 0x900
-+#define RK3576CANFD_REG_ERROR_MASK 0x904
-+#define RK3576CANFD_REG_ERROR_MASK_ACK_ERROR BIT(4)
-+#define RK3576CANFD_REG_ERROR_MASK_FORM_ERROR BIT(3)
-+#define RK3576CANFD_REG_ERROR_MASK_CRC_ERROR BIT(2)
-+#define RK3576CANFD_REG_ERROR_MASK_STUFF_ERROR BIT(1)
-+#define RK3576CANFD_REG_ERROR_MASK_BIT_ERROR BIT(0)
-+
-+#define RK3576CANFD_REG_RXERRORCNT 0x910
-+#define RK3576CANFD_REG_TXERRORCNT 0x914
-+#define RK3576CANFD_REG_RX_RXSRAM_RDATA 0xc00
-+#define RK3576CANFD_REG_RTL_VERSION 0xf0c
-+
-+#define RK3576CANFD_REG_ERROR_CODE_PHASE BIT(29)
-+#define RK3576CANFD_REG_ERROR_CODE_TYPE GENMASK(28, 26)
-+#define RK3576CANFD_REG_ERROR_CODE_TYPE_BIT 0x0
-+#define RK3576CANFD_REG_ERROR_CODE_TYPE_STUFF 0x1
-+#define RK3576CANFD_REG_ERROR_CODE_TYPE_FORM 0x2
-+#define RK3576CANFD_REG_ERROR_CODE_TYPE_ACK 0x3
-+#define RK3576CANFD_REG_ERROR_CODE_TYPE_CRC 0x4
-+#define RK3576CANFD_REG_ERROR_CODE_DIRECTION_RX BIT(25)
-+#define RK3576CANFD_REG_ERROR_CODE_TX GENMASK(24, 19)
-+#define RK3576CANFD_REG_ERROR_CODE_TX_ACK_EOF BIT(24)
-+#define RK3576CANFD_REG_ERROR_CODE_TX_CRC BIT(23)
-+#define RK3576CANFD_REG_ERROR_CODE_TX_STUFF_COUNT BIT(22)
-+#define RK3576CANFD_REG_ERROR_CODE_TX_DATA BIT(21)
-+#define RK3576CANFD_REG_ERROR_CODE_TX_SOF_DLC BIT(20)
-+#define RK3576CANFD_REG_ERROR_CODE_TX_IDLE BIT(19)
-+#define RK3576CANFD_REG_ERROR_CODE_RX GENMASK(18, 0)
-+#define RK3576CANFD_REG_ERROR_CODE_RX_ERROR BIT(18)
-+#define RK3576CANFD_REG_ERROR_CODE_RX_OVERLOAD BIT(17)
-+#define RK3576CANFD_REG_ERROR_CODE_RX_SPACE BIT(16)
-+#define RK3576CANFD_REG_ERROR_CODE_RX_EOF BIT(15)
-+#define RK3576CANFD_REG_ERROR_CODE_RX_ACK_LIM BIT(14)
-+#define RK3576CANFD_REG_ERROR_CODE_RX_ACK BIT(13)
-+#define RK3576CANFD_REG_ERROR_CODE_RX_CRC_LIM BIT(12)
-+#define RK3576CANFD_REG_ERROR_CODE_RX_CRC BIT(11)
-+#define RK3576CANFD_REG_ERROR_CODE_RX_STUFF_COUNT BIT(10)
-+#define RK3576CANFD_REG_ERROR_CODE_RX_DATA BIT(9)
-+#define RK3576CANFD_REG_ERROR_CODE_RX_DLC BIT(8)
-+#define RK3576CANFD_REG_ERROR_CODE_RX_BRS_ESI BIT(7)
-+#define RK3576CANFD_REG_ERROR_CODE_RX_RES BIT(6)
-+#define RK3576CANFD_REG_ERROR_CODE_RX_FDF BIT(5)
-+#define RK3576CANFD_REG_ERROR_CODE_RX_ID2_RTR BIT(4)
-+#define RK3576CANFD_REG_ERROR_CODE_RX_SOF_IDE BIT(3)
-+#define RK3576CANFD_REG_ERROR_CODE_RX_BUS_IDLE BIT(2)
-+#define RK3576CANFD_REG_ERROR_CODE_RX_BUS_INT BIT(1)
-+#define RK3576CANFD_REG_ERROR_CODE_RX_STOP BIT(0)
-+
-+#define RK3576CANFD_ISM_WATERMASK_CAN 0x6c /* word */
-+#define RK3576CANFD_ISM_WATERMASK_CANFD 0x6c /* word */
-+
-+#define RK3576CANFD_SRAM_MAX_DEPTH 256 /* word */
-+
-+#define RK3576CANFD_CANFD_FILTER GENMASK(28, 0)
-+
-+#define RK3576CANFD_CANFD_FIFO_CNT GENMASK(7, 0)
-+
- #define DEVICE_NAME "rockchip_canfd"
- #define RKCANFD_NAPI_WEIGHT 32
- #define RKCANFD_TXFIFO_DEPTH 2
-@@ -434,6 +693,7 @@
- enum rkcanfd_model {
- 	RKCANFD_MODEL_RK3568V2 = 0x35682,
- 	RKCANFD_MODEL_RK3568V3 = 0x35683,
-+	RKCANFD_MODEL_RK3576 = 0x3576,
- };
- 
- static struct rkcanfd_priv *priv;
-@@ -458,6 +718,11 @@ struct rkcanfd_fifo_header {
- 	u32 ts;
- };
- 
-+struct rk3576canfd_fifo_header {
-+	u32 frameinfo;
-+	u32 id;
-+};
-+
- struct rkcanfd_stats {
- 	struct u64_stats_sync syncp;
- 
-@@ -547,6 +812,8 @@ rkcanfd_get_tx_free(const struct rkcanfd_priv *priv)
- void rkcanfd_ethtool_init(struct rkcanfd_priv *priv);
- 
- int rkcanfd_handle_rx_int(struct rkcanfd_priv *priv);
-+int rkcanfd_handle_rk3576_tx_int(struct rkcanfd_priv *priv);
-+int rkcanfd_handle_rk3576_rx_int(struct rkcanfd_priv *priv);
- 
- void rkcanfd_skb_set_timestamp(const struct rkcanfd_priv *priv,
- 			       struct sk_buff *skb, const u32 timestamp);
--- 
-2.34.1
 
+> + * @length: Length of the queue memory
+> + *
+> + * Allocate a HW queue object for a vIOMMU-specific HW-accelerated
+> queue, which
+> + * allows HW to access a guest queue memory described using
+> @nesting_parent_iova
+> + * and @length.
+> + *
+> + * Upon success, the underlying physical pages of the guest queue memory
+> will be
+> + * pinned to prevent VMM from unmapping them in the IOAS until the HW
+> queue gets
+> + * destroyed.
+
+This is conditional.
+
+> +void iommufd_hw_queue_destroy(struct iommufd_object *obj)
+> +{
+> +	struct iommufd_hw_queue *hw_queue =3D
+> +		container_of(obj, struct iommufd_hw_queue, obj);
+> +	struct iommufd_viommu *viommu =3D hw_queue->viommu;
+> +
+> +	if (viommu->ops->hw_queue_destroy)
+> +		viommu->ops->hw_queue_destroy(hw_queue);
+> +	iopt_unpin_pages(&viommu->hwpt->ioas->iopt, hw_queue-
+> >base_addr,
+> +			 hw_queue->length, true);
+
+Check the flag
+
+> +
+> +		/* Validate if the underlying physical pages are contiguous */
+> +		for (i =3D 1; i < max_npages && pages[i]; i++) {
+
+Page[i] must be valid otherwise it's a bug?
+
+Reviewed-by: Kevin Tian <kevin.tian@intel.com>
