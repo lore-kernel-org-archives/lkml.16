@@ -1,197 +1,183 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f50.google.com (mail-vs1-f50.google.com [209.85.217.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CABE227EAF;
-	Fri, 23 May 2025 09:56:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88B16226D09;
+	Fri, 23 May 2025 09:57:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747994209; cv=none; b=DhTSEZcQ/min+YbFKJjdD4VIRG5lsvSXVmg/qaGocYhqxBe1n+MAWkjcr2eetvrE92VNEVgLrYLzDWtvgXFKpfz7TMNyEy/km7qFR9slGVKUgCo52e2DtjzK6og6bM2QnaNqI+49oJ3MDHJEF4OcJ3g5pG9Zt7EExNdl2X/oBT4=
+	t=1747994275; cv=none; b=ILiGfk1q44+8ecbro3zuh6yz+N7wjJHZCHoXeyjNDHCo++FeExm2MV+6dNbxs8Di3oJ5rW25SgP5M31ji0/UFTf2Nbo+DNbHYRTxlY3b0FUC2kamptYbZQ22qq05RYMWMe8fSHCMqL2VfxiaLv1FiRr2XlHGVFGGKl6CVQDQ1fw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747994209; c=relaxed/simple;
-	bh=JbxZhZlzZC1d54wodrzZn1J3iTj3tlK9lW0dMu8lctw=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=hi/QUgS8xwJmyoWJOhxB5OILiVOkYk94zpmdo23J616lTC8ytAxVMOKVNAVO8kKPsxHiDeKcZWdkiCA685zqXM30Nt0vx0oRLoKzqEzIcV7ROz0AkwY3S379J7BQVZYobKwfiketgHRTFFlODRVvmnTscc8VZSzLNMPFPO65pGo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iBrQ3jJQ; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iBrQ3jJQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747994208; x=1779530208;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=JbxZhZlzZC1d54wodrzZn1J3iTj3tlK9lW0dMu8lctw=;
-  b=iBrQ3jJQGW6Amzi5IxO2Tt5QMzvfSDlPwPD9s4VGIdQoa4t34b2r3GPG
-   Kn/84phHtGOQZEN4KNPbIux1f3efFmvtakxu6mSttpZyewCzzRtDTSMBc
-   ctoMdIxBY1+yMvNTPjHVC+5YsVJBygj83gDjPIleoTL9TjhIJiZ4YbuYL
-   ZtEFChdwRno2hJaaeYaSKrbEuow7Ai5s6o5HL4fEfTZUltefrHafIOsUC
-   bbet/RUhHX8b4nCck29nUUR/fHOf6FlLkif7ZMeogEjcz5UO1hQl7WT9H
-   lZQlXwA7B6pQij+lTtaNso1W7duXYu78Rt34gPHg9fj8o5/tsgTPsROj3
-   A==;
-X-CSE-ConnectionGUID: liSpU07WSh+iuPqcYs5n0w==
-X-CSE-MsgGUID: kE2K5jMIT9adk/8sfy4wgg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11441"; a="37670357"
-X-IronPort-AV: E=Sophos;i="6.15,308,1739865600"; 
-   d="scan'208";a="37670357"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2025 02:56:47 -0700
-X-CSE-ConnectionGUID: yFtpiiTURPqBOqi3zo9T/A==
-X-CSE-MsgGUID: suIahlvJSs2wQTPTiC/a1Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,308,1739865600"; 
-   d="scan'208";a="146063780"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.150])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2025 02:56:39 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Fri, 23 May 2025 12:56:35 +0300 (EEST)
-To: Bjorn Helgaas <helgaas@kernel.org>
-cc: linux-pci@vger.kernel.org, Jon Pan-Doh <pandoh@google.com>, 
-    Karolina Stolarek <karolina.stolarek@oracle.com>, 
-    Weinan Liu <wnliu@google.com>, 
-    Martin Petersen <martin.petersen@oracle.com>, 
-    Ben Fuller <ben.fuller@oracle.com>, Drew Walton <drewwalton@microsoft.com>, 
-    Anil Agrawal <anilagrawal@meta.com>, Tony Luck <tony.luck@intel.com>, 
-    Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>, 
-    Lukas Wunner <lukas@wunner.de>, 
-    Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
-    Sargun Dhillon <sargun@meta.com>, "Paul E . McKenney" <paulmck@kernel.org>, 
-    Mahesh J Salgaonkar <mahesh@linux.ibm.com>, 
-    Oliver O'Halloran <oohall@gmail.com>, Kai-Heng Feng <kaihengf@nvidia.com>, 
-    Keith Busch <kbusch@kernel.org>, Robert Richter <rrichter@amd.com>, 
-    Terry Bowman <terry.bowman@amd.com>, Shiju Jose <shiju.jose@huawei.com>, 
-    Dave Jiang <dave.jiang@intel.com>, LKML <linux-kernel@vger.kernel.org>, 
-    linuxppc-dev@lists.ozlabs.org, Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v8 13/20] PCI/ERR: Add printk level to
- pcie_print_tlp_log()
-In-Reply-To: <20250522232339.1525671-14-helgaas@kernel.org>
-Message-ID: <ce537bc4-a302-4da5-2e65-0fb07c9e3e1d@linux.intel.com>
-References: <20250522232339.1525671-1-helgaas@kernel.org> <20250522232339.1525671-14-helgaas@kernel.org>
+	s=arc-20240116; t=1747994275; c=relaxed/simple;
+	bh=o3+U2pTjpoLy4VBlboNFSpKjjYw/1Y9CbZlyI6v5MxI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Itsjk/RzHJ0Nu593JPB3bwovKMvo2MeZSu9DY448wmEaFHRzuIXnj+1UMRVqfaw+u+cag4hI8wD/vzaANFe6xT3APUfbzJUIs1URCUPZaa2/qXw3DhKB+8zIHLftnslPuQGIk+bvffjzPaS9fyQ9NfMeiW/gfChEtc+Xfxtixxg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.217.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vs1-f50.google.com with SMTP id ada2fe7eead31-4e2b5ffb932so1067454137.0;
+        Fri, 23 May 2025 02:57:53 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747994271; x=1748599071;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=dOpTsqxLWECKPkArKUXl99v0o7bZ+EJjw6Rtwx3j45U=;
+        b=lue3UFOrrSSSSC+zEej3jV+eWKVg0Qin64rbFFMuswF4F8Jtwhs5MB0mQZCmkBXG16
+         aB1BaFB0699+jYBf5iwXosUtH2u4CoyMAJyoFMCjAMp/KjONn8VeSy5FZ6JSaO2X1Jdx
+         a4flWTqxxR7toM4uKAi+abE+vmh3OW5pwt2MyA13FbPXlJk1JlPm94X5PqjMjPIJ4fWQ
+         +tJiKihWE2bf2BJcS/Jmgh3LISolzVaWIyV4B9ejgAOjdepDXf1Cp/4SIhOAtf6xF9Bk
+         mpSPMfWnVx8zNWqgk0PYmuWxk/PDyzbTO05XVT2Iq9jYea3PsC8ZSmIcKR7zArWeyNb5
+         826Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVZBolRXZHmP3fvDLKprd8uk3dM/7tj+z97ni6nn6YIYjjR+XlZ2XfG/J1NQFQm1WiolLRlwb60AeCjsew=@vger.kernel.org, AJvYcCWpPD1W2Dej+UULo+3gUVWHeo7OUA3sGp5UpsrlCEtUt0kNMr+aKIyQnemBKneY17dfZmk/dvuCAYFmaMh7Kqdzkrg=@vger.kernel.org, AJvYcCXDVsyzfxa8K89LZpeHnLsKWPlVh/GnzuSGvv8mk2LS3V6kV4Ov6uL34V/0rGj2E5xDmd/LZFMT6+hddhpQ@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx2MHV3gNbOdfZq+3ZfjiU8lBAXqmfDVnasfnPbyfrZUkqcNoz6
+	FC0ymlmjikLV60jtW/rOUinN/AYY/xSAtODCH7ivzLPywnifoc4g9VwBHmDq4GBH
+X-Gm-Gg: ASbGncv7YLNiEFH+qn/M8Eu0ubsnvbVTrWEDt64OIW6G26IyBA9AsNnhuKj7BgZeSs8
+	uKDnnn8f5rvkqcb90ujyp03HEdj3qAmFgqUqKCaGuIZW+qUW2pU4adq/Xfzk/SPRTJ3iLQPakTS
+	p6r/gvJJBEhyNX0vjrOSv0I9nV5F0eZbm2FSxvTfeA7VSZHEIkyJOrT8BsOk2Ploh8KXfW71nEV
+	BFc9NUhaXaH5AE3RKfNOXpOKU94nICtpXeUoUaYlRRDPH1mO0v+y3fxPd1yfa8NtmiTQ1hbW7yU
+	dbXNCxbqUdQ0eiOGFjCro16d/vG/Du31Y4+BENIDKUnlh81m0kLlEYqEcGXaG4DgS8I/UbyouO4
+	WckenA4KU7M+CwerWXQ==
+X-Google-Smtp-Source: AGHT+IErEm1p66emtG23zmtX6IYikVXCh98rO9xeqwquTjV91rWvkBqKHgVLffSQ8t4REJVocOMIyQ==
+X-Received: by 2002:a05:6102:50a4:b0:4bb:e5bf:9c7d with SMTP id ada2fe7eead31-4dfa6c31c98mr25458123137.17.1747994270671;
+        Fri, 23 May 2025 02:57:50 -0700 (PDT)
+Received: from mail-vk1-f170.google.com (mail-vk1-f170.google.com. [209.85.221.170])
+        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4dfa66e2910sm12328267137.13.2025.05.23.02.57.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 23 May 2025 02:57:50 -0700 (PDT)
+Received: by mail-vk1-f170.google.com with SMTP id 71dfb90a1353d-52dc826204eso2317494e0c.1;
+        Fri, 23 May 2025 02:57:50 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU/p6oGcOuCpHsZBJJG32iwhLE+bSwW9GxAjzu5vRHX8Ne+pCFQ2X8MqoaLyhQKmq+BNhqsuHlWJ6IYzkV4@vger.kernel.org, AJvYcCW9+/q/DUjN3QVREvJDt3ai1pI9h1b+WERkVO9LmxLPdiPJIUalLlQdcaS8Q6fFVSaLJKaxqwux4MRgH+A=@vger.kernel.org, AJvYcCXrHI8T841FT6tN7YEolXpYuoxS9puwcgIebpOtOQX/wPc6rIkVbu5+nYs/jyUL5ScYblF6uzttZc8scYfM2LuaYm4=@vger.kernel.org
+X-Received: by 2002:a05:6122:2529:b0:52a:791f:7e20 with SMTP id
+ 71dfb90a1353d-52dba80d3e3mr25830440e0c.4.1747994269866; Fri, 23 May 2025
+ 02:57:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-2019861423-1747994195=:933"
+References: <20250515141828.43444-1-thierry.bultel.yh@bp.renesas.com> <20250515141828.43444-8-thierry.bultel.yh@bp.renesas.com>
+In-Reply-To: <20250515141828.43444-8-thierry.bultel.yh@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Fri, 23 May 2025 11:57:37 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdWhq+o18hgBO7Kg_Rsq47WsEwV7-DWYcyJCM0h1wsMshg@mail.gmail.com>
+X-Gm-Features: AX0GCFutLZp2NjdVwF0AAwLhMEAFa6NnDGxnoo0-7WDTAMJFZVVCBRJ3x6pp41o
+Message-ID: <CAMuHMdWhq+o18hgBO7Kg_Rsq47WsEwV7-DWYcyJCM0h1wsMshg@mail.gmail.com>
+Subject: Re: [PATCH v9 07/10] serial: sh-sci: Add support for RZ/T2H SCI
+To: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
+Cc: thierry.bultel@linatsea.fr, linux-renesas-soc@vger.kernel.org, 
+	paul.barker.ct@bp.renesas.com, 
+	Wolfram Sang <wsa+renesas@sang-engineering.com>, linux-kernel@vger.kernel.org, 
+	linux-serial@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Hi Thierry,
 
---8323328-2019861423-1747994195=:933
-Content-Type: text/plain; charset=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-
-On Thu, 22 May 2025, Bjorn Helgaas wrote:
-
-> From: Bjorn Helgaas <bhelgaas@google.com>
->=20
-> aer_print_error() produces output at a printk level (KERN_ERR/KERN_WARNIN=
-G/
-> etc) that depends on the kind of error, and it calls pcie_print_tlp_log()=
-,
-> which previously always produced output at KERN_ERR.
->=20
-> Add a "level" parameter so aer_print_error() can control the level of the
-> pcie_print_tlp_log() output to match.
->=20
-> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+On Thu, 15 May 2025 at 16:19, Thierry Bultel
+<thierry.bultel.yh@bp.renesas.com> wrote:
+> Define a new RSCI port type, and the RSCI 32 bits registers set.
+> The RZ/T2H SCI has a a fifo, and a quite different set of registers
+> from the original SH SCI ones.
+> DMA is not supported yet.
+>
+> Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+> Signed-off-by: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
 > ---
->  drivers/pci/pci.h      | 3 ++-
->  drivers/pci/pcie/aer.c | 5 +++--
->  drivers/pci/pcie/dpc.c | 2 +-
->  drivers/pci/pcie/tlp.c | 6 ++++--
->  4 files changed, 10 insertions(+), 6 deletions(-)
->=20
-> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> index 705f9ef58acc..1a9bfc708757 100644
-> --- a/drivers/pci/pci.h
-> +++ b/drivers/pci/pci.h
-> @@ -613,7 +613,8 @@ int pcie_read_tlp_log(struct pci_dev *dev, int where,=
- int where2,
->  =09=09      struct pcie_tlp_log *log);
->  unsigned int aer_tlp_log_len(struct pci_dev *dev, u32 aercc);
->  void pcie_print_tlp_log(const struct pci_dev *dev,
-> -=09=09=09const struct pcie_tlp_log *log, const char *pfx);
-> +=09=09=09const struct pcie_tlp_log *log, const char *level,
-> +=09=09=09const char *pfx);
->  #endif=09/* CONFIG_PCIEAER */
-> =20
->  #ifdef CONFIG_PCIEPORTBUS
-> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> index f80c78846a14..f0936759ba8b 100644
-> --- a/drivers/pci/pcie/aer.c
-> +++ b/drivers/pci/pcie/aer.c
-> @@ -734,7 +734,7 @@ void aer_print_error(struct pci_dev *dev, struct aer_=
-err_info *info)
->  =09__aer_print_error(dev, info);
-> =20
->  =09if (info->tlp_header_valid)
-> -=09=09pcie_print_tlp_log(dev, &info->tlp, dev_fmt("  "));
-> +=09=09pcie_print_tlp_log(dev, &info->tlp, level, dev_fmt("  "));
-> =20
->  out:
->  =09if (info->id && info->error_dev_num > 1 && info->id =3D=3D id)
-> @@ -797,7 +797,8 @@ void pci_print_aer(struct pci_dev *dev, int aer_sever=
-ity,
->  =09=09=09aer->uncor_severity);
-> =20
->  =09if (tlp_header_valid)
-> -=09=09pcie_print_tlp_log(dev, &aer->header_log, dev_fmt("  "));
-> +=09=09pcie_print_tlp_log(dev, &aer->header_log, info.level,
-> +=09=09=09=09   dev_fmt("  "));
->  }
->  EXPORT_SYMBOL_NS_GPL(pci_print_aer, "CXL");
-> =20
-> diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
-> index 6c98fabdba57..7ae1590ea1da 100644
-> --- a/drivers/pci/pcie/dpc.c
-> +++ b/drivers/pci/pcie/dpc.c
-> @@ -222,7 +222,7 @@ static void dpc_process_rp_pio_error(struct pci_dev *=
-pdev)
->  =09=09=09  dpc_tlp_log_len(pdev),
->  =09=09=09  pdev->subordinate->flit_mode,
->  =09=09=09  &tlp_log);
-> -=09pcie_print_tlp_log(pdev, &tlp_log, dev_fmt(""));
-> +=09pcie_print_tlp_log(pdev, &tlp_log, KERN_ERR, dev_fmt(""));
-> =20
->  =09if (pdev->dpc_rp_log_size < PCIE_STD_NUM_TLP_HEADERLOG + 1)
->  =09=09goto clear_status;
-> diff --git a/drivers/pci/pcie/tlp.c b/drivers/pci/pcie/tlp.c
-> index 890d5391d7f5..71f8fc9ea2ed 100644
-> --- a/drivers/pci/pcie/tlp.c
-> +++ b/drivers/pci/pcie/tlp.c
-> @@ -98,12 +98,14 @@ int pcie_read_tlp_log(struct pci_dev *dev, int where,=
- int where2,
->   * pcie_print_tlp_log - Print TLP Header / Prefix Log contents
->   * @dev: PCIe device
->   * @log: TLP Log structure
-> + * @level: Printk log level
->   * @pfx: String prefix
->   *
->   * Prints TLP Header and Prefix Log information held by @log.
->   */
->  void pcie_print_tlp_log(const struct pci_dev *dev,
-> -=09=09=09const struct pcie_tlp_log *log, const char *pfx)
-> +=09=09=09const struct pcie_tlp_log *log, const char *level,
-> +=09=09=09const char *pfx)
->  {
->  =09/* EE_PREFIX_STR fits the extended DW space needed for the Flit mode =
-*/
->  =09char buf[11 * PCIE_STD_MAX_TLP_HEADERLOG + 1];
-> @@ -130,6 +132,6 @@ void pcie_print_tlp_log(const struct pci_dev *dev,
->  =09=09}
->  =09}
-> =20
-> -=09pci_err(dev, "%sTLP Header%s: %s\n", pfx,
-> +=09dev_printk(level, &dev->dev, "%sTLP Header%s: %s\n", pfx,
->  =09=09log->flit ? " (Flit)" : "", buf);
->  }
->=20
+> Changes v8->v9:
+>   - Fixed some code formatting
+>   - Renamed rzt2_sci_uart_ops to rsci_uart_ops
+>   - Renamed of_sci_r9a09g077_data to of_sci_rsci_data
+>   - Added EXPORT_SYMBOL for public functions
+>   - Added MODULE_LICENSE & MODULE_DESCRIPTION
+>   - Fixed RSCI clock names
+>   - Fixed SCI_PORT_RSCI using BIT(7)
 
-Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
+Thanks for the update!
 
---=20
- i.
+> --- /dev/null
+> +++ b/drivers/tty/serial/rsci.h
+> @@ -0,0 +1,12 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +
+> +#ifndef __RSCI_H__
+> +#define __RSCI_H__
+> +
+> +#include "sh-sci-common.h"
+> +
+> +#ifdef CONFIG_SERIAL_RSCI
+> +extern struct sci_of_data of_sci_rsci_data;
+> +#endif
 
---8323328-2019861423-1747994195=:933--
+The #ifdef isn't really needed.
+
+> +
+> +#endif /* __RSCI_H__ */
+
+> --- a/drivers/tty/serial/sh-sci.c
+> +++ b/drivers/tty/serial/sh-sci.c
+
+> @@ -2977,14 +2987,27 @@ static int sci_init_clocks(struct sci_port *sci_port, struct device *dev)
+>         struct clk *clk;
+>         unsigned int i;
+>
+> -       if (sci_port->type == PORT_HSCIF)
+> +       if (sci_port->type == PORT_HSCIF) {
+>                 clk_names[SCI_SCK] = "hsck";
+> +       } else if (sci_port->type == SCI_PORT_RSCI) {
+> +               clk_names[SCI_FCK] = "operation";
+> +               clk_names[SCI_BRG_INT] = "bus";
+> +       }
+>
+>         for (i = 0; i < SCI_NUM_CLKS; i++) {
+> -               clk = devm_clk_get_optional(dev, clk_names[i]);
+> +               const char *name = clk_names[i];
+> +
+> +               clk = devm_clk_get_optional(dev, name);
+>                 if (IS_ERR(clk))
+>                         return PTR_ERR(clk);
+>
+> +               if (!clk && sci_port->type == SCI_PORT_RSCI &&
+> +                   (i == SCI_FCK || i == SCI_BRG_INT)) {
+> +                       return dev_err_probe(dev, -ENODEV,
+> +                                            "failed to get '%s' clock\n",
+
+I would make the error message identical to the other cases below,
+so the format string can be shared by the compiler.
+
+> +                                            name);
+> +               }
+> +
+>                 if (!clk && i == SCI_FCK) {
+>                         /*
+>                          * Not all SH platforms declare a clock lookup entry
+> @@ -2995,13 +3018,13 @@ static int sci_init_clocks(struct sci_port *sci_port, struct device *dev)
+>                         if (IS_ERR(clk))
+>                                 return dev_err_probe(dev, PTR_ERR(clk),
+>                                                      "failed to get %s\n",
+> -                                                    clk_names[i]);
+> +                                                    name);
+>                 }
+>
+>                 if (!clk)
+> -                       dev_dbg(dev, "failed to get %s\n", clk_names[i]);
+> +                       dev_dbg(dev, "failed to get %s\n", name);
+>                 else
+> -                       dev_dbg(dev, "clk %s is %pC rate %lu\n", clk_names[i],
+> +                       dev_dbg(dev, "clk %s is %pC rate %lu\n", name,
+>                                 clk, clk_get_rate(clk));
+>                 sci_port->clks[i] = clk;
+>         }
+
+The rest of the (generic; I didn't look at the RSCI low-level details)
+changes LGTM.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
