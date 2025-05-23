@@ -1,165 +1,130 @@
-Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0226E1DB366;
-	Fri, 23 May 2025 08:57:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F9FA1EBFEB
+	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 08:58:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747990684; cv=none; b=h8c3hwvgdXHFEUBwIh4dSjNqoo4t5VvdtYlm3mT5/j7ICjss2rbX6sZtNQ1LVrVfIfoPtDY/AMz2AS3dhfREm5yObxfPLk2mF5dOamYqYe/NB+hucoGi5WsTD37IWBW5ftFY+qYdgAN5TPfxoJjIFB7ZhsYCKxjMgiFG7cfStoM=
+	t=1747990724; cv=none; b=mnQ9ApSsoFGAMYpbZeIYHmhN8lnvAdNoaEp//VVP4W4MWlzFZTKhpYzxLO2lfq6pZEbFMCdF7sy4LchYIs94IYVtHxhSC9jzF8mbH9c3VmQ7uDMSxz02MN1qLyCVdLR81mC3mkBaYzUiZtyGtxxsoY9Yf40ubbcDcC6VI2K+9Ak=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747990684; c=relaxed/simple;
-	bh=d7W1r3LIstZbYeoZfuyhfwQT9HfuZicMosylAkArLNE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=LLIv/9oQNQwWEeR+HJi91fo6UEp4YYbUkmOdxU1Hbj73+OwGbCVculjHMhi+oO97ks6If7x0it+dWrY+ONoCuvRnwRpv6FOArs55UewEO4jdLLr+nftWYoUZH/vLZ2KzHqd2X3bgUB+x/hJGL2NOCPSD19xnyLbCsB/7d/Nvavs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=pGGk0s4n; arc=none smtp.client-ip=198.47.23.235
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1747990724; c=relaxed/simple;
+	bh=zDRzq9Tfty91GtEb71CtKU6V6XsJ8Gw0d9DOAy5jhc8=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=R7VWft106RPEHGgIRtDy7QiBkjXt/+MBYRGXubNhASerCwjeRUA1nAFLvbV46pqNOZ36n+IAfL62N/nmdXN2Xt/St8FwR3rYb6TvlIHhveWPdaIJwoAn/XH2DHQ3/2aIiBpUUH8jx7UFMAcwyVqpxVcT59fSB21OW+VwO9EWp9A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=N62MAUSW; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="pGGk0s4n"
-Received: from fllvem-sh04.itg.ti.com ([10.64.41.54])
-	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTP id 54N8vpwH902994;
-	Fri, 23 May 2025 03:57:51 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1747990671;
-	bh=dvL8UvE8kTyU3pakYq1t1Av2K6VHG+lxt62YTy231JM=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=pGGk0s4nBS+kfza+T/LlvzeExl1Bvodi7ZFDGMlo2Tag9OeV0yO857ojW/FrxrcIw
-	 PQ7ck5JIPoHFQRtBfGTi3FQGy9Plw2TxBebrAGtPXyEsBar7TCR89SSFGTaBuZoxBf
-	 vkYcySBsH69XiwqWSLx6KDCiagbXPiVEdRAYw5Bg=
-Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
-	by fllvem-sh04.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 54N8vo574154099
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
-	Fri, 23 May 2025 03:57:51 -0500
-Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 23
- May 2025 03:57:50 -0500
-Received: from lelvem-mr05.itg.ti.com (10.180.75.9) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Fri, 23 May 2025 03:57:50 -0500
-Received: from [172.24.21.52] (ltpw0bk3z4.dhcp.ti.com [172.24.21.52])
-	by lelvem-mr05.itg.ti.com (8.18.1/8.18.1) with ESMTP id 54N8vjPe1139884;
-	Fri, 23 May 2025 03:57:46 -0500
-Message-ID: <5cfaed26-28ec-42dc-b9f6-836869ad3fa3@ti.com>
-Date: Fri, 23 May 2025 14:27:44 +0530
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="N62MAUSW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1747990721;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=6J/RUYS6OBOPvuZyXgo5WgF2pNpessZJIoWwbAcSf0A=;
+	b=N62MAUSWPqMvB9zMaUDQUYlVbYDGBrEmdZc2fcaWsEhRSAPj0XjfRdLFMPFIEHQvoXyz5n
+	OxDDHRTJDRqKaDM2Ax/cQeMjhGlHe7+N74gKmcDVwH3ontyxEotFaycuXqPXem9RUFZKPx
+	xuGQNo0GdfCyLkqHpp/B1HFkA3UvS2k=
+Received: from mail-lf1-f70.google.com (mail-lf1-f70.google.com
+ [209.85.167.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-448-aacqF4ECNIeKcpsVQhAR-w-1; Fri, 23 May 2025 04:58:39 -0400
+X-MC-Unique: aacqF4ECNIeKcpsVQhAR-w-1
+X-Mimecast-MFC-AGG-ID: aacqF4ECNIeKcpsVQhAR-w_1747990718
+Received: by mail-lf1-f70.google.com with SMTP id 2adb3069b0e04-550d7bd9a7fso4990581e87.2
+        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 01:58:38 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747990717; x=1748595517;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=6J/RUYS6OBOPvuZyXgo5WgF2pNpessZJIoWwbAcSf0A=;
+        b=N2MmdpwwHXhJ7gatA93vFjbk3I70S0GdpMTVMKxxEI53/pcj8B2ELG+/VqAsVuGGww
+         UPPixwvxqSlRybXzuBHEah97WNiBvrNg6Mh+N8WQwD8bCKjbXE//1LOtbLyoyEAntSdN
+         vg5Pf9EnngNc1o218iuEoL7QDNt2kYxCnz3rolP5yHny6JpmjkU9jz2hDLG4LXVEc9nx
+         roriVWIGHC+rzZO0wcgYvV1D2H45NFs+FrFbjEiiZWqAOkTnMyQZ1yLReCiFiQBaJbwz
+         r+DL8nlS+DYJzs355n4lJrNxmhCLdKNzb1FKQzxn3RhCm7hrOiCg0cQNJlVZ0UYgTv5U
+         ZAxg==
+X-Gm-Message-State: AOJu0YwVDV/JkdTZ/dLhFYLp9cYg4VcgrWXbJ6z5Odw/aipHDOs8Cp2N
+	2y7gJnAhCvKL84wtioUIVYqeaQzLJqj7Xe4a1fAPTmLLUilVFXGp9xYzRJoBaMCKt6UT0DpT1/g
+	FDK21Jat57kHaoSjBMpu9FDatXLKqTbiyh1H4W09pMChcMxKub2Me351P9OGUAJw9LQ==
+X-Gm-Gg: ASbGncv1d3sZgLczBoD3TWOwVWgSomtyHNaZG+OKIYb2NN+/el3wkyzDW6l0pZoGdjP
+	IdtTjBj+Q6qx8JoYfQBleMQtvr3sU9rK1c+amY4/muTekKxsxtazGCb6rh5PcxVA+7uJCpaM9lJ
+	XSp9mgOzyTF6BHFD7nxXjbj8M8yB1ujEQj/MEnxAbljdD9EoQ7W46xNL/xt/sfQO15RFQiKVrvB
+	JnkbTPKlrMLjqEfv/rHrwTmDY7q/KAfTGMa9WeZIqShUZtA3ASamkgacY5+WAE6Dalyp1EpxHHr
+	Pfb3XLxtF/CKEODm20ZGoxPXO4qMXBKZ0YlF
+X-Received: by 2002:a05:6512:3083:b0:552:31c:d27f with SMTP id 2adb3069b0e04-55216e18aa5mr550249e87.6.1747990717426;
+        Fri, 23 May 2025 01:58:37 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGGupqC+46X0tt6Ygg6tbBTVVOo7BQlw5aLij8Bq0jPcx2TjqKILidIf2WS35eedcHMuDdsdg==
+X-Received: by 2002:a05:6512:3083:b0:552:31c:d27f with SMTP id 2adb3069b0e04-55216e18aa5mr550242e87.6.1747990716968;
+        Fri, 23 May 2025 01:58:36 -0700 (PDT)
+Received: from alrua-x1.borgediget.toke.dk ([45.145.92.2])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-550e702e03dsm3786008e87.195.2025.05.23.01.58.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 23 May 2025 01:58:36 -0700 (PDT)
+Received: by alrua-x1.borgediget.toke.dk (Postfix, from userid 1000)
+	id D7C101AA3B8A; Fri, 23 May 2025 10:58:33 +0200 (CEST)
+From: Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
+To: Byungchul Park <byungchul@sk.com>, willy@infradead.org,
+ netdev@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+ kernel_team@skhynix.com, kuba@kernel.org, almasrymina@google.com,
+ ilias.apalodimas@linaro.org, harry.yoo@oracle.com, hawk@kernel.org,
+ akpm@linux-foundation.org, davem@davemloft.net, john.fastabend@gmail.com,
+ andrew+netdev@lunn.ch, asml.silence@gmail.com, tariqt@nvidia.com,
+ edumazet@google.com, pabeni@redhat.com, saeedm@nvidia.com,
+ leon@kernel.org, ast@kernel.org, daniel@iogearbox.net, david@redhat.com,
+ lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, vbabka@suse.cz,
+ rppt@kernel.org, surenb@google.com, mhocko@suse.com, horms@kernel.org,
+ linux-rdma@vger.kernel.org, bpf@vger.kernel.org, vishal.moola@gmail.com
+Subject: Re: [PATCH 12/18] page_pool: use netmem APIs to access
+ page->pp_magic in page_pool_page_is_pp()
+In-Reply-To: <20250523032609.16334-13-byungchul@sk.com>
+References: <20250523032609.16334-1-byungchul@sk.com>
+ <20250523032609.16334-13-byungchul@sk.com>
+X-Clacks-Overhead: GNU Terry Pratchett
+Date: Fri, 23 May 2025 10:58:33 +0200
+Message-ID: <87ecwfn1om.fsf@toke.dk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/2] TI: K3: Switch MCU R5F cluster into Split mode
-To: Nishanth Menon <nm@ti.com>
-CC: <vigneshr@ti.com>, <kristo@kernel.org>, <robh@kernel.org>,
-        <krzk+dt@kernel.org>, <conor+dt@kernel.org>, <afd@ti.com>,
-        <u-kumar1@ti.com>, <hnagalla@ti.com>, <jm@ti.com>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-References: <20250522073426.329344-1-b-padhi@ti.com>
- <20250522155338.gpbcubkvygtju3qc@bagpipe>
-Content-Language: en-US
-From: Beleswar Prasad Padhi <b-padhi@ti.com>
-In-Reply-To: <20250522155338.gpbcubkvygtju3qc@bagpipe>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Type: text/plain
 
-Hi Nishanth,
+Byungchul Park <byungchul@sk.com> writes:
 
-On 5/22/2025 9:23 PM, Nishanth Menon wrote:
-> On 13:04-20250522, Beleswar Padhi wrote:
->> Several TI K3 SoCs like J7200, J721E, J721S2, J784S4 and J742S2 have a
->> R5F cluster in the MCU domain which is configured for LockStep mode at
->> the moment. Switch this R5F cluster to Split mode by default in all
->> corresponding board level DTs to maximize the number of R5F cores.
-> Why? I can read the patch to understand what you are trying to do, but
-> the rationale needs to be explained.
-
-
-Sure, rationale is lot of users of our SoCs want to control the R5 core 
-in the MCU domain as a general purpose remote processor to increase 
-performance. That means able to load applications from 
-bootloader/kernel/userspace, poweroff/poweron core at runtime etc. The 
-challenge with this is the MCU R5F cluster is reserved to run the 
-central Device Manager (DM) Firmware.
-
-However, since the MCU R5F cluster is lockstep enabled, it supports both 
-lockstep mode and split mode of booting. So here we decide to boot the 
-cluster in split mode by which we can reserve the primary core to run DM 
-and use the secondary core as a general purpose remote processor.
-
-Now why didn't we do this split mode booting since the inception? Well 
-because MCU R5F Cluster is booted by ROM code, and when ROM boots it in 
-split mode, it powers on the secondary core and puts it in WFI (as there 
-is nothing to do for it yet). But the standard remoteproc drivers in 
-Linux and other bootloaders can only load firmware on a core if it is 
-powered off/held in reset. So there was some plumbing needed to be done 
-at the bootloader stage to actually poweroff the secondary core in split 
-mode; so that remoteproc drivers can then load & control the core as 
-expected. Now that the plumbing[0] is posted for U-Boot, we can switch 
-to split mode booting here in DT.
-
-[0]: https://lore.kernel.org/all/20250522071828.285462-1-b-padhi@ti.com/
-
+> To simplify struct page, the effort to seperate its own descriptor from
+> struct page is required and the work for page pool is on going.
 >
->> Corresponding support to shutdown MCU R5F core 1 on SoC power on have
->> been posted in U-Boot:
->> https://lore.kernel.org/all/20250522071828.285462-1-b-padhi@ti.com/
->>
->> While at it, correct the firmware-name property for MCU R5F cores of
->> J742S2 SoC in [PATCH 1/2].
->>
->> Testing Done:
->> 1. Tested that each patch does not generate any new warnings/errors.
->> 2. Build test on all existing TI K3 platforms.
->> 3. Tested U-Boot and Linux load of MCU R5F core in split mode on all
->> applicable boards (AM68-SK, AM69-SK, J7200-EVM, J721E-EVM, J721S2-EVM,
->> J784S4-evm, J742S2-EVM)
->>
->> Test logs:
->> https://gist.github.com/3V3RYONE/ee8e3cb9aa5f4c5c00b059b9c14bfa98
->>
->> Thanks,
->> Beleswar
->>
->> Beleswar Padhi (2):
->>    arm64: dts: ti: k3-j742s2-mcu-wakeup: Override firmware-name for MCU
->>      R5F cores
->>    arm64: dts: ti: k3: Switch MCU R5F cluster to Split-mode
-> NAK! We are once again churning downstream users again and for what
-> reason - coverletter and the patch is vague on that!
+> To achieve that, all the code should avoid accessing page pool members
+> of struct page directly, but use safe APIs for the purpose.
 >
-> I would prefer the entire remote proc dts stuff cleaned up once for all
-> in a comprehensive series.
+> Use netmem_is_pp() instead of directly accessing page->pp_magic in
+> page_pool_page_is_pp().
 >
-> Let me be clear (once again): We DO NOT break backward compatibility.
-> We do not break downstream users without a clear cut rationale. We do
-> not break all other ecosystems depending on device tree without a very
-> very solid reason.
+> Signed-off-by: Byungchul Park <byungchul@sk.com>
+> ---
+>  include/linux/mm.h   | 5 +----
+>  net/core/page_pool.c | 5 +++++
+>  2 files changed, 6 insertions(+), 4 deletions(-)
+>
+> diff --git a/include/linux/mm.h b/include/linux/mm.h
+> index 8dc012e84033..3f7c80fb73ce 100644
+> --- a/include/linux/mm.h
+> +++ b/include/linux/mm.h
+> @@ -4312,10 +4312,7 @@ int arch_lock_shadow_stack_status(struct task_struct *t, unsigned long status);
+>  #define PP_MAGIC_MASK ~(PP_DMA_INDEX_MASK | 0x3UL)
+>  
+>  #ifdef CONFIG_PAGE_POOL
+> -static inline bool page_pool_page_is_pp(struct page *page)
+> -{
+> -	return (page->pp_magic & PP_MAGIC_MASK) == PP_SIGNATURE;
+> -}
+> +bool page_pool_page_is_pp(struct page *page);
 
+Here you're turning an inline function into a function call, which has
+performance implications. Please try to avoid that.
 
-I don't understand how this is breaking any backward compatibility. We 
-are not removing the lockstep boot support entirely here. We are just 
-switching to Split boot by default because of the usecases. If not 
-today, someday we have to go with split mode booting by default.
-
-That's exactly what we did for the MAIN domain R5F clusters: 1. First we 
-did the plumbing to have power synchronization between the cores of a 
-cluster: 
-https://lore.kernel.org/all/20240430105307.1190615-1-b-padhi@ti.com/ 2. 
-Then we switched the Cluster to boot in split mode by default: 
-https://lore.kernel.org/all/20240826093024.1183540-1-b-padhi@ti.com/
-
-Now, for users who prefer to use the fault-tolerant lockstep mode, they 
-can still do that by setting `ti,cluster-mode` property to 1. However, I 
-agree that we should not be doing 'hardware configuration' (split vs 
-lockstep) in Device Tree which is supposed to be 'hardware description'. 
-We have started to explore solutions where we can dictate this lockstep 
-vs split core configuration from the firmware itself during runtime. 
-Once that is done (long way to go thinking of upstream), we can get rid 
-of this configuration from the DT entirely.
-
-Thanks, Beleswar
+-Toke
 
