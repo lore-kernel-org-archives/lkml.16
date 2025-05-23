@@ -1,90 +1,109 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BFD32DCBF9;
-	Fri, 23 May 2025 06:28:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A58AF33F3;
+	Fri, 23 May 2025 06:32:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747981737; cv=none; b=s8ww3F2U7licUSOoqpoZ8kOe6isikZSBD/kuahHvo3ZJLFpnAEj06rrU/I0ndj+XbdYgo9jGkMhMaXrhp5cVNfUI+lfN9dk8NY9ZsZZT2l4xVk+NzKJ3oeiaHn2FTqVTH3gc4nj6kC57ttrp8QGhjcBKDrPdktp6NlX2MGfXI94=
+	t=1747981932; cv=none; b=fKBdAFstrk8uIKY/9bDWuNHJMUmUZHiL9FKTLIBOohVEFlOgLBtqvgDjvgvJ1no1fdaa+tLNGiP6SILD/AfalAokhlsQLanIQ82N+6C4JYdmwgQW4jUaYesa+aM8xUEmVzo0pauJIQc7J+/BV2N3ME0QPXUdXG7zomFRV6Nz210=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747981737; c=relaxed/simple;
-	bh=3tqexcS7D6IOEMJ2g2Hd2+uXohr3B3skFKzTrgnzjeg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dg2VqlmiNozIW4W7a0BCaMZJQm3m6rAlnATxEB9NQs2HiTCjj/Vu9zhSxGCzuCjndiDuWN6NgLyOmB7Nj0Y9Y3N5tzwy0iNu/4/ByNyDg17ZX9ObJ3qQA2FPn+wz+QMRTW2j/jYNLyUwWoyKOQJTL7c8yR3/GqGdsCwc8NBc9RA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JuDxQ2Ov; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747981932; c=relaxed/simple;
+	bh=iczsGgbOp2ghmmrVs4dItJAR6r10cdIAcSuFTkkOvVw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=mthyXw8RvVmlcqWman2ie1QlYLSnX5AyvfAqtETdy3WLWKe22Ji9ZozT7/uvPPogacZPaId8DkloUNGStUR+EoM5/0ec+vqP87jWj43Xcu7DePMzGFjr94sBH/i/kLxtLaZgIN8fal8aSzcYXC2zgWQECF+3k1qkSr2AgTsn28c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mzV5Abgw; arc=none smtp.client-ip=209.85.210.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JuDxQ2Ov"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 729BDC4CEE9;
-	Fri, 23 May 2025 06:28:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747981736;
-	bh=3tqexcS7D6IOEMJ2g2Hd2+uXohr3B3skFKzTrgnzjeg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=JuDxQ2Ov380+IKk6qsxkM74ACiMV8IlKBtx0HuJSsl0m/FGuyD/M4hzcydT7P6V9+
-	 4owr+lKIgofUesPXNE7RYHCrTtao5YWPYw+nY9I3tSj/lX13yZ7qAN1gkCJqOByC2A
-	 MMklTTusk0J9g2TejR+4CiZ/2zw8vUo0lPu6QqYu8zFf1cfqqvTMbyDcbxvMnF/j9Y
-	 i5WBG4PCefDjDfjRzoFSHFRTM0xnY1nYFQ5omqybdO7pZJJKwipMEfj8tYhxzwjOEi
-	 W4Nf4krPXbix0cvcCdF8o3SxrwoHOcdIU8pPbIzqv6SjWGuOb7cCEDoz6GK+lkWzZR
-	 3TK0L8CAweDbA==
-Date: Fri, 23 May 2025 08:28:51 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Rob Clark <robdclark@gmail.com>
-Cc: Dave Airlie <airlied@gmail.com>, dri-devel@lists.freedesktop.org,
-	freedreno@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
-	Connor Abbott <cwabbott0@gmail.com>,
-	Rob Clark <robdclark@chromium.org>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Simona Vetter <simona@ffwll.ch>,
-	open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4 01/40] drm/gpuvm: Don't require obj lock in destructor
- path
-Message-ID: <aDAVo-dle3wgFiJb@pollux>
-References: <aCWueFzx2QzF7LVg@pollux>
- <CAF6AEGu9MPxKnkHo45gSRxaCP+CTzqsKZjiLuy4Ne4GbrsStGA@mail.gmail.com>
- <aCYqlvp_T77LyuMa@pollux>
- <CAF6AEGsOTNedZhuBzipSQgNpG0SyVObaeq+g5U1hGUFfRYjw8w@mail.gmail.com>
- <aCb-72KH-NrzvGXy@pollux>
- <CAF6AEGu=KzCnkxuUsYvCHBGwo-e2W16u_cRT1NFAXLphty1_ig@mail.gmail.com>
- <CAPM=9tzcvDVDOM88O8oqDHURR1nbR7KsFStavNnT1CN6C6kGgg@mail.gmail.com>
- <CAF6AEGuv3GXTBcU99sBjAa5gPOSNoxwY+eiPy=Q--cLYHVn+cw@mail.gmail.com>
- <CAPM=9tykCXSKOH0BcMkNLKyCWfEN-kCjs0U7UA+C1pPqFr1jLA@mail.gmail.com>
- <CAF6AEGuK+X4Q=Z-anjQuUBi952eYSs3u9HxVz0GSQM8fokdiiw@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mzV5Abgw"
+Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-742c3d06de3so6811712b3a.0;
+        Thu, 22 May 2025 23:32:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747981930; x=1748586730; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=mJ3uQbc8/jUzObnwzagu5VXqL+U22usgEm91G+BMtpI=;
+        b=mzV5AbgwCkgT41VDo9Io/Rl/DVLoDpW9iu7uzncN4vjKLW0QXUyK8zVvFcr7UX9zjk
+         YIBvsXeGLSGJI53F6e0026QOr3oDf4duq/5hs1tNm9arkLTzn4UfmE4IZzuPnbIqNhSC
+         zNgZ0zhM0SPj/e4aKgdzV8eLKq3aWvk3OWZOTbzdCYDpIwwFNb1KP5aUqcI1BAp6VQzI
+         LfQiHD9arBFY6b0OJrWj1bLE9rW7DZToikvrE81vJKCFBg5jW7hVmTutaqs/KXYdng+n
+         PkWFKDYeZ5BThLWKdAxCyXRi0WLOJ/AjBVPB7JB+A0wuhMXl5UI9WXXOZA8zYloPIiXA
+         kvZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747981930; x=1748586730;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=mJ3uQbc8/jUzObnwzagu5VXqL+U22usgEm91G+BMtpI=;
+        b=bSW69XWI6N4h944HAJKewFKliYoRkrziBSiDgAxVejBbWqNz1gzwULwPzOQzqJPCiw
+         zMVGCvHMYv+AQBRkqyw71GSrkDrEHlBtH31LmPITsvzCL53fo47kD3tKTAwmc3835FYV
+         uJuEoFX66iRR/iUGZGeXZAod24Uqh3eqt0vAU0nfz8ww24/D6S7h3wLCZEth3UyhyFQI
+         tD3pZmt4GHK5WYf5IYv1qnvpYdF+Wnd/U97S8HWdSeZrObMbGZGAlRHyVqHQeHEnTx70
+         ELn2qp9JZwXVNmaxOieMGj1UrVL16uq39fy3nrNPR135ZSrDkJ6GG+GoI/8kRSqg+TZu
+         SyTg==
+X-Forwarded-Encrypted: i=1; AJvYcCUBmgofFWK7vmstSOImoGGArTlc9LMjEXstrMPa7XtlK2Rvjkldj4b7Xhh75aM9RWJbf/lOSk0nKUKoHg==@vger.kernel.org, AJvYcCVoVawzc6Gngs7/kvRial4qpQH9FZe5vcAHSX2o17joP6fV+vhla00Ieepa6Tqb8j3uCk09Gy03mKmEu+mY@vger.kernel.org, AJvYcCWFd/vU0MZ5QYEDvmZzVMzY4rCwQDhvc5H2RpbuFXy+cTTUamXGGeKkqiU4TfT4PLV+aJ4YoEQuFw3X@vger.kernel.org
+X-Gm-Message-State: AOJu0YyDtcQeHeXcsOJ3FlEK+DK0VI8xAOV82QROiXzULZp5Ky1eXiTn
+	d4nxjdKCD1wxPgourALT2yWz1XnJ2EP2bP7UpHgi4444m5dfv0aq3vQdVM0zVA==
+X-Gm-Gg: ASbGnctIbCtOHM8vIdvA/9HGJIAghRoyCNOwPIGs87ac0QTQhD7tcHS2qJaZ8+yt5pW
+	e+pG0fugQ0xQlrs8Mw6mlW4zBycuz54gLk+fDb7vUxEkCe3btu+KPX+pWItm3yxGD2BG0xy10qE
+	K7folM2g3dzkNkQAyCWxo5yoVtftzyBzJl6iJBLpV+e8XWGap56ezTYAvtHY40fGuo5rMmyDOuw
+	1nZsrZlBrJD32TkYhE8qyzTc5I4AtXUlvfZpQg6AM1kfTV6MIbfZOsSh7vy0txlg/Ef2jcy8u7i
+	M2DZGptItVgAWUdWkFRRX5ziJO0=
+X-Google-Smtp-Source: AGHT+IEi3OOVNro5y9f22mFvO5EjQRMJ5a/Z/1C5GltShokVPZZyPEEcJSSFjjjMZgN0h5D6GTz2vw==
+X-Received: by 2002:a05:6a00:c86:b0:740:9e87:9625 with SMTP id d2e1a72fcca58-742acc8ff71mr39363528b3a.4.1747981929616;
+        Thu, 22 May 2025 23:32:09 -0700 (PDT)
+Received: from ryzen.lan ([2601:644:8200:dab8::a86])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-742a97398f8sm12177783b3a.78.2025.05.22.23.32.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 May 2025 23:32:09 -0700 (PDT)
+From: Rosen Penev <rosenp@gmail.com>
+To: linux-wireless@vger.kernel.org
+Cc: =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@toke.dk>,
+	nbd@ndb.name,
+	Johannes Berg <johannes@sipsolutions.net>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS),
+	linux-kernel@vger.kernel.org (open list),
+	linux-mips@vger.kernel.org (open list:MIPS)
+Subject: [PATCHv3 0/5] wifi: ath9k: add ahb OF support
+Date: Thu, 22 May 2025 23:32:02 -0700
+Message-ID: <20250523063207.10040-1-rosenp@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAF6AEGuK+X4Q=Z-anjQuUBi952eYSs3u9HxVz0GSQM8fokdiiw@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
 
-On Thu, May 22, 2025 at 07:51:50PM -0700, Rob Clark wrote:
-> So if you _really_ don't like the WEAK_REF flag, I have a workable alternative
-> that addresses the performance problems.
+First two commits are small cleanups to make the changes of the third
+simpler. The fourth actually adds dts definitions to use ahb.
 
-The mode you want to introduce is broken, and I don't understand why you don't
-want to accept that.
+v2: Add documentation, use kernel_ulong_t, and of_device_get_match_data
+v3: Use qcom prefix and wifi suffix as in other ath drivers.
 
-  1. It obviously breaks some features, which is why you have to add lots of
-     WARN_ON() calls to the corresponding code paths, such that drivers won't
-     call into them any more.
-  2. It requires conditionals based on kref_read(), which is oviously racy, and
-     can cause UAF bugs.
-  3. I'm sure, if we look closely, we'll find more subtle bugs, because GPUVM
-     was designed with a clear ownership and lifetime model, that this mode
-     undermines entirely.
+Rosen Penev (5):
+  wifi: ath9k: ahb: reorder declarations
+  wifi: ath9k: ahb: reorder includes
+  wifi: ath9k: ahb: replace id_table with of
+  dt-bindings: net: wireless: ath9k: add OF bindings
+  mips: dts: qca: add wmac support
 
-The only reason why your MSM implementation does not run into trouble is because
-it upholds certain contitions such that the racy kref_read() code does not cause
-issues.
+ .../bindings/net/wireless/qca,ath9k.yaml      | 23 ++++++-
+ arch/mips/boot/dts/qca/ar9132.dtsi            |  9 +++
+ .../boot/dts/qca/ar9132_tl_wr1043nd_v1.dts    |  4 ++
+ arch/mips/boot/dts/qca/ar9331.dtsi            |  9 +++
+ arch/mips/boot/dts/qca/ar9331_dpt_module.dts  |  4 ++
+ .../mips/boot/dts/qca/ar9331_dragino_ms14.dts |  4 ++
+ arch/mips/boot/dts/qca/ar9331_omega.dts       |  4 ++
+ .../qca/ar9331_openembed_som9331_board.dts    |  4 ++
+ arch/mips/boot/dts/qca/ar9331_tl_mr3020.dts   |  4 ++
+ drivers/net/wireless/ath/ath9k/ahb.c          | 60 +++++++------------
+ 10 files changed, 84 insertions(+), 41 deletions(-)
 
-So, we would need to document all those extra requirements that drivers would
-need to uphold using this mode, which eliminates more perfectly normal use
-cases, that people expect to just work, one example for that would be to have
-the same GEM object in multiple VMs.
+-- 
+2.49.0
 
-This would be a huge mess and a mode full of footguns for drivers, and hence a
-NACK from my side.
