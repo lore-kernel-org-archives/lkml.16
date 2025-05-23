@@ -1,196 +1,133 @@
-Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBCB522A1CD;
-	Fri, 23 May 2025 17:28:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F86229375E
+	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 17:29:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748021287; cv=none; b=lXE4sMdYPE/UmT7N5Z/stxNBMPmM2XIvQgAzgU8akyk0s905NcqELvC4rvNrZwTNIEMR8qU7b1VBAvJCZxtUtsE/dASQ03fE+G4/WgdOxrP0EfmsMS9YmlbuOyyOtP1fDynMatfp1rVPQV5Y7VYqlAAAHzf0LzzRVLmoGzo0iP8=
+	t=1748021345; cv=none; b=qLX4bMQJGQ5HsHAr1E/cMVxFjpAawYAZFXCp5auTfKzIOSGsLK7tVh7ZBK+fH/MML5f9vj4PppnkykABFD7C5zU29cS9yc/wdJoYcJViB6+RXuZyQSMkzq6V1tsByc7dj5W7OYjlp8MzWdxJBc3YICXsU1q9HcT+h7ObH+ugl0o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748021287; c=relaxed/simple;
-	bh=j2WU0H54A7OYVi3lh9l/oBhzmxcOWkGCK+0LTKNRt7w=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=QiyLCrGJdkeLDHh0z6n1qcglyoT99tKw8x/DB0MWDwVDQJeJYml5b6fVeam94LKH4qSHaBhwNxDlUoZDuXqKFoyhC9MtZIS1NKvoDob73xLPs3Mqr+fM65ICoKh5dZqWOE/0fuM9ptk7AGF5kK6++yuPJsX8wUIgAOhjMhsME8Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ki+P6v+k; arc=none smtp.client-ip=209.85.210.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748021345; c=relaxed/simple;
+	bh=YE9iOCasxPJapt7KcW93oC/yS0GUZhvFXPD7y43bNBg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=W8X62RJ3qw550OXuBrrsEuYZE7LfWK2tCdZaMRycTsxSz3iyo07IlNkmhYd1pwJ4BP6KNJ/yekeKD6jHAD30qy79ik7wjtcxb1sZbHwsrkgAk/RbXsK7DNJLoPrq8YZBv0yDJHT0fYkMGXLBQtUtt8mWKVdSxmcLsTCPBaIDyFo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=WMiJikqt; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ki+P6v+k"
-Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-7406c6dd2b1so969508b3a.0;
-        Fri, 23 May 2025 10:28:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748021285; x=1748626085; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=j2WU0H54A7OYVi3lh9l/oBhzmxcOWkGCK+0LTKNRt7w=;
-        b=ki+P6v+ko6L4HEGrO30Zs32/F2zZfxNIWDOHr4hsgXPZ7cxaQvUCOrpSm/PqDIFMZZ
-         BbTGzvAZRFzEhcYDpkRzDfaD12i1zalSEf7UNrBDHWBrwTGVTCU3lInN5pMPkvcJetzJ
-         tUmUyI7EVMsjFsWDFqqLRtKgz+dBtU7vfJ3Wds8l/bNsJquPETN2Mn3kfLcFp0VPhja1
-         aanJroew46DR0O3dvhZGGOhj8Cvz73dJ5LqHhKyZY3LyLtmdgAhn28DsXf33+Gm5fUNf
-         a5pg49TlQqvMGooeQ3er5ev+xn/DbDNUTKVlg8VCFRnkJOcjLcm2ER1u7jkJGK42qcRZ
-         Vs0Q==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="WMiJikqt"
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54NE2QJs002269
+	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 17:29:02 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=wFa0vdA/IRTpVTPty2QP+/P6
+	az8rnekAbo9UM4G7jm4=; b=WMiJikqti+OEnzKlXLAL8harbintk1VTQiGB7xG1
+	8/cHuWXt/X92OIdkvhwY/k9SV8ExfuIpPtxsCqCJyvX6dXNi7wUvQKYyiSfcqf05
+	RaeKt7hw5hyarWPJHKddrG7SDsnKXs2fzyhMjsmbALZrm7ktzR/tdPao5liOQg20
+	dK+gdjDr0PW77wHYU5kz/dGE5Oc6fntm/p5dFu1e65Fa2aeihL5hENUGuG4mLZd3
+	fWuBF6Slb9Zip6GXLUS19/k08KyQlO8ygl6s8RIaNMI0+Jf/9S1nE9FIRTmRpXSR
+	JIFGkfJ7QIQQHaNHmQ8N7YbM1Pp+QEPg06QsIARmD87KrQ==
+Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com [209.85.219.70])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46rwf72kg8-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 17:29:02 +0000 (GMT)
+Received: by mail-qv1-f70.google.com with SMTP id 6a1803df08f44-6f8e23d6657so1281346d6.2
+        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 10:29:02 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748021285; x=1748626085;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=j2WU0H54A7OYVi3lh9l/oBhzmxcOWkGCK+0LTKNRt7w=;
-        b=F4QwIl9Z0CYsX72Opjq4HmOO9MqguD3ZTW/QNWWDW8ecwnQkzurPufZJ57mEHsjWZD
-         ussCz02yuWaaey28oJ1bjnCVA1U/U+eRUYmmPjw4NVeKutCXI+I3xgzV/JGyWiEV9F8Y
-         pRkv/ofwpLop0KqnpbfTZ/Zfmmd9Y8o77+hvkE6R4V3Oe7RALyF7qXkWlFXStt2jmrZh
-         dSTGL4UVQHf+repaDnLZSOFJaMhK5Iq8MCE7MFDNoTIldzh6EKwFpFxcpbuaa7PtFqbG
-         pOb2QR0+4WRD/BMBD9iS7fjWnijl8KXNQCKdTiqqK9j3vROAnDvIos088trg9scZ8BuD
-         LErg==
-X-Forwarded-Encrypted: i=1; AJvYcCUi4liudXN07qAzm37ANpyjk5TxNdDzDD+LPDye09aM42Q1P0oPVgCHYrlc/MbQChRS7OaSqyOkKNbX7QkxxNf+@vger.kernel.org, AJvYcCV9D4x0XbShZrUgDIyCrZ9mQGkiIsAH2Yz01amoyhpu7bXP1O8s42nqUsnYahLJnIM/TCCEDx5gOBjDwHcD@vger.kernel.org, AJvYcCVNZ4u0yRxT6hsIFjwINGVv7pL+cKflrzuUV3Zku4u2iPLNNMI9Mfn8nBjJCNOq77aLGsZFq+J2jOrSxQ==@vger.kernel.org, AJvYcCX7EhgEDvv0auHRoriufWbZV+Lr5CcJgiIr+PZNnOiRIedgCtz7P3qmAEO2u9Xy0QtfZu0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YykIY+GN+DG61EqGunsJd9M3JmCyZg2M8aum5yWjpnYTK7gupVW
-	Itquwe93zqeMXZqyDB4qknvDLQO2hANA4fYkx3wBZeea7XW6N9XO/0aZnS/w3ZE4SnwqFrhTuYW
-	ShSCcc1/TvrL5QzEoiitAVrqHL0smUW+0HhxsufQ=
-X-Gm-Gg: ASbGncuTi8IKCsIXA123eRxguyb06fjjpd6O7kw0Ycx1lwwoGpQxO5isJkdNi1RgPpK
-	v0/4lrfM0XEA4KB6/BB9SL9yAbo1gHHA54hxM9OIwiduviLszqLL66ril7+eH8NMIzU5qhJPf3C
-	2kT63PCE+VC6f5HwwLDKIlVZdEE/cvEnzA8G6VAvAMmgnqEzI=
-X-Google-Smtp-Source: AGHT+IFz1QZsmIjpTZUFz7Xrws4r2wUDVC2JHXdj4eF2fCDzKNlto2NXFJSHT+uSXx0tMibXSUkpgaHHSvvH2CqdlnQ=
-X-Received: by 2002:a17:903:1666:b0:231:c9bb:60f8 with SMTP id
- d9443c01a7336-233f0669a7emr56775085ad.7.1748021284988; Fri, 23 May 2025
- 10:28:04 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1748021342; x=1748626142;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wFa0vdA/IRTpVTPty2QP+/P6az8rnekAbo9UM4G7jm4=;
+        b=mstIuUY1HpAHtueG+WyCRur4EVjaK8Y5ybB0/IKzwtNx3eqM41lVPMrkFDvNcrutzF
+         tTLgZQpIvYAWzL9zpNp7twJTcmPmTjXogn1qVPIH21hLugQbMQ9EM0TMvbZw7WmQCAnA
+         6X4oo5Fw5W3W0Bki4ww79Ok4CDVPUNMBbt+tufPVVSfFzJzMQ+yHVQOEYGhvYs4RkPzc
+         aNY17OVZbINUIae6bYrsELXfkEtHuV0sAUu8/u3Zo61GAuCHMo8AVck+SfXtzD9o7K6S
+         Xlb7Y0mPCzvLycvatpgp1S9we0QfLnACYbDb5hJ8WPYnj1iv61andpUpzjIxNDS1NGlT
+         46Kw==
+X-Forwarded-Encrypted: i=1; AJvYcCXZrmT5Cp60NVmBI9UTfjtvf0tWGCmm5ScZ80MTO32pgQoVwk1v12lo8U+fiyJSE9Q/iDHjHSEWeIqJa9c=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwpmEPQNpAbvdby/UXU8DktKKa9WhBvVdE6U+8Gk0p5rR5hxv2B
+	8Nq/ZaDMkCytiH/kC3/teiGpLc6mK0sDqxZ2DI8TEkJ91Elz4mUpl0c77X1LFhZuT9WJdF56ZsN
+	JmhJV1hs3cFZsnLylaNLxVjDKtkRa2fOYUQOlX+Kce7nmjGUq/R9kAR0EOwaI9RD9pQI=
+X-Gm-Gg: ASbGncvo+pMrvjMnU10nZJ04D757FFTy0nyHSoUm8+U42s67fIF2WSGz9cIL+o9IRjZ
+	zmNXB++CJJ0mIcSZsp7ut33UMpUt5U7NXRIUs3zhGvY6haVrbK607Zz+74qSOndn0He6yL2fMe1
+	J6avnH4gCUVvQQckXmDrzPLortqrhAzeCt+upAwQhbJ5mEFY1YNo7ifVmDwpqHQQmYlACezq6LR
+	EiqiglGLd3tgsoezaquQtiQL+RiZnnbb1IHvLd1gdU2CNUW4zQeSSmmHz+ukQA4yiHBbwT2YESY
+	zQcTNQFUWLFbStHhQetET+fTnRBwnuhbuoPzhPBkNAK7MJ+TzDKn8SRQ2zQo4N/n0hPHSNAS/dw
+	=
+X-Received: by 2002:ad4:5ce8:0:b0:6f0:e2d4:51fe with SMTP id 6a1803df08f44-6fa9d13380fmr4709756d6.26.1748021341958;
+        Fri, 23 May 2025 10:29:01 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHYa7Skl7n8kgzImuglUnL40cCJvrlZBl66a+j2go4me6lwztDNnIag5vwQhcV+q08HK0c0VQ==
+X-Received: by 2002:ad4:5ce8:0:b0:6f0:e2d4:51fe with SMTP id 6a1803df08f44-6fa9d13380fmr4709566d6.26.1748021341671;
+        Fri, 23 May 2025 10:29:01 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-550ee87a795sm3549913e87.220.2025.05.23.10.29.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 23 May 2025 10:29:00 -0700 (PDT)
+Date: Fri, 23 May 2025 20:28:59 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Konrad Dybcio <konradybcio@kernel.org>
+Cc: Bjorn Andersson <andersson@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        cros-qcom-dts-watchers@chromium.org,
+        Sai Prakash Ranjan <quic_saipraka@quicinc.com>,
+        Marijn Suijten <marijn.suijten@somainline.org>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Subject: Re: [PATCH 04/10] arm64: dts: qcom: sc7180: Explicitly describe the
+ IPA IMEM slice
+Message-ID: <nm245key56zcfgmo353bfiw6zrf6lymxnx7evqxzimvs7muxpj@e3yts2awiwkk>
+References: <20250523-topic-ipa_mem_dts-v1-0-f7aa94fac1ab@oss.qualcomm.com>
+ <20250523-topic-ipa_mem_dts-v1-4-f7aa94fac1ab@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <aC0OpCZCEziDXhwh@kodidev-ubuntu> <ace72324-6395-4e9b-8406-7d99d57018dd@oracle.com>
- <CAADnVQLAbQPWw_=F5WY_5-MY0GsSrnn5Ds_yE5BFC0=uuqnWug@mail.gmail.com>
-In-Reply-To: <CAADnVQLAbQPWw_=F5WY_5-MY0GsSrnn5Ds_yE5BFC0=uuqnWug@mail.gmail.com>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Fri, 23 May 2025 10:27:52 -0700
-X-Gm-Features: AX0GCFvVaHH9czT2NTjtlaHd578qhQO7h04Ft5rL8joiwPj8PfXm7_Nil1_SobI
-Message-ID: <CAEf4BzY+_+r9gyRCKhROPqEKtQ=f0CycRgv9c6b2zisV9XHO7Q@mail.gmail.com>
-Subject: Re: vmlinux BTF as a module (was Re: [PATCH bpf-next v4 0/3] Allow
- mmap of /sys/kernel/btf/vmlinux)
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc: Alan Maguire <alan.maguire@oracle.com>, Tony Ambardar <tony.ambardar@gmail.com>, 
-	Andrii Nakryiko <andrii@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Alexei Starovoitov <ast@kernel.org>, 
-	bpf <bpf@vger.kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, Eduard <eddyz87@gmail.com>, 
-	Hao Luo <haoluo@google.com>, John Fastabend <john.fastabend@gmail.com>, 
-	Jiri Olsa <jolsa@kernel.org>, KP Singh <kpsingh@kernel.org>, 
-	linux-arch <linux-arch@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>, Lorenz Bauer <lmb@isovalent.com>, 
-	Martin KaFai Lau <martin.lau@linux.dev>, Mykola Lysenko <mykolal@fb.com>, 
-	Stanislav Fomichev <sdf@fomichev.me>, Shuah Khan <shuah@kernel.org>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250523-topic-ipa_mem_dts-v1-4-f7aa94fac1ab@oss.qualcomm.com>
+X-Proofpoint-GUID: vaPh9TW3C78HTQYlXfDWqJ_L85a8wCf3
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIzMDE2MCBTYWx0ZWRfX4fXvDgVhoNpL
+ iaOc3nA2ozAiqinvDjXsrfoHw/GNzePUbhDD0JsUSSwMcDghVsTdifz4WActYBD6IO5XFHm1idq
+ WvZCnn2FgjnZOYbMedZipuwsoqYEjcXi2E4eU8AceSvaKQEHDws/i3/6GsctbAotjvXIJ+lh/oQ
+ y0aryjKewJdtH2P9kdVuP1NcxzYJ46eChI44DGNNIfl8sGAelEcm1vJpt+ROt6u1TVvEeJyq74B
+ Y+rOY0ifLQNodtKD+FADwn5G6OIwU+UivadVtmCixbIHuLrOGY7u/A9Z+w4oAeOz5dcu9nRQjIf
+ ZdxqGKCNcWuL0Rubhk9KPyVEpJrxHhATiU4KlyPo5suiOzxQ5B0pmfutMdSnBMFvsvqs7nEyjMO
+ UNDiMJX/i/hg3UXLpgsca9H1gLzzeuoCcTjf4JnSQae1P9CuyZ4w3V6v81Gj9ET/KL9xjlYf
+X-Authority-Analysis: v=2.4 cv=fZOty1QF c=1 sm=1 tr=0 ts=6830b05e cx=c_pps
+ a=oc9J++0uMp73DTRD5QyR2A==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
+ a=dt9VzEwgFbYA:10 a=EUspDBNiAAAA:8 a=CQVN2WYv2dQaG0RyAuwA:9 a=CjuIK1q_8ugA:10
+ a=iYH6xdkBrDN1Jqds4HTS:22
+X-Proofpoint-ORIG-GUID: vaPh9TW3C78HTQYlXfDWqJ_L85a8wCf3
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-23_06,2025-05-22_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ clxscore=1015 mlxscore=0 adultscore=0 spamscore=0 bulkscore=0 suspectscore=0
+ malwarescore=0 priorityscore=1501 impostorscore=0 mlxlogscore=705
+ lowpriorityscore=0 phishscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505160000 definitions=main-2505230160
 
-On Thu, May 22, 2025 at 6:04=E2=80=AFPM Alexei Starovoitov
-<alexei.starovoitov@gmail.com> wrote:
->
-> On Wed, May 21, 2025 at 8:00=E2=80=AFAM Alan Maguire <alan.maguire@oracle=
-.com> wrote:
-> >
-> > > Hi Alan,
-> > >
-> > > Thanks for taking a look at this. I've been following your related ef=
-fort
-> > > to allow /sys/kernel/btf/vmlinux as a module in support of small syst=
-ems
-> > > with kernel-size constraints, and wondered how this series might affe=
-ct
-> > > that work? Such support would be well-received in the embedded space =
-when
-> > > it happens, so am keen to understand.
-> > >
-> > > Thanks,
-> > > Tony
-> >
-> > hi Tony
-> >
-> > I had something nearly working a few months back but there are a bunch
-> > of complications that made it a bit trickier than I'd first anticipated=
-.
-> > One challenge for example is that we want /sys/kernel/btf to behave jus=
-t
-> > as it would if vmlinux BTF was not a module. My original hope was to
-> > just have the vmlinux BTF module forceload early, but the request modul=
-e
-> > approach won't work since the vmlinux_btf.ko module would have to be
-> > part of the initrd image. A question for you on this - I presume that's
-> > what you want to avoid, right? So I'm assuming that we need to extract
-> > the .BTF section out of the vmlinu[xz] binary and out of initrd into a
-> > later-loading vmlinux_btf.ko module for small-footprint systems. Is tha=
-t
-> > correct?
-> >
-> > The reason I ask is having a later-loading vmlinux_btf.ko is a bit of a
-> > pain since we need to walk the set of kernel modules and load their BTF=
-,
-> > relocate it and do kfunc registration. If we can simplify things via a
-> > shared module dependency on vmlinux_btf.ko that would be great, but I'd
-> > like to better understand the constraints from the small system
-> > perspective first. Thanks!
->
-> We cannot require other modules to depend on vmlinux_btf.ko.
-> Some of them might load during the boot. So adding to the dependency
-> will defeat the point of vmlinux_btf.ko.
-> The only option I see is to let modules load and ignore their BTFs
-> and vmlinux BTF is not present.
-> Later vmlinux_btf.ko can be loaded and modules loaded after that
-> time will succeed in loading their BTFs too.
-> So some modules will have their BTF and some don't.
-> I don't think it's an issue.
->
-> If an admin loads a module with kfuncs and vmlixnu_btf.ko is not loaded y=
-et
-> the kfunc registration will fail, of course. It's an issue,
-> but I don't think we need to fix it right now by messing with depmod.
->
-> The bigger issue is how to split vmlinux_btf.ko itself.
-> The kernel has a bunch of kfuncs and they need BTF ids for protos
-> and for all types they reference, so vmlinux BTF cannot be empty.
-> minimize_btf() can probably help.
-> So before we proceed with vmlinux_btf.ko we need to see the data
-> how big the mandatory part of vmlinux BTF will be vs
-> the rest of BTF in vmlinux_btf.ko.
+On Fri, May 23, 2025 at 01:18:19AM +0200, Konrad Dybcio wrote:
+> From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+> 
+> As part of stepping away from crazy hardcoding in the driver, move
+> define the slice explicitly and pass it to the IPA node.
+> 
+> Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+> ---
+>  arch/arm64/boot/dts/qcom/sc7180.dtsi | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
 
-I think there is a way to avoid all these problems by switching kfunc
-registration to a lazy validation model. I'll explain what I mean.
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
 
-1) vmlinux_btf.ko isn't loaded by default, but kernel is aware that
-there is vmlinux BTF available, if necessary.
-2) when user-space tries to access /sys/kernel/btf/vmlinux, we
-automatically try to load vmlinux_btf.ko; similarly, if kernel
-internally needs vmlinux BTF information, we provided that
-transparently through automatic loading of vmlinux_btf.ko
-3a) if kernel module is loaded and it needs to register kfuncs, we
-allow that, but instead of eagerly validating kfunc's associated BTF
-information for correctness, we just record the fact that there is a
-kfunc registered, with name ABC and associated BTF ID XYZ.
-3b) when user tries to verify BPF program that needs to use kfunc ABC
-from that module, that's the time when we load vmlinux_btf.ko and
-validate kfunc's BTF information for correctness. If that information
-is broken, report error, maybe log dmesg. If not, we are golden (and
-that's the expected outcome) and we proceed with verification just
-like today.
-
-The key observation here is that with BTF there is no direct pointer
-involved. It's all just stable integer IDs, so it doesn't really
-matter whether we have instantiated BTF information at the kernel
-module loading time or not. We can always (later) access this data
-through BTF ID.
-
-The biggest change is handling of kernel modules with broken kfuncs.
-Right now we'll reject the load, because registration will fail. In
-the new lazy model, this will be delayed until the very first use of
-that kfunc. And if no one ever use that kfunc, it, technically,
-doesn't matter. It's basically the same approach as with BPF CO-RE and
-dead code elimination in verifier: if there is unknown/unsupported
-code, but it's guaranteed to never execute, it's OK from the
-verifier's POV.
-
-I think that's an acceptable tradeoff, because really it's not an
-expected typical situation to have such a broken module. On the other
-hand, we don't need to complicate and extend BTF itself to accommodate
-this, it all will works as is and will keep working in the future.
-
-P.S. And of course all this can/should be cached, so we don't redo all
-this validation, but that's just an optimization.
+-- 
+With best wishes
+Dmitry
