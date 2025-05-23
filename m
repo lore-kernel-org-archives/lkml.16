@@ -1,105 +1,96 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93524294A04;
-	Fri, 23 May 2025 15:14:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D490294A04;
+	Fri, 23 May 2025 15:14:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748013270; cv=none; b=JDtu62Z7DMFrULsUYmIjYHnQYh26ZAQrEDPT5aH/ws/Ve0Hes1JulfQ9yT9+hPK0HBUbB0g3DFVHZsUBEsQPSyP//rNgalaTnOMerYTQy+Rz1R0T8nN03lQFEpsesrkLpfAFh2MYmU16o7EtOw2JNIovlqOOUqvkP10NCpEw0cM=
+	t=1748013277; cv=none; b=aXlK9dix/UTqu0SG/VOB/ChhuZjA8Eyhx96oOW37WhsJ+ToUlBn+ma0RmBOdbm685QIVOmTXg0Ro2rqdpp2fWFji5Aiwa25hk7r7O44ekyy5faSB/6zI7O/L7q4NpKhr3wVwIn/Z5Tf3naOLYeQhQPjBfNX/2nU3aK8tv9ug/44=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748013270; c=relaxed/simple;
-	bh=0Qw66rc7PmkxBXsDw/t2zc/4z3MAFYfxOMkORRxiylc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LVplnKzNkeB/uswLLWCpyeDxV8KFuRnbdMITymgWbtnmk7wFGo8+4cP4bzOA2GvVQEZQTTMiKoSBIefu1cfEyz/8A9ZEjEHY89bQcqVLtQEa+dZnd6hmuae5i4rEw5tc8bMMBaAuQrKjw7iIHWaFlv8GKgNIo4bk7gXZdouY/EM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BAxOtxvk; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748013277; c=relaxed/simple;
+	bh=agOJvT2/i6EmhSZhAs95f9ecZVtjJRDEFx8kLbUoK5w=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=j7kiyx+PDEP7aIfxnif5bwS+JZJNi6lq0cAB8FdDVr+DNRtntunRuFInMiVnzvyp25bVMWNceFsujYcahkxjed8Yf/XK90Z6eOn+hZynQELjLeMHxRcA5/1rQdKtLBErSCJYG1MVc6fKl5Ksc3ivD2sAlKc94wmUd+da9ckx7Bw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=fXJ7NTFq; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BAxOtxvk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0DCADC4CEE9;
-	Fri, 23 May 2025 15:14:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748013270;
-	bh=0Qw66rc7PmkxBXsDw/t2zc/4z3MAFYfxOMkORRxiylc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=BAxOtxvkHqlhntoG02uY9XO9rTEmZVz7VCzQw+Sn+nWw8DrYgF9cRe7y+xR0imvFT
-	 4vGAcM5M42BOyMoYLbexs+NK7P3alZaeQ/aAeTDCS7u49zvOxWzRka1ym3DMSAkwa9
-	 ah+ajsmdjU7yfsV3K7aQ9mcaiGvW5HAdjSTOfm5E5AFXAByegyGft1WwUbFaXfIZlO
-	 iDGQGDD0ERMwgP9x0OEshMRqQvw9fsrUcyhGMPAfJCK2cTmufulKvjWp/wka44h+pN
-	 ZQf3zYUAxch4Efq9GFUkbRO5QulmhfV9u3+4JQ4gBv9JjtaxCq7bliKz/76cg8MI1e
-	 hshD+0JMm7ccQ==
-Received: by mail-oo1-f54.google.com with SMTP id 006d021491bc7-60b8a9be972so11577eaf.1;
-        Fri, 23 May 2025 08:14:30 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUY/mNuXuKbhGItXqet4TodSa8elVa8s60FDgYgRZILFFmyP7JHJkJ84abalWKpji+K4uxlZEm5y29I5OA=@vger.kernel.org, AJvYcCWyaCFGFzurdzjV2is0g2HLyfZJKfxvkYA9/pKjXnnz6P93br69N0v4RIWGDQUwcqRx1YDT9vSiEvg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyANx0ZA2T1+aNIPdNnuqG1ND91UrJFXb1Bi0jHxK4uyMdfSHqL
-	6uI6p5kOH8k5DYfDuFUWnYn7t5zpYBN0odNV8YBi+1TpJlZrcP8AoZKV1ksgG/i+/v1pt6nBNVh
-	+FVQl2/j/cG0MCgGTWqVcqeqYNx3FHYc=
-X-Google-Smtp-Source: AGHT+IHgbeaYJujl+cfbxuxc1QsSxMsWo29Cf9GRGctriPfjo9YYNXi5dgreqXSQN0lHqPMLs4yiPndPUAFqAJ1KsAM=
-X-Received: by 2002:a05:6820:1990:b0:605:f34d:7e00 with SMTP id
- 006d021491bc7-609f376c5c0mr18879038eaf.7.1748013269433; Fri, 23 May 2025
- 08:14:29 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="fXJ7NTFq"
+Received: from ideasonboard.com (unknown [IPv6:2a00:6020:448c:6c00:a882:21a2:2327:ac4f])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 2A4BF346;
+	Fri, 23 May 2025 17:14:11 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1748013251;
+	bh=agOJvT2/i6EmhSZhAs95f9ecZVtjJRDEFx8kLbUoK5w=;
+	h=From:Subject:Date:To:Cc:From;
+	b=fXJ7NTFqAcFttwQE77Ek19k2Gg0g1T6AKnCdXJna7q06cNpUuN0fLt3d2hI4x7CJo
+	 tY6UEYwxM8pTKqcYwQImwBGI1lu+IwaaIugEEOPdlqz20h8pcJpw8vXwFEhABKUwlW
+	 YeiweFYKxxVio7H9lflBDttID1QmEUlMTbMSZYKw=
+From: Stefan Klug <stefan.klug@ideasonboard.com>
+Subject: [PATCH v3 0/3] media: rkisp1: Add
+ RKISP1_CID_SUPPORTED_PARAMS_BLOCKS ctrl and WDR support
+Date: Fri, 23 May 2025 17:14:29 +0200
+Message-Id: <20250523-supported-params-and-wdr-v3-0-7283b8536694@ideasonboard.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250523034253.88083-1-zhangzihuan@kylinos.cn>
-In-Reply-To: <20250523034253.88083-1-zhangzihuan@kylinos.cn>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Fri, 23 May 2025 17:14:18 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0j7i1zbcR7Tv4zNDzR8__keq3bV2m1BZJCS0-cxT8Da4Q@mail.gmail.com>
-X-Gm-Features: AX0GCFvM-eoDysKXc8iJBisS9rMmvxIADQatA2sZ0L8nAWQSXFVSvvpxzo6Au1Y
-Message-ID: <CAJZ5v0j7i1zbcR7Tv4zNDzR8__keq3bV2m1BZJCS0-cxT8Da4Q@mail.gmail.com>
-Subject: Re: [PATCH v2] PM / Freezer: Skip dead/zombie processes
-To: Zihuan Zhang <zhangzihuan@kylinos.cn>
-Cc: rafael@kernel.org, len.brown@intel.com, pavel@kernel.org, 
-	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIANWQMGgC/43OQQ6CMBCF4auYrh1Sh9aoK+9hXIx0kEZpmymgh
+ nB3wZWJG5f/4n15o8osnrM6rEYlPPjsY5ijXK9U1VC4Mng3t0KNVlssIfcpRenYQSKhNgMFBw8
+ nsCltuTcXxq0zap4n4do/P/TpPHctsYWuEaZvEDdW740pjNbabAEhd1xTKG73/nr0jinHcIkkr
+ qhiu7CNz12U1+fwgAv+x7cBQYOl3c5VZGuD+pc+T9P0BsdqknMOAQAA
+To: Dafna Hirschfeld <dafna@fastmail.com>, 
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
+ Mauro Carvalho Chehab <mchehab@kernel.org>, 
+ Heiko Stuebner <heiko@sntech.de>
+Cc: linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org, 
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ Stefan Klug <stefan.klug@ideasonboard.com>, 
+ Paul Elder <paul.elder@ideasonboard.com>, 
+ Jai Luthra <jai.luthra@ideasonboard.com>
+X-Mailer: b4 0.13.0
 
-On Fri, May 23, 2025 at 5:44=E2=80=AFAM Zihuan Zhang <zhangzihuan@kylinos.c=
-n> wrote:
->
-> ZOMBIE (exit_state =3D=3D EXIT_ZOMBIE) and DEAD (exit_state =3D=3D EXIT_D=
-EAD)
-> processes have already finished execution and will not be scheduled again=
-.
->
-> In the context of system suspend (e.g., S3), attempting to freeze such
-> processes is unnecessary. Moreover, freezing them can obscure suspend
-> diagnostics and delay resume if they appear "stuck" in logs.
->
-> This patch introduces an early check for `p->exit_state !=3D 0` in
-> `try_to_freeze_tasks()` and skips freezing for such tasks. This is a safe
-> optimization because:
->
->  - They hold no running resources
->  - Their `task_struct` is only waiting to be collected or freed
->
-> Signed-off-by: Zihuan Zhang <zhangzihuan@kylinos.cn>
->
-> Changes in v2:
-> - Simplified code, added judgment of dead processes
-> - Rewrite changelogs
-> ---
->  kernel/power/process.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/kernel/power/process.c b/kernel/power/process.c
-> index 66ac067d9ae6..82528a79d46a 100644
-> --- a/kernel/power/process.c
-> +++ b/kernel/power/process.c
-> @@ -51,7 +51,7 @@ static int try_to_freeze_tasks(bool user_only)
->                 todo =3D 0;
->                 read_lock(&tasklist_lock);
->                 for_each_process_thread(g, p) {
-> -                       if (p =3D=3D current || !freeze_task(p))
-> +                       if (p =3D=3D current || p->exit_state || !freeze_=
-task(p))
->                                 continue;
->
->                         todo++;
-> --
+Hi all,
 
-This is a bit too late for 6.16, please resubmit when 6.16-rc1 is out.
+This series adds RKISP1_CID_SUPPORTED_PARAMS_BLOCKS control to query the
+parameters blocks that are supported by the current kernel on the
+current hardware. This is required to be able to enable/disable the
+corresponding algorithms in user space without relying solely on the
+kernel version.
 
-Thanks!
+In addition to that it includes the WDR patch by Jai which is already in v5 and
+was reviewed here:
+https://lore.kernel.org/linux-media/20250521231355.GN12514@pendragon.ideasonboard.com/
+
+Version 2 of this series drops the unnecessary initial cleanup patch.
+Patch 1 was updated and has a local changelog. Patch 2 is unmodified.
+
+Version 3 splits off the first commit again as it was considered worth
+an own patch. Patch 2 was improved a bit based on review comments (see
+local changelog).
+
+---
+Jai Luthra (1):
+      media: rockchip: rkisp1: Add support for Wide Dynamic Range
+
+Stefan Klug (2):
+      media: rkisp1: Properly handle result of rkisp1_params_init_vb2_queue()
+      media: rkisp1: Add RKISP1_CID_SUPPORTED_PARAMS_BLOCKS control
+
+ .../media/platform/rockchip/rkisp1/rkisp1-common.h |   2 +
+ .../media/platform/rockchip/rkisp1/rkisp1-params.c | 150 ++++++++++++++++++++-
+ .../media/platform/rockchip/rkisp1/rkisp1-regs.h   |  99 ++++----------
+ include/uapi/linux/rkisp1-config.h                 | 103 ++++++++++++++
+ include/uapi/linux/v4l2-controls.h                 |   6 +
+ 5 files changed, 282 insertions(+), 78 deletions(-)
+---
+base-commit: a5806cd506af5a7c19bcd596e4708b5c464bfd21
+change-id: 20250523-supported-params-and-wdr-135394be26d4
+
+Best regards,
+-- 
+Stefan Klug <stefan.klug@ideasonboard.com>
+
