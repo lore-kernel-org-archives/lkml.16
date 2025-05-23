@@ -1,76 +1,70 @@
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 596492949E9
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 16:08:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 266C128382
+	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 16:09:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748016500; cv=none; b=D14ULLYKnt9SGna8ZPfQo55+kzTuSLG61QHOXf62/2La51eJPqt87BehSjujYjVczK5K/cPd0fqCeGquIYiZXf8CQmym/ALxlDIaeJkwba3g9EaoeNKNAyI8GSGwZfpKfaEbub1BARVpOBzwYlhE8JjaRkUnqx2j8ZkF2NMxRmQ=
+	t=1748016542; cv=none; b=lGENzakH8D2iEIEEKyN+RdZl2RDheGcW90s3Nv0ap11kLNYhIUQadduXpZE+M/hwopXZNSYWrsE/Hng0TTTOwi8G/QDIiM08nMO4kRw/cqrR2CwCmbdc4615+39k/ycj6TrVP69i3PsVPfUlgPM1W8/2fqoNVuT0vj3+YKK7YD0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748016500; c=relaxed/simple;
-	bh=sOSd52a5sFsFjNwgnP65YA7nbCno1YCXhcKexikeCZM=;
+	s=arc-20240116; t=1748016542; c=relaxed/simple;
+	bh=1Q3TcfmNzRDazBSppcZtg7wDQJTfh9folbD7FJfXyzM=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=b9FUgtN39lSwhGC+MjYWyfEEDONIHvV/nmo+I/iE1X/Y48s+FBhjSvl97kK1p20j6dmGzSRigIF8XCEUtf3OT3X43CVm0EqXqh/a8np6gIgWQdT7Bnd0K65k7Zhfqpaho0J5tuI2JEJfD6putYIQUs6lZefpKa2mDCUFuUE4f1s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=bzPNEBgV; arc=none smtp.client-ip=209.85.208.171
+	 Content-Disposition; b=aXbG4IVZqn+VYk6/Gc08GwGd9LyUNuvHE3d7ddQi04fNMNfznKXu2dg2eGJjPyIbBUZllbsI9cNznTAjUT4/lD8wLI2LpRvfJfHsSxDo3KcXz/9RIDkXvohI4szJTQbD4KGlMRP/G0AxeX0aT9GecjAmRFvZAxEEHpHdCol/hFk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=uJdeUy+l; arc=none smtp.client-ip=209.85.208.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bzPNEBgV"
-Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-3290ae9b011so158461fa.0
-        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 09:08:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uJdeUy+l"
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-602c4eae8d5so134868a12.1
+        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 09:09:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1748016493; x=1748621293; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1748016539; x=1748621339; darn=vger.kernel.org;
         h=content-disposition:mime-version:message-id:subject:cc:to:from:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=hGF7HsXVnOrqTUKvr0Dj/ZLjMe7xNdGfL36SW0iFLZk=;
-        b=bzPNEBgVxyGsYJJ7eQHtLerihWTYCCEkDyX9cuKt6YisD0fR0xk5rhH4jBPfJz4Yeq
-         7D1qaq3ekppC0wUGiz5vUdTM3U/DK6ZEJSD/CdPu82WFFoic4Se6SzyHhtftRwxdJRHS
-         Qyk8WhHMjxUOLs8e7iq7sGzgVdE5S93I4Wtqqh4Ycuqi9x3s9ZsUV3dF9Jniqc78e6z3
-         +nIzV+bzmraVqMJymNgxAWQ7nMU1E32dWgs55v0pA+JFdjzXs297pffPnOZn04a9ka/k
-         +dpiJUuyzlgNowCeng52k8FD78fyigYaOzmMAPhTGVi0wffKG1y8vr7MfdSWZ9WByNon
-         WK/g==
+        bh=y8YOV9dsCJJ+cVkHK0vlh5ONGz8WQtP2+w3lfUiN9I0=;
+        b=uJdeUy+lkeOx0//0MgcfC+3ktiME00Ljnnyfk4ED/+3ojkrLf/FytHrDPaff4ScKbX
+         7lqVvTydhfNUfN8KzqcUDXjnFr4mTk98KaFL/lnpn6N0W4L67b9Mngoe1JROVRwp03mW
+         yEDcZnAkqN2Wx53sZ7ULosQh6csRG0G0hNz7S1MvYACpJ3Arvw+msTbJZvl8nAoLdsS7
+         tl1rr2sKr4sfVw06pAsvNH6esasjWyUqL0DQTqITkX+DDzpDTC3zxmpjyy7KinycOEGk
+         2DSAaDyXll4sL7dDXhcfqomQoP6fK16/Nh1h7rynLEg/zJFeG3PpQpu6TKZzNe0y5wOy
+         m3CQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748016493; x=1748621293;
+        d=1e100.net; s=20230601; t=1748016539; x=1748621339;
         h=content-disposition:mime-version:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=hGF7HsXVnOrqTUKvr0Dj/ZLjMe7xNdGfL36SW0iFLZk=;
-        b=wUAEqVNTlHKD9/lXnwhx6BnSrSvc3QbBOx6YsLA16vmrObrIXOL3GmQeY4LyZf29YU
-         jeFzatUv1j2IhqB9T2ZIf7g++8wmlUbMbNO59RKwLUj9VcwMHXG50UiZ/LA0xeIZ2Lq5
-         pndLhc8bmEycvw3Kk/XDRDEftQVtf/A+Ms0r+ikz0LX78x7nts+z7EKsnrMsJ/dCs7eq
-         cPJGFbaTpsxA79npSUT2kyL5WYg1E/TFHnY3jf/TDLDOEr3HbEW1XrNpkGux+3F3UHjp
-         Zr55MSM+hjRAyTyOwZrzPQIWj3KiraYt20RBdHP96pfMJ6x3NsZm1Es6PQIr4wVpbHMC
-         2m1A==
-X-Forwarded-Encrypted: i=1; AJvYcCUgAcamUti3HyVKWSQSifxtKmD8Pfx2y31HnaoTB2bq2y5eJX49xq6/nrjNsgTzX0TZvVvGOpIuubdPKH8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxPfYEoZ3cU6yi01yc1kTuBgrTLXo2tkYgh9P/8QbXSFX5vjmF3
-	O1ElaT4/nDFW6GGHzc9oGM0bf8LRT3sF+ii81PMeMMLWvFEt0o8eVUa5JpklTmERYda9vlToaAs
-	Hgkii
-X-Gm-Gg: ASbGncsZ+WRQdpqQ2ZubIUqdGPxdzip8NDQM+mbVbIJb+aTUGQZIOY8kvdhRUcPI8Ro
-	IjIxuJ3pEpuT00cJccjQGPDwc6Dw2H9l/fJ3HkNxvLmH8XJGWDWBY5+3G9QfBDDg7s8OfkLKtIH
-	N3IiGydHIckQmIS3vc324edJ+k9YYD2PJ7e64EES1wh64ZFzt70iECIO68HcQ6EeseKSLDWy4tn
-	HEec3EANv9fQTg9X7LxA36Mjm9RzRe8SD4jpLANBbwnaDEWJ2814eCcNmEtnlMUrbM+ajA8vn2Q
-	Mx0eW4XDXbRUdQAsUS/5zUlw1fnteow+qYamaE4iYQMkPHwKNPg37c8y
-X-Google-Smtp-Source: AGHT+IEgnqQ89pTDpIiXTK+5YoVr8iR1h5pIE/WFcVljNceH6shNrv9ACEId9Fo5qIq8B9APct4R0g==
-X-Received: by 2002:a05:600c:3b21:b0:441:b3eb:5720 with SMTP id 5b1f17b1804b1-442ff0396b5mr274072555e9.29.1748016482352;
-        Fri, 23 May 2025 09:08:02 -0700 (PDT)
+        bh=y8YOV9dsCJJ+cVkHK0vlh5ONGz8WQtP2+w3lfUiN9I0=;
+        b=EAv5FX/anlKUsjjeYQ123jQkoRNek8Ex/eCZxl3IDrHlq1UAuVLrVnDV8wAOqx1vFm
+         HkcEkWEb7dqcl6DkvWhIc88cvKfWu8zzt6O2uD3KvsWNVFl+u7Ukz659NZNgLckqScSA
+         7BPoX76sNWTubQJviDHn/x1Gxc0qCSmEUF+xEgrx1Qsb3CibqjGeIH1MSZ6s3JALkvkG
+         2lheozJPkg4FKPwY3X1sjQ7XeytwumLuk4f8ZrisrQPTj2Mp/WPhZn2RNyP7YioJERZ8
+         btC7csOW5N4w4jsBbz9JrduEZO3XwpaHSYZQy/7EK2MrwqcHeO3HWsiwn/KSyEpyAps3
+         liQw==
+X-Forwarded-Encrypted: i=1; AJvYcCV39r3nKd6VOWOEXhwByPa5jkJrS6i2cWGYFguAsZ+CnQVuSNzr+UKZvNu5p2n2NwDlmNPkTMgML62YC1o=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzI/m3v9zDPOHmaD/xoNKGYpS8eZSsANXtwBvoacYCmY+huVFmY
+	OjnyogkwqTSB/7dhyy1OvWrwIxkzwxmg1LXNQfeC58uqa/tYTdRjxdAVIky/tCFKY3N/2FfpkZH
+	oXoLp
+X-Gm-Gg: ASbGncsH0ZTwQjl/ihPwuFWmhe1MT8IRo4D5EIYR3P/bjvubqyHoEqwuFRuzXZcySUb
+	HgWPUNE+Coz8jAzE+HcmgZn106uC7l3THSrCtuTgozh8nNlqsHp3Ki8jhhUobw8HzVC6ZeTxorP
+	CJwpzGlkIF6Z0ACCZ6v917ROaILNXDaneqp4r85/DcTy2Rylh1csAnudHWgiDyhmVq5L8nLOjit
+	wTqWGcAkoWyz924IP4d9Il8uI+smIzVjCuKNF2OHjls2TowWoNVE/X3LsDhWWCsZZK55Or0VqJS
+	03HfTOiglgVywdxzOVA/yit+N3D9knfakJPUg0jbGIJSfMdvXdZkaUDV
+X-Google-Smtp-Source: AGHT+IEChUpJRqifxtoHLs2XridRWAwu3U5O6UAsOP+uK971N/P8KY8xSeu1T4wchwPDHayN25tBWg==
+X-Received: by 2002:a05:6000:1845:b0:3a3:6ae4:660c with SMTP id ffacd0b85a97d-3a4c153f70fmr4239821f8f.22.1748016528875;
+        Fri, 23 May 2025 09:08:48 -0700 (PDT)
 Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3a368136014sm22978069f8f.92.2025.05.23.09.08.01
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3a360b0b766sm26836366f8f.56.2025.05.23.09.08.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 May 2025 09:08:01 -0700 (PDT)
-Date: Fri, 23 May 2025 19:07:58 +0300
+        Fri, 23 May 2025 09:08:48 -0700 (PDT)
+Date: Fri, 23 May 2025 19:08:45 +0300
 From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Ben Skeggs <bskeggs@nvidia.com>
-Cc: Lyude Paul <lyude@redhat.com>, Danilo Krummrich <dakr@kernel.org>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Jonathan Hunter <jonathanh@nvidia.com>,
-	Dave Airlie <airlied@redhat.com>,
-	Lu Baolu <baolu.lu@linux.intel.com>, Timur Tabi <ttabi@nvidia.com>,
-	dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
-	linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+To: Ritesh Harjani <ritesh.list@gmail.com>
+Cc: Theodore Ts'o <tytso@mit.edu>,
+	Andreas Dilger <adilger.kernel@dilger.ca>,
+	linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org,
 	kernel-janitors@vger.kernel.org
-Subject: [PATCH next] drm/nouveau/tegra: Fix error pointer vs NULL return in
- nvkm_device_tegra_resource_addr()
-Message-ID: <aDCdXk98AhLBcWvK@stanley.mountain>
+Subject: [PATCH] ext4: remove unnecessary duplicate check in ext4_map_blocks()
+Message-ID: <aDCdjUhpzxB64vkD@stanley.mountain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -81,29 +75,28 @@ Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 X-Mailer: git-send-email haha only kidding
 
-The nvkm_device_tegra_resource() function returns a mix of error pointers
-and NULL.  The callers only expect it to return NULL on error.  Change it
-to only return NULL.
+The previous lines ensure that EXT4_GET_BLOCKS_QUERY_LAST_IN_LEAF is
+set so remove this duplicate check.
 
-Fixes: 76b8f81a5b92 ("drm/nouveau: improve handling of 64-bit BARs")
 Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
 ---
- drivers/gpu/drm/nouveau/nvkm/engine/device/tegra.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/ext4/inode.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/nouveau/nvkm/engine/device/tegra.c b/drivers/gpu/drm/nouveau/nvkm/engine/device/tegra.c
-index 0ca2dfe99676..114e50ca1827 100644
---- a/drivers/gpu/drm/nouveau/nvkm/engine/device/tegra.c
-+++ b/drivers/gpu/drm/nouveau/nvkm/engine/device/tegra.c
-@@ -196,7 +196,7 @@ nvkm_device_tegra_resource(struct nvkm_device *device, enum nvkm_bar_id bar)
- 	case NVKM_BAR1_FB : idx = 1; break;
- 	default:
- 		WARN_ON(1);
--		return ERR_PTR(-EINVAL);
-+		return NULL;
- 	}
+diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
+index be9a4cba35fd..014021019b22 100644
+--- a/fs/ext4/inode.c
++++ b/fs/ext4/inode.c
+@@ -757,8 +757,7 @@ int ext4_map_blocks(handle_t *handle, struct inode *inode,
+ 				orig_mlen == map->m_len)
+ 			goto found;
  
- 	return platform_get_resource(tdev->pdev, IORESOURCE_MEM, idx);
+-		if (flags & EXT4_GET_BLOCKS_QUERY_LAST_IN_LEAF)
+-			map->m_len = orig_mlen;
++		map->m_len = orig_mlen;
+ 	}
+ 	/*
+ 	 * In the query cache no-wait mode, nothing we can do more if we
 -- 
 2.47.2
 
