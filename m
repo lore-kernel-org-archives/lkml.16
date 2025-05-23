@@ -1,145 +1,121 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from out-181.mta0.migadu.com (out-181.mta0.migadu.com [91.218.175.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 752C31FDD;
-	Fri, 23 May 2025 13:25:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14C0553365
+	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 13:26:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748006740; cv=none; b=c4YpW1UrylH7O4JJsMwZPEV16L8FFr6J6XZEXFYxbTYTTWMVxbFqJKqRk/IAA9KrkhrsS3QAiRqwJv7vE2iAXzJzw2zAzufD6KD7iJibngTyup75xpg+bHKzvTwdOoHVgmKVD/GLS7srvKfsZQ48aEFtIOfBtiZu+jQaiTAh1+U=
+	t=1748006789; cv=none; b=Gb8xwt3d/jNaRgREkvsFdNa0BXk/piA5VsvXUM9SVuNLh1HKXcvG/V6j8ZbY9anO4qBw5CzQqc0KbiLwjSoI4VaDBnphu2bS/QjDCTyhPJpKU5DI4oM1rQqvFQwbO+dJyDq0KlR1AmkeYUqSs3Hza/KgVjdkM8fbHJKM2eOzhsw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748006740; c=relaxed/simple;
-	bh=8e6tWzdQJXuLNBOdzFHbtTb0QEiAelckLJoP29jrl+U=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=nTNPDYKLJFJuC1KAXjNzegmSdNewAcE4Z/hUo/mAAAi4cqhMaClozfTFfmfN8gf9rgBVEl7Bo3WJXQ605mP96nIz15Fo/OGO9wkht8KA7XLhrtT9yN5n2gBmpCyGAWspekTaN83qmPPx1hCNGWpY3PG4B+Wi2qlxU/6f4SN8elQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=j2CnBNvT; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1748006789; c=relaxed/simple;
+	bh=hl8X2acmHMO6KmiHT6RV7Az2pRAzxdafh4QMGCM63nI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=uKul+dR3pBQu9nxev2kdhTCsXXiv47hpDUDXKjCuyZDgzZvljx64Ov6OkK32sg4gEMY8Fy3emVOQ4QNiHm05vUCOkpGqmyKseLtPP1qO33KgMoRRzaMq2n0TQZoIHRMpAtkRMlnSos7gVYMTYK8v3Xh8ww03EaO494N0A01Aap8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=wjL9yVwj; arc=none smtp.client-ip=91.218.175.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="j2CnBNvT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748006739; x=1779542739;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=8e6tWzdQJXuLNBOdzFHbtTb0QEiAelckLJoP29jrl+U=;
-  b=j2CnBNvT/MST0o1vfUiV32lrSMy74k9Ba8FLTyesH1bq9OyW/HpEzaWA
-   +i5QDw38SqVIOY0UupMlJ+EQ8bgFQyH0TfwseLmKK+eybd2Awwys3e/Vu
-   bxZaltOEu47FJvx/0ZORWfQwGwUKoGUcaYI+DFi7aIBkNOBROlL6BJ0Ci
-   UuvU0QAz1NJVMM0gIljtJBkd2Zd3Z+OhqJlhr+eGSeqPdL9BzDriFPDPu
-   +GATkJH7P7jHtQ0HjcJWEEQLaKGevTQEJA/dF7cZBKSrs2/w1R9+QX/NT
-   87khxOwZQlvK7uc5sJJGyIT6wNyRV3i+4xPRCorZbQkR5b178wHAmFU1t
-   g==;
-X-CSE-ConnectionGUID: G5SB0E9KQnyZErVUomY+aw==
-X-CSE-MsgGUID: CEVkEYpyQeaBbHKc9leuQw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11441"; a="49768319"
-X-IronPort-AV: E=Sophos;i="6.15,308,1739865600"; 
-   d="scan'208";a="49768319"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2025 06:25:38 -0700
-X-CSE-ConnectionGUID: SW+QVMFFT/yjKHkSk+e7nQ==
-X-CSE-MsgGUID: rfXuwkf5RYOZEFHgl4l6Ew==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,308,1739865600"; 
-   d="scan'208";a="146130694"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.150])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2025 06:25:35 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Fri, 23 May 2025 16:25:31 +0300 (EEST)
-To: Luke Jones <luke@ljones.dev>
-cc: LKML <linux-kernel@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>, 
-    platform-driver-x86@vger.kernel.org, mario.limonciello@amd.com, 
-    Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-    kernel test robot <lkp@intel.com>
-Subject: Re: [PATCH 1/1] platform/x86: asus-wmi: fix build without
- CONFIG_SUSPEND
-In-Reply-To: <20250523131451.1942578-2-luke@ljones.dev>
-Message-ID: <0dc0316d-a9ae-c152-3737-be1c73a415b1@linux.intel.com>
-References: <20250523131451.1942578-1-luke@ljones.dev> <20250523131451.1942578-2-luke@ljones.dev>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="wjL9yVwj"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1748006784;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=YHM8UbBSJvcdfK4Kdm7M9Q7vGmBWfQnpZzojYQ/jzD4=;
+	b=wjL9yVwj9ja77ckyTqtn5mCZVUWq7/9LfPpZDIEEmqV8GcItBv/JU0iSUlw6wXk3CjrxF1
+	K4f5GfQ2lSxEF5eporHgm6ks2t6EL/kMCDro8wFg20sbyLBAE3blA4z1KPapEAzMfCuqi/
+	7rHpdLpU/+/fxAGnPyjCeHLEy1+kek0=
+From: Yajun Deng <yajun.deng@linux.dev>
+To: andrew@lunn.ch,
+	hkallweit1@gmail.com,
+	linux@armlinux.org.uk,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com
+Cc: netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Yajun Deng <yajun.deng@linux.dev>
+Subject: [PATCH net-next] net: phy: Add c45_phy_ids sysfs entry
+Date: Fri, 23 May 2025 21:26:06 +0800
+Message-Id: <20250523132606.2814-1-yajun.deng@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Fri, 23 May 2025, Luke Jones wrote:
+The phy_id only shows the PHY ID of the c22 device, and the c45 device
+didn't store the PHY ID in the phy_id.
 
-> The patch "Refactor Ally suspend/resume" introduced an
+Export c45_phy_ids for the c45 device.
 
-The commit feea7bd6b02d ("...")
+Signed-off-by: Yajun Deng <yajun.deng@linux.dev>
+---
+ .../ABI/testing/sysfs-class-net-phydev         | 10 ++++++++++
+ drivers/net/phy/phy_device.c                   | 18 ++++++++++++++++++
+ 2 files changed, 28 insertions(+)
 
-> acpi_s2idle_dev_ops for use with ROG Ally which caused a build error
-> if CONFIG_SUSPEND was not defined.
-> 
-> Signed-off-by: Luke Jones <luke@ljones.dev>
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202505090418.DaeaXe4i-lkp@intel.com/
-> Fixes: feea7bd6b02d ("platform/x86: asus-wmi: Refactor Ally suspend/resume")
-> ---
->  drivers/platform/x86/asus-wmi.c | 9 +++++++++
->  1 file changed, 9 insertions(+)
-> 
-> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-> index 27f11643a00d..087318e0d595 100644
-> --- a/drivers/platform/x86/asus-wmi.c
-> +++ b/drivers/platform/x86/asus-wmi.c
-> @@ -5005,6 +5005,7 @@ static int asus_hotk_restore(struct device *device)
->  	return 0;
->  }
->  
-> +#if defined(CONFIG_SUSPEND)
->  static void asus_ally_s2idle_restore(void)
->  {
->  	if (use_ally_mcu_hack == ASUS_WMI_ALLY_MCU_HACK_ENABLED) {
-> @@ -5013,6 +5014,7 @@ static void asus_ally_s2idle_restore(void)
->  		msleep(ASUS_USB0_PWR_EC0_CSEE_WAIT);
->  	}
->  }
-> +#endif /* CONFIG_SUSPEND */
-
-Move this function below asus_hotk_prepare() next to ops, so that only one 
-#if block is needed for them.
-
->  
->  static int asus_hotk_prepare(struct device *device)
->  {
-> @@ -5025,9 +5027,11 @@ static int asus_hotk_prepare(struct device *device)
->  }
->  
->  /* Use only for Ally devices due to the wake_on_ac */
-> +#if defined(CONFIG_SUSPEND)
->  static struct acpi_s2idle_dev_ops asus_ally_s2idle_dev_ops = {
->  	.restore = asus_ally_s2idle_restore,
->  };
-> +#endif /* CONFIG_SUSPEND */
->  
->  static const struct dev_pm_ops asus_pm_ops = {
->  	.thaw = asus_hotk_thaw,
-> @@ -5060,9 +5064,11 @@ static int asus_wmi_probe(struct platform_device *pdev)
->  			return ret;
->  	}
->  
-> +	#if defined(CONFIG_SUSPEND)
->  	ret = acpi_register_lps0_dev(&asus_ally_s2idle_dev_ops);
->  	if (ret)
->  		pr_warn("failed to register LPS0 sleep handler in asus-wmi\n");
-> +	#endif /* CONFIG_SUSPEND */
->  
->  	return asus_wmi_add(pdev);
->  }
-> @@ -5096,7 +5102,10 @@ EXPORT_SYMBOL_GPL(asus_wmi_register_driver);
->  
->  void asus_wmi_unregister_driver(struct asus_wmi_driver *driver)
->  {
-> +	#if defined(CONFIG_SUSPEND)
->  	acpi_unregister_lps0_dev(&asus_ally_s2idle_dev_ops);
-> +	#endif /* CONFIG_SUSPEND */
-
-I'd have preferred these reg/unreg be solved with wrappers (see 
-pmc_atom.c).
-
-
+diff --git a/Documentation/ABI/testing/sysfs-class-net-phydev b/Documentation/ABI/testing/sysfs-class-net-phydev
+index ac722dd5e694..f6194fd6927c 100644
+--- a/Documentation/ABI/testing/sysfs-class-net-phydev
++++ b/Documentation/ABI/testing/sysfs-class-net-phydev
+@@ -26,6 +26,16 @@ Description:
+ 		This ID is used to match the device with the appropriate
+ 		driver.
+ 
++What:		/sys/class/mdio_bus/<bus>/<device>/c45_phy_ids
++Date:		May 2025
++KernelVersion:	6.16
++Contact:	netdev@vger.kernel.org
++Description:
++		This attribute contains the 32-bit PHY Identifier as reported
++		by the device during bus enumeration, encoded in hexadecimal.
++		These C45 IDs are used to match the device with the appropriate
++		driver.
++
+ What:		/sys/class/mdio_bus/<bus>/<device>/phy_interface
+ Date:		February 2014
+ KernelVersion:	3.15
+diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
+index 781dfa6680eb..eecd8273111c 100644
+--- a/drivers/net/phy/phy_device.c
++++ b/drivers/net/phy/phy_device.c
+@@ -581,6 +581,23 @@ phy_id_show(struct device *dev, struct device_attribute *attr, char *buf)
+ }
+ static DEVICE_ATTR_RO(phy_id);
+ 
++static ssize_t
++c45_phy_ids_show(struct device *dev, struct device_attribute *attr, char *buf)
++{
++	struct phy_device *phydev = to_phy_device(dev);
++	const int num_ids = ARRAY_SIZE(phydev->c45_ids.device_ids);
++	unsigned int i;
++	size_t len = 0;
++
++	for (i = 1; i < num_ids; i++)
++		len += sysfs_emit_at(buf, len, "0x%.8lx ",
++				(unsigned long)phydev->c45_ids.device_ids[i]);
++	buf[len - 1] = '\n';
++
++	return len;
++}
++static DEVICE_ATTR_RO(c45_phy_ids);
++
+ static ssize_t
+ phy_interface_show(struct device *dev, struct device_attribute *attr, char *buf)
+ {
+@@ -618,6 +635,7 @@ static DEVICE_ATTR_RO(phy_dev_flags);
+ 
+ static struct attribute *phy_dev_attrs[] = {
+ 	&dev_attr_phy_id.attr,
++	&dev_attr_c45_phy_ids.attr,
+ 	&dev_attr_phy_interface.attr,
+ 	&dev_attr_phy_has_fixups.attr,
+ 	&dev_attr_phy_dev_flags.attr,
 -- 
- i.
+2.25.1
 
