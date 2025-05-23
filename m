@@ -1,110 +1,103 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+Received: from mail-qv1-f48.google.com (mail-qv1-f48.google.com [209.85.219.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1591297A45
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 17:13:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9205297A68
+	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 17:14:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748020424; cv=none; b=Xs12Zl67Xp3/yDEtURzIC3dmmMsa0oYCf9fhK1l2bQC2e3LbXj3HiPE1m0C7MlfCfi5a5IIKL5yxLkgaHhVJgwIg4l7OSnZtGSvvz9qAINYmEitO7W31TFxzF9aBoRWB+G/5mWC/+SpB/4HcRa8vQ26s8FMxFXSVYuFj10wEilk=
+	t=1748020443; cv=none; b=OYN3dm1Mld2YEfPO4+1kroBlkm96B3Im+bf83gsmcH43v/cx2lhCi8KqLWTUECI+AVzXYNTtcnq6rrPSI/5+V7M5zOU89UU4ig00iJA392lc811aDHqMZIplRwUI+mLdKW6iLHOEeDWeqNxEc1ZLb9weI0Bl1nOFuWiz1FflruA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748020424; c=relaxed/simple;
-	bh=b6+odg8Uy4SxwN3Tk8MC1g2EyZZcGTBLhKLUpCK3vWw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XZ6Egyn3U0BUHkw9AGQHvPDwQqtfUqc06JbcS/YcUzGPnGQCoz4GKEhSgWtl7pzX4B29/vOSnmjdK7TW1cJFyEGwcTbfK3UwiQx2yPf7kMDQ98P61J6LtKlvj/ZFJBmGcb8oDv2Mrby217jYWLE6lueBbK7yNt6C6PvHu13DB7g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=GMvFsIvR; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1748020443; c=relaxed/simple;
+	bh=q70KRtP/Ls/EnPfjY52Cg7+ufdVGyh9iPZ62lGJOoDc=;
+	h=Date:From:To:cc:Subject:Message-ID:MIME-Version:Content-Type; b=iyA7+JPRy5C3vE31mJZeob5iieFlVrQ8vhZCcPuJRrH0+GBy8vJ0UFLSnEt53acD3zeUwNgyB16wLmJinwFrJM791PlJpx4xP9sO035P0WsHItcX5vDpwmDzmPaRILp/Y+ACl0B9lnB1f6IZJF0MAWDQQinGGbIPWViMYHN/B4w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=cRmn2osA; arc=none smtp.client-ip=209.85.219.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GMvFsIvR"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-234050cb45bso8885ad.1
-        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 10:13:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="cRmn2osA"
+Received: by mail-qv1-f48.google.com with SMTP id 6a1803df08f44-6f8c53aeedbso1100006d6.2
+        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 10:14:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748020422; x=1748625222; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=b6+odg8Uy4SxwN3Tk8MC1g2EyZZcGTBLhKLUpCK3vWw=;
-        b=GMvFsIvRFkw5jOSQUKELMdp3vG5J3omj2HkoA9Gl/g57Cd1dR4yaYFB/ad54YlHDob
-         clpUyhL6kpvUcHXFO0uppzUn9AsCX4EfDW7hrtqeje3H3gTAEgXZTsYyYFLbKLGtznBg
-         Y7rgPh3W809lzwCs0gmwgjzOSqUatCtIrCP4dgbxxPgRrTlL8RZoj1yoPd/TvGiGM/2m
-         cg70+tMGZcUygKrj1Z85J4+X9r8Va1bUve3mdf3HkQwo6ydQUZIkKt6Kj7xBMCHmfk1L
-         O3oYiZX7jNJmbLyd8oeiX4i2mHNwGRGSAbgkSYjD0BT8KWMdpbrAGpEpKbzRlwotYsWR
-         APFQ==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1748020439; x=1748625239; darn=vger.kernel.org;
+        h=mime-version:message-id:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=6u9v9rOB7wDSHj6qtz/FEqNxQ/3givq7zBFPK6aaZeU=;
+        b=cRmn2osAYRU5wL9NyNSmhj/NzV+WHj70LaKZOl9KV7MnCbdts5++EiMK4bdaXhkj7G
+         o6hsQm27Dy9+ISVcd87ZFaT6GNhE19biilGQ8rNGroFsBceHF0xS4QOV3fkCy7XEx1Tz
+         uzz1dtgLl+ub13go+TCvoMiKiNj/gSXUaIZySMajYCJfcS0J7Smifonr/+J6bhgMOCaT
+         w5i1bLtcORUoup8ttMzq9DM0bq75ikO//WdHzSWDY5VQg/xIpYK3oEs7YyOPpzmSDmvL
+         aDyzVI+Zynk+SUqjR9PaIjoV4dvyrjKp5KT2gL1X6fqkjbMhpcwvIIUEWErKmJ7Zn37q
+         WLHA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748020422; x=1748625222;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=b6+odg8Uy4SxwN3Tk8MC1g2EyZZcGTBLhKLUpCK3vWw=;
-        b=MYY4b00lOSTnA4qpBZBaUajzzuxv5MlinBXujKhohwCGARJ+OThGukiqboo0hrz+Co
-         vcGSR3kNt3G9w0cfVI0LKcs2Ag4sc8dShTpaEzigbvl3laciseHKkBNT1ncssZWmopif
-         8T1IM4ammTgGAx+snORGeWqYRsgYwajfTFzFGzEWw5PHz3Gwcowa3RSHHgBYr0A8bkrh
-         Mn4eyI7XnJpZIXSNkbayLv+HDmfKlRMCIWhTiSeN5pXjc7XE/iV8otpsm3DK1z9KsqyB
-         HSG0jjuRLiNL6CRoQ5DshEcbYMO69RWygaTsvbO1TG69PROy/pOjPJVDYnfVM4MnjWOy
-         CBLA==
-X-Forwarded-Encrypted: i=1; AJvYcCVIiIcIZu7YDCdvNHt9XvoEmNzj75u4toxrcjzbbgwS61apwWCfuUCbUxCLexbp9gm45mHQh+GXmNJ4+vI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwAgEFMOewgEK9WIk+IzFR5gGrob30cxyZv8Wr/D8tSfuvDWv5g
-	t/QPU4FDAoI6/As4GBjLVOnVqUvSK3wXVSXaSPzfSxR1/Zt7a2Iit4xDMb73g4taxg3gr+8wUmK
-	dZYO2Xf8DrVIB24LLtswDJwsLDII5I+MlvsP+8qFt
-X-Gm-Gg: ASbGncuJj+Xt/m95eum9oJGcwdf8xsXaP1detrJ0bJEQEd2yPxYHZms5OC7izCjIrZ1
-	Qa5hSlXCKSHTt0gWGEMv6q3qMVa8wJ01BgWRXcxD2nExh9ylRf65XAU+MRSiuisvcCrC6tj87XS
-	+SQlsiOfdkHSsaXFbiFyaFkqQkKEdHZ10moBkfZ0txwLpyX6GadB+lXSQoGNhBNm/8tmtmTwVUI
-	Q==
-X-Google-Smtp-Source: AGHT+IHAljnGYXYXNqd9nHJuWOzFhZwP9BJe61GK3nUJDrt7+9et104XIn5ap3VmMUMS9tlMLC62sQxv3IszoNXzfZw=
-X-Received: by 2002:a17:903:2348:b0:216:7aaa:4c5f with SMTP id
- d9443c01a7336-233f34df516mr2604685ad.3.1748020421823; Fri, 23 May 2025
- 10:13:41 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1748020439; x=1748625239;
+        h=mime-version:message-id:subject:cc:to:from:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=6u9v9rOB7wDSHj6qtz/FEqNxQ/3givq7zBFPK6aaZeU=;
+        b=MZN/wUydU6CWHj8IwojZiuwSk+8roG3Q3bRmBhPcqiuRz33/pR3MJGAgwCTV0Zd7Jt
+         hzE0NajQeStvoLPyYJ5kUrEwP8zyx5l8QVhGooNXl+EYfxvzYxgCSuT23FLs3qOQK7oJ
+         jm0ImMEF6sNvIHWnkGH7BazwI4Vq5mdAgReBmoA3xfxDJJO7U3vKKbdKRr5je9y+jI+Q
+         +Zafc01y75DR04fi6Zl6MySp57vb+rjAHxFMcUVqtW5zt3I88ef0p+8NEH7v4x7kX00H
+         /4ZPJmwacsqwDlSZEO09wkynLSIvLW4mwacGW69yob7pnNcg3jjurU5IMP04mwPtG+BM
+         Q/vQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWLAq8/DzkGV0MNwpNWoniq84/exDFYVzmZHvdsEjhF248pagXHdDnX17naPiUOCcAx4q48Bc+qIVrohKg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzeouxJxBsKXyredhD2KdZbuFh+L7OLF0Xz3ppaq1C7/OWI3yBG
+	mIYzMhmkH5yTWQ17Ua/xsj2k7TUyLWDnD5kgKXRNmBouf1lsTiVu4lKtTBzCdL5Kdrs=
+X-Gm-Gg: ASbGnctdMakz/DkBfaucJ99Q80AD/pVWX6Z/thdKQGxi8UltjwQUYb4N4+x3KAaAKtq
+	QfwTnB1dIESkO9oeVhciOrSSnrlCpSu3B172onKVGQUltbbqu3UvrCU6xzbD8KS4lkvTgYZyVGo
+	dU/KVFBb6GiP9CI6CvHHwWXd43ukEnKDRzY8izS8JP3BDJVmmYMaKOCB08zv9QidigyfBIsneI3
+	57vbb1XYcRBamKflfaPr3cWub3XSUKW4kcdW0BF1Of/l9OHdQM8nnuceq0H3a8tF9xDpIVuLp40
+	XxnYV8W/DQ5WNFYmJMw5DiZWAX3cBDr5/cxnKDZFiO2226eRuYADZaMELRJzw6yOTDT7ZdwyzI5
+	E8jApJxoqVZ7tNA==
+X-Google-Smtp-Source: AGHT+IGJzuu4ZXXeX5BlecuVuFVZZwA/bCwL7vxRk1fOvReZtV8zdHQ/t63ghPaOuxghJs5IcqbiTw==
+X-Received: by 2002:a05:6214:764:b0:6f5:e0c:b203 with SMTP id 6a1803df08f44-6fa9d176d43mr5501356d6.11.1748020439667;
+        Fri, 23 May 2025 10:13:59 -0700 (PDT)
+Received: from xanadu (modemcable179.17-162-184.mc.videotron.ca. [184.162.17.179])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fa99a641cesm5782186d6.53.2025.05.23.10.13.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 23 May 2025 10:13:59 -0700 (PDT)
+Date: Fri, 23 May 2025 13:13:58 -0400 (EDT)
+From: Nicolas Pitre <npitre@baylibre.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+    Jiri Slaby <jirislaby@kernel.org>
+cc: linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] vt: remove redundant condition from redraw_screen()
+Message-ID: <n58o097s-s20p-4222-nqo5-2qp26843rs35@onlyvoer.pbz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250523032609.16334-1-byungchul@sk.com> <20250523032609.16334-14-byungchul@sk.com>
-In-Reply-To: <20250523032609.16334-14-byungchul@sk.com>
-From: Mina Almasry <almasrymina@google.com>
-Date: Fri, 23 May 2025 10:13:27 -0700
-X-Gm-Features: AX0GCFudL84CRA-sCSeMtnKfh8Fbbgk_GwqD2a3SUOuPIpK4U4Fi3ZaEYQxBmmA
-Message-ID: <CAHS8izOX0j04=KB-=_kpyR+_HZHk+4hKK-xTEtsGNNHzZFvhKQ@mail.gmail.com>
-Subject: Re: [PATCH 13/18] mlx5: use netmem descriptor and APIs for page pool
-To: Byungchul Park <byungchul@sk.com>
-Cc: willy@infradead.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, kernel_team@skhynix.com, kuba@kernel.org, 
-	ilias.apalodimas@linaro.org, harry.yoo@oracle.com, hawk@kernel.org, 
-	akpm@linux-foundation.org, davem@davemloft.net, john.fastabend@gmail.com, 
-	andrew+netdev@lunn.ch, asml.silence@gmail.com, toke@redhat.com, 
-	tariqt@nvidia.com, edumazet@google.com, pabeni@redhat.com, saeedm@nvidia.com, 
-	leon@kernel.org, ast@kernel.org, daniel@iogearbox.net, david@redhat.com, 
-	lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, vbabka@suse.cz, 
-	rppt@kernel.org, surenb@google.com, mhocko@suse.com, horms@kernel.org, 
-	linux-rdma@vger.kernel.org, bpf@vger.kernel.org, vishal.moola@gmail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
 
-On Thu, May 22, 2025 at 8:26=E2=80=AFPM Byungchul Park <byungchul@sk.com> w=
-rote:
->
-> To simplify struct page, the effort to seperate its own descriptor from
-> struct page is required and the work for page pool is on going.
->
-> Use netmem descriptor and APIs for page pool in mlx5 code.
->
-> Signed-off-by: Byungchul Park <byungchul@sk.com>
+Given !con_is_visible(vc) is the equivalent of *vc->vc_display_fg != vc
+we have:
 
-Just FYI, you're racing with Nvidia adding netmem support to mlx5 as
-well. Probably they prefer to take their patch. So try to rebase on
-top of that maybe? Up to you.
+	struct vc_data *old_vc = vc_cons[fg_console].d;
+	if (old_vc == vc)
+		return;
+	*vc->vc_display_fg = vc;
+	if (*vc->vc_display_fg != old_vc) /* !con_is_visible(old_vc) */
+		...
 
-https://lore.kernel.org/netdev/1747950086-1246773-9-git-send-email-tariqt@n=
-vidia.com/
+Therefore the last if condition is always true.
 
-I also wonder if you should send this through the net-next tree, since
-it seem to race with changes that are going to land in net-next soon.
-Up to you, I don't have any strong preference. But if you do send to
-net-next, there are a bunch of extra rules to keep in mind:
+Signed-off-by: Nicolas Pitre <npitre@baylibre.com>
 
-https://docs.kernel.org/process/maintainer-netdev.html
-
---=20
-Thanks,
-Mina
+diff --git a/drivers/tty/vt/vt.c b/drivers/tty/vt/vt.c
+index ed39d9cb4432..af5186d2c219 100644
+--- a/drivers/tty/vt/vt.c
++++ b/drivers/tty/vt/vt.c
+@@ -946,10 +946,8 @@ void redraw_screen(struct vc_data *vc, int is_switch)
+ 		*vc->vc_display_fg = vc;
+ 		fg_console = vc->vc_num;
+ 		hide_cursor(old_vc);
+-		if (!con_is_visible(old_vc)) {
+-			save_screen(old_vc);
+-			set_origin(old_vc);
+-		}
++		save_screen(old_vc);
++		set_origin(old_vc);
+ 		if (tty0dev)
+ 			sysfs_notify(&tty0dev->kobj, NULL, "active");
+ 	} else {
