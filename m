@@ -1,198 +1,148 @@
-Received: from mail-yw1-f181.google.com (mail-yw1-f181.google.com [209.85.128.181])
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39DA4220685
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 15:19:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49A842063F0;
+	Fri, 23 May 2025 15:19:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748013560; cv=none; b=feMxuYeRzwNjuWpHTa6IWORjSBPa6aPoyuOG8HfXoLqdqZJR4NyiwwLuoORa8srJc0rj09eRnCxUs4pMWMGh3+XuTreECLLL0jDVKrD+o8IC2d0MXGkum5qIlAkons5otZFv/UpbGy2GlybPR/Yn2HVdIkJFVX3N6NabnhcTvd8=
+	t=1748013578; cv=none; b=JI74WI5l3ZJSZU6a7y9Rx+tPHaPnhzsbRbG6BiSkAmCL8ufC7iE/44zvj0pySl835ra0+MDoZ2F8gE0+XxNq8HTfiW9+XY/j1E5eLzCQDpszefHSUsBkNqtl1PLY9A17le12bPYaPBCTpm54c4HIe3MNUfeRRHebqEBp+NElBdw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748013560; c=relaxed/simple;
-	bh=UXt5EXFTIUCSIejkEueO1TGqvacKY2Tzkl6QFLDHdac=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tnHU7x41nkQ6DwuzK/0iZGuhf4FJ7pWUMr59ZhJn6kmA4XF/9VxL/Ckyid7ZXXKC1dDfZOe7yHwAL58TGPWWaNpGoI/f9T1dE889U2K7vo9VJ3KFYjooWDMwIqFYLG6gjpvV1vtS4ILp4SzSBZdsA/AKN1XEpxfL/AWPXfQD5t4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amarulasolutions.com; spf=pass smtp.mailfrom=amarulasolutions.com; dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b=eb+CrG7R; arc=none smtp.client-ip=209.85.128.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amarulasolutions.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amarulasolutions.com
+	s=arc-20240116; t=1748013578; c=relaxed/simple;
+	bh=MUTMUooBNBaxrKeDsBEQGZ8fMhQnRJ+zQunHq1x5RHY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mdTKGRRQrtlw4KIxaQGkGTbOSvmoRNUdycIfGwrQv9v+r+QdNsGCoZ9yJAOVETA4c1vzSQaHftauFJe9kHGBLZBV8kTMOtNjOc9kR9ZeHLmiex8X6RvwfOtv7iX/ymoGhZfSwhQnWRHqP0wzrAfSQ9PRznuATqAvHGkgF8k5Wc8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aqpwx6MB; arc=none smtp.client-ip=209.85.210.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="eb+CrG7R"
-Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-70c7b8794faso381567b3.1
-        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 08:19:15 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aqpwx6MB"
+Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-7399838db7fso90505b3a.0;
+        Fri, 23 May 2025 08:19:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google; t=1748013554; x=1748618354; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7tMirZWfsi+MGV8gZCAIGOzywZSQ1Z0yW01g9pidm94=;
-        b=eb+CrG7R7IcCQ20OExwq5k0KXZ1MTPBLR5ij72LMiH15OndFKSeAn1hXRaPletYgkE
-         G7lcz44h63m1W+kPI516iYGMyLoFvD1fGd3uI/f52kNYT2D2ODi67b0F2TuayhZmjtus
-         0BuEPWmkeF/sDBf235aLqt9cTI7cK/pDDedQs=
+        d=gmail.com; s=20230601; t=1748013576; x=1748618376; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=xZn2WhBcVJxJnJwmfHWWP4xV00Tv1IIb5fekcEpd0lY=;
+        b=aqpwx6MBJnrJevMsXJWcK9NLEnZHscAWkNcED8tCk79cDjE0ibAxRxbiHh6SXA5O+V
+         azAi3VT9VPVwH5FvKyoJDH0/wpkEFMjRdEasv4J8xNa4DOVNNLi9nNN+RX516eSnAjL1
+         O0/JWW/nnnbECm+oImrp0Q3KyA+dJJ32bDDMhjkvsSFbL7UYBQtSTGPjHhWFHpqWOeSZ
+         zOM2Ezb7esH1Esb5c7y/IXH4adKD98JoRrPbosFRcc3E4gQGN9okTO3mEhG8bd5/Hd4X
+         OczH+PU4yWByfMBEpdJZ2RYjSnzzLIGOqsbgt88Dw/zXXKM4eAn2Rxwsw0qPn+jfB+BM
+         2fTQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748013554; x=1748618354;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=7tMirZWfsi+MGV8gZCAIGOzywZSQ1Z0yW01g9pidm94=;
-        b=Of/RhC3ov1BGEqnLc/DSshHPXI5oCVQWtuXtNm3Jr71fbjHp9XDDuzwneYemS1VPHY
-         7YRZSzkC0+6bz+zaV+HjGevSTHIZiqi/Q/FRDBsx5RqNCAk8B3zyIzp4O6p9onBmz5qy
-         sCuKfFD3SofbD3CSG65t2/cKdFYXMG2BMxTNOulGqJyKe13uvKfvDnC4gM4TZG/unqSj
-         CY4QXgDU5zc7CNFdA1AhohZ0+Sfb67ZnQdEOsdrDDS9IabX40fER2cFPIt9+mKATeX39
-         Yd+HALd3ivag78BAzYwyonf92PbzjL7CHPJ3tNZZvlLBatiBpxRBQaiwa0ZKuRzno0y6
-         s1LA==
-X-Gm-Message-State: AOJu0YzbraagKtQws+Ie5EWsNj1X1fdZw7bmhB9ltjsItVej+fhTE1Pl
-	my7tPo8uXpXG9nSaULJ+4KDyOtktQLs7nXMvlEWJ1vDxGhzDqgT52n9gY0w5omKIQ+fMNI4oOZN
-	nQ9trHsR8GESSWKsnpYuQReGOhVvASXEZgMqVTtlKow==
-X-Gm-Gg: ASbGnctFD8us/oxHy7JZfw8RxeV1FR3cBpTboX7JuKek8XtpGjvPUf7Sap7vHdtvZzE
-	7Vi0RjZtJKTCSNLtytyazWdMVAfp5hfgdJ91pUU8+g/sXGYY0wFsraghjNIyR/5VmsJOJmi76Ea
-	XPyyf6l5lsQ6oZjxkkZCbhLO6rpsSkGdcFaJTQoQY=
-X-Google-Smtp-Source: AGHT+IHxEZibSLTC27ty9k9SE4RestS9NJakh2D2/0B6bmuMwt7+v2CHzq0G2guIGMTCMUwepBrci7zFuK4tcost1sw=
-X-Received: by 2002:a05:690c:d87:b0:70d:ecdd:9bd1 with SMTP id
- 00721157ae682-70decdda042mr174164037b3.24.1748013554100; Fri, 23 May 2025
- 08:19:14 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1748013576; x=1748618376;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xZn2WhBcVJxJnJwmfHWWP4xV00Tv1IIb5fekcEpd0lY=;
+        b=Qmp5QfpBTws9BHqND+7XL4Umryou7Xp9iVKMiTRJ37/WpaTQ722f0G4E4ihF9bo5fR
+         jzk4XhVbniRBBoG1g1XfYxo1KeW1G9bFMEhgbEhN7oJVfPxEdaolLqlhMPm8O6n316f/
+         emZ8VByxl7BUdc3VA0mn9rTaH9JfjFIhNRbXdp+BJwXLve7SvpFoIZ81QqzHgRzv4CVP
+         xH030qZphSzKK1haGLu9qc/XEtWJMgy1hHPwziMqEwQPNPv9SEX+uYKHhNH2zzTWc4Mz
+         Qkyb0ckh6bfUz4mzCsz/wcOLfjcNG7D2luZ+C7tzOnZtX0CtNitCmoUxI8VquP5NouOE
+         Wa/Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXkCVVUvJMv1e8l3ZmhqHRYutqli7D29he1EvopAtQdDrSdjMfv4f2tB4BGhvS26RII3Z9TWo2GNBXPIWk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyFOiWGUwWF8EU6qGNTzjRufNfvXN4vSr805VJZO9J81Lt5kT83
+	sVA9VlevV5vyJnUAGsQX/ZpSB7fKoMs8IGHxjxtMcD7pZ48fnq0vIK2e
+X-Gm-Gg: ASbGncsHzxxLzhHTbZVwmTK5cChdQD0cnCn3c1vRXyj05Xh/hlOe04nE2Z98qtUXhri
+	z6ARMtA2zfsm2yAQYuV72rPiqasDl/uzPbk43y5U0RjfREvKAexplAEyl4bqgBGw9GKGxQQXW4/
+	ZV2bHBvsr7CCdKLiB4mv/jFSN3jWlYhA+/hiFS2QLhKEx0qchU8sqYHNXeV+KMMsfO6TMG/LBHT
+	VeERMl2rbUoLld3W9FyHxJG/H8ZaVkq6/jKluZGLr05XKMf91hVx8AdtbYegU8KhT7ylFZF/5Gq
+	tL0kR6D5PMFiI242AlBsN5urve9UqlJy4pactm7eiTUpE73VQrJajlnWU3Zlrw6KNZQ0FUsEvjE
+	T5DRSjhUd7GDW1T1z/Q==
+X-Google-Smtp-Source: AGHT+IGW4YpyOrbXdFzRI8ehOgJQVxA7rWxeNbBcE9/yoNUHql2pelOCquO+RTK4gZKp0hi8WD0Fiw==
+X-Received: by 2002:a05:6a00:9294:b0:740:6f6:7338 with SMTP id d2e1a72fcca58-745ecdc83c5mr5195072b3a.3.1748013575968;
+        Fri, 23 May 2025 08:19:35 -0700 (PDT)
+Received: from [192.168.1.3] (ip68-4-215-93.oc.oc.cox.net. [68.4.215.93])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-742a9739906sm12904841b3a.80.2025.05.23.08.19.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 23 May 2025 08:19:35 -0700 (PDT)
+Message-ID: <8b947cec-f559-40b4-a0e0-7a506fd89341@gmail.com>
+Date: Fri, 23 May 2025 08:19:26 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250424062154.2999219-1-dario.binacchi@amarulasolutions.com> <174643143452.2950397.16722215892279685541.b4-ty@linaro.org>
-In-Reply-To: <174643143452.2950397.16722215892279685541.b4-ty@linaro.org>
-From: Dario Binacchi <dario.binacchi@amarulasolutions.com>
-Date: Fri, 23 May 2025 17:19:03 +0200
-X-Gm-Features: AX0GCFvfElR9-JsrdMn4qtdpNkk4pgwm-5OPkXQJhrc9LVmxjY0io-Yr760AW04
-Message-ID: <CABGWkvq=pXhrzyCV2ABvQ3uwx4qKYL_G9280p5ECb8nsJ859yw@mail.gmail.com>
-Subject: Re: (subset) [PATCH v12 00/19] Support spread spectrum clocking for
- i.MX8M PLLs
-To: Abel Vesa <abel.vesa@linaro.org>
-Cc: linux-kernel@vger.kernel.org, Peng Fan <peng.fan@nxp.com>, 
-	Stephen Boyd <sboyd@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
-	linux-amarula@amarulasolutions.com, Abel Vesa <abelvesa@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Fabio Estevam <festevam@gmail.com>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Michael Turquette <mturquette@baylibre.com>, 
-	Pengutronix Kernel Team <kernel@pengutronix.de>, Rob Herring <robh@kernel.org>, 
-	Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, imx@lists.linux.dev, 
-	linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, 
-	Michael Nazzareno Trimarchi <michael@amarulasolutions.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-Hello Abel,
-
-On Mon, May 5, 2025 at 9:52=E2=80=AFAM Abel Vesa <abel.vesa@linaro.org> wro=
-te:
->
->
-> On Thu, 24 Apr 2025 08:21:30 +0200, Dario Binacchi wrote:
-> > This version keeps the version v9 patches that can be merged and
-> > removes the patches that will need to be modified in case Peng's
-> > PR https://github.com/devicetree-org/dt-schema/pull/154 is accepted.
-> > The idea is to speed up the merging of the patches in the series
-> > that have already been reviewed and are not dependent on the
-> > introduction of the assigned-clocks-sscs property, and postpone
-> > the patches for spread spectrum to a future series once it becomes
-> > clear what needs to be done.
-> >
-> > [...]
->
-> Applied, thanks!
-
-I was surprised to see that the series has been removed from linux-next.
-
-It=E2=80=99s been 8 months since the first version dated September 28, 2024=
-.
-The most critical phase was version 3 -
-https://lore.kernel.org/all/20241106090549.3684963-1-dario.binacchi@amarula=
-solutions.com/
--
-where two key issues emerged:
-
- 1 The CCM design is flawed because "in the current design, CCM is
-   taken as the producer of CLK_IMX8M_VIDEO_PLL, not the consumer."
-
- 2 A driver for anatop needs to be implemented because "using clocks
-   to replace fsl,ssc-clocks is possible under CCM mode, but you need
-   to develop the fsl,imx8mm-anatop clock driver."
-
-These development guidelines, agreed upon with Krzysztof and Peng,
-enabled a coherent implementation of both the DT bindings and the
-code. The following versions, from v4 to v8, were necessary to
-review and refine those implementations, bringing us to January 2025.
-
-At that point, Peng opened a separate pull request -
-https://github.com/devicetree-org/dt-schema/pull/154 -
-for the definition of general-purpose DT bindings for spread spectrum
-handling, which ended up invalidating mine.
-
-While waiting for his pull request to be accepted, I submitted version 9,
-trying to at least get the patches for the anatop driver merged,
-eventually reaching version 12.
-
-This final version was merged, but then a few days ago it was dropped.
-
-As it stands now:
-
-- We still don=E2=80=99t have proper spread spectrum handling
-- Peng=E2=80=99s pull request has been stalled since February 20
-- We don=E2=80=99t have a driver for anatop
-- The CCM design remains flawed
-- Not even the first 4 patches of the series were merged =E2=80=94 these we=
-re
-  simply a replication for i.MX8MM and i.MX8MP of patch
-  bedcf9d1dcf88 ("clk: imx: rename video\_pll1 to video\_pll"), which
-  was already merged some time ago.
-
-Could you please let me know if you're still interested in this series?
-If so, could you suggest how to resolve the issues that led you to drop it?
-
-Thanks and regards,
-Dario
-
->
-> [01/19] dt-bindings: clock: imx8mm: add VIDEO_PLL clocks
->         commit: 20e5d201b5d8f830e702d7d183f6b1b246b78d8a
-> [02/19] clk: imx8mm: rename video_pll1 to video_pll
->         commit: 26a33196b5b68cf199b6c4283a254aa92d2aaf4b
-> [03/19] dt-bindings: clock: imx8mp: add VIDEO_PLL clocks
->         commit: 2d50415e2457c6f6621c2faa3b01b11150fb9c67
-> [04/19] clk: imx8mp: rename video_pll1 to video_pll
->         commit: 21bb969f608cefd8d847cf6eb50a193d9f1fbb87
-> [05/19] dt-bindings: clock: imx8m-anatop: add oscillators and PLLs
->         commit: 2ba124053687c933031a6dc5b2e16ceaca250934
-> [10/19] clk: imx: add hw API imx_anatop_get_clk_hw
->         commit: 17e3c1a272d97e49b4f3fbfe1f1b889e120d2be8
-> [11/19] clk: imx: add support for i.MX8MM anatop clock driver
->         commit: 3cbc38cf42ca42d2dc9a93c949e0381ff919df71
-> [12/19] clk: imx: add support for i.MX8MN anatop clock driver
->         commit: 80badb1d7264e83b512475898e7459f464a009c9
-> [13/19] clk: imx: add support for i.MX8MP anatop clock driver
->         commit: 4c82bbe8b5437c7f16b2891ce33210c0f1410597
-> [14/19] clk: imx8mp: rename ccm_base to base
->         commit: 1a77907dbbecfbe5e6a1aec28afd49a1dc184b7a
-> [16/19] dt-bindings: clock: imx8m-clock: add PLLs
->         commit: 6a55647af3334f1d935ece67de4a838a864b53fc
->
-> Best regards,
-> --
-> Abel Vesa <abel.vesa@linaro.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 net] net: phy: clear phydev->devlink when the link is
+ deleted
+To: Wei Fang <wei.fang@nxp.com>, andrew@lunn.ch, hkallweit1@gmail.com,
+ linux@armlinux.org.uk, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com, xiaolei.wang@windriver.com
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, imx@lists.linux.dev
+References: <20250523083759.3741168-1-wei.fang@nxp.com>
+Content-Language: en-US
+From: Florian Fainelli <f.fainelli@gmail.com>
+Autocrypt: addr=f.fainelli@gmail.com; keydata=
+ xsDiBEjPuBIRBACW9MxSJU9fvEOCTnRNqG/13rAGsj+vJqontvoDSNxRgmafP8d3nesnqPyR
+ xGlkaOSDuu09rxuW+69Y2f1TzjFuGpBk4ysWOR85O2Nx8AJ6fYGCoeTbovrNlGT1M9obSFGQ
+ X3IzRnWoqlfudjTO5TKoqkbOgpYqIo5n1QbEjCCwCwCg3DOH/4ug2AUUlcIT9/l3pGvoRJ0E
+ AICDzi3l7pmC5IWn2n1mvP5247urtHFs/uusE827DDj3K8Upn2vYiOFMBhGsxAk6YKV6IP0d
+ ZdWX6fqkJJlu9cSDvWtO1hXeHIfQIE/xcqvlRH783KrihLcsmnBqOiS6rJDO2x1eAgC8meAX
+ SAgsrBhcgGl2Rl5gh/jkeA5ykwbxA/9u1eEuL70Qzt5APJmqVXR+kWvrqdBVPoUNy/tQ8mYc
+ nzJJ63ng3tHhnwHXZOu8hL4nqwlYHRa9eeglXYhBqja4ZvIvCEqSmEukfivk+DlIgVoOAJbh
+ qIWgvr3SIEuR6ayY3f5j0f2ejUMYlYYnKdiHXFlF9uXm1ELrb0YX4GMHz80nRmxvcmlhbiBG
+ YWluZWxsaSA8Zi5mYWluZWxsaUBnbWFpbC5jb20+wmYEExECACYCGyMGCwkIBwMCBBUCCAME
+ FgIDAQIeAQIXgAUCZ7gLLgUJMbXO7gAKCRBhV5kVtWN2DlsbAJ9zUK0VNvlLPOclJV3YM5HQ
+ LkaemACgkF/tnkq2cL6CVpOk3NexhMLw2xzOw00ESM+4EhAQAL/o09boR9D3Vk1Tt7+gpYr3
+ WQ6hgYVON905q2ndEoA2J0dQxJNRw3snabHDDzQBAcqOvdi7YidfBVdKi0wxHhSuRBfuOppu
+ pdXkb7zxuPQuSveCLqqZWRQ+Cc2QgF7SBqgznbe6Ngout5qXY5Dcagk9LqFNGhJQzUGHAsIs
+ hap1f0B1PoUyUNeEInV98D8Xd/edM3mhO9nRpUXRK9Bvt4iEZUXGuVtZLT52nK6Wv2EZ1TiT
+ OiqZlf1P+vxYLBx9eKmabPdm3yjalhY8yr1S1vL0gSA/C6W1o/TowdieF1rWN/MYHlkpyj9c
+ Rpc281gAO0AP3V1G00YzBEdYyi0gaJbCEQnq8Vz1vDXFxHzyhgGz7umBsVKmYwZgA8DrrB0M
+ oaP35wuGR3RJcaG30AnJpEDkBYHznI2apxdcuTPOHZyEilIRrBGzDwGtAhldzlBoBwE3Z3MY
+ 31TOpACu1ZpNOMysZ6xiE35pWkwc0KYm4hJA5GFfmWSN6DniimW3pmdDIiw4Ifcx8b3mFrRO
+ BbDIW13E51j9RjbO/nAaK9ndZ5LRO1B/8Fwat7bLzmsCiEXOJY7NNpIEpkoNoEUfCcZwmLrU
+ +eOTPzaF6drw6ayewEi5yzPg3TAT6FV3oBsNg3xlwU0gPK3v6gYPX5w9+ovPZ1/qqNfOrbsE
+ FRuiSVsZQ5s3AAMFD/9XjlnnVDh9GX/r/6hjmr4U9tEsM+VQXaVXqZuHKaSmojOLUCP/YVQo
+ 7IiYaNssCS4FCPe4yrL4FJJfJAsbeyDykMN7wAnBcOkbZ9BPJPNCbqU6dowLOiy8AuTYQ48m
+ vIyQ4Ijnb6GTrtxIUDQeOBNuQC/gyyx3nbL/lVlHbxr4tb6YkhkO6shjXhQh7nQb33FjGO4P
+ WU11Nr9i/qoV8QCo12MQEo244RRA6VMud06y/E449rWZFSTwGqb0FS0seTcYNvxt8PB2izX+
+ HZA8SL54j479ubxhfuoTu5nXdtFYFj5Lj5x34LKPx7MpgAmj0H7SDhpFWF2FzcC1bjiW9mjW
+ HaKaX23Awt97AqQZXegbfkJwX2Y53ufq8Np3e1542lh3/mpiGSilCsaTahEGrHK+lIusl6mz
+ Joil+u3k01ofvJMK0ZdzGUZ/aPMZ16LofjFA+MNxWrZFrkYmiGdv+LG45zSlZyIvzSiG2lKy
+ kuVag+IijCIom78P9jRtB1q1Q5lwZp2TLAJlz92DmFwBg1hyFzwDADjZ2nrDxKUiybXIgZp9
+ aU2d++ptEGCVJOfEW4qpWCCLPbOT7XBr+g/4H3qWbs3j/cDDq7LuVYIe+wchy/iXEJaQVeTC
+ y5arMQorqTFWlEOgRA8OP47L9knl9i4xuR0euV6DChDrguup2aJVU8JPBBgRAgAPAhsMBQJn
+ uAtCBQkxtc7uAAoJEGFXmRW1Y3YOJHUAoLuIJDcJtl7ZksBQa+n2T7T5zXoZAJ9EnFa2JZh7
+ WlfRzlpjIPmdjgoicA==
+In-Reply-To: <20250523083759.3741168-1-wei.fang@nxp.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
 
 
---=20
+On 5/23/2025 1:37 AM, Wei Fang wrote:
+> There is a potential crash issue when disabling and re-enabling the
+> network port. When disabling the network port, phy_detach() calls
+> device_link_del() to remove the device link, but it does not clear
+> phydev->devlink, so phydev->devlink is not a NULL pointer. Then the
+> network port is re-enabled, but if phy_attach_direct() fails before
+> calling device_link_add(), the code jumps to the "error" label and
+> calls phy_detach(). Since phydev->devlink retains the old value from
+> the previous attach/detach cycle, device_link_del() uses the old value,
+> which accesses a NULL pointer and causes a crash. The simplified crash
+> log is as follows.
+> 
+> [   24.702421] Call trace:
+> [   24.704856]  device_link_put_kref+0x20/0x120
+> [   24.709124]  device_link_del+0x30/0x48
+> [   24.712864]  phy_detach+0x24/0x168
+> [   24.716261]  phy_attach_direct+0x168/0x3a4
+> [   24.720352]  phylink_fwnode_phy_connect+0xc8/0x14c
+> [   24.725140]  phylink_of_phy_connect+0x1c/0x34
+> 
+> Therefore, phydev->devlink needs to be cleared when the device link is
+> deleted.
+> 
+> Fixes: bc66fa87d4fd ("net: phy: Add link between phy dev and mac dev")
+> Signed-off-by: Wei Fang <wei.fang@nxp.com>
 
-Dario Binacchi
+Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
+-- 
+Florian
 
-Senior Embedded Linux Developer
-
-dario.binacchi@amarulasolutions.com
-
-__________________________________
-
-
-Amarula Solutions SRL
-
-Via Le Canevare 30, 31100 Treviso, Veneto, IT
-
-T. +39 042 243 5310
-info@amarulasolutions.com
-
-www.amarulasolutions.com
