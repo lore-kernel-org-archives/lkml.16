@@ -1,49 +1,67 @@
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0C0D2DCBE7;
-	Fri, 23 May 2025 03:59:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 453221EFFAC;
+	Fri, 23 May 2025 03:59:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747972789; cv=none; b=r5UwI1fcWlvETG7/5fvLJz443HBjvVetf42j0E2Cpsk6vN30dRHIyqB1XpaN9f1hzrS2dxH5hlygSRlN9kF0JuTu3d9hpv93zNyQUcjX/joD2NprOz0GcqZT77Rxy7nyO8T7irZS157GRrumDXNBVSTyr5n8n+gcdXihYMeHTWw=
+	t=1747972801; cv=none; b=IM2+R541DSYo+UsZhFdOrPDNMJ+s9g+1o9G1zhxaIv4Y230CLV3JcnXChFfyHie5IBvxpk+JE4yRMbBhy501ppBXR7dA3dqM+z9hVgeWSxy8MCSMhVT+xuLk6RLFoDy3dIf5wFlhA+CODpSezJ9UHivMwUBX9cu4w/APf9qM+kw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747972789; c=relaxed/simple;
-	bh=Xs3rciip3/QwToPd2I/zW+LQISuJ1+/fQ4kqCEMCjns=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LuI/uNSz4sKkG8NMF2rfd5fJEb06pMBN66LWGlVxBZF6eMF6Zv45jTtL2Vd8ulkMP8MjKRJoGMvTBmXlKz+ujuQoCjw79RwbmOq7wrgS7eXqKaiQgYSXFeirnYh1AHXeAFlpNewdXzQcABFa1Ub3dIQMG+ajRQvKAuIG11Ugwqc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=IY2U+qYQ; arc=none smtp.client-ip=144.6.53.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+	s=arc-20240116; t=1747972801; c=relaxed/simple;
+	bh=Sj7m6EM7kndCHsPvRtfATw9pHhcHJtt1zDi6ri9XT5E=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=bqoRpgmMJSN6di+c6tUH9h3QhqxQjEkVD1VzbyXQISHaclOCxdn3B7Cuiocc6F0qYxAB7Zuo/kJYaCNgIdrJPwZkSsJpf7AIQwdQ7BW8Xc3UEhHZcRHlzRAkq+T5fhfACAFeZHECupwm8QtIivBd7mwGiHNdC5GiVYh3IY7hvl0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OsY5Zht2; arc=none smtp.client-ip=209.85.216.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="IY2U+qYQ"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
-	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=MXZR828o5qZP9AxMXAMfCBjRO8UYgzLKwvAcmZi3aUg=; b=IY2U+qYQoaBOS4qRlR+YfASdh4
-	d7GUeIb6PNd7a4686vEFfUsP42AWD55gkWQSUXejcuNLtM9rhScop6vlq39LZ1SvrPqYZa93qO/Jw
-	SsbyCaW6KJG9IQcnirAJ9kCKahZBEJhrc399h7pXK3BZKe111JgllghYUwMHzvXoBRBxVbkgZiTzF
-	Az7ABkzPNolm36iFOl8q6xsD0YWvvfkCFEsvbQ1JInIYGd9Ll4L5pTX8Sdp+qA4g2TDS1Kr/2PKKo
-	+AHwWWWvt8UTSbWWWegWYxanBdXuucL1pv/8mfJOxZvLB/RMW/6+EiLkjgQv5kgwiRsMLpzux6ZsU
-	v315SN7w==;
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
-	id 1uIJZB-008GFT-1t;
-	Fri, 23 May 2025 11:59:30 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Fri, 23 May 2025 11:59:29 +0800
-Date: Fri, 23 May 2025 11:59:29 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: Chen Ridong <chenridong@huaweicloud.com>
-Cc: steffen.klassert@secunet.com, daniel.m.jordan@oracle.com,
-	nstange@suse.de, linux-crypto@vger.kernel.org,
-	linux-kernel@vger.kernel.org, chenridong@huawei.com,
-	wangweiyang2@huawei.com
-Subject: Re: [PATCH v2 3/3] padata: avoid UAF for reorder_work
-Message-ID: <aC_yoWXJcsLxfLR4@gondor.apana.org.au>
-References: <20250110061639.1280907-1-chenridong@huaweicloud.com>
- <20250110061639.1280907-4-chenridong@huaweicloud.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OsY5Zht2"
+Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-30e542e4187so6437906a91.3;
+        Thu, 22 May 2025 20:59:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747972799; x=1748577599; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=DoUaDf9sklz66/nXsi99JBqWi7v39+C/PJqdOEBvY4c=;
+        b=OsY5Zht2j8SdCN+JWjK4bRCbZgdhCW+MxDsrdRKyeY5GsIEVU1svjhVFG0Xho25yTi
+         2kwYwmkVrrnI+ehrKzl2RDb8Y1T1iyw/D6KZcrb7KBZ9+HDp/Lm/qogiajj00GnpVKFG
+         Dnxd/iatxADTYnePLmbWFHQb6Hsaft2IBd2EExioaa8KdC/84d3FfzcdWTdFG80VKx8J
+         rip4hioNsgOBxTNiNXbns27x1zg/T9W0DQCewAUEScMYVVjl1mPUp3Fu1iL9uYJ/OWlT
+         +ArXcicxgZVIkIiKJUoOwP9Wfv0Fvi5FnYBu4q2zvnVfpb5YVB1NCkv6V532x2GvvrR0
+         nGnw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747972799; x=1748577599;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=DoUaDf9sklz66/nXsi99JBqWi7v39+C/PJqdOEBvY4c=;
+        b=ov0IJMtTGLa2OsC20mIc8qE/5iH33OpmwkDFWGBY5IjUcWgKSMftM98Uv2+qTNcijt
+         tyt+1rgDrKikSpuv4Bt9JoVammhJ6mBVgJY6/wtRwW5ueWAvp3WULAvffwd5KJWXkWGV
+         yLXUDa0J4IIM2OdWHvpZ1DGo3aw3yvjV/IYeZZMqBrqNpVRD/mCWQHClJeDxU8mG1mfd
+         ea8D8iBiyfpidzPNF0beT69mNg+I/wu0NGXNrrLT3IFEVv8R3FXn5vLu48/HT+owvXTA
+         SB6u95583kGcJOodkkLyp8GcPUE6jKSbJrEnYKh6ihKGcSVUooqNDAS762wT7NHk6Rzc
+         heNg==
+X-Forwarded-Encrypted: i=1; AJvYcCV7QKHEbb5oChqxV6YnrJxJEswPsye5zo5HMalsiMvV3XYopMLXx8UYXeFA386pdYfyJLppAvQfHtUjklRH42s=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwYsIXHC9a13zHGVeZHPklDOBuHI2kL8kpMMFFinHH5JO1+15XE
+	m/YU8h9Y4GGq1lWQtan68tVmJq4gCTVK0sx4gorn/nSrWt7U4YTAmFG2
+X-Gm-Gg: ASbGncufM7e9KxtWt6JSZbsls/9iPlLhWzI/B2yh6BnqHP1d5MceuO1ktTkGaFW+Ljd
+	J4wiz2Q3U1m05o9/Ke2n3NLh4YjvcnaWqZbh1tES1V018ChB1yra4/sqixHJfAFdXCGr0s+6WOm
+	epgfkhgoYX8TrI/+LXcErMksfJAaKrXtnKpcDjgs4hi5Z2zltwowpILeahAit5yjNcy1a2Q4Ypn
+	qV1YsV4XTPYBM/JIlO14NgU2lDQHgjkdYiBaR8/mOlngNBD0Qonstzkh5rl3uAGBjvs4hB82jos
+	cLT7JwUJTUoVbmIsbziiw0TVvc3/qUdjLu1anS5taLhdcUyddWu/kLvwfh6roVzHazZo
+X-Google-Smtp-Source: AGHT+IEIiA+D0qQyxvTOmBXHIAVCDDhXMSPK+IhMRA0cF96xdqi3Y/mxBxAyjZlzOIhAF3ZkrM3lqg==
+X-Received: by 2002:a17:90b:1ccc:b0:30e:823f:ef3a with SMTP id 98e67ed59e1d1-30e823ff012mr41569578a91.30.1747972799271;
+        Thu, 22 May 2025 20:59:59 -0700 (PDT)
+Received: from brak3r-Ubuntu ([2401:4900:4e66:e488:f144:96a:edee:4588])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30f365b158fsm6328162a91.8.2025.05.22.20.59.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 May 2025 20:59:58 -0700 (PDT)
+Date: Fri, 23 May 2025 09:29:55 +0530
+From: Rujra Bhatt <braker.noob.kernel@gmail.com>
+To: shuah@kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	linux-kernel-mentees@lists.linux.dev
+Subject: [PATCH v2] selftests: timers: valid-adjtimex: fix coding style issues
+Message-ID: <aC_yu6Ll2E-3qRHj@brak3r-Ubuntu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,75 +70,60 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250110061639.1280907-4-chenridong@huaweicloud.com>
 
-On Fri, Jan 10, 2025 at 06:16:39AM +0000, Chen Ridong wrote:
-> From: Chen Ridong <chenridong@huawei.com>
-> 
-> Although the previous patch can avoid ps and ps UAF for _do_serial, it
-> can not avoid potential UAF issue for reorder_work. This issue can
-> happen just as below:
-> 
-> crypto_request			crypto_request		crypto_del_alg
-> padata_do_serial
->   ...
->   padata_reorder
->     // processes all remaining
->     // requests then breaks
->     while (1) {
->       if (!padata)
->         break;
->       ...
->     }
-> 
-> 				padata_do_serial
-> 				  // new request added
-> 				  list_add
->     // sees the new request
->     queue_work(reorder_work)
-> 				  padata_reorder
-> 				    queue_work_on(squeue->work)
-> ...
-> 
-> 				<kworker context>
-> 				padata_serial_worker
-> 				// completes new request,
-> 				// no more outstanding
-> 				// requests
-> 
-> 							crypto_del_alg
-> 							  // free pd
-> 
-> <kworker context>
-> invoke_padata_reorder
->   // UAF of pd
 
-Looking back this explanation is actually broken.  The call
-crypto_del_alg does not free anything immediately.  It can only
-start freeing things once the final tfm user goes away.  Any crypto
-request of that tfm must have completed before that happens.
+This patch corrects minor coding style issues to comply with the Linux kernel coding style:
 
-If not there is a serious bug in the Crypto API.
+- Align closing parentheses to match opening ones in printf statements.
+- Break long lines to keep them within the 100-column limit.
 
-So if crypto_del_alg is leading to a freeing of the pd while there
-are still outstanding users of that tfm, then this points to a bug
-in the Crypto API and not padata.
+These changes address warnings reported by checkpatch.pl and do not
+affect functionality.
 
-Can you still reproduce this bug easily if you revert the patches
-in this series? If so we should be able to track down the real bug.
+changes in v2 : 
+- Resubmitted the patch with a properly formatted commit message,
+following patch submission guidelines, as suggested by Shuah Khan.
 
-To recap, every tfm holds a ref count on the underlying crypto_alg.
-All crypto requests must complete before a tfm can be freed, which
-then leads to a drop of the refcount on crypto_alg.
+Signed-off-by: Rujra Bhatt <braker.noob.kernel@gmail.com>
+---
+ tools/testing/selftests/timers/valid-adjtimex.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-A crypto_alg can only be freed when its ref count hits zero.  Only
-then will the associated pd be freed.
+diff --git a/tools/testing/selftests/timers/valid-adjtimex.c
+b/tools/testing/selftests/timers/valid-adjtimex.c
+index 6b7801055ad1..5110f9ee285c 100644
+--- a/tools/testing/selftests/timers/valid-adjtimex.c
++++ b/tools/testing/selftests/timers/valid-adjtimex.c
+@@ -157,7 +157,7 @@ int validate_freq(void)
+                if (tx.freq == outofrange_freq[i]) {
+                        printf("[FAIL]\n");
+                        printf("ERROR: out of range value %ld actually set!\n",
+-                                       tx.freq);
++                              tx.freq);
+                        pass = -1;
+                        goto out;
+                }
+@@ -172,7 +172,7 @@ int validate_freq(void)
+                        if (ret >= 0) {
+                                printf("[FAIL]\n");
+                                printf("Error: No failure on invalid
+ADJ_FREQUENCY %ld\n",
+-                                       invalid_freq[i]);
++                                      invalid_freq[i]);
+                                pass = -1;
+                                goto out;
+                        }
+@@ -238,7 +238,8 @@ int set_bad_offset(long sec, long usec, int use_nano)
+        tmx.time.tv_usec = usec;
+        ret = clock_adjtime(CLOCK_REALTIME, &tmx);
+        if (ret >= 0) {
+-               printf("Invalid (sec: %ld  usec: %ld) did not fail! ",
+tmx.time.tv_sec, tmx.time.tv_usec);
++               printf("Invalid (sec: %ld  usec: %ld) did not fail! ",
++                      tmx.time.tv_sec, tmx.time.tv_usec);
+                printf("[FAIL]\n");
+                return -1;
+        }
+--
+2.43.0
 
-So what's missing in the above picture is the entity that is freeing
-the tfm, thus leading to the actual freeing of the alg and pd.
-
-Thanks,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
