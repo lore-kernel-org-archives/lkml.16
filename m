@@ -1,314 +1,150 @@
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-187.mta1.migadu.com (out-187.mta1.migadu.com [95.215.58.187])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F6FE214A74;
-	Fri, 23 May 2025 22:36:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27A821EE008
+	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 22:47:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748039769; cv=none; b=Ui5T7aOyhqT4vD/mK84GAc4Jmm1eXkt0G/6CvPj8rvNBIOhRurE9Syhrrn6IW+C5t8Ew5xmLGbP5chX2EVBv5OkC20dlenadVR0Rn8uxvXAH7U1ATQTAfoCoUrWXF9P+3TmOaJU1w3nQ2Il3UgFIgDxeX80JX7np5I8aFtRGfvA=
+	t=1748040443; cv=none; b=XyrknVTKJcBZqzMVK3kRqpiQi9e9i13h2nn7KvmzBJkrcyBy0kO9V4+yDR7P+I/x6TxhLuMo3+NH8sDZgaHpeaeATZ7CLHT/7wRQ3DdW7+g2aLESh2iiUtpkdylwPOHyuDl4MyHbt2Yna8DHRBAkVJfsmBg26/DzGY692XnUttU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748039769; c=relaxed/simple;
-	bh=h8H53WstQAHtKB7BqisUydwF30h1NlWHqWKS0j9d0QU=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ax+8NKBXyDb8/gbRoqXk7cvVQb87U23ekg2bHgfQT5413qlbyqX3yx8HCWl4+SMEdAlNXZfeFtsX0KhtXNEN/Awg8CACyKNWGJh92dpGKNHkU92xb1TpUZl/pG5rYM2grR+duZtaLaoSYn7Iqmbvui/xdAnKN51bDcxhBlehhlA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KiQaHWH4; arc=none smtp.client-ip=209.85.221.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748040443; c=relaxed/simple;
+	bh=x98D+Yp00VdZ07liE4NWYJeoBOk1wSzRdLodEYKc9qs=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=d/YFXufes3cf/sv78mPF451j8z3Ij/ytC6aEjfDB4e5gnYQ2xXbdbrf76JaGiCQZAM9UASVOwslWTy6xR4CxACZz+ex1UmHm/vXfFZCjE8Xg2Ls6xQ9VYxeWiGSuGDGy/7ppFCVJyNQwfYiIs+8pFgyHP3QDz4SlKvKCer0YSkw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Tz5kpDrc; arc=none smtp.client-ip=95.215.58.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KiQaHWH4"
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-3a4c58df045so52704f8f.1;
-        Fri, 23 May 2025 15:36:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748039766; x=1748644566; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DgqBxuRnRBCBlpgOJitYe+JYUaYesgoujNN7Mj4ZDPA=;
-        b=KiQaHWH4NPadu3RlkBSnZNnJlV6L0KLw6XRT+aUwPkxeJ2nspKKIGaosvj7zS934Ia
-         /vKPkV6YvknKnUMZs9FgUnK97xmvLFQh5ibDxEAqGfNnWW9f4HqCN/P5teH12hkdA86f
-         2F6iYjFd0DOTwa4rOvCQO9Lq7C46fykZUw7MxqVqz86Ts8fzCwaJVrs1YNbTSRX/BZpO
-         Tqd+4KfUtv4Kc3aim8smlWoizEQYlYakd8Nj3w4SfETBv6uf9dvLJJskWACYeeADfxQd
-         aPi4VDmCA6vbKrcKb4a38DXJA0dl8WIvHqv4eIU3quNIzlTXKA1KQBDvsGM/upYHJHP0
-         ACjQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748039766; x=1748644566;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=DgqBxuRnRBCBlpgOJitYe+JYUaYesgoujNN7Mj4ZDPA=;
-        b=NHTwYILNtzKXNv6Ri/UXvrQwAFdBjOXr85rtrZ4RKr9KZcP7IRfK8dimk7Uhpp/7rh
-         pyy4UkDjqz6XnUIXBGoyC2Us4seFVPEnWyEGqOYvHkuyj/gm3cG3NuBof5bpMUAmSRPs
-         9mxDcuoSeqCCMNPbTzMyn2IuiHr+fCjZbaZBs8p9282AiekACwhyokmF5jECem6eOIQu
-         JAQYk6SoH9RAG0SA35xdJqcbn9ZbZDZX1uuVV/J8P3INd3yVvEYPgRszjzL6bpxZj14d
-         0k4yuK11KIa2EHoZxOL7sNd0CkFPfXDsseW6n8yc19g2ocou3aBjk8g0RlIh6lhXLqa9
-         77WQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUAvzBhnc6GojUub+5I6vj4T77xi0ybB+IivapIwAG8+2GmWt34qA4jCLXg3NF089Z1iVa9fqFX7PLdMWqF@vger.kernel.org, AJvYcCUI0kX6d82P2Ocvo92QaaUwkdX6SD5j+pxsSEp/DhORjEL+Je5AD6LW79TFDPEp4q6hwlGlDKwhknQU@vger.kernel.org, AJvYcCVed7co+vNfO6EBUclXKJPJdOAcgk/O8rgRR47KfB1KYCgZ0lWmiQLGSEbdSsJcSmDv6uz1RADxfqI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzSB7bgf4BU0kuoaIQ2V128Mi2yLyci86NPyFNGe0Me191UeyDC
-	rz3Ts/Vqq81oAiu/4bKV0ACRKRWHXuvhDkQc5UfXuGymQKVGEO43kaoB
-X-Gm-Gg: ASbGncuC1ieQsjTetxy+3SN4Wvwm0NzMHh3rhhowBq5rJu5RaFgXZSjCVhNetEfqWNR
-	FeG9MtfxmDa5IUxl+M/2G09R1mUgCTfQ8MU7inC0ycj6i7ByZCAINHgsI8xeBBQokxUNAbAF4Px
-	Ygxpw4yD1dMruKUcYi6WXvd/I4oMhncF3Vc4YYJtswolB60ZzfhhwO0zds6+08ddaLvIaYzZDez
-	eoSJcMhdcNLkMRrP6WkqebHkcgFVnrOrUtjjWsatClWuN/gK8JwelzbC3kbf9jfEXbG3YmDsoMd
-	kEhyJaJe00Wx1v7VADn0wUO5kyzONCyWXBoSr/ojngdD0DE0iCHRqOzp3cI5hjYqCE4e7gQYJ+t
-	f8akTCvHw8GymzoIbtN6rxg==
-X-Google-Smtp-Source: AGHT+IH/GZdAZkTaBi/kiiSkP/j5SFtXpZ/rqheO2fODZCfFWDOvWxVFoj6aMabTImiCBTS68iFtdA==
-X-Received: by 2002:a05:600c:1c24:b0:439:9ec5:dfa with SMTP id 5b1f17b1804b1-44c938cb1e6mr2131675e9.7.1748039765729;
-        Fri, 23 May 2025 15:36:05 -0700 (PDT)
-Received: from localhost.localdomain (84-72-156-211.dclient.hispeed.ch. [84.72.156.211])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-447f6b29672sm165202375e9.3.2025.05.23.15.36.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 May 2025 15:36:05 -0700 (PDT)
-From: Lothar Rubusch <l.rubusch@gmail.com>
-To: jic23@kernel.org,
-	dlechner@baylibre.com,
-	nuno.sa@analog.com,
-	andy@kernel.org,
-	corbet@lwn.net,
-	lucas.p.stankus@gmail.com,
-	lars@metafoo.de,
-	Michael.Hennerich@analog.com
-Cc: l.rubusch@gmail.com,
-	linux-iio@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 12/12] docs: iio: add ADXL313 accelerometer
-Date: Fri, 23 May 2025 22:35:23 +0000
-Message-Id: <20250523223523.35218-13-l.rubusch@gmail.com>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250523223523.35218-1-l.rubusch@gmail.com>
-References: <20250523223523.35218-1-l.rubusch@gmail.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Tz5kpDrc"
+Message-ID: <7af85fa7-c6ec-473f-b5ac-38af12b5ad02@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1748040436;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=6I7zYLgaZ1vf52aAPbhqqUukOteUKhHVaPkuzjN4gRo=;
+	b=Tz5kpDrcNeBalk9UG3m2J1d6HBAkDNuVd2KLh/LnUFFrfJCDGVdZD10GSOsWy2xiW91vI2
+	AKE1cBwGAzZFTcGIJwhnjc9Hy0zYFNmHqG26WDfHrPQxWFgp5VUrTFcfxJY8F9GaqPkL2z
+	mVpscSfbBIHG+o07vLvggvYIBcAaQZA=
+Date: Fri, 23 May 2025 18:47:01 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=y
-Content-Transfer-Encoding: 8bit
+Subject: Re: [net-next PATCH v5 05/10] net: pcs: lynx: Convert to an MDIO
+ driver
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Sean Anderson <sean.anderson@linux.dev>
+To: Heiner Kallweit <hkallweit1@gmail.com>, netdev@vger.kernel.org,
+ Andrew Lunn <andrew+netdev@lunn.ch>, "David S . Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Russell King <linux@armlinux.org.uk>
+Cc: Lei Wei <quic_leiwei@quicinc.com>,
+ Christian Marangi <ansuelsmth@gmail.com>,
+ Kory Maincent <kory.maincent@bootlin.com>, Simon Horman <horms@kernel.org>,
+ Daniel Golle <daniel@makrotopia.org>,
+ Vineeth Karumanchi <vineeth.karumanchi@amd.com>,
+ linux-kernel@vger.kernel.org, Ioana Ciornei <ioana.ciornei@nxp.com>,
+ Vladimir Oltean <vladimir.oltean@nxp.com>, imx@lists.linux.dev,
+ linux-stm32@st-md-mailman.stormreply.com
+References: <20250523203339.1993685-1-sean.anderson@linux.dev>
+ <20250523203339.1993685-6-sean.anderson@linux.dev>
+ <a937e728-d911-4fcc-9af1-9ae6130f96c1@gmail.com>
+ <3a452864-9d02-4fa7-9d7c-a240b611ee74@linux.dev>
+ <e0bd575b-a01b-418f-9d89-b59398e87a48@linux.dev>
+Content-Language: en-US
+In-Reply-To: <e0bd575b-a01b-418f-9d89-b59398e87a48@linux.dev>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-Add documentation for the ADXL313 accelerometer driver.
+On 5/23/25 18:07, Sean Anderson wrote:
+> On 5/23/25 17:39, Sean Anderson wrote:
+>> On 5/23/25 17:33, Heiner Kallweit wrote:
+>>> On 23.05.2025 22:33, Sean Anderson wrote:
+>>>> This converts the lynx PCS driver to a proper MDIO driver.
+>>>> This allows using a more conventional driver lifecycle (e.g. with a
+>>>> probe and remove). It will also make it easier to add interrupt support.
+>>>> 
+>>>> The existing helpers are converted to bind the MDIO driver instead of
+>>>> creating the PCS directly. As lynx_pcs_create_mdiodev creates the PCS
+>>>> device, we can just set the modalias. For lynx_pcs_create_fwnode, we try
+>>>> to get the PCS the usual way, and if that fails we edit the devicetree
+>>>> to add a compatible and reprobe the device.
+>>>> 
+>>>> To ensure my contributions remain free software, remove the BSD option
+>>>> from the license. This is permitted because the SPDX uses "OR".
+>>>> 
+>>>> Signed-off-by: Sean Anderson <sean.anderson@linux.dev>
+>>>> ---
+>>>> 
+>>>> Changes in v5:
+>>>> - Use MDIO_BUS instead of MDIO_DEVICE
+>>>> 
+>>>> Changes in v4:
+>>>> - Add a note about the license
+>>>> - Convert to dev-less pcs_put
+>>>> 
+>>>> Changes in v3:
+>>>> - Call devm_pcs_register instead of devm_pcs_register_provider
+>>>> 
+>>>> Changes in v2:
+>>>> - Add support for #pcs-cells
+>>>> - Remove unused variable lynx_properties
+>>>> 
+>>>>  drivers/net/dsa/ocelot/Kconfig                |   4 +
+>>>>  drivers/net/dsa/ocelot/felix_vsc9959.c        |  11 +-
+>>>>  drivers/net/dsa/ocelot/seville_vsc9953.c      |  11 +-
+>>>>  drivers/net/ethernet/altera/Kconfig           |   2 +
+>>>>  drivers/net/ethernet/altera/altera_tse_main.c |   7 +-
+>>>>  drivers/net/ethernet/freescale/dpaa/Kconfig   |   2 +-
+>>>>  drivers/net/ethernet/freescale/dpaa2/Kconfig  |   3 +
+>>>>  .../net/ethernet/freescale/dpaa2/dpaa2-mac.c  |  11 +-
+>>>>  drivers/net/ethernet/freescale/enetc/Kconfig  |   2 +
+>>>>  .../net/ethernet/freescale/enetc/enetc_pf.c   |   8 +-
+>>>>  .../net/ethernet/freescale/enetc/enetc_pf.h   |   1 -
+>>>>  .../freescale/enetc/enetc_pf_common.c         |   4 +-
+>>>>  drivers/net/ethernet/freescale/fman/Kconfig   |   4 +-
+>>>>  .../net/ethernet/freescale/fman/fman_memac.c  |  25 ++--
+>>>>  drivers/net/ethernet/stmicro/stmmac/Kconfig   |   3 +
+>>>>  .../ethernet/stmicro/stmmac/dwmac-socfpga.c   |   6 +-
+>>>>  drivers/net/pcs/Kconfig                       |  11 +-
+>>>>  drivers/net/pcs/pcs-lynx.c                    | 110 ++++++++++--------
+>>>>  include/linux/pcs-lynx.h                      |  13 ++-
+>>>>  19 files changed, 128 insertions(+), 110 deletions(-)
+>>>> 
+>>>> diff --git a/drivers/net/dsa/ocelot/Kconfig b/drivers/net/dsa/ocelot/Kconfig
+>>>> index 081e7a88ea02..907c29d61c14 100644
+>>>> --- a/drivers/net/dsa/ocelot/Kconfig
+>>>> +++ b/drivers/net/dsa/ocelot/Kconfig
+>>>> @@ -42,7 +42,9 @@ config NET_DSA_MSCC_FELIX
+>>>>  	select NET_DSA_TAG_OCELOT_8021Q
+>>>>  	select NET_DSA_TAG_OCELOT
+>>>>  	select FSL_ENETC_MDIO
+>>>> +	select PCS
+>>>>  	select PCS_LYNX
+>>>> +	select MDIO_BUS
+>>> 
+>>> This shouldn't be needed. NET_DSA selects PHYLINK, which selects PHYLIB,
+>>> which selects MDIO_BUS. There are more places in this series where the
+>>> same comment applies.
+>> 
+>> select does not transitively enable dependencies. See the note in
+>> Documentation/kbuild/kconfig-language.rst for details. Therefore we must
+>> select the dependencies of things we select in order to ensure we do not
+>> trip sym_warn_unmet_dep.
+> 
+> OK, I see what you mean here. But of course NET_DSA is missing selects for
+> PHYLIB and MDIO_BUS. And PHYLINK is also missing a select for MDIO_BUS. Actually,
+> this bug is really endemic. Maybe we should just get rid of PHYLIB as a config
+> and just make everything depend on ETHERNET instead.
 
-Signed-off-by: Lothar Rubusch <l.rubusch@gmail.com>
----
- Documentation/iio/adxl313.rst | 196 ++++++++++++++++++++++++++++++++++
- Documentation/iio/index.rst   |   1 +
- 2 files changed, 197 insertions(+)
- create mode 100644 Documentation/iio/adxl313.rst
+After some experimentation, I think what that note means is that select
+is recursive for select but not for depends on. So I think I only have
+to select the "forward" dependencies, which is certainly easier.
 
-diff --git a/Documentation/iio/adxl313.rst b/Documentation/iio/adxl313.rst
-new file mode 100644
-index 000000000000..8c4e2d141594
---- /dev/null
-+++ b/Documentation/iio/adxl313.rst
-@@ -0,0 +1,196 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+===============
-+ADXL313 driver
-+===============
-+
-+This driver supports Analog Device's ADXL313 on SPI/I2C bus.
-+
-+1. Supported devices
-+====================
-+
-+* `ADXL313 <https://www.analog.com/ADXL313>`_
-+
-+The ADXL313is a low noise density, low power, 3-axis accelerometer with
-+selectable measurement ranges. The ADXL313 supports the ±0.5 g, ±1 g, ±2 g and
-+±4 g ranges.
-+
-+2. Device attributes
-+====================
-+
-+Accelerometer measurements are always provided.
-+
-+Temperature data are also provided. This data can be used to monitor the
-+internal system temperature or to improve the temperature stability of the
-+device via calibration.
-+
-+Each IIO device, has a device folder under ``/sys/bus/iio/devices/iio:deviceX``,
-+where X is the IIO index of the device. Under these folders reside a set of
-+device files, depending on the characteristics and features of the hardware
-+device in questions. These files are consistently generalized and documented in
-+the IIO ABI documentation.
-+
-+The following tables show the adxl313 related device files, found in the
-+specific device folder path ``/sys/bus/iio/devices/iio:deviceX``.
-+
-++---------------------------------------------------+----------------------------------------------------------+
-+| 3-Axis Accelerometer related device files         | Description                                              |
-++---------------------------------------------------+----------------------------------------------------------+
-+| in_accel_scale                                    | Scale for the accelerometer channels.                    |
-++---------------------------------------------------+----------------------------------------------------------+
-+| in_accel_x_calibbias                              | Calibration offset for the X-axis accelerometer channel. |
-++---------------------------------------------------+----------------------------------------------------------+
-+| in_accel_x_raw                                    | Raw X-axis accelerometer channel value.                  |
-++---------------------------------------------------+----------------------------------------------------------+
-+| in_accel_y_calibbias                              | y-axis acceleration offset correction                    |
-++---------------------------------------------------+----------------------------------------------------------+
-+| in_accel_y_raw                                    | Raw Y-axis accelerometer channel value.                  |
-++---------------------------------------------------+----------------------------------------------------------+
-+| in_accel_z_calibbias                              | Calibration offset for the Z-axis accelerometer channel. |
-++---------------------------------------------------+----------------------------------------------------------+
-+| in_accel_z_raw                                    | Raw Z-axis accelerometer channel value.                  |
-++---------------------------------------------------+----------------------------------------------------------+
-+
-++---------------------------------------+----------------------------------------------+
-+| Miscellaneous device files            | Description                                  |
-++---------------------------------------+----------------------------------------------+
-+| name                                  | Name of the IIO device.                      |
-++---------------------------------------+----------------------------------------------+
-+| in_accel_sampling_frequency           | Currently selected sample rate.              |
-++---------------------------------------+----------------------------------------------+
-+| in_accel_sampling_frequency_available | Available sampling frequency configurations. |
-++---------------------------------------+----------------------------------------------+
-+
-+Channels processed values
-+-------------------------
-+
-+A channel value can be read from its _raw attribute. The value returned is the
-+raw value as reported by the devices. To get the processed value of the channel,
-+apply the following formula:
-+
-+.. code-block:: bash
-+
-+        processed value = (_raw + _offset) * _scale
-+
-+Where _offset and _scale are device attributes. If no _offset attribute is
-+present, simply assume its value is 0.
-+
-+The ADXL313 driver offers data for a single types of channels, the table below
-+shows the measurement units for the processed value, which are defined by the
-+IIO framework:
-+
-++-------------------------------------+---------------------------+
-+| Channel type                        | Measurement unit          |
-++-------------------------------------+---------------------------+
-+| Acceleration on X, Y, and Z axis    | Meters per Second squared |
-++-------------------------------------+---------------------------+
-+
-+Usage examples
-+--------------
-+
-+Show device name:
-+
-+.. code-block:: bash
-+
-+        root:/sys/bus/iio/devices/iio:device0> cat name
-+        adxl313
-+
-+Show accelerometer channels value:
-+
-+.. code-block:: bash
-+
-+        root:/sys/bus/iio/devices/iio:device0> cat in_accel_x_raw
-+        2
-+        root:/sys/bus/iio/devices/iio:device0> cat in_accel_y_raw
-+        -57
-+        root:/sys/bus/iio/devices/iio:device0> cat in_accel_z_raw
-+        2
-+        root:/sys/bus/iio/devices/iio:device0> cat in_accel_scale
-+        0.009576806
-+
-+- X-axis acceleration = in_accel_x_raw * in_accel_scale = 0.0191536 m/s^2
-+- Y-axis acceleration = in_accel_y_raw * in_accel_scale = -0.5458779 m/s^2
-+- Z-axis acceleration = in_accel_z_raw * in_accel_scale = 0.0191536 m/s^2
-+
-+Set calibration offset for accelerometer channels. Note, the calibration will be
-+rounded according to the graduation of LSB units:
-+
-+.. code-block:: bash
-+
-+        root:/sys/bus/iio/devices/iio:device0> cat in_accel_x_calibbias
-+        0
-+
-+        root:/sys/bus/iio/devices/iio:device0> echo 50 > in_accel_x_calibbias
-+        root:/sys/bus/iio/devices/iio:device0> cat in_accel_x_calibbias
-+        48
-+
-+Set sampling frequency:
-+
-+.. code-block:: bash
-+
-+        root:/sys/bus/iio/devices/iio:device0> cat in_accel_sampling_frequency
-+        100.000000
-+        root:/sys/bus/iio/devices/iio:device0> cat in_accel_sampling_frequency_available
-+        6.250000 12.500000 25.000000 50.000000 100.000000 200.000000 400.000000 800.000000 1600.000000 3200.000000
-+
-+        root:/sys/bus/iio/devices/iio:device0> echo 400 > in_accel_sampling_frequency
-+        root:/sys/bus/iio/devices/iio:device0> cat in_accel_sampling_frequency
-+        400.000000
-+
-+3. Device buffers
-+=================
-+
-+This driver supports IIO buffers.
-+
-+All devices support retrieving the raw acceleration measurements using buffers.
-+
-+Usage examples
-+--------------
-+
-+Select channels for buffer read:
-+
-+.. code-block:: bash
-+
-+        root:/sys/bus/iio/devices/iio:device0> echo 1 > scan_elements/in_accel_x_en
-+        root:/sys/bus/iio/devices/iio:device0> echo 1 > scan_elements/in_accel_y_en
-+        root:/sys/bus/iio/devices/iio:device0> echo 1 > scan_elements/in_accel_z_en
-+
-+Set the number of samples to be stored in the buffer:
-+
-+.. code-block:: bash
-+
-+        root:/sys/bus/iio/devices/iio:device0> echo 10 > buffer/length
-+
-+Enable buffer readings:
-+
-+.. code-block:: bash
-+
-+        root:/sys/bus/iio/devices/iio:device0> echo 1 > buffer/enable
-+
-+Obtain buffered data:
-+
-+.. code-block:: bash
-+
-+        root:/sys/bus/iio/devices/iio:device0> hexdump -C /dev/iio\:device0
-+        ...
-+        000000d0  01 fc 31 00 c7 ff 03 fc  31 00 c7 ff 04 fc 33 00  |..1.....1.....3.|
-+        000000e0  c8 ff 03 fc 32 00 c5 ff  ff fc 32 00 c7 ff 0a fc  |....2.....2.....|
-+        000000f0  30 00 c8 ff 06 fc 33 00  c7 ff 01 fc 2f 00 c8 ff  |0.....3...../...|
-+        00000100  02 fc 32 00 c6 ff 04 fc  33 00 c8 ff 05 fc 33 00  |..2.....3.....3.|
-+        00000110  ca ff 02 fc 31 00 c7 ff  02 fc 30 00 c9 ff 09 fc  |....1.....0.....|
-+        00000120  35 00 c9 ff 08 fc 35 00  c8 ff 02 fc 31 00 c5 ff  |5.....5.....1...|
-+        00000130  03 fc 32 00 c7 ff 04 fc  32 00 c7 ff 02 fc 31 00  |..2.....2.....1.|
-+        00000140  c7 ff 08 fc 30 00 c7 ff  02 fc 32 00 c5 ff ff fc  |....0.....2.....|
-+        00000150  31 00 c5 ff 04 fc 31 00  c8 ff 03 fc 32 00 c8 ff  |1.....1.....2...|
-+        00000160  01 fc 31 00 c7 ff 05 fc  31 00 c3 ff 04 fc 31 00  |..1.....1.....1.|
-+        00000170  c5 ff 04 fc 30 00 c7 ff  03 fc 31 00 c9 ff 03 fc  |....0.....1.....|
-+        ...
-+
-+See ``Documentation/iio/iio_devbuf.rst`` for more information about how buffered
-+data is structured.
-+
-+4. IIO Interfacing Tools
-+========================
-+
-+See ``Documentation/iio/iio_tools.rst`` for the description of the available IIO
-+interfacing tools.
-diff --git a/Documentation/iio/index.rst b/Documentation/iio/index.rst
-index 2d6afc5a8ed5..c106402a91f7 100644
---- a/Documentation/iio/index.rst
-+++ b/Documentation/iio/index.rst
-@@ -31,6 +31,7 @@ Industrial I/O Kernel Drivers
-    adis16475
-    adis16480
-    adis16550
-+   adxl313
-    adxl380
-    bno055
-    ep93xx_adc
--- 
-2.39.5
-
+--Sean
