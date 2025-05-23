@@ -1,315 +1,198 @@
-Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com [209.85.219.51])
+Received: from mail-yw1-f181.google.com (mail-yw1-f181.google.com [209.85.128.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6461B625;
-	Fri, 23 May 2025 15:18:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39DA4220685
+	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 15:19:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748013536; cv=none; b=oH0tQnFdXsMa82lasJi0ngEN4lfPHI5TdMsv96PkluegEYe96sokkPZUso6LyipHHbjVX8CTMJpN7pMzk2iMndPj9u20Fsogk2OVqM7E14J8sBqybIzNkM2q3O7myqFgb5/JdrFtxYYwaS9OtmYDkVVpX+1eG7yrhAC0jIaWg1M=
+	t=1748013560; cv=none; b=feMxuYeRzwNjuWpHTa6IWORjSBPa6aPoyuOG8HfXoLqdqZJR4NyiwwLuoORa8srJc0rj09eRnCxUs4pMWMGh3+XuTreECLLL0jDVKrD+o8IC2d0MXGkum5qIlAkons5otZFv/UpbGy2GlybPR/Yn2HVdIkJFVX3N6NabnhcTvd8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748013536; c=relaxed/simple;
-	bh=JzbWPNFBaN6XORxvyrgp/fdQDALDHI1BuZLkqv0gg8c=;
+	s=arc-20240116; t=1748013560; c=relaxed/simple;
+	bh=UXt5EXFTIUCSIejkEueO1TGqvacKY2Tzkl6QFLDHdac=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uFapnjlgal93ZHDGdLO61dUFevYkM0pzzxIQgZS278dzBHJQhfKqKlMJ76RpJyweu1PKmzgL0Ek0LwB8B9BWh0td+VlFpv94UFt5iWyhk0PJh8qq7GnymGNi9ugfFveO+CO63VMNRFXGNBJCINuM+NHux+L4o3DHUrWGE3AAtVM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.219.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qv1-f51.google.com with SMTP id 6a1803df08f44-6f5373067b3so116288356d6.2;
-        Fri, 23 May 2025 08:18:54 -0700 (PDT)
+	 To:Cc:Content-Type; b=tnHU7x41nkQ6DwuzK/0iZGuhf4FJ7pWUMr59ZhJn6kmA4XF/9VxL/Ckyid7ZXXKC1dDfZOe7yHwAL58TGPWWaNpGoI/f9T1dE889U2K7vo9VJ3KFYjooWDMwIqFYLG6gjpvV1vtS4ILp4SzSBZdsA/AKN1XEpxfL/AWPXfQD5t4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amarulasolutions.com; spf=pass smtp.mailfrom=amarulasolutions.com; dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b=eb+CrG7R; arc=none smtp.client-ip=209.85.128.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amarulasolutions.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amarulasolutions.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="eb+CrG7R"
+Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-70c7b8794faso381567b3.1
+        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 08:19:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amarulasolutions.com; s=google; t=1748013554; x=1748618354; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7tMirZWfsi+MGV8gZCAIGOzywZSQ1Z0yW01g9pidm94=;
+        b=eb+CrG7R7IcCQ20OExwq5k0KXZ1MTPBLR5ij72LMiH15OndFKSeAn1hXRaPletYgkE
+         G7lcz44h63m1W+kPI516iYGMyLoFvD1fGd3uI/f52kNYT2D2ODi67b0F2TuayhZmjtus
+         0BuEPWmkeF/sDBf235aLqt9cTI7cK/pDDedQs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748013532; x=1748618332;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=KUlujxEaEdi/ZnXb2x/YmWYgGPLEJZ1h5LPkWsQToHU=;
-        b=o5LTPj1BvAR84F243XuiQuoIitOMtt/tkKRuVAvwupdkEFcRQjA2P+do0Y4+Nup/9o
-         UV8suwfwsT0OpRRYBhQ7UyCHgX5vr3IPGAwRqXeZSX6Ke+uMeyraeUECaUzbFpFsNHtE
-         Xf/emSD06pi3GmUPHjvlxCbkYE2VKqN6Y8ZXYxr8LVZZFRrC31lSUtS1qMPL6kdxwMo3
-         5+PBOk8TtFPl4JoZE4hbCng8OeMDcIvHW8JeVhG8uDNCoynx+pQ9bUQv5bDFBMZ91kOZ
-         ZWZmadtElYfZkLf7iYEyLOkGvJorbohSazjno8wFakLjDO+nu+Pk67skPJlZfbz3w1N4
-         TFKQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV7TuK6b9GA7e32GLN2F8uIygmmJn6S6Q2yFIRiVsTlkNPDaecRu61mxQXjkIeu2eAfZ7B0f7Vn3Pxx@vger.kernel.org, AJvYcCVMDNymurl/O2wT3LJgXIP1Z0ZMA2bMqqABB/MKRgfXKogDIGMVG0rd4M6waQ0/19Qc6W/raUWUojliD12p@vger.kernel.org, AJvYcCVOmsCxSxF22VtGdKwOzZ4YAEU9tSK6zS5tYmOF0zn0MkmatLNIXJvz3FPTOj9QBuWvhK03vvUJSfnL8syAgk929cA=@vger.kernel.org, AJvYcCWBTNtJl0e2oNI/S83Ct9pPnwpY6+KzXP2rVG61e0TeuDouo4DuxJxfRd/4921biyPxxeE1h6gmepZy@vger.kernel.org
-X-Gm-Message-State: AOJu0YySNrQ08RxwsyRfrfp3wKxmQvN3Yoxi4m5nCKFqcPlIKZY9sJSk
-	1wIhlEt59CeSYiZx/S2TWykXtz1Ur2nbqI63bh5BOt+wHdxweVRVkyXmtACCc9porUQ=
-X-Gm-Gg: ASbGncujxzWLqIzk1aV405c4dBZ+dFtmDYJThH0G9wFZ9B5q0ifEk98yRSam8MVJ9FH
-	UtJVKrnoFjJkfLWtdfQwO2OWUpmh/jvMNZkxjP4F/6EyX9yTsbxW0oJg9XmnECklpswXJ2Tc5GB
-	wzmlecQlqZjVJuqx78y0M8SkGWl0Gtai3Rt1O0T2nHG67oi6B0+aRyf5VK2WzFhX9yg/rIM6L46
-	OC+NnxvZoBE31rLcpLDgqRqAtSQ2Il0fE544jK+wJLUaOJ0HvOVLsm4YHmfK3BGs1HwO+7Na3l5
-	V7xqhJyLAiECFbvA60YCD1txMN0UN2PCpQWVmTLq7azOr71Ctk89ByFNiCROJgl//RD3IUCZuoR
-	CwmBA7+hABxAWbQ==
-X-Google-Smtp-Source: AGHT+IHp8A2Qx2QDuA8jJndKxg3Q6eGK3Vg4y2WlPh7F6jfevPb6GrHKE6qIihI7fR3bDFny08J/nA==
-X-Received: by 2002:a05:6214:400a:b0:6f4:c423:67b4 with SMTP id 6a1803df08f44-6f8b2c59904mr445633896d6.10.1748013531694;
-        Fri, 23 May 2025 08:18:51 -0700 (PDT)
-Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com. [209.85.219.47])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f8b096583csm115951986d6.92.2025.05.23.08.18.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 23 May 2025 08:18:50 -0700 (PDT)
-Received: by mail-qv1-f47.google.com with SMTP id 6a1803df08f44-6f2b04a6169so102859696d6.1;
-        Fri, 23 May 2025 08:18:50 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUpj6T1aJm73lDbhjKixIV3CSFzh3PpeE58xG0EeT9qteoH4HzlfoHZL6hq5QLHhwN2EKCK+VBWgYNh@vger.kernel.org, AJvYcCWeOyv5Mt73xWB8IytjHSh7zlF3AohLa5JnLfGI30afGCLFr0+xXt0F9ySN47Xjef9iUDuw2guJ4rOlWUMj@vger.kernel.org, AJvYcCXCfHhOXRt6/KR80MHjnaqw0RFb75IGMVEq+qJdAh4es+LjB+pzPU9oNYH2XD1XUhH/EmK/33UvNu3D@vger.kernel.org, AJvYcCXKa2biDzn9BOS0LT9+CFeSCH1petbuD3JxdVLneqB1eWZkQ734Sntc1M9i44xOC92U15yRtYa3jNtM7VBlcmhL8lA=@vger.kernel.org
-X-Received: by 2002:a05:6214:1308:b0:6f8:a7c6:22ca with SMTP id
- 6a1803df08f44-6f8b2c5f2bbmr442981216d6.16.1748013530224; Fri, 23 May 2025
- 08:18:50 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1748013554; x=1748618354;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=7tMirZWfsi+MGV8gZCAIGOzywZSQ1Z0yW01g9pidm94=;
+        b=Of/RhC3ov1BGEqnLc/DSshHPXI5oCVQWtuXtNm3Jr71fbjHp9XDDuzwneYemS1VPHY
+         7YRZSzkC0+6bz+zaV+HjGevSTHIZiqi/Q/FRDBsx5RqNCAk8B3zyIzp4O6p9onBmz5qy
+         sCuKfFD3SofbD3CSG65t2/cKdFYXMG2BMxTNOulGqJyKe13uvKfvDnC4gM4TZG/unqSj
+         CY4QXgDU5zc7CNFdA1AhohZ0+Sfb67ZnQdEOsdrDDS9IabX40fER2cFPIt9+mKATeX39
+         Yd+HALd3ivag78BAzYwyonf92PbzjL7CHPJ3tNZZvlLBatiBpxRBQaiwa0ZKuRzno0y6
+         s1LA==
+X-Gm-Message-State: AOJu0YzbraagKtQws+Ie5EWsNj1X1fdZw7bmhB9ltjsItVej+fhTE1Pl
+	my7tPo8uXpXG9nSaULJ+4KDyOtktQLs7nXMvlEWJ1vDxGhzDqgT52n9gY0w5omKIQ+fMNI4oOZN
+	nQ9trHsR8GESSWKsnpYuQReGOhVvASXEZgMqVTtlKow==
+X-Gm-Gg: ASbGnctFD8us/oxHy7JZfw8RxeV1FR3cBpTboX7JuKek8XtpGjvPUf7Sap7vHdtvZzE
+	7Vi0RjZtJKTCSNLtytyazWdMVAfp5hfgdJ91pUU8+g/sXGYY0wFsraghjNIyR/5VmsJOJmi76Ea
+	XPyyf6l5lsQ6oZjxkkZCbhLO6rpsSkGdcFaJTQoQY=
+X-Google-Smtp-Source: AGHT+IHxEZibSLTC27ty9k9SE4RestS9NJakh2D2/0B6bmuMwt7+v2CHzq0G2guIGMTCMUwepBrci7zFuK4tcost1sw=
+X-Received: by 2002:a05:690c:d87:b0:70d:ecdd:9bd1 with SMTP id
+ 00721157ae682-70decdda042mr174164037b3.24.1748013554100; Fri, 23 May 2025
+ 08:19:14 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250512184302.241417-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20250512184302.241417-5-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20250512184302.241417-5-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Fri, 23 May 2025 17:18:38 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdX5_P4R43HOPuZc3JSAOQ5O2xOBDVhVVg1SxU1ucPdbPA@mail.gmail.com>
-X-Gm-Features: AX0GCFsg_XSn4r6_gauahCGD7VbDyx79Ezig6sAhQFHM9qfPwmiMO6CmvkImCB0
-Message-ID: <CAMuHMdX5_P4R43HOPuZc3JSAOQ5O2xOBDVhVVg1SxU1ucPdbPA@mail.gmail.com>
-Subject: Re: [PATCH v5 4/4] drm: renesas: rz-du: mipi_dsi: Add support for
- RZ/V2H(P) SoC
-To: Prabhakar <prabhakar.csengg@gmail.com>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>
-Cc: Andrzej Hajda <andrzej.hajda@intel.com>, Neil Armstrong <neil.armstrong@linaro.org>, 
-	Robert Foss <rfoss@kernel.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
-	Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Biju Das <biju.das.jz@bp.renesas.com>, Magnus Damm <magnus.damm@gmail.com>, 
-	dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
-	linux-clk@vger.kernel.org, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+References: <20250424062154.2999219-1-dario.binacchi@amarulasolutions.com> <174643143452.2950397.16722215892279685541.b4-ty@linaro.org>
+In-Reply-To: <174643143452.2950397.16722215892279685541.b4-ty@linaro.org>
+From: Dario Binacchi <dario.binacchi@amarulasolutions.com>
+Date: Fri, 23 May 2025 17:19:03 +0200
+X-Gm-Features: AX0GCFvfElR9-JsrdMn4qtdpNkk4pgwm-5OPkXQJhrc9LVmxjY0io-Yr760AW04
+Message-ID: <CABGWkvq=pXhrzyCV2ABvQ3uwx4qKYL_G9280p5ECb8nsJ859yw@mail.gmail.com>
+Subject: Re: (subset) [PATCH v12 00/19] Support spread spectrum clocking for
+ i.MX8M PLLs
+To: Abel Vesa <abel.vesa@linaro.org>
+Cc: linux-kernel@vger.kernel.org, Peng Fan <peng.fan@nxp.com>, 
+	Stephen Boyd <sboyd@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
+	linux-amarula@amarulasolutions.com, Abel Vesa <abelvesa@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Fabio Estevam <festevam@gmail.com>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Michael Turquette <mturquette@baylibre.com>, 
+	Pengutronix Kernel Team <kernel@pengutronix.de>, Rob Herring <robh@kernel.org>, 
+	Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, imx@lists.linux.dev, 
+	linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, 
+	Michael Nazzareno Trimarchi <michael@amarulasolutions.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Prabhakar, Fabrizio,
+Hello Abel,
 
-On Mon, 12 May 2025 at 20:43, Prabhakar <prabhakar.csengg@gmail.com> wrote:
-> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+On Mon, May 5, 2025 at 9:52=E2=80=AFAM Abel Vesa <abel.vesa@linaro.org> wro=
+te:
 >
-> Add DSI support for Renesas RZ/V2H(P) SoC.
 >
-> Co-developed-by: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
-> Signed-off-by: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-
-Thanks for your patch!
-
-> --- a/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c
-> +++ b/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c
-> @@ -5,6 +5,7 @@
->   * Copyright (C) 2022 Renesas Electronics Corporation
->   */
->  #include <linux/clk.h>
-> +#include <linux/clk/renesas-rzv2h-dsi.h>
->  #include <linux/delay.h>
->  #include <linux/io.h>
->  #include <linux/iopoll.h>
-> @@ -30,6 +31,9 @@
+> On Thu, 24 Apr 2025 08:21:30 +0200, Dario Binacchi wrote:
+> > This version keeps the version v9 patches that can be merged and
+> > removes the patches that will need to be modified in case Peng's
+> > PR https://github.com/devicetree-org/dt-schema/pull/154 is accepted.
+> > The idea is to speed up the merging of the patches in the series
+> > that have already been reviewed and are not dependent on the
+> > introduction of the assigned-clocks-sscs property, and postpone
+> > the patches for spread spectrum to a future series once it becomes
+> > clear what needs to be done.
+> >
+> > [...]
 >
->  #define RZ_MIPI_DSI_FEATURE_16BPP      BIT(0)
+> Applied, thanks!
+
+I was surprised to see that the series has been removed from linux-next.
+
+It=E2=80=99s been 8 months since the first version dated September 28, 2024=
+.
+The most critical phase was version 3 -
+https://lore.kernel.org/all/20241106090549.3684963-1-dario.binacchi@amarula=
+solutions.com/
+-
+where two key issues emerged:
+
+ 1 The CCM design is flawed because "in the current design, CCM is
+   taken as the producer of CLK_IMX8M_VIDEO_PLL, not the consumer."
+
+ 2 A driver for anatop needs to be implemented because "using clocks
+   to replace fsl,ssc-clocks is possible under CCM mode, but you need
+   to develop the fsl,imx8mm-anatop clock driver."
+
+These development guidelines, agreed upon with Krzysztof and Peng,
+enabled a coherent implementation of both the DT bindings and the
+code. The following versions, from v4 to v8, were necessary to
+review and refine those implementations, bringing us to January 2025.
+
+At that point, Peng opened a separate pull request -
+https://github.com/devicetree-org/dt-schema/pull/154 -
+for the definition of general-purpose DT bindings for spread spectrum
+handling, which ended up invalidating mine.
+
+While waiting for his pull request to be accepted, I submitted version 9,
+trying to at least get the patches for the anatop driver merged,
+eventually reaching version 12.
+
+This final version was merged, but then a few days ago it was dropped.
+
+As it stands now:
+
+- We still don=E2=80=99t have proper spread spectrum handling
+- Peng=E2=80=99s pull request has been stalled since February 20
+- We don=E2=80=99t have a driver for anatop
+- The CCM design remains flawed
+- Not even the first 4 patches of the series were merged =E2=80=94 these we=
+re
+  simply a replication for i.MX8MM and i.MX8MP of patch
+  bedcf9d1dcf88 ("clk: imx: rename video\_pll1 to video\_pll"), which
+  was already merged some time ago.
+
+Could you please let me know if you're still interested in this series?
+If so, could you suggest how to resolve the issues that led you to drop it?
+
+Thanks and regards,
+Dario
+
 >
-> +#define RZV2H_MIPI_DPHY_FOUT_MIN_IN_MEGA       (80 * MEGA)
-> +#define RZV2H_MIPI_DPHY_FOUT_MAX_IN_MEGA       (1500 * MEGA)
-
-RZV2H_MIPI_DPHY_FOUT_M{IN,AX}_IN_MHZ?
-
-> +
->  struct rzg2l_mipi_dsi;
+> [01/19] dt-bindings: clock: imx8mm: add VIDEO_PLL clocks
+>         commit: 20e5d201b5d8f830e702d7d183f6b1b246b78d8a
+> [02/19] clk: imx8mm: rename video_pll1 to video_pll
+>         commit: 26a33196b5b68cf199b6c4283a254aa92d2aaf4b
+> [03/19] dt-bindings: clock: imx8mp: add VIDEO_PLL clocks
+>         commit: 2d50415e2457c6f6621c2faa3b01b11150fb9c67
+> [04/19] clk: imx8mp: rename video_pll1 to video_pll
+>         commit: 21bb969f608cefd8d847cf6eb50a193d9f1fbb87
+> [05/19] dt-bindings: clock: imx8m-anatop: add oscillators and PLLs
+>         commit: 2ba124053687c933031a6dc5b2e16ceaca250934
+> [10/19] clk: imx: add hw API imx_anatop_get_clk_hw
+>         commit: 17e3c1a272d97e49b4f3fbfe1f1b889e120d2be8
+> [11/19] clk: imx: add support for i.MX8MM anatop clock driver
+>         commit: 3cbc38cf42ca42d2dc9a93c949e0381ff919df71
+> [12/19] clk: imx: add support for i.MX8MN anatop clock driver
+>         commit: 80badb1d7264e83b512475898e7459f464a009c9
+> [13/19] clk: imx: add support for i.MX8MP anatop clock driver
+>         commit: 4c82bbe8b5437c7f16b2891ce33210c0f1410597
+> [14/19] clk: imx8mp: rename ccm_base to base
+>         commit: 1a77907dbbecfbe5e6a1aec28afd49a1dc184b7a
+> [16/19] dt-bindings: clock: imx8m-clock: add PLLs
+>         commit: 6a55647af3334f1d935ece67de4a838a864b53fc
 >
->  struct rzg2l_mipi_dsi_hw_info {
-> @@ -40,6 +44,7 @@ struct rzg2l_mipi_dsi_hw_info {
->                               u64 *hsfreq_millihz);
->         unsigned int (*dphy_mode_clk_check)(struct rzg2l_mipi_dsi *dsi,
->                                             unsigned long mode_freq);
-> +       const struct rzv2h_pll_div_limits *cpg_dsi_limits;
->         u32 phy_reg_offset;
->         u32 link_reg_offset;
->         unsigned long max_dclk;
-> @@ -47,6 +52,11 @@ struct rzg2l_mipi_dsi_hw_info {
->         u8 features;
->  };
->
-> +struct rzv2h_dsi_mode_calc {
-> +       unsigned long mode_freq;
-> +       u64 mode_freq_hz;
+> Best regards,
+> --
+> Abel Vesa <abel.vesa@linaro.org>
 
-Interesting... I guess mode_freq is not in Hz?
 
-> +};
-> +
->  struct rzg2l_mipi_dsi {
->         struct device *dev;
->         void __iomem *mmio;
 
-> +static u16 rzv2h_dphy_find_ulpsexit(unsigned long freq)
-> +{
-> +       static const unsigned long hsfreq[] = {
-> +               1953125UL,
-> +               3906250UL,
-> +               7812500UL,
-> +               15625000UL,
-> +       };
-> +       static const u16 ulpsexit[] = {49, 98, 195, 391};
-> +       unsigned int i;
-> +
-> +       for (i = 0; i < ARRAY_SIZE(hsfreq); i++) {
-> +               if (freq <= hsfreq[i])
-> +                       break;
-> +       }
-> +
-> +       if (i == ARRAY_SIZE(hsfreq))
-> +               i -= 1;
+--=20
 
-i--
+Dario Binacchi
 
-> +
-> +       return ulpsexit[i];
-> +}
-> +
-> +static u16 rzv2h_dphy_find_timings_val(unsigned long freq, u8 index)
-> +{
-> +       const struct rzv2h_mipi_dsi_timings *timings;
-> +       u16 i;
-> +
-> +       timings = &rzv2h_dsi_timings_tables[index];
-> +       for (i = 0; i < timings->len; i++) {
-> +               unsigned long hsfreq = timings->hsfreq[i] * 10000000UL;
+Senior Embedded Linux Developer
 
-(I wanted to say "MEGA", but then I noticed the 7th zero ;-)
+dario.binacchi@amarulasolutions.com
 
-10 * MEGA?
+__________________________________
 
-> +
-> +               if (freq <= hsfreq)
-> +                       break;
-> +       }
-> +
-> +       if (i == timings->len)
-> +               i -= 1;
 
-i--
+Amarula Solutions SRL
 
-> +
-> +       return timings->start_index + i;
-> +};
-> +
->  static void rzg2l_mipi_dsi_phy_write(struct rzg2l_mipi_dsi *dsi, u32 reg, u32 data)
->  {
->         iowrite32(data, dsi->mmio + dsi->info->phy_reg_offset + reg);
-> @@ -308,6 +479,158 @@ static int rzg2l_dphy_conf_clks(struct rzg2l_mipi_dsi *dsi, unsigned long mode_f
->         return 0;
->  }
->
-> +static unsigned int rzv2h_dphy_mode_clk_check(struct rzg2l_mipi_dsi *dsi,
-> +                                             unsigned long mode_freq)
-> +{
-> +       struct rzv2h_plldsi_parameters *dsi_parameters = &dsi->dsi_parameters;
-> +       u64 hsfreq_millihz, mode_freq_hz, mode_freq_millihz;
-> +       struct rzv2h_plldsi_parameters cpg_dsi_parameters;
-> +       unsigned int bpp, i;
-> +
-> +       bpp = mipi_dsi_pixel_format_to_bpp(dsi->format);
-> +
-> +       for (i = 0; i < 10; i += 1) {
-> +               unsigned long hsfreq;
-> +               bool parameters_found;
-> +
-> +               mode_freq_hz = mode_freq * MILLI + i;
+Via Le Canevare 30, 31100 Treviso, Veneto, IT
 
-KILO?
+T. +39 042 243 5310
+info@amarulasolutions.com
 
-And I guess you want to use mul_u32_u32(), as mode_freq_hz is u64?
-
-> +               mode_freq_millihz = mode_freq_hz * MILLI * 1ULL;
-
-Why * 1ULL?
-
-> +               parameters_found = rzv2h_dsi_get_pll_parameters_values(dsi->info->cpg_dsi_limits,
-> +                                                                      &cpg_dsi_parameters,
-> +                                                                      mode_freq_millihz);
-> +               if (!parameters_found)
-> +                       continue;
-> +
-> +               hsfreq_millihz = DIV_ROUND_CLOSEST_ULL(cpg_dsi_parameters.freq_millihz * bpp,
-> +                                                      dsi->lanes);
-> +               parameters_found = rzv2h_dsi_get_pll_parameters_values(&rzv2h_plldsi_div_limits,
-> +                                                                      dsi_parameters,
-> +                                                                      hsfreq_millihz);
-> +               if (!parameters_found)
-> +                       continue;
-> +
-> +               if (abs(dsi_parameters->error_millihz) >= 500)
-> +                       continue;
-> +
-> +               hsfreq = DIV_ROUND_CLOSEST_ULL(hsfreq_millihz, MILLI);
-> +               if (hsfreq >= RZV2H_MIPI_DPHY_FOUT_MIN_IN_MEGA &&
-> +                   hsfreq <= RZV2H_MIPI_DPHY_FOUT_MAX_IN_MEGA) {
-> +                       dsi->mode_calc.mode_freq_hz = mode_freq_hz;
-> +                       dsi->mode_calc.mode_freq = mode_freq;
-> +                       return MODE_OK;
-> +               }
-> +       }
-> +
-> +       return MODE_CLOCK_RANGE;
-> +}
-
-> --- a/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi_regs.h
-> +++ b/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi_regs.h
-> @@ -40,6 +40,39 @@
->  #define DSIDPHYTIM3_THS_TRAIL(x)       ((x) << 8)
->  #define DSIDPHYTIM3_THS_ZERO(x)                ((x) << 0)
->
-> +/* RZ/V2H DPHY Registers */
-> +#define PLLENR                         0x000
-> +#define PLLENR_PLLEN                   BIT(0)
-> +
-> +#define PHYRSTR                                0x004
-> +#define PHYRSTR_PHYMRSTN               BIT(0)
-> +
-> +#define PLLCLKSET0R                    0x010
-> +#define PLLCLKSET0R_PLL_S(x)           ((x) << 0)
-
- #define PLLCLKSET0R_PLL_S GENMASK(2, 0)
-
-and after that you can use FIELD_PREP(PLLCLKSET0R_PLL_S, x) in the code.
-More opportunities for masks below...
-
-> +#define PLLCLKSET0R_PLL_P(x)           ((x) << 8)
-> +#define PLLCLKSET0R_PLL_M(x)           ((x) << 16)
-> +
-> +#define PLLCLKSET1R                    0x014
-> +#define PLLCLKSET1R_PLL_K(x)           ((x) << 0)
-> +
-> +#define PHYTCLKSETR                    0x020
-> +#define PHYTCLKSETR_TCLKTRAILCTL(x)    ((x) << 0)
-> +#define PHYTCLKSETR_TCLKPOSTCTL(x)     ((x) << 8)
-> +#define PHYTCLKSETR_TCLKZEROCTL(x)     ((x) << 16)
-> +#define PHYTCLKSETR_TCLKPRPRCTL(x)     ((x) << 24)
-> +
-> +#define PHYTHSSETR                     0x024
-> +#define PHYTHSSETR_THSEXITCTL(x)       ((x) << 0)
-> +#define PHYTHSSETR_THSTRAILCTL(x)      ((x) << 8)
-> +#define PHYTHSSETR_THSZEROCTL(x)       ((x) << 16)
-> +#define PHYTHSSETR_THSPRPRCTL(x)       ((x) << 24)
-> +
-> +#define PHYTLPXSETR                    0x028
-> +#define PHYTLPXSETR_TLPXCTL(x)         ((x) << 0)
-> +
-> +#define PHYCR                          0x030
-> +#define PHYCR_ULPSEXIT(x)              ((x) << 0)
-> +
->  /* --------------------------------------------------------*/
->
->  /* Link Status Register */
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+www.amarulasolutions.com
