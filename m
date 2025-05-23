@@ -1,359 +1,166 @@
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from neil.brown.name (neil.brown.name [103.29.64.221])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76A8020C47A
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 07:41:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA3B02036ED;
+	Fri, 23 May 2025 07:42:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.29.64.221
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747986097; cv=none; b=JdTyuzpn71BRASPfQsNSYGDJRZH8hVAsLtx74Ot0oKFQBUt10DbbyG6BBotE0hF6eYcF+9Zd0oJRKjMGJYAhBdjQUFzT4s9NsuFjjANvDXtgjBrIf7N6k5UhpVpN8MBs53jlEtQ94sYxobx/I+Vqzci9ePwIYoixlMfANLqBHCI=
+	t=1747986166; cv=none; b=ADp6s1BnqVe3uN5FlvMmgAqDb3rgRDcbg2CE/JRY16B4ForqfNa1XyKngdTz4vkEpqhu2EOoUv3sqUVl7PLdjUhsTK+yLCL4Cxbqqh6/cXp40SNgUsBVu/RH9C1EjOKjaycG/NH3WYAl5w/egycxh/hu6K9zz/E4oSqQ/A0RYow=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747986097; c=relaxed/simple;
-	bh=Gcv7fQFjBsoA/VDKo34AnJZEVQyqgUBDLpgqJ7oE2cg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sDhNDTMf7qwDr7kvXGv2E3nWS9dU8Cy1td/f3XBwJjILs0w5ZXJL89wDoCVG3giAeVZdJtTHJxWKORVz3C5kc00U/Q82otJfFQ2nFhAZWxrHKr1v9PB3sAR/y2VJetVPECOmGI37ThAmk6J8nVk10/H4Xj9v1Za0Kt/Dddtjfms=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=ol7Z2OOU; arc=none smtp.client-ip=209.85.218.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="ol7Z2OOU"
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-ad53a96baf9so1150041066b.3
-        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 00:41:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tuxon.dev; s=google; t=1747986093; x=1748590893; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=wfbz3z2R9vaxFE03HpNykyLrdDEX10Q8GHXcIKDKwck=;
-        b=ol7Z2OOUZLPExex2rIjl+jTFspk/mz8C8n5P1Yt33CpoD5WDBWT7LodxS9gI52SHsK
-         XK8+m/9c+/dc7HC/EnXuCJCI8sfaZD2RaYerMHaowMvneJ6Vo/l1/x7xhSuqSMjXNRf7
-         RPTYtYFo5+PAoEPiEbC0871XsKaCY41iKT5kyhpp2tWWcgjF2hfyW+3UDEEiJaNI6mXq
-         BJf50ljKrjv8/V10kAxlyJYpajwydqBFLYKWZx01XiR7G6StqfqZ0x3z1s3mGlRsRMtO
-         sgRFfvMssKk2c+0+DdOCLRUldN00pLBPS3aUSpp7Nv2N0iwEGerUmhGo/LVtNlH9dHUK
-         in7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747986093; x=1748590893;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=wfbz3z2R9vaxFE03HpNykyLrdDEX10Q8GHXcIKDKwck=;
-        b=iJbhWAppNFwQSbQIGNfsU6XWIQ7de5+K2JgSa073ZIs7MVvTWMwZvzfG1swyDL5RCo
-         ckKOiVqo6BXl0FIdey6mXlBmW47m0XERRWNx6tvpFwdFqzVG++IwRjdVUutc7iauIcga
-         rYWgmgbPcEdWxyPXOmIaFuIArBQgVfXwHARLw4nQ57HdlBLI7WctOGp9CxhB6lMNJrdA
-         zN4preBLaPpfzObzXDXhE9Sy81G+imkbxoVtzzfkFdxRPY8jvTng/owhhZ/QA7KlMHRO
-         xtZ032piEV0priAA8pZheqJdr/+3G/jmoVNQOaj9xS9alYG98dAY/XM9o9rt8mmY22YD
-         6vVA==
-X-Forwarded-Encrypted: i=1; AJvYcCXaoUSAsoKRSKKV77XhDcXlH4Cy1mXxys4lq+/eozBdLKBn1Vskw+kakQBzeQAeYbWKZLBDzkxI53Muuoc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyZX1QRi7dWWUlFRyZssXXSDnyPixbk1vklw7QA5PmLWlOamLFy
-	jYLYI83d22r8Nt5XJHF5VlT4oNufvLIoBL6V2DvlBXRug8fIZTzBYuz8BPC0zGwuLyg=
-X-Gm-Gg: ASbGnct8t+ah/kGR8Wg8h+MR5Y7QJ9U34Scaf+XEFY7jZGZFoA5gAoSSqVwA6Gjh81i
-	2IamAG2yBhx4AlqdcBwOX4o3oIcjQ/lcfuuaVvoLu4etekShjNXyZIcUKmqqV7JH4tVv/wsf+Rp
-	l17zqBAlJ3TzbqIn28KXn/MNnkNdtPEFrF49NisI6p2+qbMZCrT5dde8oNMJGAhpRW6U5HmVrLh
-	pIApph4/HeI0b8k9rX1Kep/A6ZQdZkkoSrH8JvlaHpHzg96ZndUuc/Z/TNgLaHtBlqGnqoWpG1Z
-	WrKZ15Snif/EmitKQjaiRhKK2qGTCk2QCy8F5GlISye1vqGeimlPJFwzhPY=
-X-Google-Smtp-Source: AGHT+IFLWxVxo5oDe1VEFrnubK+bRZuRiU3pZfFFv6DnQEzoLbPR9OdPPq4oz3A7rx+fGDSHaEubkA==
-X-Received: by 2002:a17:907:3f96:b0:ad4:f5ef:84ae with SMTP id a640c23a62f3a-ad52d5afb41mr2810680366b.54.1747986092365;
-        Fri, 23 May 2025 00:41:32 -0700 (PDT)
-Received: from [192.168.50.4] ([82.78.167.58])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad52d443a0fsm1201993066b.97.2025.05.23.00.41.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 23 May 2025 00:41:31 -0700 (PDT)
-Message-ID: <b0d15a62-e164-4a8a-b4c7-77d9c3b2e7b2@tuxon.dev>
-Date: Fri, 23 May 2025 10:41:30 +0300
+	s=arc-20240116; t=1747986166; c=relaxed/simple;
+	bh=SOhrDQ8XUaAcb81YDu7fSBLPcvirijmOaA1uBw7l+h8=;
+	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
+	 References:Date:Message-id; b=m0DW7MsHN6KoljHUxy4EiwMS58UL59LldyLFBnAXnRD7OUQtJMFL6ThngcWycNLQsXkXJhwKicyLFSixvvUP5Gw6wvLGrolE2R0imWwSyXIEKXqQZxaBwjNVm0+O8wt2XKdq0pU2hmzIMLbNCQUWOxlBgjayycywy6r/ciuf94E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name; spf=pass smtp.mailfrom=neil.brown.name; arc=none smtp.client-ip=103.29.64.221
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=neil.brown.name
+Received: from 196.186.233.220.static.exetel.com.au ([220.233.186.196] helo=home.neil.brown.name)
+	by neil.brown.name with esmtp (Exim 4.95)
+	(envelope-from <mr@neil.brown.name>)
+	id 1uIN3B-008sAy-0k;
+	Fri, 23 May 2025 07:42:41 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 4/8] clk: renesas: rzg2l-cpg: Add support for MSTOP in
- clock enable/disable API
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: mturquette@baylibre.com, sboyd@kernel.org, robh@kernel.org,
- krzk+dt@kernel.org, conor+dt@kernel.org, magnus.damm@gmail.com,
- linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-References: <20250514090415.4098534-1-claudiu.beznea.uj@bp.renesas.com>
- <20250514090415.4098534-5-claudiu.beznea.uj@bp.renesas.com>
- <CAMuHMdWNrU=XOZr3dKKXQikzCzJ1oUPGQofWFdRX9x6rhYn3XA@mail.gmail.com>
-From: Claudiu Beznea <claudiu.beznea@tuxon.dev>
-Content-Language: en-US
-In-Reply-To: <CAMuHMdWNrU=XOZr3dKKXQikzCzJ1oUPGQofWFdRX9x6rhYn3XA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+From: "NeilBrown" <neil@brown.name>
+To: "Yan, Haixiao (CN)" <haixiao.yan.cn@windriver.com>
+Cc:
+ chuck.lever@oracle.com, stable@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: nfs mount failed with ipv6 addr
+In-reply-to: <73509a8c-7141-49d7-b6d4-25a271fbad2c@windriver.com>
+References: <>, <73509a8c-7141-49d7-b6d4-25a271fbad2c@windriver.com>
+Date: Fri, 23 May 2025 17:42:40 +1000
+Message-id: <174798616079.608730.9700383239346135852@noble.neil.brown.name>
 
-Hi, Geert,
+On Fri, 23 May 2025, Yan, Haixiao (CN) wrote:
+> On 5/23/2025 7:21 AM, NeilBrown wrote:
+> > CAUTION: This email comes from a non Wind River email account!
+> > Do not click links or open attachments unless you recognize the sender an=
+d know the content is safe.
+> >
+> > On Thu, 22 May 2025, Haixiao Yan wrote:
+> >> On 2025/5/22 07:32, NeilBrown wrote:
+> >>> CAUTION: This email comes from a non Wind River email account!
+> >>> Do not click links or open attachments unless you recognize the sender =
+and know the content is safe.
+> >>>
+> >>> On Thu, 22 May 2025, Yan, Haixiao (CN) wrote:
+> >>>> On linux-5.10.y, my testcase run failed:
+> >>>>
+> >>>> root@intel-x86-64:/opt/wr-test/testcases/userspace/nfs-utils_v6# mount=
+ -t nfs [::1]:/mnt/nfs_root /mnt/v6 -o nfsvers=3D3
+> >>>> mount.nfs: requested NFS version or transport protocol is not supported
+> >>>>
+> >>>> The first bad commit is:
+> >>>>
+> >>>> commit 7229200f68662660bb4d55f19247eaf3c79a4217
+> >>>> Author: Chuck Lever <chuck.lever@oracle.com>
+> >>>> Date:   Mon Jun 3 10:35:02 2024 -0400
+> >>>>
+> >>>>      nfsd: don't allow nfsd threads to be signalled.
+> >>>>
+> >>>>      [ Upstream commit 3903902401451b1cd9d797a8c79769eb26ac7fe5 ]
+> >>>>
+> >>>>
+> >>>> Here is the test log:
+> >>>>
+> >>>> root@intel-x86-64:/opt/wr-test/testcases/userspace/nfs-utils_v6# dd if=
+=3D/dev/zero of=3D/tmp/nfs.img bs=3D1M count=3D100
+> >>>> 100+0 records in
+> >>>> 100+0 records out
+> >>>> 104857600 bytes (105 MB, 100 MiB) copied, 0.0386658 s, 2.7 GB/s
+> >>>> root@intel-x86-64:/opt/wr-test/testcases/userspace/nfs-utils_v6# mkfs =
+/tmp/nfs.img
+> >>>> mke2fs 1.46.1 (9-Feb-2021)
+> >>>> Discarding device blocks:   1024/102400=08=08=08=08=08=08=08=08=08=08=
+=08=08=08             =08=08=08=08=08=08=08=08=08=08=08=08=08done
+> >>>> Creating filesystem with 102400 1k blocks and 25688 inodes
+> >>>> Filesystem UUID: 77e3bc56-46bb-4e5c-9619-d9a0c0999958
+> >>>> Superblock backups stored on blocks:
+> >>>>         8193, 24577, 40961, 57345, 73729
+> >>>>
+> >>>> Allocating group tables:  0/13=08=08=08=08=08     =08=08=08=08=08done
+> >>>> Writing inode tables:  0/13=08=08=08=08=08     =08=08=08=08=08done
+> >>>> Writing superblocks and filesystem accounting information:  0/13=08=08=
+=08=08=08     =08=08=08=08=08done
+> >>>> root@intel-x86-64:/opt/wr-test/testcases/userspace/nfs-utils_v6# mount=
+ /tmp/nfs.img /mnt
+> >>>>
+> >>>> root@intel-x86-64:/opt/wr-test/testcases/userspace/nfs-utils_v6# mkdir=
+ /mnt/nfs_root
+> >>>>
+> >>>> root@intel-x86-64:/opt/wr-test/testcases/userspace/nfs-utils_v6# touch=
+ /etc/exports
+> >>>>
+> >>>> root@intel-x86-64:/opt/wr-test/testcases/userspace/nfs-utils_v6# echo =
+'/mnt/nfs_root *(insecure,rw,async,no_root_squash)' >> /etc/exports
+> >>>>
+> >>>> root@intel-x86-64:/opt/wr-test/testcases/userspace/nfs-utils_v6# /opt/=
+wr-test/bin/svcwp.sh nfsserver restart
+> >>>> stopping mountd: done
+> >>>> stopping nfsd: ..........failed
+> >>>>     using signal 9:
+> >>>> ..........failed
+> >>> What does your "nfsserver" script do to try to stop/restart the nfsd?
+> >>> For a very long time the approved way to stop nfsd has been to run
+> >>> "rpc.nfsd 0".  My guess is that whatever script you are using still
+> >>> trying to send a signal to nfsd.  That no longer works.
+> >>>
+> >>> Unfortunately the various sysv-init scripts for starting/stopping nfsd
+> >>> have never been part of nfs-utils so we were not able to update them.
+> >>> nfs-utils *does* contain systemd unit files for sites which use systemd.
+> >>>
+> >>> If you have a non-systemd way of starting/stopping nfsd, we would be
+> >>> happy to make the relevant scripts part of nfs-utils so that we can
+> >>> ensure they stay up to date.
+> >> Actually, we use  service nfsserver restart  =3D>
+> >> /etc/init.d/nfsserver =3D>
+> >>
+> >> stop_nfsd(){
+> >>       # WARNING: this kills any process with the executable
+> >>       # name 'nfsd'.
+> >>       echo -n 'stopping nfsd: '
+> >>       start-stop-daemon --stop --quiet --signal 1 --name nfsd
+> >>       if delay_nfsd || {
+> >>           echo failed
+> >>           echo ' using signal 9: '
+> >>           start-stop-daemon --stop --quiet --signal 9 --name nfsd
+> >>           delay_nfsd
+> >>       }
+> >>       then
+> >>           echo done
+> >>       else
+> >>           echo failed
+> >>       fi
+> > The above should all be changed to
+> >     echo -n 'stopping nfsd: '
+> >     rpc.nfsd 0
+> >     echo done
+> >
+> > or similar.  What distro are you using?
+> >
+> > I can't see how this would affect your problem with IPv6 but it would be
+> > nice if you could confirm that IPv6 still doesn't work even after
+> > changing the above.
+> > What version of nfs-utils are you using?
+> > Are you should that the kernel has IPv6 enabled?  Does "ping6 ::1" work?
+> >
+> > NeilBrown
+> >
+> It works as expected.
+>=20
+> My distro is Yocto and nfs-utils 2.5.3.
 
-On 22.05.2025 17:46, Geert Uytterhoeven wrote:
-> Hi Claudiu,
-> 
-> On Wed, 14 May 2025 at 11:04, Claudiu <claudiu.beznea@tuxon.dev> wrote:
->> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
->>
->> The RZ/{G2L, V2L, G3S} CPG versions support a feature called MSTOP. Each
->> module has one or more MSTOP bits associated with it, and these bits need
->> to be configured along with the module clocks. Setting the MSTOP bits
->> switches the module between normal and standby states.
->>
->> Previously, MSTOP support was abstracted through power domains
->> (struct generic_pm_domain::{power_on, power_off} APIs). With this
->> abstraction, the order of setting the MSTOP and CLKON bits was as follows:
->>
->> Previous Order:
->> A/ Switching to Normal State (e.g., during probe):
->> 1/ Clear module MSTOP bit
->> 2/ Set module CLKON bit
->>
->> B/ Switching to Standby State (e.g., during remove):
->> 1/ Clear CLKON bit
->> 2/ Set MSTOP bit
->>
->> However, in some cases (when the clock is disabled through devres), the
->> order may have been (due to the issue described in link section):
->>
->> 1/ Set MSTOP bit
->> 2/ Clear CLKON bit
->>
->> Recently, the hardware team has suggested that the correct order to set
->> the MSTOP and CLKON bits is:
->>
->> Updated Order:
->> A/ Switching to Normal State (e.g., during probe):
->> 1/ Set CLKON bit
->> 2/ Clear MSTOP bit
->>
->> B/ Switching to Standby State (e.g., during remove):
->> 1/ Set MSTOP bit
->> 2/ Clear CLKON bit
->>
->> To prevent future issues due to incorrect ordering, the MSTOP setup has
->> now been implemented in rzg2l_mod_clock_endisable(), ensuring compliance
->> with the sequence suggested in Figure 41.5: Module Standby Mode Procedure
->> from the RZ/G3S HW manual, Rev1.10.
->>
->> Additionally, since multiple clocks of a single module may be mapped to a
->> single MSTOP bit, MSTOP setup is reference-counted.
->>
->> Furthermore, as all modules start in the normal state after reset, if the
->> module clocks are disabled, the module state is switched to standby. This
->> prevents keeping the module in an invalid state, as recommended by the
->> hardware team.
->>
->> Link: https://lore.kernel.org/all/20250215130849.227812-1-claudiu.beznea.uj@bp.renesas.com/
->> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
->> ---
->>
->> Changes in v2:
->> - udpated patch description to avoid plural in the configuration
->>   sequence description b/w MSTOP and CLK_ON
->> - use atomic type to store the usage counter; s/refcnt/usecnt/g
->> - moved MSTOP_OFF(), MSTOP_MASK() macros to rzg2l-cpg.c
->> - dropped struct mstp_clock::critical and use clk_hw_get_flags()
->>   instead to get the clock flags
->> - used unsigned int iterators in for loops
->> - keep memory allocated for a single list for clocks sharing the
->>   same MSTOP by updating the rzg2l_mod_clock_add_shared_mstop_clk();
->> - s/rzg2l_cpg_mstop_show/rzg2l_mod_clock_mstop_show/g,
->>   s/rzg2l_cpg_mstop/rzg2l_mod_clock_mstop/g,
->>   s/rzg2l_cpg_update_shared_mstop_clocks/rzg2l_mod_clock_update_shared_mstop_clks/g
->>    to keep the same naming conventions for functions handling mod clock MSTOP
->> - use the newly added for_each_mstp_clk() macro all over the code
-> 
-> Thanks for the update!
-> 
->> --- a/drivers/clk/renesas/rzg2l-cpg.c
->> +++ b/drivers/clk/renesas/rzg2l-cpg.c
-> 
->> @@ -1209,6 +1232,94 @@ struct mstp_clock {
->>                 else if (((hw) = __clk_get_hw((priv)->clks[(priv)->num_core_clks + i])) && \
->>                          ((mstp_clk) = to_mod_clock(hw)))
->>
->> +/* Need to be called with a lock held to avoid concurrent access to mstop->usecnt. */
->> +static void rzg2l_mod_clock_module_set_state(struct mstp_clock *clock,
->> +                                            bool standby)
->> +{
->> +       struct rzg2l_cpg_priv *priv = clock->priv;
->> +       struct mstop *mstop = clock->mstop;
->> +       bool update = false;
->> +       u32 value;
->> +
->> +       if (!mstop)
->> +               return;
->> +
->> +       value = MSTOP_MASK(mstop->conf) << 16;
->> +
->> +       if (standby) {
->> +               unsigned int criticals = 0;
->> +
->> +               for (unsigned int i = 0; i < clock->num_shared_mstop_clks; i++) {
->> +                       struct mstp_clock *clk = clock->shared_mstop_clks[i];
->> +
->> +                       if (clk_hw_get_flags(&clk->hw) & CLK_IS_CRITICAL)
->> +                               criticals++;
->> +               }
->> +
->> +               /*
->> +                * If this is a shared MSTOP and it is shared with critical clocks,
->> +                * and the system boots up with this clock enabled but no driver
->> +                * uses it the CCF will disable it (as it is unused). As we don't
->> +                * increment reference counter for it at registration (to avoid
->> +                * messing with clocks enabled at probe but later used by drivers)
->> +                * do not set the MSTOP here too if it is shared with critical
->> +                * clocks and ref counted only by those critical clocks.
->> +                */
->> +               if (criticals && criticals == atomic_read(&mstop->usecnt))
->> +                       return;
->> +
->> +               value |= MSTOP_MASK(mstop->conf);
->> +
->> +               /* Allow updates on probe when usecnt = 0. */
->> +               if (!atomic_read(&mstop->usecnt))
->> +                       update = true;
->> +               else
->> +                       update = atomic_dec_and_test(&mstop->usecnt);
->> +       } else {
->> +               atomic_inc(&mstop->usecnt);
->> +               update = true;
-> 
-> Shouldn't the update be conditional, i.e.:
-> 
->     if (!atomic_read(&mstop->usecnt))
->             update = true;
->     atomic_inc(&mstop->usecnt);
-> 
-> ?
+Thanks.  I've sent a patch to openembedded to change the nfsserver
+script.
 
-Indeed, it should be conditional as you suggested.
+Can you make the change to nfsserver and let me know if it fixes your
+problem?
 
-> 
->> +       }
->> +
->> +       if (update)
->> +               writel(value, priv->base + MSTOP_OFF(mstop->conf));
->> +}
-> 
->> +static int rzg2l_mod_clock_update_shared_mstop_clks(struct rzg2l_cpg_priv *priv,
->> +                                                   struct mstp_clock *clock)
->> +{
->> +       struct mstp_clock *clk;
->> +       struct clk_hw *hw;
->> +
->> +       if (!clock->mstop)
->> +               return 0;
->> +
->> +       for_each_mstp_clk(clk, hw, priv) {
->> +               struct mstp_clock **new_clks;
->> +               int num_shared_mstop_clks;
->> +               bool found = false;
->> +
->> +               if (clk->mstop != clock->mstop)
->> +                       continue;
->> +
->> +               num_shared_mstop_clks = clk->num_shared_mstop_clks;
->> +               for (unsigned int i = 0; i < num_shared_mstop_clks; i++) {
->> +                       if (clk->shared_mstop_clks[i] == clock) {
->> +                               found = true;
->> +                               break;
->> +                       }
->> +               }
->> +               if (found)
->> +                       continue;
-> 
-> Can this happen? With your current code, the answer is yes.
-> But I think this loop and check can be removed...
-> 
->> +
->> +               if (!num_shared_mstop_clks)
->> +                       new_clks = devm_kmalloc_array(priv->dev, 2, sizeof(*new_clks), GFP_KERNEL);
->> +               else
->> +                       new_clks = devm_krealloc(priv->dev, clk->shared_mstop_clks,
->> +                                                (num_shared_mstop_clks + 1) * sizeof(*new_clks),
->> +                                                GFP_KERNEL);
->> +
->> +               if (!new_clks)
->> +                       return -ENOMEM;
->> +
->> +               if (!num_shared_mstop_clks)
->> +                       new_clks[num_shared_mstop_clks++] = clk;
->> +               if (clk != clock)
-> 
-> This check is always true
-
-If I'm not wrong now, when adding the clock to it's own list, and the list
-is empty (!num_shared_mstop_clks check above is true), if this condition is
-missing the clock it will be added twice in its own list.
-
-> 
->> +                       new_clks[num_shared_mstop_clks++] = clock;
->> +
->> +               for (unsigned int i = 0; i < num_shared_mstop_clks; i++) {
->> +                       new_clks[i]->shared_mstop_clks = new_clks;
->> +                       new_clks[i]->num_shared_mstop_clks = num_shared_mstop_clks;
->> +               }
-> 
-> ... by adding a "break" here.  The loop above has already updated the
-> shared_mstop_clks[] arrays for all clocks sharing the same mstop value.
-
-It may happen that the entries in the module clock array provided by the
-SoC specific drivers to not be sorted by module clock ID. That's the case
-with RZ/G2L IA55 clocks (from r9a07g044-cpg.c):
-
-static const struct {
-	struct rzg2l_mod_clk common[79];
-#ifdef CONFIG_CLK_R9A07G054
-	struct rzg2l_mod_clk drp[5];
-#endif
-} mod_clks = {
-  .common = {
-    // ...
-
-    DEF_MOD("ia55_pclk", R9A07G044_IA55_PCLK, R9A07G044_CLK_P2,
-			 0x518, 0, MSTOP(BUS_PERI_CPU, BIT(13))),
-    DEF_MOD("ia55_clk",	R9A07G044_IA55_CLK, R9A07G044_CLK_P1,
-                         0x518, 1, MSTOP(BUS_PERI_CPU, BIT(13))),
-
-    // ...
-};
-
-Where IDs are defined as:
-
-#define R9A07G044_IA55_CLK     8
-#define R9A07G044_IA55_PCLK    9
-
-These clocks share the same MSTOP bit.
-
-Because the ia55_pclk is the 1st clock registered (index 9) it will be
-added to priv->clks[base + 9].
-
-Next registered clock will be for ia55_clk, with index 8, it will be added
-to priv->clks[base + 8].
-
-for_each_mstp_clk() loops on clocks from priv->clks[] array. If a break
-will be done at the end of the for_each_mstp_clk() loop, at the end of the
-registration each of these clocks will have on it's shared_mstop_clks[]
-only references to itself.
-
-Thank you for your review,
-Claudiu
-
-> 
->> +       }
->> +
->> +       return 0;
->> +}
-> 
-> The rest LGTM.
-> 
-> Gr{oetje,eeting}s,
-> 
->                         Geert
-> 
-> 
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-> 
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                 -- Linus Torvalds
-
+Thanks,
+NeilBrown
