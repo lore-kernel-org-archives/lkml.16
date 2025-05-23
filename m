@@ -1,186 +1,196 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fout-b5-smtp.messagingengine.com (fout-b5-smtp.messagingengine.com [202.12.124.148])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 299AA47F4A;
-	Fri, 23 May 2025 18:43:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5555D297A61;
+	Fri, 23 May 2025 18:44:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.148
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748025799; cv=none; b=N2dymyx+Zc5qdhMjQqasmVth9cs0OzzaDSPZsYI2W2teuodwdSvmSXQxN0+GyYvnI2Hy0BJHnRw6j2Py1xeRMwGL7FNv7bS1iSFyANu9seNRxuGImOP4jY94sLASMKuilPrivrnu5PSHW9M6Y0Xtp+QwsuyVWb1ASW6CP5zw+UI=
+	t=1748025897; cv=none; b=mDZ0E8sjgd3pOxqciO5odzN6sf4YKZ90s909geSZ2Gxrm4oUc69vC69K+Eis0EZbbVtDHMgConxHOC0OqxkhrbmET7vNof0Ysddxkq6Ai9IFg9MZLxV7kOWOmsrxSaFt+3qAxJYm+uMqIJkN0Pj5yqChDbN6RyUzZjmLslId9mg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748025799; c=relaxed/simple;
-	bh=gs5K2rq/cBIABkj5iFdt3STh54GNK4JoTpG2QNUrWDw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=or19p3k/vuhm+5yhw1jhRiTbVom+ultgjznYTViKCYyC2D1w5Rn6OxjGBGYnGs+qtOn0kWPMkn7zlQTjwg5ZOxGKAqdoXo73HZjSxlnaW7no/8CJuM8IYoAOyDre3JiId91g7oklYQ64S1tU/SSyqGwL0vIbGQ/KLTakNeze19g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lUmVSEay; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748025897; c=relaxed/simple;
+	bh=w3+ckWwblr2hnAQxmT7XGXfupK50WixMJtGQwz7BTgo=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=B1vJWN1RnBBEZS6zwg8s6KV6pGuzMiADi+jD1zujanopUeb9WC0W7ENfquwoCItWCU3WU5N+NqlDoXOxU8tsYcy7mbZq8B9FcGC7CW0iqNnpu4xCWoR+0KTVVKydnJTPwjK2YVbPxLetVxJ4Vh9GvtM0oZp+HQMxW5tdf6UEjJ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev; spf=none smtp.mailfrom=ljones.dev; dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b=WwDR7aZJ; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=JL8g+rUY; arc=none smtp.client-ip=202.12.124.148
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ljones.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lUmVSEay"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-43cfa7e7f54so1537495e9.1;
-        Fri, 23 May 2025 11:43:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748025796; x=1748630596; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=btTTfvQ93Rrp+cfCkaZPBbleiZuXCpTdB3DJ5XEH6Kk=;
-        b=lUmVSEayn/cYUyPyN2IkHTqlKQmtePCfj0cVAHbMtNnVnlv6V1fDoT5cs1iFrlPcLR
-         V5h3tpob3Z2JWCG+cYgx5RieSkaJWV0DbNGjq/WpnaATQRqkkBgKQShBN+hZd0xZCuEw
-         GD4ZYzv1sl1Pg+6k8KRSI+fmVEMp/ynn3pRZ8kw8uCexlTb0kVVsLKnN8/rhwiaqOv5p
-         Whg65Hc3tmVuv9cZZaTN1p+C26eulZuWYHAjxvQjmkURM+C10UAKQZq9/VK/5CuyCrvn
-         yb+0y9Vv468q60AB3I6GUEBOaAanYfBJ7UgxhjfftTWa0DEn4oHUrd1dv9pt1cPiplK1
-         1Jlg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748025796; x=1748630596;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=btTTfvQ93Rrp+cfCkaZPBbleiZuXCpTdB3DJ5XEH6Kk=;
-        b=E6zTQtflGqXsNC6YlPDRzPytM8cMtwAQhOF82ayFofC7jvIck55AE3WQhujT3wSy14
-         N/e3EcyUL9IfeVwwIut8PaPYFQEKiD2J1Y9vzF8for+7cVxe6MGx+Qqti2EeQMzULEJK
-         WaTriB/tzJX8KgtKu1cjVj1K/cKj0q+jrbgUR02gwtEyk+9wSit7V0/dHijp1O7+OjpI
-         zRPMs3waurb8BiDjozoGVeTi9axOYnU10olRABwiEsLXztZ64g/TrYizFg08myyGRGkG
-         BwoTgqWDwK1VvRDEQbEvWVMmt6S2RAGv94Sbj96c7YpZYsO/W8FdB4Mq7YTDzU8G7M9A
-         Wrow==
-X-Forwarded-Encrypted: i=1; AJvYcCW0tdDbBPqAj96S6mGJAGy87NsNxwSkx/MhRnNe+xyyS286zgvTUmabWlA9gDK6BO6BBFYHQ3TZyFZBqR8=@vger.kernel.org, AJvYcCX2jS3lyt/R3Be5NioH10Ih38iUzytti2yDr3Yz8O1aXfP8bp1vWl/PApSMo1uzrlpf7EeBfj4d5xIE/GWdq1dv@vger.kernel.org
-X-Gm-Message-State: AOJu0YwJ+vscOsKmvpJrRp556rKAwdkwrzsGF01bABISJyUVltXw6TmJ
-	hsljMTNqYK96ZvDXtBVBgg7I02xlZNG+ZH+NbVxGK9e5d+7+hOvKnESn
-X-Gm-Gg: ASbGncu86gVHYo7UnwSonupVEPhNVx+/Og0j7k/iBgPmoThoreLBTnSWn5EsttLvEhd
-	SaYIqVBJYpepUhasFY6w4W96iGJS0WTKVk457juTMyjO0v3Kr728v19tf91cABclIWLeh0oIddU
-	PsEY+Wakg2ng11pRQIHVexF4VGGGZMWCA3/QgaBlylO9PCSRlDr0VxgK/zq6S5i0Dg5cPEEcRbS
-	74Z3/BBbKYWqKlZM5HQf6A/+XTeOJB0ENREGGscPQhQWLl6WudUN46x0yNDAGCrLUPIZ6q9jMSb
-	SgSdZsurW0lOr/BjFaA68bwVYehBu3us6DIvdarvRRDqY8ngZGHwq7N57jzfa0WtoaRpXhV01ZC
-	TzcY6eFJnjbAw
-X-Google-Smtp-Source: AGHT+IGbySv0kJkzhoWrw/RDGSmd5NY01lUNmRSyAzY3QDkI4nh5xMLz5f+ebRm9TH2KKXtfV5Tq6A==
-X-Received: by 2002:a05:600c:524c:b0:440:69f5:f179 with SMTP id 5b1f17b1804b1-44b51f4c57bmr45533255e9.7.1748025796031;
-        Fri, 23 May 2025 11:43:16 -0700 (PDT)
-Received: from localhost.localdomain ([154.183.50.249])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-447f74cce5bsm145897875e9.24.2025.05.23.11.43.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 May 2025 11:43:15 -0700 (PDT)
-From: Khaled Elnaggar <khaledelnaggarlinux@gmail.com>
-To: linux-mm@kvack.org
-Cc: Khaled Elnaggar <khaledelnaggarlinux@gmail.com>,
-	linux-kernel-mentees@lists.linux.dev,
-	akpm@linux-foundation.org,
-	shuah@kernel.org,
-	linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [RFC] selftests/mm: Skip tests dependent on a binary not built
-Date: Fri, 23 May 2025 21:43:12 +0300
-Message-ID: <20250523184312.2647781-1-khaledelnaggarlinux@gmail.com>
-X-Mailer: git-send-email 2.47.2
+	dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b="WwDR7aZJ";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="JL8g+rUY"
+Received: from phl-compute-06.internal (phl-compute-06.phl.internal [10.202.2.46])
+	by mailfout.stl.internal (Postfix) with ESMTP id 4DD0411400FB;
+	Fri, 23 May 2025 14:44:52 -0400 (EDT)
+Received: from phl-imap-15 ([10.202.2.104])
+  by phl-compute-06.internal (MEProxy); Fri, 23 May 2025 14:44:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1748025892;
+	 x=1748112292; bh=GPJ1h5jqsNk4y57wGuJrXw0EWMRQE+GNnl3P04KBWbE=; b=
+	WwDR7aZJVDyXBXXo8mMWw4BiExVly1QyXDceI4kFgo+Kr3Bq09JIwkukDu3iNiwV
+	ozu7jUTEokAzmxGy0fCZJaic0BizqsPKh9pEAba3pHytzH0rO7N8uQc6lbO716ut
+	L1v23m6K4ib2uZ5Aoy+Q71UqIImd+V8ZEAZ2CN2x3okBGeGDEgrdhVae+jnPne5V
+	R39Sf2CzBzFs9FUm/vDD2rMR9BoIuC9uLvg5FkUI94gDhMtDeT/zHiLGhd7BmP9q
+	lnOjfdq5GRd/LVnrZH2BI7NkCqGuuk7hlfJITYFlhfIrJaqx5aWupEx+83+7IP2L
+	TB7hrUKZdItig0FJUJD7cQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1748025892; x=
+	1748112292; bh=GPJ1h5jqsNk4y57wGuJrXw0EWMRQE+GNnl3P04KBWbE=; b=J
+	L8g+rUYx0rt4HisGOoOpOThCr5JfFeF4A14hcjrIiIRdA9nGE4G9JSdzS6UND349
+	mkOZxq7EXo35GEjerjuf4SQb62ZXgPsdN8J4g2TctsVQDZ7IpAGcr4YtsZOeM9ix
+	mLtsTFxsggHr+gVdb4jYGc9xG9etUXlCvyXvBfb9bBA85JeL0qU437yMKRjx/dwK
+	U4GhXJz+yilVnca33sy5w3PcdTAUOWIleYPQIDaoQF896OWbPQF3e+vjxdEpURXU
+	YN0U43VnC3ze5pMP52FsBtSG4sOGd5UEjupswhErcGNeLoDZ5ycFIFRimbTfQbkB
+	agOeU65TLo5KCVCMEvSOA==
+X-ME-Sender: <xms:I8IwaJsYBQ9pxW8sAytrhhf2zhTcQKHbj-xiSfgGH5Mg2ANzT01uxA>
+    <xme:I8IwaCfYIFrvYfun8-R7BX_Rvn-FgRufHDiqUw3xT0aCtjioPfKD_xQSoOplSrcbs
+    t8xlphaemQO5w94MxI>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgdeliedtucdltddurdegfedvrddttd
+    dmucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgf
+    nhhsuhgsshgtrhhisggvpdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttd
+    enucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgj
+    fhfutgfgsehtqhertdertdejnecuhfhrohhmpedfnfhukhgvucflohhnvghsfdcuoehluh
+    hkvgeslhhjohhnvghsrdguvghvqeenucggtffrrghtthgvrhhnpeekvedvjeehiefhkeff
+    uefhtdeuleekffelgfeiuddvtdehkeethfehleehgeevudenucffohhmrghinhepkhgvrh
+    hnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhf
+    rhhomheplhhukhgvsehljhhonhgvshdruggvvhdpnhgspghrtghpthhtohepjedpmhhoug
+    gvpehsmhhtphhouhhtpdhrtghpthhtohepmhgrrhhiohdrlhhimhhonhgtihgvlhhlohes
+    rghmugdrtghomhdprhgtphhtthhopehlkhhpsehinhhtvghlrdgtohhmpdhrtghpthhtoh
+    eprghnughrihihrdhshhgvvhgthhgvnhhkoheslhhinhhugidrihhnthgvlhdrtghomhdp
+    rhgtphhtthhopehilhhpohdrjhgrrhhvihhnvghnsehlihhnuhigrdhinhhtvghlrdgtoh
+    hmpdhrtghpthhtohephhguvghgohgvuggvsehrvgguhhgrthdrtghomhdprhgtphhtthho
+    pehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtth
+    hopehplhgrthhfohhrmhdqughrihhvvghrqdigkeeisehvghgvrhdrkhgvrhhnvghlrdho
+    rhhg
+X-ME-Proxy: <xmx:I8IwaMxqg-8oMTxbxtiHQP2u5RZnu_PxngIKxvbKZrfaUO9gmGxxOQ>
+    <xmx:I8IwaAMt263H3ARhN-ZyonD2o_vaWhw4CClTc1lbu_jXnmx2f0IDVQ>
+    <xmx:I8IwaJ-gykUKzYNCK2QO44hVBSwvzHTyaMFjAY5kR-6w7McFKAGjXA>
+    <xmx:I8IwaAXaDznfWHtbHB8uYULr3nJjyHzwJKVICBmHh3O3b1AYz0uFYQ>
+    <xmx:JMIwaFLDcO_gTHJNbZu-v1cTqrG8bAQYqI0gPWygqnd2MoHEGy_o21yt>
+Feedback-ID: i5ec1447f:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id A52DE78006C; Fri, 23 May 2025 14:44:51 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-ThreadId: T439e01dd90134ed9
+Date: Fri, 23 May 2025 20:44:31 +0200
+From: "Luke Jones" <luke@ljones.dev>
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+ "Hans de Goede" <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org,
+ "Mario Limonciello" <mario.limonciello@amd.com>,
+ "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>,
+ "kernel test robot" <lkp@intel.com>
+Message-Id: <5128b201-ab6e-4536-8c24-8263789a3d78@app.fastmail.com>
+In-Reply-To: <0dc0316d-a9ae-c152-3737-be1c73a415b1@linux.intel.com>
+References: <20250523131451.1942578-1-luke@ljones.dev>
+ <20250523131451.1942578-2-luke@ljones.dev>
+ <0dc0316d-a9ae-c152-3737-be1c73a415b1@linux.intel.com>
+Subject: Re: [PATCH 1/1] platform/x86: asus-wmi: fix build without CONFIG_SUSPEND
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Hello.
+On Fri, 23 May 2025, at 3:25 PM, Ilpo J=C3=A4rvinen wrote:
+> On Fri, 23 May 2025, Luke Jones wrote:
+>
+>> The patch "Refactor Ally suspend/resume" introduced an
+>
+> The commit feea7bd6b02d ("...")
+>
+>> acpi_s2idle_dev_ops for use with ROG Ally which caused a build error
+>> if CONFIG_SUSPEND was not defined.
+>>=20
+>> Signed-off-by: Luke Jones <luke@ljones.dev>
+>> Reported-by: kernel test robot <lkp@intel.com>
+>> Closes: https://lore.kernel.org/oe-kbuild-all/202505090418.DaeaXe4i-l=
+kp@intel.com/
+>> Fixes: feea7bd6b02d ("platform/x86: asus-wmi: Refactor Ally suspend/r=
+esume")
+>> ---
+>>  drivers/platform/x86/asus-wmi.c | 9 +++++++++
+>>  1 file changed, 9 insertions(+)
+>>=20
+>> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/a=
+sus-wmi.c
+>> index 27f11643a00d..087318e0d595 100644
+>> --- a/drivers/platform/x86/asus-wmi.c
+>> +++ b/drivers/platform/x86/asus-wmi.c
+>> @@ -5005,6 +5005,7 @@ static int asus_hotk_restore(struct device *dev=
+ice)
+>>  	return 0;
+>>  }
+>> =20
+>> +#if defined(CONFIG_SUSPEND)
+>>  static void asus_ally_s2idle_restore(void)
+>>  {
+>>  	if (use_ally_mcu_hack =3D=3D ASUS_WMI_ALLY_MCU_HACK_ENABLED) {
+>> @@ -5013,6 +5014,7 @@ static void asus_ally_s2idle_restore(void)
+>>  		msleep(ASUS_USB0_PWR_EC0_CSEE_WAIT);
+>>  	}
+>>  }
+>> +#endif /* CONFIG_SUSPEND */
+>
+> Move this function below asus_hotk_prepare() next to ops, so that only=
+ one=20
+> #if block is needed for them.
+>
 
-Running the mm selftests from the kernel's root directory
-on an x86_64 debian machine using:
+Done
 
-  make defconfig
-  sudo make kselftest TARGETS=mm
+>> =20
+>>  static int asus_hotk_prepare(struct device *device)
+>>  {
+>> @@ -5025,9 +5027,11 @@ static int asus_hotk_prepare(struct device *de=
+vice)
+>>  }
+>> =20
+>>  /* Use only for Ally devices due to the wake_on_ac */
+>> +#if defined(CONFIG_SUSPEND)
+>>  static struct acpi_s2idle_dev_ops asus_ally_s2idle_dev_ops =3D {
+>>  	.restore =3D asus_ally_s2idle_restore,
+>>  };
+>> +#endif /* CONFIG_SUSPEND */
+>> =20
+>>  static const struct dev_pm_ops asus_pm_ops =3D {
+>>  	.thaw =3D asus_hotk_thaw,
+>> @@ -5060,9 +5064,11 @@ static int asus_wmi_probe(struct platform_devi=
+ce *pdev)
+>>  			return ret;
+>>  	}
+>> =20
+>> +	#if defined(CONFIG_SUSPEND)
+>>  	ret =3D acpi_register_lps0_dev(&asus_ally_s2idle_dev_ops);
+>>  	if (ret)
+>>  		pr_warn("failed to register LPS0 sleep handler in asus-wmi\n");
+>> +	#endif /* CONFIG_SUSPEND */
+>> =20
+>>  	return asus_wmi_add(pdev);
+>>  }
+>> @@ -5096,7 +5102,10 @@ EXPORT_SYMBOL_GPL(asus_wmi_register_driver);
+>> =20
+>>  void asus_wmi_unregister_driver(struct asus_wmi_driver *driver)
+>>  {
+>> +	#if defined(CONFIG_SUSPEND)
+>>  	acpi_unregister_lps0_dev(&asus_ally_s2idle_dev_ops);
+>> +	#endif /* CONFIG_SUSPEND */
+>
+> I'd have preferred these reg/unreg be solved with wrappers (see=20
+> pmc_atom.c).
 
-the tests run normally till we reach one which stalls
-for 180 seconds and times out according to the following logs:
+Can do, but I don't really understand the difference it makes in this co=
+ntext. Should I log that  CONFIG_SUSPEND was not enabled? Otherwise it's=
+ just as good as not there, right?
 
-```
- -----------------------------------------------
- running ./charge_reserved_hugetlb.sh -cgroup-v2
- -----------------------------------------------
- CLEANUP DONE
- CLEANUP DONE
-  
- Test normal case.
- private=, populate=, method=0, reserve=
- nr hugepages = 10
- writing cgroup limit: 20971520
- writing reseravation limit: 20971520
-
- Starting:
- hugetlb_usage=0
- reserved_usage=0
- expect_failure is 0
- Putting task in cgroup 'hugetlb_cgroup_test'
- Method is 0
- >>> write_hugetlb_memory.sh: line 22: ./write_to_hugetlbfs: No such file or directory <<<
- Waiting for hugetlb memory reservation to reach size 10485760.
- 0
- Waiting for hugetlb memory reservation to reach size 10485760.
- 0
- ...
- Waiting for hugetlb memory reservation to reach size 10485760.
- 0
- Waiting for hugetlb memory reservation to reach size 10485760.
- 0
-
- not ok 1 selftests: mm: run_vmtests.sh # TIMEOUT 180 seconds
- make[3]: Leaving directory '/linux/tools/testing/selftests/mm'
-```
-
-Logs show that the executable "write_to_hugetlbfs" is missing, causing
-the test to hang waiting for hugepage reservations.
-
-The executable not found means it was not built by the Make system.
-It is mentioned in Makefile:136-142, and only built if ARCH is 64-bit
-
-```
-   ifneq (,$(filter $(ARCH),arm64 mips64 parisc64 powerpc riscv64 s390x sparc64 x86_64 s390))
-   TEST_GEN_FILES += va_high_addr_switch
-   ifneq ($(ARCH),riscv64)
-   TEST_GEN_FILES += virtual_address_range
-   endif
-   TEST_GEN_FILES += write_to_hugetlbfs
-   endif
-```
-
-So, for some reason, the top-level Makefile provides ARCH as x86.
-
-My proposed solution is similar to existing virtual_address_range check
-that is to check for the binary, and if it is not found, skip these 2
-test cases: charge_reserved_hugetlb.sh and hugetlb_reparenting_test.sh
-since they directly and indirectly depend on write_to_hugetlbfs binary.
-
-This is just a workaround, the root issue of different ARCH detection
-when running tests from the kernel root directory should still be
-addressed. I am not sure how to approach it and open for your suggestions.
-
-Note that this issue does not happen when ran from selftests/mm using
-something like
-
-  sudo make -C tools/testing/selftests/mm
-
-because then mm/Makefile's ARCH detection runs correctly (x86_64)
-
-Kindly review and share your thoughts.
-
-Signed-off-by: Khaled Elnaggar <khaledelnaggarlinux@gmail.com>
----
- tools/testing/selftests/mm/run_vmtests.sh | 5 +++++
- 1 file changed, 5 insertions(+)
-
-diff --git a/tools/testing/selftests/mm/run_vmtests.sh b/tools/testing/selftests/mm/run_vmtests.sh
-index dddd1dd8af14..cdbcfdb62f8a 100755
---- a/tools/testing/selftests/mm/run_vmtests.sh
-+++ b/tools/testing/selftests/mm/run_vmtests.sh
-@@ -375,8 +375,13 @@ CATEGORY="process_mrelease" run_test ./mrelease_test
- CATEGORY="mremap" run_test ./mremap_test
-
- CATEGORY="hugetlb" run_test ./thuge-gen
-+
-+# the following depend on write_to_hugetlbfs binary
-+if [ -x ./write_to_hugetlbfs ]; then
- CATEGORY="hugetlb" run_test ./charge_reserved_hugetlb.sh -cgroup-v2
- CATEGORY="hugetlb" run_test ./hugetlb_reparenting_test.sh -cgroup-v2
-+fi
-+
- if $RUN_DESTRUCTIVE; then
- nr_hugepages_tmp=$(cat /proc/sys/vm/nr_hugepages)
- enable_soft_offline=$(cat /proc/sys/vm/enable_soft_offline)
---
-2.47.2
-
+>
+>
+> --=20
+>  i.
