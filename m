@@ -1,404 +1,332 @@
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C3841537C6
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 09:00:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0E761537C6;
+	Fri, 23 May 2025 09:00:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747990821; cv=none; b=QEledmAWtpBiUvgDKQ14aFhPEM5Ed5TwNqo1rZGp4vLwt9kj9YNbIbKlE67DDkFXmsViLau0G0VsGR/lQVL7RIYsFM5X+czgLJTLyTem84dzJc4vytf+22cZcLCYzP/6WLIuz+eNmAj2B2CEOBHuYS/qFN4J+ZW1fNbmy3V+l34=
+	t=1747990832; cv=none; b=W4VBwvEnu86kkDpaHT8x/Z3iagTXMZRWPp8f0xScOLEhIpzQ5vA8XIFIDQrd5uPincCVl5JQPc3O4I32BV907tjLKERR1CYsA9tmFG66CAf0lDPoB5AXhVwjaF25JP42cRuT7xdzIRlNqK/sbjdpRpYmB9YwFNVRhM4QvRDtvH4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747990821; c=relaxed/simple;
-	bh=fFrQ/JXoJLPBH7HEbAxWk44fvHSAe7VVAjZtBLCRav0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WVygf5ZjDRZdPMlGyp2yxS4xNLrq60kYr29AQWjq/UfHJVtZr4cEvF72csxX/zY7bT2AppSvVyvDuKBDuZshQpqTdxEmDF8jpHsYoVZlBo0cHTeerTDb2c94GlGmVGjYnOPhK8hE/a8EoHrZPrIhTbBiJlUgnmH5vZUE+I5uhzQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=0tPh4MBX; arc=none smtp.client-ip=209.85.218.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1747990832; c=relaxed/simple;
+	bh=mTpxlzLfOxVD0utOYJ/lK616UQLpk4pGr8aEVscKunw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=n79k9a95UR+LZa1YSF6mvJD1KTRStT993TK2OzSvfZBV1YDx/bRl2fqCCWHrfOVUIT4/gjI1tTDdu7FOgrIN8MhaEsrn76HW+nmXhXsaupqXzNsRr+Oqpc1FnlH8wiV98KIwWJjlYPxVxDERPQhCEG3TdLU1RgaegpnddjwI6I8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fPcckd+B; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="0tPh4MBX"
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-ac3eb3fdd2eso1589148466b.0
-        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 02:00:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747990817; x=1748595617; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9uOzrdUJ2LFuVEOHCGYzPK9BiHxjeHo77kFnCgkTb6Y=;
-        b=0tPh4MBXMhdjeaxXgwlFOOYLNiKBPzX/dVnrE/SwPE2AtCrpIf1dLURpPXSY0+9F2H
-         pjeAsveNMJ3RafASvgKHd50voXCS82VNN7mAcRCqAEHz/c8O8RF2i2qFkP1Wj0GdBIi+
-         c6q7fcrHKpF9lCdOJgCnW44m2cr/uhPAn3yll0I4Dtaev8mT7zXiaFqXNV+eQL5msxvU
-         K6M8/pT/VixMckRUDFH1dO9cPT283Akrajf7PJ2+2cZqeZ16/TDCZ6nlhut26+XbgMOw
-         xu4E3FZjjRJHmY8AG2vVnXVlzfr6950hGy2yeGWwCz4l24Bk0Zrj6LXuVoHKzECl1TmX
-         ugMg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747990817; x=1748595617;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9uOzrdUJ2LFuVEOHCGYzPK9BiHxjeHo77kFnCgkTb6Y=;
-        b=N4Fr/whyIuxaqcGb1s+GpOgUX1L7NKAMuM+tRO7h+gLHVqJXwm3vRn7mQHshY8joCk
-         p5VZ7LOuIWaPr1IFCJxSuQsuPrXVV5CJjg1/FPLFbTpkGJ109UnfU18BUKQ7AQRbZs+3
-         TAquh60EyaEFEDDtQ75xhzO5zMAHmERqMnKB4QQMGQLS6rmx9UOZ/CtXGSBHSkWJf/U9
-         RHwNKKu1oF1pirXO/GQhBbLROVnT68vZixou9G8lT/z4aFM+VbkORK4GgZ3NCuwKvAbL
-         HQjGNzWpgyNm4GrLnDU09mVM7ZFvKE3OWjWC30jQaT5Kglpqs6JdWn0zBrNHsOLF9Mto
-         W3RA==
-X-Forwarded-Encrypted: i=1; AJvYcCX8TboIwKUVSpuST0YEVOfJ8yNMpfK8Y8LQj3tS1Zt6vI9EGRh0mTZsRXMI96ci3ruQT1wmZb72+irUrXo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy2pderb/rG190yzlcOy4QgOVL1w3QendMzH+x9jc0BskggdZ+T
-	vKC90nbKJkKztoMq3mz5hSMiE7QoeHG7oL2cZBknGqsGGrDjjfFFoaL39UoKWuuWeCNrZGD4TxT
-	+01oH0gsdGtKNy75OYotbbu4TokWrpoaN8BwvaniG
-X-Gm-Gg: ASbGnctpb5hO5Jr2VdZEIDl6L9ftYSOpmf5hGwtl3dpSnQqNuYzgHArfyiE6OUg4HPT
-	jFni2MWruhu21HB+USqpS6xfUtqbfqjdf9jhxM/TZ6jWY8jKOZD0xdavC4tmfIEVS437lXswVPB
-	G1gUVd30e3UOHvGdNi00Nen17IeSaa/mtcPGle8prNKvcNPxr/z9dX9jwqyPbQMvStsPSwofBY
-X-Google-Smtp-Source: AGHT+IHrHoam2SyDQ+SDFuQ3kRR6NQqlgQ1d7rX02aF+XbK5tBB+f1Jkn6eLnmPaNV6nrsvcgQvKwhCoawOGVhsiExo=
-X-Received: by 2002:a17:907:1b19:b0:aca:c38d:fef0 with SMTP id
- a640c23a62f3a-ad52d08120dmr2751786166b.0.1747990816441; Fri, 23 May 2025
- 02:00:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fPcckd+B"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A37C8C4CEEF;
+	Fri, 23 May 2025 09:00:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747990831;
+	bh=mTpxlzLfOxVD0utOYJ/lK616UQLpk4pGr8aEVscKunw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=fPcckd+BLil1KAT5UIYjPx03Fh3ZTaEugtxxZElUKqLeUA9XnqsXOv4ajQshd0H1q
+	 2QELspOTRsUVpRVzevbwVfXxvM4HiXroUghaQnUUc8KE3ZDHwjs/1coEwu097gZLhy
+	 4aKBRwGfn3YcD3qOypMOXVAGws7OmtQKGJx24v2bPo679/vo0Hrikk0SqiquTQyaRH
+	 M5GH0ao2pnHZa4ANAt3PC8PKy4qSF7gPbYYdG3yxKni/F5NgTQxj2S5lcqO/b7cP0R
+	 NZe6DjeT7IdAgi4GGljMStrUqi+h/92RK3rEyYDY31aSKWPw8291UIh2ltO3pnVGCf
+	 5uC2mR9yOENyQ==
+Date: Fri, 23 May 2025 14:30:17 +0530
+From: Sumit Garg <sumit.garg@kernel.org>
+To: Jens Wiklander <jens.wiklander@linaro.org>
+Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+	dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
+	op-tee@lists.trustedfirmware.org,
+	linux-arm-kernel@lists.infradead.org,
+	Olivier Masse <olivier.masse@nxp.com>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Yong Wu <yong.wu@mediatek.com>,
+	Sumit Semwal <sumit.semwal@linaro.org>,
+	Benjamin Gaignard <benjamin.gaignard@collabora.com>,
+	Brian Starkey <Brian.Starkey@arm.com>,
+	John Stultz <jstultz@google.com>,
+	"T . J . Mercier" <tjmercier@google.com>,
+	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	azarrabi@qti.qualcomm.com, Simona Vetter <simona.vetter@ffwll.ch>,
+	Daniel Stone <daniel@fooishbar.org>,
+	Rouven Czerwinski <rouven.czerwinski@linaro.org>
+Subject: Re: [PATCH v9 1/9] optee: sync secure world ABI headers
+Message-ID: <aDA5IZ4lBIxNcJQX@sumit-X1>
+References: <20250520152436.474778-1-jens.wiklander@linaro.org>
+ <20250520152436.474778-2-jens.wiklander@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250521225049.132551-1-tony.luck@intel.com> <20250521225049.132551-5-tony.luck@intel.com>
-In-Reply-To: <20250521225049.132551-5-tony.luck@intel.com>
-From: Peter Newman <peternewman@google.com>
-Date: Fri, 23 May 2025 11:00:04 +0200
-X-Gm-Features: AX0GCFvmiUC1CESAcyIjRqdnb9Dai0VpCSt1phsq4U9f_hARl-qLtMQCj1OIYxc
-Message-ID: <CALPaoCj8yfzJ=5CkxTPQXc0-WRWpu0xKRX8v4FAWFGQKtXtMUw@mail.gmail.com>
-Subject: Re: [PATCH v5 04/29] x86,fs/resctrl: Prepare for more monitor events
-To: Tony Luck <tony.luck@intel.com>
-Cc: Fenghua Yu <fenghuay@nvidia.com>, Reinette Chatre <reinette.chatre@intel.com>, 
-	Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>, James Morse <james.morse@arm.com>, 
-	Babu Moger <babu.moger@amd.com>, Drew Fustini <dfustini@baylibre.com>, 
-	Dave Martin <Dave.Martin@arm.com>, Anil Keshavamurthy <anil.s.keshavamurthy@intel.com>, 
-	Chen Yu <yu.c.chen@intel.com>, x86@kernel.org, linux-kernel@vger.kernel.org, 
-	patches@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250520152436.474778-2-jens.wiklander@linaro.org>
 
-Hi Tony,
-
-On Thu, May 22, 2025 at 12:51=E2=80=AFAM Tony Luck <tony.luck@intel.com> wr=
-ote:
->
-> There's a rule in computer programming that objects appear zero,
-> once, or many times. So code accordingly.
->
-> There are two MBM events and resctrl is coded with a lot of
->
->         if (local)
->                 do one thing
->         if (total)
->                 do a different thing
->
-> Change the rdt_mon_domain and rdt_hw_mon_domain structures to hold arrays
-> of pointers to per event data instead of explicit fields for total and
-> local bandwidth.
->
-> Simplify by coding for many events using loops on which are enabled.
->
-> Move resctrl_is_mbm_event() to <linux/resctrl.h> so it can be used more
-> widely. Also provide a for_each_mbm_event() helper macro.
->
-> Signed-off-by: Tony Luck <tony.luck@intel.com>
+On Tue, May 20, 2025 at 05:16:44PM +0200, Jens Wiklander wrote:
+> Update the header files describing the secure world ABI, both with and
+> without FF-A. The ABI is extended to deal with protected memory, but as
+> usual backward compatible.
+> 
+> Signed-off-by: Jens Wiklander <jens.wiklander@linaro.org>
 > ---
->  include/linux/resctrl.h                | 15 +++++---
->  include/linux/resctrl_types.h          |  3 ++
->  arch/x86/kernel/cpu/resctrl/internal.h |  6 ++--
->  arch/x86/kernel/cpu/resctrl/core.c     | 38 ++++++++++----------
->  arch/x86/kernel/cpu/resctrl/monitor.c  | 36 +++++++++----------
->  fs/resctrl/monitor.c                   | 13 ++++---
->  fs/resctrl/rdtgroup.c                  | 48 ++++++++++++--------------
->  7 files changed, 82 insertions(+), 77 deletions(-)
+>  drivers/tee/optee/optee_ffa.h | 27 ++++++++---
+>  drivers/tee/optee/optee_msg.h | 84 ++++++++++++++++++++++++++++++-----
+>  drivers/tee/optee/optee_smc.h | 37 ++++++++++++++-
+>  3 files changed, 130 insertions(+), 18 deletions(-)
 >
-> diff --git a/include/linux/resctrl.h b/include/linux/resctrl.h
-> index 843ad7c8e247..40f2d0d48d02 100644
-> --- a/include/linux/resctrl.h
-> +++ b/include/linux/resctrl.h
-> @@ -161,8 +161,7 @@ struct rdt_ctrl_domain {
->   * @hdr:               common header for different domain types
->   * @ci:                        cache info for this domain
->   * @rmid_busy_llc:     bitmap of which limbo RMIDs are above threshold
-> - * @mbm_total:         saved state for MBM total bandwidth
-> - * @mbm_local:         saved state for MBM local bandwidth
-> + * @mbm_states:                saved state for each QOS MBM event
->   * @mbm_over:          worker to periodically read MBM h/w counters
->   * @cqm_limbo:         worker to periodically read CQM h/w counters
->   * @mbm_work_cpu:      worker CPU for MBM h/w counters
-> @@ -172,8 +171,7 @@ struct rdt_mon_domain {
->         struct rdt_domain_hdr           hdr;
->         struct cacheinfo                *ci;
->         unsigned long                   *rmid_busy_llc;
-> -       struct mbm_state                *mbm_total;
-> -       struct mbm_state                *mbm_local;
-> +       struct mbm_state                *mbm_states[QOS_NUM_L3_MBM_EVENTS=
-];
->         struct delayed_work             mbm_over;
->         struct delayed_work             cqm_limbo;
->         int                             mbm_work_cpu;
-> @@ -376,6 +374,15 @@ bool resctrl_is_mon_event_enabled(enum resctrl_event=
-_id evt);
->
->  bool resctrl_arch_is_evt_configurable(enum resctrl_event_id evt);
->
-> +static inline bool resctrl_is_mbm_event(enum resctrl_event_id e)
-> +{
-> +       return (e >=3D QOS_L3_MBM_TOTAL_EVENT_ID &&
-> +               e <=3D QOS_L3_MBM_LOCAL_EVENT_ID);
-> +}
-> +
-> +#define for_each_mbm_event(evt)        \
-> +       for (evt =3D QOS_L3_MBM_TOTAL_EVENT_ID; evt <=3D QOS_L3_MBM_LOCAL=
-_EVENT_ID; evt++)
-> +
->  /**
->   * resctrl_arch_mon_event_config_write() - Write the config for an event=
-.
->   * @config_info: struct resctrl_mon_config_info describing the resource,=
- domain
-> diff --git a/include/linux/resctrl_types.h b/include/linux/resctrl_types.=
-h
-> index a25fb9c4070d..b468bfbab9ea 100644
-> --- a/include/linux/resctrl_types.h
-> +++ b/include/linux/resctrl_types.h
-> @@ -47,4 +47,7 @@ enum resctrl_event_id {
->         QOS_NUM_EVENTS,
->  };
->
-> +#define QOS_NUM_L3_MBM_EVENTS  (QOS_L3_MBM_LOCAL_EVENT_ID - QOS_L3_MBM_T=
-OTAL_EVENT_ID + 1)
-> +#define MBM_STATE_IDX(evt)     ((evt) - QOS_L3_MBM_TOTAL_EVENT_ID)
-> +
->  #endif /* __LINUX_RESCTRL_TYPES_H */
-> diff --git a/arch/x86/kernel/cpu/resctrl/internal.h b/arch/x86/kernel/cpu=
-/resctrl/internal.h
-> index 5e3c41b36437..ea185b4d0d59 100644
-> --- a/arch/x86/kernel/cpu/resctrl/internal.h
-> +++ b/arch/x86/kernel/cpu/resctrl/internal.h
-> @@ -54,15 +54,13 @@ struct rdt_hw_ctrl_domain {
->   * struct rdt_hw_mon_domain - Arch private attributes of a set of CPUs t=
-hat share
->   *                           a resource for a monitor function
->   * @d_resctrl: Properties exposed to the resctrl file system
-> - * @arch_mbm_total:    arch private state for MBM total bandwidth
-> - * @arch_mbm_local:    arch private state for MBM local bandwidth
-> + * @arch_mbm_states:   arch private state for each MBM event
+
+Reviewed-by: Sumit Garg <sumit.garg@oss.qualcomm.com>
+
+-Sumit
+
+> diff --git a/drivers/tee/optee/optee_ffa.h b/drivers/tee/optee/optee_ffa.h
+> index 257735ae5b56..cc257e7956a3 100644
+> --- a/drivers/tee/optee/optee_ffa.h
+> +++ b/drivers/tee/optee/optee_ffa.h
+> @@ -81,7 +81,7 @@
+>   *                   as the second MSG arg struct for
+>   *                   OPTEE_FFA_YIELDING_CALL_WITH_ARG.
+>   *        Bit[31:8]: Reserved (MBZ)
+> - * w5:	  Bitfield of secure world capabilities OPTEE_FFA_SEC_CAP_* below,
+> + * w5:	  Bitfield of OP-TEE capabilities OPTEE_FFA_SEC_CAP_*
+>   * w6:	  The maximum secure world notification number
+>   * w7:	  Not used (MBZ)
+>   */
+> @@ -94,6 +94,8 @@
+>  #define OPTEE_FFA_SEC_CAP_ASYNC_NOTIF	BIT(1)
+>  /* OP-TEE supports probing for RPMB device if needed */
+>  #define OPTEE_FFA_SEC_CAP_RPMB_PROBE	BIT(2)
+> +/* OP-TEE supports Protected Memory for secure data path */
+> +#define OPTEE_FFA_SEC_CAP_PROTMEM	BIT(3)
+>  
+>  #define OPTEE_FFA_EXCHANGE_CAPABILITIES OPTEE_FFA_BLOCKING_CALL(2)
+>  
+> @@ -108,7 +110,7 @@
 >   *
->   * Members of this structure are accessed via helpers that provide abstr=
-action.
+>   * Return register usage:
+>   * w3:    Error code, 0 on success
+> - * w4-w7: Note used (MBZ)
+> + * w4-w7: Not used (MBZ)
 >   */
->  struct rdt_hw_mon_domain {
->         struct rdt_mon_domain           d_resctrl;
-> -       struct arch_mbm_state           *arch_mbm_total;
-> -       struct arch_mbm_state           *arch_mbm_local;
-> +       struct arch_mbm_state           *arch_mbm_states[QOS_NUM_L3_MBM_E=
-VENTS];
+>  #define OPTEE_FFA_UNREGISTER_SHM	OPTEE_FFA_BLOCKING_CALL(3)
+>  
+> @@ -119,16 +121,31 @@
+>   * Call register usage:
+>   * w3:    Service ID, OPTEE_FFA_ENABLE_ASYNC_NOTIF
+>   * w4:	  Notification value to request bottom half processing, should be
+> - *	  less than OPTEE_FFA_MAX_ASYNC_NOTIF_VALUE.
+> + *	  less than OPTEE_FFA_MAX_ASYNC_NOTIF_VALUE
+>   * w5-w7: Not used (MBZ)
+>   *
+>   * Return register usage:
+>   * w3:    Error code, 0 on success
+> - * w4-w7: Note used (MBZ)
+> + * w4-w7: Not used (MBZ)
+>   */
+>  #define OPTEE_FFA_ENABLE_ASYNC_NOTIF	OPTEE_FFA_BLOCKING_CALL(5)
+>  
+> -#define OPTEE_FFA_MAX_ASYNC_NOTIF_VALUE 64
+> +#define OPTEE_FFA_MAX_ASYNC_NOTIF_VALUE	64
+> +
+> +/*
+> + * Release Protected memory
+> + *
+> + * Call register usage:
+> + * w3:    Service ID, OPTEE_FFA_RECLAIM_PROTMEM
+> + * w4:    Shared memory handle, lower bits
+> + * w5:    Shared memory handle, higher bits
+> + * w6-w7: Not used (MBZ)
+> + *
+> + * Return register usage:
+> + * w3:    Error code, 0 on success
+> + * w4-w7: Note used (MBZ)
+> + */
+> +#define OPTEE_FFA_RELEASE_PROTMEM	OPTEE_FFA_BLOCKING_CALL(8)
+>  
+>  /*
+>   * Call with struct optee_msg_arg as argument in the supplied shared memory
+> diff --git a/drivers/tee/optee/optee_msg.h b/drivers/tee/optee/optee_msg.h
+> index e8840a82b983..22130e967dc5 100644
+> --- a/drivers/tee/optee/optee_msg.h
+> +++ b/drivers/tee/optee/optee_msg.h
+> @@ -133,13 +133,13 @@ struct optee_msg_param_rmem {
 >  };
->
->  static inline struct rdt_hw_ctrl_domain *resctrl_to_arch_ctrl_dom(struct=
- rdt_ctrl_domain *r)
-> diff --git a/arch/x86/kernel/cpu/resctrl/core.c b/arch/x86/kernel/cpu/res=
-ctrl/core.c
-> index 819bc7a09327..4403a820db12 100644
-> --- a/arch/x86/kernel/cpu/resctrl/core.c
-> +++ b/arch/x86/kernel/cpu/resctrl/core.c
-> @@ -364,8 +364,8 @@ static void ctrl_domain_free(struct rdt_hw_ctrl_domai=
-n *hw_dom)
->
->  static void mon_domain_free(struct rdt_hw_mon_domain *hw_dom)
->  {
-> -       kfree(hw_dom->arch_mbm_total);
-> -       kfree(hw_dom->arch_mbm_local);
-> +       for (int i =3D 0; i < QOS_NUM_L3_MBM_EVENTS; i++)
-> +               kfree(hw_dom->arch_mbm_states[i]);
->         kfree(hw_dom);
->  }
->
-> @@ -399,25 +399,27 @@ static int domain_setup_ctrlval(struct rdt_resource=
- *r, struct rdt_ctrl_domain *
+>  
+>  /**
+> - * struct optee_msg_param_fmem - ffa memory reference parameter
+> + * struct optee_msg_param_fmem - FF-A memory reference parameter
+>   * @offs_lower:	   Lower bits of offset into shared memory reference
+>   * @offs_upper:	   Upper bits of offset into shared memory reference
+>   * @internal_offs: Internal offset into the first page of shared memory
+>   *		   reference
+>   * @size:	   Size of the buffer
+> - * @global_id:	   Global identifier of Shared memory
+> + * @global_id:	   Global identifier of the shared memory
 >   */
->  static int arch_domain_mbm_alloc(u32 num_rmid, struct rdt_hw_mon_domain =
-*hw_dom)
->  {
-> -       size_t tsize;
-> -
-> -       if (resctrl_is_mon_event_enabled(QOS_L3_MBM_TOTAL_EVENT_ID)) {
-> -               tsize =3D sizeof(*hw_dom->arch_mbm_total);
-> -               hw_dom->arch_mbm_total =3D kcalloc(num_rmid, tsize, GFP_K=
-ERNEL);
-> -               if (!hw_dom->arch_mbm_total)
-> -                       return -ENOMEM;
-> -       }
-> -       if (resctrl_is_mon_event_enabled(QOS_L3_MBM_LOCAL_EVENT_ID)) {
-> -               tsize =3D sizeof(*hw_dom->arch_mbm_local);
-> -               hw_dom->arch_mbm_local =3D kcalloc(num_rmid, tsize, GFP_K=
-ERNEL);
-> -               if (!hw_dom->arch_mbm_local) {
-> -                       kfree(hw_dom->arch_mbm_total);
-> -                       hw_dom->arch_mbm_total =3D NULL;
-> -                       return -ENOMEM;
-> -               }
-> +       size_t tsize =3D sizeof(struct arch_mbm_state);
-
-sizeof(*hw_dom->arch_mbm_states[0])?
-
-The previous code didn't assume a type.
-
-> +       enum resctrl_event_id evt;
-> +       int idx;
+>  struct optee_msg_param_fmem {
+>  	u32 offs_low;
+> @@ -165,7 +165,7 @@ struct optee_msg_param_value {
+>   * @attr:	attributes
+>   * @tmem:	parameter by temporary memory reference
+>   * @rmem:	parameter by registered memory reference
+> - * @fmem:	parameter by ffa registered memory reference
+> + * @fmem:	parameter by FF-A registered memory reference
+>   * @value:	parameter by opaque value
+>   * @octets:	parameter by octet string
+>   *
+> @@ -296,6 +296,18 @@ struct optee_msg_arg {
+>   */
+>  #define OPTEE_MSG_FUNCID_GET_OS_REVISION	0x0001
+>  
+> +/*
+> + * Values used in OPTEE_MSG_CMD_LEND_PROTMEM below
+> + * OPTEE_MSG_PROTMEM_RESERVED		Reserved
+> + * OPTEE_MSG_PROTMEM_SECURE_VIDEO_PLAY	Secure Video Playback
+> + * OPTEE_MSG_PROTMEM_TRUSTED_UI		Trused UI
+> + * OPTEE_MSG_PROTMEM_SECURE_VIDEO_RECORD	Secure Video Recording
+> + */
+> +#define OPTEE_MSG_PROTMEM_RESERVED		0
+> +#define OPTEE_MSG_PROTMEM_SECURE_VIDEO_PLAY	1
+> +#define OPTEE_MSG_PROTMEM_TRUSTED_UI		2
+> +#define OPTEE_MSG_PROTMEM_SECURE_VIDEO_RECORD	3
 > +
-> +       for_each_mbm_event(evt) {
-> +               if (!resctrl_is_mon_event_enabled(evt))
-> +                       continue;
-> +               idx =3D MBM_STATE_IDX(evt);
-> +               hw_dom->arch_mbm_states[idx] =3D kcalloc(num_rmid, tsize,=
- GFP_KERNEL);
-> +               if (!hw_dom->arch_mbm_states[idx])
-> +                       goto cleanup;
->         }
->
->         return 0;
-> +cleanup:
-> +       while (--idx >=3D 0) {
-> +               kfree(hw_dom->arch_mbm_states[idx]);
-> +               hw_dom->arch_mbm_states[idx] =3D NULL;
-> +       }
-> +
-> +       return -ENOMEM;
->  }
->
->  static int get_domain_id_from_scope(int cpu, enum resctrl_scope scope)
-> diff --git a/arch/x86/kernel/cpu/resctrl/monitor.c b/arch/x86/kernel/cpu/=
-resctrl/monitor.c
-> index fda579251dba..85526e5540f2 100644
-> --- a/arch/x86/kernel/cpu/resctrl/monitor.c
-> +++ b/arch/x86/kernel/cpu/resctrl/monitor.c
-> @@ -160,18 +160,14 @@ static struct arch_mbm_state *get_arch_mbm_state(st=
-ruct rdt_hw_mon_domain *hw_do
->                                                  u32 rmid,
->                                                  enum resctrl_event_id ev=
-entid)
->  {
-> -       switch (eventid) {
-> -       case QOS_L3_OCCUP_EVENT_ID:
-> -               return NULL;
-> -       case QOS_L3_MBM_TOTAL_EVENT_ID:
-> -               return &hw_dom->arch_mbm_total[rmid];
-> -       case QOS_L3_MBM_LOCAL_EVENT_ID:
-> -               return &hw_dom->arch_mbm_local[rmid];
-> -       default:
-> -               /* Never expect to get here */
-> -               WARN_ON_ONCE(1);
-> +       struct arch_mbm_state *state;
-> +
-> +       if (!resctrl_is_mbm_event(eventid))
->                 return NULL;
-> -       }
-> +
-> +       state =3D hw_dom->arch_mbm_states[MBM_STATE_IDX(eventid)];
-> +
-> +       return state ? &state[rmid] : NULL;
->  }
->
->  void resctrl_arch_reset_rmid(struct rdt_resource *r, struct rdt_mon_doma=
-in *d,
-> @@ -200,14 +196,16 @@ void resctrl_arch_reset_rmid(struct rdt_resource *r=
-, struct rdt_mon_domain *d,
->  void resctrl_arch_reset_rmid_all(struct rdt_resource *r, struct rdt_mon_=
-domain *d)
->  {
->         struct rdt_hw_mon_domain *hw_dom =3D resctrl_to_arch_mon_dom(d);
-> -
-> -       if (resctrl_is_mon_event_enabled(QOS_L3_MBM_TOTAL_EVENT_ID))
-> -               memset(hw_dom->arch_mbm_total, 0,
-> -                      sizeof(*hw_dom->arch_mbm_total) * r->num_rmid);
-> -
-> -       if (resctrl_is_mon_event_enabled(QOS_L3_MBM_LOCAL_EVENT_ID))
-> -               memset(hw_dom->arch_mbm_local, 0,
-> -                      sizeof(*hw_dom->arch_mbm_local) * r->num_rmid);
-> +       enum resctrl_event_id evt;
-> +       int idx;
-> +
-> +       for_each_mbm_event(evt) {
-> +               idx =3D MBM_STATE_IDX(evt);
-> +               if (!hw_dom->arch_mbm_states[idx])
-> +                       continue;
-> +               memset(hw_dom->arch_mbm_states[idx], 0,
-> +                      sizeof(struct arch_mbm_state) * r->num_rmid);
-> +       }
->  }
->
->  static u64 mbm_overflow_count(u64 prev_msr, u64 cur_msr, unsigned int wi=
-dth)
-> diff --git a/fs/resctrl/monitor.c b/fs/resctrl/monitor.c
-> index 325e23c1a403..4cd0789998bf 100644
-> --- a/fs/resctrl/monitor.c
-> +++ b/fs/resctrl/monitor.c
-> @@ -346,15 +346,14 @@ static struct mbm_state *get_mbm_state(struct rdt_m=
-on_domain *d, u32 closid,
->                                        u32 rmid, enum resctrl_event_id ev=
-tid)
->  {
->         u32 idx =3D resctrl_arch_rmid_idx_encode(closid, rmid);
-> +       struct mbm_state *states;
->
-> -       switch (evtid) {
-> -       case QOS_L3_MBM_TOTAL_EVENT_ID:
-> -               return &d->mbm_total[idx];
-> -       case QOS_L3_MBM_LOCAL_EVENT_ID:
-> -               return &d->mbm_local[idx];
-> -       default:
-> +       if (!resctrl_is_mbm_event(evtid))
->                 return NULL;
-> -       }
-> +
-> +       states =3D d->mbm_states[MBM_STATE_IDX(evtid)];
-> +
-> +       return states ? &states[idx] : NULL;
->  }
->
->  static int __mon_event_count(u32 closid, u32 rmid, struct rmid_read *rr)
-> diff --git a/fs/resctrl/rdtgroup.c b/fs/resctrl/rdtgroup.c
-> index 80e74940281a..8649b89d7bfd 100644
-> --- a/fs/resctrl/rdtgroup.c
-> +++ b/fs/resctrl/rdtgroup.c
-> @@ -127,12 +127,6 @@ static bool resctrl_is_mbm_enabled(void)
->                 resctrl_is_mon_event_enabled(QOS_L3_MBM_LOCAL_EVENT_ID));
->  }
->
-> -static bool resctrl_is_mbm_event(int e)
-> -{
-> -       return (e >=3D QOS_L3_MBM_TOTAL_EVENT_ID &&
-> -               e <=3D QOS_L3_MBM_LOCAL_EVENT_ID);
-> -}
+>  /*
+>   * Do a secure call with struct optee_msg_arg as argument
+>   * The OPTEE_MSG_CMD_* below defines what goes in struct optee_msg_arg::cmd
+> @@ -337,15 +349,63 @@ struct optee_msg_arg {
+>   * OPTEE_MSG_CMD_STOP_ASYNC_NOTIF informs secure world that from now is
+>   * normal world unable to process asynchronous notifications. Typically
+>   * used when the driver is shut down.
+> + *
+> + * OPTEE_MSG_CMD_LEND_PROTMEM lends protected memory. The passed normal
+> + * physical memory is protected from normal world access. The memory
+> + * should be unmapped prior to this call since it becomes inaccessible
+> + * during the request.
+> + * Parameters are passed as:
+> + * [in] param[0].attr			OPTEE_MSG_ATTR_TYPE_VALUE_INPUT
+> + * [in] param[0].u.value.a		OPTEE_MSG_PROTMEM_* defined above
+> + * [in] param[1].attr			OPTEE_MSG_ATTR_TYPE_TMEM_INPUT
+> + * [in] param[1].u.tmem.buf_ptr		physical address
+> + * [in] param[1].u.tmem.size		size
+> + * [in] param[1].u.tmem.shm_ref		holds protected memory reference
+> + *
+> + * OPTEE_MSG_CMD_RECLAIM_PROTMEM reclaims a previously lent protected
+> + * memory reference. The physical memory is accessible by the normal world
+> + * after this function has return and can be mapped again. The information
+> + * is passed as:
+> + * [in] param[0].attr			OPTEE_MSG_ATTR_TYPE_VALUE_INPUT
+> + * [in] param[0].u.value.a		holds protected memory cookie
+> + *
+> + * OPTEE_MSG_CMD_GET_PROTMEM_CONFIG get configuration for a specific
+> + * protected memory use case. Parameters are passed as:
+> + * [in] param[0].attr			OPTEE_MSG_ATTR_TYPE_VALUE_INOUT
+> + * [in] param[0].value.a		OPTEE_MSG_PROTMEM_*
+> + * [in] param[1].attr			OPTEE_MSG_ATTR_TYPE_{R,F}MEM_OUTPUT
+> + * [in] param[1].u.{r,f}mem		Buffer or NULL
+> + * [in] param[1].u.{r,f}mem.size	Provided size of buffer or 0 for query
+> + * output for the protected use case:
+> + * [out] param[0].value.a		Minimal size of protected memory
+> + * [out] param[0].value.b		Required alignment of size and start of
+> + *					protected memory
+> + * [out] param[0].value.c               PA width, max 64
+> + * [out] param[1].{r,f}mem.size		Size of output data
+> + * [out] param[1].{r,f}mem		If non-NULL, contains an array of
+> + *					uint16_t holding endpoints that
+> + *					must be included when lending
+> + *					memory for this use case
+> + *
+> + * OPTEE_MSG_CMD_ASSIGN_PROTMEM assigns use-case to protected memory
+> + * previously lent using the FFA_LEND framework ABI. Parameters are passed
+> + * as:
+> + * [in] param[0].attr			OPTEE_MSG_ATTR_TYPE_VALUE_INPUT
+> + * [in] param[0].u.value.a		holds protected memory cookie
+> + * [in] param[0].u.value.b		OPTEE_MSG_PROTMEM_* defined above
+>   */
+> -#define OPTEE_MSG_CMD_OPEN_SESSION	0
+> -#define OPTEE_MSG_CMD_INVOKE_COMMAND	1
+> -#define OPTEE_MSG_CMD_CLOSE_SESSION	2
+> -#define OPTEE_MSG_CMD_CANCEL		3
+> -#define OPTEE_MSG_CMD_REGISTER_SHM	4
+> -#define OPTEE_MSG_CMD_UNREGISTER_SHM	5
+> -#define OPTEE_MSG_CMD_DO_BOTTOM_HALF	6
+> -#define OPTEE_MSG_CMD_STOP_ASYNC_NOTIF	7
+> -#define OPTEE_MSG_FUNCID_CALL_WITH_ARG	0x0004
+> +#define OPTEE_MSG_CMD_OPEN_SESSION		0
+> +#define OPTEE_MSG_CMD_INVOKE_COMMAND		1
+> +#define OPTEE_MSG_CMD_CLOSE_SESSION		2
+> +#define OPTEE_MSG_CMD_CANCEL			3
+> +#define OPTEE_MSG_CMD_REGISTER_SHM		4
+> +#define OPTEE_MSG_CMD_UNREGISTER_SHM		5
+> +#define OPTEE_MSG_CMD_DO_BOTTOM_HALF		6
+> +#define OPTEE_MSG_CMD_STOP_ASYNC_NOTIF		7
+> +#define OPTEE_MSG_CMD_LEND_PROTMEM		8
+> +#define OPTEE_MSG_CMD_RECLAIM_PROTMEM		9
+> +#define OPTEE_MSG_CMD_GET_PROTMEM_CONFIG	10
+> +#define OPTEE_MSG_CMD_ASSIGN_PROTMEM		11
+> +#define OPTEE_MSG_FUNCID_CALL_WITH_ARG		0x0004
+>  
+>  #endif /* _OPTEE_MSG_H */
+> diff --git a/drivers/tee/optee/optee_smc.h b/drivers/tee/optee/optee_smc.h
+> index 879426300821..accf76a99288 100644
+> --- a/drivers/tee/optee/optee_smc.h
+> +++ b/drivers/tee/optee/optee_smc.h
+> @@ -264,7 +264,6 @@ struct optee_smc_get_shm_config_result {
+>  #define OPTEE_SMC_SEC_CAP_HAVE_RESERVED_SHM	BIT(0)
+>  /* Secure world can communicate via previously unregistered shared memory */
+>  #define OPTEE_SMC_SEC_CAP_UNREGISTERED_SHM	BIT(1)
 > -
 >  /*
->   * Trivial allocator for CLOSIDs. Use BITMAP APIs to manipulate a bitmap
->   * of free CLOSIDs.
-> @@ -4020,8 +4014,10 @@ static void rdtgroup_setup_default(void)
->  static void domain_destroy_mon_state(struct rdt_mon_domain *d)
->  {
->         bitmap_free(d->rmid_busy_llc);
-> -       kfree(d->mbm_total);
-> -       kfree(d->mbm_local);
-> +       for (int i =3D 0; i < QOS_NUM_L3_MBM_EVENTS; i++) {
-> +               kfree(d->mbm_states[i]);
-> +               d->mbm_states[i] =3D NULL;
-> +       }
->  }
->
->  void resctrl_offline_ctrl_domain(struct rdt_resource *r, struct rdt_ctrl=
-_domain *d)
-> @@ -4081,32 +4077,34 @@ void resctrl_offline_mon_domain(struct rdt_resour=
-ce *r, struct rdt_mon_domain *d
->  static int domain_setup_mon_state(struct rdt_resource *r, struct rdt_mon=
-_domain *d)
->  {
->         u32 idx_limit =3D resctrl_arch_system_num_rmid_idx();
-> -       size_t tsize;
-> +       size_t tsize =3D sizeof(struct mbm_state);
-
-Here too.
-
-Thanks!
--Peter
+>   * Secure world supports commands "register/unregister shared memory",
+>   * secure world accepts command buffers located in any parts of non-secure RAM
+> @@ -280,6 +279,10 @@ struct optee_smc_get_shm_config_result {
+>  #define OPTEE_SMC_SEC_CAP_RPC_ARG		BIT(6)
+>  /* Secure world supports probing for RPMB device if needed */
+>  #define OPTEE_SMC_SEC_CAP_RPMB_PROBE		BIT(7)
+> +/* Secure world supports protected memory */
+> +#define OPTEE_SMC_SEC_CAP_PROTMEM		BIT(8)
+> +/* Secure world supports dynamic protected memory */
+> +#define OPTEE_SMC_SEC_CAP_DYNAMIC_PROTMEM	BIT(9)
+>  
+>  #define OPTEE_SMC_FUNCID_EXCHANGE_CAPABILITIES	9
+>  #define OPTEE_SMC_EXCHANGE_CAPABILITIES \
+> @@ -451,6 +454,38 @@ struct optee_smc_disable_shm_cache_result {
+>  
+>  /* See OPTEE_SMC_CALL_WITH_REGD_ARG above */
+>  #define OPTEE_SMC_FUNCID_CALL_WITH_REGD_ARG	19
+> +/*
+> + * Get protected memory config
+> + *
+> + * Returns the protected memory config.
+> + *
+> + * Call register usage:
+> + * a0   SMC Function ID, OPTEE_SMC_GET_PROTMEM_CONFIG
+> + * a2-6	Not used, must be zero
+> + * a7	Hypervisor Client ID register
+> + *
+> + * Have config return register usage:
+> + * a0	OPTEE_SMC_RETURN_OK
+> + * a1	Physical address of start of protected memory
+> + * a2	Size of protected memory
+> + * a3	PA width, max 64
+> + * a4-7	Preserved
+> + *
+> + * Not available register usage:
+> + * a0	OPTEE_SMC_RETURN_ENOTAVAIL
+> + * a1-3 Not used
+> + * a4-7	Preserved
+> + */
+> +#define OPTEE_SMC_FUNCID_GET_PROTMEM_CONFIG		20
+> +#define OPTEE_SMC_GET_PROTMEM_CONFIG \
+> +	OPTEE_SMC_FAST_CALL_VAL(OPTEE_SMC_FUNCID_GET_PROTMEM_CONFIG)
+> +
+> +struct optee_smc_get_protmem_config_result {
+> +	unsigned long status;
+> +	unsigned long start;
+> +	unsigned long size;
+> +	unsigned long pa_width;
+> +};
+>  
+>  /*
+>   * Resume from RPC (for example after processing a foreign interrupt)
+> -- 
+> 2.43.0
+> 
