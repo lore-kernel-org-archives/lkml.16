@@ -1,110 +1,76 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B42C19CC22;
-	Fri, 23 May 2025 15:06:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 505532957CD
+	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 15:08:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748012807; cv=none; b=onEkHhWoUImnQrRhSNaDuhNPvnhROuYAVAgdnadLc7S4LZYLfonrZ7EhYFbMftZcuxG+txcBmA2yJNA2DvMM4pi6baINxjbWAVFTAYeM7yDXcZ9nr5sVj0O/s6ivqv5AcwsuRu7DPSDTnUsJIMc80l+cCFhb/lPtHjqSknKjLhg=
+	t=1748012889; cv=none; b=JJANHWzuR64KdadIvOx6KBiou0X68FMLkiKAC+exciKtjTHtgGiqoAj/kk1zqMUV6DonwNDtURR3lg/D+VUUXLD1iM8ZY8V/kKpiiALfIkC4WbNrJwBvE7YVagkzpS8Mzmn42LckDiBDpqcAYbDIpxUxRAviK+b5eQjTGgo8AVo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748012807; c=relaxed/simple;
-	bh=cTgg7neabucDYcjUEjOMZEoFwiorg7njPcXPV94ubGQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=N5XVFoFIfkgnJLc1fjLUiR8vDD4/0Oss3/XsF1HcpFz5Xnxo2c4Wd6hDTj+EcdI8df2xBSG2smRaMzWpS7qGB6eO68wvCss/BXKiwdtuX4vM+zKxb0WW52T6ny0JfN41coKJpCmYAsZiZGbS5qLzezJ0v6x39mw7J3DqMvHJUJs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FKiG+4IW; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FKiG+4IW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A75C0C4CEE9;
-	Fri, 23 May 2025 15:06:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748012807;
-	bh=cTgg7neabucDYcjUEjOMZEoFwiorg7njPcXPV94ubGQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=FKiG+4IW2Z2yeLgvhvZV5x9fKc2R8Ht0x7XOxlrbB91XbqnxzdpJsXe86ZfoiOCAd
-	 +DczRHIvMD8x6PvcUQKt2s2+BSIiZFbom7+k5FUJih7N8fCbTi+b8cHD2bT/w1/B5i
-	 cXd4q9ox30WORf/qf19xY/7lTnUgHrsjzScg/PqrJzB5ubpjRoj/5xfwp0+l4wAVEv
-	 QXM6LiLDH6GwjLN3eFZFNoQDGWwee1AlxutzFnoIK4FQe61tbb8VtTzR+qsDXmjNIa
-	 GjgJReoHIKaGadLlTSh2paCbWUDD28y7ZD01D2gQEAKO4r3i9LDSfMjh3NzDvLCHXm
-	 JZGjkrYnWQ8/Q==
-Date: Fri, 23 May 2025 17:01:36 +0200
-From: Joel Granados <joel.granados@kernel.org>
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Kees Cook <kees@kernel.org>, linux-kernel@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, Wen Yang <wen.yang@linux.dev>
-Subject: Re: [PATCH] kernel/sysctl-test: Unregister sysctl table after test
- completion
-Message-ID: <yaadrvxr76up6j2cixi5hhrxrb4yd6rfus7n3pvh3fv42ahk32@vwiphrfdvj57>
-References: <20250522013211.3341273-1-linux@roeck-us.net>
- <ce50a353-e501-4a22-9742-188edfa2a7b2@roeck-us.net>
+	s=arc-20240116; t=1748012889; c=relaxed/simple;
+	bh=i+iXLNvGMTATkR4803QYEOC16erbRJNZXIzx8Xw0HYc=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=A8OHF/uPk6+wRh4EI+3/nWEdnViIG3lqsia+IyORkavQYB8rjO9xoI2eQBKHyhfMAsvgKY8nYyi9XF66g0gNaqdHtcJgbb1BdvOYdqKpF96ZCBagy134d9NaZCutSe8VSxqsOqQ4rEQTBa1H2blrB4ZjkgRXllYxRxs9zOil6LI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-3dc7bc950ceso46305125ab.1
+        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 08:08:08 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748012887; x=1748617687;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=cmr5S6Im8u0H817gwM37MBHCKU+4Gc2sIDVkqkOIiuA=;
+        b=Iuvos2x+xOZE4Mmzz5wbAPx3Vg/IZFUbObDCxRPa5CZmxaSGQzRH7tO8ujXhB1YMG9
+         0U+bsP3AfFbff63G+8fCNaLSRZ3AhbnO0sSfTI/6vyU03ivFV4zHm5DpMzZuVTCAaVFD
+         SKIkZRHLkHHBmbRNPzgGpAy5Pzsf6XJ0dueiWwbSPKvpsXTqcotyUmHkYvNQgHJYR+Rd
+         xbxHOoMmuIveT0I0HXG2VAVz18q5B276T4Ig8gCqD9pgPOIYjcBj1pi1MsbImvW2MND3
+         lwkJcx+xlRciodEOtQg9rQDZLwXEIberbL2x1B97Ep2ynMR7yx7XFJr9Q4/oIT5sDFHD
+         CkCA==
+X-Forwarded-Encrypted: i=1; AJvYcCXKVx2QsGL0AMH1e6FolHKb4KmrlH/v8hOigF+xsAzrDAjErA/wl9f6t+fvOtPoej8LE53PTt4LGwgLSVU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx1kOPwrmZTSwAJJNU4fdG4nriullCdoXt4qU5Rc/t5dsIEIaf8
+	lFeKrs4Lxz6XvUgHOiG4g4oQAcF3V1dUWAi5umy76rh+eHQiqS5yrbcjPZUsR7awMyFYTbyW1FC
+	FTBnXQv847ecKEJZe+bAdjg1TQBZIxGtCq2o26oFEuF94CSr2djjZNGSmGIk=
+X-Google-Smtp-Source: AGHT+IHDobLa4xYg9FQCxm1cqLMjYS7GvPxRMFT4ju4YhG6UZLPg2I2+dWkd/7/iXpAed8cH5xLnYDh3fovvkw25t3CkFf3ZLAmr
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="coch6zutooty5uxj"
-Content-Disposition: inline
-In-Reply-To: <ce50a353-e501-4a22-9742-188edfa2a7b2@roeck-us.net>
+X-Received: by 2002:a92:ca4f:0:b0:3d5:d6ad:286a with SMTP id
+ e9e14a558f8ab-3db84313973mr258182195ab.13.1748012887430; Fri, 23 May 2025
+ 08:08:07 -0700 (PDT)
+Date: Fri, 23 May 2025 08:08:07 -0700
+In-Reply-To: <634e5312cbaa01a31fe8781167dfb2dc8e932f2a.camel@gmail.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <68308f57.a70a0220.1765ec.014f.GAE@google.com>
+Subject: Re: [syzbot] [bpf?] WARNING in __bpf_prog_ret0_warn
+From: syzbot <syzbot+0903f6d7f285e41cdf10@syzkaller.appspotmail.com>
+To: andrii@kernel.org, ast@kernel.org, bpf@vger.kernel.org, 
+	daniel@iogearbox.net, eddyz87@gmail.com, haoluo@google.com, 
+	john.fastabend@gmail.com, jolsa@kernel.org, kpsingh@kernel.org, 
+	linux-kernel@vger.kernel.org, mannkafai@gmail.com, martin.lau@linux.dev, 
+	sdf@fomichev.me, song@kernel.org, syzkaller-bugs@googlegroups.com, 
+	yonghong.song@linux.dev
+Content-Type: text/plain; charset="UTF-8"
 
+Hello,
 
---coch6zutooty5uxj
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+syzbot has tested the proposed patch and the reproducer did not trigger any issue:
 
-On Thu, May 22, 2025 at 11:53:15AM -0700, Guenter Roeck wrote:
-> On Wed, May 21, 2025 at 06:32:11PM -0700, Guenter Roeck wrote:
-> > One of the sysctl tests registers a valid sysctl table. This operation
-> > is expected to succeed. However, it does not unregister the table after
-> > executing the test. If the code is built as module and the module is
-> > unloaded after the test, the next operation trying to access the table
-> > (such as 'sysctl -a') will trigger a crash.
-> >=20
-> > Unregister the registered table after test completiion to solve the
-> > problem.
-> >=20
->=20
-> Never mind, I just learned that a very similar patch has been submitted
-> last December or so but was rejected, and that the acceptable (?) fix see=
-ms
-> to be stalled.
->=20
-> Sorry for the noise.
->=20
-> Guenter
+Reported-by: syzbot+0903f6d7f285e41cdf10@syzkaller.appspotmail.com
+Tested-by: syzbot+0903f6d7f285e41cdf10@syzkaller.appspotmail.com
 
-Hey Guenter
+Tested on:
 
-It is part of what is getting sent for 6.16 [1]
-That test will move out of kunit into self-test.
+commit:         94305e83 Merge tag 'pmdomain-v6.15-rc3' of git://git.k..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=113f45f4580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=89a6bdf3bbc4e852
+dashboard link: https://syzkaller.appspot.com/bug?extid=0903f6d7f285e41cdf10
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=174f45f4580000
 
-Best
-
-
-[1] https://sysctl-dev-rtd.readthedocs.io/en/latest/release.html#patch-0-4-=
-sysctl-move-the-u8-range-check-test-to-lib-test-sysctl-c
-
---=20
-
-Joel Granados
-
---coch6zutooty5uxj
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQGzBAABCgAdFiEErkcJVyXmMSXOyyeQupfNUreWQU8FAmgwjccACgkQupfNUreW
-QU8YgAv+L+zQWehdMUQeh3Rr/pAATLh8YLAMC7q/tDLnjY5IyY6okQ7V7W5SBPlb
-aqtQ0OoL69Mbh2gtY0ykvFnK7G+vBOW4F3bI49jjNc9ewkaUEhk0imb69ktYounm
-eILkPj4mO6jJfPqrQMakMVqrKkc6fVRpKYwdEOGuLos/tnwc0BtwEM542JBodXtO
-I6fALUHUzq5R9mdkuAUSJ7yM7XPsIgIm8gpGRR3zH2kPFoPBhQdq2bdi/pu0Ci7s
-CjfZzUx8/EhkTaR9sZH/hUanaXAyKSQ0KxuYdJ34rgpvBWuwxGo3pdManxvpiLVS
-pASo7TCA9YQ/m61h4DVicmGAoC1LzKnCCgXefdI3Fa7SAyA3oY31vjTwWVi2wksQ
-QgoHFf6ruAmWvEOL0+WyLNGoKC0sJItN1CVGfZr2FvnIpwifqdH8Cu9nOE2HYATf
-qyansBdZ7Pkk/bE50A20asoXQpgP0EXKtOhuMNnuZvaFP36HluV/XANkPpk6taCU
-IuvZkyWq
-=sdLO
------END PGP SIGNATURE-----
-
---coch6zutooty5uxj--
+Note: testing is done by a robot and is best-effort only.
