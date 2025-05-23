@@ -1,152 +1,497 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-180.mta1.migadu.com (out-180.mta1.migadu.com [95.215.58.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 086B52367B8
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 11:54:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB46D20CCD3
+	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 11:55:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748001259; cv=none; b=bLIWisli9x3cU1ijVjLAqTMoF2thnDTiOCTchcCLponJElwnZkVmssVVeIjsGuhjM9G2WZXOB4F2YK9OdMpbt7vX6IBSKPrGxj1ujlsObjffD3QujwP7zUqhyJ5DVMwYEiERloa72x3x/6i5ZE7NZVBTxY47v3+dk+y+e5t8d9c=
+	t=1748001304; cv=none; b=GAMGAlyH39tMxlO/cjfDCeod/2IVOMbUHCZYYLiJhj2G4wHOu9OIr5X5wWqirvvzQwBMGFzOTbNXuPLv/nbjU5L0Xy1BruYHzkqbYNed+darVnkGIyG4VtHbTCMJhxUCktCfdzLJDLdrWciKi9tF1TmYtWn1/3JDDkSTgRdqn0w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748001259; c=relaxed/simple;
-	bh=BXvJFpVA4ilgRSSeqSYm7PYzi2P89luS7woNYtdBaS0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=epWpYlp2XjFckNWwdtdfLHW8c9/D9G32IyKCYBvsHkqfAehj+enSfb2HaOHO2GzljO0+AY7UEjkkpWirwivReqgbEpyYjBnTyjxXD9tr4ARTWLfsEPwibtTVRatbLKVzCOn0tLEXfw09+/lJiyN+qgMN4W18/KadLKq8FKsldyE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=H8w+bItw; arc=none smtp.client-ip=209.85.221.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1748001304; c=relaxed/simple;
+	bh=C35yRaL5tY0JLVLlAqHYlEZODlTqaIBr3GbgwbPcy+I=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=a6UlyRvkBYl1b/fXJVvNja7VfbkFqzSwvJoEqbPcaSII1fOtX7V8S780kHqd2ThZQnR+o37JjRUJ+Ga7JPysLx+aCZYuX4twk590Vq226BNm9VxbvMVXEzAIzHeGtga+DQXNd1Sawm8jM8We1yDREZr25+n0jjJUxK4b4SdhUz0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=RPY3DcK4; arc=none smtp.client-ip=95.215.58.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="H8w+bItw"
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-3a35ae46214so916311f8f.2
-        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 04:54:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1748001256; x=1748606056; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=k6qou1GXisg5Lz6mIdktWomVTeQC95vvYHD4cO4QbVE=;
-        b=H8w+bItwbKhm6OdFJpeXzvF5jqvSLwPzLlgYR/lGaBq/wscnQbtrgv4qUn5pOx4sCI
-         hTQsByZDcMbdafXf+4wfIo4UDleqNEJuf2n6GYU6PXBzu7/j/L3mL6gDENmtlH1ZbPLI
-         JvYBkO9OFYIbBInRwft5qW/A1bqV/+ojQ8NH2dAHq0Hb/r+JiQDSnSnBBkkcKMECt5Zk
-         w01YkF9dMCXQ6Tffv2Zjz0Lhx6wTF4Ly2W38fV88/DElr21BVMyxlVPiBtGoavAVxNej
-         ZETacU0hrzxG8ujGiQuSAu9TBG2SBQtQ5veQHH3+I9M1OYmODIzSyJAc5rpPTAaNcQoV
-         VdRA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748001256; x=1748606056;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=k6qou1GXisg5Lz6mIdktWomVTeQC95vvYHD4cO4QbVE=;
-        b=pgUVhcIc6q2AkGl0blU8R6Dt4Rs7VBUs11CrXsWOdOPZMT1v3GqC6Td2QROidYJsKL
-         1YEY8Il/QYXptggcoFMloCh8HYZk3ubc++7U5Qti/d3RACpuXBsthsjtymYt0zuUKqgB
-         nNoRdRo2Nzf5JrP4TptqK4AVTuz/Q/y72BHcPzPH4mPN+5lLPBUkDzFzAvLKKURRs2uV
-         chjOIVAcIxQDcovu/kRmOkaOf67BQGlHB5XVdbtO8QPl3e0KCwWi14CZnYoWtlgzBNMM
-         m1gIbFXqgW/dQ0zraDAq1M9m8J4rUhydGsxiAxY8vuFE+tW7GS86u1Cm/UwR0Hz9K3KC
-         QR1w==
-X-Forwarded-Encrypted: i=1; AJvYcCWX9qxD0sCDWpGprRJEwjx4Yx2/BW5MY4C3n8f9I9dTr74Q5FKUoxtFNI3o4Tge95XjeiwS4NnuV74objo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwgHPTiybQ0HRgEzrYu3XXGds98RFK+khyNCIwuqDPPpmv9lRHK
-	lxegDEZO+JlWQ1FoCZkn7grnpOcp6dP0f1prb7uBk86ei+IPsB1fCZnmFZ/tP382X/4=
-X-Gm-Gg: ASbGnctDP11weudnN+sSoJSaWAY6aS9Ge/TFzDQFXdIaP0sU3r4OPAYoLDcZCCQcjk/
-	viEAnbM7rgQTssyvCmKpAOUUj9spWkKSkaWhlM1khb6Pog+UKHr8saXl8jiFH5YbcexSu+MxRnK
-	2qH2rzKKE49fgfsmN+2nDHfYo4PEU0Ah+Y///z7QrZZi9J9heVqCdsCAeHBpu3o2ds3vWbbwbMe
-	sTh3HjfESWHTQhaSGt/Zl8KoQpulXWN5fxBMBrvrWaEPJeANETC2FNEYPk3ce1vALMwU/T4tqeI
-	CzhOqEmB9kmkzfrjRhkZQQmqi4Lcz/phBEB2htBx08SBAiNvTQKngcZXKmwyl0HEqVw++Rw=
-X-Google-Smtp-Source: AGHT+IFjK0qdgBolj6t+uyk1Uk/P/7Bh1VutPx4WjA3hTJjfWv5K3/rTrjmwSdWfQM8aOb4l/FfPEA==
-X-Received: by 2002:a05:6000:188f:b0:3a3:71fb:7903 with SMTP id ffacd0b85a97d-3a371fb829emr6221227f8f.10.1748001256163;
-        Fri, 23 May 2025 04:54:16 -0700 (PDT)
-Received: from [192.168.1.29] ([178.197.223.125])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a36c6eeaf8sm18642922f8f.48.2025.05.23.04.54.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 23 May 2025 04:54:15 -0700 (PDT)
-Message-ID: <bdd989b4-a572-44c2-ae7b-2c445c09fd7a@linaro.org>
-Date: Fri, 23 May 2025 13:54:14 +0200
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="RPY3DcK4"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1748001288;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9181g7QwrmXTo7V8SLmNc23UjiXBHZW7pmfawKP0VaM=;
+	b=RPY3DcK4lVmBw4J/vHr2EFFo2A9uMjX5xoY/Oy3G7YbJA71h0SQV3xgn6DPdO7QEc1wCEV
+	ri+uOQClFA9te9nRpwfYQ0kjQHhJ/bdlbea19MUeY+SCICP2fxH1TSN5cKnqdx398FWNDz
+	GKo28c+A+/aQbYlYdtSC2Y29ZixIswk=
+From: Kent Overstreet <kent.overstreet@linux.dev>
+To: linux-fsdevel@vger.kernel.org,
+	linux-bcachefs@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-unionfs@vger.kernel.org
+Cc: Kent Overstreet <kent.overstreet@linux.dev>,
+	Miklos Szeredi <miklos@szeredi.hu>,
+	Amir Goldstein <amir73il@gmail.com>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>,
+	Jan Kara <jack@suse.cz>
+Subject: [PATCH v2] fs: dcache exlusion between overlayfs, casefolding
+Date: Fri, 23 May 2025 07:54:42 -0400
+Message-ID: <20250523115442.3583342-1-kent.overstreet@linux.dev>
+In-Reply-To: <20250520051600.1903319-5-kent.overstreet@linux.dev>
+References: <20250520051600.1903319-5-kent.overstreet@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] arm64: defconfig: Build STMMAC Ethernet driver into the
- kernel for NFS boot
-To: Geert Uytterhoeven <geert@linux-m68k.org>,
- Prabhakar <prabhakar.csengg@gmail.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-renesas-soc@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>,
- Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
- Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <20250506104731.111876-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <CAMuHMdWhwJTbJOBhKmC9YUaSebBg-9m7euqmxqJLCXdr6++siA@mail.gmail.com>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Content-Language: en-US
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- 2+47PN9NZAOyb771QoVr8A==
-In-Reply-To: <CAMuHMdWhwJTbJOBhKmC9YUaSebBg-9m7euqmxqJLCXdr6++siA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On 23/05/2025 13:39, Geert Uytterhoeven wrote:
-> On Tue, 6 May 2025 at 12:47, Prabhakar <prabhakar.csengg@gmail.com> wrote:
->> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->>
->> Enable `CONFIG_STMMAC_ETH` as built-in (`y`) instead of a module (`m`) to
->> ensure the Ethernet driver is available early in the boot process. This
->> is necessary for platforms mounting the root filesystem via NFS, as the
->> driver must be available before the root filesystem is accessed.
->>
->> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->> ---
->> With this change, the Renesas RZ/V2H EVK board can boot from NFS
->> which has the DWMAC IP.
-> 
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> i.e. will queue in renesas-devel for v6.17.
+Allow casefolding to be used on the same filesystem as overlayfs.
 
-With my Nacked, please.
+Overlayfs cannot handle a directory that has been casefolding, so this
+implements locking between enabling casefolding and overlayfs.
 
-Best regards,
-Krzysztof
+The underlying filesystem mus also track, for each directory, whether
+casefolding has been enabled on any subdirectory, and provide this
+information to the VFS with the S_NO_CASEFOLD flag.
+
+Since we can't inflate struct dentry for this, add a separate rhashtable
+that functions as a per-dentry "casefolding disabled" ref.
+
+New helpers, for overlayfs:
+- d_casefold_disabled_put()
+- d_casefold_disabled_get()
+
+These acquire and release refs that check that S_NO_CASEFOLD is set on a
+directory, and prevent it from being cleared while the ref exists.
+
+For the underlying filesystem:
+
+- d_casefolding_enable()
+- d_casefolding_enable_commit()
+
+This is for the underlying filesystem that implements casefolding, in
+settar and rename. d_casefolding_enable() checks for conflicting refs
+held by overlayfs and acquires refs while the rename or setatr is being
+done, d_casefolding_enable_commit() releases those refs and clears the
+S_NO_CASEFOLD flag.
+
+Implementation -
+
+We can't inflate struct dentry for this, so references are tracked in a
+separate rhashtable.
+
+To guard against races with rename(), d_casefolding_enable() must take
+refs (which in turn call dget()) on all dentries with inodes that need
+S_NO_CASEFOLD flipped; these dget() refs are released by commit().
+
+d_casefold_disabled_get/put take dget() refs for the duration of the
+union mount, but this is unchanged because unionfs already holds a path
+ref for the duration of the mount.
+
+Changes since v1:
+
+- Fix "walk up the tree" synchronization
+
+  s_vfs_rename_mutex is required: we can't allow an operation enabling
+  casefolding (via fileattr_set) to race with a rename moving it into a
+  tree exported by overlayfs.
+
+  d_casefold_enable() has a new @rename parameter: if set, we check that
+  s_vfs_rename_mutex is held, if not (called from fileattr_set), we
+  acquire it and release it in d_casefold_enable_commit().
+
+  Also, use dget_parent().
+
+- no_casefold_dentries_lock -> sb->s_casefold_enable_lock
+
+- d_casefold_enable() now bails out early if called on non-directory, or
+  if S_NO_CASEFOLD is not set.
+
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>
+Cc: Christian Brauner <brauner@kernel.org>
+Cc: Jan Kara <jack@suse.cz>
+Signed-off-by: Kent Overstreet <kent.overstreet@linux.dev>
+---
+ fs/dcache.c            | 266 +++++++++++++++++++++++++++++++++++++++++
+ fs/super.c             |   1 +
+ include/linux/dcache.h |  12 ++
+ include/linux/fs.h     |   4 +
+ 4 files changed, 283 insertions(+)
+
+diff --git a/fs/dcache.c b/fs/dcache.c
+index bd5aa136153a..d29faa6f9ec8 100644
+--- a/fs/dcache.c
++++ b/fs/dcache.c
+@@ -32,6 +32,8 @@
+ #include <linux/bit_spinlock.h>
+ #include <linux/rculist_bl.h>
+ #include <linux/list_lru.h>
++#include <linux/rhashtable.h>
++#include <linux/darray.h>
+ #include "internal.h"
+ #include "mount.h"
+ 
+@@ -3141,6 +3143,266 @@ ino_t d_parent_ino(struct dentry *dentry)
+ }
+ EXPORT_SYMBOL(d_parent_ino);
+ 
++static struct rhashtable no_casefold_dentries;
++
++enum no_casefold_dentry_ref {
++	ref_casefold_disable,
++	ref_casefold_enable,
++};
++
++struct no_casefold_dentry {
++	struct rhash_head	hash;
++	struct dentry		*dentry;
++	unsigned long		ref[2];
++};
++
++static const struct rhashtable_params no_casefold_dentries_params = {
++	.head_offset		= offsetof(struct no_casefold_dentry, hash),
++	.key_offset		= offsetof(struct no_casefold_dentry, dentry),
++	.key_len		= sizeof(struct dentry *),
++	.automatic_shrinking	= true,
++};
++
++static int no_casefold_dentry_get(struct dentry *dentry,
++				  enum no_casefold_dentry_ref ref)
++{
++	struct no_casefold_dentry *n =
++		rhashtable_lookup_fast(&no_casefold_dentries,
++				       &dentry,
++				       no_casefold_dentries_params);
++	if (n) {
++		if (n->ref[!ref])
++			return -EINVAL;
++
++		n->ref[ref]++;
++		return 0;
++	}
++
++	n = kzalloc(sizeof(*n), GFP_KERNEL);
++	if (!n)
++		return -ENOMEM;
++
++	n->dentry = dget(dentry);
++	n->ref[ref]++;
++
++	int ret = rhashtable_lookup_insert_fast(&no_casefold_dentries,
++				&n->hash, no_casefold_dentries_params);
++	if (WARN_ON(ret)) {
++		kfree(n);
++		return ret;
++	}
++
++	return 0;
++}
++
++static void no_casefold_dentry_put(struct dentry *dentry,
++				   enum no_casefold_dentry_ref ref)
++{
++	struct no_casefold_dentry *n =
++		rhashtable_lookup_fast(&no_casefold_dentries,
++				       &dentry,
++				       no_casefold_dentries_params);
++	if (WARN_ON(!n))
++		return;
++
++	if (--n->ref[ref])
++		return;
++
++	dput(n->dentry);
++	int ret = rhashtable_remove_fast(&no_casefold_dentries,
++					 &n->hash, no_casefold_dentries_params);
++	WARN_ON(ret);
++}
++
++/**
++ * d_casefold_disabled_put - drop a "casefold disabled" ref
++ *
++ * Only for overlayfs.
++ */
++void d_casefold_disabled_put(struct dentry *dentry)
++{
++	struct super_block *sb = dentry->d_sb;
++
++	if (!(sb->s_flags & SB_CASEFOLD))
++		return;
++
++	guard(mutex)(&sb->s_casefold_enable_lock);
++	no_casefold_dentry_put(dentry, ref_casefold_disable);
++}
++EXPORT_SYMBOL_GPL(d_casefold_disabled_put);
++
++/**
++ * d_casefold_disabled_get - attempt to disable casefold on a tree
++ *
++ * Only for overlayfs.
++ *
++ * Returns -EINVAL if casefolding is in use on any subdirectory; this must be
++ * tracked by the filesystem.
++ *
++ * On success, returns with a reference held that must be released by
++ * d_casefold_disabled_put(); this ref blocks casefold from being enabled
++ * by d_casefold_enable().
++ */
++int d_casefold_disabled_get(struct dentry *dentry)
++{
++	struct super_block *sb = dentry->d_sb;
++
++	if (!(sb->s_flags & SB_CASEFOLD))
++		return 0;
++
++	guard(mutex)(&sb->s_casefold_enable_lock);
++
++	if (!(dentry->d_inode->i_flags & S_NO_CASEFOLD))
++		return -EINVAL;
++
++	return no_casefold_dentry_get(dentry, ref_casefold_disable);
++}
++EXPORT_SYMBOL_GPL(d_casefold_disabled_get);
++
++/* Crabwalk: releases @dentry after getting ref on parent */
++static struct dentry *dget_parent_this_sb(struct dentry *dentry)
++{
++	struct dentry *parent = dentry != dentry->d_sb->s_root
++		? dget_parent(dentry)
++		: NULL;
++	dput(dentry);
++	return parent;
++}
++
++/**
++ * d_casefold_enable - check if casefolding may be enabled on a dentry
++ *
++ * @dentry:	dentry to enable casefolding on
++ * @e:		state object, released by d_casefold_enable_commit()
++ * @rename:	Are we in the rename path?
++ *		If so, we expect s_vfs_rename_mutex to be held, if not (called
++ *		from setflags), we aquire it if necessary, and release in
++ *		commit.
++ *
++ * The rename mutex is required because we're operating on a whole path,
++ * potentially up to the filesystem root, and we need it to be stable until
++ * commit (i.e. we don't want to be renamed into a tree overlayfs is exporting
++ * after we've returned success).
++ *
++ * For rename, this should only be called for cross-directory rename.
++ * S_NO_CASEFOLD doesn't need to change on rename within a directory, and
++ * s_vfs_rename_mutex won't be held on non cross-directory rename.
++ *
++ * Returns -EINVAL if casefolding has been disabled on any parent directory (by
++ * overlayfs).
++ *
++ * On success, the d_casefold_enable object must be committed with
++ * d_casefold_enable_commit(), after the filesystem has updated its internal
++ * state.
++ *
++ * Commit will clear S_NO_CASEFOLD on all inodes up to the filesystem root,
++ * informing overlayfs that this tree has casefolding enabled somewhere in it.
++ */
++int d_casefold_enable(struct dentry *dentry, struct d_casefold_enable *e,
++		      bool rename)
++{
++	int ret = 0;
++
++	memset(e, 0, sizeof(*e));
++	e->sb = dentry->d_sb;
++
++	if (!(e->sb->s_flags & SB_CASEFOLD))
++		return 0;
++
++	if (!S_ISDIR(dentry->d_inode->i_mode))
++		return 0;
++
++	/*
++	 * On rename, we're passed the dentry being renamed (the filesystem is
++	 * not passed the dentry of the directory we're renaming to), but it's
++	 * the parent that may need to have S_NO_CASEFOLD cleared:
++	 */
++	dentry = rename
++		? dget_parent(dentry)
++		: dget(dentry);
++
++	if (!(dentry->d_inode->i_flags & S_NO_CASEFOLD)) {
++		dput(dentry);
++		return 0;
++	}
++
++	if (rename) {
++		lockdep_assert_held(&e->sb->s_vfs_rename_mutex);
++	} else {
++		mutex_lock(&e->sb->s_vfs_rename_mutex);
++		e->rename_mutex_held = true;
++	}
++
++	guard(mutex)(&e->sb->s_casefold_enable_lock);
++
++	for (struct dentry *i = dentry; i; i = dget_parent_this_sb(i)) {
++		if (!(i->d_inode->i_flags & S_NO_CASEFOLD)) {
++			dput(i);
++			break;
++		}
++
++		ret = darray_push(&e->refs, i);
++		if (ret) {
++			dput(i);
++			goto err;
++		}
++
++		ret = no_casefold_dentry_get(i, ref_casefold_enable);
++		if (ret) {
++			dput(i);
++			--e->refs.nr;
++			goto err;
++		}
++	}
++
++	return 0;
++err:
++	darray_for_each(e->refs, i)
++		no_casefold_dentry_put(*i, ref_casefold_enable);
++	darray_exit(&e->refs);
++
++	if (e->rename_mutex_held)
++		mutex_unlock(&e->sb->s_vfs_rename_mutex);
++	e->rename_mutex_held = false;
++	return ret;
++}
++EXPORT_SYMBOL_GPL(d_casefold_enable);
++
++/**
++ * d_casefold_enable_commit - finish operation started by d_casefold_enable()
++ *
++ * @e:		state object, started by d_casefold_enable_commit()
++ * @ret:	Success or failure of the operation, from the filesystem
++ *
++ * On success (@ret == 0), clear S_NO_CASEFOLD on all inodes up to the
++ * filesystem root that have it set, which d_casefold_enable() previously took
++ * references to.
++ */
++void d_casefold_enable_commit(struct d_casefold_enable *e, int ret)
++{
++	if (e->refs.nr) {
++		guard(mutex)(&e->sb->s_casefold_enable_lock);
++
++		darray_for_each(e->refs, i) {
++			if (!ret) {
++				struct inode *inode = (*i)->d_inode;
++
++				spin_lock(&inode->i_lock);
++				inode->i_flags &= ~S_NO_CASEFOLD;
++				spin_unlock(&inode->i_lock);
++			}
++
++			no_casefold_dentry_put(*i, ref_casefold_enable);
++		}
++		darray_exit(&e->refs);
++	}
++
++	if (e->rename_mutex_held)
++		mutex_unlock(&e->sb->s_vfs_rename_mutex);
++	e->rename_mutex_held = false;
++}
++EXPORT_SYMBOL_GPL(d_casefold_enable_commit);
++
+ static __initdata unsigned long dhash_entries;
+ static int __init set_dhash_entries(char *str)
+ {
+@@ -3186,6 +3448,10 @@ static void __init dcache_init(void)
+ 		SLAB_RECLAIM_ACCOUNT|SLAB_PANIC|SLAB_ACCOUNT,
+ 		d_shortname.string);
+ 
++	int ret = rhashtable_init(&no_casefold_dentries, &no_casefold_dentries_params);
++	if (ret)
++		panic("error initializing no_casefold_dentries: %i\n", ret);
++
+ 	/* Hash may have been set up in dcache_init_early */
+ 	if (!hashdist)
+ 		return;
+diff --git a/fs/super.c b/fs/super.c
+index 97a17f9d9023..2ba3446f09d6 100644
+--- a/fs/super.c
++++ b/fs/super.c
+@@ -368,6 +368,7 @@ static struct super_block *alloc_super(struct file_system_type *type, int flags,
+ 	atomic_set(&s->s_active, 1);
+ 	mutex_init(&s->s_vfs_rename_mutex);
+ 	lockdep_set_class(&s->s_vfs_rename_mutex, &type->s_vfs_rename_key);
++	mutex_init(&s->s_casefold_enable_lock);
+ 	init_rwsem(&s->s_dquot.dqio_sem);
+ 	s->s_maxbytes = MAX_NON_LFS;
+ 	s->s_op = &default_op;
+diff --git a/include/linux/dcache.h b/include/linux/dcache.h
+index e9f07e37dd6f..fb78de44a929 100644
+--- a/include/linux/dcache.h
++++ b/include/linux/dcache.h
+@@ -3,6 +3,7 @@
+ #define __LINUX_DCACHE_H
+ 
+ #include <linux/atomic.h>
++#include <linux/darray_types.h>
+ #include <linux/list.h>
+ #include <linux/math.h>
+ #include <linux/rculist.h>
+@@ -604,4 +605,15 @@ static inline struct dentry *d_next_sibling(const struct dentry *dentry)
+ 	return hlist_entry_safe(dentry->d_sib.next, struct dentry, d_sib);
+ }
+ 
++void d_casefold_disabled_put(struct dentry *dentry);
++int d_casefold_disabled_get(struct dentry *dentry);
++
++struct d_casefold_enable {
++	DARRAY(struct dentry *)	refs;
++	struct super_block	*sb;
++	bool			rename_mutex_held;
++};
++int d_casefold_enable(struct dentry *dentry, struct d_casefold_enable *e, bool);
++void d_casefold_enable_commit(struct d_casefold_enable *e, int ret);
++
+ #endif	/* __LINUX_DCACHE_H */
+diff --git a/include/linux/fs.h b/include/linux/fs.h
+index ba942cd2fea1..7ee0cd7bc15b 100644
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -48,6 +48,7 @@
+ #include <linux/rw_hint.h>
+ #include <linux/file_ref.h>
+ #include <linux/unicode.h>
++#include <linux/rhashtable-types.h>
+ 
+ #include <asm/byteorder.h>
+ #include <uapi/linux/fs.h>
+@@ -1397,6 +1398,7 @@ struct super_block {
+ 	 * even looking at it. You had been warned.
+ 	 */
+ 	struct mutex s_vfs_rename_mutex;	/* Kludge */
++	struct mutex s_casefold_enable_lock;
+ 
+ 	/*
+ 	 * Filesystem subtype.  If non-empty the filesystem type field
+@@ -1440,6 +1442,7 @@ struct super_block {
+ 
+ 	struct mutex		s_sync_lock;	/* sync serialisation lock */
+ 
++
+ 	/*
+ 	 * Indicates how deep in a filesystem stack this SB is
+ 	 */
+@@ -2345,6 +2348,7 @@ struct super_operations {
+ #define S_CASEFOLD	(1 << 15) /* Casefolded file */
+ #define S_VERITY	(1 << 16) /* Verity file (using fs/verity/) */
+ #define S_KERNEL_FILE	(1 << 17) /* File is in use by the kernel (eg. fs/cachefiles) */
++#define S_NO_CASEFOLD	(1 << 18) /* Directory, and all descendents, are not casefolded */
+ 
+ /*
+  * Note that nosuid etc flags are inode-specific: setting some file-system
+-- 
+2.49.0
+
