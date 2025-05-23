@@ -1,99 +1,93 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4745F2DCC02;
-	Fri, 23 May 2025 03:43:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+Received: from m16.mail.126.com (m16.mail.126.com [117.135.210.6])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7417742AB4;
+	Fri, 23 May 2025 03:47:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.6
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747971841; cv=none; b=A/CiCIcfZ6i1jQ6JVs+vBfQh1jon94r8XQb2snAswCwlLeQuXg1jANkhVSk1Kscp8T9baWr63wdFYJdH52QEL1GZGSMuYAbd/5xLRPdRdiw0kZu4JgaIA4XZsgJe4c+JlYbkMIdcERjOkqTqHQEj324xqqrVR3ZJaMj5ogTYih0=
+	t=1747972047; cv=none; b=tLDp/8Xuqkei3LL9bqm6aHAmEyju69iBujxSq4Hy7Sn9ZfBqjaf4tg5f/wAgOhALj2GTPil2Z/8T3VQF506S4VEJfol6xV3g9dF6+qfdTep44OaqXMYyDMhHTueMxU6wwwcLlSbYMCR1VuqanDdnsEH4YV1RrrEjsrvBouxp3QQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747971841; c=relaxed/simple;
-	bh=pvtNNF3h+3VSF0hj81ZgGrG4VIQvL8NxH6ruZPJeRYc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=URjwzwU4mGCRUMiSDxqAY7lA8HgUoasYIStFWL7bP0DwixR1hin2lYQ1YhoQj7Y2cqy8Q/zRjP9prUA9VZljRKjR4glRS+VDCRhqJ001Vvm+C/MZ/C4BtSe6QbrJ+F8gtOSbqYuBZxUuTLdXjbFyvTHEm1bOqKiu0X7SwNBkBeE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: 24637060378811f0b29709d653e92f7d-20250523
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.45,REQID:cee2b758-5df6-4ad5-b3b3-f9722e7e2662,IP:0,U
-	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
-	release,TS:0
-X-CID-META: VersionHash:6493067,CLOUDID:fcf36063a7b938f265164793eaa8fa7a,BulkI
-	D:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0|50,EDM:-3,IP:nil,UR
-	L:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,S
-	PR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-UUID: 24637060378811f0b29709d653e92f7d-20250523
-Received: from mail.kylinos.cn [(10.44.16.175)] by mailgw.kylinos.cn
-	(envelope-from <zhangzihuan@kylinos.cn>)
-	(Generic MTA)
-	with ESMTP id 1571438718; Fri, 23 May 2025 11:43:51 +0800
-Received: from mail.kylinos.cn (localhost [127.0.0.1])
-	by mail.kylinos.cn (NSMail) with SMTP id 3AD6BE003505;
-	Fri, 23 May 2025 11:43:51 +0800 (CST)
-X-ns-mid: postfix-682FEEF7-47407982
-Received: from localhost.localdomain (unknown [172.25.120.24])
-	by mail.kylinos.cn (NSMail) with ESMTPA id 57348E003505;
-	Fri, 23 May 2025 11:43:50 +0800 (CST)
-From: Zihuan Zhang <zhangzihuan@kylinos.cn>
-To: rafael@kernel.org,
-	len.brown@intel.com,
-	pavel@kernel.org
-Cc: linux-pm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Zihuan Zhang <zhangzihuan@kylinos.cn>
-Subject: [PATCH v2] PM / Freezer: Skip dead/zombie processes
-Date: Fri, 23 May 2025 11:42:53 +0800
-Message-Id: <20250523034253.88083-1-zhangzihuan@kylinos.cn>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1747972047; c=relaxed/simple;
+	bh=IkdmFrSh2VwCtODceQe1mvxAb3VAK663r9TayBQV6g0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nSebJrIt4LuAVCIR5UGpptEworGirFWXRqk3GWTlf5AdTWvdTf7mJZi73pV2+ZDfh1e/i8Q83zVe3XiCiC9E+X8SCbiU6MnV7hgiyNVuqiU/VVJztq0bNO5NSI75pqyaG1YsqwSPLbxNPINqMstY2iLfitlTbKbqvWIWSYNP3sE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com; spf=pass smtp.mailfrom=126.com; dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b=j0CqrPB3; arc=none smtp.client-ip=117.135.210.6
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=126.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="j0CqrPB3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
+	s=s110527; h=Message-ID:Date:MIME-Version:Subject:To:From:
+	Content-Type; bh=BRlhWrT2SoYXDlWZPjcJEikz+rURnIHTSURTtEo/7GI=;
+	b=j0CqrPB3BVJ2NkTWzNNJzTs2suu7ZY2L22yVmswZVziThaQUpJh9t9b4pblpVs
+	IFWdrQZMU8ehbQTkmMo1ChtK6BuZdCzFHAaH3jZEaw+tacAVzITJ4PXLQxo8XlXs
+	/SWybH5CWos2S04jMlGdC2HIdu7xn8Nax3cAAbQiaKIrg=
+Received: from [172.19.20.199] (unknown [])
+	by gzga-smtp-mtada-g1-2 (Coremail) with SMTP id _____wD3Xyar7y9oVPJEAg--.40133S2;
+	Fri, 23 May 2025 11:46:51 +0800 (CST)
+Message-ID: <4e408146-7c77-4f6d-90e8-bb311d7ab53d@126.com>
+Date: Fri, 23 May 2025 11:46:51 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] mm/hugetlb: fix kernel NULL pointer dereference when
+ replacing free hugetlb folios
+To: Muchun Song <muchun.song@linux.dev>, Oscar Salvador <osalvador@suse.de>
+Cc: akpm@linux-foundation.org, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, stable@vger.kernel.org, 21cnbao@gmail.com,
+ david@redhat.com, baolin.wang@linux.alibaba.com, liuzixing@hygon.cn
+References: <1747884137-26685-1-git-send-email-yangge1116@126.com>
+ <644FF836-9DC7-42B4-BACE-C433E637B885@linux.dev>
+ <aC63fmFKK84K7YiZ@localhost.localdomain>
+ <ff6bd560-d249-418f-81f4-7cbe055a25ec@126.com>
+ <aC8PRkyd3y74Ph5R@localhost.localdomain>
+ <3B8641A1-5345-44A5-B610-9BCBC980493D@linux.dev>
+ <aC974OtOuj9Tqzsa@localhost.localdomain>
+ <DF103E57-601C-4CBB-99CA-088E1C29F517@linux.dev>
+From: Ge Yang <yangge1116@126.com>
+In-Reply-To: <DF103E57-601C-4CBB-99CA-088E1C29F517@linux.dev>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wD3Xyar7y9oVPJEAg--.40133S2
+X-Coremail-Antispam: 1Uf129KBjvdXoWruF1xWrykuFyrZry7Kr18Grg_yoWkGwc_ZF
+	W0vas7Gw4UZFy0kF4DGrn0qF98Kw45ZF1YvFWrWrWUCFyftF95Xr98tr4fZwsrWa1jkF45
+	tw1Yva93Ar12kjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IU8OJ55UUUUU==
+X-CM-SenderInfo: 51dqwwjhrrila6rslhhfrp/1tbidRxWG2gv70MMjAAAsP
 
-ZOMBIE (exit_state =3D=3D EXIT_ZOMBIE) and DEAD (exit_state =3D=3D EXIT_D=
-EAD)
-processes have already finished execution and will not be scheduled again=
-.
 
-In the context of system suspend (e.g., S3), attempting to freeze such
-processes is unnecessary. Moreover, freezing them can obscure suspend
-diagnostics and delay resume if they appear "stuck" in logs.
 
-This patch introduces an early check for `p->exit_state !=3D 0` in
-`try_to_freeze_tasks()` and skips freezing for such tasks. This is a safe
-optimization because:
+在 2025/5/23 11:27, Muchun Song 写道:
+> 
+> 
+>> On May 23, 2025, at 03:32, Oscar Salvador <osalvador@suse.de> wrote:
+>>
+>> On Thu, May 22, 2025 at 08:39:39PM +0800, Muchun Song wrote:
+>>> But I think we could use "folio_order() > MAX_PAGE_ORDER" to replace the check
+>>> of hstate_is_gigantic(), right? Then ee could remove the first parameter of hstate
+>>> from alloc_and_dissolve_hugetlb_folio() and obtain hstate in it.
+>>
+>> Yes, I think we can do that.
+>> So something like the following (compily-tested only) maybe?
+>>
+>>  From d7199339e905f83b54d22849e8f21f631916ce94 Mon Sep 17 00:00:00 2001
+>> From: Oscar Salvador <osalvador@suse.de>
+>> Date: Thu, 22 May 2025 19:51:04 +0200
+>> Subject: [PATCH] TMP
+>>
+>> ---
+>>   mm/hugetlb.c | 38 +++++++++-----------------------------
+>>   1 file changed, 9 insertions(+), 29 deletions(-)
+> 
+> Pretty simple. The code LGTM.
+> 
+> Thanks.
 
- - They hold no running resources
- - Their `task_struct` is only waiting to be collected or freed
+Thanks.
 
-Signed-off-by: Zihuan Zhang <zhangzihuan@kylinos.cn>
-
-Changes in v2:
-- Simplified code, added judgment of dead processes
-- Rewrite changelogs
----
- kernel/power/process.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/kernel/power/process.c b/kernel/power/process.c
-index 66ac067d9ae6..82528a79d46a 100644
---- a/kernel/power/process.c
-+++ b/kernel/power/process.c
-@@ -51,7 +51,7 @@ static int try_to_freeze_tasks(bool user_only)
- 		todo =3D 0;
- 		read_lock(&tasklist_lock);
- 		for_each_process_thread(g, p) {
--			if (p =3D=3D current || !freeze_task(p))
-+			if (p =3D=3D current || p->exit_state || !freeze_task(p))
- 				continue;
-=20
- 			todo++;
---=20
-2.25.1
+The implementation of alloc_and_dissolve_hugetlb_folio differs between 
+kernel 6.6 and kernel 6.15. To facilitate backporting, I'm planning to 
+submit another patch based on Oscar Salvador's suggestion.
 
