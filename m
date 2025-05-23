@@ -1,75 +1,74 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C92229B783
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCE2A29B76E
 	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 19:07:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748027279; cv=none; b=GXOGH26BE6OH1Lp4+0CWl/F8ByUBFXuTkQQjYiu+dbCYpQvceUwY4YuCB1+ZZvWdyyQgay/hEoxlm52O27646q8TbjwSJqkjWQWsr38ehOgR5JKswI9QQcdNzFlOesjFShsmozXt79pAO5zGyZ9Q05rNmEzZXrsed8NODG7Rqvc=
+	t=1748027279; cv=none; b=hUUQ8zeVSU9vEHRelxE94O6KbLsSc1zzm7fABuMYvLRmTto5Bp+5suFIaQ6cPRML0rt3KQiJWxcwdslMMYSrmalHKYsdEMKPFJd7+5VowuU8oaQLbDr6oF1RSp6y/SvoK9Jm0alYGReMC7yLaVnrmtKSsvX4II6jLKL3Q1bHq7I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1748027279; c=relaxed/simple;
-	bh=D0xORoC11ef1b8XnmpFCtI0ADFqZVD+IG8XxNMK2QjE=;
+	bh=ZykR5KDDu2LYLt2a2csTXDEitMti0SIv3lJ2U21A6qQ=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=cC1yWAuKXrUSYlB6UA2ifSCpfXeNvORBDisBLmvcMWuOiOV5xnJKrL5LQSZQWx8DpCD+56bPsLt/VSD6x0XV+9qe8cPPZHb9oofbrPqdH5vHlmDzD7RZ52QG19kOUt2QGmXulpaUzx8/0Q82zB534J42Pe8eryPQK0i8KZEtLjI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=e60nxV3W; arc=none smtp.client-ip=205.220.168.131
+	 In-Reply-To:To:Cc; b=SHGM7Hxg6t53W7BaYM6BUvxURxm3WPIIQIK8PKNFnR3Aih6LHBCeIYWMc+yzUkPUSREnzJqhIVoqn3qEZrMUahTHUIRRRyHUymcV6JE2hZe64D0jpQAuHbI5XNc801ZKjL5LHIsG2n7kppXedk2ZlRK9wvStNRESMkcyhduw1ho=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=UgWSsk8W; arc=none smtp.client-ip=205.220.180.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="e60nxV3W"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54NFe1Br014592
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 19:07:57 GMT
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="UgWSsk8W"
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54NCaAtJ000873
+	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 19:07:56 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	8EV5IZ/cv+QD0prKkLqN1dGzXsThgsP17A63Jaenuh0=; b=e60nxV3WqIfbHkSz
-	gipZ1mw1a+xmAqnpCw8h17wynkLygzlHgJi/vpGkJ1RG7b13XK7sV5CXsG7yjen/
-	nlvOjrurBR1FCUMzE88B94r9fftQba8sO2h9HpGaDth7dq1eiahOsIqCT+ebUVpw
-	aBZ73skugPKFK7WwPp3CEy62iJQkgdzfyVXZoOZEkdlFaOvMaYPIjMZguZoO4Fqm
-	NzDF0Rsen0vWhi45LOUolFgsWCIR7j0yfl9Fj0Ns+/CxY1RQTkGktIgUDC70p3/r
-	pGo9fbgAezzXErTRrdk252FQRaD7eseQsOPZ8kKAnRtQX8yDmbzNcc/Q1ZD0dy8j
-	SGuU2g==
-Received: from mail-pl1-f200.google.com (mail-pl1-f200.google.com [209.85.214.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46rwf4b3c7-1
+	ht1fhZBu/Xdj2ZKeShX9LxbiXvV15fZoJixwsDaW+Gk=; b=UgWSsk8W5NkRKuoR
+	5iKBwOTu0NxEEq3uNESu/GE0CazfoEkOq7g331qgMZutiBgr2Epcd42JbBAdchMJ
+	/bXvSDmkLMhcmcnKsmY4hnl/tDWN+/MoQItCg8if2DCcXGALi0HGrmc6FBf6FiWC
+	VYRX1QuBzy7tYN5oPm7auiM7n8D6j8nh21fRuqGRhhjMNduef8eQ5+G+K3JumoCD
+	NOiCbThkCLz9fo3EjmjCQT70iaxAAWVyBdqhK7gWnvhzkYDouqgCzishc0MHz7TV
+	FT/ZEtYZpGOg+7sW4WPVEBwdKy60A54q7i+N5UNu2x+vBcVDONe8fUooaFVwq04K
+	cKBjcQ==
+Received: from mail-pl1-f198.google.com (mail-pl1-f198.google.com [209.85.214.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46rwf72tk9-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 19:07:57 +0000 (GMT)
-Received: by mail-pl1-f200.google.com with SMTP id d9443c01a7336-22e3b03cd64so1563895ad.3
-        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 12:07:57 -0700 (PDT)
+	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 19:07:56 +0000 (GMT)
+Received: by mail-pl1-f198.google.com with SMTP id d9443c01a7336-23206c06d29so1736385ad.0
+        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 12:07:56 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748027276; x=1748632076;
+        d=1e100.net; s=20230601; t=1748027275; x=1748632075;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=8EV5IZ/cv+QD0prKkLqN1dGzXsThgsP17A63Jaenuh0=;
-        b=I8s2kx9ie2+EM6uixE0NsbjgmPMtek7+Eiq86vi8kRpsihIbK8fh5q5EzDzwuEcsQJ
-         NxwfsU6VHYojqTtzFAdAyqd5Br7cgLnTv5N5IxGHC4fvdZhllIUKsSkeYjPmFXJieV4C
-         Mv54HpP+F2zA8HcY/L2w3jxpkm3z+Lpr8xJC/ShNqHbrsRcWMbzi74ur4I0FNfTVB19b
-         xsgMDALnZzhfbBtiMGBHEDDx3YFYhIw7SYYpCYZUPheuZ6/f8B6pfGAlT3PKcfi/7gfW
-         wZz03t8KDlL1AyKwkIx38cZfd0z1C7Q6iubtsG9p04SiFb+OYeaPYGemJ8eOZjyjU8/h
-         OeBw==
-X-Forwarded-Encrypted: i=1; AJvYcCU33iCHci6SsiL2RB44XiYVr1R95OisGnVMpN4EL/UnCknao8x+ELPwpUkT11rAS74rEcrcgwHKw4pLsls=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwkBqOaHI9ZaD2hCVdLyU5DUbTFyaaiq04MNLilEaIlnJl82gk8
-	88sn2Y3XOb6srONXZxOrm2x9vW07S30psqBBBpR/HbdhTYIvhN12PpJYhaUbxB4mNnv6njZ/DsA
-	b2zE2X8M6JozaR7k+jk+8aA8d2SHXpSg7nQiECxLD9w7FVwG6Aadprr3dWXVcV+VyD1c=
-X-Gm-Gg: ASbGncv8KwX39E+gPBL/i15XEf0pcMbkuwvkNoiZdDRImi0tiuMEuxWLgMeh4dIL/0s
-	WbwdBSJEYA7y3SSpdTtlYZm8l71MDSVaFpiLpdXq1oLQjgbR94ilIQcdAj8ZNvk+7oF4uqCFJlb
-	M8VWlNNn07ARuux5rflFZu/+YBH2xXmrO53Kwy1Cjf+BVcjS9SjAqloKYpZ8AlJIFqj8a2Z9wuT
-	oyl9mdsaLZ7WeFf42OX/45gruQAe7Tp9gLIP/elRVojdoPdFepY7qeKjH0yf+NEuei+9uWSDjLi
-	tM+7aH5NZz86D0M5q53//t4Hpnv0ZfutdmqJGT3B9OKhXPvIH2zb8JVjCsUr2/hnyVAnUgD8roa
-	DHmI=
-X-Received: by 2002:a17:903:2988:b0:224:c46:d167 with SMTP id d9443c01a7336-23414f6e2bemr8194665ad.16.1748027276355;
-        Fri, 23 May 2025 12:07:56 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEt70NeKTNYAk3drZ2nNdndV1zNORhUf309UeydAVRG81OvnP1i/EMYHqZv7xctkGrD4Rbsiw==
-X-Received: by 2002:a17:903:2988:b0:224:c46:d167 with SMTP id d9443c01a7336-23414f6e2bemr8194335ad.16.1748027275995;
+        bh=ht1fhZBu/Xdj2ZKeShX9LxbiXvV15fZoJixwsDaW+Gk=;
+        b=n4Lj8x4ernO4MF2uWlO5lep6lOhOBSWRiePvVChxtg4SPMahVDJYftjUz6gX/arzxl
+         F1w3IpEGQq0RswQVxsrdIMsQ5QZVfcQaM95L9IOneSjsRb/3/+L6lNDn54ucGU3V0gjz
+         LJS539WHSgYXfGTxtLhgYvnLxT1Nu2XNA4Y2FRracdv7PcB6hcEhDohMAF04qVxtjYNL
+         1weX73kKhPA0vh9NX6loA4Fhb4hPxIABm3pnFhZlx4lU+tltYw0l2CCcESDtzL1E7Kd/
+         ja84EZxbKCBM1Eqhnx+KB4J+pK1fj8dmbl3lvkdXMxgde2EBPdpWablJL/QT39Nt93jn
+         FaxA==
+X-Forwarded-Encrypted: i=1; AJvYcCWQx36/mMWvqfdfJvVa2bQUdGrsrwq81ClKfiKs1GQFJ3xLCbWH5JY52HqxpiRbTpynCq0yGwvEe0cLEBE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwmnbZZRPVdzM+CZeIHAFRTzH8m1WfZI1Ji0PQ88698RXymd2CU
+	xat2aJnTbroDybfbdD/KkvA1RlMvvoUEFBvRB9+ZnfOb9324hMN5fkpmuiN1QYEbPUT4TmzC/NV
+	0HqF0QqwRnUuHsPV7FzoMaKvKeAp/+WjBSPuqAtxjiPGivqzvPqkDzOZJ+n+Oh7DR+U8=
+X-Gm-Gg: ASbGncsHcodZbXowUtCmuIifc9f+F7ZASlHBnhsK/k/V1IMC3F0pYtZP8zsRYvPrBXe
+	KIJ3dPjNAGTmpFXmpccnIbiN3CCu6JY9oR5HRvvLhPHpe0rMty5Gcco5vO2KYG5jXK8QhuU+Weh
+	IkhfQPbgX5drFr/EVbbQOTjAkGkZs0i4DiUOXl4Cet/8k9Wch3DIN5yqELtmuVnLl8zA/B6si1Y
+	qJuqPSYIT1oiKQpDHarJNmP4kDN5FeMf00UadPuhpZ4Npid745zk/72pZGF1H85PLlv4pM00ray
+	uaRGnDCIU2z4ptajpQAvqNw4o1PjbtTpwO88NpNw5Bci5erLdvWgph91NXJSn1dIIcxtTkzneeH
+	hEDM=
+X-Received: by 2002:a17:902:ccc1:b0:234:1163:ffa9 with SMTP id d9443c01a7336-23414fd6533mr6910665ad.46.1748027275067;
         Fri, 23 May 2025 12:07:55 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHmgAQ7M1bFuuVb8sasOix686shaxTeQEHPiOneDRjyh1bgrCHrNr+RVzUI1LEXhu2YMi2Q2A==
+X-Received: by 2002:a17:902:ccc1:b0:234:1163:ffa9 with SMTP id d9443c01a7336-23414fd6533mr6910235ad.46.1748027274642;
+        Fri, 23 May 2025 12:07:54 -0700 (PDT)
 Received: from hu-uchalich-lv.qualcomm.com (Global_NAT1.qualcomm.com. [129.46.96.20])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-231d4e97886sm126652165ad.146.2025.05.23.12.07.54
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-231d4e97886sm126652165ad.146.2025.05.23.12.07.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 May 2025 12:07:55 -0700 (PDT)
+        Fri, 23 May 2025 12:07:53 -0700 (PDT)
 From: Unnathi Chalicheemala <unnathi.chalicheemala@oss.qualcomm.com>
-Date: Fri, 23 May 2025 12:07:42 -0700
-Subject: [PATCH v7 3/3] firmware: qcom_scm: Check for waitq state in
- wait_for_wq_completion()
+Date: Fri, 23 May 2025 12:07:41 -0700
+Subject: [PATCH v7 2/3] firmware: qcom_scm: Support multiple waitq contexts
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -78,7 +77,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250523-multi_waitq_scm-v7-3-5b51b60ed396@oss.qualcomm.com>
+Message-Id: <20250523-multi_waitq_scm-v7-2-5b51b60ed396@oss.qualcomm.com>
 References: <20250523-multi_waitq_scm-v7-0-5b51b60ed396@oss.qualcomm.com>
 In-Reply-To: <20250523-multi_waitq_scm-v7-0-5b51b60ed396@oss.qualcomm.com>
 To: Bjorn Andersson <andersson@kernel.org>,
@@ -90,61 +89,196 @@ Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
         Trilok Soni <quic_tsoni@quicinc.com>,
         Unnathi Chalicheemala <unnathi.chalicheemala@oss.qualcomm.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1748027270; l=956;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1748027270; l=4803;
  i=unnathi.chalicheemala@oss.qualcomm.com; s=20240514;
- h=from:subject:message-id; bh=D0xORoC11ef1b8XnmpFCtI0ADFqZVD+IG8XxNMK2QjE=;
- b=yd/3KdrfWRyyINpbCMDlshSQ8pxWotIQv8EtjntZ329GjkV1bES6yLijTcQ8uMNFkBuWjm50O
- O6XQ+tjD5fbDSbtR7nC9bfkJfNbhhNM6rLBYxPOUeuAKrtkpLvTj1dr
+ h=from:subject:message-id; bh=ZykR5KDDu2LYLt2a2csTXDEitMti0SIv3lJ2U21A6qQ=;
+ b=P46Xv/T44A/cvwXNPWe6Ei1xWLGgSpJCwLgOv5ujhXiP6o0nnF892rV25PyXeEVKJkfRLVyTr
+ re1N6DwYdG7DFBCVDfFMUKXG8JyKL88q6c5BFHScH4lliEAx8754zdC
 X-Developer-Key: i=unnathi.chalicheemala@oss.qualcomm.com; a=ed25519;
  pk=o+hVng49r5k2Gc/f9xiwzvR3y1q4kwLOASwo+cFowXI=
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIzMDE3NCBTYWx0ZWRfXzq+8SSXtE1Gw
- 7XNwWFKu6z4LhRWeg9ZTzO9wYOZXpe6nLtw8D0d8h6MmkBng5fyWi9zHM8C3wQ35Ujuab7ZxryL
- 7KOGjL5nlD6ANQEMqAQ3GX899Vj6I1DhY+5qSAuQDFQEnkAZaos7cIo7rC/tr7npTOTa6gscyN2
- iIRi4Tdi1u9UCH3r67BwGomNDqXgbnENCrA8gvDDQc7gAm8DNgyclrIM3I/kCvxxnJtZfzJl/6X
- /3cK3msg2DNenUSxznpBcavBQAXRFaXNxfUfrRkZ7+px+on7zt+/0F2ya/EnHbS4y2Zz8s5wjEc
- 7zFSKxIqb9yvKltfU9ocOsB9KN1RA/a/T60SIFx2ciQ7NfDD/EZPM0xOPUZogvzqWf7DfSQP9oI
- CyZsSiJ7zzA1j2oWpAGZqSyiQx2rU4e3vebUZy6LfjjhyntLPoToumEuxGWtEdX1v0QI67ca
-X-Proofpoint-GUID: oo596yjFaDmff8vOBNDE0-jIS6e2ILey
-X-Authority-Analysis: v=2.4 cv=Ws8rMcfv c=1 sm=1 tr=0 ts=6830c78d cx=c_pps
- a=IZJwPbhc+fLeJZngyXXI0A==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
- a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=EUspDBNiAAAA:8 a=X2av7gLQQKfhQ01XcpoA:9
- a=QEXdDO2ut3YA:10 a=uG9DUKGECoFWVXl0Dc02:22
-X-Proofpoint-ORIG-GUID: oo596yjFaDmff8vOBNDE0-jIS6e2ILey
+X-Proofpoint-GUID: 0jXkqN4whniX6emSo56wOsgf8nOjq7bl
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIzMDE3NCBTYWx0ZWRfX4Jrrdvej4Px7
+ Z4ldE+8JZBxzmIEuQNJGpEhRLyqfpaRkviYDKeP8P+PHzLgIBgqUC7sK9cT1t4pZwX7IPrhmcnn
+ AwzV0gpOG2/BAvdt8Zv0TWXvGo1ns52mx3dV7Sph4EHKqgT9F7JAx1woTihN5pfUKwJaabXfYJr
+ tgglH46w3sgs8XUNptcuKZlPsPFCySSgwLDrOoy2XFZ+IrOKT5obSm132J6VVIyMlikRJzmqXlf
+ nkKArbb3PCW/jDtlNEw6RpxoQc91Eu0Bz7Z5+K9kOZdQi1DYrAYVd37UwULcyxaJqSXVMPxsBX+
+ dIrB+vHtoqV+3oImGXP2T5fAm2J0CrPXp+cl2KLasg6GiPhR6ZEfD+Qe4oYfu+270g9TxAzv210
+ 6YQEqzt+xTa8jPfosvvPejemOqdJm60g2D/t9mnwD2d6P/dcDsOnkGC83O0/zOOR1auHUynC
+X-Authority-Analysis: v=2.4 cv=fZOty1QF c=1 sm=1 tr=0 ts=6830c78c cx=c_pps
+ a=MTSHoo12Qbhz2p7MsH1ifg==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=EUspDBNiAAAA:8 a=IoDWPEjDBkkTTY39AZoA:9
+ a=QEXdDO2ut3YA:10 a=GvdueXVYPmCkWapjIL-Q:22
+X-Proofpoint-ORIG-GUID: 0jXkqN4whniX6emSo56wOsgf8nOjq7bl
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
  definitions=2025-05-23_06,2025-05-22_01,2025-03-28_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- spamscore=0 malwarescore=0 clxscore=1015 suspectscore=0 mlxscore=0
- bulkscore=0 phishscore=0 priorityscore=1501 impostorscore=0
- lowpriorityscore=0 mlxlogscore=896 adultscore=0 classifier=spam authscore=0
- authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
+ clxscore=1015 mlxscore=0 adultscore=0 spamscore=0 bulkscore=0 suspectscore=0
+ malwarescore=0 priorityscore=1501 impostorscore=0 mlxlogscore=999
+ lowpriorityscore=0 phishscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
  engine=8.19.0-2505160000 definitions=main-2505230174
 
-Modify wait_for_wq_completion() to check if task is in idle state using
-wait_for_completion_state().
+Currently, only a single waitqueue context exists, with waitqueue id zero.
+Multi-waitqueue mechanism is added in firmware to support the case when
+multiple VMs make SMC calls or single VM making multiple calls on same CPU.
 
-This allows for detecting when waitq contexts are in idle state and
-propagates it to __scm_smc_do(), which is beneficial when task is idle
-and waiting for a kick to accept new requests.
+When VMs make SMC call, firmware will allocate waitqueue context assuming
+the SMC call to be a blocking call. SMC calls that cannot acquire resources
+are returned to sleep in the calling VM. When resource is available, VM
+will be notified to wake sleeping thread and resume SMC call.
+SM8650 firmware can allocate two such waitq contexts so create these two
+waitqueue contexts.
+
+Unique waitqueue contexts are supported by a dynamically sized array where
+each unique wq_ctx is associated with a struct completion variable for easy
+lookup. To get the number of waitqueue contexts directly from firmware,
+qcom_scm_query_waitq_count() is introduced. On older targets which support
+only a single waitqueue, wq_cnt is set to 1 as SCM call for
+query_waitq_count() is not implemented for single waitqueue case.
 
 Signed-off-by: Unnathi Chalicheemala <unnathi.chalicheemala@oss.qualcomm.com>
 ---
- drivers/firmware/qcom/qcom_scm.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/firmware/qcom/qcom_scm.c | 75 ++++++++++++++++++++++++++++------------
+ 1 file changed, 53 insertions(+), 22 deletions(-)
 
 diff --git a/drivers/firmware/qcom/qcom_scm.c b/drivers/firmware/qcom/qcom_scm.c
-index c2682e9bde58b6f132af0c1bc2e194db0e401e3b..b8ce02099584c4a87095cdc2dd688cd28bd2dae3 100644
+index 529e1d067b1901c4417a1f1fd9c3255ee31de532..c2682e9bde58b6f132af0c1bc2e194db0e401e3b 100644
 --- a/drivers/firmware/qcom/qcom_scm.c
 +++ b/drivers/firmware/qcom/qcom_scm.c
-@@ -2189,7 +2189,7 @@ int qcom_scm_wait_for_wq_completion(u32 wq_ctx)
- 	if (IS_ERR(wq))
- 		return PTR_ERR(wq);
+@@ -47,7 +47,7 @@ struct qcom_scm {
+ 	struct clk *iface_clk;
+ 	struct clk *bus_clk;
+ 	struct icc_path *path;
+-	struct completion waitq_comp;
++	struct completion *waitq;
+ 	struct reset_controller_dev reset;
  
--	wait_for_completion(wq);
-+	wait_for_completion_state(wq, TASK_IDLE);
+ 	/* control access to the interconnect path */
+@@ -57,6 +57,7 @@ struct qcom_scm {
+ 	u64 dload_mode_addr;
+ 
+ 	struct qcom_tzmem_pool *mempool;
++	unsigned int wq_cnt;
+ };
+ 
+ struct qcom_scm_current_perm_info {
+@@ -2118,6 +2119,25 @@ static int qcom_scm_fill_irq_fwspec_params(struct irq_fwspec *fwspec, u32 virq)
+ 	return 0;
+ }
+ 
++static int qcom_scm_query_waitq_count(struct qcom_scm *scm)
++{
++	int ret;
++	struct qcom_scm_desc desc = {
++		.svc = QCOM_SCM_SVC_WAITQ,
++		.cmd = QCOM_SCM_WAITQ_GET_INFO,
++		.owner = ARM_SMCCC_OWNER_SIP
++	};
++	struct qcom_scm_res res;
++
++	ret = qcom_scm_call_atomic(scm->dev, &desc, &res);
++	if (ret) {
++		dev_info(scm->dev, "Multi-waitqueue support unavailable\n");
++		return ret;
++	}
++
++	return res.result[0] & GENMASK(7, 0);
++}
++
+ static int qcom_scm_get_waitq_irq(void)
+ {
+ 	int ret;
+@@ -2149,42 +2169,40 @@ static int qcom_scm_get_waitq_irq(void)
+ 	return ret;
+ }
+ 
+-static int qcom_scm_assert_valid_wq_ctx(u32 wq_ctx)
++static struct completion *qcom_scm_get_completion(u32 wq_ctx)
+ {
+-	/* FW currently only supports a single wq_ctx (zero).
+-	 * TODO: Update this logic to include dynamic allocation and lookup of
+-	 * completion structs when FW supports more wq_ctx values.
+-	 */
+-	if (wq_ctx != 0) {
+-		dev_err(__scm->dev, "Firmware unexpectedly passed non-zero wq_ctx\n");
+-		return -EINVAL;
+-	}
++	struct completion *wq;
+ 
+-	return 0;
++	if (WARN_ON_ONCE(wq_ctx >= __scm->wq_cnt))
++		return ERR_PTR(-EINVAL);
++
++	wq = &__scm->waitq[wq_ctx];
++
++	return wq;
+ }
+ 
+ int qcom_scm_wait_for_wq_completion(u32 wq_ctx)
+ {
+-	int ret;
++	struct completion *wq;
+ 
+-	ret = qcom_scm_assert_valid_wq_ctx(wq_ctx);
+-	if (ret)
+-		return ret;
++	wq = qcom_scm_get_completion(wq_ctx);
++	if (IS_ERR(wq))
++		return PTR_ERR(wq);
+ 
+-	wait_for_completion(&__scm->waitq_comp);
++	wait_for_completion(wq);
  
  	return 0;
  }
+ 
+ static int qcom_scm_waitq_wakeup(unsigned int wq_ctx)
+ {
+-	int ret;
++	struct completion *wq;
+ 
+-	ret = qcom_scm_assert_valid_wq_ctx(wq_ctx);
+-	if (ret)
+-		return ret;
++	wq = qcom_scm_get_completion(wq_ctx);
++	if (IS_ERR(wq))
++		return PTR_ERR(wq);
+ 
+-	complete(&__scm->waitq_comp);
++	complete(wq);
+ 
+ 	return 0;
+ }
+@@ -2260,6 +2278,7 @@ static int qcom_scm_probe(struct platform_device *pdev)
+ 	struct qcom_tzmem_pool_config pool_config;
+ 	struct qcom_scm *scm;
+ 	int irq, ret;
++	int i;
+ 
+ 	scm = devm_kzalloc(&pdev->dev, sizeof(*scm), GFP_KERNEL);
+ 	if (!scm)
+@@ -2270,7 +2289,19 @@ static int qcom_scm_probe(struct platform_device *pdev)
+ 	if (ret < 0)
+ 		return ret;
+ 
+-	init_completion(&scm->waitq_comp);
++	ret = qcom_scm_query_waitq_count(scm);
++	if (ret < 0)
++		return ret;
++
++	scm->wq_cnt = ret;
++
++	scm->waitq = devm_kcalloc(&pdev->dev, scm->wq_cnt, sizeof(*scm->waitq), GFP_KERNEL);
++	if (!scm->waitq)
++		return -ENOMEM;
++
++	for (i = 0; i < scm->wq_cnt; i++)
++		init_completion(&scm->waitq[i]);
++
+ 	mutex_init(&scm->scm_bw_lock);
+ 
+ 	scm->path = devm_of_icc_get(&pdev->dev, NULL);
 
 -- 
 2.34.1
