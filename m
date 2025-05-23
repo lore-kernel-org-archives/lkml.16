@@ -1,126 +1,173 @@
-Received: from mail-qv1-f41.google.com (mail-qv1-f41.google.com [209.85.219.41])
+Received: from mail-il1-f182.google.com (mail-il1-f182.google.com [209.85.166.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 988F629710B
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 16:52:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08CC8296D26
+	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 16:52:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748019168; cv=none; b=MaCXuc9bfOxVXVIA1crvmUu95/dSPZ32460Xep7w2TXLIvVAu+9XYi2IWGsJuOTNIfg6Cpu73vulvXKofrjglMuIkii5tNzEsjXLq82Sh+u20GzxELZxh4iguHlAwLElDy0sa0qC392UKnU3NgDuCVX08BPBewKPuN2S7QKdZ8A=
+	t=1748019179; cv=none; b=h12RCqN6OdaQZq16ZXQlKTFjbV4KeCb6XIM6h7dkYlT2qiC4utx5XC7eII2eeDafIqRwLKkF8IIZmdaB4ENNsUz5pMMN4ios1dyuNCq3qp2cZYgSq6rj1z3S0lJH73m4qvfF70ZEqGDD+JrqVkURQn2SokLScw4ATfTCrfa/e7c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748019168; c=relaxed/simple;
-	bh=2fo7ThapmD/76BpPRYf8B2ESgW4zOXpH/qv5wsArI4M=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LDvBXwTOSRkjzc/DEz2aqIZngshuWavTcG/HWG/T1nDkZAvbqlyW6hF8JBYuxz5FnN26ZeuipUqVipyjJ1PmsTUjj97B9jrf5oKHHXrJK1EUPg7af45UFrDaWU0VpGmzM02pRXVPgwU2UcPU0+XZWpyRdIWzx2gHhtU+Htz0zbI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YAIdLVq/; arc=none smtp.client-ip=209.85.219.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748019179; c=relaxed/simple;
+	bh=oXggHHrffprnyUmRS6O/v0GnADhdlBANtQ73ePlBsMY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=UU0+6IHqX1IxjGtW/PpHJreSRF2/kGg18l/71ziDR3ZNvp+WciCxRP/pQggxwwGXrFT8lmj6EekKqOIznBQ0x4IFqMJrDQqKvUiiJxgOXkgq7d8MLVO9A65cw8sGJHRVKNfESamd41hld4Wn7Xan4hfH0QafZ9SGXIX/6KCc4bs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=24wXwAf1; arc=none smtp.client-ip=209.85.166.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YAIdLVq/"
-Received: by mail-qv1-f41.google.com with SMTP id 6a1803df08f44-6f8b9c72045so602766d6.1
-        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 09:52:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="24wXwAf1"
+Received: by mail-il1-f182.google.com with SMTP id e9e14a558f8ab-3da76aea6d5so3595ab.1
+        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 09:52:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748019165; x=1748623965; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=lnOScSnE/yXdZeUwx1aaQHUueDdq5UuSPkXF2iQZTL8=;
-        b=YAIdLVq/Y7tk65u0iyxl71+QU+z5emXEaaGiIdOKVG56neq/1isrkIIkQ88DvKaR1g
-         j5Y7QQYVHOPuC4iwHy/eAfmVPtt4wCtwE4PJ9XQM2C0eo8h6Wabf2KjmZPG6kdOmD+hN
-         Q4eh7TFttjuvH2JWBFvJbV1o7nidQSkfRdt8OrM+wD7Lc7/uPzv84pvHA7WJJCzGkU96
-         Way2GhlDwhUY1ZvImSKxzKnZTuE5t5LoczWs2GFAlLLJJ8v3E4m7dWElr4r0eg6wAP6M
-         AIJrpsr8CRvT5D7CfJvEV84wWuPhC1LsLsS5fEdov9v/oTCFZEqqepkg0L23YS8UMbUP
-         /5Kg==
+        d=google.com; s=20230601; t=1748019177; x=1748623977; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=kmWGLDUhhscZ2Xmxtxk5eVpPbTYTy7lJM+MM2kz6e8I=;
+        b=24wXwAf1NmBJh+Ukh7ECBk8zdAu0uiAQjTDPjeNQm64pQ50hdPZAmL+/hn4sQzIQIy
+         x/uJ1/d9pajUv+6ohX87OCpPxYvZp4sfnSpACdyAnQvVtMDm29kP+2FU1qyv6s4XDEYf
+         fP0LGkYTJZRufwNU4rNaiBJE88C2seO6SPAI8/ZfRiB1+ngFuC02M/w7UgKteLbB4JIa
+         7s9KhSj41Aal0bvP8ZSwB696mOWOyHDWRIj5r6ZYaaQCz+ApNsdxGtncYB/GPF21qf5k
+         jxnoPG/gayxdo8a+KG76TGOfHFebPUOkxjpaGVXlyM4VtIW2GSKBmDf06L7awBIq0N1Y
+         dO0g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748019165; x=1748623965;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=lnOScSnE/yXdZeUwx1aaQHUueDdq5UuSPkXF2iQZTL8=;
-        b=BUfE5FaRqC4M3chzS59gCUTfOrbYS8rt1TT/Oj+vpiov0U7v+KuS1LM5x8cFNxc3tv
-         Z0Rzw4X+ubFIgvc9elN+ImFUU99jN9lOELsSdYyOJS1bxYVrceiwwYoEh6RMy/9T5Vvh
-         XloLtTmXmQKKjURp1jlrTfpgEHEEJ/bS6itIXjEvcRoZ9dihIn815coQ4MzAl0fYgTJb
-         bkJrVQLNOZZNeGEh9pz8aDg6SG6j4YZUAwKwijsdiUkKmL3VRWOWjlycCWXEH00e6zpU
-         aZU7p73ZcTJzNvsyi0BppVELIaMA4LINfL+b3h7pc6F8XUWitmoZGE/qbTJAYj5YocP9
-         GhsQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWcmsLfZlk4w+vhunP4mXpd1ylH7XL7kTCl15TN2V+OyFl+FlQ2ZbjiOWPzNFWrUBifMkPY9HrQbfPe52k=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwmIQs2UA7euAVQsN96v23M8568MkzotwtXb/aPeK3L81DqLTSF
-	9QyJv98jaxCDAi35yQnDRNNlEKC0mkJpFXgj+rNHhJ6YWmA278Q/W9PG
-X-Gm-Gg: ASbGncvzV81eeK2oMp3z3Eeisej8AKleDzQWvAGSmBY0p+/ZPniFYAejbpAR+Vve4q4
-	6xqVAXQBEpOJiFHWtw41KOsmLVicQMa1Iqb40NTfIc/bCAbUYfq2c0SwX3pMuFVpENmB3cxx542
-	4xgZT8kNuA2AzdMIudpHq5387yWQW1gN38DVLxEOQyyZAZVszqV1Fr3qV861wn1deowkwWdKPCI
-	ULIutspXwCkbWBlYColbFmP2AaFfqPcnDQ82schv+Bj5r1/hMbDEHoHzewLmV284cKb3J+HCGPo
-	3mFItxSNR/EixWQRD8kQzkFBCXAB+x1lqjC3Abg1Bb4jNwyd
-X-Google-Smtp-Source: AGHT+IHWry3SN2Ct3SZFespp1702g6E+CCGpeSKQhfGWaRCN/eduukpNy6BuDU6Mhmu8IL0WGc98+g==
-X-Received: by 2002:a05:6214:5196:b0:6f4:f621:bc with SMTP id 6a1803df08f44-6fa9d2a28c8mr3253006d6.33.1748019165146;
-        Fri, 23 May 2025 09:52:45 -0700 (PDT)
-Received: from localhost ([2a03:2880:20ff:8::])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f8b0965823sm116908236d6.88.2025.05.23.09.52.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 May 2025 09:52:44 -0700 (PDT)
-From: Usama Arif <usamaarif642@gmail.com>
-To: Andrew Morton <akpm@linux-foundation.org>,
-	surenb@google.com
-Cc: hannes@cmpxchg.org,
-	shakeel.butt@linux.dev,
-	vlad.wing@gmail.com,
-	linux-mm@kvack.org,
-	kent.overstreet@linux.dev,
-	cl@gentwo.org,
-	rientjes@google.com,
-	vbabka@suse.cz,
-	roman.gushchin@linux.dev,
-	harry.yoo@oracle.com,
-	linux-kernel@vger.kernel.org,
-	kernel-team@meta.com,
-	Usama Arif <usamaarif642@gmail.com>
-Subject: [PATCH v3] mm: slub: only warn once when allocating slab obj extensions fails
-Date: Fri, 23 May 2025 17:52:40 +0100
-Message-ID: <20250523165240.1477006-1-usamaarif642@gmail.com>
-X-Mailer: git-send-email 2.47.1
+        d=1e100.net; s=20230601; t=1748019177; x=1748623977;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=kmWGLDUhhscZ2Xmxtxk5eVpPbTYTy7lJM+MM2kz6e8I=;
+        b=Y9gjIPwmUMelhjk2RctCkv+XuXpfiBGLFEIgnjn6rf4Zds7kk0t+zqbIcBMcf9UFRf
+         eveCfE0f5pLam6bj4Wlisl7/W4Jz7chZDv6x9O4G3gRT2FF8Ow7uBwT4o2SBtQkW/rta
+         gIujYpGJqup3zayQsROxDZgKMZ3BwkjCulAVC6HgKNVjC8FNuzzF8JCOPff0NIRpWCP8
+         FENuN9ooWzC/yRWoHGFVgJu7NBeC0R37r2CL9g1V4MghYTUhdWPQb0I1Jd7KX6UK760u
+         dxa6Cv8FmZwYYga595QW9MZt86h4W2rMzc9CEz2u83S7vSS63YVmFf/mv+S/M7ZX9Qjo
+         mCfw==
+X-Forwarded-Encrypted: i=1; AJvYcCVe4g5CxfFH9h4oBAOLrQBbSdmRSGq9rs8BZrLFVuaYirJnlcbfYApSOnQt1kM0Q2k7AUjriSXrhrNNcDU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwuI4VroL7V+JCeIxmqO334KQwFZD4nt43jmEqrl07NQcX6WKwA
+	/pQFabfXHJWvHkzYQjPMGn1OXr4KlbqS7MqSRXfAWnrRccDuu7kstDHMR9yXo7Vm3OP16UvPeB2
+	FlpP5eLzT4H2AaRmXWKsrzoL5dJgFVVd79vGbGUKIN21iIKh2GaEsVs2mz04=
+X-Gm-Gg: ASbGncvObtNA8O2pMEe3XfABlS5V8kHwSkzICcsfDKZugte2NFZRumaiZsxQOfp71TI
+	BWHd/WeuYxxkKs1tDcX11ZBAElU+VIEkw7eR4rMEHY2jIIf3k4lKdWBmprpoxB2LJMZHm47F3t8
+	viZYIJeGOI4LWX+3Mq/lhyNoDh84DLClEa6oRNq4tEG2l8
+X-Google-Smtp-Source: AGHT+IFK1nzWhCd3ujrlurypXBIY7yr65HZBuHq8XALzTXz9vJnU3sVKz+qQpe3gSMpAg96WysC0BXZvn407OPTMPsI=
+X-Received: by 2002:a05:6e02:1948:b0:3d9:6c99:5a83 with SMTP id
+ e9e14a558f8ab-3dc93ed53b5mr4085585ab.8.1748019176746; Fri, 23 May 2025
+ 09:52:56 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250331172759.115604-1-leo.yan@arm.com> <aC_Vn95vYqcXul03@x1>
+ <aC_WFRe_4HjVPUrM@x1> <20250523081036.GB2566836@e132581.arm.com>
+In-Reply-To: <20250523081036.GB2566836@e132581.arm.com>
+From: Ian Rogers <irogers@google.com>
+Date: Fri, 23 May 2025 09:52:44 -0700
+X-Gm-Features: AX0GCFsHJywegXJX6O1fGGihLJh0MjGOsPXkaorz5CszEA2KExkOeP2dBZDZfZ8
+Message-ID: <CAP-5=fXSaYcYp4YVvD8aRXNDuCN5f1QM6KkbNF4Sr+paTFkevQ@mail.gmail.com>
+Subject: Re: [PATCH] perf tests switch-tracking: Fix timestamp comparison
+To: Leo Yan <leo.yan@arm.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, "Liang, Kan" <kan.liang@linux.intel.com>, 
+	James Clark <james.clark@linaro.org>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-In memory bound systems, a large number of warnings for failing this
-allocation repeatedly may mask any real issues in the system
-during memory pressure being reported in dmesg. Change this to
-warning only once.
+On Fri, May 23, 2025 at 1:10=E2=80=AFAM Leo Yan <leo.yan@arm.com> wrote:
+>
+> On Thu, May 22, 2025 at 10:57:41PM -0300, Arnaldo Carvalho de Melo wrote:
+> > On Thu, May 22, 2025 at 10:55:46PM -0300, Arnaldo Carvalho de Melo wrot=
+e:
+> > > On Mon, Mar 31, 2025 at 06:27:59PM +0100, Leo Yan wrote:
+> > > > The test might fail on the Arm64 platform with the error:
+> > > >
+> > > >   perf test -vvv "Track with sched_switch"
+> > > >   Missing sched_switch events
+> > > >
+> > > > The issue is caused by incorrect handling of timestamp comparisons.=
+ The
+> > > > comparison result, a signed 64-bit value, was being directly cast t=
+o an
+> > > > int, leading to incorrect sorting for sched events.
+> > > >
+> > > > Fix this by explicitly returning 0, 1, or -1 based on whether the r=
+esult
+> > > > is zero, positive, or negative.
+> > > >
+> > > > Fixes: d44bc5582972 ("perf tests: Add a test for tracking with sche=
+d_switch")
+> > > > Signed-off-by: Leo Yan <leo.yan@arm.com>
+> > >
+> > > How can I reproduce this?
+> > >
+> > > Testing on a rpi5, 64-bit debian, this test passes:
+>
+> Sorry that I did not give precise info for reproducing the failure.
+> The case does not fail everytime, usually I can trigger the failure
+> after run 20 ~ 30 times:
+>
+> # while true; do perf test "Track with sched_switch"; done
+> 106: Track with sched_switch                                         : Ok
+> 106: Track with sched_switch                                         : Ok
+> 106: Track with sched_switch                                         : Ok
+> 106: Track with sched_switch                                         : Ok
+> 106: Track with sched_switch                                         : Ok
+> 106: Track with sched_switch                                         : Ok
+> 106: Track with sched_switch                                         : Ok
+> 106: Track with sched_switch                                         : Ok
+> 106: Track with sched_switch                                         : Ok
+> 106: Track with sched_switch                                         : Ok
+> 106: Track with sched_switch                                         : Ok
+> 106: Track with sched_switch                                         : Ok
+> 106: Track with sched_switch                                         : Ok
+> 106: Track with sched_switch                                         : Ok
+> 106: Track with sched_switch                                         : FA=
+ILED!
+> 106: Track with sched_switch                                         : Ok
+> 106: Track with sched_switch                                         : Ok
+> 106: Track with sched_switch                                         : Ok
+> 106: Track with sched_switch                                         : Ok
+> 106: Track with sched_switch                                         : Ok
+> 106: Track with sched_switch                                         : Ok
+> 106: Track with sched_switch                                         : Ok
+> 106: Track with sched_switch                                         : Ok
+> 106: Track with sched_switch                                         : FA=
+ILED!
+> 106: Track with sched_switch                                         : Ok
+> 106: Track with sched_switch                                         : Ok
 
-Signed-off-by: Usama Arif <usamaarif642@gmail.com>
-Reported-by: Vlad Poenaru <vlad.wing@gmail.com>
-Closes: https://lore.kernel.org/all/17fab2d6-5a74-4573-bcc3-b75951508f0a@gmail.com/
----
-v2 -> v3:
-- Put warning back, but only warn once with pr_warn_once.
-v1 -> v2:
-- remove the warning completely. We will have a way in the
-  future to indicate that the mem alloc profile is inaccurate.
----
- mm/slub.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+Just to advertise the "-r" or "--runs-per-test" option:
+```
+$ perf test -v -r 100 "Track with sched_switch"
+```
+The test is exclusive so you won't get any parallelism from this, but
+you could in other cases.
 
-diff --git a/mm/slub.c b/mm/slub.c
-index dc9e729e1d26..36d7c43a6f2a 100644
---- a/mm/slub.c
-+++ b/mm/slub.c
-@@ -2102,10 +2102,12 @@ prepare_slab_obj_exts_hook(struct kmem_cache *s, gfp_t flags, void *p)
- 
- 	slab = virt_to_slab(p);
- 	if (!slab_obj_exts(slab) &&
--	    WARN(alloc_slab_obj_exts(slab, s, flags, false),
--		 "%s, %s: Failed to create slab extension vector!\n",
--		 __func__, s->name))
-+	    alloc_slab_obj_exts(slab, s, flags, false)) {
-+		pr_warn_once("%s, %s: Failed to create slab extension vector!\n",
-+			__func__, s->name);
- 		return NULL;
-+	}
-+
- 
- 	return slab_obj_exts(slab) + obj_to_index(s, slab, p);
- }
--- 
-2.47.1
+Thanks,
+Ian
 
+> I used cross compiler to build Perf tool on my host machine and tested on
+> Debian / Juno board.  Generally, I think this issue is not very specific
+> to GCC versions.  As both internal CI and my local env can reproduce the
+> issue.
+>
+> Please let me know if need any more info.  Thanks!
+>
+>
+> ---8<---
+>
+> My Host Build compiler:
+>
+> # aarch64-linux-gnu-gcc --version
+> aarch64-linux-gnu-gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0
+>
+> Juno Board:
+>
+> # lsb_release -a
+> No LSB modules are available.
+> Distributor ID: Debian
+> Description:    Debian GNU/Linux 12 (bookworm)
+> Release:        12
+> Codename:       bookworm
