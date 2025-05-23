@@ -1,250 +1,120 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4D96226CF8;
-	Fri, 23 May 2025 10:15:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B1DC22A4E5;
+	Fri, 23 May 2025 10:15:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747995303; cv=none; b=BgoXp8zsy1g1DIkV3wQCFW+TfsDTGdpEfyv78JYbDTfD0RY25WbcNhRmgSy01nb7h+Zh33pBufqWAmgDRnenLaGvTTBF99/AQD56s1lcB48j02tXdiVKD7dXlTbeTU9hIYqjljm0Muaaf9l4QBCJfKawQ694djCxaMAeFJ6h7Dk=
+	t=1747995309; cv=none; b=C2PPespXikCY944Th9HTNwxOgSqF/68HYXww7rBSDCVzRqQT3AnTPcg+9EA8sfSm9NdAzRlqTMSisonVrAEH4CJZm5D6K6fz2OoiCJIdqQ3blS9oayAngtG3X1BpcQUzgs6RX9CiDUAb1ppc5bi0jEHmRliZVPYziZP7d2rwOoY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747995303; c=relaxed/simple;
-	bh=Mtt71jTZm+HlLNOkIpKqUpZ3L6JoS2woYWY7Cdl2HYQ=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=INWRpM5Im30QVZZTKiRvpp15aNKU1bfgw9YZniCwXO2LmjKh5Tfgg+SLWoSDfDnE4DwwctwBszv/v/nyX/9HT5ZpBjrQcO2QE268+HudPQWmQHQZvQFCeHMRLTFoJsMGr5BzUw6nin1eo9sx1I79AiVnJV8nqNG7sUgh+WhD780=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=OtfpTxR/; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1747995309; c=relaxed/simple;
+	bh=9B8Qbuz0+HjwNMerJ1VV6FpRT6m7U/s0nPQnJsXESXk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=dvVAlljNI8Eo9/wsKngzM01SeR6kDt2VdWS5iyfgueMXWSrw9LWlG5fEmTXXNW8QnqYXL4rvUMDs2bK0YMZB8S4YQuP9vxpkU9koAk05GN/dfUK1yeI/lTTkpl30zQX1k3Mg1xbRvHDRPzV+nhu6RDMKTBwXM1SCWT3QnUF3Av0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XMPe1HBt; arc=none smtp.client-ip=209.85.218.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="OtfpTxR/"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54MNWGtk004906;
-	Fri, 23 May 2025 10:14:49 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=zXHL2C
-	q+aRXrEcEy64Su9IC7piz2/y4DTVPnU1CRfrc=; b=OtfpTxR/+M1m9QoMFOZaKH
-	RActYnItKiQYOsfii4Gmmev9OQOU12QikegR5liYjMFtB9Ukq/QGoxH1S/HDh0R0
-	dThbBxCDkZdbdwStKTPDpBLzOB9tZSjUhsXSmxqnxJ+McD3P4LWOHQxMR/k0dc7T
-	2Wxsfuv1isWJdIWGUBkUv4SYZZvKAzo1pBRcc/hHVBI0cUtKUbXE7vVadxiKAhLy
-	Fc+MRJH1Ef9ALUSPKCSULvmSSkh4VTqgpzYXRE84MDgtRz9tmP8GIbwjti/Q3M/y
-	+hFc5B1nNEc40zCRalAFiD/q/ArUaOc1NvBHdS/UMCboF2uVxI+iW+TuzEyYOiDA
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46t14jp7v4-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 23 May 2025 10:14:46 +0000 (GMT)
-Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 54NAEidc010386;
-	Fri, 23 May 2025 10:14:44 GMT
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46t14jp7v3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 23 May 2025 10:14:44 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 54N6MpD2024698;
-	Fri, 23 May 2025 10:14:43 GMT
-Received: from smtprelay03.wdc07v.mail.ibm.com ([172.16.1.70])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 46rwkre2nj-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 23 May 2025 10:14:43 +0000
-Received: from smtpav06.wdc07v.mail.ibm.com (smtpav06.wdc07v.mail.ibm.com [10.39.53.233])
-	by smtprelay03.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 54NAEdqR6488688
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 23 May 2025 10:14:39 GMT
-Received: from smtpav06.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 4B6D75804E;
-	Fri, 23 May 2025 10:14:43 +0000 (GMT)
-Received: from smtpav06.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id E686E5803F;
-	Fri, 23 May 2025 10:14:38 +0000 (GMT)
-Received: from li-c18b6acc-24ee-11b2-a85c-81492619bda1.ibm.com (unknown [9.109.215.55])
-	by smtpav06.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Fri, 23 May 2025 10:14:38 +0000 (GMT)
-Message-ID: <ea0963e4b497efb46c2c8e62a30463747cd25bf9.camel@linux.ibm.com>
-Subject: Re: [RFC PATCH] mm: fix the inaccurate memory statistics issue for
- users
-From: Aboorva Devarajan <aboorvad@linux.ibm.com>
-To: Baolin Wang <baolin.wang@linux.alibaba.com>, akpm@linux-foundation.org,
-        david@redhat.com, shakeelb@google.com
-Cc: lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, vbabka@suse.cz,
-        rppt@kernel.org, surenb@google.com, mhocko@suse.com,
-        linux-mm@kvack.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, aboorvad@linux.ibm.com
-Date: Fri, 23 May 2025 15:44:37 +0530
-In-Reply-To: <3dd21f662925c108cfe706c8954e8c201a327550.1747969935.git.baolin.wang@linux.alibaba.com>
-References: 
-	<3dd21f662925c108cfe706c8954e8c201a327550.1747969935.git.baolin.wang@linux.alibaba.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.1 (3.56.1-1.fc42) 
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XMPe1HBt"
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-ad563b69908so955424466b.3;
+        Fri, 23 May 2025 03:15:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747995306; x=1748600106; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=12Do9t9YpCf+Nz+IVlJd3oQSzsy39pOVxJJm3ENuKwc=;
+        b=XMPe1HBt5RET4bQMYSlP/oPTJKE24V6d5nMO20ZHhP6HKIXYwiAA63jnz0u1IVvivz
+         5is7g64k4N3qjdhIK/0PPeAt//xxk8XaevKPEyuQgJ/jhvWjXIyNbsebtqntaaCTAnWe
+         T56MgED/UsYQy30JqFqwYH+tugV/boU5PS3DFFEypBV9kNxCwQ0EvlGdpiuiCL5S0LYc
+         Q29QU81DuM4LT0TwwCtncnkGFEc6yOBonbtF+5y4JeVoLl9rFTr1/8EaMSX2gBFAm6PF
+         EHjOd6byVA15/Gi8SQ9AqhQJTbtKXfgN8mwuX3ARKgd9E8Ji5iVs/Vyhuarszwse6d2G
+         AQvg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747995306; x=1748600106;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=12Do9t9YpCf+Nz+IVlJd3oQSzsy39pOVxJJm3ENuKwc=;
+        b=udQgWqZLKu8nsnAXGs/lpa/nAvKoVrVoOwRzBPuQ3l9J27leEyFT1tLo0bQtrDgD3b
+         ElzsOAm+dVbHxI5D/tp6IeHA+2nf5cccd6gAAn8L91nW44kxvCWK2Kf4UzO6LBfQj5WJ
+         kHAXMXIge2UEMBoG9EEnhFrYm1qVhM8OWrWK++o9WKD5wzC/Lb5P5Fo9PAHbu8k4PpsK
+         e8EmYkG5RiPLn3pObGg6lR2nJLrT5/FYxU/4nOtpbR33FhyOeD9Opa20Ih7LMnWdplBa
+         9U987IM4mvyrbmSHwNpox1v3JQGzVhjbBUyzT4gB4o6LdUAY11fenc2WsBvW1i9v5eOb
+         1nDg==
+X-Forwarded-Encrypted: i=1; AJvYcCUOBFJLQsjlhnVy1oXOLE+PxnP8YSDYqDYsV4ziXT8l3iYDZ2mYI7oECwBygBHDTPMf41bVtsLb8EOuJPC4@vger.kernel.org, AJvYcCUuRNz5D6X7tGT677esOThRXwnJjKnLiCWkHrTXPV2fQF0xu49KxV+H6SDkeYbEhiR42erRnsuVLoqcew==@vger.kernel.org, AJvYcCW7UglxJXQ9S7/cIhQQ8nuborU55juT5SqjvZx/5E7+Jagoc9C70t5BCTeZYEHwZ5DqoDHRhpfZIQ3IRkvs@vger.kernel.org
+X-Gm-Message-State: AOJu0YzLxky2RqroJuBGcsE5bQ3J0WBvdMU7R26yrlVW5M4Y5k2OYKxo
+	JOAk+QU2wv8wMK8Mgo9jI3kO626RBgdQEn8kYH8e3585fM49KhyAum/f
+X-Gm-Gg: ASbGnctdCrOwHhOyF3wpzSX8sdKr1gKUewrqR1Yi3rmd8QfD1hQ7hVarZHJJl2vaf1Z
+	0TQ7qGJ1nGLisebt+3MbSyvRNuwGDcBYgepacybkttWmvc+/W+RjCIoMXWqYeXLVwGChJRNlzx+
+	/Vd+1PVRZ63MO+p73C/rpbzqSYyZWTiRbLAr7ynRJJuFeDVYoaX/etOXDbrWry9XRHNlvM5xRaw
+	eLjNZ9Hu9D+VKipGxOh0dv0T3Giwq+btsxLpNaJTa7SpobewHpW9EiMhQuZ4sXD5YqA7nB8kVS3
+	XKtTTl9P8P7Xq0RgnRQJwCi9SzUeCktm5qHUNNJ5tsNa6yhXz5+XmEBjAfO+3QU2aQ9imR9FjCU
+	oYdk84ml1
+X-Google-Smtp-Source: AGHT+IF9z/ZwcIGZ/MFGn3LzYKCuz4hF1lfNqCLb8lo4Mdq9Jp1Bno4R2tXKBU4ikKUFTPlMGPVwAQ==
+X-Received: by 2002:a17:906:230a:b0:ad4:f6d2:431b with SMTP id a640c23a62f3a-ad536dce6cfmr1912503166b.44.1747995305575;
+        Fri, 23 May 2025 03:15:05 -0700 (PDT)
+Received: from T15.. (wireless-nat-94.ip4.greenlan.pl. [185.56.211.94])
+        by smtp.googlemail.com with ESMTPSA id a640c23a62f3a-ad52d06dfa4sm1212928966b.57.2025.05.23.03.15.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 23 May 2025 03:15:05 -0700 (PDT)
+From: Wojciech Slenska <wojciech.slenska@gmail.com>
+To: Bjorn Andersson <andersson@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>
+Cc: Wojciech Slenska <wojciech.slenska@gmail.com>,
+	linux-arm-msm@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] pinctrl: qcom: pinctrl-qcm2290: Add missing pins
+Date: Fri, 23 May 2025 12:14:37 +0200
+Message-Id: <20250523101437.59092-1-wojciech.slenska@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: kQ5NL5TDjSwS59MUQidPvcGmYplsemXy
-X-Authority-Analysis: v=2.4 cv=XOkwSRhE c=1 sm=1 tr=0 ts=68304a96 cx=c_pps a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=SRrdq9N9AAAA:8 a=VnNF1IyMAAAA:8 a=bJgjvqlET6HPnKk_xIcA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIzMDA4OCBTYWx0ZWRfX16m2iHnkczm5 iqWKf4LT5TGBLToXASQndjXxXQ6Ro8K0/reUukgZmcsqRcJ2JOYsY6DeKhUvitqSaOCdVG1wr63 xTbjzwAIYAOBKz71jcB/0sz1S88oOnf+Ma66i3jizUy+1b76dWDczWmuncNtB5i3dcvmmUWUI7x
- D6yBn44cUmW/90yBWRMj1THYJvMN21LqhoxTZ7YJzbVUL9HtOFglWi4HfgKvwwV6/JwUG6h8qWg XYImosgUg1Rvo0KtL782xVgOZAkWAAvszLepySJGdYM1lasj3juNJOnq8jc2jQrnqE/fLu6ExLq Zok0jJCiHEE7t6TgsOjyQNPiFcZo+9MvIY/okR6Gr9DXQZBFsNXVTisrfft75WiuCZQIOd/Mkwi
- kDugl0gozqeuAfRi5AC5oSfHOGmACe+hdxpripq5VTENh31GJBtjbtTeaPdNJrHaeqODwqo5
-X-Proofpoint-GUID: AR63o-4QBzzE29T2gvaQpZWgN0ph5qqw
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-23_03,2025-05-22_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 malwarescore=0
- mlxlogscore=999 bulkscore=0 mlxscore=0 lowpriorityscore=0 adultscore=0
- impostorscore=0 suspectscore=0 priorityscore=1501 spamscore=0 phishscore=0
- classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2505160000
- definitions=main-2505230088
+Content-Transfer-Encoding: 8bit
 
-On Fri, 2025-05-23 at 11:16 +0800, Baolin Wang wrote:
-> On some large machines with a high number of CPUs running a 64K kernel,
-> we found that the 'RES' field is always 0 displayed by the top command
-> for some processes, which will cause a lot of confusion for users.
->=20
-> =C2=A0=C2=A0=C2=A0 PID USER=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 PR=C2=A0 NI=C2=
-=A0=C2=A0=C2=A0 VIRT=C2=A0=C2=A0=C2=A0 RES=C2=A0=C2=A0=C2=A0 SHR S=C2=A0 %C=
-PU=C2=A0 %MEM=C2=A0=C2=A0=C2=A0=C2=A0 TIME+ COMMAND
-> =C2=A0875525 root=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 20=C2=A0=C2=A0 0=C2=A0=C2=
-=A0 12480=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0 R=
-=C2=A0=C2=A0 0.3=C2=A0=C2=A0 0.0=C2=A0=C2=A0 0:00.08 top
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 1 root=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 20=C2=
-=A0=C2=A0 0=C2=A0 172800=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 0 S=C2=A0=C2=A0 0.0=C2=A0=C2=A0 0.0=C2=A0=C2=A0 0:04.52 system=
-d
->=20
-> The main reason is that the batch size of the percpu counter is quite lar=
-ge
-> on these machines, caching a significant percpu value, since converting m=
-m's
-> rss stats into percpu_counter by commit f1a7941243c1 ("mm: convert mm's r=
-ss
-> stats into percpu_counter"). Intuitively, the batch number should be opti=
-mized,
-> but on some paths, performance may take precedence over statistical accur=
-acy.
-> Therefore, introducing a new interface to add the percpu statistical coun=
-t
-> and display it to users, which can remove the confusion. In addition, thi=
-s
-> change is not expected to be on a performance-critical path, so the modif=
-ication
-> should be acceptable.
->=20
-> Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
-> ---
-> =C2=A0fs/proc/task_mmu.c | 14 +++++++-------
-> =C2=A0include/linux/mm.h |=C2=A0 5 +++++
-> =C2=A02 files changed, 12 insertions(+), 7 deletions(-)
->=20
-> diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
-> index b9e4fbbdf6e6..f629e6526935 100644
-> --- a/fs/proc/task_mmu.c
-> +++ b/fs/proc/task_mmu.c
-> @@ -36,9 +36,9 @@ void task_mem(struct seq_file *m, struct mm_struct *mm)
-> =C2=A0	unsigned long text, lib, swap, anon, file, shmem;
-> =C2=A0	unsigned long hiwater_vm, total_vm, hiwater_rss, total_rss;
-> =C2=A0
-> -	anon =3D get_mm_counter(mm, MM_ANONPAGES);
-> -	file =3D get_mm_counter(mm, MM_FILEPAGES);
-> -	shmem =3D get_mm_counter(mm, MM_SHMEMPAGES);
-> +	anon =3D get_mm_counter_sum(mm, MM_ANONPAGES);
-> +	file =3D get_mm_counter_sum(mm, MM_FILEPAGES);
-> +	shmem =3D get_mm_counter_sum(mm, MM_SHMEMPAGES);
-> =C2=A0
-> =C2=A0	/*
-> =C2=A0	 * Note: to minimize their overhead, mm maintains hiwater_vm and
-> @@ -59,7 +59,7 @@ void task_mem(struct seq_file *m, struct mm_struct *mm)
-> =C2=A0	text =3D min(text, mm->exec_vm << PAGE_SHIFT);
-> =C2=A0	lib =3D (mm->exec_vm << PAGE_SHIFT) - text;
-> =C2=A0
-> -	swap =3D get_mm_counter(mm, MM_SWAPENTS);
-> +	swap =3D get_mm_counter_sum(mm, MM_SWAPENTS);
-> =C2=A0	SEQ_PUT_DEC("VmPeak:\t", hiwater_vm);
-> =C2=A0	SEQ_PUT_DEC(" kB\nVmSize:\t", total_vm);
-> =C2=A0	SEQ_PUT_DEC(" kB\nVmLck:\t", mm->locked_vm);
-> @@ -92,12 +92,12 @@ unsigned long task_statm(struct mm_struct *mm,
-> =C2=A0			 unsigned long *shared, unsigned long *text,
-> =C2=A0			 unsigned long *data, unsigned long *resident)
-> =C2=A0{
-> -	*shared =3D get_mm_counter(mm, MM_FILEPAGES) +
-> -			get_mm_counter(mm, MM_SHMEMPAGES);
-> +	*shared =3D get_mm_counter_sum(mm, MM_FILEPAGES) +
-> +			get_mm_counter_sum(mm, MM_SHMEMPAGES);
-> =C2=A0	*text =3D (PAGE_ALIGN(mm->end_code) - (mm->start_code & PAGE_MASK)=
-)
-> =C2=A0								>> PAGE_SHIFT;
-> =C2=A0	*data =3D mm->data_vm + mm->stack_vm;
-> -	*resident =3D *shared + get_mm_counter(mm, MM_ANONPAGES);
-> +	*resident =3D *shared + get_mm_counter_sum(mm, MM_ANONPAGES);
-> =C2=A0	return mm->total_vm;
-> =C2=A0}
-> =C2=A0
-> diff --git a/include/linux/mm.h b/include/linux/mm.h
-> index 185424858f23..15ec5cfe9515 100644
-> --- a/include/linux/mm.h
-> +++ b/include/linux/mm.h
-> @@ -2568,6 +2568,11 @@ static inline unsigned long get_mm_counter(struct =
-mm_struct *mm, int member)
-> =C2=A0	return percpu_counter_read_positive(&mm->rss_stat[member]);
-> =C2=A0}
-> =C2=A0
-> +static inline unsigned long get_mm_counter_sum(struct mm_struct *mm, int=
- member)
-> +{
-> +	return percpu_counter_sum_positive(&mm->rss_stat[member]);
-> +}
-> +
-> =C2=A0void mm_trace_rss_stat(struct mm_struct *mm, int member);
-> =C2=A0
-> =C2=A0static inline void add_mm_counter(struct mm_struct *mm, int member,=
- long value)
+Added the missing pins to the qcm2290_pins table.
 
-Hi Baolin,
+Signed-off-by: Wojciech Slenska <wojciech.slenska@gmail.com>
+---
+ drivers/pinctrl/qcom/pinctrl-qcm2290.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-This patch looks good to me. We observed a similar issue where the
-generic mm selftest split_huge_page_test failed due to outdated RssAnon
-values reported in /proc/[pid]/status.
-
-...
-
-Without Patch:
-
-# ./split_huge_page_test=20
-TAP version 13
-1..34
-Bail out! No RssAnon is allocated before split
-# Planned tests !=3D run tests (34 !=3D 0)
-# Totals: pass:0 fail:0 xfail:0 xpass:0 skip:0 error:0
-
-...
-
-With Patch:
-
-# ./split_huge_page_test
-# ./split_huge_page_test=20
-TAP version 13
-1..34
-...
-# Totals: pass:11 fail:0 xfail:0 xpass:0 skip:23 error:0
-
-...
-
-While this change may introduce some lock contention, it only affects
-the task_mem function which is invoked only when reading
-/proc/[pid]/status. Since this is not on a performance critical path,
-it will be good to have this change in order to get accurate memory
-stats.
-
-This fix resolves the issue we've seen with split_huge_page_test.
-
-Thanks!
-
-
-Reviewed-by: Aboorva Devarajan <aboorvad@linux.ibm.com>
-Tested-by: Aboorva Devarajan <aboorvad@linux.ibm.com>
-
+diff --git a/drivers/pinctrl/qcom/pinctrl-qcm2290.c b/drivers/pinctrl/qcom/pinctrl-qcm2290.c
+index 85c951305abd..eeeec6434f6a 100644
+--- a/drivers/pinctrl/qcom/pinctrl-qcm2290.c
++++ b/drivers/pinctrl/qcom/pinctrl-qcm2290.c
+@@ -167,6 +167,10 @@ static const struct pinctrl_pin_desc qcm2290_pins[] = {
+ 	PINCTRL_PIN(62, "GPIO_62"),
+ 	PINCTRL_PIN(63, "GPIO_63"),
+ 	PINCTRL_PIN(64, "GPIO_64"),
++	PINCTRL_PIN(65, "GPIO_65"),
++	PINCTRL_PIN(66, "GPIO_66"),
++	PINCTRL_PIN(67, "GPIO_67"),
++	PINCTRL_PIN(68, "GPIO_68"),
+ 	PINCTRL_PIN(69, "GPIO_69"),
+ 	PINCTRL_PIN(70, "GPIO_70"),
+ 	PINCTRL_PIN(71, "GPIO_71"),
+@@ -181,12 +185,17 @@ static const struct pinctrl_pin_desc qcm2290_pins[] = {
+ 	PINCTRL_PIN(80, "GPIO_80"),
+ 	PINCTRL_PIN(81, "GPIO_81"),
+ 	PINCTRL_PIN(82, "GPIO_82"),
++	PINCTRL_PIN(83, "GPIO_83"),
++	PINCTRL_PIN(84, "GPIO_84"),
++	PINCTRL_PIN(85, "GPIO_85"),
+ 	PINCTRL_PIN(86, "GPIO_86"),
+ 	PINCTRL_PIN(87, "GPIO_87"),
+ 	PINCTRL_PIN(88, "GPIO_88"),
+ 	PINCTRL_PIN(89, "GPIO_89"),
+ 	PINCTRL_PIN(90, "GPIO_90"),
+ 	PINCTRL_PIN(91, "GPIO_91"),
++	PINCTRL_PIN(92, "GPIO_92"),
++	PINCTRL_PIN(93, "GPIO_93"),
+ 	PINCTRL_PIN(94, "GPIO_94"),
+ 	PINCTRL_PIN(95, "GPIO_95"),
+ 	PINCTRL_PIN(96, "GPIO_96"),
+-- 
+2.34.1
 
