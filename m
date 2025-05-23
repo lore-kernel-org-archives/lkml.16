@@ -1,131 +1,202 @@
-Received: from out30-99.freemail.mail.aliyun.com (out30-99.freemail.mail.aliyun.com [115.124.30.99])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4A7E2F41;
-	Fri, 23 May 2025 06:55:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.99
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97A142F41;
+	Fri, 23 May 2025 06:59:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747983346; cv=none; b=iOxbbZwVEGwOBY+uS/MgcdEz1TckT0UDx7gbe1VJQFRXsmDzc7gA8hOiPc4k0swVQLQjPldvhJ8FopU4MbkmMLBBKqjN2kj0sw/7vPX7zmFlfkngRnGUc3nGj6FBPi5ky9ekaMOOHKPr9TVuxAAvjEEaduA3UHQREaFBL/Qh6ws=
+	t=1747983545; cv=none; b=hpnBHIKIGTWP4+nypGodxdow+jZS1oYR4xrJ5QLLbKw+HEQ3aX4ETfsSDeiLCfKLySSda2dG4ri7rgR//M5fxgwAPJ3EOeS8YXn79wu591Ufcdhf79ue71HcTpZ5w44S9HCoeM0NBeztFxYX/adHJHQxX2YaTtqt2arWuLybwFQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747983346; c=relaxed/simple;
-	bh=pVHutlHjk19bDsR5XHyrVEKz0M1o9YrQaWRutQHH+7g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gyrExshWC0WrKDVHLh3GeQSqqHR1KE7sBVD74jRW5sz9mi1uA8esTjPsQc5Gkkl/qapETKaf01DYs1tnpW2IKa/WNtNn8+KkDC+UXq2h/P34uZbpCW6zU6827u/XRfXQwWVoqOa5ws2ybQx0i5g5LxVa27g+w6zCvL/0hjXxRsI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=O4AMrPff; arc=none smtp.client-ip=115.124.30.99
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1747983545; c=relaxed/simple;
+	bh=oQB6Ln9MA/kBU//SsjcArG0iT9q+cUOskiIh8YOOv1w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pDKBZvSSc3JT70xEHgVFDYHcsD4n0JqpAGB6YMTd1ekT0VajHU0hTRq2vfz5r6uOdclJYoWUaViDJyJMQx5oXABGq9v5Pk2cBFQOvjypfhL9aakHaZk8iTtfW3aXWZPcsNoW5vhdysvj35zHfynrRZSjDYoRL31iiUcCo+2pPbs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kBNzSzm7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="O4AMrPff"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1747983339; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=kEIfINKZejvJZsMGvS6UgezRdxkkGcgt66QsjivJra8=;
-	b=O4AMrPffGEWRuSIQeLSJqdnJxh2sjB1i+nk8zjVX7OVQ5mua7SQUFPudGG8EP3PVWq4FwL78CMEFToTOU7FsuYmMFcIHvneYymAUI+5zQboAOJjN10Gn6+PZFHlNeKn8t43pDTqCi3c4k3ZLwNLhX4yv4lb4lX3f7Z2scRou0UU=
-Received: from 30.74.144.180(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0WbZKq8c_1747983335 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Fri, 23 May 2025 14:55:36 +0800
-Message-ID: <469db7d1-ba99-4dc7-af13-b5fe850d4031@linux.alibaba.com>
-Date: Fri, 23 May 2025 14:55:34 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kBNzSzm7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0292C4CEE9;
+	Fri, 23 May 2025 06:59:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747983545;
+	bh=oQB6Ln9MA/kBU//SsjcArG0iT9q+cUOskiIh8YOOv1w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=kBNzSzm79lnwPHi4IveJs23sYMPLVjmZaelESuluDDtMVYGZi3YXSkKk3xSNSkhZf
+	 mHpunarmtrSaa4/8QJZ1Ka8CcpOJlmiwvkBGeo5i9HhpQ7YplJ+V+OKKMW8byhCCaj
+	 WRs9o77RPoMywOVEfAuZaJc38ia2UDymCfYv4nyC99vMKVWbfHdExG7Gr9KiNTebY2
+	 Gak1QoFa+VeyYhkrMp7QiYIwDsp/7VXcASN/rf1afmfO+LFv6hT5WhSaD5BwzAT/7y
+	 zvltuKTTpctBZ5Q5G/BGtu/BOPclpwBJsDyzfuudSR5Ga2Gg4DYN5QsB+pMsibBSIM
+	 AyEj5ujgcDYaQ==
+Date: Fri, 23 May 2025 08:58:58 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Rob Clark <robdclark@gmail.com>
+Cc: Connor Abbott <cwabbott0@gmail.com>, Rob Clark <robdclark@chromium.org>,
+	phasta@kernel.org, dri-devel@lists.freedesktop.org,
+	freedreno@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+	Matthew Brost <matthew.brost@intel.com>,
+	Christian =?iso-8859-1?Q?K=F6nig?= <ckoenig.leichtzumerken@gmail.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	open list <linux-kernel@vger.kernel.org>,
+	Boris Brezillon <boris.brezillon@collabora.com>
+Subject: Re: [PATCH v4 04/40] drm/sched: Add enqueue credit limit
+Message-ID: <aDAcsvVaRQopkc6U@pollux>
+References: <aCY42rgJC4sQ4tp4@pollux>
+ <CAF6AEGubHkdhfJz=bAZvctO1aTKDLwRsRyPzkoVrQ7tA6dRbKw@mail.gmail.com>
+ <aCwqAGLLCC2ZLSBK@pollux>
+ <CAF6AEGspvuTHU0t9z__p_HkdRNi=cXir3t453AbR6DFNzDpgvw@mail.gmail.com>
+ <aCyzyAPbQ1SYbo4q@pollux>
+ <CAF6AEGs+WmTO_624A3Pek-1-SD6B4PFu4sDv3htko0ABhfHFzw@mail.gmail.com>
+ <aC8Dzgufa9E2MD6t@pollux>
+ <CAF6AEGvkrN8H1ZPzrCQF+d_Y_Y5kRdeQjohDqcgpNd-uDKo9yQ@mail.gmail.com>
+ <aC9Iih1KN6xb9LrK@cassiopeiae>
+ <CAF6AEGvp6BCN14_n+Ot5KQrPbnDprKXcHT0s0ZLC2-JDV7D3TQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 03/12] khugepaged: generalize hugepage_vma_revalidate
- for mTHP support
-To: Nico Pache <npache@redhat.com>, linux-mm@kvack.org,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Cc: david@redhat.com, ziy@nvidia.com, lorenzo.stoakes@oracle.com,
- Liam.Howlett@oracle.com, ryan.roberts@arm.com, dev.jain@arm.com,
- corbet@lwn.net, rostedt@goodmis.org, mhiramat@kernel.org,
- mathieu.desnoyers@efficios.com, akpm@linux-foundation.org,
- baohua@kernel.org, willy@infradead.org, peterx@redhat.com,
- wangkefeng.wang@huawei.com, usamaarif642@gmail.com, sunnanyong@huawei.com,
- vishal.moola@gmail.com, thomas.hellstrom@linux.intel.com,
- yang@os.amperecomputing.com, kirill.shutemov@linux.intel.com,
- aarcange@redhat.com, raquini@redhat.com, anshuman.khandual@arm.com,
- catalin.marinas@arm.com, tiwai@suse.de, will@kernel.org,
- dave.hansen@linux.intel.com, jack@suse.cz, cl@gentwo.org,
- jglisse@google.com, surenb@google.com, zokeefe@google.com,
- hannes@cmpxchg.org, rientjes@google.com, mhocko@suse.com,
- rdunlap@infradead.org
-References: <20250515032226.128900-1-npache@redhat.com>
- <20250515032226.128900-4-npache@redhat.com>
-From: Baolin Wang <baolin.wang@linux.alibaba.com>
-In-Reply-To: <20250515032226.128900-4-npache@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAF6AEGvp6BCN14_n+Ot5KQrPbnDprKXcHT0s0ZLC2-JDV7D3TQ@mail.gmail.com>
 
-
-
-On 2025/5/15 11:22, Nico Pache wrote:
-> For khugepaged to support different mTHP orders, we must generalize this
-> to check if the PMD is not shared by another VMA and the order is
-> enabled.
+On Thu, May 22, 2025 at 07:31:28PM -0700, Rob Clark wrote:
+> On Thu, May 22, 2025 at 8:53 AM Danilo Krummrich <dakr@kernel.org> wrote:
+> > On Thu, May 22, 2025 at 07:47:17AM -0700, Rob Clark wrote:
+> > > On Thu, May 22, 2025 at 4:00 AM Danilo Krummrich <dakr@kernel.org> wrote:
+> > > > Ok, but what about the other way around? What's the performance impact if the
+> > > > limit is chosen rather small, but we're running on a very powerful machine?
+> > > >
+> > > > Since you already have the implementation for hardware you have access to, can
+> > > > you please check if and how performance degrades when you use a very small
+> > > > threshold?
+> > >
+> > > I mean, considering that some drivers (asahi, at least), _only_
+> > > implement synchronous VM_BIND, I guess blocking in extreme cases isn't
+> > > so bad.
+> >
+> > Which is not even upstream yet and eventually will support async VM_BIND too,
+> > AFAIK.
 > 
-> No functional change in this patch.
-> 
-> Reviewed-by: Baolin Wang <baolin.wang@linux.alibaba.com>
-> Co-developed-by: Dev Jain <dev.jain@arm.com>
-> Signed-off-by: Dev Jain <dev.jain@arm.com>
-> Signed-off-by: Nico Pache <npache@redhat.com>
-> ---
->   mm/khugepaged.c | 10 +++++-----
->   1 file changed, 5 insertions(+), 5 deletions(-)
-> 
-> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-> index 5457571d505a..0c4d6a02d59c 100644
-> --- a/mm/khugepaged.c
-> +++ b/mm/khugepaged.c
-> @@ -920,7 +920,7 @@ static int khugepaged_find_target_node(struct collapse_control *cc)
->   static int hugepage_vma_revalidate(struct mm_struct *mm, unsigned long address,
->   				   bool expect_anon,
->   				   struct vm_area_struct **vmap,
-> -				   struct collapse_control *cc)
-> +				   struct collapse_control *cc, int order)
->   {
->   	struct vm_area_struct *vma;
->   	unsigned long tva_flags = cc->is_khugepaged ? TVA_ENFORCE_SYSFS : 0;
-> @@ -934,7 +934,7 @@ static int hugepage_vma_revalidate(struct mm_struct *mm, unsigned long address,
->   
->   	if (!thp_vma_suitable_order(vma, address, PMD_ORDER))
+> the uapi is upstream
 
-Sorry, I missed this before. Should we also change 'PMD_ORDER' to 
-'order' for the thp_vma_suitable_order()?
+And will be extended once they have the corresponding async implementation in
+the driver.
 
->   		return SCAN_ADDRESS_RANGE;
-> -	if (!thp_vma_allowable_order(vma, vma->vm_flags, tva_flags, PMD_ORDER))
-> +	if (!thp_vma_allowable_order(vma, vma->vm_flags, tva_flags, order))
->   		return SCAN_VMA_CHECK;
->   	/*
->   	 * Anon VMA expected, the address may be unmapped then
-> @@ -1130,7 +1130,7 @@ static int collapse_huge_page(struct mm_struct *mm, unsigned long address,
->   		goto out_nolock;
->   
->   	mmap_read_lock(mm);
-> -	result = hugepage_vma_revalidate(mm, address, true, &vma, cc);
-> +	result = hugepage_vma_revalidate(mm, address, true, &vma, cc, HPAGE_PMD_ORDER);
->   	if (result != SCAN_SUCCEED) {
->   		mmap_read_unlock(mm);
->   		goto out_nolock;
-> @@ -1164,7 +1164,7 @@ static int collapse_huge_page(struct mm_struct *mm, unsigned long address,
->   	 * mmap_lock.
->   	 */
->   	mmap_write_lock(mm);
-> -	result = hugepage_vma_revalidate(mm, address, true, &vma, cc);
-> +	result = hugepage_vma_revalidate(mm, address, true, &vma, cc, HPAGE_PMD_ORDER);
->   	if (result != SCAN_SUCCEED)
->   		goto out_up_write;
->   	/* check if the pmd is still valid */
-> @@ -2782,7 +2782,7 @@ int madvise_collapse(struct vm_area_struct *vma, struct vm_area_struct **prev,
->   			mmap_read_lock(mm);
->   			mmap_locked = true;
->   			result = hugepage_vma_revalidate(mm, addr, false, &vma,
-> -							 cc);
-> +							 cc, HPAGE_PMD_ORDER);
->   			if (result  != SCAN_SUCCEED) {
->   				last_fail = result;
->   				goto out_nolock;
+> > > But I think you are overthinking this.  4MB of pagetables is
+> > > enough to map ~8GB of buffers.
+> > >
+> > > Perhaps drivers would want to set their limit based on the amount of
+> > > memory the GPU could map, which might land them on a # larger than
+> > > 1024, but still not an order of magnitude more.
+> >
+> > Nouveau currently supports an address space width of 128TiB.
+> >
+> > In general, we have to cover the range of some small laptop or handheld devices
+> > to huge datacenter machines.
+> 
+> sure.. and?  It is still up to the user of sched to set their own
+> limits, I'm not proposing that sched takes charge of that policy
+> 
+> Maybe msm doesn't have to scale up quite as much (yet).. but it has to
+> scale quite a bit further down (like watches).  In the end it is the
+> same.  And also not really the point here.
+> 
+> > > I don't really have a good setup for testing games that use this, atm,
+> > > fex-emu isn't working for me atm.  But I think Connor has a setup with
+> > > proton working?
+> >
+> > I just want to be sure that an arbitrary small limit doing the job for a small
+> > device to not fail VK CTS can't regress the performance on large machines.
+> 
+> why are we debating the limit I set outside of sched.. even that might
+> be subject to some tuning for devices that have more memory, but that
+> really outside the scope of this patch
+
+We are not debating the number you set in MSM, we're talking about whether a
+statically set number will be sufficient.
+
+Also, do we really want it to be our quality standard that we introduce some
+throttling mechanism as generic infrastructure for driver and don't even add a
+comment guiding drivers how to choose a proper limit and what are the potential
+pitfalls in choosing the limit?
+
+When working on a driver, do you want to run into APIs that don't give you
+proper guidance on how to use them correctly?
+
+I think it would not be very nice to tell drivers, "Look, here's a throttling API
+for when VK CTS (unknown test) ruins your day. We also can't give any advise on
+the limit that should be set depending on the scale of the machine, since we
+never looked into it.".
+
+> > So, kindly try to prove that we're not prone to extreme performance regression
+> > with a static value as you propose.
+> >
+> > > > Also, I think we should probably put this throttle mechanism in a separate
+> > > > component, that just wraps a counter of bytes or rather pages that can be
+> > > > increased and decreased through an API and the increase just blocks at a certain
+> > > > threshold.
+> > >
+> > > Maybe?  I don't see why we need to explicitly define the units for the
+> > > credit.  This wasn't done for the existing credit mechanism.. which,
+> > > seems like if you used some extra fences could also have been
+> > > implemented externally.
+> >
+> > If you are referring to the credit mechanism in the scheduler for ring buffers,
+> > that's a different case. Drivers know the size of their ring buffers exactly and
+> > the scheduler has the responsibility of when to submit tasks to the ring buffer.
+> > So the scheduler kind of owns the resource.
+> >
+> > However, the throttle mechanism you propose is independent from the scheduler,
+> > it depends on the available system memory, a resource the scheduler doesn't own.
+> 
+> it is a distinction that is perhaps a matter of opinion.  I don't see
+> such a big difference, it is all just a matter of managing physical
+> resource usage in different stages of a scheduled job's lifetime.
+
+Yes, but the ring buffer as a resource is owned by the scheduler, and hence
+having the scheduler care about flow control makes sense.
+
+Here you want to flow control the uAPI (i.e. VM_BIND ioctl) -- let's do this in
+a seaparate component please.
+
+> > > Maybe?  This still has the same complaint I had about just
+> > > implementing this in msm.. it would have to reach in and use the
+> > > scheduler's job_scheduled wait-queue.  Which, to me at least, seems
+> > > like more of an internal detail about how the scheduler works.
+> >
+> > Why? The component should use its own waitqueue. Subsequently, from your code
+> > that releases the pre-allocated memory, you can decrement the counter through
+> > the drm_throttle API, which automatically kicks its the waitqueue.
+> >
+> > For instance from your VM_BIND IOCTL you can call
+> >
+> >         drm_throttle_inc(value)
+> >
+> > which blocks if the increment goes above the threshold. And when you release the
+> > pre-allocated memory you call
+> >
+> >         drm_throttle_dec(value)
+> >
+> > which wakes the waitqueue and unblocks the drm_throttle_inc() call from your
+> > VM_BIND IOCTL.
+> 
+> ok, sure, we could introduce another waitqueue, but with my proposal
+> that is not needed.  And like I said, the existing throttling could
+> also be implemented externally to the scheduler..  so I'm not seeing
+> any fundamental difference.
+
+Yes, but you also implicitly force drivers to actually release the pre-allocated
+memory before the scheduler's internal waitqueue is woken. Having such implicit
+rules isn't nice.
+
+Also, with that drivers would need to do so in run_job(), i.e. in the fence
+signalling critical path, which some drivers may not be able to do.
+
+And, it also adds complexity to the scheduler, which we're trying to reduce.
+
+All this goes away with making this a separate component -- please do that
+instead.
