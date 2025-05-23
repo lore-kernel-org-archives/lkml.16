@@ -1,130 +1,250 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A3202253A9
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 10:14:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4D96226CF8;
+	Fri, 23 May 2025 10:15:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747995278; cv=none; b=e+gJwa3A4nfpx0JG3UohKmmx+bu1vseac/MRf2fYkjPZbzGC6vFHAE1O70+GBQbHvi0a7wOjhWvbVl8hGW8FGYzwqkolpPsT1vGV0FJdowgOm1mHD/Ag+65PlpkqHITSodHoplWXmB6B/RyHBpa2bL4hJAUaDdi6Hs9OHKo43M8=
+	t=1747995303; cv=none; b=BgoXp8zsy1g1DIkV3wQCFW+TfsDTGdpEfyv78JYbDTfD0RY25WbcNhRmgSy01nb7h+Zh33pBufqWAmgDRnenLaGvTTBF99/AQD56s1lcB48j02tXdiVKD7dXlTbeTU9hIYqjljm0Muaaf9l4QBCJfKawQ694djCxaMAeFJ6h7Dk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747995278; c=relaxed/simple;
-	bh=YXdLngDcBO0vJC/gQveHdfBkHJCl1Zxhg7Yjupm186U=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=OUaCFs/ZbkH08ALXtooif0RjlI0cevOOAszxp1J3ju3raai8X1J4Bz91A26CTzY6+BFey8OZyV4mRYF2B49R1rhgGZWFzSAAAE+3vUxNvahbs5XKnjek1Mt06YxqXZ4PHtSTniKIuf2YRulqFgQ9FWXHAMzVLzaDrkFq0+WqYRc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=uWwpApxw; arc=none smtp.client-ip=209.85.128.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1747995303; c=relaxed/simple;
+	bh=Mtt71jTZm+HlLNOkIpKqUpZ3L6JoS2woYWY7Cdl2HYQ=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=INWRpM5Im30QVZZTKiRvpp15aNKU1bfgw9YZniCwXO2LmjKh5Tfgg+SLWoSDfDnE4DwwctwBszv/v/nyX/9HT5ZpBjrQcO2QE268+HudPQWmQHQZvQFCeHMRLTFoJsMGr5BzUw6nin1eo9sx1I79AiVnJV8nqNG7sUgh+WhD780=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=OtfpTxR/; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uWwpApxw"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-43ce71582e9so75009075e9.1
-        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 03:14:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1747995275; x=1748600075; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=+zKQCNztHs5vaJkSM9hQ4RIOUwHXJN4g4lZDHbYkUTE=;
-        b=uWwpApxw8cIlBK4Za3QWpp/TxifMmRA6fgvrWuj1p4XcVFQVM+gsPKQLe4ehVQazM7
-         FRDRY9FLeoQ07teM142zy+pizzYgbv7ea3j4K6TILwlgmR0J1hne6L1GFkna9OCralwC
-         lmhN/mSDCscFJLd6lwNaL7opgEIx1A0SO46s31aH2sVWOmkhLVRA2eJGsGgK9oCdRDtl
-         jrvdQ7kGvYK0WV1PTa4b6NVO2Ut0vyWYLHh1vzblAAFK10dHVpS29UKVQrHqYTPyMjuq
-         cn+V/T3QLgdBFtHXzxEzi/TEXgxHN9CBcc5nu6TH7EjvlIICXgfMnJGN2skWkCtMQ7Bx
-         tbJQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747995275; x=1748600075;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=+zKQCNztHs5vaJkSM9hQ4RIOUwHXJN4g4lZDHbYkUTE=;
-        b=w+tSgZJ1aEU7ownv2P1MW2fQmYlFuXpc0vZV6iOb/Qty1rU6MHcN3rdG27zocwnOKA
-         9yxj+9uV3qGOgz3TXbaigpj2T//a0GfuBaQGDTUqX5KzJ5CeF94Qiu4NjVns3/dQCF0w
-         SzgYk94bvFVWaIC8Fk9uv5Sl7GWBKZQt/XY1rX2ZKEvs5jKob3KhjHpgSpxFng+0pXCO
-         brdVKHXC23TrMDXKum70ljQponzo8QmRHNCFvrXXMMUnJAWet+DoDvAzWN5GOvvF5H07
-         M5vA209D7f0sFzVpDk3v6GWY6HdTyZ0OnvkQ0gst5GH0B1QXm9nJvbi9d8EDKAtMN4iX
-         lUXA==
-X-Forwarded-Encrypted: i=1; AJvYcCXzVtEkp65/gPgd+qXt/MQ5/koGAD9Dk5dXmKCcRlszsnT5fS8IVuuvbEsljR73Ci/YROn7AvUGH3U2TtU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxrMM9jnIjgMoCPQv/VifS1k9MW96QVZqHS0Y5dBOIp7TdaVxil
-	pTCdgDpcVWvvtVv7rqs95hxQT4ahDE+iKEa3qaM70x2vEjP9z1BulncY6tDAnl9hlmQ=
-X-Gm-Gg: ASbGnctru7ldlYL7Ev2qfLyjwc3spa3yaWTiEzKKQfla6BlpRv39U3yi2nR8ctnM4K1
-	e1k2r8iLm7CQ33489UX/ViH9N+9Uu9mVk5C82OHB8tfUXEFfxR825hkWF32PFhflwXT5VRUo69w
-	pqo71p70rHeNqd3sy49dHVyYQwAkW95vsYUD8J0HHzKIrgkKuxCjPFYqsfCeqmk1DQTGbb6qvXb
-	WKcEBLU5aetpJr2/l7ALQKmouB8s6EuPY8qA3QFuiqJFXAKTUs3FXgd1kFSSVSMn+L66kay100/
-	JIZeY0LcVj9loAagMZt6SwYyswLsfL684vikVkyMoMUUGraV5g==
-X-Google-Smtp-Source: AGHT+IEuf3bBObzgG57jYGNQDtRTTrbOqj54r9Cq5DQk2zMU3kmt458sE//vS5giTUD8U4YoKDV4cg==
-X-Received: by 2002:a05:600c:1f95:b0:442:e03b:589d with SMTP id 5b1f17b1804b1-44b6e85fae2mr26950875e9.24.1747995275216;
-        Fri, 23 May 2025 03:14:35 -0700 (PDT)
-Received: from [127.0.1.1] ([62.231.96.41])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-447f6f05581sm135208955e9.13.2025.05.23.03.14.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 May 2025 03:14:34 -0700 (PDT)
-From: Abel Vesa <abel.vesa@linaro.org>
-Date: Fri, 23 May 2025 13:14:22 +0300
-Subject: [PATCH] power: supply: qcom_battmgr: Add lithium-polymer entry
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="OtfpTxR/"
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54MNWGtk004906;
+	Fri, 23 May 2025 10:14:49 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=zXHL2C
+	q+aRXrEcEy64Su9IC7piz2/y4DTVPnU1CRfrc=; b=OtfpTxR/+M1m9QoMFOZaKH
+	RActYnItKiQYOsfii4Gmmev9OQOU12QikegR5liYjMFtB9Ukq/QGoxH1S/HDh0R0
+	dThbBxCDkZdbdwStKTPDpBLzOB9tZSjUhsXSmxqnxJ+McD3P4LWOHQxMR/k0dc7T
+	2Wxsfuv1isWJdIWGUBkUv4SYZZvKAzo1pBRcc/hHVBI0cUtKUbXE7vVadxiKAhLy
+	Fc+MRJH1Ef9ALUSPKCSULvmSSkh4VTqgpzYXRE84MDgtRz9tmP8GIbwjti/Q3M/y
+	+hFc5B1nNEc40zCRalAFiD/q/ArUaOc1NvBHdS/UMCboF2uVxI+iW+TuzEyYOiDA
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46t14jp7v4-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 23 May 2025 10:14:46 +0000 (GMT)
+Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 54NAEidc010386;
+	Fri, 23 May 2025 10:14:44 GMT
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46t14jp7v3-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 23 May 2025 10:14:44 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 54N6MpD2024698;
+	Fri, 23 May 2025 10:14:43 GMT
+Received: from smtprelay03.wdc07v.mail.ibm.com ([172.16.1.70])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 46rwkre2nj-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 23 May 2025 10:14:43 +0000
+Received: from smtpav06.wdc07v.mail.ibm.com (smtpav06.wdc07v.mail.ibm.com [10.39.53.233])
+	by smtprelay03.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 54NAEdqR6488688
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 23 May 2025 10:14:39 GMT
+Received: from smtpav06.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 4B6D75804E;
+	Fri, 23 May 2025 10:14:43 +0000 (GMT)
+Received: from smtpav06.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id E686E5803F;
+	Fri, 23 May 2025 10:14:38 +0000 (GMT)
+Received: from li-c18b6acc-24ee-11b2-a85c-81492619bda1.ibm.com (unknown [9.109.215.55])
+	by smtpav06.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Fri, 23 May 2025 10:14:38 +0000 (GMT)
+Message-ID: <ea0963e4b497efb46c2c8e62a30463747cd25bf9.camel@linux.ibm.com>
+Subject: Re: [RFC PATCH] mm: fix the inaccurate memory statistics issue for
+ users
+From: Aboorva Devarajan <aboorvad@linux.ibm.com>
+To: Baolin Wang <baolin.wang@linux.alibaba.com>, akpm@linux-foundation.org,
+        david@redhat.com, shakeelb@google.com
+Cc: lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, vbabka@suse.cz,
+        rppt@kernel.org, surenb@google.com, mhocko@suse.com,
+        linux-mm@kvack.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, aboorvad@linux.ibm.com
+Date: Fri, 23 May 2025 15:44:37 +0530
+In-Reply-To: <3dd21f662925c108cfe706c8954e8c201a327550.1747969935.git.baolin.wang@linux.alibaba.com>
+References: 
+	<3dd21f662925c108cfe706c8954e8c201a327550.1747969935.git.baolin.wang@linux.alibaba.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.1 (3.56.1-1.fc42) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250523-psy-qcom-battmgr-add-lipo-entry-v1-1-938c20a43a25@linaro.org>
-X-B4-Tracking: v=1; b=H4sIAH1KMGgC/x3NQQqDMBBA0avIrB2ICbHQq0gXiRntQE3SSZCKe
- PcGl2/z/wmFhKnAsztBaOfCKTYMfQfz28WVkEMzaKWtstpgLgd+57Shd7Vuq6ALAT+cE1KsciA
- 9rDeejDJ+hFbJQgv/7sP0uq4/SGJidHEAAAA=
-X-Change-ID: 20250523-psy-qcom-battmgr-add-lipo-entry-e75b3be303b6
-To: Sebastian Reichel <sre@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Abel Vesa <abel.vesa@linaro.org>
-X-Mailer: b4 0.15-dev-dedf8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1329; i=abel.vesa@linaro.org;
- h=from:subject:message-id; bh=YXdLngDcBO0vJC/gQveHdfBkHJCl1Zxhg7Yjupm186U=;
- b=owEBbQKS/ZANAwAKARtfRMkAlRVWAcsmYgBoMEqEne0ttuK8zTJJgKWMRPGQweMwniKprXSkI
- ZvK4gMoRIOJAjMEAAEKAB0WIQRO8+4RTnqPKsqn0bgbX0TJAJUVVgUCaDBKhAAKCRAbX0TJAJUV
- Vh9oD/4t/Ab4odV5IIvMkEp6oVEQR9VxC87MzrQEfmviZd69GIZYd4wR2MNejTEfmbChZaz5e54
- X6+ic+swqbVVzyp0pHjamdccJIRnpBT9C2pCx18KFONjY7bCMyvZ41MvrHLPkEljltER+4w/cly
- SSBhVDzpBZ5Lf+6HNH98ckFL1ZoFCroqDBQJrf10tCzcXHPQtRp3Zed2eDpwgFP+V06a7GOJJYj
- yVFS/gAvESmywT5U3NEVnOu4CE4zbuOG/vnMdaoLP4b2Ll4cn4wxS//Z8GpUEyr6Jq0/agqxqY6
- eiafwoU+eSxE96b7Dj8AxypUVxlCCkslg5xMs619u8UZ4FwWfWRtjF7ovuSQI7HIMZD85gEJTjK
- c2hGNBfXlsa4unReDCpfXgKw9OL3XA1iLwiX8qff1ojCsViBHwFVs1rJY1q0umqW7XxGvgTo/xl
- aGNwQKWCMWffpR0nxthiAQscEd28+vyvaQmHBqIh8AcpDtcAeAsi3W60skFRcV44s4LfXelzgOK
- SBeVfDA5cmHZbxQD9lntkUb+zFf0OVQUmiIhkB8pb/DGOo1zB8sV63iqGHRbxe9RXgrkFwo6h56
- b6M7fBKlo74u4q5lupA1biF8/9FcZVueB0yPUfJFmTMY4AONUGNf2nWwxrc0Ky6SCnt90KmgA0R
- CA94md15gdr02Ag==
-X-Developer-Key: i=abel.vesa@linaro.org; a=openpgp;
- fpr=6AFF162D57F4223A8770EF5AF7BF214136F41FAE
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: kQ5NL5TDjSwS59MUQidPvcGmYplsemXy
+X-Authority-Analysis: v=2.4 cv=XOkwSRhE c=1 sm=1 tr=0 ts=68304a96 cx=c_pps a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=SRrdq9N9AAAA:8 a=VnNF1IyMAAAA:8 a=bJgjvqlET6HPnKk_xIcA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIzMDA4OCBTYWx0ZWRfX16m2iHnkczm5 iqWKf4LT5TGBLToXASQndjXxXQ6Ro8K0/reUukgZmcsqRcJ2JOYsY6DeKhUvitqSaOCdVG1wr63 xTbjzwAIYAOBKz71jcB/0sz1S88oOnf+Ma66i3jizUy+1b76dWDczWmuncNtB5i3dcvmmUWUI7x
+ D6yBn44cUmW/90yBWRMj1THYJvMN21LqhoxTZ7YJzbVUL9HtOFglWi4HfgKvwwV6/JwUG6h8qWg XYImosgUg1Rvo0KtL782xVgOZAkWAAvszLepySJGdYM1lasj3juNJOnq8jc2jQrnqE/fLu6ExLq Zok0jJCiHEE7t6TgsOjyQNPiFcZo+9MvIY/okR6Gr9DXQZBFsNXVTisrfft75WiuCZQIOd/Mkwi
+ kDugl0gozqeuAfRi5AC5oSfHOGmACe+hdxpripq5VTENh31GJBtjbtTeaPdNJrHaeqODwqo5
+X-Proofpoint-GUID: AR63o-4QBzzE29T2gvaQpZWgN0ph5qqw
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-23_03,2025-05-22_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 malwarescore=0
+ mlxlogscore=999 bulkscore=0 mlxscore=0 lowpriorityscore=0 adultscore=0
+ impostorscore=0 suspectscore=0 priorityscore=1501 spamscore=0 phishscore=0
+ classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2505160000
+ definitions=main-2505230088
 
-On some Dell XPS 13 (9345) variants, the battery used is lithium-polymer
-based. Currently, this is reported as unknown technology due to the entry
-missing.
+On Fri, 2025-05-23 at 11:16 +0800, Baolin Wang wrote:
+> On some large machines with a high number of CPUs running a 64K kernel,
+> we found that the 'RES' field is always 0 displayed by the top command
+> for some processes, which will cause a lot of confusion for users.
+>=20
+> =C2=A0=C2=A0=C2=A0 PID USER=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 PR=C2=A0 NI=C2=
+=A0=C2=A0=C2=A0 VIRT=C2=A0=C2=A0=C2=A0 RES=C2=A0=C2=A0=C2=A0 SHR S=C2=A0 %C=
+PU=C2=A0 %MEM=C2=A0=C2=A0=C2=A0=C2=A0 TIME+ COMMAND
+> =C2=A0875525 root=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 20=C2=A0=C2=A0 0=C2=A0=C2=
+=A0 12480=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0 R=
+=C2=A0=C2=A0 0.3=C2=A0=C2=A0 0.0=C2=A0=C2=A0 0:00.08 top
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 1 root=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 20=C2=
+=A0=C2=A0 0=C2=A0 172800=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0 0 S=C2=A0=C2=A0 0.0=C2=A0=C2=A0 0.0=C2=A0=C2=A0 0:04.52 system=
+d
+>=20
+> The main reason is that the batch size of the percpu counter is quite lar=
+ge
+> on these machines, caching a significant percpu value, since converting m=
+m's
+> rss stats into percpu_counter by commit f1a7941243c1 ("mm: convert mm's r=
+ss
+> stats into percpu_counter"). Intuitively, the batch number should be opti=
+mized,
+> but on some paths, performance may take precedence over statistical accur=
+acy.
+> Therefore, introducing a new interface to add the percpu statistical coun=
+t
+> and display it to users, which can remove the confusion. In addition, thi=
+s
+> change is not expected to be on a performance-critical path, so the modif=
+ication
+> should be acceptable.
+>=20
+> Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+> ---
+> =C2=A0fs/proc/task_mmu.c | 14 +++++++-------
+> =C2=A0include/linux/mm.h |=C2=A0 5 +++++
+> =C2=A02 files changed, 12 insertions(+), 7 deletions(-)
+>=20
+> diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
+> index b9e4fbbdf6e6..f629e6526935 100644
+> --- a/fs/proc/task_mmu.c
+> +++ b/fs/proc/task_mmu.c
+> @@ -36,9 +36,9 @@ void task_mem(struct seq_file *m, struct mm_struct *mm)
+> =C2=A0	unsigned long text, lib, swap, anon, file, shmem;
+> =C2=A0	unsigned long hiwater_vm, total_vm, hiwater_rss, total_rss;
+> =C2=A0
+> -	anon =3D get_mm_counter(mm, MM_ANONPAGES);
+> -	file =3D get_mm_counter(mm, MM_FILEPAGES);
+> -	shmem =3D get_mm_counter(mm, MM_SHMEMPAGES);
+> +	anon =3D get_mm_counter_sum(mm, MM_ANONPAGES);
+> +	file =3D get_mm_counter_sum(mm, MM_FILEPAGES);
+> +	shmem =3D get_mm_counter_sum(mm, MM_SHMEMPAGES);
+> =C2=A0
+> =C2=A0	/*
+> =C2=A0	 * Note: to minimize their overhead, mm maintains hiwater_vm and
+> @@ -59,7 +59,7 @@ void task_mem(struct seq_file *m, struct mm_struct *mm)
+> =C2=A0	text =3D min(text, mm->exec_vm << PAGE_SHIFT);
+> =C2=A0	lib =3D (mm->exec_vm << PAGE_SHIFT) - text;
+> =C2=A0
+> -	swap =3D get_mm_counter(mm, MM_SWAPENTS);
+> +	swap =3D get_mm_counter_sum(mm, MM_SWAPENTS);
+> =C2=A0	SEQ_PUT_DEC("VmPeak:\t", hiwater_vm);
+> =C2=A0	SEQ_PUT_DEC(" kB\nVmSize:\t", total_vm);
+> =C2=A0	SEQ_PUT_DEC(" kB\nVmLck:\t", mm->locked_vm);
+> @@ -92,12 +92,12 @@ unsigned long task_statm(struct mm_struct *mm,
+> =C2=A0			 unsigned long *shared, unsigned long *text,
+> =C2=A0			 unsigned long *data, unsigned long *resident)
+> =C2=A0{
+> -	*shared =3D get_mm_counter(mm, MM_FILEPAGES) +
+> -			get_mm_counter(mm, MM_SHMEMPAGES);
+> +	*shared =3D get_mm_counter_sum(mm, MM_FILEPAGES) +
+> +			get_mm_counter_sum(mm, MM_SHMEMPAGES);
+> =C2=A0	*text =3D (PAGE_ALIGN(mm->end_code) - (mm->start_code & PAGE_MASK)=
+)
+> =C2=A0								>> PAGE_SHIFT;
+> =C2=A0	*data =3D mm->data_vm + mm->stack_vm;
+> -	*resident =3D *shared + get_mm_counter(mm, MM_ANONPAGES);
+> +	*resident =3D *shared + get_mm_counter_sum(mm, MM_ANONPAGES);
+> =C2=A0	return mm->total_vm;
+> =C2=A0}
+> =C2=A0
+> diff --git a/include/linux/mm.h b/include/linux/mm.h
+> index 185424858f23..15ec5cfe9515 100644
+> --- a/include/linux/mm.h
+> +++ b/include/linux/mm.h
+> @@ -2568,6 +2568,11 @@ static inline unsigned long get_mm_counter(struct =
+mm_struct *mm, int member)
+> =C2=A0	return percpu_counter_read_positive(&mm->rss_stat[member]);
+> =C2=A0}
+> =C2=A0
+> +static inline unsigned long get_mm_counter_sum(struct mm_struct *mm, int=
+ member)
+> +{
+> +	return percpu_counter_sum_positive(&mm->rss_stat[member]);
+> +}
+> +
+> =C2=A0void mm_trace_rss_stat(struct mm_struct *mm, int member);
+> =C2=A0
+> =C2=A0static inline void add_mm_counter(struct mm_struct *mm, int member,=
+ long value)
 
-[ 4083.135325] Unknown battery technology 'LIP'
+Hi Baolin,
 
-Add another check for lithium-polymer in the technology parsing callback
-and return that instead of unknown.
+This patch looks good to me. We observed a similar issue where the
+generic mm selftest split_huge_page_test failed due to outdated RssAnon
+values reported in /proc/[pid]/status.
 
-Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
----
- drivers/power/supply/qcom_battmgr.c | 2 ++
- 1 file changed, 2 insertions(+)
+...
 
-diff --git a/drivers/power/supply/qcom_battmgr.c b/drivers/power/supply/qcom_battmgr.c
-index fe27676fbc7cd12292caa6fb3b5b46a18c426e6d..32c85939b8973422ee417c3f1552f2355658cf06 100644
---- a/drivers/power/supply/qcom_battmgr.c
-+++ b/drivers/power/supply/qcom_battmgr.c
-@@ -981,6 +981,8 @@ static unsigned int qcom_battmgr_sc8280xp_parse_technology(const char *chemistry
- {
- 	if (!strncmp(chemistry, "LIO", BATTMGR_CHEMISTRY_LEN))
- 		return POWER_SUPPLY_TECHNOLOGY_LION;
-+	else if (!strncmp(chemistry, "LIP", BATTMGR_CHEMISTRY_LEN))
-+		return POWER_SUPPLY_TECHNOLOGY_LIPO;
- 
- 	pr_err("Unknown battery technology '%s'\n", chemistry);
- 	return POWER_SUPPLY_TECHNOLOGY_UNKNOWN;
+Without Patch:
 
----
-base-commit: 176e917e010cb7dcc605f11d2bc33f304292482b
-change-id: 20250523-psy-qcom-battmgr-add-lipo-entry-e75b3be303b6
+# ./split_huge_page_test=20
+TAP version 13
+1..34
+Bail out! No RssAnon is allocated before split
+# Planned tests !=3D run tests (34 !=3D 0)
+# Totals: pass:0 fail:0 xfail:0 xpass:0 skip:0 error:0
 
-Best regards,
--- 
-Abel Vesa <abel.vesa@linaro.org>
+...
+
+With Patch:
+
+# ./split_huge_page_test
+# ./split_huge_page_test=20
+TAP version 13
+1..34
+...
+# Totals: pass:11 fail:0 xfail:0 xpass:0 skip:23 error:0
+
+...
+
+While this change may introduce some lock contention, it only affects
+the task_mem function which is invoked only when reading
+/proc/[pid]/status. Since this is not on a performance critical path,
+it will be good to have this change in order to get accurate memory
+stats.
+
+This fix resolves the issue we've seen with split_huge_page_test.
+
+Thanks!
+
+
+Reviewed-by: Aboorva Devarajan <aboorvad@linux.ibm.com>
+Tested-by: Aboorva Devarajan <aboorvad@linux.ibm.com>
+
 
