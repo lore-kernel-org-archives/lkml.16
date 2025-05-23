@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72C852F3E;
-	Fri, 23 May 2025 12:55:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11E9A14B96E;
+	Fri, 23 May 2025 12:55:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748004902; cv=none; b=Uow6kBtlne7fCe73G3aEOs6tVwCxKCsX4q8oUqKLPXqfIEEqzgyeuhn/Rxl/sBulOJZDswbdv97FyDNylHwiHaLbtEXS4lb6qoSzHEIIN88vT5PolgHCBIgbesDKI+o6LN581cZ8bnt86qLxjU6SZAWWPJCwicEH1bVTsGqatqI=
+	t=1748004907; cv=none; b=qdkf8AgzsOjPxPff2XPzpyKuGbyqv1ezljsEhkWCXh/bsI5ocTlcBWwu5GGPcgJoOHmvOuT4utJ0T1DjcW/ziBXSClCF+dF9SFOmePtRlIsOWxpEt67E+Ev9TAWT9juVyZQ9YwncIDPXbOYRMwns+9lzAwxE6kO/8cNpkgtqoKY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748004902; c=relaxed/simple;
-	bh=zS2qZ1fIE8zCrAcJ/WMTG/eQWd+QMqxNhGkj9gw9I1g=;
+	s=arc-20240116; t=1748004907; c=relaxed/simple;
+	bh=UGO20Ph0m/03hTKf8vS+w+bTRY12hJNYL+9+4BG3VpE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=GT2WBNTSpaPs1htIUfYI85JbS9WZTEZpOagV9Kp9Wp6jitM7hhoLKxv/Z5Hcs4+OnYmb4P/J/d6kmZr7F0y33MK2z3KYxhI5vE/FGylOQvFUi6QDz0Yt+UGcpXGCSYHCh0QtIcbA/67tTKPq6ll9jGEJjKXzNcNj9ftL4W0nqDg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uHYGTuKT; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=s5s/wxBpCElfmLuvpPCU7SsNulSukIL6LU1CZaYN3jctSc3RaMdTbIybZ2aPDJ5dL5J+7w71IUU46Uw30YxtQOvan9qslZpJgs8Pt6CGj81EP9KmCTNVE3HmPZ1nnmsC/81+xm43+8B0NYqhT6p7SD/bReR/2iUkYOWhI0jB/RU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dqsBI1K4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uHYGTuKT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6AB3BC4CEEA;
-	Fri, 23 May 2025 12:54:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dqsBI1K4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F703C4CEE9;
+	Fri, 23 May 2025 12:55:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748004902;
-	bh=zS2qZ1fIE8zCrAcJ/WMTG/eQWd+QMqxNhGkj9gw9I1g=;
+	s=k20201202; t=1748004906;
+	bh=UGO20Ph0m/03hTKf8vS+w+bTRY12hJNYL+9+4BG3VpE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=uHYGTuKTb7yh5ax6IouJzGnymbzT3CZ0w4/MmFYbfEMi0loxcgs5ahTGHLewqMwQ/
-	 LaUmO366jdrmxtWfzwQsrbUKjjntKq5rvDndTmtQ8ayEQBzydW3pyBD/wwjwytgWtD
-	 nZ7Sh8k43noU7C36yvuCM29WeAQQWPuAgf60vAM9kHfLWeLopsTCl6UcDrHQbM31G8
-	 dJhHdNy2ZGhFMS8L3WMbjxI+wuAnURyzrEpqZpF2HEUCVrjNJ2v8tCfIoTfLkWESzK
-	 j5xy44Wx2Ea0IYNUnG656rzePP2gA6PcuYVhICUEX//cLhSunHNGC2zNay985OLjhB
-	 YO2ZvR/25LC3g==
+	b=dqsBI1K4OXbeScHKCQBLEclO45JlZHNR4JTfIPzvfdr8j8ZCB8JWL6FHvMSnmqYUS
+	 MG6CrAtDw9FHrOURNGgxoIe24waEPhBrRbs+wHetcrnGizbEx/9TMp7JYNdZBDIHwc
+	 vCnwOEVM/+o/+O+ytvRGMux8G/ZBCtFhLjeNPzVAnWWnAsfDTB23Lpgg9you//QQp6
+	 0U2biS7XhmAKwUpStEMrOBT23SmAR7j7U2zp3qMZ6Hh3mCnZbgIpyUH/1YpN09S9q+
+	 QF2D+NefnzH5jmUORgbSKVozjOIGHJfc6AreaqXMxpPvamORlhzGVpD93JCFxk0WIh
+	 Qqz0cbIjzBZyw==
 From: Benno Lossin <lossin@kernel.org>
 To: Benno Lossin <lossin@kernel.org>,
 	Miguel Ojeda <ojeda@kernel.org>,
@@ -41,9 +41,9 @@ To: Benno Lossin <lossin@kernel.org>,
 Cc: Benno Lossin <benno.lossin@proton.me>,
 	rust-for-linux@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 2/3] rust: pin-init: examples: pthread_mutex: disable the main test for miri
-Date: Fri, 23 May 2025 14:54:12 +0200
-Message-ID: <20250523125424.192843-3-lossin@kernel.org>
+Subject: [PATCH 3/3] rust: pin-init: feature-gate the `stack_init_reuse` test on the `std` feature
+Date: Fri, 23 May 2025 14:54:13 +0200
+Message-ID: <20250523125424.192843-4-lossin@kernel.org>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250523125424.192843-1-lossin@kernel.org>
 References: <20250523125424.192843-1-lossin@kernel.org>
@@ -57,27 +57,29 @@ Content-Transfer-Encoding: 8bit
 
 From: Benno Lossin <benno.lossin@proton.me>
 
-`miri` takes a long time to execute the test, so disable it.
+When trying to run `cargo check --all-targets --no-default-features`, an
+error is reported by the test, as it cannot find the `std` crate. This
+is to be expected, since the `--no-default-features` flag enables the
+`no-std` behavior of the crate. Thus exclude the test in that scenario.
 
-Link: https://github.com/Rust-for-Linux/pin-init/pull/50/commits/e717a9eec85024c11e79e8bd9dcb664ad0de8f94
+Link: https://github.com/Rust-for-Linux/pin-init/pull/50/commits/2813729ccacdedee9dbfcab1ed285b8721a0391b
 Signed-off-by: Benno Lossin <lossin@kernel.org>
 ---
- rust/pin-init/examples/pthread_mutex.rs | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ rust/pin-init/src/__internal.rs | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/rust/pin-init/examples/pthread_mutex.rs b/rust/pin-init/examples/pthread_mutex.rs
-index c709dabba7eb..6c4d18238956 100644
---- a/rust/pin-init/examples/pthread_mutex.rs
-+++ b/rust/pin-init/examples/pthread_mutex.rs
-@@ -139,7 +139,7 @@ fn deref_mut(&mut self) -> &mut Self::Target {
-     }
+diff --git a/rust/pin-init/src/__internal.rs b/rust/pin-init/src/__internal.rs
+index 557b5948cddc..90f18e9a2912 100644
+--- a/rust/pin-init/src/__internal.rs
++++ b/rust/pin-init/src/__internal.rs
+@@ -188,6 +188,7 @@ pub fn init<E>(self: Pin<&mut Self>, init: impl PinInit<T, E>) -> Result<Pin<&mu
  }
  
--#[cfg_attr(test, test)]
-+#[cfg_attr(all(test, not(miri)), test)]
- fn main() {
-     #[cfg(all(any(feature = "std", feature = "alloc"), not(windows)))]
-     {
+ #[test]
++#[cfg(feature = "std")]
+ fn stack_init_reuse() {
+     use ::std::{borrow::ToOwned, println, string::String};
+     use core::pin::pin;
 -- 
 2.49.0
 
