@@ -1,205 +1,275 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+Received: from mail-wr1-f73.google.com (mail-wr1-f73.google.com [209.85.221.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C8B529713D
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 17:06:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96B1029713F
+	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 17:06:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748020000; cv=none; b=M6t+RftPFM9idWxN7KiyC+boMTGd8roSWyWCRMuUXMtQrjaqtNpTHuyf37OK8oh+gdIa6ZkoSyKdrgc/NXB50+euTiot1lXt5qtio4WW4fghuXYSv5h4VyAJ1BxAEReJeQpS8lJTDNydBY2FjP0PzlEgc8u7YfKXbZ2i33+TQRU=
+	t=1748020021; cv=none; b=oqIj8bCWERCgkeOMIKZkLtsDBgqSaf3qGFNYo2Q6sFtZonyhNs790kFO8osTxdy6OlofXfMJSK8MumiUKe5VnlbuuzqBnRvJgnaTvSlj+nz+ZWkEoB+RHTktem3RulVrnCWuexpCBO9NSf6oGkpOqqGximggXoAZD5lxXxaFMWk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748020000; c=relaxed/simple;
-	bh=U3JZBSRTDoFHSSt8crCVrx4Xd0izWnpj1PNPW8N/9vY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Zjw68rX3oJVogqFRzWDQbI6mh/bxdA7q58axZK+2mTh1TkCZziI/i25sGJtVQ3YsXVmhluvgK2g4pMLJBVElQPjKIHXDi61fst55IdstjAO7OeMMnPsmDpswskeATCaScgfpbxsUK/XV621tsoW3NYPkt4wnhYhmaOFrevxIbME=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ccvxpeFT; arc=none smtp.client-ip=209.85.214.172
+	s=arc-20240116; t=1748020021; c=relaxed/simple;
+	bh=V2BRL2F6z1oi5Z7o1kzugA/0LWsQhDNFDDWhi5hdfnM=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=EVjJUtNDTQsxlZCaoVJ7rpM63BRpzsAYLaVymCwVr07dJO77UHjNg5FMb+RdsjF3eJATPBSXrWENFb2gbBC6k71YCg6cDh1KLGpi0+nL6Vr/KtoXqPbkJTIBYRFrrLWDqcl6AfP7CyhmzNkBXQ0vrOqtSLOMZl2SgCQOmgJqlwQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Fiu8XKMl; arc=none smtp.client-ip=209.85.221.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ccvxpeFT"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-22e16234307so1623735ad.0
-        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 10:06:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Fiu8XKMl"
+Received: by mail-wr1-f73.google.com with SMTP id ffacd0b85a97d-3a4bab50c35so67785f8f.3
+        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 10:06:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748019998; x=1748624798; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=J2WQ2P5qzSFyn4X0KDVk0we+dt/QLk97LlbxUNEkevY=;
-        b=ccvxpeFTBW8wOpc3ExvQLS/v381IaNBU7rpwQ9SadWh76KgNHcAzuM3ULnDdOapbPv
-         jBin0rE4rSTNcdUKk4PImt0x6aTpriyRUdEPkDxA2vSPEtH5Op+TA9emoZFLV4ikfjff
-         zZl4QMfMn0GNatjHoxajFvZuvzF0Mw2lkx6+UL04UO66jeD6zzv8eGFN4S4vEavqdQpI
-         9HPVJ+kW+1BASF2BBcUHWNVFEO5lw420CIJ+2Cyc3zTiXFeizn1ji/PRZK7XX2aNUEkE
-         yw9Ov8j5zVDqRoMHhKuT6c4tnR3v1mze2N6rG+cvO/cikPum7uhHOQ3svO5baBbqX0XQ
-         nGkg==
+        d=google.com; s=20230601; t=1748020018; x=1748624818; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=NvZeCtyz17wMaia/VQjjVKTrRdzsemBeeYK1+YrOw2c=;
+        b=Fiu8XKMlm7BDk+M8qb0uTk12lIWK0Yoaz+BNHi1vTmt8d2iq4+YeiV4Bk0np0vEqhs
+         QsQ+BADmOfyHFOigYi9ptDDfB2ScfhnfdqaeQAcN3IRI9Y5V0CEAxK2qril+fOUSRHBz
+         AAXGcUCLlF7HLS+faJPXwijNQJijxtogdDBujZaOPAe5+dlkcE36zJjt2u2THSrr7ZI7
+         xcQ9n6O/sNYwRZBlvatPH8evXyMDuhqOiELI5Agt11N8G+wjEUiWHiSlFGkFzN28rHpD
+         NNwcD2/0M63ysHBlguH88OzsKq+phbxmNwJ66J8CuEPpwM3F+3hgwbaY5hd1PS0EDRgr
+         93iw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748019998; x=1748624798;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=J2WQ2P5qzSFyn4X0KDVk0we+dt/QLk97LlbxUNEkevY=;
-        b=JDwq6WKNeVuoV8qTPMxtMJclaGdjl5E5YaQYyFsasAmt7o5HubVW4C141RvwlGOjmi
-         UHpJWVkBxZXsW3SMwDzBgrrmzhixDQFZpxbSZ8Z/qFGeDlxm5U2fBU1kHz6rWG+CYHw1
-         hDwNsYe3B1VfY4OmHCG7p9yFSMxBFO8SNm63GhWH16bYfIGFs/WtJ55xS8So6Kfx42hE
-         3GQCquea/gxV1j5bIyzd16oxTwn6mYr3X+T+TMzIqFFW4k4s24X4FewdBwqfbORmcAoO
-         8ptckxn0KZQHz4iQA0tDwsfrdVDx0UXRK/fHbRUBy9vhaYcRBl9hOeEordgN5/26MrCJ
-         FCdw==
-X-Forwarded-Encrypted: i=1; AJvYcCUDexzgLAZcMzQ47yceSBDrweKSU4UuSEZKyQmX5H3Embl9oywWmYrtYK+h7lCAqCqcZGAbY/yLcFLE48E=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyXp+eMLFpGw/F6YVvSarQo+sxuT4DD9zbmMxztbgfDHdkpth/z
-	JWEuz91NmiHX0/inajw2xTSkY9/9IcGXNenF18JgF7VSibwPti45LlHEj7AIQvSlDw==
-X-Gm-Gg: ASbGnctUeucnckuVi573D2ECB38aBQC4mMM+4XEvPApx4wi+Uu9iBgLIvwHm0efkWjB
-	gYCZXV5d1J+fhzUlcUBzlylJcdoUBYpGF/q30e8baUyPumHpls/18HjiZTOraunuweNQVuWyTT3
-	Ft2CLQzDbEY7U5LUgvcQrTUIpATrLTsDuYbVBjmY4LxgPEq1c1mvJDBqUxAfK8bXE35TpyN23RZ
-	M2iG08W/BPoTgVgJC1lt7LZDJ+pHF4FFGjFRAfdkowQ5AxcWCkT9TLGg11QA8eGd9VdD5Til9KL
-	uYCutkdNX9pFhretifURzBj4bQIiLkVmQwXpNk9+/IUVCo8WNzMRWWWHYfsYjeIGfCJiRYVeLoN
-	CAgBIrKhDtBeUJLyl/URJEw==
-X-Google-Smtp-Source: AGHT+IGVnaBi3jrRIwejKFDsONlHqePRuzoHWbgSbVetz1AYxiDu9Tm/UL+XQC5bZ+1BERzM5r1Wfw==
-X-Received: by 2002:a17:903:32c8:b0:231:ad5a:fe9c with SMTP id d9443c01a7336-23414dc9914mr3358605ad.15.1748019997911;
-        Fri, 23 May 2025 10:06:37 -0700 (PDT)
-Received: from google.com (33.5.83.34.bc.googleusercontent.com. [34.83.5.33])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-233f9e17e3csm10816895ad.177.2025.05.23.10.06.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 May 2025 10:06:37 -0700 (PDT)
-Date: Fri, 23 May 2025 10:06:33 -0700
-From: William McVicker <willmcvicker@google.com>
-To: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: John Stultz <jstultz@google.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Peter Griffin <peter.griffin@linaro.org>,
-	=?iso-8859-1?Q?Andr=E9?= Draszik <andre.draszik@linaro.org>,
-	Tudor Ambarus <tudor.ambarus@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Alim Akhtar <alim.akhtar@samsung.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Saravana Kannan <saravanak@google.com>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Donghoon Yu <hoony.yu@samsung.com>,
-	Hosung Kim <hosung0.kim@samsung.com>, kernel-team@android.com,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	Youngmin Nam <youngmin.nam@samsung.com>,
-	linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 6/7] clocksource/drivers/exynos_mct: Add module support
-Message-ID: <aDCrGT67ubNNUoUz@google.com>
-References: <20250402233407.2452429-1-willmcvicker@google.com>
- <20250402233407.2452429-7-willmcvicker@google.com>
- <Z_6OZHYfC0bC5289@mai.linaro.org>
- <CANDhNCodHATboF2=U2tTwdEkEJ+PsfB2F=fbBrs=J1UzZTEX8g@mail.gmail.com>
- <aCNctHq6K7uqFF05@mai.linaro.org>
- <aCUkN301jWUkXJ3_@google.com>
- <6e6b0f5f-ac60-48bb-af6c-fa58658d2639@linaro.org>
+        d=1e100.net; s=20230601; t=1748020018; x=1748624818;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=NvZeCtyz17wMaia/VQjjVKTrRdzsemBeeYK1+YrOw2c=;
+        b=t47Rysezdq1Vl60cRP0a06+I/XEGHRv7t6P/2vTZC3aKGixdoeKp+zJjsMMKjQ+r1k
+         k3fJniYL8IhWYwwHouxkacrVTKTbzxvsN2vLG7xcnb5jd3E4Lnxs3ZykWilYWfkJxKGk
+         6M9dCcrGQz3Q2BcAvul9t/XjuF19QU0Le/c9ux/b3LA1q7lph+fMVujxl01jncpWI6x3
+         BjNRkfK8MdnyEUZmFDKfaBdkrERot0y8adNsjN0EVMyO7BcOq5Bl4dce6YxwB5U0IN65
+         hvz5EX4xoj8/RKKrQQNGS8V5/cxDRyDFyjvN2tmkWeIacdVzRMSjFobS5PUPjImQcmtz
+         7bng==
+X-Forwarded-Encrypted: i=1; AJvYcCXl0yybn66SESno5Nvf0SD2Yiffe5QVK924tU02fJWgEUV5aQ4w5JPqTXAIHhrTgw51ZXij/rpJQvCFG30=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwuGpMiUx9jZU+MhcA8m3Pthm5l0KsdNbKmgzyB9wJAxBNVRN7F
+	sdwuYnC24cMU9UFONvqcXcYxImp19dZzEdZXpgcuH0QUj4a95bInscwQgRLvV3m5+HbBpdXAY64
+	Ah8vi957/qLcLVVbR8Q==
+X-Google-Smtp-Source: AGHT+IHVC8RvJLPDnaqHG2+GL0MpH/NtVjIBBOTZ10GJtCZwx5sWrfYVREnYwIhuIuAEdYjm4VfjxsHn04dItMs=
+X-Received: from wmbhj14.prod.google.com ([2002:a05:600c:528e:b0:442:f9ef:e460])
+ (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:6000:2301:b0:3a3:5c40:2000 with SMTP id ffacd0b85a97d-3a4cb42fb03mr124862f8f.13.1748020017869;
+ Fri, 23 May 2025 10:06:57 -0700 (PDT)
+Date: Fri, 23 May 2025 17:06:56 +0000
+In-Reply-To: <2025052330-reverence-slideshow-d498@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <6e6b0f5f-ac60-48bb-af6c-fa58658d2639@linaro.org>
+Mime-Version: 1.0
+References: <D9WM0BP5446N.1NVNDCZ4Y2QN1@kernel.org> <2025051524-festival-afterglow-8483@gregkh>
+ <aCzzBT96ktapP03e@google.com> <aC2HacSU7j5d9bzu@pollux> <aC5XDi7SaDJeUaAC@google.com>
+ <aC7DVewqqWIKetmk@pollux> <aC8uNmrLUSS8sxHU@google.com> <2025052201-return-reprogram-add9@gregkh>
+ <aC9krUYJmJqu0xVR@cassiopeiae> <2025052330-reverence-slideshow-d498@gregkh>
+Message-ID: <aDCrMDQYbqTz46pI@google.com>
+Subject: Re: [PATCH v5 4/4] rust: samples: Add debugfs sample
+From: Alice Ryhl <aliceryhl@google.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Danilo Krummrich <dakr@kernel.org>, Benno Lossin <lossin@kernel.org>, 
+	Matthew Maurer <mmaurer@google.com>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, 
+	"=?utf-8?B?QmrDtnJu?= Roy Baron" <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Sami Tolvanen <samitolvanen@google.com>, 
+	Timur Tabi <ttabi@nvidia.com>, linux-kernel@vger.kernel.org, 
+	rust-for-linux@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
 
-On 05/23/2025, Daniel Lezcano wrote:
-> 
-> Hi William,
-> 
-> On 15/05/2025 01:16, William McVicker wrote:
-> > On 05/13/2025, Daniel Lezcano wrote:
-> > > On Tue, Apr 15, 2025 at 05:48:41PM -0700, John Stultz wrote:
-> > > > On Tue, Apr 15, 2025 at 9:50 AM Daniel Lezcano
-> > > > <daniel.lezcano@linaro.org> wrote:
-> > > > > On Wed, Apr 02, 2025 at 04:33:57PM -0700, Will McVicker wrote:
-> > > > > > From: Donghoon Yu <hoony.yu@samsung.com>
+On Fri, May 23, 2025 at 11:14:23AM +0200, Greg Kroah-Hartman wrote:
+> On Thu, May 22, 2025 at 07:53:49PM +0200, Danilo Krummrich wrote:
+> > On Thu, May 22, 2025 at 04:15:46PM +0200, Greg Kroah-Hartman wrote:
+> > > On Thu, May 22, 2025 at 02:01:26PM +0000, Alice Ryhl wrote:
+> > > > On Thu, May 22, 2025 at 08:25:25AM +0200, Danilo Krummrich wrote:
+> > > > > On Wed, May 21, 2025 at 10:43:26PM +0000, Alice Ryhl wrote:
+> > > > > > > > * Possibly we have a way to drop a Rust object without removing it from
+> > > > > > > >   the file system. In this case, it can never be accessed from Rust
+> > > > > > > >   again, and the only way to remove it is to drop its parent directory.
+> > > > > > > 
+> > > > > > > I'm not sure about this one.
+> > > > > > > 
+> > > > > > > IIUC, this basically brings back the "keep() logic", which I still think is a
+> > > > > > > footgun and should be avoided.
+> > > > > > > 
+> > > > > > > Also, we only needed this, since due to the borrowing design we couldn't store
+> > > > > > > parent and child nodes in the same structure. With reference counting (or the
+> > > > > > > logic above) this goes away.
+> > > > > > > 
+> > > > > > > I wrote the following in a previous conversation [1].
+> > > > > > > 
+> > > > > > > --
+> > > > > > > 
+> > > > > > > What I see more likely to happen is a situation where the "root" directory
+> > > > > > > (almost) lives forever, and hence subsequent calls, such as
+> > > > > > > 
+> > > > > > > 	root.subdir("foo").keep()
+> > > > > > > 
+> > > > > > > effectively are leaks.
+> > > > > > > 
+> > > > > > > One specific example for that would be usb_debug_root, which is created in the
+> > > > > > > module scope of usb-common and is used by USB host / gadget / phy drivers.
+> > > > > > > 
+> > > > > > > The same is true for other cases where the debugfs "root" is created in the
+> > > > > > > module scope, but subsequent entries are created by driver instances. If a
+> > > > > > > driver would use keep() in such a case, we'd effectively leak memory everytime a
+> > > > > > > device is unplugged (or unbound in general).
 > > > > > > 
-> > > > > > On Arm64 platforms the Exynos MCT driver can be built as a module. On
-> > > > > > boot (and even after boot) the arch_timer is used as the clocksource and
-> > > > > > tick timer. Once the MCT driver is loaded, it can be used as the wakeup
-> > > > > > source for the arch_timer.
+> > > > > > Where is the leak? If the file is still visible in the file system, then
+> > > > > > it's not a leak to still have the memory. If the file got removed by
+> > > > > > removing its parent, then my intent is that this should free the memory
+> > > > > > of the child object.
 > > > > > 
-> > > > >  From a previous thread where there is no answer:
+> > > > > Well, take the case I described above, where the debugfs "root" is created in
+> > > > > the module scope, but subsequent entries are created by driver instances. If a
+> > > > > driver would use keep() in such a case, we'd effectively the file / directory
+> > > > > (and subsequently also the corresponding memory) everytime a device is unplugged
+> > > > > (or unbound in general)."
 > > > > > 
-> > > > > https://lore.kernel.org/all/c1e8abec-680c-451d-b5df-f687291aa413@linaro.org/
+> > > > > If the module is built-in the directory from the module scope is *never*
+> > > > > removed, but the entries the driver e.g. creates in probe() for a particular
+> > > > > device with keep() will pile up endlessly, especially for hot-pluggable devices.
 > > > > > 
-> > > > > I don't feel comfortable with changing the clocksource / clockevent drivers to
-> > > > > a module for the reasons explained in the aforementionned thread.
+> > > > > (It's getting even worse when there's data bound to such a leaked file, that
+> > > > > might even contain a vtable that is entered from any of the fops of the file.)
+> > > > > 
+> > > > > That'd be clearly a bug, but for the driver author calling keep() seems like a
+> > > > > valid thing to do -- to me that's clearly a built-in footgun.
 > > > > 
-> > > > I wasn't CC'ed on that, but to address a few of your points:
-> > > > 
-> > > > > I have some concerns about this kind of changes:
-> > > > > 
-> > > > >    * the core code may not be prepared for that, so loading / unloading
-> > > > > the modules with active timers may result into some issues
-> > > > 
-> > > > That's a fair concern, but permanent modules (which are loaded but not
-> > > > unloaded) shouldn't suffer this issue. I recognize having modules be
-> > > > fully unloadable is generally cleaner and preferred, but I also see
-> > > > the benefit of allowing permanent modules to be one-way loaded so a
-> > > > generic/distro kernel shared between lots of different platforms
-> > > > doesn't need to be bloated with drivers that aren't used everywhere.
-> > > > Obviously any single driver doesn't make a huge difference, but all
-> > > > the small drivers together does add up.
+> > > > I mean, for cases such as this, I could imagine that you use `keep()` on
+> > > > the files stored inside of the driver directory, but don't use it on the
+> > > > directory. That way, you only have to keep a single reference to an
+> > > > entire directory around, which may be more convenient.
 > > > 
-> > > Perhaps using module_platform_driver_probe() should do the trick with
-> > > some scripts updated for my git hooks to check
-> > > module_platform_driver() is not used.
+> > > No, sorry, but debugfs files are "create and forget" type of things.
+> > > The caller has NO reference back to the file at all in the C version,
+> > > let's not add that functionality back to the rust side after I spent a
+> > > long time removing it from the C code :)
 > > 
-> > Using `module_platform_driver_probe()` won't work as that still defines
-> > a `module_exit()` hook. If you want to automatically handle this in code, then
-> > the best approach is to follow what Saravana did in [1] for irqchip drivers.
-> > Basically by using `builtin_platform_driver(drv_name##_driver)`, you will only
-> > define the `module_init()` hook when the driver is compiled as a module which
-> > ensures you always get a permanent module.
+> > This response sounds like we may have a different understanding of what "keep"
+> > means.
 > > 
-> > [1] https://lore.kernel.org/linux-arm-kernel/20200718000637.3632841-1-saravanak@google.com/
+> > Earlier versions of this patch series introduced a keep() method for both
+> > debugfs::File and debugfs::Dir, which would consume, and hence get rid of, the
+> > instance of a debugfs::File or a debugfs::Dir object, while *keeping* the
+> > corresponding directory / file in the filesystem.
+> > 
+> > This makes it easy for a driver to leak the directory / file in the filesystem,
+> > as explained in [1], which you seemed to agree with in [2].
+> > 
+> > Was this a misunderstanding?
 > 
-> Thanks for the pointer and the heads up regarding the module_exit() problem
-> with module_platform_driver_probe().
+> Kind of, see below:
 > 
-> After digging into the timekeeping framework it appears if the owner of the
-> clockevent device is set to THIS_MODULE, then the framework automatically
-> grabs a reference preventing unloading the module when this one is
-> registered.
+> > > If you really want to delete a debugfs file that you have created in the
+> > > past, then look it up and delete it with the call that is present for
+> > > that.
+> > 
+> > This is promoting a C pattern (which for C code obviously makes a lot of sense),
+> > i.e. we have a function that creates a thing and another function that removes
+> > the thing given a handle of the created thing. Whether the handle is valid is
+> > the responsibility of the caller.
+> > 
+> > In this case the handle would be the filename. For instance:
+> > 
+> > 	debugfs_create_file("foo", parent, ...);
+> > 	debugfs_remove(debugfs_lookup("foo", parent));
+> > 
+> > This leaves room to the caller for making mistakes, e.g. if the caller makes a
+> > typo in the filename. In this case we wouldn't even recognize it from the return
+> > value, since there is none.
+> > 
+> > In Rust, we do things differently, i.e. we wrap things into an object that
+> > cleans up itself, once it goes out of scope. For instance:
+> > 
+> > 	let file = debugfs::File::new("foo", parent);
+> > 
+> > Subsequently we store file in a structure that represents the time we want this
+> > file to exist. Once it goes out of scope, it's removed automatically.
+> > 
+> > This is better, since we can't make any mistakes anymore, i.e. we can't mess up
+> > the filename or pass the wrong parent to clean things up.
+> > 
+> > Depending on whether the above was a misunderstanding and depending on how you
+> > think about it with this rationale, I have quite some more reasons why we don't
+> > want to have files / directories around in the filesystem without a
+> > corresponding object representation in Rust.
+> > 
+> > But before I write up a lot more text, I'd like to see if we're not already on
+> > the same page. :-)
 > 
-> IMO it was not heavily tested but for me it is enough to go forward with the
-> module direction regarding the drivers.
-
-Great! Thanks for looking into that. I'll add that in the next revision and
-verify we can't unload the module.
-
+> Ok, let's knock up the api here first before worrying about the
+> implementation, as we seem to all be a bit confused as to what we want
+> to do.
 > 
-> One point though, the condition:
+> Ideally, yes, I would like to NOT have any rust structure represent a
+> debugfs file, as that is the way the C api has been evolving.  We are
+> one step away from debugfs_create_file() being a void function that
+> doesn't return anything, and I don't want to see us go "backwards" here.
 > 
-> +#ifdef MODULE
-> [ ... ]
-> +static const struct of_device_id exynos4_mct_match_table[] = {
-> +	{ .compatible = "samsung,exynos4210-mct", .data = &mct_init_spi, },
-> +	{ .compatible = "samsung,exynos4412-mct", .data = &mct_init_ppi, },
-> +	{}
-> +};
-> +MODULE_DEVICE_TABLE(of, exynos4_mct_match_table);
-> +
-> +static struct platform_driver exynos4_mct_driver = {
-> +	.probe		= exynos4_mct_probe,
-> +	.driver		= {
-> +		.name	= "exynos-mct",
-> +		.of_match_table = exynos4_mct_match_table,
-> +	},
-> +module_platform_driver(exynos4_mct_driver);
-> +#else
->  TIMER_OF_DECLARE(exynos4210, "samsung,exynos4210-mct", mct_init_spi);
->  TIMER_OF_DECLARE(exynos4412, "samsung,exynos4412-mct", mct_init_ppi);
-> +#endif
+> But the main reason I did that work was to keep people from trying to
+> determine if a file creation worked or not and to do different logic
+> based on that.  I think the Rust api CAN do both here, as you and Alice
+> have explained, so we should be ok.
 > 
->  is not acceptable as is. We don't want to do the same in all the drivers.
+> So how about this for an example api, two structures, debugfs::Directory
+> and debugfs::File, which have only two types of operations that can be
+> done on them:
+> 
+> To create a debugfs directory, we do:
+> 
+> 	let my_dir = debugfs::Directory::new("foo_dir", parent);
+> 
+> There is no other Directory method, other than "drop", when the object
+> goes out of scope, which will clean up the directory and ALL child
+> objects at the same time (implementation details to be figured out
+> later.)
+> 
+> That will ALWAYS succeed no matter if the backend debugfs call failed or
+> not, and you have no way of knowing if it really did create something or
+> not.  That directory you can then use to pass into debugfs file or
+> directory creation functions.
+> 
+> Same for creating a debugfs file, you would do something like:
+> 
+> 	let my_file = debugfs::File::new("foo_file", my_dir);
+> 
+> depending on the "file type" you want to create, there will be different
+> new_* methods (new_u32, new_u64, etc.).
+> 
+> which also ALWAYS succeeds.  And again, as you want to keep objects
+> around, you have to have a reference on it at all times for it to exist
+> in the filesystem.  If you drop it, then it too will be removed from
+> debugfs.
+> 
+> And again, that's the only operation you can do on this object, there
+> are no other methods for it other than "new" and "drop".
+> 
+> Now there are issues with implementation details here like:
+>   - Do you want to keep the list of file and dir objects in the rust
+>     structure to manually clean them up when we go to drop the
+>     directory?
+>   - Do we want to force all files to be dropped before the directory?
+>     Or do we want to just let the C side clean it all up automagically
+>     instead?
+> and other things like that, but we can argue about that once we settle
+> on the outward-facing api first.
+> 
+> I can live with this type of api.  It's simple and seems hard to abuse
+> or get wrong from a user point-of-view, and should be pretty
+> straight-forward on the binding side as well.  It will take a bit more
+> work on the user when creating debugfs files than the C api did, but
+> that's something that you want to impose on this api, not me :)
+> 
+> Sound reasonable?  Or am I missing something else here?
 
-Are you suggesting we create a new timer macro to handle if we want to use
-TIMER_OF_DECLARE() or builtin_platform_driver()?
+This does sound reasonable to me. I'm fine with always succeeding. I do
+agree with Danilo that I would bias towards dir.file("foo_file"), but
+it's not a super big deal to me.
 
-> Furthermore, we should not assume if the modules are enabled in the kernel
-> that implies the driver is compiled as a module.
+I think the main thing I want to say here is that we should *not* force
+files to be dropped before the directory, and we should also not force
+child directories to be dropped before their parent directories. Trying
+to impose that requirement on callers will make the API significantly
+harder to use, and it's not worth it.
 
-Ah yes, that's right. The ifdef should be checking
-CONFIG_CLKSRC_EXYNOS_MCT_MODULE.
-
-Thanks,
-Will
+Alice
