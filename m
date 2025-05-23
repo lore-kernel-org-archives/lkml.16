@@ -1,73 +1,54 @@
-Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.smtp-ext.broadcom.com (relay.smtp-ext.broadcom.com [192.19.166.231])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A828F20FAB9;
-	Fri, 23 May 2025 18:47:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFAA5290DB2;
+	Fri, 23 May 2025 18:50:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.19.166.231
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748026042; cv=none; b=nTrKrhZOfa0BilvpGVsV/xkM5vulncPSh12DTbNtVI7GLeaohg5TH3TL93wbIatpNpH+XGmkFrI0ABL37h47l0aLuS4ICEBiOCg23wWk93X96fbSatcQIblFx4O+J/G3qdCMC79GLOSVuT8MNKBIuzkGXjhafrIQ/j7odmDcgJY=
+	t=1748026238; cv=none; b=YYa9iIsCtHJ0lRaFoyWR9gEx/y7LRRL9lnhxLD9JxD22/tyrWD/2K/cy1ynuTGuUN46KQKMBKVi//GJSzvet1M4bgb6XZP9ru9PfZSvbkxNSql6VazRgyXP+EvTpA3IZXCKG6bwqb4AD3CHSyJdQE6fYDSuU5gZAY2xrqM6TjwI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748026042; c=relaxed/simple;
-	bh=t5BFb4WRIJnfVfZdiG0nlQqjCuE11J00mDw6LYyvTDI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=bQvZnUnzoKh3hhaHWIyFRsyD+GgwxDTHAsw3zRfk7BClwweEwjgO5e/arotQKlZgb4pX6LMNVg7OtVKibOMVI01rf3YWCAK6CGS+sUsYJi0+Ek2tcAoomiWb8wLYDHuNB4oA0VHhACu4do0XxKrwIYW6rTor3GKU4Dz+6m8l884=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LbZFj7fc; arc=none smtp.client-ip=209.85.215.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748026238; c=relaxed/simple;
+	bh=0r9gkCW0yRQt1gnBJzDmjX7k23tGsj45UqKcrz56EBo=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Jae+JykJtcSjECqEj7b3PIVVhP/rliUuk5qohl0g5dXypNc8SILcbWaSiHQzGWTewgF7J6H8GSMexxDA+F/jNhrWMDaRA+ljAsEakP4dJuLT4kRzL1Oyvh+2sSuW0Om7eacWadeHTO+lPaQ5LbmrvuCxzTzxSFvG9UbvMc7J9uE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=MK/ygYe5; arc=none smtp.client-ip=192.19.166.231
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LbZFj7fc"
-Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-af5085f7861so93334a12.3;
-        Fri, 23 May 2025 11:47:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748026038; x=1748630838; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=wMINtzx5xOC79CwJSKh5YsZHyP2qAGiFcqWeREBv/nU=;
-        b=LbZFj7fc717/9Fy4Ho/bq8x+2WGb2xwBITjZ9SOUF5N2OcN4sotRjd19w6HXHVYb22
-         LcBRiGb7p41BFxcAvxtlj+rEv8JB82HtQynlSBNeFlQ8hjTwZRMu9NUWWi/9rupB59+g
-         5WrTqyjRN6lRgRkHBYB3iRKSKhuKfdkXRyQHRfAJ+XyBvB9A1h2q51ZgJ9uR+bZtIv9e
-         7ARgMb8Qy2FCNwzXPpELb9oD0u7MSiYk5vok924FLEZyUL8lNWdSJu60SCqyJ2KMGwn0
-         SvMiMXKVllr4FpwiOGdo7gEnoPKLsTuYkXFiUcd0Pa7HsMMPutRbE0XLXHnkFGnpk2P/
-         C4pw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748026038; x=1748630838;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=wMINtzx5xOC79CwJSKh5YsZHyP2qAGiFcqWeREBv/nU=;
-        b=YfrkDl3IjhO9FuSlIP5p5IS2J+0pvVPX3oaH/YlnLNOdVD8k1T5w9gNJMWEyl16fcy
-         mCL4/ZI8bi8SAZOMJGPj9nToH9AHtAxtvCiGO3AJ5rmE3QFiY/E3MlJcgcOe5p9gSrRH
-         jbf0GB7SFD+Oo4DdVvqOhxQ8slIE+uISNeuDHuwM4+1on+/AMppvNQm0xNZrqJWWsCUR
-         LDPSed6zYFvSPTXq1HpX65Y33G8tg/FsHzHwCJy5Cr5YDAGP31/zhIAovKDad4MaFr32
-         q5AQhxDvJgdA9kw+f2q/NVn9EA5aD2jV8Q2BXJCjQlKOTKX6AUCTwLzJDAPOTYpjKWAL
-         ezvA==
-X-Forwarded-Encrypted: i=1; AJvYcCVonqpIod+EFCIOx5FJMEmuoZi/GyQE02+89Qbg0m+wg/p6rk0wGrKx4ALzrREONoSVkvQh9HRjsyXN@vger.kernel.org
-X-Gm-Message-State: AOJu0YyNFRWAhGpmeVxUMIE1luqqEUlUoKfa0kVoA8oYs9h+tjuYuuoW
-	rfs6f02WMnNSeEA4IATBnKgZsbYze5aXwY7dkxSVL5VugCEiOTsUgMoQxPcRTKnF
-X-Gm-Gg: ASbGncvM0Q2QAj5Yn9Np4WwHVHs/1kxgIBE8CboS+8jDRuM8aaVmJ/b+QVL1nvNeYIB
-	e9ymTnH78viNlg+WMFoRk+qElWgGNo5ZuunJBpeotwQHG0U0/6YZ/0wfj1jFv2fAVhpa0c/YJyj
-	7ydUIy+TUGMeXLLgZ7sZDNeV4O1HwTbCTtM2+hGnj0BYF/848MNrIGLy2dmhpKmEh+uYCnXkHip
-	yXcPOS6dL104WoG3WYgwsEav0Saer4gZyMyt7+3ETFwIi5xyPxMhGdJ4pRj50Gq67/jswfP8fUh
-	dr4NwCeiAmfhf1baGfeglNf9CfjfjCsMTtV/ixtCvVBghcenM8ki0iVEq4E1YnDUUiIwR9EeVOV
-	2DGHIaA==
-X-Google-Smtp-Source: AGHT+IF7B7mJMAugvw4fwtXrMgg9UCZb9nMSCJHiZRZwJc9x14TpigEIGRvbLeLmAQri4x14gpQitQ==
-X-Received: by 2002:a17:903:19f0:b0:215:8d49:e2a7 with SMTP id d9443c01a7336-23414fc98a6mr5483995ad.50.1748026037794;
-        Fri, 23 May 2025 11:47:17 -0700 (PDT)
-Received: from trigkey.. (FL1-119-244-79-106.tky.mesh.ad.jp. [119.244.79.106])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2340ec5c5fcsm3417685ad.217.2025.05.23.11.47.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 May 2025 11:47:17 -0700 (PDT)
-From: Daisuke Matsuda <dskmtsd@gmail.com>
-To: linux-kernel@vger.kernel.org,
-	linux-rdma@vger.kernel.org,
-	leon@kernel.org,
-	jgg@ziepe.ca,
-	zyjzyj2000@gmail.com
-Cc: hch@infradead.org,
-	Daisuke Matsuda <dskmtsd@gmail.com>
-Subject: [PATCH for-next v1] RDMA/core: Avoid hmm_dma_map_alloc() for virtual DMA devices
-Date: Fri, 23 May 2025 18:47:01 +0000
-Message-ID: <20250523184701.11004-1-dskmtsd@gmail.com>
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="MK/ygYe5"
+Received: from mail-lvn-it-01.broadcom.com (mail-lvn-it-01.lvn.broadcom.net [10.36.132.253])
+	by relay.smtp-ext.broadcom.com (Postfix) with ESMTP id 69EA2C0000E9;
+	Fri, 23 May 2025 11:43:57 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 relay.smtp-ext.broadcom.com 69EA2C0000E9
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
+	s=dkimrelay; t=1748025837;
+	bh=0r9gkCW0yRQt1gnBJzDmjX7k23tGsj45UqKcrz56EBo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=MK/ygYe5WajchT5AUNHigM6mfw558fmeml2oAUIhvCXZPtOzcgfzi5DEknQmAbsza
+	 QQQ24fFLXujWnQlIC1tMXMmgT9qpNyAOBTaqAffEl1pwn6UzANZcN6Xx9AnRE9DcS6
+	 5nTEO8F7p8qgsHYRjUIZvVBinlw7BFV4dEkkbZ/A=
+Received: from fainelli-desktop.igp.broadcom.net (fainelli-desktop.dhcp.broadcom.net [10.67.48.245])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail-lvn-it-01.broadcom.com (Postfix) with ESMTPSA id 4810618000853;
+	Fri, 23 May 2025 11:43:57 -0700 (PDT)
+From: Florian Fainelli <florian.fainelli@broadcom.com>
+To: linux-kernel@vger.kernel.org
+Cc: justin.chen@broadcom.com,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS),
+	linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE)
+Subject: [PATCH 2/2] memory: brcmstb_memc: Simplify compatible matching
+Date: Fri, 23 May 2025 11:43:54 -0700
+Message-ID: <20250523184354.1249577-3-florian.fainelli@broadcom.com>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250523184354.1249577-1-florian.fainelli@broadcom.com>
+References: <20250523184354.1249577-1-florian.fainelli@broadcom.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -76,161 +57,91 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Drivers such as rxe, which use virtual DMA, must not call into the DMA
-mapping core since they lack physical DMA capabilities. Otherwise, a NULL
-pointer dereference is observed as shown below. This patch ensures the RDMA
-core handles virtual and physical DMA paths appropriately.
+Now that a "brcm,brcmstb-memc-ddr-rev-b.2.x" fallback compatible string
+has been defined, we can greatly simplify the matching within the driver
+to only look for that compatible string and nothing else.
 
-This fixes the following kernel oops:
+The fallback "brcm,brcmstb-memc-ddr" is also updated to assume the V21
+register layout since that is the most common nowadays.
 
- BUG: kernel NULL pointer dereference, address: 00000000000002fc
- #PF: supervisor read access in kernel mode
- #PF: error_code(0x0000) - not-present page
- PGD 1028eb067 P4D 1028eb067 PUD 105da0067 PMD 0
- Oops: Oops: 0000 [#1] SMP NOPTI
- CPU: 3 UID: 1000 PID: 1854 Comm: python3 Tainted: G        W           6.15.0-rc1+ #11 PREEMPT(voluntary)
- Tainted: [W]=WARN
- Hardware name: Trigkey Key N/Key N, BIOS KEYN101 09/02/2024
- RIP: 0010:hmm_dma_map_alloc+0x25/0x100
- Code: 90 90 90 90 90 0f 1f 44 00 00 55 48 89 e5 41 57 41 56 49 89 d6 49 c1 e6 0c 41 55 41 54 53 49 39 ce 0f 82 c6 00 00 00 49 89 fc <f6> 87 fc 02 00 00 20 0f 84 af 00 00 00 49 89 f5 48 89 d3 49 89 cf
- RSP: 0018:ffffd3d3420eb830 EFLAGS: 00010246
- RAX: 0000000000001000 RBX: ffff8b727c7f7400 RCX: 0000000000001000
- RDX: 0000000000000001 RSI: ffff8b727c7f74b0 RDI: 0000000000000000
- RBP: ffffd3d3420eb858 R08: 0000000000000000 R09: 0000000000000000
- R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
- R13: 00007262a622a000 R14: 0000000000001000 R15: ffff8b727c7f74b0
- FS:  00007262a62a1080(0000) GS:ffff8b762ac3e000(0000) knlGS:0000000000000000
- CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
- CR2: 00000000000002fc CR3: 000000010a1f0004 CR4: 0000000000f72ef0
- PKRU: 55555554
- Call Trace:
-  <TASK>
-  ib_init_umem_odp+0xb6/0x110 [ib_uverbs]
-  ib_umem_odp_get+0xf0/0x150 [ib_uverbs]
-  rxe_odp_mr_init_user+0x71/0x170 [rdma_rxe]
-  rxe_reg_user_mr+0x217/0x2e0 [rdma_rxe]
-  ib_uverbs_reg_mr+0x19e/0x2e0 [ib_uverbs]
-  ib_uverbs_handler_UVERBS_METHOD_INVOKE_WRITE+0xd9/0x150 [ib_uverbs]
-  ib_uverbs_cmd_verbs+0xd19/0xee0 [ib_uverbs]
-  ? mmap_region+0x63/0xd0
-  ? __pfx_ib_uverbs_handler_UVERBS_METHOD_INVOKE_WRITE+0x10/0x10 [ib_uverbs]
-  ib_uverbs_ioctl+0xba/0x130 [ib_uverbs]
-  __x64_sys_ioctl+0xa4/0xe0
-  x64_sys_call+0x1178/0x2660
-  do_syscall_64+0x7e/0x170
-  ? syscall_exit_to_user_mode+0x4e/0x250
-  ? do_syscall_64+0x8a/0x170
-  ? do_syscall_64+0x8a/0x170
-  ? syscall_exit_to_user_mode+0x4e/0x250
-  ? do_syscall_64+0x8a/0x170
-  ? syscall_exit_to_user_mode+0x4e/0x250
-  ? do_syscall_64+0x8a/0x170
-  ? do_user_addr_fault+0x1d2/0x8d0
-  ? irqentry_exit_to_user_mode+0x43/0x250
-  ? irqentry_exit+0x43/0x50
-  ? exc_page_fault+0x93/0x1d0
-  entry_SYSCALL_64_after_hwframe+0x76/0x7e
- RIP: 0033:0x7262a6124ded
- Code: 04 25 28 00 00 00 48 89 45 c8 31 c0 48 8d 45 10 c7 45 b0 10 00 00 00 48 89 45 b8 48 8d 45 d0 48 89 45 c0 b8 10 00 00 00 0f 05 <89> c2 3d 00 f0 ff ff 77 1a 48 8b 45 c8 64 48 2b 04 25 28 00 00 00
- RSP: 002b:00007fffd08c3960 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
- RAX: ffffffffffffffda RBX: 00007fffd08c39f0 RCX: 00007262a6124ded
- RDX: 00007fffd08c3a10 RSI: 00000000c0181b01 RDI: 0000000000000007
- RBP: 00007fffd08c39b0 R08: 0000000014107820 R09: 00007fffd08c3b44
- R10: 000000000000000c R11: 0000000000000246 R12: 00007fffd08c3b44
- R13: 000000000000000c R14: 00007fffd08c3b58 R15: 0000000014107960
-  </TASK>
-
-Fixes: 1efe8c0670d6 ("RDMA/core: Convert UMEM ODP DMA mapping to caching IOVA and page linkage")
-Closes: https://lore.kernel.org/all/3e8f343f-7d66-4f7a-9f08-3910623e322f@gmail.com/
-Signed-off-by: Daisuke Matsuda <dskmtsd@gmail.com>
+Signed-off-by: Florian Fainelli <florian.fainelli@broadcom.com>
 ---
- drivers/infiniband/core/device.c   | 24 ++++++++++++++++++++++++
- drivers/infiniband/core/umem_odp.c |  6 +++---
- include/rdma/ib_verbs.h            | 12 ++++++++++++
- 3 files changed, 39 insertions(+), 3 deletions(-)
+ drivers/memory/brcmstb_memc.c | 58 ++---------------------------------
+ 1 file changed, 3 insertions(+), 55 deletions(-)
 
-diff --git a/drivers/infiniband/core/device.c b/drivers/infiniband/core/device.c
-index b4e3e4beb7f4..8be4797c66ec 100644
---- a/drivers/infiniband/core/device.c
-+++ b/drivers/infiniband/core/device.c
-@@ -2864,6 +2864,30 @@ int ib_dma_virt_map_sg(struct ib_device *dev, struct scatterlist *sg, int nents)
- 	return nents;
- }
- EXPORT_SYMBOL(ib_dma_virt_map_sg);
-+int ib_dma_virt_map_alloc(struct device *dev, struct hmm_dma_map *map,
-+			  size_t nr_entries, size_t dma_entry_size)
-+{
-+	if (!(nr_entries * PAGE_SIZE / dma_entry_size))
-+		return -EINVAL;
-+
-+	map->dma_entry_size = dma_entry_size;
-+	map->pfn_list = kvcalloc(nr_entries, sizeof(*map->pfn_list),
-+				 GFP_KERNEL | __GFP_NOWARN);
-+	if (!map->pfn_list)
-+		return -ENOMEM;
-+
-+	map->dma_list = kvcalloc(nr_entries, sizeof(*map->dma_list),
-+				 GFP_KERNEL | __GFP_NOWARN);
-+	if (!map->dma_list)
-+		goto err_dma;
-+
-+	return 0;
-+
-+err_dma:
-+	kvfree(map->pfn_list);
-+	return -ENOMEM;
-+}
-+EXPORT_SYMBOL(ib_dma_virt_map_alloc);
- #endif /* CONFIG_INFINIBAND_VIRT_DMA */
- 
- static const struct rdma_nl_cbs ibnl_ls_cb_table[RDMA_NL_LS_NUM_OPS] = {
-diff --git a/drivers/infiniband/core/umem_odp.c b/drivers/infiniband/core/umem_odp.c
-index 51d518989914..aa03f3fc84d0 100644
---- a/drivers/infiniband/core/umem_odp.c
-+++ b/drivers/infiniband/core/umem_odp.c
-@@ -75,9 +75,9 @@ static int ib_init_umem_odp(struct ib_umem_odp *umem_odp,
- 	if (unlikely(end < page_size))
- 		return -EOVERFLOW;
- 
--	ret = hmm_dma_map_alloc(dev->dma_device, &umem_odp->map,
--				(end - start) >> PAGE_SHIFT,
--				1 << umem_odp->page_shift);
-+	ret = ib_dma_map_alloc(dev, &umem_odp->map,
-+			       (end - start) >> PAGE_SHIFT,
-+			       1 << umem_odp->page_shift);
- 	if (ret)
- 		return ret;
- 
-diff --git a/include/rdma/ib_verbs.h b/include/rdma/ib_verbs.h
-index b06a0ed81bdd..10813f348b99 100644
---- a/include/rdma/ib_verbs.h
-+++ b/include/rdma/ib_verbs.h
-@@ -36,6 +36,7 @@
- #include <linux/irqflags.h>
- #include <linux/preempt.h>
- #include <linux/dim.h>
-+#include <linux/hmm-dma.h>
- #include <uapi/rdma/ib_user_verbs.h>
- #include <rdma/rdma_counter.h>
- #include <rdma/restrack.h>
-@@ -4221,6 +4222,17 @@ static inline void ib_dma_unmap_sg_attrs(struct ib_device *dev,
- 				   dma_attrs);
- }
- 
-+int ib_dma_virt_map_alloc(struct device *dev, struct hmm_dma_map *map,
-+			  size_t nr_entries, size_t dma_entry_size);
-+static inline int ib_dma_map_alloc(struct ib_device *dev, struct hmm_dma_map *map,
-+				   size_t nr_entries, size_t dma_entry_size)
-+{
-+	if (ib_uses_virt_dma(dev))
-+		return ib_dma_virt_map_alloc(dev->dma_device, map, nr_entries,
-+					     dma_entry_size);
-+	return hmm_dma_map_alloc(dev->dma_device, map, nr_entries, dma_entry_size);
-+}
-+
- /**
-  * ib_dma_map_sgtable_attrs - Map a scatter/gather table to DMA addresses
-  * @dev: The device for which the DMA addresses are to be created
+diff --git a/drivers/memory/brcmstb_memc.c b/drivers/memory/brcmstb_memc.c
+index c87b37e2c1f0..ec4c198ddc49 100644
+--- a/drivers/memory/brcmstb_memc.c
++++ b/drivers/memory/brcmstb_memc.c
+@@ -181,65 +181,13 @@ static const struct of_device_id brcmstb_memc_of_match[] = {
+ 		.data = &brcmstb_memc_versions[BRCMSTB_MEMC_V20]
+ 	},
+ 	{
+-		.compatible = "brcm,brcmstb-memc-ddr-rev-b.2.1",
++		.compatible = "brcm,brcmstb-memc-ddr-rev-b.2.x",
+ 		.data = &brcmstb_memc_versions[BRCMSTB_MEMC_V21]
+ 	},
+-	{
+-		.compatible = "brcm,brcmstb-memc-ddr-rev-b.2.2",
+-		.data = &brcmstb_memc_versions[BRCMSTB_MEMC_V21]
+-	},
+-	{
+-		.compatible = "brcm,brcmstb-memc-ddr-rev-b.2.3",
+-		.data = &brcmstb_memc_versions[BRCMSTB_MEMC_V21]
+-	},
+-	{
+-		.compatible = "brcm,brcmstb-memc-ddr-rev-b.2.5",
+-		.data = &brcmstb_memc_versions[BRCMSTB_MEMC_V21]
+-	},
+-	{
+-		.compatible = "brcm,brcmstb-memc-ddr-rev-b.2.6",
+-		.data = &brcmstb_memc_versions[BRCMSTB_MEMC_V21]
+-	},
+-	{
+-		.compatible = "brcm,brcmstb-memc-ddr-rev-b.2.7",
+-		.data = &brcmstb_memc_versions[BRCMSTB_MEMC_V21]
+-	},
+-	{
+-		.compatible = "brcm,brcmstb-memc-ddr-rev-b.2.8",
+-		.data = &brcmstb_memc_versions[BRCMSTB_MEMC_V21]
+-	},
+-	{
+-		.compatible = "brcm,brcmstb-memc-ddr-rev-b.3.0",
+-		.data = &brcmstb_memc_versions[BRCMSTB_MEMC_V21]
+-	},
+-	{
+-		.compatible = "brcm,brcmstb-memc-ddr-rev-b.3.1",
+-		.data = &brcmstb_memc_versions[BRCMSTB_MEMC_V21]
+-	},
+-	{
+-		.compatible = "brcm,brcmstb-memc-ddr-rev-c.1.0",
+-		.data = &brcmstb_memc_versions[BRCMSTB_MEMC_V21]
+-	},
+-	{
+-		.compatible = "brcm,brcmstb-memc-ddr-rev-c.1.1",
+-		.data = &brcmstb_memc_versions[BRCMSTB_MEMC_V21]
+-	},
+-	{
+-		.compatible = "brcm,brcmstb-memc-ddr-rev-c.1.2",
+-		.data = &brcmstb_memc_versions[BRCMSTB_MEMC_V21]
+-	},
+-	{
+-		.compatible = "brcm,brcmstb-memc-ddr-rev-c.1.3",
+-		.data = &brcmstb_memc_versions[BRCMSTB_MEMC_V21]
+-	},
+-	{
+-		.compatible = "brcm,brcmstb-memc-ddr-rev-c.1.4",
+-		.data = &brcmstb_memc_versions[BRCMSTB_MEMC_V21]
+-	},
+-	/* default to the original offset */
++	/* default to the V21 offset */
+ 	{
+ 		.compatible = "brcm,brcmstb-memc-ddr",
+-		.data = &brcmstb_memc_versions[BRCMSTB_MEMC_V1X]
++		.data = &brcmstb_memc_versions[BRCMSTB_MEMC_V21]
+ 	},
+ 	{}
+ };
 -- 
 2.43.0
 
