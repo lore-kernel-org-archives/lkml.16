@@ -1,121 +1,173 @@
-Received: from mail-ot1-f47.google.com (mail-ot1-f47.google.com [209.85.210.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B2181CB518
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 15:57:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 124751805A;
+	Fri, 23 May 2025 15:57:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748015827; cv=none; b=eLOhF/YdDbTJ22KIprMQMdy98zQXFBSFJMi3fQGqPtu59RBrJhc9sEBv+BGQjWvNL867VI5rGC1lliu0CzN4pRitS9onIs6oGjCkABMmgRdWbR9hiBmXfMB7LNAuf9KvfwOLptj0cYFyiBmROgBmHQEuOxgWag5qzBRErByBWvQ=
+	t=1748015871; cv=none; b=t40W39cgeQnjfGlnQD5zQJle9r72PR6JSk8RcDiCzBUN4UX1PIM29P+cO2jhVbyVa4UW5/oxDgzMXg7z+uGKRiyufMkiWOBGH1fiNsCsWdY3TAoQP02il+K3xx4CJ13T4oFcWlrG44PdFl8PdyIOIUZiPfjnUkWlMRKi4ICjxtQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748015827; c=relaxed/simple;
-	bh=ILxEcaiDntXsflkF+6pQtHGgWFkbnjUWXJxdfu3Hvc4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Xxj1zudDpDn7KhVP/vlqhRKgrMQV5I5M5a3FcK9KdyuZTDvwP8DbXtA9q9VaTzkfoaP4Ys7AjgEs96yRmpqqtTDU3OQMSYxDHWDsghKo7sfVX/LrPSNC3hpK7uLosOc/vPrEsWtogLNYfMYFPldDzbf0nD4Bv0rSIM6D2hNpQKI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=Ph60W/EX; arc=none smtp.client-ip=209.85.210.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1748015871; c=relaxed/simple;
+	bh=+2vqHphUu4C6bprlfQR7KILEpwfjSblrde32WlRTix8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=U24K6Fx09MHWTmbUawD4a5M+7r20mnTx4rSf/RDcF19BwSrZZwI7s6GzrC30G6SFOD4rqd1VdzhcEsN85y5QkMHE1fYZpe4+3kPso1fzBooe2JRwkyUHZGxyKipaJyb17bSFRYa2osQVtqwoj6JWbde1ivxQvpqAnau2MiJ871I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Eyc+NuVW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="Ph60W/EX"
-Received: by mail-ot1-f47.google.com with SMTP id 46e09a7af769-72c172f1de1so6130397a34.3
-        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 08:57:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1748015824; x=1748620624; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=HCbggnBXhDFmScN6GeHb5Y4f9rXuA+BgiNUVjW1ACkE=;
-        b=Ph60W/EXNL7g4208D/4r8v0ThIIFZoGRpxHj5uiOMVo8yYqfmRkn3AWzjoFMDcQyU6
-         cP8keA8QMPwPjrpJeDi0fsbcq+4DArm97lz7Tc7Q7VOERsXMU7JnWu68JxnDG5v1ydI5
-         glgAfebJiiN/Egq2FCUp/ZTD45KSgYdkRGlEpU/kGgmNArhqyCKRuCswvRURHIGU302E
-         NXMFYVrgVy33HGR3lCqcPpiir+C3pxdcC3+V5KA25vERp0M9KlX+NG67DMYma/jKuMWG
-         nBVBUEp9ezO2+erKuJ1RZhfV+0/Y8BghAIGSjZcedTk3kkAOQ/430amCC0LtdYmLkT5G
-         7uBg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748015824; x=1748620624;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=HCbggnBXhDFmScN6GeHb5Y4f9rXuA+BgiNUVjW1ACkE=;
-        b=wujA1+kGkUrdR7IAzcFAxLZj1XcDXpVelWHeh7a7z4j7SeHGGJs57OMaXs7oGqRkhI
-         fVRjM+M9Yhgr60JzDpGaGvUfefbEuGdluI/UuLewU+fVaK6a4ZUhh6L4RwVmYwnjy8tL
-         eLIRHY8Cl/M7UUIp4L+Kt21Py9KomJ1Yw1rOB0FQEwhx9anuBmu9G60vq47hRx/8cFvg
-         ksIW1wr7koLshDQdDLp+j7h8cDs93ch86Rlf3VSAm2p+NDH5/IbuZRA5MC7YF5uHl7JO
-         3RYofhhRCh6fEd05LMTA/JSJtSxRRfH6gA47Ibxwi0pwO7wEoMSMxaeRwmY6CvJAHtmG
-         sL9g==
-X-Forwarded-Encrypted: i=1; AJvYcCXGfQLnVM/xoubBFKTfJ2WaJoxBWvDMingQ/hrsKDE8XFOtAgKA4vMb/k3fKKDWdTCLeuCQxhsxzVm6F98=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzPoEEP9MKvumSKxNlLrwR+G9/+uOFjTPsyx3wYAdz1+49BS7/v
-	ac3RCu/38cKI8txR++DD3PFxdBnLpC3UjlFfHdnWjymMgRLmdh5jPIu3//nfr0LhDg4=
-X-Gm-Gg: ASbGnctQp5/8uWRKsip0g5oWpCaVvIIFHHL5+qKrkgWkP0ZCxPWgGbXsZlVpb4KGK5I
-	jFC8K5Lfp3QqC+8R7RZMLOojgSHe3h/P2UFIwHYjkk3cifAVl/PjZac/sYolFe3MutAsyzMengp
-	oaZQRNtuNYo6xSnqOKxv8yl4/vDOAVbArmSzks10agbO9dJUmQN/atZHKmusrKDexB/2XXGz8uE
-	xHFdrvafn0ScFcNtUYYv9dP1EJEjltETHZ2pEBA7eb3pqLpWHSFHsTCbFk//i0/QfG3jn2ztpv4
-	QYihNzJH4v7uqwTfCdHcBA3Td7oxvh0OP1ovWh5DyJd+Gs+ScdVW2TBwbtqncakRYzweeaQMcqF
-	I88OSAILNC9lcQn3b8ZUQ++QwNzQe
-X-Google-Smtp-Source: AGHT+IFc3c1i95mFKKiwhRskWte/zI9f2iV5+4DvWEUtWy3xpbU32DrMGlEVO2qex8u//4NOEEsbzw==
-X-Received: by 2002:a05:6830:388d:b0:72c:10d5:783e with SMTP id 46e09a7af769-7355cfb0164mr17458a34.10.1748015824170;
-        Fri, 23 May 2025 08:57:04 -0700 (PDT)
-Received: from ?IPV6:2600:8803:e7e4:1d00:d0c7:531a:e465:4a2e? ([2600:8803:e7e4:1d00:d0c7:531a:e465:4a2e])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-734f6a4b206sm2902299a34.3.2025.05.23.08.57.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 23 May 2025 08:57:03 -0700 (PDT)
-Message-ID: <bcf45254-6c02-471e-86a6-66599a77c999@baylibre.com>
-Date: Fri, 23 May 2025 10:57:02 -0500
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Eyc+NuVW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CCC95C4CEE9;
+	Fri, 23 May 2025 15:57:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748015870;
+	bh=+2vqHphUu4C6bprlfQR7KILEpwfjSblrde32WlRTix8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Eyc+NuVWDjJ1F8NCyi+NHQoo1uiTIYCRQVKnyCvIE7jn1s3vl1LgxjQucaWhk2Hku
+	 /mWG0hDdnY37mkmiw+99Guq9MI7CEPVW/SP+zEGC9/zTVXoFmAfWtHBVXyIt4AmtSz
+	 STM5phoCmHxAhWWlpMLqbhcLnz/S7bIbokuB551IbzfokPx/eRSweuO5i934BWIzEn
+	 JADWmBZXTQEcmV5K0faDtXNi3XWFl3/zQPhp6bWcp7bNz5tp10WBkAmjZExUZ8vJFG
+	 7TJlFSoL0De1Hqr7TUD6ROWQJuNrmYwrUGc7yHwLxa5YzuI+/yZMEbJq+PkW+N6I7o
+	 9tCz5poC9WxWA==
+Date: Fri, 23 May 2025 18:57:45 +0300
+From: Jarkko Sakkinen <jarkko@kernel.org>
+To: Elena Reshetova <elena.reshetova@intel.com>
+Cc: dave.hansen@intel.com, seanjc@google.com, kai.huang@intel.com,
+	mingo@kernel.org, linux-sgx@vger.kernel.org,
+	linux-kernel@vger.kernel.org, x86@kernel.org,
+	asit.k.mallick@intel.com, vincent.r.scarlata@intel.com,
+	chongc@google.com, erdemaktas@google.com, vannapurve@google.com,
+	dionnaglaze@google.com, bondarn@google.com, scott.raynor@intel.com
+Subject: Re: [PATCH v6 4/5] x86/sgx: Implement ENCLS[EUPDATESVN]
+Message-ID: <aDCa-U8buhyjIygO@kernel.org>
+References: <20250522092237.7895-1-elena.reshetova@intel.com>
+ <20250522092237.7895-5-elena.reshetova@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] dt-bindings: iio: adc: adi,ad7606: fix dt_schema
- validation warning
-To: Angelo Dureghello <adureghello@baylibre.com>, Nuno Sa
- <nuno.sa@analog.com>, Lars-Peter Clausen <lars@metafoo.de>,
- Michael Hennerich <Michael.Hennerich@analog.com>,
- Jonathan Cameron <jic23@kernel.org>, Andy Shevchenko <andy@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>
-Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>, devicetree@vger.kernel.org
-References: <20250523-wip-bl-ad7606-dtschema-fixes-v1-1-d9147fb2a199@baylibre.com>
-Content-Language: en-US
-From: David Lechner <dlechner@baylibre.com>
-In-Reply-To: <20250523-wip-bl-ad7606-dtschema-fixes-v1-1-d9147fb2a199@baylibre.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250522092237.7895-5-elena.reshetova@intel.com>
 
-On 5/23/25 9:24 AM, Angelo Dureghello wrote:
-> From: Angelo Dureghello <adureghello@baylibre.com>
+On Thu, May 22, 2025 at 12:21:37PM +0300, Elena Reshetova wrote:
+> All running enclaves and cryptographic assets (such as internal SGX
+> encryption keys) are assumed to be compromised whenever an SGX-related
+> microcode update occurs. To mitigate this assumed compromise the new
+> supervisor SGX instruction ENCLS[EUPDATESVN] can generate fresh
+> cryptographic assets.
 > 
-> Fix following dt_schema warning when offload is used:
+> Before executing EUPDATESVN, all SGX memory must be marked as unused.
+> This requirement ensures that no potentially compromised enclave
+> survives the update and allows the system to safely regenerate
+> cryptographic assets.
 > 
->   DTC [C] arch/arm/boot/dts/xilinx/zynq-zed-adv7511-ad7606.dtb
-> /home/angelo/dev-baylibre/linux-iio/arch/arm/boot/dts/xilinx/zynq-zed-adv7511-ad7606.dtb: adc@0: 'oneOf' conditional failed, one must be fixed:
-> 	'interrupts' is a required property
-> 	'io-backends' is a required property
-> 	from schema $id: http://devicetree.org/schemas/iio/adc/adi,ad7606.yaml#
+> Add the method to perform ENCLS[EUPDATESVN].
 > 
-> Offload is a third option, so none of the above is needed. Used
-> "#trigger-source-cells" to identify offload usage.
-> 
-> Fixes: ccf8c3f106a2 ("dt-bindings: iio: adc: adi,ad7606: add SPI offload properties")
-> Signed-off-by: Angelo Dureghello <adureghello@baylibre.com>
+> Signed-off-by: Elena Reshetova <elena.reshetova@intel.com>
 > ---
-> Fix dt_schema validation warning.
+>  arch/x86/kernel/cpu/sgx/encls.h |  5 +++
+>  arch/x86/kernel/cpu/sgx/main.c  | 67 +++++++++++++++++++++++++++++++++
+>  2 files changed, 72 insertions(+)
 > 
-> Link: https://lore.kernel.org/linux-iio/20250408-wip-bl-ad3552r-fixes-v4-0-b33c0264bd78@baylibre.com
-> ---
+> diff --git a/arch/x86/kernel/cpu/sgx/encls.h b/arch/x86/kernel/cpu/sgx/encls.h
+> index 99004b02e2ed..d9160c89a93d 100644
+> --- a/arch/x86/kernel/cpu/sgx/encls.h
+> +++ b/arch/x86/kernel/cpu/sgx/encls.h
+> @@ -233,4 +233,9 @@ static inline int __eaug(struct sgx_pageinfo *pginfo, void *addr)
+>  	return __encls_2(EAUG, pginfo, addr);
+>  }
+>  
+> +/* Attempt to update CPUSVN at runtime. */
+> +static inline int __eupdatesvn(void)
+> +{
+> +	return __encls_ret_1(EUPDATESVN, "");
+> +}
+>  #endif /* _X86_ENCLS_H */
+> diff --git a/arch/x86/kernel/cpu/sgx/main.c b/arch/x86/kernel/cpu/sgx/main.c
+> index a018b01b8736..109d40c89fe8 100644
+> --- a/arch/x86/kernel/cpu/sgx/main.c
+> +++ b/arch/x86/kernel/cpu/sgx/main.c
+> @@ -16,6 +16,7 @@
+>  #include <linux/vmalloc.h>
+>  #include <asm/msr.h>
+>  #include <asm/sgx.h>
+> +#include <asm/archrandom.h>
+>  #include "driver.h"
+>  #include "encl.h"
+>  #include "encls.h"
+> @@ -920,6 +921,72 @@ EXPORT_SYMBOL_GPL(sgx_set_attribute);
+>  /* Counter to count the active SGX users */
+>  static atomic64_t sgx_usage_count;
+>  
+> +/**
+> + * sgx_updatesvn() - Attempt to call ENCLS[EUPDATESVN].
+> + * This instruction attempts to update CPUSVN to the
+> + * currently loaded microcode update SVN and generate new
+> + * cryptographic assets. Must be called when EPC is empty.
+> + * Most of the time, there will be no update and that's OK.
+> + * If the failure is due to SGX_INSUFFICIENT_ENTROPY, the
+> + * operation can be safely retried. In other failure cases,
+> + * the retry should not be attempted.
+> + *
+> + * Return:
+> + * 0: Success or not supported
+> + * -EAGAIN: Can be safely retried, failure is due to lack of
+> + *  entropy in RNG.
+> + * -EIO: Unexpected error, retries are not advisable.
+> + */
+> +static int sgx_update_svn(void)
+> +{
+> +	int ret;
+> +
+> +	/*
+> +	 * If EUPDATESVN is not available, it is ok to
+> +	 * silently skip it to comply with legacy behavior.
+> +	 */
+> +	if (!cpu_feature_enabled(X86_FEATURE_SGX_EUPDATESVN))
+> +		return 0;
+> +
+> +	for (int i = 0; i < RDRAND_RETRY_LOOPS; i++) {
+> +		ret = __eupdatesvn();
+> +
+> +		/* Stop on success or unexpected errors: */
+> +		if (ret != SGX_INSUFFICIENT_ENTROPY)
+> +			break;
+> +	}
+> +
+> +	/*
+> +	 * SVN was already up-to-date. This is the most
+> +	 * common case.
+> +	 */
+> +	if (ret == SGX_NO_UPDATE)
+> +		return 0;
+> +
+> +	/*
+> +	 * SVN update failed due to lack of entropy in DRNG.
+> +	 * Indicate to userspace that it should retry.
+> +	 */
+> +	if (ret == SGX_INSUFFICIENT_ENTROPY)
+> +		return -EAGAIN;
+> +
+> +	if (!ret) {
+> +		/*
+> +		 * SVN successfully updated.
+> +		 * Let users know when the update was successful.
+> +		 */
+> +		pr_info("SVN updated successfully\n");
+> +		return 0;
+> +	}
+> +
+> +	/*
+> +	 * EUPDATESVN was called when EPC is empty, all other error
+> +	 * codes are unexpected.
+> +	 */
+> +	ENCLS_WARN(ret, "EUPDATESVN");
+> +	return -EIO;
+> +}
 
-I think this is too restrictive. Generally speaking, a trigger could be
-connected to trigger something other than a SPI offload. So we wouldn't
-want to exclude that possibility as this change would.
+Even if unlikely() was not used I still don't agree with the order i.e.,
+dealing with the success case in the middle. So I stand with my earlier
+suggestion, except unlikely() (since that was a problem for David, not
+going to fight over it).
 
-The existing binding has the same issue for interrupts. There isn't any
-reason that we couldn't have interrupts wired up at the same time we
-are using io-backends or SPI offload.
-
-So I think we should just drop this whole oneOf: and let all of these
-properties just be optional.
-
-It smells to me like the original binding was written based on what the
-driver supports rather than how things could actually be wired up.
+BR, Jarkko
