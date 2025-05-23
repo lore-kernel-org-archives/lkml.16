@@ -1,107 +1,105 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65B8920C47A;
-	Fri, 23 May 2025 08:17:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A093E1C173F
+	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 08:19:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747988257; cv=none; b=H8RzMR5zYo5qzSOmLzfbt7vxNQ50mgZ+EwmpO+n7xYB7VMDFlFSA9H74nY9SNO6Hto9udvvUaKrE4GuExRt4FgIJrNswbWLsRFJCG51B/j6qnyuG9sLwwWJfVcJDEH7LKMA4smemx7qpiMISeq1yHPrCS9NB5iI97tfM6UWrONQ=
+	t=1747988390; cv=none; b=b59UUQQErDIzPd+HOPmOKuGc2oiuzNS1KcR36Z7fvJnWkl/PwuczEB4Qn1oJcep5WlqWPtfnSPww2aNjmX/86XQMnwLonJvolsfx/P9MtuI2ng9FwRaGbLVCKJzBhtib0jRcuMYuZiLjaJGIaeShp0v3fpMJ/IrUOdV50NgtzxQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747988257; c=relaxed/simple;
-	bh=BFCItceWfyuAXXe806yu+VbLQ/lI0BL9H850ON0oNA0=;
+	s=arc-20240116; t=1747988390; c=relaxed/simple;
+	bh=HNSWagAEX12O10t4eRkKH1SjIDKexCjBhWGMr16Yykc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XS4Fii2oXmmxv7Gzxbj7p5UiRX69lcaaGwyMsqEvrhhKrdRot8NAGaGAcdlRPpjtq5bdD8cFT1L/WvbiAQPup1cX42VkAYdhLP9xIsGstOKyhFqhtNhZB106JPvuPTOdaYvJr4s9eibpo1kteAAl5PVPE19282Og5EyjtPpYvYA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=uXt5eSu8; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=Gl03Kb4RQ09ywL0ZJongVg7JzGQixSPg227H4Hl4V9PrXV6cB0tBOJAugkUMKfOi9xPSDimbeaP+QLEczBlQ4XHCCFw72zHvotzlAoBR1VDyU/0cNi4H5yilLXW1JMlqu0GQf8at2qdbk3AUI0XfLXvRxeUemnz/9eQtHqFUa/Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=KmXkzArn; arc=none smtp.client-ip=209.85.221.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="uXt5eSu8"
-Received: from pendragon.ideasonboard.com (179.218-130-109.adsl-dyn.isp.belgacom.be [109.130.218.179])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 144384A4;
-	Fri, 23 May 2025 10:17:10 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1747988230;
-	bh=BFCItceWfyuAXXe806yu+VbLQ/lI0BL9H850ON0oNA0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=uXt5eSu8sVYfZL82LXbn4zyArt8iv+pp4jy+FOET4Yq/rZz0f6QDRCf70KFG7/fiw
-	 so0KRl3BEWQ97BQaMpkQ/advHhkbceM8SoU6pzKgNgbfxFc4IlOsvq9wA1tXAVECzH
-	 rOuhxR4vR5AWAlSc6Lxm4E7D82VWkJUc+fJ15UDg=
-Date: Fri, 23 May 2025 10:17:25 +0200
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: git@apitzsch.eu
-Cc: Ricardo Ribalda <ribalda@kernel.org>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
-	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org, imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v3 5/5] media: i2c: imx214: Remove hard-coded external
- clock frequency
-Message-ID: <20250523081725.GB12514@pendragon.ideasonboard.com>
-References: <20250521-imx214_ccs_pll-v3-0-bfb4a2b53d14@apitzsch.eu>
- <20250521-imx214_ccs_pll-v3-5-bfb4a2b53d14@apitzsch.eu>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KmXkzArn"
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-3a375888197so2970137f8f.0
+        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 01:19:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1747988387; x=1748593187; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=flkPxGTAPulzErROQlZpjAXNRqaIuRh5Y/yxPEIKvFM=;
+        b=KmXkzArnpz77dspTyA+Pj0iQZl15E4HDBh1oupiZb5cqFVNr/T6D4b5BfH8qGkG9OQ
+         wUvtE8Az94q0buU4vEgcPL87ecenGNtAuSEiGL6XePqu566vP7/UXbOAfSVJb/nAE3we
+         VLfJjlXaO+dTYdLmNVIIUbjhSKICUYyivQO7AIdHW2aEqwGBiVefiROLXavMNIzUl3zU
+         4zK5FCiuH+976bJdfNb6CR+L3xlpRrpYpNG+E6onCNq7M8f3v/MDAfHdJN5s1WPnoKdu
+         PxV5Gn1IGcv8NFQL4mm7HPTMiWQt2Pbb37+Jv5uPcuzbUlc+QD+DFPlODNuYpb38JeN2
+         oFdw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747988387; x=1748593187;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=flkPxGTAPulzErROQlZpjAXNRqaIuRh5Y/yxPEIKvFM=;
+        b=qZCdFM7OKDlnm2WgKoFDiP6KcsvrJ4iqvBwZWhTNCJqI1noi5wXhcP9EsHt6NsGmh9
+         YkfxB0PNkwqeC8CxhOY+mwduwjaWt5xKfEj3gbMdzmIDWxe1ySy8V3s4Zot1u/GTQV2u
+         5+/ftiwX/inR18kTKoPN8NBSu1E6LJkOUzbZzzZZP9YGI8jAEOdxsvgIx9XJu2latzv6
+         5id/rKYNvec6V+jHaByK3xX8fzbyaQ/EZtz/VeGc6LfYjv0I2LryfIZ3g1AlM73oxEwQ
+         328xpwx0VZm6TPIHfermVyXMxUtAFBu7ukdh3XHR8wCS4xl+WzeVBXEcv8TW1P+KE6K9
+         tpbw==
+X-Forwarded-Encrypted: i=1; AJvYcCVsjJyO2Y2KGuCflHunR7e2z9nTdIoe/ff6WrL6baXfhJatqNdM5rY53dFKHLgpkYFL02kk4zp1g4ZsFKE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywi9ZKJeh8u+dCQDnQqgsBHYVeyERLNijTmJPcgGTCaduY6BwL5
+	ZGSFAGO7SQNcU6BjwXaZHdNvLmpz5OOggQUbMA9xA0rT3ZvuqmnavB+9PXeFxbyvizY=
+X-Gm-Gg: ASbGncsy1LnX16OWZ5/nBqcghWBvXpt6z43Y2ozbv8R905skFzdwe6Ts/0K+wV12zM/
+	OkslLJafH+XB9xWNO50e96aj7g+yywyoZxwsAFUlH2v37/prNHh84NH77nBJHPy5x66J3D8tyLq
+	Mpqu5w6YQFGWUeqdKqjQxWX3oRnsIVzSD5mToUXolUSQ87OEV8GMV4h5N8MBRaiM7qHrYr5noWu
+	4Ak0pNBP/wSZojHhCru5sm+BvO8s5sRZ/kPKuhRFArmAx/HQEjnb6fYMElZTJT2E76bTyGDuUaM
+	MS27XSoj8+cKdD0WrW7RvOPiJsxT+fwnV1tQHnF6pWt7HZVaQaX2XbTz
+X-Google-Smtp-Source: AGHT+IF4/Q3PO7+Wp7rssB2fh/14f8yoGc7vb2xypco+l1dme8+hwhmvGGV/4fhj0blkBQdH6++bgw==
+X-Received: by 2002:a5d:64c7:0:b0:3a3:77cc:539a with SMTP id ffacd0b85a97d-3a4c2103d41mr2588162f8f.58.1747988386849;
+        Fri, 23 May 2025 01:19:46 -0700 (PDT)
+Received: from localhost ([196.207.164.177])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3a35ca88978sm26223360f8f.65.2025.05.23.01.19.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 23 May 2025 01:19:46 -0700 (PDT)
+Date: Fri, 23 May 2025 11:19:42 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: rujra <braker.noob.kernel@gmail.com>
+Cc: Johan Hovold <johan@kernel.org>, elder@kernel.org,
+	Greg KH <gregkh@linuxfoundation.org>, greybus-dev@lists.linaro.org,
+	linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] staging : greybus : Documentation : firmware : Replace
+ deprecated strncpy() with strscpy()
+Message-ID: <aDAvnmtgnssj7K5l@stanley.mountain>
+References: <CAG+54DZgF55R2pEtkVBdnwXEyNu9TrSMA9zkmw7RjWrDqX4SsQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250521-imx214_ccs_pll-v3-5-bfb4a2b53d14@apitzsch.eu>
+In-Reply-To: <CAG+54DZgF55R2pEtkVBdnwXEyNu9TrSMA9zkmw7RjWrDqX4SsQ@mail.gmail.com>
 
-Hi André,
-
-Thank you for the patch.
-
-On Wed, May 21, 2025 at 09:34:28PM +0200, André Apitzsch via B4 Relay wrote:
-> From: André Apitzsch <git@apitzsch.eu>
+On Sat, May 17, 2025 at 09:11:30AM +0530, rujra wrote:
+> To ensuring that the firmware_tag is properly null-terminated. When
+> copying firmware tag strings to prevent buffer overflows and ensure
+> data integrity.
 > 
-> Instead rely on the rate set on the clock (using assigned-clock-rates
-> etc.)
+> The maximum size of tag is GB_FIRMWARE_U_TAG_MAX_SIZE = 10 bytes, and it
+> may or may not be NULL-terminated.
+> included in "greybus_firmware.h"
 > 
-> Signed-off-by: André Apitzsch <git@apitzsch.eu>
-
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-
-> ---
->  drivers/media/i2c/imx214.c | 6 ------
->  1 file changed, 6 deletions(-)
+> changes has been made at 3 positions:
+> 1: update firmware tag
+> 2: backend update firmware tag
+> 3: backend update firmware tag with unipro
 > 
-> diff --git a/drivers/media/i2c/imx214.c b/drivers/media/i2c/imx214.c
-> index 19b494c08ece9894de67a4ee34c6f8e6e2708e41..264e897ec6e8e3d2fcd9d58db82090c7dd85d526 100644
-> --- a/drivers/media/i2c/imx214.c
-> +++ b/drivers/media/i2c/imx214.c
-> @@ -32,7 +32,6 @@
->  
->  #define IMX214_REG_FAST_STANDBY_CTRL	CCI_REG8(0x0106)
->  
-> -#define IMX214_DEFAULT_CLK_FREQ	24000000
->  #define IMX214_DEFAULT_LINK_FREQ	600000000
->  /* Keep wrong link frequency for backward compatibility */
->  #define IMX214_DEFAULT_LINK_FREQ_LEGACY	480000000
-> @@ -1402,11 +1401,6 @@ static int imx214_probe(struct i2c_client *client)
->  		return dev_err_probe(dev, PTR_ERR(imx214->xclk),
->  				     "failed to get xclk\n");
->  
-> -	ret = clk_set_rate(imx214->xclk, IMX214_DEFAULT_CLK_FREQ);
-> -	if (ret)
-> -		return dev_err_probe(dev, ret,
-> -				     "failed to set xclk frequency\n");
-> -
->  	ret = imx214_get_regulators(dev, imx214);
->  	if (ret < 0)
->  		return dev_err_probe(dev, ret, "failed to get regulators\n");
+> Signed-off-by: Rujra Bhatt <braker.noob.kernel@gmail.com>
 
--- 
-Regards,
+From doesn't match Signed-off-by line.
 
-Laurent Pinchart
+The patch is corrupted and doesn't apply.  Read the two paragraphs of
+Documentation/process/email-clients.rst.
+
+This is a usespace program so I don't think it has a strscpy()
+function.  How did you compile this?
+
+regards,
+dan carpenter
+
