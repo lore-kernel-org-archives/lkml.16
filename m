@@ -1,208 +1,1110 @@
-Received: from PAUP264CU001.outbound.protection.outlook.com (mail-francecentralazon11021085.outbound.protection.outlook.com [40.107.160.85])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB6F8236451;
-	Fri, 23 May 2025 12:24:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.160.85
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748003060; cv=fail; b=tD/banPjtoE5/H8432YsSatdaCN+O5L5JzDHvse9HEH2viDe2xgszMqi9ZJn6Dd85xGcfAeksnmcVR0D38CYEyWpiJeOl7TK3M2iZMIe+gFPAMCfl8Zs1o5569C7cBRq8lO/QvqbAfNYoPX1aeGL+ZhhWYbZoCFNUpp8jeP2jfc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748003060; c=relaxed/simple;
-	bh=oo98JQVaHYuigwWXspyJrdQrBpjuIpGv08x3PBzQwWs=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=eATe4MKtjfrgqPV49c1MXNU+x6FeLpSHGpZuSAKDKp+CsTWCw6gWirFREeWvE8A6JCrcXvCPGItDI/jeT+UYoXLZcVJsI0d2PcJcfbgn4p5G19Q44OANhqWD6Nmdat0NEwyaCik1LWg8tVC7jMTDlTRYk14np3ddaVnRVu/S+Qw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ateme.com; spf=pass smtp.mailfrom=ateme.com; dkim=pass (2048-bit key) header.d=ateme.com header.i=@ateme.com header.b=LdwfSntJ; arc=fail smtp.client-ip=40.107.160.85
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ateme.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ateme.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B908A224243;
+	Fri, 23 May 2025 12:26:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748003185; cv=none; b=GDjvGxb1xqxDtZtInIpEOAo5zq5hzx8zl1pPjs7VdeiHk/V1l97MF7YQ4VQ0deN8w3mVb78eqd+vN8U8pZNzwT3dSO7FWTB3SZxvnQTDL8Xf2Be8884Tg1tp1El28tm8lOABLc8s3dkvFZszmQnGlUTKXQ1YATn6YwQJTwvckUA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748003185; c=relaxed/simple;
+	bh=xg8uFFp0tFIZ21rnNVN9vbqDmCgZzc5TgOsxp8lLXCQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QZO5BAbpyMdCaGt87quJLvpZWcOk+icIwgML66mSXW+F8AWPogibjAP0+OdloueBcy0UTj6rMMMtUImKCQQhmcpcF7STXp4Ki42/FNRwwr2a58ynKT4fPadNTi5kjqbIR9u3dEmOYV9rdImTvwc+jU0QN6AM60t/faQWFX/hD+Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=oW3KvDT9; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=MEMSiW8V; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ateme.com header.i=@ateme.com header.b="LdwfSntJ"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=imclhng/v54kxVzPb713JtNKA/bDtZGeyVeOwlLf3Nbu5xebGACoq1jmwtbNmN8z0Ngj7Bs4+4wkC9wh/2rphAFFew50BacQ5izsJyC15/1NTbOtT62mrL+XvrDojlA0jVTBTdN5uiB0xQL2o6wyh8RGgRPzOErQY6cmp87bcHc9MPnQlV36xvYZHEBs2zj1lSKXC+nHrJHC1mGEMCKffxVhTZ8fk1aQEWVcuOZPJV8+fyiawyW3zx/7tHxoghOf4Jh039NDCl9VuMxkY3aYiRIXkuFvFjm2DCjr+RaoJxBEMKz2GOOJGFuZLlpBBkZgQvLVZIXeYfJ1YtUHJ4LjAA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=oo98JQVaHYuigwWXspyJrdQrBpjuIpGv08x3PBzQwWs=;
- b=SAdIv/dz89XXmNXUSIKDQPhLI2ssYE8zNPBKczJWjyXWKRhal3dOTjOSadw8qCoYCGRSBNAnb35GDEKZ5yeNHYFq8K5zrOBG03H/U6ZVaEeRcILfi7DvN8AKo1ZIhTYqjxSRUOXYAJ4Ccq0ELdVgJegSxDR+YWdDniuurOzIu9Y62El7vhSM3lkJVOhvuPYu9rzevIU01vjBUrw7yxOeuaYer+kWXuxVbvue3TaumrL3X9cNDfTWPwpHNqrHQBtQ7sfmaYdTqqrMtFVWXc3KEtP1OnJerVaL1kqRPtesYg9BvFRzfVuyTiUzBrgQWXAAk4fu3QSYJTykxOcYKzZBAQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=ateme.com; dmarc=pass action=none header.from=ateme.com;
- dkim=pass header.d=ateme.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ateme.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=oo98JQVaHYuigwWXspyJrdQrBpjuIpGv08x3PBzQwWs=;
- b=LdwfSntJJ81z8H7KO7RLHYSejOkoVXYRdEWeo8G0EbU/5QPTgV8adsU0tLBc6SRzxhr5QpovGXa/KMfaIpA/V4P+zDEMLyG08pK+zyRBW8gdCCFxH2zka9yM5MM3ELkmDMiipncWKjLEmwSqX54+85jUk8RppGvKYs5WDQrNVlhnarSI0EyQbKhNCapRUc0AJNhsbvJ33SNAd4po5dAPFvaY5VtQf3+ZPJ8nskAAV2Blam08y7XpfRPsxBVBmmzmhxWxnFTUQaA0aF+uSwwtw32oi3RbqrZogXQON5pZt1Wws++v51WcC0amhxj6zhFoyoJ/iz3rHdFzvl8SB9AkdA==
-Received: from MRZP264MB2587.FRAP264.PROD.OUTLOOK.COM (2603:10a6:501:1c::18)
- by MR1P264MB3234.FRAP264.PROD.OUTLOOK.COM (2603:10a6:501:3b::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.21; Fri, 23 May
- 2025 12:24:14 +0000
-Received: from MRZP264MB2587.FRAP264.PROD.OUTLOOK.COM
- ([fe80::e250:72c7:9cca:c5ad]) by MRZP264MB2587.FRAP264.PROD.OUTLOOK.COM
- ([fe80::e250:72c7:9cca:c5ad%3]) with mapi id 15.20.8769.022; Fri, 23 May 2025
- 12:24:14 +0000
-From: Jean-Baptiste Roquefere <jb.roquefere@ateme.com>
-To: Vincent Guittot <vincent.guittot@linaro.org>
-CC: K Prateek Nayak <kprateek.nayak@amd.com>, Peter Zijlstra
-	<peterz@infradead.org>, "mingo@kernel.org" <mingo@kernel.org>, Juri Lelli
-	<juri.lelli@redhat.com>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, Borislav Petkov <bp@alien8.de>, Dietmar
- Eggemann <dietmar.eggemann@arm.com>, Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, "Gautham R.
- Shenoy" <gautham.shenoy@amd.com>, Swapnil Sapkal <swapnil.sapkal@amd.com>,
-	Valentin Schneider <vschneid@redhat.com>, "regressions@lists.linux.dev"
-	<regressions@lists.linux.dev>, "stable@vger.kernel.org"
-	<stable@vger.kernel.org>
-Subject: Re: IPC drop down on AMD epyc 7702P
-Thread-Topic: IPC drop down on AMD epyc 7702P
-Thread-Index:
- AQHbr9zhl/8RWJ02Dk6pHFtpBzdc+LOo+aeAgA/I94CAAz3LAIAH8N6AgAAhnYCAAC0kgIAAAbKAgBFGlYCACWn9AIABaSmA
-Date: Fri, 23 May 2025 12:24:13 +0000
-Message-ID: <fea6da1d-85d6-459d-9ac3-661d5909420b@ateme.com>
-References: <AA29CA6A-EC92-4B45-85F5-A9DE760F0A92@ateme.com>
- <4c0f13ab-c9cd-42c4-84bd-244365b450e2@amd.com>
- <996ca8cb-3ac8-4f1b-93f1-415f43922d7a@ateme.com>
- <3daac950-3656-4ec4-bbee-7a3bbad6d631@amd.com>
- <CAKfTPtBovA700=_0BajnzkdDP6MkdgLU=E3M0GTq4zoLW=RGhA@mail.gmail.com>
- <de22462b-cda6-400f-b28c-4d1b9b244eec@amd.com>
- <CAKfTPtC6siPqX=vBweKz+dt2zoGiSQEGo32yh+MGhxNLSSW1_w@mail.gmail.com>
- <c0e87c08-f863-47f3-8016-c44e3dce2811@amd.com>
- <db7b5ad7-3dad-4e7c-a323-d0128ae818eb@ateme.com>
- <CAKfTPtDkmsFD=1uG+dGOrYfdaap4SWupc8kVV8LanwaXSbxruA@mail.gmail.com>
-In-Reply-To:
- <CAKfTPtDkmsFD=1uG+dGOrYfdaap4SWupc8kVV8LanwaXSbxruA@mail.gmail.com>
-Accept-Language: fr-FR, en-US
-Content-Language: fr-FR
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=ateme.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: MRZP264MB2587:EE_|MR1P264MB3234:EE_
-x-ms-office365-filtering-correlation-id: a52cdc92-2373-4c97-d98c-08dd99f4baba
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|376014|7416014|366016|1800799024|10070799003|38070700018;
-x-microsoft-antispam-message-info:
- =?utf-8?B?dElaejVTakVQWjBrYlM1cmJlMFdhMGFGVnQ1MzFVK09mZEQ3VXF4Zk1iTmdC?=
- =?utf-8?B?MEVqc05uZGozejFSWkNybG1qYUV5U3UvQnNRQ2dQTVFhSDY0QnJNQUtiWWxy?=
- =?utf-8?B?RHNwdng4TXdMMlBPV2N4b0d0ZkU5STVGQWxlNFpOaWNRUTdEMExyb3RvVnJt?=
- =?utf-8?B?TlZpc0E5T2o1aWRGRlJ2RHZ2WVdpSkQ5Z1l1TkpSaWcvYjVIRndaNitCcHpT?=
- =?utf-8?B?YndLOHBESlFKU0lUeG9HOFVydXpld1E3RlVDTHB2bmZNejh3UUpkektqSjZ5?=
- =?utf-8?B?bDkzZlJ0c1ppbkREaXQ0T2FkbGFFcTRrZmhocUloNVdsbysvcmlmYitoSzFQ?=
- =?utf-8?B?cDM5MUg0RVZiemxiaUd0dVhEb0d3MGhYa0NZK3crWmlVcmlwWnhvNWFSTDQ4?=
- =?utf-8?B?MEV6TlNKTmwyUWxnVGRCcjNENDliWmthZ0RHZlZUZUhjWHcxL09HRU1ISjd4?=
- =?utf-8?B?K3lyZ2VGQzNzMmdwL0lySE9wRGZhOWVPQ3ZxbmNTcVFoQlJ3cEV4bStEUkQw?=
- =?utf-8?B?VysyeGhjQ1lqUkZMWG1FOWJDY25OOThTeVZLb2todHdQeHRrOWVBN3FCYmFu?=
- =?utf-8?B?S3M1dVRNWnVGU1M0cG94K0lBSUN5WXdiZ2xBOGpwQU9qUE1nQnNvbGIzRVF0?=
- =?utf-8?B?SlQ5Rk0rbzlkejZ6UVBHcWpxSnltbG5uMnBJMnZBRkJ3bW1JM1lYYlltRExI?=
- =?utf-8?B?SEJiZVhUdDl2YnBIaGFqR2ZSUWNiNEtUNFJicG5MK05LSmQ1TnZiVFJHUDBV?=
- =?utf-8?B?MnlCSnliaVp0Sy9uN0lIejIwOG5EMmtSUGVpUUpUTm16YVQyVTUzRzFsVHFP?=
- =?utf-8?B?dzZndTFhR1I3dEg4N05QaFQveDhVZjVHQ3dkZ29RdnVMOTJjSy9GT2Yydno1?=
- =?utf-8?B?dlJya2xmcEZ6NmVtREI5RTkwczU3bDdHY2RoVXBWYlB5WVkwdk0xc3k5Z1pn?=
- =?utf-8?B?YjY2SENBTklkaENQY3RYQmdzcWV2Y1k0c0JtWnU1RnVvWnA5QUE3T2VkVEtr?=
- =?utf-8?B?L01ibFpOYUlsT2JFa1QyYzdsM0EvRTdsOHhWSUh1UEJTSHNOeWRsUXA3ZXEr?=
- =?utf-8?B?bEkzMHhBZmpVNnE4NUxsVWQ4Um0yaEFNVzcwSDVEdUtTb3RhTVpXZ1VLN2dm?=
- =?utf-8?B?dm1NVkpmVVhSc2wyc1o3VlpuRXlRMGFhS2RRWDh5M3A4TG52dkM2dk1ZSDc3?=
- =?utf-8?B?bWhiZUgrNVRhemkwdVBnVTI5OFNxaXBGOENjSnl2UGpNSFNBaG5wRzNyZkhL?=
- =?utf-8?B?Y3ZqaWxNa2RPSjVheWtSZWltZlNTV0NTdk8vbXQzeXk5dFRYYmZyK2VvaGFw?=
- =?utf-8?B?VmxuRVJUYlBBR0xkdjhJY3BqU2xzak1JSTFrRnh4RlljUFNlejJtdThESUVt?=
- =?utf-8?B?VTFtb2U2bDZmemNZR2hXQk9XOXlCUS8zSEdLdVV0NmtVay9CM1lKUUVoT3RL?=
- =?utf-8?B?QUNPT2VGU3lzSElOWEdxZm9WdGk2cmRrWFhqcFVUbmdIaGo5Qkdsc3dmVExT?=
- =?utf-8?B?bnI4UkxYbEhETXNHY2l5QmJUWHNHYXR0MjJwTzRQNWU3K0ZoaTFSbGFBOXFE?=
- =?utf-8?B?THB2cDNpb1ZlZGhBMCsrMUlsaFMyZUtzWHNGRVdZWjFzMzdqamozb09udVNV?=
- =?utf-8?B?d0dVdDJNYk0xbTg1SWU1REZLWUVSTVQyeE9KWmN1NWovSEk2MjdGc3p3VnV2?=
- =?utf-8?B?Y3FHV2U4Uk5UcnlCSFQ4OHpiRzY5TFovSmM2eVcyaDh1SGNGTHBLNjlPcm5X?=
- =?utf-8?B?bHlvbEZVQ25yUzF0UVkzYnk1NFBQOTRXeTBZV01nb1JXTEdqTk1uSElFUUlq?=
- =?utf-8?B?YTN5NVkwUnBKdThCaHZJQkhrVk1GekVtNWNGWElJWmluWDUyZThGU1J1WGFw?=
- =?utf-8?B?MlQyaW9rK3RBdVVNWGZEZmJjaFVuZzdSRkwzNXFIajdNWXRqRW9uTlZWY3BE?=
- =?utf-8?B?M293UnFnNEJHRzVEVmpLUWdRcllMRGY0MVlmTy82OGZ2Qk5kMmhQbHBNeHBZ?=
- =?utf-8?B?eGsrTjgrdThRPT0=?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MRZP264MB2587.FRAP264.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024)(10070799003)(38070700018);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?elRlNVhHbXNOVExkS1BwSW9vS084WG9iNk03TXdMV3lTSVdRbmF2c0VnTHhE?=
- =?utf-8?B?N2psTnc5M3NvLzRXaWU1WXVTbFZKU3ZjMmNxcjVvWU5GMmFiZzJ6TmJuTENU?=
- =?utf-8?B?WGNhWGNjVUdSdEd4K2FIcDBsTUxRVzZ4RzJ6TW5PY2V2S0hDSXFnMm16RjdZ?=
- =?utf-8?B?M3k2bUhjc2VHTzRrREo5U3UzNVFOZTZQdmN2cS8xUlA1cXJOZjVSem9pWUk3?=
- =?utf-8?B?SzRmaUcvK2FUcGZKd0tpN3ZydytVRThaNlMrSTBVNTEyMkh3K0t4Mjg4VzBr?=
- =?utf-8?B?b2Q2QXA4aVRoU0kwL0lralVwNEt6dWcrSGRMajhJRFpxWW0vcDJEd2FaUVpk?=
- =?utf-8?B?aXp6Y1BBZng0QmNqMzRxT01UZExXQ3ZTRUIxakwxMlZXVUlGNlVxYktJN29a?=
- =?utf-8?B?ak5uaDU0dnZFU2QwZlZ0QlcwVmV1cEhPeEVuR2ZFTVdrc2l1YUVnU1dGaTFm?=
- =?utf-8?B?TkNHbVBiNnEzd0V4Zmh5enhRUkx6WkVaSmcwM0JndUc3VWVRNi94VGwxVDFT?=
- =?utf-8?B?ME43K0RjZmE3b2hJNm0wbGhIZXR5OCtBWWFsaTZHMXZSeFF4NnJjd1NFT29w?=
- =?utf-8?B?OFdwR0xiS0lQY1NFL1hjaW1QS2Eva0dCMEZmeTZRRzh4RWpjZkt6R3BVMjly?=
- =?utf-8?B?OWxydnEyMVdWVU1uTkwvYnMwRlJ6c1dKcGU0REpTTFcxcFhOeXNlc3NUcDlI?=
- =?utf-8?B?NDV4RzRIQUtSRE9zd3dZUmpuVzhDTjhyNUthSmZrK042SUN5cDNlZDVnZkZ4?=
- =?utf-8?B?aDJwMkNqeG1SZmdaVEgvbnVxSWVOREN2YSs2TEtWdHNFVVVWZzlNWVkzY3hF?=
- =?utf-8?B?NmJPYU1RUmpFbFhmMEVEV2l1Tzh6WWg0WC92UC8yKzE5Z2RQSWNoZ21HVDgy?=
- =?utf-8?B?SVpHRXA2cnpCdFl2aWZ1N3JjeHgrdDBQeFFZT0JKSVA2M3Q3eDY1N29walZU?=
- =?utf-8?B?SEFnQUVwNlI0NDdzWUFuUG5kcVZLZy9KbHQzcFJSR0RleWRHVFFVZkVqMTlW?=
- =?utf-8?B?YWRMWEN0UC9sYXZ3VFdSNWQrQXQ3WW5KSVdZSy9oclZ2UUlNQWhxVUs2SG9v?=
- =?utf-8?B?VVJvbE1JR3J6Q2N2M2lTRHppa2IydzRHazh3MHdEaXFrNDRJK0xIR0MxdVBE?=
- =?utf-8?B?NG5jaWlxcWozVldkRmxja0oySXE2aWcxd1I0ZlJ0Zk50bWlwbWlhQndjVWgv?=
- =?utf-8?B?SWd1QTZ6bzJldlpYancrNk5OTDRMelE0K0MvMzlHdEdaT3ZkUEtITVNuK2Yx?=
- =?utf-8?B?elBzMjd1QVZOVXd0Q01ZT0hrbU9tRTRDd3E5WVVibVB6UklTOHM1am9KVklL?=
- =?utf-8?B?YTltd215a2tKaDBrQ0dKaExlaENnc01VOVFjd0FQZjRScnB0dXp6dWNIMVBJ?=
- =?utf-8?B?RzdIZWVzY0N1UW1nblhDNzlPeFF3ci9FUExTNUVFaGpldllLMWdDOFRrclk4?=
- =?utf-8?B?WDVuaHVWOHRMUjRDZ2ozSG9GUWhiUnlpSlRNZkJBNUxaU2kwd2xEWnh5R1R0?=
- =?utf-8?B?a0c1cU4wVzg0VzdHc3pDWlRlL3hqTU5aTGRXNHM4cG5oVVFFZDNtUG5XQnoz?=
- =?utf-8?B?UnVSTTBvMTdKTG5JdlJZcnc3WnpjWjRodXpaNG5RVHFteGtncHN0TjdrQ3ls?=
- =?utf-8?B?WnVHdGt1TVQ5ODhsTklQd1Z3MHcrYi8wemU1TzU3YU1SZGF1bjcxRkZvc3hH?=
- =?utf-8?B?cVNKM25KODFvd0o2RFZyaTJ1OHIzR1BoUXN3Z2R0L3E2cW0zNGhFOU1Nc0JY?=
- =?utf-8?B?cGx5UGgxTnBTaWhmcnB3WUxnNEQ1aWdvZE16SWJySTcxODc1dWRHL2drbHpu?=
- =?utf-8?B?TTN5b0VNWjFwWjdBQWZDRGVkdkswK01tclhGZE5FMTRCeGo2WlplUktjZTQz?=
- =?utf-8?B?aUpaeHZrdnYxdWs4QzdSUjBhbDIvcXZ5WW9DaVVSMnRtdENSTisrVTY1WDls?=
- =?utf-8?B?a0JtaGZYVTMwWWZjanJiSWVKZnVwQ1lXNkMydWlNSmYwVTJpOFZRVXArVGN6?=
- =?utf-8?B?bFlOdzdwOVE5NjNvTkpRT3dtZ1BuakpBQzE5cDJ4YWdKQnYxUXhLMEc5WW9R?=
- =?utf-8?B?UFNna1AxTzEzd1hMTWQyVFdYQVRTTkRlRkhDKzIzcmxjRVNMakVCTTlXdTBO?=
- =?utf-8?B?TXRzMXExK045dWxUZ1UwWHhzVWpoNzkxMXBJL2RyckpiMVpoZVRZOUR0TzM5?=
- =?utf-8?Q?gbx0TkqAO4EQX4vNyrK6Qv2dqf9hCsciVtxSZKNlrhqd?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <AE9754F313CF4B4ABAAD1733B5A0EE05@FRAP264.PROD.OUTLOOK.COM>
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="oW3KvDT9";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="MEMSiW8V"
+Date: Fri, 23 May 2025 14:26:11 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1748003172;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=S5s6iTnGwb/aLbBd8LHliltI3JdB57RnJATnoeD7k2I=;
+	b=oW3KvDT9rVsKBmpzH71QtUwEhPRIpf6IKhhtkn8eEdEGuYNGKYWARus9jVyK8mNT8c/2/3
+	GocPW5+ELsJzAKrOcSRWnSNjqPMZBj1hMimBWVM/A1jpoUeAfTQtPxuYowHT6mbgUjeOi9
+	RceUNJRkxWFTUmZ94DBDYupp5yIT7Mp9i6rTQhD6Nt042MkrWwgR6k5ltY8uTG/UpFgVi+
+	vou7UYiF6gocOi7t2j7RQaovhoI3xXsTqaeAVOWOBtLSgLV0bk4oyodEL3K8tKgHW/PxrJ
+	EqDlc/MxdMh/epdeS8JudXgGxC4xu1sIoE7SHJHQG7G371NBwAF16eAIXDoGNg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1748003172;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=S5s6iTnGwb/aLbBd8LHliltI3JdB57RnJATnoeD7k2I=;
+	b=MEMSiW8V20wID6Rj+lpw7lVLFkB0cV6Qzbp6X1aU+Ugxnz3IPcLZTAtspJX+DayMhnA5zv
+	6QrId1Bya4t0thAQ==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: Nam Cao <namcao@linutronix.de>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+	John Ogness <john.ogness@linutronix.de>,
+	Clark Williams <clrkwllms@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>, linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev,
+	linux-rt-users@vger.kernel.org, Joe Damato <jdamato@fastly.com>,
+	Martin Karsten <mkarsten@uwaterloo.ca>,
+	Jens Axboe <axboe@kernel.dk>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Valentin Schneider <vschneid@redhat.com>
+Subject: Re: [PATCH v2] eventpoll: Fix priority inversion problem
+Message-ID: <20250523122611.Q64SSO7S@linutronix.de>
+References: <20250523061104.3490066-1-namcao@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: ateme.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MRZP264MB2587.FRAP264.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-Network-Message-Id: a52cdc92-2373-4c97-d98c-08dd99f4baba
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 May 2025 12:24:13.9850
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 99ffcb0b-61fb-4a70-9dbf-700e3874ace9
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: tO7Aw+yxZh388FCqWHUuCRcni/Jekgy5swIh33C+u2lgoIF7/aR3pVJhmIqtuQ1ebMOEVbBkX/YTjiUDErZd6g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MR1P264MB3234
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20250523061104.3490066-1-namcao@linutronix.de>
 
-SGVsbG8gVmluY2VudCwNCg0KPiBBcyBzYWlkIHByZXZpb3VzbHksIEkgZG9uJ3Qgc2VlIGFuIG9i
-dmlvdXMgY29ubmVjdGlvbiBiZXR3ZWVuIGNvbW1pdA0KPiAxNmIwYTdhMWEwYWYgICgic2NoZWQv
-ZmFpcjogRW5zdXJlIHRhc2tzIHNwcmVhZGluZyBpbiBMTEMgZHVyaW5nIExCIikNCj4gd2hpY2gg
-bWFpbmx5IGVuc3VyZXMgYSBiZXR0ZXIgdXNhZ2Ugb2YgQ1BVcyBpbnNpZGUgYSBMTEMuIERvIHlv
-dSBoYXZlDQo+IGNwdWZyZXEgYW5kIGZyZXEgc2NhbGluZyBlbmFibGVkID8gVGhlIG9ubHkgbGlu
-ayB0aGF0IEkgY291bGQgdGhpbmsNCj4gb2YsIGlzIHRoYXQgdGhlIHNwcmVhZCBvZiB0YXNrIGlu
-c2lkZSBhIGxsYyBmYXZvcnMgaW50ZXIgTExDIG5ld2x5DQo+IGlkbGUgbG9hZCBiYWxhbmNlDQoj
-IGxzbW9kIHwgZ3JlcCBjcHVmcmVxDQpjcHVmcmVxX3VzZXJzcGFjZcKgwqDCoMKgwqAgMTYzODTC
-oCAwDQpjcHVmcmVxX2NvbnNlcnZhdGl2ZcKgwqDCoCAxNjM4NMKgIDANCmNwdWZyZXFfcG93ZXJz
-YXZlwqDCoMKgwqDCoCAxNjM4NMKgIDANCg0KDQpidXQgSSdtIG5vdCBzdXJlIGNwdWZyZXEgaXMg
-d2VsbCBsb2FkZWQgOg0KDQojIGNwdXBvd2VyIGZyZXF1ZW5jeS1pbmZvDQphbmFseXppbmcgQ1BV
-IDA6DQogwqAgbm8gb3IgdW5rbm93biBjcHVmcmVxIGRyaXZlciBpcyBhY3RpdmUgb24gdGhpcyBD
-UFUNCiDCoCBDUFVzIHdoaWNoIHJ1biBhdCB0aGUgc2FtZSBoYXJkd2FyZSBmcmVxdWVuY3k6IE5v
-dCBBdmFpbGFibGUNCiDCoCBDUFVzIHdoaWNoIG5lZWQgdG8gaGF2ZSB0aGVpciBmcmVxdWVuY3kg
-Y29vcmRpbmF0ZWQgYnkgc29mdHdhcmU6IE5vdCANCkF2YWlsYWJsZQ0KIMKgIG1heGltdW0gdHJh
-bnNpdGlvbiBsYXRlbmN5OsKgIENhbm5vdCBkZXRlcm1pbmUgb3IgaXMgbm90IHN1cHBvcnRlZC4N
-Ck5vdCBBdmFpbGFibGUNCiDCoCBhdmFpbGFibGUgY3B1ZnJlcSBnb3Zlcm5vcnM6IE5vdCBBdmFp
-bGFibGUNCiDCoCBVbmFibGUgdG8gZGV0ZXJtaW5lIGN1cnJlbnQgcG9saWN5DQogwqAgY3VycmVu
-dCBDUFUgZnJlcXVlbmN5OiBVbmFibGUgdG8gY2FsbCBoYXJkd2FyZQ0KIMKgIGN1cnJlbnQgQ1BV
-IGZyZXF1ZW5jeTrCoCBVbmFibGUgdG8gY2FsbCB0byBrZXJuZWwNCiDCoCBib29zdCBzdGF0ZSBz
-dXBwb3J0Og0KIMKgwqDCoCBTdXBwb3J0ZWQ6IHllcw0KIMKgwqDCoCBBY3RpdmU6IHllcw0KIMKg
-wqDCoCBCb29zdCBTdGF0ZXM6IDANCiDCoMKgwqAgVG90YWwgU3RhdGVzOiAzDQogwqDCoMKgIFBz
-dGF0ZS1QMDrCoCAyMDAwTUh6DQogwqDCoMKgIFBzdGF0ZS1QMTrCoCAxODAwTUh6DQogwqDCoMKg
-IFBzdGF0ZS1QMjrCoCAxNTAwTUh6DQoNCkFuZCBJIGNhbnQgZmluZCBjcHVmcmVxLyB1bmRlciAv
-c3lzL2RldmljZXMvc3lzdGVtL2NwdS9jcHUqLw0KDQoNClRoYW5rcyBmb3IgeW91ciBoZWxwLA0K
-DQpqYg0KDQo=
+On 2025-05-23 08:11:04 [+0200], Nam Cao wrote:
+> The ready event list of an epoll object is protected by read-write
+> semaphore:
+>=20
+>   - The consumer (waiter) acquires the write lock and takes items.
+>   - the producer (waker) takes the read lock and adds items.
+>=20
+> The point of this design is enabling epoll to scale well with large number
+> of producers, as multiple producers can hold the read lock at the same
+> time.
+>=20
+> Unfortunately, this implementation may cause scheduling priority inversion
+> problem. Suppose the consumer has higher scheduling priority than the
+> producer. The consumer needs to acquire the write lock, but may be blocked
+> by the producer holding the read lock. Since read-write semaphore does not
+> support priority-boosting for the readers (even with CONFIG_PREEMPT_RT=3D=
+y),
+> we have a case of priority inversion: a higher priority consumer is block=
+ed
+> by a lower priority producer. This problem was reported in [1].
+>=20
+> Furthermore, this could also cause stall problem, as described in [2].
+>=20
+> To fix this problem, make the event list half-lockless:
+>=20
+>   - The consumer acquires a mutex (ep->mtx) and takes items.
+>   - The producer locklessly adds items to the list.
+>=20
+> Performance is not the main goal of this patch, but as the producer now c=
+an
+> add items without waiting for consumer to release the lock, performance
+> improvement is observed using the stress test from
+> https://github.com/rouming/test-tools/blob/master/stress-epoll.c. This is
+> the same test that justified using read-write semaphore in the past.
+>=20
+> Testing using 12 x86_64 CPUs:
+>=20
+>           Before     After        Diff
+> threads  events/ms  events/ms
+>       8       6944      20151    +190%
+>      16       9367      27972    +199%
+>      32       8707      31872    +266%
+>      64      10342      38577    +273%
+>     128      10860      40062    +269%
+>=20
+> Testing using 1 riscv64 CPU (averaged over 10 runs, as the numbers are
+> noisy):
+>=20
+>           Before     After        Diff
+> threads  events/ms  events/ms
+>       1         75         96     +28%
+>       2        153        158      +3%
+>       4        229        257     +12%
+>       8        250        270      +8%
+>      16        263        275      +5%
+>=20
+> Reported-by: Frederic Weisbecker <frederic@kernel.org>
+> Closes: https://lore.kernel.org/linux-rt-users/20210825132754.GA895675@lo=
+thringen/ [1]
+> Reported-by: Valentin Schneider <vschneid@redhat.com>
+> Closes: https://lore.kernel.org/linux-rt-users/xhsmhttqvnall.mognet@vschn=
+eid.remote.csb/ [2]
+> Signed-off-by: Nam Cao <namcao@linutronix.de>
+
+Intel(R) Xeon(R) CPU E5-2650, 2 NUMA nodes, 32 CPUs
+| $ ./avg-nums.py results-rc7.txt=20
+| Threads  | avg events/ms | stddev | samples
+|    8       2565.20           48.15      5
+|   16       2627.60           75.12      5
+|   32       3897.20          117.41      5
+|   64       4094.80           75.46      5
+|  128       4464.40           92.54      5
+| $ ./avg-nums.py results-rc7-patched.txt
+| Threads  | avg events/ms | stddev | samples
+|    8      15286.00         3116.36      5
+|   16      27606.20         1890.96      5
+|   32      33690.20         4010.02      5
+|   64      54234.40         2832.40      5
+|  128      71566.40         2284.48      5
+
+AMD EPYC 7713, 2 NUMA nodes, 256 CPUs
+| $ ./avg-nums.py nums-rc7.txt=20
+| Threads  | avg events/ms | stddev | samples
+|    8       2616.40          158.54      5
+|   16       3710.40          104.34      5
+|   32       6916.80          275.06      5
+|   64       8487.20          263.31      5
+|  128      10035.20          124.82      5
+| $ ./avg-nums.py nums-rc7-patched.txt
+| Threads  | avg events/ms | stddev | samples
+|    8      20743.80         1158.03      5
+|   16      41453.00         5706.46      5
+|   32      88848.20        15076.17      5
+|   64     166501.60        28763.04      5
+|  128     312733.80        46626.34      5
+
+So it improves on both machines. The deviation is larger on patched
+version but still clearly winning.
+
+On the AMD I tried
+Unpatched:
+| $ perf bench epoll all 2>&1 | grep -v "^\["
+| # Running epoll/wait benchmark...
+| Run summary [PID 3019]: 255 threads monitoring on 64 file-descriptors for=
+ 8 secs.
+|
+|
+| Averaged 785 operations/sec (+- 0.05%), total secs =3D 8
+|
+| # Running epoll/ctl benchmark...
+| Run summary [PID 3019]: 256 threads doing epoll_ctl ops 64 file-descripto=
+rs for 8 secs.
+|
+|
+| Averaged 2652 ADD operations (+- 1.19%)
+| Averaged 2652 MOD operations (+- 1.19%)
+| Averaged 2652 DEL operations (+- 1.19%)
+
+Patched:
+| $ perf bench epoll all 2>&1 | grep -v "^\["
+| # Running epoll/wait benchmark...
+| Run summary [PID 3001]: 255 threads monitoring on 64 file-descriptors for=
+ 8 secs.
+|=20
+|=20
+| Averaged 1386 operations/sec (+- 3.94%), total secs =3D 8
+|=20
+| # Running epoll/ctl benchmark...
+| Run summary [PID 3001]: 256 threads doing epoll_ctl ops 64 file-descripto=
+rs for 8 secs.
+|=20
+|=20
+| Averaged 1495 ADD operations (+- 1.11%)
+| Averaged 1495 MOD operations (+- 1.11%)
+| Averaged 1495 DEL operations (+- 1.11%)
+
+The epoll_waits improves again, epoll_ctls does not. I'm not sure how to
+read the latter. My guess would be that ADD/ MOD are fine but DEL is a
+bit bad because it has to del, iterate, =E2=80=A6, add back.
+
+Anyway, this still an improvement overall.
+
+> ---
+> v2:
+>   - rename link_locked -> link_used
+>   - replace xchg() with smp_store_release() when applicable
+>   - make sure llist_node is in clean state when not on a list
+>   - remove now-unused list_add_tail_lockless()
+> ---
+>  fs/eventpoll.c | 498 +++++++++++++++++++------------------------------
+>  1 file changed, 189 insertions(+), 309 deletions(-)
+>=20
+> diff --git a/fs/eventpoll.c b/fs/eventpoll.c
+> index d4dbffdedd08e..483a5b217fad4 100644
+> --- a/fs/eventpoll.c
+> +++ b/fs/eventpoll.c
+> @@ -136,14 +136,29 @@ struct epitem {
+>  		struct rcu_head rcu;
+>  	};
+> =20
+> -	/* List header used to link this structure to the eventpoll ready list =
+*/
+> -	struct list_head rdllink;
+> +	/*
+> +	 * Whether epitem.rdllink is currently used in a list. When used, it ca=
+nnot be detached or
+
+Notation wise I would either use plain "rdllink" or the C++ notation
+"epitem::rdllink".
+
+> +	 * inserted elsewhere.
+
+When set, it is attached to eventpoll::rdllist and can not be attached
+again.
+This nothing to do with detaching.
+
+> +	 * It may be in use for two reasons:
+> +	 *
+> +	 * 1. This item is on the eventpoll ready list.
+> +	 * 2. This item is being consumed by a waiter and stashed on a temporar=
+y list. If inserting
+> +	 *    is blocked due to this reason, the waiter will add this item to t=
+he list once
+> +	 *    consuming is done.
+> +	 */
+> +	bool link_used;
+> =20
+>  	/*
+> -	 * Works together "struct eventpoll"->ovflist in keeping the
+> -	 * single linked chain of items.
+> +	 * Indicate whether this item is ready for consumption. All items on th=
+e ready list has this
+                                                                           =
+                have
+> +	 * flag set. Item that should be on the ready list, but cannot be added=
+ because of
+> +	 * link_used (in other words, a waiter is consuming the ready list), al=
+so has this flag
+> +	 * set. When a waiter is done consuming, the waiter will add ready item=
+s to the ready list.
+
+This sounds confusing. What about:
+
+| Ready items should be on eventpoll::rdllist. This might be not the case
+| if a waiter is consuming the list and removed temporary all items while
+| doing so. Once done, the item will be added back to eventpoll::rdllist.
+
+The reason is either an item is removed from the list and you have to
+remove them all, look for the right one, remove it from the list, splice
+what is left to the original list.
+I did not find another reason for that.
+
+>  	 */
+> -	struct epitem *next;
+> +	bool ready;
+> +
+> +	/* List header used to link this structure to the eventpoll ready list =
+*/
+> +	struct llist_node rdllink;
+> =20
+>  	/* The file descriptor information this item refers to */
+>  	struct epoll_filefd ffd;
+> @@ -191,22 +206,15 @@ struct eventpoll {
+>  	/* Wait queue used by file->poll() */
+>  	wait_queue_head_t poll_wait;
+> =20
+> -	/* List of ready file descriptors */
+> -	struct list_head rdllist;
+> -
+> -	/* Lock which protects rdllist and ovflist */
+> -	rwlock_t lock;
+> +	/*
+> +	 * List of ready file descriptors. Adding to this list is lockless. Onl=
+y one task can remove
+> +	 * from this list at a time, which is ensured by the mutex "mtx".
+
+| Items can be removed only with eventpoll::mtx=20
+
+Or something like that. I would appreciate if you add a proper
+lockdep_assert_held() where the llist_del.*() are. Those are more
+powerful ;)
+
+> +	 */
+> +	struct llist_head rdllist;
+> =20
+>  	/* RB tree root used to store monitored fd structs */
+>  	struct rb_root_cached rbr;
+> =20
+> -	/*
+> -	 * This is a single linked list that chains all the "struct epitem" that
+> -	 * happened while transferring ready events to userspace w/out
+> -	 * holding ->lock.
+> -	 */
+> -	struct epitem *ovflist;
+> -
+>  	/* wakeup_source used when ep_send_events or __ep_eventpoll_poll is run=
+ning */
+>  	struct wakeup_source *ws;
+> =20
+> @@ -361,10 +369,27 @@ static inline int ep_cmp_ffd(struct epoll_filefd *p=
+1,
+>  	        (p1->file < p2->file ? -1 : p1->fd - p2->fd));
+>  }
+> =20
+> -/* Tells us if the item is currently linked */
+> -static inline int ep_is_linked(struct epitem *epi)
+> +static void epitem_ready(struct epitem *epi)
+>  {
+> -	return !list_empty(&epi->rdllink);
+> +	/*
+> +	 * Mark it ready, just in case a waiter is blocking this item from goin=
+g into the ready
+> +	 * list. This will tell the waiter to add this item to the ready list, =
+after the waiter is
+> +	 * finished.
+> +	 */
+> +	smp_store_release(&epi->ready, true);
+> +
+> +	/*
+> +	 * If this item is not blocked, add it to the ready list. This item cou=
+ld be blocked for two
+> +	 * reasons:
+> +	 *
+> +	 * 1. It is already on the ready list. Then nothing further is required.
+> +	 * 2. A waiter is consuming the ready list, and has consumed this item.=
+ The waiter is now
+> +	 *    blocking this item, so that this item won't be seen twice. In thi=
+s case, the waiter
+> +	 *    will add this item to the ready list after the waiter is finished.
+
+Are there two waiter blocking each other or is there a waker also
+involved? The term blocked might also not the right one.
+My understanding is that the item is already on the list but the list is
+rearranged because an item is removed.
+
+> +	 */
+> +	if (!cmpxchg(&epi->link_used, false, true))
+> +		llist_add(&epi->rdllink, &epi->ep->rdllist);
+> +
+>  }
+> =20
+>  static inline struct eppoll_entry *ep_pwq_from_wait(wait_queue_entry_t *=
+p)
+> @@ -383,13 +408,27 @@ static inline struct epitem *ep_item_from_wait(wait=
+_queue_entry_t *p)
+>   *
+>   * @ep: Pointer to the eventpoll context.
+>   *
+> - * Return: a value different than %zero if ready events are available,
+> - *          or %zero otherwise.
+> + * Return: true if ready events might be available, false otherwise.
+>   */
+> -static inline int ep_events_available(struct eventpoll *ep)
+> +static inline bool ep_events_available(struct eventpoll *ep)
+>  {
+> -	return !list_empty_careful(&ep->rdllist) ||
+> -		READ_ONCE(ep->ovflist) !=3D EP_UNACTIVE_PTR;
+> +	bool available;
+> +	int locked;
+> +
+> +	locked =3D mutex_trylock(&ep->mtx);
+> +	if (!locked) {
+> +		/*
+> +		 * Someone else is holding the lock and may be removing/adding items t=
+o rdllist,
+                                                                        ^<s=
+pace>
+> +		 * therefore the llist_empty() test below is not reliable. Return true=
+ in this case,
+> +		 * as in "events might be available". We will know for sure if there i=
+s event in
+> +		 * ep_try_send_events().
+
+Maybe
+| The lock held and someone might have removed all items while inspecting
+| it. The llist_empty() check in this case is futile. Assume that
+| something is enqueued and let ep_try_send_events() figure it out.
+
+> +		 */
+> +		return true;
+> +	}
+> +
+> +	available =3D !llist_empty(&ep->rdllist);
+> +	mutex_unlock(&ep->mtx);
+> +	return available;
+>  }
+> =20
+>  #ifdef CONFIG_NET_RX_BUSY_POLL
+> @@ -724,77 +763,6 @@ static inline void ep_pm_stay_awake_rcu(struct epite=
+m *epi)
+>  	rcu_read_unlock();
+>  }
+> =20
+> -
+> -/*
+> - * ep->mutex needs to be held because we could be hit by
+> - * eventpoll_release_file() and epoll_ctl().
+> - */
+> -static void ep_start_scan(struct eventpoll *ep, struct list_head *txlist)
+> -{
+> -	/*
+> -	 * Steal the ready list, and re-init the original one to the
+> -	 * empty list. Also, set ep->ovflist to NULL so that events
+> -	 * happening while looping w/out locks, are not lost. We cannot
+> -	 * have the poll callback to queue directly on ep->rdllist,
+> -	 * because we want the "sproc" callback to be able to do it
+> -	 * in a lockless way.
+> -	 */
+> -	lockdep_assert_irqs_enabled();
+> -	write_lock_irq(&ep->lock);
+> -	list_splice_init(&ep->rdllist, txlist);
+> -	WRITE_ONCE(ep->ovflist, NULL);
+> -	write_unlock_irq(&ep->lock);
+> -}
+> -
+> -static void ep_done_scan(struct eventpoll *ep,
+> -			 struct list_head *txlist)
+> -{
+> -	struct epitem *epi, *nepi;
+> -
+> -	write_lock_irq(&ep->lock);
+> -	/*
+> -	 * During the time we spent inside the "sproc" callback, some
+> -	 * other events might have been queued by the poll callback.
+> -	 * We re-insert them inside the main ready-list here.
+> -	 */
+> -	for (nepi =3D READ_ONCE(ep->ovflist); (epi =3D nepi) !=3D NULL;
+> -	     nepi =3D epi->next, epi->next =3D EP_UNACTIVE_PTR) {
+> -		/*
+> -		 * We need to check if the item is already in the list.
+> -		 * During the "sproc" callback execution time, items are
+> -		 * queued into ->ovflist but the "txlist" might already
+> -		 * contain them, and the list_splice() below takes care of them.
+> -		 */
+> -		if (!ep_is_linked(epi)) {
+> -			/*
+> -			 * ->ovflist is LIFO, so we have to reverse it in order
+> -			 * to keep in FIFO.
+> -			 */
+> -			list_add(&epi->rdllink, &ep->rdllist);
+> -			ep_pm_stay_awake(epi);
+> -		}
+> -	}
+> -	/*
+> -	 * We need to set back ep->ovflist to EP_UNACTIVE_PTR, so that after
+> -	 * releasing the lock, events will be queued in the normal way inside
+> -	 * ep->rdllist.
+> -	 */
+> -	WRITE_ONCE(ep->ovflist, EP_UNACTIVE_PTR);
+> -
+> -	/*
+> -	 * Quickly re-inject items left on "txlist".
+> -	 */
+> -	list_splice(txlist, &ep->rdllist);
+> -	__pm_relax(ep->ws);
+> -
+> -	if (!list_empty(&ep->rdllist)) {
+> -		if (waitqueue_active(&ep->wq))
+> -			wake_up(&ep->wq);
+> -	}
+> -
+> -	write_unlock_irq(&ep->lock);
+> -}
+> -
+>  static void ep_get(struct eventpoll *ep)
+>  {
+>  	refcount_inc(&ep->refcount);
+> @@ -832,8 +800,10 @@ static void ep_free(struct eventpoll *ep)
+>  static bool __ep_remove(struct eventpoll *ep, struct epitem *epi, bool f=
+orce)
+>  {
+>  	struct file *file =3D epi->ffd.file;
+> +	struct llist_node *put_back_last;
+>  	struct epitems_head *to_free;
+>  	struct hlist_head *head;
+> +	LLIST_HEAD(put_back);
+> =20
+>  	lockdep_assert_irqs_enabled();
+
+You could remove that lockdep assert. It was only due to the
+write_.*lock_irq() which is gone.
+> =20
+> @@ -867,10 +837,25 @@ static bool __ep_remove(struct eventpoll *ep, struc=
+t epitem *epi, bool force)
+> =20
+>  	rb_erase_cached(&epi->rbn, &ep->rbr);
+> =20
+> -	write_lock_irq(&ep->lock);
+> -	if (ep_is_linked(epi))
+> -		list_del_init(&epi->rdllink);
+> -	write_unlock_irq(&ep->lock);
+> +	/*
+> +	 * ep->mtx is held, which means no waiter is touching the ready list. T=
+his item is also no
+> +	 * longer being added. Therefore, the ready flag can only mean one thin=
+g: this item is on
+> +	 * the ready list.
+> +	 */
+> +	if (smp_load_acquire(&epi->ready)) {
+> +		put_back_last =3D NULL;
+> +		while (true) {
+> +			struct llist_node *n =3D llist_del_first(&ep->rdllist);
+> +
+> +			if (&epi->rdllink =3D=3D n || WARN_ON(!n))
+> +				break;
+> +			if (!put_back_last)
+> +				put_back_last =3D n;
+> +			llist_add(n, &put_back);
+> +		}
+> +		if (put_back_last)
+> +			llist_add_batch(put_back.first, put_back_last, &ep->rdllist);
+> +	}
+> =20
+>  	wakeup_source_unregister(ep_wakeup_source(epi));
+>  	/*
+> @@ -974,8 +959,9 @@ static __poll_t ep_item_poll(const struct epitem *epi=
+, poll_table *pt, int depth
+>  static __poll_t __ep_eventpoll_poll(struct file *file, poll_table *wait,=
+ int depth)
+>  {
+>  	struct eventpoll *ep =3D file->private_data;
+> -	LIST_HEAD(txlist);
+> -	struct epitem *epi, *tmp;
+> +	struct wakeup_source *ws;
+> +	struct llist_node *n;
+> +	struct epitem *epi;
+>  	poll_table pt;
+>  	__poll_t res =3D 0;
+> =20
+> @@ -989,22 +975,58 @@ static __poll_t __ep_eventpoll_poll(struct file *fi=
+le, poll_table *wait, int dep
+>  	 * the ready list.
+>  	 */
+>  	mutex_lock_nested(&ep->mtx, depth);
+> -	ep_start_scan(ep, &txlist);
+> -	list_for_each_entry_safe(epi, tmp, &txlist, rdllink) {
+> +	while (true) {
+> +		n =3D llist_del_first_init(&ep->rdllist);
+> +		if (!n)
+> +			break;
+> +
+> +		epi =3D llist_entry(n, struct epitem, rdllink);
+> +
+> +		/*
+> +		 * Clear the ready flag now. If it is actually ready, we will set it b=
+ack.
+> +		 *
+> +		 * However, if it is not ready now, it could become ready after ep_ite=
+m_poll() and
+> +		 * before we release list_locked this item, and it wouldn't be added t=
+o the ready
+> +		 * list. To detect that case, we look at this flag again after releasi=
+ng
+> +		 * link_used, so that it can be added to the ready list if required.
+> +		 */
+
+How can it be on readylist and not ready? I know you the code but an
+item is inly added to the readylist after consulting ep_item_poll(). So
+I am not sure why this should change.
+
+I would suggest to:
+| Clear ::ready and keep ::link_used set. The ep_item_poll() is consulted
+| to check if that item can remain on the list. If it may, we set ::ready
+| back and add it to list. Keeping ::link_used prevents a double add.
+| If not ::link_used is cleared. Additionally ::ready is checked again
+| below to check if the condition changed in between. If so, it is added
+| back to the list.
+
+> +		smp_store_release(&epi->ready, false);
+> +
+>  		if (ep_item_poll(epi, &pt, depth + 1)) {
+>  			res =3D EPOLLIN | EPOLLRDNORM;
+> +			smp_store_release(&epi->ready, true);
+> +			llist_add(n, &ep->rdllist);
+>  			break;
+>  		} else {
+>  			/*
+> -			 * Item has been dropped into the ready list by the poll
+> -			 * callback, but it's not actually ready, as far as
+> -			 * caller requested events goes. We can remove it here.
+> +			 * We need to activate ep before deactivating epi, to prevent autosus=
+pend
+> +			 * just in case epi becomes active after ep_item_poll() above.
+> +			 *
+> +			 * This is similar to ep_send_events().
+>  			 */
+> +			ws =3D ep_wakeup_source(epi);
+> +			if (ws) {
+> +				if (ws->active)
+> +					__pm_stay_awake(ep->ws);
+> +				__pm_relax(ws);
+> +			}
+>  			__pm_relax(ep_wakeup_source(epi));
+> -			list_del_init(&epi->rdllink);
+> +
+> +			smp_store_release(&epi->link_used, false);
+> +
+> +			/*
+> +			 * Check the ready flag, just in case the item becomes ready after
+> +			 * ep_item_poll() but before releasing link_used above. The item was
+> +			 * blocked from being added, so we add it now.
+> +			 */
+
+This comment could go if we have the one above referencing to this
+scenario.
+
+> +			if (smp_load_acquire(&epi->ready)) {
+> +				ep_pm_stay_awake(epi);
+> +				epitem_ready(epi);
+> +			}
+> +
+> +			__pm_relax(ep->ws);
+>  		}
+>  	}
+> -	ep_done_scan(ep, &txlist);
+>  	mutex_unlock(&ep->mtx);
+>  	return res;
+>  }
+> @@ -1153,12 +1175,10 @@ static int ep_alloc(struct eventpoll **pep)
+>  		return -ENOMEM;
+> =20
+>  	mutex_init(&ep->mtx);
+> -	rwlock_init(&ep->lock);
+>  	init_waitqueue_head(&ep->wq);
+>  	init_waitqueue_head(&ep->poll_wait);
+> -	INIT_LIST_HEAD(&ep->rdllist);
+> +	init_llist_head(&ep->rdllist);
+>  	ep->rbr =3D RB_ROOT_CACHED;
+> -	ep->ovflist =3D EP_UNACTIVE_PTR;
+>  	ep->user =3D get_current_user();
+>  	refcount_set(&ep->refcount, 1);
+> =20
+> @@ -1240,94 +1260,11 @@ struct file *get_epoll_tfile_raw_ptr(struct file =
+*file, int tfd,
+>  }
+>  #endif /* CONFIG_KCMP */
+> =20
+> -/*
+> - * Adds a new entry to the tail of the list in a lockless way, i.e.
+> - * multiple CPUs are allowed to call this function concurrently.
+> - *
+> - * Beware: it is necessary to prevent any other modifications of the
+> - *         existing list until all changes are completed, in other words
+> - *         concurrent list_add_tail_lockless() calls should be protected
+> - *         with a read lock, where write lock acts as a barrier which
+> - *         makes sure all list_add_tail_lockless() calls are fully
+> - *         completed.
+> - *
+> - *        Also an element can be locklessly added to the list only in one
+> - *        direction i.e. either to the tail or to the head, otherwise
+> - *        concurrent access will corrupt the list.
+> - *
+> - * Return: %false if element has been already added to the list, %true
+> - * otherwise.
+> - */
+> -static inline bool list_add_tail_lockless(struct list_head *new,
+> -					  struct list_head *head)
+> -{
+> -	struct list_head *prev;
+> -
+> -	/*
+> -	 * This is simple 'new->next =3D head' operation, but cmpxchg()
+> -	 * is used in order to detect that same element has been just
+> -	 * added to the list from another CPU: the winner observes
+> -	 * new->next =3D=3D new.
+> -	 */
+> -	if (!try_cmpxchg(&new->next, &new, head))
+> -		return false;
+> -
+> -	/*
+> -	 * Initially ->next of a new element must be updated with the head
+> -	 * (we are inserting to the tail) and only then pointers are atomically
+> -	 * exchanged.  XCHG guarantees memory ordering, thus ->next should be
+> -	 * updated before pointers are actually swapped and pointers are
+> -	 * swapped before prev->next is updated.
+> -	 */
+> -
+> -	prev =3D xchg(&head->prev, new);
+> -
+> -	/*
+> -	 * It is safe to modify prev->next and new->prev, because a new element
+> -	 * is added only to the tail and new->next is updated before XCHG.
+> -	 */
+> -
+> -	prev->next =3D new;
+> -	new->prev =3D prev;
+> -
+> -	return true;
+> -}
+> -
+> -/*
+> - * Chains a new epi entry to the tail of the ep->ovflist in a lockless w=
+ay,
+> - * i.e. multiple CPUs are allowed to call this function concurrently.
+> - *
+> - * Return: %false if epi element has been already chained, %true otherwi=
+se.
+> - */
+> -static inline bool chain_epi_lockless(struct epitem *epi)
+> -{
+> -	struct eventpoll *ep =3D epi->ep;
+> -
+> -	/* Fast preliminary check */
+> -	if (epi->next !=3D EP_UNACTIVE_PTR)
+> -		return false;
+> -
+> -	/* Check that the same epi has not been just chained from another CPU */
+> -	if (cmpxchg(&epi->next, EP_UNACTIVE_PTR, NULL) !=3D EP_UNACTIVE_PTR)
+> -		return false;
+> -
+> -	/* Atomically exchange tail */
+> -	epi->next =3D xchg(&ep->ovflist, epi);
+> -
+> -	return true;
+> -}
+> -
+>  /*
+>   * This is the callback that is passed to the wait queue wakeup
+>   * mechanism. It is called by the stored file descriptors when they
+>   * have events to report.
+>   *
+> - * This callback takes a read lock in order not to contend with concurre=
+nt
+> - * events from another file descriptor, thus all modifications to ->rdll=
+ist
+> - * or ->ovflist are lockless.  Read lock is paired with the write lock f=
+rom
+> - * ep_start/done_scan(), which stops all list modifications and guarante=
+es
+> - * that lists state is seen correctly.
+> - *
+>   * Another thing worth to mention is that ep_poll_callback() can be call=
+ed
+>   * concurrently for the same @epi from different CPUs if poll table was =
+inited
+>   * with several wait queues entries.  Plural wakeup from different CPUs =
+of a
+> @@ -1337,15 +1274,11 @@ static inline bool chain_epi_lockless(struct epit=
+em *epi)
+>   */
+>  static int ep_poll_callback(wait_queue_entry_t *wait, unsigned mode, int=
+ sync, void *key)
+>  {
+> -	int pwake =3D 0;
+>  	struct epitem *epi =3D ep_item_from_wait(wait);
+>  	struct eventpoll *ep =3D epi->ep;
+>  	__poll_t pollflags =3D key_to_poll(key);
+> -	unsigned long flags;
+>  	int ewake =3D 0;
+> =20
+> -	read_lock_irqsave(&ep->lock, flags);
+> -
+>  	ep_set_busy_poll_napi_id(epi);
+> =20
+>  	/*
+> @@ -1355,7 +1288,7 @@ static int ep_poll_callback(wait_queue_entry_t *wai=
+t, unsigned mode, int sync, v
+>  	 * until the next EPOLL_CTL_MOD will be issued.
+>  	 */
+>  	if (!(epi->event.events & ~EP_PRIVATE_BITS))
+> -		goto out_unlock;
+> +		goto out;
+> =20
+>  	/*
+>  	 * Check the events coming with the callback. At this stage, not
+> @@ -1364,22 +1297,10 @@ static int ep_poll_callback(wait_queue_entry_t *w=
+ait, unsigned mode, int sync, v
+>  	 * test for "key" !=3D NULL before the event match test.
+>  	 */
+>  	if (pollflags && !(pollflags & epi->event.events))
+> -		goto out_unlock;
+> +		goto out;
+> =20
+> -	/*
+> -	 * If we are transferring events to userspace, we can hold no locks
+> -	 * (because we're accessing user memory, and because of linux f_op->pol=
+l()
+> -	 * semantics). All the events that happen during that period of time are
+> -	 * chained in ep->ovflist and requeued later on.
+> -	 */
+> -	if (READ_ONCE(ep->ovflist) !=3D EP_UNACTIVE_PTR) {
+> -		if (chain_epi_lockless(epi))
+> -			ep_pm_stay_awake_rcu(epi);
+> -	} else if (!ep_is_linked(epi)) {
+> -		/* In the usual case, add event to ready list. */
+> -		if (list_add_tail_lockless(&epi->rdllink, &ep->rdllist))
+> -			ep_pm_stay_awake_rcu(epi);
+> -	}
+> +	ep_pm_stay_awake_rcu(epi);
+> +	epitem_ready(epi);
+> =20
+>  	/*
+>  	 * Wake up ( if active ) both the eventpoll wait list and the ->poll()
+> @@ -1408,15 +1329,9 @@ static int ep_poll_callback(wait_queue_entry_t *wa=
+it, unsigned mode, int sync, v
+>  			wake_up(&ep->wq);
+>  	}
+>  	if (waitqueue_active(&ep->poll_wait))
+> -		pwake++;
+> -
+> -out_unlock:
+> -	read_unlock_irqrestore(&ep->lock, flags);
+> -
+> -	/* We have to call this outside the lock */
+> -	if (pwake)
+>  		ep_poll_safewake(ep, epi, pollflags & EPOLL_URING_WAKE);
+> =20
+> +out:
+>  	if (!(epi->event.events & EPOLLEXCLUSIVE))
+>  		ewake =3D 1;
+> =20
+> @@ -1674,11 +1589,10 @@ static int ep_insert(struct eventpoll *ep, const =
+struct epoll_event *event,
+>  	}
+
+if you scroll up, there is lockdep_assert_irqs_enabled(), please remove
+it.
+
+>  	/* Item initialization follow here ... */
+> -	INIT_LIST_HEAD(&epi->rdllink);
+> +	init_llist_node(&epi->rdllink);
+>  	epi->ep =3D ep;
+>  	ep_set_ffd(&epi->ffd, tfile, fd);
+>  	epi->event =3D *event;
+> -	epi->next =3D EP_UNACTIVE_PTR;
+> =20
+>  	if (tep)
+>  		mutex_lock_nested(&tep->mtx, 1);
+> @@ -1745,16 +1659,13 @@ static int ep_insert(struct eventpoll *ep, const =
+struct epoll_event *event,
+>  		return -ENOMEM;
+>  	}
+> =20
+> -	/* We have to drop the new item inside our item list to keep track of i=
+t */
+> -	write_lock_irq(&ep->lock);
+> -
+>  	/* record NAPI ID of new item if present */
+>  	ep_set_busy_poll_napi_id(epi);
+> =20
+>  	/* If the file is already "ready" we drop it inside the ready list */
+> -	if (revents && !ep_is_linked(epi)) {
+> -		list_add_tail(&epi->rdllink, &ep->rdllist);
+> +	if (revents) {
+>  		ep_pm_stay_awake(epi);
+> +		epitem_ready(epi);
+> =20
+>  		/* Notify waiting tasks that events are available */
+>  		if (waitqueue_active(&ep->wq))
+> @@ -1763,8 +1674,6 @@ static int ep_insert(struct eventpoll *ep, const st=
+ruct epoll_event *event,
+>  			pwake++;
+>  	}
+> =20
+> -	write_unlock_irq(&ep->lock);
+> -
+>  	/* We have to call this outside the lock */
+>  	if (pwake)
+>  		ep_poll_safewake(ep, NULL, 0);
+> @@ -1779,7 +1688,6 @@ static int ep_insert(struct eventpoll *ep, const st=
+ruct epoll_event *event,
+>  static int ep_modify(struct eventpoll *ep, struct epitem *epi,
+>  		     const struct epoll_event *event)
+>  {
+> -	int pwake =3D 0;
+>  	poll_table pt;
+> =20
+>  	lockdep_assert_irqs_enabled();
+
+this can go, too.
+
+> @@ -1827,24 +1735,16 @@ static int ep_modify(struct eventpoll *ep, struct=
+ epitem *epi,
+>  	 * list, push it inside.
+>  	 */
+>  	if (ep_item_poll(epi, &pt, 1)) {
+> -		write_lock_irq(&ep->lock);
+> -		if (!ep_is_linked(epi)) {
+> -			list_add_tail(&epi->rdllink, &ep->rdllist);
+> -			ep_pm_stay_awake(epi);
+> +		ep_pm_stay_awake(epi);
+> +		epitem_ready(epi);
+> =20
+> -			/* Notify waiting tasks that events are available */
+> -			if (waitqueue_active(&ep->wq))
+> -				wake_up(&ep->wq);
+> -			if (waitqueue_active(&ep->poll_wait))
+> -				pwake++;
+> -		}
+> -		write_unlock_irq(&ep->lock);
+> +		/* Notify waiting tasks that events are available */
+> +		if (waitqueue_active(&ep->wq))
+> +			wake_up(&ep->wq);
+> +		if (waitqueue_active(&ep->poll_wait))
+> +			ep_poll_safewake(ep, NULL, 0);
+>  	}
+> =20
+> -	/* We have to call this outside the lock */
+> -	if (pwake)
+> -		ep_poll_safewake(ep, NULL, 0);
+> -
+>  	return 0;
+>  }
+> =20
+> @@ -1852,7 +1752,7 @@ static int ep_send_events(struct eventpoll *ep,
+>  			  struct epoll_event __user *events, int maxevents)
+>  {
+>  	struct epitem *epi, *tmp;
+> -	LIST_HEAD(txlist);
+> +	LLIST_HEAD(txlist);
+>  	poll_table pt;
+>  	int res =3D 0;
+> =20
+> @@ -1867,19 +1767,20 @@ static int ep_send_events(struct eventpoll *ep,
+>  	init_poll_funcptr(&pt, NULL);
+> =20
+>  	mutex_lock(&ep->mtx);
+> -	ep_start_scan(ep, &txlist);
+> =20
+> -	/*
+> -	 * We can loop without lock because we are passed a task private list.
+> -	 * Items cannot vanish during the loop we are holding ep->mtx.
+> -	 */
+> -	list_for_each_entry_safe(epi, tmp, &txlist, rdllink) {
+> +	while (res < maxevents) {
+>  		struct wakeup_source *ws;
+> +		struct llist_node *n;
+>  		__poll_t revents;
+> =20
+> -		if (res >=3D maxevents)
+> +		n =3D llist_del_first(&ep->rdllist);
+> +		if (!n)
+>  			break;
+> =20
+> +		epi =3D llist_entry(n, struct epitem, rdllink);
+> +		llist_add(n, &txlist);
+> +		smp_store_release(&epi->ready, false);
+> +
+>  		/*
+>  		 * Activate ep->ws before deactivating epi->ws to prevent
+>  		 * triggering auto-suspend here (in case we reactive epi->ws
+> @@ -1896,8 +1797,6 @@ static int ep_send_events(struct eventpoll *ep,
+>  			__pm_relax(ws);
+>  		}
+> =20
+> -		list_del_init(&epi->rdllink);
+> -
+>  		/*
+>  		 * If the event mask intersect the caller-requested one,
+>  		 * deliver the event to userspace. Again, we are holding ep->mtx,
+> @@ -1909,8 +1808,7 @@ static int ep_send_events(struct eventpoll *ep,
+> =20
+>  		events =3D epoll_put_uevent(revents, epi->event.data, events);
+>  		if (!events) {
+> -			list_add(&epi->rdllink, &txlist);
+> -			ep_pm_stay_awake(epi);
+> +			smp_store_release(&epi->ready, true);
+>  			if (!res)
+>  				res =3D -EFAULT;
+>  			break;
+> @@ -1924,19 +1822,40 @@ static int ep_send_events(struct eventpoll *ep,
+>  			 * Trigger mode, we need to insert back inside
+>  			 * the ready list, so that the next call to
+>  			 * epoll_wait() will check again the events
+> -			 * availability. At this point, no one can insert
+> -			 * into ep->rdllist besides us. The epoll_ctl()
+> -			 * callers are locked out by
+> -			 * ep_send_events() holding "mtx" and the
+> -			 * poll callback will queue them in ep->ovflist.
+> +			 * availability.
+>  			 */
+> -			list_add_tail(&epi->rdllink, &ep->rdllist);
+> +			smp_store_release(&epi->ready, true);
+> +		}
+> +	}
+> +
+> +	llist_for_each_entry_safe(epi, tmp, txlist.first, rdllink) {
+> +		/*
+> +		 * We are done iterating. Allow the items we took to be added back to =
+the ready
+> +		 * list.
+> +		 */
+> +		init_llist_node(&epi->rdllink);
+> +		smp_store_release(&epi->link_used, false);
+> +
+> +		/*
+> +		 * In the loop above, we may mark some items ready, and they should be=
+ added back.
+> +		 *
+> +		 * Additionally, someone else may also attempt to add the item to the =
+ready list,
+> +		 * but got blocked by us. Add those blocked items now.
+> +		 */
+
+You the get epi items here from the ep->rdllist. In order to get there,
+you have ::ready set and once it is added ::link_used is also set. That
+item is removed from the list. If one of the conditions are true, you
+set ::ready true and expect it to be added to the rdlist below. But
+since ::link_used is true, this won't happen.
+
+> +		if (smp_load_acquire(&epi->ready)) {
+>  			ep_pm_stay_awake(epi);
+> +			epitem_ready(epi);
+>  		}
+>  	}
+> -	ep_done_scan(ep, &txlist);
+> +
+> +	__pm_relax(ep->ws);
+>  	mutex_unlock(&ep->mtx);
+> =20
+> +	if (!llist_empty(&ep->rdllist)) {
+> +		if (waitqueue_active(&ep->wq))
+> +			wake_up(&ep->wq);
+> +	}
+> +
+>  	return res;
+>  }
+> =20
+> @@ -2090,54 +2009,15 @@ static int ep_poll(struct eventpoll *ep, struct e=
+poll_event __user *events,
+>  		init_wait(&wait);
+>  		wait.func =3D ep_autoremove_wake_function;
+
+another lockdep_assert_irqs_enabled() at the top which can go.
+
+> -		write_lock_irq(&ep->lock);
+> -		/*
+> -		 * Barrierless variant, waitqueue_active() is called under
+> -		 * the same lock on wakeup ep_poll_callback() side, so it
+> -		 * is safe to avoid an explicit barrier.
+> -		 */
+> -		__set_current_state(TASK_INTERRUPTIBLE);
+> -
+> -		/*
+> -		 * Do the final check under the lock. ep_start/done_scan()
+> -		 * plays with two lists (->rdllist and ->ovflist) and there
+> -		 * is always a race when both lists are empty for short
+> -		 * period of time although events are pending, so lock is
+> -		 * important.
+> -		 */
+> -		eavail =3D ep_events_available(ep);
+> -		if (!eavail)
+> -			__add_wait_queue_exclusive(&ep->wq, &wait);
+> +		prepare_to_wait_exclusive(&ep->wq, &wait, TASK_INTERRUPTIBLE);
+> =20
+> -		write_unlock_irq(&ep->lock);
+> -
+> -		if (!eavail)
+> +		if (!ep_events_available(ep))
+>  			timed_out =3D !ep_schedule_timeout(to) ||
+>  				!schedule_hrtimeout_range(to, slack,
+>  							  HRTIMER_MODE_ABS);
+> -		__set_current_state(TASK_RUNNING);
+> =20
+> -		/*
+> -		 * We were woken up, thus go and try to harvest some events.
+> -		 * If timed out and still on the wait queue, recheck eavail
+> -		 * carefully under lock, below.
+> -		 */
+> -		eavail =3D 1;
+> -
+> -		if (!list_empty_careful(&wait.entry)) {
+> -			write_lock_irq(&ep->lock);
+> -			/*
+> -			 * If the thread timed out and is not on the wait queue,
+> -			 * it means that the thread was woken up after its
+> -			 * timeout expired before it could reacquire the lock.
+> -			 * Thus, when wait.entry is empty, it needs to harvest
+> -			 * events.
+> -			 */
+> -			if (timed_out)
+> -				eavail =3D list_empty(&wait.entry);
+> -			__remove_wait_queue(&ep->wq, &wait);
+> -			write_unlock_irq(&ep->lock);
+> -		}
+> +		finish_wait(&ep->wq, &wait);
+> +		eavail =3D ep_events_available(ep);
+>  	}
+>  }
+> =20
+
+Sebastian
