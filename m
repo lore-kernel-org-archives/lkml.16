@@ -1,110 +1,137 @@
-Received: from out-172.mta1.migadu.com (out-172.mta1.migadu.com [95.215.58.172])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D86629710D
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 17:11:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 735BE183CC3;
+	Fri, 23 May 2025 17:12:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748020312; cv=none; b=BFsPZELN6ZFyKdqI9E3V5I/OyUOhm7Et92RhNNhOVdtZku6NxM+zkEL/tguIweCcjRpARXI/Uxq0kGzUK/2OW02lJ6lLBq5u9HMRfdOI+xDyrYs6qe/0OHk2z0pBXwrGtuSPjGN222oJUN6RbV19PFXupiquVQeRh+GdC2iJAC0=
+	t=1748020345; cv=none; b=CFvLrQDeSnlHArZN9U0zgESU2lOJWBtpnyetutupTbfSaqyj1MQWbuQQDxGc991aaRKWoTlYC2Ln1EyWXg9SlP3s6eVRM9F+QhKLxHSCFnbOha/FueKzeyx79Mfrb9hyAJTQFdtgV2zNU+uOtADXLzN4Fh/PxAdvC9IYM+zDGVk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748020312; c=relaxed/simple;
-	bh=I5HRgTYbjAei0NoiDbnXhBGNnuDxKXavufUf2oKHFrU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RrKC8H9SkDw6INybczuga2nJ4VR/e5bR3aJ9u8vVkYAezypP/oUBWGn7pz0YHk3GsZLgHGiFexgDWY+ceaOCA428cymScR7hNQchH4G/nNvgeD7roT0/e+PpTouuxfy1tqfOZDTMnS5truNpXITktff/ALF5w1IYodL9IqsIAEM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=JcpyuU5e; arc=none smtp.client-ip=95.215.58.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1748020345; c=relaxed/simple;
+	bh=zq0tikLJgBJ6xM1qJkbEaSLk8KPf1GRqpuqgU8sFD48=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=l/w7tPWRzG3pLq6U5hoKwfIWFTjHgrEK677aFpH0uPKqkaN2aryMZJzlHi2jZFDEBraffOeXNml5mwpRrPOGBZ7t+B3d2Pj+r6/12DEyZBKEeYc+Hc9LSIfloRp65M8XhlFSRPx1P0ZMXFDvKo9ltRtPEnXmeJrwtu8FFw20HTw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DAAnVoMF; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="JcpyuU5e"
-Date: Fri, 23 May 2025 13:11:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1748020308;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=OJXkmNZTsKrW2Bxn55ngQ1cX8S5IwgBjPpV67nxcMZ8=;
-	b=JcpyuU5egag6kdnxDgTqogCxBAgjouV7BD7doc+ndVQaaVUgbboakZDHicwyd0WdNupVjk
-	Q6VDR0gW/jAoEFBJjHyAl4RB+vNdOpia7qbK5JQtGJb1P3iS/c+E6Z/QDNVO0QGaAyeTgr
-	O2R7uUJh9ItaXDCBhUOcfu5KLI6dDBA=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Kent Overstreet <kent.overstreet@linux.dev>
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Naresh Kamboju <naresh.kamboju@linaro.org>, 
-	linux-bcache@vger.kernel.org, open list <linux-kernel@vger.kernel.org>, 
-	lkft-triage@lists.linaro.org, Linux Regressions <regressions@lists.linux.dev>, 
-	Dan Carpenter <dan.carpenter@linaro.org>, Anders Roxell <anders.roxell@linaro.org>
-Subject: Re: riscv gcc-13 allyesconfig error the frame size of 2064 bytes is
- larger than 2048 bytes [-Werror=frame-larger-than=]
-Message-ID: <hplrd5gufo2feylgs4ieufticwemeteaaoilo2jllgauclua2c@o4erpizekm5y>
-References: <CA+G9fYv08Rbg4f8ZyoZC9qseKdRygy8y86qFvts5D=BoJg888g@mail.gmail.com>
- <6tgxbull5sqlxbpiw3jafxtio2a3kc53yh27td4g2otb6kae5t@lr6wjawp6vfa>
- <CA+G9fYsjBXvm9NNKRbVo_7heX1537K8yOjH7OaSEQhGRmkLvgA@mail.gmail.com>
- <6247de76-d1f5-4357-83bd-4dd9268f44aa@app.fastmail.com>
- <7tsvzu2mubrpclr75yezqj7ncuzebpsgqskbehhjy6gll73rez@5cj7griclubx>
- <566aefc9-7cad-4eb8-8eb0-8640d745efa2@app.fastmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DAAnVoMF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748020345; x=1779556345;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=zq0tikLJgBJ6xM1qJkbEaSLk8KPf1GRqpuqgU8sFD48=;
+  b=DAAnVoMFO/c4DM2w1iBj/P9jYfid50sEz/4oREEPUiI35S9ZZQK2XrTR
+   ACNULU7AF7jqBJx9tK7+iPuDeeoyp9re+eWrchFy7UnupypR617aMhZCo
+   ai64DtBqGaBvuojbWIXwpkzQdlZqvDrarvrdHuH/YoDaUi+/QSwhjO83J
+   mm9glEev8PWTKPWKwwZzVewqk85oIcQCZlu0YfqnKxeqVraUD8ENygoz1
+   4iRa4/9uInmMIFF0/o5rG6tKoHZRLHl/chCh7Mg1mRnWiAAFodfbbBG6w
+   GwPL0XytoegsCPsld8UZXcMTAklw0wRYf5J6yQUQ+O77HM4DVU/4E6YDx
+   g==;
+X-CSE-ConnectionGUID: Vk4mYb7oRuScvUVz5pJ4/A==
+X-CSE-MsgGUID: PPmuD8JTTNCD6pG7SEWkIQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11441"; a="52711065"
+X-IronPort-AV: E=Sophos;i="6.15,309,1739865600"; 
+   d="scan'208";a="52711065"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2025 10:12:24 -0700
+X-CSE-ConnectionGUID: xXNXQTZQQKKQHumktFYcNw==
+X-CSE-MsgGUID: L23zmdNDS+WjY2kg89RwaQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,309,1739865600"; 
+   d="scan'208";a="141071782"
+Received: from msatwood-mobl.amr.corp.intel.com (HELO [10.125.109.147]) ([10.125.109.147])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2025 10:12:22 -0700
+Message-ID: <f575567b-0d1f-4631-ad48-1ef5aaca1f75@intel.com>
+Date: Fri, 23 May 2025 10:12:22 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <566aefc9-7cad-4eb8-8eb0-8640d745efa2@app.fastmail.com>
-X-Migadu-Flow: FLOW_OUT
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8 0/6] Introduce CET supervisor state support
+To: Sean Christopherson <seanjc@google.com>, Chao Gao <chao.gao@intel.com>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+ tglx@linutronix.de, pbonzini@redhat.com, peterz@infradead.org,
+ rick.p.edgecombe@intel.com, weijiang.yang@intel.com, john.allen@amd.com,
+ bp@alien8.de, chang.seok.bae@intel.com, xin3.li@intel.com,
+ Dave Hansen <dave.hansen@linux.intel.com>, Eric Biggers
+ <ebiggers@google.com>, "H. Peter Anvin" <hpa@zytor.com>,
+ Ingo Molnar <mingo@redhat.com>, Kees Cook <kees@kernel.org>,
+ Maxim Levitsky <mlevitsk@redhat.com>, Mitchell Levy
+ <levymitchell0@gmail.com>, Nikolay Borisov <nik.borisov@suse.com>,
+ Oleg Nesterov <oleg@redhat.com>, Sohil Mehta <sohil.mehta@intel.com>,
+ Stanislav Spassov <stanspas@amazon.de>,
+ Vignesh Balasubramanian <vigbalas@amd.com>
+References: <20250522151031.426788-1-chao.gao@intel.com>
+ <aDCo_SczQOUaB2rS@google.com>
+From: Dave Hansen <dave.hansen@intel.com>
+Content-Language: en-US
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <aDCo_SczQOUaB2rS@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, May 23, 2025 at 05:17:15PM +0200, Arnd Bergmann wrote:
-> On Fri, May 23, 2025, at 16:08, Kent Overstreet wrote:
-> > On Fri, May 23, 2025 at 03:49:54PM +0200, Arnd Bergmann wrote:
-> >> On Fri, May 23, 2025, at 15:19, Naresh Kamboju wrote:
-> >
-> >> I reproduced the problem locally and found this to go down to
-> >> 1440 bytes after I turn off KASAN_STACK. next-20250523 has
-> >> some changes that take the number down further to 1136 with
-> >> KASAN_STACK and or 1552 with KASAN_STACK.
-> >> 
-> >> I've turned bcachefs with kasan-stack on for my randconfig
-> >> builds again to see if there are any remaining corner cases.
-> >
-> > Thanks for the numbers - that does still seem high, I'll have to have a
-> > look with pahole.
+On 5/23/25 09:57, Sean Christopherson wrote:
+> Side topic, and *probably* unrelated to this series, I tripped the following
+> WARN when running it through the KVM tests (though I don't think it has anything
+> to do with KVM?).  The WARN is the version of xfd_validate_state() that's guarded
+> by CONFIG_X86_DEBUG_FPU=y.
 > 
-> I agree it's still larger than it should be: having more than
-> a few hundred bytes on a function usually means that there is
-> both the risk for actual overflow and general inefficiency if
-> all the stack data gets accessed as well.
-> 
-> It's probably not actually structure data though, but a
-> combination of effects:
-> 
-> - KASAN_STACK adds extra redzones for each variable
-> - KASAN_STACK further prevents stack slots from getting
->   reused inside one function, in order to better pinpoint
->   which instance caused problems like out-of-scope access
-> - passing structures by value causes them to be put on
->   the stack on some architectures, even when the structure
->   size is only one or two registers
+>    WARNING: CPU: 232 PID: 15391 at arch/x86/kernel/fpu/xstate.c:1543 xfd_validate_state+0x65/0x70
 
-We mainly do this with bkey_s_c, which is just two words: on x86_64,
-that gets passed in registers. Is riscv different?
+Huh, and the two processes getting hit by it:
 
-> - sanitizers turn off optimizations that lead to better
->   stack usage
-> - in some cases, the missed optimization ends up causing
->   local variables to get spilled to the stack many times
->   because of a combination of all the above.
+   CPU: 232 UID: 0 PID: 15391 Comm: DefaultEventMan ...
+   CPU: 77  UID: 0 PID: 14821 Comm: futex-default-S ...
 
-Yeesh.
+don't _look_ like KVM test processes. My guess would be it's some
+mixture of KVM and a signal handler fighting with XFD state.
 
-I suspect we should be running with a larger stack when the sanitizers
-are running, and perhaps tweak the warnings accordingly. I did a bunch
-of stack usage work after I found a kmsan build was blowing out the
-stack, but then running with max stack usage tracing enabled showed it
-to be a largely non issue on non-sanitizer builds, IIRC.
-
-> The good news is that so far my randconfig builds have not
-> shown any more stack frame warnings on next-20230523 with
-> bcachefs force-enabled, now 55 builds into the change,
-> across arm32/arm64/x86 using gcc-15.1.
-
-Good to know, thanks.
+I take it this is a Sapphire Rapids system? Is there anything
+interesting about the config other than CONFIG_X86_DEBUG_FPU?
