@@ -1,111 +1,117 @@
-Received: from mail-il1-f180.google.com (mail-il1-f180.google.com [209.85.166.180])
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F19E51DDA1B
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 07:33:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB11F1FF1CF
+	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 07:34:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747985595; cv=none; b=uwqG4b0clWD7mn1jk8aIjwoinow+V2aVoVhedd5TDms8unJffWbzzf0cmFHBXBBUVfsYzbMXBdTNuhougASDhETznSHhmDIYGdDnSuDdifXwYLa10XaiZkZOYBiQ9XBA6bgSgvwdSWhaAokbZ+ICXS+GQDteHy99s5FD2GfpQWc=
+	t=1747985659; cv=none; b=DtBzF6ubhIfVIHcrA1vWxdj4FdWVh9dmlKjQiuFaTda+SM9bpsZHP2HrBkJfl6wcZTNDjMOOsob7NUsc3x+iYv59pDnl0IFiuHGHtQfYFzWr7xtMm6PphF6opzI7RSQWqtLosrpftuyItH0q0Rodr4kyhUOQlAhjeBalzKvcRNY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747985595; c=relaxed/simple;
-	bh=qAY6EeFJTZG28TvoJgL9U5bXPgvj6ZZgzASuq00yAbk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=fUMaJvrjx/dI3GNSQYc4TmLrXacqNMlLnIFSihITQxq8paZfqBupAnqFraz+cP7i2cQr9IUeNo3EFmqkYPtEW3Ux8/tMANbYHflH2mkSduHZGMIPYtclnVbg93kWpV9CgxV7U36FjNoMxUtGX4GHf4igseFueZ+0K3i1FcU9lLs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=brighamcampbell.com; spf=pass smtp.mailfrom=brighamcampbell.com; dkim=fail (0-bit key) header.d=brighamcampbell.com header.i=@brighamcampbell.com header.b=RLZ0F8Em reason="key not found in DNS"; arc=none smtp.client-ip=209.85.166.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=brighamcampbell.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=brighamcampbell.com
+	s=arc-20240116; t=1747985659; c=relaxed/simple;
+	bh=Qkt6CzKgPN893+F10EPjsbnhOH/75Q3uShv5u11c144=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OnNQ0fGclQJqnKXEoHXDp6g/vedHaJum8C967e53zPXJ13vif7pm6GlSs+WKN+pja3tx6V0IbbgTbZwOTv+qQMbyrqluCfTyR596o06HbIMjiKAFbMYabws3m2gUH6BI+yhjVUBmLXtqUQR+nrQKfB3kN1N3HmIXvKI8uVFqx5M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=W8F14ynb; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=brighamcampbell.com header.i=@brighamcampbell.com header.b="RLZ0F8Em"
-Received: by mail-il1-f180.google.com with SMTP id e9e14a558f8ab-3dc82baf4eeso11853985ab.3
-        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 00:33:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="W8F14ynb"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-442f4a3a4d6so3726045e9.0
+        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 00:34:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brighamcampbell.com; s=google; t=1747985593; x=1748590393; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=EhDC8DXcjYenT+PN1rPVu6Md6wucoYZjvtH8KVhEPDM=;
-        b=RLZ0F8EmpKF9ZzJeaC0it7Lgr9JFnBgyRUh3XBbY5SWav0fK/mcPKZVRJyuy/fEuqo
-         id7wkfSegzL5hQkdSAL9gvqZAHL0MVBdz08QY+na1Nc/QbyLg1ASGIgezM+0wd0AE7Bd
-         wrLm/JoOOsriYl88em+4IgWn/9ZsLwhHSrWXj77vXnzAwb7lhK0HR2kOZ9TCxSz3Vdic
-         ueWEx5AU0IfYtr3azoT4NJWa2bO4C1G+1ixGlEyTBSUSdA7ZSt/1yR9+emIVq42hdbb4
-         AwDslKoZz6tMEHWVR0Vwg+J8vbjg/CQnVRg/LO5vHuso2+GHOyXmahqjQMJh6UqoCwJY
-         RKKg==
+        d=linaro.org; s=google; t=1747985655; x=1748590455; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=rduOkZPUSr0jN4EKie1NNkxovdysXjYIcidklDlsDmg=;
+        b=W8F14ynbm84Q9eeHXUKOSzdgm7nZHSINHu9S1VpLeD8HYGJO1Wymw7HnZi5IjDfPuZ
+         2DTw67TWpb9EjmYdtoMn9HAQ+06XzFkeOfidpkV5qDTvWdN3jKzv19EkvM0H1a21+dA0
+         NwiKtD+yVltp4n5oAhjCAIhYhbHqF7jYTrsZentxB8r8rCQsxVCN7fekAWc1FAud2Bj2
+         +rTj2HpvgVv69rhfKurimuWrT8qC2GfLEL0LuzJQvudtpn3OfIt9Ydsbe3GUIYSsBk29
+         4P8BkBqxEpv2/xJacL8PhKzAVItT6pSB1fRTvKoeTW8c4j/ww32HN5N7TcKpWteCj8ct
+         jjwQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747985593; x=1748590393;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=EhDC8DXcjYenT+PN1rPVu6Md6wucoYZjvtH8KVhEPDM=;
-        b=ATQVKhKAW/xdtTQbkvqXb9NZcDsDmFESNyaeGNJ7H4z0TlQjk3WCm6vU61CcSNLoTX
-         pUSWxFkTY4xNO4Ia8BGuDTn6idntLp7LFSwwkns+8rYsfbie6IA/VdgcWckm4q0KiBI4
-         fkMQ5AgE3ebPlrkzCLTV8ziUcJpRugMlC2QQFqzfQxYeyNd61hX3vh/wYfYwpMXphj8R
-         LewLE5r3H4G0oczsPGmfjk8iKbtR7WbWIMuXP8yualMgXn/+BV9zLpuNZnaI17OKuB/W
-         blk2iVpZGjAX8Jdt0WVeSOqGFNoXPODfh8E/wdT7Yc9/Iz6VOXv7rcD2LXkeUHkse2kH
-         Wx/Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWw8YLRHYqQp+rOt0vV7q/ykcBYm/0P9YzEkGyXgwq+QHi+qeBxMemObw6fp60FSIE6PNNwBoN2A9DQZY8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwitM/IP7n5mZG4ylBiUIiR7QzBKuZ5xo2F4OOBZSAo+lKhsfoT
-	tIcfxor8+/GiLmD+8xFB6ZyQcf8COazx5+IVQ4CYlfEOlhgwd75Vwv9D6lEpoaDg93Q=
-X-Gm-Gg: ASbGnctS/631yht/JqpHHFdi19sdlDtTP2DVDBb0cTSUu7Wkocgj0rgwYh/dK47Mj64
-	lcRcn9R38978oXuon/+ddmxuinKBNCMyJTM/Yo7x2WfoKuQJdmoRrYb7jsQlLSMDNTMKqOz0j4G
-	QYv0aIOEKn2a2n/cqsoTnpoJGgsQfG14Al5JCWIhunipYgE9jd2vRZVS6TiNJsxKKV/+5vXkX+6
-	pdNAeV6H2hV9A0DR8V0JU7uuwU6ZP9Z+hIPal98N9Pac+neTqKBCIzcA5GoFxfny7NbDeLq2NAM
-	NUSR27iPt1LcfkdcoK3rBHcvmwaIUr+JRUJY7QrVIHe8uS8G7YyGK2tz48asdtfo7eOrq98pk2R
-	2TehbzaA=
-X-Google-Smtp-Source: AGHT+IG79dWbaOnWh6fbDdUHStp0frh1mqNr2bxuilmex7AQRbHU72XCruvtgyU30RqIruk4/I1vVA==
-X-Received: by 2002:a05:6e02:3b05:b0:3dc:7a9a:4529 with SMTP id e9e14a558f8ab-3dc7a9a4999mr104600585ab.16.1747985592940;
-        Fri, 23 May 2025 00:33:12 -0700 (PDT)
-Received: from mystery-machine.brighamcampbell.com ([64.71.154.6])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4fbcc3ae5b9sm3460807173.32.2025.05.23.00.33.11
+        d=1e100.net; s=20230601; t=1747985655; x=1748590455;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rduOkZPUSr0jN4EKie1NNkxovdysXjYIcidklDlsDmg=;
+        b=QMtT5WXTg73eDfkWMDtES4Hr2ntz96xvbvBEcwL0MCqMZoslGIYnXhkr0nLO2wmNCu
+         B7/QEJ97Lx/iVRdi7acaEUoF9bl3NyD3KoHZkDI35bI6Asxo/dBewIPJrFQx+J7AJdDT
+         C97pyWM1+jdXUllEFdC9uL0qabGgXak7+QP+N7imDLJyPOzlsSTB0qP7KCU56zwItTse
+         pzrvPV0rKSqYYO3M9C5X6ccl4KbibQXE3kkxTmYWk/yQRVtM+voI8C8scqLHHNrmzYHL
+         JycrQOMGFlYoGzyT9tzleXPEUtJhtctK7xlHIdqetfkYMd2kxWxjbOFhGlYGl+Xm8sTT
+         sHTA==
+X-Forwarded-Encrypted: i=1; AJvYcCXkYBxvnNRmr6qfIS6UAw7xpgnfRvT4HZzuFtFBFVYNwqiZ7W0Jc9a+PFmKBloROiOtyMr1roO1wS8HDBA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyO6+UhANAa0LIvw0MCKbvlJvtZbHP2IUz/RJveA9/zkPRVtvSF
+	jwYu/IYzQt9R97OzKPncGd8W6JhpT6Kx5iuGx33xneRGHOs02CMkkuINs6W9bUMtLn4=
+X-Gm-Gg: ASbGnct3VOOmkPFe5gXOu7qFu//zVgbwRBJ5+qxlshVGcRMGZj6fFNs158RnBmtrNft
+	NP9jLWwAAC59UHDjosZmI9xCRNLe+vFwU2KuqEvbwcJcdU3p4VM0puq3LotbsIp6c9uim9g98vB
+	cdXaQej41V8Zum+j5ypX9IqDSkIWIEKioinecWaaeM9TOq5P7qzgpgOUfhgRV0R/mbdsjdlg0+h
+	9GPlnYWRbaIth5+SprknZOZ4kyOdtrEa0om90cYhqsO6eLUuHerSqv6qnEK2EJuwMc6JAjILIlt
+	YlC7IGfwjkFxIJKAqNhF4TKKPyqarNFrmHWXKHqF3mNGkQm+1Ec2LwWt
+X-Google-Smtp-Source: AGHT+IEGzSRLRc18Yf011vkxlyBy+ms+Bypr7Z49E/z7Q5hD4YLlLfOvEpz0z0iR32i84oetqm+CBA==
+X-Received: by 2002:a05:600c:34cb:b0:439:8490:d1e5 with SMTP id 5b1f17b1804b1-44b51b67c5fmr21055805e9.4.1747985654946;
+        Fri, 23 May 2025 00:34:14 -0700 (PDT)
+Received: from localhost ([196.207.164.177])
+        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-447f73d3defsm127395235e9.18.2025.05.23.00.34.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 May 2025 00:33:12 -0700 (PDT)
-From: Brigham Campbell <me@brighamcampbell.com>
-To: skhan@linuxfoundation.org,
-	linux-kernel-mentees@lists.linux.dev,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org (maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)),
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Shuah Khan <shuah@kernel.org>,
-	linux-kernel@vger.kernel.org (open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)),
-	linux-kselftest@vger.kernel.org (open list:KERNEL SELFTEST FRAMEWORK)
-Cc: Brigham Campbell <me@brighamcampbell.com>
-Subject: [PATCH v2] kselftest: x86: Improve MOV SS test result message
-Date: Fri, 23 May 2025 01:32:21 -0600
-Message-ID: <20250523073220.112238-2-me@brighamcampbell.com>
-X-Mailer: git-send-email 2.49.0
+        Fri, 23 May 2025 00:34:14 -0700 (PDT)
+Date: Fri, 23 May 2025 10:34:10 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Amir Goldstein <amir73il@gmail.com>
+Cc: Charles Han <hanchunchao@inspur.com>, miklos@szeredi.hu,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ovl: Fix PTR_ERR zero argument warning
+Message-ID: <aDAk8pUwf6ZjDYQN@stanley.mountain>
+References: <20250519041100.7611-1-hanchunchao@inspur.com>
+ <CAOQ4uxjU+RC_8Ec62irOy-Kd7H6UGuqpasq1qb5fXmZgkj_tUg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAOQ4uxjU+RC_8Ec62irOy-Kd7H6UGuqpasq1qb5fXmZgkj_tUg@mail.gmail.com>
 
-Apparently, this test completes successfully when it completes execution
-without either causing a kernel panic or being killed by the kernel.
-This new test result message is more descriptive and grammatically
-correct.
+On Mon, May 19, 2025 at 08:43:16AM +0200, Amir Goldstein wrote:
+> > @@ -577,7 +579,9 @@ struct dentry *ovl_index_upper(struct ovl_fs *ofs, struct dentry *index,
+> >                 return dget(index);
+> >
+> >         fh = ovl_get_fh(ofs, index, OVL_XATTR_UPPER);
+> > -       if (IS_ERR_OR_NULL(fh))
+> > +       if (!fh)
+> > +               return ERR_PTR(-ENODATA);
+> > +       else if (IS_ERR(fh))
+> >                 return ERR_CAST(fh);
+> 
+> I don't see what's wrong with casting a NULL pointer.
+> This looks like a dubious smatch warning.
+> 
+> We could add ERR_OR_NULL_CAST() but it seems pointless.
 
-There are no changes in v2. I'm resending this patch because I addressed
-it to the wrong email for Shuah.
+The ERR_OR_NULL_CAST() define is kind of a horrible name but I can't
+think of a better one...  To me, it's easy enough to just ignore
+false positives.
 
-Signed-off-by: Brigham Campbell <me@brighamcampbell.com>
----
- tools/testing/selftests/x86/mov_ss_trap.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+This warning obviously does have false positives, but over half the
+time it points to real bugs like:
 
-diff --git a/tools/testing/selftests/x86/mov_ss_trap.c b/tools/testing/selftests/x86/mov_ss_trap.c
-index f22cb6b382f9..d80033c0d7eb 100644
---- a/tools/testing/selftests/x86/mov_ss_trap.c
-+++ b/tools/testing/selftests/x86/mov_ss_trap.c
-@@ -269,6 +269,6 @@ int main()
- 			);
- 	}
- 
--	printf("[OK]\tI aten't dead\n");
-+	printf("[OK]\tkernel handled MOV SS without crashing test\n");
- 	return 0;
- }
--- 
-2.49.0
+	p = kmalloc(sizeof(*p));
+	if (!p)
+		return PTR_ERR(p);
 
+Or copy and paste bugs etc.  There are lots of ways to get it wrong.
+These warnings are always worth checking.
+
+People should generally assume that static checker warnings in old code
+are false positives.  We're good at fixing all the real bugs.  I didn't
+report this warning because I knew the code was correct but I did look at
+it on Feb 22, 2019.  It can sometimes be helpful to look up the warning
+on lore.  We had a discussion about this one in 2020-04-21:
+
+https://lore.kernel.org/all/?q=ovl_index_upper%20carpenter
+
+regards,
+dan carpenter
