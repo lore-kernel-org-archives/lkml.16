@@ -1,114 +1,88 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A760515A85A;
-	Fri, 23 May 2025 16:21:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA7FC294A06;
+	Fri, 23 May 2025 16:21:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748017296; cv=none; b=tp3thMAU24XfqnrFFm8qrO9HLtWyfh/Njn71iZINzgYKIpUTTNt/NBkrO4zpwh+NKibpaWk1CjBne0gkQXs2IQibng9beQ8ooBbnucJG0xyA7mFFImRrtJZE2rQ6GoZ6sz2W0rwSP8UEj6kvbRforr3blVogG00U3sGfeZRF70Y=
+	t=1748017301; cv=none; b=YazUYMiO8jMbS/h1nqDvJiHJvum4ZO0Q8ZZ0mdo49tJWzSLRnqtD9Q4ss0Anvdng53ZeWDHdApLyvbmWvlBJ/ng1GT1qY/F3IVOCxwkoPLJLODSpBocK9wjGf3JOQub+2fC6SRYw+AgzbbMHr5LoDGW/7RMhc3/enRYViLBv+DM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748017296; c=relaxed/simple;
-	bh=TrhmAZSZj+zcv4/V5X1Oolly8Kxy3PHsC80uzCkSXQo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MTK3LzVMojXJlFMd/pXdkvNpY3xJq6zWnzYycqmrsyz9Qf7kyPd8uVWIaTeX1SEEyENHSu39KBHfa9fMlNsRn/MI3bQOsexZRoruZkwy4UwLah9kNBBRbJfZFJWLOyQRklxJTriaY5qkac4o3VPdb8wrZmd7quQbkCWtG9ts+pc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
-X-CSE-ConnectionGUID: BkNkIJPqQgaW1+nWtW+CWw==
-X-CSE-MsgGUID: B2MgBHZIT3ucX2f2YL6+PQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11441"; a="53740178"
-X-IronPort-AV: E=Sophos;i="6.15,309,1739865600"; 
-   d="scan'208";a="53740178"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2025 09:21:34 -0700
-X-CSE-ConnectionGUID: Z3TVpMQGSI2J/s19a4lvjA==
-X-CSE-MsgGUID: v0Jvt8P2TU2dB/Vpdp2ROw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,309,1739865600"; 
-   d="scan'208";a="142234960"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by fmviesa009.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2025 09:21:32 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andy.shevchenko@gmail.com>)
-	id 1uIV9F-000000006IG-2TSv;
-	Fri, 23 May 2025 19:21:29 +0300
-Date: Fri, 23 May 2025 19:21:29 +0300
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-To: Victor.Duicu@microchip.com
-Cc: Marius.Cristea@microchip.com, jic23@kernel.org, dlechner@baylibre.com,
-	linux-iio@vger.kernel.org, nuno.sa@analog.com,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 2/2] iio: temperature: add support for MCP998X
-Message-ID: <aDCgiQKL3ySfpkZr@smile.fi.intel.com>
-References: <20250415132623.14913-1-victor.duicu@microchip.com>
- <20250415132623.14913-3-victor.duicu@microchip.com>
- <CAHp75VdzVzNV1k8RqG6Rxsg06Oqu_p1o-4QFeT10xBjrFOEZHA@mail.gmail.com>
- <82538eaeb9bfc8dffe0b67d7dd00826b96ed573c.camel@microchip.com>
+	s=arc-20240116; t=1748017301; c=relaxed/simple;
+	bh=eutAjVroypnbDRz2QE9Rm3mywLZ3UBKPobYxoRL5Dss=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=SAHMGsZk0NX7f5jXLWhEdRrLjEscId9zfwfQ1NECrERh10+QiRAp5D9Sy9qH4EAJ1w7JqrlMicV1kd2DE+nVjYU1sWi7Q6GDW7knSkCQzZDzQJzS1ZmWFc5TIrH2Ik2nAvp87Ay1DD5slctkyd2/TYCBwjZf4haxtiTgUSRCBCg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oJqIWtqJ; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oJqIWtqJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A38CC4CEE9;
+	Fri, 23 May 2025 16:21:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748017300;
+	bh=eutAjVroypnbDRz2QE9Rm3mywLZ3UBKPobYxoRL5Dss=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=oJqIWtqJiP6jOAhFSJWVjzHZo+Ggb/S3F4of27UjkCf37icNd/+aMFWNL/FTtsF6U
+	 OckJqKLNqDWqiiaox5agrE99yW3tilv2VJC7NY77QfQeKGld1MMxZkanh6B5lIg+M7
+	 BeQF78NhV2ttJoqVtKK94OlZQaLLgUJIXjJXtuwgVekOWzqdQUvkJO3Imz4u+HkHn5
+	 bqEKIV7DnNsCYi7XpaD/Ohpej+Q8nE90UzQApzpb19xLROEbLuugM+Rr74y0VAaEMz
+	 bUH38GdcGIqRRkPeWJaoK1naDOhfi3PYSSR2vwKQcyrlz5qvf24OeX7/c+guTK5Qj2
+	 ksRq/CY9RR3LQ==
+From: Mark Brown <broonie@kernel.org>
+To: Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Robin Gong <yibin.gong@nxp.com>, 
+ Martijn de Gouw <martijn.de.gouw@prodrive-technologies.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <20250522192325.1099680-1-martijn.de.gouw@prodrive-technologies.com>
+References: <20250522192325.1099680-1-martijn.de.gouw@prodrive-technologies.com>
+Subject: Re: [PATCH 1/3] dt-bindings: regulator: add pca9450: Add
+ regulator-allowed-modes
+Message-Id: <174801729781.578098.16768660592418154140.b4-ty@kernel.org>
+Date: Fri, 23 May 2025 17:21:37 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <82538eaeb9bfc8dffe0b67d7dd00826b96ed573c.camel@microchip.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.15-dev-c25d1
 
-On Thu, May 22, 2025 at 09:18:06AM +0000, Victor.Duicu@microchip.com wrote:
-> On Tue, 2025-04-15 at 22:05 +0300, Andy Shevchenko wrote:
-> > On Tue, Apr 15, 2025 at 4:27 PM <victor.duicu@microchip.com> wrote:
-
-...
-
-> > > +#define MCP9982_CHAN(index, si, __address) ({ \
-> > > +       struct iio_chan_spec __chan = { \
-> > > +               .type = IIO_TEMP, \
-> > > +               .info_mask_separate = BIT(IIO_CHAN_INFO_RAW), \
-> > > +               .info_mask_shared_by_all_available =
-> > > BIT(IIO_CHAN_INFO_SAMP_FREQ), \
-> > > +               .info_mask_shared_by_all =
-> > > BIT(IIO_CHAN_INFO_SAMP_FREQ), \
-> > > +               .channel = index, \
-> > > +               .address = __address, \
-> > > +               .scan_index = si, \
-> > > +               .scan_type = { \
-> > > +                       .sign = 'u', \
-> > > +                       .realbits = 8, \
-> > > +                       .storagebits = 8, \
-> > > +                       .endianness = IIO_CPU \
-> > > +               }, \
-> > > +               .indexed = 1, \
-> > > +       }; \
-> > > +       __chan; \
-> > 
-> > Why in this form and not as a compound literal?
+On Thu, 22 May 2025 21:23:22 +0200, Martijn de Gouw wrote:
+> The PCA9450 has support for forced PWM mode on the buck controllers.
+> Add support to control this mode.
 > 
-> I can have up to 5 channels, which have very similar specifications.
-> I use this define to simplify definition of channels and avoid
-> repeating code.
-> Is it now preferable to use compound literal?
-> I could implement something like this:
 > 
-> #define put_channel_defaults \
-> 	.type = IIO_TEMP \
-> ...
-> 
-> priv->iio_chan[0] = ((struct iio_chan_spec){put_channel_defaults,
-> 					   .channel = x,
-> ...
-> 
-> This way when initializing the channels I don't have
-> to repeat the common properties.
-> Do you find this approach agreeable?
 
-No, just find how the compound literal macros are written in the kernel,
-e.g., PINCTRL_PIN_FUNCTION().
+Applied to
 
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-next
 
--- 
-With Best Regards,
-Andy Shevchenko
+Thanks!
 
+[1/3] dt-bindings: regulator: add pca9450: Add regulator-allowed-modes
+      (no commit info)
+[2/3] dt-bindings: add bindings for NXP PCA9450 PMIC
+      (no commit info)
+[3/3] regulator: pca9450: Add support for mode operations
+      commit: 2616e5f4fe04eb25eb5cbabc0a3a2a374e14008e
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
 
