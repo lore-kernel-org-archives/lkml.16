@@ -1,112 +1,66 @@
-Received: from sonic312-20.consmr.mail.sg3.yahoo.com (sonic312-20.consmr.mail.sg3.yahoo.com [106.10.244.210])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E80320E01F
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 22:02:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=106.10.244.210
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6FF3EC5;
+	Fri, 23 May 2025 22:06:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748037774; cv=none; b=t6mP2mhm3N+WtncW+UuzJa5t8mgIdcdO5IXjGq0C7WiSgWOlPXF9s58ontQDf/6n/4gq9kY/ZkWK824wV95G+Cpfrqe1scaD7BcsRvFmjt2ONJq/OAhm8/IRqGQ/iQmB6zyD3ExBACh4FAZhP2lhpOidcbSaR2vYGeRiccZeyAM=
+	t=1748037998; cv=none; b=cV+8Hys7WSw3PG+cT5lQN5AtAQ1dZ63Cu6yjHgSTlevXHaWKPvabDVsP20dnZUqPx9ee3wHX+x0Vhs8wXO5CMvZ3vLjh2MUCdf+TVaVzwSKD3cdHWaaj8xXDpjL2Up7qBQnashMEg665JkFuOVahaFhg0aVxRZgAWVCw/l52qsE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748037774; c=relaxed/simple;
-	bh=Ld8sSIiOdoLEcRyi37iPeIWW6gGFZx0wcF07f5OOJjQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=PjIvJ6A086HGEQa25YzIXT55ko74XmRmNEe1wE8mhI2UFIV474+PrKlO1xSGBox2G0PlC3qVRZK3mCKbkByNfH1yLlMb2yc1AKWndACpyRKBmm0LRhvmG24cSQKNs25++jSrNq3G18f1vQ4g9KD1ahz7QspDgG+LLlUVD96adJ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=yahoo.com; spf=pass smtp.mailfrom=yahoo.com; dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b=m/m32+DA; arc=none smtp.client-ip=106.10.244.210
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=yahoo.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yahoo.com
+	s=arc-20240116; t=1748037998; c=relaxed/simple;
+	bh=9j5tlxC9rdno3FMlsu5r9h9OfHHQcZ1zaGT9VEOlFpc=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=chWnHVj//uYqVSHC6BT8A68V1vfUbvGQdqzbR19YcvRYGzNVDmjOm8POaUp3MEgb4xDFIFYsVa/NTVSZOJoy9pSle2cO28ZEqh57rpO/nIOxgC+E/57CkqgxmUtEMHzI0X0LkRhbzqByQTTxBgTIHfAvSZwjjgc5KM7wbcaRfEw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=ApTu7dV5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="m/m32+DA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1748037764; bh=g3PopIJDq4T11kCNZlSkgS3dVhWsotgsaLpI5IrDYXM=; h=From:To:Cc:Subject:Date:In-Reply-To:References:From:Subject:Reply-To; b=m/m32+DAmfjk50P13ks2sQc5Bg8j837NKnqrFP7wF5hhhr21BoqO4MmndJH6+cOW9wkqMKY7gBy3NNtOyG9FnbdDNDAG67m5KHVNqOZr3mzofj8clKehJxst/NX7yfeCuTKh0GpV5lcPUMgiYL9+6wKoAzVm/xCkwLbKL+iCKadOb0hYKX+xD+3TEd+0T3dc2gkCs7wbtiN7eC3yc8SWabFCxGMH+PMMi3IOrFd9u+sMWCBXWmqJVl0ww14bddQqUSZQAGE1fNZb718Z/He+n0KvJUE+HyXeexTV+QchiCLka4LQNo4B9aIGFXT/fBF6pNn46ex4IVGF6aRE1N0dbQ==
-X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1748037764; bh=vm7jqXRtyiY/E2jBsscGxMWqT7WbgvMDmjyx01HkGXW=; h=X-Sonic-MF:From:To:Subject:Date:From:Subject; b=NdFhrYlarKNd/N7XmbpFQNgO9JrFPbUEFjbsGtnGZKg7KwQuYZq825FxzBLK1GzVV9Ach/f3nJR+1N42JUA51fY+nqWnijxMruWm1q2p+xD0QTIgGOFxjKRVfyJgPRftR+7JjJ7IxSY4r2O6ftjpspjup5XBVodypO3rN3zaIR+vZm2Di8ZvlkRZFaneXJOLd54NbZRWEnOmSd8ChM0i8pFdnO1yOrn2RN6Di63p2bgFq62tnxIy5boje8Su92ksk9X+8TiZ0FGDF50QZ1wTZprisiTxLis23/b+3fIrD0bFTM62uI4AI+EE0/hbAigEBAexJIF2pTMP8zan4PiJpg==
-X-YMail-OSG: t2vWDoAVM1nTGRJePXqMaqHw5ro0JZjImZWOmVPpZCuaXqbvED8lbDVuChKK0hK
- zwcISGhEn3mrvO75CYouml876pPept6QRUcUbaIvMtgvG_5ehdA_45BdXSQKKA5K1IrSYabp9_Es
- x4ZRFMn_Ay9BKWmMpH.ZSoztJrU449blbDONS8uVP66FeZ9nKNU5JF7XDpl6Ihc0Rarr9x7nkkye
- 3fTk7xsGIWUEZDUKYKhJRvcAw0LpPaciGIaJ0VSCS9jnotXQvkQrtXmiHFBA6OGxMxhHEosdZOqm
- xlgepOYDwHQY20f1VEkbeBSOhov708T56wVZPHS1j5gB9MaSB0JgFBejPnJ0HeUchyzIJQzLLlrT
- cO1N_c4wWzgU6Zwoa9YgRltR5oDiSwHMr8pwI1aZJYFddsrMxFsQdVfiwnJRkvni_vKBvOzFe4gw
- wUZYDnb9yevLN9OkEsrYnpFUnW.hBZGhBOiiehJLzpQHaur92RqLEi8ZYRKrPjWBVPOK0QHQ8iBB
- jh3PaIdiY45iVHIan8gMJpEkyRjAwv37WFD5.3h02lY2bI5oVuOYHeIi32Joh795hcdWEbp5hfnw
- tBXgOORQpfikKV0bCB4JmebvB.UGl3JLtxj2taog4gflr0kVhy1QjRxtlHhPOUNcVleh29L6LQsY
- da8kGQ8Z.qpO1W8Nedef.ASsscaoq6TJv2YABCAuBECPEYrnW7uteo1wRlhlplE47Thu2krqs_qN
- 8g9IOnBqfzT46qla5E4gGdNQwxDfgCa4GzGbp0r.J8WxInqcVzxw86U75h93HRJfh7_L3xrfOJOr
- MXAtOf.bLFemO7E6KBYgejSURI5.0JGQpunhSCh4Tgtks7XTZgDrHtme40Py2xKuSHBfIbZ.V08O
- _IzdGg0y028DkZ6l3FXJo2anz5l.4kNf4XvJpnCiXNUHXt8wFCUsbwQtSM3jUoI_BkyLU9FpK3ei
- p0OhykuIzyoa_844bado_gCPPac.05Jz65wMqZ0Cmn6QpZ.pdZH0UNB4.59Of9J9q8c0fhz8nLJo
- .OrdUCBUGVTOoiv5zw9bYwEe7Of2yIt1lnyL3uji91Ordjuzba6exZBrmCNUKBw9xv00Ut6cWKsp
- fjzeEDSXov6EeirBjZFEgj6aVS3.iI7zeHAZzk26DRgg_Z23lW1FhHNVH8BB1z3r.C8MYka7.mqV
- CkZYxk5.hkZM5jRdfGTqxqtEYmNyFTWFkiTO_X9VQnXaV8DetkWJZoyXqvJqTSHW_vM3BLmEEoAp
- H2kQFfc23.7sp6FoCBvmOICfqG1DF8LJjljgyD59X3G1xevomTHKdwDe3dmR49f.i1ytVH3L8PoE
- 3uFMOYGFKwCSw3rTlCpvTyupGGX6gse1qAIfDPP.rY7M24JQkxKHYcyvpGmuxB8pdghF4piZM5dA
- Lmad9XfJueeaqYXu_DM1qqEzUXTCXgwpO6dS1tu9F4F67o251Dt91CdFJmic_P.__9GGulcCES4S
- EdETlk2EuV_ODaEB19TXU2ns.1CjTxOl2GbaG63tW9142qOO4VG1aT.4QqcPt.FKb34xyUmWJL0Y
- aI_DmCp00OtHh9d6hAqINxCLRxLQpNmuQ.9SxdxK4FQKVcUX5vkOJuwNioeGb9dlMge39GOV_Agc
- jToAHUpK35AWClE2VVAMuEK3Hx5OLBIBS49r3SF7Y8wLl0AIdAKFQmKnHScJbxtmCLfrrj9EBliB
- 6GxKOZbewPskw2K1anB4D8qFumdCUY4DyvH4gbWGSlh9TTemwhS1L46rzOH9Afp74ZpzWmt.SgNy
- rNykpRP_nVacv.zgG7nRTR08kawIl3FepNtpGA0yJ8FmJjxqPYV88HxRH2y1V0vCf60__dzAYQF_
- Pk11kJguxF5aFSLT6P1MGRuATyVXmk7Owdsa7UsoIaPezR4z2Uiy6hgCOLczAO1M6A00LLJX3qJd
- IHqubOIx6FcNFCfd7fG_4SqwBs5Zq6w69deatiB3L4PLgdsv_BDPo16srr2Zc9JMbbTS58e7KIVM
- smxAnbtzJnOVNA8FlVKOAK9WY2tvObaSdkcOvUL_AdR7bCJQUhmUyBeY4SDBtCBojqG5tQJsnZW8
- GU0RfTppkZFIckP7kzbgnaD71ivWPA7XFsOykdlPW_Rt8xVO92mj4As3L_PZ.nH7wYZrH7r8W1sH
- TnwiXa1okfTaN9T2FI.1PLdCw5vfQi6_ANs271vh.LWOWc8ApLBoocoRdFYqISPsMQwrH40Zo6Iz
- YxuIbo5OxQL.yvq_SRlHs7_PqXbcCrNXXnt_fNsiGI_dasrWuG0rmnMZL59HXSB_DDrySwfCX0.8
- nN74YpKqahf3kFLjn7RwfjJ8YAQQyadR7d0qSuee_eXaA
-X-Sonic-MF: <sumanth.gavini@yahoo.com>
-X-Sonic-ID: a4fdc27a-feff-43de-adb5-bc10c078fb40
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic312.consmr.mail.sg3.yahoo.com with HTTP; Fri, 23 May 2025 22:02:44 +0000
-Received: by hermes--production-gq1-74d64bb7d7-ntkkg (Yahoo Inc. Hermes SMTP Server) with ESMTPA ID 248dee39e4af4432b83091d1a9b4c06a;
-          Fri, 23 May 2025 22:02:42 +0000 (UTC)
-From: Sumanth Gavini <sumanth.gavini@yahoo.com>
-To: skhan@linuxfoundation.org,
-	rjw@rjwysocki.net,
-	stern@rowland.harvard.edu,
-	arjan@linux.intel.com,
-	linux@dominikbrodowski.net
-Cc: Sumanth Gavini <sumanth.gavini@yahoo.com>,
-	linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-pm@vger.kernel.org
-Subject: [PATCH v2] docs: ABI: Fix "diasble" to "disable"
-Date: Fri, 23 May 2025 15:02:37 -0700
-Message-ID: <20250523220238.455718-1-sumanth.gavini@yahoo.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <a0f5b68d-e321-4ed3-a22c-24f80f4d906f@linuxfoundation.org>
-References: <a0f5b68d-e321-4ed3-a22c-24f80f4d906f@linuxfoundation.org>
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="ApTu7dV5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7546EC4CEE9;
+	Fri, 23 May 2025 22:06:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1748037997;
+	bh=9j5tlxC9rdno3FMlsu5r9h9OfHHQcZ1zaGT9VEOlFpc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=ApTu7dV5uDOWeMTHCQkL+mjCt1c3VsfCC95+l/gatD5ByaXnCF7A3AITxXV6OAmf4
+	 TheeBLzg5+YeuKYtkCmxDkU3gMOpshuv8ZalA9zGHLNm5ImZ/mZp+1gKCOxxe7kckA
+	 LPGhzTprtehL92dmLrSfMMw58GiV3bMdEnEhAtck=
+Date: Fri, 23 May 2025 15:06:35 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Chen Yu <yu.c.chen@intel.com>
+Cc: peterz@infradead.org, mkoutny@suse.com, mingo@redhat.com, tj@kernel.org,
+ hannes@cmpxchg.org, corbet@lwn.net, mgorman@suse.de, mhocko@kernel.org,
+ muchun.song@linux.dev, roman.gushchin@linux.dev, shakeel.butt@linux.dev,
+ tim.c.chen@intel.com, aubrey.li@intel.com, libo.chen@oracle.com,
+ kprateek.nayak@amd.com, vineethr@linux.ibm.com, venkat88@linux.ibm.com,
+ ayushjai@amd.com, cgroups@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org, yu.chen.surf@foxmail.com
+Subject: Re: [PATCH v5 0/2] sched/numa: add statistics of numa balance task
+ migration
+Message-Id: <20250523150635.5901dbb92b8379c9d88f88ca@linux-foundation.org>
+In-Reply-To: <cover.1748002400.git.yu.c.chen@intel.com>
+References: <cover.1748002400.git.yu.c.chen@intel.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
- Fix misspelling reported by codespell
+On Fri, 23 May 2025 20:48:02 +0800 Chen Yu <yu.c.chen@intel.com> wrote:
 
-Signed-off-by: Sumanth Gavini <sumanth.gavini@yahoo.com>
----
-changes in v2:
-- No code changes
-  - Link to v1: https://lore.kernel.org/lkml/a0f5b68d-e321-4ed3-a22c-24f80f4d906f@linuxfoundation.org/
-- Addressed review comments from Shuah Khan.
-  - get_maintainers.pl doesn't give you the complete list, So resending
-    the patchv2 with linux-pm, doccumentation list and PM maintainers
+> Introducing the task migration and swap statistics in the following places:
+> /sys/fs/cgroup/{GROUP}/memory.stat
+> /proc/{PID}/sched
+> /proc/vmstat
+> 
+> These statistics facilitate a rapid evaluation of the performance and resource
+> utilization of the target workload.
 
----
- Documentation/ABI/testing/sysfs-devices-power | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Thanks.  I added this.
 
-diff --git a/Documentation/ABI/testing/sysfs-devices-power b/Documentation/ABI/testing/sysfs-devices-power
-index 54195530e97a..d3da88b26a53 100644
---- a/Documentation/ABI/testing/sysfs-devices-power
-+++ b/Documentation/ABI/testing/sysfs-devices-power
-@@ -56,7 +56,7 @@ Date:		January 2009
- Contact:	Rafael J. Wysocki <rjw@rjwysocki.net>
- Description:
- 		The /sys/devices/.../async attribute allows the user space to
--		enable or diasble the device's suspend and resume callbacks to
-+		enable or disable the device's suspend and resume callbacks to
- 		be executed asynchronously (ie. in separate threads, in parallel
- 		with the main suspend/resume thread) during system-wide power
- 		transitions (eg. suspend to RAM, hibernation).
--- 
-2.43.0
+We're late in -rc7 but an earlier verison of this did have a run in
+linux-next.  Could reviewers please take a look relatively soon, let us
+know whether they believe this looks suitable for 6.16-rc1?
 
