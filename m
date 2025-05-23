@@ -1,108 +1,162 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 564C9200BBC;
-	Fri, 23 May 2025 07:34:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B132B2DCBED
+	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 07:40:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747985698; cv=none; b=p1gqIAIs6lbxNhph6G00KB0pT7r1JsUeud5RpJTBVA17bKKc5U0H1sudBdLrsMWWdOYJJkT3XReCphfixQ3XB5nwFiue76N/21zG1TK3hsin1yMQwd8lb+T4+Tc2Qxb2PVx3vGnZGtlqpXsGq0cpP4tgYt9woUDkTOyhyZ00g1Q=
+	t=1747986026; cv=none; b=ACMb28P/PRiCCMKw4rlCg7YJCLwxdc7KN78CHxhpSqm/Y2txCAd9WE1JB/QMzjn/zpZwc62J4vqiFuL/zL0wWY3+uPEE0fA4gpI3yTanPGhmocRMF/kyKqYQXIVyUoPTTPS4MbCSlVfJrFtYF+NYd/rInzFDGci9FxXzsci9HTc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747985698; c=relaxed/simple;
-	bh=EnQAKD8l/H9RmxSZrHWWWVsvsQ9y+wSNSH7iYmJpbco=;
-	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=bAoMHGW47886M/leR5yLcbg0gyry9M12B8kFzKSUWzlSYNlqcr7QwZAh2XNGTN5Onyoeco15diGfEktBU0epmIB20Mujv+k/SK2WcTmHOh4gg9n886yLQUfl2dtjUDqzYDXcwBRMxMm6GYKMzEy49N2Pi2D9s3bx2DpNjRIQgGM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kCEWWIyR; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747986026; c=relaxed/simple;
+	bh=PGTw0LxUJsSyzQuJ5vPi+5gicKbecgnWnJoEPlcpXP4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gRoHrUuohGxM4ZgL5mGIQibFaVYrpdNx4nPJzDQM9YOXrXZM5Ab00pl3UcDa76AiNJe963mGQfAOQMY8l9+mS1iKC6yxYkuFEF3Z41VaqMAFnkalYfN3B1Jrmt+KG47QDOW0496ghloEMLw8IF45EaSgIpVB5q+vMYfyy7n+PmY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=aakIqsvg; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kCEWWIyR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 900D5C4CEE9;
-	Fri, 23 May 2025 07:34:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747985697;
-	bh=EnQAKD8l/H9RmxSZrHWWWVsvsQ9y+wSNSH7iYmJpbco=;
-	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=kCEWWIyRzlM9lR8MWsToN9kPatqBViQgFBudMpVrII1mcakeT30TAlOGghw/8tD9Q
-	 wSLqukchbjNNdsjZuusj9FeFEqklCEscKUz0xgdzLUnr9JLilFaPh/GtqaiqjmaMlw
-	 2qwe0pko2pG1sZVfa6OQ0Fw5qBr4/hwFr9iHJdYGOT8NKiiB8HACFlcJk2/xuEM+ZN
-	 5/KVLbpE91OgmA+liadMCBzsw/MskaRHH1B++rLVO7NXdJ0tFgUu1Q1AHUJ8Qoqbw7
-	 1ZSX56EavU//hYyX02FqxUxXedDDI2mGSt9UViS5MYbWXTQpj1VXjO/xq+BZ8MR5+M
-	 oAtYcr8hMNSBA==
-Date: Fri, 23 May 2025 02:34:55 -0500
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="aakIqsvg"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-2301ac32320so93025565ad.1
+        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 00:40:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1747986024; x=1748590824; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=PaTgjZ8nTG5bdDj8zvqvQfi68C6gCVuXyW4zt/CTfRU=;
+        b=aakIqsvgSCLedjqcVSvzLUjMxdUnK+0Qb510VX9O+c0EVRv2X3cVDMd1ADypy/l9+4
+         LS+wgZHA/mssr9RNcqvUJ5T5ZfVxWIGIVsBN/y09o54JbkXx8fn67WOu9IUzUb2lCR4l
+         63v09yCsGUFIn7cQcqtP9SLv4nhjgoBG2f/u/2kg4iT+t3JgxnN4dglLHbBQgeLxsqU7
+         GwV5o8jUyWxV9UN9KioN3jHrHkpkZuwkmvB0WMtYuQZ6Vt5vo+jNy0b8UOwCGeAZppn+
+         jAn2Cq9NMqTUH+kU7lGY0/QJXzJsvYij71uIDgegOZu3Tcx/UrYBsLPnB6oCaE6j97RL
+         YLEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747986024; x=1748590824;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PaTgjZ8nTG5bdDj8zvqvQfi68C6gCVuXyW4zt/CTfRU=;
+        b=uqhaP6vdjzltYBCPonHYwO0Ho+ofoeYwzRj+bSeqeiRqQdQsx89JEMxaRo7ykzahmn
+         gquHjxoVwlbc+Y0qqm9D7XAI68TcvlTvCaJNlPF+5/ZPw4UAsCm0lv4HwphMsrgEZGbK
+         +tVwYcYp8lDwz3XqPInWtvtw4y6oCunsqL57hkUO+3FOnD7QV94SyDo/DUEBvVDscKiM
+         edCC5BE0U64hcof3ysc0/MnSm67xk3Fx58J7md99gRPSMkKm82X65Er7xUe0iPfecmFI
+         PcgQTDQ+RfSno1SnfX+wjXYE40o6zbGBbI2eV84bMNy4TNJjOLcAffaxZibpz3uDa1G9
+         75Cw==
+X-Forwarded-Encrypted: i=1; AJvYcCV5/6w/DxjJ7NlGIOwK6ZjLCfIfoo4OraTFXvF4HtSuPMTgE1VYD+mg2MwYZrhdba8k6Vc4ZS+QLW9RIHI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywhpwa+Mq9PsRIHEAlMHzswVF8IOok2PlJBJM+nM81sKiOxD7NY
+	gCzXXG12cpQQ+r7PD/jrnfYXy3telyZ0jXFXFdPdaKxtEZuymjLbwS5x+eUFATsRrw==
+X-Gm-Gg: ASbGncvIJGgUdX3OTIT4freuUmmwrPeMh5gkn1Bvm+eYE2zDvwkFnamEvsH8odVIeSn
+	0xqwTjn7J9oqap3f4TXM+n/Zea5s86L28kgtCaP88hL4qC5VgRbaUCMnKP/y4e+tTyM3Ek2tR0U
+	couFVL20pmE4FylfuGWdNYYRIamkpGAC6WM2XDIcqwbklDmd9NhsgKVUj9YUPnaDfo7LsRi+VI6
+	fkY0lIsv563xun/RPoEydj9Io3Kjii+dwTsH8uZA2fMuQyd9WbwuvESV+4n2ak+4kAM6FgIc8kJ
+	qw4XqDUDCR4rdq+uefriYDkRA+ANjP8RUvFQBe5ea5/7/Z+wPl8=
+X-Google-Smtp-Source: AGHT+IF+7alzn8xrzTIyx10RH4kFQdAdOb9EwNh7eqaIwWtTxYvBrsdu+U9FaCzg7hnUg5gq+O/m5A==
+X-Received: by 2002:a17:903:faf:b0:224:c46:d167 with SMTP id d9443c01a7336-231d44e7049mr358131955ad.16.1747986023645;
+        Fri, 23 May 2025 00:40:23 -0700 (PDT)
+Received: from bytedance ([115.190.40.14])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-231d4ed1946sm119166615ad.217.2025.05.23.00.40.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 23 May 2025 00:40:23 -0700 (PDT)
+Date: Fri, 23 May 2025 15:40:14 +0800
+From: Aaron Lu <ziqianlu@bytedance.com>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Valentin Schneider <vschneid@redhat.com>,
+	Ben Segall <bsegall@google.com>,
+	K Prateek Nayak <kprateek.nayak@amd.com>,
+	Josh Don <joshdon@google.com>, Ingo Molnar <mingo@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Xi Wang <xii@google.com>, linux-kernel@vger.kernel.org,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>, Mel Gorman <mgorman@suse.de>,
+	Chengming Zhou <chengming.zhou@linux.dev>,
+	Chuyi Zhou <zhouchuyi@bytedance.com>,
+	Jan Kiszka <jan.kiszka@siemens.com>,
+	Florian Bezdeka <florian.bezdeka@siemens.com>
+Subject: Re: [PATCH 2/7] sched/fair: prepare throttle path for task based
+ throttle
+Message-ID: <20250523073939.GA1038318@bytedance>
+References: <20250520104110.3673059-1-ziqianlu@bytedance.com>
+ <20250520104110.3673059-3-ziqianlu@bytedance.com>
+ <20250522110728.GH39944@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: linux-kernel@vger.kernel.org, 
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>, linux-mips@vger.kernel.org, 
- devicetree@vger.kernel.org, Johannes Berg <johannes@sipsolutions.net>, 
- linux-wireless@vger.kernel.org, 
- =?utf-8?q?Toke_H=C3=B8iland-J=C3=B8rgensen?= <toke@toke.dk>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, nbd@ndb.name
-To: Rosen Penev <rosenp@gmail.com>
-In-Reply-To: <20250523063207.10040-4-rosenp@gmail.com>
-References: <20250523063207.10040-1-rosenp@gmail.com>
- <20250523063207.10040-4-rosenp@gmail.com>
-Message-Id: <174798569576.581215.14604917966107916722.robh@kernel.org>
-Subject: Re: [PATCHv3 3/5] dt-bindings: net: wireless: ath9k: add WIFI
- bindings
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250522110728.GH39944@noisy.programming.kicks-ass.net>
 
-
-On Thu, 22 May 2025 23:32:05 -0700, Rosen Penev wrote:
-> These are for the wireless chips that come built in with various
-> Atheros/QCA SoCs. dts wise, the difference between pcie and the wmac is
+On Thu, May 22, 2025 at 01:07:28PM +0200, Peter Zijlstra wrote:
+> On Tue, May 20, 2025 at 06:41:05PM +0800, Aaron Lu wrote:
+> > @@ -8851,6 +8913,7 @@ static struct task_struct *pick_task_fair(struct rq *rq)
+> >  {
+> >  	struct sched_entity *se;
+> >  	struct cfs_rq *cfs_rq;
+> > +	struct task_struct *p;
+> >  
+> >  again:
+> >  	cfs_rq = &rq->cfs;
+> > @@ -8871,7 +8934,14 @@ static struct task_struct *pick_task_fair(struct rq *rq)
+> >  		cfs_rq = group_cfs_rq(se);
+> >  	} while (cfs_rq);
+> >  
+> > -	return task_of(se);
+> > +	p = task_of(se);
+> > +	if (throttled_hierarchy(cfs_rq_of(se))) {
+> > +		/* Shuold not happen for now */
+> > +		WARN_ON_ONCE(1);
+> > +		task_throttle_setup_work(p);
+> > +	}
+> > +
+> > +	return p;
+> >  }
 > 
-> AHB > PCIE > WIFI
-> AHB > WIFI
+> So the final code is a little different, because you're removing the
+> return value from check_cfs_rq_runtime().
 > 
-> These will be used to replace the platform_device code with OF in the
-> following patch.
+> But would not that exact return value be the thing you're now checking
+> for again?
+>
+
+Ah yes.
+
+> That is; at the end of the series, would not something like:
 > 
-> Signed-off-by: Rosen Penev <rosenp@gmail.com>
-> ---
->  .../bindings/net/wireless/qca,ath9k.yaml      | 20 ++++++++++++++++++-
->  1 file changed, 19 insertions(+), 1 deletion(-)
+> static struct task_struct *pick_task_fair(struct rq *rq)
+> {
+> 	struct sched_entity *se;
+> 	struct cfs_rq *cfs_rq;
+> 	struct task_struct *p;
+> 	bool throttled;
 > 
+> again:
+> 	cfs_rq = &rq->cfs;
+> 	if (!cfs_rq->nr_queued)
+> 		return NULL;
+> 
+> 	throttled = false;
+> 
+> 	do {
+> 		if (cfs_rq->curr && cfs_rq->curr->on_rq)
+> 			update_curr(cfs_rq);
+> 
+> 		throttled |= check_cfs_rq_runtime(cfs_rq);
+> 
+> 		se = pick_next_entity(rq, cfs_rq);
+> 		if (!se)
+> 			goto again;
+> 
+> 		cfs_rq = group_cfs_rq(se);
+> 	} while (cfs_rq);
+> 
+> 	p = task_of(se);
+> 	if (unlikely(throttled))
+> 		task_throttle_setup_work(p);
+> 	return p;
+> }
+> 
+> make it more obvious / be simpler?
 
-My bot found errors running 'make dt_binding_check' on your patch:
-
-yamllint warnings/errors:
-
-dtschema/dtc warnings/errors:
-Documentation/devicetree/bindings/net/wireless/qca,ath9k.example.dts:90.13-41: Warning (reg_format): /example-2/ahb/wifi@180c0000:reg: property has invalid length (8 bytes) (#address-cells == 2, #size-cells == 1)
-Documentation/devicetree/bindings/net/wireless/qca,ath9k.example.dts:86.11-18: Warning (ranges_format): /example-2/ahb:ranges: empty "ranges" property but its #address-cells (2) differs from /example-2 (1)
-Documentation/devicetree/bindings/net/wireless/qca,ath9k.example.dtb: Warning (pci_device_reg): Failed prerequisite 'reg_format'
-Documentation/devicetree/bindings/net/wireless/qca,ath9k.example.dtb: Warning (pci_device_bus_num): Failed prerequisite 'reg_format'
-Documentation/devicetree/bindings/net/wireless/qca,ath9k.example.dtb: Warning (simple_bus_reg): Failed prerequisite 'reg_format'
-Documentation/devicetree/bindings/net/wireless/qca,ath9k.example.dtb: Warning (i2c_bus_reg): Failed prerequisite 'reg_format'
-Documentation/devicetree/bindings/net/wireless/qca,ath9k.example.dtb: Warning (spi_bus_reg): Failed prerequisite 'reg_format'
-Documentation/devicetree/bindings/net/wireless/qca,ath9k.example.dts:88.25-93.13: Warning (avoid_default_addr_size): /example-2/ahb/wifi@180c0000: Relying on default #address-cells value
-Documentation/devicetree/bindings/net/wireless/qca,ath9k.example.dts:88.25-93.13: Warning (avoid_default_addr_size): /example-2/ahb/wifi@180c0000: Relying on default #size-cells value
-Documentation/devicetree/bindings/net/wireless/qca,ath9k.example.dtb: Warning (unique_unit_address_if_enabled): Failed prerequisite 'avoid_default_addr_size'
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/net/wireless/qca,ath9k.example.dtb: ahb (simple-bus): '#address-cells' is a required property
-	from schema $id: http://devicetree.org/schemas/simple-bus.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/net/wireless/qca,ath9k.example.dtb: ahb (simple-bus): '#size-cells' is a required property
-	from schema $id: http://devicetree.org/schemas/simple-bus.yaml#
-Documentation/devicetree/bindings/net/wireless/qca,ath9k.example.dtb: /example-2/ahb/wifi@180c0000: failed to match any schema with compatible: ['qca,ar9130-wifi']
-
-doc reference errors (make refcheckdocs):
-
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250523063207.10040-4-rosenp@gmail.com
-
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
-
+Thanks for the suggestion, will follow it in next version.
