@@ -1,92 +1,120 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DE6514286;
-	Fri, 23 May 2025 15:36:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C380D246793
+	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 15:36:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748014575; cv=none; b=INF4mOMiFuy6QGwTwvGceB0tnPfNbIzaUXL923HHXcqFcx6mrD/3+smZmmJZFauGHcobKIeorg9RCsw3ttu835wm5R1JxhYar+GqxjUWnEvZPFJqaNGDcPY3DA9v2L1ct40l0/bw/yPLvBQTNX66MSP09LLgpWT1ZAobeP6xG0w=
+	t=1748014600; cv=none; b=p/Qv0qrn9lNR530BGfAbmxqNBqM+iiAVFYLQMcoONK6Dr13zOWPOSATOOf8hBb2yJ9AMDiby9HodD0BPx6vwZW3Q00FyR3lnwjbbmsfKayUkcaZ/4z/U+z0XK9FEnNQrXE+zkWWXoR2hF25GVgJFIVMIeO1HHxp7oxcmK1jqVtI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748014575; c=relaxed/simple;
-	bh=zG0Aq0dm5zd6tPL905oAGCXNUFTWV4Fg6wvO8nA9YtM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JKxTxt+rYUE0k6tMtiVzjjZ6SwjK7q8rqTp+EIp/akW3ZiywDlLIKWICJuuB9+CoG1Evohw3GvECRrh3mS8Ks/TthSRM5JxA+IWr6f996nq97Wx4qh2Nk8gmjFSSQl8708R8fzllvZc+dRDRQYNPXVCFwL003Si/9RyIYmjtye4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CjwldArL; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748014600; c=relaxed/simple;
+	bh=mBoyiUX6cNGmBI/RVAoVtGY+TJHKe8LjzoZW8vjRCY4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=LLw5Z3KnFIctxS2oZm0DIgHVzzwNN1Tc4mrll3wifpZEXc3vuuMZmg+XNnj1uRfVgUB8fT6MS0oiy/HZo/oDbqFk6wUuToh60YcysL2BMBAYqjjpQeKltgVUgktckNsBoVBuwfg4FjBvrPDd6NtZqf9q3wUKbF8vEy8ns9fp9Us=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=DYNG3rqR; arc=none smtp.client-ip=209.85.167.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CjwldArL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B096CC4CEE9;
-	Fri, 23 May 2025 15:36:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748014574;
-	bh=zG0Aq0dm5zd6tPL905oAGCXNUFTWV4Fg6wvO8nA9YtM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=CjwldArLZVywmL4BtfM9pLrYXkohqEPLLnBQyNP7xfBRFsSzTxTxvrtEaGOep4K7h
-	 vZ0k4IlP/x9We6ehTYweyWo2At6E9I1IMrjAwSlUHiEL7Ru/R5yQRAzYqUXxXKlgDN
-	 KT98/Ef487LHmYrzwFvHZ4Gtw/y7nigDdaeHZLrFdj3+91C8P1bkIVdrKrSHkysQVQ
-	 UXa1YcDU6f10xJNpSegcoSTbuxW4SdAPPk86AOv5uaFfqKgDiwPykkzdKkmEKboTQy
-	 l9EMFcVTWjMceFxINNpuVIa9nLdGHG6jg10RAtB+lnucCV5vPUsGDP2bug5aJ+QEVB
-	 pyj3DMaJpVIqA==
-Date: Fri, 23 May 2025 16:36:07 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Rajnesh Kanwal <rkanwal@rivosinc.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
-	Atish Kumar Patra <atishp@rivosinc.com>,
-	Anup Patel <anup@brainfault.org>, Will Deacon <will@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Beeman Strong <beeman@rivosinc.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org,
-	Palmer Dabbelt <palmer@sifive.com>, devicetree@vger.kernel.org
-Subject: Re: [PATCH v3 7/7] dt-bindings: riscv: add Sxctr ISA extension
- description
-Message-ID: <20250523-ducky-unlisted-5764ad0f698a@spud>
-References: <20250523-b4-ctr_upstream_v3-v3-0-ad355304ba1c@rivosinc.com>
- <20250523-b4-ctr_upstream_v3-v3-7-ad355304ba1c@rivosinc.com>
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="DYNG3rqR"
+Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-551f00720cfso23726e87.0
+        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 08:36:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1748014597; x=1748619397; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=aBTug0/NeMZd6Qk9EUzJxCkzpzI4b0/AjBa3843O+Gk=;
+        b=DYNG3rqRk8pJAfG7sGnOkJsid4jRlus793Hi4KqUHsbwV+4rcsggO3l24pEmtnR4DO
+         OG31/RC/GJFuByJjRT7LaEP+OYr2NHJbrD4pj5qCoPHTKLPY6xTnO7u+SD278QpEItcC
+         9ic0RaLFG2WidDn6y/IHAN5XrhG5Nt+aw+zBs8GJSUGAd7c4WfsNv5EbbCEGkNm6LBnn
+         R0Ete8dTFqIZncVrz06rI/n/UAbu6EgsttL6byxJs1SPUbUOL4uYDePC7xuRmGWDC7qi
+         xCkFwaccDk97wPEnnNtUaxiNi85JklHiJUTe1T01yMR9stTegBgN5BmAzzwZ5vKxhBXs
+         jzsg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748014597; x=1748619397;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=aBTug0/NeMZd6Qk9EUzJxCkzpzI4b0/AjBa3843O+Gk=;
+        b=MT5OZKRLQKykYZhQ+NglYnua8iatyTpK4PZTBreQ2C2wyoawHN2mg7ZAvalR7we7+O
+         c0CMUezW/r+9R7nzoNRk/oEPkxAcvgYmLDhpFqg3rpLq9d8J1CMyf3+20cGI8wt5rOqZ
+         k63/KHzjXyknnCKLpnN6mYKbZ10Hbi/qY61d8JEA8sg6kb9SzGq8FSnR64mxtlb6HY/7
+         fnhAzqdqgoyuZRcwnBoyD9Vf3uss4MtEVJZMx5CCSdBRYGkLY0yy0K7W17m9SX0QgD8q
+         fX32YAsMs24NsnbTeVTv37DYjwHS9T7jKhiHaI2Tfwew5Cney6AGi9R44yWdMEDusJvL
+         UMzA==
+X-Forwarded-Encrypted: i=1; AJvYcCWyAgna7rP4QMOxKo9TVmK6bhVf3ML1pxIEdlHD902YNlhvQjcmexnxT5Yqtq7l4RT6UQCfq96foa1NRbM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwRqHzKXTD3wrmUFJK95Jo1C686m926yMuP3MOpxutExMufMBI0
+	DBmSb5+YL/cP5oHQBT3qxrOemJiJg4M4xYO+oMkytCNNFJvxJAXlpOqWKD0L84JleKgAHk8oZFN
+	aVdgtw9+YZNqR/fn9cHpg9yenOvXG8HnvKVSR7wHp4A==
+X-Gm-Gg: ASbGncubpAZp2HwP8Mh0/xSQsFkZDjrTQNjsOIeIa85FgcNlgEdUF95527Ik0G5IzzS
+	kAfKmVMnOOcXQNekTWQigmpcAos4A2bpMo5URcx7mVlk6A/EDf8vFL38R4aiZY4H5F+8ngQ7v5A
+	ek3jbLDhZxHryHPIp6O8/pmHlJANI/LVaa+po=
+X-Google-Smtp-Source: AGHT+IHAij+IkAtUHU5WlmmWLtmmWgHF+NpmCZ7ttFYGpc17RlUZBN41Ag3XoQmzFn5988CXaFljyU58oThRKVVdiT8=
+X-Received: by 2002:a05:6512:650e:b0:549:8cbb:5443 with SMTP id
+ 2adb3069b0e04-550e724a21emr9751477e87.47.1748014596646; Fri, 23 May 2025
+ 08:36:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="YsbMlZlsa7BrXpPT"
-Content-Disposition: inline
-In-Reply-To: <20250523-b4-ctr_upstream_v3-v3-7-ad355304ba1c@rivosinc.com>
-
-
---YsbMlZlsa7BrXpPT
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20250520031552.1931598-1-hezhongkun.hzk@bytedance.com>
+ <8029d719-9dc2-4c7d-af71-4f6ae99fe256@redhat.com> <CACSyD1Mmt54dVRiBibcGsum_rRV=_SwP=dxioAxq=EDmPRnY2Q@mail.gmail.com>
+ <aC4J9HDo2LKXYG6l@slm.duckdns.org> <CACSyD1MvwPT7i5_PnEp32seeb7X_svdCeFtN6neJ0=QPY1hDsw@mail.gmail.com>
+ <aC90-jGtD_tJiP5K@slm.duckdns.org>
+In-Reply-To: <aC90-jGtD_tJiP5K@slm.duckdns.org>
+From: Zhongkun He <hezhongkun.hzk@bytedance.com>
+Date: Fri, 23 May 2025 23:35:57 +0800
+X-Gm-Features: AX0GCFt0sS7VYPB52zeUI_3_ZpYBGiasCDtLJweGgJzUP78rp8YvdTmx5WfX8CE
+Message-ID: <CACSyD1P+wuSP2jhMsLHBAXDxGoBkWzK54S5BRzh63yby4g0OHw@mail.gmail.com>
+Subject: Re: [External] Re: [PATCH] cpuset: introduce non-blocking cpuset.mems
+ setting option
+To: Tejun Heo <tj@kernel.org>
+Cc: Waiman Long <llong@redhat.com>, hannes@cmpxchg.org, cgroups@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, muchun.song@linux.dev
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, May 23, 2025 at 12:25:13AM +0100, Rajnesh Kanwal wrote:
-> Add the S[m|s]ctr ISA extension description.
->=20
-> Signed-off-by: Rajnesh Kanwal <rkanwal@rivosinc.com>
+On Fri, May 23, 2025 at 3:03=E2=80=AFAM Tejun Heo <tj@kernel.org> wrote:
+>
+> Hello,
+>
+> On Thu, May 22, 2025 at 11:37:44AM +0800, Zhongkun He wrote:
+> > > I don't think this is a good idea. O_NONBLOCK means "don't wait", not=
+ "skip
+> > > this".
+> >
+> > Yes, I agree.  However, we have been experiencing this issue for a long=
+ time,
+> > so we hope to have an option to disable memory migration in v2.
+> >
+> > Would it be possible to re-enable the memory.migrate interface and
+> > disable memory migration by default in v2?
+> >
+> > Alternatively, could we introduce an option in cpuset.mems to explicitl=
+y
+> > indicate that memory migration should not occur?
+> >
+> > Please feel free to share any suggestions you might have.
+>
+> Is this something you want on the whole machine? If so, would global cgro=
+up
+> mount option work?
 
-Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
+It doesn't apply to the whole machine. It is only relevant to the pod
+with huge pages,
+where the service will be unavailable for over ten seconds if modify
+the cpuset.mems.
+Therefore, it would be ideal if there were an option to disable the migrati=
+on
+for this special case.
 
---YsbMlZlsa7BrXpPT
-Content-Type: application/pgp-signature; name="signature.asc"
+Thanks.
 
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaDCV5wAKCRB4tDGHoIJi
-0pfsAQCC0vFE1gQIjvjVO3vjHghEg/7zH3pwUyTcP2hPYZcZSAEAjizdb5MtEvdc
-ne55YWgcjHCCab8vDuJrO0B3c+3OXwg=
-=xhJF
------END PGP SIGNATURE-----
-
---YsbMlZlsa7BrXpPT--
+>
+> Thanks.
+>
+> --
+> tejun
+>
