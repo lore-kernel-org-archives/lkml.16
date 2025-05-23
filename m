@@ -1,322 +1,127 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3BEB2770B
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 11:46:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A32F1EE02F;
+	Fri, 23 May 2025 11:46:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748000788; cv=none; b=KIZv2Tx+Cfvc+vxkvga7o1Cepu3f70V2SWWqx/Sh7XqDH0C0hXstVnCdPmC9cZxpUWdD2o7xMkoTOgPGb7x44PmZLiZsJXjKTN6HZNL60TPFiqUdQwDdOkj5smepJpC9Wc7RI5af59SkP23QQo4CZF+eUT25AmlFMCXbSy+V9qo=
+	t=1748000811; cv=none; b=K0q0eOxhhIfMND8Khi5kp3JhPZiH8bCAk9D92LYt+g5QSVTSpnZYCc65gfrLgX1BCHh7KduzB6SqB6KOm8H/VlZGIWlXODIxngUN1lPb6ibp+Y1MPpfUw2cV0Oi+0FdIKtsILUcoT+KN7y5svYF0+gxMU326TjSBhNg6W12LgAY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748000788; c=relaxed/simple;
-	bh=tINtbMZwiyul1+s615FxcsqdDp4S0HiWbZTcY2k5exg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=I9t5krrP85udxBXwswBhkupaQF4BOyxXYPZJF4P3YG34e+/j9pcedkLZRyEY4SMPRhbUlhRJIeuIKuAaqrD6rDOjJhoNRqNR1xckHkgyohxpzvkwBPw0hDGRJHN9MS8wtTr3w/LPF+B4He6qOwB05fCbUW52znu6GeOFez1CvFs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NEZRYvcR; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1748000811; c=relaxed/simple;
+	bh=41ZMNv9DZfWMf6Rr7Dfo1K3B4T7MWWsD7qyxjxJCH+M=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=JH3P5G0irCxNGWXVp+cBPP6Fv5i+VYJ1FLE/GjH3naUjXQwGvdd8J0ZwPWk0GFK3eA/fmalvB9LlEVrOi9asvhu5OXC/bR2vH8YsCxKIHnsQGp4IkPByhOGEltUOtERtmRh1hHUUOMB2zoWaLInkaGsWRLhcJw3t8/+EoNVT8m0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=gQ0QqYFn; arc=none smtp.client-ip=217.70.183.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NEZRYvcR"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1748000785;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="gQ0QqYFn"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 9C47C43295;
+	Fri, 23 May 2025 11:46:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1748000801;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=+hWcM77IoP384h3TPLegN4v3sX3yuXb0odhYXhpeKHU=;
-	b=NEZRYvcRem4wzwB79MTsoCvztUFMiSDTDRcUY/LClJpHb5rjoOgpptx5bepdNGwacni2fT
-	4xBP3OAQNM3xW1C5ZS8QxE/MSJxHznuwHBB1Wbpo21eJu+7pU8HmA19eqEGdWuAC3kEW0X
-	OcoXvPtm6TWLIgqADiIOGLVAT8/h6q8=
-Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
- [209.85.160.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-659-62r-z3XtMiyfbEZjVzOH2w-1; Fri, 23 May 2025 07:46:24 -0400
-X-MC-Unique: 62r-z3XtMiyfbEZjVzOH2w-1
-X-Mimecast-MFC-AGG-ID: 62r-z3XtMiyfbEZjVzOH2w_1748000784
-Received: by mail-qt1-f197.google.com with SMTP id d75a77b69052e-4767e6b4596so154125331cf.2
-        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 04:46:24 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748000784; x=1748605584;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+hWcM77IoP384h3TPLegN4v3sX3yuXb0odhYXhpeKHU=;
-        b=SWN0bvHop1w0JplC38vlp8GFVVbSd+fA+PtJWPd09apcaOYGseWov1S59DQxXsroyE
-         pmWbNX1eAB0uoDtDlrNFQF3HVrxcmKyjxHr8ZGcmw2I9USA7gllw3zp1i2qKYc1t2Xqd
-         VXUsoXvYsV2KwDLA0mL+9iC5bsRZ7EI9/P2sOCSS8stWAku6rHKfCMi9CYR/bStPxiJd
-         MgpmdTAlewApCY/iAqBbYcqSI4mSRw7NkSpHwsvs0h6oD5/FDOCCddaNogMwR6UpEnx3
-         UFfus5n3FjS+Sb/yfHB5VhgBVPNo9aOqtX2Y12+vl1awELH/glDQglBrbFZpYx9/h0ro
-         M0cg==
-X-Gm-Message-State: AOJu0YxeLyBkedSvZfHspuA+b55hK1Y9dJF/A2HHI+0GuOCU2g+uBjKu
-	Q38AEpLR3rN2N/w5I3uK6BI2jGkTzmtfltS+jmcSJ8Ielmz68Y+ztZzxXTvXWrmePk7tvtWUkBL
-	k2GO/ffP0kkhaYJ1m/B/fCoy/M5/w4Jet5mrBuShQUyIBy7IwJYr9rEznnkxtN/OFrw==
-X-Gm-Gg: ASbGncs3nTtVVEtYhNGs8WSJGVfjIsfjj0DCLULNA5D4Hc5ctEEsGVZtbvMuDL5ATaN
-	GGrXGth2QbeWLdsra37yt/Z1VFiHLEFQNR8JJRbtn4tar7nJEMCmIRqZypv1HIxv56xrUaB8fpL
-	88LLFZ6ggSC4yTZ8pO6whdsVJeq+1tlGKOU7KBGlBJTtlUoDA66S8icCtBVafdQ5ZbvRNQM3Jb3
-	pM/XoNVGlYvXRUlPXMoeDjYN/fqOUWzg8+KfMhC28+YdisRzyzx43zeSdksmXtRDqWsZa582jND
-	mxk2F79XOvCN2/HuDz079qgZiSNgbNw+BXRpL4rYHakGLb/UgP2wyD9v4cHVGSOxfXI=
-X-Received: by 2002:a05:622a:5c1b:b0:494:7c68:3c6e with SMTP id d75a77b69052e-49e1df237d9mr37122841cf.15.1748000783899;
-        Fri, 23 May 2025 04:46:23 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGh3nDU8DMvp2LUfvA1rvQXn+mK50bZw+xd7UbP2Ohi0mNvNMwTvTiS0vjD5CL+WdJ4AaPr6g==
-X-Received: by 2002:a05:622a:5c1b:b0:494:7c68:3c6e with SMTP id d75a77b69052e-49e1df237d9mr37122461cf.15.1748000783501;
-        Fri, 23 May 2025 04:46:23 -0700 (PDT)
-Received: from [192.168.1.17] (pool-68-160-160-85.bstnma.fios.verizon.net. [68.160.160.85])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7cd468ccd94sm1166694285a.109.2025.05.23.04.46.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 23 May 2025 04:46:22 -0700 (PDT)
-Message-ID: <29b3d533-94cf-4949-90a1-4a8c9d698a8a@redhat.com>
-Date: Fri, 23 May 2025 07:46:19 -0400
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=mDq6MieyiMr43NuOWTLdL0EFY12TTvHhRagxM34k8EA=;
+	b=gQ0QqYFnk9rZG9v1uNDabbudjF8lmrEkamaDERL3owhT5l1lEXeEeiDLkZWrTlZjIbdftK
+	YhYFaRMlToVaQzQqLkKEUfVckqMZmXJWuyR2gSCCRBvDd1gMvCwD37tEPc0e6XogAOLzU8
+	4QhXenD1cL2qTdRj5oh1MenLyAen378EJQH7AHwYQFEvRTJaf5knDP8/kaWbbEfQM4qr6z
+	456/lDSLnd3+1/ukgP+eVu7UCXooOM76pde0n3pTLTtSSs5O8CV1bneZAGw7cq+BYN1B30
+	naK1UQZHYDz8AT596kQQDR5KZ3EA97lUifpSXFLqmJZtqtfSaU+3azD9v9/afw==
+From: =?utf-8?q?Alexis_Lothor=C3=A9?= <alexis.lothore@bootlin.com>
+Date: Fri, 23 May 2025 13:46:32 +0200
+Subject: [PATCH] net: stmmac: add explicit check and error on invalid PTP
+ clock rate
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 35/62] objtool: Refactor add_jump_destinations()
-To: Josh Poimboeuf <jpoimboe@kernel.org>, x86@kernel.org
-Cc: linux-kernel@vger.kernel.org, Petr Mladek <pmladek@suse.com>,
- Miroslav Benes <mbenes@suse.cz>, live-patching@vger.kernel.org,
- Song Liu <song@kernel.org>, laokz <laokz@foxmail.com>,
- Jiri Kosina <jikos@kernel.org>, Marcos Paulo de Souza <mpdesouza@suse.com>,
- Weinan Liu <wnliu@google.com>, Fazla Mehrab <a.mehrab@bytedance.com>,
- Chen Zhongjin <chenzhongjin@huawei.com>, Puranjay Mohan <puranjay@kernel.org>
-References: <cover.1746821544.git.jpoimboe@kernel.org>
- <70bf4b499941a6b19c5f750f5c36afcd6ffd216f.1746821544.git.jpoimboe@kernel.org>
-Content-Language: en-US
-From: Joe Lawrence <joe.lawrence@redhat.com>
-Autocrypt: addr=joe.lawrence@redhat.com; keydata=
- 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
- pNzsRQ==
-In-Reply-To: <70bf4b499941a6b19c5f750f5c36afcd6ffd216f.1746821544.git.jpoimboe@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20250523-stmmac_tstamp_div-v1-1-bca8a5a3a477@bootlin.com>
+X-B4-Tracking: v=1; b=H4sIABdgMGgC/x3MQQqAIBBA0avErBN0wKCuEhFiY81CC0ciCO+et
+ HyL/18QykwCU/dCppuFz9Rg+g784dJOirdmQI1WW0QlJUbn1yLFxWvd+FbBWmMw6EHjCK27MgV
+ +/ue81PoBTtWoOGMAAAA=
+X-Change-ID: 20250522-stmmac_tstamp_div-f55112f06029
+To: Alexandre Torgue <alexandre.torgue@foss.st.com>, 
+ Jose Abreu <joabreu@synopsys.com>, Andrew Lunn <andrew+netdev@lunn.ch>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
+ Richard Cochran <richardcochran@gmail.com>
+Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+ Maxime Chevallier <maxime.chevallier@bootlin.com>, netdev@vger.kernel.org, 
+ linux-stm32@st-md-mailman.stormreply.com, 
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ =?utf-8?q?Alexis_Lothor=C3=A9?= <alexis.lothore@bootlin.com>
+X-Mailer: b4 0.14.2
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgdekjeejucdltddurdegfedvrddttddmucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhfffugggtgffkvfevofesthekredtredtjeenucfhrhhomheptehlvgigihhsucfnohhthhhorhoruceorghlvgigihhsrdhlohhthhhorhgvsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeetudekvdffieehueeugfdujefgtddvgeekvddtieffffelvedtgeffjeekjeelgfenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepvdgrtddvmeekgedvkeemfhelgegtmegvtddtmeemfhekheenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtvdemkeegvdekmehfleegtgemvgdttdemmehfkeehpdhhvghloheplgduledvrdduieekrddurdduleejngdpmhgrihhlfhhrohhmpegrlhgvgihishdrlhhothhhohhrvgessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepudeipdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqshhtmhefvdesshhtqdhmugdqmhgrihhlmhgrnhdrshhtohhrmhhrvghplhihrdgtohhmpdhrtghpthhtohepk
+ hhusggrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdgrrhhmqdhkvghrnhgvlheslhhishhtshdrihhnfhhrrgguvggrugdrohhrghdprhgtphhtthhopehthhhomhgrshdrphgvthgriiiiohhnihessghoohhtlhhinhdrtghomhdprhgtphhtthhopegrlhgvgihishdrlhhothhhohhrvgessghoohhtlhhinhdrtghomhdprhgtphhtthhopegrnhgurhgvfidonhgvthguvghvsehluhhnnhdrtghhpdhrtghpthhtohepmhgtohhquhgvlhhinhdrshhtmhefvdesghhmrghilhdrtghomh
+X-GND-Sasl: alexis.lothore@bootlin.com
 
-On 5/9/25 4:16 PM, Josh Poimboeuf wrote:
-> The add_jump_destinations() logic is a bit weird and convoluted after
-> being incrementally tweaked over the years.  Refactor it to hopefully be
-> more logical and straightforward.
-> 
-> Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
-> ---
->  tools/objtool/check.c               | 227 +++++++++++++---------------
->  tools/objtool/include/objtool/elf.h |   4 +-
->  2 files changed, 104 insertions(+), 127 deletions(-)
-> 
-> diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-> index 66cbeebd16ea..e4ca5edf73ad 100644
-> --- a/tools/objtool/check.c
-> +++ b/tools/objtool/check.c
-> @@ -1439,9 +1439,14 @@ static void add_return_call(struct objtool_file *file, struct instruction *insn,
->  }
->  
->  static bool is_first_func_insn(struct objtool_file *file,
-> -			       struct instruction *insn, struct symbol *sym)
-> +			       struct instruction *insn)
->  {
-> -	if (insn->offset == sym->offset)
-> +	struct symbol *func = insn_func(insn);
-> +
-> +	if (!func)
-> +		return false;
-> +
-> +	if (insn->offset == func->offset)
->  		return true;
->  
->  	/* Allow direct CALL/JMP past ENDBR */
-> @@ -1449,52 +1454,32 @@ static bool is_first_func_insn(struct objtool_file *file,
->  		struct instruction *prev = prev_insn_same_sym(file, insn);
->  
->  		if (prev && prev->type == INSN_ENDBR &&
-> -		    insn->offset == sym->offset + prev->len)
-> +		    insn->offset == func->offset + prev->len)
->  			return true;
->  	}
->  
->  	return false;
->  }
->  
-> -/*
-> - * A sibling call is a tail-call to another symbol -- to differentiate from a
-> - * recursive tail-call which is to the same symbol.
-> - */
-> -static bool jump_is_sibling_call(struct objtool_file *file,
-> -				 struct instruction *from, struct instruction *to)
-> -{
-> -	struct symbol *fs = from->sym;
-> -	struct symbol *ts = to->sym;
-> -
-> -	/* Not a sibling call if from/to a symbol hole */
-> -	if (!fs || !ts)
-> -		return false;
-> -
-> -	/* Not a sibling call if not targeting the start of a symbol. */
-> -	if (!is_first_func_insn(file, to, ts))
-> -		return false;
-> -
-> -	/* Disallow sibling calls into STT_NOTYPE */
-> -	if (is_notype_sym(ts))
-> -		return false;
-> -
-> -	/* Must not be self to be a sibling */
-> -	return fs->pfunc != ts->pfunc;
-> -}
-> -
->  /*
->   * Find the destination instructions for all jumps.
->   */
->  static int add_jump_destinations(struct objtool_file *file)
->  {
-> -	struct instruction *insn, *jump_dest;
-> +	struct instruction *insn;
->  	struct reloc *reloc;
-> -	struct section *dest_sec;
-> -	unsigned long dest_off;
->  	int ret;
->  
->  	for_each_insn(file, insn) {
->  		struct symbol *func = insn_func(insn);
-> +		struct instruction *dest_insn;
-> +		struct section *dest_sec;
-> +		struct symbol *dest_sym;
-> +		unsigned long dest_off;
-> +		bool dest_undef = false;
-> +
-> +		if (!is_static_jump(insn))
-> +			continue;
->  
->  		if (insn->jump_dest) {
->  			/*
-> @@ -1503,129 +1488,121 @@ static int add_jump_destinations(struct objtool_file *file)
->  			 */
->  			continue;
->  		}
-> -		if (!is_static_jump(insn))
-> -			continue;
->  
->  		reloc = insn_reloc(file, insn);
->  		if (!reloc) {
->  			dest_sec = insn->sec;
->  			dest_off = arch_jump_destination(insn);
-> -		} else if (is_sec_sym(reloc->sym)) {
-> +		} else if (is_undef_sym(reloc->sym)) {
-> +			dest_sym = reloc->sym;
-> +			dest_undef = true;
-> +		} else {
->  			dest_sec = reloc->sym->sec;
-> -			dest_off = arch_insn_adjusted_addend(insn, reloc);
-> -		} else if (reloc->sym->retpoline_thunk) {
-> +			dest_off = reloc->sym->sym.st_value +
-> +				   arch_insn_adjusted_addend(insn, reloc);
-> +		}
-> +
-> +		if (!dest_undef) {
-> +			dest_insn = find_insn(file, dest_sec, dest_off);
-> +			if (!dest_insn) {
-> +				struct symbol *sym = find_symbol_by_offset(dest_sec, dest_off);
-> +
-> +				/*
-> +				 * retbleed_untrain_ret() jumps to
-> +				 * __x86_return_thunk(), but objtool can't find
-> +				 * the thunk's starting RET instruction,
-> +				 * because the RET is also in the middle of
-> +				 * another instruction.  Objtool only knows
-> +				 * about the outer instruction.
-> +				 */
-> +				if (sym && sym->embedded_insn) {
-> +					add_return_call(file, insn, false);
-> +					continue;
-> +				}
-> +
-> +				/*
-> +				 * GCOV/KCOV dead code can jump to the end of
-> +				 * the function/section.
-> +				 */
-> +				if (file->ignore_unreachables && func &&
-> +				    dest_sec == insn->sec &&
-> +				    dest_off == func->offset + func->len)
-> +					continue;
-> +
-> +				ERROR_INSN(insn, "can't find jump dest instruction at %s+0x%lx",
-> +					  dest_sec->name, dest_off);
-> +				return -1;
-> +			}
-> +
-> +			dest_sym = dest_insn->sym;
-> +			if (!dest_sym)
-> +				goto set_jump_dest;
-> +		}
-> +
-> +		if (dest_sym->retpoline_thunk) {
->  			ret = add_retpoline_call(file, insn);
->  			if (ret)
->  				return ret;
->  			continue;
-> -		} else if (reloc->sym->return_thunk) {
-> +		}
-> +
-> +		if (dest_sym->return_thunk) {
->  			add_return_call(file, insn, true);
->  			continue;
-> -		} else if (func) {
-> -			/*
-> -			 * External sibling call or internal sibling call with
-> -			 * STT_FUNC reloc.
-> -			 */
-> -			ret = add_call_dest(file, insn, reloc->sym, true);
-> -			if (ret)
-> -				return ret;
-> -			continue;
-> -		} else if (reloc->sym->sec->idx) {
-> -			dest_sec = reloc->sym->sec;
-> -			dest_off = reloc->sym->sym.st_value +
-> -				   arch_dest_reloc_offset(reloc_addend(reloc));
+While some platforms implementing dwmac open-code the clk_ptp_rate
+value, some others dynamically retrieve the value at runtime. If the
+retrieved value happens to be 0 for any reason, it will eventually
+propagate up to PTP initialization when bringing up the interface,
+leading to a divide by 0:
 
-Way back in ("[PATCH v2 18/62] objtool: Fix x86 addend calculation"),
-arch_dest_reloc_offset() was replaced with arch_insn_adjusted_addend(),
-so I think that patch missed this callsite and breaks bisectability.
+ Division by zero in kernel.
+ CPU: 1 UID: 0 PID: 1 Comm: swapper/0 Not tainted 6.12.30-00001-g48313bd5768a #22
+ Hardware name: STM32 (Device Tree Support)
+ Call trace:
+  unwind_backtrace from show_stack+0x18/0x1c
+  show_stack from dump_stack_lvl+0x6c/0x8c
+  dump_stack_lvl from Ldiv0_64+0x8/0x18
+  Ldiv0_64 from stmmac_init_tstamp_counter+0x190/0x1a4
+  stmmac_init_tstamp_counter from stmmac_hw_setup+0xc1c/0x111c
+  stmmac_hw_setup from __stmmac_open+0x18c/0x434
+  __stmmac_open from stmmac_open+0x3c/0xbc
+  stmmac_open from __dev_open+0xf4/0x1ac
+  __dev_open from __dev_change_flags+0x1cc/0x224
+  __dev_change_flags from dev_change_flags+0x24/0x60
+  dev_change_flags from ip_auto_config+0x2e8/0x11a0
+  ip_auto_config from do_one_initcall+0x84/0x33c
+  do_one_initcall from kernel_init_freeable+0x1b8/0x214
+  kernel_init_freeable from kernel_init+0x24/0x140
+  kernel_init from ret_from_fork+0x14/0x28
+ Exception stack(0xe0815fb0 to 0xe0815ff8)
 
+Prevent this division by 0 by adding an explicit check and error log
+about the actual issue.
+
+Signed-off-by: Alexis Lothoré <alexis.lothore@bootlin.com>
+---
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+index 918d7f2e8ba992208d7d6521a1e9dba01086058f..f68e3ece919cc88d0bf199a394bc7e44b5dee095 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+@@ -835,6 +835,11 @@ int stmmac_init_tstamp_counter(struct stmmac_priv *priv, u32 systime_flags)
+ 	if (!(priv->dma_cap.time_stamp || priv->dma_cap.atime_stamp))
+ 		return -EOPNOTSUPP;
+ 
++	if (!priv->plat->clk_ptp_rate) {
++		netdev_err(priv->dev, "Invalid PTP clock rate");
++		return -EINVAL;
++	}
++
+ 	stmmac_config_hw_tstamping(priv, priv->ptpaddr, systime_flags);
+ 	priv->systime_flags = systime_flags;
+ 
+
+---
+base-commit: e0e2f78243385e7188a57fcfceb6a19f723f1dff
+change-id: 20250522-stmmac_tstamp_div-f55112f06029
+
+Best regards,
 -- 
-Joe
+Alexis Lothoré, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
