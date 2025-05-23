@@ -1,124 +1,254 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41E7322DF9D;
-	Fri, 23 May 2025 10:57:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E77BF22A7F4
+	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 10:58:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747997881; cv=none; b=bllPENcTgKVsaJaopHgtDrFockfpKtSQnXbi2AUTgt9C7cBE+e8VjOSWAbZgz2thoOkE51uZtkUxbo7c8PR/O0RIhTKWoUzpCZn8OCSIpAvlv8wGrnHtT25aEe7D49uM9lLwHzjQrdLLeNycz7kROYiXcnmCcbvNg3cVbp9Nsz0=
+	t=1747997930; cv=none; b=sCOtLnt0G4iF1/WRrFtW2gCI01IdkrM02ZRW8bB7PBnY+GckMBgcshgRCIeJBCjrHPiaAzVpfgriyrWpdctIggppdHtkB/EjxBNyWCftkl48t/+B3whCw/NeY1z97RPF4VXdo5vAM/MZYjs+Ky22i4zCrEdzs8gS67ND7QemX9o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747997881; c=relaxed/simple;
-	bh=zRfhuo5HcN/XxgGjsNQGha70X2yKTBsAywoFmWRq+jc=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=F5joQ8mYD0Shrv2Fkfy/2chTlQ6ivosHi1NmLQ5zB5pY0t1K6XLWjw71n4WW5UGHjEsLgrQ8S8vdaFrmnQUfCR20ETO1AUMS4qIbcU1iZrL3As/Nz8FEqNjDEjv0mk8OPD1RhwEXO3kEvvOWMXb8sELJIarXLE1RVeJXctBTnlU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=YGNzcnoS; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
+	s=arc-20240116; t=1747997930; c=relaxed/simple;
+	bh=+7x8E4JVOl0BMoLyN3u4e+/xsogRji2QWQnJHu10K9I=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=X8Y8zYo8aFCXgVLbkDyTRPZ91GP3BjD0p+A9SCw/jrlcTGJgVsOdsmyYPIhxXpyrKqNTRtTieIY9obDRRInzlpB7ycRm905DtC5a2pHhjcg1tzZRHrZEgwtooStgXiEhkHByoqDjNQ/zPixGSshijpe+yeMNqJd7lV2ostQWmGE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=aBbPu1z3; arc=none smtp.client-ip=209.85.167.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="YGNzcnoS"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54N5aoN8029186;
-	Fri, 23 May 2025 10:57:56 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:date:from:in-reply-to:message-id:references:subject:to; s=
-	qcppdkim1; bh=vYIXQGwhCD+xiZWQxCiHA+S69ec5Z6pkcopdoI+jBWQ=; b=YG
-	NzcnoSOdFQe66XRuNKBf39jIA8iBb8xBSJVl5Jp9ax145tvE+HBML/33UMrrAMdj
-	+gpSYTXD4w6lgZw1eMtZy9VVAWYPo6tsVQpLBLocx3sBq0zhz88ZxH7pke8dLobB
-	lKAQU2osm/erpROwEF1u4YQNKLP1j/z/34Pauq2kwwpuyUZTwcY7A97s8vF9I5HY
-	8L5lde5C16FttdOAm1UiZHi4IdMsu+JSRtGBTPOnBfKrdV8JaHjhT4oWZRu6pyqW
-	usBydtqThCZJTr6lRjawrqZgthx1MKJVL+cE4T18aZpITmHcy7t/ZFUJein9mrft
-	PVz5NWLqvItGZpSu1Rlw==
-Received: from apblrppmta02.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46rwf49u4b-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 23 May 2025 10:57:56 +0000 (GMT)
-Received: from pps.filterd (APBLRPPMTA02.qualcomm.com [127.0.0.1])
-	by APBLRPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTP id 54NAvnvE027509;
-	Fri, 23 May 2025 10:57:52 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTP id 46syn0udnu-1;
-	Fri, 23 May 2025 10:57:52 +0000
-Received: from APBLRPPMTA02.qualcomm.com (APBLRPPMTA02.qualcomm.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 54NAvoYA027520;
-	Fri, 23 May 2025 10:57:52 GMT
-Received: from hu-maiyas-hyd.qualcomm.com (hu-sartgarg-hyd.qualcomm.com [10.213.105.147])
-	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTP id 54NAvqIR027539;
-	Fri, 23 May 2025 10:57:52 +0000
-Received: by hu-maiyas-hyd.qualcomm.com (Postfix, from userid 2339771)
-	id A7B5D608B7B; Fri, 23 May 2025 16:27:51 +0530 (+0530)
-From: Sarthak Garg <quic_sartgarg@quicinc.com>
-To: Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org,
-        quic_cang@quicinc.com, quic_nguyenb@quicinc.com,
-        quic_rampraka@quicinc.com, quic_pragalla@quicinc.com,
-        quic_sayalil@quicinc.com, quic_nitirawa@quicinc.com,
-        quic_bhaskarv@quicinc.com, Sarthak Garg <quic_sartgarg@quicinc.com>
-Subject: [PATCH V2 3/3] arm64: dts: qcom: sm8550: Remove SDR104/SDR50 broken caps
-Date: Fri, 23 May 2025 16:27:45 +0530
-Message-Id: <20250523105745.6210-4-quic_sartgarg@quicinc.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20250523105745.6210-1-quic_sartgarg@quicinc.com>
-References: <20250523105745.6210-1-quic_sartgarg@quicinc.com>
-X-QCInternal: smtphost
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIzMDA5NiBTYWx0ZWRfX+7XCGEJelHS7
- t8BbT+7G12OLDrELjuHwjVc8o/bkakFhzWzt4oiazv9NygrKk7lq9EFGL9plk25vZtn2NBDsPW/
- Chk9YqbS1Mgjg8d/csfUf83o2GCAp/ZW345OuSLtORB6kOSkniavTTRth1Jqw1GLx32oTwruMDj
- Pk0PUZsXjCl8W72+ibFyQvjP9d8oY4+tv8PlTgTKbUZCO3DwX/zGbwMXhcvNIHf6ca9C7rOk8KQ
- FwLItrLMuvnOxcYxmnDZz6FezuKPpDr2VaNCh1jm9UARlsDP3qllh/GYfhshRxbwDDn+psg0LE/
- BUcD3iK0R5aazdgkQ667nfelqft4Rs+3zY8rsUWqBfV3lbFWgjx8m82FZDeEhs6g7KzzvdC/n2b
- GDSG2jUuB2sRsAdIEawkUS8xsM+rfPOPYHxJepHDs89uyYUgll6yIPZ6odrn/nOgBNSOc4sb
-X-Proofpoint-GUID: GlDMf0X0-xFFRMols6IcYkMSgGhtB-NU
-X-Authority-Analysis: v=2.4 cv=Ws8rMcfv c=1 sm=1 tr=0 ts=683054b4 cx=c_pps
- a=Ou0eQOY4+eZoSc0qltEV5Q==:117 a=Ou0eQOY4+eZoSc0qltEV5Q==:17
- a=dt9VzEwgFbYA:10 a=COk6AnOGAAAA:8 a=QaYAvw-r52Rz4DUhQk8A:9 a=zgiPjhLxNE0A:10
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-ORIG-GUID: GlDMf0X0-xFFRMols6IcYkMSgGhtB-NU
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-23_03,2025-05-22_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- spamscore=0 malwarescore=0 clxscore=1011 suspectscore=0 mlxscore=0
- bulkscore=0 phishscore=0 priorityscore=1501 impostorscore=0
- lowpriorityscore=0 mlxlogscore=970 adultscore=0 classifier=spam authscore=0
- authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505160000 definitions=main-2505230096
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="aBbPu1z3"
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-54c0fa6d455so11314675e87.1
+        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 03:58:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1747997927; x=1748602727; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=71mj/4e4v16Jj1WjDwVwI/Op91TJ/LzlHRMMlGe5K4o=;
+        b=aBbPu1z36MFhVfPxOgZzvxGYUUPXbzP9pPZuBymaElH8/dwJfwifRtD7/R+zqj9OVA
+         AXE0wt23ocCcaInGG+FB0japNXtHNaL7KDVE85WitlXzJ5zFuqY2KXdpXdWt+TdGPsiE
+         vx0Yur0kxogFSva+Y9p9WRgC944A7JmwGMLy8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747997927; x=1748602727;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=71mj/4e4v16Jj1WjDwVwI/Op91TJ/LzlHRMMlGe5K4o=;
+        b=fti+D60cUuOng5FjyAbrBbhVspXcSEPxZ/FwVqZZfqdAnnaP7r2yhv83eWr0FgBbYk
+         rumTQYU7dmgvTVvVCKyZC2Hk7x/egZgwWYUtryMHall+kQyVHjjq1GIGUzhr4NOWi5oC
+         Wj2lwUsEAVMVIxwxWqp0U4CwlBPhY6Qxe2RAi7FLoJC7OOEq8MBavZ7RBvsf2IQWcit8
+         llXKvV+NF6iCyguJRCdZqgzF0LHgyunNbQmOICW7uYA3Fw5znAetE4q0xiS+baveznDY
+         Tt1HJ/NiBGPHN8VQhkLChCpvPSVqeaTF2SfS0Y9p1fmWFv55B1OeqxsVhjLc97L/nI6X
+         YLow==
+X-Forwarded-Encrypted: i=1; AJvYcCW2stVzrsEvAuoi90oPkZBTgXGYi7aqh9uQVgjiMncJIcIV75MCEUnaC7MsnTpypZsU79OElRgIsQKuQtI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz/RoMY6XSKozblx8+x3S3+bmrrW59K5xxzcoyFb2OyIhdbXVnN
+	r9vO8PqnLqFh2acxE/lGdL4eMksLB5XtFftVtkTWjbOHuaaVlHd4IHz7FurtrAVLTmfbZAhA6jm
+	Y3G3oig==
+X-Gm-Gg: ASbGncuLT6aUPMvROOheGN2Vf20kfqE4VBYexGALleCGKx0chvN9dUm1THm7FC/7sc9
+	SIRZWjNVn7ZEL15sfVTHL6kOwx/K1IujPaKGskWt/ELx8UGPURwCcxZfg2vdlfeyJbEGoht7UIi
+	3QQKMYkKWHPTXOAyLRaf+Tkjs6nP1c2Mk4Y8vo2uhR7ZoFfYYfutF4vtFTiWcMDZsY09KpgJjYa
+	vpHfZ6L0BOIG0I1vkiWZzC+gtaMhbo1XlwDdI5aOi4W/MoUWQ6hR3m65G+m+yDwDQ5UnG0hhBR6
+	1+McwNcX7tXJMd2+yhrAUg/4LECI49Rt5loqWfXJ+QuPqpOuGPwko0b597+J7+ZWpiBU2yA+261
+	DXNmkR+VS3ILRSzVajDy4SR+G
+X-Google-Smtp-Source: AGHT+IECEPovqRDeBSYKfnY36X2J6Zc/yzXhGc5YG/4w9afZ88H1rNnX8MLpkF5wz078qnkeJ8fbJw==
+X-Received: by 2002:a05:6512:3e04:b0:550:de26:1f23 with SMTP id 2adb3069b0e04-550e71bb785mr11471088e87.16.1747997926661;
+        Fri, 23 May 2025 03:58:46 -0700 (PDT)
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com. [209.85.167.45])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-550e703c334sm3788333e87.213.2025.05.23.03.58.45
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 23 May 2025 03:58:46 -0700 (PDT)
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-54c0fa6d455so11314657e87.1
+        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 03:58:45 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVRSQzV6lNdp8oGyoQqBTeD4HvLtS2Mx0rJ/VK6GcYmGaZIWw7cA3fXxuVVSkoxdVxE6W/Y9FcB/V8UDAA=@vger.kernel.org
+X-Received: by 2002:a05:6512:159f:b0:550:e575:3923 with SMTP id
+ 2adb3069b0e04-550e71b667amr9786746e87.15.1747997925442; Fri, 23 May 2025
+ 03:58:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+References: <20250509-uvc-followup-v1-0-73bcde30d2b5@chromium.org>
+ <20250509-uvc-followup-v1-1-73bcde30d2b5@chromium.org> <20250523085341.GA7516@pendragon.ideasonboard.com>
+In-Reply-To: <20250523085341.GA7516@pendragon.ideasonboard.com>
+From: Ricardo Ribalda <ribalda@chromium.org>
+Date: Fri, 23 May 2025 12:58:31 +0200
+X-Gmail-Original-Message-ID: <CANiDSCuuaJ9AOr9nGc+GN5UhHs2b0CCZvEnF1Qdw2vn9yo_uXw@mail.gmail.com>
+X-Gm-Features: AX0GCFtscgEu8lGhLD0b0uVltUbbjyvKq2QaZ5IbmNBRKIs4PPY0XzwdFe1MRdE
+Message-ID: <CANiDSCuuaJ9AOr9nGc+GN5UhHs2b0CCZvEnF1Qdw2vn9yo_uXw@mail.gmail.com>
+Subject: Re: [PATCH 1/4] media: uvcvideo: Refactor uvc_ctrl_set_handle()
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Hans de Goede <hdegoede@redhat.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, linux-media@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-For sm8550 all the level shifter limitations with respect to SD card
-modes are handled in the kernel code.
-Hence remove SDR104/SDR50 broken HW caps in device tree.
+Hi Laurent
 
-Signed-off-by: Sarthak Garg <quic_sartgarg@quicinc.com>
----
- arch/arm64/boot/dts/qcom/sm8550.dtsi | 3 ---
- 1 file changed, 3 deletions(-)
+On Fri, 23 May 2025 at 10:53, Laurent Pinchart
+<laurent.pinchart@ideasonboard.com> wrote:
+>
+> Hi Ricardo,
+>
+> On Fri, May 09, 2025 at 06:24:13PM +0000, Ricardo Ribalda wrote:
+> > Today uvc_ctrl_set_handle() covers two use-uses: setting the handle and
+> > clearing the handle. The only common code between the two cases is the
+> > lockdep_assert_held.
+> >
+> > The code looks cleaner if we split these two usecases in two functions.
+>
+> It does indeed. Thanks for pushing for this :-)
+>
+> > We also take this opportunity to use pending_async_ctrls from ctrl where
+> > possible.
+> >
+> > Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
+> > ---
+> >  drivers/media/usb/uvc/uvc_ctrl.c | 65 +++++++++++++++++++++-------------------
+> >  1 file changed, 35 insertions(+), 30 deletions(-)
+> >
+> > diff --git a/drivers/media/usb/uvc/uvc_ctrl.c b/drivers/media/usb/uvc/uvc_ctrl.c
+> > index 44b6513c526421943bb9841fb53dc5f8e9f93f02..26be1d0a1891cf3a9a7489f60f9a2931c78d3239 100644
+> > --- a/drivers/media/usb/uvc/uvc_ctrl.c
+> > +++ b/drivers/media/usb/uvc/uvc_ctrl.c
+> > @@ -1812,48 +1812,53 @@ static void uvc_ctrl_send_slave_event(struct uvc_video_chain *chain,
+> >       uvc_ctrl_send_event(chain, handle, ctrl, mapping, val, changes);
+> >  }
+> >
+> > -static int uvc_ctrl_set_handle(struct uvc_fh *handle, struct uvc_control *ctrl,
+> > -                            struct uvc_fh *new_handle)
+> > +static int uvc_ctrl_set_handle(struct uvc_fh *handle, struct uvc_control *ctrl)
+> >  {
+> > -     lockdep_assert_held(&handle->chain->ctrl_mutex);
+> > -
+> > -     if (new_handle) {
+> > -             int ret;
+> > +     int ret;
+> >
+> > -             if (ctrl->handle)
+> > -                     dev_warn_ratelimited(&handle->stream->dev->udev->dev,
+> > -                                          "UVC non compliance: Setting an async control with a pending operation.");
+> > +     lockdep_assert_held(&handle->chain->ctrl_mutex);
+> >
+> > -             if (new_handle == ctrl->handle)
+> > -                     return 0;
+> > +     if (ctrl->handle) {
+> > +             dev_warn_ratelimited(&handle->stream->dev->udev->dev,
+> > +                                  "UVC non compliance: Setting an async control with a pending operation.");
+> >
+> > -             if (ctrl->handle) {
+> > -                     WARN_ON(!ctrl->handle->pending_async_ctrls);
+> > -                     if (ctrl->handle->pending_async_ctrls)
+> > -                             ctrl->handle->pending_async_ctrls--;
+> > -                     ctrl->handle = new_handle;
+> > -                     handle->pending_async_ctrls++;
+> > +             if (ctrl->handle == handle)
+> >                       return 0;
+> > -             }
+> > -
+> > -             ret = uvc_pm_get(handle->chain->dev);
+> > -             if (ret)
+> > -                     return ret;
+> >
+> > -             ctrl->handle = new_handle;
+> > -             handle->pending_async_ctrls++;
+> > +             WARN_ON(!ctrl->handle->pending_async_ctrls);
+> > +             if (ctrl->handle->pending_async_ctrls)
+> > +                     ctrl->handle->pending_async_ctrls--;
+> > +             ctrl->handle = handle;
+> > +             ctrl->handle->pending_async_ctrls++;
+> >               return 0;
+> >       }
+> >
+> > +     ret = uvc_pm_get(handle->chain->dev);
+> > +     if (ret)
+> > +             return ret;
+> > +
+> > +     ctrl->handle = handle;
+> > +     ctrl->handle->pending_async_ctrls++;
+> > +     return 0;
+> > +}
+> > +
+> > +static int uvc_ctrl_clear_handle(struct uvc_fh *handle,
+> > +                              struct uvc_control *ctrl)
+> > +{
+> > +     lockdep_assert_held(&handle->chain->ctrl_mutex);
+> > +
+> >       /* Cannot clear the handle for a control not owned by us.*/
+>
+> While at it, I'll add a space before */ when applying.
+>
+> >       if (WARN_ON(ctrl->handle != handle))
+> >               return -EINVAL;
+>
+> But actually, as the caller guarantees that handle == ctrl->handle in
+> both call sites (renaming the function makes this clear), can we drop
+> the handle argument to this function ?
+>
+> If that's fine with you, I'd like to also change the
+> uvc_ctrl_set_handle() function to pass the ctrl argument first.
 
-diff --git a/arch/arm64/boot/dts/qcom/sm8550.dtsi b/arch/arm64/boot/dts/qcom/sm8550.dtsi
-index 82cabf777cd2..bc7c4b77f277 100644
---- a/arch/arm64/boot/dts/qcom/sm8550.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sm8550.dtsi
-@@ -3191,9 +3191,6 @@
- 			bus-width = <4>;
- 			dma-coherent;
- 
--			/* Forbid SDR104/SDR50 - broken hw! */
--			sdhci-caps-mask = <0x3 0>;
--
- 			status = "disabled";
- 
- 			sdhc2_opp_table: opp-table {
+SGTM, let me know if you have time to do this or if you prefer that I do it.
+
+Cheers
+
+
+>
+> >
+> > -     ctrl->handle = NULL;
+> > -     if (WARN_ON(!handle->pending_async_ctrls))
+> > +     if (WARN_ON(!ctrl->handle->pending_async_ctrls)) {
+> > +             ctrl->handle = NULL;
+> >               return -EINVAL;
+> > -     handle->pending_async_ctrls--;
+> > +     }
+> > +
+> > +     ctrl->handle->pending_async_ctrls--;
+> >       uvc_pm_put(handle->chain->dev);
+>
+> This will need to become
+>
+>         uvc_pm_put(ctrl->handle->chain->dev);
+>
+> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+>
+> > +     ctrl->handle = NULL;
+> >       return 0;
+> >  }
+> >
+> > @@ -1871,7 +1876,7 @@ void uvc_ctrl_status_event(struct uvc_video_chain *chain,
+> >
+> >       handle = ctrl->handle;
+> >       if (handle)
+> > -             uvc_ctrl_set_handle(handle, ctrl, NULL);
+> > +             uvc_ctrl_clear_handle(handle, ctrl);
+> >
+> >       list_for_each_entry(mapping, &ctrl->info.mappings, list) {
+> >               s32 value;
+> > @@ -2161,7 +2166,7 @@ static int uvc_ctrl_commit_entity(struct uvc_device *dev,
+> >
+> >               if (!rollback && handle && !ret &&
+> >                   ctrl->info.flags & UVC_CTRL_FLAG_ASYNCHRONOUS)
+> > -                     ret = uvc_ctrl_set_handle(handle, ctrl, handle);
+> > +                     ret = uvc_ctrl_set_handle(handle, ctrl);
+> >
+> >               if (ret < 0 && !rollback) {
+> >                       if (err_ctrl)
+> > @@ -3271,7 +3276,7 @@ void uvc_ctrl_cleanup_fh(struct uvc_fh *handle)
+> >               for (unsigned int i = 0; i < entity->ncontrols; ++i) {
+> >                       if (entity->controls[i].handle != handle)
+> >                               continue;
+> > -                     uvc_ctrl_set_handle(handle, &entity->controls[i], NULL);
+> > +                     uvc_ctrl_clear_handle(handle, &entity->controls[i]);
+> >               }
+> >       }
+> >
+>
+> --
+> Regards,
+>
+> Laurent Pinchart
+
+
+
 -- 
-2.17.1
-
+Ricardo Ribalda
