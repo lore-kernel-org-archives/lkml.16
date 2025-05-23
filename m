@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5272296D0A;
-	Fri, 23 May 2025 14:51:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABF53295DBA;
+	Fri, 23 May 2025 14:51:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748011912; cv=none; b=aiF0VgAT0j0IUgg31PMRT/QB0BG6xaRYB8z05PPB1dv0IG1tKuF0TTnWsPN7RQVUmyFFQmBZExyXKyf2a8v3h2cCtWZ1qod6OzubxKyJB6u6S3WmLOUV1XjnKzn++XoQEUtY5J22WUbSEhREYRydxVJJxTNnW4L9l/CSjG+1fY0=
+	t=1748011916; cv=none; b=kkBH4pP/UHQ7W6qvYkyMc0+XD+QGUk3fysABiUtrwhyrvPG7Bm3OP7YqCTUEDzJIbBfPAriVI7/FEbPmq1gfJgp8W6z07R4P/7J7kxDKp/gfdJi7Vm6cgiUWK3J9Q5Fbep2ts8qpMlvfiN2nVaBllbmjQgDZHzt5JposKlbZAbo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748011912; c=relaxed/simple;
-	bh=SxEoH7BXSu5VOV/Iad1f6Yvh9QLBwXi3Hxeh3Gh6H3k=;
+	s=arc-20240116; t=1748011916; c=relaxed/simple;
+	bh=flbhIFdpvk+11a/PVBLYuQaVdsfTyo5lYLKVPfZknus=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=FexwNBKCzu2JfX9usENC1PcAEGcGbBIGNX25Md8xNEKveJgSHg5P6lsg9PiDCqWGVfPdjzl7OvKqbKpmaAXy7wHAcyKVWr27TIR59l+NiTxVUkCEK9Pn0NNDItNkBYD3sNMvF2NPgDveSap5ikO/MxunQ4pk4I9QV3NLa9LNMF8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Lqvzhg9c; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=pmalk9nsXILK4DMPRv42o17uzuRpDTmPM4AcLHklq9V9Gt4xzljZkCOb3ksJl/s+cjrUjpqDB1JmWPnyTFcZU5d99gKOx0MMSCjwxwix8cKAVf8KKsYHn+P6SvpQH+t7wy8wiI9VUK+Z1/WsbAA42TOOriZOyRiIZaTrrjGuPo0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uRR0kNnQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Lqvzhg9c"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0676C4CEEF;
-	Fri, 23 May 2025 14:51:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uRR0kNnQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20B59C4CEE9;
+	Fri, 23 May 2025 14:51:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748011911;
-	bh=SxEoH7BXSu5VOV/Iad1f6Yvh9QLBwXi3Hxeh3Gh6H3k=;
+	s=k20201202; t=1748011916;
+	bh=flbhIFdpvk+11a/PVBLYuQaVdsfTyo5lYLKVPfZknus=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Lqvzhg9cucgqq5V6Gz5qqlzPx6zscwwr/YpR7iww/a5rrESEz264zMx+rN2n0g0Zz
-	 Ky74UyI8zQk+/LI15X1At4VWCGCgMTH51NRYz3ncTIpdIl7BOB2GDKGpRsnhVTMxTt
-	 hQi8RiY6p/dHYN/3obwwWvtxgHtnWsR8EyJBhv1stKImQX7B3VTH++qPZDp9fO4U2h
-	 ylOsyBbo1ySRr+xCvIGyUVDNinFCybw4mH7Ck1nyuEOWFzTp20Ngf6bWiuvl3Dc2B8
-	 rHv/Qjs206sKw574QQFnu5MBKRC2G0ql1DxswPtdq07Sh2vkgJLbdEJNE5Q9n9k0VZ
-	 FFj+QQsQzOCYw==
+	b=uRR0kNnQkOFd9jBfCiiC3JAWdET8mJekNG32DhLkrApGElvTZYv3HEEQhRhbqpXiA
+	 3GG1HqZvRNvwzj15prdLPcE+SatxcYz9l5l58d7NDfB6o2OZcY3DGQaBFXU/N8obZX
+	 UI09uS7ZxnmZeNDEkI/Mn9JwindaZiYaSAXk2HM4iPPcuLzl5qNgoWpOlDWZp/6RhM
+	 o2kGQ8rA7Fqg6phQk+TT0i/z+mVQV1h3+9g9ZHOzjs/5GwXy1sWnbW9xmOZiN8cgKA
+	 xa3ECcfVvnu0L+idecOnC0vImdrzYjnlt/39RFdE7trAwWzw0awkekfn2ZaJgmzWjK
+	 23OwSwKAD4lGA==
 From: Benno Lossin <lossin@kernel.org>
 To: Benno Lossin <lossin@kernel.org>,
 	Miguel Ojeda <ojeda@kernel.org>,
@@ -42,9 +42,9 @@ To: Benno Lossin <lossin@kernel.org>,
 Cc: Lyude Paul <lyude@redhat.com>,
 	rust-for-linux@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 02/13] rust: pin-init: add `Zeroable::init_zeroed`
-Date: Fri, 23 May 2025 16:50:58 +0200
-Message-ID: <20250523145125.523275-3-lossin@kernel.org>
+Subject: [PATCH v2 03/13] rust: pin-init: add `zeroed()` & `Zeroable::zeroed()` functions
+Date: Fri, 23 May 2025 16:50:59 +0200
+Message-ID: <20250523145125.523275-4-lossin@kernel.org>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250523145125.523275-1-lossin@kernel.org>
 References: <20250523145125.523275-1-lossin@kernel.org>
@@ -56,44 +56,89 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The trait function delegates to the already existing `init_zeroed`
-function that returns a zeroing initializer for `Self`.
+`zeroed()` returns a zeroed out value of a sized type implementing
+`Zeroable`.
 
-The syntax `..Zeroable::init_zeroed()` is already used by the
-initialization macros to initialize all fields that are not mentioned in
-the initializer with zero. Therefore it is expected that the function
-also exists on the trait.
+The function is added as a free standing function, in addition to an
+associated function on `Zeroable`, because then it can be marked `const`
+(functions in traits can't be const at the moment).
 
-Link: https://github.com/Rust-for-Linux/pin-init/pull/56/commits/a424a6c9af5a4418a8e5e986a3db26a4432e2f1a
+Link: https://github.com/Rust-for-Linux/pin-init/pull/56/commits/809e4ec160579c1601dce5d78b432a5b6c8e4e40
 Signed-off-by: Benno Lossin <lossin@kernel.org>
 ---
- rust/pin-init/src/lib.rs | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
+ rust/pin-init/src/lib.rs | 52 ++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 52 insertions(+)
 
 diff --git a/rust/pin-init/src/lib.rs b/rust/pin-init/src/lib.rs
-index 3bb0700355df..436fa3bc0339 100644
+index 436fa3bc0339..7535c3fcc961 100644
 --- a/rust/pin-init/src/lib.rs
 +++ b/rust/pin-init/src/lib.rs
-@@ -1471,7 +1471,18 @@ pub unsafe trait PinnedDrop: __internal::HasPinData {
- /// ```rust,ignore
- /// let val: Self = unsafe { core::mem::init_zeroed() };
- /// ```
--pub unsafe trait Zeroable {}
-+pub unsafe trait Zeroable {
-+    /// Create a new zeroed `Self`.
+@@ -1482,6 +1482,33 @@ fn init_zeroed() -> impl Init<Self>
+     {
+         init_zeroed()
+     }
++
++    /// Create a `Self` consisting of all zeroes.
 +    ///
-+    /// The returned initializer will write `0x00` to every byte of the given `slot`.
-+    #[inline]
-+    fn init_zeroed() -> impl Init<Self>
++    /// Whenever a type implements [`Zeroable`], this function should be preferred over
++    /// [`core::mem::zeroed()`] or using `MaybeUninit<T>::zeroed().assume_init()`.
++    ///
++    /// # Examples
++    ///
++    /// ```
++    /// use pin_init::{Zeroable, zeroed};
++    ///
++    /// #[derive(Zeroable)]
++    /// struct Point {
++    ///     x: u32,
++    ///     y: u32,
++    /// }
++    ///
++    /// let point: Point = zeroed();
++    /// assert_eq!(point.x, 0);
++    /// assert_eq!(point.y, 0);
++    /// ```
++    fn zeroed() -> Self
 +    where
 +        Self: Sized,
 +    {
-+        init_zeroed()
++        zeroed()
 +    }
-+}
+ }
  
  /// Marker trait for types that allow `Option<Self>` to be set to all zeroes in order to write
- /// `None` to that location.
+@@ -1510,6 +1537,31 @@ pub fn init_zeroed<T: Zeroable>() -> impl Init<T> {
+     }
+ }
+ 
++/// Create a `T` consisting of all zeroes.
++///
++/// Whenever a type implements [`Zeroable`], this function should be preferred over
++/// [`core::mem::zeroed()`] or using `MaybeUninit<T>::zeroed().assume_init()`.
++///
++/// # Examples
++///
++/// ```
++/// use pin_init::{Zeroable, zeroed};
++///
++/// #[derive(Zeroable)]
++/// struct Point {
++///     x: u32,
++///     y: u32,
++/// }
++///
++/// let point: Point = zeroed();
++/// assert_eq!(point.x, 0);
++/// assert_eq!(point.y, 0);
++/// ```
++pub const fn zeroed<T: Zeroable>() -> T {
++    // SAFETY:By the type invariants of `Zeroable`, all zeroes is a valid bit pattern for `T`.
++    unsafe { core::mem::zeroed() }
++}
++
+ macro_rules! impl_zeroable {
+     ($($({$($generics:tt)*})? $t:ty, )*) => {
+         // SAFETY: Safety comments written in the macro invocation.
 
 base-commit: ae8b3a83fb9de394f609035041cd7a668fda2ab3
 prerequisite-patch-id: https://lore.kernel.org/all/20250523125424.192843-2-lossin@kernel.org
