@@ -1,239 +1,210 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05on2072.outbound.protection.outlook.com [40.107.22.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAA251EB18E
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 20:39:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748032784; cv=none; b=MJO/tVy28yEElJbjZdYJKoFVJOlKyEdnHJIHYruXnStRRVuNniAyAgE37qjy+h9m8L/YgryucmUhnqvz4HdpozSDl6nb+PmYvT97MyuAzGDlMqG3AfAtPKwC2tgYF9DC8/hAnmjDkdqPYh6/pGencl1JhG6CjrwMtr2xaePt+0U=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748032784; c=relaxed/simple;
-	bh=NoFNWSDaQ/q09Uz+TdFjvizT/rD+Qjp28PV65Ss9HqA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NU+FwnZhjzd1VEWP9Mw56O0iXJOo7kAQdG2d7Mv7Uk86RSygY787d/YO8zsZ0hklJVulD71ikfjS+k/JjrKUcWoLMt8Cpwki4pdbg6iXwByNfMCkpdIxw6E5w8Kx0690zlSEy+qCm04bPAozxVjsMrA0uVyTPkF/5lmpaWoRFd4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=JZcQQTXl; arc=none smtp.client-ip=209.85.128.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C20F37482;
+	Fri, 23 May 2025 20:45:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.22.72
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748033146; cv=fail; b=jl1uUW+Xh/nFCnhQ05xJR5VBB2hUNRO5FbdDLpBcguLfQU4tbqQ3+AVvDlRMKK5onRUToTyBMa3niKYJLaBEorZgKCADsLGYMkZCBGQ5mJKGsKcCeSl0nQkd2eqDWLveINTw8jWA+PQyWiqWlWkawyFraEXj7QtI5sAilDkfDN8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748033146; c=relaxed/simple;
+	bh=apAuHHWTjXf3iKGRjuYxsMlZ6lEZY0d4Y+qTYCkxyt4=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=sl6hmsFry+Na7E+sjgiIr1eUFzF3wWsCgXZLrxae/p/f5BvEDGyJ5ocp6hEznAKs5z1JEHnBEURyaK3UzR8ClWKB3u2GfmZWoL0H+mpxYpQwktCebLXIXbERV3zN5fa3H2zfto21RBHd74xyyzkqdlw1h20BznqQYsw+ZADmWA0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=j39UCckc; arc=fail smtp.client-ip=40.107.22.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JZcQQTXl"
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-442f5b3c710so1462445e9.1
-        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 13:39:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1748032780; x=1748637580; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=hZkCTIkoEPF/4oXgPPxT3DQfkcNtTOcqqQ2VA82+SL4=;
-        b=JZcQQTXloijmli5VMgsE3+Dkfx4LS7B8EyP2zf4yoDDqGhq9tlSZP9uzfsaZ4eAnjT
-         RHPr1zr2je6lAaDYFBcAtemmBBI2KHnVHNVrrBM1tM1JHR/Ab+iw3FGKrIkVxTbMbOpA
-         QiaPdifn3Cpo5Gzb1qisnnKoRecHNdnAqHNwiqzXajADOz0J9ljWtBOTWM1BH0Dt6A8A
-         RZh/jx1FFbMl0n85XHTKbFnS3jilrJMUN+ZFTenDs0jaFgay+UrejM+6V/Vg1dEgSDuN
-         Vwdxp86RvJCnaJwElZLMFOeBcTBlRyFKWBKv6+7xZSLGRyroM59Xz5JFh2SxjY0Gd9vf
-         LhqA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748032780; x=1748637580;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=hZkCTIkoEPF/4oXgPPxT3DQfkcNtTOcqqQ2VA82+SL4=;
-        b=Qs59gFsKliDJhQaKirl1ZEYnybEyi9eycwTk8POFFfYVNDMJ371hSGvpm8moSIP+ub
-         pKa4RedeMY18BidrICIZX83/fHnjAmxLmU3Xi4B2WxB7SskQNaRCdpgVnF64nE9VJk2r
-         rx2YJ/emyh8sWpxV0ylqt1Jvo+yCumOh7NA3HQOhuKyHm3FgB3obWBE1UYg4mvzZu3Xn
-         90PVnHX5vZOXoexTQ79DkAM94ykwTO1Ay9fF3EWIyR2cnGOCOqCyJnjA151zbcR1mntv
-         aFP+yNw4aDy/o3jK5GC7V6Buh4ck6c/hwkKSUtE2rBMUPZwTr3SyPuewD1wp668MaQGN
-         aVQg==
-X-Forwarded-Encrypted: i=1; AJvYcCVIO3BmmeA5b1dpUla76W2PPBQoNLZ1scWUumM7VBmlmipZCkxAtBYDHWSAioSELm2wmbzT8a/ZyXrFJZ8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxaNjllpeKE6zJWs25ef0TeDARQbiI/rFGxQnxSejshc2unJq0z
-	Y1OK3kr2Sux3UMGc2rjfmCsLsmAlHbLnqFCQynWbg8d2C/ycqdabec9bLt6HEAq990I=
-X-Gm-Gg: ASbGnctlGrB3TyzbKtaXyiH4akrylspSF8K9aJP91WdOw+/zVYPqennfbUi8/tbzYP6
-	eRySDintQdjtudldnp0Y7RYoYEKzw7ZivRPo4kSIefESfCcrM2DtVRv/jFqmd7I4x25OMTp9ZuY
-	+4b0r2SPOQb6ocahp42UO7OIh1M+jI+rDIUpNkVFqrVLrWNStLVQ+qAItWgXZpt7YQsy5ZmfXLN
-	aEkLuNelOExEnVuBqUGTxYGRf5M21BcLQbaqmcZBe3hl+4ncbODQ+8jsN65TkoBUrltdWgWaZ1P
-	2vroniBIEItBleeOHIC7QkC3gUXO4rzEXqVpt7Lhqkf757aCC2/ni9Q3QggVmQtMpNO9EbZHiPP
-	MCing0PyCLzcMYuc=
-X-Google-Smtp-Source: AGHT+IF+UKW8HXeZsU44cfHfwETg11ROq2OaSMViVe7RnCpQ7MvNy+FadpEX11AaD2NWQvNTnzfJag==
-X-Received: by 2002:a05:600c:c87:b0:43e:ee80:c233 with SMTP id 5b1f17b1804b1-44c933ed842mr3184365e9.32.1748032779933;
-        Fri, 23 May 2025 13:39:39 -0700 (PDT)
-Received: from [192.168.10.46] (146725694.box.freepro.com. [130.180.211.218])
-        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-447f23bfdd9sm148920565e9.18.2025.05.23.13.39.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 23 May 2025 13:39:39 -0700 (PDT)
-Message-ID: <f2f914aa-c554-4135-afaa-f075537ed929@linaro.org>
-Date: Fri, 23 May 2025 22:39:38 +0200
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="j39UCckc"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=fd84LfZi6rINN8OK4mJqLc30dvLFxnXO2FiuNXg4JoHTTmIdAQX1NRAlWzW3t9yOSJ1RRWlmKUEJCUMHMWxthi+N2z6I73ZgB4ubPTuNO4+1gC5YchsDvZ72cAVlB6oZTACRoiRZJpDvJg9Bk7FEF1Hpjgr+Ykwc5aAXXh5G6Z+iwM0+bzAIr4JvicqBrB6TODvbP2t7F7QyVQAAy0Eqq0LtG6gnnYnE6KWBjLh19ZOMy/SxkoIrGBRnuNrwbz5/7Sgo3eUSsJiUyJgNxNMvNVTylyN6qm3KSD/9ITON+VdrJtmNTceF7wB8V8X+vb60KKexltBAUdnAxLRgwS9RMg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=TBtfSlky47YpOZJQ0+zNDAHLKWhrFE+K+qgGWrB3EHQ=;
+ b=nOydsPmHjClMpYx0WV7R4VasEx0cNmVSiC6x9T8p5OsTkAJ3Pl0ltj5bLVUEeg0GvTyAUyeSL04yhiQC1rtQcq6IKZ5tMYWRoFShOPJXcoJYB2Yxq7PHG9ZEB3KyWixkmIF5GRI6qM+dG0h9wdSCCGzMhsBqkdzFsOlTU4UT+xJlGvl+HZx9DPOltsmDT6xZgaYopm58dZQzROARACPKKP0Td0c/XZmQZ9Acf1K7JYJwS+xiaqqR9xMzcbMUSsyVkIamD+9RaKSDZMKX9LJyavOjcQWs5lOt+rh70Kyll5RFRbMM6Jy2kjvyx7frFHHb8YMReOT4J6ib1rPTmG1VQQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=TBtfSlky47YpOZJQ0+zNDAHLKWhrFE+K+qgGWrB3EHQ=;
+ b=j39UCckcTzIRl2NzCZtFoXPj4Vww/3qwkH5oFBYicvpP6jRgF9HOac0mUkmyh/RJiu2ykTRAsjbjvCNU4kkAjLmZesoeuDSueHKmSGijT1TKOXxJJ9pxeWrU558dpOyOYoARqq+u1IrgSgyxFDKCbiwKGNSjuXQU9riRttmV3NDqKTf9Ng82I6MzO1zneuYOW0VwkOIEW2rzGpJkqbT+hKURhdINAr57by5X9d+16AUicPm9M4llnsOOKWVhkerUnOdj/gOYdM2+wnkd49aob3s1soyIfYmBB7yqTuOT68cA2xvmW8bT8lHbaJmLYAX+LpdTNnH8+ZFEyF997mWrUw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
+ by AM9PR04MB8472.eurprd04.prod.outlook.com (2603:10a6:20b:417::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.22; Fri, 23 May
+ 2025 20:45:40 +0000
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06%2]) with mapi id 15.20.8746.030; Fri, 23 May 2025
+ 20:45:40 +0000
+From: Frank Li <Frank.Li@nxp.com>
+To: Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	linuxppc-dev@lists.ozlabs.org (open list:FREESCALE SOC DRIVERS),
+	linux-arm-kernel@lists.infradead.org (moderated list:FREESCALE SOC DRIVERS),
+	devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS),
+	imx@lists.linux.dev (open list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE),
+	linux-kernel@vger.kernel.org (open list)
+Cc: imx@lists.linux.dev
+Subject: [PATCH 1/1] dt-bindings: soc: Add fsl,imx23-digctl.yaml for i.MX23 and i.MX28
+Date: Fri, 23 May 2025 16:45:23 -0400
+Message-Id: <20250523204524.573028-1-Frank.Li@nxp.com>
+X-Mailer: git-send-email 2.34.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SJ0PR05CA0190.namprd05.prod.outlook.com
+ (2603:10b6:a03:330::15) To PAXPR04MB9642.eurprd04.prod.outlook.com
+ (2603:10a6:102:240::14)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 6/7] clocksource/drivers/exynos_mct: Add module support
-To: Saravana Kannan <saravanak@google.com>,
- William McVicker <willmcvicker@google.com>
-Cc: John Stultz <jstultz@google.com>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Peter Griffin <peter.griffin@linaro.org>,
- =?UTF-8?Q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>,
- Tudor Ambarus <tudor.ambarus@linaro.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>,
- Thomas Gleixner <tglx@linutronix.de>, Krzysztof Kozlowski <krzk@kernel.org>,
- Donghoon Yu <hoony.yu@samsung.com>, Hosung Kim <hosung0.kim@samsung.com>,
- kernel-team@android.com, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, Youngmin Nam <youngmin.nam@samsung.com>,
- linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
-References: <20250402233407.2452429-1-willmcvicker@google.com>
- <20250402233407.2452429-7-willmcvicker@google.com>
- <Z_6OZHYfC0bC5289@mai.linaro.org>
- <CANDhNCodHATboF2=U2tTwdEkEJ+PsfB2F=fbBrs=J1UzZTEX8g@mail.gmail.com>
- <aCNctHq6K7uqFF05@mai.linaro.org> <aCUkN301jWUkXJ3_@google.com>
- <6e6b0f5f-ac60-48bb-af6c-fa58658d2639@linaro.org>
- <aDCrGT67ubNNUoUz@google.com>
- <CAGETcx84OfLNRjMNGh4jS54_DgRuXx+gF5DhfiGrgckoyOfTMQ@mail.gmail.com>
-Content-Language: en-US
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-In-Reply-To: <CAGETcx84OfLNRjMNGh4jS54_DgRuXx+gF5DhfiGrgckoyOfTMQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|AM9PR04MB8472:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9dc8269f-3ceb-4b46-5060-08dd9a3ac7ae
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|366016|7416014|376014|52116014|921020|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?+JvC6RL/VQg8uPyJdp/EApljtQ5w4f13Vb9MJH1BlNe3N3Lt7cIstFD+s8Uf?=
+ =?us-ascii?Q?+L1k5/iyAEQUdjMghROUv7VZcK5kdCVgA7nBAxUOQLf3cK7Ivrsn6r1cYVhg?=
+ =?us-ascii?Q?eD+IIaKSYcyf/IoEio0iF5p5Mu62AFjHdbSPYqVQ7H6RtP1+xExIGAt/6+Zq?=
+ =?us-ascii?Q?sKsYZSRN/dFWxOE+ML7R+6ZYqTb9ZfMV+fslXX7ZPv9luJLiOljVpfaVnpwg?=
+ =?us-ascii?Q?jknfWhd1jl5bUtkNifJ6cL877xqPDQOV4hRAmXIs+Jy5UJ5TaDj27zpC41OW?=
+ =?us-ascii?Q?v6yiFc8FyuZS5ZyFT6eUaGdvqGDKHZWwoNMm5F0KWvRNU9W9aq13qxPjDEW6?=
+ =?us-ascii?Q?cWpRaKTEhQ3jMrIQv8oTYuj+J2QmQyzM7aGJu9hPDib9op5qHIqyh8RHttYw?=
+ =?us-ascii?Q?qMWTvRj32VnaAcANd2/mBzVrB3wdd6KPrRSIVkOc9Ko2WjGwH0GYqpIMk/Jf?=
+ =?us-ascii?Q?XBauvBkqAHWKc0MXn+H+8GZnPo4gblwTU/7Os4Epu0pJrJ7kWNXCYIdfnygF?=
+ =?us-ascii?Q?VMISYN/Ai5Y5DYPXkwNFVjnCEjTH9Q+7NCF5g7JCJ6webfCqqTnJf57XXR/k?=
+ =?us-ascii?Q?19oA9D1NouCuaijHvVn73NTqTNNb52PJhUZfcyFiGnnf0zJmoDPE4iA0mNx3?=
+ =?us-ascii?Q?DakP0pe/zk5fogQ+CwvEujhsqhXELSDnNSDgHWPDr7EZ3NL4K10fz9M+XTNZ?=
+ =?us-ascii?Q?YpRjYuKu6SjqfpEo8K7n6cP17zqD3JuSByLy1iX82auwuk7up2uTTJ3og34Z?=
+ =?us-ascii?Q?cqHJds970HrG1A8o1rT4ITfJEMY/YOCZ7SDQ9d7sTJfyUFsUMmacVVMiJ7rv?=
+ =?us-ascii?Q?EwC2e9DYbMbUzKnQsw9/DkNIdokIlpHSiVKNyilRe72/Q3TOSwmizKAbCpQ0?=
+ =?us-ascii?Q?jBM0cQOoojSGhRJfQv6Nib+qFIMhWb8E2an5tvI6SzTNzLVQ93JN3kCcbP1G?=
+ =?us-ascii?Q?H+QhrUf1iuiVMGk3N4JR5B+W2T5dNdGEMETKza7aud26UaxIkGanvGiyaC3f?=
+ =?us-ascii?Q?+VoRKkH1ZD1tTp2AgRoGRNJOO7HL++32x3+d/pwDSu18nqHYDWNZJNqP1aZM?=
+ =?us-ascii?Q?d3fYcepj5/HaLaRMkXjCnWE6flI2ZK68ZHcSKesTF95ph9b83resoXeQgwqN?=
+ =?us-ascii?Q?lHgB7uUznj5kkDrJhVQUUqZxmKW2F4Qp4QgWzibl4CbtZt1guaVk7T6H6hKF?=
+ =?us-ascii?Q?hix+0UmrrmFoQ4MtCLWJIWSueaLykwahfVcd/bMqVcFOZOHkPRBbW+MBx1h1?=
+ =?us-ascii?Q?XXM5XxROOZ8B7XfDmRqtzcdQcvD+U+qgQCjqIypzFkYsv72BUGziOFUHSoeQ?=
+ =?us-ascii?Q?gIbb1Y9oVgICSNWrb8skWd6n/RDVJtd1sAL2Aq/SEIrv3BP42Gg7AHuYMICK?=
+ =?us-ascii?Q?8xAYNYvmsw1hlOp0xXGdcvMX3ny9y3CSBbYJdi/MMdiFg6/pRrZ5qtEfE5lf?=
+ =?us-ascii?Q?5TGg4TNrI2rYY/bcd3wWtENXAqursDkSCYKd0B+2d9siQTvcCoU/AA=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014)(52116014)(921020)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?TD7W2vnTdxVOEohvGVAXjfaeqj7xxSSpOujmEsCuBLCCVG1ikfLWVH7gjXoX?=
+ =?us-ascii?Q?DzzMWvVN5/rxYK40LBtQIMvConpzxMfeDTJZv8ocKW+n+dkE4WAbAQPHT5Yf?=
+ =?us-ascii?Q?0h29P+KLVMvTUJF1ctUKTQolz8HVXmR84MqcNBydDVpkl3ftatS7pXotD+ZJ?=
+ =?us-ascii?Q?r3oIONo7C1/IpTy08gqiIiIPsOkK/6LRG+/yH+OS/kqOvg1QYMSBsdPneEiI?=
+ =?us-ascii?Q?VTf3AaRxBHUVMSMyq5bJzipTjwxZntiBHBVggocP8kaZxunHGyeSkPcVt2Hq?=
+ =?us-ascii?Q?5lrPD8uZorfNNaD/LasLxHPbldToNJGvtCcwJDHjSwceUYbPuWYTJQ03YbHG?=
+ =?us-ascii?Q?tiwb9eWePmEAk2W0ak2a28zWh04xG4ONWm3GMTO561BNtb/CzX5DhykwskW0?=
+ =?us-ascii?Q?xPsSUWZ1f8/V+esyTL79hIDSKYFtNp3McT2UdQkvHH0VDPtua86pM1uNC+z2?=
+ =?us-ascii?Q?kOkW7byvKhWEKGtayVlh3Mj1Py8qf+h+n9PGk0ElOF6QYDfkdIANP25OPiXw?=
+ =?us-ascii?Q?MlvTKmDVUj8DASV9DAt5c9MVUBPsnvaYG2r9u8e0w+47jsp6p69Q4bH6AVEa?=
+ =?us-ascii?Q?oLJnafwIzG4wf2DJh+VA8QHJvSNhrCCUT8fH4UFgnbnzjHimO4ArwuIbqezg?=
+ =?us-ascii?Q?lsCGFcWUX3hCOu+Ru1N0IxzP+f/m8Jtw2TjPZUWYW7PW5f0lJsr8pBEimCDr?=
+ =?us-ascii?Q?5zq3v2hPGWyeBrFpAwCd5pxqm4DzwIhBZIx8vyI6ZVISu9ZVF0Wm1obPFXqj?=
+ =?us-ascii?Q?nl7Vm2e+2mKgljg+mLoPQzN/8rMjgu+x2WaNkWUvhK7BwAxboIGra0zSMQR8?=
+ =?us-ascii?Q?A4kxjtG9aVYYlaPauPTXvnHCgq87IIYp5ZIKrXRZFOIGS6tXoxC+uoJegS8V?=
+ =?us-ascii?Q?IU9iqClOpRaUKwkDgUqdZFaMMBMo4BzSQNfWCNzruRI0b07husZ5hXC/1fRT?=
+ =?us-ascii?Q?SenyjYBK49b8EHtNGK+28tViBgtZOudV+NgEnSrxyHYaBlXHOi97KLyssDoX?=
+ =?us-ascii?Q?h77qPtX+jJcIcDErPtXJ881//GkInSvRJiYTxSyg1UQ3JTawwgDT3jUzYGNF?=
+ =?us-ascii?Q?pe12D2ATY/mcNnsQEyBqbJ0xPuwV47nd87a+B/OzwUD7AthS/YuSUyZNSF+F?=
+ =?us-ascii?Q?Rawm/FjMTmpxOwP52hOmcHUvGI1Kt7piJyyo2GhSwmjeyYK6CT4juhJK77I7?=
+ =?us-ascii?Q?dBXacyPOkcOegQktdS/oneBW+a0SJ9h4S4QD3V9bsrEs66G41P6nf3ZIwKji?=
+ =?us-ascii?Q?xTYuz1s0cOj3h7rWpzAzIzs+mIkBwUyNAgMOqb+pQgMs3+u1IiRP8CxBSyoT?=
+ =?us-ascii?Q?qYpRcpw5gFnDGicjGwBN6RUHgE/SKSNlNi1vuOBC8fXTzZA2Y2z8HIaW8Njq?=
+ =?us-ascii?Q?64KiK9EiCl5x/LD7AwaxCBMvHmDi//TKbphnKQVAuxZJbk2oWKvyR30xCzut?=
+ =?us-ascii?Q?s7Jfsgjsy3WTF4kCTMpmxkvvt+jp0ooXK4ZsTd97BAovbia2BqLTZXLT+iBi?=
+ =?us-ascii?Q?OxkhaOxuYZdGh42Nc+xqxcQZQBsxkSdxnFHBUWguoPbtUYr2CBhZvVi723V1?=
+ =?us-ascii?Q?6n+64OJgJgkUa1tDTp0qXZo5u6jol7QM9t2Eyxcs?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9dc8269f-3ceb-4b46-5060-08dd9a3ac7ae
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 May 2025 20:45:40.7840
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: aNrFqPB6BSICoXc259+KdDS9DaHwySitX5Ke+EEToaFU/eTApfjgK3e4sG68Pf5qi90eLZfG16KUsRJ/TGrrXw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM9PR04MB8472
 
-On 23/05/2025 20:06, Saravana Kannan wrote:
-> On Fri, May 23, 2025 at 10:06 AM William McVicker
-> <willmcvicker@google.com> wrote:
->>
->> On 05/23/2025, Daniel Lezcano wrote:
->>>
->>> Hi William,
->>>
->>> On 15/05/2025 01:16, William McVicker wrote:
->>>> On 05/13/2025, Daniel Lezcano wrote:
->>>>> On Tue, Apr 15, 2025 at 05:48:41PM -0700, John Stultz wrote:
->>>>>> On Tue, Apr 15, 2025 at 9:50 AM Daniel Lezcano
->>>>>> <daniel.lezcano@linaro.org> wrote:
->>>>>>> On Wed, Apr 02, 2025 at 04:33:57PM -0700, Will McVicker wrote:
->>>>>>>> From: Donghoon Yu <hoony.yu@samsung.com>
->>>>>>>>
->>>>>>>> On Arm64 platforms the Exynos MCT driver can be built as a module. On
->>>>>>>> boot (and even after boot) the arch_timer is used as the clocksource and
->>>>>>>> tick timer. Once the MCT driver is loaded, it can be used as the wakeup
->>>>>>>> source for the arch_timer.
->>>>>>>
->>>>>>>   From a previous thread where there is no answer:
->>>>>>>
->>>>>>> https://lore.kernel.org/all/c1e8abec-680c-451d-b5df-f687291aa413@linaro.org/
->>>>>>>
->>>>>>> I don't feel comfortable with changing the clocksource / clockevent drivers to
->>>>>>> a module for the reasons explained in the aforementionned thread.
->>>>>>
->>>>>> I wasn't CC'ed on that, but to address a few of your points:
->>>>>>
->>>>>>> I have some concerns about this kind of changes:
->>>>>>>
->>>>>>>     * the core code may not be prepared for that, so loading / unloading
->>>>>>> the modules with active timers may result into some issues
->>>>>>
->>>>>> That's a fair concern, but permanent modules (which are loaded but not
->>>>>> unloaded) shouldn't suffer this issue. I recognize having modules be
->>>>>> fully unloadable is generally cleaner and preferred, but I also see
->>>>>> the benefit of allowing permanent modules to be one-way loaded so a
->>>>>> generic/distro kernel shared between lots of different platforms
->>>>>> doesn't need to be bloated with drivers that aren't used everywhere.
->>>>>> Obviously any single driver doesn't make a huge difference, but all
->>>>>> the small drivers together does add up.
->>>>>
->>>>> Perhaps using module_platform_driver_probe() should do the trick with
->>>>> some scripts updated for my git hooks to check
->>>>> module_platform_driver() is not used.
->>>>
->>>> Using `module_platform_driver_probe()` won't work as that still defines
->>>> a `module_exit()` hook. If you want to automatically handle this in code, then
->>>> the best approach is to follow what Saravana did in [1] for irqchip drivers.
->>>> Basically by using `builtin_platform_driver(drv_name##_driver)`, you will only
->>>> define the `module_init()` hook when the driver is compiled as a module which
->>>> ensures you always get a permanent module.
->>>>
->>>> [1] https://lore.kernel.org/linux-arm-kernel/20200718000637.3632841-1-saravanak@google.com/
->>>
->>> Thanks for the pointer and the heads up regarding the module_exit() problem
->>> with module_platform_driver_probe().
->>>
->>> After digging into the timekeeping framework it appears if the owner of the
->>> clockevent device is set to THIS_MODULE, then the framework automatically
->>> grabs a reference preventing unloading the module when this one is
->>> registered.
->>>
->>> IMO it was not heavily tested but for me it is enough to go forward with the
->>> module direction regarding the drivers.
->>
->> Great! Thanks for looking into that. I'll add that in the next revision and
->> verify we can't unload the module.
-> 
-> Daniel, is the module_get() done when someone uses the clock source or
-> during registration? Also, we either want to support modules that can
-> be unloaded or we don't. In that case, it's better to make it explicit
-> in the macros too. It's clear and it's set where it matters. Not
-> hidden deep inside the code -- 
+Add fsl,imx23-digctl.yaml for i.MX23 and i.MX28 to fix below CHECK_DTB
+warning:
 
-Why do you want to unload ?
+arch/arm/boot/dts/nxp/mxs/imx23-sansa.dtb: /apb@80000000/apbh-bus@80000000/digctl@8001c000:
+    failed to match any schema with compatible: ['fsl,imx23-digctl']
 
-That is another aspect and the time framework is not totally ready for 
-that. So I would consider for the moment to load only.
+Signed-off-by: Frank Li <Frank.Li@nxp.com>
+---
+ .../bindings/soc/fsl/fsl,imx23-digctl.yaml    | 41 +++++++++++++++++++
+ 1 file changed, 41 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/soc/fsl/fsl,imx23-digctl.yaml
 
-> I tried to find the answer to my
-> question above and it wasn't clear (showing that it's not obvious).
-
-Globally the idea would be to take a ref to the module when the 
-clockevent or the clocksource is in use and release the ref when it is 
-unused. That needs an extra function unregister_clockevent_device() and 
-a verification of the current time core code to check if the ref is 
-get/put correctly which is, after investigating a bit, not correct at 
-the first glance.
-
->>> One point though, the condition:
->>>
->>> +#ifdef MODULE
->>> [ ... ]
->>> +static const struct of_device_id exynos4_mct_match_table[] = {
->>> +     { .compatible = "samsung,exynos4210-mct", .data = &mct_init_spi, },
->>> +     { .compatible = "samsung,exynos4412-mct", .data = &mct_init_ppi, },
->>> +     {}
->>> +};
->>> +MODULE_DEVICE_TABLE(of, exynos4_mct_match_table);
->>> +
->>> +static struct platform_driver exynos4_mct_driver = {
->>> +     .probe          = exynos4_mct_probe,
->>> +     .driver         = {
->>> +             .name   = "exynos-mct",
->>> +             .of_match_table = exynos4_mct_match_table,
->>> +     },
->>> +module_platform_driver(exynos4_mct_driver);
->>> +#else
->>>   TIMER_OF_DECLARE(exynos4210, "samsung,exynos4210-mct", mct_init_spi);
->>>   TIMER_OF_DECLARE(exynos4412, "samsung,exynos4412-mct", mct_init_ppi);
->>> +#endif
->>>
->>>   is not acceptable as is. We don't want to do the same in all the drivers.
->>
->> Are you suggesting we create a new timer macro to handle if we want to use
->> TIMER_OF_DECLARE() or builtin_platform_driver()?
-> 
-> One you convert a driver to tristate, there's no reason to continue
-> using TIMER_OF_DECLARE. Just always do the "module" approach. If it
-> gets built in, it'll just initialize early?
-> 
-> What am I missing?
-
-TIMER_OF_DECLARE relies on a mechanism building an array at compile 
-time. It is called very early in the boot process.
-
-What would be nice is to introduce something like 
-TIMER_OF_MODULE_DECLARE() where builtin means TIMER_OF_DECLARE and 
-module means module_platform_driver()
-
-
-
+diff --git a/Documentation/devicetree/bindings/soc/fsl/fsl,imx23-digctl.yaml b/Documentation/devicetree/bindings/soc/fsl/fsl,imx23-digctl.yaml
+new file mode 100644
+index 0000000000000..47f92f763bfa3
+--- /dev/null
++++ b/Documentation/devicetree/bindings/soc/fsl/fsl,imx23-digctl.yaml
+@@ -0,0 +1,41 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas//soc/fsl/fsl,imx23-digctl.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Freescale mxs digctrl for i.MX23/i.MX28
++
++maintainers:
++  - Frank Li <Frank.Li@nxp.com>
++
++properties:
++  compatible:
++    oneOf:
++      - items:
++          - enum:
++              - fsl,imx28-digctl
++          - const: fsl,imx23-digctl
++      - const: fsl,imx23-digctl
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++  - interrupts
++
++additionalProperties: false
++
++examples:
++  - |
++    digctl@8001c000 {
++        compatible = "fsl,imx28-digctl", "fsl,imx23-digctl";
++        reg = <0x8001c000 0x2000>;
++        interrupts = <89>;
++    };
++
 -- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+2.34.1
 
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
