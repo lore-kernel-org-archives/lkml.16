@@ -1,195 +1,110 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC10621E0B7
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 01:18:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D94602566
+	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 01:20:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747963090; cv=none; b=Ev5URa144H6MRij8t7d0o7Mvl//rSIgxqglR7jP13Lp/2lWtEdu07WzBPHlxcCrv5RFhbsI7MEsY2cOiTn200nd00iaEE3VB0RI5M6HIplIK1diy9xmyRXNAvmsEof7jDfmnjzYvf3MlhR8H3jBZw8PwZoMFBF8lUzM/n2GyV0A=
+	t=1747963219; cv=none; b=oEY11CeskKGvV6CMIe01AzvDLXWgQELjgBHyuGTkvBbEp1ABjhNp4rfedcoR33MET/3oANBYDlx8h+QgW7nZ3Lef3PjXDBIv/BzaLYMdfpR6j4y9LkF/5qjmh+qNJyEqywfp8Gd6R2UBwJXQLrr8PVgLSqeUkNWi7oEWKIZj60M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747963090; c=relaxed/simple;
-	bh=dX8nq0dpc2EQQRTZJEyJJGSZKFyoPAvHvk+9J9cF//A=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=r7/4n0FRXFt/n5RtK6grXBF45lcCxFgHgwZ41l4RYIMT0Xj4tNXsbJFTHo5zSkGvllr1egG3KRyHsXXj5vD/3+tSmaaxfz+Eplj1X2lABH9B2cMO/fkJmXEx03Y1a5yp80qdnoZ2K8TRRRu7pI9ECsuNQdCWg8V3dzgSRmxyggQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=QEWAt09y; arc=none smtp.client-ip=209.85.216.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1747963219; c=relaxed/simple;
+	bh=YEUaSTQuLP/mHjcUA+52MEhP4sildPgOz1CAmIvCVYw=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=gRHNlOKI6QsAQ3G3dMJGC+XdEWepLnpG0Ed44WoZ7ow6umXlKl3+eMSGUW0LG67gMsmOCb99thUP0Vi0lylLwpIe6jDGI3PxPBvZP+LsqmmFT7GqvJ8qCO6iUYCiiBbXzhmRX7Yw3mLjrg34uoojoocdAkBk+o1YyqGlRM+11sY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OTia1Eu+; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QEWAt09y"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-310e7c24158so490657a91.3
-        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 18:18:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747963088; x=1748567888; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=fufLLC396JAskRTF6ENXv8IgKQdaTngu642No/aWLio=;
-        b=QEWAt09y2pL8xG9VRU4461w6qLuofwC+yLiRdknAL0xtWwFAqHZ8VjRVDIohbbYNEc
-         B6Jj5GjKuWuwI1aPUhbe4+C5w03MKf27Ofzqc68/1TcK3+lXV/hVvo3XnJJ8OsLTl9FX
-         240RvsUP5t2IX9sOCLrYyua54J7NsWt+T82AYpbRC7eh2UYkdtGS+K+esKqZgpURd/WJ
-         5f8d/3J1fjAO0fZb1ZHwM8l7Oe13taCnWrERktiuJhXRcSN3QrlCOfTGoUc1hOJ78LWG
-         wQZu0l1d6vuyqHJHAvTasiwsaQQBRk/7De3OiUMMx3ZV26nr6hbq4EERN7gWp3Ny+k2l
-         QxgQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747963088; x=1748567888;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=fufLLC396JAskRTF6ENXv8IgKQdaTngu642No/aWLio=;
-        b=vKKVeogRcxRuwuBywlQn9B/cW6NDZqbKEC1ZLf7xXx+p3xn2OD42a7ZHVp4DTHN0CW
-         22qWzxyPiJ5JdGvB6/pf5fr9WN3d+wMM75COLoIlGWafGqhB6OTIVJSpSlW472HDDL9G
-         wwdAkcTScabk/YaUUJ6BWYh7b4ZQW0GdXgDgWGJ/sV1txoPg3A0gWKT4RTcSZjXyk+fY
-         pkyO54S7QfGSDDI4YViGThi1aW8uCNPklty2zb61r1u5f0dIJfpWxk1Z7eBOVr1vb8P0
-         28k1wpjOVYVcqbr+x9BiiP2cTj4A25U7kjVdRaxzddwlODJpFY/M4W2OoZ1VkGlSW/XE
-         VghQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWk/ZMevTgNci+t3OKpNAWYFSyYQsBsxsRh3PfpY/HNqQuPylxhSjxcmL3d6vjxX84n+zYk+nuSUoiaM+8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxM3YSZh/rhd/IqlJF0fTdJYHPrQopbrSnQUTlog3yhld9p6Ux4
-	MiENrEONXZ5duHg6ekKLDp/8DdZKA2wz8s0X5JqEZ4CixzneZISiEiMHcvYBDN2IlY2xvtUPWo6
-	PZYN8nQ==
-X-Google-Smtp-Source: AGHT+IFCOYwtizzYjOTae6Mj32F46dgD0uJVDssen2HZ7KTZkiFj54SwRB8bSELTYoqvR+qs9H39zDVz/wg=
-X-Received: from pjbsl8.prod.google.com ([2002:a17:90b:2e08:b0:301:1bf5:2f07])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90a:fc4f:b0:2ff:4f04:4266
- with SMTP id 98e67ed59e1d1-30e83216290mr31617531a91.23.1747963088080; Thu, 22
- May 2025 18:18:08 -0700 (PDT)
-Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Thu, 22 May 2025 18:17:56 -0700
-In-Reply-To: <20250523011756.3243624-1-seanjc@google.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OTia1Eu+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747963218; x=1779499218;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=YEUaSTQuLP/mHjcUA+52MEhP4sildPgOz1CAmIvCVYw=;
+  b=OTia1Eu+1AYbwBuMtfQLCIPadt+NSc0pwehgJVmxG8GXwnvY4FREsPUD
+   /YcK8kqJUvkSPlqrGjk7HH6VDpWz9jgq1lmi//Wgt3UfSwdjj9FlR911g
+   glW/Yxx91VS3fBBpboXCBoRmx0R5m6agxjIgVa8YkfWGGFOe/A7f4ODQi
+   HNTyHWk8j69WKN7SCReb1uu0sNd75Bme6frOB7ndCNQcUPnGVE8e377/7
+   51m/z05q38DjVXj1hkdSiHQGMAtn4NkT2+kbCXan6Jk/wXALt8/hLdUg+
+   ED8qXK/g3wmWiNiR3Y7vmJ07ZLRY3LqhSVtj3/PfGtZ25RiQl2KAKwnB+
+   w==;
+X-CSE-ConnectionGUID: qhKaRL5zTw+yOkZdydXzWA==
+X-CSE-MsgGUID: sMJc3nsbSo6ZBlhD9EmPUg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11441"; a="72540614"
+X-IronPort-AV: E=Sophos;i="6.15,307,1739865600"; 
+   d="scan'208";a="72540614"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2025 18:20:16 -0700
+X-CSE-ConnectionGUID: 0E4SWFD5RW2hmqqB7QpCqw==
+X-CSE-MsgGUID: pCsKkTFkQDKyFD58c8EiXA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,307,1739865600"; 
+   d="scan'208";a="146020430"
+Received: from lindenmc-mobl.amr.corp.intel.com (HELO desk) ([10.125.146.24])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2025 18:20:16 -0700
+Date: Thu, 22 May 2025 18:20:15 -0700
+From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+To: x86@kernel.org
+Cc: David Kaplan <david.kaplan@amd.com>, linux-kernel@vger.kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Borislav Petkov <bp@alien8.de>,
+	Nikolay Borisov <nik.borisov@suse.com>
+Subject: [PATCH v3 0/7] eIBRS fixes
+Message-ID: <20250522-eibrs-fix-v3-0-12704e291e1e@linux.intel.com>
+X-B4-Tracking: v=1; b=H4sIAGDML2gC/22NwWoCMRRFf0WybobkxRjjSii2iHs3pZQk86Y+n
+ U5KMg6KzL832s1Au7yXe869sYyJMLPV7MYSDpQpdiWopxkLB9d9Iqe6ZAYCtNAgOJJPmTd04Ys
+ w1+AX1tS+YWX/nbDUD9fbe8kHyn1M14d6kPf2P8sgOXArvQu10lgLu26pO18q6npsqxC/2N01w
+ JQHKcEoUb2+uOflbnsyR3+cb65xb9aN6z9Ccj1WbQyu/YXVFJbTc+CCG4Gg7RKtgvD3fBzHH7u
+ cCiclAQAA
+X-Change-ID: 20250520-eibrs-fix-6c452b697dbf
+X-Mailer: b4 0.14.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250523011756.3243624-1-seanjc@google.com>
-X-Mailer: git-send-email 2.49.0.1151.ga128411c76-goog
-Message-ID: <20250523011756.3243624-6-seanjc@google.com>
-Subject: [PATCH 5/5] VFIO: KVM: x86: Drop kvm_arch_{start,end}_assignment()
-From: Sean Christopherson <seanjc@google.com>
-To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, Borislav Petkov <bp@alien8.de>, 
-	Jim Mattson <jmattson@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Drop kvm_arch_{start,end}_assignment() and all associated code now that
-KVM x86 no longer consumes assigned_device_count.  Tracking whether or not
-a VFIO-assigned device is formally associated with a VM is fundamentally
-flawed, as such an association is optional for general usage, i.e. is prone
-to false negatives.  E.g. prior to commit 2edd9cb79fb3 ("kvm: detect
-assigned device via irqbypass manager"), device passthrough via VFIO would
-fail to enable IRQ bypass if userspace omitted the formal VFIO<=>KVM
-binding.
+v3:
+- Get rid of AUTO check in retbleed mitigation. (Borislav)
+- Update commit message to mention the preparatory patch. (Nikolay)
+- Collected tags.
 
-And device drivers that *need* the VFIO<=>KVM connection, e.g. KVM-GT,
-shouldn't be relying on generic x86 tracking infrastructure.
+v2: https://lore.kernel.org/r/20250521-eibrs-fix-v2-0-70e2598e932c@linux.intel.com
+- Split the ITS stuffing patch into smaller patches. (Borislav)
+- Zap spectre_v2_in_retpoline_mode() helper. (Borislav)
 
-Cc: Jim Mattson <jmattson@google.com>
-Signed-off-by: Sean Christopherson <seanjc@google.com>
+v1: https://lore.kernel.org/r/20250520-eibrs-fix-v1-2-91bacd35ed09@linux.intel.com
+
+tip/x86/core that has the restructured bugs.c including the recent ITS
+mitigation has some disparities compared to upstream:
+
+1. Spectre-v2 mitigation default is IBRS on eIBRS supported systems.
+2. RSB stuffing mitigation for ITS is not allowed with eIBRS.
+
+These couple of patches fixes the above issues.
+
 ---
- arch/x86/include/asm/kvm_host.h |  2 --
- arch/x86/kvm/x86.c              | 18 ------------------
- include/linux/kvm_host.h        | 18 ------------------
- virt/kvm/vfio.c                 |  3 ---
- 4 files changed, 41 deletions(-)
+Pawan Gupta (7):
+      x86/retbleed: Avoid AUTO after the select step
+      x86/retbleed: Simplify the =stuff checks
+      x86/bugs: Exit early if return thunk is already set
+      x86/its: Use switch/case to apply mitigation
+      x86/retbleed: Introduce cdt_possible()
+      x86/its: Remove =stuff dependency on retbleed
+      x86/its: Allow stuffing in eIBRS+retpoline mode also
 
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index 043be00ec5b8..3cb57f6ef730 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -1380,8 +1380,6 @@ struct kvm_arch {
- 
- #define __KVM_HAVE_ARCH_NONCOHERENT_DMA
- 	atomic_t noncoherent_dma_count;
--#define __KVM_HAVE_ARCH_ASSIGNED_DEVICE
--	atomic_t assigned_device_count;
- 	unsigned long nr_possible_bypass_irqs;
- 
- #ifdef CONFIG_KVM_IOAPIC
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 3969e439a6bb..2a1563f2ee97 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -13561,24 +13561,6 @@ bool kvm_arch_can_dequeue_async_page_present(struct kvm_vcpu *vcpu)
- 		return kvm_lapic_enabled(vcpu) && apf_pageready_slot_free(vcpu);
- }
- 
--void kvm_arch_start_assignment(struct kvm *kvm)
--{
--	atomic_inc(&kvm->arch.assigned_device_count);
--}
--EXPORT_SYMBOL_GPL(kvm_arch_start_assignment);
--
--void kvm_arch_end_assignment(struct kvm *kvm)
--{
--	atomic_dec(&kvm->arch.assigned_device_count);
--}
--EXPORT_SYMBOL_GPL(kvm_arch_end_assignment);
--
--bool noinstr kvm_arch_has_assigned_device(struct kvm *kvm)
--{
--	return raw_atomic_read(&kvm->arch.assigned_device_count);
--}
--EXPORT_SYMBOL_GPL(kvm_arch_has_assigned_device);
--
- static void kvm_noncoherent_dma_assignment_start_or_stop(struct kvm *kvm)
- {
- 	/*
-diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-index 706f2402ae8e..31f183c32f9a 100644
---- a/include/linux/kvm_host.h
-+++ b/include/linux/kvm_host.h
-@@ -1686,24 +1686,6 @@ static inline bool kvm_arch_has_noncoherent_dma(struct kvm *kvm)
- 	return false;
- }
- #endif
--#ifdef __KVM_HAVE_ARCH_ASSIGNED_DEVICE
--void kvm_arch_start_assignment(struct kvm *kvm);
--void kvm_arch_end_assignment(struct kvm *kvm);
--bool kvm_arch_has_assigned_device(struct kvm *kvm);
--#else
--static inline void kvm_arch_start_assignment(struct kvm *kvm)
--{
--}
--
--static inline void kvm_arch_end_assignment(struct kvm *kvm)
--{
--}
--
--static __always_inline bool kvm_arch_has_assigned_device(struct kvm *kvm)
--{
--	return false;
--}
--#endif
- 
- static inline struct rcuwait *kvm_arch_vcpu_get_wait(struct kvm_vcpu *vcpu)
- {
-diff --git a/virt/kvm/vfio.c b/virt/kvm/vfio.c
-index 196a102e34fb..be50514bbd11 100644
---- a/virt/kvm/vfio.c
-+++ b/virt/kvm/vfio.c
-@@ -175,7 +175,6 @@ static int kvm_vfio_file_add(struct kvm_device *dev, unsigned int fd)
- 	kvf->file = get_file(filp);
- 	list_add_tail(&kvf->node, &kv->file_list);
- 
--	kvm_arch_start_assignment(dev->kvm);
- 	kvm_vfio_file_set_kvm(kvf->file, dev->kvm);
- 	kvm_vfio_update_coherency(dev);
- 
-@@ -205,7 +204,6 @@ static int kvm_vfio_file_del(struct kvm_device *dev, unsigned int fd)
- 			continue;
- 
- 		list_del(&kvf->node);
--		kvm_arch_end_assignment(dev->kvm);
- #ifdef CONFIG_SPAPR_TCE_IOMMU
- 		kvm_spapr_tce_release_vfio_group(dev->kvm, kvf);
- #endif
-@@ -336,7 +334,6 @@ static void kvm_vfio_release(struct kvm_device *dev)
- 		fput(kvf->file);
- 		list_del(&kvf->node);
- 		kfree(kvf);
--		kvm_arch_end_assignment(dev->kvm);
- 	}
- 
- 	kvm_vfio_update_coherency(dev);
+ arch/x86/kernel/cpu/bugs.c | 91 +++++++++++++++++++++++++++-------------------
+ 1 file changed, 53 insertions(+), 38 deletions(-)
+---
+base-commit: 6a7c3c2606105a41dde81002c0037420bc1ddf00
+change-id: 20250520-eibrs-fix-6c452b697dbf
+
 -- 
-2.49.0.1151.ga128411c76-goog
+Thanks,
+Pawan
+
 
