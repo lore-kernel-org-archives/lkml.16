@@ -1,57 +1,57 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C9A3280314
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 01:01:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D185B27C152
+	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 01:01:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747962064; cv=none; b=UpZmXP8Rm6Ftw1A2J5QIdO28Owz+UMM5sTLtVf0IrYEdY+ImA9sWl+FbEtBmbGqyvoGyJcHxosRSHiZM3FG8OzMHg67KXYuzjmfmdSYrmqgEOw4fCGrxjkT4CPeDtSQsWEqRK5RdjNGpuv4WIcWfNsE8Q1jyB9zNOk0u1FMQdSQ=
+	t=1747962064; cv=none; b=qeTOSuDeduSSvSzWXi3P/XaG0gr3/zqFPnxuOUeMopQe4cN0dNTVYu1nXxAgA7k9IRqzE1Fo7vaRp6Jhxesi56cMUKyOOUNiro4QMU9Sx2lE95bO1hRzZ0VxqRG5dgiSPHmQ7bqeUKRQe9w/fJyFLygQNxIbVqAzwKcEMk2oSrM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1747962064; c=relaxed/simple;
-	bh=myxsKIMu9z2uOdqZo9sjfpCseSVPuh0CYv0CumURj6M=;
+	bh=CjEiv3EBSt3Kbej2hI7WprWBZwegAM8tmmcYdNo1npY=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=YMclHbAYbo0JPh9U8t6gAkpLLM5LKPM2ZJcnBcpBN7gHli2TJdUBXxCao8qSsP3g4hFzENGg+14euVwqhjg0klaM7DOOjoY1RHuf7mon9dUgpsO4OPyZLUcexqYdwe4tisDWDojJ5BcSmdon+GQwwe1VqTnghWvb06hP806ytD8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=WxrI960j; arc=none smtp.client-ip=209.85.216.73
+	 To:Cc:Content-Type; b=Xse83FLfGHlRVA7dYMsH9L6aiuQzNhmq0GS5SzjC3nX5Df+HmOS6wC/0VSGChGpTuFBLFmux1mmzgTRVWXegTroKM6qfA7DWpiMQsulfCvDFsNHWsTOKqibl5xvYK/ram/IkWi3PD9HfVOa43iCIhGPkd0ZIU/c6ZtseeILFNp0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=yanjyWes; arc=none smtp.client-ip=209.85.215.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WxrI960j"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-3108d5538c0so2091282a91.0
-        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 18:01:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="yanjyWes"
+Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-af534e796baso5345615a12.3
+        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 18:01:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747962063; x=1748566863; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1747962061; x=1748566861; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=Z6qJrl8moJt7bfJRd6rO8Y2MTdMUnxYZYEX7kVfA4zY=;
-        b=WxrI960jyZ6SxgFMcPlvfOPhWWcpQcZ8rNwoiMFkS1ofqeoAPzb2uF7fCnV1Q6+XlH
-         KqcBI/U1KC5ndGSWLSX+oAOTcQ0EWz00n+pUFFYgIuT982olZaxT36FFwQRBOMWoYxbN
-         jIRMMFp+WLPjqDdpYcrzU+4vUGwpeEXJ1mwO4/HJFBQXCRK5c8RKbR4LIQdzlrwlK3cH
-         ZaQJY9+qiiPomtADVDuTE2AH7fA0aBbqqoT730LkJxDh6KCtxM3rYPyeE0P21oewYnNe
-         cQuE9jvAkdyfc7iTOC0DqHx8FEOuaxF3XklAoHsNR4fnE8oS8aK3h17XLUqVXMGip5aG
-         9kpA==
+        bh=I/V/wUMCmixrEnIVNqfJcxmN2QXnsdAPP3QKe6AvyEw=;
+        b=yanjyWesW8oYnASX7ORC1Y+kgyIlvj3Szpvv0I/7s26pPS9maYlAQzsvu0wTrpeyJ7
+         fhK/i1TVtwapjuoHMPeMZiM84XzLM9vjCoph4FSl2v4j9pUN41dKmesltGRVK1efKptP
+         qzKNf+Y/VtzGdXyc5Da1SxVZTKlOVtKrc0Mnug4TEC6bhkAtojJLZqGHv4he+iZu1Lne
+         BPogYHD5AB+pu05F8FdEznv3VwhVNSAbI095ZAsqWjWe70EpM6KSZT1UDqP2QnZjldJx
+         GNvISnsdKYOmQ+lL7kkZugZ0AxIJB76ufTwO6HG6ZQ0wsZYEaOuQR1CwFkai+JEawMgN
+         yRrw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747962063; x=1748566863;
+        d=1e100.net; s=20230601; t=1747962061; x=1748566861;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=Z6qJrl8moJt7bfJRd6rO8Y2MTdMUnxYZYEX7kVfA4zY=;
-        b=J/QokrH9D8XArlOuV6eVF0SvcUZyr0ZytSl0ZaOq5095+J1KHBqAsGgqxlvrKfrRbg
-         W1+zkmXjZSgjDM6dmYApOcehR6p23f2mX94V+c0+V5Bj502n43a/og62NvBvd0w93Yk8
-         cQou2tgETFQStAUy+z13Q+MiwHdE9I+LLMHS60xUMhTEer8PRgnHvBVqYqW1dr+icboP
-         Jt13QoGgyE1jtY5ndQtjI59iOQalGgzGfi7av4i0a78BPln3GAixHqK/J9Tgqdzo4SNB
-         V8tYdHKC2fTka2tHHAhkbbdjTz7c5ZEC+vbfxD7lFT6YZk+MxLhhhp6KCuJDVl2nIgPj
-         TELw==
-X-Forwarded-Encrypted: i=1; AJvYcCVYttD9tV3v2/t7uEPyCFwFpq+629TkMgQl2mvXNe9C1oD09xo3bM8FgxAaZok1W7ZFK0bfFaQ3GSkAyZA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy9rI75MPq3MHY6Py8pu4Q66m5vtkAK/MbLJv0EE8CTCyl79hpm
-	wKCjfHpbjEYLZpzIh0KEWJiw0kzXOx3RDdPL2+yIdchCK3plAMWngblSE1ISZavhnKYCIfIwXpA
-	T6shIxw==
-X-Google-Smtp-Source: AGHT+IHGd9AMcPRaXLw73jWmjjZZ11tSRCThxeyCURZKAbhkOZc/Mi2j9RJn55Hndx07vxGEYk1l0sThWdQ=
-X-Received: from pjb7.prod.google.com ([2002:a17:90b:2f07:b0:2ff:6132:8710])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:1f8c:b0:2fc:3264:3666
- with SMTP id 98e67ed59e1d1-30e7d5be34bmr41066961a91.30.1747962062808; Thu, 22
- May 2025 18:01:02 -0700 (PDT)
+        bh=I/V/wUMCmixrEnIVNqfJcxmN2QXnsdAPP3QKe6AvyEw=;
+        b=K7pGbm356jD4RXkhbanhw+7NPVJxCISp4DhauesVGqfuQy7LQ9sXAXQ0dUKyCjWt43
+         RSocREbGUltL+69TuXv+2RxNPlECzsaTRmXWEceG9payWJnFEX+MasOh5NWhYEixsHM3
+         mjzdSOu+/c1PxhSByvKxNAUhbfG1+eEGh3lv+Fakg3J6kxrCrP5TAs5PpAoijO/lqjZA
+         kmZIPxV4QNwL9RjsvbczUwafJVjhla6JJ4pL4uINc9aQ7gyK+s6F6BRQw8Aa0N2RMpgE
+         FxMQiuKxmX17nbC5wZxin5R2KGlR5O0nJzvwJ7M/O1rrC0JqMgCv4KU8gyPD2SLimwXu
+         17Yw==
+X-Forwarded-Encrypted: i=1; AJvYcCXU3j9mGIgZizFp+JrfELuQdZdM0bW7SuklsmL6lmdqrq9hN4hFlYaREzEJz4rEDOjO1aOIybbSbADa56E=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwskKV0X3S4oupCauSqxysopVsKyddsedC0IKabp12mccE5E6SU
+	mZnrzfHCH634AnGSqt1kV1ynXmZKibBFd9IAy65X3rtMgpTeb9UTmDx36arRIR/Y4QqB796soqP
+	gNmMtTg==
+X-Google-Smtp-Source: AGHT+IEotc86oF2PtG/8v7ATzTs0oMnFmKSHoNnIFngKOe27XotzUkoD7+iAiHXRlObAKnBtxXNE1dwWSgM=
+X-Received: from pgbcr12.prod.google.com ([2002:a05:6a02:410c:b0:b2b:2ba7:184f])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:748e:b0:1f5:6b36:f57a
+ with SMTP id adf61e73a8af0-2187a6de22bmr1225154637.39.1747962061182; Thu, 22
+ May 2025 18:01:01 -0700 (PDT)
 Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Thu, 22 May 2025 17:59:36 -0700
+Date: Thu, 22 May 2025 17:59:35 -0700
 In-Reply-To: <20250523010004.3240643-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -61,8 +61,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250523010004.3240643-1-seanjc@google.com>
 X-Mailer: git-send-email 2.49.0.1151.ga128411c76-goog
-Message-ID: <20250523010004.3240643-32-seanjc@google.com>
-Subject: [PATCH v2 31/59] KVM: Fold kvm_arch_irqfd_route_changed() into kvm_arch_update_irqfd_routing()
+Message-ID: <20250523010004.3240643-31-seanjc@google.com>
+Subject: [PATCH v2 30/59] KVM: Don't WARN if updating IRQ bypass route fails
 From: Sean Christopherson <seanjc@google.com>
 To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, 
 	Joerg Roedel <joro@8bytes.org>, David Woodhouse <dwmw2@infradead.org>, 
@@ -73,82 +73,89 @@ Cc: kvm@vger.kernel.org, iommu@lists.linux.dev, linux-kernel@vger.kernel.org,
 	Francesco Lavra <francescolavra.fl@gmail.com>, David Matlack <dmatlack@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Fold kvm_arch_irqfd_route_changed() into kvm_arch_update_irqfd_routing().
-Calling arch code to know whether or not to call arch code is absurd.
+Don't bother WARNing if updating an IRTE route fails now that vendor code
+provides much more precise WARNs.  The generic WARN doesn't provide enough
+information to actually debug the problem, and has obviously done nothing
+to surface the myriad bugs in KVM's implementation.
 
 Signed-off-by: Sean Christopherson <seanjc@google.com>
 ---
- arch/x86/kvm/irq.c       | 15 +++++----------
- include/linux/kvm_host.h |  2 --
- virt/kvm/eventfd.c       | 10 +---------
- 3 files changed, 6 insertions(+), 21 deletions(-)
+ arch/x86/kvm/irq.c       |  8 ++++----
+ include/linux/kvm_host.h |  6 +++---
+ virt/kvm/eventfd.c       | 15 ++++++---------
+ 3 files changed, 13 insertions(+), 16 deletions(-)
 
 diff --git a/arch/x86/kvm/irq.c b/arch/x86/kvm/irq.c
-index b3ce870d1d91..582fc17ae02b 100644
+index f20b6da30d6f..b3ce870d1d91 100644
 --- a/arch/x86/kvm/irq.c
 +++ b/arch/x86/kvm/irq.c
-@@ -610,15 +610,10 @@ void kvm_arch_update_irqfd_routing(struct kvm_kernel_irqfd *irqfd,
- 				   struct kvm_kernel_irq_routing_entry *old,
- 				   struct kvm_kernel_irq_routing_entry *new)
- {
-+	if (old->type == KVM_IRQ_ROUTING_MSI &&
-+	    new->type == KVM_IRQ_ROUTING_MSI &&
-+	    !memcmp(&old->msi, &new->msi, sizeof(new->msi)))
-+		return;
-+
- 	kvm_pi_update_irte(irqfd, new);
+@@ -606,11 +606,11 @@ void kvm_arch_irq_bypass_del_producer(struct irq_bypass_consumer *cons,
+ 	kvm_arch_end_assignment(irqfd->kvm);
  }
--
--bool kvm_arch_irqfd_route_changed(struct kvm_kernel_irq_routing_entry *old,
+ 
+-int kvm_arch_update_irqfd_routing(struct kvm_kernel_irqfd *irqfd,
+-				  struct kvm_kernel_irq_routing_entry *old,
 -				  struct kvm_kernel_irq_routing_entry *new)
--{
--	if (old->type != KVM_IRQ_ROUTING_MSI ||
--	    new->type != KVM_IRQ_ROUTING_MSI)
--		return true;
--
--	return !!memcmp(&old->msi, &new->msi, sizeof(new->msi));
--}
++void kvm_arch_update_irqfd_routing(struct kvm_kernel_irqfd *irqfd,
++				   struct kvm_kernel_irq_routing_entry *old,
++				   struct kvm_kernel_irq_routing_entry *new)
+ {
+-	return kvm_pi_update_irte(irqfd, new);
++	kvm_pi_update_irte(irqfd, new);
+ }
+ 
+ bool kvm_arch_irqfd_route_changed(struct kvm_kernel_irq_routing_entry *old,
 diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-index ee79b1167e02..706f2402ae8e 100644
+index 27c7087820cb..ee79b1167e02 100644
 --- a/include/linux/kvm_host.h
 +++ b/include/linux/kvm_host.h
-@@ -2409,8 +2409,6 @@ void kvm_arch_irq_bypass_start(struct irq_bypass_consumer *);
- void kvm_arch_update_irqfd_routing(struct kvm_kernel_irqfd *irqfd,
- 				   struct kvm_kernel_irq_routing_entry *old,
- 				   struct kvm_kernel_irq_routing_entry *new);
--bool kvm_arch_irqfd_route_changed(struct kvm_kernel_irq_routing_entry *,
--				  struct kvm_kernel_irq_routing_entry *);
+@@ -2406,9 +2406,9 @@ void kvm_arch_irq_bypass_del_producer(struct irq_bypass_consumer *,
+ 			   struct irq_bypass_producer *);
+ void kvm_arch_irq_bypass_stop(struct irq_bypass_consumer *);
+ void kvm_arch_irq_bypass_start(struct irq_bypass_consumer *);
+-int kvm_arch_update_irqfd_routing(struct kvm_kernel_irqfd *irqfd,
+-				  struct kvm_kernel_irq_routing_entry *old,
+-				  struct kvm_kernel_irq_routing_entry *new);
++void kvm_arch_update_irqfd_routing(struct kvm_kernel_irqfd *irqfd,
++				   struct kvm_kernel_irq_routing_entry *old,
++				   struct kvm_kernel_irq_routing_entry *new);
+ bool kvm_arch_irqfd_route_changed(struct kvm_kernel_irq_routing_entry *,
+ 				  struct kvm_kernel_irq_routing_entry *);
  #endif /* CONFIG_HAVE_KVM_IRQ_BYPASS */
- 
- #ifdef CONFIG_HAVE_KVM_INVALID_WAKEUPS
 diff --git a/virt/kvm/eventfd.c b/virt/kvm/eventfd.c
-index a4f80fe8a5f3..defc2c04d241 100644
+index 85581550dc8d..a4f80fe8a5f3 100644
 --- a/virt/kvm/eventfd.c
 +++ b/virt/kvm/eventfd.c
-@@ -291,13 +291,6 @@ void __weak kvm_arch_update_irqfd_routing(struct kvm_kernel_irqfd *irqfd,
+@@ -285,11 +285,11 @@ void __attribute__((weak)) kvm_arch_irq_bypass_start(
  {
- 
  }
--
--bool __attribute__((weak)) kvm_arch_irqfd_route_changed(
--				struct kvm_kernel_irq_routing_entry *old,
--				struct kvm_kernel_irq_routing_entry *new)
--{
--	return true;
--}
- #endif
  
- static int
-@@ -617,8 +610,7 @@ void kvm_irq_routing_update(struct kvm *kvm)
- 		irqfd_update(kvm, irqfd);
+-int __weak kvm_arch_update_irqfd_routing(struct kvm_kernel_irqfd *irqfd,
+-					 struct kvm_kernel_irq_routing_entry *old,
+-					 struct kvm_kernel_irq_routing_entry *new)
++void __weak kvm_arch_update_irqfd_routing(struct kvm_kernel_irqfd *irqfd,
++					  struct kvm_kernel_irq_routing_entry *old,
++					  struct kvm_kernel_irq_routing_entry *new)
+ {
+-	return 0;
++
+ }
+ 
+ bool __attribute__((weak)) kvm_arch_irqfd_route_changed(
+@@ -618,11 +618,8 @@ void kvm_irq_routing_update(struct kvm *kvm)
  
  #if IS_ENABLED(CONFIG_HAVE_KVM_IRQ_BYPASS)
--		if (irqfd->producer &&
--		    kvm_arch_irqfd_route_changed(&old, &irqfd->irq_entry))
-+		if (irqfd->producer)
- 			kvm_arch_update_irqfd_routing(irqfd, &old, &irqfd->irq_entry);
+ 		if (irqfd->producer &&
+-		    kvm_arch_irqfd_route_changed(&old, &irqfd->irq_entry)) {
+-			int ret = kvm_arch_update_irqfd_routing(irqfd, &old, &irqfd->irq_entry);
+-
+-			WARN_ON(ret);
+-		}
++		    kvm_arch_irqfd_route_changed(&old, &irqfd->irq_entry))
++			kvm_arch_update_irqfd_routing(irqfd, &old, &irqfd->irq_entry);
  #endif
  	}
+ 
 -- 
 2.49.0.1151.ga128411c76-goog
 
