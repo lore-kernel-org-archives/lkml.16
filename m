@@ -1,126 +1,63 @@
-Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31431298C00
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 16:25:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FC12296FC6;
+	Fri, 23 May 2025 16:25:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748017518; cv=none; b=if8xa9nGWvZI9eO5tD44DmjlJE7AbHNSDeR4j9rA8UMhX/bli3pFsU1fEBAU9btX6WHvGgkuQdTL1Kk7iSvOKeqZ92pTldlLsofm5Nep1qWz56fqX2uHrpAJptdAhu/qHZDmB9ZUi92sPPOpnvZIn9Xfpm8QHuOopkq4F9Qkt7M=
+	t=1748017548; cv=none; b=Hegbm77unkapaML7ugxYNZeW9Q64tnPYf4WjAuVK/Oxqd2G0gyIEqU+I59BRdSifdzmy0VZQ+0ss/2++s++3dWJlz2fgZJAAzo85L70ima3OYT/aR9drI/z6WzlBe8Iapquz3vtqy2WUMsVZT0myjuI4mk3l3i18wyrUa7Ep7yQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748017518; c=relaxed/simple;
-	bh=pGUeqwprGZoXCxhP3CpFNIt3D2yK6irBdnlxCagzO9w=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=ITNalDGKcweClAepMHbncUthSkzvHtVUGosC0XgdOK3WRytL7Bv3gjxJMTc6SeXpLmxAMLpMku5/kd1OTxAw/sSmMowZDH6wV1UnY3lKcDAcD1NPSG7GpYy8CFcMrbGoD57I6Gjnq3kieUVxTKU7tZqmrayk7yZvHnu5y2z6gQ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Yxn2CxIW; arc=none smtp.client-ip=209.85.210.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1748017548; c=relaxed/simple;
+	bh=rjoEa4YTfRqV8t+RKBbDbYu/7bQ2rDRgnMXdcMYrDjQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CLmrF7WAJIiLZpS4mcCwgOr8Pu72N3Bh6BeyjwCwucEumFapbEbc8ZEdA3C3E3F1YUM/ATgfuKwEcbr3mwqvaLoXFh2LPJYHNEwIBFTVBFw6d3C9m10SE3+Cw+yi6EjWY/EoAOLX6zqlYm7wngithrxIlR7zdcp6Wykr5X3rGmw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=Q9PanhOR; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Yxn2CxIW"
-Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-742b01ad1a5so242314b3a.0
-        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 09:25:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748017516; x=1748622316; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=vL9yoVKIvL/ZpPCv2NyD8nz+QWrVMneQrqlXk4GCp6k=;
-        b=Yxn2CxIW7WSf7EZ9nkNneb0adNw7OJPtKxAd3aEOylnsIgW9OIRK/idk8Gmxpr4zpQ
-         bmZ7ZPgf1y9+McXt8kzxfolybaP23lyWJX0b6kYBksJzVRLQg0lSP7DcxTvS2zzYG/Mu
-         kbzcOj2k2eryBESju6k3cYm+e2tix6uCAVXwAHHbfnBgVzhzHpvb83yYDTqadRiFni2r
-         JXpeOF4jSRwftrr/ATQsWi3tBtkuBHqIRSWl16XfJ5YERTfmPpIR2r/yw6RafFiSzX44
-         p3gpXwAy0sS9h7OMyOjUCNlee7jUtDLx94Xrso83+2YtNKKiSvxXqnS9fk7Ko+9BVLKq
-         l6sQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748017516; x=1748622316;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=vL9yoVKIvL/ZpPCv2NyD8nz+QWrVMneQrqlXk4GCp6k=;
-        b=IDr8QSem9zl/D8quHktYAMcJFj+4SkhtqOKsg9nA1lcPZnE9/kcEV9uEb5jfR6hYuo
-         x8JZuKmQl+0DM1Ko6CQ6sfpsGGrRJYsx/1gMviHQ6lIxWrGW9R4zSem0VUOSHEpo9/3g
-         9OISB4eezki64SaANzZqxokVcvaArdCp2zP6FxiymZPRsfDqttM6K2maPj81oynrWkJV
-         xRnptBG/qRbgNSj5bbHFG0jV66oA5t9jGkbp9TGLV8wNXdFytzoxIq5UiK45SVPjbvch
-         88giuwcRYmXulpdWxH8ehwxLNPaK8/93bhyF0e5rBmilghBWAZJO07nFTHbIIWJHg6sq
-         AdBQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWAX2DKUUGCzfQ8AhMoZ0SGsOYt+ti05kz+t4/M8ktXxMHbyfqS38s2AL5+I90WLDnVCR8Bi8CHZuPMJBw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw4+S7iQZ5tJOeKl5Vq51BgxkTyb6afh46D5zcZ7QC+iMtihBIL
-	4u+BIMcb2Y5JXpMlsGAJgO9d78FR3kNccsV9HSu5Tx8S1Mtw8gbdYm0qdYDZJyf3n9LG66cbOrt
-	nEirJog==
-X-Google-Smtp-Source: AGHT+IEmr+q2Kj7SHDfKCzgWfyENRKXRJEnatn4gL0A2hVQRWGCweVecs/Z9aHB4483uOLHCk6aIA8ioJCk=
-X-Received: from pgh6.prod.google.com ([2002:a05:6a02:4e06:b0:b16:5cac:7fb3])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:7001:b0:1f5:790c:94a
- with SMTP id adf61e73a8af0-2170cc8fb2dmr46011731637.25.1748017516553; Fri, 23
- May 2025 09:25:16 -0700 (PDT)
-Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Fri, 23 May 2025 09:25:03 -0700
-In-Reply-To: <20250523162504.3281680-1-seanjc@google.com>
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="Q9PanhOR"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=3dBMu1aZeb4MqUjdbspQjjDSvZqqtn4D0MG87nppG/E=; b=Q9PanhORIlfOYOsdnsVJY64a4x
+	vdceOKyr8105FTb8paN5cngobBxTgeipmScNsW0bnslzqsVR0mWqlI0yGTCUlEmtoAqKTBUiAB70J
+	l3iyJuhtagFDoQA0f9onsfXDA4KIA6eFKUd4F+rAemeqzZgsQbszkoawNDCsdvlW0T1Q=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1uIVDH-00Dd8c-Ek; Fri, 23 May 2025 18:25:39 +0200
+Date: Fri, 23 May 2025 18:25:39 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Thangaraj Samynathan <thangaraj.s@microchip.com>
+Cc: bryan.whitehead@microchip.com, UNGLinuxDriver@microchip.com,
+	andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
+	kuba@kernel.org, pabeni@redhat.com, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 net 2/2] net: lan743x: Fix PHY reset handling during
+ initialization and WOL
+Message-ID: <7a6b4862-df38-4b9e-9add-beaeebbbefc0@lunn.ch>
+References: <20250523054325.88863-1-thangaraj.s@microchip.com>
+ <20250523054325.88863-3-thangaraj.s@microchip.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250523162504.3281680-1-seanjc@google.com>
-X-Mailer: git-send-email 2.49.0.1151.ga128411c76-goog
-Message-ID: <20250523162504.3281680-7-seanjc@google.com>
-Subject: [GIT PULL] KVM: x86: VMX changes for 6.16
-From: Sean Christopherson <seanjc@google.com>
-To: Paolo Bonzini <pbonzini@redhat.com>
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Sean Christopherson <seanjc@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250523054325.88863-3-thangaraj.s@microchip.com>
 
-A handful of minor tweaks and fixes, and a big reduction of the boilerplate
-needed for forking vt_x86_ops between VMX and TDX.
+On Fri, May 23, 2025 at 11:13:25AM +0530, Thangaraj Samynathan wrote:
+> Remove lan743x_phy_init from lan743x_hardware_init as it resets the PHY
+> registers, causing WOL to fail on subsequent attempts. Add a call to
+> lan743x_hw_reset_phy in the probe function to ensure the PHY is reset
+> during device initialization.
+> 
+> Fixes: 23f0703c125be ("lan743x: Add main source files for new lan743x driver")
+> Signed-off-by: Thangaraj Samynathan <thangaraj.s@microchip.com>
 
-The following changes since commit 45eb29140e68ffe8e93a5471006858a018480a45:
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
-  Merge branch 'kvm-fixes-6.15-rc4' into HEAD (2025-04-24 13:39:34 -0400)
-
-are available in the Git repository at:
-
-  https://github.com/kvm-x86/linux.git tags/kvm-x86-vmx-6.16
-
-for you to fetch changes up to 907092bf7cbddee4381729f23a33780d84b1bb7c:
-
-  KVM: VMX: Clean up and macrofy x86_ops (2025-05-02 13:37:26 -0700)
-
-----------------------------------------------------------------
-KVM VMX changes for 6.16:
-
- - Explicitly check MSR load/store list counts to fix a potential overflow on
-   32-bit kernels.
-
- - Flush shadow VMCSes on emergency reboot.
-
- - Revert mem_enc_ioctl() back to an optional hook, as it's nullified when
-   SEV or TDX is disabled via Kconfig.
-
- - Macrofy the handling of vt_x86_ops to eliminate a pile of boilerplate code
-   needed for TDX, and to optimize CONFIG_KVM_INTEL_TDX=n builds.
-
-----------------------------------------------------------------
-Chao Gao (1):
-      KVM: VMX: Flush shadow VMCS on emergency reboot
-
-Sean Christopherson (2):
-      KVM: nVMX: Check MSR load/store list counts during VM-Enter consistency checks
-      KVM: x86: Revert kvm_x86_ops.mem_enc_ioctl() back to an OPTIONAL hook
-
-Uros Bizjak (1):
-      KVM: VMX: Use LEAVE in vmx_do_interrupt_irqoff()
-
-Vishal Verma (3):
-      KVM: VMX: Move vt_apicv_pre_state_restore() to posted_intr.c and tweak name
-      KVM: VMX: Define a VMX glue macro for kvm_complete_insn_gp()
-      KVM: VMX: Clean up and macrofy x86_ops
-
- arch/x86/include/asm/kvm-x86-ops.h |   2 +-
- arch/x86/kvm/vmx/main.c            | 202 ++++++++++++++++++-------------------
- arch/x86/kvm/vmx/nested.c          |  31 ++++--
- arch/x86/kvm/vmx/posted_intr.c     |  10 +-
- arch/x86/kvm/vmx/posted_intr.h     |   3 +-
- arch/x86/kvm/vmx/vmenter.S         |   3 +-
- arch/x86/kvm/vmx/vmx.c             |   5 +-
- arch/x86/kvm/vmx/x86_ops.h         |  66 +-----------
- arch/x86/kvm/x86.c                 |   7 +-
- 9 files changed, 142 insertions(+), 187 deletions(-)
+    Andrew
