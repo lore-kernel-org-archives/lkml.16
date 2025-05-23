@@ -1,212 +1,107 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C311C1A00FA;
-	Fri, 23 May 2025 08:16:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65B8920C47A;
+	Fri, 23 May 2025 08:17:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747988204; cv=none; b=huF0QPyUuGBDv8Yyn12XpnkKUpN36NtS6i8+2x+snnNNUgDKjZvCUuqwqkbh9OZtccJv0g9PgXnDsSIbYsC7/7yqEyc2WvA6W7qCnreL86Fp+1RYnAW8sVdD+7tI+yFmi8OkfH8XYZh+UqQAx53ZGdQPYmJ3a8C0Ug7/06IH2f8=
+	t=1747988257; cv=none; b=H8RzMR5zYo5qzSOmLzfbt7vxNQ50mgZ+EwmpO+n7xYB7VMDFlFSA9H74nY9SNO6Hto9udvvUaKrE4GuExRt4FgIJrNswbWLsRFJCG51B/j6qnyuG9sLwwWJfVcJDEH7LKMA4smemx7qpiMISeq1yHPrCS9NB5iI97tfM6UWrONQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747988204; c=relaxed/simple;
-	bh=UynQ8HkI3+hzcNltXT/7HMEPf7z8Wksm8hUI7XjmWOw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VSFRqfUxhVU5nLpQjPr+cgSiM7f/lZqt9Ij6DIdVs00jsrDfIB16RLpk+fKPp0pye4tEtjjB/rV2hDhpLUd7ml8DG6GSlyLZAUjj/wGhV6wLcK83CvAy/6ccBocYdC87ca9bYf+rv5H4rvV9t4aGz3tn5YcDwZtnDfYxJnnumEQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=g7fLdskm; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1747988257; c=relaxed/simple;
+	bh=BFCItceWfyuAXXe806yu+VbLQ/lI0BL9H850ON0oNA0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XS4Fii2oXmmxv7Gzxbj7p5UiRX69lcaaGwyMsqEvrhhKrdRot8NAGaGAcdlRPpjtq5bdD8cFT1L/WvbiAQPup1cX42VkAYdhLP9xIsGstOKyhFqhtNhZB106JPvuPTOdaYvJr4s9eibpo1kteAAl5PVPE19282Og5EyjtPpYvYA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=uXt5eSu8; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="g7fLdskm"
-Received: from [100.79.97.162] (unknown [4.194.122.162])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 2ADBC211CFB8;
-	Fri, 23 May 2025 01:16:38 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 2ADBC211CFB8
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1747988202;
-	bh=vUH5yPjFNCVBgdM6AnNr9S8ZiKOmSIAeBRZzrztsjPA=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=g7fLdskmaeTaJwmArUm4SaNQPUa7Wq7gNNfSjotcP+C4iMrwTZE6Kl3AZzpfmT9WA
-	 ogd86i9lCNKefIFntmgjvaS+XnYMHCvTsPvA8zrP4WzcAR3QZti58R4iTS60hW2/Bh
-	 C6pbK2AvS+Tfgr7OO0S9CBEuaIC9Qi17cIRdCC1w=
-Message-ID: <0aa553fc-88ca-4ca6-8797-2d98e9286272@linux.microsoft.com>
-Date: Fri, 23 May 2025 13:46:37 +0530
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="uXt5eSu8"
+Received: from pendragon.ideasonboard.com (179.218-130-109.adsl-dyn.isp.belgacom.be [109.130.218.179])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 144384A4;
+	Fri, 23 May 2025 10:17:10 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1747988230;
+	bh=BFCItceWfyuAXXe806yu+VbLQ/lI0BL9H850ON0oNA0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=uXt5eSu8sVYfZL82LXbn4zyArt8iv+pp4jy+FOET4Yq/rZz0f6QDRCf70KFG7/fiw
+	 so0KRl3BEWQ97BQaMpkQ/advHhkbceM8SoU6pzKgNgbfxFc4IlOsvq9wA1tXAVECzH
+	 rOuhxR4vR5AWAlSc6Lxm4E7D82VWkJUc+fJ15UDg=
+Date: Fri, 23 May 2025 10:17:25 +0200
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: git@apitzsch.eu
+Cc: Ricardo Ribalda <ribalda@kernel.org>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
+	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org, imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v3 5/5] media: i2c: imx214: Remove hard-coded external
+ clock frequency
+Message-ID: <20250523081725.GB12514@pendragon.ideasonboard.com>
+References: <20250521-imx214_ccs_pll-v3-0-bfb4a2b53d14@apitzsch.eu>
+ <20250521-imx214_ccs_pll-v3-5-bfb4a2b53d14@apitzsch.eu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/2] Drivers: hv: Introduce mshv_vtl driver
-To: Nuno Das Neves <nunodasneves@linux.microsoft.com>,
- Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
-Cc: "K . Y . Srinivasan" <kys@microsoft.com>,
- Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
- Dexuan Cui <decui@microsoft.com>, Roman Kisel <romank@linux.microsoft.com>,
- Anirudh Rayabharam <anrayabh@linux.microsoft.com>,
- Saurabh Sengar <ssengar@linux.microsoft.com>,
- ALOK TIWARI <alok.a.tiwari@oracle.com>, linux-kernel@vger.kernel.org,
- linux-hyperv@vger.kernel.org
-References: <20250519045642.50609-1-namjain@linux.microsoft.com>
- <20250519045642.50609-3-namjain@linux.microsoft.com>
- <aCzQMuwQZ1Lkk7eH@skinsburskii.>
- <80853cdb-fd34-4a5e-99a0-1a71b8ce8226@linux.microsoft.com>
- <3ab2597b-3a64-497c-888e-dd5d0c0e5076@linux.microsoft.com>
- <9986fbe1-d9fa-4e52-ad8e-da424e2f83f3@linux.microsoft.com>
-Content-Language: en-US
-From: Naman Jain <namjain@linux.microsoft.com>
-In-Reply-To: <9986fbe1-d9fa-4e52-ad8e-da424e2f83f3@linux.microsoft.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250521-imx214_ccs_pll-v3-5-bfb4a2b53d14@apitzsch.eu>
 
+Hi André,
 
+Thank you for the patch.
 
-On 5/23/2025 12:45 AM, Nuno Das Neves wrote:
-> On 5/21/2025 2:32 AM, Naman Jain wrote:
->>
->>
->> On 5/21/2025 11:33 AM, Naman Jain wrote:
->>>
->>>
->>> On 5/21/2025 12:25 AM, Stanislav Kinsburskii wrote:
->>>> On Mon, May 19, 2025 at 10:26:42AM +0530, Naman Jain wrote:
->>>>> Provide an interface for Virtual Machine Monitor like OpenVMM and its
->>>>> use as OpenHCL paravisor to control VTL0 (Virtual trust Level).
->>>>> Expose devices and support IOCTLs for features like VTL creation,
->>>>> VTL0 memory management, context switch, making hypercalls,
->>>>> mapping VTL0 address space to VTL2 userspace, getting new VMBus
->>>>> messages and channel events in VTL2 etc.
->>>>>
->>>>> Co-developed-by: Roman Kisel <romank@linux.microsoft.com>
->>>>> Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
->>>>> Co-developed-by: Saurabh Sengar <ssengar@linux.microsoft.com>
->>>>> Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
->>>>> Reviewed-by: Roman Kisel <romank@linux.microsoft.com>
->>>>> Reviewed-by: Alok Tiwari <alok.a.tiwari@oracle.com>
->>>>> Message-ID: <20250512140432.2387503-3-namjain@linux.microsoft.com>
->>>>> Signed-off-by: Naman Jain <namjain@linux.microsoft.com>
->>>>> ---
->>>>>    drivers/hv/Kconfig          |   20 +
->>>>>    drivers/hv/Makefile         |    7 +-
->>>>>    drivers/hv/mshv_vtl.h       |   52 +
->>>>>    drivers/hv/mshv_vtl_main.c  | 1783 +++++++++++++++++++++++++++++++++++
->>>>>    include/hyperv/hvgdk_mini.h |   81 ++
->>>>>    include/hyperv/hvhdk.h      |    1 +
->>>>>    include/uapi/linux/mshv.h   |   82 ++
->>>>>    7 files changed, 2025 insertions(+), 1 deletion(-)
->>>>>    create mode 100644 drivers/hv/mshv_vtl.h
->>>>>    create mode 100644 drivers/hv/mshv_vtl_main.c
->>>>>
->>>>> diff --git a/drivers/hv/Kconfig b/drivers/hv/Kconfig
->>>>> index eefa0b559b73..21cee5564d70 100644
->>>>> --- a/drivers/hv/Kconfig
->>>>> +++ b/drivers/hv/Kconfig
->>>>> @@ -72,4 +72,24 @@ config MSHV_ROOT
->>>>>          If unsure, say N.
->>>>> +config MSHV_VTL
->>>>> +    tristate "Microsoft Hyper-V VTL driver"
->>>>> +    depends on HYPERV && X86_64
->>>>> +    depends on TRANSPARENT_HUGEPAGE
->>>>
->>>> Why does it depend on TRANSPARENT_HUGEPAGE?
->>>>
->>>
->>> Thanks for reviewing. This config is required for below functions which
->>> are used for mshv_vtl_low device.
->>>
->>> vm_fault_t mshv_vtl_low_huge_fault ->
->>> * vmf_insert_pfn_pmd
->>> * vmf_insert_pfn_pud
->>>
->>>
->>>> <snip>
->>>>
->>>>> diff --git a/include/hyperv/hvgdk_mini.h b/include/hyperv/hvgdk_mini.h
->>>>> index 1be7f6a02304..cc11000e39f4 100644
->>>>> --- a/include/hyperv/hvgdk_mini.h
->>>>> +++ b/include/hyperv/hvgdk_mini.h
->>>>> @@ -882,6 +882,23 @@ struct hv_get_vp_from_apic_id_in {
->>>>>        u32 apic_ids[];
->>>>>    } __packed;
->>>>> +union hv_register_vsm_partition_config {
->>>>> +    __u64 as_u64;
->>>>
->>>> Please, follow the file pattern: as_u64 -> as_uint64
->>>>
->>>>> +    struct {
->>>>> +        __u64 enable_vtl_protection : 1;
->>>>
->>>> Ditto: __u64 -> u64
->>>>
->>>>> +        __u64 default_vtl_protection_mask : 4;
->>>>> +        __u64 zero_memory_on_reset : 1;
->>>>> +        __u64 deny_lower_vtl_startup : 1;
->>>>> +        __u64 intercept_acceptance : 1;
->>>>> +        __u64 intercept_enable_vtl_protection : 1;
->>>>> +        __u64 intercept_vp_startup : 1;
->>>>> +        __u64 intercept_cpuid_unimplemented : 1;
->>>>> +        __u64 intercept_unrecoverable_exception : 1;
->>>>> +        __u64 intercept_page : 1;
->>>>> +        __u64 mbz : 51;
->>>>> +    };
->>>>> +};
->>>>> +
->>>>>    /*
->>>>> diff --git a/include/hyperv/hvhdk.h b/include/hyperv/hvhdk.h
->>>>> index b4067ada02cf..9b890126e8e8 100644
->>>>> --- a/include/hyperv/hvhdk.h
->>>>> +++ b/include/hyperv/hvhdk.h
->>>>> @@ -479,6 +479,7 @@ struct hv_connection_info {
->>>>>    #define HV_EVENT_FLAGS_COUNT        (256 * 8)
->>>>>    #define HV_EVENT_FLAGS_BYTE_COUNT    (256)
->>>>>    #define HV_EVENT_FLAGS32_COUNT        (256 / sizeof(u32))
->>>>> +#define HV_EVENT_FLAGS_LONG_COUNT    (HV_EVENT_FLAGS_BYTE_COUNT / sizeof(__u64))
->>>>
->>>> Ditto
->>>>
->>>>>    /* linux side we create long version of flags to use long bit ops on flags */
->>>>>    #define HV_EVENT_FLAGS_UL_COUNT        (256 / sizeof(ulong))
->>>>> diff --git a/include/uapi/linux/mshv.h b/include/uapi/linux/mshv.h
->>>>> index 876bfe4e4227..a8c39b08b39a 100644
->>>>> --- a/include/uapi/linux/mshv.h
->>>>> +++ b/include/uapi/linux/mshv.h
->>>>> @@ -288,4 +288,86 @@ struct mshv_get_set_vp_state {
->>>>>     * #define MSHV_ROOT_HVCALL            _IOWR(MSHV_IOCTL, 0x07, struct mshv_root_hvcall)
->>>>>     */
->>>>> +/* Structure definitions, macros and IOCTLs for mshv_vtl */
->>>>> +
->>>>> +#define MSHV_CAP_CORE_API_STABLE        0x0
->>>>> +#define MSHV_CAP_REGISTER_PAGE          0x1
->>>>> +#define MSHV_CAP_VTL_RETURN_ACTION      0x2
->>>>> +#define MSHV_CAP_DR6_SHARED             0x3
->>>>> +#define MSHV_MAX_RUN_MSG_SIZE                256
->>>>> +
->>>>> +#define MSHV_VP_MAX_REGISTERS   128
->>>>> +
->>>>> +struct mshv_vp_registers {
->>>>> +    __u32 count;    /* at most MSHV_VP_MAX_REGISTERS */
->>>>
->>>> Same here: __u{32,64} -> u{32,64}.
->>>>
->>>> Please, address everywhere.
->>>>
->>>
->>> I'll take care of all of these in my next patch.
->>>
->>
->>
->> One concern about this change in include/uapi/linux/mshv.h.
->> I see the convention of using '__' family of data types in this file.
->> Whatever we do here, will be applicable to existing code as well.
->> Do you suggest we should change it to u{32,64} variants or keep
->> it in current form?
->>
+On Wed, May 21, 2025 at 09:34:28PM +0200, André Apitzsch via B4 Relay wrote:
+> From: André Apitzsch <git@apitzsch.eu>
 > 
-> uapi code uses the '__' versions of these types, so they should stay
-> as they are.
+> Instead rely on the rate set on the clock (using assigned-clock-rates
+> etc.)
 > 
-> Thanks
-> Nuno
+> Signed-off-by: André Apitzsch <git@apitzsch.eu>
 
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
-Thanks Nuno. Acked.
+> ---
+>  drivers/media/i2c/imx214.c | 6 ------
+>  1 file changed, 6 deletions(-)
+> 
+> diff --git a/drivers/media/i2c/imx214.c b/drivers/media/i2c/imx214.c
+> index 19b494c08ece9894de67a4ee34c6f8e6e2708e41..264e897ec6e8e3d2fcd9d58db82090c7dd85d526 100644
+> --- a/drivers/media/i2c/imx214.c
+> +++ b/drivers/media/i2c/imx214.c
+> @@ -32,7 +32,6 @@
+>  
+>  #define IMX214_REG_FAST_STANDBY_CTRL	CCI_REG8(0x0106)
+>  
+> -#define IMX214_DEFAULT_CLK_FREQ	24000000
+>  #define IMX214_DEFAULT_LINK_FREQ	600000000
+>  /* Keep wrong link frequency for backward compatibility */
+>  #define IMX214_DEFAULT_LINK_FREQ_LEGACY	480000000
+> @@ -1402,11 +1401,6 @@ static int imx214_probe(struct i2c_client *client)
+>  		return dev_err_probe(dev, PTR_ERR(imx214->xclk),
+>  				     "failed to get xclk\n");
+>  
+> -	ret = clk_set_rate(imx214->xclk, IMX214_DEFAULT_CLK_FREQ);
+> -	if (ret)
+> -		return dev_err_probe(dev, ret,
+> -				     "failed to set xclk frequency\n");
+> -
+>  	ret = imx214_get_regulators(dev, imx214);
+>  	if (ret < 0)
+>  		return dev_err_probe(dev, ret, "failed to get regulators\n");
 
+-- 
 Regards,
-Naman
+
+Laurent Pinchart
