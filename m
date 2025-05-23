@@ -1,180 +1,118 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE8A922422E;
-	Fri, 23 May 2025 11:37:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D015221D87;
+	Fri, 23 May 2025 11:38:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748000253; cv=none; b=Dmg8X4sAIiRxzjxVZ8aCk2fXb3wEC7dRaF4dBJ3rpBVTHVfWiKxVnd4R6GVgZC5V/lSvZPbZ2msdqEeUf+QZYBhq5/9Je8C5gANnH3EB1XnZEnNnN1kHBS1wkrHS8K/7ga4wOFjTsTielTwTRWcvywGg5EPERPNgBvHRrE9Zkvs=
+	t=1748000318; cv=none; b=X8AgxuNtFtyF2OlH0KV8sE0cGtgc8yf6D7EfYrB7EfCG54gBFlPniPvMhZ24zcfmzHfwXm0DwZeDzqNSaY7bpwDD3S7/V2Hf4I3KmfwVY6GANlXa8xPpZZDPlkt+Qv780/Fiu5lPiwqEm6Geufcbz6SNpHOGea4YyI0ptxHJfEY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748000253; c=relaxed/simple;
-	bh=ypW0g4GCfFC5qMTXKecIvDxCY9VbAXYdDGLlPMYxsgc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ooR741jxX8VTxhEy/6ecKBV0hceggNQB+Y71sGJ6vfd+7G6+NSBeHP5XUd9JHrEDa5WsvMkVEY+6stcgIbGWTqy4TrBqD53B2XXBO6pJMZJDjAxKvnEWYvVVWEaena5ZRd/aZX15PpabNXWCgBOd8X/Mpc4XgBmornyh/jvh/YQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XYao0zL0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748000318; c=relaxed/simple;
+	bh=C8l6K1eDGx1IOwbMAVrLHUZ6g+1rGq8hIcwKEz+RO24=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=cTky9oAYj3P6DmO/Y6wGrg6S+mPoj61vbQb/wrGIKtgJJgysaCSwXkKh6yCScK/smtTxovnxbEma5qh7v+u9FK7HzDEDDDlWrF09gJ/9k7T1Nz1afHXIcPmAKTVjBSQAYWkvZH6y+0z+BODSLIGHnsuyYssg4e8MX6SSUSFZO8A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=draigBrady.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Okuq+63N; arc=none smtp.client-ip=209.85.221.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=draigBrady.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XYao0zL0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2AC0C4CEE9;
-	Fri, 23 May 2025 11:37:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748000253;
-	bh=ypW0g4GCfFC5qMTXKecIvDxCY9VbAXYdDGLlPMYxsgc=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=XYao0zL0eGBsy4gYEv5M2EQ+0PTussn2jUP/Ysmyx5cjTZ0PpRweg8hxna9lH0c10
-	 IdNRWUqURMzyDAe7mYG1D2J1jdtHD0+3zAmpXVR/r9nBy6sGDmGRJso/eb1D5Ifu6Q
-	 Jg5MVeL7zJGsuBDSiNqR0FKmcv8DW1kUxWpdsK5umQ55Fs0rRDa4FlHeaXnqjbzVFc
-	 jKsZFexrumw/2Wg6r1N8Td17V0g29a3WoOxubz4HCIF7AZRiV/pe+egm+P2B3sM1Sy
-	 6mY6e799d2ULqjIgbkHkl9FlgZrdZ14npFho89FgmW8xk7ePYOIjYfbjluX+i2vyPx
-	 zCd1Z7i/6KTWg==
-Message-ID: <e5a09a55-844b-4045-9459-e61abda255f3@kernel.org>
-Date: Fri, 23 May 2025 13:37:28 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Okuq+63N"
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-3a36efcadb8so4839751f8f.0;
+        Fri, 23 May 2025 04:38:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748000314; x=1748605114; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id:sender
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=nV44RYFzgQCSPTYPIbcTRtzMraX+Xrj0AC4YMAinlic=;
+        b=Okuq+63No6WnIwAyL2N9sRYPac1l0Pr3rNK3obDozHIJJdP12IePPtXPJAPYuMAr5x
+         Co6Acx9Qz//yK+TUbvd15B/aKPCWFw2KTds8eV1KMACVx5BWGxT4A8n++Rwa+Iz7k5r+
+         yqUNJKNlEZOKbrnwYH44wbc1fZjKxsBWbzONYAORtJlCyJ6IWN7m10duE1P9lDLKaKRz
+         DLfwgtvcMOugGrlxVsZdPdb+06UA7Ns8rg2iPzOnYuEK1X7/vbAUxxBGPJ4Cc9pHrSIW
+         nADLEMWGnUoAwyiN3oPsnIpVALua7dxa9rVt5j6vOJxA7tiPrJ5/Z/KNBjG5X5NDNOuH
+         BsAQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748000314; x=1748605114;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id:sender
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=nV44RYFzgQCSPTYPIbcTRtzMraX+Xrj0AC4YMAinlic=;
+        b=fdrW5wDzPXTH3jduaM9aSWngNX7FWiqTTzsIlCq7QLRLyCOb+dEtU14Ac8pu9T+VRZ
+         0ktF5r59lwUD/I1PZHcOosWVrdXzgR/N2aksKEpoof+q67KnmaAALXQtWuzaMXyl56ro
+         9T7LSqCwmfX2Xb9f8X4ETaBF/TPw1+AF2+yJl7igCIp2G+BNijdK7xHlYNmp5tBeFlpg
+         0P4MrCasJavpeG8yiKrQGODD9wFoI8OKjiX+ZEFw23RCI7TSgl+CDTkLyuZT8z0sThmT
+         aBdZCsw6FrJlNzik88Cd3Ji3JxJJmpUBDv/xI5edrK0K87xZzCjH6MA477BeNu8N45Pj
+         Oy+Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXYSe9mBMdDYP9V3sxRgE5IKV8hoSp7XpweXCtGyrrdPToJQdgHBwybaysrU9Ce5mHgeSNMAdjVfUuXkOQyxuHJxtOB7Go=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywnr1Bi4JQWKIK1s+hV1JlZItbhM27E0QEu1SbC1VUah2frTBwv
+	6bJnSb7sfjFYwzKsPE6C53hicyz9XzIIHNXflsnInkVkHQJadmPYHwKJd7WXTA==
+X-Gm-Gg: ASbGnctfSGX9zbsv6QksoIzaF9FHjZXvuX2QW1TAETTGjTgQHJw0lcTKPsnu4Dlfn4D
+	TBaTiF8i2gzU4GUUWsrr2BjB231v47BozVAw7DW9z/oU0D4qiHn7m8VwnTdE/jgw3SUZViy3ULV
+	C+y3mhpJcHuKhd1zKMSCeigdfVrIClDWVIZBeoRRM6pPDh5dOzzMqo2U6WS2e1aCEj2gm7gAK/C
+	ShQUm62w1GiVmDQfchegcn/RzCzU3GTw6MMtaX9ncj5ctpxpvCp9s01g6vZAbJs2eimnKheY7rH
+	6E3Ekq44TmOYXMsEKtLpxu0lxOcF0UQpZ7Ppp9iQEMNSGdfrNOiIlccd9MxrYwOUnIpvN9mOWBW
+	OegrrKkOkLWjsZbJfRdE9mdwOZQfR29AveDKKZIDmGw==
+X-Google-Smtp-Source: AGHT+IGSymWAI4/j9vDmQlzt/sPc9Dh/0VDwaExNYUv64bsna5U4XuMSwwnbvHdZIplpAKkpEPMSXw==
+X-Received: by 2002:a05:6000:400f:b0:39f:175b:a68d with SMTP id ffacd0b85a97d-3a35c808b3dmr26578121f8f.11.1748000314259;
+        Fri, 23 May 2025 04:38:34 -0700 (PDT)
+Received: from [192.168.1.31] (86-44-211-146-dynamic.agg2.lod.rsl-rtd.eircom.net. [86.44.211.146])
+        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-3a4c002e937sm3816448f8f.29.2025.05.23.04.38.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 23 May 2025 04:38:33 -0700 (PDT)
+Sender: =?UTF-8?Q?P=C3=A1draig_Brady?= <pixelbeat@gmail.com>
+Message-ID: <c0a1f475-b973-40a8-a7cc-6947791af38a@draigBrady.com>
+Date: Fri, 23 May 2025 12:38:32 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/8] dt-bindings: clock: Document Loongson 2K0300 clock
- controller
-To: Yao Zi <ziyao@disroot.org>, Michael Turquette <mturquette@baylibre.com>,
- Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
- WANG Xuerui <kernel@xen0n.name>, Yinbo Zhu <zhuyinbo@loongson.cn>
-Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
- Mingcong Bai <jeffbai@aosc.io>, Kexy Biscuit <kexybiscuit@aosc.io>
-References: <20250523104552.32742-1-ziyao@disroot.org>
- <20250523104552.32742-2-ziyao@disroot.org>
-From: Krzysztof Kozlowski <krzk@kernel.org>
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: bug#77597: listxattr() should return ENOTSUP for sysfs / tmpfs
+ entries, not 0
+From: =?UTF-8?Q?P=C3=A1draig_Brady?= <P@draigBrady.com>
+To: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ linux-security-module@vger.kernel.org
+Cc: 77597@debbugs.gnu.org, Paul Eggert <eggert@CS.UCLA.EDU>,
+ Rahul Sandhu <nvraxn@gmail.com>
+References: <D8Z6FP3UZG2G.I8H42ZV6DM08@gmail.com>
+ <41067aa3-0e72-456f-b3f2-7bd713242457@cs.ucla.edu>
+ <c7d16a13-79c9-4e81-996a-0f32bcff79cc@draigBrady.com>
+ <2e24f40d-b475-4199-b53b-e4c266d0d314@cs.ucla.edu>
+ <60b2252d-9295-4d03-921e-a596444da960@draigBrady.com>
+ <64b14829-381d-4295-8878-f6b06906ef3c@draigBrady.com>
 Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <20250523104552.32742-2-ziyao@disroot.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <64b14829-381d-4295-8878-f6b06906ef3c@draigBrady.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On 23/05/2025 12:45, Yao Zi wrote:
-> +maintainers:
-> +  - Yao Zi <ziyao@disroot.org>
-> +
-> +description: |
+On 23/04/2025 13:22, Pádraig Brady wrote:
+> Older coreutils was less efficient and always called getxattr("security.selinux"),
+> and thus shows the SELinux context as expected:
+> 
+>     $ coreutils-9.3/src/ls -lZd /run/initramfs
+>     drwxr-xr-x. 3 root root system_u:object_r:tmpfs_t:s0 60 Apr 19 14:52 /run/initramfs
+>     $ coreutils-9.3/src/ls -lZd /sys/block
+>     drwxr-xr-x. 2 root root system_u:object_r:sysfs_t:s0 0 Apr 23 12:54 /sys/block
+> 
+> However newer coreutils is more efficient, and does not call getxattr()
+> if listxattr() returns 0 indicating that there are no xattrs.
+> 
+>     $ coreutils-9.7/src/ls -lZd /run/initramfs
+>     drwxr-xr-x 3 root root ? 60 Apr 19 14:52 /run/initramfs
+>     $ coreutils-9.7/src/ls -lZd /sys/block
+>     drwxr-xr-x 2 root root ? 0 Apr 23 12:54 /sys/block
+> 
+> I also noticed the same issue with the exa utility for example.
+> For coreutils to maintain efficient processing and to fix the issue centrally,
+> it would be more correct for listxattr() to return ENOTSUP,
+> in which case ls will try the getxattr() call and operate as expected.
+> Otherwise I can't see a way for coreutils to be both efficient and always correct.
+> 
+> I'm currently testing on kernel 6.14.2-300.fc42.x86_64
 
-Do not need '|' unless you need to preserve formatting.
+FYI this should be addressed with:
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=8b0ba61d
 
-> +  The Loongson 2K0300 clock controller generates various clocks for SoC
-> +  peripherals. See include/dt-bindings/clock/loongson,ls2k0300-clk.h for
-> +  valid clock IDs.
-> +
-> +properties:
-> +  compatible:
-> +    const: loongson,ls2k0300-clk
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    items:
-> +      - description: External 120MHz reference clock
-> +
-> +  clock-names:
-> +    items:
-> +      - const: ref_120m
-
-Just ref or drop the clock-names completely.
-
-> +
-> +  '#clock-cells':
-> +    const: 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - clocks
-> +  - clock-names
-> +  - '#clock-cells'
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    clk: clock-controller@16000400 {
-
-Drop unused label
-
-> +        compatible = "loongson,ls2k0300-clk";
-> +        reg = <0x16000400 0x100>;
-> +        clocks = <&ref_120m>;
-> +        clock-names = "ref_120m";
-> +        #clock-cells = <1>;
-
-
-With above changes:
-
-
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-
-<form letter>
-This is an automated instruction, just in case, because many review tags
-are being ignored. If you know the process, you can skip it (please do
-not feel offended by me posting it here - no bad intentions intended).
-If you do not know the process, here is a short explanation:
-
-Please add Acked-by/Reviewed-by/Tested-by tags when posting new versions
-of patchset, under or above your Signed-off-by tag, unless patch changed
-significantly (e.g. new properties added to the DT bindings). Tag is
-"received", when provided in a message replied to you on the mailing
-list. Tools like b4 can help here. However, there's no need to repost
-patches *only* to add the tags. The upstream maintainer will do that for
-tags received on the version they apply.
-
-Full context and explanation:
-https://elixir.bootlin.com/linux/v6.12-rc3/source/Documentation/process/submitting-patches.rst#L577
-</form letter>
-
-
-
-Best regards,
-Krzysztof
+cheers,
+Pádraig
