@@ -1,89 +1,99 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from finn.localdomain (finn.gateworks.com [108.161.129.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B52E41F4165;
-	Fri, 23 May 2025 17:45:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 366414120B;
+	Fri, 23 May 2025 17:45:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=108.161.129.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748022332; cv=none; b=iGL7wCNTwEkYTCoIRRm+UJm3FokpH3ayGnr3RZl5WHqbPwhSkTvDlIn5TFuM5msuLVDr9T/Gu5wvorfssnnvSZwWTo56tZfVtXgPqWZNUnKXYPAZOfsCPoaibsa+5E41Xu9aT1B4QTV1HqT/iTY+O41ibtTopfmnboTPhqk+Zbg=
+	t=1748022346; cv=none; b=ES7UKuTON422rdZI03NXBqi0MlxyokQPGvYxvyiqQcQs/BjkFnTYlmIhkR1XuukAGMV23o98uo6vpOUZLPSa8IndEKzFAgBb+fKZJN7pEbjWBR7iAX9uJMBszQeK0eej5zS+Olhk55OlkWG9Y9YBdkTn44y6NowEdm6aBT7B+Lk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748022332; c=relaxed/simple;
-	bh=Q+pVy9VN5G4mHqq4thDKtZgwMSFkUEGc/BFX+XL7hKg=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=uMEKxfghiVduwa2whazkHhjaSayf3jqSUDngHuJAnwVylKwEdZ0HCZRitE3m1NoIRnTMADaaPy3XepPMBaUagnsaj3aZchFe15cAQLE1cRVno0igNTktk+jKl5iPOol4fajzD9dnwlv9k4UwRXBaFkTxjb1+5HtgngRKF2Tm4h0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uN/u3zlH; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uN/u3zlH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 810D0C4CEE9;
-	Fri, 23 May 2025 17:45:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748022332;
-	bh=Q+pVy9VN5G4mHqq4thDKtZgwMSFkUEGc/BFX+XL7hKg=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=uN/u3zlHN302bSpReVbi28j4kEtGlncXxVrkOcYDyPFBWQBvlz8K6Dv7q9AvrFZfl
-	 1lyCZkNVSkLFLeLSAYsUAwW9x0gZ9G9/Fis3pB4JBeFgKj7oDURyCI9X4hdSq8CZQP
-	 yPdwKHs0F00Qk4lHoviXh3+zR5ufeWtHFAkGPX3JMQy4bLkUdXa2257TfGjEMrUkG+
-	 BOV6kx5jc/8XP3GC5nU0ONiJLecgCXw4/nl+s52d3c98ODfME7KYz/q86Wz21cIgnN
-	 rS84Mbo9nSPFH48NqBD6FIzvRVuDdKao7gEpdBbc4MU4c33OeIt5q+N+oJopyZdAL0
-	 EbYBNrnwy6iCg==
-From: Mark Brown <broonie@kernel.org>
-To: robh@kernel.org, tiwai@suse.com, devicetree@vger.kernel.org, 
- conor+dt@kernel.org, lgirdwood@gmail.com, linux-kernel@vger.kernel.org, 
- linux-sound@vger.kernel.org, perex@perex.cz, krzk+dt@kernel.org, 
- Zhang Yi <zhangyi@everest-semi.com>
-Cc: amadeuszx.slawinski@linux.intel.com, krzk@kernel.org
-In-Reply-To: <20250523025502.23214-1-zhangyi@everest-semi.com>
-References: <20250523025502.23214-1-zhangyi@everest-semi.com>
-Subject: Re: [PATCH v3 0/2] ASoC: codecs: add support for ES8375
-Message-Id: <174802232881.580585.23933896595053519.b4-ty@kernel.org>
-Date: Fri, 23 May 2025 18:45:28 +0100
+	s=arc-20240116; t=1748022346; c=relaxed/simple;
+	bh=dkepa0hy/DGB4imKxz0BjpHvICnt8WIvJcYJIUSFGx0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=LzdBaPvAqVqqpvJAohTup5sXzj3t3TJuFS9Xcz2B0X4yypmpdmmoYWWde46V4jDTKJQzwBol/KaYDTp9mGDxDIleGGjwonChAJfhS1ehjulDwAScm8L5YtxnmwUOURq3olYxHTPp9wa3gdK2Fll2Clr1b//KOFamLIgaggHUSMo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gateworks.com; spf=pass smtp.mailfrom=gateworks.com; arc=none smtp.client-ip=108.161.129.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gateworks.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gateworks.com
+Received: from syn-068-189-091-139.biz.spectrum.com ([68.189.91.139] helo=tharvey.pdc.gateworks.com)
+	by finn.localdomain with esmtp (Exim 4.95)
+	(envelope-from <tharvey@gateworks.com>)
+	id 1uIWG4-0076r7-Fk;
+	Fri, 23 May 2025 17:32:36 +0000
+From: Tim Harvey <tharvey@gateworks.com>
+To: linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org
+Cc: imx@lists.linux.dev,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Tim Harvey <tharvey@gateworks.com>
+Subject: [PATCH] arm64: dts: imx8mp-venice-gw74xx: update name of M2SKT_WDIS2# gpio
+Date: Fri, 23 May 2025 10:32:31 -0700
+Message-Id: <20250523173231.4166626-1-tharvey@gateworks.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.15-dev-c25d1
+Content-Transfer-Encoding: 8bit
 
-On Fri, 23 May 2025 10:55:00 +0800, Zhang Yi wrote:
-> The driver is for codec ES8375 of everest-semi.
-> 
-> v3 -> v2:
->           - Modify some control-names
->           - Delete obsolete terminology
->           - Modify tags of v2
-> 
-> [...]
+The GW74xx D revision has added a M2SKT_WDIS2# GPIO which routes to the
+W_DISABLE2# pin of the M.2 socket.
 
-Applied to
+Add the iomux and a line name for this and rename the existing
+m2_wdis# signal to m2_wdis1#.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
+Fixes: 6a5d95b06d93 ("arm64: dts: imx8mp-venice-gw74xx: add M2SKT_GPIO10 gpio configuration")
+Signed-off-by: Tim Harvey <tharvey@gateworks.com>
+---
+ arch/arm64/boot/dts/freescale/imx8mp-venice-gw74xx.dts | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-Thanks!
-
-[1/2] ASoC: dt-bindings: Add Everest ES8375 audio CODEC
-      commit: f70d0f893b945aa42576853212645f4d889332b4
-[2/2] ASoC: codecs: add support for ES8375
-      commit: 43a38a0ff8c63ee156d997cd13063c63cd55d812
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
+diff --git a/arch/arm64/boot/dts/freescale/imx8mp-venice-gw74xx.dts b/arch/arm64/boot/dts/freescale/imx8mp-venice-gw74xx.dts
+index 6daa2313f879..f00099f0cd4e 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mp-venice-gw74xx.dts
++++ b/arch/arm64/boot/dts/freescale/imx8mp-venice-gw74xx.dts
+@@ -301,7 +301,7 @@ &gpio2 {
+ &gpio3 {
+ 	gpio-line-names =
+ 		"", "", "", "", "", "", "m2_rst", "",
+-		"", "", "", "", "", "", "m2_gpio10", "",
++		"", "", "", "", "", "", "m2_wdis2#", "",
+ 		"", "", "", "", "", "", "", "",
+ 		"", "", "", "", "", "", "", "";
+ };
+@@ -310,7 +310,7 @@ &gpio4 {
+ 	gpio-line-names =
+ 		"", "", "m2_off#", "", "", "", "", "",
+ 		"", "", "", "", "", "", "", "",
+-		"", "", "m2_wdis#", "", "", "", "", "",
++		"", "", "m2_wdis1#", "", "", "", "", "",
+ 		"", "", "", "", "", "", "", "rs485_en";
+ };
+ 
+@@ -811,14 +811,14 @@ pinctrl_hog: hoggrp {
+ 			MX8MP_IOMUXC_GPIO1_IO09__GPIO1_IO09	0x40000040 /* DIO0 */
+ 			MX8MP_IOMUXC_GPIO1_IO11__GPIO1_IO11	0x40000040 /* DIO1 */
+ 			MX8MP_IOMUXC_SAI1_RXD0__GPIO4_IO02	0x40000040 /* M2SKT_OFF# */
+-			MX8MP_IOMUXC_SAI1_TXD6__GPIO4_IO18	0x40000150 /* M2SKT_WDIS# */
++			MX8MP_IOMUXC_SAI1_TXD6__GPIO4_IO18	0x40000150 /* M2SKT_WDIS1# */
+ 			MX8MP_IOMUXC_SD1_DATA4__GPIO2_IO06	0x40000040 /* M2SKT_PIN20 */
+ 			MX8MP_IOMUXC_SD1_STROBE__GPIO2_IO11	0x40000040 /* M2SKT_PIN22 */
+ 			MX8MP_IOMUXC_SD2_CLK__GPIO2_IO13	0x40000150 /* PCIE1_WDIS# */
+ 			MX8MP_IOMUXC_SD2_CMD__GPIO2_IO14	0x40000150 /* PCIE3_WDIS# */
+ 			MX8MP_IOMUXC_SD2_DATA3__GPIO2_IO18	0x40000150 /* PCIE2_WDIS# */
+ 			MX8MP_IOMUXC_NAND_DATA00__GPIO3_IO06	0x40000040 /* M2SKT_RST# */
+-			MX8MP_IOMUXC_NAND_DQS__GPIO3_IO14	0x40000040 /* M2SKT_GPIO10 */
++			MX8MP_IOMUXC_NAND_DQS__GPIO3_IO14	0x40000150 /* M2KST_WDIS2# */
+ 			MX8MP_IOMUXC_SAI3_TXD__GPIO5_IO01	0x40000104 /* UART_TERM */
+ 			MX8MP_IOMUXC_SAI3_TXFS__GPIO4_IO31	0x40000104 /* UART_RS485 */
+ 			MX8MP_IOMUXC_SAI3_TXC__GPIO5_IO00	0x40000104 /* UART_HALF */
+-- 
+2.25.1
 
