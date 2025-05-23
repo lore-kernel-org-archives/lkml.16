@@ -1,64 +1,76 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0E3D14286;
-	Fri, 23 May 2025 15:42:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D936214286;
+	Fri, 23 May 2025 15:44:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748014964; cv=none; b=N5FlSlgZSs5XEBOudD55UHz/BpCwqRgUGyXVT/fAXWR2mP4HsENJbhW2yJaPzxu+Lg7K8us1vu9G6H6l8AcWsVj93DZrGkHSW+6PnsN8AAiy8F8/evqYzq9OAtnpo4TUPe+oEM7Wkp5doTQsJEpecGE93tlTzBs+Nh8zUf12pB8=
+	t=1748015054; cv=none; b=ZJlhoUakpty6VzN7r6zuEz4ugKuBgykE7XAe89ErHlhAJ1nabwqxKnlLceUJ93Q8oVk0klpKmjyXDcxBmL43oXb0QzJceu0znpHDw4O1Uqmn9Q9oCHcMCvyYffYZUjFyqN3AuQKPJZgbSvVhMEMujDbwmcDCaTCf2TY8sAKKA3I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748014964; c=relaxed/simple;
-	bh=KVwP6ZaTXIHoBZVmEEJrV8NQeE4NX4pX/91S5eZzI1M=;
+	s=arc-20240116; t=1748015054; c=relaxed/simple;
+	bh=5ZhTYIXzwKX+uad7EpnHarDETCV3rDSAuCZHcLP0BXo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dYBsZMBw83ntgkFtFCgB7qwE2KzcWz1pu9HnSTZUTiOwIcgeeFKZooh0nn6O5o0dMLvYEeN0U2jiSB+/zkxrsTqGzfhZjT3+2kKoSjmmoB1lg3nHIvfzQ/PJxUy4jxAYWa7xr1MgHo4uOgVviuSAnWb0Jsgpv7ejGZAqi+rpVhM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=EhZXxL0G; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=RUMirhC6Stk3mHEhvxTWUqgJS1kTvvZpBPeAA0CmLFfbH9cnCcW+PbKpin4YRgDOLlTk6gSI3isqLhk+DFCxkm1ZTCFAIx6xaJMaSrIqz7C+sW7MRkwnSa+CHa+H0uu5Ghg+jbw9PMr3d4AMfa+d9yvbRzSKvFAlJNUqonPY6go=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I6fqtUA4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="EhZXxL0G"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=cWvExEmX2CXey0nsq/xA9W7LqAPoEJF71YAIT7PxRDc=; b=EhZXxL0GrKtd3iSJ+wPvrbA+m5
-	PpjOO7lePi0JrCwZhX78wxsMvPt/LHuIREgspeBc5Qc+DXhrkEbkGpNvTwrh7u8pb1D8K8sJWiKZX
-	OBfQXsavrfpWm3ai2iDsAgzOyzdrxcD2WtwhZG8tI/hplK+t/jUVOzTfi/Z2P/R0zTe8fyg5BDkJc
-	SPYu1BIBZA0GuQ+/BjZL/J2Z25LiMrKmF493AnlgWmT1aWoNbSD1orK84KSwGUKX5COCj9/LMW8rr
-	cKfL6Kc9kL+0kdRXh4qZHOP5blhDmaFRfwb2EM1j1+Efq0XX5EwCzivzAJ7UyJN/4U2m3zNSnO2nf
-	QzX76JNg==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uIUXh-00000004HKU-1vig;
-	Fri, 23 May 2025 15:42:41 +0000
-Date: Fri, 23 May 2025 08:42:41 -0700
-From: Christoph Hellwig <hch@infradead.org>
-To: Daisuke Matsuda <dskmtsd@gmail.com>
-Cc: Christoph Hellwig <hch@infradead.org>, linux-rdma@vger.kernel.org,
-	linux-mm@kvack.org, leon@kernel.org, jgg@ziepe.ca,
-	akpm@linux-foundation.org, jglisse@redhat.com,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	zyjzyj2000@gmail.com
-Subject: Re: [PATCH] mm/hmm: Allow hmm_dma_map_alloc() to tolerate NULL device
-Message-ID: <aDCXcbKwTdG3w5ZW@infradead.org>
-References: <20250523143537.10362-1-dskmtsd@gmail.com>
- <aDCKsK2-zRkqge64@infradead.org>
- <63702a66-4cc6-4562-89f4-857fe3f044e8@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I6fqtUA4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8106C4CEED;
+	Fri, 23 May 2025 15:44:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748015053;
+	bh=5ZhTYIXzwKX+uad7EpnHarDETCV3rDSAuCZHcLP0BXo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=I6fqtUA4o+lm1caEChR24iCuSWLJnvmpcqhWSKf+ksHK1E3F1fSrPF5HQa49R9sVk
+	 xP9T+sInNlAjJFUnIO66ZplZ7MjXVrUnLh0sRP8VswJYsagi+IOOaAEIpkf/pB3dO0
+	 H/c87U9IIFjPGx2pH7hpCZspGdROUGmxlUw9ENszPCVQJjCj09JZs2nfCqd1aY8tCU
+	 JVi9lJYXoeAuFsfZ1eEx12J4SBbr7Xwht4JN2ThPxyJYJj6YzuqW5Ef0YEK1EvI+Kz
+	 XCNMvZY90AgP/ru6sxrzbGQ4DeMRA9aeg9P8E8MLBppC0YzoWUQMJCsZ1C8xuc0lnT
+	 H0GEUEAZMgtCg==
+Date: Fri, 23 May 2025 16:44:09 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Charan Pedumuru <charan.pedumuru@gmail.com>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, linux-mmc@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: mmc: ti,da830-mmc: convert text based
+ binding to json schema
+Message-ID: <20250523-declared-recycler-6b512294e74c@spud>
+References: <20250523-davinci-mmc-v1-1-ceebd8352d9c@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="iEpSSjW/JvBRj22u"
+Content-Disposition: inline
+In-Reply-To: <20250523-davinci-mmc-v1-1-ceebd8352d9c@gmail.com>
+
+
+--iEpSSjW/JvBRj22u
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <63702a66-4cc6-4562-89f4-857fe3f044e8@gmail.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Transfer-Encoding: quoted-printable
 
-Thank you very much, but I know rxe very well.  And given your apparent
-knowledge of the rdma subsystem you should also know pretty well that
-it does not otherwise call into the dma mapping core for virtual devices
-because calling into the dma mapping code is not valid for the virtual
-devices.
+On Fri, May 23, 2025 at 01:34:10PM +0000, Charan Pedumuru wrote:
+> Convert TI Highspeed MMC host controller binding to YAML format. Add
+> 'clocks' property to resolve errors identified by 'dtb_check'.
+>=20
+> Signed-off-by: Charan Pedumuru <charan.pedumuru@gmail.com>
 
-Please fix the rdma core to not call into the hmm dma mapping helpers
-for the ib_uses_virt_dma() case.
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
 
+--iEpSSjW/JvBRj22u
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaDCXyQAKCRB4tDGHoIJi
+0iZNAQDXxxURqJT5LuI+oAjBm5K3HBriLjimRU/mKHJhl6TLMAD/Wi+zXpzE9EKx
+Sr4GjtmlHNeOn7XkgqF1psBMQW91Rgs=
+=x8kf
+-----END PGP SIGNATURE-----
+
+--iEpSSjW/JvBRj22u--
