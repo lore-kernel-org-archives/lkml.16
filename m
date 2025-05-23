@@ -1,127 +1,158 @@
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fout-b4-smtp.messagingengine.com (fout-b4-smtp.messagingengine.com [202.12.124.147])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5929297A7B
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 16:27:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 959FC221DA8;
+	Fri, 23 May 2025 16:29:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.147
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748017631; cv=none; b=jnMADEEVpvjPGZGz4+aJIXFM7UKh1vUaVmPNHvoUP8LdaLS33UXoeSkwYn3t997XBtxhWeBy1UZys7XNrCvzid5ePQLmTfjHOM+J0tJLsup8Leq0u05uHcAt5glIiSvBefj1OXB4yIr28dD0sJYwBMa4pWyWiH7ckhsNG6EV7ws=
+	t=1748017763; cv=none; b=BgpeXHiMXJqIsE0tArmaCZ7PehpOpauGKLwBi6fH9AZdpOmbYyKmr8XwABY0zJ2JmljjiFIUij72PokICmK2QsDOYdntY/05GdPLfUmT9BxlnFrVQ936BD/w6rApdGDvHBjjZN+JmBYXSdpvPbaksCJY1uido9jyAEPz2I45xxE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748017631; c=relaxed/simple;
-	bh=xoy2iHNo1joT7Vza5E4ulrB5ALTkKGuwFJzZh05QFXY=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:To:From:
-	 References:In-Reply-To; b=k8YyLCrbiX6CV3px8b6Qb5rdq1LJCcmQ7xbfa/YpQUcOlKndG+XaJpAf1pSwAn2C5k749d3cBQEOsw2Fg1YyLA2O+xG2BJ4bcOCG9U+KgnqicdpaOFl+o0H/1KHVJPBDkPZkpg8f9zi+LlOgvBwpeRjLHZ8Nl7vcs5NmpGPhpBU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=YWVho5t0; arc=none smtp.client-ip=209.85.221.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
+	s=arc-20240116; t=1748017763; c=relaxed/simple;
+	bh=Kw6bWuaiyS3+hflqZXKFnnrzeY0NQuNKqxzLWMI8hCk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=utuFc//aeyguVWqWKydR08dLGINwbrKBBxLziZdF/t91TifF49riQuADtX305BJS3PNo6nlQ25kMm4Fyh26QT72VdaXPcqn5RNzvBKEjkh+Fp6JHbxhHf+ukvaFVbAEI3juwMKgAiQ3h/7p/PixnBPot3nw7nPtSlA8jrq/InrY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jannau.net; spf=pass smtp.mailfrom=jannau.net; dkim=pass (2048-bit key) header.d=jannau.net header.i=@jannau.net header.b=agsAbmY3; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=IP7+WWPm; arc=none smtp.client-ip=202.12.124.147
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jannau.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jannau.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="YWVho5t0"
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-3a367b6ad08so18587f8f.2
-        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 09:27:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1748017628; x=1748622428; darn=vger.kernel.org;
-        h=in-reply-to:references:from:to:cc:subject:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Ia6puvfZPG5fMJM1ZRtmeD9phh8ksFStnHEcrbqR9QM=;
-        b=YWVho5t00wvenZuAzoFsjd+SDYyEJKBKLddYH1sizwOm6UT4z3PLA+rgnyNaTcoNWY
-         ivS2MCzrHRq9yzMIG4GiOV5tfNJrpVcRRNU3uFKdvwid2zy0LRznIFvCMYlMXSsya+r+
-         G2H1sQ+6JiML5gGBxo6avtIDrJc+xO0KuS5aJaJ52FslLlHm2YGRZftDYhgDOzvERsEB
-         FlI5XrWoq0+HDRHs7wvgWSt8geb5p0uUl/ntjExeO5ZUwG/JB+T/zPVsjf5VsDde1z7i
-         AbnfTu8soC+Eb2DMd18QwSUKo8DbVYnIdhiugDfbf9O6Qg9NEUAW4F1FhHsHRPvgil8U
-         IWJQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748017628; x=1748622428;
-        h=in-reply-to:references:from:to:cc:subject:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=Ia6puvfZPG5fMJM1ZRtmeD9phh8ksFStnHEcrbqR9QM=;
-        b=btWzecl0ReQR7dNIJRfwVRiplAFKLZhKYse2gPOLAoofROvnFjdX1IsB2p8RSqMSgV
-         y7VTWGvAGoZQu4yLUhr/PIS7uYvI6d5l62NmyjX268zLBBTsS6h32FpCnyWUUKK+Osmc
-         QLeTNwnCeEtpjsNhM6YkoEUN5ivDKTbss4bVd+REU+g94NnFhFW0vs8RpD7Kbo+NTMDr
-         FKXKk648hBeeCkssAJV/Hd8sQJRg8aMp88HE9yeXsDlOgdZOKZR5WuQeyTyoImfVtcMo
-         lYuHMRHAdOLdnup9Vvp510LTAPxa8TAGYP2lt+E69t8OMofMUYlAniEqmd8ohpkXdZn5
-         5CKA==
-X-Forwarded-Encrypted: i=1; AJvYcCWUcd2O62tDQMIFMamK6htNnx9RcVXGr3DBSJZfMnn4a4WLF4oKWmnyM9wE1kTnlPd2UDPynz/YhwUPOCg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyN3MOSVYherX5jZQMr34DJ06BuOPtg5Fs8S1dA+VDN8OR2X/y2
-	RAPZ/eDye/bGm+Ar+rF5dlq9RpOkmrmMexittHCuDLGrZfFZZroG/gKugFZvNyxBkcA=
-X-Gm-Gg: ASbGncvCdeSEH1AYDz3/ucl5XYAuPncKH6OAln8M7Spi4AzgFDfL7kquTrIEYGCu3AE
-	lVqtYKMj1TPhsyMTCsdDNU95P6B+lAfDJNW0q9+vonpFCpfN8UVNbkcqTuey8jdw6PxJU1Mh9da
-	QcPKSgLMIiyGZhGJ1DJ/2fd2HDJHgFAlr7bfvA1MsAYqM5gyOl2VfNvtFUXRy6MmFX7zdvu89HS
-	0bW0UkT77RD46bI3y//RP0qIt+7ByFiy3LR/fG9qTB+qmls3gD8o3jeVimvAOQa7aa/NcCo39fi
-	I2kkv54bOVBGcFRUi2ENXVJ+WSg+mvbt0ItnjCoZI3yFiK0JY+JqKYeUGrw7/sNwA9vfuw==
-X-Google-Smtp-Source: AGHT+IGu5SqOXXJDnZhsvGxzP9Q90JnNNFmT1bVPxtvjIRaUq9pqy0zhm7LZZhwBJv3AkH7nFc+56w==
-X-Received: by 2002:a05:6000:230e:b0:3a4:bafb:adaa with SMTP id ffacd0b85a97d-3a4c2b3b3d4mr1273822f8f.3.1748017627898;
-        Fri, 23 May 2025 09:27:07 -0700 (PDT)
-Received: from localhost ([2a02:8308:a00c:e200:be84:d9ad:e5e6:f60b])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a368250dbbsm22377027f8f.47.2025.05.23.09.27.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 May 2025 09:27:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=jannau.net header.i=@jannau.net header.b="agsAbmY3";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="IP7+WWPm"
+Received: from phl-compute-12.internal (phl-compute-12.phl.internal [10.202.2.52])
+	by mailfout.stl.internal (Postfix) with ESMTP id 4AC521140115;
+	Fri, 23 May 2025 12:29:20 -0400 (EDT)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-12.internal (MEProxy); Fri, 23 May 2025 12:29:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jannau.net; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1748017760;
+	 x=1748104160; bh=/jlfPNouODknHqpqkHZeeFhINTA3VzKs1lAxLlE+jls=; b=
+	agsAbmY33GMWvWyNeAaz6utYRbBJfT3Ry4Jq8JESCeXlyPhOJYokhBeY6M0X/Rsg
+	Kem9qxXzOthnAOfSEen8pC7bds9o1CLHcQqwJjz4OGBGDgQNcXZeIX6S26z+E+N4
+	Ml6n69RI5s2GieN6BqZQsMBCTlYYbc9ixYd6ufLP5SD0YEyhjYsPBWe1ayPYpOKv
+	P6u+GU3Hao0WZoMuncTZ4aphvH3DFTF7vo52JMy3xfwrX0UphuwIYr9fSgjcYxd3
+	s40ypq18yK1QxVrm1Pxhqgf8TLVWtJxF2KFIUuGGbt2WoPhKOZwQ9qEbXyF7wnwq
+	IpYpPUvbEfOSwgl+M1gW5w==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1748017760; x=
+	1748104160; bh=/jlfPNouODknHqpqkHZeeFhINTA3VzKs1lAxLlE+jls=; b=I
+	P7+WWPmfAGkSo1ldXj/sdRVvNyyFulS7EJZzeLDfDwPbEHj/WAOvvMJxAPes3JJN
+	oTPsGFAX9waXsOkTBAb60Exojg5sN2qgyD5nAuLuLs6WAYeMA8Oom1EEK+bwtZPi
+	ylNqDxfH2Zb5yTPSWEzLXIoWZhc3XpGVcHOboxWwAgDFycfv2r/ikp1aXIJIT7Sq
+	hkQVuGaMweOuekbC7h/mDkCg1Fie5cJF52F6WXcp1B5TQjdTVjCMfNxQcdsKaIx8
+	U7cPFuiqkOBJdeEdPVnC343CxAFDJTblh9D0XJPq+4UlB3zj604nXJ9IQ8AwNdP4
+	O95LHXo01JxQ7BDWmR1HQ==
+X-ME-Sender: <xms:X6IwaFWHPctf93jQ6FEg67qFg4cyLbR1Y3lf47CePyykrmt_jCMHDA>
+    <xme:X6IwaFkZG5GxWlJpYmR2UDSJt-9FGi22AEnoiorD3HgV0bhKukLbJhSfodpnSDsA6
+    MPJkTcY5YqoRR3o1iU>
+X-ME-Received: <xmr:X6IwaBYZvKTIf4NsR8Gb6Z56QbeYwjjkDHsUAp5lsfv7ux534iBg4aXjW6O5fEOrEKtuXOaP7IBoGZ57fwHj66djSRaltKS3G2E>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgdelfeegucdltddurdegfedvrddttd
+    dmucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgf
+    nhhsuhgsshgtrhhisggvpdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttd
+    enucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhgg
+    tggugfgjsehtkeertddttdejnecuhfhrohhmpeflrghnnhgvucfirhhunhgruhcuoehjse
+    hjrghnnhgruhdrnhgvtheqnecuggftrfgrthhtvghrnhepuefgfefhvdeuvdffteegueev
+    lefhtdffgeefhefgffehtdegffefveetieeutdetnecuffhomhgrihhnpehkvghrnhgvlh
+    drohhrghenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhm
+    pehjsehjrghnnhgruhdrnhgvthdpnhgspghrtghpthhtohepiedpmhhouggvpehsmhhtph
+    houhhtpdhrtghpthhtoheprhgrfhgrvghlsehkvghrnhgvlhdrohhrghdprhgtphhtthho
+    peifpggrrhhmihhnsehgmhigrdguvgdprhgtphhtthhopehlvghnsgeskhgvrhhnvghlrd
+    horhhgpdhrtghpthhtoheplhhinhhugidqrggtphhisehvghgvrhdrkhgvrhhnvghlrdho
+    rhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrd
+    horhhgpdhrtghpthhtoheprghrnhgusegrrhhnuggsrdguvg
+X-ME-Proxy: <xmx:X6IwaIXey5ugv4zkfWpdPRU1ccUIRNBkCtk92rxWUsQK6VZJZBzMqQ>
+    <xmx:X6IwaPkAmTRSf7fyM4iBDIXJTrZq45ybrsOMZXhsRoX-YKNT9MJs7g>
+    <xmx:X6IwaFe8dzDt7oALnJAGbSTTfu_DU4u0ojhsxpu784x4e5qYuDqYEA>
+    <xmx:X6IwaJHsAruKQ1rSPXbSK_p0LBQEnRzLTp0UCjTUoycPkvH0GR8ZGw>
+    <xmx:YKIwaONIxjOB8CBz6Ha4sBVid0pI8usgKKyBuE-FzCD_Z9dWgXtO76oU>
+Feedback-ID: i47b949f6:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
+ 23 May 2025 12:29:19 -0400 (EDT)
+Date: Fri, 23 May 2025 18:29:17 +0200
+From: Janne Grunau <j@jannau.net>
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Armin Wolf <W_Armin@gmx.de>, lenb@kernel.org,
+	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 1/2] ACPI: platform_profile: Add support for non-ACPI
+ platforms
+Message-ID: <20250523162917.GC2575813@robin.jannau.net>
+References: <20250518185111.3560-1-W_Armin@gmx.de>
+ <CAJZ5v0hNmMtR4V0tYqD1dV2BqAKJ2sCOyBadkVtG3sS3V90uvw@mail.gmail.com>
+ <a6d92cdd-4dc3-4080-9ed9-5b1f02f247e0@gmx.de>
+ <CAJZ5v0icRdTSToaKbdf=MdRin4NyB2MstUVaQo8VR6-n7DkVMQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Fri, 23 May 2025 18:27:07 +0200
-Message-Id: <DA3OJ7WWUGLT.35AVP0QQDJRZV@ventanamicro.com>
-Subject: Re: [PATCH v8 13/14] RISC-V: KVM: add support for FWFT SBI
- extension
-Cc: "Samuel Holland" <samuel.holland@sifive.com>, "Andrew Jones"
- <ajones@ventanamicro.com>, "Deepak Gupta" <debug@rivosinc.com>, "Charlie
- Jenkins" <charlie@rivosinc.com>, "Atish Patra" <atishp@rivosinc.com>,
- "linux-riscv" <linux-riscv-bounces@lists.infradead.org>
-To: =?utf-8?q?Cl=C3=A9ment_L=C3=A9ger?= <cleger@rivosinc.com>, "Paul
- Walmsley" <paul.walmsley@sifive.com>, "Palmer Dabbelt"
- <palmer@dabbelt.com>, "Anup Patel" <anup@brainfault.org>, "Atish Patra"
- <atishp@atishpatra.org>, "Shuah Khan" <shuah@kernel.org>, "Jonathan Corbet"
- <corbet@lwn.net>, <linux-riscv@lists.infradead.org>,
- <linux-kernel@vger.kernel.org>, <linux-doc@vger.kernel.org>,
- <kvm@vger.kernel.org>, <kvm-riscv@lists.infradead.org>,
- <linux-kselftest@vger.kernel.org>
-From: =?utf-8?q?Radim_Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@ventanamicro.com>
-References: <20250523101932.1594077-1-cleger@rivosinc.com>
- <20250523101932.1594077-14-cleger@rivosinc.com>
- <DA3K95ZYJ52S.1K6O3LN6WEI0N@ventanamicro.com>
- <9f9e2869-725d-4590-887a-9b0ef091472e@rivosinc.com>
-In-Reply-To: <9f9e2869-725d-4590-887a-9b0ef091472e@rivosinc.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAJZ5v0icRdTSToaKbdf=MdRin4NyB2MstUVaQo8VR6-n7DkVMQ@mail.gmail.com>
 
-2025-05-23T17:29:49+02:00, Cl=C3=A9ment L=C3=A9ger <cleger@rivosinc.com>:
-> On 23/05/2025 15:05, Radim Kr=C4=8Dm=C3=A1=C5=99 wrote:
->> 2025-05-23T12:19:30+02:00, Cl=C3=A9ment L=C3=A9ger <cleger@rivosinc.com>=
-:
->>> +++ b/arch/riscv/kvm/vcpu_sbi_fwft.c
->>> +static const enum sbi_fwft_feature_t kvm_fwft_defined_features[] =3D {
->>> +	SBI_FWFT_MISALIGNED_EXC_DELEG,
->>> +	SBI_FWFT_LANDING_PAD,
->>> +	SBI_FWFT_SHADOW_STACK,
->>> +	SBI_FWFT_DOUBLE_TRAP,
->>> +	SBI_FWFT_PTE_AD_HW_UPDATING,
->>> +	SBI_FWFT_POINTER_MASKING_PMLEN,
->>> +};
->>=20
->> How will userspace control which subset of these features is allowed in
->> the guest?
->>=20
->> (We can reuse the KVM SBI extension interface if we don't want to add a
->>  FWFT specific ONE_REG.)
->
-> Hi Radim,
->
-> I didn't looked at that part. But most likely using the kvm one reg
-> interface seems ok like what is done for STA ? We could have per feature
-> override with one reg per feature.
+On Fri, May 23, 2025 at 04:39:59PM +0200, Rafael J. Wysocki wrote:
+> On Thu, May 22, 2025 at 6:34 AM Armin Wolf <W_Armin@gmx.de> wrote:
+> >
+> > Am 21.05.25 um 22:17 schrieb Rafael J. Wysocki:
+> >
+> > > On Sun, May 18, 2025 at 8:51 PM Armin Wolf <W_Armin@gmx.de> wrote:
+> > >> Currently the platform profile subsystem assumes that all supported
+> > >> (i.e. ACPI-capable) platforms always run with ACPI being enabled.
+> > >> However some ARM64 notebooks do not support ACPI and are instead
+> > >> using devicetree for booting.
+> > >>
+> > >> Do not register the legacy sysfs interface on such devices as it
+> > >> depends on the acpi_kobj (/sys/firmware/acpi/) being present. Users
+> > >> are encouraged to use the new platform-profile class interface
+> > >> instead.
+> > > So how does it work in this case?
+> > >
+> > The platform profile subsystem also exposes a more modern class-based sysfs interface,
+> > see Documentation/ABI/testing/sysfs-class-platform-profile for details.
+> >
+> > This interface does not depend on /sys/firmware/acpi being present, so userspace
+> > programs can still control the platform profiles using the class-based interface.
+> >
+> > This will become very important once we have platform profile drivers not depending on
+> > some sort of ACPI interface. I suspect that sooner or later some drivers for the embedded
+> > controllers on ARM64 notebooks (devicetree!) will register with the platform profile subsystem.
+> >
+> > Apart from that this allows input drivers using platform_profile_cycle() to work on non-ACPI
+> > platforms (like ARm64 devices using devicetree).
+> 
+> This driver though is located in drivers/acpi/ and depends on
+> CONFIG_ACPI.  Moreover, the platform profile provider drivers need to
+> select ACPI_PLATFORM_PROFILE so it gets built.  This means that there
+> are no non-ACPI platform profile providers currently in the tree.
+> 
+> While the observation that the code in the driver, other than the
+> legacy sysfs interface, doesn't really depend on ACPI is valid, if you
+> want it to be used on systems without ACPI, it needs to be properly
+> converted to a generic driver.
+> 
+> For now, it is better to simply make it fail to initialize without
+> ACPI, so I'm going to apply this patch:
+> 
+> https://patchwork.kernel.org/project/linux-acpi/patch/20250522141410.31315-1-alexghiti@rivosinc.com/
 
-Sounds fine.
+That unfortunately does not help with the hid-lenovo regression. Commit
+84c9d2a968c8 ("HID: lenovo: Support for ThinkPad-X12-TAB-1/2 Kbd Fn
+keys") added a platform_profile_cycle() call and thus a dependency on
+platform_profile. hid-lenovo is used for USB and Bluetooth devices and
+not just for Lenovo laptop/tablet specific devices.
+Above patch just avoids the warning splat but still prevents loading
+hid-lenovo when ACPI is enabled in the kernel (like Distro kernels) on
+a non-ACPI system. This breaks devices like "Lenovo ThinkPad Compact
+Keyboard with TrackPoint" on such systems.
 
-> Is this something blocking though ? We'd like to merge FWFT once SBI 3.0
-> is ratified so that would be nice not delaying it too much. I'll take a
-> look at it to see if it isn't too long to implement.
+I will send a patch to remove platform_profile_cycle() call as short
+term regression fix and tell the original author to to resubmit once the
+platform_profile dependency on non-ACPI systems is worked out.
 
-Not blocking, but I would at least default FWFT to disabled, because
-current userspace cannot handle [14/14].  (Well... save/restore was
-probably broken even before, but let's try to not make it worse. :])
-
-Thanks.
+Janne
