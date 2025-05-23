@@ -1,161 +1,120 @@
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1721D297B69;
-	Fri, 23 May 2025 17:21:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27315297A4E;
+	Fri, 23 May 2025 17:21:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748020912; cv=none; b=SySp9Uon1E8GhUlVqyatIqSyHlV8ipQCKI2BSJDKvisLowcWmW5U25nxbBbMNZGFYpL7w/2mU1AQixqYT/lqJtSP5uz+Z/FDcRBfIoTaCjRHGNhXk7wWORhnkrppSaf0N4pYJfESZN1iCflOLat8hF4SFkssZk182ESMAyuYN5w=
+	t=1748020913; cv=none; b=tJLZqkbUX3sVjlCOLotIgIUVQNSj+I7RBg4J7pbAZ3ahVdGPp899FzwCGooR/M146NSPDtm7m1mOEbiwJOf8xEcTb/oOAsn4l2e5iVtjBQ0FVtJuRhORzg7eKMG3YqSVtps7qTzkGjqoAXZH5gnpUz/rsIxTZKXJU1ZnNns6uJg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748020912; c=relaxed/simple;
-	bh=9SLdynl6L7y6joeNZe/hgRVqbliepI84c5Fual0QYhM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=XDwezrxxNNtCTEBvMyrl3Dsb64tuFfanqRsx2SCoaMONx3RZmIVFQR2hVPtFI0rZiskcRixKIUDxs6SuIjwfgnhrDszFg8+FGgJQr9bf+jsSYbuewpx/BQ7pYjqCQSvRTVu/imnYi2dfrx7yCNqYvq/EOJfmR3dBjTcniKtLhc0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-ad53a96baf9so6970366b.3;
-        Fri, 23 May 2025 10:21:48 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748020907; x=1748625707;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=1as6ImIdlFWGVqlVEq7SS2UVNO7GhmhlxXbjC8OXbUU=;
-        b=OVI4TR30bNaAKlpaW580DlL85Ouo98G777cbZbHU8DAjO/+0Rpt1Jxo/fIbOO8eIbv
-         9wUkvFFZEDRXQdpQEov8S2JaSV02II/v34bRNGJ8huGKva9PFRXuMifIAht8W1KQG+aR
-         6vsjN0lWNda8uKgkuxwY/asBpR/SQcMPGoMn0oxRhVlxq7GZYTRRX2PFHAlr3eLZ5geK
-         MiQJZodC8QjfS+yeKOwcsCcelm8neWTQhoTy037IUy0pCYlS3/CdRmlcRqfKlcCsiyEO
-         lsnL5GRjROkTWOVhH/IwnB20oeGJ4+hf09wR4MbLEdbDzVuQ1pWhTX5c2R54Bco4RIG1
-         1L6A==
-X-Forwarded-Encrypted: i=1; AJvYcCU5Et6SY9LD0RGBCIWFPXYj2u2j5268zuzVVvvCyOQbQkzN5oPPI9mpKj15gOQmwbcWSa8Dn28TkPrmH6C0@vger.kernel.org, AJvYcCW1SqvxUSA7ML3e/6lqLbNScO4pjVdoYSzjsADClOhGdrtkmYCEQK/GA5HYhGzOcw7sp0dFKkhe@vger.kernel.org
-X-Gm-Message-State: AOJu0YzrRH3RmlpfMhGMZIN+AIRHe1Zzs1ww25aMye+OtadM1xA9Phj8
-	3Dhc4ZlZnjB0Oa7yUubg06gJODUmROg++4UwSuaKxnHc/F6CkfWLafboBawI0g==
-X-Gm-Gg: ASbGncu/g5aIs3xVXrkPK6Z5iLcJtBIwg8dZXIVK5gOS9/IzqdfLsXt5i/+qnVUT1GA
-	emTdzzINwbUJa6wzCxdcuV0TQKWde1oU0lH6DIAu6kB3g3uEsKesW+S+IZb04Hx5s8pd6gDd3R3
-	P7NvXmnIWnlcwnZWtvcLNWa9l4Up9rP4BXJyZFMbFpzA6vB7s/x+m/CKzJA2hybXpbgTTf8In99
-	vXm5jPVN00VWYwekNImqcpSD2ftrhhGYHflYIJ3YU1cQbS1xg6+XpJ9Q51RokClljemNiJDzYAa
-	EtBMlcdAGPTZ5PaBkHUUnM9PJa7U4qya9Z3zTTiykMY=
-X-Google-Smtp-Source: AGHT+IEEWay1bo7xwQtAs3f6A3rSo4pJSW6u6S62+uEQlhJzjpxa/eN/MPuznam0Nb0N36VqDaOo9A==
-X-Received: by 2002:a17:907:7d89:b0:ad2:4785:c4ac with SMTP id a640c23a62f3a-ad52d575a9fmr3121280566b.40.1748020906956;
-        Fri, 23 May 2025 10:21:46 -0700 (PDT)
-Received: from localhost ([2a03:2880:30ff:72::])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6005ac333d1sm12197258a12.61.2025.05.23.10.21.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 May 2025 10:21:46 -0700 (PDT)
-From: Breno Leitao <leitao@debian.org>
-Date: Fri, 23 May 2025 10:21:06 -0700
-Subject: [PATCH] memcg: Always call cond_resched() after fn()
+	s=arc-20240116; t=1748020913; c=relaxed/simple;
+	bh=l68jmxlSRibiW9YCMsKtE4fFV3SCeLUF2uAmWkZSsgw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ES5IfYRabI1anyeYqfIjuAbD8mNn3TxHyUvElnUJ8P5FBKVgL+T3zfl7l2LDUEAINqQzhdmx/oai22yOw1ovETxxw7OunPqRCXkqvKYLL4DA34vk2EXI6StKcECAnSHUDTVkDQnIiIocm6K7ecNtlwfB0ioW5K54FZqG3W/ldwc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UjFpapf/; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UjFpapf/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748020912; x=1779556912;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=l68jmxlSRibiW9YCMsKtE4fFV3SCeLUF2uAmWkZSsgw=;
+  b=UjFpapf/NRYraAYFNdNPj54QzZ/77zUCGuKZPMgqJO4Q+NuVtfUs9XRi
+   0+0/oevPUazy6WQFJChQ2SM0Hvq4IXJS9BVsAEuX5c0z6W7wrssCKRFFD
+   zgmnp4tdawT+1NAxa4ZS4NfqRqkbIO/eLWCM6mTNylRqx22ykoY3Wi3pD
+   SURao45jA+C6Ndlak2mpGAdSWf8LRz45owCf6eltasyvcIwV/oRKnfltV
+   IYATDl1OJHIvnQz8M1oxOkTYr1AV+cf7UqWurGn8T+ru7tMCBrDAMNqmr
+   +qJ/nuGsF2Rr4AeKZRYgF7einZLhnKOQ78tzVy1dNGyI4gNIKWW3pso7R
+   A==;
+X-CSE-ConnectionGUID: oCyUp601R/2GEcRYrKPN1Q==
+X-CSE-MsgGUID: tkxrFlvKRtyQ9NjoucAT7Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11441"; a="67645740"
+X-IronPort-AV: E=Sophos;i="6.15,309,1739865600"; 
+   d="scan'208";a="67645740"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2025 10:21:51 -0700
+X-CSE-ConnectionGUID: rJYYQspgSYmGZixLrpvNHg==
+X-CSE-MsgGUID: 8DdUHlMURVuaqg5AK/pTKQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,309,1739865600"; 
+   d="scan'208";a="142246844"
+Received: from msatwood-mobl.amr.corp.intel.com (HELO [10.125.109.147]) ([10.125.109.147])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2025 10:21:50 -0700
+Message-ID: <fd29d8b6-f605-4954-83b3-71f0132cf6f2@intel.com>
+Date: Fri, 23 May 2025 10:21:50 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/3] x86/mm: Avoid repeated this_cpu_*() ops in
+ switch_mm_irqs_off()
+To: Peter Zijlstra <peterz@infradead.org>, x86@kernel.org
+Cc: linux-kernel@vger.kernel.org, kys@microsoft.com, haiyangz@microsoft.com,
+ wei.liu@kernel.org, decui@microsoft.com, tglx@linutronix.de,
+ mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com,
+ luto@kernel.org, linux-hyperv@vger.kernel.org
+References: <20250520105542.283166629@infradead.org>
+ <20250520110632.168981626@infradead.org>
+From: Dave Hansen <dave.hansen@intel.com>
+Content-Language: en-US
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <20250520110632.168981626@infradead.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250523-memcg_fix-v1-1-ad3eafb60477@debian.org>
-X-B4-Tracking: v=1; b=H4sIAIGuMGgC/x3MUQqAIBAFwKss7ztBNyTyKhERtdZ+WKEQgXT3o
- DnAVBTJKgWBKrLcWvQ8EMg1hGWfj02MrggEtuyt59YkScs2RX2Mdcy+i62zvaAhXFmiPv81jO/
- 7AXG+asRbAAAA
-X-Change-ID: 20250523-memcg_fix-012257f3109e
-To: Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>, 
- Roman Gushchin <roman.gushchin@linux.dev>, 
- Shakeel Butt <shakeel.butt@linux.dev>, Muchun Song <muchun.song@linux.dev>, 
- Andrew Morton <akpm@linux-foundation.org>, 
- Chen Ridong <chenridong@huawei.com>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Michal Hocko <mhocko@suse.com>, cgroups@vger.kernel.org, 
- linux-mm@kvack.org, linux-kernel@vger.kernel.org, kernel-team@meta.com, 
- Michael van der Westhuizen <rmikey@meta.com>, 
- Usama Arif <usamaarif642@gmail.com>, 
- Pavel Begunkov <asml.silence@gmail.com>, Rik van Riel <riel@surriel.com>, 
- Breno Leitao <leitao@debian.org>
-X-Mailer: b4 0.15-dev-42535
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2567; i=leitao@debian.org;
- h=from:subject:message-id; bh=9SLdynl6L7y6joeNZe/hgRVqbliepI84c5Fual0QYhM=;
- b=owEBbQKS/ZANAwAIATWjk5/8eHdtAcsmYgBoMK6oTefW5BzotcyUzyayF5x6y5MfHcnenlf2J
- mFeWRdJMYaJAjMEAAEIAB0WIQSshTmm6PRnAspKQ5s1o5Of/Hh3bQUCaDCuqAAKCRA1o5Of/Hh3
- bczDD/9jW9atkOFws/9Mw2wEqL09mHhEgwb3LKjbIkp3KBDora5mTdsh4EM6VDEQMdxq1kpjpNz
- GiJtQH7jl1kc71734kzXrt8qJN75Zqyv/pnPjRfRIgAqxKK7UPW/YzanfOzR88LHiUtAbQ8aLV9
- 4pbpcytSlqBucL9CaCEGLV1PlWFzdaaBwgzyp3t3LOA3bXJEWVxVtwMGAGB6MA4puNNl+PHzRgr
- 8ymf1ID08isRIHU+TNVMyaeqG5EKSgNlcSGjgGYHm4RMBaIQtLI5RZFcrfX4/zZ1WvJznGdwIqu
- gChRgIRKgXT0O/Jz4sKsezfnM9byOY8PuVIydhBnPMTi/B6WQR+HdioIXE92SkS/a/cn2nXpTdc
- tTaPXVLdK8HsEeGrjNlP+ub4dfa387IrUHscHBH9RCoZTa1Vvwmc5sIGSKV3kPD2QJAkEjiZXvS
- CFlJlm5VvP4XcdMvrrcNl9+8iW8/52UIMlvrfXMPherMbhp7cO5Fj7qyF0seL3GtJ0OKUTEl03B
- UfdP2gvmtKfltA6ED/SLIuUrvV0R4kyXmKtHkISbWp5Q72UD1PFy7AyVYovEjPNzCgcwNMWkEbY
- SFHYQAnmna2+xMQkC0N76hbzegoWLAWh2wIIxIwZyzfLgh84GkfNc7yf4RLWJIBwAwSAN7blASR
- tJd2X4lzFEXJ6+w==
-X-Developer-Key: i=leitao@debian.org; a=openpgp;
- fpr=AC8539A6E8F46702CA4A439B35A3939FFC78776D
 
-I am seeing soft lockup on certain machine types when a cgroup
-OOMs. This is happening because killing the process in certain machine
-might be very slow, which causes the soft lockup and RCU stalls. This
-happens usually when the cgroup has MANY processes and memory.oom.group
-is set.
+On 5/20/25 03:55, Peter Zijlstra wrote:
+> Aside from generating slightly better code for not having to use %fs
+> prefixed ops, the real purpose is to clarify code by switching some to
+> smp_store_release() later on.
+> 
+> Notably, this_cpu_{read,write}() imply {READ,WRITE}_ONCE().
 
-Example I am seeing in real production:
-
-       [462012.244552] Memory cgroup out of memory: Killed process 3370438 (crosvm) ....
-       ....
-       [462037.318059] Memory cgroup out of memory: Killed process 4171372 (adb) ....
-       [462037.348314] watchdog: BUG: soft lockup - CPU#64 stuck for 26s! [stat_manager-ag:1618982]
-       ....
-
-Quick look at why this is so slow, it seems to be related to serial
-flush for certain machine types. For all the crashes I saw, the target
-CPU was at console_flush_all().
-
-In the case above, there are thousands of processes in the cgroup, and
-it is soft locking up before it reaches the 1024 limit in the code
-(which would call the cond_resched()). So, cond_resched() in 1024 blocks
-is not sufficient.
-
-Remove the counter-based conditional rescheduling logic and call
-cond_resched() unconditionally after each task iteration, after fn() is
-called. This avoids the lockup independently of how slow fn() is.
-
-Cc: Michael van der Westhuizen <rmikey@meta.com>
-Cc: Usama Arif <usamaarif642@gmail.com>
-Cc: Pavel Begunkov <asml.silence@gmail.com>
-Suggested-by: Rik van Riel <riel@surriel.com>
-Signed-off-by: Breno Leitao <leitao@debian.org>
-Fixes: 46576834291869457 ("memcg: fix soft lockup in the OOM process")
----
- mm/memcontrol.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
-
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index c96c1f2b9cf57..2d4d65f25fecd 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -1168,7 +1168,6 @@ void mem_cgroup_scan_tasks(struct mem_cgroup *memcg,
- {
- 	struct mem_cgroup *iter;
- 	int ret = 0;
--	int i = 0;
- 
- 	BUG_ON(mem_cgroup_is_root(memcg));
- 
-@@ -1178,10 +1177,9 @@ void mem_cgroup_scan_tasks(struct mem_cgroup *memcg,
- 
- 		css_task_iter_start(&iter->css, CSS_TASK_ITER_PROCS, &it);
- 		while (!ret && (task = css_task_iter_next(&it))) {
--			/* Avoid potential softlockup warning */
--			if ((++i & 1023) == 0)
--				cond_resched();
- 			ret = fn(task, arg);
-+			/* Avoid potential softlockup warning */
-+			cond_resched();
- 		}
- 		css_task_iter_end(&it);
- 		if (ret) {
-
----
-base-commit: ea15e046263b19e91ffd827645ae5dfa44ebd044
-change-id: 20250523-memcg_fix-012257f3109e
-
-Best regards,
--- 
-Breno Leitao <leitao@debian.org>
-
+Acked-by: Dave Hansen <dave.hansen@linux.intel.com>
