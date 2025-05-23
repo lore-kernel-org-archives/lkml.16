@@ -1,86 +1,76 @@
-Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 812691F3B87;
-	Fri, 23 May 2025 21:26:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.78.240
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C27C1F582F;
+	Fri, 23 May 2025 21:26:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748035581; cv=none; b=UFBe8uIDra+Wmcv3F9QJzru+KuSY2fUa5+HtCSnhEaJNsCwUNcg9QZLZpK6T8/EDinI+1Kmp7KFAewbaTjKpWCzFVQiehf1wOQVJf4FcW3J/YVI8BzDgDK1WXKW5sAhlS+BcFq6qlkpC9VCNnTNDLadAx+HNAjrYRaT1t3yBwRk=
+	t=1748035594; cv=none; b=gz9iSwN/mR47wqv5BS043oT8bBeyTgl/13nPGldZShV4aByi0UFmLT5RQTmFzY3dzsnHL347UUkjpK0LJVmGmS87jODMjlq3j2Nd2bGYOrTs1sCeXSHeETErpDNwGeiQCkchawRrifIF6dXVpRilkby9OiZuppiJAdNXZ3UE5Ks=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748035581; c=relaxed/simple;
-	bh=SOHTYxjEKCoVoQ/vP2ctFKnsmi301z+p0Ait05tMC6M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=S5TCz7//IvfyCxV6XnAxx/SQGbThDB+AGJOvlpAYvUfaouRIX/qabctiG43LIDlhvZWcn4TeVwdksaycHNIKQy4JVGFrUQ8xtewWyxCzvERk5oi3+O5tgPytabmyBhXOFUhTA06lwC7PCkaigCeFtKspOFrGKDDA/d9MTXatBm8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.78.240
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout2.hostsharing.net (Postfix) with ESMTPS id 1CAA52009D05;
-	Fri, 23 May 2025 23:26:15 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id 07AFF24A2A7; Fri, 23 May 2025 23:26:15 +0200 (CEST)
-Date: Fri, 23 May 2025 23:26:15 +0200
-From: Lukas Wunner <lukas@wunner.de>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-pci@vger.kernel.org,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Cyril Brulebois <kibi@debian.org>,
-	Nicolas Saenz Julienne <nsaenz@kernel.org>,
-	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-	Krzysztof Wilczy??ski <kwilczynski@kernel.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Jim Quinlan <james.quinlan@broadcom.com>,
-	bcm-kernel-feedback-list@broadcom.com, linux-kernel@vger.kernel.org,
-	Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH] PCI/pwrctrl: Skip creating platform device unless
- CONFIG_PCI_PWRCTL enabled
-Message-ID: <aDDn94q9gS8SfK9_@wunner.de>
-References: <20250523201935.1586198-1-helgaas@kernel.org>
+	s=arc-20240116; t=1748035594; c=relaxed/simple;
+	bh=yW5i9tOGdIxs0IhrA0Hmi1ous7kRqD8vZyPP9v1q7jk=;
+	h=Message-ID:Subject:From:To:Date:Content-Type:MIME-Version; b=iYvynIYlUVkn5dA7BZ43n6CwLUMIHPJ+huy3dt0eCJo7j7/52/xyXnJ6A4p335sBWOGxr/NV6K8dniEdikf9cbsMTrDENI/xIfQLzIaUQCx/spswomPQ4EpW/bwd1sKu6jMLAypo4NczA9NB6sL4Ldpx4h3nex4xJGb1tN2GJ78=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cghMzfYH; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cghMzfYH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 200C4C4CEE9;
+	Fri, 23 May 2025 21:26:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748035594;
+	bh=yW5i9tOGdIxs0IhrA0Hmi1ous7kRqD8vZyPP9v1q7jk=;
+	h=Subject:From:To:Date:From;
+	b=cghMzfYHT561kRuLRFIgNd1rFknERP6Xp1PqyzVzdKZLpVGDy87ce7OObKPHXxbxW
+	 PGu/ke4bhcWcyFcrFUGwe48QikoYcC3lj95YVf3kZ58bqXL9uLNIV1pdxyoou1iHCL
+	 9j4tIVJl5qwtizw78xUpfPTkTpmeCqS2gGfGnyQOcz4xHyhvKmZstaFGSPyKVdvAci
+	 ePbm5iaopkPQ7aKcq/JhaR7Hp3oav4U4Wp3tMCOTkoI6fVyx30EZUn/B4ccHtfHte4
+	 jDuuyW3P2Qz7a3S7tvVQRy/3/Az22Q2xr/3iDv+Lo/57CdYLxh+yRKrcsAv4yR1QXo
+	 W1jSV2aGhvb9w==
+Message-ID: <4421c5e1450b7264b85deaa913df35018601bb19.camel@kernel.org>
+Subject: [ANNOUNCE] 5.4.293-rt98
+From: Tom Zanussi <zanussi@kernel.org>
+To: LKML <linux-kernel@vger.kernel.org>, linux-rt-users
+ <linux-rt-users@vger.kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
+ Thomas Gleixner <tglx@linutronix.de>, Carsten Emde <C.Emde@osadl.org>, John
+ Kacur <jkacur@redhat.com>, Sebastian Andrzej Siewior
+ <bigeasy@linutronix.de>, Daniel Wagner <wagi@monom.org>, Clark Williams
+ <williams@redhat.com>,  "Luis Claudio R. Goncalves" <lgoncalv@redhat.com>,
+ Joseph Salisbury <joseph.salisbury@oracle.com>, Tom Zanussi
+ <zanussi@kernel.org>
+Date: Fri, 23 May 2025 16:26:32 -0500
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.3-0ubuntu1 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250523201935.1586198-1-helgaas@kernel.org>
 
-On Fri, May 23, 2025 at 03:17:59PM -0500, Bjorn Helgaas wrote:
-> --- a/drivers/pci/probe.c
-> +++ b/drivers/pci/probe.c
-> @@ -2510,6 +2510,7 @@ EXPORT_SYMBOL(pci_bus_read_dev_vendor_id);
->  
->  static struct platform_device *pci_pwrctrl_create_device(struct pci_bus *bus, int devfn)
->  {
-> +#if defined(CONFIG_PCI_PWRCTL) || defined(CONFIG_PCI_PWRCTL_MODULE)
->  	struct pci_host_bridge *host = pci_find_host_bridge(bus);
->  	struct platform_device *pdev;
->  	struct device_node *np;
-> @@ -2536,6 +2537,9 @@ static struct platform_device *pci_pwrctrl_create_device(struct pci_bus *bus, in
->  	}
->  
->  	return pdev;
-> +#else
-> +	return NULL;
-> +#endif
->  }
-[...]
-> This an alternate to
-> https://lore.kernel.org/r/20250522140326.93869-1-manivannan.sadhasivam@linaro.org
-> 
-> It should accomplish the same thing but I think using #ifdef makes it a
-> little more visible and easier to see that pci_pwrctrl_create_device() is
-> only relevant when CONFIG_PCI_PWRCTL is enabled.
+Hello RT Folks!
 
-Just noting though that section 21 of Documentation/process/coding-style.rst
-discourages use of #ifdef and recommends IS_ENABLED() and inline stubs
-instead.
+I'm pleased to announce the 5.4.293-rt98 stable release.
 
-Thanks,
+This release is just an update to the new stable 5.4.293
+version and no RT specific changes have been made.
 
-Lukas
+You can get this release via the git tree at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-stable-rt.git
+
+  branch: v5.4-rt
+  Head SHA1: b0414bb960796a924d2769a6f4010d98f19ddde8
+
+Or to build 5.4.293-rt98 directly, the following patches should be applied:
+
+  https://www.kernel.org/pub/linux/kernel/v5.x/linux-5.4.tar.xz
+
+  https://www.kernel.org/pub/linux/kernel/v5.x/patch-5.4.293.xz
+
+  https://www.kernel.org/pub/linux/kernel/projects/rt/5.4/patch-5.4.293-rt9=
+8.patch.xz
+
+Enjoy!
+
+   Tom
+
