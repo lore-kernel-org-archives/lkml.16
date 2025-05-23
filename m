@@ -1,33 +1,39 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9239D634;
-	Fri, 23 May 2025 06:24:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 031932DCBF9;
+	Fri, 23 May 2025 06:24:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747981445; cv=none; b=gCNdDTpUt7q6g2rRjHl1odZEylbkX44f9CuqvxijLVfnAE7CBgijqb0Kj/3txg047p4/SzdwKpq9d3b3D+dar4K+OFmd0HfJ3aJtwzScwOquohU5dli24O79j2zoF/uAE4al6xfzdxwHddd1dYPbuqDm2i0QW2JRp2x+k/NoGuI=
+	t=1747981472; cv=none; b=UdrU74F8g7EDJ+Wxm4FbJiJBMJqvCyTRGNvD11Fxjh6K8skjp1aHBsoJn64Q9nYjW2YI4gMTiezRXrpWoHGdRcZigT0gGaxAG2A8a6X+2fITJFq84CogCOq/dvRBBco/W9+3n05zF3NZmWdMAnRtDtjOFe8zfMDiH7tVu1Crutg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747981445; c=relaxed/simple;
-	bh=PIYLxqCyjw+4aCqAW27AXRd6ZQCdzIB4GNC0BzN1GP0=;
+	s=arc-20240116; t=1747981472; c=relaxed/simple;
+	bh=vcbOFAtxUBDkEdAWJqQHqJrbVgEUXO+diVOFf+nGBKA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dJPfsdvzGj6/2wXpN+YS54AkBn/qhYpiz696d5kam6Wt090bsnCvcxoFEHJKrAv6llwbAjVcHn6neUvFYnmHbStdxvP5t6WxRdkseohgXvLYNHF/gqZ98clkIcdRKzXIh3udB3otE/4ThHV2Tu/DS4fpE8Z0ZFGdt7ni4+G5TQo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BC4sgF7y; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=VFWGnRKfjbQwRNmAdcHXotRVp7vYOgZw//p2OoQd74KbjxV7yWt/0lIC7nJTND4yu9/lOZPxS1kA8P0O6BijtlZ+RaI3a4/qinJbl3LbFFvNOF6fwMVn8bN9xdzCE1HmtxdZDmjQnG99Z6y3GezBgrrTZZr/xFzdfpXJMe6gTQo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=XsCNw4n1; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BC4sgF7y"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C5D6C4CEE9;
-	Fri, 23 May 2025 06:24:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747981445;
-	bh=PIYLxqCyjw+4aCqAW27AXRd6ZQCdzIB4GNC0BzN1GP0=;
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="XsCNw4n1"
+Received: from [192.168.7.202] ([71.202.166.45])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 54N6NUq83337630
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Thu, 22 May 2025 23:23:31 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 54N6NUq83337630
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025042001; t=1747981412;
+	bh=wnyZuODJByEqpzXIq2BlNFfzd2lgJUg6GSxaV1xq9rE=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=BC4sgF7y+evOPoAhcLFKLfTQwBlnXPq9nnsmi3NuvoBWeuFfiX2UkLlX6Af/jWeaq
-	 fAFxkLZuZiPq9U7JiEAauYZYBdjUsx+3mbIWzWxV6Cji5f4dCdUY1GZJjwU/bfe5yz
-	 V9LnlDHC0xAhrkfnnV/IA33rapFy1/5tT/bzwOIw1JZFLyESlDhjNLURatUSU7FDxI
-	 RMrbpUngOG4R4DvNLWz2bkXk4/f6+K9lLEi5SLqT8n114ZnGev61d3cbTke7FmFDFE
-	 Eg4Si9pGlmJp51/wFJXNBNnbM8QSwPD/R8YWzOuKGmN+u/QnqMLR1MBo3BOdmgzata
-	 o2sg5CqnFjKZQ==
-Message-ID: <4b1960f2-95e4-41c3-9723-04d77c6c27d4@kernel.org>
-Date: Fri, 23 May 2025 08:24:00 +0200
+	b=XsCNw4n1ssDTJReaTMTvbM2c7QkmubHLKX2tkB+DBrWGHejtY5GWbmWvIglLe9q3Z
+	 Qe2y0D6zeoxrz8lYv/X39uGcjQ89CjZ/3E0JHPt5V3JRCjN51u1P/WfGoGGVxRP0yh
+	 +OW3vegTptZjEzl6pzmCdWAVwzw9nyqnoi93zP133qMc40kU+gRcQAAcRD82SvdNc8
+	 m9+3WmGIHwTznMxjN4dGUxt50jDmETfD0zKwKay+YK5ecxaBfhy/GztcucAk+6GnHr
+	 f9x7KzsTJjr0Z1seSEHECNGFiks0CiVu8e0n8GIJzD5fgDFLIWz1exGL82FqCjjfhj
+	 NKRWfZ9d64tzQ==
+Message-ID: <98baeeed-345d-4ae9-9418-61df6c689516@zytor.com>
+Date: Thu, 22 May 2025 23:23:30 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,89 +41,79 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCHv2 4/5] dt-bindings: net: wireless: ath9k: add OF bindings
-To: Rosen Penev <rosenp@gmail.com>
-Cc: linux-wireless@vger.kernel.org, =?UTF-8?Q?Toke_H=C3=B8iland-J=C3=B8rgens?=
- =?UTF-8?Q?en?= <toke@toke.dk>, Johannes Berg <johannes@sipsolutions.net>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
- "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
- <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>,
- "open list:MIPS" <linux-mips@vger.kernel.org>
-References: <20250522184516.13176-1-rosenp@gmail.com>
- <20250522184516.13176-5-rosenp@gmail.com>
- <871d18ab-a696-4141-bc3a-7b6e968fc649@kernel.org>
- <CAKxU2N8uZ+q1aE42+e65tVMr=ji0RTx5wZssFBnQN29OzsFXVA@mail.gmail.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH v1 1/1] x86/fred/signal: Prevent single-step upon ERETU
+ completion
+To: Andrew Cooper <andrew.cooper3@citrix.com>,
+        kernel test robot <lkp@intel.com>, linux-kernel@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
+        hpa@zytor.com, peterz@infradead.org, stable@vger.kernel.org
+References: <20250522060549.2882444-1-xin@zytor.com>
+ <202505230141.4YBHhrPI-lkp@intel.com>
+ <83b013fb-2057-4097-ac8c-b5c38d019a0f@zytor.com>
+ <005d4d4c-f385-42e0-8a30-62c6d77ff0f0@citrix.com>
 Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <CAKxU2N8uZ+q1aE42+e65tVMr=ji0RTx5wZssFBnQN29OzsFXVA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
+From: Xin Li <xin@zytor.com>
+Autocrypt: addr=xin@zytor.com; keydata=
+ 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
+ l75w1xInsg==
+In-Reply-To: <005d4d4c-f385-42e0-8a30-62c6d77ff0f0@citrix.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-On 23/05/2025 02:04, Rosen Penev wrote:
-> On Thu, May 22, 2025 at 12:54 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+>>>      arch/x86/include/asm/sighandling.h: In function
+>>> 'prevent_single_step_upon_eretu':
+>>>>> arch/x86/include/asm/sighandling.h:44:21: error: 'struct pt_regs'
+>>>>> has no member named 'fred_ss'
+>>>         44 |                 regs->fred_ss.swevent = 0;
+>>>            |                     ^~
+>>>
 >>
->> On 22/05/2025 20:45, Rosen Penev wrote:
->>> Now that support was added to the driver, document it.
->>
->> That's not appropriate commit msg. Binding must be before the user (see
->> submitting patches in DT directory). Describe the hardware, what are you
->> adding here.
->>
->> Subject: OF bindings is redundant. It duplicates dt-bindings. Instead:
->> "Add Atheros AR9-foo-bar on AHB bus" or something similar
-> At this point I wonder if my approach is wrong. The other ath drivers
-> use a qcom, prefix and a -wifi suffix. Might make sense to do the same
-> here to avoid typing qca twice.
+>> Hmm, this statement is under IS_ENABLED(CONFIG_X86_FRED), which should
+>> be a compile time FALSE with i386.  Why it is still being compiled?
+> 
+> Because what the compiler is seeing is:
+> 
+> if (0 && ...)
+>      regs->fred_ss.swevent = 0;
+> 
+> and the bad field name is found at parse time, while the whole
+> expression is only discarded during optimisation.
+> 
+> The one thing you can't IS_ENABLED() around is conditional fields.  That
+> needs to be full #ifdef.
 
+Thanks a lot for the explanation.  Just sent out v3 using #ifdef.
 
-
-Yes, probably this should be qcom.
-
-
-Best regards,
-Krzysztof
+     Xin
