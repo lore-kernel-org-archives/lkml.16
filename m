@@ -1,175 +1,120 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mail-m49236.qiye.163.com (mail-m49236.qiye.163.com [45.254.49.236])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEC69288CAF;
-	Fri, 23 May 2025 08:09:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC4D9286D45;
+	Fri, 23 May 2025 08:09:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.49.236
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747987758; cv=none; b=D7gOiVEu+NyWTk3LbXAQ9oAl5xPy9IrCPpg706lhyiWHan7GlZea8fzclzI2aovqSdydLpB2YpAQjxMHeSfhDmVzaj+K0NY0HLbjzRAgDQAYRJ1Y1Q6OZ3G0mQcQ+8p6GyDZcl76qbYNtzFlOgQzApsiQ3sYbc+oBQF4aanzjJw=
+	t=1747987790; cv=none; b=AOeum++Lc5AOUy63uUznT44FRw1Af9xa7h5PSe0IpT5RfO5acdjiM8pFbRWPC50cdQnf8lYh9Q5TphFFb+Kq5eLssSkONLaLi76nQQf1x9gWulzcDHVGVh+BNbJ8NSBanh1tPDmDLSAwHUsfuqVI9NiKrGzEC6g3Px/s6zA4vsA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747987758; c=relaxed/simple;
-	bh=G3HZUfBG3cjLwFnPE+/4xdSSAsXnFyflo/c7NxHyx5I=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=dWct0KPB5HyBY5Rl7f61V3zSe9G2wr0hcspJ/qV5lHdL5dtu+dWeUDqZIwgt1mLEX0Ht9e7UcPeZel8NXUwaiFvvxrRVAKbaci743TfYMC+YwBcSsLA2TXcU+44z1s/htiysyKRx2EyQJN1rzxSCLEbI9Z7fdyBhwfQ8DOUftWk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=BcECy/0O; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1747987790; c=relaxed/simple;
+	bh=RThPFsAaD2E0xzlCf7d/TjbxGHfXhIj29Z6UO+WQm2Y=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=r8yeRa5EAyr0egZyVIr7DEojIQVQGxVJCSAJH9mFSTcVCddBjQ1RrDprf3w1nePYPRHm6AzslWX1B5bIY3Ffk/lAgIoBL+eiTG1iINE2YYIRfOXXJttWxKEIuU5L92589yNnf89MlJbWHpz1cNztLw8M5lGJHwG3zqb+lMaLUhQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=fhxsDPqD; arc=none smtp.client-ip=45.254.49.236
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="BcECy/0O"
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54N6Aqlf013895;
-	Fri, 23 May 2025 08:09:05 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	KUeiwjwwRKCeSzEn89kVpyg8NofPZDIR7gL3zffWsso=; b=BcECy/0OUo93fw4F
-	gZhiI2GyStvzLgqVX6vJU+kVdqtdXt/O9Ne0e0WVl2BqI/IXJHGu1lZtNm/qFRu9
-	zTmeamQ14LNlDclW4zl74Q7v4JeSlyib+8CHcq3iacrG2bS6YqwY/RPCTb6vmSHS
-	pGA/92wLfRA/BndpU8wWdaHR8D/rAWfiAscigzUT7Zyiid4jvQH9IH/qZMiEVRj/
-	5vmFjdC8cGAE62DdYUSQ3jRx+xE+k9PfmVikNCjNH1OrvYwSy6k4AD5qrbrpCiQL
-	uGONtVcIPnz1P3aAeIiKqndj0NuD3IOHd3LsrElCrn2GbEsVPXJQc/Tnt81h35mO
-	8fjRaA==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46rwf9h4n8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 23 May 2025 08:09:04 +0000 (GMT)
-Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54N8931s004706
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 23 May 2025 08:09:03 GMT
-Received: from [10.239.133.114] (10.80.80.8) by nalasex01b.na.qualcomm.com
- (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 23 May
- 2025 01:09:00 -0700
-Message-ID: <40599afc-4342-467c-87d8-3f53cbcfd242@quicinc.com>
-Date: Fri, 23 May 2025 16:08:58 +0800
+	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="fhxsDPqD"
+Received: from rockchip.. (unknown [58.22.7.114])
+	by smtp.qiye.163.com (Hmail) with ESMTP id 1628045cb;
+	Fri, 23 May 2025 15:54:25 +0800 (GMT+08:00)
+From: Elaine Zhang <zhangqing@rock-chips.com>
+To: zhangqing@rock-chips.com,
+	mkl@pengutronix.de,
+	kernel@pengutronix.de,
+	mailhol.vincent@wanadoo.fr,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	heiko@sntech.de,
+	cl@rock-chips.com,
+	kever.yang@rock-chips.com
+Cc: linux-can@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org
+Subject: [PATCH v5 1/4] dt-bindings: can: rockchip_canfd: add rk3576 CAN-FD controller
+Date: Fri, 23 May 2025 15:54:19 +0800
+Message-Id: <20250523075422.4010083-2-zhangqing@rock-chips.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250523075422.4010083-1-zhangqing@rock-chips.com>
+References: <20250523075422.4010083-1-zhangqing@rock-chips.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 2/2] coresight: add coresight Trace Network On Chip
- driver
-To: Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach
-	<mike.leach@linaro.org>,
-        James Clark <james.clark@linaro.org>, Rob Herring
-	<robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>,
-        Alexander Shishkin
-	<alexander.shishkin@linux.intel.com>
-CC: <kernel@oss.qualcomm.com>, <linux-arm-msm@vger.kernel.org>,
-        <coresight@lists.linaro.org>, <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20250522-trace-noc-v6-0-f5a9bcae90ee@quicinc.com>
- <20250522-trace-noc-v6-2-f5a9bcae90ee@quicinc.com>
- <3a19197d-b534-458c-b4d7-51fd9d2c954d@arm.com>
-Content-Language: en-US
-From: Yuanfang Zhang <quic_yuanfang@quicinc.com>
-In-Reply-To: <3a19197d-b534-458c-b4d7-51fd9d2c954d@arm.com>
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01b.na.qualcomm.com (10.47.209.197)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: kPgexwW-XHzVu8r4PKlL9oDSSyKwYz7X
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIzMDA3NCBTYWx0ZWRfX+Mzwh0Kss6rN
- vTf6MSyeGKL6udwQwDHZ0OP9MsaLda+CdExaw3RvabpAx2+DSIhP85YNemtGv2+ZGXV5z0ZrNBi
- hkwNjw9I+dZ2GOAtY5wV40YY6Efo0HORhh06trM/7nE/uq0cPMZWfTG05QpJK8Y9wY+AvoWVDds
- UQiSIk1dxNlulVUgg4qMQDfaDdNG0KI8z6UsS/y3budj9gTGZMKFvHyMTn4AL3Cw/TOMMmGbGOB
- 3XpoLslcNvwY1jnIQoPacFnDtBFSxuxZmActJOeM2sqiLVX3UyJvuxxP4WAcuhXvKcv0FipYYxI
- SwEU9tRl6k72cX18LKhsNgckmQLncJp/Bt6YPuEbYKP2AMMlJhnfWwRwz4OISUfN65GhPkYPxGt
- P3Gc0EmZ40UydgCGS914mx+rbuBTM+c5S4u2roWNer1r8vOnbcT+Bkr2z+HgXv2SbJjzvCzJ
-X-Authority-Analysis: v=2.4 cv=GawXnRXL c=1 sm=1 tr=0 ts=68302d20 cx=c_pps
- a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=COk6AnOGAAAA:8
- a=tqpicOYo2bCRqsTAqWEA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-GUID: kPgexwW-XHzVu8r4PKlL9oDSSyKwYz7X
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-23_02,2025-05-22_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- mlxscore=0 mlxlogscore=999 lowpriorityscore=0 impostorscore=0
- priorityscore=1501 clxscore=1015 malwarescore=0 phishscore=0 bulkscore=0
- spamscore=0 suspectscore=0 adultscore=0 classifier=spam authscore=0
- authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505160000 definitions=main-2505230074
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZGR5NSlZKSEhJTB1CQx5CSUNWFRQJFh
+	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSU9PT0
+	hVSktLVUpCS0tZBg++
+X-HM-Tid: 0a96fc22df3003a3kunm893a9d4d11dad6
+X-HM-MType: 1
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6OiI6Nio6OjE3KhUVEh9LDihC
+	TQ5PC05VSlVKTE9MQkNNQ01MTUhPVTMWGhIXVQETGhUcChIVHDsJFBgQVhgTEgsIVRgUFkVZV1kS
+	C1lBWU5DVUlJVUxVSkpPWVdZCAFZQUlOSUI3Bg++
+DKIM-Signature:a=rsa-sha256;
+	b=fhxsDPqDmyusPeEvA2QgLAU3lNNOfwIHpFA2l7M3CowNzau62ci9E+z4ZnE3Y4eYvC/9uvHXk8vDS12xFTP3R9ggakF8GPpARpsTj57ID/eTRZ+bdU+oZu7u7zj3yuJvgF35fzpe97vQBeotN4bEaMhMUDncd0eNnm121v008D0=; s=default; c=relaxed/relaxed; d=rock-chips.com; v=1;
+	bh=+khz/o7a5PPghtgkY2ZXtUUFn068QElniJYEgmUtOrI=;
+	h=date:mime-version:subject:message-id:from;
 
+Add documentation for the rockchip rk3576 CAN-FD controller.
 
+Signed-off-by: Elaine Zhang <zhangqing@rock-chips.com>
+---
+ .../net/can/rockchip,rk3568v2-canfd.yaml      | 24 +++++++++++++++++++
+ 1 file changed, 24 insertions(+)
 
-On 5/22/2025 9:13 PM, Suzuki K Poulose wrote:
-> On 22/05/2025 09:07, Yuanfang Zhang wrote:
->> Add a driver to support Coresight device Trace Network On Chip (TNOC),
->> which is an integration hierarchy integrating functionalities of TPDA
->> and funnels. It aggregates the trace and transports to coresight trace
->> bus.
->>
->> Compared to current configuration, it has the following advantages:
->> 1. Reduce wires between subsystems.
->> 2. Continue cleaning the infrastructure.
->> 3. Reduce Data overhead by transporting raw data from source to target.
->>
->>    +------------------------+                +-------------------------+
->>    | Video Subsystem        |                |Video Subsystem          |
->>    |       +-------------+  |                |       +------------+    |
->>    |       | Video TPDM  |  |                |       | Video TPDM |    |
->>    |       +-------------+  |                |       +------------+    |
->>    |            |           |                |              |          |
->>    |            v           |                |              v          |
->>    |   +---------------+    |                |        +-----------+    |
->>    |   | Video funnel  |    |                |        |Video TNOC |    |
->>    |   +---------------+    |                |        +-----------+    |
->>    +------------|-----------+                +------------|------------+
->>                 |                                         |
->>                 v-----+                                   |
->> +--------------------|---------+                         |
->> |  Multimedia        v         |                         |
->> |  Subsystem   +--------+      |                         |
->> |              |  TPDA  |      |                         v
->> |              +----|---+      |              +---------------------+
->> |                   |          |              |   Aggregator  TNOC  |
->> |                   |          |              +----------|----------+
->> |                   +--        |                         |
->> |                     |        |                         |
->> |                     |        |                         |
->> |              +------v-----+  |                         |
->> |              |  Funnel    |  |                         |
->> |              +------------+  |                         |
->> +----------------|-------------+                         |
->>                   |                                       |
->>                   v                                       v
->>        +--------------------+                    +------------------+
->>        |   Coresight Sink   |                    |  Coresight Sink  |
->>        +--------------------+                    +------------------+
->>
->>         Current Configuration                            TNOC
->>
->> Signed-off-by: Yuanfang Zhang <quic_yuanfang@quicinc.com>
-> 
-> 
->> +
->> +static int trace_noc_init_default_data(struct trace_noc_drvdata *drvdata)
->> +{
->> +    int atid;
->> +
->> +    atid = coresight_trace_id_get_system_id();
->> +    if (atid < 0)
->> +        return atid;
->> +
->> +    drvdata->atid = atid;
-> 
-> Do you need to expose this via sysfs ? Otherwise, how can you map
-> a trace to a TNOC at decoding ?
-
-yes, need to expose the atid via sysfs, but it better to expose it on source driver which connect with
-this TNOC. so dont expose it on this driver.
-
-> 
-> Suzuki
+diff --git a/Documentation/devicetree/bindings/net/can/rockchip,rk3568v2-canfd.yaml b/Documentation/devicetree/bindings/net/can/rockchip,rk3568v2-canfd.yaml
+index a077c0330013..e5dfce382061 100644
+--- a/Documentation/devicetree/bindings/net/can/rockchip,rk3568v2-canfd.yaml
++++ b/Documentation/devicetree/bindings/net/can/rockchip,rk3568v2-canfd.yaml
+@@ -17,6 +17,7 @@ properties:
+   compatible:
+     oneOf:
+       - const: rockchip,rk3568v2-canfd
++      - const: rockchip,rk3576-canfd
+       - items:
+           - const: rockchip,rk3568v3-canfd
+           - const: rockchip,rk3568v2-canfd
+@@ -43,6 +44,13 @@ properties:
+       - const: core
+       - const: apb
+ 
++  dmas:
++    maxItems: 1
++
++  dma-names:
++    items:
++      - const: rx
++
+ required:
+   - compatible
+   - reg
+@@ -72,3 +80,19 @@ examples:
+             reset-names = "core", "apb";
+         };
+     };
++
++  - |
++    soc {
++        #address-cells = <2>;
++        #size-cells = <2>;
++
++        can@2ac00000 {
++            compatible = "rockchip,rk3576-canfd";
++            reg = <0x0 0x2ac00000 0x0 0x1000>;
++            interrupts = <GIC_SPI 121 IRQ_TYPE_LEVEL_HIGH>;
++            clocks = <&cru CLK_CAN0>, <&cru PCLK_CAN0>;
++            clock-names = "baud", "pclk";
++            resets = <&cru SRST_CAN0>, <&cru SRST_P_CAN0>;
++            reset-names = "core", "apb";
++        };
++    };
+-- 
+2.34.1
 
