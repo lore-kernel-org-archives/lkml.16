@@ -1,169 +1,140 @@
-Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E2BB25760
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 18:10:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEDC629992E
+	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 18:12:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748023814; cv=none; b=N/sr6ZqBBQrKwj06UJuzFX5ItKIAMyPV5y+dXwkXv1ixY2YOZgIKWxljc1RDRA3iHX/SqGdZt68X+TIvkXAw+Q8+lU67DEzL7QmvULMZQaPkdl4Qcqw6ujXvciDMJZUZEwigom85VyGlMjXI33nQp4DprQ59yqwvxcfwzFs/JvA=
+	t=1748023966; cv=none; b=sXJSK3TTqKKMG/tPSUA1xGgwHYzm0HfYRs89rly9d0rCAPEKf98vLjVh2V3RpfcGq4Z0lklRT0+C0xvbM0nsLDPx7R+rRAJxdDVV2EBThxAuzaoKDaU6gxTt9XoWETel1SfGEN8goFvOj0/1fbJqiE4WZTLWuWcXefxTFJcl1TA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748023814; c=relaxed/simple;
-	bh=UU1RX1eq4TtMyJ2pnNDAtBTGry3M60mWbysvaPNt8HQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WxQKxtMy6RR8r4ar2ggK7CtGibsb7UI+JkJ8NJRZiCE8zwQtr59CFBsmv1D8lbRkuTbf+03GT29n91EUORBqpXBtO+uAZxM5Yk5WffGCPjmb0mmLCzZpVUpsTEVxRkyXPXKtElDVsnxmySb+YRbfVeL4/uRjL2mYA2MCxfTzz+w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com; spf=pass smtp.mailfrom=soleen.com; dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b=vhTiVtnT; arc=none smtp.client-ip=209.85.160.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=soleen.com
+	s=arc-20240116; t=1748023966; c=relaxed/simple;
+	bh=H2g7jia2BsPqgUIovz9o4/PUhE0UFnjetOMYvTY/DNE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=sl3k0M3YZJGWnucdh0KzLKk/92LOf58Y4JjOUUMoude9+/KPZTp6cTC1Xw4hFhmKBL9tMkGffC68VdH3zIE395l0YVxVyo4HMckuKcRjzSqEkly96R1Pq+nNafMTuJhXh/KJathU5/nsD0rX+oGK1VNXZBLLEtj3qOStUx9UuF0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=Il3256cu; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b="vhTiVtnT"
-Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-47691d82bfbso2283851cf.0
-        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 11:10:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen-com.20230601.gappssmtp.com; s=20230601; t=1748023812; x=1748628612; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=si3A8XaUwff9ewfSpNvPOminfhYVFidrmtQfQaknH9s=;
-        b=vhTiVtnTz4LOjwyzTdabaDahbKkVHP6urUwaCxgIh6syZFInBoixGfTVXPrxTQMCv9
-         Isg1maXlzIOZXap/wLfvoDQ32bF7VBPxw1Yl6W79KTL48bwJODecy22ftdiMmPz1XOnZ
-         xaK7iIEhMFGSwpR9LtXvEZNexN50SvecTqUaKCA5MEaf3fzqKQ/QNw+z2IGCjOMiHnlo
-         JSyHbXi+vvVi4ILn9ytq2WksmTPDKEifR0StZ5tzKu/AJh5PXv/7wFbFCBlDI9zSRyvY
-         onRnBdqXuz57SJO7zXbRpwnoODoXHqNdb7/4p+2a7wJ6KscN6Pswa8MNVWDmibJDBlGU
-         gWTg==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="Il3256cu"
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54NFJgjR027873
+	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 18:12:42 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	Iz9ezLEquuwmNTXBvuDUybdRf3cIwWCcnKJopdL/8k0=; b=Il3256cuYOzyyh3g
+	7M2t5+NKh77qhRNOvzJOcO0TZq1M+AaecW3mtzJMSZ1aFdqRZl21/u9zVUd1pChS
+	nUp1SZYOfgK3BtF+qcfkeUcsmoyrOKWGBEH/N8XmUaB8cDh8ggU3Y4/kLksNvq00
+	rsjcskDxpyk9HCf18QxcpMEMAvfInMrye+OUejGfna8R8/lfKik+1Tf2NdIt3K3X
+	ehcsIgjItlWx5ROwbjzJPd6TGIrW2Cu8TxbeiLT49cuc1milLOFzifrSXiESvQ3q
+	io1WNlzHSWxWIgIaH9EG/S2Sy10tVWMoYharxjdTkeBHpD1lsVye0ePdBKKO/upg
+	oslAbw==
+Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com [209.85.219.71])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46rwfa2wp5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 18:12:42 +0000 (GMT)
+Received: by mail-qv1-f71.google.com with SMTP id 6a1803df08f44-6fa9cc8eb70so285446d6.0
+        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 11:12:42 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748023812; x=1748628612;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=si3A8XaUwff9ewfSpNvPOminfhYVFidrmtQfQaknH9s=;
-        b=X5fBfOdvYv3kJ/nd3i9Cb+A1p4QkKdGVm9R0fY9une6WewXxlUY76htk1cCeQCjk+n
-         5WAxYdcqKaLbSsQDXs4bhNPCXmGpbJBDqMSjkOeubttN7oGlZ0qgKNVjYWfqWHGmDDpn
-         0MFqccD1Yro5CK6f+Dsdo1j4etCBy+2IftsWg2eHuAD23J8PIsVpJKPYJqQkQDGpVOQC
-         qHbmsOekVECxyxQILRMKnYTTpdiJOLi76Xpt59qY4tSfhUBOdFI8P08RvlewYW2MCmZ0
-         5jU9INNvhv+Q88JwzUCA2Pso0gdnhvfCZjTnghjyMcTtibbchzI5nqp/6XDaUogPP+fy
-         xFlg==
-X-Forwarded-Encrypted: i=1; AJvYcCWF7bXgIzhMtQJCzFLRTGCva48h0hEjeBINpjL0mdrKRWNrVa/83I7/QBVFJ7NXNS0W76e87ktkCiJs4NI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwP8451iZZ0kJCDf3NJSPiEDD5NTpgPdb6fHW2z3T0bwkVScakM
-	u4T2DK2RcAF3brKYTKC7rxi2nipAesEu9mo2f87jS+giD3FqjF5BtOV1ykMxjAtgQg64qphSUBf
-	LcTxZ7R3ui0I6nWVJrejB0/CfHqWSoR8r2CQSb54Xew==
-X-Gm-Gg: ASbGncvP9LwI95P2nqxkXDuoYXfbh6kvonzHRLa1uGIkmFdBBGN3J3zBqYB//dUnP8c
-	z31RPFD/Ou5us2DgNyjIXUM2vVAB4nk/V7+3ns9lsqCcW+6jXdjSgij0v80dGfoCICqPN3yYovT
-	ZCm/GuLAe8lPbIe/+weZepr0f2/4M7LQ==
-X-Google-Smtp-Source: AGHT+IHrhwlhpbZgGn/INwXn8JABUEPnTpSZnLrw9spErvT2Y1rpItsFgRTQatYYH58STp3erxQD5FNgCdtGvUD856o=
-X-Received: by 2002:a05:622a:4ccf:b0:48a:2a08:cbef with SMTP id
- d75a77b69052e-49f4624f333mr3037761cf.5.1748023812162; Fri, 23 May 2025
- 11:10:12 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1748023962; x=1748628762;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Iz9ezLEquuwmNTXBvuDUybdRf3cIwWCcnKJopdL/8k0=;
+        b=WcdzdNVJJL+OAhQoWmKJuYKm36zHPK4NDuwRbZ+FZCKYoz28jKBNUUUAwCtngiHr13
+         VA8Jfl+HbWItm2Gpkh858u1flWQ+d5z7tw9WJB3snrx2M0wmroZDayhdqYIyPv82vXzc
+         Z1cOPZ0/FKAEKYRqCziw5dubXPBlZfx5pRejh2OlYP7eUoPH3caQrIq7iqsomfOQPkal
+         aVgPAztaOFIPSK+qB0qd1eDnIxhdBTbGOQPfZLLeARTFSm1FsN+TebLutq7CGYtRxgfj
+         XmXZkL7TDC0np12hPXI/caTOnnOzDw9FPfGDbwi3dphnzEFNpd2TYQP9hfrNkyzTEWAK
+         qhOw==
+X-Forwarded-Encrypted: i=1; AJvYcCUlxt6zAUXPdb+ycDUQ4yhsuFbf5Auj+Wg+NCWlZDZ7XQfSi37g7W1t52fKxjulZzdSYhc11dXLe6bZDrE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzxhVj0vIIoi6N8xUM3ExpbVRb8rRfuzUbepyjV1khL73vvVWee
+	NysaH20FDGc6qzRWCut/Q0PSCRshpgUU7R60j2vUJkbL56hEv9U+D3wy83/xwrxCQeJOcxEna6b
+	Q1RwVP2UDLQVfdP/2+POY7Hy6fIAvn1O0VcZzt+DBbRhKbx5xu4J5WVAf4mxC3OC8lbs=
+X-Gm-Gg: ASbGnctdLs6kydptHRY8TfVNRUBZK/doATWy4TBuMe5w1W8hnd8bvoISEbL+nS0C83g
+	HNwDF4haFVOj1EIQABxU+CVXV5mqBTY7HEEwWSKjOR3VoKZAZy8URDyPyk/pDJiLiCUHtMBHPCj
+	qUcHqpsPg1oimxREUeRtrRmCKbs85fRBzQXmqRrsV9VQ/X8Cf/obhyoJZgXrKWOHFk3XIdh+a+g
+	1wqPGhpOh39QYtK36Yq3V3Td+GCxOEhO8JWu+jMOMAfAOXK88HgIScjXwTKTi8o/noc/GEATklo
+	wKi+SruObRInXkm6jm8C6uuxRKBkTAphE2H8KCtZ4nwyBh9j9HhbLA2h08vvr1eVYQ==
+X-Received: by 2002:a05:6214:234e:b0:6f5:3c5e:27fc with SMTP id 6a1803df08f44-6fa9d296bc1mr2479206d6.4.1748023961759;
+        Fri, 23 May 2025 11:12:41 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IE9d00l5uK2xNvswJipm7yny311lQLmRM/DwcA8svnLDgmL/dpQgbz/qdnNPu7zG//PWDyHrQ==
+X-Received: by 2002:a05:6214:234e:b0:6f5:3c5e:27fc with SMTP id 6a1803df08f44-6fa9d296bc1mr2479076d6.4.1748023961300;
+        Fri, 23 May 2025 11:12:41 -0700 (PDT)
+Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad52d04af13sm1281034966b.18.2025.05.23.11.12.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 23 May 2025 11:12:40 -0700 (PDT)
+Message-ID: <2bce3b88-8810-412e-8115-bceb73d6e8d9@oss.qualcomm.com>
+Date: Fri, 23 May 2025 20:12:38 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250515182322.117840-1-pasha.tatashin@soleen.com>
- <20250515182322.117840-9-pasha.tatashin@soleen.com> <CADrL8HWdAzQRVhLh2Pq1GV2fy6tus66Eo37PvG9A98kUJTihsg@mail.gmail.com>
-In-Reply-To: <CADrL8HWdAzQRVhLh2Pq1GV2fy6tus66Eo37PvG9A98kUJTihsg@mail.gmail.com>
-From: Pasha Tatashin <pasha.tatashin@soleen.com>
-Date: Fri, 23 May 2025 14:09:34 -0400
-X-Gm-Features: AX0GCFsjdnMDiIp0JeLxLW-c2VjwkiovzqMTPqtMLc5iAfcnOak-tebCgQ6toto
-Message-ID: <CA+CK2bB5K5zUg+-PZ2xs+iRhQskGzNgt8+ELN501ni9SM98srQ@mail.gmail.com>
-Subject: Re: [RFC v2 08/16] luo: luo_files: add infrastructure for FDs
-To: James Houghton <jthoughton@google.com>
-Cc: pratyush@kernel.org, jasonmiu@google.com, graf@amazon.com, 
-	changyuanl@google.com, rppt@kernel.org, dmatlack@google.com, 
-	rientjes@google.com, corbet@lwn.net, rdunlap@infradead.org, 
-	ilpo.jarvinen@linux.intel.com, kanie@linux.alibaba.com, ojeda@kernel.org, 
-	aliceryhl@google.com, masahiroy@kernel.org, akpm@linux-foundation.org, 
-	tj@kernel.org, yoann.congal@smile.fr, mmaurer@google.com, 
-	roman.gushchin@linux.dev, chenridong@huawei.com, axboe@kernel.dk, 
-	mark.rutland@arm.com, jannh@google.com, vincent.guittot@linaro.org, 
-	hannes@cmpxchg.org, dan.j.williams@intel.com, david@redhat.com, 
-	joel.granados@kernel.org, rostedt@goodmis.org, anna.schumaker@oracle.com, 
-	song@kernel.org, zhangguopeng@kylinos.cn, linux@weissschuh.net, 
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-mm@kvack.org, 
-	gregkh@linuxfoundation.org, tglx@linutronix.de, mingo@redhat.com, 
-	bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, 
-	rafael@kernel.org, dakr@kernel.org, bartosz.golaszewski@linaro.org, 
-	cw00.choi@samsung.com, myungjoo.ham@samsung.com, yesanishhere@gmail.com, 
-	Jonathan.Cameron@huawei.com, quic_zijuhu@quicinc.com, 
-	aleksander.lobakin@intel.com, ira.weiny@intel.com, 
-	andriy.shevchenko@linux.intel.com, leon@kernel.org, lukas@wunner.de, 
-	bhelgaas@google.com, wagi@kernel.org, djeffery@redhat.com, 
-	stuart.w.hayes@gmail.com, ptyadav@amazon.de
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 02/10] arm64: dts: qcom: sdm845: Expand IMEM region
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
+        Konrad Dybcio <konradybcio@kernel.org>
+Cc: Bjorn Andersson <andersson@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+ <conor+dt@kernel.org>,
+        cros-qcom-dts-watchers@chromium.org,
+        Sai Prakash Ranjan <quic_saipraka@quicinc.com>,
+        Marijn Suijten <marijn.suijten@somainline.org>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20250523-topic-ipa_mem_dts-v1-0-f7aa94fac1ab@oss.qualcomm.com>
+ <20250523-topic-ipa_mem_dts-v1-2-f7aa94fac1ab@oss.qualcomm.com>
+ <fjx7p2ab6c3qvwakrpj3zsjnhvjzwbfszvuwp6edf4rlehxdih@ucovc3r4fdfl>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <fjx7p2ab6c3qvwakrpj3zsjnhvjzwbfszvuwp6edf4rlehxdih@ucovc3r4fdfl>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Authority-Analysis: v=2.4 cv=V9990fni c=1 sm=1 tr=0 ts=6830ba9a cx=c_pps
+ a=UgVkIMxJMSkC9lv97toC5g==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
+ a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=EUspDBNiAAAA:8 a=JLKravJCZqfu2D88U94A:9
+ a=QEXdDO2ut3YA:10 a=1HOtulTD9v-eNWfpl4qZ:22
+X-Proofpoint-ORIG-GUID: -SHDEj7yALWNyzFe2hEyDRLNvw2QetNO
+X-Proofpoint-GUID: -SHDEj7yALWNyzFe2hEyDRLNvw2QetNO
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIzMDE2NSBTYWx0ZWRfX3YyicCVelk8e
+ gI1JXOwTVdVd6gpF9dluENjXGtm/nKlhHQ++RQvYQOQhC29F3x18Fra8BJG52FKS1ilmLQXjhUQ
+ sZ4sUkHThRG65u/vZQrtv57rL7rTDWaQq5WbhPINw7hrBqh1s+ocQk0KY3vWbVEhvxfOV2tfDaR
+ gkvnfWsF4My2I92OvOCSGxzqZmab0hV1MZtcCAZMIeGO5B0ud+6hLVR9OH7CfU3Nu4s76Xn4NTv
+ 1pOP7qrWvCPPg2jZgW06NBWtTmuHIYNEvIYhl+our+lHr/wckWD8Tlh2nK9183Cbd9TZsGUKD1h
+ GSCIksGiuUQTc47wbDcsBTnCULtdIYzifZGMJHehtCmylNOuvh81lgQXqFfm4NEj/sgj0My3G0A
+ cwh9XRme4rKcb7cQHbKxOl33xaOgdyZ8O9X3wqLDwOFNPgvVtQi17z01eEfE1SPj9B9JFcoJ
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-23_06,2025-05-22_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ mlxlogscore=733 bulkscore=0 impostorscore=0 clxscore=1015 priorityscore=1501
+ lowpriorityscore=0 mlxscore=0 spamscore=0 phishscore=0 suspectscore=0
+ adultscore=0 malwarescore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
+ definitions=main-2505230165
 
-On Thu, May 15, 2025 at 7:16=E2=80=AFPM James Houghton <jthoughton@google.c=
-om> wrote:
->
-> On Thu, May 15, 2025 at 11:23=E2=80=AFAM Pasha Tatashin
-> <pasha.tatashin@soleen.com> wrote:
-> > +/**
-> > + * luo_retrieve_file - Find a registered file instance by its token.
-> > + * @token: The unique token of the file instance to retrieve.
-> > + * @file: Output parameter. On success (return value 0), this will poi=
-nt
-> > + * to the retrieved "struct file".
-> > + *
-> > + * Searches the global list for a &struct luo_file matching the @token=
-. Uses a
-> > + * read lock, allowing concurrent retrievals.
-> > + *
-> > + * Return: 0 on success. Negative errno on failure.
-> > + */
-> > +int luo_retrieve_file(u64 token, struct file **file)
-> > +{
-> > +       struct luo_file *luo_file;
-> > +       int ret =3D 0;
-> > +
-> > +       luo_files_recreate_luo_files_xa_in();
-> > +       luo_state_read_enter();
-> > +       if (!liveupdate_state_updated()) {
-> > +               pr_warn("File can be retrieved only in updated state\n"=
-);
-> > +               luo_state_read_exit();
-> > +               return -EBUSY;
-> > +       }
-> > +
-> > +       luo_file =3D xa_load(&luo_files_xa_in, token);
-> > +       if (luo_file && !luo_file->reclaimed) {
-> > +               luo_file->reclaimed =3D true;
->
-> I haven't been able to pay too much attention to the series yet, and I
-> know this was posted as an RFC, so pardon my nit-picking.
->
-> I think you need to have xchg here for this not to be racy, so something =
-like:
->
-> `if (luo_file && !xchg(&luo_file->reclaimed, true))`
->
-> Or maybe you meant to avoid this race some other way; IIUC,
-> luo_state_read_enter() is not sufficient.
+On 5/23/25 12:40 PM, Dmitry Baryshkov wrote:
+> On Fri, May 23, 2025 at 01:18:17AM +0200, Konrad Dybcio wrote:
+>> From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+>>
+>> We need more than what is currently described, expand the region to its
+>> actual boundaries.
+>>
+>> Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+>> ---
+>>  arch/arm64/boot/dts/qcom/sdm845.dtsi | 10 +++++-----
+>>  1 file changed, 5 insertions(+), 5 deletions(-)
+> 
+> Fixes: 948f6161c6ab ("arm64: dts: qcom: sdm845: Add IMEM and PIL info region")
+> 
+> BTW, are you sure about the address? msm-4.9 agrees with the current
+> one.
 
-Thank you for catching this. This is a bug, I actually added a per fd
-mutex lock to struct luo_file that is supposed to be used here. I am
-going to address this in the next version.
+we talked offline, but for the record, it is intentional - parts of IMEM
+are not accessible to the OS and were previously not described
 
-Thanks,
-Pasha
-
->
-> Thanks!
->
-> > +               ret =3D luo_file->fs->retrieve(luo_file->fs->arg,
-> > +                                            luo_file->private_data,
-> > +                                            file);
-> > +               if (!ret)
-> > +                       luo_file->file =3D *file;
-> > +       } else if (luo_file && luo_file->reclaimed) {
-> > +               pr_err("The file descriptor for token %lld has already =
-been retrieved\n",
-> > +                      token);
-> > +               ret =3D -EINVAL;
-> > +       } else {
-> > +               ret =3D -ENOENT;
-> > +       }
-> > +
-> > +       luo_state_read_exit();
-> > +
-> > +       return ret;
-> > +}
+Konrad
