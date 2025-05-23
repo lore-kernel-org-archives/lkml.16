@@ -1,114 +1,96 @@
-Received: from mail-oi1-f178.google.com (mail-oi1-f178.google.com [209.85.167.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 598211A76BB;
-	Fri, 23 May 2025 06:32:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9B398634F;
+	Fri, 23 May 2025 06:35:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747981945; cv=none; b=DsVLurPp4oRP6rvIhk2WdI3eEwtVqkP5WROvG8Hx4vyP5U5AcX8HwEsxm+7YbiyuuAdEjqevVb6Z+0zg+hlyNlqWcF9Ximobb71fLu9biwdE1tLME0Td/fehvaTitgIES5bz4rMrwEGpeWMJUnfZZeDobGwjXZxb+k2TJGMRC90=
+	t=1747982116; cv=none; b=PQh5Rumvmc5UrkiGN2P/vE80e1D2CS1go7qD+wXLrsUkQiRa0YnpoyzkOdGmGqI8r8PPGH1Ak9/S6C5twwqgi2FWBB2uJTJ5nPH1aHsJhN+9d5RC6t7e7ajKL0osC1ZzhX/Kcebn6R9Cs5VHm3R2g2lMPGeiJmQ14FLEDIj+/A4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747981945; c=relaxed/simple;
-	bh=GHzj+vhP0IH7AazDd4aDDdmVsDEWratUTV7OerNI/8A=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=EXOIK6fI0vjSysf73ekfzDeFo9FUl2hIUWK9g/X/gAgsB2NLEoLbD7jgQPVkj/Jy/6qZakYTBeiI35Vd8p6uZxjJ/lHClmwbHuaCNGZiqa/Gm3ly6xdzHiMCStK+igkdWMM37ftN9YqWdLqiuAvywM61dqbiIhEIzjcbH3U+XjQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fl4DkD2t; arc=none smtp.client-ip=209.85.167.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747982116; c=relaxed/simple;
+	bh=ZJ7JmYi7v/9GW6YlI13qU6U2LDd6O+i6xiPd4qimaJs=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=nLIrsdB0J/PGH66Kc83G0AYerl94zemaCiZjEuamWLHcwE9TehgcLeZPQYWNM0Fk+tFOv2pMDCSCsPkbkwm2Ygc2wbL5OEnWFcFh0ixDFGEikgLBl4o2r6Pr1h9iapWUTvbOH5cPoK4yAik6z7rk5Ry2tpDJz9GUPosBYEumKkc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=YSU+IfA0; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fl4DkD2t"
-Received: by mail-oi1-f178.google.com with SMTP id 5614622812f47-3fea67e64caso6416674b6e.2;
-        Thu, 22 May 2025 23:32:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747981943; x=1748586743; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=SQ+RqlSFyQLSDHWP9kEu2/DGiQBnqF1j/beqMyydt5w=;
-        b=fl4DkD2tcpNyJBWoj9N32s337eLA/4QJedSieKirVWbZfwkBlc0qJkRWWAVS0hHmrt
-         a57SK+5gShCHuqr1QqMRNJL4N0VXyFNM6SezaVcmaJkszhFEXuR3l/qkgI+wfeUpcgqv
-         wNtfOGhqyhQp9vgJbRz0ZsuiNjQT3NEm4s5z4teKql7AqfpwiaLwEeWQULHnEf7XPS3e
-         QzBl+6Nhg41S9zisJpsJO30xOzq+LNQX7Z3w+MSlj3FitCaxJUcc5UU3JidX1g6RDQx7
-         OHAN4t19sNRxKFhRM7jGO4puQjxxzYuoXYNpsPymGHKZxdOUQwl1X3fsiB/Yg31pZ9/a
-         e1ww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747981943; x=1748586743;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=SQ+RqlSFyQLSDHWP9kEu2/DGiQBnqF1j/beqMyydt5w=;
-        b=X0BzLF+AIfwEAHkrC9mEFhkhXG/CSUM5ttkWQVguVvuzuGA4V+/tFybTvxNenCIGYR
-         BzjgNHEBVKPMdkPUb3beYDzh97awvL6SCeeNEH4InLOIqNQg1gplVjOjtj1FfbA9yCnx
-         JuWPwIOtXR3g/RbDwhhHuBJIZkhu8KCu/FwgdW9UusLIWd8ZC2Eh4mwkVQgo4DtczThM
-         0/ABOB69R+wCCdJlUN5/SPjjRJsWiuczhk6GdbOl+x18cWvqk7bXs4Kq4Z9mj8QxFdEO
-         plr/HKo77Jup77lWrLgTz8te2X6oF8EDcx3MY7N5lbzhZ3qtSqG919tHyxHDQUS88HfE
-         uRog==
-X-Forwarded-Encrypted: i=1; AJvYcCUYKKUc9UdpKHhdEhzdeA/55wgFQ6j8V3ellxAUlxasmlaGu7lz7Kgi4OiO/ueMyyb8usJ6+VMr5K8+ewI0@vger.kernel.org, AJvYcCVe/xibO1moPl0qpJ3MlvHYF294GtmSKQOw0taaelD4T2o8D7NZy+wb4isGtaC2uQUqeOSujYCFVjLjqQ==@vger.kernel.org, AJvYcCXmXyMyEFs6RA2mDm2dDSyCbsVjica0zcVSTtlPzf8C8jUOma/iNsm+VxxO0tLp5TogNHyKACuXU/O/@vger.kernel.org
-X-Gm-Message-State: AOJu0YyHjy/dYHsXj2Q9A5oAgAe6Vs0FoRVId3ubHo/YXmZ/gQJjfY5Z
-	ewCZdbZXPurxbxvSinz91WWbES68LOES6Ky5NIgpy53IdI3xU1IaHphDkqG4bQ==
-X-Gm-Gg: ASbGncugR1nvGvN1/BenTjrdKZHgQF5rZRpOMpAtKWysOMjZefjo4GNIahGnPXmUEbs
-	jayF7bXwD/Y4Z1yMsMDl7UWQ9Yg2nTQIGV2VOahk1Xr3lvoOs1QSFSB5leFnztU4f8nkJ/I3BnX
-	gOQU9fKMS+hXrdhhAsFLjO+ejW879D4jX560z5qyX422iRkqx6agb36HtP2bgysO0IcrWIohy68
-	9qayD11KHJjA9vNcPbA1JMOpHfVYiDxeqF7XbWy9SDudWexyUlQQwBAlMd1yg6Un7VsD9K7jpbY
-	RJPGlYENK8oKDyydoRd+mgPG7lo=
-X-Google-Smtp-Source: AGHT+IGhnyWT9GvTWolu4b2fI6AfbQOl7Zyn8oBKkKaRYw2hxxcF6ho7p3hKkHjd6ugynOQBEUrCWA==
-X-Received: by 2002:a05:6a00:b90:b0:740:9d7c:8f5c with SMTP id d2e1a72fcca58-745ed8f662cmr3137860b3a.18.1747981932622;
-        Thu, 22 May 2025 23:32:12 -0700 (PDT)
-Received: from ryzen.lan ([2601:644:8200:dab8::a86])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-742a97398f8sm12177783b3a.78.2025.05.22.23.32.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 May 2025 23:32:12 -0700 (PDT)
-From: Rosen Penev <rosenp@gmail.com>
-To: linux-wireless@vger.kernel.org
-Cc: =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@toke.dk>,
-	nbd@ndb.name,
-	Johannes Berg <johannes@sipsolutions.net>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS),
-	linux-kernel@vger.kernel.org (open list),
-	linux-mips@vger.kernel.org (open list:MIPS)
-Subject: [PATCHv3 2/5] wifi: ath9k: ahb: reorder includes
-Date: Thu, 22 May 2025 23:32:04 -0700
-Message-ID: <20250523063207.10040-3-rosenp@gmail.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250523063207.10040-1-rosenp@gmail.com>
-References: <20250523063207.10040-1-rosenp@gmail.com>
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="YSU+IfA0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1747982110;
+	bh=jL9lz3ytBDcvyIRB8gXr8jQsMb0pdoHCK033w9X7VUA=;
+	h=Date:From:To:Cc:Subject:From;
+	b=YSU+IfA0KjMkSLtxu3DQFeMIcFJKnPl9/jjQ//Kz+yA0BXtq1JOH7XL6S7Qa0/eEB
+	 2VmkI+4RZSLF84srrdv2y1PeLjUekx97xLtlI8TLXKpTFsnEsW7KHSa9Ph5xsklYFc
+	 9k7SudQ5n8GTtZzONQ9CSdgTEF2uCyAsTPZfWGO8wEBxGUog3NCzyhRlOOY0IYK6LW
+	 FjHiTfGX/9tn805oH8kJuWG1r7y9e2aB5S7ydxU4MTvw33INWD1XS8XDWRkRZCPG1y
+	 6Lfn7QkGn8E4xRnuCS7EJPglb+s25Kltyd9yp5bmOlpWgexs5MvLVTsBB8PjmIUcpc
+	 K6hNWCrG110PQ==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4b3b4Z0cDcz4wxh;
+	Fri, 23 May 2025 16:35:10 +1000 (AEST)
+Date: Fri, 23 May 2025 16:35:09 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Greg KH
+ <greg@kroah.com>, Arnd Bergmann <arnd@arndb.de>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
+ Mailing List <linux-next@vger.kernel.org>
+Subject: linux-next: duplicate patches in the nvmem tree
+Message-ID: <20250523163509.683d19a2@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="Sig_/.XzQSY++hhf2Zn1W0x2M5GR";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-Alphabetic includes are easier to look at and to make further changes to
-them.
+--Sig_/.XzQSY++hhf2Zn1W0x2M5GR
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Rosen Penev <rosenp@gmail.com>
----
- drivers/net/wireless/ath/ath9k/ahb.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+Hi all,
 
-diff --git a/drivers/net/wireless/ath/ath9k/ahb.c b/drivers/net/wireless/ath/ath9k/ahb.c
-index d2a97e74f451..1ffec827ed87 100644
---- a/drivers/net/wireless/ath/ath9k/ahb.c
-+++ b/drivers/net/wireless/ath/ath9k/ahb.c
-@@ -16,10 +16,11 @@
-  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
-  */
- 
-+#include <linux/mod_devicetable.h>
-+#include <linux/module.h>
- #include <linux/nl80211.h>
- #include <linux/platform_device.h>
--#include <linux/module.h>
--#include <linux/mod_devicetable.h>
-+
- #include "ath9k.h"
- 
- static const struct platform_device_id ath9k_platform_id_table[] = {
--- 
-2.49.0
+The following commits are also in the char-misc tree as different commits
+(but the same patches):
 
+  8d2900cc1411 ("nvmem: Add apple-spmi-nvmem driver")
+  342ad99689be ("dt-bindings: spmi: Add Apple SPMI NVMEM")
+  1656ca6bf14d ("nvmem: Remove unused nvmem cell table support")
+  c708bbd57d15 ("nvmem: zynqmp_nvmem: unbreak driver after cleanup")
+  f1a714e1cd0d ("nvmem: rmem: select CONFIG_CRC32")
+
+These are commits
+
+  fe91c24a551c ("nvmem: Add apple-spmi-nvmem driver")
+  483324549267 ("dt-bindings: spmi: Add Apple SPMI NVMEM")
+  01465f296a68 ("nvmem: Remove unused nvmem cell table support")
+  fe8abdd175d7 ("nvmem: zynqmp_nvmem: unbreak driver after cleanup")
+  7a93add1d31f ("nvmem: rmem: select CONFIG_CRC32")
+
+in the char-misc tree.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/.XzQSY++hhf2Zn1W0x2M5GR
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgwFx0ACgkQAVBC80lX
+0Gzj9ggAkMvWu59aNZdINxbwJc7gjPfPnw3jcu9jwfaOkXaZGdHgj2VYkfyoLY3v
+WZIcRRue0uvwB2Z6QH6aN+h0Pv2/Kh6J1sBs7YO8zbNd30vA1l6/mG46rT7eYqLf
+9hHm6TOoQuIMy3rSiwJTlXtQfS4Rh3oG3LodAzMQ6Z1EwJghnLJs+ZtZTskBooaB
+LVH4MHRxrZhFSGZ/BcKJELH4RwC3Ub11ViW+/v5Z+b8V4Y28imUvVO+o6p4Fs1YG
+SOqsmH9lmtbfRUVcw682NwwZ8nkJa8TS+bsFoJeKHijXW1MIRfOflQ8yKw8bUCis
+RxfE/2mnxkXPoF2HtQMx5ZOwCzqbCQ==
+=KqoU
+-----END PGP SIGNATURE-----
+
+--Sig_/.XzQSY++hhf2Zn1W0x2M5GR--
