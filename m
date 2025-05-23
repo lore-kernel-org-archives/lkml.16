@@ -1,117 +1,156 @@
-Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-177.mta1.migadu.com (out-177.mta1.migadu.com [95.215.58.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2F5A291157
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 13:19:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2653B291157;
+	Fri, 23 May 2025 13:19:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748006371; cv=none; b=uho7iNuEuSNmkWuZpkEajmVrwJitNFkeXOjNlGJNthGzfc1RB4jKaWV4X10u7MaTiiBYUCYJ1kEnzCe54CPy/TRX1QkySrV95aEgHx4/Wq7Xk7F8AkwXtSlK8Yg3TvrXPaNv7n6YxjifQtY6ctWluFu7toGYoLwHPJTWcfZAd0k=
+	t=1748006384; cv=none; b=EockvWBs8WUl1SBo/dJ2vBjvCNCQzEC5rd2STFqbeTuoAkgLgh+MmtyZgO2WmKDTFLM7jIHhtNu0Jv3MLasDF+TxYSnJLhXoHtrUi2VWN6Ajnw88jL2yTMfdYzpcMky3cbfr1uUUgL+yA18ikPVcAQx9Cn/6hdB9WyrF+B35hjg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748006371; c=relaxed/simple;
-	bh=weVIVWSmAEm0vAps5JJpC+7tazPUvlBdD62+QheOM+8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ogX0Z+jCvH16Q3uEpsWGc6f1+J1v6r0Pjod8rNc6TyRmatXp5s/F+CFlrC9PDOAA/vJZeLLcbCKAraQpEXouLPw6XrcJloFfLpHS0WBWm+NBpHW8cPXggo4X1YfgQPhBqKcu4/qsa7lpnERmXkmL7GdOEV25Gug3LBsP+l7kMLQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=c460AcOz; arc=none smtp.client-ip=209.85.222.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1748006384; c=relaxed/simple;
+	bh=nc44uegTtaBLfa/PspnBn79HdTIQhDX0Wc6fqNkOBjU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=OLQ7RdaqT8XqF7r1IM6jZ+NboLRNWfAZTl5gP04OPF5QtI/O+fXqI4VjTvJ+KjejmPJHrQJb0M1s7xsy8oy7WfA+tRBBTijTxtn7SwWBPCgkUK+bpMV9CaG/oNS6jvC775tBX+ApUCmCMcyWm1gUtfmBJm7PpL4INJN8ysjzDAI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=nBTHqycH; arc=none smtp.client-ip=95.215.58.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="c460AcOz"
-Received: by mail-qk1-f172.google.com with SMTP id af79cd13be357-7c560c55bc1so884288285a.1
-        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 06:19:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1748006369; x=1748611169; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=wxyrfP33qC8ALCV6TibxZ8ffP3Xham0td5+3H8syoiE=;
-        b=c460AcOzuYYjeF+SezJ4YwxXN4T3pHzG3QjtXxx0mrZhn3vDtG6RETrb+0z2F2ijXm
-         fEaINOST5DaCgAy0H6cBasspgJx5dysEGjivFdLLciKatewrFde+MiBwXIFp7b1M5aOO
-         d4hPNg17kELhhoNAD9I9WCdOyIGYJcBpjI4GgCsr7vLu2GxnXwA6/kiRONd4CGgemk4i
-         OXmeb32JRLIVgB2GHytXIlhtLTeQcqoRgXtWhW4DC6I2kAmnE1246tjdzFK7eN5F+VsK
-         2as8pS/x+lkmIS2l+7MzjK7RWEljvm+kvB0hDfOg3lqA89rXO1q9tHaUBVLkQmjSpv2t
-         y84Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748006369; x=1748611169;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=wxyrfP33qC8ALCV6TibxZ8ffP3Xham0td5+3H8syoiE=;
-        b=K5VGB9e51mgVmFN93xBMui3TqVR4N66ww+YuxawIDdcVCQwhtHN/OMxIBX/Rtip8st
-         r2F05Wet838Mc9b+wlbppm3Iz92PtKwjeTVVe1XBK6yE6VbTjZ2JfDYP8VAvujiZ93II
-         RKe7qg7Q4pR/ppSKDP6DvQ0vLIJRMGCUVPPcVC6HwM5+TjmPrNKIiouyyUATwzQtySjI
-         NUkY/mg0+aWYY9/hb/uHxb2dFx7FFxN0g6dPRIuq46P1fsYqvUeXMPlKBj96Pb6Cwb5R
-         8cgEZVFNwsBcjK0JQEl5QJX+ywPWbNiV2zGdk7rkU1YPNcjNiDhTbZPaq6s1I1U6vn/a
-         +Ung==
-X-Forwarded-Encrypted: i=1; AJvYcCViKA/72HIwSAgU01OGiIcqn+OkR8pLJyh92J7CC34jUpr5+OWLo5dPU5JmNzmXHyhVnQgse8dAr6shXJs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzpXaxm55WapC3ZY0oYX9+7YzUgeHhrbhyo562rngSzGGgs6z2y
-	wTy/FrDIC787tz+eXpzLFXwMhbzeuM7aFdjKGezNLe8Txx6jYYc8Qts4hsXBPzNr/h5tL718kxL
-	bUDYa610ZqAPZbK3oU1TeEQYHLbv3tvUcf3zoIxK8eg==
-X-Gm-Gg: ASbGncs4c3ubVx+zRrZ5cR7q5luIOv/Sa+wdbhDP32c0pkoBK5V+1wf1BAOIf4/8Omc
-	MMWypZPQZInm4YL/+87VlCXv4sZ8MbIGWcIj4/a8xuyYUbk5Sin8Q1oCxvRumca1V9WHXUKZ7rC
-	EjsTioVuBZe5pFzmHq45Ox3NbHUAkA39qe+NDOuMENwjDzDBp6gQHzTuwSLLEP6uBsyvm0A6Tw/
-	w==
-X-Google-Smtp-Source: AGHT+IHyjvNAAtHNM58ZIM56gNpC2I5XziXsRadQQZ+dhZZ3rU8qNnJxcPg4bPBm0zEL2RJNey22Zg6GikdUy4Olj2Y=
-X-Received: by 2002:a05:620a:400c:b0:7c0:c332:1cdb with SMTP id
- af79cd13be357-7cd4677d30dmr4029786585a.38.1748006368879; Fri, 23 May 2025
- 06:19:28 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="nBTHqycH"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1748006378;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=YI9vOyiOj/PuepHUap7YF6scm7WgxYFdNjSyMkhd8EQ=;
+	b=nBTHqycH+yvB3uSaBCk/npTNGvfHjK4j58ohsdK1C4HRvIm24xgP1hnNdrBUIbeReeSN3R
+	CbhQ9XLaBvWdPcbmJ/tDNYRdHyLK4j7UpJ+WCp7kzN7FbqpnmRNcs5Vp6mycGPDmduPNVe
+	QXz9B3PD9l4N96SwtEZ5JNyQSweqYoE=
+From: Jiayuan Chen <jiayuan.chen@linux.dev>
+To: bpf@vger.kernel.org
+Cc: Jiayuan Chen <jiayuan.chen@linux.dev>,
+	Boris Pismenny <borisp@nvidia.com>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	KP Singh <kpsingh@kernel.org>,
+	Stanislav Fomichev <sdf@fomichev.me>,
+	Hao Luo <haoluo@google.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Mykola Lysenko <mykolal@fb.com>,
+	Shuah Khan <shuah@kernel.org>,
+	Ihor Solodrai <isolodrai@meta.com>,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Subject: [PATCH bpf-next v1 0/2] bpf,ktls: Fix data corruption caused by using bpf_msg_pop_data() in ktls
+Date: Fri, 23 May 2025 21:18:57 +0800
+Message-ID: <20250523131915.19349-1-jiayuan.chen@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CA+G9fYv08Rbg4f8ZyoZC9qseKdRygy8y86qFvts5D=BoJg888g@mail.gmail.com>
- <6tgxbull5sqlxbpiw3jafxtio2a3kc53yh27td4g2otb6kae5t@lr6wjawp6vfa>
-In-Reply-To: <6tgxbull5sqlxbpiw3jafxtio2a3kc53yh27td4g2otb6kae5t@lr6wjawp6vfa>
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Fri, 23 May 2025 18:49:17 +0530
-X-Gm-Features: AX0GCFv47L9zNz_HqH7izio-QcYYMfFmCuTMugR2i0Gz9XAi2gWfyAbx-zg4GTQ
-Message-ID: <CA+G9fYsjBXvm9NNKRbVo_7heX1537K8yOjH7OaSEQhGRmkLvgA@mail.gmail.com>
-Subject: Re: riscv gcc-13 allyesconfig error the frame size of 2064 bytes is
- larger than 2048 bytes [-Werror=frame-larger-than=]
-To: Kent Overstreet <kent.overstreet@linux.dev>
-Cc: linux-bcache@vger.kernel.org, open list <linux-kernel@vger.kernel.org>, 
-	lkft-triage@lists.linaro.org, Linux Regressions <regressions@lists.linux.dev>, 
-	Arnd Bergmann <arnd@arndb.de>, Dan Carpenter <dan.carpenter@linaro.org>, 
-	Anders Roxell <anders.roxell@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Thu, 22 May 2025 at 22:18, Kent Overstreet <kent.overstreet@linux.dev> wrote:
->
-> On Thu, May 22, 2025 at 06:59:53PM +0530, Naresh Kamboju wrote:
-> > Regressions on riscv allyesconfig build failed with gcc-13 on the Linux next
-> > tag next-20250516 and next-20250522.
-> >
-> > First seen on the next-20250516
-> >  Good: next-20250515
-> >  Bad:  next-20250516
-> >
-> > Regressions found on riscv:
-> >  - build/gcc-13-allyesconfig
-> >
-> > Regression Analysis:
-> >  - New regression? Yes
-> >  - Reproducible? Yes
-> >
-> > Build regression: riscv gcc-13 allyesconfig error the frame size of
-> > 2064 bytes is larger than 2048 bytes [-Werror=frame-larger-than=]
->
-> Is this a kmsan build? kmsan seems to inflate stack usage by quite a
-> lot.
+Cong reported an issue where running 'test_sockmap' in the current
+bpf-next tree results in an error [1].
 
-This is allyesconfig build which has KASAN builds.
+The specific test case that triggered the error is a combined test
+involving ktls and bpf_msg_pop_data().
 
-CONFIG_HAVE_ARCH_KASAN=y
-CONFIG_HAVE_ARCH_KASAN_VMALLOC=y
-CONFIG_CC_HAS_KASAN_GENERIC=y
-CONFIG_CC_HAS_WORKING_NOSANITIZE_ADDRESS=y
-CONFIG_KASAN=y
-CONFIG_CC_HAS_KASAN_MEMINTRINSIC_PREFIX=y
-CONFIG_KASAN_GENERIC=y
-# CONFIG_KASAN_OUTLINE is not set
-CONFIG_KASAN_INLINE=y
-CONFIG_KASAN_STACK=y
-CONFIG_KASAN_VMALLOC=y
-CONFIG_KASAN_KUNIT_TEST=y
-CONFIG_KASAN_EXTRA_INFO=y
+Root Cause:
+When sending plaintext data, we initially calculated the corresponding
+ciphertext length. However, if we later reduced the plaintext data length
+via socket policy, we failed to recalculate the ciphertext length.
 
-- Naresh
+This results in transmitting buffers containing uninitialized data during
+ciphertext transmission.
+
+This causes uninitialized bytes to be appended after a complete
+"Application Data" packet, leading to errors on the receiving end when
+parsing TLS record.
+
+This issue has existed for a long time but was only exposed after the
+following test code was merged.
+commit 47eae080410b ("selftests/bpf: Add more tests for test_txmsg_push_pop in test_sockmap")
+
+Although we already had tests for pop data before this commit, the
+pop data length was insufficient (less than 5 bytes). This meant that the
+corrupted TLS records with data length <5 bytes were cached without being
+parsed, resulting in no error being triggered.
+
+After this fix, all tests pass.
+
+ 1/ 6  sockmap::txmsg test passthrough:OK
+ 2/ 6  sockmap::txmsg test redirect:OK
+ 3/ 2  sockmap::txmsg test redirect wait send mem:OK
+ 4/ 6  sockmap::txmsg test drop:OK
+ 5/ 6  sockmap::txmsg test ingress redirect:OK
+ 6/ 7  sockmap::txmsg test skb:OK
+ 7/12  sockmap::txmsg test apply:OK
+ 8/12  sockmap::txmsg test cork:OK
+ 9/ 3  sockmap::txmsg test hanging corks:OK
+10/11  sockmap::txmsg test push_data:OK
+11/17  sockmap::txmsg test pull-data:OK
+12/ 9  sockmap::txmsg test pop-data:OK
+13/ 6  sockmap::txmsg test push/pop data:OK
+14/ 1  sockmap::txmsg test ingress parser:OK
+15/ 1  sockmap::txmsg test ingress parser2:OK
+16/ 6 sockhash::txmsg test passthrough:OK
+17/ 6 sockhash::txmsg test redirect:OK
+18/ 2 sockhash::txmsg test redirect wait send mem:OK
+19/ 6 sockhash::txmsg test drop:OK
+20/ 6 sockhash::txmsg test ingress redirect:OK
+21/ 7 sockhash::txmsg test skb:OK
+22/12 sockhash::txmsg test apply:OK
+23/12 sockhash::txmsg test cork:OK
+24/ 3 sockhash::txmsg test hanging corks:OK
+25/11 sockhash::txmsg test push_data:OK
+26/17 sockhash::txmsg test pull-data:OK
+27/ 9 sockhash::txmsg test pop-data:OK
+28/ 6 sockhash::txmsg test push/pop data:OK
+29/ 1 sockhash::txmsg test ingress parser:OK
+30/ 1 sockhash::txmsg test ingress parser2:OK
+31/ 6 sockhash:ktls:txmsg test passthrough:OK
+32/ 6 sockhash:ktls:txmsg test redirect:OK
+33/ 2 sockhash:ktls:txmsg test redirect wait send mem:OK
+34/ 6 sockhash:ktls:txmsg test drop:OK
+35/ 6 sockhash:ktls:txmsg test ingress redirect:OK
+36/ 7 sockhash:ktls:txmsg test skb:OK
+37/12 sockhash:ktls:txmsg test apply:OK
+38/12 sockhash:ktls:txmsg test cork:OK
+39/ 3 sockhash:ktls:txmsg test hanging corks:OK
+40/11 sockhash:ktls:txmsg test push_data:OK
+41/17 sockhash:ktls:txmsg test pull-data:OK
+42/ 9 sockhash:ktls:txmsg test pop-data:OK
+43/ 6 sockhash:ktls:txmsg test push/pop data:OK
+44/ 1 sockhash:ktls:txmsg test ingress parser:OK
+45/ 0 sockhash:ktls:txmsg test ingress parser2:OK
+Pass: 45 Fail: 0
+
+[1]: https://lore.kernel.org/bpf/CAM_iQpU7=4xjbefZoxndKoX9gFFMOe7FcWMq5tHBsymbrnMHxQ@mail.gmail.com/
+
+Jiayuan Chen (2):
+  bpf,ktls: Fix data corruption when using bpf_msg_pop_data() in ktls
+  selftests/bpf: Add test to cover ktls with bpf_msg_pop_data
+
+ net/tls/tls_sw.c                              | 15 +++
+ .../selftests/bpf/prog_tests/sockmap_ktls.c   | 91 +++++++++++++++++++
+ .../selftests/bpf/progs/test_sockmap_ktls.c   |  4 +
+ 3 files changed, 110 insertions(+)
+
+-- 
+2.47.1
+
