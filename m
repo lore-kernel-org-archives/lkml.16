@@ -1,134 +1,112 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fhigh-a6-smtp.messagingengine.com (fhigh-a6-smtp.messagingengine.com [103.168.172.157])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE4EFE552;
-	Fri, 23 May 2025 12:49:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B11F32576;
+	Fri, 23 May 2025 12:50:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748004594; cv=none; b=akvTevUhY5OIMo1TgwWm8zq+tq9GpwFY+aq6ZMa7mUYBZmmCd0VtGgn0ilAW6gSnzaXYe7ciMkDIbUAWIjj7vbfE3hsfKPfGdc8OcZOR0trh7etrP+/X72MgwjBNdlPTRWgUWVCmuVoyIansMcwtU640S8hyA70ciLzfBglfUm0=
+	t=1748004624; cv=none; b=bYz7Ck+qkO/jV5Il441CeWqmr9plagI+fFmOdQjXo/VfslPKvt7VNQAfy8bG7BxSVFANwodchsccLGO/mBqxS2Vdur4/cdSiu+doC+EWx5+NAtUJoDYVFFryNV1FUjFXyQhM58qwxIrLMOnsz1NqYL8u4hHpRBbKjmo2oC88vhE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748004594; c=relaxed/simple;
-	bh=lTdsbseJ6wgeYEPSolOTU0dSxK7rrPUSyxs/Ke9nS0k=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=TV+2PL0AY8QQqn8Qmu6V0OxqkKRZ7YY3h3DA6evQYfEgV2H7pomivxccqb9M01ueRyO7DCnDMeTYXJVZctIx07Dpo1YL8QXy1ypqnxfqRuyY0NhkC/f7Oy9RPqr6+F+cfRR6zpcS1e4gk9PgL1ovgi4wVa/YOBnJpVzN4tAHaus=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gFmu4nSN; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748004624; c=relaxed/simple;
+	bh=s68+E7ctAYoJcPBM1D4+htBme6u+WOWt5Olodz1asVU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=J+gP72jSaciuL4QDkHkoFvgju9AIFLhvg8y8m9yCdZUyKvcA4KpsGcIt/M3QCnA8e6bH5KPE7QwckHmgGfB98TVo029v7ZqqE8hbAv3bhvs97ggV3N9xeohVbZe5jVdN3qEb2/4bRil/fGvHAjMy8BBWKzBCDqFyH/CXhHZqb8E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kroah.com; spf=pass smtp.mailfrom=kroah.com; dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b=LPIRd/8Q; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=cCsyRVd/; arc=none smtp.client-ip=103.168.172.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kroah.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kroah.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gFmu4nSN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 353EEC4CEE9;
-	Fri, 23 May 2025 12:49:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748004594;
-	bh=lTdsbseJ6wgeYEPSolOTU0dSxK7rrPUSyxs/Ke9nS0k=;
-	h=From:To:Cc:Subject:Date:From;
-	b=gFmu4nSNot0I4YTwHHaG3Zqiw8ShgLpMckMETZnybv7SQd03sYeYnytmF3Frkap55
-	 2h8Evg6zzanwxR19yGAB+bfDCq8+3OFrxWpUvbNfLN6+L09RJtoUdtRIsbRUQuyG9P
-	 optZ1TzvJkro1x6aqw/P0z6GoeCOccQ7wQ6ud6IyIVSsBE1U6o4BctQo57KvE1DiaG
-	 NKNA4RXD9DRSkMNWnzEqEbYb7AaulX1bSP0joN69Wr6yeX3pOBfdO8aWqsxOn83tRA
-	 7JPwZ8TIrwSZfrmlUW3BGbkyd2S33ILNIso7ob9HvHQnYvKNMS7PUzXyavHtE1uLQF
-	 q91REFQqfjKjw==
-From: Christian Brauner <brauner@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Christian Brauner <brauner@kernel.org>,
-	linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [GIT PULL for v6.16] vfs selftests
-Date: Fri, 23 May 2025 14:49:41 +0200
-Message-ID: <20250523-vfs-selftests-0c172b9ac74f@brauner>
-X-Mailer: git-send-email 2.47.2
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="LPIRd/8Q";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="cCsyRVd/"
+Received: from phl-compute-10.internal (phl-compute-10.phl.internal [10.202.2.50])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id 87E371140178;
+	Fri, 23 May 2025 08:50:20 -0400 (EDT)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-10.internal (MEProxy); Fri, 23 May 2025 08:50:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm3; t=1748004620; x=1748091020; bh=PwwEtOtJCz
+	k3vlOMeCM+Nvpswbr381LHbWSMQWgkYPA=; b=LPIRd/8Q1IPcVO5ZeGx6qmsVCn
+	6d6deZwnvkoyzEnZW6/HaT0GGbwxcqc66jUSecG3T8AMh2fdsa8fkJrOD61J+AAW
+	P04UP1kQNyzK8GsURUvv/Nbab/UPDsHU9rSaFhZjOLl554nr6EzsG2F79PtA1Cgj
+	5GIQ5rVZimrDLuj+C+szmlkXguBTG1oFdW2FDX7QGaMlk9JAyqcTCScxkvJ63Nc9
+	W4PkUrw9qLa95YMum2DwHs7ilfK08wo0AZJHoMXwcRmdhgI5lUj0iSG5Y5okDsTO
+	fOWEYac5SQFY4hN7CdTKncuIBoSq+HFB4BiySNKUXvbGJZSpiCAoqrEjuylw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
+	1748004620; x=1748091020; bh=PwwEtOtJCzk3vlOMeCM+Nvpswbr381LHbWS
+	MQWgkYPA=; b=cCsyRVd/nk9pwzNZfqqn0OD9Cj3eUUNwd9yqtKwgW1EsCuwrZLJ
+	2Tu6blSKJL/r4iWAuV+yHERB65YfA8wFpiuvdu8++QX0w4D4abNVTxrB9uMmLPOF
+	cnuJDETRpMhzvXsKe+gOAoLJVB4bhD56IfT7V0A9aWdjqHy3agQrHiE67xdhR6Z/
+	IDaAbP4SFRChaPSgC3HJe70Z3JzB2ZVs/9oqYxClSNN4soqn5xMNzawo3VJjqKm1
+	dHubj3AxWvaxO2/bhtpBBZmLd7G4YCgU4juKkujHAauuI72Ed4utuZsAsi2NdoHK
+	PNuUm/n++DdyPkTOYGQGIkm6drriycuEwaA==
+X-ME-Sender: <xms:C28waIVDDGXGg24pAg8nJezolkWrsSyJFI9o3_oqWOC7xo17QQxa3w>
+    <xme:C28waMlZdOckPzignd6CbbJrJSNQx7Rz0uCweWl26lTqtNUt1Afl9jsQXKzNdLdn_
+    jv5R5R55CphiA>
+X-ME-Received: <xmr:C28waMYo4R9i_AKV1jy5tlIi5jRcKuvKPu6EEDPNvh9OFM52ymGxdusEqi6Hc4sVC7m4p6FC9DDrkTHDwq2wqaFllRsTblk>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgdekkeelucdltddurdegfedvrddttd
+    dmucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgf
+    nhhsuhgsshgtrhhisggvpdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttd
+    enucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhgg
+    tggujgesthdtredttddtvdenucfhrhhomhepifhrvghgucfmjfcuoehgrhgvgheskhhroh
+    grhhdrtghomheqnecuggftrfgrthhtvghrnhepheegvdevvdeljeeugfdtudduhfekledt
+    iefhveejkeejuefhtdeufefhgfehkeetnecuvehluhhsthgvrhfuihiivgeptdenucfrrg
+    hrrghmpehmrghilhhfrhhomhepghhrvghgsehkrhhorghhrdgtohhmpdhnsggprhgtphht
+    thhopedutddpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepshhfrhestggrnhgsrd
+    gruhhughdrohhrghdrrghupdhrtghpthhtohepjhhonhgrthhhrghnrdhsthhrohhuuges
+    rghmugdrtghomhdprhgtphhtthhopehrrgguhhgvhidrshhhhigrmhdrphgrnhguvgihse
+    grmhgurdgtohhmpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgv
+    rhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqnhgvgihtsehvghgvrhdrkhgvrh
+    hnvghlrdhorhhg
+X-ME-Proxy: <xmx:C28waHWs62z-EH0hpd7LOE6wuJ8wVUeZ9Df7Fusnuw-D-mBGKoRAWQ>
+    <xmx:C28waClQacsxU1uUlODW_VRX58-kkNYxL55PooJdhgSRI3lTMzozgw>
+    <xmx:C28waMeTji5nTaXeK45kdnJoU62YqGPa_uNHffHPpXCVWQum4L9eCw>
+    <xmx:C28waEFHiyus5Ib_0vQhzQXk4cblrKqcQUOPhm9jo-2NnswiPfjw_g>
+    <xmx:DG8waFYzuIR48AtLn_U-YiERSA-PjGMSILrbyFs7dtKrjxVoiqrO7VDw>
+Feedback-ID: i787e41f1:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
+ 23 May 2025 08:50:19 -0400 (EDT)
+Date: Fri, 23 May 2025 14:50:17 +0200
+From: Greg KH <greg@kroah.com>
+To: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: Jonathan Stroud <jonathan.stroud@amd.com>,
+	Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Next Mailing List <linux-next@vger.kernel.org>
+Subject: Re: linux-next: build warning after merge of the usb tree
+Message-ID: <2025052309-moisten-antiquity-a888@gregkh>
+References: <20250523150934.09d99b2b@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3628; i=brauner@kernel.org; h=from:subject:message-id; bh=lTdsbseJ6wgeYEPSolOTU0dSxK7rrPUSyxs/Ke9nS0k=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWQY5L3iErWcb1krpPjzxqOibsEXB+Lv2p+N361y64Hmx pczNzQLd5SyMIhxMciKKbI4tJuEyy3nqdhslKkBM4eVCWQIAxenAEykhIHhfykL87yy9Gc8RkJH n9oKq/O/f8SzNcQy054haY5p9NZJ0owMWyVTnApMvT/1NaT1RNzmdZ9+M+jN872vmDodFJgWZr3 lAQA=
-X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250523150934.09d99b2b@canb.auug.org.au>
 
-Hey Linus,
+On Fri, May 23, 2025 at 03:09:34PM +1000, Stephen Rothwell wrote:
+> Hi all,
+> 
+> After merging the usb tree, today's linux-next build (arm
+> multi_v7_defconfig) produced this warning:
+> 
+> drivers/usb/misc/onboard_usb_dev.c:358:12: warning: 'onboard_dev_5744_i2c_write_byte' defined but not used [-Wunused-function]
+>   358 | static int onboard_dev_5744_i2c_write_byte(struct i2c_client *client, u16 addr, u8 data)
+>       |            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> drivers/usb/misc/onboard_usb_dev.c:313:12: warning: 'onboard_dev_5744_i2c_read_byte' defined but not used [-Wunused-function]
+>   313 | static int onboard_dev_5744_i2c_read_byte(struct i2c_client *client, u16 addr, u8 *data)
+>       |            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> 
+> Introduced by commit
+> 
+>   1143d41922c0 ("usb: misc: onboard_usb_dev: Fix usb5744 initialization sequence")
 
-/* Summary */
+Should now be fixed, thanks!
 
-This contains various cleanups, fixes, and extensions for out filesystem
-selftests.
-
-/* Testing */
-
-gcc (Debian 14.2.0-19) 14.2.0
-Debian clang version 19.1.7 (3)
-
-No build failures or warnings were observed.
-
-/* Conflicts */
-
-Merge conflicts with mainline
-=============================
-
-No known conflicts.
-
-Merge conflicts with other trees
-================================
-
-No known conflicts.
-
-The following changes since commit 92a09c47464d040866cf2b4cd052bc60555185fb:
-
-  Linux 6.15-rc5 (2025-05-04 13:55:04 -0700)
-
-are available in the Git repository at:
-
-  git@gitolite.kernel.org:pub/scm/linux/kernel/git/vfs/vfs tags/vfs-6.16-rc1.selftests
-
-for you to fetch changes up to 7ec091c55986423b6460604a6921e441e23d68c7:
-
-  Merge patch series "filesystems selftests cleanups and fanotify test" (2025-05-12 11:40:18 +0200)
-
-Please consider pulling these changes from the signed vfs-6.16-rc1.selftests tag.
-
-Thanks!
-Christian
-
-----------------------------------------------------------------
-vfs-6.16-rc1.selftests
-
-----------------------------------------------------------------
-Amir Goldstein (8):
-      selftests/filesystems: move wrapper.h out of overlayfs subdir
-      selftests/fs/statmount: build with tools include dir
-      selftests/pidfd: move syscall definitions into wrappers.h
-      selftests/mount_settattr: remove duplicate syscall definitions
-      selftests/fs/mount-notify: build with tools include dir
-      selftests/filesystems: create get_unique_mnt_id() helper
-      selftests/filesystems: create setup_userns() helper
-      selftests/fs/mount-notify: add a test variant running inside userns
-
-Christian Brauner (4):
-      selftests/mount_settattr: don't define sys_open_tree() twice
-      selftests/mount_settattr: add missing STATX_MNT_ID_UNIQUE define
-      selftests/mount_settattr: ensure that ext4 filesystem can be created
-      Merge patch series "filesystems selftests cleanups and fanotify test"
-
- tools/include/uapi/linux/fanotify.h                | 274 ++++++++++
- tools/include/uapi/linux/mount.h                   | 235 +++++++++
- tools/include/uapi/linux/nsfs.h                    |  45 ++
- .../selftests/filesystems/mount-notify/.gitignore  |   1 +
- .../selftests/filesystems/mount-notify/Makefile    |   9 +-
- .../filesystems/mount-notify/mount-notify_test.c   |  38 +-
- .../mount-notify/mount-notify_test_ns.c            | 557 +++++++++++++++++++++
- .../selftests/filesystems/overlayfs/Makefile       |   2 +-
- .../selftests/filesystems/overlayfs/dev_in_maps.c  |   2 +-
- .../filesystems/overlayfs/set_layers_via_fds.c     |   2 +-
- .../selftests/filesystems/statmount/Makefile       |   6 +-
- .../selftests/filesystems/statmount/statmount.h    |  36 ++
- .../filesystems/statmount/statmount_test_ns.c      |  86 +---
- tools/testing/selftests/filesystems/utils.c        |  88 ++++
- tools/testing/selftests/filesystems/utils.h        |   3 +
- .../filesystems/{overlayfs => }/wrappers.h         |  46 +-
- tools/testing/selftests/mount_setattr/Makefile     |   2 +
- .../selftests/mount_setattr/mount_setattr_test.c   |  61 +--
- tools/testing/selftests/pidfd/pidfd_bind_mount.c   |  74 +--
- 19 files changed, 1317 insertions(+), 250 deletions(-)
- create mode 100644 tools/include/uapi/linux/fanotify.h
- create mode 100644 tools/include/uapi/linux/mount.h
- create mode 100644 tools/include/uapi/linux/nsfs.h
- create mode 100644 tools/testing/selftests/filesystems/mount-notify/mount-notify_test_ns.c
- rename tools/testing/selftests/filesystems/{overlayfs => }/wrappers.h (57%)
+greg k-h
