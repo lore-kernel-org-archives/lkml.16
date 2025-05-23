@@ -1,121 +1,269 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 678C54C6C
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 00:11:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D87AAA48
+	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 00:11:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747959104; cv=none; b=BeOC6MWQLX9QOZreIez1+JQjN2FcCd/P2xPhoPjruRdDzxFL2rhKXfNt7W13qZMBkZtbdTjAG650Q6yIGduw1D6Q/0N8pECHdeHFnp23GTmI3Yh7Xo71Mtn4cB/URpODO8NMsngUIqDkS0nt8bnjIN1f6BAnBxSabsfzsz0jeA4=
+	t=1747959105; cv=none; b=QTOOUt3slCXaqr/12JLWvKHQjk0dCxUhzU9dwuMy9Pq8BdvFpIR0qPMb13bKVFPj9g2YqVkKZ4S2CbsMB9PBtlWv8VvOdueW1PBOO7U7DzJoK4SruE6s4dOIZR84V/w7dJASECXH9vZuOAGV8qtbOhtatfyAXWgHGnKN98s+IV0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747959104; c=relaxed/simple;
-	bh=sQw+ZBS7btddT1jEyQ0Mw2gQseAOEUbp2G/+0j/KjW4=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=Ghu3C97B0wKV7/0SQkrnZqv5fINqmJ7XrULJs8TqGQYDTSxMI57NHIdIFnkQYO0uPFucCAklSSLVen7VNadkqY5gsZgkggEtZsGxJgtAGTRGqdql2pKWRvjlF0FR61+5CU2jjuKQXGVJClb/Ofkunog3BQ7sPe0eDOSL74dddj4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=fAky0Yo2; arc=none smtp.client-ip=209.85.216.73
+	s=arc-20240116; t=1747959105; c=relaxed/simple;
+	bh=G0RDgBaetD99CnRPKH6iyJ3zEre2Mdnla3R/SEbQaoQ=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=Vv+0ZU1DIdVnRp919SQDB3OYF1PZ12xIuV+Iyc2oFQk2akTdZqO6/FwaSr17qu53lGit0eU9+Pu/MfryUiQ9Wd69gn6gFUZw539vm4XLSE3MwrliT9xuaOsi9dpXOSYsxTbSH2sRuVGFcODsysGS4fZ3UUnCqixzdlRBNfw1DTg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Bdw99PL1; arc=none smtp.client-ip=209.85.216.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fAky0Yo2"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-3108d5156e8so3386230a91.1
-        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 17:11:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Bdw99PL1"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-30e8425926eso9477033a91.1
+        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 17:11:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747959101; x=1748563901; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:reply-to:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=KwOiWiUkW2WRC0f12oP0F8RtFJzWREDgIfvrDaq9yGs=;
-        b=fAky0Yo2kTjLoeYgQGklIm0Wf1hvDPZClWzH/9kw/qpgkwAjewvVRhg7FBp3g20QVC
-         GMpXOCmUecMHkofEtH+tVW7/s8fEZ1MK/82Srw3nGvdxClf580Ue3kJHpsVhaw5Vesiz
-         MsfDJaams/Rgx985H52RbMAaem6ENaTNPBgWuCdvfHQLowGzG1bJYJcj4WRmoJj/ubcO
-         NzCkxECUx+q4tfsyY7JK0VHHWhj2HLGBimvVngKh+SI0zZE25tLQ3Arr/8eekV64pNGS
-         gW8ChPVrpTEv++jxQskxuLwUZJHzcVRpp7RzGggz78tqadj2uUMQdFJ3bHfd/+MKycLf
-         D9Vw==
+        d=google.com; s=20230601; t=1747959103; x=1748563903; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZTz7h4GlYFASCSDvq3MGwO0zKatp0Zx+JK9Pkw18hXA=;
+        b=Bdw99PL1di+5L3Ufh//gKcfPS8ryxnSdM9elOPZZQy9GxO/26yMKq8Q1FQlxYkqgfX
+         s/kMbAysf1hx9NNJMv/hr00QGTmkUKd1x1ZVgB+P1gYoavZ5g/MG8mIuwCQHOzrbKaTG
+         DHIytBlR1EpelOZtaCzKWH6ByUedMa8spHbPTbEfB/OYWhNEqD3xglFuInp4zxdppP1c
+         Df+6w/xYewI6WsayCBsbGskfBj/TM7waHDGP3XH1snY49786+YAridr9T1A+aWrfdGuA
+         dtM1ZZg7tk1ClsLWX142ERXWBFA+PiG3xxHcmLn3fnajO+02U+QOB5L6ZCi9lEufZAog
+         R2qA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747959101; x=1748563901;
-        h=cc:to:from:subject:message-id:mime-version:date:reply-to
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=KwOiWiUkW2WRC0f12oP0F8RtFJzWREDgIfvrDaq9yGs=;
-        b=oN7Ld66J/qDFvAtamCLKIS27jeaY6/AAeWxnt2dQ7s4pkjABMkhNzbrJng6QH8WJHK
-         h31oTQYWp04OzI83lY9cMHzur1sQCwAd/DSS3w8YkMHirWdHBzgfsXHKSd3DhSMkd6Hp
-         C/1hizmy/UKSYxD8HG3vzcid3uTs83ZQ7zG32Tr1RH6uneiqgWu1yevE8WR2QjSFJ4BC
-         KLZV8F7Qj3ivw0HeU5tOM8h6BptEevv/Dhqt2ByokZWs7Nb2IzDvB8Jl5XebYxInhFMP
-         cOHnf0PNQnXIdflYP1+sOc8ShgiTaRz6zUhTD8WlNPyKUxWVSNeSIvp5H2KI0ehV+c5j
-         3Wlg==
-X-Forwarded-Encrypted: i=1; AJvYcCV3hGoTC9qK7hm5BnGt9x/5DJmsqqu2yB8WwLSleKAxOM3rp42pwA32yaEoEMpik047zI/NazgkjR4JV2s=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxzCghu136m1uA0xpfX+ZENaO4Fnucq4sohHE9MXE+UIsJRos7v
-	KNzULiIGX0Fip+SpK95x0Gz0/6SMqEB7KRMecdqgiH0imXnJxvV/cTCOF/qWN5jxIr8Lcl2Zpk2
-	Cwd6a2g==
-X-Google-Smtp-Source: AGHT+IHfJRG6bZqXDGiQR0PkW8vISNvqIJt+BBS5L57W17F1JJXNfuZ6GkBx45/WIbeFHaWld6GcnrXttZg=
-X-Received: from pjbqb9.prod.google.com ([2002:a17:90b:2809:b0:308:6685:55e6])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:1c90:b0:2f2:a664:df1a
- with SMTP id 98e67ed59e1d1-310e96b5fb7mr1787280a91.2.1747959101663; Thu, 22
- May 2025 17:11:41 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1747959103; x=1748563903;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ZTz7h4GlYFASCSDvq3MGwO0zKatp0Zx+JK9Pkw18hXA=;
+        b=Es5vpVso11N4YJ8U2MrnUU1YpauHrDZlxSpPgR6qM5V6J8vG+spOodYWLb4pfTzWE+
+         T0/nDbF9QNJbtFHoYi+6I1aDwn4JyNoQ/FcO7WJtNPswtLs9LcLB92X+bw7mHIqYsUGo
+         ebObFuHccz5DBsRYL+MRCOAznP7FHsQyAoXMKqPDszMWtUaeujksCLsBQH1InhdAeC4H
+         w87Oz08TOgutCghZ6CS6u6YnZpue3VnHyG3xAXWKuU+F0QFV7/kShChFBTbe0JPyRXRB
+         jUidsz/dUmMeevMiipoT62bplj3zj5sM3rYTelNgXki8fG7y/etuS3TJ/fHkR7elu1iA
+         oBDw==
+X-Forwarded-Encrypted: i=1; AJvYcCXsy5/e7dp84enXH0CTAwFjNP5jGbYssvaqKbl7gx2GPoSlH1VFTvmZVaKDOSkxiiLAMu5Dt/GiNAVs/og=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxf2dyYrn5vYUbLqRenG7BVzmH1RXLXWrvG+hAHZAhHkKp/E3eb
+	NYZgJh1Gnfow6xwGpG6EsW45TbH9sdhHPnWXmfMiYrONR5FzO6YAumfWweVXR9uHmhuWp9l3x5C
+	rn9m9Fg==
+X-Google-Smtp-Source: AGHT+IHONfSPdCJFXkshmuSt+zEMD7DSeSIrKIz/GIuk8D7dE7BGyxB9Vk9j/E/m1jYUQkiFGIU9BvhAhWs=
+X-Received: from pjbpt18.prod.google.com ([2002:a17:90b:3d12:b0:2ff:6e58:8a0a])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:3684:b0:310:ca8f:18d3
+ with SMTP id 98e67ed59e1d1-310ca8f18e2mr5191236a91.17.1747959103244; Thu, 22
+ May 2025 17:11:43 -0700 (PDT)
 Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Thu, 22 May 2025 17:11:34 -0700
+Date: Thu, 22 May 2025 17:11:35 -0700
+In-Reply-To: <20250523001138.3182794-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
+References: <20250523001138.3182794-1-seanjc@google.com>
 X-Mailer: git-send-email 2.49.0.1151.ga128411c76-goog
-Message-ID: <20250523001138.3182794-1-seanjc@google.com>
-Subject: [PATCH v4 0/4] KVM: x86: Dynamically allocate hashed page list
+Message-ID: <20250523001138.3182794-2-seanjc@google.com>
+Subject: [PATCH v4 1/4] KVM: TDX: Move TDX hardware setup from main.c to tdx.c
 From: Sean Christopherson <seanjc@google.com>
 To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>
 Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
 	Vipin Sharma <vipinsh@google.com>, James Houghton <jthoughton@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Allocate the hashed list of shadow pages dynamically (separate from
-struct kvm), and on-demand.  The hashed list is 32KiB, i.e. absolutely
-belongs in a separate allocation, and is worth skipping if KVM isn't
-shadowing guest PTEs for the VM.
+Move TDX hardware setup to tdx.c, as the code is obviously TDX specific,
+co-locating the setup with tdx_bringup() makes it easier to see and
+document the success_disable_tdx "error" path, and configuring the TDX
+specific hooks in tdx.c reduces the number of globally visible TDX symbols.
 
-I double checked that padding kvm_arch with a 4KiB array trips the assert,
-but padding with 2KiB does not.  So knock on wood, I finally got the assert
-right.  Maybe.
+Signed-off-by: Sean Christopherson <seanjc@google.com>
+---
+ arch/x86/kvm/vmx/main.c    | 36 ++----------------------------
+ arch/x86/kvm/vmx/tdx.c     | 45 +++++++++++++++++++++++++++-----------
+ arch/x86/kvm/vmx/tdx.h     |  1 +
+ arch/x86/kvm/vmx/x86_ops.h | 10 ---------
+ 4 files changed, 35 insertions(+), 57 deletions(-)
 
-v4:
- - Use smp_store_release() and smp_load_acquire() instead of {READ,WRITE}_ONCE,
-   and update the comments accordingly. [Paolo, James]
- - Move the kvm_tdx assert to tdx.c. [Paolo]
- - Fix the assertion, again.  [Vipin, in spirit if not in reality]
- - Add a patch to move TDX hardware setup to tdx.c.
-
-v3:
- -  https://lore.kernel.org/all/20250516215422.2550669-1-seanjc@google.com
- - Add comments explaining the {READ,WRITE}_ONCE logic, and why it's safe
-   to set the list outside of mmu_lock. [Vipin]
- - Make the assertions actually work. [Vipin]
- - Refine the assertions so they (hopefully) won't fail on kernels with
-   a bunch of debug crud added.
-
-v2:
- - https://lore.kernel.org/all/20250401155714.838398-1-seanjc@google.com
- - Actually defer allocation when using TDP MMU. [Vipin]
- - Free allocation on MMU teardown. [Vipin]
-
-v1: https://lore.kernel.org/all/20250315024010.2360884-1-seanjc@google.com
-
-Sean Christopherson (4):
-  KVM: TDX: Move TDX hardware setup from main.c to tdx.c
-  KVM: x86/mmu: Dynamically allocate shadow MMU's hashed page list
-  KVM: x86: Use kvzalloc() to allocate VM struct
-  KVM: x86/mmu: Defer allocation of shadow MMU's hashed page list
-
- arch/x86/include/asm/kvm_host.h |  6 +--
- arch/x86/kvm/mmu/mmu.c          | 75 ++++++++++++++++++++++++++++++---
- arch/x86/kvm/svm/svm.c          |  2 +
- arch/x86/kvm/vmx/main.c         | 36 +---------------
- arch/x86/kvm/vmx/tdx.c          | 47 +++++++++++++++------
- arch/x86/kvm/vmx/tdx.h          |  1 +
- arch/x86/kvm/vmx/vmx.c          |  2 +
- arch/x86/kvm/vmx/x86_ops.h      | 10 -----
- arch/x86/kvm/x86.c              |  5 ++-
- arch/x86/kvm/x86.h              | 22 ++++++++++
- 10 files changed, 139 insertions(+), 67 deletions(-)
-
-
-base-commit: 3f7b307757ecffc1c18ede9ee3cf9ce8101f3cc9
+diff --git a/arch/x86/kvm/vmx/main.c b/arch/x86/kvm/vmx/main.c
+index d1e02e567b57..d7178d15ac8f 100644
+--- a/arch/x86/kvm/vmx/main.c
++++ b/arch/x86/kvm/vmx/main.c
+@@ -29,40 +29,8 @@ static __init int vt_hardware_setup(void)
+ 	if (ret)
+ 		return ret;
+ 
+-	/*
+-	 * Update vt_x86_ops::vm_size here so it is ready before
+-	 * kvm_ops_update() is called in kvm_x86_vendor_init().
+-	 *
+-	 * Note, the actual bringing up of TDX must be done after
+-	 * kvm_ops_update() because enabling TDX requires enabling
+-	 * hardware virtualization first, i.e., all online CPUs must
+-	 * be in post-VMXON state.  This means the @vm_size here
+-	 * may be updated to TDX's size but TDX may fail to enable
+-	 * at later time.
+-	 *
+-	 * The VMX/VT code could update kvm_x86_ops::vm_size again
+-	 * after bringing up TDX, but this would require exporting
+-	 * either kvm_x86_ops or kvm_ops_update() from the base KVM
+-	 * module, which looks overkill.  Anyway, the worst case here
+-	 * is KVM may allocate couple of more bytes than needed for
+-	 * each VM.
+-	 */
+-	if (enable_tdx) {
+-		vt_x86_ops.vm_size = max_t(unsigned int, vt_x86_ops.vm_size,
+-				sizeof(struct kvm_tdx));
+-		/*
+-		 * Note, TDX may fail to initialize in a later time in
+-		 * vt_init(), in which case it is not necessary to setup
+-		 * those callbacks.  But making them valid here even
+-		 * when TDX fails to init later is fine because those
+-		 * callbacks won't be called if the VM isn't TDX guest.
+-		 */
+-		vt_x86_ops.link_external_spt = tdx_sept_link_private_spt;
+-		vt_x86_ops.set_external_spte = tdx_sept_set_private_spte;
+-		vt_x86_ops.free_external_spt = tdx_sept_free_private_spt;
+-		vt_x86_ops.remove_external_spte = tdx_sept_remove_private_spte;
+-		vt_x86_ops.protected_apic_has_interrupt = tdx_protected_apic_has_interrupt;
+-	}
++	if (enable_tdx)
++		tdx_hardware_setup();
+ 
+ 	return 0;
+ }
+diff --git a/arch/x86/kvm/vmx/tdx.c b/arch/x86/kvm/vmx/tdx.c
+index b952bc673271..1790f6dee870 100644
+--- a/arch/x86/kvm/vmx/tdx.c
++++ b/arch/x86/kvm/vmx/tdx.c
+@@ -738,7 +738,7 @@ bool tdx_interrupt_allowed(struct kvm_vcpu *vcpu)
+ 	       !to_tdx(vcpu)->vp_enter_args.r12;
+ }
+ 
+-bool tdx_protected_apic_has_interrupt(struct kvm_vcpu *vcpu)
++static bool tdx_protected_apic_has_interrupt(struct kvm_vcpu *vcpu)
+ {
+ 	u64 vcpu_state_details;
+ 
+@@ -1543,8 +1543,8 @@ static int tdx_mem_page_record_premap_cnt(struct kvm *kvm, gfn_t gfn,
+ 	return 0;
+ }
+ 
+-int tdx_sept_set_private_spte(struct kvm *kvm, gfn_t gfn,
+-			      enum pg_level level, kvm_pfn_t pfn)
++static int tdx_sept_set_private_spte(struct kvm *kvm, gfn_t gfn,
++				     enum pg_level level, kvm_pfn_t pfn)
+ {
+ 	struct kvm_tdx *kvm_tdx = to_kvm_tdx(kvm);
+ 	struct page *page = pfn_to_page(pfn);
+@@ -1624,8 +1624,8 @@ static int tdx_sept_drop_private_spte(struct kvm *kvm, gfn_t gfn,
+ 	return 0;
+ }
+ 
+-int tdx_sept_link_private_spt(struct kvm *kvm, gfn_t gfn,
+-			      enum pg_level level, void *private_spt)
++static int tdx_sept_link_private_spt(struct kvm *kvm, gfn_t gfn,
++				     enum pg_level level, void *private_spt)
+ {
+ 	int tdx_level = pg_level_to_tdx_sept_level(level);
+ 	gpa_t gpa = gfn_to_gpa(gfn);
+@@ -1760,8 +1760,8 @@ static void tdx_track(struct kvm *kvm)
+ 	kvm_make_all_cpus_request(kvm, KVM_REQ_OUTSIDE_GUEST_MODE);
+ }
+ 
+-int tdx_sept_free_private_spt(struct kvm *kvm, gfn_t gfn,
+-			      enum pg_level level, void *private_spt)
++static int tdx_sept_free_private_spt(struct kvm *kvm, gfn_t gfn,
++				     enum pg_level level, void *private_spt)
+ {
+ 	struct kvm_tdx *kvm_tdx = to_kvm_tdx(kvm);
+ 
+@@ -1783,8 +1783,8 @@ int tdx_sept_free_private_spt(struct kvm *kvm, gfn_t gfn,
+ 	return tdx_reclaim_page(virt_to_page(private_spt));
+ }
+ 
+-int tdx_sept_remove_private_spte(struct kvm *kvm, gfn_t gfn,
+-				 enum pg_level level, kvm_pfn_t pfn)
++static int tdx_sept_remove_private_spte(struct kvm *kvm, gfn_t gfn,
++					enum pg_level level, kvm_pfn_t pfn)
+ {
+ 	struct page *page = pfn_to_page(pfn);
+ 	int ret;
+@@ -3507,10 +3507,14 @@ int __init tdx_bringup(void)
+ 	r = __tdx_bringup();
+ 	if (r) {
+ 		/*
+-		 * Disable TDX only but don't fail to load module if
+-		 * the TDX module could not be loaded.  No need to print
+-		 * message saying "module is not loaded" because it was
+-		 * printed when the first SEAMCALL failed.
++		 * Disable TDX only but don't fail to load module if the TDX
++		 * module could not be loaded.  No need to print message saying
++		 * "module is not loaded" because it was printed when the first
++		 * SEAMCALL failed.  Don't bother unwinding the S-EPT hooks or
++		 * vm_size, as kvm_x86_ops have already been finalized (and are
++		 * intentionally not exported).  The S-EPT code is unreachable,
++		 * and allocating a few more bytes per VM in a should-be-rare
++		 * failure scenario is a non-issue.
+ 		 */
+ 		if (r == -ENODEV)
+ 			goto success_disable_tdx;
+@@ -3524,3 +3528,18 @@ int __init tdx_bringup(void)
+ 	enable_tdx = 0;
+ 	return 0;
+ }
++
++void __init tdx_hardware_setup(void)
++{
++	/*
++	 * Note, if the TDX module can't be loaded, KVM TDX support will be
++	 * disabled but KVM will continue loading (see tdx_bringup()).
++	 */
++	vt_x86_ops.vm_size = max_t(unsigned int, vt_x86_ops.vm_size, sizeof(struct kvm_tdx));
++
++	vt_x86_ops.link_external_spt = tdx_sept_link_private_spt;
++	vt_x86_ops.set_external_spte = tdx_sept_set_private_spte;
++	vt_x86_ops.free_external_spt = tdx_sept_free_private_spt;
++	vt_x86_ops.remove_external_spte = tdx_sept_remove_private_spte;
++	vt_x86_ops.protected_apic_has_interrupt = tdx_protected_apic_has_interrupt;
++}
+diff --git a/arch/x86/kvm/vmx/tdx.h b/arch/x86/kvm/vmx/tdx.h
+index 51f98443e8a2..ca39a9391db1 100644
+--- a/arch/x86/kvm/vmx/tdx.h
++++ b/arch/x86/kvm/vmx/tdx.h
+@@ -8,6 +8,7 @@
+ #ifdef CONFIG_KVM_INTEL_TDX
+ #include "common.h"
+ 
++void tdx_hardware_setup(void);
+ int tdx_bringup(void);
+ void tdx_cleanup(void);
+ 
+diff --git a/arch/x86/kvm/vmx/x86_ops.h b/arch/x86/kvm/vmx/x86_ops.h
+index b4596f651232..87e855276a88 100644
+--- a/arch/x86/kvm/vmx/x86_ops.h
++++ b/arch/x86/kvm/vmx/x86_ops.h
+@@ -136,7 +136,6 @@ int tdx_vcpu_pre_run(struct kvm_vcpu *vcpu);
+ fastpath_t tdx_vcpu_run(struct kvm_vcpu *vcpu, bool force_immediate_exit);
+ void tdx_prepare_switch_to_guest(struct kvm_vcpu *vcpu);
+ void tdx_vcpu_put(struct kvm_vcpu *vcpu);
+-bool tdx_protected_apic_has_interrupt(struct kvm_vcpu *vcpu);
+ int tdx_handle_exit(struct kvm_vcpu *vcpu,
+ 		enum exit_fastpath_completion fastpath);
+ 
+@@ -151,15 +150,6 @@ int tdx_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr);
+ 
+ int tdx_vcpu_ioctl(struct kvm_vcpu *vcpu, void __user *argp);
+ 
+-int tdx_sept_link_private_spt(struct kvm *kvm, gfn_t gfn,
+-			      enum pg_level level, void *private_spt);
+-int tdx_sept_free_private_spt(struct kvm *kvm, gfn_t gfn,
+-			      enum pg_level level, void *private_spt);
+-int tdx_sept_set_private_spte(struct kvm *kvm, gfn_t gfn,
+-			      enum pg_level level, kvm_pfn_t pfn);
+-int tdx_sept_remove_private_spte(struct kvm *kvm, gfn_t gfn,
+-				 enum pg_level level, kvm_pfn_t pfn);
+-
+ void tdx_flush_tlb_current(struct kvm_vcpu *vcpu);
+ void tdx_flush_tlb_all(struct kvm_vcpu *vcpu);
+ void tdx_load_mmu_pgd(struct kvm_vcpu *vcpu, hpa_t root_hpa, int root_level);
 -- 
 2.49.0.1151.ga128411c76-goog
 
