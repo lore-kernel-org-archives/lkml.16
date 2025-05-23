@@ -1,235 +1,132 @@
-Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2062.outbound.protection.outlook.com [40.107.102.62])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F9282F24;
-	Fri, 23 May 2025 01:59:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.102.62
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747965557; cv=fail; b=WxUcWEIPm9IR/5+6Ej3eY7CNXHa838QoajVJaCN2qCPdukjmKexwKfeYBdozIs3bMH1qbENzKxOqYmfSt6+A4SB/GWVM8wFsPGQGl2VkNaLO5vp1xguX3zNLewGtL7AOjABFHhAldvBf9cI3viVZ8dBHe4pbZbFO/vlguN3h59M=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747965557; c=relaxed/simple;
-	bh=7D55gtgcNGLMAD9oQwSG77HmjgHOfeBHHkqQ55NwBS0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=RM3Csx+E7nxT2iW162Cl067gTEThh+Oz4MHfxIL1JY5cHU1t4qHJ1CYqtmtNoBeLnxBA9F6kvnJLvnW/bkRz0JMeNmaeR5olxGUKWrW5gt7aZDJB5sF/d03YnnYws4UD5gTqLO+6E+DxmdEnNgkgQOfWwqlGkoDs5FDwfDmC+pg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=XgtncdMP; arc=fail smtp.client-ip=40.107.102.62
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB0DC2DCBF2;
+	Fri, 23 May 2025 02:02:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747965775; cv=none; b=TZblXZHbMTqnXnv15j4h+GEJnupbTV5i4HcdnJt8httxj4xmbnIgghvJrdpfqP1uFBYaPFfXH5REKzLZ49BWfFJgQb1plMA2IoQVeFqoYGL4LYo3fAw70aV3iYUBjnLMKOnvp8O6S+3uYwCD2/EprORQVN4i17Hq546hfRRRomU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747965775; c=relaxed/simple;
+	bh=sAPs8eekytATjQiNX4kt8EpnASncF/Bdl5+1rITtTMU=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=DQQKtckZUT3NspWPYBj3kPD2nwWTLOBcWr/+UDgy6fx74amm586vhYHSrALTpSLLxmIkuc+YqHEwIw79/Wq/LaCwSd/hartVOxFrKztuXjMGIH566RtvfxmUrY1c769MnU167rl9KnFlcFfMZey3zi/81bW/yJX0QhnmUIqbwY4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=jgUGvUNi; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="XgtncdMP"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=jm8ej2Erfnbyzk0mWGXGjNDW4OK8b9IBHN2uiHfJ1h8VUSXW8Yf/Nk3Fi5OZDnBrdZmtKUKwpEeTDwRLCQbYaH/KhFtoco73d6pRjNPzucTsTO5vkPI95YprwSHOkt8TuRndyQt7hVf1avWSL7/KlOPZL3NNjisvMTGFiZts5qmmdkvKL3sQOc+qLMbCKHjHDlz2RziaeIeH9tPasKo/dBs343DW7ukzFQsASDoeDhP2wpdeXZAnJH0GLxmK0O6rWbVWWUUGKeawRJLagh22QZbp5hlz8e4UcvBO0Wr+u3krV5Ng0h0GWMrCe3ZFQUa7OltdAtHVyno8OmcnZsWHHQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=2jg1Jo/1eSjCWJkFNEVAt/YgZ2WapDMhykPCUGd9NvI=;
- b=J/xwyHi4x3XBHrAFx/yv9AkCoc+bCf7ehgnySqNwwBd9jHtQ4W6+E/o6iNsUSoDC9xFdN5TrY5ZLyYCwFFfFqQyE2ZJ/JMVbdvs2rh7e/l3/ZiDtHzOn/KhZOA0nrlyjno7716s8Vx0i7V/yEppV3nJH+Dd9onC+rbdiEU+VaxA0GNuyr/6XaZkN/kBpTIknsM2Bi1xyDO37Q1RfxWP7/2mmfTJSCf/oPTfnghs8UqN/dSIV3b/t6PFGVwgVLpLwAJeTUOeYtRYwr0fxg70hXF0OTjnjjVnX9VWobvoDvxQHHHt+tPbTnAvsJV6Qf6dTd/W6UunKYfkPjSzTvp20UA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.160) smtp.rcpttodomain=kernel.org smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2jg1Jo/1eSjCWJkFNEVAt/YgZ2WapDMhykPCUGd9NvI=;
- b=XgtncdMPwnpW8bj1a3QHHEWB8JqYoh3gSp/pS4WmPiGaZlOdqDhuY0+83ieHAVk4kVS5bUsUdLtc586xWg55U140d/9x8pDnoOPwec5iHWOy21Lupea+KbokOqZXE8jFs4YezLDaJouQVM8FdeBBaR7rP1727kcyOvCrIV4h2WaUepM3sJK4rsi0T3RUQ2GyuksfyTPQZpkh4DF7Wn14tHzKXFY7iPNy6ms50gbfD3TjOGrfCJZtDEqo1Z6IqDEqqkFxG4EtE6ZGys9oBjWE0qrgeMaH9lMDgNaawB0ml/6BOTsMFkVcN/VMOOtz5jGH0I6ZE/TbXP/doVESMoKq8g==
-Received: from BY5PR04CA0005.namprd04.prod.outlook.com (2603:10b6:a03:1d0::15)
- by CY5PR12MB6274.namprd12.prod.outlook.com (2603:10b6:930:21::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.21; Fri, 23 May
- 2025 01:59:12 +0000
-Received: from CO1PEPF000042AD.namprd03.prod.outlook.com
- (2603:10b6:a03:1d0:cafe::f3) by BY5PR04CA0005.outlook.office365.com
- (2603:10b6:a03:1d0::15) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8746.31 via Frontend Transport; Fri,
- 23 May 2025 01:59:12 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.160) by
- CO1PEPF000042AD.mail.protection.outlook.com (10.167.243.42) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8769.18 via Frontend Transport; Fri, 23 May 2025 01:59:11 +0000
-Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
- (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Thu, 22 May
- 2025 18:59:01 -0700
-Received: from [10.19.161.220] (10.126.231.35) by rnnvmail201.nvidia.com
- (10.129.68.8) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Thu, 22 May
- 2025 18:58:57 -0700
-Message-ID: <1a8cb838-d487-4c56-8dfa-8179f305de02@nvidia.com>
-Date: Fri, 23 May 2025 09:58:57 +0800
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="jgUGvUNi"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1747965761;
+	bh=MfyXNmVq5Z57W8YqbOLHkYNkAS6y8iTHnUs6IL3dh+Q=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=jgUGvUNiVwrgAxApHPiqbinsoHeCx669G/3+GWLNV7+wz4qRywIO4XEVquW1KE1CC
+	 2kjhtE4JNgmamzpPV01iM9kFwf30UjOGJKHtu7km83G3rN7gaGdcdBTGyLnIijxFVW
+	 7YLPGwppdyOCtdlZrdGTPjWdW90E0UIVUS/aXfBjlSrXQebULqmK+omaqUl9mrHgJZ
+	 c2mrzokZ3ddc77SGsGpp1YjPUE1rUGIt+CURJkO3uxdAcnlzOs/DZL0TVJhHu3g9ky
+	 baP99Pp6okjOMLrgHC/SBDFozlOkrLpuX6MGv8RBdSg5XU2bwFf1VQeP1AqS4j6tn/
+	 cjDg6ILC7jE4g==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4b3T292TGNz4x1w;
+	Fri, 23 May 2025 12:02:41 +1000 (AEST)
+Date: Fri, 23 May 2025 12:02:39 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Andreas Hindborg <a.hindborg@kernel.org>, "Rafael J. Wysocki"
+ <rjw@rjwysocki.net>
+Cc: Viresh Kumar <viresh.kumar@linaro.org>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>
+Subject: Re: linux-next: manual merge of the cpufreq-arm tree with the
+ configfs tree
+Message-ID: <20250523120239.2ab98a68@canb.auug.org.au>
+In-Reply-To: <20250521125946.664a79c1@canb.auug.org.au>
+References: <20250521125946.664a79c1@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net 2/2] net/mlx5e: Fix leak of Geneve TLV option object
-To: Simon Horman <horms@kernel.org>, Tariq Toukan <tariqt@nvidia.com>
-CC: "David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>, Eric Dumazet <edumazet@google.com>, "Andrew
- Lunn" <andrew+netdev@lunn.ch>, Saeed Mahameed <saeedm@nvidia.com>, "Leon
- Romanovsky" <leon@kernel.org>, <netdev@vger.kernel.org>,
-	<linux-rdma@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Moshe Shemesh
-	<moshe@nvidia.com>, Mark Bloch <mbloch@nvidia.com>, Gal Pressman
-	<gal@nvidia.com>
-References: <1747895286-1075233-1-git-send-email-tariqt@nvidia.com>
- <1747895286-1075233-3-git-send-email-tariqt@nvidia.com>
- <20250522191651.GL365796@horms.kernel.org>
-Content-Language: en-US
-From: Jianbo Liu <jianbol@nvidia.com>
-In-Reply-To: <20250522191651.GL365796@horms.kernel.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: rnnvmail203.nvidia.com (10.129.68.9) To
- rnnvmail201.nvidia.com (10.129.68.8)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CO1PEPF000042AD:EE_|CY5PR12MB6274:EE_
-X-MS-Office365-Filtering-Correlation-Id: db273a6c-e0c4-47dd-c720-08dd999d6979
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|36860700013|1800799024|376014|7416014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?MHB1WFp1ckFtd2lTTEtkUi8wRW5XOVhEdFNreHFUZXlxOEZMdHlNUXhNNjhC?=
- =?utf-8?B?QzdVQ05vUW9KbmJSVVJ3aGZobjZHaDZLTnNwcWxzS0JiaTg4KzZYak1KVHdO?=
- =?utf-8?B?eFBIbUZTQkR0ZmE4SWlXbGcwdnhBMGJScnFpeFhwdWs4UlRxaXhuM1lWTmFZ?=
- =?utf-8?B?SmdDMEwwRDQ3bVVNblBEMSsxSlVxcVNuQnR0ZkpHN3NnWjg4S3BiR2VaTnNS?=
- =?utf-8?B?QlN1akFTbGMvejJORGIrTDVYV245c1ViQUFIcFpQOUpKY01BRXNKR1UyUEJE?=
- =?utf-8?B?NmlaSHN0UG5MU1FTbHVTRUhsOXU0Z21jSEV1aFZVemNCN0sxNithSWFKd0hZ?=
- =?utf-8?B?WFM3bDE3bHZoOE9VNWluRHhVQVFwaktlUmE0NE9Mb2gzMFV5aXRPekhYdFpn?=
- =?utf-8?B?dFR2dG9TeVZ0ZUZtTHI0RmR2SlJmcVAxd29LZFB0WXNERHN5MXZ6UncwU0J1?=
- =?utf-8?B?TXZaclR0WkxSSFZZbXFlNnBsc2RzVkVvMVZ3eVRNcm4xQVh3OWEvTVMyd3FZ?=
- =?utf-8?B?b09mUjdCUFplYjJnZ0UwTFFyQW9Tand5NTMwa20reDBxRmszVWpYdEJjbGhk?=
- =?utf-8?B?dHdQM1VVSWVzRGRhU2dGSGg1NTlUb21SbjhoaTlVTkUyaURDVzZRcWhpcWlq?=
- =?utf-8?B?OWM1T3NQY1Y0ekRUWnZjS0x5ZlVCNXJhUms0cGtwbE1DcTljZmhwdGpDaCsy?=
- =?utf-8?B?Z3pJUjZaL0lzcnkveHYzNHZPZ3BncC9VaUp3OTZDc0YvK3RZbFE1ZVRITGFn?=
- =?utf-8?B?TEducmR0K2V2Z2tKVVJYb0dCRjNTNGJGa0doVUJVRnM5M1B2eVhac3FVSEo1?=
- =?utf-8?B?bzM1VmdEaFFtVjNCcXMyT0poSW5RUC9kVUdiUDdrcWJzbUw3T0M0aS83RUE3?=
- =?utf-8?B?dW1sL0dwV3l5SWM0MjdEMkg3K05PWTV4d1k0bDVoR1RpbXBzbXRzY3JZbTRB?=
- =?utf-8?B?SnowL0I5MWZ6ci9Yb05LTHhhNHlTT2RwMnR4RmRiRG5MbmE1WWxONDFJRHg5?=
- =?utf-8?B?NmxaNEdYcE5FQmExRmVSTXZtbDJNT0ptR1hGUmM4ZDVIUFBRTWNjN2pYZG5v?=
- =?utf-8?B?eHZrWUNCaWRUMEpwL09VcnBjUWFRa1RFQkdxdStlNDFoMWZxT0d0VXZRUkI4?=
- =?utf-8?B?MmlYQ0RibGJkSFFRR00vc1pBRU4vOUFOc0xLOWpIQm1wVXVhektWVzRmVG9J?=
- =?utf-8?B?V1BYd055RnRNaXJDQXpscnZicm5jbi9seTJEUFEvanNvVWp0ek90OFpIRS9x?=
- =?utf-8?B?Y0JCcjZwcE1wKzJnL21aOUIwQlpXK0RpM0tqSHR2Q2lrbkFzaUdzMUJoQlZa?=
- =?utf-8?B?bXdVVzJKcWs3ZzdMTm13SWhzRDgrWFpEYXR0RjZxQzN6UjVqSHExQStnbVln?=
- =?utf-8?B?MG4zc1NzRDZ2QTFaL05yb01ubHI2WUYwdER4MW1sYXdQS2xtYW5Gem55b2s0?=
- =?utf-8?B?Ky9lb0ZBWTM5TUxIN0dUU2FxQ2N6T2FSNGJ6M2M1aWxMTk1IbldoRFZnaVk3?=
- =?utf-8?B?SWlONlVPL2lSWUtlOGhQZHNVdnhYNVFpSGhqVk42SHVHZitOaFdQNXZpOEth?=
- =?utf-8?B?SkZFMnVPYVVERjNidC9HUjNFY0VlNTN2RVJMbFJkV3RQcmUvZkkyT2YxL3Rs?=
- =?utf-8?B?Qi9YRU9YdTZPWFlEaDRtb1dKQURYNzgxUHVOSk5mUFFjblRYcitkdE94R1BS?=
- =?utf-8?B?V202dC9Oc3ZyTDE0YjlENkFOWnFDSmV6NWhGUWRRd1J0dFZ4WnpYd0syVVZQ?=
- =?utf-8?B?VWRBNXc4QmlnQWU3SFJUeTNhc0FTS3NtSmZLWDV1R0RyREE3RUJSekMvNDk4?=
- =?utf-8?B?R2ExWTNsVTk2NFdWL1crMlQ0SFlXSTIyeXcxamE4b1pDTWUzdUdQUTZHVGEz?=
- =?utf-8?B?cUVyUE90SVZiZXBmUkdrWmFUSUMzejBHL2puaE92QjB3bVNuMnVXT2U2eDhL?=
- =?utf-8?B?YXBvcktxRUZCY3k1UDdmeWYzYmEvbzMyMk1wZi96c1hlRHhVNzlxWXY1c0pm?=
- =?utf-8?B?ZU5TK243MGxYS0NGWmVraWMxdVBxQ3lSbTVKVGdKczIvNmpDbjQ4ZFowVXU3?=
- =?utf-8?Q?vJeRAz?=
-X-Forefront-Antispam-Report:
-	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230040)(82310400026)(36860700013)(1800799024)(376014)(7416014);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 May 2025 01:59:11.3541
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: db273a6c-e0c4-47dd-c720-08dd999d6979
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CO1PEPF000042AD.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR12MB6274
+Content-Type: multipart/signed; boundary="Sig_/BMnC+4lP=lyn2d1=wcP=50p";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
+--Sig_/BMnC+4lP=lyn2d1=wcP=50p
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
+Hi all,
 
-On 5/23/2025 3:16 AM, Simon Horman wrote:
-> On Thu, May 22, 2025 at 09:28:06AM +0300, Tariq Toukan wrote:
->> From: Jianbo Liu <jianbol@nvidia.com>
->>
->> Previously, a unique tunnel id was added for the matching on TC
->> non-zero chains, to support inner header rewrite with goto action.
->> Later, it was used to support VF tunnel offload for vxlan, then for
->> Geneve and GRE. To support VF tunnel, a temporary mlx5_flow_spec is
->> used to parse tunnel options. For Geneve, if there is TLV option, a
->> object is created, or refcnt is added if already exists. But the
->> temporary mlx5_flow_spec is directly freed after parsing, which causes
->> the leak because no information regarding the object is saved in
->> flow's mlx5_flow_spec, which is used to free the object when deleting
->> the flow.
->>
->> To fix the leak, call mlx5_geneve_tlv_option_del() before free the
->> temporary spec if it has TLV object.
->>
->> Fixes: 521933cdc4aa ("net/mlx5e: Support Geneve and GRE with VF tunnel offload")
->> Signed-off-by: Jianbo Liu <jianbol@nvidia.com>
->> Reviewed-by: Cosmin Ratiu <cratiu@nvidia.com>
->> Signed-off-by: Tariq Toukan <tariqt@nvidia.com>
->> ---
->>   drivers/net/ethernet/mellanox/mlx5/core/en_tc.c | 7 ++++---
->>   1 file changed, 4 insertions(+), 3 deletions(-)
->>
->> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_tc.c b/drivers/net/ethernet/mellanox/mlx5/core/en_tc.c
->> index f1d908f61134..b9c1d7f8f05c 100644
->> --- a/drivers/net/ethernet/mellanox/mlx5/core/en_tc.c
->> +++ b/drivers/net/ethernet/mellanox/mlx5/core/en_tc.c
->> @@ -2028,9 +2028,8 @@ mlx5e_tc_add_fdb_flow(struct mlx5e_priv *priv,
->>   	return err;
->>   }
->>   
->> -static bool mlx5_flow_has_geneve_opt(struct mlx5e_tc_flow *flow)
->> +static bool mlx5_flow_has_geneve_opt(struct mlx5_flow_spec *spec)
->>   {
->> -	struct mlx5_flow_spec *spec = &flow->attr->parse_attr->spec;
->>   	void *headers_v = MLX5_ADDR_OF(fte_match_param,
->>   				       spec->match_value,
->>   				       misc_parameters_3);
->> @@ -2069,7 +2068,7 @@ static void mlx5e_tc_del_fdb_flow(struct mlx5e_priv *priv,
->>   	}
->>   	complete_all(&flow->del_hw_done);
->>   
->> -	if (mlx5_flow_has_geneve_opt(flow))
->> +	if (mlx5_flow_has_geneve_opt(&attr->parse_attr->spec))
->>   		mlx5_geneve_tlv_option_del(priv->mdev->geneve);
->>   
->>   	if (flow->decap_route)
-> 
-> Hi,
-> 
-> The lines leading up to the hung below are:
-> 
-> 	      err = mlx5e_tc_tun_parse(filter_dev, priv, tmp_spec, f, match_level);
->                if (err) {
->                          kvfree(tmp_spec);
->                          NL_SET_ERR_MSG_MOD(extack, "Failed to parse tunnel attributes");
->                          netdev_warn(priv->netdev, "Failed to parse tunnel attributes");
-> 
-> I am wondering if the same resource leak described in the patch description
-> can occur if mlx5e_tc_tun_parse() fails after it successfully calls
-> tunnel->parse_tunnel().
-> 
+On Wed, 21 May 2025 12:59:46 +1000 Stephen Rothwell <sfr@canb.auug.org.au> =
+wrote:
+>
+> Today's linux-next merge of the cpufreq-arm tree got a conflict in:
+>=20
+>   rust/kernel/lib.rs
+>=20
+> between commit:
+>=20
+>   446cafc295bf ("rust: configfs: introduce rust support for configfs")
+>=20
+> from the configfs tree and commits:
+>=20
+>   8961b8cb3099 ("rust: cpumask: Add initial abstractions")
+>   d01d70205601 ("rust: clk: Add initial abstractions")
+>   3accb57d56a9 ("rust: cpu: Add from_cpu()")
+>   2207856ff0bc ("rust: cpufreq: Add initial abstractions for cpufreq fram=
+ework")
+>=20
+> from the cpufreq-arm tree.
+>=20
+> I fixed it up (see below) and can carry the fix as necessary. This
+> is now fixed as far as linux-next is concerned, but any non trivial
+> conflicts should be mentioned to your upstream maintainer when your tree
+> is submitted for merging.  You may also want to consider cooperating
+> with the maintainer of the conflicting tree to minimise any particularly
+> complex conflicts.
+>=20
+>=20
+> diff --cc rust/kernel/lib.rs
+> index 354eb1605194,133ebee4f9d3..000000000000
+> --- a/rust/kernel/lib.rs
+> +++ b/rust/kernel/lib.rs
+> @@@ -42,8 -42,11 +42,13 @@@ pub mod alloc
+>   pub mod block;
+>   #[doc(hidden)]
+>   pub mod build_assert;
+> + pub mod clk;
+>  +#[cfg(CONFIG_CONFIGFS_FS)]
+>  +pub mod configfs;
+> + pub mod cpu;
+> + #[cfg(CONFIG_CPU_FREQ)]
+> + pub mod cpufreq;
+> + pub mod cpumask;
+>   pub mod cred;
+>   pub mod device;
+>   pub mod device_id;
 
-Yes, I missed that. I will fix in next version.
+This is now a conflict between the pm tree and the configfs tree.
 
-Thanks!
-Jianbo
+--=20
+Cheers,
+Stephen Rothwell
 
->> @@ -2580,6 +2579,8 @@ static int parse_tunnel_attr(struct mlx5e_priv *priv,
->>   			return err;
->>   		}
->>   		err = mlx5e_tc_set_attr_rx_tun(flow, tmp_spec);
->> +		if (mlx5_flow_has_geneve_opt(tmp_spec))
->> +			mlx5_geneve_tlv_option_del(priv->mdev->geneve);
->>   		kvfree(tmp_spec);
->>   		if (err)
->>   			return err;
->> -- 
->> 2.31.1
->>
->>
+--Sig_/BMnC+4lP=lyn2d1=wcP=50p
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgv1z8ACgkQAVBC80lX
+0Gwiqwf+IbEKDSB3xg2N0ASFgP/hV80N38A4hU9qDz5PEkyp63brxTyJeYEeg4rz
+7xQgOuWK6FpmsjC0z21gHNi9/f21LUUROPgresq7cmUDg3eX8aF7hSy0/OU7QROZ
+nbgd+sR8sDaa0uHbQmM/ISqnBsDkTzoiQnIhcpgN1e5ZzH7On9P26GT7/hUYzKPI
+7qSpTB+VYW4lwT11rDJ3u9tROFkc8y0/ZTQm+rR6fI9jOZF4uNMmDfrRDV0HYO+1
+09zSzF5pN/DjtVC3dEO8LE70gxVs9nVXwKBPcPqPTG+kNDhCKifybEso6v1kksEx
+nHwBxfcHfxyPiUKoquQJqLRfbnNHhg==
+=lRUT
+-----END PGP SIGNATURE-----
+
+--Sig_/BMnC+4lP=lyn2d1=wcP=50p--
