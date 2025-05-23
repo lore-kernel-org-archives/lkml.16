@@ -1,57 +1,57 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42B69219A90
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 01:01:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1CC428DB72
+	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 01:01:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747962074; cv=none; b=CjIetZggVtLiLYXegKI7ptGcQLYv9fJ+haxih4A9xztd8qUSoHb3Rl515YZdJ9+5tPpLRWDtK4JSSh7I8VyA48y4qUuZcL5Kc7WJBX+SyOBu/so+wrs0i0Z5BN3j975CPfxnQ234HH9YT/iWXqgXgE3gzH23sLl5a77ftHeNMrk=
+	t=1747962076; cv=none; b=A2YvetIu7+2j++jHmdeRL1N3UrNgALL+s3N7V7jS3oSavzZGg2mgbsLG5wBngf3V/HdsqOWBMCE9C1knJjSaP+U5fwm+0tb2Kfcj3yeoS/3qWDh99Kk8aIUPXcl06BifQBfKia+f2GLTMyCLtotMkRSxJ4yfcSOu1zBAN7KZ7G4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747962074; c=relaxed/simple;
-	bh=OoaKuYJuGBNrzRs4FOlcqG4EfEZ0eKgNguock8Nm660=;
+	s=arc-20240116; t=1747962076; c=relaxed/simple;
+	bh=GqaZYSOh5Yivyj2qFqb00jJ6hR1JshloGdmkeWMFgz8=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=mYfwv3bQ7lAFtYgjzQRwFtWJhedH0QFl+MdP9HSGVX11HySheUriJ9ftXJxFoDWjYtOia4Z416G8S/cy/ckfEkjZneACxpa3ldf88qptpuU/Sqgf7MytwMLR0cM3e24aUOAfIS9khVGd45Cuh8D4Pov3cXBsBvjLoi37im3uHEk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=UlyUrYEj; arc=none smtp.client-ip=209.85.216.74
+	 To:Cc:Content-Type; b=EdOvNdmI++SfbkcorBX+Un0DoQ/btuVBrgBjCgc7ANXyugLzkPxQeE1WfWA2MnS9vYrPUm3b5WZyiY1xCnRfYrR3EB6/QjsLuyV2kWctxCBbl+xCTX/fNRArFHRmK90Xelbm2QonGwBSzX+dl5S9cliFhv287k5295MFvNCKJNw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ZYWqPcsg; arc=none smtp.client-ip=209.85.210.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UlyUrYEj"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-310a0668968so2255193a91.0
-        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 18:01:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZYWqPcsg"
+Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-742951722b3so7407973b3a.2
+        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 18:01:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747962072; x=1748566872; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1747962074; x=1748566874; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=QZ/HVVcKE1D9F/RksSitv8YykybKRfr9scegH3bUh2Y=;
-        b=UlyUrYEjdVZunsrh+BToNNWHq4fLxFgLdK47+ZROj1lhq4xu+f2Jh7zpXsgtSRQneM
-         8VwXh5Pbas0WvMpjThAyf5tojMoxmneOk76DK98z6UlDVDPTzibZZ1yRkWeFPq8w2+0i
-         LcQ+wJCmsnDmCw9AkxX71fHfK0TpJI250QJ+o5F9u6yAIeRIFl3xj0mcz6zkiPGJVdFr
-         hNz2T5T7Ydi2+xI8JTqyTu9e5fCWtWn46A2US6GD8bPDvnqw9aETkRk37rLQL3hOGUIH
-         n1M1iUh4l/lBJ83Rcxj67qv2YNapTTf820bhVL2nGMrWGw/vXA2xc26CF3DrouLaHuNj
-         zJUg==
+        bh=x0SQOCMzf8MbWWt1DyUg5caMlYYVCTMHKmyxGamNwc0=;
+        b=ZYWqPcsgQ0EtRfq32IQ9P7EdSYZUGVH+Eab8vog4S+NQ8yb+GDRDFHtFoRhdotdQk9
+         5zEXB5s8zu81Wv52ZC/gXZUIH84e+AI8E8MlLZOQTHuYMrXM4OICKk+Zwf7BcZ8h/LMD
+         kA0aFHh3XAEjR1qyZNOyVOgBhqxqDrxIOpuxa4qRg0DEa3h+BjeCX0gv70aZCLqxzFtz
+         am4gcL/8TuXqPfCIlReM196o/iFykBJdIMJf+WDxXGqRIxesLf7wiCOf6CqSeN1rSTvz
+         Wgf82OuOg4ODqI/+noJJp8ICv7ESpjdQnEnzSomqQZkqSgs/NqexXsLqMYKvy0RgNXn9
+         6KMQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747962072; x=1748566872;
+        d=1e100.net; s=20230601; t=1747962074; x=1748566874;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=QZ/HVVcKE1D9F/RksSitv8YykybKRfr9scegH3bUh2Y=;
-        b=m0JWdbY/3nVvP7HdhTIEpreFXgIVyOkz3q/2yMEdjkYVUrI7cxbHNbLhEQDf/h7Vs0
-         UoBFaBYABLtqE1FYTBNuM+olQarNpM7rmmf5CiiPteduaN4X9VHxbBDsoEnCbA7C0nmc
-         X9hCJ9xf1c+5LjQGnAtKL/OEs1iAtsleFRIOJvltq42UYrh5msPxzdaPYpNTLMe/o+jb
-         A4e1DZZUoA8ZnvpH9C5D6RqL9Fy7H8mlUpJfZGv+wG9Nqd+8V1uMqkvPzjItnyaJ1nHM
-         OtGXL78TxhW+7D+HmqKxJ/igIwC3YMjHF08Fsq1wlmyGJ8JxOGycAYuhlUFxuD4fm+ty
-         HS3g==
-X-Forwarded-Encrypted: i=1; AJvYcCXBOzYqbkWdur+82vX8p5QrUf+6Bt6pwPzmFqPRemh6m4RW96fubWgtoQY5Vwidr0/UX6s5dF7xl6M7xmk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwcW1YraU2mAeXeCGiVDk7VEqiIZzXPk8wpy6IVR2TdFdREtvKo
-	B7/2InYA1S42RvKFe/fybUTLldDuz/psjHPeA8aSZ6hQQdUaALs9glLZ4BxpoixwoU8oAr3rl9O
-	izl7hLg==
-X-Google-Smtp-Source: AGHT+IEivPKszStQSfYiwNpJ7/umbLGOogBna7x7mx10TTJkqWGmqjwZ44z3FVYVN+th/LcfZ1pWsae8+lg=
-X-Received: from pja14.prod.google.com ([2002:a17:90b:548e:b0:2ef:d283:5089])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:3b86:b0:30e:8c5d:8f8
- with SMTP id 98e67ed59e1d1-30e8c5d09b3mr44884823a91.14.1747962072336; Thu, 22
- May 2025 18:01:12 -0700 (PDT)
+        bh=x0SQOCMzf8MbWWt1DyUg5caMlYYVCTMHKmyxGamNwc0=;
+        b=Xy756GdwndO3jwD2VegM0GyGZWcpp74Q8jH79YikatModW4pLIL8ptsG1UHGur1Kgj
+         sMn2jwYJrg/VFRbyLxHiSScBa4Ih2W9EQc1Gn5RBRZVDpR/3f3e9IYZ6DpKL6CkQ/vkE
+         sb09tExEyemm3kKn073e020zei7PklOVI4cAiTi97oTtw+itqBVZ0yKgbr/FCmQJURL6
+         i5NImcWnms807udQn5nKQlO38ReBodLbpqu/p3jDlE/2ir+qNYSPSnKRapqH2DR+9KcA
+         oV5r+l8zBJ+X5PpgVg8LbBSlQwbSNE9OnCmSJ8ybxAMLI6vOdr4HDsehxuS9/9KGU9CM
+         izqA==
+X-Forwarded-Encrypted: i=1; AJvYcCVcmwqVQJoRqb7FdOZeUrTxfmAP5WaZnBcJACGj5Ydw6q1B2ZhvFHK4xqhbwzWIGNv28rkopt/kEXjYaf8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzlstFHdH4s7OVg73ghzKPUS/jVATg3DN951hSKpHhNbJPrsxuH
+	GyEIgKQ/vtiq2iz8olq5/Wc49Wf/myrGTcTb3j7DHLMvhs1KUVs87F0t/AOJC9w7EfApoc+JZhr
+	/2ImAuw==
+X-Google-Smtp-Source: AGHT+IGnAWR1Ge5/kNVjom0UceZOieMbcvP7V10C2KnBUEzzCVxlhXi3O6dwFOIaCRRkmy7JIN59ucCqu8k=
+X-Received: from pfbcd23.prod.google.com ([2002:a05:6a00:4217:b0:736:7120:dd05])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:e0e:b0:736:9f20:a175
+ with SMTP id d2e1a72fcca58-742acc8d8f4mr36938652b3a.2.1747962073957; Thu, 22
+ May 2025 18:01:13 -0700 (PDT)
 Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Thu, 22 May 2025 17:59:42 -0700
+Date: Thu, 22 May 2025 17:59:43 -0700
 In-Reply-To: <20250523010004.3240643-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -61,9 +61,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250523010004.3240643-1-seanjc@google.com>
 X-Mailer: git-send-email 2.49.0.1151.ga128411c76-goog
-Message-ID: <20250523010004.3240643-38-seanjc@google.com>
-Subject: [PATCH v2 37/59] iommu/amd: Document which IRTE fields
- amd_iommu_update_ga() can modify
+Message-ID: <20250523010004.3240643-39-seanjc@google.com>
+Subject: [PATCH v2 38/59] iommu/amd: KVM: SVM: Infer IsRun from validity of
+ pCPU destination
 From: Sean Christopherson <seanjc@google.com>
 To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, 
 	Joerg Roedel <joro@8bytes.org>, David Woodhouse <dwmw2@infradead.org>, 
@@ -74,47 +74,131 @@ Cc: kvm@vger.kernel.org, iommu@lists.linux.dev, linux-kernel@vger.kernel.org,
 	Francesco Lavra <francescolavra.fl@gmail.com>, David Matlack <dmatlack@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Add a comment to amd_iommu_update_ga() to document what fields it can
-safely modify without issuing an invalidation of the IRTE, and to explain
-its role in keeping GA IRTEs up-to-date.
+Infer whether or not a vCPU should be marked running from the validity of
+the pCPU on which it is running.  amd_iommu_update_ga() already skips the
+IRTE update if the pCPU is invalid, i.e. passing %true for is_run with an
+invalid pCPU would be a blatant and egregrious KVM bug.
 
-Per page 93 of the IOMMU spec dated Feb 2025:
-
-  When virtual interrupts are enabled by setting MMIO Offset 0018h[GAEn] and
-  IRTE[GuestMode=1], IRTE[IsRun], IRTE[Destination], and if present IRTE[GATag],
-  are not cached by the IOMMU. Modifications to these fields do not require an
-  invalidation of the Interrupt Remapping Table.
-
-Link: https://lore.kernel.org/all/9b7ceea3-8c47-4383-ad9c-1a9bbdc9044a@oracle.com
-Cc: Joao Martins <joao.m.martins@oracle.com>
+Tested-by: Sairaj Kodilkar <sarunkod@amd.com>
 Signed-off-by: Sean Christopherson <seanjc@google.com>
 ---
- drivers/iommu/amd/iommu.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ arch/x86/kvm/svm/avic.c   | 11 +++++------
+ drivers/iommu/amd/iommu.c | 14 +++++++++-----
+ include/linux/amd-iommu.h |  6 ++----
+ 3 files changed, 16 insertions(+), 15 deletions(-)
 
+diff --git a/arch/x86/kvm/svm/avic.c b/arch/x86/kvm/svm/avic.c
+index 4747fb09aca4..c79648d96752 100644
+--- a/arch/x86/kvm/svm/avic.c
++++ b/arch/x86/kvm/svm/avic.c
+@@ -832,7 +832,7 @@ int avic_pi_update_irte(struct kvm_kernel_irqfd *irqfd, struct kvm *kvm,
+ 		entry = svm->avic_physical_id_entry;
+ 		if (entry & AVIC_PHYSICAL_ID_ENTRY_IS_RUNNING_MASK)
+ 			amd_iommu_update_ga(entry & AVIC_PHYSICAL_ID_ENTRY_HOST_PHYSICAL_ID_MASK,
+-					    true, pi_data.ir_data);
++					    pi_data.ir_data);
+ 
+ 		irqfd->irq_bypass_data = pi_data.ir_data;
+ 		list_add(&irqfd->vcpu_list, &svm->ir_list);
+@@ -841,8 +841,7 @@ int avic_pi_update_irte(struct kvm_kernel_irqfd *irqfd, struct kvm *kvm,
+ 	return irq_set_vcpu_affinity(host_irq, NULL);
+ }
+ 
+-static inline int
+-avic_update_iommu_vcpu_affinity(struct kvm_vcpu *vcpu, int cpu, bool r)
++static inline int avic_update_iommu_vcpu_affinity(struct kvm_vcpu *vcpu, int cpu)
+ {
+ 	int ret = 0;
+ 	struct vcpu_svm *svm = to_svm(vcpu);
+@@ -861,7 +860,7 @@ avic_update_iommu_vcpu_affinity(struct kvm_vcpu *vcpu, int cpu, bool r)
+ 		return 0;
+ 
+ 	list_for_each_entry(irqfd, &svm->ir_list, vcpu_list) {
+-		ret = amd_iommu_update_ga(cpu, r, irqfd->irq_bypass_data);
++		ret = amd_iommu_update_ga(cpu, irqfd->irq_bypass_data);
+ 		if (ret)
+ 			return ret;
+ 	}
+@@ -923,7 +922,7 @@ void avic_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
+ 
+ 	WRITE_ONCE(kvm_svm->avic_physical_id_table[vcpu->vcpu_id], entry);
+ 
+-	avic_update_iommu_vcpu_affinity(vcpu, h_physical_id, true);
++	avic_update_iommu_vcpu_affinity(vcpu, h_physical_id);
+ 
+ 	spin_unlock_irqrestore(&svm->ir_list_lock, flags);
+ }
+@@ -963,7 +962,7 @@ void avic_vcpu_put(struct kvm_vcpu *vcpu)
+ 	 */
+ 	spin_lock_irqsave(&svm->ir_list_lock, flags);
+ 
+-	avic_update_iommu_vcpu_affinity(vcpu, -1, 0);
++	avic_update_iommu_vcpu_affinity(vcpu, -1);
+ 
+ 	entry &= ~AVIC_PHYSICAL_ID_ENTRY_IS_RUNNING_MASK;
+ 	svm->avic_physical_id_entry = entry;
 diff --git a/drivers/iommu/amd/iommu.c b/drivers/iommu/amd/iommu.c
-index 36749efcc781..5adc932b947e 100644
+index 5adc932b947e..bb804bbc916b 100644
 --- a/drivers/iommu/amd/iommu.c
 +++ b/drivers/iommu/amd/iommu.c
-@@ -3986,6 +3986,18 @@ int amd_iommu_create_irq_domain(struct amd_iommu *iommu)
+@@ -3990,15 +3990,17 @@ int amd_iommu_create_irq_domain(struct amd_iommu *iommu)
+  * Update the pCPU information for an IRTE that is configured to post IRQs to
+  * a vCPU, without issuing an IOMMU invalidation for the IRTE.
+  *
+- * This API is intended to be used when a vCPU is scheduled in/out (or stops
+- * running for any reason), to do a fast update of IsRun and (conditionally)
+- * Destination.
++ * If the vCPU is associated with a pCPU (@cpu >= 0), configure the Destination
++ * with the pCPU's APIC ID and set IsRun, else clear IsRun.  I.e. treat vCPUs
++ * that are associated with a pCPU as running.  This API is intended to be used
++ * when a vCPU is scheduled in/out (or stops running for any reason), to do a
++ * fast update of IsRun and (conditionally) Destination.
+  *
+  * Per the IOMMU spec, the Destination, IsRun, and GATag fields are not cached
+  * and thus don't require an invalidation to ensure the IOMMU consumes fresh
+  * information.
+  */
+-int amd_iommu_update_ga(int cpu, bool is_run, void *data)
++int amd_iommu_update_ga(int cpu, void *data)
+ {
+ 	struct amd_ir_data *ir_data = (struct amd_ir_data *)data;
+ 	struct irte_ga *entry = (struct irte_ga *) ir_data->entry;
+@@ -4015,8 +4017,10 @@ int amd_iommu_update_ga(int cpu, bool is_run, void *data)
+ 					APICID_TO_IRTE_DEST_LO(cpu);
+ 		entry->hi.fields.destination =
+ 					APICID_TO_IRTE_DEST_HI(cpu);
++		entry->lo.fields_vapic.is_run = true;
++	} else {
++		entry->lo.fields_vapic.is_run = false;
+ 	}
+-	entry->lo.fields_vapic.is_run = is_run;
+ 
+ 	return __modify_irte_ga(ir_data->iommu, ir_data->irq_2_irte.devid,
+ 				ir_data->irq_2_irte.index, entry);
+diff --git a/include/linux/amd-iommu.h b/include/linux/amd-iommu.h
+index 99b4fa9a0296..fe0e16ffe0e5 100644
+--- a/include/linux/amd-iommu.h
++++ b/include/linux/amd-iommu.h
+@@ -30,8 +30,7 @@ static inline void amd_iommu_detect(void) { }
+ /* IOMMU AVIC Function */
+ extern int amd_iommu_register_ga_log_notifier(int (*notifier)(u32));
+ 
+-extern int
+-amd_iommu_update_ga(int cpu, bool is_run, void *data);
++extern int amd_iommu_update_ga(int cpu, void *data);
+ 
+ extern int amd_iommu_activate_guest_mode(void *data);
+ extern int amd_iommu_deactivate_guest_mode(void *data);
+@@ -44,8 +43,7 @@ amd_iommu_register_ga_log_notifier(int (*notifier)(u32))
  	return 0;
  }
  
-+/*
-+ * Update the pCPU information for an IRTE that is configured to post IRQs to
-+ * a vCPU, without issuing an IOMMU invalidation for the IRTE.
-+ *
-+ * This API is intended to be used when a vCPU is scheduled in/out (or stops
-+ * running for any reason), to do a fast update of IsRun and (conditionally)
-+ * Destination.
-+ *
-+ * Per the IOMMU spec, the Destination, IsRun, and GATag fields are not cached
-+ * and thus don't require an invalidation to ensure the IOMMU consumes fresh
-+ * information.
-+ */
- int amd_iommu_update_ga(int cpu, bool is_run, void *data)
+-static inline int
+-amd_iommu_update_ga(int cpu, bool is_run, void *data)
++static inline int amd_iommu_update_ga(int cpu, void *data)
  {
- 	struct amd_ir_data *ir_data = (struct amd_ir_data *)data;
+ 	return 0;
+ }
 -- 
 2.49.0.1151.ga128411c76-goog
 
