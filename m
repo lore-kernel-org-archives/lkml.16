@@ -1,202 +1,194 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97A142F41;
-	Fri, 23 May 2025 06:59:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0686B19C554
+	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 07:00:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747983545; cv=none; b=hpnBHIKIGTWP4+nypGodxdow+jZS1oYR4xrJ5QLLbKw+HEQ3aX4ETfsSDeiLCfKLySSda2dG4ri7rgR//M5fxgwAPJ3EOeS8YXn79wu591Ufcdhf79ue71HcTpZ5w44S9HCoeM0NBeztFxYX/adHJHQxX2YaTtqt2arWuLybwFQ=
+	t=1747983624; cv=none; b=kToiOGYxGCK1PUGkbFdqIFYvO9j6aWtGSJp3Hfrz+B/vxt74LqVl2ZbNqdwm0iqYMk6/nxOeG4yvWUFzaG5q05xUuAJ7F/hgP9mbN6upxpYel5NZyFDTICe3VGUdTSKV7Jt9uhI4xAoSKbHnNK5Gp875QB0PD+zCfGyoknIKOgc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747983545; c=relaxed/simple;
-	bh=oQB6Ln9MA/kBU//SsjcArG0iT9q+cUOskiIh8YOOv1w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pDKBZvSSc3JT70xEHgVFDYHcsD4n0JqpAGB6YMTd1ekT0VajHU0hTRq2vfz5r6uOdclJYoWUaViDJyJMQx5oXABGq9v5Pk2cBFQOvjypfhL9aakHaZk8iTtfW3aXWZPcsNoW5vhdysvj35zHfynrRZSjDYoRL31iiUcCo+2pPbs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kBNzSzm7; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747983624; c=relaxed/simple;
+	bh=neDk6r//D2YS/2ztabYUktexdeEwePzAlfRSv8mTWso=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=foGQt2Z6MD0QDsWnVgxZT3CDAi9pgxptyu4ODRHAEm/F2SOghKKa+1FSak7R30IemukZzc5wc9VuqeVC2UzdU89wN33ezAFVCHIA4sGFjiG2GWjzmv1ohhhAQRkHNss1IZuoKWoAZ3j/EGW6KYuKP4sXuQLOBR8f7Vu5i9xbLG0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UlekYvnx; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kBNzSzm7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0292C4CEE9;
-	Fri, 23 May 2025 06:59:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747983545;
-	bh=oQB6Ln9MA/kBU//SsjcArG0iT9q+cUOskiIh8YOOv1w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=kBNzSzm79lnwPHi4IveJs23sYMPLVjmZaelESuluDDtMVYGZi3YXSkKk3xSNSkhZf
-	 mHpunarmtrSaa4/8QJZ1Ka8CcpOJlmiwvkBGeo5i9HhpQ7YplJ+V+OKKMW8byhCCaj
-	 WRs9o77RPoMywOVEfAuZaJc38ia2UDymCfYv4nyC99vMKVWbfHdExG7Gr9KiNTebY2
-	 Gak1QoFa+VeyYhkrMp7QiYIwDsp/7VXcASN/rf1afmfO+LFv6hT5WhSaD5BwzAT/7y
-	 zvltuKTTpctBZ5Q5G/BGtu/BOPclpwBJsDyzfuudSR5Ga2Gg4DYN5QsB+pMsibBSIM
-	 AyEj5ujgcDYaQ==
-Date: Fri, 23 May 2025 08:58:58 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Rob Clark <robdclark@gmail.com>
-Cc: Connor Abbott <cwabbott0@gmail.com>, Rob Clark <robdclark@chromium.org>,
-	phasta@kernel.org, dri-devel@lists.freedesktop.org,
-	freedreno@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
-	Matthew Brost <matthew.brost@intel.com>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <ckoenig.leichtzumerken@gmail.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	open list <linux-kernel@vger.kernel.org>,
-	Boris Brezillon <boris.brezillon@collabora.com>
-Subject: Re: [PATCH v4 04/40] drm/sched: Add enqueue credit limit
-Message-ID: <aDAcsvVaRQopkc6U@pollux>
-References: <aCY42rgJC4sQ4tp4@pollux>
- <CAF6AEGubHkdhfJz=bAZvctO1aTKDLwRsRyPzkoVrQ7tA6dRbKw@mail.gmail.com>
- <aCwqAGLLCC2ZLSBK@pollux>
- <CAF6AEGspvuTHU0t9z__p_HkdRNi=cXir3t453AbR6DFNzDpgvw@mail.gmail.com>
- <aCyzyAPbQ1SYbo4q@pollux>
- <CAF6AEGs+WmTO_624A3Pek-1-SD6B4PFu4sDv3htko0ABhfHFzw@mail.gmail.com>
- <aC8Dzgufa9E2MD6t@pollux>
- <CAF6AEGvkrN8H1ZPzrCQF+d_Y_Y5kRdeQjohDqcgpNd-uDKo9yQ@mail.gmail.com>
- <aC9Iih1KN6xb9LrK@cassiopeiae>
- <CAF6AEGvp6BCN14_n+Ot5KQrPbnDprKXcHT0s0ZLC2-JDV7D3TQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UlekYvnx"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747983623; x=1779519623;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=neDk6r//D2YS/2ztabYUktexdeEwePzAlfRSv8mTWso=;
+  b=UlekYvnxII1Opyi13+3JlnOYJbhv0dD5EnUVimvvBC2uVphr9LrRuTv9
+   V+fC2FFPNsMVnZO6uY0oKTNEwTcMNfo1JeuxwWluq03eOUoOxpEj7aSNu
+   pUxgdDh2JsUcukJ2Y5hjiRWEhyQXO7vQR0Qwi1C6pitmVG0Z5GPRB0iVK
+   kOQH/+P7yTjUU2LUIgjGUVLTxAFzaLNPd8oM9iRzIkrtVGh/SguShmngO
+   78Nkks7qBRXaRpphcqv9NgkPYUfcZI5Eytbq87NvAybOO2AGsxfT44YYR
+   NLjcdYaSBnEQAUg5Hz6hi506eMFGUJyD07XJY3lrNAbodrFv6o19zQEU0
+   A==;
+X-CSE-ConnectionGUID: UDQJJZfRT9iWwGrTVALtJQ==
+X-CSE-MsgGUID: zkAJC+V2Qci8mfiV9CjcJw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11441"; a="75430911"
+X-IronPort-AV: E=Sophos;i="6.15,308,1739865600"; 
+   d="scan'208";a="75430911"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2025 00:00:22 -0700
+X-CSE-ConnectionGUID: 30lQAUSIRM6UmHbxFVUwBQ==
+X-CSE-MsgGUID: nSx8iumJTI+iZRJNKzhUBQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,308,1739865600"; 
+   d="scan'208";a="145716117"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by orviesa003.jf.intel.com with ESMTP; 23 May 2025 00:00:20 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uIMOA-000Q78-22;
+	Fri, 23 May 2025 07:00:18 +0000
+Date: Fri, 23 May 2025 14:59:22 +0800
+From: kernel test robot <lkp@intel.com>
+To: Tudor Ambarus <tudor.ambarus@linaro.org>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Sam Protsenko <semen.protsenko@linaro.org>
+Subject: drivers/tty/serial/samsung_tty.c:1391:48: warning: '%d' directive
+ writing between 1 and 3 bytes into a region of size 2
+Message-ID: <202505231407.tTtUXDmp-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAF6AEGvp6BCN14_n+Ot5KQrPbnDprKXcHT0s0ZLC2-JDV7D3TQ@mail.gmail.com>
 
-On Thu, May 22, 2025 at 07:31:28PM -0700, Rob Clark wrote:
-> On Thu, May 22, 2025 at 8:53 AM Danilo Krummrich <dakr@kernel.org> wrote:
-> > On Thu, May 22, 2025 at 07:47:17AM -0700, Rob Clark wrote:
-> > > On Thu, May 22, 2025 at 4:00 AM Danilo Krummrich <dakr@kernel.org> wrote:
-> > > > Ok, but what about the other way around? What's the performance impact if the
-> > > > limit is chosen rather small, but we're running on a very powerful machine?
-> > > >
-> > > > Since you already have the implementation for hardware you have access to, can
-> > > > you please check if and how performance degrades when you use a very small
-> > > > threshold?
-> > >
-> > > I mean, considering that some drivers (asahi, at least), _only_
-> > > implement synchronous VM_BIND, I guess blocking in extreme cases isn't
-> > > so bad.
-> >
-> > Which is not even upstream yet and eventually will support async VM_BIND too,
-> > AFAIK.
-> 
-> the uapi is upstream
+Hi Tudor,
 
-And will be extended once they have the corresponding async implementation in
-the driver.
+FYI, the error/warning still remains.
 
-> > > But I think you are overthinking this.  4MB of pagetables is
-> > > enough to map ~8GB of buffers.
-> > >
-> > > Perhaps drivers would want to set their limit based on the amount of
-> > > memory the GPU could map, which might land them on a # larger than
-> > > 1024, but still not an order of magnitude more.
-> >
-> > Nouveau currently supports an address space width of 128TiB.
-> >
-> > In general, we have to cover the range of some small laptop or handheld devices
-> > to huge datacenter machines.
-> 
-> sure.. and?  It is still up to the user of sched to set their own
-> limits, I'm not proposing that sched takes charge of that policy
-> 
-> Maybe msm doesn't have to scale up quite as much (yet).. but it has to
-> scale quite a bit further down (like watches).  In the end it is the
-> same.  And also not really the point here.
-> 
-> > > I don't really have a good setup for testing games that use this, atm,
-> > > fex-emu isn't working for me atm.  But I think Connor has a setup with
-> > > proton working?
-> >
-> > I just want to be sure that an arbitrary small limit doing the job for a small
-> > device to not fail VK CTS can't regress the performance on large machines.
-> 
-> why are we debating the limit I set outside of sched.. even that might
-> be subject to some tuning for devices that have more memory, but that
-> really outside the scope of this patch
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   94305e83eccb3120c921cd3a015cd74731140bac
+commit: 6e1e48b6ef2613ff4c28a34f7a57c29a4367ad87 tty: serial: samsung: shrink the clock selection to 8 clocks
+date:   1 year, 4 months ago
+config: csky-randconfig-r053-20231127 (https://download.01.org/0day-ci/archive/20250523/202505231407.tTtUXDmp-lkp@intel.com/config)
+compiler: csky-linux-gcc (GCC) 12.4.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250523/202505231407.tTtUXDmp-lkp@intel.com/reproduce)
 
-We are not debating the number you set in MSM, we're talking about whether a
-statically set number will be sufficient.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202505231407.tTtUXDmp-lkp@intel.com/
 
-Also, do we really want it to be our quality standard that we introduce some
-throttling mechanism as generic infrastructure for driver and don't even add a
-comment guiding drivers how to choose a proper limit and what are the potential
-pitfalls in choosing the limit?
+All warnings (new ones prefixed by >>):
 
-When working on a driver, do you want to run into APIs that don't give you
-proper guidance on how to use them correctly?
+   drivers/tty/serial/samsung_tty.c: In function 's3c24xx_serial_set_termios':
+>> drivers/tty/serial/samsung_tty.c:1391:48: warning: '%d' directive writing between 1 and 3 bytes into a region of size 2 [-Wformat-overflow=]
+    1391 |                 sprintf(clkname, "clk_uart_baud%d", cnt);
+         |                                                ^~
+   In function 's3c24xx_serial_getclk',
+       inlined from 's3c24xx_serial_set_termios' at drivers/tty/serial/samsung_tty.c:1492:9:
+   drivers/tty/serial/samsung_tty.c:1391:34: note: directive argument in the range [0, 254]
+    1391 |                 sprintf(clkname, "clk_uart_baud%d", cnt);
+         |                                  ^~~~~~~~~~~~~~~~~
+   drivers/tty/serial/samsung_tty.c:1391:17: note: 'sprintf' output between 15 and 17 bytes into a destination of size 15
+    1391 |                 sprintf(clkname, "clk_uart_baud%d", cnt);
+         |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   drivers/tty/serial/samsung_tty.c: In function 's3c24xx_serial_init_port':
+   drivers/tty/serial/samsung_tty.c:1789:49: warning: '%d' directive writing between 1 and 3 bytes into a region of size 2 [-Wformat-overflow=]
+    1789 |                 sprintf(clk_name, "clk_uart_baud%d", clk_num);
+         |                                                 ^~
+   In function 's3c24xx_serial_enable_baudclk',
+       inlined from 's3c24xx_serial_init_port' at drivers/tty/serial/samsung_tty.c:1895:8:
+   drivers/tty/serial/samsung_tty.c:1789:35: note: directive argument in the range [0, 254]
+    1789 |                 sprintf(clk_name, "clk_uart_baud%d", clk_num);
+         |                                   ^~~~~~~~~~~~~~~~~
+   drivers/tty/serial/samsung_tty.c:1789:17: note: 'sprintf' output between 15 and 17 bytes into a destination of size 15
+    1789 |                 sprintf(clk_name, "clk_uart_baud%d", clk_num);
+         |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-I think it would not be very nice to tell drivers, "Look, here's a throttling API
-for when VK CTS (unknown test) ruins your day. We also can't give any advise on
-the limit that should be set depending on the scale of the machine, since we
-never looked into it.".
 
-> > So, kindly try to prove that we're not prone to extreme performance regression
-> > with a static value as you propose.
-> >
-> > > > Also, I think we should probably put this throttle mechanism in a separate
-> > > > component, that just wraps a counter of bytes or rather pages that can be
-> > > > increased and decreased through an API and the increase just blocks at a certain
-> > > > threshold.
-> > >
-> > > Maybe?  I don't see why we need to explicitly define the units for the
-> > > credit.  This wasn't done for the existing credit mechanism.. which,
-> > > seems like if you used some extra fences could also have been
-> > > implemented externally.
-> >
-> > If you are referring to the credit mechanism in the scheduler for ring buffers,
-> > that's a different case. Drivers know the size of their ring buffers exactly and
-> > the scheduler has the responsibility of when to submit tasks to the ring buffer.
-> > So the scheduler kind of owns the resource.
-> >
-> > However, the throttle mechanism you propose is independent from the scheduler,
-> > it depends on the available system memory, a resource the scheduler doesn't own.
-> 
-> it is a distinction that is perhaps a matter of opinion.  I don't see
-> such a big difference, it is all just a matter of managing physical
-> resource usage in different stages of a scheduled job's lifetime.
+vim +1391 drivers/tty/serial/samsung_tty.c
 
-Yes, but the ring buffer as a resource is owned by the scheduler, and hence
-having the scheduler care about flow control makes sense.
+5f5a7a5578c588 drivers/tty/serial/samsung.c     Thomas Abraham      2011-10-24  1372  
+5f5a7a5578c588 drivers/tty/serial/samsung.c     Thomas Abraham      2011-10-24  1373  static unsigned int s3c24xx_serial_getclk(struct s3c24xx_uart_port *ourport,
+5f5a7a5578c588 drivers/tty/serial/samsung.c     Thomas Abraham      2011-10-24  1374  			unsigned int req_baud, struct clk **best_clk,
+6e1e48b6ef2613 drivers/tty/serial/samsung_tty.c Tudor Ambarus       2024-01-19  1375  			u8 *clk_num)
+b497549a035c2a drivers/serial/samsung.c         Ben Dooks           2008-07-03  1376  {
+97a6cfe8115b04 drivers/tty/serial/samsung_tty.c Krzysztof Kozlowski 2022-03-08  1377  	const struct s3c24xx_uart_info *info = ourport->info;
+5f5a7a5578c588 drivers/tty/serial/samsung.c     Thomas Abraham      2011-10-24  1378  	struct clk *clk;
+b497549a035c2a drivers/serial/samsung.c         Ben Dooks           2008-07-03  1379  	unsigned long rate;
+6e1e48b6ef2613 drivers/tty/serial/samsung_tty.c Tudor Ambarus       2024-01-19  1380  	unsigned int baud, quot, best_quot = 0;
+5f5a7a5578c588 drivers/tty/serial/samsung.c     Thomas Abraham      2011-10-24  1381  	char clkname[MAX_CLK_NAME_LENGTH];
+5f5a7a5578c588 drivers/tty/serial/samsung.c     Thomas Abraham      2011-10-24  1382  	int calc_deviation, deviation = (1 << 30) - 1;
+6e1e48b6ef2613 drivers/tty/serial/samsung_tty.c Tudor Ambarus       2024-01-19  1383  	u8 cnt;
+5f5a7a5578c588 drivers/tty/serial/samsung.c     Thomas Abraham      2011-10-24  1384  
+5f5a7a5578c588 drivers/tty/serial/samsung.c     Thomas Abraham      2011-10-24  1385  	for (cnt = 0; cnt < info->num_clks; cnt++) {
+7d31676a8d91dd drivers/tty/serial/samsung_tty.c Jonathan Bakker     2020-05-08  1386  		/* Keep selected clock if provided */
+7d31676a8d91dd drivers/tty/serial/samsung_tty.c Jonathan Bakker     2020-05-08  1387  		if (ourport->cfg->clk_sel &&
+7d31676a8d91dd drivers/tty/serial/samsung_tty.c Jonathan Bakker     2020-05-08  1388  			!(ourport->cfg->clk_sel & (1 << cnt)))
+5f5a7a5578c588 drivers/tty/serial/samsung.c     Thomas Abraham      2011-10-24  1389  			continue;
+b497549a035c2a drivers/serial/samsung.c         Ben Dooks           2008-07-03  1390  
+5f5a7a5578c588 drivers/tty/serial/samsung.c     Thomas Abraham      2011-10-24 @1391  		sprintf(clkname, "clk_uart_baud%d", cnt);
+5f5a7a5578c588 drivers/tty/serial/samsung.c     Thomas Abraham      2011-10-24  1392  		clk = clk_get(ourport->port.dev, clkname);
+7cd88831feb03c drivers/tty/serial/samsung.c     Kyoungil Kim        2012-05-20  1393  		if (IS_ERR(clk))
+5f5a7a5578c588 drivers/tty/serial/samsung.c     Thomas Abraham      2011-10-24  1394  			continue;
+b497549a035c2a drivers/serial/samsung.c         Ben Dooks           2008-07-03  1395  
+5f5a7a5578c588 drivers/tty/serial/samsung.c     Thomas Abraham      2011-10-24  1396  		rate = clk_get_rate(clk);
+a9c09546e903f1 drivers/tty/serial/samsung_tty.c Christophe JAILLET  2023-06-10  1397  		if (!rate) {
+a9c09546e903f1 drivers/tty/serial/samsung_tty.c Christophe JAILLET  2023-06-10  1398  			dev_err(ourport->port.dev,
+a9c09546e903f1 drivers/tty/serial/samsung_tty.c Christophe JAILLET  2023-06-10  1399  				"Failed to get clock rate for %s.\n", clkname);
+a9c09546e903f1 drivers/tty/serial/samsung_tty.c Christophe JAILLET  2023-06-10  1400  			clk_put(clk);
+5f5a7a5578c588 drivers/tty/serial/samsung.c     Thomas Abraham      2011-10-24  1401  			continue;
+a9c09546e903f1 drivers/tty/serial/samsung_tty.c Christophe JAILLET  2023-06-10  1402  		}
+090f848da00008 drivers/serial/samsung.c         Ben Dooks           2008-12-12  1403  
+090f848da00008 drivers/serial/samsung.c         Ben Dooks           2008-12-12  1404  		if (ourport->info->has_divslot) {
+5f5a7a5578c588 drivers/tty/serial/samsung.c     Thomas Abraham      2011-10-24  1405  			unsigned long div = rate / req_baud;
+090f848da00008 drivers/serial/samsung.c         Ben Dooks           2008-12-12  1406  
+090f848da00008 drivers/serial/samsung.c         Ben Dooks           2008-12-12  1407  			/* The UDIVSLOT register on the newer UARTs allows us to
+090f848da00008 drivers/serial/samsung.c         Ben Dooks           2008-12-12  1408  			 * get a divisor adjustment of 1/16th on the baud clock.
+090f848da00008 drivers/serial/samsung.c         Ben Dooks           2008-12-12  1409  			 *
+5f5a7a5578c588 drivers/tty/serial/samsung.c     Thomas Abraham      2011-10-24  1410  			 * We don't keep the UDIVSLOT value (the 16ths we
+5f5a7a5578c588 drivers/tty/serial/samsung.c     Thomas Abraham      2011-10-24  1411  			 * calculated by not multiplying the baud by 16) as it
+5f5a7a5578c588 drivers/tty/serial/samsung.c     Thomas Abraham      2011-10-24  1412  			 * is easy enough to recalculate.
+090f848da00008 drivers/serial/samsung.c         Ben Dooks           2008-12-12  1413  			 */
+090f848da00008 drivers/serial/samsung.c         Ben Dooks           2008-12-12  1414  
+5f5a7a5578c588 drivers/tty/serial/samsung.c     Thomas Abraham      2011-10-24  1415  			quot = div / 16;
+5f5a7a5578c588 drivers/tty/serial/samsung.c     Thomas Abraham      2011-10-24  1416  			baud = rate / div;
+090f848da00008 drivers/serial/samsung.c         Ben Dooks           2008-12-12  1417  		} else {
+5f5a7a5578c588 drivers/tty/serial/samsung.c     Thomas Abraham      2011-10-24  1418  			quot = (rate + (8 * req_baud)) / (16 * req_baud);
+5f5a7a5578c588 drivers/tty/serial/samsung.c     Thomas Abraham      2011-10-24  1419  			baud = rate / (quot * 16);
+090f848da00008 drivers/serial/samsung.c         Ben Dooks           2008-12-12  1420  		}
+5f5a7a5578c588 drivers/tty/serial/samsung.c     Thomas Abraham      2011-10-24  1421  		quot--;
+b497549a035c2a drivers/serial/samsung.c         Ben Dooks           2008-07-03  1422  
+f3710f5e9e1a68 drivers/tty/serial/samsung_tty.c Christophe JAILLET  2023-06-10  1423  		calc_deviation = abs(req_baud - baud);
+b497549a035c2a drivers/serial/samsung.c         Ben Dooks           2008-07-03  1424  
+b497549a035c2a drivers/serial/samsung.c         Ben Dooks           2008-07-03  1425  		if (calc_deviation < deviation) {
+832e231cff4761 drivers/tty/serial/samsung_tty.c Christophe JAILLET  2023-06-10  1426  			/*
+832e231cff4761 drivers/tty/serial/samsung_tty.c Christophe JAILLET  2023-06-10  1427  			 * If we find a better clk, release the previous one, if
+832e231cff4761 drivers/tty/serial/samsung_tty.c Christophe JAILLET  2023-06-10  1428  			 * any.
+832e231cff4761 drivers/tty/serial/samsung_tty.c Christophe JAILLET  2023-06-10  1429  			 */
+832e231cff4761 drivers/tty/serial/samsung_tty.c Christophe JAILLET  2023-06-10  1430  			if (!IS_ERR(*best_clk))
+832e231cff4761 drivers/tty/serial/samsung_tty.c Christophe JAILLET  2023-06-10  1431  				clk_put(*best_clk);
+5f5a7a5578c588 drivers/tty/serial/samsung.c     Thomas Abraham      2011-10-24  1432  			*best_clk = clk;
+5f5a7a5578c588 drivers/tty/serial/samsung.c     Thomas Abraham      2011-10-24  1433  			best_quot = quot;
+5f5a7a5578c588 drivers/tty/serial/samsung.c     Thomas Abraham      2011-10-24  1434  			*clk_num = cnt;
+b497549a035c2a drivers/serial/samsung.c         Ben Dooks           2008-07-03  1435  			deviation = calc_deviation;
+832e231cff4761 drivers/tty/serial/samsung_tty.c Christophe JAILLET  2023-06-10  1436  		} else {
+832e231cff4761 drivers/tty/serial/samsung_tty.c Christophe JAILLET  2023-06-10  1437  			clk_put(clk);
+b497549a035c2a drivers/serial/samsung.c         Ben Dooks           2008-07-03  1438  		}
+b497549a035c2a drivers/serial/samsung.c         Ben Dooks           2008-07-03  1439  	}
+b497549a035c2a drivers/serial/samsung.c         Ben Dooks           2008-07-03  1440  
+5f5a7a5578c588 drivers/tty/serial/samsung.c     Thomas Abraham      2011-10-24  1441  	return best_quot;
+b497549a035c2a drivers/serial/samsung.c         Ben Dooks           2008-07-03  1442  }
+b497549a035c2a drivers/serial/samsung.c         Ben Dooks           2008-07-03  1443  
 
-Here you want to flow control the uAPI (i.e. VM_BIND ioctl) -- let's do this in
-a seaparate component please.
+:::::: The code at line 1391 was first introduced by commit
+:::::: 5f5a7a5578c5885201cf9c85856f023fe8b81765 serial: samsung: switch to clkdev based clock lookup
 
-> > > Maybe?  This still has the same complaint I had about just
-> > > implementing this in msm.. it would have to reach in and use the
-> > > scheduler's job_scheduled wait-queue.  Which, to me at least, seems
-> > > like more of an internal detail about how the scheduler works.
-> >
-> > Why? The component should use its own waitqueue. Subsequently, from your code
-> > that releases the pre-allocated memory, you can decrement the counter through
-> > the drm_throttle API, which automatically kicks its the waitqueue.
-> >
-> > For instance from your VM_BIND IOCTL you can call
-> >
-> >         drm_throttle_inc(value)
-> >
-> > which blocks if the increment goes above the threshold. And when you release the
-> > pre-allocated memory you call
-> >
-> >         drm_throttle_dec(value)
-> >
-> > which wakes the waitqueue and unblocks the drm_throttle_inc() call from your
-> > VM_BIND IOCTL.
-> 
-> ok, sure, we could introduce another waitqueue, but with my proposal
-> that is not needed.  And like I said, the existing throttling could
-> also be implemented externally to the scheduler..  so I'm not seeing
-> any fundamental difference.
+:::::: TO: Thomas Abraham <thomas.abraham@linaro.org>
+:::::: CC: Kukjin Kim <kgene.kim@samsung.com>
 
-Yes, but you also implicitly force drivers to actually release the pre-allocated
-memory before the scheduler's internal waitqueue is woken. Having such implicit
-rules isn't nice.
-
-Also, with that drivers would need to do so in run_job(), i.e. in the fence
-signalling critical path, which some drivers may not be able to do.
-
-And, it also adds complexity to the scheduler, which we're trying to reduce.
-
-All this goes away with making this a separate component -- please do that
-instead.
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
