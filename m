@@ -1,65 +1,25 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B35321CC6D
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 15:03:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1C710145B27;
+	Fri, 23 May 2025 15:04:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748012625; cv=none; b=Je+RWNhoA0mj1Jjwf8NehZrc1SOjsZKd3okwA80R1RaMi56Sptyh3VlEa2O+MsL32EJehwjRm+Swp0iVCILH6/f2DpydIzI4NOT6DqsHQIkB6UEo1oRSV38mP6Ie0N3SX9vSWyILSAJRz/E9ugYMnB+5Q3b7RVZwjnGWZg83J18=
+	t=1748012649; cv=none; b=VD4btFh6F+vAjMFnXR+N6N27xVv3r0de2znhJbTYOkFCpRPSRUuuj+xjxTFUKay/OhqAGG/rADzYFNRyghzabiRYaDPDncET9rjz6J60HGvIhDQiEREaOM3BN1/8P/arA5Z/U3DUZRIFS7ZTJdT/XovywLePA+gRRBCM01ZwToc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748012625; c=relaxed/simple;
-	bh=gt14UkZ4PejnmdASx0UjnVuD0GVKd0I/tRd3QMFeD18=;
+	s=arc-20240116; t=1748012649; c=relaxed/simple;
+	bh=LgzZzvYlCla4L/rFHSdbF/gMPO8RB3+Aboi8mlRGv9Q=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZH+S3xKrdJ5EbmNaYBwmCFLkiVQK3f2GCZi7AOJodwifNZL/mNiufbgYc5qyJt2CVfmrXz9uGV9UgrlFtsBxuFl3asV/6pwQxNps1hXifWg72RGpMUlPPVVm58Odjw1+U4JPA8+ltqdz68280unACpuaybZ0EtMlMEwZ2Do0djQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=kGL2eaw5; arc=none smtp.client-ip=209.85.128.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kGL2eaw5"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-43edecbfb46so74829795e9.0
-        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 08:03:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1748012621; x=1748617421; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=gbvz/uK2pr2MI4jmK6EDAPEU/Gm2+BjOciuq5aXVONE=;
-        b=kGL2eaw5qYWAlBXk1fwVgctZpFQkcVBDkzfmw/pebZXoRUD71jCheHWHEtPbvzaq8X
-         IYE0DtYGtt4UDHmxhpg6tmxCcsc6aK25toq6IsCmlvpiHkCc/3IU/hSf2JiC1YxqT9EM
-         OB1/Lo7wULaYAVll4D18FDKqUtuRenpQu6NWFwSjUpm/xbGvsKlq5YCiHvIx7M5z7cTe
-         jcvKE4TTbOQ3ZvlH+5HxkdPCO8O622WuRVBk09CvR5+SQit+is3k0kvGnJUZe3iW8X8Q
-         7x65VJ62KX5nJbFp5jmYb1uv7bzj84nNRL4lNpJh6YQZ+3ilshDQ33ENSU3wjIcTZ3iR
-         UdJA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748012621; x=1748617421;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=gbvz/uK2pr2MI4jmK6EDAPEU/Gm2+BjOciuq5aXVONE=;
-        b=TRC+JXAiOEAdI5Jg+/kBa+2wYJ8cNazeowwUTs0boZXY5GyIvBWWXAasI1m+++XuIj
-         VZ2bvTDccu/ARcVHlf6WA4ocQ1Bg1r9nhTcfSCmHI9yuTHx+VeIRLz3VIQOGAZoXfoPr
-         AZrWhwzj8YHN7VK6FUrklaG+ouVIPzkUvd3NPp3zZdtnyMm214q6x7P/18axJojzPXkR
-         NNwpTVKTky0hHpG2zumEHieIPy4RT47ny6y1u+pIIIq/8axOxYSDKfsbkmyEdOHagfII
-         ZPPGLAgtYQAdtdHrF3YgSoXFHYb+gYO6gho52WzZJghf7RMhK1Xbs994Lzm9/MtGfgl/
-         CvAw==
-X-Forwarded-Encrypted: i=1; AJvYcCXZ45Fe3ZtmaHaCOg9HVWtiUZBwtiVWJueOta8ySeiF4CFkrze2vGNUJvQoJR/kzlazWbNuOH446mNxkjk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwZ5ky+J0SLa/FR1TQoCI4X5kx8WZ4xMaQugD3ChXYDJtqrybJl
-	xRcRA7o7GSjdk6XPZgFAlAZs8qtKZ7YmSzISfDgF1yl70SfjtQbLo7mA6TDEXGXYkMk=
-X-Gm-Gg: ASbGncuZDniO7gT2gda1VGSdRUnQPuSkpLyeKA4N+rDEGb1bbC1QghQMpcC0GB8yyb/
-	C7A3fx7LVq7oD6213csY39NOmJTl+MytcKXKmvY4von+dteCNZppdmVa4e73zUSiY8GV0lvFixS
-	c+wJJFM2FGms1Zwc9DLwvCJlYSTXAubJsiAMbThroOfpwQmqjFl+3SJRvEwzz9gjMBriYJRTqkP
-	40hJRm4Gq89KPyREiyL2xFKgrQMz/pe3lyPzNIUuO1i/ga19CYlcXTbOJybTKmdG8RIQtDlVi99
-	4NUB0IwIVJt5qY9HwqHtTmBvtF4VohKr9CmeM+hskcAZ0bRzEZ6vJ0DXfJxlDNdJc010V7kVSkm
-	wMI9WafDIuf0xeMU=
-X-Google-Smtp-Source: AGHT+IF6xxRKnVQPDNFgsmCYk0Qf6SwE1QfyL2jwEhJSor+dcRHsUaLRMrkpLvb8B9U+ZEe9KiJLBQ==
-X-Received: by 2002:a05:600c:3d0b:b0:43c:f513:9591 with SMTP id 5b1f17b1804b1-442feff05b7mr289497065e9.14.1748012621210;
-        Fri, 23 May 2025 08:03:41 -0700 (PDT)
-Received: from [192.168.10.46] (146725694.box.freepro.com. [130.180.211.218])
-        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-3a36835ef41sm22867132f8f.94.2025.05.23.08.03.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 23 May 2025 08:03:40 -0700 (PDT)
-Message-ID: <6e6b0f5f-ac60-48bb-af6c-fa58658d2639@linaro.org>
-Date: Fri, 23 May 2025 17:03:39 +0200
+	 In-Reply-To:Content-Type; b=iwT0FGXoi/AT8ZJNAQHJWh0SzfzyWUjcgk/4y9JUbtY0xjT3Nmik4jR5AuddEAAI0+GJw5ooFnB674mB4Cov0Dd4wq3ZZgiL7LjDyeGcRM9M8BfOaxymQG2G1Gs/uxTDxgUV5KaNmCvmWBIltCTjqYU4staKZsVFSWUKfNy0GY4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AFB781758;
+	Fri, 23 May 2025 08:03:51 -0700 (PDT)
+Received: from [192.168.20.16] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7CD2E3F5A1;
+	Fri, 23 May 2025 08:04:04 -0700 (PDT)
+Message-ID: <d97d3229-110f-4aee-93ad-e4499ef4133e@arm.com>
+Date: Fri, 23 May 2025 10:03:58 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,126 +27,96 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 6/7] clocksource/drivers/exynos_mct: Add module support
-To: William McVicker <willmcvicker@google.com>
-Cc: John Stultz <jstultz@google.com>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Peter Griffin <peter.griffin@linaro.org>,
- =?UTF-8?Q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>,
- Tudor Ambarus <tudor.ambarus@linaro.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>,
- Thomas Gleixner <tglx@linutronix.de>, Saravana Kannan
- <saravanak@google.com>, Krzysztof Kozlowski <krzk@kernel.org>,
- Donghoon Yu <hoony.yu@samsung.com>, Hosung Kim <hosung0.kim@samsung.com>,
- kernel-team@android.com, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, Youngmin Nam <youngmin.nam@samsung.com>,
- linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
-References: <20250402233407.2452429-1-willmcvicker@google.com>
- <20250402233407.2452429-7-willmcvicker@google.com>
- <Z_6OZHYfC0bC5289@mai.linaro.org>
- <CANDhNCodHATboF2=U2tTwdEkEJ+PsfB2F=fbBrs=J1UzZTEX8g@mail.gmail.com>
- <aCNctHq6K7uqFF05@mai.linaro.org> <aCUkN301jWUkXJ3_@google.com>
+Subject: Re: [PATCH] scripts: add zboot support to extract-vmlinux
+To: Nathan Chancellor <nathan@kernel.org>
+Cc: linux-kbuild@vger.kernel.org, masahiroy@kernel.org,
+ nicolas.schier@linux.dev, linux-kernel@vger.kernel.org,
+ Ard Biesheuvel <ardb@kernel.org>
+References: <20250522172941.1669424-1-jeremy.linton@arm.com>
+ <20250522231009.GA2020750@ax162>
 Content-Language: en-US
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-In-Reply-To: <aCUkN301jWUkXJ3_@google.com>
+From: Jeremy Linton <jeremy.linton@arm.com>
+In-Reply-To: <20250522231009.GA2020750@ax162>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
+Hi,
 
-Hi William,
+Thanks for looking at this.
 
-On 15/05/2025 01:16, William McVicker wrote:
-> On 05/13/2025, Daniel Lezcano wrote:
->> On Tue, Apr 15, 2025 at 05:48:41PM -0700, John Stultz wrote:
->>> On Tue, Apr 15, 2025 at 9:50 AM Daniel Lezcano
->>> <daniel.lezcano@linaro.org> wrote:
->>>> On Wed, Apr 02, 2025 at 04:33:57PM -0700, Will McVicker wrote:
->>>>> From: Donghoon Yu <hoony.yu@samsung.com>
->>>>>
->>>>> On Arm64 platforms the Exynos MCT driver can be built as a module. On
->>>>> boot (and even after boot) the arch_timer is used as the clocksource and
->>>>> tick timer. Once the MCT driver is loaded, it can be used as the wakeup
->>>>> source for the arch_timer.
->>>>
->>>>  From a previous thread where there is no answer:
->>>>
->>>> https://lore.kernel.org/all/c1e8abec-680c-451d-b5df-f687291aa413@linaro.org/
->>>>
->>>> I don't feel comfortable with changing the clocksource / clockevent drivers to
->>>> a module for the reasons explained in the aforementionned thread.
->>>
->>> I wasn't CC'ed on that, but to address a few of your points:
->>>
->>>> I have some concerns about this kind of changes:
->>>>
->>>>    * the core code may not be prepared for that, so loading / unloading
->>>> the modules with active timers may result into some issues
->>>
->>> That's a fair concern, but permanent modules (which are loaded but not
->>> unloaded) shouldn't suffer this issue. I recognize having modules be
->>> fully unloadable is generally cleaner and preferred, but I also see
->>> the benefit of allowing permanent modules to be one-way loaded so a
->>> generic/distro kernel shared between lots of different platforms
->>> doesn't need to be bloated with drivers that aren't used everywhere.
->>> Obviously any single driver doesn't make a huge difference, but all
->>> the small drivers together does add up.
+On 5/22/25 6:10 PM, Nathan Chancellor wrote:
+> Hi Jeremy,
+> 
+> On Thu, May 22, 2025 at 12:29:41PM -0500, Jeremy Linton wrote:
+>> Zboot compressed kernel images are used for arm kernels on various
+>> distros.
 >>
->> Perhaps using module_platform_driver_probe() should do the trick with
->> some scripts updated for my git hooks to check
->> module_platform_driver() is not used.
+>> extract-vmlinux fails with those kernels because the wrapped image is
+>> another PE. While this could be a bit confusing, the tools primary
+>> purpose of unwrapping and decompressing the contained vmlinux image
+>> makes it the obvious place for this functionality.
+>>
+>> Add a 'file' check in check_vmlinux() that detects a contained PE
+>> image before trying readelf. Recent file implementations output
+>> something like:
+>>
+>> "Linux kernel ARM64 boot executable Image, little-endian, 4K pages"
+>>
+>> Which is also a stronger statement than readelf provides so drop that
+>> part of the comment. At the same time this means that kernel images
+>> which don't appear to contain a compressed image will be returned
+>> rather than reporting an error. Which matches the behavior for
+>> existing ELF files.
+>>
+>> Signed-off-by: Jeremy Linton <jeremy.linton@arm.com>
+>> Cc: Ard Biesheuvel <ardb@kernel.org>
+>> ---
+>>   scripts/extract-vmlinux | 9 +++++----
+>>   1 file changed, 5 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/scripts/extract-vmlinux b/scripts/extract-vmlinux
+>> index 8995cd304e6e..edda1abe226c 100755
+>> --- a/scripts/extract-vmlinux
+>> +++ b/scripts/extract-vmlinux
+>> @@ -12,10 +12,11 @@
+>>   
+>>   check_vmlinux()
+>>   {
+>> -	# Use readelf to check if it's a valid ELF
+>> -	# TODO: find a better to way to check that it's really vmlinux
+>> -	#       and not just an elf
+>> -	readelf -h $1 > /dev/null 2>&1 || return 1
+>> +	file $1 |grep 'Linux kernel.*boot executable Image' > /dev/null
+>> +	if [ "$?" -ne "0" ]; then
 > 
-> Using `module_platform_driver_probe()` won't work as that still defines
-> a `module_exit()` hook. If you want to automatically handle this in code, then
-> the best approach is to follow what Saravana did in [1] for irqchip drivers.
-> Basically by using `builtin_platform_driver(drv_name##_driver)`, you will only
-> define the `module_init()` hook when the driver is compiled as a module which
-> ensures you always get a permanent module.
+> Could these two lines be simplified to:
 > 
-> [1] https://lore.kernel.org/linux-arm-kernel/20200718000637.3632841-1-saravanak@google.com/
+>    if file $1 | grep 'Linux kernel.*boot executable Image' > /dev/null; then
 
-Thanks for the pointer and the heads up regarding the module_exit() 
-problem with module_platform_driver_probe().
+Yes, but it needs, a '!', which applies to the last operator in the 
+pipeline and for clarity should probably drop the redirection, so I 
+think it ends up:
 
-After digging into the timekeeping framework it appears if the owner of 
-the clockevent device is set to THIS_MODULE, then the framework 
-automatically grabs a reference preventing unloading the module when 
-this one is registered.
+if ! file $1 | grep -q 'Linux kernel.*boot executable Image'; then
 
-IMO it was not heavily tested but for me it is enough to go forward with 
-the module direction regarding the drivers.
+But it mixes the condition checking and the execution, which is common 
+but maybe not the best idea.
 
-One point though, the condition:
-
-+#ifdef MODULE
-[ ... ]
-+static const struct of_device_id exynos4_mct_match_table[] = {
-+	{ .compatible = "samsung,exynos4210-mct", .data = &mct_init_spi, },
-+	{ .compatible = "samsung,exynos4412-mct", .data = &mct_init_ppi, },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, exynos4_mct_match_table);
-+
-+static struct platform_driver exynos4_mct_driver = {
-+	.probe		= exynos4_mct_probe,
-+	.driver		= {
-+		.name	= "exynos-mct",
-+		.of_match_table = exynos4_mct_match_table,
-+	},
-+module_platform_driver(exynos4_mct_driver);
-+#else
-  TIMER_OF_DECLARE(exynos4210, "samsung,exynos4210-mct", mct_init_spi);
-  TIMER_OF_DECLARE(exynos4412, "samsung,exynos4412-mct", mct_init_ppi);
-+#endif
-
-  is not acceptable as is. We don't want to do the same in all the 
-drivers. Furthermore, we should not assume if the modules are enabled in 
-the kernel that implies the driver is compiled as a module.
+Although, if I'm going to reroll this, i think the " Image" should be 
+dropped since it can also have zImage and possibly other reports in the 
+future and AFAIK there isn't any reason to exclude them.
 
 
--- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
 
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+
+> 
+>> +		# Use readelf to check if it's a valid ELF, if 'file' fails
+>> +		readelf -h $1 > /dev/null 2>&1 || return 1
+>> +	fi
+>>   
+>>   	cat $1
+>>   	exit 0
+>> -- 
+>> 2.49.0
+>>
+
