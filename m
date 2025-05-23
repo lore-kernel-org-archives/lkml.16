@@ -1,148 +1,145 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 901F57DA73
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 11:15:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C28F183CC3;
+	Fri, 23 May 2025 11:16:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747998953; cv=none; b=b73bjguAgAhaaJS1A98tvTl6ux5ovw5Jccsr7MNqln3VMUKymuBapxaOFV2ee0qt954Ukqrbr2wtI7zWuphHd3wC9F2EStAVrO8c5gX6MH0H1yI5rFsbyeER8M1boO05uEEkxdwIYHymwRGkNpI7eVxN4gH5pqOrSCHceRPlnL8=
+	t=1747999015; cv=none; b=F4ItIiXyuTiSDiM24whb+lReqMdk+YIeIQ9p61hcvBQoFhM6b1qQRMlRT6JMET10Moz+9MoVegyzwlAk8uMd5a5h2qbIutAKVErGL15rtEbVTjQ5qQgl+9opexzqOicxMkYmpomvWEDrvyNw2lVtQWwMGq0xfi5fyh6vsus8VIE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747998953; c=relaxed/simple;
-	bh=J6e1TgdBjaEx8XvZ6C8MNn1skWDBpxxnlWuZc/HxhNo=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=ZwQohgVgXaE9NXrp317m7YpNzgyqjvdWI8W3RQOXYpRGhsyVwzsL1ODXna0sSPuQSESRYOP4YeY2PDFxilE2xi442P65sfy+dfrSDqqn/DaeE7c+8qpR/Tj/qY0ABHnYGREJ3I9FE5HbGi3Lg4d+CMonf4x3Y2+ULy5U9mblLnQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UuDwRN6U; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1747999015; c=relaxed/simple;
+	bh=B/LXczBMwATATQAdxc5lRKz9Xr6ZFT04LNvWjtBMxkU=;
+	h=Content-Type:Date:Message-Id:Cc:From:To:Subject:References:
+	 In-Reply-To; b=DdmMwdQqfQBFZ6TaPG69Ups87T5Ks43qwi0XOzLB98p+2QGtVCN4Gqv5zWcydpLlmRt8cvi45MBG4cqkQ4cIpM1/31IxNifmIZl4fRCegmKj+xYuETDQLpRi8TV/A9FbO0ytPMfqDHT+IDJ6vUBXUaDk8efO9a/GSIHynzI04/w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cxHPdvBe; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UuDwRN6U"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747998949;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=J6e1TgdBjaEx8XvZ6C8MNn1skWDBpxxnlWuZc/HxhNo=;
-	b=UuDwRN6U4SGh86TvUXacTTug4fm+xUu8/+fqTW6Cc9SpN08XnJjEe0La3LF4Gf127AWFYz
-	7ngml/95GXHMvOiRul7AjO4IzydziVy086rU82X1tUECwo2kT3RY0W9BOSBkwhZew0w/fz
-	xe0cha3p1jyPfcwX+HcNqvLkmKI8wSY=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-265-7udrvziqNS2TbeEAtrU18Q-1; Fri, 23 May 2025 07:15:47 -0400
-X-MC-Unique: 7udrvziqNS2TbeEAtrU18Q-1
-X-Mimecast-MFC-AGG-ID: 7udrvziqNS2TbeEAtrU18Q_1747998947
-Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-3a364d2d0efso3531463f8f.3
-        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 04:15:47 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747998947; x=1748603747;
-        h=mime-version:user-agent:content-transfer-encoding:autocrypt
-         :references:in-reply-to:date:cc:to:from:subject:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=J6e1TgdBjaEx8XvZ6C8MNn1skWDBpxxnlWuZc/HxhNo=;
-        b=MXq2FoyS2xcVtPOtbrJ8PNuJP3Y9F9+DYPDBZ3z4fP6i6Wu2Mag0AXTuoHUOcIPxuX
-         eLn9PSKMwuqLp3SAPjcvAKsF4O4xVyMSND2QcWM6p7FZ7jrihgfBQdvd6d1ojXwdGILP
-         l67P+BAt+CUYmxQeZ4hgPSlPu8ILTVrjMrjkcbBVx8sSQcufJsQbdR9rLJjcxmqKsoVZ
-         9WIuV8ZLIClKRRReFYoiKRTS6isHof7rRJfTOFIHGxTJtvS7yRO0a9t8OxCz0wr9TFwZ
-         YFzhHrsNMbWp7e9iGr0FTAq6jfBSWa5mCCInKm64khJ/PnBWsTzXIYPQ39LCv4g/3R4a
-         zjzQ==
-X-Gm-Message-State: AOJu0YwGL24OMUyiBptImz/mxMZBw+X93i5s5W33PfP3Dj4NQcoR8EkK
-	/K5sHIxopUOyJow2udw1Y/DkodGgwuqbRYbLFKtA2Cdy3C4OIbqGrqsUsl+OHIsOy2JeCHeDBvQ
-	Mk3KR64Ub66UbZEbBWf+Qw8R8TN256OK1XWb5g+fACkZeoPGZeBT2Lm3QGFLLV88JDA==
-X-Gm-Gg: ASbGncu1wUt+x7VMkSAV4jTFQ0PiL6J5sms8monmZpem7bNEGJ5ufe3d3JkghMxOYFo
-	yKCTfbh62kvCO6RBGcsQ5Rt0OGWl6fgkEI3E2Guc8o12sEgsfrHUhmcZUM26+TXg3b25hTVGI8s
-	stq3TcPJ+ZCQ+XMdR254MnTsQHKx0/xyPdgIFtKvy+FgXZkLSnkaRMlDMC3eOG+v1JmmH27/eEV
-	QDk1p67x6HxzKBiK8nEBUenyE+Z1Dp7Vz/7DvnZJcmSQUPtiFNNksm8ke1aNPyq06TwZ9DcwYJI
-	XedyiU1c6pZ6YP51dtFKPsj7nHPat0gPNE6viA==
-X-Received: by 2002:a05:6000:2387:b0:3a0:7d27:f076 with SMTP id ffacd0b85a97d-3a35c808dafmr28627765f8f.2.1747998946747;
-        Fri, 23 May 2025 04:15:46 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEuPwiNwmmzA9AIp0wWmLST5V+HF4P7xwvKIOizJ7kcxEm1aHBtXZgLtzxEGmJXrPuRjZck0Q==
-X-Received: by 2002:a05:6000:2387:b0:3a0:7d27:f076 with SMTP id ffacd0b85a97d-3a35c808dafmr28627734f8f.2.1747998946278;
-        Fri, 23 May 2025 04:15:46 -0700 (PDT)
-Received: from gmonaco-thinkpadt14gen3.rmtit.csb ([185.107.56.42])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a35ca5aba3sm25724068f8f.40.2025.05.23.04.15.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 May 2025 04:15:45 -0700 (PDT)
-Message-ID: <3acad4a1a07ccbde615ea19eb13a96f37d4a3a2f.camel@redhat.com>
-Subject: Re: [PATCH v5 5/6] cgroup/cpuset: Fail if isolated and nohz_full
- don't leave any housekeeping
-From: Gabriele Monaco <gmonaco@redhat.com>
-To: Frederic Weisbecker <frederic@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, 
- Waiman Long <longman@redhat.com>, Anna-Maria Behnsen
- <anna-maria@linutronix.de>
-Date: Fri, 23 May 2025 13:15:44 +0200
-In-Reply-To: <aCyRhAeGwLSVf2LZ@localhost.localdomain>
-References: <20250508145319.97794-8-gmonaco@redhat.com>
-	 <20250508145319.97794-13-gmonaco@redhat.com>
-	 <aCyRhAeGwLSVf2LZ@localhost.localdomain>
-Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
- keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
- 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0ByZWRoYXQuY29tPoiZBBMWCgBBFiEEysoR+AuB3R
- Zwp6j270psSVh4TfIFAmbiuWMCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
- Q70psSVh4TfJzZgD/TXjnqCyqaZH/Y2w+YVbvm93WX2eqBqiVZ6VEjTuGNs8A/iPrKbzdWC7AicnK
- xyhmqeUWOzFx5P43S1E1dhsrLWgP
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.1 (3.56.1-1.fc42) 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cxHPdvBe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6BFBDC4CEE9;
+	Fri, 23 May 2025 11:16:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747999014;
+	bh=B/LXczBMwATATQAdxc5lRKz9Xr6ZFT04LNvWjtBMxkU=;
+	h=Date:Cc:From:To:Subject:References:In-Reply-To:From;
+	b=cxHPdvBe2B7S2ZMSHJgNTjL3niskBzJjgW2RKIktdRkiXOOXsgYaVYgz/y8IfZFJg
+	 cpxIfXGjW1+p0BGT7XheLQnrlcgVyvIlwio4KdPxhCG7ECnZklvNOlabzR2uYDx2jZ
+	 5ual7045iX2BvdMF88W8VIvAnIdoxr9nlned5tW8wAkgSEi7ESnw96okwxP2ZjOtfX
+	 Tg8+4lEjUlcOOu835mjBeq7Z3rJ+BVwFhHBf0YW+t539i9z/ACoqPxvo+/Li216m9c
+	 WWxB/Fyv8COc5sDmwWX0aMsTxW5R5Rim1sj9aSchy5nHOXCV49CXnbJIDnTh22flsl
+	 OnO+m062AH1Gg==
+Content-Type: multipart/signed;
+ boundary=a4437fa9bafb8d487087985596b0399ee9f18bc31a0f1c2284c38ec0a1e9;
+ micalg=pgp-sha384; protocol="application/pgp-signature"
+Date: Fri, 23 May 2025 13:16:50 +0200
+Message-Id: <DA3HXNN7HTD2.2NUKORU5V6CS2@kernel.org>
+Cc: <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+ <sophgo@lists.linux.dev>, <linux-spi@vger.kernel.org>,
+ <devicetree@vger.kernel.org>, <linux-riscv@lists.infradead.org>,
+ <dlan@gentoo.org>, <ziyao@disroot.org>
+From: "Michael Walle" <mwalle@kernel.org>
+To: "Zixian Zeng" <sycamoremoon376@gmail.com>, "Tudor Ambarus"
+ <tudor.ambarus@linaro.org>, "Pratyush Yadav" <pratyush@kernel.org>, "Miquel
+ Raynal" <miquel.raynal@bootlin.com>, "Richard Weinberger" <richard@nod.at>,
+ "Vignesh Raghavendra" <vigneshr@ti.com>, "Chen Wang"
+ <unicorn_wang@outlook.com>, "Inochi Amaoto" <inochiama@gmail.com>, "Mark
+ Brown" <broonie@kernel.org>, "Rob Herring" <robh@kernel.org>, "Krzysztof
+ Kozlowski" <krzk+dt@kernel.org>, "Conor Dooley" <conor+dt@kernel.org>,
+ "Paul Walmsley" <paul.walmsley@sifive.com>, "Palmer Dabbelt"
+ <palmer@dabbelt.com>, "Albert Ou" <aou@eecs.berkeley.edu>, "Alexandre
+ Ghiti" <alex@ghiti.fr>, "Longbin Li" <looong.bin@gmail.com>
+Subject: Re: [PATCH 2/3] mtd: spi-nor: Add GD25LB512ME GigaDevice flash_info
+X-Mailer: aerc 0.16.0
+References: <20250523-sfg-spifmc-v1-0-4cf16cf3fd2a@gmail.com>
+ <20250523-sfg-spifmc-v1-2-4cf16cf3fd2a@gmail.com>
+In-Reply-To: <20250523-sfg-spifmc-v1-2-4cf16cf3fd2a@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
 
-On Tue, 2025-05-20 at 16:28 +0200, Frederic Weisbecker wrote:
->=20
-> Apparently you can't trigger the same with isolcpus=3D0-6, for some
-> reason.
->=20
-> One last thing, nohz_full makes sure that we never offline the
-> timekeeper
-> (see tick_nohz_cpu_down()). The timekeeper also never shuts down its
-> tick
-> and therefore never go idle, from tmigr perspective, this way when a
-> nohz_full
-> CPU shuts down its tick, it makes sure that its global timers are
-> handled by
-> the timekeeper in last resort, because it's the last global migrator,
-> always
-> alive.
->=20
-> But if the timekeeper is HK_TYPE_DOMAIN, or isolated by cpuset, it
-> will go out
-> of the tmigr hierarchy, breaking the guarantee to have a live global
-> migrator
-> for nohz_full.
->=20
-> That one is a bit more tricky to solve. The easiest is to forbid the
-> timekeeper
-> from ever being made unavailable. It is also possible to migrate the
-> timekeeping duty
-> to another common housekeeper.
->=20
-> We probably need to do the latter...
+--a4437fa9bafb8d487087985596b0399ee9f18bc31a0f1c2284c38ec0a1e9
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
 
-I'm thinking about this again, is it really worth the extra complexity?
+Hi,
 
-The tick CPU is already set as the boot CPU and if the user requests it
-as nohz_full, that's not accepted.
-In my understanding, this typically happens on CPU0 and this CPU is
-kinda special and is advised to stay as housekeeping. As far as I
-understand, when nohz_full is enabled, the tick CPU cannot change.
+> Add GD25LB512ME SPI-NOR flash information
 
-Said that, I'd reconsider force keeping the tick CPU in the hierarchy
-no matter if we isolate it or not when nohz_full is active (e.g. what
-you mentioned as the /easy/ way).
-We'd not prevent domain isolation (as the user requested), but allow a
-bit more noise just on that CPU for the sake of keeping things simple
-while not falling into dangerous corner cases.
-If that's still a problem for the user, they are probably better off
-either selecting a different mask or setting nohz_full consistently
-(I'm still wondering how common a scenario this is).
+Please have a look at [1].
 
-Am I missing something here?
+This flash supports SFDP, do you really need a new entry in the
+flashdb? Could you try without it?
 
-Thanks,
-Gabriele
+In any case, could you please dump the SFDP see [1], too.
 
+[1] https://docs.kernel.org/driver-api/mtd/spi-nor.html
+
+> Signed-off-by: Zixian Zeng <sycamoremoon376@gmail.com>
+> ---
+>  drivers/mtd/spi-nor/gigadevice.c | 17 +++++++++++++++++
+>  1 file changed, 17 insertions(+)
+>
+> diff --git a/drivers/mtd/spi-nor/gigadevice.c b/drivers/mtd/spi-nor/gigad=
+evice.c
+> index ef1edd0add70e6ca501620798a779d621d6bb00d..223b2f598ecd651ce8df6789d=
+fbaf938c534f94f 100644
+> --- a/drivers/mtd/spi-nor/gigadevice.c
+> +++ b/drivers/mtd/spi-nor/gigadevice.c
+> @@ -33,6 +33,15 @@ static const struct spi_nor_fixups gd25q256_fixups =3D=
+ {
+>  	.post_bfpt =3D gd25q256_post_bfpt,
+>  };
+> =20
+> +static void gd25lb512me_default_init(struct spi_nor *nor)
+> +{
+> +	nor->params->quad_enable =3D spi_nor_sr1_bit6_quad_enable;
+
+Should be automatically set, by SFDP.
+
+> +}
+> +
+> +static const struct spi_nor_fixups gd25lb512me_fixups =3D {
+> +	.default_init =3D gd25lb512me_default_init,
+> +};
+> +
+>  static const struct flash_info gigadevice_nor_parts[] =3D {
+>  	{
+>  		.id =3D SNOR_ID(0xc8, 0x40, 0x15),
+> @@ -82,6 +91,14 @@ static const struct flash_info gigadevice_nor_parts[] =
+=3D {
+>  		.size =3D SZ_16M,
+>  		.flags =3D SPI_NOR_HAS_LOCK | SPI_NOR_HAS_TB,
+>  		.no_sfdp_flags =3D SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ,
+> +	}, {
+> +		.id =3D SNOR_ID(0xc8, 0x67, 0x1a),
+> +		.name =3D "gd25lb512me",
+
+No name,
+
+> +		.size =3D SZ_64M,
+> +		.flags =3D SPI_NOR_HAS_LOCK | SPI_NOR_HAS_TB,
+> +		.no_sfdp_flags =3D SECT_4K | SPI_NOR_QUAD_READ,
+No, no_sfdp_flags, as this flash supports SFDP.
+
+> +		.fixups =3D &gd25lb512me_fixups,
+> +		.fixup_flags =3D SPI_NOR_4B_OPCODES,
+>  	},
+>  };
+> =20
+
+-michael
+
+--a4437fa9bafb8d487087985596b0399ee9f18bc31a0f1c2284c38ec0a1e9
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iKgEABMJADAWIQTIVZIcOo5wfU/AngkSJzzuPgIf+AUCaDBZIxIcbXdhbGxlQGtl
+cm5lbC5vcmcACgkQEic87j4CH/hOXgGA5IPK+ocEhmNsajncGUWdZqEDgOAiOPNY
+CQW2nV3PFOOnnsYFRw7BDqyotkT0/9LqAYDBeTthHnuuXXJT8EiGX7W7fi4j+3e8
+tqMR/EiYNuB4aDB+iAsc1btzQhSq0gwCl/E=
+=Cu9o
+-----END PGP SIGNATURE-----
+
+--a4437fa9bafb8d487087985596b0399ee9f18bc31a0f1c2284c38ec0a1e9--
