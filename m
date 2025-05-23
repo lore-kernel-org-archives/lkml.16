@@ -1,267 +1,219 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on2120.outbound.protection.outlook.com [40.107.20.120])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7F5410A1F;
-	Fri, 23 May 2025 12:57:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748005073; cv=none; b=bAWdAhBFTgpjYitlUiEaM0yQ0ZFIZdLj3svWD0Jk9PtVUNQr7jw7q+buOq9aN2bfaCvuykXn2BheuhsxE24suQ3K+kRB2/bs7gV1MLeifd04IuyJ07pjZuBCAGVluKGlbuhOui0oRuQt8UsQS0BWVjVkdAS2nn6Hww43Zil/8Q4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748005073; c=relaxed/simple;
-	bh=rRs9XseLreLZ799IlzhB0KoGHd9fK4lDSsY4Z7uNsZE=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=OneVIvRHbKryhZkC1ZrPNTSSPY+twev87S9pV8JsULzOVbYT17W7dj4dUGci/cOUQZU6GBQA+QrxxQj3DqVje+bHqm1N7sNsYdU+/0fL1L+naVYA6uG3x3lwX2ZIeHaxER1nP3D6ut5H/3YSTEmPsy6qd+VnvL7eXpiJqdEBwG8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FKplNDH9; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C890310A1F;
+	Fri, 23 May 2025 12:57:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.20.120
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748005079; cv=fail; b=EwyVsGQBtOuO5niZEGvkfgD2C4y+YLwCC62jwnvuGVYEGCLq1FqTrazEArosYlZ8XYOkYJEUsd6vNj7CG8zA9QJGY+cd9cyj4we3NJzvAwdDmDswA4qRkMfw4PKdSobz5vsZmb/OWj+TkhoQZR+c51iPglp/a6ws5noRSz6+5ac=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748005079; c=relaxed/simple;
+	bh=9HzKjeYCrXlV+jzYVDuGtBO8+EdK/CkZImUZ0pVQS8M=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=AVDi8MXpmMADNyDjJAPn/prcfPYlbhgfzkTF1iDMPCAPLAktHr1GAFWRAimCJhU41nRMTSqNCK11c2Ls9IyVPlc5Ps0cG9oUGUV0RWHYKhhrCD8zEwoNn985f6uskaRi9sDrV64CNh79YlYemVup7SCw8A69UQkjrOdMNowehLE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxera.com; spf=pass smtp.mailfrom=tuxera.com; dkim=pass (2048-bit key) header.d=tuxera.com header.i=@tuxera.com header.b=eofHChoP; arc=fail smtp.client-ip=40.107.20.120
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxera.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxera.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FKplNDH9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748005071; x=1779541071;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=rRs9XseLreLZ799IlzhB0KoGHd9fK4lDSsY4Z7uNsZE=;
-  b=FKplNDH9wmg/PWIG75Ib2k+SKgKZHgQobuHeYEfBADsqyyYwR9ZjD3zV
-   7iucXk9juWrYVTirRhRw3YQHVNINt/uqaBcAPeONpGcjajH4cuxEaCjlQ
-   OB1EZpv1NdQcTLhwSbeqykqylpS/SFXXDwllOlXwiBI5Gs6taxc8TkBQ7
-   H1oZ6Tg6ICnG38wOWv1s8Ft5ErOU60ThUeHp7GVIsPMTpyDh/iNev0LzN
-   miu10mKnohxxDtCln6KWx6oDAOaKGKLy7KbPb8K7MuxFll+1uGLObWDE0
-   Cf49RaXahq6wn9nbU1SG+jbe2I8cbhjspxhcewr/mjB4E2lffI8ikzINn
-   g==;
-X-CSE-ConnectionGUID: nAWanG1PQq2NMM9U+V/nFw==
-X-CSE-MsgGUID: H21LbeGHR6WYQovb8K8uzg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11441"; a="49177632"
-X-IronPort-AV: E=Sophos;i="6.15,308,1739865600"; 
-   d="scan'208";a="49177632"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2025 05:57:50 -0700
-X-CSE-ConnectionGUID: w07W8+JUToKmjsvrozAm9w==
-X-CSE-MsgGUID: PVtsidVES4GxFwfdkylrBg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,308,1739865600"; 
-   d="scan'208";a="145087474"
-Received: from chenyu-dev.sh.intel.com ([10.239.62.107])
-  by fmviesa003.fm.intel.com with ESMTP; 23 May 2025 05:57:45 -0700
-From: Chen Yu <yu.c.chen@intel.com>
-To: peterz@infradead.org,
+	dkim=pass (2048-bit key) header.d=tuxera.com header.i=@tuxera.com header.b="eofHChoP"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=JGBMgpfZFrhcMqXw5dGIN5ofCj9QE95WI8JfjYFoOEfIT/RwF8QEHQft9mtrYNNg2JwRn1bvELq8tvGz0eSpheUuLpoRLp5RYYYzGqzoOiL5JjVf7JakrjRd1OzNsduu/X6dfEOp16QdCraGgPwTnAevpmpuAm3G4sPtGYKvJQajN3JzkYzpaq9af35zf6+tJ5+JSAhNu+LW+i9fyivUzUzLeZwzSkfAMDxPPdkJ79xSXRiAeMZVFVN1kTV8us+Nsm0UNjF0BT458pwdq9U5ZSRHqQCN6gF/saEZOvh+eAawD0wEP5lxOXCSWCZbhlnpEjyBnEkCfHhYSLc4jR7wNw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=RVP+ygWcitRHxmtADqmqYED5plcWhRm31plhQOlqjE8=;
+ b=dVZ/Fhz1nekkiwcwc6DsiDiWLyUWHB/rLk9yibL06VV0YP+pnIOMnl7dKB9slkTdwmLjaCIQu1SFo1CAABsE54y7xbzT5LXFHlX8S87qxTkkbS/YS/yvh9job/VcyTfhNgK5Tf99tjLLV6LaKHzG45uqljz3KnnFAHiyBqNRUFMf8E17r3kS9FKe8GNzAFzizCvSIyiAWskMVSXCoAEckzh9ROGhAwK7vD1e1dc5wZN9UaoC2zqshmhEZM+SD4qh043+HwcytsggDwROFsnv1lYIOFxXzyQcPfqXdVLb4Ym/dAvRwksRWtV35cKNLDF+GsuH35KuY7/5aCRFIHwKfg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=tuxera.com; dmarc=pass action=none header.from=tuxera.com;
+ dkim=pass header.d=tuxera.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tuxera.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RVP+ygWcitRHxmtADqmqYED5plcWhRm31plhQOlqjE8=;
+ b=eofHChoPBaxTOIynf7JqpAz/egOKn/Pn3wXTveg9gfhqKRW2Qv6L/VhpXvbvcNNkSIpSNyxYZ6WxLeD5qN1RGNksblj9V45vV2FJUJSoYjNQXCGc+mUaH2guYbCPdHH1fVrLAlpLIRBqwFTTQ/RDfDaurBDIi34cSVmWzzu0cgizErL+b08LP4QIdlGf4NzLhFcvQuV9ITp5Gf4mufQj3zjpzZVpZWUaRpRWzkoqi50SqvuZORj9L4o4V+BXsLMiIW3+r1drJZOI/5GOd8Q76LUMBWsYtPeTtuHAwcRZzrtYEkjc9Ha+LP7WpyA5bAwsRsdYNz9wsRHWp7k3St9I+g==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=tuxera.com;
+Received: from PAXPR06MB7984.eurprd06.prod.outlook.com (2603:10a6:102:1a9::9)
+ by VI2PR06MB9358.eurprd06.prod.outlook.com (2603:10a6:800:225::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.21; Fri, 23 May
+ 2025 12:57:53 +0000
+Received: from PAXPR06MB7984.eurprd06.prod.outlook.com
+ ([fe80::f663:f3dd:7a0:7d4f]) by PAXPR06MB7984.eurprd06.prod.outlook.com
+ ([fe80::f663:f3dd:7a0:7d4f%5]) with mapi id 15.20.8722.031; Fri, 23 May 2025
+ 12:57:52 +0000
+From: =?UTF-8?q?Aaro=20M=C3=A4kinen?= <aaro@tuxera.com>
+To: linux-kernel@vger.kernel.org,
 	akpm@linux-foundation.org
-Cc: mkoutny@suse.com,
-	mingo@redhat.com,
-	tj@kernel.org,
-	hannes@cmpxchg.org,
-	corbet@lwn.net,
-	mgorman@suse.de,
-	mhocko@kernel.org,
-	muchun.song@linux.dev,
-	roman.gushchin@linux.dev,
-	shakeel.butt@linux.dev,
-	tim.c.chen@intel.com,
-	aubrey.li@intel.com,
-	libo.chen@oracle.com,
-	kprateek.nayak@amd.com,
-	vineethr@linux.ibm.com,
-	venkat88@linux.ibm.com,
-	ayushjai@amd.com,
-	cgroups@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	yu.chen.surf@foxmail.com,
-	Chen Yu <yu.c.chen@intel.com>
-Subject: [PATCH v5 2/2] sched/numa: add statistics of numa balance task
-Date: Fri, 23 May 2025 20:51:15 +0800
-Message-Id: <7ef90a88602ed536be46eba7152ed0d33bad5790.1748002400.git.yu.c.chen@intel.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <cover.1748002400.git.yu.c.chen@intel.com>
-References: <cover.1748002400.git.yu.c.chen@intel.com>
+Cc: =?UTF-8?q?Aaro=20M=C3=A4kinen?= <aaro@tuxera.com>,
+	stable@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	Anton Altaparmakov <anton@tuxera.com>
+Subject: [PATCH V2] hfsplus: Return null terminated string from hfsplus_uni2asc()
+Date: Fri, 23 May 2025 15:57:31 +0300
+Message-ID: <20250523125731.83227-1-aaro@tuxera.com>
+X-Mailer: git-send-email 2.43.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: GV3PEPF0000366A.SWEP280.PROD.OUTLOOK.COM
+ (2603:10a6:158:401::386) To PAXPR06MB7984.eurprd06.prod.outlook.com
+ (2603:10a6:102:1a9::9)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAXPR06MB7984:EE_|VI2PR06MB9358:EE_
+X-MS-Office365-Filtering-Correlation-Id: 295978d8-3475-46ee-ebab-08dd99f96dcd
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|376014|52116014|1800799024|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?VU85OHp4VHp5QUtnS3pSWVZLdFRWYkdQZDZHQ0hJZUIyNFF3ekJMRDlHMDRT?=
+ =?utf-8?B?RWFCaUtCdkEwSXpFVm5ucE5WOTFVYlYxenlqUFNBQTVjN3ROb2I1a1R4ZmFv?=
+ =?utf-8?B?eWNWK05pU1BnRnVzcVVxM01DREJqOHFQcFFYbDYyNlR6Sit0L0VxTXdWS2o2?=
+ =?utf-8?B?WnM5RGczS3dBb1ZTdFFjanB0UTVOQStjOFVTK3ZaSEp6UnBTNkNlZXgrWTJQ?=
+ =?utf-8?B?YTIwL0dPc3pFemVHcGJSOW9UUlBWZVlmM3pvNFovT2xuSnBEQ0tmSTk3Szdp?=
+ =?utf-8?B?dytrWEtZdnZVQ2pvaXk1U0E5dThiaFNMc3ZHMWF5bXJ1T1g5Smp1ZWlNU3lm?=
+ =?utf-8?B?Mk5JamV5dmZGblVZZjFzWFBvUjVtK2ZGM29PamV4aEkrSVIra2xrTTUxM2dX?=
+ =?utf-8?B?NjBXUDRNQWZGVzI3aEk1RHFFL2tjSTQyNUs3SHJQNFpWclIybEsrc0I4R1l1?=
+ =?utf-8?B?ejJQK3RmZkcxdEJ0cmY3eHZPaWJpYkh6czVUR1ZGZXhKRGpqcWJGRUFkaUlG?=
+ =?utf-8?B?Wlc1U2JnTUNHc2JTL3JRUDJGMU5mN3NOSXhrdTZUUkpzL0hIelhvVTh4QUZw?=
+ =?utf-8?B?TlpWOXc2Tmx4TkF6elJxTElsSEJ3TGN6VDVGL25LODY3dmRLbFhDTDlHaURm?=
+ =?utf-8?B?b0N4anc3REF6R2hMR256N3lwOEwwUkxESmN2Q3lRZ1czSDNEbnJDYStLZ1pT?=
+ =?utf-8?B?Y2MzZ0tGeU05ZXk3TFRuWjNibTNJcUxMQ2VqU3FURzhyWU0zSlJyY1dQcUdv?=
+ =?utf-8?B?QkpwZUtNUXJzck12T1FiZm5FKytIZHJiUGNSZWZ6Q014ZEVkTUlNbjFYd2ZV?=
+ =?utf-8?B?QWd6RWkyUklBVU4xcG5sbWVwSmUyZWNFK0lTMzJoZG15MWN5SUdkWGFILzdh?=
+ =?utf-8?B?VTdXRWpTeHVyQ2JOMTZxZExKRU84cnBISXFMRmtqRklLdlhldTFWTG9rbVlN?=
+ =?utf-8?B?dmdqTndNeUttQUFYRGk0VkovNDRsTWpyN0JQNnA4UDdkd21udVJZQTk2UzBI?=
+ =?utf-8?B?eTYrRXB0bU96K3BRMUpNRnVWdkYyWmtldTFPRkJuaDRSMHYzeVFIWDhWMTJP?=
+ =?utf-8?B?TTVmdm8wZmttdkNGWFdVdk9iV29tTXF1cWw3bWROU2VOQ1dqWTc1M0ZCSFE5?=
+ =?utf-8?B?em5abmVjY01TTit2RFM0K0F6WndnZnpHVE5ERFk0ZkE0K25GNXFGMjNya1Bm?=
+ =?utf-8?B?YzA3S0dmV3BHVkx3YXBYOXdGTVNTc1ZydzhVNmFlb1JQM1RRU1dobCt4QWJn?=
+ =?utf-8?B?UEliay8wRnFsMzZ3Sy91TW5WK2JSMW1oaDZid0tGaUdMajZIK3ArK2I1YUIr?=
+ =?utf-8?B?MEYzTXBpZHh2QXoyUnBFWGllQmtPelNPQ1ZaUERlRFhXQk9mVGpJL0NZSmdp?=
+ =?utf-8?B?RW1KdkkvUjFES2U5ei9VODU0Z2NqNUtBOE5hRnovMjBnR21QUEF4d2JGRmNZ?=
+ =?utf-8?B?Z1JxVDFxRGdEZHFSNUY3S3p4dklsQ2s2Sm1aTkcyZVhLTUFsall5TTRnRFNV?=
+ =?utf-8?B?cWF0RXVPSmp5cTViZzlLaE1JelZMQjF5RWxrSzQxVWJBZlNkT05XZ24rbE9J?=
+ =?utf-8?B?WWVUbEozZDEvSTJmMmdGQmFIZ2pMZGRMdUNLWmwzenJJWFY2Ykxka0ozaXYy?=
+ =?utf-8?B?dE9pV1BVZDR2Qytyd1BxanRqdUFBcDNXRlhvNkhHOGVVKzY4QkJFMzhyWDB3?=
+ =?utf-8?B?M0M4RTc4VTRibER5VU1SK1Fra1c4ZEIxRkE4Ly9Fa3E2c0kwYkRrZXBVUy8w?=
+ =?utf-8?B?S0lMdnk3VXNTYXlBM1lBWXozeTV3UXB6MTQvYUJPTnp6ZUJCY283WVorbTFr?=
+ =?utf-8?B?OStrVmMxazRhWEFVVzYrTStETVRVYmVhUWtiN1NoVlc4TUFXenBRNytsM24z?=
+ =?utf-8?B?elk3a01iMlVYTVVLbUtOckhDVXR2ZHIwSnIraVdQaHdGNlRpZHgwNDFkbVQ1?=
+ =?utf-8?B?TnE5VUlXTzlwWWhwVm5RaU9ybGhRbUlJUUpqTlhqeGZHamlDVExBaXJmNkJw?=
+ =?utf-8?B?ODdsLzBqa2RnPT0=?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR06MB7984.eurprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(52116014)(1800799024)(38350700014);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?T2J4V3ZRMWN0Y0R5QjB3bXAzeHRzVzlIdTZ1OFdtaGRidS9LTHlZVi9uWU5h?=
+ =?utf-8?B?NmVwbzYwNnFzUnNQbklaQW1YZko4WmQ5czk3a1drektmeHJTU0tJd0MxdXBU?=
+ =?utf-8?B?bVNOQzdLR1RQSzIySVdJcXZyV0RPSjRjc3kzUHRXVVZ3MzNVdWlaaHljMURt?=
+ =?utf-8?B?UlRxQ2UrRjhZOWdnY09UNDFpcEJsQkhhd2Y1ck5PRnpqck9YaVJBeWFuNzNF?=
+ =?utf-8?B?T1AzL0RnSEFKcXpSbkdWOVFTUlNRZVpDbnJVcGRSRjJldFZjOEJXOUMzWTBT?=
+ =?utf-8?B?OCtFeHdmUWhoV3VPZnpOUEZ2MEZqU0JtYUlTZGg0Szg3Q1FFYmdHdG5GS1NB?=
+ =?utf-8?B?V24rQWNXL3phRXUrck9HSkpyMjRiZ3dzSXppZlo0MUpuaFZSc21ZNnBkY3JZ?=
+ =?utf-8?B?OC83LzJvOUd6bHdqZlRzQ296OVAzWHQrT0hkaTZhZkp4cUR0dW1QdW5XKzR2?=
+ =?utf-8?B?UTQvZk9tNVRIeStlTTNxaU1TcFhCb1lQZGRWY0c4NjExRTM4cWxvR1M2K09I?=
+ =?utf-8?B?MnFNaU0xaDl6ZDFwWVJEakFWc1dwMlBRM3pMTzZ4TFQ1b1Z6WHdhaDYxQmR5?=
+ =?utf-8?B?MUdnMEZOVy9nejMxRUtrU01xWG9UNmFnMyt1VCtIZG83TndTaDJDZFB6anpF?=
+ =?utf-8?B?U1RVUEtiT21GUm9Qay9BcFMzWkFtSlA1NWFLbm5yeHVBZ2NXRE55S3VJTVlq?=
+ =?utf-8?B?eDhDRjd6NXVBOTlTWTFlQWRybksrNm9teSsxMmIzV3VXcFVoRlZiZzh3LytB?=
+ =?utf-8?B?K1JLc1REYjdqeStVQk05dWwrNGNIcVNpbjlDdEVPanVTcitpNVB2RjcyRXFH?=
+ =?utf-8?B?VlpMRkdhMnhmV01yY2pTTjZIVXh5cWl2OU9CNnd1VjQ1TWIyZTVuM1lqbzhv?=
+ =?utf-8?B?QkdSUEYzeHBRYWJqZXFaUVhGUlhTVjdKT0VTdEY0RjRiWDVtcFB0RGlKdEY4?=
+ =?utf-8?B?UnRjTWhGa2p0MUlnL2NLR2lnVGxwVGFJUkZla2FtczMvYzBLeldnVnBiVm13?=
+ =?utf-8?B?TjRON3ZNRWlxaVNQV1REYStIbkNmVFZtNXZxS2tRck4xWHFFUmpHUnN3M3Bm?=
+ =?utf-8?B?cFkyT3E5TTBsVTRCOGtVSURVWlB4L0FqeC9LQmpyTWRCdGVWQXhYYlh5Q3V3?=
+ =?utf-8?B?NnpPa2xJZmU5UXUzRU9Ddld4ZGU3SUlJc0JteUFzVVRZdnVpclROZkMxZGpY?=
+ =?utf-8?B?ZnhPMlhRK2E1NnZXSGdMMWFzaUVYdFFQUjFRayswSmVhMjRaTnQ4MUlzbjFY?=
+ =?utf-8?B?VmVVRWE0VGJpOGRObkVJd3o2Uk9DVDdZZVFucHF5dTZUOFUyeHptM2NtN0Vx?=
+ =?utf-8?B?MElrYU9rN0VqNjExN2VsVy9MdmhnODZyYTVJT1lSUEhDVFFEMkxFcTNxK2JX?=
+ =?utf-8?B?L3pwWTcxWlJibVNjN2pYNldqcmlacnRkb3MvN2FoTm1QaDRma0IxM0dDODE5?=
+ =?utf-8?B?bjM0c09tRE9IMmVJUm9RMEozN1NrUG80aXZDNFkvc1ZSVVlKVmlyU3BZZGJq?=
+ =?utf-8?B?aFJrL3hZZjFtMlFHRmR2ZUpiZTUwekNXMzJaZ1diWXZobzdwY3BWcG9DMlZH?=
+ =?utf-8?B?WC9UWUhVYnU5OEU2MUd0S3lacStRTldyN0ZYdFBiaTVNSEVKcERUdWtIck41?=
+ =?utf-8?B?MW9kZEJubWx2NjB6OWtSK3RkNWF3RC9BSVpBMnBPS1Y0TUs2UWt3VUF5ZXgx?=
+ =?utf-8?B?Y2dybWFDdHlDYVJFWkw5eVM4ZEdPaEYwMlMrMWc2d1Z4ZUdTYzNhMkNrYUIx?=
+ =?utf-8?B?U21oUHk4SlFPdDRsZCtPNTNXZkdETWlpb2IyQmNnVDhVTDZaNjBCK0VZUlow?=
+ =?utf-8?B?Y1VacVlkSEJjOGh5ZHNLcnR2Z2llRWx4QiswM291R0NTZmJqdjJGQThWVVow?=
+ =?utf-8?B?N01FL282bkszMXl6ZlgzZXhPWjc4KzhVeldRZXIxc09GNGdXbUI5R0dPRkJV?=
+ =?utf-8?B?bklSdlNIT1hMMC9VTk1SeGkwbXE0VDNEQ2p1OENnUkNYam5tOS9pUmY5cDBF?=
+ =?utf-8?B?bXl2N3RFSFpkWmtwbmUxQllOWG9UYUxyblNuRFMvUEFoa0JUOENOYVlWR1pn?=
+ =?utf-8?B?NlZVQWVUdEdtdTBqbDBNS3ZEQW1SZ1d2RkplblFMZnY3MWl0cGY2anJCcC9U?=
+ =?utf-8?Q?xz+p3sDUL+WgcL1q1FdsRXzs2?=
+X-OriginatorOrg: tuxera.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 295978d8-3475-46ee-ebab-08dd99f96dcd
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR06MB7984.eurprd06.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 May 2025 12:57:52.6171
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: e7fd1de3-6111-47e9-bf5d-4c1ca2ed0b84
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: WYi5reTpz3U4eUlN0iFMndy9AbQKkX9rZAyPBFjztsp00PuhXLng7QoNB7C9pY44
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI2PR06MB9358
 
-On systems with NUMA balancing enabled, it has been found
-that tracking task activities resulting from NUMA balancing
-is beneficial. NUMA balancing employs two mechanisms for task
-migration: one is to migrate a task to an idle CPU within its
-preferred node, and the other is to swap tasks located on
-different nodes when they are on each other's preferred nodes.
+In case hfsplus_uni2asc() is called with reused buffer there is a
+possibility that the buffer contains remains of the last string and the
+null character is only after that. This can and has caused problems in
+functions that call hfsplus_uni2asc().
 
-The kernel already provides NUMA page migration statistics in
-/sys/fs/cgroup/mytest/memory.stat and /proc/{PID}/sched. However,
-it lacks statistics regarding task migration and swapping.
-Therefore, relevant counts for task migration and swapping should
-be added.
+Also correct the error handling for call to copy_name() where the above
+problem caused error to be not passed in hfsplus_listxattr().
 
-The following two new fields:
-
-numa_task_migrated
-numa_task_swapped
-
-will be shown in /sys/fs/cgroup/{GROUP}/memory.stat, /proc/{PID}/sched
-and /proc/vmstat
-
-Introducing both per-task and per-memory cgroup (memcg) NUMA
-balancing statistics facilitates a rapid evaluation of the
-performance and resource utilization of the target workload.
-For instance, users can first identify the container with high
-NUMA balancing activity and then further pinpoint a specific
-task within that group, and subsequently adjust the memory policy
-for that task. In short, although it is possible to iterate through
-/proc/$pid/sched to locate the problematic task, the introduction
-of aggregated NUMA balancing activity for tasks within each memcg
-can assist users in identifying the task more efficiently through
-a divide-and-conquer approach.
-
-As Libo Chen pointed out, the memcg event relies on the text
-names in vmstat_text, and /proc/vmstat generates corresponding items
-based on vmstat_text. Thus, the relevant task migration and swapping
-events introduced in vmstat_text also need to be populated by
-count_vm_numa_event(), otherwise these values are zero in
-/proc/vmstat.
-
-Tested-by: K Prateek Nayak <kprateek.nayak@amd.com>
-Tested-by: Madadi Vineeth Reddy <vineethr@linux.ibm.com>
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Tested-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
-Signed-off-by: Chen Yu <yu.c.chen@intel.com>
+Fixes: 7dcbf17e3f91 ("hfsplus: refactor copy_name to not use strncpy")
+Cc: stable@vger.kernel.org
+Cc: linux-fsdevel@vger.kernel.org
+Signed-off-by: Aaro Mäkinen <aaro@tuxera.com>
+Reviewed-by: Anton Altaparmakov <anton@tuxera.com>
 ---
-v4->v5:
-no change.
-v3->v4:
-Populate the /prov/vmstat otherwise the items are all zero.
-(Libo)
-v2->v3:
-Remove unnecessary p->mm check because kernel threads are
-not supported by Numa Balancing. (Libo Chen)
-v1->v2:
-Update the Documentation/admin-guide/cgroup-v2.rst. (Michal)
+Changes in v2:
+  - Add Cc tag to sign-off area 
 ---
- Documentation/admin-guide/cgroup-v2.rst | 6 ++++++
- include/linux/sched.h                   | 4 ++++
- include/linux/vm_event_item.h           | 2 ++
- kernel/sched/core.c                     | 9 +++++++--
- kernel/sched/debug.c                    | 4 ++++
- mm/memcontrol.c                         | 2 ++
- mm/vmstat.c                             | 2 ++
- 7 files changed, 27 insertions(+), 2 deletions(-)
+ fs/hfsplus/unicode.c |  1 +
+ fs/hfsplus/xattr.c   | 13 ++++++++++---
+ 2 files changed, 11 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/admin-guide/cgroup-v2.rst b/Documentation/admin-guide/cgroup-v2.rst
-index 1a16ce68a4d7..d346f3235945 100644
---- a/Documentation/admin-guide/cgroup-v2.rst
-+++ b/Documentation/admin-guide/cgroup-v2.rst
-@@ -1670,6 +1670,12 @@ The following nested keys are defined.
- 	  numa_hint_faults (npn)
- 		Number of NUMA hinting faults.
- 
-+	  numa_task_migrated (npn)
-+		Number of task migration by NUMA balancing.
-+
-+	  numa_task_swapped (npn)
-+		Number of task swap by NUMA balancing.
-+
- 	  pgdemote_kswapd
- 		Number of pages demoted by kswapd.
- 
-diff --git a/include/linux/sched.h b/include/linux/sched.h
-index f96ac1982893..1c50e30b5c01 100644
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -549,6 +549,10 @@ struct sched_statistics {
- 	u64				nr_failed_migrations_running;
- 	u64				nr_failed_migrations_hot;
- 	u64				nr_forced_migrations;
-+#ifdef CONFIG_NUMA_BALANCING
-+	u64				numa_task_migrated;
-+	u64				numa_task_swapped;
-+#endif
- 
- 	u64				nr_wakeups;
- 	u64				nr_wakeups_sync;
-diff --git a/include/linux/vm_event_item.h b/include/linux/vm_event_item.h
-index 9e15a088ba38..91a3ce9a2687 100644
---- a/include/linux/vm_event_item.h
-+++ b/include/linux/vm_event_item.h
-@@ -66,6 +66,8 @@ enum vm_event_item { PGPGIN, PGPGOUT, PSWPIN, PSWPOUT,
- 		NUMA_HINT_FAULTS,
- 		NUMA_HINT_FAULTS_LOCAL,
- 		NUMA_PAGE_MIGRATE,
-+		NUMA_TASK_MIGRATE,
-+		NUMA_TASK_SWAP,
- #endif
- #ifdef CONFIG_MIGRATION
- 		PGMIGRATE_SUCCESS, PGMIGRATE_FAIL,
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index c81cf642dba0..62b033199e9c 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -3352,6 +3352,10 @@ void set_task_cpu(struct task_struct *p, unsigned int new_cpu)
- #ifdef CONFIG_NUMA_BALANCING
- static void __migrate_swap_task(struct task_struct *p, int cpu)
- {
-+	__schedstat_inc(p->stats.numa_task_swapped);
-+	count_vm_numa_event(NUMA_TASK_SWAP);
-+	count_memcg_event_mm(p->mm, NUMA_TASK_SWAP);
-+
- 	if (task_on_rq_queued(p)) {
- 		struct rq *src_rq, *dst_rq;
- 		struct rq_flags srf, drf;
-@@ -7953,8 +7957,9 @@ int migrate_task_to(struct task_struct *p, int target_cpu)
- 	if (!cpumask_test_cpu(target_cpu, p->cpus_ptr))
- 		return -EINVAL;
- 
--	/* TODO: This is not properly updating schedstats */
--
-+	__schedstat_inc(p->stats.numa_task_migrated);
-+	count_vm_numa_event(NUMA_TASK_MIGRATE);
-+	count_memcg_event_mm(p->mm, NUMA_TASK_MIGRATE);
- 	trace_sched_move_numa(p, curr_cpu, target_cpu);
- 	return stop_one_cpu(curr_cpu, migration_cpu_stop, &arg);
+diff --git a/fs/hfsplus/unicode.c b/fs/hfsplus/unicode.c
+index 73342c925a4b..1f122e3c9583 100644
+--- a/fs/hfsplus/unicode.c
++++ b/fs/hfsplus/unicode.c
+@@ -246,6 +246,7 @@ int hfsplus_uni2asc(struct super_block *sb,
+ 	res = 0;
+ out:
+ 	*len_p = (char *)op - astr;
++	*op = '\0';
+ 	return res;
  }
-diff --git a/kernel/sched/debug.c b/kernel/sched/debug.c
-index 56ae54e0ce6a..f971c2af7912 100644
---- a/kernel/sched/debug.c
-+++ b/kernel/sched/debug.c
-@@ -1206,6 +1206,10 @@ void proc_sched_show_task(struct task_struct *p, struct pid_namespace *ns,
- 		P_SCHEDSTAT(nr_failed_migrations_running);
- 		P_SCHEDSTAT(nr_failed_migrations_hot);
- 		P_SCHEDSTAT(nr_forced_migrations);
-+#ifdef CONFIG_NUMA_BALANCING
-+		P_SCHEDSTAT(numa_task_migrated);
-+		P_SCHEDSTAT(numa_task_swapped);
-+#endif
- 		P_SCHEDSTAT(nr_wakeups);
- 		P_SCHEDSTAT(nr_wakeups_sync);
- 		P_SCHEDSTAT(nr_wakeups_migrate);
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index c96c1f2b9cf5..cdaab8a957f3 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -463,6 +463,8 @@ static const unsigned int memcg_vm_event_stat[] = {
- 	NUMA_PAGE_MIGRATE,
- 	NUMA_PTE_UPDATES,
- 	NUMA_HINT_FAULTS,
-+	NUMA_TASK_MIGRATE,
-+	NUMA_TASK_SWAP,
- #endif
- };
  
-diff --git a/mm/vmstat.c b/mm/vmstat.c
-index 4c268ce39ff2..ed08bb384ae4 100644
---- a/mm/vmstat.c
-+++ b/mm/vmstat.c
-@@ -1347,6 +1347,8 @@ const char * const vmstat_text[] = {
- 	"numa_hint_faults",
- 	"numa_hint_faults_local",
- 	"numa_pages_migrated",
-+	"numa_task_migrated",
-+	"numa_task_swapped",
- #endif
- #ifdef CONFIG_MIGRATION
- 	"pgmigrate_success",
+diff --git a/fs/hfsplus/xattr.c b/fs/hfsplus/xattr.c
+index 9a1a93e3888b..f20487ad4e8a 100644
+--- a/fs/hfsplus/xattr.c
++++ b/fs/hfsplus/xattr.c
+@@ -746,9 +746,16 @@ ssize_t hfsplus_listxattr(struct dentry *dentry, char *buffer, size_t size)
+ 			if (size < (res + name_len(strbuf, xattr_name_len))) {
+ 				res = -ERANGE;
+ 				goto end_listxattr;
+-			} else
+-				res += copy_name(buffer + res,
+-						strbuf, xattr_name_len);
++			} else {
++				err = copy_name(buffer + res,
++					strbuf, xattr_name_len);
++				if (err < 0) {
++					res = err;
++					goto end_listxattr;
++				}
++				else
++					res += err;
++			}
+ 		}
+ 
+ 		if (hfs_brec_goto(&fd, 1))
 -- 
-2.25.1
+2.43.0
 
