@@ -1,249 +1,109 @@
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19843184E
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 10:52:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E13F72F3E
+	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 10:52:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747997530; cv=none; b=jvQQne2LXKsDcSk42rN/E1UxGMt+K5vlL/IOS5MPwMtZQIxwwalD28pbr77uPv3uxuOG513lE36H57dUHyWZhzSIt3jGnUb+Pydk1ffKhILInXOe0Qb/jcPcR2DYlHSKIJQihIv5dDbfdN1IdhS2xYSK26pthJxWE4t4ml2YMFA=
+	t=1747997544; cv=none; b=lE5AlV0tPwKzeYERiWnoMy75ND0FKPT7TNZC6ReO/tjKnVUgqJJgx3uOZPS4OTVgw8aYNmfpYPUal4eIIs6P9AlurRLr3HaKGUcjIlwLWpTAMgy+S2zeEnPpqWCTTT3PDgLCGuElOOFu/xiSLRT3Eh14gyFONEi8OhbFQHKvXyE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747997530; c=relaxed/simple;
-	bh=j1XZzWdwtTmEvvN2qv3t6z37DY91Kr1PWlQJJLrpV1k=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=My01tA23b1ZbRfTdBCgcZQ2LQWcHe0kFFdZWg1rF6U6mmEpB01tvOx2TwhrRCmZTX+OJ9M5Cgg8M61Lv/ijAnW6HU/SMqfZCmhuV6eUXTooJc2QKy5k4dl97+hlh35YwkrMrWgyD16y0kY0oQAxDxO+IQsWlhd/0yVfiTJrad4U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=RMgPcdtV; arc=none smtp.client-ip=209.85.208.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
+	s=arc-20240116; t=1747997544; c=relaxed/simple;
+	bh=Ekl+hGAB44Rldtp80MChpA/wZATRMQ1Vak431vW9/qk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=q9Kc55sY1DitpwJ1Fwv/rhcULeye5fAOghCnUkpUqISj1V0gqtfnSW4cQXkft/+Eub74roacCneLSG/i7Xb5CG97UbSwv8YdMBtGpY3cc8eFG8akIU+Ue/2K0y4Dn9+BCdJ6CF79vVhuorBZlLbF8JoKfRcWwsfoO3tn/4PG7q4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=m6Eq7HnK; arc=none smtp.client-ip=209.85.221.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="RMgPcdtV"
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-5f3f04b5dbcso13664281a12.1
-        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 03:52:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="m6Eq7HnK"
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-3a374754e03so409767f8f.1
+        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 03:52:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tuxon.dev; s=google; t=1747997525; x=1748602325; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=XwP8jYnybIYdZwiFlF4p0pHyTP1yOv6D4gpD/fnEuLY=;
-        b=RMgPcdtVQFRHdCZBiBKbtXQG0qgQDhPDt74zDK4mNDBZ7sYmm+FzV0Z1DZgY6j37xe
-         123Ske63/i4rSU2z5SlP0szNl0B+YECVWvMx1/tQKz0qJ3COzgGz4lA3osbiZkNX0C/l
-         tOkoV+0oDUOajEvaw6DeddEriNwIueCo8cCMkoijQpy5QkLJlAv56KkWHEhCOyqEz0yZ
-         4hfO3Vj4XD/m3HB3RNRyfdpHttBJ96fQhSiLlyZnXqVgMUvVU5ONK43IzesqtQ0kyye9
-         5INYQUVR0dXL0AoplQZJW9b1KVTPOX3NnfdLby7Ay1N+tdY94glxR/O2oM7MyZqD76Am
-         IHTA==
+        d=ventanamicro.com; s=google; t=1747997541; x=1748602341; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=qMi4ApElv9UTRXKLCAFiLHeHw33aLOhDiUIk/Js8sWU=;
+        b=m6Eq7HnKZoBo8XLjvhH83fOPp+KwcyUNJTp4kT5iGDUFP6XrhZZi5IQk0Z45udZDpD
+         H1gAkac9vUx2xvQbEPU+lYJfV+KBjUHVUqZyUM93voBBT/XtJYcBcywEtFf8QvithBgw
+         bsaEFwBNHu63bWlHgWf3W5GeqDC8ozJ+teEWwz8rfiqJoYriRifT6alPxIe9l6Kgxgq8
+         wrJ+NYyebIWUNOMLj6OEK/HO354+KLdJCpFBIhGXUshBqM8UriMr3wkIZvkiEzr0AfFX
+         OG7SexElzwLeC2NwVT6rc3Bp5X4wvlZSY01v0K1gr700u/RWADygBIco8ehKzLKUg151
+         13RQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747997525; x=1748602325;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=XwP8jYnybIYdZwiFlF4p0pHyTP1yOv6D4gpD/fnEuLY=;
-        b=LYX5OjFviQLgI3HYx61us7Q3dWauPyThvRMtg0xzGM9/o4NgVvKyigoMEcHlzGaWwy
-         3X5530KD4kFGwRDLkl4uD4kn5Qdx/KUR1FND6BdcRO5rNrzSsO/r5pwUPF391tH/oVU6
-         ttK+Og+Q/6zV0Lplyc58PEBXHCM8AWDF/xDxv6inNLYjSOmPQIoMxqoGMxXagKa8cEny
-         gUrxi4bleCm75xo7ZYHiq9dCqBwOcitHIMYo5tE64nNpNUm5HFLxU15Dq2fiGjp91tTF
-         Yi1P3Sdrzikr3Oa/QMimpKtLcm6MAd5+jLTbiFWz4x7D/44ow7ijU9ZSUNthYxFfThs8
-         s0oA==
-X-Forwarded-Encrypted: i=1; AJvYcCUNUBVOQVwMEuFcCUeSDViNVx3Gs5iMP/pv5X2LaqLNcFoiPOQjOAEXw5fa9ydk2aUi0gvsdsy43luviDI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzOf/coJp/QrwV1anAT7Q3ePaNRuq0rrKl8c+eIKVD97TsGq+39
-	owP8Szzos72O6XiK/JKcM5N8t0H1Qxp6B5jhfndPvYAKPbBb9GGxYDzlrWL1+Fictdo=
-X-Gm-Gg: ASbGncuHBwADkgFvMGG/ltEkBOT62Q9JdAM52UsoHkuScqYTfYJG4K6vegwZV7gzEGZ
-	s0XiY5R/zCT2ArUbz3M1epnHQWPfBQbczycrwdTKL0nE8ROfD7cmSSgS6uH9TbLxIUD7hD3Rke7
-	xwH2c9X4B2MbHThOuHAlLw8M9iN6AXeGskwjqQFxyakIh581ttg8UFHYnWZFIfmgH8rPbwgrv0+
-	T6JX6aivPEfFanFUkk+RWqMkOzp240lm+ytJX5DNEFXZFdTVcpt/xy8wqBp+4lYFRvNKH0EIy65
-	Blk24VckTAUCXwVi3GSWjNwoLbHXtMX2zIow8RxzMQtREprSt5EW7jL096hgUPotuQDVUA==
-X-Google-Smtp-Source: AGHT+IEC4yMEc83C32Rd4QKL4hSK5Wu12v5T+oSzGSvYSxS2+OO278DiRhv1/vjRF4GiSVkrB+WCww==
-X-Received: by 2002:a05:6402:2709:b0:601:9dc3:2796 with SMTP id 4fb4d7f45d1cf-6019dc32a0bmr19644753a12.6.1747997525189;
-        Fri, 23 May 2025 03:52:05 -0700 (PDT)
-Received: from [192.168.50.4] ([82.78.167.58])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6005a6e019asm11583614a12.36.2025.05.23.03.52.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 23 May 2025 03:52:04 -0700 (PDT)
-Message-ID: <47853bb8-db03-42b1-bcc2-3338fc208abb@tuxon.dev>
-Date: Fri, 23 May 2025 13:52:03 +0300
+        d=1e100.net; s=20230601; t=1747997541; x=1748602341;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=qMi4ApElv9UTRXKLCAFiLHeHw33aLOhDiUIk/Js8sWU=;
+        b=NuiX4vQ/qJUf7ewlJKNNSJXVLXwChqx/mfBFFAX6XAsbTyEtkvXfkveeb8MAmEEnSz
+         4RJO5YAeaoPb4OdROqXAhWuhPl3lAs5O9xk6a8Lbyf9ApXZM/+4ygpYswP1RrdBZnExw
+         1v5U4h7t+dbmG8EoVL3PTg68HSxdHBlvUUsKRa4i9+RhPt7X+hd0PPAC4/JKvaOeqYKq
+         q9tod7CAVAA4GOq7CMvcmWBpEqQm2gf4H3TJs7ra9v8kAjo8PXE6D2hx7j+J5W2SB0+A
+         2UulNaERQHk4SPIjavIQFk6wj7HShze85V/Qo9GmiaSQ1vccjb6bKqLptJTDCiWCaJ3T
+         0aMA==
+X-Forwarded-Encrypted: i=1; AJvYcCWVlgDyr/iV2uOLd0fzDaFE7z6o9ES/2U0EaZ3AWdMadERYdK9Z1DVpqbnzmv77/h9Dz/X6xzRiaRVfTuo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyJq+LtfVFziIJD53A82gTIGh2LmlvuDcLZs1wi47/qoP1IDKYM
+	0tTRl6CMT2W15GLTDCmBiMqfoGKJfc4OyBTUDEzdDHtP0HGaFOUU8TZ5UKF9iLZD/Fg=
+X-Gm-Gg: ASbGncvK5Z90MJMnMO3U+NHzxmTFJ887KQsVCPWFN+NYvEmRJIcKyLE4+oqzBc1ex1l
+	z8PQDO69WRAhMHf0B/Y/yREE6PRoEqPB1SAMRLF3WiNTTtsbVc9HZjOr97bPnPvXZnZa7iSuMuQ
+	Fu4M/SLvWqOx4E23MwlaZGjmt52vnnFriOkufQ1zXGtmFxNHxOUzz8qxf4J/HuqFalRCBvMjruQ
+	VaUJTNPjWCgCI97OJUEXTJ9su6uZqvD+M/lHHsKKDTGdVAcT1GBYaW9+pMYd+r+KdIfNbiyrxts
+	7X5VI2jQRl9s1tPc/GIjke9xim9Ri1jXoinpQsVJQrgRDpTKUnvJEIZ1Eq0=
+X-Google-Smtp-Source: AGHT+IEZmpBdHidSmMll0Tt/cMd2jy3jhCSZ/4z88K5W2YuxN+ezZzGMi4M3/53vgB32or4XtWGoCA==
+X-Received: by 2002:a05:6000:1acc:b0:3a4:7373:7a6a with SMTP id ffacd0b85a97d-3a4c2e443a3mr745998f8f.10.1747997541137;
+        Fri, 23 May 2025 03:52:21 -0700 (PDT)
+Received: from localhost ([2a02:8308:a00c:e200:be84:d9ad:e5e6:f60b])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a35ca8cf66sm25590521f8f.87.2025.05.23.03.52.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 23 May 2025 03:52:20 -0700 (PDT)
+From: =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@ventanamicro.com>
+To: kvm-riscv@lists.infradead.org
+Cc: kvm@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Anup Patel <anup@brainfault.org>,
+	Atish Patra <atishp@atishpatra.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Alexandre Ghiti <alex@ghiti.fr>,
+	Yong-Xuan Wang <yongxuan.wang@sifive.com>
+Subject: [PATCH] RISC-V: KVM: lock the correct mp_state during reset
+Date: Fri, 23 May 2025 12:47:28 +0200
+Message-ID: <20250523104725.2894546-4-rkrcmar@ventanamicro.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] driver core: platform: Use devres group to free driver
- probe resources
-To: Ulf Hansson <ulf.hansson@linaro.org>,
- Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Jonathan Cameron <jic23@kernel.org>, "Rafael J. Wysocki"
- <rafael@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>,
- dakr@kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
- linux-renesas-soc@vger.kernel.org, geert@linux-m68k.org,
- Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-iio@vger.kernel.org,
- bhelgaas@google.com
-References: <CAPDyKFqMB7XutXba73YHx1X4rm6uc3Fz6yMZ8yM=wgduEmgUDg@mail.gmail.com>
- <a20fc6ee-c6c3-4013-b175-4918b9a44380@tuxon.dev>
- <CAPDyKFpbeLJUiB_xQbqDib+-8Q3AcJNVg+DuEcqmVGMbFdNxwA@mail.gmail.com>
- <fgl4w5uhxci7rrbdigtni72vveb2gqemh6iccz4qruqkek5rja@rzwkcjg6hkid>
- <3b1963ba-f93f-48f2-8fb0-a485dd80ffcb@tuxon.dev>
- <CAPDyKFqrAS4iV59S-zJ9H7_3VuGr9JdZABhfUGBwTzQNDCasaw@mail.gmail.com>
- <482b55c9-a210-4b2d-8405-e9f30d48a8fd@tuxon.dev>
- <CAPDyKFpLF2P438GGWSgbXzpT7JNdUjtZ2ZxYf1_4=fNUX3s-KQ@mail.gmail.com>
- <4fzotopz57igmiyssgkogfbup6uu7qgza3t53t5qsouegmj7ii@wfiz4g3eiffs>
- <CAPDyKFoxs6wDCLp5EGHVqkqSstBLNmngps2KfanRezV_EN8tuA@mail.gmail.com>
- <hd3hobuaunmn2uqzl72yv7nz2ms25fczc264wmt6o7twrxdhsy@mm22ujnawutc>
- <CAPDyKFpRUhTK=UfcEdRdT0f5EVoGN5okLosd9_tYjdGKr0qvkA@mail.gmail.com>
-From: Claudiu Beznea <claudiu.beznea@tuxon.dev>
-Content-Language: en-US
-In-Reply-To: <CAPDyKFpRUhTK=UfcEdRdT0f5EVoGN5okLosd9_tYjdGKr0qvkA@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi, Ulf,
+We're writing to *tmp, but locking *vcpu.
 
-On 23.05.2025 12:47, Ulf Hansson wrote:
-> On Fri, 23 May 2025 at 01:06, Dmitry Torokhov <dmitry.torokhov@gmail.com> wrote:
->>
->> On Fri, May 23, 2025 at 12:09:08AM +0200, Ulf Hansson wrote:
->>> On Thu, 22 May 2025 at 20:47, Dmitry Torokhov <dmitry.torokhov@gmail.com> wrote:
->>>>
->>>> On Thu, May 22, 2025 at 06:28:44PM +0200, Ulf Hansson wrote:
->>>>> On Thu, 22 May 2025 at 16:08, Claudiu Beznea <claudiu.beznea@tuxon.dev> wrote:
->>>>>>
->>>>>> Hi, Ulf,
->>>>>>
->>>>>> On 22.05.2025 14:53, Ulf Hansson wrote:
->>>>>>>
->>>>>>> That said, I think adding a devm_pm_domain_attach() interface would
->>>>>>> make perfect sense. Then we can try to replace
->>>>>>> dev_pm_domain_attach|detach() in bus level code, with just a call to
->>>>>>> devm_pm_domain_attach(). In this way, we should preserve the
->>>>>>> expectation for drivers around devres for PM domains. Even if it would
->>>>>>> change the behaviour for some drivers, it still sounds like the
->>>>>>> correct thing to do in my opinion.
->>>>>>
->>>>>> This looks good to me, as well. I did prototype it on my side and tested on
->>>>>> all my failure cases and it works.
->>>>>
->>>>> That's great! I am happy to help review, if/when you decide to post it.
->>>>
->>>> So you are saying you'd be OK with essentially the following (with
->>>> devm_pm_domain_attach() actually being elsewhere in a real patch and not
->>>> necessarily mimicked by devm_add_action_or_reset()):
->>>
->>> Correct!
->>>
->>>>
->>>> diff --git a/drivers/base/platform.c b/drivers/base/platform.c
->>>> index cfccf3ff36e7..1e017bfa5caf 100644
->>>> --- a/drivers/base/platform.c
->>>> +++ b/drivers/base/platform.c
->>>> @@ -1376,6 +1376,27 @@ static int platform_uevent(const struct device *dev, struct kobj_uevent_env *env
->>>>         return 0;
->>>>  }
->>>>
->>>> +
->>>> +static void platform_pm_domain_detach(void *d)
->>>> +{
->>>> +       dev_pm_domain_detach(d, true);
->>>> +}
->>>
->>> Well, I would not limit this to the platform bus, even if that is the
->>> most widely used.
->>>
->>> Let's add the new generic interface along with
->>> dev_pm_domain_attach|detach* and friends instead.
->>>
->>> Then we can convert bus level code (and others), such as the platform
->>> bus to use it, in a step-by-step approach.
->>
->> Right, this was only a draft:
->>
->> "... with devm_pm_domain_attach() actually being elsewhere in a real
->> patch and not necessarily mimicked by devm_add_action_or_reset() ..."
->>
->>>
->>>> +
->>>> +static int devm_pm_domain_attach(struct device *dev)
->>>> +{
->>>> +       int error;
->>>> +
->>>> +       error = dev_pm_domain_attach(dev, true);
->>>> +       if (error)
->>>> +               return error;
->>>> +
->>>> +       error = devm_add_action_or_reset(dev, platform_pm_domain_detach, dev);
->>>> +       if (error)
->>>> +               return error;
->>>> +
->>>> +       return 0;
->>>> +}
->>>> +
->>>>  static int platform_probe(struct device *_dev)
->>>>  {
->>>>         struct platform_driver *drv = to_platform_driver(_dev->driver);
->>>> @@ -1396,15 +1417,12 @@ static int platform_probe(struct device *_dev)
->>>>         if (ret < 0)
->>>>                 return ret;
->>>>
->>>> -       ret = dev_pm_domain_attach(_dev, true);
->>>> +       ret = devm_pm_domain_attach(_dev);
->>>>         if (ret)
->>>>                 goto out;
->>>>
->>>> -       if (drv->probe) {
->>>> +       if (drv->probe)
->>>>                 ret = drv->probe(dev);
->>>> -               if (ret)
->>>> -                       dev_pm_domain_detach(_dev, true);
->>>> -       }
->>>>
->>>>  out:
->>>>         if (drv->prevent_deferred_probe && ret == -EPROBE_DEFER) {
->>>> @@ -1422,7 +1440,6 @@ static void platform_remove(struct device *_dev)
->>>>
->>>>         if (drv->remove)
->>>>                 drv->remove(dev);
->>>> -       dev_pm_domain_detach(_dev, true);
->>>>  }
->>>>
->>>>  static void platform_shutdown(struct device *_dev)
->>>>
->>>>
->>>> If so, then OK, it will work for me as well. This achieves the
->>>> same behavior as with using devres group. The only difference is that if
->>>> we ever need to extend the platform bus to acquire/release more
->>>> resources they will also have to use devm API and not the regular one.
->>>
->>> Sounds reasonable to me! Thanks for a nice discussion!
->>>
->>> When it comes to the devm_pm_runtime_enable() API, I think we
->>> seriously should consider removing it. Let me have a closer look at
->>> that.
->>
->> I think once we sort out the power domain detach being out of order with
->> regard to other devm-managed resources in bus code you need to analyze
->> this again and you will find out that much as with IRQs, devm API for
->> runtime PM is useful for majority of cases. Of course there will be
->> exceptions, but by and large it will cut down on boilerplate code.
-> 
-> Well, the problem is that the interface is just too difficult to
-> understand how to use correctly.
-> 
-> A quick look for deployments in drivers confirms my worries.
+Fixes: 2121cadec45a ("RISCV: KVM: Introduce mp_state_lock to avoid lock inversion")
+Signed-off-by: Radim Krčmář <rkrcmar@ventanamicro.com>
+---
+ arch/riscv/kvm/vcpu_sbi.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Maybe we can add something like:
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 96e64f3d7b47..568a8307863b 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -10100,6 +10100,7 @@ F:
-Documentation/devicetree/bindings/power/power?domain*
- T:     git git://git.kernel.org/pub/scm/linux/kernel/git/ulfh/linux-pm.git
- F:     drivers/pmdomain/
- F:     include/linux/pm_domain.h
-+K:      \bpm_runtime_\w+\b
-
-in MAINTAINERS file so that any new patch using the RPM will also be sent
-to PM maintainers and checked accordingly?
-
-Thank you,
-Claudiu
+diff --git a/arch/riscv/kvm/vcpu_sbi.c b/arch/riscv/kvm/vcpu_sbi.c
+index 31fd3cc98d66..6e09b518a5d1 100644
+--- a/arch/riscv/kvm/vcpu_sbi.c
++++ b/arch/riscv/kvm/vcpu_sbi.c
+@@ -143,9 +143,9 @@ void kvm_riscv_vcpu_sbi_system_reset(struct kvm_vcpu *vcpu,
+ 	struct kvm_vcpu *tmp;
+ 
+ 	kvm_for_each_vcpu(i, tmp, vcpu->kvm) {
+-		spin_lock(&vcpu->arch.mp_state_lock);
++		spin_lock(&tmp->arch.mp_state_lock);
+ 		WRITE_ONCE(tmp->arch.mp_state.mp_state, KVM_MP_STATE_STOPPED);
+-		spin_unlock(&vcpu->arch.mp_state_lock);
++		spin_unlock(&tmp->arch.mp_state_lock);
+ 	}
+ 	kvm_make_all_cpus_request(vcpu->kvm, KVM_REQ_SLEEP);
+ 
+-- 
+2.49.0
 
