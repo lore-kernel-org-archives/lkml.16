@@ -1,83 +1,108 @@
-Received: from smtp-fw-6001.amazon.com (smtp-fw-6001.amazon.com [52.95.48.154])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A08828382;
-	Fri, 23 May 2025 16:01:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.95.48.154
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B23628382;
+	Fri, 23 May 2025 16:02:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748016108; cv=none; b=gHim64QFX/2AVGNdtgGTGUYUeICC/n2RBhz3DC1bqLq5QT/bfoHmYJaF8i3MkvfSZoefIG0/biBTSAHYHpEIzY1O5yQDt2yNv+nkQiN9was51gM+YinVhFuecVwld0BqbILF8cXXmiAh6y//0YR6EXptyo1V3xk+nXWq3c+zOxo=
+	t=1748016129; cv=none; b=rAZF4yNXkqL+fLtKjsOob1PgR1eepRTxOEKzC7sDYuj7iEQ4Tf35v0cApma5UaHXtwY53Vw/dJXHkYLbgBdcIncqJsar/tcMua24SsolmOFOMsyaQE8ia7EYFvDML+hZLzcr2FA22d66VgHPIHAmeLs6R0ReIEwGmAtiyc65+rQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748016108; c=relaxed/simple;
-	bh=X4/5x2g3r0H0D5vuqU8mLH/IrNTkGVhsWoxQBRNKzpg=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=nUBexj/4vhevZBGMGBbQ6zfUrgp9oC25rbDrBY5sOSsS7x2VY8KGHZrhYeP/UUXPSMYEAxAFOokH4T+IheCeUKsuoD3ilLT5xtPnHj1rBMb+ClHfN7u3yV9tDYNzXj46Lq4xC6agCFFQqU9r0m0qDGLyPZIWeZh90JyaUPYQM3o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.co.uk; spf=pass smtp.mailfrom=amazon.co.uk; dkim=pass (2048-bit key) header.d=amazon.co.uk header.i=@amazon.co.uk header.b=sDqt8WYT; arc=none smtp.client-ip=52.95.48.154
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.co.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.uk
+	s=arc-20240116; t=1748016129; c=relaxed/simple;
+	bh=qgYSTT9XcSyqI+DBeYRkhP8s0z5sSZV+A60zwa1m+G0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Tm2YWOWXnVN0A4G1LSep4V1kp8H1j1OkGXcRE6mWfstTCBuP/+Cy6jJ6Twq9rmLLbVG590A+kuwJ8p8lJu/pBrgFAbl7mnSj/cxNvIYJqU7oAgOTQR3kNYSBWN6ymcUV0JEK9oyNifkPdQWGF1vGeSsBQEROUfqadxUPiborWAo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B1cJjoD2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=amazon.co.uk header.i=@amazon.co.uk header.b="sDqt8WYT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.co.uk; i=@amazon.co.uk; q=dns/txt;
-  s=amazoncorp2; t=1748016107; x=1779552107;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=Ux2fz6ALWguuUll23AorrgrszZl9ikA7djgXi7e3PXE=;
-  b=sDqt8WYTI2OiysEHkc2nBlZzixbEtKg2h266dTVaCZXymM5XxKQKc+dY
-   ZoNv3NyCtDgvc0BAzv3r8agTe78ySeVekFHSJnce+0uiTlkOCeBULosEi
-   Wt7HflKkXldBg4X8hck3ajjF//R+Erz7QL+m6PKM8gSSxgyJvgepSMHy8
-   rC1hvDCAeydtc6kfOu949IctEh3K/3agjIpAfPulI60UYgVyxhT/5aQW7
-   pahLjax4f0baywbydR8PU6ZMkrnfBkD67LnpGvdmoNyH/nP5ds6nALJr+
-   +QFu+JUV8M6efhJy0zVNRy/WxOuUrVLqG2xP7YWYuiXIZ8gBQA+kN3NF6
-   Q==;
-X-IronPort-AV: E=Sophos;i="6.15,309,1739836800"; 
-   d="scan'208";a="493505763"
-Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.2])
-  by smtp-border-fw-6001.iad6.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2025 16:01:43 +0000
-Received: from EX19MTAEUA001.ant.amazon.com [10.0.43.254:49295]
- by smtpin.naws.eu-west-1.prod.farcaster.email.amazon.dev [10.0.2.235:2525] with esmtp (Farcaster)
- id 2f752404-5de8-41fe-8a16-eb65358a1460; Fri, 23 May 2025 16:01:40 +0000 (UTC)
-X-Farcaster-Flow-ID: 2f752404-5de8-41fe-8a16-eb65358a1460
-Received: from EX19D031EUB002.ant.amazon.com (10.252.61.105) by
- EX19MTAEUA001.ant.amazon.com (10.252.50.223) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Fri, 23 May 2025 16:01:40 +0000
-Received: from dev-dsk-hmushi-1a-0c348132.eu-west-1.amazon.com
- (172.19.124.218) by EX19D031EUB002.ant.amazon.com (10.252.61.105) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14; Fri, 23 May 2025
- 16:01:37 +0000
-From: Mushahid Hussain <hmushi@amazon.co.uk>
-To: <tip-bot2@linutronix.de>
-CC: <efault@gmx.de>, <linux-kernel@vger.kernel.org>,
-	<linux-tip-commits@vger.kernel.org>, <peterz@infradead.org>,
-	<stable@vger.kernel.org>, <x86@kernel.org>, <hmushi@amazon.co.uk>,
-	<nh-open-source@amazon.com>, <sieberf@amazon.com>
-Subject: Re: [PATCH 6.12 000/122] 6.12.11-rc1 review
-Date: Fri, 23 May 2025 16:01:28 +0000
-Message-ID: <20250523160128.8846-1-hmushi@amazon.co.uk>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <173902629450.10177.17446372607519992642.tip-bot2@tip-bot2>
-References: <173902629450.10177.17446372607519992642.tip-bot2@tip-bot2>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B1cJjoD2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DBDF2C4CEE9;
+	Fri, 23 May 2025 16:02:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748016128;
+	bh=qgYSTT9XcSyqI+DBeYRkhP8s0z5sSZV+A60zwa1m+G0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=B1cJjoD22VVrq7n3ZjtSjCKVoJHel3VRZawP05ZnRpXIj+3lQiQJUxTt1+DGwjiXj
+	 qiD93PYBeFeRoR4Y3uogSidZFUVxB7MStQE+euuIHup4TCaudxawDUawpio9ybD3fV
+	 AhaIZCgcDC/8VysRupdDwrUkEyvyKG0zpXtpASfDrEGSCKnxvivqTg5i0KP3P9b+FB
+	 mmLwMGNrE7wvYDNWfWFIHneeun9Yry7a5r75iW1d1T3oepXmg2ZnV6I2Usv1sfwjVf
+	 xTzDLnpyvW96MaSXDzQ9odJXIZZEAHIUziVTI2IlbG+IwS5CJij5MfbH4ZTOpxNbdp
+	 qxaXWEl1wc40g==
+Date: Fri, 23 May 2025 19:02:03 +0300
+From: Jarkko Sakkinen <jarkko@kernel.org>
+To: Stefano Garzarella <sgarzare@redhat.com>
+Cc: linuxppc-dev@lists.ozlabs.org, Peter Huewe <peterhuewe@gmx.de>,
+	Jens Wiklander <jens.wiklander@linaro.org>,
+	linux-integrity@vger.kernel.org,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	linux-arm-kernel@lists.infradead.org,
+	Nicolas Ferre <nicolas.ferre@microchip.com>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Sumit Garg <sumit.garg@kernel.org>,
+	James Bottomley <James.Bottomley@hansenpartnership.com>,
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Jason Gunthorpe <jgg@ziepe.ca>, linux-kernel@vger.kernel.org,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Naveen N Rao <naveen@kernel.org>,
+	Michael Ellerman <mpe@ellerman.id.au>
+Subject: Re: [PATCH v5 4/4] tpm/tpm_svsm: support TPM_CHIP_FLAG_SYNC
+Message-ID: <aDCb-wkHGoLQ-IGg@kernel.org>
+References: <20250514134630.137621-1-sgarzare@redhat.com>
+ <20250514134630.137621-5-sgarzare@redhat.com>
+ <aCVHQ-LRqHeEVEAW@kernel.org>
+ <CAGxU2F5AsNY5mQPd=qajW1seFYHSYpB0Fa1iuR_f2QavtoB6sA@mail.gmail.com>
+ <aCzf6aoJAC-IdS_n@kernel.org>
+ <CAGxU2F6rfqGV_gJk-JxrCk3f9dWtYn_3o9RODh7cVG0X_oQWaA@mail.gmail.com>
+ <aC2nBCxkvWWz5y5E@kernel.org>
+ <aC4CVUXpThAyKQdf@kernel.org>
+ <CAGxU2F5zQJR4GvZ9ovtQBqMFGs-wBMoCRks=JYQ1JF6qMKK-6g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: EX19D041UWB004.ant.amazon.com (10.13.139.143) To
- EX19D031EUB002.ant.amazon.com (10.252.61.105)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAGxU2F5zQJR4GvZ9ovtQBqMFGs-wBMoCRks=JYQ1JF6qMKK-6g@mail.gmail.com>
 
-> The following commit has been merged into the sched/urgent branch of tip:
+On Thu, May 22, 2025 at 10:26:34AM +0200, Stefano Garzarella wrote:
+> On Wed, 21 May 2025 at 18:42, Jarkko Sakkinen <jarkko@kernel.org> wrote:
+> >
+> > On Wed, May 21, 2025 at 01:12:20PM +0300, Jarkko Sakkinen wrote:
+> > > > I tried, but the last patch (this one) is based on the series merged
+> > > > on the tip tree, where I introduced tpm_svsm.
+> > > > I can see that series in linux-next merged with commit
+> > > > 16a56ee59ab8ee05e67de35bbb5782ef9cfb4f07,
+> > > > but I can't see it in your next tree [1].
+> > > >
+> > > > How do we proceed in such cases?
+> > > >
+> > > > Just to be sure, did I use the right tree?
+> > >
+> > > Thanks for the remark. Lemme check tonight. Hold on doing
+> > > anything ;-) We'll get there...
+> >
+> > I just rebased my branches on top of latest from Linus. That is what I
+> > need base PR also on, and:
+> >
+> > $ git show 16a56ee59ab8ee05e67de35bbb5782ef9cfb4f07
+> > fatal: bad object 16a56ee59ab8ee05e67de35bbb5782ef9cfb4f07
+> >
+> > I'd use git cherry-pick on a range to take them from linux-next to a
+> > mainline tip...
 > 
-> Commit-ID:     55294004b122c997591d9de8446f5a4c60402805
-> Gitweb:        https://git.kernel.org/tip/55294004b122c997591d9de8446f5a4c60402805
-> Author:        Peter Zijlstra <peterz@infradead.org>
-> AuthorDate:    Tue, 28 Jan 2025 15:39:49 +01:00
-> Committer:     Peter Zijlstra <peterz@infradead.org>
-> CommitterDate: Sat, 08 Feb 2025 15:43:12 +01:00
+> I see, let me know if I can help in some way.
+> 
+> We can also wait the next cycle if it simplifies your work, definitely
+> no rush on my side.
 
-Was this merged to sched/urgent or any other branches/RCs? Given gitweb link
-sends me to "Bad commit reference". I don't see this commit in sched/urgent:
-https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/log/?h=sched%2Furgent
+Let's do it. At least it will then get a full round of testing before
+ending up to a release.
+
+Thank you!
+
+> 
+> Thanks,
+> Stefano
+
+BR, Jarkko
