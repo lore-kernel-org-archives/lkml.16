@@ -1,50 +1,58 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B64C721C178;
-	Fri, 23 May 2025 07:19:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B386119C554
+	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 07:20:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747984796; cv=none; b=jONkYGLH/AhPSFOuMxMKXyWxfw75diYza5AzZuMO8tfi9zNGIhmWzsoCgObJOFEAKAK21TLTyGk95CnZsF9X7BPxHGeGXwJgUuoq1W/KtTR5ODAyh4j3aMYazsCf82SmFa8va8WmCcN95OPDQLH40IdjIlL7fazI8/FY87nfTJs=
+	t=1747984827; cv=none; b=lUP7f1aHrCYjDSe4XVvY4yoKI3ec9qFSLBovoQ+JgERant7oOph6G/yBgNS9kyOplpYIggfj1ZDkmZ++Oo8zcScmD0iA/2bzASwEXu2OlIw4y2vBi+3nbEGp5FXKXRfbgpQzDEu+DSBBe24FI95z8v0OGcTqr6fPYO2ytL0syuU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747984796; c=relaxed/simple;
-	bh=aEtUCaVHTrmJDEuedumuApTBnp00wSWAxrbB4vvfuSo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AF4xdCsgtdz5gtZzjTo5U++Xnrm6BMX4b1jyjTOr9ZJrBFyzi4sZdBXkcX079En/1V7WO0uIgEgKEOS7HWnN6RY42aecOM035InHQ/zbf2EMqOLWjt28Ws4HdRnO/CAxPf/RKJnmRj6LcwnCAx1Ws21M/7TvFOGlXVWiOJbNSSk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nZRIYEg9; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747984827; c=relaxed/simple;
+	bh=fW7a3/gECDZY6ptlTYpQDHTPsytBdrwV8a3YoEnMvP4=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=kwpsWCTd2OOyNYodbDK/L6r1v3kOHxeVjyBuSL8Jf1RsUOxGRwvZx8ZzYPePHNxqZewhjBHdlJN6At6t37dBZOgnCVd37W+uV8XcJ8igFRi2QgBV5hgjLI5EG7eBUXPtfFRCcIVLz6ZJj5+U9P4AR40ZC0xdTuXyHO+oZAmAyHM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DOEBC0IJ; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nZRIYEg9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3AC9AC4CEE9;
-	Fri, 23 May 2025 07:19:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747984796;
-	bh=aEtUCaVHTrmJDEuedumuApTBnp00wSWAxrbB4vvfuSo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=nZRIYEg9qsgPAtly1UXn8khOlwhVwJ+LaiirtAQd1lEtfXDBWImjwIhfM7Ctr06Zx
-	 aPV1gW7rrIZUpc3pkx9JTbEuBnMVRXZdKdl4C5UkgYPVi7zF0QOp01Y9uRtUs3Pzj4
-	 z6XBtTZ2kvFnlYpUCuNDabtv0h+rvqNuQusUVSeYznJCsXsXh46QG/C/SweEh+qJP2
-	 UtgMBaNs3ikjpA5Zd6fSZdEBR/xaaBSA2fk6RUCPlegprwVdTMRezE+WCV3jYzILaw
-	 x3r0/bcrCySpCuML91lS6O6ooSXPbjESvfBR65Hls0bOmh1qSAl0xAmgKy6PiKOsb2
-	 BoVVMfYNb0T/g==
-Date: Fri, 23 May 2025 08:19:50 +0100
-From: Simon Horman <horms@kernel.org>
-To: Jianbo Liu <jianbol@nvidia.com>
-Cc: Tariq Toukan <tariqt@nvidia.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Eric Dumazet <edumazet@google.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	Saeed Mahameed <saeedm@nvidia.com>,
-	Leon Romanovsky <leon@kernel.org>, netdev@vger.kernel.org,
-	linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Moshe Shemesh <moshe@nvidia.com>, Mark Bloch <mbloch@nvidia.com>,
-	Gal Pressman <gal@nvidia.com>
-Subject: Re: [PATCH net 2/2] net/mlx5e: Fix leak of Geneve TLV option object
-Message-ID: <20250523071950.GP365796@horms.kernel.org>
-References: <1747895286-1075233-1-git-send-email-tariqt@nvidia.com>
- <1747895286-1075233-3-git-send-email-tariqt@nvidia.com>
- <20250522191651.GL365796@horms.kernel.org>
- <1a8cb838-d487-4c56-8dfa-8179f305de02@nvidia.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DOEBC0IJ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747984826; x=1779520826;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=fW7a3/gECDZY6ptlTYpQDHTPsytBdrwV8a3YoEnMvP4=;
+  b=DOEBC0IJHVnrXoVPvRWxnwywkH3NNrm6zXO2fsqI0jby6ltnHAkkKnSN
+   Pnc+swEzz3veKxC/gP/6OetkND683i4AvTwyzxx5WPhAwkkl6F2HMaqk5
+   shCaCXDM6Um+4c/NAJRSZP7quk2NZkl73UuNc7IyBGJiHMr9qFToHvaeQ
+   Dy8ksB7NYvzUDO9PkfxgK0D+9/er+DGnl4+4YIvqWDWgWF6pOJfZ8/ixY
+   w81eiB5biHd8ccLyvK4meh3PmcORTZD3lJ9ZB6Tc22XZMZ2djD16C+104
+   26qVS06nyAkFJnl0LzoKUhG6Ytksqhzl8xOmiHGmkezc/LPdeLrF8a6eI
+   A==;
+X-CSE-ConnectionGUID: SJFzSt8qTpW/UsmBRazcnA==
+X-CSE-MsgGUID: v+zi1e+QTaG7flcqIhwbxQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11441"; a="49736942"
+X-IronPort-AV: E=Sophos;i="6.15,308,1739865600"; 
+   d="scan'208";a="49736942"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2025 00:20:25 -0700
+X-CSE-ConnectionGUID: 9X9b2IQpRNGzGLl9NtcmSA==
+X-CSE-MsgGUID: ijNJH/mKQui06Vrv8jxhNg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,308,1739865600"; 
+   d="scan'208";a="140877707"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by orviesa010.jf.intel.com with ESMTP; 23 May 2025 00:20:24 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uIMhZ-000Q9q-0Y;
+	Fri, 23 May 2025 07:20:21 +0000
+Date: Fri, 23 May 2025 15:20:20 +0800
+From: kernel test robot <lkp@intel.com>
+To: Kees Cook <kees@kernel.org>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: ld.lld: error: call to __read_overflow marked "dontcall-error":
+ detected read beyond size of object (1st parameter)
+Message-ID: <202505231544.lATsLNnT-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -53,74 +61,28 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1a8cb838-d487-4c56-8dfa-8179f305de02@nvidia.com>
 
-On Fri, May 23, 2025 at 09:58:57AM +0800, Jianbo Liu wrote:
-> 
-> 
-> On 5/23/2025 3:16 AM, Simon Horman wrote:
-> > On Thu, May 22, 2025 at 09:28:06AM +0300, Tariq Toukan wrote:
-> > > From: Jianbo Liu <jianbol@nvidia.com>
-> > > 
-> > > Previously, a unique tunnel id was added for the matching on TC
-> > > non-zero chains, to support inner header rewrite with goto action.
-> > > Later, it was used to support VF tunnel offload for vxlan, then for
-> > > Geneve and GRE. To support VF tunnel, a temporary mlx5_flow_spec is
-> > > used to parse tunnel options. For Geneve, if there is TLV option, a
-> > > object is created, or refcnt is added if already exists. But the
-> > > temporary mlx5_flow_spec is directly freed after parsing, which causes
-> > > the leak because no information regarding the object is saved in
-> > > flow's mlx5_flow_spec, which is used to free the object when deleting
-> > > the flow.
-> > > 
-> > > To fix the leak, call mlx5_geneve_tlv_option_del() before free the
-> > > temporary spec if it has TLV object.
-> > > 
-> > > Fixes: 521933cdc4aa ("net/mlx5e: Support Geneve and GRE with VF tunnel offload")
-> > > Signed-off-by: Jianbo Liu <jianbol@nvidia.com>
-> > > Reviewed-by: Cosmin Ratiu <cratiu@nvidia.com>
-> > > Signed-off-by: Tariq Toukan <tariqt@nvidia.com>
-> > > ---
-> > >   drivers/net/ethernet/mellanox/mlx5/core/en_tc.c | 7 ++++---
-> > >   1 file changed, 4 insertions(+), 3 deletions(-)
-> > > 
-> > > diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_tc.c b/drivers/net/ethernet/mellanox/mlx5/core/en_tc.c
-> > > index f1d908f61134..b9c1d7f8f05c 100644
-> > > --- a/drivers/net/ethernet/mellanox/mlx5/core/en_tc.c
-> > > +++ b/drivers/net/ethernet/mellanox/mlx5/core/en_tc.c
-> > > @@ -2028,9 +2028,8 @@ mlx5e_tc_add_fdb_flow(struct mlx5e_priv *priv,
-> > >   	return err;
-> > >   }
-> > > -static bool mlx5_flow_has_geneve_opt(struct mlx5e_tc_flow *flow)
-> > > +static bool mlx5_flow_has_geneve_opt(struct mlx5_flow_spec *spec)
-> > >   {
-> > > -	struct mlx5_flow_spec *spec = &flow->attr->parse_attr->spec;
-> > >   	void *headers_v = MLX5_ADDR_OF(fte_match_param,
-> > >   				       spec->match_value,
-> > >   				       misc_parameters_3);
-> > > @@ -2069,7 +2068,7 @@ static void mlx5e_tc_del_fdb_flow(struct mlx5e_priv *priv,
-> > >   	}
-> > >   	complete_all(&flow->del_hw_done);
-> > > -	if (mlx5_flow_has_geneve_opt(flow))
-> > > +	if (mlx5_flow_has_geneve_opt(&attr->parse_attr->spec))
-> > >   		mlx5_geneve_tlv_option_del(priv->mdev->geneve);
-> > >   	if (flow->decap_route)
-> > 
-> > Hi,
-> > 
-> > The lines leading up to the hung below are:
-> > 
-> > 	      err = mlx5e_tc_tun_parse(filter_dev, priv, tmp_spec, f, match_level);
-> >                if (err) {
-> >                          kvfree(tmp_spec);
-> >                          NL_SET_ERR_MSG_MOD(extack, "Failed to parse tunnel attributes");
-> >                          netdev_warn(priv->netdev, "Failed to parse tunnel attributes");
-> > 
-> > I am wondering if the same resource leak described in the patch description
-> > can occur if mlx5e_tc_tun_parse() fails after it successfully calls
-> > tunnel->parse_tunnel().
-> > 
-> 
-> Yes, I missed that. I will fix in next version.
+Hi Kees,
 
-Thanks, much appreciated.
+FYI, the error/warning still remains.
+
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   94305e83eccb3120c921cd3a015cd74731140bac
+commit: 6ee149f61bcce39692f0335a01e99355d4cec8da kunit/fortify: Replace "volatile" with OPTIMIZER_HIDE_VAR()
+date:   2 months ago
+config: arm64-randconfig-r063-20250523 (https://download.01.org/0day-ci/archive/20250523/202505231544.lATsLNnT-lkp@intel.com/config)
+compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project f819f46284f2a79790038e1f6649172789734ae8)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250523/202505231544.lATsLNnT-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202505231544.lATsLNnT-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+>> ld.lld: error: call to __read_overflow marked "dontcall-error": detected read beyond size of object (1st parameter)
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
