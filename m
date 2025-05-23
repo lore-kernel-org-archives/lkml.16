@@ -1,265 +1,245 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com [209.85.219.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9015290D8E;
-	Fri, 23 May 2025 13:48:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EB7322B8D2
+	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 13:49:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748008111; cv=none; b=DJqr4MJanBx1qkzJXuI4QI2TgkV3NxWbmeTE+pVOeH+TtSqogExdCsk3UZ6DiaROyaeq620cIpAJuWOmr0t16tg/T4KWyde/uoife7G3hkleNMDAEeBVw/XK9Oq/mWE/ksmIK8L+wNlxwrxe2j8+wT/GqfgjtUj2yCM4lYvfNAE=
+	t=1748008176; cv=none; b=ZTWzyoMlIKudbvLOjPUS0W5LiBFHKbtlj4F7NZZ6oIyt13xgejCf0DGxgeNMlVJkOAIR3+wptBBxsIfp4WVE1nMwHbQvTF8vCuckRIdGLJu4p+CDpUt7zQMGEOLuHIzQ84c1ZJHbAQE5o6moj1XxUVjMnvqXms0jb3HyfAmuczU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748008111; c=relaxed/simple;
-	bh=5WZKHVX1SoX76iCdr9eUwSznmo4DZk0Nvw57g9VWXTs=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=G2DZYjXXxdplUD1JWw6SaiOBaqpJuRx+p6ErmSpBB3+ugl0uq48vehkM/k3SW1NITzPFjY0O1eRx5TZ1kOP5pEaZYjsNTKSqPsd4ZOWLuL5XfPJAXj88wVJYLfJQa1MwQvqoczG7K6DpHW53kdLBgWcUeT7OAj/Kv+K+OuF+Ycc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hQBrYFAs; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748008176; c=relaxed/simple;
+	bh=hQH4sl4pAH2WPO33R/7uyvvZOOHNtsDFvCDO5Xyji5E=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Vat5uSEGZ37bcb8Q6IrXBqTsqxqZhtAhY6zHFhODmxnd4Yi/jsmrwsYPv9QJoaIZk3L5fao+n6nBbJ4//md5I+FZwSPYsy1sIzjYHul6vs/3nVPaUURPvZVH1llY6cK74iYXdMEmryHbVoMPTWTkhCTSedXKUtXLRZQsOY/d0YA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=qWNSdYIQ; arc=none smtp.client-ip=209.85.219.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hQBrYFAs"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-43cfebc343dso71151595e9.2;
-        Fri, 23 May 2025 06:48:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qWNSdYIQ"
+Received: by mail-yb1-f174.google.com with SMTP id 3f1490d57ef6-e7d6cbd3a82so1778024276.3
+        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 06:49:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748008108; x=1748612908; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=5WZKHVX1SoX76iCdr9eUwSznmo4DZk0Nvw57g9VWXTs=;
-        b=hQBrYFAsJnrxOJ00xzBZplDWmDcAGA41v5QhnY1KaF2giV1jByL5lQpwc4SbRCtXqf
-         EVQ9Bct+ROpq97pSoVXI3Jcr5PrbQEjEVAjVi5GKXpKxXgEIQJSgvhcw7RCRCN8/fboG
-         fZ+f3Zl0ms43Ke/cImCaqTFlm2SdZTibqmnNUOsrjAjP8sg9wZO94660+jRvhf5jAL8i
-         RJAyJYzVo3Yut53RjBst2KaYNsE6XsUJGMBkvlfCqebTq5b1tmd0F45PZ4rgxmuv322P
-         nDewBkJQTUNn0hBxobOJVmwnQPuL7qhwLnvrHWXJGnIOXgRQAMex96hyFW++HqK9T6zg
-         CF5w==
+        d=linaro.org; s=google; t=1748008173; x=1748612973; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=jm7LJvTGmSbZFlkn4UoigKXMnhFDdijfvdo8t5yXxjg=;
+        b=qWNSdYIQeErMMhjJVz2qT79n9g/JRctNfv0E3/6C/7edhOW/tnfd8s3Ta1CFIkat+j
+         x/G4z3bGJNqh0Bx2DJZWgs+uDSsDYYe90vGyvWptbWdTTSikEYg9l+Uqmm27a4LqFHAH
+         wj7KcXqFg6sqswGOKutosag3IdtktE0KOItFMCkSR7de/4YfFpzsX6agA+cl5S5tLhpq
+         xX4pHvfLG7VgGL2MQK5enTL1O2qWUOR/bYDd6qzq9xxxwmkq9qQ1QE7PNQmk9PU4Zo92
+         bxLDe5B8Uw6drmb7ZPWLZjey+PA9WO/ix6V7ii01bteB/f2thtIrZjX7izq8UsMd1Ix9
+         ZWlQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748008108; x=1748612908;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=5WZKHVX1SoX76iCdr9eUwSznmo4DZk0Nvw57g9VWXTs=;
-        b=uhSNkhCeOUfsaTxoetPRryOkgkRv0QIs45fIigw82HEJ+QhjxcrpenmUAebHRfgzQp
-         BrbC/ryYQakgzTPzgGoPzbGRKT7hidpcDkwLnxqP2vgp2U4tr7u6Ad517ngypd2nbjCT
-         9x70ek71u0qoN8OmnlbZJ4DGV+36K6+b02xKPb9E/YBlWoHevA5y3YZQhAdra7n+81Lb
-         0b7qzOFQnOcjDMzWUTmvWH++XTUA3hPXLOwMBE04ldhAj6xPUht4+1WA80K6jxaQwP1T
-         6C+PebAu7C72GVxC2b1AdjTgk8aZCeZQ8phDYA1Td5R8xZsFwTnXdaBsG6FlQ9K16ENo
-         KfbA==
-X-Forwarded-Encrypted: i=1; AJvYcCUu5wAYEiNDuJCCRlH0Q1trhwZCma+efhbCPqo3ZpG2nVbz7g6dw3no0/Z/Sm8siN4F/r4tHx6jF5JeD54=@vger.kernel.org, AJvYcCXbYt413P10umUn5wMKJm6UDNZ59QE3ZfV53wvw7AdIC9h3sBuhmyUZn8VmTq0yuPwGCfYD7WzioSzuDxXO/Ws=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxQJ1Mr7DbHj98I+vJi91lCrOYY0AM6MimujB84+5LpwEsYQ7cN
-	E8VUHHLiKYAP928GHeNptVFdcFNmVqwR3LMUebVcl4QPheEADuLzB6l39J9Bcfbl
-X-Gm-Gg: ASbGncs71ULXKr2rHJf5gZOnCG4gcUxyoUp+G9QfI0a4a+dyarWP+zfzkxNmkjb/PpA
-	JMJ0mdTGzjGOR7JDHTumza/SZUCgN6HKjNXkIngsyugJk9GKZBqZJq5JcgZw3zkpjILCPd9F+hh
-	S6pP/qq5X01rXI/qeLTjq/wyOankhezNX+3dxb8GT5KWkYwZ6tgPqS+DziDJ8lN+OKJ7OZR+fWY
-	uS8qaYiyGALX6FYJt46ZNLaU8VrsJ0VjId2u/b2tThrHD+iSMghWfT8SNeUHtoB052Y+TEpbX9A
-	lUdukTEsGdw5ZIIHPhkSscZ3GNcSCLy03cUWfzNAOIzLd6yH3QmoiPmXfghmZH11l2fb1VYTMv7
-	N1d/5Bk7nUqWDPdyLSuay6e9rvt9sXRQJaMOfW2e/eWykaV2QZS6L/YPDXq4z06Q=
-X-Google-Smtp-Source: AGHT+IHCHWgzs6ok+9oUDkNDixpXJM3owBcKd/3Mx5okhrSd+/1j2ORV0V99xgFBPmR9KO9HsFGkBA==
-X-Received: by 2002:a05:6000:188c:b0:3a3:79cb:8b14 with SMTP id ffacd0b85a97d-3a379cb8e37mr14344708f8f.33.1748008107615;
-        Fri, 23 May 2025 06:48:27 -0700 (PDT)
-Received: from dominikat-nb.corp.toradex.com (248.201.173.83.static.wline.lns.sme.cust.swisscom.ch. [83.173.201.248])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a3648baa6asm24418561f8f.91.2025.05.23.06.48.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 May 2025 06:48:27 -0700 (PDT)
-Message-ID: <91bc6f30004f80feb193a24292f841ee88d48504.camel@gmail.com>
-Subject: Re: [PATCH ath-next] wifi: ath12k: fix GCC_GCC_PCIE_HOT_RST
- definition for WCN7850
-From: Parth Panchoil <parth105105@gmail.com>
-To: Baochen Qiang <quic_bqiang@quicinc.com>, Jeff Johnson
- <jjohnson@kernel.org>,  Pradeep Kumar Chitrapu <quic_pradeepc@quicinc.com>,
- Wen Gong <quic_wgong@quicinc.com>, Vasanthakumar Thiagarajan
- <quic_vthiagar@quicinc.com>, Bhagavathi Perumal S
- <quic_bperumal@quicinc.com>,  P Praneesh <quic_ppranees@quicinc.com>
-Cc: Sriram R <quic_srirrama@quicinc.com>, linux-wireless@vger.kernel.org, 
-	ath12k@lists.infradead.org, linux-kernel@vger.kernel.org, Francesco Dolcini
-	 <francesco@dolcini.it>
-Date: Fri, 23 May 2025 15:48:26 +0200
-In-Reply-To: <20250523-ath12k-wrong-global-reset-addr-v1-1-3b06eb556196@quicinc.com>
-References: 
-	<20250523-ath12k-wrong-global-reset-addr-v1-1-3b06eb556196@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.4-0ubuntu2 
+        d=1e100.net; s=20230601; t=1748008173; x=1748612973;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=jm7LJvTGmSbZFlkn4UoigKXMnhFDdijfvdo8t5yXxjg=;
+        b=fzJx9ULPg0JU53bIXNW6NCLR/aY18BO0vyo8RuEK8zepzP0uc/Ku1CAqgneOt05p81
+         BH8YtxAQKDSJNTVZzkP08FLE4xIOkNTHq/IhML4SgIh061MQnpBJQSgfiJNHcCCwpGRz
+         XTAwRI2Jcm1SswEx9hUHoNTNoaFpJhE5KlDcFeoRP58Jm8bzMDPbowUvTXg0GBsB7HCT
+         Y5BcboRSRJXGW+2ft+9I5MgMsZiis490tlK0wgjh57d2TLMNCfwOcpdFFBDOWEyynvku
+         XIAE0xIPCh1ZazWSFLCvyvHqY/YAEIRqWcLzpD85bPdFoH1+zHjL+rWkY2YfAJ9eeadF
+         jGtw==
+X-Forwarded-Encrypted: i=1; AJvYcCUBWZOre+OwDyb0R6Em2nlTe36kU4Xrtl6Pfmz3vQmiiJy0Xn/skHH5Xi05NkHKKT5K6Fy9+ULtliRfTSc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwxLLXpXBjNAj+Fqwua0KHzwE1wYTrvVdjOqeMTb55tSRUwMGPx
+	aLMPFU15mB9FgzoLaEOHDSwKYMaz3/ZfmyvnNcsm8uC1dg4r634tObI02dQwgMfjRKZcCmkk+67
+	YT5jB/fBBlye/zz9hkwNXdHylM8Rqunk0Oq4ZPEvJbQ==
+X-Gm-Gg: ASbGncvmfVd0GxHkE25t+9/Swk/gmrTFefHGyQF5YGrcZbKdAzUlQU37dLNSAKvCk/f
+	nbzo5VaYurqW2zXdk93ovbS3+FEVnfxAOos/LvOW9LYlpREjYy8FKgyBinsA+wxU89m/OKoNCKk
+	C76k6vtM/wvJ0bjxQp1jWmccQaoxUcQlH/xw==
+X-Google-Smtp-Source: AGHT+IGNqYy2yI4RNlUni96VpZTudvYTqV4SwGwfXprccTDokjVwD65TwJIsh8Rz9fSY0wLyanwf8XtnOdcJPBjSIrQ=
+X-Received: by 2002:a05:6902:1025:b0:e7d:702d:934b with SMTP id
+ 3f1490d57ef6-e7d702d950cmr6373613276.32.1748008173039; Fri, 23 May 2025
+ 06:49:33 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <CAPDyKFqMB7XutXba73YHx1X4rm6uc3Fz6yMZ8yM=wgduEmgUDg@mail.gmail.com>
+ <a20fc6ee-c6c3-4013-b175-4918b9a44380@tuxon.dev> <CAPDyKFpbeLJUiB_xQbqDib+-8Q3AcJNVg+DuEcqmVGMbFdNxwA@mail.gmail.com>
+ <fgl4w5uhxci7rrbdigtni72vveb2gqemh6iccz4qruqkek5rja@rzwkcjg6hkid>
+ <3b1963ba-f93f-48f2-8fb0-a485dd80ffcb@tuxon.dev> <CAPDyKFqrAS4iV59S-zJ9H7_3VuGr9JdZABhfUGBwTzQNDCasaw@mail.gmail.com>
+ <482b55c9-a210-4b2d-8405-e9f30d48a8fd@tuxon.dev> <CAPDyKFpLF2P438GGWSgbXzpT7JNdUjtZ2ZxYf1_4=fNUX3s-KQ@mail.gmail.com>
+ <4fzotopz57igmiyssgkogfbup6uu7qgza3t53t5qsouegmj7ii@wfiz4g3eiffs>
+ <CAPDyKFoxs6wDCLp5EGHVqkqSstBLNmngps2KfanRezV_EN8tuA@mail.gmail.com>
+ <hd3hobuaunmn2uqzl72yv7nz2ms25fczc264wmt6o7twrxdhsy@mm22ujnawutc>
+ <CAPDyKFpRUhTK=UfcEdRdT0f5EVoGN5okLosd9_tYjdGKr0qvkA@mail.gmail.com> <47853bb8-db03-42b1-bcc2-3338fc208abb@tuxon.dev>
+In-Reply-To: <47853bb8-db03-42b1-bcc2-3338fc208abb@tuxon.dev>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Date: Fri, 23 May 2025 15:48:56 +0200
+X-Gm-Features: AX0GCFsSac-ldUQm8kyY0pi3eboltE5eDrGVCa-jAdlSEMVJc5esYEhG-rZoc2Y
+Message-ID: <CAPDyKFofyCNCbGfwo9D0-fwH9Bf+7hpcQUE1jUGwSrSKvEBm4A@mail.gmail.com>
+Subject: Re: [PATCH] driver core: platform: Use devres group to free driver
+ probe resources
+To: Claudiu Beznea <claudiu.beznea@tuxon.dev>, "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Jonathan Cameron <jic23@kernel.org>, 
+	Daniel Lezcano <daniel.lezcano@linaro.org>, dakr@kernel.org, linux-kernel@vger.kernel.org, 
+	linux-pm@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
+	geert@linux-m68k.org, Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-iio@vger.kernel.org, bhelgaas@google.com
+Content-Type: text/plain; charset="UTF-8"
 
-Thanks Baochen for the patch.=20
+On Fri, 23 May 2025 at 12:52, Claudiu Beznea <claudiu.beznea@tuxon.dev> wrote:
+>
+> Hi, Ulf,
+>
+> On 23.05.2025 12:47, Ulf Hansson wrote:
+> > On Fri, 23 May 2025 at 01:06, Dmitry Torokhov <dmitry.torokhov@gmail.com> wrote:
+> >>
+> >> On Fri, May 23, 2025 at 12:09:08AM +0200, Ulf Hansson wrote:
+> >>> On Thu, 22 May 2025 at 20:47, Dmitry Torokhov <dmitry.torokhov@gmail.com> wrote:
+> >>>>
+> >>>> On Thu, May 22, 2025 at 06:28:44PM +0200, Ulf Hansson wrote:
+> >>>>> On Thu, 22 May 2025 at 16:08, Claudiu Beznea <claudiu.beznea@tuxon.dev> wrote:
+> >>>>>>
+> >>>>>> Hi, Ulf,
+> >>>>>>
+> >>>>>> On 22.05.2025 14:53, Ulf Hansson wrote:
+> >>>>>>>
+> >>>>>>> That said, I think adding a devm_pm_domain_attach() interface would
+> >>>>>>> make perfect sense. Then we can try to replace
+> >>>>>>> dev_pm_domain_attach|detach() in bus level code, with just a call to
+> >>>>>>> devm_pm_domain_attach(). In this way, we should preserve the
+> >>>>>>> expectation for drivers around devres for PM domains. Even if it would
+> >>>>>>> change the behaviour for some drivers, it still sounds like the
+> >>>>>>> correct thing to do in my opinion.
+> >>>>>>
+> >>>>>> This looks good to me, as well. I did prototype it on my side and tested on
+> >>>>>> all my failure cases and it works.
+> >>>>>
+> >>>>> That's great! I am happy to help review, if/when you decide to post it.
+> >>>>
+> >>>> So you are saying you'd be OK with essentially the following (with
+> >>>> devm_pm_domain_attach() actually being elsewhere in a real patch and not
+> >>>> necessarily mimicked by devm_add_action_or_reset()):
+> >>>
+> >>> Correct!
+> >>>
+> >>>>
+> >>>> diff --git a/drivers/base/platform.c b/drivers/base/platform.c
+> >>>> index cfccf3ff36e7..1e017bfa5caf 100644
+> >>>> --- a/drivers/base/platform.c
+> >>>> +++ b/drivers/base/platform.c
+> >>>> @@ -1376,6 +1376,27 @@ static int platform_uevent(const struct device *dev, struct kobj_uevent_env *env
+> >>>>         return 0;
+> >>>>  }
+> >>>>
+> >>>> +
+> >>>> +static void platform_pm_domain_detach(void *d)
+> >>>> +{
+> >>>> +       dev_pm_domain_detach(d, true);
+> >>>> +}
+> >>>
+> >>> Well, I would not limit this to the platform bus, even if that is the
+> >>> most widely used.
+> >>>
+> >>> Let's add the new generic interface along with
+> >>> dev_pm_domain_attach|detach* and friends instead.
+> >>>
+> >>> Then we can convert bus level code (and others), such as the platform
+> >>> bus to use it, in a step-by-step approach.
+> >>
+> >> Right, this was only a draft:
+> >>
+> >> "... with devm_pm_domain_attach() actually being elsewhere in a real
+> >> patch and not necessarily mimicked by devm_add_action_or_reset() ..."
+> >>
+> >>>
+> >>>> +
+> >>>> +static int devm_pm_domain_attach(struct device *dev)
+> >>>> +{
+> >>>> +       int error;
+> >>>> +
+> >>>> +       error = dev_pm_domain_attach(dev, true);
+> >>>> +       if (error)
+> >>>> +               return error;
+> >>>> +
+> >>>> +       error = devm_add_action_or_reset(dev, platform_pm_domain_detach, dev);
+> >>>> +       if (error)
+> >>>> +               return error;
+> >>>> +
+> >>>> +       return 0;
+> >>>> +}
+> >>>> +
+> >>>>  static int platform_probe(struct device *_dev)
+> >>>>  {
+> >>>>         struct platform_driver *drv = to_platform_driver(_dev->driver);
+> >>>> @@ -1396,15 +1417,12 @@ static int platform_probe(struct device *_dev)
+> >>>>         if (ret < 0)
+> >>>>                 return ret;
+> >>>>
+> >>>> -       ret = dev_pm_domain_attach(_dev, true);
+> >>>> +       ret = devm_pm_domain_attach(_dev);
+> >>>>         if (ret)
+> >>>>                 goto out;
+> >>>>
+> >>>> -       if (drv->probe) {
+> >>>> +       if (drv->probe)
+> >>>>                 ret = drv->probe(dev);
+> >>>> -               if (ret)
+> >>>> -                       dev_pm_domain_detach(_dev, true);
+> >>>> -       }
+> >>>>
+> >>>>  out:
+> >>>>         if (drv->prevent_deferred_probe && ret == -EPROBE_DEFER) {
+> >>>> @@ -1422,7 +1440,6 @@ static void platform_remove(struct device *_dev)
+> >>>>
+> >>>>         if (drv->remove)
+> >>>>                 drv->remove(dev);
+> >>>> -       dev_pm_domain_detach(_dev, true);
+> >>>>  }
+> >>>>
+> >>>>  static void platform_shutdown(struct device *_dev)
+> >>>>
+> >>>>
+> >>>> If so, then OK, it will work for me as well. This achieves the
+> >>>> same behavior as with using devres group. The only difference is that if
+> >>>> we ever need to extend the platform bus to acquire/release more
+> >>>> resources they will also have to use devm API and not the regular one.
+> >>>
+> >>> Sounds reasonable to me! Thanks for a nice discussion!
+> >>>
+> >>> When it comes to the devm_pm_runtime_enable() API, I think we
+> >>> seriously should consider removing it. Let me have a closer look at
+> >>> that.
+> >>
+> >> I think once we sort out the power domain detach being out of order with
+> >> regard to other devm-managed resources in bus code you need to analyze
+> >> this again and you will find out that much as with IRQs, devm API for
+> >> runtime PM is useful for majority of cases. Of course there will be
+> >> exceptions, but by and large it will cut down on boilerplate code.
+> >
+> > Well, the problem is that the interface is just too difficult to
+> > understand how to use correctly.
+> >
+> > A quick look for deployments in drivers confirms my worries.
+>
+> Maybe we can add something like:
+>
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 96e64f3d7b47..568a8307863b 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -10100,6 +10100,7 @@ F:
+> Documentation/devicetree/bindings/power/power?domain*
+>  T:     git git://git.kernel.org/pub/scm/linux/kernel/git/ulfh/linux-pm.git
+>  F:     drivers/pmdomain/
+>  F:     include/linux/pm_domain.h
+> +K:      \bpm_runtime_\w+\b
+>
+> in MAINTAINERS file so that any new patch using the RPM will also be sent
+> to PM maintainers and checked accordingly?
 
-This patch fixes a bug in older kernels, so it should be backported.
-Minor correction needed on the reported tag.
-Tested on TI AM69 SK board with SX-PCEBE (WCN7850) Wi-Fi module and did
-not observe the reported crash anymore.
+Well, I like the idea, but I am worried that it may be too much for me
+to review. :-)
 
-Cc: stable@vger.kernel.org
-Reported-by: Parth Pancholi <parth.pancholi@toradex.com>
-Tested-by: Parth Pancholi <parth.pancholi@toradex.com>
+Although, perhaps I should help Rafael, more officially, to helpt
+review code under "POWER MANAGEMENT CORE". Runtime PM is part of it.
 
-Regards,
-Parth P
+Rafael, what do you think?
 
-> GCC_GCC_PCIE_HOT_RST is wrongly defined for WCN7850, causing kernel
-> crash
-> on some specific platforms.
->=20
-> Since this register is divergent for WCN7850 and QCN9274, move it to
-> register table to allow different definitions. Then correct the
-> register
-> address for WCN7850 to fix this issue.
->=20
-> Note IPQ5332 is not affected as it is not PCIe based device.
->=20
-> Tested-on: WCN7850 hw2.0 PCI WLAN.HMT.1.0.c5-00481-
-> QCAHMTSWPL_V1.0_V2.0_SILICONZ-3
->=20
-> Reported-by: Parth Panchoil <parth105105@gmail.com>
-> Closes:
-> https://lore.kernel.org/all/86899b2235a59c9134603beebe08f2bb0b244ea0.came=
-l@gmail.com
-> Fixes: d889913205cf ("wifi: ath12k: driver for Qualcomm Wi-Fi 7
-> devices")
-> Signed-off-by: Baochen Qiang <quic_bqiang@quicinc.com>
-> ---
-> ---
-> =C2=A0drivers/net/wireless/ath/ath12k/hw.c=C2=A0 | 6 ++++++
-> =C2=A0drivers/net/wireless/ath/ath12k/hw.h=C2=A0 | 2 ++
-> =C2=A0drivers/net/wireless/ath/ath12k/pci.c | 6 +++---
-> =C2=A0drivers/net/wireless/ath/ath12k/pci.h | 4 +++-
-> =C2=A04 files changed, 14 insertions(+), 4 deletions(-)
->=20
-> diff --git a/drivers/net/wireless/ath/ath12k/hw.c
-> b/drivers/net/wireless/ath/ath12k/hw.c
-> index
-> 7e2cf0fb2085ab014fc14a5c81074802674b154e..8254dc10b53bbfb54a44c7ff2f7
-> 05c72461d1031 100644
-> --- a/drivers/net/wireless/ath/ath12k/hw.c
-> +++ b/drivers/net/wireless/ath/ath12k/hw.c
-> @@ -951,6 +951,8 @@ static const struct ath12k_hw_regs
-> qcn9274_v1_regs =3D {
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0.hal_umac_ce0_dest_reg_ba=
-se =3D 0x01b81000,
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0.hal_umac_ce1_src_reg_bas=
-e =3D 0x01b82000,
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0.hal_umac_ce1_dest_reg_ba=
-se =3D 0x01b83000,
-> +
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0.gcc_gcc_pcie_hot_rst =3D 0x1e=
-38338,
-> =C2=A0};
-> =C2=A0
-> =C2=A0static const struct ath12k_hw_regs qcn9274_v2_regs =3D {
-> @@ -1042,6 +1044,8 @@ static const struct ath12k_hw_regs
-> qcn9274_v2_regs =3D {
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0.hal_umac_ce0_dest_reg_ba=
-se =3D 0x01b81000,
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0.hal_umac_ce1_src_reg_bas=
-e =3D 0x01b82000,
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0.hal_umac_ce1_dest_reg_ba=
-se =3D 0x01b83000,
-> +
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0.gcc_gcc_pcie_hot_rst =3D 0x1e=
-38338,
-> =C2=A0};
-> =C2=A0
-> =C2=A0static const struct ath12k_hw_regs ipq5332_regs =3D {
-> @@ -1215,6 +1219,8 @@ static const struct ath12k_hw_regs wcn7850_regs
-> =3D {
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0.hal_umac_ce0_dest_reg_ba=
-se =3D 0x01b81000,
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0.hal_umac_ce1_src_reg_bas=
-e =3D 0x01b82000,
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0.hal_umac_ce1_dest_reg_ba=
-se =3D 0x01b83000,
-> +
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0.gcc_gcc_pcie_hot_rst =3D 0x1e=
-40304,
-> =C2=A0};
-> =C2=A0
-> =C2=A0static const struct ath12k_hw_hal_params
-> ath12k_hw_hal_params_qcn9274 =3D {
-> diff --git a/drivers/net/wireless/ath/ath12k/hw.h
-> b/drivers/net/wireless/ath/ath12k/hw.h
-> index
-> 0fbc17649df463334aa0ebb3da407115985335ca..0a75bc5abfa2410ab3c7b6ce038
-> f4d5f6445ecf9 100644
-> --- a/drivers/net/wireless/ath/ath12k/hw.h
-> +++ b/drivers/net/wireless/ath/ath12k/hw.h
-> @@ -375,6 +375,8 @@ struct ath12k_hw_regs {
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0u32 hal_reo_cmd_ring_base=
-;
-> =C2=A0
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0u32 hal_reo_status_ring_b=
-ase;
-> +
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0u32 gcc_gcc_pcie_hot_rst;
-> =C2=A0};
-> =C2=A0
-> =C2=A0static inline const char *ath12k_bd_ie_type_str(enum
-> ath12k_bd_ie_type type)
-> diff --git a/drivers/net/wireless/ath/ath12k/pci.c
-> b/drivers/net/wireless/ath/ath12k/pci.c
-> index
-> 489d546390fcdab8f615cc9184006a958d9f140a..1f3cfd9b89fdcfd84731ec90c9c
-> 678b0c477a2af 100644
-> --- a/drivers/net/wireless/ath/ath12k/pci.c
-> +++ b/drivers/net/wireless/ath/ath12k/pci.c
-> @@ -292,10 +292,10 @@ static void ath12k_pci_enable_ltssm(struct
-> ath12k_base *ab)
-> =C2=A0
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0ath12k_dbg(ab, ATH12K_DBG=
-_PCI, "pci ltssm 0x%x\n", val);
-> =C2=A0
-> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0val =3D ath12k_pci_read32(ab, =
-GCC_GCC_PCIE_HOT_RST);
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0val =3D ath12k_pci_read32(ab, =
-GCC_GCC_PCIE_HOT_RST(ab));
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0val |=3D GCC_GCC_PCIE_HOT=
-_RST_VAL;
-> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0ath12k_pci_write32(ab, GCC_GCC=
-_PCIE_HOT_RST, val);
-> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0val =3D ath12k_pci_read32(ab, =
-GCC_GCC_PCIE_HOT_RST);
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0ath12k_pci_write32(ab, GCC_GCC=
-_PCIE_HOT_RST(ab), val);
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0val =3D ath12k_pci_read32(ab, =
-GCC_GCC_PCIE_HOT_RST(ab));
-> =C2=A0
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0ath12k_dbg(ab, ATH12K_DBG=
-_PCI, "pci pcie_hot_rst 0x%x\n",
-> val);
-> =C2=A0
-> diff --git a/drivers/net/wireless/ath/ath12k/pci.h
-> b/drivers/net/wireless/ath/ath12k/pci.h
-> index
-> 0b4c459d6d8eabb0773162e6bb3ca666c0a8f15a..d1ec8aad7f6c3b6f5cbdf8ce57a
-> 4106733686521 100644
-> --- a/drivers/net/wireless/ath/ath12k/pci.h
-> +++ b/drivers/net/wireless/ath/ath12k/pci.h
-> @@ -28,7 +28,9 @@
-> =C2=A0#define PCIE_PCIE_PARF_LTSSM=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-0x1e081b0
-> =C2=A0#define PARM_LTSSM_VALUE=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A00x111
-> =C2=A0
-> -#define GCC_GCC_PCIE_HOT_RST=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00x1=
-e38338
-> +#define GCC_GCC_PCIE_HOT_RST(ab) \
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0((ab)->hw_params->regs->gcc_gc=
-c_pcie_hot_rst)
-> +
-> =C2=A0#define GCC_GCC_PCIE_HOT_RST_VAL=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00x10
-> =C2=A0
-> =C2=A0#define PCIE_PCIE_INT_ALL_CLEAR=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00x1e08228
->=20
-> ---
-> base-commit: 3d933084a072fd5fb5da54c06a017abc0412c86f
-> change-id: 20250506-ath12k-wrong-global-reset-addr-b75ddc6e7850
->=20
-> Best regards,
-
+Kind regards
+Uffe
