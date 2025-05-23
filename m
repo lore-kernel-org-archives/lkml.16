@@ -1,125 +1,107 @@
-Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com [209.85.128.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A4B022576E
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 10:03:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.172
+Received: from zg8tmja2lje4os4yms4ymjma.icoremail.net (zg8tmja2lje4os4yms4ymjma.icoremail.net [206.189.21.223])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 527FBCA4E;
+	Fri, 23 May 2025 10:04:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=206.189.21.223
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747994634; cv=none; b=WEo3VypRL03wuw3V5uzRqfVHTJTTbIvdVqk8kD+ZQQqtNjH2AxNPdbAm564riSIR8RICkyldXv8R1w3d5jFrT56LayoqREiuy88qw+FcBCba28ZWTQIPjgSHxkJrWRklA9q3gMET5eC78+wuQyGhpvJMGyaU2kmHA/434gP399g=
+	t=1747994684; cv=none; b=kIS8ZO4fWsiJrkqNb854NHc8gWBplqueHvLBMLCTmKiYu7c2c2cMdqelZsE6l6ir0iecAEijCpwlMa+I9a5UvuwiDh1Eb3ndP9sdjxKb25LH32Vne7a9iS2jzoV9mfoQk2UW/Ekw/vldJdKlJltfUbygkc9Eqn8JjdzaqIyQEtM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747994634; c=relaxed/simple;
-	bh=nSyy6F6LK0lnXl6EFJ91Tp2akvoleZ9nkVxTo4FlKQE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uO90JI17fKTg8hbtiKJKsAtp5I6J5xDZaEF8AOm1N1FouYw6EwSqzCBWLOHFwMYuhMWMBO3tmxA5a3sDnJISopMX6ehsysq7mXJJtlViKxlWkmhz0uVgvcPRW43lZCJumNt48/gtXQC00hRawnBn9ow18U0bT+24jgpWjirJzLs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=bLKsUaTP; arc=none smtp.client-ip=209.85.128.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bLKsUaTP"
-Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-70df67e1b17so27220007b3.1
-        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 03:03:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1747994632; x=1748599432; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=nSyy6F6LK0lnXl6EFJ91Tp2akvoleZ9nkVxTo4FlKQE=;
-        b=bLKsUaTPQwFXIqFeyqVcgxvw3aRmSivdHcb11fMev9IfXzi3oKLg+xEFIolUscgtT6
-         l02Bf24giZN35UqBeeL91h4eLuD3bU8fORaxZi0fx2PTSix6Y4xBhGG+bSr/hwi49bC4
-         NWTL26EHv2XpUN/0aAqrof+u7R4GnoTkNwsLddGmP/0hycxSdFpqzWpu76eLBPOhcT9n
-         0BdYDwQg4lk+tslUfAVlqjE4EXq2ZkxMw8UX3gRARSL6GQ4ssT7Caz3rLMdmx6Yq1Hl4
-         O37/LPZfqXmcYBslojPLYJIrrlDPafb+KEck5i1CFWB4Q8oUSKsVYWFhkIyzOWrChtO2
-         kqHA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747994632; x=1748599432;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=nSyy6F6LK0lnXl6EFJ91Tp2akvoleZ9nkVxTo4FlKQE=;
-        b=LYiLYrq1wx464vyvt31bgrY8bnPWBSty6dbG/ZVD1omFe/ajbhHw64of6qTTfIarab
-         m28a7wmnQ6FX0zp7fUEcPQ57IvxNCO4L+zWvt9Pbs5vl6GgepHHjRlKg4FaCIqmn5rEf
-         vHJ/O4j014xPGnJlP0nYDECNpAcyZ40S3DRcf/ywCidbGb+TvoDVWD4vTmFop8TokmjF
-         S9e7asc+VoP1m6mt7dUe10B9hH2CKa65L0axh2JH5vcPEnIba2OhDVw+oVNOxuB2fqop
-         5OmF72FB8oNSBSlNvfajxUAfK6RsuDf6G/8ALb8j/ABzs/qdtaUCxfEsS0d4h4rSnabL
-         UrhQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW0DbY77ekd0psGY4qKu2puuaVRTmcu36Wzw8hnVARBXQo43Di+B7j1Zy9wRlFfcKKNx558KJyBvDkFO68=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxcl9TjC6c+C054RyVg945RxeJhYWCfreWjm6Tg9AKTRHrB64Vt
-	gdraQyFdUO3qLkflE5mGohgypWyKAyx+KtZM2xDo7KqELEPkPKJ2bbwQRvAWe5wVVBvMepBFqpN
-	RIX7puWys0w7jGRcjbCdOzhBZMEniszZghI5nXFkqyw==
-X-Gm-Gg: ASbGnct/J1nUaqbM/Uyx1Q4/uvxpv3Xheoke7naKQscrn7JjrcZiFptmldkIxf+c4lh
-	UKJQ9BytZm627VKqJWpdvR7nn+UOn3Xe6v1LAXjwrNxhmKJg4dBHqK10tBYG7a6Xk6kqSXcdUqH
-	PxpJtqHUhk/NcuYzdLxpIwMP2rMviqnZxvVIV+trO5tw/e43ZQTTd0+wfiItpm0Tn2P2E=
-X-Google-Smtp-Source: AGHT+IHMOhW87yFnNkOzjQbF5lt7pbwsLfpvr6K8p94xBG86k8PuM3wB1MN6LYFWzC8LZIK5hH5M2DO7rvHYJxhdvTg=
-X-Received: by 2002:a05:690c:6704:b0:70e:142d:9c56 with SMTP id
- 00721157ae682-70e198da98bmr30145427b3.26.1747994632204; Fri, 23 May 2025
- 03:03:52 -0700 (PDT)
+	s=arc-20240116; t=1747994684; c=relaxed/simple;
+	bh=LqqTEKsZGOlen8A5zdVQ/tcZunierACeScgI5NQ2Df0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
+	 MIME-Version:Message-ID; b=PrIX5aS64Pjgk9oheU7Tk74qFW0FaYJN6o1OgeblMS2x6sJGT1qLKs/a2QEZW7cFMSkguwH6fCakDzVaDHJNTjHAGIpsS5bo84OZ9+Q0KuiRbFoeofkfn6cxmj/csk/QyTx46dUig8ot6ghDGKBgm+tTwUI1voGV5Ed1dQ/mKSM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com; spf=pass smtp.mailfrom=eswincomputing.com; arc=none smtp.client-ip=206.189.21.223
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=eswincomputing.com
+Received: from linmin$eswincomputing.com ( [10.10.96.205] ) by
+ ajax-webmail-app2 (Coremail) ; Fri, 23 May 2025 18:04:00 +0800 (GMT+08:00)
+Date: Fri, 23 May 2025 18:04:00 +0800 (GMT+08:00)
+X-CM-HeaderCharset: UTF-8
+From: =?UTF-8?B?5p6X5pWP?= <linmin@eswincomputing.com>
+To: "Pinkesh Vaghela" <pinkesh.vaghela@einfochips.com>
+Cc: "Conor Dooley" <conor@kernel.org>, "Rob Herring" <robh@kernel.org>,
+	"Krzysztof Kozlowski" <krzk+dt@kernel.org>,
+	"Thomas Gleixner" <tglx@linutronix.de>,
+	"Paul Walmsley" <paul.walmsley@sifive.com>,
+	"Samuel Holland" <samuel.holland@sifive.com>,
+	"Palmer Dabbelt" <palmer@dabbelt.com>,
+	"Albert Ou" <aou@eecs.berkeley.edu>,
+	"Daniel Lezcano" <daniel.lezcano@linaro.org>,
+	"Pritesh Patel" <pritesh.patel@einfochips.com>,
+	"Yangyu Chen" <cyy@cyyself.name>,
+	"Lad Prabhakar" <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+	"Yu Chien Peter Lin" <peterlin@andestech.com>,
+	"Charlie Jenkins" <charlie@rivosinc.com>,
+	"Kanak Shilledar" <kanakshilledar@gmail.com>,
+	"Darshan Prajapati" <darshan.prajapati@einfochips.com>,
+	"Neil Armstrong" <neil.armstrong@linaro.org>,
+	"Heiko Stuebner" <heiko@sntech.de>,
+	"Aradhya Bhatia" <a-bhatia1@ti.com>, rafal@milecki.pl,
+	"Anup Patel" <anup@brainfault.org>, devicetree@vger.kernel.org,
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 04/10] dt-bindings: riscv: Add SiFive HiFive Premier
+ P550 board
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version 2024.2-cmXT6 build
+ 20241203(6b039d88) Copyright (c) 2002-2025 www.mailtech.cn
+ mispb-72143050-eaf5-4703-89e0-86624513b4ce-eswincomputing.com
+In-Reply-To: <20250410152519.1358964-5-pinkesh.vaghela@einfochips.com>
+References: <20250410152519.1358964-1-pinkesh.vaghela@einfochips.com>
+ <20250410152519.1358964-5-pinkesh.vaghela@einfochips.com>
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250506-quad-pipe-upstream-v9-0-f7b273a8cc80@linaro.org>
- <20250506-quad-pipe-upstream-v9-9-f7b273a8cc80@linaro.org>
- <0dace5ee-8c81-4181-ae0d-7f317b7f5ac9@quicinc.com> <0fcad5ac-e1b3-41ef-9d29-0c801aa4fc51@quicinc.com>
-In-Reply-To: <0fcad5ac-e1b3-41ef-9d29-0c801aa4fc51@quicinc.com>
-From: Jun Nie <jun.nie@linaro.org>
-Date: Fri, 23 May 2025 18:03:41 +0800
-X-Gm-Features: AX0GCFt8U5tJbB_Frbkc2UDuQKbexsfWNiEDvHL2UT7JPw5PMyVZFKL3Z9TN9lk
-Message-ID: <CABymUCMYSj=3LaA8Hw4se57_4xV+G33DLrYkGRR5z6DjDeypCA@mail.gmail.com>
-Subject: Re: [PATCH v9 09/14] drm/msm/dpu: split PIPES_PER_STAGE definition
- per plane and mixer
-To: Jessica Zhang <quic_jesszhan@quicinc.com>
-Cc: Rob Clark <robdclark@gmail.com>, Abhinav Kumar <quic_abhinavk@quicinc.com>, 
-	Sean Paul <sean@poorly.run>, Marijn Suijten <marijn.suijten@somainline.org>, 
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, Dmitry Baryshkov <lumag@kernel.org>, linux-arm-msm@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Message-ID: <12b31aa1.107c.196fc99801d.Coremail.linmin@eswincomputing.com>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID:TQJkCgDHZpUQSDBo3PiJAA--.14149W
+X-CM-SenderInfo: 5olqzx3q6h245lqf0zpsxwx03jof0z/1tbiAQELCWgvUWdFOQACsN
+X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJ3iIAIbVAYjsxI4VWxJw
+	CS07vEb4IE77IF4wCS07vE1I0E4x80FVAKz4kxMIAIbVAFxVCaYxvI4VCIwcAKzIAtYxBI
+	daVFxhVjvjDU=
 
-Jessica Zhang <quic_jesszhan@quicinc.com> =E4=BA=8E2025=E5=B9=B45=E6=9C=889=
-=E6=97=A5=E5=91=A8=E4=BA=94 04:55=E5=86=99=E9=81=93=EF=BC=9A
->
->
->
-> On 5/8/2025 1:42 PM, Jessica Zhang wrote:
-> >
-> >
-> > On 5/6/2025 8:47 AM, Jun Nie wrote:
-> >> The stage contains configuration for a mixer pair. Currently the plane
-> >> supports just one stage and 2 pipes. Quad-pipe support will require
-> >> handling 2 stages and 4 pipes at the same time. In preparation for tha=
-t
-> >> add a separate define, PIPES_PER_PLANE, to denote number of pipes that
-> >> can be used by the plane.
-> >>
-> >> Signed-off-by: Jun Nie <jun.nie@linaro.org>
-> >> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> >
-> > Hi Jun,
-> >
-> > I think the comment from v7 about propogating the PIPES_PER_PLANE chang=
-e
-> > to _dpu_plane_color_fill() got dropped in this version [1].
->
-> s/propogating/propagating/
->
-> >
-> > Also, any reason PIPES_PER_STAGE was kept for
-> > dpu_plane_danger_signal_ctrl()?
->
-> I have the same question for _dpu_debugfs_status_show(). It seems to me
-> both helpers should be using PIPES_PER_PLANE.
->
-> Thanks,
->
-> Jessica Zhang
->
-Thanks for pointing this out! They both should be changed to PIPES_PER_PLAN=
-E.
-Will fix it in next version.
+T24gMTAvMDQvMjAyNSAyMzoyNToxMyBQcml0ZXNoIFBhdGVsIHdyb3RlOgo+IEZyb206IFByaXRl
+c2ggUGF0ZWwgPHByaXRlc2gucGF0ZWxAZWluZm9jaGlwcy5jb20+Cj4gCj4gQWRkIERUIGJpbmRp
+bmcgZG9jdW1lbnRhdGlvbiBmb3IgdGhlIEVTV0lOIEVJQzc3MDAgU29DIGFuZAo+IEhpRml2ZSBQ
+cmVtaWVyIFA1NTAgQm9hcmQKPiAKPiBTaWduZWQtb2ZmLWJ5OiBQcml0ZXNoIFBhdGVsIDxwcml0
+ZXNoLnBhdGVsQGVpbmZvY2hpcHMuY29tPgo+IFJldmlld2VkLWJ5OiBTYW11ZWwgSG9sbGFuZCA8
+c2FtdWVsLmhvbGxhbmRAc2lmaXZlLmNvbT4KPiBTaWduZWQtb2ZmLWJ5OiBQaW5rZXNoIFZhZ2hl
+bGEgPHBpbmtlc2gudmFnaGVsYUBlaW5mb2NoaXBzLmNvbT4KPiBSZXZpZXdlZC1ieTogTWF0dGhp
+YXMgQnJ1Z2dlciA8bWF0dGhpYXMuYmdnQGtlcm5lbC5vcmc+Cj4gUmV2aWV3ZWQtYnk6IFJvYiBI
+ZXJyaW5nIChBcm0pIDxyb2JoQGtlcm5lbC5vcmc+CgpBY2tlZC1ieTogTWluIExpbiA8bGlubWlu
+QGVzd2luY29tcHV0aW5nLmNvbT4KCj4gLS0tCj4gIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Jp
+c2N2L2Vzd2luLnlhbWwgICAgICB8IDI5ICsrKysrKysrKysrKysrKysrKysKPiAgTUFJTlRBSU5F
+UlMgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgIDcgKysrKysKPiAgMiBmaWxl
+cyBjaGFuZ2VkLCAzNiBpbnNlcnRpb25zKCspCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcmlzY3YvZXN3aW4ueWFtbAo+IAo+IGRpZmYgLS1n
+aXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcmlzY3YvZXN3aW4ueWFtbCBi
+L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9yaXNjdi9lc3dpbi55YW1sCj4gbmV3
+IGZpbGUgbW9kZSAxMDA2NDQKPiBpbmRleCAwMDAwMDAwMDAwMDAuLmM2MDNjNDVlZWYyMgo+IC0t
+LSAvZGV2L251bGwKPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvcmlz
+Y3YvZXN3aW4ueWFtbAo+IEBAIC0wLDAgKzEsMjkgQEAKPiArIyBTUERYLUxpY2Vuc2UtSWRlbnRp
+ZmllcjogKEdQTC0yLjAtb25seSBPUiBCU0QtMi1DbGF1c2UpCj4gKyVZQU1MIDEuMgo+ICstLS0K
+PiArJGlkOiBodHRwOi8vZGV2aWNldHJlZS5vcmcvc2NoZW1hcy9yaXNjdi9lc3dpbi55YW1sIwo+
+ICskc2NoZW1hOiBodHRwOi8vZGV2aWNldHJlZS5vcmcvbWV0YS1zY2hlbWFzL2NvcmUueWFtbCMK
+PiArCj4gK3RpdGxlOiBFU1dJTiBTb0MtYmFzZWQgYm9hcmRzCj4gKwo+ICttYWludGFpbmVyczoK
+PiArICAtIE1pbiBMaW4gPGxpbm1pbkBlc3dpbmNvbXB1dGluZy5jb20+Cj4gKyAgLSBQaW5rZXNo
+IFZhZ2hlbGEgPHBpbmtlc2gudmFnaGVsYUBlaW5mb2NoaXBzLmNvbT4KPiArICAtIFByaXRlc2gg
+UGF0ZWwgPHByaXRlc2gucGF0ZWxAZWluZm9jaGlwcy5jb20+Cj4gKwo+ICtkZXNjcmlwdGlvbjoK
+PiArICBFU1dJTiBTb0MtYmFzZWQgYm9hcmRzCj4gKwo+ICtwcm9wZXJ0aWVzOgo+ICsgICRub2Rl
+bmFtZToKPiArICAgIGNvbnN0OiAnLycKPiArICBjb21wYXRpYmxlOgo+ICsgICAgb25lT2Y6Cj4g
+KyAgICAgIC0gaXRlbXM6Cj4gKyAgICAgICAgICAtIGVudW06Cj4gKyAgICAgICAgICAgICAgLSBz
+aWZpdmUsaGlmaXZlLXByZW1pZXItcDU1MAo+ICsgICAgICAgICAgLSBjb25zdDogZXN3aW4sZWlj
+NzcwMAo+ICsKPiArYWRkaXRpb25hbFByb3BlcnRpZXM6IHRydWUKPiArCj4gKy4uLgo+IGRpZmYg
+LS1naXQgYS9NQUlOVEFJTkVSUyBiL01BSU5UQUlORVJTCj4gaW5kZXggYmZjZGYyYmNlZDYxLi5m
+OTBjOTQwZjI4NmMgMTAwNjQ0Cj4gLS0tIGEvTUFJTlRBSU5FUlMKPiArKysgYi9NQUlOVEFJTkVS
+Uwo+IEBAIC04NzY4LDYgKzg3NjgsMTMgQEAgTDoJbGludXgtY2FuQHZnZXIua2VybmVsLm9yZwo+
+ICBTOglNYWludGFpbmVkCj4gIEY6CWRyaXZlcnMvbmV0L2Nhbi91c2IvZXNkX3VzYi5jCj4gIAo+
+ICtFU1dJTiBERVZJQ0VUUkVFUwo+ICtNOglNaW4gTGluIDxsaW5taW5AZXN3aW5jb21wdXRpbmcu
+Y29tPgo+ICtNOglQaW5rZXNoIFZhZ2hlbGEgPHBpbmtlc2gudmFnaGVsYUBlaW5mb2NoaXBzLmNv
+bT4KPiArTToJUHJpdGVzaCBQYXRlbCA8cHJpdGVzaC5wYXRlbEBlaW5mb2NoaXBzLmNvbT4KPiAr
+UzoJTWFpbnRhaW5lZAo+ICtGOglEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvcmlz
+Y3YvZXN3aW4ueWFtbAo+ICsKPiAgRVQxMzFYIE5FVFdPUksgRFJJVkVSCj4gIE06CU1hcmsgRWlu
+b24gPG1hcmsuZWlub25AZ21haWwuY29tPgo+ICBTOglPZGQgRml4ZXMKPiAtLSAKPiAyLjI1LjEK
 
-Jun
