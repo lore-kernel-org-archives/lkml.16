@@ -1,313 +1,159 @@
-Received: from mail-io1-f54.google.com (mail-io1-f54.google.com [209.85.166.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.andi.de1.cc (mail.andi.de1.cc [178.238.236.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA8571A315A
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 20:12:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAB1F1F03D8;
+	Fri, 23 May 2025 20:15:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.238.236.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748031160; cv=none; b=sn8T6Qw9XsOWAVrKm3RhXJJv1pnuWk9tGM3zmjkcz5vJ7KVi5ghX7GuHKexlleLspSjMbdxcxmfvZNkKAfvjVuytAq3CULz69haEzh0X0Brf+oCElEtH8OYAcFiAu0ngPQx+iDMGudr0jUug4y35v/FKkAnnjWac67y+CMpEK5o=
+	t=1748031304; cv=none; b=KEr+eAWN2KdJpgu9X6Dn0eL+WUIQLj79/+eHjHOkQ26j8LarmEuYJNHZxoQhj2o+qSTgfCUKtJaEVx3lY7XU9qhI330TXYLPgYXNrzrD00vex7Ya8aFcnzYqGO+oB6V7aelsNmx8Ox6TLqTPgvC93UAKGR+Kh2rielEDw+GeQcM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748031160; c=relaxed/simple;
-	bh=IsUqT2Nbyf3bYo3O7Bc9+g5SjYq0TRbsUwXysH7Yzbg=;
-	h=Content-Type:Message-ID:Date:MIME-Version:To:Cc:From:Subject; b=WAEq40uIp9ajQdM7LrKaumNk5hCs/3T54UAFgxZcE4AOSX8IJqzzltlJla2LjyBc44eX6Nnxg/8jzCZvB3pPWMS2Mu4/b0wP4PuGt9QkHup3/6ngMGMDn+euNDWehP+X+Vfe3dAFDs6u3N/nJp2vfYoR9H8SROlwwH5B0WM27Lc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=M9QAKWG4; arc=none smtp.client-ip=209.85.166.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1748031304; c=relaxed/simple;
+	bh=ZzKsQe0lj6WOuUIPmss5hEmhtTxyrfgkMdWlZ1pZ5J8=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=repmCJm/J2iJN6Xkd2AohUaGX8dFzfz6TkNf57x/EmL2p/zg2adr09evOi3g+j3XDxysGwHkfunVHrGijaIIyMuPjTZHQiH76Rnn0PRCJkHduDC0SSSavf8VkFEYX/dV5Bz3skocvFuHxqse5eKdys7YFx/0WC05uYIXSFdro3c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kemnade.info; spf=pass smtp.mailfrom=kemnade.info; dkim=pass (2048-bit key) header.d=kemnade.info header.i=@kemnade.info header.b=XjUHdm32; arc=none smtp.client-ip=178.238.236.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kemnade.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kemnade.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="M9QAKWG4"
-Received: by mail-io1-f54.google.com with SMTP id ca18e2360f4ac-85de3e8d0adso5670639f.1
-        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 13:12:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1748031157; x=1748635957; darn=vger.kernel.org;
-        h=subject:from:cc:to:content-language:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=DjOoqkojd+z53Bm3NFkUBelI0e+mwFoE4RhggrBwi34=;
-        b=M9QAKWG4eTxWdNxHbusPtT8lLwt5zgc/1UCFHprm5hWezYOoBFpsQBZ0MqYxLfet6M
-         n8GLViJ4XilYAxcclhgm0r1ccRgUJYN/z5qt6+T2adkRcXimIXvVEZ+J8+duE1t7PMR/
-         Q7h89rYAchohFtZdtF1xKW3dxqqh1fDRipQWU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748031157; x=1748635957;
-        h=subject:from:cc:to:content-language:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=DjOoqkojd+z53Bm3NFkUBelI0e+mwFoE4RhggrBwi34=;
-        b=KqtdgJHPmM5ymyD4faUdaPSOqkdIJCGR+dCHD4H49p1lIZN0R/BTGIKOkY4yMBMMbQ
-         Y0HwzVq42hXMD82/PXUW5eBPMv3esByMsY1/C8zLA7KppEBWPmMKtYLrd9epE5xeAJ1M
-         NWzUsCSY4XlxJ0fnC7KpwCK4Fa3vLBbjAk9/g3R7dMv+/axFOjPexQMqkeFSvV2SbMPh
-         0IvcfDJPEFnHR2TjkV7ZMbBam4HqUcFyyd6mJcb/HKHxrHE7YrW4huBRlRGiFGpZ/jOD
-         UrCu1PYS8vJeHHeBtRbDZ6mszxxWNKPoBMa+hNtRL9vIDvgtR4uT7KvPRKpCXUyjPD8Y
-         HXrg==
-X-Forwarded-Encrypted: i=1; AJvYcCXe1sadRQGaFlsNqrrygEM624Tg1gQger2kwwoTngeoJ11gtX6fMVlzMOZ0rn7Ypfz65pmu7xZSudgF3o8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzFW2ItsNnPyqSBQQE0E3JgkOPw/FvqXvEJGv6XW52mV5B7fGr2
-	vL1MCM/aMipPuZY02zhOPpvxvcOgYmHZxWU7QZjWbiipApi0j97R7antCpHv9QC5zWU=
-X-Gm-Gg: ASbGnctIUJKzGA5bXMKOjnXKBhoLCwOUDvraznOlci6MEjzj+46NLydKSNPTnWE9QPD
-	1Mk2W43X1Ot81YhQmgIKtHTn8PKKO8UTNfgVKJh4TAf+Uxp9nHdWDGotmR6kyl8ZTgrB2r27+UZ
-	slrfzJzzEzu+Uvuirz1HW1bKtHtDz+DAewl5wGjY3eH2l1DBkT4Y4HBigR2ixtf52aBrnv9olQb
-	oKEN/zldYqeNvKbyONHwL19T1qlZ09pfhS0+m8IJ04ZjmKgrsQfdQEy2toWEBzjOzJrX9T1CFzs
-	3pR6csvm7KGcpVpC1W6F5Vukz0nwrxEQ3+QxfvsZJaaa5U2ejI+0mZ3DdqY6Mg==
-X-Google-Smtp-Source: AGHT+IGD5AvT0ZCOslvtg8fYuY6R0TPW+HU2UzirdDn3KmI9L5iQGYs3+z46jDeQu48pX+2E3RsHcA==
-X-Received: by 2002:a05:6602:29a8:b0:867:3670:5d49 with SMTP id ca18e2360f4ac-86cbb813cf3mr93541339f.7.1748031156908;
-        Fri, 23 May 2025 13:12:36 -0700 (PDT)
-Received: from [192.168.1.14] ([38.175.170.29])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4fbcc38a2a1sm3764060173.14.2025.05.23.13.12.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 23 May 2025 13:12:36 -0700 (PDT)
-Content-Type: multipart/mixed; boundary="------------hdoGusMM000G5LVg2MWm0rHk"
-Message-ID: <f7b637e0-76d4-4891-a39e-085c7beed403@linuxfoundation.org>
-Date: Fri, 23 May 2025 14:12:35 -0600
+	dkim=pass (2048-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="XjUHdm32"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=kemnade.info; s=20220719; h=References:In-Reply-To:Cc:From:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID;
+	bh=MgDBO0Rfj6StKE9ETlKlxeDYg7F6wFKoUAt1aJj9SlY=; b=XjUHdm32g+dcVpd6SoiNniNl4z
+	kqn1xD6s/XYQ0twDkuSY5DUdE24+/kPHm4uJVYjmAasJkaB/UC/7jOBYbAWuh8XTO8zlNMdaksrBd
+	vUpxdgL7qhe0sN0jIzSWvfNJhno6pG7YVs/ERs6Dv4seK6y195C/FORaIaIpt9BDN7RnpMnzPpn8n
+	oI6NyRNjnZFPa6BHwNLe4+uE78xNXLskEX1PoflkoKlidKnMXCSpLBOq9QkopZz7OAwXYvtgsbj3m
+	B5sYuz2/noU/7TIiPxtEUXC8kVLVRVc+t1jaT+BF0BX4aiS3Z+lrhBHd0JbdJaGipf9g2XVzMigAG
+	OPnCU+Rg==;
+Date: Fri, 23 May 2025 21:43:53 +0200
+From: Andreas Kemnade <andreas@kemnade.info>
+To: Kory Maincent <kory.maincent@bootlin.com>
+Cc: Tony Lindgren <tony@atomide.com>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Aaro Koskinen <aaro.koskinen@iki.fi>, Kevin Hilman
+ <khilman@baylibre.com>, Roger Quadros <rogerq@kernel.org>, Russell King
+ <linux@armlinux.org.uk>, Bajjuri Praneeth <praneeth@ti.com>, Liam Girdwood
+ <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Thomas Petazzoni
+ <thomas.petazzoni@bootlin.com>, linux-omap@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 1/2] arm: dts: omap: Add support for BeagleBone Green
+ Eco board
+Message-ID: <20250523214353.6e46574a@akair>
+In-Reply-To: <20250523-bbg-v1-1-ef4a9e57eeee@bootlin.com>
+References: <20250523-bbg-v1-0-ef4a9e57eeee@bootlin.com>
+	<20250523-bbg-v1-1-ef4a9e57eeee@bootlin.com>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Content-Language: en-US
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: shuah <shuah@kernel.org>, Shuah Khan <skhan@linuxfoundation.org>,
- linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-From: Shuah Khan <skhan@linuxfoundation.org>
-Subject: [GIT PULL] Kselftest next update for Linux 6.16-rc1
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-This is a multi-part message in MIME format.
---------------hdoGusMM000G5LVg2MWm0rHk
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Am Fri, 23 May 2025 17:57:42 +0200
+schrieb Kory Maincent <kory.maincent@bootlin.com>:
 
-Hi Linus,
+> SeeedStudio BeagleBone Green Eco (BBGE) is a clone of the BeagleBone Green
+> (BBG). It has minor differences from the BBG, such as a different PMIC,
+> a different Ethernet PHY, and a larger eMMC.
+> 
+> Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
+> ---
+> 
+> The pmic binding is currently only in regulator tree. I don't know if it
+> should be merged in omap tree or in regulator tree due to that binding
+> dependency.
 
-Please pull the following kselftest next update for Linux 6.16-rc1.
+Well, the pull request for omap stuff to soc is already sent, so this
+will go into 6.17 probably while the regulator stuff seems to be
+scheduled for 6.16. So this issue will solve itself.
 
--- Fixes
-    - cpufreq test to not double suspend in rtcwake case.
-    - compile error in pid_namespace test.
-    - run_kselftest.sh to use readlink if realpath is not available.
-    - cpufreq basic read and update testcases.
-    - ftrace to add poll to a gen_file so test can find it at run-time.
-    - spelling errors in perf_events test.
+> ---
+>  arch/arm/boot/dts/ti/omap/Makefile                 |   1 +
+>  arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dts | 170 +++++++++++++++++++++
+>  2 files changed, 171 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/ti/omap/Makefile b/arch/arm/boot/dts/ti/omap/Makefile
+> index 95c68135dd0c..1aef60eef671 100644
+> --- a/arch/arm/boot/dts/ti/omap/Makefile
+> +++ b/arch/arm/boot/dts/ti/omap/Makefile
+> @@ -93,6 +93,7 @@ dtb-$(CONFIG_SOC_AM33XX) += \
+>  	am335x-boneblue.dtb \
+>  	am335x-bonegreen.dtb \
+>  	am335x-bonegreen-wireless.dtb \
+> +	am335x-bonegreen-eco.dtb \
+>  	am335x-chiliboard.dtb \
+>  	am335x-cm-t335.dtb \
+>  	am335x-evm.dtb \
+> diff --git a/arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dts b/arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dts
+> new file mode 100644
+> index 000000000000..521f92347bbe
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dts
+> @@ -0,0 +1,170 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Copyright (C) 2025 Bootlin
+> + */
+> +/dts-v1/;
+> +
+> +#include "am33xx.dtsi"
+> +#include "am335x-bone-common.dtsi"
+> +#include "am335x-bonegreen-common.dtsi"
+> +#include <dt-bindings/net/ti-dp83867.h>
+> +
+> +/ {
+> +	model = "TI AM335x BeagleBone Green Eco";
+> +	compatible = "ti,am335x-bone-green-eco", "ti,am335x-bone-green",
+> +		     "ti,am335x-bone-black", "ti,am335x-bone", "ti,am33xx";
+> +
+these compatibles should be defined in
+Documentation/devicetree/bindings/arm/ti/omap.yaml
 
-diff is attached.
+But are that much really necessary? At least ti,am335x-bone-black looks
+strange in the list, it does not look as it is derived from it.
 
-thanks,
--- Shuah
+> +	cpus {
+> +		cpu@0 {
+> +			cpu0-supply = <&buck1>;
+> +		};
+> +	};
+> +
+> +	sys_5v: sys-5v {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "sys_5v";
+> +		regulator-min-microvolt = <5000000>;
+> +		regulator-max-microvolt = <5000000>;
+> +		regulator-always-on;
+> +	};
+> +
+> +	v3v3: v3v3 {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "v3v3";
+> +		regulator-always-on;
+> +	};
+> +};
+> +
+> +&usb0 {
+> +	interrupts-extended = <&intc 18>;
+> +	interrupt-names = "mc";
+> +};
+> +
+> +&baseboard_eeprom {
+> +	vcc-supply = <&v3v3>;
+> +};
+> +
+> +&i2c0 {
+> +	/delete-node/ tps@24;
+> +
+> +	tps65214: tps@30 {
 
-----------------------------------------------------------------
-The following changes since commit b4432656b36e5cc1d50a1f2dc15357543add530e:
+generic node names please, so pmic@30.
+And maybe while you are at it, maybe you can clean up the tps@24 stuff.
 
-   Linux 6.15-rc4 (2025-04-27 15:19:23 -0700)
-
-are available in the Git repository at:
-
-   git://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest tags/linux_kselftest-next-6.16-rc1
-
-for you to fetch changes up to 1107dc4c5b06188a3fb4897ceb197eb320a52e85:
-
-   selftests/run_kselftest.sh: Use readlink if realpath is not available (2025-05-15 16:52:47 -0600)
-
-----------------------------------------------------------------
-linux_kselftest-next-6.16-rc1
-
--- Fixes
-    - cpufreq test to not double suspend in rtcwake case.
-    - compile error in pid_namespace test.
-    - run_kselftest.sh to use readlink if realpath is not available.
-    - cpufreq basic read and update testcases.
-    - ftrace to add poll to a gen_file so test can find it at run-time.
-    - spelling errors in perf_events test.
-
-----------------------------------------------------------------
-Ayush Jain (1):
-       selftests/ftrace: Convert poll to a gen_file
-
-Colin Ian King (1):
-       selftests/perf_events: Fix spelling mistake "sycnhronize" -> "synchronize"
-
-Nícolas F. R. A. Prado (1):
-       kselftest: cpufreq: Get rid of double suspend in rtcwake case
-
-Peter Seiderer (1):
-       selftests: pid_namespace: add missing sys/mount.h include in pid_max.c
-
-Swapnil Sapkal (1):
-       selftests/cpufreq: Fix cpufreq basic read and update testcases
-
-Thomas Weißschuh (3):
-       selftests/timens: Print TAP headers
-       selftests/timens: Make run_tests() functions static
-       selftests/timens: timerfd: Use correct clockid type in tclock_gettime()
-
-Yosry Ahmed (1):
-       selftests/run_kselftest.sh: Use readlink if realpath is not available
-
-  tools/testing/selftests/cpufreq/cpufreq.sh             | 18 +++++++++++++-----
-  tools/testing/selftests/ftrace/Makefile                |  2 +-
-  tools/testing/selftests/perf_events/watermark_signal.c |  2 +-
-  tools/testing/selftests/pid_namespace/pid_max.c        |  1 +
-  tools/testing/selftests/run_kselftest.sh               |  9 ++++++++-
-  tools/testing/selftests/timens/clock_nanosleep.c       |  4 +++-
-  tools/testing/selftests/timens/exec.c                  |  2 ++
-  tools/testing/selftests/timens/futex.c                 |  2 ++
-  tools/testing/selftests/timens/gettime_perf.c          |  2 ++
-  tools/testing/selftests/timens/procfs.c                |  2 ++
-  tools/testing/selftests/timens/timens.c                |  2 ++
-  tools/testing/selftests/timens/timer.c                 |  4 +++-
-  tools/testing/selftests/timens/timerfd.c               |  6 ++++--
-  tools/testing/selftests/timens/vfork_exec.c            |  2 ++
-  14 files changed, 46 insertions(+), 12 deletions(-)
-----------------------------------------------------------------
---------------hdoGusMM000G5LVg2MWm0rHk
-Content-Type: text/x-patch; charset=UTF-8;
- name="linux_kselftest-next-6.16-rc1.diff"
-Content-Disposition: attachment; filename="linux_kselftest-next-6.16-rc1.diff"
-Content-Transfer-Encoding: base64
-
-ZGlmZiAtLWdpdCBhL3Rvb2xzL3Rlc3Rpbmcvc2VsZnRlc3RzL2NwdWZyZXEvY3B1ZnJlcS5z
-aCBiL3Rvb2xzL3Rlc3Rpbmcvc2VsZnRlc3RzL2NwdWZyZXEvY3B1ZnJlcS5zaAppbmRleCBl
-MzUwYzUyMWI0NjcuLjk5MjdiNjU0ZmI4ZiAxMDA3NTUKLS0tIGEvdG9vbHMvdGVzdGluZy9z
-ZWxmdGVzdHMvY3B1ZnJlcS9jcHVmcmVxLnNoCisrKyBiL3Rvb2xzL3Rlc3Rpbmcvc2VsZnRl
-c3RzL2NwdWZyZXEvY3B1ZnJlcS5zaApAQCAtNTIsNyArNTIsMTQgQEAgcmVhZF9jcHVmcmVx
-X2ZpbGVzX2luX2RpcigpCiAJZm9yIGZpbGUgaW4gJGZpbGVzOyBkbwogCQlpZiBbIC1mICQx
-LyRmaWxlIF07IHRoZW4KIAkJCXByaW50ZiAiJGZpbGU6IgotCQkJY2F0ICQxLyRmaWxlCisJ
-CQkjZmlsZSBpcyByZWFkYWJsZSA/CisJCQlsb2NhbCByZmlsZT0kKGxzIC1sICQxLyRmaWxl
-IHwgYXdrICckMSB+IC9eLipyLiovIHsgcHJpbnQgJE5GOyB9JykKKworCQkJaWYgWyAhIC16
-ICRyZmlsZSBdOyB0aGVuCisJCQkJY2F0ICQxLyRmaWxlCisJCQllbHNlCisJCQkJcHJpbnRm
-ICIkZmlsZSBpcyBub3QgcmVhZGFibGVcbiIKKwkJCWZpCiAJCWVsc2UKIAkJCXByaW50ZiAi
-XG4iCiAJCQlyZWFkX2NwdWZyZXFfZmlsZXNfaW5fZGlyICIkMS8kZmlsZSIKQEAgLTgzLDEw
-ICs5MCwxMCBAQCB1cGRhdGVfY3B1ZnJlcV9maWxlc19pbl9kaXIoKQogCiAJZm9yIGZpbGUg
-aW4gJGZpbGVzOyBkbwogCQlpZiBbIC1mICQxLyRmaWxlIF07IHRoZW4KLQkJCSMgZmlsZSBp
-cyB3cml0YWJsZSA/Ci0JCQlsb2NhbCB3ZmlsZT0kKGxzIC1sICQxLyRmaWxlIHwgYXdrICck
-MSB+IC9eLip3LiovIHsgcHJpbnQgJE5GOyB9JykKKwkJCSMgZmlsZSBpcyByZWFkYWJsZSBh
-bmQgd3JpdGFibGUgPworCQkJbG9jYWwgcndmaWxlPSQobHMgLWwgJDEvJGZpbGUgfCBhd2sg
-JyQxIH4gL14uKnJ3LiovIHsgcHJpbnQgJE5GOyB9JykKIAotCQkJaWYgWyAhIC16ICR3Zmls
-ZSBdOyB0aGVuCisJCQlpZiBbICEgLXogJHJ3ZmlsZSBdOyB0aGVuCiAJCQkJIyBzY2FsaW5n
-X3NldHNwZWVkIGlzIGEgc3BlY2lhbCBmaWxlIGFuZCB3ZQogCQkJCSMgc2hvdWxkIHNraXAg
-dXBkYXRpbmcgaXQKIAkJCQlpZiBbICRmaWxlICE9ICJzY2FsaW5nX3NldHNwZWVkIiBdOyB0
-aGVuCkBAIC0yNDQsOSArMjUxLDEwIEBAIGRvX3N1c3BlbmQoKQogCQkJCQlwcmludGYgIkZh
-aWxlZCB0byBzdXNwZW5kIHVzaW5nIFJUQyB3YWtlIGFsYXJtXG4iCiAJCQkJCXJldHVybiAx
-CiAJCQkJZmkKKwkJCWVsc2UKKwkJCQllY2hvICRmaWxlbmFtZSA+ICRTWVNGUy9wb3dlci9z
-dGF0ZQogCQkJZmkKIAotCQkJZWNobyAkZmlsZW5hbWUgPiAkU1lTRlMvcG93ZXIvc3RhdGUK
-IAkJCXByaW50ZiAiQ2FtZSBvdXQgb2YgJDFcbiIKIAogCQkJcHJpbnRmICJEbyBiYXNpYyB0
-ZXN0cyBhZnRlciBmaW5pc2hpbmcgJDEgdG8gdmVyaWZ5IGNwdWZyZXEgc3RhdGVcblxuIgpk
-aWZmIC0tZ2l0IGEvdG9vbHMvdGVzdGluZy9zZWxmdGVzdHMvZnRyYWNlL01ha2VmaWxlIGIv
-dG9vbHMvdGVzdGluZy9zZWxmdGVzdHMvZnRyYWNlL01ha2VmaWxlCmluZGV4IDQ5ZDk2YmIx
-NjM1NS4uN2MxMjI2M2Y4MjYwIDEwMDY0NAotLS0gYS90b29scy90ZXN0aW5nL3NlbGZ0ZXN0
-cy9mdHJhY2UvTWFrZWZpbGUKKysrIGIvdG9vbHMvdGVzdGluZy9zZWxmdGVzdHMvZnRyYWNl
-L01ha2VmaWxlCkBAIC02LDYgKzYsNiBAQCBURVNUX1BST0dTIDo9IGZ0cmFjZXRlc3Qta3Rh
-cAogVEVTVF9GSUxFUyA6PSB0ZXN0LmQgc2V0dGluZ3MKIEVYVFJBX0NMRUFOIDo9ICQoT1VU
-UFVUKS9sb2dzLyoKIAotVEVTVF9HRU5fUFJPR1MgPSBwb2xsCitURVNUX0dFTl9GSUxFUyA6
-PSBwb2xsCiAKIGluY2x1ZGUgLi4vbGliLm1rCmRpZmYgLS1naXQgYS90b29scy90ZXN0aW5n
-L3NlbGZ0ZXN0cy9wZXJmX2V2ZW50cy93YXRlcm1hcmtfc2lnbmFsLmMgYi90b29scy90ZXN0
-aW5nL3NlbGZ0ZXN0cy9wZXJmX2V2ZW50cy93YXRlcm1hcmtfc2lnbmFsLmMKaW5kZXggNDlk
-YzFlODMxMTc0Li5lMDNmZTFiOWJiYTIgMTAwNjQ0Ci0tLSBhL3Rvb2xzL3Rlc3Rpbmcvc2Vs
-ZnRlc3RzL3BlcmZfZXZlbnRzL3dhdGVybWFya19zaWduYWwuYworKysgYi90b29scy90ZXN0
-aW5nL3NlbGZ0ZXN0cy9wZXJmX2V2ZW50cy93YXRlcm1hcmtfc2lnbmFsLmMKQEAgLTc1LDcg
-Kzc1LDcgQEAgVEVTVCh3YXRlcm1hcmtfc2lnbmFsKQogCWlmICh3YWl0cGlkKGNoaWxkLCAm
-Y2hpbGRfc3RhdHVzLCBXU1RPUFBFRCkgIT0gY2hpbGQgfHwKIAkgICAgIShXSUZTVE9QUEVE
-KGNoaWxkX3N0YXR1cykgJiYgV1NUT1BTSUcoY2hpbGRfc3RhdHVzKSA9PSBTSUdTVE9QKSkg
-ewogCQlmcHJpbnRmKHN0ZGVyciwKLQkJCSJmYWlsZWQgdG8gc3ljbmhyb25pemUgd2l0aCBj
-aGlsZCBlcnJubz0lZCBzdGF0dXM9JXhcbiIsCisJCQkiZmFpbGVkIHRvIHN5bmNocm9uaXpl
-IHdpdGggY2hpbGQgZXJybm89JWQgc3RhdHVzPSV4XG4iLAogCQkJZXJybm8sCiAJCQljaGls
-ZF9zdGF0dXMpOwogCQlnb3RvIGNsZWFudXA7CmRpZmYgLS1naXQgYS90b29scy90ZXN0aW5n
-L3NlbGZ0ZXN0cy9waWRfbmFtZXNwYWNlL3BpZF9tYXguYyBiL3Rvb2xzL3Rlc3Rpbmcvc2Vs
-ZnRlc3RzL3BpZF9uYW1lc3BhY2UvcGlkX21heC5jCmluZGV4IDUxYzQxNGZhYWJiMC4uOTZm
-Mjc0ZjA1ODJiIDEwMDY0NAotLS0gYS90b29scy90ZXN0aW5nL3NlbGZ0ZXN0cy9waWRfbmFt
-ZXNwYWNlL3BpZF9tYXguYworKysgYi90b29scy90ZXN0aW5nL3NlbGZ0ZXN0cy9waWRfbmFt
-ZXNwYWNlL3BpZF9tYXguYwpAQCAtMTAsNiArMTAsNyBAQAogI2luY2x1ZGUgPHN0ZGxpYi5o
-PgogI2luY2x1ZGUgPHN0cmluZy5oPgogI2luY2x1ZGUgPHN5c2NhbGwuaD4KKyNpbmNsdWRl
-IDxzeXMvbW91bnQuaD4KICNpbmNsdWRlIDxzeXMvd2FpdC5oPgogCiAjaW5jbHVkZSAiLi4v
-a3NlbGZ0ZXN0X2hhcm5lc3MuaCIKZGlmZiAtLWdpdCBhL3Rvb2xzL3Rlc3Rpbmcvc2VsZnRl
-c3RzL3J1bl9rc2VsZnRlc3Quc2ggYi90b29scy90ZXN0aW5nL3NlbGZ0ZXN0cy9ydW5fa3Nl
-bGZ0ZXN0LnNoCmluZGV4IDUwZTAzZWVmZTdhYy4uMDQ0M2JlYWNmMzYyIDEwMDc1NQotLS0g
-YS90b29scy90ZXN0aW5nL3NlbGZ0ZXN0cy9ydW5fa3NlbGZ0ZXN0LnNoCisrKyBiL3Rvb2xz
-L3Rlc3Rpbmcvc2VsZnRlc3RzL3J1bl9rc2VsZnRlc3Quc2gKQEAgLTMsNyArMywxNCBAQAog
-IwogIyBSdW4gaW5zdGFsbGVkIGtzZWxmdGVzdCB0ZXN0cy4KICMKLUJBU0VfRElSPSQocmVh
-bHBhdGggJChkaXJuYW1lICQwKSkKKworIyBGYWxsYmFjayB0byByZWFkbGluayBpZiByZWFs
-cGF0aCBpcyBub3QgYXZhaWxhYmxlCitpZiB3aGljaCByZWFscGF0aCA+IC9kZXYvbnVsbDsg
-dGhlbgorICAgICAgICBCQVNFX0RJUj0kKHJlYWxwYXRoICQoZGlybmFtZSAkMCkpCitlbHNl
-CisgICAgICAgIEJBU0VfRElSPSQocmVhZGxpbmsgLWYgJChkaXJuYW1lICQwKSkKK2ZpCisK
-IGNkICRCQVNFX0RJUgogVEVTVFM9IiRCQVNFX0RJUiIva3NlbGZ0ZXN0LWxpc3QudHh0CiBp
-ZiBbICEgLXIgIiRURVNUUyIgXSA7IHRoZW4KZGlmZiAtLWdpdCBhL3Rvb2xzL3Rlc3Rpbmcv
-c2VsZnRlc3RzL3RpbWVucy9jbG9ja19uYW5vc2xlZXAuYyBiL3Rvb2xzL3Rlc3Rpbmcvc2Vs
-ZnRlc3RzL3RpbWVucy9jbG9ja19uYW5vc2xlZXAuYwppbmRleCA3MmQ0MWI5NTVmYjIuLjVj
-YzAwMTBlODVmZiAxMDA2NDQKLS0tIGEvdG9vbHMvdGVzdGluZy9zZWxmdGVzdHMvdGltZW5z
-L2Nsb2NrX25hbm9zbGVlcC5jCisrKyBiL3Rvb2xzL3Rlc3Rpbmcvc2VsZnRlc3RzL3RpbWVu
-cy9jbG9ja19uYW5vc2xlZXAuYwpAQCAtMzgsNyArMzgsNyBAQCB2b2lkICpjYWxsX25hbm9z
-bGVlcCh2b2lkICpfYXJncykKIAlyZXR1cm4gTlVMTDsKIH0KIAotaW50IHJ1bl90ZXN0KGlu
-dCBjbG9ja2lkLCBpbnQgYWJzKQorc3RhdGljIGludCBydW5fdGVzdChpbnQgY2xvY2tpZCwg
-aW50IGFicykKIHsKIAlzdHJ1Y3QgdGltZXNwZWMgbm93ID0ge30sIHJlbTsKIAlzdHJ1Y3Qg
-dGhyZWFkX2FyZ3MgYXJncyA9IHsgLm5vdyA9ICZub3csIC5yZW0gPSAmcmVtLCAuY2xvY2tp
-ZCA9IGNsb2NraWR9OwpAQCAtMTE1LDYgKzExNSw4IEBAIGludCBtYWluKGludCBhcmdjLCBj
-aGFyICphcmd2W10pCiB7CiAJaW50IHJldCwgbnNmZDsKIAorCWtzZnRfcHJpbnRfaGVhZGVy
-KCk7CisKIAluc2NoZWNrKCk7CiAKIAlrc2Z0X3NldF9wbGFuKDQpOwpkaWZmIC0tZ2l0IGEv
-dG9vbHMvdGVzdGluZy9zZWxmdGVzdHMvdGltZW5zL2V4ZWMuYyBiL3Rvb2xzL3Rlc3Rpbmcv
-c2VsZnRlc3RzL3RpbWVucy9leGVjLmMKaW5kZXggZDEyZmY5NTVkZTBkLi5hNjQ0MTYyZDU2
-ZmQgMTAwNjQ0Ci0tLSBhL3Rvb2xzL3Rlc3Rpbmcvc2VsZnRlc3RzL3RpbWVucy9leGVjLmMK
-KysrIGIvdG9vbHMvdGVzdGluZy9zZWxmdGVzdHMvdGltZW5zL2V4ZWMuYwpAQCAtMzYsNiAr
-MzYsOCBAQCBpbnQgbWFpbihpbnQgYXJnYywgY2hhciAqYXJndltdKQogCQlyZXR1cm4gMDsK
-IAl9CiAKKwlrc2Z0X3ByaW50X2hlYWRlcigpOworCiAJbnNjaGVjaygpOwogCiAJa3NmdF9z
-ZXRfcGxhbigxKTsKZGlmZiAtLWdpdCBhL3Rvb2xzL3Rlc3Rpbmcvc2VsZnRlc3RzL3RpbWVu
-cy9mdXRleC5jIGIvdG9vbHMvdGVzdGluZy9zZWxmdGVzdHMvdGltZW5zL2Z1dGV4LmMKaW5k
-ZXggNmIyYjkyNjRlODUxLi4zMzk2MzNhZTAzN2EgMTAwNjQ0Ci0tLSBhL3Rvb2xzL3Rlc3Rp
-bmcvc2VsZnRlc3RzL3RpbWVucy9mdXRleC5jCisrKyBiL3Rvb2xzL3Rlc3Rpbmcvc2VsZnRl
-c3RzL3RpbWVucy9mdXRleC5jCkBAIC02Niw2ICs2Niw4IEBAIGludCBtYWluKGludCBhcmdj
-LCBjaGFyICphcmd2W10pCiAJcGlkX3QgcGlkOwogCXN0cnVjdCB0aW1lc3BlYyBtdGltZV9u
-b3c7CiAKKwlrc2Z0X3ByaW50X2hlYWRlcigpOworCiAJbnNjaGVjaygpOwogCiAJa3NmdF9z
-ZXRfcGxhbigyKTsKZGlmZiAtLWdpdCBhL3Rvb2xzL3Rlc3Rpbmcvc2VsZnRlc3RzL3RpbWVu
-cy9nZXR0aW1lX3BlcmYuYyBiL3Rvb2xzL3Rlc3Rpbmcvc2VsZnRlc3RzL3RpbWVucy9nZXR0
-aW1lX3BlcmYuYwppbmRleCA2YjEzZGMyNzc3MjQuLmQ2NjU4YjdiNzU0OCAxMDA2NDQKLS0t
-IGEvdG9vbHMvdGVzdGluZy9zZWxmdGVzdHMvdGltZW5zL2dldHRpbWVfcGVyZi5jCisrKyBi
-L3Rvb2xzL3Rlc3Rpbmcvc2VsZnRlc3RzL3RpbWVucy9nZXR0aW1lX3BlcmYuYwpAQCAtNjcs
-NiArNjcsOCBAQCBpbnQgbWFpbihpbnQgYXJnYywgY2hhciAqYXJndltdKQogCXRpbWVfdCBv
-ZmZzZXQgPSAxMDsKIAlpbnQgbnNmZDsKIAorCWtzZnRfcHJpbnRfaGVhZGVyKCk7CisKIAlr
-c2Z0X3NldF9wbGFuKDgpOwogCiAJZmlsbF9mdW5jdGlvbl9wb2ludGVycygpOwpkaWZmIC0t
-Z2l0IGEvdG9vbHMvdGVzdGluZy9zZWxmdGVzdHMvdGltZW5zL3Byb2Nmcy5jIGIvdG9vbHMv
-dGVzdGluZy9zZWxmdGVzdHMvdGltZW5zL3Byb2Nmcy5jCmluZGV4IDE4MzNjYTk3ZWIyNC4u
-MGE5ZmY5MGVlNjlhIDEwMDY0NAotLS0gYS90b29scy90ZXN0aW5nL3NlbGZ0ZXN0cy90aW1l
-bnMvcHJvY2ZzLmMKKysrIGIvdG9vbHMvdGVzdGluZy9zZWxmdGVzdHMvdGltZW5zL3Byb2Nm
-cy5jCkBAIC0xODAsNiArMTgwLDggQEAgaW50IG1haW4oaW50IGFyZ2MsIGNoYXIgKmFyZ3Zb
-XSkKIHsKIAlpbnQgcmV0ID0gMDsKIAorCWtzZnRfcHJpbnRfaGVhZGVyKCk7CisKIAluc2No
-ZWNrKCk7CiAKIAlrc2Z0X3NldF9wbGFuKDIpOwpkaWZmIC0tZ2l0IGEvdG9vbHMvdGVzdGlu
-Zy9zZWxmdGVzdHMvdGltZW5zL3RpbWVucy5jIGIvdG9vbHMvdGVzdGluZy9zZWxmdGVzdHMv
-dGltZW5zL3RpbWVucy5jCmluZGV4IDM4NzIyMDc5MWEwNS4uYTljMDUzNGVmOGY2IDEwMDY0
-NAotLS0gYS90b29scy90ZXN0aW5nL3NlbGZ0ZXN0cy90aW1lbnMvdGltZW5zLmMKKysrIGIv
-dG9vbHMvdGVzdGluZy9zZWxmdGVzdHMvdGltZW5zL3RpbWVucy5jCkBAIC0xNTEsNiArMTUx
-LDggQEAgaW50IG1haW4oaW50IGFyZ2MsIGNoYXIgKmFyZ3ZbXSkKIAl0aW1lX3Qgb2Zmc2V0
-OwogCWludCByZXQgPSAwOwogCisJa3NmdF9wcmludF9oZWFkZXIoKTsKKwogCW5zY2hlY2so
-KTsKIAogCWNoZWNrX3N1cHBvcnRlZF90aW1lcnMoKTsKZGlmZiAtLWdpdCBhL3Rvb2xzL3Rl
-c3Rpbmcvc2VsZnRlc3RzL3RpbWVucy90aW1lci5jIGIvdG9vbHMvdGVzdGluZy9zZWxmdGVz
-dHMvdGltZW5zL3RpbWVyLmMKaW5kZXggNWI5MzlmNTlkZmE0Li43OTU0M2NlYjJjMGYgMTAw
-NjQ0Ci0tLSBhL3Rvb2xzL3Rlc3Rpbmcvc2VsZnRlc3RzL3RpbWVucy90aW1lci5jCisrKyBi
-L3Rvb2xzL3Rlc3Rpbmcvc2VsZnRlc3RzL3RpbWVucy90aW1lci5jCkBAIC0xNSw3ICsxNSw3
-IEBACiAjaW5jbHVkZSAibG9nLmgiCiAjaW5jbHVkZSAidGltZW5zLmgiCiAKLWludCBydW5f
-dGVzdChpbnQgY2xvY2tpZCwgc3RydWN0IHRpbWVzcGVjIG5vdykKK3N0YXRpYyBpbnQgcnVu
-X3Rlc3QoaW50IGNsb2NraWQsIHN0cnVjdCB0aW1lc3BlYyBub3cpCiB7CiAJc3RydWN0IGl0
-aW1lcnNwZWMgbmV3X3ZhbHVlOwogCWxvbmcgbG9uZyBlbGFwc2VkOwpAQCAtNzUsNiArNzUs
-OCBAQCBpbnQgbWFpbihpbnQgYXJnYywgY2hhciAqYXJndltdKQogCXBpZF90IHBpZDsKIAlz
-dHJ1Y3QgdGltZXNwZWMgYnRpbWVfbm93LCBtdGltZV9ub3c7CiAKKwlrc2Z0X3ByaW50X2hl
-YWRlcigpOworCiAJbnNjaGVjaygpOwogCiAJY2hlY2tfc3VwcG9ydGVkX3RpbWVycygpOwpk
-aWZmIC0tZ2l0IGEvdG9vbHMvdGVzdGluZy9zZWxmdGVzdHMvdGltZW5zL3RpbWVyZmQuYyBi
-L3Rvb2xzL3Rlc3Rpbmcvc2VsZnRlc3RzL3RpbWVucy90aW1lcmZkLmMKaW5kZXggYTQxOTZi
-YmQ2ZTMzLi40MDJlMmU0MTU1NDUgMTAwNjQ0Ci0tLSBhL3Rvb2xzL3Rlc3Rpbmcvc2VsZnRl
-c3RzL3RpbWVucy90aW1lcmZkLmMKKysrIGIvdG9vbHMvdGVzdGluZy9zZWxmdGVzdHMvdGlt
-ZW5zL3RpbWVyZmQuYwpAQCAtMTUsMTQgKzE1LDE0IEBACiAjaW5jbHVkZSAibG9nLmgiCiAj
-aW5jbHVkZSAidGltZW5zLmgiCiAKLXN0YXRpYyBpbnQgdGNsb2NrX2dldHRpbWUoY2xvY2tf
-dCBjbG9ja2lkLCBzdHJ1Y3QgdGltZXNwZWMgKm5vdykKK3N0YXRpYyBpbnQgdGNsb2NrX2dl
-dHRpbWUoY2xvY2tpZF90IGNsb2NraWQsIHN0cnVjdCB0aW1lc3BlYyAqbm93KQogewogCWlm
-IChjbG9ja2lkID09IENMT0NLX0JPT1RUSU1FX0FMQVJNKQogCQljbG9ja2lkID0gQ0xPQ0tf
-Qk9PVFRJTUU7CiAJcmV0dXJuIGNsb2NrX2dldHRpbWUoY2xvY2tpZCwgbm93KTsKIH0KIAot
-aW50IHJ1bl90ZXN0KGludCBjbG9ja2lkLCBzdHJ1Y3QgdGltZXNwZWMgbm93KQorc3RhdGlj
-IGludCBydW5fdGVzdChpbnQgY2xvY2tpZCwgc3RydWN0IHRpbWVzcGVjIG5vdykKIHsKIAlz
-dHJ1Y3QgaXRpbWVyc3BlYyBuZXdfdmFsdWU7CiAJbG9uZyBsb25nIGVsYXBzZWQ7CkBAIC04
-Miw2ICs4Miw4IEBAIGludCBtYWluKGludCBhcmdjLCBjaGFyICphcmd2W10pCiAJcGlkX3Qg
-cGlkOwogCXN0cnVjdCB0aW1lc3BlYyBidGltZV9ub3csIG10aW1lX25vdzsKIAorCWtzZnRf
-cHJpbnRfaGVhZGVyKCk7CisKIAluc2NoZWNrKCk7CiAKIAljaGVja19zdXBwb3J0ZWRfdGlt
-ZXJzKCk7CmRpZmYgLS1naXQgYS90b29scy90ZXN0aW5nL3NlbGZ0ZXN0cy90aW1lbnMvdmZv
-cmtfZXhlYy5jIGIvdG9vbHMvdGVzdGluZy9zZWxmdGVzdHMvdGltZW5zL3Zmb3JrX2V4ZWMu
-YwppbmRleCA1Yjg5MDdiZjQ1MWQuLmI5NTdlMWE2NTEyNCAxMDA2NDQKLS0tIGEvdG9vbHMv
-dGVzdGluZy9zZWxmdGVzdHMvdGltZW5zL3Zmb3JrX2V4ZWMuYworKysgYi90b29scy90ZXN0
-aW5nL3NlbGZ0ZXN0cy90aW1lbnMvdmZvcmtfZXhlYy5jCkBAIC05MSw2ICs5MSw4IEBAIGlu
-dCBtYWluKGludCBhcmdjLCBjaGFyICphcmd2W10pCiAJCXJldHVybiBjaGVjaygiY2hpbGQg
-YWZ0ZXIgZXhlYyIsICZub3cpOwogCX0KIAorCWtzZnRfcHJpbnRfaGVhZGVyKCk7CisKIAlu
-c2NoZWNrKCk7CiAKIAlrc2Z0X3NldF9wbGFuKDQpOwo=
-
---------------hdoGusMM000G5LVg2MWm0rHk--
+Regards,
+Andreas
