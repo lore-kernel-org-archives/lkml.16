@@ -1,141 +1,89 @@
-Received: from out-182.mta1.migadu.com (out-182.mta1.migadu.com [95.215.58.182])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8163367
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 17:44:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B52E41F4165;
+	Fri, 23 May 2025 17:45:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748022289; cv=none; b=Y1GZm5AqoUTIub4AaWAfMTquB3NKxOBCeYlGQ7QrGDBFcTnQPEyzeZanPFlIAZkgTZi73lcj5fmjr1ytzGPlKFaFmvOtx7lrE2tSQO3q38pxzHgNGV/+6kv3MV1qAcA+q0gUGMvhSqLcA2CGYL1oF7zciJ9VAGnWXj/IvOw9J7M=
+	t=1748022332; cv=none; b=iGL7wCNTwEkYTCoIRRm+UJm3FokpH3ayGnr3RZl5WHqbPwhSkTvDlIn5TFuM5msuLVDr9T/Gu5wvorfssnnvSZwWTo56tZfVtXgPqWZNUnKXYPAZOfsCPoaibsa+5E41Xu9aT1B4QTV1HqT/iTY+O41ibtTopfmnboTPhqk+Zbg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748022289; c=relaxed/simple;
-	bh=WLYdKQDt07xomL9E7YSjellVtwIwFOs4bfXXPpfWz3w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bP92L3HZXOHoxla47aSKMZMVSVqVnJ2x6l9hsB2MH9xo6hywjPXYqmvR6+Ia0K4L9lrQEj5pW2neXSzZGtZwbG3CrAX7kdiUV7LRU3PpBQaLjhNA/Y0nqgc4pnEpFTcNA7IePfM0Q7fJKyWvl9yIrVYhH5Kc9K2Xc2VDJcFbLxk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=NAYkbMnB; arc=none smtp.client-ip=95.215.58.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1748022332; c=relaxed/simple;
+	bh=Q+pVy9VN5G4mHqq4thDKtZgwMSFkUEGc/BFX+XL7hKg=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=uMEKxfghiVduwa2whazkHhjaSayf3jqSUDngHuJAnwVylKwEdZ0HCZRitE3m1NoIRnTMADaaPy3XepPMBaUagnsaj3aZchFe15cAQLE1cRVno0igNTktk+jKl5iPOol4fajzD9dnwlv9k4UwRXBaFkTxjb1+5HtgngRKF2Tm4h0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uN/u3zlH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="NAYkbMnB"
-Message-ID: <7ad8cfad-745f-4626-a2ce-eab33998a711@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1748022283;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=rQan1lP1SvjQ3YoRxtVwG6BShbKuywXf8Ct5XNCQIOg=;
-	b=NAYkbMnBv2evElrcBOFds8eWgU1fYgMA3/0NEOiNFfz9SqkvlWQGDOpCmog0ZWqn9eNse8
-	fgii+JDcSH7sb67ucwZRsWTjlg7ojV58E/jfFNqNTcCx/JnTYuL4z8vytXAqUB3iq1OggA
-	4d+3iHUV/8HVnz+o13xmZw9cjoW8J+s=
-Date: Fri, 23 May 2025 10:44:37 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uN/u3zlH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 810D0C4CEE9;
+	Fri, 23 May 2025 17:45:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748022332;
+	bh=Q+pVy9VN5G4mHqq4thDKtZgwMSFkUEGc/BFX+XL7hKg=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=uN/u3zlHN302bSpReVbi28j4kEtGlncXxVrkOcYDyPFBWQBvlz8K6Dv7q9AvrFZfl
+	 1lyCZkNVSkLFLeLSAYsUAwW9x0gZ9G9/Fis3pB4JBeFgKj7oDURyCI9X4hdSq8CZQP
+	 yPdwKHs0F00Qk4lHoviXh3+zR5ufeWtHFAkGPX3JMQy4bLkUdXa2257TfGjEMrUkG+
+	 BOV6kx5jc/8XP3GC5nU0ONiJLecgCXw4/nl+s52d3c98ODfME7KYz/q86Wz21cIgnN
+	 rS84Mbo9nSPFH48NqBD6FIzvRVuDdKao7gEpdBbc4MU4c33OeIt5q+N+oJopyZdAL0
+	 EbYBNrnwy6iCg==
+From: Mark Brown <broonie@kernel.org>
+To: robh@kernel.org, tiwai@suse.com, devicetree@vger.kernel.org, 
+ conor+dt@kernel.org, lgirdwood@gmail.com, linux-kernel@vger.kernel.org, 
+ linux-sound@vger.kernel.org, perex@perex.cz, krzk+dt@kernel.org, 
+ Zhang Yi <zhangyi@everest-semi.com>
+Cc: amadeuszx.slawinski@linux.intel.com, krzk@kernel.org
+In-Reply-To: <20250523025502.23214-1-zhangyi@everest-semi.com>
+References: <20250523025502.23214-1-zhangyi@everest-semi.com>
+Subject: Re: [PATCH v3 0/2] ASoC: codecs: add support for ES8375
+Message-Id: <174802232881.580585.23933896595053519.b4-ty@kernel.org>
+Date: Fri, 23 May 2025 18:45:28 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v3 0/2] RISC-V: KVM: VCPU reset fixes
-To: =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@ventanamicro.com>,
- Anup Patel <apatel@ventanamicro.com>
-Cc: kvm-riscv@lists.infradead.org, kvm@vger.kernel.org,
- linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
- Anup Patel <anup@brainfault.org>, Atish Patra <atishp@atishpatra.org>,
- Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
- <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Alexandre Ghiti <alex@ghiti.fr>, Andrew Jones <ajones@ventanamicro.com>
-References: <20250515143723.2450630-4-rkrcmar@ventanamicro.com>
- <1a7a81fd-cf15-4b54-a805-32d66ced4517@linux.dev>
- <DA3CUGMQXZNW.2BF5WWE4ANFS0@ventanamicro.com>
- <CAK9=C2Xi3=9JL5f=0as2nEYKuRVTtJoL6Vdt_y2E06ta6G_07A@mail.gmail.com>
- <DA3FGGI5PEZG.3T26KJXT2QO8M@ventanamicro.com>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Atish Patra <atish.patra@linux.dev>
-In-Reply-To: <DA3FGGI5PEZG.3T26KJXT2QO8M@ventanamicro.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.15-dev-c25d1
 
+On Fri, 23 May 2025 10:55:00 +0800, Zhang Yi wrote:
+> The driver is for codec ES8375 of everest-semi.
+> 
+> v3 -> v2:
+>           - Modify some control-names
+>           - Delete obsolete terminology
+>           - Modify tags of v2
+> 
+> [...]
 
-On 5/23/25 2:20 AM, Radim Krčmář wrote:
-> 2025-05-23T13:38:26+05:30, Anup Patel <apatel@ventanamicro.com>:
->> On Fri, May 23, 2025 at 12:47 PM Radim Krčmář <rkrcmar@ventanamicro.com> wrote:
->>> 2025-05-22T14:43:40-07:00, Atish Patra <atish.patra@linux.dev>:
->>>> On 5/15/25 7:37 AM, Radim KrÄmÃ¡Å wrote:
->>>>> Hello,
->>>>>
->>>>> the design still requires a discussion.
->>>>>
->>>>> [v3 1/2] removes most of the additional changes that the KVM capability
->>>>> was doing in v2.  [v3 2/2] is new and previews a general solution to the
->>>>> lack of userspace control over KVM SBI.
->>>>>
->>>> I am still missing the motivation behind it. If the motivation is SBI
->>>> HSM suspend, the PATCH2 doesn't achieve that as it forwards every call
->>>> to the user space. Why do you want to control hsm start/stop from the
->>>> user space ?
->>> HSM needs fixing, because KVM doesn't know what the state after
->>> sbi_hart_start should be.
->>> For example, we had a discussion about scounteren and regardless of what
->>> default we choose in KVM, the userspace might want a different value.
->>> I don't think that HSM start/stop is a hot path, so trapping to
->>> userspace seems better than adding more kernel code.
->> There are no implementation specific S-mode CSR reset values
->> required at the moment.
-> Jessica mentioned that BSD requires scounteren to be non-zero, so
-> userspace should be able to provide that value.
+Applied to
 
-Jessica admitted that it was a bug which should be fixed.
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
 
-> I would prefer if KVM could avoid getting into those discussions.
-> We can just just let userspace be as crazy as it wants.
+Thanks!
 
-The scounteren state you mentioned is already fixed now.
+[1/2] ASoC: dt-bindings: Add Everest ES8375 audio CODEC
+      commit: f70d0f893b945aa42576853212645f4d889332b4
+[2/2] ASoC: codecs: add support for ES8375
+      commit: 43a38a0ff8c63ee156d997cd13063c63cd55d812
 
-I would prefer to do this if there are more of these issues. Otherwise,
-we may gain little by just delegating more work to the userspace for no 
-reason.
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
 
->>                          Whenever the need arises, we will extend
->> the ONE_REG interface so that user space can specify custom
->> CSR reset values at Guest/VM creation time. We don't need to
->> forward SBI HSM calls to user space for custom S-mode CSR
->> reset values.
-> The benefits of adding a new ONE_REG interface seem very small compared
-> to the drawbacks of having extra kernel code.
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
-How ? The extra kernel code is just few lines where it just registers a 
-SBI extension and forwards
-it to the userspace. That's for the entire extension.
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
-For extensions like HSM, only selective functions that should be 
-forwarded to the userspace which
-defeats the purpose.
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
-Let's not try to fix something that is not broken yet.
+Thanks,
+Mark
 
-> If userspace would want to reset or setup new multi-VCPUs VMs often, we
-> could add an interface that loads the whole register state from
-> userspace in a single IOCTL, because ONE_REG is not the best interface
-> for bulk data transfer either.
->
->>> Forwarding all the unimplemented SBI ecalls shouldn't be a performance
->>> issue, because S-mode software would hopefully learn after the first
->>> error and stop trying again.
->>>
->>> Allowing userspace to fully implement the ecall instruction one of the
->>> motivations as well -- SBI is not a part of RISC-V ISA, so someone might
->>> be interested in accelerating a different M-mode software with KVM.
->>>
->>> I'll send v4 later today -- there is a missing part in [2/2], because
->>> userspace also needs to be able to emulate the base SBI extension.
->>>
->> [...]          The best approach is to selectively forward SBI
->> calls to user space where needed (e.g. SBI system reset,
->> SBI system suspend, SBI debug console, etc.).
-> That is exactly what my proposal does, it's just that the userspace says
-> what is "needed".
->
-> If we started with this mechanism, KVM would not have needed to add
-> SRST/SUSP/DBCN SBI emulation at all -- they would be forwarded as any
-> other unhandled ecall.
