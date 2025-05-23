@@ -1,228 +1,85 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5582D202F9A;
-	Fri, 23 May 2025 14:51:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DC0C202F9A
+	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 14:51:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748011864; cv=none; b=KSln9flsJzMAJqaDgrIz0sggRiKhzQ0FAL6gyVGtMkptEyVCY3+pG3iVEK++1oArj7l0tZoFelRBRYhiKMs40TDMKdcW9sBJvDUzWmcGcMobW74KNBYsBiSYX51WokY0yVPg1G1+270c3ns0vW+SblULYt1QBzmkY2+2gg0RwP4=
+	t=1748011872; cv=none; b=Qq8F0hNL521fXv0pmZwEtHmMCICRdNqgRTlI1k0oKReMUzW+KXJADd+yoiQWbh+IQld3Lk0orqTX6mUvtnbQFoI0wgN9/BkIPDjcwR3auHsqPceWr1P+md2eEJ4h62CFGsCSj+YdjEbV111YLaUn5hTz/iI/QbuJO4ErNZkoXk0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748011864; c=relaxed/simple;
-	bh=iQNEWUeLCB352bTu3ok5V6qZW15EZquP6l1y9wrUrVo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dxzNs7UkcNsjpNmugY49UnYzs4GH6yVhtRU+JE9s7xEkxxSBBh35uCn6O4meejrXqFBvOzBiQOEasi3iNBgjjknhMCc3xX4NZS+npIUZ6zU8915twFS5KinTyj7PGAqnTEqkEa47cGAQSmiM/Qc8Z312E0Rh93wxBAlMwWtgrrY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=coIpBfJv; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1748011872; c=relaxed/simple;
+	bh=BnH5pMSZnKDK8bkUF14DW7/8wopewvVFPMukGn9fNEs=;
+	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=U6fEAluH9yH1mDlbOSitj2bJqNxT9Rj2P1KkpENAkuRrPKnmsIbY7d6xHdcQNG//b0Uj8VI3yHOG73PlOW1b7k3nUSGiIg0yrt+XO3BU73F/5Y2w1xwACQPRAlBHKeC8SJj48VnQLQh0aFe414+iYLj5fteahwOxZYKB2tWYoYY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=JhBXPYsH; arc=none smtp.client-ip=217.70.183.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="coIpBfJv"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748011863; x=1779547863;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=iQNEWUeLCB352bTu3ok5V6qZW15EZquP6l1y9wrUrVo=;
-  b=coIpBfJvctMCMq5+iXjDJRytoCizoIrpgBbqnYRlUHJ4++nxUq+sBKrK
-   oh4nd5uPcN3IYI+LT1P6hZFNOHdJe5xb/ISb7l4ggIBcbcRi5SgSzlXG6
-   wmaVvIVB082zR9liwTA3d1G/q3J/GPVD1J0mmkoCeB+0+y0rTTrShEtdr
-   dpGIl1FSeT7Aivtkna6VYV0hTA4ANzyfQ8jdWFIvlODN4xxC59t4ePFzw
-   NdWiFXYZSkb4X5kbcwdHi7zxU/NmfNqJUfjFvqYnH/kknpsqVgrQz1cGr
-   f4nEeriiKQXhCqJ7VjnAjSOdgBqnogQOS0sVlGdSFediaB6Q253hm1YmD
-   w==;
-X-CSE-ConnectionGUID: 9kPrQ/4MRR6yvBdOqM9Dnw==
-X-CSE-MsgGUID: qc0sEfCvTa2iyS56BNtyLw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11441"; a="61475178"
-X-IronPort-AV: E=Sophos;i="6.15,309,1739865600"; 
-   d="scan'208";a="61475178"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2025 07:51:02 -0700
-X-CSE-ConnectionGUID: cot97aG8Sl6Sk3nzhwRTlw==
-X-CSE-MsgGUID: jH6Cx1IFTq2CHlSbh3IE8g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,309,1739865600"; 
-   d="scan'208";a="164414225"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmviesa002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2025 07:51:01 -0700
-Received: from [10.246.136.52] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.52])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id CAA1D20B5736;
-	Fri, 23 May 2025 07:50:57 -0700 (PDT)
-Message-ID: <c56c9e23-cf6e-4040-aee8-da13d5157dcf@linux.intel.com>
-Date: Fri, 23 May 2025 10:50:56 -0400
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="JhBXPYsH"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id B65AA43B0C;
+	Fri, 23 May 2025 14:50:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1748011862;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=WSgX7S40xopOK0v+O35hOo/TqGd2mvAhf1SqDu4HKcc=;
+	b=JhBXPYsH5PxPq19gYzDB9J3tWUmqaqsXkNK7BD9cxPYC23Z4rRE44HR26G3sxnUjlyy/9g
+	vQGZcgr0oJDZFArugTZdMyLag6dd/fbgAeNxqMqcz8oVr8IhX1uX1EOCihklFq1fOqK83i
+	bfC9FqpvSXq7AB1NRZ+p5J1qOyQNGbuZO83Q61+6o/52QvxTpRwnHmOnEBAJ0m5fHbJ87p
+	djKKFU5cLB0IsZN77g5S8rNYVDr3gmZ7cJtGhZkY6snKTVHxiZi6NYerSmVnV14dizgM6r
+	91Uobx/Sqen0PbPL3dBzWIwJT+Yy2NoTVoomdxEZPc49bFV3VQZaPJT4vzPlyQ==
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+To: linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, 
+ bcm-kernel-feedback-list@broadcom.com, william.zhang@broadcom.com, 
+ anand.gore@broadcom.com, florian.fainelli@broadcom.com, 
+ kamal.dasu@broadcom.com, dan.beygelman@broadcom.com, 
+ =?utf-8?q?=C3=81lvaro_Fern=C3=A1ndez_Rojas?= <noltari@gmail.com>, 
+ rafal@milecki.pl, computersforpeace@gmail.com, frieder.schrempf@kontron.de, 
+ vigneshr@ti.com, richard@nod.at, bbrezillon@kernel.org, 
+ kdasu.kdev@gmail.com, jaimeliao.tw@gmail.com, kilobyte@angband.pl, 
+ jonas.gorski@gmail.com, dgcbueu@gmail.com, dregan@mail.com, 
+ dregan@broadcom.com
+In-Reply-To: <20250522172526.3926633-1-dregan@broadcom.com>
+References: <20250522172526.3926633-1-dregan@broadcom.com>
+Subject: Re: [PATCH] mtd: nand: brcmnand: fix NAND timeout when accessing
+ eMMC
+Message-Id: <174801185752.990005.9184545428707751994.b4-ty@bootlin.com>
+Date: Fri, 23 May 2025 16:50:57 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/3] perf sort: Use perf_env to set arch sort keys and
- header
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
- James Clark <james.clark@linaro.org>,
- "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
- Ravi Bangoria <ravi.bangoria@amd.com>, Leo Yan <leo.yan@arm.com>,
- Yujie Liu <yujie.liu@intel.com>, Graham Woodward <graham.woodward@arm.com>,
- Howard Chu <howardchu95@gmail.com>, Weilin Wang <weilin.wang@intel.com>,
- Dmitry Vyukov <dvyukov@google.com>, Andi Kleen <ak@linux.intel.com>,
- Thomas Falcon <thomas.falcon@intel.com>, Matt Fleming
- <matt@readmodwrite.com>, Chun-Tse Shao <ctshao@google.com>,
- Ben Gainey <ben.gainey@arm.com>, Song Liu <song@kernel.org>,
- linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-References: <20250521135500.677508-1-irogers@google.com>
- <20250521135500.677508-4-irogers@google.com>
- <3e8b674e-38f7-4212-923d-f53626de69f2@linux.intel.com>
- <CAP-5=fX5q7rDgBdB+cMH6fTyHBBPyiac7tuv9WJOMcg9OFdq5g@mail.gmail.com>
- <9aa2c899-80e0-4626-acb7-5331fbf46a0d@linux.intel.com>
- <CAP-5=fW4brQZQ-tMDj+N9MnddRVZidi4L5uSw1mvv_9OD_vOSA@mail.gmail.com>
-Content-Language: en-US
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <CAP-5=fW4brQZQ-tMDj+N9MnddRVZidi4L5uSw1mvv_9OD_vOSA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+X-Mailer: b4 0.15-dev
+X-GND-State: clean
+X-GND-Score: 0
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgdeludegucdltddurdegfedvrddttddmucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecunecujfgurhephffvjghfuffkffggtgfgofesthekredtredtjeenucfhrhhomhepofhiqhhuvghlucftrgihnhgrlhcuoehmihhquhgvlhdrrhgrhihnrghlsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeffhfdufefgueeuheeuveduieeijefhjeduveduveeitedvteeftdffhfejieelfeenucfkphepledvrddukeegrdelkedrtdenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeelvddrudekgedrleekrddtpdhhvghloheplgduledvrdduieekrddurddutdeingdpmhgrihhlfhhrohhmpehmihhquhgvlhdrrhgrhihnrghlsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvvddprhgtphhtthhopegrnhgrnhgurdhgohhrvgessghrohgruggtohhmrdgtohhmpdhrtghpthhtohepfhhlohhrihgrnhdrfhgrihhnvghllhhisegsrhhorggutghomhdrtghomhdprhgtphhtthhopegurhgvghgrnhesmhgrihhlrdgtohhmpdhrtghpthhtohepnhholhhtrghrihesghhmrghilhdrtghomhdprhgtphhtthhopehkrghmrghlrdgurghsuhessghrohgruggtohhmrdgtohhmpdhrtghpthhtohepsggtm
+ hdqkhgvrhhnvghlqdhfvggvuggsrggtkhdqlhhishhtsegsrhhorggutghomhdrtghomhdprhgtphhtthhopehjrghimhgvlhhirghordhtfiesghhmrghilhdrtghomhdprhgtphhtthhopehfrhhivgguvghrrdhstghhrhgvmhhpfheskhhonhhtrhhonhdruggv
+X-GND-Sasl: miquel.raynal@bootlin.com
 
+On Thu, 22 May 2025 10:25:17 -0700, dregan@broadcom.com wrote:
+> When booting a board to NAND and accessing NAND while eMMC
+> transactions are occurring the NAND will sometimes timeout. This
+> is due to both NAND and eMMC controller sharing the same data bus
+> on BCMBCA chips. Fix is to extend NAND timeout to allow eMMC
+> transactions time to complete.
+> 
+> 
+> [...]
 
+Applied to nand/next, thanks!
 
-On 2025-05-21 3:19 p.m., Ian Rogers wrote:
-> On Wed, May 21, 2025 at 11:14 AM Liang, Kan <kan.liang@linux.intel.com> wrote:
->>
->>
->>
->> On 2025-05-21 12:16 p.m., Ian Rogers wrote:
->>>>> diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
->>>>> index 7b6cde87d2af..13ef0d188a96 100644
->>>>> --- a/tools/perf/builtin-top.c
->>>>> +++ b/tools/perf/builtin-top.c
->>>>> @@ -1747,7 +1747,14 @@ int cmd_top(int argc, const char **argv)
->>>>>
->>>>>       setup_browser(false);
->>>>>
->>>>> -     if (setup_sorting(top.evlist) < 0) {
->>>>> +     top.session = perf_session__new(/*data=*/NULL, /*tool=*/NULL);
->>>>> +     if (IS_ERR(top.session)) {
->>>>> +             status = PTR_ERR(top.session);
->>>>> +             top.session = NULL;
->>>>> +             goto out_delete_evlist;
->>>>> +     }
->>>>> +
->>>>> +     if (setup_sorting(top.evlist, &top.session->header.env) < 0) {
->>>> I doubt a valide env can be got in perf_session__new(), since there is
->>>> no perf.data in perf top.
->>>> Maybe just need to invoke the perf_env__raw_arch() instead to fill the
->>>> env->arch.
->>> I think the current code is making things harder than it should be, we
->>> should work away from perf_env__arch and strings, instead using EM_
->>> values which we can default to EM_HOST avoiding any runtime costs.
->>> Looking at perf_env__arch:
->>> ```
->>> const char *perf_env__arch(struct perf_env *env)
->>> {
->>>         char *arch_name;
->>>
->>>         if (!env || !env->arch) { /* Assume local operation */
->>>                 static struct utsname uts = { .machine[0] = '\0', };
->>>                 if (uts.machine[0] == '\0' && uname(&uts) < 0)
->>>                         return NULL;
->>>                 arch_name = uts.machine;
->>>         } else
->>>                 arch_name = env->arch;
->>>
->>>         return normalize_arch(arch_name);
->>> }
->>> ```
->>> in this case env->arch == NULL and so the uname machine will be used.
->>> For perf_env__raw_arch the behavior is similar but it populates the
->>> env:
->>> ```
->>> static int perf_env__read_arch(struct perf_env *env)
->>> {
->>>         struct utsname uts;
->>>
->>>         if (env->arch)
->>>                 return 0;
->>>
->>>         if (!uname(&uts))
->>>                 env->arch = strdup(uts.machine);
->>>
->>>         return env->arch ? 0 : -ENOMEM;
->>> }
->>>
->>> const char *perf_env__raw_arch(struct perf_env *env)
->>> {
->>>         return env && !perf_env__read_arch(env) ? env->arch : "unknown";
->>> }
->>> ```
->>> Aside from caching the arch, the main difference is that
->>> normalize_arch isn't called. Not having normalize_arch means the code
->>> in arch_support_sort_key and arch_perf_header_entry would need to
->>> handle strings "ppc" as well as "powerpc", "i386" as well as "x86",
->>> etc. As I'd prefer not handle all those cases I think the way the code
->>> is is best given how the env code is currently structured.
->>
->> Right. The perf_env__raw_arch() doesn't improve anything.
->> But I still don't like &top.session->header.env.
->> Because I don't think you can get any useful information from
->> top.session->header.env. It just brings confusions. (It seems an env is
->> retrieved, but it is actually not.)
-> 
-> Well there's a certain consistency in using the session env to set up
-> the sorting, etc. This pre-exists this change with nearly every
-> builtin-* file doing `symbol__init(&session->header.env);`. perf top
-> does `symbol__init(NULL);`:
-> https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/builtin-top.c?h=perf-tools-next#n1811
-> but the code now has lazy initialization patterns and handling NULL as
-> a special case of meaning host machine:
-> https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/util/symbol.c?h=perf-tools-next#n2350
-> 
->> In the perf top, &perf_env is used for the existing cases. If any env
->> fields are not available, perf_env__read_XXX() is invoked to get the
->> information.
->> I think we may follow the existing usage, e.g.,
->> setup_sorting(top.evlist, &perf_env).
-> 
-> So using the global perf_env rather than NULL feels preferable but I
-> think the global perf_env should be deleted. Whenever I see the global
-> perf_env in use I think the code has a bug as the perf_env should be
-> coming from the session or the machine. The global perf_env can have
-> no meaning for cases like `perf diff` where more than one
-> file/header/env is open at a time. The global perf_env variable's
-> existence encourages bad or broken code, so deleting it should avoid
-> errors in code. Another place these issues can occur is with TPEBS
-> where we're maintaining multiple sessions for sampling alongside
-> counting.
-> 
->> Alternatively, it looks like the perf top doesn't support --weight. The
->> env->arch should never be used. If so, a NULL can be used as well, E.g.,
->> setup_sorting(top.evlist, NULL).
-> 
-> So I don't like NULL because then we have lazy initialization of host
-> data and NULL meaning use host. I don't like the global perf_env
-> variable as it has a code smell about it. I think moving the session
-> initialization earlier in perf top so its env, although unpopulated,
-> can be used is consistent with `perf report` - this is consistent with
-> `perf top` being `perf record` glued together with `perf report`. So I
-> think the change here is the smallest and most sensible.
-> 
-> Longer term let's delete the global perf_env variable,  perf_env__arch
-> should be switched to a perf_env__e_machine as then we can avoid uname
-> calls just to determine the machine architecture, etc.
-> 
+[1/1] mtd: nand: brcmnand: fix NAND timeout when accessing eMMC
+      commit: 528b541b71cf03e263272b051b70696f92258e9d
 
-I'm fine with the session's env, as long as there is a consistent env
-source in the perf top. Because in the recent perf top fixes, we
-randomly pick the env source. Thomas's patch used the global env, but
-this one chose the session's env. It brings confusions.
-https://lore.kernel.org/lkml/20250513231813.13846-2-thomas.falcon@intel.com/
+Patche(s) should be available on mtd/linux.git and will be
+part of the next PR (provided that no robot complains by then).
 
-Could you please send a clean up patch to address the inconsistency?
-
-Thanks,
-Kan
+Kind regards,
+Miquèl
 
