@@ -1,43 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA7FC294A06;
-	Fri, 23 May 2025 16:21:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 824CC29713F;
+	Fri, 23 May 2025 16:21:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748017301; cv=none; b=YazUYMiO8jMbS/h1nqDvJiHJvum4ZO0Q8ZZ0mdo49tJWzSLRnqtD9Q4ss0Anvdng53ZeWDHdApLyvbmWvlBJ/ng1GT1qY/F3IVOCxwkoPLJLODSpBocK9wjGf3JOQub+2fC6SRYw+AgzbbMHr5LoDGW/7RMhc3/enRYViLBv+DM=
+	t=1748017302; cv=none; b=t0FIayG47PQy9PNF94iEuA+L4NxJJXkvduZTAYQqvBZ3i0eUyb60NPo/b2Ts4msRHh1hy2aqzAZBjlohrZRUl3cM2Heq4x+kwz464LjzAOQE2icHBIumLsUhBmAKP2ZXXCKWM9ZndHlUkeYos6rkCV7qKvgvlz4Kyqn2uhIOP+g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748017301; c=relaxed/simple;
-	bh=eutAjVroypnbDRz2QE9Rm3mywLZ3UBKPobYxoRL5Dss=;
+	s=arc-20240116; t=1748017302; c=relaxed/simple;
+	bh=nfVfDN3HgVuzw3t37wjLxC06xBmaqVN2owM9riXecqY=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=SAHMGsZk0NX7f5jXLWhEdRrLjEscId9zfwfQ1NECrERh10+QiRAp5D9Sy9qH4EAJ1w7JqrlMicV1kd2DE+nVjYU1sWi7Q6GDW7knSkCQzZDzQJzS1ZmWFc5TIrH2Ik2nAvp87Ay1DD5slctkyd2/TYCBwjZf4haxtiTgUSRCBCg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oJqIWtqJ; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=n+kiPFBEPlPvHPM7X82Eg+H5vn2PecZmsVaFSkLrLOGfSeDcezx2P2VHfCE5hbjOu2YWP84NpaDycRUVhVXfXaS8lThWfkHW6Ftt4vowuNpfY3h+c5N0sEprcY475G86aktzeNOYAasF/icnSfBs7EBODDQDcIm80br4SOBtev8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NvHaeTkV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oJqIWtqJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A38CC4CEE9;
-	Fri, 23 May 2025 16:21:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NvHaeTkV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9308AC4CEEB;
+	Fri, 23 May 2025 16:21:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748017300;
-	bh=eutAjVroypnbDRz2QE9Rm3mywLZ3UBKPobYxoRL5Dss=;
+	s=k20201202; t=1748017302;
+	bh=nfVfDN3HgVuzw3t37wjLxC06xBmaqVN2owM9riXecqY=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=oJqIWtqJiP6jOAhFSJWVjzHZo+Ggb/S3F4of27UjkCf37icNd/+aMFWNL/FTtsF6U
-	 OckJqKLNqDWqiiaox5agrE99yW3tilv2VJC7NY77QfQeKGld1MMxZkanh6B5lIg+M7
-	 BeQF78NhV2ttJoqVtKK94OlZQaLLgUJIXjJXtuwgVekOWzqdQUvkJO3Imz4u+HkHn5
-	 bqEKIV7DnNsCYi7XpaD/Ohpej+Q8nE90UzQApzpb19xLROEbLuugM+Rr74y0VAaEMz
-	 bUH38GdcGIqRRkPeWJaoK1naDOhfi3PYSSR2vwKQcyrlz5qvf24OeX7/c+guTK5Qj2
-	 ksRq/CY9RR3LQ==
+	b=NvHaeTkVioxFNO138/QpRiHGbE8ZCtyeEz9/FW9aeuFZ2nB3F0LoadaGtq6FFAVNX
+	 cNRLvHAT3rIF0iMQXzeLHbMoflox99STpdFSclJoZe5T8R1FhB0T18lwk77NE/gQJB
+	 OPbAaeh+Xpx/Sj9OajaeO7SxlovUqMUVjQQuOUaX6DmQ7gxubsyMFeMz7iMSRvRpPa
+	 VKebsECWXjn482DwLm5RznFqvZPSlwz2y5kUWGgVgcRF2QqdJaFqcytMEJJkW75Yeo
+	 JQqYudCrAfc6wezP0OorCOnKqku4FZSJxXYs7QDkJvxr879S010Ma1TxFsdC/3cYdr
+	 rVsm4kc1rZcPg==
 From: Mark Brown <broonie@kernel.org>
 To: Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh@kernel.org>, 
  Krzysztof Kozlowski <krzk+dt@kernel.org>, 
  Conor Dooley <conor+dt@kernel.org>, Robin Gong <yibin.gong@nxp.com>, 
  Martijn de Gouw <martijn.de.gouw@prodrive-technologies.com>
 Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-In-Reply-To: <20250522192325.1099680-1-martijn.de.gouw@prodrive-technologies.com>
-References: <20250522192325.1099680-1-martijn.de.gouw@prodrive-technologies.com>
-Subject: Re: [PATCH 1/3] dt-bindings: regulator: add pca9450: Add
+In-Reply-To: <20250523131214.955970-1-martijn.de.gouw@prodrive-technologies.com>
+References: <20250523131214.955970-1-martijn.de.gouw@prodrive-technologies.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: regulator: add pca9450: Add
  regulator-allowed-modes
-Message-Id: <174801729781.578098.16768660592418154140.b4-ty@kernel.org>
-Date: Fri, 23 May 2025 17:21:37 +0100
+Message-Id: <174801730004.578098.7742808995079543725.b4-ty@kernel.org>
+Date: Fri, 23 May 2025 17:21:40 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,9 +48,10 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15-dev-c25d1
 
-On Thu, 22 May 2025 21:23:22 +0200, Martijn de Gouw wrote:
-> The PCA9450 has support for forced PWM mode on the buck controllers.
-> Add support to control this mode.
+On Fri, 23 May 2025 15:12:11 +0200, Martijn de Gouw wrote:
+> Make the PWM mode on the buck controllers configurable from devicetree.
+> Some boards require forced PWM mode to keep the supply ripple within
+> acceptable limits under light load conditions.
 > 
 > 
 
@@ -60,11 +61,9 @@ Applied to
 
 Thanks!
 
-[1/3] dt-bindings: regulator: add pca9450: Add regulator-allowed-modes
-      (no commit info)
-[2/3] dt-bindings: add bindings for NXP PCA9450 PMIC
-      (no commit info)
-[3/3] regulator: pca9450: Add support for mode operations
+[1/2] dt-bindings: regulator: add pca9450: Add regulator-allowed-modes
+      commit: 0a4056a444c8d55beea470948c73befd6673aa6c
+[2/2] regulator: pca9450: Add support for mode operations
       commit: 2616e5f4fe04eb25eb5cbabc0a3a2a374e14008e
 
 All being well this means that it will be integrated into the linux-next
