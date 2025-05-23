@@ -1,288 +1,467 @@
-Received: from smtp.smtpout.orange.fr (smtp-18.smtpout.orange.fr [80.12.242.18])
-	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0F164120B;
-	Fri, 23 May 2025 16:42:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E2AA4120B;
+	Fri, 23 May 2025 16:44:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748018563; cv=none; b=iLMZRYuJ1qhVnsO7uY1C3yVx4867sR8EkCyRiD9P7oro99gq53fGKnBygYHPTsm9bsUco+LTZCsCpCV2gH8ByPsgnfAxrsxHMBLKOtKok94IrPuuI8QfyBZHdsLrctyIT1c9hwxnrdOH8t1v7YvMLwSDl4bXeyXLQ0rFiHd3LkU=
+	t=1748018643; cv=none; b=hW1PTrgXewYpGGY8rlhNkMjEZGwDXj/gsPHfuWpUa9Vr82MvkxVIYV5euUobWGAmNwLA3wV9JMjLSQN01jxUB+TF8KK2E3vAhGgBgreQ/r0zdKYBSfvY1CVDufnS2i6IwQxHpU0pUFftoXLjClgn+sn6xE+y8yblykTLDAV44QE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748018563; c=relaxed/simple;
-	bh=tq4TuVSZAIRjvQu1VdJ2ys6D+exC6+GZ9V4Q2kNeeZA=;
-	h=Message-ID:Date:MIME-Version:Subject:References:From:To:Cc:
-	 In-Reply-To:Content-Type; b=UdIbiIshgkvA9f20cig7bjJcYFnibaTn8oTw12+e5SWOhdsKpCA3YOFeSk5kW2xUd8pVLypN5u9Squdrj5Dy7vNteR5IR+5IuUnVHs96bMRLBtLh3iNKq5/VtGgqoO2zQtC0qjlmlTVpt1CM11fbX12adyVdwUVDFXw7G53QHUQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=pOlCfneW; arc=none smtp.client-ip=80.12.242.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	s=arc-20240116; t=1748018643; c=relaxed/simple;
+	bh=Adv/SzYY1kL96AE7h8AQE8GubOTLp/Wk+DtJGu644YE=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=YuVR2ndYNll1jUPMg38lJ4l/AXhrtM4vcmM5Oi++t/kAt6l4RYD6+Kxj7RLgI8MT/6q2VZ2T9nSPzS3K+A/YPansEF6m8WUL6OHXNxjpkdtynWGtnZzI5A7o4QjYQ8Gc3/IoaHAUZS0UDzRebh1QfoNIObNGRzO4jsMvQ+C69vQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=WEJF+uts; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="pOlCfneW"
-Received: from [IPV6:2a01:cb10:785:b00:8347:f260:7456:7662]
- ([IPv6:2a01:cb10:785:b00:8347:f260:7456:7662])
-	by smtp.orange.fr with ESMTPA
-	id IVSSurGNEpEs6IVSSuRRWF; Fri, 23 May 2025 18:41:24 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1748018484;
-	bh=3+QxL/ee61ufD+4tquQWli5spOHmHSP5ezjYfdkKTd8=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To;
-	b=pOlCfneWdXLFPaZIu5XSYv4nRFQa/8oQomownlOpjHGyymEnk4FjHH1e/0j8vaK+U
-	 OiJmXmq3gSxgBRYKJ9BQAOF6c13sDc+Vn3uHi66h7HrnVF9w0QvGXr/oo4L5siH8SQ
-	 vC1ZPCpI8UVRHVDtHpHTKR+4wDO1IpOWf2whW4oaMyxI3+rdXM5rsdSitn4aVFh2j2
-	 SyVZj2CgjWU6m9sIkB6bNWJvUNoBN4T7njXh2p1LDW+tQxwVJoOqsV9GIA1itB0qhW
-	 Kyvn47CfThH7z2dcWf7xwvtus4SFDhCCSTysUdKcZo6Yc80v7I2Ee4F1NOtTkfJoWa
-	 pnlFxycmQ3lig==
-X-ME-Helo: [IPV6:2a01:cb10:785:b00:8347:f260:7456:7662]
-X-ME-Auth: bWFyaW9uLmphaWxsZXRAd2FuYWRvby5mcg==
-X-ME-Date: Fri, 23 May 2025 18:41:24 +0200
-X-ME-IP: 2a01:cb10:785:b00:8347:f260:7456:7662
-Message-ID: <29b547b3-8adc-4c14-b8e6-431a1f2e6849@wanadoo.fr>
-Date: Fri, 23 May 2025 18:41:20 +0200
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="WEJF+uts"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=Content-Type:MIME-Version:Message-ID:
+	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+	Content-Description:In-Reply-To:References;
+	bh=8Pk1b0UMHhjG5XBjXRII1ET1RF8evIDkrLvxPpnPWn8=; b=WEJF+utso6HD8RTg5Quj1n4C1F
+	MWPyY5Br/OT2mJuMGM9HBT+Ylkwlv3WO5x9EKRA/9ovQt2yiT3VUrKnoO0+628/X59B34n0er5JKD
+	qzZoTAIThlOMw8NtCkcKxqGsSiiiSkTen0vlJmFYgEldmpQUCe9wJZjeKwhlhWU7b3nHTAtObLxoI
+	kKG2mXFvQlleUg5KaMZ5hZ1iKBtKOkHJadNlhQJ9gUfii849mhikxmoUHBvE071EJ2bWf0TwuDN+j
+	bemd8nN4xCQD8b3kN2g2Vna3vY4AJAMTdWuPkSlgy2j3NGBbvKQEoge+AeKbTHkmOqVO5eSJrieDf
+	lP0YnaFw==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
+	id 1uIVUr-00000001M0L-49ka;
+	Fri, 23 May 2025 16:43:50 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 2C941300472; Fri, 23 May 2025 18:43:49 +0200 (CEST)
+Date: Fri, 23 May 2025 18:43:48 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
+	vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+	rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+	vschneid@redhat.com, rafael@kernel.org, viresh.kumar@linaro.org,
+	mathieu.desnoyers@efficios.com, paulmck@kernel.org,
+	hannes@cmpxchg.org, surenb@google.com
+Cc: linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, tj@kernel.org
+Subject: [PATCH] sched: Make clangd usable
+Message-ID: <20250523164348.GN39944@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/2] ASoC: codecs: add support for ES8375
-References: <20250523025502.23214-1-zhangyi@everest-semi.com>
- <20250523025502.23214-3-zhangyi@everest-semi.com>
-Content-Language: en-US, fr-FR
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To: zhangyi@everest-semi.com
-Cc: amadeuszx.slawinski@linux.intel.com, broonie@kernel.org,
- conor+dt@kernel.org, devicetree@vger.kernel.org, krzk+dt@kernel.org,
- krzk@kernel.org, lgirdwood@gmail.com, linux-kernel@vger.kernel.org,
- linux-sound@vger.kernel.org, perex@perex.cz, robh@kernel.org, tiwai@suse.com
-In-Reply-To: <20250523025502.23214-3-zhangyi@everest-semi.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Le 23/05/2025 à 04:55, Zhang Yi a écrit :
-> The driver is for codec es8375 of everest
 
-...
+Due to the weird Makefile setup of sched the various files do not
+compile as stand alone units. The new generation of editors are trying
+to do just this -- mostly to offer fancy things like completions but
+also better syntax highlighting and code navigation.
 
-> +#include <linux/gpio/consumer.h>
-> +#include <linux/clk.h>
-> +#include <linux/module.h>
-> +#include <linux/kernel.h>
-> +#include <linux/delay.h>
-> +#include <linux/i2c.h>
-> +#include <linux/regmap.h>
-> +#include <linux/regulator/consumer.h>
-> +#include <sound/core.h>
-> +#include <sound/pcm.h>
-> +#include <sound/pcm_params.h>
-> +#include <sound/tlv.h>
-> +#include <sound/soc.h>
-> +#include <linux/acpi.h>
+Specifically, I've been playing around with neovim and clangd.
 
-Sometimes, it is preferred to keep includes in alphabetic order.
+Setting up clangd on the kernel source is a giant pain in the arse
+(this really should be improved), but once you do manage, you run into
+dumb stuff like the above.
 
-> +#include "es8375.h"
-> +
-> +struct	es8375_priv {
-> +	struct regmap *regmap;
-> +	struct clk *mclk;
-> +	struct regulator_bulk_data core_supply[2];
-> +	unsigned int  mclk_freq;
-> +	int mastermode;
-> +	u8 mclk_src;
-> +	u8 vddd;
-> +	enum snd_soc_bias_level bias_level;
-> +};
-> +
-> +static const char * const es8375_core_supplies[] = {
-> +	"vddd",
-> +	"vdda",
-> +};
-> +
-> +static const DECLARE_TLV_DB_SCALE(es8375_adc_osr_gain_tlv, -3100, 100, 0);
-> +static const DECLARE_TLV_DB_SCALE(es8375_adc_volume_tlv, -9550, 50, 0);
-> +static const DECLARE_TLV_DB_SCALE(es8375_adc_automute_attn_tlv, 0, 100, 0);
-> +static const DECLARE_TLV_DB_SCALE(es8375_adc_dmic_volume_tlv, 0, 600, 0);
-> +static const DECLARE_TLV_DB_SCALE(es8375_dac_volume_tlv, -9550, 50, 0);
-> +static const DECLARE_TLV_DB_SCALE(es8375_dac_vppscale_tlv, -388, 12, 0);
-> +static const DECLARE_TLV_DB_SCALE(es8375_dac_automute_attn_tlv, 0, 400, 0);
-> +static const DECLARE_TLV_DB_SCALE(es8375_automute_ng_tlv, -9600, 600, 0);
-> +
-> +static const char *const es8375_ramprate_txt[] = {
+Fix up the scheduler files to at least pretend to work.
 
-Missing space after *?
-(or extra space above in es8375_core_supplies)
+(this excludes ext because those include games are worse than average)
 
-> +	"0.125dB/LRCK",
-> +	"0.125dB/2LRCK",
-> +	"0.125dB/4LRCK",
-> +	"0.125dB/8LRCK",
-> +	"0.125dB/16LRCK",
-> +	"0.125dB/32LRCK",
-> +	"0.125dB/64LRCK",
-> +	"0.125dB/128LRCK",
-> +	"disable softramp",
-> +};
-> +static SOC_ENUM_SINGLE_DECL(es8375_adc_ramprate, ES8375_ADC2,
-> +		ADC_RAMPRATE_SHIFT_0, es8375_ramprate_txt);
-> +static SOC_ENUM_SINGLE_DECL(es8375_dac_ramprate, ES8375_DAC2,
-> +		DAC_RAMPRATE_SHIFT_0, es8375_ramprate_txt);
-> +
-> +static const char *const es8375_automute_ws_txt[] = {
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+---
 
-Missing space after *?
-(or extra space above in es8375_core_supplies)
+Ingo, the alternative is going back a normal make setup, hmm?
 
-... same several times below ...
 
-> +	"256 samples",
-> +	"512 samples",
-> +	"1024 samples",
-> +	"2048 samples",
-> +	"4096 samples",
-> +	"8192 samples",
-> +	"16384 samples",
-> +	"32768 samples",
-> +};
+ kernel/sched/autogroup.c         |    3 +++
+ kernel/sched/autogroup.h         |    2 ++
+ kernel/sched/clock.c             |    3 +++
+ kernel/sched/completion.c        |    5 +++++
+ kernel/sched/core_sched.c        |    2 ++
+ kernel/sched/cpuacct.c           |    2 ++
+ kernel/sched/cpudeadline.c       |    1 +
+ kernel/sched/cpudeadline.h       |    2 ++
+ kernel/sched/cpufreq.c           |    1 +
+ kernel/sched/cpufreq_schedutil.c |    2 ++
+ kernel/sched/cpupri.c            |    1 +
+ kernel/sched/cpupri.h            |    3 +++
+ kernel/sched/cputime.c           |    3 +++
+ kernel/sched/deadline.c          |    4 ++++
+ kernel/sched/debug.c             |    3 +++
+ kernel/sched/idle.c              |    5 +++++
+ kernel/sched/isolation.c         |    2 ++
+ kernel/sched/loadavg.c           |    2 ++
+ kernel/sched/membarrier.c        |    2 ++
+ kernel/sched/pelt.c              |    1 +
+ kernel/sched/pelt.h              |    7 ++++++-
+ kernel/sched/psi.c               |    2 ++
+ kernel/sched/rt.c                |    3 +++
+ kernel/sched/sched-pelt.h        |    1 +
+ kernel/sched/sched.h             |    1 +
+ kernel/sched/smp.h               |    1 +
+ kernel/sched/stats.c             |    1 +
+ kernel/sched/stop_task.c         |    1 +
+ kernel/sched/swait.c             |    1 +
+ kernel/sched/topology.c          |    2 ++
+ kernel/sched/wait.c              |    1 +
+ kernel/sched/wait_bit.c          |    3 +++
+ 32 files changed, 72 insertions(+), 1 deletion(-)
 
-...
-
-> +static struct regmap_config es8375_regmap_config = {
-
-I think this could be const.
-
-> +	.reg_bits = 8,
-> +	.val_bits = 8,
-> +	.max_register = ES8375_REG_MAX,
-> +	.cache_type = REGCACHE_MAPLE,
-> +	.use_single_read = true,
-> +	.use_single_write = true,
-> +	.writeable_reg = es8375_writeable_register,
-> +};
-
-...
-
-> +static int es8375_read_device_properities(struct device *dev, struct es8375_priv *es8375)
-> +{
-> +	int ret, i;
-> +
-> +	ret = device_property_read_u8(dev, "everest,mclk-src", &es8375->mclk_src);
-> +	if (ret != 0)
-> +		es8375->mclk_src = ES8375_MCLK_SOURCE;
-> +	dev_dbg(dev, "mclk-src %x", es8375->mclk_src);
-> +
-> +	for (i = 0; i < ARRAY_SIZE(es8375_core_supplies); i++)
-> +		es8375->core_supply[i].supply = es8375_core_supplies[i];
-> +	ret = devm_regulator_bulk_get(dev, ARRAY_SIZE(es8375_core_supplies), es8375->core_supply);
-> +	if (ret) {
-> +		dev_err(dev, "Failed to request core supplies %d\n", ret);
-
-dev_err_probe() in the whole function maybe, as already used just below.
-
-> +		return ret;
-> +	}
-> +
-> +	es8375->mclk = devm_clk_get(dev, "mclk");
-
-devm_clk_get_enabled() maybe?
-
-> +	if (IS_ERR(es8375->mclk))
-> +		return dev_err_probe(dev, PTR_ERR(es8375->mclk), "unable to get mclk\n");
-> +
-> +	if (!es8375->mclk)
-> +		dev_warn(dev, "assuming static mclk\n");
-> +
-> +	ret = clk_prepare_enable(es8375->mclk);
-
-If kept as-is, clk_disable_unprepare() should be called in the probe if 
-devm_snd_soc_register_component() fails, and a removed function looks 
-needed.
-
-> +	if (ret) {
-> +		dev_err(dev, "unable to enable mclk\n");
-> +		return ret;
-> +	}
-> +	ret = regulator_bulk_enable(ARRAY_SIZE(es8375_core_supplies), es8375->core_supply);
-> +	if (ret) {
-> +		dev_err(dev, "Failed to enable core supplies: %d\n", ret);
-> +		clk_disable_unprepare(es8375->mclk);
-> +		return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int es8375_i2c_probe(struct i2c_client *i2c_client)
-> +{
-> +	struct es8375_priv *es8375;
-> +	struct device *dev = &i2c_client->dev;
-> +	int ret;
-> +	unsigned int val;
-> +
-> +	es8375 = devm_kzalloc(&i2c_client->dev, sizeof(*es8375), GFP_KERNEL);
-> +	if (!es8375)
-> +		return -ENOMEM;
-> +
-> +	es8375->regmap = devm_regmap_init_i2c(i2c_client,
-> +			&es8375_regmap_config);
-> +	if (IS_ERR(es8375->regmap))
-> +		return dev_err_probe(&i2c_client->dev, PTR_ERR(es8375->regmap),
-> +			"regmap_init() failed\n");
-> +
-> +	i2c_set_clientdata(i2c_client, es8375);
-> +
-> +	ret = regmap_read(es8375->regmap, ES8375_CHIP_ID1, &val);
-> +	if (ret < 0) {
-> +		dev_err(&i2c_client->dev, "failed to read i2c at addr %X\n",
-> +				i2c_client->addr);
-> +		return ret;
-> +	}
-> +
-> +	if (val != 0x83) {
-> +		dev_err(&i2c_client->dev, "device at addr %X is not an es8375\n",
-> +				i2c_client->addr);
-> +		return -ENODEV;
-> +	}
-> +
-> +	ret = regmap_read(es8375->regmap, ES8375_CHIP_ID0, &val);
-> +	if (val != 0x75) {
-> +		dev_err(&i2c_client->dev, "device at addr %X is not an es8375\n",
-> +				i2c_client->addr);
-> +		return -ENODEV;
-> +	}
-> +
-> +	ret = es8375_read_device_properities(dev, es8375);
-
-Typo? Change the fct name to es8375_read_device_properties()?
-
-> +	if (ret != 0) {
-> +		dev_err(&i2c_client->dev, "get an error from dts info %X\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	return devm_snd_soc_register_component(&i2c_client->dev, &es8375_codec_driver,
-> +			&es8375_dai, 1);
-> +}
-
-...
-
-> +static const struct i2c_device_id es8375_id[] = {
-> +	{"es8375"},
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(i2c, es8375_id);
-> +
-> +#ifdef CONFIG_ACPI
-> +static const struct acpi_device_id es8375_acpi_match[] = {
-> +	{"ESSX8375", 0},
-> +	{},
-
-Unneeded , after a terminator
-
-> +};
-> +
-> +MODULE_DEVICE_TABLE(acpi, es8375_acpi_match);
-> +#endif
-
-...
-
-CJ
-
+--- a/kernel/sched/autogroup.c
++++ b/kernel/sched/autogroup.c
+@@ -4,6 +4,9 @@
+  * Auto-group scheduling implementation:
+  */
+ 
++#include "autogroup.h"
++#include "sched.h"
++
+ unsigned int __read_mostly sysctl_sched_autogroup_enabled = 1;
+ static struct autogroup autogroup_default;
+ static atomic_t autogroup_seq_nr;
+--- a/kernel/sched/autogroup.h
++++ b/kernel/sched/autogroup.h
+@@ -2,6 +2,8 @@
+ #ifndef _KERNEL_SCHED_AUTOGROUP_H
+ #define _KERNEL_SCHED_AUTOGROUP_H
+ 
++#include "sched.h"
++
+ #ifdef CONFIG_SCHED_AUTOGROUP
+ 
+ struct autogroup {
+--- a/kernel/sched/clock.c
++++ b/kernel/sched/clock.c
+@@ -54,6 +54,9 @@
+  *
+  */
+ 
++#include <linux/sched/clock.h>
++#include "sched.h"
++
+ /*
+  * Scheduler clock - returns current time in nanosec units.
+  * This is default implementation.
+--- a/kernel/sched/completion.c
++++ b/kernel/sched/completion.c
+@@ -13,6 +13,11 @@
+  * Waiting for completion is a typically sync point, but not an exclusion point.
+  */
+ 
++#include <linux/linkage.h>
++#include <linux/sched/debug.h>
++#include <linux/completion.h>
++#include "sched.h"
++
+ static void complete_with_flags(struct completion *x, int wake_flags)
+ {
+ 	unsigned long flags;
+--- a/kernel/sched/core_sched.c
++++ b/kernel/sched/core_sched.c
+@@ -4,6 +4,8 @@
+  * A simple wrapper around refcount. An allocated sched_core_cookie's
+  * address is used to compute the cookie of the task.
+  */
++#include "sched.h"
++
+ struct sched_core_cookie {
+ 	refcount_t refcnt;
+ };
+--- a/kernel/sched/cpuacct.c
++++ b/kernel/sched/cpuacct.c
+@@ -6,6 +6,8 @@
+  * Based on the work by Paul Menage (menage@google.com) and Balbir Singh
+  * (balbir@in.ibm.com).
+  */
++#include <linux/sched/cputime.h>
++#include "sched.h"
+ 
+ /* Time spent by the tasks of the CPU accounting group executing in ... */
+ enum cpuacct_stat_index {
+--- a/kernel/sched/cpudeadline.c
++++ b/kernel/sched/cpudeadline.c
+@@ -6,6 +6,7 @@
+  *
+  *  Author: Juri Lelli <j.lelli@sssup.it>
+  */
++#include "sched.h"
+ 
+ static inline int parent(int i)
+ {
+--- a/kernel/sched/cpudeadline.h
++++ b/kernel/sched/cpudeadline.h
+@@ -1,4 +1,6 @@
+ /* SPDX-License-Identifier: GPL-2.0 */
++#include <linux/types.h>
++#include <linux/spinlock.h>
+ 
+ #define IDX_INVALID		-1
+ 
+--- a/kernel/sched/cpufreq.c
++++ b/kernel/sched/cpufreq.c
+@@ -5,6 +5,7 @@
+  * Copyright (C) 2016, Intel Corporation
+  * Author: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+  */
++#include "sched.h"
+ 
+ DEFINE_PER_CPU(struct update_util_data __rcu *, cpufreq_update_util_data);
+ 
+--- a/kernel/sched/cpufreq_schedutil.c
++++ b/kernel/sched/cpufreq_schedutil.c
+@@ -5,6 +5,8 @@
+  * Copyright (C) 2016, Intel Corporation
+  * Author: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+  */
++#include <uapi/linux/sched/types.h>
++#include "sched.h"
+ 
+ #define IOWAIT_BOOST_MIN	(SCHED_CAPACITY_SCALE / 8)
+ 
+--- a/kernel/sched/cpupri.c
++++ b/kernel/sched/cpupri.c
+@@ -22,6 +22,7 @@
+  *  worst case complexity of O(min(101, nr_domcpus)), though the scenario that
+  *  yields the worst case search is fairly contrived.
+  */
++#include "sched.h"
+ 
+ /*
+  * p->rt_priority   p->prio   newpri   cpupri
+--- a/kernel/sched/cpupri.h
++++ b/kernel/sched/cpupri.h
+@@ -1,4 +1,7 @@
+ /* SPDX-License-Identifier: GPL-2.0 */
++#include <linux/atomic.h>
++#include <linux/cpumask.h>
++#include <linux/sched/rt.h>
+ 
+ #define CPUPRI_NR_PRIORITIES	(MAX_RT_PRIO+1)
+ 
+--- a/kernel/sched/cputime.c
++++ b/kernel/sched/cputime.c
+@@ -2,6 +2,9 @@
+ /*
+  * Simple CPU accounting cgroup controller
+  */
++#include <linux/sched/cputime.h>
++#include <linux/tsacct_kern.h>
++#include "sched.h"
+ 
+ #ifdef CONFIG_VIRT_CPU_ACCOUNTING_NATIVE
+  #include <asm/cputime.h>
+--- a/kernel/sched/deadline.c
++++ b/kernel/sched/deadline.c
+@@ -17,6 +17,10 @@
+  */
+ 
+ #include <linux/cpuset.h>
++#include <linux/sched/clock.h>
++#include <uapi/linux/sched/types.h>
++#include "sched.h"
++#include "pelt.h"
+ 
+ /*
+  * Default limits for DL period; on the top end we guard against small util
+--- a/kernel/sched/debug.c
++++ b/kernel/sched/debug.c
+@@ -6,6 +6,9 @@
+  *
+  * Copyright(C) 2007, Red Hat, Inc., Ingo Molnar
+  */
++#include <linux/debugfs.h>
++#include <linux/nmi.h>
++#include "sched.h"
+ 
+ /*
+  * This allows printing both to /sys/kernel/debug/sched/debug and
+--- a/kernel/sched/idle.c
++++ b/kernel/sched/idle.c
+@@ -6,6 +6,11 @@
+  * (NOTE: these are not related to SCHED_IDLE batch scheduled
+  *        tasks which are handled in sched/fair.c )
+  */
++#include <linux/cpuidle.h>
++#include <linux/suspend.h>
++#include <linux/livepatch.h>
++#include "sched.h"
++#include "smp.h"
+ 
+ /* Linker adds these: start and end of __cpuidle functions */
+ extern char __cpuidle_text_start[], __cpuidle_text_end[];
+--- a/kernel/sched/isolation.c
++++ b/kernel/sched/isolation.c
+@@ -7,6 +7,8 @@
+  * Copyright (C) 2017-2018 SUSE, Frederic Weisbecker
+  *
+  */
++#include <linux/sched/isolation.h>
++#include "sched.h"
+ 
+ enum hk_flags {
+ 	HK_FLAG_DOMAIN		= BIT(HK_TYPE_DOMAIN),
+--- a/kernel/sched/loadavg.c
++++ b/kernel/sched/loadavg.c
+@@ -6,6 +6,8 @@
+  * figure. Its a silly number but people think its important. We go through
+  * great pains to make it work on big machines and tickless kernels.
+  */
++#include <linux/sched/nohz.h>
++#include "sched.h"
+ 
+ /*
+  * Global load-average calculations
+--- a/kernel/sched/membarrier.c
++++ b/kernel/sched/membarrier.c
+@@ -4,6 +4,8 @@
+  *
+  * membarrier system call
+  */
++#include <uapi/linux/membarrier.h>
++#include "sched.h"
+ 
+ /*
+  * For documentation purposes, here are some membarrier ordering
+--- a/kernel/sched/pelt.c
++++ b/kernel/sched/pelt.c
+@@ -23,6 +23,7 @@
+  *  Move PELT related code from fair.c into this pelt.c file
+  *  Author: Vincent Guittot <vincent.guittot@linaro.org>
+  */
++#include "pelt.h"
+ 
+ /*
+  * Approximate:
+--- a/kernel/sched/pelt.h
++++ b/kernel/sched/pelt.h
+@@ -1,3 +1,8 @@
++// SPDX-License-Identifier: GPL-2.0
++#ifndef _KERNEL_SCHED_PELT_H
++#define _KERNEL_SCHED_PELT_H
++#include "sched.h"
++
+ #ifdef CONFIG_SMP
+ #include "sched-pelt.h"
+ 
+@@ -233,4 +238,4 @@ update_idle_rq_clock_pelt(struct rq *rq)
+ static inline void update_idle_cfs_rq_clock_pelt(struct cfs_rq *cfs_rq) { }
+ #endif
+ 
+-
++#endif /* _KERNEL_SCHED_PELT_H */
+--- a/kernel/sched/psi.c
++++ b/kernel/sched/psi.c
+@@ -136,6 +136,8 @@
+  * cost-wise, yet way more sensitive and accurate than periodic
+  * sampling of the aggregate task states would be.
+  */
++#include <linux/psi.h>
++#include "sched.h"
+ 
+ static int psi_bug __read_mostly;
+ 
+--- a/kernel/sched/rt.c
++++ b/kernel/sched/rt.c
+@@ -4,6 +4,9 @@
+  * policies)
+  */
+ 
++#include "sched.h"
++#include "pelt.h"
++
+ int sched_rr_timeslice = RR_TIMESLICE;
+ /* More than 4 hours if BW_SHIFT equals 20. */
+ static const u64 max_rt_runtime = MAX_BW;
+--- a/kernel/sched/sched-pelt.h
++++ b/kernel/sched/sched-pelt.h
+@@ -1,5 +1,6 @@
+ /* SPDX-License-Identifier: GPL-2.0 */
+ /* Generated by Documentation/scheduler/sched-pelt; do not modify. */
++#include <linux/types.h>
+ 
+ static const u32 runnable_avg_yN_inv[] __maybe_unused = {
+ 	0xffffffff, 0xfa83b2da, 0xf5257d14, 0xefe4b99a, 0xeac0c6e6, 0xe5b906e6,
+--- a/kernel/sched/sched.h
++++ b/kernel/sched/sched.h
+@@ -69,6 +69,7 @@
+ #include <linux/wait_bit.h>
+ #include <linux/workqueue_api.h>
+ #include <linux/delayacct.h>
++#include <linux/mmu_context.h>
+ 
+ #include <trace/events/power.h>
+ #include <trace/events/sched.h>
+--- a/kernel/sched/smp.h
++++ b/kernel/sched/smp.h
+@@ -3,6 +3,7 @@
+  * Scheduler internal SMP callback types and methods between the scheduler
+  * and other internal parts of the core kernel:
+  */
++#include <linux/types.h>
+ 
+ extern void sched_ttwu_pending(void *arg);
+ 
+--- a/kernel/sched/stats.c
++++ b/kernel/sched/stats.c
+@@ -2,6 +2,7 @@
+ /*
+  * /proc/schedstat implementation
+  */
++#include "sched.h"
+ 
+ void __update_stats_wait_start(struct rq *rq, struct task_struct *p,
+ 			       struct sched_statistics *stats)
+--- a/kernel/sched/stop_task.c
++++ b/kernel/sched/stop_task.c
+@@ -7,6 +7,7 @@
+  *
+  * See kernel/stop_machine.c
+  */
++#include "sched.h"
+ 
+ #ifdef CONFIG_SMP
+ static int
+--- a/kernel/sched/swait.c
++++ b/kernel/sched/swait.c
+@@ -2,6 +2,7 @@
+ /*
+  * <linux/swait.h> (simple wait queues ) implementation:
+  */
++#include "sched.h"
+ 
+ void __init_swait_queue_head(struct swait_queue_head *q, const char *name,
+ 			     struct lock_class_key *key)
+--- a/kernel/sched/topology.c
++++ b/kernel/sched/topology.c
+@@ -3,7 +3,9 @@
+  * Scheduler topology setup/handling methods
+  */
+ 
++#include <linux/sched/isolation.h>
+ #include <linux/bsearch.h>
++#include "sched.h"
+ 
+ DEFINE_MUTEX(sched_domains_mutex);
+ void sched_domains_mutex_lock(void)
+--- a/kernel/sched/wait.c
++++ b/kernel/sched/wait.c
+@@ -4,6 +4,7 @@
+  *
+  * (C) 2004 Nadia Yvette Chambers, Oracle
+  */
++#include "sched.h"
+ 
+ void __init_waitqueue_head(struct wait_queue_head *wq_head, const char *name, struct lock_class_key *key)
+ {
+--- a/kernel/sched/wait_bit.c
++++ b/kernel/sched/wait_bit.c
+@@ -1,5 +1,8 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+ 
++#include <linux/sched/debug.h>
++#include "sched.h"
++
+ /*
+  * The implementation of the wait_bit*() and related waiting APIs:
+  */
