@@ -1,116 +1,212 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 584EC286419
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 08:16:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C311C1A00FA;
+	Fri, 23 May 2025 08:16:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747988168; cv=none; b=U8Hjk8WUlryr2CXw69i2eIHvRpCAYLN8F4vMtaPxin0kXW/fDo9xprrmRoEp1qP6AsMfhtjIIrpPgnRqV2KCtLTfwTUW0Nu4o8/yKiy6zrmPMEg7x2COjLGmaksCHvQb13O8eOLSowx2OafP+cWbv4YNgRZ32TEBImJk9sIY1NI=
+	t=1747988204; cv=none; b=huF0QPyUuGBDv8Yyn12XpnkKUpN36NtS6i8+2x+snnNNUgDKjZvCUuqwqkbh9OZtccJv0g9PgXnDsSIbYsC7/7yqEyc2WvA6W7qCnreL86Fp+1RYnAW8sVdD+7tI+yFmi8OkfH8XYZh+UqQAx53ZGdQPYmJ3a8C0Ug7/06IH2f8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747988168; c=relaxed/simple;
-	bh=WnGkweXbMTvqm1k+cA/PuSpChITwx4vZKQFQpjZpfaw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HcnZjo8r5y8NAuMUUkZs+Q6FMhnepDEDb4mPprhD3WZ/zK9oNhIc1hH6YLubNC30EPmWAN3fULlfswAwF3G4oC6wVUvYXweT0RfhJlZCCKtP1hZERNKb/Q1hbUJcByjqMq9w0+Cf4GmRlvsT5SN0pjvSYe4UJN3rXj/pDWbDoxg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <mkl@pengutronix.de>)
-	id 1uINZE-00048L-H1; Fri, 23 May 2025 10:15:48 +0200
-Received: from moin.white.stw.pengutronix.de ([2a0a:edc0:0:b01:1d::7b] helo=bjornoya.blackshift.org)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <mkl@pengutronix.de>)
-	id 1uINZE-000s0g-0C;
-	Fri, 23 May 2025 10:15:48 +0200
-Received: from pengutronix.de (unknown [IPv6:2a03:2260:2009:2000::])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	(Authenticated sender: mkl-all@blackshift.org)
-	by smtp.blackshift.org (Postfix) with ESMTPSA id 1562B418169;
-	Fri, 23 May 2025 08:15:47 +0000 (UTC)
-Date: Fri, 23 May 2025 10:15:46 +0200
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-To: Elaine Zhang <zhangqing@rock-chips.com>
-Cc: kernel@pengutronix.de, mailhol.vincent@wanadoo.fr, robh@kernel.org, 
-	krzk+dt@kernel.org, conor+dt@kernel.org, heiko@sntech.de, cl@rock-chips.com, 
-	kever.yang@rock-chips.com, linux-can@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v5 3/4] net: can: rockchip: add can for RK3576 Soc
-Message-ID: <20250523-elegant-elite-iguana-8b4116-mkl@pengutronix.de>
-References: <20250523075422.4010083-1-zhangqing@rock-chips.com>
- <20250523075422.4010083-4-zhangqing@rock-chips.com>
+	s=arc-20240116; t=1747988204; c=relaxed/simple;
+	bh=UynQ8HkI3+hzcNltXT/7HMEPf7z8Wksm8hUI7XjmWOw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=VSFRqfUxhVU5nLpQjPr+cgSiM7f/lZqt9Ij6DIdVs00jsrDfIB16RLpk+fKPp0pye4tEtjjB/rV2hDhpLUd7ml8DG6GSlyLZAUjj/wGhV6wLcK83CvAy/6ccBocYdC87ca9bYf+rv5H4rvV9t4aGz3tn5YcDwZtnDfYxJnnumEQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=g7fLdskm; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="g7fLdskm"
+Received: from [100.79.97.162] (unknown [4.194.122.162])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 2ADBC211CFB8;
+	Fri, 23 May 2025 01:16:38 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 2ADBC211CFB8
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1747988202;
+	bh=vUH5yPjFNCVBgdM6AnNr9S8ZiKOmSIAeBRZzrztsjPA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=g7fLdskmaeTaJwmArUm4SaNQPUa7Wq7gNNfSjotcP+C4iMrwTZE6Kl3AZzpfmT9WA
+	 ogd86i9lCNKefIFntmgjvaS+XnYMHCvTsPvA8zrP4WzcAR3QZti58R4iTS60hW2/Bh
+	 C6pbK2AvS+Tfgr7OO0S9CBEuaIC9Qi17cIRdCC1w=
+Message-ID: <0aa553fc-88ca-4ca6-8797-2d98e9286272@linux.microsoft.com>
+Date: Fri, 23 May 2025 13:46:37 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="c5dnlywm7hswlywp"
-Content-Disposition: inline
-In-Reply-To: <20250523075422.4010083-4-zhangqing@rock-chips.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: mkl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 2/2] Drivers: hv: Introduce mshv_vtl driver
+To: Nuno Das Neves <nunodasneves@linux.microsoft.com>,
+ Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
+Cc: "K . Y . Srinivasan" <kys@microsoft.com>,
+ Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
+ Dexuan Cui <decui@microsoft.com>, Roman Kisel <romank@linux.microsoft.com>,
+ Anirudh Rayabharam <anrayabh@linux.microsoft.com>,
+ Saurabh Sengar <ssengar@linux.microsoft.com>,
+ ALOK TIWARI <alok.a.tiwari@oracle.com>, linux-kernel@vger.kernel.org,
+ linux-hyperv@vger.kernel.org
+References: <20250519045642.50609-1-namjain@linux.microsoft.com>
+ <20250519045642.50609-3-namjain@linux.microsoft.com>
+ <aCzQMuwQZ1Lkk7eH@skinsburskii.>
+ <80853cdb-fd34-4a5e-99a0-1a71b8ce8226@linux.microsoft.com>
+ <3ab2597b-3a64-497c-888e-dd5d0c0e5076@linux.microsoft.com>
+ <9986fbe1-d9fa-4e52-ad8e-da424e2f83f3@linux.microsoft.com>
+Content-Language: en-US
+From: Naman Jain <namjain@linux.microsoft.com>
+In-Reply-To: <9986fbe1-d9fa-4e52-ad8e-da424e2f83f3@linux.microsoft.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
 
---c5dnlywm7hswlywp
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v5 3/4] net: can: rockchip: add can for RK3576 Soc
-MIME-Version: 1.0
 
-On 23.05.2025 15:54:21, Elaine Zhang wrote:
-> Is new controller, new register layout and Bit position definition:
-> Support CAN and CANFD protocol, ISO 11898-1
-> Support transmit or receive error count
-> Support acceptance filter, more functional
-> Support interrupt and all interrupt can be masked
-> Support error code check
-> Support self test\silent\loop-back mode
-> Support auto retransmission mode
-> Support auto bus on after bus-off state
-> Support 2 transmit buffers
-> Support Internal Storage Mode
-> Support DMA
->=20
-> Signed-off-by: Elaine Zhang <zhangqing@rock-chips.com>
+On 5/23/2025 12:45 AM, Nuno Das Neves wrote:
+> On 5/21/2025 2:32 AM, Naman Jain wrote:
+>>
+>>
+>> On 5/21/2025 11:33 AM, Naman Jain wrote:
+>>>
+>>>
+>>> On 5/21/2025 12:25 AM, Stanislav Kinsburskii wrote:
+>>>> On Mon, May 19, 2025 at 10:26:42AM +0530, Naman Jain wrote:
+>>>>> Provide an interface for Virtual Machine Monitor like OpenVMM and its
+>>>>> use as OpenHCL paravisor to control VTL0 (Virtual trust Level).
+>>>>> Expose devices and support IOCTLs for features like VTL creation,
+>>>>> VTL0 memory management, context switch, making hypercalls,
+>>>>> mapping VTL0 address space to VTL2 userspace, getting new VMBus
+>>>>> messages and channel events in VTL2 etc.
+>>>>>
+>>>>> Co-developed-by: Roman Kisel <romank@linux.microsoft.com>
+>>>>> Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
+>>>>> Co-developed-by: Saurabh Sengar <ssengar@linux.microsoft.com>
+>>>>> Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
+>>>>> Reviewed-by: Roman Kisel <romank@linux.microsoft.com>
+>>>>> Reviewed-by: Alok Tiwari <alok.a.tiwari@oracle.com>
+>>>>> Message-ID: <20250512140432.2387503-3-namjain@linux.microsoft.com>
+>>>>> Signed-off-by: Naman Jain <namjain@linux.microsoft.com>
+>>>>> ---
+>>>>>    drivers/hv/Kconfig          |   20 +
+>>>>>    drivers/hv/Makefile         |    7 +-
+>>>>>    drivers/hv/mshv_vtl.h       |   52 +
+>>>>>    drivers/hv/mshv_vtl_main.c  | 1783 +++++++++++++++++++++++++++++++++++
+>>>>>    include/hyperv/hvgdk_mini.h |   81 ++
+>>>>>    include/hyperv/hvhdk.h      |    1 +
+>>>>>    include/uapi/linux/mshv.h   |   82 ++
+>>>>>    7 files changed, 2025 insertions(+), 1 deletion(-)
+>>>>>    create mode 100644 drivers/hv/mshv_vtl.h
+>>>>>    create mode 100644 drivers/hv/mshv_vtl_main.c
+>>>>>
+>>>>> diff --git a/drivers/hv/Kconfig b/drivers/hv/Kconfig
+>>>>> index eefa0b559b73..21cee5564d70 100644
+>>>>> --- a/drivers/hv/Kconfig
+>>>>> +++ b/drivers/hv/Kconfig
+>>>>> @@ -72,4 +72,24 @@ config MSHV_ROOT
+>>>>>          If unsure, say N.
+>>>>> +config MSHV_VTL
+>>>>> +    tristate "Microsoft Hyper-V VTL driver"
+>>>>> +    depends on HYPERV && X86_64
+>>>>> +    depends on TRANSPARENT_HUGEPAGE
+>>>>
+>>>> Why does it depend on TRANSPARENT_HUGEPAGE?
+>>>>
+>>>
+>>> Thanks for reviewing. This config is required for below functions which
+>>> are used for mshv_vtl_low device.
+>>>
+>>> vm_fault_t mshv_vtl_low_huge_fault ->
+>>> * vmf_insert_pfn_pmd
+>>> * vmf_insert_pfn_pud
+>>>
+>>>
+>>>> <snip>
+>>>>
+>>>>> diff --git a/include/hyperv/hvgdk_mini.h b/include/hyperv/hvgdk_mini.h
+>>>>> index 1be7f6a02304..cc11000e39f4 100644
+>>>>> --- a/include/hyperv/hvgdk_mini.h
+>>>>> +++ b/include/hyperv/hvgdk_mini.h
+>>>>> @@ -882,6 +882,23 @@ struct hv_get_vp_from_apic_id_in {
+>>>>>        u32 apic_ids[];
+>>>>>    } __packed;
+>>>>> +union hv_register_vsm_partition_config {
+>>>>> +    __u64 as_u64;
+>>>>
+>>>> Please, follow the file pattern: as_u64 -> as_uint64
+>>>>
+>>>>> +    struct {
+>>>>> +        __u64 enable_vtl_protection : 1;
+>>>>
+>>>> Ditto: __u64 -> u64
+>>>>
+>>>>> +        __u64 default_vtl_protection_mask : 4;
+>>>>> +        __u64 zero_memory_on_reset : 1;
+>>>>> +        __u64 deny_lower_vtl_startup : 1;
+>>>>> +        __u64 intercept_acceptance : 1;
+>>>>> +        __u64 intercept_enable_vtl_protection : 1;
+>>>>> +        __u64 intercept_vp_startup : 1;
+>>>>> +        __u64 intercept_cpuid_unimplemented : 1;
+>>>>> +        __u64 intercept_unrecoverable_exception : 1;
+>>>>> +        __u64 intercept_page : 1;
+>>>>> +        __u64 mbz : 51;
+>>>>> +    };
+>>>>> +};
+>>>>> +
+>>>>>    /*
+>>>>> diff --git a/include/hyperv/hvhdk.h b/include/hyperv/hvhdk.h
+>>>>> index b4067ada02cf..9b890126e8e8 100644
+>>>>> --- a/include/hyperv/hvhdk.h
+>>>>> +++ b/include/hyperv/hvhdk.h
+>>>>> @@ -479,6 +479,7 @@ struct hv_connection_info {
+>>>>>    #define HV_EVENT_FLAGS_COUNT        (256 * 8)
+>>>>>    #define HV_EVENT_FLAGS_BYTE_COUNT    (256)
+>>>>>    #define HV_EVENT_FLAGS32_COUNT        (256 / sizeof(u32))
+>>>>> +#define HV_EVENT_FLAGS_LONG_COUNT    (HV_EVENT_FLAGS_BYTE_COUNT / sizeof(__u64))
+>>>>
+>>>> Ditto
+>>>>
+>>>>>    /* linux side we create long version of flags to use long bit ops on flags */
+>>>>>    #define HV_EVENT_FLAGS_UL_COUNT        (256 / sizeof(ulong))
+>>>>> diff --git a/include/uapi/linux/mshv.h b/include/uapi/linux/mshv.h
+>>>>> index 876bfe4e4227..a8c39b08b39a 100644
+>>>>> --- a/include/uapi/linux/mshv.h
+>>>>> +++ b/include/uapi/linux/mshv.h
+>>>>> @@ -288,4 +288,86 @@ struct mshv_get_set_vp_state {
+>>>>>     * #define MSHV_ROOT_HVCALL            _IOWR(MSHV_IOCTL, 0x07, struct mshv_root_hvcall)
+>>>>>     */
+>>>>> +/* Structure definitions, macros and IOCTLs for mshv_vtl */
+>>>>> +
+>>>>> +#define MSHV_CAP_CORE_API_STABLE        0x0
+>>>>> +#define MSHV_CAP_REGISTER_PAGE          0x1
+>>>>> +#define MSHV_CAP_VTL_RETURN_ACTION      0x2
+>>>>> +#define MSHV_CAP_DR6_SHARED             0x3
+>>>>> +#define MSHV_MAX_RUN_MSG_SIZE                256
+>>>>> +
+>>>>> +#define MSHV_VP_MAX_REGISTERS   128
+>>>>> +
+>>>>> +struct mshv_vp_registers {
+>>>>> +    __u32 count;    /* at most MSHV_VP_MAX_REGISTERS */
+>>>>
+>>>> Same here: __u{32,64} -> u{32,64}.
+>>>>
+>>>> Please, address everywhere.
+>>>>
+>>>
+>>> I'll take care of all of these in my next patch.
+>>>
+>>
+>>
+>> One concern about this change in include/uapi/linux/mshv.h.
+>> I see the convention of using '__' family of data types in this file.
+>> Whatever we do here, will be applicable to existing code as well.
+>> Do you suggest we should change it to u{32,64} variants or keep
+>> it in current form?
+>>
+> 
+> uapi code uses the '__' versions of these types, so they should stay
+> as they are.
+> 
+> Thanks
+> Nuno
 
-Compiling throws the following error:
 
-| drivers/net/can/rockchip/rockchip_canfd-tx.c:173:18: error: variable 'skb=
-' set but not used [-Werror,-Wunused-but-set-variable]
-|   173 |         struct sk_buff *skb;
-|       |                         ^
+Thanks Nuno. Acked.
 
-regards,
-Marc
-
---=20
-Pengutronix e.K.                 | Marc Kleine-Budde          |
-Embedded Linux                   | https://www.pengutronix.de |
-Vertretung N=C3=BCrnberg              | Phone: +49-5121-206917-129 |
-Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-9   |
-
---c5dnlywm7hswlywp
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEn/sM2K9nqF/8FWzzDHRl3/mQkZwFAmgwLq8ACgkQDHRl3/mQ
-kZxFJgf/RJLII4jmWOIO0Kb32Hp9dCsN8hBYODQ+RosNpTkM/rBDuyJtV6a8RjoA
-QkGvGiZgji4sv3G5o/kWmggUz4OIY7hbqzKWy4wy3rRVLeotubC/O4Fw7q5tYBCv
-uX7C4eiAJKBiJvnnAT7qiQ4jc4foCQqZgh0b73GKu2oUmYoN7kTfl6yF/yICbbSq
-sMMteatdKMyTwn5zbgSp3+QnxqWD8rnEU8eDyPOrZBhQ1PVS9Ck5prYF7e5erxEw
-OpfsaJRJXfjf0h1ZTZiNbOlKvtqnUWFCDwUV/ScZ/wP94vdiRSrJfWrsKn07KjQa
-rljIHYoxSu7aVhIUgk/71QvejRHWOQ==
-=egoG
------END PGP SIGNATURE-----
-
---c5dnlywm7hswlywp--
+Regards,
+Naman
