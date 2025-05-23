@@ -1,243 +1,159 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD8EB298997;
-	Fri, 23 May 2025 17:48:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB44E22338;
+	Fri, 23 May 2025 17:48:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748022487; cv=none; b=F+UFSmD+uBEl4O1rvQhMeeGezizYRS0IjETyMixO504e3oh//aNkyC5N85p4ioYQBm6+LhL1WXXMYYuaHG1P6V+drlC6QrTlPXBOxEAbvs1rwJws0NEErW+kn5SEVO7ajDkGLvTFcF1j7xmNvfYolUcapwJfrl/1V2aKjKh+QtE=
+	t=1748022506; cv=none; b=ZIyf6oqN1bkPe7EonYTm7s5PbJgpL+2KOu1pl+H/BAjEGsXpY4mr++6HlGhOR1py87coxHbvCzYllf8FhDu4aWVjkcPY9qxY4HxeqAjcMePLerDxKOF7D8pVJWTxsOZuLXyb/Xc8YgvxAz5N5NFA1fE+iil2bL28PZM7eJTk6zM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748022487; c=relaxed/simple;
-	bh=Zla4eSAtyF5aQ3YrcAlzvxeTrpOdPZl2dsWyeEwuh5Q=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=QNIF0qN/gSaoUWRh9WKHLSnOR7D3qTT5ZWuIck+X09obHX/kTHdhkGDCJXqBkDBjn7ZcmjqRYk28481BBapjYuGj/CZM1xkuI16fdJ3zqlRuRV7hRZ83Fd6gs3GPEBDe+kBtFdQePHNrL92NX4wi3ZL4/FDektDFTyLqJtD4qcg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=euXxLVh4; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1748022506; c=relaxed/simple;
+	bh=AqUynDC3Sw8C6ZtTMriTAeGFMTNBji4jXiQmc/rbw2o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=b1yIC3caKW9BqaZjR2EMzdmTrPJIxNGgnPm5RSpE/YC29dyeng/CYNGgkrIdiwOVvzwGe318PmZIrGLlfCFUlTX7XEEyudse22VL0hkET/W5S8QFVTsgfVRYa0YmVd8uod6DFSRfy7aahh13zsDAQkKPwC5L25Ut9zTOgjs1Bgc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Uj1T2rMY; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="euXxLVh4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1748022482;
-	bh=Zla4eSAtyF5aQ3YrcAlzvxeTrpOdPZl2dsWyeEwuh5Q=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=euXxLVh49w9rNZx0rVL5iRUQk39c5woIrQClkF10LRgPYvtnB7EBOhIICD3fGsNUT
-	 QWmMM9uLwiKoRWdtXuambFSNqTgG93ZUv0YY5Jr2D7pwVH5dkXtqzF5N+anvNvcu5i
-	 ei6fbDHadbF5WR/n+4o+g/uqZDutfL06C4+B/ZmMv27ZMwNDzSt90pI/VvvJkInzjX
-	 YCNq4Ha8zMsTURLbFatzHvjQyneEH1uKjjPvPfUWIa120H5Ndn5d0NYbfHJtr+YAeQ
-	 xO1Nf2OI8YjOjjbNnovFO68zw06GeyJhC8sm0wO6Ckk0NfD//CLESSxhcYM3pHQED2
-	 wHMpuu0enAOdQ==
-Received: from [IPv6:2606:6d00:17:b2fc::5ac] (unknown [IPv6:2606:6d00:17:b2fc::5ac])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: nicolas)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 73CB317E0202;
-	Fri, 23 May 2025 19:48:01 +0200 (CEST)
-Message-ID: <932fcabd9e5f2188ec1e779b330ff694e6f161b4.camel@collabora.com>
-Subject: Re: [PATCH v2 7/7] media: chips-media: wave5: Fix SError of kernel
- panic when closed
-From: Nicolas Dufresne <nicolas.dufresne@collabora.com>
-To: "Jackson.lee" <jackson.lee@chipsnmedia.com>, mchehab@kernel.org, 
-	hverkuil-cisco@xs4all.nl, sebastian.fricke@collabora.com, 
-	bob.beckett@collabora.com, dafna.hirschfeld@collabora.com
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	lafley.kim@chipsnmedia.com, b-brnich@ti.com, hverkuil@xs4all.nl, 
-	nas.chung@chipsnmedia.com
-Date: Fri, 23 May 2025 13:48:00 -0400
-In-Reply-To: <20250522072606.51-8-jackson.lee@chipsnmedia.com>
-References: <20250522072606.51-1-jackson.lee@chipsnmedia.com>
-	 <20250522072606.51-8-jackson.lee@chipsnmedia.com>
-Organization: Collabora Canada
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.56.1 (3.56.1-1.fc42) 
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Uj1T2rMY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748022504; x=1779558504;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=AqUynDC3Sw8C6ZtTMriTAeGFMTNBji4jXiQmc/rbw2o=;
+  b=Uj1T2rMYNnVhnHXtN/RnP04tZ1CWrrf6meRJMiClT/em1VWtJgTL9MDX
+   DYzGHU8S4kF5p6FvlsvT5KyQnsip+ucOzPvuvE7Ug/NXkWsOAcB7+sk2E
+   V3KM52bnREc+oTfqB3hB1II/GuECO/LFiUquQuKyhR8nbjUyvNb1lcg7K
+   6qKIoBcsLRQWZcuXncz3B1CUmW8ck63tvAsnn+cN8Ioaomh15KWwQp4qd
+   827m8XptPtTyysZtCOS17M2rZsxulhZqywvgHLra6x9iVR2+DnOIlbF7Z
+   4Vbk88w/ZXogxcAjJHCDCx9fpDbVhop8uW/lqA09aTJhbAJfS++vzNigE
+   g==;
+X-CSE-ConnectionGUID: jugNgIZWQ066tu/rZ/IvjA==
+X-CSE-MsgGUID: AYASXsoTTJCzt7KzI7G55g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11441"; a="37712255"
+X-IronPort-AV: E=Sophos;i="6.15,309,1739865600"; 
+   d="scan'208";a="37712255"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2025 10:48:24 -0700
+X-CSE-ConnectionGUID: lJrSde5yS5yz0+ah3FyjYQ==
+X-CSE-MsgGUID: VO9IXjEZT1W8X0PcYRPbOw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,309,1739865600"; 
+   d="scan'208";a="141740316"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by fmviesa010.fm.intel.com with ESMTP; 23 May 2025 10:48:18 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uIWVD-000QdI-2N;
+	Fri, 23 May 2025 17:48:15 +0000
+Date: Sat, 24 May 2025 01:48:04 +0800
+From: kernel test robot <lkp@intel.com>
+To: Rajnesh Kanwal <rkanwal@rivosinc.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
+	Atish Kumar Patra <atishp@rivosinc.com>,
+	Anup Patel <anup@brainfault.org>, Will Deacon <will@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Beeman Strong <beeman@rivosinc.com>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+	Rajnesh Kanwal <rkanwal@rivosinc.com>
+Subject: Re: [PATCH v3 5/7] riscv: pmu: Add driver for Control Transfer
+ Records Ext.
+Message-ID: <202505240131.OJkUGGvA-lkp@intel.com>
+References: <20250523-b4-ctr_upstream_v3-v3-5-ad355304ba1c@rivosinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250523-b4-ctr_upstream_v3-v3-5-ad355304ba1c@rivosinc.com>
 
-Hi,
+Hi Rajnesh,
+
+kernel test robot noticed the following build warnings:
+
+[auto build test WARNING on e0200e37637e573cd68f522ecd550be87e304c6c]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Rajnesh-Kanwal/perf-Increase-the-maximum-number-of-branches-remove_loops-can-process/20250523-073341
+base:   e0200e37637e573cd68f522ecd550be87e304c6c
+patch link:    https://lore.kernel.org/r/20250523-b4-ctr_upstream_v3-v3-5-ad355304ba1c%40rivosinc.com
+patch subject: [PATCH v3 5/7] riscv: pmu: Add driver for Control Transfer Records Ext.
+config: riscv-randconfig-002-20250523 (https://download.01.org/0day-ci/archive/20250524/202505240131.OJkUGGvA-lkp@intel.com/config)
+compiler: clang version 17.0.6 (https://github.com/llvm/llvm-project 6009708b4367171ccdbf4b5905cb6a803753fe18)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250524/202505240131.OJkUGGvA-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202505240131.OJkUGGvA-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+   In file included from arch/riscv/kernel/asm-offsets.c:12:
+   In file included from arch/riscv/include/asm/kvm_host.h:23:
+   In file included from arch/riscv/include/asm/kvm_vcpu_pmu.h:12:
+>> include/linux/perf/riscv_pmu.h:156:76: warning: omitting the parameter name in a function definition is a C2x extension [-Wc2x-extensions]
+     156 | static inline void riscv_pmu_ctr_sched_task(struct perf_event_pmu_context *,
+         |                                                                            ^
+   include/linux/perf/riscv_pmu.h:158:13: warning: unused function 'riscv_pmu_ctr_add' [-Wunused-function]
+     158 | static void riscv_pmu_ctr_add(struct perf_event *event) { }
+         |             ^~~~~~~~~~~~~~~~~
+   include/linux/perf/riscv_pmu.h:159:13: warning: unused function 'riscv_pmu_ctr_del' [-Wunused-function]
+     159 | static void riscv_pmu_ctr_del(struct perf_event *event) { }
+         |             ^~~~~~~~~~~~~~~~~
+   3 warnings generated.
+--
+   In file included from arch/riscv/kernel/asm-offsets.c:12:
+   In file included from arch/riscv/include/asm/kvm_host.h:23:
+   In file included from arch/riscv/include/asm/kvm_vcpu_pmu.h:12:
+>> include/linux/perf/riscv_pmu.h:156:76: warning: omitting the parameter name in a function definition is a C2x extension [-Wc2x-extensions]
+     156 | static inline void riscv_pmu_ctr_sched_task(struct perf_event_pmu_context *,
+         |                                                                            ^
+   include/linux/perf/riscv_pmu.h:158:13: warning: unused function 'riscv_pmu_ctr_add' [-Wunused-function]
+     158 | static void riscv_pmu_ctr_add(struct perf_event *event) { }
+         |             ^~~~~~~~~~~~~~~~~
+   include/linux/perf/riscv_pmu.h:159:13: warning: unused function 'riscv_pmu_ctr_del' [-Wunused-function]
+     159 | static void riscv_pmu_ctr_del(struct perf_event *event) { }
+         |             ^~~~~~~~~~~~~~~~~
+   3 warnings generated.
 
 
-Le jeudi 22 mai 2025 à 16:26 +0900, Jackson.lee a écrit :
-> From: Jackson Lee <jackson.lee@chipsnmedia.com>
-> 
-> Since applying "Reduce high CPU load" patch, SError of kernel panic rarely
-> happened while testing fluster.
-> The root cause was to enter suspend mode because timeout of autosuspend
-> delay happened.
+vim +156 include/linux/perf/riscv_pmu.h
 
-This would need to be done ahead of other patches, before it breaks. Toggling
-auto-suspend seems suspicious. I'm pretty sure this was always a bit fishy, so
-I'm fine with removing that. Normally get/put once everything is configured
-should be fine.
+   152	
+   153	static inline bool riscv_pmu_ctr_valid(struct perf_event *event) { return false; }
+   154	static inline void riscv_pmu_ctr_consume(struct cpu_hw_events *cpuc,
+   155					      struct perf_event *event) { }
+ > 156	static inline void riscv_pmu_ctr_sched_task(struct perf_event_pmu_context *,
+   157						    bool sched_in) { }
+   158	static void riscv_pmu_ctr_add(struct perf_event *event) { }
+   159	static void riscv_pmu_ctr_del(struct perf_event *event) { }
+   160	static inline void riscv_pmu_ctr_enable(struct perf_event *event) { }
+   161	static inline void riscv_pmu_ctr_disable(struct perf_event *event) { }
+   162	static inline void riscv_pmu_ctr_dying_cpu(void) { }
+   163	static inline void riscv_pmu_ctr_starting_cpu(void) { }
+   164	static inline int riscv_pmu_ctr_init(struct riscv_pmu *riscv_pmu) { return 0; }
+   165	static inline void riscv_pmu_ctr_finish(struct riscv_pmu *riscv_pmu) { }
+   166	
 
-> 
-> [   48.834439] SError Interrupt on CPU0, code 0x00000000bf000000 -- SError
-> [   48.834455] CPU: 0 UID: 0 PID: 1067 Comm: v4l2h265dec0:sr Not tainted 6.12.9-gc9e21a1ebd75-dirty #7
-> [   48.834461] Hardware name: ti Texas Instruments J721S2 EVM/Texas Instruments J721S2 EVM, BIOS 2025.01-00345-
-> gbaf3aaa8ecfa 01/01/2025
-> [   48.834464] pstate: 20000005 (nzCv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-> [   48.834468] pc : wave5_dec_clr_disp_flag+0x40/0x80 [wave5]
-> [   48.834488] lr : wave5_dec_clr_disp_flag+0x40/0x80 [wave5]
-> [   48.834495] sp : ffff8000856e3a30
-> [   48.834497] x29: ffff8000856e3a30 x28: ffff0008093f6010 x27: ffff000809158130
-> [   48.834504] x26: 0000000000000000 x25: ffff00080b625000 x24: ffff000804a9ba80
-> [   48.834509] x23: ffff000802343028 x22: ffff000809158150 x21: ffff000802218000
-> [   48.834513] x20: ffff0008093f6000 x19: ffff0008093f6000 x18: 0000000000000000
-> [   48.834518] x17: 0000000000000000 x16: 0000000000000000 x15: 0000ffff74009618
-> [   48.834523] x14: 000000010000000c x13: 0000000000000000 x12: 0000000000000000
-> [   48.834527] x11: ffffffffffffffff x10: ffffffffffffffff x9 : ffff000802343028
-> [   48.834532] x8 : ffff00080b6252a0 x7 : 0000000000000038 x6 : 0000000000000000
-> [   48.834536] x5 : ffff00080b625060 x4 : 0000000000000000 x3 : 0000000000000000
-> [   48.834541] x2 : 0000000000000000 x1 : ffff800084bf0118 x0 : ffff800084bf0000
-> [   48.834547] Kernel panic - not syncing: Asynchronous SError Interrupt
-> [   48.834549] CPU: 0 UID: 0 PID: 1067 Comm: v4l2h265dec0:sr Not tainted 6.12.9-gc9e21a1ebd75-dirty #7
-
-Hopefully you also test on mainline.
-
-Nicolas
-
-> [   48.834554] Hardware name: ti Texas Instruments J721S2 EVM/Texas Instruments J721S2 EVM, BIOS 2025.01-00345-
-> gbaf3aaa8ecfa 01/01/2025
-> [   48.834556] Call trace:
-> [   48.834559]  dump_backtrace+0x94/0xec
-> [   48.834574]  show_stack+0x18/0x24
-> [   48.834579]  dump_stack_lvl+0x38/0x90
-> [   48.834585]  dump_stack+0x18/0x24
-> [   48.834588]  panic+0x35c/0x3e0
-> [   48.834592]  nmi_panic+0x40/0x8c
-> [   48.834595]  arm64_serror_panic+0x64/0x70
-> [   48.834598]  do_serror+0x3c/0x78
-> [   48.834601]  el1h_64_error_handler+0x34/0x4c
-> [   48.834605]  el1h_64_error+0x64/0x68
-> [   48.834608]  wave5_dec_clr_disp_flag+0x40/0x80 [wave5]
-> [   48.834615]  wave5_vpu_dec_clr_disp_flag+0x54/0x80 [wave5]
-> [   48.834622]  wave5_vpu_dec_buf_queue+0x19c/0x1a0 [wave5]
-> [   48.834628]  __enqueue_in_driver+0x3c/0x74 [videobuf2_common]
-> [   48.834639]  vb2_core_qbuf+0x508/0x61c [videobuf2_common]
-> [   48.834646]  vb2_qbuf+0xa4/0x168 [videobuf2_v4l2]
-> [   48.834656]  v4l2_m2m_qbuf+0x80/0x238 [v4l2_mem2mem]
-> [   48.834666]  v4l2_m2m_ioctl_qbuf+0x18/0x24 [v4l2_mem2mem]
-> [   48.834673]  v4l_qbuf+0x48/0x5c [videodev]
-> [   48.834704]  __video_do_ioctl+0x180/0x3f0 [videodev]
-> [   48.834725]  video_usercopy+0x2ec/0x68c [videodev]
-> [   48.834745]  video_ioctl2+0x18/0x24 [videodev]
-> [   48.834766]  v4l2_ioctl+0x40/0x60 [videodev]
-> [   48.834786]  __arm64_sys_ioctl+0xa8/0xec
-> [   48.834793]  invoke_syscall+0x44/0x100
-> [   48.834800]  el0_svc_common.constprop.0+0xc0/0xe0
-> [   48.834804]  do_el0_svc+0x1c/0x28
-> [   48.834809]  el0_svc+0x30/0xd0
-> [   48.834813]  el0t_64_sync_handler+0xc0/0xc4
-> [   48.834816]  el0t_64_sync+0x190/0x194
-> [   48.834820] SMP: stopping secondary CPUs
-> [   48.834831] Kernel Offset: disabled
-> [   48.834833] CPU features: 0x08,00002002,80200000,4200421b
-> [   48.834837] Memory Limit: none
-> [   49.161404] ---[ end Kernel panic - not syncing: Asynchronous SError Interrupt ]---
-> 
-> Signed-off-by: Jackson Lee <jackson.lee@chipsnmedia.com>
-> Signed-off-by: Nas Chung <nas.chung@chipsnmedia.com>
-> ---
->  .../platform/chips-media/wave5/wave5-vpu-dec.c   |  3 ---
->  .../platform/chips-media/wave5/wave5-vpu-enc.c   |  3 ---
->  .../media/platform/chips-media/wave5/wave5-vpu.c |  2 +-
->  .../platform/chips-media/wave5/wave5-vpuapi.c    | 16 ----------------
->  4 files changed, 1 insertion(+), 23 deletions(-)
-> 
-> diff --git a/drivers/media/platform/chips-media/wave5/wave5-vpu-dec.c b/drivers/media/platform/chips-
-> media/wave5/wave5-vpu-dec.c
-> index 421a9e1a6f15..b4b522d7fa84 100644
-> --- a/drivers/media/platform/chips-media/wave5/wave5-vpu-dec.c
-> +++ b/drivers/media/platform/chips-media/wave5/wave5-vpu-dec.c
-> @@ -1865,9 +1865,6 @@ static int wave5_vpu_open_dec(struct file *filp)
->  	if (ret)
->  		goto cleanup_inst;
->  
-> -	if (list_empty(&dev->instances))
-> -		pm_runtime_use_autosuspend(inst->dev->dev);
-> -
->  	list_add_tail(&inst->list, &dev->instances);
->  
->  	mutex_unlock(&dev->dev_lock);
-> diff --git a/drivers/media/platform/chips-media/wave5/wave5-vpu-enc.c b/drivers/media/platform/chips-
-> media/wave5/wave5-vpu-enc.c
-> index 52a1a00fd9bb..7f1aa392805f 100644
-> --- a/drivers/media/platform/chips-media/wave5/wave5-vpu-enc.c
-> +++ b/drivers/media/platform/chips-media/wave5/wave5-vpu-enc.c
-> @@ -1779,9 +1779,6 @@ static int wave5_vpu_open_enc(struct file *filp)
->  	if (ret)
->  		goto cleanup_inst;
->  
-> -	if (list_empty(&dev->instances))
-> -		pm_runtime_use_autosuspend(inst->dev->dev);
-> -
->  	list_add_tail(&inst->list, &dev->instances);
->  
->  	mutex_unlock(&dev->dev_lock);
-> diff --git a/drivers/media/platform/chips-media/wave5/wave5-vpu.c b/drivers/media/platform/chips-media/wave5/wave5-
-> vpu.c
-> index a2c09523d76b..24a9001966e7 100644
-> --- a/drivers/media/platform/chips-media/wave5/wave5-vpu.c
-> +++ b/drivers/media/platform/chips-media/wave5/wave5-vpu.c
-> @@ -368,7 +368,7 @@ static int wave5_vpu_probe(struct platform_device *pdev)
->  	dev_info(&pdev->dev, "Product Code:      0x%x\n", dev->product_code);
->  	dev_info(&pdev->dev, "Firmware Revision: %u\n", fw_revision);
->  
-> -	pm_runtime_set_autosuspend_delay(&pdev->dev, 100);
-> +	pm_runtime_set_autosuspend_delay(&pdev->dev, 500);
->  	pm_runtime_use_autosuspend(&pdev->dev);
->  	pm_runtime_enable(&pdev->dev);
->  	wave5_vpu_sleep_wake(&pdev->dev, true, NULL, 0);
-> diff --git a/drivers/media/platform/chips-media/wave5/wave5-vpuapi.c b/drivers/media/platform/chips-media/wave5/wave5-
-> vpuapi.c
-> index d7318d596b73..1f7f4d214b3c 100644
-> --- a/drivers/media/platform/chips-media/wave5/wave5-vpuapi.c
-> +++ b/drivers/media/platform/chips-media/wave5/wave5-vpuapi.c
-> @@ -207,8 +207,6 @@ int wave5_vpu_dec_close(struct vpu_instance *inst, u32 *fail_res)
->  	int retry = 0;
->  	struct vpu_device *vpu_dev = inst->dev;
->  	int i;
-> -	int inst_count = 0;
-> -	struct vpu_instance *inst_elm;
->  	struct dec_output_info dec_info;
->  
->  	*fail_res = 0;
-> @@ -265,12 +263,6 @@ int wave5_vpu_dec_close(struct vpu_instance *inst, u32 *fail_res)
->  	}
->  
->  	wave5_vdi_free_dma_memory(vpu_dev, &p_dec_info->vb_task);
-> -
-> -	list_for_each_entry(inst_elm, &vpu_dev->instances, list)
-> -		inst_count++;
-> -	if (inst_count == 1)
-> -		pm_runtime_dont_use_autosuspend(vpu_dev->dev);
-> -
->  	mutex_destroy(&inst->feed_lock);
->  
->  unlock_and_return:
-> @@ -738,8 +730,6 @@ int wave5_vpu_enc_close(struct vpu_instance *inst, u32 *fail_res)
->  	int ret;
->  	int retry = 0;
->  	struct vpu_device *vpu_dev = inst->dev;
-> -	int inst_count = 0;
-> -	struct vpu_instance *inst_elm;
->  
->  	*fail_res = 0;
->  	if (!inst->codec_info)
-> @@ -782,12 +772,6 @@ int wave5_vpu_enc_close(struct vpu_instance *inst, u32 *fail_res)
->  	}
->  
->  	wave5_vdi_free_dma_memory(vpu_dev, &p_enc_info->vb_task);
-> -
-> -	list_for_each_entry(inst_elm, &vpu_dev->instances, list)
-> -		inst_count++;
-> -	if (inst_count == 1)
-> -		pm_runtime_dont_use_autosuspend(vpu_dev->dev);
-> -
->  	mutex_unlock(&vpu_dev->hw_lock);
->  	pm_runtime_put_sync(inst->dev->dev);
->  
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
