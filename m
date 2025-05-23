@@ -1,198 +1,245 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7459AD24;
-	Fri, 23 May 2025 00:58:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91F571CB337
+	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 01:00:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747961927; cv=none; b=m8f2znCNr5mRRz2+mCK34Ap+WUok1oRsyO0f27bVxI2uX/ViJ1xuhobTFfdveNuwe9QuLodFVFjPDUm+qCWU9nfQSv8pOkjMPPpJ4BExo1WoP09RL6NxpK+GLSsG+RZSKVWkKxcB+bBmNMW0P4r85QK55DSQJIYchazT9Wgsm/s=
+	t=1747962013; cv=none; b=MrgeqJQsrWn9NxIkLysJeVwBmIanSu+nUL57PId/Uc+uSXm1Up6VHgXJ6TkDI9SFxcqY3my1pBqJXZgIatGx0FcLqvSlXddj2V7SUhuCJLUsUvNF6Gc7FoGB5MBr11htGeieDVk4eGBY/7pIf8b1pdLIost2/1eiP2IFvZNBvFw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747961927; c=relaxed/simple;
-	bh=G3lDgalSES4+LUeMJSVcq2Vx7YAnMSifKDBUKcnxS90=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=O4voYlqKjm2SUrQ6XNcgRMBrH8656EW5dolfMxrqP6Ki3Zn8+HG1OEIHr1C/6c/U5vINZ6wIZ6tHHx59yKUNYpL3O7a0/lUkOks4FQ8Q6KlHZ3ou9xKSIG54CYYsX8znObrW8GxtW8g76RsxP6+TigCxcF8Ye/zZi71+3+42CaM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=ihKSeQkN; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1747962013; c=relaxed/simple;
+	bh=biSP/RElUvnB1P1L6qHmpOQ1N71dp2oSy6pxd4IxXLY=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=PvT3cMpZ8H5nRHc5KWapselFmjpS2uRpUDpSqna3kRbYJYPGCc1ArgDuIVIxIb1DqGJe1NuhY4UKbRkmd6vg0Hvf4K8Q9b1lRPvJGduUzrnVE6v/xjrA4waT1xvJV4+N2J8oT6LbIy9w7SQBIJZHAalifv/VOj2liu1tI/VoO5E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=mfEoEcbp; arc=none smtp.client-ip=209.85.216.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="ihKSeQkN"
-Received: from [192.168.7.202] ([71.202.166.45])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 54N0vVCN3229952
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Thu, 22 May 2025 17:57:32 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 54N0vVCN3229952
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025042001; t=1747961853;
-	bh=hLCy7IahoOH+nrCcvZn3wBZZBx3mRCPW8+yytgbmYQw=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=ihKSeQkNPrDweyMMjCBfaJhlyRciuvUlfc8SB/DlqpiHjoItCE5lKKDlZXgy4ERzw
-	 1nm9VfJ7NFhJPibwdALiazQfGVv2qJKEtpqINUZEyvXcK/dImDUgLLK5Zs88RCzHXd
-	 z90CHhiqmdhJv6r0GE4LkQ6N89TrpMnDMYdp0tM/B3ABEqhzn0eXWufmcxrwXznVhq
-	 t6B96xiMQWiwQotC4Y6Idy6oJe7SoCBZSPSXuW6oza3ueZ8Bu5ivApj78Hcwj4Gxq9
-	 qcUJF3abmIDUavsjQq2kisAj6nagLuTUhiUZ3bqZtzp9QYuPpUp0S6/8p3frf/GpB5
-	 ERObCGKHWKoKQ==
-Message-ID: <97a86550-844d-41c8-bc5e-b3b7b20ef6c9@zytor.com>
-Date: Thu, 22 May 2025 17:57:31 -0700
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mfEoEcbp"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-310c5c2c38cso1549927a91.1
+        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 18:00:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1747962011; x=1748566811; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:reply-to:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=nWmLXJzC9mxFkQYj92kdzkjh5kkvtzBuQ9m+OSqSfeU=;
+        b=mfEoEcbpdlTCwGSaGqG8eVwjyEc4GFr8teTtSNlzbMViO0gOjGuXqMGJ8+RXWtJycq
+         8irBugSbjRQboTSXsauauu1czLlvFT06TsLxlMdHhDPdZ4wZUBDSQENo79cOSw4EDXmK
+         Tc7rD6E8nq+jwdIL21rtZAPr8GFz5Q2QW2gVs30SSYv/IdOrC4NWjcRgeI6i6bzda1Vs
+         OOaxEs8U3pwzX1/SZfSXp1p1tHWetzdjR7yp7U2bT+5S8w9oXZ4z4QvMU5itGgyjMf7M
+         mHOJXf2Acs7tGZqQfTrRnpfrcmPCFFs/c88z8W2gHB17aHB3Ip+j3dUd+ELieUoG/BdN
+         v2xg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747962011; x=1748566811;
+        h=cc:to:from:subject:message-id:mime-version:date:reply-to
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=nWmLXJzC9mxFkQYj92kdzkjh5kkvtzBuQ9m+OSqSfeU=;
+        b=djBZZuwOVttuZzY2jhzW/QcHa+tRooe2daObdDKEgLPGpA3HjfPBGLyyiAJ21lmMd7
+         OYBzJHC+w8nQv/dAbCM77OukDzE4iYMxc4SXFzUAT0y8W4VcPQgc7IO2vJw17HvAQVrw
+         hR/wQvkNDDzuW5WCbdF4+3aPlH5DR1uTK8cYJw6UD6rHQ0uQMBA1GdBB0yeMZ5j/WgeH
+         Z72knYGgFn/F0LUgA3P3g7W1AEyV8D0HNorha3A0Rg8PWFS/wMjkxRV5+lE0hnFEJotj
+         uRUU21wiVcw/RQpIK5ulyArjRdH585RgOlP4EeCwlu5MD8gK3sAv4sza7bOIzS7tWTv5
+         7Fqw==
+X-Forwarded-Encrypted: i=1; AJvYcCUZ7yNbBnYpCoVNO6WIDu7Ea3C5xLzgbgnRFBSjPThNEbRCCbKCD3YsFLGOuoMXBripCTlE+MjcyUi/ETc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx+81leoiJ/5Lx0zMrYNv8I49Ye8Qd1BNexO6o9TODN2G1v/pAw
+	0s7gPkMa8oLe48jXPAkrEd7aFk0aCEk6fn6kTz90z7Ai7pXDmBMZpPyFSCXKdYsB4f1Gc8cQLbq
+	ZyVeQoA==
+X-Google-Smtp-Source: AGHT+IGOgLpofs6bAdGinxnH4Es1IEAINUEcE+ZxHgfQ8A0l+jmCduN+XjF7ckQz21BAe1IxauoQZPltAZw=
+X-Received: from pjbqj8.prod.google.com ([2002:a17:90b:28c8:b0:2fc:2ee0:d38a])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:3d85:b0:2f9:d9fe:e72e
+ with SMTP id 98e67ed59e1d1-30e8312dcd2mr50071317a91.16.1747962010923; Thu, 22
+ May 2025 18:00:10 -0700 (PDT)
+Reply-To: Sean Christopherson <seanjc@google.com>
+Date: Thu, 22 May 2025 17:59:05 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/1] x86/fred/signal: Prevent single-step upon ERETU
- completion
-To: Andrew Cooper <andrew.cooper3@citrix.com>,
-        Dave Hansen <dave.hansen@intel.com>, linux-kernel@vger.kernel.org
-Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        peterz@infradead.org, stable@vger.kernel.org
-References: <20250522171754.3082061-1-xin@zytor.com>
- <e4f1120b-0bff-4f01-8fe7-5e394a254020@intel.com>
- <ad8d3a12-25f3-4d57-8f34-950b7967f92b@citrix.com>
-Content-Language: en-US
-From: Xin Li <xin@zytor.com>
-Autocrypt: addr=xin@zytor.com; keydata=
- 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
- l75w1xInsg==
-In-Reply-To: <ad8d3a12-25f3-4d57-8f34-950b7967f92b@citrix.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.49.0.1151.ga128411c76-goog
+Message-ID: <20250523010004.3240643-1-seanjc@google.com>
+Subject: [PATCH v2 00/59] KVM: iommu: Overhaul device posted IRQs support
+From: Sean Christopherson <seanjc@google.com>
+To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, 
+	Joerg Roedel <joro@8bytes.org>, David Woodhouse <dwmw2@infradead.org>, 
+	Lu Baolu <baolu.lu@linux.intel.com>
+Cc: kvm@vger.kernel.org, iommu@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	Sairaj Kodilkar <sarunkod@amd.com>, Vasant Hegde <vasant.hegde@amd.com>, 
+	Maxim Levitsky <mlevitsk@redhat.com>, Joao Martins <joao.m.martins@oracle.com>, 
+	Francesco Lavra <francescolavra.fl@gmail.com>, David Matlack <dmatlack@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On 5/22/2025 10:53 AM, Andrew Cooper wrote:
-> This was a behaviour intentionally changed in FRED so traps wouldn't get
-> lost if an exception where to occur.
-> 
-> What precise case is triggering this?
+TL;DR: Overhaul device posted interrupts in KVM and IOMMU, and AVIC in
+       general.
 
-Following is the test code:
+This applies on the series to add CONFIG_KVM_IOAPIC (and to kill irq_comm.c):
 
-// SPDX-License-Identifier: GPL-2.0-or-later
-/*
-  *  Copyright (C) 2025 Intel Corporation
-  */
-#define _GNU_SOURCE
+  https://lore.kernel.org/all/20250519232808.2745331-1-seanjc@google.com
 
-#include <err.h>
-#include <signal.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <sys/ucontext.h>
+Fix a variety of bugs related to device posted IRQs, especially on the
+AMD side, and clean up KVM's implementation (this series actually removes
+more code than it adds).
 
-static void sethandler(int sig, void (*handler)(int, siginfo_t *, void 
-*), int flags)
-{
-	struct sigaction sa;
+Stating the obvious, this series is comically large.  Though it's smaller than
+v1! (Ignoring that I cheated by moving 15 patches to a prep series, and that
+Paolo already grabbed several patches).
 
-	memset(&sa, 0, sizeof(sa));
-	sa.sa_sigaction = handler;
-	sa.sa_flags = SA_SIGINFO | flags;
-	sigemptyset(&sa.sa_mask);
+Sairaj, I applied your Tested-by somewhat sparingly, as some of the patches
+changed (most notably "Consolidate IRTE update when toggling AVIC on/off").
+Please holler if you want me to remove/add any tags.  And when you get time,
+I'd greatly appreciate a sanity check!
 
-	if (sigaction(sig, &sa, 0))
-		err(1, "sigaction");
+Batch #1 is mostly SVM specific:
 
-	return;
-}
+ - Cleans up various warts and bugs in the IRTE tracking
+ - Fixes AVIC to not reject large VMs (honor KVM's ABI)
+ - Wire up AVIC to enable_ipiv to support disabling IPI virtualization while
+   still utilizing device posted interrupts, and to workaround erratum #1235.
 
-static void sigtrap(int sig, siginfo_t *info, void *ctx_void)
-{
-	ucontext_t *ctx = (ucontext_t *)ctx_void;
-	static unsigned long last_trap_ip;
-	static unsigned int loop_count_on_same_ip;
+Batch #3 overhauls the guts of IRQ bypass in KVM, and moves the vast majority
+of the logic to common x86; only the code that needs to communicate with the
+IOMMU is truly vendor specific.
 
-	if (last_trap_ip == ctx->uc_mcontext.gregs[REG_RIP]) {
-		printf("trapped on %016lx\n", last_trap_ip);
+Batch #4 is more SVM/AVIC cleanups that are made possible by batch #3.
 
-		if (++loop_count_on_same_ip > 10) {
-			printf("trap loop detected, test failed\n");
-			exit(2);
-		}
+Batch #5 adds WARNs and drops dead code after all the previous cleanups and
+fixes (I don't want to add the WARNs earlier; I don't see any point in adding
+WARNs in code that's known to be broken).
 
-		return;
-	}
+Batch #6 is yet more SVM/AVIC cleanups, with the specific goal of configuring
+IRTEs to generate GA log interrupts if and only if KVM actually needs a wake
+event.
 
-	loop_count_on_same_ip = 0;
-	last_trap_ip = ctx->uc_mcontext.gregs[REG_RIP];
-	printf("trapped on %016lx\n", last_trap_ip);
-}
+v2:
+ - Drop patches that were already merged.
+ - Move code into irq.c, not x86.c. [Paolo]
+ - Collect review/testing tags. [Sairaj, Vasant]
+ - Sqaush fixup for a comment that was added in the prior patch. [Sairaj]
+ - Rewrote the changelog for "Delete IRTE link from previous vCPU irrespective
+   of new routing". [Sairaj]
+ - Actually drop "struct amd_svm_iommu_ir" and all usage in "Track per-vCPU
+   IRTEs using kvm_kernel_irqfd structure" (the previous version was getting
+   hilarious lucky with struct offsets). [Sairaj]
+ - Drop unused params from kvm_pi_update_irte() and pi_update_irte(). [Sairaj]
+ - Document the rules and behavior of amd_iommu_update_ga(). [Joerg]
+ - Fix a changelog typo. [Paolo]
+ - Document that GALogIntr isn't cached, i.e. can be safely updated without
+   an invalidation. [Joao, Vasant]
+ - Rework avic_vcpu_{load,put}() to use an enumerated parameter instead of a
+   series of booleans. [Paolo]
+ - Drop a redundant "&& new". [Francesco]
+ - Drop the *** DO NOT MERGE *** testing hack patches.
 
-int main(int argc, char *argv[])
-{
-	sethandler(SIGTRAP, sigtrap, 0);
+v1: https://lore.kernel.org/all/20250404193923.1413163-1-seanjc@google.com
 
-	asm volatile("push $0x302\n\t"
-		     "popf\n\t"
-		     "nop\n\t"
-		     "nop\n\t"
-		     "push $0x202\n\t"
-		     "popf\n\t");
+Maxim Levitsky (2):
+  KVM: SVM: Add enable_ipiv param, never set IsRunning if disabled
+  KVM: SVM: Disable (x2)AVIC IPI virtualization if CPU has erratum #1235
 
-	printf("test passed\n");
-}
+Sean Christopherson (57):
+  KVM: x86: Pass new routing entries and irqfd when updating IRTEs
+  KVM: SVM: Track per-vCPU IRTEs using kvm_kernel_irqfd structure
+  KVM: SVM: Delete IRTE link from previous vCPU before setting new IRTE
+  iommu/amd: KVM: SVM: Delete now-unused cached/previous GA tag fields
+  KVM: SVM: Delete IRTE link from previous vCPU irrespective of new
+    routing
+  KVM: SVM: Drop pointless masking of default APIC base when setting
+    V_APIC_BAR
+  KVM: SVM: Drop pointless masking of kernel page pa's with AVIC HPA
+    masks
+  KVM: SVM: Add helper to deduplicate code for getting AVIC backing page
+  KVM: SVM: Drop vcpu_svm's pointless avic_backing_page field
+  KVM: SVM: Inhibit AVIC if ID is too big instead of rejecting vCPU
+    creation
+  KVM: SVM: Drop redundant check in AVIC code on ID during vCPU creation
+  KVM: SVM: Track AVIC tables as natively sized pointers, not "struct
+    pages"
+  KVM: SVM: Drop superfluous "cache" of AVIC Physical ID entry pointer
+  KVM: VMX: Move enable_ipiv knob to common x86
+  KVM: VMX: Suppress PI notifications whenever the vCPU is put
+  KVM: SVM: Add a comment to explain why avic_vcpu_blocking() ignores
+    IRQ blocking
+  iommu/amd: KVM: SVM: Use pi_desc_addr to derive ga_root_ptr
+  iommu/amd: KVM: SVM: Pass NULL @vcpu_info to indicate "not guest mode"
+  KVM: SVM: Stop walking list of routing table entries when updating
+    IRTE
+  KVM: VMX: Stop walking list of routing table entries when updating
+    IRTE
+  KVM: SVM: Extract SVM specific code out of get_pi_vcpu_info()
+  KVM: x86: Move IRQ routing/delivery APIs from x86.c => irq.c
+  KVM: x86: Nullify irqfd->producer after updating IRTEs
+  KVM: x86: Dedup AVIC vs. PI code for identifying target vCPU
+  KVM: x86: Move posted interrupt tracepoint to common code
+  KVM: SVM: Clean up return handling in avic_pi_update_irte()
+  iommu: KVM: Split "struct vcpu_data" into separate AMD vs. Intel
+    structs
+  KVM: Don't WARN if updating IRQ bypass route fails
+  KVM: Fold kvm_arch_irqfd_route_changed() into
+    kvm_arch_update_irqfd_routing()
+  KVM: x86: Track irq_bypass_vcpu in common x86 code
+  KVM: x86: Skip IOMMU IRTE updates if there's no old or new vCPU being
+    targeted
+  KVM: x86: Don't update IRTE entries when old and new routes were !MSI
+  KVM: SVM: Revert IRTE to legacy mode if IOMMU doesn't provide IR
+    metadata
+  KVM: SVM: Take and hold ir_list_lock across IRTE updates in IOMMU
+  iommu/amd: Document which IRTE fields amd_iommu_update_ga() can modify
+  iommu/amd: KVM: SVM: Infer IsRun from validity of pCPU destination
+  iommu/amd: Factor out helper for manipulating IRTE GA/CPU info
+  iommu/amd: KVM: SVM: Set pCPU info in IRTE when setting vCPU affinity
+  iommu/amd: KVM: SVM: Add IRTE metadata to affined vCPU's list if AVIC
+    is inhibited
+  KVM: SVM: Don't check for assigned device(s) when updating affinity
+  KVM: SVM: Don't check for assigned device(s) when activating AVIC
+  KVM: SVM: WARN if (de)activating guest mode in IOMMU fails
+  KVM: SVM: Process all IRTEs on affinity change even if one update
+    fails
+  KVM: SVM: WARN if updating IRTE GA fields in IOMMU fails
+  KVM: x86: Drop superfluous "has assigned device" check in
+    kvm_pi_update_irte()
+  KVM: x86: WARN if IRQ bypass isn't supported in kvm_pi_update_irte()
+  KVM: x86: WARN if IRQ bypass routing is updated without in-kernel
+    local APIC
+  KVM: SVM: WARN if ir_list is non-empty at vCPU free
+  KVM: x86: Decouple device assignment from IRQ bypass
+  KVM: VMX: WARN if VT-d Posted IRQs aren't possible when starting IRQ
+    bypass
+  KVM: SVM: Use vcpu_idx, not vcpu_id, for GA log tag/metadata
+  iommu/amd: WARN if KVM calls GA IRTE helpers without virtual APIC
+    support
+  KVM: SVM: Fold avic_set_pi_irte_mode() into its sole caller
+  KVM: SVM: Don't check vCPU's blocking status when toggling AVIC on/off
+  KVM: SVM: Consolidate IRTE update when toggling AVIC on/off
+  iommu/amd: KVM: SVM: Allow KVM to control need for GA log interrupts
+  KVM: SVM: Generate GA log IRQs only if the associated vCPUs is
+    blocking
+
+ arch/x86/include/asm/irq_remapping.h |  17 +-
+ arch/x86/include/asm/kvm-x86-ops.h   |   2 +-
+ arch/x86/include/asm/kvm_host.h      |  20 +-
+ arch/x86/include/asm/svm.h           |  13 +-
+ arch/x86/kvm/irq.c                   | 140 ++++++
+ arch/x86/kvm/svm/avic.c              | 702 ++++++++++++---------------
+ arch/x86/kvm/svm/svm.c               |   4 +
+ arch/x86/kvm/svm/svm.h               |  32 +-
+ arch/x86/kvm/trace.h                 |  19 +-
+ arch/x86/kvm/vmx/capabilities.h      |   1 -
+ arch/x86/kvm/vmx/main.c              |   2 +-
+ arch/x86/kvm/vmx/posted_intr.c       | 140 ++----
+ arch/x86/kvm/vmx/posted_intr.h       |  10 +-
+ arch/x86/kvm/vmx/vmx.c               |   2 -
+ arch/x86/kvm/x86.c                   |  90 +---
+ drivers/iommu/amd/amd_iommu_types.h  |   1 -
+ drivers/iommu/amd/iommu.c            | 125 +++--
+ drivers/iommu/intel/irq_remapping.c  |  10 +-
+ include/linux/amd-iommu.h            |  25 +-
+ include/linux/kvm_host.h             |   9 +-
+ include/linux/kvm_irqfd.h            |   4 +
+ virt/kvm/eventfd.c                   |  22 +-
+ 22 files changed, 672 insertions(+), 718 deletions(-)
 
 
-W/o the fix when FRED enabled, I get:
-xin@fred-ubt:~$ ./lass_test
-trapped on 00000000004012fe
-trapped on 00000000004012fe
-trapped on 00000000004012fe
-trapped on 00000000004012fe
-trapped on 00000000004012fe
-trapped on 00000000004012fe
-trapped on 00000000004012fe
-trapped on 00000000004012fe
-trapped on 00000000004012fe
-trapped on 00000000004012fe
-trapped on 00000000004012fe
-trapped on 00000000004012fe
-trap loop detected, test failed
+base-commit: 3debd5461fba1dcb33e732b16153da0cf5d0c251
+-- 
+2.49.0.1151.ga128411c76-goog
 
-
-W/ the fix when FRED enabled:
-[xin@dev ~]$ ./lass_test
-trapped on 00000000004012fe
-trapped on 00000000004012ff
-trapped on 0000000000401304
-trapped on 0000000000401305
-test passed
-
-Obviously the test passes on IDT.
-
-As Dave asked, I will integrate this test into selftests.
-
-Thanks!
-     Xin
