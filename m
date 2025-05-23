@@ -1,150 +1,152 @@
-Received: from mail-il1-f178.google.com (mail-il1-f178.google.com [209.85.166.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C385C25760;
-	Fri, 23 May 2025 14:46:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AF112957B2;
+	Fri, 23 May 2025 14:47:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748011607; cv=none; b=NJhUt2Ld1Ma9B73GkxwywKrjCxfrUxxAXMFYt8GWvjqivTJzyUzCmH0DZgh/S+DnRYoIhMbcXUkidDuAB/R3orTCYD0iywkUWjR/xOyCTXO+MFVrpzyFLrQXAa/D7z5P+e7bw6Rn5UITAVMOwHx7g5Dn7ZIA7Fua4TzChfgN5co=
+	t=1748011630; cv=none; b=hVpbst6oJk/r8w3BszO9NIJBtbxEXdMRzu8WPU2aXQrqgMMP7+osALsKk1+raTYUB9BcUqqMSSyzsE5yIknRFiDVVqlsS7QUtS7rHqMixS2CcPBRmdyexxuTZdyzGoujumTX0vXNIcomQB+tE/XR8ds1BDYqut4Vjezuw4ZTJb8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748011607; c=relaxed/simple;
-	bh=HiFOdJZe5roxIuT5bKk20cXktATgE23oiaWu7kfhOqg=;
+	s=arc-20240116; t=1748011630; c=relaxed/simple;
+	bh=Ocz5J1wgv3YESCv8WYdkxEBqXdkzz0W+TH/W1ADUndA=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VirTnywLWNzQRBRPNGTx9cR0F3/b2LMHygaTRMj45Qb+EBFegvGMzbLXPZCuLLILabwg74oiJmwGkMy9etFJpYKbq5NCfSExtmd31gCg7vEhHMAZOr+wPP2COjQwbcPmW4+IBA0YyP1ShbyiTT07G+e1QZB278wtaTGgI9CZHog=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.166.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-il1-f178.google.com with SMTP id e9e14a558f8ab-3dc6b2a8647so20296935ab.2;
-        Fri, 23 May 2025 07:46:45 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748011604; x=1748616404;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ghdI2uqqe2O4Wmd68hFPGrigGpfsBMc5eDJtKxJn5bI=;
-        b=vjicjp/4xsP3G9Mb6Usvuy2/pjI1ndDdm7tNUQnNwYwAzvb1FQNsSPxQOYJB7TpPuB
-         SoyHZzXmxX0KlbXmPAkUaSysZt4qJlHZqSRA0E3PLqHlHyB8bwBDrBYFKJBnDnL57bqD
-         2Y6KbTUE71dePonAJ8muZR9wQKhhE89IMRDGp60duMC3k3iaO8YzjiLNA8FjBLsh40VA
-         TJBUp2C2GBaX9z7wrcNdYeONp5zSFv/JeoUk1hrfKwa0rm8AVGOTCfCpm+HOjWlRWwVT
-         dFYYXIlrVaygZBMEu2H8DZ0T3jy462E2Yz/VVvOryVIftqC4qpoQ34dKVOULxGWySrM4
-         qnAA==
-X-Forwarded-Encrypted: i=1; AJvYcCUQSpJAixz/vT4woPCEfFbx/Ba3yhb7xgj1yQNLQyBddS4sPDOXe04e5kJsAPvpqBEMuZf6hZlrLFpvy1V+AaeEcPY=@vger.kernel.org, AJvYcCVO4qDFCXAzP3ATkdHmQ0bAZE97vUKNM247I7F0gkeZHVz90qGU3uGarq3+S8tp41hfrUuJcrqj7wIf6NZ1@vger.kernel.org, AJvYcCWMKROFmFqb2kVLO0WrAMMy8LTuCfGY4AW8Jqc0dPnct2vJIZayQK/XTUsEx70PNLA1HAvTqHkx03PX@vger.kernel.org, AJvYcCWVMpiiqOFO1d+tN8rOZEzm6Fm275yn6u2FHnDAHiaR8QWjSh1b6DjnSIXHLmPKsJkQox611fTEKhQk@vger.kernel.org
-X-Gm-Message-State: AOJu0YzF5aM7ffPokY5bGorvkFppxlVS2JSaXSWKEx3NVNlIRdxNKiVc
-	wxKU86/SWAUXdtXTuLxJ/WOfQMXCwTDLrUOCR6WFS68FZPL0OxZiEBbHU0hzrJ8+I4s=
-X-Gm-Gg: ASbGncvK5+FBz+pS/0q0bVS7Vy+ZFBIJyJbyaxKC7hwd78Wn9g4nOZGIp78E5TF9KzT
-	EuoPzAbo0POGXHO8utSmCLM3DiShuT+8LYJuli+u56fWqbz248mn+f3gtHhFTPrOZFSKYA/3qz0
-	EGp5CXZEZ2HPUxeH37aJarYz8HK16aKN9mTnPoEUXvaIHT/lg6wkbKNeDMm2Fv1J9zHJ5nxj4zR
-	hA4cLedfzH/3IqWgKeu9mK57nV+DzF8C7gOY/oVCkP//Iv35L2YzVFxzzXPYA/zCs74bKuTUfUJ
-	klQu5IO0K6WstV3IoZYE2OKWiwYECMtDL9Nh6nUChwT2pPXqv/0IZLvvXz1yc5CmbY4Q+tQe26j
-	+blA0Nml2NjhRvA==
-X-Google-Smtp-Source: AGHT+IFPGqGxfZsnaUJRDPmSNVeNAm5Cj5OwuuwCMO1g/YtfSHJ4hU/SmlYKGWm45TdD6B+AQmKajQ==
-X-Received: by 2002:a05:6870:2a4c:b0:29f:97af:a1a0 with SMTP id 586e51a60fabf-2e3c84d532amr16045579fac.24.1748011593386;
-        Fri, 23 May 2025 07:46:33 -0700 (PDT)
-Received: from mail-ot1-f52.google.com (mail-ot1-f52.google.com. [209.85.210.52])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2e3c075bdfdsm3562700fac.25.2025.05.23.07.46.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 23 May 2025 07:46:32 -0700 (PDT)
-Received: by mail-ot1-f52.google.com with SMTP id 46e09a7af769-72bd5f25ea6so2513064a34.1;
-        Fri, 23 May 2025 07:46:32 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVT92M5qpwDwODEn9CZlYffbjxWG9Tm6n1ubLIrwcOjf4tlzhpr81BmH4AlLVEZX3SVz2gj60IlWK5i@vger.kernel.org, AJvYcCVfF5b/XJlhcZZt2NZcOfk4kJzgG8n40ttpY9Lnak25TTKmzu2mSa7luP75XsePLraIT6EXVPV7QSZ6@vger.kernel.org, AJvYcCW31504SGf2BaDj1T2FXWNFMFLv2noXgQCJhHD6aYla/byGrYHR/XL+c+NFYtCpKS2iBAQmLjoflCJF42yY@vger.kernel.org, AJvYcCXJTN7/2NpuY6gf2eczdDx2kIodoTScUlpKod33SCH2/LS5jDYDOanqlc1MNFEHm2rkThz4uXASG+1W4TBcCxvtV+Q=@vger.kernel.org
-X-Received: by 2002:a05:6830:6887:b0:72b:a3f3:deb6 with SMTP id
- 46e09a7af769-734f984a750mr15833524a34.4.1748011592230; Fri, 23 May 2025
- 07:46:32 -0700 (PDT)
+	 To:Cc:Content-Type; b=h7J3IxDSB6XByQyewsfVLbPSQRzRRlVxyaqYsBNAUmenaEz7VDA/30cbl31XnoJWqTXxvhU9HXJeU+A4aWkCdTB7JP/KkEGe7AiIKpjpEoliJET8VLoUqmg0ftQriEYyN25EXl+zNaey5WEveXTXrNcaiNvSWrYwxPeGi584We4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p5+oYAi9; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p5+oYAi9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE438C4CEED;
+	Fri, 23 May 2025 14:47:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748011629;
+	bh=Ocz5J1wgv3YESCv8WYdkxEBqXdkzz0W+TH/W1ADUndA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=p5+oYAi9e/oWGhHk+fosP6dsXBN2Bqqz/RtfmYCGLGUyU6KkEte5RTr21U6RQmAAH
+	 rGrA87GT9vlTZTPh+HPWUKWp0DCIFkf5yOVFRxc8YoQB3U1KGLLJC3vIhl9txl4pPU
+	 q14+b9aNWIit7WlXdbXywjdEKGmdHLvbBcKiT1VpP8Irr5BoQluteaHzZD/8G4JWF3
+	 E9cF6wXsWA8si/H2j2wYjn1noxpSN5m7VW9cVDrmtXTs6nmnghvFkdUjEClE1jFJyh
+	 m1S9Vk72/mZ+8mGxJlkFpibWlfIdVMRZA7pKiFLqHUxeEldmLlQc7t4r1xxcZ/nTsl
+	 9kWzNVH1CibJw==
+Received: by mail-oi1-f181.google.com with SMTP id 5614622812f47-3feaedb4085so35131b6e.0;
+        Fri, 23 May 2025 07:47:09 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCW99yl1tr2Qwsafj9mmZsiKNMGZ72dUXnv422nJidn7zTmo391JbNT7rjDxwvfeJaa3GqvC6BiiuASG2BKb@vger.kernel.org, AJvYcCXxOFjWPMZzZq+WE6h8Ydk2lnoVMurUJ7DR2WGTb2euZQArXbPlhADplSomC5izVvjJsjPEOg+Ibs/R@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz2AuwJsO6jIihYcdx02hFTyCmAnIrQA/mq9mHO/N4xgdLNo9hp
+	jJog59pBejgc6zVItYSaRERCpOYp96NDDA10Seh7mdPA1w7BMXrF6OfK1H1HIesSi+1ac5oal0e
+	mZZD9YyX/0xOatQqEcbFms9yjbw6jbBc=
+X-Google-Smtp-Source: AGHT+IGXxPZzBQ0rd2WqVkE2kMetZWcN0Srwq81135CC4scj5mkn+qPK+TyalxnWlDXRxW6GT+U59ljzQHKP8FVgAfY=
+X-Received: by 2002:a05:6808:149:b0:401:e67c:b3be with SMTP id
+ 5614622812f47-404d865e18emr16061098b6e.4.1748011629042; Fri, 23 May 2025
+ 07:47:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250512184302.241417-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20250512184302.241417-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20250512184302.241417-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Fri, 23 May 2025 16:46:20 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdV9NM3SPeZAxDnh=ez0uBvt9077_64oJe9A727p1r9QOg@mail.gmail.com>
-X-Gm-Features: AX0GCFv_GjXouNvqk1PpQnSfRmAzXOHXMmh8i0A88wx3URx0tlvPZOD5l0uuRfQ
-Message-ID: <CAMuHMdV9NM3SPeZAxDnh=ez0uBvt9077_64oJe9A727p1r9QOg@mail.gmail.com>
-Subject: Re: [PATCH v5 2/4] clk: renesas: r9a09g057: Add clock and reset
- entries for DSI and LCDC
-To: Prabhakar <prabhakar.csengg@gmail.com>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>
-Cc: Andrzej Hajda <andrzej.hajda@intel.com>, Neil Armstrong <neil.armstrong@linaro.org>, 
-	Robert Foss <rfoss@kernel.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
-	Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Biju Das <biju.das.jz@bp.renesas.com>, Magnus Damm <magnus.damm@gmail.com>, 
-	dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
-	linux-clk@vger.kernel.org, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+References: <20250522141410.31315-1-alexghiti@rivosinc.com>
+ <91458376-dfc7-46fc-8523-aa176907d703@gmx.de> <83e02a52-86ad-45e5-ba87-6c17dc6f59b5@ghiti.fr>
+ <CAJZ5v0iPVx0KXB5qQ46iQ7CKG6KJC1CnXogQ=e8or24vZuytrw@mail.gmail.com>
+In-Reply-To: <CAJZ5v0iPVx0KXB5qQ46iQ7CKG6KJC1CnXogQ=e8or24vZuytrw@mail.gmail.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Fri, 23 May 2025 16:46:58 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0iwH3p_A=f0g7+EsPbP7KBJS_LbT9+_gXNLBbXqW8vMFg@mail.gmail.com>
+X-Gm-Features: AX0GCFu5YgI8J1uqi55rgc7H6g3G0QyH8pHo4Ylik2ehjhEW7e8_ODhJw6NXFgk
+Message-ID: <CAJZ5v0iwH3p_A=f0g7+EsPbP7KBJS_LbT9+_gXNLBbXqW8vMFg@mail.gmail.com>
+Subject: Re: [PATCH] drivers: acpi: Fix platform profile driver on !acpi platforms
+To: Alexandre Ghiti <alex@ghiti.fr>
+Cc: Armin Wolf <W_Armin@gmx.de>, Alexandre Ghiti <alexghiti@rivosinc.com>, 
+	"Rafael J . Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, 
+	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	Mario Limonciello <mario.limonciello@amd.com>, Mark Pearson <mpearson-lenovo@squebb.ca>, 
+	Arnd Bergmann <arnd@arndb.de>, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-riscv@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Prabhakar, Fabrizio,
-
-On Mon, 12 May 2025 at 20:43, Prabhakar <prabhakar.csengg@gmail.com> wrote:
-> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+On Fri, May 23, 2025 at 12:50=E2=80=AFPM Rafael J. Wysocki <rafael@kernel.o=
+rg> wrote:
 >
-> Add clock and reset entries for the DSI and LCDC peripherals.
+> On Fri, May 23, 2025 at 12:11=E2=80=AFPM Alexandre Ghiti <alex@ghiti.fr> =
+wrote:
+> >
+> > On 5/22/25 22:04, Armin Wolf wrote:
+> > > Am 22.05.25 um 16:13 schrieb Alexandre Ghiti:
+> > >
+> > >> The platform profile driver is loaded even on platforms that do not =
+have
+> > >> acpi enabled. The initialization of the sysfs entries was recently m=
+oved
+> > >> from platform_profile_register() to the module init call, and those
+> > >> entries need acpi_kobj to be initialized which is not the case when =
+acpi
+> > >> is disabled.
+> > >>
+> > >> This results in the following warning:
+> > >>
+> > >>   WARNING: CPU: 5 PID: 1 at fs/sysfs/group.c:131
+> > >> internal_create_group+0xa22/0xdd8
+> > >>   Modules linked in:
+> > >>   CPU: 5 UID: 0 PID: 1 Comm: swapper/0 Tainted: G W
+> > >> 6.15.0-rc7-dirty #6 PREEMPT
+> > >>   Tainted: [W]=3DWARN
+> > >>   Hardware name: riscv-virtio,qemu (DT)
+> > >>   epc : internal_create_group+0xa22/0xdd8
+> > >>    ra : internal_create_group+0xa22/0xdd8
+> > >>
+> > >>   Call Trace:
+> > >>
+> > >>   internal_create_group+0xa22/0xdd8
+> > >>   sysfs_create_group+0x22/0x2e
+> > >>   platform_profile_init+0x74/0xb2
+> > >>   do_one_initcall+0x198/0xa9e
+> > >>   kernel_init_freeable+0x6d8/0x780
+> > >>   kernel_init+0x28/0x24c
+> > >>   ret_from_fork+0xe/0x18
+> > >>
+> > >> Fix this by checking if acpi is enabled before trying to create sysf=
+s
+> > >> entries.
+> > >
+> > > I already submitted a patch for this problem (see
+> > > https://lore.kernel.org/linux-acpi/a6d92cdd-4dc3-4080-9ed9-5b1f02f247=
+e0@gmx.de/T/)
+> > > that only disables the legacy sysfs interface while keeping the
+> > > class-based interface functional
+> > > as it does not depend on ACPI at all.
+> >
+> >
+> > Great, I understand if your patchset is not merged for rc1 but it would
+> > be nice to have it merged in 6.16 though to fix riscv syzkaller
+> > instance. Perhaps you could add the Fixes tag that Arnd mentioned too?
 >
-> Co-developed-by: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
-> Signed-off-by: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> I actually prefer your patch to the Armin's one because there are
+> questions regarding the latter (see the most recent message from Arnd
+> in this thread).
 
-Thanks for your patch!
+And so it has been applied as 6.16 material now, thanks!
 
-> --- a/drivers/clk/renesas/r9a09g057-cpg.c
-> +++ b/drivers/clk/renesas/r9a09g057-cpg.c
-
-> @@ -58,6 +60,9 @@ enum clk_ids {
->         CLK_SMUX2_GBE0_RXCLK,
->         CLK_SMUX2_GBE1_TXCLK,
->         CLK_SMUX2_GBE1_RXCLK,
-> +       CLK_DIV_PLLETH_LPCLK,
-
-CLK_CDIV4_PLLETH_LPCLK?
-
-> +       CLK_CSDIV_PLLETH_LPCLK,
-
-CLK_PLLETH_LPCLK_GEAR?
-
-> +       CLK_PLLDSI_SDIV2,
-
-CLK_PLLDSI_GEAR?
-
->         CLK_PLLGPU_GEAR,
->
->         /* Module Clocks */
-
-> @@ -148,6 +182,12 @@ static const struct cpg_core_clk r9a09g057_core_clks[] __initconst = {
->         DEF_SMUX(".smux2_gbe0_rxclk", CLK_SMUX2_GBE0_RXCLK, SSEL0_SELCTL3, smux2_gbe0_rxclk),
->         DEF_SMUX(".smux2_gbe1_txclk", CLK_SMUX2_GBE1_TXCLK, SSEL1_SELCTL0, smux2_gbe1_txclk),
->         DEF_SMUX(".smux2_gbe1_rxclk", CLK_SMUX2_GBE1_RXCLK, SSEL1_SELCTL1, smux2_gbe1_rxclk),
-> +       DEF_FIXED(".cdiv4_plleth_lpclk", CLK_DIV_PLLETH_LPCLK, CLK_PLLETH, 1, 4),
-> +       DEF_CSDIV(".plleth_lpclk_gear", CLK_CSDIV_PLLETH_LPCLK, CLK_DIV_PLLETH_LPCLK,
-> +                 CSDIV0_DIVCTL2, dtable_16_128),
-> +
-> +       DEF_PLLDSI_DIV(".plldsi_sdiv2", CLK_PLLDSI_SDIV2, CLK_PLLDSI,
-
-".plldsi_gear", CLK_PLLDSI_GEAR ...
-
-
-> +                      CSDIV1_DIVCTL2, dtable_2_32),
->
->         DEF_DDIV(".pllgpu_gear", CLK_PLLGPU_GEAR, CLK_PLLGPU, CDDIV3_DIVCTL1, dtable_2_64),
->
-
-The rest LGTM.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+> > >> Fixes: 77be5cacb2c2 ("ACPI: platform_profile: Create class for ACPI
+> > >> platform profile")
+> > >> Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+> > >> ---
+> > >>   drivers/acpi/platform_profile.c | 3 +++
+> > >>   1 file changed, 3 insertions(+)
+> > >>
+> > >> diff --git a/drivers/acpi/platform_profile.c
+> > >> b/drivers/acpi/platform_profile.c
+> > >> index ffbfd32f4cf1..b43f4459a4f6 100644
+> > >> --- a/drivers/acpi/platform_profile.c
+> > >> +++ b/drivers/acpi/platform_profile.c
+> > >> @@ -688,6 +688,9 @@ static int __init platform_profile_init(void)
+> > >>   {
+> > >>       int err;
+> > >>   +    if (acpi_disabled)
+> > >> +        return -EOPNOTSUPP;
+> > >> +
+> > >>       err =3D class_register(&platform_profile_class);
+> > >>       if (err)
+> > >>           return err;
+> > >
+> > > _______________________________________________
+> > > linux-riscv mailing list
+> > > linux-riscv@lists.infradead.org
+> > > http://lists.infradead.org/mailman/listinfo/linux-riscv
