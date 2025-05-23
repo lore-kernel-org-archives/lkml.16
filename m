@@ -1,63 +1,63 @@
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16528294A11
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 13:40:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF7D02951B5
+	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 13:40:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748007650; cv=none; b=juCJeWC6IizrcQx2qKkKTEHjgzVIWBzPglNTmmB+mAEXSW0gej2fABo/8DlVqj7jwLWjZtDIu0GF6h/WCPxkilYgA3Y1b+xnHzVJwEP8utVRxBgXCNVd9YFnRKBmYcwJ8KWSaLM7Dl/xlnfmTwLPJFObxopNdF18ETuZEpRh21w=
+	t=1748007652; cv=none; b=TThbGckemEKpUcdtN6P3UD2m96kRCnwjzSs87fDQBsV3dMReIOyYv1mem1K32JB/UH/j+CdcodmUaXn1twTYJC+sPi9AjUYAWspjr+0j/RUARhCtYR2ZtSGMFUdxtOslCpcFpleo1bEqeRih7c6SSTW+ld2EWBxjxmEneEuNXa8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748007650; c=relaxed/simple;
-	bh=nIpXaKo7UoYnucf3GuIfuZxsHV/DZVUWbfnVOjaAP7s=;
+	s=arc-20240116; t=1748007652; c=relaxed/simple;
+	bh=WcF75pnqXotEsYTaAIFVCeSXbuTwse28sKqnHWInBJo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=YhOgHnTtFk7DXZ2rYfmw2hSvtOxwOrzwHmqC7f3bbLJYvVqKUhc9/5Gs4w/1ZQ0P/0PRZPH7VGIdovREvfhyN8P3U0BzEKiFfde12/rqmmXBmzzLoioZ/a4Dib74oFqnOofIfxfiaxmrEmlWyIH+qwH6BD4hSzSR0xz7Eu8xb3M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=pbzUhY/k; arc=none smtp.client-ip=209.85.167.43
+	 MIME-Version; b=FDkztZhCmHrVgqqhrSi8r936AL8meLqR15mWgtrpmhK7/LJRGwGlpm5aybykzd4V7Zo9MPW6J9BWWgmEl4sL79HLWP0FTIyxFBBk3eklaoq4c6oxA3fb60EOxLNbUzbHet88h/PyrSVCrrf+oE85mnYMicRQrGtqa+imrM7UCs8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=rt5Mf0Eg; arc=none smtp.client-ip=209.85.167.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pbzUhY/k"
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-549b116321aso11081553e87.3
-        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 06:40:48 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rt5Mf0Eg"
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-54b0d638e86so13766874e87.1
+        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 06:40:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1748007647; x=1748612447; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1748007649; x=1748612449; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=bRfyxZvH5+TpkOAftwgj9mo3UBVnLXBhqh8LLeaEC0o=;
-        b=pbzUhY/kYRwEbbmAU2uxDtfT3SxQlZ8CYpJ0LU2P4+6dV+AUAjCVBOlWb2ONZoBopf
-         TEhUQtkm0QixzG/L73rwY7sWHnb2tiUY9SUCXiw54ek6A2ZzfD1vAK6kae0nVZnAZXFR
-         kCJZfTDR5bdQHNBtt08HsDIESR4nHeAE37VKZ/WDvljFp3O1hCDWgxYSOzComsBakjhN
-         vFOmXvRX7UQO2TCfnxyPIhIsTrjAUin+IzBVt1kBXGXknVqzD9xq/FBcyOQ3CV0rXec4
-         KkO0GQsV8jSLCj8xZOJMXFWTUP9HvdasV4tM2PdVdeQPKaja4LLKOw0wfFethws15q1d
-         7TYQ==
+        bh=JMZdXJF8HQ4HBbVGnSNAyGkt9IprenNJaiH/9V7ofuE=;
+        b=rt5Mf0Eg5tZEJJ+mdYv8QUxFbcJqhdsHxnKfo+vJ27/cBMgMs6Bj8ad7h2blhm+/GX
+         1tmGKMz+f1Ifz83EjfHEYiFlyfP4WANbOYAnSJ7QV0m5dicc7UxebJOC6hR9xZMJ1K4K
+         Vc+AIfAANog00rhxQ9RhOH5NWqcPw3rP1XKQ7LuuScUjtVg5VtkXuHvSioG4IYHuzuHy
+         rGcrmFxNfgX4SzQ0IJHUkrsvSB4FZr+VnxrWXbgWf0kFi7MfhcBdJn1OcgNKb5Ug28cn
+         2PKOFyGmEvrzWDVWr4TnRyfPxxTX8ElYoriE+rI0nsD+/9iMmYqdeucyp0M5f9KPFX4S
+         HF9w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748007647; x=1748612447;
+        d=1e100.net; s=20230601; t=1748007649; x=1748612449;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=bRfyxZvH5+TpkOAftwgj9mo3UBVnLXBhqh8LLeaEC0o=;
-        b=Ai3Khl2jiYUDbEjPyexRFqMk8WYrXU9GrzyUzHHK83NeseeirygFPHR1Kw/J3kpkE7
-         ZwUp7kt7n64WD8IIKpOS1xhZyUwiuUo7IOzK+2AzuZp+zE8XzDTgWvV9B9FliOb2I4ga
-         GP71Ap6dSYzVOxqd88qSDgTtCQYjwFKpFa6EJCCZ7LBvMCz/rOfvN4i5W2++fO+Pg1vi
-         OljnNHYXzwn7pgA6JUcvm7OHY7o9Eod7pQVCtgEVIt13/cwvg9MaFSfDN3iQlx/AJBEM
-         Odu6nXuQ7sh+45WBRRJxR6GX6LaLbSB/SBcjbPUY5Z5JoRKh1BVvangeNixxRnvirmiq
-         fWRQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU1gqZ5Zb+J/bSbhVvYhLDQtfxfVokfCAKmPmT57dAdzMKPMV8imiMxgS1k9gSYW7rcBig3XkkqjHpXINw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywcf+XJizOBeri/Nu5yOfFYtOjSWNExuAUZS5jKE7HgCURdOSoC
-	KjRW/fuTwoIN1jnm+HLiKkuZs/dI4yqR4X/T/KRrabDuR/YdFZ5kvVj84QW07My1vU4=
-X-Gm-Gg: ASbGncs1ckoWOOErva2cqBpuvkhg6xjunfjSfgvWL/9NH6B9C32siK1WS+Rb5EP+5hP
-	pu+NRrT9nnch3Sl1+/FRtLufk4VH9EbUxExFsB3anGHb/fIfjPVP2aDXHHN3CUEuoLe+gFIA3wB
-	wqrcjoPGgmU+sRFl5GfcIjrM7ArB6Gn4+BNG0Pvvs2moCiuzwCED0IpOFZqi6Rug/06OBbQbWvT
-	RcJiOfuatjRR7bydwD1YOdA6oPbp+HBaigQLUsIU+1Xa4WiX9s4JJiNJEovudDoZIjlqv3deHV/
-	dhAiCO3PYXQ1+IKKSfwMwgyI2lboBWdrNg+YkXavV3rZ3htgjX1f2t/VAfU8xxgfAnhTf5jK8sS
-	FfD5p3AX3hGxsPXJTARaVTT+4fQ==
-X-Google-Smtp-Source: AGHT+IEQ3+x5BM2uDN34zUdzxKW6ya4/VolG4ReWBxvxjZOXbRaDh6MY+jvSlnL1g35O0Meqr3/ZCA==
-X-Received: by 2002:a05:6512:22c4:b0:551:fd90:e4a9 with SMTP id 2adb3069b0e04-551fd90e544mr4364920e87.44.1748007647110;
-        Fri, 23 May 2025 06:40:47 -0700 (PDT)
+        bh=JMZdXJF8HQ4HBbVGnSNAyGkt9IprenNJaiH/9V7ofuE=;
+        b=ukijNbdlX/nTYbOprxOoqv/Qw7zdu69BPEXLexE7NbVym4Oh8QxGr0VfrKdjK8Jy9K
+         /E3zaGvQAkdtZp78eu6ohA0eZSecLLGmMEiIjM/w/3SRrKLKtaQwvpbAXzsgtTVQam+O
+         h/DJd1ujnqx0zDTthEdf3vmchiOsfe6qbYUuRcSUqFTvvSQYCZOjFjG1lWRQw6ceTUyQ
+         pUWudEv2ZOC1wqepiyoONbKjp/O5FXbTU2dVEYGCYF0HcTTLJK9WV9WjBSxK05gSm4/X
+         a7dw1dSkxWntVtm88iQ6DN+IUNmy47OtCLMhD58o2n4SpPGHiPzELcbqRRIDDuWC3Q/B
+         gmBg==
+X-Forwarded-Encrypted: i=1; AJvYcCUQg3c4GL6xmf9PZHoxF9WHLQdiSyDEon9zJwnQmR1kQGj4qLHLiVvrp+o7woYAePq+nA5dxvYQkYtr/1U=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywfkzx8KudHYpTxs+2W3sanKStoBoeeiykvRXXzvLhW4lsKKkeJ
+	2+YPXpy4avsj1jQ8H+gySlhsFLhB3lQ7et2Y0/eTqxUm/Czh8PI0uxU9jxxZYR4zbPc=
+X-Gm-Gg: ASbGncuG0s1jPt1jnC5TWjvxo9AOuE0Y4DYHxACHwGBFp0r9lq84I/7eantzi8lWPHM
+	3Rco1LKY3H49Zydi5CnE50LdWohSpGKR2rT8xWiF+kaoxmEFSURbYb+Pz/he3GNgeur+A4YejQk
+	UUHjwPvMBCK8IYofbV4nFrjrL9d9rzvPLf1Fpm7Sx7MyjSyfLu9II3mYlo4HD8mnfkEx/6PiCNt
+	5LfKT7MDtQV73zR6v+/ZUK9yNRqQx27PuX4b3EoulvXVuzupcwyizwo8FHzZb1dK3arlp/PHIXX
+	psgNZEcpJk7oNxehnnt+w405gkFJ5DqkgtC2Y/xsKu1MxtaysAFf47wdP4dirW5Jiyw+OCo330a
+	1OLPJATexGtUyHMRPeJTkYG7YTw==
+X-Google-Smtp-Source: AGHT+IGvEYgNGoCkD4rXMPLf1i5EyasJT4rgUzgZY4MikEpEuIPRUFRo0vKJ3KsJupVkoZwFT+4GMg==
+X-Received: by 2002:a05:6512:10cc:b0:54e:86f3:5e65 with SMTP id 2adb3069b0e04-550e9966d43mr9793624e87.56.1748007648818;
+        Fri, 23 May 2025 06:40:48 -0700 (PDT)
 Received: from uffe-tuxpro14.. (h-178-174-189-39.A498.priv.bahnhof.se. [178.174.189.39])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-551fc0d473bsm1950609e87.244.2025.05.23.06.40.45
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-551fc0d473bsm1950609e87.244.2025.05.23.06.40.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 May 2025 06:40:46 -0700 (PDT)
+        Fri, 23 May 2025 06:40:48 -0700 (PDT)
 From: Ulf Hansson <ulf.hansson@linaro.org>
 To: Saravana Kannan <saravanak@google.com>,
 	Stephen Boyd <sboyd@kernel.org>,
@@ -78,9 +78,9 @@ Cc: "Rafael J . Wysocki" <rafael@kernel.org>,
 	Ulf Hansson <ulf.hansson@linaro.org>,
 	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 05/21] pmdomain: core: Prepare to add the common ->sync_state() support
-Date: Fri, 23 May 2025 15:40:02 +0200
-Message-ID: <20250523134025.75130-6-ulf.hansson@linaro.org>
+Subject: [PATCH v2 06/21] soc/tegra: pmc: Opt-out from genpd's common ->sync_state() support
+Date: Fri, 23 May 2025 15:40:03 +0200
+Message-ID: <20250523134025.75130-7-ulf.hansson@linaro.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250523134025.75130-1-ulf.hansson@linaro.org>
 References: <20250523134025.75130-1-ulf.hansson@linaro.org>
@@ -92,42 +92,100 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Before we can implement the common ->sync_state() support in genpd, we need
-to allow a few specific genpd providers to opt out from the new behaviour.
+Tegra implements its own specific ->sync_state() callback for the genpd
+providers. Let's set the GENPD_FLAG_NO_SYNC_STATE to inform genpd about it.
 
-Let's introduce GENPD_FLAG_NO_SYNC_STATE as a new genpd config option, to
-allow providers to opt out.
+Moreover, let's call of_genpd_sync_state() to make sure genpd tries to
+power off unused PM domains.
 
-Suggested-by: Saravana Kannan <saravanak@google.com>
+Cc: Thierry Reding <thierry.reding@gmail.com>
+Cc: Jonathan Hunter <jonathanh@nvidia.com>
 Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 ---
- include/linux/pm_domain.h | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/soc/tegra/pmc.c | 26 +++++++++++++++++++-------
+ 1 file changed, 19 insertions(+), 7 deletions(-)
 
-diff --git a/include/linux/pm_domain.h b/include/linux/pm_domain.h
-index 3578196e6626..9329554b9c4a 100644
---- a/include/linux/pm_domain.h
-+++ b/include/linux/pm_domain.h
-@@ -104,6 +104,11 @@ struct dev_pm_domain_list {
-  * GENPD_FLAG_DEV_NAME_FW:	Instructs genpd to generate an unique device name
-  *				using ida. It is used by genpd providers which
-  *				get their genpd-names directly from FW.
-+ *
-+ * GENPD_FLAG_NO_SYNC_STATE:	The ->sync_state() support is implemented in a
-+ *				genpd provider specific way, likely through a
-+ *				parent device node. This flag makes genpd to
-+ *				skip its internal support for this.
-  */
- #define GENPD_FLAG_PM_CLK	 (1U << 0)
- #define GENPD_FLAG_IRQ_SAFE	 (1U << 1)
-@@ -114,6 +119,7 @@ struct dev_pm_domain_list {
- #define GENPD_FLAG_MIN_RESIDENCY (1U << 6)
- #define GENPD_FLAG_OPP_TABLE_FW	 (1U << 7)
- #define GENPD_FLAG_DEV_NAME_FW	 (1U << 8)
-+#define GENPD_FLAG_NO_SYNC_STATE (1U << 9)
+diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
+index 51b9d852bb6a..ef486387ccd9 100644
+--- a/drivers/soc/tegra/pmc.c
++++ b/drivers/soc/tegra/pmc.c
+@@ -418,7 +418,6 @@ struct tegra_pmc_soc {
+  * @irq: chip implementation for the IRQ domain
+  * @clk_nb: pclk clock changes handler
+  * @core_domain_state_synced: flag marking the core domain's state as synced
+- * @core_domain_registered: flag marking the core domain as registered
+  * @wake_type_level_map: Bitmap indicating level type for non-dual edge wakes
+  * @wake_type_dual_edge_map: Bitmap indicating if a wake is dual-edge or not
+  * @wake_sw_status_map: Bitmap to hold raw status of wakes without mask
+@@ -462,7 +461,6 @@ struct tegra_pmc {
+ 	struct notifier_block clk_nb;
  
- enum gpd_status {
- 	GENPD_STATE_ON = 0,	/* PM domain is on */
+ 	bool core_domain_state_synced;
+-	bool core_domain_registered;
+ 
+ 	unsigned long *wake_type_level_map;
+ 	unsigned long *wake_type_dual_edge_map;
+@@ -1297,6 +1295,7 @@ static int tegra_powergate_add(struct tegra_pmc *pmc, struct device_node *np)
+ 
+ 	pg->id = id;
+ 	pg->genpd.name = np->name;
++	pg->genpd.flags = GENPD_FLAG_NO_SYNC_STATE;
+ 	pg->genpd.power_off = tegra_genpd_power_off;
+ 	pg->genpd.power_on = tegra_genpd_power_on;
+ 	pg->pmc = pmc;
+@@ -1406,6 +1405,7 @@ static int tegra_pmc_core_pd_add(struct tegra_pmc *pmc, struct device_node *np)
+ 		return -ENOMEM;
+ 
+ 	genpd->name = "core";
++	genpd->flags = GENPD_FLAG_NO_SYNC_STATE;
+ 	genpd->set_performance_state = tegra_pmc_core_pd_set_performance_state;
+ 
+ 	err = devm_pm_opp_set_regulators(pmc->dev, rname);
+@@ -1425,8 +1425,6 @@ static int tegra_pmc_core_pd_add(struct tegra_pmc *pmc, struct device_node *np)
+ 		goto remove_genpd;
+ 	}
+ 
+-	pmc->core_domain_registered = true;
+-
+ 	return 0;
+ 
+ remove_genpd:
+@@ -4262,8 +4260,25 @@ static const struct of_device_id tegra_pmc_match[] = {
+ 
+ static void tegra_pmc_sync_state(struct device *dev)
+ {
++	struct device_node *np, *child;
+ 	int err;
+ 
++	np = of_get_child_by_name(dev->of_node, "powergates");
++	if (!np)
++		return;
++
++	for_each_child_of_node(np, child)
++		of_genpd_sync_state(child);
++
++	of_node_put(np);
++
++	np = of_get_child_by_name(dev->of_node, "core-domain");
++	if (!np)
++		return;
++
++	of_genpd_sync_state(np);
++	of_node_put(np);
++
+ 	/*
+ 	 * Newer device-trees have power domains, but we need to prepare all
+ 	 * device drivers with runtime PM and OPP support first, otherwise
+@@ -4277,9 +4292,6 @@ static void tegra_pmc_sync_state(struct device *dev)
+ 	 * no dependencies that will block the state syncing. We shouldn't
+ 	 * mark the domain as synced in this case.
+ 	 */
+-	if (!pmc->core_domain_registered)
+-		return;
+-
+ 	pmc->core_domain_state_synced = true;
+ 
+ 	/* this is a no-op if core regulator isn't used */
 -- 
 2.43.0
 
