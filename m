@@ -1,192 +1,92 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49BA01519A0;
-	Fri, 23 May 2025 03:49:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6E8519ADBF;
+	Fri, 23 May 2025 03:49:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747972149; cv=none; b=A0vX/MpFbE0KvFWZbyj6H6FxJIw12tapgU/HguL+uU/JOx62dui5N/kB7aDysQOjmbCoKf7qcRsxfw9LvAbTxywiC/zK/KiUzpuhFUXB2KuK5jEvqz9vNQF6YYsizA1CP9B923kQiiFvcuZ8BHnJzE8o1YhT+kBzjtp+sfpc8Rw=
+	t=1747972166; cv=none; b=q7tY1Jxh73GqjMuwRT430GCtbXAhgK5c6nTb3JcS5RbFpxQbbtVtZlIruBy1Z1wCt0L3usqqXDp3Tc/vJX/Wws/RramYu5ANR6c3V/5plRJzVHUnEBcFnAGXgnZVR1KOBQ7tEvi7HtAQX1X0YwfxFVC7eCE+2su5IH+cvPaQG5I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747972149; c=relaxed/simple;
-	bh=W0I1h/EFOaXWHoneVKr55BZEEapiZElQ6WMainFSWps=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kZvOpb1LPVQPP28KiDftXSj1FcMAHrw9rqu/IoOHA4V+GX3AIC4nr5oAJv3qGIigjwegLU0STmfY2LDBDCENWZEIlTNEAmj/4RkCk2RTNbIsgqOFzi7gmkdeLp0kCsw9kZfXKXJu7+iB1hdpK7T8FHQdwRJOuTh7GzfUBJj+kDA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VrG+HFJM; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1747972166; c=relaxed/simple;
+	bh=DpSrGOdy7vLavJphaFDZF+lJ+ZUz8BU9EXeH3ZXqCNs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=IZniTkMhIvoXFkKyOrYS0oJS2wRR2eO90/gjlsg2ubUpIK6GXvJeQY+gVvzM7FrsfXkVoFaAEvHYgWf6Qu7Ir8HzzTZreBphF8YqTso+Hr9HdjvF60nxddqo6e4oc92jRV/MYVSmMRQ967yUYXPZVG76BempN/NtwJIe6O37qV4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=KsvorOcf; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VrG+HFJM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747972147; x=1779508147;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=W0I1h/EFOaXWHoneVKr55BZEEapiZElQ6WMainFSWps=;
-  b=VrG+HFJM91OCsbD6N9+HLYS3XnDpXuLdP6ll4N+DqJZEzElPR9XhT1EV
-   lmA+QNLHGN95GRAkmjFVvJkx0BBwwyt7oIY9E1/M1O5naca8DHLTJtTRR
-   cewSfhF8ElS1vVHAi4Q23pbJjo2gg53C439VYOBAydCqp/XLcPZDZQQ35
-   O8bI8mvtZNFrxYtH/zeiS/JERhN1Eci4W4lRiFSERjSmApyyAslUz3Jnw
-   f8Zq0nVcZ+77pR7/MJy8GXO1wPUYPtDk5BhbRZaii2S8kbfVI0Ho3Xmox
-   UeuqBQvumPVwQohKALtjase5wQoXU9V4puhwzqI6URcteAT5/O5NulpK+
-   g==;
-X-CSE-ConnectionGUID: LAsLKR51SjSmMAXOw9wqBA==
-X-CSE-MsgGUID: d+eFs/pyRQavSbLtqYvkWg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11441"; a="49915778"
-X-IronPort-AV: E=Sophos;i="6.15,307,1739865600"; 
-   d="scan'208";a="49915778"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2025 20:49:06 -0700
-X-CSE-ConnectionGUID: dkunbL94RdmQJVUYFsoLtw==
-X-CSE-MsgGUID: 2AmUQwVESvaXiXzhANKj0w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,307,1739865600"; 
-   d="scan'208";a="140747623"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by orviesa009.jf.intel.com with ESMTP; 22 May 2025 20:49:02 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uIJP2-000PzW-0E;
-	Fri, 23 May 2025 03:49:00 +0000
-Date: Fri, 23 May 2025 11:48:20 +0800
-From: kernel test robot <lkp@intel.com>
-To: Claudio Imbrenda <imbrenda@linux.ibm.com>, linux-kernel@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, kvm@vger.kernel.org,
-	linux-s390@vger.kernel.org, frankja@linux.ibm.com,
-	borntraeger@de.ibm.com, seiden@linux.ibm.com, nsg@linux.ibm.com,
-	nrb@linux.ibm.com, david@redhat.com, hca@linux.ibm.com,
-	agordeev@linux.ibm.com, svens@linux.ibm.com, gor@linux.ibm.com,
-	schlameuss@linux.ibm.com
-Subject: Re: [PATCH v3 3/4] KVM: s390: refactor and split some gmap helpers
-Message-ID: <202505231158.TssIVgKH-lkp@intel.com>
-References: <20250522132259.167708-4-imbrenda@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="KsvorOcf"
+Received: from [IPV6:2601:646:8081:9485:40c5:16f6:92c4:44cf] ([IPv6:2601:646:8081:9485:40c5:16f6:92c4:44cf])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 54N3mnmB3287516
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Thu, 22 May 2025 20:48:50 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 54N3mnmB3287516
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025042001; t=1747972131;
+	bh=0+y2JN5llR4Gfib/fV4eg/92zfayiIPRRtSpX9qWiZM=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=KsvorOcfwMjV5DhjJYlk6PqGAVVBpdo0Ay1mKoNEc4uDj+UAZiqUPyoqsmCWbxXBt
+	 5AozE/rs2TmbAPrLdB12URBcs+Vcnv5nz3AmXmCznoSOCmSYQNwGRQdolL6KivCIEN
+	 TKMLmne7KOEZIffr+Q0zBIqTAVIiTOgxDdNR0X6Q5vONA9ugMDa+3ZiXmsaF3dg4GQ
+	 UhGlekNxErudGxzw7RhnGfX3WYh/DQogo2GKhQnIS9hJ21mDzZGjHVjV7EK9NfrI/Z
+	 qsGxMXEdA6qTSFht5d+dKN/MKJp+OIJTxX6KPMfh8Z+1IepQhAqHj25oMSi807WIlZ
+	 j/ZI9lBARF8JA==
+Message-ID: <ec1af0a2-d07a-4963-bae7-8a7f559798bd@zytor.com>
+Date: Thu, 22 May 2025 20:48:44 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250522132259.167708-4-imbrenda@linux.ibm.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/1] x86/fred/signal: Prevent single-step upon ERETU
+ completion
+To: Andrew Cooper <andrew.cooper3@citrix.com>,
+        Dave Hansen <dave.hansen@intel.com>, "Xin Li (Intel)" <xin@zytor.com>,
+        linux-kernel@vger.kernel.org
+Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, peterz@infradead.org,
+        stable@vger.kernel.org
+References: <20250522171754.3082061-1-xin@zytor.com>
+ <e4f1120b-0bff-4f01-8fe7-5e394a254020@intel.com>
+ <ad8d3a12-25f3-4d57-8f34-950b7967f92b@citrix.com>
+ <3D4D48D6-D6E7-4391-8DCF-6B9D307FE2E2@zytor.com>
+ <0a4db439-e402-4b6a-8aba-79a3c0398d9a@citrix.com>
+Content-Language: en-US
+From: "H. Peter Anvin" <hpa@zytor.com>
+In-Reply-To: <0a4db439-e402-4b6a-8aba-79a3c0398d9a@citrix.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hi Claudio,
+On 5/22/25 17:10, Andrew Cooper wrote:
+>>>
+>>> ~Andrew
+>> SIGTRAP → sigreturn. Basically, we have to uplevel the suppression behavior to the kernel (where it belongs) instead of doing it at the ISA level. 
+> 
+> So the problem is specifically that we're in a SYSCALL context (from
+> FRED's point of view), and we rewrite state in the FRED FRAME to be
+> another context which happened to have eflags.TF set.
+> 
+> And the combination of these two triggers a new singlestep to be pending
+> immediately.
+> 
+> I have to admit that I didn't like the implication from the SYSCALL bit,
+> and argued to have it handled differently, but alas.  I think the real
+> bug here is trying to ERETU with a splice of two different contexts
+> worth of FRED state.
+> 
 
-kernel test robot noticed the following build errors:
+To some degree it is, yes. And it is sigreturn that does that splicing.
 
-[auto build test ERROR on kvms390/next]
-[also build test ERROR on s390/features kvm/queue kvm/next mst-vhost/linux-next linus/master v6.15-rc7 next-20250522]
-[cannot apply to kvm/linux-next]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+But it is desirable to be able to single-step across sigreturn if one is
+debugging from inside the signal handler, hence we should not clearing
+TF if it is set on sigreturn entry.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Claudio-Imbrenda/s390-remove-unneeded-includes/20250522-212623
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/kvms390/linux.git next
-patch link:    https://lore.kernel.org/r/20250522132259.167708-4-imbrenda%40linux.ibm.com
-patch subject: [PATCH v3 3/4] KVM: s390: refactor and split some gmap helpers
-config: s390-randconfig-001-20250523 (https://download.01.org/0day-ci/archive/20250523/202505231158.TssIVgKH-lkp@intel.com/config)
-compiler: s390-linux-gcc (GCC) 8.5.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250523/202505231158.TssIVgKH-lkp@intel.com/reproduce)
+This is in fact exactly analogous to ERETU ignoring the syscall bit if
+TF is set before ERETU is executed, just one abstraction level higher up
+in the stack.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505231158.TssIVgKH-lkp@intel.com/
+	-hpa
 
-All errors (new ones prefixed by >>):
-
-   arch/s390/mm/gmap_helpers.c: In function 'ptep_zap_swap_entry':
->> arch/s390/mm/gmap_helpers.c:26:7: error: implicit declaration of function 'non_swap_entry'; did you mean 'init_wait_entry'? [-Werror=implicit-function-declaration]
-     if (!non_swap_entry(entry))
-          ^~~~~~~~~~~~~~
-          init_wait_entry
->> arch/s390/mm/gmap_helpers.c:28:11: error: implicit declaration of function 'is_migration_entry'; did you mean 'list_first_entry'? [-Werror=implicit-function-declaration]
-     else if (is_migration_entry(entry))
-              ^~~~~~~~~~~~~~~~~~
-              list_first_entry
->> arch/s390/mm/gmap_helpers.c:29:33: error: implicit declaration of function 'pfn_swap_entry_folio'; did you mean 'filemap_dirty_folio'? [-Werror=implicit-function-declaration]
-      dec_mm_counter(mm, mm_counter(pfn_swap_entry_folio(entry)));
-                                    ^~~~~~~~~~~~~~~~~~~~
-                                    filemap_dirty_folio
-   arch/s390/mm/gmap_helpers.c:29:33: warning: passing argument 1 of 'mm_counter' makes pointer from integer without a cast [-Wint-conversion]
-      dec_mm_counter(mm, mm_counter(pfn_swap_entry_folio(entry)));
-                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~
-   In file included from arch/s390/mm/gmap_helpers.c:9:
-   include/linux/mm.h:2725:44: note: expected 'struct folio *' but argument is of type 'int'
-    static inline int mm_counter(struct folio *folio)
-                                 ~~~~~~~~~~~~~~^~~~~
->> arch/s390/mm/gmap_helpers.c:30:2: error: implicit declaration of function 'free_swap_and_cache'; did you mean 'free_pgd_range'? [-Werror=implicit-function-declaration]
-     free_swap_and_cache(entry);
-     ^~~~~~~~~~~~~~~~~~~
-     free_pgd_range
-   arch/s390/mm/gmap_helpers.c: In function 'gmap_helper_zap_one_page':
->> arch/s390/mm/gmap_helpers.c:60:27: error: implicit declaration of function 'pte_to_swp_entry'; did you mean 'ptep_zap_swap_entry'? [-Werror=implicit-function-declaration]
-      ptep_zap_swap_entry(mm, pte_to_swp_entry(*ptep));
-                              ^~~~~~~~~~~~~~~~
-                              ptep_zap_swap_entry
->> arch/s390/mm/gmap_helpers.c:60:27: error: incompatible type for argument 2 of 'ptep_zap_swap_entry'
-      ptep_zap_swap_entry(mm, pte_to_swp_entry(*ptep));
-                              ^~~~~~~~~~~~~~~~~~~~~~~
-   arch/s390/mm/gmap_helpers.c:24:67: note: expected 'swp_entry_t' {aka 'struct <anonymous>'} but argument is of type 'int'
-    static void ptep_zap_swap_entry(struct mm_struct *mm, swp_entry_t entry)
-                                                          ~~~~~~~~~~~~^~~~~
-   cc1: some warnings being treated as errors
-
-
-vim +26 arch/s390/mm/gmap_helpers.c
-
-    14	
-    15	/**
-    16	 * ptep_zap_swap_entry() - discard a swap entry.
-    17	 * @mm: the mm
-    18	 * @entry: the swap entry that needs to be zapped
-    19	 *
-    20	 * Discards the given swap entry. If the swap entry was an actual swap
-    21	 * entry (and not a migration entry, for example), the actual swapped
-    22	 * page is also discarded from swap.
-    23	 */
-    24	static void ptep_zap_swap_entry(struct mm_struct *mm, swp_entry_t entry)
-    25	{
-  > 26		if (!non_swap_entry(entry))
-    27			dec_mm_counter(mm, MM_SWAPENTS);
-  > 28		else if (is_migration_entry(entry))
-  > 29			dec_mm_counter(mm, mm_counter(pfn_swap_entry_folio(entry)));
-  > 30		free_swap_and_cache(entry);
-    31	}
-    32	
-    33	/**
-    34	 * gmap_helper_zap_one_page() - discard a page if it was swapped.
-    35	 * @mm: the mm
-    36	 * @vmaddr: the userspace virtual address that needs to be discarded
-    37	 *
-    38	 * If the given address maps to a swap entry, discard it.
-    39	 *
-    40	 * Context: needs to be called while holding the mmap lock.
-    41	 */
-    42	void gmap_helper_zap_one_page(struct mm_struct *mm, unsigned long vmaddr)
-    43	{
-    44		struct vm_area_struct *vma;
-    45		spinlock_t *ptl;
-    46		pte_t *ptep;
-    47	
-    48		mmap_assert_locked(mm);
-    49	
-    50		/* Find the vm address for the guest address */
-    51		vma = vma_lookup(mm, vmaddr);
-    52		if (!vma || is_vm_hugetlb_page(vma))
-    53			return;
-    54	
-    55		/* Get pointer to the page table entry */
-    56		ptep = get_locked_pte(mm, vmaddr, &ptl);
-    57		if (unlikely(!ptep))
-    58			return;
-    59		if (pte_swap(*ptep))
-  > 60			ptep_zap_swap_entry(mm, pte_to_swp_entry(*ptep));
-    61		pte_unmap_unlock(ptep, ptl);
-    62	}
-    63	EXPORT_SYMBOL_GPL(gmap_helper_zap_one_page);
-    64	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
