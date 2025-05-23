@@ -1,162 +1,147 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C9277DA8C;
-	Fri, 23 May 2025 06:13:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A602F22577D;
+	Fri, 23 May 2025 06:14:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747980840; cv=none; b=gnv5Skd6qWYLT8IKqZHnt4yJWkwZTUIGai1+BfyRgn5NS0zCw+C0UvJV/sW3gt7w64dVT5QURo6RVXtpmzt2dW3MXp46D3dJhvn5kIedbZfQWTq2ZcHXcFWYtifXtrErdWVBYa/wEGbq5a6a+K7COIjWyR/V/4azs3fCZYwQ9Lw=
+	t=1747980866; cv=none; b=WvrCxDhFI/lnrKnp0o32UOD1O928sFvp4GundgjVPS84egmE2twkUF3DyXZuE7IKPeQLatVdVkf6av0yFM1cQp4Etft4s/PXYej+mbu711bYXb7Kf73nXP7Zenh62vnIz7xUGc8S0PiF7Z8GhE2JmtfHjaHxSWPsu30nxKoEWnM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747980840; c=relaxed/simple;
-	bh=0rnDohHDNcqVJjVo5X0KD3ipnyZySeQ57vlVYBZfkF4=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=GwNIWTDkhdNzDPEtL41Yy6mo7LJgr2XYghiwjIGzxT0Dfw4hKtDmFlpcwSk65lZ5xhMpuwPlBEa+2Fgp6byLxzzGFSyHY/BRnJL+v1qS9oJtOSO+zxIjvW2pxtYKtY8xlXbjMqidDjq3JsBlDJMynClUT0mrFUh0A1sPFAO8owQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=qtorz+4H; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1747980866; c=relaxed/simple;
+	bh=QzJNuVs8vVKFKM8wKyULi4Vvzh4pwY3oC3m/lfAcQ9I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UUawQ2KfNfzPsQhU1f68lUjSwdFdZVMYvLXL71+OWak/66KLnaUGr6OmxSIc6fKhhLjUjk9Go5KRR45pKdqAhrN9E2oW406oSa2wmKc8+5LQhn45c1qY+HavqtDA7ui30ocHuZcJMyAvmdTIdfRGpyLipDuVO+IwTB21PPMS/rY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HJ48/bHz; arc=none smtp.client-ip=209.85.210.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="qtorz+4H"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1747980833;
-	bh=pn2PuBTFwlhixqOZOK4nMXhyOFmSaO0qfQoQhcdFgfU=;
-	h=Date:From:To:Cc:Subject:From;
-	b=qtorz+4HtzchEWiH72jM72nMdXDjsE+qhqVvDOEIHN1fusy06F4xbU55OEGQyCwF6
-	 qgJ8JGqbGgn6q9eWQeMdpwqRuXj5XtChs61XwoP49d7KSDOIu8NQYz/3bZa5utHGQA
-	 m+is+mS7ayKfhdgo8z9M95Wo3IsC1XaWsStXmX58wj/aePAY5463n+8hgLA8UdRqXL
-	 no2iBBeexQHn11/+8+se3v/Eusby2ppV92gXj28B3ZvYgztLZsnquhczaT1BHzUk6n
-	 5ATM+ofZkr2j9tCMjHgiUCg+G4cmusgSte9ibTMq8MInYDyx7qY++Jg0E9vIzGNWNI
-	 AWFMef5TaXtOw==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4b3Zc11TlGz4wxh;
-	Fri, 23 May 2025 16:13:53 +1000 (AEST)
-Date: Fri, 23 May 2025 16:13:52 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Miguel Ojeda <ojeda@kernel.org>, Dave Airlie <airlied@redhat.com>
-Cc: Andreas Hindborg <a.hindborg@kernel.org>, Asahi Lina
- <lina+kernel@asahilina.net>, Danilo Krummrich <dakr@kernel.org>, DRI
- <dri-devel@lists.freedesktop.org>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>, Tamir Duberstein <tamird@gmail.com>
-Subject: linux-next: manual merge of the rust tree with the drm tree
-Message-ID: <20250523161352.20f0589a@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HJ48/bHz"
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-7376dd56f8fso9985485b3a.2;
+        Thu, 22 May 2025 23:14:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747980864; x=1748585664; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=MHl3B8D0g534+xOMHpbFZ1fPtFf+LSieMSonGIYFvHU=;
+        b=HJ48/bHzkEfVspe5yIvM20AjtgzFkLFjCV7mHvKXWkNf6sRDpzlptYtri5ehUU6F4r
+         XFYNVOTkM9E3fb6Nqd6bxizwLF8PEIQA21CmxMbs76n8VTpbK/vR+P+IbhQccpiBihxt
+         5kxgkjbHwFCCnBokPaS+gfQzz8o7Gv/WHR11FhsZKpodO6ZvSHSNJj7A45mBy4fhJo3X
+         lsnz2h4NXleaXJqnL30/nGl0BW2Pm6BpgKaQQ/+byIqyn6ReCPEnKliuD3L0CAwf6Ngd
+         guUMMt+M6FqbF5ojSODPRo/JpQNcM0PtEWEjg+H2M/KM2a6m/7i1fVbPuxan7/nUfZXx
+         F4xw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747980864; x=1748585664;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=MHl3B8D0g534+xOMHpbFZ1fPtFf+LSieMSonGIYFvHU=;
+        b=rJp+jxEAHz+boUv8sHtIVsAAbefKmwfKaiY2lenLwddFSrWa5mEG27G5CEFQ5g/pwS
+         L0WVzbWEpYYYbeRvNWqw9hY1JrudDhVONhk9pk2rSaBse+HluUiGGJQgfE6c9rLFChtj
+         pQ0lYc7d516QuN40s4tXsv/JqDRjamL0PYN5ZDvEzY9z33IPgSa/VhX9KtshmwtKp4BL
+         DVxPT22DkA4p00EKy36czEOopLAhgeQFAhmzJU+v4nNqSLTbIsVit+pvFzNGP4zzqtek
+         C+3zsd6/POQ5moJf326USUEgjb7zFr1JVXe4WNbx3CNfbRTp7gK/4W6Kcfjb7TXcXmhY
+         ABgQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXiSjagLz+iYvZqEvY58cUE4xRwrn0wr4OWRIoqOUTGAJfE+FBSXgOUk0f+qFgod3KGydWI0bzMR8fuIu0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxuaH5nNsWLVS89OPhPJAn2ZVdrQESqcCCFmI7jnemBDYGeAa/b
+	m6cL2K+nyY5xDsa4EFnEXSE5lXYh/prrdvvmgI9ldJV5mo1I4E6e9F+u
+X-Gm-Gg: ASbGncvsl90AdDlo4Dosb5O2Z3NDCbS0RjS1H6bgDj/hIOq8y8xyrKLK4fcWto5Iy+s
+	vcl2iwTnb+hAs+W9TTdeqWUNP2luei3JJODQXACMrnbKSt3b4d0vrgfTk2HnblOED5jpXmWOA6d
+	OaVj9kIluEdSXy7lWtE8ZFR/1HlBAA2yjlGcfOHwxRFAsk41AHKQVGTiLdkl1ThbJOowKTxGFg0
+	cL6Wc7sAxNytgBzieY3sKvEjZXkD0LTTMHv+nccRZ3U9wdmxK/iOOnm7fanGV70pKbLOBuJ11WN
+	y+kkg+R+fjREW0JWkfB7NtJhoj2ZUImfZ5CvYuE3LEd2VxC/MUC+2DwwJSTjXA==
+X-Google-Smtp-Source: AGHT+IF8NcYpLF/vCpsLTmL2BavFzYK0IE92XL7WtADDDe8q+CJGuAknVVIFrJ5MaDtWDYAN1k9fkw==
+X-Received: by 2002:a05:6a00:2d04:b0:73c:a55c:6cdf with SMTP id d2e1a72fcca58-742a978ebbbmr35788381b3a.1.1747980863708;
+        Thu, 22 May 2025 23:14:23 -0700 (PDT)
+Received: from archie.me ([103.124.138.155])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-742af5d1cbbsm12065992b3a.149.2025.05.22.23.14.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 May 2025 23:14:22 -0700 (PDT)
+Received: by archie.me (Postfix, from userid 1000)
+	id D2C4942439C3; Fri, 23 May 2025 13:14:20 +0700 (WIB)
+Date: Fri, 23 May 2025 13:14:20 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Hanne-Lotta =?utf-8?B?TcOkZW5ww6TDpA==?= <hannelotta@gmail.com>,
+	mchehab@kernel.org, ribalda@chromium.org, hverkuil@xs4all.nl,
+	sebastian.fricke@collabora.com, hljunggr@cisco.com,
+	dave.jiang@intel.com, jgg@ziepe.ca, saeedm@nvidia.com,
+	Jonathan.Cameron@huawei.com, corbet@lwn.net,
+	ilpo.jarvinen@linux.intel.com, mario.limonciello@amd.com,
+	W_Armin@gmx.de, mpearson-lenovo@squebb.ca,
+	skhan@linuxfoundation.org
+Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-kernel-mentees@lists.linux.dev
+Subject: Re: [PATCH v2 4/4] docs: Fix typos, improve grammar in Userspace API
+Message-ID: <aDASPKOpCjv3rUeQ@archie.me>
+References: <20250522115255.137450-1-hannelotta@gmail.com>
+ <20250522115255.137450-4-hannelotta@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/UfLstoki3dA=qGyu89WKs+a";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="7URSTXlAz4njnFY8"
+Content-Disposition: inline
+In-Reply-To: <20250522115255.137450-4-hannelotta@gmail.com>
 
---Sig_/UfLstoki3dA=qGyu89WKs+a
-Content-Type: text/plain; charset=US-ASCII
+
+--7URSTXlAz4njnFY8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hi all,
+On Thu, May 22, 2025 at 02:52:55PM +0300, Hanne-Lotta M=C3=A4enp=C3=A4=C3=
+=A4 wrote:
+> diff --git a/Documentation/userspace-api/sysfs-platform_profile.rst b/Doc=
+umentation/userspace-api/sysfs-platform_profile.rst
+> index 7f013356118a..6613e188242a 100644
+> --- a/Documentation/userspace-api/sysfs-platform_profile.rst
+> +++ b/Documentation/userspace-api/sysfs-platform_profile.rst
+> @@ -18,9 +18,9 @@ API for selecting the platform profile of these automat=
+ic mechanisms.
+>  Note that this API is only for selecting the platform profile, it is
+>  NOT a goal of this API to allow monitoring the resulting performance
+>  characteristics. Monitoring performance is best done with device/vendor
+> -specific tools such as e.g. turbostat.
+> +specific tools, e.g. turbostat.
+> =20
+> -Specifically when selecting a high performance profile the actual achiev=
+ed
+> +Specifically, when selecting a high performance profile the actual achie=
+ved
+>  performance may be limited by various factors such as: the heat generated
+>  by other components, room temperature, free air flow at the bottom of a
+>  laptop, etc. It is explicitly NOT a goal of this API to let userspace kn=
+ow
+> @@ -44,7 +44,7 @@ added. Drivers which wish to introduce new profile name=
+s must:
+>  "Custom" profile support
+>  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>  The platform_profile class also supports profiles advertising a "custom"
+> -profile. This is intended to be set by drivers when the setttings in the
+> +profile. This is intended to be set by drivers when the settings in the
+>  driver have been modified in a way that a standard profile doesn't repre=
+sent
+>  the current state.
+> =20
 
-Today's linux-next merge of the rust tree got a conflict in:
+LGTM, thanks!
 
-  rust/bindings/bindings_helper.h
-
-between commits:
-
-  9a69570682b1 ("rust: drm: ioctl: Add DRM ioctl abstraction")
-  07c9016085f9 ("rust: drm: add driver abstractions")
-  1e4b8896c0f3 ("rust: drm: add device abstraction")
-  a98a73be9ee9 ("rust: drm: file: Add File abstraction")
-  c284d3e42338 ("rust: drm: gem: Add GEM object abstraction")
-
-from the drm tree and commits:
-
-  210b81578efb ("rust: xarray: Add an abstraction for XArray")
-  8cbc95f983bc ("rust: workaround `bindgen` issue with forward references t=
-o `enum` types")
-
-from the rust tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
+Reviewed-by: Bagas Sanjaya <bagasdotme@gmail.com>
 
 --=20
-Cheers,
-Stephen Rothwell
+An old man doll... just what I always wanted! - Clara
 
-diff --cc rust/bindings/bindings_helper.h
-index a5a6fb45d405,5532bbfd96eb..000000000000
---- a/rust/bindings/bindings_helper.h
-+++ b/rust/bindings/bindings_helper.h
-@@@ -6,13 -6,29 +6,35 @@@
-   * Sorted alphabetically.
-   */
- =20
-+ /*
-+  * First, avoid forward references to `enum` types.
-+  *
-+  * This workarounds a `bindgen` issue with them:
-+  * <https://github.com/rust-lang/rust-bindgen/issues/3179>.
-+  *
-+  * Without this, the generated Rust type may be the wrong one (`i32`) or
-+  * the proper one (typically `c_uint`) depending on how the headers are
-+  * included, which in turn may depend on the particular kernel configurat=
-ion
-+  * or the architecture.
-+  *
-+  * The alternative would be to use casts and likely an
-+  * `#[allow(clippy::unnecessary_cast)]` in the Rust source files. Instead,
-+  * this approach allows us to keep the correct code in the source files a=
-nd
-+  * simply remove this section when the issue is fixed upstream and we bump
-+  * the minimum `bindgen` version.
-+  *
-+  * This workaround may not be possible in some cases, depending on how th=
-e C
-+  * headers are set up.
-+  */
-+ #include <linux/hrtimer_types.h>
-+=20
- +#include <drm/drm_device.h>
- +#include <drm/drm_drv.h>
- +#include <drm/drm_file.h>
- +#include <drm/drm_gem.h>
- +#include <drm/drm_ioctl.h>
-  #include <kunit/test.h>
- +#include <linux/auxiliary_bus.h>
-  #include <linux/blk-mq.h>
-  #include <linux/blk_types.h>
-  #include <linux/blkdev.h>
-@@@ -66,4 -78,8 +89,9 @@@ const gfp_t RUST_CONST_HELPER___GFP_ZER
-  const gfp_t RUST_CONST_HELPER___GFP_HIGHMEM =3D ___GFP_HIGHMEM;
-  const gfp_t RUST_CONST_HELPER___GFP_NOWARN =3D ___GFP_NOWARN;
-  const blk_features_t RUST_CONST_HELPER_BLK_FEAT_ROTATIONAL =3D BLK_FEAT_R=
-OTATIONAL;
- +const fop_flags_t RUST_CONST_HELPER_FOP_UNSIGNED_OFFSET =3D FOP_UNSIGNED_=
-OFFSET;
-+=20
-+ const xa_mark_t RUST_CONST_HELPER_XA_PRESENT =3D XA_PRESENT;
-+=20
-+ const gfp_t RUST_CONST_HELPER_XA_FLAGS_ALLOC =3D XA_FLAGS_ALLOC;
-+ const gfp_t RUST_CONST_HELPER_XA_FLAGS_ALLOC1 =3D XA_FLAGS_ALLOC1;
-
---Sig_/UfLstoki3dA=qGyu89WKs+a
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+--7URSTXlAz4njnFY8
+Content-Type: application/pgp-signature; name=signature.asc
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgwEiAACgkQAVBC80lX
-0GydpAf/RbWvNFVq/Wp77QPgTquSHd4gV7XQfUccfon1i8HdQiQjUsK8oKbP8HWe
-9rWIFLwUnmcr/IawqVfBYZlBcld9LLWBXrmUpnLL2OcEOB7DI5W8LjhvT8GLbi6P
-qKMxrzeCsjpxdMLiucpBlLH1dzqneqie4Y/QdQhC+pYI4t7h/o3/OuzwuYKJzvTZ
-8oJ0LKWwiVD5CailSwJ1dZtWAuji3Ps+no+OoJbDA1lZ6GQ32ubn15r2n/XOmdAY
-kBD4VyS5PnJljLysMz/FhO4ntCaHRrn9sWQ6YsX8F9wUHdN2z+rJWj7Qnsh1c0RG
-owJ/9IJ6NtOwU18O9QOsuamt7dvWQg==
-=ou7m
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCaDASPAAKCRD2uYlJVVFO
+o7K9AQCAadOCdr3sLHWQNMQdtCOg92nM0uxCES3VUJaSEZRzoQEAk4qnDQ4yVHkO
+T7roqthiiUAgSj8C3VgyyYkT8DK/YwY=
+=u/LH
 -----END PGP SIGNATURE-----
 
---Sig_/UfLstoki3dA=qGyu89WKs+a--
+--7URSTXlAz4njnFY8--
