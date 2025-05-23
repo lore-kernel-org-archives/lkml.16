@@ -1,300 +1,212 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from mx07-0057a101.pphosted.com (mx07-0057a101.pphosted.com [205.220.184.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0FDE2253EC;
-	Fri, 23 May 2025 05:57:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747979852; cv=none; b=sJBBwabB7do7xaLIg9huOGCof2h34QCm8/056Hwyy8oEKeJcpdwFpx0kil43Un1hKAlsX4p9Acr5n3BuwAIa7yFnIKon/+QjSbNIZn70W2NDOSQiyrXb08C8MI3cu+0mYcdhWk6cvmxqvhB8ynoZ4WhY8jYPDsFg3xMonaAHmUI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747979852; c=relaxed/simple;
-	bh=hRmVVkMPDICu6d7y/B6zsPQs+Um/02wZlq73ImpTzTY=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=hxqmLZ4nAd/WLykfauF33I2KVHbKzQ2OM6mmSEJl6+oJRfoFPYvTrTiIBLQABTYOZqnxpmHeOMqbClwAeceCoosGQeJu0HJYMv0gaSEOSKX8lJzMjwpJIEeK1Z8lWrFyT0Uc2WCHOxe2AkVXZF3lvGLO72/p9fkwLQ8wMojZwhY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=l6ch7RBb; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 919BC1B95B;
+	Fri, 23 May 2025 05:58:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.184.10
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747979890; cv=fail; b=I5VMUZpeaEnYOPg684IM+qep6soglDdw55STiYh4bFzsv2JEszGNg0IqqhQwSGepqARmLaazKRJd9ba/7N3xkXfr5hWghpRUpa+vgHq3A1qyEPyQExtKeSNgBKQafH17Tq/2EDUKdOfh1dZo6YLCjEkNPTRni2PLd9Ir5c8NkAQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747979890; c=relaxed/simple;
+	bh=LCbfBDW8lltvLK6wdKLqMPEQ7dMfXlC2k8i30MRNTbo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=b6LKE2yUvPKz5ogxmqmImjxP1X5kMNYAPa4FJ8M8vK5ETT0omdS7ss1yJbIpIGJruBasbB8mw8hMTws96KY7PrNEuUrYuHVw0joIqywa2Btvtv1B5KbuAUqXD85ibAVzAX2XoU0voUzl3obQ+2d3kBhpPM8OHJyB1vSWRGkrBzA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=westermo.com; spf=pass smtp.mailfrom=westermo.com; dkim=pass (2048-bit key) header.d=westermo.com header.i=@westermo.com header.b=bcu4x9wV; dkim=pass (1024-bit key) header.d=beijerelectronicsab.onmicrosoft.com header.i=@beijerelectronicsab.onmicrosoft.com header.b=D+A5p7KO; arc=fail smtp.client-ip=205.220.184.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=westermo.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=westermo.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="l6ch7RBb"
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54MNW6bD030284;
-	Fri, 23 May 2025 05:57:15 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=0RnJL3
-	KkZs3wmTkJxrlJtYFbridthCOY7DfKrAWdtAE=; b=l6ch7RBbOQY7digoycCCke
-	kHz/0TtkbPEIpVa2MlgsaeU3eT2yYOcvhvzPLWKzzDnjF3tnZWb4nvgVN3MVYUib
-	FQ43NrCcgbBsoHuMruNjMJVdO37ZabkYTEeGMjcQcjkb9Iz4kjm0sPP83gLAYcIW
-	4+IAq1roMBmBpHL8s7h/YIkdaOluEePhAniOKkWLxDYZkuQUfH8YNLE6PCXoKwy8
-	ce2Bdq/XNoemQWStLsIdqW8fYEg+GNzn2jajMgbie8TJPI6MQAv53DYkSxPC98yk
-	01VlobtxS8Xw5MBPiZX0896xH7WziLQYEhDEwki+Awido9/ITWPEDQf9iaP4sE7w
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46t669kgr6-1
+	dkim=pass (2048-bit key) header.d=westermo.com header.i=@westermo.com header.b="bcu4x9wV";
+	dkim=pass (1024-bit key) header.d=beijerelectronicsab.onmicrosoft.com header.i=@beijerelectronicsab.onmicrosoft.com header.b="D+A5p7KO"
+Received: from pps.filterd (m0214197.ppops.net [127.0.0.1])
+	by mx07-0057a101.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54N5MX7B026466;
+	Fri, 23 May 2025 07:57:59 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=westermo.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=270620241; bh=n9EczjqfsrMC0qUs8GGIprFZ
+	AMI/3edOvVeYT+o9ZgM=; b=bcu4x9wVtwhUSiSChjDfI/PxJH0i3NpiUg8sfoCH
+	l54X/YjOuOMR9V3S3yTPFHviWLcxMVGkNK7dnygLPUBE6GcLQt8zZIstwLwPUrzG
+	BTQDieIfTMG0bbQ513BVyL6knNSjkggqVN9Vp5QDBvcx5jBtVHY95YZ4trVGC8M8
+	L4h7SeDW22ASD2fP5LEaCtWCCiPQ11K9AHdghGKPRzwx0I7562ZCmmSXgFXCSz9F
+	UMYpUhm6ynqMvM5VZYG64iiUH7/oeanMPplCGxrJRdA9okShgwrvKk5kks0XWByZ
+	M56sCXBNjNytgD641M71rMvNuc/xYsDqsI6CPWO3scVIxg==
+Received: from eur05-db8-obe.outbound.protection.outlook.com (mail-db8eur05lp2109.outbound.protection.outlook.com [104.47.17.109])
+	by mx07-0057a101.pphosted.com (PPS) with ESMTPS id 46rpf3kh6r-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 23 May 2025 05:57:15 +0000 (GMT)
-Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 54N5tk8K030055;
-	Fri, 23 May 2025 05:57:14 GMT
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46t669kgr3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 23 May 2025 05:57:14 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 54N25cEL032117;
-	Fri, 23 May 2025 05:57:13 GMT
-Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 46rwnmn4vq-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 23 May 2025 05:57:13 +0000
-Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 54N5vCPW56885674
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 23 May 2025 05:57:12 GMT
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 099CE20043;
-	Fri, 23 May 2025 05:57:12 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 3BAEB20040;
-	Fri, 23 May 2025 05:57:11 +0000 (GMT)
-Received: from ozlabs.au.ibm.com (unknown [9.63.197.14])
-	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Fri, 23 May 2025 05:57:11 +0000 (GMT)
-Received: from jarvis.ozlabs.ibm.com (haven.au.ibm.com [9.63.198.114])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 6FA546013B;
-	Fri, 23 May 2025 15:57:08 +1000 (AEST)
-Message-ID: <c06c6a36356ce803654a441d4b8b2901b5f78007.camel@linux.ibm.com>
-Subject: Re: [PATCH v2 1/3] powerpc/pseries: Correct secvar format
- representation for static key management
-From: Andrew Donnellan <ajd@linux.ibm.com>
-To: Srish Srinivasan <ssrish@linux.ibm.com>, linux-integrity@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org
-Cc: maddy@linux.ibm.com, mpe@ellerman.id.au, npiggin@gmail.com,
-        christophe.leroy@csgroup.eu, naveen@kernel.org, zohar@linux.ibm.com,
-        nayna@linux.ibm.com, linux-kernel@vger.kernel.org
-Date: Fri, 23 May 2025 15:57:08 +1000
-In-Reply-To: <20250521105759.8408-2-ssrish@linux.ibm.com>
-References: <20250521105759.8408-1-ssrish@linux.ibm.com>
-	 <20250521105759.8408-2-ssrish@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.1 (3.56.1-1.fc42) 
+	Fri, 23 May 2025 07:57:59 +0200 (MEST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=m+NYyqdkZ1uvAburXeyosTkf2d/lJw5VCtE70NdE1IItPaje9eLT+z7rjkX/6GNRGll2cU3ZHECpHTX+m9MZMS+R7BdeAsbWaYB+lNi4/YdCi6Eyj4JBOJVXZuesNt6OR6eRoOSmZ6yS9eM/GSXl8ooLK8LASRQoZQUfLt5MZTFR4GUmWWzGRo3maxIgpqQQiClkhUN2Cnkax2LVCc/up4SUoOB4Ql+K0++emUGtcbQioG1TwoXvsdFveWXkRckx/7/XxJDhXeT+XLyQohAL3tD1YfgOER9A9m9GJQ/bFPvTnggCzPfAtbuNaBT/6MIqflW7sZZKwGllQUTMMn78Ag==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=n9EczjqfsrMC0qUs8GGIprFZAMI/3edOvVeYT+o9ZgM=;
+ b=KHt56NvCC2VROFkmQlfUAo3EyWxgFIl5WT+zNATd16vaGuCm6Kx3Rzt8jlf625gJUeB5mMqorXDFjjW2sIZIaDu1vbxNZSULubY8ivZ77jWP9m/GHC60IMwp7R2phYbymMtS86D2UptEAN5sVxgWR3bVci7+q+eaHIknrGSqLr2Mk8JL9nkUQoTJlpczs4T+ljrV5ZCm/X6MkBqamN/9KG3M2WLwMRVmbw7ycYtK7/ozHXTsQLwd8rrdMNuJh8UEAdpC6bUgtiTuWfY9iOXKQXW43qT/n/bUkNyNJ8YvMPJ9R6EkE9tQpmM/3ICOblluq8c7q2mpjsjMwdgrQS2w+Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=westermo.com; dmarc=pass action=none header.from=westermo.com;
+ dkim=pass header.d=westermo.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=beijerelectronicsab.onmicrosoft.com;
+ s=selector1-beijerelectronicsab-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=n9EczjqfsrMC0qUs8GGIprFZAMI/3edOvVeYT+o9ZgM=;
+ b=D+A5p7KOlv67OqxFm0vgkaXjWQoAHUfc+047Qkl9lDQuSLITZ1CA7z55vg8PjEfDZI7phrTg55rx8YOnCbiMTSrrEVjA5X8OtnUj/0oy+r3PdtX0eECZjdnYDNJhPDjwRcRFx3QWS0ei/ms05PykBSSgMtv/m8U/CfH96OIHuLI=
+Received: from AS8P192MB2240.EURP192.PROD.OUTLOOK.COM (2603:10a6:20b:63a::18)
+ by GV2P192MB2013.EURP192.PROD.OUTLOOK.COM (2603:10a6:150:bb::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8746.30; Fri, 23 May
+ 2025 05:57:53 +0000
+Received: from AS8P192MB2240.EURP192.PROD.OUTLOOK.COM
+ ([fe80::bee5:29b7:49f2:cf70]) by AS8P192MB2240.EURP192.PROD.OUTLOOK.COM
+ ([fe80::bee5:29b7:49f2:cf70%3]) with mapi id 15.20.8722.027; Fri, 23 May 2025
+ 05:57:53 +0000
+Date: Fri, 23 May 2025 07:57:50 +0200
+From: Alexander Wilhelm <alexander.wilhelm@westermo.com>
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] soc: qcom: fix endianness for QMI header
+Message-ID: <aDAOXo/ujOcefs04@FUE-ALEWI-WINX>
+References: <20250522143530.3623809-1-alexander.wilhelm@westermo.com>
+ <20250522143530.3623809-3-alexander.wilhelm@westermo.com>
+ <vf7fb7jxxwy25wzow4pbzvh26xqd7hkx4edqmcts2tzoyrnxqs@u3lev7ergjb2>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <vf7fb7jxxwy25wzow4pbzvh26xqd7hkx4edqmcts2tzoyrnxqs@u3lev7ergjb2>
+User-Agent: Mutt/2.1.4 (2021-12-11)
+X-ClientProxiedBy: GVYP280CA0021.SWEP280.PROD.OUTLOOK.COM
+ (2603:10a6:150:fa::29) To AS8P192MB2240.EURP192.PROD.OUTLOOK.COM
+ (2603:10a6:20b:63a::18)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-TM-AS-GCONF: 00
-X-Authority-Analysis: v=2.4 cv=RrPFLDmK c=1 sm=1 tr=0 ts=68300e3b cx=c_pps a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VnNF1IyMAAAA:8 a=j0dSOGOAlxuxqmnNqi0A:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-ORIG-GUID: CcDd9yrN8iS_71Noi58spuEXY0J0-olV
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIzMDA0OCBTYWx0ZWRfX1YhB2V5/JjNn sPp7ZpATPI9/oBkdmpiKK1L9XM928hmJOzDCCXyIAIw7qrvowq40TERRHIQl1NTBGc4M5Z2Ujrl YH0KNfgV5U6P1g9bQClKf2NFsUV0Q6VYzjYKkLe88O0Qzyn1ZS/mju876Ysn68M2PGyC5dzzB1l
- hULn6kLqb0boh2R92jt6sRqAiWFaf94ojCfs72mZhAzOOuCqr5o0+ilSa/19DZEaoGATYf4faCF 63mwXq/hKPVEL7ovdOx4zFTupSV0OziJuID4/zQr4SlA1Kau7EAl3qKZTQwBQ31jln72OqpTSq0 xWMz3DuXFxBuAELDbwJY68/416x2270X4BVtxCH3WgpEldOJnC/XtxwZOZtJTphPLyU7CdUuxKX
- n7h2YCvW63wWtuSqi3ExImVkA2GN0prGxCulr0jI2BuVObcBLCBXOcP0GFZatZw7r4ELrDxK
-X-Proofpoint-GUID: TDISRVUD4u5HTs9v5BOFugVfQcdQG2ZJ
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-23_02,2025-05-22_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 malwarescore=0
- impostorscore=0 mlxlogscore=999 suspectscore=0 bulkscore=0
- lowpriorityscore=0 priorityscore=1501 mlxscore=0 spamscore=0 adultscore=0
- clxscore=1015 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
- definitions=main-2505230048
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AS8P192MB2240:EE_|GV2P192MB2013:EE_
+X-MS-Office365-Filtering-Correlation-Id: 818a6505-38aa-4b69-cbfd-08dd99bec1b6
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?ewI+E/Zx42aD/+IRUFIE11QHDxKPbBXIKuAOcY+2qstVebV9nxxknCZBUIGt?=
+ =?us-ascii?Q?LayiR1sGqEznhwaG5akZ2gcI/Rk5Ve76G9JxbgWB2V3zK1cD0ObO5V/zHg7Y?=
+ =?us-ascii?Q?X+zp3r+FQObsDyxSDRgBg/xsYPebeF+7jo3EjdVeGXTzhrhRqu/ff8QyywzO?=
+ =?us-ascii?Q?oiAJiWG6J2fNqXtsTuKA3YWkqgVuJOn0VaWJu7FSInn4er6qhWlBMClKxehD?=
+ =?us-ascii?Q?D+rTAJrJM7UUwB9m7+iOvLcxUqVW8H9Q/dIkq6EXN/okUpA/QPKvxtSvKGbV?=
+ =?us-ascii?Q?QzBOqncs4DMid0Xh6nN/dZxe6xLEsptd5sJwb9B0OYkvTRdplDELnCwJ9VIY?=
+ =?us-ascii?Q?g3TgRUoiORdp3BrYlDvUH4agxQmBnI4jVAPIVlsH3w4GhUBnJi2pGYQYuC5f?=
+ =?us-ascii?Q?At73T1q0cziSR35INRZYlyrmCJ+r9MTRUWCk3kivxsz7HrM4ScEDptti9ylf?=
+ =?us-ascii?Q?+SG0UiJ4YNgbfi2kQeXcPEBBJiYEtJWxB/08R4f/VkBonFHVyRJ4PYeVs2B/?=
+ =?us-ascii?Q?P8O1t9ISQqUa+Kb5l5Y5gpPBTRSIDA+QzB7jzXs+Lmv2p/bVj7eFuUakvcTV?=
+ =?us-ascii?Q?6Ws3+/v9kg1iyFxM6M8reLTcKNVq/PKfUDvJB1ItpadJtmsepLZZPiWl2XzD?=
+ =?us-ascii?Q?sIBqmYkh65R3j40kkb9lXcrr663c2jgFBl7+XmEXkxhM0nP/vB+7AUxlGHmg?=
+ =?us-ascii?Q?ZVY6G+ZdZOUpYNDP7jJP+NpsVhXpZl/1+8qOBrX69IPUo9hy1J64Cya8014D?=
+ =?us-ascii?Q?4p6xH4EoSVgxNWGPbXQnYnmom5vY6m8Q+9iH/xpTH5cShGoC3hMSv0PX0Hsq?=
+ =?us-ascii?Q?uhz8pgOn6idqSusr0RJ9BizlDFGflKFIEmRHFg3vz0TXH1+NqXdUuwPToM30?=
+ =?us-ascii?Q?oIdI3sDzV9p7+clwOjd6MdkesotfAOBnZsfbzBIbfDMbUPPa/5jCTXFsXmVU?=
+ =?us-ascii?Q?RHUDYpdXZMwYAC8jP9FC/8+9a+9sCqeJwH/Jy9JyiH1EV27O7HRTsO4vJLzI?=
+ =?us-ascii?Q?PWaDQiJvVWRAwRL9ohKwwR3rD4DxWwvDHkPJxONx0mvRj78whrVDE7AUUsjF?=
+ =?us-ascii?Q?+K+IJdJgjs74+dFnBiFv5sdg+QGrLKORLSfBx+NdU39ZdOdgD04z5HPrf+7N?=
+ =?us-ascii?Q?4UwVjRi+UUGfREMWzBqjL5Ewnbn5mB0uxnUrsr+0JwV8yKiX0MCWK7xI0yLK?=
+ =?us-ascii?Q?DHl9YEB1jvrrHfwSkU74RJ62Lm73WtUQS1LNg8IvmggnT6jB5JjuDA3rV6+o?=
+ =?us-ascii?Q?0KE3fZAkkmFhN7YKEzUoh3TTQaq5RYPGCN4tkBkWMEoWkEMVj+8mlJSWuf2J?=
+ =?us-ascii?Q?OLQgnHns14hQUT4VR5YAPYNMzwWcp3K8R9xN0Q/JFsIRmRkWsnY4YpyjWyAl?=
+ =?us-ascii?Q?jjO75bf+oyChXIsTS2W/L25K3ow0J2vt24u1MdQoNYJWJmw50F1XilZTEToD?=
+ =?us-ascii?Q?dwZ/bxnsUNo=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS8P192MB2240.EURP192.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?QHRwsqlAJkJruVbhK8CmvOXo9IAu+JROAEp+/pkOWNnQgoZ1TZyLyZQk122C?=
+ =?us-ascii?Q?vO+yh7v+nQy87QuJ3GoXKIJsq7k21n3uovlrfcOz68SMl2o/SlLxG/m0JlC6?=
+ =?us-ascii?Q?qmKkWYLdA2sKkl0wsnIllFzKbwWKIINKsdRjR0TDjO/qxabY4y3CrtYJhUwS?=
+ =?us-ascii?Q?MeUEzE53bmYr1fjkujesSFiHi7LT3aMdfOBFseFcKr6IibhCNZzlLx1xd+ry?=
+ =?us-ascii?Q?oSZbpWa8d8YD+r2ESpd7ajzjsHm9YUp3CoqT4LIUg83qy+otb/mgvNESTfEd?=
+ =?us-ascii?Q?jijo9s6eSler4oGcEMEbTlRgM8R68rWOIquY85YpBKRBPetETfnXDFL7E0Zx?=
+ =?us-ascii?Q?rOdCNDs8Fqh2SVgw+2cvR/2b14kM2XeOpOiyLcb81aoR7gJkyWgptSkcO1jh?=
+ =?us-ascii?Q?yIDigItjXjrWcUSM2meJMIhv4C6YCHmKqtSAtVmZqWePRfDL/6tGbW4WsdEE?=
+ =?us-ascii?Q?B+5xkRR9kXffE25EBeB4jMzsseSfTvE6ykh0Bd9V3pA9gF3PWwjduZu5pQgl?=
+ =?us-ascii?Q?GeWP0M2e1rDx6MQHYhYB2LL9vWsj+PcTw7RHP/sgLLZY8LbdL758xY8/JjxZ?=
+ =?us-ascii?Q?XaPMddwfdqWHYFbMn3M1Xc6uW4a/dnTkGiVwsm6vrc443mWdZ6HqKbrnM5g8?=
+ =?us-ascii?Q?+E4/9USOm+0dK2usy7Q7L8bcC0UT93xCpK0Kb+FhxSrLPDk8Ebs2ek/BdfJ+?=
+ =?us-ascii?Q?mxhcjoMNALdcueo+qE6vd9BvujIvspmYWYGMOsl/EvqjyYNzNqYWG/QLMaCQ?=
+ =?us-ascii?Q?wVypwPBjKpbVaAbKqTsKtCvwUSh5qNSn/pfGxsQgIrCC4tJGRg23I66AMjSj?=
+ =?us-ascii?Q?fWHBo9niF7XRapD7u6WytIHLqq9Wldy1wM4jObu2ioNLR9oxy+YpiTO/b0Iv?=
+ =?us-ascii?Q?C8kmIXLx6rpLJ6a6khMkiPYA5hLrnSGbgzYQvl334tFvoBDMorIVBjAmI09o?=
+ =?us-ascii?Q?CW4LE9dGpDRl+cMmoQrfmM0X9Zo0Gm3uzDxgiivIPoZGpaql3wVu2KzVI5HN?=
+ =?us-ascii?Q?Ma9M616OGHPgVd4bCNlepry+XbrKtEB4W9mg3WxCf+C0qBa4z27o0Qut5bti?=
+ =?us-ascii?Q?JQOUCsgpIbNruwjpZeNrr6iZw2eHKIoSSK6JFOuQe8GbI6eQlpuiXdYUMi0z?=
+ =?us-ascii?Q?5NbZeyWDoZxUNf/B4+Hec+emlJsoUiPZkPqnQZTcaahd5LySPgP4QWNwRv33?=
+ =?us-ascii?Q?jM+Zp+Xb3X0deI4tndXaGtB/c4pLYe1/8pXQuYKra2vyu46JP6Oi+PXxImQJ?=
+ =?us-ascii?Q?EWiwPDdbTWL9mX8FVEhTw/mQvWNLmRDoIluB0ObE60gT8aSPPnPBA7C8yw3r?=
+ =?us-ascii?Q?PLAcEykbJxQWtKHKlgi39e0RI98gK3OrQe4tUUUiVfHVlX9wR0B+KCk3CELK?=
+ =?us-ascii?Q?tLrwG6MRAMSAXGB227Rqh5+UkaW8h9ReLDm/ziQ3hlqeZ2s7bkhhX++1Rzj6?=
+ =?us-ascii?Q?3pjNl2cLZcg33gvzKPlktj4Soezzy5NVw1nAh84qYe95YWtbQDX2AoeTM0aj?=
+ =?us-ascii?Q?wHoCxmV5drNP4N/UtpLv3D5cGlcxcTgFgqaAq75eVsH/flVm+FWFWmRUfz/d?=
+ =?us-ascii?Q?/3beRGmXJmM7EGKZrqI60/EY60MfLcTn5YYEuOZI?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	V+RRUgtWPrYO+b5/mxb1sHbOd4sws3749SwVZ5nRfl5Zm8ATwelmP6SWOvICRacGRAw1ABGta1DoaJiPXqQn25fwae6FOZ9DAZP0F+xizPSvelRc9EbEBXLMlUW6VYkXGNm4LcxtAqPVndImTKJffO4Qm0N3bi3a6HRjL520vgaH9+YJ5yxO+Vs1/kyIXNzdkzubCVH/w+rqi9wZi5b0ve6k6MgXar3FFWZJuIxXZa3uaozoPbduS7+DHQV9+3EmsXwOQBCvMKrp002g/FOazsRwSExO6+jNQNqGJjqEHnKv1Umv0DluQXyrza/eNWKaaeqmWtY0XR2CKcIvnIgHYByaSa4Q6dUbXdDxlj8RkAdIAqutb4dWB+5GuA4n5xK9b6eUnUm4UY1/4WhVbbxwInaG2dY+DaMrDdcl3gvi7v7ouwXC7o6wKOeFW7FXO/FplHA8lknLdJVAiX4rUiafbRKyVXlgAOnHH40fCmyko+wAEe9EUeCLPELMjiEkgzSco7fO3BExDXOKFO7wEekerae+IeOqDHQlUUeI5WpXNz7V4RpvWbmFoP9J9UaQR1noXDqm8pQcG3+EXxXLFTDWtvZE5+4/hNGBa2fjiCCokpxcthT5Ucj8i9OC5yj9VjPV
+X-OriginatorOrg: westermo.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 818a6505-38aa-4b69-cbfd-08dd99bec1b6
+X-MS-Exchange-CrossTenant-AuthSource: AS8P192MB2240.EURP192.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 May 2025 05:57:53.0697
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4b2e9b91-de77-4ca7-8130-c80faee67059
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 4Mtn9fNGPq1EZAzoGSfIuHJyWTG9+V6EG73YaRCnkHBNCYEYeRMtRSIADjkBIvntlUFJxP6akmdroH0tLs25Tw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: GV2P192MB2013
+X-MS-Exchange-CrossPremises-AuthSource: AS8P192MB2240.EURP192.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossPremises-AuthAs: Internal
+X-MS-Exchange-CrossPremises-AuthMechanism: 14
+X-MS-Exchange-CrossPremises-Mapi-Admin-Submission:
+X-MS-Exchange-CrossPremises-MessageSource: StoreDriver
+X-MS-Exchange-CrossPremises-BCC:
+X-MS-Exchange-CrossPremises-OriginalClientIPAddress: 104.151.95.196
+X-MS-Exchange-CrossPremises-TransportTrafficType: Email
+X-MS-Exchange-CrossPremises-Antispam-ScanContext:
+	DIR:Originating;SFV:NSPM;SKIP:0;
+X-MS-Exchange-CrossPremises-SCL: 1
+X-MS-Exchange-CrossPremises-Processed-By-Journaling: Journal Agent
+X-OrganizationHeadersPreserved: GV2P192MB2013.EURP192.PROD.OUTLOOK.COM
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIzMDA1MiBTYWx0ZWRfX0MRBLOs0nqC9 VtytOxdk7AczR4HAFLwTQBp8fUjJ4pYXnde4mkb6aCLwkuCzJnxqUP01SVx2+AfSLM8y+Df1qxL 621DHsbraZuQiwgHlWJnj9OO6kalj6Sy7wqn2wkhfKMCyveXI7jIecoWJn5ZeukWsrjN2jA7OEz
+ 2qWCKBcwjuRMo85KTUmXnAPrGUIwRBOnzSZYOi9Q4dJPbeG1cMN8hX3jThlwkk/uJSI6+EUghNV em6uebRZi2PG7oTiqqsDk6AcvkSptOFZxwLZxA/kCxfwY8xE6LbaOKHQkkt9I6FfAbhCqq8m+d4 DF+qEhUZB6K4ijlaRKOy9ypgpTOZ+KvZHmvAkgd+RlLnaJyzNXtUAjjzeZozvJpV/fs48S2B4FU
+ WGkVyejJx/rTZ5lWARN+NBBvlIKBrhlgUQ/3bJa/COmrcO+cdKPTfKuVsMHCbe9FdR8RAT8d
+X-Authority-Analysis: v=2.4 cv=d9f1yQjE c=1 sm=1 tr=0 ts=68300e67 cx=c_pps a=l7dDOtusiRNhBxiH5QrzSw==:117 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
+ a=dt9VzEwgFbYA:10 a=8gLI3H-aZtYA:10 a=N9GNhs4bAAAA:8 a=65p1ccFE3Hf02clXqFMA:9 a=CjuIK1q_8ugA:10 a=PZhj9NlD-CKO8hVp7yCs:22
+X-Proofpoint-GUID: s3vEMV0kGTTUyWiGkd02E8UROO46y--a
+X-Proofpoint-ORIG-GUID: s3vEMV0kGTTUyWiGkd02E8UROO46y--a
 
-On Wed, 2025-05-21 at 16:27 +0530, Srish Srinivasan wrote:
-> On a PLPKS enabled PowerVM LPAR, the secvar format property for
-> static
-> key management is misrepresented as "ibm,plpks-sb-unknown", creating
-> reason for confusion.
->=20
-> Static key management mode uses fixed, built-in keys. Dynamic key
-> management mode allows keys to be updated in production to handle
-> security updates without firmware rebuilds.
->=20
-> Define a function named plpks_get_sb_keymgmt_mode() to retrieve the
-> key management mode based on the existence of the SB_VERSION property
-> in the firmware.
->=20
-> Set the secvar format property to either "ibm,plpks-sb-v<version>" or
-> "ibm,plpks-sb-v0" based on the key management mode, and return the
-> length of the secvar format property.
->=20
-> Co-developed-by: Souradeep <soura@imap.linux.ibm.com>
-> Signed-off-by: Souradeep <soura@imap.linux.ibm.com>
-> Signed-off-by: Srish Srinivasan <ssrish@linux.ibm.com>
-> Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
-> Reviewed-by: Stefan Berger <stefanb@linux.ibm.com>
-> Reviewed-by: Nayna Jain <nayna@linux.ibm.com>
+Am Thu, May 22, 2025 at 10:09:13PM +0300 schrieb Dmitry Baryshkov:
+> On Thu, May 22, 2025 at 04:35:30PM +0200, Alexander Wilhelm wrote:
+> > The members of QMI header have to be swapped on big endian platforms. Use
+> > __le16 types instead of u16 ones.
+> > 
+> > Signed-off-by: Alexander Wilhelm <alexander.wilhelm@westermo.com>
+> > ---
+> >  drivers/soc/qcom/qmi_encdec.c    | 6 +++---
+> >  drivers/soc/qcom/qmi_interface.c | 6 +++---
+> >  include/linux/soc/qcom/qmi.h     | 6 +++---
+> >  3 files changed, 9 insertions(+), 9 deletions(-)
+> 
+> Just out of curiosity, is there a usecase for running QMI helpers on BE
+> platforms?
 
-Thanks for the fixes, minor comment about the docs below.
+I'm not familiar with modems, but the wireless drivers ath11k and ath12k use the
+QMI helpers while transferring the firmware and boardfile to the module. As an
+example here is the log by probing ath12k device on big endian without a patch:
 
-Reviewed-by: Andrew Donnellan <ajd@linux.ibm.com>
+    ath12k_pci 0001:01:00.0: BAR 0: assigned [mem 0xc00000000-0xc001fffff 64bit]
+    ath12k_pci 0001:01:00.0: MSI vectors: 1
+    ath12k_pci 0001:01:00.0: Hardware name: qcn9274 hw2.0
+    ath12k_pci 0001:01:00.0: FW Ind register request failed, result: 256, err: 512
+    ath12k_pci 0001:01:00.0: qmi failed to send FW indication QMI:-22
 
-> ---
-> =C2=A0Documentation/ABI/testing/sysfs-secvar=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 |=C2=A0 9 ++-
-> =C2=A0arch/powerpc/platforms/pseries/plpks-secvar.c | 76 +++++++++++-----=
--
-> --
-> =C2=A02 files changed, 52 insertions(+), 33 deletions(-)
->=20
-> diff --git a/Documentation/ABI/testing/sysfs-secvar
-> b/Documentation/ABI/testing/sysfs-secvar
-> index 857cf12b0904..45281888e520 100644
-> --- a/Documentation/ABI/testing/sysfs-secvar
-> +++ b/Documentation/ABI/testing/sysfs-secvar
-> @@ -22,9 +22,12 @@ Description:	A string indicating which backend is
-> in use by the firmware.
-> =C2=A0		and is expected to be "ibm,edk2-compat-v1".
-> =C2=A0
-> =C2=A0		On pseries/PLPKS, this is generated by the kernel
-> based on the
-> -		version number in the SB_VERSION variable in the
-> keystore, and
-> -		has the form "ibm,plpks-sb-v<version>", or
-> -		"ibm,plpks-sb-unknown" if there is no SB_VERSION
-> variable.
-> +		version number in the SB_VERSION variable in the
-> keystore. The
-> +		version numbering in the SB_VERSION variable starts
-> from 1. The
-> +		format string takes the form "ibm,plpks-sb-
-> v<version>" in the
-> +		case of dynamic key management mode. Otherwise, for
-> any error in
-> +		reading SB_VERSION it takes the form "ibm,plpks-sb-
-> v0",
-> +		indicating that the key management mode is static.
+Similar behavior is seen with ath11k drivers.
 
-This last sentence is true, but makes it sound like static mode is only
-used in case of errors.
 
-Something like:
-
-"If the SB_VERSION variable does not exist (or there is an error while
-reading it), it takes the form "ibm,plpks-sb-v0", indicating that the
-key management mode is static."
-
-might be slightly clearer?
-
-> =C2=A0
-> =C2=A0What:		/sys/firmware/secvar/vars/<variable name>
-> =C2=A0Date:		August 2019
-> diff --git a/arch/powerpc/platforms/pseries/plpks-secvar.c
-> b/arch/powerpc/platforms/pseries/plpks-secvar.c
-> index 257fd1f8bc19..767e5e8c6990 100644
-> --- a/arch/powerpc/platforms/pseries/plpks-secvar.c
-> +++ b/arch/powerpc/platforms/pseries/plpks-secvar.c
-> @@ -152,39 +152,55 @@ static int plpks_set_variable(const char *key,
-> u64 key_len, u8 *data,
-> =C2=A0	return rc;
-> =C2=A0}
-> =C2=A0
-> -// PLPKS dynamic secure boot doesn't give us a format string in the
-> same way OPAL does.
-> -// Instead, report the format using the SB_VERSION variable in the
-> keystore.
-> -// The string is made up by us, and takes the form "ibm,plpks-sb-
-> v<n>" (or "ibm,plpks-sb-unknown"
-> -// if the SB_VERSION variable doesn't exist). Hypervisor defines the
-> SB_VERSION variable as a
-> -// "1 byte unsigned integer value".
-> -static ssize_t plpks_secvar_format(char *buf, size_t bufsize)
-> +/*
-> + * Return the key management mode.
-> + *
-> + * SB_VERSION is defined as a "1 byte unsigned integer value",
-> taking values
-> + * starting from 1. It is owned by the Partition Firmware and its
-> presence
-> + * indicates that the key management mode is dynamic. Any failure in
-> + * reading SB_VERSION defaults the key management mode to static.
-> The error
-> + * codes -ENOENT or -EPERM are expected in static key management
-> mode. An
-> + * unexpected error code will have to be investigated. Only signed
-> variables
-> + * have null bytes in their names, SB_VERSION does not.
-> + *
-> + * Return 0 to indicate that the key management mode is static.
-> Otherwise
-> + * return the SB_VERSION value to indicate that the key management
-> mode is
-> + * dynamic.
-> + */
-> +static u8 plpks_get_sb_keymgmt_mode(void)
-> =C2=A0{
-> -	struct plpks_var var =3D {0};
-> -	ssize_t ret;
-> -	u8 version;
-> -
-> -	var.component =3D NULL;
-> -	// Only the signed variables have null bytes in their names,
-> this one doesn't
-> -	var.name =3D "SB_VERSION";
-> -	var.namelen =3D strlen(var.name);
-> -	var.datalen =3D 1;
-> -	var.data =3D &version;
-> -
-> -	// Unlike the other vars, SB_VERSION is owned by firmware
-> instead of the OS
-> -	ret =3D plpks_read_fw_var(&var);
-> -	if (ret) {
-> -		if (ret =3D=3D -ENOENT) {
-> -			ret =3D snprintf(buf, bufsize, "ibm,plpks-sb-
-> unknown");
-> -		} else {
-> -			pr_err("Error %ld reading SB_VERSION from
-> firmware\n", ret);
-> -			ret =3D -EIO;
-> -		}
-> -		goto err;
-> +	u8 mode;
-> +	ssize_t rc;
-> +	struct plpks_var var =3D {
-> +		.component =3D NULL,
-> +		.name =3D "SB_VERSION",
-> +		.namelen =3D 10,
-> +		.datalen =3D 1,
-> +		.data =3D &mode,
-> +	};
-> +
-> +	rc =3D plpks_read_fw_var(&var);
-> +	if (rc) {
-> +		if (rc !=3D -ENOENT && rc !=3D -EPERM)
-> +			pr_info("Error %ld reading SB_VERSION from
-> firmware\n", rc);
-> +		mode =3D 0;
-> =C2=A0	}
-> +	return mode;
-> +}
-> =C2=A0
-> -	ret =3D snprintf(buf, bufsize, "ibm,plpks-sb-v%hhu", version);
-> -err:
-> -	return ret;
-> +/*
-> + * PLPKS dynamic secure boot doesn't give us a format string in the
-> same way
-> + * OPAL does. Instead, report the format using the SB_VERSION
-> variable in the
-> + * keystore. The string, made up by us, takes the form of either
-> + * "ibm,plpks-sb-v<n>" or "ibm,plpks-sb-v0", based on the key
-> management mode,
-> + * and return the length of the secvar format property.
-> + */
-> +static ssize_t plpks_secvar_format(char *buf, size_t bufsize)
-> +{
-> +	u8 mode;
-> +
-> +	mode =3D plpks_get_sb_keymgmt_mode();
-> +	return snprintf(buf, bufsize, "ibm,plpks-sb-v%hhu", mode);
-> =C2=A0}
-> =C2=A0
-> =C2=A0static int plpks_max_size(u64 *max_size)
-
---=20
-Andrew Donnellan    OzLabs, ADL Canberra
-ajd@linux.ibm.com   IBM Australia Limited
+Best regards
+Alexander Wilhelm
