@@ -1,70 +1,128 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.prodrive-technologies.com (mail.prodrive-technologies.com [212.61.153.67])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DD50151990;
-	Fri, 23 May 2025 13:08:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0D642F22;
+	Fri, 23 May 2025 13:12:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.61.153.67
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748005726; cv=none; b=tVMsVCvJMCPL2cdYkH2cCftRpaDTwtjc9r0zKVjy3n3zmjqwBN7jQmP1lyeUmGghsS9NgP2ESnnliJlnxX+oEHXhNZFWF/yTPX7EzPpDhS31iXWoO0YszSm/5xKzSJrsOSDMHhcVqy8iM4rRwHBdANBhkkzbN5pyvMo51qWzGus=
+	t=1748005951; cv=none; b=Bc0xg4XEY0r5IOxAjCiZ74wg9+s+juhCwjHVTPWS25Ni2ecVuH4di3/ULygitmlDuReEjtAjj4Ncy1kBLi6UEW7/iFrfNuOZmrNviiUdPEOdQRRJ7ffC6SoEDXqcQG0Nz+GYXeH4onz/1Nh+RLcc/NfBAUHf3CQhF2MGbk9dNnk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748005726; c=relaxed/simple;
-	bh=JV/1Gfqr7/DTYbohhc0eut/n2vI/4G6jIFGhCVznTik=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YtqJJrwWY9C+xnQ7QQ0dLTNUA3UckakF8wPFCaVLCS1XPMlfujZKYacDotIO+oiz2+TQRITgdRylg0kp0dKkXM/7fyoGwyHspck1y+Adc7/5NwG8dhKw0KpPsIIlxu4p1kTd0l+g9pmzU6yf3C87EES2uWfCNesRSrOZH4o7+Wg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kcBej1hc; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kcBej1hc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D868C4CEE9;
-	Fri, 23 May 2025 13:08:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748005725;
-	bh=JV/1Gfqr7/DTYbohhc0eut/n2vI/4G6jIFGhCVznTik=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=kcBej1hcKyPZAL+Y6Kt7H+YmTtUJEXG/vbY9hEAEOFrqAtuluopoLxfNZyc6B4mZp
-	 gm/W9sDufD3sIEvS5sMDANkwMqtYNJF7kI4vmb6i+yTcHcYnkEAtoTbrFz/XeaLUd5
-	 KFjrR/Tk/FXeCjfhhTSjEkcbnf7Lkpd+DlM/5Ng5VS2xQNnkjyvbGq9p21XidbBxfb
-	 uMD9xjY+eRFel9a3tJpF/wQbvgDCPvhfevuBJvFewf2sC1UHvgqyLXkjfSi4T/kcAR
-	 c7SLAcnFIgrHt6WXrxvTHHrmcqruZtj5MWOcgJjCo6Lmw6FArbJBlEVbBHTvavzaq+
-	 I3j60WApuHbCQ==
-Date: Fri, 23 May 2025 14:08:40 +0100
-From: Simon Horman <horms@kernel.org>
-To: Praveen Balakrishnan <praveen.balakrishnan@magd.ox.ac.uk>
-Cc: pablo@netfilter.org, kadlec@netfilter.org, davem@davemloft.net,
-	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
-	shuah@kernel.org, aconole@redhat.com, echaudro@redhat.com,
-	i.maximets@ovn.org, netfilter-devel@vger.kernel.org,
-	coreteam@netfilter.org, netdev@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
-	skhan@linuxfoundation.org, linux-kernel-mentees@lists.linux.dev
-Subject: Re: [PATCH v2] selftests: net: fix spelling and grammar mistakes
-Message-ID: <20250523130840.GT365796@horms.kernel.org>
-References: <4f0d5c19-8358-4e5b-a8f0-3adcee34ffd4@linuxfoundation.org>
- <20250523022242.3518-1-praveen.balakrishnan@magd.ox.ac.uk>
+	s=arc-20240116; t=1748005951; c=relaxed/simple;
+	bh=asocCwBB+I1oj0XoSaa+zfApakrtiCAk8eNuyXuNpik=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Q5fctnYUnJojx7QTWUkdqqx9RgbsdJ9EnIizvT5uT5AnKiJ6FZe1fyOKDTJ+J7d+NvNZ7LK+5ancx9BgxUmeygzYeXEHBCCwtF8NLv/0kEKBQIrFUeCG2iN2FnbiJEvVWB0KPfS/zPHf0iqifnR8IjRTjnMb5LQiX9Voz1bA8E4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=prodrive-technologies.com; spf=pass smtp.mailfrom=prodrive-technologies.com; arc=none smtp.client-ip=212.61.153.67
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=prodrive-technologies.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=prodrive-technologies.com
+Received: from EXCOP01.bk.prodrive.nl (10.1.0.22) by EXCOP01.bk.prodrive.nl
+ (10.1.0.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Fri, 23 May
+ 2025 15:12:26 +0200
+Received: from lnxdevrm02.prodrive.nl (10.1.1.121) by EXCOP01.bk.prodrive.nl
+ (10.1.0.22) with Microsoft SMTP Server id 15.2.1544.4 via Frontend Transport;
+ Fri, 23 May 2025 15:12:26 +0200
+From: Martijn de Gouw <martijn.de.gouw@prodrive-technologies.com>
+To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, "Rob
+ Herring" <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, "Conor
+ Dooley" <conor+dt@kernel.org>, Robin Gong <yibin.gong@nxp.com>
+CC: Martijn de Gouw <martijn.de.gouw@prodrive-technologies.com>,
+	<linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
+Subject: [PATCH v2 1/2] dt-bindings: regulator: add pca9450: Add regulator-allowed-modes
+Date: Fri, 23 May 2025 15:12:11 +0200
+Message-ID: <20250523131214.955970-1-martijn.de.gouw@prodrive-technologies.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250523022242.3518-1-praveen.balakrishnan@magd.ox.ac.uk>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-On Fri, May 23, 2025 at 03:22:42AM +0100, Praveen Balakrishnan wrote:
-> Fix several spelling and grammatical mistakes in output messages from
-> the net selftests to improve readability.
-> 
-> Only the message strings for the test output have been modified. No
-> changes to the functional logic of the tests have been made.
-> 
-> Signed-off-by: Praveen Balakrishnan <praveen.balakrishnan@magd.ox.ac.uk>
-> ---
-> Changes in v2:
-> - Resending to full recipient list as requested by Shuah Khan. No code
->   changes since v1.
+Make the PWM mode on the buck controllers configurable from devicetree.
+Some boards require forced PWM mode to keep the supply ripple within
+acceptable limits under light load conditions.
 
-Thanks,
+Signed-off-by: Martijn de Gouw <martijn.de.gouw@prodrive-technologies.com>
+---
+Changes in v2:
+  - Add the header to the binding patch
+  - Improve commit message
 
-I agree these are all good improvements.
+ .../regulator/nxp,pca9450-regulator.yaml       | 14 ++++++++++++++
+ .../regulator/nxp,pca9450-regulator.h          | 18 ++++++++++++++++++
+ 2 files changed, 32 insertions(+)
+ create mode 100644 include/dt-bindings/regulator/nxp,pca9450-regulator.h
 
-Reviewed-by: Simon Horman <horms@kernel.org>
+diff --git a/Documentation/devicetree/bindings/regulator/nxp,pca9450-regulator.yaml b/Documentation/devicetree/bindings/regulator/nxp,pca9450-regulator.yaml
+index 4ffe5c3faea07..c7327474c64ba 100644
+--- a/Documentation/devicetree/bindings/regulator/nxp,pca9450-regulator.yaml
++++ b/Documentation/devicetree/bindings/regulator/nxp,pca9450-regulator.yaml
+@@ -100,6 +100,15 @@ properties:
+               PMIC default "STANDBY" state voltage in uV. Only Buck1~3 have such
+               dvs(dynamic voltage scaling) property.
+ 
++          regulator-allowed-modes:
++            description: |
++              Buck regulator operating modes allowed. Valid values below.
++              Users should use the macros from dt-bindings/regulator/nxp,pca9450-regulator.h
++                0 (PCA9450_BUCK_MODE_AUTO): Auto PFM/PWM mode
++                1 (PCA9450_BUCK_MODE_FORCE_PWM): Forced PWM mode
++            items:
++              enum: [ 0, 1 ]
++
+         unevaluatedProperties: false
+ 
+     additionalProperties: false
+@@ -143,6 +152,7 @@ allOf:
+ examples:
+   - |
+     #include <dt-bindings/interrupt-controller/irq.h>
++    #include <dt-bindings/regulator/nxp,pca9450-regulator.h>
+ 
+     i2c {
+         #address-cells = <1>;
+@@ -179,6 +189,8 @@ examples:
+                     regulator-max-microvolt = <3400000>;
+                     regulator-boot-on;
+                     regulator-always-on;
++                    regulator-inital-mode = <PCA9450_BUCK_MODE_FORCE_PWM>;
++                    regulator-allowed-modes = <PCA9450_BUCK_MODE_FORCE_PWM>;
+                 };
+                 buck5: BUCK5 {
+                     regulator-name = "BUCK5";
+@@ -186,6 +198,8 @@ examples:
+                     regulator-max-microvolt = <3400000>;
+                     regulator-boot-on;
+                     regulator-always-on;
++                    regulator-allowed-modes = <PCA9450_BUCK_MODE_AUTO
++                                               PCA9450_BUCK_MODE_FORCE_PWM>;
+                 };
+                 buck6: BUCK6 {
+                     regulator-name = "BUCK6";
+diff --git a/include/dt-bindings/regulator/nxp,pca9450-regulator.h b/include/dt-bindings/regulator/nxp,pca9450-regulator.h
+new file mode 100644
+index 0000000000000..08434caef429f
+--- /dev/null
++++ b/include/dt-bindings/regulator/nxp,pca9450-regulator.h
+@@ -0,0 +1,18 @@
++/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause) */
++/*
++ * Device Tree binding constants for the NXP PCA9450A/B/C PMIC regulators
++ */
++
++#ifndef _DT_BINDINGS_REGULATORS_NXP_PCA9450_H
++#define _DT_BINDINGS_REGULATORS_NXP_PCA9450_H
++
++/*
++ * Buck mode constants which may be used in devicetree properties (eg.
++ * regulator-initial-mode, regulator-allowed-modes).
++ * See the manufacturer's datasheet for more information on these modes.
++ */
++
++#define PCA9450_BUCK_MODE_AUTO		0
++#define PCA9450_BUCK_MODE_FORCE_PWM	1
++
++#endif
+-- 
+2.39.2
