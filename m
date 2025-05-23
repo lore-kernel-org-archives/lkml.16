@@ -1,96 +1,101 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from 004.mia.mailroute.net (004.mia.mailroute.net [199.89.3.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F00FF1A0BF3;
-	Fri, 23 May 2025 16:12:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC9F51A0BF3;
+	Fri, 23 May 2025 16:14:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.3.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748016767; cv=none; b=tgqB25/Ll+9FRlKMxmBIGYAsp9P6nQnf3XJ+CfZUABnB+E3mIJn5B/gz/ypxJySo2/LJmAF/r9gyPpzSEwkMwWJu4jyUkznRXKTsPLHjUapY5O2DuACp2dNHcyqz2uU3yR+qIWtzC6Klkyu+rMRZUaxt3iJutNWOXgC3kk8NQ3c=
+	t=1748016885; cv=none; b=qJAHsFc0XkjXleYCa7G0NFVdomHtfohrLf54ahQNC2voBv3QgtxXpLEY5746OpjjIvAVC3DAHpqb0xtvWOt3ZSj7izt0ByFeNhPhbix93M94mAgbYwcoAlCC65W1dOHr+sMGAG74TW1KzvXQ22CG5sH3rJ7OE9Wc7ni1RqABEb4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748016767; c=relaxed/simple;
-	bh=stvsu4xByc6n2n97XoQi+HIP09rpdP6ynB7YbbNj4KI=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=NMJM7CwH2DJIgbGIyGbEj5Niq7BT/0EC7ueUHpv+mHfsXp/hNZMZ6pDx9iWemYt3B9nLEWnBoLSK3mFC68HLXh6KcNLf97AZOf1QYFXlpcEqS7PVA3ChWKGxMIGq7xXhSUEhc3JH3K9lL9Ufo8AGuHjWWqRmHUFlnbVmVOKVZ8I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gLMKIQgl; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748016885; c=relaxed/simple;
+	bh=0SzYKSzxQM+1V+XY2it4tfm6cveHMJtM8UUtz4GMRD0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Cqixu2fOp3VgnZg0oKW81HlVkg32FFwnpooBo6dEonb8azeo/Mb1AuyFH38Xyi2U/h/DUD8hw+6xUfFFEauEQx41kPi7dvYTyUFVuWB1HeH1B02HkglNu9vUejOhP9h5OnRsVmlf9bqbXI3vMwovlgiW27LYQKlgk1O6rXx3ZzU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=xU9vrABs; arc=none smtp.client-ip=199.89.3.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gLMKIQgl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2EA36C4CEE9;
-	Fri, 23 May 2025 16:12:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748016765;
-	bh=stvsu4xByc6n2n97XoQi+HIP09rpdP6ynB7YbbNj4KI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=gLMKIQglZVHVJrIBT9fuUVoEk86gspRrdu0MSmpWv4I37u4mbh7bM8U2FW2ASJWm0
-	 HlIOeJvO4pZYGWJuJTnHz2PDV8OA/gJTLwYNKILEdQlX+bk5xR1FEJyNmY0EA6VKH4
-	 HCQNhmtcMFAyGAN5/ymkOF+c94t0ZjngYAfYSCF6GmhvElNxa5t5IH8hmvHXlIlJ4m
-	 TPsZdJYlCtR2X3tZL3w8BkiBiwBaeNbrUZSwFNNTtyHlYQ/7iZieQLMwdw6+IOg2CL
-	 xSA8Jnjrim//zklWRD/FijrAmNqWRBlJbsq9QFcfyZ9qpt5aYozEULjAbgbSxzXBx7
-	 WPrGOeLcX/jfw==
-Date: Fri, 23 May 2025 11:12:43 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
-Cc: linux-pci@vger.kernel.org, Jon Pan-Doh <pandoh@google.com>,
-	Karolina Stolarek <karolina.stolarek@oracle.com>,
-	Weinan Liu <wnliu@google.com>,
-	Martin Petersen <martin.petersen@oracle.com>,
-	Ben Fuller <ben.fuller@oracle.com>,
-	Drew Walton <drewwalton@microsoft.com>,
-	Anil Agrawal <anilagrawal@meta.com>,
-	Tony Luck <tony.luck@intel.com>,
-	Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	Lukas Wunner <lukas@wunner.de>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Sargun Dhillon <sargun@meta.com>,
-	"Paul E . McKenney" <paulmck@kernel.org>,
-	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-	Oliver O'Halloran <oohall@gmail.com>,
-	Kai-Heng Feng <kaihengf@nvidia.com>,
-	Keith Busch <kbusch@kernel.org>, Robert Richter <rrichter@amd.com>,
-	Terry Bowman <terry.bowman@amd.com>,
-	Shiju Jose <shiju.jose@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	LKML <linux-kernel@vger.kernel.org>, linuxppc-dev@lists.ozlabs.org,
-	Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v8 16/20] PCI/AER: Convert aer_get_device_error_info(),
- aer_print_error() to index
-Message-ID: <20250523161243.GA1559290@bhelgaas>
+	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="xU9vrABs"
+Received: from localhost (localhost [127.0.0.1])
+	by 004.mia.mailroute.net (Postfix) with ESMTP id 4b3qx74t2Mzm0yVc;
+	Fri, 23 May 2025 16:14:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
+	content-transfer-encoding:content-type:content-type:in-reply-to
+	:from:from:content-language:references:subject:subject
+	:user-agent:mime-version:date:date:message-id:received:received;
+	 s=mr01; t=1748016872; x=1750608873; bh=TisoT1GJKWQdeL0EC37oUEGl
+	p+YGOKzOH7FoNix20D8=; b=xU9vrABsUYq4zcSAfdLkpbXZnnzktvng2o5pI/Q/
+	ziOO1dHMJO99+2qQY5SWzAvOo2nYwVg3yc3/eKqGXs5/F1dt80JgzNpcRJQqOw5v
+	Jd2gZSRYlzhcnTYNT1Yjx6o5eJPu0ffE09owgUarMo3JEzrtzIAZ6b2jUu3fD2o0
+	b+TTyegQqqnknufjqZZI9VF8mfy4agIvigdfMoCwJZM1kUEUQcw5/ibQrLgWpGVN
+	71NGqkrf6/xk074GgLtYzyODD1rCOB7gXBZqjDsvQVGTVuZC53XA3gu3sS12xJ+h
+	9xnPQNPv4UxRuCSZfj4+vtcQj3SuhwAgNvj9JxMumtCASA==
+X-Virus-Scanned: by MailRoute
+Received: from 004.mia.mailroute.net ([127.0.0.1])
+ by localhost (004.mia [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
+ id jUb281F6MwOT; Fri, 23 May 2025 16:14:32 +0000 (UTC)
+Received: from [100.66.154.22] (unknown [104.135.204.82])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: bvanassche@acm.org)
+	by 004.mia.mailroute.net (Postfix) with ESMTPSA id 4b3qwq3FVSzm0gbW;
+	Fri, 23 May 2025 16:14:18 +0000 (UTC)
+Message-ID: <c2608cd6-8c77-48f2-bc50-2ff087b0d48f@acm.org>
+Date: Fri, 23 May 2025 09:14:17 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <b7e7a308-713f-d89b-cccd-8f397e097bae@linux.intel.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/1] ufs: core: add fatal errors check for LINERESET
+To: naomi.chu@mediatek.com, linux-scsi@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org, Alim Akhtar <alim.akhtar@samsung.com>,
+ Avri Altman <avri.altman@wdc.com>,
+ "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+ "Martin K. Petersen" <martin.petersen@oracle.com>,
+ Matthias Brugger <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: wsd_upstream@mediatek.com, peter.wang@mediatek.com,
+ alice.chao@mediatek.com, chun-hung.wu@mediatek.com, cc.chou@mediatek.com,
+ yi-fan.peng@mediatek.com
+References: <20250523101041.3615819-1-naomi.chu@mediatek.com>
+Content-Language: en-US
+From: Bart Van Assche <bvanassche@acm.org>
+In-Reply-To: <20250523101041.3615819-1-naomi.chu@mediatek.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, May 23, 2025 at 02:13:52PM +0300, Ilpo Järvinen wrote:
-> On Thu, 22 May 2025, Bjorn Helgaas wrote:
-> 
-> > From: Bjorn Helgaas <bhelgaas@google.com>
-> > 
-> > Previously aer_get_device_error_info() and aer_print_error() took a pointer
-> > to struct aer_err_info and a pointer to a pci_dev.  Typically the pci_dev
-> > was one of the elements of the aer_err_info.dev[] array (DPC was an
-> > exception, where the dev[] array was unused).
+On 5/23/25 3:10 AM, naomi.chu@mediatek.com wrote:
+> +static bool ufshcd_is_linereset_fatal(struct ufs_hba *hba)
+> +{
+> +	bool needs_reset = true;
+> +	unsigned long flags;
+> +	int err;
+> +
+> +	spin_lock_irqsave(hba->host->host_lock, flags);
+> +
+> +	if (ufshcd_is_saved_err_fatal(hba)) {
+> +		spin_unlock_irqrestore(hba->host->host_lock, flags);
+> +		goto out;
+> +	}
+> +
+> +	/*
+> +	 * Wait for 100ms to ensure the PA_INIT flow is complete,
+> +	 * and check for PA_INIT_ERR or other fatal errors.
+> +	 */
+> +	spin_unlock_irqrestore(hba->host->host_lock, flags);
 
-> > -void aer_print_error(struct pci_dev *dev, struct aer_err_info *info)
-> > +void aer_print_error(struct aer_err_info *info, int i)
-> >  {
-> > -	int layer, agent;
-> > -	int id = pci_dev_id(dev);
-> > +	struct pci_dev *dev;
-> > +	int layer, agent, id;
-> >  	const char *level = info->level;
-> >  
-> > +	if (i >= AER_MAX_MULTI_ERR_DEVICES)
-> > +		return;
-> 
-> Are these OoB checks actually indication of a logic error in the caller 
-> side which would perhaps warrant using
-> 	if (WARN_ON_ONCE(i >= AER_MAX_MULTI_ERR_DEVICES))
-> ?
+Please use scoped_guard(spinlock_irqsave) instead of calling 
+spin_lock_irqsave() and spin_unlock_irqrestore() directly.
 
-Good idea, thanks!  I hope we can someday get rid of this info->dev[]
-array and the headaches associated with it.
+ > +	msleep(100);
+
+Can ufshcd_is_linereset_fatal() be called from IRQ context? If so,
+calling msleep() is not allowed. If it can't be called from IRQ
+context, saving and restoring 'flags' is not necessary.
+
+Bart.
