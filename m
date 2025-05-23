@@ -1,88 +1,77 @@
-Received: from outbound.pv.icloud.com (p-west1-cluster1-host8-snip4-1.eps.apple.com [57.103.64.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D67C130A73
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 08:56:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=57.103.64.34
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5BF9F130A73;
+	Fri, 23 May 2025 08:57:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747990585; cv=none; b=HlMuzLn80vw0YN9CQCOXSUd/nGlegPpzA/Y0hSbG8o6l7PFPuJUj5SjqJEuUbgagiatwtij2kOJyEM8oCQpvqwf6j2RFQGaS3q7WVpiSQfD7CBHXMkpmz5zzxP2pEvD0sofAyZQrQiNf83L1LLchi9e/hbKi8XfYN7kH/mQEa3A=
+	t=1747990623; cv=none; b=VJZiTA1lUARV/uOgG8C2kxRg/ERAjDL77S9Bf+mN8fLnhsLUoQxWer6CyDXQKufSHckLrEb5WZ7h4RwHNew4GxW6oMKqqIxjjJaE3jj+cGqzR+e+TwGC1iqdGYtkxQXP4pO6KXQYEpheq5AndexLzhowgnCJl/TTJfzr+H+Dovw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747990585; c=relaxed/simple;
-	bh=1iTWbYs077VKyvs3vZv19qAfY6J3LzqMV+LLxQJYbag=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Q1J2HlwibATazgitTvs2bbZ/ikBzIBeLhn2dUx1z7n6NGiNnrmDuhppRKlRp3+29I2NOrjXsAJspWyw7Wxxq2q/BT/clpaRhIWX1H489tnWEqysze79VrCA8UN4edEihXu7AghoCJpP2M4pmiSlKAvZ5/ONMa5H9Z6nNQxFsKuE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ai-sast.com; spf=pass smtp.mailfrom=ai-sast.com; dkim=pass (2048-bit key) header.d=ai-sast.com header.i=@ai-sast.com header.b=D09E9oQj; arc=none smtp.client-ip=57.103.64.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ai-sast.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ai-sast.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ai-sast.com header.i=@ai-sast.com header.b="D09E9oQj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ai-sast.com; s=sig1;
-	bh=BykeWOFG8Ty7ohO6Jd2gflf8OkLQ78fEPhw+xt4LCjE=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:x-icloud-hme;
-	b=D09E9oQjj2/ot+d5WMgfQJb7ft36rJTXB2iRCzuZL51TYto/Z+c/N0+RPyk9odiKa
-	 50gbdu8v8ulFh/uRvQ+/qEUJwHU/urW7Edixgro8fA7Hc7JavVa011EsZi1KYN2sEl
-	 GpeDstRQz4HmkSWPbtEZgJZYfPMjzNJnZsRYRlhWlzyULgaoC0XM1vVdLTw258se3r
-	 18myxUPSbxSDGnYWWgXSHQpCcEOg6muxlYrLHO4mzEP4FQknqwgGPltYl/jE3N2ckq
-	 KNKrzMfYT+5EcvSN0B19IBPA6mVZAsKVs/oQZL9zACK0+MQK1FVxO9QtZAeAlx2M3B
-	 841FR6tsSZBfA==
-Received: from outbound.pv.icloud.com (localhost [127.0.0.1])
-	by outbound.pv.icloud.com (Postfix) with ESMTPS id 1B1151801EE2;
-	Fri, 23 May 2025 08:56:19 +0000 (UTC)
-Received: from localhost.localdomain (pv-asmtp-me-k8s.p00.prod.me.com [17.56.9.36])
-	by outbound.pv.icloud.com (Postfix) with ESMTPSA id 50FDA1801EC1;
-	Fri, 23 May 2025 08:56:17 +0000 (UTC)
-From: Ye Chey <yechey@ai-sast.com>
-To: philipp.reisner@linbit.com,
-	lars.ellenberg@linbit.com,
-	christoph.boehmwalder@linbit.com,
-	axboe@kernel.dk
-Cc: linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Ye Chey <yechey@ai-sast.com>
-Subject: [PATCH] drbd: fix potential NULL pointer dereference in drbd_md_sync_page_io
-Date: Fri, 23 May 2025 16:55:29 +0800
-Message-ID: <20250523085529.85368-1-yechey@ai-sast.com>
-X-Mailer: git-send-email 2.44.0
+	s=arc-20240116; t=1747990623; c=relaxed/simple;
+	bh=2wMx3Q7Wvu1cfxZ2dDyBBjq1bdLpmI9aZZqIl69oznI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lEZ5WubzqdlPcS4jjjhn3/aQok0PsFga0fAn0inu8Qreni8ckHQrHS32t7b9VTC2uDuE3+C0jhUsZu5wota7MqChdYBVrCgzbncxp8/b5oz8w2gkiAabUH0MzBhCwxRFE2kytrmTs37KNCZqJrAz7Iih+0KrdcUFVCr01TAuMCM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 00CFB1758;
+	Fri, 23 May 2025 01:56:46 -0700 (PDT)
+Received: from localhost (e132581.arm.com [10.1.196.87])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 10B213F5A1;
+	Fri, 23 May 2025 01:56:59 -0700 (PDT)
+Date: Fri, 23 May 2025 09:56:55 +0100
+From: Leo Yan <leo.yan@arm.com>
+To: Yuanfang Zhang <quic_yuanfang@quicinc.com>
+Cc: Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Mike Leach <mike.leach@linaro.org>,
+	James Clark <james.clark@linaro.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	kernel@oss.qualcomm.com, linux-arm-msm@vger.kernel.org,
+	coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 2/2] coresight: add coresight Trace Network On Chip
+ driver
+Message-ID: <20250523085655.GD2566836@e132581.arm.com>
+References: <20250522-trace-noc-v6-0-f5a9bcae90ee@quicinc.com>
+ <20250522-trace-noc-v6-2-f5a9bcae90ee@quicinc.com>
+ <3a19197d-b534-458c-b4d7-51fd9d2c954d@arm.com>
+ <40599afc-4342-467c-87d8-3f53cbcfd242@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Proofpoint-ORIG-GUID: AyTumcuuQawnp_KXmgcN_gJ6zBcgBl3o
-X-Proofpoint-GUID: AyTumcuuQawnp_KXmgcN_gJ6zBcgBl3o
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-23_02,2025-05-22_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0
- mlxlogscore=999 phishscore=0 mlxscore=0 adultscore=0 suspectscore=0
- bulkscore=0 clxscore=1030 malwarescore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.22.0-2503310001 definitions=main-2505230079
+In-Reply-To: <40599afc-4342-467c-87d8-3f53cbcfd242@quicinc.com>
 
-Under memory pressure, bio_alloc_bioset() may fail and return NULL. Add a
-check to handle this case gracefully by returning -ENOMEM instead of
-dereferencing a NULL pointer.
+On Fri, May 23, 2025 at 04:08:58PM +0800, Yuanfang Zhang wrote:
 
-Signed-off-by: Ye Chey <yechey@ai-sast.com>
----
- drivers/block/drbd/drbd_actlog.c | 4 ++++
- 1 file changed, 4 insertions(+)
+[...]
 
-diff --git a/drivers/block/drbd/drbd_actlog.c b/drivers/block/drbd/drbd_actlog.c
-index 742b2908f..68b925b49 100644
---- a/drivers/block/drbd/drbd_actlog.c
-+++ b/drivers/block/drbd/drbd_actlog.c
-@@ -141,6 +141,10 @@ static int _drbd_md_sync_page_io(struct drbd_device *device,
- 
- 	bio = bio_alloc_bioset(bdev->md_bdev, 1, op | op_flags, GFP_NOIO,
- 			       &drbd_md_io_bio_set);
-+	if (!bio) {
-+		err = -ENOMEM;
-+		goto out;
-+	}
- 	bio->bi_iter.bi_sector = sector;
- 	err = -EIO;
- 	if (bio_add_page(bio, device->md_io.page, size, 0) != size)
--- 
-2.44.0
+> >> +static int trace_noc_init_default_data(struct trace_noc_drvdata *drvdata)
+> >> +{
+> >> +    int atid;
+> >> +
+> >> +    atid = coresight_trace_id_get_system_id();
+> >> +    if (atid < 0)
+> >> +        return atid;
+> >> +
+> >> +    drvdata->atid = atid;
+> > 
+> > Do you need to expose this via sysfs ? Otherwise, how can you map
+> > a trace to a TNOC at decoding ?
+> 
+> yes, need to expose the atid via sysfs, but it better to expose it on source driver which connect with
+> this TNOC. so dont expose it on this driver.
 
+If so, why the ID is not maintained in coresight_path::trace_id?
+
+A source device allocates ID and maintains in coresight path, then
+this ID is passed (when enabling the link) to TNOC driver to consume it.
+
+Thanks,
+Leo
