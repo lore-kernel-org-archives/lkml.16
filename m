@@ -1,106 +1,197 @@
-Received: from out-178.mta1.migadu.com (out-178.mta1.migadu.com [95.215.58.178])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A2CF22577E
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 09:56:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CABE227EAF;
+	Fri, 23 May 2025 09:56:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747994185; cv=none; b=CpoiairI2zWDoJRrMxK9I269YQSpn02Vn502HTi0qJIrFvetyaLHlebSFL+IrSLa6q8mlfAJII55mF5BGUomK5O8cUbteimaP/49mQ2dlYJfb+bXfvBPiOjyH9wwr5ppTZBSX1oJw63SRI7uz+FkM0U8wIpGhMqoL5c6sQG4xUQ=
+	t=1747994209; cv=none; b=DhTSEZcQ/min+YbFKJjdD4VIRG5lsvSXVmg/qaGocYhqxBe1n+MAWkjcr2eetvrE92VNEVgLrYLzDWtvgXFKpfz7TMNyEy/km7qFR9slGVKUgCo52e2DtjzK6og6bM2QnaNqI+49oJ3MDHJEF4OcJ3g5pG9Zt7EExNdl2X/oBT4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747994185; c=relaxed/simple;
-	bh=PANqLNE4Hy9PQHvQ48fm/8QdTFQug/Qz4dlUcnk+x/Y=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=oAIYrvicXrUK7h67B+Br28szOcOsexbsWMDpkYfiBq1TBIw6YBE57euJ1eePp+X8p9NPGQENC7x2vDrw1UG+LY0q/mWtzsO2lr7iro3ofwrn10fxSexhGP87Cx13psMp6qpG09mGdjgA4gpqRkoDY5nC2+x3rSsPZc04dfgCT5s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=ngtwQ28S; arc=none smtp.client-ip=95.215.58.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1747994209; c=relaxed/simple;
+	bh=JbxZhZlzZC1d54wodrzZn1J3iTj3tlK9lW0dMu8lctw=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=hi/QUgS8xwJmyoWJOhxB5OILiVOkYk94zpmdo23J616lTC8ytAxVMOKVNAVO8kKPsxHiDeKcZWdkiCA685zqXM30Nt0vx0oRLoKzqEzIcV7ROz0AkwY3S379J7BQVZYobKwfiketgHRTFFlODRVvmnTscc8VZSzLNMPFPO65pGo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iBrQ3jJQ; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="ngtwQ28S"
-Message-ID: <1328ff08-1de7-4c62-b8f7-b09e15f50737@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1747994181;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=3es2sUYLu5Dzmw+V1ZC3XbDJRR2Hn2vugSOxxMimAl0=;
-	b=ngtwQ28SgIPRfxIM+X5gDQunmPRyT2N0rTU6Xo+bVv3pK8vljLIKw/giIwz6B3TOzrPHaz
-	YvNzCjG7r8+pulYXliUEFynvKE1BMKtpWeAIJYgZD6N+tAuia5M1T+GD+jzvOkXUP2rqzC
-	4/bz5zV2huRUUmwY8Pf8LiYhG0a1kBM=
-Date: Fri, 23 May 2025 11:55:48 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iBrQ3jJQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747994208; x=1779530208;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=JbxZhZlzZC1d54wodrzZn1J3iTj3tlK9lW0dMu8lctw=;
+  b=iBrQ3jJQGW6Amzi5IxO2Tt5QMzvfSDlPwPD9s4VGIdQoa4t34b2r3GPG
+   Kn/84phHtGOQZEN4KNPbIux1f3efFmvtakxu6mSttpZyewCzzRtDTSMBc
+   ctoMdIxBY1+yMvNTPjHVC+5YsVJBygj83gDjPIleoTL9TjhIJiZ4YbuYL
+   ZtEFChdwRno2hJaaeYaSKrbEuow7Ai5s6o5HL4fEfTZUltefrHafIOsUC
+   bbet/RUhHX8b4nCck29nUUR/fHOf6FlLkif7ZMeogEjcz5UO1hQl7WT9H
+   lZQlXwA7B6pQij+lTtaNso1W7duXYu78Rt34gPHg9fj8o5/tsgTPsROj3
+   A==;
+X-CSE-ConnectionGUID: liSpU07WSh+iuPqcYs5n0w==
+X-CSE-MsgGUID: kE2K5jMIT9adk/8sfy4wgg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11441"; a="37670357"
+X-IronPort-AV: E=Sophos;i="6.15,308,1739865600"; 
+   d="scan'208";a="37670357"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2025 02:56:47 -0700
+X-CSE-ConnectionGUID: yFtpiiTURPqBOqi3zo9T/A==
+X-CSE-MsgGUID: suIahlvJSs2wQTPTiC/a1Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,308,1739865600"; 
+   d="scan'208";a="146063780"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.150])
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2025 02:56:39 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Fri, 23 May 2025 12:56:35 +0300 (EEST)
+To: Bjorn Helgaas <helgaas@kernel.org>
+cc: linux-pci@vger.kernel.org, Jon Pan-Doh <pandoh@google.com>, 
+    Karolina Stolarek <karolina.stolarek@oracle.com>, 
+    Weinan Liu <wnliu@google.com>, 
+    Martin Petersen <martin.petersen@oracle.com>, 
+    Ben Fuller <ben.fuller@oracle.com>, Drew Walton <drewwalton@microsoft.com>, 
+    Anil Agrawal <anilagrawal@meta.com>, Tony Luck <tony.luck@intel.com>, 
+    Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>, 
+    Lukas Wunner <lukas@wunner.de>, 
+    Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
+    Sargun Dhillon <sargun@meta.com>, "Paul E . McKenney" <paulmck@kernel.org>, 
+    Mahesh J Salgaonkar <mahesh@linux.ibm.com>, 
+    Oliver O'Halloran <oohall@gmail.com>, Kai-Heng Feng <kaihengf@nvidia.com>, 
+    Keith Busch <kbusch@kernel.org>, Robert Richter <rrichter@amd.com>, 
+    Terry Bowman <terry.bowman@amd.com>, Shiju Jose <shiju.jose@huawei.com>, 
+    Dave Jiang <dave.jiang@intel.com>, LKML <linux-kernel@vger.kernel.org>, 
+    linuxppc-dev@lists.ozlabs.org, Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH v8 13/20] PCI/ERR: Add printk level to
+ pcie_print_tlp_log()
+In-Reply-To: <20250522232339.1525671-14-helgaas@kernel.org>
+Message-ID: <ce537bc4-a302-4da5-2e65-0fb07c9e3e1d@linux.intel.com>
+References: <20250522232339.1525671-1-helgaas@kernel.org> <20250522232339.1525671-14-helgaas@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [RFC PATCH v2] ASoC: soc-pcm: Optimize hw_params() BE DAI call
-To: =?UTF-8?Q?P=C3=A9ter_Ujfalusi?= <peter.ujfalusi@linux.intel.com>,
- "Sheetal ." <sheetal@nvidia.com>, broonie@kernel.org, lgirdwood@gmail.com,
- perex@perex.cz, tiwai@suse.com, linux-sound@vger.kernel.org
-Cc: linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
- jonathanh@nvidia.com, thierry.reding@gmail.com, mkumard@nvidia.com,
- spujar@nvidia.com
-References: <20250408083022.3671283-1-sheetal@nvidia.com>
- <52681983-2fe2-45da-b0ee-1e9452ed469e@linux.intel.com>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>
-In-Reply-To: <52681983-2fe2-45da-b0ee-1e9452ed469e@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: multipart/mixed; boundary="8323328-2019861423-1747994195=:933"
 
-On 5/13/25 13:10, Péter Ujfalusi wrote:
-> 
-> 
-> On 08/04/2025 11:30, Sheetal . wrote:
->> From: Sheetal <sheetal@nvidia.com>
->>
->> The hw_params() function for BE DAI was being called multiple times due
->> to an unnecessary SND_SOC_DPCM_STATE_HW_PARAMS state check.
->>
->> Remove the redundant state check to ensure hw_params() is called only once
->> per BE DAI configuration.
-> 
-> The first sentence tells that the hw_params() of the BE is called
-> multiple times.
-> 
-> The second sentence states that the check is redundant then tells that
-> it is removed to not call the hw_params() of the BE, so the check was
-> not redundant, it got exercised.
-> 
-> Which one is true?
-> 
-> Under what circumstance the __soc_pcm_hw_params() got called multiple
-> times? Was it normal or was it error? What causes it?
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-I share Peter's question. The code has been around since 2016, in what case would the existing logic need to be updated?
+--8323328-2019861423-1747994195=:933
+Content-Type: text/plain; charset=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-One key point is that hw_params() may be called multiple times with different parameters, it's a feature and not a bug. If a call to hw_params() changes an internal state, a follow-up call to hw_params() shall undo the initial state change and rerun the appropriate configuration.
+On Thu, 22 May 2025, Bjorn Helgaas wrote:
 
->> Signed-off-by: Sheetal <sheetal@nvidia.com>
->> ---
->> Changes in v2:
->> - Update commit message as its not a fix.
->> - Marked as RFC patch as it requires feedback from other users
->>   perspective as well.
->> - The patch is being sent separately as other patch is not RFC.
->>
->>  sound/soc/soc-pcm.c | 1 -
->>  1 file changed, 1 deletion(-)
->>
->> diff --git a/sound/soc/soc-pcm.c b/sound/soc/soc-pcm.c
->> index d7f6d3a6d312..c73be27c4ecb 100644
->> --- a/sound/soc/soc-pcm.c
->> +++ b/sound/soc/soc-pcm.c
->> @@ -2123,7 +2123,6 @@ int dpcm_be_dai_hw_params(struct snd_soc_pcm_runtime *fe, int stream)
->>  			continue;
->>  
->>  		if ((be->dpcm[stream].state != SND_SOC_DPCM_STATE_OPEN) &&
->> -		    (be->dpcm[stream].state != SND_SOC_DPCM_STATE_HW_PARAMS) &&
->>  		    (be->dpcm[stream].state != SND_SOC_DPCM_STATE_HW_FREE))
->>  			continue;
->>  
-> 
+> From: Bjorn Helgaas <bhelgaas@google.com>
+>=20
+> aer_print_error() produces output at a printk level (KERN_ERR/KERN_WARNIN=
+G/
+> etc) that depends on the kind of error, and it calls pcie_print_tlp_log()=
+,
+> which previously always produced output at KERN_ERR.
+>=20
+> Add a "level" parameter so aer_print_error() can control the level of the
+> pcie_print_tlp_log() output to match.
+>=20
+> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+> ---
+>  drivers/pci/pci.h      | 3 ++-
+>  drivers/pci/pcie/aer.c | 5 +++--
+>  drivers/pci/pcie/dpc.c | 2 +-
+>  drivers/pci/pcie/tlp.c | 6 ++++--
+>  4 files changed, 10 insertions(+), 6 deletions(-)
+>=20
+> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> index 705f9ef58acc..1a9bfc708757 100644
+> --- a/drivers/pci/pci.h
+> +++ b/drivers/pci/pci.h
+> @@ -613,7 +613,8 @@ int pcie_read_tlp_log(struct pci_dev *dev, int where,=
+ int where2,
+>  =09=09      struct pcie_tlp_log *log);
+>  unsigned int aer_tlp_log_len(struct pci_dev *dev, u32 aercc);
+>  void pcie_print_tlp_log(const struct pci_dev *dev,
+> -=09=09=09const struct pcie_tlp_log *log, const char *pfx);
+> +=09=09=09const struct pcie_tlp_log *log, const char *level,
+> +=09=09=09const char *pfx);
+>  #endif=09/* CONFIG_PCIEAER */
+> =20
+>  #ifdef CONFIG_PCIEPORTBUS
+> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+> index f80c78846a14..f0936759ba8b 100644
+> --- a/drivers/pci/pcie/aer.c
+> +++ b/drivers/pci/pcie/aer.c
+> @@ -734,7 +734,7 @@ void aer_print_error(struct pci_dev *dev, struct aer_=
+err_info *info)
+>  =09__aer_print_error(dev, info);
+> =20
+>  =09if (info->tlp_header_valid)
+> -=09=09pcie_print_tlp_log(dev, &info->tlp, dev_fmt("  "));
+> +=09=09pcie_print_tlp_log(dev, &info->tlp, level, dev_fmt("  "));
+> =20
+>  out:
+>  =09if (info->id && info->error_dev_num > 1 && info->id =3D=3D id)
+> @@ -797,7 +797,8 @@ void pci_print_aer(struct pci_dev *dev, int aer_sever=
+ity,
+>  =09=09=09aer->uncor_severity);
+> =20
+>  =09if (tlp_header_valid)
+> -=09=09pcie_print_tlp_log(dev, &aer->header_log, dev_fmt("  "));
+> +=09=09pcie_print_tlp_log(dev, &aer->header_log, info.level,
+> +=09=09=09=09   dev_fmt("  "));
+>  }
+>  EXPORT_SYMBOL_NS_GPL(pci_print_aer, "CXL");
+> =20
+> diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
+> index 6c98fabdba57..7ae1590ea1da 100644
+> --- a/drivers/pci/pcie/dpc.c
+> +++ b/drivers/pci/pcie/dpc.c
+> @@ -222,7 +222,7 @@ static void dpc_process_rp_pio_error(struct pci_dev *=
+pdev)
+>  =09=09=09  dpc_tlp_log_len(pdev),
+>  =09=09=09  pdev->subordinate->flit_mode,
+>  =09=09=09  &tlp_log);
+> -=09pcie_print_tlp_log(pdev, &tlp_log, dev_fmt(""));
+> +=09pcie_print_tlp_log(pdev, &tlp_log, KERN_ERR, dev_fmt(""));
+> =20
+>  =09if (pdev->dpc_rp_log_size < PCIE_STD_NUM_TLP_HEADERLOG + 1)
+>  =09=09goto clear_status;
+> diff --git a/drivers/pci/pcie/tlp.c b/drivers/pci/pcie/tlp.c
+> index 890d5391d7f5..71f8fc9ea2ed 100644
+> --- a/drivers/pci/pcie/tlp.c
+> +++ b/drivers/pci/pcie/tlp.c
+> @@ -98,12 +98,14 @@ int pcie_read_tlp_log(struct pci_dev *dev, int where,=
+ int where2,
+>   * pcie_print_tlp_log - Print TLP Header / Prefix Log contents
+>   * @dev: PCIe device
+>   * @log: TLP Log structure
+> + * @level: Printk log level
+>   * @pfx: String prefix
+>   *
+>   * Prints TLP Header and Prefix Log information held by @log.
+>   */
+>  void pcie_print_tlp_log(const struct pci_dev *dev,
+> -=09=09=09const struct pcie_tlp_log *log, const char *pfx)
+> +=09=09=09const struct pcie_tlp_log *log, const char *level,
+> +=09=09=09const char *pfx)
+>  {
+>  =09/* EE_PREFIX_STR fits the extended DW space needed for the Flit mode =
+*/
+>  =09char buf[11 * PCIE_STD_MAX_TLP_HEADERLOG + 1];
+> @@ -130,6 +132,6 @@ void pcie_print_tlp_log(const struct pci_dev *dev,
+>  =09=09}
+>  =09}
+> =20
+> -=09pci_err(dev, "%sTLP Header%s: %s\n", pfx,
+> +=09dev_printk(level, &dev->dev, "%sTLP Header%s: %s\n", pfx,
+>  =09=09log->flit ? " (Flit)" : "", buf);
+>  }
+>=20
 
+Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
+
+--=20
+ i.
+
+--8323328-2019861423-1747994195=:933--
