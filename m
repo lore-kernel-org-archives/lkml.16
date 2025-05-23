@@ -1,108 +1,209 @@
-Received: from mail-ua1-f50.google.com (mail-ua1-f50.google.com [209.85.222.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B2522B9B7
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 07:31:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 508A47D098
+	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 07:33:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747985518; cv=none; b=sMC04QTt6ywlj5bug7HrW2sxjAAqdBLwg7xtYmTUREGRieDgkVrbXNtIakOI7FTkdhwAX93a+73DIhHOWDRwc/qrZJfYR8GNRBRmY4akgdtoAiV0K1bvHENsydv63byuQoCdsVnrepK3DVs6GnMia1JCACfQDCtTAFaIkZ2H5wc=
+	t=1747985590; cv=none; b=trqt6To6aECCXo+rMjE5II7oPw/OCFkoQwIBfPzAjMpk5/coYf+AFYbxqaIoPgRNrzR8mizQi3ZhW94eh2GYbXXxijtBJpyY4R2yRZCcHl8TrC7T8mgVeBUPpwoP3QJwT83RYVBw4z7V5O9z9sDkzLFpsTF09eLnokOZKxNe1oI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747985518; c=relaxed/simple;
-	bh=1rU8KfdpOw/wwgN/qzAFAUH/2Puusqm5B5r9ppRAw14=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nf3TgS1tFlaJdzLyPRQaoQh9YgrKV7wCarfAF6DdrmLXQSXC+Fqam2U/Bjo4k7L1p3ldQocgBTl+Xme4xjsCgnB2LvHaAoFaI5Q4LbmSMQxAYlPPgiRuIg4jjCJimKRzdYgyE5ksO6qy0yqfU1npJtpccdIayx7Y+gBAGeYtMF0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ua1-f50.google.com with SMTP id a1e0cc1a2514c-87be2373596so2655449241.1
-        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 00:31:56 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747985515; x=1748590315;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=FD+nL4yd2I4+cbDko5AOqUkYfXfG+wQm1GId2A/CBdM=;
-        b=UA4CqtQnBDXpz5irAQzD70B7Wy9QfEErIhSjpIzJJq7COnNrJ6ZIUyMUsDiA9rIYzt
-         REs0ZdX8qqmxhX5WQHK5fmQEWXUYEzB6yDeMuQwm43F9nLEVmbxGqmcNYrASgsunmnO0
-         4Q+W9BMbT2cHEROUfmfKTz+CCL9EFPcUfwosp+MCfK6uJ1OS2x2E3p20R8HAnjj1/LKC
-         PTM/Ez/kFDYCh8T24SGgYCCp8ASeC+5dw9RBSyRe03Z6BK717snY2mxApS7qHL07AIZW
-         HGMme+oEIuk6UUdKjObg5WiCh8i0LA2y4PKPNBEjNrnE3iROYVCMesSfy011CIPvMuSH
-         2FlA==
-X-Gm-Message-State: AOJu0Yyr0FxrlgpagDTd9qPRB6qn2m2INm6UF/osQ2jx6chbZAtd423q
-	Cnhbxeu/0SFtUq7SjGcIb8WasAaNqm1c5bFPIZjLFg+uBrjCKp0dzT/S1ueQThrt
-X-Gm-Gg: ASbGncsUF2YitBMF9W+O8WMqxgS5EGahew2GsgyXj4AfSLuOw0eNBZ50LqWckDa4tIu
-	IkknqkmXN5UFYEc6fBoHnIsKqOd8iT6WgJkHpgRrYhu0eJTO6/3dvaY6vVTwjaWF3rlaXGYuD0o
-	SAmbZ7fvEorwMpxZCZAr+0s9gVBeMrx/hg75X4P8kBQk0aOqa0bzZL54NCiiFGCVRrV3mcD0jx9
-	LrVBOBL+B1KIYOFpnVs7iLnFxOPrWDWID8tmPiQ8zSgmX/FnKaIfWyWIyS7ddrLkVsFYaxGEBFl
-	n8EWNU6nZxxzlLeFFMXsnbxuwA0mqNl+xqNJ0rO5IHxzRKkfQciESX1RvBVHhmbb4MyIRxPW8NU
-	byfT3Yv/fvo8MmOrLCG2O7rZE
-X-Google-Smtp-Source: AGHT+IF6WCqmWtndt31S/aMgjatCzAyze5HP1mPP1gJK3udqQJsWmjwEJJ9QryKLBRTZD70u7NLi1w==
-X-Received: by 2002:a05:6102:2ac3:b0:4dd:b9bc:df71 with SMTP id ada2fe7eead31-4e049e63e87mr22977066137.10.1747985514845;
-        Fri, 23 May 2025 00:31:54 -0700 (PDT)
-Received: from mail-ua1-f41.google.com (mail-ua1-f41.google.com. [209.85.222.41])
-        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-87bec157a69sm11376301241.19.2025.05.23.00.31.54
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 23 May 2025 00:31:54 -0700 (PDT)
-Received: by mail-ua1-f41.google.com with SMTP id a1e0cc1a2514c-87bf9d00e1bso1760537241.0
-        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 00:31:54 -0700 (PDT)
-X-Received: by 2002:a05:6102:8005:b0:4dd:ad20:a334 with SMTP id
- ada2fe7eead31-4e049d57331mr26428808137.7.1747985514143; Fri, 23 May 2025
- 00:31:54 -0700 (PDT)
+	s=arc-20240116; t=1747985590; c=relaxed/simple;
+	bh=pFnEr6hyNcgHZPVE1y0sFt2psdOkxyQ/M8O3rUFymBw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jQkKb20RaY+nmdgiT23k0C83yjxwN1qfWGMeLGQ41NFJWb1l6B1KJqRdAh2O0aPtiPmY/8kMosC1B6dg1HlOIOm777CJzrGBte3+6Ez32jJQKBQu5PIxT5HnUo2r9Jw0zgzEfow/aWoOJH+sLgfQsex2TlN+UHlmlsYxywoLfkM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QUEN732j; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QUEN732j"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CEF43C4CEE9;
+	Fri, 23 May 2025 07:33:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747985589;
+	bh=pFnEr6hyNcgHZPVE1y0sFt2psdOkxyQ/M8O3rUFymBw=;
+	h=From:To:Cc:Subject:Date:From;
+	b=QUEN732j9i1x60vsIJjbh9rh/IJSccpyrHjJwLMrPXePPEuaL1gwosehnYT4YHNFY
+	 ++D2TPKIKMSssN30c2/Ly+v9zfEsOSHruTEOBBHsjqT9cLTscnZumxmvuHsNwJG6Qu
+	 qBpijUzM/gEcYGaznXhgVdJRAXX2Dr22pZuzzAWjGvbRlusVwyiSwVYm/QIGB/WFf1
+	 yx/9Mjk/+sXwc6VSikqgvXoLIwukl6wVyex07XdtaGn1LPuU0TkvLo4BtYAlaExe0a
+	 l0xhTRGqPffBPEl08ezAHgrobHHBPsaAh60oeBeS4046cJ61XdjHMN5yZ6maT2miKr
+	 xGP78/E5WF4RQ==
+From: Chao Yu <chao@kernel.org>
+To: jaegeuk@kernel.org
+Cc: linux-f2fs-devel@lists.sourceforge.net,
+	linux-kernel@vger.kernel.org,
+	Chao Yu <chao@kernel.org>
+Subject: [PATCH 1/2] f2fs: introduce is_{meta,node}_folio
+Date: Fri, 23 May 2025 15:33:03 +0800
+Message-ID: <20250523073304.1454247-1-chao@kernel.org>
+X-Mailer: git-send-email 2.49.0.1151.ga128411c76-goog
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250331190731.5094-2-wsa+renesas@sang-engineering.com>
-In-Reply-To: <20250331190731.5094-2-wsa+renesas@sang-engineering.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Fri, 23 May 2025 09:31:42 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdXmQ2uGR1ntERG7rS=VtNNZ734BMCQu=GaYgQ3sOMpd6g@mail.gmail.com>
-X-Gm-Features: AX0GCFtFv5fcH5b31peoUctAzpCxkK7VzeLvAUvdWARN-L5YJkESt2RHNq335aI
-Message-ID: <CAMuHMdXmQ2uGR1ntERG7rS=VtNNZ734BMCQu=GaYgQ3sOMpd6g@mail.gmail.com>
-Subject: Re: [PATCH] MAINTAINERS: delete email for Shiraz Hashim
-To: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	soc@lists.linux.dev, Shiraz Hashim <quic_shashim@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-CC the address last used in Oct 2024
+Just cleanup, no changes.
 
-On Mon, 31 Mar 2025 at 21:09, Wolfram Sang
-<wsa+renesas@sang-engineering.com> wrote:
-> The email address bounced. I couldn't find a newer one in recent git
-> history (last activity 9 years ago), so delete this email entry.
->
-> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-> ---
->  MAINTAINERS | 1 -
->  1 file changed, 1 deletion(-)
->
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 9bb1db9979f1..32f15c2ce531 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -22627,7 +22627,6 @@ F:      drivers/accessibility/speakup/
->
->  SPEAR PLATFORM/CLOCK/PINCTRL SUPPORT
->  M:     Viresh Kumar <vireshk@kernel.org>
-> -M:     Shiraz Hashim <shiraz.linux.kernel@gmail.com>
->  L:     linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
->  L:     soc@lists.linux.dev
->  S:     Maintained
+Signed-off-by: Chao Yu <chao@kernel.org>
+---
+ fs/f2fs/checkpoint.c |  4 ++--
+ fs/f2fs/data.c       |  2 +-
+ fs/f2fs/f2fs.h       | 13 +++++++++++--
+ fs/f2fs/gc.c         |  2 +-
+ fs/f2fs/node.c       | 18 +++++++++---------
+ 5 files changed, 24 insertions(+), 15 deletions(-)
 
-This is now commit 3238532ba55c9bf9 ("MAINTAINERS: delete email for
-Shiraz Hashim") upstream.
+diff --git a/fs/f2fs/checkpoint.c b/fs/f2fs/checkpoint.c
+index 164b7719f365..f149ec28aefd 100644
+--- a/fs/f2fs/checkpoint.c
++++ b/fs/f2fs/checkpoint.c
+@@ -93,7 +93,7 @@ static struct folio *__get_meta_folio(struct f2fs_sb_info *sbi, pgoff_t index,
+ 	f2fs_update_iostat(sbi, NULL, FS_META_READ_IO, F2FS_BLKSIZE);
+ 
+ 	folio_lock(folio);
+-	if (unlikely(folio->mapping != mapping)) {
++	if (unlikely(!is_meta_folio(folio))) {
+ 		f2fs_folio_put(folio, true);
+ 		goto repeat;
+ 	}
+@@ -439,7 +439,7 @@ long f2fs_sync_meta_pages(struct f2fs_sb_info *sbi, enum page_type type,
+ 
+ 			folio_lock(folio);
+ 
+-			if (unlikely(folio->mapping != mapping)) {
++			if (unlikely(!is_meta_folio(folio))) {
+ continue_unlock:
+ 				folio_unlock(folio);
+ 				continue;
+diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
+index 8d8018083c31..1be38186076d 100644
+--- a/fs/f2fs/data.c
++++ b/fs/f2fs/data.c
+@@ -354,7 +354,7 @@ static void f2fs_write_end_io(struct bio *bio)
+ 						STOP_CP_REASON_WRITE_FAIL);
+ 		}
+ 
+-		f2fs_bug_on(sbi, folio->mapping == NODE_MAPPING(sbi) &&
++		f2fs_bug_on(sbi, is_node_folio(folio) &&
+ 				folio->index != nid_of_node(&folio->page));
+ 
+ 		dec_page_count(sbi, type);
+diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+index e0196c285ad1..9333a22b9a01 100644
+--- a/fs/f2fs/f2fs.h
++++ b/fs/f2fs/f2fs.h
+@@ -2088,6 +2088,16 @@ static inline struct address_space *NODE_MAPPING(struct f2fs_sb_info *sbi)
+ 	return sbi->node_inode->i_mapping;
+ }
+ 
++static inline bool is_meta_folio(struct folio *folio)
++{
++	return folio->mapping == META_MAPPING(F2FS_F_SB(folio));
++}
++
++static inline bool is_node_folio(struct folio *folio)
++{
++	return folio->mapping == NODE_MAPPING(F2FS_F_SB(folio));
++}
++
+ static inline bool is_sbi_flag_set(struct f2fs_sb_info *sbi, unsigned int type)
+ {
+ 	return test_bit(type, &sbi->s_flag);
+@@ -3738,8 +3748,7 @@ struct node_info;
+ 
+ int f2fs_check_nid_range(struct f2fs_sb_info *sbi, nid_t nid);
+ bool f2fs_available_free_memory(struct f2fs_sb_info *sbi, int type);
+-bool f2fs_in_warm_node_list(struct f2fs_sb_info *sbi,
+-		const struct folio *folio);
++bool f2fs_in_warm_node_list(struct f2fs_sb_info *sbi, struct folio *folio);
+ void f2fs_init_fsync_node_info(struct f2fs_sb_info *sbi);
+ void f2fs_del_fsync_node_entry(struct f2fs_sb_info *sbi, struct folio *folio);
+ void f2fs_reset_fsync_node_info(struct f2fs_sb_info *sbi);
+diff --git a/fs/f2fs/gc.c b/fs/f2fs/gc.c
+index 3ff74267b52a..8b8025772340 100644
+--- a/fs/f2fs/gc.c
++++ b/fs/f2fs/gc.c
+@@ -1382,7 +1382,7 @@ static int move_data_block(struct inode *inode, block_t bidx,
+ 							F2FS_BLKSIZE);
+ 
+ 		folio_lock(mfolio);
+-		if (unlikely(mfolio->mapping != META_MAPPING(fio.sbi) ||
++		if (unlikely(!is_meta_folio(mfolio) ||
+ 			     !folio_test_uptodate(mfolio))) {
+ 			err = -EIO;
+ 			f2fs_folio_put(mfolio, true);
+diff --git a/fs/f2fs/node.c b/fs/f2fs/node.c
+index 88d3032236cb..1cb4cba7f961 100644
+--- a/fs/f2fs/node.c
++++ b/fs/f2fs/node.c
+@@ -310,10 +310,10 @@ static unsigned int __gang_lookup_nat_set(struct f2fs_nm_info *nm_i,
+ 							start, nr);
+ }
+ 
+-bool f2fs_in_warm_node_list(struct f2fs_sb_info *sbi, const struct folio *folio)
++bool f2fs_in_warm_node_list(struct f2fs_sb_info *sbi, struct folio *folio)
+ {
+-	return NODE_MAPPING(sbi) == folio->mapping &&
+-			IS_DNODE(&folio->page) && is_cold_node(&folio->page);
++	return is_node_folio(folio) && IS_DNODE(&folio->page) &&
++					is_cold_node(&folio->page);
+ }
+ 
+ void f2fs_init_fsync_node_info(struct f2fs_sb_info *sbi)
+@@ -1222,7 +1222,7 @@ int f2fs_truncate_inode_blocks(struct inode *inode, pgoff_t from)
+ 			goto fail;
+ 		if (offset[1] == 0 && get_nid(&folio->page, offset[0], true)) {
+ 			folio_lock(folio);
+-			BUG_ON(folio->mapping != NODE_MAPPING(sbi));
++			BUG_ON(!is_node_folio(folio));
+ 			set_nid(folio, offset[0], 0, true);
+ 			folio_unlock(folio);
+ 		}
+@@ -1507,7 +1507,7 @@ static struct folio *__get_node_folio(struct f2fs_sb_info *sbi, pgoff_t nid,
+ 
+ 	folio_lock(folio);
+ 
+-	if (unlikely(folio->mapping != NODE_MAPPING(sbi))) {
++	if (unlikely(!is_node_folio(folio))) {
+ 		f2fs_folio_put(folio, true);
+ 		goto repeat;
+ 	}
+@@ -1625,7 +1625,7 @@ static struct folio *last_fsync_dnode(struct f2fs_sb_info *sbi, nid_t ino)
+ 
+ 			folio_lock(folio);
+ 
+-			if (unlikely(folio->mapping != NODE_MAPPING(sbi))) {
++			if (unlikely(!is_node_folio(folio))) {
+ continue_unlock:
+ 				folio_unlock(folio);
+ 				continue;
+@@ -1834,7 +1834,7 @@ int f2fs_fsync_node_pages(struct f2fs_sb_info *sbi, struct inode *inode,
+ 
+ 			folio_lock(folio);
+ 
+-			if (unlikely(folio->mapping != NODE_MAPPING(sbi))) {
++			if (unlikely(!is_node_folio(folio))) {
+ continue_unlock:
+ 				folio_unlock(folio);
+ 				continue;
+@@ -1969,7 +1969,7 @@ void f2fs_flush_inline_data(struct f2fs_sb_info *sbi)
+ 
+ 			folio_lock(folio);
+ 
+-			if (unlikely(folio->mapping != NODE_MAPPING(sbi)))
++			if (unlikely(!is_node_folio(folio)))
+ 				goto unlock;
+ 			if (!folio_test_dirty(folio))
+ 				goto unlock;
+@@ -2041,7 +2041,7 @@ int f2fs_sync_node_pages(struct f2fs_sb_info *sbi,
+ 			else if (!folio_trylock(folio))
+ 				continue;
+ 
+-			if (unlikely(folio->mapping != NODE_MAPPING(sbi))) {
++			if (unlikely(!is_node_folio(folio))) {
+ continue_unlock:
+ 				folio_unlock(folio);
+ 				continue;
+-- 
+2.49.0
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
