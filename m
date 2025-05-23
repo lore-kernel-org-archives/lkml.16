@@ -1,265 +1,197 @@
-Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0273918A6C1
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 10:12:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B50B218A6C1
+	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 10:13:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747995163; cv=none; b=HDLWJVonYs5rx9i11FZWiSrDYWfAROzvZwwRjjyNqA6M7+bW9PB/9D5F4e3At52yIl83lF6br6Jl4hvOLJQ9bgp52In7AR9nOt82t2peMKMWZsj5n5UM62eQsxghmGu6bsM5ATb1WYBX+gm8M42sYChCBBXMi2wag8VqRb1HCwc=
+	t=1747995221; cv=none; b=DUmBEjCBPt4skSCx7kq7Fz0wOKTYya4PxHDJ63jvY9RBi7kZ0t5DN2R58M5K+Q75R+6iNXSPNuUOr522za7wzgkW9IQqL+87pyrnbT3Yns/zSi4nICkX45++27XtofumaBzEUC4evpJyREuUb8NDkX0RbfOfHkoDj3TUFnRYjhs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747995163; c=relaxed/simple;
-	bh=Pji3pOrxIsdrF6N7TOopnNprznlfL8393By8J52sO2Y=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bJGV8Z6Wgg9SMhw2cuCy672RkaSXGLDNEpUj6aB8hofoNKSqrb4QuOPCiXKFoIe4NFZ0zuLlu7Hz2QIjqoCWI8B/cHb4kgvcp4xHTFZwL5JUXR/qSPQNDEe2za+GomzHJsC/zcdzgeiFEneKQiSnjE0VffmyiB/fgNCbnkkivXU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=w3EMGKi+; arc=none smtp.client-ip=209.85.160.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1747995221; c=relaxed/simple;
+	bh=z0k2gRgp8t4Xyf5S9o4TFdoIspE5qpPnnX0oFXM2MS4=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=jrSNTSvOmEdp08AJqL54KMjY7YIfDrSHrB3Fq5Q6raLEkbCeJr1o9AmpAtLEGDwWD+kml9v6QrtW6gMkEjCQZChT0TKudA16CFXc4zxz4nlUUUn0QBhJQXJ0FpwBM/hVAk6vs3Q96nDHO8RpfsSZlMohGE0wqQ7Yijw5cXMROes=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iJgi2/LG; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="w3EMGKi+"
-Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-48b7747f881so208521cf.1
-        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 03:12:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747995161; x=1748599961; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=tb9MyJc2bCS8IIcbG5oS2rW0sKmwPpiIghmBwRh5La8=;
-        b=w3EMGKi+cPpivPfkOuNZpDjyCE4PYW/26YgPlZJ9U49NwUHRnLT4p7EH3AB691RTB6
-         Hui6Fjk8JOQCGT+3wAC+ee7MPe3lsEY2mzjUJ/W8nUiNfeRU5gxgQ8byLqnLtIDl8/Xu
-         lEE3BogGlx8bO6MVuqXdSTl0Sd/koXACB01BKPLFYFaw+U981kPu7YDSVU/LJXBAPLfH
-         Y987L5MwGido5hQzcinE3kYxVAKRToIakGaClJDe7sCi78hwQZFnQO+910jfUdusplkh
-         kYImnw9yq/95UfvHbguON+AZmXfoygNlbZ6PBuG9ASF4b2HMRQR5tlMwGdu8/Z7pWYIq
-         YjYA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747995161; x=1748599961;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=tb9MyJc2bCS8IIcbG5oS2rW0sKmwPpiIghmBwRh5La8=;
-        b=GW839Z4CatUK5vU/bK9laqJIjAN07jl9/b5geDX9upMSKjlVYk273JUbuI11rZmppC
-         BHxuiK8gFLajENn8MiKvA8/4ZKqmdpwrrPjumBr2AOWh2fDunv0SJEZ21i5fM9RDfq7h
-         5ybVaAGeXH8KF/Of7ehfXK/uFk1SVftweKais6vA/ld6XFclH2OSAIg49xpFlmN0R0ZA
-         VF0jW96kKXfwbvoWYunnJNOY1SbqRLLZ2XT8NvOWb1XoAE9UaL1qEVZff7eQISgZH5rY
-         C73hnqxLscjrofSjUN/VUea4pgh0FdWkhZyEkKTCv9+JcwRPj35kRg7nGzUPord45oC9
-         Rt4g==
-X-Forwarded-Encrypted: i=1; AJvYcCU9hgjYMTvaby072GRpWGeTA+08tfb2+bdy0n60f0JHbeLFRzzUQqQ6PO4nqXsvme141dG6kLEc1xAq9Fc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw2W/ZAGbg++Ak6HJHEXi1SqRaz5xYW5e54ip6hSWjx7mKugSUC
-	yhXB7rpPJThzB2wifhix3w2pNCx3wc+OuKfwIcidLWh5Arxuvr73xbWZB4B5W9mfW7EfNEIKNVv
-	bDNKhg3C6lofBLrurW92V0am7fs1B9Rz2TzSJRRM9
-X-Gm-Gg: ASbGncuKz+DVm7Yh4kmTMVK1LUk5zZKh0TIA+U2EVMS64zw3TDwIFmk4pu7HlmMxJzO
-	ELzmAKFW4I2Pj/loOM9RVlM2sSqtUTSnahyIjBunOGIehiUhlQfpCUvPrB5+09nJ7fYKHkeDBWC
-	6eHl5SDheSz18wZK4LYMFqN+LatL2E39lb6y/8lAf6fCM=
-X-Google-Smtp-Source: AGHT+IEkIIS4aNjnOZldCQ1+78h6aJmwPwAW5h7vR8N5+0fx6Rl0x1SYbJYgMD0+JUZ/omAoMfiFpgjWvd8MxNA8Oqo=
-X-Received: by 2002:a05:622a:5cf:b0:47d:4e8a:97f0 with SMTP id
- d75a77b69052e-49e35da50e0mr2300641cf.29.1747995160362; Fri, 23 May 2025
- 03:12:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iJgi2/LG"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747995220; x=1779531220;
+  h=date:from:to:cc:subject:message-id;
+  bh=z0k2gRgp8t4Xyf5S9o4TFdoIspE5qpPnnX0oFXM2MS4=;
+  b=iJgi2/LGU+Xtynoh402/OFG6V5nkXIPsilTJ8SvheXj6adMZ1cJ3wzJk
+   s/UdN7HCiZhAEaCyvDYlcYl4t48KgYxE4XdDuWS9ghPnrCFPFLwYp+Yq8
+   nWGFSLFehbsYTl8HIg11PpfbU24nLCrWtr1dd5Xi9ovBKf61QFLsJIEXv
+   XUuSXMIGmtaFUAX8jmMDacbY+KYXj2JUj4CR+gNbX2CCPG/UjbiRDIS5t
+   3hNyKc50GL9y8JC7dt5C0hk26x67kqu24Eea3J7P67dsxpN3iFOj62Jcx
+   fGFmw1G9GIosf360cehQvvYFd4lUSs8o9+pDEQHSRZ3H8EeLDBzNcKpVw
+   Q==;
+X-CSE-ConnectionGUID: LF4XSMnmTj+e6boWLhmV5Q==
+X-CSE-MsgGUID: oXOG+4SZQLqKl/BxAcnTJA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11441"; a="61451267"
+X-IronPort-AV: E=Sophos;i="6.15,308,1739865600"; 
+   d="scan'208";a="61451267"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2025 03:13:40 -0700
+X-CSE-ConnectionGUID: ar94YddlQxyhw8WjlDd2GA==
+X-CSE-MsgGUID: 2JrNiW67S7CfivIeot/mug==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,308,1739865600"; 
+   d="scan'208";a="145042856"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by fmviesa003.fm.intel.com with ESMTP; 23 May 2025 03:13:39 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uIPPD-000QHe-2B;
+	Fri, 23 May 2025 10:13:35 +0000
+Date: Fri, 23 May 2025 18:13:28 +0800
+From: kernel test robot <lkp@intel.com>
+To: "x86-ml" <x86@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Subject: [tip:perf/core] BUILD SUCCESS
+ 44889ff67cee7b9ee2d305690ce7a5488b137a66
+Message-ID: <202505231819.TGXXPVRX-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <CAGtprH_7jSpwF77j1GW8rjSrbtZZ2OW2iGck5=Wk67+VnF9vjQ@mail.gmail.com>
- <CA+EHjTzMhKCoftfJUuL0WUZW4DdqOHgVDcn0Cmf-0r--8rBdbg@mail.gmail.com>
- <diqzecwjnk95.fsf@ackerleytng-ctop.c.googlers.com> <CA+EHjTyY5C1QgkoAqvJ0kHM4nUvKc1e1nQ0Uq+BANtVEnZH90w@mail.gmail.com>
- <CAGtprH-fE=G923ctBAcq5zFna+2WULhmHDSbXUsZKUrin29b4g@mail.gmail.com>
- <CA+EHjTxvufYVA8LQWRKEX7zA0gWLQUHVO2LvwKc5JXVu-XAEEA@mail.gmail.com>
- <CAGtprH_TfKT3oRPCLbh-ojLGXSfOQ2XA39pVhr47gb3ikPtUkw@mail.gmail.com>
- <CA+EHjTxJZ_pb7+chRoZxvkxuib2YjbiHg=_+f4bpRt2xDFNCzQ@mail.gmail.com>
- <aC86OsU2HSFZkJP6@google.com> <CA+EHjTxjt-mb_WbtVymaBvCb1EdJAVMV_uGb4xDs_ewg4k0C4g@mail.gmail.com>
- <aC9QPoEUw_nLHhV4@google.com>
-In-Reply-To: <aC9QPoEUw_nLHhV4@google.com>
-From: Fuad Tabba <tabba@google.com>
-Date: Fri, 23 May 2025 11:12:03 +0100
-X-Gm-Features: AX0GCFsTSgoQuYeHe63NUWNK_TXQp_3mL71CbShDN1o-eae1QjvK7sqPLnnLNQo
-Message-ID: <CA+EHjTzMYSHKuxMJbpMx594RsL64aph1dWj06zx_01=ZuQU+Bg@mail.gmail.com>
-Subject: Re: [RFC PATCH v2 04/51] KVM: guest_memfd: Introduce
- KVM_GMEM_CONVERT_SHARED/PRIVATE ioctls
-To: Sean Christopherson <seanjc@google.com>
-Cc: Vishal Annapurve <vannapurve@google.com>, Ackerley Tng <ackerleytng@google.com>, kvm@vger.kernel.org, 
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org, x86@kernel.org, 
-	linux-fsdevel@vger.kernel.org, aik@amd.com, ajones@ventanamicro.com, 
-	akpm@linux-foundation.org, amoorthy@google.com, anthony.yznaga@oracle.com, 
-	anup@brainfault.org, aou@eecs.berkeley.edu, bfoster@redhat.com, 
-	binbin.wu@linux.intel.com, brauner@kernel.org, catalin.marinas@arm.com, 
-	chao.p.peng@intel.com, chenhuacai@kernel.org, dave.hansen@intel.com, 
-	david@redhat.com, dmatlack@google.com, dwmw@amazon.co.uk, 
-	erdemaktas@google.com, fan.du@intel.com, fvdl@google.com, graf@amazon.com, 
-	haibo1.xu@intel.com, hch@infradead.org, hughd@google.com, ira.weiny@intel.com, 
-	isaku.yamahata@intel.com, jack@suse.cz, james.morse@arm.com, 
-	jarkko@kernel.org, jgg@ziepe.ca, jgowans@amazon.com, jhubbard@nvidia.com, 
-	jroedel@suse.de, jthoughton@google.com, jun.miao@intel.com, 
-	kai.huang@intel.com, keirf@google.com, kent.overstreet@linux.dev, 
-	kirill.shutemov@intel.com, liam.merwick@oracle.com, 
-	maciej.wieczor-retman@intel.com, mail@maciej.szmigiero.name, maz@kernel.org, 
-	mic@digikod.net, michael.roth@amd.com, mpe@ellerman.id.au, 
-	muchun.song@linux.dev, nikunj@amd.com, nsaenz@amazon.es, 
-	oliver.upton@linux.dev, palmer@dabbelt.com, pankaj.gupta@amd.com, 
-	paul.walmsley@sifive.com, pbonzini@redhat.com, pdurrant@amazon.co.uk, 
-	peterx@redhat.com, pgonda@google.com, pvorel@suse.cz, qperret@google.com, 
-	quic_cvanscha@quicinc.com, quic_eberman@quicinc.com, 
-	quic_mnalajal@quicinc.com, quic_pderrin@quicinc.com, quic_pheragu@quicinc.com, 
-	quic_svaddagi@quicinc.com, quic_tsoni@quicinc.com, richard.weiyang@gmail.com, 
-	rick.p.edgecombe@intel.com, rientjes@google.com, roypat@amazon.co.uk, 
-	rppt@kernel.org, shuah@kernel.org, steven.price@arm.com, 
-	steven.sistare@oracle.com, suzuki.poulose@arm.com, thomas.lendacky@amd.com, 
-	usama.arif@bytedance.com, vbabka@suse.cz, viro@zeniv.linux.org.uk, 
-	vkuznets@redhat.com, wei.w.wang@intel.com, will@kernel.org, 
-	willy@infradead.org, xiaoyao.li@intel.com, yan.y.zhao@intel.com, 
-	yilun.xu@intel.com, yuzenghui@huawei.com, zhiquan1.li@intel.com
-Content-Type: text/plain; charset="UTF-8"
 
-Hi Sean,
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git perf/core
+branch HEAD: 44889ff67cee7b9ee2d305690ce7a5488b137a66  perf/uapi: Clean up <uapi/linux/perf_event.h> a bit
 
+elapsed time: 1437m
 
-On Thu, 22 May 2025 at 17:26, Sean Christopherson <seanjc@google.com> wrote:
->
-> On Thu, May 22, 2025, Fuad Tabba wrote:
-> > On Thu, 22 May 2025 at 15:52, Sean Christopherson <seanjc@google.com> wrote:
-> > > On Wed, May 21, 2025, Fuad Tabba wrote:
-> > > > How does the host userspace find that out? If the host userspace is capable
-> > > > of finding that out, then surely KVM is also capable of finding out the same.
-> > >
-> > > Nope, not on x86.  Well, not without userspace invoking a new ioctl, which would
-> > > defeat the purpose of adding these ioctls.
-> > >
-> > > KVM is only responsible for emulating/virtualizing the "CPU".  The chipset, e.g.
-> > > the PCI config space, is fully owned by userspace.  KVM doesn't even know whether
-> > > or not PCI exists for the VM.  And reboot may be emulated by simply creating a
-> > > new KVM instance, i.e. even if KVM was somehow aware of the reboot request, the
-> > > change in state would happen in an entirely new struct kvm.
-> > >
-> > > That said, Vishal and Ackerley, this patch is a bit lacking on the documentation
-> > > front.  The changelog asserts that:
-> > >
-> > >   A guest_memfd ioctl is used because shareability is a property of the memory,
-> > >   and this property should be modifiable independently of the attached struct kvm
-> > >
-> > > but then follows with a very weak and IMO largely irrelevant justification of:
-> > >
-> > >   This allows shareability to be modified even if the memory is not yet bound
-> > >   using memslots.
-> > >
-> > > Allowing userspace to change shareability without memslots is one relatively minor
-> > > flow in one very specific use case.
-> > >
-> > > The real justification for these ioctls is that fundamentally, shareability for
-> > > in-place conversions is a property of a guest_memfd instance and not a struct kvm
-> > > instance, and so needs to owned by guest_memfd.
-> >
-> > Thanks for the clarification Sean. I have a couple of followup
-> > questions/comments that you might be able to help with:
-> >
-> > From a conceptual point of view, I understand that the in-place conversion is
-> > a property of guest_memfd. But that doesn't necessarily mean that the
-> > interface between kvm <-> guest_memfd is a userspace IOCTL.
->
-> kvm and guest_memfd aren't the communication endpoints for in-place conversions,
-> and more importantly, kvm isn't part of the control plane.  kvm's primary role
-> (for guest_memfd with in-place conversions) is to manage the page tables to map
-> memory into the guest.
->
-> kvm *may* also explicitly provide a communication channel between the guest and
-> host, e.g. when conversions are initiated via hypercalls, but in some cases the
-> communication channel may be created through pre-existing mechanisms, e.g. a
-> shared memory buffer or emulated I/O (such as the PCI reset case).
->
->   guest => kvm (dumb pipe) => userspace => guest_memfd => kvm (invalidate)
->
-> And in other cases, kvm might not be in that part of the picture at all, e.g. if
-> the userspace VMM provides an interface to the VM owner (which could also be the
-> user running the VM) to reset the VM, then the flow would look like:
->
->   userspace => guest_memfd => kvm (invalidate)
->
-> A decent comparison is vCPUs.  KVM _could_ route all ioctls through the VM, but
-> that's unpleasant for all parties, as it'd be cumbersome for userspace, and
-> unnecessarily complex and messy for KVM.  Similarly, routing guest_memfd state
-> changes through KVM_SET_MEMORY_ATTRIBUTES is awkward from both design and mechanical
-> perspectives.
->
-> Even if we disagree on how ugly/pretty routing conversions through kvm would be,
-> which I'll allow is subjective, the bigger problem is that bouncing through
-> KVM_SET_MEMORY_ATTRIBUTES would create an unholy mess of an ABI.
->
-> Today, KVM_SET_MEMORY_ATTRIBUTES is handled entirely within kvm, and any changes
-> take effect irrespective of any memslot bindings.  And that didn't happen by
-> chance; preserving and enforcing attribute changes independently of memslots was
-> a key design requirement, precisely because memslots are ephemeral to a certain
-> extent.
->
-> Adding support for in-place guest_memfd conversion will require new ABI, and so
-> will be a "breaking" change for KVM_SET_MEMORY_ATTRIBUTES no matter what.  E.g.
-> KVM will need to reject KVM_MEMORY_ATTRIBUTE_PRIVATE for VMs that elect to use
-> in-place guest_memfd conversions.  But very critically, KVM can cripsly enumerate
-> the lack of KVM_MEMORY_ATTRIBUTE_PRIVATE via KVM_CAP_MEMORY_ATTRIBUTES, the
-> behavior will be very straightforward to document (e.g. CAP X is mutually excusive
-> with KVM_MEMORY_ATTRIBUTE_PRIVATE), and it will be opt-in, i.e. won't truly be a
-> breaking change.
->
-> If/when we move shareability to guest_memfd, routing state changes through
-> KVM_SET_MEMORY_ATTRIBUTES will gain a subtle dependency on userspace having to
-> create memslots in order for state changes to take effect.  That wrinkle would be
-> weird and annoying to document, e.g. "if CAP X is enabled, the ioctl ordering is
-> A => B => C, otherwise the ordering doesn't matter", and would create many more
-> conundrums:
->
->   - If a memslot needs to exist in order for KVM_SET_MEMORY_ATTRIBUTES to take effect,
->     what should happen if that memslot is deleted?
->   - If a memslot isn't found, should KVM_SET_MEMORY_ATTRIBUTES fail and report
->     an error, or silently do nothing?
->   - If KVM_SET_MEMORY_ATTRIBUTES affects multiple memslots that are bound to
->     multiple guest_memfd, how does KVM guarantee atomicity?  What happens if one
->     guest_memfd conversion succeeds, but a later fails?
->
-> > We already communicate directly between the two. Other, even less related
-> > subsystems within the kernel also interact without going through userspace.
-> > Why can't we do the same here? I'm not suggesting it not be owned by
-> > guest_memfd, but that we communicate directly.
->
-> I'm not concerned about kvm communicating with guest_memfd, as you note it's all
-> KVM.  As above, my concerns are all about KVM's ABI and who owns/controls what.
->
-> > From a performance point of view, I would expect the common case to be that
-> > when KVM gets an unshare request from the guest, it would be able to unmap
-> > those pages from the (cooperative) host userspace, and return back to the
-> > guest. In this scenario, the host userspace wouldn't even need to be
-> > involved.
->
-> Hard NAK, at least from an x86 perspective.  Userspace is the sole decision maker
-> with respect to what memory is state of shared vs. private, full stop.  The guest
-> can make *requests* to convert memory, but ultimately it's host userspace that
-> decides whether or not to honor the request.
->
-> We've litigated this exact issue multiple times.  All state changes must be
-> controlled by userspace, because userspace is the only entity that can gracefully
-> handle exceptions and edge cases, and is the only entity with (almost) full
-> knowledge of the system.  We can discuss this again if necessary, but I'd much
-> prefer to not rehash all of those conversations.
->
-> > Having a userspace IOCTL as part of this makes that trip unnecessarily longer
-> > for the common case.
->
-> I'm very skeptical that an exit to userspace is going to even be measurable in
-> terms of the cost to convert memory.  Conversion is going to require multiple
-> locks, modifications to multiple sets of page tables with all the associated TLB
-> maintenance, possibly cache maintenance, and probably a few other things I'm
-> forgetting.  The cost of a few user<=>kernel transitions is likely going to be a
-> drop in the bucket.
->
-> If I'm wrong, and there are flows where the user<=>kernel transitions are the
-> long pole, then we could certainly exploring adding a way for userspace to opt
-> into a "fast path" conversion.  But it would need to be exactly that, an optional
-> fast path that can fall back to the "slow" userspace-driven conversion as needed.
+configs tested: 120
+configs skipped: 2
 
-Thanks for this very thorough explanation. I know that we have
-litigated this issue, but not this _exact_ issue. My understanding was
-that the main reason for using IOCTLs for memory attributes is that
-userspace needs to manage private and shared memory seperately,
-including allocation and punching holes where necessary.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-That said, no need to discuss this again. If it turns out that
-user<->kernel transitions are a bottleneck we could look into an
-opt-in fast path as you said.
+tested configs:
+alpha                             allnoconfig    gcc-14.2.0
+alpha                            allyesconfig    gcc-14.2.0
+arc                              allmodconfig    gcc-14.2.0
+arc                               allnoconfig    gcc-14.2.0
+arc                              allyesconfig    gcc-14.2.0
+arc                   randconfig-001-20250522    gcc-15.1.0
+arc                   randconfig-002-20250522    gcc-15.1.0
+arm                              allmodconfig    gcc-14.2.0
+arm                               allnoconfig    clang-21
+arm                              allyesconfig    gcc-14.2.0
+arm                          gemini_defconfig    clang-20
+arm                            mmp2_defconfig    gcc-14.2.0
+arm                            mps2_defconfig    clang-21
+arm                   randconfig-001-20250522    clang-21
+arm                   randconfig-002-20250522    clang-21
+arm                   randconfig-003-20250522    clang-18
+arm                   randconfig-004-20250522    gcc-7.5.0
+arm                         wpcm450_defconfig    gcc-14.2.0
+arm64                            allmodconfig    clang-19
+arm64                             allnoconfig    gcc-14.2.0
+arm64                 randconfig-001-20250522    clang-21
+arm64                 randconfig-002-20250522    gcc-7.5.0
+arm64                 randconfig-003-20250522    clang-21
+arm64                 randconfig-004-20250522    gcc-5.5.0
+csky                              allnoconfig    gcc-14.2.0
+csky                  randconfig-001-20250522    gcc-15.1.0
+csky                  randconfig-002-20250522    gcc-15.1.0
+hexagon                          allmodconfig    clang-17
+hexagon                           allnoconfig    clang-21
+hexagon                          allyesconfig    clang-21
+hexagon               randconfig-001-20250522    clang-17
+hexagon               randconfig-002-20250522    clang-21
+i386                             allmodconfig    gcc-12
+i386                              allnoconfig    gcc-12
+i386                             allyesconfig    gcc-12
+i386        buildonly-randconfig-001-20250522    clang-20
+i386        buildonly-randconfig-002-20250522    gcc-12
+i386        buildonly-randconfig-003-20250522    gcc-12
+i386        buildonly-randconfig-004-20250522    gcc-12
+i386        buildonly-randconfig-005-20250522    gcc-12
+i386        buildonly-randconfig-006-20250522    clang-20
+i386                                defconfig    clang-20
+loongarch                        allmodconfig    gcc-14.2.0
+loongarch                         allnoconfig    gcc-14.2.0
+loongarch             randconfig-001-20250522    gcc-15.1.0
+loongarch             randconfig-002-20250522    gcc-15.1.0
+m68k                             allmodconfig    gcc-14.2.0
+m68k                              allnoconfig    gcc-14.2.0
+m68k                             allyesconfig    gcc-14.2.0
+m68k                         apollo_defconfig    gcc-14.2.0
+m68k                            q40_defconfig    gcc-14.2.0
+microblaze                       alldefconfig    gcc-14.2.0
+microblaze                       allmodconfig    gcc-14.2.0
+microblaze                        allnoconfig    gcc-14.2.0
+microblaze                       allyesconfig    gcc-14.2.0
+microblaze                      mmu_defconfig    gcc-14.2.0
+mips                              allnoconfig    gcc-14.2.0
+mips                      maltaaprp_defconfig    clang-21
+mips                           mtx1_defconfig    clang-21
+nios2                             allnoconfig    gcc-14.2.0
+nios2                 randconfig-001-20250522    gcc-9.3.0
+nios2                 randconfig-002-20250522    gcc-9.3.0
+openrisc                          allnoconfig    gcc-14.2.0
+openrisc                         allyesconfig    gcc-14.2.0
+parisc                           allmodconfig    gcc-14.2.0
+parisc                            allnoconfig    gcc-14.2.0
+parisc                           allyesconfig    gcc-14.2.0
+parisc                randconfig-001-20250522    gcc-6.5.0
+parisc                randconfig-002-20250522    gcc-12.4.0
+powerpc                          allmodconfig    gcc-14.2.0
+powerpc                           allnoconfig    gcc-14.2.0
+powerpc                          allyesconfig    clang-21
+powerpc                      chrp32_defconfig    clang-19
+powerpc                      pasemi_defconfig    clang-21
+powerpc               randconfig-001-20250522    gcc-9.3.0
+powerpc               randconfig-002-20250522    clang-21
+powerpc               randconfig-003-20250522    gcc-7.5.0
+powerpc64             randconfig-001-20250522    clang-21
+powerpc64             randconfig-002-20250522    gcc-10.5.0
+powerpc64             randconfig-003-20250522    gcc-7.5.0
+riscv                            allmodconfig    clang-21
+riscv                             allnoconfig    gcc-14.2.0
+riscv                            allyesconfig    clang-16
+riscv                 randconfig-001-20250522    gcc-9.3.0
+riscv                 randconfig-002-20250522    clang-18
+s390                             allmodconfig    clang-18
+s390                              allnoconfig    clang-21
+s390                             allyesconfig    gcc-14.2.0
+s390                  randconfig-001-20250522    clang-19
+s390                  randconfig-002-20250522    clang-18
+sh                               allmodconfig    gcc-14.2.0
+sh                                allnoconfig    gcc-14.2.0
+sh                               allyesconfig    gcc-14.2.0
+sh                    randconfig-001-20250522    gcc-13.3.0
+sh                    randconfig-002-20250522    gcc-13.3.0
+sh                              ul2_defconfig    gcc-14.2.0
+sparc                            allmodconfig    gcc-14.2.0
+sparc                             allnoconfig    gcc-14.2.0
+sparc                 randconfig-001-20250522    gcc-14.2.0
+sparc                 randconfig-002-20250522    gcc-6.5.0
+sparc64               randconfig-001-20250522    gcc-14.2.0
+sparc64               randconfig-002-20250522    gcc-12.4.0
+um                               allmodconfig    clang-19
+um                                allnoconfig    clang-21
+um                               allyesconfig    gcc-12
+um                    randconfig-001-20250522    gcc-12
+um                    randconfig-002-20250522    gcc-12
+x86_64                            allnoconfig    clang-20
+x86_64                           allyesconfig    clang-20
+x86_64      buildonly-randconfig-001-20250522    clang-20
+x86_64      buildonly-randconfig-002-20250522    gcc-12
+x86_64      buildonly-randconfig-003-20250522    gcc-12
+x86_64      buildonly-randconfig-004-20250522    gcc-12
+x86_64      buildonly-randconfig-005-20250522    gcc-12
+x86_64      buildonly-randconfig-006-20250522    gcc-12
+x86_64                              defconfig    gcc-11
+x86_64                          rhel-9.4-rust    clang-18
+xtensa                            allnoconfig    gcc-14.2.0
+xtensa                randconfig-001-20250522    gcc-14.2.0
+xtensa                randconfig-002-20250522    gcc-10.5.0
 
-Cheers,
-/fuad
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
