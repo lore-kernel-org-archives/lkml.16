@@ -1,40 +1,46 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.4])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3C30C1494DF
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 08:47:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.4
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0222F153BF0
+	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 08:49:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747990069; cv=none; b=kRddkz5FQkTz4tQT7nKgdns7AVpn3+C6fuFKKw9eoIMLH46LAJzKVkvWA/J8k4VrEKcW91kBLF3RE6Wx4g90MhEIlH0aFQujfCaBodujnzMtT8jjlOFyFrfKKL0cg0ks02l/YZqqxSXRGWkokWkECFz+WKUBj+4dM9wG+TmqZi8=
+	t=1747990146; cv=none; b=QBIyFI2Q71zTQsgaROF1Xx1HhbjjKi7FVNnqn92Yqfd+FOWkKbw/Z8BDaENnXFjRi2DnTOMJGWoSQWhAB939hEhDe7reORzUnH3n5NCyQUMozumrkuyXFDSRpY+DLxwLHCccsQbvWD2PYLu+sKAkNOiGwqRTBZZKSC1nHH1eygs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747990069; c=relaxed/simple;
-	bh=5cHjh0c/Fu4y8h4TOWZBwsw1Yha8wtyyfu8NzJg4mtk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=lBMxDXFJU2M7oFC5dcBNq4YLa/XwAoqjlNhqYu2bDfXZQq3m4IMIHKgChFBDdip3rLAD/wcyhAMmXW+5uaCbTvAqzAzZbt+wzOuR32G6yn8LoXBrnSs4+5b0LR6FuR//EvMQK+5N8i6vIWNu+z180YZ0a8AQcrj3rlTTy5EUH6M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=MApWt5wi; arc=none smtp.client-ip=117.135.210.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1747990146; c=relaxed/simple;
+	bh=UJS0OYy0ef9mbviZ+sxQd1YSz71cZ9/kFDU1csLnVqw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Z9MNaH6+3q2iEafSMhWV+7YkcLk67BZHZovy61m5MxpBfyNL4VqlkPtQKxYM838gCY8rjIpUN4QYySL2W42TLDT8RP6XbmbJPD3nhOoDXUb1y61vSQ+iizFrpa45TsXx652Kiel/RQe9h76Rx+3MjrZkw0rLOn36+9I/nALrCYE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FWz9trbd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="MApWt5wi"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:To:Subject:Date:Message-ID:MIME-Version; bh=Eg
-	FS/rW230blmPCo/88Tvv809uo+RDzoEKY/8wGd39o=; b=MApWt5wimIOZAalquO
-	Dvc9tko7f2gt/7W6H+iKpXpcWCMovx44TS3hvs5hQmKZ3P1tUFVFeQ8Gr9owTlwu
-	J7EboKS6Mo1ZXeBGuxGM/6/6L/0zlLa47mASt3/Gs4+DlmoJl9Un4PAvdvfais07
-	+uhUAV50RXuBCfyzOcDJ/1SWM=
-Received: from evb20.domain.sensetime.com (unknown [])
-	by gzga-smtp-mtada-g0-0 (Coremail) with SMTP id _____wB34EgFNjBoK31rDQ--.40531S2;
-	Fri, 23 May 2025 16:47:03 +0800 (CST)
-From: junan <junan76@163.com>
-To: maarten.lankhorst@linux.intel.com,
-	mripard@kernel.org,
-	airlied@gmail.com,
-	simona@ffwll.ch,
-	tzimmermann@suse.de
-Cc: dri-devel@lists.freedesktop.org,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FWz9trbd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6059C4CEF1;
+	Fri, 23 May 2025 08:49:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747990145;
+	bh=UJS0OYy0ef9mbviZ+sxQd1YSz71cZ9/kFDU1csLnVqw=;
+	h=From:To:Cc:Subject:Date:From;
+	b=FWz9trbdLY+aUWbXnbtR2nDar9Ve6QYzpBLkOsAJ4wPx5+YrwmQbXIxruFdElikfd
+	 5PKBIrvhBJN/WeUzurJOB2pINI9R/sMK8/hUjHoeAkLg+alILUNoNNCTgpHiSipMjI
+	 5XWhsjzlw7EgxzOLASaS01j2p5Mt13JhgAqKItHcXHcazyv6sI9w5NYzW3CDThn4v8
+	 9zOAUbURK4d7+AEwBXLC82+SeSuQAvhNlU+rOLpIgzgGnT3qq7RD1z+Jsb/L9YjKHv
+	 eq5kth1xThAmELH4+ioMfs9ufDQYDusaE2Psi0XIzohqW+9GQnWC+5wVyJ4tXPuscZ
+	 asy0ZvV5cwE1Q==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan+linaro@kernel.org>)
+	id 1uIO5O-000000002sa-3Xze;
+	Fri, 23 May 2025 10:49:03 +0200
+From: Johan Hovold <johan+linaro@kernel.org>
+To: Vinod Koul <vkoul@kernel.org>
+Cc: Kishon Vijay Abraham I <kishon@kernel.org>,
+	Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>,
+	Abel Vesa <abel.vesa@linaro.org>,
+	linux-phy@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
-	junan76@163.com
-Subject: [PATCH] DRM: Fix rbtree search issue of find_hole_addr
-Date: Fri, 23 May 2025 16:39:10 +0800
-Message-ID: <20250523083909.84517-2-junan76@163.com>
-X-Mailer: git-send-email 2.43.5
+	Johan Hovold <johan+linaro@kernel.org>
+Subject: [PATCH 0/7] phy: phy-snps-eusb2: fixes and cleanups
+Date: Fri, 23 May 2025 10:48:32 +0200
+Message-ID: <20250523084839.11015-1-johan+linaro@kernel.org>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,63 +48,36 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wB34EgFNjBoK31rDQ--.40531S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWrtryDtF4rur43ZFyxAr1DJrb_yoW8JryUpF
-	47G3s0krZ5Ka1rWw1IyFs7uFy3A3W5GFWxt3yDuwsa9F1v9rs2ga4Fyr13KFyUJrZ3Gr43
-	WwsYgFyUCF4jyr7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0pE6pBsUUUUU=
-X-CM-SenderInfo: pmxqt0ixw6il2tof0z/1tbizQNWsWgwMtVWOAAAs4
 
-I'm not sure if it is a bug or just for some special purposes in the function
-"find_hole_addr", the original implementation is as follows:
+Here are a couple of fixes and some related cleanups to the recently
+reworked and renamed phy-snps-eusb2 driver.
 
-static struct drm_mm_node *find_hole_addr(struct drm_mm *mm, u64 addr, u64 size)
-{
-	struct rb_node *rb = mm->holes_addr.rb_node;
-	struct drm_mm_node *node = NULL;
+The clock and repeater imbalance fixes are not marked for stable as the
+first issue was introduced in the recent rework which is queued for
+6.16-rc1.
 
-	while (rb) {
-		u64 hole_start;
+The repeater imbalance has been there for a few years and
+could be backported even if this is now complicated by the
+rework/rename. Since it only affects a resource leak in an error path I
+decided to not mark this one for stable for now.
 
-		if (!usable_hole_addr(rb, size))
-			break;
+Ideally, these could go in along with the reworked driver for rc1.
 
-		node = rb_hole_addr_to_node(rb);
-		hole_start = __drm_mm_hole_node_start(node);
+Johan
 
-		if (addr < hole_start)
-			rb = node->rb_hole_addr.rb_left;
-		else if (addr > hole_start + node->hole_size)
-			rb = node->rb_hole_addr.rb_right;
-		else
-			break;
 
-	}
+Johan Hovold (7):
+  phy: phy-snps-eusb2: fix clock imbalance on phy_exit()
+  phy: phy-snps-eusb2: fix repeater imbalance on phy_init() failure
+  phy: phy-snps-eusb2: rename phy_init() clock error label
+  phy: phy-snps-eusb2: clean up error messages
+  phy: phy-snps-eusb2: fix optional phy lookup parameter
+  phy: phy-snps-eusb2: drop unnecessary loop index declarations
+  phy: phy-snps-eusb2: clean up id table sentinel
 
-	return node;
-}
+ drivers/phy/phy-snps-eusb2.c | 39 +++++++++++++++++++-----------------
+ 1 file changed, 21 insertions(+), 18 deletions(-)
 
-I think that the "node" should be set to NULL if it is not the one we want,
-please tell me if I am wrong.
-
-Signed-off-by: junan <junan76@163.com>
----
- drivers/gpu/drm/drm_mm.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/drivers/gpu/drm/drm_mm.c b/drivers/gpu/drm/drm_mm.c
-index ca254611b382..9417911198b5 100644
---- a/drivers/gpu/drm/drm_mm.c
-+++ b/drivers/gpu/drm/drm_mm.c
-@@ -347,6 +347,8 @@ static struct drm_mm_node *find_hole_addr(struct drm_mm *mm, u64 addr, u64 size)
- 			rb = node->rb_hole_addr.rb_right;
- 		else
- 			break;
-+
-+		node = NULL;
- 	}
- 
- 	return node;
 -- 
-2.43.5
+2.49.0
 
