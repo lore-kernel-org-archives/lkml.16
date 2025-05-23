@@ -1,156 +1,118 @@
-Received: from fout-b5-smtp.messagingengine.com (fout-b5-smtp.messagingengine.com [202.12.124.148])
+Received: from out-171.mta0.migadu.com (out-171.mta0.migadu.com [91.218.175.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4231721ABD3;
-	Fri, 23 May 2025 18:01:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.148
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CB9B2DCBF6
+	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 18:02:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748023318; cv=none; b=rmv1rP34DWVVITlu7tfcteWwxfVdzQniZgqUgtxFj4+STv7HgMuwcsvXQGx+PcC2cxo9oAVJixmyXs+wDczaEPCfvTtf6hMOcr2W2shfw7lOmSZY59ANMjUMDDvzqCfpMnMyJmFhn1ZtmDHJ5QOOE67/u+H3lYZPLdOZxcHSRAI=
+	t=1748023345; cv=none; b=uWZxp01qr1fZJqF22RjWfSJLck5gczpihVdliGEbYx5FHeug7mAKr+9hyEypRG6FFPb1QhCVm7K81T2eD4SR/evNrSsThTWdWOY/SA9p2VjTZv9dGlc2AoA/4qfid4/33x1c4RmHuKMdgDK3kLOmrbz+CXk18+9Br9MbJak9asU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748023318; c=relaxed/simple;
-	bh=eLcMbXdwuNnvAUlO9CRu55Ndn59jGO1rx+ykDT5c1K0=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=cioAzFldfDcoEPkOtsDZuWItU4Rg3myfPWzT+LpffgqCMC3TJROMMT+eMEYy+fRwspl20H3BViABAFi0+v9opvon2PSwIwKey1sJsFN91G4sZ6lFnU0XL8H4FBOTwIwJTFnV3ZTM4iE99V2nWDSe1Sm5BeP0kWcaIgwof51ITLY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=2Vsmli+d; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=SI85RS1b; arc=none smtp.client-ip=202.12.124.148
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1748023345; c=relaxed/simple;
+	bh=/IJS+eg31HVMWiLhSeRqgdbO7HyM9IVVNSvfwS9h97Q=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bs3n+XaWC90pNUJ8dS4xrPz81BReRcQz3CesgPq0XWGnGB3LTXvQ77POJueTBZ0t/gtw4YwKWe1DA99TFOUz7dE81mhIO3gtemeVzYoCCDpUowArT8sexd6TMtFJjeUde9pLB447lYCSj5kmHj1ouw/YF8E+/puV86pUayG7efs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=cb6ir8xE; arc=none smtp.client-ip=91.218.175.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="2Vsmli+d";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="SI85RS1b"
-Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
-	by mailfout.stl.internal (Postfix) with ESMTP id 1D75411400C0;
-	Fri, 23 May 2025 14:01:55 -0400 (EDT)
-Received: from phl-imap-12 ([10.202.2.86])
-  by phl-compute-05.internal (MEProxy); Fri, 23 May 2025 14:01:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1748023314;
-	 x=1748109714; bh=etHm7ib5DqaWFk1XWWYwvr/YNJrq8Y1TAgZzJHn5gcM=; b=
-	2Vsmli+dvja130EpShUHphEGFbPVJDvyPSZb0A6bmhnW1Qk1bru540h09TUFu180
-	z0Wpd4ynhV7Zg6WsLzt834vz9cc+Bqj3Bu+IIfzWCvu9Qx5FqGThCYqwuCssUnHb
-	mxIlEQViPjbaMEU77lnBXzqk6cM0lx1i0chvq5e9p+ifTefEyuObBzvs7L9EXWJP
-	SMHzdKRoa1uDeiBeC2QJ7PUkHkyy1RA+ZMPE8ffZx03qbOnl9qFBjKGoVzsk5OY4
-	YJIoNrBegB0pz0p5oU3N6gsrWM/QU1mE9BFXr4o/MzPwWTmfac2/EQwsRBDe/tN5
-	J0ICFdjaut/iXLn6t18FxA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1748023314; x=
-	1748109714; bh=etHm7ib5DqaWFk1XWWYwvr/YNJrq8Y1TAgZzJHn5gcM=; b=S
-	I85RS1b7dAIRflZ5rplYPidXo6iSIFKUkG5w1XtIPG+/+N8jqx2g1eW1Shu033cY
-	tZS3kiOz5vlzKHjGGC/nC/8Gh+R0av5Z5Tg7EDM6Y222aHgDZghcFyTCSKmo08V2
-	/TbVj7t3SyAFocZ0Imf2/zlEj1wlwkPTuYO8Jt2FBklt80rVbuuej/sOLr4svkHR
-	juSGJIMGbdEeGM2ioOfSeVk72xyWYYKLXKvLj97VctkCS7WdlBSKRWnlIInNSuZb
-	NDBVq2+CgwapxZPnJAuvnr7+fmw4PTNA6ardoEPPx+ows40Ci2c92waFYBjUS1iF
-	clmuN55g0dliBWQdHvoWA==
-X-ME-Sender: <xms:ErgwaF4VTF9t0dXQSdszMmdQTPsVIEdaMlrnUW12ogZiBZJnTv3-0Q>
-    <xme:ErgwaC6pNW2GVsDS5Tm18svA_4fpUbxAV4K8HuwxgFvXfIVJskA6VmGGJmNX7TZjX
-    18RunE6cqA5Vxrv7U8>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgdelhedvucdltddurdegfedvrddttd
-    dmucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgf
-    nhhsuhgsshgtrhhisggvpdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttd
-    enucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgj
-    fhfutgfgsehtjeertdertddtnecuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuc
-    eorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrthhtvghrnhephfdthfdvtdefhedu
-    keetgefggffhjeeggeetfefggfevudegudevledvkefhvdeinecuvehluhhsthgvrhfuih
-    iivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvgdp
-    nhgspghrtghpthhtohepkedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtoheprghnug
-    gvrhhsrdhrohigvghllheslhhinhgrrhhordhorhhgpdhrtghpthhtohepuggrnhdrtggr
-    rhhpvghnthgvrheslhhinhgrrhhordhorhhgpdhrtghpthhtohepnhgrrhgvshhhrdhkrg
-    hmsghojhhusehlihhnrghrohdrohhrghdprhgtphhtthhopehkvghnthdrohhvvghrshht
-    rhgvvghtsehlihhnuhigrdguvghvpdhrtghpthhtoheplhhkfhhtqdhtrhhirghgvgeslh
-    hishhtshdrlhhinhgrrhhordhorhhgpdhrtghpthhtoheprhgvghhrvghsshhiohhnshes
-    lhhishhtshdrlhhinhhugidruggvvhdprhgtphhtthhopehlihhnuhigqdgstggrtghhvg
-    esvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgv
-    lhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:ErgwaMe0oIf56Skend13df07ttI1F5HCefs-y414yDoWbgVNcYp6aA>
-    <xmx:ErgwaOIuL6DRKH_C9SemZmzaKVCPykmy1tzHyUMvUJ_08_VIL8Y_zg>
-    <xmx:ErgwaJLG0QhITT5OAV8utOikBh6qLXfQFeErjlPcfzh4f-3L80COZw>
-    <xmx:ErgwaHxUN2VctTz5xzcnIGN_ivhIIu5Zj8krUjNyoUPHVim7Wbo7cA>
-    <xmx:ErgwaEyAFwwaxCURHiIGUPrbRS5uYYsTVgXzbno-g7aXVa2MxdF3XhqA>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 6F3C31060063; Fri, 23 May 2025 14:01:54 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="cb6ir8xE"
+Message-ID: <5dd587b3-8c04-41d1-b677-5b07266cfec5@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1748023337;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=dVgfGwkpVOgVzuNCU5zCPpN93of0x7k+aYCz5DP0VOA=;
+	b=cb6ir8xE4q8LN9CRbizpHOwYHG/1HnOlKRh3ajaE1tDkmTd8L19cu4lPf8tqbFVowAvU7o
+	37f+G4WGNnNmva62kOAHzlLog/TeUa+vG94ciSfJV4Agz/wUc+d1DCUpdSbMrQe4M9rbRz
+	+MQCdF0ERsqq1cCkeU0V+ucqdayBGaM=
+Date: Fri, 23 May 2025 11:02:11 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: Tddf37e9d72974a2b
-Date: Fri, 23 May 2025 20:01:33 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Kent Overstreet" <kent.overstreet@linux.dev>
-Cc: "Naresh Kamboju" <naresh.kamboju@linaro.org>,
- linux-bcache@vger.kernel.org, "open list" <linux-kernel@vger.kernel.org>,
- lkft-triage@lists.linaro.org,
- "Linux Regressions" <regressions@lists.linux.dev>,
- "Dan Carpenter" <dan.carpenter@linaro.org>,
- "Anders Roxell" <anders.roxell@linaro.org>
-Message-Id: <692e313d-ea31-45c0-8c66-36b25c9d955d@app.fastmail.com>
-In-Reply-To: 
- <hplrd5gufo2feylgs4ieufticwemeteaaoilo2jllgauclua2c@o4erpizekm5y>
-References: 
- <CA+G9fYv08Rbg4f8ZyoZC9qseKdRygy8y86qFvts5D=BoJg888g@mail.gmail.com>
- <6tgxbull5sqlxbpiw3jafxtio2a3kc53yh27td4g2otb6kae5t@lr6wjawp6vfa>
- <CA+G9fYsjBXvm9NNKRbVo_7heX1537K8yOjH7OaSEQhGRmkLvgA@mail.gmail.com>
- <6247de76-d1f5-4357-83bd-4dd9268f44aa@app.fastmail.com>
- <7tsvzu2mubrpclr75yezqj7ncuzebpsgqskbehhjy6gll73rez@5cj7griclubx>
- <566aefc9-7cad-4eb8-8eb0-8640d745efa2@app.fastmail.com>
- <hplrd5gufo2feylgs4ieufticwemeteaaoilo2jllgauclua2c@o4erpizekm5y>
-Subject: Re: riscv gcc-13 allyesconfig error the frame size of 2064 bytes is larger
- than 2048 bytes [-Werror=frame-larger-than=]
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH v8 13/14] RISC-V: KVM: add support for FWFT SBI extension
+To: =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@ventanamicro.com>,
+ =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>,
+ Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Anup Patel <anup@brainfault.org>,
+ Atish Patra <atishp@atishpatra.org>, Shuah Khan <shuah@kernel.org>,
+ Jonathan Corbet <corbet@lwn.net>, linux-riscv@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ kvm@vger.kernel.org, kvm-riscv@lists.infradead.org,
+ linux-kselftest@vger.kernel.org
+Cc: Samuel Holland <samuel.holland@sifive.com>,
+ Andrew Jones <ajones@ventanamicro.com>, Deepak Gupta <debug@rivosinc.com>,
+ Charlie Jenkins <charlie@rivosinc.com>,
+ linux-riscv <linux-riscv-bounces@lists.infradead.org>
+References: <20250523101932.1594077-1-cleger@rivosinc.com>
+ <20250523101932.1594077-14-cleger@rivosinc.com>
+ <DA3K95ZYJ52S.1K6O3LN6WEI0N@ventanamicro.com>
+ <9f9e2869-725d-4590-887a-9b0ef091472e@rivosinc.com>
+ <DA3OJ7WWUGLT.35AVP0QQDJRZV@ventanamicro.com>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Atish Patra <atish.patra@linux.dev>
+In-Reply-To: <DA3OJ7WWUGLT.35AVP0QQDJRZV@ventanamicro.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Fri, May 23, 2025, at 19:11, Kent Overstreet wrote:
-> On Fri, May 23, 2025 at 05:17:15PM +0200, Arnd Bergmann wrote:
->> 
->> - KASAN_STACK adds extra redzones for each variable
->> - KASAN_STACK further prevents stack slots from getting
->>   reused inside one function, in order to better pinpoint
->>   which instance caused problems like out-of-scope access
->> - passing structures by value causes them to be put on
->>   the stack on some architectures, even when the structure
->>   size is only one or two registers
->
-> We mainly do this with bkey_s_c, which is just two words: on x86_64,
-> that gets passed in registers. Is riscv different?
+On 5/23/25 9:27 AM, Radim KrÄmÃ¡Å wrote:
+> 2025-05-23T17:29:49+02:00, Clément Léger <cleger@rivosinc.com>:
+>> On 23/05/2025 15:05, Radim Krčmář wrote:
+>>> 2025-05-23T12:19:30+02:00, Clément Léger <cleger@rivosinc.com>:
+>>>> +++ b/arch/riscv/kvm/vcpu_sbi_fwft.c
+>>>> +static const enum sbi_fwft_feature_t kvm_fwft_defined_features[] = {
+>>>> +	SBI_FWFT_MISALIGNED_EXC_DELEG,
+>>>> +	SBI_FWFT_LANDING_PAD,
+>>>> +	SBI_FWFT_SHADOW_STACK,
+>>>> +	SBI_FWFT_DOUBLE_TRAP,
+>>>> +	SBI_FWFT_PTE_AD_HW_UPDATING,
+>>>> +	SBI_FWFT_POINTER_MASKING_PMLEN,
+>>>> +};
+>>>
+>>> How will userspace control which subset of these features is allowed in
+>>> the guest?
+>>>
+>>> (We can reuse the KVM SBI extension interface if we don't want to add a
+>>>   FWFT specific ONE_REG.)
+>>
+>> Hi Radim,
+>>
+>> I didn't looked at that part. But most likely using the kvm one reg
+>> interface seems ok like what is done for STA ? We could have per feature
+>> override with one reg per feature.
+> 
+> Sounds fine.
+> 
 
-Not sure, I think it's mostly older ABIs that are limited,
-either not passing structures in registers at all, or only
-possibly one but not two of them.
+Yeah. We can have a follow up series for SBI FWFT state that allows user 
+space to toggle each state individually.
 
->> - sanitizers turn off optimizations that lead to better
->>   stack usage
->> - in some cases, the missed optimization ends up causing
->>   local variables to get spilled to the stack many times
->>   because of a combination of all the above.
->
-> Yeesh.
->
-> I suspect we should be running with a larger stack when the sanitizers
-> are running, and perhaps tweak the warnings accordingly. I did a bunch
-> of stack usage work after I found a kmsan build was blowing out the
-> stack, but then running with max stack usage tracing enabled showed it
-> to be a largely non issue on non-sanitizer builds, IIRC.
+>> Is this something blocking though ? We'd like to merge FWFT once SBI 3.0
+>> is ratified so that would be nice not delaying it too much. I'll take a
+>> look at it to see if it isn't too long to implement.
+> 
+> Not blocking, but I would at least default FWFT to disabled, because
+> current userspace cannot handle [14/14].  (Well... save/restore was
+> probably broken even before, but let's try to not make it worse. :])
+> 
 
-Enabling KASAN does double the available stack space. However, I don't
-think we should use that as an excuse to raise the per-function
-warning limit, because
+User space can not enable or disable misaligned access delegation as 
+there is no interface for now rightly pointed by you. I guess supporting 
+that would be quicker than fixing the broader guest save/restore 
+anyways. Isn't it ?
 
- - the majority of all function stacks do not grow that much when
-   sanitizers are enabled
- - allmodconfig enables KASAN and should still catch mistakes
-   where a driver accidentally puts a large structure on the stack
- - 2KB on 64-bit targes is a really large limit. At some point
-   in the past I had a series that lowered the limit to 1536 byte
-   for 64-bit targets, but I never managed to get all the changes
-   merged.
-  
+We can have the patches ready for the next MW for FWFT one reg interface.
 
-     Arnd
+> Thanks.
+> 
+> _______________________________________________
+> linux-riscv mailing list
+> linux-riscv@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-riscv
+
