@@ -1,105 +1,98 @@
-Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f50.google.com (mail-io1-f50.google.com [209.85.166.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B183183CC3;
-	Fri, 23 May 2025 11:36:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.61.82.184
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A72F0221D87;
+	Fri, 23 May 2025 11:37:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748000219; cv=none; b=B41Wdvb7uSXt0VYkPTGEdOauCm3npSGkWjM/hHqBpzNKyet08zHFpJgOGSCzAdMmwqtxS1zL2Vfawc8Pm7i0MYVFenAt9bxPwkeZSGFas2AbsL7BHqA6uF1b2ROYVYGMBr8FkaqSg+8k2PH/nIBXJZ8TH05iiJy90xxb6EQuhNE=
+	t=1748000255; cv=none; b=gqvQ9ywY4UB/PlA9EaDr4hgxUGDK94YzdDIdDkeEc42Z3cwX7KaEurPcCQDKE7Qn9UeKOq7H75r0R6njWljPG6Xfcjdt3XgyfhGVcsSXiY5JxZylqyZNBlhSLQdx80T9yccNfLvNVL7H1HW3mBZHCs1x3ulsYlTBZsAwBq8wbWk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748000219; c=relaxed/simple;
-	bh=XTCFovV6gRgjPh361438rq+kkBsjg1osqxNg/6PDdUo=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=p5lNTRyYmwPCNbd77y5a/DgoWMjBSTxVqc99H3nTgpFqpHAnsZqE6f+/+I2H3sLfCdCZvRxbPsUHR6nrHtPtHv7Yy6qOfIEtRevs8VB6FafS1HLY1Shc/kCGynRu96PYK4GhSupw6ujsseiuJusqqVV6+I19SmLsuYFg15iWbf4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=aymo7bCQ; arc=none smtp.client-ip=210.61.82.184
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="aymo7bCQ"
-X-UUID: 372bdb7837ca11f082f7f7ac98dee637-20250523
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=tYIiwWGIKoPuKSFob4g15bxKNl60UEjmO24khtCJJDk=;
-	b=aymo7bCQCXfMiJzaZbMrMoftOU10W9ETAUbRAW0iPqwRz7czD75BkIDRSMvQe+EI8AW8BmsTb4XLNuykHINppjG2rSpZJh74aq93uRf9f6m1h38j+Ddglf9rppIuw25Ge2k56tTE0J0FSxMqmAIaqhhPeI1tr8RFAFXSARvowB4=;
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.2.1,REQID:a360be72-ded3-46cb-bebd-cb8696d30694,IP:0,UR
-	L:0,TC:0,Content:0,EDM:-30,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION
-	:release,TS:-30
-X-CID-META: VersionHash:0ef645f,CLOUDID:ae5b35f1-2ded-45ed-94e2-b3e9fa87100d,B
-	ulkID:nil,BulkQuantity:0,Recheck:0,SF:81|82|102,TC:nil,Content:0|50,EDM:2,
-	IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:
-	0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-UUID: 372bdb7837ca11f082f7f7ac98dee637-20250523
-Received: from mtkmbs09n2.mediatek.inc [(172.21.101.94)] by mailgw02.mediatek.com
-	(envelope-from <skylake.huang@mediatek.com>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 475967441; Fri, 23 May 2025 19:36:49 +0800
-Received: from mtkmbs11n1.mediatek.inc (172.21.101.185) by
- MTKMBS09N1.mediatek.inc (172.21.101.35) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.39; Fri, 23 May 2025 19:36:46 +0800
-Received: from mtksitap99.mediatek.inc (10.233.130.16) by
- mtkmbs11n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1258.39 via Frontend Transport; Fri, 23 May 2025 19:36:46 +0800
-From: Sky Huang <SkyLake.Huang@mediatek.com>
-To: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>, "David S. Miller"
-	<davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
-	<kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Daniel Golle
-	<daniel@makrotopia.org>, Qingfang Deng <dqfext@gmail.com>, SkyLake Huang
-	<SkyLake.Huang@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	<linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-mediatek@lists.infradead.org>
-CC: Sky Huang <skylake.huang@mediatek.com>
-Subject: [PATCH net-next 2/2] net: phy: mtk-ge-soc: Fix LED behavior if blinking is not set.
-Date: Fri, 23 May 2025 19:36:01 +0800
-Message-ID: <20250523113601.3627781-3-SkyLake.Huang@mediatek.com>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250523113601.3627781-1-SkyLake.Huang@mediatek.com>
-References: <20250523113601.3627781-1-SkyLake.Huang@mediatek.com>
+	s=arc-20240116; t=1748000255; c=relaxed/simple;
+	bh=RPNi1QDrDr0oLkHY3jiUnnyxRMbcBwEqM+TlcWJLhmU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=BuuLdVjkHp5HfwuF5kyzvINkAXFz7jdJcRGYX5X15+f0fXTPnw1g/EJVzTbi3cLAVbttLjaad0a89scd5d014aTIG22a8lckr4gB0u/ckY0AikPclrXlx9lMjZMCNYGuKrHY+iEgzp8p/vuElbYB2fleKpVtUZNcw16uBbDiMtE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.166.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-io1-f50.google.com with SMTP id ca18e2360f4ac-85dac9729c3so866195139f.2;
+        Fri, 23 May 2025 04:37:32 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748000250; x=1748605050;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=7wlzvB2Q8r8iVI++Q756y7sEw+0J/OE0zl08HpFQmKI=;
+        b=IFZwEXCBSidXRRD9LqASXnje2ptY/TbQOkgvAe/cUKR9wjcBO7R//JCYxLQjs6m2mI
+         orLVcu+DLa5qWRdxMrWW0xJj4Odgw7AuHVGtdBEXpWfRK1p2krzm71ozd9pfm8/Y0GaD
+         0rkKf4CEXxZ1J9yK/uFlPCXbldK4YrSOfVYSV7xN853zjmLdR4/eH4sNlsnZtU7gFr4y
+         df4InMuR23AhkxvPuDBnD8Ly9VowdvgyPwXixebb8T0eFNwM0DNWxZj81yuw8833lIWO
+         y/y9+CkC12ncZYpgWbwfxxYK0dGj+pvAHUjgjDWhWfVHG+txWoUB2Ob5xnSAhM5l482X
+         1tVQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWzRNUn6oJgsMYUR5PBBkbeDR9Ro3iJQ+LbehagzEzyuVWbKXYliGgS8nLnQXx+g8anitvYwER1SeZ0mng=@vger.kernel.org, AJvYcCXu8E7zVBpTz6nHQGa3MrmTbxMswPgzp7Mqq/MTJ3FwzaV7JZHDwgzxwEDhFVrqA2bZppaYo1XxALu4bwQxH/5rFRc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw1xSX+/2GNRZOTw4V0sLZ/tpIxkfbGZ7CkANp/7S2xZsgD1iOu
+	K/MNsGJr8R1mYE5BWuVAEJHcnxhYdTu0mJF8Qn5AVxK0rvi5odI3YBrcpWNE1O9f
+X-Gm-Gg: ASbGncu+oLVmUeR+L59Zcnvz5BPYyBOs63qsPpmkaatix+93wdpboX3QmuXGjQHBwSB
+	zztLBfX5ose2MhkFALvMEFs5im59YBV46yyiOnJOsg8TXI0ZYP5ejM2jP+9gRsNWFO0vQC57GI3
+	uApmFqGMz/TnA5qCBNgrnuto4jyDiNkvInS9o23KkP8vJUWEQuagxJ2xD1ECyDmNLXiyCbKv5oj
+	1AdcmQgT0K4G0gjG6kmBLQr6u7+irczPgQEu3DxnAYcySkNlKBXT2YzehFQWhkEa7ex1z/t6ZUN
+	QIHLX1cXX1/sVe8a2thg+ZeNEf4RzeLrhlkCumcTmA3Pz700gHUG09ZO1fwZezx4FFI+k9U0S12
+	m3ttRQqrcur7m1SmAbQ==
+X-Google-Smtp-Source: AGHT+IH2uEsHE/YAObvEt/LSD6+nx4WMqZ1snpyvAr5Jwsf7Iwj2NQBWE5VLPgWfDFloVuIKNExfuQ==
+X-Received: by 2002:a05:6602:4186:b0:85c:c7f9:9a1c with SMTP id ca18e2360f4ac-86a23283c78mr3814209339f.13.1748000250611;
+        Fri, 23 May 2025 04:37:30 -0700 (PDT)
+Received: from mail-il1-f175.google.com (mail-il1-f175.google.com. [209.85.166.175])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4fbcc48c5cdsm3585753173.84.2025.05.23.04.37.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 23 May 2025 04:37:30 -0700 (PDT)
+Received: by mail-il1-f175.google.com with SMTP id e9e14a558f8ab-3dc6dbb3d58so45312415ab.3;
+        Fri, 23 May 2025 04:37:30 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU5bT7uPu2u449LTaor+TXGV+xQnMEd4p/hQxeo9erZgTmx3mlC4k1g5Y9mNly4tW0WL6qZFhgGgSuI0kAs377D6y0=@vger.kernel.org, AJvYcCVfwBaPgjZQrKPv6q66Bv9eaS5wHYqGDvl0ueD/rR0oyzk16Sow40A7sugEq9nlohIP141m31UV7RBnU58=@vger.kernel.org
+X-Received: by 2002:a05:6102:370a:b0:4c1:9b88:5c30 with SMTP id
+ ada2fe7eead31-4dfa6c62d03mr28083060137.19.1748000239515; Fri, 23 May 2025
+ 04:37:19 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-MTK: N
+References: <20250513125858.251064-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20250513125858.251064-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Fri, 23 May 2025 13:37:06 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdWLYuwVU=9FnXoYYXzA+XYoSc89MBsTzAyZQAGF2cVvFA@mail.gmail.com>
+X-Gm-Features: AX0GCFsYAsYC7rTS4r0G9iHcLPTnjlp95PDD1ysnF-SrRgCKFmwYpC3XJI0oK_c
+Message-ID: <CAMuHMdWLYuwVU=9FnXoYYXzA+XYoSc89MBsTzAyZQAGF2cVvFA@mail.gmail.com>
+Subject: Re: [PATCH] arm64: defconfig: Enable RZ/V2H(P) USB2 PHY controller
+ reset driver
+To: Prabhakar <prabhakar.csengg@gmail.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, linux-arm-kernel@lists.infradead.org, 
+	linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Biju Das <biju.das.jz@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
 
-From: Sky Huang <skylake.huang@mediatek.com>
+On Tue, 13 May 2025 at 14:59, Prabhakar <prabhakar.csengg@gmail.com> wrote:
+> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+>
+> Enable the `CONFIG_RESET_RZV2H_USB2PHY` option in the arm64 defconfig to
+> support the USB2 PHY controller reset driver on the Renesas RZ/V2H(P) SoC.
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-If delay_on==0 and delay_off==0 are passed to
-mt798x_2p5ge_phy_led_blink_set() and mtk_phy_led_num_dly_cfg(),
-blinking is actually not set. So don't clean "LED on" status under
-this circumstance.
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i.e. will queue in renesas-devel for v6.17.
 
-Signed-off-by: Sky Huang <skylake.huang@mediatek.com>
----
- drivers/net/phy/mediatek/mtk-ge-soc.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+Gr{oetje,eeting}s,
 
-diff --git a/drivers/net/phy/mediatek/mtk-ge-soc.c b/drivers/net/phy/mediatek/mtk-ge-soc.c
-index cd0968478..15dcf2046 100644
---- a/drivers/net/phy/mediatek/mtk-ge-soc.c
-+++ b/drivers/net/phy/mediatek/mtk-ge-soc.c
-@@ -1228,8 +1228,11 @@ static int mt798x_phy_led_blink_set(struct phy_device *phydev, u8 index,
- 	if (err)
- 		return err;
- 
--	return mtk_phy_hw_led_on_set(phydev, index, MTK_GPHY_LED_ON_MASK,
--				     false);
-+	if (blinking)
-+		mtk_phy_hw_led_on_set(phydev, index, MTK_GPHY_LED_ON_MASK,
-+				      false);
-+
-+	return 0;
- }
- 
- static int mt798x_phy_led_brightness_set(struct phy_device *phydev,
+                        Geert
+
 -- 
-2.45.2
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
