@@ -1,103 +1,157 @@
-Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7D3E4437C
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 13:17:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 223BC22A1FA;
+	Fri, 23 May 2025 13:17:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748006258; cv=none; b=jS5Hcf61fhgWtNs46vjwlfTAhxgnLt7Reo7OAkkBZX+XpFWs68vho71agLkBmbiIPv+I2xbHm6YjQQxfe31HseLwmqhFD0CooEODypXDh4P3Ofn+vZbU4zZ7Aw/SNYloqP0Vc/ZhkI7659bACURLDEvl4B27yQeV72PjjHge4Xw=
+	t=1748006270; cv=none; b=QSnOosvlJORGJ35y2cIKsm/i97TNvLMPvYKC8s1BUlUodE3x/EbcE4Ga5+w162veaPl3AhRj7flQ00jcqLA8UCAdYYvhx8VX0fdC2eZpaDIwOk/tpX9lOP09VMlEP8J0o2xbnCtdqPHliwo96RUZlKC3//5SrUOudlADg3cmiSI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748006258; c=relaxed/simple;
-	bh=s7FKmfnt3j9otfDhlONhzVebzNJubqL1vlpgOU5y99I=;
+	s=arc-20240116; t=1748006270; c=relaxed/simple;
+	bh=WfmGZAQo3wsig3eX3iDyV4RWHk0+I/HNvFEj1zWHGNU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=e4d+cnP3s61cMU9mj6tyMxoVb3dpdxSLGUQgPHIpNcZu7T3XnTG0Q33gzOBVnQQTZfkhJ1e5N3IdEHJqC1KE57Zpnqu9co/5gk4CW9sHVGfyWX8ahSKP9Aww+CaCCoypNHJrrdRUOxAyQdZju3a+Pfwa2NVVI48sJQadpsY4gnA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=g4m8U/u+; arc=none smtp.client-ip=194.117.254.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=s1yRzz2+k8zI8wh3b9RqHtFrucan7OqKlgMgc1XdRYNwSkJ9V/EoyPQ4Sje9O3o0P3taqsmFRXCzZ7QjN9qFocz4XuEQPqfFyVqTAKqWEc/oE0q3KFr5WtJNOTSHbC8L611Vtc/Vdn6QSfHkSRF73HoqLWBJs6gRF6YYsiRhurQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sIRcSfX1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="g4m8U/u+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	sang-engineering.com; h=date:from:to:cc:subject:message-id
-	:references:mime-version:content-type:in-reply-to; s=k1; bh=s7FK
-	mfnt3j9otfDhlONhzVebzNJubqL1vlpgOU5y99I=; b=g4m8U/u+zpjSb85r0t3f
-	G2uSqztrliE99E9hzHKnWUTF5ZLHFZbj+ljpyj5figknh07b5+gts+o802TrCQ7Y
-	u9PQuKcaLmxtV3jo/sdrVPpe9rJh7/YzWpTw5RbvhFv9U+LM4/WODVtVO7reSj0y
-	SZWqbidY6MQ+vEn1tkEAEHE8DwniRPNMhwgXTz6SCDgbRNFsWggghhNRNZwkBXRF
-	HS5wO2j9kZcVPekeqZK44UPqRE/CHQBluITc1pL3ZnaEd4XgRec/HjzfEWWev1nR
-	dhdL4wbE/+5fVzGs1I3Ex0o4NR/A2XHJP3mMTpfDrzjJURJd+B66RVp0BhlZIDpj
-	dg==
-Received: (qmail 4052540 invoked from network); 23 May 2025 15:17:34 +0200
-Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 23 May 2025 15:17:34 +0200
-X-UD-Smtp-Session: l3s3148p1@Z8baa801bMdehhrS
-Date: Fri, 23 May 2025 15:17:34 +0200
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
-To: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
-Cc: thierry.bultel@linatsea.fr, linux-renesas-soc@vger.kernel.org,
-	geert@linux-m68k.org, paul.barker.ct@bp.renesas.com,
-	linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org
-Subject: Re: [PATCH v9 06/10] serial: sh-sci: Use private port ID
-Message-ID: <aDB1bm01fuUkk0-U@ninjato>
-Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Thierry Bultel <thierry.bultel.yh@bp.renesas.com>,
-	thierry.bultel@linatsea.fr, linux-renesas-soc@vger.kernel.org,
-	geert@linux-m68k.org, paul.barker.ct@bp.renesas.com,
-	linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org
-References: <20250515141828.43444-1-thierry.bultel.yh@bp.renesas.com>
- <20250515141828.43444-7-thierry.bultel.yh@bp.renesas.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sIRcSfX1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77545C4CEE9;
+	Fri, 23 May 2025 13:17:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748006269;
+	bh=WfmGZAQo3wsig3eX3iDyV4RWHk0+I/HNvFEj1zWHGNU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=sIRcSfX1CYv1tmxeRycBUBqZh/m/OMEOLPDgNxPff4ovLTh/5Ckw1HwV48vtvu9se
+	 bcfmn1oIenxAfT1vtX4IMt4Hvz9B5vnPqQfvBFd1UUAtl5hxOQMvY5vCZIUqT6fxf9
+	 Mj57TOK8TiMW0Lgi3KoPWVGId5y5vuYvJb+1Cy3qypq//Mq5OgrS8lBvBNBp7d4vST
+	 5jcMSomn6JXx1hEqoe3L1gc9AUpYe/0VgJYmw5RyZ4kUQPIX3Vy+RTbE2CsWfB7T6B
+	 XwoWHWY0EKR6NFsUEUXFR0KtEUxSd4PDNGRmaEDCXDr4pYYL+1DfAVm0BmhByD58d+
+	 JttUL1BYOqThA==
+Date: Fri, 23 May 2025 14:17:44 +0100
+From: Simon Horman <horms@kernel.org>
+To: Konrad Dybcio <konradybcio@kernel.org>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Alex Elder <elder@kernel.org>,
+	Marijn Suijten <marijn.suijten@somainline.org>,
+	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Subject: Re: [PATCH 3/3] net: ipa: Grab IMEM slice base/size from DTS
+Message-ID: <20250523131744.GU365796@horms.kernel.org>
+References: <20250523-topic-ipa_imem-v1-0-b5d536291c7f@oss.qualcomm.com>
+ <20250523-topic-ipa_imem-v1-3-b5d536291c7f@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="7Z6tc/8G+wfrnnQj"
-Content-Disposition: inline
-In-Reply-To: <20250515141828.43444-7-thierry.bultel.yh@bp.renesas.com>
-
-
---7Z6tc/8G+wfrnnQj
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20250523-topic-ipa_imem-v1-3-b5d536291c7f@oss.qualcomm.com>
 
-On Thu, May 15, 2025 at 04:18:21PM +0200, Thierry Bultel wrote:
-> New port types cannot be added in serial_core.h, which is shared with
-> userspace.
-> In order to support new port types, the coming new ones will have
-> BIT(7) set in the id value, and in this case, uartport->type is
-> set to PORT_GENERIC.
-> This commit therefore changes all the places where the port type is
-> read, by not relying on uartport->type but on the private
-> value stored in struct sci_port.
->=20
-> Signed-off-by: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
+On Fri, May 23, 2025 at 01:08:34AM +0200, Konrad Dybcio wrote:
+> From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+> 
+> This is a detail that differ per chip, and not per IPA version (and
+> there are cases of the same IPA versions being implemented across very
+> very very different SoCs).
+> 
+> This region isn't actually used by the driver, but we most definitely
+> want to iommu-map it, so that IPA can poke at the data within.
+> 
+> Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 
-If you promise to incermentally add the stuff we discussed, then
+It looks like these patches are for net-next. For future reference,
+it's best to note that in the subject.
 
-Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+  Subject: [PATCH net-next 3/3 v2] ...
 
-;)
+> ---
+>  drivers/net/ipa/ipa_data.h |  3 +++
+>  drivers/net/ipa/ipa_mem.c  | 18 ++++++++++++++++++
+>  2 files changed, 21 insertions(+)
+> 
+> diff --git a/drivers/net/ipa/ipa_data.h b/drivers/net/ipa/ipa_data.h
+> index 2fd03f0799b207833f9f2b421ce043534720d718..a384df91b5ee3ed2db9c7812ad43d03424b82a6f 100644
+> --- a/drivers/net/ipa/ipa_data.h
+> +++ b/drivers/net/ipa/ipa_data.h
+> @@ -185,8 +185,11 @@ struct ipa_resource_data {
+>  struct ipa_mem_data {
+>  	u32 local_count;
+>  	const struct ipa_mem *local;
+> +
+> +	/* DEPRECATED (now passed via DT) fallback data, varies per chip and not per IPA version */
 
+For Networking code, please restrict lines to 80 columns wide or less where
+that can be done without reducing readability (which is the case here).
 
---7Z6tc/8G+wfrnnQj
-Content-Type: application/pgp-signature; name="signature.asc"
+	/* DEPRECATED (now passed via DT) fallback data,
+	 * varies per chip and not per IPA version */
 
------BEGIN PGP SIGNATURE-----
+>  	u32 imem_addr;
+>  	u32 imem_size;
+> +
+>  	u32 smem_size;
+>  };
+>  
+> diff --git a/drivers/net/ipa/ipa_mem.c b/drivers/net/ipa/ipa_mem.c
+> index 835a3c9c1fd47167da3396424a1653ebcae81d40..020508ab47d92b5cca9d5b467e3fef46936b4a82 100644
+> --- a/drivers/net/ipa/ipa_mem.c
+> +++ b/drivers/net/ipa/ipa_mem.c
+> @@ -7,6 +7,7 @@
+>  #include <linux/dma-mapping.h>
+>  #include <linux/io.h>
+>  #include <linux/iommu.h>
+> +#include <linux/of_address.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/types.h>
+>  
+> @@ -617,7 +618,9 @@ static void ipa_smem_exit(struct ipa *ipa)
+>  int ipa_mem_init(struct ipa *ipa, struct platform_device *pdev,
+>  		 const struct ipa_mem_data *mem_data)
+>  {
+> +	struct device_node *ipa_slice_np;
+>  	struct device *dev = &pdev->dev;
+> +	u32 imem_base, imem_size;
+>  	struct resource *res;
+>  	int ret;
+>  
+> @@ -656,6 +659,21 @@ int ipa_mem_init(struct ipa *ipa, struct platform_device *pdev,
+>  	ipa->mem_addr = res->start;
+>  	ipa->mem_size = resource_size(res);
+>  
+> +	ipa_slice_np = of_parse_phandle(dev->of_node, "sram", 0);
+> +	if (ipa_slice_np) {
+> +		ret = of_address_to_resource(ipa_slice_np, 0, res);
+> +		of_node_put(ipa_slice_np);
+> +		if (ret)
+> +			return ret;
+> +
+> +		imem_base = res->start;
+> +		imem_size = resource_size(res);
+> +	} else {
+> +		/* Backwards compatibility for DTs lacking an explicit reference */
 
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmgwdW0ACgkQFA3kzBSg
-KbYCaw/9GEz/FLucy3l5sEdql+ARAfsRci4eTKis9U29FXYUX04AGvMZi2fpMP6t
-K5+f2N+NyEnJdKH4S1fyzbmQ3/FRdEyaThu7ol5KGaMs/G+RqBMI3HKib7C0ZPUY
-X17NCNNriMPrqV7tRdQ2zsrpomCGJ+Nwn2nTxELr11hKNny5xOD5UrPb/S4b+qtT
-030MgQ7CVc4Rij3UxwSPONfjJ0seH21cDfZ4uCAbMD8eUgzoZQI1uFaDaXM4W7Oz
-OxjSe8WCmWBBpgOrDqKeBvpAJ/ceZVgAy8sh6S5P4p3oqfDTKI9A/Eom0yTMcIyf
-n54m9Tm3XYb+f0N0C0+iqZ0NNs9HT3aiLaRhCFK3dwlzsoej1+ueyZXMl0gCVscK
-ctK7mcLUTUbu3Sdrib/0ccPgNAfQXUa+piisyBgs/Q4ILetDpa+l8JVV5nyfHG33
-VjpVCEN8pfZoqyoXF5XkPSa+91SjjErkNQTenQCd7ldZJZCW/011Ap+7ZEcu2Dx1
-85NbWkDMBqecvLLIrsce0mORFrVVhuPbAiIlX65VusmxQMOO+K3nyBsar4BywEVV
-qbEIWaYO4khkJNrkzjaW7zldvSU7Tg1TeuGW0ubelpMrXcP+G38KuYv6fEUp+cbe
-RQ2ts/Qn9E4wHfO52rkMibAmWknuh8+chPVuLj1xfK03GTWjqlk=
-=wrA/
------END PGP SIGNATURE-----
+Ditto.
 
---7Z6tc/8G+wfrnnQj--
+> +		imem_base = mem_data->imem_addr;
+> +		imem_size = mem_data->imem_size;
+> +	}
+> +
+>  	ret = ipa_imem_init(ipa, mem_data->imem_addr, mem_data->imem_size);
+
+I think you also need to update this line to use the local
+variables imem_addr and imem_size.
+
+>  	if (ret)
+>  		goto err_unmap;
+
+Please do observe the 24h rule [1] if you post a v2 of this patchset.
+
+[1] https://docs.kernel.org/process/maintainer-netdev.html#resending-after-review
