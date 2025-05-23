@@ -1,109 +1,171 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D34619F40B
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 03:02:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A87B5218AC8
+	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 03:08:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747969332; cv=none; b=bQ78sBxEU9Y9wAGfS1hyaQGM2pH/Ym/+VprOb2LawecJ9UtdyWX8Oh8Tk6qzxWXPBNWI85N2sP62zOQZHctoC0takLWBDaLK5opm/9nXl6P6Z+ZqdAKlOT+Z17kPFhw6B24b6qj6klwzeA6kgVLUTlFaDce7e+ImLAjsD8ZYgTo=
+	t=1747969704; cv=none; b=MdS1uZMrqnB2MOK+qQVi/DZdHn0bb6JePmlapY9n5IRjMGukZl0uDierOcKpcf2HFw51R/iq387EBmEYDTrEI6DJYAdalcmPfIqrIQ24Aipjv88fnChhkb7jbtfBC8MNRE7AbneIDM5ILtXM0ZnCr9/FdaGb2R3HDCZ0e8K1cmo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747969332; c=relaxed/simple;
-	bh=wplwYI7GgC9kB2y7v0LF84mYlsoFz02XT65yeJzSsCI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=G9fxtMgraN08oWsbxREpceyws6JXvmF3uxdCnCs0JshQXXLNeRswJHqPrXCru+UeRbDjFKRUv3oCzXfYEmxQTD2duVAuv2BLnGqJ/E5ZrfARtS8MVC7KkUlwYRGVivNUnwPkjy3MDHVUjRcLNXrOwv8j/6Y3u8gwVlzchitdYlM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mFM2M7HH; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mFM2M7HH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747969331; x=1779505331;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=wplwYI7GgC9kB2y7v0LF84mYlsoFz02XT65yeJzSsCI=;
-  b=mFM2M7HHvrhyBkJcughNOM02j67TGgjXIXwX5haRaKaeYsb7G9T+BNIM
-   RHy8mtAwqSQhYQSKi206C3AUmjIDzl8P99CCECvHHDiI4zgqhlgRYtaX0
-   2l2EKp3e8jTNV3oHCReM6tGDv87w3qhA5BTf5q8MvAo6G43eqvcGpp414
-   vj7xPRfrcRhwAE3+TBjNDFB8kcYPnKjLl7g6afBKMNr+/sg27zzyFBeeJ
-   Vw0Y9ZH0evjXW8/x32R13cgkIptu49GafhA0cX//gc1Ro8daZVASSoCma
-   7xvE9dfJt0E7YA0j2fcu+TsNUXKW4c4EaEPpzdf3Nmz7JgDhxaxg85r7W
-   w==;
-X-CSE-ConnectionGUID: 9dqWZ9rwRPOfSpOgfmtGXw==
-X-CSE-MsgGUID: OJdkBGNxQ8WJhiFVcG36MQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11441"; a="53811562"
-X-IronPort-AV: E=Sophos;i="6.15,307,1739865600"; 
-   d="scan'208";a="53811562"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2025 19:45:43 -0700
-X-CSE-ConnectionGUID: lPJiDiioS8qyMY/cX+2KUw==
-X-CSE-MsgGUID: rh8X+AASQBiFD9N6/1cKWQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,307,1739865600"; 
-   d="scan'208";a="171873796"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2025 19:45:39 -0700
-Date: Fri, 23 May 2025 05:45:36 +0300
-From: Raag Jadav <raag.jadav@intel.com>
-To: =?iso-8859-1?Q?Andr=E9?= Almeida <andrealmeid@igalia.com>
-Cc: Alex Deucher <alexander.deucher@amd.com>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-	siqueira@igalia.com, airlied@gmail.com, simona@ffwll.ch,
-	rodrigo.vivi@intel.com, jani.nikula@linux.intel.com,
-	Xaver Hugl <xaver.hugl@gmail.com>,
-	Krzysztof Karas <krzysztof.karas@intel.com>,
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-	kernel-dev@igalia.com, amd-gfx@lists.freedesktop.org,
-	intel-xe@lists.freedesktop.org, intel-gfx@lists.freedesktop.org
-Subject: Re: [PATCH v6 1/3] drm: Create a task info option for wedge events
-Message-ID: <aC_hUHyLhaY40aSl@black.fi.intel.com>
-References: <20250521153323.935974-1-andrealmeid@igalia.com>
- <20250521153323.935974-2-andrealmeid@igalia.com>
+	s=arc-20240116; t=1747969704; c=relaxed/simple;
+	bh=Sqz/278FdnOoqHsMnL1osxPoy3F6FDVCvwvqgyuiMm8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=riRz22AnyYGLpzsRq5AXx2i9bF53v6kCFKHSa8hTL3qexTpIuDWRSQQGIMp5MNKlOHuC4ew5AOCBvTR8OUXChW4VJrt+EDDVXHTCHYo4d2qJwO2iWc5slueAl/M8bmyFNkrFTcVm6cXvlD2mzUbZddD/p99K4AS5UObJEoflYBQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: 28623cb4378311f0b29709d653e92f7d-20250523
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.45,REQID:81d289c8-f117-40e5-9bad-d52e8f26d88c,IP:0,U
+	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
+	release,TS:0
+X-CID-META: VersionHash:6493067,CLOUDID:307a2bf67713fa1756139d6dab2a9bf5,BulkI
+	D:nil,BulkQuantity:0,Recheck:0,SF:80|81|82|83|102,TC:nil,Content:0|52,EDM:
+	-3,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,
+	AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0,NGT
+X-CID-BAS: 0,NGT,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-UUID: 28623cb4378311f0b29709d653e92f7d-20250523
+Received: from node4.com.cn [(10.44.16.170)] by mailgw.kylinos.cn
+	(envelope-from <xiaopei01@kylinos.cn>)
+	(Generic MTA)
+	with ESMTP id 1152663842; Fri, 23 May 2025 11:08:10 +0800
+Received: from node4.com.cn (localhost [127.0.0.1])
+	by node4.com.cn (NSMail) with SMTP id 6DCFB16003842;
+	Fri, 23 May 2025 11:08:10 +0800 (CST)
+X-ns-mid: postfix-682FE69A-3583511376
+Received: from [10.42.13.56] (unknown [10.42.13.56])
+	by node4.com.cn (NSMail) with ESMTPA id 9446116003841;
+	Fri, 23 May 2025 03:08:09 +0000 (UTC)
+Message-ID: <3abc216a-1af5-4cc2-a70c-e406943be274@kylinos.cn>
+Date: Fri, 23 May 2025 11:08:09 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250521153323.935974-2-andrealmeid@igalia.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] devres: Move remaining devm_alloc_percpu and
+ devm_device_add_group to devres.h
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+ rafael@kernel.org, dakr@kernel.org, bartosz.golaszewski@linaro.org
+References: <5ac1e2a127c9df7233ca8ba0696ebb08960d0fc3.1747903894.git.xiaopei01@kylinos.cn>
+ <aC8en60QI0MwnXxM@smile.fi.intel.com>
+From: Pei Xiao <xiaopei01@kylinos.cn>
+In-Reply-To: <aC8en60QI0MwnXxM@smile.fi.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, May 21, 2025 at 12:33:21PM -0300, André Almeida wrote:
-> When a device get wedged, it might be caused by a guilty application.
-> For userspace, knowing which task was the cause can be useful for some
 
-s/cause/involved
+=E5=9C=A8 2025/5/22 20:54, Andy Shevchenko =E5=86=99=E9=81=93:
+> On Thu, May 22, 2025 at 05:01:26PM +0800, Pei Xiao wrote:
+>> Since commit f5e5631df596("devres: Move devm_*_action*() APIs to
+>> devres.h"), But devm_alloc_percpu() and devm_device_add_group didn't b=
+e
+>> moved.
+>>
+>> so move it.The changes improve header organization by keeping all
+>> resource-managed device APIs in the dedicated devres.h header,
+>> reducing cross-header dependencies and making the interfaces
+>> easier to locate.
+> Thanks for the patch, my comments below.
+>
+> ...
+>
+>> -/**
+>> - * devm_alloc_percpu - Resource-managed alloc_percpu
+>> - * @dev: Device to allocate per-cpu memory for
+>> - * @type: Type to allocate per-cpu memory for
+>> - *
+>> - * Managed alloc_percpu. Per-cpu memory allocated with this function =
+is
+>> - * automatically freed on driver detach.
+>> - *
+>> - * RETURNS:
+>> - * Pointer to allocated memory on success, NULL on failure.
+>> - */
+>> -#define devm_alloc_percpu(dev, type)      \
+>> -	((typeof(type) __percpu *)__devm_alloc_percpu((dev), sizeof(type), \
+>> -						      __alignof__(type)))
+>> -
+>> -void __percpu *__devm_alloc_percpu(struct device *dev, size_t size,
+>> -				   size_t align);
+>> -void devm_free_percpu(struct device *dev, void __percpu *pdata);
+> Don't you need to cleanup the header inclusions as well?
+>
+> ...
+>
+>> -int __must_check devm_device_add_group(struct device *dev,
+>> -				       const struct attribute_group *grp);
+> I'm not sure about this. The percpu seems standalone piece, but this ha=
+s
+> relations with the other group related definitions just above.
+>
+> ...
+>
+>> +#include <linux/sysfs.h>
+>> +#include <asm/percpu.h>
+> What for are these new inclusions, please?
 
-> situations, like for implementing a policy, logs or for giving a chance
-> for the compositor to let the user know what task caused the problem.
+I add these for build error:
 
-Ditto
+In file included from drivers/gpio/gpiolib-devres.c:9:
+./include/linux/device/devres.h:189:15: error: expected =E2=80=98=3D=E2=80=
+=99, =E2=80=98,=E2=80=99, =E2=80=98;=E2=80=99, =E2=80=98asm=E2=80=99 or =E2=
+=80=98__attribute__=E2=80=99 before =E2=80=98*=E2=80=99 token
+=C2=A0 189 | void __percpu *__devm_alloc_percpu(struct device *dev, size_=
+t size,
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ^
+./include/linux/device/devres.h:191:57: error: expected =E2=80=98;=E2=80=99=
+, =E2=80=98,=E2=80=99 or =E2=80=98)=E2=80=99 before =E2=80=98*=E2=80=99 t=
+oken
+=C2=A0 191 | void devm_free_percpu(struct device *dev, void __percpu *pda=
+ta);
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ^
+./include/linux/device/devres.h:194:25: warning: =E2=80=98struct attribut=
+e_group=E2=80=99 declared inside parameter list will not be visible outsi=
+de of this definition or declaration
+=C2=A0 194 |=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 const struct attribute_group *grp);
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0 ^~~~~~~~~~~~~~~
 
-> This is an optional argument, when the task info is not available, the
-> PID and TASK string won't appear in the event string.
-> 
-> Sometimes just the PID isn't enough giving that the task might be already
-> dead by the time userspace will try to check what was this PID's name,
-> so to make the life easier also notify what's the task's name in the user
-> event.
-
-...
-
-> -int drm_dev_wedged_event(struct drm_device *dev, unsigned long method)
-> +int drm_dev_wedged_event(struct drm_device *dev, unsigned long method,
-> +			 struct drm_wedge_task_info *info)
->  {
->  	const char *recovery = NULL;
->  	unsigned int len, opt;
-> -	/* Event string length up to 28+ characters with available methods */
-> -	char event_string[32];
-> -	char *envp[] = { event_string, NULL };
-> +	char event_string[WEDGE_STR_LEN], pid_string[PID_LEN] = "", comm_string[TASK_COMM_LEN] = "";
-
-Most likely there's no need to initialize these.
-
-With above changes,
-
-Reviewed-by: Raag Jadav <raag.jadav@intel.com>
+> ...
+>
+>> +/**
+>> + * devm_alloc_percpu - Resource-managed alloc_percpu
+>> + * @dev: Device to allocate per-cpu memory for
+>> + * @type: Type to allocate per-cpu memory for
+>> + *
+>> + * Managed alloc_percpu. Per-cpu memory allocated with this function =
+is
+>> + * automatically freed on driver detach.
+>> + *
+>> + * RETURNS:
+> Please, check that all of the kernel-doc are in align (using same style=
+).
+ok,get it
+>> + * Pointer to allocated memory on success, NULL on failure.
+>> + */
+>> +#define devm_alloc_percpu(dev, type)      \
+>> +	((typeof(type) __percpu *)__devm_alloc_percpu((dev), sizeof(type), \
+>> +						      __alignof__(type)))
+> Just make it one line. it will be less than 100.
+ok
+>> +void __percpu *__devm_alloc_percpu(struct device *dev, size_t size,
+>> +				   size_t align);
+> Ditto.
+ok.
+>> +void devm_free_percpu(struct device *dev, void __percpu *pdata);
+> Please, take your time to understand what is behind the __percpu and
+> why the asm/percpu.h is redundant here.
+>
