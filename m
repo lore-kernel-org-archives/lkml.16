@@ -1,101 +1,122 @@
-Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
+Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9840714286;
-	Fri, 23 May 2025 15:38:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A29821B9D1;
+	Fri, 23 May 2025 15:39:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748014730; cv=none; b=GMTJct5woD0Jx4VU8ElYEybl9LML8WnAmC9aNKJM7M4fKYMQi9dZBFYCdKAcniXd0K41LiqzdjeLa4WF+mIvjOiNGhe9iLviphkJzpTHDm9bqJ9MOzKTyxkOWIx1YswunR8SrU/k8/eGq49e/JyGO4wN+vBvqqh+1MG6Ji7JNw8=
+	t=1748014758; cv=none; b=Z8Hc7WRiOsUa04G7z7W/jCJcsaU3RftxvDRPVXUxwE/IoLG+XaS55z26qgPyf+8JKCcEr0c6xE0VpLdhW2nFgl489xraD9cnYGIQ7ReKEUtu1A3v6srpZJGKq1s4Bgx0Fde5zAXzVmhpnOlT9VeO2tMh/o2qfq/5bjq4eWc0/dk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748014730; c=relaxed/simple;
-	bh=esKPzyKTo7EyhBPeYFjR099taB5F7qTmeYFSJEtpeUM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DPoSpL+ES5SK4LhS6xPDgEJuk1xZtyMwkEuaCLI0vJtqazshj62kkEY2cTqMrtBqo9oRi9k2JJ7SOuzLkItQYelBpn+R8cCIcWmLXRe96LigJtxueZBCZHqpShAylBoHtlPYK8U0KymZDwpSBTF24hNU1VqX2jmZk3BWfDbC2Pg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=a0rM6f3Q; arc=none smtp.client-ip=209.85.215.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	s=arc-20240116; t=1748014758; c=relaxed/simple;
+	bh=y6QDEdVpdn8ngwnjqX/heqft7b9nTsCDw/SESWMAK88=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=UQFkMY0dlGIX9tL+C7mzXkd09aqwspxQx4a8AtJ+hFKHMc2iSaUxaceio9IhSdwi2yqmKYDif2XlDrsGM/IJ2A5s4WW+04hBPywlD5wTLPYSVYcT5qAwyWD0lyrAmviE48+27Ki7BkBwkZ+gJF/huOSig8/IpX6SWtlEjxNrujA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a0rM6f3Q"
-Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-b1f7357b5b6so5841836a12.0;
-        Fri, 23 May 2025 08:38:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748014728; x=1748619528; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=i9By7081c2CRgn2t4xnecIrtE4ESQao/xPs7l46E2ec=;
-        b=a0rM6f3QBM8UqSdNCTF3yv/XhWpcBk6CgvWPUXVMJ7gco2a5YmtgPQufd/bcQfJvOz
-         ws01Ama/t9wMXj/mfqZ6dC5jX5fofJcRapity7O1Pwj1nW9kZoO1cw3m1vqDLxcW7Mf5
-         lQ1T2PSjFDTZ3TP5LXMdPzkZn+TAxGHpi3SKC/43BNmqNogWnG5vLw3+A611cP6k/L5a
-         ccmmkvGN/gkkMbQPiF/8RzPDeTMHiotM4W37FK/trRMSjVWq/Rz5mcE/Hfopcf72jaou
-         vWbquyA4qJhIWSP5jZsySetJDAF8zq0xDw1vco5G41FKrdBjUJiwqZEKMFLV072D9ceI
-         uPdw==
+Received: by mail-qk1-f179.google.com with SMTP id af79cd13be357-7c922169051so553810985a.0;
+        Fri, 23 May 2025 08:39:16 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748014728; x=1748619528;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=i9By7081c2CRgn2t4xnecIrtE4ESQao/xPs7l46E2ec=;
-        b=qUxMOPmFMk0WARcgXpXS+lCjW0mwDZu78IcAMSAIN1Tn7NLCjwo/r7bdr1kFRvpmkt
-         TcT/KSutyHVxJkoCZYGPtb4hbZXdK0ZaAhmJqOp11ShcLSLkNIpxtszaSNFwiQNr3Rf0
-         UrmFa9FzwWBq7WiN//oGaFrBaQocovOAMsqb0BiB7ruNYrJYV9zlW3T9mu6f4AXQxfKO
-         EbdnH8rRtowgOaLxkxbEKAZDj54aiWfZEM4aWtwaEUB9Sst/xV83d/OUg9hUFkPm0m7z
-         3LmqqAY0xMsaIwZY5421HZuR1jvnf5hhjKnz1PvVbINMIf97c2uFAYDjgXxppBp9mFSH
-         LqUg==
-X-Forwarded-Encrypted: i=1; AJvYcCW/T2/+pJHPQGQWaWY0+FfDA5L90/UtC4/AvQuTBkcIXLo+EglQzXKeOFoh4G7u6wy9koKxHg85nfQdks0=@vger.kernel.org, AJvYcCWjM2uJK2J0lMyWKeQdhumeWTpBfxG4qT4XYbOGlhIRAdUXts2qoye1I90cH6Ae9y6V5zXETBQtwPQr@vger.kernel.org
-X-Gm-Message-State: AOJu0YwS8a9jfshx4bUkq3yMCz7u6bOpGmnAWiDgCAajEwGqJdSFhVQG
-	rXpEdACKoCapurYxyYhrgimZQJoUdgBPJBht3lLGhrLIThfY3WUlQeY3
-X-Gm-Gg: ASbGncu4MPWjklGilwPl09yWFxb3TFAeTfMqrbv0iroD2mx6l7IVZ9yy5kMFUcGQJ+w
-	r0ORgm5TVmyypbxOSdep/M0MbfUmbvDJ85nzAOAPPqcv4dSDr4JljHsV6cvAqnJ9+mOv7YYtkI6
-	3Hia1nj+PJFJYWaRVywlxsKBCMjspFRFo3aYNAqDVumO6zImGTGtso7QvXQ4LN2YJT64SpbkX4/
-	fV7ejuJoOhq63BAvW17GDBh5DzctlBrKwj24PWm6bGJZzSho7IajYeRo8fLj2gOC2gUISyQeHkh
-	oLskRAnQiuiTfJPhz8hsorUDPltEJ1EfG8gYy0Fy2s0D6Eu/YKK4uKKVZegpGGtYCsyEACTE/mU
-	O2ATG120uZ2JURrY/aiDVnLcAO1s=
-X-Google-Smtp-Source: AGHT+IE+ZIequO6IEewOv6/npkzSIgcVfoP+JyEutRg58NuQQxakWelr4YYr4N2RGALZuFbYJsZAUA==
-X-Received: by 2002:a17:90b:3682:b0:310:eea1:1c1 with SMTP id 98e67ed59e1d1-310eea10349mr2961466a91.16.1748014727610;
-        Fri, 23 May 2025 08:38:47 -0700 (PDT)
-Received: from [192.168.11.2] (FL1-119-244-79-106.tky.mesh.ad.jp. [119.244.79.106])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30e11e33c2esm12871188a91.1.2025.05.23.08.38.45
+        d=1e100.net; s=20230601; t=1748014755; x=1748619555;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ryBrvbiRRYJJ2VCcfpsXi9l8rNBPjFl5o3IstLI0tZw=;
+        b=nohfKRR9l46Bn4wXY2EWeDIe6P+QsvRR+53A7h5hSdhPLmCRvdj3Rn/4baE29PKxft
+         S078OBwsS4DMWayPaiN6NaFn4j0xHQttH5fJHNjwwGQs3nDoERFZDeELA3HgJita9Kf5
+         gxVMg3pp0E7rq3rojtGcuPG7YyW83C/pZKckFuIKXu4dnJPimJthZlvnPwDS+Bbm8hnZ
+         2GAyRCwQVMNtLRROEwp1B3b1+LYT9k60gdFDtGNzKUZ3K0bbrlySNw6LNyTzncR86JBG
+         CEgxvremznjxm6tivZU26FlRAQUK6EdxD4y77+eW7X1c/4Xev1xJ0Pc4Zq9ANY4oDhuy
+         GlCQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUHILaOT9yZ24w/vT2StILkXTGMJK26Nmc9mrsbplpzLuU0vAm+leR+KWZoJ41TgR0M6A6XrQVkSt0Y@vger.kernel.org, AJvYcCVwxRlzay2hptuxUU+mj0DjiTe925yWUCRRqQsd/qgOrrCpUBfj487ZHS747U5PxWH+xltSyPmYOayUY5I1@vger.kernel.org, AJvYcCXu4G3EfOvlRzvvTspgRDRpKDONIGZxMdHXu2GLu4O3clxd3UjJhDNpwMyo+WBaw3YPChlcJ/9rxggMxBxG6e+xVXA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzgqqbr0sYUg/fkf4w02BaoQ3ll8LDOM9cjG9QCSV/lHVqdnBKw
+	SGakymk5eanBc48zOsweBTOfJhTP02N1d/ylI4nSWL2W3UswpZg0nV/cy/5ARwzJ/kI=
+X-Gm-Gg: ASbGncuccBTD86RO0HBXMREUyxB+B8IFqvL25z7FaeGhQSMNQc9n9lIemPiQgla7XTb
+	QzisczzayxOlRhh1OVTmTtIkBV9WeEoj/zBDZTXJVgtqRnavUE9jKefRLAk8pIhMSKXFoIcWMuJ
+	Lc9sj43T2jKM2wli3kWPnsByM0E6ISKIMVdYnOvj2rKLm2rwg2d8MZ8wMj6RLHhVz3RoheV7CF9
+	12kYuHw+70m2vP82UulMt5kfUcwFo8hxDs9ys0WCFFxNIE3kvwT3DkQWyc73iZXqaOI9xUiaxHJ
+	P7sNSDAOKmf/P81oxScCIuhqkyXwHS9TqEHLfS7C5y26BvZaiPBhnLPmqmSUccLGrRhTBJXCo+e
+	Uu+XH/MGKaw0r8sjGbQ==
+X-Google-Smtp-Source: AGHT+IFJ17PdUSrR9PAyz9A373Qt5+hTCJx8bTr+SWPz7moNObgf+GjDwQtYfqxX3cYq6vu5r5dXlw==
+X-Received: by 2002:a05:620a:1128:b0:7cd:92:9f48 with SMTP id af79cd13be357-7cee3280f39mr419630285a.52.1748014754985;
+        Fri, 23 May 2025 08:39:14 -0700 (PDT)
+Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com. [209.85.222.169])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7cd468cc4dcsm1191241385a.96.2025.05.23.08.39.14
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 23 May 2025 08:38:47 -0700 (PDT)
-Message-ID: <63702a66-4cc6-4562-89f4-857fe3f044e8@gmail.com>
-Date: Sat, 24 May 2025 00:38:43 +0900
+        Fri, 23 May 2025 08:39:14 -0700 (PDT)
+Received: by mail-qk1-f169.google.com with SMTP id af79cd13be357-7cd0a7b672bso630273085a.2;
+        Fri, 23 May 2025 08:39:14 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVEOR3ON8CXP3UOnyogxW+amUCV3cAuYsOyR/a8sJWMrwsv/C3JsDdRJ7ActbNlURB0whxUCFm6aRGjTFUa@vger.kernel.org, AJvYcCWG3V8NiKGc5Tr9mst7H0l0hl45kVP108H3ONe+gOl574bxZ+6QB7bDVSYigUIrSdCSgo8l7Bkf0wSb@vger.kernel.org, AJvYcCXc+dUSdM0ZFqg7fJUUili6vIvdaFP7zv0NB7ZaZXDcU+1nckVcRfGpKA8eEHJpEwI00yNdpRItlSU/oyzzSTCSexU=@vger.kernel.org
+X-Received: by 2002:a05:620a:2891:b0:7c5:b909:fde1 with SMTP id
+ af79cd13be357-7cee31f7527mr536169785a.25.1748014754323; Fri, 23 May 2025
+ 08:39:14 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] mm/hmm: Allow hmm_dma_map_alloc() to tolerate NULL device
-To: Christoph Hellwig <hch@infradead.org>
-Cc: linux-rdma@vger.kernel.org, linux-mm@kvack.org, leon@kernel.org,
- jgg@ziepe.ca, akpm@linux-foundation.org, jglisse@redhat.com,
- linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, zyjzyj2000@gmail.com
-References: <20250523143537.10362-1-dskmtsd@gmail.com>
- <aDCKsK2-zRkqge64@infradead.org>
-Content-Language: en-US
-From: Daisuke Matsuda <dskmtsd@gmail.com>
-In-Reply-To: <aDCKsK2-zRkqge64@infradead.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250518220812.1480696-1-john.madieu.xa@bp.renesas.com>
+ <CAMuHMdX3tmRsWH=T76UESxPO59uG=8di72FuSsV__hHNsmw_CQ@mail.gmail.com> <OSCPR01MB14647796989C230D7E1866C86FF9CA@OSCPR01MB14647.jpnprd01.prod.outlook.com>
+In-Reply-To: <OSCPR01MB14647796989C230D7E1866C86FF9CA@OSCPR01MB14647.jpnprd01.prod.outlook.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Fri, 23 May 2025 17:39:02 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdU4poOJ46NEVZUpuDDNjU-F7o6Wn62triNd=jqHq466Wg@mail.gmail.com>
+X-Gm-Features: AX0GCFvPbfJQetkxe_Tm6HStAEgmMR_7lrJ5cp2m_CaawoErBbvWG065tJ8rY3M
+Message-ID: <CAMuHMdU4poOJ46NEVZUpuDDNjU-F7o6Wn62triNd=jqHq466Wg@mail.gmail.com>
+Subject: Re: [PATCH] arm64: dts: renesas: r9a09g047e57-smarc: Reduce I2C2
+ clock frequency
+To: John Madieu <john.madieu.xa@bp.renesas.com>
+Cc: "magnus.damm@gmail.com" <magnus.damm@gmail.com>, "robh@kernel.org" <robh@kernel.org>, 
+	"krzk+dt@kernel.org" <krzk+dt@kernel.org>, "conor+dt@kernel.org" <conor+dt@kernel.org>, 
+	Biju Das <biju.das.jz@bp.renesas.com>, 
+	"linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, 
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On 2025/05/23 23:48, Christoph Hellwig wrote:
-> On Fri, May 23, 2025 at 02:35:37PM +0000, Daisuke Matsuda wrote:
->> Some drivers (such as rxe) may legitimately call hmm_dma_map_alloc() with a
->> NULL device pointer,
-> 
-> No, they may not.  If something has no device with physical DMA
-> capabilities, it has not business calling into it.
-> 
+Hi John,
 
-Hi Christoph,
+On Mon, 19 May 2025 at 10:56, John Madieu <john.madieu.xa@bp.renesas.com> wrote:
+> > From: Geert Uytterhoeven <geert@linux-m68k.org>
+> > On Mon, 19 May 2025 at 00:08, John Madieu <john.madieu.xa@bp.renesas.com>
+> > wrote:
+> > > Lower the I2C2 bus clock frequency on the RZ/G3E SMARC SoM from 1MHz
+> > > to 400KHz to improve compatibility with a wider range of I2C
+> > > peripherals. The previous 1MHz setting was too aggressive for some
+> > > devices on the bus, which experienced timing issues at such a frequency.
+> > >
+> > > --- a/arch/arm64/boot/dts/renesas/rzg3e-smarc-som.dtsi
+> > > +++ b/arch/arm64/boot/dts/renesas/rzg3e-smarc-som.dtsi
+> > > @@ -85,7 +85,7 @@ &gpu {
+> > >  &i2c2 {
+> > >         pinctrl-0 = <&i2c2_pins>;
+> > >         pinctrl-names = "default";
+> > > -       clock-frequency = <1000000>;
+> > > +       clock-frequency = <400000>;
+> > >         status = "okay";
+> > >
+> > >         raa215300: pmic@12 {
+> >
+> > Can you please clarify which devices on this bus do not support 1 MHz?
+> > Or perhaps this is a board layout issue?
+>
+> This is mainly the case for the GreenPAK device, that is programmed to
+> Operate at 400KHz.
 
-RXE is a software emulator of IBTA RoCEv2, designed to allow systems equipped with standard Ethernet adapters to interoperate with other RoCEv2-capable nodes.
+Thanks for the clarification!
 
-Like other Infiniband subsystem drivers (under drivers/infiniband/{hw,sw}), RXE depends on the ib_core and ib_uverbs layers in drivers/infiniband/core. These common RDMA layers, in turn, rely on the HMM infrastructure for specific features such as On-Demand Paging.
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i.e. will queue in renesas-devel as a fix for v6.16, with the clarification
+added.
 
-As a result, even though RXE lacks physical DMA capabilities, it still needs to interact with hmm_dma_map_alloc() through the shared RDMA core paths. This patch ensures that such software-only use cases do not trigger unintended null pointer dereferences.
+Gr{oetje,eeting}s,
 
-Thanks,
-Daisuke
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
