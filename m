@@ -1,121 +1,90 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18BBD137E;
-	Fri, 23 May 2025 12:41:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BED161FDD;
+	Fri, 23 May 2025 12:48:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748004117; cv=none; b=OFoydM39SqONIEOQqVOnrx3Ih8ndEQaq9PknFDlNFc+AAUAucoFMN5fsXisUz96p/ArWD58XyuqxHyX4oWVlL3ew3YpTI9CRt65IXSV7lwkt24St3XC+kqKRU/xxy3v7HcY1VdjThCYtiocmalQTUCTZdvVv2Y7nZmnRUqlHgpE=
+	t=1748004506; cv=none; b=hIcM2YlzYg50E2qVitW0OGUwSL5MxsJB2iQGcmuU8rUW8Ue0xnhrs9UoCQjqGBXY1dXpuQtRf0kxbd+evFBCllBnDFdGWLpLIuHLrIQIDMEuari7PCRBr03E1PSAUfMTh7u5yQQyISP5QbjGkbV3Uwk0kKE0oSENoCgPGKW9LnE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748004117; c=relaxed/simple;
-	bh=kRLeMz1HYfI4gwnhv0LNFYddk/iydJ/jv0OGcCUxDaA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=JBnA/4qI9zm3UJ+ZEbuwyyo+7aAmP/qFCvPOZaOifQ1kcoCCLwiEw6p8Y1ANtba/mEG2CuUSvX2Ic/2ibSps0mvSwTfzmsOSp02KGNQuTLBz5MRAKwPBdrTzyB897XffIWdvQvyTIEmHpM4a+1Us1gv+eHeMVaOCx6i+m9/VafA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T3pJVtM3; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748004506; c=relaxed/simple;
+	bh=ep7ttSMYmIC7dSCZw6rB4THOYgYU0W+j3ONAkquPmvs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LA/oOHh/Z9f6iiQJB7iI4LRn7gTtaPG6DtVEiQ9iYdTmfwwXGfAmvqoI8aXjpTOhZZWnrk8utRq9sBcmzh92qnTGDHa1Yd8m5z5IVgzJH1mlkcl2etIBer9g4q1GCxVTtsebKnngA8ycw8Xsr6k9ihUJknpK5Vi4dsR4JJbE4FU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=E0BEV1Pi; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T3pJVtM3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E323C4CEE9;
-	Fri, 23 May 2025 12:41:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748004116;
-	bh=kRLeMz1HYfI4gwnhv0LNFYddk/iydJ/jv0OGcCUxDaA=;
-	h=From:To:Cc:Subject:Date:From;
-	b=T3pJVtM3yAk3998WCgVoSynMJli4Bw01rMwdunAaH4qj1BCMZicQG5wfHp9MMKZ3v
-	 EHuwa25FCwnWjWazB//3Ot+c8fCpwpDMNKbF5efpOBr+SCPHlvDxNFKB8SB9E4bLhM
-	 FmJwYb8ju1wai4t5m1Fa/Zm6T5BiKhh1IbSFPtFvKR4cxdi5Acq4+5QOleHPVzBlud
-	 ULRUFRFUYk+O7fSFsaowy64SC7exK1CfuNARTc4F5ViFK/lNhg2E0xn4RLhVGAAxWM
-	 faxtSSMa0ZD30zMTIWCa9ZHx6KTEbUnFUGUD4ZTa/+6ly86WAKwKAlshRj+omALR3W
-	 r/1nLiGIOedUg==
-From: Christian Brauner <brauner@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Christian Brauner <brauner@kernel.org>,
-	linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [GIT PULL for v6.16] vfs mount
-Date: Fri, 23 May 2025 14:41:15 +0200
-Message-ID: <20250523-vfs-mount-419141f78092@brauner>
-X-Mailer: git-send-email 2.47.2
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="E0BEV1Pi"
+Received: by linux.microsoft.com (Postfix, from userid 1127)
+	id 2B704206834F; Fri, 23 May 2025 05:48:24 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 2B704206834F
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1748004504;
+	bh=TK3pq8zeypwsvsAQp4lD9eQ6MH7Hnc9VhxYCb1JrU/k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=E0BEV1PiOKtEampixS2HTrQxuD6/TbQearDIPrcet4PyKtxbMC1/Q71ZYdfiTYVsH
+	 moQRlxSHrYNO1KOo90RlnK3/DUbIJDZSuqyoA8rV+E3rS0NoL7tqL/q/1azAgm5xA2
+	 jbfWowHxhBACmuy0yY8YgnAdfNdE4lhyN/FnXj8M=
+Date: Fri, 23 May 2025 05:48:24 -0700
+From: Saurabh Singh Sengar <ssengar@linux.microsoft.com>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+	decui@microsoft.com, andrew+netdev@lunn.ch, davem@davemloft.net,
+	edumazet@google.com, pabeni@redhat.com, horms@kernel.org,
+	ast@kernel.org, daniel@iogearbox.net, hawk@kernel.org,
+	john.fastabend@gmail.com, sdf@fomichev.me, kuniyu@amazon.com,
+	ahmed.zaki@intel.com, aleksander.lobakin@intel.com,
+	linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+	ssengar@microsoft.com, stable@vger.kernel.org
+Subject: Re: [PATCH net,v2] hv_netvsc: fix potential deadlock in
+ netvsc_vf_setxdp()
+Message-ID: <20250523124824.GA4946@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+References: <1747823103-3420-1-git-send-email-ssengar@linux.microsoft.com>
+ <20250522151346.57390f40@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2104; i=brauner@kernel.org; h=from:subject:message-id; bh=kRLeMz1HYfI4gwnhv0LNFYddk/iydJ/jv0OGcCUxDaA=; b=kA0DAAoWkcYbwGV43KIByyZiAGgwbQ6iMwtOnNOfIz0ddahcZ+NbVcR+O7a+dp1ECmx6KvEE0 Yh1BAAWCgAdFiEEQIc0Vx6nDHizMmkokcYbwGV43KIFAmgwbQ4ACgkQkcYbwGV43KJTxAEAwb/D IWiTOi/qKRbg9nhR/u6yFbWldGLT/tJJ7b+UJEEA/1vH3RM1ubQLbRIyaZsUZ0wgcPlAIkYZEu9 jPfnyjTUN
-X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250522151346.57390f40@kernel.org>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 
-Hey Linus,
+On Thu, May 22, 2025 at 03:13:46PM -0700, Jakub Kicinski wrote:
+> On Wed, 21 May 2025 03:25:03 -0700 Saurabh Sengar wrote:
+> > The MANA driver's probe registers netdevice via the following call chain:
+> > 
+> > mana_probe()
+> >   register_netdev()
+> >     register_netdevice()
+> > 
+> > register_netdevice() calls notifier callback for netvsc driver,
+> > holding the netdev mutex via netdev_lock_ops().
+> > 
+> > Further this netvsc notifier callback end up attempting to acquire the
+> > same lock again in dev_xdp_propagate() leading to deadlock.
+> > 
+> > netvsc_netdev_event()
+> >   netvsc_vf_setxdp()
+> >     dev_xdp_propagate()
+> > 
+> > This deadlock was not observed so far because net_shaper_ops was never set,
+> 
+> The lock is on the VF, I think you meant to say that no device you use
+> in Azure is ops locked?
 
-Unfortunately this had to be rebased as this had patches in it who were
-also present in another branch under different hashes. Because I both
-merged them and exposed them as one set in -next this didn't get
-noticed. The patches here are trivial though.
+That's right.
 
-/* Summary */
+> 
+> There's also the call to netvsc_register_vf() on probe path, please
+> fix or explain why it doesn't need locking in the commit message.
 
-This contains minor mount updates for this cycle:
+On rethinking I realize you were referring to the netvsc_probe() path not
+mana_probe(). Since this lock is effectively a no-op, it doesn't really
+matter whether it's there or not.
 
-- mnt->mnt_devname can never be NULL so simplify the code handling that case.
+However, I think we can revisit this when we add ops for any of the VFs.
 
-- Add a comment about concurrent changes during statmount() and listmount().
-
-- Update the STATMOUNT_SUPPORTED macro.
-
-- Convert mount flags to an enum.
-
-/* Testing */
-
-gcc (Debian 14.2.0-19) 14.2.0
-Debian clang version 19.1.7 (3)
-
-No build failures or warnings were observed.
-
-/* Conflicts */
-
-Merge conflicts with mainline
-=============================
-
-No known conflicts.
-
-Merge conflicts with other trees
-================================
-
-No known conflicts.
-
-The following changes since commit 0af2f6be1b4281385b618cb86ad946eded089ac8:
-
-  Linux 6.15-rc1 (2025-04-06 13:11:33 -0700)
-
-are available in the Git repository at:
-
-  git@gitolite.kernel.org:pub/scm/linux/kernel/git/vfs/vfs tags/vfs-6.16-rc1.mount
-
-for you to fetch changes up to 2b3c61b87519ff5d52fd9d6eb2632975f4e18b04:
-
-  statmount: update STATMOUNT_SUPPORTED macro (2025-05-23 14:20:45 +0200)
-
-Please consider pulling these changes from the signed vfs-6.16-rc1.mount tag.
-
-Thanks!
-Christian
-
-----------------------------------------------------------------
-vfs-6.16-rc1.mount
-
-----------------------------------------------------------------
-Al Viro (1):
-      ->mnt_devname is never NULL
-
-Christian Brauner (1):
-      mount: add a comment about concurrent changes with statmount()/listmount()
-
-Dmitry V. Levin (1):
-      statmount: update STATMOUNT_SUPPORTED macro
-
-Stephen Brennan (1):
-      fs: convert mount flags to enum
-
- fs/namespace.c        | 43 +++++++++++++++++++------
- fs/proc_namespace.c   | 12 +++----
- include/linux/mount.h | 87 ++++++++++++++++++++++++++-------------------------
- 3 files changed, 82 insertions(+), 60 deletions(-)
+- Saurabh
