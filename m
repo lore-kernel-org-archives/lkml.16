@@ -1,98 +1,147 @@
-Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45931298CAA
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 18:22:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D94A299A80
+	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 18:25:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748024565; cv=none; b=T2MtWJggtKxBog9LWYCLRqbfMAbnZEvbNWqFBoNwj7B7y/WEZJ/zCYYdq6ZivrZrnaE8H+ID6lVr+QtiKtryPw8InU0J9yQrmcZ4O1mxYc3VOaAXBuxMtXmLxxgDUzxHQHTjLO4hAPadaoQzhv+P3xdIRYrLBZmgjvq/RFq1OZs=
+	t=1748024755; cv=none; b=nAe8yhEHchJB/AVEbd4AiX2wE/+VooPOSdIkU9vJ9+EPZ1Hebl+y3sDMCLw5wVh0aS2UKtsg74TJZ6ibd1p1BLqqXvsMlPkV2vwzBZCaSg+UeAJZpBl4smLlCwqFjdMxaA4dYCLj0qBU81prjhASQ34vBLxo6Q3uG9T3cfygthM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748024565; c=relaxed/simple;
-	bh=s/6eqYOTLrxmW0LGX7eGemIDLzBddKua1DF2bww+zAo=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=anLkKWUt/XhHSjFYlOP5cWz71xMMZoyQXIiWgccMdWpT3Ff2oZvjIdWgUQr9Qs6+6w/7kqbQiRC14Ds/RLEgDksCDwk82jxnBvZxZZmdvc/nf1wCxN7ArEZRjT6NeiuVDQmr7OuV5V8DrNTk3GSCk3/jw9HD9oXovhnv5BCo4VM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=1M3Gq0sB; arc=none smtp.client-ip=209.85.219.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1748024755; c=relaxed/simple;
+	bh=NtQOkWCQz8U7GrzRiRmsaukr1M2Wq2lGQo0FZR6FC7E=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=s1vX7ZfqDCo0QLwdArD23f8hMtayoeryRa77gF75Yhbn71w9IEvU+nFBcPJrKv0FJ0z46v+epYT5GimYOly725A8MTK2bvFyU6S49lTup19xi3xXF1REm7N2XI/lIOCRHmZ/1u/n+MehnPLR5NPz5tPEKkXvKWN7BJSRis/GVfk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=HfR6BXcX; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="1M3Gq0sB"
-Received: by mail-qv1-f46.google.com with SMTP id 6a1803df08f44-6fa9dced621so220266d6.1
-        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 11:22:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1748024562; x=1748629362; darn=vger.kernel.org;
-        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=BClPbehAu6JBgNUB0ZQty6Cn+WSxNViJiPjUPJj/yCw=;
-        b=1M3Gq0sBFkRYElwIstMMRFgXHLwAT7q0n0q6HybokgkH4buOU9ce3/qUMheQIiddgE
-         wxpBPFsnsTSg/xTpG01JsO6ED44qToFo1AjBnYHrP/IrLhuNuaovvgi3nlxKjjX964LQ
-         ZAw/NLGgXPW4WyA+bOOjOv3Mk/0Jzy4GiBKxhaGdWUOKl3Gf1/v7qv19yeaDRvRDnfif
-         KZOKe+Z/GAF8lwTFOZFtZ23RFyZYK59/Wwm6idyvXIwKpoh96XMNDuaD2AtBpuWvatoG
-         GPdUcDc7Lrcof2osxKHPTJSe48StG/ubpOcMjYdBNYR+tB7rjdQZOaYOb/ByYLXkdRGQ
-         TojQ==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="HfR6BXcX"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54NAG4Z2013413
+	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 18:25:53 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	Q7jAskVrOtvAVeaEb311Ty4pkBPjetu94PQoDx54lkY=; b=HfR6BXcXPhL9z02U
+	7PYNsF3D2uRj8K+AgnLAdgTlfOtOTU7JIrVaxVtVsb4fyYBC39rjqJBgMgzkha2V
+	V/BW4qrAp1ucCNPQf9Paw4wBMBv2dCA5FmNtc3AUhlMiEBnAuTNhO+PJ1xP08Cod
+	pfRla/oupSxgc0uE+dionxeGOEvAQYT2e5zFwIbZDW/ZgfHz3Garg+7PIofVQDYe
+	0xtFPknPdg2XuffIKAXg/2WUCJOYQWpkrb5K5aPX/GhgfWxUmqSDn3UcSlKUE6mn
+	VKLhIpafA2fL1XeOQA81nsI2tnVWD6mT02eNotorFnM+gl571xYwfgEh5Qt6Ycwt
+	xXme4A==
+Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com [209.85.219.70])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46rwh5k4r2-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 18:25:53 +0000 (GMT)
+Received: by mail-qv1-f70.google.com with SMTP id 6a1803df08f44-6f8d32c0b57so242196d6.2
+        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 11:25:53 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748024562; x=1748629362;
-        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=BClPbehAu6JBgNUB0ZQty6Cn+WSxNViJiPjUPJj/yCw=;
-        b=cLU30Iac8RcZCw5bgI15gGyGP93ocLhq6HvDZFO35Nj3UWdGu5KY1gteGfrtAQB45l
-         ZHZ23RTEHnwIGk7vZOdSd8HT+qBLHQVARvR4Z6+xBdT0bYegQeWgda/N41DPqdWimOHD
-         eGvx0IxEbd7jvRN/5IGGdS4FdGUmaImAxB8WicsL68Jy7dAtZ80BAgNIvQEbS13JYD47
-         Coe7EVxnm5e9cq+5/a8KDmP23jkhsXOoIPgxxHY7hXsa41StImgnN8eGK0vxr4T+1iH0
-         FiSyukkn9LPGMBYJLixKRaZHla6gNsfgtvey9Dhm333aGsHxtdQaWbIVjEWsRu4f10qZ
-         2nyA==
-X-Forwarded-Encrypted: i=1; AJvYcCXKKpI/UPl+sd1X3Fa7OEqnZzhQXXHlqeZJ7FcT64a+mNs2ozs15ySyTTmsRCsQJ9j5hob2TqVh6LYx8cs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YycVKlX0uoBLZ5FSGu2Ypj8Xcwp52H0yVz9d7E91fEUPQuFDN2e
-	WMA1uKYQdbOJbmPo6UsQu/Njgff1L1k9zdjKvldy6NfCJbMU5ve2YMl2SgdurvWkQAov0vP8Hrx
-	3RZ4z
-X-Gm-Gg: ASbGncsQcmzTN/WiGv9kWY8kkQdHszymiyPCSr7zzA2ac72z3AVJUtuAYAAxpy8uTZf
-	+2xK1Icm1SvSCpLzJf6nsGMnCZqFMQoM1trn1wc7se8YPe5W6rfQcVaLAehj0ebqamnc6FfVgVm
-	LaPve35Io7kb0jWmtUUMuijktZhCvZ/YkdVhaBdpDifSFE6tHq0ML6m6U3zWF0aCnkKS/eaD67h
-	g5QpA1x0gIpoiBpvYuHIUmgx1y9/UwxiuEITL47owNxqCQ3lQ57heaHrRsjrSjZZF1dlA/BRMVO
-	UwcyOsCfncbSc0rBi62j+XJw/JlhZe54VIxh2EjUKOOQRc1jcyd+iFGrVKO5imXo56GeU+nge7V
-	p7PllVbta8XurcQ==
-X-Google-Smtp-Source: AGHT+IHtcqZzqfWbk5o/UzOJDRxNNio2Z/lxjmpT3kSO+7xSuTcmZ2FTV0xn5lzDCf4Hua7Q5fv9Ug==
-X-Received: by 2002:ad4:5dc4:0:b0:6f5:1192:ccdf with SMTP id 6a1803df08f44-6fa9d139408mr6440336d6.6.1748024562089;
-        Fri, 23 May 2025 11:22:42 -0700 (PDT)
-Received: from xanadu (modemcable179.17-162-184.mc.videotron.ca. [184.162.17.179])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f8b0898f66sm118824496d6.27.2025.05.23.11.22.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 May 2025 11:22:41 -0700 (PDT)
-Date: Fri, 23 May 2025 14:22:40 -0400 (EDT)
-From: Nicolas Pitre <npitre@baylibre.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-    Jiri Slaby <jirislaby@kernel.org>
-cc: linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] vt: remove redundant condition from redraw_screen()
-In-Reply-To: <n58o097s-s20p-4222-nqo5-2qp26843rs35@onlyvoer.pbz>
-Message-ID: <srp75229-623q-q31s-79op-076nqs4so36q@onlyvoer.pbz>
-References: <n58o097s-s20p-4222-nqo5-2qp26843rs35@onlyvoer.pbz>
+        d=1e100.net; s=20230601; t=1748024752; x=1748629552;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Q7jAskVrOtvAVeaEb311Ty4pkBPjetu94PQoDx54lkY=;
+        b=qXzbyyrWQd8oTtfXDY5KS/C46wuwruD5hW5LeNKs9MlpvcUUxq+zq2bWCOk6t407BJ
+         BptL4udSu4f7F/JQTNN0PIR5VpI/NkdcVtrHJenDENHFPTkepsPh59pKnshS1tt45hUA
+         udEMjB2hBqNtI7S+AkMyD0G5dYr88TIcfG0jmQMTpTcWJqgSBQsiD2/iLqNeeGfxkvn+
+         xi7WHzZfZMk3NK0GAvrYUHPK+tcTK3XAJvyrXn20nQTxQP1vS8i3D64uIaywvuy6rxJp
+         CU5FRwThzQP8WfTqtKMPyzPsjkemxSUR2UQPCX6B2JJF4uPoLAgOaSstWuw8kX5dqNFs
+         DcFw==
+X-Forwarded-Encrypted: i=1; AJvYcCWrZfy2PUdjxgawLF206leOZSXweASGyXrcvbHnUCFbVusNHEj2UVRZAYFlJ4exeSF96GiBxmMWWKiyrGo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyfbeizzs03B+423B14+D5h4puImcn4CPIkUSGrernGGtsuHH3q
+	uiilIpZoi8uDPHVW+1Xxo5EFKaQLOTxGKP+FssXB6x2BCAh/0OC/vj9rm4+/n3Quue2B0Qwsu0N
+	Ctiwj9b8XloZc9jEQoclnImgKiH1hvgT3o39bFefwdHNFjRO9UXXIK6Oab+onM7V20Go=
+X-Gm-Gg: ASbGnctsjNSIC2GlkliYoHYXTamCJjSz3yFy+WzGyTHlkTVS7q27IzCFLDHDhtLbPSj
+	vODfc8LqTJUfZthB+5cDVLmR9Xxu2LQLgo+twe1cshZyR6IJekExNr7rjnmYK97cOo4HTQV+t2N
+	U8hgTW9xKXsaD1aMg8e3176kSHXcX6jl5xLY2DTPQS9I7SXPznPX3tGzshlvvFRyM9mBIaVQJUB
+	m3U31/AAqQEBdQ2+UVjBEF0LsQVqOBdCgHH22LyOekN423rX40zYlZhOcZeB7WWB9u3cu0t0qeQ
+	c0tZDWa0pO5fkIhP1zwKKHb1usiCi1vIAN1awFiQhlbWchyljbxR8cULMZ1hUfWdxg==
+X-Received: by 2002:a05:6214:21c2:b0:6f2:c9dd:353d with SMTP id 6a1803df08f44-6fa9d2baa17mr3427446d6.10.1748024752345;
+        Fri, 23 May 2025 11:25:52 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHRXjYKiZh4UzYAut+MyKZE13w0f4gwaL2w4sBdwdgygXZc6Mqqi5zfAiRZTmNuRy9a3FKMAA==
+X-Received: by 2002:a05:6214:21c2:b0:6f2:c9dd:353d with SMTP id 6a1803df08f44-6fa9d2baa17mr3427246d6.10.1748024751924;
+        Fri, 23 May 2025 11:25:51 -0700 (PDT)
+Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad52d04f263sm1257906766b.1.2025.05.23.11.25.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 23 May 2025 11:25:51 -0700 (PDT)
+Message-ID: <d0d3c2c0-d5ab-484d-835b-3a76055cad55@oss.qualcomm.com>
+Date: Fri, 23 May 2025 20:25:49 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V2 0/3] Add level shifter support for qualcomm SOC's
+To: Sarthak Garg <quic_sartgarg@quicinc.com>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+ <conor+dt@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org,
+        quic_cang@quicinc.com, quic_nguyenb@quicinc.com,
+        quic_rampraka@quicinc.com, quic_pragalla@quicinc.com,
+        quic_sayalil@quicinc.com, quic_nitirawa@quicinc.com,
+        quic_bhaskarv@quicinc.com
+References: <20250523105745.6210-1-quic_sartgarg@quicinc.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <20250523105745.6210-1-quic_sartgarg@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIzMDE2NyBTYWx0ZWRfX1/rvpXyNzoCi
+ MT5p0obDLtZh+AS06rAfsGsLoaZtnwpP8hxlynAUK3KC12WjzLYE8gdODWqHOuQo5wjy90f7EZ0
+ txI2+ZqtEyQvD8e/xUvHvirNcDT5mX4bLKxFhB77p6fRfWBqPDmq8gELQJtCQGsq1dAJUIsqcME
+ PRvz/Ss1w1um58a5qNPs+iVChv1ncKEwFKwavRjR7mdIGkfii1WblZ9/XSBw/LcKiayIaKBUvRg
+ Vvxq1aWL4T5Naev5AhyJA0AJed9Rl7CBJyhMwRRVc9t0sErl/G3eN7+U1GQXDdh9s0iKb4ZbBQF
+ D9CgpQrbweMdtfD+KlnCzlCL53FfwIkkvQx1O7eLPyvrTG2Bdq1ms4/mLFJ/vI4Qu8exOBBszRC
+ lRIiA0k1GwF/yQq2sVznzgZS7+sndUKWJ9wa5OZnGarQCjAvZx5nO4qhv2mRc+ZXsL9JHFuK
+X-Authority-Analysis: v=2.4 cv=XeWJzJ55 c=1 sm=1 tr=0 ts=6830bdb1 cx=c_pps
+ a=oc9J++0uMp73DTRD5QyR2A==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
+ a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=phjHtPm2XXW9BfwSypYA:9
+ a=QEXdDO2ut3YA:10 a=zgiPjhLxNE0A:10 a=iYH6xdkBrDN1Jqds4HTS:22
+X-Proofpoint-GUID: JSWB_wGdjp8maGDxfLxSP_BkfRtGEWAt
+X-Proofpoint-ORIG-GUID: JSWB_wGdjp8maGDxfLxSP_BkfRtGEWAt
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-23_06,2025-05-22_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ phishscore=0 clxscore=1015 mlxlogscore=999 mlxscore=0 bulkscore=0 spamscore=0
+ suspectscore=0 impostorscore=0 adultscore=0 malwarescore=0 lowpriorityscore=0
+ priorityscore=1501 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
+ definitions=main-2505230167
 
-On Fri, 23 May 2025, Nicolas Pitre wrote:
-
-> Given !con_is_visible(vc) is the equivalent of *vc->vc_display_fg != vc
-> we have:
+On 5/23/25 12:57 PM, Sarthak Garg wrote:
+> Add level shifter support for qualcomm SOC's.
 > 
-> 	struct vc_data *old_vc = vc_cons[fg_console].d;
-> 	if (old_vc == vc)
-> 		return;
-> 	*vc->vc_display_fg = vc;
-> 	if (*vc->vc_display_fg != old_vc) /* !con_is_visible(old_vc) */
-> 		...
+> - Changed from v1
+>     - As suggested by Krzysztof Kozlowski redesigned logic to use
+>     compatible property for adding this level shifter support.
+>     - Addressed Adrian Hunter comments on V1 with resepect to
+>       checkpatch.
+>     - Cleared the bits first and then set bits in
+>       sdhci_msm_execute_tuning as suggested by Adrian Hunter.
+>     - Upated the if condition logic in msm_set_clock_rate_for_bus_mode
+>       as suggested by Adrian Hunter.
 
-Please disregard this patch. Obviously the last if substitution should
-rather be:
+During internal review I suggested we could introduce a generic quirk,
+perhaps called "max-hs-frequency" which would update this
+currently-constant value:
 
-        if (*old_vcvc->vc_display_fg != old_vc)
+---------------- drivers/mmc/core/sd.c ----------------
+if (status[13] & SD_MODE_HIGH_SPEED)
+	card->sw_caps.hs_max_dtr = HIGH_SPEED_MAX_DTR;
+-------------------------------------------------------
 
-and there is no guarantee that vc->vc_display_fg and
-old_vc->vc_display_fg have the same value.
+(50 MHz)
 
+which I believe is where it comes from
 
-Nicolas
+Konrad
