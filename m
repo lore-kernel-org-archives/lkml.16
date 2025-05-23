@@ -1,207 +1,237 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 635A22DCBED;
-	Fri, 23 May 2025 07:46:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.19
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747986393; cv=fail; b=N34jeWVtCoypaljKzivwmdu+jhQ+CpgsPhfptBXEHvzAZbhKK7zQ9zVB/od4ZNkjgvspkhlUTjT7AI/wBTroiefB5EV+vsZFIduuknqoyKlGOveRvqQHtiafX2LYt/k/9gToLm4AcWMxAW3oIQVZwhiwyQ4mjoMuEyaZ9hbe5zA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747986393; c=relaxed/simple;
-	bh=llOypQFovGjK0MJYJEdAyD0cezI+LnlxDRl5AEDHr3Q=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=a/pEV24wmZ68LN9gYFOfaPgLZolwE4eV3e3LajLfRqripSiKad5JqwQeZkGErhWWzsuiGnQOeREi5Oj+UDqp4vHRlEtBU0BWdUpqKQb1fOCXetIoVSwg51wS7Lu0h4KTNhDt88YzTzS3j9CJAZUe2TAVZbg0VAigI2ZgWes15YM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fzmHKItG; arc=fail smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fzmHKItG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747986392; x=1779522392;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=llOypQFovGjK0MJYJEdAyD0cezI+LnlxDRl5AEDHr3Q=;
-  b=fzmHKItG0Bz24C4/6427875aogBvhDHd+65R5uZHdf2LPw3e48hh9NtJ
-   RVI4iN1FdZycInTq2GxFCeyzUpzkcCbJwGPeOfArpRatJwm3YwKDXC05Z
-   TJ8mu+esK5NNiDcetkZIe8okuOrfSevCAXnWunFf30jhODcG6+mZ6laZR
-   oE4dwq3qIh+TR1SML9Y0va8zPzM5vphS5VEDmnLtbjfXmpLl2hd7+pam3
-   Q6V+3kTSqVU55Bl4ewdY968EtRjH1W2QJDxEJQ6rgfIbj1O8I+v/2CkC0
-   lNujnKeB8MZSlydOYaf7dNNic1fBBj1ftZt+vt8VZ3lTiFYAPJLWG8Afx
-   Q==;
-X-CSE-ConnectionGUID: QC2uljhRQK2rt8rknfgLVw==
-X-CSE-MsgGUID: d35Mg4SdR1SviKHLjmlARw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11441"; a="49914720"
-X-IronPort-AV: E=Sophos;i="6.15,308,1739865600"; 
-   d="scan'208";a="49914720"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2025 00:46:22 -0700
-X-CSE-ConnectionGUID: Be6LBcCoR7SGvKmI5fkqWQ==
-X-CSE-MsgGUID: gMXGMK8wThq4O2zTQMM6mg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,308,1739865600"; 
-   d="scan'208";a="140856759"
-Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
-  by orviesa009.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2025 00:46:22 -0700
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Fri, 23 May 2025 00:46:21 -0700
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25 via Frontend Transport; Fri, 23 May 2025 00:46:21 -0700
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (40.107.92.51) by
- edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.55; Fri, 23 May 2025 00:46:21 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Ecl3yVwGNzO49o+i566VerGG1vVqifbi4tBRpAFSejA2rAeXILCaGBP0S24NT1hrJEpBETWM4rGrp7sjNHZU1H4m7ake4n2zK5uyy180SD0TgBjf5o7LFxrCIVlo23qlY9XGEzAlBs9ZGt6HyK0iuluLVfFX9UPrkBQBOtnzYO0jXGUNOIXOn8/X5Vqh52gJo6PF8qrPMz1lLaJL5Ud41L+Mwpw76kRYJv0hsxUCY4fn4qoWqnRTZbOVghj6VI1DapB8IFmv5dR1K2tJZCrzttNZag+gvgSRtFqcAw8hXlcxa0HdnsLJKJegREEBBQ+IG6rV6YKNyX97EcT52/Ykpw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=hV8UL3CS49J0d3HMUU7NSHuBBeckS7jgYJvSNlD/Vo8=;
- b=wdc/uowzqCJLQ+PRdIm/nvKQeX1IpwRbBuAAj/FJa2ur+Suf9yjeCAi2iRH63M+fGWOnnlt6nVwvWWRVbo+Zpi6YBwzs3Mdb81fLb1qBhCgAkDVmE4ePI9uh5rLhe4nCZI8gdmfTbkjN/kzs8ZQPQCL3lcUhyQm05ynQoTTX2gr/9uC5VaY/zw3p4Z1kslWUMw6e0xM+m/dX32W7xMhnAemQscBdAt+W8+lSuNMKqqxY3uooeg4xK0Wc8K6C/TyurHR874pM5UyhdgAfx8h2sOqJTSd5EQnA2CMPuZWCP3QCt4xDCjqLxhDMvBHY92iTiyq7EXh7atIlu+3wIuG6/A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from BN9PR11MB5276.namprd11.prod.outlook.com (2603:10b6:408:135::18)
- by CH3PR11MB7252.namprd11.prod.outlook.com (2603:10b6:610:144::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.21; Fri, 23 May
- 2025 07:46:13 +0000
-Received: from BN9PR11MB5276.namprd11.prod.outlook.com
- ([fe80::b576:d3bd:c8e0:4bc1]) by BN9PR11MB5276.namprd11.prod.outlook.com
- ([fe80::b576:d3bd:c8e0:4bc1%4]) with mapi id 15.20.8769.021; Fri, 23 May 2025
- 07:46:13 +0000
-From: "Tian, Kevin" <kevin.tian@intel.com>
-To: Nicolin Chen <nicolinc@nvidia.com>, "jgg@nvidia.com" <jgg@nvidia.com>,
-	"corbet@lwn.net" <corbet@lwn.net>, "will@kernel.org" <will@kernel.org>
-CC: "bagasdotme@gmail.com" <bagasdotme@gmail.com>, "robin.murphy@arm.com"
-	<robin.murphy@arm.com>, "joro@8bytes.org" <joro@8bytes.org>,
-	"thierry.reding@gmail.com" <thierry.reding@gmail.com>, "vdumpa@nvidia.com"
-	<vdumpa@nvidia.com>, "jonathanh@nvidia.com" <jonathanh@nvidia.com>,
-	"shuah@kernel.org" <shuah@kernel.org>, "jsnitsel@redhat.com"
-	<jsnitsel@redhat.com>, "nathan@kernel.org" <nathan@kernel.org>,
-	"peterz@infradead.org" <peterz@infradead.org>, "Liu, Yi L"
-	<yi.l.liu@intel.com>, "mshavit@google.com" <mshavit@google.com>,
-	"praan@google.com" <praan@google.com>, "zhangzekun11@huawei.com"
-	<zhangzekun11@huawei.com>, "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
-	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "linux-tegra@vger.kernel.org"
-	<linux-tegra@vger.kernel.org>, "linux-kselftest@vger.kernel.org"
-	<linux-kselftest@vger.kernel.org>, "patches@lists.linux.dev"
-	<patches@lists.linux.dev>, "mochs@nvidia.com" <mochs@nvidia.com>,
-	"alok.a.tiwari@oracle.com" <alok.a.tiwari@oracle.com>, "vasant.hegde@amd.com"
-	<vasant.hegde@amd.com>, "dwmw2@infradead.org" <dwmw2@infradead.org>,
-	"baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>
-Subject: RE: [PATCH v5 02/29] iommufd: Introduce iommufd_object_alloc_ucmd
- helper
-Thread-Topic: [PATCH v5 02/29] iommufd: Introduce iommufd_object_alloc_ucmd
- helper
-Thread-Index: AQHbx6QRuGKSUXq7OUSJC0+nT1LEFLPf3ZzQ
-Date: Fri, 23 May 2025 07:46:13 +0000
-Message-ID: <BN9PR11MB5276E1932E77354694D45C678C98A@BN9PR11MB5276.namprd11.prod.outlook.com>
-References: <cover.1747537752.git.nicolinc@nvidia.com>
- <4cc3e95520bbade9004615d04fdf5624e0b2d51d.1747537752.git.nicolinc@nvidia.com>
-In-Reply-To: <4cc3e95520bbade9004615d04fdf5624e0b2d51d.1747537752.git.nicolinc@nvidia.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: BN9PR11MB5276:EE_|CH3PR11MB7252:EE_
-x-ms-office365-filtering-correlation-id: 124e6d33-aea5-4232-bed9-08dd99cde467
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|366016|1800799024|7416014|376014|38070700018;
-x-microsoft-antispam-message-info: =?us-ascii?Q?rjYAI/ajJeMK5Nmg06nlkQnnT4mUu3HV5FPDaFj9o1P5HAiqnHnmjMkMjnXr?=
- =?us-ascii?Q?I7/CAbjViobxq8jvfGVpCyTs5glB4orgM85kbMUPkdxqWkDLJs9AdEu4fF5+?=
- =?us-ascii?Q?2XAr4nJdW2FcF0YA/LTddxwKIDEcbODUvsxjU1Oml8JNvl6pht2zXwhCUHJT?=
- =?us-ascii?Q?p2nFrhwYMc84vpppbaTxCxdWLIIvSB0MxteTdLFu/ucdwXLaQGK1rTYQ4IUC?=
- =?us-ascii?Q?Why5OOP3GfY9UOk7rdvdD2YQ9KLGbDpAMLXOysSKeMBl4jHRf/74NRAKbAAv?=
- =?us-ascii?Q?AUD9hftBKt5O29KpMo1HdHasgfmpF5o+zFL0FcCbGzFUON7mW3Og4maqZWiw?=
- =?us-ascii?Q?H7LvKel0s30DdZeijlurU7cKGx6ryxcy9XmJQ6GxnhKEhRNIlhJ4pybexlBt?=
- =?us-ascii?Q?TfMLAE5U2Hyba7bq3yLNFs8M9kemXZrx/oVhJt6FukufH48TxVBEL49WkeoK?=
- =?us-ascii?Q?nmpJq/5Dq4MwZIK3sXlmd/+20ddXZ6CA6AVOgCeedEnenEYsGbUwsIIZi3gQ?=
- =?us-ascii?Q?SF1bfSCidsHRiwox+lKM/9RbnTYz1m3IbcRopSJnFGzmvKywcMkMkmMaxaLo?=
- =?us-ascii?Q?Q+rLfhkQv2sTIhTFnz5XJOhN55raDtOvQTuo5NL186sfwXAnzTvbMwhX9g3Q?=
- =?us-ascii?Q?O8GLGobMkXC3xhCK4/zBclDn7/sMdI5/kX8kIvUEQ+p1b8ARGze0AFWQvAap?=
- =?us-ascii?Q?XM0cygEIITWaayIUjjHOS5MzUFkJ8/CX1xhQ4ZWt9QMMFIjHCHuAnHHivaN0?=
- =?us-ascii?Q?K9NX+Z0o38ROFUZarSTH2lDJZdO8gjg5J0vMd59D69Nfi5Zefsr8rrpC3P5E?=
- =?us-ascii?Q?5TeUlE+d4i9Z5vwxmJejxgQXl6cEWrrQUDgikGv8ZRUeXLZMaR/lYcZ9QoRc?=
- =?us-ascii?Q?GlCFhtLEwZbz6512wmF1z4kgc+6iOw/4QFXJIbUNJys1t7n81noCXTWncLVk?=
- =?us-ascii?Q?2vOGOzPe8fFhszyZGnYBLYdK5rCkhkXZoYnpTjWFuVZEc/CF43ufT9bORxHj?=
- =?us-ascii?Q?KTWYqWh3UtoMlF5sT+C50QjVlOt2MgizoNWR29BrbplUNy1Vdat25ZUPEJc8?=
- =?us-ascii?Q?A14qLNT++0S4dFzkeE6dPDcQ1Lnx9PqR3duFY2IiB24lxXDYDuPEIpl4E55e?=
- =?us-ascii?Q?4fk8qJGnKZwkIgHgUXxiE6R0TQNuDaxqImS+T1t+M+Wrv81wcfNBnBnx1mX2?=
- =?us-ascii?Q?413Kygeo0r9A2O/aabAsRKEGMSN3KRvxYWV34xyjdF1Uxo74MnaHiL537EWj?=
- =?us-ascii?Q?04XBabCZA3v+Qqu8A19uJveE6rw/wknl2rpuOnIwBh0mzHGg8sJuGq8edBl+?=
- =?us-ascii?Q?dbqQmcD/GHOA5L7SWdyh6CDBwxmUeMaxWQbXNoIkKKzRIKNKPLzuovX+kkZ/?=
- =?us-ascii?Q?u2NRfLbPOz62+JarzONamYEbkMI8HfgnVAwoXprmVSySZO+5QmBtfS8thGrb?=
- =?us-ascii?Q?vPggN1WTOjA3e72gJWTMnKLVb6qwmIWehnWJcDnKLxShUfqTXHoXHw=3D=3D?=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN9PR11MB5276.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?sCYe56gktsG6u+GENf4oGdCfFDIg974QByCh98YtZGx+NrM5AcdGKWNOsIiM?=
- =?us-ascii?Q?Fd02ubu6w4M5Ff4Yf/0ZgCaPT8Xl8ghnkEr/x/xW4eijMnYBFf8WFeBMEQIs?=
- =?us-ascii?Q?S08kT39JlxSdDySQBkeRMyphJCQPU8m6SVtzJWoeTNV+Ks5k1k8RQ8y4/w+K?=
- =?us-ascii?Q?ZNMmU771aoT5V8BBRLovr2UN3sbSOvRwR+ZBLfDEIa9Sh/Q+YMo5EuiBOzKb?=
- =?us-ascii?Q?F1hz+o8xArJKGQBmixaQolYPQR/CTdQ8h9s+iTmfLM4kBg6G3zH4TnelYYi/?=
- =?us-ascii?Q?Ox2KlT9lNDRpcyx6nO6egYkNOl2T4FFcllODsXFhfebnqhI9xOb5lnfZAYYy?=
- =?us-ascii?Q?4BV7v7OYEob3ECgyoHu2kCI1Om9AbFV7cS6FtLFiGz4rM9Ij0gsKcUsbglBU?=
- =?us-ascii?Q?TaO78OsqIlL2rxARvGvqEAIRaZofUS2WdogIXHZIcuJ1cyvMSEQ5HWFPfZtu?=
- =?us-ascii?Q?bQS5bJAbALm6FxBSuT3vIdgxl6nyztRWQO+Vyv8PVt4EuGuVPfgMA7sUvCtC?=
- =?us-ascii?Q?/gJxOiAJo8lZPkEATYHFSX4YvTkZkipeH3DnMHEnhTBZSKSd1ig3Lt6s6K5o?=
- =?us-ascii?Q?F3N/IxHgXMdXNOE/lHOw6bn2FDa785j8bA13qOo+lUZJVsCqzZrWS/n02sOt?=
- =?us-ascii?Q?/EXAFHGD50MXWvpd/xExIQZMzasFSGX9GQ7wiU9KnYHDu3rJIh9FWcJF6I27?=
- =?us-ascii?Q?UKx05V4mBjpVXRM/fm1+YigwO9oCFNVzf+DjinHgLCKcmCpEQXXvNIVEKeA2?=
- =?us-ascii?Q?KktDvN2dLh8WvlrMfSyHCGFsmuGcvJYiRJIL2A13g6aYurjGnXu7UtueNYY6?=
- =?us-ascii?Q?8VP9DBxPCTDEB71GSxHCW+/WGNj/pNp4nampXmN1WrOvr24eOUMJwlUNtNuY?=
- =?us-ascii?Q?chaTbrot+zg79mPp7+5pesMAesX7fEW4YI4BcHdbh13RixgjDs5yZTCyj9Hy?=
- =?us-ascii?Q?PN8BBw+mxmIBQj7+v3slRXWI0bg7xiQEODt9DtmA7R9HgXr4MIIp19FwtOit?=
- =?us-ascii?Q?m2pqRUGKqjWFddVP61vipQJoZH9fGp9PQUTTBXsdaZrXwHuE5xk4Um1y1Me7?=
- =?us-ascii?Q?Dhef8uFJ1sl4cqjhE2pxQgEywZBNoGUJciEO7kTeMx7EhdFiba+mjixgHFWj?=
- =?us-ascii?Q?iZYkibQFFfU8LffHqomLK4jmpmzNQ8O/YAyuJgSbfJvKSymNqSKd7o/zd6GN?=
- =?us-ascii?Q?yT6Ne627Vd9jeTKetU7m+lDO7XTOYX/lqrtlkmfCrsy/eYLPDwRMh8Fi4wk5?=
- =?us-ascii?Q?oY+eunmjVStH103l6ZWiAdXaRMvChihUBdYOxuWBOMf3JW4Mqm7MT0mdnVRk?=
- =?us-ascii?Q?CHGlkSmlabvMHBWo5jnBvTeUdiZRT2rjZrXqxX6Rdt5YExT8o4FEtNN5aegx?=
- =?us-ascii?Q?2tg0lkjvBP1aUepQnz0s/gHbyn96uLZeTbvtyOO3m8JlQN/a/3vIgbBlgJN6?=
- =?us-ascii?Q?zTryyv5GiBJg2XQBGfol0ds6lQegiTQR3TziImzaiWs1DqoTYcY4/xuw0tNK?=
- =?us-ascii?Q?Lnh10ZCyU34HnztfbgOjOJUIIrsI9ZWIQdqOPV2/IyTAZJKDeshYmU2nfL6y?=
- =?us-ascii?Q?2s0hjiaciHVy34pR2AKUNfFspZnpuP1Qm1KwSr7f?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Received: from invmail4.hynix.com (exvmail4.skhynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6C6C11547F2;
+	Fri, 23 May 2025 07:47:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747986480; cv=none; b=UkVQsD49IKRQJdgAvGeSY9bz5NpC0jk2Eh7nqTu/GlKq6lMQZJt8WvAgc76RGtCWDykzV/Z7F7p3d+SBB2HcN9BxL/trPiqRSl1oPh3+/P9tbn0kxlnxNg/u2NrgqlcI2FHbFJd3MAXQgDBGcbPLlB3WbSwsfByp010m8x7tIhM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747986480; c=relaxed/simple;
+	bh=g7Gdg+0qWBaRAZcaKXMUtBidxCgzsXqlP6QraOrKnVM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZAbtM6ryxkDZlf23yUhnjdrPcIo7xitDsy6yVy9L1XfsG9vcleOlwf2nc3TtnKI2CVfCdFqVQPkCeC8VaFohVTjGlV1OmXhNsgBaMdpMWqDzmRuDB4KiHaL7Ux17AMQhgBwQQ5mfZiG5ziMHvUtGPQm4gXYdViF4xagWRa9gNj8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
+X-AuditID: a67dfc5b-669ff7000002311f-83-6830282111e6
+Date: Fri, 23 May 2025 16:47:40 +0900
+From: Byungchul Park <byungchul@sk.com>
+To: Taehee Yoo <ap420073@gmail.com>
+Cc: willy@infradead.org, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	kernel_team@skhynix.com, kuba@kernel.org, almasrymina@google.com,
+	ilias.apalodimas@linaro.org, harry.yoo@oracle.com, hawk@kernel.org,
+	akpm@linux-foundation.org, davem@davemloft.net,
+	john.fastabend@gmail.com, andrew+netdev@lunn.ch,
+	asml.silence@gmail.com, toke@redhat.com, tariqt@nvidia.com,
+	edumazet@google.com, pabeni@redhat.com, saeedm@nvidia.com,
+	leon@kernel.org, ast@kernel.org, daniel@iogearbox.net,
+	david@redhat.com, lorenzo.stoakes@oracle.com,
+	Liam.Howlett@oracle.com, vbabka@suse.cz, rppt@kernel.org,
+	surenb@google.com, mhocko@suse.com, horms@kernel.org,
+	linux-rdma@vger.kernel.org, bpf@vger.kernel.org,
+	vishal.moola@gmail.com
+Subject: Re: [PATCH 00/18] Split netmem from struct page
+Message-ID: <20250523074740.GA8205@system.software.com>
+References: <20250523032609.16334-1-byungchul@sk.com>
+ <CAMArcTWx+8GFzk4=A2-DCUZkMtyYRaDZSqf+HvOf2KyC80BqsA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BN9PR11MB5276.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 124e6d33-aea5-4232-bed9-08dd99cde467
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 May 2025 07:46:13.5366
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: WuiV8ViAqJMLtNyO7seEBXwuEkY9Jprk5wJhQjy+DJkkWh1HaKsH9rGJOqVXzc4TN+9QIdAmSw8ZUVlWNxIBug==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR11MB7252
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMArcTWx+8GFzk4=A2-DCUZkMtyYRaDZSqf+HvOf2KyC80BqsA@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0iTYRTHe97bXoeLt2X6qJA4u2GkVkIHUjP68kJfiqCggrbypS2vbGoa
+	FaaiNNMiLW1NmZZmJg6WuRlDaplTDLSVsbw0MW9FF2pqznVzSuS3H//z5/zOh8OS0gY6hFWl
+	ZQrqNEWKjBFT4s/+tdvCt8QoYxoqIkBvbGbgwXwO3Bu10OBpniJA39SGYMYzJAJ3p52BO7Vz
+	JOj7CimYNS6QMNE1JgJXwyQF1mIzCWNXuxkoLfSSkG9pJKC/rYyGioV6Esx5oyJ49VjPwLvm
+	PzRM2kop6NHdp8BVlghdhkCY6/2EoNNoJmDuSjUD5Q4DA+8LXQgcz8YouH2pDIGxw0mDd17P
+	JMr41vtvCb5dNyLiDaYs/mFjJK91Okje1HSZ4U3fr4v44TdWhu+u8lJ8u8VN8KUFXxj+28Qg
+	xX/tGGB4Y+sAxb8wdIp4t2n9Ae6oOC5JSFFlC+roBLlY6R0eoDMcu3OK7Y1UHqqO1iKWxVws
+	9pRu0CK/Jeyvd5E+priNuEVXi3zMcJux0+khffUALgJrO/ZqkZgluR80/uQuJnydtRzgKWs7
+	5WMJtwvXWT+IfCzlzuO82RJyOV+De26NL3XIxZ0/axxLO0kuFN/7zS7HYbjg0e2luh93EFcZ
+	jLSP1y1qn7TZCZ8Xc09YbHrtYpZvDsZPG53UNbRGt0KhW6HQ/VfoVigMiGpCUlVadqpClRIb
+	pcxNU+VEnUpPNaHF72m48POYBX3vP2RDHItk/hKLOFoppRXZmtxUG8IsKQuQPJ+MUkolSYrc
+	c4I6/YQ6K0XQ2FAoS8mCJDvmziZJudOKTCFZEDIE9b8pwfqF5KHYmcB8r51I2qcJrTsQcWPP
+	lcqx2LjKhfjAnjDn4LydCC8y+Wsjras/juOy2a3xblKekNqdOTM/2DyOHW2D0xNBQ8pf5qxN
+	0lUT+2+2vCo+GdBbdeaY/O5spSggudx2ePry0J3gTm/By/7w+J3y3otMSQ038rzo+Lr9IdVH
+	+jokMkqjVGyPJNUaxV+dWULZOQMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA02SbUhTYRiGe895z9nZaHGcVicNqoVpX2pR9IBaRj966UfUjygiylWnNpym
+	m8pMg9Ukazr7JGxtMbP8ppGaH2UW01IrKCbGNGtmaRr2aVqmWM6I/HdxPzfX/efhaIWZCeQ0
+	CcmiLkGlVbIyLNsaaVq5KDRCHfHOxYPNWc5C2U8DFHXXMjBa/p4CW2k1gu+jLyUw1NTMQkH+
+	CA22Z5kYhp2/aOh91CMBb2EfhvqsGhp6zrSwYMkco+FEbTEFjfZWBp5X5zJw8dcNGmqM3RJo
+	u2Nj4XX5bwb6XBYMrdYSDN7cGHjkmAMjTwYRNDlrKBjJsbNwwe1g4W2mF4G7sQfDleO5CJwN
+	HgbGftrYmMWkqqSDInXWVxLiqEghlcXLiNnjpklF6WmWVHw7LyFdL+pZ0pI3hkld7RBFLKZP
+	LPna24nJ54Z2lhT0f6GIs6odk6eOJsk2v92yqIOiVpMq6sLXx8rUY13tTKI70pDVXIyNyB5u
+	RlJO4NcIz294aR9jPli4ac1HPmb5EMHjGZ3MOS6AXyyYGzaakYyj+R+MMDiURfk6/jwI7+vr
+	sI/l/DrhWv2AxMcKPkMwDmfTf3M/ofXyu6kOPekcv+qectJ8kFA0wf2NFwim21em6lJ+u5Dn
+	cDI+nj05+6C6mTqLZlmnmazTTNb/Jus0kwPhUhSgSUiNV2m0a8P0ceq0BI0h7MCR+Ao0+SGF
+	x8bP1aLvbZtdiOeQcqY8ND5crWBUqfq0eBcSOFoZIH/YF6ZWyA+q0o6KuiP7dClaUe9CQRxW
+	zpVv2SnGKvjDqmQxThQTRd2/K8VJA40o5eOKSwGne1+E8tr0oUrTXVP21ZPSxjP3Ooi3sPdZ
+	UnrZdf/5OePj9KE7ndLPu66nhxurFprc+YXRm+8vnGcoKdsxmBF17tbEqX7Pkv2Rb/zW22Nc
+	ewvagpenGCJsM+y/UzeU4uGkvO7Vi8pzB3YIluhNDz0fDuNTiY8ztoZYlu6ZocR6tWrVMlqn
+	V/0B0MxHWB0DAAA=
+X-CFilter-Loop: Reflected
 
-> From: Nicolin Chen <nicolinc@nvidia.com>
-> Sent: Sunday, May 18, 2025 11:21 AM
->=20
-> @@ -135,6 +135,7 @@ struct iommufd_ucmd {
->  	void __user *ubuffer;
->  	u32 user_size;
->  	void *cmd;
-> +	struct iommufd_object *new_obj;
+On Fri, May 23, 2025 at 03:20:27PM +0900, Taehee Yoo wrote:
+> On Fri, May 23, 2025 at 12:36 PM Byungchul Park <byungchul@sk.com> wrote:
+> >
+> 
+> Hi Byungchul,
+> Thanks a lot for this work!
+> 
+> > The MM subsystem is trying to reduce struct page to a single pointer.
+> > The first step towards that is splitting struct page by its individual
+> > users, as has already been done with folio and slab.  This patchset does
+> > that for netmem which is used for page pools.
+> >
+> > Matthew Wilcox tried and stopped the same work, you can see in:
+> >
+> >    https://lore.kernel.org/linux-mm/20230111042214.907030-1-willy@infradead.org/
+> >
+> > Mina Almasry already has done a lot fo prerequisite works by luck, he
+> > said :).  I stacked my patches on the top of his work e.i. netmem.
+> >
+> > I focused on removing the page pool members in struct page this time,
+> > not moving the allocation code of page pool from net to mm.  It can be
+> > done later if needed.
+> >
+> > My rfc version of this work is:
+> >
+> >    https://lore.kernel.org/all/20250509115126.63190-1-byungchul@sk.com/
+> >
+> > There are still a lot of works to do, to remove the dependency on struct
+> > page in the network subsystem.  I will continue to work on this after
+> > this base patchset is merged.
+> 
+> There is a compile failure.
 
-Could just be called as 'obj'. but not a strong preference.
+Thanks a lot.  I will fix it.
 
-Reviewed-by: Kevin Tian <kevin.tian@intel.com>
+	Byungchul
+> 
+> In file included from drivers/net/ethernet/intel/libeth/rx.c:4:
+> ./include/net/libeth/rx.h: In function ‘libeth_rx_sync_for_cpu’:
+> ./include/net/libeth/rx.h:140:40: error: ‘struct page’ has no member named ‘pp’
+>   140 |         page_pool_dma_sync_for_cpu(page->pp, page, fqe->offset, len);
+>       |                                        ^~
+> drivers/net/ethernet/intel/libeth/rx.c: In function ‘libeth_rx_recycle_slow’:
+> drivers/net/ethernet/intel/libeth/rx.c:210:38: error: ‘struct page’
+> has no member named ‘pp’
+>   210 |         page_pool_recycle_direct(page->pp, page);
+>       |                                      ^~
+> make[7]: *** [scripts/Makefile.build:203:
+> drivers/net/ethernet/intel/libeth/rx.o] Error 1
+> make[6]: *** [scripts/Makefile.build:461:
+> drivers/net/ethernet/intel/libeth] Error 2
+> make[5]: *** [scripts/Makefile.build:461: drivers/net/ethernet/intel] Error 2
+> make[5]: *** Waiting for unfinished jobs....
+> 
+> There are page->pp usecases in drivers/net
+> ./drivers/net/ethernet/marvell/octeontx2/nic/otx2_txrx.c:1574:
+>  } else if (page->pp) {
+> ./drivers/net/ethernet/freescale/fec_main.c:1046:
+>                  page_pool_put_page(page->pp, page, 0, false);
+> ./drivers/net/ethernet/freescale/fec_main.c:1584:
+>  page_pool_put_page(page->pp, page, 0, true);
+> ./drivers/net/ethernet/freescale/fec_main.c:3351:
+>          page_pool_put_page(page->pp, page, 0, false);
+> ./drivers/net/ethernet/ti/icssg/icssg_prueth_sr1.c:370:
+> page_pool_recycle_direct(page->pp, page);
+> ./drivers/net/ethernet/ti/icssg/icssg_prueth_sr1.c:395:
+> page_pool_recycle_direct(page->pp, page);
+> ./drivers/net/ethernet/ti/icssg/icssg_common.c:111:
+> page_pool_recycle_direct(page->pp, swdata->data.page);
+> ./drivers/net/ethernet/intel/idpf/idpf_txrx.c:389:
+> page_pool_put_full_page(rx_buf->page->pp, rx_buf->page, false);
+> ./drivers/net/ethernet/intel/idpf/idpf_txrx.c:3254:     u32 hr =
+> rx_buf->page->pp->p.offset;
+> ./drivers/net/ethernet/intel/idpf/idpf_txrx.c:3286:     dst =
+> page_address(hdr->page) + hdr->offset + hdr->page->pp->p.offset;
+> ./drivers/net/ethernet/intel/idpf/idpf_txrx.c:3287:     src =
+> page_address(buf->page) + buf->offset + buf->page->pp->p.offset;
+> ./drivers/net/ethernet/intel/idpf/idpf_txrx.c:3305:     u32 hr =
+> buf->page->pp->p.offset;
+> ./drivers/net/ethernet/intel/libeth/rx.c:210:
+> page_pool_recycle_direct(page->pp, page);
+> ./drivers/net/ethernet/intel/iavf/iavf_txrx.c:1200:     u32 hr =
+> rx_buffer->page->pp->p.offset;
+> ./drivers/net/ethernet/intel/iavf/iavf_txrx.c:1217:     u32 hr =
+> rx_buffer->page->pp->p.offset;
+> ./drivers/net/wireless/mediatek/mt76/mt76.h:1800:
+> page_pool_put_full_page(page->pp, page, allow_direct);
+> ./include/net/libeth/rx.h:140:  page_pool_dma_sync_for_cpu(page->pp,
+> page, fqe->offset, len);
+> 
+> Thanks a lot!
+> Taehee Yoo
+> 
+> >
+> > ---
+> >
+> > Changes from rfc:
+> >         1. Rebase on net-next's main branch
+> >            https://git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next.git/
+> >         2. Fix a build error reported by kernel test robot
+> >            https://lore.kernel.org/all/202505100932.uzAMBW1y-lkp@intel.com/
+> >         3. Add given 'Reviewed-by's, thanks to Mina and Ilias
+> >         4. Do static_assert() on the size of struct netmem_desc instead
+> >            of placing place-holder in struct page, feedbacked by Matthew
+> >         5. Do struct_group_tagged(netmem_desc) on struct net_iov instead
+> >            of wholly renaming it to strcut netmem_desc, feedbacked by
+> >            Mina and Pavel
+> >
+> > Byungchul Park (18):
+> >   netmem: introduce struct netmem_desc struct_group_tagged()'ed on
+> >     struct net_iov
+> >   netmem: introduce netmem alloc APIs to wrap page alloc APIs
+> >   page_pool: use netmem alloc/put APIs in __page_pool_alloc_page_order()
+> >   page_pool: rename __page_pool_alloc_page_order() to
+> >     __page_pool_alloc_large_netmem()
+> >   page_pool: use netmem alloc/put APIs in __page_pool_alloc_pages_slow()
+> >   page_pool: rename page_pool_return_page() to page_pool_return_netmem()
+> >   page_pool: use netmem put API in page_pool_return_netmem()
+> >   page_pool: rename __page_pool_release_page_dma() to
+> >     __page_pool_release_netmem_dma()
+> >   page_pool: rename __page_pool_put_page() to __page_pool_put_netmem()
+> >   page_pool: rename __page_pool_alloc_pages_slow() to
+> >     __page_pool_alloc_netmems_slow()
+> >   mlx4: use netmem descriptor and APIs for page pool
+> >   page_pool: use netmem APIs to access page->pp_magic in
+> >     page_pool_page_is_pp()
+> >   mlx5: use netmem descriptor and APIs for page pool
+> >   netmem: use _Generic to cover const casting for page_to_netmem()
+> >   netmem: remove __netmem_get_pp()
+> >   page_pool: make page_pool_get_dma_addr() just wrap
+> >     page_pool_get_dma_addr_netmem()
+> >   netdevsim: use netmem descriptor and APIs for page pool
+> >   mm, netmem: remove the page pool members in struct page
+> >
+> >  drivers/net/ethernet/mellanox/mlx4/en_rx.c    |  46 ++++----
+> >  drivers/net/ethernet/mellanox/mlx4/en_tx.c    |   8 +-
+> >  drivers/net/ethernet/mellanox/mlx4/mlx4_en.h  |   4 +-
+> >  drivers/net/ethernet/mellanox/mlx5/core/en.h  |   4 +-
+> >  .../net/ethernet/mellanox/mlx5/core/en/xdp.c  |  18 ++--
+> >  .../net/ethernet/mellanox/mlx5/core/en/xdp.h  |   2 +-
+> >  .../net/ethernet/mellanox/mlx5/core/en_main.c |  15 ++-
+> >  .../net/ethernet/mellanox/mlx5/core/en_rx.c   |  66 ++++++------
+> >  drivers/net/netdevsim/netdev.c                |  18 ++--
+> >  drivers/net/netdevsim/netdevsim.h             |   2 +-
+> >  include/linux/mm.h                            |   5 +-
+> >  include/linux/mm_types.h                      |  11 --
+> >  include/linux/skbuff.h                        |  14 +++
+> >  include/net/netmem.h                          | 101 ++++++++++--------
+> >  include/net/page_pool/helpers.h               |  11 +-
+> >  net/core/page_pool.c                          |  97 +++++++++--------
+> >  16 files changed, 221 insertions(+), 201 deletions(-)
+> >
+> >
+> > base-commit: f44092606a3f153bb7e6b277006b1f4a5b914cfc
+> > --
+> > 2.17.1
+> >
+> >
