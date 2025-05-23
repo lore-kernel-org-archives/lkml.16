@@ -1,129 +1,144 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fout-a4-smtp.messagingengine.com (fout-a4-smtp.messagingengine.com [103.168.172.147])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC41529293D;
-	Fri, 23 May 2025 13:31:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C5E62920B6
+	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 13:31:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.147
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748007074; cv=none; b=ZD1BbmN+7jh+RvYNpFyqx2RxvKcc8UGxsmJSsuTetZGUMnWaTyO4aRlehE1TKMwiGFHdTpvcuY/NvVOUZD/UA9fuKr2dHTywP6g1tZQ1LzwJQU9yGcCbXiJVJTXyxaX9DBRuXyhsYSzAZsxleBPhi0meBQ53Jspjcr/ML+CRp+M=
+	t=1748007088; cv=none; b=IP+gCs3Q8idpKf1bLL2WYNk/Z9KHS5F37R6FxfT1fWxzeirLdLG3f3tMhs0y8GrdmYOUPMgTOTpBb8MLH0eCzR/ctBnNhdzdx+E03A4DupJlEwPwD65jlJ9w6eD0LDSaMobGiVMEVEvIY8VHG1S2HCGpwC1BT5D5pdD7xU7qxOY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748007074; c=relaxed/simple;
-	bh=x7MXJmmi2wAWHuMNAG2bEFBDQGLJOpgvMJzqXoNhxPA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kA70auKTaWpFebm1AAUFioQvp5txuiELyyWoQp1w/h4sM0rv2JgvT4oPCWeWcJWnUEFQ9M/BRxoIRS0TVTQpOsMJcUoipdUX6Q25qMhSK7SYK2+6edtEb6e/h24jA7tylPh2wdT8thcpl3JTr91C3JqoulAiyaevwsG6Soj/HFc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XdO6QroD; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748007088; c=relaxed/simple;
+	bh=hmeGEPMh9P5skLJdhS+l7SxgL11YyT/5iYaaGyCECY0=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:Subject:Content-Type; b=qEEuJ6UfcxQZIpdaFTBPiNsr7YeizCxJHX7+6HFcGMS9gfyl/YG40/XmWrvW49a6CFmjAKXYsAC9ZjdYTtcZCvYBmQGnCypUBAF/uGNJ+jknpyl7V+5fb1sKiNt9bjNYrAdcUoCHr1vOUA1W4htyJwk60FlcRxCaMB2yUmqo4hM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=xatwRtGR; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=CnPGWYEN; arc=none smtp.client-ip=103.168.172.147
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XdO6QroD"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-2320d06b728so51991745ad.1;
-        Fri, 23 May 2025 06:31:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748007072; x=1748611872; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=UHviDmj3xu42QGU1Ib9f7zk1dVsPa60dS0RLUI16fXE=;
-        b=XdO6QroDz9kfB71KqXq0UzmofZSxtfQvK1q83r9HYRv8RyacGcOwRG4vCfpSNp5PQH
-         xcrJQfI9RfDO5DcD/zOTNJht+j4DIa7PsHVfxTZddwsYONuQc3QebvtElv8mhzpPfxws
-         kgg+Z4MIeUpzy8seZFaeX3E715xZRwdHuOWRArBAXdbc/PljP78tilpu8k+9CGj3/52G
-         aUngl/IdCK30gMhCl1Rdh7BHq5JqViuWP7ETF9ZfHDyyjtJWuwNz0a2J/DmMaK+wHNv/
-         aEx2MV4/fL4Fww7BJU7GuZAxoSpnzTiPJYnGPS0EOkmgUvpkMWty1d2e5UtmmjhqaI3X
-         9yng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748007072; x=1748611872;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=UHviDmj3xu42QGU1Ib9f7zk1dVsPa60dS0RLUI16fXE=;
-        b=pn7SDX0+P8WApSW0o/7kFCEoVos/1SPJO8yjqY492ZsyjHU82AeDJjA2AOCGbxV7Jd
-         BT7f62qqcukq7+i8bOHhrCOwxk9tV5DUMLAoMmeTzKkFYJPCnczygvMLqWDF5AVEH+1p
-         PkLEukJzIDnl8/w8qRAZaWAD+CQK0uUqAWUi5F4YhFSkQC8aqHDxqk4voolqWCPWkNKI
-         pTljvR9ygFMD4VICIokeHzPEXbOZqgEzplvPahnrco/e89XTwhLTuqJry/6hgR1YKdfj
-         FPAl4e0AD0CI7NE784rnfcON21ydmCS2NBnZ8XTfjM4EKyrGUdOInb1/wXUZw8ssfdYa
-         YrMA==
-X-Forwarded-Encrypted: i=1; AJvYcCVY81tki2Kgrs1VszQoVwf2OyJIybQbMIBUyNnymnV7YMtbFPSLCtW9sszSMRI2D9izS/RKXMziU+l2LcwO@vger.kernel.org, AJvYcCWD+rk2Jtw8Ft3OSe9g+voXPKo4suldFtr4wsvlHa0jnUsHWKZxy6oq8H6fZ0x4Tg2ub86lREi6ShH8@vger.kernel.org, AJvYcCWkzyv0zw7fEhav6eHoJ84m8/Ta4bamjA77BZ6HBWDmGAy9LYez4+Trp5xWoo25jT1+iUe7Vsfvv3nu@vger.kernel.org
-X-Gm-Message-State: AOJu0YxK/+3OZenPsx+JuiwXMcA4IwnPgJob+fhqslGxsVEaqMx6dJ5x
-	DMNPMI+2tkwqNIakOeIrxG+/HyGv+xMv4HT2fhcK33kZwIOdPM2puNJq
-X-Gm-Gg: ASbGncuFCtZtcb9ybZs880wik7lCKKb12dB2P1S1XTsDEyzWZEcQGiqb/EFnmTvRuYv
-	72cTO8GzD+o5+LLzbcie3NCDGMP+hmqk/JvAoyZquq3eIhjMqhRM3MdLh6ZF+jw3ew+qnpjbeaq
-	o1+mzbT1HcXc37weP+gsIhDmZLlUCsJTGLIdb09rLR0rILLwX7Gkts/6GEpZtOGHwGbHahr1UUd
-	N9Ay8p1o7TGUHRTix9Two+QUJLmI5asLuVsoesWvEIyBiQ+aYJLHb3g6ptFGraj2zqgfU36YjUg
-	yEH8m3TKfPxDxR72thavbqHBmorAkcgxloKcBBe+
-X-Google-Smtp-Source: AGHT+IGLbgtx4Af3Q4/lm93aVPuKQYWmNhIgnWUD8AgPn231XjLOFnnKcHeakMtqv3fSR76ZQS0WhQ==
-X-Received: by 2002:a17:903:18d:b0:224:c47:cbd with SMTP id d9443c01a7336-231d3257fc6mr419336045ad.0.1748007071336;
-        Fri, 23 May 2025 06:31:11 -0700 (PDT)
-Received: from localhost ([2001:250:5800:1000::3fc8])
-        by smtp.gmail.com with UTF8SMTPSA id 41be03b00d2f7-b26ecfc85e9sm12505536a12.11.2025.05.23.06.31.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 May 2025 06:31:10 -0700 (PDT)
-Date: Fri, 23 May 2025 21:31:07 +0800
-From: Zixian Zeng <sycamoremoon376@gmail.com>
-To: Krzysztof Kozlowski <krzk@kernel.org>,
-	Tudor Ambarus <tudor.ambarus@linaro.org>,
-	Pratyush Yadav <pratyush@kernel.org>,
-	Michael Walle <mwalle@kernel.org>,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
-	Richard Weinberger <richard@nod.at>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Chen Wang <unicorn_wang@outlook.com>,
-	Inochi Amaoto <inochiama@gmail.com>,
-	Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
-	Longbin Li <looong.bin@gmail.com>
-Cc: linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
-	sophgo@lists.linux.dev, linux-spi@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
-	dlan@gentoo.org, ziyao@disroot.org
-Subject: Re: [PATCH 1/3] dt-bindings: spi: Add bindings for SOPHGO SG2042
-Message-ID: <aDB4m6THbV19qjwP@calculate>
-References: <20250523-sfg-spifmc-v1-0-4cf16cf3fd2a@gmail.com>
- <20250523-sfg-spifmc-v1-1-4cf16cf3fd2a@gmail.com>
- <5ce44ff6-831b-4128-9fab-7658ffae550f@kernel.org>
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="xatwRtGR";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="CnPGWYEN"
+Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
+	by mailfout.phl.internal (Postfix) with ESMTP id 62D6F138011E;
+	Fri, 23 May 2025 09:31:25 -0400 (EDT)
+Received: from phl-imap-12 ([10.202.2.86])
+  by phl-compute-05.internal (MEProxy); Fri, 23 May 2025 09:31:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:message-id:mime-version:reply-to
+	:subject:subject:to:to; s=fm3; t=1748007085; x=1748093485; bh=KU
+	5b0C5IBMALgRXRMDkd/wslgmOMlnTPEARvynr96Po=; b=xatwRtGRZBM9O+Y8N8
+	Lw9IwwlKk8b3km7GogUxi6tSffyD9oa6d+omzaLvLKd/spStaU7oERIKeoOVsh9J
+	GSoeeW6AO9SQQ4fGclXIzde86IJknc61NAGH7IiTtZzw25pEkgA9RBRZeafe1BLt
+	hWY9mm1a/yB3tjr8GQCRyAURLjNCXNJt0e2se5vCfWG+ZepxZ8HOsCTRgu39AYCy
+	NY+xoJ9X7h21wwUqG72wrdHXK2W/Q/rluJ5rLB2rwQs5yv64ZtN8FlIfdCqiez7+
+	pOJcDh+t6Echlir9h3Lm/hBAZwsyhxTEq7uYlh+7W3o1iIuVG0Pa3gKrY07oBR16
+	6XoA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:message-id:mime-version:reply-to:subject
+	:subject:to:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm3; t=1748007085; x=1748093485; bh=KU5b0C5IBMALgRXRMDkd/wslgmOM
+	lnTPEARvynr96Po=; b=CnPGWYENOcYcVcJNc8P+TW4yEXryyZOU7AHUWWl83Vqa
+	eC6bTdF9+lIUdGvh2rfelPo4WSa6DPVtL3GtoEBcfnOgZaCaVtV+oCCck+CF3Jh3
+	iODlX7bhUF8s+jSBQUHwxakUehunJUl4NsY+rxR2exXzsaRJGE8yDvXfxYYH/7vY
+	CfyPtlOJ/FTuZsd2dGdC/tYIAkDN1LwJ0OP5Qpd8J8dpYDMYFzZZKWwg/J6U3Nby
+	cVGp5hdQEEitoSS1NupVuz4Tz4ZXdgIsF08L4uno6MnAN0WK5sOE1jhV9BfN3jqf
+	0Ceks12xvh59P+g9yn14GzQkyGrP9qxBEwqi5B6Nig==
+X-ME-Sender: <xms:rXgwaEm2-k9BaSIfXS2lBbpW6jlScIC9XXyl03wuNs7pmFVL0I_kMg>
+    <xme:rXgwaD1Px-6j_DOyCEqgSDLYusLSoGNVxnu7hbVpwqzZnDYVMesCJsAfCZuMtuYk6
+    vbeqASnUZcdmvDZR4w>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgdekleekucdltddurdegfedvrddttd
+    dmucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgf
+    nhhsuhgsshgtrhhisggvpdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttd
+    enucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkffu
+    tgfgsehtjeertdertddtnecuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorg
+    hrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrthhtvghrnhepudelieegkeevueegtedt
+    jedttdelgeehhfdvhfeuheethfduleffuddvueelveetnecuffhomhgrihhnpehkvghrnh
+    gvlhdrohhrghenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhr
+    ohhmpegrrhhnugesrghrnhgusgdruggvpdhnsggprhgtphhtthhopeegpdhmohguvgepsh
+    hmthhpohhuthdprhgtphhtthhopehtohhrvhgrlhgusheslhhinhhugidqfhhouhhnuggr
+    thhiohhnrdhorhhgpdhrtghpthhtoheplhhinhhugidqrghrmhdqkhgvrhhnvghlsehlih
+    hsthhsrdhinhhfrhgruggvrggurdhorhhgpdhrtghpthhtohepshhotgeslhhishhtshdr
+    lhhinhhugidruggvvhdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrd
+    hkvghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:rXgwaCrjqaWgV3MuBFWHYPZeDNuSLDdSNqVwS8cRNFy7Nn8u9IaRZg>
+    <xmx:rXgwaAnhCEesldGpxZ49V9b5c1wUYdPBn8RHkBnavH8Y5GVCa4VBZw>
+    <xmx:rXgwaC2rhbcfe0RdYIZVYhcCAZzpGbhzqfvzUyGRaMeA9ss9A9-zvQ>
+    <xmx:rXgwaHvsFpBZX2poYYmiU9IfcrvcJFf-yFQ4DMQBTtUb9gsGOgln_Q>
+    <xmx:rXgwaLPNCVxQOutr0YMZvj-24PRWueJHZTSUiQSQaW6sHxsT6TPCQffQ>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 1EE161060060; Fri, 23 May 2025 09:31:25 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <5ce44ff6-831b-4128-9fab-7658ffae550f@kernel.org>
+Date: Fri, 23 May 2025 15:31:03 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Linus Torvalds" <torvalds@linux-foundation.org>
+Cc: soc@lists.linux.dev, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org
+Message-Id: <de1a7a9e-7823-4f98-bf9e-99d8722c28b8@app.fastmail.com>
+Subject: [GIT PULL] soc: fixes for 6.13, part 3
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-On Fri, May 23, 2025 at 01:33:13PM +0200, Krzysztof Kozlowski wrote:
-> On 23/05/2025 12:54, Zixian Zeng wrote:
-> > Add bindings for the SOPHGO SG2042 SPI-NOR flash controller,
-> > which is compatible with SOPHGO SG2044.
-> > 
-> 1. This wasn't tested.
-> 2. Breaks existing boards, so you did not test DTS either. Do not
-> reviewers but machine for such trivialities.
-> 
-Sorry, This is my bad. I admit this is a pretty stupid mistake and
-I should have run a full dt_bindings check rather than the platform I
-am testing currently.
-Sorry for taking up your time, I'm sure this is the last time for such
-kind of mistake.
-> 3. A nit, subject: drop second/last, redundant "bindings". The
-> "dt-bindings" prefix is already stating that these are bindings.
-> See also:
-> https://elixir.bootlin.com/linux/v6.7-rc8/source/Documentation/devicetree/bindings/submitting-patches.rst#L18
-> 
-Thank you, I will remove the redundant "bindings" next time.
-> 4. Please use subject prefixes matching the subsystem. You can get them
-> for example with `git log --oneline -- DIRECTORY_OR_FILE` on the
-> directory your patch is touching. For bindings, the preferred subjects
-> are explained here:
-> https://www.kernel.org/doc/html/latest/devicetree/bindings/submitting-patches.html#i-for-patch-submitters
-> 
-Ok, I will do it in next revision.
-> Best regards,
-> Krzysztof
+The following changes since commit 15eaaa71e8ef142b122942b35653d513cfb90050:
 
-Thank you again for your detailed revieiws and links
+  Merge tag 'imx-fixes-6.15-2' of https://git.kernel.org/pub/scm/linux/kernel/git/shawnguo/linux into arm/fixes (2025-05-10 11:10:38 +0200)
 
-Best regards,
-Zixian
+are available in the Git repository at:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/soc/soc.git tags/soc-fixes-6.15-3
+
+for you to fetch changes up to 070d04f002ddc308b053df4723e83cf43719fda0:
+
+  Merge tag 'mvebu-fixes-6.15-1' of https://git.kernel.org/pub/scm/linux/kernel/git/gclement/mvebu into arm/fixes (2025-05-21 23:26:54 +0200)
+
+----------------------------------------------------------------
+soc: fixes for 6.13, part 3
+
+A few last minute fixes:
+
+ - two driver fixes for samsung/google platforms, both addressing
+   mistakes in changes from the 6.15 merge window
+
+ - a revert for an allwinner devicetree change that caused problems
+
+ - a fix for an older regression with the LEDs on Marvell Armada 3720
+
+ - a defconfig change to enable chacha20 again after a crypto
+   subsystem change in 6.15 inadventently turned it off
+
+----------------------------------------------------------------
+Arnd Bergmann (3):
+      Merge tag 'samsung-fixes-6.15' of https://git.kernel.org/pub/scm/linux/kernel/git/krzk/linux into arm/fixes
+      Merge tag 'sunxi-fixes-for-6.15' of https://git.kernel.org/pub/scm/linux/kernel/git/sunxi/linux into arm/fixes
+      Merge tag 'mvebu-fixes-6.15-1' of https://git.kernel.org/pub/scm/linux/kernel/git/gclement/mvebu into arm/fixes
+
+Fabio Estevam (1):
+      arm64: defconfig: Ensure CRYPTO_CHACHA20_NEON is selected
+
+Gabor Juhos (1):
+      arm64: dts: marvell: uDPU: define pinctrl state for alarm LEDs
+
+Ivaylo Ivanov (1):
+      soc: samsung: usi: prevent wrong bits inversion during unconfiguring
+
+Jernej Skrabec (1):
+      Revert "arm64: dts: allwinner: h6: Use RSB for AXP805 PMIC connection"
+
+Tudor Ambarus (1):
+      firmware: exynos-acpm: check saved RX before bailing out on empty RX queue
+
+ .../boot/dts/allwinner/sun50i-h6-beelink-gs1.dts   | 38 +++++++++----------
+ .../boot/dts/allwinner/sun50i-h6-orangepi-3.dts    | 14 +++----
+ .../boot/dts/allwinner/sun50i-h6-orangepi.dtsi     | 22 +++++------
+ arch/arm64/boot/dts/marvell/armada-3720-uDPU.dtsi  |  8 +++-
+ arch/arm64/configs/defconfig                       |  2 +-
+ drivers/firmware/samsung/exynos-acpm.c             | 44 +++++++++++++++-------
+ drivers/soc/samsung/exynos-usi.c                   |  2 +-
+ 7 files changed, 75 insertions(+), 55 deletions(-)
