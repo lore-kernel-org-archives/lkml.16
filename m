@@ -1,212 +1,118 @@
-Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
+Received: from mail-il1-f174.google.com (mail-il1-f174.google.com [209.85.166.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C48E624DD0B
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 00:11:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BC2DBA42
+	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 00:13:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747959110; cv=none; b=Aw6X1SaJwYTYLUnPQ0pwxHHppDd+uFgt9yu6sfX/XzHedUQVu4GOb1mJBvgNznygnwdfsEQgELLTnWhtud8SACQfahaV9WCMuv//N7c1TICCH9I0C+vS86gLorAUXA9FV/6rgVtWNPFAP/BBnpMP+mu9GFs9DmvtkW2VNyvZ740=
+	t=1747959217; cv=none; b=h1pImFy5OnGxKTDox01//idR2sq8odbD5cRs9r6hGUs8F4AuxbijJQ4hVcD7mNa0PoxfuBiiXuMyRc4lkRbU0whlmW6cmI+wdgLX1Kq2tb2oWkhOE2CgRKW8JB0jFno2uJEQTTggaOc02m9bvcmkd6VdXheMduzSUaYSZIlMXN8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747959110; c=relaxed/simple;
-	bh=B12X3JWhxznlcRgHh2qi4Ak58CALHcWct2odIF6qY+E=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=sWNU1Jg6n4KSXi+Ae+SU6+BOUDjjpULlpvIpdhB4AovvpqnrPxrAlXgZ/qQSBctmTK/KUEyEWyr2riCz57TXWOFeSA1ugp8iVX5Sml6bgUl02B6iZXCiTRDb050svY6WdW/UR4X7eggnAIP1szhQXafWhwGC2BqHh1qL+a05Mdk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=LJKcaoi6; arc=none smtp.client-ip=209.85.215.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1747959217; c=relaxed/simple;
+	bh=muJaRWHLNAqEyREyDsVWtWk1D+Gg65Bd35PEgmxwyjU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=mMf08VEefB1HYJPTkujTIrfZnfChJMGFY0xjVlijpIZg6uyZ0QEvdSzDgxcytFDjhC7KKzPieksTeNbGT5LdHN+qGkpPxjei/ziRGhMJDdSCQbg62sX9iak1oGm5yRliHLyTcqQtQMMx7L9JEMeu1nGI0QBn6EQv/PKhRbNkluk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=brighamcampbell.com; spf=pass smtp.mailfrom=brighamcampbell.com; dkim=fail (0-bit key) header.d=brighamcampbell.com header.i=@brighamcampbell.com header.b=RWPK24j4 reason="key not found in DNS"; arc=none smtp.client-ip=209.85.166.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=brighamcampbell.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=brighamcampbell.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LJKcaoi6"
-Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-b16b35ea570so8428713a12.0
-        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 17:11:48 -0700 (PDT)
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=brighamcampbell.com header.i=@brighamcampbell.com header.b="RWPK24j4"
+Received: by mail-il1-f174.google.com with SMTP id e9e14a558f8ab-3dc6f653152so16274165ab.3
+        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 17:13:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747959108; x=1748563908; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=ICBtionEpcInnEHm0R5wGA1N61VckpDnHwHr/zSAgpU=;
-        b=LJKcaoi6iqLYwBANDxnMPqiyIjZ96kLA7ipV2whMLREDkbf61+I4FYJZfLLmu2ZpVn
-         453G+8V+Yhx1DSUEHCX3uEC5y4mNV80JcZm+V6pmLGYRoEp6LA1Wh9QM6eEVbyC5J6W0
-         vDS0QQy4x7NHUxIzkZ3sipBqQOrS4m0zNqVGkuxXoge0y5uuSBDuHvyB3vly/TQOP7Va
-         TQ6f6hrMGvkYUIaDU5AnNHDj60N2ahzlB2EERXvNEFB0pq4Fy8SWDe3dxUvmfaEObdMs
-         Pup12kA0glPlClfF90UwTJJlFUSe2dSqyCbg+worb26giFbCrUG8knZXDPPz+tVPCKDF
-         ESKg==
+        d=brighamcampbell.com; s=google; t=1747959215; x=1748564015; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=NtaCyH1WfJUArzSfLQLt408RcB4GdI59nwfsGjUrhJE=;
+        b=RWPK24j4OBLf0Uh068ZuoYhpDfCmXc6JfmfLeklh7BOIRAgqGvXs/7FNpP3Y+GnnHo
+         fh0/FR7jS/CvOADrbMbavDq5nIH/zKBk0Pl+xx+MTuDgfY+D4sxCQUtc0uUMJVWr50px
+         zqETgtuz08gIurRsSgXX5w1JwHUnwZjdMs4ITkQMQA5PkewQkAOnwMoj7E8xzQY9RG7J
+         BMg4l5Vb7zD1R+u2fqZDjfL7nipJ/mgD7d6QAEn+xawB63+TrvyIcTUCjnZCqs8cmqoW
+         9j33RQvw+mpbYVfdJx4+WuivfgTp1rtOx2wmJ2ODIywE9fH61s29qQMp0HelLfCLgcNI
+         RxOw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747959108; x=1748563908;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1747959215; x=1748564015;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=ICBtionEpcInnEHm0R5wGA1N61VckpDnHwHr/zSAgpU=;
-        b=PMvfa3yssEjetw1zC91oJm6g5WWW4G65J/smH/z54zlj1QYMCvcLV3yMZNVrgipOpu
-         JoAAeR42s7NmsgvFLSXASKp5Y8IxnK6cUi7FbKPFBzl6LyP/uYVmor+um7vnSZOrmGTA
-         DSRkPuRXvERYU9vCzTa+xhLvGU7jJT0EfYJSayvbnFBvYhzrTqcdXGQmYEKh3YaKWVvb
-         aGByk6KtfRiTeE0wRSukTin+EMQISvnkZQFpCYqDJtIlU14n2pezW962y3uArQS/5ZtF
-         33SWEJDqJjaPsGXGELQzMxQDARVrexnMO+zHL83fkK7cY4PEL7If9hKHaHGbWACmuhDm
-         M80w==
-X-Forwarded-Encrypted: i=1; AJvYcCUIY8loXbSp546k8XUI37KwGnCwn24MwLPYC20Phh/p1F8bPVCWgqTbrX/DI7Eg4drgOvAmuQrX0EU5OJA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxbHrqnJlPknRDHlMneAkQ9+sZKVtiHPAGDVBANzQoiVfSPe9he
-	1T4DWE4yTl/3MuzfUqDTV6kBKfAOkkGx4WXK9Hi4C0ong0eyblbpz55jC+Izv2CbZUpnG9tfjNV
-	vlVISZQ==
-X-Google-Smtp-Source: AGHT+IHHYxG9CcZuEmSk4Nb2ra5RfhcDZNkQLE2VxWWyhLXKCZHL145tN4rfUIK1hwi4Tnf2i/3YCUPh+L8=
-X-Received: from pjtu7.prod.google.com ([2002:a17:90a:c887:b0:2ea:29de:af10])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:57ec:b0:30c:52c5:3dc4
- with SMTP id 98e67ed59e1d1-310e972bb26mr1890088a91.24.1747959108208; Thu, 22
- May 2025 17:11:48 -0700 (PDT)
-Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Thu, 22 May 2025 17:11:38 -0700
-In-Reply-To: <20250523001138.3182794-1-seanjc@google.com>
+        bh=NtaCyH1WfJUArzSfLQLt408RcB4GdI59nwfsGjUrhJE=;
+        b=leEjzlU3jfSetgkxz448RVZhcKP/wMa2jxs1mVlPr1avY3YpsiC6DiB7IZoxNFhxul
+         GO4hylv7ZIjyubNqnAbyF9FZpoI1F5VA+C4o1ymjC4fOS26jwPLeJYiJaCAyHJ5yXt2p
+         MxJNVbYKBJfQ9TFHwVCuj+Sc/kkqwWOQvKSuDAKsscQLbQxDry1QRDJz6YrwfEApzwWq
+         rf3M9RKZnQ4HMhXM/MOQL7btWq7ckbkdszFA9MU6xyedPh8hchtBd6LSLdAo0e41HYpU
+         L2z0ZqUwVx4cuzZpHqp1DFsDAvTEmZejojniknbg7ytEUKUYUA4dGwvNXDUnCboxMAmM
+         QYRg==
+X-Forwarded-Encrypted: i=1; AJvYcCU0vy3q6uw67+BhJSaElKY8rf+a8/nklm+hjGb+oMMd8HW6Tfj/MuPo0wLLw9NhHm1J7Sfb70o4qNuTc+Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzrbds/Jbs0x9/0TQJT/c2/DG+gSTCyF2zs7OdjG7KVXgmPMKHH
+	ibZt6tdQ5JP3m3qJlZDv8cXbbaLhSn37vkSc/jtkoQvNEu0a623kweF1i0qT91zNfHJ9T5vgP3t
+	s0YIafv9SBw==
+X-Gm-Gg: ASbGncvRMRtXrW1ANh6yW6tLQafmZbtIvY5NuFoJ9l4UW6SKcHB6FPr5foWBi2FE//B
+	UzsKiSeyFK+mth+8GUsHHpdO2IEBJFnxfgKUTYL5fCfSyUk9u1n0JY8ZnP0F6akRmEacBrdAm17
+	wHphXpgFwuJT3bNtlG6f1BXTnu1FhHJUTGDgvxtv4oyXVtPyX94cXXJZQrVm3BpsadGkVVinZ3v
+	ooRGKWreiDIVxyrvmmoPu6q3eoA96OjQMXUnJuz94utC9jmVy2yP5v+G5vti92XB7mKRuZ6yxTK
+	MokHTbjXuznn0tGJ2XxUJMjLVuy7K4cFIfNWSXOs2fWUYGXyYmlgnHdt6wgE9husygdmfmh3Zc8
+	IU94M/Ik=
+X-Google-Smtp-Source: AGHT+IFKmxDugOdIs6vFYcotQEFU7a9JdAs53jaauyO4yjTbDeTgs1+LUU9JZAtgqiOFD9DNicpN9Q==
+X-Received: by 2002:a05:6e02:3c04:b0:3d9:65b6:d4db with SMTP id e9e14a558f8ab-3dc93276652mr13178285ab.12.1747959214980;
+        Thu, 22 May 2025 17:13:34 -0700 (PDT)
+Received: from mystery-machine.brighamcampbell.com ([64.71.154.6])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4fbd17aa848sm3183450173.67.2025.05.22.17.13.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 May 2025 17:13:32 -0700 (PDT)
+From: Brigham Campbell <me@brighamcampbell.com>
+To: skhan@linuxfoundation.org,
+	linux-kernel-mentees@lists.linux.dev,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Athira Rajeev <atrajeev@linux.ibm.com>,
+	linuxppc-dev@lists.ozlabs.org (open list:LINUX FOR POWERPC (32-BIT AND 64-BIT)),
+	linux-doc@vger.kernel.org (open list:DOCUMENTATION),
+	linux-kernel@vger.kernel.org (open list)
+Cc: Brigham Campbell <me@brighamcampbell.com>,
+	Randy Dunlap <rdunlap@infradead.org>
+Subject: [PATCH v2] docs: powerpc: Add htm.rst to table of contents
+Date: Thu, 22 May 2025 18:11:14 -0600
+Message-ID: <20250523001112.102087-3-me@brighamcampbell.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250523001138.3182794-1-seanjc@google.com>
-X-Mailer: git-send-email 2.49.0.1151.ga128411c76-goog
-Message-ID: <20250523001138.3182794-5-seanjc@google.com>
-Subject: [PATCH v4 4/4] KVM: x86/mmu: Defer allocation of shadow MMU's hashed
- page list
-From: Sean Christopherson <seanjc@google.com>
-To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Vipin Sharma <vipinsh@google.com>, James Houghton <jthoughton@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-When the TDP MMU is enabled, i.e. when the shadow MMU isn't used until a
-nested TDP VM is run, defer allocation of the array of hashed lists used
-to track shadow MMU pages until the first shadow root is allocated.
+These changes fix the following error, which was introduced by commit
+ab1456c5 when Documentation/arch/powerpc/htm.rst was added to the
+repository without any reference to the document.
 
-Setting the list outside of mmu_lock is safe, as concurrent readers must
-hold mmu_lock in some capacity, shadow pages can only be added (or removed)
-from the list when mmu_lock is held for write, and tasks that are creating
-a shadow root are serialized by slots_arch_lock.  I.e. it's impossible for
-the list to become non-empty until all readers go away, and so readers are
-guaranteed to see an empty list even if they make multiple calls to
-kvm_get_mmu_page_hash() in a single mmu_lock critical section.
+Documentation/arch/powerpc/htm.rst: WARNING: document isn't included in any toctree [toc.not_included]
 
-Use smp_store_release() and smp_load_acquire() to access the hash table
-pointer to ensure the stores to zero the lists are retired before readers
-start to walk the list.  E.g. if the compiler hoisted the store before the
-zeroing of memory, for_each_gfn_valid_sp_with_gptes() could consume stale
-kernel data.
+There are no changes in v2. I'm resending this patch because I addressed
+it to the wrong email for Shuah.
 
-Cc: James Houghton <jthoughton@google.com>
-Signed-off-by: Sean Christopherson <seanjc@google.com>
+Fixes: ab1456c5aa7a63d5 ("powerpc/pseries/htmdump: Add documentation for H_HTM debugfs interface")
+Acked-by: Randy Dunlap <rdunlap@infradead.org>
+Tested-by: Randy Dunlap <rdunlap@infradead.org>
+Signed-off-by: Brigham Campbell <me@brighamcampbell.com>
+Link: https://lore.kernel.org/all/20250517210757.1076554-3-me@brighamcampbell.com
 ---
- arch/x86/kvm/mmu/mmu.c | 62 +++++++++++++++++++++++++++++++++++-------
- 1 file changed, 52 insertions(+), 10 deletions(-)
+ Documentation/arch/powerpc/index.rst | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-index 41da2cb1e3f1..173f7fdfba21 100644
---- a/arch/x86/kvm/mmu/mmu.c
-+++ b/arch/x86/kvm/mmu/mmu.c
-@@ -1983,14 +1983,35 @@ static bool sp_has_gptes(struct kvm_mmu_page *sp)
- 	return true;
- }
- 
-+static __ro_after_init HLIST_HEAD(empty_page_hash);
-+
-+static struct hlist_head *kvm_get_mmu_page_hash(struct kvm *kvm, gfn_t gfn)
-+{
-+	/*
-+	 * Ensure the load of the hash table pointer itself is ordered before
-+	 * loads to walk the table.  The pointer is set at runtime outside of
-+	 * mmu_lock when the TDP MMU is enabled, i.e. when the hash table of
-+	 * shadow pages becomes necessary only when KVM needs to shadow L1's
-+	 * TDP for an L2 guest.  Pairs with the smp_store_release() in
-+	 * kvm_mmu_alloc_page_hash().
-+	 */
-+	struct hlist_head *page_hash = smp_load_acquire(&kvm->arch.mmu_page_hash);
-+
-+	lockdep_assert_held(&kvm->mmu_lock);
-+
-+	if (!page_hash)
-+		return &empty_page_hash;
-+
-+	return &page_hash[kvm_page_table_hashfn(gfn)];
-+}
-+
- #define for_each_valid_sp(_kvm, _sp, _list)				\
- 	hlist_for_each_entry(_sp, _list, hash_link)			\
- 		if (is_obsolete_sp((_kvm), (_sp))) {			\
- 		} else
- 
- #define for_each_gfn_valid_sp_with_gptes(_kvm, _sp, _gfn)		\
--	for_each_valid_sp(_kvm, _sp,					\
--	  &(_kvm)->arch.mmu_page_hash[kvm_page_table_hashfn(_gfn)])	\
-+	for_each_valid_sp(_kvm, _sp, kvm_get_mmu_page_hash(_kvm, _gfn))	\
- 		if ((_sp)->gfn != (_gfn) || !sp_has_gptes(_sp)) {} else
- 
- static bool kvm_sync_page_check(struct kvm_vcpu *vcpu, struct kvm_mmu_page *sp)
-@@ -2358,6 +2379,12 @@ static struct kvm_mmu_page *__kvm_mmu_get_shadow_page(struct kvm *kvm,
- 	struct kvm_mmu_page *sp;
- 	bool created = false;
- 
-+	/*
-+	 * No need for memory barriers, unlike in kvm_get_mmu_page_hash(), as
-+	 * mmu_page_hash must be set prior to creating the first shadow root,
-+	 * i.e. reaching this point is fully serialized by slots_arch_lock.
-+	 */
-+	BUG_ON(!kvm->arch.mmu_page_hash);
- 	sp_list = &kvm->arch.mmu_page_hash[kvm_page_table_hashfn(gfn)];
- 
- 	sp = kvm_mmu_find_shadow_page(kvm, vcpu, gfn, sp_list, role);
-@@ -3886,11 +3913,21 @@ static int kvm_mmu_alloc_page_hash(struct kvm *kvm)
- {
- 	typeof(kvm->arch.mmu_page_hash) h;
- 
-+	if (kvm->arch.mmu_page_hash)
-+		return 0;
-+
- 	h = kvcalloc(KVM_NUM_MMU_PAGES, sizeof(*h), GFP_KERNEL_ACCOUNT);
- 	if (!h)
- 		return -ENOMEM;
- 
--	kvm->arch.mmu_page_hash = h;
-+	/*
-+	 * Ensure the hash table pointer is set only after all stores to zero
-+	 * the memory are retired.  Pairs with the smp_load_acquire() in
-+	 * kvm_get_mmu_page_hash().  Note, mmu_lock must be held for write to
-+	 * add (or remove) shadow pages, and so readers are guaranteed to see
-+	 * an empty list for their current mmu_lock critical section.
-+	 */
-+	smp_store_release(&kvm->arch.mmu_page_hash, h);
- 	return 0;
- }
- 
-@@ -3913,9 +3950,13 @@ static int mmu_first_shadow_root_alloc(struct kvm *kvm)
- 	if (kvm_shadow_root_allocated(kvm))
- 		goto out_unlock;
- 
-+	r = kvm_mmu_alloc_page_hash(kvm);
-+	if (r)
-+		goto out_unlock;
-+
- 	/*
--	 * Check if anything actually needs to be allocated, e.g. all metadata
--	 * will be allocated upfront if TDP is disabled.
-+	 * Check if memslot metadata actually needs to be allocated, e.g. all
-+	 * metadata will be allocated upfront if TDP is disabled.
- 	 */
- 	if (kvm_memslots_have_rmaps(kvm) &&
- 	    kvm_page_track_write_tracking_enabled(kvm))
-@@ -6696,12 +6737,13 @@ int kvm_mmu_init_vm(struct kvm *kvm)
- 	INIT_LIST_HEAD(&kvm->arch.possible_nx_huge_pages);
- 	spin_lock_init(&kvm->arch.mmu_unsync_pages_lock);
- 
--	r = kvm_mmu_alloc_page_hash(kvm);
--	if (r)
--		return r;
--
--	if (tdp_mmu_enabled)
-+	if (tdp_mmu_enabled) {
- 		kvm_mmu_init_tdp_mmu(kvm);
-+	} else {
-+		r = kvm_mmu_alloc_page_hash(kvm);
-+		if (r)
-+			return r;
-+	}
- 
- 	kvm->arch.split_page_header_cache.kmem_cache = mmu_page_header_cache;
- 	kvm->arch.split_page_header_cache.gfp_zero = __GFP_ZERO;
--- 
-2.49.0.1151.ga128411c76-goog
+diff --git a/Documentation/arch/powerpc/index.rst b/Documentation/arch/powerpc/index.rst
+index 0560cbae5fa1..53fc9f89f3e4 100644
+--- a/Documentation/arch/powerpc/index.rst
++++ b/Documentation/arch/powerpc/index.rst
+@@ -19,6 +19,7 @@ powerpc
+     elf_hwcaps
+     elfnote
+     firmware-assisted-dump
++    htm
+     hvcs
+     imc
+     isa-versions
+--
+2.49.0
 
