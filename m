@@ -1,332 +1,172 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2051.outbound.protection.outlook.com [40.107.220.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 647898F5C;
-	Fri, 23 May 2025 21:36:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748036185; cv=none; b=T93id8u3yJvsRpLLExC8OOXOnqizfkwcD1va9GQZfTmhl1bb2GQMaCtSb1oZ1bmVhmaEzVvvH1jB/aUmtctaoyxTzBmK6Zitde3LWYR2cGIPX6ZNu2ZO1eCLzTDFT2lkZiGdovFUxFyQ76/j4p7eUSdILsWtiatHbEmDQFzNvxY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748036185; c=relaxed/simple;
-	bh=Ms3TTJ8nkVYnRSxV222T+cB9moNyejBFtBngZsyvv0Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gMO+mZy6OWzQ1amOSzrVptrlNvuRSVkZFbuJ0CyngNMTi39t0eNxCDVmEzJnkNMrVQ7go38Ku87LuCnDB70LP77RLLVVWQPVP44/AcaURIYa1ndBJwmyv+TmV1B7axyz9NjJq9TI5nO3DtJlqKh4qXHsl6n+nYdAESKwjQ0Arv8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uP7X0feS; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90C9A2DCBE6;
+	Fri, 23 May 2025 21:38:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.51
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748036331; cv=fail; b=Zemjkz/IjxAjGReFTNGSjBpPbLcHH5FtN/0OXYndbPghzqkRFPyIZIcXhgQ0NF8qoWtDgZfMPGCvt077wG8cQJJDp3Em1G4he7gD5jYDTjkz0Hk3m/Foyat3DTk3iPrrvxgbt7cYN56n6/SE8nKDnyBj3cWeqplBxviBAi4R/O4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748036331; c=relaxed/simple;
+	bh=2QLCKtbX2vlZ/4kOPz8KlIJo0y5Egs/NN2+qUewcFrw=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=G5MgztJmPNPVAl52wYWmYqYpbwzy0hEw3bpH11+J0MkjaDehMiBJk+tAsAwJbw0kWx4uwwo70kB3hqCvt+2UF+6hxQT3xe+KA5ngKX4zgCu6ElRvqGnVpjdWnf/xHM9f/E6TwDImMktKteLArTig4iyjKobvYpWeXFSa502R5V0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=Rr22k/P8; arc=fail smtp.client-ip=40.107.220.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uP7X0feS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7667EC4CEE9;
-	Fri, 23 May 2025 21:36:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748036184;
-	bh=Ms3TTJ8nkVYnRSxV222T+cB9moNyejBFtBngZsyvv0Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=uP7X0feSQaiwkuCaRQKGAVR8Li8reG0AERaZaL8C6pn17M0DVVzlAKKHZQm270kZv
-	 96wTpd3RDicJAPBgh0265dX2JFJQVB6403aSAoiP0TL65XMQNDzzpJpU6CjmIdvPyj
-	 vP+nDTJgHzuIOn+OK6k+XzOPxVpePB6/GaGvtNdpBhaUWvOymIq4rEebzANpmPdcDk
-	 i5hst/uxeNvM1In7VINDVFQp2hw/SMGpJs/C2aAPKBBcpEOBGixlRPwwkaImkZRuoo
-	 v6nup+nwczuK8Q8L6iile9vjladhqKTy1PQFaiGHwii4qILrLVN2nlR/oTg7kxhNj1
-	 NfGFMyRJAD2Jg==
-Date: Fri, 23 May 2025 14:36:23 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: James Clark <james.clark@linaro.org>, Ian Rogers <irogers@google.com>,
-	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 1/3] perf test: Support arch-specific shell tests
-Message-ID: <aDDqV7opuG26U6WU@google.com>
-References: <20250522171044.1075583-1-namhyung@kernel.org>
- <CAP-5=fXDaKueO9HE-Gr3Q7R6qm2EjwnL845nh7R2OU+DCfrhyA@mail.gmail.com>
- <4763aca8-a140-4291-b12e-e03cc0d82bdd@linaro.org>
- <aDCncXryXGaOuDNl@x1>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="Rr22k/P8"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=sjAMII08X+NWbN2Ciqwhaj/Oimr31/8jKHelu2fOEYlLWL6Y3L3LEzkFpAcxGwxUsj9ZFL3ab2avV0s4Lt9BmA/mMxt+CHEBxeY1Ucomb7KnlxCFRaiq6yCjLL0kEHT2URAhcDIXx4G0/n3cvc19e6o85UIe6ViFztpwHga5lT0iEPcjrnpoEHGCxobH2ifAQeQnDOL7SsnVgV5qaUg4bEB9hXEOUDca0RNVP6moWucxsxHAJlZ0iOIZyJBDDalqazrDRx9sTyFM2vQlOhJoEEsG/0Ap3uepsfsVD+szLAYBHeK8hdFiYGdYfeEDl/LHlN9RF5v0Zl+9gJcz7kf+vQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ZdsTgf2ig//aHH2GxUEG4W4gPkprtjhrjxNuohg+uYA=;
+ b=MztpU1xAL+VimybCCO5dQT1BZIbX0egUC02I0/UxakLlPqyN2ScLSm+8LBG1JMAsoacmlq4lMSTCrspuwSPHuMpvRDCmOJlQPAqEA+NUweFppKEk5erMGStL+VQodIGnOTF8BZ0uCwdc2NM6R0Jp/2JTa0ZdfwqafqOfVB0Qt9471VhEdYZBL+M/LtNMQRg70XEvKZHSgYj4Dl/uHKALWcZmK3OaxVt/m7B6Kd3Ff5+KWqWhC5BJJCmZBM9GKRrqvlm4OUyuLQfURx08C9Fy4g0BfDl88+BVvFigc5YiAwHZF8dSh/MYXJhu6qca1pymKKiAWbBNlSYTl2qOBy1a3w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.117.160) smtp.rcpttodomain=intel.com smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ZdsTgf2ig//aHH2GxUEG4W4gPkprtjhrjxNuohg+uYA=;
+ b=Rr22k/P89srh+gTEtxtc9A1VgeB6VK/BCziYepht4ON4NcRivr4dLLIU5XhdF2aELj2WGavFnw0cWCF5+XL24p9JBV7dxEywXan0BaYa1PXVN2A/OO5o6o3nheeMT8btL38XxaY+VKlqO4lM8uAUVj3A/6tvJf8ebzGFT5l07/lr4vkSOiRIUBOOp1LEnJcAA6BEELjeaeTkjFa13GbuF+Znlxp9azWJ9Fnpu4q/9rjogK2cnovnpK/cl8OdQq4vgOhHQ+hDFNTbOIianlKUowUZ8VfAJPX5Q88i07DM8r1MTdN0gtCRjaiLjIU9UxsfdAl09jWUaaQBeSb6M2ruZg==
+Received: from BYAPR08CA0063.namprd08.prod.outlook.com (2603:10b6:a03:117::40)
+ by DS0PR12MB7948.namprd12.prod.outlook.com (2603:10b6:8:152::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8746.30; Fri, 23 May
+ 2025 21:38:41 +0000
+Received: from CO1PEPF000044F6.namprd21.prod.outlook.com
+ (2603:10b6:a03:117:cafe::9) by BYAPR08CA0063.outlook.office365.com
+ (2603:10b6:a03:117::40) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8769.18 via Frontend Transport; Fri,
+ 23 May 2025 21:38:40 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.117.160) by
+ CO1PEPF000044F6.mail.protection.outlook.com (10.167.241.196) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8813.0 via Frontend Transport; Fri, 23 May 2025 21:38:40 +0000
+Received: from rnnvmail202.nvidia.com (10.129.68.7) by mail.nvidia.com
+ (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Fri, 23 May
+ 2025 14:38:25 -0700
+Received: from rnnvmail203.nvidia.com (10.129.68.9) by rnnvmail202.nvidia.com
+ (10.129.68.7) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Fri, 23 May
+ 2025 14:38:24 -0700
+Received: from Asurada-Nvidia (10.127.8.12) by mail.nvidia.com (10.129.68.9)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14 via Frontend
+ Transport; Fri, 23 May 2025 14:38:23 -0700
+Date: Fri, 23 May 2025 14:38:21 -0700
+From: Nicolin Chen <nicolinc@nvidia.com>
+To: "Tian, Kevin" <kevin.tian@intel.com>
+CC: "jgg@nvidia.com" <jgg@nvidia.com>, "corbet@lwn.net" <corbet@lwn.net>,
+	"will@kernel.org" <will@kernel.org>, "bagasdotme@gmail.com"
+	<bagasdotme@gmail.com>, "robin.murphy@arm.com" <robin.murphy@arm.com>,
+	"joro@8bytes.org" <joro@8bytes.org>, "thierry.reding@gmail.com"
+	<thierry.reding@gmail.com>, "vdumpa@nvidia.com" <vdumpa@nvidia.com>,
+	"jonathanh@nvidia.com" <jonathanh@nvidia.com>, "shuah@kernel.org"
+	<shuah@kernel.org>, "jsnitsel@redhat.com" <jsnitsel@redhat.com>,
+	"nathan@kernel.org" <nathan@kernel.org>, "peterz@infradead.org"
+	<peterz@infradead.org>, "Liu, Yi L" <yi.l.liu@intel.com>,
+	"mshavit@google.com" <mshavit@google.com>, "praan@google.com"
+	<praan@google.com>, "zhangzekun11@huawei.com" <zhangzekun11@huawei.com>,
+	"iommu@lists.linux.dev" <iommu@lists.linux.dev>, "linux-doc@vger.kernel.org"
+	<linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "linux-tegra@vger.kernel.org"
+	<linux-tegra@vger.kernel.org>, "linux-kselftest@vger.kernel.org"
+	<linux-kselftest@vger.kernel.org>, "patches@lists.linux.dev"
+	<patches@lists.linux.dev>, "mochs@nvidia.com" <mochs@nvidia.com>,
+	"alok.a.tiwari@oracle.com" <alok.a.tiwari@oracle.com>, "vasant.hegde@amd.com"
+	<vasant.hegde@amd.com>, "dwmw2@infradead.org" <dwmw2@infradead.org>,
+	"baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>
+Subject: Re: [PATCH v5 09/29] iommufd: Do not unmap an owned iopt_area
+Message-ID: <aDDqzeHfq8RtYCnJ@Asurada-Nvidia>
+References: <cover.1747537752.git.nicolinc@nvidia.com>
+ <3ddc8c678406772a8358a265912bb1c064f4c796.1747537752.git.nicolinc@nvidia.com>
+ <BN9PR11MB5276A0EDB2CAF2C333372FA28C98A@BN9PR11MB5276.namprd11.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <aDCncXryXGaOuDNl@x1>
+In-Reply-To: <BN9PR11MB5276A0EDB2CAF2C333372FA28C98A@BN9PR11MB5276.namprd11.prod.outlook.com>
+X-NV-OnPremToCloud: AnonymousSubmission
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CO1PEPF000044F6:EE_|DS0PR12MB7948:EE_
+X-MS-Office365-Filtering-Correlation-Id: 82c2f724-290e-4810-aa36-08dd9a422f38
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|7416014|36860700013|376014|1800799024|82310400026;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?oBx+NtOUqRSgwAmYE1jDDqxBtaGIvQ1PFOyEtvjzAQfdNiQvCXh/qx/yvbeG?=
+ =?us-ascii?Q?ElxuSr3hYozczUlG+Y836RDqkUb66CK0nksg0QMPxGgi5TkHEsr6e2MoBcyV?=
+ =?us-ascii?Q?pKIpWAv4Czt8EkeDhV9fXTWPZaINTMEoFP+FHQJUCchtaE3K6HdRnMNs5U5F?=
+ =?us-ascii?Q?6XK1voJT8ZqHa9sX6vvSw7QxJn9Y5OwHK2Pcwo7agu8nksASbpozDSGzX+Jr?=
+ =?us-ascii?Q?NuYUVnFEf5h+6ZPy4Q5LkEhG+C44OQReOOeN8wxUgLubu0eO+Cs03POuN2VQ?=
+ =?us-ascii?Q?oC2S1SrZBcP+4xVA3XF8/LlwubJ3XiFiT3Y88RNH8P0eYNE/psUtEqfEVZ2k?=
+ =?us-ascii?Q?wjdlx8a6hYLGJJbhd/bvaYzjH4jcE7rzFQbXPUtcY60C5hR3X2GnzwUSJyr3?=
+ =?us-ascii?Q?Tb2SVfyzJTbtaCpr9BbWNZ05MeE48SE/rVfj3ha32tpzUf+mxc5ZZR/ntLL+?=
+ =?us-ascii?Q?oNDQnMnc2JmLHpaCxrvgwPEdsFwJHjLmMLS8tB4+tueMaukt+j/cxzKhUMMi?=
+ =?us-ascii?Q?B+4YuX21omoyCK71yjCYjS/NO8WBKyrC5/RvNXYp16/YmFf67HiQ4d+7Za+c?=
+ =?us-ascii?Q?Ng9Onqo8cidS/1UnkXMygCwD8EMC1sEhysBdNTeiX0rNrzDm3XVhHuztVN2d?=
+ =?us-ascii?Q?BBgoRurSnI9GUrKRjHzJ0lpKY5aY6w0r4Wqowe0jDLXh9gx1CAls3HGK+zB+?=
+ =?us-ascii?Q?ZVNm9aisNQZmY8KfkUQSVaxsNXfGrrTvhaAw6cjUaZgyw5w+x16msHF5oyVp?=
+ =?us-ascii?Q?R+JYfZU9cu64nAleL05oGrDNfM7sZ15pe3bfDPHSZoWqCSD/IbfHJlgP5ueK?=
+ =?us-ascii?Q?QQbtUxQfRAeum2fL/t5d42jDdkvmFi0O2DSHALr33iadNuf2l/azW0AQLiEl?=
+ =?us-ascii?Q?gM6qY2A2+Jc05kWVX4E5UQHa7gENsF6MPFlRPl1ynevP5teXjf5ZY0Wv90lg?=
+ =?us-ascii?Q?ENdBSn7Bwo5aHjoDrBfublk568COq5K+4V88fy+Mu4PcFRwnr/xl8Tppzzph?=
+ =?us-ascii?Q?m5vwXLnfTd1jbONnv+hpS5YE131pxTa6z8MvnUrRuqzZA/oDNfNYglgm7fsD?=
+ =?us-ascii?Q?xxUCjOMIEDLJHsN71wZ1dsHB5DAjDlrM0uvVOnkiGzrmcO5PZVsN3OLVC9Aa?=
+ =?us-ascii?Q?ZK1awLNGBoxRV0HpGJutpjD0GhUVFdTHC7Tq3P2xy8TOUtQf7CwJOZ0a4UrT?=
+ =?us-ascii?Q?0qRrupWQXRBipcKAvIawr0AO26pn+c2YJ7mYIVEp7B2NtRy57Kq+VqIvIEvv?=
+ =?us-ascii?Q?6zKXOniWde4OCV4ArxivnCkSDPQdJJ5aaU0BxoebqnO6b8MXSmxkI5hM4SnT?=
+ =?us-ascii?Q?feIr9tPazlw4N8u7RgpbTJMohUc7+I2Vh9GfdUYtQTKflqvQP9tPd5XAUnFD?=
+ =?us-ascii?Q?L5vpqKQPH9yBXsiaFyAKyGW7fWNOwhWrjDEvaBAbc6s1X5p/t99Q4c/BbICN?=
+ =?us-ascii?Q?/w3JfQuvWfnRsupmaLf59ykIC+g5tt8o9jMacWLBtqBYSpGLzFlRGf7HH7Za?=
+ =?us-ascii?Q?OI/v86m6aIjbihUBsNSswQVKha+P05f/4Clu?=
+X-Forefront-Antispam-Report:
+	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230040)(7416014)(36860700013)(376014)(1800799024)(82310400026);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 May 2025 21:38:40.5784
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 82c2f724-290e-4810-aa36-08dd9a422f38
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CO1PEPF000044F6.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB7948
 
-On Fri, May 23, 2025 at 01:50:57PM -0300, Arnaldo Carvalho de Melo wrote:
-> On Fri, May 23, 2025 at 11:48:26AM +0100, James Clark wrote:
-> > On 22/05/2025 9:09 pm, Ian Rogers wrote:
-> > > On Thu, May 22, 2025 at 10:10 AM Namhyung Kim <namhyung@kernel.org> wrote:
-> > > > This is a preparation for shell tests belong to an arch.
+On Fri, May 23, 2025 at 07:53:37AM +0000, Tian, Kevin wrote:
+> > From: Nicolin Chen <nicolinc@nvidia.com>
+> > Sent: Sunday, May 18, 2025 11:21 AM
+> > 
+> > @@ -48,6 +48,7 @@ struct iopt_area {
+> >  	int iommu_prot;
+> >  	bool prevent_access : 1;
+> >  	unsigned int num_accesses;
+> > +	unsigned int num_owners;
 > 
-> > > I keep repeating that I don't like arch and I think ideally we'd be
-> > > getting rid of the C arch tests. I just sent out a patch doing this
-> > > for 1 test:
-> > > https://lore.kernel.org/lkml/20250521165317.713463-2-irogers@google.com/
-> > > We should be able to make perf, tests, etc. dependent on a PMU rather
-> > > than an architecture. This means that running perf built for ARM will
-> > > be able to do things running on an instruction emulator on x86. It
->  
-> > In this case for Arm SPE and Coresight you can only generate trace by
-> > running on a full model or a real CPU, so I'm not sure if we could ever get
-> > close to running on just an emulator.
->  
-> > > means the tool, the kernel APIs, etc. are generic and new
-> > > architectures like RISC-V can test things. It means cross-platform
-> > > (record on 1 machine type, report on another) can work without
-> > > tripping over load bearing architecture ifdefs. It means that we
->  
-> > I have thought about adding some generic decoding side tests for SPE and
-> > Coresight, but couldn't really get past the fact that you need to put the
-> > trace dump _and_ the binaries traced into the git repo.
-> 
-> So, we could have some .perfconfig setting that states the user wants to
-> auto-download the tracefiles if not present locally.
-> 
-> If not available locally and not explicitely authorized via
-> "test.coresight_traces_download=yes" or some more suitable name, then it
-> would skip the test and show as the reason the lack of needed trace
-> files, with a hint about how to enable it, something like:
-> 
-> 176: Coresight hw trace decoding      : Skip   (Enable fetching via 'perf test test.coresight_trace_download=yes')
-> 
-> We are already auto-downloading debuginfo files (not the whole packages,
-> just for the needed build-id) in some cases, like:
-> 
-> root@x1:~# pahole --running_kernel_vmlinux
-> /usr/lib/debug/lib/modules/6.13.9-100.fc40.x86_64/vmlinux
-> root@x1:~#
-> root@x1:~# time perf probe -L icmp_rcv > /dev/null
-> 
-> real	0m2.046s
-> user	0m1.550s
-> sys	0m0.486s
-> root@x1:~#
-> 
-> But if I move that file:
-> 
-> root@x1:~# pahole --running_kernel_vmlinux
-> /usr/lib/debug/lib/modules/6.13.9-100.fc40.x86_64/vmlinux
-> root@x1:~# mv /usr/lib/debug/lib/modules/6.13.9-100.fc40.x86_64/vmlinux ~
-> root@x1:~# pahole --running_kernel_vmlinux
-> vmlinux
-> root@x1:~#
-> 
-> Oops, it searches the current directory too ;)
-> 
-> root@x1:~# mkdir hideout
-> root@x1:~# mv vmlinux hideout/
-> root@x1:~# pahole --running_kernel_vmlinux
-> pahole: couldn't find a vmlinux that matches the running kernel
-> HINT: Maybe you're inside a container or missing a debuginfo package?
-> root@x1:~#
-> 
-> Now:
-> 
-> root@x1:~# time perf probe -L icmp_rcv | head
-> 
-> Takes a while, in other term:
-> 
-> root@x1:~# ps ax|grep 'perf probe' | grep -v grep
-> 1755681 pts/13   S+     0:00 perf probe -L icmp_rcv
-> root@x1:~# 
-> root@x1:~# perf trace -p 1755681 --summary sleep 10s
-> 
->  Summary of events:
-> 
->  perf (1755681), 4756 events, 100.0%
-> 
->    syscall            calls  errors  total       min       avg       max       stddev
->                                      (msec)    (msec)    (msec)    (msec)        (%)
->    --------------- --------  ------ -------- --------- --------- ---------     ------
->    poll                 606      0  9645.195     0.000    15.916   757.894     16.65%
->    write                580      0    17.904     0.004     0.031     0.237      3.41%
->    recvfrom            1191    374     8.380     0.001     0.007     0.083      3.58%
->    sendto                 1      0     0.026     0.026     0.026     0.026      0.00%
-> 
-> 
-> root@x1:~#
-> 
-> root@x1:~# perf trace -p 1755681 -e write --max-stack 16 --max-events 1
->      0.000 ( 0.103 ms): perf/1755681 write(fd: 5, buf: \219*\0\26\230\1\11\136\4\0\0\192\0\5'g\0\0\150\1pid\0p\1487\172h\0\0\1, count: 10157) = 10157
->                                        syscall_exit_to_user_mode_prepare ([kernel.kallsyms])
->                                        syscall_exit_to_user_mode_prepare ([kernel.kallsyms])
->                                        syscall_exit_to_user_mode ([kernel.kallsyms])
->                                        do_syscall_64 ([kernel.kallsyms])
->                                        entry_SYSCALL_64_after_hwframe ([kernel.kallsyms])
->                                        __GI___libc_write (/usr/lib64/libc.so.6)
->                                        chop_write.lto_priv.0 (/usr/lib64/libcurl.so.4.8.0)
->                                        <invalid> (inlined)
->                                        inflate_stream (/usr/lib64/libcurl.so.4.8.0)
->                                        <invalid> (inlined)
->                                        cw_download_write (/usr/lib64/libcurl.so.4.8.0)
->                                        <invalid> (inlined)
->                                        <invalid> (inlined)
->                                        Curl_readwrite (/usr/lib64/libcurl.so.4.8.0)
->                                        multi_runsingle (/usr/lib64/libcurl.so.4.8.0)
->                                        curl_multi_perform (/usr/lib64/libcurl.so.4.8.0)
->                                        perform_queries (/usr/lib64/libdebuginfod-0.192.so)
->                                        debuginfod_query_server_by_buildid (/usr/lib64/libdebuginfod-0.192.so)
->                                        open_debuginfo (/home/acme/bin/perf)
->                                        __show_line_range (/home/acme/bin/perf)
->                                        show_line_range (/home/acme/bin/perf)
->                                        __cmd_probe (/home/acme/bin/perf)
-> root@x1:~#
-> 
-> Those <invalid> ones...
-> 
-> unwind: curl_multi_perform:ip = 0x7f6e7ab33464 (0x4e464)
-> unwind: access_mem addr 0x7ffe829cec08, val 2b324d40, offset 1480
-> unwind: access_mem addr 0x7ffe829cec30, val 7ffe829d01f0, offset 1520
-> unwind: access_mem addr 0x7ffe829cec10, val 2b32b9e4, offset 1488
-> unwind: access_mem addr 0x7ffe829cec18, val ffffffff, offset 1496
-> unwind: access_mem addr 0x7ffe829cec20, val 0, offset 1504
-> unwind: access_mem addr 0x7ffe829cec28, val 0, offset 1512
-> unwind: access_mem addr 0x7ffe829cec38, val 7f6e7b326c5f, offset 1528
-> unwind: perform_queries:ip = 0x7f6e7b324b2d (0x5b2d)
-> unwind: access_mem addr 0x7ffe829d01c8, val 7ffe829d0260, offset 7048
-> unwind: access_mem addr 0x7ffe829d01f0, val 7ffe829d0320, offset 7088
-> unwind: access_mem addr 0x7ffe829d01d0, val 0, offset 7056
-> unwind: access_mem addr 0x7ffe829d01d8, val 0, offset 7064
-> unwind: access_mem addr 0x7ffe829d01e0, val 2b2db8c0, offset 7072
-> unwind: access_mem addr 0x7ffe829d01e8, val 2b324d40, offset 7080
-> unwind: access_mem addr 0x7ffe829d01f8, val 6792ef, offset 7096
-> unwind: debuginfod_query_server_by_buildid:ip = 0x7f6e7b326c5e (0x7c5e)
-> unwind: access_mem addr 0x7ffe829d02f8, val 2b2dace0, offset 7352
-> unwind: access_mem addr 0x7ffe829d0320, val 7ffe829d05b0, offset 7392
-> unwind: access_mem addr 0x7ffe829d0300, val 0, offset 7360
-> unwind: access_mem addr 0x7ffe829d0308, val 2b2dace0, offset 7368
-> unwind: access_mem addr 0x7ffe829d0310, val 0, offset 7376
-> unwind: access_mem addr 0x7ffe829d0318, val 0, offset 7384
-> unwind: access_mem addr 0x7ffe829d0328, val 67aaff, offset 7400
-> unwind: open_debuginfo:ip = 0x6792ee (0x2792ee)
-> unwind: access_mem addr 0x7ffe829d0588, val 0, offset 8008
-> unwind: access_mem addr 0x7ffe829d05b0, val 7ffe829d0620, offset 8048
-> unwind: access_mem addr 0x7ffe829d0590, val 0, offset 8016
-> unwind: access_mem addr 0x7ffe829d0598, val 2b2dace0, offset 8024
-> unwind: access_mem addr 0x7ffe829d05a0, val 0, offset 8032
-> unwind: access_mem addr 0x7ffe829d05a8, val 0, offset 8040
-> unwind: access_mem addr 0x7ffe829d05b8, val 67b0ea, offset 8056
-> unwind: __show_line_range:ip = 0x67aafe (0x27aafe)
-> unwind: access_mem addr 0x7ffe829d05f8, val 0, offset 8120
-> unwind: access_mem addr 0x7ffe829d0620, val 7ffe829d1180, offset 8160
-> unwind: access_mem addr 0x7ffe829d0600, val 7ffe829d06a0, offset 8128
-> unwind: access_mem addr 0x7ffe829d0608, val 8, offset 8136
-> unwind: access_mem addr 0x7ffe829d0610, val 2b2d74d0, offset 8144
-> unwind: access_mem addr 0x7ffe829d0618, val 6df140, offset 8152
-> unwind: access_mem addr 0x7ffe829d0628, val 4979b3, offset 8168
-> unwind: show_line_range:ip = 0x67b0e9 (0x27b0e9)
-> unwind: no map for 7ffe829d1158
-> unwind: access_mem 0x7ffe829d1158 not inside range 0x7ffe829ce640-0x7ffe829d0640
-> unwind: no map for 7ffe829d1180
-> unwind: access_mem 0x7ffe829d1180 not inside range 0x7ffe829ce640-0x7ffe829d0640
-> unwind: no map for 7ffe829d1160
-> unwind: access_mem 0x7ffe829d1160 not inside range 0x7ffe829ce640-0x7ffe829d0640
-> unwind: no map for 7ffe829d1168
-> unwind: access_mem 0x7ffe829d1168 not inside range 0x7ffe829ce640-0x7ffe829d0640
-> unwind: no map for 7ffe829d1170
-> unwind: access_mem 0x7ffe829d1170 not inside range 0x7ffe829ce640-0x7ffe829d0640
-> unwind: no map for 7ffe829d1178
-> unwind: access_mem 0x7ffe829d1178 not inside range 0x7ffe829ce640-0x7ffe829d0640
-> unwind: no map for 7ffe829d1188
-> unwind: access_mem 0x7ffe829d1188 not inside range 0x7ffe829ce640-0x7ffe829d0640
-> unwind: __cmd_probe:ip = 0x4979b2 (0x979b2)
->      0.000 ( 0.102 ms): perf/1755681 write(fd: 5, buf: \197\10\17K\137\0\0\0\9ops\0\197\11#y\4\1\0\8\1\176+E\0\197\12\15]\0\0, count: 16384) = 16384
->                                        syscall_exit_to_user_mode_prepare ([kernel.kallsyms])
-> 
-> 
-> Anyway, I'm digressing, I need to make this auto-download similar to
-> what I proposed above for the coresight traces needed by the tests you
-> think about adding for decoding in all platforms, which I encourage you
-> to do.
-> 
-> > Not only would this benefit testing on other arches like you say, but
-> > it would also lock down that decoding of a known file doesn't regress
-> > which we can't currently do by generating new trace every time the
-> > test runs.
-> 
-> Right.
->  
-> > If we ever added this they would be separate tests though so they could go
-> > in the top level folder, where the ones in the arch folder would continue to
-> > do record and decode. Maybe naming the folders by PMU could work, but you
-> > could also have both PMU name and arch name folders like:
->  
-> > Recording/requires hardware:
->  
-> >   tools/perf/arch/arm64/tests/shell/cs_etm/
->  
-> > Cross platform decode tests:
->  
-> >   tools/perf/tests/shell/cs_etm/
->  
-> > Which would mirror how the source files are currently laid out:
->  
-> >  tools/perf/arch/arm/util/cs-etm.c
-> >  tools/perf/util/cs-etm.c
-> 
-> Yeah, I think we can experiment with this and take advantage of the
-> effort Namhyung already put into this, and then revisit later, after
-> trying this for a while.
+> What about 'num_locked' to directly mark out that this area
+> is locked hence cannot be removed? 
 
-I'm ok with sending v2 removing arch shell tests.  Actually it'd be
-simpler.  Let me know which way you prefer. :)
+Yea. That sounds more straightforward to me. I will keep it plural
+"num_locks". And "is_owner" can be just "locks_area".
 
-Thanks,
-Namhyung
-
-> 
-> Ah, finally:
-> 
-> root@x1:~# time perf probe -L icmp_rcv | head 
-> <icmp_rcv@/root/.cache/debuginfod_client/aa3c82b4a13f9c0e0301bebb20fe958c4db6f362/source-d5d23b89-#usr#src#debug#kernel-6.13.9#linux-6.13.9-100.fc40.x86_64#net#ipv4#icmp.c:0>
->       0  int icmp_rcv(struct sk_buff *skb)
->          {
->       2  	enum skb_drop_reason reason = SKB_DROP_REASON_NOT_SPECIFIED;
->          	struct rtable *rt = skb_rtable(skb);
->          	struct net *net = dev_net_rcu(rt->dst.dev);
->          	struct icmphdr *icmph;
->          
->          	if (!xfrm4_policy_check(NULL, XFRM_POLICY_IN, skb)) {
->       8  		struct sec_path *sp = skb_sec_path(skb);
-> 
-> real	9m20.630s
-> user	0m5.427s
-> sys	0m2.127s
-> root@x1:~#
-> 
-> And now:
-> 
-> root@x1:~# pahole --running_kernel_vmlinux
-> /root/.cache/debuginfod_client/aa3c82b4a13f9c0e0301bebb20fe958c4db6f362/debuginfo
-> root@x1:~#
-> 
-> Also:
-> 
-> root@x1:~# file /root/.cache/debuginfod_client/aa3c82b4a13f9c0e0301bebb20fe958c4db6f362/debuginfo
-> /root/.cache/debuginfod_client/aa3c82b4a13f9c0e0301bebb20fe958c4db6f362/debuginfo: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), statically linked, BuildID[sha1]=aa3c82b4a13f9c0e0301bebb20fe958c4db6f362, with debug_info, not stripped
-> root@x1:~# file hideout/vmlinux
-> hideout/vmlinux: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), statically linked, BuildID[sha1]=aa3c82b4a13f9c0e0301bebb20fe958c4db6f362, with debug_info, not stripped
-> root@x1:~#
-> 
-> root@x1:~# sha256sum /root/.cache/debuginfod_client/aa3c82b4a13f9c0e0301bebb20fe958c4db6f362/debuginfo hideout/vmlinux
-> 6e998df9b235ed50ea4d7c6d997450cb7bd6691537e525f002630ae123bc0084  /root/.cache/debuginfod_client/aa3c82b4a13f9c0e0301bebb20fe958c4db6f362/debuginfo
-> 6e998df9b235ed50ea4d7c6d997450cb7bd6691537e525f002630ae123bc0084  hideout/vmlinux
-> root@x1:~#
-> 
-> But:
-> 
-> root@x1:~# rpm -qf /usr/lib/debug/lib/modules/6.13.9-100.fc40.x86_64/vmlinux
-> kernel-debuginfo-6.13.9-100.fc40.x86_64
-> root@x1:~# rpm -V kernel-debuginfo-6.13.9-100.fc40.x86_64
-> missing     /usr/lib/debug/lib/modules/6.13.9-100.fc40.x86_64/vmlinux
-> root@x1:~#
-> 
-> Lets fix this:
-> 
-> root@x1:~# mv hideout/vmlinux /usr/lib/debug/lib/modules/6.13.9-100.fc40.x86_64/vmlinux
-> root@x1:~# rpm -V kernel-debuginfo-6.13.9-100.fc40.x86_64
-> root@x1:~#
-> 
-> Cheers,
-> 
-> - Arnaldo
+Thanks
+Nicolin
