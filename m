@@ -1,62 +1,187 @@
-Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4011F1C173F
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 08:20:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.71
+Received: from m16.mail.126.com (m16.mail.126.com [117.135.210.6])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4BAB47DA8C
+	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 08:21:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.6
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747988446; cv=none; b=rPQI3JUTYOCcFTeZ0kqEOitU5n1dMMX1q2z2wVN8nNTT8aEESqj3CBAmXr0ljX+Zlfzr1jtvCJo/pyHPeffiKaVflL44i/utefSUN8zZQRwCoOV95FCI31zYYUfh1FDk/ZblYEXpT2wAvDF8hPbIowjkDHyRV1nvRRYxep63DUo=
+	t=1747988522; cv=none; b=TazN17dDgFw8DZ8zKTFVi7tg2PJsxjt3zzmoCdfQiWg+GNrgoj47uWxrCxlLTyhHaBhkDVBqzScKFUOYxO7OF2xzZ9Eko7XoGb6rPtL1zj34Em7X7EQu32BsMQvJuCTzI01NFZzNiib+v9sFR2olf1facr651ACpLH89SzHx6aM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747988446; c=relaxed/simple;
-	bh=/naF2eePZ5wL1Hl1DjVhjlQCKvY8+Qq5o73TyNeHfGg=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=H2Ii0FYftQOhIiZF7RYlebxWl2d2PhY4nslG0sBcluROnvRdNnPkLS7EGkg6Hx7OvEDqnijVOAXMwmn6GZcUZR+6hCk/qXgAtDbPrcHGYGgzMWB5RLqRMPC7/bNvaC1hP4msNlGtaKKWRhO/ixKwwcpi/4O/+EtOIT0ZqlfCoy8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-86a3d964d9fso67644639f.0
-        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 01:20:44 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747988444; x=1748593244;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/naF2eePZ5wL1Hl1DjVhjlQCKvY8+Qq5o73TyNeHfGg=;
-        b=aoEUltaRxuRC7iufbi+hAiyvjtDDyqGYXP8EaE7NmQB+QtCsGU2zf+fp+GU/X4J2R3
-         Tv7zZ2UIUotxgoLTfirIjKDb6+4KLTN0IzvFwSeMzS/iADFMNiY2zmiqg4njWBu2XGkl
-         yg5Baxyh/4HA3CrNbS+jU2J8CobPrwzxI4mz3LUe47rgZEe2c7ya5/pNCAp373ApWYII
-         LD10IDW/kE1FDnrn8sJIqgnzooDcq2OOtJFmFUyamq25DKssCZ+464y7rRV6XjHJ3r7l
-         TXfsXLwfjHzmEGof3nPplSUFj5P04p4QRPXrYVHKt0FNbr9/OgA6Cs+iGByYrUvPfXKG
-         5olw==
-X-Gm-Message-State: AOJu0YzHM5jdvWya100flsjj7gOBWdwPHb/UfKTQRZ5tTSnWP416FhkE
-	SAmgRnquZK4ag0yiRyx7Pn5ifpJprWhBh70laBEcbvZhWJDyGXuBxjKeXvzzMN+P7KbWguz14fp
-	DvPw/JQa7F3EGiHVLUGZ32KkmSZSfapNAyc1L5tZ73zy+CNzQheIYbmWe2Gg=
-X-Google-Smtp-Source: AGHT+IF99Fdm2+wcDHMWXtc4RyMHHaecq7IrYh/R5QL6ha1EYL/GvsmA0uri4QB6iwWcNdfXblbsPxzMEt2xgev39tKsnjDwaxYh
+	s=arc-20240116; t=1747988522; c=relaxed/simple;
+	bh=F9eogXVRmQc37DFh25x1QQIVdRcTgtl5Gout+juqN4M=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=VJp9FnTSxFrwxj7z//QcKvoX4/t3GtNvDIQHwuCPXZuShOCy6Tj6qFkB3QQSYERrCQ8Ci1ZlQ/2ppXamrW+ZOq2FAqs7GzOKVRG4aorcJvaDwKzha/rrYWRSeslV7u1FWGxB8PouB8DB5bAm0ZjNxO8PK7mkD8bsx3jXuWzRkHc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com; spf=pass smtp.mailfrom=126.com; dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b=eK6KCAMD; arc=none smtp.client-ip=117.135.210.6
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=126.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="eK6KCAMD"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
+	s=s110527; h=From:To:Subject:Date:Message-Id; bh=rp6Hjx/YmyVFhd+
+	IZDZGfGqixxaOhCtM0oD2AcUcjns=; b=eK6KCAMD40HqGN8n0ZYfBa1SW/Wzawb
+	x1FcUtyHLSJuXWz3XqVxGtbRGPsvmeq7E6uCiNBt3ave7tM7kuUjS1Zu0zBwmMTB
+	sQ4zJMmNWqz0gscWhlB758DQILUiTy4MCm6KHYPc+jXVSdQTLdqFpQ8D2oUfFm0b
+	Tfk9nODcBA2k=
+Received: from hg-OptiPlex-7040.hygon.cn (unknown [])
+	by gzga-smtp-mtada-g0-0 (Coremail) with SMTP id _____wDXb09qLDBosZMgAg--.61413S2;
+	Fri, 23 May 2025 16:06:03 +0800 (CST)
+From: yangge1116@126.com
+To: akpm@linux-foundation.org
+Cc: linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	21cnbao@gmail.com,
+	david@redhat.com,
+	baolin.wang@linux.alibaba.com,
+	muchun.song@linux.dev,
+	osalvador@suse.de,
+	liuzixing@hygon.cn,
+	Ge Yang <yangge1116@126.com>
+Subject: [PATCH] mm/hugetlb: remove redundant folio_test_hugetlb
+Date: Fri, 23 May 2025 16:05:59 +0800
+Message-Id: <1747987559-23082-1-git-send-email-yangge1116@126.com>
+X-Mailer: git-send-email 2.7.4
+X-CM-TRANSID:_____wDXb09qLDBosZMgAg--.61413S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxGF4rXryfZw4rtrWDGF1kGrg_yoWruryUpF
+	W3GrsxtrWkXa4DWr4xAr4kJrn0k34DX34UtFWxKFWavF4aqw1UKF1DZw18XayrCr9rJFWf
+	ZF4jqFWv9F4jy3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0zNQ6JUUUUUU=
+X-CM-SenderInfo: 51dqwwjhrrila6rslhhfrp/1tbidQFWG2gwKKR7KgAAs8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-Received: by 2002:a05:6602:4255:b0:858:7b72:ec89 with SMTP id
- ca18e2360f4ac-86caddb9a7fmr222765339f.5.1747988444382; Fri, 23 May 2025
- 01:20:44 -0700 (PDT)
-Date: Fri, 23 May 2025 01:20:44 -0700
-In-Reply-To: <68241bb2.a70a0220.3e9d8.0005.GAE@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <68302fdc.a70a0220.1765ec.0149.GAE@google.com>
-Subject: Re: [syzbot] #syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
- 94305e83eccb3120c921cd3a015cd74731140bac
-From: syzbot <syzbot+feb0dc579bbe30a13190@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
 
-For archival purposes, forwarding an incoming command email to
-linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com.
+From: Ge Yang <yangge1116@126.com>
 
-***
+In the isolate_or_dissolve_huge_folio() function, the folio_test_hugetlb()
+function is called to determine whether a folio is a hugetlb folio.
+However, in the subsequent alloc_and_dissolve_hugetlb_folio() function,
+the folio_test_hugetlb() function is called again to make the same
+determination about whether the folio is a hugetlb folio. It appears that
+the folio_test_hugetlb() check in the isolate_or_dissolve_huge_folio()
+function can be removed. Additionally, a similar issue exists in the
+replace_free_hugepage_folios() function, and it should be addressed as
+well.
 
-Subject: #syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git 94305e83eccb3120c921cd3a015cd74731140bac
-Author: dmantipov@yandex.ru
+Suggested-by: Oscar Salvador <osalvador@suse.de>
+Signed-off-by: Ge Yang <yangge1116@126.com>
+---
+ mm/hugetlb.c | 51 +++++++++++++--------------------------------------
+ 1 file changed, 13 insertions(+), 38 deletions(-)
 
-#syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git 94305e83eccb3120c921cd3a015cd74731140bac
+diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+index 6c2e007..6e46f2f 100644
+--- a/mm/hugetlb.c
++++ b/mm/hugetlb.c
+@@ -2787,20 +2787,24 @@ void restore_reserve_on_error(struct hstate *h, struct vm_area_struct *vma,
+ /*
+  * alloc_and_dissolve_hugetlb_folio - Allocate a new folio and dissolve
+  * the old one
+- * @h: struct hstate old page belongs to
+  * @old_folio: Old folio to dissolve
+  * @list: List to isolate the page in case we need to
+  * Returns 0 on success, otherwise negated error.
+  */
+-static int alloc_and_dissolve_hugetlb_folio(struct hstate *h,
+-			struct folio *old_folio, struct list_head *list)
++static int alloc_and_dissolve_hugetlb_folio(struct folio *old_folio,
++			struct list_head *list)
+ {
+-	gfp_t gfp_mask = htlb_alloc_mask(h) | __GFP_THISNODE;
++	gfp_t gfp_mask;
++	struct hstate *h;
+ 	int nid = folio_nid(old_folio);
+ 	struct folio *new_folio = NULL;
+ 	int ret = 0;
+ 
+ retry:
++	/*
++	 * The old_folio might have been dissolved from under our feet, so make sure
++	 * to carefully check the state under the lock.
++	 */
+ 	spin_lock_irq(&hugetlb_lock);
+ 	if (!folio_test_hugetlb(old_folio)) {
+ 		/*
+@@ -2829,8 +2833,10 @@ static int alloc_and_dissolve_hugetlb_folio(struct hstate *h,
+ 		cond_resched();
+ 		goto retry;
+ 	} else {
++		h = folio_hstate(old_folio);
+ 		if (!new_folio) {
+ 			spin_unlock_irq(&hugetlb_lock);
++			gfp_mask = htlb_alloc_mask(h) | __GFP_THISNODE;
+ 			new_folio = alloc_buddy_hugetlb_folio(h, gfp_mask, nid,
+ 							      NULL, NULL);
+ 			if (!new_folio)
+@@ -2874,35 +2880,20 @@ static int alloc_and_dissolve_hugetlb_folio(struct hstate *h,
+ 
+ int isolate_or_dissolve_huge_folio(struct folio *folio, struct list_head *list)
+ {
+-	struct hstate *h;
+ 	int ret = -EBUSY;
+ 
+ 	/*
+-	 * The page might have been dissolved from under our feet, so make sure
+-	 * to carefully check the state under the lock.
+-	 * Return success when racing as if we dissolved the page ourselves.
+-	 */
+-	spin_lock_irq(&hugetlb_lock);
+-	if (folio_test_hugetlb(folio)) {
+-		h = folio_hstate(folio);
+-	} else {
+-		spin_unlock_irq(&hugetlb_lock);
+-		return 0;
+-	}
+-	spin_unlock_irq(&hugetlb_lock);
+-
+-	/*
+ 	 * Fence off gigantic pages as there is a cyclic dependency between
+ 	 * alloc_contig_range and them. Return -ENOMEM as this has the effect
+ 	 * of bailing out right away without further retrying.
+ 	 */
+-	if (hstate_is_gigantic(h))
++	if (folio_order(folio) > MAX_PAGE_ORDER)
+ 		return -ENOMEM;
+ 
+ 	if (folio_ref_count(folio) && folio_isolate_hugetlb(folio, list))
+ 		ret = 0;
+ 	else if (!folio_ref_count(folio))
+-		ret = alloc_and_dissolve_hugetlb_folio(h, folio, list);
++		ret = alloc_and_dissolve_hugetlb_folio(folio, list);
+ 
+ 	return ret;
+ }
+@@ -2916,7 +2907,6 @@ int isolate_or_dissolve_huge_folio(struct folio *folio, struct list_head *list)
+  */
+ int replace_free_hugepage_folios(unsigned long start_pfn, unsigned long end_pfn)
+ {
+-	struct hstate *h;
+ 	struct folio *folio;
+ 	int ret = 0;
+ 
+@@ -2925,23 +2915,8 @@ int replace_free_hugepage_folios(unsigned long start_pfn, unsigned long end_pfn)
+ 	while (start_pfn < end_pfn) {
+ 		folio = pfn_folio(start_pfn);
+ 
+-		/*
+-		 * The folio might have been dissolved from under our feet, so make sure
+-		 * to carefully check the state under the lock.
+-		 */
+-		spin_lock_irq(&hugetlb_lock);
+-		if (folio_test_hugetlb(folio)) {
+-			h = folio_hstate(folio);
+-		} else {
+-			spin_unlock_irq(&hugetlb_lock);
+-			start_pfn++;
+-			continue;
+-		}
+-		spin_unlock_irq(&hugetlb_lock);
+-
+ 		if (!folio_ref_count(folio)) {
+-			ret = alloc_and_dissolve_hugetlb_folio(h, folio,
+-							       &isolate_list);
++			ret = alloc_and_dissolve_hugetlb_folio(folio, &isolate_list);
+ 			if (ret)
+ 				break;
+ 
+-- 
+2.7.4
+
