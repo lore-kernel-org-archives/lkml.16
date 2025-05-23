@@ -1,129 +1,207 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 002A32036ED;
-	Fri, 23 May 2025 12:01:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFDAA2036ED;
+	Fri, 23 May 2025 12:04:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748001663; cv=none; b=hh0j+rpKQtcDlq1TXA2jfo6PIjWVQ7PWk3I/LAophVFZf3hxYrArYQaP8+oqaLeiW7QCm5sBLotObi8ZZEus/a89+pfWVRN8fVda5LsLdPzieP7bKrheEKv8UCjh4ssa/5Ytu5A7WVCBq4mISHVqnSTmXQUJe8Y/oiqh/P4wVgQ=
+	t=1748001880; cv=none; b=obBCcaqY0NCx/VthtJB3Lti9+lqDt0YboqQh2t8qD6aQ4PHreFPYPtgRDLAGnM+H3gnvPGXfVojUsHK+XWzKPb6xCm8aNzZ0WtErIIumhQNxVJjY1zUv/ANOny649oZbG3JhndJ+E+yOMK4gk44Z6tYwk5RoLLL5PWBqIjzX+1Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748001663; c=relaxed/simple;
-	bh=7IjIckS/eHld9WifYNay9DZZv9Fs5Z1uq608lkoIXkI=;
+	s=arc-20240116; t=1748001880; c=relaxed/simple;
+	bh=KUciZpVHXkEANVkxmh/SLhERPr0kKkkkuizcZDLh1OU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iYQY65v78qAduUeDMz7cshtgQ1aQjLX7qCGprRAzUpdDZAO7R1OQ9UAp3CDGbi4B8sSrV4PgNpIgRoLA2EUSaRvr2aKrlCHllhl3HUKJh55kMuBHlWJMlMQhVX0vEMuEeu3PFzX+CjTaWVJzhuovdrKBP/rC5Fqkkhn28uR3xfQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nxHUTEje; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=gSm1T+38nQSNw4oh01Z+iMKsMsHFmmEL3l/lbYeiDkUmOUCJxTK8kaT5KyEgN4FUceigQnW277jYKzRuYxdL6qdh0hXbEyX96XnB9Lhb85AycT9rD7CfgH6pgjPgdttvFHG7u5QCfZqdqUGODoJHFCG8E6t8GiaLHvcl16oSO80=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=KWH490rE; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nxHUTEje"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748001662; x=1779537662;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=7IjIckS/eHld9WifYNay9DZZv9Fs5Z1uq608lkoIXkI=;
-  b=nxHUTEjeRckz0pihB027tb/94QuYG4HV3b5v1rEib/k/2qgaPQExy4ij
-   HRVc7bxLeCrpqNg0Y5BQR3NtwJyeZXEtE9iY6C+8f/MKevm4/6Lt/WIAs
-   gsvseR7rn+NuACa67HRsk5Hcexhtrp1fniZeNpvM5FOgLLHmrw21rLXpH
-   w1Xs4GDKY7Tr47jbKnvjqGeJc+izqBEJyXusYME85+pZxvR2/PVsh9HIm
-   yIFRHKkKV7egxzi9QS2ciOB8W81wR8bYw22Pu64muIfe9CkxV8Xi8nwxI
-   kjYkuWAT7PcHTQs5x8D2CJErT36Dg3uyUDoSFCrHzXdX8FqKzK6qy/oYx
-   Q==;
-X-CSE-ConnectionGUID: GXi5kTDVTe2MItB97A3lUw==
-X-CSE-MsgGUID: GieZnZyMSRW9inJwlotmSw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11441"; a="50220491"
-X-IronPort-AV: E=Sophos;i="6.15,308,1739865600"; 
-   d="scan'208";a="50220491"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2025 05:01:01 -0700
-X-CSE-ConnectionGUID: 7NjLot7PTG2we7A1X3P5lw==
-X-CSE-MsgGUID: 7qugAWUHQgK6aOkQIYfU1A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,308,1739865600"; 
-   d="scan'208";a="141178468"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa007.fm.intel.com with ESMTP; 23 May 2025 05:00:58 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1000)
-	id ACD931F6; Fri, 23 May 2025 15:00:56 +0300 (EEST)
-Date: Fri, 23 May 2025 15:00:56 +0300
-From: "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>
-To: "Huang, Kai" <kai.huang@intel.com>
-Cc: "Zhao, Yan Y" <yan.y.zhao@intel.com>, 
-	"Edgecombe, Rick P" <rick.p.edgecombe@intel.com>, "seanjc@google.com" <seanjc@google.com>, 
-	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>, "bp@alien8.de" <bp@alien8.de>, "x86@kernel.org" <x86@kernel.org>, 
-	"mingo@redhat.com" <mingo@redhat.com>, "tglx@linutronix.de" <tglx@linutronix.de>, 
-	"pbonzini@redhat.com" <pbonzini@redhat.com>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>, 
-	"Yamahata, Isaku" <isaku.yamahata@intel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"linux-coco@lists.linux.dev" <linux-coco@lists.linux.dev>
-Subject: Re: [RFC, PATCH 08/12] KVM: x86/tdp_mmu: Add phys_prepare() and
- phys_cleanup() to kvm_x86_ops
-Message-ID: <mgu7at7d3qy4h55bchxfmxj6yzqyi7gh4ieds4ecdvlv243frl@bzou376shiak>
-References: <20250502130828.4071412-1-kirill.shutemov@linux.intel.com>
- <20250502130828.4071412-9-kirill.shutemov@linux.intel.com>
- <aBn4pfn4aMXcFHd7@yzhao56-desk.sh.intel.com>
- <t2im27kgcfsl2qltxbf3cear35szyoafczgvmmwootxthnbcdp@dasmg4bdfd6i>
- <aB1ZplDCPkDCkhQr@yzhao56-desk.sh.intel.com>
- <2bi4cz2ulrki62odprol253mhxkvjdu3xtq4p6dbndowsufnmu@7kzlzywmi22s>
- <8668efe87d6e538b5a49a3c7508ade612a6d766b.camel@intel.com>
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="KWH490rE"
+Received: from pendragon.ideasonboard.com (179.218-130-109.adsl-dyn.isp.belgacom.be [109.130.218.179])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 6782F4A4;
+	Fri, 23 May 2025 14:04:14 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1748001854;
+	bh=KUciZpVHXkEANVkxmh/SLhERPr0kKkkkuizcZDLh1OU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=KWH490rEsxTFMwCvm9b+3blEsuePTcPO/YjZpGITfQspRER8doOV65JjHLtS1U9JN
+	 QNSP3iIMgJojMjLGxKWIdPyCZeL7+w3VTFWo7HIJtEUNvq9Q8a8Jhf7U1gO3xzU37h
+	 2Yt6qdrdOpLAu2N+WSvMIAtKc22icVm9B2eMM0P8=
+Date: Fri, 23 May 2025 14:04:30 +0200
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Ricardo Ribalda <ribalda@chromium.org>
+Cc: Hans de Goede <hdegoede@redhat.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/4] media: uvcvideo: Refactor uvc_ctrl_set_handle()
+Message-ID: <20250523120430.GF12514@pendragon.ideasonboard.com>
+References: <20250509-uvc-followup-v1-0-73bcde30d2b5@chromium.org>
+ <20250509-uvc-followup-v1-1-73bcde30d2b5@chromium.org>
+ <20250523085341.GA7516@pendragon.ideasonboard.com>
+ <CANiDSCuuaJ9AOr9nGc+GN5UhHs2b0CCZvEnF1Qdw2vn9yo_uXw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <8668efe87d6e538b5a49a3c7508ade612a6d766b.camel@intel.com>
+In-Reply-To: <CANiDSCuuaJ9AOr9nGc+GN5UhHs2b0CCZvEnF1Qdw2vn9yo_uXw@mail.gmail.com>
 
-On Wed, May 14, 2025 at 12:00:17AM +0000, Huang, Kai wrote:
-> On Mon, 2025-05-12 at 12:55 +0300, Kirill A. Shutemov wrote:
-> > On Fri, May 09, 2025 at 09:25:58AM +0800, Yan Zhao wrote:
-> > > On Thu, May 08, 2025 at 04:23:56PM +0300, Kirill A. Shutemov wrote:
-> > > > On Tue, May 06, 2025 at 07:55:17PM +0800, Yan Zhao wrote:
-> > > > > On Fri, May 02, 2025 at 04:08:24PM +0300, Kirill A. Shutemov wrote:
-> > > > > > The functions kvm_x86_ops::link_external_spt() and
-> > > > > > kvm_x86_ops::set_external_spte() are used to assign new memory to a VM.
-> > > > > > When using TDX with Dynamic PAMT enabled, the assigned memory must be
-> > > > > > covered by PAMT.
-> > > > > > 
-> > > > > > The new function kvm_x86_ops::phys_prepare() is called before
-> > > > > > link_external_spt() and set_external_spte() to ensure that the memory is
-> > > > > > ready to be assigned to the virtual machine. In the case of TDX, it
-> > > > > > makes sure that the memory is covered by PAMT.
-> > > > > > 
-> > > > > > kvm_x86_ops::phys_prepare() is called in a context where struct kvm_vcpu
-> > > > > > is available, allowing the implementation to allocate memory from a
-> > > > > > per-VCPU pool.
-> > > > > > 
-> > > > > Why not invoke phys_prepare() and phys_cleanup() in set_external_spte_present()?
-> > > > > Or in tdx_sept_set_private_spte()/tdx_sept_link_private_spt()?
-> > > > 
-> > > > Because the memory pool we allocated from is per-vcpu and we lost access
-> > > > to vcpu by then. And not all callers provide vcpu.
-> > > Maybe we can get vcpu via kvm_get_running_vcpu(), as in [1].
-> > > Then for callers not providing vcpu (where vcpu is NULL), we can use per-KVM
-> > > cache? 
-> > 
-> > Hm. I was not aware of kvm_get_running_vcpu(). Will play with it, thanks.
+On Fri, May 23, 2025 at 12:58:31PM +0200, Ricardo Ribalda wrote:
+> On Fri, 23 May 2025 at 10:53, Laurent Pinchart wrote:
+> > On Fri, May 09, 2025 at 06:24:13PM +0000, Ricardo Ribalda wrote:
+> > > Today uvc_ctrl_set_handle() covers two use-uses: setting the handle and
+> > > clearing the handle. The only common code between the two cases is the
+> > > lockdep_assert_held.
+> > >
+> > > The code looks cleaner if we split these two usecases in two functions.
+> >
+> > It does indeed. Thanks for pushing for this :-)
+> >
+> > > We also take this opportunity to use pending_async_ctrls from ctrl where
+> > > possible.
+> > >
+> > > Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
+> > > ---
+> > >  drivers/media/usb/uvc/uvc_ctrl.c | 65 +++++++++++++++++++++-------------------
+> > >  1 file changed, 35 insertions(+), 30 deletions(-)
+> > >
+> > > diff --git a/drivers/media/usb/uvc/uvc_ctrl.c b/drivers/media/usb/uvc/uvc_ctrl.c
+> > > index 44b6513c526421943bb9841fb53dc5f8e9f93f02..26be1d0a1891cf3a9a7489f60f9a2931c78d3239 100644
+> > > --- a/drivers/media/usb/uvc/uvc_ctrl.c
+> > > +++ b/drivers/media/usb/uvc/uvc_ctrl.c
+> > > @@ -1812,48 +1812,53 @@ static void uvc_ctrl_send_slave_event(struct uvc_video_chain *chain,
+> > >       uvc_ctrl_send_event(chain, handle, ctrl, mapping, val, changes);
+> > >  }
+> > >
+> > > -static int uvc_ctrl_set_handle(struct uvc_fh *handle, struct uvc_control *ctrl,
+> > > -                            struct uvc_fh *new_handle)
+> > > +static int uvc_ctrl_set_handle(struct uvc_fh *handle, struct uvc_control *ctrl)
+> > >  {
+> > > -     lockdep_assert_held(&handle->chain->ctrl_mutex);
+> > > -
+> > > -     if (new_handle) {
+> > > -             int ret;
+> > > +     int ret;
+> > >
+> > > -             if (ctrl->handle)
+> > > -                     dev_warn_ratelimited(&handle->stream->dev->udev->dev,
+> > > -                                          "UVC non compliance: Setting an async control with a pending operation.");
+> > > +     lockdep_assert_held(&handle->chain->ctrl_mutex);
+> > >
+> > > -             if (new_handle == ctrl->handle)
+> > > -                     return 0;
+> > > +     if (ctrl->handle) {
+> > > +             dev_warn_ratelimited(&handle->stream->dev->udev->dev,
+> > > +                                  "UVC non compliance: Setting an async control with a pending operation.");
+> > >
+> > > -             if (ctrl->handle) {
+> > > -                     WARN_ON(!ctrl->handle->pending_async_ctrls);
+> > > -                     if (ctrl->handle->pending_async_ctrls)
+> > > -                             ctrl->handle->pending_async_ctrls--;
+> > > -                     ctrl->handle = new_handle;
+> > > -                     handle->pending_async_ctrls++;
+> > > +             if (ctrl->handle == handle)
+> > >                       return 0;
+> > > -             }
+> > > -
+> > > -             ret = uvc_pm_get(handle->chain->dev);
+> > > -             if (ret)
+> > > -                     return ret;
+> > >
+> > > -             ctrl->handle = new_handle;
+> > > -             handle->pending_async_ctrls++;
+> > > +             WARN_ON(!ctrl->handle->pending_async_ctrls);
+> > > +             if (ctrl->handle->pending_async_ctrls)
+> > > +                     ctrl->handle->pending_async_ctrls--;
+> > > +             ctrl->handle = handle;
+> > > +             ctrl->handle->pending_async_ctrls++;
+> > >               return 0;
+> > >       }
+> > >
+> > > +     ret = uvc_pm_get(handle->chain->dev);
+> > > +     if (ret)
+> > > +             return ret;
+> > > +
+> > > +     ctrl->handle = handle;
+> > > +     ctrl->handle->pending_async_ctrls++;
+> > > +     return 0;
+> > > +}
+> > > +
+> > > +static int uvc_ctrl_clear_handle(struct uvc_fh *handle,
+> > > +                              struct uvc_control *ctrl)
+> > > +{
+> > > +     lockdep_assert_held(&handle->chain->ctrl_mutex);
+> > > +
+> > >       /* Cannot clear the handle for a control not owned by us.*/
+> >
+> > While at it, I'll add a space before */ when applying.
+> >
+> > >       if (WARN_ON(ctrl->handle != handle))
+> > >               return -EINVAL;
+> >
+> > But actually, as the caller guarantees that handle == ctrl->handle in
+> > both call sites (renaming the function makes this clear), can we drop
+> > the handle argument to this function ?
+> >
+> > If that's fine with you, I'd like to also change the
+> > uvc_ctrl_set_handle() function to pass the ctrl argument first.
 > 
-> I am not sure why per-vcpu cache matters.
-> 
-> For non-leaf SEPT pages, AFAICT the "vcpu->arch.mmu_external_spt_cache" is just
-> an empty cache, and eventually __get_free_page() is used to allocate in:
->                                                                                             
->   sp->external_spt = 
-> 	kvm_mmu_memory_cache_alloc(&vcpu->arch.mmu_external_spt_cache);
-> 
-> So why not we actually create a kmem_cache for it with an actual 'ctor', and we
-> can call tdx_alloc_page() in that.  This makes sure when the "external_spt" is
-> allocated, the underneath PAMT entry is there.
+> SGTM, let me know if you have time to do this or if you prefer that I do it.
 
-I looked closer to this and while it is good idea, but ctor in kmem_cache
-cannot fail which makes this approach not viable.
+I'll send a new version of this patch.
 
-I guess we can a constructor directly into struct kvm_mmu_memory_cache.
-Let me play with this.
+> > > -     ctrl->handle = NULL;
+> > > -     if (WARN_ON(!handle->pending_async_ctrls))
+> > > +     if (WARN_ON(!ctrl->handle->pending_async_ctrls)) {
+> > > +             ctrl->handle = NULL;
+> > >               return -EINVAL;
+> > > -     handle->pending_async_ctrls--;
+> > > +     }
+> > > +
+> > > +     ctrl->handle->pending_async_ctrls--;
+> > >       uvc_pm_put(handle->chain->dev);
+> >
+> > This will need to become
+> >
+> >         uvc_pm_put(ctrl->handle->chain->dev);
+> >
+> > Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> >
+> > > +     ctrl->handle = NULL;
+> > >       return 0;
+> > >  }
+> > >
+> > > @@ -1871,7 +1876,7 @@ void uvc_ctrl_status_event(struct uvc_video_chain *chain,
+> > >
+> > >       handle = ctrl->handle;
+> > >       if (handle)
+> > > -             uvc_ctrl_set_handle(handle, ctrl, NULL);
+> > > +             uvc_ctrl_clear_handle(handle, ctrl);
+> > >
+> > >       list_for_each_entry(mapping, &ctrl->info.mappings, list) {
+> > >               s32 value;
+> > > @@ -2161,7 +2166,7 @@ static int uvc_ctrl_commit_entity(struct uvc_device *dev,
+> > >
+> > >               if (!rollback && handle && !ret &&
+> > >                   ctrl->info.flags & UVC_CTRL_FLAG_ASYNCHRONOUS)
+> > > -                     ret = uvc_ctrl_set_handle(handle, ctrl, handle);
+> > > +                     ret = uvc_ctrl_set_handle(handle, ctrl);
+> > >
+> > >               if (ret < 0 && !rollback) {
+> > >                       if (err_ctrl)
+> > > @@ -3271,7 +3276,7 @@ void uvc_ctrl_cleanup_fh(struct uvc_fh *handle)
+> > >               for (unsigned int i = 0; i < entity->ncontrols; ++i) {
+> > >                       if (entity->controls[i].handle != handle)
+> > >                               continue;
+> > > -                     uvc_ctrl_set_handle(handle, &entity->controls[i], NULL);
+> > > +                     uvc_ctrl_clear_handle(handle, &entity->controls[i]);
+> > >               }
+> > >       }
+> > >
 
 -- 
-  Kiryl Shutsemau / Kirill A. Shutemov
+Regards,
+
+Laurent Pinchart
