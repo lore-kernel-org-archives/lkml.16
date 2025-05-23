@@ -1,237 +1,216 @@
-Received: from invmail4.hynix.com (exvmail4.skhynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6C6C11547F2;
-	Fri, 23 May 2025 07:47:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747986480; cv=none; b=UkVQsD49IKRQJdgAvGeSY9bz5NpC0jk2Eh7nqTu/GlKq6lMQZJt8WvAgc76RGtCWDykzV/Z7F7p3d+SBB2HcN9BxL/trPiqRSl1oPh3+/P9tbn0kxlnxNg/u2NrgqlcI2FHbFJd3MAXQgDBGcbPLlB3WbSwsfByp010m8x7tIhM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747986480; c=relaxed/simple;
-	bh=g7Gdg+0qWBaRAZcaKXMUtBidxCgzsXqlP6QraOrKnVM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZAbtM6ryxkDZlf23yUhnjdrPcIo7xitDsy6yVy9L1XfsG9vcleOlwf2nc3TtnKI2CVfCdFqVQPkCeC8VaFohVTjGlV1OmXhNsgBaMdpMWqDzmRuDB4KiHaL7Ux17AMQhgBwQQ5mfZiG5ziMHvUtGPQm4gXYdViF4xagWRa9gNj8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-669ff7000002311f-83-6830282111e6
-Date: Fri, 23 May 2025 16:47:40 +0900
-From: Byungchul Park <byungchul@sk.com>
-To: Taehee Yoo <ap420073@gmail.com>
-Cc: willy@infradead.org, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	kernel_team@skhynix.com, kuba@kernel.org, almasrymina@google.com,
-	ilias.apalodimas@linaro.org, harry.yoo@oracle.com, hawk@kernel.org,
-	akpm@linux-foundation.org, davem@davemloft.net,
-	john.fastabend@gmail.com, andrew+netdev@lunn.ch,
-	asml.silence@gmail.com, toke@redhat.com, tariqt@nvidia.com,
-	edumazet@google.com, pabeni@redhat.com, saeedm@nvidia.com,
-	leon@kernel.org, ast@kernel.org, daniel@iogearbox.net,
-	david@redhat.com, lorenzo.stoakes@oracle.com,
-	Liam.Howlett@oracle.com, vbabka@suse.cz, rppt@kernel.org,
-	surenb@google.com, mhocko@suse.com, horms@kernel.org,
-	linux-rdma@vger.kernel.org, bpf@vger.kernel.org,
-	vishal.moola@gmail.com
-Subject: Re: [PATCH 00/18] Split netmem from struct page
-Message-ID: <20250523074740.GA8205@system.software.com>
-References: <20250523032609.16334-1-byungchul@sk.com>
- <CAMArcTWx+8GFzk4=A2-DCUZkMtyYRaDZSqf+HvOf2KyC80BqsA@mail.gmail.com>
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55F4D1A288;
+	Fri, 23 May 2025 07:50:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.11
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747986644; cv=fail; b=EoccYdxpyx8osDi0CW6sGrxAbk+luSPyLZqRo4opP2l3jo8MxPkeMFwE5xUE0AiW48EnB4RtxO7GtydvBN/hE8hjeCcFSRbYr7YpBgNluMjaRhRdlC4FSgXszWsiOWWSPmerk20LR2ggpHPb2JMcDYjvDZ+avM1Q904yxc/a4uY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747986644; c=relaxed/simple;
+	bh=APs+7BECWNirjpeO/rOsDmaFlY8ajkJXLX8R4pLka6Y=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=SUJ5ll8xEedz9RFQ7sZJPfPVv2xCGteAUTX8zRPMm3Rgkql7h60cC/d6dJgAeoLnFkdTgX1ZYOKbVSNVgA8OkLwHv59vw/vypuQNeu2/jXxc1/I8Cz9mL/yDu3qRbcee/m6yx4JNo0Rlcc31HWr/Nvbd23WbkQIF+KeTm8T9LIA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=j9g1Gw8X; arc=fail smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="j9g1Gw8X"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747986644; x=1779522644;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=APs+7BECWNirjpeO/rOsDmaFlY8ajkJXLX8R4pLka6Y=;
+  b=j9g1Gw8XOVK74xRZMITBAbCVMZBLZcekn/tX7q3g6jomSIyiJ2sYxAZw
+   MAuzwBCh1zE2MP5JfQlcUkLUoO6hGtj2IRVu1K4XWqluHWPzHYsVIzjnR
+   8WNdJOjgHwDo+HBubu3mgzN5nXlESMUyjzkGD+fPWC9jhABfa8xozSM19
+   78BVQKWE+timI1Eyj/sHmnAuhVYZHzPAlkwIo4TpWJSE6624vpLjOJY6y
+   mZ0o4JI/x4ovfDI2WEFkMb2xmqX4TV0Db9RlXwRzEOeDw2H5mJ/POhd+U
+   vowX4qjCms0xJzF94c33hyhtzsNSKJ93GNIvOUH5P25xJbzUBl2lDTzB5
+   w==;
+X-CSE-ConnectionGUID: 78LZUDNlS6ezUYWlI1lETg==
+X-CSE-MsgGUID: cJ2ALvVfQXW94SstiSBxVQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11441"; a="60290378"
+X-IronPort-AV: E=Sophos;i="6.15,308,1739865600"; 
+   d="scan'208";a="60290378"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2025 00:50:29 -0700
+X-CSE-ConnectionGUID: eEg65ZZLTBKaBqcEEr1uQg==
+X-CSE-MsgGUID: njRJ5txAQb2gbELA1Zhopg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,308,1739865600"; 
+   d="scan'208";a="171919015"
+Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
+  by orviesa002.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2025 00:50:29 -0700
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Fri, 23 May 2025 00:50:28 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25 via Frontend Transport; Fri, 23 May 2025 00:50:28 -0700
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (40.107.93.74) by
+ edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.55; Fri, 23 May 2025 00:50:28 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=fC4zR12ZEp097DHv5n4jRdwWY0HBQFMyjvUL2gaZUUVMZHgcn63BOoqY0Fh0i7O4y0nrGweq7WUG6RB4ibVBLFE39Tg0nCVMu87X0ACPNBy3NBJ6lBrd4Yk6Guw503d7coZTIlF1FyDDQVXdTmWqCtFqckjQ4cgFKAIMLGWp91tNf7MDdb3QIrLmFypMWgQULnzHW5y2HdZeg4Bzrh91ZJraKnWP86TR7ELgTc9V+SyrgRBaEu3DzIjKXYSJ1myEFiTuOKa6WkeMIyb9JmN3dgiyZkaPCP5A9Ldj3B8sJg7unFtJkLSGgB/NxEpbkJP9rjR24eYI8vDKDoKPqNRh3g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=AK6aD5QlMVn+n2d9qrWVN3S3ygWa/Fh+9ChbM4AY9XA=;
+ b=MO5xk0QXqqBFcHCohcL+KXehWpbunWre6vkYAhuK1uK6UUEqP5NYE/+BLQnZuu7RJEaadXnNrEZOLl9VXaNoOH+99NrBJFQy4ybD/WcxEzOOqxXjm8tAaUX0fcl8PUNt+iTlFfTqUx+Nxfs/WWzdVFopZ+jmPHXXtQ9/pfan9sSs5Ben4R34jgEc8GfVMyiBtudI6CZ/yJLb9urfGzi1naojxUbq5T6HxP79VVRJOPN5ep3dOUoOwa9U7teoRa+RPJsIbJHM/wU1gX4DPYZnwkmSkAOQ9uvPf4YW+8m6lLn8g6o5jOi4IcSuyPWAB28ZMR8U2qRL41yzG836fGYYhg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from BN9PR11MB5276.namprd11.prod.outlook.com (2603:10b6:408:135::18)
+ by CH3PR11MB7252.namprd11.prod.outlook.com (2603:10b6:610:144::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.21; Fri, 23 May
+ 2025 07:49:40 +0000
+Received: from BN9PR11MB5276.namprd11.prod.outlook.com
+ ([fe80::b576:d3bd:c8e0:4bc1]) by BN9PR11MB5276.namprd11.prod.outlook.com
+ ([fe80::b576:d3bd:c8e0:4bc1%4]) with mapi id 15.20.8769.021; Fri, 23 May 2025
+ 07:49:40 +0000
+From: "Tian, Kevin" <kevin.tian@intel.com>
+To: Nicolin Chen <nicolinc@nvidia.com>, "jgg@nvidia.com" <jgg@nvidia.com>,
+	"corbet@lwn.net" <corbet@lwn.net>, "will@kernel.org" <will@kernel.org>
+CC: "bagasdotme@gmail.com" <bagasdotme@gmail.com>, "robin.murphy@arm.com"
+	<robin.murphy@arm.com>, "joro@8bytes.org" <joro@8bytes.org>,
+	"thierry.reding@gmail.com" <thierry.reding@gmail.com>, "vdumpa@nvidia.com"
+	<vdumpa@nvidia.com>, "jonathanh@nvidia.com" <jonathanh@nvidia.com>,
+	"shuah@kernel.org" <shuah@kernel.org>, "jsnitsel@redhat.com"
+	<jsnitsel@redhat.com>, "nathan@kernel.org" <nathan@kernel.org>,
+	"peterz@infradead.org" <peterz@infradead.org>, "Liu, Yi L"
+	<yi.l.liu@intel.com>, "mshavit@google.com" <mshavit@google.com>,
+	"praan@google.com" <praan@google.com>, "zhangzekun11@huawei.com"
+	<zhangzekun11@huawei.com>, "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
+	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "linux-tegra@vger.kernel.org"
+	<linux-tegra@vger.kernel.org>, "linux-kselftest@vger.kernel.org"
+	<linux-kselftest@vger.kernel.org>, "patches@lists.linux.dev"
+	<patches@lists.linux.dev>, "mochs@nvidia.com" <mochs@nvidia.com>,
+	"alok.a.tiwari@oracle.com" <alok.a.tiwari@oracle.com>, "vasant.hegde@amd.com"
+	<vasant.hegde@amd.com>, "dwmw2@infradead.org" <dwmw2@infradead.org>,
+	"baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>
+Subject: RE: [PATCH v5 03/29] iommu: Apply the new iommufd_object_alloc_ucmd
+ helper
+Thread-Topic: [PATCH v5 03/29] iommu: Apply the new iommufd_object_alloc_ucmd
+ helper
+Thread-Index: AQHbx6QUab9gqVJWEE29OKdWGASVW7Pf3lGw
+Date: Fri, 23 May 2025 07:49:40 +0000
+Message-ID: <BN9PR11MB527605018977CA291C0D8E018C98A@BN9PR11MB5276.namprd11.prod.outlook.com>
+References: <cover.1747537752.git.nicolinc@nvidia.com>
+ <c01f145f9fd9a803a3154c3e7221dd76b4f8adfd.1747537752.git.nicolinc@nvidia.com>
+In-Reply-To: <c01f145f9fd9a803a3154c3e7221dd76b4f8adfd.1747537752.git.nicolinc@nvidia.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: BN9PR11MB5276:EE_|CH3PR11MB7252:EE_
+x-ms-office365-filtering-correlation-id: 3647afbf-e875-4311-868e-08dd99ce5fd0
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|366016|1800799024|7416014|376014|38070700018;
+x-microsoft-antispam-message-info: =?us-ascii?Q?L5fV3RjFrKKfSwHIpBrdOv3IS+IF8LgbzcS6YMn3P1M9YX5FYZOiSCcwus4G?=
+ =?us-ascii?Q?LFhHaHjeBTUwftAsbViK940lHqF5JViBzp7NYZK8nlhKJfF3KSpeJYTi3JwA?=
+ =?us-ascii?Q?E+82VWcdvP3jr7jULkyNwzAZHLWTjmg+lYou1gR9bPSAl7px1y5MbHNntokL?=
+ =?us-ascii?Q?EY52KdM8VyV75JfNIq4vTm0oQG8rDzGoBpzs+azoSePjDR4Q1VCaw6OXTi9t?=
+ =?us-ascii?Q?69uZcF9Ah8G/RgyO0RMTv6q1Sfs7l3Nes5RQEM5Jb74K9KalDb3U0mU35IFZ?=
+ =?us-ascii?Q?wkxbWsn5HjoczAHEoKzuR+fsdSMn73w94LuaRy1gi75lHWqGFvh3k2Amxau6?=
+ =?us-ascii?Q?1CTNrirkFxNqnPWktxICr91Az2WVVtTrw0bppi7fotKu/M7+PlfXTtzlS7I3?=
+ =?us-ascii?Q?sHzukGH569PZ2mTMDWYbwhYK2iUcJh1lEBJjaseoRkPOCIS24YgOPX+We9+A?=
+ =?us-ascii?Q?Diq2Kxwjy0N2O1tF0kHvs5KJPDoHzGGn3fijHGFxxsMULa8s3CKq/shAicdG?=
+ =?us-ascii?Q?mHImJQEV60hMasQqzoh9bHGVjMO7OlhfhZrnUl9cCH7VKmumzEyT5tyOFq3c?=
+ =?us-ascii?Q?MifId1sHmZzNVRZUbTQzo0Plm+YqyRR//wek9fVClmLqmtGFr0kBPIDK1BZ1?=
+ =?us-ascii?Q?63u/iMvolmd4jxWkKuvOa9Ae9QBG4gYfyOJxxAZ2PMUZjd8jL3MxgiYe3vWP?=
+ =?us-ascii?Q?L/shRc1Z10B3w+32E+UGsAuIrd1xuQf0tcozekBwTt4lK9TmIKXo4lbo/wxI?=
+ =?us-ascii?Q?bPqs9Jgic/x2PMiou6sg2RtNN7K2NC9jXkoq5wrqY7GuPNfcevi+UI+NpZ+2?=
+ =?us-ascii?Q?z18BF+s/1GTkgbGAHXGIMwBwRR7JYTkvnyQZCeXe8rFVTi7/2d8/8HUtTbYZ?=
+ =?us-ascii?Q?UNWUZH5aJghGQz26xKELzbZTdM3N3TstTQ8UvKkLDh/r/w30EUKjX3wbO7Cs?=
+ =?us-ascii?Q?funoS9P+aOUJ8/SWUAtE8Y/qHgedltDr+/0cWY+JLcnCaxVWbnZrkDeSRIm6?=
+ =?us-ascii?Q?0STtPxJeQdnqbptayWgteecgBcUi30AydH8X8O1FkxEeIvmehg/bg0x8uGK0?=
+ =?us-ascii?Q?qMVkqapV6lZ/NCNxl4iSbjK22aKQFU2CIYmgLc0pkijWi0oJCsUlzIsGsyWe?=
+ =?us-ascii?Q?rV+IwwMEoVvQJ9l5PZSZmMnWX3fUkGQ/dsCAnMlwZ0vcF0GuFVw+YJam3hUk?=
+ =?us-ascii?Q?9JJGXwfn5cd4ZnlwS/1+w1iJJu5UR60eFSm/utzZW2otl6qv2WRYUNRxc63E?=
+ =?us-ascii?Q?+pFPUHfA6jEJU70+3Fqz9RCc6OJI8bnGwCIc1erFUtjobOuEhALVHq2GtoGb?=
+ =?us-ascii?Q?8RRY/g/pCnYN8ckCUl/jqnlit6w2R1n7q7A//sT4be6VLicaYXK+nlfxixnf?=
+ =?us-ascii?Q?PBKYmPOgH4gjgap813PDSRH1iZY6qxXM+YzQ0Y1TpWf95uqNFtfrIcwqnT6G?=
+ =?us-ascii?Q?OkmgyL4II8VV+jmTtJPV2r/xXytvXwdGnklCQ+hJrasqR16fTzEMBQ=3D=3D?=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN9PR11MB5276.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?UIEt4V3isIYSsxKoSEdmld1q3UOoPgSoh1r/aK9Zto8A5x7op6x4zlephV/v?=
+ =?us-ascii?Q?srR88xt+zwvyJmKmBWTrigbN7BGuGPwzjRiGGW/1bytb5KhqWCF58e9HHTpQ?=
+ =?us-ascii?Q?GdevYehTZQPZfH/5tb30PVBvgWYZPix/Nkf8H8bL+IN5MW57A8tLC3aeH2vo?=
+ =?us-ascii?Q?0Vv4PJqxc74wuyfTq9Z2JKX4MQi27MgJ+e2LzTrUX0uNnlOJIIBIh6Y6NmD1?=
+ =?us-ascii?Q?8npWcJlQHRUdeVtUJg50gmeEPiZa42tEnB3FaGrY+b2kZ4S96sbhMtgQX7tx?=
+ =?us-ascii?Q?HNE5NI4ZUhXwBu+XmPDPA/BKX92EjdcXcI6GNYpDfJmQucbVgLac23ingT0m?=
+ =?us-ascii?Q?OFHJz89MQjiC/fIDL50D2FpsBnDK3Mg7BrMWeAOGC8RNNxiJwnuWQLZ6Vcub?=
+ =?us-ascii?Q?SezRBrMZ8X1am1+ZnGrNf6Adu4UmmGQTVDzfO7WBXQIemO+t5XQxVH/UmYdZ?=
+ =?us-ascii?Q?l3rt56ENV6pm5oH7LFbTmWjGPrsuisaQCrwcN7Q1jOi4ywsD/yToQJVrFvCc?=
+ =?us-ascii?Q?6fYGP6XxOWFVxXupPxJodxax5LrZKzi4HuJCAUQIF7Hx9KSJUZZT2nt7iqNK?=
+ =?us-ascii?Q?uHPhc3g4r8+R30a5UN5VErj6pMJOq6x1Yi/31SE30S9a6k0LuPuo3BCTlLit?=
+ =?us-ascii?Q?68HabHVfbMBO+2r9tkLwcm5RtxW9cP/GCTpeehft9CDsAKE2SK6zRD4Ezpxl?=
+ =?us-ascii?Q?J8lpS9RFEqvYDtBHwwWL+Pn8GTypiwHUzwpZO/bP+slgHhmY8mERUfMIkKsl?=
+ =?us-ascii?Q?IvBdI/Jn3sQ/D6S2KonhuBUvqNvOSzXjLMp4CUsuLSqpkpZDAaXCvT80NsMy?=
+ =?us-ascii?Q?p8Il5HUbwhdIuG6IfClLnkqwy39XjFr5wd9n9GUCggq1zP4e1zGqLR0/xb5t?=
+ =?us-ascii?Q?fViur1vhTDAJNnE5lDgU6ox97R0KP/aNmAfgpsz1SnwQzlJ3L7bAl+jXVuvG?=
+ =?us-ascii?Q?LnzUiEQGIpW6bCK3JlzDgbb27aTp0tIobxSSL/7g6tkyttPXIcjf5vlySfp0?=
+ =?us-ascii?Q?/9tNeWNrRGd8cnXJvcL5hWwEuFVDcViZbGxTAxCRSFbw1eFN2WMDv+1uqpwi?=
+ =?us-ascii?Q?aq0HdGHuOI7iMNHX7PZg0gP+LDyBPsebVM+ZaCaHS2HDOaVFBsD5aCRGDaOI?=
+ =?us-ascii?Q?Ol5C3L3YTau6b4U+aeqNhKO4fjJSsmn6jbhFW2rAKaZPijdulKdn8z2KN+8G?=
+ =?us-ascii?Q?+220jYvdyDkeeqcIj3UsHl2CtLSHeDKLn01lt7oXtc5NyGwlde8Y2NW6BPmD?=
+ =?us-ascii?Q?ftdQaAxPrMNL8msGgeHzcE80d6lm4A/cesf2/LYBT6LCZPqqE4d+WGHndLB3?=
+ =?us-ascii?Q?wOEcrDv2GJonu/TLI8b5m5Re4HAbXqYHgxwz1wDavA9r7Lww2Ym5E4xpPiIP?=
+ =?us-ascii?Q?AMRtKSHVA8uO+d+ThwMC7/jtkqbQDnWtVYE3f6McCPndbM05qHtqSGQeXQZC?=
+ =?us-ascii?Q?blk3w2OWC9pftMWyfaJJj3OkBaCBeQg/SHBVk2SwzWe29EvD980c0xx154nt?=
+ =?us-ascii?Q?HLTD/Wi8GZixd881OzvoetXuQ+8T3UDA2H5fTMZDv28ZZfmyeHtmHVDFfSr/?=
+ =?us-ascii?Q?eTN4cGGhKFKiG4WN7o/bba6DdEYZMUWSCvjGuW3k?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMArcTWx+8GFzk4=A2-DCUZkMtyYRaDZSqf+HvOf2KyC80BqsA@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0iTYRTHe97bXoeLt2X6qJA4u2GkVkIHUjP68kJfiqCggrbypS2vbGoa
-	FaaiNNMiLW1NmZZmJg6WuRlDaplTDLSVsbw0MW9FF2pqznVzSuS3H//z5/zOh8OS0gY6hFWl
-	ZQrqNEWKjBFT4s/+tdvCt8QoYxoqIkBvbGbgwXwO3Bu10OBpniJA39SGYMYzJAJ3p52BO7Vz
-	JOj7CimYNS6QMNE1JgJXwyQF1mIzCWNXuxkoLfSSkG9pJKC/rYyGioV6Esx5oyJ49VjPwLvm
-	PzRM2kop6NHdp8BVlghdhkCY6/2EoNNoJmDuSjUD5Q4DA+8LXQgcz8YouH2pDIGxw0mDd17P
-	JMr41vtvCb5dNyLiDaYs/mFjJK91Okje1HSZ4U3fr4v44TdWhu+u8lJ8u8VN8KUFXxj+28Qg
-	xX/tGGB4Y+sAxb8wdIp4t2n9Ae6oOC5JSFFlC+roBLlY6R0eoDMcu3OK7Y1UHqqO1iKWxVws
-	9pRu0CK/Jeyvd5E+priNuEVXi3zMcJux0+khffUALgJrO/ZqkZgluR80/uQuJnydtRzgKWs7
-	5WMJtwvXWT+IfCzlzuO82RJyOV+De26NL3XIxZ0/axxLO0kuFN/7zS7HYbjg0e2luh93EFcZ
-	jLSP1y1qn7TZCZ8Xc09YbHrtYpZvDsZPG53UNbRGt0KhW6HQ/VfoVigMiGpCUlVadqpClRIb
-	pcxNU+VEnUpPNaHF72m48POYBX3vP2RDHItk/hKLOFoppRXZmtxUG8IsKQuQPJ+MUkolSYrc
-	c4I6/YQ6K0XQ2FAoS8mCJDvmziZJudOKTCFZEDIE9b8pwfqF5KHYmcB8r51I2qcJrTsQcWPP
-	lcqx2LjKhfjAnjDn4LydCC8y+Wsjras/juOy2a3xblKekNqdOTM/2DyOHW2D0xNBQ8pf5qxN
-	0lUT+2+2vCo+GdBbdeaY/O5spSggudx2ePry0J3gTm/By/7w+J3y3otMSQ038rzo+Lr9IdVH
-	+jokMkqjVGyPJNUaxV+dWULZOQMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA02SbUhTYRiGe895z9nZaHGcVicNqoVpX2pR9IBaRj966UfUjygiylWnNpym
-	m8pMg9Ukazr7JGxtMbP8ppGaH2UW01IrKCbGNGtmaRr2aVqmWM6I/HdxPzfX/efhaIWZCeQ0
-	CcmiLkGlVbIyLNsaaVq5KDRCHfHOxYPNWc5C2U8DFHXXMjBa/p4CW2k1gu+jLyUw1NTMQkH+
-	CA22Z5kYhp2/aOh91CMBb2EfhvqsGhp6zrSwYMkco+FEbTEFjfZWBp5X5zJw8dcNGmqM3RJo
-	u2Nj4XX5bwb6XBYMrdYSDN7cGHjkmAMjTwYRNDlrKBjJsbNwwe1g4W2mF4G7sQfDleO5CJwN
-	HgbGftrYmMWkqqSDInXWVxLiqEghlcXLiNnjpklF6WmWVHw7LyFdL+pZ0pI3hkld7RBFLKZP
-	LPna24nJ54Z2lhT0f6GIs6odk6eOJsk2v92yqIOiVpMq6sLXx8rUY13tTKI70pDVXIyNyB5u
-	RlJO4NcIz294aR9jPli4ac1HPmb5EMHjGZ3MOS6AXyyYGzaakYyj+R+MMDiURfk6/jwI7+vr
-	sI/l/DrhWv2AxMcKPkMwDmfTf3M/ofXyu6kOPekcv+qectJ8kFA0wf2NFwim21em6lJ+u5Dn
-	cDI+nj05+6C6mTqLZlmnmazTTNb/Jus0kwPhUhSgSUiNV2m0a8P0ceq0BI0h7MCR+Ao0+SGF
-	x8bP1aLvbZtdiOeQcqY8ND5crWBUqfq0eBcSOFoZIH/YF6ZWyA+q0o6KuiP7dClaUe9CQRxW
-	zpVv2SnGKvjDqmQxThQTRd2/K8VJA40o5eOKSwGne1+E8tr0oUrTXVP21ZPSxjP3Ooi3sPdZ
-	UnrZdf/5OePj9KE7ndLPu66nhxurFprc+YXRm+8vnGcoKdsxmBF17tbEqX7Pkv2Rb/zW22Nc
-	ewvagpenGCJsM+y/UzeU4uGkvO7Vi8pzB3YIluhNDz0fDuNTiY8ztoZYlu6ZocR6tWrVMlqn
-	V/0B0MxHWB0DAAA=
-X-CFilter-Loop: Reflected
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BN9PR11MB5276.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3647afbf-e875-4311-868e-08dd99ce5fd0
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 May 2025 07:49:40.5887
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: hvXFHxbtm5kBOZpQYJEATSwaB/y5YgBx2aiP08cOFM21h0ugCUsNAXFaQh397GysM98sTNCQe42gQtqnRAy8iw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR11MB7252
+X-OriginatorOrg: intel.com
 
-On Fri, May 23, 2025 at 03:20:27PM +0900, Taehee Yoo wrote:
-> On Fri, May 23, 2025 at 12:36 PM Byungchul Park <byungchul@sk.com> wrote:
-> >
-> 
-> Hi Byungchul,
-> Thanks a lot for this work!
-> 
-> > The MM subsystem is trying to reduce struct page to a single pointer.
-> > The first step towards that is splitting struct page by its individual
-> > users, as has already been done with folio and slab.  This patchset does
-> > that for netmem which is used for page pools.
-> >
-> > Matthew Wilcox tried and stopped the same work, you can see in:
-> >
-> >    https://lore.kernel.org/linux-mm/20230111042214.907030-1-willy@infradead.org/
-> >
-> > Mina Almasry already has done a lot fo prerequisite works by luck, he
-> > said :).  I stacked my patches on the top of his work e.i. netmem.
-> >
-> > I focused on removing the page pool members in struct page this time,
-> > not moving the allocation code of page pool from net to mm.  It can be
-> > done later if needed.
-> >
-> > My rfc version of this work is:
-> >
-> >    https://lore.kernel.org/all/20250509115126.63190-1-byungchul@sk.com/
-> >
-> > There are still a lot of works to do, to remove the dependency on struct
-> > page in the network subsystem.  I will continue to work on this after
-> > this base patchset is merged.
-> 
-> There is a compile failure.
+> From: Nicolin Chen <nicolinc@nvidia.com>
+> Sent: Sunday, May 18, 2025 11:21 AM
+>=20
+> Now the new ucmd-based object allocator eases the finalize/abort routine,
+> apply this to all existing allocators that aren't protected by any lock.
+>=20
+> Upgrade the for-driver vIOMMU alloctor too, and pass down to all existing
+> viommu_alloc op accordingly.
+>=20
+> Note that __iommufd_object_alloc_ucmd() builds in some static tests that
+> cover both static_asserts in the iommufd_viommu_alloc(). Thus drop them.
 
-Thanks a lot.  I will fix it.
+I may overlook something, but at a quick glance the following check
+Is not covered?
 
-	Byungchul
-> 
-> In file included from drivers/net/ethernet/intel/libeth/rx.c:4:
-> ./include/net/libeth/rx.h: In function ‘libeth_rx_sync_for_cpu’:
-> ./include/net/libeth/rx.h:140:40: error: ‘struct page’ has no member named ‘pp’
->   140 |         page_pool_dma_sync_for_cpu(page->pp, page, fqe->offset, len);
->       |                                        ^~
-> drivers/net/ethernet/intel/libeth/rx.c: In function ‘libeth_rx_recycle_slow’:
-> drivers/net/ethernet/intel/libeth/rx.c:210:38: error: ‘struct page’
-> has no member named ‘pp’
->   210 |         page_pool_recycle_direct(page->pp, page);
->       |                                      ^~
-> make[7]: *** [scripts/Makefile.build:203:
-> drivers/net/ethernet/intel/libeth/rx.o] Error 1
-> make[6]: *** [scripts/Makefile.build:461:
-> drivers/net/ethernet/intel/libeth] Error 2
-> make[5]: *** [scripts/Makefile.build:461: drivers/net/ethernet/intel] Error 2
-> make[5]: *** Waiting for unfinished jobs....
-> 
-> There are page->pp usecases in drivers/net
-> ./drivers/net/ethernet/marvell/octeontx2/nic/otx2_txrx.c:1574:
->  } else if (page->pp) {
-> ./drivers/net/ethernet/freescale/fec_main.c:1046:
->                  page_pool_put_page(page->pp, page, 0, false);
-> ./drivers/net/ethernet/freescale/fec_main.c:1584:
->  page_pool_put_page(page->pp, page, 0, true);
-> ./drivers/net/ethernet/freescale/fec_main.c:3351:
->          page_pool_put_page(page->pp, page, 0, false);
-> ./drivers/net/ethernet/ti/icssg/icssg_prueth_sr1.c:370:
-> page_pool_recycle_direct(page->pp, page);
-> ./drivers/net/ethernet/ti/icssg/icssg_prueth_sr1.c:395:
-> page_pool_recycle_direct(page->pp, page);
-> ./drivers/net/ethernet/ti/icssg/icssg_common.c:111:
-> page_pool_recycle_direct(page->pp, swdata->data.page);
-> ./drivers/net/ethernet/intel/idpf/idpf_txrx.c:389:
-> page_pool_put_full_page(rx_buf->page->pp, rx_buf->page, false);
-> ./drivers/net/ethernet/intel/idpf/idpf_txrx.c:3254:     u32 hr =
-> rx_buf->page->pp->p.offset;
-> ./drivers/net/ethernet/intel/idpf/idpf_txrx.c:3286:     dst =
-> page_address(hdr->page) + hdr->offset + hdr->page->pp->p.offset;
-> ./drivers/net/ethernet/intel/idpf/idpf_txrx.c:3287:     src =
-> page_address(buf->page) + buf->offset + buf->page->pp->p.offset;
-> ./drivers/net/ethernet/intel/idpf/idpf_txrx.c:3305:     u32 hr =
-> buf->page->pp->p.offset;
-> ./drivers/net/ethernet/intel/libeth/rx.c:210:
-> page_pool_recycle_direct(page->pp, page);
-> ./drivers/net/ethernet/intel/iavf/iavf_txrx.c:1200:     u32 hr =
-> rx_buffer->page->pp->p.offset;
-> ./drivers/net/ethernet/intel/iavf/iavf_txrx.c:1217:     u32 hr =
-> rx_buffer->page->pp->p.offset;
-> ./drivers/net/wireless/mediatek/mt76/mt76.h:1800:
-> page_pool_put_full_page(page->pp, page, allow_direct);
-> ./include/net/libeth/rx.h:140:  page_pool_dma_sync_for_cpu(page->pp,
-> page, fqe->offset, len);
-> 
-> Thanks a lot!
-> Taehee Yoo
-> 
-> >
-> > ---
-> >
-> > Changes from rfc:
-> >         1. Rebase on net-next's main branch
-> >            https://git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next.git/
-> >         2. Fix a build error reported by kernel test robot
-> >            https://lore.kernel.org/all/202505100932.uzAMBW1y-lkp@intel.com/
-> >         3. Add given 'Reviewed-by's, thanks to Mina and Ilias
-> >         4. Do static_assert() on the size of struct netmem_desc instead
-> >            of placing place-holder in struct page, feedbacked by Matthew
-> >         5. Do struct_group_tagged(netmem_desc) on struct net_iov instead
-> >            of wholly renaming it to strcut netmem_desc, feedbacked by
-> >            Mina and Pavel
-> >
-> > Byungchul Park (18):
-> >   netmem: introduce struct netmem_desc struct_group_tagged()'ed on
-> >     struct net_iov
-> >   netmem: introduce netmem alloc APIs to wrap page alloc APIs
-> >   page_pool: use netmem alloc/put APIs in __page_pool_alloc_page_order()
-> >   page_pool: rename __page_pool_alloc_page_order() to
-> >     __page_pool_alloc_large_netmem()
-> >   page_pool: use netmem alloc/put APIs in __page_pool_alloc_pages_slow()
-> >   page_pool: rename page_pool_return_page() to page_pool_return_netmem()
-> >   page_pool: use netmem put API in page_pool_return_netmem()
-> >   page_pool: rename __page_pool_release_page_dma() to
-> >     __page_pool_release_netmem_dma()
-> >   page_pool: rename __page_pool_put_page() to __page_pool_put_netmem()
-> >   page_pool: rename __page_pool_alloc_pages_slow() to
-> >     __page_pool_alloc_netmems_slow()
-> >   mlx4: use netmem descriptor and APIs for page pool
-> >   page_pool: use netmem APIs to access page->pp_magic in
-> >     page_pool_page_is_pp()
-> >   mlx5: use netmem descriptor and APIs for page pool
-> >   netmem: use _Generic to cover const casting for page_to_netmem()
-> >   netmem: remove __netmem_get_pp()
-> >   page_pool: make page_pool_get_dma_addr() just wrap
-> >     page_pool_get_dma_addr_netmem()
-> >   netdevsim: use netmem descriptor and APIs for page pool
-> >   mm, netmem: remove the page pool members in struct page
-> >
-> >  drivers/net/ethernet/mellanox/mlx4/en_rx.c    |  46 ++++----
-> >  drivers/net/ethernet/mellanox/mlx4/en_tx.c    |   8 +-
-> >  drivers/net/ethernet/mellanox/mlx4/mlx4_en.h  |   4 +-
-> >  drivers/net/ethernet/mellanox/mlx5/core/en.h  |   4 +-
-> >  .../net/ethernet/mellanox/mlx5/core/en/xdp.c  |  18 ++--
-> >  .../net/ethernet/mellanox/mlx5/core/en/xdp.h  |   2 +-
-> >  .../net/ethernet/mellanox/mlx5/core/en_main.c |  15 ++-
-> >  .../net/ethernet/mellanox/mlx5/core/en_rx.c   |  66 ++++++------
-> >  drivers/net/netdevsim/netdev.c                |  18 ++--
-> >  drivers/net/netdevsim/netdevsim.h             |   2 +-
-> >  include/linux/mm.h                            |   5 +-
-> >  include/linux/mm_types.h                      |  11 --
-> >  include/linux/skbuff.h                        |  14 +++
-> >  include/net/netmem.h                          | 101 ++++++++++--------
-> >  include/net/page_pool/helpers.h               |  11 +-
-> >  net/core/page_pool.c                          |  97 +++++++++--------
-> >  16 files changed, 221 insertions(+), 201 deletions(-)
-> >
-> >
-> > base-commit: f44092606a3f153bb7e6b277006b1f4a5b914cfc
-> > --
-> > 2.17.1
-> >
-> >
+-		static_assert(__same_type(struct iommufd_viommu,               \
+-					  ((drv_struct *)NULL)->member));      \
+
+Btw this patch doesn't convert all object allocations to the new helper,
+e.g. ioas. What is the criteria for when to use the old helpers vs. the
+new helpers?
