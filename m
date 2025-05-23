@@ -1,99 +1,222 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from mxhk.zte.com.cn (mxhk.zte.com.cn [63.216.63.35])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 173961EF368;
-	Fri, 23 May 2025 08:54:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03EA9130A73;
+	Fri, 23 May 2025 08:55:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=63.216.63.35
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747990480; cv=none; b=mLkbICU8kVpm2cPnRKcVwehfEDjBWz9xWewQeAFaso6YnOG0RhMVuAQxZ78hk75QoPX98TUHXQIVK31q+VXAwDzSfh95IWfomIwuEfON+Gd/KaPmkI/jLGaU71eTLZQyDyVdF+Q9uP3FanjH1wqxNpLouQFkbiSi4SAn8L1LKGY=
+	t=1747990516; cv=none; b=awEq8hrE3c9EU2ET0PQmLXWV/8YquGgZM+bnvYUw3kRqrfgdQcqcfnVDK0rzkvVygcVpxBKYo7Igjweb4tPaGqKNtZx+t5xppl2sdmplHtNQzJ6rIiPow2rU6f6AEbDGHSkEaUcw5DrHA5gzDyy9TN5IhXlZ08Ik5kDsecnH7RQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747990480; c=relaxed/simple;
-	bh=MjxuTkhnVdJdm2Od9+U+j0GCwsGx+2VCONvDGKbMvIA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JYlQyZzhSwbAFxwEfysSNrAz0uoNvamZJ7jRlLFy1avnPn0EYuWcxpuQANyB22ZDnu2JD1mZGtbiD6M8UwuY3rlM9DHzki73TiXRMYf+Qt1sbAuMQE8EnXypxk8sXGntz7iMwF0CnQRimcHJC8FnXy7FHyLgo+TqRi05GdaBdCk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=vF7e7yia; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="vF7e7yia"
-Received: from pendragon.ideasonboard.com (179.218-130-109.adsl-dyn.isp.belgacom.be [109.130.218.179])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 0EEF1346;
-	Fri, 23 May 2025 10:54:15 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1747990455;
-	bh=MjxuTkhnVdJdm2Od9+U+j0GCwsGx+2VCONvDGKbMvIA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=vF7e7yiamqBNkdZYhOw6lRl1ylQIV/fQnbEiuQNW3mPCxy0cyyHUGxr34f6eLM5jz
-	 ANJcpNrNdpWaAqEeBtmWfGwulGSlzrp7f1GZg3G+KTJj0MBItj3mjGKAjBsRLgCf9n
-	 OxwUaJWXkaDJHCCu1JMWtskavXR1aPOdrl/lXj/I=
-Date: Fri, 23 May 2025 10:54:30 +0200
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Ricardo Ribalda <ribalda@chromium.org>
-Cc: Hans de Goede <hdegoede@redhat.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/4] media: uvcvideo: Refactor uvc_queue_streamon
-Message-ID: <20250523085430.GB7516@pendragon.ideasonboard.com>
-References: <20250509-uvc-followup-v1-0-73bcde30d2b5@chromium.org>
- <20250509-uvc-followup-v1-2-73bcde30d2b5@chromium.org>
+	s=arc-20240116; t=1747990516; c=relaxed/simple;
+	bh=WuYWKSM/26vX+BnazJK6j8NxJkKFj+uIw8YHL5OYIWE=;
+	h=Date:Message-ID:Mime-Version:From:To:Cc:Subject:Content-Type; b=rL41l8eeBkxQ9KRGLYKOimWzKA7OPiLuBprpON6ye59ISEfcdRV/VKLl2NI5LIiQJdQAq29/FaBiTED+Xe81kIm3x4lBejVITAiq5XA9QJv8uvNwpMJsiun5bWWE22nTjvRiFXjNXlU/XdzL2mwJt+WpafW/5TXoCBPA9u8CpJU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=63.216.63.35
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zte.com.cn
+Received: from mse-fl1.zte.com.cn (unknown [10.5.228.132])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mxhk.zte.com.cn (FangMail) with ESMTPS id 4b3f9y56Llz5B1J6;
+	Fri, 23 May 2025 16:55:02 +0800 (CST)
+Received: from njb2app05.zte.com.cn ([10.55.22.121])
+	by mse-fl1.zte.com.cn with SMTP id 54N8sg6h069796;
+	Fri, 23 May 2025 16:54:42 +0800 (+08)
+	(envelope-from long.yunjian@zte.com.cn)
+Received: from mapi (njy2app04[null])
+	by mapi (Zmail) with MAPI id mid201;
+	Fri, 23 May 2025 16:54:45 +0800 (CST)
+Date: Fri, 23 May 2025 16:54:45 +0800 (CST)
+X-Zmail-TransId: 2afc683037d5ffffffffaf2-ab6b4
+X-Mailer: Zmail v1.0
+Message-ID: <20250523165445002hUV3RCqhv6Xng7_bbUxlJ@zte.com.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250509-uvc-followup-v1-2-73bcde30d2b5@chromium.org>
+Mime-Version: 1.0
+From: <long.yunjian@zte.com.cn>
+To: <andi.shyti@kernel.org>
+Cc: <codrin.ciubotariu@microchip.com>, <nicolas.ferre@microchip.com>,
+        <alexandre.belloni@bootlin.com>, <claudiu.beznea@tuxon.dev>,
+        <wsa+renesas@sang-engineering.com>, <till@harbaum.org>,
+        <linux-i2c@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-renesas-soc@vger.kernel.org>, <mou.yi@zte.com.cn>,
+        <xu.lifeng1@zte.com.cn>, <fang.yumeng@zte.com.cn>,
+        <ouyang.maochun@zte.com.cn>
+Subject: =?UTF-8?B?W1BBVENIIHYyXSBpMmM6IFVzZSBzdHJfcmVhZF93cml0ZSgpIGhlbHBlcg==?=
+Content-Type: text/plain;
+	charset="UTF-8"
+X-MAIL:mse-fl1.zte.com.cn 54N8sg6h069796
+X-Fangmail-Anti-Spam-Filtered: true
+X-Fangmail-MID-QID: 683037E6.003/4b3f9y56Llz5B1J6
 
-Hi Ricardo,
+From: Yumeng Fang <fang.yumeng@zte.com.cn>
 
-Thank you for the patch.
+Remove hard-coded strings by using the str_read_write() helper.
 
-On Fri, May 09, 2025 at 06:24:14PM +0000, Ricardo Ribalda wrote:
-> Do uvc_pm_get before we call uvc_queue_streamon. Although the current
-> code is correct, uvc_ioctl_streamon is allways called after uvc_pm_get,
-> this change makes the code more resiliant to future changes.
-> 
-> Suggested-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
+Signed-off-by: Yumeng Fang <fang.yumeng@zte.com.cn>
+Signed-off-by: Yunjian Long <long.yunjian@zte.com.cn>
+---
+v1 -> v2
+Fix this in the whole i2c subsystem.
 
-I've reviewed this as part of a separate series, and I'll copy
+ drivers/i2c/algos/i2c-algo-pcf.c     | 3 ++-
+ drivers/i2c/busses/i2c-at91-master.c | 3 ++-
+ drivers/i2c/busses/i2c-sh_mobile.c   | 3 ++-
+ drivers/i2c/busses/i2c-tiny-usb.c    | 3 ++-
+ drivers/i2c/busses/i2c-viperboard.c  | 3 ++-
+ drivers/i2c/i2c-core-base.c          | 3 ++-
+ drivers/i2c/i2c-core-smbus.c         | 3 ++-
+ 7 files changed, 14 insertions(+), 7 deletions(-)
 
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+diff --git a/drivers/i2c/algos/i2c-algo-pcf.c b/drivers/i2c/algos/i2c-algo-pcf.c
+index 7a01f2687b4c..740066ceaea3 100644
+--- a/drivers/i2c/algos/i2c-algo-pcf.c
++++ b/drivers/i2c/algos/i2c-algo-pcf.c
+@@ -19,6 +19,7 @@
+ #include <linux/errno.h>
+ #include <linux/i2c.h>
+ #include <linux/i2c-algo-pcf.h>
++#include <linux/string_choices.h>
+ #include "i2c-algo-pcf.h"
 
-here for patchwork to pick.
 
-> ---
->  drivers/media/usb/uvc/uvc_v4l2.c | 7 ++++---
->  1 file changed, 4 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/media/usb/uvc/uvc_v4l2.c b/drivers/media/usb/uvc/uvc_v4l2.c
-> index 668a4e9d772c6d91f045ca75e2744b3a6c69da6b..862b4e34e5b629cf324479a9bb59ebe8784ccd5d 100644
-> --- a/drivers/media/usb/uvc/uvc_v4l2.c
-> +++ b/drivers/media/usb/uvc/uvc_v4l2.c
-> @@ -853,15 +853,16 @@ static int uvc_ioctl_streamon(struct file *file, void *fh,
->  	if (handle->is_streaming)
->  		return 0;
->  
-> -	ret = uvc_queue_streamon(&stream->queue, type);
-> +	ret = uvc_pm_get(stream->dev);
->  	if (ret)
->  		return ret;
->  
-> -	ret = uvc_pm_get(stream->dev);
-> +	ret = uvc_queue_streamon(&stream->queue, type);
->  	if (ret) {
-> -		uvc_queue_streamoff(&stream->queue, type);
-> +		uvc_pm_put(stream->dev);
->  		return ret;
->  	}
-> +
->  	handle->is_streaming = true;
->  
->  	return 0;
+@@ -316,7 +317,7 @@ static int pcf_xfer(struct i2c_adapter *i2c_adap,
+ 		pmsg = &msgs[i];
 
+ 		DEB2(printk(KERN_DEBUG "i2c-algo-pcf.o: Doing %s %d bytes to 0x%02x - %d of %d messages\n",
+-		     pmsg->flags & I2C_M_RD ? "read" : "write",
++		     str_read_write(pmsg->flags & I2C_M_RD),
+ 		     pmsg->len, pmsg->addr, i + 1, num);)
+
+ 		ret = pcf_doAddress(adap, pmsg);
+diff --git a/drivers/i2c/busses/i2c-at91-master.c b/drivers/i2c/busses/i2c-at91-master.c
+index ee3b469ddfb9..374fc50bb205 100644
+--- a/drivers/i2c/busses/i2c-at91-master.c
++++ b/drivers/i2c/busses/i2c-at91-master.c
+@@ -26,6 +26,7 @@
+ #include <linux/pinctrl/consumer.h>
+ #include <linux/platform_device.h>
+ #include <linux/pm_runtime.h>
++#include <linux/string_choices.h>
+
+ #include "i2c-at91.h"
+
+@@ -523,7 +524,7 @@ static int at91_do_twi_transfer(struct at91_twi_dev *dev)
+ 	 */
+
+ 	dev_dbg(dev->dev, "transfer: %s %zu bytes.\n",
+-		(dev->msg->flags & I2C_M_RD) ? "read" : "write", dev->buf_len);
++		str_read_write(dev->msg->flags & I2C_M_RD), dev->buf_len);
+
+ 	reinit_completion(&dev->cmd_complete);
+ 	dev->transfer_status = 0;
+diff --git a/drivers/i2c/busses/i2c-sh_mobile.c b/drivers/i2c/busses/i2c-sh_mobile.c
+index efe29621b8d7..adfcee6c9fdc 100644
+--- a/drivers/i2c/busses/i2c-sh_mobile.c
++++ b/drivers/i2c/busses/i2c-sh_mobile.c
+@@ -24,6 +24,7 @@
+ #include <linux/platform_device.h>
+ #include <linux/pm_runtime.h>
+ #include <linux/slab.h>
++#include <linux/string_choices.h>
+
+ /* Transmit operation:                                                      */
+ /*                                                                          */
+@@ -409,7 +410,7 @@ static irqreturn_t sh_mobile_i2c_isr(int irq, void *dev_id)
+ 	pd->sr |= sr; /* remember state */
+
+ 	dev_dbg(pd->dev, "i2c_isr 0x%02x 0x%02x %s %d %d!\n", sr, pd->sr,
+-	       (pd->msg->flags & I2C_M_RD) ? "read" : "write",
++	       str_read_write(pd->msg->flags & I2C_M_RD),
+ 	       pd->pos, pd->msg->len);
+
+ 	/* Kick off TxDMA after preface was done */
+diff --git a/drivers/i2c/busses/i2c-tiny-usb.c b/drivers/i2c/busses/i2c-tiny-usb.c
+index 0f2ed181b266..a18eab0992a1 100644
+--- a/drivers/i2c/busses/i2c-tiny-usb.c
++++ b/drivers/i2c/busses/i2c-tiny-usb.c
+@@ -10,6 +10,7 @@
+ #include <linux/errno.h>
+ #include <linux/module.h>
+ #include <linux/slab.h>
++#include <linux/string_choices.h>
+ #include <linux/types.h>
+
+ /* include interfaces to usb layer */
+@@ -71,7 +72,7 @@ static int usb_xfer(struct i2c_adapter *adapter, struct i2c_msg *msgs, int num)
+
+ 		dev_dbg(&adapter->dev,
+ 			"  %d: %s (flags %d) %d bytes to 0x%02x\n",
+-			i, pmsg->flags & I2C_M_RD ? "read" : "write",
++			i, str_read_write(pmsg->flags & I2C_M_RD),
+ 			pmsg->flags, pmsg->len, pmsg->addr);
+
+ 		/* and directly send the message */
+diff --git a/drivers/i2c/busses/i2c-viperboard.c b/drivers/i2c/busses/i2c-viperboard.c
+index 7523e7c02271..1bd602852e35 100644
+--- a/drivers/i2c/busses/i2c-viperboard.c
++++ b/drivers/i2c/busses/i2c-viperboard.c
+@@ -11,6 +11,7 @@
+ #include <linux/errno.h>
+ #include <linux/module.h>
+ #include <linux/slab.h>
++#include <linux/string_choices.h>
+ #include <linux/types.h>
+ #include <linux/mutex.h>
+ #include <linux/platform_device.h>
+@@ -278,7 +279,7 @@ static int vprbrd_i2c_xfer(struct i2c_adapter *i2c, struct i2c_msg *msgs,
+
+ 		dev_dbg(&i2c->dev,
+ 			"  %d: %s (flags %d) %d bytes to 0x%02x\n",
+-			i, pmsg->flags & I2C_M_RD ? "read" : "write",
++			i, str_read_write(pmsg->flags & I2C_M_RD),
+ 			pmsg->flags, pmsg->len, pmsg->addr);
+
+ 		mutex_lock(&vb->lock);
+diff --git a/drivers/i2c/i2c-core-base.c b/drivers/i2c/i2c-core-base.c
+index 5f6ff35a2707..2ad2b1838f0f 100644
+--- a/drivers/i2c/i2c-core-base.c
++++ b/drivers/i2c/i2c-core-base.c
+@@ -41,6 +41,7 @@
+ #include <linux/property.h>
+ #include <linux/rwsem.h>
+ #include <linux/slab.h>
++#include <linux/string_choices.h>
+
+ #include "i2c-core.h"
+
+@@ -2144,7 +2145,7 @@ static int i2c_quirk_error(struct i2c_adapter *adap, struct i2c_msg *msg, char *
+ {
+ 	dev_err_ratelimited(&adap->dev, "adapter quirk: %s (addr 0x%04x, size %u, %s)\n",
+ 			    err_msg, msg->addr, msg->len,
+-			    msg->flags & I2C_M_RD ? "read" : "write");
++			    str_read_write(msg->flags & I2C_M_RD));
+ 	return -EOPNOTSUPP;
+ }
+
+diff --git a/drivers/i2c/i2c-core-smbus.c b/drivers/i2c/i2c-core-smbus.c
+index e73afbefe222..71eb1ef56f0c 100644
+--- a/drivers/i2c/i2c-core-smbus.c
++++ b/drivers/i2c/i2c-core-smbus.c
+@@ -16,6 +16,7 @@
+ #include <linux/i2c-smbus.h>
+ #include <linux/property.h>
+ #include <linux/slab.h>
++#include <linux/string_choices.h>
+
+ #include "i2c-core.h"
+
+@@ -433,7 +434,7 @@ static s32 i2c_smbus_xfer_emulated(struct i2c_adapter *adapter, u16 addr,
+ 	case I2C_SMBUS_I2C_BLOCK_DATA:
+ 		if (data->block[0] > I2C_SMBUS_BLOCK_MAX) {
+ 			dev_err(&adapter->dev, "Invalid block %s size %d\n",
+-				read_write == I2C_SMBUS_READ ? "read" : "write",
++				str_read_write(read_write == I2C_SMBUS_READ),
+ 				data->block[0]);
+ 			return -EINVAL;
+ 		}
 -- 
-Regards,
-
-Laurent Pinchart
+2.25.1
