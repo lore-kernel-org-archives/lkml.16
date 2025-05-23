@@ -1,86 +1,231 @@
-Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE0285D8F0;
-	Fri, 23 May 2025 11:36:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.61.82.184
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAB192356A8
+	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 11:36:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748000171; cv=none; b=XHiF6nC52k/S5Zs+ZnmhEOWt1LRvOaIeYlp19N5u6ThHFh1gTcNIqCH0uUiPEEvzwwgKzJPD77bjBy7FlrEOlFm7Pb8GmG/06leDYwK7sTS3RN1ONhISUAwx/7NGlQnepRBAF3tesLFNItPzQNBHRjOkwFkGrBtszMoVmLhIeY0=
+	t=1748000175; cv=none; b=GskWvIVoeU13MC+zXejNQ7TLtWUxX4hz/9yFHLe8bUFZkkngA/YESlGQVYQx3jU08ZRLE5F0zh6GXuv3soYQ3oSps+nk2IXFkZszfnWN7mKNbFDbBDPzudhhajGyZFpS30xW9I7NMz3qLB7MYGXzNm8B5nsdX/DMVZ3EB3M7dpU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748000171; c=relaxed/simple;
-	bh=uXNU0NtsMBAb+zFHnNSWxwAJ193VCHniibeEdiXy4NM=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Ak5xDTIxIgfy5xORnHJXkI+ZTltt8vQ3W2xTgbzRX1IbBX6FfeHe6rxtW8WPx2HkbDRSpoUMFIQ0J9Atavb/JZ/gJigzmaBBtpeZJCD+bjvhOls21g2ZUtkmrY4N12U173kLw2E94kqUEcLlkPSb2FUTlaIJE+GDO87+rWXz/IE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=a7fis9FR; arc=none smtp.client-ip=210.61.82.184
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
+	s=arc-20240116; t=1748000175; c=relaxed/simple;
+	bh=5osHyV21by3EPnFM/B87KOZI5Ors1zitCYB5PcM/luk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=HBWkt/jMa+u0f4uxs/y4qzsnXqjgLxjuSb9eyDhwbXP0LjOV/5pAsFXTz+J1xD9K4OFbgBqfm0NbXsjXmiYjRt2d4mRSfLlWpU44Q0nrx1MG5TqTuIAurYS6wH5LiKByqo2MlsfQt4x14dM1Nd4kGJRdh8wTxy2jaQafoktUQws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=Xrh4wYB9; arc=none smtp.client-ip=209.85.221.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="a7fis9FR"
-X-UUID: 1bf7466237ca11f082f7f7ac98dee637-20250523
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=bpH39SBux/FnTvU2Mj/izFWlhWacqOVNUYyzk61rexs=;
-	b=a7fis9FRrkmHg6cxiVXIDFOphGPXDIcxhvHWITARDHzV/QOkHFIHTOu29gvhD8o6vA2WE+utiCO7b/XQpLfiDgnUW6/L9ENMZeV23ZNJJ7iNQx2YYWHTFRyr+nb+wer9PEuLrMbzIobRFLLaf6xJMnLUP8GeaSQ3qkGBgU4u+/w=;
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.2.1,REQID:b6088f32-e915-4281-9970-10dc072fc477,IP:0,UR
-	L:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:r
-	elease,TS:0
-X-CID-META: VersionHash:0ef645f,CLOUDID:c029e757-abad-4ac2-9923-3af0a8a9a079,B
-	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0|50,EDM:-3,IP:ni
-	l,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES
-	:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-UUID: 1bf7466237ca11f082f7f7ac98dee637-20250523
-Received: from mtkmbs09n2.mediatek.inc [(172.21.101.94)] by mailgw02.mediatek.com
-	(envelope-from <skylake.huang@mediatek.com>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 524666907; Fri, 23 May 2025 19:36:04 +0800
-Received: from mtkmbs11n1.mediatek.inc (172.21.101.185) by
- MTKMBS14N1.mediatek.inc (172.21.101.75) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.39; Fri, 23 May 2025 19:36:01 +0800
-Received: from mtksitap99.mediatek.inc (10.233.130.16) by
- mtkmbs11n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1258.39 via Frontend Transport; Fri, 23 May 2025 19:36:01 +0800
-From: Sky Huang <SkyLake.Huang@mediatek.com>
-To: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>, "David S. Miller"
-	<davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
-	<kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Daniel Golle
-	<daniel@makrotopia.org>, Qingfang Deng <dqfext@gmail.com>, SkyLake Huang
-	<SkyLake.Huang@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	<linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-mediatek@lists.infradead.org>
-CC: Sky Huang <skylake.huang@mediatek.com>
-Subject: [PATCH net-next 0/2] Add LED support/fix to MediaTek 2.5Gphy & Gphy
-Date: Fri, 23 May 2025 19:35:59 +0800
-Message-ID: <20250523113601.3627781-1-SkyLake.Huang@mediatek.com>
-X-Mailer: git-send-email 2.45.2
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="Xrh4wYB9"
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-3a361a54454so1141823f8f.0
+        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 04:36:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ventanamicro.com; s=google; t=1748000172; x=1748604972; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=VPjovNDjW6+EQ4LMpESmH+B/L0gygzy/uxelrXjYBg8=;
+        b=Xrh4wYB9eJtr9DWwSS4xd5adpaYq9zmg89Jhn8G/8wD1IH468nKEPdS+etZcsfXube
+         CvoErKsdwtLpjrzTrhX0r72c5Qv1bzFEsQ0Fm4+1RvqGY/I/SEwR2fI+wv8bFMRLKH+6
+         9XaxCBAqy021IVcUcOfLF97C3N+bhWhHqmWJ+PB2Wq7qbIr5lSlbHopi4lSSDce4vwQS
+         yk2AD7eKljt3EjfUCUNgt8HyXlgQ/GNisg8jf/aPGTw45BZ8nfPmcBVqLU0eJ+wADcF4
+         QhsLH2EplMFIvPVvsos9PApgWFsZtfr1p1+n9UpDSMiQaPn9yWuezyHuH1ir+ip+xGJL
+         y4lg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748000172; x=1748604972;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=VPjovNDjW6+EQ4LMpESmH+B/L0gygzy/uxelrXjYBg8=;
+        b=SbfacoPWR01PSa7zwMEfP/mFN8uGqUJxhv2o7yIaFWSa8KohAEuqNjK0+Nl7fUbrgD
+         Gt9jKjpTgbwYMi5JT0njFTQfGxVCc76tATufMC/UkK+O1QE4RvLbY/D5h03GV4K3xSx+
+         bL9/Uilp+iU1ySHPSBsTwWQlm3XpuQaXdFfFXVw+vT8fVBJZpslwy4umZ3dLcVrK3d3A
+         mqdIyB7SNnrkJzIrsa5A/x0GBr+SLWuNI8BTog30Dw+3bQ20hblCaJBa1JNyIRNlWGyd
+         VFgS11xxg7VvHHgz58W/G7Fu2qIMQc4pz45znf3eCG6Nb5Uul2ijFqS7E6+U53Rc8lQW
+         UQkg==
+X-Forwarded-Encrypted: i=1; AJvYcCWVfN14Mqx40ZEH4P8gkSeRun9zMJYStVq/G5GegDWIb4dTOlNaJMwMklswvQJJgSB5+8CNFL0anxIsfZ0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwSIUeBEgbEeDXwFKmmcr4xs/iHsKdaR4cWzaence1K91B4fUqV
+	JNQK2pb8tS8e3QQ/ZC0RABGD27ZkvdRRf4v+aZ60USOOXgburG63R4+AelY3aqMeVVo=
+X-Gm-Gg: ASbGnctv80vsoubLIXFrc3vJjrGrEsZr42JMw35Xnbd9p6GsjqOoVzP+ts4+6VyBlBS
+	WLw5e0QMPrQklkGQ5lhqd5zRMV49b1DiBybSCwIbTgtaIbBnqkDl0ucjKjz/tZ89jNqnXyhH8/Q
+	/+HvmacAGbc3XgWxMGkwlx+zbSCOG2pLvBb+HjHiJTcCS/82GY6lCHDdsSKbSREnClUuRT4fDaG
+	PCmX+LOjG4KiH9qMrBVJoWFZhjd+oHUrTWXRKRyxacbusq6eBfnqwYKovRao7HpgE7ZgicC2AM7
+	NcvGuIbshUCkd43QZEJ3WD00msBu6rZcU9AKq2O7rPPqKvL1uSHzxEbZEo8=
+X-Google-Smtp-Source: AGHT+IF2ZQShD6Bzg9HopdSxCvsBVk+Vm5DBLVCqW0pMilB6flZ85+PDQSUHNACKnOikFlZ7WJIovg==
+X-Received: by 2002:a05:6000:188f:b0:3a3:71fb:7903 with SMTP id ffacd0b85a97d-3a371fb829emr6202649f8f.10.1748000171649;
+        Fri, 23 May 2025 04:36:11 -0700 (PDT)
+Received: from localhost ([2a02:8308:a00c:e200:be84:d9ad:e5e6:f60b])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-447f3814262sm136898265e9.25.2025.05.23.04.36.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 23 May 2025 04:36:11 -0700 (PDT)
+From: =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@ventanamicro.com>
+To: kvm-riscv@lists.infradead.org
+Cc: kvm@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Anup Patel <anup@brainfault.org>,
+	Atish Patra <atishp@atishpatra.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Alexandre Ghiti <alex@ghiti.fr>,
+	Andrew Jones <ajones@ventanamicro.com>
+Subject: [PATCH v4] RISC-V: KVM: add KVM_CAP_RISCV_USERSPACE_SBI
+Date: Fri, 23 May 2025 13:33:49 +0200
+Message-ID: <20250523113347.2898042-3-rkrcmar@ventanamicro.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-MTK: N
 
-From: Sky Huang <skylake.huang@mediatek.com>
+The new capability allows userspace to implement SBI extensions that KVM
+does not handle.  This allows userspace to implement any SBI ecall as
+userspace already has the ability to disable acceleration of selected
+SBI extensions.
+The base extension is made controllable as well, but only with the new
+capability, because it was previously handled specially for some reason.
+*** The related compatibility TODO in the code needs addressing. ***
 
-This patchset adds LED support to MediaTek's built-in 2.5G phy, which
-basically hooks the same helper function with built-in Gphy. Also, fix
-LED behavior when blinking(delay_on & delay_off are both zero) is not set.
+This is a VM capability, because userspace will most likely want to have
+the same behavior for all VCPUs.  We can easily make it both a VCPU and
+a VM capability if there is demand in the future.
 
-Sky Huang (2):
-  net: phy: mtk-2p5ge: Add LED support for MT7988
-  net: phy: mtk-ge-soc: Fix LED behavior if blinking is not set.
+Signed-off-by: Radim Krčmář <rkrcmar@ventanamicro.com>
+---
+v4:
+* forward base extension as well
+* change the id to 242, because 241 is already taken in linux-next
+* QEMU example: https://github.com/radimkrcmar/qemu/tree/mp_state_reset
+v3: new
+---
+ Documentation/virt/kvm/api.rst    | 11 +++++++++++
+ arch/riscv/include/asm/kvm_host.h |  3 +++
+ arch/riscv/include/uapi/asm/kvm.h |  1 +
+ arch/riscv/kvm/vcpu_sbi.c         | 17 ++++++++++++++---
+ arch/riscv/kvm/vm.c               |  5 +++++
+ include/uapi/linux/kvm.h          |  1 +
+ 6 files changed, 35 insertions(+), 3 deletions(-)
 
- drivers/net/phy/mediatek/mtk-2p5ge.c  | 104 ++++++++++++++++++++++++--
- drivers/net/phy/mediatek/mtk-ge-soc.c |   7 +-
- 2 files changed, 103 insertions(+), 8 deletions(-)
-
+diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
+index e107694fb41f..c9d627d13a5e 100644
+--- a/Documentation/virt/kvm/api.rst
++++ b/Documentation/virt/kvm/api.rst
+@@ -8507,6 +8507,17 @@ given VM.
+ When this capability is enabled, KVM resets the VCPU when setting
+ MP_STATE_INIT_RECEIVED through IOCTL.  The original MP_STATE is preserved.
+ 
++7.44 KVM_CAP_RISCV_USERSPACE_SBI
++--------------------------------
++
++:Architectures: riscv
++:Type: VM
++:Parameters: None
++:Returns: 0 on success, -EINVAL if arg[0] is not zero
++
++When this capability is enabled, KVM forwards ecalls from disabled or unknown
++SBI extensions to userspace.
++
+ 8. Other capabilities.
+ ======================
+ 
+diff --git a/arch/riscv/include/asm/kvm_host.h b/arch/riscv/include/asm/kvm_host.h
+index 85cfebc32e4c..6f17cd923889 100644
+--- a/arch/riscv/include/asm/kvm_host.h
++++ b/arch/riscv/include/asm/kvm_host.h
+@@ -122,6 +122,9 @@ struct kvm_arch {
+ 
+ 	/* KVM_CAP_RISCV_MP_STATE_RESET */
+ 	bool mp_state_reset;
++
++	/* KVM_CAP_RISCV_USERSPACE_SBI */
++	bool userspace_sbi;
+ };
+ 
+ struct kvm_cpu_trap {
+diff --git a/arch/riscv/include/uapi/asm/kvm.h b/arch/riscv/include/uapi/asm/kvm.h
+index 5f59fd226cc5..dd3a5dc53d34 100644
+--- a/arch/riscv/include/uapi/asm/kvm.h
++++ b/arch/riscv/include/uapi/asm/kvm.h
+@@ -204,6 +204,7 @@ enum KVM_RISCV_SBI_EXT_ID {
+ 	KVM_RISCV_SBI_EXT_DBCN,
+ 	KVM_RISCV_SBI_EXT_STA,
+ 	KVM_RISCV_SBI_EXT_SUSP,
++	KVM_RISCV_SBI_EXT_BASE,
+ 	KVM_RISCV_SBI_EXT_MAX,
+ };
+ 
+diff --git a/arch/riscv/kvm/vcpu_sbi.c b/arch/riscv/kvm/vcpu_sbi.c
+index 31fd3cc98d66..497d5b023153 100644
+--- a/arch/riscv/kvm/vcpu_sbi.c
++++ b/arch/riscv/kvm/vcpu_sbi.c
+@@ -39,7 +39,7 @@ static const struct kvm_riscv_sbi_extension_entry sbi_ext[] = {
+ 		.ext_ptr = &vcpu_sbi_ext_v01,
+ 	},
+ 	{
+-		.ext_idx = KVM_RISCV_SBI_EXT_MAX, /* Can't be disabled */
++		.ext_idx = KVM_RISCV_SBI_EXT_BASE,
+ 		.ext_ptr = &vcpu_sbi_ext_base,
+ 	},
+ 	{
+@@ -217,6 +217,11 @@ static int riscv_vcpu_set_sbi_ext_single(struct kvm_vcpu *vcpu,
+ 	if (!sext || scontext->ext_status[sext->ext_idx] == KVM_RISCV_SBI_EXT_STATUS_UNAVAILABLE)
+ 		return -ENOENT;
+ 
++	// TODO: probably remove, the extension originally couldn't be
++	// disabled, but it doesn't seem necessary
++	if (!vcpu->kvm->arch.userspace_sbi && sext->ext_id == KVM_RISCV_SBI_EXT_BASE)
++		return -ENOENT;
++
+ 	scontext->ext_status[sext->ext_idx] = (reg_val) ?
+ 			KVM_RISCV_SBI_EXT_STATUS_ENABLED :
+ 			KVM_RISCV_SBI_EXT_STATUS_DISABLED;
+@@ -471,8 +476,14 @@ int kvm_riscv_vcpu_sbi_ecall(struct kvm_vcpu *vcpu, struct kvm_run *run)
+ #endif
+ 		ret = sbi_ext->handler(vcpu, run, &sbi_ret);
+ 	} else {
+-		/* Return error for unsupported SBI calls */
+-		cp->a0 = SBI_ERR_NOT_SUPPORTED;
++		if (vcpu->kvm->arch.userspace_sbi) {
++			next_sepc = false;
++			ret = 0;
++			kvm_riscv_vcpu_sbi_forward(vcpu, run);
++		} else {
++			/* Return error for unsupported SBI calls */
++			cp->a0 = SBI_ERR_NOT_SUPPORTED;
++		}
+ 		goto ecall_done;
+ 	}
+ 
+diff --git a/arch/riscv/kvm/vm.c b/arch/riscv/kvm/vm.c
+index b27ec8f96697..0b6378b83955 100644
+--- a/arch/riscv/kvm/vm.c
++++ b/arch/riscv/kvm/vm.c
+@@ -217,6 +217,11 @@ int kvm_vm_ioctl_enable_cap(struct kvm *kvm, struct kvm_enable_cap *cap)
+ 			return -EINVAL;
+ 		kvm->arch.mp_state_reset = true;
+ 		return 0;
++	case KVM_CAP_RISCV_USERSPACE_SBI:
++		if (cap->flags)
++			return -EINVAL;
++		kvm->arch.userspace_sbi = true;
++		return 0;
+ 	default:
+ 		return -EINVAL;
+ 	}
+diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
+index 454b7d4a0448..bf23deb6679e 100644
+--- a/include/uapi/linux/kvm.h
++++ b/include/uapi/linux/kvm.h
+@@ -931,6 +931,7 @@ struct kvm_enable_cap {
+ #define KVM_CAP_X86_GUEST_MODE 238
+ #define KVM_CAP_ARM_WRITABLE_IMP_ID_REGS 239
+ #define KVM_CAP_RISCV_MP_STATE_RESET 240
++#define KVM_CAP_RISCV_USERSPACE_SBI 242
+ 
+ struct kvm_irq_routing_irqchip {
+ 	__u32 irqchip;
 -- 
-2.45.2
+2.49.0
 
