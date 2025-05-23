@@ -1,63 +1,74 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78921296D26;
-	Fri, 23 May 2025 16:51:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 899C3296FCA;
+	Fri, 23 May 2025 16:51:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748019069; cv=none; b=XsgjdwgP2QCzbmP5OkrC5hz8YvZR3T7blFeieACnQJf0fcwvyHNFmAnWoZavSpwKaKSwTRPiAaH95I65L5KEug3IjI1daxrHLOhZuLGo1leWP4a4Fj49lDXlnwm/zucmpIx38nN/d8vgy6hksMnfdLS2IldtsHkUunjG04c3dZk=
+	t=1748019107; cv=none; b=CUbOZ6TjBR+qGStd9KpDaZI1L0LUtFhOXGnY4Mbt7NsGtObmQl218qY4XPHbIGYwFgRtXcOdzIKEeY5zM9bCdXu5vffxf6TT656pPDsqEyWP1HUhbr111HLXGoefK9QGCEVWdKoYPh1F1MiDs2VNgTb8iUzBIWNopqwA+BZ8UCs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748019069; c=relaxed/simple;
-	bh=QCNLeg1eIDnhSEBsotWoZ7Cdi7uOOQCHPM5NmVDVyPQ=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=FgWsI484SjAQYTEHBTbeNJr17HdTSFS2riw82CIZcc35Lbul8iC4xDH2XVSogaXAFryPyWYa1TadaK7zVUVEjh/q+tJbwrrZ9Q75KreMb6KV1XadPet4//2TFkRUDeL49C95YX7zUNc7hOkdY+HgQZwmGBMrPmFtUICrp05BMZI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AvbYfOjD; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748019107; c=relaxed/simple;
+	bh=Wh0XqPUu+Lz68HLgF4GQPjuZRkkZz7XwGHcAlknA1F0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mam6klp0rymLOAO5ur6JTZ4/JCKSSGs1+MoXqmO60yJYGtfcb6X/SrOeVlBauN78ULxpSPDkg6ugNDxAB89gpUAAlW98PQoN6MYwSyHhCyR4oaezobNmYBhDk7j3k3r9Rah3Ro38hpfZlpPdh7hUABiVEWaxNoILXTytyjVWVY4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZLLoq8gl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AvbYfOjD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E82EBC4CEE9;
-	Fri, 23 May 2025 16:51:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZLLoq8gl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B2FCC4CEE9;
+	Fri, 23 May 2025 16:51:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748019068;
-	bh=QCNLeg1eIDnhSEBsotWoZ7Cdi7uOOQCHPM5NmVDVyPQ=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=AvbYfOjD/gi/1GC97I0Jt3q0ST5lTx1V25utdj5JoIPkETpZXz0Dq0+nzGcjPXBGR
-	 k3nfLz4QIOHSLNblwuZu668ZyMD+NeNTPMhjigj2CXJUq5hYvLbRKU8+lP69cCTcec
-	 JNrq1jd/YnbxSN9mrm0OTDyqdw9a6zYviNoytYvhbLNtlx3FYyXfzTUC9FeUNFdgrK
-	 ojM0TsZUhAxp/aONqCMRdBIyj45oryCQp/etBtGDLk/x+P8jJBKVXIllQ9tSwh178o
-	 AYdo/uiTpWgPUtAhtRAJoqOH+Wx1eLkJPyWKcH1wFpU2TAuGB3Iqs7mE2hQQpfgF1S
-	 6jpQI9TojsbMw==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 7110A380DBEB;
-	Fri, 23 May 2025 16:51:45 +0000 (UTC)
-Subject: Re: [GIT PULL] Thermal control fix for final v6.15
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <CAJZ5v0j7MgC5SheA+8A-QiznuCyT9cRG6spXZS4d10OVGPmgfw@mail.gmail.com>
-References: <CAJZ5v0j7MgC5SheA+8A-QiznuCyT9cRG6spXZS4d10OVGPmgfw@mail.gmail.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <CAJZ5v0j7MgC5SheA+8A-QiznuCyT9cRG6spXZS4d10OVGPmgfw@mail.gmail.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git thermal-6.15-rc8
-X-PR-Tracked-Commit-Id: cf948c8e274e8b406e846cdf6cc48fe47f98cf57
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 7586ac7c340c3672f116052c1d150f134810965b
-Message-Id: <174801910395.3663029.18440796244398718733.pr-tracker-bot@kernel.org>
-Date: Fri, 23 May 2025 16:51:43 +0000
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Linux PM <linux-pm@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>
+	s=k20201202; t=1748019107;
+	bh=Wh0XqPUu+Lz68HLgF4GQPjuZRkkZz7XwGHcAlknA1F0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ZLLoq8glu63ddQX8GfGQABKc1/sthdqvrLqG/2Wkri12PhSEzJnLwlGfz7fP4w31w
+	 cUS+VWCZsAtBU0AJ75DUXEUbtk6gOl9tWVZQQCLh0ovP5hYwL9yQ1KrZzJpnDrTPMo
+	 04L0fVKSRJCi1kSFCr/JRzxu3VJTaH8dAgjO1+ZrB6Uj1ufjA3VABC9oFxtXtLG0/N
+	 HG9GS07dMcXmIX9TBCrkldXiwzMGbXTZ3/SjDmX22KMDqrg5YK4P4ta2PflRafrJj0
+	 mnffnxTljFDxgLZ55H+w4b9sIPoC93PCNYnIQskRd16BaJ0I/Yx8I20j6Bb81kSFJV
+	 EK/rSBRZ6m2qg==
+Date: Fri, 23 May 2025 06:51:41 -1000
+From: Tejun Heo <tj@kernel.org>
+To: Zhongkun He <hezhongkun.hzk@bytedance.com>
+Cc: Waiman Long <llong@redhat.com>, hannes@cmpxchg.org,
+	cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+	muchun.song@linux.dev
+Subject: Re: [External] Re: [PATCH] cpuset: introduce non-blocking
+ cpuset.mems setting option
+Message-ID: <aDCnnd46qjAvoxZq@slm.duckdns.org>
+References: <20250520031552.1931598-1-hezhongkun.hzk@bytedance.com>
+ <8029d719-9dc2-4c7d-af71-4f6ae99fe256@redhat.com>
+ <CACSyD1Mmt54dVRiBibcGsum_rRV=_SwP=dxioAxq=EDmPRnY2Q@mail.gmail.com>
+ <aC4J9HDo2LKXYG6l@slm.duckdns.org>
+ <CACSyD1MvwPT7i5_PnEp32seeb7X_svdCeFtN6neJ0=QPY1hDsw@mail.gmail.com>
+ <aC90-jGtD_tJiP5K@slm.duckdns.org>
+ <CACSyD1P+wuSP2jhMsLHBAXDxGoBkWzK54S5BRzh63yby4g0OHw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACSyD1P+wuSP2jhMsLHBAXDxGoBkWzK54S5BRzh63yby4g0OHw@mail.gmail.com>
 
-The pull request you sent on Fri, 23 May 2025 17:51:29 +0200:
+Hello,
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git thermal-6.15-rc8
+On Fri, May 23, 2025 at 11:35:57PM +0800, Zhongkun He wrote:
+> > Is this something you want on the whole machine? If so, would global cgroup
+> > mount option work?
+> 
+> It doesn't apply to the whole machine. It is only relevant to the pod with
+> huge pages, where the service will be unavailable for over ten seconds if
+> modify the cpuset.mems. Therefore, it would be ideal if there were an
+> option to disable the migration for this special case.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/7586ac7c340c3672f116052c1d150f134810965b
+I suppose we can add back an interface similar to cgroup1 but can you detail
+the use case a bit? If you relocate threads without relocating memory, you'd
+be paying on-going cost for memory access. It'd be great if you can
+elaborate why such mode of operation is desirable.
 
-Thank you!
+Thanks.
 
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+tejun
