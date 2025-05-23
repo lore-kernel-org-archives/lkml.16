@@ -1,153 +1,185 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from out30-130.freemail.mail.aliyun.com (out30-130.freemail.mail.aliyun.com [115.124.30.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CFD42DCBE6;
-	Fri, 23 May 2025 05:25:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1735223709;
+	Fri, 23 May 2025 05:25:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747977924; cv=none; b=rs3TWeUZOLt44Zgoxha0woc75QhlJsfYh4ppNC0RqXfAXLt5i5yrIfPdEe8kptkwyf7LKl12RzgE+YYBURQNKGSEGM65BGE+gwXAM8jWA0O/5pWbOnGMKzojPgRYYQGD2qnD3oginQTNmaLgbkhf/WCVcccuXziRukKEmh4dehY=
+	t=1747977945; cv=none; b=ia5veVzUuftih5ygVNNI75Blo8tYQWUn36USYxaorFfc5D5YlbpMokO6laE4XhMfwbr+iWCDpSAzuf9IlcwHWWPylFd+HHBIwSyzVGW6TecEAMcYPlPIOXxo+SKlIb2DUf/KeVm9cz3uj1RI+M1CtDeXUcRrqlvnOJKuWvkzZLI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747977924; c=relaxed/simple;
-	bh=sHCHau5V2Ia+Ul8jz8STWNXfBt/x/iwthPVTBpu6WaA=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=fi1Gza9LJHT1PxtWaXmTShBekgB6hjMPNg36EdtTruY+srj4Bw6mSljxqFtunpKIrjoHJnuwUZBWXdeKAIeL8pTAbmwDKAx2iX2esCiYspHgk+OoZfv+eYDi821oApSbGBcVqN+JyX3FxxqlVHqdXJxDVkrV9LCKnchsvkZeSkM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=gkPzzSJS; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1747977945; c=relaxed/simple;
+	bh=zqFBXNgJR6QPqujYBcu7eKwHqsY+GG/0ieJMWXaanzY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Q/fkIq41zx0r5sSu6fnSSA9YSWTakPIP/KOu2fjKaug5Nlql5b8YOVglpsiKbtoj0GX0FxFis9s4FrTWpMDOOU+4+DqmVrdyPRBrAPO8I8LBdQmLtVWvz9+rwoSNOaD/NzL3N+e3L8FfzT4pZstz5sDPj/Lr3jHjYG/H1NPNUXc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=CZtZcw+a; arc=none smtp.client-ip=115.124.30.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="gkPzzSJS"
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54MNWEn5006420;
-	Fri, 23 May 2025 05:24:43 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=T9QR0v
-	Rv/b0B11JDYax3wCR+tNiJcsp+EMocfpzOxi8=; b=gkPzzSJS3ymffrtpxcB5vm
-	v0s0Gt+0xedPFAF4Q0SBMgwUo01yMH5OqoDNtugNOwneyxcvMf5JVIm1y0T08Re7
-	EmJ6QdZ6GthLPsjQ11Y8uXW7sj+Eeyb8WqKlexTBXqcCpntaCyNC/X7hKpXH2JUj
-	tiWuD0uZqTjnvmBQRioWrY0breTha8OmZHdV8IDZEYMicTaNWm94EHTL/osOLYVd
-	iuLvSdTpZmyAtPpzaNMZw/bBFpt41IbV5Ua0ZuIpLPTk4wDsHISYTDhuqr1lanD2
-	vG9gQ6KwGs17vxJDgNiDQL5N9JmAxrZi3uqj2fVPEF8IGqrxh/bDnF+01ZlmwWWQ
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46t9m7t7sq-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 23 May 2025 05:24:43 +0000 (GMT)
-Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 54N5Ogd1008988;
-	Fri, 23 May 2025 05:24:42 GMT
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46t9m7t7sh-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 23 May 2025 05:24:42 +0000 (GMT)
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 54N1ugL2015431;
-	Fri, 23 May 2025 05:24:41 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 46rwnnn2at-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 23 May 2025 05:24:41 +0000
-Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 54N5OdfJ51446136
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 23 May 2025 05:24:40 GMT
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id DFC2C20043;
-	Fri, 23 May 2025 05:24:39 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 6FB4920040;
-	Fri, 23 May 2025 05:24:39 +0000 (GMT)
-Received: from ozlabs.au.ibm.com (unknown [9.63.197.14])
-	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Fri, 23 May 2025 05:24:39 +0000 (GMT)
-Received: from jarvis.ozlabs.ibm.com (haven.au.ibm.com [9.63.198.114])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by ozlabs.au.ibm.com (Postfix) with ESMTPSA id A792F60213;
-	Fri, 23 May 2025 15:24:35 +1000 (AEST)
-Message-ID: <e50abba6c962772c73342bacf20fb87dc99dd542.camel@linux.ibm.com>
-Subject: Re: [PATCH v2 08/14] powerpc: Handle KCOV __init vs inline
- mismatches
-From: Andrew Donnellan <ajd@linux.ibm.com>
-To: Kees Cook <kees@kernel.org>, Arnd Bergmann <arnd@arndb.de>
-Cc: Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Michael Ellerman	
- <mpe@ellerman.id.au>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Christophe Leroy
-	 <christophe.leroy@csgroup.eu>,
-        Naveen N Rao <naveen@kernel.org>,
-        "Ritesh
- Harjani (IBM)" <ritesh.list@gmail.com>,
-        "Aneesh Kumar K.V"
- <aneesh.kumar@linux.ibm.com>,
-        Andrew Morton	 <akpm@linux-foundation.org>,
-        linuxppc-dev@lists.ozlabs.org,
-        "Gustavo A. R. Silva"
- <gustavoars@kernel.org>,
-        Christoph Hellwig <hch@lst.de>, Marco Elver
- <elver@google.com>,
-        Andrey Konovalov <andreyknvl@gmail.com>,
-        Andrey
- Ryabinin <ryabinin.a.a@gmail.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Nathan Chancellor
- <nathan@kernel.org>,
-        Nicolas Schier	 <nicolas.schier@linux.dev>,
-        Nick
- Desaulniers <nick.desaulniers+lkml@gmail.com>,
-        Bill Wendling
- <morbo@google.com>,
-        Justin Stitt <justinstitt@google.com>, linux-kernel@vger.kernel.org,
-        x86@kernel.org, kasan-dev@googlegroups.com, linux-doc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
-        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-        linux-efi@vger.kernel.org, linux-hardening@vger.kernel.org,
-        linux-kbuild@vger.kernel.org, linux-security-module@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, sparclinux@vger.kernel.org,
-        llvm@lists.linux.dev
-Date: Fri, 23 May 2025 15:24:30 +1000
-In-Reply-To: <20250523043935.2009972-8-kees@kernel.org>
-References: <20250523043251.it.550-kees@kernel.org>
-	 <20250523043935.2009972-8-kees@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.1 (3.56.1-1.fc42) 
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="CZtZcw+a"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1747977938; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=p9YLrwedFtwnpJG6tOJNl4XHicffoGD8uCwZAyB8uHI=;
+	b=CZtZcw+aEPe0HT/wUy3oVlOn/BgLogIzKK0fCEUuASBLkMkRKKfo46791/PMhn5h/yB41J9N22hiuoFHqV261lehUnabbQwV0/tV3I14WAaUq8iqQozgA2PaeC8EiEpq9KbT3pZImJtartFJfKY0jWVKTDWcmoWXC+bAPvZk1co=
+Received: from 30.246.160.208(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WbZ4I8V_1747977617 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Fri, 23 May 2025 13:20:18 +0800
+Message-ID: <b2153756-a57e-4054-bde2-deb8865c9e59@linux.alibaba.com>
+Date: Fri, 23 May 2025 13:20:16 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-TM-AS-GCONF: 00
-X-Authority-Analysis: v=2.4 cv=SMZCVPvH c=1 sm=1 tr=0 ts=6830069b cx=c_pps a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VnNF1IyMAAAA:8 a=REYBSQJbgk_QW_Jsg8sA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-GUID: oQb5v6M7wutfrMtk1qvZQMEXsUNMAS6C
-X-Proofpoint-ORIG-GUID: 5IyYPtP_M7W6sx6jcc6-H4GkEZFAEAEb
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIzMDA0MyBTYWx0ZWRfX8CeyVmgZNEOz 8pmB+9RdT5ZsQ98qxplPqvRkrNpOOYwsSTFPDm5ofvI1Vh4bbudIby6HA8NmTGhtWKTGCbPb+Vc ncpDniBcH8eQ2V6TvH4/WOR7hWwc72H7W3tmeVLVHUbkift9S50W47R4EZG5vRt+eQh2UiWAsBK
- iE2vMgtZCKgIB8ryEScHd2O4ZVBu+fZQ71R6KP7ZepPiveo0szKoP5GtVDvnlETC92QyKZ6dJPA 9F354NXkUaazXC5GwoeLMpIeHZomJ+1xdeYZUMVAtJ78BfchmFk42UaDhV8BLvtV9oREWNDxTxG /JkwdDWhrq02gBuo/giLPxFbLNIIh1tgMIxMCWOWwczwEbDPV9zml+heRweY+Jd/oul5iu2Dl1O
- bQSsYl9qhOX4fnuFfAi63sra+qJkyo0qkV3/wv1tj0wVD9FBgFyh3pEhli53wYP0l6epaDcF
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-23_02,2025-05-22_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- mlxlogscore=480 suspectscore=0 bulkscore=0 clxscore=1011 adultscore=0
- phishscore=0 mlxscore=0 impostorscore=0 spamscore=0 lowpriorityscore=0
- malwarescore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
- definitions=main-2505230043
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 1/2] dmaengine: idxd: Fix race condition between WQ
+ enable and reset paths
+To: Dave Jiang <dave.jiang@intel.com>, vinicius.gomes@intel.com,
+ fenghuay@nvidia.com, vkoul@kernel.org
+Cc: dmaengine@vger.kernel.org, colin.i.king@gmail.com,
+ linux-kernel@vger.kernel.org
+References: <20250522063329.51156-1-xueshuai@linux.alibaba.com>
+ <20250522063329.51156-2-xueshuai@linux.alibaba.com>
+ <a03e4f97-2289-4af7-8bfc-ad2d38ec8677@intel.com>
+From: Shuai Xue <xueshuai@linux.alibaba.com>
+In-Reply-To: <a03e4f97-2289-4af7-8bfc-ad2d38ec8677@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Thu, 2025-05-22 at 21:39 -0700, Kees Cook wrote:
-> When KCOV is enabled all functions get instrumented, unless
-> the __no_sanitize_coverage attribute is used. To prepare for
-> __no_sanitize_coverage being applied to __init functions, we have to
-> handle differences in how GCC's inline optimizations get resolved.
-> For
-> s390 this requires forcing a couple functions to be inline with
 
-I assume you mean powerpc here, though I'm sure my employer is happy
-that you're at least confusing us with IBM's other architecture :)
 
---=20
-Andrew Donnellan    OzLabs, ADL Canberra
-ajd@linux.ibm.com   IBM Australia Limited
+在 2025/5/22 22:55, Dave Jiang 写道:
+> 
+> 
+> On 5/21/25 11:33 PM, Shuai Xue wrote:
+>> A device reset command disables all WQs in hardware. If issued while a WQ
+>> is being enabled, it can cause a mismatch between the software and hardware
+>> states.
+>>
+>> When a hardware error occurs, the IDXD driver calls idxd_device_reset() to
+>> send a reset command and clear the state (wq->state) of all WQs. It then
+>> uses wq_enable_map (a bitmask tracking enabled WQs) to re-enable them and
+>> ensure consistency between the software and hardware states.
+>>
+>> However, a race condition exists between the WQ enable path and the
+>> reset/recovery path. For example:
+>>
+>> A: WQ enable path                   B: Reset and recovery path
+>> ------------------                 ------------------------
+>> a1. issue IDXD_CMD_ENABLE_WQ
+>>                                     b1. issue IDXD_CMD_RESET_DEVICE
+>>                                     b2. clear wq->state
+>>                                     b3. check wq_enable_map bit, not set
+>> a2. set wq->state = IDXD_WQ_ENABLED
+>> a3. set wq_enable_map
+>>
+>> In this case, b1 issues a reset command that disables all WQs in hardware.
+>> Since b3 checks wq_enable_map before a2, it doesn't re-enable the WQ,
+>> leading to an inconsistency between wq->state (software) and the actual
+>> hardware state (IDXD_WQ_DISABLED).
+> 
+> 
+> Would it lessen the complication to just have wq enable path grab the device lock before proceeding?
+> 
+> DJ
+
+Yep, how about add a spin lock to enable wq and reset device path.
+
+diff --git a/drivers/dma/idxd/device.c b/drivers/dma/idxd/device.c
+index 38633ec5b60e..c0dc904b2a94 100644
+--- a/drivers/dma/idxd/device.c
++++ b/drivers/dma/idxd/device.c
+@@ -203,6 +203,29 @@ int idxd_wq_enable(struct idxd_wq *wq)
+  }
+  EXPORT_SYMBOL_GPL(idxd_wq_enable);
+  
++/*
++ * This function enables a WQ in hareware and updates the driver maintained
++ * wq->state to IDXD_WQ_ENABLED. It should be called with the dev_lock held
++ * to prevent race conditions with IDXD_CMD_RESET_DEVICE, which could
++ * otherwise disable the WQ without the driver's state being properly
++ * updated.
++ *
++ * For IDXD_CMD_DISABLE_DEVICE, this function is safe because it is only
++ * called after the WQ has been explicitly disabled, so no concurrency
++ * issues arise.
++ */
++int idxd_wq_enable_locked(struct idxd_wq *wq)
++{
++       struct idxd_device *idxd = wq->idxd;
++       int ret;
++
++       spin_lock(&idxd->dev_lock);
++       ret = idxd_wq_enable_locked(wq);
++       spin_unlock(&idxd->dev_lock);
++
++       return ret;
++}
++
+  int idxd_wq_disable(struct idxd_wq *wq, bool reset_config)
+  {
+         struct idxd_device *idxd = wq->idxd;
+@@ -330,7 +353,7 @@ int idxd_wq_set_pasid(struct idxd_wq *wq, int pasid)
+  
+         __idxd_wq_set_pasid_locked(wq, pasid);
+  
+-       rc = idxd_wq_enable(wq);
++       rc = idxd_wq_enable_locked(wq);
+         if (rc < 0)
+                 return rc;
+  
+@@ -380,7 +403,7 @@ int idxd_wq_disable_pasid(struct idxd_wq *wq)
+         iowrite32(wqcfg.bits[WQCFG_PASID_IDX], idxd->reg_base + offset);
+         spin_unlock(&idxd->dev_lock);
+  
+-       rc = idxd_wq_enable(wq);
++       rc = idxd_wq_enable_locked(wq);
+         if (rc < 0)
+                 return rc;
+  
+@@ -644,7 +667,11 @@ int idxd_device_disable(struct idxd_device *idxd)
+  
+  void idxd_device_reset(struct idxd_device *idxd)
+  {
++
++       spin_lock(&idxd->dev_lock);
+         idxd_cmd_exec(idxd, IDXD_CMD_RESET_DEVICE, 0, NULL);
++       spin_unlock(&idxd->dev_lock);
++
+
+(The dev_lock should also apply to idxd_wq_enable(), I did not paste here)
+
+Also, I found a new bug that idxd_device_config() is called without
+hold idxd->dev_lock.
+
+idxd_device_config() explictly asserts the hold of idxd->dev_lock.
+
++++ b/drivers/dma/idxd/irq.c
+@@ -33,12 +33,17 @@ static void idxd_device_reinit(struct work_struct *work)
+  {
+         struct idxd_device *idxd = container_of(work, struct idxd_device, work);
+         struct device *dev = &idxd->pdev->dev;
+-       int rc, i;
++       int rc = 0, i;
+  
+         idxd_device_reset(idxd);
+-       rc = idxd_device_config(idxd);
+-       if (rc < 0)
++       spin_lock(&idxd->dev_lock);
++       if (test_bit(IDXD_FLAG_CONFIGURABLE, &idxd->flags))
++               rc = idxd_device_config(idxd);
++       spin_unlock(&idxd->dev_lock);
++       if (rc < 0) {
++               dev_err(dev, "Reinit: %s config fails\n", dev_name(idxd_confdev(idxd)));
+                 goto out;
++       }
+  
+         rc = idxd_device_enable(idxd);
+         if (rc < 0)
+
+Please correct me if I missed anything.
+
+Thanks.
+Shuai
+
