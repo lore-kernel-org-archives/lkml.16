@@ -1,135 +1,254 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A151529711E
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 17:34:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16D3A2951D9;
+	Fri, 23 May 2025 17:34:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748021660; cv=none; b=elH6tsVA8sxDv9pllewu22RmRbHfzbfos6tyMd2Qfpv6oMk07CvWswbAjKooGuzGg8f2pwOBR9FGyl6OjJjDfGb+qpOXhMKIQqCMGpfBzNBRsZFyl2o+OLLFBhaYnOZkC+NX03hBLWJDc46/cZVw+aSnvl+9phVP+LqR44XsCAQ=
+	t=1748021671; cv=none; b=AHE0Kn3yTR7DIUuxJPS75/bIR0y/kvvUeDj7hEwBhsVYxImnqyLQm6YAaqbBHfO+sKYQtjjfr52Jjcsi+/lvB6ig1zghJp+nGCbQuAyMydZUxY4KZnaFaTGCfay98Yn0bW+91p1zqV/Z0WD2Dp+6+mURY869FPiMPcHaCV+Hm8Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748021660; c=relaxed/simple;
-	bh=R5hPgr8g6KF4vV9/MNI6Uvrws8BZ2MQ56xJgfpRQ1mg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jAETn2G64xm6gqOIog7D3QyyECIx+vPKzImAnNdyBWSf/8Q+rdiavSXykoYAQkRJMc/Y8rrr884pRo9+jdF2qr2nX34ysHdytn2wXp2mOOUtNA0kAqP3RUnEu7EAArlKxD1SFD2/JAKi4p+hmWyoF+hvroHs5Yojhk1Z0dyUIyA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=m+b0J6tX; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1748021671; c=relaxed/simple;
+	bh=o/MfV3NBdoLlJ+2K8YIIS097SZ/GoVrhpmXnuk4lhS0=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=NHM9rJ8yaaM7tSHC27+T3RZfYD7ur0H0JT9WULenQq/BYCZqbr4y7UpINdftI46BsrkjTkreCkTd77TkgqZc++GmxSzaNeyxXxUCvWJ+qtsWele7wReyiLGlxjj0zDZk4vBq05ysKPA4wkbJgDVO8RbQTxFz49ipfC6txkZmgBA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DWOh6P3z; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="m+b0J6tX"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54NCdIj2028791
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 17:34:17 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=gMc8tnNtub36PEixyB/6BFjb
-	qupY8X/snLnvo/lsW5M=; b=m+b0J6tXM0t+5Y31/71h1MUu94AI4yg9aVWwXaPV
-	x2zAHhN8TEob9doriadqXHYq06+6KFKHOA4HQK+OcSBydLEomFIt21SD+7wt2yEf
-	LdTgdV9ATSux5ILgeBaQz+wkS8jhEo6ZXQywoxgRbBpo0LGWCcL9qitahdqmwvsx
-	jBcnS8Zu4Czh5p0fdLrgqC62xAprqVlG7N9EnnEVmPHGI0ZAsVU63YteejNhGTnZ
-	8dSDM+EWPj1sf5nkRhKER/Oj+mPaLf2qx5bgroUBFbLGpTOe6A9i80Kw5XD77y1p
-	sgmjjmZO1kb1TWwkmQo6ahssu/H5egq3HM6+yt07/GkMVA==
-Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com [209.85.219.72])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46rwf0twnb-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 17:34:17 +0000 (GMT)
-Received: by mail-qv1-f72.google.com with SMTP id 6a1803df08f44-6f8c2ad9cf2so1185386d6.3
-        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 10:34:17 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748021656; x=1748626456;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gMc8tnNtub36PEixyB/6BFjbqupY8X/snLnvo/lsW5M=;
-        b=Q3NULOhPlyjrTaoRHsQ3Xl5AlcDrILxme4DNwM5CM+EgrurKMyZpAmtNZAoYI4P9Ge
-         1Mpj8CVMxz03UfcgAh2xU07+1r7T/J+G+HiIalmAcKFxjIp6L41Vg/YKrz8nbEZYn2HB
-         cZGgaLo5h5Bw8XnB3dpvH4//vdmW22zEYIUjekv2A7CwthVEvC3NWPGISU9UGKWpisJu
-         XIe/VjQ+AiUHYrag8slZbUgQoEb721lDe3d5uNWMuB/261mDERV8P/Q3yJ32xQnFGzYH
-         NgG6+uNce8g4sx9PSja+gt04+EUwesBW+EAoA31m7D134v2AUCURne+Z+AagaCqwYpVQ
-         1dxQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU2AJ/2/pEHbNJXM6oZ4yCu63iSD+xUeFO/16+zpfFMtRjaEV3ifFbC6JwpPxlfiUJAUSfMTAta8rAQAjA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwHwPYFTDDvNpFSvpfyWfGjYs3bl4ejH8R1CdLo6JtfCNRiL8gx
-	hW9U+iEF2hHEHioPRScoejSJrTMyPqMHXviLxw0x5eRVsFx5tYgFxrBFfBFEYE2J3zXa+PK6rbr
-	Y18swEXzoZCPFb/MzFuz6VCgezeKwm1x5hvEbP0q4i9q3i1/DYls9OipPWMd8G+vKtwQ=
-X-Gm-Gg: ASbGncs/++/5t5gR9dGxID4Cj7H8sLrs4WNOgvb9zHvZulVmte2eangsNCITKFwS+do
-	jryiGiF1F8ey8SzQUxUvJeCyievbvq8xRu1363GrbjeZiYX6fDERNHjFxAE4y+ybHWfYk/Qozgr
-	dM19l+TM6z2kpAaicT9G2mUXbJokCyRpWt/+Y4GPVFKinwbqmVFYS8hbcuALriZTXc05DCux8Ju
-	fAJ/TOn0yiT7sG2M12B0B2W8pBd2i6FX7aiJwjWRldErsdJh+Pmai32Kl2kIN4s6sJa1xnxqe1N
-	f3eIPVySYLqTrUdU0bfy5x7OB7hHTzI4k8X1ZW/pVHdyJurQslaGQd6yHk1x82ySKJWwNK6tzMQ
-	=
-X-Received: by 2002:a05:6214:2586:b0:6f8:f1a5:e694 with SMTP id 6a1803df08f44-6fa9d34c88bmr4704016d6.42.1748021656357;
-        Fri, 23 May 2025 10:34:16 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEcfxuoSftseURZRDsLe+y4Vv11HBXw7kl1X8xprRtc28GdvrSX2JxAnsHDAi3vNm+Nwvs1Xg==
-X-Received: by 2002:a05:6214:2586:b0:6f8:f1a5:e694 with SMTP id 6a1803df08f44-6fa9d34c88bmr4703596d6.42.1748021655973;
-        Fri, 23 May 2025 10:34:15 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-550e7017f23sm3941283e87.118.2025.05.23.10.34.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 May 2025 10:34:15 -0700 (PDT)
-Date: Fri, 23 May 2025 20:34:13 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Konrad Dybcio <konradybcio@kernel.org>
-Cc: Bjorn Andersson <andersson@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        cros-qcom-dts-watchers@chromium.org,
-        Sai Prakash Ranjan <quic_saipraka@quicinc.com>,
-        Marijn Suijten <marijn.suijten@somainline.org>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Subject: Re: [PATCH 06/10] arm64: dts: qcom: sdm845: Explicitly describe the
- IPA IMEM slice
-Message-ID: <achy4wt6dqamghzwydwvogisljmfe3bgt3ku663mengoxf5ers@nyti7qnrkyam>
-References: <20250523-topic-ipa_mem_dts-v1-0-f7aa94fac1ab@oss.qualcomm.com>
- <20250523-topic-ipa_mem_dts-v1-6-f7aa94fac1ab@oss.qualcomm.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DWOh6P3z"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748021670; x=1779557670;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=o/MfV3NBdoLlJ+2K8YIIS097SZ/GoVrhpmXnuk4lhS0=;
+  b=DWOh6P3zYKXprTBNn08PtuRamjz7BhNmSCx6RiwS3tlZdyrLYDc4U6af
+   tf1m0qB1mYsRNL4nJkf2ULvS0TBfkjZbBjE3sGRgoxpAI/7xTgb9c9upd
+   nvMfu2mBc29apN5yjvjvfggWj4KO/QmwmpAPOcQ/tu6FtI3i76Y1DxAqU
+   hg/5WpEmEOnKZ5S0bfuvesO2v7hdTpZ0wY5dcaHGMu8IBMebwqa4mHTjT
+   pZnmV6wRrJop5scx7GAtxMZqedh9k7Y8AjV6CgkslsP7UZHXiQC1uLj04
+   w3r/0xA02Mdh64ODWJc8N8hiD6gHtBFP+1pVz/WIF09cTcd8kOThbALUZ
+   A==;
+X-CSE-ConnectionGUID: rr0vuA4ATZyn4WePMIDH8g==
+X-CSE-MsgGUID: XNI2bBW/RPazlA6jcoC6tA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11441"; a="60343224"
+X-IronPort-AV: E=Sophos;i="6.15,309,1739865600"; 
+   d="scan'208";a="60343224"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2025 10:34:29 -0700
+X-CSE-ConnectionGUID: 74aNxdbuQviu7Jiggnwokg==
+X-CSE-MsgGUID: GL52UcBGRBSbQAZ4kf0u8Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,309,1739865600"; 
+   d="scan'208";a="142178954"
+Received: from amlin-018-114.igk.intel.com ([10.102.18.114])
+  by orviesa008.jf.intel.com with ESMTP; 23 May 2025 10:33:02 -0700
+From: Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>
+To: donald.hunter@gmail.com,
+	kuba@kernel.org,
+	davem@davemloft.net,
+	edumazet@google.com,
+	pabeni@redhat.com,
+	horms@kernel.org,
+	vadim.fedorenko@linux.dev,
+	jiri@resnulli.us,
+	anthony.l.nguyen@intel.com,
+	przemyslaw.kitszel@intel.com,
+	andrew+netdev@lunn.ch,
+	aleksandr.loktionov@intel.com,
+	corbet@lwn.net
+Cc: netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	intel-wired-lan@lists.osuosl.org,
+	linux-rdma@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
+	Milena Olech <milena.olech@intel.com>
+Subject: [PATCH net-next v4 1/3] dpll: add reference-sync netlink attribute
+Date: Fri, 23 May 2025 19:26:48 +0200
+Message-Id: <20250523172650.1517164-2-arkadiusz.kubalewski@intel.com>
+X-Mailer: git-send-email 2.38.1
+In-Reply-To: <20250523172650.1517164-1-arkadiusz.kubalewski@intel.com>
+References: <20250523172650.1517164-1-arkadiusz.kubalewski@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250523-topic-ipa_mem_dts-v1-6-f7aa94fac1ab@oss.qualcomm.com>
-X-Proofpoint-GUID: 5OmRSR4Tiuyei5eKzZjzLw9JFqgkBpN6
-X-Authority-Analysis: v=2.4 cv=J/Sq7BnS c=1 sm=1 tr=0 ts=6830b199 cx=c_pps
- a=7E5Bxpl4vBhpaufnMqZlrw==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
- a=dt9VzEwgFbYA:10 a=EUspDBNiAAAA:8 a=BMQiLzMcCAhL0mC9dAoA:9 a=CjuIK1q_8ugA:10
- a=pJ04lnu7RYOZP9TFuWaZ:22
-X-Proofpoint-ORIG-GUID: 5OmRSR4Tiuyei5eKzZjzLw9JFqgkBpN6
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIzMDE2MSBTYWx0ZWRfX5m33oEgu9U+d
- gkAdC8KOsM4plPNivfvZqa6aJV0nPnfYbSNhNKdLV9iMEYYW/azD2dYu4Hg/a008UC9gH4f6VSE
- 4U6DJF5/LVJHQeMdttgp/nPbdCZfqFB/jQhjZ1x0b2xIY/4JoE7Dnn44BMdaOPR2tslU9yCiZiI
- ECDF5PxLSvaqpeoVPp82MaE6y8LQAKCaDutBEE3YsuY3OoznHPtTle8nPHsy6/fZaDQgZPr0XOA
- YY9nnYCQVKS9egYFDtrQyidXt0XCNQHga8yvahgUgT8onU5i+nBda+uxpJ9RFKrqkXxip6H8qKx
- XS7W/f/Kx+UUfm91LS0li9HTaVbDnK8fwebnQpFiO5Aefi3oRb5Eh49XeCgFEYuh8ItA/mwqXed
- 76KS640miMWMTsQXi4qvaEcdy3Jx6BC8w5fVUfS/OGAp2V8EpNSFe5TXQwLq2G8Bsnw7SkW+
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-23_06,2025-05-22_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- mlxscore=0 clxscore=1015 mlxlogscore=736 suspectscore=0 spamscore=0
- priorityscore=1501 bulkscore=0 phishscore=0 impostorscore=0
- lowpriorityscore=0 malwarescore=0 adultscore=0 classifier=spam authscore=0
- authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505160000 definitions=main-2505230161
+Content-Transfer-Encoding: 8bit
 
-On Fri, May 23, 2025 at 01:18:21AM +0200, Konrad Dybcio wrote:
-> From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-> 
-> As part of stepping away from crazy hardcoding in the driver, move
-> define the slice explicitly and pass it to the IPA node.
-> 
-> Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-> ---
->  arch/arm64/boot/dts/qcom/sdm845.dtsi | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
+Add new netlink attribute to allow user space configuration of reference
+sync pin pairs, where both pins are used to provide one clock signal
+consisting of both: base frequency and sync signal.
 
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Reviewed-by: Przemek Kitszel <przemyslaw.kitszel@intel.com>
+Reviewed-by: Milena Olech <milena.olech@intel.com>
+Signed-off-by: Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>
+---
+v4:
+- no change.
+---
+ Documentation/driver-api/dpll.rst     | 25 +++++++++++++++++++++++++
+ Documentation/netlink/specs/dpll.yaml | 19 +++++++++++++++++++
+ drivers/dpll/dpll_nl.c                | 10 ++++++++--
+ drivers/dpll/dpll_nl.h                |  1 +
+ include/uapi/linux/dpll.h             |  1 +
+ 5 files changed, 54 insertions(+), 2 deletions(-)
 
-It seems yesterday I was blind...
-
+diff --git a/Documentation/driver-api/dpll.rst b/Documentation/driver-api/dpll.rst
+index e6855cd37e85..7570890c6cd1 100644
+--- a/Documentation/driver-api/dpll.rst
++++ b/Documentation/driver-api/dpll.rst
+@@ -235,6 +235,31 @@ the pin.
+   ``DPLL_A_PIN_ESYNC_PULSE``                pulse type of Embedded SYNC
+   ========================================= =================================
+ 
++Reference SYNC
++==============
++
++The device may support the Reference SYNC feature, which allows the combination
++of two inputs into a Reference SYNC pair. In this configuration, clock signals
++from both inputs are used to synchronize the dpll device. The higher frequency
++signal is utilized for the loop bandwidth of the DPLL, while the lower frequency
++signal is used to syntonize the output signal of the DPLL device. This feature
++enables the provision of a high-quality loop bandwidth signal from an external
++source.
++
++A capable input provides a list of inputs that can be paired to create a
++Reference SYNC pair. To control this feature, the user must request a desired
++state for a target pin: use ``DPLL_PIN_STATE_CONNECTED`` to enable or
++``DPLL_PIN_STATE_DISCONNECTED`` to disable the feature. Only two pins can be
++bound to form a Reference SYNC pair at any given time.
++
++  ============================== ==========================================
++  ``DPLL_A_PIN_REFERENCE_SYNC``  nested attribute for providing info or
++                                 requesting configuration of the Reference
++                                 SYNC feature
++    ``DPLL_A_PIN_ID``            target pin id for Reference SYNC pair
++    ``DPLL_A_PIN_STATE``         state of Reference SYNC pair connection
++  ============================== ==========================================
++
+ Configuration commands group
+ ============================
+ 
+diff --git a/Documentation/netlink/specs/dpll.yaml b/Documentation/netlink/specs/dpll.yaml
+index 8feefeae5376..333b4596b36f 100644
+--- a/Documentation/netlink/specs/dpll.yaml
++++ b/Documentation/netlink/specs/dpll.yaml
+@@ -406,6 +406,15 @@ attribute-sets:
+         doc: |
+           A ratio of high to low state of a SYNC signal pulse embedded
+           into base clock frequency. Value is in percents.
++      -
++        name: reference-sync
++        type: nest
++        multi-attr: true
++        nested-attributes: reference-sync
++        doc: |
++          Capable pin provides list of pins that can be bound to create a
++          reference-sync pin pair.
++
+   -
+     name: pin-parent-device
+     subset-of: pin
+@@ -436,6 +445,14 @@ attribute-sets:
+         name: frequency-min
+       -
+         name: frequency-max
++  -
++    name: reference-sync
++    subset-of: pin
++    attributes:
++      -
++        name: id
++      -
++        name: state
+ 
+ operations:
+   enum-name: dpll_cmd
+@@ -574,6 +591,7 @@ operations:
+             - esync-frequency
+             - esync-frequency-supported
+             - esync-pulse
++            - reference-sync
+ 
+       dump:
+         request:
+@@ -601,6 +619,7 @@ operations:
+             - parent-pin
+             - phase-adjust
+             - esync-frequency
++            - reference-sync
+     -
+       name: pin-create-ntf
+       doc: Notification about pin appearing
+diff --git a/drivers/dpll/dpll_nl.c b/drivers/dpll/dpll_nl.c
+index fe9b6893d261..d709a8dc304f 100644
+--- a/drivers/dpll/dpll_nl.c
++++ b/drivers/dpll/dpll_nl.c
+@@ -24,6 +24,11 @@ const struct nla_policy dpll_pin_parent_pin_nl_policy[DPLL_A_PIN_STATE + 1] = {
+ 	[DPLL_A_PIN_STATE] = NLA_POLICY_RANGE(NLA_U32, 1, 3),
+ };
+ 
++const struct nla_policy dpll_reference_sync_nl_policy[DPLL_A_PIN_STATE + 1] = {
++	[DPLL_A_PIN_ID] = { .type = NLA_U32, },
++	[DPLL_A_PIN_STATE] = NLA_POLICY_RANGE(NLA_U32, 1, 3),
++};
++
+ /* DPLL_CMD_DEVICE_ID_GET - do */
+ static const struct nla_policy dpll_device_id_get_nl_policy[DPLL_A_TYPE + 1] = {
+ 	[DPLL_A_MODULE_NAME] = { .type = NLA_NUL_STRING, },
+@@ -62,7 +67,7 @@ static const struct nla_policy dpll_pin_get_dump_nl_policy[DPLL_A_PIN_ID + 1] =
+ };
+ 
+ /* DPLL_CMD_PIN_SET - do */
+-static const struct nla_policy dpll_pin_set_nl_policy[DPLL_A_PIN_ESYNC_FREQUENCY + 1] = {
++static const struct nla_policy dpll_pin_set_nl_policy[DPLL_A_PIN_REFERENCE_SYNC + 1] = {
+ 	[DPLL_A_PIN_ID] = { .type = NLA_U32, },
+ 	[DPLL_A_PIN_FREQUENCY] = { .type = NLA_U64, },
+ 	[DPLL_A_PIN_DIRECTION] = NLA_POLICY_RANGE(NLA_U32, 1, 2),
+@@ -72,6 +77,7 @@ static const struct nla_policy dpll_pin_set_nl_policy[DPLL_A_PIN_ESYNC_FREQUENCY
+ 	[DPLL_A_PIN_PARENT_PIN] = NLA_POLICY_NESTED(dpll_pin_parent_pin_nl_policy),
+ 	[DPLL_A_PIN_PHASE_ADJUST] = { .type = NLA_S32, },
+ 	[DPLL_A_PIN_ESYNC_FREQUENCY] = { .type = NLA_U64, },
++	[DPLL_A_PIN_REFERENCE_SYNC] = NLA_POLICY_NESTED(dpll_reference_sync_nl_policy),
+ };
+ 
+ /* Ops table for dpll */
+@@ -139,7 +145,7 @@ static const struct genl_split_ops dpll_nl_ops[] = {
+ 		.doit		= dpll_nl_pin_set_doit,
+ 		.post_doit	= dpll_pin_post_doit,
+ 		.policy		= dpll_pin_set_nl_policy,
+-		.maxattr	= DPLL_A_PIN_ESYNC_FREQUENCY,
++		.maxattr	= DPLL_A_PIN_REFERENCE_SYNC,
+ 		.flags		= GENL_ADMIN_PERM | GENL_CMD_CAP_DO,
+ 	},
+ };
+diff --git a/drivers/dpll/dpll_nl.h b/drivers/dpll/dpll_nl.h
+index f491262bee4f..3da10cfe9a6e 100644
+--- a/drivers/dpll/dpll_nl.h
++++ b/drivers/dpll/dpll_nl.h
+@@ -14,6 +14,7 @@
+ /* Common nested types */
+ extern const struct nla_policy dpll_pin_parent_device_nl_policy[DPLL_A_PIN_PHASE_OFFSET + 1];
+ extern const struct nla_policy dpll_pin_parent_pin_nl_policy[DPLL_A_PIN_STATE + 1];
++extern const struct nla_policy dpll_reference_sync_nl_policy[DPLL_A_PIN_STATE + 1];
+ 
+ int dpll_lock_doit(const struct genl_split_ops *ops, struct sk_buff *skb,
+ 		   struct genl_info *info);
+diff --git a/include/uapi/linux/dpll.h b/include/uapi/linux/dpll.h
+index bf97d4b6d51f..f6cb6209566c 100644
+--- a/include/uapi/linux/dpll.h
++++ b/include/uapi/linux/dpll.h
+@@ -237,6 +237,7 @@ enum dpll_a_pin {
+ 	DPLL_A_PIN_ESYNC_FREQUENCY,
+ 	DPLL_A_PIN_ESYNC_FREQUENCY_SUPPORTED,
+ 	DPLL_A_PIN_ESYNC_PULSE,
++	DPLL_A_PIN_REFERENCE_SYNC,
+ 
+ 	__DPLL_A_PIN_MAX,
+ 	DPLL_A_PIN_MAX = (__DPLL_A_PIN_MAX - 1)
 -- 
-With best wishes
-Dmitry
+2.38.1
+
