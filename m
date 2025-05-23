@@ -1,82 +1,130 @@
-Received: from mail-m49197.qiye.163.com (mail-m49197.qiye.163.com [45.254.49.197])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7065423185B;
-	Fri, 23 May 2025 11:02:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.49.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F6CE183CC3;
+	Fri, 23 May 2025 11:05:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747998136; cv=none; b=hE/JFS1wFiU2PSzXp0vTA1FGDo5ggME90BDE3ibqvNb5T6eWmRNGtQ9rG/R5U7cAkv0YneZs2mMUg4N8Mmy8qJcpcYIZ88VW5cYQeOFnxdqXjRt1jRgc0EJn3TGOXMVrggup0z3yhc+rce6Zo/hB+/8HqPS2RvSZqzIw76yC9nQ=
+	t=1747998343; cv=none; b=FQf1YnL7ux9NGhhkQXOrZ6cB4rgHyzo5FuWQLJjqldFSWwkROZJJxutVBRx8CHaIDJ+oD8MyXFoEvBzI7C5jUqhSUOxelX0y9zEqPeEqi2mzcwBM6XHJbmJyjbc1x/LYPHZC4fjPLK1RWGn99Uzse5VzrF5nwCM67PtCbduRpS0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747998136; c=relaxed/simple;
-	bh=wA1U2bbwCWWWNfJz305Gv8CySEchp6eJnyTgQZt24ig=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=IEgAU+pCNkNj0q/0KrcI4hyZa1hS1xpJB1XoIhfZFZ3VsxsZBtivYUqif0FzYE93c5co3YhvSoT3im73O6hlArQchTmCwMB5eMrDWhNRCiHUrX1w9W1n1HVgJyCJ3LO9iZL+kjbHBw/CA8FZbeU/l2yBh25y/MbPG0ndNRT7dTA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=seu.edu.cn; spf=pass smtp.mailfrom=seu.edu.cn; dkim=pass (1024-bit key) header.d=seu.edu.cn header.i=@seu.edu.cn header.b=O+GjlyMk; arc=none smtp.client-ip=45.254.49.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=seu.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=seu.edu.cn
+	s=arc-20240116; t=1747998343; c=relaxed/simple;
+	bh=Ye3uQC7xrBPg3aUxgsBw7tGbGkMZh87SKpNk54FKl/g=;
+	h=Content-Type:MIME-Version:In-Reply-To:References:Subject:From:Cc:
+	 To:Date:Message-ID; b=hPXrX8eb9E5MLuRfra3fP8G7AETe64H5DD4M6eit/nPK8qaSgNppay1q6/S4AhUXo0glcf2cVmfvCA3lJZFbMuJYRbP8Z5+jxM+eMdoLO35WjZmCHXXTab5vx6+V+Yik+HGVa8eDE156Gz0LrqzOpSmlPLKhJp5TUON5Eu18LMI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=G/y3vF7Y; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=seu.edu.cn header.i=@seu.edu.cn header.b="O+GjlyMk"
-Received: from localhost.localdomain (unknown [202.119.23.198])
-	by smtp.qiye.163.com (Hmail) with ESMTP id 162e36df1;
-	Fri, 23 May 2025 19:02:02 +0800 (GMT+08:00)
-From: Zilin Guan <zilin@seu.edu.cn>
-To: johannes@sipsolutions.net
-Cc: linux-wireless@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	jianhao.xu@seu.edu.cn,
-	Zilin Guan <zilin@seu.edu.cn>
-Subject: [PATCH] wifi: cfg80211: use kfree_sensitive() for connkeys cleanup
-Date: Fri, 23 May 2025 11:01:56 +0000
-Message-Id: <20250523110156.4017111-1-zilin@seu.edu.cn>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="G/y3vF7Y"
+Received: from pyrite.rasen.tech (fp76f176b6.tkyc001.ap.nuro.jp [118.241.118.182])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id E0A916B5;
+	Fri, 23 May 2025 13:05:15 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1747998316;
+	bh=Ye3uQC7xrBPg3aUxgsBw7tGbGkMZh87SKpNk54FKl/g=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+	b=G/y3vF7YOUJLFITEcHDpZCtnC7qocDabh33hZac6L8UjnXI1jLccP/ZETvK3upVRV
+	 gQLqvFzXJXlGCU+zTkAwgehOnCQIgfX/xQCO34L6dNj7jlOkXtcvmsV5hEUvzqKmJ5
+	 2Cl9zbuhwDoSvmda14WqVX2ZaK3Lcs48tRgAlXng=
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVlDHk4ZVhgeSkxPQx1JHx0YTVYeHw5VEwETFhoSFy
-	QUDg9ZV1kYEgtZQVlJS0lVSkpCVUlIVUpCQ1lXWRYaDxIVHRRZQVlPS0hVSktISk5MSlVKS0tVSk
-	JLS1kG
-X-HM-Tid: 0a96fccea00503a1kunm7d07db8a29d309
-X-HM-MType: 10
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6MEk6Cio5MTE*IhQoODo3PB8u
-	FgEKCTJVSlVKTE9MQkJDSklJQ0NCVTMWGhIXVQESFxIVOwgeDlUeHw5VGBVFWVdZEgtZQVlJS0lV
-	SkpCVUlIVUpCQ1lXWQgBWUFKTktCNwY+
-DKIM-Signature:a=rsa-sha256;
-	b=O+GjlyMkKTWk2xvyT10/+a8t7Aq9yusNhkIMszo3bdz+TQ/XWs6S7kCyPd7/63HTOhaCDan6QU5jiaVVL4Zcy8q9/nqMDHQtEJVDF5EcIPsSMBpIOPzeIIbfzK7uZvMK8Mjr8kahxQ/WcsZRFCHCIkCFk5YBG7VQWDsGMgmAoik=; s=default; c=relaxed/relaxed; d=seu.edu.cn; v=1;
-	bh=2mZX1RublkKQ4pxyQ4siv7ydpqrv6wL/TIjOia5Vwf8=;
-	h=date:mime-version:subject:message-id:from;
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <m3tt5b7kvc.fsf@t19.piap.pl>
+References: <m3tt5b7kvc.fsf@t19.piap.pl>
+Subject: Re: [PATCH] media: rkisp1: correct histogram window size
+From: Paul Elder <paul.elder@ideasonboard.com>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Heiko Stuebner <heiko@sntech.de>, linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Jacopo Mondi <jacopo.mondi@ideasonboard.com>, Ondrej Jirman <megi@xff.cz>, Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+To: Dafna Hirschfeld <dafna@fastmail.com>, Krzysztof =?utf-8?q?Ha=C5=82asa?= <khalasa@piap.pl>
+Date: Fri, 23 May 2025 20:05:32 +0900
+Message-ID: <174799833258.43941.7457628037394806572@pyrite.rasen.tech>
+User-Agent: alot/0.0.0
 
-The nl80211_parse_connkeys() function currently uses kfree() to release
-the 'result' structure in error handling paths. However, if an error
-occurs due to result->def being less than 0, the 'result' structure may
-contain sensitive information.
+Hi Krzysztof,
 
-To prevent potential leakage of sensitive data, replace kfree() with
-kfree_sensitive() when freeing 'result'. This change aligns with the
-approach used in its caller, nl80211_join_ibss(), enhancing the overall
-security of the wireless subsystem.
+Thanks for the new version.
 
-Signed-off-by: Zilin Guan <zilin@seu.edu.cn>
----
- net/wireless/nl80211.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+My bad, I should've mentioned in the review of the previous version; I think
+you should have a paragraph in the beginning briefly explaining the problem=
+ in
+english.
 
-diff --git a/net/wireless/nl80211.c b/net/wireless/nl80211.c
-index f039a7d0d..aaaafde96 100644
---- a/net/wireless/nl80211.c
-+++ b/net/wireless/nl80211.c
-@@ -1580,7 +1580,7 @@ nl80211_parse_connkeys(struct cfg80211_registered_device *rdev,
- 
- 	return result;
-  error:
--	kfree(result);
-+	kfree_sensitive(result);
- 	return ERR_PTR(err);
- }
- 
--- 
-2.34.1
+"The histogram window dimensions are unnecessarily decremented. This can be
+seen in the following example, where when all pixels are of maximum intensi=
+ty
+there are pixels that we expect to be counted but are missing from the high=
+est
+bin. Fix this by removing the unnecessary decrement."
 
+I think would be good enough.
+
+Quoting Krzysztof Ha=C5=82asa (2025-05-23 18:10:47)
+> Without the patch (i.MX8MP, all-white RGGB-12 full HD input from
+> the sensor, YUV NV12 output from ISP, full range, histogram Y mode).
+> HIST_STEPSIZE =3D 3 (lowest permitted), all weights are set to 1:
+>=20
+> isp_hist_h_size: 383 (=3D 1920 / 5 - 1)
+> isp_hist_v_size: 215 (=3D 1080 / 5 - 1)
+> histogram_measurement_result[16]: 0 0 0 0  0 0 0 0  0 0 0 0  0 0 0 229401
+>=20
+> Apparently the histogram is missing the last column (3-pixel wide,
+> though only single pixels count) and the last (same idea) row
+> of the input image: 1917 * 1077 / 3 / 3 =3D 229401.
+>=20
+> E.g. without the patch, the pixels counted in lines are:
+> 0, 3, ... 1914 (which makes 1917/3), and patched:
+> 0, 3, ... 1914, 1917 (which makes 1920/3).
+> The same is true for rows.
+
+I like this clarification.
+
+
+With the above paragraph added,
+
+Reviewed-by: Paul Elder <paul.elder@ideasonboard.com>
+
+(I suppose if you approve it then it could simply be added when it's applied
+and you wouldn't need to send a new version, but I don't have permissions f=
+or
+that so uh...)
+
+>=20
+> With the patch applied:
+> isp_hist_h_size: 384 (=3D 1920 / 5)
+> isp_hist_v_size: 216 (=3D 1080 / 5)
+> histogram_measurement_result[16]: 0 0 0 0  0 0 0 0  0 0 0 0  0 0 0 230400
+>=20
+> 1920 * 1080 / 3 / 3 =3D 230400
+>=20
+> Signed-off-by: Krzysztof Ha=C5=82asa <khalasa@piap.pl>
+>=20
+> diff --git a/drivers/media/platform/rockchip/rkisp1/rkisp1-params.c b/dri=
+vers/media/platform/rockchip/rkisp1/rkisp1-params.c
+> index b28f4140c8a3..ca9b3e711e5f 100644
+> --- a/drivers/media/platform/rockchip/rkisp1/rkisp1-params.c
+> +++ b/drivers/media/platform/rockchip/rkisp1/rkisp1-params.c
+> @@ -819,8 +819,8 @@ static void rkisp1_hst_config_v10(struct rkisp1_param=
+s *params,
+>                      arg->meas_window.v_offs);
+> =20
+>         block_hsize =3D arg->meas_window.h_size /
+> -                     RKISP1_CIF_ISP_HIST_COLUMN_NUM_V10 - 1;
+> -       block_vsize =3D arg->meas_window.v_size / RKISP1_CIF_ISP_HIST_ROW=
+_NUM_V10 - 1;
+> +                     RKISP1_CIF_ISP_HIST_COLUMN_NUM_V10;
+> +       block_vsize =3D arg->meas_window.v_size / RKISP1_CIF_ISP_HIST_ROW=
+_NUM_V10;
+> =20
+>         rkisp1_write(params->rkisp1, RKISP1_CIF_ISP_HIST_H_SIZE_V10,
+>                      block_hsize);
+>=20
+> --=20
+> Krzysztof "Chris" Ha=C5=82asa
+>=20
+> Sie=C4=87 Badawcza =C5=81ukasiewicz
+> Przemys=C5=82owy Instytut Automatyki i Pomiar=C3=B3w PIAP
+> Al. Jerozolimskie 202, 02-486 Warszawa
