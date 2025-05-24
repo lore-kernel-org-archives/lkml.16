@@ -1,40 +1,76 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED6127261A;
-	Sat, 24 May 2025 13:19:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2295E1A23A6;
+	Sat, 24 May 2025 13:35:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748092800; cv=none; b=H4J+o7oWbLvZtsZ9bVXLH2R83jQPDGPA4Ql8mf2xXfggWjAG3xKFOi/3r6jcwncWzWZ35gXgEMDykIrwNt7Spq9J0YK/vDbS76T3tek3pcU6yw5F+NykPYKRZDgGpyuTgAjLLY7g63Crkw33Ux1bpji9JIWq7cD/ZmkslOiwoUc=
+	t=1748093705; cv=none; b=f4raGyvPqhqarMbXL7AJjoKitfLEzR8uj7HiXzPVkhhf4DMixLhDCHcL2qfVHUpXK5++E/Tw/SLt5aw2b6oeE2Hn+MLhnSiwAnzOaoYh6XB7xkCGweCUwG33hpxphaFINsOmYLg3kU9TSc2ghW/JSW8HlV4YKW2zf8iP3AxD7z4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748092800; c=relaxed/simple;
-	bh=M0/xS0AFYmtov4bwJ8ApqaeiOVA7jV54N54Wgf8jJTw=;
+	s=arc-20240116; t=1748093705; c=relaxed/simple;
+	bh=qcL491bXMJZ+O+gsTZNeVomr5uwF83cd6pWDzZAReO4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IoOv7RWIZn5jd+3+yJ2mRoAzoe67eVnrc3S34U2dh/yfOiQatEaVbMa6cLGYwa3Pub0klTvA+dJfkObBxcyXdS0lCH+O/jj1YQTl0qV/mBNMQPEfaKVv9di/eg6clpCifRjZEGom+oTrxfN82eIKArkDp8n+tnxQnxHoMvXV+lE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hc7Bewia; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=qxYDL8LhUDBSP966tcfrukDUYdmgTIjQpe4WieeR5Djs1h3aj2hjEAops3foOJIvx4mKYdq4rD8Km9kYlO6mlzAGC0Skr8OsxJ8JlkqBdcaX8URhsL+vtTDVWXC3PEmUwRxvDxNybkw680R81e/HxauiqXbKvw/3N/wUWaeQQac=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=X2a8gPFN; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hc7Bewia"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0BCF7C4CEE4;
-	Sat, 24 May 2025 13:19:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748092799;
-	bh=M0/xS0AFYmtov4bwJ8ApqaeiOVA7jV54N54Wgf8jJTw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=hc7Bewia+fk+4P20IMXK40vB2eY6bRtqz5YOsGlaNFcGQtZcED23DvvB+so5JX4xQ
-	 6xWFojMxcbfx0Ltaf/CX0g36z1xCesLFnp4JPL8tZfLGQ8ju8pFEnZ8Ql0fgDTCXkO
-	 WWVdWfbot21w749b+qKZQBEwOv+ozX8Lagr4RwHciuYBKwN/qV/B2bCMRU0XnuwZo8
-	 87I/3zjXUC7Iosd2/riZc0VNX2yUhiMQJzGx+RzzP0RJsxtKQfsk5UFHn1Z5mcEVCE
-	 TnaOHKMKBNOWWJi0kc7vi8huURjvMSWd0kdjyri2xpdHG5FMz3kq2sZK6Y+dgkJxax
-	 MQvyDMBGHXgBA==
-Date: Sat, 24 May 2025 16:19:55 +0300
-From: Leon Romanovsky <leon@kernel.org>
-To: Daisuke Matsuda <dskmtsd@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org, jgg@ziepe.ca,
-	zyjzyj2000@gmail.com, hch@infradead.org
-Subject: Re: [PATCH for-next v1] RDMA/core: Avoid hmm_dma_map_alloc() for
- virtual DMA devices
-Message-ID: <20250524131955.GU7435@unreal>
-References: <20250523184701.11004-1-dskmtsd@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="X2a8gPFN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748093705; x=1779629705;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=qcL491bXMJZ+O+gsTZNeVomr5uwF83cd6pWDzZAReO4=;
+  b=X2a8gPFN47FpwHOPEZLAw3OExi7ukSDyHHUVGUKU5EzjoRM9XxknVXUm
+   v62MH9gsyGhk+EtL1Q0V05L66ffgO22oXyHozrlOD5tSpBlvz8r9i2uQr
+   1lLZM8pm3SFPUh21f7yZEHOfRTHW1tTgO9NAhAHpPZMhLJGptx+E+k06E
+   NEUyD623DSgChWxtK9N2gSDmUmk4HbGuEJVmZAwy6/9c5wm1blB1pravm
+   JJFaLqz6hXfR+2h6sw+MgKGiNk/oK+1QoZTG9/zQ+qeHcwkqjbh96v0gn
+   fAQfDaBgRv/gRJgKitvl7Pr/8IhmgPNyyCATR0mh6nyd+HFh5VtyMDY5c
+   w==;
+X-CSE-ConnectionGUID: pu/HJrAtSluZtG+LBXcSAA==
+X-CSE-MsgGUID: NqbCi5TzT3Sl7bpt0CVdvg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11443"; a="50290713"
+X-IronPort-AV: E=Sophos;i="6.15,311,1739865600"; 
+   d="scan'208";a="50290713"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 May 2025 06:35:04 -0700
+X-CSE-ConnectionGUID: Hm0pHqY8QqeFxidCs1ibYg==
+X-CSE-MsgGUID: DQo3Dxt/SMuMBg2vQW1Svg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,311,1739865600"; 
+   d="scan'208";a="146431096"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by fmviesa005.fm.intel.com with ESMTP; 24 May 2025 06:34:58 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uIp1c-000RDw-1k;
+	Sat, 24 May 2025 13:34:56 +0000
+Date: Sat, 24 May 2025 21:34:33 +0800
+From: kernel test robot <lkp@intel.com>
+To: Sean Anderson <sean.anderson@linux.dev>, netdev@vger.kernel.org,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Russell King <linux@armlinux.org.uk>
+Cc: oe-kbuild-all@lists.linux.dev, Lei Wei <quic_leiwei@quicinc.com>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Christian Marangi <ansuelsmth@gmail.com>,
+	Kory Maincent <kory.maincent@bootlin.com>,
+	Simon Horman <horms@kernel.org>,
+	Daniel Golle <daniel@makrotopia.org>,
+	Vineeth Karumanchi <vineeth.karumanchi@amd.com>,
+	linux-kernel@vger.kernel.org,
+	Sean Anderson <sean.anderson@linux.dev>,
+	Ioana Ciornei <ioana.ciornei@nxp.com>,
+	Vladimir Oltean <vladimir.oltean@nxp.com>, imx@lists.linux.dev,
+	linux-stm32@st-md-mailman.stormreply.com
+Subject: Re: [net-next PATCH v5 05/10] net: pcs: lynx: Convert to an MDIO
+ driver
+Message-ID: <202505242145.RKJGzoHX-lkp@intel.com>
+References: <20250523203339.1993685-6-sean.anderson@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,136 +79,38 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250523184701.11004-1-dskmtsd@gmail.com>
+In-Reply-To: <20250523203339.1993685-6-sean.anderson@linux.dev>
 
-On Fri, May 23, 2025 at 06:47:01PM +0000, Daisuke Matsuda wrote:
-> Drivers such as rxe, which use virtual DMA, must not call into the DMA
-> mapping core since they lack physical DMA capabilities. Otherwise, a NULL
-> pointer dereference is observed as shown below. This patch ensures the RDMA
-> core handles virtual and physical DMA paths appropriately.
-> 
-> This fixes the following kernel oops:
-> 
->  BUG: kernel NULL pointer dereference, address: 00000000000002fc
->  #PF: supervisor read access in kernel mode
->  #PF: error_code(0x0000) - not-present page
->  PGD 1028eb067 P4D 1028eb067 PUD 105da0067 PMD 0
->  Oops: Oops: 0000 [#1] SMP NOPTI
->  CPU: 3 UID: 1000 PID: 1854 Comm: python3 Tainted: G        W           6.15.0-rc1+ #11 PREEMPT(voluntary)
->  Tainted: [W]=WARN
->  Hardware name: Trigkey Key N/Key N, BIOS KEYN101 09/02/2024
->  RIP: 0010:hmm_dma_map_alloc+0x25/0x100
->  Code: 90 90 90 90 90 0f 1f 44 00 00 55 48 89 e5 41 57 41 56 49 89 d6 49 c1 e6 0c 41 55 41 54 53 49 39 ce 0f 82 c6 00 00 00 49 89 fc <f6> 87 fc 02 00 00 20 0f 84 af 00 00 00 49 89 f5 48 89 d3 49 89 cf
->  RSP: 0018:ffffd3d3420eb830 EFLAGS: 00010246
->  RAX: 0000000000001000 RBX: ffff8b727c7f7400 RCX: 0000000000001000
->  RDX: 0000000000000001 RSI: ffff8b727c7f74b0 RDI: 0000000000000000
->  RBP: ffffd3d3420eb858 R08: 0000000000000000 R09: 0000000000000000
->  R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
->  R13: 00007262a622a000 R14: 0000000000001000 R15: ffff8b727c7f74b0
->  FS:  00007262a62a1080(0000) GS:ffff8b762ac3e000(0000) knlGS:0000000000000000
->  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->  CR2: 00000000000002fc CR3: 000000010a1f0004 CR4: 0000000000f72ef0
->  PKRU: 55555554
->  Call Trace:
->   <TASK>
->   ib_init_umem_odp+0xb6/0x110 [ib_uverbs]
->   ib_umem_odp_get+0xf0/0x150 [ib_uverbs]
->   rxe_odp_mr_init_user+0x71/0x170 [rdma_rxe]
->   rxe_reg_user_mr+0x217/0x2e0 [rdma_rxe]
->   ib_uverbs_reg_mr+0x19e/0x2e0 [ib_uverbs]
->   ib_uverbs_handler_UVERBS_METHOD_INVOKE_WRITE+0xd9/0x150 [ib_uverbs]
->   ib_uverbs_cmd_verbs+0xd19/0xee0 [ib_uverbs]
->   ? mmap_region+0x63/0xd0
->   ? __pfx_ib_uverbs_handler_UVERBS_METHOD_INVOKE_WRITE+0x10/0x10 [ib_uverbs]
->   ib_uverbs_ioctl+0xba/0x130 [ib_uverbs]
->   __x64_sys_ioctl+0xa4/0xe0
->   x64_sys_call+0x1178/0x2660
->   do_syscall_64+0x7e/0x170
->   ? syscall_exit_to_user_mode+0x4e/0x250
->   ? do_syscall_64+0x8a/0x170
->   ? do_syscall_64+0x8a/0x170
->   ? syscall_exit_to_user_mode+0x4e/0x250
->   ? do_syscall_64+0x8a/0x170
->   ? syscall_exit_to_user_mode+0x4e/0x250
->   ? do_syscall_64+0x8a/0x170
->   ? do_user_addr_fault+0x1d2/0x8d0
->   ? irqentry_exit_to_user_mode+0x43/0x250
->   ? irqentry_exit+0x43/0x50
->   ? exc_page_fault+0x93/0x1d0
->   entry_SYSCALL_64_after_hwframe+0x76/0x7e
->  RIP: 0033:0x7262a6124ded
->  Code: 04 25 28 00 00 00 48 89 45 c8 31 c0 48 8d 45 10 c7 45 b0 10 00 00 00 48 89 45 b8 48 8d 45 d0 48 89 45 c0 b8 10 00 00 00 0f 05 <89> c2 3d 00 f0 ff ff 77 1a 48 8b 45 c8 64 48 2b 04 25 28 00 00 00
->  RSP: 002b:00007fffd08c3960 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
->  RAX: ffffffffffffffda RBX: 00007fffd08c39f0 RCX: 00007262a6124ded
->  RDX: 00007fffd08c3a10 RSI: 00000000c0181b01 RDI: 0000000000000007
->  RBP: 00007fffd08c39b0 R08: 0000000014107820 R09: 00007fffd08c3b44
->  R10: 000000000000000c R11: 0000000000000246 R12: 00007fffd08c3b44
->  R13: 000000000000000c R14: 00007fffd08c3b58 R15: 0000000014107960
->   </TASK>
-> 
-> Fixes: 1efe8c0670d6 ("RDMA/core: Convert UMEM ODP DMA mapping to caching IOVA and page linkage")
-> Closes: https://lore.kernel.org/all/3e8f343f-7d66-4f7a-9f08-3910623e322f@gmail.com/
-> Signed-off-by: Daisuke Matsuda <dskmtsd@gmail.com>
-> ---
->  drivers/infiniband/core/device.c   | 24 ++++++++++++++++++++++++
->  drivers/infiniband/core/umem_odp.c |  6 +++---
->  include/rdma/ib_verbs.h            | 12 ++++++++++++
->  3 files changed, 39 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/infiniband/core/device.c b/drivers/infiniband/core/device.c
-> index b4e3e4beb7f4..8be4797c66ec 100644
-> --- a/drivers/infiniband/core/device.c
-> +++ b/drivers/infiniband/core/device.c
-> @@ -2864,6 +2864,30 @@ int ib_dma_virt_map_sg(struct ib_device *dev, struct scatterlist *sg, int nents)
->  	return nents;
->  }
->  EXPORT_SYMBOL(ib_dma_virt_map_sg);
-> +int ib_dma_virt_map_alloc(struct device *dev, struct hmm_dma_map *map,
-> +			  size_t nr_entries, size_t dma_entry_size)
-> +{
-> +	if (!(nr_entries * PAGE_SIZE / dma_entry_size))
-> +		return -EINVAL;
-> +
-> +	map->dma_entry_size = dma_entry_size;
-> +	map->pfn_list = kvcalloc(nr_entries, sizeof(*map->pfn_list),
-> +				 GFP_KERNEL | __GFP_NOWARN);
-> +	if (!map->pfn_list)
-> +		return -ENOMEM;
+Hi Sean,
 
-pfn_list is enough, virtual devices doesn't go through path which needs
-dma_list. They use simple CPU address to DMA address translation.
+kernel test robot noticed the following build warnings:
 
-> +
-> +	map->dma_list = kvcalloc(nr_entries, sizeof(*map->dma_list),
-> +				 GFP_KERNEL | __GFP_NOWARN);
-> +	if (!map->dma_list)
-> +		goto err_dma;
-> +
-> +	return 0;
-> +
-> +err_dma:
-> +	kvfree(map->pfn_list);
-> +	return -ENOMEM;
-> +}
-> +EXPORT_SYMBOL(ib_dma_virt_map_alloc);
->  #endif /* CONFIG_INFINIBAND_VIRT_DMA */
->  
->  static const struct rdma_nl_cbs ibnl_ls_cb_table[RDMA_NL_LS_NUM_OPS] = {
-> diff --git a/drivers/infiniband/core/umem_odp.c b/drivers/infiniband/core/umem_odp.c
-> index 51d518989914..aa03f3fc84d0 100644
-> --- a/drivers/infiniband/core/umem_odp.c
-> +++ b/drivers/infiniband/core/umem_odp.c
-> @@ -75,9 +75,9 @@ static int ib_init_umem_odp(struct ib_umem_odp *umem_odp,
->  	if (unlikely(end < page_size))
->  		return -EOVERFLOW;
->  
-> -	ret = hmm_dma_map_alloc(dev->dma_device, &umem_odp->map,
-> -				(end - start) >> PAGE_SHIFT,
-> -				1 << umem_odp->page_shift);
-> +	ret = ib_dma_map_alloc(dev, &umem_odp->map,
-> +			       (end - start) >> PAGE_SHIFT,
-> +			       1 << umem_odp->page_shift);
+[auto build test WARNING on net-next/main]
 
-There is no need in extra function, implement if(ib_uses_virt_dma...) here.
+url:    https://github.com/intel-lab-lkp/linux/commits/Sean-Anderson/dt-bindings-net-Add-Xilinx-PCS/20250524-043901
+base:   net-next/main
+patch link:    https://lore.kernel.org/r/20250523203339.1993685-6-sean.anderson%40linux.dev
+patch subject: [net-next PATCH v5 05/10] net: pcs: lynx: Convert to an MDIO driver
+compiler: clang version 20.1.2 (https://github.com/llvm/llvm-project 58df0ef89dd64126512e4ee27b4ac3fd8ddf6247)
 
-Thanks
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202505242145.RKJGzoHX-lkp@intel.com/
+
+includecheck warnings: (new ones prefixed by >>)
+>> drivers/net/pcs/pcs-lynx.c: linux/phylink.h is included more than once.
+
+vim +8 drivers/net/pcs/pcs-lynx.c
+
+   > 8	#include <linux/phylink.h>
+     9	#include <linux/of.h>
+    10	#include <linux/pcs.h>
+    11	#include <linux/pcs-lynx.h>
+  > 12	#include <linux/phylink.h>
+    13	#include <linux/property.h>
+    14	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
