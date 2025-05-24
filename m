@@ -1,123 +1,135 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 403AB1DE3CA;
-	Sat, 24 May 2025 00:53:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9E9E1DC1A7
+	for <linux-kernel@vger.kernel.org>; Sat, 24 May 2025 01:11:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748048034; cv=none; b=LgySteSAeS60aUNuGXnvvOhjH/ovBViAHcAg6N0Mc5L5l63CDPUd9OxdKDIc/N5faXm7NcBpE9xdGRtEoyIvFHCS4DolKlOmwwM+rcIi+joJZXDqjH3NqQ5iwpDMX9+FxUMB2NVvDZsQ1HkiA6LuK2kTmn5O8wXp3RTPQS2RI3E=
+	t=1748049062; cv=none; b=Z60/B2BWgtxli9RSI12vuSJJBlPqVCT/qZIGZ30GJhrurpOtgKtwaq2DSMfday9oB2h9mBaZNSX06w+rjGC5jhMnTyfIDqX7GMj1c9D+0UPInCMRZKlUa7IVDs3qtpR2a56wyCnUOWGGJW6XsKHtDcyjBnt67++YJwj4vUUSb0U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748048034; c=relaxed/simple;
-	bh=o4ZCIdstP4akpvLI/xTOh3WGsK9Kd7BBZn+JNNXep3o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=symffpKxqeLPilwU5i2CtqjkrUsGXXdaRPmofJe4SJFwDTUKM0TkRLlAWbZdyALU1AHvT+4nQQyzLasqswObKgKGH9WRemTiJqMIb1F+FdTsUqRi/JQIzZRabAzZFaQd6//dVJalepUcIm9//PQ3/AWUKUDGoRcBYnVdZcFDeG8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lstcPD7c; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1748049062; c=relaxed/simple;
+	bh=wespwvF6kqzq5dgx3obPD++AP8ju/UbhX9PaIJjnAcs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=SmKrD3nzdQn5EH5mAcQXrvib2QBcP2WVgK0VqnvTEccnMx/PBu+RC0EkGwvp4p/KzMzAMQPmDAsUQRzgW0JvI5WgO2ARH9qmOPKwiOxUGvmgGQvX3w2Eq0Z2WwaiqmCwXdlUFVURJFy0krM0M/3PHn7lglLqe7C6BKWUvLDFhSQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=VX37isXK; arc=none smtp.client-ip=209.85.167.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lstcPD7c"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748048033; x=1779584033;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=o4ZCIdstP4akpvLI/xTOh3WGsK9Kd7BBZn+JNNXep3o=;
-  b=lstcPD7cqis68nq1eNzBC1XszvKRBHlih4gXCwod/dx0P6jjII7ilnhY
-   1KD39+VPm6ZVxHrdO+bppcKEaCxJfBcUFnSRPWw9j7gkpSz+UxUqVE4W8
-   9ZWJ4Z4WMXwj2tCmzveqCu1pdCY/DYzj1lJRsxaB+vFVtKbofDqYK5god
-   e6/WiCrPA41BoIUp4R1nCphZ27ancTyplWfOmz3bhV0LhC4muVy65CbY9
-   V3RxnhzD2fN/1i8KQPqkBmGQ9XOpT5AtZdtBqR8gSJPtAuaDrJb+ql++6
-   OYUtvVy2RHBICp4XvRf6NdQatRPasYVii5x8pg7jTj/eNh4+Tx6sXp/kn
-   A==;
-X-CSE-ConnectionGUID: dKF3AfeFSwWZIeLyLtA8HA==
-X-CSE-MsgGUID: cLIJJYmDRrShhO7CRj4bTQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11441"; a="75508444"
-X-IronPort-AV: E=Sophos;i="6.15,310,1739865600"; 
-   d="scan'208";a="75508444"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2025 17:53:52 -0700
-X-CSE-ConnectionGUID: 46G+cFMqQ5ykPEn51US7kA==
-X-CSE-MsgGUID: tTBhCX0NQPejqe8lvgJDRQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,310,1739865600"; 
-   d="scan'208";a="178484993"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by orviesa001.jf.intel.com with ESMTP; 23 May 2025 17:53:49 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uId91-000QqG-0n;
-	Sat, 24 May 2025 00:53:47 +0000
-Date: Sat, 24 May 2025 08:52:58 +0800
-From: kernel test robot <lkp@intel.com>
-To: Kees Cook <kees@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>
-Cc: oe-kbuild-all@lists.linux.dev, Kees Cook <kees@kernel.org>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] x86: string_32.h: Provide basic sanity checks for
- fallback memcpy()
-Message-ID: <202505240850.vTrqyqJx-lkp@intel.com>
-References: <20250523042635.work.579-kees@kernel.org>
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="VX37isXK"
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-550edba125bso474033e87.3
+        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 18:11:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1748049059; x=1748653859; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wespwvF6kqzq5dgx3obPD++AP8ju/UbhX9PaIJjnAcs=;
+        b=VX37isXKWMApTKWVAzaPXPTA3zzcC+Xd4a/v44zhmlZMixG+Z0XSgdYihX/3Q3F7Pd
+         2ZoWACZ2JWn1mppu9IhcbC4tPU+hYw4G0RX6X5SXs0jF+y/LwJvH0/yl1AbFz23PU7j0
+         0SF37oxmqCwK4Px5Vhm0n5PZ6Kair/Zxs37qo0l09+rClHBPa2+TKe1bVI/8gwWyfsdp
+         Fb9ygoxvzs+ZFe2byLmP7ndykbiYwPidKJhT/6BRvO5SyHNFytEqHyqVsd0LnDBjt+hS
+         67+iOSEbc66mPB6HRyTMf1jHrpvouKPd+GmJuMyDsoGnZeNxKeN+UDw7+jUgQ/xLLTKv
+         OWnA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748049059; x=1748653859;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=wespwvF6kqzq5dgx3obPD++AP8ju/UbhX9PaIJjnAcs=;
+        b=acWAgi2tvs2rcUxpCtA7Aa60V09RvdN2nVd5MLlPN7UdjqnB+pV+KAB+gVpz2qQQdg
+         1uyt8B7CcI2rWgCREWXMRXuRGkD+fy9W9lHU4Ax3t4A9zTsCvDQiuZFoO2EhVX8qeDSq
+         +8Nnlxx1ZOWnXgfRkB9UeZ1zoZt6nCdw6t6M+WXi3RUsBKOE4GKl8KTUHUhrblRcPgnz
+         LU5LYxhZGxMZM4vON0cM6wwCozildR3dbP+natWtv+IWollgnHPZ6GpCp43alcCMfPmj
+         KEVuDxB1mnbPYNibBS1AKOiMZ9GhegBOSLReuPvWRLVRuH+Y2onmzMTI4kgoxou5NMKj
+         HAxg==
+X-Forwarded-Encrypted: i=1; AJvYcCUVcshxiSJs9AEAzduqcMgBkMvsMQCXclG/lQqwlmS27sIK/FW8e3Kskb+Cqf5LvDS4bumo0eZKyBiLUm4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyBmAZZSKjp0odf/TslpP7sR8xNCXTvqM0qZ3uYwSYEqnqhnf1b
+	a7CNKhWKGFL20P9vI31Wxoz0EMPjYMoRU3yhaIePN8gf9zGxDdP4oj5kMULv4uUZ8/U+JsQKSi7
+	QrX7wos6YRSc/3gPjOIg4ewh0SGM0dY/ZCQOPCC/Cng==
+X-Gm-Gg: ASbGncsoP4+wYCQlFXpR+ek88L7HaH0erycu7SqX4ch+nPUR8j90mdMTXCurOc25vxf
+	axC7tg3m2YyJ3ol76qUpSLkBUtaFGyKdX5d0j7TXJC0p3KrjME7SeueQLK+NBMhL53UBiDtihEC
+	be7MtRCzq4UX6x0HOxMGjoAbTnFMMAln7Zy+U=
+X-Google-Smtp-Source: AGHT+IH5kNKjU5mY0iqNrnFhhvRdZxyDeoZSH7FdpYSyRUJRwx65Aa9wswzpoQgpipYAIMWDpukycaM4+rxyvstCBqM=
+X-Received: by 2002:a05:6512:3c8e:b0:552:1c1b:556 with SMTP id
+ 2adb3069b0e04-5521c7ae35emr424381e87.24.1748049058648; Fri, 23 May 2025
+ 18:10:58 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250523042635.work.579-kees@kernel.org>
+References: <20250520031552.1931598-1-hezhongkun.hzk@bytedance.com>
+ <8029d719-9dc2-4c7d-af71-4f6ae99fe256@redhat.com> <CACSyD1Mmt54dVRiBibcGsum_rRV=_SwP=dxioAxq=EDmPRnY2Q@mail.gmail.com>
+ <aC4J9HDo2LKXYG6l@slm.duckdns.org> <CACSyD1MvwPT7i5_PnEp32seeb7X_svdCeFtN6neJ0=QPY1hDsw@mail.gmail.com>
+ <aC90-jGtD_tJiP5K@slm.duckdns.org> <CACSyD1P+wuSP2jhMsLHBAXDxGoBkWzK54S5BRzh63yby4g0OHw@mail.gmail.com>
+ <aDCnnd46qjAvoxZq@slm.duckdns.org>
+In-Reply-To: <aDCnnd46qjAvoxZq@slm.duckdns.org>
+From: Zhongkun He <hezhongkun.hzk@bytedance.com>
+Date: Sat, 24 May 2025 09:10:21 +0800
+X-Gm-Features: AX0GCFtSWHIc8ezRHjr9cZ4HLh0KjLJb_vy2wgYKIE3iBWgQLXGLTBxq8dVy6uM
+Message-ID: <CACSyD1OWe-PkUjmcTtbYCbLi3TrxNQd==-zjo4S9X5Ry3Gwbzg@mail.gmail.com>
+Subject: Re: [External] Re: [PATCH] cpuset: introduce non-blocking cpuset.mems
+ setting option
+To: Tejun Heo <tj@kernel.org>
+Cc: Waiman Long <llong@redhat.com>, cgroups@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	muchun.song@linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Kees,
+On Sat, May 24, 2025 at 12:51=E2=80=AFAM Tejun Heo <tj@kernel.org> wrote:
+>
+> Hello,
+>
+> On Fri, May 23, 2025 at 11:35:57PM +0800, Zhongkun He wrote:
+> > > Is this something you want on the whole machine? If so, would global =
+cgroup
+> > > mount option work?
+> >
+> > It doesn't apply to the whole machine. It is only relevant to the pod w=
+ith
+> > huge pages, where the service will be unavailable for over ten seconds =
+if
+> > modify the cpuset.mems. Therefore, it would be ideal if there were an
+> > option to disable the migration for this special case.
+>
+> I suppose we can add back an interface similar to cgroup1 but can you det=
+ail
+> the use case a bit? If you relocate threads without relocating memory, yo=
+u'd
 
-kernel test robot noticed the following build errors:
+Thanks, that sounds great.
 
-[auto build test ERROR on tip/master]
-[also build test ERROR on tip/x86/core kees/for-next/pstore kees/for-next/kspp linus/master v6.15-rc7 next-20250523]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+> be paying on-going cost for memory access. It'd be great if you can
+> elaborate why such mode of operation is desirable.
+>
+> Thanks.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Kees-Cook/x86-string_32-h-Provide-basic-sanity-checks-for-fallback-memcpy/20250523-122803
-base:   tip/master
-patch link:    https://lore.kernel.org/r/20250523042635.work.579-kees%40kernel.org
-patch subject: [PATCH] x86: string_32.h: Provide basic sanity checks for fallback memcpy()
-config: i386-buildonly-randconfig-004-20250524 (https://download.01.org/0day-ci/archive/20250524/202505240850.vTrqyqJx-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250524/202505240850.vTrqyqJx-lkp@intel.com/reproduce)
+This is a story about optimizing CPU and memory bandwidth utilization.
+In our production environment, the application exhibits distinct peak
+and off-peak cycles and the cpuset.mems interface is modified
+several times within a day.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505240850.vTrqyqJx-lkp@intel.com/
+During off-peak periods, tasks are evenly distributed across all NUMA nodes=
+.
+When peak periods arrive, we collectively migrate tasks to a designated nod=
+e,
+freeing up another node to accommodate new resource-intensive tasks.
 
-All errors (new ones prefixed by >>):
+We move the task by modifying the cpuset.cpus and cpuset.mems and
+the memory migration is an option with cpuset.memory_migrate
+interface in V1. After we relocate the threads, the memory will be
+migrated by syscall move_pages in userspace slowly, within a few
+minutes.
 
-   arch/x86/crypto/serpent_sse2_glue.c: In function 'serpent_decrypt_cbc_xway':
->> arch/x86/crypto/serpent_sse2_glue.c:39:19: error: assignment to 'const u8 *' {aka 'const unsigned char *'} from incompatible pointer type 'u8 (*)[16]' {aka 'unsigned char (*)[16]'} [-Werror=incompatible-pointer-types]
-      39 |                 s = memcpy(buf, src, sizeof(buf));
-         |                   ^
-   cc1: some warnings being treated as errors
+Presently, cpuset.mems triggers synchronous memory migration,
+leading to prolonged and unacceptable service downtime in V2.
 
+So we hope to add back an interface similar to cgroup v1, optional
+the migration.
 
-vim +39 arch/x86/crypto/serpent_sse2_glue.c
+Thanks.
 
-e0f409dcb82e463 Eric Biggers    2018-02-19  32  
-9ad58b46f814edd Ard Biesheuvel  2021-01-05  33  static void serpent_decrypt_cbc_xway(const void *ctx, u8 *dst, const u8 *src)
-e81792fbc2a6fa4 Jussi Kivilinna 2012-06-18  34  {
-9ad58b46f814edd Ard Biesheuvel  2021-01-05  35  	u8 buf[SERPENT_PARALLEL_BLOCKS - 1][SERPENT_BLOCK_SIZE];
-9ad58b46f814edd Ard Biesheuvel  2021-01-05  36  	const u8 *s = src;
-e81792fbc2a6fa4 Jussi Kivilinna 2012-06-18  37  
-9ad58b46f814edd Ard Biesheuvel  2021-01-05  38  	if (dst == src)
-9ad58b46f814edd Ard Biesheuvel  2021-01-05 @39  		s = memcpy(buf, src, sizeof(buf));
-9ad58b46f814edd Ard Biesheuvel  2021-01-05  40  	serpent_dec_blk_xway(ctx, dst, src);
-9ad58b46f814edd Ard Biesheuvel  2021-01-05  41  	crypto_xor(dst + SERPENT_BLOCK_SIZE, s, sizeof(buf));
-e81792fbc2a6fa4 Jussi Kivilinna 2012-06-18  42  }
-e81792fbc2a6fa4 Jussi Kivilinna 2012-06-18  43  
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+>
+> --
+> tejun
