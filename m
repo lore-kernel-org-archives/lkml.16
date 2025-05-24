@@ -1,222 +1,273 @@
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F7F32745E;
-	Sat, 24 May 2025 13:01:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFAA07E9;
+	Sat, 24 May 2025 13:15:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748091721; cv=none; b=Qam/60Usc/Z50W6ZmSweM2sEioCvN1xMqdrU746FqoAEW8b2QaSr4N/C9ZYFzU1izkhC9Kyy8UZKwNkaGFRcUeq05ascaUvuF4+tzoMMG9CHMQ5gcvUBl6DUQLzO1mjDW4ze46TxDB91pEL0MFaTOKa3AL1GUde1Uu8QEsGmc5s=
+	t=1748092551; cv=none; b=sv78oLQv9SyH+/LHWAcBSlPZsJfDoE07+x9zSr29ZBSDId0ySDJ6kAObI2y7BJuCmPuD3C1mrkPxoP/eWpsqSbO7NCtn7R0p931mKD/P7ZplivFULr9SzaRf1Vr2ZrJNhK1QWaEKuF+rMUTIcYjSYwMaf4Q1OXteYqaDjInFuGc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748091721; c=relaxed/simple;
-	bh=RRcJZK/fdpm/UJirK6DuyBS1H1g+MRfNPW/QAj20+u0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rpxepuN5gQuIrOgMigexr+sy+K4n2TQeP0VnPAX+N4IpL3UVN8dbEFpv+hYRWfpp3X69Hi32jyoZHCRzqOqRjFqfbkkCFwSxhr2tIfVI3bEVWPe06CJeuf83v82b+IfRPNLbT9vEbZF8bcAXFJJGZiS6eztufFrzb9GuBByHQlQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lsflvgie; arc=none smtp.client-ip=209.85.208.41
+	s=arc-20240116; t=1748092551; c=relaxed/simple;
+	bh=vLcHHKUQEgddGQiMZdUg/Ge3HUsIo0jn4qXtL0dcuiQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KzHtijdUsiuh+RKI6UQcNKV1ulCBaVMlmU8qFcUy1oGX8kxN4mgtV0HESEJTdoAtL3VIva733okm9oAI2Z98UVJmApFBHk6XXacb7e3iPxTr7EsGYz4tRH/WbBtaEMFgcKlnngk6cMYlbaqtVuS/TbdXB0KS4Yuc5qFT5QPfSjA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ax0B6g3N; arc=none smtp.client-ip=209.85.216.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lsflvgie"
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-601968db16bso1502175a12.3;
-        Sat, 24 May 2025 06:01:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ax0B6g3N"
+Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-3112beaa623so118157a91.2;
+        Sat, 24 May 2025 06:15:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748091718; x=1748696518; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=VKli66YIl4D8KkYGob+nwhEH8L463HtKxvM0zVYBV2s=;
-        b=lsflvgiekZizO3XbaMloNxblORDr68FHmP01w8oT89m72k9mrP3xz42NePmQWEKH7U
-         cwliYuhFkP1jCMYJwiXSY+tzz9+3llTAP8zgvCJT8Z7w7VaVEamnHIpWeAdKRCmlymze
-         y5gndaz4qYICAr3Fm4II5gQ5/9vSmT3DMcbwekIM5bpKrkud7pPaMO+e6KVzOhs+Qsxx
-         kFtjTKl/CNC0BDYHXMZbs84C7HBKUeMrGqBntT9qCt0bfA7J5UI2tvsPJ9uOny/+b75o
-         lnWni4twep8BbN7S7Oj+eIW0SnUaQ558p20p4Jxz/UlTfGfYxENlwo9asAS2gPpYKXWF
-         Vq7Q==
+        d=gmail.com; s=20230601; t=1748092549; x=1748697349; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=9qrfev+FmiUJFqYOfv5bYcixbTHUXGEoxf24Yu+cbgs=;
+        b=ax0B6g3NvQLTqSn8LLgDSQzgg3MLew8pGw1AbxqP0XaB9EeRCGFnXD1/pnaDQ9wUXi
+         Yr5ZUIJBw0W4cXV4MdIjKGNveVyibqsX5G1d5WSkmgcKAtVJa8o0CFY4CTQTjCfE8/DN
+         V9HjzSFLXpdd7QlMre803v+U1WsqT702EtckhZ334UxxgMUvfxV0zAjVKASkCYDqdkRx
+         x0IKdkqRzr9I0gD2I11PwQFI9Jo9SGgY+LKSMjrZGyCAwN5uU37/k5PvINq0+EFJR01L
+         nmH+0DIifAHgCzI+yMJD9yuzUZE1EPl1hhWXJ9nBTSN6sw7+PLMxl+nX1ZCBKGhKKCKg
+         d8yA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748091718; x=1748696518;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=VKli66YIl4D8KkYGob+nwhEH8L463HtKxvM0zVYBV2s=;
-        b=Dpx9A0kHhfVddzwUi9XZktLKDwjigu3dpgQEtFfDodTTCYuY7gtpd/d8+0fM3fm4+N
-         Wr7JmpBHMpWf5waWOczqk3hTdGoASzKHlDiSUNUurHySSMB9LZL4MSqgAcjBynJ6JBc2
-         F80KE+cr35vH7p0WuvFusLAs7rKrA5JoBL6rcpsuF9NyadABeNE+5PaZV5bA7feeC2dh
-         D/lmBq+l99RVXLsHX7ZahR5soEOBif7CnsCdpZhL48XPwk/x25urs/p5gjU6ORtcf0lx
-         Lhmtka8AI6xVHUXzulgUuaeyXPMNt2eRODU0OQOj3WqWxC2C4M28EBMTpesdfr4WH4lW
-         HqJg==
-X-Forwarded-Encrypted: i=1; AJvYcCUVkU/fBTTRer2kYXIVUfA7QeIunq87GxLgnO9b2iHgS1XMtnpPuwa3yIP9s/hkxHBxtjVdcs/nKO6GtW79@vger.kernel.org, AJvYcCVu00b9tEseWlPq+tt/QNEx1c/u2MLizlr/1l9lcdD5shhFk1jK7YKEWRvHHrZuw7aZTDTptOMQAJBY6git3Q==@vger.kernel.org, AJvYcCXpdFYAKoGnt9Ggx8IYdfZhwec1qZLq5a2Wll2p7oH7Dh51+VTx8xn1weri6WLwMxCCHNHxDvKdftqA68y0yg==@vger.kernel.org
-X-Gm-Message-State: AOJu0YxNDuZH8HQbh4QNfCOx1mMFH2e4aaLw4qAEzvyLBND/tbkz0GUe
-	59hDV8X6AhJImXvNNd4pWd/qPn4tJtV0dKJl6bSJLeYDjFdUQbQEM71t/IdNyPcO8I8XaWDMFe7
-	GssGveuFy/w23sSFxiRqulIZxt7IIWvw=
-X-Gm-Gg: ASbGncvVaf2MgLE/2LUzj3HB3+uh5uWZrmQOonZ2R70k73yS5vQU2Bbi/I/QW1e4rg7
-	tY5P/UOFoFRm9KbVNtJBp6TkyG1xwt+fdBmr639/slmEHEY7js4ZXH5shBVKLyUPgrqoKXq23/U
-	QG2VBtV2oa7nIAXA/X7Qb3NeIfuCkHhbnp
-X-Google-Smtp-Source: AGHT+IGFBuSQWTc2AAcR3FwFP7yOs/CuTeEbBHHmWeUnThUmXvogiu/D4qUlObhi1NJKDe5soESb6rq9vROFyqvVDe0=
-X-Received: by 2002:a17:907:da7:b0:ac3:17bb:34fc with SMTP id
- a640c23a62f3a-ad85b2f3465mr212279766b.52.1748091717392; Sat, 24 May 2025
- 06:01:57 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1748092549; x=1748697349;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=9qrfev+FmiUJFqYOfv5bYcixbTHUXGEoxf24Yu+cbgs=;
+        b=DAl6AcmhurIlEXhYquna/R96rxQXQ/6ernF9AFSqXQI1k5Y7MhJIa0phOAM3nnqm/c
+         JvnNzYqcHbFY5AqZ7zQERa5RXtsYfytVkrPhN0k3Dcn53RdwePUmJkGAw6plDZ+XhCRI
+         fs59Ok3upEcxLRBbBhyE1m+NulFd3yp9icGbqJzAZkv5ZqQAxz7IJESH4SZOLeNplzcj
+         Wx/H0SEgKBrqaJyJ3BXMF1ZxhlOv40pjZ3S/HzRa1pnH5CNzQFM0uBuZbBzoalz32it5
+         86TFjllJJ2k5QcJaAJ6aHZjjrCAwN2Rf0dffvk//HUcpNrM6W9ZtZSbkJXXkG/lnNnUr
+         kAQA==
+X-Forwarded-Encrypted: i=1; AJvYcCUkNrUQ9j0DBoECkMjrI0B1JG1tTDDzsLequJ106Lx6mk/P31fTq7cUA9WliKKBov5vBvbF+c354X/pXu4=@vger.kernel.org, AJvYcCVLlhs7/jIGNUgNZW0chK9/g+z7ME5iyDiy9cYLQy/akIvxHzsfNsxsyzTs6C3R20A8rn+E6K335DHwUQ==@vger.kernel.org
+X-Gm-Message-State: AOJu0YzZxa82gUCrnsx766F6QdfdppiUJ82B4Y8WEP/6g3xmPAaKWmub
+	ScX8tJ4vut63p/ljEgr0LQRRx5hVon56xbvAb6jO8Qqqe6Vld194aesQ
+X-Gm-Gg: ASbGnctNycSBJmmN5lDF43Ux3aZSKCZgCitjX5hw5jOCgjXG22WGJwu0vLjQtpiXxlu
+	V/o8aXAg6NHaGj/uIbuSaa0JnRiroFdPaBjOHVCtM+oPYtc1cnI5vgEekky9WmKZE1kKh4Pzq8j
+	lyuruSSsjJT5Fp/Bmm05ES60kIt65w1KO6zqRuuAPmGH9Fgmn3KSpf2tN/Qta4RES94vd+ETGaK
+	0Aay3ePVcBiiEzLwCnxcXa7d7GQ0nh6sTT8Ot39B023Gle6trjqJhKaLKmzMrdTO2uitDDJmpsB
+	6zIa4oSFWalS9TUzekDDXyuoOuk19Y2+Um39UyMTfuMXnLxOww39e/97ZJT46VlcrkArlLasy9c
+	RosYS4bNsfeVd71v0QNlWYxL5kk8=
+X-Google-Smtp-Source: AGHT+IEf0MtmsIg3fXFeAxOxn1z87LOsYCgCy9TBgMDOAL0jf8N2CC/qlFlfnXE9UXYcNOciz9kdmQ==
+X-Received: by 2002:a17:90b:52c6:b0:303:75a7:26a4 with SMTP id 98e67ed59e1d1-3110f333fa4mr4308197a91.7.1748092548842;
+        Sat, 24 May 2025 06:15:48 -0700 (PDT)
+Received: from [192.168.11.2] (FL1-119-244-79-106.tky.mesh.ad.jp. [119.244.79.106])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3110b9a447bsm1520492a91.3.2025.05.24.06.15.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 24 May 2025 06:15:48 -0700 (PDT)
+Message-ID: <95b1875c-fe87-4941-9242-551fb9546ccc@gmail.com>
+Date: Sat, 24 May 2025 22:15:43 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <osbsqlzkc4zttz4gxa25exm5bhqog3tpyirsezcbcdesaucd7g@4sltqny4ybnz>
- <CAOQ4uxjUC=1MinjDCOfY5t89N3ga6msLmpVXL1p23qdQax6fSg@mail.gmail.com>
- <gdvg6zswvq4zjzo6vntggoacrgxxh33zmejo72yusp7aqkqzic@kaibexik7lvh>
- <CAOQ4uxg9sKC_8PLARkN6aB3E_U62_S3kfnBuRbAvho9BNzGAsQ@mail.gmail.com>
- <rkbkjp7xvefmtutkwtltyd6xch2pbw47x5czx6ctldemus2bvj@2ukfdmtfjjbw>
- <CAOQ4uxgOM83u1SOd4zxpDmWFsGvrgqErKRwea=85_drpF6WESA@mail.gmail.com>
- <q6o6jrgwpdt67xsztsqjmewt66kjv6btyayazk7zlk4zjoww4n@2zzowgibx5ka>
- <CAOQ4uxisCFNuHtSJoP19525BDdfeN2ukehj_-7PxepSTDOte9w@mail.gmail.com>
- <CAOQ4uxhnOMPTBd+k4UVPvAWYLhJWOdV4FbyKa_+a=cqK9Chr2A@mail.gmail.com> <ltzdzvmycohkgvmr3bd6f2ve4a4faxuvkav3d7wt2zoo5gkote@47o5yfse2mzn>
-In-Reply-To: <ltzdzvmycohkgvmr3bd6f2ve4a4faxuvkav3d7wt2zoo5gkote@47o5yfse2mzn>
-From: Amir Goldstein <amir73il@gmail.com>
-Date: Sat, 24 May 2025 15:01:44 +0200
-X-Gm-Features: AX0GCFsWbisYlOZ9f-uZKVJuy4gvFqMnUE-fT8CU5vNIsj46pl3EvxBQal41DSo
-Message-ID: <CAOQ4uxjHb4B1YL2hSMHxd2Y0mMmfpHMzgbHO5wLF3=rMVxsHyQ@mail.gmail.com>
-Subject: Re: [PATCH 0/6] overlayfs + casefolding
-To: Kent Overstreet <kent.overstreet@linux.dev>
-Cc: linux-fsdevel@vger.kernel.org, linux-bcachefs@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-unionfs@vger.kernel.org, 
-	Miklos Szeredi <miklos@szeredi.hu>, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>
-Content-Type: multipart/mixed; boundary="000000000000d9cf060635e15135"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH for-next v1] RDMA/core: Avoid hmm_dma_map_alloc() for
+ virtual DMA devices
+To: Zhu Yanjun <yanjun.zhu@linux.dev>, linux-kernel@vger.kernel.org,
+ linux-rdma@vger.kernel.org, leon@kernel.org, jgg@ziepe.ca,
+ zyjzyj2000@gmail.com
+Cc: hch@infradead.org
+References: <20250523184701.11004-1-dskmtsd@gmail.com>
+ <bfb143ad-9a98-4832-ba1b-25bfe5879e46@linux.dev>
+ <c71dcd9b-ab75-4f13-8170-71c71d911779@linux.dev>
+Content-Language: en-US
+From: Daisuke Matsuda <dskmtsd@gmail.com>
+In-Reply-To: <c71dcd9b-ab75-4f13-8170-71c71d911779@linux.dev>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
---000000000000d9cf060635e15135
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Fri, May 23, 2025 at 11:10=E2=80=AFPM Kent Overstreet
-<kent.overstreet@linux.dev> wrote:
->
-> On Fri, May 23, 2025 at 10:30:16PM +0200, Amir Goldstein wrote:
->
-> That makes fstests generic/631 pass.
+On 2025/05/24 16:52, Zhu Yanjun wrote:
+> 在 2025/5/24 9:31, Zhu Yanjun 写道:
+>> 在 2025/5/23 20:47, Daisuke Matsuda 写道:
+>>> Drivers such as rxe, which use virtual DMA, must not call into the DMA
+>>> mapping core since they lack physical DMA capabilities. Otherwise, a NULL
+>>> pointer dereference is observed as shown below. This patch ensures the RDMA
+>>> core handles virtual and physical DMA paths appropriately.
+>>>
+>>> This fixes the following kernel oops:
+>>>
+>>>   BUG: kernel NULL pointer dereference, address: 00000000000002fc
+>>>   #PF: supervisor read access in kernel mode
+>>>   #PF: error_code(0x0000) - not-present page
+>>>   PGD 1028eb067 P4D 1028eb067 PUD 105da0067 PMD 0
+>>>   Oops: Oops: 0000 [#1] SMP NOPTI
+>>>   CPU: 3 UID: 1000 PID: 1854 Comm: python3 Tainted: G W           6.15.0-rc1+ #11 PREEMPT(voluntary)
+>>>   Tainted: [W]=WARN
+>>>   Hardware name: Trigkey Key N/Key N, BIOS KEYN101 09/02/2024
+>>>   RIP: 0010:hmm_dma_map_alloc+0x25/0x100
+>>>   Code: 90 90 90 90 90 0f 1f 44 00 00 55 48 89 e5 41 57 41 56 49 89 d6 49 c1 e6 0c 41 55 41 54 53 49 39 ce 0f 82 c6 00 00 00 49 89 fc <f6> 87 fc 02 00 00 20 0f 84 af 00 00 00 49 89 f5 48 89 d3 49 89 cf
+>>>   RSP: 0018:ffffd3d3420eb830 EFLAGS: 00010246
+>>>   RAX: 0000000000001000 RBX: ffff8b727c7f7400 RCX: 0000000000001000
+>>>   RDX: 0000000000000001 RSI: ffff8b727c7f74b0 RDI: 0000000000000000
+>>>   RBP: ffffd3d3420eb858 R08: 0000000000000000 R09: 0000000000000000
+>>>   R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
+>>>   R13: 00007262a622a000 R14: 0000000000001000 R15: ffff8b727c7f74b0
+>>>   FS:  00007262a62a1080(0000) GS:ffff8b762ac3e000(0000) knlGS:0000000000000000
+>>>   CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>>>   CR2: 00000000000002fc CR3: 000000010a1f0004 CR4: 0000000000f72ef0
+>>>   PKRU: 55555554
+>>>   Call Trace:
+>>>    <TASK>
+>>>    ib_init_umem_odp+0xb6/0x110 [ib_uverbs]
+>>>    ib_umem_odp_get+0xf0/0x150 [ib_uverbs]
+>>>    rxe_odp_mr_init_user+0x71/0x170 [rdma_rxe]
+>>>    rxe_reg_user_mr+0x217/0x2e0 [rdma_rxe]
+>>>    ib_uverbs_reg_mr+0x19e/0x2e0 [ib_uverbs]
+>>>    ib_uverbs_handler_UVERBS_METHOD_INVOKE_WRITE+0xd9/0x150 [ib_uverbs]
+>>>    ib_uverbs_cmd_verbs+0xd19/0xee0 [ib_uverbs]
+>>>    ? mmap_region+0x63/0xd0
+>>>    ? __pfx_ib_uverbs_handler_UVERBS_METHOD_INVOKE_WRITE+0x10/0x10 [ib_uverbs]
+>>>    ib_uverbs_ioctl+0xba/0x130 [ib_uverbs]
+>>>    __x64_sys_ioctl+0xa4/0xe0
+>>>    x64_sys_call+0x1178/0x2660
+>>>    do_syscall_64+0x7e/0x170
+>>>    ? syscall_exit_to_user_mode+0x4e/0x250
+>>>    ? do_syscall_64+0x8a/0x170
+>>>    ? do_syscall_64+0x8a/0x170
+>>>    ? syscall_exit_to_user_mode+0x4e/0x250
+>>>    ? do_syscall_64+0x8a/0x170
+>>>    ? syscall_exit_to_user_mode+0x4e/0x250
+>>>    ? do_syscall_64+0x8a/0x170
+>>>    ? do_user_addr_fault+0x1d2/0x8d0
+>>>    ? irqentry_exit_to_user_mode+0x43/0x250
+>>>    ? irqentry_exit+0x43/0x50
+>>>    ? exc_page_fault+0x93/0x1d0
+>>>    entry_SYSCALL_64_after_hwframe+0x76/0x7e
+>>>   RIP: 0033:0x7262a6124ded
+>>>   Code: 04 25 28 00 00 00 48 89 45 c8 31 c0 48 8d 45 10 c7 45 b0 10 00 00 00 48 89 45 b8 48 8d 45 d0 48 89 45 c0 b8 10 00 00 00 0f 05 <89> c2 3d 00 f0 ff ff 77 1a 48 8b 45 c8 64 48 2b 04 25 28 00 00 00
+>>>   RSP: 002b:00007fffd08c3960 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+>>>   RAX: ffffffffffffffda RBX: 00007fffd08c39f0 RCX: 00007262a6124ded
+>>>   RDX: 00007fffd08c3a10 RSI: 00000000c0181b01 RDI: 0000000000000007
+>>>   RBP: 00007fffd08c39b0 R08: 0000000014107820 R09: 00007fffd08c3b44
+>>>   R10: 000000000000000c R11: 0000000000000246 R12: 00007fffd08c3b44
+>>>   R13: 000000000000000c R14: 00007fffd08c3b58 R15: 0000000014107960
+>>>    </TASK>
+>>>
+>>> Fixes: 1efe8c0670d6 ("RDMA/core: Convert UMEM ODP DMA mapping to caching IOVA and page linkage")
+>>> Closes: https://lore.kernel.org/ all/3e8f343f-7d66-4f7a-9f08-3910623e322f@gmail.com/
+>>> Signed-off-by: Daisuke Matsuda <dskmtsd@gmail.com>
+>>> ---
+>>>   drivers/infiniband/core/device.c   | 24 ++++++++++++++++++++++++
+>>>   drivers/infiniband/core/umem_odp.c |  6 +++---
+>>>   include/rdma/ib_verbs.h            | 12 ++++++++++++
+>>>   3 files changed, 39 insertions(+), 3 deletions(-)
+>>>
+>>> diff --git a/drivers/infiniband/core/device.c b/drivers/infiniband/ core/device.c
+>>> index b4e3e4beb7f4..8be4797c66ec 100644
+>>> --- a/drivers/infiniband/core/device.c
+>>> +++ b/drivers/infiniband/core/device.c
+>>> @@ -2864,6 +2864,30 @@ int ib_dma_virt_map_sg(struct ib_device *dev, struct scatterlist *sg, int nents)
+>>>       return nents;
+>>>   }
+>>>   EXPORT_SYMBOL(ib_dma_virt_map_sg);
+>>> +int ib_dma_virt_map_alloc(struct device *dev, struct hmm_dma_map *map,
+>>> +              size_t nr_entries, size_t dma_entry_size)
+>>> +{
+>>> +    if (!(nr_entries * PAGE_SIZE / dma_entry_size))
+>>> +        return -EINVAL;
+>>> +
+>>> +    map->dma_entry_size = dma_entry_size;
+>>> +    map->pfn_list = kvcalloc(nr_entries, sizeof(*map->pfn_list),
+>>> +                 GFP_KERNEL | __GFP_NOWARN);
+>>> +    if (!map->pfn_list)
+>>> +        return -ENOMEM;
+>>> +
+>>> +    map->dma_list = kvcalloc(nr_entries, sizeof(*map->dma_list),
+>>> +                 GFP_KERNEL | __GFP_NOWARN);
+>>> +    if (!map->dma_list)
+>>> +        goto err_dma;
+>>> +
+>>> +    return 0;
+>>> +
+>>> +err_dma:
+>>> +    kvfree(map->pfn_list);
+>>> +    return -ENOMEM;
+>>> +}
+>>> +EXPORT_SYMBOL(ib_dma_virt_map_alloc);
+>>>   #endif /* CONFIG_INFINIBAND_VIRT_DMA */
+>>>   static const struct rdma_nl_cbs ibnl_ls_cb_table[RDMA_NL_LS_NUM_OPS] = {
+>>> diff --git a/drivers/infiniband/core/umem_odp.c b/drivers/infiniband/ core/umem_odp.c
+>>> index 51d518989914..aa03f3fc84d0 100644
+>>> --- a/drivers/infiniband/core/umem_odp.c
+>>> +++ b/drivers/infiniband/core/umem_odp.c
+>>> @@ -75,9 +75,9 @@ static int ib_init_umem_odp(struct ib_umem_odp *umem_odp,
+>>>       if (unlikely(end < page_size))
+>>>           return -EOVERFLOW;
+>>> -    ret = hmm_dma_map_alloc(dev->dma_device, &umem_odp->map,
+>>> -                (end - start) >> PAGE_SHIFT,
+>>> -                1 << umem_odp->page_shift);
+>>> +    ret = ib_dma_map_alloc(dev, &umem_odp->map,
+>>> +                   (end - start) >> PAGE_SHIFT,
+>>> +                   1 << umem_odp->page_shift);
+>>>       if (ret)
+>>>           return ret;
+>>> diff --git a/include/rdma/ib_verbs.h b/include/rdma/ib_verbs.h
+>>> index b06a0ed81bdd..10813f348b99 100644
+>>> --- a/include/rdma/ib_verbs.h
+>>> +++ b/include/rdma/ib_verbs.h
+>>> @@ -36,6 +36,7 @@
+>>>   #include <linux/irqflags.h>
+>>>   #include <linux/preempt.h>
+>>>   #include <linux/dim.h>
+>>> +#include <linux/hmm-dma.h>
+>>>   #include <uapi/rdma/ib_user_verbs.h>
+>>>   #include <rdma/rdma_counter.h>
+>>>   #include <rdma/restrack.h>
+>>> @@ -4221,6 +4222,17 @@ static inline void ib_dma_unmap_sg_attrs(struct ib_device *dev,
+>>>                      dma_attrs);
+>>>   }
+>>> +int ib_dma_virt_map_alloc(struct device *dev, struct hmm_dma_map *map,
+>>> +              size_t nr_entries, size_t dma_entry_size);
+>>> +static inline int ib_dma_map_alloc(struct ib_device *dev, struct hmm_dma_map *map,
+>>> +                   size_t nr_entries, size_t dma_entry_size)
+>>> +{
+>>> +    if (ib_uses_virt_dma(dev))
+>>> +        return ib_dma_virt_map_alloc(dev->dma_device, map, nr_entries,
+>>> +                         dma_entry_size);
+>>
+>> Other emulated RDMA devices driver also call ib_dma_virt_map_alloc?
+>> Only rxe will call ib_dma_virt_map_alloc?
 
-Yes, that is not very surprising.
-I meant if you could help test that:
+Only rxe will call ib_dma_virt_map_alloc()
+because currently only mlx5 and rxe will use ib_dma_map_alloc().
 
-1. mounting case folder upperdir/lowerdir fails
-2. lookup a case folder subdir fails
-3. lookup in a dir that was empty and became case folder while ovl was
-mounted fails
+> 
+> As I know, other emulated RDMA driver also implemented ODP, and with the current hmm_dma_map_alloc, it can work well.
+> So in the above "if (ib_uses_virt_dma(dev))", changed to if (rxe_dev), then go to call ib_dma_virt_map_alloc.
 
-For me, I do not have any setup with case folding subtrees
-so testing those use cases would take me time and
-I think that you must have tested all those scenarios with your patch set?
-and maybe already have some fstests for them?
+Only mlx5 and rxe support ODP. While hmm_dma_map_alloc() works fine for mlx5,
+it cannot be used for any drivers under drivers/infiniband/sw/ because they all set
+dma_device to NULL in ib_register_device().
 
->
-> We really should be logging something in dmesg on error due to
-> casefolded directory, though.
+So changing the condition to if (rxe_dev) makes the code too specific.
+To my understanding, it's generally discouraged to add code in the RDMA core
+that targets a specific implementation.
 
-No problem.
-Attached v2 with warnings.
-
-For example, here is the new warning in test overlay/065:
-
-[  131.815110] overlayfs: failed lookup in lower (/lower,
-name=3D'upper', err=3D-40): overlapping layers
+I have just realized that we can remove an argument "struct device"
+from ib_dma_virt_map_alloc(). I will post the v2 to fix this.
 
 Thanks,
-Amir.
+Daisuke
 
---000000000000d9cf060635e15135
-Content-Type: text/x-patch; charset="US-ASCII"; 
-	name="v2-0001-ovl-support-layers-on-case-folding-capable-filesy.patch"
-Content-Disposition: attachment; 
-	filename="v2-0001-ovl-support-layers-on-case-folding-capable-filesy.patch"
-Content-Transfer-Encoding: base64
-Content-ID: <f_mb28nuoh0>
-X-Attachment-Id: f_mb28nuoh0
+> 
+> Yanjun.Zhu
+> 
+>>
+>> Zhu Yanjun
+>>
+>>> +    return hmm_dma_map_alloc(dev->dma_device, map, nr_entries, dma_entry_size);
+>>> +}
+>>> +
+>>>   /**
+>>>    * ib_dma_map_sgtable_attrs - Map a scatter/gather table to DMA addresses
+>>>    * @dev: The device for which the DMA addresses are to be created
+>>
+> 
 
-RnJvbSA0ZjczMDgxMWI4MDY3MGI2NWU0ZWRkODE4NjIxYjk4OGM1OWUxNTBiIE1vbiBTZXAgMTcg
-MDA6MDA6MDAgMjAwMQpGcm9tOiBBbWlyIEdvbGRzdGVpbiA8YW1pcjczaWxAZ21haWwuY29tPgpE
-YXRlOiBGcmksIDIzIE1heSAyMDI1IDIyOjEzOjE4ICswMjAwClN1YmplY3Q6IFtQQVRDSCB2Ml0g
-b3ZsOiBzdXBwb3J0IGxheWVycyBvbiBjYXNlLWZvbGRpbmcgY2FwYWJsZSBmaWxlc3lzdGVtcwoK
-Q2FzZSBmb2xkaW5nIGlzIG9mdGVuIGFwcGxpZWQgdG8gc3VidHJlZXMgYW5kIG5vdCBvbiBhbiBl
-bnRpcmUKZmlsZXN5c3RlbS4KCkRpc2FsbG93aW5nIGxheWVycyBmcm9tIGZpbGVzeXN0ZW1zIHRo
-YXQgc3VwcG9ydCBjYXNlIGZvbGRpbmcgaXMgb3ZlcgpsaW1pdGluZy4KClJlcGxhY2UgdGhlIHJ1
-bGUgdGhhdCBjYXNlLWZvbGRpbmcgY2FwYWJsZSBhcmUgbm90IGFsbG93ZWQgYXMgbGF5ZXJzCndp
-dGggYSBydWxlIHRoYXQgY2FzZSBmb2xkZWQgZGlyZWN0b3JpZXMgYXJlIG5vdCBhbGxvd2VkIGlu
-IGEgbWVyZ2VkCmRpcmVjdG9yeSBzdGFjay4KClNob3VsZCBjYXNlIGZvbGRpbmcgYmUgZW5hYmxl
-ZCBvbiBhbiB1bmRlcmx5aW5nIGRpcmVjdG9yeSB3aGlsZQpvdmVybGF5ZnMgaXMgbW91bnRlZCB0
-aGUgb3V0Y29tZSBpcyBnZW5lcmFsbHkgdW5kZWZpbmVkLgoKU3BlY2lmaWNhbGx5IGluIG92bF9s
-b29rdXAoKSwgd2UgY2hlY2sgdGhlIGJhc2UgdW5kZXJseWluZyBkaXJlY3RvcnkKYW5kIGZhaWwg
-d2l0aCAtRVNUQUxFIGFuZCB3cml0ZSBhIHdhcm5pbmcgdG8ga21zZyBpZiBhbiB1bmRlcmx5aW5n
-CmRpcmVjdG9yeSBjYXNlIGZvbGRpbmcgaXMgZW5hYmxlZC4KClN1Z2dlc3RlZC1ieTogS2VudCBP
-dmVyc3RyZWV0IDxrZW50Lm92ZXJzdHJlZXRAbGludXguZGV2PgpMaW5rOiBodHRwczovL2xvcmUu
-a2VybmVsLm9yZy9saW51eC1mc2RldmVsLzIwMjUwNTIwMDUxNjAwLjE5MDMzMTktMS1rZW50Lm92
-ZXJzdHJlZXRAbGludXguZGV2LwpTaWduZWQtb2ZmLWJ5OiBBbWlyIEdvbGRzdGVpbiA8YW1pcjcz
-aWxAZ21haWwuY29tPgotLS0KIGZzL292ZXJsYXlmcy9uYW1laS5jICB8IDI1ICsrKysrKysrKysr
-KysrKysrKysrKystLS0KIGZzL292ZXJsYXlmcy9wYXJhbXMuYyB8IDExICsrKysrLS0tLS0tCiBm
-cy9vdmVybGF5ZnMvdXRpbC5jICAgfCAxNSArKysrKysrKysrKy0tLS0KIDMgZmlsZXMgY2hhbmdl
-ZCwgMzggaW5zZXJ0aW9ucygrKSwgMTMgZGVsZXRpb25zKC0pCgpkaWZmIC0tZ2l0IGEvZnMvb3Zl
-cmxheWZzL25hbWVpLmMgYi9mcy9vdmVybGF5ZnMvbmFtZWkuYwppbmRleCBkNDg5ZTgwZmViNmYu
-LjMzMzAxN2Y2YWU2NSAxMDA2NDQKLS0tIGEvZnMvb3ZlcmxheWZzL25hbWVpLmMKKysrIGIvZnMv
-b3ZlcmxheWZzL25hbWVpLmMKQEAgLTIzMCwxMyArMjMwLDI2IEBAIHN0YXRpYyBpbnQgb3ZsX2xv
-b2t1cF9zaW5nbGUoc3RydWN0IGRlbnRyeSAqYmFzZSwgc3RydWN0IG92bF9sb29rdXBfZGF0YSAq
-ZCwKIAkJCSAgICAgc3RydWN0IGRlbnRyeSAqKnJldCwgYm9vbCBkcm9wX25lZ2F0aXZlKQogewog
-CXN0cnVjdCBvdmxfZnMgKm9mcyA9IE9WTF9GUyhkLT5zYik7Ci0Jc3RydWN0IGRlbnRyeSAqdGhp
-czsKKwlzdHJ1Y3QgZGVudHJ5ICp0aGlzID0gTlVMTDsKKwljb25zdCBjaGFyICp3YXJuOwogCXN0
-cnVjdCBwYXRoIHBhdGg7CiAJaW50IGVycjsKIAlib29sIGxhc3RfZWxlbWVudCA9ICFwb3N0WzBd
-OwogCWJvb2wgaXNfdXBwZXIgPSBkLT5sYXllci0+aWR4ID09IDA7CiAJY2hhciB2YWw7CiAKKwkv
-KgorCSAqIFdlIGFsbG93IGZpbGVzeXN0ZW1zIHRoYXQgYXJlIGNhc2UtZm9sZGluZyBjYXBhYmxl
-IGJ1dCBkZW55IGNvbXBvc2luZworCSAqIG92bCBzdGFjayBmcm9tIGNhc2UtZm9sZGVkIGRpcmVj
-dG9yaWVzLiBJZiBzb21lb25lIGhhcyBlbmFibGVkIGNhc2UKKwkgKiBmb2xkaW5nIG9uIGEgZGly
-ZWN0b3J5IG9uIHVuZGVybHlpbmcgbGF5ZXIsIHRoZSB3YXJyYW50eSBvZiB0aGUgb3ZsCisJICog
-c3RhY2sgaXMgdm9pZGVkLgorCSAqLworCWlmIChzYl9oYXNfZW5jb2RpbmcoYmFzZS0+ZF9zYikg
-JiYgSVNfQ0FTRUZPTERFRChkX2lub2RlKGJhc2UpKSkgeworCQl3YXJuID0gImNhc2UgZm9sZGVk
-IHBhcmVudCI7CisJCWVyciA9IC1FU1RBTEU7CisJCWdvdG8gb3V0X3dhcm47CisJfQorCiAJdGhp
-cyA9IG92bF9sb29rdXBfcG9zaXRpdmVfdW5sb2NrZWQoZCwgbmFtZSwgYmFzZSwgbmFtZWxlbiwg
-ZHJvcF9uZWdhdGl2ZSk7CiAJaWYgKElTX0VSUih0aGlzKSkgewogCQllcnIgPSBQVFJfRVJSKHRo
-aXMpOwpAQCAtMjQ4LDggKzI2MSw5IEBAIHN0YXRpYyBpbnQgb3ZsX2xvb2t1cF9zaW5nbGUoc3Ry
-dWN0IGRlbnRyeSAqYmFzZSwgc3RydWN0IG92bF9sb29rdXBfZGF0YSAqZCwKIAogCWlmIChvdmxf
-ZGVudHJ5X3dlaXJkKHRoaXMpKSB7CiAJCS8qIERvbid0IHN1cHBvcnQgdHJhdmVyc2luZyBhdXRv
-bW91bnRzIGFuZCBvdGhlciB3ZWlyZG5lc3MgKi8KKwkJd2FybiA9ICJ1bnN1cHBvcnRlZCBvYmpl
-Y3QgdHlwZSI7CiAJCWVyciA9IC1FUkVNT1RFOwotCQlnb3RvIG91dF9lcnI7CisJCWdvdG8gb3V0
-X3dhcm47CiAJfQogCiAJcGF0aC5kZW50cnkgPSB0aGlzOwpAQCAtMjgzLDggKzI5Nyw5IEBAIHN0
-YXRpYyBpbnQgb3ZsX2xvb2t1cF9zaW5nbGUoc3RydWN0IGRlbnRyeSAqYmFzZSwgc3RydWN0IG92
-bF9sb29rdXBfZGF0YSAqZCwKIAl9IGVsc2UgewogCQlpZiAob3ZsX2xvb2t1cF90cmFwX2lub2Rl
-KGQtPnNiLCB0aGlzKSkgewogCQkJLyogQ2F1Z2h0IGluIGEgdHJhcCBvZiBvdmVybGFwcGluZyBs
-YXllcnMgKi8KKwkJCXdhcm4gPSAib3ZlcmxhcHBpbmcgbGF5ZXJzIjsKIAkJCWVyciA9IC1FTE9P
-UDsKLQkJCWdvdG8gb3V0X2VycjsKKwkJCWdvdG8gb3V0X3dhcm47CiAJCX0KIAogCQlpZiAobGFz
-dF9lbGVtZW50KQpAQCAtMzE2LDYgKzMzMSwxMCBAQCBzdGF0aWMgaW50IG92bF9sb29rdXBfc2lu
-Z2xlKHN0cnVjdCBkZW50cnkgKmJhc2UsIHN0cnVjdCBvdmxfbG9va3VwX2RhdGEgKmQsCiAJdGhp
-cyA9IE5VTEw7CiAJZ290byBvdXQ7CiAKK291dF93YXJuOgorCXByX3dhcm5fcmF0ZWxpbWl0ZWQo
-ImZhaWxlZCBsb29rdXAgaW4gJXMgKCVwZDIsIG5hbWU9JyUuKnMnLCBlcnI9JWkpOiAlc1xuIiwK
-KwkJCSAgICBpc191cHBlciA/ICJ1cHBlciIgOiAibG93ZXIiLCBiYXNlLAorCQkJICAgIG5hbWVs
-ZW4sIG5hbWUsIGVyciwgd2Fybik7CiBvdXRfZXJyOgogCWRwdXQodGhpcyk7CiAJcmV0dXJuIGVy
-cjsKZGlmZiAtLWdpdCBhL2ZzL292ZXJsYXlmcy9wYXJhbXMuYyBiL2ZzL292ZXJsYXlmcy9wYXJh
-bXMuYwppbmRleCBmNDI0ODhjMDE5NTcuLjg0OGE2YjEzNTE0MyAxMDA2NDQKLS0tIGEvZnMvb3Zl
-cmxheWZzL3BhcmFtcy5jCisrKyBiL2ZzL292ZXJsYXlmcy9wYXJhbXMuYwpAQCAtMjgyLDEzICsy
-ODIsMTIgQEAgc3RhdGljIGludCBvdmxfbW91bnRfZGlyX2NoZWNrKHN0cnVjdCBmc19jb250ZXh0
-ICpmYywgY29uc3Qgc3RydWN0IHBhdGggKnBhdGgsCiAJCXJldHVybiBpbnZhbGZjKGZjLCAiJXMg
-aXMgbm90IGEgZGlyZWN0b3J5IiwgbmFtZSk7CiAKIAkvKgotCSAqIFJvb3QgZGVudHJpZXMgb2Yg
-Y2FzZS1pbnNlbnNpdGl2ZSBjYXBhYmxlIGZpbGVzeXN0ZW1zIG1pZ2h0Ci0JICogbm90IGhhdmUg
-dGhlIGRlbnRyeSBvcGVyYXRpb25zIHNldCwgYnV0IHN0aWxsIGJlIGluY29tcGF0aWJsZQotCSAq
-IHdpdGggb3ZlcmxheWZzLiAgQ2hlY2sgZXhwbGljaXRseSB0byBwcmV2ZW50IHBvc3QtbW91bnQK
-LQkgKiBmYWlsdXJlcy4KKwkgKiBBbGxvdyBmaWxlc3lzdGVtcyB0aGF0IGFyZSBjYXNlLWZvbGRp
-bmcgY2FwYWJsZSBidXQgZGVueSBjb21wb3NpbmcKKwkgKiBvdmwgc3RhY2sgZnJvbSBjYXNlLWZv
-bGRlZCBkaXJlY3Rvcmllcy4KIAkgKi8KLQlpZiAoc2JfaGFzX2VuY29kaW5nKHBhdGgtPm1udC0+
-bW50X3NiKSkKLQkJcmV0dXJuIGludmFsZmMoZmMsICJjYXNlLWluc2Vuc2l0aXZlIGNhcGFibGUg
-ZmlsZXN5c3RlbSBvbiAlcyBub3Qgc3VwcG9ydGVkIiwgbmFtZSk7CisJaWYgKHNiX2hhc19lbmNv
-ZGluZyhwYXRoLT5tbnQtPm1udF9zYikgJiYKKwkgICAgSVNfQ0FTRUZPTERFRChkX2lub2RlKHBh
-dGgtPmRlbnRyeSkpKQorCQlyZXR1cm4gaW52YWxmYyhmYywgImNhc2UtaW5zZW5zaXRpdmUgZGly
-ZWN0b3J5IG9uICVzIG5vdCBzdXBwb3J0ZWQiLCBuYW1lKTsKIAogCWlmIChvdmxfZGVudHJ5X3dl
-aXJkKHBhdGgtPmRlbnRyeSkpCiAJCXJldHVybiBpbnZhbGZjKGZjLCAiZmlsZXN5c3RlbSBvbiAl
-cyBub3Qgc3VwcG9ydGVkIiwgbmFtZSk7CmRpZmYgLS1naXQgYS9mcy9vdmVybGF5ZnMvdXRpbC5j
-IGIvZnMvb3ZlcmxheWZzL3V0aWwuYwppbmRleCBkY2NjYjRiNGE2NmMuLjU5M2M0ZGExMDdkNiAx
-MDA2NDQKLS0tIGEvZnMvb3ZlcmxheWZzL3V0aWwuYworKysgYi9mcy9vdmVybGF5ZnMvdXRpbC5j
-CkBAIC0yMDYsMTAgKzIwNiwxNyBAQCBib29sIG92bF9kZW50cnlfd2VpcmQoc3RydWN0IGRlbnRy
-eSAqZGVudHJ5KQogCWlmICghZF9jYW5fbG9va3VwKGRlbnRyeSkgJiYgIWRfaXNfZmlsZShkZW50
-cnkpICYmICFkX2lzX3N5bWxpbmsoZGVudHJ5KSkKIAkJcmV0dXJuIHRydWU7CiAKLQlyZXR1cm4g
-ZGVudHJ5LT5kX2ZsYWdzICYgKERDQUNIRV9ORUVEX0FVVE9NT1VOVCB8Ci0JCQkJICBEQ0FDSEVf
-TUFOQUdFX1RSQU5TSVQgfAotCQkJCSAgRENBQ0hFX09QX0hBU0ggfAotCQkJCSAgRENBQ0hFX09Q
-X0NPTVBBUkUpOworCWlmIChkZW50cnktPmRfZmxhZ3MgJiAoRENBQ0hFX05FRURfQVVUT01PVU5U
-IHwgRENBQ0hFX01BTkFHRV9UUkFOU0lUKSkKKwkJcmV0dXJuIHRydWU7CisKKwkvKgorCSAqIEFs
-bG93IGZpbGVzeXN0ZW1zIHRoYXQgYXJlIGNhc2UtZm9sZGluZyBjYXBhYmxlIGJ1dCBkZW55IGNv
-bXBvc2luZworCSAqIG92bCBzdGFjayBmcm9tIGNhc2UtZm9sZGVkIGRpcmVjdG9yaWVzLgorCSAq
-LworCWlmIChzYl9oYXNfZW5jb2RpbmcoZGVudHJ5LT5kX3NiKSkKKwkJcmV0dXJuIElTX0NBU0VG
-T0xERUQoZF9pbm9kZShkZW50cnkpKTsKKworCXJldHVybiBkZW50cnktPmRfZmxhZ3MgJiAoRENB
-Q0hFX09QX0hBU0ggfCBEQ0FDSEVfT1BfQ09NUEFSRSk7CiB9CiAKIGVudW0gb3ZsX3BhdGhfdHlw
-ZSBvdmxfcGF0aF90eXBlKHN0cnVjdCBkZW50cnkgKmRlbnRyeSkKLS0gCjIuMzQuMQoK
---000000000000d9cf060635e15135--
