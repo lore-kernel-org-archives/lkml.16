@@ -1,33 +1,65 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA6B67262E;
-	Sat, 24 May 2025 06:25:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A3C61C84BA
+	for <linux-kernel@vger.kernel.org>; Sat, 24 May 2025 06:27:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748067960; cv=none; b=eWFyQSgsZe4zlPwx36dDgMFcLreTHPVBDAXGyDpPFkQ68XwphnjASGURTNbvTCZUYi+WeSHtfrBsVJJAZZhgx7KRrFPC+/fMvUVbjU6UlGF6k8/CsVWhEEAmrwOuGjivSbaI4JBDIvDVYHRYyYX5F9pHo87/79BhJHew4ciC9Nc=
+	t=1748068049; cv=none; b=Hjh4v4t1obp9rdu5CjYMusDwX+jCESdS/qEnqNuyT0NgLKjeATCfriDQWFcReyHz1AFc8vL1EHXOB6U0eWAWsH2P1z3h4bA8Xq0RG3m9a6GQNLdsLGIwX9VyCf359pZHw/hfNpxmQGmep93tnRNmBU1V0+uFZEZ77Fswb5IbL1E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748067960; c=relaxed/simple;
-	bh=ybkyU6z28mqr4/T7na2QWpSLF3TBkc00QqWGfXfVfMk=;
+	s=arc-20240116; t=1748068049; c=relaxed/simple;
+	bh=I6HEzLGnLMV/1y8If1T3+TyLatSI7Db52eFHOCDQc6E=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ERhXWbsfFxWrv4gUK94vyqKDaLcL+cd1sjRCq+EfHdWelqECNmVAJjlIN4rb4o8bN9EO1/spmW0D5oILoev6oJ3ZfvBZZO4WoeQKHs3/Uq7tOEjCcIQfUqtrj1bMNXWYl5O408Y3xLeNO/ECOMu/NXxyVYE3nBNgxrXpIYeCAnw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C7HoDqdm; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=BCqfmVY0iqWdRzQQF4oyKd309aLVqloGbIskcWY2s6ptMM8W1G2QuMsbUiRKLLnISDWx/KPQ6VElF0nrKgV9lFzVbp+8zGRloWO57cpEhKe4QwmkfZNLXV14tifZkrhHBVrw+Xz5S51q8939zQzvF1jNZ2t9ZVb4W7xLJ7fBSoU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=n00KdUe3; arc=none smtp.client-ip=209.85.218.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C7HoDqdm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E725C4CEE4;
-	Sat, 24 May 2025 06:25:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748067959;
-	bh=ybkyU6z28mqr4/T7na2QWpSLF3TBkc00QqWGfXfVfMk=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=C7HoDqdmO/xotBfAzRUQ+GNoQf2H1eycERDLPvJ4iw6PwkBWbgTyfTFWVc142XYZO
-	 BrXBCTsFp/59q0HRmi1wr5KK5BkGvkws+PmHtzgi+FBt9CF2OK6+7biVq7kpW1fpSV
-	 z3MyOarDobehnuIivFfSOQbeaSE/5dX44kHcIk32/FTIyMXs1UeOnbqsAYbDItUPik
-	 5wlrOQTPgvCWP7ssoo4g/K4NOdGems50a4TviqN+xY9NeGYApzEDJYK9Dn9mbhASSz
-	 RAR615DA7OkBk337aqgF9otVt3Yii9w80PnBJlq07AblfAy16OgKQxAju2Sq2RnKfW
-	 EodumkqNv2rOg==
-Message-ID: <e9dac160-f90a-48e2-9269-245b36c3aefe@kernel.org>
-Date: Sat, 24 May 2025 08:25:51 +0200
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="n00KdUe3"
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-ab7098af6fdso9312166b.2
+        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 23:27:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1748068046; x=1748672846; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=SrCnX7ZGW71AQWL3Tr85Pt+nNECZZ216v6JjnroPo+c=;
+        b=n00KdUe38jMT7uHSqtSacA7F8jAyxrr48zZjnQ4eAg3aFEamf5PamFg5Wu5ab8p3PO
+         xoYE17njQCesAWUJyaz+tBdcypmaBnZWSRo1TC84nyLQ+gcrT0fcw5Rql57T/hUR/Scm
+         G7mVjJ+fTaDqe+7pF7MDcRYtecjkIFZn8VEmaqBgAqntUulV/cofCveqIklAmJim7N65
+         HYeJiSiHkb25kufVgXY7ygGD8GiJF+nkB1jvEsffuuiVLSpT+JYEJSCGIdaHHNHkpkaJ
+         6XJuDeIB12SWOsELqK5KC/y8Cdcs5f3brVbee3UHtZ8ul2hEvts7bUdXR+e8NhD64m7N
+         y5/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748068046; x=1748672846;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=SrCnX7ZGW71AQWL3Tr85Pt+nNECZZ216v6JjnroPo+c=;
+        b=Exu/SsqMtd1mbQTfjZ3kMDDwwNTHigv4PnPUATDOKL/bCze8g6HT/E5c13VxTeacSS
+         1OP4YGVH/6+XYiZzZ06T/ARrRMcg+XBYASd2sca6JfNqbL325bukdZsQBTqJeP7dVPdj
+         Fnsh321k+MmaZtIaQGuIkOE6eDa10yGvE1fCjaZSvLYGvAh1w2OYncL/jrlzBI+XP+Ib
+         6wccNTeyUBlEmfS2+3Gn3sDwqWvHYIVHqDEqmncoiGcxQNWymTE0snrS3kJKOsvcgNWm
+         8YJreHOoOyOwfz2UdXTZcYhWp9FSUdZqFelhYCtX8XlvqUvEapuzIlGlUxUFL49xg07u
+         Xpjg==
+X-Forwarded-Encrypted: i=1; AJvYcCW15N79SUNUjUJ7Kv/qXDtmtxvrniIarIDgN81m8nReZ1VYPKeIb+VW7YBLRzuDtzKYGujm2/b/yZcV3ls=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxPq3DeuFKjnuj1bWIKJ6g9sUdMKagFbv2rlBoyB7vXSRPBRju6
+	vI0kGwBBZRu+JjAA1+T34obkzK1D4MJBoGIm9OXU3ic6fkj0kRPFXjwyk9J8WuX69+s=
+X-Gm-Gg: ASbGnct7p1ppP2HLYxlaIAL+qTgsybSVYz6Z4mkoORoMgdmjSb4zVY8FnbG8ZIMvCJe
+	7ftXU7GHBl8CFtyY88JiIwwV0vqvdaCtm1rWxVtX3Plg6l6Sj8lRM0FwkfskwXm39Aw/g4dp4AF
+	bLl5CRuaY0WFjihHYrSZ4dlc02P/a2SzOXilSjkvUW6NTSonmP08xs0YesE8XtLxDH/5nShos5w
+	94oMrRmrC6/i7X/hPQSwFp8qIeM1O4NeEAeBLZreTkSWmS+VFsrj9eTm3P7BL4UktcXqlttl6gb
+	t6zxjvVMkbsbMeYFFIp89scxsQuJtPoi7wdQye5teUebkH8LemuOShMUiQP1r0HZJ812At0=
+X-Google-Smtp-Source: AGHT+IFrGOHRDPV2gmNCJFm1ILCmmRF9v/HBorbGU1yfb5w8KGXInfeDVlK0y6rEslMoaySXGbfAkw==
+X-Received: by 2002:a17:907:2e01:b0:ace:ef48:c7c1 with SMTP id a640c23a62f3a-ad85ae6d64fmr40696166b.0.1748068045678;
+        Fri, 23 May 2025 23:27:25 -0700 (PDT)
+Received: from [192.168.1.29] ([178.197.223.125])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad52d04af2asm1357676766b.4.2025.05.23.23.27.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 23 May 2025 23:27:24 -0700 (PDT)
+Message-ID: <fdd10564-2041-4ee4-9546-fbcce12e1d52@linaro.org>
+Date: Sat, 24 May 2025 08:27:22 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,31 +67,21 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v4 01/14] dt-bindings: net: Add PPE for Qualcomm
- IPQ9574 SoC
-To: Luo Jie <quic_luoj@quicinc.com>
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Lei Wei <quic_leiwei@quicinc.com>,
- Suruchi Agarwal <quic_suruchia@quicinc.com>,
- Pavithra R <quic_pavir@quicinc.com>, Simon Horman <horms@kernel.org>,
- Jonathan Corbet <corbet@lwn.net>, Kees Cook <kees@kernel.org>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Philipp Zabel <p.zabel@pengutronix.de>, linux-arm-msm@vger.kernel.org,
- netdev@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-hardening@vger.kernel.org, quic_kkumarcs@quicinc.com,
- quic_linchen@quicinc.com, srinivas.kandagatla@linaro.org,
- bartosz.golaszewski@linaro.org, john@phrozen.org
-References: <20250513-qcom_ipq_ppe-v4-0-4fbe40cbbb71@quicinc.com>
- <20250513-qcom_ipq_ppe-v4-1-4fbe40cbbb71@quicinc.com>
- <20250519-garrulous-monumental-shrimp-94ad70@kuoka>
- <a182df27-5b0d-42d1-8f58-4e7a913bb12d@quicinc.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH RESEND 1/2] media: dt-bindings: nxp,imx8-jpeg: Add
+ compatible strings for IMX95 JPEG
+To: Nicolas Dufresne <nicolas@ndufresne.ca>, Frank Li <Frank.Li@nxp.com>,
+ mirela.rabulea@nxp.com, mchehab@kernel.org, robh@kernel.org,
+ krzk+dt@kernel.org, conor+dt@kernel.org, shawnguo@kernel.org,
+ s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com
+Cc: imx@lists.linux.dev, linux-media@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, ming.qian@nxp.com
+References: <20250521-95_jpeg-v1-0-392de5d29672@nxp.com>
+ <20250521173444.310641-1-Frank.Li@nxp.com>
+ <eef5ccd99d82dd33e3a4ecdb5d4a5b75ccb0b972.camel@ndufresne.ca>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
  cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
  JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
@@ -69,66 +91,63 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  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
- 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 a/A=
-In-Reply-To: <a182df27-5b0d-42d1-8f58-4e7a913bb12d@quicinc.com>
+ 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
+ 2+47PN9NZAOyb771QoVr8A==
+In-Reply-To: <eef5ccd99d82dd33e3a4ecdb5d4a5b75ccb0b972.camel@ndufresne.ca>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 23/05/2025 12:28, Luo Jie wrote:
->>> +  interconnect-names:
->>> +    items:
->>> +      - const: ppe
->>> +      - const: ppe_cfg
->>> +      - const: qos_gen
->>> +      - const: timeout_ref
->>> +      - const: nssnoc_memnoc
->>> +      - const: memnoc_nssnoc
->>> +      - const: memnoc_nssnoc_1
->>> +
->>> +  ethernet-dma:
->>
->> I don't get why this is a separate node.
->>
+On 24/05/2025 01:22, Nicolas Dufresne wrote:
+> Hi,
 > 
-> We used a separate node because the EDMA (Ethernet DMA)
-> is a separate block within the PPE block, with specific
-> functions like ports-to-host-CPU packet transfer and
-> hardware packet steering. We felt that a separate node
-> would depict the hierarchy more clearly. Could you please
-> suggest if a single node is recommended instead?
-Since it is a separate block and it has its own resources, it is fine.
+> Le mercredi 21 mai 2025 à 13:34 -0400, Frank Li a écrit :
+>> Add compatible strings "nxp,imx95-jpgdec" and "nxp,imx95-jpgenc", which
+>> are backward compatible with "nxp,imx8qxp-jpgdec" and
+>> "nxp,imx8qxp-jpegenc". i.MX95 just need one power domain which combine
+>> wrap and all slots together. Reduce minItems of power-domains to 1 for
+>> i.MX95 and keep the same restriction for others.
+>>
+>> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+>> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> 
+> Acked-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
+> 
+> Krzysztof, will you take this one once the DTS part is ready ?
+> 
+No, that's a media patch, not a Samsung or any other subsystem I
+maintain. I do not have write access to media tree.
 
 Best regards,
 Krzysztof
