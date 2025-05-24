@@ -1,276 +1,232 @@
-Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com [209.85.219.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out30-111.freemail.mail.aliyun.com (out30-111.freemail.mail.aliyun.com [115.124.30.111])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 193132940B
-	for <linux-kernel@vger.kernel.org>; Sat, 24 May 2025 05:24:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56EA1156F5D;
+	Sat, 24 May 2025 05:40:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.111
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748064282; cv=none; b=lrodOiO0BaS5zhL1ZGhq52HUJFc8kawdrg0NA4DzhPfl5UfvOjI3CqxDe7K3ubIfekDzoHydEHoPYZJsBI35qU21/m2noyBQr2HiVXtMAR0Rb4EhtfM3yLViPLUfjh1x3q4zWVCXdJabHoWV4g34GrYKLsskUepE5Cu05Qar3Hk=
+	t=1748065218; cv=none; b=VyMTHrL9XzbuaNs4yQOOryd1Kp6a3Gx+nw1DFoxQCt8iTzyuxJOHvASGARK/R4muAprkR2xBeVTId2ydF1S+Am0VSDjPVihA2p/3ZIvF8ebzyYwjyhSSiLmTag47hUUci7IssaWsQVDgaaDS88u5+fcJ5fhCN+eH3TY6d4PkrpA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748064282; c=relaxed/simple;
-	bh=GiaLSpO69si5cY+HnmouRhCWSgnl5QXjVkwFa+gH73A=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=JLgjvAlHHQPxbqNXcoaFj6Iaw7NRkcnjHoPFepqPSLJ1vvWIP2E/PzjiN+e39TNCs//hE+nU9WUZ3NurY8JEi6AagbxDOgpSIuNT/UVmApHdgiLYM/av/gWnM/n3RF3DcuraAM8mi29Ao8Q6OVty3vtmw3DsHyQMy/se2LlBhoA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=W+W6bXbZ; arc=none smtp.client-ip=209.85.219.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748065218; c=relaxed/simple;
+	bh=14/2ip35FeywfWYzsVvpZkM3FiQyxMuIi4NDdHLXrTE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=drch746+v995nJblmdLit1/o1WY2LLd3v3Cmpnt9FPxuY5RpcZtGvMj+niTQZUkY3gpxVFwMJ9bBrr1zxYbxf7MS3vlW/o0rIRHDr9OeeVkeK6r05DBOyLjOEsakfonO/VUN0aYzPABCpD2p2xUgMV/YtcgcvRdbP8p7DdegOGA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=ZV2LjEXe; arc=none smtp.client-ip=115.124.30.111
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W+W6bXbZ"
-Received: by mail-yb1-f174.google.com with SMTP id 3f1490d57ef6-e740a09eb00so446395276.0
-        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 22:24:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748064280; x=1748669080; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=bfdLlZW9vW98y4u4S7T97dVouVxcWz8Fq/nuepj4wa8=;
-        b=W+W6bXbZaQHEQbitMcs81U7wX9P2qCwA0Cu59PNOw8LKlYHVSc9uh/f5VCK6tyxhE9
-         riFqs/DL1xBQJB7hK1wwg1hbTPLUrO5dhMcjcSz6sVKo9VwdO4xPST+gef4Uch/KGoT9
-         dlAkl6nXj7PwC/geZpQq9T7pGZzkSj7ialJPmHyxUTIuTX72AKDW4UHPm3Vi4CmYeUu2
-         26XDcXmjQXgPK8WWBT/ug8sW29uqrA1bsEx3oAExmBZCKihF+XSVdzIS/yzSgTfVInJz
-         CfXqH6Pk23bAxrszbzhIYppleZBxazJNpjLxV2EBZoznMK1Zs4WgUFdsv/E9B5hf4Y+M
-         BrQA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748064280; x=1748669080;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=bfdLlZW9vW98y4u4S7T97dVouVxcWz8Fq/nuepj4wa8=;
-        b=uJAPMbrl8U43L621XpMSWRelV66hKIyujYrGWEeHRg79HnkZKhvWIYhDpug8sSIQey
-         0+t9VwO8QTVFv8Zamv6dVyj/08A2Z83Q5fVQEm3Rd4kJoH9C033jH6Sdwe+YvoJaVbVo
-         oGc8mKdMHFCGIzagnvMtTJSxjXpm6VCKrvO6U74oguqbf9PPzH4P7E4uc/vctnfW3w0l
-         nM6IVMQCfmvKvCXCxzY9SHb5K1ug91DtUfzgsL7hE63n4ymJ8VTmlCJ4vnOhPtqpzrfi
-         kRB4LPPfzjjTdvIfUhxRDLsJbxfPT+1qsdt7v+HXmtmLIZmP7IHqG5nw8rGfWq6qT5zT
-         bl5Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUwlTB7On7kKS4wnBdEfLQ6e6Kop6p7IEQs95yJSAz8s7R1on9U57eHlD1XBuoFudQWbqFxVNTbTqMD8g0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxvBGDZKwAl1PaMdVvoz9bxc7ugzzP9tqYcWnaZb1TrWdLTQVpV
-	keUqbE9vyNHD3JtuFkvc4VLaUpY912j0qdEIrcfKFfNPDAJXBQDOpQUh
-X-Gm-Gg: ASbGncvyH+/43b81wiunkYcXpCLl1zLh5ZevOEfZt3rUI1/B1NJqXNhXj93Fi6dl/Sx
-	LgTuUtN2TM0c6xGyYaodNe5jtGDTzW1StNd7Q1028/lkD2ebs69c0wNL49lViRG4ksczj6BR+ZY
-	eYtpULr/1HxewvoIGTmiAeL39MxmszAkYRg5xEuw/bMYWAarhEQSNEngyH/uVfMjQOvhImdxI3A
-	O+PvAVk5ZPJQ0q2fI3bjZcuUl5ZK/MTHVsMkLIhd4ZX0NIVny6vJ5YDIApQnmWT1ZJvR/BCcNf+
-	FvOpBZuKL2KLtZQ91yo9AzzcV6C8DYYKdGNC2CcGlhxvb85wjvV8UoslBBtYNk5Z55D+uF1Xh+T
-	OqVgU
-X-Google-Smtp-Source: AGHT+IHIlIVKc+RK333O87ahPa6hVP3F8/RzrvVmknd8RsaXqksMeGR+0xcL2eRmqxTuaWVuOqcxsQ==
-X-Received: by 2002:a05:6902:270a:b0:e71:2a10:8fd with SMTP id 3f1490d57ef6-e7d919d9b0amr2194807276.26.1748064279911;
-        Fri, 23 May 2025 22:24:39 -0700 (PDT)
-Received: from maquina-virtual-para-linux.. ([191.156.249.162])
-        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e7d9233f7absm334970276.34.2025.05.23.22.24.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 May 2025 22:24:38 -0700 (PDT)
-From: Donny Turizo <donnyturizo13@gmail.com>
-To: gregkh@linuxfoundation.org
-Cc: linux-staging@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Donny Turizo <donnyturizo13@gmail.com>
-Subject: [PATCH v5] staging: rtl8723bs: rename _Read_EEPROM and other functions to snake_case
-Date: Sat, 24 May 2025 05:24:32 +0000
-Message-ID: <20250524052432.19125-1-donnyturizo13@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="ZV2LjEXe"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1748065210; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=Vb/+YVmUsnGKgeF1YClxfgtT9PLmvgySvb+sSDF/9tU=;
+	b=ZV2LjEXepZbaEjRV05Tv4wkieJocWk5Pk1wrNjX5WoSwhmMMCL2toNQs4gowxWRrV95aHp/XHbhKhl1n9ewO+vVqkrjX0trsTjGnmVLpOzVrY7Da/zZ/gIFI11Qmle13bGPKYlWfAXSNcwYeC78KSoQxcf0n3kBRR/Q71GDywxw=
+Received: from 30.246.160.208(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0Wbd3RrH_1748065209 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Sat, 24 May 2025 13:40:10 +0800
+Message-ID: <87234fab-081e-4e2e-9ef1-0414b23601ce@linux.alibaba.com>
+Date: Sat, 24 May 2025 13:40:08 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 1/2] dmaengine: idxd: Fix race condition between WQ
+ enable and reset paths
+To: Dave Jiang <dave.jiang@intel.com>, vinicius.gomes@intel.com,
+ fenghuay@nvidia.com, vkoul@kernel.org
+Cc: dmaengine@vger.kernel.org, colin.i.king@gmail.com,
+ linux-kernel@vger.kernel.org
+References: <20250522063329.51156-1-xueshuai@linux.alibaba.com>
+ <20250522063329.51156-2-xueshuai@linux.alibaba.com>
+ <a03e4f97-2289-4af7-8bfc-ad2d38ec8677@intel.com>
+ <b2153756-a57e-4054-bde2-deb8865c9e59@linux.alibaba.com>
+ <4cd53b91-bd20-46a1-854c-9bf0950ea496@intel.com>
+From: Shuai Xue <xueshuai@linux.alibaba.com>
+In-Reply-To: <4cd53b91-bd20-46a1-854c-9bf0950ea496@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-Renamed _Read_EEPROM and several other functions in rtw_cmd.c to follow
-the kernel coding style (snake_case). This fixes checkpatch warnings
-related to naming conventions.
 
-Signed-off-by: Donny Turizo <donnyturizo13@gmail.com>
 
----
-v2: Initial patch rejected by the robot due to naming issues.
+在 2025/5/23 22:54, Dave Jiang 写道:
+> 
+> 
+> On 5/22/25 10:20 PM, Shuai Xue wrote:
+>>
+>>
+>> 在 2025/5/22 22:55, Dave Jiang 写道:
+>>>
+>>>
+>>> On 5/21/25 11:33 PM, Shuai Xue wrote:
+>>>> A device reset command disables all WQs in hardware. If issued while a WQ
+>>>> is being enabled, it can cause a mismatch between the software and hardware
+>>>> states.
+>>>>
+>>>> When a hardware error occurs, the IDXD driver calls idxd_device_reset() to
+>>>> send a reset command and clear the state (wq->state) of all WQs. It then
+>>>> uses wq_enable_map (a bitmask tracking enabled WQs) to re-enable them and
+>>>> ensure consistency between the software and hardware states.
+>>>>
+>>>> However, a race condition exists between the WQ enable path and the
+>>>> reset/recovery path. For example:
+>>>>
+>>>> A: WQ enable path                   B: Reset and recovery path
+>>>> ------------------                 ------------------------
+>>>> a1. issue IDXD_CMD_ENABLE_WQ
+>>>>                                      b1. issue IDXD_CMD_RESET_DEVICE
+>>>>                                      b2. clear wq->state
+>>>>                                      b3. check wq_enable_map bit, not set
+>>>> a2. set wq->state = IDXD_WQ_ENABLED
+>>>> a3. set wq_enable_map
+>>>>
+>>>> In this case, b1 issues a reset command that disables all WQs in hardware.
+>>>> Since b3 checks wq_enable_map before a2, it doesn't re-enable the WQ,
+>>>> leading to an inconsistency between wq->state (software) and the actual
+>>>> hardware state (IDXD_WQ_DISABLED).
+>>>
+>>>
+>>> Would it lessen the complication to just have wq enable path grab the device lock before proceeding?
+>>>
+>>> DJ
+>>
+>> Yep, how about add a spin lock to enable wq and reset device path.
+>>
+>> diff --git a/drivers/dma/idxd/device.c b/drivers/dma/idxd/device.c
+>> index 38633ec5b60e..c0dc904b2a94 100644
+>> --- a/drivers/dma/idxd/device.c
+>> +++ b/drivers/dma/idxd/device.c
+>> @@ -203,6 +203,29 @@ int idxd_wq_enable(struct idxd_wq *wq)
+>>   }
+>>   EXPORT_SYMBOL_GPL(idxd_wq_enable);
+>>   
+>> +/*
+>> + * This function enables a WQ in hareware and updates the driver maintained
+>> + * wq->state to IDXD_WQ_ENABLED. It should be called with the dev_lock held
+>> + * to prevent race conditions with IDXD_CMD_RESET_DEVICE, which could
+>> + * otherwise disable the WQ without the driver's state being properly
+>> + * updated.
+>> + *
+>> + * For IDXD_CMD_DISABLE_DEVICE, this function is safe because it is only
+>> + * called after the WQ has been explicitly disabled, so no concurrency
+>> + * issues arise.
+>> + */
+>> +int idxd_wq_enable_locked(struct idxd_wq *wq)
+>> +{
+>> +       struct idxd_device *idxd = wq->idxd;
+>> +       int ret;
+>> +
+>> +       spin_lock(&idxd->dev_lock);
+> 
+> Let's start using the new cleanup macro going forward:
+> guard(spinlock)(&idxd->dev_lock);
+> 
+> On a side note, there's been a cleanup on my mind WRT this driver's locking. I think we can replace idxd->dev_lock with idxd_confdev(idxd) device lock. You can end up just do:
+> guard(device)(idxd_confdev(idxd));
 
-v3: Rebased the patch onto GregKH's staging branch for better integration.
+Then we need to replace the lock from spinlock to mutex lock?
 
-v4: Changed the commit author to my name and renamed all remaining functions
-    to snake_case following kernel coding style.
+> 
+> And also drop the wq->wq_lock and replace with wq_confdev(wq) device lock:
+> guard(device)(wq_confdev(wq));
+> 
+> If you are up for it that is.
 
-v5: Renamed command _set_h2c_Lbk to _set_h2c_lbk to fix CamelCase issue.
----
- drivers/staging/rtl8723bs/core/rtw_cmd.c      | 140 +++++++++---------
- drivers/staging/rtl8723bs/include/rtw_cmd.h   |   2 +-
- .../staging/rtl8723bs/include/rtw_mlme_ext.h  |   2 +-
- 3 files changed, 72 insertions(+), 72 deletions(-)
+We creates a hierarchy: pdev -> idxd device -> wq device.
+idxd_confdev(idxd) is the parent of wq_confdev(wq) because:
 
-diff --git a/drivers/staging/rtl8723bs/core/rtw_cmd.c b/drivers/staging/rtl8723bs/core/rtw_cmd.c
-index 49bcefb5e8d2..1049d83ca4db 100644
---- a/drivers/staging/rtl8723bs/core/rtw_cmd.c
-+++ b/drivers/staging/rtl8723bs/core/rtw_cmd.c
-@@ -11,76 +11,76 @@
- static struct _cmd_callback rtw_cmd_callback[] = {
- 	{GEN_CMD_CODE(_read_macreg), NULL}, /*0*/
- 	{GEN_CMD_CODE(_write_macreg), NULL},
--	{GEN_CMD_CODE(_Read_BBREG), &rtw_getbbrfreg_cmdrsp_callback},
--	{GEN_CMD_CODE(_Write_BBREG), NULL},
--	{GEN_CMD_CODE(_Read_RFREG), &rtw_getbbrfreg_cmdrsp_callback},
--	{GEN_CMD_CODE(_Write_RFREG), NULL}, /*5*/
--	{GEN_CMD_CODE(_Read_EEPROM), NULL},
--	{GEN_CMD_CODE(_Write_EEPROM), NULL},
--	{GEN_CMD_CODE(_Read_EFUSE), NULL},
--	{GEN_CMD_CODE(_Write_EFUSE), NULL},
--
--	{GEN_CMD_CODE(_Read_CAM),	NULL},	/*10*/
--	{GEN_CMD_CODE(_Write_CAM),	 NULL},
--	{GEN_CMD_CODE(_setBCNITV), NULL},
--	{GEN_CMD_CODE(_setMBIDCFG), NULL},
--	{GEN_CMD_CODE(_JoinBss), &rtw_joinbss_cmd_callback},  /*14*/
--	{GEN_CMD_CODE(_DisConnect), &rtw_disassoc_cmd_callback}, /*15*/
--	{GEN_CMD_CODE(_CreateBss), &rtw_createbss_cmd_callback},
--	{GEN_CMD_CODE(_SetOpMode), NULL},
--	{GEN_CMD_CODE(_SiteSurvey), &rtw_survey_cmd_callback}, /*18*/
--	{GEN_CMD_CODE(_SetAuth), NULL},
--
--	{GEN_CMD_CODE(_SetKey), NULL},	/*20*/
--	{GEN_CMD_CODE(_SetStaKey), &rtw_setstaKey_cmdrsp_callback},
--	{GEN_CMD_CODE(_SetAssocSta), &rtw_setassocsta_cmdrsp_callback},
--	{GEN_CMD_CODE(_DelAssocSta), NULL},
--	{GEN_CMD_CODE(_SetStaPwrState), NULL},
--	{GEN_CMD_CODE(_SetBasicRate), NULL}, /*25*/
--	{GEN_CMD_CODE(_GetBasicRate), NULL},
--	{GEN_CMD_CODE(_SetDataRate), NULL},
--	{GEN_CMD_CODE(_GetDataRate), NULL},
--	{GEN_CMD_CODE(_SetPhyInfo), NULL},
--
--	{GEN_CMD_CODE(_GetPhyInfo), NULL}, /*30*/
--	{GEN_CMD_CODE(_SetPhy), NULL},
--	{GEN_CMD_CODE(_GetPhy), NULL},
--	{GEN_CMD_CODE(_readRssi), NULL},
--	{GEN_CMD_CODE(_readGain), NULL},
--	{GEN_CMD_CODE(_SetAtim), NULL}, /*35*/
--	{GEN_CMD_CODE(_SetPwrMode), NULL},
--	{GEN_CMD_CODE(_JoinbssRpt), NULL},
--	{GEN_CMD_CODE(_SetRaTable), NULL},
--	{GEN_CMD_CODE(_GetRaTable), NULL},
--
--	{GEN_CMD_CODE(_GetCCXReport), NULL}, /*40*/
--	{GEN_CMD_CODE(_GetDTMReport),	NULL},
--	{GEN_CMD_CODE(_GetTXRateStatistics), NULL},
--	{GEN_CMD_CODE(_SetUsbSuspend), NULL},
--	{GEN_CMD_CODE(_SetH2cLbk), NULL},
--	{GEN_CMD_CODE(_AddBAReq), NULL}, /*45*/
--	{GEN_CMD_CODE(_SetChannel), NULL},		/*46*/
--	{GEN_CMD_CODE(_SetTxPower), NULL},
--	{GEN_CMD_CODE(_SwitchAntenna), NULL},
--	{GEN_CMD_CODE(_SetCrystalCap), NULL},
--	{GEN_CMD_CODE(_SetSingleCarrierTx), NULL},	/*50*/
--
--	{GEN_CMD_CODE(_SetSingleToneTx), NULL}, /*51*/
--	{GEN_CMD_CODE(_SetCarrierSuppressionTx), NULL},
--	{GEN_CMD_CODE(_SetContinuousTx), NULL},
--	{GEN_CMD_CODE(_SwitchBandwidth), NULL},		/*54*/
--	{GEN_CMD_CODE(_TX_Beacon), NULL},/*55*/
--
--	{GEN_CMD_CODE(_Set_MLME_EVT), NULL},/*56*/
--	{GEN_CMD_CODE(_Set_Drv_Extra), NULL},/*57*/
--	{GEN_CMD_CODE(_Set_H2C_MSG), NULL},/*58*/
--	{GEN_CMD_CODE(_SetChannelPlan), NULL},/*59*/
--
--	{GEN_CMD_CODE(_SetChannelSwitch), NULL},/*60*/
--	{GEN_CMD_CODE(_TDLS), NULL},/*61*/
--	{GEN_CMD_CODE(_ChkBMCSleepq), NULL}, /*62*/
--
--	{GEN_CMD_CODE(_RunInThreadCMD), NULL},/*63*/
-+	{GEN_CMD_CODE(_read_bbreg), &rtw_getbbrfreg_cmdrsp_callback},
-+	{GEN_CMD_CODE(_write_bbreg), NULL},
-+	{GEN_CMD_CODE(_read_rfreg), &rtw_getbbrfreg_cmdrsp_callback},
-+	{GEN_CMD_CODE(_write_rfreg), NULL}, /*5*/
-+	{GEN_CMD_CODE(_read_eeprom), NULL},
-+	{GEN_CMD_CODE(_write_eeprom), NULL},
-+	{GEN_CMD_CODE(_read_efuse), NULL},
-+	{GEN_CMD_CODE(_write_efuse), NULL},
-+
-+	{GEN_CMD_CODE(_read_cam),	NULL},	/*10*/
-+	{GEN_CMD_CODE(_write_cam),	 NULL},
-+	{GEN_CMD_CODE(_set_bcnitv), NULL},
-+	{GEN_CMD_CODE(_set_mbidcfg), NULL},
-+	{GEN_CMD_CODE(_join_bss), &rtw_joinbss_cmd_callback},  /*14*/
-+	{GEN_CMD_CODE(_disconnect), &rtw_disassoc_cmd_callback}, /*15*/
-+	{GEN_CMD_CODE(_create_bss), &rtw_createbss_cmd_callback},
-+	{GEN_CMD_CODE(_set_op_mode), NULL},
-+	{GEN_CMD_CODE(_site_survey), &rtw_survey_cmd_callback}, /*18*/
-+	{GEN_CMD_CODE(_set_auth), NULL},
-+
-+	{GEN_CMD_CODE(_set_key), NULL},	/*20*/
-+	{GEN_CMD_CODE(_set_sta_key), &rtw_setstaKey_cmdrsp_callback},
-+	{GEN_CMD_CODE(_set_assoc_sta), &rtw_setassocsta_cmdrsp_callback},
-+	{GEN_CMD_CODE(_del_assoc_sta), NULL},
-+	{GEN_CMD_CODE(_set_sta_pwr_state), NULL},
-+	{GEN_CMD_CODE(_set_basic_rate), NULL}, /*25*/
-+	{GEN_CMD_CODE(_get_basic_rate), NULL},
-+	{GEN_CMD_CODE(_set_data_rate), NULL},
-+	{GEN_CMD_CODE(_get_data_rate), NULL},
-+	{GEN_CMD_CODE(_set_phy_info), NULL},
-+
-+	{GEN_CMD_CODE(_get_phy_info), NULL}, /*30*/
-+	{GEN_CMD_CODE(_set_phy), NULL},
-+	{GEN_CMD_CODE(_get_phy), NULL},
-+	{GEN_CMD_CODE(_read_rssi), NULL},
-+	{GEN_CMD_CODE(_read_gain), NULL},
-+	{GEN_CMD_CODE(_set_atim), NULL}, /*35*/
-+	{GEN_CMD_CODE(_set_pwr_mode), NULL},
-+	{GEN_CMD_CODE(_joinbss_rpt), NULL},
-+	{GEN_CMD_CODE(_set_ra_table), NULL},
-+	{GEN_CMD_CODE(_get_ra_table), NULL},
-+
-+	{GEN_CMD_CODE(_get_ccx_report), NULL}, /*40*/
-+	{GEN_CMD_CODE(_get_dtm_report),	NULL},
-+	{GEN_CMD_CODE(_get_tx_rate_statistics), NULL},
-+	{GEN_CMD_CODE(_set_usb_suspend), NULL},
-+	{GEN_CMD_CODE(_set_h2c_Lbk), NULL},
-+	{GEN_CMD_CODE(_add_ba_req), NULL}, /*45*/
-+	{GEN_CMD_CODE(_set_channel), NULL},		/*46*/
-+	{GEN_CMD_CODE(_set_tx_power), NULL},
-+	{GEN_CMD_CODE(_switch_antenna), NULL},
-+	{GEN_CMD_CODE(_set_crystal_cap), NULL},
-+	{GEN_CMD_CODE(_set_single_carrier_tx), NULL},	/*50*/
-+
-+	{GEN_CMD_CODE(_set_single_tone_tx), NULL}, /*51*/
-+	{GEN_CMD_CODE(_set_carrier_suppression_tx), NULL},
-+	{GEN_CMD_CODE(_set_continuous_tx), NULL},
-+	{GEN_CMD_CODE(_switch_bandwidth), NULL},		/*54*/
-+	{GEN_CMD_CODE(_tx_beacon), NULL},/*55*/
-+
-+	{GEN_CMD_CODE(_set_mlme_evt), NULL},/*56*/
-+	{GEN_CMD_CODE(_set_drv_extra), NULL},/*57*/
-+	{GEN_CMD_CODE(_set_h2c_msg), NULL},/*58*/
-+	{GEN_CMD_CODE(_set_channel_plan), NULL},/*59*/
-+
-+	{GEN_CMD_CODE(_set_channel_switch), NULL},/*60*/
-+	{GEN_CMD_CODE(_tdls), NULL},/*61*/
-+	{GEN_CMD_CODE(_chk_bmc_sleepq), NULL}, /*62*/
-+
-+	{GEN_CMD_CODE(_run_in_thread_cmd), NULL},/*63*/
- };
- 
- static struct cmd_hdl wlancmds[] = {
-diff --git a/drivers/staging/rtl8723bs/include/rtw_cmd.h b/drivers/staging/rtl8723bs/include/rtw_cmd.h
-index cb44119ce9a9..e4e7e350d0fc 100644
---- a/drivers/staging/rtl8723bs/include/rtw_cmd.h
-+++ b/drivers/staging/rtl8723bs/include/rtw_cmd.h
-@@ -636,7 +636,7 @@ enum {
- 	GEN_CMD_CODE(_Write_BBREG),
- 	GEN_CMD_CODE(_Read_RFREG),
- 	GEN_CMD_CODE(_Write_RFREG), /*5*/
--	GEN_CMD_CODE(_Read_EEPROM),
-+	GEN_CMD_CODE(_read_eeprom),
- 	GEN_CMD_CODE(_Write_EEPROM),
- 	GEN_CMD_CODE(_Read_EFUSE),
- 	GEN_CMD_CODE(_Write_EFUSE),
-diff --git a/drivers/staging/rtl8723bs/include/rtw_mlme_ext.h b/drivers/staging/rtl8723bs/include/rtw_mlme_ext.h
-index 2080408743ef..63373d665d4f 100644
---- a/drivers/staging/rtl8723bs/include/rtw_mlme_ext.h
-+++ b/drivers/staging/rtl8723bs/include/rtw_mlme_ext.h
-@@ -684,7 +684,7 @@ enum {
- 	GEN_EVT_CODE(_Read_MACREG) = 0, /*0*/
- 	GEN_EVT_CODE(_Read_BBREG),
- 	GEN_EVT_CODE(_Read_RFREG),
--	GEN_EVT_CODE(_Read_EEPROM),
-+	GEN_EVT_CODE(_read_eeprom),
- 	GEN_EVT_CODE(_Read_EFUSE),
- 	GEN_EVT_CODE(_Read_CAM),			/*5*/
- 	GEN_EVT_CODE(_Get_BasicRate),
--- 
-2.43.0
+     (wq_confdev(wq))->parent = idxd_confdev(idxd);
+
+Is it safe to grap lock of idxd_confdev(idxd) under hold
+lock of wq_confdev(wq)?
+
+We have mounts of code use spinlock of idxd->dev_lock under
+hold of wq->wq_lock.
+
+> 
+> 
+>> +       ret = idxd_wq_enable_locked(wq);
+>> +       spin_unlock(&idxd->dev_lock);
+>> +
+>> +       return ret;
+>> +}
+>> +
+>>   int idxd_wq_disable(struct idxd_wq *wq, bool reset_config)
+>>   {
+>>          struct idxd_device *idxd = wq->idxd;
+>> @@ -330,7 +353,7 @@ int idxd_wq_set_pasid(struct idxd_wq *wq, int pasid)
+>>   
+>>          __idxd_wq_set_pasid_locked(wq, pasid);
+>>   
+>> -       rc = idxd_wq_enable(wq);
+>> +       rc = idxd_wq_enable_locked(wq);
+>>          if (rc < 0)
+>>                  return rc;
+>>   
+>> @@ -380,7 +403,7 @@ int idxd_wq_disable_pasid(struct idxd_wq *wq)
+>>          iowrite32(wqcfg.bits[WQCFG_PASID_IDX], idxd->reg_base + offset);
+>>          spin_unlock(&idxd->dev_lock);
+>>   
+>> -       rc = idxd_wq_enable(wq);
+>> +       rc = idxd_wq_enable_locked(wq);
+>>          if (rc < 0)
+>>                  return rc;
+>>   
+>> @@ -644,7 +667,11 @@ int idxd_device_disable(struct idxd_device *idxd)
+>>   
+>>   void idxd_device_reset(struct idxd_device *idxd)
+>>   {
+>> +
+>> +       spin_lock(&idxd->dev_lock);
+>>          idxd_cmd_exec(idxd, IDXD_CMD_RESET_DEVICE, 0, NULL);
+>> +       spin_unlock(&idxd->dev_lock);
+>> +
+>>
+> 
+> I think you just need the wq_enable locked and also in idxd_device_clear_state(), extend the lock to the whole function. Locking the reset function around just the command execute won't protect the wq enable path against the changing of the software states on the reset side.
+
+Quite agreed.
+
+> 
+> DJ
+> 
+>> (The dev_lock should also apply to idxd_wq_enable(), I did not paste here)
+>>
+>> Also, I found a new bug that idxd_device_config() is called without
+>> hold idxd->dev_lock.
+>>> idxd_device_config() explictly asserts the hold of idxd->dev_lock.
+>>
+>> +++ b/drivers/dma/idxd/irq.c
+>> @@ -33,12 +33,17 @@ static void idxd_device_reinit(struct work_struct *work)
+>>   {
+>>          struct idxd_device *idxd = container_of(work, struct idxd_device, work);
+>>          struct device *dev = &idxd->pdev->dev;
+>> -       int rc, i;
+>> +       int rc = 0, i;
+>>   
+>>          idxd_device_reset(idxd);
+>> -       rc = idxd_device_config(idxd);
+>> -       if (rc < 0)
+>> +       spin_lock(&idxd->dev_lock);
+> I wonder if you should also just lock the idxd_device_reset() and the idxd_device_enable() as well in this case as you don't anything to interfere with the entire reinit path.
+
+During reset, any operation to enable wq should indeed be avoided,
+but there isn't a suitable lock currently. idxd->dev_lock is a
+lightweight lock, only used when updating the device state, and
+it's used while holding wq->wq_lock. Therefore, holding idxd->dev_lock
+currently cannot form mutual exclusion with wq->wq_lock.
+
+And the sub caller of idxd_device_reset(), e.g. idxd_device_clear_state()
+also spins to hold idxd->dev_lock.
+
+A hack way it to grab wq_lock of all wqs before before reinit, but
+this is hardly elegant (:
+
+Thanks.
+Have a nice holiday!
+
+Best regards,
+Shuai
 
