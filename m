@@ -1,66 +1,67 @@
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8566B1A3056
-	for <linux-kernel@vger.kernel.org>; Sat, 24 May 2025 05:21:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51B871B3952
+	for <linux-kernel@vger.kernel.org>; Sat, 24 May 2025 05:21:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748064102; cv=none; b=EydFzX/6dzGKQ3UUzd/yr+d8PIAC281ZO7jfF9r8eQL/i26L7/ARKotZqnXvU4bZzoVu+Fcdb6AjEfPisegiwLuHSyI9znXC5vltYDuErHRJgdvdOzGRmI7Y9enHw4TsKrs/3/Z2XEf/AUeZqV5TidGLCM7cacjjS6PBTuchKc0=
+	t=1748064103; cv=none; b=nQ8XkRoF/McNxFtuUsFKzC3PHvWsBaisYbp1h7KYsQu7zGphXY3MMTXsddDr184EmIFAUdtbZSlUfnTQ9lP9P4Q5sTSd+mLavm8i197fN6f82/OuC8f0oBTdZlx9XN5iHgzcGyrzrF8qYigB6V0mjfmZtoNYXB+cZc77hqLv6FM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748064102; c=relaxed/simple;
-	bh=TpC6PkRugx4epgip2T3sTO52PlSZ3ufOTy2Swc8UlBY=;
+	s=arc-20240116; t=1748064103; c=relaxed/simple;
+	bh=+jwqBuIwFMBeNotpPI6tkIuGBlP83Ihx29EXiedTQeE=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=eGBuZ+Ys8O5qVD8uHKcE4EBO3U4ikZDtZFyAL5hOaxZjWnEPTJ2rrKWqSphmnVa3/ohjQBgp3k/O5/GaB2c+NSdOGMVECJ0HiDFOHal8JvNG8oKJVFco1B7xisMT7LVXqeReWzrtx2AB2eijHs3zAUPz+sxpoCCJh8rneQrzzBA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=NnynTvV/; arc=none smtp.client-ip=209.85.218.47
+	 In-Reply-To:To:Cc; b=LyxMGBmj9n7TEKajGdvyUvMLq2BK1IUyX3eSYeH2f2wpwvzgevVeutmu4oboorvWzO+F2nnXpqK64s3B2PrFbrB+2kVvt6X+3rwNd8GiymaSQjNchYl2apcDBfS+Zu8g+gwRRld1+mWYZH/YZ4WeZIMOD3kL6jsmgifg5TgNNT4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=f85i/E8r; arc=none smtp.client-ip=209.85.208.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NnynTvV/"
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-ac2bb7ca40bso76139666b.3
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="f85i/E8r"
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-602c4eae8d5so983905a12.1
         for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 22:21:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google; t=1748064099; x=1748668899; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=PQMgvnHl/e3juDL0qxGSaY3LA5gtsGQ7YiUwPKjqwnE=;
-        b=NnynTvV/woIm2fjCJupZGsLCcjr533lZ4S3Qpeg7xhom3Gqs0j3YIKIbvMVXxcsntk
-         Rxs37eIoZtCxuqS4Qi3BEfCbcZOpoWldwd8QZegjL0KOOXzjXJ4/EiBeqT4qKEMuaWt+
-         817RW/048KTkjy+jlDJcoR4asFMBj0l+oKLugbPWqkyrBsMOszrlKsFiGOgdXsC9a+Kh
-         g2FwEanIXwI5J5kjpH1gpAQtiY07XXbaSnmPBxPsMpiXVcS4SfEmcLQIhJqvDyT2JPCT
-         +vBjdjP46dUyE/LvknZuy0U1FiF4jxTGcfLcegpVXnHFnpFxTHWgweBkRo4tZqMah1GW
-         t5eQ==
+        bh=7Twazfz0joDHDf3E0VUXRkggat1KdGbQWxfqNgUu5Y8=;
+        b=f85i/E8ru0B3StnOmk25oZBBK2xMpuL+AuQtKizcNTRlFtNGk1woykQVEhJcfdrHFg
+         UKGKn8O83EdCypfKynAbFWjsj4yuDIDQtNBF6QDrlWUCFq6R1ZpoWoK8Mk3/ZH2DFNnF
+         JJxRWw1zoQIKJ72cizxsH1O5N7rwgP2DNK54p2To2Q2RIsm6PxvMUDrKGk8a0V7shqzI
+         J6voFEsUVS8YmLSFLp2FlI69GfvA3eD13LSBVTkU15hP9jIx/bDdOaidx83nE2iNt50D
+         U/d5aTgxjCo8szne6fEoy31KZuuc2zz3CKZdqwUng/3pZTNLy1mBzdeKtsxJMN1DwSXK
+         eK1g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1748064099; x=1748668899;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=PQMgvnHl/e3juDL0qxGSaY3LA5gtsGQ7YiUwPKjqwnE=;
-        b=NR34g/oWprxx3PojZlOTGjuKL8EE5SeGMFi2bBDRzfPqT0LBtaL5SVc3qP+rWTdq9/
-         a/aKCb/t1I57U4ebm2u5oKrJiHF9h2dj3bBJRb+FFcArd+82D+psX0dxF4XNbC4TmFL6
-         OU8mNg3ZwBb8dMjqc+7cJelSsp8ihgsDPsPX9IJuncAx577eBDDFtJIq9KvSpkwX+yv7
-         d7UqUn3inUZ7rZhiyuxSHkxBhEw4DjjMK4dwdodkoWlPk5ljTyfRr9V3rVoDgFuvfRSq
-         kxXIDfwjvtQ8FHysf1rqpsvqpeodeI+oiWkZGKHDjO48SysfA4pR8YrnOmVBz92DBDrI
-         KtDg==
-X-Forwarded-Encrypted: i=1; AJvYcCXpGiEGpizaRzKrmQaTpiCgCsjTq/6L9vuDrOSLlmuUZ4NBl9RlnXEJpsSELXWcZ6BfbbBdDvv5wguBBBU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YybwFrfwnug4YNpdQOqrWsHrBH/wsNfbbTWCS9vQf/gO6MResPw
-	CLX5fQ4htqUZrNZcHwwysKh4Dd/HLysTtLLGOmJnZ/NvhFRm83omt7DgoDtgZltw8kg=
-X-Gm-Gg: ASbGncsItzZdaqT0goKK7jcd3B8BAHknwUiWMF9+o45iXARc5U1WQF42ADr3NFIS8Im
-	rZMKnmYYaxvYYlGcZVY9ytbPUdvqwaXJ0Zz5Yzd+4lMW8/4prxcIvoUXLpPtwJrQFNBaIh0kXHC
-	pU6oubmVMLblzTTLy3ux0mwmX5oTzPKwtaDY3QQzHZYd4GV/KR7soLic/3lCvtrK8AneMnNu9wB
-	DLpxS5/oXRSEtbMmQ/rlh6RVMN0HuF1kWWN8p7Vl5ktufTe+JSlQ1jArUgCHjcFeQxpEN5aQNg8
-	MU0RR1kuyqRu79dtXEk750VWz3r5wR+0zfemo8z5+Q6zAM/q6isP6PJzvi/qDoWYwc9CcyvocuE
-	m35Ku8SH213XWSew5enSFQdeKA/MKAzk3IllxySlbU4mGVQ==
-X-Google-Smtp-Source: AGHT+IHXaAPaMnNiBFZlXKcRr+qFufWpMyOC01eMRk+Jpj8a7drQ0LfzI9zmQlfsyWsV8hXXiHulVQ==
-X-Received: by 2002:a17:906:6a29:b0:ad5:3055:784d with SMTP id a640c23a62f3a-ad85b1300dbmr126184266b.34.1748064098471;
-        Fri, 23 May 2025 22:21:38 -0700 (PDT)
+        bh=7Twazfz0joDHDf3E0VUXRkggat1KdGbQWxfqNgUu5Y8=;
+        b=kN+lKb2xwoUUEGi+0frSy35+8AzaOnfYAsXEfHHjUH/QuRSsy8UPU5ANKjlzNvi3L+
+         9s72eRa+695VryVGHKk/0LezbiRY0Dl8htPeyJE+1bsH0ZrYsxHqbK9b1lTbC6lD+D/E
+         HoPHU1FDOcWFY4fRi+wssBMOBUHYMHfJxk1GKUgqX0UgBIHKv3Wm3+a7hf818RIfm2q2
+         IO6V31EoNgyPkv5Z/CA3uiC5i2AyJutHCnDiPkxLITaJQFiCiLi8MEF5AIlXLv+WKC5o
+         Hr03NtyOUdkNtw8bPi8lXTtAlXFC89f3mEVm3TWpRrdZYdQI0rifmnhv8BOioHYQsH9C
+         D6Fw==
+X-Forwarded-Encrypted: i=1; AJvYcCURCLgxjhJh5aWVhyul+xJy6M0sukhs056sJLgwJaTtToxrZucxpnrLWfwkVS77cSRQazVVU39sVcpiSPE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxTvNwI3upase1kyMOSkgPpYCM+BgRpSDDxxnNaBniODUH0++Df
+	rXjuVpkH1gWP2oK2cRLmtkb565dCfuCR5L8+CZ6IPLfEl//+u+WNcG3o6nMDDUxrp9Q=
+X-Gm-Gg: ASbGncvbKgXu2vnHBJUmbf7lL6W3knIWsBb8KvDdlAl8JEZsv0W5zRDZ8ngTTXby4ax
+	WTjh4L7NUHQ+5iXhfutuGtq9J3taOZcUeladNcjMaEoSls+vOuGBH3wKgaLMwM52tVertMNEi2U
+	rUjGKHPjUZrqPfxPLZkE9Vfm1RtmtXa88SxfLaH0zuPxZDHmM+GrTh3rLtW+6vdWzD8f1iwXDHO
+	fzeNFDFAdUeqdBZefpEa85wcAxwveXO3/ptSi3BwJsJaHV3alwzPU7TwbWmDBKFMwdQWmYbEzEf
+	9lXbHrhNzSRd5XC6Vzgsq3jKR2UbNSEt1K00NW5XZsclUzqFWqB4UCsRN6uJCejydUrveWDADRb
+	ac5KKV5uDlL3W8r1385j/hOWzBB4B8c5lAU0=
+X-Google-Smtp-Source: AGHT+IHtMWk0Zf+q26yD0iAFN/AxSEy+PDpN0ChAhlrk8dppBVzxLu8QU9Jabhie5nFR/O8+Q1JeMA==
+X-Received: by 2002:a17:907:96a0:b0:ad5:67f3:73ea with SMTP id a640c23a62f3a-ad64e84b500mr516495266b.21.1748064099584;
+        Fri, 23 May 2025 22:21:39 -0700 (PDT)
 Received: from puffmais.c.googlers.com (68.57.204.35.bc.googleusercontent.com. [35.204.57.68])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad5572f6402sm1106778066b.178.2025.05.23.22.21.38
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad5572f6402sm1106778066b.178.2025.05.23.22.21.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 May 2025 22:21:38 -0700 (PDT)
+        Fri, 23 May 2025 22:21:39 -0700 (PDT)
 From: =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
-Date: Sat, 24 May 2025 06:21:28 +0100
-Subject: [PATCH v2 1/4] arm64: defconfig: enable Maxim max77759 driver
+Date: Sat, 24 May 2025 06:21:30 +0100
+Subject: [PATCH v2 3/4] arm64: dts: exynos: gs101-pixel-common: add
+ nvmem-reboot-mode
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,7 +70,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250524-b4-max77759-mfd-dts-v2-1-b479542eb97d@linaro.org>
+Message-Id: <20250524-b4-max77759-mfd-dts-v2-3-b479542eb97d@linaro.org>
 References: <20250524-b4-max77759-mfd-dts-v2-0-b479542eb97d@linaro.org>
 In-Reply-To: <20250524-b4-max77759-mfd-dts-v2-0-b479542eb97d@linaro.org>
 To: Catalin Marinas <catalin.marinas@arm.com>, 
@@ -83,29 +84,54 @@ Cc: Will McVicker <willmcvicker@google.com>, kernel-team@android.com,
  =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
 X-Mailer: b4 0.14.2
 
-Enable the Maxim max77759 as this is used by the gs101-oriole and
-gs101-raven (Google Pixel 6 and Pixel 6 Pro) boards,
-
-The child devices' defaults are based on this MFD driver's state, so
-this commit enables those implicitly as well.
+Add the 'nvmem-reboot-mode' which is used to communicate a requested
+boot mode to the boot loader.
 
 Signed-off-by: André Draszik <andre.draszik@linaro.org>
----
- arch/arm64/configs/defconfig | 1 +
- 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 1f3fd474911b7ab1aa75dc72d42614f12b2dfc54..07e5e76edcbd3fcc4358d08663f51cca00acd49c 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -769,6 +769,7 @@ CONFIG_MFD_EXYNOS_LPASS=m
- CONFIG_MFD_HI6421_PMIC=y
- CONFIG_MFD_HI655X_PMIC=y
- CONFIG_MFD_MAX77620=y
-+CONFIG_MFD_MAX77759=m
- CONFIG_MFD_MT6360=y
- CONFIG_MFD_MT6397=y
- CONFIG_MFD_SPMI_PMIC=y
+---
+v2:
+- add dm-verity-device-corrupted
+- update commit message slightly
+---
+ .../boot/dts/exynos/google/gs101-pixel-common.dtsi      | 17 ++++++++++++++++-
+ 1 file changed, 16 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm64/boot/dts/exynos/google/gs101-pixel-common.dtsi b/arch/arm64/boot/dts/exynos/google/gs101-pixel-common.dtsi
+index de5c8d236b705505c0745827c5c6b67d94ba6227..cd8e1b8a10b111190b984e104f749d04514d0449 100644
+--- a/arch/arm64/boot/dts/exynos/google/gs101-pixel-common.dtsi
++++ b/arch/arm64/boot/dts/exynos/google/gs101-pixel-common.dtsi
+@@ -60,6 +60,21 @@ button-power {
+ 		};
+ 	};
+ 
++	reboot-mode {
++		compatible = "nvmem-reboot-mode";
++		nvmem-cells = <&nvmem_reboot_mode>;
++		nvmem-cell-names = "reboot-mode";
++		mode-bootloader = <0x800000fc>;
++		mode-charge = <0x8000000a>;
++		mode-dm-verity-device-corrupted = <0x80000050>;
++		mode-fastboot = <0x800000fa>;
++		mode-reboot-ab-update = <0x80000052>;
++		mode-recovery = <0x800000ff>;
++		mode-rescue = <0x800000f9>;
++		mode-shutdown-thermal = <0x80000051>;
++		mode-shutdown-thermal-battery = <0x80000051>;
++	};
++
+ 	/* TODO: Remove this once PMIC is implemented  */
+ 	reg_placeholder: regulator-0 {
+ 		compatible = "regulator-fixed";
+@@ -224,7 +239,7 @@ nvmem-layout {
+ 				#address-cells = <1>;
+ 				#size-cells = <1>;
+ 
+-				reboot-mode@0 {
++				nvmem_reboot_mode: reboot-mode@0 {
+ 					reg = <0x0 0x4>;
+ 				};
+ 
 
 -- 
 2.49.0.1151.ga128411c76-goog
