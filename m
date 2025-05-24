@@ -1,195 +1,172 @@
-Received: from EUR03-AM7-obe.outbound.protection.outlook.com (mail-am7eur03on2097.outbound.protection.outlook.com [40.107.105.97])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 071322DCC06;
-	Sat, 24 May 2025 21:37:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.105.97
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748122646; cv=fail; b=Qu1C9IkiPJDN+SBLk+K83wtR39/+CjEVtJO4Ckk8Wx1M6pIsC6849ii9iZhNnM8GLRAhZyX0tYClwFFuKdKTTWAQ3sh2PVBBSBUvcSWijET9yi71Q1WjPcvp1R6IoJdUBTii0yEM5dIPeB8ex8kelPBN/JRV6FjX5nwz9HnT8II=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748122646; c=relaxed/simple;
-	bh=nWKI0HuihUtbl2vzum4MSXFljSBCEfBxu7nkHW58l90=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=D9dLL0ZVp/yH64f8TJouTHzQFc9r24g/wTz1MNNDwUT5tThb2l3LFtd8ha1Q7w/WgZQJAu7WOCCBVAl943PXxjWNzcY95kaQBj+MQ7GZnH8NzINANyDrsMGagC4teTdtd1lXdnRL5rc/OgshoSRNsCZX58NRw9Wgy+VL4n8y4nQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=phytec.de; spf=pass smtp.mailfrom=phytec.de; dkim=pass (2048-bit key) header.d=phytec.de header.i=@phytec.de header.b=BVD/nhiv; arc=fail smtp.client-ip=40.107.105.97
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=phytec.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=phytec.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9ED9C3595E
+	for <linux-kernel@vger.kernel.org>; Sat, 24 May 2025 21:45:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748123154; cv=none; b=Pc7zpLEYyUtFFUpCzwE1wBvBoejP1EgWoCKk5BwPu3ait+B7Vk3YDGPB3LGmx7Myv17v+eQSEzNTqJrW21thar4Pfyub5yzOOH1VV+VTu0fpVmqtAQZXG6Pp3Oi40pl53An9vU42ZDpUgJds0oiEiKBpxSclDOHbIGNQZXNSvXE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748123154; c=relaxed/simple;
+	bh=Podk3V7hcIlk3gk/HYNo637BGRvHORddtAxtebFTszs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=uItn5ymsxRVGP/0Mr0/0w6dCyJXqK59u30JKuXRY7J0EQBqN/KxoVJbkuc+IhWk161teaHNRPzLTliIpWt2QD3f7bha3jcPtpMaUW1NvRmJTPViY9X8Goi8ZCmDroIEwe9whhOtkJGg+um+oqFKtlaNjleJDQcA+SXx8bO0OeVA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=EPjwgJN+; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=phytec.de header.i=@phytec.de header.b="BVD/nhiv"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Lc8fl0pXlpbbqL3vTby8HkNeNwyzLa/vKYLsUbIvGYG8j4UjZ7BXxHC6OUzuzovycCTpJahLJTQ+9GgqFwuTatNFyB/aQ9Svw4ykR1C6s8iRCaqVAdquxq2yZk+1VfUUhPuc4J29iRn0NxSwpjQ5e9DAzyzHHJZrU/f4Rmwhk6zBWPJ0k/4k/01evlVhzofJZbShB982fnXCnPmghld4hBfPzt0BDD1kUEREJmleUbOBmdfityNCXpHnehgKDMlddpMHFwuhI2jdhozrL1m+uXtdnqz04knTS3jShFwBqxX6xDjGxtp1bVPLPlxlB9nfN/MXyXppHGcL6Chv5AyCKw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=vC0X/QxmJwdrehjfIn3T5ZZn2sBdoyj6zD2UyFkrIHs=;
- b=rB9bXvwHa27wk/PfOzIpv9PolgPIk6GA4PNlF7irLAbkB7Sa/GqI5rjLDmIsul6N6eWamXXYOeLuiKxYxbSkldeGIpzjxmUY73RD251L4iSaCelPzPO9QSiFAYZh73x/0hk1Ufw9weNXUmws8X6sGzyVP32K6Kv/vccgA42aWXPQF3rSPLJzo9T2VHVw4DKAGutzVorG3nOe8toiX3SZsFQgQV2UmBRxKL0/JxMnGRZDF+KsgD5krYKDMFwprS3/5OZdsmsqZ9P+fRDa3mpvpxYA+SEiXk/Tfa4+09pJLkDFUNOfG0b5QRDCi1tE9EubyuyNrjwa9t1L8uP+ToXS+Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=phytec.de; dmarc=pass action=none header.from=phytec.de;
- dkim=pass header.d=phytec.de; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=phytec.de;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vC0X/QxmJwdrehjfIn3T5ZZn2sBdoyj6zD2UyFkrIHs=;
- b=BVD/nhivlVgWNLlZuVJuAW/YWCCNttjkAHxloicNvn1eC/ls0vnZu1snv1gyLWFYJA/StgJlr5SByWDwJL5IfGQgN++INgrOgB13/Rs3E8o2WzIRG6D2+PNOx3l7TLCiGzPgDmFIIOzcZbSYCaf6f8wWPTZ9cw2iESA5PdNZzT6mw4P9AfF8Mhj3Lt/GuhdRujD35vI2szk8i9IOKbh03iDpgityapQKMTRbOQWvU6D41VfdQQ7lxe9Ih34V2UhY/ER9XwE8V9yZ00Fha5HzPBNTHrTxJVU0ORBlCfK3sK661OoYn+N/UENtg6uNBplB3Gbvuv1lblO+ew/H8+s+hQ==
-Received: from VI1P195MB0272.EURP195.PROD.OUTLOOK.COM (2603:10a6:802:60::29)
- by VI1P195MB0592.EURP195.PROD.OUTLOOK.COM (2603:10a6:800:15c::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.21; Sat, 24 May
- 2025 21:37:17 +0000
-Received: from VI1P195MB0272.EURP195.PROD.OUTLOOK.COM
- ([fe80::e9b2:9988:f36b:8cc]) by VI1P195MB0272.EURP195.PROD.OUTLOOK.COM
- ([fe80::e9b2:9988:f36b:8cc%4]) with mapi id 15.20.8769.019; Sat, 24 May 2025
- 21:37:17 +0000
-From: Christoph Stoidner <C.Stoidner@phytec.de>
-To: Andrew Lunn <andrew@lunn.ch>
-CC: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha
- Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team
-	<kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"imx@lists.linux.dev" <imx@lists.linux.dev>,
-	"linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "upstream@lists.phytec.de"
-	<upstream@lists.phytec.de>
-Subject: AW: [PATCH v3] arm64: dts: freescale: imx93-phycore-som: Delay the
- phy reset by a gpio
-Thread-Topic: [PATCH v3] arm64: dts: freescale: imx93-phycore-som: Delay the
- phy reset by a gpio
-Thread-Index: AQHbzJ5IkKiCUrqPH06p42f/+549BbPiDcKAgAA9rmY=
-Date: Sat, 24 May 2025 21:37:17 +0000
-Message-ID:
- <VI1P195MB02721791E42104B050912965979BA@VI1P195MB0272.EURP195.PROD.OUTLOOK.COM>
-References: <20250524112315.695376-1-c.stoidner@phytec.de>
- <047c963e-f24d-4995-aea0-4a8cf8e343f5@lunn.ch>
-In-Reply-To: <047c963e-f24d-4995-aea0-4a8cf8e343f5@lunn.ch>
-Accept-Language: de-DE, en-US
-Content-Language: de-DE
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-msip_labels:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=phytec.de;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: VI1P195MB0272:EE_|VI1P195MB0592:EE_
-x-ms-office365-filtering-correlation-id: e4b828ca-6008-472d-1519-08dd9b0b2808
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|376014|366016|7416014|1800799024|38070700018;
-x-microsoft-antispam-message-info:
- =?iso-8859-1?Q?knnCUGrMG3xsBJfssrIEBBMO+IHIKbwQMaqbL9uO53DcPw8BtMDyo36tyS?=
- =?iso-8859-1?Q?4ylHR09feZU/KlCiTHBQxPLmYLP5Da3e9+bBtNeZg05Zoe2wDdYBlxc+ei?=
- =?iso-8859-1?Q?ZB40LmLlUk45K5RJbY7P/+G6fUCMbejKBobbo2/qM5BlyyFryF5hj80mrH?=
- =?iso-8859-1?Q?n+bQ7mRoBkwLh+gRrNbCs4JZcz0rLu2/fJoQM4mGzzP41FKbHIyt75fqiz?=
- =?iso-8859-1?Q?BPbNVEerea5pkgQ+AWN9gAtV80rSi4a5Oh3SMJd4aNwF9LndRn2PtGFLo5?=
- =?iso-8859-1?Q?anBxeGo0G882lN1EpEcsybDVkVBaKaboI9xjbnL1zSF8RXtuC+pDAW0K2X?=
- =?iso-8859-1?Q?OE9wgEUxuN/DImMHbc/oakmrKhnQRDtoebTzEyaAiOAjQFI0AqD8U786wy?=
- =?iso-8859-1?Q?VTATcKMj1ysTmQ1tlZ+mzb81q+EqE0tKl9TL5JsAl4XWEQpM2rISxOHnAr?=
- =?iso-8859-1?Q?0cqsZ3YmnDUt7ZoRbZl0ljankghy11gOlzDKOXgJHfsPp2wwDP9Wcxcfnj?=
- =?iso-8859-1?Q?MoM7yvpyT7hSIN2HkAJXsG4MGj50qNyU2CcrpePHNgGkt8G3V2SMPyoo5Z?=
- =?iso-8859-1?Q?RjWARQoCIjrz6xXQJngvBVEtzpy2bmQ3RwVPT68rxMBceVLgT7cFOWp6Ip?=
- =?iso-8859-1?Q?RwEEOwY0NHToTb3oV6I4jG65hffvPhffs8CE18pWIvOkFHitB8UHX2gb1B?=
- =?iso-8859-1?Q?qM8n20YrDERjhjHFbWglAZXWi+9zitsl92grBwHcdYTMf03qRq+kE+FPVQ?=
- =?iso-8859-1?Q?AYi5VujchX3EsKBgY8WMujrMOZ1LODE4xrAx4dTdcwhRiBBSfvH5qAE4AB?=
- =?iso-8859-1?Q?pF/HZnHfBsMrttDO1jDQ9+NnM97r1thD0mtJkl9OPBn0YzYJlq7NuT9GOX?=
- =?iso-8859-1?Q?Yx7VpM4ApNsY5W+Cmb1bK/4WpgIHfSiQiZEM6P7OtJF7bbmnZeOjtgUObG?=
- =?iso-8859-1?Q?TCRAOsFKhIuyCfKpycUVQjkhK4fXv24UAZv3RWSnH5lx9I/nDB/vte+Sft?=
- =?iso-8859-1?Q?YyFBmpuK3YEc7kGWzwhF31XDDEpzSZrubpEckeTezvBMXi7fVYNEyzooQa?=
- =?iso-8859-1?Q?LHt2FMbmMe4dOWJtiP8VEPvGLBXVYEi+pNo1AJpTOJ1cyFB6MpT6QAAsqt?=
- =?iso-8859-1?Q?T7jI34Pu+aZhHJ+1i5xi/dHectuRi8Aao8WJX8Ndni3ZWuuF8Q/l2/Iprr?=
- =?iso-8859-1?Q?5J82NtYPY+lMAwBASiFeu/jkic08RIZv/2mQF6e4Q7gp02m8cP2nucemLN?=
- =?iso-8859-1?Q?YRcrspkHxXLd/XKolnSK5cuURBDK7uy1LRvvOW2SNJPEuhQsPzLN1ABt15?=
- =?iso-8859-1?Q?8weR+nAi0dZ0C3uCyiMw0ONonFxn53LAhtCLkjuRsVhxRb0pLqIUaXuXJo?=
- =?iso-8859-1?Q?7MEneVnNyWED8MAK1DWJXEu16cNR38rFMHYQBqx3QeaGMMIth3/Zc0+uKY?=
- =?iso-8859-1?Q?nuYEIpOHJTOALxgIx6UqiJZvLfcFZExls9/WCbaiHZeLRvq2L2Nw4F5upF?=
- =?iso-8859-1?Q?sVxYXZnkC0zMyIeKPacDcezhWBWFQS9lrikCt1zPR8PQ=3D=3D?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1P195MB0272.EURP195.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(7416014)(1800799024)(38070700018);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?iso-8859-1?Q?UbQsa8Eig0ggtn8xWcJAteps0UBuKdMqYusmTBojbAOCIAEL/QS5sjayvX?=
- =?iso-8859-1?Q?NDhfXM+uSsuxf6/8kIEWliEkNrlgT9HwhtHynGNQNDz2AbVpB6AplcwNid?=
- =?iso-8859-1?Q?9MgWAsG4axo5jk948XsyucJWs+QFZ0A98JuQ1RIHxA4FNVPUdQ0RGYKN8z?=
- =?iso-8859-1?Q?4EJ6B3qS5NOAnUPP3inW99Xr3gczEAb/eNWn+p0OHrUvJOuGzXFnmxNF6S?=
- =?iso-8859-1?Q?UcFxlQAJ4JNGEKu8Xt/q5Megti2gq7ODU/TkVjJ87v2KTE26C9XigpJAS7?=
- =?iso-8859-1?Q?mXVDszwaZzjq8dxdbEdO4fkI1YwFDErNjdApVGzkuzFkhgkZZbeOYnlo3R?=
- =?iso-8859-1?Q?vtVbpzYDxaYDbhcwvSgQzRuF4a0f/hPy2L7DSG3eJCeOYXqin93QYUVftx?=
- =?iso-8859-1?Q?/nU2V1IsQ1Vqng59a7GHQFakfzb7i/cMJvmMDVJjkT5xkj1hSR5OVztn+r?=
- =?iso-8859-1?Q?BFOTLah3LR8x7bbDTcdZc5QI/4WDwTKmJaQMzzVQwYxhwyme9iUA8OovPk?=
- =?iso-8859-1?Q?hmhhnjmXpqj7aDpAI9pqxwSDMlET5Ca3NeoAuWbIXRoGLuOBq9PVCaK4NK?=
- =?iso-8859-1?Q?VepZ5jYu6tlwGSViC8fjKYZwJ2W1Eob9C1t+voAS1QKGTzQwj+3+cEzA9w?=
- =?iso-8859-1?Q?k595dGyZjJyGv2ZIAX8eAs/hxUzFmvQJ0KoKr5Uzw58ViHFRrp/S4tt9id?=
- =?iso-8859-1?Q?3hM89Hh+C/URvK0vDod/LTY/LQrlMEa+LdvC2F7CkMABI7O1P41FskSWKb?=
- =?iso-8859-1?Q?vUXTwOwC2W0XgwN8pQRUCGPy/M773RZzE1q7A3BfELFB0KozoYN2var9nL?=
- =?iso-8859-1?Q?SHxIUeNWAj1Hu1sD4RCbwiTuuZ/oHiV5uN4V0/sRC8tEJD+UH/f8BZr+iI?=
- =?iso-8859-1?Q?Ll5UuiOpy2O5aMszmOxhqwkyeRXVthwhHgqncuT58z9ZVwTNgmClqKqw5G?=
- =?iso-8859-1?Q?Fv24wwZd8/db5vApt3scY1VwAIFgiG4JVjPXDbAyy5GkuBMSzmer1/n7/l?=
- =?iso-8859-1?Q?NgVRcmn2iopLeOIzBrEcaBGirjOc68QCGukQBxxoBVY5FLBTvmkmBwf+tx?=
- =?iso-8859-1?Q?GOjahdSc6FexBJaw3NiIvsKgHrfzJDyalqvzIGxxLYP64BXZ9KcRvWzzSV?=
- =?iso-8859-1?Q?c+bOF9Xtx/IxXLRw++nt4o/m6NNn0kEc4ATYI32KczI8d1C1jK6eysXAc1?=
- =?iso-8859-1?Q?GB8hMEfTX7GWflYSnFl8xFd6/uCUEHVbc8RETEQ5jDJ9ZqL5b8QxtDTHP+?=
- =?iso-8859-1?Q?1IKq6TTjCrw+gl20/yoXsmwVAFIISMTahsM4S30sdYcwVbykPLLhV72XaK?=
- =?iso-8859-1?Q?szArG4V6Gk1oXzhb2dbjDA2iOlOqECYT2/ePtv8Ypq37ZmrqvSfekXSPiw?=
- =?iso-8859-1?Q?8LAR9HR3d0Rw7GahKoNkohvi9uWsOZD0ZL06qXltgQXEvIL2a6/cVik9BC?=
- =?iso-8859-1?Q?uBznwOpkneB6Zg/PFKNrxnpzVgDnzu3LXH7MufXVoAhsGwjeeigaTYWq1j?=
- =?iso-8859-1?Q?ZhkfViGEOfZexk5edciuxPqdl4+rlt0LsDTSu0BsLKFm6Hh90gbmHPdtxW?=
- =?iso-8859-1?Q?oVlvcEB4bPNIozzBQ3CzgXpZ/GPP8rg6EUQtPTHTDI/5ghHxvsjD/8s0p6?=
- =?iso-8859-1?Q?6ytvYuw4mvyKA=3D?=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EPjwgJN+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1748123151;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=3f0POsuaZwbMCUgkWn24uYMKYFlgMDPWNaKoICRP4SY=;
+	b=EPjwgJN+8mctMXoXLL50lWKjPEbdTdiBFGUAT4/KbPnqD4IgQtOiB9Qv+ZWUS8ZwG5P0Oz
+	2Q9mA75Zsyr80Qyu8nF/YXeO7qT2VurcCW41Ejnu72tvB0PJlTsgIoTb1FVOhNFbnyXkIQ
+	/sOhApf9Fh/sbp9ynLoG+mO+kDjdLuE=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-61-BWJYVWOiM4mgyVl4Umj7Yw-1; Sat, 24 May 2025 17:45:50 -0400
+X-MC-Unique: BWJYVWOiM4mgyVl4Umj7Yw-1
+X-Mimecast-MFC-AGG-ID: BWJYVWOiM4mgyVl4Umj7Yw_1748123149
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-442dc6f0138so4047925e9.0
+        for <linux-kernel@vger.kernel.org>; Sat, 24 May 2025 14:45:49 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748123149; x=1748727949;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=3f0POsuaZwbMCUgkWn24uYMKYFlgMDPWNaKoICRP4SY=;
+        b=Hh0f8fdQBHU37Wfl5VCvIDCKKRYbLLgS5Qj8Jv3IoKeESjmHu7u4gZ7S5c6WsjmDrb
+         GUQHNRNyEz0a9HIPxMeA2nBWJh2HlX8A+fhC5iC2UCLSG7uIyvc9/GRFeaTqGy016S+W
+         NZAQ5y9HABUy5d1k6wbPgCnyS0sR/rsRm4etwfYOUscQKdFPns4Bf0ob+QlgEh9edfJI
+         PSwNPgJBmyCDVwOJgAX7lHxIeppet49WVO7vOWrmp8YEchGSNjWJDNp2jp7y07IplDHU
+         zDNxnTaIICb2OqIRXTv5s0v3dsVX9OoiyZqjWXmAUaETZ++D/fbpPc7sd1GLfICGvsQc
+         CPPQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVR9Kfe737BLnljVO/xU3lRhjL5nJnse6Q0zc8sGdCArmD3xVNJnRRpee/0ll9UBsb9KVbJK3ahNzB4Dhw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy84X+POjg/UyBKqWSFGiaRHGLmro7AOhMoTYB0he/vgWTNKGgd
+	HZWeB+itSDAtI/NhR5TI8TIWz2AYI3TU71+lRLQBJJQSneOCzj1nA8Qce1TlS8MYL5CinX/XqSp
+	EwgmGy3RmX1rRxKVyZoYd8kaGzo4MSI68HJAczJWu8qSGQ8R3g/hrgdviQAzgu1/XkQ==
+X-Gm-Gg: ASbGncvfU1Vh5HgJfp+tgiFQruQIz+o8tmUAZ1uqWkf1scj2KnFmtvgjfS/Le7jt7W0
+	tD/axwvbWIs2HONnPg7aCnUhlxFz4PO7ksfdr4yt4LtZdEMEqv0qQUZJwgUmvKzARPnOnAocKaf
+	dhoGBWK7Gn5fiJTNqHKfc18ZDBpWq9Bz9sm+7TK9GG90SGLlBsQh1IMWRjHY2e7DZudedB1XcVY
+	bWeunkHZHurPYqw/AQjs5Amdumsb/5cQ9OhpQ198lnfy35w50hbLsKAHDN/TRuPcUo4vC4FyfQy
+	mLxUeVGt7R5fQOAKi/od3DmfOs+Pp0oXRUYsaLoUlzfhYwInPL0dOuTZ8kogGC5EHID/BJ9t5ZO
+	gczj7mvOJin85li8mi7Bp/rp6nkzl3pX8olhHask=
+X-Received: by 2002:a05:6000:3103:b0:3a3:64b8:84de with SMTP id ffacd0b85a97d-3a4cb445221mr2819786f8f.1.1748123148800;
+        Sat, 24 May 2025 14:45:48 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IG/kZfall6GGwVvQtttxy1WCaTjOisnJJX+Hz6av+6a281Q+zZAWkFkgOqElGaB9F++e4CMLQ==
+X-Received: by 2002:a05:6000:3103:b0:3a3:64b8:84de with SMTP id ffacd0b85a97d-3a4cb445221mr2819767f8f.1.1748123148383;
+        Sat, 24 May 2025 14:45:48 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f38:b600:7d6d:5e38:70ec:12c6? (p200300d82f38b6007d6d5e3870ec12c6.dip0.t-ipconnect.de. [2003:d8:2f38:b600:7d6d:5e38:70ec:12c6])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-447f73d4b68sm191115745e9.23.2025.05.24.14.45.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 24 May 2025 14:45:47 -0700 (PDT)
+Message-ID: <e8a679eb-e40c-481d-b65a-d16f9e66c19a@redhat.com>
+Date: Sat, 24 May 2025 23:45:46 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: phytec.de
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: VI1P195MB0272.EURP195.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-Network-Message-Id: e4b828ca-6008-472d-1519-08dd9b0b2808
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 May 2025 21:37:17.4723
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: e609157c-80e2-446d-9be3-9c99c2399d29
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 6Wkz9vYG6DSJUpB3rjJjndcu/2UwrvUrwBZp2rT4etn1p5tcaQJvsrm2McO7HbADAkm5MeVQQfsCr0fEqYTXNA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1P195MB0592
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH] mm/mmap: Fix uprobe anon page be overwritten when
+ expanding vma during mremap
+To: Oleg Nesterov <oleg@redhat.com>, Pu Lehui <pulehui@huaweicloud.com>,
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: mhiramat@kernel.org, peterz@infradead.org, akpm@linux-foundation.org,
+ Liam.Howlett@oracle.com, vbabka@suse.cz, jannh@google.com, pfalcato@suse.de,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org, pulehui@huawei.com,
+ Andrii Nakryiko <andrii@kernel.org>, Jiri Olsa <jolsa@kernel.org>
+References: <20250521092503.3116340-1-pulehui@huaweicloud.com>
+ <20250524164516.GA11642@redhat.com>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <20250524164516.GA11642@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Andrew,=0A=
-=0A=
-> On Di, 2025-05-24 at 19:44 -0300, Andrew Lunn wrote:=0A=
->=0A=
->> diff --git a/arch/arm64/boot/dts/freescale/imx93-phycore-som.dtsi b/arch=
-/arm64/boot/dts/freescale/imx93-phycore-som.dtsi=0A=
->> index 88c2657b50e6..b481097f08a4 100644=0A=
->> --- a/arch/arm64/boot/dts/freescale/imx93-phycore-som.dtsi=0A=
->> +++ b/arch/arm64/boot/dts/freescale/imx93-phycore-som.dtsi=0A=
->> @@ -68,6 +68,8 @@ mdio: mdio {=0A=
->>               ethphy1: ethernet-phy@1 {=0A=
->>                       compatible =3D "ethernet-phy-ieee802.3-c22";=0A=
->>                       reg =3D <1>;=0A=
->> +                     reset-gpios =3D <&gpio4 23 GPIO_ACTIVE_HIGH>;=0A=
->> +                     reset-assert-us =3D <30>;=0A=
->=0A=
->Is there anything in the datasheet about needing a delay after the=0A=
->reset? There is a DT property for this:=0A=
->=0A=
->  reset-deassert-us:=0A=
->    description:=0A=
->      Delay after the reset was deasserted in microseconds. If=0A=
->      this property is missing the delay will be skipped.=0A=
-No, there is no need for a delay after the reset mentioned in the datasheet=
-.=0A=
-There is only the delay after the assert (i.E. the pulse width), that I=0A=
-declared with the property reset-assert-us.=0A=
-=0A=
->=0A=
->Anyway:=0A=
->=0A=
->Reviewed-by: Andrew Lunn <andrew@lunn.ch>=0A=
-Thanks, and regards,=0A=
-Christoph=0A=
-=0A=
->=0A=
->    Andrew=
+On 24.05.25 18:45, Oleg Nesterov wrote:
+> I am very glad that mm experts are already looking into this problem ;)
+> I can't help, today I don't understand mm/vma.c even remotely. But let
+> me ask a couple of stupid questions.
+> 
+>> However, the
+>> upcomming move_page_tables step, which use set_pte_at to remap the vma2
+>> uprobe anon page to the merged vma, will over map the old uprobe anon
+>> page in the merged vma, and lead the old uprobe anon page to be orphan.
+> 
+> To be honest, I can't even understand this part due to my ignorance.
+> What does "the old uprobe anon page to be orphan" actually mean?
+> How can the unnecessary uprobe_mmap() lead to an "unbalanced"
+> inc_mm_counter(MM_ANONPAGES) ? Or what else can explain the
+> "BUG: Bad rss-counter state" from check_mm() ? Or there are more problems?
+
+Essentially, we end up mapping an anonymous page (when install the 
+uprobe) after preparing the new VMA, but before moving over the pages 
+from the old VMA.
+
+So when we then move over the pages from the old VMA, we overwrite the 
+PTE mapping an anonymous page (due to uprobe).
+
+As we simply overwrite the PTE that is mapping an anonymous page, we run 
+into inconsistency later: RSS counter mismatch, memory leak, etc.
+
+We should never be installing an anonymous page (due to uprobe) into a 
+VMA during mremap() before moving over the pages from the old VMA.
+
+-- 
+Cheers,
+
+David / dhildenb
+
