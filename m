@@ -1,168 +1,141 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31F1A101DE
-	for <linux-kernel@vger.kernel.org>; Sat, 24 May 2025 21:48:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 531601E1DE2;
+	Sat, 24 May 2025 21:51:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748123290; cv=none; b=WQk3FQCMbo9BNKuwxdQFL5RTSguKPz3ufApTiAsgeoI+3aMhVUulrBaMxsc/3oTIUTBotNrfT+w9PqNSp7HXvxEXE4hh7VbqZsBThsXE7U4bkDWrXgwdXTd2ql9YSpeJxaggmyKydotFBoRb91YySBPGndS2ii/VvOyqbg0Z70s=
+	t=1748123504; cv=none; b=pg+IMCcpfp1oLYWiI+UKtiaRglGLEH6OZPa5lmrdpE0Ckj0JnSYJgoY/UW0VpCGRKFg5iV6WvCkAYYChjNdJx6Xc5swE2ATBgCtzNFUXphuKifrO/w7jCDcYukbBh0nE/WPj498xAuPVUKQYAoQMlpllpz2Gfzq9UTp98gliEe0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748123290; c=relaxed/simple;
-	bh=I6FxPXazGEzkzRC/RtofabQVJhiiEdkVWKblQhydB9Y=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VYfsZ2puFod45kDGo/hhGWNiW3HCyRAbQc08/BQhowEYzXTNgrA8Tx5enBjBkkuQw0kUz2fQxtXHhxzvgE94/mInW2r1KGOZUeyRPsJlr4RTBmKm5WLVo3xQIZ4NQYT5yWMRtmO15keLiNxrITuabWlH7YLpR6Nl7TF4N7W3jUA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=etBlUJpm; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1748123504; c=relaxed/simple;
+	bh=g39d9JHRR+ysYFLAUlmlFCphyI2Zuyqr/nbGPJ/VLF8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CbEyMIcHPJesrLY4ga52JeyJ8I2ENoAzumBuFERyLYWzE/sNA+VyZkzReXr94lBfREReZKj30gfngOB0Row05yeuD/vrrpKcPT+TAV7zA8pLYbnHQ06nhOEs9rzIZDXpJMls6IsytLmHaIptNp13+bgTbY0t0QEwXYFh2HbVrUg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KHBjkDf7; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="etBlUJpm"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1748123288;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=w2rWzS+AsuB1F3ghmFsRObn9HTI/ZiLDh2V5adXL99k=;
-	b=etBlUJpmWAOrGzxiNgrAiRdr9PygZLqWSj3szzuFiSf1L+/TmvruZHuF4MCMAPDAXWDnHp
-	e5Qei/HDgEzulldS4qiDxlT/ts3CuFtR7zgHmVhcwQS+AZ2CzGoySlRq3rSAz1rU/UWo6I
-	BDElUZJ6NwliplIdYsI0yPptLrQZrYQ=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-605-oGLZP08wM0q-xGB1any-bQ-1; Sat, 24 May 2025 17:48:06 -0400
-X-MC-Unique: oGLZP08wM0q-xGB1any-bQ-1
-X-Mimecast-MFC-AGG-ID: oGLZP08wM0q-xGB1any-bQ_1748123285
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-3a35989e5b2so715404f8f.2
-        for <linux-kernel@vger.kernel.org>; Sat, 24 May 2025 14:48:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748123285; x=1748728085;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=w2rWzS+AsuB1F3ghmFsRObn9HTI/ZiLDh2V5adXL99k=;
-        b=cYuu/H9ag8HL4MbGwZOpnDgPlgednBL2Uwfaryey8YQkhFMArOaZDzPYsb+eo80L+a
-         YjOxJJC+8hSd/t7sKihj+hwZAYTd+ojg3D8Oq1/EMIjXTaYvLu8a2lQ5JkE3WFTOukRf
-         xcBon7a/drC5d+3KHDNBGupH5SUmXBm6gjqtybgOaODAFa8V/S4NILd4399a992PlJ8x
-         E+aBDKFgz85qu2KHaxk0ZqJNrheMAOltiuxUC2V2p31nv0XKBqBEwiUZ2LyvkLwVJzJ+
-         1/DHWr1CkRg/m1zQ1rY6V9T2mdLASVXsY2m02qFqkgPOLpkM2fIPwm9hNJsyf0jdDetz
-         h4Rw==
-X-Forwarded-Encrypted: i=1; AJvYcCVMNWLrSvNyMYIh8ZXzHFheS7cJXuZCk78LwRtGtkty/fT3i3dgDesMuIenL+It/7R5UFx024Xs7fpUnZI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyfjTKEdt3tl26vjLIWPS/hkOoqv3TncN15i/9u0hrOKm+i9HaZ
-	qGPW+cAVshnVpztTwPc7YMYlrPbPlV3jJOElUMkqHsDLmuLE6lUhvN0dFO+kQeucsHr4el4bOql
-	08HPeMHyJJkbZegdtTj2eLQFAphDtp2vVYZXOdTLFTFWs64SOCr2F5uwwhBDbPtd3nQ==
-X-Gm-Gg: ASbGncv6wlrV3pWL6elSkdypVxeooQv+AWPGC5XZHMCC+3iuVjxUbKz4FeQPwWKUadx
-	nJI8dNmgYzBMATmHYj13T1VuptMVeL4wVxKPp3NkV/Iu0fnNL9GVDqp3r7FzG94Mkpe5ZcDTcxw
-	l2dqtTCFxXcngwYhqmd4zWvdx1kCwEu7NVgwML4dRGQo005+NCJbz9kPyv7Xog2MSS7qlqa8ef5
-	8u3UpibpC4M8Q2ZlMEaGgYIgJJPWDTNDMrvXABI63ddCr6yKKIYvWxwNJpq3CibdKGN8VOSXVzY
-	fbdyHWqH9Cq8oUeD14yZPItdCgvfbBvpcKiYfmiTuy//48Ds0C9scdv9bmUJZ2+Unq2Mv8V2pdL
-	yQRoVJy7EF80dbY+QdFPWJ2l0k+x+0dYtiwHWKnk=
-X-Received: by 2002:a05:6000:2281:b0:3a3:73dd:92c7 with SMTP id ffacd0b85a97d-3a4cb4613fcmr2690387f8f.4.1748123285386;
-        Sat, 24 May 2025 14:48:05 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHeglW2LJADKwUjYH86RDbbHLscEbEcy50DpGg57dr9bAGB70VYMaoCw8dPnWiK6HZbBwFpaQ==
-X-Received: by 2002:a05:6000:2281:b0:3a3:73dd:92c7 with SMTP id ffacd0b85a97d-3a4cb4613fcmr2690368f8f.4.1748123285033;
-        Sat, 24 May 2025 14:48:05 -0700 (PDT)
-Received: from ?IPV6:2003:d8:2f38:b600:7d6d:5e38:70ec:12c6? (p200300d82f38b6007d6d5e3870ec12c6.dip0.t-ipconnect.de. [2003:d8:2f38:b600:7d6d:5e38:70ec:12c6])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-447f73d4a3csm193343385e9.22.2025.05.24.14.48.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 24 May 2025 14:48:03 -0700 (PDT)
-Message-ID: <5815d9ed-e59f-4129-b20b-a0c07a2cf874@redhat.com>
-Date: Sat, 24 May 2025 23:48:01 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KHBjkDf7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748123503; x=1779659503;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=g39d9JHRR+ysYFLAUlmlFCphyI2Zuyqr/nbGPJ/VLF8=;
+  b=KHBjkDf79Ws9DW211uzG7uGDGDGyivgQSaNC72EGVFRwGQ4IUMoIkLlw
+   gftsBBaAdVJdhxyMJ45uZNMxgWyI/GOEX9c+W7rGAj/bSgcqqMQhjGcaU
+   fy6PjLApJhOmnUpH7GC1w+kqzzgR/Jfm2W5Vuob5TqlP/4Byxaw3Od55U
+   z6pc7rwV5SEntzWHFu++Imbp4K7riQNOB+B1FFa2zXuKxtdhAW9xsu3n9
+   KngDSL7qBJQ62xr6/NORJmc4BS2y8esi5QVxocZxjjX4do/x1c04jTbBr
+   pqbXIbYPhc5hDe1+qixBbECA4v4D2+6P4iotYGRblSWGiBhDkgnf4MqVQ
+   Q==;
+X-CSE-ConnectionGUID: tpx4xgFPReKyMHkt5yRKxQ==
+X-CSE-MsgGUID: oCaW8bnARAmks9ja5h4HvA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11443"; a="61496264"
+X-IronPort-AV: E=Sophos;i="6.15,311,1739865600"; 
+   d="scan'208";a="61496264"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 May 2025 14:51:42 -0700
+X-CSE-ConnectionGUID: fA/mF9yATwi4WsKTQNS57Q==
+X-CSE-MsgGUID: m1DNvvEMS/GIG0PRBODSXw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,311,1739865600"; 
+   d="scan'208";a="178837550"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by orviesa001.jf.intel.com with ESMTP; 24 May 2025 14:51:39 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uIwmG-000RTc-1l;
+	Sat, 24 May 2025 21:51:36 +0000
+Date: Sun, 25 May 2025 05:51:12 +0800
+From: kernel test robot <lkp@intel.com>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com
+Cc: oe-kbuild-all@lists.linux.dev, linux-pci@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+	cassel@kernel.org, wilfred.mallawa@wdc.com,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Lukas Wunner <lukas@wunner.de>
+Subject: Re: [PATCH 2/2] PCI: Rename host_bridge::reset_slot() to
+ host_bridge::reset_root_port()
+Message-ID: <202505250525.2csmeURe-lkp@intel.com>
+References: <20250524185304.26698-3-manivannan.sadhasivam@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V2 2/2] mm/khugepaged: fix race with folio split/free
- using temporary reference
-To: Shivank Garg <shivankg@amd.com>, akpm@linux-foundation.org,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Cc: ziy@nvidia.com, baolin.wang@linux.alibaba.com,
- lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, npache@redhat.com,
- ryan.roberts@arm.com, dev.jain@arm.com, fengwei.yin@intel.com,
- bharata@amd.com, syzbot+2b99589e33edbe9475ca@syzkaller.appspotmail.com
-References: <20250523091432.17588-1-shivankg@amd.com>
- <20250523091432.17588-2-shivankg@amd.com>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <20250523091432.17588-2-shivankg@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250524185304.26698-3-manivannan.sadhasivam@linaro.org>
 
-On 23.05.25 11:14, Shivank Garg wrote:
-> hpage_collapse_scan_file() calls folio_expected_ref_count(), which in turn
-> calls folio_mapcount(). folio_mapcount() checks folio_test_large() before
-> proceeding to folio_large_mapcount(), but there is a race window where the
-> folio may get split/freed between these checks, triggering:
-> 
->    VM_WARN_ON_FOLIO(!folio_test_large(folio), folio)
-> 
-> Take a temporary reference to the folio in hpage_collapse_scan_file().
-> This stabilizes the folio during refcount check and prevents incorrect
-> large folio detection due to concurrent split/free.
-> 
-> Fixes: 05c5323b2a34 ("mm: track mapcount of large folios in single value")
-> Reported-by: syzbot+2b99589e33edbe9475ca@syzkaller.appspotmail.com
-> Closes: https://lore.kernel.org/all/6828470d.a70a0220.38f255.000c.GAE@google.com
-> Suggested-by: David Hildenbrand <david@redhat.com>
-> Signed-off-by: Shivank Garg <shivankg@amd.com>
-> ---
-> V1: https://lore.kernel.org/linux-mm/20250522093452.6379-1-shivankg@amd.com
-> ---
+Hi Manivannan,
 
-Assuming we have this as patch #1:
+kernel test robot noticed the following build errors:
 
-Acked-by: David Hildenbrand <david@redhat.com>
+[auto build test ERROR on pci/next]
+[also build test ERROR on next-20250523]
+[cannot apply to pci/for-linus linus/master v6.15-rc7]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Manivannan-Sadhasivam/PCI-Save-and-restore-root-port-config-space-in-pcibios_reset_secondary_bus/20250525-025535
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
+patch link:    https://lore.kernel.org/r/20250524185304.26698-3-manivannan.sadhasivam%40linaro.org
+patch subject: [PATCH 2/2] PCI: Rename host_bridge::reset_slot() to host_bridge::reset_root_port()
+config: csky-randconfig-002-20250525 (https://download.01.org/0day-ci/archive/20250525/202505250525.2csmeURe-lkp@intel.com/config)
+compiler: csky-linux-gcc (GCC) 10.5.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250525/202505250525.2csmeURe-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202505250525.2csmeURe-lkp@intel.com/
+
+All error/warnings (new ones prefixed by >>):
+
+   drivers/pci/controller/dwc/pcie-dw-rockchip.c: In function 'rockchip_pcie_host_init':
+>> drivers/pci/controller/dwc/pcie-dw-rockchip.c:264:32: error: 'rockchip_pcie_rc_reset_slot' undeclared (first use in this function); did you mean 'rockchip_pcie_rc_reset_root_port'?
+     264 |  pp->bridge->reset_root_port = rockchip_pcie_rc_reset_slot;
+         |                                ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+         |                                rockchip_pcie_rc_reset_root_port
+   drivers/pci/controller/dwc/pcie-dw-rockchip.c:264:32: note: each undeclared identifier is reported only once for each function it appears in
+   At top level:
+>> drivers/pci/controller/dwc/pcie-dw-rockchip.c:703:12: warning: 'rockchip_pcie_rc_reset_root_port' defined but not used [-Wunused-function]
+     703 | static int rockchip_pcie_rc_reset_root_port(struct pci_host_bridge *bridge,
+         |            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+vim +264 drivers/pci/controller/dwc/pcie-dw-rockchip.c
+
+   244	
+   245	static int rockchip_pcie_host_init(struct dw_pcie_rp *pp)
+   246	{
+   247		struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+   248		struct rockchip_pcie *rockchip = to_rockchip_pcie(pci);
+   249		struct device *dev = rockchip->pci.dev;
+   250		int irq, ret;
+   251	
+   252		irq = of_irq_get_byname(dev->of_node, "legacy");
+   253		if (irq < 0)
+   254			return irq;
+   255	
+   256		ret = rockchip_pcie_init_irq_domain(rockchip);
+   257		if (ret < 0)
+   258			dev_err(dev, "failed to init irq domain\n");
+   259	
+   260		irq_set_chained_handler_and_data(irq, rockchip_pcie_intx_handler,
+   261						 rockchip);
+   262	
+   263		rockchip_pcie_enable_l0s(pci);
+ > 264		pp->bridge->reset_root_port = rockchip_pcie_rc_reset_slot;
+   265	
+   266		return 0;
+   267	}
+   268	
 
 -- 
-Cheers,
-
-David / dhildenb
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
