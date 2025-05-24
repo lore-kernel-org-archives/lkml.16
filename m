@@ -1,261 +1,173 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F325A1D8E07;
-	Sat, 24 May 2025 20:57:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 189CC1607AC
+	for <linux-kernel@vger.kernel.org>; Sat, 24 May 2025 21:15:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748120270; cv=none; b=a94pGLWud9pstsX4WoKLsID9pQXyF8AGLDM2D0ZxfRbfZA/rh54AYyQ8qCrZEJsVGVqhz2zziiWz80n3Zj4UyCioxd5L8vHOqsPucTzfKrfRjbvkZVrbAo3+EkfgGfeY1bJaBfOUWOPsthK12Mai1BZCbdzFZHfd0foj2YCNXOU=
+	t=1748121331; cv=none; b=LBN3szaAj4VhIGfLCk7xnupbiLXY4zvLQo4w5RD0ffjHezZjq6R6HhHbH92JHN/AQ0AWI+zpf24pNxsl3THnfGrOW9UM2S5suYfxnVBXTN1usDcOkh0fq0FtuBU/wJoNat6F7uWX4Y5o0Vr9jYOugD/5WMPBYOu1kJVCzDVo4uI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748120270; c=relaxed/simple;
-	bh=ZRgBVQ4cQLyahlJiDiZ4ANkfRyf4jQKwrcJG8gTPvI4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Myclq2dr6+Q5ua2Y+LjstZggwA0BeGm/pEEauv1wAx5gKQzSFeQzcQSboJnfRwWhTayVLR8/LVvENlsK7nUvu1shkdp5JeNrfR7WuMX6avwy5ZDK5eRPkNO8c18ouVofosstG8gGn0v6OF07OVpcPGsOTMlX9uPpV/NTiBjNkfM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QODOBHg9; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748121331; c=relaxed/simple;
+	bh=xKidcrCEFdUV4GWdtue79HCZjBpewqgvV5J0mHSlBXo=;
+	h=From:Subject:Date:Message-Id:MIME-Version:To:Cc:Content-Type:
+	 References; b=jZeDePSIlRiK6sq8h0arNS27cxoCuW7A73UIKgolNBdaalrUA9YbKhitdIGkPVJCM8GRslqdwUM2ZVUIKFzOlyMMWGCqLDxGOtUBylSXhhWSQIBy52/393hHioMRKE38i4JthsLeaiDOGD00+Uo481UJYCM8sIDm4sEng49k4bQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=ZoFKZZ9q; arc=none smtp.client-ip=210.118.77.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QODOBHg9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 803B1C4CEE4;
-	Sat, 24 May 2025 20:57:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748120269;
-	bh=ZRgBVQ4cQLyahlJiDiZ4ANkfRyf4jQKwrcJG8gTPvI4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=QODOBHg9CAZLkFb545G6G9+TacSr/PmgssN3lUhiGZTMQisKA5J7B1gmqKNrnPVHJ
-	 bl1LnS5KUwwiXzo5xK9Nufbq6ZcBIRrrbhxI47tm2Cj3JdLsifuNRCpVoxSfWr1dQv
-	 UiODjZDlHBaF0hnKN3UWBT0Y0PkkeBGLmLOPFZeV8A7nQESD4KLE4m6J88NG0ljJig
-	 mEn8nYSvjM/nEwhFpS3gjNKupvUlaDZuQM9mjbnd7ZANC9FCJ32+lmAZaKB1Yszrv9
-	 +x4UL0tY3fCmXes7ZxJBuD+Rj8EIALQ9XApDyUNIiFVMtQd5aU5YTnEkUtm8SYQF+r
-	 xWNRXuomjtgFw==
-Date: Sat, 24 May 2025 22:57:44 +0200
-From: Niklas Cassel <cassel@kernel.org>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com,
-	linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, wilfred.mallawa@wdc.com,
-	Lukas Wunner <lukas@wunner.de>
-Subject: Re: [PATCH 2/2] PCI: Rename host_bridge::reset_slot() to
- host_bridge::reset_root_port()
-Message-ID: <aDIyyMvQkMC40jnQ@ryzen>
-References: <20250524185304.26698-1-manivannan.sadhasivam@linaro.org>
- <20250524185304.26698-3-manivannan.sadhasivam@linaro.org>
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="ZoFKZZ9q"
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20250524211520euoutp01584f825519a9959a728a0467fdaff4be~CkxRNV_sA2955029550euoutp01C
+	for <linux-kernel@vger.kernel.org>; Sat, 24 May 2025 21:15:20 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20250524211520euoutp01584f825519a9959a728a0467fdaff4be~CkxRNV_sA2955029550euoutp01C
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1748121320;
+	bh=LIr9lMjTF7O5NejxvO4VQjTJnbf2W8BRLqWDMWxSh4Q=;
+	h=From:Subject:Date:To:Cc:References:From;
+	b=ZoFKZZ9q/OdqYy0aov6l5nIwQDv1/QSaLs0W0EE5ooPz5YE9LPpJfz+TmmBcxA0Sx
+	 INaLSeeByskA5yvdTAC7Oh0VY2YtuRRd6pluE/pJj9jLIbR7oDnnAQ/mNPvDWyvizC
+	 xln6nxs1ciMgxmLhGu/bcHeWwZqC5S9Urn+77/G0=
+Received: from eusmtip2.samsung.com (unknown [203.254.199.222]) by
+	eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+	20250524211519eucas1p218997c69b98b14d3af2eb6bf4e9d3187~CkxQAQcej3005230052eucas1p2S;
+	Sat, 24 May 2025 21:15:19 +0000 (GMT)
+Received: from AMDC4942.eu.corp.samsungelectronics.net (unknown
+	[106.210.136.40]) by eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+	20250524211518eusmtip2a617d171be64487ab018985485f2cae7~CkxPAWrLi0676606766eusmtip2l;
+	Sat, 24 May 2025 21:15:18 +0000 (GMT)
+From: Michal Wilczynski <m.wilczynski@samsung.com>
+Subject: [PATCH RFC 0/6] Rust Abstractions for PWM subsystem with TH1520 PWM
+ driver
+Date: Sat, 24 May 2025 23:14:54 +0200
+Message-Id: <20250524-rust-next-pwm-working-fan-for-sending-v1-0-bdd2d5094ff7@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250524185304.26698-3-manivannan.sadhasivam@linaro.org>
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAM42MmgC/x3NMQ7CMAxA0atUnrHUGDLAisQBWBFDSpxiIZzKK
+	W2lqncnML7l/xUKm3CBU7OC8SRFsla4XQOPZ9CeUWI1UEu+9XRA+5QRlZcRh/mNc7aXaI8pKKZ
+	sWFjjz95TiBRd5457qK3BOMny/9zgejnDfdu+QwqYRXwAAAA=
+X-Change-ID: 20250524-rust-next-pwm-working-fan-for-sending-552ad2d1b193
+To: =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,  Miguel Ojeda
+	<ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,  Boqun Feng
+	<boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,  Benno Lossin
+	<benno.lossin@proton.me>,  Andreas Hindborg <a.hindborg@kernel.org>, Alice
+	Ryhl <aliceryhl@google.com>,  Trevor Gross <tmgross@umich.edu>, Danilo
+	Krummrich <dakr@kernel.org>,  Michal Wilczynski <m.wilczynski@samsung.com>,
+	Drew Fustini <drew@pdp7.com>,  Guo Ren <guoren@kernel.org>, Fu Wei
+	<wefu@redhat.com>,  Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
+	<krzk+dt@kernel.org>,  Conor Dooley <conor+dt@kernel.org>,  Paul Walmsley
+	<paul.walmsley@sifive.com>,  Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou
+	<aou@eecs.berkeley.edu>,  Alexandre Ghiti <alex@ghiti.fr>,  Marek Szyprowski
+	<m.szyprowski@samsung.com>
+Cc: linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
+	rust-for-linux@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	devicetree@vger.kernel.org
+X-Mailer: b4 0.15-dev
+X-CMS-MailID: 20250524211519eucas1p218997c69b98b14d3af2eb6bf4e9d3187
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20250524211519eucas1p218997c69b98b14d3af2eb6bf4e9d3187
+X-EPHeader: CA
+X-CMS-RootMailID: 20250524211519eucas1p218997c69b98b14d3af2eb6bf4e9d3187
+References: <CGME20250524211519eucas1p218997c69b98b14d3af2eb6bf4e9d3187@eucas1p2.samsung.com>
 
-On Sun, May 25, 2025 at 12:23:04AM +0530, Manivannan Sadhasivam wrote:
-> The callback is supposed to reset the root port, hence it should be named
-> as 'reset_root_port'. This also warrants renaming the rest of the instances
-> of 'reset slot' as 'reset root port' in the drivers.
-> 
-> Suggested-by: Lukas Wunner <lukas@wunner.de>
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> ---
->  drivers/pci/controller/dwc/pcie-dw-rockchip.c |  8 ++++----
->  drivers/pci/controller/dwc/pcie-qcom.c        |  8 ++++----
->  drivers/pci/controller/pci-host-common.c      | 20 +++++++++----------
->  drivers/pci/pci.c                             |  6 +++---
->  include/linux/pci.h                           |  2 +-
->  5 files changed, 22 insertions(+), 22 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-dw-rockchip.c b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-> index 193e97adf228..0cc7186758ce 100644
-> --- a/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-> +++ b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-> @@ -85,7 +85,7 @@ struct rockchip_pcie_of_data {
->  	const struct pci_epc_features *epc_features;
->  };
->  
-> -static int rockchip_pcie_rc_reset_slot(struct pci_host_bridge *bridge,
-> +static int rockchip_pcie_rc_reset_root_port(struct pci_host_bridge *bridge,
->  				       struct pci_dev *pdev);
->  
->  static int rockchip_pcie_readl_apb(struct rockchip_pcie *rockchip, u32 reg)
-> @@ -261,7 +261,7 @@ static int rockchip_pcie_host_init(struct dw_pcie_rp *pp)
->  					 rockchip);
->  
->  	rockchip_pcie_enable_l0s(pci);
-> -	pp->bridge->reset_slot = rockchip_pcie_rc_reset_slot;
-> +	pp->bridge->reset_root_port = rockchip_pcie_rc_reset_slot;
+This patch series introduces Rust support for the T-HEAD TH1520 PWM
+controller and demonstrates its use for fan control on the Sipeed Lichee
+Pi 4A board.
 
-You just renamed the function to rockchip_pcie_rc_reset_root_port(),
-but you seem to use the old name here, so I would guess that this will
-not compile.
+The primary goal of this patch series is to introduce a basic set of
+Rust abstractions for the Linux PWM subsystem. As a first user and
+practical demonstration of these abstractions, the series also provides
+a functional PWM driver for the T-HEAD TH1520 SoC. This allows control
+of its PWM channels and ultimately enables temperature controlled fan
+support for the Lichee Pi 4A board. This work aims to explore the use of
+Rust for PWM drivers and lay a foundation for potential future
+Rust based PWM drivers.
 
-With the function pointer renamed, this patch looks good to me:
-Reviewed-by: Niklas Cassel <cassel@kernel.org>
+The series is structured as follows:
 
+Patch 1/6: Introduce basic PWM abstractions
+This patch lays the groundwork by adding a Kconfig option for Rust PWM
+abstractions, necessary C helper functions, and a new Rust module
+(rust/kernel/pwm.rs). This module provides initial safe wrappers for
+core PWM data structures (Chip, Device, State, Args, Polarity) and
+functions (devm_chip_alloc, devm_chip_add), along with a basic PwmOps
+trait focusing on the .apply callback needed by PWM chip providers.
 
->  
->  	return 0;
->  }
-> @@ -700,7 +700,7 @@ static int rockchip_pcie_probe(struct platform_device *pdev)
->  	return ret;
->  }
->  
-> -static int rockchip_pcie_rc_reset_slot(struct pci_host_bridge *bridge,
-> +static int rockchip_pcie_rc_reset_root_port(struct pci_host_bridge *bridge,
->  				       struct pci_dev *pdev)
->  {
->  	struct pci_bus *bus = bridge->bus;
-> @@ -759,7 +759,7 @@ static int rockchip_pcie_rc_reset_slot(struct pci_host_bridge *bridge,
->  
->  	/* Ignore errors, the link may come up later. */
->  	dw_pcie_wait_for_link(pci);
-> -	dev_dbg(dev, "slot reset completed\n");
-> +	dev_dbg(dev, "Root port reset completed\n");
->  	return ret;
->  
->  deinit_clk:
-> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> index 0c59030a2d55..840263c1efe0 100644
-> --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> @@ -291,7 +291,7 @@ struct qcom_pcie {
->  };
->  
->  #define to_qcom_pcie(x)		dev_get_drvdata((x)->dev)
-> -static int qcom_pcie_reset_slot(struct pci_host_bridge *bridge,
-> +static int qcom_pcie_reset_root_port(struct pci_host_bridge *bridge,
->  				  struct pci_dev *pdev);
->  
->  static void qcom_ep_reset_assert(struct qcom_pcie *pcie)
-> @@ -1277,7 +1277,7 @@ static int qcom_pcie_host_init(struct dw_pcie_rp *pp)
->  			goto err_assert_reset;
->  	}
->  
-> -	pp->bridge->reset_slot = qcom_pcie_reset_slot;
-> +	pp->bridge->reset_root_port = qcom_pcie_reset_root_port;
->  
->  	return 0;
->  
-> @@ -1533,7 +1533,7 @@ static void qcom_pcie_icc_opp_update(struct qcom_pcie *pcie)
->  	}
->  }
->  
-> -static int qcom_pcie_reset_slot(struct pci_host_bridge *bridge,
-> +static int qcom_pcie_reset_root_port(struct pci_host_bridge *bridge,
->  				  struct pci_dev *pdev)
->  {
->  	struct pci_bus *bus = bridge->bus;
-> @@ -1589,7 +1589,7 @@ static int qcom_pcie_reset_slot(struct pci_host_bridge *bridge,
->  
->  	qcom_pcie_start_link(pci);
->  
-> -	dev_dbg(dev, "Slot reset completed\n");
-> +	dev_dbg(dev, "Root port reset completed\n");
->  
->  	return 0;
->  
-> diff --git a/drivers/pci/controller/pci-host-common.c b/drivers/pci/controller/pci-host-common.c
-> index afa7b140a04a..24e357e85adb 100644
-> --- a/drivers/pci/controller/pci-host-common.c
-> +++ b/drivers/pci/controller/pci-host-common.c
-> @@ -99,22 +99,22 @@ void pci_host_common_remove(struct platform_device *pdev)
->  EXPORT_SYMBOL_GPL(pci_host_common_remove);
->  
->  #if IS_ENABLED(CONFIG_PCIEAER)
-> -static pci_ers_result_t pci_host_reset_slot(struct pci_dev *dev)
-> +static pci_ers_result_t pci_host_reset_root_port(struct pci_dev *dev)
->  {
->  	int ret;
->  
->  	ret = pci_bus_error_reset(dev);
->  	if (ret) {
-> -		pci_err(dev, "Failed to reset slot: %d\n", ret);
-> +		pci_err(dev, "Failed to reset root port: %d\n", ret);
->  		return PCI_ERS_RESULT_DISCONNECT;
->  	}
->  
-> -	pci_info(dev, "Slot has been reset\n");
-> +	pci_info(dev, "Root port has been reset\n");
->  
->  	return PCI_ERS_RESULT_RECOVERED;
->  }
->  
-> -static void pci_host_recover_slots(struct pci_host_bridge *host)
-> +static void pci_host_reset_root_ports(struct pci_host_bridge *host)
->  {
->  	struct pci_bus *bus = host->bus;
->  	struct pci_dev *dev;
-> @@ -124,11 +124,11 @@ static void pci_host_recover_slots(struct pci_host_bridge *host)
->  			continue;
->  
->  		pcie_do_recovery(dev, pci_channel_io_frozen,
-> -				 pci_host_reset_slot);
-> +				 pci_host_reset_root_port);
->  	}
->  }
->  #else
-> -static void pci_host_recover_slots(struct pci_host_bridge *host)
-> +static void pci_host_reset_root_ports(struct pci_host_bridge *host)
->  {
->  	struct pci_bus *bus = host->bus;
->  	struct pci_dev *dev;
-> @@ -140,17 +140,17 @@ static void pci_host_recover_slots(struct pci_host_bridge *host)
->  
->  		ret = pci_bus_error_reset(dev);
->  		if (ret)
-> -			pci_err(dev, "Failed to reset slot: %d\n", ret);
-> +			pci_err(dev, "Failed to reset root port: %d\n", ret);
->  		else
-> -			pci_info(dev, "Slot has been reset\n");
-> +			pci_info(dev, "Root port has been reset\n");
->  	}
->  }
->  #endif
->  
->  void pci_host_handle_link_down(struct pci_host_bridge *bridge)
->  {
-> -	dev_info(&bridge->dev, "Recovering slots due to Link Down\n");
-> -	pci_host_recover_slots(bridge);
-> +	dev_info(&bridge->dev, "Recovering root ports due to Link Down\n");
-> +	pci_host_reset_root_ports(bridge);
->  }
->  EXPORT_SYMBOL_GPL(pci_host_handle_link_down);
->  
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index 6d6e9ce2bbcc..154d33e1af84 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -4985,16 +4985,16 @@ void __weak pcibios_reset_secondary_bus(struct pci_dev *dev)
->  	struct pci_host_bridge *host = pci_find_host_bridge(dev->bus);
->  	int ret;
->  
-> -	if (pci_is_root_bus(dev->bus) && host->reset_slot) {
-> +	if (pci_is_root_bus(dev->bus) && host->reset_root_port) {
->  		/*
->  		 * Save the config space of the root port before doing the
->  		 * reset, since the state could be lost. The device state
->  		 * should've been saved by the caller.
->  		 */
->  		pci_save_state(dev);
-> -		ret = host->reset_slot(host, dev);
-> +		ret = host->reset_root_port(host, dev);
->  		if (ret)
-> -			pci_err(dev, "failed to reset slot: %d\n", ret);
-> +			pci_err(dev, "failed to reset root port: %d\n", ret);
->  		else
->  			/* Now restore it on success */
->  			pci_restore_state(dev);
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 8d7d2a49b76c..ab4f4a668f6d 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -599,7 +599,7 @@ struct pci_host_bridge {
->  	void (*release_fn)(struct pci_host_bridge *);
->  	int (*enable_device)(struct pci_host_bridge *bridge, struct pci_dev *dev);
->  	void (*disable_device)(struct pci_host_bridge *bridge, struct pci_dev *dev);
-> -	int (*reset_slot)(struct pci_host_bridge *bridge, struct pci_dev *dev);
-> +	int (*reset_root_port)(struct pci_host_bridge *bridge, struct pci_dev *dev);
->  	void		*release_data;
->  	unsigned int	ignore_reset_delay:1;	/* For entire hierarchy */
->  	unsigned int	no_ext_tags:1;		/* No Extended Tags */
-> -- 
-> 2.43.0
-> 
+Patch 2/6: Add PWM driver for TH1520 SoC
+This introduces the Rust based PWM driver for the T-HEAD TH1520 SoC.
+It implements the PwmOps trait using the abstractions from the first
+patch and handles the specifics of the TH1520 hardware for configuring
+period, duty cycle, and polarity. Resource management leverages devm
+for the PWM chip and Rust DevRes for I/O memory, and RAII for clock
+handling.
+
+Patch 3/6: dt-bindings: Add PWM T-HEAD controller dt-binding
+This patch adds the Device Tree binding documentation for the T-HEAD
+TH1520 PWM controller.
+
+Patch 4/6: riscv: dts: thead:: Add PWM controller node
+This patch adds the actual Device Tree node for the TH1520 PWM controller.
+
+Patch 5/6: riscv: dts: thead: Add PVT node
+Add pvt node for thermal sensor.
+
+Patch 6/6: riscv: dts: thead: Add PWM fan and thermal control
+This final patch adds the Device Tree configuration for a PWM controlled
+fan to the Sipeed Lichee Pi 4A board DTS file. 
+
+Testing:
+Tested on the TH1520 SoC. The fan works correctly.
+
+Points for Discussion:
+The rust/kernel/pwm.rs abstraction layer is currently minimal,
+focusing on the immediate needs of this driver. Feedback on its design,
+scope, and potential for generalization would be highly appreciated.
+General feedback on the Rust implementation, FFI wrapping patterns, and
+adherence to kernel development practices is very welcome.
+
+The patches are based on rust-next, with some dependencies which are not
+merged yet - platform Io support [1] and clk abstractions [2]. 
+
+Reference repository with all the patches together can be found on
+github [3].
+
+[1] - https://lore.kernel.org/rust-for-linux/20250509-topics-tyr-platform_iomem-v8-0-e9f1725a40da@collabora.com/
+[2] - https://lore.kernel.org/rust-for-linux/0ec0250c1170a8a6efb2db7a6cb49ae974d7ce05.1747634382.git.viresh.kumar@linaro.org/ 
+[3] - https://github.com/mwilczy/linux/commits/rust-next-pwm-working-fan-for-sending/
+
+---
+Michal Wilczynski (6):
+      rust: Add basic PWM abstractions
+      pwm: Add Rust driver for T-HEAD TH1520 SoC
+      dt-bindings: pwm: thead: Add T-HEAD TH1520 PWM controller
+      riscv: dts: thead: Add PWM controller node
+      riscv: dts: thead: Add PVT node
+      riscv: dts: thead: Add PWM fan and thermal control
+
+ .../devicetree/bindings/pwm/thead,th1520-pwm.yaml  |  48 +++
+ MAINTAINERS                                        |   8 +
+ arch/riscv/boot/dts/thead/th1520-lichee-pi-4a.dts  |  67 ++++
+ arch/riscv/boot/dts/thead/th1520.dtsi              |  18 +
+ drivers/pwm/Kconfig                                |  14 +
+ drivers/pwm/Makefile                               |   1 +
+ drivers/pwm/pwm_th1520.rs                          | 272 +++++++++++++++
+ rust/bindings/bindings_helper.h                    |   1 +
+ rust/helpers/helpers.c                             |   1 +
+ rust/helpers/pwm.c                                 |  20 ++
+ rust/kernel/lib.rs                                 |   2 +
+ rust/kernel/pwm.rs                                 | 376 +++++++++++++++++++++
+ 12 files changed, 828 insertions(+)
+---
+base-commit: 9416c85e2767adcf72a21bce15f9c56ed085c5d4
+change-id: 20250524-rust-next-pwm-working-fan-for-sending-552ad2d1b193
+
+Best regards,
+-- 
+Michal Wilczynski <m.wilczynski@samsung.com>
+
