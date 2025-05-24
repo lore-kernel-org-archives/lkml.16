@@ -1,159 +1,138 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from out-172.mta0.migadu.com (out-172.mta0.migadu.com [91.218.175.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5547D1A23A6
-	for <linux-kernel@vger.kernel.org>; Sat, 24 May 2025 17:15:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C7D342C0B;
+	Sat, 24 May 2025 17:32:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748106953; cv=none; b=cpm7SGsW/WCeDvB4G3Jle+8b3xOk1krjmH7NrxBZ0w8H2dYeTAo8a1uc5aCULRUIz0vJt27v0nD+59r9BKznsARovZOAxOUk6OLjGjbWUztgWs+pTNyxLTJEbEplgLWWQaWzIHDfIV03kyVkhpnAnmbVf86i6jM1qP1vtHHDmJM=
+	t=1748107966; cv=none; b=UkSd6W7EtvIeIUKIiSnLISRF5FWh9snrZUX46JOk2E2TBpM4GMkYf0ezE49iTTR1gknU3UBxx+5csX+CJ5fj9RwTNbfrASqjMtskA6dm672gPZHChLHWSG/Jnba21GL4ITMABp+24UYPoJFbUmZje9LL7w5u5lCtGrz/4Qb0x4I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748106953; c=relaxed/simple;
-	bh=k8WsU7Kl8gGiw2twvpTg1c6BvC+MbJXbs5ZHnfLjSOg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eCnR7KZQpPOedeR5tixk7n7wm9yxa/zcryCMZSl7cf65jBynZ/XbXF17vSFg61mY+sn+6/26zNyuhme8ZA3SqOJPJfB6zpSTfxQh1/s/aH/MNjG/WUKN7DlnuDlafDbTiuJDIqtLQbVwpURnh+6SY96VCQ9DLWsKzdZ3QybtX60=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=I60MA9Wa; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1748107966; c=relaxed/simple;
+	bh=WROu/pu0ybtezcTtiIfVSav31rQxzPNSRZ+C+QZg8tc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=WGTMSADgMX6NJbmPzx6r9ISkVhoFKYj1egIvDV2IBYleNprl/+ZqsTX5APQK6XJ5uUG8sdh8Kqod3mXeCjxt406P5S3kISYzAroyzM9bwdOHZ2+qyaoTf7GDoWKISmzdmjCv1h1ToOEVgfydMwElN3+O9H0lZ4zwzIPjQGSyQ1w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=DJyxKc7m; arc=none smtp.client-ip=91.218.175.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="I60MA9Wa"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54OGwlWj027726
-	for <linux-kernel@vger.kernel.org>; Sat, 24 May 2025 17:15:50 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=HoKB7FoEFd+ZhxUTxnT07Hez
-	elPHtrNEFYztHvSBeTM=; b=I60MA9WaCYrQl3K61kG7yKmYGl9ROeRwT/67lMeC
-	reb+NGpNPyHnfdqVaAf2cBYgnc/1QzAhQbXQcHSHwwchJBZnWmucKKXIryhgowY4
-	vk6Gs5AIVJ0mGfMgmpH7rDumAlHDYh0Lptcnm0vC4hYmrbm7L3rQ55sQ6vbyjS1V
-	OLffzTCJkiDbWpEKWpUsTzVS/qN9w9j2JlwYhwlNbL1V5J6SfhXPY/PjmNHCsUTb
-	Ei7Rc8o7Gnb63DjMuXrepEITpjmMZr3x9EKikdixyjPeukufEmRKuRwMRaKWH2wx
-	5OWKO+ccedjgwHdCZJSP+R/WVHbKrU65gL28Nxpw3OsFsw==
-Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com [209.85.219.72])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46u66w8wb6-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Sat, 24 May 2025 17:15:49 +0000 (GMT)
-Received: by mail-qv1-f72.google.com with SMTP id 6a1803df08f44-6f8dbab898cso24163776d6.3
-        for <linux-kernel@vger.kernel.org>; Sat, 24 May 2025 10:15:49 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748106949; x=1748711749;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HoKB7FoEFd+ZhxUTxnT07HezelPHtrNEFYztHvSBeTM=;
-        b=tDgNU+qbawLB1ED/JHc6nkS7Qu3g6L+RWaJ2FvSK1QNujdVP9gVxV6qyEFspiaednI
-         TN+G1LOuODY/3r8eEKVmiHDomWxi4dYB4i4FzFJYrjw5uRgpjLpoQaTxImqpl55YoTKc
-         +mUUk3aqbzwFDpb0FI0Y0edoa9srO2Y1gJRmAl0kmRVAdjGZiHlMLtgZ//0HLD26u4q9
-         yy/PF0CPUbnGBQq6BsMoa5fOgfPWwPLrGSWGuDZyuP9cyY9XRYSOlhEspVungU18MNUq
-         mPjN02kHdWLLSiSdY+pJz2veWOzuy2Zc4EpNxfJwBgUJr4jSu8rutmcZdY5EQPAso0QH
-         EgWw==
-X-Forwarded-Encrypted: i=1; AJvYcCUT9l5MbWZmN/pF5EwASR6qfwrIQ5DZPhJAFF5+N140pFTZeXCqKiKqGDi16mSauhKzozS4b6/+eDlg90I=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyOy+cnPXos7MkdWYNgwIxvo2jloWGV6b7lfuLbezP6IlMSkZ/K
-	0mA277MaAr6TnjjFZRm6BnOL36XdiShrBYEw9gINzVKw9QCadu5+43nghi/DHZTj7OCoUk1GeAr
-	UdpGGugtMYsORkEcFEiHS7XgVwIcJgZMzxhGAp9PeNNWL4SuQqW0Wn4As5m15ZWPe960=
-X-Gm-Gg: ASbGncuLH1enF2M5Yc3XHsnSU2HPFchi5HM+tOpOrT4KGcvD2N+eYMJqHKF/dShWIp9
-	lkRTbJjngZULeKxMJ94E5COM2Ar3Thhb4oUifGGAyRw6jR4H8/jaQBZI2tYj07nVt6nHGgw1ajM
-	TE/uXN4SnbEG41ZhfhmTAOaEvDMdKrGZwKXHxQktXMIN4cu+1jGNkHLCeA4FPQ6RxFn/bRNxoJw
-	0mEkuw2QqABL1OQKyxDltlxPcnKQASNihkdL3cjeGsdEp2m/26h1jhRqmpY7oYJh7bCIOjyQkD5
-	wRuF/jagoN7XNR8ABkqkQoPeSm3/ODSDPfcTo4/P/Y2rkvAIhKZYhkQRKfy5V5AgTWJViZ5vCrk
-	=
-X-Received: by 2002:ad4:5bad:0:b0:6f2:c88a:50c5 with SMTP id 6a1803df08f44-6fa9d28772fmr67452106d6.32.1748106948868;
-        Sat, 24 May 2025 10:15:48 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHIqkv1DDylW1b3GD2ViKAIAcTr7kO7D7YE6wGfo1Ri+34/iDrnom1wZeOY+am9JzCmMIPeew==
-X-Received: by 2002:ad4:5bad:0:b0:6f2:c88a:50c5 with SMTP id 6a1803df08f44-6fa9d28772fmr67451546d6.32.1748106948491;
-        Sat, 24 May 2025 10:15:48 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-552133120b8sm1112985e87.121.2025.05.24.10.15.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 24 May 2025 10:15:46 -0700 (PDT)
-Date: Sat, 24 May 2025 20:15:44 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Viswanath Kraleti <viswanath.kraleti@oss.qualcomm.com>
-Cc: Rob Clark <robdclark@gmail.com>, Abhinav Kumar <quic_abhinavk@quicinc.com>,
-        Sean Paul <sean@poorly.run>,
-        Marijn Suijten <marijn.suijten@somainline.org>,
-        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        Ryan Eatmon <reatmon@ti.com>, linux-arm-msm@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org,
-        Bruce Ashfield <bruce.ashfield@gmail.com>
-Subject: Re: [PATCH v2] drivers: gpu: drm: msm: registers: improve
- reproducibility
-Message-ID: <6mgmrqmixjdftpjz2hvwjnsyh3wwylxuaih7yez2mdgjpcp3l2@zjr4ai6kkjxn>
-References: <20250524-binrep-v2-1-09040177218e@oss.qualcomm.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="DJyxKc7m"
+X-Forwarded-Encrypted: i=1; AJvYcCWjC39xMqo+b58J77GU/m11ovSM/aPrxdhujC78zvC9Q0hMQdtO0D4LhXo41iATy64i8okWg/ig26UYBjOm@vger.kernel.org, AJvYcCXP4e6n5CoELH3Dm7FKoGc2qi7L/egV/5/vdSMtvsaGgUOCc69SAhU7rhJmq16KEpT9WRF6zTjl@vger.kernel.org, AJvYcCXReQUYSAgG6UrWxEjqvc9kV/nCjgCGdyjYvrkmZkiG6u1noBA3mVD6n1yvYVsDVrVhajcMdAypmiAw@vger.kernel.org
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1748107960;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=WROu/pu0ybtezcTtiIfVSav31rQxzPNSRZ+C+QZg8tc=;
+	b=DJyxKc7mlCCeK+zTphZNOmJBUOFtzUEu6bjlEnzHvuQ3c9lvj+w+UHJVXWYS2KasNOpUO9
+	IM5GfJPDpw1PMAmyVnLSilvrFT5GPF+JxAdTVO3N4vOcFBiYi/X8QxRwbrVBlgT+PyQmS+
+	XGyqMiJ5cOl3/ikSKFp7e+hRsIqPVRM=
+X-Gm-Message-State: AOJu0YzHrs56pHOk78FVi4bb2aHLIpDo/UNQTmZhFCztRNWjNtiabRXJ
+	gMBObbwm3SCGSzxgj3a6tXMNwfTDWt2d23nkTHf+oChHWbA5tCE2ucwcrXFk3P3q1TKvXsscPn6
+	LeTeTvwKyoolqkhqbBJGrgtJ/YPOQBMA=
+X-Google-Smtp-Source: AGHT+IHLfzVJ2UpaVUCWlm1zWAshulOa7vscD+okP1uymiyJvIt0gCpGOGxAHvcaNuNdCBxsLb/J5w4FXXuPCngwndM=
+X-Received: by 2002:a67:e446:0:b0:4e4:3c3a:f163 with SMTP id
+ ada2fe7eead31-4e43c3af25bmr1133636137.7.1748107953734; Sat, 24 May 2025
+ 10:32:33 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250524-binrep-v2-1-09040177218e@oss.qualcomm.com>
-X-Authority-Analysis: v=2.4 cv=aYJhnQot c=1 sm=1 tr=0 ts=6831fec5 cx=c_pps
- a=7E5Bxpl4vBhpaufnMqZlrw==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
- a=dt9VzEwgFbYA:10 a=iGHA9ds3AAAA:8 a=VwQbUJbxAAAA:8 a=EUspDBNiAAAA:8
- a=sozttTNsAAAA:8 a=pGLkceISAAAA:8 a=CEJotdllt_GKsxek9pwA:9 a=CjuIK1q_8ugA:10
- a=pJ04lnu7RYOZP9TFuWaZ:22 a=nM-MV4yxpKKO9kiQg6Ot:22
-X-Proofpoint-ORIG-GUID: 6ODIhbw0_uMxcAOyWGLRhWeM8b1BnvZH
-X-Proofpoint-GUID: 6ODIhbw0_uMxcAOyWGLRhWeM8b1BnvZH
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTI0MDE1OCBTYWx0ZWRfX25Lj5iLIb9ft
- 9OPgoxV6kvpCITi2oR3yCV4LkhNZ6XUhjopw/lBFh7IKfHvX2Hy5zkqBA/Q3MmCIqmV3i2fMlWp
- vvee/gijXeP/AXwS8RIbnYCPW047HLlbBC1rsRCsc7Wqo7B6wpmhOF9dZtqbiLzcJzL2jB5eTeb
- b9sIjJYW8AL3B2Z0bmvruIIerqpEJ+LX/2ZpheR8BSVxXLXb6bCSWXPdDQpbBlExHAP4Y7eLLzh
- auBRjAwbCOn7ltwodaj10fxNlEUlpeGUrIqmvi9pzy0Lri9Q+8BQmgG0qWWLWbM6IrFJC7LsL9D
- z8LdOsswdfPksa/cT+AD4Sq11TjVIaoc6Zw1quJJNPUQaZwZpk+QZ4I4dWYojq9T1q6p53VFSTC
- fknN+M64WoOa8k1V3tm5IpYQUYS9HCLrQrQMRoG/kOqMurTj1reEHD7CVzuNHjAk4pawm2YJ
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-24_06,2025-05-22_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- priorityscore=1501 suspectscore=0 impostorscore=0 adultscore=0
- mlxlogscore=903 lowpriorityscore=0 malwarescore=0 mlxscore=0 spamscore=0
- clxscore=1015 bulkscore=0 phishscore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505160000 definitions=main-2505240158
+References: <cover.1748002400.git.yu.c.chen@intel.com> <7ef90a88602ed536be46eba7152ed0d33bad5790.1748002400.git.yu.c.chen@intel.com>
+ <cx4s4pnw5ymr4bxxmvrkhc457krq46eh6zamlr4ikp7tn3jsno@xzchjlnnawe5> <ad9f8af5-6bac-48c0-924b-498863370079@intel.com>
+In-Reply-To: <ad9f8af5-6bac-48c0-924b-498863370079@intel.com>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Shakeel Butt <shakeel.butt@linux.dev>
+Date: Sat, 24 May 2025 10:32:23 -0700
+X-Gmail-Original-Message-ID: <CAGj-7pX9yFFEFuMPgXBL_gsWevX8MtUZix5qyUQxOqWGKcbFzA@mail.gmail.com>
+X-Gm-Features: AX0GCFtAGKYvnyUctUx8VirEg3z97hG3ViBkmzEXKrnSY_iFkoXIYVHb96S8e1c
+Message-ID: <CAGj-7pX9yFFEFuMPgXBL_gsWevX8MtUZix5qyUQxOqWGKcbFzA@mail.gmail.com>
+Subject: Re: [PATCH v5 2/2] sched/numa: add statistics of numa balance task
+To: "Chen, Yu C" <yu.c.chen@intel.com>
+Cc: peterz@infradead.org, akpm@linux-foundation.org, mkoutny@suse.com, 
+	mingo@redhat.com, tj@kernel.org, hannes@cmpxchg.org, corbet@lwn.net, 
+	mgorman@suse.de, mhocko@kernel.org, muchun.song@linux.dev, 
+	roman.gushchin@linux.dev, tim.c.chen@intel.com, aubrey.li@intel.com, 
+	libo.chen@oracle.com, kprateek.nayak@amd.com, vineethr@linux.ibm.com, 
+	venkat88@linux.ibm.com, ayushjai@amd.com, cgroups@vger.kernel.org, 
+	linux-doc@vger.kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
+	yu.chen.surf@foxmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Migadu-Flow: FLOW_OUT
 
-On Sat, May 24, 2025 at 09:25:37PM +0530, Viswanath Kraleti wrote:
-> From: Ryan Eatmon <reatmon@ti.com>
-> 
-> The files generated by gen_header.py capture the source path to the
-> input files and the date.  While that can be informative, it varies
-> based on where and when the kernel was built as the full path is
-> captured.
-> 
-> Since all of the files that this tool is run on is under the drivers
-> directory, this modifies the application to strip all of the path before
-> drivers.  Additionally it prints <stripped> instead of the date.
-> 
-> Signed-off-by: Ryan Eatmon <reatmon@ti.com>
-> Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
-> Signed-off-by: Viswanath Kraleti <viswanath.kraleti@oss.qualcomm.com>
-> ---
-> The files generated by gen_header.py include the source path to the
-> input files and the build date. While this information can be useful,
-> it inadvertently exposes build system configuration details in the
-> binaries. This hinders binary reproducibility, as the output will
-> vary if the build environment changes.
-> 
-> This change was originally submitted to the linux-yocto-dev kernel [1]
-> to address binary reproducibility QA errors. However, the fix is generic 
-> enough to be applicable to the mainline kernel and would benefit other 
-> distributions as well. So proposing it here for broader inclusion.
-> 
-> [1] https://git.yoctoproject.org/linux-yocto-dev/commit/?id=f36faf0f9f8d8f5b4c43a68e5c6bd83a62253140
-> ---
-> Changes in v2:
-> - Corrected author id
-> - Link to v1: https://lore.kernel.org/r/20250523-binrep-v1-1-c3a446518847@oss.qualcomm.com
-> ---
->  drivers/gpu/drm/msm/registers/gen_header.py | 8 +++++---
->  1 file changed, 5 insertions(+), 3 deletions(-)
-> 
+On Sat, May 24, 2025 at 2:07=E2=80=AFAM Chen, Yu C <yu.c.chen@intel.com> wr=
+ote:
+>
+> Hi Shakeel,
+>
+> On 5/24/2025 7:42 AM, Shakeel Butt wrote:
+> > On Fri, May 23, 2025 at 08:51:15PM +0800, Chen Yu wrote:
+> >> On systems with NUMA balancing enabled, it has been found
+> >> that tracking task activities resulting from NUMA balancing
+> >> is beneficial. NUMA balancing employs two mechanisms for task
+> >> migration: one is to migrate a task to an idle CPU within its
+> >> preferred node, and the other is to swap tasks located on
+> >> different nodes when they are on each other's preferred nodes.
+> >>
+> >> The kernel already provides NUMA page migration statistics in
+> >> /sys/fs/cgroup/mytest/memory.stat and /proc/{PID}/sched. However,
+> >> it lacks statistics regarding task migration and swapping.
+> >> Therefore, relevant counts for task migration and swapping should
+> >> be added.
+> >>
+> >> The following two new fields:
+> >>
+> >> numa_task_migrated
+> >> numa_task_swapped
+> >>
+> >> will be shown in /sys/fs/cgroup/{GROUP}/memory.stat, /proc/{PID}/sched
+> >> and /proc/vmstat
+> >
+> > Hmm these are scheduler events, how are these relevant to memory cgroup
+> > or vmstat?
+> > Any reason to not expose these in cpu.stat?
+> >
+>
+> I understand that in theory they are scheduling activities.
+> The reason for including these statistics here was mainly that
+> I assumed there is a close relationship between page migration
+> and task migration in Numa Balance. Specifically, task migration
+> is triggered when page migration fails.
+> Placing these statistics closer to the existing Numa Balance page
+> statistics in /sys/fs/cgroup/{GROUP}/memory.stat and /proc/vmstat
+> may help users query relevant data from a single file, avoiding
+> the need to search through scattered files.
+> Notably, these events are associated with a task=E2=80=99s working set
+> (footprint) rather than pure CPU cycles IMO. I took a look at
+> the cpu_cfs_stat_show() for cpu.stat, it seems that a lot of
+> code is needed if we want to expose them in cpu.stat, while
+> reusing existing interface of count_memcg_event_mm() is simpler.
 
-Acked-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Let me address two of your points first:
 
-Rob, WDYT?
+(1) cpu.stat currently contains cpu cycles stats. I don't see an issue
+adding these new events in it as you can see memory.stat exposes stats
+and events as well.
 
--- 
-With best wishes
-Dmitry
+(2) You can still use count_memcg_event_mm() and related infra while
+exposing the stats/events in cpu.stat.
+
+Now your point on having related stats within a single interface is
+more convincing. Let me ask you couple of simple questions:
+
+I am not well versed with numa migration, can you expand a bit more on
+these two events (numa_task_migrated & numa_task_swapped)? How are
+these related to numa memory migration? You mentioned these events
+happen on page migration failure, can you please give an end-to-end
+flow/story of all these events happening on a timeline.
+
+Beside that, do you think there might be some other scheduling events
+(maybe unrelated to numa balancing) which might be suitable for
+memory.stat? Basically I am trying to find if having sched events in
+memory.stat be an exception for numa balancing or more general.
+
+thanks,
+Shakeel
