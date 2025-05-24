@@ -1,76 +1,80 @@
-Received: from fout-b6-smtp.messagingengine.com (fout-b6-smtp.messagingengine.com [202.12.124.149])
+Received: from fhigh-b5-smtp.messagingengine.com (fhigh-b5-smtp.messagingengine.com [202.12.124.156])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80DEE158DD4;
-	Sat, 24 May 2025 10:04:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.149
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5598919D898;
+	Sat, 24 May 2025 10:04:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.156
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748081098; cv=none; b=qBzoN1gSBeU/JWCv7WK5FRSRj6q5kH3pE836nvvtS1omqkTvJb9fuVC1lM/0d7zSUHxTXsrnETje2wSrrH3lG15uYEQEJ+GfHZxIzcLC4iX9k1TYtDoyO6JS7TzVr7haMzdrkMbP6bi4godQfjBrNxBH+K10tckKz5H2CnZiwok=
+	t=1748081100; cv=none; b=kwJo1eekxvjvoXe62CNCtk17POrnfYilJrsLnEd+uvA/uo1mh4QDk98vSLMG8de+3xEIJBctn6N1ER0AtTPgIGXyh4feLeflPS6sb10/bjNG4uJMltAvogw81NdMxZNllJJO38DiV7IXXD4jOxTehGsYvzT84qYKYtaWIVTiifQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748081098; c=relaxed/simple;
-	bh=fxMnjZiNwhDbwnOGD8pLjX1z1xVnNDl1UnyCm9rdHOY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=SXvDGaqrWb7lzmgXvgxUZ93HS0CNyZfe3RXIyb4Sw/a801QYAcuNbgPyYm+11P24xfkBRXSQQi87k1mpuHN6m2lbBqpU/A7cz+feHkxViBrIPdrGHj8oBFlNQZD3M2EraBrREEQ8uHLetl//247a4IxjCxTVqvUJrRVRwDnSrME=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev; spf=none smtp.mailfrom=ljones.dev; dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b=KXboK10M; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=em3n7pT1; arc=none smtp.client-ip=202.12.124.149
+	s=arc-20240116; t=1748081100; c=relaxed/simple;
+	bh=0VIRaW4aXHfL+7TpYVCF8wVnGPe4IKYHZAkQ9dCSnfc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Cc4y/CiVs3BWOGx7eMoMPJ1zvof5wu2t8qkIsx2ZN7JCE32YquBdeAFLIbCIer2rIXhBYTohhpQAOnK2c5KeB4zF6k0N9Sp7WbTkO4kbIu25j2ShUi9R7+4a1aZMg8GPL7D2gv4R8YhdYKZXKzk4rWspxDv0AkFcEKCx7lteaI0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev; spf=none smtp.mailfrom=ljones.dev; dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b=xsCSx8s6; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=tc3AmAo1; arc=none smtp.client-ip=202.12.124.156
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ljones.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b="KXboK10M";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="em3n7pT1"
-Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
-	by mailfout.stl.internal (Postfix) with ESMTP id 647101140117;
-	Sat, 24 May 2025 06:04:54 -0400 (EDT)
+	dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b="xsCSx8s6";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="tc3AmAo1"
+Received: from phl-compute-11.internal (phl-compute-11.phl.internal [10.202.2.51])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id 2C91A25400BB;
+	Sat, 24 May 2025 06:04:57 -0400 (EDT)
 Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-05.internal (MEProxy); Sat, 24 May 2025 06:04:54 -0400
+  by phl-compute-11.internal (MEProxy); Sat, 24 May 2025 06:04:57 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
 	:cc:content-transfer-encoding:content-type:date:date:from:from
-	:in-reply-to:message-id:mime-version:reply-to:subject:subject:to
-	:to; s=fm2; t=1748081094; x=1748167494; bh=OUnV5SMtE8saeflhpyRbB
-	3o2H/2nDtLfE+Juhhf1BM8=; b=KXboK10MeZtrNEwt197MsNZeVM1YY1zn8jOuN
-	C51z521N6Qg8M9YKJf2TE6efzdugzghI0P8U2rpKPfoN4zmT1PNyYi4saPLp+MM9
-	rTxpzQu3B+pT5f0Pnzca3zL/50Dbj5mmLYDm5pU59J9y7EQxFS4+C66pkC1k+5Ym
-	rw2jU3h7cgrowOOw3Zk9Dmlu+cUzoSP6AOeczwcgNtPqjDid7rfZToZUZOpBvY+7
-	5k5xEi5Hstj3U0WMAHVzuDf4LCs0UZdFaQf4AnJrPsjwqPB09JLYXW/1lB7vX0BX
-	nMeICi098woQAa1POOxEpf3Wrv79ejEsoatAQVhk2h0Ilr3/Q==
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to; s=fm2; t=1748081097; x=
+	1748167497; bh=B4D9Ku5Wd2m+zjF0yZmx5RNXRlw0J8FKlwUDXcrkhHo=; b=x
+	sCSx8s6Foux6ivWtc5MaouDgo/VG4YMVzZMEoKTGbk2swHlQeJFTNHRrXcAVD/S/
+	1an3gvNxRuTOrWRSzYYyI0UD6/RVesaLjxUXaYXY6cu0+ApM1hWVWVIWDMh3xYsM
+	2kSvK9cWbCAnzNz5dndoCwcrKCEBPjB+9CdUCPvsop4RFNQrph6aGXL8BzAhuJZA
+	bTfdmey7a9v7q4/2FH+glC1do3IJsexWYIe57TMIK1d+j8HOGAsKyC8H1LQhGa/i
+	1uez6BkDOFLYeOdYvkPZudDej1nmAyDShNpztxvS4I6Kb8k9Fn+ymaNm4PHjoKbA
+	i1bYTx1Dja2ChR+ZytLKA==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:cc:content-transfer-encoding
 	:content-type:date:date:feedback-id:feedback-id:from:from
-	:in-reply-to:message-id:mime-version:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
-	1748081094; x=1748167494; bh=OUnV5SMtE8saeflhpyRbB3o2H/2nDtLfE+J
-	uhhf1BM8=; b=em3n7pT1fqi1qpN9OUW8J2jLOenXzMsPYd6CSPCr4q4ke+YO3qw
-	l5qN2IGeklzlJci12ckFwYNLFG0jXCP2C/sOUJm0XOb/mKc3qgmRfqzu4XeImeqC
-	z66zu3HsUQ9rRblb5POpuDGsoIceZQuQ4mQ0LIWo+1yPogWhZSz23RhWzpw+jX1L
-	BmyxU8exgZPuECZYn+S+aTntgGginbulwm2Jxf5jMDgrz3dRjF6PBA379MM7IJXR
-	k8MwZEIcV8lcQrB5iUDVnkthuMFm6CfV5SOea4e00fFOwW6VvMigX8sBCuSkC95Z
-	9LWZQJ3/lCHx7O8Gn7E2jgQ+z3KuAJVwqIw==
-X-ME-Sender: <xms:xZkxaBWBcK5ilqi3P7PsRqmklniewulNwAkFJOY_mGlvg5bIifRDDQ>
-    <xme:xZkxaBnwMdd_chJG9-uhPkAGyJFdiFB4pj2Gt3Sq2KwDpsQtD7CkSbj0E1x-FuX7c
-    SLDY6cEeAPmad9Py7U>
-X-ME-Received: <xmr:xZkxaNYIZnqM_o7rHD-0jqEH8JtnC3YAw49EmJb3urg_2GHZmpYigYbC1KqCR1Hvqa3jEIoKDbM>
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to:x-me-proxy:x-me-sender
+	:x-me-sender:x-sasl-enc; s=fm3; t=1748081097; x=1748167497; bh=B
+	4D9Ku5Wd2m+zjF0yZmx5RNXRlw0J8FKlwUDXcrkhHo=; b=tc3AmAo1O6+zU+SMn
+	sipJxP5xM7QkRVqAxeBrj8jl45dhExw9yj2ia5H3zrwJ05C9wTicyJzxvsH6dsUo
+	t8VHmxiHWWVpSAPFBABRjV+oX+IH4sAOB80FgWF0WjausjJ1glPCFgyqGkajx0/O
+	tO4WQLe8aOpC4M0XnPWrxfVqGOP/dqPqmE0sQawL59ZXcr3NLrWJaP7p5e5TW3e9
+	Q3bljqRCz4TUZwYDefSnPJrVhdc4zzp3eQU9Vo9XEI+qFPH827rxsdB+rPWQWWrZ
+	dninV4b/Sr/8HOzisT4B9jE0i5wcnsKx9T9whbTrcwYRpCU5egKi1OFJlKK90D37
+	hDifg==
+X-ME-Sender: <xms:yJkxaD4SDfVbZcgL-wTME9beLtfv4FnfCqzcjARXsotLIJne9fKCoQ>
+    <xme:yJkxaI6UEvJhdz2isEZRwoNwuI6nu6HIGdVAfvTHqRf7689252KRaeQjSARpSkuH7
+    HFxwCPsg2V2OL3RQ9Y>
+X-ME-Received: <xmr:yJkxaKcsqdHr5Pm_fKKmm3IjsEjGfnVm-EUyB5P4Vody4aXEwDYZBuYWnYMAqaWd69SbZLufhEM>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgdduudeggeculddtuddrgeefvddrtd
     dtmdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggft
     fghnshhusghstghrihgsvgdpuffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftd
-    dtnecunecujfgurhephffvvefufffkofgggfestdekredtredttdenucfhrhhomhepnfhu
-    khgvucflohhnvghsuceolhhukhgvsehljhhonhgvshdruggvvheqnecuggftrfgrthhtvg
-    hrnhepiefhfeeuueeigffgtdefgeetgedufeefkeektdevudefhedtgfehkeejveejtdff
-    necuffhomhgrihhnpehkvghrnhgvlhdrohhrghdptddurdhorhhgpdhgihhthhhusgdrtg
-    homhenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehl
-    uhhkvgeslhhjohhnvghsrdguvghvpdhnsggprhgtphhtthhopeejpdhmohguvgepshhmth
-    hpohhuthdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgv
-    lhdrohhrghdprhgtphhtthhopehhuggvghhovgguvgesrhgvughhrghtrdgtohhmpdhrtg
-    hpthhtohepihhlphhordhjrghrvhhinhgvnheslhhinhhugidrihhnthgvlhdrtghomhdp
-    rhgtphhtthhopehplhgrthhfohhrmhdqughrihhvvghrqdigkeeisehvghgvrhdrkhgvrh
-    hnvghlrdhorhhgpdhrtghpthhtohepmhgrrhhiohdrlhhimhhonhgtihgvlhhlohesrghm
-    ugdrtghomhdprhgtphhtthhopegrnhgurhhihidrshhhvghvtghhvghnkhhosehlihhnuh
-    igrdhinhhtvghlrdgtohhmpdhrtghpthhtoheplhhukhgvsehljhhonhgvshdruggvvh
-X-ME-Proxy: <xmx:xZkxaEVzjccCD7FcMsJ2SiVqnjGaz7Xl_pJ9zCMyqqVgdRjKQXFCMQ>
-    <xmx:xZkxaLnWqWIWhw0TntvfaEeVPhK2edMC83e94pOMX7PzZKuS-gFP1w>
-    <xmx:xZkxaBc_rXqjVyXAatGswQQK3rq6OE0tfog3A9mGlPt3mDemJAxtpA>
-    <xmx:xZkxaFEYRHBtD9MaY0CL28YHuY1AbgBzfPEJhsUTi1vAshuS9IH6Ag>
-    <xmx:xpkxaPFzGgcjFL5TwHEBauGv6PwDLsPM1on7BkNvFgf8iK_IE3o8mLfU>
+    dtnecunecujfgurhephffvvefufffkofgjfhgggfestdekredtredttdenucfhrhhomhep
+    nfhukhgvucflohhnvghsuceolhhukhgvsehljhhonhgvshdruggvvheqnecuggftrfgrth
+    htvghrnhepveelgfeugffhhfegtedvfeelieegueekiefhgeelueefueeujeelueduhfdv
+    kedvnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpe
+    dtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehluhhkvgeslhhjohhnvghsrdguvghvpdhn
+    sggprhgtphhtthhopeekpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehlihhnuh
+    igqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehhuggv
+    ghhovgguvgesrhgvughhrghtrdgtohhmpdhrtghpthhtohepihhlphhordhjrghrvhhinh
+    gvnheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopehplhgrthhfohhrmhdq
+    ughrihhvvghrqdigkeeisehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepmh
+    grrhhiohdrlhhimhhonhgtihgvlhhlohesrghmugdrtghomhdprhgtphhtthhopegrnhgu
+    rhhihidrshhhvghvtghhvghnkhhosehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpth
+    htoheplhhukhgvsehljhhonhgvshdruggvvhdprhgtphhtthhopehlkhhpsehinhhtvghl
+    rdgtohhm
+X-ME-Proxy: <xmx:yJkxaEJ5_YMr9TskLgDRBlab2dmORams8BNm-53FFu7lqpVDHX23LA>
+    <xmx:yJkxaHKx-S7gXo2b_21CBuoFz4V-ufXuCotW30IZVFPEbkecMAVNeQ>
+    <xmx:yJkxaNyVu0dsjDzkIqQMOcFSe_2cuVviC_qI0UcMtmlslLIkEOG5VA>
+    <xmx:yJkxaDII8HQEME5lYxbJQibILj8qZ7Bo4WnjGfrBtllz9Xa43mkuPA>
+    <xmx:yZkxaF_BBnXxWrUPcZuB5fwY0te_dX-Xb5Y3tWuh_TAN1N_idGiG8Xiz>
 Feedback-ID: i5ec1447f:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sat,
- 24 May 2025 06:04:52 -0400 (EDT)
+ 24 May 2025 06:04:54 -0400 (EDT)
 From: Luke Jones <luke@ljones.dev>
 To: linux-kernel@vger.kernel.org
 Cc: hdegoede@redhat.com,
@@ -78,11 +82,14 @@ Cc: hdegoede@redhat.com,
 	platform-driver-x86@vger.kernel.org,
 	mario.limonciello@amd.com,
 	andriy.shevchenko@linux.intel.com,
-	Luke Jones <luke@ljones.dev>
-Subject: [PATCH v2 0/1] platform/x86: asus-wmi: fix build without CONFIG_SUSPEND
-Date: Sat, 24 May 2025 12:04:43 +0200
-Message-ID: <20250524100444.34370-1-luke@ljones.dev>
+	Luke Jones <luke@ljones.dev>,
+	kernel test robot <lkp@intel.com>
+Subject: [PATCH v2 1/1] platform/x86: asus-wmi: fix build without CONFIG_SUSPEND
+Date: Sat, 24 May 2025 12:04:44 +0200
+Message-ID: <20250524100444.34370-2-luke@ljones.dev>
 X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250524100444.34370-1-luke@ljones.dev>
+References: <20250524100444.34370-1-luke@ljones.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -91,30 +98,92 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Fixes "platform/x86: asus-wmi: Refactor Ally suspend/resume".
+The patch "Refactor Ally suspend/resume" introduced an
+acpi_s2idle_dev_ops for use with ROG Ally which caused a build error
+if CONFIG_SUSPEND was not defined.
 
-Verified using the following details provided by test robot:
-
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git review-ilpo-next
-head:   83579675331059689e2869bf752ca9e17fadbd82
-commit: feea7bd6b02d43a794e3f065650d89cf8d8e8e59 [74/89] platform/x86: asus-wmi: Refactor Ally suspend/resume
-config: x86_64-buildonly-randconfig-004-20250509 (https://download.01.org/0day-ci/archive/20250509/202505090418.DaeaXe4i-lkp@intel.com/config)
-compiler: clang version 20.1.2 (https://github.com/llvm/llvm-project 58df0ef89dd64126512e4ee27b4ac3fd8ddf6247)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250509/202505090418.DaeaXe4i-lkp@intel.com/reproduce)
-
-I've not done anything fancy here and left asus_hotk_prepare() as is, as it is *incredibly* unlikely anyone would ever run a ROG Ally without suspend enabled.
-
-Changelog:
-- V1:
-  - Move functions and struct together to be under one ifdef block
-  - Use wrapper functions for s2idle registration
-
-Luke Jones (1):
-  platform/x86: asus-wmi: fix build without CONFIG_SUSPEND
-
+Signed-off-by: Luke Jones <luke@ljones.dev>
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202505090418.DaeaXe4i-lkp@intel.com/
+Fixes: feea7bd6b02d ("platform/x86: asus-wmi: Refactor Ally suspend/resume")
+---
  drivers/platform/x86/asus-wmi.c | 30 +++++++++++++++++++++++-------
  1 file changed, 23 insertions(+), 7 deletions(-)
 
+diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+index 27f11643a00d..c77198761dc7 100644
+--- a/drivers/platform/x86/asus-wmi.c
++++ b/drivers/platform/x86/asus-wmi.c
+@@ -5005,23 +5005,24 @@ static int asus_hotk_restore(struct device *device)
+ 	return 0;
+ }
+ 
+-static void asus_ally_s2idle_restore(void)
++static int asus_hotk_prepare(struct device *device)
+ {
+ 	if (use_ally_mcu_hack == ASUS_WMI_ALLY_MCU_HACK_ENABLED) {
+ 		acpi_execute_simple_method(NULL, ASUS_USB0_PWR_EC0_CSEE,
+-					   ASUS_USB0_PWR_EC0_CSEE_ON);
++					   ASUS_USB0_PWR_EC0_CSEE_OFF);
+ 		msleep(ASUS_USB0_PWR_EC0_CSEE_WAIT);
+ 	}
++	return 0;
+ }
+ 
+-static int asus_hotk_prepare(struct device *device)
++#if defined(CONFIG_SUSPEND)
++static void asus_ally_s2idle_restore(void)
+ {
+ 	if (use_ally_mcu_hack == ASUS_WMI_ALLY_MCU_HACK_ENABLED) {
+ 		acpi_execute_simple_method(NULL, ASUS_USB0_PWR_EC0_CSEE,
+-					   ASUS_USB0_PWR_EC0_CSEE_OFF);
++					   ASUS_USB0_PWR_EC0_CSEE_ON);
+ 		msleep(ASUS_USB0_PWR_EC0_CSEE_WAIT);
+ 	}
+-	return 0;
+ }
+ 
+ /* Use only for Ally devices due to the wake_on_ac */
+@@ -5029,6 +5030,20 @@ static struct acpi_s2idle_dev_ops asus_ally_s2idle_dev_ops = {
+ 	.restore = asus_ally_s2idle_restore,
+ };
+ 
++static void asus_s2idle_check_register(void)
++{
++	acpi_register_lps0_dev(&asus_ally_s2idle_dev_ops);
++}
++
++static void asus_s2idle_check_unregister(void)
++{
++	acpi_unregister_lps0_dev(&asus_ally_s2idle_dev_ops);
++}
++#else
++static void asus_s2idle_check_register(void) {}
++static void asus_s2idle_check_unregister(void) {}
++#endif /* CONFIG_SUSPEND */
++
+ static const struct dev_pm_ops asus_pm_ops = {
+ 	.thaw = asus_hotk_thaw,
+ 	.restore = asus_hotk_restore,
+@@ -5060,7 +5075,7 @@ static int asus_wmi_probe(struct platform_device *pdev)
+ 			return ret;
+ 	}
+ 
+-	ret = acpi_register_lps0_dev(&asus_ally_s2idle_dev_ops);
++	ret = asus_s2idle_check_register(&asus_ally_s2idle_dev_ops);
+ 	if (ret)
+ 		pr_warn("failed to register LPS0 sleep handler in asus-wmi\n");
+ 
+@@ -5096,7 +5111,8 @@ EXPORT_SYMBOL_GPL(asus_wmi_register_driver);
+ 
+ void asus_wmi_unregister_driver(struct asus_wmi_driver *driver)
+ {
+-	acpi_unregister_lps0_dev(&asus_ally_s2idle_dev_ops);
++	asus_s2idle_check_unregister(&asus_ally_s2idle_dev_ops);
++
+ 	platform_device_unregister(driver->platform_device);
+ 	platform_driver_unregister(&driver->platform_driver);
+ 	used = false;
 -- 
 2.49.0
 
