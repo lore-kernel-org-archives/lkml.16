@@ -1,141 +1,190 @@
-Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EA521EF380
-	for <linux-kernel@vger.kernel.org>; Sat, 24 May 2025 15:55:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 925971EE7B6
+	for <linux-kernel@vger.kernel.org>; Sat, 24 May 2025 15:55:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748102149; cv=none; b=bUtTOoMHtu97Nlny0ipKPMg7JKJcTbb63bZguZXQe8NKe7H1jId4CqEREeQvDndxm+KsVAMGe9zUgkRXYoeDHJVBDJpTua1F2Lrw5MMBer4c9Q4kVk6jqplfRMteksVHa0cT8CVgM5MGs5WeiDTMgBXHSopfQhFk6aojmWt/Z5c=
+	t=1748102151; cv=none; b=NWt9MAWQWLgmsigN+GjepSeg5cfpITTgFMTBkhhjeYKtlvPaHmEi0gZ+3mCViEoflnKMJuQmpu89N7oqu7XjiTayzy/uR46Q1Kk+sWeuJQ3APSBsYotgZm2L6SoitCa+9fh/i3ltJWXcbl/NvoRN6h0C7Dl+BhsdMqbuTJyLkGw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748102149; c=relaxed/simple;
-	bh=QfSnw3oP/4WKgI480zkw9SSi/asBUx+GlH7LBbjlZ/0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=G9aB7favtTmsKeLhr6rN807KTXpWA2awQZe2ot9Yyc9S9bpDPJR9VxoXyviIMbDobVdI4bZocY1j9IGYdbZ2MUr+1A0cLbz9lAYAlr66Mjq+Az8F/0vtIBjs7CouqDpYoBfF/49FfmTtZlp8f3juKbW8OfGQDtydc9lZV0k+K0Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=l5+iqf9O; arc=none smtp.client-ip=209.85.215.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748102151; c=relaxed/simple;
+	bh=ljssUhbJ/Dlo/98coDHxsN/uR+m1VrO4HU0Yd+OJvuc=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=XIgvSQQSZpnYZ2Iq2ozcR4DjwJFOlqP1BFnvuNvNI3E0lJITcO2M6dW+p1xUifuIkRClGxHIenXCYftUujwPAVb7fJFXItr86MkD0n9X0l0pVqutC02SVBkjsz0Ibt+uasVSXF4qdxpCO/h5U8pRPMd9T1nbV4gnkGYiDCfYy/E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=LhcYwmwU; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l5+iqf9O"
-Received: by mail-pg1-f181.google.com with SMTP id 41be03b00d2f7-b1ff9b276c2so409896a12.1
-        for <linux-kernel@vger.kernel.org>; Sat, 24 May 2025 08:55:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748102147; x=1748706947; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7XEj2bDzjI5RZaf4AQVAydyOkb+dFtV7mE+ztvzkolw=;
-        b=l5+iqf9Oe4Cy9Eq/MmPfTsXtqN8AIDPPJ9BDgYGc5gFeg8Gv4+30pvGVi1bSwTN72n
-         yzgbj8+65nIXwI0koy8H8BhC2zhXVLXGfaoxr/y9Qkexd4FgmLb43U2F4JZ3vY56hH37
-         o3L0ca+IcjknXXD4XFh3+u0mVUbUTF5nS3of3BrvsOITHS4BJUdUPibf8CyZFT65YgnF
-         CMd3K90ZD1Q2SSp3aBSeHZgExPpya31FoWAgzq2X4XHpw3Fq67spnV//yx2ISx8uKoaT
-         cNeCZjkVw9hUyWIQBy5hqzNMPUkqIzo+I6tOt0B9TMRODRVX+mK3QQsRmJ3RYvUTWiNi
-         2syw==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="LhcYwmwU"
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54OCfmYf016506
+	for <linux-kernel@vger.kernel.org>; Sat, 24 May 2025 15:55:48 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=ENaXaAptX7hV0LnSeomxQb
+	fTAaRBDEz7YM383T9ESwA=; b=LhcYwmwULS5KfUeqGBzXGcoruxONco/eBptlY/
+	nM1vtfzRk5rUckwf11bl6c8rdzYN8frmxC8Az0cbDkZRSZK3FcSEJIrFqIrIyiEB
+	MKTJw3/ehE7aHXwNeS/cIzqi0PW3nTF50HalXOvQC83Pf75UWiKOYzfigigLv38I
+	weXKpwY8VkZgKz7K1OkE3kCAEWLBZN9O+mwSn19m14dhC92kGZN87opWCDpK2kWU
+	lwtVj/mQITdmtbukbCtD87LgnriAef/AaZC44X5p5oW/+k+jmyLuXXTOzz52FGA3
+	oPWHvbEtDf1YFGd5WTyFsjfjfzfhioH7+2ljeC37eOuffw5A==
+Received: from mail-pl1-f198.google.com (mail-pl1-f198.google.com [209.85.214.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46u6vjgt3f-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Sat, 24 May 2025 15:55:48 +0000 (GMT)
+Received: by mail-pl1-f198.google.com with SMTP id d9443c01a7336-22e7e097ef7so5076025ad.2
+        for <linux-kernel@vger.kernel.org>; Sat, 24 May 2025 08:55:48 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1748102147; x=1748706947;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=7XEj2bDzjI5RZaf4AQVAydyOkb+dFtV7mE+ztvzkolw=;
-        b=EOqdNllq5hASzq6S5k5PIjTr2sQxfJyxkvb1UKyOON+CFTWuPISxBj04NW5+T2EZSm
-         L9bBrT/nzLfDt21kFEoSPQES4xNMURkUKwampXVafvMQo0A39v9Yncnb8/v7HQpYATJe
-         r6ZTR2HBUnnORUkq3ux0u6NaO8mRwr+aH1H4D/eTXPQ8pOlcgvsj+dPLf6bC/1stLjsd
-         CtVuKhLr7se+LkyV41WVX8OQY7NOZFJNYOffwe/zY6fvtrbNu2XMWcqpM6kk5d3/B4U+
-         J1tEvYF6p5DtQB+mG73Pa5iWTjUNQWrtlwz4tx4OvtWnkUG7H1Rf3RYY9GrV9KlQ2Ks4
-         vSFQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUEhLeWku7l/iXp3/NSrI/eAxSw3HEHh1Hi2OF7MZwbc7rvpyrblUbp8oQ9z3QmHudIMbgqTF82hEB8DkE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz4NQQKXLNp131Tku2t3UAxfxoXrrQ5CPyztCe1bZGYbZJPQ09+
-	UTzam/nn3a+Nshz9LmBIPpKMBTYd3btr0knTE1DEkIxYuddBqwY/hKZh
-X-Gm-Gg: ASbGncsQdR0fmUBH3UAP6rK9wNMEhcvmUD+3EJ8cNlo3rkx5LnU69C2H8w864+T0gfT
-	pjH3ZLVaQfrJcnC1WGIA/RDn7aC99TiEDyt0ziHCOv6nfx5HQOvR2c3o9mzCLHFPpgHRMccj+jU
-	nBcTB80ino4kdOk9zDBXoTszUzeqAX0bTXDC3biMuIClxZndsn/SdedxOne+bYb5q6N1CAW+BGG
-	9sw1j6bywUY18RZxEAoU64GTG2prJ7c98oAp/6zEC2BfNPa2U/pVwrTuCRqI8yuahvB455aMkE5
-	V76LuQq9095z4l+ELTrbnsraUBjm7r4Aefn4Bya4Sei17iLCtWV6rLR4VO5Qpea+cEyfu4XST0f
-	f4iVS663FWVcTvUbk
-X-Google-Smtp-Source: AGHT+IFJr9YZ2XIjARlbWHrAZjs3d7ZcQweRgWi1fq4Jo17NP2mGsaaRzDetVmjg1S6Cr0UjlcknLA==
-X-Received: by 2002:a17:902:e80e:b0:22e:50e1:73e with SMTP id d9443c01a7336-23414f49fc9mr43253575ad.14.1748102147183;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ENaXaAptX7hV0LnSeomxQbfTAaRBDEz7YM383T9ESwA=;
+        b=NsVKOHhLMaX6zvCmdDUaEdzY36GsIceUB/Dwd6roAyyv8C8m1YcbmcWA3m9cHR6GaH
+         G2X5AXKo1fbwAbiAr61baBDK+B3DzqZAfLvShOMmYcSo2OudNj4IOF6Ie2rA6ccqKDvB
+         +xlfg0rL4DrV7h8Jg8sXWIda52vPoZLd3e5TO9tZ5bBUAJ/au95Pi8WIO4r54xZ4zpAd
+         bZqjGLISwTZ8/S9Mgnzwy5PDrMjeqKG6k3SWe9hp84J6yXM3p9vaU3/WgmvTQIOotJs0
+         iCwkOTdN1cJOhTElzFFFUW5r3JwjwsNBBovqGrb5l/uXO7nUZoWUgK1fNhC74C39u+ub
+         ptNw==
+X-Forwarded-Encrypted: i=1; AJvYcCUWHoce+M4IvO7gM0CHvco5JaqGfe7iZl1mxVqRnXTg62I3QZf7Ua9jkUNVskxOBVgFaYKW4vVl4re7pwA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwP55qG6g2OXwXbRGDhVP5tzFUDATPI9eiZrfse/nj7FEngekBH
+	Wl+TJ8SXVjR2LmQU0UgD1BA3MRCEDV1AdfItTibt5WRgnDptjeTaw3XCN4/9SyERLZTnBUQy3UY
+	0q7UokDJE7XfAeCEC+ATFh3cR4AC+zZHzD2LQqjoo0RaZNj+7iP/kIEZ48PuNMyx5/80=
+X-Gm-Gg: ASbGncts0KSis+awSrfXCxOoUpAJxWaenEtpV5NbsKp3xQl1m4J3HuwLz5kZREV5g7L
+	E9k9Zvm1xHJ4NY90FONgdBqW2L0P+6EdPxK4RScRImvLeMnfILCh+oLejKs5pcvfPDNXZYkZtHZ
+	ZEnmBo6RPEVqARUGtEVVw4aGpDR3yhtdC0vhXlTirwSRNBqDm0KzlPjAC8iR70xkies5cRh9DVW
+	6h09rJLN/dDLe+2fI4x0F08hjfZX1dVPoGKGjOkhA1KsNi0+lkEtF53WYWzu+yjbA5+gJ/h6XAp
+	yiN3fTIZ+eoMx3ZaypplmPu50xf89kV54om01gzHwGn8fCsA3gM=
+X-Received: by 2002:a17:902:e544:b0:22f:a4aa:b82b with SMTP id d9443c01a7336-23414f62af9mr58433795ad.21.1748102147396;
         Sat, 24 May 2025 08:55:47 -0700 (PDT)
-Received: from visitorckw-System-Product-Name.. ([140.113.216.168])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-234396eaf62sm1200745ad.9.2025.05.24.08.55.45
+X-Google-Smtp-Source: AGHT+IH6qiynLRSJOmSDekV7ueADk6ZcUv9RFrAPGuFI8AxKbhuiTjsCzxUbRLDcJyHbQbuDV90JCQ==
+X-Received: by 2002:a17:902:e544:b0:22f:a4aa:b82b with SMTP id d9443c01a7336-23414f62af9mr58433375ad.21.1748102146905;
+        Sat, 24 May 2025 08:55:46 -0700 (PDT)
+Received: from hu-vkraleti-hyd.qualcomm.com ([202.46.23.25])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2341ccad6fcsm12090755ad.170.2025.05.24.08.55.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Sat, 24 May 2025 08:55:46 -0700 (PDT)
-From: Kuan-Wei Chiu <visitorckw@gmail.com>
-To: paul.walmsley@sifive.com,
-	palmer@dabbelt.com,
-	aou@eecs.berkeley.edu,
-	alex@ghiti.fr,
-	akpm@linux-foundation.org
-Cc: linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	jserv@ccns.ncku.edu.tw,
-	Kuan-Wei Chiu <visitorckw@gmail.com>,
-	Yu-Chun Lin <eleanor15x@gmail.com>
-Subject: [PATCH v2 3/3] riscv: Optimize gcd() performance on RISC-V without Zbb extension
-Date: Sat, 24 May 2025 23:55:19 +0800
-Message-Id: <20250524155519.1142570-4-visitorckw@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250524155519.1142570-1-visitorckw@gmail.com>
-References: <20250524155519.1142570-1-visitorckw@gmail.com>
+From: Viswanath Kraleti <viswanath.kraleti@oss.qualcomm.com>
+Date: Sat, 24 May 2025 21:25:37 +0530
+Subject: [PATCH v2] drivers: gpu: drm: msm: registers: improve
+ reproducibility
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250524-binrep-v2-1-09040177218e@oss.qualcomm.com>
+X-B4-Tracking: v=1; b=H4sIAPjrMWgC/2WMywrCMBQFf6XctSl5anDlf0gXMQ97wTZtokEp+
+ Xdjt24OzGGYDbJP6DOcuw2SL5gxzg34oQM7mvnuCbrGwClXVHFBbjgnv5CgrWbBUCeYgyYvyQd
+ 876Hr0HjE/Izps3cL+71/icIII1YYKY+KaS1Pl5hzv77Mw8Zp6tvAUGv9ApwpD82jAAAA
+X-Change-ID: 20250523-binrep-f8c81fa0d31d
+To: Rob Clark <robdclark@gmail.com>, Abhinav Kumar <quic_abhinavk@quicinc.com>,
+        Dmitry Baryshkov <lumag@kernel.org>, Sean Paul <sean@poorly.run>,
+        Marijn Suijten <marijn.suijten@somainline.org>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
+Cc: Ryan Eatmon <reatmon@ti.com>, linux-arm-msm@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org,
+        Bruce Ashfield <bruce.ashfield@gmail.com>,
+        Viswanath Kraleti <viswanath.kraleti@oss.qualcomm.com>
+X-Mailer: b4 0.14.2
+X-Authority-Analysis: v=2.4 cv=UOXdHDfy c=1 sm=1 tr=0 ts=6831ec04 cx=c_pps
+ a=MTSHoo12Qbhz2p7MsH1ifg==:117 a=ZePRamnt/+rB5gQjfz0u9A==:17
+ a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=iGHA9ds3AAAA:8 a=VwQbUJbxAAAA:8
+ a=EUspDBNiAAAA:8 a=sozttTNsAAAA:8 a=pGLkceISAAAA:8 a=k2a8_r_j4jiI5Xvw-VoA:9
+ a=QEXdDO2ut3YA:10 a=GvdueXVYPmCkWapjIL-Q:22 a=nM-MV4yxpKKO9kiQg6Ot:22
+X-Proofpoint-ORIG-GUID: wNzRh6CJsjuQVcLPsKdA7VPWI_gWodFq
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTI0MDE0NSBTYWx0ZWRfX8by2gXZc4g/A
+ RWFL5MozqRvpy44mnkkALUu7ROy4DzWLJhzL4kqx/u3q9OpQys1MVfIJl6MWlJiwdj6soZjjY+V
+ 46imxPrRDrCOL4rcI3ZdrbzFfjz6DYZe3sgnMOrS9Lb1adiLRar4Unx7oN9GXg1gOnp61N0ANSr
+ 0Kh9pfLPsYtCTOfKSkUEeUqx/xToJE0cfkUmZPB4SF7YP1B6o/lsTRaMFyJhorLXssNWG9Ob5hH
+ KJnJa+VufmWGAXPd+1dkSLpz4tTzxj0EiuQqXK7kVvLGvR2MBIXYsQOV4F5GrTKOGXSolBZ8y1a
+ 4CynbZr0w0P3RVZA+1Kv9mzmW02T5RNaP69NWCB0TKFcZkFkjASkoBAH7c+bWNNf39jvUh4J/jo
+ Ju/2wQUft+Djsy3E8xbMHFmog4/1XRMkT3SNdPpdHuIrEKphS+3E74qgsRLDIsyxvUrm3it7
+X-Proofpoint-GUID: wNzRh6CJsjuQVcLPsKdA7VPWI_gWodFq
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-24_06,2025-05-22_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ clxscore=1015 phishscore=0 mlxscore=0 adultscore=0 priorityscore=1501
+ mlxlogscore=856 bulkscore=0 malwarescore=0 impostorscore=0 spamscore=0
+ suspectscore=0 lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505160000 definitions=main-2505240145
 
-The binary GCD implementation uses FFS (find first set), which benefits
-from hardware support for the ctz instruction, provided by the Zbb
-extension on RISC-V. Without Zbb, this results in slower
-software-emulated behavior.
+From: Ryan Eatmon <reatmon@ti.com>
 
-Previously, RISC-V always used the binary GCD, regardless of actual
-hardware support. This patch improves runtime efficiency by disabling
-the efficient_ffs_key static branch when Zbb is either not enabled in
-the kernel (config) or not supported on the executing CPU. This selects
-the odd-even GCD implementation, which is faster in the absence of
-efficient FFS.
+The files generated by gen_header.py capture the source path to the
+input files and the date.  While that can be informative, it varies
+based on where and when the kernel was built as the full path is
+captured.
 
-This change ensures the most suitable GCD algorithm is chosen
-dynamically based on actual hardware capabilities.
+Since all of the files that this tool is run on is under the drivers
+directory, this modifies the application to strip all of the path before
+drivers.  Additionally it prints <stripped> instead of the date.
 
-Co-developed-by: Yu-Chun Lin <eleanor15x@gmail.com>
-Signed-off-by: Yu-Chun Lin <eleanor15x@gmail.com>
-Signed-off-by: Kuan-Wei Chiu <visitorckw@gmail.com>
+Signed-off-by: Ryan Eatmon <reatmon@ti.com>
+Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
+Signed-off-by: Viswanath Kraleti <viswanath.kraleti@oss.qualcomm.com>
 ---
- arch/riscv/kernel/setup.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+The files generated by gen_header.py include the source path to the
+input files and the build date. While this information can be useful,
+it inadvertently exposes build system configuration details in the
+binaries. This hinders binary reproducibility, as the output will
+vary if the build environment changes.
 
-diff --git a/arch/riscv/kernel/setup.c b/arch/riscv/kernel/setup.c
-index f7c9a1caa83e..f891eedc3644 100644
---- a/arch/riscv/kernel/setup.c
-+++ b/arch/riscv/kernel/setup.c
-@@ -21,6 +21,7 @@
- #include <linux/efi.h>
- #include <linux/crash_dump.h>
- #include <linux/panic_notifier.h>
-+#include <linux/jump_label.h>
+This change was originally submitted to the linux-yocto-dev kernel [1]
+to address binary reproducibility QA errors. However, the fix is generic 
+enough to be applicable to the mainline kernel and would benefit other 
+distributions as well. So proposing it here for broader inclusion.
+
+[1] https://git.yoctoproject.org/linux-yocto-dev/commit/?id=f36faf0f9f8d8f5b4c43a68e5c6bd83a62253140
+---
+Changes in v2:
+- Corrected author id
+- Link to v1: https://lore.kernel.org/r/20250523-binrep-v1-1-c3a446518847@oss.qualcomm.com
+---
+ drivers/gpu/drm/msm/registers/gen_header.py | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/gpu/drm/msm/registers/gen_header.py b/drivers/gpu/drm/msm/registers/gen_header.py
+index 3926485bb197b0992232447cb71bf1c1ebd0968c..a409404627c7180d5b0626f0ce6255d7d0df5113 100644
+--- a/drivers/gpu/drm/msm/registers/gen_header.py
++++ b/drivers/gpu/drm/msm/registers/gen_header.py
+@@ -11,6 +11,7 @@ import collections
+ import argparse
+ import time
+ import datetime
++import re
  
- #include <asm/acpi.h>
- #include <asm/alternative.h>
-@@ -51,6 +52,8 @@ atomic_t hart_lottery __section(".sdata")
- ;
- unsigned long boot_cpu_hartid;
- 
-+DECLARE_STATIC_KEY_TRUE(efficient_ffs_key);
-+
- /*
-  * Place kernel memory regions on the resource tree so that
-  * kexec-tools can retrieve them from /proc/iomem. While there
-@@ -361,6 +364,9 @@ void __init setup_arch(char **cmdline_p)
- 
- 	riscv_user_isa_enable();
- 	riscv_spinlock_init();
-+
-+	if (!IS_ENABLED(CONFIG_RISCV_ISA_ZBB) || !riscv_isa_extension_available(NULL, ZBB))
-+		static_branch_disable(&efficient_ffs_key);
- }
- 
- bool arch_cpu_is_hotpluggable(int cpu)
+ class Error(Exception):
+ 	def __init__(self, message):
+@@ -877,13 +878,14 @@ The rules-ng-ng source files this header was generated from are:
+ """)
+ 	maxlen = 0
+ 	for filepath in p.xml_files:
+-		maxlen = max(maxlen, len(filepath))
++		new_filepath = re.sub("^.+drivers","drivers",filepath)
++		maxlen = max(maxlen, len(new_filepath))
+ 	for filepath in p.xml_files:
+-		pad = " " * (maxlen - len(filepath))
++		pad = " " * (maxlen - len(new_filepath))
+ 		filesize = str(os.path.getsize(filepath))
+ 		filesize = " " * (7 - len(filesize)) + filesize
+ 		filetime = time.ctime(os.path.getmtime(filepath))
+-		print("- " + filepath + pad + " (" + filesize + " bytes, from " + filetime + ")")
++		print("- " + new_filepath + pad + " (" + filesize + " bytes, from <stripped>)")
+ 	if p.copyright_year:
+ 		current_year = str(datetime.date.today().year)
+ 		print()
+
+---
+base-commit: fc5c669c902c3039aa41731b6c58c0960d0b1bbf
+change-id: 20250523-binrep-f8c81fa0d31d
+
+Best regards,
 -- 
-2.34.1
+Viswanath Kraleti <viswanath.kraleti@oss.qualcomm.com>
 
