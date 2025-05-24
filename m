@@ -1,113 +1,74 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B138217F24;
-	Sat, 24 May 2025 19:34:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09C162DCC1A
+	for <linux-kernel@vger.kernel.org>; Sat, 24 May 2025 20:01:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748115298; cv=none; b=aalLt9GP5A5CW7gO5tdeRLPORfabt7XIchuSPjhzJQSjOF+C6mB1wZvKttBOSIjYFYckR0ByYfBCqUHSLz3/rnnIVYzpdlap0U4TfDnHDjjSTReMcnXwb1a5/AY1RLhNDSZYPj7tWXKJtfxZ26QRJ7tJk9XHsWFkXB+8bV7pYuE=
+	t=1748116864; cv=none; b=nSYlQ0XNrMBB1w6xUl0AdT1sdv4FNnPUu8L+st3c4pJz93D7yZrDoyCe10rytKfmdu1H1Y/af0OjHGVI/Rm8LDSIJoyk65zvMQvWkBY2NX96Jga4i2/zUfON2Kqd5ZYjdwSx79LdqvqMwTRTwV7otPGsKpK2cg4NC7TuLscUgtk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748115298; c=relaxed/simple;
-	bh=RcQpM8Qhq03nv1Nk9bPW2HtWKX67vf6WAJ14x+qCfDQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nYNELOjWbcDSPAjMF7zAM9V3M225rqRKC2s7vNBUIm65Kt7/+40+xdleK0ij/qbPCidSb7JoBDmFi2gN0jUYeLOPY4QFxg6v3bSWk6+/L4gQ245ocG3rSsqUrle9HVIJgkVioRQ65FpDLKVgWSe0EXsh49Iyi7vsKZAmhDQcnTY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=HAt5yaoD; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="HAt5yaoD"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:
-	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=FDzdnEi5TtcfKfjBkwBIU4/mQNamhC7e6P0CVNdVIJw=; b=HAt5yaoD8r1RszUzBbuF8pC43r
-	6oAm8q6za/9fBu8kLaJV/wfUo1mDL9YbJN24T8ehAhOcgv1KvAaRQq9qcls3V1pNhtZ72ypqO4huO
-	T+JQFwB3s23BdF/KqtFLnIcdJhDEQaW72xPKwVhW9bzjbdBXXhj6+O9gLx3mhZhQssUdBJlPvvZS/
-	xK+2bfiQ7CXjruJHi0FeyQqKd9ki4wveUOyeKQxlMug29Mdri9yyYxhwAgn+ri1g5FNf9H9oZeSt4
-	2awXIc4zwtCH2Mt8RLAF6Sd+a134GkvAA/diZAqtSuBDgq65VDnu1BgJ3SjjO/IWyg3/LWvWJgIgE
-	QekY3i3g==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:59090)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1uIudU-0005Al-17;
-	Sat, 24 May 2025 20:34:25 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1uIudJ-00075J-2Z;
-	Sat, 24 May 2025 20:34:13 +0100
-Date: Sat, 24 May 2025 20:34:13 +0100
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: lizhe <sensor1010@163.com>, andrew+netdev@lunn.ch, davem@davemloft.net,
-	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
-	mcoquelin.stm32@gmail.com, alexandre.torgue@foss.st.com,
-	jonas@kwiboo.se, david.wu@rock-chips.com, wens@csie.org,
-	u.kleine-koenig@baylibre.com, an.petrous@oss.nxp.com,
-	netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: Re: [PATCH] net: dwmac-rk: MAC clock should be truned off
-Message-ID: <aDIfNZtSwZ1HwW2l@shell.armlinux.org.uk>
-References: <20250523151521.3503-1-sensor1010@163.com>
- <d5325aba-507e-47b6-83fb-b9156c1f351e@lunn.ch>
- <2525c791.3415.197029d3705.Coremail.sensor1010@163.com>
- <112fa3c4-908d-4e31-9288-b3a2949555b0@lunn.ch>
+	s=arc-20240116; t=1748116864; c=relaxed/simple;
+	bh=WpkEbdefTf88Zfflfd1A4zmISqE2tdGJEjFwMzXcUUk=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=CR+2W8wkCd0HXx7xbOcEB7gsocj6B16TRf7Xiv45Vm7I5FaAaaLh+5wp8y9PgxlMOvMKms9AM2YjTZDg0V88Oebdpxq6U3i0SO3C7FBIKROipjCXuFjG/OPU14TXP/dhqd0Ze9x8fTzzdkdPKi2Lseyv6LIfVWExp0UYztLmjjE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f72.google.com with SMTP id ca18e2360f4ac-85b5e46a526so81952739f.1
+        for <linux-kernel@vger.kernel.org>; Sat, 24 May 2025 13:01:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748116862; x=1748721662;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=aWHpknBTvhEqzClw1olgFVybxg3QOCdv9i4kYfUVySo=;
+        b=fFUznh1DFoXOIW+9LX91WaAvu90gJMXlGhDwkilAid0eakDLp1BzpzZ1tjhtNhD4h/
+         /uluao4rxgEJ7AkVxCR9XRQX+wWWw9Rr50YdQ0TFzM6XgFtqh552xMdYdqPap49CnPXa
+         VJSHO9zc6EpE50vhtVaD0mA5CkjMzrkxDXFysQT7tPu9Sj5JQblDPURrmeYXkRGvrZNx
+         1KtSyBRG566WMrlXfXBcWWF+gQZvdsjb7KwGwCmmzxpEldgz1M2Pbem1eWhR/m5yjPuY
+         //LZfUDdV5Jx/GEdrZezfepqsAxU27wVRjsfMxxKDzjpPoo9AzKCvbLyXeBoDj0Gc2r7
+         l4yQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXgkV7E1bQkKame6+FHYePlZSg5TBi/44+UBzknSGpjgtvOmEnMAYDAePmxkeXBe1vrRa5ZwEUuhn48a34=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwvyAE/IHqiG0+Qr96Lp0qII63uczTTDg/llF0Orj3sE0nHU+Ps
+	kwXiq5wJqiSoGyrEPjgYWWFa64cc2k4kXhFToAriD8+ZlSMagxll2ptCuwltd1NikeSavIt6bDD
+	2V8yerb+eA2Y3cwVaw9P5Ob1KzS25AcQMef9HmBhIO8OGCikBvspHt/97BVo=
+X-Google-Smtp-Source: AGHT+IHon7o/p/rlon33R45s6/GSuqDH8upCxBPbCn/a5hKySQVq6f1BgW+kU7Rj2Rv0pDjQ2cntIB01zk7/T71mncPOMj3dxBRC
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <112fa3c4-908d-4e31-9288-b3a2949555b0@lunn.ch>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+X-Received: by 2002:a05:6602:3684:b0:85e:a8db:fa10 with SMTP id
+ ca18e2360f4ac-86cbb7b82bcmr364089839f.1.1748116862140; Sat, 24 May 2025
+ 13:01:02 -0700 (PDT)
+Date: Sat, 24 May 2025 13:01:02 -0700
+In-Reply-To: <aDIEqaNaLBChOlg9@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <6832257e.a70a0220.253bc2.0075.GAE@google.com>
+Subject: Re: [syzbot] [kernel?] KASAN: slab-use-after-free Write in binder_remove_device
+From: syzbot <syzbot+4af454407ec393de51d6@syzkaller.appspotmail.com>
+To: arve@android.com, brauner@kernel.org, cmllamas@google.com, 
+	gregkh@linuxfoundation.org, joelagnelf@nvidia.com, 
+	linux-kernel@vger.kernel.org, maco@android.com, surenb@google.com, 
+	syzkaller-bugs@googlegroups.com, tkjos@android.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Sat, May 24, 2025 at 04:48:15PM +0200, Andrew Lunn wrote:
-> On Sat, May 24, 2025 at 10:05:47PM +0800, lizhe wrote:
-> > Hi， Anerdw
-> > The following is the logic for calling this function： 
-> > 
-> > 
-> > rk_gmac_powerup() {
-> > 
-> > ret = phy_power_on(bsp_priv, true);      // here.
-> > 
-> > if (ret) {
-> > 
-> > gmac_clk_enable(bsp_priv, false);
-> > 
-> > return ret;
-> > 
-> > }
-> > 
-> > }
-> 
-> Ah, there is something funny with your patch. Look at the diff:
-> 
-> diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c
-> index 700858ff6f7c..036e45be5828 100644
-> --- a/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c
-> +++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c
-> @@ -1648,7 +1648,7 @@  static int gmac_clk_enable(struct rk_priv_data *bsp_priv, bool enable)
-> 
-> This line tells you where in the file you are patching, and the
-> function to be patched. This is what i looked at,
-> gmac_clk_enable(). And gmac_clk_enable() has a similar structure, ret
-> declared at the beginning, return 0 at the end. But the only way to
-> that return 0 is without error.
-> 
-> But patch is actually for:
-> 
->  static int phy_power_on(struct rk_priv_data *bsp_priv, bool enable)
+Hello,
 
-Andrew, this is not a problem. This is how diffs work. If the function
-hasn't actually started at the point the context starts, then the
-previous function will appear in the comment after the line numbers.
+syzbot has tested the proposed patch and the reproducer did not trigger any issue:
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+Reported-by: syzbot+4af454407ec393de51d6@syzkaller.appspotmail.com
+Tested-by: syzbot+4af454407ec393de51d6@syzkaller.appspotmail.com
+
+Tested on:
+
+commit:         176e917e Add linux-next specific files for 20250523
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=12bed5f4580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=e7902c752bef748
+dashboard link: https://syzkaller.appspot.com/bug?extid=4af454407ec393de51d6
+compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=120c6170580000
+
+Note: testing is done by a robot and is best-effort only.
