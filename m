@@ -1,113 +1,93 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD63F18BC3B;
-	Sat, 24 May 2025 09:14:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.4])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3FEB68F6E;
+	Sat, 24 May 2025 09:16:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748078083; cv=none; b=pN0TuIA+rYWStuvU3TjdEtgjvcFjR+NbUeU54AlLBB3CxpmJ/KXEmbKtU5wLvTNwRf1GU4+Kswv7UGX113s6htTVQNZcLJ9sCzlQ/Fik8oGhaq7NDDRq0ba9wpMGlbtZeP+1iJW8KWwfjfEOhYSKAgaUl2D18zZgNivYFJSRmOk=
+	t=1748078166; cv=none; b=AXH/kevmw2pH3V6STcJO84Q/nYE/4UFuevMoM1gJbFQsJsQqvhz3RRghcv0J/7RyXq9xj5rc1D7Rnehv9F6guCv7thIWUGDuA3NcLhf51j5Yr0qCwlN+F1hLyl57O53/MfRrVX+C4fr8UcAK1IozE15Wv37297ZdGKUppmFAOfg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748078083; c=relaxed/simple;
-	bh=QmJJzXeg74/tDMm21ZE8ew95kEfbtH/qiljqYhp4/+A=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=I0jDyqfspKOPuveJFwDSO5V5+qDOFXjrGhFettD044GlQrCp0JApmVD5dlxzMNx+99HzHa9gK6lPC8pkmyJ2UPLNr/ouko24RHJf37Ou1as/9zT73b1Fwo5d4P0PlyaLl5O7ex9ASeFZuOl5iHLfnfsyDJRwNeG/x/Sf7TYx8XU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V5w5otD/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748078166; c=relaxed/simple;
+	bh=U5w7z1f+zwJd3WnPOJTamPbzkncIzBdmoD+MNuTBh4U=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=K23/vM+0rxo/t5ki1Sem28kLK6VyoUZxeoh5UifLhANU9z+8qr0VhGTIggFzOYw3XUctaEY++XWeXd++MaE9TE4T/zb+nJYaxv5/evfWLJkpa3F7vnK85qESaMNFEGO5X4I+ozh7cmgJKjwHnIu6TLjQWJdem8CjO0MrFbl/gOI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=JScucoHv; arc=none smtp.client-ip=117.135.210.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V5w5otD/"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 1EF20C4CEFC;
-	Sat, 24 May 2025 09:14:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748078083;
-	bh=QmJJzXeg74/tDMm21ZE8ew95kEfbtH/qiljqYhp4/+A=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=V5w5otD/CRTFSQT6LRbqQUyYXhWIrYu8GOpFp+H3QRDL53u/r+j+qTNdgqX41IcCH
-	 5pXFsdrZa4I0lN0aeP/qw3MUDWQBZMqLUGKhRqPVD/jJO1mEEYmDBTWiAn5pIaMgX9
-	 m82zAL3yVYYEz9hFhhgCI4W3hIIkUrCt7woODA20+wfDrgHu0JuzKCES7EtXOuVT7/
-	 EtsoODSUPWXlCuMd8CVGtys+b4l7yze3NYpmLnFqkvMrqUj9scMy6bNp/AtxUUlive
-	 8UZRpHcF7LHsSRbR/nfVym2Dzn3mJkc9/lZr03FFpZfD9kPtDJVY9tHDnBtCle336u
-	 XZLPbRLF1A4yg==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15F2FC54F30;
-	Sat, 24 May 2025 09:14:43 +0000 (UTC)
-From: =?utf-8?q?Andr=C3=A9_Apitzsch_via_B4_Relay?= <devnull+git.apitzsch.eu@kernel.org>
-Date: Sat, 24 May 2025 11:14:40 +0200
-Subject: [PATCH v4 5/5] media: i2c: imx214: Remove hard-coded external
- clock frequency
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="JScucoHv"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=fy
+	7w/fOito6n1NlzBReuG43gvvfQ9OWKnvPxAA/UOtk=; b=JScucoHvnZtRgy0xv+
+	O/K7g87oEEFMwTXNkrOhJ3KBI829BeF3k9gq4kt+8Kdglfz2u67IdAzDX1jaet4o
+	LQy8GLqgTQ0dCxsT/wZkH29WAckYlBIfCrX8jPYfG1BUMvkVt58rFa3pQWYmM5r7
+	/me8X+pkw6ZCG1sU/WSC/K96M=
+Received: from icess-ProLiant-DL380-Gen10.. (unknown [])
+	by gzga-smtp-mtada-g0-4 (Coremail) with SMTP id _____wDnb_EljjFopvfQDg--.27292S4;
+	Sat, 24 May 2025 17:15:19 +0800 (CST)
+From: Haoxiang Li <haoxiang_li2024@163.com>
+To: maarten.lankhorst@linux.intel.com,
+	mripard@kernel.org,
+	tzimmermann@suse.de,
+	airlied@gmail.com,
+	simona@ffwll.ch,
+	sam@ravnborg.org
+Cc: dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	Haoxiang Li <haoxiang_li2024@163.com>,
+	stable@vger.kernel.org
+Subject: [PATCH] drm: Fix potential null pointer dereference issues in drm_managed.c
+Date: Sat, 24 May 2025 17:15:15 +0800
+Message-Id: <20250524091515.3594232-1-haoxiang_li2024@163.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250524-imx214_ccs_pll-v4-5-f7dc22e5255b@apitzsch.eu>
-References: <20250524-imx214_ccs_pll-v4-0-f7dc22e5255b@apitzsch.eu>
-In-Reply-To: <20250524-imx214_ccs_pll-v4-0-f7dc22e5255b@apitzsch.eu>
-To: Ricardo Ribalda <ribalda@kernel.org>, 
- Sakari Ailus <sakari.ailus@linux.intel.com>, 
- Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
- Sascha Hauer <s.hauer@pengutronix.de>, 
- Pengutronix Kernel Team <kernel@pengutronix.de>, 
- Fabio Estevam <festevam@gmail.com>
-Cc: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org, 
- linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
- devicetree@vger.kernel.org, imx@lists.linux.dev, 
- linux-arm-kernel@lists.infradead.org, 
- =?utf-8?q?Andr=C3=A9_Apitzsch?= <git@apitzsch.eu>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1748078081; l=1261;
- i=git@apitzsch.eu; s=20240325; h=from:subject:message-id;
- bh=roC/yqnwu/rypBv0AK9sWLYwwI91i9Cg/QD5HFxyhEk=;
- b=oS74+YSuz1SReKw3CMPcyGgH0e39XipgsbpyBEb7LbIsCW4gVPPvUkf++YOdCF/KRixS3ghIm
- a69VX8DNsnlDw2IRx/LvZUf5NkbElBqrVMM54PUja1q8jDL+6CoClTd
-X-Developer-Key: i=git@apitzsch.eu; a=ed25519;
- pk=wxovcZRfvNYBMcTw4QFFtNEP4qv39gnBfnfyImXZxiU=
-X-Endpoint-Received: by B4 Relay for git@apitzsch.eu/20240325 with
- auth_id=142
-X-Original-From: =?utf-8?q?Andr=C3=A9_Apitzsch?= <git@apitzsch.eu>
-Reply-To: git@apitzsch.eu
+X-CM-TRANSID:_____wDnb_EljjFopvfQDg--.27292S4
+X-Coremail-Antispam: 1Uf129KBjvdXoWrZFyrKrW5ur18KFWUWF1fCrg_yoWDtrX_C3
+	W8Xrn3Wr4kCF98GF4qyw13ZryIka1DCFsYvF47tasayrW5Jr1vq34UZr45JryDWF1xuF9r
+	u3WDAryfZrnrGjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7sRNvtCUUUUUU==
+X-CM-SenderInfo: xkdr5xpdqjszblsqjki6rwjhhfrp/1tbiqB9XbmgxhNn3egAAsH
 
-From: André Apitzsch <git@apitzsch.eu>
+Add check for the return value of kstrdup_const() in drm_managed.c
+to prevent potential null pointer dereference.
 
-Instead rely on the rate set on the clock (using assigned-clock-rates
-etc.)
-
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Signed-off-by: André Apitzsch <git@apitzsch.eu>
+Fixes: c6603c740e0e ("drm: add managed resources tied to drm_device")
+Cc: stable@vger.kernel.org
+Signed-off-by: Haoxiang Li <haoxiang_li2024@163.com>
 ---
- drivers/media/i2c/imx214.c | 6 ------
- 1 file changed, 6 deletions(-)
+ drivers/gpu/drm/drm_managed.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/drivers/media/i2c/imx214.c b/drivers/media/i2c/imx214.c
-index fd03650a5b2bbdbbc677d5797380285f1832baa5..a0cef9e61b41be8ea76a6d6e4b8c9fc4060cfa0f 100644
---- a/drivers/media/i2c/imx214.c
-+++ b/drivers/media/i2c/imx214.c
-@@ -32,7 +32,6 @@
+diff --git a/drivers/gpu/drm/drm_managed.c b/drivers/gpu/drm/drm_managed.c
+index cc4c463daae7..0ff8335a337b 100644
+--- a/drivers/gpu/drm/drm_managed.c
++++ b/drivers/gpu/drm/drm_managed.c
+@@ -151,6 +151,11 @@ int __drmm_add_action(struct drm_device *dev,
+ 	}
  
- #define IMX214_REG_FAST_STANDBY_CTRL	CCI_REG8(0x0106)
+ 	dr->node.name = kstrdup_const(name, GFP_KERNEL);
++	if (!dr->node.name) {
++		kfree(dr);
++		return -ENOMEM;
++	}
++
+ 	if (data) {
+ 		void_ptr = (void **)&dr->data;
+ 		*void_ptr = data;
+@@ -236,6 +241,10 @@ void *drmm_kmalloc(struct drm_device *dev, size_t size, gfp_t gfp)
+ 		return NULL;
+ 	}
+ 	dr->node.name = kstrdup_const("kmalloc", gfp);
++	if (!dr->node.name) {
++		kfree(dr);
++		return NULL;
++	}
  
--#define IMX214_DEFAULT_CLK_FREQ	24000000
- #define IMX214_DEFAULT_LINK_FREQ	600000000
- /* Keep wrong link frequency for backward compatibility */
- #define IMX214_DEFAULT_LINK_FREQ_LEGACY	480000000
-@@ -1402,11 +1401,6 @@ static int imx214_probe(struct i2c_client *client)
- 		return dev_err_probe(dev, PTR_ERR(imx214->xclk),
- 				     "failed to get xclk\n");
+ 	add_dr(dev, dr);
  
--	ret = clk_set_rate(imx214->xclk, IMX214_DEFAULT_CLK_FREQ);
--	if (ret)
--		return dev_err_probe(dev, ret,
--				     "failed to set xclk frequency\n");
--
- 	ret = imx214_get_regulators(dev, imx214);
- 	if (ret < 0)
- 		return dev_err_probe(dev, ret, "failed to get regulators\n");
-
 -- 
-2.49.0
-
+2.25.1
 
