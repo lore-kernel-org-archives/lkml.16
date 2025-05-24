@@ -1,185 +1,122 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f52.google.com (mail-qv1-f52.google.com [209.85.219.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FDE48F66;
-	Sat, 24 May 2025 00:06:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 634051401B
+	for <linux-kernel@vger.kernel.org>; Sat, 24 May 2025 00:07:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748045173; cv=none; b=K06syPZ4vWhcTuZqudm+SpuxVw8/AsLgj8nzHeQnOXWa3c8lAm3i9wU6QIvymDOTZFY9/jrGZJQpUbdKYAUt6kdMXycVakz/jHSmqS3h8Xzo99URcjKWK658NlZcHwyQModFjetMBaeBotI1oZVl9skudZGB9ZdnVNfq5QyRxao=
+	t=1748045228; cv=none; b=ClxbNjshd+8TAPiVdSfTSXT+PcYmoV/ZNrwTlQccyvfdKJIw3jkSI2micyQunTTudqe6SgGNwk2GkBfgXyMv66fQNC6H79fUOqQU15WTSPltdSB4teAT2UFAlTEBVRUpfBKYoZ8w7wlmn6AGnw9P2RQFbO+3thpHUlPoh/V6TJg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748045173; c=relaxed/simple;
-	bh=d5tUJSTZcL5Tc4PZdJBl8+x39c8Y4r8OKEODz43Oe80=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jsp+MXBpWSQkafLLTwbH1UIv3h/RMLJ+qXuhyEEGYuumH4IQbdzh4lAc3k0CT3lDpzKHI5VnfYi6M4TcNUepzzKslXzC9aZhA/1AiWBlEYd/r6kGjA6IEeUmXv5QyMo7Ku2oyVkFKRKGFT8/E52yUzcg2KtqOd5gHeRGGTttqaA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=s3R3w63k; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	s=arc-20240116; t=1748045228; c=relaxed/simple;
+	bh=gkfs6iShkZzxqmST28I6UZJPTMoF/O+kKXk2E97Xgdg=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=AzMo1cxiJB/flDjhDCtwZhvON9G+UfRtEtXJrFbHLRNWXMMqhwkNrjAWgzWps4OahP/6/da12Xs9XZOXT9m/KH/+hohe23RpJHIBEYo2dviK7pXUiH2ImlKL6kNmNTTtPFmvlx4/T8vsQ+Z+eLvFOhrlkpE73FdM2PM2TUeEcqE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ndufresne.ca; spf=none smtp.mailfrom=ndufresne.ca; dkim=pass (2048-bit key) header.d=ndufresne-ca.20230601.gappssmtp.com header.i=@ndufresne-ca.20230601.gappssmtp.com header.b=SbgaL1Kd; arc=none smtp.client-ip=209.85.219.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ndufresne.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ndufresne.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="s3R3w63k"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=kJW5yfLMv6KfYajBWSB2+tcy3Ju4PEVFx9kcwqoX2M8=; b=s3R3w63k4JHTq66/JjHB3c/PnR
-	vMXzuY6WQj8bpgPt2kJRuib+GLaM3kYRx3NE8wnMhr0hPrJSI1mp7woYJBtv7bu2fASR5Jnf5lqEH
-	SCPz3nneg3BV/mGEAywVzBnkUk8RmK38w0kCO17zEmHJnLtDtjn2EqA4t2R88SItIlJkco63+uKFk
-	jCn+IGlm5SBzNcb3l+wwDGva82RKj4kWXjHjEm283Om5wVuXxfyCqu0iZ0WciHzyX0fDsXR0339u9
-	NUZ068vY9q1JYl7AYdY+CL+/BNF1weL6y/v6WYU5iimdqX+NwQWLoEGDxWs2pyzWALV8gerYDnKXR
-	vI+1mGNA==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:54864)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1uIcOm-0004BY-32;
-	Sat, 24 May 2025 01:06:01 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1uIcOg-0006Ib-04;
-	Sat, 24 May 2025 01:05:54 +0100
-Date: Sat, 24 May 2025 01:05:53 +0100
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Sean Anderson <sean.anderson@linux.dev>
-Cc: Heiner Kallweit <hkallweit1@gmail.com>, netdev@vger.kernel.org,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Lei Wei <quic_leiwei@quicinc.com>,
-	Christian Marangi <ansuelsmth@gmail.com>,
-	Kory Maincent <kory.maincent@bootlin.com>,
-	Simon Horman <horms@kernel.org>,
-	Daniel Golle <daniel@makrotopia.org>,
-	Vineeth Karumanchi <vineeth.karumanchi@amd.com>,
-	linux-kernel@vger.kernel.org, Ioana Ciornei <ioana.ciornei@nxp.com>,
-	Vladimir Oltean <vladimir.oltean@nxp.com>, imx@lists.linux.dev,
-	linux-stm32@st-md-mailman.stormreply.com
-Subject: Re: [net-next PATCH v5 05/10] net: pcs: lynx: Convert to an MDIO
- driver
-Message-ID: <aDENYfL7Hstsswml@shell.armlinux.org.uk>
-References: <20250523203339.1993685-1-sean.anderson@linux.dev>
- <20250523203339.1993685-6-sean.anderson@linux.dev>
- <a937e728-d911-4fcc-9af1-9ae6130f96c1@gmail.com>
- <3a452864-9d02-4fa7-9d7c-a240b611ee74@linux.dev>
- <e0bd575b-a01b-418f-9d89-b59398e87a48@linux.dev>
+	dkim=pass (2048-bit key) header.d=ndufresne-ca.20230601.gappssmtp.com header.i=@ndufresne-ca.20230601.gappssmtp.com header.b="SbgaL1Kd"
+Received: by mail-qv1-f52.google.com with SMTP id 6a1803df08f44-6f8c3db8709so5140886d6.0
+        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 17:07:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ndufresne-ca.20230601.gappssmtp.com; s=20230601; t=1748045226; x=1748650026; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=w2v6oPiR0TpWgcv0Ui7wcKxLp1yAUHwVBhhO5ks6C7M=;
+        b=SbgaL1Kdxnp/P8fLg6n8my4dRzKlD3fr3eW4r5MAF4M1+Sn4MIZOHflVL9qa4sEBv/
+         h+6h123xUs0W6bf6RnUk42CyT+J0pCZhi4wVTGdvdg/NIQYASz7JQB0cOMJ9WIbGRNOl
+         tsSVA2RqyTtxKzVH6wTV5JWlMIS7QGkJxXIEFc/Nqp+cn728MAS7aaa/2Nb0RsKvjMsX
+         2LpSVrSd1VXt9tpD9UVsdenq12EDK89KiKXEeFwqZDoztjhLWF1i6D89D1iU6hPWw0WS
+         KBCAV3XDDommQAdY6nXBMrozdakrRQ6vmlBTSFZJlFmYdiIbi0KGGt7ClEt5/3AXuK5T
+         z8bQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748045226; x=1748650026;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=w2v6oPiR0TpWgcv0Ui7wcKxLp1yAUHwVBhhO5ks6C7M=;
+        b=cDfz2I6Wsb6ehGWEqtnY66LsSWHXqPd5663I9KJtT2UF4zcPULt9qtE/W+7YoOptyN
+         HwWCshZ3OmUOag/0btpnz3xA7ew5iQiyITlfQMhXAFlp3e1JyU8LbJoInKHUV9hImvf9
+         IC2OgBcUvqSBfctNcHlLnFA8fbjyIXu6hnjEWlNwir62RR1ev3vBVe2Kp7xnV5+L6m/B
+         5sGnaTVgdFxA+m27s9pfArVUqyVcs+TdnO4TmMQrN0nXoOUW5xH6Cun3hwPc22t2CnI5
+         51ozY5/4flpW3Oy0oqenwepuulgDro3iSD570dKg3FdO3S0+6+w/3bTN3CxJ3XVhD5bX
+         0j9Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWaQhe8NAihYQDQn5WbTKyyPi9+f1MSRbc4Oqhm1t1Sg2O9FReZ9E22oYn8pvh+mPIKNy4UQ8A8N33AkUc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxDYjoJUE2ZCyX/oI7HmX7qM09d9ovPrnNdcy1NzuxM+/A64P3c
+	Dr1tv3OqOOhvFxJ98SXnra2P6i4J/TM3TcGkVaCUTWS2YdlpqQWuVXyYcBF4VZaCwnY=
+X-Gm-Gg: ASbGnctvnjprP17BC0pidLqGM+WJRvP3qjHjQBSyjRhfeEI3cldCRwvzVta3VrsieTn
+	orRxKB4jrCvjkVFXU5NYgX2lWqgDfmk9nvcmHKlDzm6s2QH41UM4LVhHwotdAKvR580XktJE133
+	fiXzn/uCojRCP2pwl6TMcjI3MQc6LfOWFWLX+EyQhA7LFlrhKVV/0UGBqpW4HdECnMzqaUyhUYz
+	HHohMdG3JDtFIDS8MCHXdQHP3bV8Lh33QNKaz4NGN84JWdsDV1WSmE+2xC1PNdC9qvNNfRpobMq
+	yBYI0aMqQB4Un3QKU/St69/tQwDd24++Y7MgM2JARl4MRqXpoJeBVP/u
+X-Google-Smtp-Source: AGHT+IGD9e17824qKyd+B1gosd9Ns80AmHmBePi9Z8UI0Xsqhm4+eWfNjMArpT/NS6/AeerCmI7lBw==
+X-Received: by 2002:a05:6214:d6b:b0:6f8:d50a:aea7 with SMTP id 6a1803df08f44-6fa935b5183mr76231986d6.10.1748045226169;
+        Fri, 23 May 2025 17:07:06 -0700 (PDT)
+Received: from ?IPv6:2606:6d00:17:b2fc::c41? ([2606:6d00:17:b2fc::c41])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f8b0884038sm121929706d6.15.2025.05.23.17.07.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 23 May 2025 17:07:05 -0700 (PDT)
+Message-ID: <f4ced91cbc1e52347189a91351fcde17f021bc09.camel@ndufresne.ca>
+Subject: Re: [PATCH 09/18] media: coda: Fix max h.264 level for CODA_DX6
+From: Nicolas Dufresne <nicolas@ndufresne.ca>
+To: Sergey Khimich <serghox@gmail.com>, linux-media@vger.kernel.org
+Cc: Philipp Zabel <p.zabel@pengutronix.de>, Mauro Carvalho Chehab
+	 <mchehab@kernel.org>, linux-kernel@vger.kernel.org, Vladimir Yakovlev
+	 <vovchkir@gmail.com>, Maksim Turok <turok.m7@gmail.com>
+Date: Fri, 23 May 2025 20:07:04 -0400
+In-Reply-To: <20250314152939.2759573-10-serghox@gmail.com>
+References: <20250314152939.2759573-1-serghox@gmail.com>
+	 <20250314152939.2759573-10-serghox@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.1 (3.56.1-1.fc42) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e0bd575b-a01b-418f-9d89-b59398e87a48@linux.dev>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-On Fri, May 23, 2025 at 06:07:16PM -0400, Sean Anderson wrote:
-> On 5/23/25 17:39, Sean Anderson wrote:
-> > On 5/23/25 17:33, Heiner Kallweit wrote:
-> >> On 23.05.2025 22:33, Sean Anderson wrote:
-> >>> This converts the lynx PCS driver to a proper MDIO driver.
-> >>> This allows using a more conventional driver lifecycle (e.g. with a
-> >>> probe and remove). It will also make it easier to add interrupt support.
-> >>> 
-> >>> The existing helpers are converted to bind the MDIO driver instead of
-> >>> creating the PCS directly. As lynx_pcs_create_mdiodev creates the PCS
-> >>> device, we can just set the modalias. For lynx_pcs_create_fwnode, we try
-> >>> to get the PCS the usual way, and if that fails we edit the devicetree
-> >>> to add a compatible and reprobe the device.
-> >>> 
-> >>> To ensure my contributions remain free software, remove the BSD option
-> >>> from the license. This is permitted because the SPDX uses "OR".
-> >>> 
-> >>> Signed-off-by: Sean Anderson <sean.anderson@linux.dev>
-> >>> ---
-> >>> 
-> >>> Changes in v5:
-> >>> - Use MDIO_BUS instead of MDIO_DEVICE
-> >>> 
-> >>> Changes in v4:
-> >>> - Add a note about the license
-> >>> - Convert to dev-less pcs_put
-> >>> 
-> >>> Changes in v3:
-> >>> - Call devm_pcs_register instead of devm_pcs_register_provider
-> >>> 
-> >>> Changes in v2:
-> >>> - Add support for #pcs-cells
-> >>> - Remove unused variable lynx_properties
-> >>> 
-> >>>  drivers/net/dsa/ocelot/Kconfig                |   4 +
-> >>>  drivers/net/dsa/ocelot/felix_vsc9959.c        |  11 +-
-> >>>  drivers/net/dsa/ocelot/seville_vsc9953.c      |  11 +-
-> >>>  drivers/net/ethernet/altera/Kconfig           |   2 +
-> >>>  drivers/net/ethernet/altera/altera_tse_main.c |   7 +-
-> >>>  drivers/net/ethernet/freescale/dpaa/Kconfig   |   2 +-
-> >>>  drivers/net/ethernet/freescale/dpaa2/Kconfig  |   3 +
-> >>>  .../net/ethernet/freescale/dpaa2/dpaa2-mac.c  |  11 +-
-> >>>  drivers/net/ethernet/freescale/enetc/Kconfig  |   2 +
-> >>>  .../net/ethernet/freescale/enetc/enetc_pf.c   |   8 +-
-> >>>  .../net/ethernet/freescale/enetc/enetc_pf.h   |   1 -
-> >>>  .../freescale/enetc/enetc_pf_common.c         |   4 +-
-> >>>  drivers/net/ethernet/freescale/fman/Kconfig   |   4 +-
-> >>>  .../net/ethernet/freescale/fman/fman_memac.c  |  25 ++--
-> >>>  drivers/net/ethernet/stmicro/stmmac/Kconfig   |   3 +
-> >>>  .../ethernet/stmicro/stmmac/dwmac-socfpga.c   |   6 +-
-> >>>  drivers/net/pcs/Kconfig                       |  11 +-
-> >>>  drivers/net/pcs/pcs-lynx.c                    | 110 ++++++++++--------
-> >>>  include/linux/pcs-lynx.h                      |  13 ++-
-> >>>  19 files changed, 128 insertions(+), 110 deletions(-)
-> >>> 
-> >>> diff --git a/drivers/net/dsa/ocelot/Kconfig b/drivers/net/dsa/ocelot/Kconfig
-> >>> index 081e7a88ea02..907c29d61c14 100644
-> >>> --- a/drivers/net/dsa/ocelot/Kconfig
-> >>> +++ b/drivers/net/dsa/ocelot/Kconfig
-> >>> @@ -42,7 +42,9 @@ config NET_DSA_MSCC_FELIX
-> >>>  	select NET_DSA_TAG_OCELOT_8021Q
-> >>>  	select NET_DSA_TAG_OCELOT
-> >>>  	select FSL_ENETC_MDIO
-> >>> +	select PCS
-> >>>  	select PCS_LYNX
-> >>> +	select MDIO_BUS
-> >> 
-> >> This shouldn't be needed. NET_DSA selects PHYLINK, which selects PHYLIB,
-> >> which selects MDIO_BUS. There are more places in this series where the
-> >> same comment applies.
-> > 
-> > select does not transitively enable dependencies. See the note in
-> > Documentation/kbuild/kconfig-language.rst for details. Therefore we must
-> > select the dependencies of things we select in order to ensure we do not
-> > trip sym_warn_unmet_dep.
-> 
-> OK, I see what you mean here. But of course NET_DSA is missing selects for
-> PHYLIB and MDIO_BUS. And PHYLINK is also missing a select for MDIO_BUS. Actually,
-> this bug is really endemic. Maybe we should just get rid of PHYLIB as a config
-> and just make everything depend on ETHERNET instead.
+Hi,
 
-You're reading the documentation wrongly.
+Le vendredi 14 mars 2025 =C3=A0 18:29 +0300, Sergey Khimich a =C3=A9crit=C2=
+=A0:
+> From: Vladimir Yakovlev <vovchkir@gmail.com>
+>=20
+> CODA_DX6 has h.264 decoder but v4l2_ctrls of level wasn't setting
 
-Take this example:
+Perhaps:
+CODA_DX6 supports H.264 decoder, though the maximum level wasn't set
+properly.
 
-config A
-	select B
+regards,
+Nicolas
 
-config B
-	select C
-	depends on E
+> for this device.
 
-config C
-	select D
-
-config D
-
-config E
-
-Enabling A leads to B, C and D all being enabled, but it does *not*
-lead to E being enabled - kconfig will issue a warning if E is not
-already enabled.
-
-E is a dependency of B. There are no other dependencies, but there
-are reverse dependencies, and reverse dependencies are propagated.
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+>=20
+> Co-developed-by: Sergey Khimich <serghox@gmail.com>
+> Signed-off-by: Sergey Khimich <serghox@gmail.com>
+> Signed-off-by: Vladimir Yakovlev <vovchkir@gmail.com>
+> ---
+> =C2=A0drivers/media/platform/chips-media/coda/coda-common.c | 4 ++--
+> =C2=A01 file changed, 2 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/drivers/media/platform/chips-media/coda/coda-common.c b/driv=
+ers/media/platform/chips-media/coda/coda-
+> common.c
+> index 33c7e8398f31..555b73816952 100644
+> --- a/drivers/media/platform/chips-media/coda/coda-common.c
+> +++ b/drivers/media/platform/chips-media/coda/coda-common.c
+> @@ -2440,8 +2440,8 @@ static void coda_decode_ctrls(struct coda_ctx *ctx)
+> =C2=A0		max =3D V4L2_MPEG_VIDEO_H264_LEVEL_4_0;
+> =C2=A0	else if (ctx->dev->devtype->product =3D=3D CODA_960)
+> =C2=A0		max =3D V4L2_MPEG_VIDEO_H264_LEVEL_4_1;
+> -	else
+> -		return;
+> +	else /* CODA_DX6 */
+> +		max =3D V4L2_MPEG_VIDEO_H264_LEVEL_3_0;
+> =C2=A0	ctx->h264_level_ctrl =3D v4l2_ctrl_new_std_menu(&ctx->ctrls,
+> =C2=A0		&coda_ctrl_ops, V4L2_CID_MPEG_VIDEO_H264_LEVEL, max, 0, max);
+> =C2=A0	if (ctx->h264_level_ctrl)
