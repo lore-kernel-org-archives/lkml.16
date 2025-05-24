@@ -1,48 +1,47 @@
 Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 504E11E3761;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 505EA1E51EA;
 	Sat, 24 May 2025 11:52:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.244.123.138
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748087529; cv=none; b=VQHDjNYDbxgDu3YR9KSreP1c91KTX2+RAboDR/Zyu6GB085tg2KZ6iQckbIeyddOoSo2qtCt+xLaP0BKZEBecntnNSaBksUpo25ATi+A8D4jwNyzblhZFV1GgqcPLXcgjtIMI7GlgRefIurT1BorGgjfAgZJFBTexoVLA/9mObg=
+	t=1748087530; cv=none; b=fdb5jb9OqQpctk+5IXNkb7vr0FoE2hgPAM9HoaZN8R7AZQMF8YZykwu3XFN1NV02h2KUOO2paosEtAXRwXkiOhHr5oDRZdQObtuK7hD4P09+10UoBkf3Q21UiShjd21xEoL7JG3wcz08ebBWeOf2nOMLiAaii6tBXPSxO0EIKx8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748087529; c=relaxed/simple;
-	bh=1cVrAohHGTODOEsG+lFJbdBYHDSOcyg0TaEEVjqywik=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=PLAA7Ty2Hl2HgSSPaSJ6eKS/VsRw6vzxDt1nT2ZBWTicrRBQ/eL+xGJqh0ezlUSMVneaC4sB6CgcuwWn1EtFi8FHyHmQFkFzGoLatXuj0HX02NoNXLmjWnFLTbraLIhjIpNQuJU/iQrr/JpqIZX9Pacp7CFQVu95jiEB50Ckmyg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=G6AD9AU/; arc=none smtp.client-ip=60.244.123.138
+	s=arc-20240116; t=1748087530; c=relaxed/simple;
+	bh=vvEShNy0WMcjGdNZqIfmzh+B8d0rIP9nKdvt8N8KCf0=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=PNyaX1Z0oDbyL/B/Hq6YlDEIiXcIIl82h3kQ8xdnS4v6m987Hr5MSzUEesgl+kAYs65mlQ0PQw0q8cFhqqnSpBQlDAxJrYmdvafowT2GbZgabzg392FRQIm5hq5e9QPWmJXg4IFXqik5Qb24jbutEP8MszNrgrZh09S3uUf0Tog=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=IiOX/wh+; arc=none smtp.client-ip=60.244.123.138
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="G6AD9AU/"
-X-UUID: 7a8dac40389511f0813e4fe1310efc19-20250524
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="IiOX/wh+"
+X-UUID: 7a615c3a389511f0813e4fe1310efc19-20250524
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=8T7k3loXw2kUYsQr6rWUMCabl4A10FGQeJtjVO+YG0k=;
-	b=G6AD9AU/djo4tWfrRmmvis1a40Iq9XznCdtmCYOPc0L1YPRJv0jCoWsKeJWibmLbWLu4VOYdYuKC5efa5XSZNpkjpTn/0Mv0B2oWxnRti+xaEmKo/QSYJx7+aEY/07tvYx0dyqTJY6UJPMNuuWGOxdEkip74aHOIaiapauzVhcE=;
+	h=Content-Type:Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=2uctqsBOVfw44286a8eWc49jMtIazpf2BUO8MAhx3po=;
+	b=IiOX/wh+PWxF4m1N9XLBhDPnR2iySx25re6hWJ/9uOMoM4EL1pD/jVB4pXXw9t4kTVvsPpScSE+r2fJAoYkV37Bee7XFUoPaYiS8qYECEoma4rAWcBeIxI4Rp3/lVcoJnztd0ykgSJrLg2ug2eV5iMRmpXhziXo1vgrtPK6gsM0=;
 X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.2.1,REQID:7bfb6523-6b3b-48cd-8079-6ccbd0d58dfe,IP:0,UR
-	L:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:r
-	elease,TS:0
-X-CID-META: VersionHash:0ef645f,CLOUDID:648ded57-abad-4ac2-9923-3af0a8a9a079,B
-	ulkID:nil,BulkQuantity:0,Recheck:0,SF:81|82|102,TC:nil,Content:0|50,EDM:-3
-	,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV
-	:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0,NGT
-X-CID-BAS: 0,NGT,0,_
+X-CID-O-INFO: VERSION:1.2.1,REQID:b504a654-5cf1-45bc-855b-e6af9af319e3,IP:0,UR
+	L:0,TC:0,Content:-25,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION
+	:release,TS:-25
+X-CID-META: VersionHash:0ef645f,CLOUDID:51bb3bf1-2ded-45ed-94e2-b3e9fa87100d,B
+	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0|50,EDM:-3,IP:ni
+	l,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES
+	:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
 X-CID-FACTOR: TF_CID_SPAM_SNR
-X-UUID: 7a8dac40389511f0813e4fe1310efc19-20250524
-Received: from mtkmbs11n2.mediatek.inc [(172.21.101.187)] by mailgw01.mediatek.com
+X-UUID: 7a615c3a389511f0813e4fe1310efc19-20250524
+Received: from mtkmbs09n1.mediatek.inc [(172.21.101.35)] by mailgw01.mediatek.com
 	(envelope-from <olivia.wen@mediatek.com>)
 	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 169165166; Sat, 24 May 2025 19:51:50 +0800
+	with ESMTP id 167223835; Sat, 24 May 2025 19:51:50 +0800
 Received: from mtkmbs11n2.mediatek.inc (172.21.101.187) by
- MTKMBS09N2.mediatek.inc (172.21.101.94) with Microsoft SMTP Server
+ MTKMBS14N1.mediatek.inc (172.21.101.75) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.39; Sat, 24 May 2025 19:51:48 +0800
+ 15.2.1258.39; Sat, 24 May 2025 19:51:47 +0800
 Received: from mtksitap99.mediatek.inc (10.233.130.16) by
  mtkmbs11n2.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1258.39 via Frontend Transport; Sat, 24 May 2025 19:51:48 +0800
+ 15.2.1258.39 via Frontend Transport; Sat, 24 May 2025 19:51:47 +0800
 From: Olivia Wen <olivia.wen@mediatek.com>
 To: Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>,
 	Matthias Brugger <matthias.bgg@gmail.com>, AngeloGioacchino Del Regno
@@ -54,12 +53,10 @@ CC: Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
 	<linux-mediatek@lists.infradead.org>,
 	<Project_Global_Chrome_Upstream_Group@mediatek.com>,
 	<teddy.chen@mediatek.com>, <yunkec@chromium.org>
-Subject: [PATCH v1 03/10] uapi: linux: Add MediaTek Imgsys user API
-Date: Sat, 24 May 2025 19:49:55 +0800
-Message-ID: <20250524115144.3832748-4-olivia.wen@mediatek.com>
+Subject: [PATCH v1 00/10] Add MediaTek ISP7 Image Syatem driver
+Date: Sat, 24 May 2025 19:49:52 +0800
+Message-ID: <20250524115144.3832748-1-olivia.wen@mediatek.com>
 X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250524115144.3832748-1-olivia.wen@mediatek.com>
-References: <20250524115144.3832748-1-olivia.wen@mediatek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -70,235 +67,161 @@ Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 X-MTK: N
 
-Add controls and formats for MediaTek Imgsys processing
+Dear Maintainers,
 
-Signed-off-by: Olivia Wen <olivia.wen@mediatek.com>
----
- include/uapi/linux/mtkisp_imgsys.h | 215 +++++++++++++++++++++++++++++
- 1 file changed, 215 insertions(+)
+I am pleased to submit this patch series that introduces the MediaTek
+ISP7 Image System driver. This series consists of ten patches that
+collectively add support for various components and functionalities of
+the ISP7 architecture. The patches include device tree bindings, user
+API definitions, V4L2 flow support, LARB device integration, CMDQ
+support, SCP support, and image processing flows.
+
+MediaTek's Image System (ImgSys), also known as ISP Pass2, is a
+memory-to-memory hardware device designed for advanced image processing
+tasks. ImgSys includes multiple hardware components such as TRAW, DIP,
+PQDIP, ME, and WPE.
+
+- **TRAW (Tile RAW)**:
+  Provides multiple downscaled resizers for multi-scale noise reduction
+  and supports RAW/RGB format conversion.
+
+- **DIP (Digital Image Processing) and PQDIP (Picture Quality DIP)**:
+  Supports temporal and spatial noise reduction (TNR/SNR), edge
+  enhancement (EE), sharpness (SHP), image scaling, and rotation.
+
+- **ME (Motion Estimation)**:
+  Supports motion estimation between consecutive frames.
+
+- **WPE (Warping Engine)**:
+  Handles image warping and de-warping processes.
+
+ImgSys utilizes Multi-Frame Combined Noise Reduction (MCNR) technology to
+enhance image quality.
+
+Below is a simplified architecture of the ImgSys driver:
+User -> V4L2 Framework -> ImgSys Driver
+     -> SCP (It packages the hardware settings into commands)
+     -> ImgSys Driver
+     -> CMDQ (The packaged commands are sent to the hardware via GCE)
+     -> Hardware
+
+Thease patches are base on linux-next/master, tag: next-20250523
+Thank you for reviewing these patches.
+
+Olivia Wen (10):
+  dt-bindings: media: Add MediaTek mt8188 ImgSys components
+  dt-bindings: media: Add MT8188 ImgSys's LARB
+  uapi: linux: Add MediaTek Imgsys user API
+  media: mediatek: isp: Add V4L2 flow support for ImgSys driver
+  media: mediatek: isp: Add the Imgsys LARBs device
+  media: mediatek: isp: Add module operations structure for ImgSys
+  media: mediatek: isp: Add CMDQ support for ImgSys driver
+  media: mediatek: isp: Add SCP support for ImgSys driver
+  media: mediatek: isp: Add image processing flow
+  media: mediatek: isp: Add normal data dump flow
+
+ .../bindings/media/mediatek,imgsys-larbs.yaml |   75 +
+ .../bindings/media/mediatek,imgsys.yaml       |  180 ++
+ drivers/media/platform/mediatek/Kconfig       |    1 +
+ drivers/media/platform/mediatek/Makefile      |    1 +
+ drivers/media/platform/mediatek/isp/Kconfig   |   23 +
+ .../platform/mediatek/isp/isp_7x/Makefile     |    6 +
+ .../mediatek/isp/isp_7x/imgsys/Makefile       |   25 +
+ .../imgsys/modules/mtk_dip_v4l2_vnode.h       |  594 +++++
+ .../isp_7x/imgsys/modules/mtk_imgsys-dip.c    |  162 ++
+ .../isp_7x/imgsys/modules/mtk_imgsys-dip.h    |   21 +
+ .../isp/isp_7x/imgsys/modules/mtk_imgsys-me.c |   65 +
+ .../isp/isp_7x/imgsys/modules/mtk_imgsys-me.h |   30 +
+ .../isp_7x/imgsys/modules/mtk_imgsys-pqdip.c  |  165 ++
+ .../isp_7x/imgsys/modules/mtk_imgsys-pqdip.h  |   20 +
+ .../isp_7x/imgsys/modules/mtk_imgsys-traw.c   |  120 ++
+ .../isp_7x/imgsys/modules/mtk_imgsys-traw.h   |   20 +
+ .../isp_7x/imgsys/modules/mtk_imgsys-wpe.c    |  176 ++
+ .../isp_7x/imgsys/modules/mtk_imgsys-wpe.h    |   20 +
+ .../isp_7x/imgsys/modules/mtk_me_v4l2_vnode.h |  386 ++++
+ .../imgsys/modules/mtk_pqdip_v4l2_vnode.h     |  149 ++
+ .../imgsys/modules/mtk_traw_v4l2_vnode.h      |  371 ++++
+ .../imgsys/modules/mtk_wpe_v4l2_vnode.h       |  317 +++
+ .../mediatek/isp/isp_7x/imgsys/mtk-img-ipi.h  |  151 ++
+ .../isp/isp_7x/imgsys/mtk_header_desc.h       |  129 ++
+ .../isp/isp_7x/imgsys/mtk_imgsys-cmdq-plat.h  |  502 +++++
+ .../isp/isp_7x/imgsys/mtk_imgsys-cmdq.c       |  690 ++++++
+ .../isp/isp_7x/imgsys/mtk_imgsys-cmdq.h       |   29 +
+ .../isp/isp_7x/imgsys/mtk_imgsys-dev.c        |  299 +++
+ .../isp/isp_7x/imgsys/mtk_imgsys-dev.h        |  570 +++++
+ .../isp/isp_7x/imgsys/mtk_imgsys-formats.c    |  139 ++
+ .../isp/isp_7x/imgsys/mtk_imgsys-formats.h    |   72 +
+ .../isp/isp_7x/imgsys/mtk_imgsys-gce_work.c   |   86 +
+ .../isp/isp_7x/imgsys/mtk_imgsys-gce_work.h   |   37 +
+ .../isp_7x/imgsys/mtk_imgsys-module_common.h  |  102 +
+ .../isp_7x/imgsys/mtk_imgsys-module_main.c    |  187 ++
+ .../isp_7x/imgsys/mtk_imgsys-module_main.h    |   17 +
+ .../isp/isp_7x/imgsys/mtk_imgsys-module_ops.h |   64 +
+ .../isp_7x/imgsys/mtk_imgsys-ndd_debugfs.c    |  342 +++
+ .../isp_7x/imgsys/mtk_imgsys-ndd_debugfs.h    |   64 +
+ .../isp/isp_7x/imgsys/mtk_imgsys-of.c         |   39 +
+ .../isp/isp_7x/imgsys/mtk_imgsys-of.h         |   58 +
+ .../isp/isp_7x/imgsys/mtk_imgsys-scp.c        |  349 +++
+ .../isp/isp_7x/imgsys/mtk_imgsys-scp.h        |  194 ++
+ .../isp/isp_7x/imgsys/mtk_imgsys-sys.c        |  556 +++++
+ .../isp/isp_7x/imgsys/mtk_imgsys-sys.h        |   50 +
+ .../isp/isp_7x/imgsys/mtk_imgsys-v4l2.c       | 1919 +++++++++++++++++
+ .../isp/isp_7x/imgsys/mtk_imgsys-vnode_id.h   |  100 +
+ .../isp/isp_7x/imgsys/mtk_imgsys-work_buf.c   |  113 +
+ .../isp/isp_7x/imgsys/mtk_imgsys-work_buf.h   |   55 +
+ .../isp/isp_7x/imgsys/mtk_imgsys_v4l2_vnode.h |  135 ++
+ include/uapi/linux/mtkisp_imgsys.h            |  215 ++
+ 51 files changed, 10190 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/mediatek,imgsys-larbs.yaml
+ create mode 100644 Documentation/devicetree/bindings/media/mediatek,imgsys.yaml
+ create mode 100644 drivers/media/platform/mediatek/isp/Kconfig
+ create mode 100644 drivers/media/platform/mediatek/isp/isp_7x/Makefile
+ create mode 100644 drivers/media/platform/mediatek/isp/isp_7x/imgsys/Makefile
+ create mode 100644 drivers/media/platform/mediatek/isp/isp_7x/imgsys/modules/mtk_dip_v4l2_vnode.h
+ create mode 100644 drivers/media/platform/mediatek/isp/isp_7x/imgsys/modules/mtk_imgsys-dip.c
+ create mode 100644 drivers/media/platform/mediatek/isp/isp_7x/imgsys/modules/mtk_imgsys-dip.h
+ create mode 100644 drivers/media/platform/mediatek/isp/isp_7x/imgsys/modules/mtk_imgsys-me.c
+ create mode 100644 drivers/media/platform/mediatek/isp/isp_7x/imgsys/modules/mtk_imgsys-me.h
+ create mode 100644 drivers/media/platform/mediatek/isp/isp_7x/imgsys/modules/mtk_imgsys-pqdip.c
+ create mode 100644 drivers/media/platform/mediatek/isp/isp_7x/imgsys/modules/mtk_imgsys-pqdip.h
+ create mode 100644 drivers/media/platform/mediatek/isp/isp_7x/imgsys/modules/mtk_imgsys-traw.c
+ create mode 100644 drivers/media/platform/mediatek/isp/isp_7x/imgsys/modules/mtk_imgsys-traw.h
+ create mode 100644 drivers/media/platform/mediatek/isp/isp_7x/imgsys/modules/mtk_imgsys-wpe.c
+ create mode 100644 drivers/media/platform/mediatek/isp/isp_7x/imgsys/modules/mtk_imgsys-wpe.h
+ create mode 100644 drivers/media/platform/mediatek/isp/isp_7x/imgsys/modules/mtk_me_v4l2_vnode.h
+ create mode 100644 drivers/media/platform/mediatek/isp/isp_7x/imgsys/modules/mtk_pqdip_v4l2_vnode.h
+ create mode 100644 drivers/media/platform/mediatek/isp/isp_7x/imgsys/modules/mtk_traw_v4l2_vnode.h
+ create mode 100644 drivers/media/platform/mediatek/isp/isp_7x/imgsys/modules/mtk_wpe_v4l2_vnode.h
+ create mode 100644 drivers/media/platform/mediatek/isp/isp_7x/imgsys/mtk-img-ipi.h
+ create mode 100644 drivers/media/platform/mediatek/isp/isp_7x/imgsys/mtk_header_desc.h
+ create mode 100644 drivers/media/platform/mediatek/isp/isp_7x/imgsys/mtk_imgsys-cmdq-plat.h
+ create mode 100644 drivers/media/platform/mediatek/isp/isp_7x/imgsys/mtk_imgsys-cmdq.c
+ create mode 100644 drivers/media/platform/mediatek/isp/isp_7x/imgsys/mtk_imgsys-cmdq.h
+ create mode 100644 drivers/media/platform/mediatek/isp/isp_7x/imgsys/mtk_imgsys-dev.c
+ create mode 100644 drivers/media/platform/mediatek/isp/isp_7x/imgsys/mtk_imgsys-dev.h
+ create mode 100644 drivers/media/platform/mediatek/isp/isp_7x/imgsys/mtk_imgsys-formats.c
+ create mode 100644 drivers/media/platform/mediatek/isp/isp_7x/imgsys/mtk_imgsys-formats.h
+ create mode 100644 drivers/media/platform/mediatek/isp/isp_7x/imgsys/mtk_imgsys-gce_work.c
+ create mode 100644 drivers/media/platform/mediatek/isp/isp_7x/imgsys/mtk_imgsys-gce_work.h
+ create mode 100644 drivers/media/platform/mediatek/isp/isp_7x/imgsys/mtk_imgsys-module_common.h
+ create mode 100644 drivers/media/platform/mediatek/isp/isp_7x/imgsys/mtk_imgsys-module_main.c
+ create mode 100644 drivers/media/platform/mediatek/isp/isp_7x/imgsys/mtk_imgsys-module_main.h
+ create mode 100644 drivers/media/platform/mediatek/isp/isp_7x/imgsys/mtk_imgsys-module_ops.h
+ create mode 100644 drivers/media/platform/mediatek/isp/isp_7x/imgsys/mtk_imgsys-ndd_debugfs.c
+ create mode 100644 drivers/media/platform/mediatek/isp/isp_7x/imgsys/mtk_imgsys-ndd_debugfs.h
+ create mode 100644 drivers/media/platform/mediatek/isp/isp_7x/imgsys/mtk_imgsys-of.c
+ create mode 100644 drivers/media/platform/mediatek/isp/isp_7x/imgsys/mtk_imgsys-of.h
+ create mode 100644 drivers/media/platform/mediatek/isp/isp_7x/imgsys/mtk_imgsys-scp.c
+ create mode 100644 drivers/media/platform/mediatek/isp/isp_7x/imgsys/mtk_imgsys-scp.h
+ create mode 100644 drivers/media/platform/mediatek/isp/isp_7x/imgsys/mtk_imgsys-sys.c
+ create mode 100644 drivers/media/platform/mediatek/isp/isp_7x/imgsys/mtk_imgsys-sys.h
+ create mode 100644 drivers/media/platform/mediatek/isp/isp_7x/imgsys/mtk_imgsys-v4l2.c
+ create mode 100644 drivers/media/platform/mediatek/isp/isp_7x/imgsys/mtk_imgsys-vnode_id.h
+ create mode 100644 drivers/media/platform/mediatek/isp/isp_7x/imgsys/mtk_imgsys-work_buf.c
+ create mode 100644 drivers/media/platform/mediatek/isp/isp_7x/imgsys/mtk_imgsys-work_buf.h
+ create mode 100644 drivers/media/platform/mediatek/isp/isp_7x/imgsys/mtk_imgsys_v4l2_vnode.h
  create mode 100644 include/uapi/linux/mtkisp_imgsys.h
 
-diff --git a/include/uapi/linux/mtkisp_imgsys.h b/include/uapi/linux/mtkisp_imgsys.h
-new file mode 100644
-index 000000000000..c7528c8bf4a2
---- /dev/null
-+++ b/include/uapi/linux/mtkisp_imgsys.h
-@@ -0,0 +1,215 @@
-+/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
-+/*
-+ * MediaTek ISP imgsys User space API
-+ *
-+ * Copyright (c) 2024 MediaTek Inc.
-+ */
-+
-+#ifndef _MTKISP_IMGSYS_USER_H
-+#define _MTKISP_IMGSYS_USER_H
-+
-+#include <linux/v4l2-controls.h>
-+
-+/******************************************************/
-+/*            MediaTek ISP imgsys controls            */
-+/******************************************************/
-+
-+/* The base for the MediaTek imgsys driver controls */
-+/* We reserve 48 controls for this driver. */
-+#define V4L2_CID_USER_MTK_IMG_BASE		(V4L2_CID_USER_BASE + 0x1100)
-+
-+/**
-+ * Define a control identifier, V4L2_CID_MTK_IMG_RESIZE_RATIO, for setting the
-+ * image processing resize ratio for MediaTek chip. This identifier allows
-+ * adjustment of the image resize ratio to accommodate various display or
-+ * processing needs. ImgSys hardware supports multiple resizers, including
-+ * any ratio, downscaling by factors of 2, 4, and 42, with NULL indicating
-+ * the end of menu options.
-+ */
-+#define V4L2_CID_MTK_IMG_RESIZE_RATIO	(V4L2_CID_USER_MTK_IMG_BASE + 34)
-+
-+/******************************************************/
-+/*       Vendor specific - MediaTek ISP formats       */
-+/******************************************************/
-+
-+/* MediaTek warp map 32-bit, 2 plane */
-+#define V4L2_PIX_FMT_WARP2P      v4l2_fourcc('M', 'W', '2', 'P')
-+/* YUV-10bit packed 4:2:0 2plane, (Y)(UV)  */
-+#define V4L2_PIX_FMT_YUV_2P010P    v4l2_fourcc('U', '0', '2', 'A')
-+/* YUV-12bit packed 4:2:0 2plane, (Y)(UV)  */
-+#define V4L2_PIX_FMT_YUV_2P012P    v4l2_fourcc('U', '0', '2', 'C')
-+/* Y-32bit */
-+#define V4L2_PIX_FMT_MTISP_Y32   v4l2_fourcc('M', 'T', '3', '2')
-+/* Y-16bit */
-+#define V4L2_PIX_FMT_MTISP_Y16   v4l2_fourcc('M', 'T', '1', '6')
-+/* Y-8bit */
-+#define V4L2_PIX_FMT_MTISP_Y8   v4l2_fourcc('M', 'T', '0', '8')
-+
-+/**
-+ * Describes the MediaTek APLY8(V4L2_PIX_FMT_MTISP_APLY8) format, which includes
-+ * Y-8bit image data and appends APL(Average Pixel Level) data utilized by the
-+ * ME(motion estimation) hardware to the end of the image.
-+ *
-+ * The hardware ME generates motion vectors by processing two consecutive frames,
-+ * referred to as the previous and current frames, to enhance graphic processing.
-+ * The diagram is shown below.
-+ *
-+ *                                     +------------------+
-+ *  the thumbnail of previous frame -> |                  |
-+ *  (include the L0 frame and L1 frame)|                  |
-+ *                                     |        ME        | -> motion vectors
-+ *  the thumbnail of current frame  -> |                  |
-+ *  (include the L0 frame and L1 frame)|                  |
-+ *                                     +------------------+
-+ *
-+ * To accelerate computation, the two images will be resized into two different
-+ * smaller images, referred to as L0 frame, L1 frame and APL data.
-+ * The L1 frame is a scaled-down version of the L0 frame, reduced to one-fourth
-+ * of its original size containing APL data.
-+ *
-+ *                                     +------------------+
-+ *                previous L0 frame -> |                  |
-+ *                previous L1 frame -> |                  |
-+ *                (include APL data)   |                  |
-+ *                                     |        ME        | -> motion vectors
-+ *                current L0 frame  -> |                  |
-+ *                current L1 frame  -> |                  |
-+ *                (include APL data)   |                  |
-+ *                                     +------------------+
-+ *
-+ * Each frame size:
-+ *    the width of L0 frame (L0_wd) = 576 (fixed value)
-+ *    the height of L0 frame (L0_ht) =
-+ *    16 pixels align((the width of original image * L0_wd) / the height of original image)
-+ *    the width of L1 frame (L1_wd) = L0_wd / 4
-+ *    the height of L1 frame (L1_ht) = L0_ht / 4
-+ *
-+ * Buffer size:
-+ *    line_size = width * bytes_per_pixel(1)
-+ *    stride with 16 bytes alignment = ((line_size + 15) / 16) * 16
-+ *    buffer_size = stride with 16 bytes alignment * height + APL data(16 bytes)
-+ *
-+ * And the memory layout should be followed as
-+ *
-+ *  @code
-+ *           APLY8
-+ *    +------------------+
-+ *    |     Y Plane      |
-+ *    |    Bit Stream    |
-+ *    +------------------+
-+ *    |      APL data    |
-+ *    +------------------+
-+ *  @endcode
-+ *
-+ *  @note The APL data size is 16 bytes.The caller SHOULD NOT modify it.
-+ */
-+/* Y-8bit image data and append the APL data */
-+#define V4L2_PIX_FMT_MTISP_APLY8   v4l2_fourcc('M', 'T', 'A', '8')
-+
-+/*  Packed 10-bit  */
-+#define V4L2_PIX_FMT_MTISP_SBGGR10  v4l2_fourcc('M', 'B', 'B', 'A')
-+#define V4L2_PIX_FMT_MTISP_SGBRG10  v4l2_fourcc('M', 'B', 'G', 'A')
-+#define V4L2_PIX_FMT_MTISP_SGRBG10  v4l2_fourcc('M', 'B', 'g', 'A')
-+#define V4L2_PIX_FMT_MTISP_SRGGB10  v4l2_fourcc('M', 'B', 'R', 'A')
-+
-+/* Vendor specific - MediaTek ISP parameters for firmware */
-+/* ISP tuning parameters */
-+#define V4L2_META_FMT_MTISP_TUN_PARAMS  v4l2_fourcc('M', 'T', 'f', 't')
-+/* ISP statistics parameters */
-+#define V4L2_META_FMT_MTISP_STAT_PARAMS v4l2_fourcc('M', 'T', 'f', 's')
-+/* ISP controlling parameters */
-+#define V4L2_META_FMT_MTISP_CTL_PARAMS  v4l2_fourcc('M', 'T', 'f', 'c')
-+
-+/*****************************************************************************/
-+/* Define sizes for various formats used in the MediaTek image system driver */
-+/*****************************************************************************/
-+/**
-+ * SIZE_OF_APL_DATA - Size of the APL (Average Pixel Level) data
-+ *
-+ * This constant defines the size of the APL data, which is 16 bytes.
-+ * The APL data is appended to the image format defined by
-+ * V4L2_PIX_FMT_MTISP_APLY8. This format includes 8-bit Y image data
-+ * followed by the APL data, which is utilized by the motion estimation
-+ * hardware for enhanced processing. The APL data provides important
-+ * information about the average pixel levels, which can be critical
-+ * for various image processing tasks.
-+ */
-+#define SIZE_OF_APL_DATA 16 /* Size of APL data used by V4L2_PIX_FMT_MTISP_APLY8 */
-+
-+/**
-+ * MediaTek Tuning Metadata Buffer for Image Processing Modules
-+ *
-+ * This definition is used for format V4L2_META_FMT_MTISP_TUN_PARAMS.
-+ * This buffer contains essential tuning information for the MediaTek camera,
-+ * including:
-+ * - Sensor tuning settings
-+ * - Digital gain for adjusting image brightness
-+ * - White balance gain
-+ *
-+ * Note: The individual fields of the tuning metadata structure are not exposed
-+ * to the kernel. The kernel only requires the size of the tuning metadata
-+ * for memory allocation and management purposes. This encapsulation provides
-+ * flexibility in implementing the tuning metadata without impacting the
-+ * kernel's interface.
-+ */
-+ #define SIZE_OF_TUNING_META 219352
-+
-+/**
-+ * MediaTek Control Metadata Buffer for Image Processing Modules
-+ *
-+ * This definition is used for format V4L2_META_FMT_MTISP_CTL_PARAMS.
-+ * The control metadata buffer aggregates control information for multiple
-+ * image processing modules, including TRAW, DIP, PQDIP, ME, WPE, and ADL.
-+ * It facilitates the configuration and management of these modules by
-+ * encapsulating relevant parameters and settings required for processing
-+ * image data efficiently. This structure serves as a central point for
-+ * coordinating the operation of different hardware components in the image
-+ * processing pipeline.
-+ *
-+ * Note: The individual fields of the control metadata structure are not exposed
-+ * to the kernel. The kernel only requires the size of the control metadata
-+ * for memory allocation and management purposes. This encapsulation provides
-+ * flexibility in implementing the control metadata without impacting the
-+ * kernel's interface.
-+ */
-+#define SIZE_OF_COMMON_CTRL       688
-+#define SIZE_OF_WPE_CTRL          240
-+#define SIZE_OF_TRAW_CTRL         120
-+#define SIZE_OF_DIP_CTRL          112
-+#define SIZE_OF_PQDIP_CTRL        112
-+#define SIZE_OF_ME_CTRL           8
-+#define SIZE_OF_ADL_CTRL          64
-+#define SIZE_OF_YUFO_META_INFO_WPE 4228
-+#define SIZE_OF_YUFO_META_INFO_DIP 4228
-+
-+#define SIZE_OF_CTRL_META ( \
-+	SIZE_OF_COMMON_CTRL + \
-+	SIZE_OF_WPE_CTRL + \
-+	SIZE_OF_TRAW_CTRL + \
-+	SIZE_OF_DIP_CTRL + \
-+	SIZE_OF_PQDIP_CTRL + \
-+	SIZE_OF_ME_CTRL + \
-+	SIZE_OF_ADL_CTRL + \
-+	SIZE_OF_YUFO_META_INFO_WPE + \
-+	SIZE_OF_YUFO_META_INFO_DIP \
-+)
-+
-+/**
-+ * MediaTek Statistics Metadata Buffer for Image Processing Modules
-+ *
-+ * This definition is used for format V4L2_META_FMT_MTISP_STAT_PARAMS.
-+ * This buffer contains essential statistics information for the MediaTek camera,
-+ * including:
-+ * - Readiness and corresponding values for tone and contrast statistics
-+ * - Motion estimation (ME) statistics
-+ * - ME feature match blocks statistics
-+ *
-+ * Note: The individual fields of the statistics buffer structure are not exposed
-+ * to the kernel. The kernel only requires the size of the statistics metadata
-+ * for memory allocation and management purposes. This encapsulation provides
-+ * flexibility in implementing the statistics metadata without impacting the
-+ * kernel's interface.
-+ */
-+ #define SIZE_OF_STATISTICS_META 88
-+
-+#endif /* _MTKISP_IMGSYS_USER_H */
 -- 
 2.45.2
 
