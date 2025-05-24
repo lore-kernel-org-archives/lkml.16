@@ -1,135 +1,185 @@
-Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2B1933E1
-	for <linux-kernel@vger.kernel.org>; Sat, 24 May 2025 00:03:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FDE48F66;
+	Sat, 24 May 2025 00:06:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748044993; cv=none; b=LjlIhi+XqcAaIefalXQyQvmTQLtUWkzRN+FM+ExwWOxD/n1275/3COzhCEbM6XQrIdp2rsfb/QY4amDWHdSH8+Ha5IPqT9aaMsX8YBCIczDUaUmec7v1PmQMViK7Ae/GUkrOx87yb/57y0NvrdlLCcBkif8WWN5Q/861v7z24bU=
+	t=1748045173; cv=none; b=K06syPZ4vWhcTuZqudm+SpuxVw8/AsLgj8nzHeQnOXWa3c8lAm3i9wU6QIvymDOTZFY9/jrGZJQpUbdKYAUt6kdMXycVakz/jHSmqS3h8Xzo99URcjKWK658NlZcHwyQModFjetMBaeBotI1oZVl9skudZGB9ZdnVNfq5QyRxao=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748044993; c=relaxed/simple;
-	bh=D1rHEs9Rnrh2fo3+SBcBY9k/RBpmLkbdd9w+WxaWi+E=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=JnnaOK+eAzlXdgay+kUGvEnFWTWEWYGHleQS927ynN163DegTa0pbPxSrrupz2/VlsyQkqGSGBDHpRl8xwChOPkoEYWdskqlGnQiVKohhvbnw+tEuuQW0zn0vMRb3q/BCfuQTJT8LVq42yr2p+ufhW1xWNIHp8nvRFJVt1fiz8M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ndufresne.ca; spf=none smtp.mailfrom=ndufresne.ca; dkim=pass (2048-bit key) header.d=ndufresne-ca.20230601.gappssmtp.com header.i=@ndufresne-ca.20230601.gappssmtp.com header.b=vZ1PjET3; arc=none smtp.client-ip=209.85.222.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ndufresne.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ndufresne.ca
+	s=arc-20240116; t=1748045173; c=relaxed/simple;
+	bh=d5tUJSTZcL5Tc4PZdJBl8+x39c8Y4r8OKEODz43Oe80=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jsp+MXBpWSQkafLLTwbH1UIv3h/RMLJ+qXuhyEEGYuumH4IQbdzh4lAc3k0CT3lDpzKHI5VnfYi6M4TcNUepzzKslXzC9aZhA/1AiWBlEYd/r6kGjA6IEeUmXv5QyMo7Ku2oyVkFKRKGFT8/E52yUzcg2KtqOd5gHeRGGTttqaA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=s3R3w63k; arc=none smtp.client-ip=78.32.30.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ndufresne-ca.20230601.gappssmtp.com header.i=@ndufresne-ca.20230601.gappssmtp.com header.b="vZ1PjET3"
-Received: by mail-qk1-f172.google.com with SMTP id af79cd13be357-7c597760323so30268885a.3
-        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 17:03:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ndufresne-ca.20230601.gappssmtp.com; s=20230601; t=1748044991; x=1748649791; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=H4opPIOSOsz08wDjPNXDe/THEcgYZeP29JFFlP6TG8U=;
-        b=vZ1PjET3KCe/yTcFb2smdpHmj3bNQT3h/Uf8e5oNFzzBZFvM8U8r3vNVnBXltKKnZO
-         Um9vpwsh/dly3h5NWyshT0EA6/3uFnLj5e3JAnREqXBOepihnw6qX33nNr4C/sp13b/f
-         TNRBU57jASh7alt+ZKHELoj41HbacWF0a1g8be92t+kDtzoGxzc22W2PBsjLk2NuuuT2
-         0Uj89uxrXPmJ3wmFnq5my1rgkJHZbKde1c1M9VzfMuHg/NZ91KKtIWv6rU/rilqHOgnP
-         8eN24zi/xEvWnpveeK3W0d2ZawKGuXQ6sNyaedxubCxbRjJdpRzHAxlhqxsuSkYROY35
-         AF+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748044991; x=1748649791;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=H4opPIOSOsz08wDjPNXDe/THEcgYZeP29JFFlP6TG8U=;
-        b=gR6LurMblKLEJlQt+MklNeFCXAeglgrcnLB3WXGzPwxG7GSfjThnPiqEs/uO/DkPKX
-         jdTbT0AJoTHTCjMcbu3xtxLtajZ3wM9bK2q3aRMp0PBcUbwn0K8zdFmZQVUkcmFEEOoE
-         eUpYtjpdr4K88cJcmKVZBI82TTIe8a3I4ZmSXdQxhzzC5/GWAZY5onU5cstDLVYya47I
-         VigmUDlPjVFcZhJRpJ9Vx+q+Uj0jlohK24tdHIRCJ+d+5vKhBOW5WYZ6AMj7QfUtXJ7w
-         ekCxlhf/ww1i+GH31er+cxcyiIOYb9cK4AW+BV0lef95L0b24nWLWkCzKAemqsUrntqE
-         qyiQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXFT96M/T6tfjvKP0NuUnmGGZOVdH4B01+5X17b5Eae2ogNOGbCyJELN8ZnlM1aBXvoQB1U3LQgdZtbGZI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxbZV9gqfMHMnsIfpWHyAQv5vzGQs757p81xOp3kiRwZ2dbfVwT
-	Fh7tNqgod65TyJLlnPztdT28qpMK+X/oNImqJc8yZBQBVFPnwmeBVQrhPXpBdIwe1kZHLwQvips
-	Rn1r7qfM=
-X-Gm-Gg: ASbGncuN0g7kXYGF8/pMvrW0U9mgOmkmbWUtNaMWoTX+AFlQ9UGbUTh/+SvDCu7zokV
-	g8aLRDczw+lSOT90RZxLHYr15h/FjU8f8q/Yu1PFa6S8oqJvzYP6VMYoCyugn1Zaf84cQ5aCDFG
-	pZ4UBYPKqW5scjti7FtbFQP4b7Es4QT7H/4+vWYTRxoeKkIzU6vJPkvfv5KKiVqiYipCOERU2ux
-	DPhZJVa+IEnL0iM0iwm3WUSF2RDe77xFDviXhn75CFNhGuA0bRj/N+/QAvTspsenfa+yXt7irB8
-	U+kS0JXSb/fK56XPBzahkzj6TYlWchuz3EY9xizSH3G1IfMykybBgZHq
-X-Google-Smtp-Source: AGHT+IGBwAQoWstxEDbk7EcqjEnHqu91vhi+vANL+tSMX7buO7G75pqfgQLBAaGT9HN1knmW2LmwKA==
-X-Received: by 2002:a05:620a:19a7:b0:7ce:b9ed:24dc with SMTP id af79cd13be357-7ceecbd2f51mr179211185a.23.1748044990812;
-        Fri, 23 May 2025 17:03:10 -0700 (PDT)
-Received: from ?IPv6:2606:6d00:17:b2fc::c41? ([2606:6d00:17:b2fc::c41])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7cd467ef019sm1253414085a.63.2025.05.23.17.03.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 May 2025 17:03:10 -0700 (PDT)
-Message-ID: <a40986e970f049aa1448bee662b024e50404e04d.camel@ndufresne.ca>
-Subject: Re: [PATCH 08/18] media: coda: Add log to finish_encode if buffer
- is too small
-From: Nicolas Dufresne <nicolas@ndufresne.ca>
-To: Sergey Khimich <serghox@gmail.com>, linux-media@vger.kernel.org
-Cc: Philipp Zabel <p.zabel@pengutronix.de>, Mauro Carvalho Chehab
-	 <mchehab@kernel.org>, linux-kernel@vger.kernel.org, Vladimir Yakovlev
-	 <vovchkir@gmail.com>, Maksim Turok <turok.m7@gmail.com>
-Date: Fri, 23 May 2025 20:03:09 -0400
-In-Reply-To: <20250314152939.2759573-9-serghox@gmail.com>
-References: <20250314152939.2759573-1-serghox@gmail.com>
-	 <20250314152939.2759573-9-serghox@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.1 (3.56.1-1.fc42) 
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="s3R3w63k"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=kJW5yfLMv6KfYajBWSB2+tcy3Ju4PEVFx9kcwqoX2M8=; b=s3R3w63k4JHTq66/JjHB3c/PnR
+	vMXzuY6WQj8bpgPt2kJRuib+GLaM3kYRx3NE8wnMhr0hPrJSI1mp7woYJBtv7bu2fASR5Jnf5lqEH
+	SCPz3nneg3BV/mGEAywVzBnkUk8RmK38w0kCO17zEmHJnLtDtjn2EqA4t2R88SItIlJkco63+uKFk
+	jCn+IGlm5SBzNcb3l+wwDGva82RKj4kWXjHjEm283Om5wVuXxfyCqu0iZ0WciHzyX0fDsXR0339u9
+	NUZ068vY9q1JYl7AYdY+CL+/BNF1weL6y/v6WYU5iimdqX+NwQWLoEGDxWs2pyzWALV8gerYDnKXR
+	vI+1mGNA==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:54864)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1uIcOm-0004BY-32;
+	Sat, 24 May 2025 01:06:01 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1uIcOg-0006Ib-04;
+	Sat, 24 May 2025 01:05:54 +0100
+Date: Sat, 24 May 2025 01:05:53 +0100
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: Sean Anderson <sean.anderson@linux.dev>
+Cc: Heiner Kallweit <hkallweit1@gmail.com>, netdev@vger.kernel.org,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Lei Wei <quic_leiwei@quicinc.com>,
+	Christian Marangi <ansuelsmth@gmail.com>,
+	Kory Maincent <kory.maincent@bootlin.com>,
+	Simon Horman <horms@kernel.org>,
+	Daniel Golle <daniel@makrotopia.org>,
+	Vineeth Karumanchi <vineeth.karumanchi@amd.com>,
+	linux-kernel@vger.kernel.org, Ioana Ciornei <ioana.ciornei@nxp.com>,
+	Vladimir Oltean <vladimir.oltean@nxp.com>, imx@lists.linux.dev,
+	linux-stm32@st-md-mailman.stormreply.com
+Subject: Re: [net-next PATCH v5 05/10] net: pcs: lynx: Convert to an MDIO
+ driver
+Message-ID: <aDENYfL7Hstsswml@shell.armlinux.org.uk>
+References: <20250523203339.1993685-1-sean.anderson@linux.dev>
+ <20250523203339.1993685-6-sean.anderson@linux.dev>
+ <a937e728-d911-4fcc-9af1-9ae6130f96c1@gmail.com>
+ <3a452864-9d02-4fa7-9d7c-a240b611ee74@linux.dev>
+ <e0bd575b-a01b-418f-9d89-b59398e87a48@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e0bd575b-a01b-418f-9d89-b59398e87a48@linux.dev>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-Hi,
+On Fri, May 23, 2025 at 06:07:16PM -0400, Sean Anderson wrote:
+> On 5/23/25 17:39, Sean Anderson wrote:
+> > On 5/23/25 17:33, Heiner Kallweit wrote:
+> >> On 23.05.2025 22:33, Sean Anderson wrote:
+> >>> This converts the lynx PCS driver to a proper MDIO driver.
+> >>> This allows using a more conventional driver lifecycle (e.g. with a
+> >>> probe and remove). It will also make it easier to add interrupt support.
+> >>> 
+> >>> The existing helpers are converted to bind the MDIO driver instead of
+> >>> creating the PCS directly. As lynx_pcs_create_mdiodev creates the PCS
+> >>> device, we can just set the modalias. For lynx_pcs_create_fwnode, we try
+> >>> to get the PCS the usual way, and if that fails we edit the devicetree
+> >>> to add a compatible and reprobe the device.
+> >>> 
+> >>> To ensure my contributions remain free software, remove the BSD option
+> >>> from the license. This is permitted because the SPDX uses "OR".
+> >>> 
+> >>> Signed-off-by: Sean Anderson <sean.anderson@linux.dev>
+> >>> ---
+> >>> 
+> >>> Changes in v5:
+> >>> - Use MDIO_BUS instead of MDIO_DEVICE
+> >>> 
+> >>> Changes in v4:
+> >>> - Add a note about the license
+> >>> - Convert to dev-less pcs_put
+> >>> 
+> >>> Changes in v3:
+> >>> - Call devm_pcs_register instead of devm_pcs_register_provider
+> >>> 
+> >>> Changes in v2:
+> >>> - Add support for #pcs-cells
+> >>> - Remove unused variable lynx_properties
+> >>> 
+> >>>  drivers/net/dsa/ocelot/Kconfig                |   4 +
+> >>>  drivers/net/dsa/ocelot/felix_vsc9959.c        |  11 +-
+> >>>  drivers/net/dsa/ocelot/seville_vsc9953.c      |  11 +-
+> >>>  drivers/net/ethernet/altera/Kconfig           |   2 +
+> >>>  drivers/net/ethernet/altera/altera_tse_main.c |   7 +-
+> >>>  drivers/net/ethernet/freescale/dpaa/Kconfig   |   2 +-
+> >>>  drivers/net/ethernet/freescale/dpaa2/Kconfig  |   3 +
+> >>>  .../net/ethernet/freescale/dpaa2/dpaa2-mac.c  |  11 +-
+> >>>  drivers/net/ethernet/freescale/enetc/Kconfig  |   2 +
+> >>>  .../net/ethernet/freescale/enetc/enetc_pf.c   |   8 +-
+> >>>  .../net/ethernet/freescale/enetc/enetc_pf.h   |   1 -
+> >>>  .../freescale/enetc/enetc_pf_common.c         |   4 +-
+> >>>  drivers/net/ethernet/freescale/fman/Kconfig   |   4 +-
+> >>>  .../net/ethernet/freescale/fman/fman_memac.c  |  25 ++--
+> >>>  drivers/net/ethernet/stmicro/stmmac/Kconfig   |   3 +
+> >>>  .../ethernet/stmicro/stmmac/dwmac-socfpga.c   |   6 +-
+> >>>  drivers/net/pcs/Kconfig                       |  11 +-
+> >>>  drivers/net/pcs/pcs-lynx.c                    | 110 ++++++++++--------
+> >>>  include/linux/pcs-lynx.h                      |  13 ++-
+> >>>  19 files changed, 128 insertions(+), 110 deletions(-)
+> >>> 
+> >>> diff --git a/drivers/net/dsa/ocelot/Kconfig b/drivers/net/dsa/ocelot/Kconfig
+> >>> index 081e7a88ea02..907c29d61c14 100644
+> >>> --- a/drivers/net/dsa/ocelot/Kconfig
+> >>> +++ b/drivers/net/dsa/ocelot/Kconfig
+> >>> @@ -42,7 +42,9 @@ config NET_DSA_MSCC_FELIX
+> >>>  	select NET_DSA_TAG_OCELOT_8021Q
+> >>>  	select NET_DSA_TAG_OCELOT
+> >>>  	select FSL_ENETC_MDIO
+> >>> +	select PCS
+> >>>  	select PCS_LYNX
+> >>> +	select MDIO_BUS
+> >> 
+> >> This shouldn't be needed. NET_DSA selects PHYLINK, which selects PHYLIB,
+> >> which selects MDIO_BUS. There are more places in this series where the
+> >> same comment applies.
+> > 
+> > select does not transitively enable dependencies. See the note in
+> > Documentation/kbuild/kconfig-language.rst for details. Therefore we must
+> > select the dependencies of things we select in order to ensure we do not
+> > trip sym_warn_unmet_dep.
+> 
+> OK, I see what you mean here. But of course NET_DSA is missing selects for
+> PHYLIB and MDIO_BUS. And PHYLINK is also missing a select for MDIO_BUS. Actually,
+> this bug is really endemic. Maybe we should just get rid of PHYLIB as a config
+> and just make everything depend on ETHERNET instead.
 
-Le vendredi 14 mars 2025 =C3=A0 18:29 +0300, Sergey Khimich a =C3=A9crit=C2=
-=A0:
-> From: Vladimir Yakovlev <vovchkir@gmail.com>
->=20
-> CODA_RET_ENC_PIC_FLAG flag means that bitstream buffer size
-> is not enough to save one frame data when buffer reset mode is used.
-> If this flag is set, currently encoded bitstream is corrupted.
->=20
-> Co-developed-by: Sergey Khimich <serghox@gmail.com>
-> Signed-off-by: Sergey Khimich <serghox@gmail.com>
-> Signed-off-by: Vladimir Yakovlev <vovchkir@gmail.com>
-> ---
-> =C2=A0drivers/media/platform/chips-media/coda/coda-bit.c | 8 +++++++-
-> =C2=A01 file changed, 7 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/media/platform/chips-media/coda/coda-bit.c b/drivers=
-/media/platform/chips-media/coda/coda-bit.c
-> index 3e3bb3d64ec9..515eb8be4b86 100644
-> --- a/drivers/media/platform/chips-media/coda/coda-bit.c
-> +++ b/drivers/media/platform/chips-media/coda/coda-bit.c
-> @@ -1641,6 +1641,7 @@ static void coda_finish_encode(struct coda_ctx *ctx=
-)
-> =C2=A0	struct vb2_v4l2_buffer *src_buf, *dst_buf;
-> =C2=A0	struct coda_dev *dev =3D ctx->dev;
-> =C2=A0	u32 wr_ptr, start_ptr;
-> +	int val;
-> =C2=A0
-> =C2=A0	if (ctx->aborting)
-> =C2=A0		return;
-> @@ -1674,7 +1675,12 @@ static void coda_finish_encode(struct coda_ctx *ct=
-x)
-> =C2=A0	coda_dbg(1, ctx, "frame size =3D %u\n", wr_ptr - start_ptr);
-> =C2=A0
-> =C2=A0	coda_read(dev, CODA_RET_ENC_PIC_SLICE_NUM);
-> -	coda_read(dev, CODA_RET_ENC_PIC_FLAG);
-> +	val =3D coda_read(dev, CODA_RET_ENC_PIC_FLAG);
-> +	if (val > 0) {
-> +		v4l2_err(&dev->v4l2_dev,
-> +			 "Encode fail. Encode buffer is too small\n");
-> +		// TODO what to do next?
+You're reading the documentation wrongly.
 
-Lower in the same function, you should still copy the metadata but replace
-VB2_BUF_STATE_DONE with VB2_BUF_STATE_ERROR. Perhaps introduce a state
-variable and set it accordingly.
+Take this example:
 
-Nicolas
+config A
+	select B
 
-> +	}
-> =C2=A0
-> =C2=A0	dst_buf->flags &=3D ~(V4L2_BUF_FLAG_KEYFRAME |
-> =C2=A0			=C2=A0=C2=A0=C2=A0 V4L2_BUF_FLAG_PFRAME |
+config B
+	select C
+	depends on E
+
+config C
+	select D
+
+config D
+
+config E
+
+Enabling A leads to B, C and D all being enabled, but it does *not*
+lead to E being enabled - kconfig will issue a warning if E is not
+already enabled.
+
+E is a dependency of B. There are no other dependencies, but there
+are reverse dependencies, and reverse dependencies are propagated.
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
