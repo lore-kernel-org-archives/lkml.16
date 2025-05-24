@@ -1,227 +1,99 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95AD4101FF;
-	Sat, 24 May 2025 03:39:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 661E317BBF;
+	Sat, 24 May 2025 03:55:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748057976; cv=none; b=sA/Nz95HDKe6ylt/T6/DBSgfVqxMpBKcx318xx5omDg7MUIRU4Jy//m8rgkhCwEVb39ra/mpjVCMrzPG1uIYJONYwAnaiQEWxOAoIW+HfGIqfmUj5lCzJF7RCA7soIAXZGB/7R682oliLEJpcrZHxkzcvtdHVWlmb18TMgOixMg=
+	t=1748058947; cv=none; b=RWGMcNtihlnKdJvj6T3Q7muBNpoKoyPiKaHHPjmVoH8RpFVbEIFaPI0kayUulXG8PLJJp6ZaQD/co4C6RQGJgBrj9vKnvYlcX95EyARKWuL7e/mey3HqV2xzJdZYiPtvgXz1m8ash7Myz73hUj2yNQCQ8SDjNvXFaLOPikycHqA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748057976; c=relaxed/simple;
-	bh=7IzTik7Z1oQYNbi1ZtvITH1vtj4QWC1+x7Q28RIHobI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=R6w0DmHEqdXbKlatfy802Y8vNbzvyKZrAvAABTSCZvruHp5JqHJBO87vuNReAlR4ou5dnwsuucLkozeBUSs1KT099TutJ1McDPttcQI5wCRs0hZx1LRx1hJ/H15fCVSvEMfEzrGgfHwznxEi8Y/LRtlhGYbK/7i0GQ7lK0TVVSU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XrqQljMu; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1748058947; c=relaxed/simple;
+	bh=JU8iOU5XsMKv/yF0+qrL2TTRn1KelKiIZHxAy0V+ank=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Y14PzEC5/fLe1RuQJcSI0OK8x/pzU9sP68g+pFTtbesBItynMjacdXjLwezMrIaf6+BgsnEaLpeq4FTfCpzqVkb0vgFEp6o7vbXrLJU1DQS9xFZxNaGUPxVdhi6s8ZQZQZRoKusmywzoOpR73WtHpoNKzw+cOzioIlftmPUTzmY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OuCZX2MK; arc=none smtp.client-ip=209.85.215.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XrqQljMu"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748057973; x=1779593973;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=7IzTik7Z1oQYNbi1ZtvITH1vtj4QWC1+x7Q28RIHobI=;
-  b=XrqQljMuPCnydCrBKUKNKl/sgSQfxikD0pa/vGCzEh+3uD626/s9zZDc
-   EO3AC0d2NgeD0yYnCfyevH1Y4E2XMzvb1Np7NTndSyUdz5XYT+TikLzE6
-   m7xgw7H9oRGhjCa1/OxVMBhyszM1JdSOoQsP/DKlzL9f1KH8llAp5qZmY
-   lqCT2qtLb32zsdz3Tp8+bEYsZRZkZ5Av3G+K1HvosWbuz0WE88UsKMSBv
-   0ejLYZni7BmK6MQGgV+CjTz9DMKG3TgZCwmectd4OHkeKIuLrB38Fmal3
-   TCVFX9ywp4P/r/lCXS3MqoJPVYH3LdexcxL0+zaANRalL5y3oU1wJnUPV
-   A==;
-X-CSE-ConnectionGUID: hCdmmq9kSAmjcMsWfSWjKg==
-X-CSE-MsgGUID: jiAD3MUdS92tITHvGVGJPQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11441"; a="50227673"
-X-IronPort-AV: E=Sophos;i="6.15,310,1739865600"; 
-   d="scan'208";a="50227673"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2025 20:39:32 -0700
-X-CSE-ConnectionGUID: zcZxj8dbTb+bAaFrzD0SGA==
-X-CSE-MsgGUID: DCJiGGXWQl+UORP1bJyepw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,310,1739865600"; 
-   d="scan'208";a="141966994"
-Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
-  by orviesa007.jf.intel.com with ESMTP; 23 May 2025 20:39:28 -0700
-Date: Sat, 24 May 2025 11:33:25 +0800
-From: Xu Yilun <yilun.xu@linux.intel.com>
-To: Alexey Kardashevskiy <aik@amd.com>
-Cc: Zhi Wang <zhiw@nvidia.com>, Jason Gunthorpe <jgg@nvidia.com>,
-	kvm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-	linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org,
-	sumit.semwal@linaro.org, christian.koenig@amd.com,
-	pbonzini@redhat.com, seanjc@google.com, alex.williamson@redhat.com,
-	vivek.kasireddy@intel.com, dan.j.williams@intel.com,
-	yilun.xu@intel.com, linux-coco@lists.linux.dev,
-	linux-kernel@vger.kernel.org, lukas@wunner.de, yan.y.zhao@intel.com,
-	daniel.vetter@ffwll.ch, leon@kernel.org, baolu.lu@linux.intel.com,
-	zhenzhong.duan@intel.com, tao1.su@intel.com
-Subject: Re: [RFC PATCH 00/12] Private MMIO support for private assigned dev
-Message-ID: <aDE+BaMo+X75QaEW@yilunxu-OptiPlex-7050>
-References: <aB4tQHmHzHooDeTE@yilunxu-OptiPlex-7050>
- <20250509184318.GD5657@nvidia.com>
- <aB7Ma84WXATiu5O1@yilunxu-OptiPlex-7050>
- <2c4713b0-3d6c-4705-841b-1cb58cd9a0f5@amd.com>
- <20250512140617.GA285583@nvidia.com>
- <20250513130315.0158a626.zhiw@nvidia.com>
- <aCRmoDupzK9zTqFL@yilunxu-OptiPlex-7050>
- <20250514230502.6b64da7f.zhiw@nvidia.com>
- <aCYsNSFQJZzHVOFI@yilunxu-OptiPlex-7050>
- <3909686a-be14-4b0b-8336-0674667d5159@amd.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OuCZX2MK"
+Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-7fd35b301bdso373527a12.2;
+        Fri, 23 May 2025 20:55:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748058945; x=1748663745; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=iOOMMXXqkOKG/dAPYpGHtEnMJRzYGPdaiwfPy079iJQ=;
+        b=OuCZX2MKLpVEjfx3lng0XSznsVpKbtqa4yoDgeMO28rOxecHOL+D/CcwCNB3GKV96y
+         Gi6os8cT5A5gIqhmMPz14jPSQBzY7cM9ixhulkda0spYPo2LUZdvi1ueofvUB7Ms25Ei
+         1GJpK7FXNWYUbojbpFduE6yzvqRoJtAxzVvT0VOYlgLLlhL7JsbhQTea5GRsXhHza4Hp
+         mq54tnb/UrYzU756Op4fy/EBi2xWecfUwoe+OO+mkeTWYGOdmhFOsGvbjyka7woznswz
+         z86BS7P/e6BEUC1fNEd4pBPzm6uJU7hq/e3PZCBoiUtLBJvMWZ5J3kJEW7iSlPO/H/fJ
+         zY6w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748058945; x=1748663745;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=iOOMMXXqkOKG/dAPYpGHtEnMJRzYGPdaiwfPy079iJQ=;
+        b=g2WDv7U22eg25g4B+fjGq57k3KHNr4sQhdhGRRBGHpJwgnTL6Iz+B0PtEnXohljUlJ
+         ZJOUeWfmsz5mXHwqetuzVGSCGDQkwhUBalxj9PVwVe4O0Q2aCNjiJVPjuTR7V2W6saKe
+         UsMH2uu7rMUPnw5hl5pmjXAc8+V8hiiJfsQDfrEolX7ZmBgYl6iKJ086wDCjJD8nnMpU
+         35KcZJeo1DPrwcovp31vpqwnJlHAxCa99Ipbl6efbqwFig9bPSOxGEElrWQdM3P6owJz
+         0j5BczDh77UhqbQoMzLplptAvvs/GagzWYNbokobA06+a5HlfIA0Q6IP1yM0c31CK5lu
+         2wog==
+X-Forwarded-Encrypted: i=1; AJvYcCXXlnXVFM0/sSbqjZr6+4nRUQylNtDGpynDiG5ilRVUzyb8gar5JE4KEEC99Xan7NscOH0EZ0cS28Crv/Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0YypvrxVhFO64Ue0geXSJ+YOpQX3znGewU2PQHY8EGrTWy4B0SOj
+	aHYebkXlRyhQR3XuO4Lj9xK9rUYN9fihgnGvmCumNsiVavaHU5tVTL5N
+X-Gm-Gg: ASbGncu94piv6CPjxopslb/MeXqXrTYXb+4ccFaaPkI1nRygrRQsyuwIj0T9KcQfm5V
+	E5+ZfcYOtPDkd/JaAxtkmLnuW/ac862n8DBaanew/urOx9uNhYjlIx2q9+WY4PbWQcsBvk4U+IZ
+	30yh+XXP9j6xc+OQmmRKdrBFIwWwzRT3/Yya3LfdmaZ+SkOeoDaVvatHUyLgwlGAk7r6fm/tuGK
+	ad1S4TSAPMNFbPY9bMzbtNBTyQrfxxMWQWArz6k1Y5fV/l4hgDlCkdwtJ8IdZU+K3Cyu5sggDmf
+	63ubzhra07KpSpMFj+na+KOSXs3A82y4MG6Bw/KeYBpmrCUcS6M3d+rBeoifSa2H
+X-Google-Smtp-Source: AGHT+IGFrdmT47Ot+f4lT/yBluPn5u+8o8zMcAQYNom7xNEYdagmtxyMKQjvuMsVnUJxleXfcz2Sow==
+X-Received: by 2002:a17:902:db03:b0:224:1001:677c with SMTP id d9443c01a7336-23414f32ca9mr27166425ad.9.1748058945398;
+        Fri, 23 May 2025 20:55:45 -0700 (PDT)
+Received: from n.. ([2401:4900:1cb0:129d:7b0a:6b07:3aed:30f1])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2340934d8a0sm10021235ad.167.2025.05.23.20.55.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 23 May 2025 20:55:44 -0700 (PDT)
+From: mrigendrachaubey <mrigendra.chaubey@gmail.com>
+To: James.Bottomley@HansenPartnership.com,
+	martin.petersen@oracle.com
+Cc: linux-scsi@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	mrigendrachaubey <mrigendra.chaubey@gmail.com>
+Subject: [PATCH] scsi: scsi_devinfo: Fix typo in comment
+Date: Sat, 24 May 2025 09:25:16 +0530
+Message-Id: <20250524035516.27341-1-mrigendra.chaubey@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3909686a-be14-4b0b-8336-0674667d5159@amd.com>
+Content-Transfer-Encoding: 8bit
 
-On Tue, May 20, 2025 at 08:57:42PM +1000, Alexey Kardashevskiy wrote:
-> 
-> 
-> On 16/5/25 04:02, Xu Yilun wrote:
-> > > IMHO, I think it might be helpful that you can picture out what are the
-> > > minimum requirements (function/life cycle) to the current IOMMUFD TSM
-> > > bind architecture:
-> > > 
-> > > 1.host tsm_bind (preparation) is in IOMMUFD, triggered by QEMU handling
-> > > the TVM-HOST call.
-> > > 2. TDI acceptance is handled in guest_request() to accept the TDI after
-> > > the validation in the TVM)
-> > 
-> > I'll try my best to brainstorm and make a flow in ASCII.
-> > 
-> > (*) means new feature
-> > 
-> > 
-> >        Guest          Guest TSM       QEMU           VFIO            IOMMUFD       host TSM          KVM
-> >        -----          ---------       ----           ----            -------       --------          ---
-> > 1.                                                                               *Connect(IDE)
-> > 2.                                 Init vdev
-> > 3.                                *create dmabuf
-> > 4.                                               *export dmabuf
-> > 5.                                create memslot
-> > 6.                                                                                              *import dmabuf
-> > 7.                                setup shared DMA
-> > 8.                                                                 create hwpt
-> > 9.                                               attach hwpt
-> > 10.                                  kvm run
-> > 11.enum shared dev
-> > 12.*Connect(Bind)
-> > 13.                  *GHCI Bind
-> > 14.                                  *Bind
-> > 15                                                                 CC viommu alloc
-> > 16.                                                                vdevice allloc
-> > 16.                                              *attach vdev
-> 
-> 
-> This "attach vdev" - we are still deciding if it goes to IOMMUFD or VFIO, right?
+This patch corrects a minor typo in a comment within scsi_devinfo.c,
+replacing "compatibile" with the correct spelling "compatible".
 
-This should be "tsm bind". Seems Jason's suggestion is place the IOCTL
-against VFIO, then VFIO reach into IOMMUFD to do the real
-pci_tsm_bind().
+Signed-off-by: mrigendrachaubey <mrigendra.chaubey@gmail.com>
+---
+ drivers/scsi/scsi_devinfo.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-https://lore.kernel.org/all/20250515175658.GR382960@nvidia.com/
+diff --git a/drivers/scsi/scsi_devinfo.c b/drivers/scsi/scsi_devinfo.c
+index 90f1393a23f8..3772c3bca5fe 100644
+--- a/drivers/scsi/scsi_devinfo.c
++++ b/drivers/scsi/scsi_devinfo.c
+@@ -863,7 +863,7 @@ int __init scsi_init_devinfo(void)
+ 		goto out;
+ 
+ 	for (i = 0; scsi_static_device_list[i].vendor; i++) {
+-		error = scsi_dev_info_list_add(1 /* compatibile */,
++		error = scsi_dev_info_list_add(1 /* compatible */,
+ 				scsi_static_device_list[i].vendor,
+ 				scsi_static_device_list[i].model,
+ 				NULL,
+-- 
+2.34.1
 
-> 
-> 
-> > 17.                                                               *setup CC viommu
-> > 18                                                                 *tsm_bind
-> > 19.                                                                                  *bind
-> > 20.*Attest
-> > 21.               *GHCI get CC info
-> > 22.                                 *get CC info
-> > 23.                                                                *vdev guest req
-> > 24.                                                                                 *guest req
-> > 25.*Accept
-> > 26.             *GHCI accept MMIO/DMA
-> > 27.                                *accept MMIO/DMA
-> > 28.                                                               *vdev guest req
-> > 29.                                                                                 *guest req
-> > 30.                                                                                              *map private MMIO
-> > 31.             *GHCI start tdi
-> > 32.                                *start tdi
-> > 33.                                                               *vdev guest req
-> > 34.                                                                                 *guest req
-> 
-> 
-> I am not sure I follow the layout here. "start tdi" and "accept MMIO/DMA" are under "QEMU" but QEMU cannot do anything by itself and has to call VFIO or some other driver...
-> 
-
-Yes. Call IOCTL(iommufd, IOMMUFD_VDEVICE_GUEST_REQUEST, vdevice_id)
-
-> > 35.Workload...
-> > 36.*disconnect(Unbind)
-> 
-> Is this a case of PCI hotunplug? Or just killing QEMU/shutting down the VM? Or stopping trusting the device and switching it to untrusted mode, to work with SWIOTLB or DiscardManager?
-> 
-
-switching to untrusted mode. But I think hotunplug would finally trigger
-the same host side behavior, only no need the guest to "echo 0 > connect"
-
-> > 37.              *GHCI unbind
-> > 38.                                *Unbind
-> > 39.                                            *detach vdev
-> > 40.                                                               *tsm_unbind
-> > 41.                                                                                 *TDX stop tdi
-> > 42.                                                                                 *TDX disable mmio cb
-> > 43.                                            *cb dmabuf revoke
-> 
-> 
-> ... like VFIO and hostTSM - "TDX stop tdi" and "cb dmabuf revoke" are not under QEMU.
-
-Correct. These are TDX Module specific requirements, we don't want them
-to make the general APIs unnecessary verbose.
-
-> 
-> 
-> > 44.                                                                                               *unmap private MMIO
-> > 45.                                                                                 *TDX disable dma cb
-> > 46.                                                              *cb disable CC viommu
-> > 47.                                                                                 *TDX tdi free
-> > 48.                                                                                 *enable mmio
-> > 49.                                            *cb dmabuf recover
-> 
-> 
-> What is the difference between "cb dmabuf revoke" and "cb dmabuf recover"?
-
-revoke revokes private S-EPT mapping, recover means KVM could then do
-shared MMIO mapping on EPT.
-
-Thanks,
-Yilun
-
-> 
-> 
-> > 50.workable shared dev
-> > 
-> > TSM unbind is a little verbos & specific to TDX Connect, but SEV TSM could
-> > ignore these callback. Just implement an "unbind" tsm ops.
-> 
-> 
-> Well, something need to clear RMP entries, can be done in the TDI unbind or whenever you will do it.
-> 
-> And the chart applies for AMD too, more or less. Thanks,
-> 
-> 
-> > Thanks,
-> > Yilun
-> > 
-> > > 
-> > > and which part/where need to be modified in the current architecture to
-> > > reach there. Try to fold vendor-specific knowledge as much as possible,
-> > > but still keep them modular in the TSM driver and let's see how it looks
-> > > like. Maybe some example TSM driver code to demonstrate together with
-> > > VFIO dma-buf patch.
-> > > 
-> > > If some where is extremely hacky in the TSM driver, let's see how they
-> > > can be lift to the upper level or the upper call passes more parameters
-> > > to them.
-> 
-> 
-> 
-> -- 
-> Alexey
-> 
