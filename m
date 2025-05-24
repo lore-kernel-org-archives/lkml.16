@@ -1,119 +1,134 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E50D12628D;
-	Sat, 24 May 2025 12:25:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C250A12B93;
+	Sat, 24 May 2025 12:31:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748089534; cv=none; b=qhLUh39yqcqQOzBVGu5yhWgQ61kXxDYyH1mjrpdHy+eHtqw22R0TNlfLwJJ8s6neTm5WDKVN8+IiJc+gmie7ftIzQrVC9lKX+7Au0a4I3P26idauCDVGui+bCooOEVem/EUUMM6DHhA7NqXRrUgR1HrzDaqKaPGrBLIEUNXNuMo=
+	t=1748089896; cv=none; b=ezgrFbrhiQ7GdZhVxTFhtgrTig3ZhGg8t58O+cE+DKyw4GxkAzfGU/9Pi9kBu90Fi98EZTSYn67qSoH/Pm/ppsKyIhM1SY5Mp41pV1NIeAzXrKbRfUsZeMGEcNRBuyTFF90Ze3ABgFKxs34dnpC5xktDuyN2Gzm4L8uplz6njDE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748089534; c=relaxed/simple;
-	bh=yVYaerb/jU3BxcNZXp7iBv190F9MWlYXKuCoD8t8ycw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=u15BA6yd8r5+IIC8GkKbe5Urj/SG/LbmE8Qdy1N4pejJwZPGuhIVuiJk1Swtf4TVOf8sr8fB4UHpKZnOTKDJWtGVR5Nvh9dkDYFgYifXJh1n8g4JS2ywcrzZgCEmbxCTyeVGw2IpkWhCYdnUZBtHjxLGCultGG6kJqtRRMDpis4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p/zpeqA8; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748089896; c=relaxed/simple;
+	bh=Z3IGYqO9v/4n7a9oJbzTR4w6KIlION9VPYOwL2P0dAQ=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=q8IE8Fggn+INIneAnNwY3eVtrs9vk4rFUbfZo3JfnKdOggMkK8Im3ZAjQwSlMGxWts4TccW4BKxEczK8aNWM9I0yuyvmK1L3Qs8uYQ03c8tI+sUAn4UaY8f4FaPRMdik7ZlQ025Hg8w4+hkAtH3Q7MroGWvevnDRhDwVqVzTHq8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=emYY3i9E; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p/zpeqA8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0670CC4CEE4;
-	Sat, 24 May 2025 12:25:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="emYY3i9E"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 333BFC4CEE4;
+	Sat, 24 May 2025 12:31:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748089533;
-	bh=yVYaerb/jU3BxcNZXp7iBv190F9MWlYXKuCoD8t8ycw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=p/zpeqA8ezheaDjtuGcRTgNSB9q8hRQl4GYWED/+PHCIDWNW8mMbhLOsU43svDgGK
-	 F2IJlphinhn4HQhOZXnUOsc/x9qoL3Qw2WeKCgZbF09epyyhjC+SwmcKbz8MwlXz3c
-	 NCj5/+r2voKPPYQGub/B44mCzDB/HAJ1ttVET09SM0IeBNiaZiwzpn8T4c+1AwKzOD
-	 LBYggOiRy+m7e7fwOvAFnGjmI++y826u9thYInXB2e25zZa5B2LXM2sStYSbsfZH3x
-	 Ua/6LVSaTbKTwURmuZtTuLE7dCJ8RoJ1p2NogHJaWhqJ+LFCuNsAokDfWq666zniHU
-	 PYsyCVLHDHxDQ==
-Date: Sat, 24 May 2025 14:25:27 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Alice Ryhl <aliceryhl@google.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Benno Lossin <lossin@kernel.org>,
-	Matthew Maurer <mmaurer@google.com>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Trevor Gross <tmgross@umich.edu>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Sami Tolvanen <samitolvanen@google.com>,
-	Timur Tabi <ttabi@nvidia.com>, linux-kernel@vger.kernel.org,
-	rust-for-linux@vger.kernel.org
-Subject: Re: [PATCH v5 4/4] rust: samples: Add debugfs sample
-Message-ID: <aDG6t-HdZSuWyPGo@pollux.localdomain>
-References: <aCzzBT96ktapP03e@google.com>
- <aC2HacSU7j5d9bzu@pollux>
- <aC5XDi7SaDJeUaAC@google.com>
- <aC7DVewqqWIKetmk@pollux>
- <aC8uNmrLUSS8sxHU@google.com>
- <2025052201-return-reprogram-add9@gregkh>
- <aC9krUYJmJqu0xVR@cassiopeiae>
- <2025052330-reverence-slideshow-d498@gregkh>
- <aDBC__rflS8625Vb@cassiopeiae>
- <aDCrufEjtJeGjO6z@google.com>
+	s=k20201202; t=1748089896;
+	bh=Z3IGYqO9v/4n7a9oJbzTR4w6KIlION9VPYOwL2P0dAQ=;
+	h=From:Date:Subject:To:Cc:Reply-To:From;
+	b=emYY3i9Exk24sZyQVq3g9XMv8mpyiLdNbCLTcLj+4B5+fvH67cd0NeG/rl5Y1Lm9E
+	 eGfpJTKCE8VzFS1wxko8/86lI3ge5Ksc6g/o7GJlQoacx0NGQqTg1qhg6BGqYfpPXL
+	 1Ua5NHtNZeVgfQqfrVkA5cMP2vHVQ13h7onFUmr8mFBJFunRcCDG9ZgniBBscszoeZ
+	 58p19pgNueBto1fa8OousJAG+mME1Hc0UCYIs4/eSUlG5edbNq7DLecLGbAMWplpJi
+	 GMEsftViVx9nWb8h5hEKUPNF6QIngRqxp1KjqLr8ET46G3u8S+69NI9vEuue4obKxn
+	 f53oqKt9Eyw8g==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22E9FC54FC6;
+	Sat, 24 May 2025 12:31:36 +0000 (UTC)
+From: George Moussalem via B4 Relay <devnull+george.moussalem.outlook.com@kernel.org>
+Date: Sat, 24 May 2025 16:31:31 +0400
+Subject: [PATCH v2] arm64: dts: qcom: ipq5018: Add crypto nodes
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aDCrufEjtJeGjO6z@google.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250524-ipq5018-crypto-v2-1-faa26aedc4cf@outlook.com>
+X-B4-Tracking: v=1; b=H4sIACK8MWgC/3XMQQ6CMBCF4auQWVszrVQnrriHYQGlykRlaotEQ
+ ri7lb3L/yXvWyD5yD7BuVgg+okTy5DD7ApwfTPcvOIuNxg0Fq05KA4vi5qUi3MYRaE52pbIli0
+ 6yKcQ/ZU/G3ipc/ecRonz5k/6t/6lJq20QtKE5amjRlMl7/Ehct87eUK9rusXPKCAw64AAAA=
+X-Change-ID: 20250523-ipq5018-crypto-0265b8854b0c
+To: Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, 
+ Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, 
+ George Moussalem <george.moussalem@outlook.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1748089894; l=1977;
+ i=george.moussalem@outlook.com; s=20250321; h=from:subject:message-id;
+ bh=jiSu2brkAB+drch8iI9SatYPuZQZCSdgzO/6G8YlqTo=;
+ b=gsBBt/IwZPLredb8H5qjyhqegJwbNZiUPk6cHuz0sEvD1lHRY0C2dCa1nG5sXkLG2XQt01bAy
+ vf2HK3DM9E5D7Ke2mSZxzQak3OxUqp2t2cKZ5d+mpe6o7swsdzmQ4pg
+X-Developer-Key: i=george.moussalem@outlook.com; a=ed25519;
+ pk=/PuRTSI9iYiHwcc6Nrde8qF4ZDhJBlUgpHdhsIjnqIk=
+X-Endpoint-Received: by B4 Relay for george.moussalem@outlook.com/20250321
+ with auth_id=364
+X-Original-From: George Moussalem <george.moussalem@outlook.com>
+Reply-To: george.moussalem@outlook.com
 
-On Fri, May 23, 2025 at 05:09:13PM +0000, Alice Ryhl wrote:
-> On Fri, May 23, 2025 at 11:42:23AM +0200, Danilo Krummrich wrote:
-> > The only thing I don't want to is to allow to leak files or directories, i.e.
-> > 
-> > 	File::new("bar_file", bar_dir).leak()
-> > 
-> > which keeps the file in the filesystem, but takes away the handle from the Rust
-> > side, such that it won't be removed from the filesystem anymore when the handle
-> > goes out of scope, which can cause nasty bugs. But I think there isn't any
-> > benefit to allow this anyways and it isn't needed with reference counting.
-> 
-> Why not have leak() for files only? That way, the files still go away
-> when you drop the directory, and you don't have to keep around a bunch
-> of File objects in your Rust structs.
+From: George Moussalem <george.moussalem@outlook.com>
 
-In a previous mail I said that there are more reasons why we don't want to have
-files (or directories) in the filesystem without an object representation in
-Rust.
+IPQ5018 uses Qualcomm QCE crypto engine v5.1 which is already supported.
+So let's add the dts nodes for its DMA v1.7.4 and QCE itself.
 
-One of them is when attaching private data to a file, like we do with
-debugfs_create_file().
+Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Signed-off-by: George Moussalem <george.moussalem@outlook.com>
+---
+Changes in v2:
+- As per Konrad's comment, the BAM DMA controller is v1.7.4, so updated
+  the dma controller node accordingly.
+- Link to v1: https://lore.kernel.org/r/20250523-ipq5018-crypto-v1-1-0818047d8a18@outlook.com
+---
+ arch/arm64/boot/dts/qcom/ipq5018.dtsi | 30 ++++++++++++++++++++++++++++++
+ 1 file changed, 30 insertions(+)
 
-When we do this, in most of the cases we want to share data between a driver
-structure and the debugfs file (e.g. a GPU's VM to dump the virtual address
-space layout).
+diff --git a/arch/arm64/boot/dts/qcom/ipq5018.dtsi b/arch/arm64/boot/dts/qcom/ipq5018.dtsi
+index 130360014c5e14c778e348d37e601f60325b0b14..558a97a050c6b87ffa9ab45e80ede18c1eaffcc2 100644
+--- a/arch/arm64/boot/dts/qcom/ipq5018.dtsi
++++ b/arch/arm64/boot/dts/qcom/ipq5018.dtsi
+@@ -182,6 +182,36 @@ pcie0_phy: phy@86000 {
+ 			status = "disabled";
+ 		};
+ 
++		cryptobam: dma-controller@704000 {
++			compatible = "qcom,bam-v1.7.4", "qcom,bam-v1.7.0";
++			reg = <0x00704000 0x20000>;
++			interrupts = <GIC_SPI 207 IRQ_TYPE_LEVEL_HIGH>;
++
++			clocks = <&gcc GCC_CRYPTO_AHB_CLK>;
++			clock-names = "bam_clk";
++
++			#dma-cells = <1>;
++			qcom,ee = <1>;
++			qcom,controlled-remotely;
++		};
++
++		crypto: crypto@73a000 {
++			compatible = "qcom,crypto-v5.1";
++			reg = <0x0073a000 0x6000>;
++
++			clocks = <&gcc GCC_CRYPTO_AHB_CLK>,
++				 <&gcc GCC_CRYPTO_AXI_CLK>,
++				 <&gcc GCC_CRYPTO_CLK>;
++			clock-names = "iface",
++				      "bus",
++				      "core";
++
++			dmas = <&cryptobam 2>,
++			       <&cryptobam 3>;
++			dma-names = "rx",
++				    "tx";
++		};
++
+ 		tlmm: pinctrl@1000000 {
+ 			compatible = "qcom,ipq5018-tlmm";
+ 			reg = <0x01000000 0x300000>;
 
-And most likely we do this by passing an Arc<T> to dir.file(), to make the file
-own a reference to the corresponding reference counted object (in C we just hope
-that no one frees the object while the debugfs file holds a pointer to it).
+---
+base-commit: 176e917e010cb7dcc605f11d2bc33f304292482b
+change-id: 20250523-ipq5018-crypto-0265b8854b0c
 
-The question is, what happens to this reference if we would subsequently call
-file.leak()? We can't drop the Arc, because otherwise we risk a UAF in the
-filesystem callback, but we can't keep it either because otherwise we *really*
-leak this reference, even if the parent directory is removed eventually.
+Best regards,
+-- 
+George Moussalem <george.moussalem@outlook.com>
 
---
 
-Now, one could say, what about attaching the file's private data to the directory
-instead? (And I think this has been proposed already elsewhere.)
-
-But I really don't like this approach, because it would mean that when creating
-the directory we would necessarily need to know all the files we will ever
-create in this directory *and* have all the corresponding private data
-available at this point of time. But that would be an insane requirement.
-
-For instance, let's assume a driver creates a directory 'clients', which for
-every connected userspace "client" wants to provide a file with some metadata
-for this client.
-
-Sure, you can work around this somehow, e.g. by using a mutex protected Vec as
-private data or by always creating a new directory first for dynamically created
-debugfs entires. But this sounds pretty horrible to me.
