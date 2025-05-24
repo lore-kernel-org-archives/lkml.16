@@ -1,134 +1,326 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C250A12B93;
-	Sat, 24 May 2025 12:31:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09A5E12B93;
+	Sat, 24 May 2025 12:32:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748089896; cv=none; b=ezgrFbrhiQ7GdZhVxTFhtgrTig3ZhGg8t58O+cE+DKyw4GxkAzfGU/9Pi9kBu90Fi98EZTSYn67qSoH/Pm/ppsKyIhM1SY5Mp41pV1NIeAzXrKbRfUsZeMGEcNRBuyTFF90Ze3ABgFKxs34dnpC5xktDuyN2Gzm4L8uplz6njDE=
+	t=1748089949; cv=none; b=u+/tqXu/tae1IhF9RzYqNmfZGxX5auT8KbSipaGMn5Sxm3uG8Cax2n8iVY8P+owURuayy7VOs5JfqoXLxrOYdN1te3btnSylTKfh3pnkMka08O3N5IWQ8ylpGdCWkc5PykHF7vhiwZQZuBWU5me4QavOcCAML4fbHXH4gWJwYIk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748089896; c=relaxed/simple;
-	bh=Z3IGYqO9v/4n7a9oJbzTR4w6KIlION9VPYOwL2P0dAQ=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=q8IE8Fggn+INIneAnNwY3eVtrs9vk4rFUbfZo3JfnKdOggMkK8Im3ZAjQwSlMGxWts4TccW4BKxEczK8aNWM9I0yuyvmK1L3Qs8uYQ03c8tI+sUAn4UaY8f4FaPRMdik7ZlQ025Hg8w4+hkAtH3Q7MroGWvevnDRhDwVqVzTHq8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=emYY3i9E; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748089949; c=relaxed/simple;
+	bh=NIpuf06wgYb3yJUOrA1R8Jz93nw3W0KBHBW1UEjoBN0=;
+	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=a9iwnnrglTym26u/wDLLbajTif7JQn6C5CNywWf3l1kvIgvRXamMdi0OjjS0PtWRvFUeBEeSRLM+t9S+/2b94m6W+99PFbDu/nsmbApaMAvWdR/KCM6f4UWWI8H92mFybb1+CLXmHb5SIukXDTHRuMBzLVe+eF/SQskEVdsM3PY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=K9LdA1To; arc=none smtp.client-ip=144.6.53.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="emYY3i9E"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 333BFC4CEE4;
-	Sat, 24 May 2025 12:31:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748089896;
-	bh=Z3IGYqO9v/4n7a9oJbzTR4w6KIlION9VPYOwL2P0dAQ=;
-	h=From:Date:Subject:To:Cc:Reply-To:From;
-	b=emYY3i9Exk24sZyQVq3g9XMv8mpyiLdNbCLTcLj+4B5+fvH67cd0NeG/rl5Y1Lm9E
-	 eGfpJTKCE8VzFS1wxko8/86lI3ge5Ksc6g/o7GJlQoacx0NGQqTg1qhg6BGqYfpPXL
-	 1Ua5NHtNZeVgfQqfrVkA5cMP2vHVQ13h7onFUmr8mFBJFunRcCDG9ZgniBBscszoeZ
-	 58p19pgNueBto1fa8OousJAG+mME1Hc0UCYIs4/eSUlG5edbNq7DLecLGbAMWplpJi
-	 GMEsftViVx9nWb8h5hEKUPNF6QIngRqxp1KjqLr8ET46G3u8S+69NI9vEuue4obKxn
-	 f53oqKt9Eyw8g==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22E9FC54FC6;
-	Sat, 24 May 2025 12:31:36 +0000 (UTC)
-From: George Moussalem via B4 Relay <devnull+george.moussalem.outlook.com@kernel.org>
-Date: Sat, 24 May 2025 16:31:31 +0400
-Subject: [PATCH v2] arm64: dts: qcom: ipq5018: Add crypto nodes
+	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="K9LdA1To"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
+	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+	Subject:To:From:Date:Sender:Reply-To:Cc:Content-Transfer-Encoding:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=J4CnmiHo1M098NXfFFPFdA7iGglzhKvYq8/yxhJhfGU=; b=K9LdA1To4jMJ0VwLCzS0r56616
+	3+wMBRZxzwTlFdBCFqf4tE70YVYXwFq5fwlUZuz4eFF1G3mHDl70Ns/vEqhP6r2XoxJC7QxB+ii1H
+	nzeRnbIu6s0eX88L6jgcf1+3ed8P8MqRYxFfWGigECPvvO05ut/w039bYShTP5vEQ7XIYYi4QNO60
+	XknevlWKUWP209+svkpmBV73rOJvYINe96ydHBMmhvoxzDyYoHs+jA1lVBFwzKxLjnTFq2ztLUiQf
+	At2T1uYsfDThoxKgJIH02UZoc4f/i5qBlsEd7sdcU1+tsJja5OjVhP4djPISl4qM1iNPKgQ0FobjE
+	i7cqYW/A==;
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
+	id 1uIo32-008Xct-19;
+	Sat, 24 May 2025 20:32:21 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Sat, 24 May 2025 20:32:20 +0800
+Date: Sat, 24 May 2025 20:32:20 +0800
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Steffen Klassert <steffen.klassert@secunet.com>,
+	Daniel Jordan <daniel.m.jordan@oracle.com>,
+	Dominik Grzegorzek <dominik.grzegorzek@oracle.com>,
+	Chen Ridong <chenridong@huawei.com>,
+	WangJinchao <wangjinchao@xfusion.com>
+Subject: [v2 PATCH] padata: Fix pd UAF once and for all
+Message-ID: <aDG8VJqzxksIooIq@gondor.apana.org.au>
+References: <aDGklJE5JKOpM7A_@gondor.apana.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250524-ipq5018-crypto-v2-1-faa26aedc4cf@outlook.com>
-X-B4-Tracking: v=1; b=H4sIACK8MWgC/3XMQQ6CMBCF4auQWVszrVQnrriHYQGlykRlaotEQ
- ri7lb3L/yXvWyD5yD7BuVgg+okTy5DD7ApwfTPcvOIuNxg0Fq05KA4vi5qUi3MYRaE52pbIli0
- 6yKcQ/ZU/G3ipc/ecRonz5k/6t/6lJq20QtKE5amjRlMl7/Ehct87eUK9rusXPKCAw64AAAA=
-X-Change-ID: 20250523-ipq5018-crypto-0265b8854b0c
-To: Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, 
- Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, 
- George Moussalem <george.moussalem@outlook.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1748089894; l=1977;
- i=george.moussalem@outlook.com; s=20250321; h=from:subject:message-id;
- bh=jiSu2brkAB+drch8iI9SatYPuZQZCSdgzO/6G8YlqTo=;
- b=gsBBt/IwZPLredb8H5qjyhqegJwbNZiUPk6cHuz0sEvD1lHRY0C2dCa1nG5sXkLG2XQt01bAy
- vf2HK3DM9E5D7Ke2mSZxzQak3OxUqp2t2cKZ5d+mpe6o7swsdzmQ4pg
-X-Developer-Key: i=george.moussalem@outlook.com; a=ed25519;
- pk=/PuRTSI9iYiHwcc6Nrde8qF4ZDhJBlUgpHdhsIjnqIk=
-X-Endpoint-Received: by B4 Relay for george.moussalem@outlook.com/20250321
- with auth_id=364
-X-Original-From: George Moussalem <george.moussalem@outlook.com>
-Reply-To: george.moussalem@outlook.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aDGklJE5JKOpM7A_@gondor.apana.org.au>
 
-From: George Moussalem <george.moussalem@outlook.com>
+v2 removes the WARN_ON which is wrong as the serial worker drops the
+reference count after calling completion.
 
-IPQ5018 uses Qualcomm QCE crypto engine v5.1 which is already supported.
-So let's add the dts nodes for its DMA v1.7.4 and QCE itself.
+---8<---
+There is a race condition/UAF in padata_reorder that goes back
+to the initial commit.  A reference count is taken at the start
+of the process in padata_do_parallel, and released at the end in
+padata_serial_worker.
 
-Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Signed-off-by: George Moussalem <george.moussalem@outlook.com>
+This reference count is (and only is) required for padata_replace
+to function correctly.  If padata_replace is never called then
+there is no issue.
+
+In the function padata_reorder which serves as the core of padata,
+as soon as padata is added to queue->serial.list, and the associated
+spin lock released, that padata may be processed and the reference
+count on pd would go away.
+
+Fix this by getting the next padata before the squeue->serial lock
+is released.
+
+In order to make this possible, simplify padata_reorder by only
+calling it once the next padata arrives.
+
+Fixes: 16295bec6398 ("padata: Generic parallelization/serialization interface")
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 ---
-Changes in v2:
-- As per Konrad's comment, the BAM DMA controller is v1.7.4, so updated
-  the dma controller node accordingly.
-- Link to v1: https://lore.kernel.org/r/20250523-ipq5018-crypto-v1-1-0818047d8a18@outlook.com
----
- arch/arm64/boot/dts/qcom/ipq5018.dtsi | 30 ++++++++++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
+ include/linux/padata.h |   3 -
+ kernel/padata.c        | 132 ++++++++++++-----------------------------
+ 2 files changed, 37 insertions(+), 98 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/ipq5018.dtsi b/arch/arm64/boot/dts/qcom/ipq5018.dtsi
-index 130360014c5e14c778e348d37e601f60325b0b14..558a97a050c6b87ffa9ab45e80ede18c1eaffcc2 100644
---- a/arch/arm64/boot/dts/qcom/ipq5018.dtsi
-+++ b/arch/arm64/boot/dts/qcom/ipq5018.dtsi
-@@ -182,6 +182,36 @@ pcie0_phy: phy@86000 {
- 			status = "disabled";
- 		};
+diff --git a/include/linux/padata.h b/include/linux/padata.h
+index 0146daf34430..b486c7359de2 100644
+--- a/include/linux/padata.h
++++ b/include/linux/padata.h
+@@ -91,7 +91,6 @@ struct padata_cpumask {
+  * @cpu: Next CPU to be processed.
+  * @cpumask: The cpumasks in use for parallel and serial workers.
+  * @reorder_work: work struct for reordering.
+- * @lock: Reorder lock.
+  */
+ struct parallel_data {
+ 	struct padata_shell		*ps;
+@@ -102,8 +101,6 @@ struct parallel_data {
+ 	unsigned int			processed;
+ 	int				cpu;
+ 	struct padata_cpumask		cpumask;
+-	struct work_struct		reorder_work;
+-	spinlock_t                      ____cacheline_aligned lock;
+ };
  
-+		cryptobam: dma-controller@704000 {
-+			compatible = "qcom,bam-v1.7.4", "qcom,bam-v1.7.0";
-+			reg = <0x00704000 0x20000>;
-+			interrupts = <GIC_SPI 207 IRQ_TYPE_LEVEL_HIGH>;
+ /**
+diff --git a/kernel/padata.c b/kernel/padata.c
+index 7eee94166357..25cd3406477a 100644
+--- a/kernel/padata.c
++++ b/kernel/padata.c
+@@ -261,20 +261,17 @@ EXPORT_SYMBOL(padata_do_parallel);
+  *   be parallel processed by another cpu and is not yet present in
+  *   the cpu's reorder queue.
+  */
+-static struct padata_priv *padata_find_next(struct parallel_data *pd,
+-					    bool remove_object)
++static struct padata_priv *padata_find_next(struct parallel_data *pd, int cpu,
++					    unsigned int processed)
+ {
+ 	struct padata_priv *padata;
+ 	struct padata_list *reorder;
+-	int cpu = pd->cpu;
+ 
+ 	reorder = per_cpu_ptr(pd->reorder_list, cpu);
+ 
+ 	spin_lock(&reorder->lock);
+-	if (list_empty(&reorder->list)) {
+-		spin_unlock(&reorder->lock);
+-		return NULL;
+-	}
++	if (list_empty(&reorder->list))
++		goto notfound;
+ 
+ 	padata = list_entry(reorder->list.next, struct padata_priv, list);
+ 
+@@ -282,97 +279,52 @@ static struct padata_priv *padata_find_next(struct parallel_data *pd,
+ 	 * Checks the rare case where two or more parallel jobs have hashed to
+ 	 * the same CPU and one of the later ones finishes first.
+ 	 */
+-	if (padata->seq_nr != pd->processed) {
+-		spin_unlock(&reorder->lock);
+-		return NULL;
+-	}
+-
+-	if (remove_object) {
+-		list_del_init(&padata->list);
+-		++pd->processed;
+-		pd->cpu = cpumask_next_wrap(cpu, pd->cpumask.pcpu);
+-	}
++	if (padata->seq_nr != processed)
++		goto notfound;
+ 
++	list_del_init(&padata->list);
+ 	spin_unlock(&reorder->lock);
+ 	return padata;
 +
-+			clocks = <&gcc GCC_CRYPTO_AHB_CLK>;
-+			clock-names = "bam_clk";
-+
-+			#dma-cells = <1>;
-+			qcom,ee = <1>;
-+			qcom,controlled-remotely;
-+		};
-+
-+		crypto: crypto@73a000 {
-+			compatible = "qcom,crypto-v5.1";
-+			reg = <0x0073a000 0x6000>;
-+
-+			clocks = <&gcc GCC_CRYPTO_AHB_CLK>,
-+				 <&gcc GCC_CRYPTO_AXI_CLK>,
-+				 <&gcc GCC_CRYPTO_CLK>;
-+			clock-names = "iface",
-+				      "bus",
-+				      "core";
-+
-+			dmas = <&cryptobam 2>,
-+			       <&cryptobam 3>;
-+			dma-names = "rx",
-+				    "tx";
-+		};
-+
- 		tlmm: pinctrl@1000000 {
- 			compatible = "qcom,ipq5018-tlmm";
- 			reg = <0x01000000 0x300000>;
++notfound:
++	pd->processed = processed;
++	pd->cpu = cpu;
++	spin_unlock(&reorder->lock);
++	return NULL;
+ }
+ 
+-static void padata_reorder(struct parallel_data *pd)
++static void padata_reorder(struct padata_priv *padata)
+ {
++	struct parallel_data *pd = padata->pd;
+ 	struct padata_instance *pinst = pd->ps->pinst;
+-	int cb_cpu;
+-	struct padata_priv *padata;
+-	struct padata_serial_queue *squeue;
+-	struct padata_list *reorder;
++	unsigned int processed;
++	int cpu;
+ 
+-	/*
+-	 * We need to ensure that only one cpu can work on dequeueing of
+-	 * the reorder queue the time. Calculating in which percpu reorder
+-	 * queue the next object will arrive takes some time. A spinlock
+-	 * would be highly contended. Also it is not clear in which order
+-	 * the objects arrive to the reorder queues. So a cpu could wait to
+-	 * get the lock just to notice that there is nothing to do at the
+-	 * moment. Therefore we use a trylock and let the holder of the lock
+-	 * care for all the objects enqueued during the holdtime of the lock.
+-	 */
+-	if (!spin_trylock_bh(&pd->lock))
+-		return;
++	processed = pd->processed;
++	cpu = pd->cpu;
+ 
+-	while (1) {
+-		padata = padata_find_next(pd, true);
++	do {
++		struct padata_serial_queue *squeue;
++		int cb_cpu;
+ 
+-		/*
+-		 * If the next object that needs serialization is parallel
+-		 * processed by another cpu and is still on it's way to the
+-		 * cpu's reorder queue, nothing to do for now.
+-		 */
+-		if (!padata)
+-			break;
++		cpu = cpumask_next_wrap(cpu, pd->cpumask.pcpu);
++		processed++;
+ 
+ 		cb_cpu = padata->cb_cpu;
+ 		squeue = per_cpu_ptr(pd->squeue, cb_cpu);
+ 
+ 		spin_lock(&squeue->serial.lock);
+ 		list_add_tail(&padata->list, &squeue->serial.list);
+-		spin_unlock(&squeue->serial.lock);
+-
+ 		queue_work_on(cb_cpu, pinst->serial_wq, &squeue->work);
+-	}
+ 
+-	spin_unlock_bh(&pd->lock);
+-
+-	/*
+-	 * The next object that needs serialization might have arrived to
+-	 * the reorder queues in the meantime.
+-	 *
+-	 * Ensure reorder queue is read after pd->lock is dropped so we see
+-	 * new objects from another task in padata_do_serial.  Pairs with
+-	 * smp_mb in padata_do_serial.
+-	 */
+-	smp_mb();
+-
+-	reorder = per_cpu_ptr(pd->reorder_list, pd->cpu);
+-	if (!list_empty(&reorder->list) && padata_find_next(pd, false)) {
+ 		/*
+-		 * Other context(eg. the padata_serial_worker) can finish the request.
+-		 * To avoid UAF issue, add pd ref here, and put pd ref after reorder_work finish.
++		 * If the next object that needs serialization is parallel
++		 * processed by another cpu and is still on it's way to the
++		 * cpu's reorder queue, end the loop.
+ 		 */
+-		padata_get_pd(pd);
+-		if (!queue_work(pinst->serial_wq, &pd->reorder_work))
+-			padata_put_pd(pd);
+-	}
+-}
+-
+-static void invoke_padata_reorder(struct work_struct *work)
+-{
+-	struct parallel_data *pd;
+-
+-	local_bh_disable();
+-	pd = container_of(work, struct parallel_data, reorder_work);
+-	padata_reorder(pd);
+-	local_bh_enable();
+-	/* Pairs with putting the reorder_work in the serial_wq */
+-	padata_put_pd(pd);
++		padata = padata_find_next(pd, cpu, processed);
++		spin_unlock(&squeue->serial.lock);
++	} while (padata);
+ }
+ 
+ static void padata_serial_worker(struct work_struct *serial_work)
+@@ -423,6 +375,7 @@ void padata_do_serial(struct padata_priv *padata)
+ 	struct padata_list *reorder = per_cpu_ptr(pd->reorder_list, hashed_cpu);
+ 	struct padata_priv *cur;
+ 	struct list_head *pos;
++	bool gotit = true;
+ 
+ 	spin_lock(&reorder->lock);
+ 	/* Sort in ascending order of sequence number. */
+@@ -432,17 +385,14 @@ void padata_do_serial(struct padata_priv *padata)
+ 		if ((signed int)(cur->seq_nr - padata->seq_nr) < 0)
+ 			break;
+ 	}
+-	list_add(&padata->list, pos);
++	if (padata->seq_nr != pd->processed) {
++		gotit = false;
++		list_add(&padata->list, pos);
++	}
+ 	spin_unlock(&reorder->lock);
+ 
+-	/*
+-	 * Ensure the addition to the reorder list is ordered correctly
+-	 * with the trylock of pd->lock in padata_reorder.  Pairs with smp_mb
+-	 * in padata_reorder.
+-	 */
+-	smp_mb();
+-
+-	padata_reorder(pd);
++	if (gotit)
++		padata_reorder(padata);
+ }
+ EXPORT_SYMBOL(padata_do_serial);
+ 
+@@ -632,9 +582,7 @@ static struct parallel_data *padata_alloc_pd(struct padata_shell *ps)
+ 	padata_init_squeues(pd);
+ 	pd->seq_nr = -1;
+ 	refcount_set(&pd->refcnt, 1);
+-	spin_lock_init(&pd->lock);
+ 	pd->cpu = cpumask_first(pd->cpumask.pcpu);
+-	INIT_WORK(&pd->reorder_work, invoke_padata_reorder);
+ 
+ 	return pd;
+ 
+@@ -1144,12 +1092,6 @@ void padata_free_shell(struct padata_shell *ps)
+ 	if (!ps)
+ 		return;
+ 
+-	/*
+-	 * Wait for all _do_serial calls to finish to avoid touching
+-	 * freed pd's and ps's.
+-	 */
+-	synchronize_rcu();
+-
+ 	mutex_lock(&ps->pinst->lock);
+ 	list_del(&ps->list);
+ 	pd = rcu_dereference_protected(ps->pd, 1);
 
----
-base-commit: 176e917e010cb7dcc605f11d2bc33f304292482b
-change-id: 20250523-ipq5018-crypto-0265b8854b0c
-
-Best regards,
+base-commit: b2df03ed4052e97126267e8c13ad4204ea6ba9b6
 -- 
-George Moussalem <george.moussalem@outlook.com>
+2.39.5
 
-
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
