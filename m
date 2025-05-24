@@ -1,311 +1,111 @@
-Received: from smtp.smtpout.orange.fr (smtp-71.smtpout.orange.fr [80.12.242.71])
-	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C33321EEA5D
-	for <linux-kernel@vger.kernel.org>; Sat, 24 May 2025 16:11:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.71
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C583E1DF27E;
+	Sat, 24 May 2025 16:17:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748103125; cv=none; b=A7xcbayZcrTuaOuFxW8u53LyIgwcnZaZ+cVGFqiBf2aHZS06ZzERtfAI226+GL5UpdSJWfHq2/JAz2+R3VEf9e+QbDpzgDH2k8x7tC3fs0f+bd/f/oP4bKM3cXl9w0Oc1j725yOvPUkL+8aYXjfjZjGEf9TnVjgYzUKr5RjT1u0=
+	t=1748103475; cv=none; b=huURqQXm837tW3oJW9uQol/iQJ+XVJzbVShjQH9CgyKn9Te1zKkur5gOzdN080wgZGMwTG8qoC/VL7YJB4z+BUhPF+Wpy+5WezyCUQQr0zts1UH96HPHUbZsCB8UVqnxeTyoeM/SZbhVpZuzL5ER/mncj6GEON+X/ldnmbVSQ4g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748103125; c=relaxed/simple;
-	bh=MFb/QiWyLDUm78aMKEfxoK1mzgM/wr/cRwi7aM35eiU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=J+WWQS/CxfUaLOQKamEfxj4Ms90wnRyh5TUKkR1sujQIqCg6xhmOVRg/8MLbB3H4X7bAi+BlYvIdTRZ1T1S4TxXHg1PAQkNYjaWv0tXB5rig8EJPX1fOY2n5U6fjWLJdYS7UErdiSd3j/or08r5bchefKBrQBb/UEhqGJq5Zc70=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=EDPSfmk8; arc=none smtp.client-ip=80.12.242.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	s=arc-20240116; t=1748103475; c=relaxed/simple;
+	bh=2PqjOsTXHea2A1nlsV5lb1aiLBMHAEESuBIul4P5vps=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=o71hp0ZHPOa8fp/kYh5tfwK0CaJIcrvPqOmxMt5yN5s7nR0xrtKM9OIclmYTnifzhBhF/a/i4YPrQZEuzkp7hhRmm2tVoGyhRyB26mRyzkOZuwA5bH/4zSx0C1ZOnqdt6WTLHscoALUBYKeTjZCra3ddoghOtrdOhDKHJjocq2s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=btM1Y3da; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="EDPSfmk8"
-Received: from localhost.localdomain
- ([IPv6:2a01:cb10:785:b00:8347:f260:7456:7662])
-	by smtp.orange.fr with ESMTPA
-	id IrSUuI1zk7nctIrSUuJnW5; Sat, 24 May 2025 18:10:51 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1748103051;
-	bh=bvxyCYtpvBuLxyyPBVFxUFFbUBuGFb/ODhJ+wj6k5Cg=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=EDPSfmk8gZx+oHEAzvOklA4Tpze4LfxE/aQxKeSnP8RNY37EHpGzdXmgLBZGrG3kO
-	 6ElSA3x6+OAnRRMmbX07INMdTbJiysrQXT/yWgrDJ/0FwJ8OHGBu8n9Q6BWCSuqTMk
-	 uEtWrh4iedjeUfy4O4aP79jXxD3T6E8D4LIECWlrKTzTzbDZAu5Zus5McvQWp7aEeg
-	 c/g+OvkfzXF46iLbeQ/48PVeU3WjVfWCadLErVw91UxubFiNRJ8sbbg+eWiPuzxKQw
-	 AmEmqXYNj3D8+/wHol+JWJ+zaA3h/h40E5Km/oGG8TwtIb5Rsf3VVBMoJuQeU5dmf3
-	 VqucCNuMdTyZA==
-X-ME-Helo: localhost.localdomain
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Sat, 24 May 2025 18:10:51 +0200
-X-ME-IP: 2a01:cb10:785:b00:8347:f260:7456:7662
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To: Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>
-Cc: linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Subject: [PATCH 1/2] regulator: tps6594-regulator: Constify struct tps6594_regulator_irq_type
-Date: Sat, 24 May 2025 18:10:38 +0200
-Message-ID: <1446fb1938f3f38115be3e53f5dda3c8bb0ba5a1.1748103005.git.christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="btM1Y3da"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5E94C4CEE4;
+	Sat, 24 May 2025 16:17:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1748103474;
+	bh=2PqjOsTXHea2A1nlsV5lb1aiLBMHAEESuBIul4P5vps=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=btM1Y3daMuWWZlxrePRGj1CxuuJv6HqWCWNijtb6BxknSYdVrzLiQ4OTzeMvlFGCR
+	 tzX0BOpmtPDjMpn8/Y+aQNe2AXCQ/Mv4ZwGowFqNmRooKpNv2pWE4j9KN7zSysXLwg
+	 d0hqtnbTuOmvcT+iRxwAx55T9RUPQKBtQDAVmYwI=
+Date: Sat, 24 May 2025 18:17:51 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Heikki Huttu <heissendo88@gmail.com>
+Cc: linux-kernel@vger.kernel.org, linux-staging@lists.linux.dev,
+	kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] staging: vme_user: add missing includes
+Message-ID: <2025052448-overuse-demise-d090@gregkh>
+References: <aCZDHXJTyfJRseho@Lappari.v6.elisa-laajakaista.fi>
+ <2025052136-backstab-dork-de2d@gregkh>
+ <aDHvSicbJpYBY-dn@Lappari.v6.elisa-laajakaista.fi>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <aDHvSicbJpYBY-dn@Lappari.v6.elisa-laajakaista.fi>
 
-'struct tps6594_regulator_irq_type' are not modified in this driver.
+On Sat, May 24, 2025 at 07:09:46PM +0300, Heikki Huttu wrote:
+> Wed, May 21, 2025 at 01:43:24PM +0200, Greg KH kirjoitti:
+> > On Thu, May 15, 2025 at 10:40:13PM +0300, Heikki Huttu wrote:
+> > > Header files use u32, size_t, dma_addr_t, struct device, struct list_head.
+> > > Add direct includes to make the headers self-contained.
+> > > 
+> > > Signed-off-by: Heikki Huttu <heissendo88@gmail.com>
+> > > ---
+> > >  drivers/staging/vme_user/vme.h      | 5 +++++
+> > >  drivers/staging/vme_user/vme_user.h | 2 ++
+> > >  2 files changed, 7 insertions(+)
+> > > 
+> > > diff --git a/drivers/staging/vme_user/vme.h b/drivers/staging/vme_user/vme.h
+> > > index 7753e736f9fd..55499b240dc3 100644
+> > > --- a/drivers/staging/vme_user/vme.h
+> > > +++ b/drivers/staging/vme_user/vme.h
+> > > @@ -3,6 +3,11 @@
+> > >  #define _VME_H_
+> > >  
+> > >  #include <linux/bitops.h>
+> > > +#include <linux/types.h>
+> > > +#include <linux/device.h>
+> > > +#include <linux/list.h>
+> > > +#include <linux/mm.h>
+> > > +#include <linux/dma-mapping.h>
+> > 
+> > If you are going to add these, please do so in a sorted way.
+> > 
+> > But really, why is this needed at all?
+> > 
+> > >  
+> > >  /* Resource Type */
+> > >  enum vme_resource_type {
+> > > diff --git a/drivers/staging/vme_user/vme_user.h b/drivers/staging/vme_user/vme_user.h
+> > > index 19ecb05781cc..297b25fab164 100644
+> > > --- a/drivers/staging/vme_user/vme_user.h
+> > > +++ b/drivers/staging/vme_user/vme_user.h
+> > > @@ -2,6 +2,8 @@
+> > >  #ifndef _VME_USER_H_
+> > >  #define _VME_USER_H_
+> > >  
+> > > +#include <linux/types.h>
+> > 
+> > Same here, are you sure this is needed?
+> > 
+> > thanks,
+> > 
+> > greg k-h
+> 
+> Hi Greg,
+> 
+> Thank you for the feedback.
+> 
+> I was under the impression that it's generally preferred to use direct includes to make headers self-contained and avoid relying on transitive includes.  
+> If I was mistaken, apologies — feel free to disregard this.
 
-Constifying this structure moves some data to a read-only section, so
-increases overall security.
+Generally, yes, it is a good idea, but if nothing is broken, adding
+additional .h files to other .h files is not a required change at all.
 
-On a x86_64, with allmodconfig, as an example:
-Before:
-======
-   text	   data	    bss	    dec	    hex	filename
-  25645	  14480	     64	  40189	   9cfd	drivers/regulator/tps6594-regulator.o
+Are you doing this for all of the staging driver files?  Is this a goal
+to try to fix up more than just this one file?
 
-After:
-=====
-   text	   data	    bss	    dec	    hex	filename
-  27949	  12176	     64	  40189	   9cfd	drivers/regulator/tps6594-regulator.o
+thanks,
 
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
----
-Compile tested-only.
----
- drivers/regulator/tps6594-regulator.c | 60 +++++++++++++--------------
- 1 file changed, 30 insertions(+), 30 deletions(-)
-
-diff --git a/drivers/regulator/tps6594-regulator.c b/drivers/regulator/tps6594-regulator.c
-index ac53792e3fed..0193efb5dffa 100644
---- a/drivers/regulator/tps6594-regulator.c
-+++ b/drivers/regulator/tps6594-regulator.c
-@@ -56,7 +56,7 @@ struct tps6594_regulator_irq_type {
- 	unsigned long event;
- };
- 
--static struct tps6594_regulator_irq_type tps6594_ext_regulator_irq_types[] = {
-+static const struct tps6594_regulator_irq_type tps6594_ext_regulator_irq_types[] = {
- 	{ TPS6594_IRQ_NAME_VCCA_OV, "VCCA", "overvoltage", REGULATOR_EVENT_OVER_VOLTAGE_WARN },
- 	{ TPS6594_IRQ_NAME_VCCA_UV, "VCCA", "undervoltage", REGULATOR_EVENT_UNDER_VOLTAGE },
- 	{ TPS6594_IRQ_NAME_VMON1_OV, "VMON1", "overvoltage", REGULATOR_EVENT_OVER_VOLTAGE_WARN },
-@@ -69,7 +69,7 @@ static struct tps6594_regulator_irq_type tps6594_ext_regulator_irq_types[] = {
- 	  REGULATOR_EVENT_OVER_VOLTAGE_WARN },
- };
- 
--static struct tps6594_regulator_irq_type tps65224_ext_regulator_irq_types[] = {
-+static const struct tps6594_regulator_irq_type tps65224_ext_regulator_irq_types[] = {
- 	{ TPS65224_IRQ_NAME_VCCA_UVOV, "VCCA", "voltage out of range",
- 	  REGULATOR_EVENT_REGULATION_OUT },
- 	{ TPS65224_IRQ_NAME_VMON1_UVOV, "VMON1", "voltage out of range",
-@@ -80,13 +80,13 @@ static struct tps6594_regulator_irq_type tps65224_ext_regulator_irq_types[] = {
- 
- struct tps6594_regulator_irq_data {
- 	struct device *dev;
--	struct tps6594_regulator_irq_type *type;
-+	const struct tps6594_regulator_irq_type *type;
- 	struct regulator_dev *rdev;
- };
- 
- struct tps6594_ext_regulator_irq_data {
- 	struct device *dev;
--	struct tps6594_regulator_irq_type *type;
-+	const struct tps6594_regulator_irq_type *type;
- };
- 
- #define TPS6594_REGULATOR(_name, _of, _id, _type, _ops, _n, _vr, _vm, _er, \
-@@ -262,7 +262,7 @@ static const struct regulator_desc tps65224_buck_regs[] = {
- 			  4, 0, 0, NULL, 0, 0),
- };
- 
--static struct tps6594_regulator_irq_type tps6594_buck1_irq_types[] = {
-+static const struct tps6594_regulator_irq_type tps6594_buck1_irq_types[] = {
- 	{ TPS6594_IRQ_NAME_BUCK1_OV, "BUCK1", "overvoltage", REGULATOR_EVENT_OVER_VOLTAGE_WARN },
- 	{ TPS6594_IRQ_NAME_BUCK1_UV, "BUCK1", "undervoltage", REGULATOR_EVENT_UNDER_VOLTAGE },
- 	{ TPS6594_IRQ_NAME_BUCK1_SC, "BUCK1", "short circuit", REGULATOR_EVENT_REGULATION_OUT },
-@@ -270,7 +270,7 @@ static struct tps6594_regulator_irq_type tps6594_buck1_irq_types[] = {
- 	  REGULATOR_EVENT_OVER_CURRENT },
- };
- 
--static struct tps6594_regulator_irq_type tps6594_buck2_irq_types[] = {
-+static const struct tps6594_regulator_irq_type tps6594_buck2_irq_types[] = {
- 	{ TPS6594_IRQ_NAME_BUCK2_OV, "BUCK2", "overvoltage", REGULATOR_EVENT_OVER_VOLTAGE_WARN },
- 	{ TPS6594_IRQ_NAME_BUCK2_UV, "BUCK2", "undervoltage", REGULATOR_EVENT_UNDER_VOLTAGE },
- 	{ TPS6594_IRQ_NAME_BUCK2_SC, "BUCK2", "short circuit", REGULATOR_EVENT_REGULATION_OUT },
-@@ -278,7 +278,7 @@ static struct tps6594_regulator_irq_type tps6594_buck2_irq_types[] = {
- 	  REGULATOR_EVENT_OVER_CURRENT },
- };
- 
--static struct tps6594_regulator_irq_type tps6594_buck3_irq_types[] = {
-+static const struct tps6594_regulator_irq_type tps6594_buck3_irq_types[] = {
- 	{ TPS6594_IRQ_NAME_BUCK3_OV, "BUCK3", "overvoltage", REGULATOR_EVENT_OVER_VOLTAGE_WARN },
- 	{ TPS6594_IRQ_NAME_BUCK3_UV, "BUCK3", "undervoltage", REGULATOR_EVENT_UNDER_VOLTAGE },
- 	{ TPS6594_IRQ_NAME_BUCK3_SC, "BUCK3", "short circuit", REGULATOR_EVENT_REGULATION_OUT },
-@@ -286,7 +286,7 @@ static struct tps6594_regulator_irq_type tps6594_buck3_irq_types[] = {
- 	  REGULATOR_EVENT_OVER_CURRENT },
- };
- 
--static struct tps6594_regulator_irq_type tps6594_buck4_irq_types[] = {
-+static const struct tps6594_regulator_irq_type tps6594_buck4_irq_types[] = {
- 	{ TPS6594_IRQ_NAME_BUCK4_OV, "BUCK4", "overvoltage", REGULATOR_EVENT_OVER_VOLTAGE_WARN },
- 	{ TPS6594_IRQ_NAME_BUCK4_UV, "BUCK4", "undervoltage", REGULATOR_EVENT_UNDER_VOLTAGE },
- 	{ TPS6594_IRQ_NAME_BUCK4_SC, "BUCK4", "short circuit", REGULATOR_EVENT_REGULATION_OUT },
-@@ -294,7 +294,7 @@ static struct tps6594_regulator_irq_type tps6594_buck4_irq_types[] = {
- 	  REGULATOR_EVENT_OVER_CURRENT },
- };
- 
--static struct tps6594_regulator_irq_type tps6594_buck5_irq_types[] = {
-+static const struct tps6594_regulator_irq_type tps6594_buck5_irq_types[] = {
- 	{ TPS6594_IRQ_NAME_BUCK5_OV, "BUCK5", "overvoltage", REGULATOR_EVENT_OVER_VOLTAGE_WARN },
- 	{ TPS6594_IRQ_NAME_BUCK5_UV, "BUCK5", "undervoltage", REGULATOR_EVENT_UNDER_VOLTAGE },
- 	{ TPS6594_IRQ_NAME_BUCK5_SC, "BUCK5", "short circuit", REGULATOR_EVENT_REGULATION_OUT },
-@@ -302,7 +302,7 @@ static struct tps6594_regulator_irq_type tps6594_buck5_irq_types[] = {
- 	  REGULATOR_EVENT_OVER_CURRENT },
- };
- 
--static struct tps6594_regulator_irq_type tps6594_ldo1_irq_types[] = {
-+static const struct tps6594_regulator_irq_type tps6594_ldo1_irq_types[] = {
- 	{ TPS6594_IRQ_NAME_LDO1_OV, "LDO1", "overvoltage", REGULATOR_EVENT_OVER_VOLTAGE_WARN },
- 	{ TPS6594_IRQ_NAME_LDO1_UV, "LDO1", "undervoltage", REGULATOR_EVENT_UNDER_VOLTAGE },
- 	{ TPS6594_IRQ_NAME_LDO1_SC, "LDO1", "short circuit", REGULATOR_EVENT_REGULATION_OUT },
-@@ -310,7 +310,7 @@ static struct tps6594_regulator_irq_type tps6594_ldo1_irq_types[] = {
- 	  REGULATOR_EVENT_OVER_CURRENT },
- };
- 
--static struct tps6594_regulator_irq_type tps6594_ldo2_irq_types[] = {
-+static const struct tps6594_regulator_irq_type tps6594_ldo2_irq_types[] = {
- 	{ TPS6594_IRQ_NAME_LDO2_OV, "LDO2", "overvoltage", REGULATOR_EVENT_OVER_VOLTAGE_WARN },
- 	{ TPS6594_IRQ_NAME_LDO2_UV, "LDO2", "undervoltage", REGULATOR_EVENT_UNDER_VOLTAGE },
- 	{ TPS6594_IRQ_NAME_LDO2_SC, "LDO2", "short circuit", REGULATOR_EVENT_REGULATION_OUT },
-@@ -318,7 +318,7 @@ static struct tps6594_regulator_irq_type tps6594_ldo2_irq_types[] = {
- 	  REGULATOR_EVENT_OVER_CURRENT },
- };
- 
--static struct tps6594_regulator_irq_type tps6594_ldo3_irq_types[] = {
-+static const struct tps6594_regulator_irq_type tps6594_ldo3_irq_types[] = {
- 	{ TPS6594_IRQ_NAME_LDO3_OV, "LDO3", "overvoltage", REGULATOR_EVENT_OVER_VOLTAGE_WARN },
- 	{ TPS6594_IRQ_NAME_LDO3_UV, "LDO3", "undervoltage", REGULATOR_EVENT_UNDER_VOLTAGE },
- 	{ TPS6594_IRQ_NAME_LDO3_SC, "LDO3", "short circuit", REGULATOR_EVENT_REGULATION_OUT },
-@@ -326,7 +326,7 @@ static struct tps6594_regulator_irq_type tps6594_ldo3_irq_types[] = {
- 	  REGULATOR_EVENT_OVER_CURRENT },
- };
- 
--static struct tps6594_regulator_irq_type tps6594_ldo4_irq_types[] = {
-+static const struct tps6594_regulator_irq_type tps6594_ldo4_irq_types[] = {
- 	{ TPS6594_IRQ_NAME_LDO4_OV, "LDO4", "overvoltage", REGULATOR_EVENT_OVER_VOLTAGE_WARN },
- 	{ TPS6594_IRQ_NAME_LDO4_UV, "LDO4", "undervoltage", REGULATOR_EVENT_UNDER_VOLTAGE },
- 	{ TPS6594_IRQ_NAME_LDO4_SC, "LDO4", "short circuit", REGULATOR_EVENT_REGULATION_OUT },
-@@ -334,42 +334,42 @@ static struct tps6594_regulator_irq_type tps6594_ldo4_irq_types[] = {
- 	  REGULATOR_EVENT_OVER_CURRENT },
- };
- 
--static struct tps6594_regulator_irq_type tps65224_buck1_irq_types[] = {
-+static const struct tps6594_regulator_irq_type tps65224_buck1_irq_types[] = {
- 	{ TPS65224_IRQ_NAME_BUCK1_UVOV, "BUCK1", "voltage out of range",
- 	  REGULATOR_EVENT_REGULATION_OUT },
- };
- 
--static struct tps6594_regulator_irq_type tps65224_buck2_irq_types[] = {
-+static const struct tps6594_regulator_irq_type tps65224_buck2_irq_types[] = {
- 	{ TPS65224_IRQ_NAME_BUCK2_UVOV, "BUCK2", "voltage out of range",
- 	  REGULATOR_EVENT_REGULATION_OUT },
- };
- 
--static struct tps6594_regulator_irq_type tps65224_buck3_irq_types[] = {
-+static const struct tps6594_regulator_irq_type tps65224_buck3_irq_types[] = {
- 	{ TPS65224_IRQ_NAME_BUCK3_UVOV, "BUCK3", "voltage out of range",
- 	  REGULATOR_EVENT_REGULATION_OUT },
- };
- 
--static struct tps6594_regulator_irq_type tps65224_buck4_irq_types[] = {
-+static const struct tps6594_regulator_irq_type tps65224_buck4_irq_types[] = {
- 	{ TPS65224_IRQ_NAME_BUCK4_UVOV, "BUCK4", "voltage out of range",
- 	  REGULATOR_EVENT_REGULATION_OUT },
- };
- 
--static struct tps6594_regulator_irq_type tps65224_ldo1_irq_types[] = {
-+static const struct tps6594_regulator_irq_type tps65224_ldo1_irq_types[] = {
- 	{ TPS65224_IRQ_NAME_LDO1_UVOV, "LDO1", "voltage out of range",
- 	  REGULATOR_EVENT_REGULATION_OUT },
- };
- 
--static struct tps6594_regulator_irq_type tps65224_ldo2_irq_types[] = {
-+static const struct tps6594_regulator_irq_type tps65224_ldo2_irq_types[] = {
- 	{ TPS65224_IRQ_NAME_LDO2_UVOV, "LDO2", "voltage out of range",
- 	  REGULATOR_EVENT_REGULATION_OUT },
- };
- 
--static struct tps6594_regulator_irq_type tps65224_ldo3_irq_types[] = {
-+static const struct tps6594_regulator_irq_type tps65224_ldo3_irq_types[] = {
- 	{ TPS65224_IRQ_NAME_LDO3_UVOV, "LDO3", "voltage out of range",
- 	  REGULATOR_EVENT_REGULATION_OUT },
- };
- 
--static struct tps6594_regulator_irq_type *tps6594_bucks_irq_types[] = {
-+static const struct tps6594_regulator_irq_type *tps6594_bucks_irq_types[] = {
- 	tps6594_buck1_irq_types,
- 	tps6594_buck2_irq_types,
- 	tps6594_buck3_irq_types,
-@@ -377,21 +377,21 @@ static struct tps6594_regulator_irq_type *tps6594_bucks_irq_types[] = {
- 	tps6594_buck5_irq_types,
- };
- 
--static struct tps6594_regulator_irq_type *tps6594_ldos_irq_types[] = {
-+static const struct tps6594_regulator_irq_type *tps6594_ldos_irq_types[] = {
- 	tps6594_ldo1_irq_types,
- 	tps6594_ldo2_irq_types,
- 	tps6594_ldo3_irq_types,
- 	tps6594_ldo4_irq_types,
- };
- 
--static struct tps6594_regulator_irq_type *tps65224_bucks_irq_types[] = {
-+static const struct tps6594_regulator_irq_type *tps65224_bucks_irq_types[] = {
- 	tps65224_buck1_irq_types,
- 	tps65224_buck2_irq_types,
- 	tps65224_buck3_irq_types,
- 	tps65224_buck4_irq_types,
- };
- 
--static struct tps6594_regulator_irq_type *tps65224_ldos_irq_types[] = {
-+static const struct tps6594_regulator_irq_type *tps65224_ldos_irq_types[] = {
- 	tps65224_ldo1_irq_types,
- 	tps65224_ldo2_irq_types,
- 	tps65224_ldo3_irq_types,
-@@ -516,11 +516,11 @@ static irqreturn_t tps6594_regulator_irq_handler(int irq, void *data)
- static int tps6594_request_reg_irqs(struct platform_device *pdev,
- 				    struct regulator_dev *rdev,
- 				    struct tps6594_regulator_irq_data *irq_data,
--				    struct tps6594_regulator_irq_type *regs_irq_types,
-+				    const struct tps6594_regulator_irq_type *regs_irq_types,
- 				    size_t interrupt_cnt,
- 				    int *irq_idx)
- {
--	struct tps6594_regulator_irq_type *irq_type;
-+	const struct tps6594_regulator_irq_type *irq_type;
- 	struct tps6594 *tps = dev_get_drvdata(pdev->dev.parent);
- 	size_t j;
- 	int irq;
-@@ -558,8 +558,8 @@ static int tps6594_regulator_probe(struct platform_device *pdev)
- 	struct regulator_config config = {};
- 	struct tps6594_regulator_irq_data *irq_data;
- 	struct tps6594_ext_regulator_irq_data *irq_ext_reg_data;
--	struct tps6594_regulator_irq_type *irq_type;
--	struct tps6594_regulator_irq_type *irq_types;
-+	const struct tps6594_regulator_irq_type *irq_type;
-+	const struct tps6594_regulator_irq_type *irq_types;
- 	bool buck_configured[BUCK_NB] = { false };
- 	bool buck_multi[MULTI_PHASE_NB] = { false };
- 
-@@ -573,9 +573,9 @@ static int tps6594_regulator_probe(struct platform_device *pdev)
- 	unsigned int irq_count;
- 	unsigned int multi_phase_cnt;
- 	size_t reg_irq_nb;
--	struct tps6594_regulator_irq_type **bucks_irq_types;
-+	const struct tps6594_regulator_irq_type **bucks_irq_types;
- 	const struct regulator_desc *multi_regs;
--	struct tps6594_regulator_irq_type **ldos_irq_types;
-+	const struct tps6594_regulator_irq_type **ldos_irq_types;
- 	const struct regulator_desc *ldo_regs;
- 	size_t interrupt_count;
- 
--- 
-2.49.0
-
+greg k-h
