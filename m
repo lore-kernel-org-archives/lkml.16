@@ -1,108 +1,182 @@
-Received: from mail-qv1-f48.google.com (mail-qv1-f48.google.com [209.85.219.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09B4B4C98
-	for <linux-kernel@vger.kernel.org>; Sat, 24 May 2025 12:47:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E6647261A
+	for <linux-kernel@vger.kernel.org>; Sat, 24 May 2025 12:52:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748090848; cv=none; b=FMXCboYPNkC8BDW/dpk9amv7bvNw5KANKPcrJFc5vi7ykAmNrMI81kkXfG4bQmcL15EW2j+3danzHc+lVUfjHNE5Cxc/DZf3ULXcjh9MUc4cNy3AHz1n3ulH/dXH9eYOsAZ1mTJA4PDQOPp7WbFNhEegKngH5GgW6jr5xgQes88=
+	t=1748091179; cv=none; b=gZOJLzdatgOZH1zEk8/D7Nvc1gYK7gZCc0JDUWuJ6itGaLXAFsTMLcqSXxx/dZt0yyAxiryixIuXG9+DUJmWKuv3fCvpAKf+efF3lcNBDKbsyZJiWq4EgiC5K1tQc4i7CbXrhx/1BUPctiNWQxmPIOaXUBQtwwyk53m8X8NRxE0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748090848; c=relaxed/simple;
-	bh=ijUDYdDsiCYuyjQz6cOVB4vV8ZrUp3UUkJZE5ynxgOI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=eyA9/HYWrsQ6Q5Lzd4dwR8bBQxJN3iXbzokO4pWqrnaCmBEAhc3Sy/druZC1XE3Fr5s9ZyFPKocIqFTr9zmT8Srhvnk+6CE7CBEXWSSwxuGNaqYQSVe0WSvRWoGrWghP4lj73aHOI/c3KnNnUyZAFgVPLmI3sBBpN7tHYSrFqTA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fooishbar.org; spf=pass smtp.mailfrom=fooishbar.org; dkim=pass (2048-bit key) header.d=fooishbar.org header.i=@fooishbar.org header.b=S3pHJknQ; arc=none smtp.client-ip=209.85.219.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fooishbar.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fooishbar.org
+	s=arc-20240116; t=1748091179; c=relaxed/simple;
+	bh=F5X8f7Ol2g6q60kTT41bWjS2GPogjhZ4e4wv0jXVsrc=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=tiBZzRKsnLgfn1mno96mNn67I1YghBfaQg1aY5pA5xqZtGHvNZKc1oFDBpZ1SIVAaJa9Z4fBNP64lArPwE5aufddZOUrMb2ImunNcQtjEpsLlLk6PrqOGfXjp++bdh+o4z7I8GcnnKcFBI5bYHGhusVG4FQTHAdl5S4MoFVrqAU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dXJoBet3; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fooishbar.org header.i=@fooishbar.org header.b="S3pHJknQ"
-Received: by mail-qv1-f48.google.com with SMTP id 6a1803df08f44-6fa9dced621so6434276d6.1
-        for <linux-kernel@vger.kernel.org>; Sat, 24 May 2025 05:47:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fooishbar.org; s=google; t=1748090845; x=1748695645; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=ijUDYdDsiCYuyjQz6cOVB4vV8ZrUp3UUkJZE5ynxgOI=;
-        b=S3pHJknQSNCmFW7vs7IJCObFyQPbkIwXv++3i1SngnXLH2vlETMsLZbIH++/7Dz+oN
-         tx6kA5fjBMV1iLKHBx0+gk2SiHSLiESjqsLAq+lYDn4BGrTknHMjdXv9O1/unufAwptr
-         zm4LuzMugCZZZUsjR+3n2FN66ZvwhXq8Eu76D+VJja2cH30U4K9ZYmalayu+NgVwYCmt
-         cuZESKojrQiji0R5Bknrf6K/JI56jiNSgjTbTwX0/GzbkoOlARFezd/IFH0OEnsUneCB
-         B++0zFBSxkYicRc0gdJWYK4ih4wmMEqsEOavOJEy6KRJ0nXChs94YQ+rxRQ7t3cdWgaf
-         grzQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748090845; x=1748695645;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ijUDYdDsiCYuyjQz6cOVB4vV8ZrUp3UUkJZE5ynxgOI=;
-        b=fg+1N/lGECGCH6Wr6eVFF2Mca4ZYrNLDNiEg0lkUHxktKZtzaJlaeD82/ijsX5NZMu
-         o6JLr7CKJzE3RiyHye26bOZFFEE/1tN/oI7kvalar9uTAXwA/FK3FiT4mXlxOsX7WbEv
-         bxMiy5ElC7ScIWU0UtyvmBJ///bcwbc/slWWVHaQ1uzJBW0XlK81v5MYrmVbJMuLqxHQ
-         IWA0mQkUnyJFmFRVIxBS8IrqD3azgTB2l2rENxAwJ0R2yu6oT7U3UHDWnuQ/q3r6JFE4
-         kbjLy5bLZXxADt5SN46oNCTByUaKWZ7PApTFPtttbJSHuXQmleMUE45kcKOfZktRD7Bj
-         7mzQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXnV5uu6DTApylfxvwF9tJbKrJY7rgb2IRdJjOkdnuZyEGLoZo32pr8u6vKRZVk2KhoiUJZGaeqepDNDEg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyVxrR0HrWxLcJYTme4U1Xlognvxffm24KLOQzKusE6V5PfJ3oC
-	DBw+uSb6kQaPtF+MY658GGKpRwKyU21EXG9t5AKaEdkE5mjVHafsFOZisBiGgvYawA8nJ1UPaSU
-	7WRDk6Gp1pFQl1JUU06wGEFDXMNQbCFWwdgjNcnQ3ow==
-X-Gm-Gg: ASbGncuZQCBrOLEgvbTivJdvw3x7cd+6alFQJJFsZPcF/9sTQP1zIgRNqC1XGgA0iZF
-	88E+RVnoeYBbRsuDf2XmBECIvJAUEL2cFc0u/Ys3ws55bjxuFshAkdSgUIWSO9mbg/p9eXkdjYw
-	e4XQV7d5tmLBZyKPukblHyG3VSva7vhhQ=
-X-Google-Smtp-Source: AGHT+IGJrpaXggbO0XyLY6WU6SWTgZC9F8s7Hf3WwPDR/lbtMX7FQqhOd0dkVj8JEzPGo+APzIftTHlFkeC/LSVLiBg=
-X-Received: by 2002:a05:622a:53cb:b0:494:9e0e:2129 with SMTP id
- d75a77b69052e-49f3505f1femr51220641cf.22.1748090844750; Sat, 24 May 2025
- 05:47:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dXJoBet3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748091177; x=1779627177;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=F5X8f7Ol2g6q60kTT41bWjS2GPogjhZ4e4wv0jXVsrc=;
+  b=dXJoBet3PwINZ+1cO7v4klyaUxOvm8+h6Aefxv02s2VMhn0hfOXz/7wL
+   CZR3DaMnfqFRyNJt9ewCG+dY1EnCJ/wEUSBwlsikm3pagdMh9Qmd3dHpv
+   AHwKKHzYe3lzCY0C+sV7PkFxq6nhlc/JRCLo0//l9Y1rKbUCs0u/WnVYV
+   ka9Cenf8sFsfT81L2/eNNaBvomDET2JoPQSrOLqiLMzdHaVth+ZyERrXM
+   6+yT0KBm3UksK6jpJscac9XMXVO1Qf3dpqklUIxgv9cwRWlvOF9dRidCk
+   1yohFtK/U+QwtKvhZ1RK/IutoXhY7YqFDbsizRyR1ey+RLDNb/F/rAx8B
+   Q==;
+X-CSE-ConnectionGUID: V3RAFw3RT36LmDF2ut+I2w==
+X-CSE-MsgGUID: KP9tYsd6TS+bWwr1ubQiuw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11443"; a="49245566"
+X-IronPort-AV: E=Sophos;i="6.15,311,1739865600"; 
+   d="scan'208";a="49245566"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 May 2025 05:52:56 -0700
+X-CSE-ConnectionGUID: 38PsfmIPSiatfTx46nf1sQ==
+X-CSE-MsgGUID: XvvkD0BcTuG9Y5e3+/5iQQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,311,1739865600"; 
+   d="scan'208";a="142497128"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by orviesa008.jf.intel.com with ESMTP; 24 May 2025 05:52:55 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uIoMv-000RD2-0n;
+	Sat, 24 May 2025 12:52:53 +0000
+Date: Sat, 24 May 2025 20:52:48 +0800
+From: kernel test robot <lkp@intel.com>
+To: Ingo Molnar <mingo@kernel.org>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	x86@kernel.org
+Subject: [tip:master 747/770] arch/powerpc/include/asm/perf_event.h:47:0:
+ warning: "PERF_REG_EXTENDED_MASK" redefined
+Message-ID: <202505242035.SN55pavs-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250522085149.3361598-1-jason-jh.lin@mediatek.com>
-In-Reply-To: <20250522085149.3361598-1-jason-jh.lin@mediatek.com>
-From: Daniel Stone <daniel@fooishbar.org>
-Date: Sat, 24 May 2025 13:47:13 +0100
-X-Gm-Features: AX0GCFvBeLD8sRxyqEm85OLAoQZjo4C2fe9icGhm_Cxkm7__yWuuXUFz1KdCsJ8
-Message-ID: <CAPj87rNV_48pQF+gv3HEx+-n1WvKOoX2u_HRW5w8DrgEAigk9w@mail.gmail.com>
-Subject: Re: [PATCH] drm/mediatek: Add wait_event_timeout when disabling plane
-To: Jason-JH Lin <jason-jh.lin@mediatek.com>
-Cc: Chun-Kuang Hu <chunkuang.hu@kernel.org>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
-	Nancy Lin <nancy.lin@mediatek.com>, Singo Chang <singo.chang@mediatek.com>, 
-	Paul-PL Chen <paul-pl.chen@mediatek.com>, Yongqiang Niu <yongqiang.niu@mediatek.com>, 
-	Zhenxing Qin <zhenxing.qin@mediatek.com>, Sirius Wang <sirius.wang@mediatek.com>, 
-	Xavier Chang <xavier.chang@mediatek.com>, Fei Shao <fshao@chromium.org>, 
-	Chen-yu Tsai <wenst@chromium.org>, dri-devel@lists.freedesktop.org, 
-	linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, 
-	linux-arm-kernel@lists.infradead.org, 
-	Project_Global_Chrome_Upstream_Group@mediatek.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Hi Jason,
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git master
+head:   4df0681d0b0244368a8a0982b24ceb536c3b5165
+commit: a7872f778554c4849d59def8dfe0d295328e5e10 [747/770] perf/headers: Clean up <linux/perf_event.h> a bit
+config: powerpc-randconfig-002-20250524 (https://download.01.org/0day-ci/archive/20250524/202505242035.SN55pavs-lkp@intel.com/config)
+compiler: powerpc-linux-gcc (GCC) 7.5.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250524/202505242035.SN55pavs-lkp@intel.com/reproduce)
 
-On Thu, 22 May 2025 at 09:52, Jason-JH Lin <jason-jh.lin@mediatek.com> wrote:
-> Our hardware registers are set through GCE, not by the CPU.
-> DRM might assume the hardware is disabled immediately after calling
-> atomic_disable() of drm_plane, but it is only truly disabled after the
-> GCE IRQ is triggered.
->
-> Additionally, the cursor plane in DRM uses async_commit, so DRM will
-> not wait for vblank and will free the buffer immediately after calling
-> atomic_disable().
->
-> To prevent the framebuffer from being freed before the layer disable
-> settings are configured into the hardware, which can cause an IOMMU
-> fault error, a wait_event_timeout has been added to wait for the
-> ddp_cmdq_cb() callback,indicating that the GCE IRQ has been triggered.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202505242035.SN55pavs-lkp@intel.com/
 
-Waiting up to 500ms for each plane to be disabled is ... not ideal.
-Especially as multiple planes can be disabled at once. This may happen
-dynamically during runtime, e.g. when a video is playing and a user
-moves their cursor over the plane to make the UI controls visible.
+All warnings (new ones prefixed by >>):
 
-I think this should be handled through the atomic_commit() handler,
-with asynchronous tracking of the state, instead of the hard block
-here.
+   In file included from include/linux/perf_event.h:33:0,
+                    from kernel/events/ring_buffer.c:11:
+   include/linux/perf_regs.h:16:32: error: expected identifier or '(' before numeric constant
+    #define PERF_REG_EXTENDED_MASK 0
+                                   ^
+   arch/powerpc/include/asm/perf_event.h:46:12: note: in expansion of macro 'PERF_REG_EXTENDED_MASK'
+    extern u64 PERF_REG_EXTENDED_MASK;
+               ^~~~~~~~~~~~~~~~~~~~~~
+   In file included from include/linux/perf_event.h:50:0,
+                    from kernel/events/ring_buffer.c:11:
+>> arch/powerpc/include/asm/perf_event.h:47:0: warning: "PERF_REG_EXTENDED_MASK" redefined
+    #define PERF_REG_EXTENDED_MASK PERF_REG_EXTENDED_MASK
+    
+   In file included from include/linux/perf_event.h:33:0,
+                    from kernel/events/ring_buffer.c:11:
+   include/linux/perf_regs.h:16:0: note: this is the location of the previous definition
+    #define PERF_REG_EXTENDED_MASK 0
+    
+   cc1: warning: unrecognized command line option '-Wno-unterminated-string-initialization'
+--
+   In file included from include/linux/perf_event.h:33:0,
+                    from include/linux/trace_events.h:10,
+                    from include/trace/syscall.h:7,
+                    from include/linux/syscalls.h:94,
+                    from kernel/events/core.c:34:
+   include/linux/perf_regs.h:16:32: error: expected identifier or '(' before numeric constant
+    #define PERF_REG_EXTENDED_MASK 0
+                                   ^
+   arch/powerpc/include/asm/perf_event.h:46:12: note: in expansion of macro 'PERF_REG_EXTENDED_MASK'
+    extern u64 PERF_REG_EXTENDED_MASK;
+               ^~~~~~~~~~~~~~~~~~~~~~
+   In file included from include/linux/perf_event.h:50:0,
+                    from include/linux/trace_events.h:10,
+                    from include/trace/syscall.h:7,
+                    from include/linux/syscalls.h:94,
+                    from kernel/events/core.c:34:
+>> arch/powerpc/include/asm/perf_event.h:47:0: warning: "PERF_REG_EXTENDED_MASK" redefined
+    #define PERF_REG_EXTENDED_MASK PERF_REG_EXTENDED_MASK
+    
+   In file included from include/linux/perf_event.h:33:0,
+                    from include/linux/trace_events.h:10,
+                    from include/trace/syscall.h:7,
+                    from include/linux/syscalls.h:94,
+                    from kernel/events/core.c:34:
+   include/linux/perf_regs.h:16:0: note: this is the location of the previous definition
+    #define PERF_REG_EXTENDED_MASK 0
+    
+   In file included from include/linux/perf_event.h:50:0,
+                    from include/linux/trace_events.h:10,
+                    from include/trace/syscall.h:7,
+                    from include/linux/syscalls.h:94,
+                    from kernel/events/core.c:34:
+   kernel/events/core.c: In function 'has_extended_regs':
+   arch/powerpc/include/asm/perf_event.h:47:32: error: 'PERF_REG_EXTENDED_MASK' undeclared (first use in this function); did you mean 'PERF_REG_EXTENDED_MAX'?
+    #define PERF_REG_EXTENDED_MASK PERF_REG_EXTENDED_MASK
+                                   ^
+   kernel/events/core.c:12500:41: note: in expansion of macro 'PERF_REG_EXTENDED_MASK'
+     return (event->attr.sample_regs_user & PERF_REG_EXTENDED_MASK) ||
+                                            ^~~~~~~~~~~~~~~~~~~~~~
+   arch/powerpc/include/asm/perf_event.h:47:32: note: each undeclared identifier is reported only once for each function it appears in
+    #define PERF_REG_EXTENDED_MASK PERF_REG_EXTENDED_MASK
+                                   ^
+   kernel/events/core.c:12500:41: note: in expansion of macro 'PERF_REG_EXTENDED_MASK'
+     return (event->attr.sample_regs_user & PERF_REG_EXTENDED_MASK) ||
+                                            ^~~~~~~~~~~~~~~~~~~~~~
+   kernel/events/core.c:12502:1: warning: control reaches end of non-void function [-Wreturn-type]
+    }
+    ^
+   kernel/events/core.c: At top level:
+   cc1: warning: unrecognized command line option '-Wno-unterminated-string-initialization'
 
-Cheers,
-Daniel
+
+vim +/PERF_REG_EXTENDED_MASK +47 arch/powerpc/include/asm/perf_event.h
+
+a6460b03f945ee Sandipan Das        2018-12-06  29  
+75382aa72f0682 Anton Blanchard     2012-06-26  30  /*
+75382aa72f0682 Anton Blanchard     2012-06-26  31   * Overload regs->result to specify whether we should use the MSR (result
+75382aa72f0682 Anton Blanchard     2012-06-26  32   * is zero) or the SIAR (result is non zero).
+75382aa72f0682 Anton Blanchard     2012-06-26  33   */
+b0f82b81fe6bbc Frederic Weisbecker 2010-05-20  34  #define perf_arch_fetch_caller_regs(regs, __ip)			\
+b0f82b81fe6bbc Frederic Weisbecker 2010-05-20  35  	do {							\
+75382aa72f0682 Anton Blanchard     2012-06-26  36  		(regs)->result = 0;				\
+b0f82b81fe6bbc Frederic Weisbecker 2010-05-20  37  		(regs)->nip = __ip;				\
+3d13e839e801e0 Michael Ellerman    2020-02-20  38  		(regs)->gpr[1] = current_stack_frame();		\
+b0f82b81fe6bbc Frederic Weisbecker 2010-05-20  39  		asm volatile("mfmsr %0" : "=r" ((regs)->msr));	\
+b0f82b81fe6bbc Frederic Weisbecker 2010-05-20  40  	} while (0)
+333804dc3b7a92 Madhavan Srinivasan 2018-12-09  41  
+333804dc3b7a92 Madhavan Srinivasan 2018-12-09  42  /* To support perf_regs sier update */
+333804dc3b7a92 Madhavan Srinivasan 2018-12-09  43  extern bool is_sier_available(void);
+e79b76e03b712e Athira Rajeev       2021-02-03  44  extern unsigned long get_pmcs_ext_regs(int idx);
+781fa4811d9531 Anju T Sudhakar     2020-08-07  45  /* To define perf extended regs mask value */
+781fa4811d9531 Anju T Sudhakar     2020-08-07  46  extern u64 PERF_REG_EXTENDED_MASK;
+781fa4811d9531 Anju T Sudhakar     2020-08-07 @47  #define PERF_REG_EXTENDED_MASK	PERF_REG_EXTENDED_MASK
+
+:::::: The code at line 47 was first introduced by commit
+:::::: 781fa4811d95314c1965c0c3337c9ac36ef26093 powerpc/perf: Add support for outputting extended regs in perf intr_regs
+
+:::::: TO: Anju T Sudhakar <anju@linux.vnet.ibm.com>
+:::::: CC: Michael Ellerman <mpe@ellerman.id.au>
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
