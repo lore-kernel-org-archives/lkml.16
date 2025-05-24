@@ -1,125 +1,227 @@
-Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F7194A1D;
-	Sat, 24 May 2025 03:31:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95AD4101FF;
+	Sat, 24 May 2025 03:39:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748057507; cv=none; b=EP5mNvTBTIH7sX+reAgM++pyAKRM4y1zHYxWW3ESHjP9Upf4ghHm9q0GUmaw6AmnZbyaPeT5o397Nou6/6qHJkg++78NnlQ/2F7dFF4apa+hr+OosUENgih6cREkiEP2nqSsuBrm+o5W99b1A7qV07sdR5LdpJlcXitkCG9B4ao=
+	t=1748057976; cv=none; b=sA/Nz95HDKe6ylt/T6/DBSgfVqxMpBKcx318xx5omDg7MUIRU4Jy//m8rgkhCwEVb39ra/mpjVCMrzPG1uIYJONYwAnaiQEWxOAoIW+HfGIqfmUj5lCzJF7RCA7soIAXZGB/7R682oliLEJpcrZHxkzcvtdHVWlmb18TMgOixMg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748057507; c=relaxed/simple;
-	bh=skUyVSXbiipwpe/RGHesq9AxqtDJj2JGXYoLDvznrIA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Ob6/A4T9ZR6PVDldtbmqzpt2XXgeALch4S2DTnJDbqYh6+Nto9i0xlOsYVN4ukqWQiDMP+4yY8ORSSqyxwavcWVy8JUrsIEqq5BDaasA//yJ1zt8DRqoyXXRVeyFxARniN+dvu6D1hMhrTj3+Voq2ugTx+zGAioyjtnhFirOzp4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jxVm1+C1; arc=none smtp.client-ip=209.85.216.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748057976; c=relaxed/simple;
+	bh=7IzTik7Z1oQYNbi1ZtvITH1vtj4QWC1+x7Q28RIHobI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=R6w0DmHEqdXbKlatfy802Y8vNbzvyKZrAvAABTSCZvruHp5JqHJBO87vuNReAlR4ou5dnwsuucLkozeBUSs1KT099TutJ1McDPttcQI5wCRs0hZx1LRx1hJ/H15fCVSvEMfEzrGgfHwznxEi8Y/LRtlhGYbK/7i0GQ7lK0TVVSU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XrqQljMu; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jxVm1+C1"
-Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-310e1f4627aso536445a91.2;
-        Fri, 23 May 2025 20:31:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748057505; x=1748662305; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=z0KfmMjgOEpWzo+0u3yfDTi/IRtsd5mxIqnOYASIlOI=;
-        b=jxVm1+C1bFVoRu4Zq8eGb8Q7LJQNnNNXRU84V5TG0jfJq8kSFtTm6DGCCpWLzzbZF5
-         PdYCi2KJpVaC8kIl2seQDKT3FJOpJBdZmD8yPMRMCQEe0So5dkC/wJR5oOnHtzzHwisq
-         1h7vQ8EnBiNwcervgztIKAAkDGfZ2NhClRlRWYP4P0JHARK+RM+0c2/sNNUckjXBnNjY
-         O5Vu7CrjmDU8v942FFdfIB3DVqCHX1EhJ7Iwc+OCGK1p4mdv3SuUaCdDxcO1ITF8uxWy
-         sGGT00E2RnKOAGS/1PTEYZ50qHjO5X7KkJQltWN477irvbRohgvXMQFdDrc7kA0NhdQy
-         +Lsw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748057505; x=1748662305;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=z0KfmMjgOEpWzo+0u3yfDTi/IRtsd5mxIqnOYASIlOI=;
-        b=NRPOOqqyZtwMVfJWC1sB8amf0FWbEYgGXrRH/V58X61xu69Cv8/jNZohKp2PY2Dl4K
-         YNXaV7VePiWBNOfMVbnuvVy6iRHZZWadoNEtop1MIxxM9Gf+mP0iOTzUqzNrY6iQjqg2
-         wmzjwEuX4feNrMs9OmMlUTqPJMdu04oarxWCO5+e3ZCyy3K+CgBPKU9BgtWIXe955gwO
-         0cdg7RAbLwD62sXL6bceYe6ECzPzJ54ejL6o2tVDOuUo4KfAD5DeT/9usiyClFUS113p
-         JBtDW8z6kgJuSdOggU2OMW8ytUaP9m9CaZhV36q9aXuACHzSL6x8JUG5kIKtvBa3LeGt
-         fo+w==
-X-Forwarded-Encrypted: i=1; AJvYcCVngSH3X5vDwbgigmNw5Iainnau/WxSW4wXCOsfdBNRO5IsEQFDc79iVwQ0ACdtRwdiXKoaQ9/h@vger.kernel.org, AJvYcCVpIxUZ8+MnY6v1T1nKwhw6m2jlnMrjifgLrz8YaH6kz2dbGWZW788SB8nBcDy7EBmdBo8WDga+nFtDduA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxZpdb+8sRBmm/psurxBv7qk0Ut15BaanxPBb/GWlPccC7LQR6R
-	L2Fu/2QeCawhaoxrPqmQFRKvanc3WWzMY5LiYRqzSDdeaBZBqrU96I0C
-X-Gm-Gg: ASbGncvMBdi6ryyixIX9JVqJjfPQjcFEksMW7tHyRiR4iOrzYF1anTeeF+ChOQUxwFe
-	wPzz6EFNP+H1r5zE2NfS4l49voqRas26BQCrT/cqYPvtdLb9q6EmNC8O923NJ1yqjrhn2swe8sX
-	a/bCtu5ceVCh8BJWkQiCC2iWrNfy27TWNgXZsvyQjlx01JNj/Y6wwxgRxqT7WZBQVaYOTono+oZ
-	gQVHX3wKsuZNG8MmtK0mU6kTy3KMjqxkQlYhJ+5g9jw7Scrb+GVySnAHXC4cZFlcJXftfuP45xz
-	LMEJo8bTm7wubdaEzCcWGj9enUkYRY4gZ/gCKs22O2faHwJWyPEDepkD/U8oz0I=
-X-Google-Smtp-Source: AGHT+IFQTVRjmY+/uCNbktEe6LN80eKzA137UEpFZA8kJ1//cPP2NysUTgu3Y+saLRLKxZhfvfekMA==
-X-Received: by 2002:a17:90b:280b:b0:2ff:6167:e92d with SMTP id 98e67ed59e1d1-31110d71ba8mr2169730a91.32.1748057504692;
-        Fri, 23 May 2025 20:31:44 -0700 (PDT)
-Received: from celestia.turtle.lan ([2601:1c2:c184:dc00:e71b:d5fb:fd1f:ff05])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30f365f3487sm8074630a91.42.2025.05.23.20.31.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 May 2025 20:31:44 -0700 (PDT)
-From: Sam Edwards <cfsworks@gmail.com>
-X-Google-Original-From: Sam Edwards <CFSworks@gmail.com>
-To: Heiko Stuebner <heiko@sntech.de>
-Cc: linux-rockchip@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Sebastian Reichel <sebastian.reichel@collabora.com>,
-	=?UTF-8?q?Daniel=20Kukie=C5=82a?= <daniel@kukiela.pl>,
-	Sven Rademakers <sven.rademakers@gmail.com>,
-	Joshua Riek <jjriek@verizon.net>,
-	Sam Edwards <CFSworks@gmail.com>,
-	stable@vger.kernel.org
-Subject: [PATCH] arm64: dts: rockchip: Remove workaround that prevented Turing RK1 GPU power regulator control
-Date: Fri, 23 May 2025 20:29:37 -0700
-Message-ID: <20250524032937.7788-1-CFSworks@gmail.com>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XrqQljMu"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748057973; x=1779593973;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=7IzTik7Z1oQYNbi1ZtvITH1vtj4QWC1+x7Q28RIHobI=;
+  b=XrqQljMuPCnydCrBKUKNKl/sgSQfxikD0pa/vGCzEh+3uD626/s9zZDc
+   EO3AC0d2NgeD0yYnCfyevH1Y4E2XMzvb1Np7NTndSyUdz5XYT+TikLzE6
+   m7xgw7H9oRGhjCa1/OxVMBhyszM1JdSOoQsP/DKlzL9f1KH8llAp5qZmY
+   lqCT2qtLb32zsdz3Tp8+bEYsZRZkZ5Av3G+K1HvosWbuz0WE88UsKMSBv
+   0ejLYZni7BmK6MQGgV+CjTz9DMKG3TgZCwmectd4OHkeKIuLrB38Fmal3
+   TCVFX9ywp4P/r/lCXS3MqoJPVYH3LdexcxL0+zaANRalL5y3oU1wJnUPV
+   A==;
+X-CSE-ConnectionGUID: hCdmmq9kSAmjcMsWfSWjKg==
+X-CSE-MsgGUID: jiAD3MUdS92tITHvGVGJPQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11441"; a="50227673"
+X-IronPort-AV: E=Sophos;i="6.15,310,1739865600"; 
+   d="scan'208";a="50227673"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2025 20:39:32 -0700
+X-CSE-ConnectionGUID: zcZxj8dbTb+bAaFrzD0SGA==
+X-CSE-MsgGUID: DCJiGGXWQl+UORP1bJyepw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,310,1739865600"; 
+   d="scan'208";a="141966994"
+Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
+  by orviesa007.jf.intel.com with ESMTP; 23 May 2025 20:39:28 -0700
+Date: Sat, 24 May 2025 11:33:25 +0800
+From: Xu Yilun <yilun.xu@linux.intel.com>
+To: Alexey Kardashevskiy <aik@amd.com>
+Cc: Zhi Wang <zhiw@nvidia.com>, Jason Gunthorpe <jgg@nvidia.com>,
+	kvm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+	linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org,
+	sumit.semwal@linaro.org, christian.koenig@amd.com,
+	pbonzini@redhat.com, seanjc@google.com, alex.williamson@redhat.com,
+	vivek.kasireddy@intel.com, dan.j.williams@intel.com,
+	yilun.xu@intel.com, linux-coco@lists.linux.dev,
+	linux-kernel@vger.kernel.org, lukas@wunner.de, yan.y.zhao@intel.com,
+	daniel.vetter@ffwll.ch, leon@kernel.org, baolu.lu@linux.intel.com,
+	zhenzhong.duan@intel.com, tao1.su@intel.com
+Subject: Re: [RFC PATCH 00/12] Private MMIO support for private assigned dev
+Message-ID: <aDE+BaMo+X75QaEW@yilunxu-OptiPlex-7050>
+References: <aB4tQHmHzHooDeTE@yilunxu-OptiPlex-7050>
+ <20250509184318.GD5657@nvidia.com>
+ <aB7Ma84WXATiu5O1@yilunxu-OptiPlex-7050>
+ <2c4713b0-3d6c-4705-841b-1cb58cd9a0f5@amd.com>
+ <20250512140617.GA285583@nvidia.com>
+ <20250513130315.0158a626.zhiw@nvidia.com>
+ <aCRmoDupzK9zTqFL@yilunxu-OptiPlex-7050>
+ <20250514230502.6b64da7f.zhiw@nvidia.com>
+ <aCYsNSFQJZzHVOFI@yilunxu-OptiPlex-7050>
+ <3909686a-be14-4b0b-8336-0674667d5159@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3909686a-be14-4b0b-8336-0674667d5159@amd.com>
 
-The RK3588 GPU power domain cannot be activated unless the external
-power regulator is already on. When GPU support was added to this DT,
-we had no way to represent this requirement, so `regulator-always-on`
-was added to the `vdd_gpu_s0` regulator in order to ensure stability.
-A later patch series (see "Fixes:" commit) resolved this shortcoming,
-but that commit left the workaround -- and rendered the comment above
-it no longer correct.
+On Tue, May 20, 2025 at 08:57:42PM +1000, Alexey Kardashevskiy wrote:
+> 
+> 
+> On 16/5/25 04:02, Xu Yilun wrote:
+> > > IMHO, I think it might be helpful that you can picture out what are the
+> > > minimum requirements (function/life cycle) to the current IOMMUFD TSM
+> > > bind architecture:
+> > > 
+> > > 1.host tsm_bind (preparation) is in IOMMUFD, triggered by QEMU handling
+> > > the TVM-HOST call.
+> > > 2. TDI acceptance is handled in guest_request() to accept the TDI after
+> > > the validation in the TVM)
+> > 
+> > I'll try my best to brainstorm and make a flow in ASCII.
+> > 
+> > (*) means new feature
+> > 
+> > 
+> >        Guest          Guest TSM       QEMU           VFIO            IOMMUFD       host TSM          KVM
+> >        -----          ---------       ----           ----            -------       --------          ---
+> > 1.                                                                               *Connect(IDE)
+> > 2.                                 Init vdev
+> > 3.                                *create dmabuf
+> > 4.                                               *export dmabuf
+> > 5.                                create memslot
+> > 6.                                                                                              *import dmabuf
+> > 7.                                setup shared DMA
+> > 8.                                                                 create hwpt
+> > 9.                                               attach hwpt
+> > 10.                                  kvm run
+> > 11.enum shared dev
+> > 12.*Connect(Bind)
+> > 13.                  *GHCI Bind
+> > 14.                                  *Bind
+> > 15                                                                 CC viommu alloc
+> > 16.                                                                vdevice allloc
+> > 16.                                              *attach vdev
+> 
+> 
+> This "attach vdev" - we are still deciding if it goes to IOMMUFD or VFIO, right?
 
-Remove the workaround to allow the GPU power regulator to power off, now
-that the DT includes the necessary information to power it back on
-correctly.
+This should be "tsm bind". Seems Jason's suggestion is place the IOCTL
+against VFIO, then VFIO reach into IOMMUFD to do the real
+pci_tsm_bind().
 
-Fixes: f94500eb7328b ("arm64: dts: rockchip: Add GPU power domain regulator dependency for RK3588")
-Signed-off-by: Sam Edwards <CFSworks@gmail.com>
-Cc: <stable@vger.kernel.org>
----
- arch/arm64/boot/dts/rockchip/rk3588-turing-rk1.dtsi | 11 -----------
- 1 file changed, 11 deletions(-)
+https://lore.kernel.org/all/20250515175658.GR382960@nvidia.com/
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3588-turing-rk1.dtsi b/arch/arm64/boot/dts/rockchip/rk3588-turing-rk1.dtsi
-index 60ad272982ad..6daea8961fdd 100644
---- a/arch/arm64/boot/dts/rockchip/rk3588-turing-rk1.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3588-turing-rk1.dtsi
-@@ -398,17 +398,6 @@ rk806_dvs3_null: dvs3-null-pins {
- 
- 		regulators {
- 			vdd_gpu_s0: vdd_gpu_mem_s0: dcdc-reg1 {
--				/*
--				 * RK3588's GPU power domain cannot be enabled
--				 * without this regulator active, but it
--				 * doesn't have to be on when the GPU PD is
--				 * disabled.  Because the PD binding does not
--				 * currently allow us to express this
--				 * relationship, we have no choice but to do
--				 * this instead:
--				 */
--				regulator-always-on;
--
- 				regulator-boot-on;
- 				regulator-min-microvolt = <550000>;
- 				regulator-max-microvolt = <950000>;
--- 
-2.48.1
+> 
+> 
+> > 17.                                                               *setup CC viommu
+> > 18                                                                 *tsm_bind
+> > 19.                                                                                  *bind
+> > 20.*Attest
+> > 21.               *GHCI get CC info
+> > 22.                                 *get CC info
+> > 23.                                                                *vdev guest req
+> > 24.                                                                                 *guest req
+> > 25.*Accept
+> > 26.             *GHCI accept MMIO/DMA
+> > 27.                                *accept MMIO/DMA
+> > 28.                                                               *vdev guest req
+> > 29.                                                                                 *guest req
+> > 30.                                                                                              *map private MMIO
+> > 31.             *GHCI start tdi
+> > 32.                                *start tdi
+> > 33.                                                               *vdev guest req
+> > 34.                                                                                 *guest req
+> 
+> 
+> I am not sure I follow the layout here. "start tdi" and "accept MMIO/DMA" are under "QEMU" but QEMU cannot do anything by itself and has to call VFIO or some other driver...
+> 
 
+Yes. Call IOCTL(iommufd, IOMMUFD_VDEVICE_GUEST_REQUEST, vdevice_id)
+
+> > 35.Workload...
+> > 36.*disconnect(Unbind)
+> 
+> Is this a case of PCI hotunplug? Or just killing QEMU/shutting down the VM? Or stopping trusting the device and switching it to untrusted mode, to work with SWIOTLB or DiscardManager?
+> 
+
+switching to untrusted mode. But I think hotunplug would finally trigger
+the same host side behavior, only no need the guest to "echo 0 > connect"
+
+> > 37.              *GHCI unbind
+> > 38.                                *Unbind
+> > 39.                                            *detach vdev
+> > 40.                                                               *tsm_unbind
+> > 41.                                                                                 *TDX stop tdi
+> > 42.                                                                                 *TDX disable mmio cb
+> > 43.                                            *cb dmabuf revoke
+> 
+> 
+> ... like VFIO and hostTSM - "TDX stop tdi" and "cb dmabuf revoke" are not under QEMU.
+
+Correct. These are TDX Module specific requirements, we don't want them
+to make the general APIs unnecessary verbose.
+
+> 
+> 
+> > 44.                                                                                               *unmap private MMIO
+> > 45.                                                                                 *TDX disable dma cb
+> > 46.                                                              *cb disable CC viommu
+> > 47.                                                                                 *TDX tdi free
+> > 48.                                                                                 *enable mmio
+> > 49.                                            *cb dmabuf recover
+> 
+> 
+> What is the difference between "cb dmabuf revoke" and "cb dmabuf recover"?
+
+revoke revokes private S-EPT mapping, recover means KVM could then do
+shared MMIO mapping on EPT.
+
+Thanks,
+Yilun
+
+> 
+> 
+> > 50.workable shared dev
+> > 
+> > TSM unbind is a little verbos & specific to TDX Connect, but SEV TSM could
+> > ignore these callback. Just implement an "unbind" tsm ops.
+> 
+> 
+> Well, something need to clear RMP entries, can be done in the TDI unbind or whenever you will do it.
+> 
+> And the chart applies for AMD too, more or less. Thanks,
+> 
+> 
+> > Thanks,
+> > Yilun
+> > 
+> > > 
+> > > and which part/where need to be modified in the current architecture to
+> > > reach there. Try to fold vendor-specific knowledge as much as possible,
+> > > but still keep them modular in the TSM driver and let's see how it looks
+> > > like. Maybe some example TSM driver code to demonstrate together with
+> > > VFIO dma-buf patch.
+> > > 
+> > > If some where is extremely hacky in the TSM driver, let's see how they
+> > > can be lift to the upper level or the upper call passes more parameters
+> > > to them.
+> 
+> 
+> 
+> -- 
+> Alexey
+> 
