@@ -1,83 +1,73 @@
-Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C5F016D9C2;
-	Sat, 24 May 2025 22:31:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A90837482;
+	Sat, 24 May 2025 22:35:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748125922; cv=none; b=mmUP2Z5oA21aNrzuN5uirqVX0/DQJHSAndNYc2+GJunYVC99TqmmNdQc9r/J+/8o9vSFJbL0kDxxmm4Kl/5Y6q6pyb5eUVkpYC7NiET7aD1YYTBLtO3gQcQfUvSm9YQ69n3JLqzf+K3Ku7xalcEGXV40/UDOlpmil9lqsIF3Nu4=
+	t=1748126123; cv=none; b=fjlqjdUDc+ET3wYT2/ddRd5NsWZWXQRNhCqpQDhl1WnxY+xBv6mzmGK1ubClveDJ8H2kmrS7RlzlR/g/0UuvzylIKTj2H+2EiC3wdB3Nd+Vzj1BEn0izK0nxI2XS4QbsEdgL5jIXwwbG6Cktw5dmezEbYxut0xfUdDeISPkw12I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748125922; c=relaxed/simple;
-	bh=+rG7oX5eth85rNKkvEQbRhRSKSFrL6Rki09gLGBzzl0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mAENZOLPr96Dn6jkT9ejM3m2kCdZhDh+2zdDm6s2cdC7/aC+F/enWEye9JWdkA7YruaYwRdT0oVmxP+ILk+x1NRMxrZ8fGK1VaYmnTy9CG4uFsN6a5Sm7J30Of/kFc3vnfouLG0bSi7p297kzCH938622sHS7eY8CeaFprH/rIg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Fwtb9Q68; arc=none smtp.client-ip=217.70.183.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1748126123; c=relaxed/simple;
+	bh=dU4AyeWP+INwsL+aKLcDRQiaDCQV4Vh2+r41wSbmyK4=;
+	h=Message-ID:From:To:Cc:Subject:Date; b=TawpeEQ7G97AEHZn5CBP4btzwzgOVP0zCjazdMNAzoe2YhMhc0hv2KMNobBdAVh6V0IGAEp5Z18HCj5o4W3r/JnWgw4ftYBsqoTcPTzgJsd2xBcPXWldCUTVsal8wWbVn4HjBYj1Q9vgWAnhw7ZvNIl6gOSz9ue0PmBKH5WsFlk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l+qK9bo6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Fwtb9Q68"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id DABF443308;
-	Sat, 24 May 2025 22:31:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1748125918;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ctA+pw0iwq71a2CU5/HfDOmg6L4QLY/4rAetftgLJfE=;
-	b=Fwtb9Q68LXYuMwGTgH6ki4eecalXw93ok0fpht6jqEJQqsUwkNw6d9gLJheTHHSLrlshv1
-	6osgGSYStO3i+7WLQZOM5iLG0nYzU1EFmbOfoiX735m7189RufFLKZOIyRYG3hGz1m2Crb
-	CmqJsDd5uYtC904ZtaQQZCSE0doyPP4zBVV+uh3uEpQDle6QAuLXwCncqTWZhSgnRbfVwO
-	f29VJhVdgyTiuhUMoEKT7xPTK0tT+3Ir9Eo1ngvRB9wOlO9WNj3Tap5BYQLWhFBtIsCZ+c
-	iMfT/VMaDkjjhDYEM+Ztnd/jpcnrU4m20/ZL6q4sju40JLwOh9/bjPbgyYNc3A==
-Date: Sun, 25 May 2025 00:31:57 +0200
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-To: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
-	nicolas.ferre@microchip.com, claudiu.beznea@tuxon.dev,
-	lee@kernel.org, sre@kernel.org, p.zabel@pengutronix.de,
-	Ryan.Wanner@microchip.com
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-	linux-rtc@vger.kernel.org
-Subject: Re: (subset) [PATCH v5 00/11] Enable Power Modes Support for
- SAMA7D65 SoC
-Message-ID: <174812590116.1278122.18254321478152467419.b4-ty@bootlin.com>
-References: <cover.1744666011.git.Ryan.Wanner@microchip.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l+qK9bo6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2B9DC4CEE4;
+	Sat, 24 May 2025 22:35:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748126123;
+	bh=dU4AyeWP+INwsL+aKLcDRQiaDCQV4Vh2+r41wSbmyK4=;
+	h=From:To:Cc:Subject:Date:From;
+	b=l+qK9bo6qbJ9gjihICWvh113OdRUA+orlSAbSxmdcmIn5gkmJ7WWBYOh36nerhDjS
+	 Ic43/ThJhBHuXCjEIW2Ssl4LRlpNq5rIe+BZvB6D+tN5OSp523Zpmsd6HwKx5ADdGP
+	 Uz+49w58tkV2lX6Jp55p2+rz17r6t5424WShsp97cELKJXrukcLx53ZKC88MQmVjGZ
+	 KgkJtZu2TRXr77ihIN1ftP9ckNUZcrewq5vZLFqyf+q/xjmy3jbSg06rlx/Rx8j9mb
+	 OKaEmR+DNPxyxKYZs6xYgudMD59OlsmugJ2W1WaokszaNpcJUXtrxNYKNwYQhlxch8
+	 0hzrPa+A/emFw==
+Message-ID: <cc4326d57c0588f9916731c203773a17.broonie@kernel.org>
+From: Mark Brown <broonie@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
+Subject: [GIT PULL] SPI fixes for v6.15-rc7
+Date: Sat, 24 May 2025 23:35:12 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1744666011.git.Ryan.Wanner@microchip.com>
-X-GND-State: clean
-X-GND-Score: 0
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgdduvdeludculddtuddrgeefvddrtddtmdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucenucfjughrpeffhffvvefukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpeetlhgvgigrnhgurhgvuceuvghllhhonhhiuceorghlvgigrghnughrvgdrsggvlhhlohhnihessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepieejfefhffekjeeuheevueevjedvleevjeetudffheeutdffudefjeduffeuvddtnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghdpsghoohhtlhhinhdrtghomhenucfkphepvdgrtddumegvtdgrmedvugemieefjedtmeejkegvtdemtgdtvgekmedvkedtieemkegrtgeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegvtdgrmedvugemieefjedtmeejkegvtdemtgdtvgekmedvkedtieemkegrtgeipdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpegrlhgvgigrnhgurhgvrdgsvghllhhonhhisegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedugedprhgtphhtthhopehrohgshheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhhriihkodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheptghonhhorhdoughtsehkvghrn
- hgvlhdrohhrghdprhgtphhtthhopehnihgtohhlrghsrdhfvghrrhgvsehmihgtrhhotghhihhprdgtohhmpdhrtghpthhtoheptghlrghuughiuhdrsggviihnvggrsehtuhigohhnrdguvghvpdhrtghpthhtoheplhgvvgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepshhrvgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepphdriigrsggvlhesphgvnhhguhhtrhhonhhigidruggv
-X-GND-Sasl: alexandre.belloni@bootlin.com
 
-On Mon, 14 Apr 2025 14:41:17 -0700, Ryan.Wanner@microchip.com wrote:
-> From: Ryan Wanner <Ryan.Wanner@microchip.com>
-> 
-> This patch set adds support for low power modes for the SAMA7D65 SoC and
-> the required components and changes for low power modes.
-> 
-> The series includes changes in the asm code to account for the addtional
-> clocks that are in this SoC.
-> 
-> [...]
+The following changes since commit a5806cd506af5a7c19bcd596e4708b5c464bfd21:
 
-Applied, thanks!
+  Linux 6.15-rc7 (2025-05-18 13:57:29 -0700)
 
-[04/11] dt-bindings: rtc: at91rm9200: add microchip,sama7d65-rtc
-        https://git.kernel.org/abelloni/c/0a68f5be7883
-[05/11] dt-bindings: at91rm9260-rtt: add microchip,sama7d65-rtt
-        https://git.kernel.org/abelloni/c/bf1c27c6d540
+are available in the Git repository at:
 
-Best regards,
+  https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git tags/spi-fix-v6.15-rc7
 
--- 
-Alexandre Belloni, co-owner and COO, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+for you to fetch changes up to 7aba292eb15389073c7f3bd7847e3862dfdf604d:
+
+  spi: spi-fsl-dspi: Reset SR flags before sending a new message (2025-05-22 16:05:26 +0100)
+
+----------------------------------------------------------------
+spi: Fixes for v6.15
+
+A few final fixes for v6.15, some driver fixes for the Freescale DSPI
+driver pulled over from their vendor code and another instance of the
+fixes Greg has been sending throughout the kernel for constification of
+the bus_type in driver core match() functions.
+
+----------------------------------------------------------------
+Bogdan-Gabriel Roman (1):
+      spi: spi-fsl-dspi: Halt the module after a new message transfer
+
+Greg Kroah-Hartman (1):
+      spi: use container_of_cont() for to_spi_device()
+
+Larisa Grigore (2):
+      spi: spi-fsl-dspi: restrict register range for regmap access
+      spi: spi-fsl-dspi: Reset SR flags before sending a new message
+
+ drivers/spi/spi-fsl-dspi.c | 46 +++++++++++++++++++++++++++++++++++++++++++++-
+ include/linux/spi/spi.h    |  5 +----
+ 2 files changed, 46 insertions(+), 5 deletions(-)
