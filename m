@@ -1,232 +1,145 @@
-Received: from out30-111.freemail.mail.aliyun.com (out30-111.freemail.mail.aliyun.com [115.124.30.111])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56EA1156F5D;
-	Sat, 24 May 2025 05:40:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.111
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1BFD2DCBFE;
+	Sat, 24 May 2025 05:52:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748065218; cv=none; b=VyMTHrL9XzbuaNs4yQOOryd1Kp6a3Gx+nw1DFoxQCt8iTzyuxJOHvASGARK/R4muAprkR2xBeVTId2ydF1S+Am0VSDjPVihA2p/3ZIvF8ebzyYwjyhSSiLmTag47hUUci7IssaWsQVDgaaDS88u5+fcJ5fhCN+eH3TY6d4PkrpA=
+	t=1748065928; cv=none; b=mWL5Nr576Z8W0gNxJfMwqf8YWfkSk3WRHY0rXldORD99Y7vxhSsleHjwrQPu/Nmy7AbmQZCz07O76tJmTmkEyeE51XLdsZVZ6KY6CaceA+OFP+CGFgvLIqdn7KP6miVRv6/Vd3rY08zG0UWsG99/yyCPIjTMW6L5G63S8BWLvAg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748065218; c=relaxed/simple;
-	bh=14/2ip35FeywfWYzsVvpZkM3FiQyxMuIi4NDdHLXrTE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=drch746+v995nJblmdLit1/o1WY2LLd3v3Cmpnt9FPxuY5RpcZtGvMj+niTQZUkY3gpxVFwMJ9bBrr1zxYbxf7MS3vlW/o0rIRHDr9OeeVkeK6r05DBOyLjOEsakfonO/VUN0aYzPABCpD2p2xUgMV/YtcgcvRdbP8p7DdegOGA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=ZV2LjEXe; arc=none smtp.client-ip=115.124.30.111
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1748065928; c=relaxed/simple;
+	bh=FdWjl1ErG93oPcsjFxaQj2C7s+R0GcehBa85jodw+II=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=d9iIGLUUUYaso+vADRbexdHGYClT1YoHpMf8CXu11y1mWR+2wTu8Y+RemLkYMUab7YqPjVFg0z59buJUpy910jJAxIXn6qKM/HxX3gOAAV+4vynIN63DoaPYVko20gvCSPJ6+4fKsfv2flviNYCWWYL0fWrouaHDdNFTQha8Xw4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ry0zFlNA; arc=none smtp.client-ip=209.85.208.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="ZV2LjEXe"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1748065210; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=Vb/+YVmUsnGKgeF1YClxfgtT9PLmvgySvb+sSDF/9tU=;
-	b=ZV2LjEXepZbaEjRV05Tv4wkieJocWk5Pk1wrNjX5WoSwhmMMCL2toNQs4gowxWRrV95aHp/XHbhKhl1n9ewO+vVqkrjX0trsTjGnmVLpOzVrY7Da/zZ/gIFI11Qmle13bGPKYlWfAXSNcwYeC78KSoQxcf0n3kBRR/Q71GDywxw=
-Received: from 30.246.160.208(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0Wbd3RrH_1748065209 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Sat, 24 May 2025 13:40:10 +0800
-Message-ID: <87234fab-081e-4e2e-9ef1-0414b23601ce@linux.alibaba.com>
-Date: Sat, 24 May 2025 13:40:08 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ry0zFlNA"
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-6000f2f217dso995299a12.1;
+        Fri, 23 May 2025 22:52:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748065925; x=1748670725; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=fWh8IbKY/zP3rW8Cj2HDPpInfGDKXjZkqplO5iz+naE=;
+        b=Ry0zFlNALJKg8OpucClbwO3rHcrprrb3x5sDcAabMETmctHZ96F9zDRZi4PnUuib9K
+         ICRLe+AJmYPFGQ4ckrzPKVjCQwMVSTg3sC4aRUZQc+CYoFc5+xv777HEd8sS7+ZaO/S3
+         bcASnvNvsON2U7LzM4zD6D85cmp9ZfI145Jg3XQmAsAv4gOQEPBR7bi13a3vKM2h9uIf
+         yYm7tLYhRzgvCgyx1IbZ/xW7MmR9MhVQ6O7unQZ1LakIPRU0RuVANHRoVk/umYL+oueT
+         /Du2zUcvFOIXefZdmyUD8OgnfLUNflkOdayjn1utXSTln/9lWESx1MLAOLbcQ/hmGIz+
+         MLTA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748065925; x=1748670725;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=fWh8IbKY/zP3rW8Cj2HDPpInfGDKXjZkqplO5iz+naE=;
+        b=iYfvPbYELQvUTAJQNJGqp+lsFnZh5+g/mhmZD2lKowLBuW+nLeziD1no3BSHAp17vo
+         nY7O9GUFFVbAyZwF/Xp79Z7D4K2mOKbNnZXtfntRPHI208B0akdNLb3YqGneoMTE70zY
+         tNja7IvLNtlzkVFOTc39zFL+gE5HZAFIlM4D1Fod0IXkhvc8wvpewSJskqnJKQbMs9Rv
+         xSy8YOtE3kZzYAsdqoPXoRjkW2dGiwZiBRnkvBl3knr9UOFiBpM3aa93YT9Dxvem0/zC
+         gDfrEBUKIsvjS1umMbVuvEcv8iJMj2jmIGhS5FK0lDwYq3f9amC8H09K4UPi5hZu5pG3
+         bHJg==
+X-Gm-Message-State: AOJu0YzPkpyJDWDOABFz6vb/nEyazvj8ll87DqZ5qgUj5eAZLwd8rQRx
+	QAV3jY1FG/8+5aLRnB9SE+3idcZ+AhhwPnDMOsCAF7znq16mb/lpmsu5PPOqlkSw
+X-Gm-Gg: ASbGncv5O9R9FIAcXrE+MSAWWVBaGPu1Dr0y9AzUgI/omaQ5qM+m3QtN3x/X0r8oX57
+	s15cJuwPNF+Tq9bOKAsU/Nbc4aOtJJIiB/gnEgl+rhjAtd70luP40FEWqMyAvU+hl/XKT9mLUcl
+	3papaZr5cE8AJLduNIT+dG1oSE+GrE/XEwHb4q6yqqVilW5CMNISaHJOvUubJ/5oc2VZIid0NaG
+	dQ6UIF0yWngzeph+iwUgrJs8SKVl2VGrOi2CSPocHq/PkvbL1DT4jMIllQwXSZLkyMIQcTknMGo
+	pfi3s6rsChM9ATUt0GMTd8XPaag4/DJBsZzyRn0mltpsYKfp2ktSjekG8dwYPRYS8pDY9w34lZA
+	sh/UJF7jVfRUvfnkRVeTSOjRDTyYuRifvLEQSoploJA==
+X-Google-Smtp-Source: AGHT+IEFT6FG6h7tfjwp6aaU7GjUlIxno4NGCn1vxL7j0P907vGQ+YTP9/2jgTBtGvtOaM2AoeRrPg==
+X-Received: by 2002:a17:907:c26:b0:ad2:3f1f:7971 with SMTP id a640c23a62f3a-ad85b120179mr138922766b.8.1748065924561;
+        Fri, 23 May 2025 22:52:04 -0700 (PDT)
+Received: from rafal-Predator-PHN16-71.NAT.wroclaw_krzyki_2.vectranet.pl ([89.151.25.111])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad52d06dc6csm1365451966b.53.2025.05.23.22.52.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 23 May 2025 22:52:04 -0700 (PDT)
+From: Rafal Bilkowski <rafalbilkowski@gmail.com>
+To: netdev@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	dsahern@kernel.org,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	Rafal Bilkowski <rafalbilkowski@gmail.com>
+Subject: [PATCH]    net: ipv6: sanitize RPL SRH cmpre/cmpre fields to fix taint issue
+Date: Sat, 24 May 2025 07:51:59 +0200
+Message-ID: <20250524055159.32982-1-rafalbilkowski@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 1/2] dmaengine: idxd: Fix race condition between WQ
- enable and reset paths
-To: Dave Jiang <dave.jiang@intel.com>, vinicius.gomes@intel.com,
- fenghuay@nvidia.com, vkoul@kernel.org
-Cc: dmaengine@vger.kernel.org, colin.i.king@gmail.com,
- linux-kernel@vger.kernel.org
-References: <20250522063329.51156-1-xueshuai@linux.alibaba.com>
- <20250522063329.51156-2-xueshuai@linux.alibaba.com>
- <a03e4f97-2289-4af7-8bfc-ad2d38ec8677@intel.com>
- <b2153756-a57e-4054-bde2-deb8865c9e59@linux.alibaba.com>
- <4cd53b91-bd20-46a1-854c-9bf0950ea496@intel.com>
-From: Shuai Xue <xueshuai@linux.alibaba.com>
-In-Reply-To: <4cd53b91-bd20-46a1-854c-9bf0950ea496@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
+   Coverity flagged that the cmpre and cmpri fields in
+   struct ipv6_rpl_sr_hdr are used without proper bounds checking,
+   which may allow tainted values to be used as offsets or divisors,
+   potentially leading to out-of-bounds access or division by zero.
 
+   This patch adds explicit range checks for cmpre and cmpri before
+   using them, ensuring they are within the valid range (0-15) and
+   cmpri is non-zero. Coverity was run loccaly
 
-在 2025/5/23 22:54, Dave Jiang 写道:
-> 
-> 
-> On 5/22/25 10:20 PM, Shuai Xue wrote:
->>
->>
->> 在 2025/5/22 22:55, Dave Jiang 写道:
->>>
->>>
->>> On 5/21/25 11:33 PM, Shuai Xue wrote:
->>>> A device reset command disables all WQs in hardware. If issued while a WQ
->>>> is being enabled, it can cause a mismatch between the software and hardware
->>>> states.
->>>>
->>>> When a hardware error occurs, the IDXD driver calls idxd_device_reset() to
->>>> send a reset command and clear the state (wq->state) of all WQs. It then
->>>> uses wq_enable_map (a bitmask tracking enabled WQs) to re-enable them and
->>>> ensure consistency between the software and hardware states.
->>>>
->>>> However, a race condition exists between the WQ enable path and the
->>>> reset/recovery path. For example:
->>>>
->>>> A: WQ enable path                   B: Reset and recovery path
->>>> ------------------                 ------------------------
->>>> a1. issue IDXD_CMD_ENABLE_WQ
->>>>                                      b1. issue IDXD_CMD_RESET_DEVICE
->>>>                                      b2. clear wq->state
->>>>                                      b3. check wq_enable_map bit, not set
->>>> a2. set wq->state = IDXD_WQ_ENABLED
->>>> a3. set wq_enable_map
->>>>
->>>> In this case, b1 issues a reset command that disables all WQs in hardware.
->>>> Since b3 checks wq_enable_map before a2, it doesn't re-enable the WQ,
->>>> leading to an inconsistency between wq->state (software) and the actual
->>>> hardware state (IDXD_WQ_DISABLED).
->>>
->>>
->>> Would it lessen the complication to just have wq enable path grab the device lock before proceeding?
->>>
->>> DJ
->>
->> Yep, how about add a spin lock to enable wq and reset device path.
->>
->> diff --git a/drivers/dma/idxd/device.c b/drivers/dma/idxd/device.c
->> index 38633ec5b60e..c0dc904b2a94 100644
->> --- a/drivers/dma/idxd/device.c
->> +++ b/drivers/dma/idxd/device.c
->> @@ -203,6 +203,29 @@ int idxd_wq_enable(struct idxd_wq *wq)
->>   }
->>   EXPORT_SYMBOL_GPL(idxd_wq_enable);
->>   
->> +/*
->> + * This function enables a WQ in hareware and updates the driver maintained
->> + * wq->state to IDXD_WQ_ENABLED. It should be called with the dev_lock held
->> + * to prevent race conditions with IDXD_CMD_RESET_DEVICE, which could
->> + * otherwise disable the WQ without the driver's state being properly
->> + * updated.
->> + *
->> + * For IDXD_CMD_DISABLE_DEVICE, this function is safe because it is only
->> + * called after the WQ has been explicitly disabled, so no concurrency
->> + * issues arise.
->> + */
->> +int idxd_wq_enable_locked(struct idxd_wq *wq)
->> +{
->> +       struct idxd_device *idxd = wq->idxd;
->> +       int ret;
->> +
->> +       spin_lock(&idxd->dev_lock);
-> 
-> Let's start using the new cleanup macro going forward:
-> guard(spinlock)(&idxd->dev_lock);
-> 
-> On a side note, there's been a cleanup on my mind WRT this driver's locking. I think we can replace idxd->dev_lock with idxd_confdev(idxd) device lock. You can end up just do:
-> guard(device)(idxd_confdev(idxd));
+   Fixes:  ("Untrusted value as argument (TAINTED_SCALAR)")
 
-Then we need to replace the lock from spinlock to mutex lock?
+Signed-off-by: Rafal Bilkowski <rafalbilkowski@gmail.com>
+---
+ net/ipv6/exthdrs.c | 23 +++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
 
-> 
-> And also drop the wq->wq_lock and replace with wq_confdev(wq) device lock:
-> guard(device)(wq_confdev(wq));
-> 
-> If you are up for it that is.
-
-We creates a hierarchy: pdev -> idxd device -> wq device.
-idxd_confdev(idxd) is the parent of wq_confdev(wq) because:
-
-     (wq_confdev(wq))->parent = idxd_confdev(idxd);
-
-Is it safe to grap lock of idxd_confdev(idxd) under hold
-lock of wq_confdev(wq)?
-
-We have mounts of code use spinlock of idxd->dev_lock under
-hold of wq->wq_lock.
-
-> 
-> 
->> +       ret = idxd_wq_enable_locked(wq);
->> +       spin_unlock(&idxd->dev_lock);
->> +
->> +       return ret;
->> +}
->> +
->>   int idxd_wq_disable(struct idxd_wq *wq, bool reset_config)
->>   {
->>          struct idxd_device *idxd = wq->idxd;
->> @@ -330,7 +353,7 @@ int idxd_wq_set_pasid(struct idxd_wq *wq, int pasid)
->>   
->>          __idxd_wq_set_pasid_locked(wq, pasid);
->>   
->> -       rc = idxd_wq_enable(wq);
->> +       rc = idxd_wq_enable_locked(wq);
->>          if (rc < 0)
->>                  return rc;
->>   
->> @@ -380,7 +403,7 @@ int idxd_wq_disable_pasid(struct idxd_wq *wq)
->>          iowrite32(wqcfg.bits[WQCFG_PASID_IDX], idxd->reg_base + offset);
->>          spin_unlock(&idxd->dev_lock);
->>   
->> -       rc = idxd_wq_enable(wq);
->> +       rc = idxd_wq_enable_locked(wq);
->>          if (rc < 0)
->>                  return rc;
->>   
->> @@ -644,7 +667,11 @@ int idxd_device_disable(struct idxd_device *idxd)
->>   
->>   void idxd_device_reset(struct idxd_device *idxd)
->>   {
->> +
->> +       spin_lock(&idxd->dev_lock);
->>          idxd_cmd_exec(idxd, IDXD_CMD_RESET_DEVICE, 0, NULL);
->> +       spin_unlock(&idxd->dev_lock);
->> +
->>
-> 
-> I think you just need the wq_enable locked and also in idxd_device_clear_state(), extend the lock to the whole function. Locking the reset function around just the command execute won't protect the wq enable path against the changing of the software states on the reset side.
-
-Quite agreed.
-
-> 
-> DJ
-> 
->> (The dev_lock should also apply to idxd_wq_enable(), I did not paste here)
->>
->> Also, I found a new bug that idxd_device_config() is called without
->> hold idxd->dev_lock.
->>> idxd_device_config() explictly asserts the hold of idxd->dev_lock.
->>
->> +++ b/drivers/dma/idxd/irq.c
->> @@ -33,12 +33,17 @@ static void idxd_device_reinit(struct work_struct *work)
->>   {
->>          struct idxd_device *idxd = container_of(work, struct idxd_device, work);
->>          struct device *dev = &idxd->pdev->dev;
->> -       int rc, i;
->> +       int rc = 0, i;
->>   
->>          idxd_device_reset(idxd);
->> -       rc = idxd_device_config(idxd);
->> -       if (rc < 0)
->> +       spin_lock(&idxd->dev_lock);
-> I wonder if you should also just lock the idxd_device_reset() and the idxd_device_enable() as well in this case as you don't anything to interfere with the entire reinit path.
-
-During reset, any operation to enable wq should indeed be avoided,
-but there isn't a suitable lock currently. idxd->dev_lock is a
-lightweight lock, only used when updating the device state, and
-it's used while holding wq->wq_lock. Therefore, holding idxd->dev_lock
-currently cannot form mutual exclusion with wq->wq_lock.
-
-And the sub caller of idxd_device_reset(), e.g. idxd_device_clear_state()
-also spins to hold idxd->dev_lock.
-
-A hack way it to grab wq_lock of all wqs before before reinit, but
-this is hardly elegant (:
-
-Thanks.
-Have a nice holiday!
-
-Best regards,
-Shuai
+diff --git a/net/ipv6/exthdrs.c b/net/ipv6/exthdrs.c
+index 02e9ffb63af1..9646738cb872 100644
+--- a/net/ipv6/exthdrs.c
++++ b/net/ipv6/exthdrs.c
+@@ -504,6 +504,15 @@ static int ipv6_rpl_srh_rcv(struct sk_buff *skb)
+ 	}
+ 
+ looped_back:
++
++	if (!pskb_may_pull(skb, skb_transport_offset(skb) + sizeof(struct ipv6_rpl_sr_hdr)))
++		goto error;
++	// Check if there is enough memory available for the header and hdrlen is in valid range
++	if (skb_tailroom(skb) < ((hdr->hdrlen + 1) << 3) ||
++	    hdr->hdrlen == 0 ||
++	    hdr->hdrlen > U8_MAX)
++		goto error;
++
+ 	hdr = (struct ipv6_rpl_sr_hdr *)skb_transport_header(skb);
+ 
+ 	if (hdr->segments_left == 0) {
+@@ -534,7 +543,18 @@ static int ipv6_rpl_srh_rcv(struct sk_buff *skb)
+ 		return 1;
+ 	}
+ 
++	// Check if cmpri and cmpre are valid and do not exceed 15
++	if (hdr->cmpri > 15 || hdr->cmpre > 15)
++		goto error;
++	// Check if pad value is valid and does not exceed 15
++	if (hdr->pad > 15)
++		goto error;
++
+ 	n = (hdr->hdrlen << 3) - hdr->pad - (16 - hdr->cmpre);
++	// Check if n is non-negative
++	if (n <= 0)
++		goto error;
++
+ 	r = do_div(n, (16 - hdr->cmpri));
+ 	/* checks if calculation was without remainder and n fits into
+ 	 * unsigned char which is segments_left field. Should not be
+@@ -638,6 +658,9 @@ static int ipv6_rpl_srh_rcv(struct sk_buff *skb)
+ 	dst_input(skb);
+ 
+ 	return -1;
++
++error:
++	return -1;
+ }
+ 
+ /********************************
+-- 
+2.43.0
 
