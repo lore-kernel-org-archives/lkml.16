@@ -1,74 +1,87 @@
 Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3137E19D898
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C98F19DF60
 	for <linux-kernel@vger.kernel.org>; Sat, 24 May 2025 10:05:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.69
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748081136; cv=none; b=M2OOLXhGjYUyLv0zPwBX3BsiZS5fR7gvqPEcGH6QvwYkPpKSTdl4qyXnRYlBGQa1D1R9ctZdwlPrk4aBUlAtZ2ovGG8xEYcyM+KiPxFk9NNNFOqhSG3eVowmF5R5uDsvz2t/WeWt5hpUqfKe8BSkWkASDKYPE3sTxXMMfMfHa2o=
+	t=1748081137; cv=none; b=GJHXjPN/ysSk2kxYNaz7NtpfdDtpinJADnYnkUBnPvLXX8Nf+Md6oG3iiN/auFeiaavDWknDGXsim8qYftViv2xCeXXZx37jotomfmHOZSnK1Uo3f58OkSrsi9pUnwIHsEH+/1+F0XwIllgo6U9nip4wKlvgzL/sd+b5GAdJLXU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748081136; c=relaxed/simple;
-	bh=lGw3DY65ueQVYKXqtXWX8gnFKsdoVy88glIX9gkXqQs=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=o6UPveI7wy6f17A3epjNofa/cRt6xb+9wq47ny1XVtbF+LvnhLN7armsjjG9Uyen5bvhXnZgDHE/K4bP7JYCFuiegPTsFOuU7L5kqTrGniQzd0hwuYo5GGeWBHk/x6Xzhm05LHvlTFTHj365Te6i7XBICzIvXekPK9qgOX3vKyw=
+	s=arc-20240116; t=1748081137; c=relaxed/simple;
+	bh=5Dho/UhyNhw8Xndxbgw5Ks5g3QE7trd4nZhV1x2fZMk=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=synx/VH43JPTfMHOISxZ2O/f9pCNj+ppraFHMPQ3y1IE07juvMPvO0GOWWRzTB3DKo7wqxaW8GS5rmf4ZOAMFS7qX1mpULCv6IqRS4YPLRcR2Ng6HTW/u1I6SfcYS8ChakilUc9ZnO0WATR9LY2dX5MaRXMfdUspVZNZr4ekSOA=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.69
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-8649be94fa1so118066439f.0
+Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-869e9667f58so152450539f.3
         for <linux-kernel@vger.kernel.org>; Sat, 24 May 2025 03:05:35 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1748081134; x=1748685934;
         h=to:from:subject:message-id:date:mime-version:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=ZF0QGYyssk/KtoqKqz083DqbcjhDRw8W0phBEuMFFi4=;
-        b=IEn5y8G4+T8cs/lxGYrqq/TDjkWLlneG7n+5Pv6ZaAwOpYrAjnDWo9bgWXQ5mR6pbJ
-         FF1zJOZe6VmrEThrmyTlgLbJ3yjvaJ6Zv2CU0y4RpJP+UzMvQw6ZNrHbTvOjIqCrsKqX
-         E22OFJV9MJSNpv4+ny+QOv4WJVHUSc+GYP0TAvbIA95kki5nP734QmYjMhp3pUWGGFW+
-         7hohC4X/BCsM1hvsZWTBRWzglv5+EG4feTNc+HhTZqhzHSXeXPTrmab/XJAw30xXbYWA
-         vu33qk+QEYJqsD8Ko1wMUBpPYhXy5gIwidTTMmIHwS8HuI0lrHjckRAjwNsmvhtxnXb8
-         mDKg==
-X-Forwarded-Encrypted: i=1; AJvYcCWD770FvB2bnzxZOtgtU5yMnGUNvtRgkk9Ha9pc3iFRbcymaYf9ViOHTvzOaO05abKSDJl0jhItdw8bUmo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyGAWflH6lb2KzQGRutIp0HzvpUisOiNIBKiqxcOahecrEkt2dQ
-	fEIikGVV/pgKsmFHt50wm1fCJVWdTfyKS3/xlFv0Qw+uObtOya3RRqmnE9qX826iM+18DQngqSk
-	hCZkNVzfcd0SU4wewXRpfboB+JGvCS46aR58QqE4+czQFXBHYjVY6NVpuglI=
-X-Google-Smtp-Source: AGHT+IGBeRgaOle5h3604R+qkWqBVgjEkp5aLPVs03gg96GrLNb1jQCpQ4W+eEhTp+837c0PKI3pSX9/bYFYdl4KHW0NjGTzJvj5
+        bh=RD2cV1CO1dNEpaup5SvqkbO53KQufDr6yCliucKyjDk=;
+        b=NQBAlPjMLgTKJs+MZbfD5qsn8QaFgHdU3FVyFXvLV0/n6MMoyywkqczOPplNA8TV8g
+         gwJvhmVzHztlt7oUgZAsY9JgpPp7H57cNexOajfSQFV9cYgMFuDeU4l08XSTC1JU+TJa
+         seHONWIr6XWXJodmnu2YKLgPB1tj3YOOJ9vK2+Sjdg0ySBvSFSnIUORFADi/h4r6SfYJ
+         IUaA/YptbANtDKiD+9+HyBWm9Kc9NpNiHOvGjQtGKNd+4PxJAFiJ23ebZnlLBafOX//p
+         bN2FHsWY+IE7pOcU+dRaVFW/TjCFYN93kP9QcuGs/T5nkB785hOeS6S+LLntr5Ow1dLx
+         a/3g==
+X-Forwarded-Encrypted: i=1; AJvYcCVuCtEhNd12CV9VwiwsZJXcgxgPTaq+WTEHNeuI8TcIIxAzoRe5VHSdKIDiKFccu34LeoR8fqvbOTj2Ovo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxPVcl8pyG3Wg0dkdIU8GPY5UxfoXM3War8NQc9shsGzTlSEDxA
+	mQK2KFulM36h0kB/uY4S8dxl+a9GHi40pb+h7NUiNQgRxDScUWGRCTWVqsEyI/usSDOmHLbr+xt
+	Bna/6lFcufPB/AhN6jELsCyEE76rPP+WYYZ59Ms5en3WmAL5zv0Y6XcOAmJ0=
+X-Google-Smtp-Source: AGHT+IE56ITQSR7t/xGPzhiObRt51qFb/wjZMl6ZpVRw288eRFFCX2f6FHydabgtfUXFrTQ+cEWS57Coa/uo0cxRHL6dBlphRXMX
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:3684:b0:86a:93b:c7de with SMTP id
- ca18e2360f4ac-86cbb7b5de5mr265760139f.3.1748081134401; Sat, 24 May 2025
+X-Received: by 2002:a05:6602:6a87:b0:864:4aa2:d796 with SMTP id
+ ca18e2360f4ac-86cbb7fc708mr255484939f.8.1748081134606; Sat, 24 May 2025
  03:05:34 -0700 (PDT)
 Date: Sat, 24 May 2025 03:05:34 -0700
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <683199ee.a70a0220.29d4a0.07f9.GAE@google.com>
-Subject: [syzbot] Monthly exfat report (May 2025)
-From: syzbot <syzbot+list9e94a023fafdc8e336d3@syzkaller.appspotmail.com>
-To: linkinjeon@kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, sj1557.seo@samsung.com, 
+Message-ID: <683199ee.a70a0220.29d4a0.07fa.GAE@google.com>
+Subject: [syzbot] Monthly hfs report (May 2025)
+From: syzbot <syzbot+listdc2978c83beda70d5e82@syzkaller.appspotmail.com>
+To: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
 	syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 
-Hello exfat maintainers/developers,
+Hello hfs maintainers/developers,
 
-This is a 31-day syzbot report for the exfat subsystem.
+This is a 31-day syzbot report for the hfs subsystem.
 All related reports/information can be found at:
-https://syzkaller.appspot.com/upstream/s/exfat
+https://syzkaller.appspot.com/upstream/s/hfs
 
-During the period, 0 new issues were detected and 0 were fixed.
-In total, 4 issues are still open and 22 have already been fixed.
+During the period, 1 new issues were detected and 0 were fixed.
+In total, 45 issues are still open and 23 have already been fixed.
 
 Some of the still happening issues:
 
-Ref Crashes Repro Title
-<1> 3314    Yes   INFO: task hung in exfat_write_inode
-                  https://syzkaller.appspot.com/bug?extid=2f73ed585f115e98aee8
-<2> 96      Yes   KMSAN: uninit-value in iov_iter_alignment_iovec
-                  https://syzkaller.appspot.com/bug?extid=f2a9c06bfaa027217ebb
-<3> 14      Yes   INFO: task hung in vfs_rmdir (2)
-                  https://syzkaller.appspot.com/bug?extid=42986aeeddfd7ed93c8b
+Ref  Crashes Repro Title
+<1>  82181   Yes   kernel BUG in hfs_write_inode
+                   https://syzkaller.appspot.com/bug?extid=97e301b4b82ae803d21b
+<2>  16625   Yes   kernel BUG in __hfsplus_setxattr
+                   https://syzkaller.appspot.com/bug?extid=1107451c16b9eb9d29e6
+<3>  13051   Yes   possible deadlock in hfsplus_get_block
+                   https://syzkaller.appspot.com/bug?extid=b7ef7c0c8d8098686ae2
+<4>  7316    Yes   KMSAN: uninit-value in hfsplus_cat_case_cmp_key
+                   https://syzkaller.appspot.com/bug?extid=50d8672fea106e5387bb
+<5>  4019    Yes   KMSAN: uninit-value in hfsplus_delete_cat
+                   https://syzkaller.appspot.com/bug?extid=fdedff847a0e5e84c39f
+<6>  3876    Yes   KMSAN: uninit-value in hfsplus_attr_bin_cmp_key
+                   https://syzkaller.appspot.com/bug?extid=c6d8e1bffb0970780d5c
+<7>  3686    Yes   possible deadlock in hfs_find_init (2)
+                   https://syzkaller.appspot.com/bug?extid=e390d66dda462b51fde1
+<8>  3653    Yes   KMSAN: uninit-value in hfs_find_set_zero_bits
+                   https://syzkaller.appspot.com/bug?extid=773fa9d79b29bd8b6831
+<9>  3080    Yes   KASAN: slab-out-of-bounds Read in hfsplus_uni2asc
+                   https://syzkaller.appspot.com/bug?extid=076d963e115823c4b9be
+<10> 2849    Yes   KMSAN: uninit-value in hfsplus_lookup
+                   https://syzkaller.appspot.com/bug?extid=91db973302e7b18c7653
 
 ---
 This report is generated by a bot. It may contain errors.
