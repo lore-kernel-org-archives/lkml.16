@@ -1,129 +1,148 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CB9C4A1D;
-	Sat, 24 May 2025 10:18:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72294EAE7
+	for <linux-kernel@vger.kernel.org>; Sat, 24 May 2025 10:20:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748081903; cv=none; b=KkVcdMQNPFd1Raljbaf+nTMZRPApGlSQKw9A92EskO5pXXhKotHg75SUVR3hoGX176GaYKfpoCcCmsvua+31zwruemvZGC9D+Wn/5SjZDit04CcmR7Zi2/MNniH4h/JnROGlkcV/EUQiUNy3oW8iICHDoMuxEQ2Unc4oSN1JUko=
+	t=1748082022; cv=none; b=PStqLX5vVp5CUqNuDn5uo+iIbB1BN/ikTmeDsGsYn+amoqg3usf8zHvS/ARmbKcGdanfGqnDnc7E6UUtL4rb39JKncvsLwiwBMOgXG4JHcbmRBW1YDlWDcdMNTmsC6xR877AU1JFDT6cf9szCNL5iIJdP2fpwndgnJSyFkgZyzs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748081903; c=relaxed/simple;
-	bh=fegzFpIcG+9An2adNTrrMdYqP95RFa3AIn0vE9liKsk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YKYdkASohZv81X73jXTTt69Dlwvf7/PR1XhKfNkXdsrEwI7RW9PYR3YVA3hWNT99LdeXS9+DTGP+B/8Eo3HadvHib78dIYW+Lm2FU++x3Ho+uMDR94BQ/JLx12i6apO8K14EuzgVXw+eqJWuLMOZz38eHumnU98TAXE+iye/FQ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lZ6EYmOf; arc=none smtp.client-ip=209.85.218.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748082022; c=relaxed/simple;
+	bh=KAzAK7TgNRgfMo1XSxTNbqWPQmUnZXND6HQQpmqPXwQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tJxBulfpB970oWHCamcUF3/PyLJdle4QsxXB9ucurf6/OSEzeBNQ4QnU8IsD8s580d0aBRT2I3JzL0P/FLbdoSbhhMN9r53LGhE9tzmqfVbSG0/SYboqewRBGD8wThaek7eGAy68Et/4s0+SeZKC7BB4d2rXSwacXAmOhunHKwE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QvuF6eQk; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lZ6EYmOf"
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-ad564b7aea9so329512466b.1;
-        Sat, 24 May 2025 03:18:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748081895; x=1748686695; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=0Dzb3JHRMdpmADz7F31upHZIM2rweK1WRKvLmimqyeU=;
-        b=lZ6EYmOf2P7JnOJTN5us+pZ+W3lvBXwHOBjzcDgz0SI/vAPyH32zdJU1qbRSfo02sc
-         019j2AT3kOpEofkEwk4Lk6naYbhn93u9+sHliU/iXfyhW+FfGrQe3hfy+FdbqGl4Vpzy
-         n0c18bOaezWLprZ/N5cTuwpFweAhG4Fhs/KalScCkrQ5y4RqQZZVN8k/0ddnwX9nIYcf
-         wV5euxsi6OQzpdSMugWllnlmJHq8M4ngmgZshiUbiqSojMPnNM7NgNSw3sFz2KwBCGYL
-         hkEpaenvH/hGo751PR1IETMGMM16TELE6G5WcD1guUcbIvAWvNvdwfK9HT6Ck49V7tw1
-         x1nw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748081895; x=1748686695;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=0Dzb3JHRMdpmADz7F31upHZIM2rweK1WRKvLmimqyeU=;
-        b=vr1fj7liPes5tLfHRPhmmWtoy6dJc2FKZ6ectS2+Lzhjw0U2sGtYamSg591n3qLSsd
-         MnMpRXnWBKoEqSWM5VMRMgHo9RhNsduBumewNCFkq4jmk0YveuCAEDeLrBjYOZaaEyLT
-         4ppDusLoJw6K21FbjRwGDmIcaHrY/g67PA7qZ7PTPlaoQriEEsr5zNrF1o53QIVGl3cm
-         Vik+W/pK6BeA7sQaj98O4jxzTEWXuiiDftPhfpifgNmE1vW2D99S8e3V9k6urlbZGleu
-         Bdb5mgjbMlXSLuNAOZrFOfolT3lm2tzvApnCRGv5pVXUSF4NfLQrrqjxkMg3UE936YK/
-         7OUw==
-X-Forwarded-Encrypted: i=1; AJvYcCU2yG03Z47Wd5ZbQt7zNnBXRE9H1GGdMgSXGExAPUS+bK5Hx4rHqgyp6xrQC2euqtHwaURHr3u3FuF7NSmb@vger.kernel.org, AJvYcCX7dq8UxxZURYvHIcHjs7dJCEk8WDL5lGVZAdfxzkumEjcH4w7lo0lyc1DHESc/qBb/NF+AwGXQKMYVmSdQ@vger.kernel.org, AJvYcCXr7EXHLw4FbIJzb64/WrwpAHB13gUjVsddFXOdiDP7H89cpb6R5+WDRh5pYC9C9SCJo32NguhXO3Xz@vger.kernel.org
-X-Gm-Message-State: AOJu0YxpbwoVtN33fEbALPI3DTEapItQsBbt8TmNnR6+BoCYP47+qTwK
-	CaUpjgmICTUgjp0ph3dPUNmHO25kSr3YcEIZ28kkC01gnBEoSGrbyNId
-X-Gm-Gg: ASbGncuOaLnSwoPs1FGT6OLCz704hJV7Dsme69gbFDbtaXTDN+9+Fmrl3u5e/D6OjD3
-	z77xDeCLLDpaZGNzTj/Epm2bPCTaSQ9WnpD+1t1+EDx7ifL8QHEFwDSjdTQ6pT+NTk8gMr9VWm3
-	eLxkHhKpZq3ke7OG6F9ucigAKlGa97RWS13+j3mjUfAs5BFby57AmDvpNCWLh+JfB2cCbinXvnb
-	D0Pvn3/nftjBO/PN73X+bVUKWesVYBkH+tS2WTg1RBUUs9zXHOKRMw3oRB+mvhY0/guZHdYzrMe
-	0tmldA6k4g8oBqmb/BIKQN7LNNcTNrowqeBped6YDuC4KGRUSIErQ0kZcwqXp9kqjdUubU7r14g
-	jVUz11pURGwWZuYam
-X-Google-Smtp-Source: AGHT+IFNHwWIR8ptD43relRI1YmiVXvEBMPrnqyp9HLfaqyNlLeVc/aY4bDgRLRWImxYbuqH3dc5OA==
-X-Received: by 2002:a17:907:1b21:b0:ad5:7649:b3f5 with SMTP id a640c23a62f3a-ad63f98066bmr615214766b.3.1748081895304;
-        Sat, 24 May 2025 03:18:15 -0700 (PDT)
-Received: from [192.168.3.32] (cpe-188-129-45-176.dynamic.amis.hr. [188.129.45.176])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad52d06dcafsm1402536966b.54.2025.05.24.03.18.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 24 May 2025 03:18:14 -0700 (PDT)
-Message-ID: <35ec4b1e-9502-4d4f-96cd-531c176dc82d@gmail.com>
-Date: Sat, 24 May 2025 12:18:13 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QvuF6eQk"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748082020; x=1779618020;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=KAzAK7TgNRgfMo1XSxTNbqWPQmUnZXND6HQQpmqPXwQ=;
+  b=QvuF6eQkqyqXqD6ztHsblXOsiEMZVT5jsYjoB5gdKou+tlYxHzsle2H/
+   oaj9X2XZoJPRMRuO07KQor4NwxOcL9HIf5spz7SRa0g6/CqRCASwopw/u
+   P3YDUXyRDmOLwjIDA2SycdsfJV5ymEDpYYa1Dq3t7If56xB1Yni3nSrGm
+   038gyna59VeMeA0ZubrQPAN8joMa//8SRGmDmBgp8qAs4UdccpYGVs6DJ
+   imwLNaIHegjKnbN2VoMaJqL+X90oHGip2hrsQkkC/cgG/tz1A8J0w7uPD
+   0OYC+WVJ9jaLhE2ylADTrxzlk9xJcjQL8D9ez93RT5kKm1fmMkE2vhnUP
+   g==;
+X-CSE-ConnectionGUID: EnPSfYAVRQuJGElwOTqKvQ==
+X-CSE-MsgGUID: 66idiVpDREmqBxfvRVYNOw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11441"; a="49241365"
+X-IronPort-AV: E=Sophos;i="6.15,311,1739865600"; 
+   d="scan'208";a="49241365"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 May 2025 03:20:18 -0700
+X-CSE-ConnectionGUID: UtDEC9GMRJ229+0hrrPFMw==
+X-CSE-MsgGUID: vhFYDXKRSCaVzMriwIjFzA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,311,1739865600"; 
+   d="scan'208";a="146382875"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa005.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 May 2025 03:20:13 -0700
+Date: Sat, 24 May 2025 13:20:10 +0300
+From: Raag Jadav <raag.jadav@intel.com>
+To: Alexander Usyskin <alexander.usyskin@intel.com>
+Cc: Miquel Raynal <miquel.raynal@bootlin.com>,
+	Richard Weinberger <richard@nod.at>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	Lucas De Marchi <lucas.demarchi@intel.com>,
+	Thomas =?iso-8859-1?Q?Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Jani Nikula <jani.nikula@linux.intel.com>,
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+	Tvrtko Ursulin <tursulin@ursulin.net>,
+	Karthik Poosa <karthik.poosa@intel.com>,
+	Reuven Abliyev <reuven.abliyev@intel.com>,
+	Oren Weil <oren.jer.weil@intel.com>, linux-mtd@lists.infradead.org,
+	intel-xe@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+	intel-gfx@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+	Tomas Winkler <tomasw@gmail.com>
+Subject: Re: [PATCH v10 06/10] drm/i915/nvm: add nvm device for discrete
+ graphics
+Message-ID: <aDGdWof1HfViERND@black.fi.intel.com>
+References: <20250515133345.2805031-1-alexander.usyskin@intel.com>
+ <20250515133345.2805031-7-alexander.usyskin@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] clk: qcom: gcc-ipq8074: fix broken freq table for
- nss_port6_tx_clk_src
-To: Christian Marangi <ansuelsmth@gmail.com>,
- Bjorn Andersson <andersson@kernel.org>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, linux-arm-msm@vger.kernel.org,
- linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: stable@vger.kernel.org
-References: <20250522202600.4028-1-ansuelsmth@gmail.com>
-Content-Language: en-US
-From: Robert Marko <robimarko@gmail.com>
-In-Reply-To: <20250522202600.4028-1-ansuelsmth@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250515133345.2805031-7-alexander.usyskin@intel.com>
 
+On Thu, May 15, 2025 at 04:33:41PM +0300, Alexander Usyskin wrote:
+> Enable access to internal non-volatile memory on
+> DGFX devices via a child device.
+> The nvm child device is exposed via auxiliary bus.
 
-On 22. 05. 2025. 22:25, Christian Marangi wrote:
-> With the conversion done by commit e88f03230dc0 ("clk: qcom: gcc-ipq8074:
-> rework nss_port5/6 clock to multiple conf") a Copy-Paste error was made
-> for the nss_port6_tx_clk_src frequency table.
->
-> This was caused by the wrong setting of the parent in
-> ftbl_nss_port6_tx_clk_src that was wrongly set to P_UNIPHY1_RX instead
-> of P_UNIPHY2_TX.
->
-> This cause the UNIPHY2 port to malfunction when it needs to be scaled to
-> higher clock. The malfunction was observed with the example scenario
-> with an Aquantia 10G PHY connected and a speed higher than 1G (example
-> 2.5G)
->
-> Fix the broken frequency table to restore original functionality.
->
-> Cc: stable@vger.kernel.org
-> Fixes: e88f03230dc0 ("clk: qcom: gcc-ipq8074: rework nss_port5/6 clock to multiple conf")
-> Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
+...
 
-Tested-by: Robert Marko <robimarko@gmail.com>
+> +void intel_nvm_init(struct drm_i915_private *i915)
+> +{
 
-> ---
->   drivers/clk/qcom/gcc-ipq8074.c | 6 +++---
->   1 file changed, 3 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/clk/qcom/gcc-ipq8074.c b/drivers/clk/qcom/gcc-ipq8074.c
-> index 7258ba5c0900..1329ea28d703 100644
-> --- a/drivers/clk/qcom/gcc-ipq8074.c
-> +++ b/drivers/clk/qcom/gcc-ipq8074.c
-> @@ -1895,10 +1895,10 @@ static const struct freq_conf ftbl_nss_port6_tx_clk_src_125[] = {
->   static const struct freq_multi_tbl ftbl_nss_port6_tx_clk_src[] = {
->   	FMS(19200000, P_XO, 1, 0, 0),
->   	FM(25000000, ftbl_nss_port6_tx_clk_src_25),
-> -	FMS(78125000, P_UNIPHY1_RX, 4, 0, 0),
-> +	FMS(78125000, P_UNIPHY2_TX, 4, 0, 0),
->   	FM(125000000, ftbl_nss_port6_tx_clk_src_125),
-> -	FMS(156250000, P_UNIPHY1_RX, 2, 0, 0),
-> -	FMS(312500000, P_UNIPHY1_RX, 1, 0, 0),
-> +	FMS(156250000, P_UNIPHY2_TX, 2, 0, 0),
-> +	FMS(312500000, P_UNIPHY2_TX, 1, 0, 0),
->   	{ }
->   };
->   
+Lucas recently revamped xe driver to address this, so let's not hide bugs
+and return an error where possible.
+
+> +	struct pci_dev *pdev = to_pci_dev(i915->drm.dev);
+> +	struct intel_dg_nvm_dev *nvm;
+> +	struct auxiliary_device *aux_dev;
+> +	int ret;
+> +
+> +	/* Only the DGFX devices have internal NVM */
+> +	if (!IS_DGFX(i915))
+> +		return;
+> +
+> +	/* Nvm pointer should be NULL here */
+> +	if (WARN_ON(i915->nvm))
+> +		return;
+> +
+> +	i915->nvm = kzalloc(sizeof(*nvm), GFP_KERNEL);
+> +	if (!i915->nvm)
+> +		return;
+> +
+> +	nvm = i915->nvm;
+> +
+> +	nvm->writeable_override = true;
+> +	nvm->bar.parent = &pdev->resource[0];
+> +	nvm->bar.start = GEN12_GUNIT_NVM_BASE + pdev->resource[0].start;
+> +	nvm->bar.end = nvm->bar.start + GEN12_GUNIT_NVM_SIZE - 1;
+> +	nvm->bar.flags = IORESOURCE_MEM;
+> +	nvm->bar.desc = IORES_DESC_NONE;
+> +	nvm->regions = regions;
+> +
+> +	aux_dev = &nvm->aux_dev;
+> +
+> +	aux_dev->name = "nvm";
+> +	aux_dev->id = (pci_domain_nr(pdev->bus) << 16) |
+> +		       PCI_DEVID(pdev->bus->number, pdev->devfn);
+
+Why not just pci_dev_id()?
+
+> +	aux_dev->dev.parent = &pdev->dev;
+> +	aux_dev->dev.release = i915_nvm_release_dev;
+> +
+> +	ret = auxiliary_device_init(aux_dev);
+> +	if (ret) {
+> +		drm_err(&i915->drm, "i915-nvm aux init failed %d\n", ret);
+> +		return;
+> +	}
+> +
+> +	ret = auxiliary_device_add(aux_dev);
+> +	if (ret) {
+> +		drm_err(&i915->drm, "i915-nvm aux add failed %d\n", ret);
+> +		auxiliary_device_uninit(aux_dev);
+> +		return;
+> +	}
+> +}
+
+Raag
