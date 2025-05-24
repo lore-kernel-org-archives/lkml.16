@@ -1,25 +1,25 @@
-Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [80.241.56.151])
+Received: from mout-p-103.mailbox.org (mout-p-103.mailbox.org [80.241.56.161])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B98561F2BA4;
-	Sat, 24 May 2025 19:23:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E69FD1F4623;
+	Sat, 24 May 2025 19:23:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.161
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748114583; cv=none; b=m1UjjFZItWA7JsNFojawX6UCKVSebYYdUZ4H4FidvVLetonc6ypItBcA6vZFqOZOsdCin6zo/tPPyZ8kR3/LQbZ3ZzaQhM59ocaHAsGJBqQnBAfW7g9kZAkJU6b630OZWlZOAJkUfD50T8Ol2tHfpQ7wyf610zsQYh8CjcRNbOI=
+	t=1748114585; cv=none; b=dhT0zo6QYSzEiJvXXpEqNigw067YpMFrF+FVDt/5QDNrncQXPMgZz65vlpCA2IpNzwWluEyaEZtrGUE8gVowjvXZhRJ6sedE4LlDjx42aj/KHUrU6+QR43QeBN/JftODMbeYTxKAQXqbUH8JZ1jyyiIMeN/dfOUY2bob1dihqFM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748114583; c=relaxed/simple;
-	bh=4kDGoizj1P/M0IQMgBKf8XjIKoVsd8BHgb3eY67qhUQ=;
+	s=arc-20240116; t=1748114585; c=relaxed/simple;
+	bh=0MNaA9+1msDzcrXqel8vgvRGbT0EiK6rtjW7nvfr0o0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=TWdKfwuXnH3EkCiEXpVjqTkMKLuA5ivZapoHmLi6lrA8x5C9xupdBvIiVW5M7Y7ftAGaUT3FuQkOITI5dbcPiE/E3evLEqZgecxOVt5lxmttuZ5AQREHMpYwHhT1QxEXn4B1tKAw5XMT/TBaW8G0ulFvEeQqRT49bXROOQOVD24=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=buenzli.dev; spf=pass smtp.mailfrom=buenzli.dev; arc=none smtp.client-ip=80.241.56.151
+	 MIME-Version; b=nPmeXTIRrEbnJHqTcZpgx2hKEN8uciI7d3OWHivYQ1+0IpTISxCd+rwh4WWQZgjJ4Npw9uvdVBvo7/aaD6DZSvMSMA/0bdCoUnNpVfOlU3ynq7epjhfNwnOLniQH17TQwWEk3oHO6Qcsjiefpn/mvEnnGC84xr56J/JCgQiJVZY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=buenzli.dev; spf=pass smtp.mailfrom=buenzli.dev; arc=none smtp.client-ip=80.241.56.161
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=buenzli.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=buenzli.dev
-Received: from smtp102.mailbox.org (smtp102.mailbox.org [IPv6:2001:67c:2050:b231:465::102])
+Received: from smtp102.mailbox.org (smtp102.mailbox.org [10.196.197.102])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mout-p-101.mailbox.org (Postfix) with ESMTPS id 4b4X421J5Dz9snp;
-	Sat, 24 May 2025 21:22:58 +0200 (CEST)
+	by mout-p-103.mailbox.org (Postfix) with ESMTPS id 4b4X441YfZz9sTd;
+	Sat, 24 May 2025 21:23:00 +0200 (CEST)
 From: Remo Senekowitsch <remo@buenzli.dev>
 To: Rob Herring <robh@kernel.org>,
 	Saravana Kannan <saravanak@google.com>,
@@ -40,9 +40,9 @@ To: Rob Herring <robh@kernel.org>,
 Cc: linux-kernel@vger.kernel.org,
 	devicetree@vger.kernel.org,
 	rust-for-linux@vger.kernel.org
-Subject: [PATCH v6 5/9] rust: device: Introduce PropertyGuard
-Date: Sat, 24 May 2025 21:22:28 +0200
-Message-ID: <20250524192232.705860-6-remo@buenzli.dev>
+Subject: [PATCH v6 6/9] rust: device: Implement accessors for firmware properties
+Date: Sat, 24 May 2025 21:22:29 +0200
+Message-ID: <20250524192232.705860-7-remo@buenzli.dev>
 In-Reply-To: <20250524192232.705860-1-remo@buenzli.dev>
 References: <20250524192232.705860-1-remo@buenzli.dev>
 Precedence: bulk
@@ -52,87 +52,319 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 4b4X421J5Dz9snp
 
-This abstraction is a way to force users to specify whether a property
-is supposed to be required or not. This allows us to move error
-logging of missing required properties into core, preventing a lot of
-boilerplate in drivers.
+Add methods to FwNode for reading several firmware property types like
+strings, integers and arrays.
 
-It will be used by upcoming methods for reading device properties.
+Most types are read with the generic `property_read` method. There are
+two exceptions:
 
+* `property_read_bool` cannot fail, so the fallible function signature
+  of `property_read` would not make sense for reading booleans.
+
+* `property_read_array_vec` can fail because of a dynamic memory
+  allocation. This error must be handled separately, leading to a
+  different function signature than `property_read`.
+
+The traits `Property` and `PropertyInt` drive the generic behavior
+of `property_read`. `PropertyInt` is necessary to associate
+specific integer types with the C functions to read them. While
+there is a C function to read integers of generic sizes called
+`fwnode_property_read_int_array`, it was preferred not to make this
+public.
+
+Co-developed-by: Rob Herring (Arm) <robh@kernel.org>
+Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
 Signed-off-by: Remo Senekowitsch <remo@buenzli.dev>
 ---
- rust/kernel/device/property.rs | 59 ++++++++++++++++++++++++++++++++++
- 1 file changed, 59 insertions(+)
+ rust/kernel/device/property.rs | 259 ++++++++++++++++++++++++++++++++-
+ 1 file changed, 257 insertions(+), 2 deletions(-)
 
 diff --git a/rust/kernel/device/property.rs b/rust/kernel/device/property.rs
-index 09c38775b2354..7b1116daae3aa 100644
+index 7b1116daae3aa..9caa39782092b 100644
 --- a/rust/kernel/device/property.rs
 +++ b/rust/kernel/device/property.rs
-@@ -128,3 +128,62 @@ unsafe fn dec_ref(obj: ptr::NonNull<Self>) {
-         unsafe { bindings::fwnode_handle_put(obj.cast().as_ptr()) }
+@@ -4,9 +4,17 @@
+ //!
+ //! C header: [`include/linux/property.h`](srctree/include/linux/property.h)
+ 
+-use core::ptr;
++use core::{mem::MaybeUninit, ptr};
+ 
+-use crate::{bindings, str::CStr, types::Opaque};
++use crate::{
++    alloc::KVec,
++    bindings,
++    error::{to_result, Result},
++    prelude::*,
++    private::Sealed,
++    str::{CStr, CString},
++    types::Opaque,
++};
+ 
+ /// A reference-counted fwnode_handle.
+ ///
+@@ -112,6 +120,104 @@ pub fn property_present(&self, name: &CStr) -> bool {
+         // SAFETY: By the invariant of `CStr`, `name` is null-terminated.
+         unsafe { bindings::fwnode_property_present(self.as_raw().cast_const(), name.as_char_ptr()) }
+     }
++
++    /// Returns firmware property `name` boolean value.
++    pub fn property_read_bool(&self, name: &CStr) -> bool {
++        // SAFETY:
++        // - `name` is non-null and null-terminated.
++        // - `self.as_raw()` is valid because `self` is valid.
++        unsafe { bindings::fwnode_property_read_bool(self.as_raw(), name.as_char_ptr()) }
++    }
++
++    /// Returns the index of matching string `match_str` for firmware string
++    /// property `name`.
++    pub fn property_match_string(&self, name: &CStr, match_str: &CStr) -> Result<usize> {
++        // SAFETY:
++        // - `name` and `match_str` are non-null and null-terminated.
++        // - `self.as_raw` is valid because `self` is valid.
++        let ret = unsafe {
++            bindings::fwnode_property_match_string(
++                self.as_raw(),
++                name.as_char_ptr(),
++                match_str.as_char_ptr(),
++            )
++        };
++        to_result(ret)?;
++        Ok(ret as usize)
++    }
++
++    /// Returns firmware property `name` integer array values in a [`KVec`].
++    pub fn property_read_array_vec<'fwnode, 'name, T: PropertyInt>(
++        &'fwnode self,
++        name: &'name CStr,
++        len: usize,
++    ) -> Result<PropertyGuard<'fwnode, 'name, KVec<T>>> {
++        let mut val: KVec<T> = KVec::with_capacity(len, GFP_KERNEL)?;
++
++        let res = T::read_array_from_fwnode_property(self, name, val.spare_capacity_mut());
++        let res = match res {
++            Ok(_) => {
++                // SAFETY:
++                // - `len` is equal to `val.capacity - val.len`, because
++                //   `val.capacity` is `len` and `val.len` is zero.
++                // - All elements within the interval [`0`, `len`) were initialized
++                //   by `read_array_from_fwnode_property`.
++                unsafe { val.inc_len(len) }
++                Ok(val)
++            }
++            Err(e) => Err(e),
++        };
++        Ok(PropertyGuard {
++            inner: res,
++            fwnode: self,
++            name,
++        })
++    }
++
++    /// Returns integer array length for firmware property `name`.
++    pub fn property_count_elem<T: PropertyInt>(&self, name: &CStr) -> Result<usize> {
++        T::read_array_len_from_fwnode_property(self, name)
++    }
++
++    /// Returns the value of firmware property `name`.
++    ///
++    /// This method is generic over the type of value to read. The types that
++    /// can be read are strings, integers and arrays of integers.
++    ///
++    /// Reading a [`KVec`] of integers is done with the separate
++    /// method [`Self::property_read_array_vec`], because it takes an
++    /// additional `len` argument.
++    ///
++    /// Reading a boolean is done with the separate method
++    /// [`Self::property_read_bool`], because this operation is infallible.
++    ///
++    /// For more precise documentation about what types can be read, see
++    /// the [implementors of Property][Property#implementors] and [its
++    /// implementations on foreign types][Property#foreign-impls].
++    ///
++    /// # Examples
++    ///
++    /// ```
++    /// # use kernel::{c_str, device::{Device, property::FwNode}, str::CString};
++    /// fn examples(dev: &Device) -> Result {
++    ///     let fwnode = dev.fwnode().ok_or(ENOENT)?;
++    ///     let b: u32 = fwnode.property_read(c_str!("some-number")).required_by(dev)?;
++    ///     if let Some(s) = fwnode.property_read::<CString>(c_str!("some-str")).optional() {
++    ///         // ...
++    ///     }
++    ///     Ok(())
++    /// }
++    /// ```
++    pub fn property_read<'fwnode, 'name, T: Property>(
++        &'fwnode self,
++        name: &'name CStr,
++    ) -> PropertyGuard<'fwnode, 'name, T> {
++        PropertyGuard {
++            inner: T::read_from_fwnode_property(self, name),
++            fwnode: self,
++            name,
++        }
++    }
+ }
+ 
+ // SAFETY: Instances of `FwNode` are always reference-counted.
+@@ -129,6 +235,155 @@ unsafe fn dec_ref(obj: ptr::NonNull<Self>) {
      }
  }
-+
-+/// A helper for reading device properties.
+ 
++/// Implemented for types that can be read as properties.
 +///
-+/// Use [`Self::required_by`] if a missing property is considered a bug and
-+/// [`Self::optional`] otherwise.
++/// This is implemented for strings, integers and arrays of integers. It's used
++/// to make [`FwNode::property_read`] generic over the type of property being
++/// read. There are also two dedicated methods to read other types, because they
++/// require more specialized function signatures:
++/// - [`property_read_bool`](FwNode::property_read_bool)
++/// - [`property_read_array_vec`](FwNode::property_read_array_vec)
 +///
-+/// For convenience, [`Self::or`] and [`Self::or_default`] are provided.
-+pub struct PropertyGuard<'fwnode, 'name, T> {
-+    /// The result of reading the property.
-+    inner: Result<T>,
-+    /// The fwnode of the property, used for logging in the "required" case.
-+    fwnode: &'fwnode FwNode,
-+    /// The name of the property, used for logging in the "required" case.
-+    name: &'name CStr,
++/// It must be public, because it appears in the signatures of other public
++/// functions, but its methods shouldn't be used outside the kernel crate.
++pub trait Property: Sized + Sealed {
++    /// Used to make [`FwNode::property_read`] generic.
++    fn read_from_fwnode_property(fwnode: &FwNode, name: &CStr) -> Result<Self>;
 +}
 +
-+impl<T> PropertyGuard<'_, '_, T> {
-+    /// Access the property, indicating it is required.
-+    ///
-+    /// If the property is not present, the error is automatically logged. If a
-+    /// missing property is not an error, use [`Self::optional`] instead. The
-+    /// device is required to associate the log with it.
-+    pub fn required_by(self, dev: &super::Device) -> Result<T> {
-+        if self.inner.is_err() {
-+            dev_err!(
-+                dev,
-+                "{}: property '{}' is missing\n",
-+                self.fwnode.display_path(),
-+                self.name
-+            );
++impl Sealed for CString {}
++
++impl Property for CString {
++    fn read_from_fwnode_property(fwnode: &FwNode, name: &CStr) -> Result<Self> {
++        let mut str: *mut u8 = ptr::null_mut();
++        let pstr: *mut _ = &mut str;
++
++        // SAFETY:
++        // - `name` is non-null and null-terminated.
++        // - `fwnode.as_raw` is valid because `fwnode` is valid.
++        let ret = unsafe {
++            bindings::fwnode_property_read_string(fwnode.as_raw(), name.as_char_ptr(), pstr.cast())
++        };
++        to_result(ret)?;
++
++        // SAFETY:
++        // - `pstr` is a valid pointer to a NUL-terminated C string.
++        // - It is valid for at least as long as `fwnode`, but it's only used
++        //   within the current function.
++        // - The memory it points to is not mutated during that time.
++        let str = unsafe { CStr::from_char_ptr(*pstr) };
++        Ok(str.try_into()?)
++    }
++}
++
++/// Implemented for all integers that can be read as properties.
++///
++/// This helper trait is needed on top of the existing [`Property`]
++/// trait to associate the integer types of various sizes with their
++/// corresponding `fwnode_property_read_*_array` functions.
++///
++/// It must be public, because it appears in the signatures of other public
++/// functions, but its methods shouldn't be used outside the kernel crate.
++pub trait PropertyInt: Copy + Sealed {
++    /// Reads a property array.
++    fn read_array_from_fwnode_property<'a>(
++        fwnode: &FwNode,
++        name: &CStr,
++        out: &'a mut [MaybeUninit<Self>],
++    ) -> Result<&'a mut [Self]>;
++
++    /// Reads the length of a property array.
++    fn read_array_len_from_fwnode_property(fwnode: &FwNode, name: &CStr) -> Result<usize>;
++}
++// This macro generates implementations of the traits `Property` and
++// `PropertyInt` for integers of various sizes. Its input is a list
++// of pairs separated by commas. The first element of the pair is the
++// type of the integer, the second one is the name of its corresponding
++// `fwnode_property_read_*_array` function.
++macro_rules! impl_property_for_int {
++    ($($int:ty: $f:ident),* $(,)?) => { $(
++        impl Sealed for $int {}
++        impl<const N: usize> Sealed for [$int; N] {}
++
++        impl PropertyInt for $int {
++            fn read_array_from_fwnode_property<'a>(
++                fwnode: &FwNode,
++                name: &CStr,
++                out: &'a mut [MaybeUninit<Self>],
++            ) -> Result<&'a mut [Self]> {
++                // SAFETY:
++                // - `fwnode`, `name` and `out` are all valid by their type
++                //   invariants.
++                // - `out.len()` is a valid bound for the memory pointed to by
++                //   `out.as_mut_ptr()`.
++                // CAST: It's ok to cast from `*mut MaybeUninit<$int>` to a
++                // `*mut $int` because they have the same memory layout.
++                let ret = unsafe {
++                    bindings::$f(
++                        fwnode.as_raw(),
++                        name.as_char_ptr(),
++                        out.as_mut_ptr().cast(),
++                        out.len(),
++                    )
++                };
++                to_result(ret)?;
++                // SAFETY: Transmuting from `&'a mut [MaybeUninit<Self>]` to
++                // `&'a mut [Self]` is sound, because the previous call to a
++                // `fwnode_property_read_*_array` function (which didn't fail)
++                // fully initialized the slice.
++                Ok(unsafe { core::mem::transmute(out) })
++            }
++
++            fn read_array_len_from_fwnode_property(fwnode: &FwNode, name: &CStr) -> Result<usize> {
++                // SAFETY:
++                // - `fwnode` and `name` are valid by their type invariants.
++                // - It's ok to pass a null pointer to the
++                //   `fwnode_property_read_*_array` functions if `nval` is zero.
++                //   This will return the length of the array.
++                let ret = unsafe {
++                    bindings::$f(
++                        fwnode.as_raw(),
++                        name.as_char_ptr(),
++                        ptr::null_mut(),
++                        0,
++                    )
++                };
++                to_result(ret)?;
++                Ok(ret as usize)
++            }
 +        }
-+        self.inner
-+    }
 +
-+    /// Access the property, indicating it is optional.
-+    ///
-+    /// In contrast to [`Self::required_by`], no error message is logged if
-+    /// the property is not present.
-+    pub fn optional(self) -> Option<T> {
-+        self.inner.ok()
-+    }
++        impl Property for $int {
++            fn read_from_fwnode_property(fwnode: &FwNode, name: &CStr) -> Result<Self> {
++                let val: [_; 1] = <[$int; 1]>::read_from_fwnode_property(fwnode, name)?;
++                Ok(val[0])
++            }
++        }
 +
-+    /// Access the property or the specified default value.
-+    ///
-+    /// Do not pass a sentinel value as default to detect a missing property.
-+    /// Use [`Self::required_by`] or [`Self::optional`] instead.
-+    pub fn or(self, default: T) -> T {
-+        self.inner.unwrap_or(default)
-+    }
++        impl<const N: usize> Property for [$int; N] {
++            fn read_from_fwnode_property(fwnode: &FwNode, name: &CStr) -> Result<Self> {
++                let mut val: [MaybeUninit<$int>; N] = [const { MaybeUninit::uninit() }; N];
++
++                <$int>::read_array_from_fwnode_property(fwnode, name, &mut val)?;
++
++                // SAFETY: `val` is always initialized when
++                // `fwnode_property_read_*_array` is successful.
++                Ok(val.map(|v| unsafe { v.assume_init() }))
++            }
++        }
++    )* };
++}
++impl_property_for_int! {
++    u8: fwnode_property_read_u8_array,
++    u16: fwnode_property_read_u16_array,
++    u32: fwnode_property_read_u32_array,
++    u64: fwnode_property_read_u64_array,
++    i8: fwnode_property_read_u8_array,
++    i16: fwnode_property_read_u16_array,
++    i32: fwnode_property_read_u32_array,
++    i64: fwnode_property_read_u64_array,
 +}
 +
-+impl<T: Default> PropertyGuard<'_, '_, T> {
-+    /// Access the property or a default value.
-+    ///
-+    /// Use [`Self::or`] to specify a custom default value.
-+    pub fn or_default(self) -> T {
-+        self.inner.unwrap_or_default()
-+    }
-+}
+ /// A helper for reading device properties.
+ ///
+ /// Use [`Self::required_by`] if a missing property is considered a bug and
 -- 
 2.49.0
 
