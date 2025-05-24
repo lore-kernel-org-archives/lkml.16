@@ -1,73 +1,91 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A90837482;
-	Sat, 24 May 2025 22:35:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49A1B1DE4E1;
+	Sat, 24 May 2025 22:38:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748126123; cv=none; b=fjlqjdUDc+ET3wYT2/ddRd5NsWZWXQRNhCqpQDhl1WnxY+xBv6mzmGK1ubClveDJ8H2kmrS7RlzlR/g/0UuvzylIKTj2H+2EiC3wdB3Nd+Vzj1BEn0izK0nxI2XS4QbsEdgL5jIXwwbG6Cktw5dmezEbYxut0xfUdDeISPkw12I=
+	t=1748126295; cv=none; b=UAfaNfliYfgdREx7UWqzqQ/OiLX6a82f8GcxKD8q1/SSPw6hxk/tgh17lk2n0xpalWYRZ7pUViVY4n3Z7+v2h8N1UaZKaBBU7PacngyhrxYK+dpiOKEKOiypc+bdg86gzhwdXRJ44g2A8qvlV5A6pBHfePFDhUDiVCcjSqS2m+4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748126123; c=relaxed/simple;
-	bh=dU4AyeWP+INwsL+aKLcDRQiaDCQV4Vh2+r41wSbmyK4=;
-	h=Message-ID:From:To:Cc:Subject:Date; b=TawpeEQ7G97AEHZn5CBP4btzwzgOVP0zCjazdMNAzoe2YhMhc0hv2KMNobBdAVh6V0IGAEp5Z18HCj5o4W3r/JnWgw4ftYBsqoTcPTzgJsd2xBcPXWldCUTVsal8wWbVn4HjBYj1Q9vgWAnhw7ZvNIl6gOSz9ue0PmBKH5WsFlk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l+qK9bo6; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748126295; c=relaxed/simple;
+	bh=wiNISRlJOG80aJKsvyuGaUGYqxWYkyyJW/Xju/cgeag=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=s7/sji/vL4NMs23EG8pt5JUzMJu9pXDnLXILULlgbQNX7DOLy2U7pj4os7sQQbu9jiIkJVyjLoakCM8asYFpbGBx0/Rn6pVDk+qYFX3J37zQCHq0oloAFMUSrDuoz5GkMJnHvpTO/Q7AU89IDWOAl0Q6xGfYc5e/Vg3oYlFpzdQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZVPzLBsy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l+qK9bo6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2B9DC4CEE4;
-	Sat, 24 May 2025 22:35:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZVPzLBsy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14DF8C4CEE4;
+	Sat, 24 May 2025 22:38:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748126123;
-	bh=dU4AyeWP+INwsL+aKLcDRQiaDCQV4Vh2+r41wSbmyK4=;
-	h=From:To:Cc:Subject:Date:From;
-	b=l+qK9bo6qbJ9gjihICWvh113OdRUA+orlSAbSxmdcmIn5gkmJ7WWBYOh36nerhDjS
-	 Ic43/ThJhBHuXCjEIW2Ssl4LRlpNq5rIe+BZvB6D+tN5OSp523Zpmsd6HwKx5ADdGP
-	 Uz+49w58tkV2lX6Jp55p2+rz17r6t5424WShsp97cELKJXrukcLx53ZKC88MQmVjGZ
-	 KgkJtZu2TRXr77ihIN1ftP9ckNUZcrewq5vZLFqyf+q/xjmy3jbSg06rlx/Rx8j9mb
-	 OKaEmR+DNPxyxKYZs6xYgudMD59OlsmugJ2W1WaokszaNpcJUXtrxNYKNwYQhlxch8
-	 0hzrPa+A/emFw==
-Message-ID: <cc4326d57c0588f9916731c203773a17.broonie@kernel.org>
+	s=k20201202; t=1748126294;
+	bh=wiNISRlJOG80aJKsvyuGaUGYqxWYkyyJW/Xju/cgeag=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ZVPzLBsy69UQCWLd0hTmxlwFEe0NmZ4SK1Gejeh5J0n+j60rlYUMBZzArcW3OTTr+
+	 B4x8Jb57nhdGcoyTit6esO/+1YOMG1Sdua8YijOGzU+G04aLqnC0QMN+l0tqL/MYHX
+	 w4qhSHiOQGfvE/tiSWP+G9Dy7MUH7RFHk2jsnZwl6BFAcW+Bn8WO7kFaS6Ts9Y3q72
+	 J/+z8nlakKwc+eZrNGGNTcBbbkGejrCnG+BheMpzSi2/EEDRMt5iqVzVf3wEIGNCWk
+	 ztCNRgnj9w7ggwmBBPhHamB1D530uLVR0ph/stNOmkr4T2qMIrJr/sRtA6TpY1jBl/
+	 tPwcmEeoqk/Xw==
+Date: Sat, 24 May 2025 23:38:10 +0100
 From: Mark Brown <broonie@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
-Subject: [GIT PULL] SPI fixes for v6.15-rc7
-Date: Sat, 24 May 2025 23:35:12 +0100
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Robin Gong <yibin.gong@nxp.com>,
+	Martijn de Gouw <martijn.de.gouw@prodrive-technologies.com>,
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] dt-bindings: regulator: add pca9450: Add
+ regulator-allowed-modes
+Message-ID: <aDJKUl2l3l08LPDe@finisterre.sirena.org.uk>
+References: <20250523131214.955970-1-martijn.de.gouw@prodrive-technologies.com>
+ <174801730004.578098.7742808995079543725.b4-ty@kernel.org>
+ <8ff817a3-c734-45de-afbd-5da9aecd4cbb@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="KNzx3qMrtTYzHp9B"
+Content-Disposition: inline
+In-Reply-To: <8ff817a3-c734-45de-afbd-5da9aecd4cbb@kernel.org>
+X-Cookie: Well begun is half done.
 
-The following changes since commit a5806cd506af5a7c19bcd596e4708b5c464bfd21:
 
-  Linux 6.15-rc7 (2025-05-18 13:57:29 -0700)
+--KNzx3qMrtTYzHp9B
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-are available in the Git repository at:
+On Sat, May 24, 2025 at 08:34:41AM +0200, Krzysztof Kozlowski wrote:
+> On 23/05/2025 18:21, Mark Brown wrote:
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git tags/spi-fix-v6.15-rc7
+> > [1/2] dt-bindings: regulator: add pca9450: Add regulator-allowed-modes
+> >       commit: 0a4056a444c8d55beea470948c73befd6673aa6c
+> > [2/2] regulator: pca9450: Add support for mode operations
+> >       commit: 2616e5f4fe04eb25eb5cbabc0a3a2a374e14008e
 
-for you to fetch changes up to 7aba292eb15389073c7f3bd7847e3862dfdf604d:
+> Rob reported binding has failure (which also means binding was not
+> tested). Can you drop the patch?
 
-  spi: spi-fsl-dspi: Reset SR flags before sending a new message (2025-05-22 16:05:26 +0100)
+That seemed to just be due to v1 splitting the header with the constants
+=66rom the binding change (the issue was that the header wasn't there)
+which should be fixed by this version?
 
-----------------------------------------------------------------
-spi: Fixes for v6.15
+--KNzx3qMrtTYzHp9B
+Content-Type: application/pgp-signature; name="signature.asc"
 
-A few final fixes for v6.15, some driver fixes for the Freescale DSPI
-driver pulled over from their vendor code and another instance of the
-fixes Greg has been sending throughout the kernel for constification of
-the bus_type in driver core match() functions.
+-----BEGIN PGP SIGNATURE-----
 
-----------------------------------------------------------------
-Bogdan-Gabriel Roman (1):
-      spi: spi-fsl-dspi: Halt the module after a new message transfer
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmgySlEACgkQJNaLcl1U
+h9AoSwf+OdEUNEBe2LeHJXhe/tcKQGAl02dLbNs/usuj+m2nPvXCDq3H3wQYKItJ
+5tWeTidprgvK8HXg55orvP/IzyTXeCSaBEzO63McWEJAhfTm812V28aw0+SAZmNj
+DKEUkh9nSiYvJjzvbQhFmN9wjPCStzGtquWcmlRQk2aRaa0BRk7TKctdT7qrZaG7
+LceHuFVS6awaxxrxzMQ7Gi4awszQZo4QnRo3uR6Hs2snRamvhP9lAFQkzMLggaMb
+r89TKw/GVPr5wTtIQM+TslOhEQuGA6SM+qrkrGnQiSbkZUHaTs0zGKDk9uJn9fUU
+0SefeZoT0mRbYwybQzNLk59lycWaOg==
+=ikut
+-----END PGP SIGNATURE-----
 
-Greg Kroah-Hartman (1):
-      spi: use container_of_cont() for to_spi_device()
-
-Larisa Grigore (2):
-      spi: spi-fsl-dspi: restrict register range for regmap access
-      spi: spi-fsl-dspi: Reset SR flags before sending a new message
-
- drivers/spi/spi-fsl-dspi.c | 46 +++++++++++++++++++++++++++++++++++++++++++++-
- include/linux/spi/spi.h    |  5 +----
- 2 files changed, 46 insertions(+), 5 deletions(-)
+--KNzx3qMrtTYzHp9B--
