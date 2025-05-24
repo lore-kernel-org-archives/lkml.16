@@ -1,215 +1,135 @@
-Received: from mail-qv1-f52.google.com (mail-qv1-f52.google.com [209.85.219.52])
+Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 859FB4C7C;
-	Sat, 24 May 2025 00:00:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2B1933E1
+	for <linux-kernel@vger.kernel.org>; Sat, 24 May 2025 00:03:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748044827; cv=none; b=oIw1smAJjPqc5wVTE2UdltkaqS8QvRf2wjkLNZfcOdY1F8KPeiSIiU7/M+Ndq2dSyDRdYf6KMJXNPGw2PbMej19eXmWIGiRZVeWXRhVggogPDn2MqtYVnSAn+vOsDZw+4eUm1KblzeRppiUmMX/8pzygHi2OUWX6xofNwtonjTE=
+	t=1748044993; cv=none; b=LjlIhi+XqcAaIefalXQyQvmTQLtUWkzRN+FM+ExwWOxD/n1275/3COzhCEbM6XQrIdp2rsfb/QY4amDWHdSH8+Ha5IPqT9aaMsX8YBCIczDUaUmec7v1PmQMViK7Ae/GUkrOx87yb/57y0NvrdlLCcBkif8WWN5Q/861v7z24bU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748044827; c=relaxed/simple;
-	bh=TNxK7mTWRgfqHFOlA9knAWb8UG7aQsjnNGtP0nwujr0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JjhPic57ucu1gUS74iCZYUxZ5Jbmgrw99NekuoD7SNCSH5ULCK5h0xXBJ4PPbkMZ/LhLc9bzudUNH7elzh/VyCiLFb1/TK+NN9Sa2EQW5vVHxRTw5J31jbky6wsK8IaJPOqsi1S9jYHbCUj79d3HBZb2EQHp1cVmfcEBYEW+NBI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FUcz2oJL; arc=none smtp.client-ip=209.85.219.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748044993; c=relaxed/simple;
+	bh=D1rHEs9Rnrh2fo3+SBcBY9k/RBpmLkbdd9w+WxaWi+E=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=JnnaOK+eAzlXdgay+kUGvEnFWTWEWYGHleQS927ynN163DegTa0pbPxSrrupz2/VlsyQkqGSGBDHpRl8xwChOPkoEYWdskqlGnQiVKohhvbnw+tEuuQW0zn0vMRb3q/BCfuQTJT8LVq42yr2p+ufhW1xWNIHp8nvRFJVt1fiz8M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ndufresne.ca; spf=none smtp.mailfrom=ndufresne.ca; dkim=pass (2048-bit key) header.d=ndufresne-ca.20230601.gappssmtp.com header.i=@ndufresne-ca.20230601.gappssmtp.com header.b=vZ1PjET3; arc=none smtp.client-ip=209.85.222.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ndufresne.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ndufresne.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FUcz2oJL"
-Received: by mail-qv1-f52.google.com with SMTP id 6a1803df08f44-6fa9c907cacso719386d6.1;
-        Fri, 23 May 2025 17:00:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ndufresne-ca.20230601.gappssmtp.com header.i=@ndufresne-ca.20230601.gappssmtp.com header.b="vZ1PjET3"
+Received: by mail-qk1-f172.google.com with SMTP id af79cd13be357-7c597760323so30268885a.3
+        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 17:03:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748044824; x=1748649624; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9g0bCtwZKg4p785vc5FWBzUYXiC+e3vu3lEqFvrGvvQ=;
-        b=FUcz2oJLRLwh7TG27ciHJRTX7uNuPhlqlv8MibCAN1+uZxHRUC1TryF/cGnYNn7p9x
-         ulQeDt4ZZso6P/E/tJNOk5xGqNVCyg6gRzQvlyjJ/UfioZIQqU1/YKChbPnbRXHbvPZq
-         PWmfc04O70+kD7LqiZkOst3q7vW9772P/L+eTtuReFIlUuWbXBzdFWTMo72rGsa23XSs
-         kxOtG2LJ8CtH+YkYN0XmBmu0ltuKj8lottvIeQ//vBG7QzKKj/tx5j/QEuPnxnA2L6T4
-         any5OnXi3bcBSFkbcAmz7zesd0KBjSwov2OmrhnGGyjRtLOnGBthg3JT0fYDQt7TpH93
-         EHCg==
+        d=ndufresne-ca.20230601.gappssmtp.com; s=20230601; t=1748044991; x=1748649791; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=H4opPIOSOsz08wDjPNXDe/THEcgYZeP29JFFlP6TG8U=;
+        b=vZ1PjET3KCe/yTcFb2smdpHmj3bNQT3h/Uf8e5oNFzzBZFvM8U8r3vNVnBXltKKnZO
+         Um9vpwsh/dly3h5NWyshT0EA6/3uFnLj5e3JAnREqXBOepihnw6qX33nNr4C/sp13b/f
+         TNRBU57jASh7alt+ZKHELoj41HbacWF0a1g8be92t+kDtzoGxzc22W2PBsjLk2NuuuT2
+         0Uj89uxrXPmJ3wmFnq5my1rgkJHZbKde1c1M9VzfMuHg/NZ91KKtIWv6rU/rilqHOgnP
+         8eN24zi/xEvWnpveeK3W0d2ZawKGuXQ6sNyaedxubCxbRjJdpRzHAxlhqxsuSkYROY35
+         AF+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748044824; x=1748649624;
-        h=in-reply-to:content-disposition:mime-version:references:reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9g0bCtwZKg4p785vc5FWBzUYXiC+e3vu3lEqFvrGvvQ=;
-        b=LsLEBoA/8LsAopHhrIB1gF3GarNLFWDO4P6FHDE5SK2eNwtaethQQmsE+qY5u6chjY
-         x/KaoOCFeFAg7cNUE+MLXhI7pL3mxOeSRzAu3R19CtLDzG9/zAdYGzepSi/42BguVQus
-         iAflXaF6W5at+JKEkJYNYbM7YbNSe8lFrtvuNuL+saZ5bb+eax18Df8jc8C+GKnhq5bD
-         a1xpprFfMr3U+4Eou05aHtrowu7PBMR9IkD4IVZdCYYt6SYJ6q+QkARYV5Ps5CzCH/Jw
-         lXDIVqi5ttNyddQIVV/uCYezM8zBVDXP6aFhmIwf7RLL+OJI7xbawIKqLg/jjnL2zgfU
-         V0vg==
-X-Forwarded-Encrypted: i=1; AJvYcCUSUMFr+aaTzpE7Uj4HaRf9qA0C4AZmj60pbv+uhD9c/gkCdF48WrIysdR2SNDcXTm9U796bnN0KCQZdnXU@vger.kernel.org, AJvYcCXDx3S4p8B2kRZS7nhmkio1/m4k2mkGgd7U4fskbtsPTUoZkWyUwCl3lRwMHbs40ssdpS/rNhG7xam8@vger.kernel.org, AJvYcCXNs/MI2KimsFhxb0nl8yrRHw47ANzW+rlWqbxM29x0++qA961Ez/tOKTcilWD3cnc1An4zcNdDKed2@vger.kernel.org, AJvYcCXeqye8InnnhmmhZzHgB2ISRDJKAubP70nuc+DgCVd/5Ye8Y5wWDgthvBc0iAkOJv1UHjeK1ryeCa5d3w==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyutb6Ry4YTDnxjovBfiameVSa2g5hrEIVN3U3N/D69mZigMcnH
-	eLe3k+7uCC+39f3z4CFxFe5EbG9OywRq1Rj1tUZRwUzXHpVgKU0re6VO
-X-Gm-Gg: ASbGncs7U3A4hRX5HQhCusQvVWHmoEqKVPR6F3prvA0ouHpDOF/DMSGNWHozHQvBQWB
-	WJcMNjK6Vfa4xaxyLgqFsChONqScYjFXId2DIjjo4BVFGhEXVo3rFl+Zt2W/RXunOjWTz2w8bZh
-	UCRXat9ODRiv8mkHmgJ/2dkvKv82ZFXb53oyYUZF/5gkzdywZldWS/409C4U3SHij4T/Tcl6jI7
-	+lsb6WgNdScdwpupIbGng32dVR8atJyv/ZcNUPqgAzl5l3FYAcELp40Rc4la2Uvygr8ySb6jGLZ
-	DU3CHP/9ajr4qartTePLVJ8zAGh4XvKzQzGbzQsNnVBl7J8/39Ht16tGr9e7DxjWWCLT0WVk8Tc
-	VErS7h3g=
-X-Google-Smtp-Source: AGHT+IH6VVwSEesBgULWBddMghxWcMgx95hbJxuBZHbEXRgYNm4ei9O3lM42bP5G9QWa4OOvSKv9Lw==
-X-Received: by 2002:ac8:5710:0:b0:48a:80e5:72bb with SMTP id d75a77b69052e-49f46055e2cmr7140761cf.2.1748044824092;
-        Fri, 23 May 2025 17:00:24 -0700 (PDT)
-Received: from JSANTO12-L01.ad.analog.com ([189.121.203.94])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-494ae528ffasm120727491cf.73.2025.05.23.17.00.20
+        d=1e100.net; s=20230601; t=1748044991; x=1748649791;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=H4opPIOSOsz08wDjPNXDe/THEcgYZeP29JFFlP6TG8U=;
+        b=gR6LurMblKLEJlQt+MklNeFCXAeglgrcnLB3WXGzPwxG7GSfjThnPiqEs/uO/DkPKX
+         jdTbT0AJoTHTCjMcbu3xtxLtajZ3wM9bK2q3aRMp0PBcUbwn0K8zdFmZQVUkcmFEEOoE
+         eUpYtjpdr4K88cJcmKVZBI82TTIe8a3I4ZmSXdQxhzzC5/GWAZY5onU5cstDLVYya47I
+         VigmUDlPjVFcZhJRpJ9Vx+q+Uj0jlohK24tdHIRCJ+d+5vKhBOW5WYZ6AMj7QfUtXJ7w
+         ekCxlhf/ww1i+GH31er+cxcyiIOYb9cK4AW+BV0lef95L0b24nWLWkCzKAemqsUrntqE
+         qyiQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXFT96M/T6tfjvKP0NuUnmGGZOVdH4B01+5X17b5Eae2ogNOGbCyJELN8ZnlM1aBXvoQB1U3LQgdZtbGZI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxbZV9gqfMHMnsIfpWHyAQv5vzGQs757p81xOp3kiRwZ2dbfVwT
+	Fh7tNqgod65TyJLlnPztdT28qpMK+X/oNImqJc8yZBQBVFPnwmeBVQrhPXpBdIwe1kZHLwQvips
+	Rn1r7qfM=
+X-Gm-Gg: ASbGncuN0g7kXYGF8/pMvrW0U9mgOmkmbWUtNaMWoTX+AFlQ9UGbUTh/+SvDCu7zokV
+	g8aLRDczw+lSOT90RZxLHYr15h/FjU8f8q/Yu1PFa6S8oqJvzYP6VMYoCyugn1Zaf84cQ5aCDFG
+	pZ4UBYPKqW5scjti7FtbFQP4b7Es4QT7H/4+vWYTRxoeKkIzU6vJPkvfv5KKiVqiYipCOERU2ux
+	DPhZJVa+IEnL0iM0iwm3WUSF2RDe77xFDviXhn75CFNhGuA0bRj/N+/QAvTspsenfa+yXt7irB8
+	U+kS0JXSb/fK56XPBzahkzj6TYlWchuz3EY9xizSH3G1IfMykybBgZHq
+X-Google-Smtp-Source: AGHT+IGBwAQoWstxEDbk7EcqjEnHqu91vhi+vANL+tSMX7buO7G75pqfgQLBAaGT9HN1knmW2LmwKA==
+X-Received: by 2002:a05:620a:19a7:b0:7ce:b9ed:24dc with SMTP id af79cd13be357-7ceecbd2f51mr179211185a.23.1748044990812;
+        Fri, 23 May 2025 17:03:10 -0700 (PDT)
+Received: from ?IPv6:2606:6d00:17:b2fc::c41? ([2606:6d00:17:b2fc::c41])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7cd467ef019sm1253414085a.63.2025.05.23.17.03.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 May 2025 17:00:23 -0700 (PDT)
-Date: Fri, 23 May 2025 21:00:17 -0300
-From: Jonathan Santos <jonath4nns@gmail.com>
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: Andy Shevchenko <andy@kernel.org>,
-	Jonathan Santos <Jonathan.Santos@analog.com>,
-	linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-	nuno.sa@analog.com, Michael.Hennerich@analog.com,
-	marcelo.schmitt@analog.com, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, marcelo.schmitt1@gmail.com,
-	linus.walleij@linaro.org, brgl@bgdev.pl, lgirdwood@gmail.com,
-	broonie@kernel.org, dlechner@baylibre.com
-Subject: Re: [PATCH v8 08/11] iio: adc: ad7768-1: add support for
- Synchronization over SPI
-Message-ID: <aDEMEWQvu0r9stCh@JSANTO12-L01.ad.analog.com>
-Reply-To: 20250518175832.77b8d670@jic23-huawei
-References: <cover.1747175187.git.Jonathan.Santos@analog.com>
- <59f45c9af16fa68f2a479f824129f5a9f2cd0997.1747175187.git.Jonathan.Santos@analog.com>
- <aCcFXolH0FVBSP11@smile.fi.intel.com>
- <20250518175832.77b8d670@jic23-huawei>
+        Fri, 23 May 2025 17:03:10 -0700 (PDT)
+Message-ID: <a40986e970f049aa1448bee662b024e50404e04d.camel@ndufresne.ca>
+Subject: Re: [PATCH 08/18] media: coda: Add log to finish_encode if buffer
+ is too small
+From: Nicolas Dufresne <nicolas@ndufresne.ca>
+To: Sergey Khimich <serghox@gmail.com>, linux-media@vger.kernel.org
+Cc: Philipp Zabel <p.zabel@pengutronix.de>, Mauro Carvalho Chehab
+	 <mchehab@kernel.org>, linux-kernel@vger.kernel.org, Vladimir Yakovlev
+	 <vovchkir@gmail.com>, Maksim Turok <turok.m7@gmail.com>
+Date: Fri, 23 May 2025 20:03:09 -0400
+In-Reply-To: <20250314152939.2759573-9-serghox@gmail.com>
+References: <20250314152939.2759573-1-serghox@gmail.com>
+	 <20250314152939.2759573-9-serghox@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.1 (3.56.1-1.fc42) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250518175832.77b8d670@jic23-huawei>
 
-On 05/18, Jonathan Cameron wrote:
-> On Fri, 16 May 2025 12:29:02 +0300
-> Andy Shevchenko <andy@kernel.org> wrote:
-> 
-> > On Thu, May 15, 2025 at 06:13:56PM -0300, Jonathan Santos wrote:
-> > > The synchronization method using GPIO requires the generated pulse to be
-> > > truly synchronous with the base MCLK signal. When it is not possible to
-> > > do that in hardware, the datasheet recommends using synchronization over
-> > > SPI, where the generated pulse is already synchronous with MCLK. This
-> > > requires the SYNC_OUT pin to be connected to the SYNC_IN pin.
-> > > 
-> > > Use trigger-sources property to enable device synchronization over SPI
-> > > and multi-device synchronization while replacing sync-in-gpios property.  
-> Given some discussion in here I'll not (yet) pick up this series.
-> 
-> It's almost certainly just missed the coming merge window anyway so
-> we have time.
-> 
-> > 
-> > ...
-> > 
-> > > +static int ad7768_trigger_sources_get_sync(struct device *dev,
-> > > +					   struct ad7768_state *st)
-> > > +{
-> > > +	struct fwnode_reference_args args;
-> > > +	struct fwnode_handle *fwnode = dev_fwnode(dev);
-> > > +	int ret;
-> > > +
-> > > +	/*
-> > > +	 * The AD7768-1 allows two primary methods for driving the SYNC_IN pin
-> > > +	 * to synchronize one or more devices:
-> > > +	 * 1. Using an external GPIO.
-> > > +	 * 2. Using a SPI command, where the SYNC_OUT pin generates a
-> > > +	 *    synchronization pulse that drives the SYNC_IN pin.
-> > > +	 */
-> > > +	if (!fwnode_property_present(fwnode, "trigger-sources")) {  
-> > 
-> > I'm wondering if you can split the below to a separate function and do something like
-> > 
-> > 	if (fwnode_property_present(...))
-> > 		return setup_trigger_source(...);
-> > 
-> > 	...
-> > 	en_spi_sync = true;
-> > 	return 0;
-> > 
-> > > +		/*
-> > > +		 * In the absence of trigger-sources property, enable self
-> > > +		 * synchronization over SPI (SYNC_OUT).
-> > > +		 */
-> > > +		st->en_spi_sync = true;
-> > > +		return 0;
-> > > +	}
-> > > +
-> > > +	ret = fwnode_property_get_reference_args(fwnode,
-> > > +						 "trigger-sources",
-> > > +						 "#trigger-source-cells",
-> > > +						 0,
-> > > +						 AD7768_TRIGGER_SOURCE_SYNC_IDX,
-> > > +						 &args);  
-> > 
-> > 
-> > __free(fwnode_handle) ?
-> 
-> For args.fwnode?
-> 
-> That's fiddly to do and needs a different local variable to...
-> 
-> 
-> 
-> > 
-> > > +	if (ret)
-> > > +		return ret;
-> > > +
-> > > +	fwnode = args.fwnode;
-> 
-> this one.
-> 
-> You could wrap it up in a function to make that works cleanly.
-> So something similar to fwnode_find_reference() but with the
-> rest of the arguments.  Is there appetite for such a wrapper
-> in the generic property code?
->
+Hi,
 
-you mean like:
+Le vendredi 14 mars 2025 =C3=A0 18:29 +0300, Sergey Khimich a =C3=A9crit=C2=
+=A0:
+> From: Vladimir Yakovlev <vovchkir@gmail.com>
+>=20
+> CODA_RET_ENC_PIC_FLAG flag means that bitstream buffer size
+> is not enough to save one frame data when buffer reset mode is used.
+> If this flag is set, currently encoded bitstream is corrupted.
+>=20
+> Co-developed-by: Sergey Khimich <serghox@gmail.com>
+> Signed-off-by: Sergey Khimich <serghox@gmail.com>
+> Signed-off-by: Vladimir Yakovlev <vovchkir@gmail.com>
+> ---
+> =C2=A0drivers/media/platform/chips-media/coda/coda-bit.c | 8 +++++++-
+> =C2=A01 file changed, 7 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/media/platform/chips-media/coda/coda-bit.c b/drivers=
+/media/platform/chips-media/coda/coda-bit.c
+> index 3e3bb3d64ec9..515eb8be4b86 100644
+> --- a/drivers/media/platform/chips-media/coda/coda-bit.c
+> +++ b/drivers/media/platform/chips-media/coda/coda-bit.c
+> @@ -1641,6 +1641,7 @@ static void coda_finish_encode(struct coda_ctx *ctx=
+)
+> =C2=A0	struct vb2_v4l2_buffer *src_buf, *dst_buf;
+> =C2=A0	struct coda_dev *dev =3D ctx->dev;
+> =C2=A0	u32 wr_ptr, start_ptr;
+> +	int val;
+> =C2=A0
+> =C2=A0	if (ctx->aborting)
+> =C2=A0		return;
+> @@ -1674,7 +1675,12 @@ static void coda_finish_encode(struct coda_ctx *ct=
+x)
+> =C2=A0	coda_dbg(1, ctx, "frame size =3D %u\n", wr_ptr - start_ptr);
+> =C2=A0
+> =C2=A0	coda_read(dev, CODA_RET_ENC_PIC_SLICE_NUM);
+> -	coda_read(dev, CODA_RET_ENC_PIC_FLAG);
+> +	val =3D coda_read(dev, CODA_RET_ENC_PIC_FLAG);
+> +	if (val > 0) {
+> +		v4l2_err(&dev->v4l2_dev,
+> +			 "Encode fail. Encode buffer is too small\n");
+> +		// TODO what to do next?
 
-fwnode_find_reference_args(const struct fwnode_handle *fwnode,
-			   const char *name, const char *nargs_prop,
-			   unsigned int nargs, unsigned int index,
-			   struct fwnode_reference_args *args)
+Lower in the same function, you should still copy the metadata but replace
+VB2_BUF_STATE_DONE with VB2_BUF_STATE_ERROR. Perhaps introduce a state
+variable and set it accordingly.
 
-I don't know if it helps that much and since we are not handling
-arguments right know, I think fwnode_find_reference() would work (or not?).
-In that case maybe we add some note or TODO to explain why. 
+Nicolas
 
-> 
-> > > +	/* First, try getting the GPIO trigger source */
-> > > +	if (fwnode_device_is_compatible(fwnode, "gpio-trigger")) {
-> > > +		st->gpio_sync_in = devm_fwnode_gpiod_get_index(dev, fwnode,
-> > > +							       NULL,
-> > > +							       0,
-> > > +							       GPIOD_OUT_LOW,
-> > > +							       "sync-in");
-> > > +		ret = PTR_ERR_OR_ZERO(st->gpio_sync_in);
-> > > +		goto out_put_node;
-> > > +	}
-> > > +
-> > > +	/*
-> > > +	 * TODO: Support the other cases when we have a trigger subsystem to
-> > > +	 * reliably handle other types of devices as trigger sources.
-> > > +	 *
-> > > +	 * For now, return an error message. For self triggering, omit the
-> > > +	 * trigger-sources property.
-> > > +	 */
-> > > +	ret = dev_err_probe(dev, -EOPNOTSUPP, "Invalid synchronization trigger source\n");
-> > > +
-> > > +out_put_node:  
-> > 
-> > The above will allow to get rid of this label.
-> > 
-> > > +	fwnode_handle_put(args.fwnode);
-> > > +	return ret;
-> > > +}  
-> > 
-> 
+> +	}
+> =C2=A0
+> =C2=A0	dst_buf->flags &=3D ~(V4L2_BUF_FLAG_KEYFRAME |
+> =C2=A0			=C2=A0=C2=A0=C2=A0 V4L2_BUF_FLAG_PFRAME |
