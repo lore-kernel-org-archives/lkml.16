@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D92DB54918;
-	Sat, 24 May 2025 06:30:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D59154918;
+	Sat, 24 May 2025 06:34:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748068259; cv=none; b=dj1YrFWCxSeltHp94jQeRfgxMjLqEuVmaGwgbY9a0YrGq9LjjxbvUZkR0rXPDrcpry0pBT4R6jBK3n5ihZcsO4PjQ2hySqYYB/CG1+VG6DIctMQ5PgQtot2eIlxuJY+j73rOy7/1CmIny0nBzVSwk4ZFz8f14Va3cqroRONNKMA=
+	t=1748068486; cv=none; b=F0SCQ1X+a6eUOI+6zAqzNyhntmp7Qggjc7xd9izDfHq6B0AJdD2CcuwDzl7P8WPatnLG1drBVfItv6LLw5+VrD9crMTbXPahjRtrpFvvwmAgvwd9NJvCfpvAsZebKorC8qDFYO5C/HbiwG57zEUluqmQ5dr+lqCPqzdg6Ce9830=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748068259; c=relaxed/simple;
-	bh=OSW0a8O6Ua3C9OWukvcF0yxnXBWtC+NYWhxAHl7Wztc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=MOgVXBQqltnjrcrPlx8H5+ZU88jKPHRJtQWI8bh0n/cd1g3RRdGg2a0R288LQ6qrDsuj1BJmDpTFxQmeTg4heeb/kGnCG/0gXhJN5tQc7gvem33amEFwfMoW7zJ6Z8+sxYALTXV3gWSGx8kuFANbGpiWsr/flzkvLGsdDivSyWw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OpFesYvK; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748068486; c=relaxed/simple;
+	bh=WwTDPQU2XhwTb8UHSyuopZHFmEvOODQ7+77Q3mUhwRs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=VPm1Sen1lrxwVBSYOiZBomdBjw/VjquPh9NfnBFhfloeh1JecpMmubZ8qB5v6KLnKInZFD3jxbUNjeSua/Kgrr8IwoV03il98dd3lbnRpgm9FX9M3Fgj6gLED8VROtLO6uZaiSe0DIL9WgZ7izs+jZv154btGdx2F/yQLzhQoF4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dN7oQ8eC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OpFesYvK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8884C4CEE4;
-	Sat, 24 May 2025 06:30:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dN7oQ8eC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A012C4CEE4;
+	Sat, 24 May 2025 06:34:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748068258;
-	bh=OSW0a8O6Ua3C9OWukvcF0yxnXBWtC+NYWhxAHl7Wztc=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=OpFesYvKN/KLhXgATBYCI4q4vGnBunLB8OMRrNQr7btbcpD1+sOXwyAGFj8EQAlu0
-	 tni57uJKB6QINRKRPcfU2dQtlXpp1blv1muy6foBOrSwffg0VCuocZIs/jiVD25lHT
-	 6pGk00a3MAT0PRZZXAidk2SmQnsDJgZvFOn6YXyPMjfE8Y7v/XzAp1Ikb0xZ3TkFGy
-	 eP2TQLhEKnbos+TxdcALReBys49nl/svLLJdxjEXGYiH7z18TJq/04GCjDt6hHjzO/
-	 /h+RaK86SID+ZhpbVh+We1Zc/zx5kQKZFSb3pj+QDktnaS9gVnt1DSD6eMms5W36xS
-	 wA0w2vSnT5dBg==
-Message-ID: <e19ee6c5-447e-43ee-bc63-df15ff2f6031@kernel.org>
-Date: Sat, 24 May 2025 08:30:53 +0200
+	s=k20201202; t=1748068485;
+	bh=WwTDPQU2XhwTb8UHSyuopZHFmEvOODQ7+77Q3mUhwRs=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=dN7oQ8eCU4bZ59ZUtLPAaV5vuaahXDJuYmuAXxgB86BE8Iz8CeXCOzOgORNL8zEvi
+	 +t5o6uQkZoUip85iprATo2m+VPjhdxEvueD4g3qP+evX9D3vQ6Lt5BuN/O6DY2sDez
+	 WT9tThdjT+xwaS9xdgECEqLOWqWgGt2mTKYDmGDrOt2J2JlPYrnTwPLLDQ4cjFdsTJ
+	 eui0UVrtDLdJjRC8pt9f4AnAYIQWqtyERsJns1y+ublmCKRzKmB0m8qv4Yh1eIUDhL
+	 Camks1tYv3sG02nn6TCIxHe3PRZP78vKFmzBfuLgwax1bJyBWISB4yCIv7M05V8Cns
+	 +xYt/xOsecpuQ==
+Message-ID: <8ff817a3-c734-45de-afbd-5da9aecd4cbb@kernel.org>
+Date: Sat, 24 May 2025 08:34:41 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,17 +35,15 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 4/5] dt-bindings: thermal: airoha: Rename and Document
- AN7583 support
-To: Christian Marangi <ansuelsmth@gmail.com>,
- "Rafael J. Wysocki" <rafael@kernel.org>,
- Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>,
- Lukasz Luba <lukasz.luba@arm.com>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250523182939.30489-1-ansuelsmth@gmail.com>
- <20250523182939.30489-5-ansuelsmth@gmail.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: regulator: add pca9450: Add
+ regulator-allowed-modes
+To: Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Robin Gong <yibin.gong@nxp.com>,
+ Martijn de Gouw <martijn.de.gouw@prodrive-technologies.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+References: <20250523131214.955970-1-martijn.de.gouw@prodrive-technologies.com>
+ <174801730004.578098.7742808995079543725.b4-ty@kernel.org>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -91,94 +89,31 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <20250523182939.30489-5-ansuelsmth@gmail.com>
+In-Reply-To: <174801730004.578098.7742808995079543725.b4-ty@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 23/05/2025 20:29, Christian Marangi wrote:
-> Rename .yaml to a more generic airoha-thermal and Document support for
-> Airoha AN7583 thermal driver.
+On 23/05/2025 18:21, Mark Brown wrote:
+> On Fri, 23 May 2025 15:12:11 +0200, Martijn de Gouw wrote:
+>> Make the PWM mode on the buck controllers configurable from devicetree.
+>> Some boards require forced PWM mode to keep the supply ripple within
+>> acceptable limits under light load conditions.
+>>
+>>
 > 
-> Airoha AN7583 follow the same logic of Airoha EN7581 to read the
-> temperature but lack all the support for the PTP_THERMAL used to monitor
-> and react when trip point are triggered.
+> Applied to
 > 
-> Also the Airoha AN7583 lives entirely under the Chip SCU SoC register
-> space.
+>    https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-next
 > 
-> Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
-> ---
->  ...n7581-thermal.yaml => airoha-thermal.yaml} | 42 ++++++++++++++++---
->  1 file changed, 36 insertions(+), 6 deletions(-)
->  rename Documentation/devicetree/bindings/thermal/{airoha,en7581-thermal.yaml => airoha-thermal.yaml} (52%)
-
-No. I do not see any reason to rename correct filename (how we expect)
-to incorrect (wrong format, no vendor prefix, not matching compatible).
-
+> Thanks!
 > 
-> diff --git a/Documentation/devicetree/bindings/thermal/airoha,en7581-thermal.yaml b/Documentation/devicetree/bindings/thermal/airoha-thermal.yaml
-> similarity index 52%
-> rename from Documentation/devicetree/bindings/thermal/airoha,en7581-thermal.yaml
-> rename to Documentation/devicetree/bindings/thermal/airoha-thermal.yaml
-> index ca0242ef0378..42f93b095783 100644
-> --- a/Documentation/devicetree/bindings/thermal/airoha,en7581-thermal.yaml
-> +++ b/Documentation/devicetree/bindings/thermal/airoha-thermal.yaml
-> @@ -1,17 +1,19 @@
->  # SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
->  %YAML 1.2
->  ---
-> -$id: http://devicetree.org/schemas/thermal/airoha,en7581-thermal.yaml#
-> +$id: http://devicetree.org/schemas/thermal/airoha-thermal.yaml#
->  $schema: http://devicetree.org/meta-schemas/core.yaml#
->  
-> -title: Airoha EN7581 Thermal Sensor and Monitor
-> +title: Airoha Thermal Sensor and Monitor
->  
->  maintainers:
->    - Christian Marangi <ansuelsmth@gmail.com>
->  
->  properties:
->    compatible:
-> -    const: airoha,en7581-thermal
-> +    enum:
-> +      - airoha,en7581-thermal
-> +      - airoha,an7583-thermal
->  
->    reg:
->      maxItems: 1
-> @@ -28,9 +30,30 @@ properties:
->  
->  required:
->    - compatible
-> -  - reg
-> -  - interrupts
-> -  - airoha,chip-scu
-> +  - '#thermal-sensor-cells'
-> +
-> +allOf:
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            const: airoha,en7581-thermal
-> +    then:
-> +      required:
-> +        - reg
-> +        - interrupts
-> +        - airoha,chip-scu
-> +
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            const: airoha,an7583-thermal
-> +    then:
-> +      properties:
-> +        reg: false
+> [1/2] dt-bindings: regulator: add pca9450: Add regulator-allowed-modes
+>       commit: 0a4056a444c8d55beea470948c73befd6673aa6c
+> [2/2] regulator: pca9450: Add support for mode operations
+>       commit: 2616e5f4fe04eb25eb5cbabc0a3a2a374e14008e
 
-Don't stuff completely different devices into one binding. They are
-completely different if they have completely different programming model.
-
+Rob reported binding has failure (which also means binding was not
+tested). Can you drop the patch?
 
 Best regards,
 Krzysztof
