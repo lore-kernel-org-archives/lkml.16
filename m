@@ -1,193 +1,132 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8825B25776;
-	Sat, 24 May 2025 15:51:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D92561A5BB7
+	for <linux-kernel@vger.kernel.org>; Sat, 24 May 2025 15:55:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748101907; cv=none; b=GZo7HkZ2GONnrW+A0JofbGVvTA7jeGKL2gepYjta7TQamXVGylt1mS12CQ0AvHKFq8gNgAzjUuI4ikYFG5RnDB6THzNLUK7KiMFTBQgiLak3HIgOUo6v6l3hJL92cyuMWajq4tPD4dVHEbHokCqE/qRYQNKmKPRnzFPA6YG51dA=
+	t=1748102139; cv=none; b=WLAt7FoMQ8FeZH1xJq1yY7H/SNp2Xm4+X/1Go9Hf27hd9Vn2tO2UqqU45F26DOGxTr9rjhDc1nzbhqfc0QRxg7YVOkc4kwOh3SmLtvi4IluusIZyFUyMS7VUcTAXfNwgxUI/Z0tm9tl37cVT5gvFpJnmmQ3er0OasN0xsVC4zn8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748101907; c=relaxed/simple;
-	bh=+ucDhazGPC9Jvva6Fi6SHN5ahyqoS/gM+jfdi9hKwl0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Q58/xiTIeegUGln7EFTw/RbJg/mRCgdNdi8gFxjhT9EG1KEPeUTmVY22dU7kSTX4QjwqzrBzM8yrkzUEUWvHMopctjqDPwAuhFJZqdE+81D5EaZgeMLXRzAwZ9r6tQ2R+LOZ+b+A69xVGYpCHf9TFcRdsd1Rn1EIzOxpPEtN+cE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fxoH+Qpq; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1748102139; c=relaxed/simple;
+	bh=mw163myt7I5W/xZanH/RGCekGwcrGEHcSJq505eIhyI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=jmzhC8Db1ZsFCw7hK5/LjH23aK3eI+AMO/sBkb8ML5cytaa8Mz4LuDY5CyEOlq6s4goG469Q3Pntl8PPx+M4bwubbDm/DeGuQjPeiTwBlNcPtgJKRG/wvfH7wy1RGPWzIgfiTa3Qo6X/h7AWDcNOP3jmfiVCWbxFHTAmYep5uZU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QtWsWBrR; arc=none smtp.client-ip=209.85.210.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fxoH+Qpq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748101906; x=1779637906;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=+ucDhazGPC9Jvva6Fi6SHN5ahyqoS/gM+jfdi9hKwl0=;
-  b=fxoH+QpqBNI9TinK/Yw4e94Y9MEOzb1nE4dBTb8TdMLYzTdphV2E1KEr
-   Djp9cXXXhKrjGDa82n3yB6TBFR6GkyY09uCE4XWoYTmrJWIcVx6cjawzV
-   LdbTno908lCiv3pd2Z5iTIxLo1dsLC8KhS+ZTaCK9MZqui3LQyZy6VjSU
-   MxQdO9FZTbG7Y6EgBONPTi3CCjKnTPPGd2hx4XMMmCUwpGzMYLti4L84Q
-   XwzuJu8133+3TtYpiTNftQe9ATFcDNST8xGzBkeJdJf8GTSjqix47t4Ej
-   Mu+q0Z/kd9tRrhd/6ab1tyOPMpSV0jaI0r9FbHnafNDMt3ICQgpZSMflD
-   Q==;
-X-CSE-ConnectionGUID: Dpgrq0jBTECZAS3RGH8duA==
-X-CSE-MsgGUID: I3MjJ/NERdCD3Iezv6ih8Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11443"; a="52758862"
-X-IronPort-AV: E=Sophos;i="6.15,311,1739865600"; 
-   d="scan'208";a="52758862"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 May 2025 08:51:45 -0700
-X-CSE-ConnectionGUID: /nFUagFnQQCHiiDQc4YJ9A==
-X-CSE-MsgGUID: hhjk9CTzSkaju1yIfPj27w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,311,1739865600"; 
-   d="scan'208";a="141658419"
-Received: from ranerica-svr.sc.intel.com ([172.25.110.23])
-  by fmviesa007.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 May 2025 08:51:44 -0700
-Date: Sat, 24 May 2025 08:56:50 -0700
-From: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>
-Cc: x86@kernel.org, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	Michael Kelley <mhklinux@outlook.com>, devicetree@vger.kernel.org,
-	Saurabh Sengar <ssengar@linux.microsoft.com>,
-	Chris Oo <cho@microsoft.com>, linux-hyperv@vger.kernel.org,
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-	"Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-	Ricardo Neri <ricardo.neri@intel.com>
-Subject: Re: [PATCH v3 06/13] dt-bindings: reserved-memory: Wakeup Mailbox
- for Intel processors
-Message-ID: <20250524155650.GA16942@ranerica-svr.sc.intel.com>
-References: <20250504-original-leopard-of-vigor-5702ef@kuoka>
- <20250506051610.GC25533@ranerica-svr.sc.intel.com>
- <20250506-pompous-meaty-crane-97efce@kuoka>
- <20250507032339.GA27243@ranerica-svr.sc.intel.com>
- <20250512153224.GA3377771-robh@kernel.org>
- <20250513221456.GA2794@ranerica-svr.sc.intel.com>
- <20250514154248.GA2375202-robh@kernel.org>
- <20250515035338.GA4955@ranerica-svr.sc.intel.com>
- <20250519152937.GA2227051-robh@kernel.org>
- <20250519175606.GA9693@ranerica-svr.sc.intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QtWsWBrR"
+Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-742af848148so571332b3a.1
+        for <linux-kernel@vger.kernel.org>; Sat, 24 May 2025 08:55:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748102137; x=1748706937; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=f5NzQXNu49XBtQeENiXLHMtGN2kWzF78ktALbXii2Y0=;
+        b=QtWsWBrRdQvDNR/6ZRaltr/NpR/Oa4XTBIPbft/hC+j9YyIIjMbI+x5XYvoajchpZB
+         26+x/5nTMVyzXP5uFrW/wkFTB8/8jtCY/TGocQo9ic+ylb29cHegErW26XS8qFJC1aN1
+         u7FxG48dc+3Mj8/zDMGDo6kyaLTwvNLuWIAO0JjdpNY57iW/UjqaLG3ndAZfUksG7Ebd
+         oSl0XNGRhWHY7sjtRwxG2LjFehIT0vnh4+Wj6QZuHSfrKQj15/o7R4xwvWnkobJWvbRr
+         I4KN1JR9i8syCiQZg5t0b5hJ6cG6w8jVT67mvuU6WI8i9TlPYoUcB0BoEzsSpWYT1TdO
+         D02Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748102137; x=1748706937;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=f5NzQXNu49XBtQeENiXLHMtGN2kWzF78ktALbXii2Y0=;
+        b=Sf4ZjbYil6/M+dqOldDrcTk9IDEWcR6sm5dsc8yqKtS/PC89mXDpyS0EZB9bvUVIcr
+         M6PrimVo6VmoYcfmXleCl9i/ziBQSu3pmuncghndQQ6v7PLzDx9gSzArihDv9OVHky9U
+         YWYU7eu4easq1mY3kQunzs0729DnZVIrE62xhy4fyjaY0RpGBy/lxZP6ras//WZ6GI6/
+         g6v7/T3776nm8lDZzkYfm5r/mRGMXVqbdvmu6J9lTP+WnDo3ryKVvkqGfzZLyN7Vom2n
+         bOlVSjZgTOJqhbr5PyCfq0arbK0YhhSUXIgir+cFGCakv2iXZ+dcL9YdvI5li9rOO3FO
+         F31g==
+X-Forwarded-Encrypted: i=1; AJvYcCU+1nK2HE/Vy9P/r1OtC/OlRNzdj/YTKE4+ZRjrXimx4qk4lx7TQJmaoUTF3jI8PfSc+sa67bwBiZ15XXE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwzkrgVQDFYHV9N4kts22EkTTOsY9Cg8h2x54rmn+zf5DLJfHEs
+	bl8kiG4Fhhxztwn1VgO4jVBdVV7T8fi/+Mu6/hNDSgFftU2CsGbb8cX7
+X-Gm-Gg: ASbGnctmeCwMUOX16So8O6agNc5AfWXCmvqDO2ZWHpvlf3EdKu07B2a5sRiTG1RW4mQ
+	wfiimYIEANk+Y/rwiTpS/hk1PRR0GAEO/0Z73O1iKXfd9n12SzKzT4UuY9iz1IICOtIyA//aXdj
+	v5FmP77q8Pk2VmVcBUM8PdRNSpxyvrQHqeA1aVmk7rK4BvdgSpZVpLbVipziYraTJWZfpi6r/rc
+	Vn8JnS0b/kLNvLnKyRSt+JviZRgLXod3mAw/doYzA8aFlYmPbun7sIUzyXqWeoonAWzbz3kUGhW
+	KhQNKBqGfy4+M4wOPNneI1qxcVU/3VwElODCt1Kz1kluqPfH0EgDLGf672upEI4CH7d5yUDS3ua
+	uDsYgVA==
+X-Google-Smtp-Source: AGHT+IHb1auLczNBxaTokKxKT8OTNVUuMgd7gpT41ZORQNU8eQ5rzK5+ef4IEIxT0hdT8elE8OmEcQ==
+X-Received: by 2002:a17:903:22c6:b0:234:1df:4409 with SMTP id d9443c01a7336-23414f61b86mr49644245ad.16.1748102137007;
+        Sat, 24 May 2025 08:55:37 -0700 (PDT)
+Received: from visitorckw-System-Product-Name.. ([140.113.216.168])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-234396eaf62sm1200745ad.9.2025.05.24.08.55.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 24 May 2025 08:55:36 -0700 (PDT)
+From: Kuan-Wei Chiu <visitorckw@gmail.com>
+To: paul.walmsley@sifive.com,
+	palmer@dabbelt.com,
+	aou@eecs.berkeley.edu,
+	alex@ghiti.fr,
+	akpm@linux-foundation.org
+Cc: linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	jserv@ccns.ncku.edu.tw,
+	Kuan-Wei Chiu <visitorckw@gmail.com>,
+	Yu-Chun Lin <eleanor15x@gmail.com>
+Subject: [PATCH v2 0/3] Optimize GCD performance on RISC-V by selecting implementation at runtime
+Date: Sat, 24 May 2025 23:55:16 +0800
+Message-Id: <20250524155519.1142570-1-visitorckw@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250519175606.GA9693@ranerica-svr.sc.intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 
-On Mon, May 19, 2025 at 10:56:06AM -0700, Ricardo Neri wrote:
-> On Mon, May 19, 2025 at 10:29:37AM -0500, Rob Herring wrote:
-> > On Wed, May 14, 2025 at 08:53:38PM -0700, Ricardo Neri wrote:
-> > > On Wed, May 14, 2025 at 10:42:48AM -0500, Rob Herring wrote:
-> > > > On Tue, May 13, 2025 at 03:14:56PM -0700, Ricardo Neri wrote:
-> > > > > On Mon, May 12, 2025 at 10:32:24AM -0500, Rob Herring wrote:
-> > > > > > On Tue, May 06, 2025 at 08:23:39PM -0700, Ricardo Neri wrote:
-> > > > > > > On Tue, May 06, 2025 at 09:10:22AM +0200, Krzysztof Kozlowski wrote:
-> > > > > > > > On Mon, May 05, 2025 at 10:16:10PM GMT, Ricardo Neri wrote:
-> > > > > > > > > > If this is a device, then compatibles specific to devices. You do not
-> > > > > > > > > > get different rules than all other bindings... or this does not have to
-> > > > > > > > > > be binding at all. Why standard reserved-memory does not work for here?
-> > > > > > > > > > 
-> > > > > > > > > > Why do you need compatible in the first place?
-> > > > > > > > > 
-> > > > > > > > > Are you suggesting something like this?
-> > > > > > > > > 
-> > > > > > > > > reserved-memory {
-> > > > > > > > > 	# address-cells = <2>;
-> > > > > > > > > 	# size-cells = <1>;
-> > > > > > > > > 
-> > > > > > > > > 	wakeup_mailbox: wakeupmb@fff000 {
-> > > > > > > > > 		reg = < 0x0 0xfff000 0x1000>
-> > > > > > > > > 	}
-> > > > > > > > > 
-> > > > > > > > > and then reference to the reserved memory using the wakeup_mailbox
-> > > > > > > > > phandle?
-> > > > > > > > 
-> > > > > > > > Yes just like every other, typical reserved memory block.
-> > > > > > > 
-> > > > > > > Thanks! I will take this approach and drop this patch.
-> > > > > > 
-> > > > > > If there is nothing else to this other than the reserved region, then 
-> > > > > > don't do this. Keep it like you had. There's no need for 2 nodes.
-> > > > > 
-> > > > > Thank you for your feedback!
-> > > > > 
-> > > > > I was planning to use one reserved-memory node and inside of it a child
-> > > > > node to with a `reg` property to specify the location and size of the
-> > > > > mailbox. I would reference to that subnode from the kernel code.
-> > > > > 
-> > > > > IIUC, the reserved-memory node is only the container and the actual memory
-> > > > > regions are expressed as child nodes.
-> > > > > 
-> > > > > I had it like that before, but with a `compatible` property that I did not
-> > > > > need.
-> > > > > 
-> > > > > Am I missing anything?
-> > > > 
-> > > > Without a compatible, how do you identify which reserved region is the 
-> > > > wakeup mailbox?
-> > > 
-> > > I thought using a phandle to the wakeup_mailbox. Then I realized that the
-> > > device nodes using the mailbox would be CPUs. They would need a `memory-
-> > > region` property. This does not look right to me.
-> > 
-> > That doesn't really make sense unless it's a memory region per CPU.
-> 
-> Agreed.
-> 
-> > 
-> > 
-> > > > Before you say node name, those are supposed to be 
-> > > > generic though we failed to enforce anything for /reserved-memory child 
-> > > > nodes.
-> > > 
-> > > I see. Thanks for preventing me from doing this.
-> > > 
-> > > Then the `compatible` property seems the way to go after all.
-> > > 
-> > > This what motivated this patch in the first place. On further analysis,
-> > > IIUC, defining bindings and schema is not needed, IMO, since the mailbox
-> > > is already defined in the ACPI spec. No need to redefine.
-> > 
-> > You lost me...
-> > 
-> > You don't need to redefine the layout of the memory region as that's 
-> > defined already somewhere,
-> 
-> Great!
-> 
-> > but you do need to define where it is for DT. 
-> > And for that, you need a compatible. Do you know where it is in this 
-> > case?
-> 
-> The compatible is not defined anywhere yet. Is a DT schema needed to
-> document it? If yes, I am usure what to put in the description. We tried
-> to not redefine the mailbox and refer to the ACPI spec. That was a NAK
-> from Krzysztof [1].
-> 
-> [1]. https://lore.kernel.org/r/624e1985-7dd2-4abe-a918-78cb43556967@kernel.org
+The current implementation of gcd() selects between the binary GCD and
+the odd-even GCD algorithm at compile time, depending on whether
+CONFIG_CPU_NO_EFFICIENT_FFS is set. On platforms like RISC-V, however,
+this compile-time decision can be misleading: even when the compiler
+emits ctz instructions based on the assumption that they are efficient
+(as is the case when CONFIG_RISCV_ISA_ZBB is enabled), the actual
+hardware may lack support for the Zbb extension. In such cases, ffs()
+falls back to a software implementation at runtime, making the binary
+GCD algorithm significantly slower than the odd-even variant.
 
-In summary, documenting the `compatible` property for the mailbox is
-necessary. There is no need to redefine the malbox on a schema but
-referring to the ACPI spec is not acceptable.
+To address this, we introduce a static key to allow runtime selection
+between the binary and odd-even GCD implementations. On RISC-V, the
+kernel now checks for Zbb support during boot. If Zbb is unavailable,
+the static key is disabled so that gcd() consistently uses the more
+efficient odd-even algorithm in that scenario. Additionally, to further
+reduce code size, we select CONFIG_CPU_NO_EFFICIENT_FFS automatically
+when CONFIG_RISCV_ISA_ZBB is not enabled, avoiding compilation of the
+unused binary GCD implementation entirely on systems where it would
+never be executed.
 
-What about referring in the schema to the Intel TDX Virtual Firmware Design
-Guide[2]? It describes how firmware should implement the mailbox the section
-4.3.5.
+This series ensures that the most efficient GCD algorithm is used in
+practice and avoids compiling unnecessary code based on hardware
+capabilities and kernel configuration.
 
-A mailbox with compatible = "intel,wakeup-mailbox" is implemented after the
-guide that Intel published.
+Co-developed-by: Yu-Chun Lin <eleanor15x@gmail.com>
+Signed-off-by: Yu-Chun Lin <eleanor15x@gmail.com>
+Signed-off-by: Kuan-Wei Chiu <visitorckw@gmail.com>
 
-Rob, Krzysztof, would that be acceptable?
+---
+This series has been tested on QEMU to verify that the correct GCD
+implementation is used both with and without Zbb support.
 
-Thanks and BR,
-Ricardo
+v1 -> v2:
+- Use a static key to select the GCD implementation at runtime.
 
-[2]. https://www.intel.com/content/www/us/en/content-details/733585/intel-tdx-virtual-firmware-design-guide.html
+v1: https://lore.kernel.org/lkml/20250217013708.1932496-1-visitorckw@gmail.com/
+---
+
+Kuan-Wei Chiu (3):
+  lib/math/gcd: Use static key to select implementation at runtime
+  riscv: Optimize gcd() code size when CONFIG_RISCV_ISA_ZBB is disabled
+  riscv: Optimize gcd() performance on RISC-V without Zbb extension
+
+ arch/riscv/Kconfig        |  1 +
+ arch/riscv/kernel/setup.c |  6 ++++++
+ lib/math/gcd.c            | 25 ++++++++++++++++---------
+ 3 files changed, 23 insertions(+), 9 deletions(-)
+
+-- 
+2.34.1
+
