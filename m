@@ -1,200 +1,276 @@
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
+Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com [209.85.219.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7A731A5BAD
-	for <linux-kernel@vger.kernel.org>; Sat, 24 May 2025 05:21:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 193132940B
+	for <linux-kernel@vger.kernel.org>; Sat, 24 May 2025 05:24:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748064104; cv=none; b=jyKR0owI9pUOvtuM5OK6oRCN5J+tse+MfZmIV1EDH0etJUTLFig0edb5LgIQr6SgSuPLKOlv9Z42WmFT/oybWTAhzGHXzgfUPGKTVZu6HI7+/F9/AZms9Q8nN6DbAT1F7E4xWAoklLdKPvLB4mgcN2WJj+9/QPfeJgTEf+XdwE8=
+	t=1748064282; cv=none; b=lrodOiO0BaS5zhL1ZGhq52HUJFc8kawdrg0NA4DzhPfl5UfvOjI3CqxDe7K3ubIfekDzoHydEHoPYZJsBI35qU21/m2noyBQr2HiVXtMAR0Rb4EhtfM3yLViPLUfjh1x3q4zWVCXdJabHoWV4g34GrYKLsskUepE5Cu05Qar3Hk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748064104; c=relaxed/simple;
-	bh=CxJGVYe9gQWEypwBZmgwMYlPMVvbtIIqNvj32ACzzR0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=N0Tf5BVpSZMSEDVOSo/m2SIf25nodG4jyUnbbapjcXNCMZAMHULLnxyT4T6zp8nFCAMg1m5r/cmjos4MnMgh6jePem+RVDOOxP3zhVZEo7YECS4FvVnwcSt2eeiKpcaqQ72Z8w3HOndUs1NuyGUftc/EPxkDjkK37YstZUr/fJM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=KzTJ7w7J; arc=none smtp.client-ip=209.85.218.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1748064282; c=relaxed/simple;
+	bh=GiaLSpO69si5cY+HnmouRhCWSgnl5QXjVkwFa+gH73A=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=JLgjvAlHHQPxbqNXcoaFj6Iaw7NRkcnjHoPFepqPSLJ1vvWIP2E/PzjiN+e39TNCs//hE+nU9WUZ3NurY8JEi6AagbxDOgpSIuNT/UVmApHdgiLYM/av/gWnM/n3RF3DcuraAM8mi29Ao8Q6OVty3vtmw3DsHyQMy/se2LlBhoA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=W+W6bXbZ; arc=none smtp.client-ip=209.85.219.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KzTJ7w7J"
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-ad1a87d93f7so77154766b.0
-        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 22:21:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W+W6bXbZ"
+Received: by mail-yb1-f174.google.com with SMTP id 3f1490d57ef6-e740a09eb00so446395276.0
+        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 22:24:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1748064099; x=1748668899; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=p9Vj2sz8u3fgQAY0zH4yjJJsJuXYHYmr/5RzLXpeQpg=;
-        b=KzTJ7w7JRU3uBYTnn09a70sQrd+t2FrMKTBGh1Pk9fvJO4MP/n6rM0Ew0dfZLojAFG
-         SbLax91wVaPUvRpU50mJEU0MUpKGXwRLyhUlfxO/hFXz+NmEb4jurvsQCx3nAuYMrMaB
-         kFWJPl5ohPi3xG9wgKkOC0ia6cnll7XScCDw68S5bwMZ2RFogAOgaVu39mK3cuuKXokN
-         Z2lIvUfL8XYH0/j+e3rXrKFSysz8Q5NrbUB/muR303vteLrvMzcfUe//8bf1MZcUP+fL
-         ATN/MObBzyv8i0YuR77i1u39YZ4o86M8bV4ScJEQBqtva9kWCoCnRyJt/3jwpzyYZii1
-         mVyQ==
+        d=gmail.com; s=20230601; t=1748064280; x=1748669080; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=bfdLlZW9vW98y4u4S7T97dVouVxcWz8Fq/nuepj4wa8=;
+        b=W+W6bXbZaQHEQbitMcs81U7wX9P2qCwA0Cu59PNOw8LKlYHVSc9uh/f5VCK6tyxhE9
+         riFqs/DL1xBQJB7hK1wwg1hbTPLUrO5dhMcjcSz6sVKo9VwdO4xPST+gef4Uch/KGoT9
+         dlAkl6nXj7PwC/geZpQq9T7pGZzkSj7ialJPmHyxUTIuTX72AKDW4UHPm3Vi4CmYeUu2
+         26XDcXmjQXgPK8WWBT/ug8sW29uqrA1bsEx3oAExmBZCKihF+XSVdzIS/yzSgTfVInJz
+         CfXqH6Pk23bAxrszbzhIYppleZBxazJNpjLxV2EBZoznMK1Zs4WgUFdsv/E9B5hf4Y+M
+         BrQA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748064099; x=1748668899;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=p9Vj2sz8u3fgQAY0zH4yjJJsJuXYHYmr/5RzLXpeQpg=;
-        b=wWdzwVHaeZAa1LJvdlJlVFfoYPnonMtfzQlJ1PIZq5I1JAGTuR+FnMdobHdJ1B7VHW
-         bsC3YCt+2qmPdJlCewPq9DvSH2b6oX5QyOQ/5kv0MrhkJyKWB/CqEKuYXqBCK/ue1ssS
-         h20LFTkGt4iVBGLRRSILYQGABgl7NcR2bqZatxxeBw3KwOe+au8T0ix4KSEU++Gwm1uf
-         lsRJ5KLn97q0pqfQbRW58latNZW5q2tCG7rZERHIX4Ixturlatu/76OY8GuznF5JBg4n
-         C+UZcmdQTj/hih7tyz7fCtoyEAsdy4oLBeyemp0qr3l4QPbM3tuvCuJ5d+3R+9NW46h9
-         LUag==
-X-Forwarded-Encrypted: i=1; AJvYcCV3/UaE9kDuDSsCKvBA2ruMqzBRUPeL4Oo559npcyGOOsMCIVmw8qaDc52To+7KI89qOiqjCzOUKj7fbVs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxR8tvEf5E0Y3HkTecMrDqwo+hoZx9BqvSOh86bLGwhTaz0AKs0
-	zFN4A+Pv2SH83F3ByTalBWbfU4ITGxNUooyx1rcOEjuIY/J3dg7VPptMgVlKAzXguQ0=
-X-Gm-Gg: ASbGncus3f8y4elfzqsig2mehS9h9Xumh3FYuHjYZIwhNYcM7mzj0qE6lOjUZNmjFHL
-	Q0DlOIdFFBYQNtbzaAzhkGUoErxoa9BV3gUWwaNowGvTF/AxjRnnbajaW1xSwO6KFEa7KfnAMIa
-	gj1E6PAzKy6wxGXhPbF5rfE13S+IYKS6SPmNaeNHnIijGRckPGAuM7npX9z5k6sF/3eD3Ta4ptF
-	08aGZNal0Cmj13UWGF3GTe7I7nL2hRdiF4pv2q/dlsAjgdyGW298ZeyjnYNo1mY5b7Qb2/spFht
-	G4fyoN96O18qZKREju8BcK01WDcYI8tEtDeYuYWRL4M/0zU4ML7iJY+sd78UL8nSUqFlBrB5V7r
-	itPUQWcn7J9WeLARZ2wmokmFtdTgvorPmjLY=
-X-Google-Smtp-Source: AGHT+IF8pgsRiLru+xzCs3/kYK9IFFjLgdgCKETe4qhqLvBb/0iNzUicN2Yb4j1NXVYdjuG8Y5CZ0A==
-X-Received: by 2002:a17:907:d06:b0:ad2:2ef3:d487 with SMTP id a640c23a62f3a-ad85b329c74mr142108566b.58.1748064099139;
-        Fri, 23 May 2025 22:21:39 -0700 (PDT)
-Received: from puffmais.c.googlers.com (68.57.204.35.bc.googleusercontent.com. [35.204.57.68])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad5572f6402sm1106778066b.178.2025.05.23.22.21.38
+        d=1e100.net; s=20230601; t=1748064280; x=1748669080;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=bfdLlZW9vW98y4u4S7T97dVouVxcWz8Fq/nuepj4wa8=;
+        b=uJAPMbrl8U43L621XpMSWRelV66hKIyujYrGWEeHRg79HnkZKhvWIYhDpug8sSIQey
+         0+t9VwO8QTVFv8Zamv6dVyj/08A2Z83Q5fVQEm3Rd4kJoH9C033jH6Sdwe+YvoJaVbVo
+         oGc8mKdMHFCGIzagnvMtTJSxjXpm6VCKrvO6U74oguqbf9PPzH4P7E4uc/vctnfW3w0l
+         nM6IVMQCfmvKvCXCxzY9SHb5K1ug91DtUfzgsL7hE63n4ymJ8VTmlCJ4vnOhPtqpzrfi
+         kRB4LPPfzjjTdvIfUhxRDLsJbxfPT+1qsdt7v+HXmtmLIZmP7IHqG5nw8rGfWq6qT5zT
+         bl5Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUwlTB7On7kKS4wnBdEfLQ6e6Kop6p7IEQs95yJSAz8s7R1on9U57eHlD1XBuoFudQWbqFxVNTbTqMD8g0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxvBGDZKwAl1PaMdVvoz9bxc7ugzzP9tqYcWnaZb1TrWdLTQVpV
+	keUqbE9vyNHD3JtuFkvc4VLaUpY912j0qdEIrcfKFfNPDAJXBQDOpQUh
+X-Gm-Gg: ASbGncvyH+/43b81wiunkYcXpCLl1zLh5ZevOEfZt3rUI1/B1NJqXNhXj93Fi6dl/Sx
+	LgTuUtN2TM0c6xGyYaodNe5jtGDTzW1StNd7Q1028/lkD2ebs69c0wNL49lViRG4ksczj6BR+ZY
+	eYtpULr/1HxewvoIGTmiAeL39MxmszAkYRg5xEuw/bMYWAarhEQSNEngyH/uVfMjQOvhImdxI3A
+	O+PvAVk5ZPJQ0q2fI3bjZcuUl5ZK/MTHVsMkLIhd4ZX0NIVny6vJ5YDIApQnmWT1ZJvR/BCcNf+
+	FvOpBZuKL2KLtZQ91yo9AzzcV6C8DYYKdGNC2CcGlhxvb85wjvV8UoslBBtYNk5Z55D+uF1Xh+T
+	OqVgU
+X-Google-Smtp-Source: AGHT+IHIlIVKc+RK333O87ahPa6hVP3F8/RzrvVmknd8RsaXqksMeGR+0xcL2eRmqxTuaWVuOqcxsQ==
+X-Received: by 2002:a05:6902:270a:b0:e71:2a10:8fd with SMTP id 3f1490d57ef6-e7d919d9b0amr2194807276.26.1748064279911;
+        Fri, 23 May 2025 22:24:39 -0700 (PDT)
+Received: from maquina-virtual-para-linux.. ([191.156.249.162])
+        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e7d9233f7absm334970276.34.2025.05.23.22.24.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 May 2025 22:21:38 -0700 (PDT)
-From: =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
-Date: Sat, 24 May 2025 06:21:29 +0100
-Subject: [PATCH v2 2/4] arm64: dts: exynos: gs101-pixel-common: add Maxim
- MAX77759 PMIC
+        Fri, 23 May 2025 22:24:38 -0700 (PDT)
+From: Donny Turizo <donnyturizo13@gmail.com>
+To: gregkh@linuxfoundation.org
+Cc: linux-staging@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Donny Turizo <donnyturizo13@gmail.com>
+Subject: [PATCH v5] staging: rtl8723bs: rename _Read_EEPROM and other functions to snake_case
+Date: Sat, 24 May 2025 05:24:32 +0000
+Message-ID: <20250524052432.19125-1-donnyturizo13@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250524-b4-max77759-mfd-dts-v2-2-b479542eb97d@linaro.org>
-References: <20250524-b4-max77759-mfd-dts-v2-0-b479542eb97d@linaro.org>
-In-Reply-To: <20250524-b4-max77759-mfd-dts-v2-0-b479542eb97d@linaro.org>
-To: Catalin Marinas <catalin.marinas@arm.com>, 
- Will Deacon <will@kernel.org>, Peter Griffin <peter.griffin@linaro.org>, 
- Tudor Ambarus <tudor.ambarus@linaro.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>
-Cc: Will McVicker <willmcvicker@google.com>, kernel-team@android.com, 
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
- linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, 
- =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
-X-Mailer: b4 0.14.2
 
-On Pixel 6 (and Pro), a MAX77759 companion PMIC for USB Type-C
-applications is used, which contains four functional blocks (at
-distinct I2C addresses):
-  * top (including GPIO & NVMEM)
-  * charger
-  * fuel gauge
-  * TCPCi
+Renamed _Read_EEPROM and several other functions in rtw_cmd.c to follow
+the kernel coding style (snake_case). This fixes checkpatch warnings
+related to naming conventions.
 
-This change adds the PMIC and the subnodes for the GPIO expander and
-NVMEM, and defines the NVMEM layout.
-
-The NVMEM layout is declared such that it matches downstream's
-open-coded configuration [1].
-
-Note:
-The pinctrl nodes are kept sorted by the 'samsung,pins' property rather
-than node name, as I think that makes it easier to look at and to add
-new nodes unambiguously in the future. Its label is prefixed with 'if'
-(for interface), because there are three PMICs in total in use on
-Pixel 6 (Pro).
-
-Link: https://android.googlesource.com/kernel/google-modules/bms/+/96e729a83817/max77759_maxq.c#67 [1]
-Signed-off-by: André Draszik <andre.draszik@linaro.org>
+Signed-off-by: Donny Turizo <donnyturizo13@gmail.com>
 
 ---
-v2:
-- update commit message slightly
+v2: Initial patch rejected by the robot due to naming issues.
+
+v3: Rebased the patch onto GregKH's staging branch for better integration.
+
+v4: Changed the commit author to my name and renamed all remaining functions
+    to snake_case following kernel coding style.
+
+v5: Renamed command _set_h2c_Lbk to _set_h2c_lbk to fix CamelCase issue.
 ---
- .../boot/dts/exynos/google/gs101-pixel-common.dtsi | 61 ++++++++++++++++++++++
- 1 file changed, 61 insertions(+)
+ drivers/staging/rtl8723bs/core/rtw_cmd.c      | 140 +++++++++---------
+ drivers/staging/rtl8723bs/include/rtw_cmd.h   |   2 +-
+ .../staging/rtl8723bs/include/rtw_mlme_ext.h  |   2 +-
+ 3 files changed, 72 insertions(+), 72 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/exynos/google/gs101-pixel-common.dtsi b/arch/arm64/boot/dts/exynos/google/gs101-pixel-common.dtsi
-index d6ddcc13f7b20c6dfbe92e86abafe965870d0c78..de5c8d236b705505c0745827c5c6b67d94ba6227 100644
---- a/arch/arm64/boot/dts/exynos/google/gs101-pixel-common.dtsi
-+++ b/arch/arm64/boot/dts/exynos/google/gs101-pixel-common.dtsi
-@@ -188,6 +188,60 @@ usbc0_role_sw: endpoint {
- 			};
- 		};
- 	};
+diff --git a/drivers/staging/rtl8723bs/core/rtw_cmd.c b/drivers/staging/rtl8723bs/core/rtw_cmd.c
+index 49bcefb5e8d2..1049d83ca4db 100644
+--- a/drivers/staging/rtl8723bs/core/rtw_cmd.c
++++ b/drivers/staging/rtl8723bs/core/rtw_cmd.c
+@@ -11,76 +11,76 @@
+ static struct _cmd_callback rtw_cmd_callback[] = {
+ 	{GEN_CMD_CODE(_read_macreg), NULL}, /*0*/
+ 	{GEN_CMD_CODE(_write_macreg), NULL},
+-	{GEN_CMD_CODE(_Read_BBREG), &rtw_getbbrfreg_cmdrsp_callback},
+-	{GEN_CMD_CODE(_Write_BBREG), NULL},
+-	{GEN_CMD_CODE(_Read_RFREG), &rtw_getbbrfreg_cmdrsp_callback},
+-	{GEN_CMD_CODE(_Write_RFREG), NULL}, /*5*/
+-	{GEN_CMD_CODE(_Read_EEPROM), NULL},
+-	{GEN_CMD_CODE(_Write_EEPROM), NULL},
+-	{GEN_CMD_CODE(_Read_EFUSE), NULL},
+-	{GEN_CMD_CODE(_Write_EFUSE), NULL},
+-
+-	{GEN_CMD_CODE(_Read_CAM),	NULL},	/*10*/
+-	{GEN_CMD_CODE(_Write_CAM),	 NULL},
+-	{GEN_CMD_CODE(_setBCNITV), NULL},
+-	{GEN_CMD_CODE(_setMBIDCFG), NULL},
+-	{GEN_CMD_CODE(_JoinBss), &rtw_joinbss_cmd_callback},  /*14*/
+-	{GEN_CMD_CODE(_DisConnect), &rtw_disassoc_cmd_callback}, /*15*/
+-	{GEN_CMD_CODE(_CreateBss), &rtw_createbss_cmd_callback},
+-	{GEN_CMD_CODE(_SetOpMode), NULL},
+-	{GEN_CMD_CODE(_SiteSurvey), &rtw_survey_cmd_callback}, /*18*/
+-	{GEN_CMD_CODE(_SetAuth), NULL},
+-
+-	{GEN_CMD_CODE(_SetKey), NULL},	/*20*/
+-	{GEN_CMD_CODE(_SetStaKey), &rtw_setstaKey_cmdrsp_callback},
+-	{GEN_CMD_CODE(_SetAssocSta), &rtw_setassocsta_cmdrsp_callback},
+-	{GEN_CMD_CODE(_DelAssocSta), NULL},
+-	{GEN_CMD_CODE(_SetStaPwrState), NULL},
+-	{GEN_CMD_CODE(_SetBasicRate), NULL}, /*25*/
+-	{GEN_CMD_CODE(_GetBasicRate), NULL},
+-	{GEN_CMD_CODE(_SetDataRate), NULL},
+-	{GEN_CMD_CODE(_GetDataRate), NULL},
+-	{GEN_CMD_CODE(_SetPhyInfo), NULL},
+-
+-	{GEN_CMD_CODE(_GetPhyInfo), NULL}, /*30*/
+-	{GEN_CMD_CODE(_SetPhy), NULL},
+-	{GEN_CMD_CODE(_GetPhy), NULL},
+-	{GEN_CMD_CODE(_readRssi), NULL},
+-	{GEN_CMD_CODE(_readGain), NULL},
+-	{GEN_CMD_CODE(_SetAtim), NULL}, /*35*/
+-	{GEN_CMD_CODE(_SetPwrMode), NULL},
+-	{GEN_CMD_CODE(_JoinbssRpt), NULL},
+-	{GEN_CMD_CODE(_SetRaTable), NULL},
+-	{GEN_CMD_CODE(_GetRaTable), NULL},
+-
+-	{GEN_CMD_CODE(_GetCCXReport), NULL}, /*40*/
+-	{GEN_CMD_CODE(_GetDTMReport),	NULL},
+-	{GEN_CMD_CODE(_GetTXRateStatistics), NULL},
+-	{GEN_CMD_CODE(_SetUsbSuspend), NULL},
+-	{GEN_CMD_CODE(_SetH2cLbk), NULL},
+-	{GEN_CMD_CODE(_AddBAReq), NULL}, /*45*/
+-	{GEN_CMD_CODE(_SetChannel), NULL},		/*46*/
+-	{GEN_CMD_CODE(_SetTxPower), NULL},
+-	{GEN_CMD_CODE(_SwitchAntenna), NULL},
+-	{GEN_CMD_CODE(_SetCrystalCap), NULL},
+-	{GEN_CMD_CODE(_SetSingleCarrierTx), NULL},	/*50*/
+-
+-	{GEN_CMD_CODE(_SetSingleToneTx), NULL}, /*51*/
+-	{GEN_CMD_CODE(_SetCarrierSuppressionTx), NULL},
+-	{GEN_CMD_CODE(_SetContinuousTx), NULL},
+-	{GEN_CMD_CODE(_SwitchBandwidth), NULL},		/*54*/
+-	{GEN_CMD_CODE(_TX_Beacon), NULL},/*55*/
+-
+-	{GEN_CMD_CODE(_Set_MLME_EVT), NULL},/*56*/
+-	{GEN_CMD_CODE(_Set_Drv_Extra), NULL},/*57*/
+-	{GEN_CMD_CODE(_Set_H2C_MSG), NULL},/*58*/
+-	{GEN_CMD_CODE(_SetChannelPlan), NULL},/*59*/
+-
+-	{GEN_CMD_CODE(_SetChannelSwitch), NULL},/*60*/
+-	{GEN_CMD_CODE(_TDLS), NULL},/*61*/
+-	{GEN_CMD_CODE(_ChkBMCSleepq), NULL}, /*62*/
+-
+-	{GEN_CMD_CODE(_RunInThreadCMD), NULL},/*63*/
++	{GEN_CMD_CODE(_read_bbreg), &rtw_getbbrfreg_cmdrsp_callback},
++	{GEN_CMD_CODE(_write_bbreg), NULL},
++	{GEN_CMD_CODE(_read_rfreg), &rtw_getbbrfreg_cmdrsp_callback},
++	{GEN_CMD_CODE(_write_rfreg), NULL}, /*5*/
++	{GEN_CMD_CODE(_read_eeprom), NULL},
++	{GEN_CMD_CODE(_write_eeprom), NULL},
++	{GEN_CMD_CODE(_read_efuse), NULL},
++	{GEN_CMD_CODE(_write_efuse), NULL},
 +
-+	pmic@66 {
-+		compatible = "maxim,max77759";
-+		reg = <0x66>;
++	{GEN_CMD_CODE(_read_cam),	NULL},	/*10*/
++	{GEN_CMD_CODE(_write_cam),	 NULL},
++	{GEN_CMD_CODE(_set_bcnitv), NULL},
++	{GEN_CMD_CODE(_set_mbidcfg), NULL},
++	{GEN_CMD_CODE(_join_bss), &rtw_joinbss_cmd_callback},  /*14*/
++	{GEN_CMD_CODE(_disconnect), &rtw_disassoc_cmd_callback}, /*15*/
++	{GEN_CMD_CODE(_create_bss), &rtw_createbss_cmd_callback},
++	{GEN_CMD_CODE(_set_op_mode), NULL},
++	{GEN_CMD_CODE(_site_survey), &rtw_survey_cmd_callback}, /*18*/
++	{GEN_CMD_CODE(_set_auth), NULL},
 +
-+		pinctrl-0 = <&if_pmic_int>;
-+		pinctrl-names = "default";
-+		interrupts-extended = <&gpa8 3 IRQ_TYPE_LEVEL_LOW>;
++	{GEN_CMD_CODE(_set_key), NULL},	/*20*/
++	{GEN_CMD_CODE(_set_sta_key), &rtw_setstaKey_cmdrsp_callback},
++	{GEN_CMD_CODE(_set_assoc_sta), &rtw_setassocsta_cmdrsp_callback},
++	{GEN_CMD_CODE(_del_assoc_sta), NULL},
++	{GEN_CMD_CODE(_set_sta_pwr_state), NULL},
++	{GEN_CMD_CODE(_set_basic_rate), NULL}, /*25*/
++	{GEN_CMD_CODE(_get_basic_rate), NULL},
++	{GEN_CMD_CODE(_set_data_rate), NULL},
++	{GEN_CMD_CODE(_get_data_rate), NULL},
++	{GEN_CMD_CODE(_set_phy_info), NULL},
 +
-+		interrupt-controller;
-+		#interrupt-cells = <2>;
++	{GEN_CMD_CODE(_get_phy_info), NULL}, /*30*/
++	{GEN_CMD_CODE(_set_phy), NULL},
++	{GEN_CMD_CODE(_get_phy), NULL},
++	{GEN_CMD_CODE(_read_rssi), NULL},
++	{GEN_CMD_CODE(_read_gain), NULL},
++	{GEN_CMD_CODE(_set_atim), NULL}, /*35*/
++	{GEN_CMD_CODE(_set_pwr_mode), NULL},
++	{GEN_CMD_CODE(_joinbss_rpt), NULL},
++	{GEN_CMD_CODE(_set_ra_table), NULL},
++	{GEN_CMD_CODE(_get_ra_table), NULL},
 +
-+		gpio {
-+			compatible = "maxim,max77759-gpio";
++	{GEN_CMD_CODE(_get_ccx_report), NULL}, /*40*/
++	{GEN_CMD_CODE(_get_dtm_report),	NULL},
++	{GEN_CMD_CODE(_get_tx_rate_statistics), NULL},
++	{GEN_CMD_CODE(_set_usb_suspend), NULL},
++	{GEN_CMD_CODE(_set_h2c_Lbk), NULL},
++	{GEN_CMD_CODE(_add_ba_req), NULL}, /*45*/
++	{GEN_CMD_CODE(_set_channel), NULL},		/*46*/
++	{GEN_CMD_CODE(_set_tx_power), NULL},
++	{GEN_CMD_CODE(_switch_antenna), NULL},
++	{GEN_CMD_CODE(_set_crystal_cap), NULL},
++	{GEN_CMD_CODE(_set_single_carrier_tx), NULL},	/*50*/
 +
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			/*
-+			 * "Human-readable name [SIGNAL_LABEL]" where the
-+			 * latter comes from the schematic
-+			 */
-+			gpio-line-names = "OTG boost [OTG_BOOST_EN]",
-+					  "max20339 IRQ [MW_OVP_INT_L]";
++	{GEN_CMD_CODE(_set_single_tone_tx), NULL}, /*51*/
++	{GEN_CMD_CODE(_set_carrier_suppression_tx), NULL},
++	{GEN_CMD_CODE(_set_continuous_tx), NULL},
++	{GEN_CMD_CODE(_switch_bandwidth), NULL},		/*54*/
++	{GEN_CMD_CODE(_tx_beacon), NULL},/*55*/
 +
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+		};
++	{GEN_CMD_CODE(_set_mlme_evt), NULL},/*56*/
++	{GEN_CMD_CODE(_set_drv_extra), NULL},/*57*/
++	{GEN_CMD_CODE(_set_h2c_msg), NULL},/*58*/
++	{GEN_CMD_CODE(_set_channel_plan), NULL},/*59*/
 +
-+		nvmem-0 {
-+			compatible = "maxim,max77759-nvmem";
++	{GEN_CMD_CODE(_set_channel_switch), NULL},/*60*/
++	{GEN_CMD_CODE(_tdls), NULL},/*61*/
++	{GEN_CMD_CODE(_chk_bmc_sleepq), NULL}, /*62*/
 +
-+			nvmem-layout {
-+				compatible = "fixed-layout";
-+				#address-cells = <1>;
-+				#size-cells = <1>;
-+
-+				reboot-mode@0 {
-+					reg = <0x0 0x4>;
-+				};
-+
-+				boot-reason@4 {
-+					reg = <0x4 0x4>;
-+				};
-+
-+				shutdown-user-flag@8 {
-+					reg = <0x8 0x1>;
-+				};
-+
-+				rsoc@a {
-+					reg = <0xa 0x2>;
-+				};
-+			};
-+		};
-+	};
++	{GEN_CMD_CODE(_run_in_thread_cmd), NULL},/*63*/
  };
  
- &pinctrl_far_alive {
-@@ -211,6 +265,13 @@ typec_int: typec-int-pins {
- 		samsung,pin-pud = <GS101_PIN_PULL_UP>;
- 		samsung,pin-drv = <GS101_PIN_DRV_2_5_MA>;
- 	};
-+
-+	if_pmic_int: if-pmic-int-pins {
-+		samsung,pins = "gpa8-3";
-+		samsung,pin-function = <GS101_PIN_FUNC_EINT>;
-+		samsung,pin-pud = <GS101_PIN_PULL_UP>;
-+		samsung,pin-drv = <GS101_PIN_DRV_2_5_MA>;
-+	};
- };
- 
- &pinctrl_gpio_alive {
-
+ static struct cmd_hdl wlancmds[] = {
+diff --git a/drivers/staging/rtl8723bs/include/rtw_cmd.h b/drivers/staging/rtl8723bs/include/rtw_cmd.h
+index cb44119ce9a9..e4e7e350d0fc 100644
+--- a/drivers/staging/rtl8723bs/include/rtw_cmd.h
++++ b/drivers/staging/rtl8723bs/include/rtw_cmd.h
+@@ -636,7 +636,7 @@ enum {
+ 	GEN_CMD_CODE(_Write_BBREG),
+ 	GEN_CMD_CODE(_Read_RFREG),
+ 	GEN_CMD_CODE(_Write_RFREG), /*5*/
+-	GEN_CMD_CODE(_Read_EEPROM),
++	GEN_CMD_CODE(_read_eeprom),
+ 	GEN_CMD_CODE(_Write_EEPROM),
+ 	GEN_CMD_CODE(_Read_EFUSE),
+ 	GEN_CMD_CODE(_Write_EFUSE),
+diff --git a/drivers/staging/rtl8723bs/include/rtw_mlme_ext.h b/drivers/staging/rtl8723bs/include/rtw_mlme_ext.h
+index 2080408743ef..63373d665d4f 100644
+--- a/drivers/staging/rtl8723bs/include/rtw_mlme_ext.h
++++ b/drivers/staging/rtl8723bs/include/rtw_mlme_ext.h
+@@ -684,7 +684,7 @@ enum {
+ 	GEN_EVT_CODE(_Read_MACREG) = 0, /*0*/
+ 	GEN_EVT_CODE(_Read_BBREG),
+ 	GEN_EVT_CODE(_Read_RFREG),
+-	GEN_EVT_CODE(_Read_EEPROM),
++	GEN_EVT_CODE(_read_eeprom),
+ 	GEN_EVT_CODE(_Read_EFUSE),
+ 	GEN_EVT_CODE(_Read_CAM),			/*5*/
+ 	GEN_EVT_CODE(_Get_BasicRate),
 -- 
-2.49.0.1151.ga128411c76-goog
+2.43.0
 
