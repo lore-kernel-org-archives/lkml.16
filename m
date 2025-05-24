@@ -1,108 +1,119 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9488964D;
-	Sat, 24 May 2025 12:16:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E50D12628D;
+	Sat, 24 May 2025 12:25:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748088967; cv=none; b=RGQODZ+61aJwGPaGob4+RxHNeEp8g2IQMPUHnBhOWPrE9DAYjIOtlJlxqBubKY98VOYhZ2bQTI2dMbZOWyFEXhrAgVdR3gVfJ71bW6hFku2tH1WIRdzax6brZJIVBS+LARGxI576Xi8B1lksdvKxFRj/52SmpQM/+vlj8o3oOBY=
+	t=1748089534; cv=none; b=qhLUh39yqcqQOzBVGu5yhWgQ61kXxDYyH1mjrpdHy+eHtqw22R0TNlfLwJJ8s6neTm5WDKVN8+IiJc+gmie7ftIzQrVC9lKX+7Au0a4I3P26idauCDVGui+bCooOEVem/EUUMM6DHhA7NqXRrUgR1HrzDaqKaPGrBLIEUNXNuMo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748088967; c=relaxed/simple;
-	bh=4ZNTnv+X7aLB9eh6U9G1II3rkSEXnfaarUYE/GfJY70=;
+	s=arc-20240116; t=1748089534; c=relaxed/simple;
+	bh=yVYaerb/jU3BxcNZXp7iBv190F9MWlYXKuCoD8t8ycw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ibjLoNb0IwP9Q0/rP9ikAVLRw2GpwGETpN72EznFcmTRs89JdyBuxSlgAyt6Ku9rP1Y0HKPvj+ZrDNrpVM4Km2HyPkkhFuQV2MNyO44yvvByZKpXzQ0ffle+n5Z/l99MDDcJzjSgOyFtZZcBt1FDk7YcQ34sg6dc4+yAyNdE3j4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=ei3fvW3Y; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=u15BA6yd8r5+IIC8GkKbe5Urj/SG/LbmE8Qdy1N4pejJwZPGuhIVuiJk1Swtf4TVOf8sr8fB4UHpKZnOTKDJWtGVR5Nvh9dkDYFgYifXJh1n8g4JS2ywcrzZgCEmbxCTyeVGw2IpkWhCYdnUZBtHjxLGCultGG6kJqtRRMDpis4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p/zpeqA8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="ei3fvW3Y"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id A89E940E0192;
-	Sat, 24 May 2025 12:16:03 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id MYDVwJK-B1LQ; Sat, 24 May 2025 12:16:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1748088960; bh=G04Bsu13NY7VxO/c0Bho72SUtXBpCGutnQt1yuNIxsY=;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p/zpeqA8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0670CC4CEE4;
+	Sat, 24 May 2025 12:25:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748089533;
+	bh=yVYaerb/jU3BxcNZXp7iBv190F9MWlYXKuCoD8t8ycw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ei3fvW3YMoyy7LoosELZ9OYefkHk9AHqN/PAEIskaKnMkCn8SWnXTseEQxn4s6Gmz
-	 Ybi914HCFcj1P/I2uoOqF4eQbcODncF+5qfzzTS1ey16sPI8V3xyECQ+A4tDSl+2ST
-	 9Lj6q/jepOYhUxqIo8cDH5DqQGrDvpYJBiGIuznScs1nBsi2+/vCAzUzspqlUc7iH1
-	 u1Qxh9FQ3qcqN3gaHVBGEwNa8xkHScbBzDPDgjgox3CzO5A+IdWogBwWlT8oB2A1Yx
-	 iw8p4YgoGo8PgMeoUoi2V0jdHiR9TD3kDwOJbFKON4/pjzUfyZlcvuFfvm2pgTWvA1
-	 HzseszgOUyzyhEUFVo6nDBqArV8yCYG3Kf3i77XoCxCIocczZKcwhwmOJ1XmErmquG
-	 4gGfb22SOKscA5mxLgLiORKHEnBb+UT5csKp8wmXHfX2qAOSNMANO8sjoHThwSlrAC
-	 F/SWb48PRg1ZHhgtE5/GUCKkUeccLDz9pSrRR/VWrcZ0I+faLOGjUPyzD8pVdFCQVc
-	 Pi7r8KblSQaWwhY50hR0rsLninHlCnywRZvY2LXd0SnyDZpu2Ce9a1pgJjRBiCZr43
-	 0nMSrctiH9s9QRUgruGEmf1mRZt0JJVnjSYTQhFG5gRpdv7yZA4crv6IaNDb65Txgb
-	 I3yFd0kwp+kazwnS6myWO0Us=
-Received: from zn.tnic (p57969c58.dip0.t-ipconnect.de [87.150.156.88])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 2C1FC40E0266;
-	Sat, 24 May 2025 12:15:38 +0000 (UTC)
-Date: Sat, 24 May 2025 14:15:37 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>
-Cc: linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
-	dave.hansen@linux.intel.com, Thomas.Lendacky@amd.com,
-	nikunj@amd.com, Santosh.Shukla@amd.com, Vasant.Hegde@amd.com,
-	Suravee.Suthikulpanit@amd.com, David.Kaplan@amd.com, x86@kernel.org,
-	hpa@zytor.com, peterz@infradead.org, seanjc@google.com,
-	pbonzini@redhat.com, kvm@vger.kernel.org,
-	kirill.shutemov@linux.intel.com, huibo.wang@amd.com,
-	naveen.rao@amd.com, francescolavra.fl@gmail.com,
-	tiala@microsoft.com
-Subject: Re: [RFC PATCH v6 10/32] x86/apic: Change apic_*_vector() vector
- param to unsigned
-Message-ID: <20250524121537.GMaDG4adGsxaPFT7DX@fat_crate.local>
-References: <20250514071803.209166-1-Neeraj.Upadhyay@amd.com>
- <20250514071803.209166-11-Neeraj.Upadhyay@amd.com>
+	b=p/zpeqA8ezheaDjtuGcRTgNSB9q8hRQl4GYWED/+PHCIDWNW8mMbhLOsU43svDgGK
+	 F2IJlphinhn4HQhOZXnUOsc/x9qoL3Qw2WeKCgZbF09epyyhjC+SwmcKbz8MwlXz3c
+	 NCj5/+r2voKPPYQGub/B44mCzDB/HAJ1ttVET09SM0IeBNiaZiwzpn8T4c+1AwKzOD
+	 LBYggOiRy+m7e7fwOvAFnGjmI++y826u9thYInXB2e25zZa5B2LXM2sStYSbsfZH3x
+	 Ua/6LVSaTbKTwURmuZtTuLE7dCJ8RoJ1p2NogHJaWhqJ+LFCuNsAokDfWq666zniHU
+	 PYsyCVLHDHxDQ==
+Date: Sat, 24 May 2025 14:25:27 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Alice Ryhl <aliceryhl@google.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Benno Lossin <lossin@kernel.org>,
+	Matthew Maurer <mmaurer@google.com>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Trevor Gross <tmgross@umich.edu>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Timur Tabi <ttabi@nvidia.com>, linux-kernel@vger.kernel.org,
+	rust-for-linux@vger.kernel.org
+Subject: Re: [PATCH v5 4/4] rust: samples: Add debugfs sample
+Message-ID: <aDG6t-HdZSuWyPGo@pollux.localdomain>
+References: <aCzzBT96ktapP03e@google.com>
+ <aC2HacSU7j5d9bzu@pollux>
+ <aC5XDi7SaDJeUaAC@google.com>
+ <aC7DVewqqWIKetmk@pollux>
+ <aC8uNmrLUSS8sxHU@google.com>
+ <2025052201-return-reprogram-add9@gregkh>
+ <aC9krUYJmJqu0xVR@cassiopeiae>
+ <2025052330-reverence-slideshow-d498@gregkh>
+ <aDBC__rflS8625Vb@cassiopeiae>
+ <aDCrufEjtJeGjO6z@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250514071803.209166-11-Neeraj.Upadhyay@amd.com>
+In-Reply-To: <aDCrufEjtJeGjO6z@google.com>
 
-On Wed, May 14, 2025 at 12:47:41PM +0530, Neeraj Upadhyay wrote:
-> Change vector parameter of apic_{set|clear|test}_vector to
-> unsigned int to optimize code generation for modulo operation.
+On Fri, May 23, 2025 at 05:09:13PM +0000, Alice Ryhl wrote:
+> On Fri, May 23, 2025 at 11:42:23AM +0200, Danilo Krummrich wrote:
+> > The only thing I don't want to is to allow to leak files or directories, i.e.
+> > 
+> > 	File::new("bar_file", bar_dir).leak()
+> > 
+> > which keeps the file in the filesystem, but takes away the handle from the Rust
+> > side, such that it won't be removed from the filesystem anymore when the handle
+> > goes out of scope, which can cause nasty bugs. But I think there isn't any
+> > benefit to allow this anyways and it isn't needed with reference counting.
 > 
-> On gcc-14.2, code generation for below C statement is given
-> after it.
-> 
-> long nr = APIC_VECTOR_TO_BIT_NUMBER(vec);
-> 
-> * Without change:
-> 
->  mov    eax,edi
->  sar    eax,0x1f
->  shr    eax,0x1b
->  add    edi,eax
->  and    edi,0x1f
->  sub    edi,eax
->  movsxd rdi,edi
->  mov    QWORD PTR [rsp-0x8],rdi
-> 
-> * With change:
-> 
->  and    edi,0x1f
->  mov    QWORD PTR [rsp-0x8],rdi
+> Why not have leak() for files only? That way, the files still go away
+> when you drop the directory, and you don't have to keep around a bunch
+> of File objects in your Rust structs.
 
-AT&T assembly please.
+In a previous mail I said that there are more reasons why we don't want to have
+files (or directories) in the filesystem without an object representation in
+Rust.
 
-This change needs to go first too.
+One of them is when attaching private data to a file, like we do with
+debugfs_create_file().
 
--- 
-Regards/Gruss,
-    Boris.
+When we do this, in most of the cases we want to share data between a driver
+structure and the debugfs file (e.g. a GPU's VM to dump the virtual address
+space layout).
 
-https://people.kernel.org/tglx/notes-about-netiquette
+And most likely we do this by passing an Arc<T> to dir.file(), to make the file
+own a reference to the corresponding reference counted object (in C we just hope
+that no one frees the object while the debugfs file holds a pointer to it).
+
+The question is, what happens to this reference if we would subsequently call
+file.leak()? We can't drop the Arc, because otherwise we risk a UAF in the
+filesystem callback, but we can't keep it either because otherwise we *really*
+leak this reference, even if the parent directory is removed eventually.
+
+--
+
+Now, one could say, what about attaching the file's private data to the directory
+instead? (And I think this has been proposed already elsewhere.)
+
+But I really don't like this approach, because it would mean that when creating
+the directory we would necessarily need to know all the files we will ever
+create in this directory *and* have all the corresponding private data
+available at this point of time. But that would be an insane requirement.
+
+For instance, let's assume a driver creates a directory 'clients', which for
+every connected userspace "client" wants to provide a file with some metadata
+for this client.
+
+Sure, you can work around this somehow, e.g. by using a mutex protected Vec as
+private data or by always creating a new directory first for dynamically created
+debugfs entires. But this sounds pretty horrible to me.
