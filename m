@@ -1,63 +1,63 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEA371EE7B6
-	for <linux-kernel@vger.kernel.org>; Sat, 24 May 2025 15:55:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EA521EF380
+	for <linux-kernel@vger.kernel.org>; Sat, 24 May 2025 15:55:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748102146; cv=none; b=ORWQJsivRdp/pIqdqaMvc0iirJT+PvenHIB3pXe7x1tHQ1KHJOGABo+/q1nAwdrFRaCb56Q5B8n/2nhjemAD+1PnuLCEVjubtGnKGPuZFcB6sPjsZMDRr823C7zzzxwUVCyRSyoCO75i5l3uvFs0zrMK53t19hbVLaaLELyfDg0=
+	t=1748102149; cv=none; b=bUtTOoMHtu97Nlny0ipKPMg7JKJcTbb63bZguZXQe8NKe7H1jId4CqEREeQvDndxm+KsVAMGe9zUgkRXYoeDHJVBDJpTua1F2Lrw5MMBer4c9Q4kVk6jqplfRMteksVHa0cT8CVgM5MGs5WeiDTMgBXHSopfQhFk6aojmWt/Z5c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748102146; c=relaxed/simple;
-	bh=NswgQ1t2swuHv8wddM8n4IMJSh/NdUsfmZylZ40IPmc=;
+	s=arc-20240116; t=1748102149; c=relaxed/simple;
+	bh=QfSnw3oP/4WKgI480zkw9SSi/asBUx+GlH7LBbjlZ/0=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=nOaqqjpuhUB7owauNp36zG7j/w9w2F3U0QAU8xp4oF298CsMcNEbgppPil52dIkAlGX6ph9UNeEsEquBpbnTzs0mLJjIeH+fi9VIc+7ZFVCYwkdqM+wGDhi2gIS53ELgoJJ309FkWZM7RpFeCq6p1bAbR2peMMgMGpckNi2rU9U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MAWQcNuu; arc=none smtp.client-ip=209.85.214.176
+	 MIME-Version; b=G9aB7favtTmsKeLhr6rN807KTXpWA2awQZe2ot9Yyc9S9bpDPJR9VxoXyviIMbDobVdI4bZocY1j9IGYdbZ2MUr+1A0cLbz9lAYAlr66Mjq+Az8F/0vtIBjs7CouqDpYoBfF/49FfmTtZlp8f3juKbW8OfGQDtydc9lZV0k+K0Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=l5+iqf9O; arc=none smtp.client-ip=209.85.215.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MAWQcNuu"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-233b1e4376fso8611495ad.0
-        for <linux-kernel@vger.kernel.org>; Sat, 24 May 2025 08:55:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l5+iqf9O"
+Received: by mail-pg1-f181.google.com with SMTP id 41be03b00d2f7-b1ff9b276c2so409896a12.1
+        for <linux-kernel@vger.kernel.org>; Sat, 24 May 2025 08:55:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748102144; x=1748706944; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1748102147; x=1748706947; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=1FT74bOydnUw1XVZ+DksJusFTfOc0V0/ESQZbybugO8=;
-        b=MAWQcNuuMgrYQDAWYFe6o4X9DuwsI2Dn2dFJvZHbk1jJmIZB7ORKm6nPCxcaovVsU0
-         FUFweXJ1ZMwPWW5oyTawvPy/puox1M8j66CjtJlnGn/hWrnzc4kRFegp6+5/yojqotZt
-         5T8VhaDzZ/ZaBez6QRzpaAcEbVsQRAwg1P6dB6XYmr3bbPtk/1K7MKeVH669OJ/9ikOG
-         kwptaFv7nijykM38Jfj6OecdXLTVMF0Ci8xwUXwdyQI2ARHRDnWsSIjRH/O3fkRB+7wr
-         OWqnb9qxOM6iR3LD8mOmg6PZp389j0hsEZ1yXPubgn8aBbv5Xlz+vZzzfA/QccZ3MgwP
-         ldgg==
+        bh=7XEj2bDzjI5RZaf4AQVAydyOkb+dFtV7mE+ztvzkolw=;
+        b=l5+iqf9Oe4Cy9Eq/MmPfTsXtqN8AIDPPJ9BDgYGc5gFeg8Gv4+30pvGVi1bSwTN72n
+         yzgbj8+65nIXwI0koy8H8BhC2zhXVLXGfaoxr/y9Qkexd4FgmLb43U2F4JZ3vY56hH37
+         o3L0ca+IcjknXXD4XFh3+u0mVUbUTF5nS3of3BrvsOITHS4BJUdUPibf8CyZFT65YgnF
+         CMd3K90ZD1Q2SSp3aBSeHZgExPpya31FoWAgzq2X4XHpw3Fq67spnV//yx2ISx8uKoaT
+         cNeCZjkVw9hUyWIQBy5hqzNMPUkqIzo+I6tOt0B9TMRODRVX+mK3QQsRmJ3RYvUTWiNi
+         2syw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748102144; x=1748706944;
+        d=1e100.net; s=20230601; t=1748102147; x=1748706947;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=1FT74bOydnUw1XVZ+DksJusFTfOc0V0/ESQZbybugO8=;
-        b=kP+rpkuEPJtCtZGOlxFJT/iq6F71yE8Xmc3a06yLAoyzG8uiid9s3y4aTjDEWZaglH
-         0dBdFkLwK/9B4DMkQ9mICt6B0DYrbw+fAVt4cednZyILUr4u62P/szfNVQ7G5/ikfaBE
-         0zrEj1L9u7mxbwXefNbgvJ2m8zVoM+29ptqi2SI1tB/dvjEW5a0Qs296MYLOC7NDM6rS
-         /0msAdGfz2Rzt8jI17TiTVQqR3WqTmj8/pMLVzHnib+cyEOpVR8WitYjavi+RJCj8ksZ
-         jqT7KjQasgh/9PXlXCLddp05OPVqKVPehdauXebOh8ZKJ13jXasjnY9v1KSRm4s4DhNt
-         iqVA==
-X-Forwarded-Encrypted: i=1; AJvYcCUfS3/og/zz5kuJBke+QPKnWmG6BzYJ7/K/SSqiDmYy9vU3Iyb2+EtA0+d9mbafxx5nzI6rkg1/v/SpYoc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwAttubslQevrSQrdx73A4fQMhMmAqaoHpHU4n5uDsw5GRwmq/k
-	7Ij1hbPjufTFhvnl9z/w/lrdSBn99NzYU6KUmzZK+wEjxxuVIMS167G9
-X-Gm-Gg: ASbGncvceMviTJpUqd17a7hOObDeCBd3cOtGIjyxqA0MZah84Hk5BthHln+zwvvJFuc
-	6uHwUiljl7T8hM/R+lUAaYnmiwLPS2JTpDzqUpDuB33P3sy+zPf3OvDyOYgoA6uA0pZBqd4IZcy
-	XtU+FdW36RaTJ5Mx+vxqvyHuOR4EnBYnTdpVj+aKF+0J+erkdhmZYOUEyp/BZxV+mIdjSCNnpZP
-	Z82ecaBfbuJL3ptsejZ1TCqYbMrdXdjm7+lZNPhzmu2JxEgNFNegcmA3qYfuBPGtEsykxr1ksXU
-	G+J2bakxqTKwaW0fGKB1ztrc+N8JyGDecIiB71G41sD+LM4yt4fo4wzDL405O3C3sGCj1JY0FHi
-	jxjd1WQ==
-X-Google-Smtp-Source: AGHT+IEMc+IyJuKkp4oh/MfbC7nxhyOBDtktmANYUsWS5HqqsjVoXbsdcZhXdFZe8Q2T0aebh8oAAA==
-X-Received: by 2002:a17:902:ef43:b0:231:c99b:9fd7 with SMTP id d9443c01a7336-23414f6e667mr51686015ad.19.1748102143957;
-        Sat, 24 May 2025 08:55:43 -0700 (PDT)
+        bh=7XEj2bDzjI5RZaf4AQVAydyOkb+dFtV7mE+ztvzkolw=;
+        b=EOqdNllq5hASzq6S5k5PIjTr2sQxfJyxkvb1UKyOON+CFTWuPISxBj04NW5+T2EZSm
+         L9bBrT/nzLfDt21kFEoSPQES4xNMURkUKwampXVafvMQo0A39v9Yncnb8/v7HQpYATJe
+         r6ZTR2HBUnnORUkq3ux0u6NaO8mRwr+aH1H4D/eTXPQ8pOlcgvsj+dPLf6bC/1stLjsd
+         CtVuKhLr7se+LkyV41WVX8OQY7NOZFJNYOffwe/zY6fvtrbNu2XMWcqpM6kk5d3/B4U+
+         J1tEvYF6p5DtQB+mG73Pa5iWTjUNQWrtlwz4tx4OvtWnkUG7H1Rf3RYY9GrV9KlQ2Ks4
+         vSFQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUEhLeWku7l/iXp3/NSrI/eAxSw3HEHh1Hi2OF7MZwbc7rvpyrblUbp8oQ9z3QmHudIMbgqTF82hEB8DkE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz4NQQKXLNp131Tku2t3UAxfxoXrrQ5CPyztCe1bZGYbZJPQ09+
+	UTzam/nn3a+Nshz9LmBIPpKMBTYd3btr0knTE1DEkIxYuddBqwY/hKZh
+X-Gm-Gg: ASbGncsQdR0fmUBH3UAP6rK9wNMEhcvmUD+3EJ8cNlo3rkx5LnU69C2H8w864+T0gfT
+	pjH3ZLVaQfrJcnC1WGIA/RDn7aC99TiEDyt0ziHCOv6nfx5HQOvR2c3o9mzCLHFPpgHRMccj+jU
+	nBcTB80ino4kdOk9zDBXoTszUzeqAX0bTXDC3biMuIClxZndsn/SdedxOne+bYb5q6N1CAW+BGG
+	9sw1j6bywUY18RZxEAoU64GTG2prJ7c98oAp/6zEC2BfNPa2U/pVwrTuCRqI8yuahvB455aMkE5
+	V76LuQq9095z4l+ELTrbnsraUBjm7r4Aefn4Bya4Sei17iLCtWV6rLR4VO5Qpea+cEyfu4XST0f
+	f4iVS663FWVcTvUbk
+X-Google-Smtp-Source: AGHT+IFJr9YZ2XIjARlbWHrAZjs3d7ZcQweRgWi1fq4Jo17NP2mGsaaRzDetVmjg1S6Cr0UjlcknLA==
+X-Received: by 2002:a17:902:e80e:b0:22e:50e1:73e with SMTP id d9443c01a7336-23414f49fc9mr43253575ad.14.1748102147183;
+        Sat, 24 May 2025 08:55:47 -0700 (PDT)
 Received: from visitorckw-System-Product-Name.. ([140.113.216.168])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-234396eaf62sm1200745ad.9.2025.05.24.08.55.41
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-234396eaf62sm1200745ad.9.2025.05.24.08.55.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 24 May 2025 08:55:43 -0700 (PDT)
+        Sat, 24 May 2025 08:55:46 -0700 (PDT)
 From: Kuan-Wei Chiu <visitorckw@gmail.com>
 To: paul.walmsley@sifive.com,
 	palmer@dabbelt.com,
@@ -69,9 +69,9 @@ Cc: linux-riscv@lists.infradead.org,
 	jserv@ccns.ncku.edu.tw,
 	Kuan-Wei Chiu <visitorckw@gmail.com>,
 	Yu-Chun Lin <eleanor15x@gmail.com>
-Subject: [PATCH v2 2/3] riscv: Optimize gcd() code size when CONFIG_RISCV_ISA_ZBB is disabled
-Date: Sat, 24 May 2025 23:55:18 +0800
-Message-Id: <20250524155519.1142570-3-visitorckw@gmail.com>
+Subject: [PATCH v2 3/3] riscv: Optimize gcd() performance on RISC-V without Zbb extension
+Date: Sat, 24 May 2025 23:55:19 +0800
+Message-Id: <20250524155519.1142570-4-visitorckw@gmail.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20250524155519.1142570-1-visitorckw@gmail.com>
 References: <20250524155519.1142570-1-visitorckw@gmail.com>
@@ -83,40 +83,59 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The binary GCD implementation depends on efficient ffs(), which on
-RISC-V requires hardware support for the Zbb extension. When
-CONFIG_RISCV_ISA_ZBB is not enabled, the kernel will never use binary
-GCD, as runtime logic will always fall back to the odd-even
-implementation.
+The binary GCD implementation uses FFS (find first set), which benefits
+from hardware support for the ctz instruction, provided by the Zbb
+extension on RISC-V. Without Zbb, this results in slower
+software-emulated behavior.
 
-To avoid compiling unused code and reduce code size, select
-CONFIG_CPU_NO_EFFICIENT_FFS when CONFIG_RISCV_ISA_ZBB is not set.
+Previously, RISC-V always used the binary GCD, regardless of actual
+hardware support. This patch improves runtime efficiency by disabling
+the efficient_ffs_key static branch when Zbb is either not enabled in
+the kernel (config) or not supported on the executing CPU. This selects
+the odd-even GCD implementation, which is faster in the absence of
+efficient FFS.
 
-$ ./scripts/bloat-o-meter ./lib/math/gcd.o.old ./lib/math/gcd.o.new
-add/remove: 0/0 grow/shrink: 0/1 up/down: 0/-274 (-274)
-Function                                     old     new   delta
-gcd                                          360      86    -274
-Total: Before=384, After=110, chg -71.35%
+This change ensures the most suitable GCD algorithm is chosen
+dynamically based on actual hardware capabilities.
 
 Co-developed-by: Yu-Chun Lin <eleanor15x@gmail.com>
 Signed-off-by: Yu-Chun Lin <eleanor15x@gmail.com>
 Signed-off-by: Kuan-Wei Chiu <visitorckw@gmail.com>
 ---
- arch/riscv/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+ arch/riscv/kernel/setup.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-index bbec87b79309..f085adc6f573 100644
---- a/arch/riscv/Kconfig
-+++ b/arch/riscv/Kconfig
-@@ -95,6 +95,7 @@ config RISCV
- 	select CLINT_TIMER if RISCV_M_MODE
- 	select CLONE_BACKWARDS
- 	select COMMON_CLK
-+	select CPU_NO_EFFICIENT_FFS if !RISCV_ISA_ZBB
- 	select CPU_PM if CPU_IDLE || HIBERNATION || SUSPEND
- 	select EDAC_SUPPORT
- 	select FRAME_POINTER if PERF_EVENTS || (FUNCTION_TRACER && !DYNAMIC_FTRACE)
+diff --git a/arch/riscv/kernel/setup.c b/arch/riscv/kernel/setup.c
+index f7c9a1caa83e..f891eedc3644 100644
+--- a/arch/riscv/kernel/setup.c
++++ b/arch/riscv/kernel/setup.c
+@@ -21,6 +21,7 @@
+ #include <linux/efi.h>
+ #include <linux/crash_dump.h>
+ #include <linux/panic_notifier.h>
++#include <linux/jump_label.h>
+ 
+ #include <asm/acpi.h>
+ #include <asm/alternative.h>
+@@ -51,6 +52,8 @@ atomic_t hart_lottery __section(".sdata")
+ ;
+ unsigned long boot_cpu_hartid;
+ 
++DECLARE_STATIC_KEY_TRUE(efficient_ffs_key);
++
+ /*
+  * Place kernel memory regions on the resource tree so that
+  * kexec-tools can retrieve them from /proc/iomem. While there
+@@ -361,6 +364,9 @@ void __init setup_arch(char **cmdline_p)
+ 
+ 	riscv_user_isa_enable();
+ 	riscv_spinlock_init();
++
++	if (!IS_ENABLED(CONFIG_RISCV_ISA_ZBB) || !riscv_isa_extension_available(NULL, ZBB))
++		static_branch_disable(&efficient_ffs_key);
+ }
+ 
+ bool arch_cpu_is_hotpluggable(int cpu)
 -- 
 2.34.1
 
