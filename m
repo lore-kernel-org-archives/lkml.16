@@ -1,274 +1,94 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5BA972617;
-	Sat, 24 May 2025 09:25:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B353C4C98
+	for <linux-kernel@vger.kernel.org>; Sat, 24 May 2025 09:29:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748078746; cv=none; b=NCML96m1T2+GwuMx4P56SXoK/S8h/ROgdjv9kz3P5MxTqSy/WONpXdXC1vIkllRtDdcC8C/IDKz8s3/7/qLUgAX4OldYiXSZfcZTHkca0I7YrvWWy+HB9wJFU3itEaek0EgERPeSxXa2BJaRaWPa7gg00T63/EBpIsB6MDX7fBw=
+	t=1748078998; cv=none; b=duiadSOtGjwRJQ9pdoI9NNMx262ZnqIHJ2vEJK3z8qXHveKSSviu/wtsfUbROp1X/q1QHfQLUmJMtViFXJGkmPrP0R24pZRQLD5F6FzgO7T04QN9GbwEskK5zxbiRpFjxsZDjxDZzp7rJbo7N1574nkU3yLtqZ5uebFj0dJ+PNg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748078746; c=relaxed/simple;
-	bh=kyU2amj6osJGwnLgXhlWOF/c7MgKBXzBWPVbi2oSDKQ=;
+	s=arc-20240116; t=1748078998; c=relaxed/simple;
+	bh=yqiizPXANFaNXL49xKo2MzOc8w7hMWMpUlF1HjK78eQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Oyw+fQAm6KcNX8BY/XM+f3DoAM/0UrgZfQ2vbUtxsigWt3WjD63KYgz0zNP+ovlu8MAuLcrLagJISiCC1EJP5kocgMQmPjKlbPv4W4vSP07dQJZeYO1wRoC6ZBqfbwbPbVo2Y1QOyeRfDEZ0iwKRrDhn8P+0fTGgMhidbaL39yU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Q36a4Lmy; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=POeRgY/wcYgsuiEuXEMldwEqDA1rnjIfLvbIpi5k4ttB6Egcf/jjtV8d8RDddu6UjWgEXOe5w3uMNhSa2bhEsoLcwTdTZ1kQjBQY9x1L5CQM7FpDdS0JqOOvLvZRjwF7Kto11OGwEOnjp5PRPYlqvdLjC47cvR4yWcYnVno/ZzE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=FheSrbry; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Q36a4Lmy"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748078744; x=1779614744;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=kyU2amj6osJGwnLgXhlWOF/c7MgKBXzBWPVbi2oSDKQ=;
-  b=Q36a4LmyUkbBDRAXa51wn+rv3X2zWIRdmNDU3SJROuc1VicoT57AfsZr
-   xyXaXL0laobyhwo/abQyji09l6UhJv9dhyfWFCGv+CarzFlKJ3c4wpUNB
-   a8YQgHNTm26szOXvJwXQNzIN7H49xF3WgX7WiF9eHpNjAoYRdXmIsRaKh
-   zlkOB0Dyrpt7YLfdXyPM82mMqS2RgNzYlGzgH8S+0cP9Kg3vj9CwiyhKD
-   BB94kuulW5YetUwPWa2MlCCnDexwBSmkfPkKjksQAyfQUSbkmizZwC6Bq
-   pSQObqhGcqOCDwpKGfhXBu9PwolRLEfEIGfFmXX0bU/i+fh/h6EDwJXJl
-   A==;
-X-CSE-ConnectionGUID: 8IexZ0glRI+BA/iGFAToOQ==
-X-CSE-MsgGUID: R5LHQ+8wRl6E/MhIWEJhYA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11441"; a="50006542"
-X-IronPort-AV: E=Sophos;i="6.15,311,1739865600"; 
-   d="scan'208";a="50006542"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 May 2025 02:25:43 -0700
-X-CSE-ConnectionGUID: 0yyWQubXT4K7oJNm5YdosA==
-X-CSE-MsgGUID: nL3pssZiST6r5K/fqX6LrA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,311,1739865600"; 
-   d="scan'208";a="146489161"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by orviesa004.jf.intel.com with ESMTP; 24 May 2025 02:25:39 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uIl8K-000R52-2Z;
-	Sat, 24 May 2025 09:25:36 +0000
-Date: Sat, 24 May 2025 17:25:00 +0800
-From: kernel test robot <lkp@intel.com>
-To: Sean Anderson <sean.anderson@linux.dev>, netdev@vger.kernel.org,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Russell King <linux@armlinux.org.uk>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	Lei Wei <quic_leiwei@quicinc.com>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Christian Marangi <ansuelsmth@gmail.com>,
-	Kory Maincent <kory.maincent@bootlin.com>,
-	Simon Horman <horms@kernel.org>,
-	Daniel Golle <daniel@makrotopia.org>,
-	Vineeth Karumanchi <vineeth.karumanchi@amd.com>,
-	linux-kernel@vger.kernel.org,
-	Sean Anderson <sean.anderson@linux.dev>,
-	Michal Simek <monstr@monstr.eu>,
-	Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>,
-	Robert Hancock <robert.hancock@calian.com>,
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [net-next PATCH v5 06/10] net: pcs: Add Xilinx PCS driver
-Message-ID: <202505241748.uSxf3hT5-lkp@intel.com>
-References: <20250523203339.1993685-7-sean.anderson@linux.dev>
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="FheSrbry"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id ED39940E0239;
+	Sat, 24 May 2025 09:29:46 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id LXb7hfH1lM7s; Sat, 24 May 2025 09:29:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1748078982; bh=jp/7iaedpRwIWx3C1Iiul1/VhF/j8hCpI3GbkahmYRM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=FheSrbrylumLp4fQfAtOWsVr0YEaZIftkdsIYeoWpYi7FSNZGVCe+zWBPM2Ip9MaQ
+	 /SgTkkUPy+nwaokrQJ3Gj1g09GcJWx3uZ1/Y0nXBofiZd16HFFLxdyux89g7dCh0ix
+	 SadTMOpDNQj3gYTVPX2rLe6glIWlGWw/3kRFLUG5J5JSJtoB8duKNTBUtO+dChJ+sr
+	 fHtHbZ/JRqIXm8rEiZt5hHg4oPEukbAbOL8qBKgZzduNShtzkfogkJ/bb5W7g4Jcd8
+	 rWTDBc1Ka9lxFO/oLVvP+rtHBtJJSB/3+NUBvupiiOQ4d77XEir2hnR3zSSXLK3FQZ
+	 7iQkuLq1IzLUgmtWyK+2PqaKqpg7BdyjwkV9NZUXb2ckwc8tApddxMikGZDKu6/o6w
+	 2iuCvA9wi68lksIiHcGtk5l+9/z9GVB/tk/PJJE15uJ+XQiA6BGyFr1TeqRSJ/W0hy
+	 /GosATxKpP7crQXePBbTFM1zzkJv0B0tjpwKIBaXxlsk4uxPgNyOC2arLX15xGy/HX
+	 Oc4JdP2MmiotW22ql25Sndf32+LuwIbaO2rVYiVnQEDQQyBdlOvJwyZvOGRwtuHTku
+	 1nWIHlnX8+QtV29IhV0Z2TWQ1Zpi07xYwkFta+uqRRUxmexO48QIGWaS/ItDpjyLg4
+	 uh0dgN07/HjrqEAdjbbNPqCo=
+Received: from zn.tnic (p57969c58.dip0.t-ipconnect.de [87.150.156.88])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 1E78640E0238;
+	Sat, 24 May 2025 09:29:36 +0000 (UTC)
+Date: Sat, 24 May 2025 11:29:28 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+Cc: x86@kernel.org, David Kaplan <david.kaplan@amd.com>,
+	linux-kernel@vger.kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+	Josh Poimboeuf <jpoimboe@kernel.org>
+Subject: Re: [PATCH v3 1/7] x86/retbleed: Avoid AUTO after the select step
+Message-ID: <20250524092928.GHaDGReMdD4aFyCBq5@fat_crate.local>
+References: <20250522-eibrs-fix-v3-0-12704e291e1e@linux.intel.com>
+ <20250522-eibrs-fix-v3-1-12704e291e1e@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250523203339.1993685-7-sean.anderson@linux.dev>
+In-Reply-To: <20250522-eibrs-fix-v3-1-12704e291e1e@linux.intel.com>
 
-Hi Sean,
+On Thu, May 22, 2025 at 06:20:31PM -0700, Pawan Gupta wrote:
+> Retbleed select function leaves the mitigation to AUTO in some cases.
+> Moreover, the update function can also set the mitigation to AUTO. This is
+> inconsistent with other mitigations and requires explicit handling of AUTO
+> at the end of update step.
+> 
+> Make sure a mitigation gets selected in the select step, and do not change
+> it to AUTO in the update step. When no mitigation can be selected leave it
+> to NONE, which is what AUTO was getting changed to in the end.
+> 
+> Suggested-by: Borislav Petkov <bp@alien8.de>
+> Signed-off-by: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+> ---
+>  arch/x86/kernel/cpu/bugs.c | 19 ++++++++++---------
+>  1 file changed, 10 insertions(+), 9 deletions(-)
 
-kernel test robot noticed the following build warnings:
+Yap, much better.
 
-[auto build test WARNING on net-next/main]
+Thx.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Sean-Anderson/dt-bindings-net-Add-Xilinx-PCS/20250524-043901
-base:   net-next/main
-patch link:    https://lore.kernel.org/r/20250523203339.1993685-7-sean.anderson%40linux.dev
-patch subject: [net-next PATCH v5 06/10] net: pcs: Add Xilinx PCS driver
-config: s390-allmodconfig (https://download.01.org/0day-ci/archive/20250524/202505241748.uSxf3hT5-lkp@intel.com/config)
-compiler: clang version 18.1.8 (https://github.com/llvm/llvm-project 3b5b5c1ec4a3095ab096dd780e84d7ab81f3d7ff)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250524/202505241748.uSxf3hT5-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505241748.uSxf3hT5-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
->> drivers/net/pcs/pcs-xilinx.c:295:2: warning: label at end of compound statement is a C23 extension [-Wc23-extensions]
-     295 |         }
-         |         ^
-   1 warning generated.
-
-
-vim +295 drivers/net/pcs/pcs-xilinx.c
-
-   240	
-   241	static int xilinx_pcs_probe(struct mdio_device *mdiodev)
-   242	{
-   243		struct device *dev = &mdiodev->dev;
-   244		struct fwnode_handle *fwnode = dev->fwnode;
-   245		int ret, i, j, mode_count;
-   246		struct xilinx_pcs *xp;
-   247		const char **modes;
-   248		u32 phy_id;
-   249	
-   250		xp = devm_kzalloc(dev, sizeof(*xp), GFP_KERNEL);
-   251		if (!xp)
-   252			return -ENOMEM;
-   253		xp->mdiodev = mdiodev;
-   254		dev_set_drvdata(dev, xp);
-   255	
-   256		xp->irq = fwnode_irq_get_byname(fwnode, "an");
-   257		/* There's no _optional variant, so this is the best we've got */
-   258		if (xp->irq < 0 && xp->irq != -EINVAL)
-   259			return dev_err_probe(dev, xp->irq, "could not get IRQ\n");
-   260	
-   261		mode_count = fwnode_property_string_array_count(fwnode,
-   262								"xlnx,pcs-modes");
-   263		if (!mode_count)
-   264			mode_count = -ENODATA;
-   265		if (mode_count < 0) {
-   266			dev_err(dev, "could not read xlnx,pcs-modes: %d", mode_count);
-   267			return mode_count;
-   268		}
-   269	
-   270		modes = kcalloc(mode_count, sizeof(*modes), GFP_KERNEL);
-   271		if (!modes)
-   272			return -ENOMEM;
-   273	
-   274		ret = fwnode_property_read_string_array(fwnode, "xlnx,pcs-modes",
-   275							modes, mode_count);
-   276		if (ret < 0) {
-   277			dev_err(dev, "could not read xlnx,pcs-modes: %d\n", ret);
-   278			kfree(modes);
-   279			return ret;
-   280		}
-   281	
-   282		for (i = 0; i < mode_count; i++) {
-   283			for (j = 0; j < ARRAY_SIZE(xilinx_pcs_interfaces); j++) {
-   284				if (!strcmp(phy_modes(xilinx_pcs_interfaces[j]), modes[i])) {
-   285					__set_bit(xilinx_pcs_interfaces[j],
-   286						  xp->pcs.supported_interfaces);
-   287					goto next;
-   288				}
-   289			}
-   290	
-   291			dev_err(dev, "invalid pcs-mode \"%s\"\n", modes[i]);
-   292			kfree(modes);
-   293			return -EINVAL;
-   294	next:
- > 295		}
-   296	
-   297		kfree(modes);
-   298		if ((test_bit(PHY_INTERFACE_MODE_SGMII, xp->pcs.supported_interfaces) ||
-   299		     test_bit(PHY_INTERFACE_MODE_1000BASEX, xp->pcs.supported_interfaces)) &&
-   300		    test_bit(PHY_INTERFACE_MODE_2500BASEX, xp->pcs.supported_interfaces)) {
-   301			dev_err(dev,
-   302				"Switching from SGMII or 1000Base-X to 2500Base-X not supported\n");
-   303			return -EINVAL;
-   304		}
-   305	
-   306		xp->reset = devm_gpiod_get_optional(dev, "reset", GPIOD_OUT_HIGH);
-   307		if (IS_ERR(xp->reset))
-   308			return dev_err_probe(dev, PTR_ERR(xp->reset),
-   309					     "could not get reset gpio\n");
-   310	
-   311		xp->done = devm_gpiod_get_optional(dev, "done", GPIOD_IN);
-   312		if (IS_ERR(xp->done))
-   313			return dev_err_probe(dev, PTR_ERR(xp->done),
-   314					     "could not get done gpio\n");
-   315	
-   316		xp->refclk = devm_clk_get_optional_enabled(dev, "refclk");
-   317		if (IS_ERR(xp->refclk))
-   318			return dev_err_probe(dev, PTR_ERR(xp->refclk),
-   319					     "could not get/enable reference clock\n");
-   320	
-   321		gpiod_set_value_cansleep(xp->reset, 0);
-   322		if (xp->done) {
-   323			if (read_poll_timeout(gpiod_get_value_cansleep, ret, ret, 1000,
-   324					      100000, true, xp->done))
-   325				return dev_err_probe(dev, -ETIMEDOUT,
-   326						     "timed out waiting for reset\n");
-   327		} else {
-   328			/* Just wait for a while and hope we're done */
-   329			usleep_range(50000, 100000);
-   330		}
-   331	
-   332		if (fwnode_property_present(fwnode, "#clock-cells")) {
-   333			const char *parent = "refclk";
-   334			struct clk_init_data init = {
-   335				.name = fwnode_get_name(fwnode),
-   336				.ops = &xilinx_pcs_clk_ops,
-   337				.parent_names = &parent,
-   338				.num_parents = 1,
-   339				.flags = 0,
-   340			};
-   341	
-   342			xp->refclk_out.init = &init;
-   343			ret = devm_clk_hw_register(dev, &xp->refclk_out);
-   344			if (ret)
-   345				return dev_err_probe(dev, ret,
-   346						     "could not register refclk\n");
-   347	
-   348			ret = devm_of_clk_add_hw_provider(dev, of_clk_hw_simple_get,
-   349							  &xp->refclk_out);
-   350			if (ret)
-   351				return dev_err_probe(dev, ret,
-   352						     "could not register refclk\n");
-   353		}
-   354	
-   355		/* Sanity check */
-   356		ret = get_phy_c22_id(mdiodev->bus, mdiodev->addr, &phy_id);
-   357		if (ret)
-   358			return dev_err_probe(dev, ret, "could not read id\n");
-   359		if ((phy_id & 0xfffffff0) != 0x01740c00)
-   360			dev_warn(dev, "unknown phy id %x\n", phy_id);
-   361	
-   362		if (xp->irq < 0) {
-   363			xp->pcs.poll = true;
-   364		} else {
-   365			/* The IRQ is enabled by default; turn it off */
-   366			ret = mdiodev_write(xp->mdiodev, XILINX_PCS_ANICR, 0);
-   367			if (ret) {
-   368				dev_err(dev, "could not disable IRQ: %d\n", ret);
-   369				return ret;
-   370			}
-   371	
-   372			/* Some PCSs have a bad habit of re-enabling their IRQ!
-   373			 * Request the IRQ in probe so we don't end up triggering the
-   374			 * spurious IRQ logic.
-   375			 */
-   376			ret = devm_request_threaded_irq(dev, xp->irq, NULL, xilinx_pcs_an_irq,
-   377							IRQF_SHARED | IRQF_ONESHOT,
-   378							dev_name(dev), xp);
-   379			if (ret) {
-   380				dev_err(dev, "could not request IRQ: %d\n", ret);
-   381				return ret;
-   382			}
-   383		}
-   384	
-   385		xp->pcs.ops = &xilinx_pcs_ops;
-   386		ret = devm_pcs_register(dev, &xp->pcs);
-   387		if (ret)
-   388			return dev_err_probe(dev, ret, "could not register PCS\n");
-   389	
-   390		if (xp->irq < 0)
-   391			dev_info(dev, "probed with irq=poll\n");
-   392		else
-   393			dev_info(dev, "probed with irq=%d\n", xp->irq);
-   394		return 0;
-   395	}
-   396	
+Acked-by: Borislav Petkov (AMD) <bp@alien8.de>
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
