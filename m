@@ -1,1159 +1,626 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A1B12DCBF7;
-	Sat, 24 May 2025 17:58:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAE6928382;
+	Sat, 24 May 2025 18:15:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748109510; cv=none; b=UC0idHevAxIBf8q0+3NCTzVhdnzq+WNbo0mh1IMFImmIeRekku29/kGhMsVtSZ4ZJqpg63H1LFRXMP2kKdKsdgKDhXL+lAA3AtaBOwNdb+luBZFZ9rK6J1ba8sksirbU6+VcB7S9Fr28DxEv50lDGrIe3ybVHIVGw9W+2qIqd0I=
+	t=1748110538; cv=none; b=DOuYAb1f+RsjFKd7AOZYJzvsWa5x2k927bdzYi9IHZVa8iEO05n/IH5xI5oXnADar67N+6UW8LXx92DBlG3nMKaogZ9M6WOnLl2t8QnSEnPDU1Csn4G/zC6cy/vQ6NNUl/0zSW2kc1xu8rKZbjp/962lUABq7aqfZi3IhW0dJIs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748109510; c=relaxed/simple;
-	bh=CJEgG+9UrEsUq4RBJkDzDPe2NsAy2gbC7Z3NSHprcZ8=;
+	s=arc-20240116; t=1748110538; c=relaxed/simple;
+	bh=tokj9AdNZcLys6KcBCEI+LF8zfoInkg01RXsmtGF97U=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=L9kRdmejeij5vjasP7v4pZqZcJnQBzqrPFsNtopKkTukgeTDqrQEINL9hPnC66NMEuyOSHYJJ2CuWxP201TbWhu1OMjZSs0FVaXliT28NDTTFiILlC3c6D2CvjBnWZvtnE0kzZvq7sjpEYc3xe7dojrQETtQx4VJ9L+7VD+4cw8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CEJpdYVg; arc=none smtp.client-ip=209.85.221.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=X0KoHkk1c89BJ+Y8+beguOYmEEieyNJVMpu4o99vaNCoMqop3axqcD3oeO21ga2xBBK0ttq9tv/levPminnoinMFA7LCSueFRaLUbrN0ILq4GwBM85v1DFnnWDYk01iBNHJ0CemuLHn9SQyMPIHO9bxW3CfXLq0isMMbxVsAcbM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WVaYRSpI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CEJpdYVg"
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-3a36e090102so491575f8f.2;
-        Sat, 24 May 2025 10:58:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748109506; x=1748714306; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=JpbcXuiKIIJw5D+MoRAeAeJs8T9f5wJFlXCgJ+Rk/hc=;
-        b=CEJpdYVgya9RZ28bipdKBdEZyt1OHfanBrVrjRmrBg6scU69zfv+7ltIa6Xbu37eSc
-         LaQO70uDEn0lsvP9Jv3kBp9ec+Zm0XfyAs37ZzP73/ZF41NVDgR2cUBpPCantjALuYkT
-         4P5i4JzDZyzi2eEJSR9GP5flQhM1sqk6G6+E9geyIgiKQdIBXIyLeqHM2xFc4uMb/NCL
-         UtmvkK9a6So6AM+ruEvz4Mh3c0BtS8t3GIA+2wG3f00oGophs8C6sE2O+/jXXPOYc09+
-         fjpwwEsOu5qjc7Od8Gbf8to9S8TqTWAHemTa4on7nGizKopmuORJfKt3BKI+idhl5ymd
-         uxcw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748109506; x=1748714306;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=JpbcXuiKIIJw5D+MoRAeAeJs8T9f5wJFlXCgJ+Rk/hc=;
-        b=qlTzg+xlC8ipPKl5V37J5x4Rbh2zNak5g6pCYGyvQd1pD9UR1Sx+I0k5eqrANMLEUe
-         gezO1/y4iGZ+0hyaHB6hFEroOi7Mu80PX7jb9KwvYuOq8JVCX5tx90I/Zn7aCwLQ9Z4M
-         OLAdWA3A58DG1XF3YjKvBK0KAS5gxCdtDgDuLaYEi4LJJAk55aUJsCkvYMP81mxf140M
-         zhCdXPYRYH28uFTkSob2hIMHk3Mr/s6Fgd3Nz3/Vj9eH1aEplhDEPIiZKEKLDKXGqNoE
-         H23St3yVooLNj430l/Ph5azxSVBXLjnuKBAYM2ScjHvOT8qkxvafWtIUhnHGi5Nolxca
-         2LWg==
-X-Forwarded-Encrypted: i=1; AJvYcCUXKuaaJsGo+bQvI8YWh+yaOb2B66uLf5RvoPKBPXoitABrjJZUG96Nipm311EJrtz1XfQzeRflwCjfbR+BrQ==@vger.kernel.org, AJvYcCW+nNqKEaWJ2uF7tcLryPRLzcTaPPlXJUG68kz4SRhplG8iuqmRQHLhmACLS4EsjIBKmznbKjFDe+4n@vger.kernel.org, AJvYcCWzh5XpHtu5Y2tV63CuOl2EvrduAYt0T/qbVrLtZPzb+Gacrim2DYrvRG41M5K9PaJgl+CSVrEQ2Dtyfx2S@vger.kernel.org, AJvYcCX5XHU9YeP1QxAqX4ypHUvhSvzRCPV6k71pNQHoW3m50Pk+pOBA8iA1n1ExZ64l70jLIKh4XSeclq5V@vger.kernel.org
-X-Gm-Message-State: AOJu0YxgBSoLTkNKzOR4pefC+Hp2zEasqVc1aNx9Omwt3bxQNv3j2uny
-	la/0RfGAdFK5enOpIW/WSjwAGknh1eb9j/kvGFGn2JguJOC32cDM4hKwf5BK+FCMBZiogVPmY/e
-	i6ti+/IAbKsA/GXAikEhec4eEejuDBw==
-X-Gm-Gg: ASbGncv5HNQMg1lIiDnh4YtEs5k5GCH6YU1gJlsL8ery7/5+z4q6VNOttaVktYhIzs/
-	WsRI1piBVhrXERIjew4OVqMgGCUcx2DamkkCRNkbHDQzgwp14tWgnaJJz5Y4gUddKdqBD9/gCR1
-	TFIvsvYbKkrw6NGGmWAhFX+rNQk1dQ0lAg
-X-Google-Smtp-Source: AGHT+IEJkbFTLhLPByxhkxHUveNxIK88ufqBmQ16laKt3iokyO8tWTi8qUbqRjGlr3WVhruM+FugzlUbwxopi4Ot16s=
-X-Received: by 2002:a5d:64ea:0:b0:3a3:7753:20ff with SMTP id
- ffacd0b85a97d-3a4cb45f1f4mr3232295f8f.35.1748109505171; Sat, 24 May 2025
- 10:58:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WVaYRSpI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31FD3C4CEF4;
+	Sat, 24 May 2025 18:15:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748110537;
+	bh=tokj9AdNZcLys6KcBCEI+LF8zfoInkg01RXsmtGF97U=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=WVaYRSpI3jkPtyOwnWeImKMWeKs6DxW7Z0GW2JFjqhBYRxXPkFj8V8dFljxKLXP2J
+	 7CxbZi+1/tCVygPPoFDAhBPHmBP4N+RjPGZ/k8n9LyrBP0CEJokEOZ0WestB62+lQo
+	 Q19JntsmsRq73xaWbrMsf+kfFrY01CvzT7FdYqevEqiXHRhkTeul4luac5L8rXHqHA
+	 kTrL6mtVek9nOse554Xqe1vGXB7EqyW26a+wxiM2pqsBwtns85Zd9OcpDNvvUfiZiR
+	 nf48Y2ORaOB5TIwDFfE8an3qQEBfpIkpnDc6yYGUx4A9ZlOqMw7GgYogG5uSQCrEyg
+	 siOMMui6zH72g==
+Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-3105ef2a071so9403911fa.1;
+        Sat, 24 May 2025 11:15:37 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU8fl5/K68W5LhikuSDW+r9qfv+pzODljEca/arsUuC/7GADOIuUcN6lZo9R++zIcSJlLamtHV/ORU2QJM=@vger.kernel.org, AJvYcCX+R/lZNF9EyrlDVxLUJVFnoKwKm5d05lHz4Sws/YdN8ijLt85HLxGHbQXIpkxaxTzKF3HLYtj1PjQwBEEO@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz8HJRCC7Llh8J+uRbLi+F6WxsrI9AbtBc+95/uZ3clloshpABh
+	IfFR2oLrv4M44a+peJTgVPlUcHHnYvbGz54ZUbDw8vcKtS5QE6s2iZyABnh6gHhS3lxy6kXEYIX
+	7/39nFKfaNSWeHdgNQJWv6j+Vcsbe9T8=
+X-Google-Smtp-Source: AGHT+IG2OLZdIjG367/4RRpP9r6ghaIgdEJR336gJlUQLdBIT9sYxE23kbv2q0CRuj8usbifAtReQZ/L3pAtgYth3AY=
+X-Received: by 2002:a05:651c:31d1:b0:329:25dd:72ce with SMTP id
+ 38308e7fff4ca-3295ba84fbfmr6493111fa.35.1748110535529; Sat, 24 May 2025
+ 11:15:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250524-tb16-dt-v4-0-2c1e6018d3f0@oldschoolsolutions.biz>
- <20250524-tb16-dt-v4-5-2c1e6018d3f0@oldschoolsolutions.biz> <g7vlyqma6ow6tdsaqt2rfwvblxqwbqlwmoueio7i4vqvjy76kw@5bz4g33pq4t7>
-In-Reply-To: <g7vlyqma6ow6tdsaqt2rfwvblxqwbqlwmoueio7i4vqvjy76kw@5bz4g33pq4t7>
-From: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>
-Date: Sat, 24 May 2025 19:58:13 +0200
-X-Gm-Features: AX0GCFsG_alMF1pdvWcQUvRQFwuTzB11t-rBcYRl2wvQbcSJtw1oawetOfEHu40
-Message-ID: <CAMcHhXoYkQru_0n5siMGGkTcHu8yWRZWfT4ByiD8D0ieZHF+wQ@mail.gmail.com>
-Subject: Re: [PATCH v4 5/5] arm64: dts: qcom: Add Lenovo ThinkBook 16 G7 QOY
- device tree
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Cc: jens.glathe@oldschoolsolutions.biz, Bjorn Andersson <andersson@kernel.org>, 
-	Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Matthias Kaehlcke <mka@chromium.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Douglas Anderson <dianders@chromium.org>, Neil Armstrong <neil.armstrong@linaro.org>, 
-	Jessica Zhang <quic_jesszhan@quicinc.com>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Johan Hovold <johan+linaro@kernel.org>, 
-	linux-usb@vger.kernel.org, dri-devel@lists.freedesktop.org
+References: <20250521213534.3159514-1-xur@google.com>
+In-Reply-To: <20250521213534.3159514-1-xur@google.com>
+From: Masahiro Yamada <masahiroy@kernel.org>
+Date: Sun, 25 May 2025 03:14:59 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAT5Jy-us4pc725bb_LyHAP3b9D7Z0Jp=krOFujmnYmZXg@mail.gmail.com>
+X-Gm-Features: AX0GCFsSIqrrUUwix6ProBaZwka9mt9diJwawOE6SyAqaw0ixCAkfHKFanL0HUk
+Message-ID: <CAK7LNAT5Jy-us4pc725bb_LyHAP3b9D7Z0Jp=krOFujmnYmZXg@mail.gmail.com>
+Subject: Re: [PATCH v3] kbuild: distributed build support for Clang ThinLTO
+To: xur@google.com
+Cc: Nathan Chancellor <nathan@kernel.org>, Eric Naim <dnaim@cachyos.org>, 
+	Nicolas Schier <nicolas.schier@linux.dev>, 
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, 
+	Justin Stitt <justinstitt@google.com>, Miguel Ojeda <ojeda@kernel.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, Alice Ryhl <aliceryhl@google.com>, 
+	Sami Tolvanen <samitolvanen@google.com>, "Mike Rapoport (Microsoft)" <rppt@kernel.org>, 
+	Rafael Aquini <aquini@redhat.com>, Michael Ellerman <mpe@ellerman.id.au>, 
+	Stafford Horne <shorne@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, 
+	Teresa Johnson <tejohnson@google.com>, linux-kernel@vger.kernel.org, 
+	linux-kbuild@vger.kernel.org, llvm@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sat, 24 May 2025 at 17:33, Dmitry Baryshkov
-<dmitry.baryshkov@oss.qualcomm.com> wrote:
+On Thu, May 22, 2025 at 6:35=E2=80=AFAM <xur@google.com> wrote:
 >
-> On Sat, May 24, 2025 at 01:48:40PM +0200, Jens Glathe via B4 Relay wrote:
-> > From: Jens Glathe <jens.glathe@oldschoolsolutions.biz>
-> >
-> > Device tree for the Lenovo Thinkbook 16 G7 QOY
-> >
-> > The Laptop is a Snapdragon X1 / X1 Plus (Purwa) based device [1].
-> >
-> > Supported features:
-> >
-> > - USB type-c and type-a ports
-> > - Keyboard
-> > - Touchpad (all that are described in the dsdt)
-> > - Touchscreen (described in the dsdt, no known SKUss)
-> > - Display including PWM backlight control
-> > - PCIe devices
-> > - nvme
-> > - SDHC card reader
-> > - ath12k WCN7850 Wifi and Bluetooth
-> > - ADSP and CDSP
-> > - GPIO keys (Lid switch)
-> > - Sound via internal speakers / DMIC / USB / headphone jack
-> > - DP Altmode with 2 lanes (as all of these still do)
-> > - Integrated fingerprint reader (FPC)
-> > - Integrated UVC camera
-> >
-> > Not supported yet:
-> >
-> > - HDMI port.
-> > - EC and some fn hotkeys.
-> >
-> > Limited support yet:
-> >
-> > - SDHC card reader is based on the on-chip sdhc_2 controller, but the driver from
-> > the Snapdragon Dev Kit is only a partial match. It can do normal slow sd cards,
-> > but not UHS-I (SD104) and UHS-II.
-> >
-> > - The GPU is not yet supported. Graphics is only software rendered.
-> >
-> > This work was done without any schematics or non-public knowledge of the device.
-> > So, it is based on the existing x1e device trees, dsdt analysis, using HWInfo
-> > ARM64, and pure guesswork. It has been confirmed, however, that the device really
-> > has 4 NXP PTN3222 eUSB2 repeaters, one of which doesn't have a reset GPIO (eusb5
-> > @43).
-> >
-> > Signed-off-by: Jens Glathe <jens.glathe@oldschoolsolutions.biz>
-> > Co-developed by: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>
-> > ---
-> >  arch/arm64/boot/dts/qcom/Makefile                  |    3 +
-> >  arch/arm64/boot/dts/qcom/x1e80100-pmics.dtsi       |    2 +-
-> >  .../boot/dts/qcom/x1p42100-lenovo-thinkbook-16.dts | 1655 ++++++++++++++++++++
-> >  3 files changed, 1659 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
-> > index 669b888b27a1daa93ac15f47e8b9a302bb0922c2..aff4fe3e81ec0d6f6d52e2aa0da327b7576632d8 100644
-> > --- a/arch/arm64/boot/dts/qcom/Makefile
-> > +++ b/arch/arm64/boot/dts/qcom/Makefile
-> > @@ -327,3 +327,6 @@ x1e80100-qcp-el2-dtbs     := x1e80100-qcp.dtb x1-el2.dtbo
-> >  dtb-$(CONFIG_ARCH_QCOM)      += x1e80100-qcp.dtb x1e80100-qcp-el2.dtb
-> >  x1p42100-crd-el2-dtbs        := x1p42100-crd.dtb x1-el2.dtbo
-> >  dtb-$(CONFIG_ARCH_QCOM)      += x1p42100-crd.dtb x1p42100-crd-el2.dtb
-> > +x1p42100-lenovo-thinkbook-16-el2-dtbs        := x1p42100-lenovo-thinkbook-16.dtb x1-el2.dtbo
-> > +dtb-$(CONFIG_ARCH_QCOM)      += x1p42100-lenovo-thinkbook-16.dtb x1p42100-lenovo-thinkbook-16-el2.dtb
-> > +
+> From: Rong Xu <xur@google.com>
 >
-> No need for an extra empty line.
->
-> > diff --git a/arch/arm64/boot/dts/qcom/x1e80100-pmics.dtsi b/arch/arm64/boot/dts/qcom/x1e80100-pmics.dtsi
-> > index c02fd4d15c9649c222caaafa5ed2c777a10fb4f5..551b392eca4ef3b6041e03ad1385fef11cec1690 100644
-> > --- a/arch/arm64/boot/dts/qcom/x1e80100-pmics.dtsi
-> > +++ b/arch/arm64/boot/dts/qcom/x1e80100-pmics.dtsi
-> > @@ -170,7 +170,7 @@ trip1 {
-> >                       };
-> >               };
-> >
-> > -             pm8010-thermal {
-> > +             pm8010_thermal: pm8010-thermal {
-> >                       polling-delay-passive = <100>;
-> >
-> >                       thermal-sensors = <&pm8010_temp_alarm>;
-> > diff --git a/arch/arm64/boot/dts/qcom/x1p42100-lenovo-thinkbook-16.dts b/arch/arm64/boot/dts/qcom/x1p42100-lenovo-thinkbook-16.dts
-> > new file mode 100644
-> > index 0000000000000000000000000000000000000000..7089219ed08c1c4a60cc007f9d043a34a8071b4f
-> > --- /dev/null
-> > +++ b/arch/arm64/boot/dts/qcom/x1p42100-lenovo-thinkbook-16.dts
-> > @@ -0,0 +1,1655 @@
-> > +// SPDX-License-Identifier: BSD-3-Clause
-> > +/*
-> > + * Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
-> > + * Copyright (c) 2024, Linaro Limited
-> > + * Copyright (c) 2025, Jens Glathe
-> > + */
-> > +
-> > +/dts-v1/;
-> > +
-> > +#include <dt-bindings/gpio/gpio.h>
-> > +#include <dt-bindings/input/gpio-keys.h>
-> > +#include <dt-bindings/input/input.h>
-> > +#include <dt-bindings/pinctrl/qcom,pmic-gpio.h>
-> > +#include <dt-bindings/regulator/qcom,rpmh-regulator.h>
-> > +
-> > +#include "x1p42100.dtsi"
-> > +#include "x1e80100-pmics.dtsi"
-> > +
-> > +/delete-node/ &pmc8380_6;
-> > +/delete-node/ &pmc8380_6_thermal;
-> > +/delete-node/ &pm8010;
-> > +/delete-node/ &pm8010_thermal;
-> > +
-> > +/ {
-> > +     model = "Lenovo ThinkBook 16 Gen 7 QOY";
-> > +     compatible = "lenovo,thinkbook-16", "qcom,x1p42100";
-> > +     chassis-type = "laptop";
-> > +
-> > +     aliases {
-> > +             serial0 = &uart21;
-> > +             serial1 = &uart14;
-> > +     };
-> > +
-> > +     wcd938x: audio-codec {
-> > +             compatible = "qcom,wcd9385-codec";
-> > +
-> > +             pinctrl-names = "default";
-> > +             pinctrl-0 = <&wcd_default>;
-> > +
-> > +             qcom,micbias1-microvolt = <1800000>;
-> > +             qcom,micbias2-microvolt = <1800000>;
-> > +             qcom,micbias3-microvolt = <1800000>;
-> > +             qcom,micbias4-microvolt = <1800000>;
-> > +             qcom,mbhc-buttons-vthreshold-microvolt = <75000 150000 237000 500000 500000 500000 500000 500000>;
-> > +             qcom,mbhc-headset-vthreshold-microvolt = <1700000>;
-> > +             qcom,mbhc-headphone-vthreshold-microvolt = <50000>;
-> > +             qcom,rx-device = <&wcd_rx>;
-> > +             qcom,tx-device = <&wcd_tx>;
-> > +
-> > +             reset-gpios = <&tlmm 191 GPIO_ACTIVE_LOW>;
-> > +
-> > +             vdd-buck-supply = <&vreg_l15b_1p8>;
-> > +             vdd-rxtx-supply = <&vreg_l15b_1p8>;
-> > +             vdd-io-supply = <&vreg_l15b_1p8>;
-> > +             vdd-mic-bias-supply = <&vreg_bob1>;
-> > +
-> > +             #sound-dai-cells = <1>;
-> > +     };
-> > +
-> > +     backlight: backlight {
-> > +             compatible = "pwm-backlight";
-> > +             pwms = <&pm8550_pwm 3 500000>;
-> > +
-> > +             power-supply = <&vreg_edp_bl>;
-> > +     };
-> > +
-> > +     camera {
-> > +             compatible = "usb5986,1198";
-> > +
-> > +             vdd-supply = <&vreg_cam_5p0>;
-> > +
-> > +             status = "okay";
->
-> This is default, please drop.
->
-> > +     };
->
-> Camera isn't randomly wire to the board, it is on the USB bus. Please
-> follow DT bindings and put it accordingly, describing topology of the
-> bus.
->
-> > +
-> > +     gpio-keys {
-> > +             compatible = "gpio-keys";
-> > +
-> > +             pinctrl-0 = <&hall_int_n_default>;
-> > +             pinctrl-names = "default";
-> > +
-> > +             switch-lid {
-> > +                     gpios = <&tlmm 92 GPIO_ACTIVE_LOW>;
-> > +                     linux,input-type = <EV_SW>;
-> > +                     linux,code = <SW_LID>;
-> > +                     wakeup-source;
-> > +                     wakeup-event-action = <EV_ACT_DEASSERTED>;
-> > +             };
-> > +     };
-> > +
-> > +     pmic-glink {
-> > +             compatible = "qcom,x1e80100-pmic-glink",
-> > +                             "qcom,sm8550-pmic-glink",
-> > +                             "qcom,pmic-glink";
->
-> Align vertically on the double-quote
->
-> > +             #address-cells = <1>;
-> > +             #size-cells = <0>;
-> > +             orientation-gpios = <&tlmm 121 GPIO_ACTIVE_HIGH>,
-> > +                             <&tlmm 123 GPIO_ACTIVE_HIGH>;
->
-> And such lists should be aligned on the opening angle bracket.
->
-> > +
-> > +             /* Display-adjacent port */
-> > +             connector@0 {
-> > +                     compatible = "usb-c-connector";
-> > +                     reg = <0>;
-> > +                     power-role = "dual";
-> > +                     data-role = "dual";
->
-> Is it actually dual-role? What does UCSI report for it?
->
-> > +
-> > +                     ports {
-> > +                             #address-cells = <1>;
-> > +                             #size-cells = <0>;
-> > +
-> > +                             port@0 {
-> > +                                     reg = <0>;
-> > +
-> > +                                     pmic_glink_ss0_hs_in: endpoint {
-> > +                                             remote-endpoint = <&usb_1_ss0_dwc3_hs>;
-> > +                                     };
-> > +                             };
-> > +
-> > +                             port@1 {
-> > +                                     reg = <1>;
-> > +
-> > +                                     pmic_glink_ss0_ss_in: endpoint {
-> > +                                             remote-endpoint = <&usb_1_ss0_qmpphy_out>;
-> > +                                     };
-> > +                             };
-> > +
-> > +                             port@2 {
-> > +                                     reg = <2>;
-> > +
-> > +                                     pmic_glink_ss0_sbu: endpoint {
-> > +                                             remote-endpoint = <&usb_1_ss0_sbu_mux>;
-> > +                                     };
-> > +                             };
-> > +                     };
-> > +             };
-> > +
-> > +             /* User-adjacent port */
-> > +             connector@1 {
-> > +                     compatible = "usb-c-connector";
-> > +                     reg = <1>;
-> > +                     power-role = "dual";
-> > +                     data-role = "dual";
-> > +
-> > +                     ports {
-> > +                             #address-cells = <1>;
-> > +                             #size-cells = <0>;
-> > +
-> > +                             port@0 {
-> > +                                     reg = <0>;
-> > +
-> > +                                     pmic_glink_ss1_hs_in: endpoint {
-> > +                                             remote-endpoint = <&usb_1_ss1_dwc3_hs>;
-> > +                                     };
-> > +                             };
-> > +
-> > +                             port@1 {
-> > +                                     reg = <1>;
-> > +
-> > +                                     pmic_glink_ss1_ss_in: endpoint {
-> > +                                             remote-endpoint = <&usb_1_ss1_qmpphy_out>;
-> > +                                     };
-> > +                             };
-> > +
-> > +                             port@2 {
-> > +                                     reg = <2>;
-> > +
-> > +                                     pmic_glink_ss1_sbu: endpoint {
-> > +                                             remote-endpoint = <&usb_1_ss1_sbu_mux>;
-> > +                                     };
-> > +                             };
-> > +                     };
-> > +             };
-> > +     };
-> > +
-> > +     reserved-memory {
-> > +             linux,cma {
->
-> What for?
->
-> > +                     compatible = "shared-dma-pool";
-> > +                     size = <0x0 0x8000000>;
-> > +                     reusable;
-> > +                     linux,cma-default;
-> > +             };
-> > +     };
-> > +
->
-> [...]
->
-> > +
-> > +&gpu {
-> > +     status = "okay";
->
-> I think that you wrote that GPU isn't supported (yet).
+> Add distributed ThinLTO build support for the Linux kernel.
+> This new mode offers several advantages: (1) Increased
+> flexibility in handling user-specified build options.
+> (2) Improved user-friendliness for developers. (3) Greater
+> convenience for integrating with objtool and livepatch.
 
-GPU is not supported on SoC level (x1p42100/purwa), not device
-specific. The idea I suggested to Jens was to mimic Asus Zenbook A14
-as per discussion abou purwa GPU and purwa firmware in general [1]: to
-already include correct filename and firmware path (since these are
-known) such that once SoC lands the GPU support laptops with that SoC
-will gain GPU support 'automatically'. As nothing consumes this
-property (on purwa) just yet, adding it already does not cause any
-harm.
+I did not understand any of these benefits
+despite a lot of added complexity.
 
-Jens, as per the same discussion [1] the path is wrong here,
-s/x1e80100/x1p42100/ for all purwa-specifc firmware. Unless the
-decision about firmware paths was re-evaluated in Linaro/Qcom?
+
+
+
+
+
+> Note that "distributed" in this context refers to a term
+> that differentiates in-process ThinLTO builds by invoking
+> backend compilation through the linker, not necessarily
+> building in distributed environments.
+>
+> Distributed ThinLTO is enabled via the
+> `CONFIG_LTO_CLANG_THIN_DIST` Kconfig option. For example:
+>  > make LLVM=3D1 defconfig
+>  > scripts/config -e LTO_CLANG_THIN_DIST
+>  > make LLVM=3D1 oldconfig
+>  > make LLVM=3D1 vmlinux -j <..>
+>
+> The implementation changes the top-level Makefile with a
+> macro for generating `vmlinux.o` for distributed ThinLTO
+> builds. It uses the existing Kbuild infrastructure to
+> perform two recursive passes through the subdirectories.
+> The first pass generates LLVM IR object files, similar to
+> in-process ThinLTO. Following the thin-link stage, a second
+> pass compiles these IR files into the final native object
+> files. The build rules and actions for this two-pass process
+> are primarily implemented in `scripts/Makefile.build`.
+>
+> Currently, this patch focuses on building the main kernel
+> image (`vmlinux`) only. Support for building kernel modules
+> using this method is planned for a subsequent patch.
+
+The announcement of the future plan is even scary,
+especially after looking at your implementation.
+
 
 >
-> > +
-> > +     zap-shader {
-> > +             firmware-name = "qcom/x1e80100/LENOVO/21NH/qcdxkmsucpurwa.mbn";
-> > +     };
-> > +};
-> > +
-> > +&i2c2 {
-> > +     clock-frequency = <400000>;
-> > +
-> > +     pinctrl-0 = <&qup_i2c2_data_clk>, <&tpad_default>, <&kybd_default>;
+> Tested on the following arch: x86, arm64, loongarch, and
+> riscv.
 >
-> If keyboard doesn't share pinctrl with other devices, you can move it to the keyboard DT node.
+> Some implementation details can be found here:
+> https://discourse.llvm.org/t/rfc-distributed-thinlto-build-for-kernel/859=
+34
 >
-> > +     pinctrl-names = "default";
-> > +     status = "okay";
-> > +
-> > +     /* ELAN06FA */
-> > +     touchpad@15 {
-> > +             compatible = "hid-over-i2c";
-> > +             reg = <0x15>;
-> > +
-> > +             hid-descr-addr = <0x1>;
-> > +             interrupts-extended = <&tlmm 3 IRQ_TYPE_LEVEL_LOW>;
-> > +
-> > +             vdd-supply = <&vreg_misc_3p3>;
-> > +             vddl-supply = <&vreg_l12b_1p2>;
-> > +
-> > +             wakeup-source;
-> > +     };
-> > +
-> > +     /* CIRQ1080 or SYNA2BA6 */
-> > +     touchpad@2c {
-> > +             compatible = "hid-over-i2c";
-> > +             reg = <0x2c>;
-> > +
-> > +             hid-descr-addr = <0x20>;
-> > +             interrupts-extended = <&tlmm 3 IRQ_TYPE_LEVEL_LOW>;
-> > +
-> > +             vdd-supply = <&vreg_misc_3p3>;
-> > +             vddl-supply = <&vreg_l12b_1p2>;
-> > +
-> > +             wakeup-source;
-> > +     };
-> > +
-> > +     /* FTCS0038 */
-> > +     touchpad@38 {
-> > +             compatible = "hid-over-i2c";
-> > +             reg = <0x38>;
-> > +
-> > +             hid-descr-addr = <0x1>;
-> > +             interrupts-extended = <&tlmm 3 IRQ_TYPE_LEVEL_LOW>;
-> > +
-> > +             vdd-supply = <&vreg_misc_3p3>;
-> > +             vddl-supply = <&vreg_l12b_1p2>;
-> > +
-> > +             wakeup-source;
-> > +     };
-> > +
-> > +     keyboard@3a {
-> > +             compatible = "hid-over-i2c";
-> > +             reg = <0x3a>;
-> > +
-> > +             hid-descr-addr = <0x1>;
-> > +             interrupts-extended = <&tlmm 67 IRQ_TYPE_LEVEL_LOW>;
-> > +
-> > +             vdd-supply = <&vreg_misc_3p3>;
-> > +             vddl-supply = <&vreg_l12b_1p2>;
-> > +
-> > +             wakeup-source;
-> > +     };
-> > +
-> > +     /* GXTP5100 */
-> > +     touchpad@5d {
-> > +             compatible = "hid-over-i2c";
-> > +             reg = <0x5d>;
-> > +
-> > +             hid-descr-addr = <0x1>;
-> > +             interrupts-extended = <&tlmm 3 IRQ_TYPE_LEVEL_LOW>;
-> > +
-> > +             vdd-supply = <&vreg_misc_3p3>;
-> > +             vddl-supply = <&vreg_l12b_1p2>;
-> > +
-> > +             wakeup-source;
-> > +     };
-> > +};
-> > +
-> > +&i2c5 {
-> > +     clock-frequency = <400000>;
-> > +
-> > +     status = "okay";
-> > +
-> > +     eusb5_repeater: redriver@43 {
-> > +             compatible = "nxp,ptn3222";
-> > +             reg = <0x43>;
-> > +             #phy-cells = <0>;
-> > +
-> > +             vdd3v3-supply = <&vreg_l13b_3p0>;
-> > +             vdd1v8-supply = <&vreg_l4b_1p8>;
-> > +     };
-> > +
-> > +     eusb3_repeater: redriver@47 {
-> > +             compatible = "nxp,ptn3222";
-> > +             reg = <0x47>;
-> > +             #phy-cells = <0>;
-> > +
-> > +             vdd3v3-supply = <&vreg_l13b_3p0>;
-> > +             vdd1v8-supply = <&vreg_l4b_1p8>;
-> > +
-> > +             reset-gpios = <&tlmm 6 GPIO_ACTIVE_LOW>;
-> > +
-> > +             pinctrl-0 = <&eusb3_reset_n>;
-> > +             pinctrl-names = "default";
-> > +     };
-> > +
-> > +     eusb9_repeater: redriver@4b {
-> > +             compatible = "nxp,ptn3222";
-> > +             reg = <0x4b>;
-> > +             #phy-cells = <0>;
-> > +
-> > +             vdd3v3-supply = <&vreg_l13b_3p0>;
-> > +             vdd1v8-supply = <&vreg_l4b_1p8>;
-> > +
-> > +             reset-gpios = <&tlmm 7 GPIO_ACTIVE_LOW>;
-> > +
-> > +             pinctrl-0 = <&eusb9_reset_n>;
-> > +             pinctrl-names = "default";
-> > +     };
-> > +
-> > +     eusb6_repeater: redriver@4f {
-> > +             compatible = "nxp,ptn3222";
-> > +             reg = <0x4f>;
-> > +             #phy-cells = <0>;
-> > +
-> > +             vdd3v3-supply = <&vreg_l13b_3p0>;
-> > +             vdd1v8-supply = <&vreg_l4b_1p8>;
-> > +
-> > +             reset-gpios = <&tlmm 184 GPIO_ACTIVE_LOW>;
-> > +
-> > +             pinctrl-0 = <&eusb6_reset_n>;
-> > +             pinctrl-names = "default";
-> > +     };
-> > +};
-> > +
-> > +&i2c8 {
-> > +     clock-frequency = <400000>;
-> > +
-> > +     status = "okay";
-> > +
-> > +     /* ILIT2911 or GTCH1563 */
-> > +     touchscreen@10 {
-> > +             compatible = "hid-over-i2c";
-> > +             reg = <0x10>;
-> > +
-> > +             hid-descr-addr = <0x1>;
-> > +             interrupts-extended = <&tlmm 51 IRQ_TYPE_LEVEL_LOW>;
-> > +
-> > +             vdd-supply = <&vreg_misc_3p3>;
-> > +             vddl-supply = <&vreg_l15b_1p8>;
-> > +
-> > +             pinctrl-0 = <&ts0_default>;
-> > +             pinctrl-names = "default";
-> > +     };
-> > +};
-> > +
-> > +&lpass_tlmm {
-> > +     spkr_01_sd_n_active: spkr-01-sd-n-active-state {
-> > +             pins = "gpio12";
-> > +             function = "gpio";
-> > +             drive-strength = <16>;
-> > +             bias-disable;
-> > +             output-low;
-> > +     };
-> > +};
-> > +
-> > +&lpass_vamacro {
-> > +     pinctrl-0 = <&dmic01_default>, <&dmic23_default>;
-> > +     pinctrl-names = "default";
-> > +
-> > +     vdd-micb-supply = <&vreg_l1b_1p8>;
-> > +     qcom,dmic-sample-rate = <4800000>;
-> > +};
-> > +
-> > +&mdss {
-> > +     status = "okay";
-> > +};
-> > +
-> > +&mdss_dp0 {
-> > +     status = "okay";
-> > +};
-> > +
-> > +&mdss_dp0_out {
-> > +     data-lanes = <0 1>;
-> > +     link-frequencies = /bits/ 64 <1620000000 2700000000 5400000000 8100000000>;
-> > +};
-> > +
-> > +&mdss_dp1 {
-> > +     status = "okay";
-> > +};
-> > +
-> > +&mdss_dp1_out {
-> > +     data-lanes = <0 1>;
-> > +     link-frequencies = /bits/ 64 <1620000000 2700000000 5400000000 8100000000>;
-> > +};
-> > +
-> > +&mdss_dp3 {
-> > +     /delete-property/ #sound-dai-cells;
-> > +
-> > +     status = "okay";
-> > +
-> > +     aux-bus {
-> > +             panel {
-> > +                     compatible = "edp-panel";
-> > +
-> > +                     backlight = <&backlight>;
-> > +
-> > +                     enable-gpios = <&pmc8380_3_gpios 4 GPIO_ACTIVE_HIGH>;
-> > +                     pinctrl-0 = <&edp_bl_en>;
-> > +                     pinctrl-names = "default";
-> > +
-> > +                     power-supply = <&vreg_edp_3p3>;
-> > +
-> > +                     port {
-> > +                             edp_panel_in: endpoint {
-> > +                                     remote-endpoint = <&mdss_dp3_out>;
-> > +                             };
-> > +                     };
-> > +             };
-> > +     };
-> > +
-> > +     ports {
-> > +             port@1 {
-> > +                     reg = <1>;
-> > +
-> > +                     mdss_dp3_out: endpoint {
-> > +                             data-lanes = <0 1 2 3>;
-> > +                             link-frequencies = /bits/ 64 <1620000000 2700000000 5400000000 8100000000>;
-> > +
-> > +                             remote-endpoint = <&edp_panel_in>;
-> > +                     };
-> > +             };
-> > +     };
-> > +};
-> > +
-> > +&mdss_dp3_phy {
+> Signed-off-by: Rong Xu <xur@google.com>
+> ---
+> Changelog since v1:
+> - Updated the description in arch/Kconfig based on feedback
+>   from Nathan Chancellor
+> - Revised file suffixes: .final_o -> .o.thinlto.native, and
+>   .final_a -> .a.thinlto.native
+> - Updated list of ignored files in .gitignore
 >
-> What about DP0 / DP1 PHYs?
+> Changelog since v2:
+> - Changed file suffixes: .o.thinlto.native -> .o_thinlto_native,
+>   and .a.thinlto.native -> .a_thinlto_native so that basename
+>   works as intended.
+> - Tested the patch with AutoFDO and Propeller.
+> ---
+>  .gitignore                        |  3 ++
+>  MAINTAINERS                       |  5 +++
+>  Makefile                          | 40 ++++++++++++++++++++---
+>  arch/Kconfig                      | 19 +++++++++++
+>  scripts/Makefile.build            | 52 +++++++++++++++++++++++++++---
+>  scripts/Makefile.lib              |  7 +++-
+>  scripts/Makefile.vmlinux_o        | 16 +++++++---
+>  scripts/Makefile.vmlinux_thinlink | 53 +++++++++++++++++++++++++++++++
+>  scripts/head-object-list.txt      |  1 +
+>  9 files changed, 181 insertions(+), 15 deletions(-)
+>  create mode 100644 scripts/Makefile.vmlinux_thinlink
 >
-> > +     vdda-phy-supply = <&vreg_l3j_0p8>;
-> > +     vdda-pll-supply = <&vreg_l2j_1p2>;
-> > +
-> > +     status = "okay";
-> > +};
-> > +
+> diff --git a/.gitignore b/.gitignore
+> index f2f63e47fb886..b83a68185ef46 100644
+> --- a/.gitignore
+> +++ b/.gitignore
+> @@ -12,6 +12,7 @@
+>  #
+>  .*
+>  *.a
+> +*.a_thinlto_native
+>  *.asn1.[ch]
+>  *.bin
+>  *.bz2
+> @@ -39,6 +40,7 @@
+>  *.mod.c
+>  *.o
+>  *.o.*
+> +*.o_thinlto_native
+>  *.patch
+>  *.rmeta
+>  *.rpm
+> @@ -64,6 +66,7 @@ modules.order
+>  /vmlinux
+>  /vmlinux.32
+>  /vmlinux.map
+> +/vmlinux.thinlink
+>  /vmlinux.symvers
+>  /vmlinux.unstripped
+>  /vmlinux-gdb.py
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index d48dd6726fe6b..f54090f364c93 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -5790,6 +5790,11 @@ F:       scripts/Makefile.clang
+>  F:     scripts/clang-tools/
+>  K:     \b(?i:clang|llvm)\b
 >
-> [...]
+> +CLANG/LLVM THINLTO DISTRIBUTED BUILD
+> +M:     Rong Xu <xur@google.com>
+> +S:     Supported
+> +F:     scripts/Makefile.vmlinux_thinlink
+> +
+>  CLK API
+>  M:     Russell King <linux@armlinux.org.uk>
+>  L:     linux-clk@vger.kernel.org
+> diff --git a/Makefile b/Makefile
+> index a9edd03036537..8fbff2ab87ebd 100644
+> --- a/Makefile
+> +++ b/Makefile
+> @@ -298,7 +298,8 @@ no-dot-config-targets :=3D $(clean-targets) \
+>                          outputmakefile rustavailable rustfmt rustfmtchec=
+k
+>  no-sync-config-targets :=3D $(no-dot-config-targets) %install modules_si=
+gn kernelrelease \
+>                           image_name
+> -single-targets :=3D %.a %.i %.ko %.lds %.ll %.lst %.mod %.o %.rsi %.s %/
+> +single-targets :=3D %.a %.i %.ko %.lds %.ll %.lst %.mod %.o %.rsi %.s %.=
+o_thinlto_native \
+> +                 %.a_thinlto_native %.o.thinlto.bc %/
 >
-> > +
-> > +&qupv3_0 {
-> > +     status = "okay";
-> > +};
-> > +
-> > +&qupv3_1 {
-> > +     status = "okay";
-> > +};
-> > +
-> > +&qupv3_2 {
-> > +     status = "okay";
-> > +};
+>  config-build   :=3D
+>  mixed-build    :=3D
+> @@ -991,10 +992,10 @@ export CC_FLAGS_SCS
+>  endif
 >
-> Don't you also wan to enable corresponding GPI DMA devices?
+>  ifdef CONFIG_LTO_CLANG
+> -ifdef CONFIG_LTO_CLANG_THIN
+> -CC_FLAGS_LTO   :=3D -flto=3Dthin -fsplit-lto-unit
+> -else
+> +ifdef CONFIG_LTO_CLANG_FULL
+>  CC_FLAGS_LTO   :=3D -flto
+> +else # for CONFIG_LTO_CLANG_THIN or CONFIG_LTO_CLANG_THIN_DIST
+> +CC_FLAGS_LTO   :=3D -flto=3Dthin -fsplit-lto-unit
+>  endif
+>  CC_FLAGS_LTO   +=3D -fvisibility=3Dhidden
 >
-> > +
-> > +&remoteproc_adsp {
-> > +     firmware-name = "qcom/x1e80100/LENOVO/21NH/qcadsp8380.mbn",
-> > +                     "qcom/x1e80100/LENOVO/21NH/adsp_dtbs.elf";
-> > +
-> > +     status = "okay";
-> > +};
+> @@ -1213,8 +1214,34 @@ vmlinux.a: $(KBUILD_VMLINUX_OBJS) scripts/head-obj=
+ect-list.txt FORCE
+>         $(call if_changed,ar_vmlinux.a)
+>
+>  PHONY +=3D vmlinux_o
+> +ifdef CONFIG_LTO_CLANG_THIN_DIST
+> +vmlinux.thinlink: vmlinux.a $(KBUILD_VMLINUX_LIBS) FORCE
+> +       $(Q)$(MAKE) -f $(srctree)/scripts/Makefile.vmlinux_thinlink
+> +targets +=3D vmlinux.thinlink
+> +
+> +vmlinux.a_thinlto_native :=3D $(patsubst %.a,%.a_thinlto_native,$(KBUILD=
+_VMLINUX_OBJS))
+> +quiet_cmd_ar_vmlinux.a_thinlto_native =3D AR      $@
+> +      cmd_ar_vmlinux.a_thinlto_native =3D \
+> +       rm -f $@; \
+> +       $(AR) cDPrST $@ $(vmlinux.a_thinlto_native); \
+> +       $(AR) mPiT $$($(AR) t $@ | sed -n 1p) $@ $$($(AR) t $@ | grep -F =
+-f $(srctree)/scripts/head-object-list.txt)
+> +
+> +define rule_gen_vmlinux.a_thinlto_native
+> +       +$(Q)$(MAKE) $(build)=3D. need-builtin=3D1 thinlto_final_pass=3D1=
+ need-modorder=3D1 built-in.a_thinlto_native
 
-And here, s/x1e80100/x1p42100/
 
-> > +
-> > +&remoteproc_cdsp {
-> > +     firmware-name = "qcom/x1e80100/LENOVO/21NH/qccdsp8380.mbn",
-> > +                     "qcom/x1e80100/LENOVO/21NH/cdsp_dtbs.elf";
-> > +
-> > +     status = "okay";
-> > +};
+I really do not understand why this needs the second
+recursion, as you already know the list of objects
+by 'ar t vmlinux.a'.
 
-And here, s/x1e80100/x1p42100/
 
-Regards,
-Alex
 
-[1] https://lore.kernel.org/all/93f916d1-83b9-41c0-bb05-a785fb730088@oss.qualcomm.com/
 
-> > +
-> > +&sdhc_2 {
-> > +     cd-gpios = <&tlmm 71 GPIO_ACTIVE_LOW>;
-> > +     pinctrl-0 = <&sdc2_default &sdc2_card_det_n>;
-> > +     pinctrl-1 = <&sdc2_sleep &sdc2_card_det_n>;
-> > +     pinctrl-names = "default", "sleep";
-> > +     vmmc-supply = <&vreg_l9b_2p9>;
-> > +     vqmmc-supply = <&vreg_l6b_1p8>;
-> > +     status = "okay";
-> > +};
-> > +
-> > +&smb2360_0 {
-> > +     status = "okay";
-> > +};
-> > +
-> > +&smb2360_0_eusb2_repeater {
-> > +     vdd18-supply = <&vreg_l3d_1p8>;
-> > +     vdd3-supply = <&vreg_l2b_3p0>;
-> > +};
-> > +
-> > +&smb2360_1 {
-> > +     status = "okay";
-> > +};
-> > +
-> > +&smb2360_1_eusb2_repeater {
-> > +     vdd18-supply = <&vreg_l3d_1p8>;
-> > +     vdd3-supply = <&vreg_l14b_3p0>;
-> > +};
-> > +
-> > +&swr0 {
-> > +     status = "okay";
-> > +
-> > +     pinctrl-0 = <&wsa_swr_active>, <&spkr_01_sd_n_active>;
-> > +     pinctrl-names = "default";
-> > +
-> > +     /* WSA8845, Left Speaker */
-> > +     left_spkr: speaker@0,0 {
-> > +             compatible = "sdw20217020400";
-> > +             reg = <0 0>;
-> > +             reset-gpios = <&lpass_tlmm 12 GPIO_ACTIVE_LOW>;
-> > +             #sound-dai-cells = <0>;
-> > +             sound-name-prefix = "SpkrLeft";
-> > +             vdd-1p8-supply = <&vreg_l15b_1p8>;
-> > +             vdd-io-supply = <&vreg_l12b_1p2>;
-> > +             qcom,port-mapping = <1 2 3 7 10 13>;
-> > +     };
-> > +
-> > +     /* WSA8845, Right Speaker */
-> > +     right_spkr: speaker@0,1 {
-> > +             compatible = "sdw20217020400";
-> > +             reg = <0 1>;
-> > +             reset-gpios = <&lpass_tlmm 12 GPIO_ACTIVE_LOW>;
-> > +             #sound-dai-cells = <0>;
-> > +             sound-name-prefix = "SpkrRight";
-> > +             vdd-1p8-supply = <&vreg_l15b_1p8>;
-> > +             vdd-io-supply = <&vreg_l12b_1p2>;
-> > +             qcom,port-mapping = <4 5 6 7 11 13>;
-> > +     };
-> > +};
-> > +
-> > +&swr1 {
-> > +     status = "okay";
-> > +
-> > +     /* WCD9385 RX */
-> > +     wcd_rx: codec@0,4 {
-> > +             compatible = "sdw20217010d00";
-> > +             reg = <0 4>;
-> > +             qcom,rx-port-mapping = <1 2 3 4 5>;
-> > +     };
-> > +};
-> > +
-> > +&swr2 {
-> > +     status = "okay";
-> > +
-> > +     /* WCD9385 TX */
-> > +     wcd_tx: codec@0,3 {
-> > +             compatible = "sdw20217010d00";
-> > +             reg = <0 3>;
-> > +             qcom,tx-port-mapping = <2 2 3 4>;
-> > +     };
-> > +};
-> > +
-> > +&tlmm {
-> > +     gpio-reserved-ranges = <34 2>, /* Unused */
-> > +             <72 2>, /* Secure EC I2C connection (?) */
-> > +             <238 1>; /* UFS Reset */
-> > +
-> > +     cam_reg_en: cam-reg-en-state {
-> > +             pins = "gpio44";
-> > +             function = "gpio";
-> > +             drive-strength = <16>;
-> > +             bias-disable;
-> > +     };
-> > +
-> > +     eusb3_reset_n: eusb3-reset-n-state {
-> > +             pins = "gpio6";
-> > +             function = "gpio";
-> > +             drive-strength = <2>;
-> > +             bias-disable;
-> > +             output-low;
-> > +     };
-> > +
-> > +     eusb6_reset_n: eusb6-reset-n-state {
-> > +             pins = "gpio184";
-> > +             function = "gpio";
-> > +             drive-strength = <2>;
-> > +             bias-disable;
-> > +             output-low;
-> > +     };
-> > +
-> > +     eusb9_reset_n: eusb9-reset-n-state {
-> > +             pins = "gpio7";
-> > +             function = "gpio";
-> > +             drive-strength = <2>;
-> > +             bias-disable;
-> > +             output-low;
-> > +     };
-> > +
-> > +     edp_reg_en: edp-reg-en-state {
-> > +             pins = "gpio70";
-> > +             function = "gpio";
-> > +             drive-strength = <16>;
-> > +             bias-disable;
-> > +     };
-> > +
-> > +     hall_int_n_default: hall-int-n-state {
-> > +             pins = "gpio92";
-> > +             function = "gpio";
-> > +             bias-disable;
-> > +     };
-> > +
-> > +     kybd_default: kybd-default-state {
-> > +             pins = "gpio67";
-> > +             function = "gpio";
-> > +             bias-disable;
-> > +     };
-> > +
-> > +     nvme_reg_en: nvme-reg-en-state {
-> > +             pins = "gpio18";
-> > +             function = "gpio";
-> > +             drive-strength = <2>;
-> > +             bias-disable;
-> > +     };
-> > +
-> > +     pcie4_default: pcie4-default-state {
-> > +             clkreq-n-pins {
-> > +                     pins = "gpio147";
-> > +                     function = "pcie4_clk";
-> > +                     drive-strength = <2>;
-> > +                     bias-pull-up;
-> > +             };
-> > +
-> > +             perst-n-pins {
-> > +                     pins = "gpio146";
-> > +                     function = "gpio";
-> > +                     drive-strength = <2>;
-> > +                     bias-disable;
-> > +             };
-> > +
-> > +             wake-n-pins {
-> > +                     pins = "gpio148";
-> > +                     function = "gpio";
-> > +                     drive-strength = <2>;
-> > +                     bias-pull-up;
-> > +             };
-> > +     };
-> > +
-> > +     pcie6a_default: pcie6a-default-state {
-> > +             clkreq-n-pins {
-> > +                     pins = "gpio153";
-> > +                     function = "pcie6a_clk";
-> > +                     drive-strength = <2>;
-> > +                     bias-pull-up;
-> > +             };
-> > +
-> > +             perst-n-pins {
-> > +                     pins = "gpio152";
-> > +                     function = "gpio";
-> > +                     drive-strength = <2>;
-> > +                     bias-disable;
-> > +             };
-> > +
-> > +             wake-n-pins {
-> > +                     pins = "gpio154";
-> > +                     function = "gpio";
-> > +                     drive-strength = <2>;
-> > +                     bias-pull-up;
-> > +             };
-> > +     };
-> > +
-> > +     sdc2_card_det_n: sdc2-card-det-state {
-> > +             pins = "gpio71";
-> > +             function = "gpio";
-> > +             drive-strength = <2>;
-> > +             bias-pull-up;
-> > +     };
-> > +
-> > +     tpad_default: tpad-default-state {
-> > +             pins = "gpio3";
-> > +             function = "gpio";
-> > +             bias-pull-up;
-> > +     };
-> > +
-> > +     ts0_default: ts0-default-state {
-> > +             int-n-pins {
-> > +                     pins = "gpio51";
-> > +                     function = "gpio";
-> > +                     bias-disable;
-> > +             };
-> > +
-> > +             reset-n-pins {
-> > +                     pins = "gpio48";
-> > +                     function = "gpio";
-> > +                     output-high;
-> > +                     drive-strength = <16>;
-> > +             };
-> > +     };
-> > +
-> > +     usb_1_ss0_sbu_default: usb-1-ss0-sbu-state {
-> > +             mode-pins {
-> > +                     pins = "gpio166";
-> > +                     function = "gpio";
-> > +                     bias-disable;
-> > +                     drive-strength = <2>;
-> > +                     output-high;
-> > +             };
-> > +
-> > +             oe-n-pins {
-> > +                     pins = "gpio168";
-> > +                     function = "gpio";
-> > +                     bias-disable;
-> > +                     drive-strength = <2>;
-> > +             };
-> > +
-> > +             sel-pins {
-> > +                     pins = "gpio167";
-> > +                     function = "gpio";
-> > +                     bias-disable;
-> > +                     drive-strength = <2>;
-> > +             };
-> > +
-> > +     };
-> > +
-> > +     usb_1_ss1_sbu_default: usb-1-ss1-sbu-state {
-> > +             mode-pins {
-> > +                     pins = "gpio177";
-> > +                     function = "gpio";
-> > +                     bias-disable;
-> > +                     drive-strength = <2>;
-> > +                     output-high;
-> > +             };
-> > +
-> > +             oe-n-pins {
-> > +                     pins = "gpio179";
-> > +                     function = "gpio";
-> > +                     bias-disable;
-> > +                     drive-strength = <2>;
-> > +             };
-> > +
-> > +             sel-pins {
-> > +                     pins = "gpio178";
-> > +                     function = "gpio";
-> > +                     bias-disable;
-> > +                     drive-strength = <2>;
-> > +             };
-> > +     };
-> > +
-> > +     wcd_default: wcd-reset-n-active-state {
-> > +             pins = "gpio191";
-> > +             function = "gpio";
-> > +             drive-strength = <16>;
-> > +             bias-disable;
-> > +             output-low;
-> > +     };
-> > +
-> > +     wcn_bt_en: wcn-bt-en-state {
-> > +             pins = "gpio116";
-> > +             function = "gpio";
-> > +             drive-strength = <16>;
-> > +             output-low;
-> > +             bias-pull-down;
-> > +     };
-> > +
-> > +     wcn_sw_en: wcn-sw-en-state {
-> > +             pins = "gpio214";
-> > +             function = "gpio";
-> > +             drive-strength = <16>;
-> > +             bias-disable;
-> > +     };
-> > +
-> > +     wcn_wlan_en: wcn-wlan-en-state {
-> > +             pins = "gpio117";
-> > +             function = "gpio";
-> > +             drive-strength = <16>;
-> > +             bias-disable;
-> > +     };
-> > +};
-> > +
-> > +&uart14 {
-> > +     status = "okay";
-> > +
-> > +     bluetooth {
-> > +             compatible = "qcom,wcn7850-bt";
-> > +             max-speed = <3200000>;
-> > +
-> > +             vddaon-supply = <&vreg_pmu_aon_0p59>;
-> > +             vddwlcx-supply = <&vreg_pmu_wlcx_0p8>;
-> > +             vddwlmx-supply = <&vreg_pmu_wlmx_0p85>;
-> > +             vddrfacmn-supply = <&vreg_pmu_rfa_cmn>;
-> > +             vddrfa0p8-supply = <&vreg_pmu_rfa_0p8>;
-> > +             vddrfa1p2-supply = <&vreg_pmu_rfa_1p2>;
-> > +             vddrfa1p8-supply = <&vreg_pmu_rfa_1p8>;
-> > +     };
-> > +};
-> > +
-> > +&usb_1_ss0_hsphy {
-> > +     vdd-supply = <&vreg_l3j_0p8>;
-> > +     vdda12-supply = <&vreg_l2j_1p2>;
-> > +
-> > +     phys = <&smb2360_0_eusb2_repeater>;
-> > +
-> > +     status = "okay";
-> > +};
-> > +
-> > +&usb_1_ss0_qmpphy {
-> > +     vdda-phy-supply = <&vreg_l3e_1p2>;
-> > +     vdda-pll-supply = <&vreg_l1j_0p8>;
-> > +
-> > +     status = "okay";
-> > +};
-> > +
-> > +&usb_1_ss0 {
-> > +     status = "okay";
-> > +};
-> > +
-> > +&usb_1_ss0_dwc3 {
-> > +     dr_mode = "host";
+
+
+
+
+> +       $(call cmd_and_savecmd,ar_vmlinux.a_thinlto_native)
+> +endef
+> +
+> +vmlinux.a_thinlto_native: vmlinux.thinlink scripts/head-object-list.txt =
+FORCE
+> +       $(call if_changed_rule,gen_vmlinux.a_thinlto_native)
+> +
+> +targets +=3D vmlinux.a_thinlto_native
+> +
+> +vmlinux_o: vmlinux.a_thinlto_native
+> +       $(Q)$(MAKE) thinlto_final_pass=3D1 -f $(srctree)/scripts/Makefile=
+.vmlinux_o
+> +else
+>  vmlinux_o: vmlinux.a $(KBUILD_VMLINUX_LIBS)
+>         $(Q)$(MAKE) -f $(srctree)/scripts/Makefile.vmlinux_o
+> +endif
 >
-> So pmic-glink declares corresponding port as dual-role, but USB
-> controller is host-only?
+>  vmlinux.o modules.builtin.modinfo modules.builtin: vmlinux_o
+>         @:
+> @@ -1572,7 +1599,8 @@ CLEAN_FILES +=3D vmlinux.symvers modules-only.symve=
+rs \
+>                modules.builtin.ranges vmlinux.o.map vmlinux.unstripped \
+>                compile_commands.json rust/test \
+>                rust-project.json .vmlinux.objs .vmlinux.export.c \
+> -               .builtin-dtbs-list .builtin-dtb.S
+> +              .builtin-dtbs-list .builtin-dtb.S \
+> +              .vmlinux_thinlto_bc_files vmlinux.thinlink
 >
-> > +};
-> > +
-> > +&usb_1_ss0_dwc3_hs {
-> > +     remote-endpoint = <&pmic_glink_ss0_hs_in>;
-> > +};
-> > +
-> > +&usb_1_ss0_qmpphy_out {
-> > +     remote-endpoint = <&pmic_glink_ss0_ss_in>;
-> > +};
-> > +
-> > +&usb_1_ss1_hsphy {
-> > +     vdd-supply = <&vreg_l3j_0p8>;
-> > +     vdda12-supply = <&vreg_l2j_1p2>;
-> > +
-> > +     phys = <&smb2360_1_eusb2_repeater>;
-> > +
-> > +     status = "okay";
-> > +};
-> > +
-> > +&usb_1_ss1_qmpphy {
-> > +     vdda-phy-supply = <&vreg_l2j_1p2>;
-> > +     vdda-pll-supply = <&vreg_l2d_0p9>;
-> > +
-> > +     status = "okay";
-> > +};
-> > +
-> > +&usb_1_ss1 {
-> > +     status = "okay";
-> > +};
-> > +
-> > +&usb_1_ss1_dwc3 {
-> > +     dr_mode = "host";
+>  # Directories & files removed with 'make mrproper'
+>  MRPROPER_FILES +=3D include/config include/generated          \
+> @@ -2023,6 +2051,8 @@ clean: $(clean-dirs)
+>                 -o -name '*.symtypes' -o -name 'modules.order' \
+>                 -o -name '*.c.[012]*.*' \
+>                 -o -name '*.ll' \
+> +               -o -name '*.a_thinlto_native' -o -name '*.o_thinlto_nativ=
+e' \
+> +               -o -name '*.o.thinlto.bc' \
+>                 -o -name '*.gcno' \
+>                 \) -type f -print \
+>                 -o -name '.tmp_*' -print \
+> diff --git a/arch/Kconfig b/arch/Kconfig
+> index b0adb665041f1..30dccda07c671 100644
+> --- a/arch/Kconfig
+> +++ b/arch/Kconfig
+> @@ -810,6 +810,25 @@ config LTO_CLANG_THIN
+>             https://clang.llvm.org/docs/ThinLTO.html
 >
-> And this one...
+>           If unsure, say Y.
+> +
+> +config LTO_CLANG_THIN_DIST
+> +       bool "Clang ThinLTO in distributed mode (EXPERIMENTAL)"
+> +       depends on HAS_LTO_CLANG && ARCH_SUPPORTS_LTO_CLANG_THIN
+> +       select LTO_CLANG
+> +       help
+> +         This option enables Clang's ThinLTO in distributed build mode.
+> +         In this mode, the linker performs the thin-link, generating
+> +         ThinLTO index files. Subsequently, the build system explicitly
+> +         invokes ThinLTO backend compilation using these index files
+> +         and pre-linked IR objects. The resulting native object files
+> +         are with the .o_thinlto_native suffix.
+> +
+> +         This build mode offers improved visibility into the ThinLTO
+> +         process through explicit subcommand exposure. It also makes
+> +         final native object files directly available, benefiting
+> +         tools like objtool and kpatch. Additionally, it provides
+> +         crucial granular control over back-end options, enabling
+> +         module-specific compiler options, and simplifies debugging.
+>  endchoice
 >
-> > +};
-> > +
-> > +&usb_1_ss1_dwc3_hs {
-> > +     remote-endpoint = <&pmic_glink_ss1_hs_in>;
-> > +};
-> > +
-> > +&usb_1_ss1_qmpphy_out {
-> > +     remote-endpoint = <&pmic_glink_ss1_ss_in>;
-> > +};
-> > +
-> > +&usb_1_ss2 {
-> > +     status = "okay";
-> > +};
-> > +
-> > +&usb_1_ss2_dwc3 {
-> > +     dr_mode = "host";
-> > +     maximum-speed = "high-speed";
-> > +     phys = <&usb_1_ss2_hsphy>;
-> > +     phy-names = "usb2-phy";
-> > +};
-> > +
-> > +&usb_1_ss2_hsphy {
-> > +     vdd-supply = <&vreg_l3j_0p8>;
-> > +     vdda12-supply = <&vreg_l2j_1p2>;
-> > +
-> > +     phys = <&eusb5_repeater>;
-> > +
-> > +     status = "okay";
-> > +};
-> > +
-> > +&usb_2 {
-> > +     status = "okay";
-> > +};
-> > +
-> > +&usb_2_dwc3 {
-> > +     dr_mode = "host";
-> > +};
-> > +
-> > +&usb_2_hsphy {
-> > +     vdd-supply = <&vreg_l2e_0p8>;
-> > +     vdda12-supply = <&vreg_l3e_1p2>;
-> > +
-> > +     phys = <&eusb9_repeater>;
-> > +
-> > +     status = "okay";
-> > +};
-> > +
-> > +&usb_mp {
-> > +     status = "okay";
-> > +};
-> > +
-> > +&usb_mp_hsphy0 {
-> > +     vdd-supply = <&vreg_l2e_0p8>;
-> > +     vdda12-supply = <&vreg_l3e_1p2>;
-> > +
-> > +     phys = <&eusb6_repeater>;
-> > +
-> > +     status = "okay";
-> > +};
-> > +
-> > +&usb_mp_qmpphy0 {
-> > +     vdda-phy-supply = <&vreg_l3e_1p2>;
-> > +     vdda-pll-supply = <&vreg_l3c_0p8>;
-> > +
-> > +     status = "okay";
-> > +};
-> > +
-> > +&usb_mp_hsphy1 {
-> > +     vdd-supply = <&vreg_l2e_0p8>;
-> > +     vdda12-supply = <&vreg_l3e_1p2>;
-> > +
-> > +     phys = <&eusb3_repeater>;
-> > +
-> > +     status = "okay";
-> > +};
-> > +
-> > +&usb_mp_qmpphy1 {
-> > +     vdda-phy-supply = <&vreg_l3e_1p2>;
-> > +     vdda-pll-supply = <&vreg_l3c_0p8>;
-> > +
-> > +     status = "okay";
-> > +};
-> >
-> > --
-> > 2.48.1
-> >
-> >
+>  config ARCH_SUPPORTS_AUTOFDO_CLANG
+> diff --git a/scripts/Makefile.build b/scripts/Makefile.build
+> index 13dcd86e74ca8..338e1aec0eaa3 100644
+> --- a/scripts/Makefile.build
+> +++ b/scripts/Makefile.build
+> @@ -50,18 +50,23 @@ endif
 >
+>  # =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D
+>
+> +builtin_suffix :=3D $(if $(filter %.a_thinlto_native, $(MAKECMDGOALS)),.=
+a_thinlto_native,.a)
+> +ifeq ($(thinlto_final_pass),1)
+> +builtin_suffix :=3D.a_thinlto_native
+> +endif
+> +
+>  # subdir-builtin and subdir-modorder may contain duplications. Use $(sor=
+t ...)
+> -subdir-builtin :=3D $(sort $(filter %/built-in.a, $(real-obj-y)))
+> +subdir-builtin :=3D $(sort $(filter %/built-in$(builtin_suffix), $(real-=
+obj-y)))
+>  subdir-modorder :=3D $(sort $(filter %/modules.order, $(obj-m)))
+>
+>  targets-for-builtin :=3D $(extra-y)
+>
+>  ifneq ($(strip $(lib-y) $(lib-m) $(lib-)),)
+> -targets-for-builtin +=3D $(obj)/lib.a
+> +targets-for-builtin +=3D $(obj)/lib$(builtin_suffix)
+>  endif
+>
+>  ifdef need-builtin
+> -targets-for-builtin +=3D $(obj)/built-in.a
+> +targets-for-builtin +=3D $(obj)/built-in$(builtin_suffix)
+>  endif
+>
+>  targets-for-modules :=3D $(foreach x, o mod, \
+> @@ -337,6 +342,10 @@ $(obj)/%.o: $(obj)/%.S FORCE
+>  targets +=3D $(filter-out $(subdir-builtin), $(real-obj-y))
+>  targets +=3D $(filter-out $(subdir-modorder), $(real-obj-m))
+>  targets +=3D $(lib-y) $(always-y)
+> +ifeq ($(builtin_suffix),.a_thinlto_native)
+> +native_targets =3D $(patsubst,%.o,%.o_thinlto_native,$(targets))
+> +targets +=3D $(native_targets)
+> +endif
+>
+>  # Linker scripts preprocessor (.lds.S -> .lds)
+>  # ----------------------------------------------------------------------=
+-----
+> @@ -347,6 +356,24 @@ quiet_cmd_cpp_lds_S =3D LDS     $@
+>  $(obj)/%.lds: $(src)/%.lds.S FORCE
+>         $(call if_changed_dep,cpp_lds_S)
+>
+> +ifdef CONFIG_LTO_CLANG_THIN_DIST
+> +# Generate .o_thinlto_native (obj) from .o (bitcode) file
+> +# ----------------------------------------------------------------------=
+-----
+> +quiet_cmd_cc_o_bc =3D CC $(quiet_modtag) $@
+> +
+> +cmd_cc_o_bc      =3D $(if $(filter bitcode, $(shell file -b $<)),$(CC) \
+> +                  $(filter-out -Wp% $(LINUXINCLUDE) %.h.gch %.h -D% \
+> +                  -flto=3Dthin, $(c_flags)) \
+> +                  -Wno-unused-command-line-argument \
+> +                  -x ir -fthinlto-index=3D$<.thinlto.bc -c -o $@ \
+> +                  $(if $(findstring ../,$<), \
+> +                  $$(realpath --relative-to=3D$(srcroot) $<), $<), \
+> +                  cp $< $@)
+> +
+> +$(obj)/%.o_thinlto_native: $(obj)/%.o FORCE
+> +       $(call if_changed,cc_o_bc)
+> +endif
+> +
+>  # ASN.1 grammar
+>  # ----------------------------------------------------------------------=
+-----
+>  quiet_cmd_asn1_compiler =3D ASN.1   $(basename $@).[ch]
+> @@ -360,7 +387,7 @@ $(obj)/%.asn1.c $(obj)/%.asn1.h: $(src)/%.asn1 $(objt=
+ree)/scripts/asn1_compiler
+>  # ----------------------------------------------------------------------=
+-----
+>
+>  # To build objects in subdirs, we need to descend into the directories
+> -$(subdir-builtin): $(obj)/%/built-in.a: $(obj)/% ;
+> +$(subdir-builtin): $(obj)/%/built-in$(builtin_suffix): $(obj)/% ;
+>  $(subdir-modorder): $(obj)/%/modules.order: $(obj)/% ;
+>
+>  #
+> @@ -377,6 +404,12 @@ quiet_cmd_ar_builtin =3D AR      $@
+>  $(obj)/built-in.a: $(real-obj-y) FORCE
+>         $(call if_changed,ar_builtin)
+>
+> +ifdef CONFIG_LTO_CLANG_THIN_DIST
+> +# Rule to compile a set of .o_thinlto_native files into one .a_thinlto_n=
+ative file.
+> +$(obj)/built-in.a_thinlto_native: $(patsubst %.o,%.o_thinlto_native,$(re=
+al-obj-y)) FORCE
+> +       $(call if_changed,ar_builtin)
+> +endif
+> +
+>  # This is a list of build artifacts from the current Makefile and its
+>  # sub-directories. The timestamp should be updated when any of the membe=
+r files.
+>
+> @@ -394,6 +427,14 @@ $(obj)/modules.order: $(obj-m) FORCE
+>  $(obj)/lib.a: $(lib-y) FORCE
+>         $(call if_changed,ar)
+>
+> +ifdef CONFIG_LTO_CLANG_THIN_DIST
+> +quiet_cmd_ar_native =3D AR      $@
+> +      cmd_ar_native =3D rm -f $@; $(AR) cDPrsT $@ $(patsubst %.o,%.o_thi=
+nlto_native,$(real-prereqs))
+> +
+> +$(obj)/lib.a_thinlto_native: $(patsubst %.o,%.o_thinlto_native,$(lib-y))=
+ FORCE
+> +       $(call if_changed,ar_native)
+> +endif
+> +
+>  quiet_cmd_ld_multi_m =3D LD [M]  $@
+>        cmd_ld_multi_m =3D $(LD) $(ld_flags) -r -o $@ @$< $(cmd_objtool)
+>
+> @@ -459,7 +500,8 @@ $(single-subdir-goals): $(single-subdirs)
+>  PHONY +=3D $(subdir-ym)
+>  $(subdir-ym):
+>         $(Q)$(MAKE) $(build)=3D$@ \
+> -       need-builtin=3D$(if $(filter $@/built-in.a, $(subdir-builtin)),1)=
+ \
+> +       need-builtin=3D$(if $(filter $@/built-in$(builtin_suffix), $(subd=
+ir-builtin)),1) \
+> +       thinlto_final_pass=3D$(if $(filter .a_thinlto_native, $(builtin_s=
+uffix)),1) \
+>         need-modorder=3D$(if $(filter $@/modules.order, $(subdir-modorder=
+)),1) \
+>         $(filter $@/%, $(single-subdir-goals))
+>
+> diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
+> index 2fe73cda0bddb..9cfd23590334d 100644
+> --- a/scripts/Makefile.lib
+> +++ b/scripts/Makefile.lib
+> @@ -34,8 +34,13 @@ else
+>  obj-m :=3D $(filter-out %/, $(obj-m))
+>  endif
+>
+> +builtin_suffix :=3D $(if $(filter %.a_thinlto_native, $(MAKECMDGOALS)),.=
+a_thinlto_native,.a)
+> +ifeq ($(thinlto_final_pass),1)
+> +        builtin_suffix :=3D.a_thinlto_native
+> +endif
+> +
+>  ifdef need-builtin
+> -obj-y          :=3D $(patsubst %/, %/built-in.a, $(obj-y))
+> +obj-y          :=3D $(patsubst %/, %/built-in$(builtin_suffix), $(obj-y)=
+)
+>  else
+>  obj-y          :=3D $(filter-out %/, $(obj-y))
+>  endif
+> diff --git a/scripts/Makefile.vmlinux_o b/scripts/Makefile.vmlinux_o
+> index b024ffb3e2018..f9abc45a68b36 100644
+> --- a/scripts/Makefile.vmlinux_o
+> +++ b/scripts/Makefile.vmlinux_o
+> @@ -9,6 +9,14 @@ include $(srctree)/scripts/Kbuild.include
+>  # for objtool
+>  include $(srctree)/scripts/Makefile.lib
+>
+> +ifeq ($(thinlto_final_pass),1)
+> +vmlinux_a :=3D vmlinux.a_thinlto_native
+> +vmlinux_libs :=3D $(patsubst %.a,%.a_thinlto_native,$(KBUILD_VMLINUX_LIB=
+S))
+> +else
+> +vmlinux_a :=3D vmlinux.a
+> +vmlinux_libs :=3D $(KBUILD_VMLINUX_LIBS)
+> +endif
+> +
+>  # Generate a linker script to ensure correct ordering of initcalls for C=
+lang LTO
+>  # ----------------------------------------------------------------------=
+-----
+>
+> @@ -18,7 +26,7 @@ quiet_cmd_gen_initcalls_lds =3D GEN     $@
+>         $(PERL) $(real-prereqs) > $@
+>
+>  .tmp_initcalls.lds: $(srctree)/scripts/generate_initcall_order.pl \
+> -               vmlinux.a $(KBUILD_VMLINUX_LIBS) FORCE
+> +               $(vmlinux_a) $(vmlinux_libs) FORCE
+>         $(call if_changed,gen_initcalls_lds)
+>
+>  targets :=3D .tmp_initcalls.lds
+> @@ -59,8 +67,8 @@ quiet_cmd_ld_vmlinux.o =3D LD      $@
+>         $(LD) ${KBUILD_LDFLAGS} -r -o $@ \
+>         $(vmlinux-o-ld-args-y) \
+>         $(addprefix -T , $(initcalls-lds)) \
+> -       --whole-archive vmlinux.a --no-whole-archive \
+> -       --start-group $(KBUILD_VMLINUX_LIBS) --end-group \
+> +       --whole-archive $(vmlinux_a) --no-whole-archive \
+> +       --start-group $(vmlinux_libs) --end-group \
+>         $(cmd_objtool)
+>
+>  define rule_ld_vmlinux.o
+> @@ -68,7 +76,7 @@ define rule_ld_vmlinux.o
+>         $(call cmd,gen_objtooldep)
+>  endef
+>
+> -vmlinux.o: $(initcalls-lds) vmlinux.a $(KBUILD_VMLINUX_LIBS) FORCE
+> +vmlinux.o: $(initcalls-lds) $(vmlinux_a) $(vmlinux_libs) FORCE
+>         $(call if_changed_rule,ld_vmlinux.o)
+>
+>  targets +=3D vmlinux.o
+> diff --git a/scripts/Makefile.vmlinux_thinlink b/scripts/Makefile.vmlinux=
+_thinlink
+> new file mode 100644
+> index 0000000000000..13e4026c7d45b
+> --- /dev/null
+> +++ b/scripts/Makefile.vmlinux_thinlink
+> @@ -0,0 +1,53 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
+> +
+> +PHONY :=3D __default
+> +__default: vmlinux.thinlink
+> +
+> +include include/config/auto.conf
+> +include $(srctree)/scripts/Kbuild.include
+> +
+> +
+> +# Generate a linker script to ensure correct ordering of initcalls for C=
+lang LTO
+> +# ----------------------------------------------------------------------=
+-----
+> +
+> +quiet_cmd_gen_initcalls_lds =3D GEN     $@
+> +      cmd_gen_initcalls_lds =3D \
+> +       $(PYTHON3) $(srctree)/scripts/jobserver-exec \
+> +       $(PERL) $(real-prereqs) > $@
+> +
+> +.tmp_initcalls_thinlink.lds: $(srctree)/scripts/generate_initcall_order.=
+pl \
+> +               vmlinux.a FORCE
+> +       $(call if_changed,gen_initcalls_lds)
+> +
+> +targets :=3D .tmp_initcalls_thinlink.lds
+> +
+> +initcalls-lds :=3D .tmp_initcalls_thinlink.lds
+> +
+> +quiet_cmd_ld_vmlinux.thinlink =3D LD      $@
+> +      cmd_ld_vmlinux.thinlink =3D \
+> +       $(AR) t vmlinux.a > .vmlinux_thinlto_bc_files; \
+> +       $(LD) ${KBUILD_LDFLAGS} -r $(addprefix -T , $(initcalls-lds)) \
+> +       --thinlto-index-only @.vmlinux_thinlto_bc_files; \
+> +       touch vmlinux.thinlink
+> +
+> +vmlinux.thinlink: vmlinux.a $(initcalls-lds) FORCE
+> +       $(call if_changed,ld_vmlinux.thinlink)
+> +
+> +targets +=3D vmlinux.thinlink
+> +
+> +# Add FORCE to the prerequisites of a target to force it to be always re=
+built.
+> +# ----------------------------------------------------------------------=
+-----
+> +
+> +PHONY +=3D FORCE
+> +FORCE:
+> +
+> +# Read all saved command lines and dependencies for the $(targets) we
+> +# may be building above, using $(if_changed{,_dep}). As an
+> +# optimization, we don't need to read them if the target does not
+> +# exist, we will rebuild anyway in that case.
+> +
+> +existing-targets :=3D $(wildcard $(sort $(targets)))
+> +
+> +-include $(foreach f,$(existing-targets),$(dir $(f)).$(notdir $(f)).cmd)
+> +
+> +.PHONY: $(PHONY)
+> diff --git a/scripts/head-object-list.txt b/scripts/head-object-list.txt
+> index 7274dfc65af60..90710b87a3877 100644
+> --- a/scripts/head-object-list.txt
+> +++ b/scripts/head-object-list.txt
+
+Adding a new entry to this file is NACK.
+
+
+
+> @@ -18,6 +18,7 @@ arch/arm/kernel/head.o
+>  arch/csky/kernel/head.o
+>  arch/hexagon/kernel/head.o
+>  arch/loongarch/kernel/head.o
+> +arch/loongarch/kernel/head.o_thinlto_native
+>  arch/m68k/68000/head.o
+>  arch/m68k/coldfire/head.o
+>  arch/m68k/kernel/head.o
 > --
-> With best wishes
-> Dmitry
+> 2.49.0.1143.g0be31eac6b-goog
+>
+>
+
+
+--=20
+Best Regards
+Masahiro Yamada
