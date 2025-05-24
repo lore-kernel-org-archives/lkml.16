@@ -1,149 +1,124 @@
-Received: from out30-110.freemail.mail.aliyun.com (out30-110.freemail.mail.aliyun.com [115.124.30.110])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AFC1288A5;
-	Sat, 24 May 2025 02:00:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.110
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D74FA191F74
+	for <linux-kernel@vger.kernel.org>; Sat, 24 May 2025 02:10:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748052013; cv=none; b=OKpmocpjMjJEAsa+QF9vMaOGNZhdBqK/43RZBMJS5YBGmyIkAPkSf0SmAPLPc1GfMogC3u3mMucbZygMHN+lsAPahWCA4mG62VC2H6b1fT8VvNOHqi8CDBm5oUl6yZYaLHYvhvyukCcbhh256+Nu3T32t68ib6+i+1qSy9u0QZM=
+	t=1748052617; cv=none; b=RTw40VVhgrz/mUn+jZQwdG3I2Q1vlWhEHnH8FL9A39/wS7K7aIpRoIkjC25rAuG9ei7HXPilNnTjojTooxWfc5r4ns3DiSxt0Groo7G4nLOued8qHbYAdVZXJ0lCwKat6ZVI3GcbxZQlSP5wdQCMi+tyi3K/CFKlwPFrutMZp/4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748052013; c=relaxed/simple;
-	bh=yVsIs9c2VNbcBMNMt2QKM6J6M2oE1mZDuv/fT2zyWkk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XBRiF5nFTYnXa8a3Iu8IZ95R7ummyHKtWSs41hzrRmKdZ0mapoLShxuuZfOr4RrbC5MFEuG5FVMO8ECBL+zYXJveskLj5DZLrcO7AXS9K0KGhKVD0TIREFm2TCi14uWgeHRaKrDHnFzMqqRMu0zcZ2kXkCYvev825xrkEuFH38E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=iGM1QGsL; arc=none smtp.client-ip=115.124.30.110
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1748052617; c=relaxed/simple;
+	bh=o4MvvKaZWgzzKt41LfWGF6XxHz6DvTMbHLbGblGx36c=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gN05clQuAkZ5PPm+Gm0nbC3/Oys0e01QwH2QkcbkJxS72g4vTzO5OR2DuYQ/S4syz9E+0sdYEoRGijTa7aVrxAaLbouZCxjt759h5knhs0eoa0K7BtgB+CVepD23O1vCo0Y82NsSAn4xYO3qKhxC1TF7djwZsaP3MdbjoKXszbM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=PU8clbf7; arc=none smtp.client-ip=209.85.208.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="iGM1QGsL"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1748052007; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=+lI6y2wDJ47d4yiPcvPJikdG0IMfeTY5l5iLcdXaZ4c=;
-	b=iGM1QGsLFrKnaqh43kXkDXkmQ3/cLlmyVkhEkFgRxYMEvdzDG2a7x+JLDllCObjbCfs6ib/qYv3TyM/00MYN0MVwdYyh17HPxD3kn91orMhJSR37X+s5j+pt15cazYQ6kYj5GYaLo+eLNRd3V6FnHZ6ozJanklEMNMuc3w5I2/0=
-Received: from localhost(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0WbcNlVP_1748052005 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Sat, 24 May 2025 10:00:05 +0800
-From: Baolin Wang <baolin.wang@linux.alibaba.com>
-To: akpm@linux-foundation.org,
-	david@redhat.com,
-	shakeel.butt@linux.dev
-Cc: lorenzo.stoakes@oracle.com,
-	Liam.Howlett@oracle.com,
-	vbabka@suse.cz,
-	rppt@kernel.org,
-	surenb@google.com,
-	mhocko@suse.com,
-	donettom@linux.ibm.com,
-	aboorvad@linux.ibm.com,
-	sj@kernel.org,
-	baolin.wang@linux.alibaba.com,
-	linux-mm@kvack.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] mm: fix the inaccurate memory statistics issue for users
-Date: Sat, 24 May 2025 09:59:53 +0800
-Message-ID: <4f0fd51eb4f48c1a34226456b7a8b4ebff11bf72.1748051851.git.baolin.wang@linux.alibaba.com>
-X-Mailer: git-send-email 2.43.5
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="PU8clbf7"
+Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-32840b91488so4050771fa.0
+        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 19:10:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1748052614; x=1748657414; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=H7TEkWtOA1fKJ9Z3MfHUljq+ctXCp/GLeazv/q5J3eQ=;
+        b=PU8clbf7ukGyCeKd2uECagqv+9gGN324heIc/TboTLadTrNfcI6gRgMdVIJs08wmcn
+         X42OPZ7l+1wt963IY0v/9i5xk+RNeqJeq96ubhCD3XldzXdRAThqlHFbs5X5cUd7kx3p
+         8wOv5YGVujzxT7P+ZiRSQi3dovTWwEZIcQ/rcFG1Xircbe0iXKQYpJuky/gFsQ/uijyX
+         bqR+6lo60OCKASBDJvBjFVuzR59Xu5RRKQXMpANgS1wExW+DYfPnZOTVMnWUKLMDIAG5
+         WCoMTm8ajiI2TUS8mQZuvWeSRE5jWGxy27des1VDojRxzIUkem86+j8yaZaKS1QNlpd4
+         JVcA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748052614; x=1748657414;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=H7TEkWtOA1fKJ9Z3MfHUljq+ctXCp/GLeazv/q5J3eQ=;
+        b=TR9JiCLbmmaJv/HhBxI+n9Ul0Er7Zge/22YeJGWN2XfvbDMgW4pIIixY7qqwTUvSSm
+         kYdXVDv1LAEO/5EsKJTZkodFGE3nQc9Rk1uvE32eB4jKEIrQMi+keuLB2gHc1mQYGGhm
+         fNrw91o3FXX1nvBWQU14/ivNAgEk4zzti4da52rvrc+S9ZDKARDL3lRBDkbKnG0xccDT
+         dc/9gV2xLNdKGRlM1cJ8HPfVVEJOb7vCifcKdbhE9cn1v2IDmV1AygzA0UBsXmcP98ZV
+         b9JcVrawPaPdj3BboCI+j4LgjjscCqCI5mCU4ZVVvUGgW9+MM5Cdn2Ot/yNSZhN+dTqv
+         kv5w==
+X-Forwarded-Encrypted: i=1; AJvYcCX90dbLIWYn+l8KnqqvKqh61mfx4zfFzhwDxY3l7gMpXuJtezvK3HfGntoeV4t/Jce3Dv1Y+CxUjTTgMGc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwB33mSiYcke4UeGQNzHTSfqtddmkLGA6U9LutVzK2RIT9x65kT
+	HkSsuHuz1+8H8DIczSIFPd5fxsMd+LmhP/AMMOEM4LV1v3cUookhABSYpCrztMNtD9o8xS+/JD9
+	VsSYbY5dBJbV6fh3ExRJE+PPjD5T9VAs9zuw9I8IG4naMgJdwgxX1lIU=
+X-Gm-Gg: ASbGncsnu47lXDhnOfmqXJ0D1+LccvxISPbT5ul2D3bIygDLg8WLgMWx4QZTRW5GObl
+	7aMms56q6BsE3/uDM5I+JV/twtRZavoWFO6E4y/YGv+9Kxdj2f2JZkbMeGfDpQjMNJx2Ut5kDcj
+	6OnG4w1ouF2yF0FSbC+e6l5B2rdXFOftOiUxuEKes=
+X-Google-Smtp-Source: AGHT+IHY5XW6K8OSyPXphlOcDwKBn+R3ju+NDtjgbho1Jx9msYMJnMGN5LmUHY0PKXrBeRjomdAYIIuLKlv3vv3K5ec=
+X-Received: by 2002:a05:6512:1242:b0:54e:751f:40a2 with SMTP id
+ 2adb3069b0e04-5521c7adc37mr417766e87.14.1748052613881; Fri, 23 May 2025
+ 19:10:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250520031552.1931598-1-hezhongkun.hzk@bytedance.com>
+ <8029d719-9dc2-4c7d-af71-4f6ae99fe256@redhat.com> <CACSyD1Mmt54dVRiBibcGsum_rRV=_SwP=dxioAxq=EDmPRnY2Q@mail.gmail.com>
+ <aC4J9HDo2LKXYG6l@slm.duckdns.org> <CACSyD1MvwPT7i5_PnEp32seeb7X_svdCeFtN6neJ0=QPY1hDsw@mail.gmail.com>
+ <aC90-jGtD_tJiP5K@slm.duckdns.org> <CACSyD1P+wuSP2jhMsLHBAXDxGoBkWzK54S5BRzh63yby4g0OHw@mail.gmail.com>
+ <aDCnnd46qjAvoxZq@slm.duckdns.org> <CACSyD1OWe-PkUjmcTtbYCbLi3TrxNQd==-zjo4S9X5Ry3Gwbzg@mail.gmail.com>
+ <aDEdYIEpu_7o6Kot@slm.duckdns.org>
+In-Reply-To: <aDEdYIEpu_7o6Kot@slm.duckdns.org>
+From: Zhongkun He <hezhongkun.hzk@bytedance.com>
+Date: Sat, 24 May 2025 10:09:36 +0800
+X-Gm-Features: AX0GCFtSw_BI9F2a_IL3u-e95lEJrbiFfnBD-W_brUziurfcRh6cHEni89aqwos
+Message-ID: <CACSyD1N2CjY-yqcSg+Q6KHKGzzQnio9HjwUHutup+FEX08wg0g@mail.gmail.com>
+Subject: Re: [External] Re: [PATCH] cpuset: introduce non-blocking cpuset.mems
+ setting option
+To: Tejun Heo <tj@kernel.org>
+Cc: Waiman Long <llong@redhat.com>, cgroups@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	muchun.song@linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On some large machines with a high number of CPUs running a 64K pagesize
-kernel, we found that the 'RES' field is always 0 displayed by the top
-command for some processes, which will cause a lot of confusion for users.
+On Sat, May 24, 2025 at 9:14=E2=80=AFAM Tejun Heo <tj@kernel.org> wrote:
+>
+> Hello,
+>
+> On Sat, May 24, 2025 at 09:10:21AM +0800, Zhongkun He wrote:
+> ...
+> > We move the task by modifying the cpuset.cpus and cpuset.mems and
+> > the memory migration is an option with cpuset.memory_migrate
+> > interface in V1. After we relocate the threads, the memory will be
+> > migrated by syscall move_pages in userspace slowly, within a few
+> > minutes.
+> >
+> > Presently, cpuset.mems triggers synchronous memory migration,
+> > leading to prolonged and unacceptable service downtime in V2.
+> >
+> > So we hope to add back an interface similar to cgroup v1, optional
+> > the migration.
+>
+> Ah, I see, so it's not that you aren't migrating the memory but more that
+> the migration through cpuset.mems is too aggressive and causes disruption=
+.
+> Is that the right understanding?
 
-    PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND
- 875525 root      20   0   12480      0      0 R   0.3   0.0   0:00.08 top
-      1 root      20   0  172800      0      0 S   0.0   0.0   0:04.52 systemd
+Yes, exactly.
 
-The main reason is that the batch size of the percpu counter is quite large
-on these machines, caching a significant percpu value, since converting mm's
-rss stats into percpu_counter by commit f1a7941243c1 ("mm: convert mm's rss
-stats into percpu_counter"). Intuitively, the batch number should be optimized,
-but on some paths, performance may take precedence over statistical accuracy.
-Therefore, introducing a new interface to add the percpu statistical count
-and display it to users, which can remove the confusion. In addition, this
-change is not expected to be on a performance-critical path, so the modification
-should be acceptable.
+>
+> If so, would an interface to specify the rate of migration be a better
+> interface?
+>
 
-Fixes: f1a7941243c1 ("mm: convert mm's rss stats into percpu_counter")
-Tested-by Donet Tom <donettom@linux.ibm.com>
-Reviewed-by: Aboorva Devarajan <aboorvad@linux.ibm.com>
-Tested-by: Aboorva Devarajan <aboorvad@linux.ibm.com>
-Acked-by: Shakeel Butt <shakeel.butt@linux.dev>
-Acked-by: SeongJae Park <sj@kernel.org>
-Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
----
-Changes from RFC:
- - Collect reviewed and tested tags. Thanks.
- - Add Fixes tag.
----
- fs/proc/task_mmu.c | 14 +++++++-------
- include/linux/mm.h |  5 +++++
- 2 files changed, 12 insertions(+), 7 deletions(-)
+Per my understanding,  the interface of migration rate is far more complex.
+To slow down the migration, moving it to the userspace can also help determ=
+ine
+when to carry out this operation.
 
-diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
-index b9e4fbbdf6e6..f629e6526935 100644
---- a/fs/proc/task_mmu.c
-+++ b/fs/proc/task_mmu.c
-@@ -36,9 +36,9 @@ void task_mem(struct seq_file *m, struct mm_struct *mm)
- 	unsigned long text, lib, swap, anon, file, shmem;
- 	unsigned long hiwater_vm, total_vm, hiwater_rss, total_rss;
- 
--	anon = get_mm_counter(mm, MM_ANONPAGES);
--	file = get_mm_counter(mm, MM_FILEPAGES);
--	shmem = get_mm_counter(mm, MM_SHMEMPAGES);
-+	anon = get_mm_counter_sum(mm, MM_ANONPAGES);
-+	file = get_mm_counter_sum(mm, MM_FILEPAGES);
-+	shmem = get_mm_counter_sum(mm, MM_SHMEMPAGES);
- 
- 	/*
- 	 * Note: to minimize their overhead, mm maintains hiwater_vm and
-@@ -59,7 +59,7 @@ void task_mem(struct seq_file *m, struct mm_struct *mm)
- 	text = min(text, mm->exec_vm << PAGE_SHIFT);
- 	lib = (mm->exec_vm << PAGE_SHIFT) - text;
- 
--	swap = get_mm_counter(mm, MM_SWAPENTS);
-+	swap = get_mm_counter_sum(mm, MM_SWAPENTS);
- 	SEQ_PUT_DEC("VmPeak:\t", hiwater_vm);
- 	SEQ_PUT_DEC(" kB\nVmSize:\t", total_vm);
- 	SEQ_PUT_DEC(" kB\nVmLck:\t", mm->locked_vm);
-@@ -92,12 +92,12 @@ unsigned long task_statm(struct mm_struct *mm,
- 			 unsigned long *shared, unsigned long *text,
- 			 unsigned long *data, unsigned long *resident)
- {
--	*shared = get_mm_counter(mm, MM_FILEPAGES) +
--			get_mm_counter(mm, MM_SHMEMPAGES);
-+	*shared = get_mm_counter_sum(mm, MM_FILEPAGES) +
-+			get_mm_counter_sum(mm, MM_SHMEMPAGES);
- 	*text = (PAGE_ALIGN(mm->end_code) - (mm->start_code & PAGE_MASK))
- 								>> PAGE_SHIFT;
- 	*data = mm->data_vm + mm->stack_vm;
--	*resident = *shared + get_mm_counter(mm, MM_ANONPAGES);
-+	*resident = *shared + get_mm_counter_sum(mm, MM_ANONPAGES);
- 	return mm->total_vm;
- }
- 
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 185424858f23..15ec5cfe9515 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -2568,6 +2568,11 @@ static inline unsigned long get_mm_counter(struct mm_struct *mm, int member)
- 	return percpu_counter_read_positive(&mm->rss_stat[member]);
- }
- 
-+static inline unsigned long get_mm_counter_sum(struct mm_struct *mm, int member)
-+{
-+	return percpu_counter_sum_positive(&mm->rss_stat[member]);
-+}
-+
- void mm_trace_rss_stat(struct mm_struct *mm, int member);
- 
- static inline void add_mm_counter(struct mm_struct *mm, int member, long value)
--- 
-2.43.5
+Perhaps we can give it a try if there is a elegant code implementation whic=
+h
+can help the people do not migrate it in userspace.
+If that path doesn't work, it's okay for us to disable the migration.
 
+> Thanks.
+>
+> --
+> tejun
