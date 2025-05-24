@@ -1,163 +1,215 @@
-Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
+Received: from mail-qv1-f52.google.com (mail-qv1-f52.google.com [209.85.219.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97D258634F
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 23:57:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 859FB4C7C;
+	Sat, 24 May 2025 00:00:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748044624; cv=none; b=SuDaptZtEVdAYCGEtwKTeeezr6OMFscAb/Mly7xJAEIlkgZWuguP3r4hVu7Zy+l4xKADCTWrncNbrEKFK1K74/HQPIWrXtl9wFcBTGFwPpPK8ztiaTwcQz/bPa9murn7qHRrcw5osVe5ttaXxFsoJPrHhAEGY+cs35j5aIllxBU=
+	t=1748044827; cv=none; b=oIw1smAJjPqc5wVTE2UdltkaqS8QvRf2wjkLNZfcOdY1F8KPeiSIiU7/M+Ndq2dSyDRdYf6KMJXNPGw2PbMej19eXmWIGiRZVeWXRhVggogPDn2MqtYVnSAn+vOsDZw+4eUm1KblzeRppiUmMX/8pzygHi2OUWX6xofNwtonjTE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748044624; c=relaxed/simple;
-	bh=6TMOE8tfjhP/pe8QLHmdJ8V7+7q15WDOJwrhvuXiiSs=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=eayosr514SA9/QY0QkLSM6z0OAhWU3rqu98BLFIRlHoa+zRkSuqlrRXfVACbaULv4rrhVknQkyT9hucgVlBVyHM0hA6CNKlLO6BvtVfwGv4FupSTAT5/eErog6zjogyQN79N2IFtqNRNH1nQoAA9K0AcczKfh9zwhOucYi4rp6U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ndufresne.ca; spf=none smtp.mailfrom=ndufresne.ca; dkim=pass (2048-bit key) header.d=ndufresne-ca.20230601.gappssmtp.com header.i=@ndufresne-ca.20230601.gappssmtp.com header.b=ybkvl8V6; arc=none smtp.client-ip=209.85.222.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ndufresne.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ndufresne.ca
+	s=arc-20240116; t=1748044827; c=relaxed/simple;
+	bh=TNxK7mTWRgfqHFOlA9knAWb8UG7aQsjnNGtP0nwujr0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JjhPic57ucu1gUS74iCZYUxZ5Jbmgrw99NekuoD7SNCSH5ULCK5h0xXBJ4PPbkMZ/LhLc9bzudUNH7elzh/VyCiLFb1/TK+NN9Sa2EQW5vVHxRTw5J31jbky6wsK8IaJPOqsi1S9jYHbCUj79d3HBZb2EQHp1cVmfcEBYEW+NBI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FUcz2oJL; arc=none smtp.client-ip=209.85.219.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ndufresne-ca.20230601.gappssmtp.com header.i=@ndufresne-ca.20230601.gappssmtp.com header.b="ybkvl8V6"
-Received: by mail-qk1-f174.google.com with SMTP id af79cd13be357-7c5e39d1db2so18373085a.3
-        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 16:57:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FUcz2oJL"
+Received: by mail-qv1-f52.google.com with SMTP id 6a1803df08f44-6fa9c907cacso719386d6.1;
+        Fri, 23 May 2025 17:00:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ndufresne-ca.20230601.gappssmtp.com; s=20230601; t=1748044621; x=1748649421; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=1V3jztqEm0v3PJIR69srO63uF29oBzq7VleLsu+OAvc=;
-        b=ybkvl8V64KIiwM+Pd7oLY1lZKSH8ULmZMXVTFsCj5as1WSzLg+R6R1HkxgOTva8xP2
-         SpCCrOKzYRvAkxGjg/12OMD2IR7UbH4LSxcgXJGJ3wai/cYxUn3/nplXKoCl28vdqDS2
-         Zb4lbsp+zhZfPoKUAtWUQs60KVuFbYYXul68fkCue5cLeWCIwERHWzR2EwD/+Vo+2OfO
-         jq8m7GWxSJyAmgXxOokl1YxbfvSWzM8zA1eduo9dwkJkhIERsSDYQCaBImp8RcWAL0Kn
-         nVjeADp5MuRtyYjH1et/LAex5B41nUlSi8njJq6o/d08K2jaVcdAS9biCXfChuuFHcMd
-         k63g==
+        d=gmail.com; s=20230601; t=1748044824; x=1748649624; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9g0bCtwZKg4p785vc5FWBzUYXiC+e3vu3lEqFvrGvvQ=;
+        b=FUcz2oJLRLwh7TG27ciHJRTX7uNuPhlqlv8MibCAN1+uZxHRUC1TryF/cGnYNn7p9x
+         ulQeDt4ZZso6P/E/tJNOk5xGqNVCyg6gRzQvlyjJ/UfioZIQqU1/YKChbPnbRXHbvPZq
+         PWmfc04O70+kD7LqiZkOst3q7vW9772P/L+eTtuReFIlUuWbXBzdFWTMo72rGsa23XSs
+         kxOtG2LJ8CtH+YkYN0XmBmu0ltuKj8lottvIeQ//vBG7QzKKj/tx5j/QEuPnxnA2L6T4
+         any5OnXi3bcBSFkbcAmz7zesd0KBjSwov2OmrhnGGyjRtLOnGBthg3JT0fYDQt7TpH93
+         EHCg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748044621; x=1748649421;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=1V3jztqEm0v3PJIR69srO63uF29oBzq7VleLsu+OAvc=;
-        b=WuCq+ukjGoXX04l93DsZaeMdedky2z+9AATmlToji+f4aOnKuOfLWlszjhBKBR/yo0
-         jxqQfG0dnL/9Hk+q7JfhtAl8URBpCKBRMx/7niW8cOmP2v9VRJ1lDU+NL9ZI7jn8BXZX
-         Et642rviQ1JMwEh4veTU7NWyI6/EgDdA8XVnrGfUuuwTNi+boR7XzWad9ehomvIfHqh1
-         HNIzEQKIP3t3Zb8hgnQ5UgFCIfWeJ0fVt/y3aMETXedn75w5proNN3smfib02d483D45
-         hPiygtnNBIcZ0+MT8ESljtONw8/7iIaiVn3kfdWDs/psIhbhMY3ykZhr1h568ohDe8ik
-         E3XA==
-X-Forwarded-Encrypted: i=1; AJvYcCXy0NQ9fSGurInN4jjK7wrpITuQpsoebEBR1S6tUpDPqAHdsySGtwWo1xEPzwz+nQbh7beepTiKq/OGyIA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy/ONKOkDKxIKQaRc0LHdgQ7Sb9M5EpXNFV2bhBIeskfX/mpM5v
-	mR/2g/n4p8aOM96mio0ZJUj9GGqotyzOB+MvR4mzQjW4cWgkUEGI3X+OSzD8Kl8AMa2j+Nb3K7b
-	eY5LWtxY=
-X-Gm-Gg: ASbGnctfyKf+m7ffmXsheQgmWCCPfBx+E/VgnZRcMs0QI7YzwjDOgypEyWngD8AiF0V
-	qO/xjrcRdHeHHcUSht2lmmsO7x1unu2N+tZWxkkYDO5bi3h9FWKkAhVNjTb/hOWJD0BornF+UU3
-	64+MHZaY0YkQf2f2V3JA7o7w8NvHArK6FkO1vx6kUIcQCXFDGccEl1vFl29OHJvq0vDUKc1IWqt
-	n1jb4LVgNW/hhvP62+K3OyR6K+HOh+woHygznLKsMUJm4Z5ED7Lc/tqF+PEzcxqwU4SGr+dHYHB
-	J1GQOiiOPXl0nV7HnU9q9j31I6ZTVYshFsWK6pPj8/a1dFL0qlLD5dV0
-X-Google-Smtp-Source: AGHT+IF6fgqRDRQ5OBQMveh8h4PNZ39A72J47cOsJyJsBBuyNTZPwp9WTl4uQWPXOOe2jevp6q4Zaw==
-X-Received: by 2002:a05:620a:44ca:b0:7c7:a5f6:2633 with SMTP id af79cd13be357-7ceecb6cc93mr218440785a.6.1748044621467;
-        Fri, 23 May 2025 16:57:01 -0700 (PDT)
-Received: from ?IPv6:2606:6d00:17:b2fc::c41? ([2606:6d00:17:b2fc::c41])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7cd468ccbfcsm1254223785a.107.2025.05.23.16.57.00
+        d=1e100.net; s=20230601; t=1748044824; x=1748649624;
+        h=in-reply-to:content-disposition:mime-version:references:reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=9g0bCtwZKg4p785vc5FWBzUYXiC+e3vu3lEqFvrGvvQ=;
+        b=LsLEBoA/8LsAopHhrIB1gF3GarNLFWDO4P6FHDE5SK2eNwtaethQQmsE+qY5u6chjY
+         x/KaoOCFeFAg7cNUE+MLXhI7pL3mxOeSRzAu3R19CtLDzG9/zAdYGzepSi/42BguVQus
+         iAflXaF6W5at+JKEkJYNYbM7YbNSe8lFrtvuNuL+saZ5bb+eax18Df8jc8C+GKnhq5bD
+         a1xpprFfMr3U+4Eou05aHtrowu7PBMR9IkD4IVZdCYYt6SYJ6q+QkARYV5Ps5CzCH/Jw
+         lXDIVqi5ttNyddQIVV/uCYezM8zBVDXP6aFhmIwf7RLL+OJI7xbawIKqLg/jjnL2zgfU
+         V0vg==
+X-Forwarded-Encrypted: i=1; AJvYcCUSUMFr+aaTzpE7Uj4HaRf9qA0C4AZmj60pbv+uhD9c/gkCdF48WrIysdR2SNDcXTm9U796bnN0KCQZdnXU@vger.kernel.org, AJvYcCXDx3S4p8B2kRZS7nhmkio1/m4k2mkGgd7U4fskbtsPTUoZkWyUwCl3lRwMHbs40ssdpS/rNhG7xam8@vger.kernel.org, AJvYcCXNs/MI2KimsFhxb0nl8yrRHw47ANzW+rlWqbxM29x0++qA961Ez/tOKTcilWD3cnc1An4zcNdDKed2@vger.kernel.org, AJvYcCXeqye8InnnhmmhZzHgB2ISRDJKAubP70nuc+DgCVd/5Ye8Y5wWDgthvBc0iAkOJv1UHjeK1ryeCa5d3w==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyutb6Ry4YTDnxjovBfiameVSa2g5hrEIVN3U3N/D69mZigMcnH
+	eLe3k+7uCC+39f3z4CFxFe5EbG9OywRq1Rj1tUZRwUzXHpVgKU0re6VO
+X-Gm-Gg: ASbGncs7U3A4hRX5HQhCusQvVWHmoEqKVPR6F3prvA0ouHpDOF/DMSGNWHozHQvBQWB
+	WJcMNjK6Vfa4xaxyLgqFsChONqScYjFXId2DIjjo4BVFGhEXVo3rFl+Zt2W/RXunOjWTz2w8bZh
+	UCRXat9ODRiv8mkHmgJ/2dkvKv82ZFXb53oyYUZF/5gkzdywZldWS/409C4U3SHij4T/Tcl6jI7
+	+lsb6WgNdScdwpupIbGng32dVR8atJyv/ZcNUPqgAzl5l3FYAcELp40Rc4la2Uvygr8ySb6jGLZ
+	DU3CHP/9ajr4qartTePLVJ8zAGh4XvKzQzGbzQsNnVBl7J8/39Ht16tGr9e7DxjWWCLT0WVk8Tc
+	VErS7h3g=
+X-Google-Smtp-Source: AGHT+IH6VVwSEesBgULWBddMghxWcMgx95hbJxuBZHbEXRgYNm4ei9O3lM42bP5G9QWa4OOvSKv9Lw==
+X-Received: by 2002:ac8:5710:0:b0:48a:80e5:72bb with SMTP id d75a77b69052e-49f46055e2cmr7140761cf.2.1748044824092;
+        Fri, 23 May 2025 17:00:24 -0700 (PDT)
+Received: from JSANTO12-L01.ad.analog.com ([189.121.203.94])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-494ae528ffasm120727491cf.73.2025.05.23.17.00.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 May 2025 16:57:01 -0700 (PDT)
-Message-ID: <82e84dc1277e08742b8f72c6a6ce475acd6d36d8.camel@ndufresne.ca>
-Subject: Re: [PATCH 07/18] media: coda: Add fake IRQ check
-From: Nicolas Dufresne <nicolas@ndufresne.ca>
-To: Sergey Khimich <serghox@gmail.com>, linux-media@vger.kernel.org
-Cc: Philipp Zabel <p.zabel@pengutronix.de>, Mauro Carvalho Chehab
-	 <mchehab@kernel.org>, linux-kernel@vger.kernel.org, Vladimir Yakovlev
-	 <vovchkir@gmail.com>, Maksim Turok <turok.m7@gmail.com>
-Date: Fri, 23 May 2025 19:57:00 -0400
-In-Reply-To: <20250314152939.2759573-8-serghox@gmail.com>
-References: <20250314152939.2759573-1-serghox@gmail.com>
-	 <20250314152939.2759573-8-serghox@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.1 (3.56.1-1.fc42) 
+        Fri, 23 May 2025 17:00:23 -0700 (PDT)
+Date: Fri, 23 May 2025 21:00:17 -0300
+From: Jonathan Santos <jonath4nns@gmail.com>
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: Andy Shevchenko <andy@kernel.org>,
+	Jonathan Santos <Jonathan.Santos@analog.com>,
+	linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+	nuno.sa@analog.com, Michael.Hennerich@analog.com,
+	marcelo.schmitt@analog.com, robh@kernel.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, marcelo.schmitt1@gmail.com,
+	linus.walleij@linaro.org, brgl@bgdev.pl, lgirdwood@gmail.com,
+	broonie@kernel.org, dlechner@baylibre.com
+Subject: Re: [PATCH v8 08/11] iio: adc: ad7768-1: add support for
+ Synchronization over SPI
+Message-ID: <aDEMEWQvu0r9stCh@JSANTO12-L01.ad.analog.com>
+Reply-To: 20250518175832.77b8d670@jic23-huawei
+References: <cover.1747175187.git.Jonathan.Santos@analog.com>
+ <59f45c9af16fa68f2a479f824129f5a9f2cd0997.1747175187.git.Jonathan.Santos@analog.com>
+ <aCcFXolH0FVBSP11@smile.fi.intel.com>
+ <20250518175832.77b8d670@jic23-huawei>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250518175832.77b8d670@jic23-huawei>
 
-Hi,
+On 05/18, Jonathan Cameron wrote:
+> On Fri, 16 May 2025 12:29:02 +0300
+> Andy Shevchenko <andy@kernel.org> wrote:
+> 
+> > On Thu, May 15, 2025 at 06:13:56PM -0300, Jonathan Santos wrote:
+> > > The synchronization method using GPIO requires the generated pulse to be
+> > > truly synchronous with the base MCLK signal. When it is not possible to
+> > > do that in hardware, the datasheet recommends using synchronization over
+> > > SPI, where the generated pulse is already synchronous with MCLK. This
+> > > requires the SYNC_OUT pin to be connected to the SYNC_IN pin.
+> > > 
+> > > Use trigger-sources property to enable device synchronization over SPI
+> > > and multi-device synchronization while replacing sync-in-gpios property.  
+> Given some discussion in here I'll not (yet) pick up this series.
+> 
+> It's almost certainly just missed the coming merge window anyway so
+> we have time.
+> 
+> > 
+> > ...
+> > 
+> > > +static int ad7768_trigger_sources_get_sync(struct device *dev,
+> > > +					   struct ad7768_state *st)
+> > > +{
+> > > +	struct fwnode_reference_args args;
+> > > +	struct fwnode_handle *fwnode = dev_fwnode(dev);
+> > > +	int ret;
+> > > +
+> > > +	/*
+> > > +	 * The AD7768-1 allows two primary methods for driving the SYNC_IN pin
+> > > +	 * to synchronize one or more devices:
+> > > +	 * 1. Using an external GPIO.
+> > > +	 * 2. Using a SPI command, where the SYNC_OUT pin generates a
+> > > +	 *    synchronization pulse that drives the SYNC_IN pin.
+> > > +	 */
+> > > +	if (!fwnode_property_present(fwnode, "trigger-sources")) {  
+> > 
+> > I'm wondering if you can split the below to a separate function and do something like
+> > 
+> > 	if (fwnode_property_present(...))
+> > 		return setup_trigger_source(...);
+> > 
+> > 	...
+> > 	en_spi_sync = true;
+> > 	return 0;
+> > 
+> > > +		/*
+> > > +		 * In the absence of trigger-sources property, enable self
+> > > +		 * synchronization over SPI (SYNC_OUT).
+> > > +		 */
+> > > +		st->en_spi_sync = true;
+> > > +		return 0;
+> > > +	}
+> > > +
+> > > +	ret = fwnode_property_get_reference_args(fwnode,
+> > > +						 "trigger-sources",
+> > > +						 "#trigger-source-cells",
+> > > +						 0,
+> > > +						 AD7768_TRIGGER_SOURCE_SYNC_IDX,
+> > > +						 &args);  
+> > 
+> > 
+> > __free(fwnode_handle) ?
+> 
+> For args.fwnode?
+> 
+> That's fiddly to do and needs a different local variable to...
+> 
+> 
+> 
+> > 
+> > > +	if (ret)
+> > > +		return ret;
+> > > +
+> > > +	fwnode = args.fwnode;
+> 
+> this one.
+> 
+> You could wrap it up in a function to make that works cleanly.
+> So something similar to fwnode_find_reference() but with the
+> rest of the arguments.  Is there appetite for such a wrapper
+> in the generic property code?
+>
 
-Le vendredi 14 mars 2025 =C3=A0 18:29 +0300, Sergey Khimich a =C3=A9crit=C2=
-=A0:
-> From: Sergey Khimich <serghox@gmail.com>
->=20
-> Sometimes we receive fake interrupts. It's better to check
-> status register and trace fake irq if occurred.
->=20
-> Signed-off-by: Sergey Khimich <serghox@gmail.com>
-> ---
-> =C2=A0.../media/platform/chips-media/coda/coda-bit.c=C2=A0=C2=A0 | 16 +++=
-++++++++++++-
-> =C2=A0drivers/media/platform/chips-media/coda/trace.h=C2=A0 | 16 ++++++++=
-++++++++
-> =C2=A02 files changed, 31 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/media/platform/chips-media/coda/coda-bit.c b/drivers=
-/media/platform/chips-media/coda/coda-bit.c
-> index 84ded154adfe..3e3bb3d64ec9 100644
-> --- a/drivers/media/platform/chips-media/coda/coda-bit.c
-> +++ b/drivers/media/platform/chips-media/coda/coda-bit.c
-> @@ -2635,9 +2635,23 @@ irqreturn_t coda_irq_handler(int irq, void *data)
-> =C2=A0{
-> =C2=A0	struct coda_dev *dev =3D data;
-> =C2=A0	struct coda_ctx *ctx;
-> +	u32 status;
-> =C2=A0
-> =C2=A0	/* read status register to attend the IRQ */
-> -	coda_read(dev, CODA_REG_BIT_INT_STATUS);
-> +	status =3D coda_read(dev, CODA_REG_BIT_INT_STATUS);
-> +	if (!status) {
-> +		/*
-> +		 * Sometimes we received wrong interrupts
-> +		 * That's why we check status
-> +		 * and if one of it is zero - wait next interrupts
-> +		 * You need check your HW configuration
-> +		 */
-> +		dev_warn_ratelimited(dev->dev, "Fake irq status=3D0x%X\n",
-> +				=C2=A0=C2=A0=C2=A0=C2=A0 status);
-> +		trace_coda_wrong_irq(dev);
-> +		return IRQ_HANDLED;
+you mean like:
 
-How often is sometimes ? Does it cause any issues, frame loss ? If not, I w=
-ould say
-drop the warning and just swallow it.
+fwnode_find_reference_args(const struct fwnode_handle *fwnode,
+			   const char *name, const char *nargs_prop,
+			   unsigned int nargs, unsigned int index,
+			   struct fwnode_reference_args *args)
 
-Nicolas
+I don't know if it helps that much and since we are not handling
+arguments right know, I think fwnode_find_reference() would work (or not?).
+In that case maybe we add some note or TODO to explain why. 
 
-> +	}
-> +
-> =C2=A0	coda_write(dev, 0, CODA_REG_BIT_INT_REASON);
-> =C2=A0	coda_write(dev, CODA_REG_BIT_INT_CLEAR_SET,
-> =C2=A0		=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 CODA_REG_BIT_INT_CLEAR);
-> diff --git a/drivers/media/platform/chips-media/coda/trace.h b/drivers/me=
-dia/platform/chips-media/coda/trace.h
-> index abc6a01a74e9..15a96bab10ad 100644
-> --- a/drivers/media/platform/chips-media/coda/trace.h
-> +++ b/drivers/media/platform/chips-media/coda/trace.h
-> @@ -10,6 +10,22 @@
-> =C2=A0
-> =C2=A0#include "coda.h"
-> =C2=A0
-> +TRACE_EVENT(coda_wrong_irq,
-> +	TP_PROTO(struct coda_dev *dev),
-> +
-> +	TP_ARGS(dev),
-> +
-> +	TP_STRUCT__entry(
-> +		__field(struct coda_dev *, dev)
-> +	),
-> +
-> +	TP_fast_assign(
-> +		__entry->dev =3D dev;
-> +	),
-> +
-> +	TP_printk(" dev =3D 0x%p", __entry->dev)
-> +);
-> +
-> =C2=A0TRACE_EVENT(coda_bit_run,
-> =C2=A0	TP_PROTO(struct coda_ctx *ctx, int cmd),
-> =C2=A0
+> 
+> > > +	/* First, try getting the GPIO trigger source */
+> > > +	if (fwnode_device_is_compatible(fwnode, "gpio-trigger")) {
+> > > +		st->gpio_sync_in = devm_fwnode_gpiod_get_index(dev, fwnode,
+> > > +							       NULL,
+> > > +							       0,
+> > > +							       GPIOD_OUT_LOW,
+> > > +							       "sync-in");
+> > > +		ret = PTR_ERR_OR_ZERO(st->gpio_sync_in);
+> > > +		goto out_put_node;
+> > > +	}
+> > > +
+> > > +	/*
+> > > +	 * TODO: Support the other cases when we have a trigger subsystem to
+> > > +	 * reliably handle other types of devices as trigger sources.
+> > > +	 *
+> > > +	 * For now, return an error message. For self triggering, omit the
+> > > +	 * trigger-sources property.
+> > > +	 */
+> > > +	ret = dev_err_probe(dev, -EOPNOTSUPP, "Invalid synchronization trigger source\n");
+> > > +
+> > > +out_put_node:  
+> > 
+> > The above will allow to get rid of this label.
+> > 
+> > > +	fwnode_handle_put(args.fwnode);
+> > > +	return ret;
+> > > +}  
+> > 
+> 
