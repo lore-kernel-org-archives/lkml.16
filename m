@@ -1,129 +1,279 @@
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+Received: from mail-yw1-f177.google.com (mail-yw1-f177.google.com [209.85.128.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D942F23BE;
-	Sat, 24 May 2025 17:35:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF5651E5B95
+	for <linux-kernel@vger.kernel.org>; Sat, 24 May 2025 17:37:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748108109; cv=none; b=U2sY+8augKDpZh9VrRFFFQtWhdLPfW55ZAUQBQGJh/pR7TzAO9H2t/mtM1FTUtlm6bejV92EJXCus0VeZ2Cnr9fge0/Asqfh9zxMBcAW/6eBj4KbrkNE/DVNjG+bECZEYCCKcvVFMNYFQYUIROj6Aw4OYWKt9jIRcjrPSZaeY6U=
+	t=1748108273; cv=none; b=MSbV3hN8/mQukEVKPOO6N/R0FfyzwUuIMYwS1RVmBLCo/L5BAIQ9jbo7L5AROr2ueDBL8XyJCqMm+lc+mByjoxes9WxZAPZrzRRoxB8V38yUshWjKq3rQAxWZzBzNfjgvSnl1b8iQe8iPe4SD/5P+AJ19Qm2AI2OSjmyZGmT840=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748108109; c=relaxed/simple;
-	bh=i/LAb6xVbxT1aJ90RfLFJRh5A3lT0zdiGCBkjFs2BmE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=doNqu0xhBP10cR9cRLFLrbgOsIsEvWYhVYzq+kINJOacnsl9COV5TzyjdAjfKjhIKPY1yMAhPCk50vk4Sspvu9W4193W63vy5uPGjAeA9AwRzPCtt/+n7C/IniGQovkN58QyZVKmswitOBdYNH9yLt7s4GMC9DTqrjyRiu0VmLc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BOwYRy2u; arc=none smtp.client-ip=209.85.218.52
+	s=arc-20240116; t=1748108273; c=relaxed/simple;
+	bh=YvTjvHZRac60HkW2zlfb55VH5bsoVzIkvvxMQ06ioYg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YTN+YgG+iAMR+oITfWxfj6wfYRSVHLni5EW28Ks7KHsTiC6SRS1FWNfEAJJ9eDTEmpZpnAfuBF7fvlVXjDlXDhCVWKD7pTyCT0wp48N42a324AWsnlxp86198iTaMB62QRnUV1fgf7bOnDMZuDhQT60HyDm5FRCXtDRq3/hrKzY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GgIfFz08; arc=none smtp.client-ip=209.85.128.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BOwYRy2u"
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-ad564b7aea9so375683066b.1;
-        Sat, 24 May 2025 10:35:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GgIfFz08"
+Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-6ff4faf858cso5935467b3.2
+        for <linux-kernel@vger.kernel.org>; Sat, 24 May 2025 10:37:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748108106; x=1748712906; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6esos0NCbJWOrHjcUciV7jdqA8qN5ZRshgoZfehNMKs=;
-        b=BOwYRy2uTmy1EpOVc/c6Rs0Kh8DZHBrPvvvYhmjZ64PRFfQSAsoSYLrBkbBKzAJpRe
-         cz6h6n3r6hXeqs/I2HN4attqDPtyOamSa5+jR8fLmYQ0HUyxY0RZYW2GWSnYxCXUgRqR
-         1vwoR5q5ZIIqbizTflzqB71W8svb+1Ld+72mu3nVAgymfmIvnJS/M5Eh31E1ryysi1Qf
-         RxxRS5wqgXdcRLJVwoinYre1HKvZcoOYr80qywfE+5Il9TdP45wF20Lqn0R44+A6Ql5K
-         I71hDWEWMF1KzVTx6P1vovS9wNnLXYdE1wIf1PGCa882CgyJQiGuB7+uM6TjjcMzD7Qc
-         oZbg==
+        d=gmail.com; s=20230601; t=1748108271; x=1748713071; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=/omOcdeuHUY20QhcLJWkT4wJlAOgV8U3bLr2o0uq3JQ=;
+        b=GgIfFz08fHlHKKyoAas2ZYugO1nR4osisUOI/YRuDLH8VSiqcOt8fs8R92pE1qQ2/H
+         UN4neMKHV6mO4T0Se7sXccF19rzDISEwbbzzN1tLHnd7Di5i/MAWGuvIQzKbCigx9UE9
+         RicgJRSHOtXY92bd1OiB9zmDmiIzX2P4fdiiPko4WPQBTtiEXWBbq5JLdN/1MrgnjTy/
+         GivyXhLWXvuhmF1tsnm9gSTcjy1Z5v/cxWeG1VAb8NoRWaO5Koo5UIzEURrZS3mEA1+p
+         tqDKRiRHlor0wa9RX5aCmBZ9NppudM7sLbo9BLqGBDzXvs5byjNYsbkr9aQNBKwGuLpG
+         5ZQg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748108106; x=1748712906;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=6esos0NCbJWOrHjcUciV7jdqA8qN5ZRshgoZfehNMKs=;
-        b=uRHaJqcJ/Pr74bJduwdszDqWoTRUe9ESSgxQ/b5GGrMCTlX+LB3fp8A3+YX5VHyrjR
-         EesRowNfYVd6iggh5QAt+BASo2aBL2bmkqcwdFiEdmZ+Q9GqLKPXEsGgrodv5SDBB9vT
-         +XIEYxrn8EqzkwP138vj1YfZW/33yne7+qZIuCpeTx5fu1ckmshjZ4qLnd+zYbf6Ggby
-         1DxShKmk4wqftMgxiMFmCuqk+xkykJlqeFaQNY3CdWZqefWhUKV+kLMf1Mtx3DjHEkzH
-         Es2UhbkIlKxNDkZLDq72vgEq0/562GNE6MTf5zeH0/07aHYoes43wCkqovsna9qVOHhP
-         Exww==
-X-Forwarded-Encrypted: i=1; AJvYcCUD9MD6zFivE7yIIO93AZWa9JeBbHlba/slvaLOmQv+7aXE66kJlrH3C5ML2r8fpOMohxUrIBQSy9s=@vger.kernel.org, AJvYcCWFVsucTuc60jqMnDLDJfU/PyR+i0S7AJTFvgKRldK/AWLYZ+zqX8k2fRvCTvghAPSNAG1V/O/FM4Qp0a1B@vger.kernel.org
-X-Gm-Message-State: AOJu0YyEzzc7lBFNsRwmIQ0SB5mRgYwyanm6xR9UecINrnjIgASFXXrU
-	gxjnmKZFknCEVW6XqqdQhLBANHSUWRqBjfCR+iYoBz19qYKr7EfU6aNhxlThv4B0iy6EhBGpTd8
-	hTnza2EzT+hPjU+TK/GNVZz7oDBfz1sU=
-X-Gm-Gg: ASbGnctNqnWhrrlrcu2lMjOISad+5BQRgqDQn7yVeApZtUddKSPNVff/NjfJ6wAuQ5j
-	E1s4n9407cYG9nlKaKTZKfCTQyKarOME0RTNSj9rBsqleapaVwO0RycqdbI7yhEBIlqimFPuGRH
-	AjNIPJ7MKnGSH+Fvn2w03CsSawN6igkQ7Hmc3vMF33Kc5Wm8pFnKAEFZNnaojG07i/xw==
-X-Google-Smtp-Source: AGHT+IH7TxQKxV5rqnlT4lgf1dRHo65M8Huun796jND/WC3MPI6epVJVwGlHgQV8HtghIxJJCAIRdYl+87zUl5rXFss=
-X-Received: by 2002:a17:906:6a26:b0:ad5:4998:9f1a with SMTP id
- a640c23a62f3a-ad63f984b0fmr718065366b.5.1748108105950; Sat, 24 May 2025
- 10:35:05 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1748108271; x=1748713071;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=/omOcdeuHUY20QhcLJWkT4wJlAOgV8U3bLr2o0uq3JQ=;
+        b=ZtqL9E0gQGvnOUZBxZLIqyy2rK8I9R+ULAuxQlOWX+4Eug91DneNfkk/LVEV7W4QLh
+         tnzJF8Jh1RBsmF2oSjQlmBDHH4lie9P6YfT8R7mvVZXdqfeOXCd6bUTcD2evSo9YXZeg
+         33hIPL9a2RybPsYRtQtgbDuAskG8bLmpMh1YPGrcb3dYibfpWsVrJMW1XznKwXVn5wEO
+         c8CDAgUZ2fHBo/i5W3DPZWucNt++l+KtF9y6ZU+Jf7QddxvrsgxmV8GdDG+lB4b1azfa
+         A7wnMSl/CVk/2Cqm7BKkTzKnqupbDo4fgFQL7Ys7xPasVcNKL1O/8+aKzkFYXYPaI45N
+         pJvQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUGdsXf2tezj7MNEC+cIvK5PQ77pskJKlVwNQWnrAiIPBBk9xbpxrVxrQz3L47fpW3DSNwmnb9Xlvr1z2w=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxeKaajlqtZ1bROFlgjlF6gdWZBXctHDYSZ7iAL4GoVGYiH1lJU
+	GFUDBs0PONGf1b2cAH2N+mXD5samn46rM/xnDn6zqnE3mqUzWYzpswpfN9FtK6LLWmo=
+X-Gm-Gg: ASbGncurAtZ5Kpbj+vXP/0Z76t1fv6EjtlBSg3xJor5zReNuesehJD1FfRxkZBlCqfA
+	l9jt1+Qv6kaT480naJRQ4mKZAY9LKWqaLwRYwO7O3dgDwqhK2ZeQ8EiN/QecAKR5QSjiNv97s5y
+	MOjd+YsZgs7ztmRFn4vbYs/+2edeIbt8XECRzabQ1xsCZ/LixVTRtZJycMmKGF7qT38GLCeYuUz
+	DdWx1vD1pcXtXD3bapSvnbdzpnurn2Zzu+7S3V0udMDYKIMQDvsGg5IvfI8siKj/Vtw16iKu9LL
+	US7SQLYiU3O37xGsTSVIhjUsV12RRu4vKeh7nUIEK//pArcpG/Bmx6qlZ99rICjafQl51XNoDKC
+	qdto=
+X-Google-Smtp-Source: AGHT+IHI+L3Xls1kgCgdwWFwcxdTOzGuD5srEN+8Vk2Zi2eTlBN015UxL3MtE7hhlzAxJCNYK8334g==
+X-Received: by 2002:a05:690c:6610:b0:70e:128c:3010 with SMTP id 00721157ae682-70e2d9d5779mr29491557b3.12.1748108270668;
+        Sat, 24 May 2025 10:37:50 -0700 (PDT)
+Received: from maquina-virtual-para-linux.. ([181.68.238.177])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-70e3b07fa04sm1106567b3.3.2025.05.24.10.37.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 24 May 2025 10:37:50 -0700 (PDT)
+From: Donny Turizo <donnyturizo13@gmail.com>
+To: gregkh@linuxfoundation.org
+Cc: linux-staging@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Donny Turizo <donnyturizo13@gmail.com>
+Subject: [PATCH v6] staging: rtl8723bs: rename _Read_EEPROM and other functions to snake_case
+Date: Sat, 24 May 2025 17:37:45 +0000
+Message-ID: <20250524173745.4907-1-donnyturizo13@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250522-drm-doc-updates-v1-1-d1efd54740bd@gmail.com> <87ecwfczcw.fsf@trenco.lwn.net>
-In-Reply-To: <87ecwfczcw.fsf@trenco.lwn.net>
-From: Abdulrasaq Lawani <abdulrasaqolawani@gmail.com>
-Date: Sat, 24 May 2025 13:34:55 -0400
-X-Gm-Features: AX0GCFsi-MN0UA4uRCGebgf9C8Rt3Zsaglwx2_dkVsiyykORTxqO9nOADvqJFIA
-Message-ID: <CAC0Z3JtyP+QKdP9WiuyURfnU9ccobzvChCBK1i=eENm5DEyQNw@mail.gmail.com>
-Subject: Re: [PATCH] drm: add overview diagram for drm stack
-To: Jonathan Corbet <corbet@lwn.net>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	dri-devel@lists.freedesktop.org, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Thanks for the feedback. I have added the fix and sent another version
-(v2) of the patch.
+Renamed _Read_EEPROM and several other functions in rtw_cmd.c to follow
+the kernel coding style (snake_case). This fixes checkpatch warnings
+related to naming conventions.
 
-https://lore.kernel.org/all/20250523-drm-doc-updates-v2-0-e517df152cf6@gmai=
-l.com/
+Signed-off-by: Donny Turizo <donnyturizo13@gmail.com>
 
-best regards,
-Abdulrasaq
+---
+v2: Initial patch rejected by the robot due to naming issues.
 
+v3: Rebased the patch onto GregKH's staging branch for better integration.
 
-On Fri, May 23, 2025 at 7:58=E2=80=AFAM Jonathan Corbet <corbet@lwn.net> wr=
-ote:
->
-> Abdulrasaq Lawani <abdulrasaqolawani@gmail.com> writes:
->
-> > Add an overview diagram of Linux DRM architecture for
-> > graphics and compute to introduction.rst
-> >
-> > ---
-> > Signed-off-by: Abdulrasaq Lawani <abdulrasaqolawani@gmail.com>
-> > ---
-> >  Documentation/gpu/introduction.rst | 38 ++++++++++++++++++++++++++++++=
-+++++++-
-> >  1 file changed, 37 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/Documentation/gpu/introduction.rst b/Documentation/gpu/int=
-roduction.rst
-> > index 3cd0c8860b949408ed570d3f9384edd5f03df002..91bb0efc96d69921a122c52=
-65b1431fa18110a7a 100644
-> > --- a/Documentation/gpu/introduction.rst
-> > +++ b/Documentation/gpu/introduction.rst
-> > @@ -14,7 +14,43 @@ including the TTM memory manager, output configurati=
-on and mode setting,
-> >  and the new vblank internals, in addition to all the regular features
-> >  found in current kernels.
-> >
-> > -[Insert diagram of typical DRM stack here]
-> > +Overview of the Linux DRM Architecture
-> > +-----------------------------------------------
-> > ++-----------------------------+
-> > +|     User-space Apps         |
-> > +| (Games, Browsers, ML, etc.) |
-> > ++-----------------------------+
->
-> [...]
->
-> Please actually build the docs after a change like this and look at the
-> results; they will not be what you expect here.  You need to put that
-> diagram into a literal block.
->
-> Thanks,
->
-> jon
+v4: Changed the commit author to my name and renamed all remaining functions
+    to snake_case following kernel coding style.
+
+v5: Renamed command _set_h2c_Lbk to _set_h2c_lbk to fix CamelCase issue.
+
+v6: Actually fixed the misspelled name that was incorrectly stated as
+  fixed in v5.
+---
+ drivers/staging/rtl8723bs/core/rtw_cmd.c      | 140 +++++++++---------
+ drivers/staging/rtl8723bs/include/rtw_cmd.h   |   2 +-
+ .../staging/rtl8723bs/include/rtw_mlme_ext.h  |   2 +-
+ 3 files changed, 72 insertions(+), 72 deletions(-)
+
+diff --git a/drivers/staging/rtl8723bs/core/rtw_cmd.c b/drivers/staging/rtl8723bs/core/rtw_cmd.c
+index 49bcefb5e8d2..a73c83f804e4 100644
+--- a/drivers/staging/rtl8723bs/core/rtw_cmd.c
++++ b/drivers/staging/rtl8723bs/core/rtw_cmd.c
+@@ -11,76 +11,76 @@
+ static struct _cmd_callback rtw_cmd_callback[] = {
+ 	{GEN_CMD_CODE(_read_macreg), NULL}, /*0*/
+ 	{GEN_CMD_CODE(_write_macreg), NULL},
+-	{GEN_CMD_CODE(_Read_BBREG), &rtw_getbbrfreg_cmdrsp_callback},
+-	{GEN_CMD_CODE(_Write_BBREG), NULL},
+-	{GEN_CMD_CODE(_Read_RFREG), &rtw_getbbrfreg_cmdrsp_callback},
+-	{GEN_CMD_CODE(_Write_RFREG), NULL}, /*5*/
+-	{GEN_CMD_CODE(_Read_EEPROM), NULL},
+-	{GEN_CMD_CODE(_Write_EEPROM), NULL},
+-	{GEN_CMD_CODE(_Read_EFUSE), NULL},
+-	{GEN_CMD_CODE(_Write_EFUSE), NULL},
+-
+-	{GEN_CMD_CODE(_Read_CAM),	NULL},	/*10*/
+-	{GEN_CMD_CODE(_Write_CAM),	 NULL},
+-	{GEN_CMD_CODE(_setBCNITV), NULL},
+-	{GEN_CMD_CODE(_setMBIDCFG), NULL},
+-	{GEN_CMD_CODE(_JoinBss), &rtw_joinbss_cmd_callback},  /*14*/
+-	{GEN_CMD_CODE(_DisConnect), &rtw_disassoc_cmd_callback}, /*15*/
+-	{GEN_CMD_CODE(_CreateBss), &rtw_createbss_cmd_callback},
+-	{GEN_CMD_CODE(_SetOpMode), NULL},
+-	{GEN_CMD_CODE(_SiteSurvey), &rtw_survey_cmd_callback}, /*18*/
+-	{GEN_CMD_CODE(_SetAuth), NULL},
+-
+-	{GEN_CMD_CODE(_SetKey), NULL},	/*20*/
+-	{GEN_CMD_CODE(_SetStaKey), &rtw_setstaKey_cmdrsp_callback},
+-	{GEN_CMD_CODE(_SetAssocSta), &rtw_setassocsta_cmdrsp_callback},
+-	{GEN_CMD_CODE(_DelAssocSta), NULL},
+-	{GEN_CMD_CODE(_SetStaPwrState), NULL},
+-	{GEN_CMD_CODE(_SetBasicRate), NULL}, /*25*/
+-	{GEN_CMD_CODE(_GetBasicRate), NULL},
+-	{GEN_CMD_CODE(_SetDataRate), NULL},
+-	{GEN_CMD_CODE(_GetDataRate), NULL},
+-	{GEN_CMD_CODE(_SetPhyInfo), NULL},
+-
+-	{GEN_CMD_CODE(_GetPhyInfo), NULL}, /*30*/
+-	{GEN_CMD_CODE(_SetPhy), NULL},
+-	{GEN_CMD_CODE(_GetPhy), NULL},
+-	{GEN_CMD_CODE(_readRssi), NULL},
+-	{GEN_CMD_CODE(_readGain), NULL},
+-	{GEN_CMD_CODE(_SetAtim), NULL}, /*35*/
+-	{GEN_CMD_CODE(_SetPwrMode), NULL},
+-	{GEN_CMD_CODE(_JoinbssRpt), NULL},
+-	{GEN_CMD_CODE(_SetRaTable), NULL},
+-	{GEN_CMD_CODE(_GetRaTable), NULL},
+-
+-	{GEN_CMD_CODE(_GetCCXReport), NULL}, /*40*/
+-	{GEN_CMD_CODE(_GetDTMReport),	NULL},
+-	{GEN_CMD_CODE(_GetTXRateStatistics), NULL},
+-	{GEN_CMD_CODE(_SetUsbSuspend), NULL},
+-	{GEN_CMD_CODE(_SetH2cLbk), NULL},
+-	{GEN_CMD_CODE(_AddBAReq), NULL}, /*45*/
+-	{GEN_CMD_CODE(_SetChannel), NULL},		/*46*/
+-	{GEN_CMD_CODE(_SetTxPower), NULL},
+-	{GEN_CMD_CODE(_SwitchAntenna), NULL},
+-	{GEN_CMD_CODE(_SetCrystalCap), NULL},
+-	{GEN_CMD_CODE(_SetSingleCarrierTx), NULL},	/*50*/
+-
+-	{GEN_CMD_CODE(_SetSingleToneTx), NULL}, /*51*/
+-	{GEN_CMD_CODE(_SetCarrierSuppressionTx), NULL},
+-	{GEN_CMD_CODE(_SetContinuousTx), NULL},
+-	{GEN_CMD_CODE(_SwitchBandwidth), NULL},		/*54*/
+-	{GEN_CMD_CODE(_TX_Beacon), NULL},/*55*/
+-
+-	{GEN_CMD_CODE(_Set_MLME_EVT), NULL},/*56*/
+-	{GEN_CMD_CODE(_Set_Drv_Extra), NULL},/*57*/
+-	{GEN_CMD_CODE(_Set_H2C_MSG), NULL},/*58*/
+-	{GEN_CMD_CODE(_SetChannelPlan), NULL},/*59*/
+-
+-	{GEN_CMD_CODE(_SetChannelSwitch), NULL},/*60*/
+-	{GEN_CMD_CODE(_TDLS), NULL},/*61*/
+-	{GEN_CMD_CODE(_ChkBMCSleepq), NULL}, /*62*/
+-
+-	{GEN_CMD_CODE(_RunInThreadCMD), NULL},/*63*/
++	{GEN_CMD_CODE(_read_bbreg), &rtw_getbbrfreg_cmdrsp_callback},
++	{GEN_CMD_CODE(_write_bbreg), NULL},
++	{GEN_CMD_CODE(_read_rfreg), &rtw_getbbrfreg_cmdrsp_callback},
++	{GEN_CMD_CODE(_write_rfreg), NULL}, /*5*/
++	{GEN_CMD_CODE(_read_eeprom), NULL},
++	{GEN_CMD_CODE(_write_eeprom), NULL},
++	{GEN_CMD_CODE(_read_efuse), NULL},
++	{GEN_CMD_CODE(_write_efuse), NULL},
++
++	{GEN_CMD_CODE(_read_cam),	NULL},	/*10*/
++	{GEN_CMD_CODE(_write_cam),	 NULL},
++	{GEN_CMD_CODE(_set_bcnitv), NULL},
++	{GEN_CMD_CODE(_set_mbidcfg), NULL},
++	{GEN_CMD_CODE(_join_bss), &rtw_joinbss_cmd_callback},  /*14*/
++	{GEN_CMD_CODE(_disconnect), &rtw_disassoc_cmd_callback}, /*15*/
++	{GEN_CMD_CODE(_create_bss), &rtw_createbss_cmd_callback},
++	{GEN_CMD_CODE(_set_op_mode), NULL},
++	{GEN_CMD_CODE(_site_survey), &rtw_survey_cmd_callback}, /*18*/
++	{GEN_CMD_CODE(_set_auth), NULL},
++
++	{GEN_CMD_CODE(_set_key), NULL},	/*20*/
++	{GEN_CMD_CODE(_set_sta_key), &rtw_setstaKey_cmdrsp_callback},
++	{GEN_CMD_CODE(_set_assoc_sta), &rtw_setassocsta_cmdrsp_callback},
++	{GEN_CMD_CODE(_del_assoc_sta), NULL},
++	{GEN_CMD_CODE(_set_sta_pwr_state), NULL},
++	{GEN_CMD_CODE(_set_basic_rate), NULL}, /*25*/
++	{GEN_CMD_CODE(_get_basic_rate), NULL},
++	{GEN_CMD_CODE(_set_data_rate), NULL},
++	{GEN_CMD_CODE(_get_data_rate), NULL},
++	{GEN_CMD_CODE(_set_phy_info), NULL},
++
++	{GEN_CMD_CODE(_get_phy_info), NULL}, /*30*/
++	{GEN_CMD_CODE(_set_phy), NULL},
++	{GEN_CMD_CODE(_get_phy), NULL},
++	{GEN_CMD_CODE(_read_rssi), NULL},
++	{GEN_CMD_CODE(_read_gain), NULL},
++	{GEN_CMD_CODE(_set_atim), NULL}, /*35*/
++	{GEN_CMD_CODE(_set_pwr_mode), NULL},
++	{GEN_CMD_CODE(_joinbss_rpt), NULL},
++	{GEN_CMD_CODE(_set_ra_table), NULL},
++	{GEN_CMD_CODE(_get_ra_table), NULL},
++
++	{GEN_CMD_CODE(_get_ccx_report), NULL}, /*40*/
++	{GEN_CMD_CODE(_get_dtm_report),	NULL},
++	{GEN_CMD_CODE(_get_tx_rate_statistics), NULL},
++	{GEN_CMD_CODE(_set_usb_suspend), NULL},
++	{GEN_CMD_CODE(_set_h2c_lbk), NULL},
++	{GEN_CMD_CODE(_add_ba_req), NULL}, /*45*/
++	{GEN_CMD_CODE(_set_channel), NULL},		/*46*/
++	{GEN_CMD_CODE(_set_tx_power), NULL},
++	{GEN_CMD_CODE(_switch_antenna), NULL},
++	{GEN_CMD_CODE(_set_crystal_cap), NULL},
++	{GEN_CMD_CODE(_set_single_carrier_tx), NULL},	/*50*/
++
++	{GEN_CMD_CODE(_set_single_tone_tx), NULL}, /*51*/
++	{GEN_CMD_CODE(_set_carrier_suppression_tx), NULL},
++	{GEN_CMD_CODE(_set_continuous_tx), NULL},
++	{GEN_CMD_CODE(_switch_bandwidth), NULL},		/*54*/
++	{GEN_CMD_CODE(_tx_beacon), NULL},/*55*/
++
++	{GEN_CMD_CODE(_set_mlme_evt), NULL},/*56*/
++	{GEN_CMD_CODE(_set_drv_extra), NULL},/*57*/
++	{GEN_CMD_CODE(_set_h2c_msg), NULL},/*58*/
++	{GEN_CMD_CODE(_set_channel_plan), NULL},/*59*/
++
++	{GEN_CMD_CODE(_set_channel_switch), NULL},/*60*/
++	{GEN_CMD_CODE(_tdls), NULL},/*61*/
++	{GEN_CMD_CODE(_chk_bmc_sleepq), NULL}, /*62*/
++
++	{GEN_CMD_CODE(_run_in_thread_cmd), NULL},/*63*/
+ };
+ 
+ static struct cmd_hdl wlancmds[] = {
+diff --git a/drivers/staging/rtl8723bs/include/rtw_cmd.h b/drivers/staging/rtl8723bs/include/rtw_cmd.h
+index cb44119ce9a9..e4e7e350d0fc 100644
+--- a/drivers/staging/rtl8723bs/include/rtw_cmd.h
++++ b/drivers/staging/rtl8723bs/include/rtw_cmd.h
+@@ -636,7 +636,7 @@ enum {
+ 	GEN_CMD_CODE(_Write_BBREG),
+ 	GEN_CMD_CODE(_Read_RFREG),
+ 	GEN_CMD_CODE(_Write_RFREG), /*5*/
+-	GEN_CMD_CODE(_Read_EEPROM),
++	GEN_CMD_CODE(_read_eeprom),
+ 	GEN_CMD_CODE(_Write_EEPROM),
+ 	GEN_CMD_CODE(_Read_EFUSE),
+ 	GEN_CMD_CODE(_Write_EFUSE),
+diff --git a/drivers/staging/rtl8723bs/include/rtw_mlme_ext.h b/drivers/staging/rtl8723bs/include/rtw_mlme_ext.h
+index 2080408743ef..63373d665d4f 100644
+--- a/drivers/staging/rtl8723bs/include/rtw_mlme_ext.h
++++ b/drivers/staging/rtl8723bs/include/rtw_mlme_ext.h
+@@ -684,7 +684,7 @@ enum {
+ 	GEN_EVT_CODE(_Read_MACREG) = 0, /*0*/
+ 	GEN_EVT_CODE(_Read_BBREG),
+ 	GEN_EVT_CODE(_Read_RFREG),
+-	GEN_EVT_CODE(_Read_EEPROM),
++	GEN_EVT_CODE(_read_eeprom),
+ 	GEN_EVT_CODE(_Read_EFUSE),
+ 	GEN_EVT_CODE(_Read_CAM),			/*5*/
+ 	GEN_EVT_CODE(_Get_BasicRate),
+-- 
+2.43.0
+
