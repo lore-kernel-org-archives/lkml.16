@@ -1,129 +1,219 @@
-Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
+Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02D0D194A44;
-	Sat, 24 May 2025 11:03:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C6A41B043E
+	for <linux-kernel@vger.kernel.org>; Sat, 24 May 2025 11:10:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748084611; cv=none; b=gflG5g12K2GRHXlz1wzWqP2EZyZqBM8ugAqDk5TpsbtmULlFTqwb2hN8O/1tjEpYZWiD0T4FDM5UiaHEiI/im02xJv7ddqOkc7e2j9/0Qbxj6iaiJXSGsoPX6/gRzB2DqbFVUt0MP4nhCu+MOPHRO+qGAZ38lImZIIprO+52TGA=
+	t=1748085007; cv=none; b=Y/AclA9c5YnIJzeW6xTBkeDbBaNWm5u2hT2fFvacDBp9vKTB5JrbCQbFnOcnjjhLTHvcyxY5tSzibBV+uNj6tMSGkxWBPXrhSdPYOSY5DjGXgses++FSLqCoSf97fKvU4IbCDK1HcIPeG0WacIAYhKCsH/gru9qr/F5CzVzuFK4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748084611; c=relaxed/simple;
-	bh=0JfAm6XyLt8Uvc0tgfIphr7NJd8emCwE8S+wsVjBD7U=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=pXM1WIJRcfiWnVedTKeKtGK7ulYms9Yz40GQwBr+JZyRP8kE++oToEzBSbx5ygx4XLWNRv6Yz91XD6SrsdNE0+RDRSKQM3EKX6EJ1c9zPNcA3+rUGDMo6TwUUY6Do62Gtt0ZH6XMND3zF6f1x6AZS9c8qLczU63kvF74rX6r4S4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=JFuRV/sz; arc=none smtp.client-ip=217.70.183.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1748085007; c=relaxed/simple;
+	bh=rfmYxIskjfiUgB5Am/1Fvd9ISgUIpsNV8D+4YnV92i4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=UiUYIurSrttC0P9eMZKkcHIf6VJMs2a3HIYWFM/rJWluUKw16wzYtHAqLAOcG6UDlGMlaU4N4iARycYd2i5fA5ZkZeOGy1QEEMECSD6O73oAZqOiP66ZIUGV/f+Khged/2h9wsuvvM5rWVE1ptCqHCYbDwcmalFU+CGc9S54PAI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=BVwyCjNg; arc=none smtp.client-ip=213.97.179.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="JFuRV/sz"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id C74AE439FF;
-	Sat, 24 May 2025 11:03:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1748084601;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=VhGo38p9AkZZZjS8zqaVWp4e4joqF7J4aXzGFF+CwMo=;
-	b=JFuRV/szLE4v7nVrWLQbgWBmGZsH0XwI8sozeptD2rLnQbxO3TnrRk77r8eMBK0eV4RDfq
-	PcmSGE0xQkAmzXerO13gos8BDcag8sCIMUMbDFaSHNI4AI+0O3q2myRlmj/X7KiCgQF9lk
-	xNey3XDpw2JxOtw0qfw51yMW0vRJu8qnNIG+qcw4f0x65+UIBOwn9UKeOqld3IJQhov/xe
-	kycACu2V8DCFP1RgHj7HXMCsoT4iiDB921UpkSEsZdoqCfzw8Y/yT5xhb8UE3gbly4+P7z
-	xxBO4f8k7YXRWkEWhe/xlnGzfHiUK4FKegWyplPA1uMZdUtkZGVUt676UT/gtQ==
-Date: Sat, 24 May 2025 13:03:18 +0200
-From: Kory Maincent <kory.maincent@bootlin.com>
-To: Andrew Lunn <andrew@lunn.ch>, Oleksij Rempel <o.rempel@pengutronix.de>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
- <pabeni@redhat.com>, Jonathan Corbet <corbet@lwn.net>, Donald Hunter
- <donald.hunter@gmail.com>, Rob Herring <robh@kernel.org>, Andrew Lunn
- <andrew+netdev@lunn.ch>, Simon Horman <horms@kernel.org>, Heiner Kallweit
- <hkallweit1@gmail.com>, Russell King <linux@armlinux.org.uk>, Krzysztof
- Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org,
- linux-doc@vger.kernel.org, Kyle Swenson <kyle.swenson@est.tech>, Dent
- Project <dentproject@linuxfoundation.org>, kernel@pengutronix.de, Maxime
- Chevallier <maxime.chevallier@bootlin.com>, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v12 07/13] net: pse-pd: Add support for budget
- evaluation strategies
-Message-ID: <20250524130318.72daea05@kmaincent-XPS-13-7390>
-In-Reply-To: <20250524-feature_poe_port_prio-v12-7-d65fd61df7a7@bootlin.com>
-References: <20250524-feature_poe_port_prio-v12-0-d65fd61df7a7@bootlin.com>
-	<20250524-feature_poe_port_prio-v12-7-d65fd61df7a7@bootlin.com>
-Organization: bootlin
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="BVwyCjNg"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=sR776M/6brt/2VOO3DWDAEjQNmTyZBx8N+FX7qYPO/E=; b=BVwyCjNg7VgMsEJxcvLU3ubGjJ
+	EbfWxFjDkEpSOsw3TVhK4XtvlAvsaQRnZqDK/lj7NmGSmqnKwpaZnsgV5feY/KVqnFkJ9SWKXIHrR
+	IU1UBkMMOFCZhyoT8AhOv+N0zN2q141A1kiZG+czU8yKhu2YuMi2w3CK+OGRK6AxfO8GBOznSEqmp
+	SF/rdeC40ljWvJa76Ga0VmozIZbHz3DapuiUhd8gGY1cqgVepISfRPBBnQLdvB3V/sZkVHuZfVkDQ
+	sjMVckUw0llScL3+o48oFxO3XP1WlFvrqke1K2L3FCsw7jEQBufnMezl6yoarLIP5FwOtGmgiR+LV
+	1yPNFe0Q==;
+Received: from [189.7.87.163] (helo=[192.168.0.7])
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
+	id 1uIml5-00CX95-Tt; Sat, 24 May 2025 13:09:44 +0200
+Message-ID: <0a55c763-c1c1-48dc-bad0-d993b4fc4f87@igalia.com>
+Date: Sat, 24 May 2025 08:09:36 -0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgdduudehheculddtuddrgeefvddrtddtmdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkjghfohfogggtgfesthhqredtredtjeenucfhrhhomhepmfhorhihucforghinhgtvghnthcuoehkohhrhidrmhgrihhntggvnhhtsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpefguddtfeevtddugeevgfevtdfgvdfhtdeuleetffefffffhffgteekvdefudeiieenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepvdgrtddumegtsgduleemkeehkeejmeejuddttdemvgeigegsmegtkegrsgemvggvkeemjegvieeknecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgduleemkeehkeejmeejuddttdemvgeigegsmegtkegrsgemvggvkeemjegvieekpdhhvghlohepkhhmrghinhgtvghnthdqigfrufdqudefqdejfeeltddpmhgrihhlfhhrohhmpehkohhrhidrmhgrihhntggvnhhtsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvjedprhgtphhtthhopegrnhgurhgvfieslhhunhhnrdgthhdprhgtphhtthhopehordhrvghmphgvlhesphgvnhhguhhtrhhonhhigidruggvpdhrt
- ghpthhtohepuggrvhgvmhesuggrvhgvmhhlohhfthdrnhgvthdprhgtphhtthhopegvughumhgriigvthesghhoohhglhgvrdgtohhmpdhrtghpthhtohepkhhusggrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehprggsvghnihesrhgvughhrghtrdgtohhmpdhrtghpthhtoheptghorhgsvghtsehlfihnrdhnvghtpdhrtghpthhtohepughonhgrlhgurdhhuhhnthgvrhesghhmrghilhdrtghomh
-X-GND-Sasl: kory.maincent@bootlin.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] drm/vc4: tests: pv_muxing: Fix locking
+To: Maxime Ripard <mripard@kernel.org>,
+ Dave Stevenson <dave.stevenson@raspberrypi.com>,
+ Raspberry Pi Kernel Maintenance <kernel-list@raspberrypi.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>, Dmitry Baryshkov <lumag@kernel.org>
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+ Catalin Marinas <catalin.marinas@arm.com>
+References: <20250520-drm-vc4-kunit-fixes-v1-1-ca281e485f8e@kernel.org>
+Content-Language: en-US
+From: =?UTF-8?Q?Ma=C3=ADra_Canal?= <mcanal@igalia.com>
+In-Reply-To: <20250520-drm-vc4-kunit-fixes-v1-1-ca281e485f8e@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Le Sat, 24 May 2025 12:56:09 +0200,
-Kory Maincent <kory.maincent@bootlin.com> a =C3=A9crit :
+On 20/05/25 09:08, Maxime Ripard wrote:
+> Commit 30188df0c387 ("drm/tests: Drop drm_kunit_helper_acquire_ctx_alloc()")
+> removed a kunit-managed function to get a drm_modeset_acquire_ctx.
+> 
+> It converted the vc4_pv_muxing_test_init() function, used by
+> drm_vc4_test_pv_muxing() and drm_vc4_test_pv_muxing_invalid(). However,
+> during that conversion, it went from being kzalloc'd to being allocated
+> on the stack.
+> 
+> vc4_pv_muxing_test_init() then uses that context to allocate a
+> drm_atomic_state using drm_kunit_helper_atomic_state_alloc(), which
+> stores a pointer to the locking context in the allocated state.
+> 
+> However, since vc4_pv_muxing_test_init() is a test init function, the
+> context is then cleared when we leave the function, and before executing
+> the test. We're then running the test with a dangling pointer, which
+> then leads to various crashes.
+> 
+> Rework the context initialization and state allocation to move them to
+> drm_vc4_test_pv_muxing() and drm_vc4_test_pv_muxing_invalid().
+> 
+> Fixes: 30188df0c387 ("drm/tests: Drop drm_kunit_helper_acquire_ctx_alloc()")
+> Reported-by: Catalin Marinas <catalin.marinas@arm.com>
+> Closes: https://lore.kernel.org/r/Z_95jWM2YMTGy3pi@arm.com/
+> Signed-off-by: Maxime Ripard <mripard@kernel.org>
+> ---
+>   drivers/gpu/drm/vc4/tests/vc4_test_pv_muxing.c | 38 ++++++++++++++++----------
+>   1 file changed, 24 insertions(+), 14 deletions(-)
 
-> From: Kory Maincent (Dent Project) <kory.maincent@bootlin.com>
->=20
-> This patch introduces the ability to configure the PSE PI budget evaluati=
-on
-> strategies. Budget evaluation strategies is utilized by PSE controllers to
-> determine which ports to turn off first in scenarios such as power budget
-> exceedance.
->=20
-> The pis_prio_max value is used to define the maximum priority level
-> supported by the controller. Both the current priority and the maximum
-> priority are exposed to the user through the pse_ethtool_get_status call.
->=20
-> This patch add support for two mode of budget evaluation strategies.
-> 1. Static Method:
->=20
->    This method involves distributing power based on PD classification.
->    It=E2=80=99s straightforward and stable, the PSE core keeping track of=
- the
->    budget and subtracting the power requested by each PD=E2=80=99s class.
->=20
->    Advantages: Every PD gets its promised power at any time, which
->    guarantees reliability.
->=20
->    Disadvantages: PD classification steps are large, meaning devices
->    request much more power than they actually need. As a result, the power
->    supply may only operate at, say, 50% capacity, which is inefficient and
->    wastes money.
->=20
->    Priority max value is matching the number of PSE PIs within the PSE.
->=20
-> 2. Dynamic Method:
->=20
->    To address the inefficiencies of the static method, vendors like
->    Microchip have introduced dynamic power budgeting, as seen in the
->    PD692x0 firmware. This method monitors the current consumption per port
->    and subtracts it from the available power budget. When the budget is
->    exceeded, lower-priority ports are shut down.
->=20
->    Advantages: This method optimizes resource utilization, saving costs.
->=20
->    Disadvantages: Low-priority devices may experience instability.
->=20
->    Priority max value is set by the PSE controller driver.
->=20
-> For now, budget evaluation methods are not configurable and cannot be
-> mixed. They are hardcoded in the PSE driver itself, as no current PSE
-> controller supports both methods.
->=20
-> Signed-off-by: Kory Maincent (Dent Project) <kory.maincent@bootlin.com>
+Hi Maxime,
 
-Forgot to add:
-Acked-by: Oleksij Rempel <o.rempel@pengutronix.de>
---=20
-K=C3=B6ry Maincent, Bootlin
-Embedded Linux and kernel engineering
-https://bootlin.com
+Didn't you fix this issue in commit 7e0351ae91ed ("drm/vc4: tests: Stop
+allocating the state in test init") [1]?
+
+[1] 
+https://gitlab.freedesktop.org/drm/misc/kernel/-/commit/7e0351ae91ed2b6178abbfae96c3c6aaa1652567
+
+Best Regards,
+- Maíra
+
+> 
+> diff --git a/drivers/gpu/drm/vc4/tests/vc4_test_pv_muxing.c b/drivers/gpu/drm/vc4/tests/vc4_test_pv_muxing.c
+> index 992e8f5c5c6ea8d92338a8fe739fa1115ff85338..a79b152f8b97add449cffc9674abec0df95239e3 100644
+> --- a/drivers/gpu/drm/vc4/tests/vc4_test_pv_muxing.c
+> +++ b/drivers/gpu/drm/vc4/tests/vc4_test_pv_muxing.c
+> @@ -18,11 +18,10 @@
+>   
+>   #include "vc4_mock.h"
+>   
+>   struct pv_muxing_priv {
+>   	struct vc4_dev *vc4;
+> -	struct drm_atomic_state *state;
+>   };
+>   
+>   static bool check_fifo_conflict(struct kunit *test,
+>   				const struct drm_atomic_state *state)
+>   {
+> @@ -675,14 +674,22 @@ KUNIT_ARRAY_PARAM(vc5_test_pv_muxing_invalid,
+>   
+>   static void drm_vc4_test_pv_muxing(struct kunit *test)
+>   {
+>   	const struct pv_muxing_param *params = test->param_value;
+>   	const struct pv_muxing_priv *priv = test->priv;
+> -	struct drm_atomic_state *state = priv->state;
+> +	struct drm_modeset_acquire_ctx ctx;
+> +	struct drm_atomic_state *state;
+> +	struct drm_device *drm;
+>   	unsigned int i;
+>   	int ret;
+>   
+> +	drm_modeset_acquire_init(&ctx, 0);
+> +
+> +	drm = &priv->vc4->base;
+> +	state = drm_kunit_helper_atomic_state_alloc(test, drm, &ctx);
+> +	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, state);
+> +
+>   	for (i = 0; i < params->nencoders; i++) {
+>   		enum vc4_encoder_type enc_type = params->encoders[i];
+>   
+>   		ret = vc4_mock_atomic_add_output(test, state, enc_type);
+>   		KUNIT_ASSERT_EQ(test, ret, 0);
+> @@ -698,56 +705,59 @@ static void drm_vc4_test_pv_muxing(struct kunit *test)
+>   		enum vc4_encoder_type enc_type = params->encoders[i];
+>   
+>   		KUNIT_EXPECT_TRUE(test, check_channel_for_encoder(test, state, enc_type,
+>   								  params->check_fn));
+>   	}
+> +
+> +	drm_modeset_drop_locks(&ctx);
+> +	drm_modeset_acquire_fini(&ctx);
+>   }
+>   
+>   static void drm_vc4_test_pv_muxing_invalid(struct kunit *test)
+>   {
+>   	const struct pv_muxing_param *params = test->param_value;
+>   	const struct pv_muxing_priv *priv = test->priv;
+> -	struct drm_atomic_state *state = priv->state;
+> +	struct drm_modeset_acquire_ctx ctx;
+> +	struct drm_atomic_state *state;
+> +	struct drm_device *drm;
+>   	unsigned int i;
+>   	int ret;
+>   
+> +	drm_modeset_acquire_init(&ctx, 0);
+> +
+> +	drm = &priv->vc4->base;
+> +	state = drm_kunit_helper_atomic_state_alloc(test, drm, &ctx);
+> +	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, state);
+> +
+>   	for (i = 0; i < params->nencoders; i++) {
+>   		enum vc4_encoder_type enc_type = params->encoders[i];
+>   
+>   		ret = vc4_mock_atomic_add_output(test, state, enc_type);
+>   		KUNIT_ASSERT_EQ(test, ret, 0);
+>   	}
+>   
+>   	ret = drm_atomic_check_only(state);
+>   	KUNIT_EXPECT_LT(test, ret, 0);
+> +
+> +	drm_modeset_drop_locks(&ctx);
+> +	drm_modeset_acquire_fini(&ctx);
+>   }
+>   
+>   static int vc4_pv_muxing_test_init(struct kunit *test)
+>   {
+>   	const struct pv_muxing_param *params = test->param_value;
+> -	struct drm_modeset_acquire_ctx ctx;
+>   	struct pv_muxing_priv *priv;
+> -	struct drm_device *drm;
+>   	struct vc4_dev *vc4;
+>   
+>   	priv = kunit_kzalloc(test, sizeof(*priv), GFP_KERNEL);
+>   	KUNIT_ASSERT_NOT_NULL(test, priv);
+>   	test->priv = priv;
+>   
+>   	vc4 = params->mock_fn(test);
+>   	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, vc4);
+>   	priv->vc4 = vc4;
+>   
+> -	drm_modeset_acquire_init(&ctx, 0);
+> -
+> -	drm = &vc4->base;
+> -	priv->state = drm_kunit_helper_atomic_state_alloc(test, drm, &ctx);
+> -	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, priv->state);
+> -
+> -	drm_modeset_drop_locks(&ctx);
+> -	drm_modeset_acquire_fini(&ctx);
+> -
+>   	return 0;
+>   }
+>   
+>   static struct kunit_case vc4_pv_muxing_tests[] = {
+>   	KUNIT_CASE_PARAM(drm_vc4_test_pv_muxing,
+> 
+> ---
+> base-commit: a5806cd506af5a7c19bcd596e4708b5c464bfd21
+> change-id: 20250520-drm-vc4-kunit-fixes-a681715c4409
+> 
+> Best regards,
+
