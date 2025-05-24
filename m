@@ -1,206 +1,127 @@
-Received: from smtp.smtpout.orange.fr (smtp-27.smtpout.orange.fr [80.12.242.27])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDBDC4A1E;
-	Sat, 24 May 2025 17:00:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.27
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C81B1E502;
+	Sat, 24 May 2025 17:08:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748106061; cv=none; b=pVqWTmM7FU4P378jRolj3fLNDAjtVRxGpJ0oioOyMu4VuXitfGPQtKh77/1wAkdS3XmlwNEoJ7sjoPg7oqIpl5c5ffxwP/a974kG7+gZ4XMif4sLG85+cWt1X6az2OcSL2NRkrc1uyZ3FIYX0PeqCm3W5DwGtXNSfT73qnoVPCk=
+	t=1748106503; cv=none; b=mP8cmGWW2f5UmA94wdB4X8GakSMTpygyNy/+iZw5mGsG6xbrW0kNNS8xfQr0DR3gb4m1oVn6hAMqLCLcascM+tSRqsGmfKgVZlq4nXwdNkFta0GtjKfV00akE68fxFNshv7nxQvC+tJG0GNcGzkjpMvLEq8XyA96gJe8zHxyBZk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748106061; c=relaxed/simple;
-	bh=q+HMSf4sbY/eOZnI4FaMXJ5LU41yeLrP7lIjqJsCRgI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=PLR2lYx81O6DDu0GHBVn8IPxlUUuyH0BCTmbDtwLsuYwLyFOBXeoWSK6iE8Q97b1l9ntGqBX+5kBnUPPWgxBNhAqwl9ZCizM4TqAYuPsZ0z4V+U7/+KhvPpiYnhYKnn5z8+4KCXGYI+r4iiimj1XK23cn8BPB8ZxwAbpMPrN200=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=bJC+f2Y0; arc=none smtp.client-ip=80.12.242.27
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	s=arc-20240116; t=1748106503; c=relaxed/simple;
+	bh=7+TM/n6ai+omIt+WF0zO4MV42VZZUnYOpb7bunwoEAQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=JlbrhRHFnNIDMRtrknFvbsdGSaiOwkXThO4hS+6fH0Bc/NsfQR9XZulYvfwiSJU/K9eAJ1wCdLYazI6s3uH0Ro/Oa1ATnYanS2G/8QaMqiDXdRml8CguWRQ4g/p7Tn35LzY8k2jKTfGz24pHgkfc3IFVBlCHf7IHxu3Xz6EDgA8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sCai76dt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="bJC+f2Y0"
-Received: from localhost.localdomain
- ([IPv6:2a01:cb10:785:b00:8347:f260:7456:7662])
-	by smtp.orange.fr with ESMTPA
-	id Is60uQbGt1n9nIs60uXgae; Sat, 24 May 2025 18:51:41 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1748105501;
-	bh=3/m2btaSoyNeCIlV4H3OiW8YIofhGOiWjmetp7MzqjU=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=bJC+f2Y0+Km6Z52inhkP0hqQakFaXaHQchhVmoPPNindPDUK+LsBDzXhOItzj0wng
-	 lGXs0kgZaXgwVES2xLYHqAy35/IF+ezFHaQQMgE10IrqNCdL+N6GabyxUKX1RmqYEK
-	 wNRrX0brLSDDQRHV99QvAzKTpkWD5qzL7kem7Fwjtv8iRFbtZxIz3VqXwKWOQQaPX2
-	 lLWdfNJhBpmN9iXAwr+9EduLgncABqi8rinBjp9Q+3QcLneykVebwR38VJE7TRFavm
-	 NvkpcP4qUS4N2IKu8G3C7ph8agoraaUu3oY7z+qgzo1oBzbhVyTq9yWVdpLrM+22O6
-	 EK14idepQesOg==
-X-ME-Helo: localhost.localdomain
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Sat, 24 May 2025 18:51:41 +0200
-X-ME-IP: 2a01:cb10:785:b00:8347:f260:7456:7662
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To: Harry Wentland <harry.wentland@amd.com>,
-	Leo Li <sunpeng.li@amd.com>,
-	Rodrigo Siqueira <siqueira@igalia.com>,
-	Alex Deucher <alexander.deucher@amd.com>,
-	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>
-Cc: linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	amd-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org
-Subject: [PATCH] drm/amd/display: Constify struct timing_generator_funcs
-Date: Sat, 24 May 2025 18:51:25 +0200
-Message-ID: <7dd73263342c1093f3e86ae5841a53c1e3739b5e.1748105447.git.christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sCai76dt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93CEDC4CEE4;
+	Sat, 24 May 2025 17:08:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748106502;
+	bh=7+TM/n6ai+omIt+WF0zO4MV42VZZUnYOpb7bunwoEAQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=sCai76dtm/VcFkfiJFz+5BuUSJnmKuPB+Rl1GnHj7LHgj6Oj/I5HY+L0dEsc56Cud
+	 TxmtiSEoYb/XmzEaRHuhkk47U9G/JdMkQqf53+PfoLRni3N/MGFaXj3/wf/LC2xmrk
+	 L2HPqxzCcNJhTuJbKr4nH2dsRvs9eDKYHDpYu9660iIawl0VV61AmEaFv2RjRTIkWE
+	 mDtmEW6Gkxef8sbG+MSmYoxzHza4e5b++EpZg4eVFMhyAXK73EIvB7R7hXu4BTAqQi
+	 jtYGz1TJWM0aTLFbOHypiy1GAQTK8aMGD9uBlqxHD1Bc1DXjrHYE3IJZZQuNVsD+p4
+	 A59t019k/ni4Q==
+Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-3280ce0795bso7711351fa.2;
+        Sat, 24 May 2025 10:08:22 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWKAwSn6a3DLlnMV0ZUdlZNbyRP5m46xfvqVA+2JIPVSeN15MMZn6Gh6RQ9i6iKo7bZUdMf8jfu45OaLiBZ@vger.kernel.org, AJvYcCXoZgkfNX1nk0RXKjYkVMiz8rNj1fkQpYZ3IQFl5p9FwkgnSYbTdKXqrF/oeBD9MijLu+5FsjDX0t0r7mQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzj2KPnTSFhe4QN24cFG8viWfNnooIXkuI0wc+wcghgknrvKqeU
+	qiZ22Rtrl+hXND76OglyxrM6EVclWcRKoEBlL5F3S53JrqIiq4MSQp+Js85lZPz8J6Ghz/d+ZSC
+	dOtyu996OxPoAuE9XjX/kSthrHq6Ek8g=
+X-Google-Smtp-Source: AGHT+IFSYXY1uQlLrBWnw5PAjCmGapkbcpR6P46oNufADbn+gagWrR3GPhulQF/wotNYYLBIuX4GmSJidjLQdVLs0Dc=
+X-Received: by 2002:a2e:bea4:0:b0:326:c07e:b0a4 with SMTP id
+ 38308e7fff4ca-3295b9c2c54mr8236851fa.11.1748106501294; Sat, 24 May 2025
+ 10:08:21 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CAGG=3QU5Yi2AfHS_poi8SgmatedRg-X8Ct74FOCJUc9iJNPnhg@mail.gmail.com>
+ <CAGG=3QVw5+4-7f+gMJSanb0ixC=SujDQyA1=CPRvR+a6+c0U_Q@mail.gmail.com> <27de0526-0b19-4e14-8c51-1e8b0ddcf490@gmail.com>
+In-Reply-To: <27de0526-0b19-4e14-8c51-1e8b0ddcf490@gmail.com>
+From: Masahiro Yamada <masahiroy@kernel.org>
+Date: Sun, 25 May 2025 02:07:44 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQAoPhZrbY=5iBSCxWegSaoqsdtY=3zK+u+ZrgevidAsw@mail.gmail.com>
+X-Gm-Features: AX0GCFtZ_tLd8Ul1A5BM_eszKowxTUOGMleFBLQX19e531w-COFBAyBEgthzAOs
+Message-ID: <CAK7LNAQAoPhZrbY=5iBSCxWegSaoqsdtY=3zK+u+ZrgevidAsw@mail.gmail.com>
+Subject: Re: [PATCH v3] kconfig: check for a NULL pointer before access
+To: Bill Wendling <isanbard@gmail.com>
+Cc: Bill Wendling <morbo@google.com>, 
+	Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	Randy Dunlap <rdunlap@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-'struct timing_generator_funcs' are not modified in these drivers.
+On Sat, May 24, 2025 at 9:49=E2=80=AFAM Bill Wendling <isanbard@gmail.com> =
+wrote:
+>
+> The call to 'prop_get_symbol' may return NULL in some cases. The if-then
+> statement accesses the returned value without cheecking if it's
+> non-NULL. After inlining, the compiler may treat the conditional as
+> 'undefined behavior', which the compiler may take the opportunity to do
+> whatever it wants with the UB path. This patch simply adds a check to
+> ensure that 'def_sym' is non-NULL to avoid this behavior.
+>
+> Signed-off-by: Bill Wendling <isanbard@gmail.com>
 
-Constifying these structures moves some data to a read-only section, so
-increases overall security, especially when the structure holds some
-function pointers.
 
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
----
-This is NOT compile tested, because apparently some .h files are missing on
-my system ("reg_helper.h")
+Same reaction to this patch
 
-However, I've checked how these struct timing_generator_funcs are used.
-They end in "struct optc->base.funcs" which is a
-"const struct timing_generator_funcs", so evething should be fine.
----
- drivers/gpu/drm/amd/display/dc/optc/dcn20/dcn20_optc.c   | 2 +-
- drivers/gpu/drm/amd/display/dc/optc/dcn201/dcn201_optc.c | 2 +-
- drivers/gpu/drm/amd/display/dc/optc/dcn30/dcn30_optc.c   | 2 +-
- drivers/gpu/drm/amd/display/dc/optc/dcn301/dcn301_optc.c | 2 +-
- drivers/gpu/drm/amd/display/dc/optc/dcn31/dcn31_optc.c   | 2 +-
- drivers/gpu/drm/amd/display/dc/optc/dcn314/dcn314_optc.c | 2 +-
- drivers/gpu/drm/amd/display/dc/optc/dcn32/dcn32_optc.c   | 2 +-
- drivers/gpu/drm/amd/display/dc/optc/dcn35/dcn35_optc.c   | 2 +-
- drivers/gpu/drm/amd/display/dc/optc/dcn401/dcn401_optc.c | 2 +-
- 9 files changed, 9 insertions(+), 9 deletions(-)
+https://lore.kernel.org/linux-kbuild/20250212154537.235297-1-ant.v.moryakov=
+@gmail.com/
 
-diff --git a/drivers/gpu/drm/amd/display/dc/optc/dcn20/dcn20_optc.c b/drivers/gpu/drm/amd/display/dc/optc/dcn20/dcn20_optc.c
-index 81857ce6d68d..e7a90a437fff 100644
---- a/drivers/gpu/drm/amd/display/dc/optc/dcn20/dcn20_optc.c
-+++ b/drivers/gpu/drm/amd/display/dc/optc/dcn20/dcn20_optc.c
-@@ -502,7 +502,7 @@ void optc2_get_last_used_drr_vtotal(struct timing_generator *optc, uint32_t *ref
- 	REG_GET(OTG_DRR_CONTROL, OTG_V_TOTAL_LAST_USED_BY_DRR, refresh_rate);
- }
- 
--static struct timing_generator_funcs dcn20_tg_funcs = {
-+static const struct timing_generator_funcs dcn20_tg_funcs = {
- 		.validate_timing = optc1_validate_timing,
- 		.program_timing = optc1_program_timing,
- 		.setup_vertical_interrupt0 = optc1_setup_vertical_interrupt0,
-diff --git a/drivers/gpu/drm/amd/display/dc/optc/dcn201/dcn201_optc.c b/drivers/gpu/drm/amd/display/dc/optc/dcn201/dcn201_optc.c
-index f2415eebdc09..772a8bfb949c 100644
---- a/drivers/gpu/drm/amd/display/dc/optc/dcn201/dcn201_optc.c
-+++ b/drivers/gpu/drm/amd/display/dc/optc/dcn201/dcn201_optc.c
-@@ -129,7 +129,7 @@ static void optc201_get_optc_source(struct timing_generator *optc,
- 	*num_of_src_opp = 1;
- }
- 
--static struct timing_generator_funcs dcn201_tg_funcs = {
-+static const struct timing_generator_funcs dcn201_tg_funcs = {
- 		.validate_timing = optc201_validate_timing,
- 		.program_timing = optc1_program_timing,
- 		.setup_vertical_interrupt0 = optc1_setup_vertical_interrupt0,
-diff --git a/drivers/gpu/drm/amd/display/dc/optc/dcn30/dcn30_optc.c b/drivers/gpu/drm/amd/display/dc/optc/dcn30/dcn30_optc.c
-index 78b58a449fa4..ee4665aa49e9 100644
---- a/drivers/gpu/drm/amd/display/dc/optc/dcn30/dcn30_optc.c
-+++ b/drivers/gpu/drm/amd/display/dc/optc/dcn30/dcn30_optc.c
-@@ -357,7 +357,7 @@ void optc3_tg_init(struct timing_generator *optc)
- 	optc1_clear_optc_underflow(optc);
- }
- 
--static struct timing_generator_funcs dcn30_tg_funcs = {
-+static const struct timing_generator_funcs dcn30_tg_funcs = {
- 		.validate_timing = optc1_validate_timing,
- 		.program_timing = optc1_program_timing,
- 		.setup_vertical_interrupt0 = optc1_setup_vertical_interrupt0,
-diff --git a/drivers/gpu/drm/amd/display/dc/optc/dcn301/dcn301_optc.c b/drivers/gpu/drm/amd/display/dc/optc/dcn301/dcn301_optc.c
-index 65e9089b7f31..38f85bc2681a 100644
---- a/drivers/gpu/drm/amd/display/dc/optc/dcn301/dcn301_optc.c
-+++ b/drivers/gpu/drm/amd/display/dc/optc/dcn301/dcn301_optc.c
-@@ -109,7 +109,7 @@ void optc301_setup_manual_trigger(struct timing_generator *optc)
- 			OTG_TRIGA_CLEAR, 1);
- }
- 
--static struct timing_generator_funcs dcn30_tg_funcs = {
-+static const struct timing_generator_funcs dcn30_tg_funcs = {
- 		.validate_timing = optc1_validate_timing,
- 		.program_timing = optc1_program_timing,
- 		.setup_vertical_interrupt0 = optc1_setup_vertical_interrupt0,
-diff --git a/drivers/gpu/drm/amd/display/dc/optc/dcn31/dcn31_optc.c b/drivers/gpu/drm/amd/display/dc/optc/dcn31/dcn31_optc.c
-index ef536f37b4ed..4f1830ba619f 100644
---- a/drivers/gpu/drm/amd/display/dc/optc/dcn31/dcn31_optc.c
-+++ b/drivers/gpu/drm/amd/display/dc/optc/dcn31/dcn31_optc.c
-@@ -315,7 +315,7 @@ void optc31_read_otg_state(struct timing_generator *optc,
- 	s->otg_double_buffer_control = REG_READ(OTG_DOUBLE_BUFFER_CONTROL);
- }
- 
--static struct timing_generator_funcs dcn31_tg_funcs = {
-+static const struct timing_generator_funcs dcn31_tg_funcs = {
- 		.validate_timing = optc1_validate_timing,
- 		.program_timing = optc1_program_timing,
- 		.setup_vertical_interrupt0 = optc1_setup_vertical_interrupt0,
-diff --git a/drivers/gpu/drm/amd/display/dc/optc/dcn314/dcn314_optc.c b/drivers/gpu/drm/amd/display/dc/optc/dcn314/dcn314_optc.c
-index 0e603bad0d12..4a2caca37255 100644
---- a/drivers/gpu/drm/amd/display/dc/optc/dcn314/dcn314_optc.c
-+++ b/drivers/gpu/drm/amd/display/dc/optc/dcn314/dcn314_optc.c
-@@ -192,7 +192,7 @@ static void optc314_set_h_timing_div_manual_mode(struct timing_generator *optc,
- }
- 
- 
--static struct timing_generator_funcs dcn314_tg_funcs = {
-+static const struct timing_generator_funcs dcn314_tg_funcs = {
- 		.validate_timing = optc1_validate_timing,
- 		.program_timing = optc1_program_timing,
- 		.setup_vertical_interrupt0 = optc1_setup_vertical_interrupt0,
-diff --git a/drivers/gpu/drm/amd/display/dc/optc/dcn32/dcn32_optc.c b/drivers/gpu/drm/amd/display/dc/optc/dcn32/dcn32_optc.c
-index 2cdd19ba634b..b2b226bcd871 100644
---- a/drivers/gpu/drm/amd/display/dc/optc/dcn32/dcn32_optc.c
-+++ b/drivers/gpu/drm/amd/display/dc/optc/dcn32/dcn32_optc.c
-@@ -297,7 +297,7 @@ static void optc32_set_drr(
- 	optc32_setup_manual_trigger(optc);
- }
- 
--static struct timing_generator_funcs dcn32_tg_funcs = {
-+static const struct timing_generator_funcs dcn32_tg_funcs = {
- 		.validate_timing = optc1_validate_timing,
- 		.program_timing = optc1_program_timing,
- 		.setup_vertical_interrupt0 = optc1_setup_vertical_interrupt0,
-diff --git a/drivers/gpu/drm/amd/display/dc/optc/dcn35/dcn35_optc.c b/drivers/gpu/drm/amd/display/dc/optc/dcn35/dcn35_optc.c
-index 4cfc6c0fa147..72bff94cb57d 100644
---- a/drivers/gpu/drm/amd/display/dc/optc/dcn35/dcn35_optc.c
-+++ b/drivers/gpu/drm/amd/display/dc/optc/dcn35/dcn35_optc.c
-@@ -428,7 +428,7 @@ static void optc35_set_long_vtotal(
- 	}
- }
- 
--static struct timing_generator_funcs dcn35_tg_funcs = {
-+static const struct timing_generator_funcs dcn35_tg_funcs = {
- 		.validate_timing = optc1_validate_timing,
- 		.program_timing = optc1_program_timing,
- 		.setup_vertical_interrupt0 = optc1_setup_vertical_interrupt0,
-diff --git a/drivers/gpu/drm/amd/display/dc/optc/dcn401/dcn401_optc.c b/drivers/gpu/drm/amd/display/dc/optc/dcn401/dcn401_optc.c
-index 382ac18e7854..ff79c38287df 100644
---- a/drivers/gpu/drm/amd/display/dc/optc/dcn401/dcn401_optc.c
-+++ b/drivers/gpu/drm/amd/display/dc/optc/dcn401/dcn401_optc.c
-@@ -459,7 +459,7 @@ bool optc401_wait_update_lock_status(struct timing_generator *tg, bool locked)
- 	return true;
- }
- 
--static struct timing_generator_funcs dcn401_tg_funcs = {
-+static const struct timing_generator_funcs dcn401_tg_funcs = {
- 		.validate_timing = optc1_validate_timing,
- 		.program_timing = optc1_program_timing,
- 		.setup_vertical_interrupt0 = optc1_setup_vertical_interrupt0,
--- 
-2.49.0
 
+Please attach a test case
+that causes a segfault with NULL pointer dereference.
+
+
+
+
+
+
+
+
+
+
+
+> ---
+> Cc: Masahiro Yamada <masahiroy@kernel.org>
+> Cc: linux-kbuild@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> v3:
+>   - Fix whitespace for real now.
+>   - Patch from another email account so that the whitespace is retained.
+> v2:
+>   - Fix whitespace
+> ---
+>   scripts/kconfig/symbol.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/scripts/kconfig/symbol.c b/scripts/kconfig/symbol.c
+> index d57f8cbba291..9c5068225328 100644
+> --- a/scripts/kconfig/symbol.c
+> +++ b/scripts/kconfig/symbol.c
+> @@ -272,7 +272,7 @@ struct symbol *sym_choice_default(struct menu *choice=
+)
+>                 if (prop->visible.tri =3D=3D no)
+>                         continue;
+>                 def_sym =3D prop_get_symbol(prop);
+> -               if (def_sym->visible !=3D no)
+> +               if (def_sym && def_sym->visible !=3D no)
+>                         return def_sym;
+>         }
+>
+> --
+> 2.49.0.1164.gab81da1b16-goog
+>
+
+
+--=20
+Best Regards
+Masahiro Yamada
