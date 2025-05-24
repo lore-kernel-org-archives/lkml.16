@@ -1,346 +1,213 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-182.mta0.migadu.com (out-182.mta0.migadu.com [91.218.175.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AD181DF996
-	for <linux-kernel@vger.kernel.org>; Sat, 24 May 2025 07:30:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70BA41DED53
+	for <linux-kernel@vger.kernel.org>; Sat, 24 May 2025 07:31:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748071857; cv=none; b=JocADR32O6qgZ8ezUXYRGUP4nl7k1CCnOGnQNordtC5EIUdBlw/byMH2wC/qfW/HpGIQX0TPm+2MhrewKL8xADEDuNVDhFEeN3J8SXKA+/sLD/cHimmMl/qLOv80ugdGtHoKuagup9AkYtF9HtpP3c4AuTbJ/VrtmHC5VrP2zjc=
+	t=1748071906; cv=none; b=QBEk78Q1YG8ZE+J5W9MetCvprzI3Wd2cYEEp+T1dsv221sv8hT0WO9W2e3YtYelGeNFCSryyhEd/LPC32yClTq378Gj2I3nBel9oe3+3ivSC0vZ5GdT74/YPW4zK00iQeZBgJQYKTGeKpO2+7Wo3ygWpWbLNfthkS0qmkTxboP4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748071857; c=relaxed/simple;
-	bh=7U9tlCoZc/rOj7EH40BDPDvRFAVAP6sWxjfHvLHGmLE=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=HojFT5KIBiAW4Gm9ASQukjjR34oeWkMYu+R6WZfT0q8sI0t6rITkbLt7Boozfiapc3UhjYkN05ZfdyB//Yse+Xmg48mc4cNoQ4WXy/LWeL5vFne30uRgwkzTASW4Dohb7nu88R7pfCR5Qm8aYICZevmnRV1SHCO0PmMIvAglDFg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Xj21y3bU; arc=none smtp.client-ip=209.85.221.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1748071906; c=relaxed/simple;
+	bh=XS7prL6KH/XEofn/J1XVyxtQ2bnzpG98qZcKqIl5/aY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=IqRwVcJEQXm8P2cvloj6tMidXP2CQHNs+QnGmDy/c5R61h0yeN3dsVuQTUWykvDyem+MjJBw4z6SUA0lVxSKZbslk5++YKfGBrU3xTmsoWgYYFGGWk9SweM9f7gmQzqpo/8sxUraf91NuNScEjcC5XTaBfupTLWYkidfa8aXU9s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=C87BhoG8; arc=none smtp.client-ip=91.218.175.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Xj21y3bU"
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-3a376ba6f08so326924f8f.1
-        for <linux-kernel@vger.kernel.org>; Sat, 24 May 2025 00:30:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1748071853; x=1748676653; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=dpN965PXtFApJwEIkCDxa4SlX4t9L4NYatiQcXWo3sM=;
-        b=Xj21y3bUkrs1ySK8AguOh0zH6cDlXJovXslBY1ZKJF8tcQ5+db9W4Uk5j+Dzy3Dct4
-         JTBuqEvA96pVLzgoJOwQYX6KHDOXTEOrKTZhB0c/b6j4YCn+S7oIhBft8NW+FzbWz8Pg
-         vM3l+t5XUneiJzm4cTYivaLwp3Dkd8oFubRWzypMgt1gtxXX2Rh1MZmwDJ5xZ8wlf6zu
-         ys2Dx+mM0aYhMv3iGL+ZXFHSD1lyBOR5lMRpreEQhFldBtvepaQIHeFtXqrjF9AVIEXZ
-         OKAhgM5xB8RhdjU6tLUh4PdCVpPy2fRPFqpSYB9pR87KrJxEa4T0a/qLn4KncU5x1wXi
-         4SNA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748071853; x=1748676653;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=dpN965PXtFApJwEIkCDxa4SlX4t9L4NYatiQcXWo3sM=;
-        b=wZxrWAeB904Ba2OigSIlIZWVp4eeWU5t0fkJmdGa7QkHzULoKMGkmNsm3zNL9bG9QC
-         oIIBzTvtEgmAcukrbCjgW6MVFJjI7vjOO2JauiWZHodMMvhtxpRT/iFbKky4gLe0ee5+
-         Bita4LcokPUqoWfrBi6cRNDXQkVHScQJzyyRIM7UH7WgcsuCzd5YJBT9KuRssnTO5Mtq
-         IxTXG5SiwFRhMcIXyM6vGLyuKQsinteUWQLkfJ6zzvnKumiW8YIh8ve5OcqZkEVl2mWZ
-         SxPqRScRig0i4KvqCuRu6uMSd0vT78ryjidc+dKVd0pDaFOe22vxXaFQIoJ8lXetO91+
-         qjqg==
-X-Forwarded-Encrypted: i=1; AJvYcCVU8bIIPcdWXByKiztIgGsD0/yN2V7CJkwfPlUVmvmN4AxoJFlEV24yH/bse8lvsU9zpjyzqT1lHxpfBzU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzFCbTmyCK8rgKA0KBIG5/1daiIHAr7fcPojlzuHNGHuiEQrduD
-	hSiEXeVwArOBPlCQRvtIAwBHiu+BhuzmzzXRSaYADJREvj/Z14+YooZ4A+XQfLsT4Hc=
-X-Gm-Gg: ASbGncu2aYOHnXkQwOf7LnVRSKEY2pDGeHHCo61l1dhxwXtqRrlR+XnP0GrbIQVkVOZ
-	iNVtQF7hUolkdG7xZKsnZJ/HVnnKLlxfrfZuEm1RatWNQ3L0QNsQeLlxPAqtRtZFAURQfcoUGSL
-	Aw7aP/QIFVLOUd+jH0plU/SPwzRWBjA7az6l66oaSCv2isK50kFqAfyVWPp5I8p0EE7GL9ieVtK
-	2Rp74243lieDG1loma/SN6khrsiOvzvaa607goR+Sj2LAY1ZA20Z1QHUGckBOro13XWlr2RcUB8
-	MYT4xPA08jiqP8pCnPsrkmejPbqEmfrEw8ZzvPkHRc6hVWgw3A7sKgO4iWJ5z9ETDO3dKODDX3y
-	iu3oczCg=
-X-Google-Smtp-Source: AGHT+IF0wVjcuoZd4VTJ0sGnuwAU+9jQIdeBlKfJuU5uEJZ08QXI5uRMh7/aqwevs21KvTC+SndKRA==
-X-Received: by 2002:a05:6000:2890:b0:391:23de:b19a with SMTP id ffacd0b85a97d-3a4cb464885mr1858085f8f.31.1748071852553;
-        Sat, 24 May 2025 00:30:52 -0700 (PDT)
-Received: from gpeter-l.roam.corp.google.com ([212.105.145.168])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a3ca066eb7sm10924273f8f.2.2025.05.24.00.30.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 24 May 2025 00:30:52 -0700 (PDT)
-From: Peter Griffin <peter.griffin@linaro.org>
-Date: Sat, 24 May 2025 08:30:30 +0100
-Subject: [PATCH 2/2] soc: samsung: exynos-pmu: Enable CPU Idle for gs101
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="C87BhoG8"
+Message-ID: <bfb143ad-9a98-4832-ba1b-25bfe5879e46@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1748071892;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ilHvc8PU70FGv6EUZPusoLGq1eblv5p4mf9oTTnFFLA=;
+	b=C87BhoG8nqQ1GRHhNuSJHcL8T4uZBQ2TuZHYLg/ATGdhPOH895IooVWlSE1MzWauk2GT3X
+	i97a/+k6u74qfNovzzC9K6zLPOFHxoohwsutoKb/m7ghCu97n7eSJqYzXI+7U65Iqb62AN
+	3ZY3lhzegLob8btOaMDbOXrP8vrNeLY=
+Date: Sat, 24 May 2025 09:31:29 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250524-gs101-cpuidle-v1-2-aea77a7842a6@linaro.org>
-References: <20250524-gs101-cpuidle-v1-0-aea77a7842a6@linaro.org>
-In-Reply-To: <20250524-gs101-cpuidle-v1-0-aea77a7842a6@linaro.org>
-To: =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>, 
- Tudor Ambarus <tudor.ambarus@linaro.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>, 
- Krzysztof Kozlowski <krzk@kernel.org>
-Cc: William Mcvicker <willmcvicker@google.com>, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
- linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- kernel-team@android.com, Peter Griffin <peter.griffin@linaro.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=6895;
- i=peter.griffin@linaro.org; h=from:subject:message-id;
- bh=7U9tlCoZc/rOj7EH40BDPDvRFAVAP6sWxjfHvLHGmLE=;
- b=owEBbQKS/ZANAwAKAc7ouNYCNHK6AcsmYgBoMXWmtDVOeQQo+H2c8AvBH76fkztXnDVtGuqHJ
- H/MOqEBp7iJAjMEAAEKAB0WIQQO/I5vVXh1DVa1SfzO6LjWAjRyugUCaDF1pgAKCRDO6LjWAjRy
- uvt+D/0bEVtxwCaxiKJJL5LsmcMbQ09zGgPLJNXhqcCbb4XRLAVXkYKJnwc/7SC54L78zeTcBmS
- sVdtvXO2LLihhhB4gE/dZrdoL6DFKdfv+p7EWTWY39yAluPT8Ws9dyu60bmSnwtETaB5TvRORLr
- CVpi1KXEZFqcLRd76WdwhOC3TfZGZdKTlfSQoVISIYZY30N1svryxaDJ0jtyVJ9yq4bmGGg6yNb
- r6LsXie6JJH/SL2iCEDXGj6JoNT+cbicc5ezR22b+edZqR16pQufrH1sDH1jDTnmmboNUHnYDzC
- fSI3li6BxlMIgZ4Tge/XxCGIQ1OcK1G3+nV9hoxZM0AkQ65EQ/mY14m1e1zYl7rVHXTC4UAqIce
- ab9dpeA/rDq/7AXDV05Rt8Qrp60mvG//C+R7tp+MyEv/cofB6mydmzHb2H/PdlZwhk7a2I1fMY0
- kf15KNkn87hfj9rZZmqXMAdMORi5G44moutqZKAJ4ZR9vuXN4to1tTl2QoccSM7w0eMK3lnMH8U
- 4lvxY++hVNk6J9uWZd5nmql7NqnfqaXKRXU72FRvSsoOS0tN6Uvlc2PuAkXpNx83FbV8obI6J+V
- Bgqtlt24gLXBORP35mOAIFPwUyshxgEdlzr8g5+QrqtFVNSjwWEONlnxDPG1lwRG7N2h9W2Z2ub
- fXQSh7iXFNUrK4Q==
-X-Developer-Key: i=peter.griffin@linaro.org; a=openpgp;
- fpr=0EFC8E6F5578750D56B549FCCEE8B8D6023472BA
+Subject: Re: [PATCH for-next v1] RDMA/core: Avoid hmm_dma_map_alloc() for
+ virtual DMA devices
+To: Daisuke Matsuda <dskmtsd@gmail.com>, linux-kernel@vger.kernel.org,
+ linux-rdma@vger.kernel.org, leon@kernel.org, jgg@ziepe.ca,
+ zyjzyj2000@gmail.com
+Cc: hch@infradead.org
+References: <20250523184701.11004-1-dskmtsd@gmail.com>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Zhu Yanjun <yanjun.zhu@linux.dev>
+In-Reply-To: <20250523184701.11004-1-dskmtsd@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-Register cpu pm notifiers for gs101 which call the
-gs101_cpu_pmu_online/offline callbacks which in turn
-program the ACPM hint. This is required to actually
-enter the idle state.
+在 2025/5/23 20:47, Daisuke Matsuda 写道:
+> Drivers such as rxe, which use virtual DMA, must not call into the DMA
+> mapping core since they lack physical DMA capabilities. Otherwise, a NULL
+> pointer dereference is observed as shown below. This patch ensures the RDMA
+> core handles virtual and physical DMA paths appropriately.
+> 
+> This fixes the following kernel oops:
+> 
+>   BUG: kernel NULL pointer dereference, address: 00000000000002fc
+>   #PF: supervisor read access in kernel mode
+>   #PF: error_code(0x0000) - not-present page
+>   PGD 1028eb067 P4D 1028eb067 PUD 105da0067 PMD 0
+>   Oops: Oops: 0000 [#1] SMP NOPTI
+>   CPU: 3 UID: 1000 PID: 1854 Comm: python3 Tainted: G        W           6.15.0-rc1+ #11 PREEMPT(voluntary)
+>   Tainted: [W]=WARN
+>   Hardware name: Trigkey Key N/Key N, BIOS KEYN101 09/02/2024
+>   RIP: 0010:hmm_dma_map_alloc+0x25/0x100
+>   Code: 90 90 90 90 90 0f 1f 44 00 00 55 48 89 e5 41 57 41 56 49 89 d6 49 c1 e6 0c 41 55 41 54 53 49 39 ce 0f 82 c6 00 00 00 49 89 fc <f6> 87 fc 02 00 00 20 0f 84 af 00 00 00 49 89 f5 48 89 d3 49 89 cf
+>   RSP: 0018:ffffd3d3420eb830 EFLAGS: 00010246
+>   RAX: 0000000000001000 RBX: ffff8b727c7f7400 RCX: 0000000000001000
+>   RDX: 0000000000000001 RSI: ffff8b727c7f74b0 RDI: 0000000000000000
+>   RBP: ffffd3d3420eb858 R08: 0000000000000000 R09: 0000000000000000
+>   R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
+>   R13: 00007262a622a000 R14: 0000000000001000 R15: ffff8b727c7f74b0
+>   FS:  00007262a62a1080(0000) GS:ffff8b762ac3e000(0000) knlGS:0000000000000000
+>   CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>   CR2: 00000000000002fc CR3: 000000010a1f0004 CR4: 0000000000f72ef0
+>   PKRU: 55555554
+>   Call Trace:
+>    <TASK>
+>    ib_init_umem_odp+0xb6/0x110 [ib_uverbs]
+>    ib_umem_odp_get+0xf0/0x150 [ib_uverbs]
+>    rxe_odp_mr_init_user+0x71/0x170 [rdma_rxe]
+>    rxe_reg_user_mr+0x217/0x2e0 [rdma_rxe]
+>    ib_uverbs_reg_mr+0x19e/0x2e0 [ib_uverbs]
+>    ib_uverbs_handler_UVERBS_METHOD_INVOKE_WRITE+0xd9/0x150 [ib_uverbs]
+>    ib_uverbs_cmd_verbs+0xd19/0xee0 [ib_uverbs]
+>    ? mmap_region+0x63/0xd0
+>    ? __pfx_ib_uverbs_handler_UVERBS_METHOD_INVOKE_WRITE+0x10/0x10 [ib_uverbs]
+>    ib_uverbs_ioctl+0xba/0x130 [ib_uverbs]
+>    __x64_sys_ioctl+0xa4/0xe0
+>    x64_sys_call+0x1178/0x2660
+>    do_syscall_64+0x7e/0x170
+>    ? syscall_exit_to_user_mode+0x4e/0x250
+>    ? do_syscall_64+0x8a/0x170
+>    ? do_syscall_64+0x8a/0x170
+>    ? syscall_exit_to_user_mode+0x4e/0x250
+>    ? do_syscall_64+0x8a/0x170
+>    ? syscall_exit_to_user_mode+0x4e/0x250
+>    ? do_syscall_64+0x8a/0x170
+>    ? do_user_addr_fault+0x1d2/0x8d0
+>    ? irqentry_exit_to_user_mode+0x43/0x250
+>    ? irqentry_exit+0x43/0x50
+>    ? exc_page_fault+0x93/0x1d0
+>    entry_SYSCALL_64_after_hwframe+0x76/0x7e
+>   RIP: 0033:0x7262a6124ded
+>   Code: 04 25 28 00 00 00 48 89 45 c8 31 c0 48 8d 45 10 c7 45 b0 10 00 00 00 48 89 45 b8 48 8d 45 d0 48 89 45 c0 b8 10 00 00 00 0f 05 <89> c2 3d 00 f0 ff ff 77 1a 48 8b 45 c8 64 48 2b 04 25 28 00 00 00
+>   RSP: 002b:00007fffd08c3960 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+>   RAX: ffffffffffffffda RBX: 00007fffd08c39f0 RCX: 00007262a6124ded
+>   RDX: 00007fffd08c3a10 RSI: 00000000c0181b01 RDI: 0000000000000007
+>   RBP: 00007fffd08c39b0 R08: 0000000014107820 R09: 00007fffd08c3b44
+>   R10: 000000000000000c R11: 0000000000000246 R12: 00007fffd08c3b44
+>   R13: 000000000000000c R14: 00007fffd08c3b58 R15: 0000000014107960
+>    </TASK>
+> 
+> Fixes: 1efe8c0670d6 ("RDMA/core: Convert UMEM ODP DMA mapping to caching IOVA and page linkage")
+> Closes: https://lore.kernel.org/all/3e8f343f-7d66-4f7a-9f08-3910623e322f@gmail.com/
+> Signed-off-by: Daisuke Matsuda <dskmtsd@gmail.com>
+> ---
+>   drivers/infiniband/core/device.c   | 24 ++++++++++++++++++++++++
+>   drivers/infiniband/core/umem_odp.c |  6 +++---
+>   include/rdma/ib_verbs.h            | 12 ++++++++++++
+>   3 files changed, 39 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/infiniband/core/device.c b/drivers/infiniband/core/device.c
+> index b4e3e4beb7f4..8be4797c66ec 100644
+> --- a/drivers/infiniband/core/device.c
+> +++ b/drivers/infiniband/core/device.c
+> @@ -2864,6 +2864,30 @@ int ib_dma_virt_map_sg(struct ib_device *dev, struct scatterlist *sg, int nents)
+>   	return nents;
+>   }
+>   EXPORT_SYMBOL(ib_dma_virt_map_sg);
+> +int ib_dma_virt_map_alloc(struct device *dev, struct hmm_dma_map *map,
+> +			  size_t nr_entries, size_t dma_entry_size)
+> +{
+> +	if (!(nr_entries * PAGE_SIZE / dma_entry_size))
+> +		return -EINVAL;
+> +
+> +	map->dma_entry_size = dma_entry_size;
+> +	map->pfn_list = kvcalloc(nr_entries, sizeof(*map->pfn_list),
+> +				 GFP_KERNEL | __GFP_NOWARN);
+> +	if (!map->pfn_list)
+> +		return -ENOMEM;
+> +
+> +	map->dma_list = kvcalloc(nr_entries, sizeof(*map->dma_list),
+> +				 GFP_KERNEL | __GFP_NOWARN);
+> +	if (!map->dma_list)
+> +		goto err_dma;
+> +
+> +	return 0;
+> +
+> +err_dma:
+> +	kvfree(map->pfn_list);
+> +	return -ENOMEM;
+> +}
+> +EXPORT_SYMBOL(ib_dma_virt_map_alloc);
+>   #endif /* CONFIG_INFINIBAND_VIRT_DMA */
+>   
+>   static const struct rdma_nl_cbs ibnl_ls_cb_table[RDMA_NL_LS_NUM_OPS] = {
+> diff --git a/drivers/infiniband/core/umem_odp.c b/drivers/infiniband/core/umem_odp.c
+> index 51d518989914..aa03f3fc84d0 100644
+> --- a/drivers/infiniband/core/umem_odp.c
+> +++ b/drivers/infiniband/core/umem_odp.c
+> @@ -75,9 +75,9 @@ static int ib_init_umem_odp(struct ib_umem_odp *umem_odp,
+>   	if (unlikely(end < page_size))
+>   		return -EOVERFLOW;
+>   
+> -	ret = hmm_dma_map_alloc(dev->dma_device, &umem_odp->map,
+> -				(end - start) >> PAGE_SHIFT,
+> -				1 << umem_odp->page_shift);
+> +	ret = ib_dma_map_alloc(dev, &umem_odp->map,
+> +			       (end - start) >> PAGE_SHIFT,
+> +			       1 << umem_odp->page_shift);
+>   	if (ret)
+>   		return ret;
+>   
+> diff --git a/include/rdma/ib_verbs.h b/include/rdma/ib_verbs.h
+> index b06a0ed81bdd..10813f348b99 100644
+> --- a/include/rdma/ib_verbs.h
+> +++ b/include/rdma/ib_verbs.h
+> @@ -36,6 +36,7 @@
+>   #include <linux/irqflags.h>
+>   #include <linux/preempt.h>
+>   #include <linux/dim.h>
+> +#include <linux/hmm-dma.h>
+>   #include <uapi/rdma/ib_user_verbs.h>
+>   #include <rdma/rdma_counter.h>
+>   #include <rdma/restrack.h>
+> @@ -4221,6 +4222,17 @@ static inline void ib_dma_unmap_sg_attrs(struct ib_device *dev,
+>   				   dma_attrs);
+>   }
+>   
+> +int ib_dma_virt_map_alloc(struct device *dev, struct hmm_dma_map *map,
+> +			  size_t nr_entries, size_t dma_entry_size);
+> +static inline int ib_dma_map_alloc(struct ib_device *dev, struct hmm_dma_map *map,
+> +				   size_t nr_entries, size_t dma_entry_size)
+> +{
+> +	if (ib_uses_virt_dma(dev))
+> +		return ib_dma_virt_map_alloc(dev->dma_device, map, nr_entries,
+> +					     dma_entry_size);
 
-A couple of corner cases are handled, namely when the
-system is rebooting or suspending we ignore the request.
-Additionally the request is ignored if the CPU is in
-CPU hot plug.
+Other emulated RDMA devices driver also call ib_dma_virt_map_alloc?
+Only rxe will call ib_dma_virt_map_alloc?
 
-Note: this patch has a runtime dependency on adding
-'local-timer-stop' dt property to the CPU nodes. This
-informs the time framework to switch to a broadcast timer
-as the local timer will be shutdown. Without that DT
-property specified the system hangs in early boot with
-this patch applied.
+Zhu Yanjun
 
-Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
----
- drivers/soc/samsung/exynos-pmu.c | 135 +++++++++++++++++++++++++++++++++++++--
- 1 file changed, 131 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/soc/samsung/exynos-pmu.c b/drivers/soc/samsung/exynos-pmu.c
-index a77288f49d249f890060c595556708334383c910..314f543d46b82dc3e991a5928fea50b81d4f92b7 100644
---- a/drivers/soc/samsung/exynos-pmu.c
-+++ b/drivers/soc/samsung/exynos-pmu.c
-@@ -8,6 +8,7 @@
- #include <linux/array_size.h>
- #include <linux/arm-smccc.h>
- #include <linux/cpuhotplug.h>
-+#include <linux/cpu_pm.h>
- #include <linux/of.h>
- #include <linux/of_address.h>
- #include <linux/mfd/core.h>
-@@ -15,6 +16,7 @@
- #include <linux/of_platform.h>
- #include <linux/platform_device.h>
- #include <linux/delay.h>
-+#include <linux/reboot.h>
- #include <linux/regmap.h>
- 
- #include <linux/soc/samsung/exynos-regs-pmu.h>
-@@ -35,6 +37,10 @@ struct exynos_pmu_context {
- 	const struct exynos_pmu_data *pmu_data;
- 	struct regmap *pmureg;
- 	struct regmap *pmuintrgen;
-+	spinlock_t cpupm_lock;	/* serialization lock */
-+	bool __percpu *hotplug_ing;
-+	atomic_t sys_suspended;
-+	atomic_t sys_rebooting;
- };
- 
- void __iomem *pmu_base_addr;
-@@ -336,7 +342,7 @@ EXPORT_SYMBOL_GPL(exynos_get_pmu_regmap_by_phandle);
- #define CPU_INFORM_CLEAR	0
- #define CPU_INFORM_C2		1
- 
--static int gs101_cpuhp_pmu_online(unsigned int cpu)
-+static int gs101_cpu_pmu_online(unsigned int cpu)
- {
- 	unsigned int cpuhint = smp_processor_id();
- 	u32 reg, mask;
-@@ -358,10 +364,26 @@ static int gs101_cpuhp_pmu_online(unsigned int cpu)
- 	return 0;
- }
- 
--static int gs101_cpuhp_pmu_offline(unsigned int cpu)
-+static int gs101_cpuhp_pmu_online(unsigned int cpu)
-+{
-+	gs101_cpu_pmu_online(cpu);
-+
-+	/*
-+	 * Mark this CPU as having finished the hotplug.
-+	 * This means this CPU can now enter C2 idle state.
-+	 */
-+	*per_cpu_ptr(pmu_context->hotplug_ing, cpu) = false;
-+
-+	return 0;
-+}
-+
-+static int gs101_cpu_pmu_offline(unsigned int cpu)
- {
- 	u32 reg, mask;
--	unsigned int cpuhint = smp_processor_id();
-+	unsigned int cpuhint;
-+
-+	spin_lock(&pmu_context->cpupm_lock);
-+	cpuhint	= smp_processor_id();
- 
- 	/* set cpu inform hint */
- 	regmap_write(pmu_context->pmureg, GS101_CPU_INFORM(cpuhint),
-@@ -379,16 +401,89 @@ static int gs101_cpuhp_pmu_offline(unsigned int cpu)
- 	regmap_read(pmu_context->pmuintrgen, GS101_GRP1_INTR_BID_UPEND, &reg);
- 	regmap_write(pmu_context->pmuintrgen, GS101_GRP1_INTR_BID_CLEAR,
- 		     reg & mask);
-+
-+	spin_unlock(&pmu_context->cpupm_lock);
-+	return 0;
-+}
-+
-+static int gs101_cpuhp_pmu_offline(unsigned int cpu)
-+{
-+	/*
-+	 * Mark this CPU as entering hotplug. So as not to confuse
-+	 * ACPM the CPU entering hotplug should not enter C2 idle state.
-+	 */
-+	*per_cpu_ptr(pmu_context->hotplug_ing, cpu) = true;
-+
-+	gs101_cpu_pmu_offline(cpu);
-+
- 	return 0;
- }
- 
-+static int gs101_cpu_pm_notify_callback(struct notifier_block *self,
-+					unsigned long action, void *v)
-+{
-+	int cpu = smp_processor_id();
-+
-+	switch (action) {
-+	case CPU_PM_ENTER:
-+		/*
-+		 * Ignore CPU_PM_ENTER event in reboot or
-+		 * suspend sequence.
-+		 */
-+
-+		if (atomic_read(&pmu_context->sys_suspended) ||
-+		    atomic_read(&pmu_context->sys_rebooting))
-+			return NOTIFY_OK;
-+
-+		if (*per_cpu_ptr(pmu_context->hotplug_ing, cpu))
-+			return NOTIFY_BAD;
-+
-+		gs101_cpu_pmu_offline(cpu);
-+
-+		break;
-+	case CPU_PM_EXIT:
-+
-+		if (atomic_read(&pmu_context->sys_rebooting))
-+			return NOTIFY_OK;
-+
-+		gs101_cpu_pmu_online(cpu);
-+
-+		break;
-+	}
-+
-+	return NOTIFY_OK;
-+}
-+
-+static struct notifier_block gs101_cpu_pm_notifier = {
-+	.notifier_call = gs101_cpu_pm_notify_callback,
-+	.priority = INT_MAX	/* we want to be called first */
-+};
-+
-+static int exynos_cpupm_reboot_notifier(struct notifier_block *nb,
-+					unsigned long event, void *v)
-+{
-+	switch (event) {
-+	case SYS_POWER_OFF:
-+	case SYS_RESTART:
-+		atomic_set(&pmu_context->sys_rebooting, 1);
-+		break;
-+	}
-+
-+	return NOTIFY_OK;
-+}
-+
-+static struct notifier_block exynos_cpupm_reboot_nb = {
-+	.priority = INT_MAX,
-+	.notifier_call = exynos_cpupm_reboot_notifier,
-+};
-+
- static int exynos_pmu_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
- 	struct regmap_config pmu_regmcfg;
- 	struct regmap *regmap;
- 	struct resource *res;
--	int ret;
-+	int ret, cpu;
- 
- 	pmu_base_addr = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(pmu_base_addr))
-@@ -444,6 +539,12 @@ static int exynos_pmu_probe(struct platform_device *pdev)
- 			 */
- 			dev_warn(&pdev->dev, "pmu-intr-gen syscon unavailable\n");
- 		} else {
-+			pmu_context->hotplug_ing = alloc_percpu(bool);
-+
-+			/* set PMU to power on */
-+			for_each_online_cpu(cpu)
-+				gs101_cpuhp_pmu_online(cpu);
-+
- 			cpuhp_setup_state(CPUHP_BP_PREPARE_DYN,
- 					  "soc/exynos-pmu:prepare",
- 					  gs101_cpuhp_pmu_online, NULL);
-@@ -451,6 +552,12 @@ static int exynos_pmu_probe(struct platform_device *pdev)
- 			cpuhp_setup_state(CPUHP_AP_ONLINE_DYN,
- 					  "soc/exynos-pmu:online",
- 					  NULL, gs101_cpuhp_pmu_offline);
-+
-+			cpu_pm_register_notifier(&gs101_cpu_pm_notifier);
-+			spin_lock_init(&pmu_context->cpupm_lock);
-+			atomic_set(&pmu_context->sys_rebooting, 0);
-+			atomic_set(&pmu_context->sys_suspended, 0);
-+			register_reboot_notifier(&exynos_cpupm_reboot_nb);
- 		}
- 	}
- 
-@@ -471,10 +578,30 @@ static int exynos_pmu_probe(struct platform_device *pdev)
- 	return 0;
- }
- 
-+static int exynos_cpupm_suspend_noirq(struct device *dev)
-+{
-+	atomic_set(&pmu_context->sys_suspended, 1);
-+	return 0;
-+}
-+
-+static int exynos_cpupm_resume_noirq(struct device *dev)
-+{
-+	atomic_set(&pmu_context->sys_suspended, 0);
-+	return 0;
-+}
-+
-+static const struct dev_pm_ops cpupm_pm_ops = {
-+	.suspend_noirq = exynos_cpupm_suspend_noirq,
-+	.resume_noirq = exynos_cpupm_resume_noirq,
-+};
-+
- static struct platform_driver exynos_pmu_driver = {
- 	.driver  = {
- 		.name   = "exynos-pmu",
- 		.of_match_table = exynos_pmu_of_device_ids,
-+#ifdef CONFIG_PM_SLEEP
-+		.pm = &cpupm_pm_ops,
-+#endif
- 	},
- 	.probe = exynos_pmu_probe,
- };
-
--- 
-2.49.0.1151.ga128411c76-goog
+> +	return hmm_dma_map_alloc(dev->dma_device, map, nr_entries, dma_entry_size);
+> +}
+> +
+>   /**
+>    * ib_dma_map_sgtable_attrs - Map a scatter/gather table to DMA addresses
+>    * @dev: The device for which the DMA addresses are to be created
 
