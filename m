@@ -1,184 +1,216 @@
-Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2059.outbound.protection.outlook.com [40.107.243.59])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2B4B1C863B
-	for <linux-kernel@vger.kernel.org>; Sat, 24 May 2025 00:30:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.172
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748046622; cv=none; b=Yh6EunOPEHy94Ip+9wBVU+eP+0nI/V+eNmUan5rpWzYUEkhu4qxxC8+qwWvZfoZ+BdtyVBX+aakanTxlnlOTLya3RtSZiT1VTAhRpRu5j7861RjGh5Sv7eo5RpenNFWeC15mNNxeS1LBGA8ovFO6KVDur1HvM+JXBYMXFJmIgy4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748046622; c=relaxed/simple;
-	bh=Z3vQxLcTpDMFbmhqz80TZkS1cBKQmNM3Hvh7L+Ojb0c=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=KUyjUxxBNGBAX5KeXSpDpWQ+nv7fxbfBz3NHkt3fe9hPoVtVSJarIbom4NOu4LPcIfiD/2WcNcsHQ2l47ACDUftnFlwrdHN8RXOHmTFap8IOJ5b+0EgcHFPltJtEuIqLd0qnH9cEigWNfxyaMM3qYbDD1OCg0FbUdhvU4OJtTL4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ndufresne.ca; spf=none smtp.mailfrom=ndufresne.ca; dkim=pass (2048-bit key) header.d=ndufresne-ca.20230601.gappssmtp.com header.i=@ndufresne-ca.20230601.gappssmtp.com header.b=XyZBH6vi; arc=none smtp.client-ip=209.85.222.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ndufresne.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ndufresne.ca
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30B3835977;
+	Sat, 24 May 2025 00:31:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.59
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748046664; cv=fail; b=CuS1p0CWwSXUiaPfIjztWy8F8X2BIfT0VRB++4G0wYma208i+s3ukCc2Ko2b0IC67DRbuR7iuC2z8u8D8xe19vIu8BGqMUkeQEKVZSyQ0A3Q/fxAIzonjKRgMp3TprOxiGJ8KuEaUhHWgRMaZVjiiGq0VVMxpdtnRBcMAKeuZwU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748046664; c=relaxed/simple;
+	bh=oe08y/JWMUNcUXyj5O+WCJxn2ISKzTzHKytFHQ463QY=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eajAgkO8ZcWuA6M1TQQKYf8WY5goluuaw4/lWoKzJueG1gpF2xaZW647qrTi6RRygzU5Std0zzLdM6aRIWt9HGBUUVw1hENW/9Ua+by4Iw6Jqn+U7z5KP9nB8X2zaBiNhaZfAEVuXYNsJ/ZMPXzn1mYNbmj+ObPGMO9dXNfMlR4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=iexzYLdy; arc=fail smtp.client-ip=40.107.243.59
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ndufresne-ca.20230601.gappssmtp.com header.i=@ndufresne-ca.20230601.gappssmtp.com header.b="XyZBH6vi"
-Received: by mail-qk1-f172.google.com with SMTP id af79cd13be357-7c542ffec37so37945585a.2
-        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 17:30:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ndufresne-ca.20230601.gappssmtp.com; s=20230601; t=1748046619; x=1748651419; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=Z3vQxLcTpDMFbmhqz80TZkS1cBKQmNM3Hvh7L+Ojb0c=;
-        b=XyZBH6vizpgpRCeZTyKCanfnijS/hfS2cqHTp68TiMC2+Rpkt1qIzoAIJxU1ET9OWJ
-         x6q+v9DyfJ7y0AYGt4tvsCsQYgeb9yL7R3cDjmPCP7VhDCt2IVMuZRDVIPnDamW8YJ0q
-         vadw/4btZjnz6gm2QHFx8oO88bhxmEy6s5liOaG3S0H2nSgK9PvzaMkmvjRwdXFr+nS8
-         mpKJhNqRAvfFm+Wh+X8AK32vB1GmRblw+vAspkOQiBZaRtDRPZqbFZPDs8CqwkqMPpwf
-         EMIRn07nBYutQqGXxKCOlc10TOyYnuS2rg6w+ywH/jDW5KXYw7DlEMayChptN0XodZ5N
-         Xi9w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748046619; x=1748651419;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Z3vQxLcTpDMFbmhqz80TZkS1cBKQmNM3Hvh7L+Ojb0c=;
-        b=K4i91JcwpW7PfYsZrsG6In1wmNfBbMVcHL5zxV3UIB645Xw+EBojNL/7H2L8e+wz2N
-         cS3pruy6suskg68WgCnRPL0yo2cJmydm2Hc1HyjRBtZePwiEkOu+iWt2OiabktvlltJT
-         RRRSew5XPrMNVcBlJtj9VeNcLXpX8rWJtHHRJSUfXXkoAPDyV+XMAiSmrQdtNUMN2JRM
-         VhyCS/9uLfc+9ce+MdYQx1jfcZf5z9DOU9LRzYHbYW6WHZieGf2+RGY3AUA7ci20fDhf
-         e1ANJETnb8rNFxbVOrTB3RkoXt2hjOXdz5feB26ElryJPYO8AzTiE/YwhKLGE3+gh6VF
-         XiZg==
-X-Forwarded-Encrypted: i=1; AJvYcCW3tzMYSZk4sVbY9OhKNAVAOeVruEZxmPggSC3mhi66dUQAyr6+uQRb6otPZ3x9BVa1W99QyWAXgM0kNmE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxdBREU+g0SD0tFblvQCjArCqTBi9os3b4/GVKyOCiCbV79g47J
-	J01l2P6cFIFg3iG/cyNCRFNb+ArEg+pZ1vWnZBCsOuqZH219/7Kyf+xlkNx4l20w8kz0Kkfsv+0
-	bn9SgQ+M=
-X-Gm-Gg: ASbGncurW7PMzMGFsMXadO9x5/49ZHC6AOQBzPgRkAvzOT37+IfcDK29E40z/GODcIO
-	Ts6X7Rbw2llhf1G8FPl1AujzGZM6RGxdx30lGn2qEY29s1Mpgm0RoIb70FpYhNr0cnL/3v37DCc
-	6KCBzE/RXqZF4SdJNcmfT26q3B0G8iPEn8a7g6Hpe8VSuuG2Fm+8BQQnHeIIAlnQQi/seajA4vK
-	ud6zW88wjuadY+aJq/PkVbIHIHnlMrqcDciG1s/DcKWG1PHE29JkTGOTucMCCrzEq0fJQguScmm
-	plXNu2XzAaN38p31w477+tmjO7YziYAQBZ53RSuAIs3UL+orflK8fJb1
-X-Google-Smtp-Source: AGHT+IEdDR8OXzB8US60Ph044RM+6ozSx842gNCE6DrnFPv+fhbjtE54fFC5D64DrrpFCuVDHM+uHA==
-X-Received: by 2002:a05:620a:45a7:b0:7cd:53cc:c60c with SMTP id af79cd13be357-7ceecc2b5d3mr205043985a.37.1748046619377;
-        Fri, 23 May 2025 17:30:19 -0700 (PDT)
-Received: from ?IPv6:2606:6d00:17:b2fc::c41? ([2606:6d00:17:b2fc::c41])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7cd468b7400sm1254895885a.66.2025.05.23.17.30.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 May 2025 17:30:18 -0700 (PDT)
-Message-ID: <b1d8b6407bcaea4e12ff1c6c206c8d3b591ac2a9.camel@ndufresne.ca>
-Subject: Re: [PATCH v3 1/5] docs: uapi: media: Document Raspberry Pi NV12
- column format
-From: Nicolas Dufresne <nicolas@ndufresne.ca>
-To: Dave Stevenson <dave.stevenson@raspberrypi.com>, Sakari Ailus	
- <sakari.ailus@linux.intel.com>, Laurent Pinchart	
- <laurent.pinchart@ideasonboard.com>, Mauro Carvalho Chehab
- <mchehab@kernel.org>,  Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
- <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,  Florian Fainelli
- <florian.fainelli@broadcom.com>, Broadcom internal kernel review list	
- <bcm-kernel-feedback-list@broadcom.com>, John Cox
- <john.cox@raspberrypi.com>,  Dom Cobley <dom@raspberrypi.com>, review list
- <kernel-list@raspberrypi.com>, Ezequiel Garcia	
- <ezequiel@vanguardiasur.com.ar>
-Cc: John Cox <jc@kynesim.co.uk>, linux-media@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org
-Date: Fri, 23 May 2025 20:30:17 -0400
-In-Reply-To: <20250423-media-rpi-hevc-dec-v3-1-8fd3fad1d6fb@raspberrypi.com>
-References: <20250423-media-rpi-hevc-dec-v3-0-8fd3fad1d6fb@raspberrypi.com>
-	 <20250423-media-rpi-hevc-dec-v3-1-8fd3fad1d6fb@raspberrypi.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.1 (3.56.1-1.fc42) 
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="iexzYLdy"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=uqILuVhylkw/P0zYbF4YBTkxANa0nodQ8njK5Y1OboefhLCIvICFmX/UvL2FvhWfB3Z1rc5DQbVv4640zEwKn2p45eRRvnHmxQTWcqfdPEreFmf/Jo8yOlP5vqKK69l1eCoEB2bRZucVcX4ypVqw5PfBN0BSaTvigo9z+rfoOzZvawe/06IkVblzuvZkMuUHBM8eMgn145yihbUc7x72zl5K28EN+08nanW+XcQDZqBTVanjPRhFPKY1BmunMHzsacIpvt4IE3ACD7Qxa488cxZ/TaXwtmy5xKQJOVrwsnsZjld8FgkGKqB+Ox9yItsnUZxoCZRAgpKjSUxA7H6meg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=HwZFXKFqeE72D8GqV4GpraW6xUHQGDxYnVfRZKKk1CE=;
+ b=FeYVGsjzBJAMGYTqLqrnRb1+6MdBRCJvM1n99/1c/t9zv6HCxf/zXHxaReOpzik4H6GGGjuEimZlr+EO9R4f09hQXx0YYsPslYAFlBncSrHYGcqA3dEjeAcH3BiPkFYITJbbYjOriUD2H+WAdzj++bQMwHis/1rHs7VQJCiBeEEnmiygD+/Pkla+k5uVmYnrveKzdNmhlUxy3MZFwqnfrqEIddGY3UzksOzeBNnI5i4CYJADP54iBhyJ9+zZjiXwMde01lSF2tFEHxytuVCa5wHOMgfw2je9E5u7yeU+OOzpsCZmK+WsOO/UVWJEGBrS4dLd+tHs8jDUgQFnGZ18XA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.117.161) smtp.rcpttodomain=intel.com smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=HwZFXKFqeE72D8GqV4GpraW6xUHQGDxYnVfRZKKk1CE=;
+ b=iexzYLdyn9ZJVqtHjjRNe/R1tceY/LU4gfOwrnUW2D93IDGpuHjbxRzMrkWSBMqagasqi16bppjDbBLhBBGpiUSTaRWjJWczUzuCDtxIJgtqH6KlTOIPfrlShZWnJFhyOHeLNWDeNnbtyDejj7VBCO+0qfG5NOEmhwxMeYtcaZXdJMsjVI2pVG9+2mfL7GM74CIhdccrZm93AeKNjRKe6cHu4fBcfey/bdv/Ieof4RqGmuDP4EGw/j5V69PuqBMg2KE2ud2gnUL22Ni3ywL13L+QUneT9KPOuNX9csUeOA4wi5C1IDMQHZXJ8bztENzO6L+w1RaUqmYyab9WY9eDGw==
+Received: from BN9PR03CA0158.namprd03.prod.outlook.com (2603:10b6:408:f4::13)
+ by SA0PR12MB4446.namprd12.prod.outlook.com (2603:10b6:806:71::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.21; Sat, 24 May
+ 2025 00:30:58 +0000
+Received: from BN1PEPF00004688.namprd05.prod.outlook.com
+ (2603:10b6:408:f4:cafe::16) by BN9PR03CA0158.outlook.office365.com
+ (2603:10b6:408:f4::13) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8769.21 via Frontend Transport; Sat,
+ 24 May 2025 00:30:58 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.117.161) by
+ BN1PEPF00004688.mail.protection.outlook.com (10.167.243.133) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8769.18 via Frontend Transport; Sat, 24 May 2025 00:30:58 +0000
+Received: from rnnvmail205.nvidia.com (10.129.68.10) by mail.nvidia.com
+ (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Fri, 23 May
+ 2025 17:30:42 -0700
+Received: from rnnvmail205.nvidia.com (10.129.68.10) by rnnvmail205.nvidia.com
+ (10.129.68.10) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Fri, 23 May
+ 2025 17:30:42 -0700
+Received: from Asurada-Nvidia (10.127.8.12) by mail.nvidia.com (10.129.68.10)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14 via Frontend
+ Transport; Fri, 23 May 2025 17:30:40 -0700
+Date: Fri, 23 May 2025 17:30:39 -0700
+From: Nicolin Chen <nicolinc@nvidia.com>
+To: "Tian, Kevin" <kevin.tian@intel.com>
+CC: "jgg@nvidia.com" <jgg@nvidia.com>, "corbet@lwn.net" <corbet@lwn.net>,
+	"will@kernel.org" <will@kernel.org>, "bagasdotme@gmail.com"
+	<bagasdotme@gmail.com>, "robin.murphy@arm.com" <robin.murphy@arm.com>,
+	"joro@8bytes.org" <joro@8bytes.org>, "thierry.reding@gmail.com"
+	<thierry.reding@gmail.com>, "vdumpa@nvidia.com" <vdumpa@nvidia.com>,
+	"jonathanh@nvidia.com" <jonathanh@nvidia.com>, "shuah@kernel.org"
+	<shuah@kernel.org>, "jsnitsel@redhat.com" <jsnitsel@redhat.com>,
+	"nathan@kernel.org" <nathan@kernel.org>, "peterz@infradead.org"
+	<peterz@infradead.org>, "Liu, Yi L" <yi.l.liu@intel.com>,
+	"mshavit@google.com" <mshavit@google.com>, "praan@google.com"
+	<praan@google.com>, "zhangzekun11@huawei.com" <zhangzekun11@huawei.com>,
+	"iommu@lists.linux.dev" <iommu@lists.linux.dev>, "linux-doc@vger.kernel.org"
+	<linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "linux-tegra@vger.kernel.org"
+	<linux-tegra@vger.kernel.org>, "linux-kselftest@vger.kernel.org"
+	<linux-kselftest@vger.kernel.org>, "patches@lists.linux.dev"
+	<patches@lists.linux.dev>, "mochs@nvidia.com" <mochs@nvidia.com>,
+	"alok.a.tiwari@oracle.com" <alok.a.tiwari@oracle.com>, "vasant.hegde@amd.com"
+	<vasant.hegde@amd.com>, "dwmw2@infradead.org" <dwmw2@infradead.org>,
+	"baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>
+Subject: Re: [PATCH v5 14/29] iommufd/viommu: Add IOMMUFD_CMD_HW_QUEUE_ALLOC
+ ioctl
+Message-ID: <aDETLwnxlt8PpHo3@Asurada-Nvidia>
+References: <cover.1747537752.git.nicolinc@nvidia.com>
+ <5c509f092ba61d4c0852ba57b530888ffb864ccb.1747537752.git.nicolinc@nvidia.com>
+ <BN9PR11MB5276B1C7B8827EE2102824998C98A@BN9PR11MB5276.namprd11.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <BN9PR11MB5276B1C7B8827EE2102824998C98A@BN9PR11MB5276.namprd11.prod.outlook.com>
+X-NV-OnPremToCloud: AnonymousSubmission
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN1PEPF00004688:EE_|SA0PR12MB4446:EE_
+X-MS-Office365-Filtering-Correlation-Id: 4bad1086-9391-42e8-b762-08dd9a5a40e2
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|1800799024|36860700013|7416014|376014|13003099007;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?KVTXZVmMmitA8RiwH8+XsAPfIGD/Gj2rvEpLGBktITcmXiq4W29+p3KWC5Y5?=
+ =?us-ascii?Q?MaSyAgxZmJi4heUQvR6g2EyBPLExqDORQAU0rNlV6xWugpSk/pJATwjohBF9?=
+ =?us-ascii?Q?q/pojYvCZuQSSEnv6zY0bWfT4CJXS0FApiUQbCXD8fSW347Oun5jbtD5kaGx?=
+ =?us-ascii?Q?4YMI/kDUo9rViY8l8clQ01Kmp7V5zfl7lyyH2HFVKuJjgUTD2n5yxuYXSONP?=
+ =?us-ascii?Q?9n77MjnjpBdObPaIwg4I08dKk73T18iizoq2xAEXf8R1S5ZA/WbGjQQAhKII?=
+ =?us-ascii?Q?fnGdS0G3BycW4ai/dlBwQkQdJ3ROIDe8hKk12GIOAewNcBBrp47kfsgbt/75?=
+ =?us-ascii?Q?rxA32kGUDdfZfqVh81LcDF3G/EKsAxhKobaLULHrWlRO4NOYFVMEPXfVNmX/?=
+ =?us-ascii?Q?OHI+A87A1strkKjvsO5KtfvQlgWbBBi0GUas73BDmwsMofiNlYg5oLAVBWNx?=
+ =?us-ascii?Q?fkFttMX5Sr4dzgtf1EtYQgqGsO90zy1EX2RMy0hBpbOFEXFkGXURXQmTGchA?=
+ =?us-ascii?Q?53mSI22KfvpGSlH0QDDgOVK8Xs1bjU2TIoj04f9nf2fdcEhr3E8ZgIcNMzgu?=
+ =?us-ascii?Q?Qvfxi0j4q1NC8wZaA69P+GUFNMrwOi3GstWlu4sYWfpa963xmO3xnQRVTp2n?=
+ =?us-ascii?Q?SqEwrM6t5GhMXxZQi95iR9qYxU8OKO5+xtrnlDK5p8aKoMyaSiG3667GAqkH?=
+ =?us-ascii?Q?YDKELubbYSFs4juZBrnCgbVpQ+ZEFjSgHeQQmU8f3AurJDiDf5pKN00t0D4N?=
+ =?us-ascii?Q?sPt2Yg7KJTQ1QQEk37pc7Vkh9RhP/zJTSQDEfkA5hWO2sP4UAfZBnVzRVNic?=
+ =?us-ascii?Q?VKnDbwvcoH2/oZFOE57JLsW54gFKJKZmrfyFtDaJn47hyD7CZaMG5UFWI1c/?=
+ =?us-ascii?Q?9xiA0RYQZJhcOIuRmBkQp1yPzWnZKF+CL7sRwhYgeD20bwbMR+iqvQ493zER?=
+ =?us-ascii?Q?+wld/RroZhatZ0zQ6d/X4XMeLm/NlNpSAvDqcW3Thm9YpxzdNFrgIzAOd72g?=
+ =?us-ascii?Q?OEkitwnczsm+rkbAY5Z2/Ymzpvu8+7iRgw63V2itdYZjCn+MSu1y+6qwdrnr?=
+ =?us-ascii?Q?3WM3eHfB3k2X9whx7/gG5gqt/84aafzydDVaDVvbzJFD+jN3Vj84T5OhUnzm?=
+ =?us-ascii?Q?LJ54DAw22oJsgkNrb+fN4RpF3UmY7AHS+LvmovpjdB5/zTXex3TVpJsNbLa9?=
+ =?us-ascii?Q?+bPrYHmX8vKNKfnpIYeNAGNhnrUxsrdVDGrd+vuLPwyJYopo7WaXu7cH95EK?=
+ =?us-ascii?Q?HLfoYh2yEBYJw0oLVK0HcZoxqAYbUCkpvoQodeo8E6zfTkeMQaIJjKIbsdWi?=
+ =?us-ascii?Q?zEhe42ZMOkOTLAFUUBNYF8Ci0rmLXTSnIsi2caP/+dU9h37pqPiG59sUqmNU?=
+ =?us-ascii?Q?8mBVu3zHoeO5BiEy4AhqTcjc1IXJMtkoLeI5CKdxFE4cPl6h3CVwfOZqHr6B?=
+ =?us-ascii?Q?/IaFhoy/2Bym4NHNfrLMYHXHo5VQhKVzDLcLaZgQvk5C45SoJw8aJxzpox6+?=
+ =?us-ascii?Q?zARNGbzYkeCr6isn41MZeCqIFs/cf/3dYeCEBl5ngpVjeHGrT4+1ifm7qQ?=
+ =?us-ascii?Q?=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(36860700013)(7416014)(376014)(13003099007);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 May 2025 00:30:58.0804
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4bad1086-9391-42e8-b762-08dd9a5a40e2
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BN1PEPF00004688.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR12MB4446
 
-Le mercredi 23 avril 2025 =C3=A0 18:20 +0100, Dave Stevenson a =C3=A9crit=
-=C2=A0:
-> The Raspberry Pi HEVC decoder uses a tiled format based on
-> columns for 8 and 10 bit YUV images, so document them as
-> NV12MT_COL128 and NV12MT_10_COL128.
->=20
-> Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
-> ---
-> =C2=A0.../userspace-api/media/v4l/pixfmt-yuv-planar.rst=C2=A0 | 42 ++++++=
-++++++++++++++++
-> =C2=A01 file changed, 42 insertions(+)
->=20
-> diff --git a/Documentation/userspace-api/media/v4l/pixfmt-yuv-planar.rst =
-b/Documentation/userspace-
-> api/media/v4l/pixfmt-yuv-planar.rst
-> index b788f6933855..b5b590f234b0 100644
-> --- a/Documentation/userspace-api/media/v4l/pixfmt-yuv-planar.rst
-> +++ b/Documentation/userspace-api/media/v4l/pixfmt-yuv-planar.rst
-> @@ -827,6 +827,48 @@ Data in the 12 high bits, zeros in the 4 low bits, a=
-rranged in little endian ord
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - Cb\ :sub:`11`
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - Cr\ :sub:`11`
-> =C2=A0
-> +V4L2_PIX_FMT_NV12MT_COL128 and V4L2_PIX_FMT_NV12MT_10_COL128
-> +------------------------------------------------------------
-> +
-> +``V4L2_PIX_FMT_NV12MT_COL128`` is a tiled version of
-> +``V4L2_PIX_FMT_NV12M`` where the two planes are split into 128 byte wide=
- columns
-> +of Y or interleaved CbCr.
-> +
-> +V4L2_PIX_FMT_NV12MT_10_COL128 expands that as a 10 bit format where 3 10=
- bit
-> +values are packed into a 32bit word. A 128 byte wide column therefore ho=
-lds 96
-> +samples (either Y or interleaved CrCb). That effectively makes it 6 valu=
-es in a
-> +64 bit word for the CbCr plane, as the values always go in pairs.
+On Fri, May 23, 2025 at 08:00:02AM +0000, Tian, Kevin wrote:
+> > From: Nicolin Chen <nicolinc@nvidia.com>
+> > Sent: Sunday, May 18, 2025 11:22 AM
+> > 
+> > + * @nesting_parent_iova: Base address of the queue memory in the guest
+> > physical
+> > + *                       address space
+> 
+> 'nesting_parent' is a bit redundant. 'iova' should be sufficient as it
+> implies a s2 input address.
 
-Could be nice to mention that this has a verticalement alignment of 8, allo=
-wing
-to represent it as a 128x8 tiled format with a column layout. This was hand=
-y for
-the GStreamer integration your showed me.
+Hmm, Jason suggested to highlight "nesting_parent":
+https://lore.kernel.org/all/20250515160620.GJ382960@nvidia.com/
 
-Nicolas
+> 
+> > + * @length: Length of the queue memory
+> > + *
+> > + * Allocate a HW queue object for a vIOMMU-specific HW-accelerated
+> > queue, which
+> > + * allows HW to access a guest queue memory described using
+> > @nesting_parent_iova
+> > + * and @length.
+> > + *
+> > + * Upon success, the underlying physical pages of the guest queue memory
+> > will be
+> > + * pinned to prevent VMM from unmapping them in the IOAS until the HW
+> > queue gets
+> > + * destroyed.
+> 
+> This is conditional.
 
-> +
-> +Bit-packed representation.
-> +
-> +.. tabularcolumns:: |p{1.2cm}||p{1.2cm}||p{1.2cm}||p{1.2cm}|p{3.2cm}|p{3=
-.2cm}|
-> +
-> +.. flat-table::
-> +=C2=A0=C2=A0=C2=A0 :header-rows:=C2=A0 0
-> +=C2=A0=C2=A0=C2=A0 :stub-columns: 0
-> +=C2=A0=C2=A0=C2=A0 :widths: 8 8 8 8
-> +
-> +=C2=A0=C2=A0=C2=A0 * - Y'\ :sub:`00[7:0]`
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - Y'\ :sub:`01[5:0] (bits 7--2)` Y'\ :sub=
-:`00[9:8]`\ (bits 1--0)
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - Y'\ :sub:`02[3:0] (bits 7--4)` Y'\ :sub=
-:`01[9:6]`\ (bits 3--0)
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - unused (bits 7--6)` Y'\ :sub:`02[9:4]`\=
- (bits 5--0)
-> +
-> +.. tabularcolumns:: |p{1.2cm}||p{1.2cm}||p{1.2cm}||p{1.2cm}|p{3.2cm}|p{3=
-.2cm}|
-> +
-> +.. flat-table::
-> +=C2=A0=C2=A0=C2=A0 :header-rows:=C2=A0 0
-> +=C2=A0=C2=A0=C2=A0 :stub-columns: 0
-> +=C2=A0=C2=A0=C2=A0 :widths: 12 12 12 12 12 12 12 12
-> +
-> +=C2=A0=C2=A0=C2=A0 * - Cb\ :sub:`00[7:0]`
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - Cr\ :sub:`00[5:0]`\ (bits 7--2) Cb\ :su=
-b:`00[9:8]`\ (bits 1--0)
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - Cb\ :sub:`01[3:0]`\ (bits 7--4) Cr\ :su=
-b:`00[9:6]`\ (bits 3--0)
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - unused (bits 7--6) Cb\ :sub:`02[9:4]`\ =
-(bits 5--0)
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - Cr\ :sub:`01[7:0]`
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - Cb\ :sub:`02[5:0]`\ (bits 7--2) Cr\ :su=
-b:`01[9:8]`\ (bits 1--0)
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - Cr\ :sub:`02[3:0]`\ (bits 7--4) Cb\ :su=
-b:`02[9:6]`\ (bits 3--0)
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - unused (bits 7--6) Cr\ :sub:`02[9:4]`\ =
-(bits 5--0)
-> +
-> =C2=A0
-> =C2=A0Fully Planar YUV Formats
-> =C2=A0=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D
+Yea, forgot to delete that.
+
+> 
+> > +void iommufd_hw_queue_destroy(struct iommufd_object *obj)
+> > +{
+> > +	struct iommufd_hw_queue *hw_queue =
+> > +		container_of(obj, struct iommufd_hw_queue, obj);
+> > +	struct iommufd_viommu *viommu = hw_queue->viommu;
+> > +
+> > +	if (viommu->ops->hw_queue_destroy)
+> > +		viommu->ops->hw_queue_destroy(hw_queue);
+> > +	iopt_unpin_pages(&viommu->hwpt->ioas->iopt, hw_queue-
+> > >base_addr,
+> > +			 hw_queue->length, true);
+> 
+> Check the flag
+
+Oh, right! Will fix.
+
+> > +
+> > +		/* Validate if the underlying physical pages are contiguous */
+> > +		for (i = 1; i < max_npages && pages[i]; i++) {
+> 
+> Page[i] must be valid otherwise it's a bug?
+
+Yea, I think so. We can drop this pages[i].
+
+Thanks!
+Nicolin
