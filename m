@@ -1,47 +1,43 @@
-Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B47A19AD8B;
-	Sat, 24 May 2025 20:51:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AABE610FD;
+	Sat, 24 May 2025 20:54:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748119868; cv=none; b=HmZ4x5FOUcZSrRzM5Rz5cP5qXnfvugXPny8aGUlC+FSdxOCqTej1VLZs/dUBN4p7Cm0KDaV1pdSlHpn1XT7jkAchsCb9iGQivinBoZiTZVW0NZ5CP/Jo/xYQmhtbcjeq+5rHcXtvR3TphixPo+h5XGKrmE89sfrFZNZHdhXx2DU=
+	t=1748120066; cv=none; b=kvzukR3zb1YaVAKyz+72MKAzk3Nd/ORK84mUKiJF1nZ7HEmOZC5+nBbp3orST/tLFvU2QElIU4dkSQ4hrRQ10K4A6maUkyHZsWTmpDUcwO8KRrASYccyYLUAjMjMAWYp8O7u4jE4+u7cUWthJDJCrSJ9r8MsKNPrEvs/IEQW0k0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748119868; c=relaxed/simple;
-	bh=8e3qtdIEUU/UtHqgEFU0L/nDT5eQYIFkqlWHUgYAkSY=;
+	s=arc-20240116; t=1748120066; c=relaxed/simple;
+	bh=vAMyCB5LtrJUl5vCLXNGrnc0C903N0xaljWpzC2GIG4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iOYMMBJAcAKxjcXrrlz07MwIqB4QwcfJva+ocBnuY5y7zX2a9DHf5U2Jz8DV0WC8JIA3/g/O22V86mII3ip4R9eJU2Kiwzs3ZnAtoGAd8W2uqSQplSeLWsjW2VQ3TTXqYtUprUorcetDAeq+h+XVfsxrmAeYcG9CYYeykRzD3QA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=eN2NJaAU; arc=none smtp.client-ip=217.70.183.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=isnSm8vB9Xv2EaQCffoarwKHUNKGB1hckr5izW31R9vqfzEyPBJ2nOPu75olzd9O3yhx28aUzyiL4J8UEZFj0AGJQzHqs2F8cX2FRzBQQQmEdIZM6XzQfzvlfU3SunNWCszn5Vt2nR0ndj3dg0Ojc4ed7hOBEQUZjsSo+aaRL6Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NuRE6cL7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="eN2NJaAU"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 8C35D43A81;
-	Sat, 24 May 2025 20:51:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1748119864;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=UUOyvQo9/EeP3DIU+h+yQywTeP4pomxjS3Y8EoD38FY=;
-	b=eN2NJaAUm9dZUbijDMh09rQbJXrvEe02w9WScw7sU/2y6YgIdgDMWVkki0NAp6eklOoyWU
-	EGgKUXso4XMJMaD+SwpePQ0ZHgF5lAilyY3MNxaRKME6Rk/0Vlr4bNrpCFVm7axKJmqgIa
-	IuoZ4VFLrAlkKcVPCyEScwIKJZwygG82aEuYcOH8GtQ67qK6WBpNMRKRqAOEW+elJWR6+1
-	87ooWs3iaNOn6G2U9EcBjUpQjEfQUymQwEyNX7U66OAmSvc+t4FjR50FpR4IpdiBSvM7IK
-	AbeqwpBzXewLHSyn8hYcSFtkrjNc8JaOevkJgqTtfrI73zqMXBvsIW1y9Ge3YA==
-Date: Sat, 24 May 2025 22:51:03 +0200
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-To: miquel.raynal@bootlin.com, Frank.Li@nxp.com, robh@kernel.org,
-	krzk+dt@kernel.org, conor+dt@kernel.org, shawnguo@kernel.org,
-	s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-	conor.culhane@silvaco.com, carlos.song@nxp.com
-Cc: linux-i3c@lists.infradead.org, imx@lists.linux.dev,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: (subset) [PATCH V4 0/3] support different number of clocks for
- svc i3c controller
-Message-ID: <174811981012.1255947.3023044294163637573.b4-ty@bootlin.com>
-References: <20250427083230.3325700-1-carlos.song@nxp.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NuRE6cL7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32340C4CEE4;
+	Sat, 24 May 2025 20:54:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748120066;
+	bh=vAMyCB5LtrJUl5vCLXNGrnc0C903N0xaljWpzC2GIG4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=NuRE6cL7cAJq9F1AqONN0LgF9ggsl3Qr9I2O2YSb2GBRXHmurT1rbr7artx7BdK+2
+	 nrUCyp976U6c89LXxPTaw4icQ6+Se1ELBukHZgXjMIOHWRrgaQVue9nS1X90iZvegt
+	 GmxteX/2AOty83QpLujVKuwLwW4/xS11SFfVJfnULD99tg9WoIX7Vw728ZDd7rLCJd
+	 ua7AfW1AK+9sLSHIJ0tRLewm9gCbBTxTJwBeaAAy8yh8jY0AE7wFA1m7BMZM5BiH2o
+	 xCUyIkM20K0hsshaJ4t0zGVB4ooeyLgxk5NJHJ7XHWQaZgFN3asTVSf+06aaERG223
+	 tYaMGKCCgInFA==
+Date: Sat, 24 May 2025 22:54:21 +0200
+From: Niklas Cassel <cassel@kernel.org>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com,
+	linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, wilfred.mallawa@wdc.com,
+	Lukas Wunner <lukas@wunner.de>
+Subject: Re: [PATCH 1/2] PCI: Save and restore root port config space in
+ pcibios_reset_secondary_bus()
+Message-ID: <aDIx_TaNXv__uO14@ryzen>
+References: <20250524185304.26698-1-manivannan.sadhasivam@linaro.org>
+ <20250524185304.26698-2-manivannan.sadhasivam@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,34 +46,56 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250427083230.3325700-1-carlos.song@nxp.com>
-X-GND-State: clean
-X-GND-Score: 0
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgdduvdejtdculddtuddrgeefvddrtddtmdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucenucfjughrpeffhffvvefukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpeetlhgvgigrnhgurhgvuceuvghllhhonhhiuceorghlvgigrghnughrvgdrsggvlhhlohhnihessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepieejfefhffekjeeuheevueevjedvleevjeetudffheeutdffudefjeduffeuvddtnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghdpsghoohhtlhhinhdrtghomhenucfkphepvdgrtddumegvtdgrmedvugemieefjedtmeejkegvtdemtgdtvgekmedvkedtieemkegrtgeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegvtdgrmedvugemieefjedtmeejkegvtdemtgdtvgekmedvkedtieemkegrtgeipdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpegrlhgvgigrnhgurhgvrdgsvghllhhonhhisegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeduiedprhgtphhtthhopehmihhquhgvlhdrrhgrhihnrghlsegsohhothhlihhnrdgtohhmpdhrtghpthhtohephfhrrghnkhdrnfhisehngihprdgtohhmpdhrtghpthhtoheprhhosghhs
- ehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkrhiikhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegtohhnohhrodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepshhhrgifnhhguhhosehkvghrnhgvlhdrohhrghdprhgtphhtthhopehsrdhhrghuvghrsehpvghnghhuthhrohhnihigrdguvgdprhgtphhtthhopehkvghrnhgvlhesphgvnhhguhhtrhhonhhigidruggv
-X-GND-Sasl: alexandre.belloni@bootlin.com
+In-Reply-To: <20250524185304.26698-2-manivannan.sadhasivam@linaro.org>
 
-On Sun, 27 Apr 2025 16:32:27 +0800, carlos.song@nxp.com wrote:
-> From: Carlos Song <carlos.song@nxp.com>
+On Sun, May 25, 2025 at 12:23:03AM +0530, Manivannan Sadhasivam wrote:
+> host_bridge::reset_slot() is supposed to reset the PCI root port/slot. Once
+> that happens, the config space content would be lost. This was reported by
+> Niklas on the dw-rockchip based platform where the MPS setting of the root
+> port was lost after the host_bridge::reset_slot() callback. Hence, save the
+> config space before calling the host_bridge::reset_slot() callback and
+> restore it afterwards.
 > 
-> I.MX94 and I.MX95 I3C only need two clocks and legacy I3C needs three
-> clocks. So add restrictions for clock and clock-names properties for
-> different Socs. In driver, use the clk_bulk API to handle clocks to
-> support different numbers of clocks more easily. Make the code cleaner
-> and more flexible.
+> While at it, make sure that the callback is only called for root ports by
+> checking if the bridge is behind the root bus.
 > 
-> [...]
+> Fixes: d5c1e1c25b37 ("PCI/ERR: Add support for resetting the slots in a platform specific way")
+> Reported-by: Niklas Cassel <cassel@kernel.org>
+> Closes: https://lore.kernel.org/linux-pci/aC9OrPAfpzB_A4K2@ryzen
+> Suggested-by: Lukas Wunner <lukas@wunner.de>
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> ---
+>  drivers/pci/pci.c | 11 ++++++++++-
+>  1 file changed, 10 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index 4d396bbab4a8..6d6e9ce2bbcc 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -4985,10 +4985,19 @@ void __weak pcibios_reset_secondary_bus(struct pci_dev *dev)
+>  	struct pci_host_bridge *host = pci_find_host_bridge(dev->bus);
+>  	int ret;
+>  
+> -	if (host->reset_slot) {
+> +	if (pci_is_root_bus(dev->bus) && host->reset_slot) {
+> +		/*
+> +		 * Save the config space of the root port before doing the
+> +		 * reset, since the state could be lost. The device state
+> +		 * should've been saved by the caller.
+> +		 */
+> +		pci_save_state(dev);
+>  		ret = host->reset_slot(host, dev);
+>  		if (ret)
+>  			pci_err(dev, "failed to reset slot: %d\n", ret);
+> +		else
+> +			/* Now restore it on success */
+> +			pci_restore_state(dev);
+>  
+>  		return;
+>  	}
+> -- 
+> 2.43.0
+> 
 
-Applied, thanks!
-
-[1/3] dt-bindings: i3c: silvaco,i3c-master: add i.MX94 and i.MX95 I3C
-      https://git.kernel.org/abelloni/c/489c773a68de
-[2/3] i3c: master: svc: switch to bulk clk API for flexible clock support
-      https://git.kernel.org/abelloni/c/cd1a6a0c69e7
-
-Best regards,
-
--- 
-Alexandre Belloni, co-owner and COO, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Looks good to me:
+Reviewed-by: Niklas Cassel <cassel@kernel.org>
