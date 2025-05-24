@@ -1,145 +1,152 @@
-Received: from fout-a1-smtp.messagingengine.com (fout-a1-smtp.messagingengine.com [103.168.172.144])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7ECC91DED42;
-	Sat, 24 May 2025 10:29:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.144
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A7171A7AF7
+	for <linux-kernel@vger.kernel.org>; Sat, 24 May 2025 10:29:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748082548; cv=none; b=cgfajC/2755SRvyUXLC/Ida87He2WqlfIDDwwwVUuJWHnKYaItsgVKnURYd6R6DaFY5YFQ20roqI6Lhp/knRReeZnjYPvm4PqyWtR96tJ/Hqlxz7PWvegW4fObjzCbj8RWVFGILx5cdMuCtmHsfGO2PkIHWXhZshgGx5qsTYBWQ=
+	t=1748082572; cv=none; b=BH2mQmJ1vDNkXO0Eighxh119ipufdGofaWNgpVFQmJX4KGIkzz0gEV71hcMthTxoIbdlSyvDx6NjYrcvWLJDxuPs3lxxMUYjisf0btOLLwNGCdEuqO/eoMZ0oygJ/poa/jYhytexVawBFShMgVi4JzOz858+HJtOePFfDruCqWc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748082548; c=relaxed/simple;
-	bh=Vo9bZalWQPgoZtXoUV/2o0PGzSrkiSgePwMw03SGqYc=;
+	s=arc-20240116; t=1748082572; c=relaxed/simple;
+	bh=s6UiEN1Jm7OVCrzrD4ZPy3L4yqbPYUdJaL8UHsYSCNY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=epAw6zSJkC7o1/88060QhAHCG56+iorK3gRX1e2fRuauWlfaWbaOr08OtySeQkJOOoUbiCU7+jm84XLnyuHnOWhsKEjnV0FsPwzV/szWF13XDXvEVo5T7mgtuMnys57RFhmufUmMPRY8QrMn8wJ1Z1RekWI5SullS2EgT8fhhKs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ragnatech.se; spf=pass smtp.mailfrom=ragnatech.se; dkim=pass (2048-bit key) header.d=ragnatech.se header.i=@ragnatech.se header.b=Lq3xxTy/; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=QEOVe9eC; arc=none smtp.client-ip=103.168.172.144
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ragnatech.se
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ragnatech.se
+	 Content-Type:Content-Disposition:In-Reply-To; b=OoL/8GNFjoChbkV6EeeqeiX64nySUT6ZvwQuCGY95vApS1Ftri/j/n0m+XOe7fJ7Z0df2uf0mlRvEJulPc/FlgwWAmzj+8Y0IGfLSWQnt82a+RXpJLYo9z25+BxRNKuhTsNyumylW6XD2y53LQRRTIO2YkHtEPYmHHcQhJ0hEEk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RCXmTDft; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ragnatech.se header.i=@ragnatech.se header.b="Lq3xxTy/";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="QEOVe9eC"
-Received: from phl-compute-01.internal (phl-compute-01.phl.internal [10.202.2.41])
-	by mailfout.phl.internal (Postfix) with ESMTP id 5370B138026B;
-	Sat, 24 May 2025 06:29:04 -0400 (EDT)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-01.internal (MEProxy); Sat, 24 May 2025 06:29:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ragnatech.se; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1748082544;
-	 x=1748168944; bh=KNL3wWIg9pTl/87kvpN3LEkYYiFn0rJyJv1V7pOOQXk=; b=
-	Lq3xxTy/Lf0RTtPoDgXVh0REO39vW6cwCGjbYoUgfKKSUWXizM1TvfiTAM/VDvoO
-	Cj3vA9XgooBJZOw8FmDPZd17Rcni06GOq5wtgXA2ObWbKJ083Gja19D4VSYpSsCO
-	5S6nSwg7LfdRrqLSNsjLRSbfg4WVuoV1FPMi8LDDEIqllDMxDUcOs/efAmIlLpoP
-	nnu+TZ1+G/m4MJs4WcvyprLXQuFz4jQ+vkDZY4xtlEvXlV8ylSpE6PwpLKFZ4D+Y
-	c/BgOGt9oCzLAfC8xN3I7aOMlNNkqIbU7qAv3UM3eBtpHgT0qm5cSdlbRdum29vH
-	kfzhrtR6wrWx6RfAW1uSrw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1748082544; x=
-	1748168944; bh=KNL3wWIg9pTl/87kvpN3LEkYYiFn0rJyJv1V7pOOQXk=; b=Q
-	EOVe9eCwIsRSt0Y06QRxNVThARExsfGtH56lAEkVwqaWW1qO7lUQtCclfJzf4r+5
-	14B+i9ijrX1j9wkHwFWbfdq26LBy24BSHYJFKwET0SzFK3TqpzjBXOYTfJFs7T7r
-	vl4KriuRvI1sOQNNXJru7vCYfSVlAkIBhunEvn5yd4dPEc8WnVGh2uZ8O/VfZV59
-	JoZbOsinDKclin2PvNA+qASHeb3A26W3aThHiFxJ5KVvcf8N7BwZBmhz1wuv/Qlo
-	ylVhCKMdvmjVBnlblKsaxWw7OXdTAzcht4wuGUQCCEYh3FZ9CtJVrwbb9l8cYJ6a
-	TXlW/amZmM1jFFDtm6uJA==
-X-ME-Sender: <xms:b58xaM70h0gS1GpKy8P2QxeAD16QPtBfImceMra-jR6WSpZJ0ruRtw>
-    <xme:b58xaN5rsqHpufTuXU6Gc1oxZYYjPsGWfZJVK8Q0Qh-cyndWBNe5t12hqEz18bgyd
-    oW5rpBeNhOuUsVRGjw>
-X-ME-Received: <xmr:b58xaLe56REzU1TWZreOtGhbKGRwbauFtexrFv0UgPrDAAQJ0EjCP4nIEvoC7r9aBYcMuPzBdxUZ7_L6KM7sg6TdyvDpaNX6Qw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgdduudegleculddtuddrgeefvddrtd
-    dtmdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggft
-    fghnshhusghstghrihgsvgdpuffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftd
-    dtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfhf
-    gggtugfgjgesthekredttddtjeenucfhrhhomheppfhikhhlrghsucfunpguvghrlhhunh
-    guuceonhhikhhlrghsrdhsohguvghrlhhunhgusehrrghgnhgrthgvtghhrdhsvgeqnecu
-    ggftrfgrthhtvghrnhepveetgedtvddvhfdtkeeghfeffeehteehkeekgeefjeduieduue
-    elgedtheekkeetnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhf
-    rhhomhepnhhikhhlrghsrdhsohguvghrlhhunhgusehrrghgnhgrthgvtghhrdhsvgdpnh
-    gspghrtghpthhtohepuddupdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehhrgho
-    gihirghnghgplhhivddtvdegseduieefrdgtohhmpdhrtghpthhtoheprghnughrvgifod
-    hnvghtuggvvheslhhunhhnrdgthhdprhgtphhtthhopegurghvvghmsegurghvvghmlhho
-    fhhtrdhnvghtpdhrtghpthhtohepvgguuhhmrgiivghtsehgohhoghhlvgdrtghomhdprh
-    gtphhtthhopehkuhgsrgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepphgrsggvnhhi
-    sehrvgguhhgrthdrtghomhdprhgtphhtthhopehrihgthhgrrhgutghotghhrhgrnhesgh
-    hmrghilhdrtghomhdprhgtphhtthhopehnvghtuggvvhesvhhgvghrrdhkvghrnhgvlhdr
-    ohhrghdprhgtphhtthhopehlihhnuhigqdhrvghnvghsrghsqdhsohgtsehvghgvrhdrkh
-    gvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:b58xaBLp9civC8pwRZPokRqJE_hjoLAgtMIahk1NNxeIDXkTJUFgvg>
-    <xmx:b58xaAIt9jRHAxjjiVLdYfzt2hYBUSFLwDUi9LJGTJ3KalZoq63DOw>
-    <xmx:b58xaCyS_3Pj8s_9L3nfxb2uN6ZvAp4zbTSF6iCV1ZvjZ608dNPPCA>
-    <xmx:b58xaEJWUlzM0AakjabNFdBTR-Do-XPDcqfF3d0E1mdekpxF946-UA>
-    <xmx:cJ8xaDMiV14b2sByBZA-IA-WJ7nSwCiuqo8hUmEPCxvaohgEbknaaGdy>
-Feedback-ID: i80c9496c:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sat,
- 24 May 2025 06:29:03 -0400 (EDT)
-Date: Sat, 24 May 2025 12:29:01 +0200
-From: Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>
-To: Haoxiang Li <haoxiang_li2024@163.com>
-Cc: andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
-	kuba@kernel.org, pabeni@redhat.com, richardcochran@gmail.com,
-	netdev@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH] net: ethernet: rtsn: Fix a null pointer dereference in
- rtsn_probe()
-Message-ID: <20250524102901.GD600042@ragnatech.se>
-References: <20250524075825.3589001-1-haoxiang_li2024@163.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RCXmTDft"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748082571; x=1779618571;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=s6UiEN1Jm7OVCrzrD4ZPy3L4yqbPYUdJaL8UHsYSCNY=;
+  b=RCXmTDftQCBmYUmiVN7O7vpaaXcoAtV29VxgDD2yOOOtsA3gqa5k7DDA
+   jMjQWnW+Tj5jYj/Hwe0K0Yzm2WLNpYuq6b5kXfD0OsXM1bfYH4MB76rSh
+   dGlAiWmCCETwTV72JayxXE5/vp9O1BOZZnivBun1wmdOBQ0g1PhvitMnc
+   JjesNxUUJVE/bscWmLQAaDXNmu3aUhhplikuRDVXSi/HvS+GY+kdNNYnL
+   Vy3fWRLWdXfElqFjglSMagKNOV3/Pgf3I9R8QGxs4lYnDUv6A/Gt4VgkA
+   P3b4YMug+f114n+N3MkRRuzyhnBi4l0iyts5iDx3uM2zNNc+v+1k6r9gG
+   g==;
+X-CSE-ConnectionGUID: +I/SBokaSCObzM07B3uaFw==
+X-CSE-MsgGUID: px75wd/oRIaO7CxxJxdXEg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11441"; a="75522094"
+X-IronPort-AV: E=Sophos;i="6.15,311,1739865600"; 
+   d="scan'208";a="75522094"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 May 2025 03:29:30 -0700
+X-CSE-ConnectionGUID: HrBfmwpQQvqMks20J/JY6g==
+X-CSE-MsgGUID: a+CwcV1LRRSjgimO27u1cw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,311,1739865600"; 
+   d="scan'208";a="146700425"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa004.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 May 2025 03:29:25 -0700
+Date: Sat, 24 May 2025 13:29:22 +0300
+From: Raag Jadav <raag.jadav@intel.com>
+To: Alexander Usyskin <alexander.usyskin@intel.com>
+Cc: Miquel Raynal <miquel.raynal@bootlin.com>,
+	Richard Weinberger <richard@nod.at>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	Lucas De Marchi <lucas.demarchi@intel.com>,
+	Thomas =?iso-8859-1?Q?Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Jani Nikula <jani.nikula@linux.intel.com>,
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+	Tvrtko Ursulin <tursulin@ursulin.net>,
+	Karthik Poosa <karthik.poosa@intel.com>,
+	Reuven Abliyev <reuven.abliyev@intel.com>,
+	Oren Weil <oren.jer.weil@intel.com>, linux-mtd@lists.infradead.org,
+	intel-xe@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+	intel-gfx@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v10 08/10] drm/xe/nvm: add on-die non-volatile memory
+ device
+Message-ID: <aDGfgubuFfa3e0K_@black.fi.intel.com>
+References: <20250515133345.2805031-1-alexander.usyskin@intel.com>
+ <20250515133345.2805031-9-alexander.usyskin@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250524075825.3589001-1-haoxiang_li2024@163.com>
+In-Reply-To: <20250515133345.2805031-9-alexander.usyskin@intel.com>
 
-Hi Haoxiang,
+On Thu, May 15, 2025 at 04:33:43PM +0300, Alexander Usyskin wrote:
+> Enable access to internal non-volatile memory on DGFX
+> with GSC/CSC devices via a child device.
+> The nvm child device is exposed via auxiliary bus.
 
-Thanks for your fix, nice catch.
+...
 
-On 2025-05-24 15:58:25 +0800, Haoxiang Li wrote:
-> Add check for the return value of rcar_gen4_ptp_alloc()
-> to prevent potential null pointer dereference.
-> 
-> Fixes: b0d3969d2b4d ("net: ethernet: rtsn: Add support for Renesas Ethernet-TSN")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Haoxiang Li <haoxiang_li2024@163.com>
-> ---
->  drivers/net/ethernet/renesas/rtsn.c | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/drivers/net/ethernet/renesas/rtsn.c b/drivers/net/ethernet/renesas/rtsn.c
-> index 6b3f7fca8d15..f5df3374d279 100644
-> --- a/drivers/net/ethernet/renesas/rtsn.c
-> +++ b/drivers/net/ethernet/renesas/rtsn.c
-> @@ -1260,6 +1260,10 @@ static int rtsn_probe(struct platform_device *pdev)
->  	priv->pdev = pdev;
->  	priv->ndev = ndev;
+> +void xe_nvm_init(struct xe_device *xe)
+> +{
 
-nit: I would add a blank line here to make the grouping similar to the 
-style of other error checks in probe.
+Same as patch 6, please handle errors.
 
-With that fixed,
+> +	struct pci_dev *pdev = to_pci_dev(xe->drm.dev);
+> +	struct intel_dg_nvm_dev *nvm;
+> +	struct auxiliary_device *aux_dev;
+> +	int ret;
+> +
+> +	if (!xe->info.has_gsc_nvm)
+> +		return;
+> +
+> +	/* No access to internal NVM from VFs */
+> +	if (IS_SRIOV_VF(xe))
+> +		return;
+> +
+> +	/* Nvm pointer should be NULL here */
+> +	if (WARN_ON(xe->nvm))
+> +		return;
+> +
+> +	xe->nvm = kzalloc(sizeof(*nvm), GFP_KERNEL);
+> +	if (!xe->nvm)
+> +		return;
+> +
+> +	nvm = xe->nvm;
+> +
+> +	nvm->writeable_override = false;
+> +	nvm->bar.parent = &pdev->resource[0];
+> +	nvm->bar.start = GEN12_GUNIT_NVM_BASE + pdev->resource[0].start;
+> +	nvm->bar.end = nvm->bar.start + GEN12_GUNIT_NVM_SIZE - 1;
 
-Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+Just out of curiosity, why off by one? Aren't ioremaps all PAGE_SIZEd?
 
->  	priv->ptp_priv = rcar_gen4_ptp_alloc(pdev);
-> +	if (!priv->ptp_priv) {
-> +		ret = -ENOMEM;
-> +		goto error_free;
+> +	nvm->bar.flags = IORESOURCE_MEM;
+> +	nvm->bar.desc = IORES_DESC_NONE;
+> +	nvm->regions = regions;
+> +
+> +	aux_dev = &nvm->aux_dev;
+> +
+> +	aux_dev->name = "nvm";
+> +	aux_dev->id = (pci_domain_nr(pdev->bus) << 16) |
+> +		       PCI_DEVID(pdev->bus->number, pdev->devfn);
+
+Ditto as patch 6.
+
+> +	aux_dev->dev.parent = &pdev->dev;
+> +	aux_dev->dev.release = xe_nvm_release_dev;
+> +
+> +	ret = auxiliary_device_init(aux_dev);
+> +	if (ret) {
+> +		drm_err(&xe->drm, "xe-nvm aux init failed %d\n", ret);
+> +		return;
 > +	}
->  
->  	spin_lock_init(&priv->lock);
->  	platform_set_drvdata(pdev, priv);
-> -- 
-> 2.25.1
-> 
+> +
+> +	ret = auxiliary_device_add(aux_dev);
+> +	if (ret) {
+> +		drm_err(&xe->drm, "xe-nvm aux add failed %d\n", ret);
+> +		auxiliary_device_uninit(aux_dev);
+> +		return;
+> +	}
+> +}
 
--- 
-Kind Regards,
-Niklas Söderlund
+Raag
