@@ -1,107 +1,217 @@
-Received: from mail-yw1-f180.google.com (mail-yw1-f180.google.com [209.85.128.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 828B21459F7;
-	Sat, 24 May 2025 04:18:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE26C63CF
+	for <linux-kernel@vger.kernel.org>; Sat, 24 May 2025 04:30:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748060315; cv=none; b=Q2e0lXT1Tzp1lG/KpC1tM9d5/5fybG3AQGQh5rCPz33i2zV9aOKyyUJS+KWD5wKXrIXEeLeMoADjZDeJIGsM4/qHiT60eB4llZsbv3l7Y2WniSFMxBOmWa/P8fkrtoUS4mF12A/hs0Uoypq44JsdxNGUElhwkiK8tPJeOGTXAJc=
+	t=1748061011; cv=none; b=Pd7QGOxwGVlduZZ57zFwE9/ZPU3Q3nmoWIOxGVjysWS7+PrRTLg4jTtlqMz762ZVYzRGCi4oWlcEmSaYSfsWx+rqpPOlvjsElaXmZ8L5wkysFKaL2JCAvAvTrNeRlhmrNanX11UYDRGCMRKoS0SFc3ZY9cF5mhPx3r3+GZscrrw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748060315; c=relaxed/simple;
-	bh=cfXmE2pc2gDI2tlS9y8yO19okkSub+/4UOnWj3rW+DQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lcLrJ0TxPxQnFPcwlODt9QIEOBOAdiZgbGlvgAbkS2XuhxFRzuqltPVERI+eSIkxzo9pFy+GoOSXpEHO531h/D2U1hMtcuJflDyNnzSDPlL3JYpZUr8P5F6b1UCtax/mwosRu2ABqYfjVLJTffV5HRSagyszKBcEFj9FPWAOXpU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UxOU02Aj; arc=none smtp.client-ip=209.85.128.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748061011; c=relaxed/simple;
+	bh=lmioRTC+vWdchSKwww8oJ8zM6TW/i18Dpt27s0mNqB4=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=cnkBiRV/J4F4ky86bKnQdqihTfu/Utqli581TxnsH74kB1JlYlMLpHnZjtwTgalDMtMQT89mjjXkoNd/QTi+WQcvOHP+x/utf71TdkjOvvUfV0VCwnZVA5imk4hiTKTnyt+q+bRozuQ/nPexFDAV99lQxVGn4Zkn8JVaWh5Yz8E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MMjHREVn; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UxOU02Aj"
-Received: by mail-yw1-f180.google.com with SMTP id 00721157ae682-70dec158cc1so5648427b3.0;
-        Fri, 23 May 2025 21:18:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748060312; x=1748665112; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=i/bjQmjwtohthdugt6eowqJarB465LHeHvHrhFq0nio=;
-        b=UxOU02AjzqbWkPHAQFakyNTzSpkwqTkj9WL3QZnk+BhafzKbz7CV57+pJBlhqrUeAs
-         F3xyQoPr4NeeCElLMoWDGKpSXWbHBEFzs7WV5N0zATEZ4OFhEQiObvAl/pp1AQkRxzfO
-         hhZ9TI79E14OphMoOoWjUG5kuKZDsayoltWp7iynL2r/FMIcUxniUUjHFPKdy5vdkKXc
-         WTnMIun1bbHLmyXgC0io0HzLnAOK1zkjlwhr3pgitz5XUsNlZv4no6GqRkJPn0gTPht5
-         xOa1Ce252LAWqWTY48Dyt8wo6Rq9eaERKzAxCmYNoGgqgfzFB8M0m0EDzKo3bLwZ2OPG
-         5VyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748060312; x=1748665112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=i/bjQmjwtohthdugt6eowqJarB465LHeHvHrhFq0nio=;
-        b=ssaaY/tDQnXOCmtLlJAGSt8WE7wJQYQZfCJVj63lRuwOryY33gnGUXDixxsESnph21
-         FN9bNrId6N+STEEQ0Z3rd6O7OVvx+D97benNYyaLFJW4hZslrwpMdo4NtpjDupoZZBbP
-         zgkievPOoUg1pThPpqnog7Z4wyHBXbtMG0XfFyhfdqoAuijOGyaCfOMN1H6D+WWV1UvQ
-         UU5EISvAOYRSn7txjSCL313CUy1qmEg1Btt6ocrvcfNohs8dIokeEarTpb1k+11XBpQd
-         VwmqTtmNQxj1fP/laOVjjyhLCduyEX7ceh4tHxJwTyh3ukqhAhBmrDWjy4iSUwbNXfop
-         k8aA==
-X-Forwarded-Encrypted: i=1; AJvYcCUETAi+2DsU8Q5rYv4KiYBBl8fgx4RMKQG0U3FfM7xB/E2DNY6Jt14jdP6+F8EdBMZrIamr2+LdyV+/5VcS@vger.kernel.org, AJvYcCUPJtLQww2yYtpdw7onwX0o1OJtxBqwBg7n5T0YuTXBBi+Q7YptirPqXbEUSSHOcmo8gewCHJ14CoEE@vger.kernel.org, AJvYcCVOr7UUGVof1LVAHLSd5t/GvI/AMDJKyuJLQU4XRlpIHkCi9YfOYuL53ZPENrn4GqKP0jPf0sBPZOklmg==@vger.kernel.org
-X-Gm-Message-State: AOJu0YxDlomG7b65yXi83iatKFgeLafhM53bwWz51Ug/UHyZJQTy7wbx
-	CmcD6UhMQtt/s8rKHW8+lxXk9pQXtdinFCQjRgqlen7cpIlxmhKCUaFJny49REt7cThd5nOHu6g
-	ZZ+qhAMEMn0vo2oAL4PObH4NdIAHiEnc=
-X-Gm-Gg: ASbGncs4GmrVFH7TTuy7DJFy5LC/7GzY7OvVwHVbyGAHWkU+vYBBsPCDVa/P8cnDSgx
-	c8pwE6H7vUb1UfnIr30MmlmyW9qU8paxAxq4rKwhyogvy2LWqAZ1zXxjbIlo7hPeHS0Du/ido1i
-	TlXyDpwIfISClMpRRaJGsfvpmiq2hkC5oMFAVwBgoLWDZDuw==
-X-Google-Smtp-Source: AGHT+IFg5h998sEp+caqpNiReRUAD9Rb4THGYBdIE463bb4Wx9PXVjAuDagWJZCWi5jhq7C8t1WEEwZRae+ucF/3i2o=
-X-Received: by 2002:a05:690c:6888:b0:70c:d977:b154 with SMTP id
- 00721157ae682-70e184f055dmr72960587b3.4.1748060312370; Fri, 23 May 2025
- 21:18:32 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MMjHREVn"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748061009; x=1779597009;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=lmioRTC+vWdchSKwww8oJ8zM6TW/i18Dpt27s0mNqB4=;
+  b=MMjHREVnhmsM7rLQDSjG29rfLYESjsAjgYodAb9kWwpM2+AJMAFfuTLx
+   W/i7uESyT5+LcKaCLaPnUMOaa1v3vMFpTnqvi7uMDMTilakzZG0tzU7jm
+   IgGL0Cu2lGn5RvP1/Fh8H0+kZgQhkjqe8vrEmKs2t65Pu6DXouSEucilv
+   mLZOo58ahxYEgH4Y7kRereQEfSe64EEtmmUUiwRvFT81AK7btM+xBaoLO
+   BaFK/wlLB2OrpE+JZsT90DJusRkAAV8fQ9lBNG3tGpiuTZxb8UX7Xp/7s
+   gXEXaV/eDQzGktSW+TnSdB8BLsVzU6e2sDxNKKvYH0Qe6GZUqN3SCo0St
+   w==;
+X-CSE-ConnectionGUID: 3baE+FOxR7KcuqjRNbOwfw==
+X-CSE-MsgGUID: KjFV3kKnTYWX/Cc7LC0RJA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11441"; a="53924050"
+X-IronPort-AV: E=Sophos;i="6.15,310,1739865600"; 
+   d="scan'208";a="53924050"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2025 21:30:09 -0700
+X-CSE-ConnectionGUID: ZQ2VdN/YSCaZIOgrxE4LGQ==
+X-CSE-MsgGUID: 8xuFLMeuRy+ygcN15LXCYw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,310,1739865600"; 
+   d="scan'208";a="142370336"
+Received: from igk-lkp-server01.igk.intel.com (HELO a1decbf9c5f9) ([10.211.3.150])
+  by orviesa008.jf.intel.com with ESMTP; 23 May 2025 21:30:07 -0700
+Received: from kbuild by a1decbf9c5f9 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uIgWL-0001bM-1C;
+	Sat, 24 May 2025 04:30:05 +0000
+Date: Sat, 24 May 2025 12:30:01 +0800
+From: kernel test robot <lkp@intel.com>
+To: Dave Stevenson <dave.stevenson@raspberrypi.com>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	linux-kernel@vger.kernel.org, Maxime Ripard <mripard@kernel.org>
+Subject: drivers/gpu/drm/vc4/vc4_drv.c:303:8: warning: cast to smaller
+ integer type 'enum vc4_gen' from 'const void *'
+Message-ID: <202505241244.A9oll6Fa-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250523063207.10040-1-rosenp@gmail.com> <20250523063207.10040-4-rosenp@gmail.com>
- <574cd2c2-8201-4182-b372-da518a9b1972@kernel.org>
-In-Reply-To: <574cd2c2-8201-4182-b372-da518a9b1972@kernel.org>
-From: Rosen Penev <rosenp@gmail.com>
-Date: Fri, 23 May 2025 21:18:21 -0700
-X-Gm-Features: AX0GCFuq4AddLSsQedtAvLI-0HgSKsrcTrueAoZj3qwNaJ-bWn8b9Cxa82DU61s
-Message-ID: <CAKxU2N_Ce_O0_xPaZESFoX1SNAs4GNsZfpdw3EXm12d+RBe6Cw@mail.gmail.com>
-Subject: Re: [PATCHv3 3/5] dt-bindings: net: wireless: ath9k: add WIFI bindings
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: linux-wireless@vger.kernel.org, =?UTF-8?B?VG9rZSBIw7hpbGFuZC1Kw7hyZ2Vuc2Vu?= <toke@toke.dk>, 
-	nbd@ndb.name, Johannes Berg <johannes@sipsolutions.net>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, 
-	"open list:MIPS" <linux-mips@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Thu, May 22, 2025 at 11:43=E2=80=AFPM Krzysztof Kozlowski <krzk@kernel.o=
-rg> wrote:
->
-> On 23/05/2025 08:32, Rosen Penev wrote:
-> >    reg:
-> >      maxItems: 1
-> > @@ -88,3 +94,15 @@ examples:
-> >          nvmem-cell-names =3D "mac-address", "calibration";
-> >        };
-> >      };
-> > +  - |
-> > +    ahb {
-> > +      compatible =3D "simple-bus";
-> > +      ranges;
->
-> Not much improved... Code is now actually wrong. Remember to notice
-> where the comments appear. We are using here mailing list style of
-> communication.
-Will fix. I ran make dt_binding_check just to make sure. The example's
-compatible is also wrong. Will fix as well.
->
-> In any case: 1 patchset per 24h.
-Ah right. Apologies.
->
->
->
-> Best regards,
-> Krzysztof
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   4856ebd997159f198e3177e515bda01143727463
+commit: 56aa4c374dbf86d90b7c5aabdc8facbdd3321477 drm/vc4: Use of_device_get_match_data to set generation
+date:   6 months ago
+config: x86_64-buildonly-randconfig-2001-20250524 (https://download.01.org/0day-ci/archive/20250524/202505241244.A9oll6Fa-lkp@intel.com/config)
+compiler: clang version 20.1.2 (https://github.com/llvm/llvm-project 58df0ef89dd64126512e4ee27b4ac3fd8ddf6247)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250524/202505241244.A9oll6Fa-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202505241244.A9oll6Fa-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+   In file included from drivers/gpu/drm/vc4/vc4_drv.c:27:
+   In file included from include/linux/dma-mapping.h:11:
+   In file included from include/linux/scatterlist.h:8:
+   In file included from include/linux/mm.h:2213:
+   include/linux/vmstat.h:518:36: warning: arithmetic between different enumeration types ('enum node_stat_item' and 'enum lru_list') [-Wenum-enum-conversion]
+     518 |         return node_stat_name(NR_LRU_BASE + lru) + 3; // skip "nr_"
+         |                               ~~~~~~~~~~~ ^ ~~~
+>> drivers/gpu/drm/vc4/vc4_drv.c:303:8: warning: cast to smaller integer type 'enum vc4_gen' from 'const void *' [-Wvoid-pointer-to-enum-cast]
+     303 |         gen = (enum vc4_gen)of_device_get_match_data(dev);
+         |               ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   2 warnings generated.
+
+
+vim +303 drivers/gpu/drm/vc4/vc4_drv.c
+
+   288	
+   289	static int vc4_drm_bind(struct device *dev)
+   290	{
+   291		struct platform_device *pdev = to_platform_device(dev);
+   292		const struct drm_driver *driver;
+   293		struct rpi_firmware *firmware = NULL;
+   294		struct drm_device *drm;
+   295		struct vc4_dev *vc4;
+   296		struct device_node *node;
+   297		struct drm_crtc *crtc;
+   298		enum vc4_gen gen;
+   299		int ret = 0;
+   300	
+   301		dev->coherent_dma_mask = DMA_BIT_MASK(32);
+   302	
+ > 303		gen = (enum vc4_gen)of_device_get_match_data(dev);
+   304	
+   305		if (gen > VC4_GEN_4)
+   306			driver = &vc5_drm_driver;
+   307		else
+   308			driver = &vc4_drm_driver;
+   309	
+   310		node = of_find_matching_node_and_match(NULL, vc4_dma_range_matches,
+   311						       NULL);
+   312		if (node) {
+   313			ret = of_dma_configure(dev, node, true);
+   314			of_node_put(node);
+   315	
+   316			if (ret)
+   317				return ret;
+   318		}
+   319	
+   320		vc4 = devm_drm_dev_alloc(dev, driver, struct vc4_dev, base);
+   321		if (IS_ERR(vc4))
+   322			return PTR_ERR(vc4);
+   323		vc4->gen = gen;
+   324		vc4->dev = dev;
+   325	
+   326		drm = &vc4->base;
+   327		platform_set_drvdata(pdev, drm);
+   328	
+   329		if (gen == VC4_GEN_4) {
+   330			ret = drmm_mutex_init(drm, &vc4->bin_bo_lock);
+   331			if (ret)
+   332				goto err;
+   333	
+   334			ret = vc4_bo_cache_init(drm);
+   335			if (ret)
+   336				goto err;
+   337		}
+   338	
+   339		ret = drmm_mode_config_init(drm);
+   340		if (ret)
+   341			goto err;
+   342	
+   343		if (gen == VC4_GEN_4) {
+   344			ret = vc4_gem_init(drm);
+   345			if (ret)
+   346				goto err;
+   347		}
+   348	
+   349		node = of_find_compatible_node(NULL, NULL, "raspberrypi,bcm2835-firmware");
+   350		if (node) {
+   351			firmware = rpi_firmware_get(node);
+   352			of_node_put(node);
+   353	
+   354			if (!firmware) {
+   355				ret = -EPROBE_DEFER;
+   356				goto err;
+   357			}
+   358		}
+   359	
+   360		ret = aperture_remove_all_conflicting_devices(driver->name);
+   361		if (ret)
+   362			goto err;
+   363	
+   364		if (firmware) {
+   365			ret = rpi_firmware_property(firmware,
+   366						    RPI_FIRMWARE_NOTIFY_DISPLAY_DONE,
+   367						    NULL, 0);
+   368			if (ret)
+   369				drm_warn(drm, "Couldn't stop firmware display driver: %d\n", ret);
+   370	
+   371			rpi_firmware_put(firmware);
+   372		}
+   373	
+   374		ret = component_bind_all(dev, drm);
+   375		if (ret)
+   376			goto err;
+   377	
+   378		ret = devm_add_action_or_reset(dev, vc4_component_unbind_all, vc4);
+   379		if (ret)
+   380			goto err;
+   381	
+   382		ret = vc4_plane_create_additional_planes(drm);
+   383		if (ret)
+   384			goto err;
+   385	
+   386		ret = vc4_kms_load(drm);
+   387		if (ret < 0)
+   388			goto err;
+   389	
+   390		drm_for_each_crtc(crtc, drm)
+   391			vc4_crtc_disable_at_boot(crtc);
+   392	
+   393		ret = drm_dev_register(drm, 0);
+   394		if (ret < 0)
+   395			goto err;
+   396	
+   397		drm_client_setup_with_fourcc(drm, DRM_FORMAT_RGB565);
+   398	
+   399		return 0;
+   400	
+   401	err:
+   402		platform_set_drvdata(pdev, NULL);
+   403		return ret;
+   404	}
+   405	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
