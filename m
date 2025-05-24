@@ -1,111 +1,93 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.smtpout.orange.fr (smtp-72.smtpout.orange.fr [80.12.242.72])
+	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C583E1DF27E;
-	Sat, 24 May 2025 16:17:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9A7B8C11
+	for <linux-kernel@vger.kernel.org>; Sat, 24 May 2025 16:20:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748103475; cv=none; b=huURqQXm837tW3oJW9uQol/iQJ+XVJzbVShjQH9CgyKn9Te1zKkur5gOzdN080wgZGMwTG8qoC/VL7YJB4z+BUhPF+Wpy+5WezyCUQQr0zts1UH96HPHUbZsCB8UVqnxeTyoeM/SZbhVpZuzL5ER/mncj6GEON+X/ldnmbVSQ4g=
+	t=1748103622; cv=none; b=WGn5pM43ZrVfbfJLrDFXuEp9TyjYq0ATLY7j2hly3kLZo1nS17/cENg+6G3q432lAtxMDxVRSkaL8TjEvAzQfjGhcEKGRd7xa7gEi3IEZwYhPfLSDNZBuVv8IU1p39paWkQUQDD2Thjo0HYoGEN00di3XDBjR3Sv/pN/osudlFc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748103475; c=relaxed/simple;
-	bh=2PqjOsTXHea2A1nlsV5lb1aiLBMHAEESuBIul4P5vps=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=o71hp0ZHPOa8fp/kYh5tfwK0CaJIcrvPqOmxMt5yN5s7nR0xrtKM9OIclmYTnifzhBhF/a/i4YPrQZEuzkp7hhRmm2tVoGyhRyB26mRyzkOZuwA5bH/4zSx0C1ZOnqdt6WTLHscoALUBYKeTjZCra3ddoghOtrdOhDKHJjocq2s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=btM1Y3da; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748103622; c=relaxed/simple;
+	bh=65/KaLpzRs8gFo79tDMN4s4RnT6oxjpzQ5k2c/LetYM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=E6SyQYYxFwSVrPBbNAJ89WnGnix7xIX/LjAHBG7Up/0Jal2gryUcpnv95NbUU8dB2Dq0vm4mWdM07ix1ZHpCuqe3qqPEe85hbw0WtXVa2RtP4THMPHD5yfWJQSfvVJ+IntfQLzl2Kjmrp7ff5YDo4fZakBPuvPVyJ1lcF6XK3Dw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=p7MTcRsh; arc=none smtp.client-ip=80.12.242.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="btM1Y3da"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5E94C4CEE4;
-	Sat, 24 May 2025 16:17:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1748103474;
-	bh=2PqjOsTXHea2A1nlsV5lb1aiLBMHAEESuBIul4P5vps=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=btM1Y3daMuWWZlxrePRGj1CxuuJv6HqWCWNijtb6BxknSYdVrzLiQ4OTzeMvlFGCR
-	 tzX0BOpmtPDjMpn8/Y+aQNe2AXCQ/Mv4ZwGowFqNmRooKpNv2pWE4j9KN7zSysXLwg
-	 d0hqtnbTuOmvcT+iRxwAx55T9RUPQKBtQDAVmYwI=
-Date: Sat, 24 May 2025 18:17:51 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Heikki Huttu <heissendo88@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linux-staging@lists.linux.dev,
-	kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] staging: vme_user: add missing includes
-Message-ID: <2025052448-overuse-demise-d090@gregkh>
-References: <aCZDHXJTyfJRseho@Lappari.v6.elisa-laajakaista.fi>
- <2025052136-backstab-dork-de2d@gregkh>
- <aDHvSicbJpYBY-dn@Lappari.v6.elisa-laajakaista.fi>
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="p7MTcRsh"
+Received: from localhost.localdomain
+ ([IPv6:2a01:cb10:785:b00:8347:f260:7456:7662])
+	by smtp.orange.fr with ESMTPA
+	id IrSUuI1zk7nctIrScuJnhc; Sat, 24 May 2025 18:10:58 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1748103059;
+	bh=vp6GqdAP6pKVMGw4uZqtEavNsIsEsQuRgZ4ZJY92yNY=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=p7MTcRshYZXU2FUZ8LbcvZzzx9ukOmAlM40uGp+htz7x8wmgzaYmxk9SJnNPUalxW
+	 x9Ut1N0XSwMvEcrcNLSPDid4mbP/0y/vuh0XKozpze2o75t9SelV7P0j0bwf+bgKIE
+	 DZVx8i8Zr8hS0ga7yrmRgFMrkRTvKciJeQJAgXGRUuJDrSEpT4jdb3F1oiea4R2A/n
+	 iCM8lBykzNT+Q9E79S8hCbEQJvZP31itIR2MNj1D56kEb95HM/STy7dUTkkp5ODbH9
+	 9BscOZAme61iYCGbutZmUUThbEHkYcRZEqZlHNAM6DjOvkIhyiCYFIwuwKAmEHitNl
+	 M5HBMdEBTqa0Q==
+X-ME-Helo: localhost.localdomain
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Sat, 24 May 2025 18:10:59 +0200
+X-ME-IP: 2a01:cb10:785:b00:8347:f260:7456:7662
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To: Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>
+Cc: linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Subject: [PATCH 2/2] regulator: tps6594-regulator: Remove a useless static qualifier
+Date: Sat, 24 May 2025 18:10:39 +0200
+Message-ID: <ebc53d4049ec19796ef07e1bb734de19a2814727.1748103005.git.christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <1446fb1938f3f38115be3e53f5dda3c8bb0ba5a1.1748103005.git.christophe.jaillet@wanadoo.fr>
+References: <1446fb1938f3f38115be3e53f5dda3c8bb0ba5a1.1748103005.git.christophe.jaillet@wanadoo.fr>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <aDHvSicbJpYBY-dn@Lappari.v6.elisa-laajakaista.fi>
 
-On Sat, May 24, 2025 at 07:09:46PM +0300, Heikki Huttu wrote:
-> Wed, May 21, 2025 at 01:43:24PM +0200, Greg KH kirjoitti:
-> > On Thu, May 15, 2025 at 10:40:13PM +0300, Heikki Huttu wrote:
-> > > Header files use u32, size_t, dma_addr_t, struct device, struct list_head.
-> > > Add direct includes to make the headers self-contained.
-> > > 
-> > > Signed-off-by: Heikki Huttu <heissendo88@gmail.com>
-> > > ---
-> > >  drivers/staging/vme_user/vme.h      | 5 +++++
-> > >  drivers/staging/vme_user/vme_user.h | 2 ++
-> > >  2 files changed, 7 insertions(+)
-> > > 
-> > > diff --git a/drivers/staging/vme_user/vme.h b/drivers/staging/vme_user/vme.h
-> > > index 7753e736f9fd..55499b240dc3 100644
-> > > --- a/drivers/staging/vme_user/vme.h
-> > > +++ b/drivers/staging/vme_user/vme.h
-> > > @@ -3,6 +3,11 @@
-> > >  #define _VME_H_
-> > >  
-> > >  #include <linux/bitops.h>
-> > > +#include <linux/types.h>
-> > > +#include <linux/device.h>
-> > > +#include <linux/list.h>
-> > > +#include <linux/mm.h>
-> > > +#include <linux/dma-mapping.h>
-> > 
-> > If you are going to add these, please do so in a sorted way.
-> > 
-> > But really, why is this needed at all?
-> > 
-> > >  
-> > >  /* Resource Type */
-> > >  enum vme_resource_type {
-> > > diff --git a/drivers/staging/vme_user/vme_user.h b/drivers/staging/vme_user/vme_user.h
-> > > index 19ecb05781cc..297b25fab164 100644
-> > > --- a/drivers/staging/vme_user/vme_user.h
-> > > +++ b/drivers/staging/vme_user/vme_user.h
-> > > @@ -2,6 +2,8 @@
-> > >  #ifndef _VME_USER_H_
-> > >  #define _VME_USER_H_
-> > >  
-> > > +#include <linux/types.h>
-> > 
-> > Same here, are you sure this is needed?
-> > 
-> > thanks,
-> > 
-> > greg k-h
-> 
-> Hi Greg,
-> 
-> Thank you for the feedback.
-> 
-> I was under the impression that it's generally preferred to use direct includes to make headers self-contained and avoid relying on transitive includes.  
-> If I was mistaken, apologies — feel free to disregard this.
+There is no point in having 'npname' a static variable. So remove the
+static qualifier. This is cleaner and saves a few bytes.
 
-Generally, yes, it is a good idea, but if nothing is broken, adding
-additional .h files to other .h files is not a required change at all.
+On a x86_64, with allmodconfig:
+Before:
+======
+   text	   data	    bss	    dec	    hex	filename
+  27949	  12176	     64	  40189	   9cfd	drivers/regulator/tps6594-regulator.o
 
-Are you doing this for all of the staging driver files?  Is this a goal
-to try to fix up more than just this one file?
+After:
+=====
+   text	   data	    bss	    dec	    hex	filename
+  27947	  12112	      0	  40059	   9c7b	drivers/regulator/tps6594-regulator.o
 
-thanks,
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+---
+Compile tested-only.
+---
+ drivers/regulator/tps6594-regulator.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-greg k-h
+diff --git a/drivers/regulator/tps6594-regulator.c b/drivers/regulator/tps6594-regulator.c
+index 0193efb5dffa..51264c869aa0 100644
+--- a/drivers/regulator/tps6594-regulator.c
++++ b/drivers/regulator/tps6594-regulator.c
+@@ -563,7 +563,7 @@ static int tps6594_regulator_probe(struct platform_device *pdev)
+ 	bool buck_configured[BUCK_NB] = { false };
+ 	bool buck_multi[MULTI_PHASE_NB] = { false };
+ 
+-	static const char *npname;
++	const char *npname;
+ 	int error, i, irq, multi;
+ 	int irq_idx = 0;
+ 	int buck_idx = 0;
+-- 
+2.49.0
+
