@@ -1,159 +1,149 @@
-Received: from mail-io1-f79.google.com (mail-io1-f79.google.com [209.85.166.79])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out30-110.freemail.mail.aliyun.com (out30-110.freemail.mail.aliyun.com [115.124.30.110])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E257E7DA73
-	for <linux-kernel@vger.kernel.org>; Sat, 24 May 2025 01:52:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.79
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AFC1288A5;
+	Sat, 24 May 2025 02:00:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.110
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748051553; cv=none; b=R+7pWio7clbceLONgiuEX1s32OQd817oNXAmKVLfY1alzdbS4mr5hcB0zA7nrxsnCw/6Co47LIphKtedlR007V3IwP9XA4Yc7MJlS2YOSeJm+/SPiabai5JvqBUAaJXqaoWHcWwH6xaPH9eVsvlAWPEc5oMFFmm8+yIjty4aSLI=
+	t=1748052013; cv=none; b=OKpmocpjMjJEAsa+QF9vMaOGNZhdBqK/43RZBMJS5YBGmyIkAPkSf0SmAPLPc1GfMogC3u3mMucbZygMHN+lsAPahWCA4mG62VC2H6b1fT8VvNOHqi8CDBm5oUl6yZYaLHYvhvyukCcbhh256+Nu3T32t68ib6+i+1qSy9u0QZM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748051553; c=relaxed/simple;
-	bh=SIrbXMA2jngYiDdg3SOaWcko+lqHbPrQf8IMMmTLPPs=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=hqbfAvvBz0Vk+mjBXV8eCtgyPTnR/Q1zQwxQWUdbNY0Ll4uvV8Hb4FIfm45sA92V8SMiRQHjZ392pwXJpIoQwcvQLQnLbg8Q7KMua4Y4xE8vO4LHaaIRsusmGXiWNqUNCXyVkqSSL87Sq0SqvaqeMd8jdvQv6JQp460ET+TiH3U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.79
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f79.google.com with SMTP id ca18e2360f4ac-85e7551197bso53319139f.0
-        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 18:52:31 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748051551; x=1748656351;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=qPo2k/B3eiqsxwoXP1WPRx2t6rR6+uFWaX3ght3GZwk=;
-        b=VL1yOOXBRkdTiXF2RzNTVw6rO7lNKZU2+MMERoU2hLf/UqS0rTzEjPtMI2VW3lfjJY
-         m83EoHhf9tWSSB8hSGdZfwcpPKgr04UNRc2ezlsKSDTAA7/qKstgUGL/DWndvzY4y6mE
-         VaKjaxMdx9NWM0Lva/akgEUzmOnmKYgBouLcujNouFWnjS/RjCorfGyAzi8Qw+thY5ZH
-         HYI0HERw3cxDBrog4BZyzivhcPt9zl6coOPPNdgAaE4yLZqWd5mdqsZUe10Shw5SPXms
-         jz1nVysaeDTzdizujPV6Jyjcj2uDwEGyjZuiItc3S6Y9DHpM+IBwzbivwszLORYkE02j
-         Vo1g==
-X-Forwarded-Encrypted: i=1; AJvYcCWHnuF+ccsjCb+rZ3qVn/q3KcmDNIh0tLbd08HqlJLBYDlBSfL64iPHi1KWzy0D4HBBBPvCkrNXyP4OazA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw8wwc00Fh0+wMqOzdfsFJAgb1G6yVatR1T7lBGkfA74zaog53e
-	Xch49ws1tP1esIflSyQaViuS4yfgo+jdD6klthrfsL2GHwxfaTENK9c1qrJQdwKOL1y4/8E9c6a
-	VIXby+lxui2bKq27iEGEmJH+qL2Oy5I+qgYjYN/IaSp3YjcF976OJXxJ5E6M=
-X-Google-Smtp-Source: AGHT+IHWcnczVi5pwcKkKiUuet6e+nNcoWIn05PWhJ/1xy7Nx9lwkprR04CdTce9jtUr6yGRQ6yblgY7qQE4jMNgOLQ6Qliz840J
+	s=arc-20240116; t=1748052013; c=relaxed/simple;
+	bh=yVsIs9c2VNbcBMNMt2QKM6J6M2oE1mZDuv/fT2zyWkk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XBRiF5nFTYnXa8a3Iu8IZ95R7ummyHKtWSs41hzrRmKdZ0mapoLShxuuZfOr4RrbC5MFEuG5FVMO8ECBL+zYXJveskLj5DZLrcO7AXS9K0KGhKVD0TIREFm2TCi14uWgeHRaKrDHnFzMqqRMu0zcZ2kXkCYvev825xrkEuFH38E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=iGM1QGsL; arc=none smtp.client-ip=115.124.30.110
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="iGM1QGsL"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1748052007; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=+lI6y2wDJ47d4yiPcvPJikdG0IMfeTY5l5iLcdXaZ4c=;
+	b=iGM1QGsLFrKnaqh43kXkDXkmQ3/cLlmyVkhEkFgRxYMEvdzDG2a7x+JLDllCObjbCfs6ib/qYv3TyM/00MYN0MVwdYyh17HPxD3kn91orMhJSR37X+s5j+pt15cazYQ6kYj5GYaLo+eLNRd3V6FnHZ6ozJanklEMNMuc3w5I2/0=
+Received: from localhost(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0WbcNlVP_1748052005 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Sat, 24 May 2025 10:00:05 +0800
+From: Baolin Wang <baolin.wang@linux.alibaba.com>
+To: akpm@linux-foundation.org,
+	david@redhat.com,
+	shakeel.butt@linux.dev
+Cc: lorenzo.stoakes@oracle.com,
+	Liam.Howlett@oracle.com,
+	vbabka@suse.cz,
+	rppt@kernel.org,
+	surenb@google.com,
+	mhocko@suse.com,
+	donettom@linux.ibm.com,
+	aboorvad@linux.ibm.com,
+	sj@kernel.org,
+	baolin.wang@linux.alibaba.com,
+	linux-mm@kvack.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] mm: fix the inaccurate memory statistics issue for users
+Date: Sat, 24 May 2025 09:59:53 +0800
+Message-ID: <4f0fd51eb4f48c1a34226456b7a8b4ebff11bf72.1748051851.git.baolin.wang@linux.alibaba.com>
+X-Mailer: git-send-email 2.43.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:36c5:b0:864:a1fe:1e4a with SMTP id
- ca18e2360f4ac-86cbb697f0cmr186686139f.3.1748051551008; Fri, 23 May 2025
- 18:52:31 -0700 (PDT)
-Date: Fri, 23 May 2025 18:52:30 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <6831265e.a70a0220.29d4a0.07f0.GAE@google.com>
-Subject: [syzbot] [block?] [bcachefs?] kernel BUG in blk_mq_end_request
-From: syzbot <syzbot+a8f903ba15921696861d@syzkaller.appspotmail.com>
-To: axboe@kernel.dk, kent.overstreet@linux.dev, linux-bcachefs@vger.kernel.org, 
-	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-Hello,
+On some large machines with a high number of CPUs running a 64K pagesize
+kernel, we found that the 'RES' field is always 0 displayed by the top
+command for some processes, which will cause a lot of confusion for users.
 
-syzbot found the following issue on:
+    PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND
+ 875525 root      20   0   12480      0      0 R   0.3   0.0   0:00.08 top
+      1 root      20   0  172800      0      0 S   0.0   0.0   0:04.52 systemd
 
-HEAD commit:    a5806cd506af Linux 6.15-rc7
-git tree:       upstream
-console+strace: https://syzkaller.appspot.com/x/log.txt?x=131bde70580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=a1de0d8596cea805
-dashboard link: https://syzkaller.appspot.com/bug?extid=a8f903ba15921696861d
-compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16bb32d4580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=142351f4580000
+The main reason is that the batch size of the percpu counter is quite large
+on these machines, caching a significant percpu value, since converting mm's
+rss stats into percpu_counter by commit f1a7941243c1 ("mm: convert mm's rss
+stats into percpu_counter"). Intuitively, the batch number should be optimized,
+but on some paths, performance may take precedence over statistical accuracy.
+Therefore, introducing a new interface to add the percpu statistical count
+and display it to users, which can remove the confusion. In addition, this
+change is not expected to be on a performance-critical path, so the modification
+should be acceptable.
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/d72f8f4a220d/disk-a5806cd5.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/6567d0e5a4d8/vmlinux-a5806cd5.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/66e79750c483/bzImage-a5806cd5.xz
-mounted in repro: https://storage.googleapis.com/syzbot-assets/7fdb68bab5ea/mount_0.gz
-
-The issue was bisected to:
-
-commit f5095b9f85a1674a92d00e7ab466499a8ba49ce1
-Author: Kent Overstreet <kent.overstreet@linux.dev>
-Date:   Tue Jan 2 00:42:37 2024 +0000
-
-    bcachefs: dev_usage updated by new accounting
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=14897e70580000
-final oops:     https://syzkaller.appspot.com/x/report.txt?x=16897e70580000
-console output: https://syzkaller.appspot.com/x/log.txt?x=12897e70580000
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+a8f903ba15921696861d@syzkaller.appspotmail.com
-Fixes: f5095b9f85a1 ("bcachefs: dev_usage updated by new accounting")
-
-------------[ cut here ]------------
-kernel BUG at block/blk-mq.c:1146!
-Oops: invalid opcode: 0000 [#1] SMP KASAN PTI
-CPU: 0 UID: 0 PID: 15 Comm: ksoftirqd/0 Not tainted 6.15.0-rc7-syzkaller #0 PREEMPT(full) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
-RIP: 0010:blk_mq_end_request+0x6c/0x70 block/blk-mq.c:1146
-Code: e8 79 f1 2b fd 48 89 df 89 ee 5b 5d e9 bd f9 ff ff 89 f9 80 e1 07 80 c1 03 38 c1 7c ce e8 ec c5 8b fd eb c7 e8 55 f1 2b fd 90 <0f> 0b 66 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 f3 0f
-RSP: 0018:ffffc90000147bb8 EFLAGS: 00010246
-RAX: ffffffff8493ff8b RBX: ffff8880242d1200 RCX: ffff88801c6d3c00
-RDX: 0000000000000100 RSI: 0000000000000000 RDI: 0000000000000000
-RBP: 0000000000000000 R08: ffff88801c6d3c00 R09: 0000000000000003
-R10: 0000000000000009 R11: 0000000000000100 R12: dffffc0000000000
-R13: 0000000000000005 R14: ffff8880242d1200 R15: ffffffff8be81688
-FS:  0000000000000000(0000) GS:ffff8881260f6000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000000000000 CR3: 000000007cdd8000 CR4: 00000000003526f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- blk_complete_reqs block/blk-mq.c:1220 [inline]
- blk_done_softirq+0x10a/0x160 block/blk-mq.c:1225
- handle_softirqs+0x283/0x870 kernel/softirq.c:579
- run_ksoftirqd+0x9b/0x100 kernel/softirq.c:968
- smpboot_thread_fn+0x53f/0xa60 kernel/smpboot.c:164
- kthread+0x711/0x8a0 kernel/kthread.c:464
- ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:153
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
- </TASK>
-Modules linked in:
----[ end trace 0000000000000000 ]---
-RIP: 0010:blk_mq_end_request+0x6c/0x70 block/blk-mq.c:1146
-Code: e8 79 f1 2b fd 48 89 df 89 ee 5b 5d e9 bd f9 ff ff 89 f9 80 e1 07 80 c1 03 38 c1 7c ce e8 ec c5 8b fd eb c7 e8 55 f1 2b fd 90 <0f> 0b 66 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 f3 0f
-RSP: 0018:ffffc90000147bb8 EFLAGS: 00010246
-RAX: ffffffff8493ff8b RBX: ffff8880242d1200 RCX: ffff88801c6d3c00
-RDX: 0000000000000100 RSI: 0000000000000000 RDI: 0000000000000000
-RBP: 0000000000000000 R08: ffff88801c6d3c00 R09: 0000000000000003
-R10: 0000000000000009 R11: 0000000000000100 R12: dffffc0000000000
-R13: 0000000000000005 R14: ffff8880242d1200 R15: ffffffff8be81688
-FS:  0000000000000000(0000) GS:ffff8881260f6000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000000000000 CR3: 000000007cdd8000 CR4: 00000000003526f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-
-
+Fixes: f1a7941243c1 ("mm: convert mm's rss stats into percpu_counter")
+Tested-by Donet Tom <donettom@linux.ibm.com>
+Reviewed-by: Aboorva Devarajan <aboorvad@linux.ibm.com>
+Tested-by: Aboorva Devarajan <aboorvad@linux.ibm.com>
+Acked-by: Shakeel Butt <shakeel.butt@linux.dev>
+Acked-by: SeongJae Park <sj@kernel.org>
+Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
 ---
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+Changes from RFC:
+ - Collect reviewed and tested tags. Thanks.
+ - Add Fixes tag.
+---
+ fs/proc/task_mmu.c | 14 +++++++-------
+ include/linux/mm.h |  5 +++++
+ 2 files changed, 12 insertions(+), 7 deletions(-)
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
+index b9e4fbbdf6e6..f629e6526935 100644
+--- a/fs/proc/task_mmu.c
++++ b/fs/proc/task_mmu.c
+@@ -36,9 +36,9 @@ void task_mem(struct seq_file *m, struct mm_struct *mm)
+ 	unsigned long text, lib, swap, anon, file, shmem;
+ 	unsigned long hiwater_vm, total_vm, hiwater_rss, total_rss;
+ 
+-	anon = get_mm_counter(mm, MM_ANONPAGES);
+-	file = get_mm_counter(mm, MM_FILEPAGES);
+-	shmem = get_mm_counter(mm, MM_SHMEMPAGES);
++	anon = get_mm_counter_sum(mm, MM_ANONPAGES);
++	file = get_mm_counter_sum(mm, MM_FILEPAGES);
++	shmem = get_mm_counter_sum(mm, MM_SHMEMPAGES);
+ 
+ 	/*
+ 	 * Note: to minimize their overhead, mm maintains hiwater_vm and
+@@ -59,7 +59,7 @@ void task_mem(struct seq_file *m, struct mm_struct *mm)
+ 	text = min(text, mm->exec_vm << PAGE_SHIFT);
+ 	lib = (mm->exec_vm << PAGE_SHIFT) - text;
+ 
+-	swap = get_mm_counter(mm, MM_SWAPENTS);
++	swap = get_mm_counter_sum(mm, MM_SWAPENTS);
+ 	SEQ_PUT_DEC("VmPeak:\t", hiwater_vm);
+ 	SEQ_PUT_DEC(" kB\nVmSize:\t", total_vm);
+ 	SEQ_PUT_DEC(" kB\nVmLck:\t", mm->locked_vm);
+@@ -92,12 +92,12 @@ unsigned long task_statm(struct mm_struct *mm,
+ 			 unsigned long *shared, unsigned long *text,
+ 			 unsigned long *data, unsigned long *resident)
+ {
+-	*shared = get_mm_counter(mm, MM_FILEPAGES) +
+-			get_mm_counter(mm, MM_SHMEMPAGES);
++	*shared = get_mm_counter_sum(mm, MM_FILEPAGES) +
++			get_mm_counter_sum(mm, MM_SHMEMPAGES);
+ 	*text = (PAGE_ALIGN(mm->end_code) - (mm->start_code & PAGE_MASK))
+ 								>> PAGE_SHIFT;
+ 	*data = mm->data_vm + mm->stack_vm;
+-	*resident = *shared + get_mm_counter(mm, MM_ANONPAGES);
++	*resident = *shared + get_mm_counter_sum(mm, MM_ANONPAGES);
+ 	return mm->total_vm;
+ }
+ 
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index 185424858f23..15ec5cfe9515 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -2568,6 +2568,11 @@ static inline unsigned long get_mm_counter(struct mm_struct *mm, int member)
+ 	return percpu_counter_read_positive(&mm->rss_stat[member]);
+ }
+ 
++static inline unsigned long get_mm_counter_sum(struct mm_struct *mm, int member)
++{
++	return percpu_counter_sum_positive(&mm->rss_stat[member]);
++}
++
+ void mm_trace_rss_stat(struct mm_struct *mm, int member);
+ 
+ static inline void add_mm_counter(struct mm_struct *mm, int member, long value)
+-- 
+2.43.5
 
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
