@@ -1,96 +1,120 @@
-Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fout-b6-smtp.messagingengine.com (fout-b6-smtp.messagingengine.com [202.12.124.149])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 119D054670
-	for <linux-kernel@vger.kernel.org>; Sat, 24 May 2025 10:04:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.69
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80DEE158DD4;
+	Sat, 24 May 2025 10:04:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.149
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748081076; cv=none; b=tzBuZZMNSKjSiEMX6uZ3vdoYO0h4FCAS4f5HU+uO11LcwFnFKimiDnsq+HM2n46npMOGabVmM42RdAkOXs35vgpZTQTHZHRq+TgsJZsJA1dZS89nxYH+FeRPIe+pZxtND3HIAj/miE/ipx8l9yCyLo8OTJKNSdhQozqx8onDEPw=
+	t=1748081098; cv=none; b=qBzoN1gSBeU/JWCv7WK5FRSRj6q5kH3pE836nvvtS1omqkTvJb9fuVC1lM/0d7zSUHxTXsrnETje2wSrrH3lG15uYEQEJ+GfHZxIzcLC4iX9k1TYtDoyO6JS7TzVr7haMzdrkMbP6bi4godQfjBrNxBH+K10tckKz5H2CnZiwok=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748081076; c=relaxed/simple;
-	bh=e5FAItjOUVgu208JXZ6Q6IRZJFER/+U3nwpQKrSjQls=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=T5D22EdKgUxt3dLggTiQ73N484e6zyHyF98pa9MfCbNQL4WUNfDmHR2qaRvN8upoRKfPsiYI5HLQ3XqtXhn5ee/EnscqdDrmMUbHsS6OPpPCHcrwiF3xkDCF/ozImbNJyk3HxeFCrehOMzGqdFe8TisQ7v+nKnPt2VgVhX37PyY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.69
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-85b3b781313so121568739f.1
-        for <linux-kernel@vger.kernel.org>; Sat, 24 May 2025 03:04:34 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748081074; x=1748685874;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=m/oazIG9eIkKX1kLYtUBakGdZ2zpECZekm+C1pvoXJs=;
-        b=ie3IIvUYls3yOa+VVcwbKxnW4WMMg3uiecBPNgsTEJouK9LRF5VyFM6wkX/lR8DECD
-         YiF3BCAjpfZPYjDA7eRaYHpPZmXMHJQcHj9R9OfVNoCHRO7uyVXV1Xmz8dWM1ndS6aFf
-         SdWEmQUntBDe2jBHNM8vgI+NK8LcsbTk1X0Yh1204VmCeaSZk+fnHINEXydKuYzwN3TX
-         IH4XyGNQoSiB/iBV2e2ntW6nacwITDfhco8o+q8zJkVKjVmEEsFC+/PdVvmuWm2ge1s1
-         Q1bdrxtAE367XKYxsUAZO0dG2LS30PQA5zhRv5aLx/FWCOCqK49W1DTj8qVGlLTCkG2v
-         wiJw==
-X-Gm-Message-State: AOJu0YzX3Eh8ix94PcUD2YPJve5Tv6bqaZ/oyuBD10Q+mI2Ox/NOt+hB
-	BZzgZTtstB7MsdBZAmppE5pJ6oDrUKnxcFkBpbI8ZbvtShkkCNiOH08k7q8uVbhqG6cANj21iPu
-	JSZSZxj96QFuuuEapE8oW8nA1DAZEsaqWSWtl9fNumf1dZrkc3MKQo79cM2A=
-X-Google-Smtp-Source: AGHT+IHOMdPgdyMGDK6iaWwUFwI9jfCGRXgY/C/cohoWm3k23D8JclT3N2bpn6wT+HcDRh7YFR1xqy4KhpuGz/LeBypl8a9wzlnr
+	s=arc-20240116; t=1748081098; c=relaxed/simple;
+	bh=fxMnjZiNwhDbwnOGD8pLjX1z1xVnNDl1UnyCm9rdHOY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=SXvDGaqrWb7lzmgXvgxUZ93HS0CNyZfe3RXIyb4Sw/a801QYAcuNbgPyYm+11P24xfkBRXSQQi87k1mpuHN6m2lbBqpU/A7cz+feHkxViBrIPdrGHj8oBFlNQZD3M2EraBrREEQ8uHLetl//247a4IxjCxTVqvUJrRVRwDnSrME=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev; spf=none smtp.mailfrom=ljones.dev; dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b=KXboK10M; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=em3n7pT1; arc=none smtp.client-ip=202.12.124.149
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ljones.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b="KXboK10M";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="em3n7pT1"
+Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
+	by mailfout.stl.internal (Postfix) with ESMTP id 647101140117;
+	Sat, 24 May 2025 06:04:54 -0400 (EDT)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-05.internal (MEProxy); Sat, 24 May 2025 06:04:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
+	:cc:content-transfer-encoding:content-type:date:date:from:from
+	:in-reply-to:message-id:mime-version:reply-to:subject:subject:to
+	:to; s=fm2; t=1748081094; x=1748167494; bh=OUnV5SMtE8saeflhpyRbB
+	3o2H/2nDtLfE+Juhhf1BM8=; b=KXboK10MeZtrNEwt197MsNZeVM1YY1zn8jOuN
+	C51z521N6Qg8M9YKJf2TE6efzdugzghI0P8U2rpKPfoN4zmT1PNyYi4saPLp+MM9
+	rTxpzQu3B+pT5f0Pnzca3zL/50Dbj5mmLYDm5pU59J9y7EQxFS4+C66pkC1k+5Ym
+	rw2jU3h7cgrowOOw3Zk9Dmlu+cUzoSP6AOeczwcgNtPqjDid7rfZToZUZOpBvY+7
+	5k5xEi5Hstj3U0WMAHVzuDf4LCs0UZdFaQf4AnJrPsjwqPB09JLYXW/1lB7vX0BX
+	nMeICi098woQAa1POOxEpf3Wrv79ejEsoatAQVhk2h0Ilr3/Q==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:date:date:feedback-id:feedback-id:from:from
+	:in-reply-to:message-id:mime-version:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
+	1748081094; x=1748167494; bh=OUnV5SMtE8saeflhpyRbB3o2H/2nDtLfE+J
+	uhhf1BM8=; b=em3n7pT1fqi1qpN9OUW8J2jLOenXzMsPYd6CSPCr4q4ke+YO3qw
+	l5qN2IGeklzlJci12ckFwYNLFG0jXCP2C/sOUJm0XOb/mKc3qgmRfqzu4XeImeqC
+	z66zu3HsUQ9rRblb5POpuDGsoIceZQuQ4mQ0LIWo+1yPogWhZSz23RhWzpw+jX1L
+	BmyxU8exgZPuECZYn+S+aTntgGginbulwm2Jxf5jMDgrz3dRjF6PBA379MM7IJXR
+	k8MwZEIcV8lcQrB5iUDVnkthuMFm6CfV5SOea4e00fFOwW6VvMigX8sBCuSkC95Z
+	9LWZQJ3/lCHx7O8Gn7E2jgQ+z3KuAJVwqIw==
+X-ME-Sender: <xms:xZkxaBWBcK5ilqi3P7PsRqmklniewulNwAkFJOY_mGlvg5bIifRDDQ>
+    <xme:xZkxaBnwMdd_chJG9-uhPkAGyJFdiFB4pj2Gt3Sq2KwDpsQtD7CkSbj0E1x-FuX7c
+    SLDY6cEeAPmad9Py7U>
+X-ME-Received: <xmr:xZkxaNYIZnqM_o7rHD-0jqEH8JtnC3YAw49EmJb3urg_2GHZmpYigYbC1KqCR1Hvqa3jEIoKDbM>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgdduudeggeculddtuddrgeefvddrtd
+    dtmdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggft
+    fghnshhusghstghrihgsvgdpuffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftd
+    dtnecunecujfgurhephffvvefufffkofgggfestdekredtredttdenucfhrhhomhepnfhu
+    khgvucflohhnvghsuceolhhukhgvsehljhhonhgvshdruggvvheqnecuggftrfgrthhtvg
+    hrnhepiefhfeeuueeigffgtdefgeetgedufeefkeektdevudefhedtgfehkeejveejtdff
+    necuffhomhgrihhnpehkvghrnhgvlhdrohhrghdptddurdhorhhgpdhgihhthhhusgdrtg
+    homhenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehl
+    uhhkvgeslhhjohhnvghsrdguvghvpdhnsggprhgtphhtthhopeejpdhmohguvgepshhmth
+    hpohhuthdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgv
+    lhdrohhrghdprhgtphhtthhopehhuggvghhovgguvgesrhgvughhrghtrdgtohhmpdhrtg
+    hpthhtohepihhlphhordhjrghrvhhinhgvnheslhhinhhugidrihhnthgvlhdrtghomhdp
+    rhgtphhtthhopehplhgrthhfohhrmhdqughrihhvvghrqdigkeeisehvghgvrhdrkhgvrh
+    hnvghlrdhorhhgpdhrtghpthhtohepmhgrrhhiohdrlhhimhhonhgtihgvlhhlohesrghm
+    ugdrtghomhdprhgtphhtthhopegrnhgurhhihidrshhhvghvtghhvghnkhhosehlihhnuh
+    igrdhinhhtvghlrdgtohhmpdhrtghpthhtoheplhhukhgvsehljhhonhgvshdruggvvh
+X-ME-Proxy: <xmx:xZkxaEVzjccCD7FcMsJ2SiVqnjGaz7Xl_pJ9zCMyqqVgdRjKQXFCMQ>
+    <xmx:xZkxaLnWqWIWhw0TntvfaEeVPhK2edMC83e94pOMX7PzZKuS-gFP1w>
+    <xmx:xZkxaBc_rXqjVyXAatGswQQK3rq6OE0tfog3A9mGlPt3mDemJAxtpA>
+    <xmx:xZkxaFEYRHBtD9MaY0CL28YHuY1AbgBzfPEJhsUTi1vAshuS9IH6Ag>
+    <xmx:xpkxaPFzGgcjFL5TwHEBauGv6PwDLsPM1on7BkNvFgf8iK_IE3o8mLfU>
+Feedback-ID: i5ec1447f:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sat,
+ 24 May 2025 06:04:52 -0400 (EDT)
+From: Luke Jones <luke@ljones.dev>
+To: linux-kernel@vger.kernel.org
+Cc: hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com,
+	platform-driver-x86@vger.kernel.org,
+	mario.limonciello@amd.com,
+	andriy.shevchenko@linux.intel.com,
+	Luke Jones <luke@ljones.dev>
+Subject: [PATCH v2 0/1] platform/x86: asus-wmi: fix build without CONFIG_SUSPEND
+Date: Sat, 24 May 2025 12:04:43 +0200
+Message-ID: <20250524100444.34370-1-luke@ljones.dev>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:389a:b0:85d:b7a3:b84d with SMTP id
- ca18e2360f4ac-86cbb8bee3emr210592539f.13.1748081074230; Sat, 24 May 2025
- 03:04:34 -0700 (PDT)
-Date: Sat, 24 May 2025 03:04:34 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <683199b2.a70a0220.29d4a0.07f5.GAE@google.com>
-Subject: [syzbot] Monthly wireless report (May 2025)
-From: syzbot <syzbot+list1fcea8bbcf300c57bf70@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org, 
-	netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-Hello wireless maintainers/developers,
+Fixes "platform/x86: asus-wmi: Refactor Ally suspend/resume".
 
-This is a 31-day syzbot report for the wireless subsystem.
-All related reports/information can be found at:
-https://syzkaller.appspot.com/upstream/s/wireless
+Verified using the following details provided by test robot:
 
-During the period, 4 new issues were detected and 1 were fixed.
-In total, 55 issues are still open and 158 have already been fixed.
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git review-ilpo-next
+head:   83579675331059689e2869bf752ca9e17fadbd82
+commit: feea7bd6b02d43a794e3f065650d89cf8d8e8e59 [74/89] platform/x86: asus-wmi: Refactor Ally suspend/resume
+config: x86_64-buildonly-randconfig-004-20250509 (https://download.01.org/0day-ci/archive/20250509/202505090418.DaeaXe4i-lkp@intel.com/config)
+compiler: clang version 20.1.2 (https://github.com/llvm/llvm-project 58df0ef89dd64126512e4ee27b4ac3fd8ddf6247)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250509/202505090418.DaeaXe4i-lkp@intel.com/reproduce)
 
-Some of the still happening issues:
+I've not done anything fancy here and left asus_hotk_prepare() as is, as it is *incredibly* unlikely anyone would ever run a ROG Ally without suspend enabled.
 
-Ref  Crashes Repro Title
-<1>  127535  Yes   WARNING in __ieee80211_beacon_get
-                   https://syzkaller.appspot.com/bug?extid=18c783c5cf6a781e3e2c
-<2>  10768   Yes   WARNING in rate_control_rate_init (3)
-                   https://syzkaller.appspot.com/bug?extid=9bdc0c5998ab45b05030
-<3>  8142    Yes   WARNING in __rate_control_send_low (3)
-                   https://syzkaller.appspot.com/bug?extid=34463a129786910405dd
-<4>  6632    Yes   WARNING in __cfg80211_ibss_joined (2)
-                   https://syzkaller.appspot.com/bug?extid=7f064ba1704c2466e36d
-<5>  1208    Yes   WARNING in ieee80211_start_next_roc
-                   https://syzkaller.appspot.com/bug?extid=c3a167b5615df4ccd7fb
-<6>  1129    Yes   INFO: task hung in rfkill_global_led_trigger_worker (3)
-                   https://syzkaller.appspot.com/bug?extid=50499e163bfa302dfe7b
-<7>  567     Yes   INFO: task hung in crda_timeout_work (8)
-                   https://syzkaller.appspot.com/bug?extid=d41f74db64598e0b5016
-<8>  511     Yes   INFO: task hung in reg_check_chans_work (7)
-                   https://syzkaller.appspot.com/bug?extid=a2de4763f84f61499210
-<9>  500     Yes   INFO: task hung in reg_process_self_managed_hints
-                   https://syzkaller.appspot.com/bug?extid=1f16507d9ec05f64210a
-<10> 427     No    WARNING in ieee80211_request_ibss_scan
-                   https://syzkaller.appspot.com/bug?extid=1634c5399e29d8b66789
+Changelog:
+- V1:
+  - Move functions and struct together to be under one ifdef block
+  - Use wrapper functions for s2idle registration
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+Luke Jones (1):
+  platform/x86: asus-wmi: fix build without CONFIG_SUSPEND
 
-To disable reminders for individual bugs, reply with the following command:
-#syz set <Ref> no-reminders
+ drivers/platform/x86/asus-wmi.c | 30 +++++++++++++++++++++++-------
+ 1 file changed, 23 insertions(+), 7 deletions(-)
 
-To change bug's subsystems, reply with:
-#syz set <Ref> subsystems: new-subsystem
+-- 
+2.49.0
 
-You may send multiple commands in a single email message.
