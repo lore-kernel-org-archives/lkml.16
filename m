@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAA5472618;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C885722087;
 	Sat, 24 May 2025 09:19:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748078355; cv=none; b=C1x0n4D9CmqCFTCf5iEL6u2wbSwcQHIa6bmxUY+Lnyik/E3tMzQ1OFdgLT+leC2PXNtLDVu+siXF+cfLvpUQX0o37vP6F05naGXfldjOT+sTtKKPUDjUMJM3eJ8h4SPQN6Hhi37prhxRVKWS04Uw92y1Io9QW+R0UB4OF8v/dkc=
+	t=1748078354; cv=none; b=MkVrNCFQytEY7t9qRWbTb01eX12mD6ewttQnFFrJAGK5XSRMQTMX8q6ESs3m/LASDm3dooZREilOtQYj/iLDUvCr9cgUf7Hmlg6yj/+cfDsaLYKpRscl55XNVjU0EU6wePKOYmpNl2Kuvg0E/GmUB5WbbQlYnXzHGMJx7ET0Z6g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748078355; c=relaxed/simple;
-	bh=nRgzOOCuIPHGX0gadXiMJ/Ch0afEnXVbOaCIFDyeXCc=;
+	s=arc-20240116; t=1748078354; c=relaxed/simple;
+	bh=ByKRfmUS7oGlsvSeZn4NcYMz3p4i4dHR18AvjwkAKbk=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=GK9rIE1tUO4EuIjT06EI7Kr0a/IKt5b0l5En+nzvQ7+AlPLTF/Yq65PHpkjMRWQPoSZyS0/RetheqKp93rsQUrRUNg2bQfhcyvP2uk/cR40hZbWxlN4xcSD4efDGYNrVeg6o5ujjsF7I11snQLYQcuzRgENYWv04PapWyDe9Y4c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W7jXnKdB; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=luyKMzG73zM/YUy5cJaWIzEbukXU5yE89K/t+Wv1L4ZOKWw7rbyWgSyWMiDDFlE8n3yjsI+LrzqR3Ong2PdgaZkqtEjNmdX9uIBE3oAcR7JhQ6Kyn/2TEySG+ILWxgWPog/sn4udrEUAKsuTj4HSZD4aTfVznTWKwm76IWHt5fM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iynCZPQb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W7jXnKdB"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 5B17EC4CEF3;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iynCZPQb"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 43033C4CEEE;
 	Sat, 24 May 2025 09:19:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1748078354;
-	bh=nRgzOOCuIPHGX0gadXiMJ/Ch0afEnXVbOaCIFDyeXCc=;
+	bh=ByKRfmUS7oGlsvSeZn4NcYMz3p4i4dHR18AvjwkAKbk=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=W7jXnKdBFEAPHs5/c3ZiaP7H/FVuVOKBtnkcUHQGUpd3KiUUMHlqRHNCZb7f3Lt7F
-	 0Cx/GmvbmIcVBKRanru4g5zIYcb4xAc6YajnQgYmf0YuANCrDLfZCQ+pdpFhdfOydq
-	 mWVu1DJGSPHz6e2rTZKGhcZmkmZKSTjeYKzqfZbNR2FscdcYVBAmgmRTjj5xTZjvIg
-	 xon4PRApERPs7vSVa5JCWG0TITegqZqo1Vf9nc9TfGTkw9T0w7kXRkvtm/s8AQ89BO
-	 GRKV7g45Je0DBAveAfHExikejFrp8MLgDTY+3Ylr3Hqs1w26fJHHXR+eKoZTK/H0Lf
-	 R7MEUowlAIuxw==
+	b=iynCZPQbT3Sz4Zy9uMq98gV5UhpEYDqrH+RTj+/b7rlw8dMkEUz8M0nn9ne2bxWGp
+	 xcC6deuVA7q0rIqRcy6IRjYRvE2qHkORmte41zZ0V1nfxnRMojLLsw7kuWdFh1Akhh
+	 eMmqCxW0Y2LGPYCsIFmlADpysJx4zEP+BHPcPG0i7HMt3fI4fG+dK0sAOhMm424SDl
+	 eEx1IxRPonIZ51op64P5I2iSWWXMwgJ9isgXn4B+0TlaFUqiQRvEGaZqx85vBvvPn1
+	 kIF6VtyxkD9IZkaQOtAYheNcZBHJZHU4J6t5itp3I71PgpzlEaObVr637nXf5QtoBB
+	 Y5jw1W2m5muWw==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E47BC5AD49;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 328D2C54FB3;
 	Sat, 24 May 2025 09:19:14 +0000 (UTC)
 From: Jens Glathe via B4 Relay <devnull+jens.glathe.oldschoolsolutions.biz@kernel.org>
-Date: Sat, 24 May 2025 11:19:11 +0200
-Subject: [PATCH v3 4/6] firmware: qcom: scm: Allow QSEECOM on Lenovo
+Date: Sat, 24 May 2025 11:19:09 +0200
+Subject: [PATCH v3 2/6] drm/panel-edp: add N160JCE-ELL CMN panel for Lenovo
  Thinkbook 16
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -41,7 +41,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250524-tb16-dt-v3-4-17e26d935e73@oldschoolsolutions.biz>
+Message-Id: <20250524-tb16-dt-v3-2-17e26d935e73@oldschoolsolutions.biz>
 References: <20250524-tb16-dt-v3-0-17e26d935e73@oldschoolsolutions.biz>
 In-Reply-To: <20250524-tb16-dt-v3-0-17e26d935e73@oldschoolsolutions.biz>
 To: Bjorn Andersson <andersson@kernel.org>, 
@@ -61,12 +61,12 @@ Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
  dri-devel@lists.freedesktop.org, 
  Jens Glathe <jens.glathe@oldschoolsolutions.biz>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1748078352; l=871;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1748078352; l=1516;
  i=jens.glathe@oldschoolsolutions.biz; s=20240919;
  h=from:subject:message-id;
- bh=SqyOjM4lFCEsz5Ib0lcU303VTifLpUJsBJ9F9U5GZRI=;
- b=bXZBlnXwJwILEnXWYV1/cDDMdcfa2l1EnuUESPYzUil6d7FpTyfDf6f3VIaHeZB5PvJiG97ni
- 5cMGMvjpd9iAhh1uZUNxrDRGrB9CVyCRu1p7zt8WzZlwfLRvegjJRX+
+ bh=tHgac9hVQDbAaXNwsVj/n84C1GFybdnTbmVUs8xBXGE=;
+ b=/8UFrqByg0mrieUk3yMAUUIrl0E/UZ1a0wAIb4reDpuqJnN3GPadDXgqdfZn7cBjOM7oR+Ms+
+ 7R08QqyfqOoAnNLxiN0VLx/KrrgbYA+pScVORVggiOMbNxP8zUH6FRA
 X-Developer-Key: i=jens.glathe@oldschoolsolutions.biz; a=ed25519;
  pk=JcRJqJc/y8LsxOlPakALD3juGfOKmFBWtO+GfELMJVg=
 X-Endpoint-Received: by B4 Relay for
@@ -76,25 +76,37 @@ Reply-To: jens.glathe@oldschoolsolutions.biz
 
 From: Jens Glathe <jens.glathe@oldschoolsolutions.biz>
 
-Allow particular machine accessing eg. efivars.
+Panel is widely used in 16" laptops, and also in my Thinkbook 16 G7 QOY.
+
+CMN N160JCE-ELL EDID
+edid-decode (hex):
+
+00 ff ff ff ff ff ff 00 0d ae 2b 16 00 00 00 00
+20 20 01 04 a5 22 16 78 03 28 65 97 59 54 8e 27
+1e 50 54 00 00 00 01 01 01 01 01 01 01 01 01 01
+01 01 01 01 01 01 42 3c 80 a0 70 b0 24 40 30 20
+a6 00 58 d7 10 00 00 18 35 30 80 a0 70 b0 24 40
+30 20 a6 00 58 d7 10 00 00 18 00 00 00 fd 00 28
+3c 4b 4b 10 01 0a 20 20 20 20 20 20 00 00 00 fe
+00 4e 31 36 30 4a 43 45 2d 45 4c 4c 0a 20 00 95
 
 Signed-off-by: Jens Glathe <jens.glathe@oldschoolsolutions.biz>
 ---
- drivers/firmware/qcom/qcom_scm.c | 1 +
+ drivers/gpu/drm/panel/panel-edp.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/drivers/firmware/qcom/qcom_scm.c b/drivers/firmware/qcom/qcom_scm.c
-index f63b716be5b027550ae3a987e784f0814ea6d678..171cc2a6502463e3445919ef77a129563ea233a4 100644
---- a/drivers/firmware/qcom/qcom_scm.c
-+++ b/drivers/firmware/qcom/qcom_scm.c
-@@ -1993,6 +1993,7 @@ static const struct of_device_id qcom_scm_qseecom_allowlist[] __maybe_unused = {
- 	{ .compatible = "hp,omnibook-x14" },
- 	{ .compatible = "huawei,gaokun3" },
- 	{ .compatible = "lenovo,flex-5g" },
-+	{ .compatible = "lenovo,thinkbook-16" },
- 	{ .compatible = "lenovo,thinkpad-t14s" },
- 	{ .compatible = "lenovo,thinkpad-x13s", },
- 	{ .compatible = "lenovo,yoga-slim7x" },
+diff --git a/drivers/gpu/drm/panel/panel-edp.c b/drivers/gpu/drm/panel/panel-edp.c
+index 90e8c154a9788ad40e2101fdf39cbd92f2e0773a..ec9622e0a313f4a228618f119e2aaa812f63d5a4 100644
+--- a/drivers/gpu/drm/panel/panel-edp.c
++++ b/drivers/gpu/drm/panel/panel-edp.c
+@@ -1973,6 +1973,7 @@ static const struct edp_panel_entry edp_panels[] = {
+ 	EDP_PANEL_ENTRY('C', 'M', 'N', 0x14d4, &delay_200_500_e80_d50, "N140HCA-EAC"),
+ 	EDP_PANEL_ENTRY('C', 'M', 'N', 0x14d6, &delay_200_500_e80_d50, "N140BGA-EA4"),
+ 	EDP_PANEL_ENTRY('C', 'M', 'N', 0x14e5, &delay_200_500_e80_d50, "N140HGA-EA1"),
++	EDP_PANEL_ENTRY('C', 'M', 'N', 0x162b, &delay_200_500_e80_d50, "N160JCE-ELL"),
+ 
+ 	EDP_PANEL_ENTRY('C', 'S', 'O', 0x1200, &delay_200_500_e50_p2e200, "MNC207QS1-1"),
+ 	EDP_PANEL_ENTRY('C', 'S', 'O', 0x1413, &delay_200_500_e50_p2e200, "MNE007JA1-2"),
 
 -- 
 2.48.1
