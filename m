@@ -1,264 +1,116 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73B1D23BE;
-	Sat, 24 May 2025 12:37:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3477AA48
+	for <linux-kernel@vger.kernel.org>; Sat, 24 May 2025 12:45:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748090245; cv=none; b=BNgOcbORjLj8y/vcp5GGgoz8pBdnI1g71tyG1v2zxr5kyNLS2XueIdwSYgmdgA/FNOH0vgDInOQKvxwd6jpjPRdRThDgnUu3NjSbCzAykJjlUbFw9klb7oUOygs7LCsvaiT9ImsfSNplnZVk48vtUVgGaVnTjFz4pBYI4J+eNl4=
+	t=1748090737; cv=none; b=Jpt6O8DYfOFK2h+s9BARr2FizPPEN3++P6NeMH9NxiEbnuzIJw5heeMivdfRps3Cj3FFCaeCSketk8e1fFjN0dVF1GTOE9QKDc7bvJlg6zy1Eobu9fs7aJiJ8bU4CFMqq/wYI8Ii/cMxM/EMIbMQWwpJYIIbv2iuoCXfIFIlxMc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748090245; c=relaxed/simple;
-	bh=fJqu4BRzOk4TCVJLIjUQ6Oi7yNlvNjyxCBHqnveQ83k=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Di+1AMF/qdtohGPZRr5gPFd+Uyv37+0kTSqMSFOsijM1n5/refFs6vwSFyY/0RFcIeTSOjyUXrXclqkMi1FYfAzD5XuaC7UtsCGjwfmvlrTzL8h1jQYd+2P1fZRuzrrg2mOirUXZNvB6EY0fDEFxyT1Wdc3xmq08ARu2rILJ1v4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iAlr+1m6; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748090737; c=relaxed/simple;
+	bh=xH4h0zgppRosl/vzGNdRwpydm6+l6L1Aflr9XwKFWYI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=dyMdeAZaM6d695ZAzsxXcMNEZ23l7/CLzRZZdZOpRzkh7ECOnAxv4X3PaOevMl4WCa20gRPBrNCKPT9A26CALxQ16woUvQkV45hc6mbaQVt0dNlLG4ClJ3X94i2kAcXR9m8EkYLJWY6nhpZDDDL/0eBJL7X4gEnbYFuhPKLBkcA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VlIIX9Ey; arc=none smtp.client-ip=209.85.221.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iAlr+1m6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 245E1C4CEE4;
-	Sat, 24 May 2025 12:37:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748090244;
-	bh=fJqu4BRzOk4TCVJLIjUQ6Oi7yNlvNjyxCBHqnveQ83k=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=iAlr+1m6wxUHPY7upXtcvjIE5/VtZGFWHB8HRpi7WTmhHFVZwYlFLHi8cgcIQPFiz
-	 YPH0U5xJ3j/YL3dP9+/5V+JKQ7p0NmFd/QivbE5+t+M+7dlPW7eHFEToeqvHtT9lrh
-	 j2Wbmoc81BWtCcdhO0EEdrTFWpx+jhPkJLpAeojZpVDuPyWAatJ9VsSB4TwNGGJtq2
-	 f6BwqKSbuP3uDBfzhckRkuT6uXUppU6x8cyOcjQzaHyPVnf2SCTOybzixRzGfaoHXH
-	 hxfhZ8kjcV0rGFKqc6XhjjuIH+ojAvJo5q64ScIhPH7iLzugS6CTcKATKHB7T7L5Xt
-	 sIwSEaJxqoiXQ==
-Message-ID: <1f0d8e3b-1e3f-4fc7-b415-07a6e7727a91@kernel.org>
-Date: Sat, 24 May 2025 14:37:21 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VlIIX9Ey"
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-3a36c2d3104so372715f8f.1
+        for <linux-kernel@vger.kernel.org>; Sat, 24 May 2025 05:45:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748090734; x=1748695534; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2fAadodyaUJ3UfjakUQd1RzRTpxjoFJWx5tx5bxrnsE=;
+        b=VlIIX9EytuDBptqZrd3HmigCucJ51OOm9+g4MQbPYwAJJoUnJd2YhmYE0n0/QN5SRP
+         R7GjJPBg6IYh2Z3OK1ypZJJo6iOBJ9R+v3xsoDsmDmaDbjQANkcKDS1feFVhN5cLkRp7
+         eAKqvuJrQFCHx//SI6X4KeSdZK7e4r35tNcSKQovFRQG5cmoK9l6TcA1BqyJDhvBRlK4
+         1N+ltuZ23qMoCIJdFWzWeOY5Mc5zEU2a+w3xylgdh+Lk1xoJ/eAxzTn5R/kU2hUkLNQt
+         LrlWqugRaSeggUvzs2k9fPMHaHJhid+e0A7CumlIG456zoqnynuJnSSWIM0Tj+vDE+1L
+         xYDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748090734; x=1748695534;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=2fAadodyaUJ3UfjakUQd1RzRTpxjoFJWx5tx5bxrnsE=;
+        b=PyLLySa7rIsBYVuvPi/fGpGfcdEmklwLKq5MqCVsrszqYQ0WUUSka9Bi0lxf4f0FSy
+         AtKmXsYQVw3uTnOUfSCqR22+YFLk8zR1Hk/5nKov0+bgk0e6f7yEpjIURf79VkXbZ/jK
+         tXr7XNOJ++YTRQAd9ATvYTOYhjpKIgqWMUEt9aLJInw8afyEGE6yU/+E3IKCnwHjnubO
+         fuI91Hpth+wVZDk/xqpSIoIm46Ct5mPxV+KitT84cYpGGFmh2CqmZSY88saT2nc1uUns
+         2CG2N018bzE7NjDIetl/48G0f41RQ9gNOu9pvz5ssWZ0Di5+gQnYIDbu7ayskNm/lX7Z
+         kEHw==
+X-Forwarded-Encrypted: i=1; AJvYcCXu50QTtbaUZVVrzUtfelG+k2IDbWSXDDX9pva24rgUoo/D4R1TCQTb+9ATHfzpFiauQ402hYqabzQPJsU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxKOsYwnuxq2OaMBpxOegxMXTFvga9JKY+tudWMXtrMBG2l23yu
+	NEu0qQBrNjmbKDNmrp2Ylw0YE0ucuE599qpTymiCffdZC2yzf7lCHx+O
+X-Gm-Gg: ASbGnctFsMpT+cBBao6ddJwtvJb3E7Kiim7FRcrci+ZqEXm+7Yi/eCt/fmKgAvaxCR6
+	1gv/Sxs+LlbFHo3ypIvAe8keKgkT5yKBi1uBwdtzh1Ki7Ph0S8PqKqWSpeH6GGFZ8IeilYVJ2Eo
+	dbiKy6nbWevaTer5XtYssHlnAXvQKZsK0jWVqRjfIFRnD9secSm22GcD7s+/zrvwK/j3u9DExCM
+	H5/8E0DPP4OCxR/vQ7/7ykfG8E8+08o/ymT9TymG2fZCcQTnndJ5/j2+y5X5BZrGZD+twdNqk/s
+	X0/2poxfesYnuOzpRXEHgN8A7u4yqLVWVZwAe3Leua56e/AcFzekAGfNLXneWEbAJC203SerFu4
+	ZPAHa7JbzQf5Zkw==
+X-Google-Smtp-Source: AGHT+IG0i9qFukv9w5pfMACSVf+KHuxboeRS6v0mNA/Osrs5ViQtvkt7VCdtpYqD3/7fW94dkWb+DQ==
+X-Received: by 2002:a05:6000:26ce:b0:3a4:d004:94a8 with SMTP id ffacd0b85a97d-3a4d0049624mr1244031f8f.5.1748090734156;
+        Sat, 24 May 2025 05:45:34 -0700 (PDT)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a36835ef41sm25766737f8f.94.2025.05.24.05.45.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 24 May 2025 05:45:33 -0700 (PDT)
+Date: Sat, 24 May 2025 13:45:26 +0100
+From: David Laight <david.laight.linux@gmail.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Sakari Ailus <sakari.ailus@linux.intel.com>, Andy Shevchenko
+ <andriy.shevchenko@linux.intel.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/1] container_of: Document container_of() is not to be
+ used in new code
+Message-ID: <20250524134526.28285a0b@pumpkin>
+In-Reply-To: <2025052306-childlike-operating-d9c7@gregkh>
+References: <20250520103437.468691-1-sakari.ailus@linux.intel.com>
+	<aCyOzUIIvMk6Gp8o@smile.fi.intel.com>
+	<2025052000-widen-lip-350b@gregkh>
+	<aCz9jlMcXDooqx0s@kekkonen.localdomain>
+	<2025052138-carport-applaud-61b8@gregkh>
+	<2025052121-drastic-hacker-aab6@gregkh>
+	<20250522220142.14876993@pumpkin>
+	<2025052306-childlike-operating-d9c7@gregkh>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V3] ahci: enhance error handling and resource management
- in ahci_init_one
-To: Alexander Roman <monderasdor@gmail.com>, linux-ide@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-References: <f2db43ab-97d0-4731-9b51-18876f342b42@kernel.org>
- <20250522100051.771-1-monderasdor@gmail.com>
-From: Damien Le Moal <dlemoal@kernel.org>
-Content-Language: en-US
-Organization: Western Digital Research
-In-Reply-To: <20250522100051.771-1-monderasdor@gmail.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On 5/22/25 12:00, Alexander Roman wrote:
+On Fri, 23 May 2025 10:36:45 +0200
+Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
 
-Please send patches to the subsystem maintainers (myself and Niklas).
-Use scripts/get_maintainer.pl.
+> On Thu, May 22, 2025 at 10:01:42PM +0100, David Laight wrote:
+> > On Wed, 21 May 2025 15:31:36 +0200
+> > Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
+> >   
+> > > On Wed, May 21, 2025 at 03:27:19PM +0200, Greg Kroah-Hartman wrote:  
+> > ...  
+> > > I tried it for the whole tree, and ugh, there are some real "errors" in
+> > > there.  The nfs inode handling logic is crazy, passing in a const
+> > > pointer and then setting fields in it.  So this will be some real work
+> > > to unwind and fix in some places.  
+> > 
+> > Perhaps change the really dodgy ones to container_of_deconst().
+> > And fix the easy ones so they compile with the 'const' check.  
+> 
+> Ick, no, let me fix these up properly.  I'm picking them off, and have
+> found some real issues here.  It will give me something to build patches
+> for over time while doing stable kernel test builds :)
 
+I was mostly thinking of it as temporary measure help find the easy cases.
 
-> Problem:
-> The current implementation of ahci_init_one has several issues with error handling
-> and resource management. It lacks proper error cleanup paths, doesn't initialize
-> pointers to NULL, and has inconsistent error handling patterns throughout the code.
-> This can lead to resource leaks and make debugging initialization failures difficult.
-> 
-> Solution:
-> This patch enhances the error handling and resource management in ahci_init_one by:
-> - Adding comprehensive error checking with descriptive error messages
-> - Improving error propagation through return codes
-> - Adding proper error cleanup paths for all resource allocations
-> - Initializing pointers to NULL to prevent use-after-free bugs
-> - Implementing proper cleanup of allocated resources in error paths
-> - Adding more descriptive error messages for all failure points
-> - Including error codes in log messages for better diagnostics
-> - Adding warning messages for potential system issues
-> - Improving code structure with proper error handling paths
-> - Adding proper error return labels
-> - Making code more maintainable with consistent error handling patterns
-> 
-> Technical Details:
-> - Added proper initialization of pointers (hpriv, host) to NULL
-> - Added error cleanup paths with proper resource release
-> - Improved error messages to include specific error codes
-> - Added proper error handling for all resource allocation failures
-> - Added proper cleanup of allocated resources in error paths
-> - Improved code organization with clear error handling paths
-> - Added proper error return labels for better code flow
-> 
-> Note: Some error checks and logging have been simplified to reduce churn while
-> maintaining robust error handling. The focus is on critical error paths and
-> resource management rather than redundant checks. Log levels have been adjusted
-> to use dev_warn for non-fatal warnings and dev_dbg for quirk failures.
-> 
-> Signed-off-by: Alexander Roman <monderasdor@gmail.com>
-> ---
->  drivers/ata/ahci.c | 150 ++++++++++++++++++++++++++++++-----------------------
->  1 file changed, 85 insertions(+), 65 deletions(-)
-> 
-> diff --git a/drivers/ata/ahci.c b/drivers/ata/ahci.c
-> --- a/drivers/ata/ahci.c
-> +++ b/drivers/ata/ahci.c
-> @@ -1611,460 +1611,555 @@ static int ahci_init_one(struct pci_dev *pdev, const struct pci_device_id *ent) {
->      struct ahci_host_priv *hpriv = NULL;
->      struct ata_host *host = NULL;
->      void __iomem *mmio = NULL;
-> +    int n_ports, i, rc = -ENOMEM;
-> -    int n_ports, i, rc;
->      u32 tmp, cap, port_map;
->      u32 saved_cap;
->      struct device *dev = &pdev->dev;
-> 
->      VPRINTK("ahci_init_one enter\n");
-> 
-> +    /* acquire resources with proper error handling */
-> -    /* acquire resources */
->      rc = pcim_enable_device(pdev);
->      if (rc) {
-> +        dev_err(dev, "Failed to enable PCI device: %d\n", rc);
-> +        goto err_out;
-> -        return rc;
->      }
-> 
->      rc = pcim_iomap_regions(pdev, 1 << AHCI_PCI_BAR_STANDARD, DRV_NAME);
->      if (rc) {
-> +        dev_err(dev, "Failed to map PCI regions: %d\n", rc);
-> +        goto err_out;
-> -        return rc;
->      }
->      mmio = pcim_iomap_table(pdev)[AHCI_PCI_BAR_STANDARD];
-> 
->      rc = pci_alloc_irq_vectors(pdev, 1, AHCI_MAX_PORTS, PCI_IRQ_ALL_TYPES);
->      if (rc < 0) {
-> +        dev_err(dev, "Failed to allocate IRQ vectors: %d\n", rc);
-> +        goto err_out;
-> -        return rc;
->      }
-> 
-> +    /* allocate and initialize host private data */
->      hpriv = devm_kzalloc(dev, sizeof(*hpriv), GFP_KERNEL);
->      if (!hpriv) {
-> +        dev_err(dev, "Failed to allocate host private data\n");
-> +        goto err_out;
-> -        return -ENOMEM;
->      }
-> 
->      hpriv->mmio = mmio;
->      hpriv->flags = (unsigned long)ent->driver_data;
->      hpriv->irq = pdev->irq;
-> 
-> +    /* apply board quirks */
->      if (pdev->vendor == PCI_VENDOR_ID_INTEL) {
-> +        rc = ahci_intel_pcs_quirk(pdev, hpriv);
-> +        if (rc) {
-> +            dev_dbg(dev, "Intel PCS quirk failed (%d)\n", rc);
-> +            goto err_host;
-> +        }
-> -        ahci_intel_pcs_quirk(pdev, hpriv);
->      }
-> 
-> +    /* apply port map mask if present */
->      ahci_get_port_map_mask(dev, hpriv);
-> 
-> +    /* save initial config */
->      rc = ahci_pci_save_initial_config(pdev, hpriv);
->      if (rc) {
-> +        dev_err(dev, "Failed to save initial configuration: %d\n", rc);
-> +        goto err_out;
-> -        return rc;
->      }
-> 
-> +    /* prepare host */
->      cap = hpriv->cap;
->      saved_cap = cap;
->      port_map = hpriv->port_map;
->      n_ports = ahci_calc_n_ports(cap, port_map);
-> 
->      host = ata_host_alloc_pinfo(dev, ahci_port_info + ent->driver_data, n_ports);
->      if (!host) {
-> +        dev_err(dev, "Failed to allocate ATA host\n");
-> +        goto err_out;
-> -        return -ENOMEM;
->      }
-> 
->      host->private_data = hpriv;
-> 
-> +    /* configure DMA masks */
->      rc = ahci_configure_dma_masks(pdev, hpriv);
->      if (rc) {
-> +        dev_err(dev, "Failed to configure DMA masks: %d\n", rc);
-> +        goto err_host;
-> -        return rc;
->      }
-> 
-> +    /* initialize adapter */
->      ahci_pci_init_controller(host);
->      rc = ahci_reset_controller(host);
->      if (rc) {
-> +        dev_err(dev, "Failed to reset controller: %d\n", rc);
-> +        goto err_host;
-> -        return rc;
->      }
-> 
-> +    /* apply fixups for broken systems */
->      if (ahci_broken_system_poweroff(pdev)) {
-> +        dev_warn(dev, "System may need power cycle after shutdown\n");
-> -        dev_info(dev, "quirky BIOS, skipping spindown on poweroff\n");
->      }
-> 
-> +    /* configure LPM policy */
->      for (i = 0; i < n_ports; i++) {
->          ahci_update_initial_lpm_policy(host->ports[i]);
->      }
-> 
-> +    /* apply platform-specific workarounds */
->      if (pdev->vendor == PCI_VENDOR_ID_INTEL) {
-> +        rc = ahci_intel_pcs_quirk(pdev, hpriv);
-> +        if (rc) {
-> +            dev_dbg(dev, "Intel PCS quirk failed (%d)\n", rc);
-> +            goto err_host;
-> +        }
-> -        ahci_intel_pcs_quirk(pdev, hpriv);
->      }
-> 
-> +    /* apply Apple MCP89 workaround */
->      if (is_mcp89_apple(pdev)) {
-> +        rc = ahci_mcp89_apple_enable(pdev);
-> +        if (rc) {
-> +            dev_err(dev, "Failed to enable MCP89 Apple: %d\n", rc);
-> +            goto err_host;
-> +        }
-> -        ahci_mcp89_apple_enable(pdev);
->      }
-> 
-> +    /* apply Acer SA5-271 workaround */
->      acer_sa5_271_workaround(hpriv, pdev);
-> 
-> +    /* initialize and enable interrupts */
->      ahci_init_irq(pdev, n_ports, hpriv);
->      ahci_pci_enable_interrupts(host);
-> 
-> +    /* print information */
->      ahci_pci_print_info(host);
-> 
-> +    /* register with libata */
->      rc = ata_host_activate(host, hpriv->irq, ahci_interrupt, IRQF_SHARED,
-> +                        &ahci_sht);
-> -                        &ahci_sht);
->      if (rc) {
-> +        dev_err(dev, "Failed to activate ATA host: %d\n", rc);
-> +        goto err_host;
-> -        return rc;
->      }
-> 
->      return 0;
-> 
-> +err_host:
-> +    ata_host_detach(host); // host is NULL-checked internally
-> +err_out:
-> +    return rc;
-> -    return 0;
->  }
-> 
+But having container_of_const() that preserves 'const-ness' and
+container_of() that always removes it seems wrong.
+Wouldn't preserving const-ness for a W=1 build would be a more normal way
+to do it?
 
-
--- 
-Damien Le Moal
-Western Digital Research
+	David
