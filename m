@@ -1,76 +1,80 @@
 Received: from fout-b6-smtp.messagingengine.com (fout-b6-smtp.messagingengine.com [202.12.124.149])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEEF772627;
-	Sat, 24 May 2025 10:13:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4816119E99E;
+	Sat, 24 May 2025 10:13:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.149
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748081638; cv=none; b=prGj88dB5Xf/g4fzmDDqGGiHEgyVL1du3TLdxkonL8EfFjI+lh7n0lGTuSWV20ips1My74qxbxfhzI1tXq3qXj6pWgrOYr0FeJCOdkHtRbH+TYww1p/QFKL7MsJH191RIM5KL2IwNjljjcGBLU4qNqfMbdc+QWtsDye5/KqAoFk=
+	t=1748081641; cv=none; b=o7Dm1wIcjQ+jyk31W1sXaWAnpvTvelj9gEtiuqr1GViu+yQStS0lxYU/mb1owwPYuEp6qlPcj4vNvZDidZu2gKtdwonjRKuG3FEHegHkWClR90jE6p8izm0/oyOVhVu8IKIi6O+4YLLZWfR0V67FeO1C04D42qMSFb1fqrZO/js=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748081638; c=relaxed/simple;
-	bh=1XMDELaeqTKaIim3oYaW+v76R78xWPX1eFmjmVSqpnU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KIOO65hbSkK9WOFC8irZoeLlFR6ryZW203XO19XyTEvUij3GMiJt3vTIqk2rDkiYQDzlaCEFdcC4YrmN1LY1R51mHYCJXVs2hS1x3RZX8GmSmjnJq3FaVMriVTRgcbhMzorBH00j/jhl8PgN3eaPEdXjYFrTf8WmQ4q62vChY3g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev; spf=none smtp.mailfrom=ljones.dev; dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b=UgyE4Xa/; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=rqTbBLFK; arc=none smtp.client-ip=202.12.124.149
+	s=arc-20240116; t=1748081641; c=relaxed/simple;
+	bh=/C8QiTTUb0vTL80OddyY43F9fUZVhdwpVHklu+nJRqU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=nXofa8HMeaKP6MrmzfOGQ7f0bF6YWJrLWqZxO1nEJDgwJcD40e7D35MEv9K0s2neLZSxtIl9UGlu73qlslT1hpFy8tw1XYUvch/u3vrRxbWEqkmzNkt4TZVWFNaNF6gcl9Np4aVKMSnJHnrIRiyLMUpCAiDNk0uhnvZdlNWlO40=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev; spf=none smtp.mailfrom=ljones.dev; dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b=hml4SO3v; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=PVdk3gON; arc=none smtp.client-ip=202.12.124.149
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ljones.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b="UgyE4Xa/";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="rqTbBLFK"
+	dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b="hml4SO3v";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="PVdk3gON"
 Received: from phl-compute-08.internal (phl-compute-08.phl.internal [10.202.2.48])
-	by mailfout.stl.internal (Postfix) with ESMTP id CC69111400F7;
-	Sat, 24 May 2025 06:13:55 -0400 (EDT)
+	by mailfout.stl.internal (Postfix) with ESMTP id 24A8311400CF;
+	Sat, 24 May 2025 06:13:58 -0400 (EDT)
 Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-08.internal (MEProxy); Sat, 24 May 2025 06:13:56 -0400
+  by phl-compute-08.internal (MEProxy); Sat, 24 May 2025 06:13:58 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
 	:cc:content-transfer-encoding:content-type:date:date:from:from
-	:in-reply-to:message-id:mime-version:reply-to:subject:subject:to
-	:to; s=fm2; t=1748081635; x=1748168035; bh=FluFuOFvgquuWZWu40tDv
-	+uWE6BcxeZX5V782aBS1jc=; b=UgyE4Xa/PnfMVmK3EFRdRQhfGDEMp7m/twOiZ
-	YhZcUvMj+MxshTEYj6TwIDkrhJfMw3QUcpQ3U9rWZbnLq1aQth47nr9p+gqovg+k
-	ATx0Qg7z5mC12XfpK3Kpeo3fUfmsLaNUIpr6x1I9Jso+2MbsLuX4dgHzkawQcJUi
-	xFqRnyik9wg5jxG4Q7vNQCldFXsgGnG+HMt8tgFN44QCfmpzQe4SYIwzMkEf7MjC
-	3l7s7VhUWoohpHfCQgkiquNO7osEQkkCHIr2i0f+B8RDej/E0Pa7eLdQKBxVJCO4
-	nIictmtpO6aR7ZFHitmJdKaElIYjV0S5empz++Cn+sSuYJaeA==
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to; s=fm2; t=1748081637; x=
+	1748168037; bh=akA5CFfanHToafD1mbjbfGsMj4lpdg0uahm+NJOHo+A=; b=h
+	ml4SO3ve8hhPor1MlwHKNiQOlrpvEg5f9jrXAiRze6By6VTiTtvn6UZO3nZE68KN
+	AVsgqsDXbolr/qcLLyfsbdiYnIL4rVA4Xcyu4zaXK9CfCIDY5OyPGYoeUX0Cwvem
+	YtRsSl7xJeru4C8HMdrD/fkIa4EhTFl3NJ3drHJAn8MiZAv4FHd4ZjF8VtaOaP0Y
+	WfsrPog3Ltoc28d6xm0hCqi6hSU47dFoglWkpw8tbWWitbZYyZnV1fogJI9w+iPe
+	LPsqDANm/SEU4C0RjaMdsxD1m9qV+bXX0FU+FCLfZSZq34/f3OQdTbm9BZQVh/wB
+	8spiKU9yLisZ0ed6f4U8Q==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:cc:content-transfer-encoding
 	:content-type:date:date:feedback-id:feedback-id:from:from
-	:in-reply-to:message-id:mime-version:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
-	1748081635; x=1748168035; bh=FluFuOFvgquuWZWu40tDv+uWE6BcxeZX5V7
-	82aBS1jc=; b=rqTbBLFKexlfDu9mEnP7RcbumS2a79OE9o9hwx0U7GOagSCQzpK
-	zMXcmVavu7E/PTIUMwQS8e33I9/68z1FQyJbldC8Nxo0c9cPEMn4OAVm/2HUCT26
-	38NGXOCtTQTJDIFif7Q7Yr9OoFIKMVoj0EluyANU/peZ+J4w7BPJHdAQoVQGq50d
-	gbmmPFDYg+rrRWpteDpcuPhc31dV4yt3GV8EprFJbsAq2yn+7QgHSigQofDunihW
-	EXJDh5rBKuLIrd+8LZBkID3lVMef2LRxNA3W/IyiyM/vg/WmWsKvOwB6B13YRh0d
-	DpOFEUfIMo1k/5VfSmqwMXrm0E8bNXpzP/g==
-X-ME-Sender: <xms:45sxaD26wyRiOEZffzQW7DEwN5kzKx4oEDbYrmThkS6Ue0ZR2oXy2w>
-    <xme:45sxaCE2216wiAPjFsLLzVf0UBzR4VzHEgFGeiNhE4pPAKMv0N3rLymbJDxRx4Zac
-    256otAhhN0B0DtDkr8>
-X-ME-Received: <xmr:45sxaD4KxNGCHVyjkIPQ54RmzSAvEzuOvkwluVXthI5CVr0c2UH8BfiyAxdQbF4RRn-cBg97u5c>
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to:x-me-proxy:x-me-sender
+	:x-me-sender:x-sasl-enc; s=fm3; t=1748081637; x=1748168037; bh=a
+	kA5CFfanHToafD1mbjbfGsMj4lpdg0uahm+NJOHo+A=; b=PVdk3gONQCr88ub7W
+	LPXoovQcqnOPtpELSbVVdloM3VTaOZFeN3iwEip9t9RlLGpDP0ls0SsX64n+T1fZ
+	AjpptA9bmX6WVPzM8gjx1zApXJl8CnNF5kgHLMhdutVLn15hqiVOan+DSKr21mce
+	0OF2M7oGabiduGizJYlxCjtaNbw/jZV+3YGZBgzS/mfSXAv+10yyBiqvRMPJBCgr
+	SEPSZq1Negl3gYFZXBvVoDd0ffcScoCDATMNZWBd2OB0FDlSZQfgYOsgWH+uQKrB
+	qMjhsPHgOrsoFvvI3yn/uNAXwqdLPRzxkuY4yF+dFWc1z2G9c4hfI90Mkrll9DE7
+	Up4sA==
+X-ME-Sender: <xms:5ZsxaAlj3ZNzNUg2aUjaCuqx8yQwrC4G8UdSGx2XCJmzPvKzy0FCyQ>
+    <xme:5ZsxaP1cfz56j_4GvCaJCDge15gkcOq-wCO2CbDI-zHrvf26R4UiPZQeyw6vqUpiU
+    gvuZCK4X4slB8_ApB8>
+X-ME-Received: <xmr:5ZsxaOo9YiCm1uXqYcsZvHsmwzfe_sAMM5VKh9hJRKMNqojEhX5tSYrm91CnNKzu9I6R8ofEq_0>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgdduudegieculddtuddrgeefvddrtd
     dtmdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggft
     fghnshhusghstghrihgsvgdpuffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftd
-    dtnecunecujfgurhephffvvefufffkofgggfestdekredtredttdenucfhrhhomhepnfhu
-    khgvucflohhnvghsuceolhhukhgvsehljhhonhgvshdruggvvheqnecuggftrfgrthhtvg
-    hrnhepiefhfeeuueeigffgtdefgeetgedufeefkeektdevudefhedtgfehkeejveejtdff
-    necuffhomhgrihhnpehkvghrnhgvlhdrohhrghdptddurdhorhhgpdhgihhthhhusgdrtg
-    homhenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehl
-    uhhkvgeslhhjohhnvghsrdguvghvpdhnsggprhgtphhtthhopeejpdhmohguvgepshhmth
-    hpohhuthdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgv
-    lhdrohhrghdprhgtphhtthhopehhuggvghhovgguvgesrhgvughhrghtrdgtohhmpdhrtg
-    hpthhtohepihhlphhordhjrghrvhhinhgvnheslhhinhhugidrihhnthgvlhdrtghomhdp
-    rhgtphhtthhopehplhgrthhfohhrmhdqughrihhvvghrqdigkeeisehvghgvrhdrkhgvrh
-    hnvghlrdhorhhgpdhrtghpthhtohepmhgrrhhiohdrlhhimhhonhgtihgvlhhlohesrghm
-    ugdrtghomhdprhgtphhtthhopegrnhgurhhihidrshhhvghvtghhvghnkhhosehlihhnuh
-    igrdhinhhtvghlrdgtohhmpdhrtghpthhtoheplhhukhgvsehljhhonhgvshdruggvvh
-X-ME-Proxy: <xmx:45sxaI18t-tsytJqfaQadFICAGELiRXM68h-LlWh5hluzqSbQBXFOw>
-    <xmx:45sxaGF6RotkKqzVE9-VXf3GiZl_Jc0GWytVPG4hY-YOn63J0IMzGg>
-    <xmx:45sxaJ_dRw_orhleUuh-avq08DqlHgr3BEsTnK2e2YHvacjyE5KwNg>
-    <xmx:45sxaDnI57UAfGEmKRX2lecfcrZ-qeUJwIDAJOMY_Bkz4OXkDMYyag>
-    <xmx:45sxaBkVj6FA-Sc2bhQLCC1_n6VvHk1EaDOo8iYTu4rrp54GSbm7Uk3a>
+    dtnecunecujfgurhephffvvefufffkofgjfhgggfestdekredtredttdenucfhrhhomhep
+    nfhukhgvucflohhnvghsuceolhhukhgvsehljhhonhgvshdruggvvheqnecuggftrfgrth
+    htvghrnhepveelgfeugffhhfegtedvfeelieegueekiefhgeelueefueeujeelueduhfdv
+    kedvnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpe
+    dtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehluhhkvgeslhhjohhnvghsrdguvghvpdhn
+    sggprhgtphhtthhopeekpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehlihhnuh
+    igqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehhuggv
+    ghhovgguvgesrhgvughhrghtrdgtohhmpdhrtghpthhtohepihhlphhordhjrghrvhhinh
+    gvnheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopehplhgrthhfohhrmhdq
+    ughrihhvvghrqdigkeeisehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepmh
+    grrhhiohdrlhhimhhonhgtihgvlhhlohesrghmugdrtghomhdprhgtphhtthhopegrnhgu
+    rhhihidrshhhvghvtghhvghnkhhosehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpth
+    htoheplhhukhgvsehljhhonhgvshdruggvvhdprhgtphhtthhopehlkhhpsehinhhtvghl
+    rdgtohhm
+X-ME-Proxy: <xmx:5ZsxaMkEEFKW_GVqV3egGpR_LG2Y99A6pejyIUyjN3zrAlLCYXdy5g>
+    <xmx:5ZsxaO1jrkg-Nhcd-uTHmHoo0AlYEKMGBc5Ga01MUYE6CV2sXslN0Q>
+    <xmx:5ZsxaDsWasWQXppd26Hezp1Clq2kcZTxZaT81oh22ZwYxBXLZcQHkw>
+    <xmx:5ZsxaKUKJnloHibMdHtFGjfXUI7IftGoyz6_BrQdqjUheiiXdN3xOw>
+    <xmx:5ZsxaK7vNTzmwuKhSOJdTEg4Vkp3MQ9Q9b1KIuu_LYYmNxQ4VSfFsn72>
 Feedback-ID: i5ec1447f:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sat,
- 24 May 2025 06:13:53 -0400 (EDT)
+ 24 May 2025 06:13:56 -0400 (EDT)
 From: Luke Jones <luke@ljones.dev>
 To: linux-kernel@vger.kernel.org
 Cc: hdegoede@redhat.com,
@@ -78,11 +82,14 @@ Cc: hdegoede@redhat.com,
 	platform-driver-x86@vger.kernel.org,
 	mario.limonciello@amd.com,
 	andriy.shevchenko@linux.intel.com,
-	Luke Jones <luke@ljones.dev>
-Subject: [PATCH v3 0/1] platform/x86: asus-wmi: fix build without CONFIG_SUSPEND
-Date: Sat, 24 May 2025 12:13:41 +0200
-Message-ID: <20250524101343.57883-1-luke@ljones.dev>
+	Luke Jones <luke@ljones.dev>,
+	kernel test robot <lkp@intel.com>
+Subject: [PATCH v3 1/1] platform/x86: asus-wmi: fix build without CONFIG_SUSPEND
+Date: Sat, 24 May 2025 12:13:42 +0200
+Message-ID: <20250524101343.57883-2-luke@ljones.dev>
 X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250524101343.57883-1-luke@ljones.dev>
+References: <20250524101343.57883-1-luke@ljones.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -91,35 +98,95 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Fixes "platform/x86: asus-wmi: Refactor Ally suspend/resume".
+The patch "Refactor Ally suspend/resume" introduced an
+acpi_s2idle_dev_ops for use with ROG Ally which caused a build error
+if CONFIG_SUSPEND was not defined.
 
-Verified using the following details provided by test robot:
-
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git review-ilpo-next
-head:   83579675331059689e2869bf752ca9e17fadbd82
-commit: feea7bd6b02d43a794e3f065650d89cf8d8e8e59 [74/89] platform/x86: asus-wmi: Refactor Ally suspend/resume
-config: x86_64-buildonly-randconfig-004-20250509 (https://download.01.org/0day-ci/archive/20250509/202505090418.DaeaXe4i-lkp@intel.com/config)
-compiler: clang version 20.1.2 (https://github.com/llvm/llvm-project 58df0ef89dd64126512e4ee27b4ac3fd8ddf6247)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250509/202505090418.DaeaXe4i-lkp@intel.com/reproduce)
-
-I've not done anything fancy here and left asus_hotk_prepare() as is, as it is *incredibly* unlikely anyone would ever run a ROG Ally without suspend enabled.
-
-Sincerest apologies to all for the noise.
-
-Changelog:
-- V2:
-  - Move functions and struct together to be under one ifdef block
-  - Use wrapper functions for s2idle registration
-- V3:
-  - Use the correct commit for patch. V1 was missing the full set of changes :(
-  - Reference the right patch in changelog....
-
-Luke Jones (1):
-  platform/x86: asus-wmi: fix build without CONFIG_SUSPEND
-
+Signed-off-by: Luke Jones <luke@ljones.dev>
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202505090418.DaeaXe4i-lkp@intel.com/
+Fixes: feea7bd6b02d ("platform/x86: asus-wmi: Refactor Ally suspend/resume")
+---
  drivers/platform/x86/asus-wmi.c | 33 ++++++++++++++++++++++++---------
  1 file changed, 24 insertions(+), 9 deletions(-)
 
+diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+index 27f11643a00d..cbbd0ef0906f 100644
+--- a/drivers/platform/x86/asus-wmi.c
++++ b/drivers/platform/x86/asus-wmi.c
+@@ -5005,23 +5005,24 @@ static int asus_hotk_restore(struct device *device)
+ 	return 0;
+ }
+ 
+-static void asus_ally_s2idle_restore(void)
++static int asus_hotk_prepare(struct device *device)
+ {
+ 	if (use_ally_mcu_hack == ASUS_WMI_ALLY_MCU_HACK_ENABLED) {
+ 		acpi_execute_simple_method(NULL, ASUS_USB0_PWR_EC0_CSEE,
+-					   ASUS_USB0_PWR_EC0_CSEE_ON);
++					   ASUS_USB0_PWR_EC0_CSEE_OFF);
+ 		msleep(ASUS_USB0_PWR_EC0_CSEE_WAIT);
+ 	}
++	return 0;
+ }
+ 
+-static int asus_hotk_prepare(struct device *device)
++#if defined(CONFIG_SUSPEND)
++static void asus_ally_s2idle_restore(void)
+ {
+ 	if (use_ally_mcu_hack == ASUS_WMI_ALLY_MCU_HACK_ENABLED) {
+ 		acpi_execute_simple_method(NULL, ASUS_USB0_PWR_EC0_CSEE,
+-					   ASUS_USB0_PWR_EC0_CSEE_OFF);
++					   ASUS_USB0_PWR_EC0_CSEE_ON);
+ 		msleep(ASUS_USB0_PWR_EC0_CSEE_WAIT);
+ 	}
+-	return 0;
+ }
+ 
+ /* Use only for Ally devices due to the wake_on_ac */
+@@ -5029,6 +5030,21 @@ static struct acpi_s2idle_dev_ops asus_ally_s2idle_dev_ops = {
+ 	.restore = asus_ally_s2idle_restore,
+ };
+ 
++static void asus_s2idle_check_register(void)
++{
++	if (acpi_register_lps0_dev(&asus_ally_s2idle_dev_ops))
++		pr_warn("failed to register LPS0 sleep handler in asus-wmi\n");
++}
++
++static void asus_s2idle_check_unregister(void)
++{
++	acpi_unregister_lps0_dev(&asus_ally_s2idle_dev_ops);
++}
++#else
++static void asus_s2idle_check_register(void) {}
++static void asus_s2idle_check_unregister(void) {}
++#endif /* CONFIG_SUSPEND */
++
+ static const struct dev_pm_ops asus_pm_ops = {
+ 	.thaw = asus_hotk_thaw,
+ 	.restore = asus_hotk_restore,
+@@ -5060,9 +5076,7 @@ static int asus_wmi_probe(struct platform_device *pdev)
+ 			return ret;
+ 	}
+ 
+-	ret = acpi_register_lps0_dev(&asus_ally_s2idle_dev_ops);
+-	if (ret)
+-		pr_warn("failed to register LPS0 sleep handler in asus-wmi\n");
++	asus_s2idle_check_register();
+ 
+ 	return asus_wmi_add(pdev);
+ }
+@@ -5096,7 +5110,8 @@ EXPORT_SYMBOL_GPL(asus_wmi_register_driver);
+ 
+ void asus_wmi_unregister_driver(struct asus_wmi_driver *driver)
+ {
+-	acpi_unregister_lps0_dev(&asus_ally_s2idle_dev_ops);
++	asus_s2idle_check_unregister();
++
+ 	platform_device_unregister(driver->platform_device);
+ 	platform_driver_unregister(&driver->platform_driver);
+ 	used = false;
 -- 
 2.49.0
 
