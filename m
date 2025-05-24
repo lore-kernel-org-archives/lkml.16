@@ -1,44 +1,47 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6CE22DCC1C;
-	Sat, 24 May 2025 02:41:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA2B417BBF;
+	Sat, 24 May 2025 02:42:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748054469; cv=none; b=I597qXJnCxnyUxopOk+ookmABMxr3pPqztF48eRmXLzP50mOeh11WmrQnEVWN03pDBF507cK7YmXdKfQ2Stp8sDsg+VoSd0myhR0NdGeEt6LYI9yMNPXjL2+lfF+35pKDN3zEowPFuVNHlgMfbUEURbaNIuf2egeSbh1//MnmUE=
+	t=1748054530; cv=none; b=M2fVQQl3fitfnNBHnboK1wdXoQ/VQ/6PqTcaHBDOQu4LQ5eXxoX0NDgBfNnsyrhTlNqZ8/1xOOJcX5bFfKgw8RCY2RWnlh2ENrAL23djXEr8fRJ7Queg3pN7bJy7twzYcAHxm8CMcFc5IJ+iO0BeJmFuEHVovp/+YIO9I8N1+F4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748054469; c=relaxed/simple;
-	bh=9N6vJ1zJxFw9+690svPBoBzidDB7D5LNcL1y5z3rzKg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Eg4TUGwsaERmmxOhYlWYlwdCvQ6RwbOc05h9jpJRZOyWB3cHChqutO3n8WWuZxuUL5TuZhPM/85R3Xq5gKt5uxNNBWri0s3Bh6n/IJcz8wZSaqJoAKpeG1hycxB1IgE3C1XLHskNWTLe0LAr6doawZwOia6iAMzudfDV0L4D/Qw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UM9hphXW; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748054530; c=relaxed/simple;
+	bh=hJBGEXSDXftTSK2poU6B84MMf35kTyveWAY3zABcuxk=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=jCCoa4mdA483PXDw9Z9tpRSRze/XSuLx9yTsQTP9Y4ZuiHEVvdxokwwGuY/uTVOGcRjOmOIHPNHs1QZQxTic8aGZi6rhSRjdikmS67UXNzDNq7vXg7IVzsYjsaCmzYw5l/EUE79sC87AD3vQOQRU+C66YMD+O6rweIkAHNZ2AJY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K1ag/CFs; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UM9hphXW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76440C4CEE9;
-	Sat, 24 May 2025 02:41:07 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K1ag/CFs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40868C4CEE9;
+	Sat, 24 May 2025 02:42:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748054468;
-	bh=9N6vJ1zJxFw9+690svPBoBzidDB7D5LNcL1y5z3rzKg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=UM9hphXWzj9nOLYc7mdVJa4gEgM1DCIBKWTVbAjyF9XnnB3O1ugxPPlMyqKoAQhA0
-	 9LJnZHG/8CndBl6Y4BSZeiiI/0ee7cFoKt8x6SMbpHdyNA/GJ+tZZHyZE5foCQar1e
-	 xR6e+iLE6i5ATdzTFh/ZGer4K1a+qMjzZ42oEc4YiEMlTjf0h7aK9sUZplWyJN2p+i
-	 msoFFXbZwSHf1C65EIhDuuFNWesRAK26udSG7VnScoOsbHTNc4aRrziHyN6oHI93Gj
-	 yL8Wre4qirSnqfOd9I4GmYGfEUV1KiHB+Cfy4K0B320NV128WFQPKJnaTD2228A+bI
-	 sEpLcZvr0JCQA==
-Date: Fri, 23 May 2025 21:41:05 -0500
-From: Bjorn Andersson <andersson@kernel.org>
-To: Song Xue <quic_songxue@quicinc.com>
-Cc: "Rob Herring (Arm)" <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, kernel@quicinc.com, 
-	linux-kernel@vger.kernel.org, Konrad Dybcio <konradybcio@kernel.org>, 
-	devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH] arm64: dts: qcom: qcs615-ride: Add PSCI SYSTEM_RESET2
- types
-Message-ID: <v57xfmnmf26zs5unsl5zy4flar76hlpjwnohioctlqowkxicx4@g4svxqdgqk4f>
-References: <20250422-add_psci_sys_reset2_modes_for_qcs615-v1-1-7faaf877366e@quicinc.com>
- <174532908966.1111913.12713682553446003215.robh@kernel.org>
- <1fab200f-c7fd-4772-ae8b-6b8f4f1f4adb@quicinc.com>
+	s=k20201202; t=1748054529;
+	bh=hJBGEXSDXftTSK2poU6B84MMf35kTyveWAY3zABcuxk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=K1ag/CFsCY+Vs9dk6QJWRiIPXnR+g2TWtYfIJy7wqNMieCvRcc4lUxOVCCnHpUegV
+	 PVAyi36eeoxZ1vpZovzEpki2NLYE2/VsdvrP/kCdcr4+t9+KOmBFBJjEudV9WtjsAH
+	 9doEJNeBxzaeUbLjmyK0j/JumYZSjx/HZmnIEkYwmGYeRUB+mtqcAcJmtIc0L9Uphy
+	 tk0gQQzwXoRjGwx6C9RbAM+6Q6RGUM5SoEyB97MveHLWSvEBxbbfdF5fuX63cgWlBS
+	 cKlCJkaJ5xSrlGlPyL2m57b/xJKfA33j1H0pTVlTEu7PtE+jh8QGVKnWi5G3bQS7Wx
+	 aFaXuOUMJSnkg==
+Date: Fri, 23 May 2025 21:42:07 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Lukas Wunner <lukas@wunner.de>
+Cc: linux-pci@vger.kernel.org,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Cyril Brulebois <kibi@debian.org>,
+	Nicolas Saenz Julienne <nsaenz@kernel.org>,
+	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+	Krzysztof Wilczy??ski <kwilczynski@kernel.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Jim Quinlan <james.quinlan@broadcom.com>,
+	bcm-kernel-feedback-list@broadcom.com, linux-kernel@vger.kernel.org,
+	Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH] PCI/pwrctrl: Skip creating platform device unless
+ CONFIG_PCI_PWRCTL enabled
+Message-ID: <20250524024207.GA1598583@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -47,72 +50,87 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1fab200f-c7fd-4772-ae8b-6b8f4f1f4adb@quicinc.com>
+In-Reply-To: <aDDn94q9gS8SfK9_@wunner.de>
 
-On Thu, Apr 24, 2025 at 01:59:04PM +0800, Song Xue wrote:
+On Fri, May 23, 2025 at 11:26:15PM +0200, Lukas Wunner wrote:
+> On Fri, May 23, 2025 at 03:17:59PM -0500, Bjorn Helgaas wrote:
+> > --- a/drivers/pci/probe.c
+> > +++ b/drivers/pci/probe.c
+> > @@ -2510,6 +2510,7 @@ EXPORT_SYMBOL(pci_bus_read_dev_vendor_id);
+> >  
+> >  static struct platform_device *pci_pwrctrl_create_device(struct pci_bus *bus, int devfn)
+> >  {
+> > +#if defined(CONFIG_PCI_PWRCTL) || defined(CONFIG_PCI_PWRCTL_MODULE)
+> >  	struct pci_host_bridge *host = pci_find_host_bridge(bus);
+> >  	struct platform_device *pdev;
+> >  	struct device_node *np;
+> > @@ -2536,6 +2537,9 @@ static struct platform_device *pci_pwrctrl_create_device(struct pci_bus *bus, in
+> >  	}
+> >  
+> >  	return pdev;
+> > +#else
+> > +	return NULL;
+> > +#endif
+> >  }
+> [...]
+> > This an alternate to
+> > https://lore.kernel.org/r/20250522140326.93869-1-manivannan.sadhasivam@linaro.org
+> > 
+> > It should accomplish the same thing but I think using #ifdef makes it a
+> > little more visible and easier to see that pci_pwrctrl_create_device() is
+> > only relevant when CONFIG_PCI_PWRCTL is enabled.
 > 
-> 
-> On 4/22/2025 9:38 PM, Rob Herring (Arm) wrote:
-> > 
-> > On Tue, 22 Apr 2025 15:39:54 +0800, Song Xue wrote:
-> > > Add properties to support Bootloader and Edl mode for PSCI system
-> > > reset2 reboot modes. The cookie and magic values set will be used
-> > > by SYSTEM_RESET2 call.
-> > > 
-> > > Signed-off-by: Song Xue <quic_songxue@quicinc.com>
-> > > ---
-> > > Dependencies:
-> > > Link to bindings and driver changes:
-> > > https://lore.kernel.org/all/20250303-arm-psci-system_reset2-vendor-reboots-v9-0-b2cf4a20feda@oss.qualcomm.com/
-> > > ---
-> > >   arch/arm64/boot/dts/qcom/qcs615-ride.dts | 7 +++++++
-> > >   arch/arm64/boot/dts/qcom/qcs615.dtsi     | 2 +-
-> > >   2 files changed, 8 insertions(+), 1 deletion(-)
-> > > 
-> > 
-> > 
-> > My bot found new DTB warnings on the .dts files added or changed in this
-> > series.
-> > 
-> > Some warnings may be from an existing SoC .dtsi. Or perhaps the warnings
-> > are fixed by another series. Ultimately, it is up to the platform
-> > maintainer whether these warnings are acceptable or not. No need to reply
-> > unless the platform maintainer has comments.
-> > 
-> > If you already ran DT checks and didn't see these error(s), then
-> > make sure dt-schema is up to date:
-> > 
-> >    pip3 install dtschema --upgrade
-> > 
-> > 
-> > This patch series was applied (using b4) to base:
-> >   Base: using specified base-commit e21edb1638e82460f126a6e49bcdd958d452929c
-> > 
-> > If this is not the correct base, please add 'base-commit' tag
-> > (or use b4 which does this automatically)
-> > 
-> > New warnings running 'make CHECK_DTBS=y for arch/arm64/boot/dts/qcom/' for 20250422-add_psci_sys_reset2_modes_for_qcs615-v1-1-7faaf877366e@quicinc.com:
-> > 
-> > arch/arm64/boot/dts/qcom/qcs615-ride.dtb: psci (arm,psci-1.0): 'reset-types' does not match any of the regexes: '^pinctrl-[0-9]+$', '^power-domain-'
-> > 	from schema $id: http://devicetree.org/schemas/arm/psci.yaml#
-> > 
-> My patch is depend on the bindings:https://lore.kernel.org/all/20250303-arm-psci-system_reset2-vendor-reboots-v9-1-b2cf4a20feda@oss.qualcomm.com/
-> 
+> Just noting though that section 21 of Documentation/process/coding-style.rst
+> discourages use of #ifdef and recommends IS_ENABLED() and inline stubs
+> instead.
 
-This dependency has not yet been accepted, so there's nothing I can do
-with your patch. Please resubmit it once the dependencies have been
-accepted.
+True, although I kind of object to IS_ENABLED() in cases like this
+where what we really want is a no-op function, because IS_ENABLED()
+forces me to mentally execute the function to see what's going on.
 
-Thanks,
+What I would prefer is something like the first paragraph in that
+section: the #ifdef in a header file that declares the function and
+defines a no-op stub, with the implementation in some pwrctrl file.
+
+But now since we're considering this for v6.15 in a couple days, we
+need a minimal fix.  Mani's original patch is probably the best for
+that, and I'm fine with that, although I don't think we should throw
+brcmstb under the bus.  The pci_pwrctrl_create_device() assumption
+that pwrctrl is enabled is just broken, and I don't think the fix is
+to improve pwrctrl and convert drivers.
+
+Maybe we could use Mani's patch with something like my commit log
+(it's quite possible I don't understand the situation completely):
+
+  If devicetree describes power supplies related to a PCI device, we
+  previously created a pwrctrl device even if CONFIG_PCI_PWRCTL was
+  not enabled.
+
+  When pci_pwrctrl_create_device() creates and returns a pwrctrl
+  device, pci_scan_device() doesn't enumerate the PCI device; it
+  assumes the pwrctrl core will rescan the bus after turning on the
+  power.  If CONFIG_PCI_PWRCTL is not enabled, the rescan never
+  happens.
+
+  This may break PCI enumeration on any system that describes power
+  supplies in devicetree but does not use pwrctrl.  Jim reported that
+  some brcmstb platforms break this way.
+
+  If CONFIG_PCI_PWRCTL is not enabled, skip creating the pwrctrl
+  platform device and scan the device normally.
+
+Looking at pci_pwrctrl_create_device() raised more questions for me:
+
+  - If pwrctrl is enabled, devicetree describes a regulator, and the
+    power is already on, do we really want to defer enumeration?
+
+  - If pwrctrl *not* enabled, devicetree describes a regulator, and
+    the power is off, is there anything in dmesg that gives us a clue
+    about why we don't enumerate the device?  Could/should we emit a
+    message as a hint?
+
+  - Creating a pwrctrl device, returning a pointer to it, and then
+    throwing that pointer away seems ... weird?  Makes me wonder about
+    the lifetime management of that device.
+
 Bjorn
-
-> In this bindings, we can see the property definition of 'reset-types' which
-> only has "mode-" property.
-> 
-> Best regards,
-> Song Xue
-> > 
-> > 
-> > 
-> > 
-> 
