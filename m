@@ -1,122 +1,121 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from mail.mixaill.net (mail.mixaill.net [144.76.234.135])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE7249444;
-	Sat, 24 May 2025 14:48:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B554A143748
+	for <linux-kernel@vger.kernel.org>; Sat, 24 May 2025 15:02:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.76.234.135
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748098140; cv=none; b=u9CiaVyehrq2+j7tuEbi/ESBnBA1W3rr3tpjH5jF4vx7i4Vu4QSVzqGbpjR8MLIHJmB+VoowjVfLCMkE04d0R5KkG6v2cfpG25WSsS3IkArIcNhEXCIbUA7hJ7+ibu/lf9xoB094PTuVZDPT5IelXZiXOk4P+Ds+eBUJKBuLLMQ=
+	t=1748098929; cv=none; b=UhoU3DIu3LE/nyxAMYNFwkGapapaw06GFSnFtKyoWWmlzGqId9lGHRsmvFi8Atwr2AAAUllVwzdHzj9pr1b6A58kIyK7iYhIgbDYWdPvPE/JPqh6W4fkX+BqlU2h2hSS51AGspQ78d7E/SMUiS0MMr/quG2+rlQ8f98+0siK7Yk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748098140; c=relaxed/simple;
-	bh=hi0FhnivKthEbtDL/pIRmuxZrvxkLdiF0ueMxA2JKu0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TMbyd0uGWeJonxEVl54V8L9KtoiTfcgSZFki21f0rr86DuPLKjuS0/uR+P/pw4OE8xK8EjdL4kULTrztRsw6z4ddWB50FA/sX/6tQ3r5D9FD8hrhx29hu1BGFZNk+Dv2dk8TUPpt4ekCMB6dE0fGl1llOiD6stWh3FlO231x5+M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=Xm+Fntir; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1748098929; c=relaxed/simple;
+	bh=NNv+EXFIzxTrtcLp3+aZuZ0bMbaekAyoddMeWPXN8U4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=bOovhzrKMO3y3owWNJUaRF4gSxCFGf3PpaqH3ga608Cgqq2GisROdx4T9gvrAjeycFd6MqrMXaPiCOs0AhgoXnnl8q5LG5Ytz5bjGnO7TsxnFbaGlMyZjGRwt0M6OAJQNIQSBzqVK0QbR9WOSHg+AdEcihiDB8Xm5fVy8hQDLMs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mixaill.net; spf=pass smtp.mailfrom=mixaill.net; dkim=pass (2048-bit key) header.d=mixaill.net header.i=@mixaill.net header.b=ckd/biK6; arc=none smtp.client-ip=144.76.234.135
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mixaill.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mixaill.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="Xm+Fntir"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Transfer-Encoding:Content-Disposition:
-	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:From:
-	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Content-Disposition:
-	In-Reply-To:References; bh=6j+A/wcAjjzOXucCcPrPqRyyoTRY9hnx7kS73VHwOW0=; b=Xm
-	+Fntir9xBjM2MNWbSndaFmwEXhYF9USaPzzlIBnIdtYCNjV4ZIq9s5XoD2o1OaBJXNVmTu9z5TRMd
-	DNKc6sxBSylhkLtYUeHzjykapObNfBt7gPISSXSgjjNCK2lIOsy/V1psSSVvUhRSOwIEWMD8OVuTi
-	VWCCVcoaxKAAdTY=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1uIqAZ-00DglV-8h; Sat, 24 May 2025 16:48:15 +0200
-Date: Sat, 24 May 2025 16:48:15 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: lizhe <sensor1010@163.com>
-Cc: andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
-	kuba@kernel.org, pabeni@redhat.com, mcoquelin.stm32@gmail.com,
-	alexandre.torgue@foss.st.com, jonas@kwiboo.se,
-	rmk+kernel@armlinux.org.uk, david.wu@rock-chips.com, wens@csie.org,
-	u.kleine-koenig@baylibre.com, an.petrous@oss.nxp.com,
-	netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: Re: [PATCH] net: dwmac-rk: MAC clock should be truned off
-Message-ID: <112fa3c4-908d-4e31-9288-b3a2949555b0@lunn.ch>
-References: <20250523151521.3503-1-sensor1010@163.com>
- <d5325aba-507e-47b6-83fb-b9156c1f351e@lunn.ch>
- <2525c791.3415.197029d3705.Coremail.sensor1010@163.com>
+	dkim=pass (2048-bit key) header.d=mixaill.net header.i=@mixaill.net header.b="ckd/biK6"
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 0D41C3C0E6;
+	Sat, 24 May 2025 14:54:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mixaill.net; s=dkim;
+	t=1748098449; h=from:subject:date:message-id:to:cc:mime-version:
+	 content-transfer-encoding; bh=7NH8ryW0ZzZ3WLvIkVaP8T3bWJ7q/jL0EKkZ2GHY3Y8=;
+	b=ckd/biK6fQxf6+Bw6OzMDLj6EinNccKv/bLLm3rAXaRk02UjdwLu7cduyXkoKOGE9xAb9s
+	Hov1cR6ijDRY6lav0bNQpWIdRYDfBKjEWIsWj73t8mUe4wxS91GlE4bsqYBnpU41bDDYO4
+	F1vN/6fWtUqRmaqwzrrJHQHRQLantDCNFGUlb10WYgpC2b16u2nJ5ASPZHfxCGR9DIy7gK
+	O4ijAkdRIioDkUMN5teXaSkKdxl0ev/vhtXnsa7w8VDXuo4VWVRgvSTFuPHaOagCx6KiUn
+	XIz6h9vPXZg6zAEkhSPjVPZ6F1tJaYrjLrq+W3uUF+fJe9Hh7gSAy41qj5qzbw==
+From: Mikhail Paulyshka <me@mixaill.net>
+To: Borislav Petkov <bp@alien8.de>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Mikhail Paulyshka <me@mixaill.net>
+Subject: [PATCH v2 1/1] x86/rdrand: disable RDSEED on AMD Cyan Skillfish
+Date: Sat, 24 May 2025 17:53:19 +0300
+Message-ID: <20250524145319.209075-1-me@mixaill.net>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <2525c791.3415.197029d3705.Coremail.sensor1010@163.com>
+X-Last-TLS-Session-Version: TLSv1.3
 
-On Sat, May 24, 2025 at 10:05:47PM +0800, lizhe wrote:
-> Hi， Anerdw
-> The following is the logic for calling this function： 
-> 
-> 
-> rk_gmac_powerup() {
-> 
-> ret = phy_power_on(bsp_priv, true);      // here.
-> 
-> if (ret) {
-> 
-> gmac_clk_enable(bsp_priv, false);
-> 
-> return ret;
-> 
-> }
-> 
-> }
+AMD Cyan Skillfish (Family 17h, Model 47h, Stepping 0h) has an
+error that causes RDSEED to always return 0xffffffff, while RDRAND
+works correctly.
 
-Ah, there is something funny with your patch. Look at the diff:
+This patch masks the RDSEED cap for this CPU so that both
+/proc/cpuinfo and direct CPUID read report RDSEED as unavailable.
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c
-index 700858ff6f7c..036e45be5828 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c
-@@ -1648,7 +1648,7 @@  static int gmac_clk_enable(struct rk_priv_data *bsp_priv, bool enable)
 
-This line tells you where in the file you are patching, and the
-function to be patched. This is what i looked at,
-gmac_clk_enable(). And gmac_clk_enable() has a similar structure, ret
-declared at the beginning, return 0 at the end. But the only way to
-that return 0 is without error.
+v2:
+  * Limit changes to AMD Cyan Skillfish
+  * Replace the runtime RDSEED sanity check with a simple
+    family/model/stepping match
 
-But patch is actually for:
+Signed-off-by: Mikhail Paulyshka <me@mixaill.net>
+---
+ arch/x86/include/asm/msr-index.h       | 1 +
+ arch/x86/kernel/cpu/rdrand.c           | 9 +++++++++
+ tools/arch/x86/include/asm/msr-index.h | 1 +
+ 3 files changed, 11 insertions(+)
 
- static int phy_power_on(struct rk_priv_data *bsp_priv, bool enable)
- {
- 	struct regulator *ldo = bsp_priv->regulator;
--	int ret;
-+	int ret = 0;
- 	struct device *dev = &bsp_priv->pdev->dev;
+diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
+index e7d2f460fcc6..2333f4e7bc2f 100644
+--- a/arch/x86/include/asm/msr-index.h
++++ b/arch/x86/include/asm/msr-index.h
+@@ -624,6 +624,7 @@
+ #define MSR_AMD64_OSVW_STATUS		0xc0010141
+ #define MSR_AMD_PPIN_CTL		0xc00102f0
+ #define MSR_AMD_PPIN			0xc00102f1
++#define MSR_AMD64_CPUID_FN_7		0xc0011002
+ #define MSR_AMD64_CPUID_FN_1		0xc0011004
+ #define MSR_AMD64_LS_CFG		0xc0011020
+ #define MSR_AMD64_DC_CFG		0xc0011022
+diff --git a/arch/x86/kernel/cpu/rdrand.c b/arch/x86/kernel/cpu/rdrand.c
+index eeac00d20926..c474d0a5c317 100644
+--- a/arch/x86/kernel/cpu/rdrand.c
++++ b/arch/x86/kernel/cpu/rdrand.c
+@@ -11,6 +11,7 @@
+ #include <asm/processor.h>
+ #include <asm/archrandom.h>
+ #include <asm/sections.h>
++#include <asm/msr.h>
  
- 	if (enable) {
-@@ -1661,7 +1661,7 @@  static int phy_power_on(struct rk_priv_data *bsp_priv, bool enable)
- 			dev_err(dev, "fail to disable phy-supply\n");
+ /*
+  * RDRAND has Built-In-Self-Test (BIST) that runs on every invocation.
+@@ -47,4 +48,12 @@ void x86_init_rdrand(struct cpuinfo_x86 *c)
+ 		clear_cpu_cap(c, X86_FEATURE_RDSEED);
+ 		pr_emerg("RDRAND is not reliable on this platform; disabling.\n");
  	}
- 
--	return 0;
-+	return ret;
++
++	/* disable RDSEED on AMD Cyan Skillfish because of hw bug */
++	if (c->x86_vendor == X86_VENDOR_AMD && c->x86 == 0x17 &&
++	    c->x86_model == 0x47 && c->x86_stepping == 0x0) {
++		clear_cpu_cap(c, X86_FEATURE_RDSEED);
++		msr_clear_bit(MSR_AMD64_CPUID_FN_7, 18);
++		pr_emerg("RDSEED is not reliable on this platform; disabling.\n");
++	}
  }
+diff --git a/tools/arch/x86/include/asm/msr-index.h b/tools/arch/x86/include/asm/msr-index.h
+index e6134ef2263d..8b48a54b627a 100644
+--- a/tools/arch/x86/include/asm/msr-index.h
++++ b/tools/arch/x86/include/asm/msr-index.h
+@@ -616,6 +616,7 @@
+ #define MSR_AMD64_OSVW_STATUS		0xc0010141
+ #define MSR_AMD_PPIN_CTL		0xc00102f0
+ #define MSR_AMD_PPIN			0xc00102f1
++#define MSR_AMD64_CPUID_FN_7		0xc0011002
+ #define MSR_AMD64_CPUID_FN_1		0xc0011004
+ #define MSR_AMD64_LS_CFG		0xc0011020
+ #define MSR_AMD64_DC_CFG		0xc0011022
+-- 
+2.49.0
 
-And agree, the error codes are ignored in phy_power_on().
-
-But i have a few questions:
-
-How did you generate this diff? This is the first time i've made this
-mistake, as far as i know. I trust the context information when
-reviewing patches. Yet here it is wrong. Why? Is this actually normal?
-I know diff gets it wrong for python, i don't trust it at all with
-that language, but i've not noticed such problems with C.
-
-Did you look at the history of phy_power_on()? It looks pretty
-deliberate ignoring errors. Maybe there is a reason why this happens?
-git blame and git log might explain why it is like this.
-
-	Andrew
