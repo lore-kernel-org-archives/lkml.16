@@ -1,65 +1,66 @@
-Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1D892940B
-	for <linux-kernel@vger.kernel.org>; Sat, 24 May 2025 05:21:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8566B1A3056
+	for <linux-kernel@vger.kernel.org>; Sat, 24 May 2025 05:21:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748064101; cv=none; b=Pu/Fe3ttj2iEU7aho1dxDnSzZliNiWCjafkR1l37W2WGo8MmfPBEHBX8eSBK0k8lScOTIKt257M6CHk87NAWd8bBhNXvTO5Q0brtjnBaJNYu7YU1ab9uOSg5WcBBJHyC1uHaVXOCDzRG2vtnWehu38z+SHsb6qr4DDcrWEs5POQ=
+	t=1748064102; cv=none; b=EydFzX/6dzGKQ3UUzd/yr+d8PIAC281ZO7jfF9r8eQL/i26L7/ARKotZqnXvU4bZzoVu+Fcdb6AjEfPisegiwLuHSyI9znXC5vltYDuErHRJgdvdOzGRmI7Y9enHw4TsKrs/3/Z2XEf/AUeZqV5TidGLCM7cacjjS6PBTuchKc0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748064101; c=relaxed/simple;
-	bh=3aztcBEs5t+8vb2HvoZuOjO3OzbfcifNMPQfFU+/Q0g=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=O18PWi+m7UWRDOIi07Mc+eDQ9ZZCmbfsdE+0jMbAiol49VajukDon+H9yiocd0PTw6mvWfJIJ8cj5roITrF4KCIm4ZqCjGTBgSI7pFvFoua+DTzMsjM0acU0BbpiuURWBaFRcyAQwegqCPsdIiZZOVekxyzUTg6LRGTRgmN+EEo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=eSn4nZ+D; arc=none smtp.client-ip=209.85.208.47
+	s=arc-20240116; t=1748064102; c=relaxed/simple;
+	bh=TpC6PkRugx4epgip2T3sTO52PlSZ3ufOTy2Swc8UlBY=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=eGBuZ+Ys8O5qVD8uHKcE4EBO3U4ikZDtZFyAL5hOaxZjWnEPTJ2rrKWqSphmnVa3/ohjQBgp3k/O5/GaB2c+NSdOGMVECJ0HiDFOHal8JvNG8oKJVFco1B7xisMT7LVXqeReWzrtx2AB2eijHs3zAUPz+sxpoCCJh8rneQrzzBA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=NnynTvV/; arc=none smtp.client-ip=209.85.218.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eSn4nZ+D"
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-602e203db66so517262a12.1
-        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 22:21:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NnynTvV/"
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-ac2bb7ca40bso76139666b.3
+        for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 22:21:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1748064098; x=1748668898; darn=vger.kernel.org;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=HVLgX7oZgKgmp7JBYszc+Lbf8YbgAmX++SIMz1uljwM=;
-        b=eSn4nZ+D1wAIxz51qMcxVy7kmAiMCv0Wmdqdz5/vlhy392XzVhKsdAEg5+f/PDUXAt
-         UAZGgh3UcC5+Fevb0V0gFSZ0FkVam3Ov9VTlbkqhYxGMVakq8g/MivUDWdJblU3+OKTw
-         L7FEmu247ydu3wnXmcHOy4BRzGH/3u6RF/DrOmt05JCwDPaCO++xwRH964HXFH9mnfi5
-         W/r8fZKwv/hbox+6lfBMjtZuM+rMXT7S11P9Kfm5dmK7DPLSaYUURee7hRLKFeY49pU/
-         O4f3bbabLWJFD+jIlkBgFmzbpTxZ3zlGCodaeIv/Zh+5vo2c8Waw30FJo5qwOMh4C/e0
-         egxA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748064098; x=1748668898;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=linaro.org; s=google; t=1748064099; x=1748668899; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=HVLgX7oZgKgmp7JBYszc+Lbf8YbgAmX++SIMz1uljwM=;
-        b=wruKmWMeS+k/igTdLBuPEAhleHyUk7qqULYLbEHjxrLv728NxiHWHkXIrF0SB5DqY4
-         qHGnr9cbuCqPrhxOQ8Nw1odMWHWVv/4tM99YaM8BfwWSMcJ/iUz0nZUW0AQ4cGnPO92c
-         MAXSg5JwpQs55W257k7IgIBk9O++WddoyTyfPNgShh8cGLIUJaKQfcd5coP1C/WdML93
-         tFNG+RJkcEk8TjBg8EZum21zScuLJCNS2ryBJtZi8S0ilC0IyyVVm4bNYFvht5Umz/Q4
-         22LD7tmI2fz+doXhO2ajRDC+u0BLDqeIKL2SEEyPF+eu0TsdLFPKejWMZyl/VmE9jLW6
-         00PA==
-X-Forwarded-Encrypted: i=1; AJvYcCWk8WtVh2/MVmer6vARQ3JwCqTL9hohtFb6L1MRk9/cb0Y0W5fB/JnNS1oJlu+2mUrZ+IrJpv3htXmaCXw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz3aanv5jsGO3HiCsNeVSzXlQJBo9dhtAWfLwsny+pcZHj52COD
-	l7KyrPT16hRjK7F1OmdDVR4Q5qylRUqe5duXlWgd0UyXbtjWdY42TCCaGdKMG4aDz5A=
-X-Gm-Gg: ASbGnct6Y69bZi7Eab/qcAckywlSLg+xUny5cveHyro0nPs/Sclc1f/1uwMUQi9lsCj
-	uEM/qcv+y9Uh215x6klvSlULE6aJ5X6S5wGEcY1ggpd8ULDUxw4K3XFtE9Bobsj21YT9NW3GNay
-	3b2isODszcsVVe1lfj+HTdewNKVV7kobjIj8ZsYIKl+kdpaWDMva26ASwHcTHB/bTUszosMgAyw
-	SbtvxhX88xIUoxItr8F3b1lpaCS6SNs4s8bwEXZIeBsezoKvbYOmp1PU6GIeW9/k/f0zH8bwWr6
-	QgO0Z7AV+TXlrVJzmeyDGufkeU6wsN1OrLskriKUryaUclDFQcu6gwEv+zJk/OkKbHu+NwTUT6n
-	4YTIRjNqbYvcjX/x5JjWJwQyPMl9k19lrF0c=
-X-Google-Smtp-Source: AGHT+IFwfRfCw7b+i30fDVsYjamnwABVc4tlq1MkutzLjfaI4FhpNhFaGTjcBmSVXr0eujU+xxYGNA==
-X-Received: by 2002:a17:907:9688:b0:ad5:7499:2644 with SMTP id a640c23a62f3a-ad85b2a4f94mr135383166b.54.1748064097988;
-        Fri, 23 May 2025 22:21:37 -0700 (PDT)
+        bh=PQMgvnHl/e3juDL0qxGSaY3LA5gtsGQ7YiUwPKjqwnE=;
+        b=NnynTvV/woIm2fjCJupZGsLCcjr533lZ4S3Qpeg7xhom3Gqs0j3YIKIbvMVXxcsntk
+         Rxs37eIoZtCxuqS4Qi3BEfCbcZOpoWldwd8QZegjL0KOOXzjXJ4/EiBeqT4qKEMuaWt+
+         817RW/048KTkjy+jlDJcoR4asFMBj0l+oKLugbPWqkyrBsMOszrlKsFiGOgdXsC9a+Kh
+         g2FwEanIXwI5J5kjpH1gpAQtiY07XXbaSnmPBxPsMpiXVcS4SfEmcLQIhJqvDyT2JPCT
+         +vBjdjP46dUyE/LvknZuy0U1FiF4jxTGcfLcegpVXnHFnpFxTHWgweBkRo4tZqMah1GW
+         t5eQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748064099; x=1748668899;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=PQMgvnHl/e3juDL0qxGSaY3LA5gtsGQ7YiUwPKjqwnE=;
+        b=NR34g/oWprxx3PojZlOTGjuKL8EE5SeGMFi2bBDRzfPqT0LBtaL5SVc3qP+rWTdq9/
+         a/aKCb/t1I57U4ebm2u5oKrJiHF9h2dj3bBJRb+FFcArd+82D+psX0dxF4XNbC4TmFL6
+         OU8mNg3ZwBb8dMjqc+7cJelSsp8ihgsDPsPX9IJuncAx577eBDDFtJIq9KvSpkwX+yv7
+         d7UqUn3inUZ7rZhiyuxSHkxBhEw4DjjMK4dwdodkoWlPk5ljTyfRr9V3rVoDgFuvfRSq
+         kxXIDfwjvtQ8FHysf1rqpsvqpeodeI+oiWkZGKHDjO48SysfA4pR8YrnOmVBz92DBDrI
+         KtDg==
+X-Forwarded-Encrypted: i=1; AJvYcCXpGiEGpizaRzKrmQaTpiCgCsjTq/6L9vuDrOSLlmuUZ4NBl9RlnXEJpsSELXWcZ6BfbbBdDvv5wguBBBU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YybwFrfwnug4YNpdQOqrWsHrBH/wsNfbbTWCS9vQf/gO6MResPw
+	CLX5fQ4htqUZrNZcHwwysKh4Dd/HLysTtLLGOmJnZ/NvhFRm83omt7DgoDtgZltw8kg=
+X-Gm-Gg: ASbGncsItzZdaqT0goKK7jcd3B8BAHknwUiWMF9+o45iXARc5U1WQF42ADr3NFIS8Im
+	rZMKnmYYaxvYYlGcZVY9ytbPUdvqwaXJ0Zz5Yzd+4lMW8/4prxcIvoUXLpPtwJrQFNBaIh0kXHC
+	pU6oubmVMLblzTTLy3ux0mwmX5oTzPKwtaDY3QQzHZYd4GV/KR7soLic/3lCvtrK8AneMnNu9wB
+	DLpxS5/oXRSEtbMmQ/rlh6RVMN0HuF1kWWN8p7Vl5ktufTe+JSlQ1jArUgCHjcFeQxpEN5aQNg8
+	MU0RR1kuyqRu79dtXEk750VWz3r5wR+0zfemo8z5+Q6zAM/q6isP6PJzvi/qDoWYwc9CcyvocuE
+	m35Ku8SH213XWSew5enSFQdeKA/MKAzk3IllxySlbU4mGVQ==
+X-Google-Smtp-Source: AGHT+IHXaAPaMnNiBFZlXKcRr+qFufWpMyOC01eMRk+Jpj8a7drQ0LfzI9zmQlfsyWsV8hXXiHulVQ==
+X-Received: by 2002:a17:906:6a29:b0:ad5:3055:784d with SMTP id a640c23a62f3a-ad85b1300dbmr126184266b.34.1748064098471;
+        Fri, 23 May 2025 22:21:38 -0700 (PDT)
 Received: from puffmais.c.googlers.com (68.57.204.35.bc.googleusercontent.com. [35.204.57.68])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad5572f6402sm1106778066b.178.2025.05.23.22.21.37
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad5572f6402sm1106778066b.178.2025.05.23.22.21.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 May 2025 22:21:37 -0700 (PDT)
+        Fri, 23 May 2025 22:21:38 -0700 (PDT)
 From: =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
-Subject: [PATCH v2 0/4] gs101 max77759 enablement (DT)
-Date: Sat, 24 May 2025 06:21:27 +0100
-Message-Id: <20250524-b4-max77759-mfd-dts-v2-0-b479542eb97d@linaro.org>
+Date: Sat, 24 May 2025 06:21:28 +0100
+Subject: [PATCH v2 1/4] arm64: defconfig: enable Maxim max77759 driver
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,11 +69,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-B4-Tracking: v=1; b=H4sIAFdXMWgC/32NQQ6CMBBFr0Jm7ZhSpBRX3sOwoHQKkwg1LSEY0
- rtbOYDL95L//gGRAlOEe3FAoI0j+yWDvBQwTP0yErLNDFLIWlRCobnh3O9N09Qtzs6iXSM6o7V
- RgzJWCcjLdyDH+1l9dpknjqsPn/NkK3/2f28rUWDrSBtBRpeyerx46YO/+jBCl1L6AjRlJpK3A
- AAA
-X-Change-ID: 20250306-b4-max77759-mfd-dts-fb88b6c6bd60
+Message-Id: <20250524-b4-max77759-mfd-dts-v2-1-b479542eb97d@linaro.org>
+References: <20250524-b4-max77759-mfd-dts-v2-0-b479542eb97d@linaro.org>
+In-Reply-To: <20250524-b4-max77759-mfd-dts-v2-0-b479542eb97d@linaro.org>
 To: Catalin Marinas <catalin.marinas@arm.com>, 
  Will Deacon <will@kernel.org>, Peter Griffin <peter.griffin@linaro.org>, 
  Tudor Ambarus <tudor.ambarus@linaro.org>, Rob Herring <robh@kernel.org>, 
@@ -84,40 +83,30 @@ Cc: Will McVicker <willmcvicker@google.com>, kernel-team@android.com,
  =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
 X-Mailer: b4 0.14.2
 
-Hi,
+Enable the Maxim max77759 as this is used by the gs101-oriole and
+gs101-raven (Google Pixel 6 and Pixel 6 Pro) boards,
 
-This series enables the recently merged Maxim max77759 driver and
-updates the DT for the Google Pixel 6 / Pro (oriole / raven) boards
-accordingly.
-
-This gives us some extra GPIOs, and enables NVMEM which is used to
-communicate the requested boot mode to the bootloader when doing a cold
-reset.
+The child devices' defaults are based on this MFD driver's state, so
+this commit enables those implicitly as well.
 
 Signed-off-by: André Draszik <andre.draszik@linaro.org>
 ---
-Changes in v2:
-- rebase against next-20250516
-- add dm-verity-device-corrupted to reboot-mode (nvmem & syscon)
-- update commit messages slightly
-- Link to v1: https://lore.kernel.org/r/20250306-b4-max77759-mfd-dts-v1-0-9fe8b0eb8123@linaro.org
+ arch/arm64/configs/defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
----
-André Draszik (4):
-      arm64: defconfig: enable Maxim max77759 driver
-      arm64: dts: exynos: gs101-pixel-common: add Maxim MAX77759 PMIC
-      arm64: dts: exynos: gs101-pixel-common: add nvmem-reboot-mode
-      arm64: dts: exynos: gs101: add dm-verity-device-corrupted syscon-reboot-mode
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index 1f3fd474911b7ab1aa75dc72d42614f12b2dfc54..07e5e76edcbd3fcc4358d08663f51cca00acd49c 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -769,6 +769,7 @@ CONFIG_MFD_EXYNOS_LPASS=m
+ CONFIG_MFD_HI6421_PMIC=y
+ CONFIG_MFD_HI655X_PMIC=y
+ CONFIG_MFD_MAX77620=y
++CONFIG_MFD_MAX77759=m
+ CONFIG_MFD_MT6360=y
+ CONFIG_MFD_MT6397=y
+ CONFIG_MFD_SPMI_PMIC=y
 
- .../boot/dts/exynos/google/gs101-pixel-common.dtsi | 76 ++++++++++++++++++++++
- arch/arm64/boot/dts/exynos/google/gs101.dtsi       |  1 +
- arch/arm64/configs/defconfig                       |  1 +
- 3 files changed, 78 insertions(+)
----
-base-commit: 8566fc3b96539e3235909d6bdda198e1282beaed
-change-id: 20250306-b4-max77759-mfd-dts-fb88b6c6bd60
-
-Best regards,
 -- 
-André Draszik <andre.draszik@linaro.org>
+2.49.0.1151.ga128411c76-goog
 
