@@ -1,684 +1,194 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DA5BDDBC;
-	Sun, 25 May 2025 08:14:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6157C2EAE5
+	for <linux-kernel@vger.kernel.org>; Sun, 25 May 2025 08:28:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748160843; cv=none; b=SLRYWPptZ0X6TTJI773oOYz7Bra2JAueryDsESDfSWIK9mcAf2KcYqgHeEC+adpAGJ2tNUNLELyGTkomcRsE0djTeUYA5lG34FM4wGGvVn9kbC2OU78aAkmBILgGVgZk99T6c3eY9aUPLoa91kjprhBWQ4qru2AMi9/y4AymKKQ=
+	t=1748161704; cv=none; b=G3v4d4oq3rLHCAGUbs9WUlTRgoYnd2s/DrMFFTgx7IrBAYEck2F1aOhtwUhmQ3lrQBQRq2nyIlocDA09uzmlzMm8PbBrzlSWijTP6ogAQK4xz2SXVIQRmJUsnuh14dlV/MI1179oR/8TNS2ygudq/Fsy6nQVrR+VfvkMDIudutk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748160843; c=relaxed/simple;
-	bh=dIPRMd2IlvGlOKnlln67L0v0VbURlJGuDCWunk9jrHs=;
-	h=Date:From:To:Subject:Cc:MIME-Version:Message-ID:Content-Type; b=DIA3uVYSuT4WNTTVQ8R4Fknq297j56uXMk4GppoC6TsGgRjdwc0f8MvuE9oxZIU3DYN27yN4cdeqNZtJ7evpCLhQzEucaobQiluKGZpBti1Q/SldRLNfut32Bo1FpQ+N+9hiB9gyTfInpHYhLYh9BqIascYnto0S0V5SPUOdhRI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=iPtKQ2Pj; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=dZtRMIvK; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1748161704; c=relaxed/simple;
+	bh=ejp4wm01HVYCSmFMOQbnLtRgrnY0ZvRQ2FFm4BrYP8g=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=b98s6cfEImAkLl3U3VCDOPYXFXg9YFp3uVLOW5UNvegOdJ8vnqIFrCSOTsTz0gb4p0n9/PTnOAjsvnITuE5BpGrn7bhzcvZkTvQ7NtOIiS0pK1zr5G22NA3qaX2YgVrsj+azeoLHY0wahXVaIbT0noj7u1Qj6xSxHqXfjMOdRBQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GhosYu4F; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="iPtKQ2Pj";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="dZtRMIvK"
-Date: Sun, 25 May 2025 08:13:52 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1748160833;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
-	bh=lIbaSQI+wJjPQgsiBf8Bm9Ofyn63M/0Na2ZbMuoJQsg=;
-	b=iPtKQ2Pjnr8hhzEyF5827pt4gHMuWmJ7OBE5roPiliLA9gIeCQCy4biBEzqcbTAbvLXG2q
-	ZeRDMFaILNF8QLqM3dSaj4DmMMbHZnVy3KH/z/vZYfhFl0Mz8rJ/e/io+cr4M4+w929IMC
-	VlU8rCqu+n4zOJULrHu17Ckkqp/wClMrJPghJx2TWmKbrZMWvzt+ECBy053h0KJIbQzofa
-	MeW2lD1uNZaajeDAC18r+oK9qDl38J/OsKkU10GnO9aMKeM0cAfJzD5sDyAQC86D1+TC8i
-	WO7AZRZRyT4y5b4vtWJnfOa8GPvSHKAGDP5ewDtF/riKmi7GUbHDdFmTULqUrg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1748160833;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
-	bh=lIbaSQI+wJjPQgsiBf8Bm9Ofyn63M/0Na2ZbMuoJQsg=;
-	b=dZtRMIvKpeqTyG4XLAdra7PSfzazLHIBP6GwhD5bXRdyeCWHoHZ1HwMNYBvaO2Vc04se7Z
-	Z6IckJBb6TpTVKCA==
-From: "tip-bot2 for Ingo Molnar" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] perf/headers: Clean up <linux/perf_event.h> a bit
-Cc: Peter Zijlstra <peterz@infradead.org>,
- Arnaldo Carvalho de Melo <acme@redhat.com>, Jiri Olsa <jolsa@redhat.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Mark Rutland <mark.rutland@arm.com>, Namhyung Kim <namhyung@kernel.org>,
- Ian Rogers <irogers@google.com>, linux-kernel@vger.kernel.org,
- Ingo Molnar <mingo@kernel.org>, x86@kernel.org
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GhosYu4F"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-231e8553248so8531905ad.1
+        for <linux-kernel@vger.kernel.org>; Sun, 25 May 2025 01:28:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748161702; x=1748766502; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=NtGixB0M/1PSb+BQwspOVAOu3wyv8hN39n5BBlGoJHY=;
+        b=GhosYu4Fomav7c1Gdr887PwPhH2EhRIYmNIH5N8LUUYpt/MpOzJbDggnQXYdOq5Stw
+         dNJ3T53Do8VL7Ln797QN94VdRsOS3JXo3bE2wmzyIbMpbVI88axwMnNVaMzyduzyaoW/
+         TgV58m7a7tVRfpSEWW6M5hBDU0oCPM6K8ivJyr2H6gevowseUuFluG2WG7rPf6gU+3iB
+         5Jx+N3DgjNdPfVPK4J0mxCE9Gs0Q/M1T7noeu8XRCgCeNSB3jZhaObc45k5a2e5DfuhZ
+         RX0yit46U/refj42P2lr5atwDuuXhrMw+rm7nWErdyPnXcdOTuZAfFe92nTvvpr316X9
+         rKbQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748161702; x=1748766502;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=NtGixB0M/1PSb+BQwspOVAOu3wyv8hN39n5BBlGoJHY=;
+        b=Clq9Ge2WJUYg0NB0u1ynT9LhkiTeppB2oht4CTfLtIfP3nrxFiBRNdDAWtw8sFMz6F
+         jAhY1GAxFgsparP4hvRYEbPWZ80R+jziFTLx/PFRrVmq5l/eGPwcvloXNK5cwY2DkwyP
+         YGU4Dxc9Wkz/TPPvVlPX+4wh3/cqSS/BsgCD9WEPBp1G9fzAfsqP+CV89Y68R3SaQRNf
+         VwsttqpnFyxFcl9fk1GEOBfsujqXHQTDY6eK9Gt1rbJ6PWZs6RDTMmAHFxc5euwpiNL+
+         PsT9OepKeUl+CFHm7f5hUxY3ureSeGzHFcSQkHkC/EjsVooOdVjOQz1oxDwiRFJP6QTg
+         e3PA==
+X-Gm-Message-State: AOJu0YyQ4rSmeDnUtXcdjfxvuSO7q4QsMDrYY9+yUJrTwPTrHzh/6S5m
+	0ZTWKe/khSVo7EHy6+Mehsp8u33Z7s7HmHnk4SP2BoXodWqrGScU42/h
+X-Gm-Gg: ASbGncuIdIQWuJsTob1eLDMPZIxGIx11rtKKpu+OST5gT0nJ/eKCgopA/R50Zg6w/Jh
+	f+U3d+dCiAutpYEci+y493zLiA3Atwy0JmzrvBoHR5Isobf3b5lqq/Y5rvBpGcnpWFej/naEld/
+	QFVfpcVR9KvBCeeLKP46HtRVkd7aOseK5woQJhw/CbfDYpw1qn5GYYsTSvLj9gBWjlBGBo4oQcf
+	KdK9BfUsHDhbOhQ5fgNX8vYVT73DR7tLEUGpHuHL253E1sFAIHhMRoVPBh9Ga1qdqcH8mu+X+lz
+	LOCmSMAloqK4Y/mWv41zdkjNlild/GdvAucitdE3kDW0v4+7qcwD1CQ26F8h
+X-Google-Smtp-Source: AGHT+IH+qm8sck6Xp62W24+76yybHMHIiXub7Bssfme5oiO0SDK0QOl9MxpJ1K8xKy9krpgH5yzf4Q==
+X-Received: by 2002:a17:903:19f0:b0:224:10a2:cae7 with SMTP id d9443c01a7336-23414fb2509mr93389715ad.40.1748161702464;
+        Sun, 25 May 2025 01:28:22 -0700 (PDT)
+Received: from [127.0.1.1] ([221.239.193.52])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-234221f8b06sm18716465ad.161.2025.05.25.01.28.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 25 May 2025 01:28:21 -0700 (PDT)
+From: Stephen Eta Zhou <stephen.eta.zhou@gmail.com>
+Date: Sun, 25 May 2025 16:28:16 +0800
+Subject: [PATCH v5] clocksource: timer-sp804: Fix read_current_timer()
+ issue when clock source is not registered
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174816083204.406.14746906241136194554.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Message-Id: <20250525-sp804-fix-read_current_timer-v5-1-49b64c77a7a6@gmail.com>
+X-B4-Tracking: v=1; b=H4sIAJ/UMmgC/32OywrCMBREf6VkbSRpEhtc+R9SSkyv7QX78CYtS
+ um/GyvizuUZhjmzsACEENgxWxjBjAGHPoHZZcy3rm+AY52Y5SI3QkvJw2iF5ld8cAJXV34igj5
+ WETsgLn3hjdPa+oNnaWIkSM1t/lx+mOA+JUv8hS2GONBzuzCrd/q16f+2WXHJjboosKIupFWnp
+ nN42/uhY+W6ri9MSxEC3QAAAA==
+X-Change-ID: 20250411-sp804-fix-read_current_timer-1c7c5a448c6c
+To: Daniel Lezcano <daniel.lezcano@linaro.org>, 
+ Thomas Gleixner <tglx@linutronix.de>
+Cc: linux-kernel@vger.kernel.org, 
+ Stephen Eta Zhou <stephen.eta.zhou@gmail.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1748161700; l=3828;
+ i=stephen.eta.zhou@gmail.com; s=20250411; h=from:subject:message-id;
+ bh=ejp4wm01HVYCSmFMOQbnLtRgrnY0ZvRQ2FFm4BrYP8g=;
+ b=JJm8AQYEpTYdo9BUZcaRnE0Z522bzD8TiV7Q7vliXE/f9VVK5jkbCgd+XZ8sZ4DH8p9qlHubh
+ ESx2+GxcaVaB081u7O9Y5gajnjzt9YGSwzoDKDEbIVaVqKQhOr5ycGe
+X-Developer-Key: i=stephen.eta.zhou@gmail.com; a=ed25519;
+ pk=JMRa8Po5ykvp3C9lVKJCeZ9BuRW6xWwa0Sj4KqnLoOk=
 
-The following commit has been merged into the perf/core branch of tip:
+Register a valid read_current_timer() function for the
+SP804 timer on ARM32.
 
-Commit-ID:     e7d952cc39fca34386ec9f15f68cb2eaac01b5ae
-Gitweb:        https://git.kernel.org/tip/e7d952cc39fca34386ec9f15f68cb2eaac01b5ae
-Author:        Ingo Molnar <mingo@kernel.org>
-AuthorDate:    Sat, 24 May 2025 11:23:25 +02:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Sun, 25 May 2025 09:51:56 +02:00
+On ARM32 platforms, when the SP804 timer is selected as the clocksource,
+the driver does not register a valid read_current_timer() function.
+As a result, features that rely on this API—such as rdseed—consistently
+return incorrect values.
 
-perf/headers: Clean up <linux/perf_event.h> a bit
+To fix this, a delay_timer structure is registered during the SP804
+driver's initialization. The read_current_timer() function is implemented
+using the existing sp804_read() logic, and the timer frequency is reused
+from the already-initialized clocksource.
 
-Do a bit of readability spring cleaning:
-
- - Fix misaligned structure member in perf_addr_filter: the new
-   struct perf_addr_filter::action member was too long, but when
-   it was added it was not aligned properly. Align all fields to
-   the customary column 41 alignment of most of the rest of the
-   header.
-
- - Adjust the vertical alignment of the definition of other
-   structures and definitions as well, so that the 'most of' in
-   the previous paragraph changes to 'all of'. ;-)
-
- - Prettify the assignments in perf_clear_branch_entry_bitfields()
-
- - Move comments from CPP definitions to outside the macro
-
- - Move perf_guest_info_callbacks and related defines from the front
-   of the header closer to where it's used within the header.
-
- - And more #endif markers for larger CPP blocks and standardize
-   #if/#else/#endif blocks to the following nomenclature:
-
-	#ifdef CONFIG_FOO
-	...
-	#else /* !CONFIG_FOO: */
-	...
-	#endif /* !CONFIG_FOO */
-
- - Standardize on consistently using the 'extern' storage class where
-   appropriate, we had cases where method prototypes sometimes omitted
-   the storage class:
-
-	extern void perf_pmu_migrate_context(struct pmu *pmu,
-					int src_cpu, int dst_cpu);
-	int perf_event_read_local(struct perf_event *event, u64 *value,
-				  u64 *enabled, u64 *running);
-	extern u64 perf_event_read_value(struct perf_event *event,
-					 u64 *enabled, u64 *running);
-
-   Which is obviously a bit confusing and adds unnecessary noise.
-
- - s/__u64/u64 and similar cleanups: there's no point in using __u64
-   in non-UAPI headers, and doing so only adds unnecessary visual noise.
-
- - Harmonize all multi-parameter function prototypes along the following
-   style:
-
-	extern struct perf_event *
-	perf_event_create_kernel_counter(struct perf_event_attr *attr,
-					 int cpu,
-					 struct task_struct *task,
-					 perf_overflow_handler_t callback,
-					 void *context);
- - etc.
-
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Ian Rogers <irogers@google.com>
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Stephen Eta Zhou <stephen.eta.zhou@gmail.com>
 ---
- include/linux/perf_event.h | 282 +++++++++++++++++++-----------------
- 1 file changed, 155 insertions(+), 127 deletions(-)
+Changes in v4:
+- Dropped redundant `delay.freq = rate;` assignment in `sp804_clocksource_and_sched_clock_init()`
+- Dropped redundant `delay.read_current_timer` and `register_current_timer_delay()` lines in `sp804_of_init()`
+- No functional changes to the driver logic; these lines were unnecessary as per Daniel's feedback.
+- Link to v3: https://lore.kernel.org/all/20250414-sp804-fix-read_current_timer-v3-1-53b3e80d7183@gmail.com
 
-diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-index a96c00e..52dc7cf 100644
---- a/include/linux/perf_event.h
-+++ b/include/linux/perf_event.h
-@@ -26,18 +26,9 @@
- # include <asm/local64.h>
- #endif
+Changes in v3:
+- Updated the commit message for clarity and structure
+- Link to v2: https://lore.kernel.org/all/BYAPR12MB3205D7A2BAA2712C89E03C4FD5D42@BYAPR12MB3205.namprd12.prod.outlook.com
+
+Changes in v2:
+- Added static keyword to struct delay_timer delay
+- Integrate sp804_read_delay_timer_read and
+  struct delay_timer delay together
+- I moved the acquisition of delay.freq to
+  sp804_clocksource_and_sched_clock_init.
+  sp804_clocksource_and_sched_clock_init has already
+  acquired and judged freq, so I can use it directly,
+  and in this way I don’t need to consider whether to
+  use clk1 or clk2, which can ensure that the clock source
+  is available and reliable.
+- Added detailed description information in Commit
+- Link to v1: https://lore.kernel.org/all/BYAPR12MB3205C9C87EB560CA0CC4984BD5FB2@BYAPR12MB3205.namprd12.prod.outlook.com
+---
+ drivers/clocksource/timer-sp804.c | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
+
+diff --git a/drivers/clocksource/timer-sp804.c b/drivers/clocksource/timer-sp804.c
+index cd1916c0532507fb3ce7a11bfab4815906e326d5..e82a95ea472478ae096b2bf7abea0d65a7bca480 100644
+--- a/drivers/clocksource/timer-sp804.c
++++ b/drivers/clocksource/timer-sp804.c
+@@ -21,6 +21,10 @@
+ #include <linux/of_irq.h>
+ #include <linux/sched_clock.h>
  
--#define PERF_GUEST_ACTIVE	0x01
--#define PERF_GUEST_USER	0x02
--
--struct perf_guest_info_callbacks {
--	unsigned int			(*state)(void);
--	unsigned long			(*get_ip)(void);
--	unsigned int			(*handle_intel_pt_intr)(void);
--};
--
- #ifdef CONFIG_HAVE_HW_BREAKPOINT
--#include <linux/rhashtable-types.h>
--#include <asm/hw_breakpoint.h>
-+# include <linux/rhashtable-types.h>
-+# include <asm/hw_breakpoint.h>
- #endif
- 
- #include <linux/list.h>
-@@ -62,19 +53,20 @@ struct perf_guest_info_callbacks {
- #include <linux/security.h>
- #include <linux/static_call.h>
- #include <linux/lockdep.h>
++#ifdef CONFIG_ARM
++#include <linux/delay.h>
++#endif
 +
- #include <asm/local.h>
+ #include "timer-sp.h"
  
- struct perf_callchain_entry {
--	__u64				nr;
--	__u64				ip[]; /* /proc/sys/kernel/perf_event_max_stack */
-+	u64				nr;
-+	u64				ip[]; /* /proc/sys/kernel/perf_event_max_stack */
- };
- 
- struct perf_callchain_entry_ctx {
--	struct perf_callchain_entry *entry;
--	u32			    max_stack;
--	u32			    nr;
--	short			    contexts;
--	bool			    contexts_maxed;
-+	struct perf_callchain_entry	*entry;
-+	u32				max_stack;
-+	u32				nr;
-+	short				contexts;
-+	bool				contexts_maxed;
- };
- 
- typedef unsigned long (*perf_copy_f)(void *dst, const void *src,
-@@ -121,8 +113,8 @@ static __always_inline bool perf_raw_frag_last(const struct perf_raw_frag *frag)
-  * already stored in age order, the hw_idx should be 0.
-  */
- struct perf_branch_stack {
--	__u64				nr;
--	__u64				hw_idx;
-+	u64				nr;
-+	u64				hw_idx;
- 	struct perf_branch_entry	entries[];
- };
- 
-@@ -132,10 +124,10 @@ struct task_struct;
-  * extra PMU register associated with an event
-  */
- struct hw_perf_event_extra {
--	u64		config;	/* register value */
--	unsigned int	reg;	/* register address or index */
--	int		alloc;	/* extra register already allocated */
--	int		idx;	/* index in shared_regs->regs[] */
-+	u64				config;	/* register value */
-+	unsigned int			reg;	/* register address or index */
-+	int				alloc;	/* extra register already allocated */
-+	int				idx;	/* index in shared_regs->regs[] */
- };
- 
- /**
-@@ -144,8 +136,8 @@ struct hw_perf_event_extra {
-  * PERF_EVENT_FLAG_ARCH bits are reserved for architecture-specific
-  * usage.
-  */
--#define PERF_EVENT_FLAG_ARCH			0x0fffffff
--#define PERF_EVENT_FLAG_USER_READ_CNT		0x80000000
-+#define PERF_EVENT_FLAG_ARCH		0x0fffffff
-+#define PERF_EVENT_FLAG_USER_READ_CNT	0x80000000
- 
- static_assert((PERF_EVENT_FLAG_USER_READ_CNT & PERF_EVENT_FLAG_ARCH) == 0);
- 
-@@ -227,9 +219,14 @@ struct hw_perf_event {
- /*
-  * hw_perf_event::state flags; used to track the PERF_EF_* state.
-  */
--#define PERF_HES_STOPPED	0x01 /* the counter is stopped */
--#define PERF_HES_UPTODATE	0x02 /* event->count up-to-date */
--#define PERF_HES_ARCH		0x04
-+
-+/* the counter is stopped */
-+#define PERF_HES_STOPPED		0x01
-+
-+/* event->count up-to-date */
-+#define PERF_HES_UPTODATE		0x02
-+
-+#define PERF_HES_ARCH			0x04
- 
- 	int				state;
- 
-@@ -278,7 +275,7 @@ struct hw_perf_event {
- 	 */
- 	u64				freq_time_stamp;
- 	u64				freq_count_stamp;
--#endif
-+#endif /* CONFIG_PERF_EVENTS */
- };
- 
- struct perf_event;
-@@ -287,29 +284,33 @@ struct perf_event_pmu_context;
- /*
-  * Common implementation detail of pmu::{start,commit,cancel}_txn
-  */
--#define PERF_PMU_TXN_ADD  0x1		/* txn to add/schedule event on PMU */
--#define PERF_PMU_TXN_READ 0x2		/* txn to read event group from PMU */
-+
-+/* txn to add/schedule event on PMU */
-+#define PERF_PMU_TXN_ADD		0x1
-+
-+/* txn to read event group from PMU */
-+#define PERF_PMU_TXN_READ		0x2
- 
- /**
-  * pmu::capabilities flags
-  */
--#define PERF_PMU_CAP_NO_INTERRUPT		0x0001
--#define PERF_PMU_CAP_NO_NMI			0x0002
--#define PERF_PMU_CAP_AUX_NO_SG			0x0004
--#define PERF_PMU_CAP_EXTENDED_REGS		0x0008
--#define PERF_PMU_CAP_EXCLUSIVE			0x0010
--#define PERF_PMU_CAP_ITRACE			0x0020
--#define PERF_PMU_CAP_NO_EXCLUDE			0x0040
--#define PERF_PMU_CAP_AUX_OUTPUT			0x0080
--#define PERF_PMU_CAP_EXTENDED_HW_TYPE		0x0100
--#define PERF_PMU_CAP_AUX_PAUSE			0x0200
--#define PERF_PMU_CAP_AUX_PREFER_LARGE		0x0400
-+#define PERF_PMU_CAP_NO_INTERRUPT	0x0001
-+#define PERF_PMU_CAP_NO_NMI		0x0002
-+#define PERF_PMU_CAP_AUX_NO_SG		0x0004
-+#define PERF_PMU_CAP_EXTENDED_REGS	0x0008
-+#define PERF_PMU_CAP_EXCLUSIVE		0x0010
-+#define PERF_PMU_CAP_ITRACE		0x0020
-+#define PERF_PMU_CAP_NO_EXCLUDE		0x0040
-+#define PERF_PMU_CAP_AUX_OUTPUT		0x0080
-+#define PERF_PMU_CAP_EXTENDED_HW_TYPE	0x0100
-+#define PERF_PMU_CAP_AUX_PAUSE		0x0200
-+#define PERF_PMU_CAP_AUX_PREFER_LARGE	0x0400
- 
- /**
-  * pmu::scope
-  */
- enum perf_pmu_scope {
--	PERF_PMU_SCOPE_NONE	= 0,
-+	PERF_PMU_SCOPE_NONE = 0,
- 	PERF_PMU_SCOPE_CORE,
- 	PERF_PMU_SCOPE_DIE,
- 	PERF_PMU_SCOPE_CLUSTER,
-@@ -393,11 +394,21 @@ struct pmu {
- 	 * Flags for ->add()/->del()/ ->start()/->stop(). There are
- 	 * matching hw_perf_event::state flags.
- 	 */
--#define PERF_EF_START	0x01		/* start the counter when adding    */
--#define PERF_EF_RELOAD	0x02		/* reload the counter when starting */
--#define PERF_EF_UPDATE	0x04		/* update the counter when stopping */
--#define PERF_EF_PAUSE	0x08		/* AUX area event, pause tracing */
--#define PERF_EF_RESUME	0x10		/* AUX area event, resume tracing */
-+
-+/* start the counter when adding    */
-+#define PERF_EF_START			0x01
-+
-+/* reload the counter when starting */
-+#define PERF_EF_RELOAD			0x02
-+
-+/* update the counter when stopping */
-+#define PERF_EF_UPDATE			0x04
-+
-+/* AUX area event, pause tracing */
-+#define PERF_EF_PAUSE			0x08
-+
-+/* AUX area event, resume tracing */
-+#define PERF_EF_RESUME			0x10
- 
- 	/*
- 	 * Adds/Removes a counter to/from the PMU, can be done inside a
-@@ -596,10 +607,10 @@ enum perf_addr_filter_action_t {
-  * This is a hardware-agnostic filter configuration as specified by the user.
-  */
- struct perf_addr_filter {
--	struct list_head	entry;
--	struct path		path;
--	unsigned long		offset;
--	unsigned long		size;
-+	struct list_head		entry;
-+	struct path			path;
-+	unsigned long			offset;
-+	unsigned long			size;
- 	enum perf_addr_filter_action_t	action;
- };
- 
-@@ -614,14 +625,14 @@ struct perf_addr_filter {
-  * bundled together; see perf_event_addr_filters().
-  */
- struct perf_addr_filters_head {
--	struct list_head	list;
--	raw_spinlock_t		lock;
--	unsigned int		nr_file_filters;
-+	struct list_head		list;
-+	raw_spinlock_t			lock;
-+	unsigned int			nr_file_filters;
- };
- 
- struct perf_addr_filter_range {
--	unsigned long		start;
--	unsigned long		size;
-+	unsigned long			start;
-+	unsigned long			size;
- };
- 
- /**
-@@ -669,24 +680,24 @@ struct swevent_hlist {
- 	struct rcu_head			rcu_head;
- };
- 
--#define PERF_ATTACH_CONTEXT	0x0001
--#define PERF_ATTACH_GROUP	0x0002
--#define PERF_ATTACH_TASK	0x0004
--#define PERF_ATTACH_TASK_DATA	0x0008
--#define PERF_ATTACH_GLOBAL_DATA	0x0010
--#define PERF_ATTACH_SCHED_CB	0x0020
--#define PERF_ATTACH_CHILD	0x0040
--#define PERF_ATTACH_EXCLUSIVE	0x0080
--#define PERF_ATTACH_CALLCHAIN	0x0100
--#define PERF_ATTACH_ITRACE	0x0200
-+#define PERF_ATTACH_CONTEXT		0x0001
-+#define PERF_ATTACH_GROUP		0x0002
-+#define PERF_ATTACH_TASK		0x0004
-+#define PERF_ATTACH_TASK_DATA		0x0008
-+#define PERF_ATTACH_GLOBAL_DATA		0x0010
-+#define PERF_ATTACH_SCHED_CB		0x0020
-+#define PERF_ATTACH_CHILD		0x0040
-+#define PERF_ATTACH_EXCLUSIVE		0x0080
-+#define PERF_ATTACH_CALLCHAIN		0x0100
-+#define PERF_ATTACH_ITRACE		0x0200
- 
- struct bpf_prog;
- struct perf_cgroup;
- struct perf_buffer;
- 
- struct pmu_event_list {
--	raw_spinlock_t		lock;
--	struct list_head	list;
-+	raw_spinlock_t			lock;
-+	struct list_head		list;
- };
- 
- /*
-@@ -696,12 +707,12 @@ struct pmu_event_list {
-  * disabled is sufficient since it will hold-off the IPIs.
-  */
- #ifdef CONFIG_PROVE_LOCKING
--#define lockdep_assert_event_ctx(event)				\
-+# define lockdep_assert_event_ctx(event)			\
- 	WARN_ON_ONCE(__lockdep_enabled &&			\
- 		     (this_cpu_read(hardirqs_enabled) &&	\
- 		      lockdep_is_held(&(event)->ctx->mutex) != LOCK_STATE_HELD))
- #else
--#define lockdep_assert_event_ctx(event)
-+# define lockdep_assert_event_ctx(event)
- #endif
- 
- #define for_each_sibling_event(sibling, event)			\
-@@ -859,9 +870,9 @@ struct perf_event {
- #ifdef CONFIG_EVENT_TRACING
- 	struct trace_event_call		*tp_event;
- 	struct event_filter		*filter;
--#ifdef CONFIG_FUNCTION_TRACER
-+# ifdef CONFIG_FUNCTION_TRACER
- 	struct ftrace_ops               ftrace_ops;
--#endif
-+# endif
- #endif
- 
- #ifdef CONFIG_CGROUP_PERF
-@@ -880,7 +891,7 @@ struct perf_event {
- 	 * of it. event->orig_type contains original 'type' requested by
- 	 * user.
- 	 */
--	__u32				orig_type;
-+	u32				orig_type;
- #endif /* CONFIG_PERF_EVENTS */
- };
- 
-@@ -945,8 +956,8 @@ static inline bool perf_pmu_ctx_is_active(struct perf_event_pmu_context *epc)
+ /* Hisilicon 64-bit timer(a variant of ARM SP804) */
+@@ -102,6 +106,23 @@ static u64 notrace sp804_read(void)
+ 	return ~readl_relaxed(sched_clkevt->value);
  }
  
- struct perf_event_groups {
--	struct rb_root	tree;
--	u64		index;
-+	struct rb_root			tree;
-+	u64				index;
- };
- 
- 
-@@ -1189,16 +1200,18 @@ extern void perf_pmu_resched(struct pmu *pmu);
- extern int perf_event_refresh(struct perf_event *event, int refresh);
- extern void perf_event_update_userpage(struct perf_event *event);
- extern int perf_event_release_kernel(struct perf_event *event);
++#ifdef CONFIG_ARM
++static struct delay_timer delay;
++static unsigned long sp804_read_delay_timer_read(void)
++{
++	return sp804_read();
++}
 +
- extern struct perf_event *
- perf_event_create_kernel_counter(struct perf_event_attr *attr,
--				int cpu,
--				struct task_struct *task,
--				perf_overflow_handler_t callback,
--				void *context);
-+				 int cpu,
-+				 struct task_struct *task,
-+				 perf_overflow_handler_t callback,
-+				 void *context);
++static void sp804_register_delay_timer(int freq)
++{
++	delay.freq = freq;
++	delay.read_current_timer = sp804_read_delay_timer_read;
++	register_current_timer_delay(&delay);
++}
++#else
++static inline void sp804_register_delay_timer(int freq) {}
++#endif
 +
- extern void perf_pmu_migrate_context(struct pmu *pmu,
--				int src_cpu, int dst_cpu);
--int perf_event_read_local(struct perf_event *event, u64 *value,
--			  u64 *enabled, u64 *running);
-+				     int src_cpu, int dst_cpu);
-+extern int perf_event_read_local(struct perf_event *event, u64 *value,
-+				 u64 *enabled, u64 *running);
- extern u64 perf_event_read_value(struct perf_event *event,
- 				 u64 *enabled, u64 *running);
+ static int __init sp804_clocksource_and_sched_clock_init(void __iomem *base,
+ 							 const char *name,
+ 							 struct clk *clk,
+@@ -114,6 +135,8 @@ static int __init sp804_clocksource_and_sched_clock_init(void __iomem *base,
+ 	if (rate < 0)
+ 		return -EINVAL;
  
-@@ -1415,14 +1428,14 @@ static inline u32 perf_sample_data_size(struct perf_sample_data *data,
-  */
- static inline void perf_clear_branch_entry_bitfields(struct perf_branch_entry *br)
- {
--	br->mispred = 0;
--	br->predicted = 0;
--	br->in_tx = 0;
--	br->abort = 0;
--	br->cycles = 0;
--	br->type = 0;
--	br->spec = PERF_BR_SPEC_NA;
--	br->reserved = 0;
-+	br->mispred	= 0;
-+	br->predicted	= 0;
-+	br->in_tx	= 0;
-+	br->abort	= 0;
-+	br->cycles	= 0;
-+	br->type	= 0;
-+	br->spec	= PERF_BR_SPEC_NA;
-+	br->reserved	= 0;
- }
- 
- extern void perf_output_sample(struct perf_output_handle *handle,
-@@ -1611,7 +1624,17 @@ extern void perf_event_bpf_event(struct bpf_prog *prog,
- 				 enum perf_bpf_event_type type,
- 				 u16 flags);
- 
-+#define PERF_GUEST_ACTIVE		0x01
-+#define PERF_GUEST_USER			0x02
++	sp804_register_delay_timer(rate);
 +
-+struct perf_guest_info_callbacks {
-+	unsigned int			(*state)(void);
-+	unsigned long			(*get_ip)(void);
-+	unsigned int			(*handle_intel_pt_intr)(void);
-+};
+ 	clkevt = sp804_clkevt_get(base);
+ 
+ 	writel(0, clkevt->ctrl);
+@@ -318,6 +341,7 @@ static int __init sp804_of_init(struct device_node *np, struct sp804_timer *time
+ 		if (ret)
+ 			goto err;
+ 	}
 +
- #ifdef CONFIG_GUEST_PERF_EVENTS
-+
- extern struct perf_guest_info_callbacks __rcu *perf_guest_cbs;
+ 	initialized = true;
  
- DECLARE_STATIC_CALL(__perf_guest_state, *perf_guest_cbs->state);
-@@ -1622,21 +1645,27 @@ static inline unsigned int perf_guest_state(void)
- {
- 	return static_call(__perf_guest_state)();
- }
-+
- static inline unsigned long perf_guest_get_ip(void)
- {
- 	return static_call(__perf_guest_get_ip)();
- }
-+
- static inline unsigned int perf_guest_handle_intel_pt_intr(void)
- {
- 	return static_call(__perf_guest_handle_intel_pt_intr)();
- }
-+
- extern void perf_register_guest_info_callbacks(struct perf_guest_info_callbacks *cbs);
- extern void perf_unregister_guest_info_callbacks(struct perf_guest_info_callbacks *cbs);
--#else
-+
-+#else /* !CONFIG_GUEST_PERF_EVENTS: */
-+
- static inline unsigned int perf_guest_state(void)		 { return 0; }
- static inline unsigned long perf_guest_get_ip(void)		 { return 0; }
- static inline unsigned int perf_guest_handle_intel_pt_intr(void) { return 0; }
--#endif /* CONFIG_GUEST_PERF_EVENTS */
-+
-+#endif /* !CONFIG_GUEST_PERF_EVENTS */
- 
- extern void perf_event_exec(void);
- extern void perf_event_comm(struct task_struct *tsk, bool exec);
-@@ -1666,6 +1695,7 @@ static inline int perf_callchain_store_context(struct perf_callchain_entry_ctx *
- {
- 	if (ctx->contexts < sysctl_perf_event_max_contexts_per_stack) {
- 		struct perf_callchain_entry *entry = ctx->entry;
-+
- 		entry->ip[entry->nr++] = ip;
- 		++ctx->contexts;
- 		return 0;
-@@ -1679,6 +1709,7 @@ static inline int perf_callchain_store(struct perf_callchain_entry_ctx *ctx, u64
- {
- 	if (ctx->nr < ctx->max_stack && !ctx->contexts_maxed) {
- 		struct perf_callchain_entry *entry = ctx->entry;
-+
- 		entry->ip[entry->nr++] = ip;
- 		++ctx->nr;
- 		return 0;
-@@ -1705,7 +1736,7 @@ static inline int perf_is_paranoid(void)
- 	return sysctl_perf_event_paranoid > -1;
- }
- 
--int perf_allow_kernel(void);
-+extern int perf_allow_kernel(void);
- 
- static inline int perf_allow_cpu(void)
- {
-@@ -1827,7 +1858,7 @@ extern int perf_output_begin_backward(struct perf_output_handle *handle,
- 
- extern void perf_output_end(struct perf_output_handle *handle);
- extern unsigned int perf_output_copy(struct perf_output_handle *handle,
--			     const void *buf, unsigned int len);
-+				     const void *buf, unsigned int len);
- extern unsigned int perf_output_skip(struct perf_output_handle *handle,
- 				     unsigned int len);
- extern long perf_output_copy_aux(struct perf_output_handle *aux_handle,
-@@ -1844,7 +1875,9 @@ extern void perf_event_task_tick(void);
- extern int perf_event_account_interrupt(struct perf_event *event);
- extern int perf_event_period(struct perf_event *event, u64 value);
- extern u64 perf_event_pause(struct perf_event *event, bool reset);
-+
- #else /* !CONFIG_PERF_EVENTS: */
-+
- static inline void *
- perf_aux_output_begin(struct perf_output_handle *handle,
- 		      struct perf_event *event)				{ return NULL; }
-@@ -1922,19 +1955,14 @@ static inline void perf_event_disable(struct perf_event *event)		{ }
- static inline int __perf_event_disable(void *info)			{ return -1; }
- static inline void perf_event_task_tick(void)				{ }
- static inline int perf_event_release_kernel(struct perf_event *event)	{ return 0; }
--static inline int perf_event_period(struct perf_event *event, u64 value)
--{
--	return -EINVAL;
--}
--static inline u64 perf_event_pause(struct perf_event *event, bool reset)
--{
--	return 0;
--}
--static inline int perf_exclude_event(struct perf_event *event, struct pt_regs *regs)
--{
--	return 0;
--}
--#endif
-+static inline int
-+perf_event_period(struct perf_event *event, u64 value)			{ return -EINVAL; }
-+static inline u64
-+perf_event_pause(struct perf_event *event, bool reset)			{ return 0; }
-+static inline int
-+perf_exclude_event(struct perf_event *event, struct pt_regs *regs)	{ return 0; }
-+
-+#endif /* !CONFIG_PERF_EVENTS */
- 
- #if defined(CONFIG_PERF_EVENTS) && defined(CONFIG_CPU_SUP_INTEL)
- extern void perf_restore_debug_store(void);
-@@ -1942,31 +1970,31 @@ extern void perf_restore_debug_store(void);
- static inline void perf_restore_debug_store(void)			{ }
- #endif
- 
--#define perf_output_put(handle, x) perf_output_copy((handle), &(x), sizeof(x))
-+#define perf_output_put(handle, x)	perf_output_copy((handle), &(x), sizeof(x))
- 
- struct perf_pmu_events_attr {
--	struct device_attribute attr;
--	u64 id;
--	const char *event_str;
-+	struct device_attribute		attr;
-+	u64				id;
-+	const char			*event_str;
- };
- 
- struct perf_pmu_events_ht_attr {
--	struct device_attribute			attr;
--	u64					id;
--	const char				*event_str_ht;
--	const char				*event_str_noht;
-+	struct device_attribute		attr;
-+	u64				id;
-+	const char			*event_str_ht;
-+	const char			*event_str_noht;
- };
- 
- struct perf_pmu_events_hybrid_attr {
--	struct device_attribute			attr;
--	u64					id;
--	const char				*event_str;
--	u64					pmu_type;
-+	struct device_attribute		attr;
-+	u64				id;
-+	const char			*event_str;
-+	u64				pmu_type;
- };
- 
- struct perf_pmu_format_hybrid_attr {
--	struct device_attribute			attr;
--	u64					pmu_type;
-+	struct device_attribute		attr;
-+	u64				pmu_type;
- };
- 
- ssize_t perf_event_sysfs_show(struct device *dev, struct device_attribute *attr,
-@@ -2008,11 +2036,11 @@ static struct device_attribute format_attr_##_name = __ATTR_RO(_name)
- 
- /* Performance counter hotplug functions */
- #ifdef CONFIG_PERF_EVENTS
--int perf_event_init_cpu(unsigned int cpu);
--int perf_event_exit_cpu(unsigned int cpu);
-+extern int perf_event_init_cpu(unsigned int cpu);
-+extern int perf_event_exit_cpu(unsigned int cpu);
- #else
--#define perf_event_init_cpu	NULL
--#define perf_event_exit_cpu	NULL
-+# define perf_event_init_cpu		NULL
-+# define perf_event_exit_cpu		NULL
- #endif
- 
- extern void arch_perf_update_userpage(struct perf_event *event,
+ 	return 0;
+
+---
+base-commit: 7ee983c850b40043ac4751836fbd9a2b4d0c5937
+change-id: 20250411-sp804-fix-read_current_timer-1c7c5a448c6c
+
+Best regards,
+-- 
+Stephen Eta Zhou <stephen.eta.zhou@gmail.com>
+
