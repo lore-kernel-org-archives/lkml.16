@@ -1,268 +1,307 @@
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2084.outbound.protection.outlook.com [40.107.237.84])
+Received: from fout-a8-smtp.messagingengine.com (fout-a8-smtp.messagingengine.com [103.168.172.151])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC5C8BA42;
-	Sun, 25 May 2025 10:16:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.84
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748168198; cv=fail; b=TPp/SwZWh5fquNKGaPNkXYOp3m7nNSZeNiACXu+VpCdkDjRUW/6/EQ8d7yh+SvY85drY6oPrQ2qbrJx7UaN4qfrGonIertZhY2wmHsDj6wx4HC7NMXj1hbyJo5ALTsZ5wgRBaAawIFjzMzyHC0V3yYcfVxoDjcH8qUh4NVz99fQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748168198; c=relaxed/simple;
-	bh=ti++qP2SxbCr94b+06dVpNQ9tNLbZ2ONqCbu72CQOmE=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=FhQrODlm8iT12PoG0WAPT9zYuRRV6N5dZbPPpDj4zseKX5gWsuBkgw3cCHddncwZwW6IGJVRxiZFbaY42VJPK2Rm8gnG6DbuxiWb/MEDI1YwQxaZBESZUBTynIeh4zt4tJNKE0+sO3sRi/80P1gsjEP6EGHqLXYmslUwVPKHBQ4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=Nf7OwBBK; arc=fail smtp.client-ip=40.107.237.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76FEC17BED0;
+	Sun, 25 May 2025 10:19:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.151
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748168399; cv=none; b=SQRSm3fZbbgtSHYOTvhHrX/OmV8oPQIgtN1gErSSjiX9oeB01r7BDx+BKE+4bVNaDc4UFZijwagYYjBcVSr42Nq5ENY+T2vlmOhuxD8ciT2luoEF3KWz4Ftd0JPvWdMUMdispR34kJZeOIom4YWecSEH1c1CVWM/boKTG7eTuhg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748168399; c=relaxed/simple;
+	bh=1kgNPA7E50ptAHDPhxFZ5JjcvPGjCbICdrnubM0rl0c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UaS2jzBr+p2mgtj4zIEMMtE9LvInC0ycrBtfKfMEWoVq18GcXRHN9OxkdLnhsEyKM5socFZFroXf5fO3g8QWdA/sfgkeJXbZrMYTx3J+oPn2+uW4X2CceAhBXrvU/6itaFNDLlV/oB1uu63SEzUYE/QR4GcY/mG1SJEusNSBw34=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ragnatech.se; spf=pass smtp.mailfrom=ragnatech.se; dkim=pass (2048-bit key) header.d=ragnatech.se header.i=@ragnatech.se header.b=VkZ5059r; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=PLO3eXAa; arc=none smtp.client-ip=103.168.172.151
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ragnatech.se
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ragnatech.se
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Nf7OwBBK"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=VFSxjE0aVdCf5qOf4bYAqqXrkOV/DLEqef6P9uFVguRVm94YthYzXa/pYFVZLS56M7oDZJBdoBnq+U6yfiV+2U8PhdpZPscYpdK+RZzVxgNT+RCBDNm2ZMpLjnadDkRzs3NTncRou5EJ5B2/H5qV6buBBUW0TW6AgzL+jzg/I/qQYovNu9unvpi19oGChDdMffmfpw+sxc1XXJcoReponbo4/v6v6gHPEHmBfYfMvTi4tFdcGGzd/9yfPJoaEXjOTY4fXf75Yrh6VO3gLmAs8GdSWxY3rBXnUMrW9dTjqKeVwGLXkGHUOOzAhlbyj7YkTSCQQYYn2Rfou907fr25mw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=izlEIQwUeKrajRtPKUwber5TbtMd+1HlD92TZXy7rh8=;
- b=FKIy2laTVzrYdnFMWYYDJisWxO9IlsYZiIoGJ5bspS9Hc39lE8dtR1D4jcASOpfAGspdKzJWO6V8WUbLj7NcXhdyQeHRlWooPpAn2Y1DHTMLxt+RyUXSA0fpOqv/QUkd8j75WzMr2CEc42Ym+nG2n3TzDa9sHFNMB4q1L00z3fd05JHBQDeFXWmiv4HQPvCH/6rQpl8xq4JqlEeqhRMqIAYpRFWxj036HyRXv5F2tEwPCLH+DlwgOEn+aY/2zYR253EqQVbSfPVTxucgqC2lVnkfVrvEU8EI96a7yIXT2ElbGNrFTfYsA+FbSQOg8PO860OkJFNFWvcb7rGgC9MaLA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=izlEIQwUeKrajRtPKUwber5TbtMd+1HlD92TZXy7rh8=;
- b=Nf7OwBBKpznfj4JQdzlCrO+5LZIPuHHPsE3Bip5RlnBaHWywDt4+6uozLC6Z3jO+6WaCtF6XoELcH7QuhtgJisvoS8InH/a0ksaaIP3+R3YwfZftWchIysGbhjONWMuZoNFVswhbB4JCn0BOwMHWZmfNPB6VOm9kW6mzW5TTmN8=
-Received: from SJ0PR13CA0014.namprd13.prod.outlook.com (2603:10b6:a03:2c0::19)
- by MW4PR12MB5601.namprd12.prod.outlook.com (2603:10b6:303:168::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.30; Sun, 25 May
- 2025 10:16:31 +0000
-Received: from SJ5PEPF00000203.namprd05.prod.outlook.com
- (2603:10b6:a03:2c0:cafe::84) by SJ0PR13CA0014.outlook.office365.com
- (2603:10b6:a03:2c0::19) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8769.18 via Frontend Transport; Sun,
- 25 May 2025 10:16:31 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- SJ5PEPF00000203.mail.protection.outlook.com (10.167.244.36) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8769.18 via Frontend Transport; Sun, 25 May 2025 10:16:31 +0000
-Received: from SATLEXMB03.amd.com (10.181.40.144) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Sun, 25 May
- 2025 05:16:30 -0500
-Received: from xhdsuragupt40.xilinx.com (10.180.168.240) by SATLEXMB03.amd.com
- (10.181.40.144) with Microsoft SMTP Server id 15.1.2507.39 via Frontend
- Transport; Sun, 25 May 2025 05:16:28 -0500
-From: Suraj Gupta <suraj.gupta2@amd.com>
-To: <vkoul@kernel.org>, <michal.simek@amd.com>, <radhey.shyam.pandey@amd.com>,
-	<thomas.gessler@brueckmann-gmbh.de>
-CC: <dmaengine@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-kernel@vger.kernel.org>, <harini.katakam@amd.com>
-Subject: [PATCH 2/2] dmaengine: xilinx_dma: Add support to configure/report coalesce parameters from/to client using AXI DMA
-Date: Sun, 25 May 2025 15:46:17 +0530
-Message-ID: <20250525101617.1168991-3-suraj.gupta2@amd.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250525101617.1168991-1-suraj.gupta2@amd.com>
-References: <20250525101617.1168991-1-suraj.gupta2@amd.com>
+	dkim=pass (2048-bit key) header.d=ragnatech.se header.i=@ragnatech.se header.b="VkZ5059r";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="PLO3eXAa"
+Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
+	by mailfout.phl.internal (Postfix) with ESMTP id 5C6431380186;
+	Sun, 25 May 2025 06:19:55 -0400 (EDT)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-05.internal (MEProxy); Sun, 25 May 2025 06:19:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ragnatech.se; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm3; t=1748168395;
+	 x=1748254795; bh=Nde2SkTDak5t7cCJKYp/aSUwJXpBCopTUS04DjQZk70=; b=
+	VkZ5059rjCC9tiBPqn7yu4+dDulqLrtNHPnj4JyYGRCy86WYJFp/+EtIUTQ9K4b9
+	1kaUtqRdQ4MxsIlDX6K6UqeZLVmR6U4X/Q63n3aOne3AuO+BSn5xbk7V8QqtUDzy
+	Gt7almcJrT7PJrtKNqbteTIDSwwOFex2xjXGFnFMmrUi70qFnPSWw3YDhs5zNAwV
+	JM5kCLWQoPy9RHImp9mXWQqJxVirCLN/mm6lEzrjJQdF71XF0S9mw5Fd3bR23EwZ
+	eU8LQNF2X3xnAI9NjvSUutSIGIZjZoeqz/mLxLlNjR1kCe0yhSzB+IZONvsJA3I9
+	oqgb6UddBuRc1OxQ1lhAOg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1748168395; x=
+	1748254795; bh=Nde2SkTDak5t7cCJKYp/aSUwJXpBCopTUS04DjQZk70=; b=P
+	LO3eXAaO+KaHnZS4qXMn3JmsoC72DXJTNsjvQxCpwCs7d0E2QeVW1hga+nkCCe64
+	alLwkz1ZPJx4ESMp20Dyq51x5D58eVS+ZmQa7P9qrsQHXcs0kwPK6qDDFGbig5PQ
+	vBj84OYKCAPjcywwgzr7jQ2OebeJNZvnGsO8C4N68nNjtPwy0pwS1mfFS+KSxI/S
+	Zvnh/gwcx0/m3jy0M85JSlGM4oB4ha8A0qJBMSPzwY/dlN+2zWvSHn9+Q5XPRisN
+	xz1klJOm1/zD3QLJ+Hbyj3u+XaVWn1kbYpcON3HpXvzbOHkR73vNCm3UeHnOa83E
+	k5tMmYtiupoOHInIQPYdA==
+X-ME-Sender: <xms:ye4yaAV0TmhvVuGmh2lKBch3mhFzsDsvVn-Ob3Zg6RfuLWFUchVs8Q>
+    <xme:ye4yaEkANnjrD3288fsi1tfIDUZttXEZLcIwa9AC5v9iRwixplqUuhy_3PU-ZakYS
+    VeQGb9TTjf8WPEEaMY>
+X-ME-Received: <xmr:ye4yaEYN7DuTNeem48U6ut8zhp7S5kXVNOLPGssh9iKDyPY8MDOsGgunKxEGIrd7GKj8C4BLwT6FYkGMKoSgT_GH4Hym6I2fUg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgddugeefheculddtuddrgeefvddrtd
+    dtmdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggft
+    fghnshhusghstghrihgsvgdpuffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftd
+    dtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfhf
+    gggtugfgjgesthekredttddtjeenucfhrhhomheppfhikhhlrghsucfunpguvghrlhhunh
+    guuceonhhikhhlrghsrdhsohguvghrlhhunhgusehrrghgnhgrthgvtghhrdhsvgeqnecu
+    ggftrfgrthhtvghrnhepveetgedtvddvhfdtkeeghfeffeehteehkeekgeefjeduieduue
+    elgedtheekkeetnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhf
+    rhhomhepnhhikhhlrghsrdhsohguvghrlhhunhgusehrrghgnhgrthgvtghhrdhsvgdpnh
+    gspghrtghpthhtohepvddvpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopegthhhr
+    ihhsthhophhhvgdrjhgrihhllhgvthesfigrnhgrughoohdrfhhrpdhrtghpthhtohepmh
+    hiqhhuvghlrdhrrgihnhgrlhessghoohhtlhhinhdrtghomhdprhgtphhtthhopehrrghf
+    rggvlheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepuggrnhhivghlrdhlvgiitggrnh
+    hosehlihhnrghrohdrohhrghdprhgtphhtthhopehruhhirdiihhgrnhhgsehinhhtvghl
+    rdgtohhmpdhrtghpthhtoheplhhukhgrshiirdhluhgsrgesrghrmhdrtghomhdprhgtph
+    htthhopehsuhhpphhorhhtrdhophgvnhhsohhurhgtvgesughirghsvghmihdrtghomhdp
+    rhgtphhtthhopehshhgrfihnghhuoheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepsh
+    drhhgruhgvrhesphgvnhhguhhtrhhonhhigidruggv
+X-ME-Proxy: <xmx:ye4yaPX22cycY_RFWzhzoxjcLJrjG4QrfTChm_xl0MKRIEeCd035Gg>
+    <xmx:ye4yaKkIzmgXp1wVQU0I_bHFWgLxyGjqh4JbrqOxtXB_2Iz6zYNn2A>
+    <xmx:ye4yaEciNMYD8G4p0mjheCagaA3JRG8oL0rCb2PmaptDexJ3yaGw9w>
+    <xmx:ye4yaMHzD9nlu_4ri7v8sXYvzYlewq6Jh3loJ7MlOCW2BM4blWnVEw>
+    <xmx:y-4yaDYNJCUmwsiSrtv-F_DKn-_S-icPF9YHu5FmKZP_k1EdWq75roPt>
+Feedback-ID: i80c9496c:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sun,
+ 25 May 2025 06:19:53 -0400 (EDT)
+Date: Sun, 25 May 2025 12:19:50 +0200
+From: Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>
+To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc: Miquel Raynal <miquel.raynal@bootlin.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>,
+	Support Opensource <support.opensource@diasemi.com>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Magnus Damm <magnus.damm@gmail.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+	linux-pm@vger.kernel.org, imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	linux-renesas-soc@vger.kernel.org,
+	linux-mediatek@lists.infradead.org
+Subject: Re: [PATCH] thermal: Constify struct thermal_zone_device_ops
+Message-ID: <20250525101950.GE600042@ragnatech.se>
+References: <5bba3bf0139e2418b306a0f9a2f1f81ef49e88a6.1748165978.git.christophe.jaillet@wanadoo.fr>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-Received-SPF: None (SATLEXMB04.amd.com: suraj.gupta2@amd.com does not
- designate permitted sender hosts)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ5PEPF00000203:EE_|MW4PR12MB5601:EE_
-X-MS-Office365-Filtering-Correlation-Id: b3f0fa65-ed8a-42dd-6a83-08dd9b75385f
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|376014|1800799024|82310400026;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?WA8g2uxEXoi3gYYQt75FOx8xOtgQxPyx1652anJp7dowfZXEvsPKwLFIry2/?=
- =?us-ascii?Q?ybSaRkuHHg5No6KDbcXmjaWds9OyFd0F98T+YlUxOp4sioBufcHcKCS1s/CR?=
- =?us-ascii?Q?8jv5T7hdWwGeUf4ZDVCU4yRLKRwSI+AqzpvzwcDZGke/rPVahQeex3lA+NFM?=
- =?us-ascii?Q?Ol0SdBpVff6p+983Q5vpFAYMa3d190Nvo0X8UZvjnbLPTLkARv0chfZ6zjKL?=
- =?us-ascii?Q?7QE4zcJBdU4VFTDES3wQJr0ly7PoxwpCcaS6qcZDT5WX+bPZSCMKXO2rpYp0?=
- =?us-ascii?Q?k/d2hVqiMrEU+vioRvtHjSFSs5qSzpuq10koE20+ToD6VxbpeyTgeWcd6ndp?=
- =?us-ascii?Q?+ff6woDa36Qmnp1Yzor5oZJnKvOREMbZj/sniWofz6eEFt7ktJ8NWISwN0BN?=
- =?us-ascii?Q?mVPwJ791j1D5rfj9BreA2/tXEqnWI8U1yvQ0ORTzVlAAQQ3l6SkQ43deI260?=
- =?us-ascii?Q?d4NSgh3zzQVeXx2bizBlMCPMaLmez29ijXQzcnOsO1Y0ZP4hqcnT/6UkLm6s?=
- =?us-ascii?Q?4kpei9kZE81XyjGTwiB7BdsYrMYXNbo0DV0YJdTLukIitcumi1N9rMnrODtZ?=
- =?us-ascii?Q?NCh7p3qsf774nGmJ9ZP40+cQcrnzrPTyP2uEGADVwWtbAVVdBdC/yBJ5Ut/4?=
- =?us-ascii?Q?K+lkdSmuT6U6aGXYLiVb5OBxCnMg4oC2fu/lx038u3raaS/GDSAVcSSKh8XV?=
- =?us-ascii?Q?1lNzfjzhuRmqC0I6VNke1LhkMg318gvA0MFiW9P/0oB94bs+HLVEaF/DyCwh?=
- =?us-ascii?Q?k4/yJgQq6CXekkGgOZQqMDDDrKT1ldbpsdbJcrRhFe1HRDynz55zfU4vYzkF?=
- =?us-ascii?Q?f1OLTJiw9F7RcfEUw4XxXk7b5pxcYe9AYPrQzQOItAuUOyunFTbaJ7biPlYG?=
- =?us-ascii?Q?XbGiyoumVRlt5wBCmVYdYksWJypecQPIm8dvkuUHO9yFxMAKrl2/BE7SAqc1?=
- =?us-ascii?Q?sMAwJinlSDLcnFQ9zCXveyiKY0JmTQS48RwmGmEr0tHiOd97f8X5hJ87LwKY?=
- =?us-ascii?Q?N7RSRNpKu7Pk5P5cOTACmHzyioWR3kKoohtS4t7CC8yUr8dv20afKQhFYn/H?=
- =?us-ascii?Q?BNtwnEGu+I1XMG9eeiEJRwlgqcq6BNKccVkcZzLGFsrl00vfBYuwbO2JOY+3?=
- =?us-ascii?Q?SXgNC3jilF+LnYN1N1lYYyJVM7xnGuAl718UK6ut6Bg8TgyAKVoKXSDG3g7G?=
- =?us-ascii?Q?uEo5XBtQzLXcZROLGe0llrTeJt4EYMDFpOYSn9PiI2zWDoy42MT5LqKbIkcc?=
- =?us-ascii?Q?je/lIzZh/YF4XAG+3xWi6iFQKRUB1eqUFvZ4rr5yeXLiOrhda83QZw62av6e?=
- =?us-ascii?Q?i+A+T9R69MPKNgm5GMsTpmmT2AK8a1+XlY6PcU297MMX1gCIvIGytIK6wdX+?=
- =?us-ascii?Q?ZcF+/CgezLCiQU7PW3h+ng01egHVZKi6UeE+ysZmcEINz+zFAOwpImwUjDBV?=
- =?us-ascii?Q?8jQJDL1aXX10SjtfzUD1ic4U7RtQwu9t39/Wlu9oDSaVVBE20jQSBLgMqJ9a?=
- =?us-ascii?Q?7THluC4SMO3sd+CNjh2PiRyHVOEtf/D4p6xQ?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(376014)(1800799024)(82310400026);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 May 2025 10:16:31.4478
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: b3f0fa65-ed8a-42dd-6a83-08dd9b75385f
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SJ5PEPF00000203.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR12MB5601
+In-Reply-To: <5bba3bf0139e2418b306a0f9a2f1f81ef49e88a6.1748165978.git.christophe.jaillet@wanadoo.fr>
 
-AXI DMA supports interrupt coalescing. Client can fine-tune coalesce
-parameters based on transaction load. Add support to configure/
-report coalesce parameters.
-Change delay setting to scale with SG clock rate rather than being a
-fixed number of clock cycles (Referred from AXI ethernet driver).
+Hi Christophe,
 
-Signed-off-by: Suraj Gupta <suraj.gupta2@amd.com>
----
- drivers/dma/xilinx/xilinx_dma.c | 62 ++++++++++++++++++++++++++++-----
- 1 file changed, 54 insertions(+), 8 deletions(-)
+Thanks for your work.
 
-diff --git a/drivers/dma/xilinx/xilinx_dma.c b/drivers/dma/xilinx/xilinx_dma.c
-index a34d8f0ceed8..b03975b6f00f 100644
---- a/drivers/dma/xilinx/xilinx_dma.c
-+++ b/drivers/dma/xilinx/xilinx_dma.c
-@@ -159,6 +159,9 @@
- 		 XILINX_DMA_DMASR_SOF_EARLY_ERR | \
- 		 XILINX_DMA_DMASR_DMA_INT_ERR)
- 
-+/* Constant to convert delay counts to microseconds */
-+#define XILINX_DMA_DELAY_SCALE		(125ULL * USEC_PER_SEC)
-+
- /* Axi VDMA Flush on Fsync bits */
- #define XILINX_DMA_FLUSH_S2MM		3
- #define XILINX_DMA_FLUSH_MM2S		2
-@@ -403,6 +406,7 @@ struct xilinx_dma_tx_descriptor {
-  * @terminating: Check for channel being synchronized by user
-  * @tasklet: Cleanup work after irq
-  * @config: Device configuration info
-+ * @slave_cfg: Device configuration info from Dmaengine
-  * @flush_on_fsync: Flush on Frame sync
-  * @desc_pendingcount: Descriptor pending count
-  * @ext_addr: Indicates 64 bit addressing is supported by dma channel
-@@ -442,6 +446,7 @@ struct xilinx_dma_chan {
- 	bool terminating;
- 	struct tasklet_struct tasklet;
- 	struct xilinx_vdma_config config;
-+	struct dma_slave_config slave_cfg;
- 	bool flush_on_fsync;
- 	u32 desc_pendingcount;
- 	bool ext_addr;
-@@ -1540,7 +1545,9 @@ static void xilinx_dma_start_transfer(struct xilinx_dma_chan *chan)
- {
- 	struct xilinx_dma_tx_descriptor *head_desc, *tail_desc;
- 	struct xilinx_axidma_tx_segment *tail_segment;
--	u32 reg;
-+	struct dma_slave_config *slave_cfg = &chan->slave_cfg;
-+	u64 clk_rate;
-+	u32 reg, usec, timer;
- 
- 	if (chan->err)
- 		return;
-@@ -1560,19 +1567,38 @@ static void xilinx_dma_start_transfer(struct xilinx_dma_chan *chan)
- 
- 	reg = dma_ctrl_read(chan, XILINX_DMA_REG_DMACR);
- 
--	if (chan->desc_pendingcount <= XILINX_DMA_COALESCE_MAX) {
--		reg &= ~XILINX_DMA_CR_COALESCE_MAX;
-+	reg &= ~XILINX_DMA_CR_COALESCE_MAX;
-+	reg  &= ~XILINX_DMA_CR_DELAY_MAX;
-+
-+	/* Use dma_slave_config if it has valid values */
-+	if (slave_cfg->coalesce_cnt &&
-+	    slave_cfg->coalesce_cnt <= XILINX_DMA_COALESCE_MAX)
-+		reg |= slave_cfg->coalesce_cnt <<
-+			XILINX_DMA_CR_COALESCE_SHIFT;
-+	else if (chan->desc_pendingcount <= XILINX_DMA_COALESCE_MAX)
- 		reg |= chan->desc_pendingcount <<
- 				  XILINX_DMA_CR_COALESCE_SHIFT;
--		dma_ctrl_write(chan, XILINX_DMA_REG_DMACR, reg);
--	}
-+
-+	if (slave_cfg->coalesce_usecs <= XILINX_DMA_DMACR_DELAY_MAX)
-+		usec = slave_cfg->coalesce_usecs;
-+	else
-+		usec = chan->irq_delay;
-+
-+	/* Scale with SG clock rate rather than being a fixed number of
-+	 * clock cycles.
-+	 * 1 Timeout Interval = 125 * (clock period of SG clock)
-+	 */
-+	clk_rate = clk_get_rate(chan->xdev->rx_clk);
-+	timer = DIV64_U64_ROUND_CLOSEST((u64)usec * clk_rate,
-+					XILINX_DMA_DELAY_SCALE);
-+	timer = min(timer, FIELD_MAX(XILINX_DMA_DMACR_DELAY_MASK));
-+	reg |= timer << XILINX_DMA_CR_DELAY_SHIFT;
-+
-+	dma_ctrl_write(chan, XILINX_DMA_REG_DMACR, reg);
- 
- 	if (chan->has_sg)
- 		xilinx_write(chan, XILINX_DMA_REG_CURDESC,
- 			     head_desc->async_tx.phys);
--	reg  &= ~XILINX_DMA_CR_DELAY_MAX;
--	reg  |= chan->irq_delay << XILINX_DMA_CR_DELAY_SHIFT;
--	dma_ctrl_write(chan, XILINX_DMA_REG_DMACR, reg);
- 
- 	xilinx_dma_start(chan);
- 
-@@ -1703,9 +1729,28 @@ static void xilinx_dma_issue_pending(struct dma_chan *dchan)
- static int xilinx_dma_device_config(struct dma_chan *dchan,
- 				    struct dma_slave_config *config)
- {
-+	struct xilinx_dma_chan *chan = to_xilinx_chan(dchan);
-+
-+	if (!config->coalesce_cnt ||
-+	    config->coalesce_cnt > XILINX_DMA_DMACR_FRAME_COUNT_MAX ||
-+	    config->coalesce_usecs > XILINX_DMA_DMACR_DELAY_MAX)
-+		return -EINVAL;
-+
-+	chan->slave_cfg.coalesce_cnt = config->coalesce_cnt;
-+	chan->slave_cfg.coalesce_usecs = config->coalesce_usecs;
-+
- 	return 0;
- }
- 
-+static void xilinx_dma_device_caps(struct dma_chan *dchan,
-+				   struct dma_slave_caps *caps)
-+{
-+	struct xilinx_dma_chan *chan = to_xilinx_chan(dchan);
-+
-+	caps->coalesce_cnt = chan->slave_cfg.coalesce_cnt;
-+	caps->coalesce_usecs = chan->slave_cfg.coalesce_usecs;
-+}
-+
- /**
-  * xilinx_dma_complete_descriptor - Mark the active descriptor as complete
-  * @chan : xilinx DMA channel
-@@ -3178,6 +3223,7 @@ static int xilinx_dma_probe(struct platform_device *pdev)
- 	xdev->common.device_tx_status = xilinx_dma_tx_status;
- 	xdev->common.device_issue_pending = xilinx_dma_issue_pending;
- 	xdev->common.device_config = xilinx_dma_device_config;
-+	xdev->common.device_caps = xilinx_dma_device_caps;
- 	if (xdev->dma_config->dmatype == XDMA_TYPE_AXIDMA) {
- 		dma_cap_set(DMA_CYCLIC, xdev->common.cap_mask);
- 		xdev->common.device_prep_slave_sg = xilinx_dma_prep_slave_sg;
+On 2025-05-25 11:40:04 +0200, Christophe JAILLET wrote:
+> 'struct thermal_zone_device_ops' are not modified in these drivers.
+> 
+> Constifying these structures moves some data to a read-only section, so
+> increases overall security, especially when the structure holds some
+> function pointers.
+> 
+> On a x86_64, with allmodconfig, as an example:
+> Before:
+> ======
+>    text	   data	    bss	    dec	    hex	filename
+>   28116	   5168	    128	  33412	   8284	drivers/thermal/armada_thermal.o
+> 
+> After:
+> =====
+>    text	   data	    bss	    dec	    hex	filename
+>   28244	   5040	    128	  33412	   8284	drivers/thermal/armada_thermal.o
+> 
+> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+> ---
+> Compile tested only
+> ---
+>  drivers/thermal/armada_thermal.c                        | 2 +-
+>  drivers/thermal/da9062-thermal.c                        | 2 +-
+>  drivers/thermal/dove_thermal.c                          | 2 +-
+>  drivers/thermal/imx_thermal.c                           | 2 +-
+>  drivers/thermal/intel/int340x_thermal/int3400_thermal.c | 2 +-
+>  drivers/thermal/kirkwood_thermal.c                      | 2 +-
+>  drivers/thermal/mediatek/lvts_thermal.c                 | 2 +-
+>  drivers/thermal/renesas/rcar_thermal.c                  | 2 +-
+
+For R-Car,
+
+Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+
+>  drivers/thermal/spear_thermal.c                         | 2 +-
+>  drivers/thermal/st/st_thermal.c                         | 2 +-
+>  drivers/thermal/testing/zone.c                          | 2 +-
+>  11 files changed, 11 insertions(+), 11 deletions(-)
+> 
+> diff --git a/drivers/thermal/armada_thermal.c b/drivers/thermal/armada_thermal.c
+> index 9bff21068721..c2fbdb534f61 100644
+> --- a/drivers/thermal/armada_thermal.c
+> +++ b/drivers/thermal/armada_thermal.c
+> @@ -408,7 +408,7 @@ static int armada_get_temp_legacy(struct thermal_zone_device *thermal,
+>  	return ret;
+>  }
+>  
+> -static struct thermal_zone_device_ops legacy_ops = {
+> +static const struct thermal_zone_device_ops legacy_ops = {
+>  	.get_temp = armada_get_temp_legacy,
+>  };
+>  
+> diff --git a/drivers/thermal/da9062-thermal.c b/drivers/thermal/da9062-thermal.c
+> index 2077e85ef5ca..a8d4b766ba21 100644
+> --- a/drivers/thermal/da9062-thermal.c
+> +++ b/drivers/thermal/da9062-thermal.c
+> @@ -137,7 +137,7 @@ static int da9062_thermal_get_temp(struct thermal_zone_device *z,
+>  	return 0;
+>  }
+>  
+> -static struct thermal_zone_device_ops da9062_thermal_ops = {
+> +static const struct thermal_zone_device_ops da9062_thermal_ops = {
+>  	.get_temp	= da9062_thermal_get_temp,
+>  };
+>  
+> diff --git a/drivers/thermal/dove_thermal.c b/drivers/thermal/dove_thermal.c
+> index f9157a47156b..723bc72f0626 100644
+> --- a/drivers/thermal/dove_thermal.c
+> +++ b/drivers/thermal/dove_thermal.c
+> @@ -106,7 +106,7 @@ static int dove_get_temp(struct thermal_zone_device *thermal,
+>  	return 0;
+>  }
+>  
+> -static struct thermal_zone_device_ops ops = {
+> +static const struct thermal_zone_device_ops ops = {
+>  	.get_temp = dove_get_temp,
+>  };
+>  
+> diff --git a/drivers/thermal/imx_thermal.c b/drivers/thermal/imx_thermal.c
+> index bab52e6b3b15..38c993d1bcb3 100644
+> --- a/drivers/thermal/imx_thermal.c
+> +++ b/drivers/thermal/imx_thermal.c
+> @@ -361,7 +361,7 @@ static bool imx_should_bind(struct thermal_zone_device *tz,
+>  	return trip->type == THERMAL_TRIP_PASSIVE;
+>  }
+>  
+> -static struct thermal_zone_device_ops imx_tz_ops = {
+> +static const struct thermal_zone_device_ops imx_tz_ops = {
+>  	.should_bind = imx_should_bind,
+>  	.get_temp = imx_get_temp,
+>  	.change_mode = imx_change_mode,
+> diff --git a/drivers/thermal/intel/int340x_thermal/int3400_thermal.c b/drivers/thermal/intel/int340x_thermal/int3400_thermal.c
+> index 0e07693ecf59..5736638c586b 100644
+> --- a/drivers/thermal/intel/int340x_thermal/int3400_thermal.c
+> +++ b/drivers/thermal/intel/int340x_thermal/int3400_thermal.c
+> @@ -515,7 +515,7 @@ static int int3400_thermal_change_mode(struct thermal_zone_device *thermal,
+>  	return result;
+>  }
+>  
+> -static struct thermal_zone_device_ops int3400_thermal_ops = {
+> +static const struct thermal_zone_device_ops int3400_thermal_ops = {
+>  	.get_temp = int3400_thermal_get_temp,
+>  	.change_mode = int3400_thermal_change_mode,
+>  };
+> diff --git a/drivers/thermal/kirkwood_thermal.c b/drivers/thermal/kirkwood_thermal.c
+> index 7c2265231668..4619e090f756 100644
+> --- a/drivers/thermal/kirkwood_thermal.c
+> +++ b/drivers/thermal/kirkwood_thermal.c
+> @@ -48,7 +48,7 @@ static int kirkwood_get_temp(struct thermal_zone_device *thermal,
+>  	return 0;
+>  }
+>  
+> -static struct thermal_zone_device_ops ops = {
+> +static const struct thermal_zone_device_ops ops = {
+>  	.get_temp = kirkwood_get_temp,
+>  };
+>  
+> diff --git a/drivers/thermal/mediatek/lvts_thermal.c b/drivers/thermal/mediatek/lvts_thermal.c
+> index 985925147ac0..acce8fde2cba 100644
+> --- a/drivers/thermal/mediatek/lvts_thermal.c
+> +++ b/drivers/thermal/mediatek/lvts_thermal.c
+> @@ -571,7 +571,7 @@ static irqreturn_t lvts_irq_handler(int irq, void *data)
+>  	return iret;
+>  }
+>  
+> -static struct thermal_zone_device_ops lvts_ops = {
+> +static const struct thermal_zone_device_ops lvts_ops = {
+>  	.get_temp = lvts_get_temp,
+>  	.set_trips = lvts_set_trips,
+>  };
+> diff --git a/drivers/thermal/renesas/rcar_thermal.c b/drivers/thermal/renesas/rcar_thermal.c
+> index 00a66ee0a5b0..fdd7afdc4ff6 100644
+> --- a/drivers/thermal/renesas/rcar_thermal.c
+> +++ b/drivers/thermal/renesas/rcar_thermal.c
+> @@ -277,7 +277,7 @@ static int rcar_thermal_get_temp(struct thermal_zone_device *zone, int *temp)
+>  	return rcar_thermal_get_current_temp(priv, temp);
+>  }
+>  
+> -static struct thermal_zone_device_ops rcar_thermal_zone_ops = {
+> +static const struct thermal_zone_device_ops rcar_thermal_zone_ops = {
+>  	.get_temp	= rcar_thermal_get_temp,
+>  };
+>  
+> diff --git a/drivers/thermal/spear_thermal.c b/drivers/thermal/spear_thermal.c
+> index bb96be947521..603dadcd3df5 100644
+> --- a/drivers/thermal/spear_thermal.c
+> +++ b/drivers/thermal/spear_thermal.c
+> @@ -41,7 +41,7 @@ static inline int thermal_get_temp(struct thermal_zone_device *thermal,
+>  	return 0;
+>  }
+>  
+> -static struct thermal_zone_device_ops ops = {
+> +static const struct thermal_zone_device_ops ops = {
+>  	.get_temp = thermal_get_temp,
+>  };
+>  
+> diff --git a/drivers/thermal/st/st_thermal.c b/drivers/thermal/st/st_thermal.c
+> index a14a37d54698..1470ca519def 100644
+> --- a/drivers/thermal/st/st_thermal.c
+> +++ b/drivers/thermal/st/st_thermal.c
+> @@ -132,7 +132,7 @@ static int st_thermal_get_temp(struct thermal_zone_device *th, int *temperature)
+>  	return 0;
+>  }
+>  
+> -static struct thermal_zone_device_ops st_tz_ops = {
+> +static const struct thermal_zone_device_ops st_tz_ops = {
+>  	.get_temp	= st_thermal_get_temp,
+>  };
+>  
+> diff --git a/drivers/thermal/testing/zone.c b/drivers/thermal/testing/zone.c
+> index 1f4e450100e2..4257d813d572 100644
+> --- a/drivers/thermal/testing/zone.c
+> +++ b/drivers/thermal/testing/zone.c
+> @@ -381,7 +381,7 @@ static int tt_zone_get_temp(struct thermal_zone_device *tz, int *temp)
+>  	return 0;
+>  }
+>  
+> -static struct thermal_zone_device_ops tt_zone_ops = {
+> +static const struct thermal_zone_device_ops tt_zone_ops = {
+>  	.get_temp = tt_zone_get_temp,
+>  };
+>  
+> -- 
+> 2.49.0
+> 
+
 -- 
-2.25.1
-
+Kind Regards,
+Niklas Söderlund
