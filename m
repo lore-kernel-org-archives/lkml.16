@@ -1,244 +1,210 @@
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2051.outbound.protection.outlook.com [40.107.244.51])
+Received: from fout-a6-smtp.messagingengine.com (fout-a6-smtp.messagingengine.com [103.168.172.149])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E39247F9;
-	Sun, 25 May 2025 20:31:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.51
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748205077; cv=fail; b=Vt/TszH05yX/Ph95GyXSFE6PGeSryPkOm2AFkGFXtuyWhvwQb1WetYDC8UjZtaMd+Ja0AbWfpvg1drmNYuNyt+g/iJ5GJ1fLCUaLNY888LFMTEY55OOkJ5OJfjQagkxbSK4mVEpY36TZhiVqat64eaykoU0LX1yr+sqqg7cz+6c=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748205077; c=relaxed/simple;
-	bh=g83MZvlDdbyM5TWteeR6U7U3oyTvRd5TtxL3rE4tTjc=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=YpXyT2IVtBx4+M1Gelzdn6xdn2y0ZcNbQdxjiv36F0SgZQfHUicmQwka07Vxt3eTcVDU5ddGkWp4jlyosC5h2hEcFZGkiXe3IvrOUyvYqnxniFjd1tzoWr0D8rnHPi+LitiHMewN8+MMn6Po6pNLNncqEmeSgMwurASZqzAhc9I=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=QXnybs2X; arc=fail smtp.client-ip=40.107.244.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 456794690;
+	Sun, 25 May 2025 20:42:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.149
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748205751; cv=none; b=QQ9TW8ns6220kpNwwlbmtNoRaiJc1aYbB1kVli6j5AtF8JiP+IqMtnhAYssYYhI3zn187SN6KjYBULFe6CsAfu3WtQ06Q9R/Q3AOQEoPezC2/f8sCuaO6WcbhrukCevVCf12m4YA9cnhOezrddUUi1raM9in6qp0uNlsjv9Sq68=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748205751; c=relaxed/simple;
+	bh=pG3DksZ5niG3gPjDO8DVTQsOM39xmHZzz6PDFj4VTiM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=WDER3j80bsPf4PFwoYH2DfIBrKhYf1kJmjpLrdsIlY8SWaiTXjsmEED4KWhmHx9r0/dH0ur91Fdpzh6YOvctPoTus9tt24iisafDd0rEQBnj+Y482iAn+gYh+5npqTlEZZdquucIj/jfgVvn+1URJ6bw5PKFFNrGA8ejX6GJtjI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev; spf=none smtp.mailfrom=ljones.dev; dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b=UuzPDkAV; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=kJTlPubK; arc=none smtp.client-ip=103.168.172.149
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ljones.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="QXnybs2X"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=rhyWJHKe5s1TLeRI0rSWaHdOKzOkTvY9PmlUJyrn3Vk3+yyawStnoG8GgnmG/MrXtm7IUoNE9uxCH2f0xAb5pubrqwgHji+81mG8zbGpBwFoz0iyW6T0WgsCFOUepDsrJ11Osbza2FZG7T2PLxI3cqFM8quTUNhdtMtJQcJvz43j7GzcXOAr33F7g70wXYnVmjNoO0CqTEPDzo6LqlXFw6wUHJVrKykHu/cAjGeluc8g2ilkeRqmmQ09mJDX4+lPwgrstfBC2MwLMhN4N2pIVbAd3Ojrm8xz/FydKbCyZizTWF1Evmhay5SQsKyLnhnmJ4M7ZUqHhK6qJIhnSV+NFA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=krnJaukq++C57Z1QDW65zgCiwWvQHJFfQoRxOlXY9Ig=;
- b=sQ2f5t0HX/Vih6bUj02eJupO0iwV90YQUzdVyz5InhqlN0HCFDzvswasDlb5cPGCltuo0Ojzc+5c1ED0ySkKFs/7VmJbqTvrLGZyQj4zp0N3C57rj+dTOACNewEQiR7zEuZpHCRTVJ6GhxKK1+BqX6ty0BQ+kLIXuqfCas+LYbkbjTpVB3sWOKkAuKLidOETIzpp0zW69nCR1gcg6s4JgcPsujiM0ytymNLrsuoacxxl3o+Hq1iDn8H+9iJj0aiRAJ2UcytkJ6rzZ4seSNjo5x7Oz9zkvOiaODfCwq7rLgLnrFsaBO55Y7H+LcDBohNU/89Ixgh13RO//itjkzaZ/A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=krnJaukq++C57Z1QDW65zgCiwWvQHJFfQoRxOlXY9Ig=;
- b=QXnybs2Xz0KLusaJsVFGzDvU5PJTD/mD4VrXw2VXnSQhwzrugs9WanIAlkV2CiNcuLLD+WKIjMLRsUeJKxo1HBc54qe+mUOEMkCUCSngxwYBoy65JwxhH0k49qp6YGWjopYL7ouB4CwxEDaNgs3kSldF+DUKUY6i8x/I+F5RP7YkNCQ+zzhqG5X0UJAaCw2ya/ovOiDpcVqLok5Xv9ud3Z0x+ZD2m97rfLuwX1p21TCM7/8t6i47Tedj7AO6l66M+yXV1epXgIRADxm/hTqgoXz8IPGWYhd1h/jiPyrVdD20lusLF5HfroriRAuQJWR2rTg5tkH4DbiTBHK63AMtPg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from CH3PR12MB7500.namprd12.prod.outlook.com (2603:10b6:610:148::17)
- by IA0PR12MB7506.namprd12.prod.outlook.com (2603:10b6:208:442::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.26; Sun, 25 May
- 2025 20:31:11 +0000
-Received: from CH3PR12MB7500.namprd12.prod.outlook.com
- ([fe80::7470:5626:d269:2bf2]) by CH3PR12MB7500.namprd12.prod.outlook.com
- ([fe80::7470:5626:d269:2bf2%5]) with mapi id 15.20.8769.019; Sun, 25 May 2025
- 20:31:10 +0000
-Message-ID: <3a3ce4c2-5cc1-4deb-be47-d936b61c42c4@nvidia.com>
-Date: Sun, 25 May 2025 23:31:01 +0300
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next V10 2/6] selftest: netdevsim: Add devlink rate
- tc-bw test
-To: Jakub Kicinski <kuba@kernel.org>, Tariq Toukan <ttoukan.linux@gmail.com>
-Cc: Carolina Jubran <cjubran@nvidia.com>, Tariq Toukan <tariqt@nvidia.com>,
- "David S. Miller" <davem@davemloft.net>, Paolo Abeni <pabeni@redhat.com>,
- Eric Dumazet <edumazet@google.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
- Jiri Pirko <jiri@nvidia.com>, Leon Romanovsky <leonro@nvidia.com>,
- Donald Hunter <donald.hunter@gmail.com>, Jiri Pirko <jiri@resnulli.us>,
- Jonathan Corbet <corbet@lwn.net>, Saeed Mahameed <saeedm@nvidia.com>,
- Leon Romanovsky <leon@kernel.org>, Shuah Khan <shuah@kernel.org>,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-rdma@vger.kernel.org,
- linux-kselftest@vger.kernel.org, Moshe Shemesh <moshe@nvidia.com>,
- Mark Bloch <mbloch@nvidia.com>, Cosmin Ratiu <cratiu@nvidia.com>
-References: <1747766287-950144-1-git-send-email-tariqt@nvidia.com>
- <1747766287-950144-3-git-send-email-tariqt@nvidia.com>
- <20250520155957.04b27217@kernel.org>
- <80b40828-8fa3-4313-8c98-823ac7c055c1@gmail.com>
- <20250521071007.0cb6f546@kernel.org>
-Content-Language: en-US
-From: Gal Pressman <gal@nvidia.com>
-In-Reply-To: <20250521071007.0cb6f546@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MM0P280CA0114.SWEP280.PROD.OUTLOOK.COM
- (2603:10a6:190:9::11) To CH3PR12MB7500.namprd12.prod.outlook.com
- (2603:10b6:610:148::17)
+	dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b="UuzPDkAV";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="kJTlPubK"
+Received: from phl-compute-06.internal (phl-compute-06.phl.internal [10.202.2.46])
+	by mailfout.phl.internal (Postfix) with ESMTP id 230251380452;
+	Sun, 25 May 2025 16:42:27 -0400 (EDT)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-06.internal (MEProxy); Sun, 25 May 2025 16:42:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
+	:cc:content-transfer-encoding:content-type:date:date:from:from
+	:in-reply-to:message-id:mime-version:reply-to:subject:subject:to
+	:to; s=fm2; t=1748205747; x=1748292147; bh=nC/xhqrsPKfreoD8yVsiD
+	635NRVSdwJZuhOTWVC02Hs=; b=UuzPDkAVxEikR7HTVqbdaLvhGsKOnk3x0kedP
+	XoP+1zyQeRuTzxgdbudFETSwV0SBMMlR8AhMXPkIlbTCuYmObheMQ+hnkM0V5lFv
+	6/znnJoyG9daHEZZwFAIveOc4TehwOD+foKJy/Ug1X76v7P83KsSmYUj33MBtQzf
+	2Tr46fKBBVw5kkCkou5icdQKZgJmX3mP4Y5sWEtaPj75n4Zis2PLkknbZTkTKvfg
+	HU+fsijmhzDrg+2ZVeCjSyhJalUtMz/NfSQ1lId5qKCrE9U+xFLIG9Thp3p0/k8p
+	WLKaqjS0viMJX3irV4siM/cM5BwFFePBoXzMW7ki31zRcxUtA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:date:date:feedback-id:feedback-id:from:from
+	:in-reply-to:message-id:mime-version:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=
+	1748205747; x=1748292147; bh=nC/xhqrsPKfreoD8yVsiD635NRVSdwJZuhO
+	TWVC02Hs=; b=kJTlPubKefr+MV11QnFysPTK8C5mUOCcTRDHqEgiaNLEGL5r9lN
+	DmNub2ODfi0uK9KbqtAHoySmZ0i0J93XicX2qRY9jU6KVCsZHVcFmBn0YBcC4nVI
+	JSGmvXzwyy76xt9/cXjaP8Q1jsqoyRSbyQsQy1htK1hUy6mRGzhlmj0pRVQrKYza
+	xp/oLkowVFg/M4YX2v+t2SdCs9UVDBZbvKYjsl0LQfrKYnv9uWFy8P3M9QzLq4Cn
+	T5pYF1UYK+irC4gnW7ojv83LtKaoY41f/ffEvL4rxe387HQxyU9YxG9/++w3fbAn
+	dDWlWEF78objipWtfMlTDd4eK3NaYRScVqw==
+X-ME-Sender: <xms:soAzaHUmL_iMc32IZW-fPwIqMwqscjd0vZ3xe33FuVAJs926bjvKSA>
+    <xme:soAzaPmZcjqnnP1Hixz7FTphGahjrr8U1cNyzCHMmuDvgvmgP2pm7ZBFarXeHa_P7
+    X6zql_Jkg5eas3wPNM>
+X-ME-Received: <xmr:soAzaDadDbBrFtsQT9J3ZztQB4XnDSQ95cX1hYJJrcxJ0oT6L4an6ro6_5hWJnscowuHacfTSCE>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgdduheeitdculddtuddrgeefvddrtd
+    dtmdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggft
+    fghnshhusghstghrihgsvgdpuffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftd
+    dtnecunecujfgurhephffvvefufffkofgggfestdekredtredttdenucfhrhhomhepnfhu
+    khgvucflohhnvghsuceolhhukhgvsehljhhonhgvshdruggvvheqnecuggftrfgrthhtvg
+    hrnheptdektdeitdetueehueetteffffeggfefhfeitddvgeeifeejheelheffjefggfeh
+    necuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheplhhukh
+    gvsehljhhonhgvshdruggvvhdpnhgspghrtghpthhtohephedpmhhouggvpehsmhhtphho
+    uhhtpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrd
+    horhhgpdhrtghpthhtohephhguvghgohgvuggvsehrvgguhhgrthdrtghomhdprhgtphht
+    thhopehilhhpohdrjhgrrhhvihhnvghnsehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtg
+    hpthhtohepphhlrghtfhhorhhmqdgurhhivhgvrhdqgiekieesvhhgvghrrdhkvghrnhgv
+    lhdrohhrghdprhgtphhtthhopehluhhkvgeslhhjohhnvghsrdguvghv
+X-ME-Proxy: <xmx:soAzaCXgtTfMXFe1r4sOCw-BjKHhng3O1b4aGoYgt6M2WDvW_SJIyg>
+    <xmx:soAzaBlyMRQuJuhfPd53o_nnU233jLkR6Ka8KLVOsw35JoTqoxg8xA>
+    <xmx:soAzaPemgmMn59N1M-rBgnlhrcLJmkGGpIW7I8gCpECV0tMvytPCsg>
+    <xmx:soAzaLGS9FC0KvCELfRCjF19MUSUCoYwzEwDCyF1s0pf85D0b6YP0Q>
+    <xmx:s4AzaPA3LFpib7Q6nNF0JEMtDKFNkqkcfCf6qY8yA-JV09Rk8d-TQ_6t>
+Feedback-ID: i5ec1447f:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sun,
+ 25 May 2025 16:42:25 -0400 (EDT)
+From: Luke Jones <luke@ljones.dev>
+To: linux-kernel@vger.kernel.org
+Cc: hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com,
+	platform-driver-x86@vger.kernel.org,
+	Luke Jones <luke@ljones.dev>
+Subject: [PATCH] asus-wmi: fixup screenpad brightness
+Date: Sun, 25 May 2025 22:42:14 +0200
+Message-ID: <20250525204214.104030-1-luke@ljones.dev>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH3PR12MB7500:EE_|IA0PR12MB7506:EE_
-X-MS-Office365-Filtering-Correlation-Id: c03dc37e-ec15-404a-810f-08dd9bcb15b0
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|7416014|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?OVhDWmFLck5FY0pFblFINUdEdzkxcnpmMm1yZWRUTlZCNHl4ZElyU3RleURF?=
- =?utf-8?B?SmdTQk5RaXZxdzkzQWF0MjJmSzUwNW5oM1A0bjVCejZDOUwzbTkzR3hhOUpo?=
- =?utf-8?B?a0xoQnl1YjZjUUd5VWFBcFlZODBPOWxKTlhvRDB5TDhnYkQ2YWljQUVwS0oy?=
- =?utf-8?B?cDBtZTJBSFhQY0tpM1hGbDk4QWo0ZVFsOWI4d2UzcWtFODNCcTlOQ0FDRWVn?=
- =?utf-8?B?T2w1d0ROaHRjR2NSenBVNUgzaU5mSXI4bUhzS2lzWjlmVlc3NTFpNUZyUktV?=
- =?utf-8?B?anZMeVBIdUsyUVYrWnVYaXlBMzAxNUlHQ1FtY3ZMZFV0aUFISXdSQXdtdk9Y?=
- =?utf-8?B?MmtBdXhIN2JDY1A2T29sLzJmUHNPWTZabGJGTUxWSlBkcm1jNWI5UkxVSk1u?=
- =?utf-8?B?TU5yOXpiU3FWTWwxeUYxUWxQZnFES0ljYkwwUG1XbU1xSU1HaUtoQ1daeDAz?=
- =?utf-8?B?L2Y5WWJxOVc0UVdSVTI5bVhqUFVOK1Q5cUVtWVBRM0JuRVlnSFI4amRkSmJ2?=
- =?utf-8?B?YkpZcjlsZWNYN2dxNjlOa1kxUlEwSWd0dzM4Q1Y1MFZ5bmozenV4WXdyTE9i?=
- =?utf-8?B?Z0xsaXZ4bjhtaXBOSXVZcVdBNzVDUm1IenpzRDRjYUVqckRra3RSMDl6Ulkz?=
- =?utf-8?B?dVlWejNJeFgzMEEyWXZ5L3c5WVdHWGpjSXNtZmVTT0FyWGNBSDBablVsL2VQ?=
- =?utf-8?B?Z05iNTlLTmJLQUwrRzFTYTgyZ1VNZE5xWnJBVFMrZTh4dEQ2STM0Q0ZjajJq?=
- =?utf-8?B?c0t1cTRMUS9sZHV2c3pSNlJ4aHBBOTQ1cEQvN1p4Wm5QOGVqS2hTRTdETzJr?=
- =?utf-8?B?T080ck5yLzRkajA2OFZibm0xdUh6VC90ZjlrK3pWcy9rVjBUOFRpL2JMREU3?=
- =?utf-8?B?UjdoeS8rUklyUnFGUUx2OTVlK3ZtL1JVeHhtYm95VUh6Q2FkWnFESkJ6b3V4?=
- =?utf-8?B?UVpxQkN6WXVGaUZ3cWV1ZWdrQnNkTkFYRS9yV29PUnZxdDJsdEI4enBaMmdY?=
- =?utf-8?B?bXIvTTNBWmQ4cks5MlF4Y3JuQjRXRTdUVXladGhWR0NYNlpQRWRUU095LzRB?=
- =?utf-8?B?ek84VnIzSEV4TENSbnovTTZYV1UzNW9JSjQzTkdFVFUwWks0SXFhRGdDWDJ0?=
- =?utf-8?B?aU1MMGpJMDR6T2k3ekZjT3JLRVhmS09BSjNqVXltZ2lZMzFIc1N4VmtTeG1O?=
- =?utf-8?B?TENrUWd6S2Y2Q3VZQ3pHMmtaS0hwWTYwUFZZeEg1N0FtWEVKc05UOHJJUjUr?=
- =?utf-8?B?bHIyNWNVNThnWE0zNE5mM1FqeGloU2RhWGF5M0cyS29SR3EvS1Qwd2JZY0dx?=
- =?utf-8?B?bk92SWgrWEg4ZFJLbVN3NkVVU2czdW1pQmV0SGJNaGpDVnlRSVFKVHV0KzVB?=
- =?utf-8?B?cE43dzBHZHlhUUJZamNycVEwenphM3FubTBKVmZ0VlBpZUVadVBvRkdBL2t1?=
- =?utf-8?B?U1ZHbnpXVi94MFAwQS9VUTJ1V0tFZGtVcUVzWkh3OWRDZXU5RHZxR0REajJl?=
- =?utf-8?B?RmtBTEhUTHRnSUE0UGZNMkhRcnJPVk91cTA4Qk51VC9PWE5hdm1RRnBsd3RO?=
- =?utf-8?B?eTVMd01jeGkyL1Q4SXJ4KzV0TkJ2VUMxcWZTY0RJMW9rbGlWZlpuVEdNMDhn?=
- =?utf-8?B?RnBhcHc3VVA5enZJU2dUeE1uKzZtM2tyeDNieUFUbm1PcUVHV05JdHVFc3RL?=
- =?utf-8?B?TnBkTGNaRFZNcjZMUXVabjloVjZRS2lETDFPdlFydERiZkt3aU9mTTVKd3lk?=
- =?utf-8?B?MzBRN1V0VUIrTlNhN2o3L3creW1peEFscEhOMk85UU9LaFhKV1lKUGRmM3Zs?=
- =?utf-8?B?NHdvNWoyTGt5Mms1TXZzZTZLbW9vNGlJNXYxNmQzVitkaks0NEFLcW9OamhO?=
- =?utf-8?B?UUFtd05DTWtVUTBOL2RvblUxNFZKdkJ3YWs1SDJBellzUUZwaFFuMWJXcDhi?=
- =?utf-8?Q?oorg9qQtyHo=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB7500.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?cURQNDVJZlNyLys2MEhrTDBVcnlkdndBbkxjcEtkbUlFTjMvNlZtYW85eUpY?=
- =?utf-8?B?Zm1PazVmQ1Z3TUZYS3ZyZ2cvUVI4dytpTFR3M2ZOMmk2YjZsNEE5ZFZNRzVE?=
- =?utf-8?B?THRCNktLZ3JOWDNndHgycnNtOVh2RmpudzZkc1BxUllXVisrYnF0UTN2Zkti?=
- =?utf-8?B?NDFlUVlHZjJRTTArS2U2enBPUTJyNXZtMTZLMTVpREpOL3BYZmNGaVJBZktw?=
- =?utf-8?B?cGVpSTdKRndBZ2JoZkd0dUVybUNqS3ZtbTE3OWErWHFTb0VoRnJYbDhUM2NH?=
- =?utf-8?B?cHNOU0hQR3p3TndkRzlHYm8rb1pCZjVmSnY4aTAxcWFJNi9iV1I2bjd6bFpq?=
- =?utf-8?B?QUQrdWR6SHVpUmRpVHJrTk13ZDdINWJYdTB2NGRadHNPQ1VoQWwrSEpOMVJE?=
- =?utf-8?B?OGpoUzBZL09IWEgya3JoalBhaHRmQ2svNVhVSTI5RDQyTnFnaUVKN2JBNE9Z?=
- =?utf-8?B?cmUxQTZVMUdxeHNnS3JOOVd1VGxiM2tvUVZSckV3bk41REFGeGVkdHkzZGJz?=
- =?utf-8?B?MjRkaS9pV0hHaEdSd0hNOWFtNEdmcXluZ1I5NkhyMDV2akpncWcyUkthbm4w?=
- =?utf-8?B?NWxVcjI5bitRK0dyMnpFRDYwL3cyNkxReThKUkhyWGlqWnFOdHhsQkpxRFNq?=
- =?utf-8?B?WEV3U21xV243WHN3Y1R5Y3I3RGFxWFNzVjNjaXNMeEpjSFFJRmlWZU5OYVNm?=
- =?utf-8?B?aEt5cVVkb1VEaGtyM3dXcWwvNWp5Q1V2NjBjY0JXK0ZpRk9wSnM5MTFRMkFP?=
- =?utf-8?B?VEQ4eUJMQmtta3ZtZ0I0eG9uMW1ydFI0RlVEaFd3OXFsNW5HY1pCR3duSU5x?=
- =?utf-8?B?TEZjL1pVMFE2TVU3ejBaL3ZSVWtqQ09JRm5UWVRKTklPUktkbGJPMEpvaFZy?=
- =?utf-8?B?NHJwZndlUmQ3eUs3QlZPQUpEeTg2NXluZmh5dVArNVFBS0x6em5pTFBPTFlk?=
- =?utf-8?B?QnlWYlJsRTZQc0dYWEtOMzlNa2dmUyt2QksvMEJkdTQ3am55cVZQWEpobXBR?=
- =?utf-8?B?LzhBV3dZNE5Wc1B4RVBIQkFiZ0ppOThDenFMb3pqOFBIekVlczBmTlZWdWpo?=
- =?utf-8?B?dWs1WGNzQVFrS2FnRk5IOVhJUXhpSXJoNzRQdDY3YTJqOU1qdy9WcnUwS0d0?=
- =?utf-8?B?aUcxaHJwNGxJV3ZybVFkSXMwYU9qSEplMXNFM2daQUhoc1BqdjArMUNlSlVM?=
- =?utf-8?B?MUk4UHo2UkhzTFUzU0Y1ZEx3LzVuRjZDK2RYRnFON0t3U0hhL1dqOVlLUFA0?=
- =?utf-8?B?cmhHVi8vaHJPRDlVWDlDdDM1L2RRNVZCTmVOd0JvZVdlaU1kMXkrejBQZDJ3?=
- =?utf-8?B?eDQ3aEZ2MThSVG1kQTJPeEwycFFxaW80ZkhjazNQNndyQkJZbDljNGtEaFl3?=
- =?utf-8?B?c1JQY1R2NHpmbnZIeFRkY1I5U1Nvb3ZwczhIUjVsNkZrOStEMzRiVUhPRFps?=
- =?utf-8?B?Y01jVkFscGp3WDJ6a2RFWCsrQ21SMEFoOG9aWHkrazNWWjU5WURYclF5WXVy?=
- =?utf-8?B?RHJhbWppS1hhcmhHVGVZU0lWVmdSdC96dzlldExPUXRhakRFejc1eVkxSU82?=
- =?utf-8?B?R2NuMWJacGVXOGljd1hhZFRqSjZlOTd1eVNiWnB3blQ2OVFQVWtNOWpLRlhp?=
- =?utf-8?B?MHVMNndTbmdnVE1oSWNjWEZ4UHd5bVk4L2FSUzg1U0FmcDNPcTA0UnluZWxx?=
- =?utf-8?B?eEFUS3J0R3BTUWx2Tm8zbmhVY2g4RUtrZUpHSkxhSHQxREdEOElDLzl6YVQy?=
- =?utf-8?B?QXdXL2pMYVFHZXY2Y2VBd1VzYWgyNk1tckRYWEIxNWJIVDlQVTAzTUNqaDZY?=
- =?utf-8?B?UnhUNEN6bVZDU2U4Nk9lQ1FXM1RHbElMd21aUTloY3VWWHgxWHB6VjB1QkNO?=
- =?utf-8?B?MGl4R2RkYTZHV05XNlNRNzRoazVPVW9uMHpHMXRNaS9rZXpnZkx4bHl2cTZY?=
- =?utf-8?B?eUNzYmpPMHYweW1iTXlnMTVVTm9VdWNITnpmV1lDSXRidGZOMVZ3VlBZSFdW?=
- =?utf-8?B?dGRsRTBVZkpDU05OZEdWSWE0dk5SL2RIdEIybUhlS1pQSHk5ampic3IxVUls?=
- =?utf-8?B?SUJhZEJrMDFKOG04R0MrcUpuZWpnK2djTlVVVUFadXBUcHhhbHBZemNpMDlM?=
- =?utf-8?Q?MJgDCoEQJhPXzogDU9am8j65m?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c03dc37e-ec15-404a-810f-08dd9bcb15b0
-X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB7500.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 May 2025 20:31:10.3605
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: u+QKUnzgttlk7CCUSU4/x2zCCM9BKNjC5EfB64yXFNx2hMAghm8FrhOjrgR1j2DC
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR12MB7506
+Content-Transfer-Encoding: 8bit
 
-On 21/05/2025 17:10, Jakub Kicinski wrote:
->> We could've saved this extra cycle if my questions [1] exactly about 
->> this topic weren't ignored.
->> Area is vague and not well defined. We can continue with the iterative 
->> guess and fix cycles, or alternatively get it clearly and formally defined.
-> 
-> I started a couple of times on answering but my hands go a little limb
-> when I have to explain things so obvious like "testing is a crucial part
-> of software development" :S
+Fix up some inconsistent behaviour involving the screenpad on some
+ASUS laptops. This fixes:
+- illogical screen off control (0/1 flipped depending on WMI state)
+- bad brightness depending on the last screenpad power state
+- incorrect brightness scaling
 
-You're acting as if kernel testing is obvious, and the only way to test
-the kernel is through selftests. The kernel and networking subsystem are
-tested regardless of selftests, the fact that you don't see the tests
-does not mean it doesn't happen.
+Signed-off-by: Luke Jones <luke@ljones.dev>
+---
+ drivers/platform/x86/asus-wmi.c | 52 +++++++++++++--------------------
+ 1 file changed, 21 insertions(+), 31 deletions(-)
 
-We are not new contributors, plenty of uapi changes have been merged
-without selftests, it's natural for us to try and understand this new
-requirement.
+diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+index f52884e90759..cec509171971 100644
+--- a/drivers/platform/x86/asus-wmi.c
++++ b/drivers/platform/x86/asus-wmi.c
+@@ -123,7 +123,6 @@ module_param(fnlock_default, bool, 0444);
+ #define NVIDIA_TEMP_MIN		75
+ #define NVIDIA_TEMP_MAX		87
+ 
+-#define ASUS_SCREENPAD_BRIGHT_MIN 20
+ #define ASUS_SCREENPAD_BRIGHT_MAX 255
+ #define ASUS_SCREENPAD_BRIGHT_DEFAULT 60
+ 
+@@ -4239,43 +4238,37 @@ static int read_screenpad_brightness(struct backlight_device *bd)
+ 		return err;
+ 	/* The device brightness can only be read if powered, so return stored */
+ 	if (err == BACKLIGHT_POWER_OFF)
+-		return asus->driver->screenpad_brightness - ASUS_SCREENPAD_BRIGHT_MIN;
++		return bd->props.brightness;
+ 
+ 	err = asus_wmi_get_devstate(asus, ASUS_WMI_DEVID_SCREENPAD_LIGHT, &retval);
+ 	if (err < 0)
+ 		return err;
+ 
+-	return (retval & ASUS_WMI_DSTS_BRIGHTNESS_MASK) - ASUS_SCREENPAD_BRIGHT_MIN;
++	return (retval & ASUS_WMI_DSTS_BRIGHTNESS_MASK);
+ }
+ 
+ static int update_screenpad_bl_status(struct backlight_device *bd)
+ {
+-	struct asus_wmi *asus = bl_get_data(bd);
+-	int power, err = 0;
++	int err = 0;
+ 	u32 ctrl_param;
+ 
+-	power = read_screenpad_backlight_power(asus);
+-	if (power < 0)
+-		return power;
+-
+-	if (bd->props.power != power) {
+-		if (power != BACKLIGHT_POWER_ON) {
+-			/* Only brightness > 0 can power it back on */
+-			ctrl_param = asus->driver->screenpad_brightness - ASUS_SCREENPAD_BRIGHT_MIN;
+-			err = asus_wmi_set_devstate(ASUS_WMI_DEVID_SCREENPAD_LIGHT,
+-						    ctrl_param, NULL);
+-		} else {
+-			err = asus_wmi_set_devstate(ASUS_WMI_DEVID_SCREENPAD_POWER, 0, NULL);
+-		}
+-	} else if (power == BACKLIGHT_POWER_ON) {
+-		/* Only set brightness if powered on or we get invalid/unsync state */
+-		ctrl_param = bd->props.brightness + ASUS_SCREENPAD_BRIGHT_MIN;
++	ctrl_param = bd->props.brightness;
++	if (ctrl_param >= 0 && bd->props.power) {
++		err = asus_wmi_set_devstate(ASUS_WMI_DEVID_SCREENPAD_POWER, 1,
++					    NULL);
++		if (err < 0)
++			return err;
++		ctrl_param = bd->props.brightness;
+ 		err = asus_wmi_set_devstate(ASUS_WMI_DEVID_SCREENPAD_LIGHT, ctrl_param, NULL);
++		if (err < 0)
++			return err;
+ 	}
+ 
+-	/* Ensure brightness is stored to turn back on with */
+-	if (err == 0)
+-		asus->driver->screenpad_brightness = bd->props.brightness + ASUS_SCREENPAD_BRIGHT_MIN;
++	if (!bd->props.power) {
++		err = asus_wmi_set_devstate(ASUS_WMI_DEVID_SCREENPAD_POWER, 0, NULL);
++		if (err < 0)
++			return err;
++	}
+ 
+ 	return err;
+ }
+@@ -4293,22 +4286,19 @@ static int asus_screenpad_init(struct asus_wmi *asus)
+ 	int err, power;
+ 	int brightness = 0;
+ 
+-	power = read_screenpad_backlight_power(asus);
++	power = asus_wmi_get_devstate_simple(asus, ASUS_WMI_DEVID_SCREENPAD_POWER);
+ 	if (power < 0)
+ 		return power;
+ 
+-	if (power != BACKLIGHT_POWER_OFF) {
++	if (power) {
+ 		err = asus_wmi_get_devstate(asus, ASUS_WMI_DEVID_SCREENPAD_LIGHT, &brightness);
+ 		if (err < 0)
+ 			return err;
+ 	}
+-	/* default to an acceptable min brightness on boot if too low */
+-	if (brightness < ASUS_SCREENPAD_BRIGHT_MIN)
+-		brightness = ASUS_SCREENPAD_BRIGHT_DEFAULT;
+ 
+ 	memset(&props, 0, sizeof(struct backlight_properties));
+ 	props.type = BACKLIGHT_RAW; /* ensure this bd is last to be picked */
+-	props.max_brightness = ASUS_SCREENPAD_BRIGHT_MAX - ASUS_SCREENPAD_BRIGHT_MIN;
++	props.max_brightness = ASUS_SCREENPAD_BRIGHT_MAX;
+ 	bd = backlight_device_register("asus_screenpad",
+ 				       &asus->platform_device->dev, asus,
+ 				       &asus_screenpad_bl_ops, &props);
+@@ -4319,7 +4309,7 @@ static int asus_screenpad_init(struct asus_wmi *asus)
+ 
+ 	asus->screenpad_backlight_device = bd;
+ 	asus->driver->screenpad_brightness = brightness;
+-	bd->props.brightness = brightness - ASUS_SCREENPAD_BRIGHT_MIN;
++	bd->props.brightness = brightness;
+ 	bd->props.power = power;
+ 	backlight_update_status(bd);
+ 
+-- 
+2.49.0
 
-> I mean.. nvidia certainly tests their code, so I'm not sure where the disconnect is. 
-
-Absolutely!
-Our testing and coverage are far more complex and valuable than what the
-existing selftests provide.
-
-We have testing infrastructure that predates these recent selftests
-addition by years, and we don't plan on switching them to something
-inferior.
-
-Writing selftests will not replace our internal tests, we're wasting
-extra cycles adapting our tests to yet another project, just for the
-sake of having them in the kernel tree?
-
-> I had a short conversation with
-> Gal at some conference where he, AFAIU, was doubting that device testing
-> can be part of an open source project.
-
-What's your point?
-Did that prevent me from being a top 10 netdev selftests contributor in
-v6.15?
-
-I don't care if tests are open source or not, I care about having good
-tests that run often and report bugs and regressions.
-
-> 
-> It certainly is not advantageous to companies to have to share their
-> test code. So when you ask me for details on the rules what I hear is
-> "how can we make sure we do as little as possible".
-
-No, I'm asking for predictability, we've been circling this point for
-quite some time.
-
-We shouldn't have to wait until v9 to guess whether a certain submission
-requires the addition of a test.
-We shouldn't submit a bug fix, to find out that it's blocked due to lack
-of a test.
-
-As an example, we have well documented coding style, so:
-- You don't have to waste your time commenting on things that could have
-been handled before submission.
-- Rules are clear, comments don't rely on personal taste or mood.
-- Developers learn, number of review iterations are reduced.
-
-What's the difference with documenting requirements for tests? We can't
-read your mind.
-
-> 
-> Broadly, any new uAPI should come with tests which exercise the
-> functionality.
-
-I'm fine with this definition (though I think it's too vague), can I add
-it to maintainer-netdev.rst?
