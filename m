@@ -1,51 +1,70 @@
-Received: from out-184.mta0.migadu.com (out-184.mta0.migadu.com [91.218.175.184])
+Received: from mx0b-0016f401.pphosted.com (mx0b-0016f401.pphosted.com [67.231.156.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A4981D47B4
-	for <linux-kernel@vger.kernel.org>; Sun, 25 May 2025 09:55:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.184
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA3531A08BC;
+	Sun, 25 May 2025 09:59:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.156.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748166956; cv=none; b=iiMlbyHQE634PByD18duRIgkLaY3gakV3scdgx99sJUY5I7Irmm2/KZvvLzLrSYgNU62TaEy7xXBt6v8e0IdPs3ZIh/h2VAlbJNPnvGfqx8vIJeXMwPt1YU8KcB3v5Ocp60GgFhAG0qT02Y9Y5Ifp9oUT4D5Y1YNPLXI7OD/8ps=
+	t=1748167169; cv=none; b=aai92heszYhBTSbapuraYUwz+F1OYuLGPFbqLsJUxVi90mkhagps+RZHg3NOFtWB1UUMDINkE+MrXUVAkk2nHt2y3MCp9ohNIDQp8ZqssqMHliTABKEhbG7lDAJ27VZzRBGixkbEL9ytMZTIA9lYTk5RRmY2R/wNzMJoP7o5Dew=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748166956; c=relaxed/simple;
-	bh=NQP7jqFUEh4B5N7CPMMbSmLmin4zYEpjxuKWftdQM3k=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=nuT+uXxciNQFX3E0/Jl4nv+TnfIyNYatfGaAFc2yYbKAuTZekraMYIfq2lWMFFfN7PJ0tP1NeHzDypWy0IpFvr8alaCE9fkU06I/eKHRim3PGTcyAOlIvj3iSnMPpGWoosUeLZn3W999+p+/y41BVdsfvUKVWTJ/yAgczh4O/6M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=packett.cool; spf=pass smtp.mailfrom=packett.cool; dkim=pass (2048-bit key) header.d=packett.cool header.i=@packett.cool header.b=pwoYNqk3; arc=none smtp.client-ip=91.218.175.184
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=packett.cool
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=packett.cool
+	s=arc-20240116; t=1748167169; c=relaxed/simple;
+	bh=V3tmG3dLO9mr0GAHG2bi03/J92CNc+D6dI01p6IGmts=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=V4Uac0TQk9i9CTiI9oIh4B0pjrxxqKpcvleDuxV5bTO5jSMit2juBSS/g0Ujy2L1JKdxC1LRIzTFNhyiKqsKFqC//+J9bOh3nL6/7NirrhO6JUs+rStfwgdWADVplIWh7FJ73bGFSdC7kHDFTUhZOmT5iGEO9lmY9saAB9lSCl4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=Wy2HljHu; arc=none smtp.client-ip=67.231.156.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=packett.cool header.i=@packett.cool header.b="pwoYNqk3"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=packett.cool;
-	s=key1; t=1748166951;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ZrfySnnJmJf8OR0WcIjvlJn/uez+04v8Z2OdLalAhPE=;
-	b=pwoYNqk3SKEZYb8xaXXifHMpsKCZv9lOGhdaapKJt0RKxp9JiE9iBaQt2Gj5leL7jWhniw
-	WfT4kOeNCTjxTZlWtaA4dj/M5g9Ab/ALWdRIdaPnt5uyLYaG4jClSmZfHIivFTzQAX558l
-	xWbAis92MJNKTQcTVtzeOVguQvb15HYRnZ5gOSOtpUJMq+zSZHLlLaQi1ji2wMgCQAAs2k
-	IefmJ4ch/khK8iwkGczex3FLekWbWouOdVggWHwwzqZQnwq/bI+EBoca85sv6H0pJvFv1/
-	CTGFOhsv2WI6I9dD7y7CyVnsbj/aU0nF4xv6OkGjwLyzHazqLRFtIcecmGWksw==
-From: Val Packett <val@packett.cool>
-To: Douglas Anderson <dianders@chromium.org>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Jessica Zhang <quic_jesszhan@quicinc.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>
-Cc: Val Packett <val@packett.cool>,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 4/4] drm/panel-edp: Add BOE NE14QDM panel for Dell Latitude 7455
-Date: Sun, 25 May 2025 06:53:36 -0300
-Message-ID: <20250525095341.12462-6-val@packett.cool>
-In-Reply-To: <20250525095341.12462-2-val@packett.cool>
-References: <20250525095341.12462-2-val@packett.cool>
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="Wy2HljHu"
+Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
+	by mx0b-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54P9tc31010346;
+	Sun, 25 May 2025 02:59:04 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=pfpt0220; bh=OplobE/ksS9d99f5uK5mcir
+	jzOQv08vitVJNOGxuBYI=; b=Wy2HljHum51U4MFHuIQjbNACxoE4cco9gSA6uhh
+	TZEht2PwhEe4xkPtbbZIrf12PiWqm8+o3xAQAfk0Jj9pKXTRyiXhrfb/bWfmrqHG
+	dDpEFsMfn0CMhTR2V6AyLUoqV4X5FxkSx9OUPWcPA5l2qCaVUUJZa+wD/FXmIs3l
+	+zzXupf3M4ZtXG7acxJ9kHyCkRzMOPc0aQfkuzP/Ab79d1EcfJaN7bosOL6Y45qA
+	r2Y9gDod+SxsMsH0M7AHsjmONfJiFkw/fjgR5fg+VvTgCpw0ZDHaPm6j50WLMicJ
+	7ZyHVJMAUBbeRnh1S1nkAVZNmiVEkhobkyKepq7GvBdFEqg==
+Received: from dc6wp-exch02.marvell.com ([4.21.29.225])
+	by mx0b-0016f401.pphosted.com (PPS) with ESMTPS id 46udmjh474-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sun, 25 May 2025 02:59:04 -0700 (PDT)
+Received: from DC6WP-EXCH02.marvell.com (10.76.176.209) by
+ DC6WP-EXCH02.marvell.com (10.76.176.209) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.4; Sun, 25 May 2025 02:59:03 -0700
+Received: from maili.marvell.com (10.69.176.80) by DC6WP-EXCH02.marvell.com
+ (10.76.176.209) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
+ Transport; Sun, 25 May 2025 02:59:03 -0700
+Received: from test-OptiPlex-Tower-Plus-7010.marvell.com (unknown [10.29.37.157])
+	by maili.marvell.com (Postfix) with ESMTP id 57C5F3F709D;
+	Sun, 25 May 2025 02:58:58 -0700 (PDT)
+From: Hariprasad Kelam <hkelam@marvell.com>
+To: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC: Hariprasad Kelam <hkelam@marvell.com>,
+        Sunil Goutham
+	<sgoutham@marvell.com>,
+        Linu Cherian <lcherian@marvell.com>,
+        Geetha sowjanya
+	<gakula@marvell.com>,
+        Jerin Jacob <jerinj@marvell.com>,
+        Subbaraya Sundeep
+	<sbhatta@marvell.com>,
+        Andrew Lunn <andrew+netdev@lunn.ch>,
+        "David S. Miller"
+	<davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>, Jakub Kicinski
+	<kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Ratheesh Kannoth
+	<rkannoth@marvell.com>,
+        Simon Horman <horms@kernel.org>
+Subject: [net] Octeontx2-af: Skip overlap check for SPI field
+Date: Sun, 25 May 2025 15:28:54 +0530
+Message-ID: <20250525095854.1612196-1-hkelam@marvell.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -53,32 +72,52 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain
+X-Authority-Analysis: v=2.4 cv=T8qMT+KQ c=1 sm=1 tr=0 ts=6832e9e8 cx=c_pps a=gIfcoYsirJbf48DBMSPrZA==:117 a=gIfcoYsirJbf48DBMSPrZA==:17 a=dt9VzEwgFbYA:10 a=M5GUcnROAAAA:8 a=KLocVHQyFJvDF4PZL-8A:9 a=OBjm3rFKGHvpk9ecZwUJ:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTI1MDA5MSBTYWx0ZWRfX0CJoPIkmuRIV hNlU0zv13z5O1039yS1WdaTppLez8iGVzIVW3VvD00hoPej49+XCotDkuVq79IeFtmGxwsHM8iq 3n3fdlHD2rSISYvCL2AoEnPxvrKxjXjtR4Sn4tvBX7VHe50pzccuEZbi5j7AvLtqZc87avFKx/T
+ MtMzOMD7u6uG8Y4VLf0n/2avSS1TvKcbPMLKL9mFCVoVMSMh5SiWzsYAX+HMb7gXXyjfs+tGH0v t8oW4qFpB7ZlfZFwWG23VnbCMWexhiKIg/E3GMhP4mOcZY/fFUqYQOlFL+beiOS0CHyQhFKLOOE dIfdPi8QfOvZSao2hMPcUuHveYZHovMHTrHCJb7TdmvJFWfXFN5/slyt1+q0PacNn2wmS+jt8aE
+ Ap7C4nQMKRv0nnnZJ17pgBrexCQDTWzVas1QXw6z9gE9DH+Ib3bW/QVzqqWF1aWfhbYhjvYX
+X-Proofpoint-GUID: VzaG_KmzZslV0bbW84rBl6ycUkRTlecf
+X-Proofpoint-ORIG-GUID: VzaG_KmzZslV0bbW84rBl6ycUkRTlecf
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-25_04,2025-05-22_01,2025-03-28_01
 
-Cannot confirm which variant exactly it is, as the EDID alphanumeric data
-contains '0RGNR' <0x80> 'NE14QDM' and ends there; but it's 60 Hz and with
-touch.
+Currently, the AF driver scans the mkex profile to identify all
+supported features. This process also involves checking for any
+fields that might overlap with each other.
 
-I do not have access to datasheets for these panels, so the timing is
-a guess that was tested to work fine on this laptop.
+For example, NPC_TCP_SPORT field offset within the key should
+not overlap with NPC_DMAC/NPC_SIP_IPV4 or any other field.
 
-Signed-off-by: Val Packett <val@packett.cool>
+However, there are situations where some overlap is unavoidable.
+For instance, when extracting the SPI field, the same key offset might
+be used by both the AH and ESP layers. This patch addresses this
+specific scenario by skipping the overlap check and instead, adds
+a warning message to the user.
+
+Fixes: 12aa0a3b93f3 ("octeontx2-af: Harden rule validation.")
+Signed-off-by: Hariprasad Kelam <hkelam@marvell.com>
 ---
- drivers/gpu/drm/panel/panel-edp.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/ethernet/marvell/octeontx2/af/rvu_npc_fs.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/panel/panel-edp.c b/drivers/gpu/drm/panel/panel-edp.c
-index 90e8c154a978..ec7c1e21f2d2 100644
---- a/drivers/gpu/drm/panel/panel-edp.c
-+++ b/drivers/gpu/drm/panel/panel-edp.c
-@@ -1937,6 +1937,7 @@ static const struct edp_panel_entry edp_panels[] = {
- 	EDP_PANEL_ENTRY('B', 'O', 'E', 0x0ac5, &delay_200_500_e50, "NV116WHM-N4C"),
- 	EDP_PANEL_ENTRY('B', 'O', 'E', 0x0ae8, &delay_200_500_e50_p2e80, "NV140WUM-N41"),
- 	EDP_PANEL_ENTRY('B', 'O', 'E', 0x0b09, &delay_200_500_e50_po2e200, "NV140FHM-NZ"),
-+	EDP_PANEL_ENTRY('B', 'O', 'E', 0x0b1e, &delay_200_500_e80, "NE140QDM-N6A"),
- 	EDP_PANEL_ENTRY('B', 'O', 'E', 0x0b34, &delay_200_500_e80, "NV122WUM-N41"),
- 	EDP_PANEL_ENTRY('B', 'O', 'E', 0x0b43, &delay_200_500_e200, "NV140FHM-T09"),
- 	EDP_PANEL_ENTRY('B', 'O', 'E', 0x0b56, &delay_200_500_e80, "NT140FHM-N47"),
+diff --git a/drivers/net/ethernet/marvell/octeontx2/af/rvu_npc_fs.c b/drivers/net/ethernet/marvell/octeontx2/af/rvu_npc_fs.c
+index 1b765045aa63..163cbce8575f 100644
+--- a/drivers/net/ethernet/marvell/octeontx2/af/rvu_npc_fs.c
++++ b/drivers/net/ethernet/marvell/octeontx2/af/rvu_npc_fs.c
+@@ -606,8 +606,10 @@ static void npc_set_features(struct rvu *rvu, int blkaddr, u8 intf)
+ 		if (!npc_check_field(rvu, blkaddr, NPC_LB, intf))
+ 			*features &= ~BIT_ULL(NPC_OUTER_VID);
+ 
++	if (npc_check_overlap(rvu, blkaddr, NPC_IPSEC_SPI, 0, intf))
++		dev_warn(rvu->dev, "Overlap detected the field NPC_IPSEC_SPI\n");
+ 	/* Set SPI flag only if AH/ESP and IPSEC_SPI are in the key */
+-	if (npc_check_field(rvu, blkaddr, NPC_IPSEC_SPI, intf) &&
++	if (npc_is_field_present(rvu, NPC_IPSEC_SPI, intf) &&
+ 	    (*features & (BIT_ULL(NPC_IPPROTO_ESP) | BIT_ULL(NPC_IPPROTO_AH))))
+ 		*features |= BIT_ULL(NPC_IPSEC_SPI);
+ 
 -- 
-2.49.0
+2.34.1
 
