@@ -1,47 +1,47 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD5991ADC7E
-	for <linux-kernel@vger.kernel.org>; Sun, 25 May 2025 20:53:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CFE21B0439
+	for <linux-kernel@vger.kernel.org>; Sun, 25 May 2025 20:53:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748206428; cv=none; b=TttP6O8HyRDDiaC20sRUfbDGwoOdwn32ySOs13FxA7/yc6ju9Xw1Vn62XXd6AykmFp5Ae6FYYjbwlYeADJ1CQZLvGyNBdWTOahW3JqKa7d+Sbcdc7iAPbjcU7Kunig/PVu6+kflkzsqYkd3rYFmNWrKG35UCoKEji8fdAfA7xwA=
+	t=1748206431; cv=none; b=o/SD1Dh+mck16aZco7xFTnX8R/Y5A0DaWXkSD5omLIeAWjwUySiQ2yk+d51gPrKFgeDwK09moJc8oSkeKUA1K2yecyEovBF7sGrMoYeNrZOO26v1mBbRxbx3Bxnh9EukvWdZiXpie7WxS9tJEN4DVvawp0V3+jldQa13WZ31eS4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748206428; c=relaxed/simple;
-	bh=87Y9UtE1bV0NznMoJYUdEzGExRkwtxvQR4K0CzPR56M=;
+	s=arc-20240116; t=1748206431; c=relaxed/simple;
+	bh=bJyIqbmPGHdaSpO1YegnxbuFwa5qsE2E0M/C1ttOZDA=;
 	h=From:To:Cc:Subject:References:Message-ID:Content-Type:
-	 MIME-Version:Date; b=JRHt1RYSQ7byRTjFZDq/S578SdAki1owqJq53Uo2/N4eZe73Mh85Ip0yo6W24LesjV3/ENTdl0wV6SOERM5XSgZaXkEJmJwTzYHc6WvE/AsgMXlKv334ltccU8+cy7ZOYmLNXtLCrYgzSC1JTz/be5t3jx/1dCwcaHdFp2cxR6Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=zpLYGdK/; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=SvYUbYXW; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version:Date; b=BQfIgNMA7eB7WwaeM6x0XaWyNWO+RM4zXhmS+lfJHImSQIz6p+Ee5/Smn5wFRNPfwBrH21qhlVhE41UHLsLwd9F/6tMcBvwItX7M59Hq+r8W+eTE1mlL79XSbYRsXqGQA/7XMWGGckEjY11zMuOblNPasLevkX8BywwTspYtmmg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=fGb3ezyc; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=jtaHbE6Z; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="zpLYGdK/";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="SvYUbYXW"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="fGb3ezyc";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="jtaHbE6Z"
 From: Thomas Gleixner <tglx@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1748206423;
+	s=2020; t=1748206424;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:  references:references;
-	bh=SZmMBAe8QPFBI9mhG+0i95R9Kt9c0yNsb397kGWF1jQ=;
-	b=zpLYGdK/rW6Jtz0SU6eGfqBzXiUNQvTtGt5GsXxtq4Hg00ffh9c6CcL3zrhYzv9FakUC+D
-	sDlZGuhgjWJGHuNNGX89x4ZP51F/Y2hMvP3yv309dgv8gIXFlfn/fgiRfYkbf38qyqQLn1
-	4ldbrxmZV9ueX/aY3OIT2BB9qKd9n93wzWBqET18pY09fvmY1v4VsIUuMBnZ3UsRnDalky
-	SdhSgWpLNeWj+AnIOY8n08qKE0IBQoQro/r7k/IZk4VCFplhxaAML2A37dEZD4onCHWLxc
-	xr47JUa1ILjgLrGMp0l5pAZfi5+x7tRdmeiuXLJ4b1UcoXnqMWmiW40SO8ozJw==
+	bh=D6B/ZQOfZhK3JXtmKqJry5QKnzMkhDd4OCKPg4N3y4Q=;
+	b=fGb3ezycvaqgCeHNeslmvSjcAyLM8GVO2Po8Tj66VCZKaaGvOWijPPlDM5P/Hd6k3jKgBN
+	Tw1D9K7Xmz08lv/O8D63q/AbP9A8UNCZfP636T/l9XpZuIo36PiBxLgNpI6AkkU7W9VAlT
+	WWZ5N5UePUEYFKuEgOu+lCVeuRhrXk4gEisjRi6tykOVQlRdh0pMQ4vemLPGKqXGarD3MQ
+	RdkzEWksYD7RlMjPQBpjtGFh5mCoJ8VnkwJHKGiAbIbfpWxnftJEeIX5e0qAYOc1V10rlT
+	4IK+6QBzYw+qChAYoLowppwOJYeAyG48SR8ssii7ybg4dYGlpf87aIVFaZDKQw==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1748206423;
+	s=2020e; t=1748206424;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:  references:references;
-	bh=SZmMBAe8QPFBI9mhG+0i95R9Kt9c0yNsb397kGWF1jQ=;
-	b=SvYUbYXW7kos0uIef3ejM04ghxXItoNgEXFyrnn6fmlW7n4+MW/TG+pKI548HU3IAStYWb
-	xNd0vsElVAp1NUCw==
+	bh=D6B/ZQOfZhK3JXtmKqJry5QKnzMkhDd4OCKPg4N3y4Q=;
+	b=jtaHbE6Z5G97Vd9qYRTsqcWRvqy9mZeteRnL/8qOxKK93Pdw35m4WKS2TO0L6uRr32YsXB
+	TNsLk6xiJEQYSbAA==
 To: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: linux-kernel@vger.kernel.org, x86@kernel.org
-Subject: [GIT pull] irq/drivers for v6.16-rc1
+Subject: [GIT pull] irq/msi for v6.16-rc1
 References: <174820637262.238682.1985899398053030312.tglx@xen13>
-Message-ID: <174820637812.238682.1039624619620049695.tglx@xen13>
+Message-ID: <174820637979.238682.4349646136552270664.tglx@xen13>
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
@@ -50,2181 +50,2714 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Sun, 25 May 2025 22:53:42 +0200 (CEST)
+Date: Sun, 25 May 2025 22:53:43 +0200 (CEST)
 
 Linus,
 
-please pull the latest irq/drivers branch from:
+please pull the latest irq/msi branch from:
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git irq-drivers-2025=
--05-25
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git irq-msi-2025-05-=
+25
 
-up to:  3e402acd5c4f: irqchip/irq-pruss-intc: Simplify chained interrupt hand=
-ler setup
+up to:  4e7bca76e3fe: PCI/MSI: Use bool for MSI enable state tracking
 
 
-Update for interrupt chip drivers:
+Updates for the MSI subsystem (core code and PCI):
 
-  - Convert the generic interrupt chip to lock guards to remove copy &
-    pasta boilerplate code and gotos.
+  - Switch the MSI decriptor locking to lock guards
 
-  - A new driver fot the interrupt controller in the EcoNet EN751221 MIPS SoC.
+  - Replace a broken and naive implementation of PCI/MSI-X control word
+    updates in the PCI/TPH driver with a properly serialized variant in the
+    PCI/MSI core code.
 
-  - Extend the SG2042-MSI driver to support the new SG2044 SoC
+  - Remove the MSI descriptor abuse in the SCCI/UFS/QCOM driver by
+    replacing the direct access to the MSI descriptors with the proper API
+    function calls. People will never understand that APIs exist for a
+    reason...
 
-  - Updates and cleanups for the (ancient) VT8500 driver
+  - Provide core infrastructre for the upcoming PCI endpoint library
+    extensions. Currently limited to ARM GICv3+, but in theory extensible
+    to other architectures.
 
-  - Improve the scalability of the ARM GICV4.1 ITS driver by utilizing node
-    local copies a VM's interrupt translation table when possible. This
-    results in a 12% reduction of VM IPI latency in certain workloads.
+  - Provide a MSI domain::teardown() callback, which allows drivers to undo
+    the effects of the prepare() callback.
 
-  - The usual cleanups and improvements all over the place
+  - Move the MSI domain::prepare() callback invocation to domain creation
+    time to avoid redundant (and in case of ARM/GIC-V3-ITS confusing)
+    invocations on every allocation.
+
+    In combination with the new teardown callback this removes some ugly
+    hacks in the GIC-V3-ITS driver, which pretended to work around the
+    short comings of the core code so far. With this update the code is
+    correct by design and implementation.
+
+  - Make the irqchip MSI library globally available, provide a MSI parent
+    domain creation helper and convert a bunch of (PCI/)MSI drivers over to
+    the modern MSI parent mechanism. This is the first step to get rid of
+    at least one incarnation of the three PCI/MSI management schemes.
+
+  - The usual small cleanups and improvements
 
 Thanks,
 
 	tglx
 
 ------------------>
-Alexey Charkov (5):
-      irqchip/irq-vt8500: Split up ack/mask functions
-      irqchip/irq-vt8500: Drop redundant copy of the device node pointer
-      irqchip/irq-vt8500: Don't require 8 interrupts from a chained controller
-      irqchip/irq-vt8500: Use a dedicated chained handler function
-      irqchip/irq-vt8500: Use fewer global variables and add error handling
+Frank Li (5):
+      platform-msi: Add msi_remove_device_irq_domain() in platform_device_msi=
+_free_irqs_all()
+      irqdomain: Add IRQ_DOMAIN_FLAG_MSI_IMMUTABLE and irq_domain_is_msi_immu=
+table()
+      irqchip/gic-v3-its: Set IRQ_DOMAIN_FLAG_MSI_IMMUTABLE for ITS
+      dt-bindings: PCI: pci-ep: Add support for iommu-map and msi-map
+      irqchip/gic-v3-its: Add support for device tree msi-map and msi-mask
 
-Caleb James DeLisle (2):
-      dt-bindings: interrupt-controller: Add EcoNet EN751221 INTC
-      irqchip: Add EcoNet EN751221 INTC
+Hans Zhang (1):
+      PCI/MSI: Use bool for MSI enable state tracking
 
-Chen Ni (1):
-      irqchip/irq-pruss-intc: Simplify chained interrupt handler setup
+Jiri Slaby (SUSE) (1):
+      irqdomain: pci: Switch to of_fwnode_handle()
 
-Geert Uytterhoeven (1):
-      genirq/generic-chip: Fix incorrect lock guard conversions
+Marc Zyngier (13):
+      genirq/msi: Add .msi_teardown() callback as the reverse of .msi_prepare=
+()
+      irqchip/gic-v3-its: Implement .msi_teardown() callback
+      genirq/msi: Move prepare() call to per-device allocation
+      genirq/msi: Engage the .msi_teardown() callback on domain removal
+      irqchip/gic-v3-its: Use allocation size from the prepare call
+      irqchip: Make irq-msi-lib.h globally available
+      genirq/msi: Add helper for creating MSI-parent irq domains
+      irqchip/gic: Convert to msi_create_parent_irq_domain() helper
+      irqchip/mvebu: Convert to msi_create_parent_irq_domain() helper
+      irqchip/msi-lib: Honour the MSI_FLAG_NO_AFFINITY flag
+      PCI: apple: Convert to MSI parent infrastructure
+      PCI: xgene: Convert to MSI parent infrastructure
+      PCI: tegra: Convert to MSI parent infrastructure
 
-Inochi Amaoto (5):
-      dt-bindings: interrupt-controller: Add Sophgo SG2044 MSI controller
-      irqchip/sg2042-msi: Rename functions and data structures to be SG2042 a=
-gnostic
-      irqchip/sg2042-msi: Introduce configurable chipinfo for SG2042
-      irqchip/sg2042-msi: Add the Sophgo SG2044 MSI interrupt controller
-      irqchip/sg2042-msi: Fix wrong type cast in sg2044_msi_irq_ack()
-
-Jiri Slaby (SUSE) (2):
-      irqchip/irq-vt8500: Switch to irq_domain_create_*()
-      irqchip/econet-en751221: Switch to of_fwnode_handle()
-
-Nianyao Tang (1):
-      irqchip/gic-v4.1: Use local 4_1 ITS to generate VSGI
-
-Thomas Gleixner (8):
-      genirq/generic-chip: Make locking unconditional
-      genirq/generic-chip: Convert core code to lock guards
-      soc: dove: Convert generic irqchip locking to guard()
-      ARM: orion/gpio:: Convert generic irqchip locking to guard()
-      gpio: mvebu: Convert generic irqchip locking to guard()
-      irqchip: Convert generic irqchip locking to guards
-      genirq/generic-chip: Remove unused lock wrappers
-      irqchip/econet-en751221: Switch to irq_domain_create_linear()
+Thomas Gleixner (14):
+      cleanup: Provide retain_and_null_ptr()
+      genirq/msi: Use lock guards for MSI descriptor locking
+      soc: ti: ti_sci_inta_msi: Switch MSI descriptor locking to guard()
+      NTB/msi: Switch MSI descriptor locking to lock guard()
+      PCI/MSI: Use guard(msi_desc_lock) where applicable
+      PCI/MSI: Set pci_dev:: Msi_enabled late
+      PCI/MSI: Use __free() for affinity masks
+      PCI/MSI: Switch msi_capability_init() to guard(msi_desc_lock)
+      PCI/MSI: Switch msix_capability_init() to guard(msi_desc_lock)
+      PCI: hv: Switch MSI descriptor locking to guard()
+      PCI/MSI: Provide a sane mechanism for TPH
+      PCI/TPH: Replace the broken MSI-X control word update
+      scsi: ufs: qcom: Remove the MSI descriptor abuse
+      genirq/msi: Rename msi_[un]lock_descs()
 
 
- .../interrupt-controller/econet,en751221-intc.yaml |  78 ++++++
- .../interrupt-controller/sophgo,sg2042-msi.yaml    |   4 +-
- arch/arm/plat-orion/gpio.c                         |   6 +-
- drivers/gpio/gpio-mvebu.c                          |  15 +-
- drivers/irqchip/Kconfig                            |   5 +
- drivers/irqchip/Makefile                           |   1 +
- drivers/irqchip/irq-al-fic.c                       |  18 +-
- drivers/irqchip/irq-atmel-aic.c                    |  19 +-
- drivers/irqchip/irq-atmel-aic5.c                   |  28 +-
- drivers/irqchip/irq-bcm7120-l2.c                   |  22 +-
- drivers/irqchip/irq-brcmstb-l2.c                   |   8 +-
- drivers/irqchip/irq-csky-apb-intc.c                |   3 +-
- drivers/irqchip/irq-dw-apb-ictl.c                  |   3 +-
- drivers/irqchip/irq-econet-en751221.c              | 310 +++++++++++++++++++=
-++
- drivers/irqchip/irq-gic-v3-its.c                   |   6 +-
- drivers/irqchip/irq-ingenic-tcu.c                  |   9 +-
- drivers/irqchip/irq-lan966x-oic.c                  |  18 +-
- drivers/irqchip/irq-loongson-liointc.c             |   9 +-
- drivers/irqchip/irq-mscc-ocelot.c                  |   3 +-
- drivers/irqchip/irq-pruss-intc.c                   |   3 +-
- drivers/irqchip/irq-sg2042-msi.c                   | 152 +++++++---
- drivers/irqchip/irq-stm32-exti.c                   |  21 +-
- drivers/irqchip/irq-sunxi-nmi.c                    |   9 +-
- drivers/irqchip/irq-tb10x.c                        |  13 +-
- drivers/irqchip/irq-vt8500.c                       | 153 +++++-----
- drivers/soc/dove/pmu.c                             |   3 +-
- include/linux/irq.h                                |  25 --
- kernel/irq/generic-chip.c                          |  47 ++--
- 28 files changed, 679 insertions(+), 312 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/ec=
-onet,en751221-intc.yaml
- create mode 100644 drivers/irqchip/irq-econet-en751221.c
+ Documentation/devicetree/bindings/pci/pci-ep.yaml  |  68 ++++++++
+ drivers/base/platform-msi.c                        |   1 +
+ drivers/irqchip/irq-bcm2712-mip.c                  |   2 +-
+ drivers/irqchip/irq-gic-v2m.c                      |  18 +-
+ drivers/irqchip/irq-gic-v3-its-msi-parent.c        |  39 ++---
+ drivers/irqchip/irq-gic-v3-its.c                   |  70 ++++----
+ drivers/irqchip/irq-gic-v3-mbi.c                   |  18 +-
+ drivers/irqchip/irq-imx-mu-msi.c                   |   2 +-
+ drivers/irqchip/irq-loongarch-avec.c               |   2 +-
+ drivers/irqchip/irq-loongson-pch-msi.c             |   2 +-
+ drivers/irqchip/irq-msi-lib.c                      |   9 +-
+ drivers/irqchip/irq-mvebu-gicp.c                   |  26 ++-
+ drivers/irqchip/irq-mvebu-icu.c                    |   2 +-
+ drivers/irqchip/irq-mvebu-odmi.c                   |  27 ++-
+ drivers/irqchip/irq-mvebu-sei.c                    |  24 +--
+ drivers/irqchip/irq-riscv-imsic-platform.c         |   2 +-
+ drivers/irqchip/irq-sg2042-msi.c                   |   2 +-
+ drivers/ntb/msi.c                                  |  22 +--
+ drivers/pci/controller/Kconfig                     |   3 +
+ drivers/pci/controller/dwc/pcie-designware-host.c  |   2 +-
+ .../pci/controller/mobiveil/pcie-mobiveil-host.c   |   2 +-
+ drivers/pci/controller/pci-hyperv.c                |  14 +-
+ drivers/pci/controller/pci-tegra.c                 |  63 ++-----
+ drivers/pci/controller/pci-xgene-msi.c             |  53 +++---
+ drivers/pci/controller/pcie-altera-msi.c           |   2 +-
+ drivers/pci/controller/pcie-apple.c                |  69 +++-----
+ drivers/pci/controller/pcie-brcmstb.c              |   2 +-
+ drivers/pci/controller/pcie-iproc-msi.c            |   2 +-
+ drivers/pci/controller/pcie-mediatek.c             |   2 +-
+ drivers/pci/controller/pcie-xilinx-dma-pl.c        |   2 +-
+ drivers/pci/controller/pcie-xilinx-nwl.c           |   2 +-
+ drivers/pci/controller/plda/pcie-plda-host.c       |   2 +-
+ drivers/pci/msi/api.c                              |   8 +-
+ drivers/pci/msi/msi.c                              | 179 ++++++++++++-------
+ drivers/pci/msi/msi.h                              |   2 +-
+ drivers/pci/pci.h                                  |   9 +
+ drivers/pci/tph.c                                  |  44 +----
+ drivers/soc/ti/ti_sci_inta_msi.c                   |  10 +-
+ drivers/ufs/host/ufs-qcom.c                        |  85 +++++----
+ include/linux/cleanup.h                            |  19 ++
+ {drivers =3D> include/linux}/irqchip/irq-msi-lib.h   |   6 +-
+ include/linux/irqdomain.h                          |   9 +
+ include/linux/msi.h                                |  23 ++-
+ include/linux/pci.h                                |   4 +-
+ kernel/irq/msi.c                                   | 192 ++++++++++++-------=
+--
+ 45 files changed, 616 insertions(+), 530 deletions(-)
+ rename {drivers =3D> include/linux}/irqchip/irq-msi-lib.h (84%)
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/econet,en=
-751221-intc.yaml b/Documentation/devicetree/bindings/interrupt-controller/eco=
-net,en751221-intc.yaml
-new file mode 100644
-index 000000000000..5536319c49c3
---- /dev/null
-+++ b/Documentation/devicetree/bindings/interrupt-controller/econet,en751221-=
-intc.yaml
-@@ -0,0 +1,78 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/interrupt-controller/econet,en751221-intc=
-.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: EcoNet EN751221 Interrupt Controller
-+
-+maintainers:
-+  - Caleb James DeLisle <cjd@cjdns.fr>
-+
-+description:
-+  The EcoNet EN751221 Interrupt Controller is a simple interrupt controller
-+  designed for the MIPS 34Kc MT SMP processor with 2 VPEs. Each interrupt can
-+  be routed to either VPE but not both, so to support per-CPU interrupts, a
-+  secondary IRQ number is allocated to control masking/unmasking on VPE#1. F=
-or
-+  lack of a better term we call these "shadow interrupts". The assignment of
-+  shadow interrupts is defined by the SoC integrator when wiring the interru=
-pt
-+  lines, so they are configurable in the device tree.
-+
-+allOf:
-+  - $ref: /schemas/interrupt-controller.yaml#
-+
-+properties:
-+  compatible:
-+    const: econet,en751221-intc
-+
-+  reg:
-+    maxItems: 1
-+
-+  "#interrupt-cells":
-+    const: 1
-+
-+  interrupt-controller: true
-+
-+  interrupts:
-+    maxItems: 1
-+    description: Interrupt line connecting this controller to its parent.
-+
-+  econet,shadow-interrupts:
+diff --git a/Documentation/devicetree/bindings/pci/pci-ep.yaml b/Documentatio=
+n/devicetree/bindings/pci/pci-ep.yaml
+index f75000e3093d..214caa4ec3d5 100644
+--- a/Documentation/devicetree/bindings/pci/pci-ep.yaml
++++ b/Documentation/devicetree/bindings/pci/pci-ep.yaml
+@@ -17,6 +17,24 @@ properties:
+   $nodename:
+     pattern: "^pcie-ep@"
+=20
++  iommu-map:
 +    $ref: /schemas/types.yaml#/definitions/uint32-matrix
-+    description:
-+      An array of interrupt number pairs where each pair represents a shadow
-+      interrupt relationship. The first number in each pair is the primary I=
-RQ,
-+      and the second is its shadow IRQ used for VPE#1 control. For example,
-+      <8 3> means IRQ 8 is shadowed by IRQ 3, so IRQ 3 cannot be mapped, but
-+      when VPE#1 requests IRQ 8, it will manipulate the IRQ 3 mask bit.
-+    minItems: 1
-+    maxItems: 20
 +    items:
 +      items:
-+        - description: primary per-CPU IRQ
-+        - description: shadow IRQ number
++        - description: Device ID (see msi-map) base
++          maximum: 0x7ffff
++        - description: phandle to IOMMU
++        - description: IOMMU specifier base (currently always 1 cell)
++        - description: Number of Device IDs
++          maximum: 0x80000
 +
-+required:
-+  - compatible
-+  - reg
-+  - interrupt-controller
-+  - "#interrupt-cells"
-+  - interrupts
++  iommu-map-mask:
++    description:
++      A mask to be applied to each Device ID prior to being mapped to an
++      IOMMU specifier per the iommu-map property.
++    $ref: /schemas/types.yaml#/definitions/uint32
++    maximum: 0x7ffff
 +
-+additionalProperties: false
+   max-functions:
+     description: Maximum number of functions that can be configured
+     $ref: /schemas/types.yaml#/definitions/uint8
+@@ -35,6 +53,56 @@ properties:
+     $ref: /schemas/types.yaml#/definitions/uint32
+     enum: [ 1, 2, 3, 4 ]
+=20
++  msi-map:
++    description: |
++      Maps a Device ID to an MSI and associated MSI specifier data.
 +
-+examples:
-+  - |
-+    interrupt-controller@1fb40000 {
-+        compatible =3D "econet,en751221-intc";
-+        reg =3D <0x1fb40000 0x100>;
++      A PCI Endpoint (EP) can use MSI as a doorbell function. This is achiev=
+ed by
++      mapping the MSI controller's address into PCI BAR<n>. The PCI Root Com=
+plex
++      can write to this BAR<n>, triggering the EP to generate IRQ. This noti=
+fies
++      the EP-side driver of an event, eliminating the need for the driver to
++      continuously poll for status changes.
 +
-+        interrupt-controller;
-+        #interrupt-cells =3D <1>;
++      However, the EP cannot rely on Requester ID (RID) because the RID is
++      determined by the PCI topology of the host system. Since the EP may be
++      connected to different PCI hosts, the RID can vary between systems and=
+ is
++      therefore not a reliable identifier.
 +
-+        interrupt-parent =3D <&cpuintc>;
-+        interrupts =3D <2>;
++      Each EP can support up to 8 physical functions and up to 65,536 virtual
++      functions. To uniquely identify each child device, a device ID is defi=
+ned
++      as
++         - Bits [2:0] for the function number (func)
++         - Bits [18:3] for the virtual function index (vfunc)
 +
-+        econet,shadow-interrupts =3D <7 2>, <8 3>, <13 12>, <30 29>;
-+    };
-+...
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/sophgo,sg=
-2042-msi.yaml b/Documentation/devicetree/bindings/interrupt-controller/sophgo=
-,sg2042-msi.yaml
-index e1ffd55fa7bf..f6b8b1d92f79 100644
---- a/Documentation/devicetree/bindings/interrupt-controller/sophgo,sg2042-ms=
-i.yaml
-+++ b/Documentation/devicetree/bindings/interrupt-controller/sophgo,sg2042-ms=
-i.yaml
-@@ -18,7 +18,9 @@ allOf:
-=20
- properties:
-   compatible:
--    const: sophgo,sg2042-msi
-+    enum:
-+      - sophgo,sg2042-msi
-+      - sophgo,sg2044-msi
-=20
-   reg:
-     items:
-diff --git a/arch/arm/plat-orion/gpio.c b/arch/arm/plat-orion/gpio.c
-index 595e9cb33c1d..47d411d80a94 100644
---- a/arch/arm/plat-orion/gpio.c
-+++ b/arch/arm/plat-orion/gpio.c
-@@ -496,11 +496,10 @@ static void orion_gpio_unmask_irq(struct irq_data *d)
- 	u32 reg_val;
- 	u32 mask =3D d->mask;
-=20
--	irq_gc_lock(gc);
-+	guard(raw_spinlock)(&gc->lock);
- 	reg_val =3D irq_reg_readl(gc, ct->regs.mask);
- 	reg_val |=3D mask;
- 	irq_reg_writel(gc, reg_val, ct->regs.mask);
--	irq_gc_unlock(gc);
- }
-=20
- static void orion_gpio_mask_irq(struct irq_data *d)
-@@ -510,11 +509,10 @@ static void orion_gpio_mask_irq(struct irq_data *d)
- 	u32 mask =3D d->mask;
- 	u32 reg_val;
-=20
--	irq_gc_lock(gc);
-+	guard(raw_spinlock)(&gc->lock);
- 	reg_val =3D irq_reg_readl(gc, ct->regs.mask);
- 	reg_val &=3D ~mask;
- 	irq_reg_writel(gc, reg_val, ct->regs.mask);
--	irq_gc_unlock(gc);
- }
-=20
- void __init orion_gpio_init(int gpio_base, int ngpio,
-diff --git a/drivers/gpio/gpio-mvebu.c b/drivers/gpio/gpio-mvebu.c
-index 3604abcb6fec..2581fbbfbad3 100644
---- a/drivers/gpio/gpio-mvebu.c
-+++ b/drivers/gpio/gpio-mvebu.c
-@@ -408,9 +408,8 @@ static void mvebu_gpio_irq_ack(struct irq_data *d)
- 	struct mvebu_gpio_chip *mvchip =3D gc->private;
- 	u32 mask =3D d->mask;
-=20
--	irq_gc_lock(gc);
-+	guard(raw_spinlock)(&gc->lock);
- 	mvebu_gpio_write_edge_cause(mvchip, ~mask);
--	irq_gc_unlock(gc);
- }
-=20
- static void mvebu_gpio_edge_irq_mask(struct irq_data *d)
-@@ -420,10 +419,9 @@ static void mvebu_gpio_edge_irq_mask(struct irq_data *d)
- 	struct irq_chip_type *ct =3D irq_data_get_chip_type(d);
- 	u32 mask =3D d->mask;
-=20
--	irq_gc_lock(gc);
-+	guard(raw_spinlock)(&gc->lock);
- 	ct->mask_cache_priv &=3D ~mask;
- 	mvebu_gpio_write_edge_mask(mvchip, ct->mask_cache_priv);
--	irq_gc_unlock(gc);
- }
-=20
- static void mvebu_gpio_edge_irq_unmask(struct irq_data *d)
-@@ -433,11 +431,10 @@ static void mvebu_gpio_edge_irq_unmask(struct irq_data =
-*d)
- 	struct irq_chip_type *ct =3D irq_data_get_chip_type(d);
- 	u32 mask =3D d->mask;
-=20
--	irq_gc_lock(gc);
-+	guard(raw_spinlock)(&gc->lock);
- 	mvebu_gpio_write_edge_cause(mvchip, ~mask);
- 	ct->mask_cache_priv |=3D mask;
- 	mvebu_gpio_write_edge_mask(mvchip, ct->mask_cache_priv);
--	irq_gc_unlock(gc);
- }
-=20
- static void mvebu_gpio_level_irq_mask(struct irq_data *d)
-@@ -447,10 +444,9 @@ static void mvebu_gpio_level_irq_mask(struct irq_data *d)
- 	struct irq_chip_type *ct =3D irq_data_get_chip_type(d);
- 	u32 mask =3D d->mask;
-=20
--	irq_gc_lock(gc);
-+	guard(raw_spinlock)(&gc->lock);
- 	ct->mask_cache_priv &=3D ~mask;
- 	mvebu_gpio_write_level_mask(mvchip, ct->mask_cache_priv);
--	irq_gc_unlock(gc);
- }
-=20
- static void mvebu_gpio_level_irq_unmask(struct irq_data *d)
-@@ -460,10 +456,9 @@ static void mvebu_gpio_level_irq_unmask(struct irq_data =
-*d)
- 	struct irq_chip_type *ct =3D irq_data_get_chip_type(d);
- 	u32 mask =3D d->mask;
-=20
--	irq_gc_lock(gc);
-+	guard(raw_spinlock)(&gc->lock);
- 	ct->mask_cache_priv |=3D mask;
- 	mvebu_gpio_write_level_mask(mvchip, ct->mask_cache_priv);
--	irq_gc_unlock(gc);
- }
-=20
- /***************************************************************************=
-**
-diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
-index cec05e443083..4b438708cdd6 100644
---- a/drivers/irqchip/Kconfig
-+++ b/drivers/irqchip/Kconfig
-@@ -166,6 +166,11 @@ config DW_APB_ICTL
- 	select GENERIC_IRQ_CHIP
- 	select IRQ_DOMAIN_HIERARCHY
-=20
-+config ECONET_EN751221_INTC
-+	bool
-+	select GENERIC_IRQ_CHIP
-+	select IRQ_DOMAIN
++      The resulting device ID is computed as:
 +
- config FARADAY_FTINTC010
- 	bool
- 	select IRQ_DOMAIN
-diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
-index 365bcea9a61f..23ca4959e6ce 100644
---- a/drivers/irqchip/Makefile
-+++ b/drivers/irqchip/Makefile
-@@ -10,6 +10,7 @@ obj-$(CONFIG_ARCH_BCM2835)		+=3D irq-bcm2836.o
- obj-$(CONFIG_ARCH_ACTIONS)		+=3D irq-owl-sirq.o
- obj-$(CONFIG_DAVINCI_CP_INTC)		+=3D irq-davinci-cp-intc.o
- obj-$(CONFIG_EXYNOS_IRQ_COMBINER)	+=3D exynos-combiner.o
-+obj-$(CONFIG_ECONET_EN751221_INTC)	+=3D irq-econet-en751221.o
- obj-$(CONFIG_FARADAY_FTINTC010)		+=3D irq-ftintc010.o
- obj-$(CONFIG_ARCH_HIP04)		+=3D irq-hip04.o
- obj-$(CONFIG_ARCH_LPC32XX)		+=3D irq-lpc32xx.o
-diff --git a/drivers/irqchip/irq-al-fic.c b/drivers/irqchip/irq-al-fic.c
-index dfb761e86c9c..7308b8dadecc 100644
---- a/drivers/irqchip/irq-al-fic.c
-+++ b/drivers/irqchip/irq-al-fic.c
-@@ -65,15 +65,13 @@ static int al_fic_irq_set_type(struct irq_data *data, uns=
-igned int flow_type)
- 	struct irq_chip_generic *gc =3D irq_data_get_irq_chip_data(data);
- 	struct al_fic *fic =3D gc->private;
- 	enum al_fic_state new_state;
--	int ret =3D 0;
++        (func & 0x7) | (vfunc << 3)
++
++      The property is an arbitrary number of tuples of
++      (device-id-base, msi, msi-base,length).
++
++      Any Device ID id in the interval [id-base, id-base + length) is
++      associated with the listed MSI, with the MSI specifier
++      (id - id-base + msi-base).
++    $ref: /schemas/types.yaml#/definitions/uint32-matrix
++    items:
++      items:
++        - description: The Device ID base matched by the entry
++          maximum: 0x7ffff
++        - description: phandle to msi-controller node
++        - description: (optional) The msi-specifier produced for the first
++            Device ID matched by the entry. Currently, msi-specifier is 0 or
++            1 cells.
++        - description: The length of consecutive Device IDs following the
++            Device ID base
++          maximum: 0x80000
++
++  msi-map-mask:
++    description: A mask to be applied to each Device ID prior to being
++      mapped to an msi-specifier per the msi-map property.
++    $ref: /schemas/types.yaml#/definitions/uint32
++    maximum: 0x7ffff
++
+   num-lanes:
+     description: maximum number of lanes
+     $ref: /schemas/types.yaml#/definitions/uint32
+diff --git a/drivers/base/platform-msi.c b/drivers/base/platform-msi.c
+index 0e60dd650b5e..70db08f3ac6f 100644
+--- a/drivers/base/platform-msi.c
++++ b/drivers/base/platform-msi.c
+@@ -95,5 +95,6 @@ EXPORT_SYMBOL_GPL(platform_device_msi_init_and_alloc_irqs);
+ void platform_device_msi_free_irqs_all(struct device *dev)
+ {
+ 	msi_domain_free_irqs_all(dev, MSI_DEFAULT_DOMAIN);
++	msi_remove_device_irq_domain(dev, MSI_DEFAULT_DOMAIN);
+ }
+ EXPORT_SYMBOL_GPL(platform_device_msi_free_irqs_all);
+diff --git a/drivers/irqchip/irq-bcm2712-mip.c b/drivers/irqchip/irq-bcm2712-=
+mip.c
+index 49a19db2d1e1..f04a42b16cca 100644
+--- a/drivers/irqchip/irq-bcm2712-mip.c
++++ b/drivers/irqchip/irq-bcm2712-mip.c
+@@ -11,7 +11,7 @@
+ #include <linux/of_address.h>
+ #include <linux/of_platform.h>
 =20
--	irq_gc_lock(gc);
-+	guard(raw_spinlock)(&gc->lock);
+-#include "irq-msi-lib.h"
++#include <linux/irqchip/irq-msi-lib.h>
 =20
- 	if (((flow_type & IRQ_TYPE_SENSE_MASK) !=3D IRQ_TYPE_LEVEL_HIGH) &&
- 	    ((flow_type & IRQ_TYPE_SENSE_MASK) !=3D IRQ_TYPE_EDGE_RISING)) {
- 		pr_debug("fic doesn't support flow type %d\n", flow_type);
--		ret =3D -EINVAL;
--		goto err;
-+		return -EINVAL;
- 	}
+ #define MIP_INT_RAISE		0x00
+ #define MIP_INT_CLEAR		0x10
+diff --git a/drivers/irqchip/irq-gic-v2m.c b/drivers/irqchip/irq-gic-v2m.c
+index c69894861866..102f1711673e 100644
+--- a/drivers/irqchip/irq-gic-v2m.c
++++ b/drivers/irqchip/irq-gic-v2m.c
+@@ -26,7 +26,7 @@
+ #include <linux/irqchip/arm-gic.h>
+ #include <linux/irqchip/arm-gic-common.h>
 =20
- 	new_state =3D (flow_type & IRQ_TYPE_LEVEL_HIGH) ?
-@@ -91,16 +89,10 @@ static int al_fic_irq_set_type(struct irq_data *data, uns=
-igned int flow_type)
- 	if (fic->state =3D=3D AL_FIC_UNCONFIGURED) {
- 		al_fic_set_trigger(fic, gc, new_state);
- 	} else if (fic->state !=3D new_state) {
--		pr_debug("fic %s state already configured to %d\n",
--			 fic->name, fic->state);
--		ret =3D -EINVAL;
--		goto err;
-+		pr_debug("fic %s state already configured to %d\n", fic->name, fic->state);
-+		return -EINVAL;
+-#include "irq-msi-lib.h"
++#include <linux/irqchip/irq-msi-lib.h>
+=20
+ /*
+ * MSI_TYPER:
+@@ -261,23 +261,23 @@ static struct msi_parent_ops gicv2m_msi_parent_ops =3D {
+=20
+ static __init int gicv2m_allocate_domains(struct irq_domain *parent)
+ {
+-	struct irq_domain *inner_domain;
++	struct irq_domain_info info =3D {
++		.ops		=3D &gicv2m_domain_ops,
++		.parent		=3D parent,
++	};
+ 	struct v2m_data *v2m;
+=20
+ 	v2m =3D list_first_entry_or_null(&v2m_nodes, struct v2m_data, entry);
+ 	if (!v2m)
+ 		return 0;
+=20
+-	inner_domain =3D irq_domain_create_hierarchy(parent, 0, 0, v2m->fwnode,
+-						   &gicv2m_domain_ops, v2m);
+-	if (!inner_domain) {
++	info.host_data =3D v2m;
++	info.fwnode =3D v2m->fwnode;
++
++	if (!msi_create_parent_irq_domain(&info, &gicv2m_msi_parent_ops)) {
+ 		pr_err("Failed to create GICv2m domain\n");
+ 		return -ENOMEM;
  	}
 -
--err:
--	irq_gc_unlock(gc);
+-	irq_domain_update_bus_token(inner_domain, DOMAIN_BUS_NEXUS);
+-	inner_domain->flags |=3D IRQ_DOMAIN_FLAG_MSI_PARENT;
+-	inner_domain->msi_parent_ops =3D &gicv2m_msi_parent_ops;
+ 	return 0;
+ }
+=20
+diff --git a/drivers/irqchip/irq-gic-v3-its-msi-parent.c b/drivers/irqchip/ir=
+q-gic-v3-its-msi-parent.c
+index bdb04c808148..d039ec541940 100644
+--- a/drivers/irqchip/irq-gic-v3-its-msi-parent.c
++++ b/drivers/irqchip/irq-gic-v3-its-msi-parent.c
+@@ -8,7 +8,7 @@
+ #include <linux/pci.h>
+=20
+ #include "irq-gic-common.h"
+-#include "irq-msi-lib.h"
++#include <linux/irqchip/irq-msi-lib.h>
+=20
+ #define ITS_MSI_FLAGS_REQUIRED  (MSI_FLAG_USE_DEF_DOM_OPS |	\
+ 				 MSI_FLAG_USE_DEF_CHIP_OPS |	\
+@@ -67,17 +67,6 @@ static int its_pci_msi_prepare(struct irq_domain *domain, =
+struct device *dev,
+ 	/* ITS specific DeviceID, as the core ITS ignores dev. */
+ 	info->scratchpad[0].ul =3D pci_msi_domain_get_msi_rid(domain->parent, pdev);
+=20
+-	/*
+-	 * @domain->msi_domain_info->hwsize contains the size of the
+-	 * MSI[-X] domain, but vector allocation happens one by one. This
+-	 * needs some thought when MSI comes into play as the size of MSI
+-	 * might be unknown at domain creation time and therefore set to
+-	 * MSI_MAX_INDEX.
+-	 */
+-	msi_info =3D msi_get_domain_info(domain);
+-	if (msi_info->hwsize > nvec)
+-		nvec =3D msi_info->hwsize;
+-
+ 	/*
+ 	 * Always allocate a power of 2, and special case device 0 for
+ 	 * broken systems where the DevID is not wired (and all devices
+@@ -118,6 +107,14 @@ static int of_pmsi_get_dev_id(struct irq_domain *domain,=
+ struct device *dev,
+ 		index++;
+ 	} while (!ret);
+=20
++	if (ret) {
++		struct device_node *np =3D NULL;
++
++		ret =3D of_map_id(dev->of_node, dev->id, "msi-map", "msi-map-mask", &np, d=
+ev_id);
++		if (np)
++			of_node_put(np);
++	}
++
+ 	return ret;
+ }
+=20
+@@ -143,14 +140,6 @@ static int its_pmsi_prepare(struct irq_domain *domain, s=
+truct device *dev,
+ 	/* ITS specific DeviceID, as the core ITS ignores dev. */
+ 	info->scratchpad[0].ul =3D dev_id;
+=20
+-	/*
+-	 * @domain->msi_domain_info->hwsize contains the size of the device
+-	 * domain, but vector allocation happens one by one.
+-	 */
+-	msi_info =3D msi_get_domain_info(domain);
+-	if (msi_info->hwsize > nvec)
+-		nvec =3D msi_info->hwsize;
+-
+ 	/* Allocate at least 32 MSIs, and always as a power of 2 */
+ 	nvec =3D max_t(int, 32, roundup_pow_of_two(nvec));
+=20
+@@ -159,6 +148,14 @@ static int its_pmsi_prepare(struct irq_domain *domain, s=
+truct device *dev,
+ 					  dev, nvec, info);
+ }
+=20
++static void its_msi_teardown(struct irq_domain *domain, msi_alloc_info_t *in=
+fo)
++{
++	struct msi_domain_info *msi_info;
++
++	msi_info =3D msi_get_domain_info(domain->parent);
++	msi_info->ops->msi_teardown(domain->parent, info);
++}
++
+ static bool its_init_dev_msi_info(struct device *dev, struct irq_domain *dom=
+ain,
+ 				  struct irq_domain *real_parent, struct msi_domain_info *info)
+ {
+@@ -182,6 +179,7 @@ static bool its_init_dev_msi_info(struct device *dev, str=
+uct irq_domain *domain,
+ 		 * %MSI_MAX_INDEX.
+ 		 */
+ 		info->ops->msi_prepare =3D its_pci_msi_prepare;
++		info->ops->msi_teardown =3D its_msi_teardown;
+ 		break;
+ 	case DOMAIN_BUS_DEVICE_MSI:
+ 	case DOMAIN_BUS_WIRED_TO_MSI:
+@@ -190,6 +188,7 @@ static bool its_init_dev_msi_info(struct device *dev, str=
+uct irq_domain *domain,
+ 		 * size is also known at domain creation time.
+ 		 */
+ 		info->ops->msi_prepare =3D its_pmsi_prepare;
++		info->ops->msi_teardown =3D its_msi_teardown;
+ 		break;
+ 	default:
+ 		/* Confused. How did the lib return true? */
+diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-it=
+s.c
+index 0115ad6c8259..57ecf5b5155f 100644
+--- a/drivers/irqchip/irq-gic-v3-its.c
++++ b/drivers/irqchip/irq-gic-v3-its.c
+@@ -41,7 +41,7 @@
+ #include <asm/exception.h>
+=20
+ #include "irq-gic-common.h"
+-#include "irq-msi-lib.h"
++#include <linux/irqchip/irq-msi-lib.h>
+=20
+ #define ITS_FLAGS_CMDQ_NEEDS_FLUSHING		(1ULL << 0)
+ #define ITS_FLAGS_WORKAROUND_CAVIUM_22375	(1ULL << 1)
+@@ -3620,8 +3620,33 @@ static int its_msi_prepare(struct irq_domain *domain, =
+struct device *dev,
+ 	return err;
+ }
+=20
++static void its_msi_teardown(struct irq_domain *domain, msi_alloc_info_t *in=
+fo)
++{
++	struct its_device *its_dev =3D info->scratchpad[0].ptr;
++
++	guard(mutex)(&its_dev->its->dev_alloc_lock);
++
++	/* If the device is shared, keep everything around */
++	if (its_dev->shared)
++		return;
++
++	/* LPIs should have been already unmapped at this stage */
++	if (WARN_ON_ONCE(!bitmap_empty(its_dev->event_map.lpi_map,
++				       its_dev->event_map.nr_lpis)))
++		return;
++
++	its_lpi_free(its_dev->event_map.lpi_map,
++		     its_dev->event_map.lpi_base,
++		     its_dev->event_map.nr_lpis);
++
++	/* Unmap device/itt, and get rid of the tracking */
++	its_send_mapd(its_dev, 0);
++	its_free_device(its_dev);
++}
++
+ static struct msi_domain_ops its_msi_domain_ops =3D {
+ 	.msi_prepare	=3D its_msi_prepare,
++	.msi_teardown	=3D its_msi_teardown,
+ };
+=20
+ static int its_irq_gic_domain_alloc(struct irq_domain *domain,
+@@ -3722,7 +3747,6 @@ static void its_irq_domain_free(struct irq_domain *doma=
+in, unsigned int virq,
+ {
+ 	struct irq_data *d =3D irq_domain_get_irq_data(domain, virq);
+ 	struct its_device *its_dev =3D irq_data_get_irq_chip_data(d);
+-	struct its_node *its =3D its_dev->its;
+ 	int i;
+=20
+ 	bitmap_release_region(its_dev->event_map.lpi_map,
+@@ -3736,26 +3760,6 @@ static void its_irq_domain_free(struct irq_domain *dom=
+ain, unsigned int virq,
+ 		irq_domain_reset_irq_data(data);
+ 	}
+=20
+-	mutex_lock(&its->dev_alloc_lock);
+-
+-	/*
+-	 * If all interrupts have been freed, start mopping the
+-	 * floor. This is conditioned on the device not being shared.
+-	 */
+-	if (!its_dev->shared &&
+-	    bitmap_empty(its_dev->event_map.lpi_map,
+-			 its_dev->event_map.nr_lpis)) {
+-		its_lpi_free(its_dev->event_map.lpi_map,
+-			     its_dev->event_map.lpi_base,
+-			     its_dev->event_map.nr_lpis);
+-
+-		/* Unmap device/itt */
+-		its_send_mapd(its_dev, 0);
+-		its_free_device(its_dev);
+-	}
+-
+-	mutex_unlock(&its->dev_alloc_lock);
+-
+ 	irq_domain_free_irqs_parent(domain, virq, nr_irqs);
+ }
+=20
+@@ -5118,7 +5122,12 @@ static void __init __iomem *its_map_one(struct resourc=
+e *res, int *err)
+=20
+ static int its_init_domain(struct its_node *its)
+ {
+-	struct irq_domain *inner_domain;
++	struct irq_domain_info dom_info =3D {
++		.fwnode		=3D its->fwnode_handle,
++		.ops		=3D &its_domain_ops,
++		.domain_flags	=3D its->msi_domain_flags,
++		.parent		=3D its_parent,
++	};
+ 	struct msi_domain_info *info;
+=20
+ 	info =3D kzalloc(sizeof(*info), GFP_KERNEL);
+@@ -5127,21 +5136,12 @@ static int its_init_domain(struct its_node *its)
+=20
+ 	info->ops =3D &its_msi_domain_ops;
+ 	info->data =3D its;
++	dom_info.host_data =3D info;
+=20
+-	inner_domain =3D irq_domain_create_hierarchy(its_parent,
+-						   its->msi_domain_flags, 0,
+-						   its->fwnode_handle, &its_domain_ops,
+-						   info);
+-	if (!inner_domain) {
++	if (!msi_create_parent_irq_domain(&dom_info, &gic_v3_its_msi_parent_ops)) {
+ 		kfree(info);
+ 		return -ENOMEM;
+ 	}
+-
+-	irq_domain_update_bus_token(inner_domain, DOMAIN_BUS_NEXUS);
+-
+-	inner_domain->msi_parent_ops =3D &gic_v3_its_msi_parent_ops;
+-	inner_domain->flags |=3D IRQ_DOMAIN_FLAG_MSI_PARENT;
+-
+ 	return 0;
+ }
+=20
+@@ -5518,7 +5518,7 @@ static struct its_node __init *its_node_init(struct res=
+ource *res,
+ 	its->base =3D its_base;
+ 	its->phys_base =3D res->start;
+ 	its->get_msi_base =3D its_irq_get_msi_base;
+-	its->msi_domain_flags =3D IRQ_DOMAIN_FLAG_ISOLATED_MSI;
++	its->msi_domain_flags =3D IRQ_DOMAIN_FLAG_ISOLATED_MSI | IRQ_DOMAIN_FLAG_MS=
+I_IMMUTABLE;
+=20
+ 	its->numa_node =3D numa_node;
+ 	its->fwnode_handle =3D handle;
+diff --git a/drivers/irqchip/irq-gic-v3-mbi.c b/drivers/irqchip/irq-gic-v3-mb=
+i.c
+index 34e9ca77a8c3..6a4afd1066dd 100644
+--- a/drivers/irqchip/irq-gic-v3-mbi.c
++++ b/drivers/irqchip/irq-gic-v3-mbi.c
+@@ -18,7 +18,7 @@
+=20
+ #include <linux/irqchip/arm-gic-v3.h>
+=20
+-#include "irq-msi-lib.h"
++#include <linux/irqchip/irq-msi-lib.h>
+=20
+ struct mbi_range {
+ 	u32			spi_start;
+@@ -206,17 +206,13 @@ static const struct msi_parent_ops gic_v3_mbi_msi_paren=
+t_ops =3D {
+=20
+ static int mbi_allocate_domain(struct irq_domain *parent)
+ {
+-	struct irq_domain *nexus_domain;
++	struct irq_domain_info info =3D {
++		.fwnode		=3D parent->fwnode,
++		.ops		=3D &mbi_domain_ops,
++		.parent		=3D parent,
++	};
+=20
+-	nexus_domain =3D irq_domain_create_hierarchy(parent, 0, 0, parent->fwnode,
+-						   &mbi_domain_ops, NULL);
+-	if (!nexus_domain)
+-		return -ENOMEM;
+-
+-	irq_domain_update_bus_token(nexus_domain, DOMAIN_BUS_NEXUS);
+-	nexus_domain->flags |=3D IRQ_DOMAIN_FLAG_MSI_PARENT;
+-	nexus_domain->msi_parent_ops =3D &gic_v3_mbi_msi_parent_ops;
+-	return 0;
++	return msi_create_parent_irq_domain(&info, &gic_v3_mbi_msi_parent_ops) ? 0 =
+: -ENOMEM;
+ }
+=20
+ int __init mbi_init(struct fwnode_handle *fwnode, struct irq_domain *parent)
+diff --git a/drivers/irqchip/irq-imx-mu-msi.c b/drivers/irqchip/irq-imx-mu-ms=
+i.c
+index 69aacdfc8bef..137da1927d14 100644
+--- a/drivers/irqchip/irq-imx-mu-msi.c
++++ b/drivers/irqchip/irq-imx-mu-msi.c
+@@ -24,7 +24,7 @@
+ #include <linux/pm_domain.h>
+ #include <linux/spinlock.h>
+=20
+-#include "irq-msi-lib.h"
++#include <linux/irqchip/irq-msi-lib.h>
+=20
+ #define IMX_MU_CHANS            4
+=20
+diff --git a/drivers/irqchip/irq-loongarch-avec.c b/drivers/irqchip/irq-loong=
+arch-avec.c
+index 80e55955a29f..bf52dc8345f5 100644
+--- a/drivers/irqchip/irq-loongarch-avec.c
++++ b/drivers/irqchip/irq-loongarch-avec.c
+@@ -18,7 +18,7 @@
+ #include <asm/loongarch.h>
+ #include <asm/setup.h>
+=20
+-#include "irq-msi-lib.h"
++#include <linux/irqchip/irq-msi-lib.h>
+ #include "irq-loongson.h"
+=20
+ #define VECTORS_PER_REG		64
+diff --git a/drivers/irqchip/irq-loongson-pch-msi.c b/drivers/irqchip/irq-loo=
+ngson-pch-msi.c
+index 9c62108b3ad5..fb690c7cbcaa 100644
+--- a/drivers/irqchip/irq-loongson-pch-msi.c
++++ b/drivers/irqchip/irq-loongson-pch-msi.c
+@@ -15,7 +15,7 @@
+ #include <linux/pci.h>
+ #include <linux/slab.h>
+=20
+-#include "irq-msi-lib.h"
++#include <linux/irqchip/irq-msi-lib.h>
+ #include "irq-loongson.h"
+=20
+ static int nr_pics;
+diff --git a/drivers/irqchip/irq-msi-lib.c b/drivers/irqchip/irq-msi-lib.c
+index 51464c6257f3..246c30205af4 100644
+--- a/drivers/irqchip/irq-msi-lib.c
++++ b/drivers/irqchip/irq-msi-lib.c
+@@ -4,7 +4,7 @@
+=20
+ #include <linux/export.h>
+=20
+-#include "irq-msi-lib.h"
++#include <linux/irqchip/irq-msi-lib.h>
+=20
+ /**
+  * msi_lib_init_dev_msi_info - Domain info setup for MSI domains
+@@ -105,8 +105,13 @@ bool msi_lib_init_dev_msi_info(struct device *dev, struc=
+t irq_domain *domain,
+ 	 * MSI message into the hardware which is the whole purpose of the
+ 	 * device MSI domain aside of mask/unmask which is provided e.g. by
+ 	 * PCI/MSI device domains.
++	 *
++	 * The exception to the rule is when the underlying domain
++	 * tells you that affinity is not a thing -- for example when
++	 * everything is muxed behind a single interrupt.
+ 	 */
+-	chip->irq_set_affinity =3D msi_domain_set_affinity;
++	if (!chip->irq_set_affinity && !(info->flags & MSI_FLAG_NO_AFFINITY))
++		chip->irq_set_affinity =3D msi_domain_set_affinity;
+ 	return true;
+ }
+ EXPORT_SYMBOL_GPL(msi_lib_init_dev_msi_info);
+diff --git a/drivers/irqchip/irq-mvebu-gicp.c b/drivers/irqchip/irq-mvebu-gic=
+p.c
+index d67f93f6d750..9cd3c6cc7143 100644
+--- a/drivers/irqchip/irq-mvebu-gicp.c
++++ b/drivers/irqchip/irq-mvebu-gicp.c
+@@ -17,7 +17,7 @@
+ #include <linux/of_platform.h>
+ #include <linux/platform_device.h>
+=20
+-#include "irq-msi-lib.h"
++#include <linux/irqchip/irq-msi-lib.h>
+=20
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+=20
+@@ -170,9 +170,12 @@ static const struct msi_parent_ops gicp_msi_parent_ops =
+=3D {
+=20
+ static int mvebu_gicp_probe(struct platform_device *pdev)
+ {
+-	struct irq_domain *inner_domain, *parent_domain;
+ 	struct device_node *node =3D pdev->dev.of_node;
+ 	struct device_node *irq_parent_dn;
++	struct irq_domain_info info =3D {
++		.fwnode	=3D of_fwnode_handle(node),
++		.ops	=3D &gicp_domain_ops,
++	};
+ 	struct mvebu_gicp *gicp;
+ 	int ret, i;
+=20
+@@ -217,30 +220,23 @@ static int mvebu_gicp_probe(struct platform_device *pde=
+v)
+ 	if (!gicp->spi_bitmap)
+ 		return -ENOMEM;
+=20
++	info.size =3D gicp->spi_cnt;
++	info.host_data =3D gicp;
++
+ 	irq_parent_dn =3D of_irq_find_parent(node);
+ 	if (!irq_parent_dn) {
+ 		dev_err(&pdev->dev, "failed to find parent IRQ node\n");
+ 		return -ENODEV;
+ 	}
+=20
+-	parent_domain =3D irq_find_host(irq_parent_dn);
++	info.parent =3D irq_find_host(irq_parent_dn);
+ 	of_node_put(irq_parent_dn);
+-	if (!parent_domain) {
++	if (!info.parent) {
+ 		dev_err(&pdev->dev, "failed to find parent IRQ domain\n");
+ 		return -ENODEV;
+ 	}
+=20
+-	inner_domain =3D irq_domain_create_hierarchy(parent_domain, 0,
+-						   gicp->spi_cnt,
+-						   of_node_to_fwnode(node),
+-						   &gicp_domain_ops, gicp);
+-	if (!inner_domain)
+-		return -ENOMEM;
+-
+-	irq_domain_update_bus_token(inner_domain, DOMAIN_BUS_GENERIC_MSI);
+-	inner_domain->flags |=3D IRQ_DOMAIN_FLAG_MSI_PARENT;
+-	inner_domain->msi_parent_ops =3D &gicp_msi_parent_ops;
+-	return 0;
++	return msi_create_parent_irq_domain(&info, &gicp_msi_parent_ops) ? 0 : -ENO=
+MEM;
+ }
+=20
+ static const struct of_device_id mvebu_gicp_of_match[] =3D {
+diff --git a/drivers/irqchip/irq-mvebu-icu.c b/drivers/irqchip/irq-mvebu-icu.c
+index 4eebed39880a..db5dbc6e88b0 100644
+--- a/drivers/irqchip/irq-mvebu-icu.c
++++ b/drivers/irqchip/irq-mvebu-icu.c
+@@ -20,7 +20,7 @@
+ #include <linux/of_platform.h>
+ #include <linux/platform_device.h>
+=20
+-#include "irq-msi-lib.h"
++#include <linux/irqchip/irq-msi-lib.h>
+=20
+ #include <dt-bindings/interrupt-controller/mvebu-icu.h>
+=20
+diff --git a/drivers/irqchip/irq-mvebu-odmi.c b/drivers/irqchip/irq-mvebu-odm=
+i.c
+index 28f7e81df94f..46256b9abd66 100644
+--- a/drivers/irqchip/irq-mvebu-odmi.c
++++ b/drivers/irqchip/irq-mvebu-odmi.c
+@@ -18,7 +18,7 @@
+ #include <linux/of_address.h>
+ #include <linux/slab.h>
+=20
+-#include "irq-msi-lib.h"
++#include <linux/irqchip/irq-msi-lib.h>
+=20
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+=20
+@@ -167,7 +167,12 @@ static const struct msi_parent_ops odmi_msi_parent_ops =
+=3D {
+ static int __init mvebu_odmi_init(struct device_node *node,
+ 				  struct device_node *parent)
+ {
+-	struct irq_domain *parent_domain, *inner_domain;
++	struct irq_domain_info info =3D {
++		.fwnode	=3D of_fwnode_handle(node),
++		.ops	=3D &odmi_domain_ops,
++		.size	=3D odmis_count * NODMIS_PER_FRAME,
++		.parent	=3D irq_find_host(parent),
++	};
+ 	int ret, i;
+=20
+ 	if (of_property_read_u32(node, "marvell,odmi-frames", &odmis_count))
+@@ -203,22 +208,10 @@ static int __init mvebu_odmi_init(struct device_node *n=
+ode,
+ 		}
+ 	}
+=20
+-	parent_domain =3D irq_find_host(parent);
++	if (msi_create_parent_irq_domain(&info, &odmi_msi_parent_ops))
++		return 0;
+=20
+-	inner_domain =3D irq_domain_create_hierarchy(parent_domain, 0,
+-						   odmis_count * NODMIS_PER_FRAME,
+-						   of_node_to_fwnode(node),
+-						   &odmi_domain_ops, NULL);
+-	if (!inner_domain) {
+-		ret =3D -ENOMEM;
+-		goto err_unmap;
+-	}
+-
+-	irq_domain_update_bus_token(inner_domain, DOMAIN_BUS_GENERIC_MSI);
+-	inner_domain->flags |=3D IRQ_DOMAIN_FLAG_MSI_PARENT;
+-	inner_domain->msi_parent_ops =3D &odmi_msi_parent_ops;
+-
+-	return 0;
++	ret =3D -ENOMEM;
+=20
+ err_unmap:
+ 	for (i =3D 0; i < odmis_count; i++) {
+diff --git a/drivers/irqchip/irq-mvebu-sei.c b/drivers/irqchip/irq-mvebu-sei.c
+index ebd4a9014e8d..5822ea864765 100644
+--- a/drivers/irqchip/irq-mvebu-sei.c
++++ b/drivers/irqchip/irq-mvebu-sei.c
+@@ -14,7 +14,7 @@
+ #include <linux/of_irq.h>
+ #include <linux/of_platform.h>
+=20
+-#include "irq-msi-lib.h"
++#include <linux/irqchip/irq-msi-lib.h>
+=20
+ /* Cause register */
+ #define GICP_SECR(idx)		(0x0  + ((idx) * 0x4))
+@@ -366,6 +366,10 @@ static const struct msi_parent_ops sei_msi_parent_ops =
+=3D {
+ static int mvebu_sei_probe(struct platform_device *pdev)
+ {
+ 	struct device_node *node =3D pdev->dev.of_node;
++	struct irq_domain_info info =3D {
++		.fwnode	=3D of_fwnode_handle(node),
++		.ops	=3D &mvebu_sei_cp_domain_ops,
++	};
+ 	struct mvebu_sei *sei;
+ 	u32 parent_irq;
+ 	int ret;
+@@ -402,7 +406,7 @@ static int mvebu_sei_probe(struct platform_device *pdev)
+ 	}
+=20
+ 	/* Create the root SEI domain */
+-	sei->sei_domain =3D irq_domain_create_linear(of_node_to_fwnode(node),
++	sei->sei_domain =3D irq_domain_create_linear(of_fwnode_handle(node),
+ 						   (sei->caps->ap_range.size +
+ 						    sei->caps->cp_range.size),
+ 						   &mvebu_sei_domain_ops,
+@@ -418,7 +422,7 @@ static int mvebu_sei_probe(struct platform_device *pdev)
+ 	/* Create the 'wired' domain */
+ 	sei->ap_domain =3D irq_domain_create_hierarchy(sei->sei_domain, 0,
+ 						     sei->caps->ap_range.size,
+-						     of_node_to_fwnode(node),
++						     of_fwnode_handle(node),
+ 						     &mvebu_sei_ap_domain_ops,
+ 						     sei);
+ 	if (!sei->ap_domain) {
+@@ -430,21 +434,17 @@ static int mvebu_sei_probe(struct platform_device *pdev)
+ 	irq_domain_update_bus_token(sei->ap_domain, DOMAIN_BUS_WIRED);
+=20
+ 	/* Create the 'MSI' domain */
+-	sei->cp_domain =3D irq_domain_create_hierarchy(sei->sei_domain, 0,
+-						     sei->caps->cp_range.size,
+-						     of_node_to_fwnode(node),
+-						     &mvebu_sei_cp_domain_ops,
+-						     sei);
++	info.size =3D sei->caps->cp_range.size;
++	info.host_data =3D sei;
++	info.parent =3D sei->sei_domain;
++
++	sei->cp_domain =3D msi_create_parent_irq_domain(&info, &sei_msi_parent_ops);
+ 	if (!sei->cp_domain) {
+ 		pr_err("Failed to create CPs IRQ domain\n");
+ 		ret =3D -ENOMEM;
+ 		goto remove_ap_domain;
+ 	}
+=20
+-	irq_domain_update_bus_token(sei->cp_domain, DOMAIN_BUS_GENERIC_MSI);
+-	sei->cp_domain->flags |=3D IRQ_DOMAIN_FLAG_MSI_PARENT;
+-	sei->cp_domain->msi_parent_ops =3D &sei_msi_parent_ops;
+-
+ 	mvebu_sei_reset(sei);
+=20
+ 	irq_set_chained_handler_and_data(parent_irq, mvebu_sei_handle_cascade_irq, =
+sei);
+diff --git a/drivers/irqchip/irq-riscv-imsic-platform.c b/drivers/irqchip/irq=
+-riscv-imsic-platform.c
+index b8ae67c25b37..1b9fbfce9581 100644
+--- a/drivers/irqchip/irq-riscv-imsic-platform.c
++++ b/drivers/irqchip/irq-riscv-imsic-platform.c
+@@ -20,7 +20,7 @@
+ #include <linux/spinlock.h>
+ #include <linux/smp.h>
+=20
+-#include "irq-msi-lib.h"
++#include <linux/irqchip/irq-msi-lib.h>
+ #include "irq-riscv-imsic-state.h"
+=20
+ static bool imsic_cpu_page_phys(unsigned int cpu, unsigned int guest_index,
+diff --git a/drivers/irqchip/irq-sg2042-msi.c b/drivers/irqchip/irq-sg2042-ms=
+i.c
+index ee682e87eb8b..d641f3a5eee9 100644
+--- a/drivers/irqchip/irq-sg2042-msi.c
++++ b/drivers/irqchip/irq-sg2042-msi.c
+@@ -17,7 +17,7 @@
+ #include <linux/property.h>
+ #include <linux/slab.h>
+=20
+-#include "irq-msi-lib.h"
++#include <linux/irqchip/irq-msi-lib.h>
+=20
+ #define SG2042_MAX_MSI_VECTOR	32
+=20
+diff --git a/drivers/ntb/msi.c b/drivers/ntb/msi.c
+index 6295e55ef85e..368f6d894bba 100644
+--- a/drivers/ntb/msi.c
++++ b/drivers/ntb/msi.c
+@@ -106,10 +106,10 @@ int ntb_msi_setup_mws(struct ntb_dev *ntb)
+ 	if (!ntb->msi)
+ 		return -EINVAL;
+=20
+-	msi_lock_descs(&ntb->pdev->dev);
+-	desc =3D msi_first_desc(&ntb->pdev->dev, MSI_DESC_ASSOCIATED);
+-	addr =3D desc->msg.address_lo + ((uint64_t)desc->msg.address_hi << 32);
+-	msi_unlock_descs(&ntb->pdev->dev);
++	scoped_guard (msi_descs_lock, &ntb->pdev->dev) {
++		desc =3D msi_first_desc(&ntb->pdev->dev, MSI_DESC_ASSOCIATED);
++		addr =3D desc->msg.address_lo + ((uint64_t)desc->msg.address_hi << 32);
++	}
+=20
+ 	for (peer =3D 0; peer < ntb_peer_port_count(ntb); peer++) {
+ 		peer_widx =3D ntb_peer_highest_mw_idx(ntb, peer);
+@@ -289,7 +289,7 @@ int ntbm_msi_request_threaded_irq(struct ntb_dev *ntb, ir=
+q_handler_t handler,
+ 	if (!ntb->msi)
+ 		return -EINVAL;
+=20
+-	msi_lock_descs(dev);
++	guard(msi_descs_lock)(dev);
+ 	msi_for_each_desc(entry, dev, MSI_DESC_ASSOCIATED) {
+ 		if (irq_has_action(entry->irq))
+ 			continue;
+@@ -307,17 +307,11 @@ int ntbm_msi_request_threaded_irq(struct ntb_dev *ntb, =
+irq_handler_t handler,
+ 		ret =3D ntbm_msi_setup_callback(ntb, entry, msi_desc);
+ 		if (ret) {
+ 			devm_free_irq(&ntb->dev, entry->irq, dev_id);
+-			goto unlock;
++			return ret;
+ 		}
+-
+-		ret =3D entry->irq;
+-		goto unlock;
++		return entry->irq;
+ 	}
+-	ret =3D -ENODEV;
+-
+-unlock:
+-	msi_unlock_descs(dev);
+-	return ret;
++	return -ENODEV;
+ }
+ EXPORT_SYMBOL(ntbm_msi_request_threaded_irq);
+=20
+diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
+index 9800b7681054..eb3cc28d43f8 100644
+--- a/drivers/pci/controller/Kconfig
++++ b/drivers/pci/controller/Kconfig
+@@ -40,6 +40,7 @@ config PCIE_APPLE
+ 	depends on OF
+ 	depends on PCI_MSI
+ 	select PCI_HOST_COMMON
++	select IRQ_MSI_LIB
+ 	help
+ 	  Say Y here if you want to enable PCIe controller support on Apple
+ 	  system-on-chips, like the Apple M1. This is required for the USB
+@@ -227,6 +228,7 @@ config PCI_TEGRA
+ 	bool "NVIDIA Tegra PCIe controller"
+ 	depends on ARCH_TEGRA || COMPILE_TEST
+ 	depends on PCI_MSI
++	select IRQ_MSI_LIB
+ 	help
+ 	  Say Y here if you want support for the PCIe host controller found
+ 	  on NVIDIA Tegra SoCs.
+@@ -303,6 +305,7 @@ config PCI_XGENE_MSI
+ 	bool "X-Gene v1 PCIe MSI feature"
+ 	depends on PCI_XGENE
+ 	depends on PCI_MSI
++	select IRQ_MSI_LIB
+ 	default y
+ 	help
+ 	  Say Y here if you want PCIe MSI support for the APM X-Gene v1 SoC.
+diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/=
+controller/dwc/pcie-designware-host.c
+index ecc33f6789e3..d1cd48efad43 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-host.c
++++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+@@ -227,7 +227,7 @@ static const struct irq_domain_ops dw_pcie_msi_domain_ops=
+ =3D {
+ int dw_pcie_allocate_domains(struct dw_pcie_rp *pp)
+ {
+ 	struct dw_pcie *pci =3D to_dw_pcie_from_pp(pp);
+-	struct fwnode_handle *fwnode =3D of_node_to_fwnode(pci->dev->of_node);
++	struct fwnode_handle *fwnode =3D of_fwnode_handle(pci->dev->of_node);
+=20
+ 	pp->irq_domain =3D irq_domain_create_linear(fwnode, pp->num_vectors,
+ 					       &dw_pcie_msi_domain_ops, pp);
+diff --git a/drivers/pci/controller/mobiveil/pcie-mobiveil-host.c b/drivers/p=
+ci/controller/mobiveil/pcie-mobiveil-host.c
+index 0e088e74155d..6628eed9d26e 100644
+--- a/drivers/pci/controller/mobiveil/pcie-mobiveil-host.c
++++ b/drivers/pci/controller/mobiveil/pcie-mobiveil-host.c
+@@ -435,7 +435,7 @@ static const struct irq_domain_ops msi_domain_ops =3D {
+ static int mobiveil_allocate_msi_domains(struct mobiveil_pcie *pcie)
+ {
+ 	struct device *dev =3D &pcie->pdev->dev;
+-	struct fwnode_handle *fwnode =3D of_node_to_fwnode(dev->of_node);
++	struct fwnode_handle *fwnode =3D of_fwnode_handle(dev->of_node);
+ 	struct mobiveil_msi *msi =3D &pcie->rp.msi;
+=20
+ 	mutex_init(&msi->lock);
+diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci=
+-hyperv.c
+index ac27bda5ba26..e1eaa24559a2 100644
+--- a/drivers/pci/controller/pci-hyperv.c
++++ b/drivers/pci/controller/pci-hyperv.c
+@@ -3975,24 +3975,18 @@ static int hv_pci_restore_msi_msg(struct pci_dev *pde=
+v, void *arg)
+ {
+ 	struct irq_data *irq_data;
+ 	struct msi_desc *entry;
+-	int ret =3D 0;
+=20
+ 	if (!pdev->msi_enabled && !pdev->msix_enabled)
+ 		return 0;
+=20
+-	msi_lock_descs(&pdev->dev);
++	guard(msi_descs_lock)(&pdev->dev);
+ 	msi_for_each_desc(entry, &pdev->dev, MSI_DESC_ASSOCIATED) {
+ 		irq_data =3D irq_get_irq_data(entry->irq);
+-		if (WARN_ON_ONCE(!irq_data)) {
+-			ret =3D -EINVAL;
+-			break;
+-		}
+-
++		if (WARN_ON_ONCE(!irq_data))
++			return -EINVAL;
+ 		hv_compose_msi_msg(irq_data, &entry->msg);
+ 	}
+-	msi_unlock_descs(&pdev->dev);
 -
 -	return ret;
 +	return 0;
  }
 =20
- static void al_fic_irq_handler(struct irq_desc *desc)
-diff --git a/drivers/irqchip/irq-atmel-aic.c b/drivers/irqchip/irq-atmel-aic.c
-index 3839ad79ad31..03aeed39a4d2 100644
---- a/drivers/irqchip/irq-atmel-aic.c
-+++ b/drivers/irqchip/irq-atmel-aic.c
-@@ -78,9 +78,8 @@ static int aic_retrigger(struct irq_data *d)
- 	struct irq_chip_generic *gc =3D irq_data_get_irq_chip_data(d);
+ /*
+diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-=
+tegra.c
+index d2f88997283a..467ddc701adc 100644
+--- a/drivers/pci/controller/pci-tegra.c
++++ b/drivers/pci/controller/pci-tegra.c
+@@ -22,6 +22,7 @@
+ #include <linux/iopoll.h>
+ #include <linux/irq.h>
+ #include <linux/irqchip/chained_irq.h>
++#include <linux/irqchip/irq-msi-lib.h>
+ #include <linux/irqdomain.h>
+ #include <linux/kernel.h>
+ #include <linux/init.h>
+@@ -1547,7 +1548,7 @@ static void tegra_pcie_msi_irq(struct irq_desc *desc)
+ 			unsigned int index =3D i * 32 + offset;
+ 			int ret;
 =20
- 	/* Enable interrupt on AIC5 */
--	irq_gc_lock(gc);
-+	guard(raw_spinlock)(&gc->lock);
- 	irq_reg_writel(gc, d->mask, AT91_AIC_ISCR);
--	irq_gc_unlock(gc);
-=20
- 	return 1;
- }
-@@ -106,30 +105,27 @@ static void aic_suspend(struct irq_data *d)
- {
- 	struct irq_chip_generic *gc =3D irq_data_get_irq_chip_data(d);
-=20
--	irq_gc_lock(gc);
-+	guard(raw_spinlock)(&gc->lock);
- 	irq_reg_writel(gc, gc->mask_cache, AT91_AIC_IDCR);
- 	irq_reg_writel(gc, gc->wake_active, AT91_AIC_IECR);
--	irq_gc_unlock(gc);
- }
-=20
- static void aic_resume(struct irq_data *d)
- {
- 	struct irq_chip_generic *gc =3D irq_data_get_irq_chip_data(d);
-=20
--	irq_gc_lock(gc);
-+	guard(raw_spinlock)(&gc->lock);
- 	irq_reg_writel(gc, gc->wake_active, AT91_AIC_IDCR);
- 	irq_reg_writel(gc, gc->mask_cache, AT91_AIC_IECR);
--	irq_gc_unlock(gc);
+-			ret =3D generic_handle_domain_irq(msi->domain->parent, index);
++			ret =3D generic_handle_domain_irq(msi->domain, index);
+ 			if (ret) {
+ 				/*
+ 				 * that's weird who triggered this?
+@@ -1565,30 +1566,6 @@ static void tegra_pcie_msi_irq(struct irq_desc *desc)
+ 	chained_irq_exit(chip, desc);
  }
 =20
- static void aic_pm_shutdown(struct irq_data *d)
- {
- 	struct irq_chip_generic *gc =3D irq_data_get_irq_chip_data(d);
-=20
--	irq_gc_lock(gc);
-+	guard(raw_spinlock)(&gc->lock);
- 	irq_reg_writel(gc, 0xffffffff, AT91_AIC_IDCR);
- 	irq_reg_writel(gc, 0xffffffff, AT91_AIC_ICCR);
--	irq_gc_unlock(gc);
- }
- #else
- #define aic_suspend		NULL
-@@ -175,10 +171,8 @@ static int aic_irq_domain_xlate(struct irq_domain *d,
- {
- 	struct irq_domain_chip_generic *dgc =3D d->gc;
- 	struct irq_chip_generic *gc;
--	unsigned long flags;
- 	unsigned smr;
--	int idx;
--	int ret;
-+	int idx, ret;
-=20
- 	if (!dgc)
- 		return -EINVAL;
-@@ -194,11 +188,10 @@ static int aic_irq_domain_xlate(struct irq_domain *d,
-=20
- 	gc =3D dgc->gc[idx];
-=20
--	irq_gc_lock_irqsave(gc, flags);
-+	guard(raw_spinlock_irq)(&gc->lock);
- 	smr =3D irq_reg_readl(gc, AT91_AIC_SMR(*out_hwirq));
- 	aic_common_set_priority(intspec[2], &smr);
- 	irq_reg_writel(gc, smr, AT91_AIC_SMR(*out_hwirq));
--	irq_gc_unlock_irqrestore(gc, flags);
-=20
- 	return ret;
- }
-diff --git a/drivers/irqchip/irq-atmel-aic5.c b/drivers/irqchip/irq-atmel-aic=
-5.c
-index e98c2875af9e..60b00d2c3d7a 100644
---- a/drivers/irqchip/irq-atmel-aic5.c
-+++ b/drivers/irqchip/irq-atmel-aic5.c
-@@ -92,11 +92,10 @@ static void aic5_mask(struct irq_data *d)
- 	 * Disable interrupt on AIC5. We always take the lock of the
- 	 * first irq chip as all chips share the same registers.
- 	 */
--	irq_gc_lock(bgc);
-+	guard(raw_spinlock)(&bgc->lock);
- 	irq_reg_writel(gc, d->hwirq, AT91_AIC5_SSR);
- 	irq_reg_writel(gc, 1, AT91_AIC5_IDCR);
- 	gc->mask_cache &=3D ~d->mask;
--	irq_gc_unlock(bgc);
- }
-=20
- static void aic5_unmask(struct irq_data *d)
-@@ -109,11 +108,10 @@ static void aic5_unmask(struct irq_data *d)
- 	 * Enable interrupt on AIC5. We always take the lock of the
- 	 * first irq chip as all chips share the same registers.
- 	 */
--	irq_gc_lock(bgc);
-+	guard(raw_spinlock)(&bgc->lock);
- 	irq_reg_writel(gc, d->hwirq, AT91_AIC5_SSR);
- 	irq_reg_writel(gc, 1, AT91_AIC5_IECR);
- 	gc->mask_cache |=3D d->mask;
--	irq_gc_unlock(bgc);
- }
-=20
- static int aic5_retrigger(struct irq_data *d)
-@@ -122,11 +120,9 @@ static int aic5_retrigger(struct irq_data *d)
- 	struct irq_chip_generic *bgc =3D irq_get_domain_generic_chip(domain, 0);
-=20
- 	/* Enable interrupt on AIC5 */
--	irq_gc_lock(bgc);
-+	guard(raw_spinlock)(&bgc->lock);
- 	irq_reg_writel(bgc, d->hwirq, AT91_AIC5_SSR);
- 	irq_reg_writel(bgc, 1, AT91_AIC5_ISCR);
--	irq_gc_unlock(bgc);
+-static void tegra_msi_top_irq_ack(struct irq_data *d)
+-{
+-	irq_chip_ack_parent(d);
+-}
 -
- 	return 1;
- }
-=20
-@@ -137,14 +133,12 @@ static int aic5_set_type(struct irq_data *d, unsigned t=
-ype)
- 	unsigned int smr;
- 	int ret;
-=20
--	irq_gc_lock(bgc);
-+	guard(raw_spinlock)(&bgc->lock);
- 	irq_reg_writel(bgc, d->hwirq, AT91_AIC5_SSR);
- 	smr =3D irq_reg_readl(bgc, AT91_AIC5_SMR);
- 	ret =3D aic_common_set_type(d, type, &smr);
- 	if (!ret)
- 		irq_reg_writel(bgc, smr, AT91_AIC5_SMR);
--	irq_gc_unlock(bgc);
+-static void tegra_msi_top_irq_mask(struct irq_data *d)
+-{
+-	pci_msi_mask_irq(d);
+-	irq_chip_mask_parent(d);
+-}
 -
- 	return ret;
- }
-=20
-@@ -166,7 +160,7 @@ static void aic5_suspend(struct irq_data *d)
- 			smr_cache[i] =3D irq_reg_readl(bgc, AT91_AIC5_SMR);
- 		}
-=20
--	irq_gc_lock(bgc);
-+	guard(raw_spinlock)(&bgc->lock);
- 	for (i =3D 0; i < dgc->irqs_per_chip; i++) {
- 		mask =3D 1 << i;
- 		if ((mask & gc->mask_cache) =3D=3D (mask & gc->wake_active))
-@@ -178,7 +172,6 @@ static void aic5_suspend(struct irq_data *d)
- 		else
- 			irq_reg_writel(bgc, 1, AT91_AIC5_IDCR);
- 	}
--	irq_gc_unlock(bgc);
- }
-=20
- static void aic5_resume(struct irq_data *d)
-@@ -190,7 +183,7 @@ static void aic5_resume(struct irq_data *d)
- 	int i;
- 	u32 mask;
-=20
--	irq_gc_lock(bgc);
-+	guard(raw_spinlock)(&bgc->lock);
-=20
- 	if (smr_cache) {
- 		irq_reg_writel(bgc, 0xffffffff, AT91_AIC5_SPU);
-@@ -214,7 +207,6 @@ static void aic5_resume(struct irq_data *d)
- 		else
- 			irq_reg_writel(bgc, 1, AT91_AIC5_IDCR);
- 	}
--	irq_gc_unlock(bgc);
- }
-=20
- static void aic5_pm_shutdown(struct irq_data *d)
-@@ -225,13 +217,12 @@ static void aic5_pm_shutdown(struct irq_data *d)
- 	struct irq_chip_generic *gc =3D irq_data_get_irq_chip_data(d);
- 	int i;
-=20
--	irq_gc_lock(bgc);
-+	guard(raw_spinlock)(&bgc->lock);
- 	for (i =3D 0; i < dgc->irqs_per_chip; i++) {
- 		irq_reg_writel(bgc, i + gc->irq_base, AT91_AIC5_SSR);
- 		irq_reg_writel(bgc, 1, AT91_AIC5_IDCR);
- 		irq_reg_writel(bgc, 1, AT91_AIC5_ICCR);
- 	}
--	irq_gc_unlock(bgc);
- }
- #else
- #define aic5_suspend		NULL
-@@ -277,7 +268,6 @@ static int aic5_irq_domain_xlate(struct irq_domain *d,
- 				 unsigned int *out_type)
+-static void tegra_msi_top_irq_unmask(struct irq_data *d)
+-{
+-	pci_msi_unmask_irq(d);
+-	irq_chip_unmask_parent(d);
+-}
+-
+-static struct irq_chip tegra_msi_top_chip =3D {
+-	.name		=3D "Tegra PCIe MSI",
+-	.irq_ack	=3D tegra_msi_top_irq_ack,
+-	.irq_mask	=3D tegra_msi_top_irq_mask,
+-	.irq_unmask	=3D tegra_msi_top_irq_unmask,
+-};
+-
+ static void tegra_msi_irq_ack(struct irq_data *d)
  {
- 	struct irq_chip_generic *bgc =3D irq_get_domain_generic_chip(d, 0);
--	unsigned long flags;
- 	unsigned smr;
- 	int ret;
-=20
-@@ -289,13 +279,11 @@ static int aic5_irq_domain_xlate(struct irq_domain *d,
- 	if (ret)
- 		return ret;
-=20
--	irq_gc_lock_irqsave(bgc, flags);
-+	guard(raw_spinlock_irq)(&bgc->lock);
- 	irq_reg_writel(bgc, *out_hwirq, AT91_AIC5_SSR);
- 	smr =3D irq_reg_readl(bgc, AT91_AIC5_SMR);
- 	aic_common_set_priority(intspec[2], &smr);
- 	irq_reg_writel(bgc, smr, AT91_AIC5_SMR);
--	irq_gc_unlock_irqrestore(bgc, flags);
--
- 	return ret;
- }
-=20
-diff --git a/drivers/irqchip/irq-bcm7120-l2.c b/drivers/irqchip/irq-bcm7120-l=
-2.c
-index 1e9dab6e0d86..90909f8c6e84 100644
---- a/drivers/irqchip/irq-bcm7120-l2.c
-+++ b/drivers/irqchip/irq-bcm7120-l2.c
-@@ -63,16 +63,15 @@ static void bcm7120_l2_intc_irq_handle(struct irq_desc *d=
-esc)
-=20
- 	for (idx =3D 0; idx < b->n_words; idx++) {
- 		int base =3D idx * IRQS_PER_WORD;
--		struct irq_chip_generic *gc =3D
--			irq_get_domain_generic_chip(b->domain, base);
-+		struct irq_chip_generic *gc;
- 		unsigned long pending;
- 		int hwirq;
-=20
--		irq_gc_lock(gc);
--		pending =3D irq_reg_readl(gc, b->stat_offset[idx]) &
--					    gc->mask_cache &
--					    data->irq_map_mask[idx];
--		irq_gc_unlock(gc);
-+		gc =3D irq_get_domain_generic_chip(b->domain, base);
-+		scoped_guard (raw_spinlock, &gc->lock) {
-+			pending =3D irq_reg_readl(gc, b->stat_offset[idx]) & gc->mask_cache &
-+				data->irq_map_mask[idx];
-+		}
-=20
- 		for_each_set_bit(hwirq, &pending, IRQS_PER_WORD)
- 			generic_handle_domain_irq(b->domain, base + hwirq);
-@@ -86,11 +85,9 @@ static void bcm7120_l2_intc_suspend(struct irq_chip_generi=
-c *gc)
- 	struct bcm7120_l2_intc_data *b =3D gc->private;
- 	struct irq_chip_type *ct =3D gc->chip_types;
-=20
--	irq_gc_lock(gc);
-+	guard(raw_spinlock)(&gc->lock);
- 	if (b->can_wake)
--		irq_reg_writel(gc, gc->mask_cache | gc->wake_active,
--			       ct->regs.mask);
--	irq_gc_unlock(gc);
-+		irq_reg_writel(gc, gc->mask_cache | gc->wake_active, ct->regs.mask);
- }
-=20
- static void bcm7120_l2_intc_resume(struct irq_chip_generic *gc)
-@@ -98,9 +95,8 @@ static void bcm7120_l2_intc_resume(struct irq_chip_generic =
-*gc)
- 	struct irq_chip_type *ct =3D gc->chip_types;
-=20
- 	/* Restore the saved mask */
--	irq_gc_lock(gc);
-+	guard(raw_spinlock)(&gc->lock);
- 	irq_reg_writel(gc, gc->mask_cache, ct->regs.mask);
--	irq_gc_unlock(gc);
- }
-=20
- static int bcm7120_l2_intc_init_one(struct device_node *dn,
-diff --git a/drivers/irqchip/irq-brcmstb-l2.c b/drivers/irqchip/irq-brcmstb-l=
-2.c
-index db4c9721fcf2..aa4e1232fd62 100644
---- a/drivers/irqchip/irq-brcmstb-l2.c
-+++ b/drivers/irqchip/irq-brcmstb-l2.c
-@@ -97,9 +97,8 @@ static void __brcmstb_l2_intc_suspend(struct irq_data *d, b=
-ool save)
- 	struct irq_chip_generic *gc =3D irq_data_get_irq_chip_data(d);
- 	struct irq_chip_type *ct =3D irq_data_get_chip_type(d);
- 	struct brcmstb_l2_intc_data *b =3D gc->private;
--	unsigned long flags;
-=20
--	irq_gc_lock_irqsave(gc, flags);
-+	guard(raw_spinlock_irqsave)(&gc->lock);
- 	/* Save the current mask */
- 	if (save)
- 		b->saved_mask =3D irq_reg_readl(gc, ct->regs.mask);
-@@ -109,7 +108,6 @@ static void __brcmstb_l2_intc_suspend(struct irq_data *d,=
- bool save)
- 		irq_reg_writel(gc, ~gc->wake_active, ct->regs.disable);
- 		irq_reg_writel(gc, gc->wake_active, ct->regs.enable);
- 	}
--	irq_gc_unlock_irqrestore(gc, flags);
- }
-=20
- static void brcmstb_l2_intc_shutdown(struct irq_data *d)
-@@ -127,9 +125,8 @@ static void brcmstb_l2_intc_resume(struct irq_data *d)
- 	struct irq_chip_generic *gc =3D irq_data_get_irq_chip_data(d);
- 	struct irq_chip_type *ct =3D irq_data_get_chip_type(d);
- 	struct brcmstb_l2_intc_data *b =3D gc->private;
--	unsigned long flags;
-=20
--	irq_gc_lock_irqsave(gc, flags);
-+	guard(raw_spinlock_irqsave)(&gc->lock);
- 	if (ct->chip.irq_ack) {
- 		/* Clear unmasked non-wakeup interrupts */
- 		irq_reg_writel(gc, ~b->saved_mask & ~gc->wake_active,
-@@ -139,7 +136,6 @@ static void brcmstb_l2_intc_resume(struct irq_data *d)
- 	/* Restore the saved mask */
- 	irq_reg_writel(gc, b->saved_mask, ct->regs.disable);
- 	irq_reg_writel(gc, ~b->saved_mask, ct->regs.enable);
--	irq_gc_unlock_irqrestore(gc, flags);
- }
-=20
- static int __init brcmstb_l2_intc_of_init(struct device_node *np,
-diff --git a/drivers/irqchip/irq-csky-apb-intc.c b/drivers/irqchip/irq-csky-a=
-pb-intc.c
-index 6710691e4c25..6e17186db1cb 100644
---- a/drivers/irqchip/irq-csky-apb-intc.c
-+++ b/drivers/irqchip/irq-csky-apb-intc.c
-@@ -50,11 +50,10 @@ static void irq_ck_mask_set_bit(struct irq_data *d)
- 	unsigned long ifr =3D ct->regs.mask - 8;
- 	u32 mask =3D d->mask;
-=20
--	irq_gc_lock(gc);
-+	guard(raw_spinlock)(&gc->lock);
- 	*ct->mask_cache |=3D mask;
- 	irq_reg_writel(gc, *ct->mask_cache, ct->regs.mask);
- 	irq_reg_writel(gc, irq_reg_readl(gc, ifr) & ~mask, ifr);
--	irq_gc_unlock(gc);
- }
-=20
- static void __init ck_set_gc(struct device_node *node, void __iomem *reg_bas=
-e,
-diff --git a/drivers/irqchip/irq-dw-apb-ictl.c b/drivers/irqchip/irq-dw-apb-i=
-ctl.c
-index d5c1c750c8d2..6874ec82f6da 100644
---- a/drivers/irqchip/irq-dw-apb-ictl.c
-+++ b/drivers/irqchip/irq-dw-apb-ictl.c
-@@ -101,10 +101,9 @@ static void dw_apb_ictl_resume(struct irq_data *d)
- 	struct irq_chip_generic *gc =3D irq_data_get_irq_chip_data(d);
- 	struct irq_chip_type *ct =3D irq_data_get_chip_type(d);
-=20
--	irq_gc_lock(gc);
-+	guard(raw_spinlock)(&gc->lock);
- 	writel_relaxed(~0, gc->reg_base + ct->regs.enable);
- 	writel_relaxed(*ct->mask_cache, gc->reg_base + ct->regs.mask);
--	irq_gc_unlock(gc);
- }
- #else
- #define dw_apb_ictl_resume	NULL
-diff --git a/drivers/irqchip/irq-econet-en751221.c b/drivers/irqchip/irq-econ=
-et-en751221.c
-new file mode 100644
-index 000000000000..d83d5eb12795
---- /dev/null
-+++ b/drivers/irqchip/irq-econet-en751221.c
-@@ -0,0 +1,310 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * EN751221 Interrupt Controller Driver.
-+ *
-+ * The EcoNet EN751221 Interrupt Controller is a simple interrupt controller
-+ * designed for the MIPS 34Kc MT SMP processor with 2 VPEs. Each interrupt c=
-an
-+ * be routed to either VPE but not both, so to support per-CPU interrupts, a
-+ * secondary IRQ number is allocated to control masking/unmasking on VPE#1. =
-In
-+ * this driver, these are called "shadow interrupts". The assignment of shad=
-ow
-+ * interrupts is defined by the SoC integrator when wiring the interrupt lin=
-es,
-+ * so they are configurable in the device tree.
-+ *
-+ * If an interrupt (say 30) needs per-CPU capability, the SoC integrator
-+ * allocates another IRQ number (say 29) to be its shadow. The device tree
-+ * reflects this by adding the pair <30 29> to the "econet,shadow-interrupts"
-+ * property.
-+ *
-+ * When VPE#1 requests IRQ 30, the driver manipulates the mask bit for IRQ 2=
-9,
-+ * telling the hardware to mask VPE#1's view of IRQ 30.
-+ *
-+ * Copyright (C) 2025 Caleb James DeLisle <cjd@cjdns.fr>
-+ */
-+
-+#include <linux/cleanup.h>
-+#include <linux/io.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/of_irq.h>
-+#include <linux/irqdomain.h>
-+#include <linux/irqchip.h>
-+#include <linux/irqchip/chained_irq.h>
-+
-+#define IRQ_COUNT		40
-+
-+#define NOT_PERCPU		0xff
-+#define IS_SHADOW		0xfe
-+
-+#define REG_MASK0		0x04
-+#define REG_MASK1		0x50
-+#define REG_PENDING0		0x08
-+#define REG_PENDING1		0x54
-+
-+/**
-+ * @membase: Base address of the interrupt controller registers
-+ * @interrupt_shadows: Array of all interrupts, for each value,
-+ *	- NOT_PERCPU: This interrupt is not per-cpu, so it has no shadow
-+ *	- IS_SHADOW: This interrupt is a shadow of another per-cpu interrupt
-+ *	- else: This is a per-cpu interrupt whose shadow is the value
-+ */
-+static struct {
-+	void __iomem	*membase;
-+	u8		interrupt_shadows[IRQ_COUNT];
-+} econet_intc __ro_after_init;
-+
-+static DEFINE_RAW_SPINLOCK(irq_lock);
-+
-+/* IRQs must be disabled */
-+static void econet_wreg(u32 reg, u32 val, u32 mask)
-+{
-+	u32 v;
-+
-+	guard(raw_spinlock)(&irq_lock);
-+
-+	v =3D ioread32(econet_intc.membase + reg);
-+	v &=3D ~mask;
-+	v |=3D val & mask;
-+	iowrite32(v, econet_intc.membase + reg);
-+}
-+
-+/* IRQs must be disabled */
-+static void econet_chmask(u32 hwirq, bool unmask)
-+{
-+	u32 reg, mask;
-+	u8 shadow;
-+
-+	/*
-+	 * If the IRQ is a shadow, it should never be manipulated directly.
-+	 * It should only be masked/unmasked as a result of the "real" per-cpu
-+	 * irq being manipulated by a thread running on VPE#1.
-+	 * If it is per-cpu (has a shadow), and we're on VPE#1, the shadow is what =
-we mask.
-+	 * This is single processor only, so smp_processor_id() never exceeds 1.
-+	 */
-+	shadow =3D econet_intc.interrupt_shadows[hwirq];
-+	if (WARN_ON_ONCE(shadow =3D=3D IS_SHADOW))
-+		return;
-+	else if (shadow !=3D NOT_PERCPU && smp_processor_id() =3D=3D 1)
-+		hwirq =3D shadow;
-+
-+	if (hwirq >=3D 32) {
-+		reg =3D REG_MASK1;
-+		mask =3D BIT(hwirq - 32);
-+	} else {
-+		reg =3D REG_MASK0;
-+		mask =3D BIT(hwirq);
-+	}
-+
-+	econet_wreg(reg, unmask ? mask : 0, mask);
-+}
-+
-+/* IRQs must be disabled */
-+static void econet_intc_mask(struct irq_data *d)
-+{
-+	econet_chmask(d->hwirq, false);
-+}
-+
-+/* IRQs must be disabled */
-+static void econet_intc_unmask(struct irq_data *d)
-+{
-+	econet_chmask(d->hwirq, true);
-+}
-+
-+static void econet_mask_all(void)
-+{
-+	/* IRQs are generally disabled during init, but guarding here makes it non-=
-obligatory. */
-+	guard(irqsave)();
-+	econet_wreg(REG_MASK0, 0, ~0);
-+	econet_wreg(REG_MASK1, 0, ~0);
-+}
-+
-+static void econet_intc_handle_pending(struct irq_domain *d, u32 pending, u3=
-2 offset)
-+{
-+	int hwirq;
-+
-+	while (pending) {
-+		hwirq =3D fls(pending) - 1;
-+		generic_handle_domain_irq(d, hwirq + offset);
-+		pending &=3D ~BIT(hwirq);
-+	}
-+}
-+
-+static void econet_intc_from_parent(struct irq_desc *desc)
-+{
-+	struct irq_chip *chip =3D irq_desc_get_chip(desc);
-+	struct irq_domain *domain;
-+	u32 pending0, pending1;
-+
-+	chained_irq_enter(chip, desc);
-+
-+	pending0 =3D ioread32(econet_intc.membase + REG_PENDING0);
-+	pending1 =3D ioread32(econet_intc.membase + REG_PENDING1);
-+
-+	if (unlikely(!(pending0 | pending1))) {
-+		spurious_interrupt();
-+	} else {
-+		domain =3D irq_desc_get_handler_data(desc);
-+		econet_intc_handle_pending(domain, pending0, 0);
-+		econet_intc_handle_pending(domain, pending1, 32);
-+	}
-+
-+	chained_irq_exit(chip, desc);
-+}
-+
-+static const struct irq_chip econet_irq_chip;
-+
-+static int econet_intc_map(struct irq_domain *d, u32 irq, irq_hw_number_t hw=
-irq)
-+{
-+	int ret;
-+
-+	if (hwirq >=3D IRQ_COUNT) {
-+		pr_err("%s: hwirq %lu out of range\n", __func__, hwirq);
-+		return -EINVAL;
-+	} else if (econet_intc.interrupt_shadows[hwirq] =3D=3D IS_SHADOW) {
-+		pr_err("%s: can't map hwirq %lu, it is a shadow interrupt\n", __func__, hw=
-irq);
-+		return -EINVAL;
-+	}
-+
-+	if (econet_intc.interrupt_shadows[hwirq] =3D=3D NOT_PERCPU) {
-+		irq_set_chip_and_handler(irq, &econet_irq_chip, handle_level_irq);
-+	} else {
-+		irq_set_chip_and_handler(irq, &econet_irq_chip, handle_percpu_devid_irq);
-+		ret =3D irq_set_percpu_devid(irq);
-+		if (ret)
-+			pr_warn("%s: Failed irq_set_percpu_devid for %u: %d\n", d->name, irq, ret=
-);
-+	}
-+
-+	irq_set_chip_data(irq, NULL);
-+	return 0;
-+}
-+
-+static const struct irq_chip econet_irq_chip =3D {
-+	.name		=3D "en751221-intc",
-+	.irq_unmask	=3D econet_intc_unmask,
-+	.irq_mask	=3D econet_intc_mask,
-+	.irq_mask_ack	=3D econet_intc_mask,
-+};
-+
-+static const struct irq_domain_ops econet_domain_ops =3D {
-+	.xlate	=3D irq_domain_xlate_onecell,
-+	.map	=3D econet_intc_map
-+};
-+
-+static int __init get_shadow_interrupts(struct device_node *node)
-+{
-+	const char *field =3D "econet,shadow-interrupts";
-+	int num_shadows;
-+
-+	num_shadows =3D of_property_count_u32_elems(node, field);
-+
-+	memset(econet_intc.interrupt_shadows, NOT_PERCPU,
-+	       sizeof(econet_intc.interrupt_shadows));
-+
-+	if (num_shadows <=3D 0) {
-+		return 0;
-+	} else if (num_shadows % 2) {
-+		pr_err("%pOF: %s count is odd, ignoring\n", node, field);
-+		return 0;
-+	}
-+
-+	u32 *shadows __free(kfree) =3D kmalloc_array(num_shadows, sizeof(u32), GFP_=
-KERNEL);
-+	if (!shadows)
-+		return -ENOMEM;
-+
-+	if (of_property_read_u32_array(node, field, shadows, num_shadows)) {
-+		pr_err("%pOF: Failed to read %s\n", node, field);
-+		return -EINVAL;
-+	}
-+
-+	for (int i =3D 0; i < num_shadows; i +=3D 2) {
-+		u32 shadow =3D shadows[i + 1];
-+		u32 target =3D shadows[i];
-+
-+		if (shadow > IRQ_COUNT) {
-+			pr_err("%pOF: %s[%d] shadow(%d) out of range\n",
-+			       node, field, i + 1, shadow);
-+			continue;
-+		}
-+
-+		if (target >=3D IRQ_COUNT) {
-+			pr_err("%pOF: %s[%d] target(%d) out of range\n", node, field, i, target);
-+			continue;
-+		}
-+
-+		if (econet_intc.interrupt_shadows[target] !=3D NOT_PERCPU) {
-+			pr_err("%pOF: %s[%d] target(%d) already has a shadow\n",
-+			       node, field, i, target);
-+			continue;
-+		}
-+
-+		if (econet_intc.interrupt_shadows[shadow] !=3D NOT_PERCPU) {
-+			pr_err("%pOF: %s[%d] shadow(%d) already has a target\n",
-+			       node, field, i + 1, shadow);
-+			continue;
-+		}
-+
-+		econet_intc.interrupt_shadows[target] =3D shadow;
-+		econet_intc.interrupt_shadows[shadow] =3D IS_SHADOW;
-+	}
-+
-+	return 0;
-+}
-+
-+static int __init econet_intc_of_init(struct device_node *node, struct devic=
-e_node *parent)
-+{
-+	struct irq_domain *domain;
-+	struct resource res;
-+	int ret, irq;
-+
-+	ret =3D get_shadow_interrupts(node);
-+	if (ret)
-+		return ret;
-+
-+	irq =3D irq_of_parse_and_map(node, 0);
-+	if (!irq) {
-+		pr_err("%pOF: DT: Failed to get IRQ from 'interrupts'\n", node);
-+		return -EINVAL;
-+	}
-+
-+	if (of_address_to_resource(node, 0, &res)) {
-+		pr_err("%pOF: DT: Failed to get 'reg'\n", node);
-+		ret =3D -EINVAL;
-+		goto err_dispose_mapping;
-+	}
-+
-+	if (!request_mem_region(res.start, resource_size(&res), res.name)) {
-+		pr_err("%pOF: Failed to request memory\n", node);
-+		ret =3D -EBUSY;
-+		goto err_dispose_mapping;
-+	}
-+
-+	econet_intc.membase =3D ioremap(res.start, resource_size(&res));
-+	if (!econet_intc.membase) {
-+		pr_err("%pOF: Failed to remap membase\n", node);
-+		ret =3D -ENOMEM;
-+		goto err_release;
-+	}
-+
-+	econet_mask_all();
-+
-+	domain =3D irq_domain_create_linear(of_fwnode_handle(node), IRQ_COUNT,
-+					  &econet_domain_ops, NULL);
-+	if (!domain) {
-+		pr_err("%pOF: Failed to add irqdomain\n", node);
-+		ret =3D -ENOMEM;
-+		goto err_unmap;
-+	}
-+
-+	irq_set_chained_handler_and_data(irq, econet_intc_from_parent, domain);
-+
-+	return 0;
-+
-+err_unmap:
-+	iounmap(econet_intc.membase);
-+err_release:
-+	release_mem_region(res.start, resource_size(&res));
-+err_dispose_mapping:
-+	irq_dispose_mapping(irq);
-+	return ret;
-+}
-+
-+IRQCHIP_DECLARE(econet_en751221_intc, "econet,en751221-intc", econet_intc_of=
-_init);
-diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-it=
-s.c
-index 0115ad6c8259..81a44ce7619f 100644
---- a/drivers/irqchip/irq-gic-v3-its.c
-+++ b/drivers/irqchip/irq-gic-v3-its.c
-@@ -125,6 +125,8 @@ struct its_node {
- 	int			vlpi_redist_offset;
+ 	struct tegra_msi *msi =3D irq_data_get_irq_chip_data(d);
+@@ -1690,42 +1667,40 @@ static const struct irq_domain_ops tegra_msi_domain_o=
+ps =3D {
+ 	.free =3D tegra_msi_domain_free,
  };
 =20
-+static DEFINE_PER_CPU(struct its_node *, local_4_1_its);
-+
- #define is_v4(its)		(!!((its)->typer & GITS_TYPER_VLPIS))
- #define is_v4_1(its)		(!!((its)->typer & GITS_TYPER_VMAPP))
- #define device_ids(its)		(FIELD_GET(GITS_TYPER_DEVBITS, (its)->typer) + 1)
-@@ -2778,6 +2780,7 @@ static u64 inherit_vpe_l1_table_from_its(void)
- 		}
- 		val |=3D FIELD_PREP(GICR_VPROPBASER_4_1_SIZE, GITS_BASER_NR_PAGES(baser) -=
- 1);
-=20
-+		*this_cpu_ptr(&local_4_1_its) =3D its;
- 		return val;
- 	}
-=20
-@@ -2815,6 +2818,7 @@ static u64 inherit_vpe_l1_table_from_rd(cpumask_t **mas=
-k)
- 		gic_data_rdist()->vpe_l1_base =3D gic_data_rdist_cpu(cpu)->vpe_l1_base;
- 		*mask =3D gic_data_rdist_cpu(cpu)->vpe_table_mask;
-=20
-+		*this_cpu_ptr(&local_4_1_its) =3D *per_cpu_ptr(&local_4_1_its, cpu);
- 		return val;
- 	}
-=20
-@@ -4180,7 +4184,7 @@ static struct irq_chip its_vpe_irq_chip =3D {
-=20
- static struct its_node *find_4_1_its(void)
- {
--	static struct its_node *its =3D NULL;
-+	struct its_node *its =3D *this_cpu_ptr(&local_4_1_its);
-=20
- 	if (!its) {
- 		list_for_each_entry(its, &its_nodes, entry) {
-diff --git a/drivers/irqchip/irq-ingenic-tcu.c b/drivers/irqchip/irq-ingenic-=
-tcu.c
-index 3363f83bd7e9..945fd57bcc73 100644
---- a/drivers/irqchip/irq-ingenic-tcu.c
-+++ b/drivers/irqchip/irq-ingenic-tcu.c
-@@ -52,11 +52,10 @@ static void ingenic_tcu_gc_unmask_enable_reg(struct irq_d=
-ata *d)
- 	struct regmap *map =3D gc->private;
- 	u32 mask =3D d->mask;
-=20
--	irq_gc_lock(gc);
-+	guard(raw_spinlock)(&gc->lock);
- 	regmap_write(map, ct->regs.ack, mask);
- 	regmap_write(map, ct->regs.enable, mask);
- 	*ct->mask_cache |=3D mask;
--	irq_gc_unlock(gc);
- }
-=20
- static void ingenic_tcu_gc_mask_disable_reg(struct irq_data *d)
-@@ -66,10 +65,9 @@ static void ingenic_tcu_gc_mask_disable_reg(struct irq_dat=
-a *d)
- 	struct regmap *map =3D gc->private;
- 	u32 mask =3D d->mask;
-=20
--	irq_gc_lock(gc);
-+	guard(raw_spinlock)(&gc->lock);
- 	regmap_write(map, ct->regs.disable, mask);
- 	*ct->mask_cache &=3D ~mask;
--	irq_gc_unlock(gc);
- }
-=20
- static void ingenic_tcu_gc_mask_disable_reg_and_ack(struct irq_data *d)
-@@ -79,10 +77,9 @@ static void ingenic_tcu_gc_mask_disable_reg_and_ack(struct=
- irq_data *d)
- 	struct regmap *map =3D gc->private;
- 	u32 mask =3D d->mask;
-=20
--	irq_gc_lock(gc);
-+	guard(raw_spinlock)(&gc->lock);
- 	regmap_write(map, ct->regs.ack, mask);
- 	regmap_write(map, ct->regs.disable, mask);
--	irq_gc_unlock(gc);
- }
-=20
- static int __init ingenic_tcu_irq_init(struct device_node *np,
-diff --git a/drivers/irqchip/irq-lan966x-oic.c b/drivers/irqchip/irq-lan966x-=
-oic.c
-index 41ac880e3b87..f77bd2a2e5e5 100644
---- a/drivers/irqchip/irq-lan966x-oic.c
-+++ b/drivers/irqchip/irq-lan966x-oic.c
-@@ -71,14 +71,12 @@ static unsigned int lan966x_oic_irq_startup(struct irq_da=
-ta *data)
- 	struct lan966x_oic_chip_regs *chip_regs =3D gc->private;
- 	u32 map;
-=20
--	irq_gc_lock(gc);
--
--	/* Map the source interrupt to the destination */
--	map =3D irq_reg_readl(gc, chip_regs->reg_off_map);
--	map |=3D data->mask;
--	irq_reg_writel(gc, map, chip_regs->reg_off_map);
--
--	irq_gc_unlock(gc);
-+	scoped_guard (raw_spinlock, &gc->lock) {
-+		/* Map the source interrupt to the destination */
-+		map =3D irq_reg_readl(gc, chip_regs->reg_off_map);
-+		map |=3D data->mask;
-+		irq_reg_writel(gc, map, chip_regs->reg_off_map);
-+	}
-=20
- 	ct->chip.irq_ack(data);
- 	ct->chip.irq_unmask(data);
-@@ -95,14 +93,12 @@ static void lan966x_oic_irq_shutdown(struct irq_data *dat=
-a)
-=20
- 	ct->chip.irq_mask(data);
-=20
--	irq_gc_lock(gc);
-+	guard(raw_spinlock)(&gc->lock);
-=20
- 	/* Unmap the interrupt */
- 	map =3D irq_reg_readl(gc, chip_regs->reg_off_map);
- 	map &=3D ~data->mask;
- 	irq_reg_writel(gc, map, chip_regs->reg_off_map);
--
--	irq_gc_unlock(gc);
- }
-=20
- static int lan966x_oic_irq_set_type(struct irq_data *data,
-diff --git a/drivers/irqchip/irq-loongson-liointc.c b/drivers/irqchip/irq-loo=
-ngson-liointc.c
-index 2b1bd4a96665..61c0b479bfe5 100644
---- a/drivers/irqchip/irq-loongson-liointc.c
-+++ b/drivers/irqchip/irq-loongson-liointc.c
-@@ -116,9 +116,8 @@ static int liointc_set_type(struct irq_data *data, unsign=
-ed int type)
- {
- 	struct irq_chip_generic *gc =3D irq_data_get_irq_chip_data(data);
- 	u32 mask =3D data->mask;
--	unsigned long flags;
-=20
--	irq_gc_lock_irqsave(gc, flags);
-+	guard(raw_spinlock)(&gc->lock);
- 	switch (type) {
- 	case IRQ_TYPE_LEVEL_HIGH:
- 		liointc_set_bit(gc, LIOINTC_REG_INTC_EDGE, mask, false);
-@@ -137,10 +136,8 @@ static int liointc_set_type(struct irq_data *data, unsig=
-ned int type)
- 		liointc_set_bit(gc, LIOINTC_REG_INTC_POL, mask, true);
- 		break;
- 	default:
--		irq_gc_unlock_irqrestore(gc, flags);
- 		return -EINVAL;
- 	}
--	irq_gc_unlock_irqrestore(gc, flags);
-=20
- 	irqd_set_trigger_type(data, type);
- 	return 0;
-@@ -157,10 +154,9 @@ static void liointc_suspend(struct irq_chip_generic *gc)
- static void liointc_resume(struct irq_chip_generic *gc)
- {
- 	struct liointc_priv *priv =3D gc->private;
--	unsigned long flags;
- 	int i;
-=20
--	irq_gc_lock_irqsave(gc, flags);
-+	guard(raw_spinlock_irqsave)(&gc->lock);
- 	/* Disable all at first */
- 	writel(0xffffffff, gc->reg_base + LIOINTC_REG_INTC_DISABLE);
- 	/* Restore map cache */
-@@ -170,7 +166,6 @@ static void liointc_resume(struct irq_chip_generic *gc)
- 	writel(priv->int_edge, gc->reg_base + LIOINTC_REG_INTC_EDGE);
- 	/* Restore mask cache */
- 	writel(gc->mask_cache, gc->reg_base + LIOINTC_REG_INTC_ENABLE);
--	irq_gc_unlock_irqrestore(gc, flags);
- }
-=20
- static int parent_irq[LIOINTC_NUM_PARENT];
-diff --git a/drivers/irqchip/irq-mscc-ocelot.c b/drivers/irqchip/irq-mscc-oce=
-lot.c
-index 3dc745b14caf..d69c5f112a7e 100644
---- a/drivers/irqchip/irq-mscc-ocelot.c
-+++ b/drivers/irqchip/irq-mscc-ocelot.c
-@@ -83,7 +83,7 @@ static void ocelot_irq_unmask(struct irq_data *data)
- 	unsigned int mask =3D data->mask;
- 	u32 val;
-=20
--	irq_gc_lock(gc);
-+	guard(raw_spinlock)(&gc->lock);
- 	/*
- 	 * Clear sticky bits for edge mode interrupts.
- 	 * Serval has only one trigger register replication, but the adjacent
-@@ -97,7 +97,6 @@ static void ocelot_irq_unmask(struct irq_data *data)
-=20
- 	*ct->mask_cache &=3D ~mask;
- 	irq_reg_writel(gc, mask, p->reg_off_ena_set);
--	irq_gc_unlock(gc);
- }
-=20
- static void ocelot_irq_handler(struct irq_desc *desc)
-diff --git a/drivers/irqchip/irq-pruss-intc.c b/drivers/irqchip/irq-pruss-int=
-c.c
-index bee01980b463..af7684758049 100644
---- a/drivers/irqchip/irq-pruss-intc.c
-+++ b/drivers/irqchip/irq-pruss-intc.c
-@@ -581,8 +581,7 @@ static int pruss_intc_probe(struct platform_device *pdev)
- 		host_data->intc =3D intc;
- 		host_data->host_irq =3D i;
-=20
--		irq_set_handler_data(irq, host_data);
--		irq_set_chained_handler(irq, pruss_intc_irq_handler);
-+		irq_set_chained_handler_and_data(irq, pruss_intc_irq_handler, host_data);
- 	}
-=20
- 	return 0;
-diff --git a/drivers/irqchip/irq-sg2042-msi.c b/drivers/irqchip/irq-sg2042-ms=
-i.c
-index ee682e87eb8b..a3e2a26d8495 100644
---- a/drivers/irqchip/irq-sg2042-msi.c
-+++ b/drivers/irqchip/irq-sg2042-msi.c
-@@ -19,21 +19,36 @@
-=20
- #include "irq-msi-lib.h"
-=20
--#define SG2042_MAX_MSI_VECTOR	32
-+struct sg204x_msi_chip_info {
-+	const struct irq_chip		*irqchip;
-+	const struct msi_parent_ops	*parent_ops;
-+};
-+
-+/**
-+ * struct sg204x_msi_chipdata - chip data for the SG204x MSI IRQ controller
-+ * @reg_clr:		clear reg, see TRM, 10.1.33, GP_INTR0_CLR
-+ * @doorbell_addr:	see TRM, 10.1.32, GP_INTR0_SET
-+ * @irq_first:		First vectors number that MSIs starts
-+ * @num_irqs:		Number of vectors for MSIs
-+ * @msi_map:		mapping for allocated MSI vectors.
-+ * @msi_map_lock:	Lock for msi_map
-+ * @chip_info:		chip specific infomations
-+ */
-+struct sg204x_msi_chipdata {
-+	void __iomem				*reg_clr;
-=20
--struct sg2042_msi_chipdata {
--	void __iomem	*reg_clr;	// clear reg, see TRM, 10.1.33, GP_INTR0_CLR
-+	phys_addr_t				doorbell_addr;
-=20
--	phys_addr_t	doorbell_addr;	// see TRM, 10.1.32, GP_INTR0_SET
-+	u32					irq_first;
-+	u32					num_irqs;
-=20
--	u32		irq_first;	// The vector number that MSIs starts
--	u32		num_irqs;	// The number of vectors for MSIs
-+	unsigned long				*msi_map;
-+	struct mutex				msi_map_lock;
-=20
--	DECLARE_BITMAP(msi_map, SG2042_MAX_MSI_VECTOR);
--	struct mutex	msi_map_lock;	// lock for msi_map
-+	const struct sg204x_msi_chip_info	*chip_info;
+-static struct msi_domain_info tegra_msi_info =3D {
+-	.flags	=3D MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS |
+-		  MSI_FLAG_NO_AFFINITY | MSI_FLAG_PCI_MSIX,
+-	.chip	=3D &tegra_msi_top_chip,
++static const struct msi_parent_ops tegra_msi_parent_ops =3D {
++	.supported_flags	=3D (MSI_GENERIC_FLAGS_MASK	|
++				   MSI_FLAG_PCI_MSIX),
++	.required_flags		=3D (MSI_FLAG_USE_DEF_DOM_OPS	|
++				   MSI_FLAG_USE_DEF_CHIP_OPS	|
++				   MSI_FLAG_PCI_MSI_MASK_PARENT	|
++				   MSI_FLAG_NO_AFFINITY),
++	.chip_flags		=3D MSI_CHIP_FLAG_SET_ACK,
++	.bus_select_token	=3D DOMAIN_BUS_PCI_MSI,
++	.init_dev_msi_info	=3D msi_lib_init_dev_msi_info,
  };
 =20
--static int sg2042_msi_allocate_hwirq(struct sg2042_msi_chipdata *data, int n=
-um_req)
-+static int sg204x_msi_allocate_hwirq(struct sg204x_msi_chipdata *data, int n=
-um_req)
+ static int tegra_allocate_domains(struct tegra_msi *msi)
  {
- 	int first;
+ 	struct tegra_pcie *pcie =3D msi_to_pcie(msi);
+ 	struct fwnode_handle *fwnode =3D dev_fwnode(pcie->dev);
+-	struct irq_domain *parent;
+-
+-	parent =3D irq_domain_create_linear(fwnode, INT_PCI_MSI_NR,
+-					  &tegra_msi_domain_ops, msi);
+-	if (!parent) {
+-		dev_err(pcie->dev, "failed to create IRQ domain\n");
+-		return -ENOMEM;
+-	}
+-	irq_domain_update_bus_token(parent, DOMAIN_BUS_NEXUS);
++	struct irq_domain_info info =3D {
++		.fwnode		=3D fwnode,
++		.ops		=3D &tegra_msi_domain_ops,
++		.size		=3D INT_PCI_MSI_NR,
++		.host_data	=3D msi,
++	};
 =20
-@@ -43,7 +58,7 @@ static int sg2042_msi_allocate_hwirq(struct sg2042_msi_chip=
-data *data, int num_r
- 	return first >=3D 0 ? first : -ENOSPC;
- }
-=20
--static void sg2042_msi_free_hwirq(struct sg2042_msi_chipdata *data, int hwir=
-q, int num_req)
-+static void sg204x_msi_free_hwirq(struct sg204x_msi_chipdata *data, int hwir=
-q, int num_req)
- {
- 	guard(mutex)(&data->msi_map_lock);
- 	bitmap_release_region(data->msi_map, hwirq, get_count_order(num_req));
-@@ -51,7 +66,7 @@ static void sg2042_msi_free_hwirq(struct sg2042_msi_chipdat=
-a *data, int hwirq, i
-=20
- static void sg2042_msi_irq_ack(struct irq_data *d)
- {
--	struct sg2042_msi_chipdata *data  =3D irq_data_get_irq_chip_data(d);
-+	struct sg204x_msi_chipdata *data  =3D irq_data_get_irq_chip_data(d);
- 	int bit_off =3D d->hwirq;
-=20
- 	writel(1 << bit_off, data->reg_clr);
-@@ -61,7 +76,7 @@ static void sg2042_msi_irq_ack(struct irq_data *d)
-=20
- static void sg2042_msi_irq_compose_msi_msg(struct irq_data *d, struct msi_ms=
-g *msg)
- {
--	struct sg2042_msi_chipdata *data =3D irq_data_get_irq_chip_data(d);
-+	struct sg204x_msi_chipdata *data =3D irq_data_get_irq_chip_data(d);
-=20
- 	msg->address_hi =3D upper_32_bits(data->doorbell_addr);
- 	msg->address_lo =3D lower_32_bits(data->doorbell_addr);
-@@ -79,9 +94,38 @@ static const struct irq_chip sg2042_msi_middle_irq_chip =
-=3D {
- 	.irq_compose_msi_msg	=3D sg2042_msi_irq_compose_msi_msg,
- };
-=20
--static int sg2042_msi_parent_domain_alloc(struct irq_domain *domain, unsigne=
-d int virq, int hwirq)
-+static void sg2044_msi_irq_ack(struct irq_data *d)
-+{
-+	struct sg204x_msi_chipdata *data =3D irq_data_get_irq_chip_data(d);
-+
-+	writel(0, (u32 __iomem *)data->reg_clr + d->hwirq);
-+	irq_chip_ack_parent(d);
-+}
-+
-+static void sg2044_msi_irq_compose_msi_msg(struct irq_data *d, struct msi_ms=
-g *msg)
-+{
-+	struct sg204x_msi_chipdata *data =3D irq_data_get_irq_chip_data(d);
-+	phys_addr_t doorbell =3D data->doorbell_addr + 4 * (d->hwirq / 32);
-+
-+	msg->address_lo =3D lower_32_bits(doorbell);
-+	msg->address_hi =3D upper_32_bits(doorbell);
-+	msg->data =3D d->hwirq % 32;
-+}
-+
-+static struct irq_chip sg2044_msi_middle_irq_chip =3D {
-+	.name			=3D "SG2044 MSI",
-+	.irq_ack		=3D sg2044_msi_irq_ack,
-+	.irq_mask		=3D irq_chip_mask_parent,
-+	.irq_unmask		=3D irq_chip_unmask_parent,
-+#ifdef CONFIG_SMP
-+	.irq_set_affinity	=3D irq_chip_set_affinity_parent,
-+#endif
-+	.irq_compose_msi_msg	=3D sg2044_msi_irq_compose_msi_msg,
-+};
-+
-+static int sg204x_msi_parent_domain_alloc(struct irq_domain *domain, unsigne=
-d int virq, int hwirq)
- {
--	struct sg2042_msi_chipdata *data =3D domain->host_data;
-+	struct sg204x_msi_chipdata *data =3D domain->host_data;
- 	struct irq_fwspec fwspec;
- 	struct irq_data *d;
- 	int ret;
-@@ -99,47 +143,45 @@ static int sg2042_msi_parent_domain_alloc(struct irq_dom=
-ain *domain, unsigned in
- 	return d->chip->irq_set_type(d, IRQ_TYPE_EDGE_RISING);
- }
-=20
--static int sg2042_msi_middle_domain_alloc(struct irq_domain *domain, unsigne=
-d int virq,
-+static int sg204x_msi_middle_domain_alloc(struct irq_domain *domain, unsigne=
-d int virq,
- 					  unsigned int nr_irqs, void *args)
- {
--	struct sg2042_msi_chipdata *data =3D domain->host_data;
-+	struct sg204x_msi_chipdata *data =3D domain->host_data;
- 	int hwirq, err, i;
-=20
--	hwirq =3D sg2042_msi_allocate_hwirq(data, nr_irqs);
-+	hwirq =3D sg204x_msi_allocate_hwirq(data, nr_irqs);
- 	if (hwirq < 0)
- 		return hwirq;
-=20
- 	for (i =3D 0; i < nr_irqs; i++) {
--		err =3D sg2042_msi_parent_domain_alloc(domain, virq + i, hwirq + i);
-+		err =3D sg204x_msi_parent_domain_alloc(domain, virq + i, hwirq + i);
- 		if (err)
- 			goto err_hwirq;
-=20
- 		irq_domain_set_hwirq_and_chip(domain, virq + i, hwirq + i,
--					      &sg2042_msi_middle_irq_chip, data);
-+					      data->chip_info->irqchip, data);
+-	msi->domain =3D pci_msi_create_irq_domain(fwnode, &tegra_msi_info, parent);
++	msi->domain =3D msi_create_parent_irq_domain(&info, &tegra_msi_parent_ops);
+ 	if (!msi->domain) {
+ 		dev_err(pcie->dev, "failed to create MSI domain\n");
+-		irq_domain_remove(parent);
+ 		return -ENOMEM;
  	}
 -
  	return 0;
-=20
- err_hwirq:
--	sg2042_msi_free_hwirq(data, hwirq, nr_irqs);
-+	sg204x_msi_free_hwirq(data, hwirq, nr_irqs);
- 	irq_domain_free_irqs_parent(domain, virq, i);
--
- 	return err;
  }
 =20
--static void sg2042_msi_middle_domain_free(struct irq_domain *domain, unsigne=
-d int virq,
-+static void sg204x_msi_middle_domain_free(struct irq_domain *domain, unsigne=
-d int virq,
- 					  unsigned int nr_irqs)
+ static void tegra_free_domains(struct tegra_msi *msi)
  {
- 	struct irq_data *d =3D irq_domain_get_irq_data(domain, virq);
--	struct sg2042_msi_chipdata *data =3D irq_data_get_irq_chip_data(d);
-+	struct sg204x_msi_chipdata *data =3D irq_data_get_irq_chip_data(d);
+-	struct irq_domain *parent =3D msi->domain->parent;
+-
+ 	irq_domain_remove(msi->domain);
+-	irq_domain_remove(parent);
+ }
 =20
+ static int tegra_pcie_msi_setup(struct tegra_pcie *pcie)
+diff --git a/drivers/pci/controller/pci-xgene-msi.c b/drivers/pci/controller/=
+pci-xgene-msi.c
+index 7bce327897c9..b05ec8b0bb93 100644
+--- a/drivers/pci/controller/pci-xgene-msi.c
++++ b/drivers/pci/controller/pci-xgene-msi.c
+@@ -12,6 +12,7 @@
+ #include <linux/module.h>
+ #include <linux/msi.h>
+ #include <linux/irqchip/chained_irq.h>
++#include <linux/irqchip/irq-msi-lib.h>
+ #include <linux/pci.h>
+ #include <linux/platform_device.h>
+ #include <linux/of_pci.h>
+@@ -32,7 +33,6 @@ struct xgene_msi_group {
+ struct xgene_msi {
+ 	struct device_node	*node;
+ 	struct irq_domain	*inner_domain;
+-	struct irq_domain	*msi_domain;
+ 	u64			msi_addr;
+ 	void __iomem		*msi_regs;
+ 	unsigned long		*bitmap;
+@@ -44,20 +44,6 @@ struct xgene_msi {
+ /* Global data */
+ static struct xgene_msi xgene_msi_ctrl;
+=20
+-static struct irq_chip xgene_msi_top_irq_chip =3D {
+-	.name		=3D "X-Gene1 MSI",
+-	.irq_enable	=3D pci_msi_unmask_irq,
+-	.irq_disable	=3D pci_msi_mask_irq,
+-	.irq_mask	=3D pci_msi_mask_irq,
+-	.irq_unmask	=3D pci_msi_unmask_irq,
+-};
+-
+-static struct  msi_domain_info xgene_msi_domain_info =3D {
+-	.flags	=3D (MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS |
+-		  MSI_FLAG_PCI_MSIX),
+-	.chip	=3D &xgene_msi_top_irq_chip,
+-};
+-
+ /*
+  * X-Gene v1 has 16 groups of MSI termination registers MSInIRx, where
+  * n is group number (0..F), x is index of registers in each group (0..7)
+@@ -235,34 +221,35 @@ static void xgene_irq_domain_free(struct irq_domain *do=
+main,
  	irq_domain_free_irqs_parent(domain, virq, nr_irqs);
--	sg2042_msi_free_hwirq(data, d->hwirq, nr_irqs);
-+	sg204x_msi_free_hwirq(data, d->hwirq, nr_irqs);
  }
 =20
--static const struct irq_domain_ops sg2042_msi_middle_domain_ops =3D {
--	.alloc	=3D sg2042_msi_middle_domain_alloc,
--	.free	=3D sg2042_msi_middle_domain_free,
-+static const struct irq_domain_ops sg204x_msi_middle_domain_ops =3D {
-+	.alloc	=3D sg204x_msi_middle_domain_alloc,
-+	.free	=3D sg204x_msi_middle_domain_free,
- 	.select	=3D msi_lib_irq_domain_select,
+-static const struct irq_domain_ops msi_domain_ops =3D {
++static const struct irq_domain_ops xgene_msi_domain_ops =3D {
+ 	.alloc  =3D xgene_irq_domain_alloc,
+ 	.free   =3D xgene_irq_domain_free,
  };
 =20
-@@ -157,14 +199,30 @@ static const struct msi_parent_ops sg2042_msi_parent_op=
-s =3D {
- 	.init_dev_msi_info	=3D msi_lib_init_dev_msi_info,
- };
-=20
--static int sg2042_msi_init_domains(struct sg2042_msi_chipdata *data,
-+#define SG2044_MSI_FLAGS_REQUIRED (MSI_FLAG_USE_DEF_DOM_OPS |	\
-+				   MSI_FLAG_USE_DEF_CHIP_OPS)
-+
-+#define SG2044_MSI_FLAGS_SUPPORTED (MSI_GENERIC_FLAGS_MASK |	\
-+				    MSI_FLAG_PCI_MSIX)
-+
-+static const struct msi_parent_ops sg2044_msi_parent_ops =3D {
-+	.required_flags		=3D SG2044_MSI_FLAGS_REQUIRED,
-+	.supported_flags	=3D SG2044_MSI_FLAGS_SUPPORTED,
-+	.chip_flags		=3D MSI_CHIP_FLAG_SET_EOI | MSI_CHIP_FLAG_SET_ACK,
-+	.bus_select_mask	=3D MATCH_PCI_MSI,
-+	.bus_select_token	=3D DOMAIN_BUS_NEXUS,
-+	.prefix			=3D "SG2044-",
++static const struct msi_parent_ops xgene_msi_parent_ops =3D {
++	.supported_flags	=3D (MSI_GENERIC_FLAGS_MASK	|
++				   MSI_FLAG_PCI_MSIX),
++	.required_flags		=3D (MSI_FLAG_USE_DEF_DOM_OPS	|
++				   MSI_FLAG_USE_DEF_CHIP_OPS),
++	.bus_select_token	=3D DOMAIN_BUS_PCI_MSI,
 +	.init_dev_msi_info	=3D msi_lib_init_dev_msi_info,
 +};
 +
-+static int sg204x_msi_init_domains(struct sg204x_msi_chipdata *data,
- 				   struct irq_domain *plic_domain, struct device *dev)
+ static int xgene_allocate_domains(struct xgene_msi *msi)
  {
- 	struct fwnode_handle *fwnode =3D dev_fwnode(dev);
- 	struct irq_domain *middle_domain;
-=20
- 	middle_domain =3D irq_domain_create_hierarchy(plic_domain, 0, data->num_irq=
-s, fwnode,
--						    &sg2042_msi_middle_domain_ops, data);
-+						    &sg204x_msi_middle_domain_ops, data);
- 	if (!middle_domain) {
- 		pr_err("Failed to create the MSI middle domain\n");
- 		return -ENOMEM;
-@@ -173,24 +231,29 @@ static int sg2042_msi_init_domains(struct sg2042_msi_ch=
-ipdata *data,
- 	irq_domain_update_bus_token(middle_domain, DOMAIN_BUS_NEXUS);
-=20
- 	middle_domain->flags |=3D IRQ_DOMAIN_FLAG_MSI_PARENT;
--	middle_domain->msi_parent_ops =3D &sg2042_msi_parent_ops;
+-	msi->inner_domain =3D irq_domain_add_linear(NULL, NR_MSI_VEC,
+-						  &msi_domain_ops, msi);
+-	if (!msi->inner_domain)
+-		return -ENOMEM;
 -
-+	middle_domain->msi_parent_ops =3D data->chip_info->parent_ops;
+-	msi->msi_domain =3D pci_msi_create_irq_domain(of_node_to_fwnode(msi->node),
+-						    &xgene_msi_domain_info,
+-						    msi->inner_domain);
+-
+-	if (!msi->msi_domain) {
+-		irq_domain_remove(msi->inner_domain);
+-		return -ENOMEM;
+-	}
+-
+-	return 0;
++	struct irq_domain_info info =3D {
++		.fwnode		=3D of_fwnode_handle(msi->node),
++		.ops		=3D &xgene_msi_domain_ops,
++		.size		=3D NR_MSI_VEC,
++		.host_data	=3D msi,
++	};
++
++	msi->inner_domain =3D msi_create_parent_irq_domain(&info, &xgene_msi_parent=
+_ops);
++	return msi->inner_domain ? 0 : -ENOMEM;
+ }
+=20
+ static void xgene_free_domains(struct xgene_msi *msi)
+ {
+-	if (msi->msi_domain)
+-		irq_domain_remove(msi->msi_domain);
+ 	if (msi->inner_domain)
+ 		irq_domain_remove(msi->inner_domain);
+ }
+diff --git a/drivers/pci/controller/pcie-altera-msi.c b/drivers/pci/controlle=
+r/pcie-altera-msi.c
+index e1cee3c0575f..5fb3a2e0017e 100644
+--- a/drivers/pci/controller/pcie-altera-msi.c
++++ b/drivers/pci/controller/pcie-altera-msi.c
+@@ -164,7 +164,7 @@ static const struct irq_domain_ops msi_domain_ops =3D {
+=20
+ static int altera_allocate_domains(struct altera_msi *msi)
+ {
+-	struct fwnode_handle *fwnode =3D of_node_to_fwnode(msi->pdev->dev.of_node);
++	struct fwnode_handle *fwnode =3D of_fwnode_handle(msi->pdev->dev.of_node);
+=20
+ 	msi->inner_domain =3D irq_domain_add_linear(NULL, msi->num_of_vectors,
+ 					     &msi_domain_ops, msi);
+diff --git a/drivers/pci/controller/pcie-apple.c b/drivers/pci/controller/pci=
+e-apple.c
+index 18e11b9a7f46..3d412a931774 100644
+--- a/drivers/pci/controller/pcie-apple.c
++++ b/drivers/pci/controller/pcie-apple.c
+@@ -22,6 +22,7 @@
+ #include <linux/kernel.h>
+ #include <linux/iopoll.h>
+ #include <linux/irqchip/chained_irq.h>
++#include <linux/irqchip/irq-msi-lib.h>
+ #include <linux/irqdomain.h>
+ #include <linux/list.h>
+ #include <linux/module.h>
+@@ -133,7 +134,6 @@ struct apple_pcie {
+ 	struct mutex		lock;
+ 	struct device		*dev;
+ 	void __iomem            *base;
+-	struct irq_domain	*domain;
+ 	unsigned long		*bitmap;
+ 	struct list_head	ports;
+ 	struct completion	event;
+@@ -162,27 +162,6 @@ static void rmw_clear(u32 clr, void __iomem *addr)
+ 	writel_relaxed(readl_relaxed(addr) & ~clr, addr);
+ }
+=20
+-static void apple_msi_top_irq_mask(struct irq_data *d)
+-{
+-	pci_msi_mask_irq(d);
+-	irq_chip_mask_parent(d);
+-}
+-
+-static void apple_msi_top_irq_unmask(struct irq_data *d)
+-{
+-	pci_msi_unmask_irq(d);
+-	irq_chip_unmask_parent(d);
+-}
+-
+-static struct irq_chip apple_msi_top_chip =3D {
+-	.name			=3D "PCIe MSI",
+-	.irq_mask		=3D apple_msi_top_irq_mask,
+-	.irq_unmask		=3D apple_msi_top_irq_unmask,
+-	.irq_eoi		=3D irq_chip_eoi_parent,
+-	.irq_set_affinity	=3D irq_chip_set_affinity_parent,
+-	.irq_set_type		=3D irq_chip_set_type_parent,
+-};
+-
+ static void apple_msi_compose_msg(struct irq_data *data, struct msi_msg *msg)
+ {
+ 	msg->address_hi =3D upper_32_bits(DOORBELL_ADDR);
+@@ -226,8 +205,7 @@ static int apple_msi_domain_alloc(struct irq_domain *doma=
+in, unsigned int virq,
+=20
+ 	for (i =3D 0; i < nr_irqs; i++) {
+ 		irq_domain_set_hwirq_and_chip(domain, virq + i, hwirq + i,
+-					      &apple_msi_bottom_chip,
+-					      domain->host_data);
++					      &apple_msi_bottom_chip, pcie);
+ 	}
+=20
+ 	return 0;
+@@ -251,12 +229,6 @@ static const struct irq_domain_ops apple_msi_domain_ops =
+=3D {
+ 	.free	=3D apple_msi_domain_free,
+ };
+=20
+-static struct msi_domain_info apple_msi_info =3D {
+-	.flags	=3D (MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS |
+-		   MSI_FLAG_MULTI_PCI_MSI | MSI_FLAG_PCI_MSIX),
+-	.chip	=3D &apple_msi_top_chip,
+-};
+-
+ static void apple_port_irq_mask(struct irq_data *data)
+ {
+ 	struct apple_pcie_port *port =3D irq_data_get_irq_chip_data(data);
+@@ -595,11 +567,28 @@ static int apple_pcie_setup_port(struct apple_pcie *pci=
+e,
  	return 0;
  }
 =20
- static int sg2042_msi_probe(struct platform_device *pdev)
++static const struct msi_parent_ops apple_msi_parent_ops =3D {
++	.supported_flags	=3D (MSI_GENERIC_FLAGS_MASK	|
++				   MSI_FLAG_PCI_MSIX		|
++				   MSI_FLAG_MULTI_PCI_MSI),
++	.required_flags		=3D (MSI_FLAG_USE_DEF_DOM_OPS	|
++				   MSI_FLAG_USE_DEF_CHIP_OPS	|
++				   MSI_FLAG_PCI_MSI_MASK_PARENT),
++	.chip_flags		=3D MSI_CHIP_FLAG_SET_EOI,
++	.bus_select_token	=3D DOMAIN_BUS_PCI_MSI,
++	.init_dev_msi_info	=3D msi_lib_init_dev_msi_info,
++};
++
+ static int apple_msi_init(struct apple_pcie *pcie)
  {
- 	struct fwnode_reference_args args =3D { };
--	struct sg2042_msi_chipdata *data;
-+	struct sg204x_msi_chipdata *data;
- 	struct device *dev =3D &pdev->dev;
- 	struct irq_domain *plic_domain;
- 	struct resource *res;
+ 	struct fwnode_handle *fwnode =3D dev_fwnode(pcie->dev);
++	struct irq_domain_info info =3D {
++		.fwnode		=3D fwnode,
++		.ops		=3D &apple_msi_domain_ops,
++		.size		=3D pcie->nvecs,
++		.host_data	=3D pcie,
++	};
+ 	struct of_phandle_args args =3D {};
+-	struct irq_domain *parent;
  	int ret;
 =20
--	data =3D devm_kzalloc(dev, sizeof(struct sg2042_msi_chipdata), GFP_KERNEL);
-+	data =3D devm_kzalloc(dev, sizeof(struct sg204x_msi_chipdata), GFP_KERNEL);
- 	if (!data)
+ 	ret =3D of_parse_phandle_with_args(to_of_node(fwnode), "msi-ranges",
+@@ -619,28 +608,16 @@ static int apple_msi_init(struct apple_pcie *pcie)
+ 	if (!pcie->bitmap)
  		return -ENOMEM;
 =20
-+	data->chip_info =3D device_get_match_data(&pdev->dev);
-+	if (!data->chip_info) {
-+		dev_err(&pdev->dev, "Failed to get irqchip\n");
-+		return -EINVAL;
-+	}
-+
- 	data->reg_clr =3D devm_platform_ioremap_resource_byname(pdev, "clr");
- 	if (IS_ERR(data->reg_clr)) {
- 		dev_err(dev, "Failed to map clear register\n");
-@@ -231,11 +294,28 @@ static int sg2042_msi_probe(struct platform_device *pde=
-v)
+-	parent =3D irq_find_matching_fwspec(&pcie->fwspec, DOMAIN_BUS_WIRED);
+-	if (!parent) {
++	info.parent =3D irq_find_matching_fwspec(&pcie->fwspec, DOMAIN_BUS_WIRED);
++	if (!info.parent) {
+ 		dev_err(pcie->dev, "failed to find parent domain\n");
+ 		return -ENXIO;
+ 	}
 =20
- 	mutex_init(&data->msi_map_lock);
-=20
--	return sg2042_msi_init_domains(data, plic_domain, dev);
-+	data->msi_map =3D devm_bitmap_zalloc(&pdev->dev, data->num_irqs, GFP_KERNEL=
-);
-+	if (!data->msi_map) {
-+		dev_err(&pdev->dev, "Unable to allocate msi mapping\n");
-+		return -ENOMEM;
-+	}
-+
-+	return sg204x_msi_init_domains(data, plic_domain, dev);
+-	parent =3D irq_domain_create_hierarchy(parent, 0, pcie->nvecs, fwnode,
+-					     &apple_msi_domain_ops, pcie);
+-	if (!parent) {
++	if (!msi_create_parent_irq_domain(&info, &apple_msi_parent_ops)) {
+ 		dev_err(pcie->dev, "failed to create IRQ domain\n");
+ 		return -ENOMEM;
+ 	}
+-	irq_domain_update_bus_token(parent, DOMAIN_BUS_NEXUS);
+-
+-	pcie->domain =3D pci_msi_create_irq_domain(fwnode, &apple_msi_info,
+-						 parent);
+-	if (!pcie->domain) {
+-		dev_err(pcie->dev, "failed to create MSI domain\n");
+-		irq_domain_remove(parent);
+-		return -ENOMEM;
+-	}
+-
+ 	return 0;
  }
 =20
-+static const struct sg204x_msi_chip_info sg2042_chip_info =3D {
-+	.irqchip	=3D &sg2042_msi_middle_irq_chip,
-+	.parent_ops	=3D &sg2042_msi_parent_ops,
-+};
-+
-+static const struct sg204x_msi_chip_info sg2044_chip_info =3D {
-+	.irqchip	=3D &sg2044_msi_middle_irq_chip,
-+	.parent_ops	=3D &sg2044_msi_parent_ops,
-+};
-+
- static const struct of_device_id sg2042_msi_of_match[] =3D {
--	{ .compatible	=3D "sophgo,sg2042-msi" },
-+	{ .compatible	=3D "sophgo,sg2042-msi", .data	=3D &sg2042_chip_info },
-+	{ .compatible	=3D "sophgo,sg2044-msi", .data	=3D &sg2044_chip_info },
- 	{ }
- };
+diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/p=
+cie-brcmstb.c
+index e19628e13898..924a81e073c0 100644
+--- a/drivers/pci/controller/pcie-brcmstb.c
++++ b/drivers/pci/controller/pcie-brcmstb.c
+@@ -581,7 +581,7 @@ static const struct irq_domain_ops msi_domain_ops =3D {
 =20
-diff --git a/drivers/irqchip/irq-stm32-exti.c b/drivers/irqchip/irq-stm32-ext=
-i.c
-index 7c6a0080c330..477046d4db0f 100644
---- a/drivers/irqchip/irq-stm32-exti.c
-+++ b/drivers/irqchip/irq-stm32-exti.c
-@@ -169,22 +169,18 @@ static int stm32_irq_set_type(struct irq_data *d, unsig=
-ned int type)
- 	u32 rtsr, ftsr;
- 	int err;
+ static int brcm_allocate_domains(struct brcm_msi *msi)
+ {
+-	struct fwnode_handle *fwnode =3D of_node_to_fwnode(msi->np);
++	struct fwnode_handle *fwnode =3D of_fwnode_handle(msi->np);
+ 	struct device *dev =3D msi->dev;
 =20
--	irq_gc_lock(gc);
-+	guard(raw_spinlock)(&gc->lock);
+ 	msi->inner_domain =3D irq_domain_add_linear(NULL, msi->nr, &msi_domain_ops,=
+ msi);
+diff --git a/drivers/pci/controller/pcie-iproc-msi.c b/drivers/pci/controller=
+/pcie-iproc-msi.c
+index 649fcb449f34..804b3a5787c5 100644
+--- a/drivers/pci/controller/pcie-iproc-msi.c
++++ b/drivers/pci/controller/pcie-iproc-msi.c
+@@ -451,7 +451,7 @@ static int iproc_msi_alloc_domains(struct device_node *no=
+de,
+ 	if (!msi->inner_domain)
+ 		return -ENOMEM;
 =20
- 	rtsr =3D irq_reg_readl(gc, stm32_bank->rtsr_ofst);
- 	ftsr =3D irq_reg_readl(gc, stm32_bank->ftsr_ofst);
+-	msi->msi_domain =3D pci_msi_create_irq_domain(of_node_to_fwnode(node),
++	msi->msi_domain =3D pci_msi_create_irq_domain(of_fwnode_handle(node),
+ 						    &iproc_msi_domain_info,
+ 						    msi->inner_domain);
+ 	if (!msi->msi_domain) {
+diff --git a/drivers/pci/controller/pcie-mediatek.c b/drivers/pci/controller/=
+pcie-mediatek.c
+index 811a8b4acd50..efcc4a7c17be 100644
+--- a/drivers/pci/controller/pcie-mediatek.c
++++ b/drivers/pci/controller/pcie-mediatek.c
+@@ -485,7 +485,7 @@ static struct msi_domain_info mtk_msi_domain_info =3D {
 =20
- 	err =3D stm32_exti_set_type(d, type, &rtsr, &ftsr);
- 	if (err)
--		goto unlock;
-+		return err;
+ static int mtk_pcie_allocate_msi_domains(struct mtk_pcie_port *port)
+ {
+-	struct fwnode_handle *fwnode =3D of_node_to_fwnode(port->pcie->dev->of_node=
+);
++	struct fwnode_handle *fwnode =3D of_fwnode_handle(port->pcie->dev->of_node);
 =20
- 	irq_reg_writel(gc, rtsr, stm32_bank->rtsr_ofst);
- 	irq_reg_writel(gc, ftsr, stm32_bank->ftsr_ofst);
+ 	mutex_init(&port->lock);
+=20
+diff --git a/drivers/pci/controller/pcie-xilinx-dma-pl.c b/drivers/pci/contro=
+ller/pcie-xilinx-dma-pl.c
+index dd117f07fc95..71cf13ae51c7 100644
+--- a/drivers/pci/controller/pcie-xilinx-dma-pl.c
++++ b/drivers/pci/controller/pcie-xilinx-dma-pl.c
+@@ -470,7 +470,7 @@ static int xilinx_pl_dma_pcie_init_msi_irq_domain(struct =
+pl_dma_pcie *port)
+ 	struct device *dev =3D port->dev;
+ 	struct xilinx_msi *msi =3D &port->msi;
+ 	int size =3D BITS_TO_LONGS(XILINX_NUM_MSI_IRQS) * sizeof(long);
+-	struct fwnode_handle *fwnode =3D of_node_to_fwnode(port->dev->of_node);
++	struct fwnode_handle *fwnode =3D of_fwnode_handle(port->dev->of_node);
+=20
+ 	msi->dev_domain =3D irq_domain_add_linear(NULL, XILINX_NUM_MSI_IRQS,
+ 						&dev_msi_domain_ops, port);
+diff --git a/drivers/pci/controller/pcie-xilinx-nwl.c b/drivers/pci/controlle=
+r/pcie-xilinx-nwl.c
+index 8d6e2a89b067..9cf8a96f7bc4 100644
+--- a/drivers/pci/controller/pcie-xilinx-nwl.c
++++ b/drivers/pci/controller/pcie-xilinx-nwl.c
+@@ -495,7 +495,7 @@ static int nwl_pcie_init_msi_irq_domain(struct nwl_pcie *=
+pcie)
+ {
+ #ifdef CONFIG_PCI_MSI
+ 	struct device *dev =3D pcie->dev;
+-	struct fwnode_handle *fwnode =3D of_node_to_fwnode(dev->of_node);
++	struct fwnode_handle *fwnode =3D of_fwnode_handle(dev->of_node);
+ 	struct nwl_msi *msi =3D &pcie->msi;
+=20
+ 	msi->dev_domain =3D irq_domain_add_linear(NULL, INT_PCI_MSI_NR,
+diff --git a/drivers/pci/controller/plda/pcie-plda-host.c b/drivers/pci/contr=
+oller/plda/pcie-plda-host.c
+index 4153214ca410..4c7a9fa311e3 100644
+--- a/drivers/pci/controller/plda/pcie-plda-host.c
++++ b/drivers/pci/controller/plda/pcie-plda-host.c
+@@ -150,7 +150,7 @@ static struct msi_domain_info plda_msi_domain_info =3D {
+ static int plda_allocate_msi_domains(struct plda_pcie_rp *port)
+ {
+ 	struct device *dev =3D port->dev;
+-	struct fwnode_handle *fwnode =3D of_node_to_fwnode(dev->of_node);
++	struct fwnode_handle *fwnode =3D of_fwnode_handle(dev->of_node);
+ 	struct plda_msi *msi =3D &port->msi;
+=20
+ 	mutex_init(&port->msi.lock);
+diff --git a/drivers/pci/msi/api.c b/drivers/pci/msi/api.c
+index 17ec6332cb1d..818d55fbad0d 100644
+--- a/drivers/pci/msi/api.c
++++ b/drivers/pci/msi/api.c
+@@ -53,10 +53,9 @@ void pci_disable_msi(struct pci_dev *dev)
+ 	if (!pci_msi_enabled() || !dev || !dev->msi_enabled)
+ 		return;
+=20
+-	msi_lock_descs(&dev->dev);
++	guard(msi_descs_lock)(&dev->dev);
+ 	pci_msi_shutdown(dev);
+ 	pci_free_msi_irqs(dev);
+-	msi_unlock_descs(&dev->dev);
+ }
+ EXPORT_SYMBOL(pci_disable_msi);
+=20
+@@ -196,10 +195,9 @@ void pci_disable_msix(struct pci_dev *dev)
+ 	if (!pci_msi_enabled() || !dev || !dev->msix_enabled)
+ 		return;
+=20
+-	msi_lock_descs(&dev->dev);
++	guard(msi_descs_lock)(&dev->dev);
+ 	pci_msix_shutdown(dev);
+ 	pci_free_msi_irqs(dev);
+-	msi_unlock_descs(&dev->dev);
+ }
+ EXPORT_SYMBOL(pci_disable_msix);
+=20
+@@ -401,7 +399,7 @@ EXPORT_SYMBOL_GPL(pci_restore_msi_state);
+  * Return: true if MSI has not been globally disabled through ACPI FADT,
+  * PCI bridge quirks, or the "pci=3Dnomsi" kernel command-line option.
+  */
+-int pci_msi_enabled(void)
++bool pci_msi_enabled(void)
+ {
+ 	return pci_msi_enable;
+ }
+diff --git a/drivers/pci/msi/msi.c b/drivers/pci/msi/msi.c
+index 6569ba3577fe..80ac764daaab 100644
+--- a/drivers/pci/msi/msi.c
++++ b/drivers/pci/msi/msi.c
+@@ -15,7 +15,7 @@
+ #include "../pci.h"
+ #include "msi.h"
+=20
+-int pci_msi_enable =3D 1;
++bool pci_msi_enable =3D true;
+=20
+ /**
+  * pci_msi_supported - check whether MSI may be enabled on a device
+@@ -335,43 +335,13 @@ static int msi_verify_entries(struct pci_dev *dev)
+ 	return !entry ? 0 : -EIO;
+ }
+=20
+-/**
+- * msi_capability_init - configure device's MSI capability structure
+- * @dev: pointer to the pci_dev data structure of MSI device function
+- * @nvec: number of interrupts to allocate
+- * @affd: description of automatic IRQ affinity assignments (may be %NULL)
+- *
+- * Setup the MSI capability structure of the device with the requested
+- * number of interrupts.  A return value of zero indicates the successful
+- * setup of an entry with the new MSI IRQ.  A negative return value indicates
+- * an error, and a positive return value indicates the number of interrupts
+- * which could have been allocated.
+- */
+-static int msi_capability_init(struct pci_dev *dev, int nvec,
+-			       struct irq_affinity *affd)
++static int __msi_capability_init(struct pci_dev *dev, int nvec, struct irq_a=
+ffinity_desc *masks)
+ {
+-	struct irq_affinity_desc *masks =3D NULL;
++	int ret =3D msi_setup_msi_desc(dev, nvec, masks);
+ 	struct msi_desc *entry, desc;
+-	int ret;
+=20
+-	/* Reject multi-MSI early on irq domain enabled architectures */
+-	if (nvec > 1 && !pci_msi_domain_supports(dev, MSI_FLAG_MULTI_PCI_MSI, ALLOW=
+_LEGACY))
+-		return 1;
 -
+-	/*
+-	 * Disable MSI during setup in the hardware, but mark it enabled
+-	 * so that setup code can evaluate it.
+-	 */
+-	pci_msi_set_enable(dev, 0);
+-	dev->msi_enabled =3D 1;
+-
+-	if (affd)
+-		masks =3D irq_create_affinity_masks(nvec, affd);
+-
+-	msi_lock_descs(&dev->dev);
+-	ret =3D msi_setup_msi_desc(dev, nvec, masks);
+ 	if (ret)
+-		goto fail;
++		return ret;
+=20
+ 	/* All MSIs are unmasked by default; mask them all */
+ 	entry =3D msi_first_desc(&dev->dev, MSI_DESC_ALL);
+@@ -393,24 +363,51 @@ static int msi_capability_init(struct pci_dev *dev, int=
+ nvec,
+ 		goto err;
+=20
+ 	/* Set MSI enabled bits	*/
++	dev->msi_enabled =3D 1;
+ 	pci_intx_for_msi(dev, 0);
+ 	pci_msi_set_enable(dev, 1);
+=20
+ 	pcibios_free_irq(dev);
+ 	dev->irq =3D entry->irq;
+-	goto unlock;
+-
++	return 0;
+ err:
+ 	pci_msi_unmask(&desc, msi_multi_mask(&desc));
+ 	pci_free_msi_irqs(dev);
+-fail:
+-	dev->msi_enabled =3D 0;
 -unlock:
--	irq_gc_unlock(gc);
+-	msi_unlock_descs(&dev->dev);
+-	kfree(masks);
+ 	return ret;
+ }
+=20
++/**
++ * msi_capability_init - configure device's MSI capability structure
++ * @dev: pointer to the pci_dev data structure of MSI device function
++ * @nvec: number of interrupts to allocate
++ * @affd: description of automatic IRQ affinity assignments (may be %NULL)
++ *
++ * Setup the MSI capability structure of the device with the requested
++ * number of interrupts.  A return value of zero indicates the successful
++ * setup of an entry with the new MSI IRQ.  A negative return value indicates
++ * an error, and a positive return value indicates the number of interrupts
++ * which could have been allocated.
++ */
++static int msi_capability_init(struct pci_dev *dev, int nvec,
++			       struct irq_affinity *affd)
++{
++	/* Reject multi-MSI early on irq domain enabled architectures */
++	if (nvec > 1 && !pci_msi_domain_supports(dev, MSI_FLAG_MULTI_PCI_MSI, ALLOW=
+_LEGACY))
++		return 1;
++
++	/*
++	 * Disable MSI during setup in the hardware, but mark it enabled
++	 * so that setup code can evaluate it.
++	 */
++	pci_msi_set_enable(dev, 0);
++
++	struct irq_affinity_desc *masks __free(kfree) =3D
++		affd ? irq_create_affinity_masks(nvec, affd) : NULL;
++
++	guard(msi_descs_lock)(&dev->dev);
++	return __msi_capability_init(dev, nvec, masks);
++}
++
+ int __pci_enable_msi_range(struct pci_dev *dev, int minvec, int maxvec,
+ 			   struct irq_affinity *affd)
+ {
+@@ -663,38 +660,39 @@ static void msix_mask_all(void __iomem *base, int tsize)
+ 		writel(ctrl, base + PCI_MSIX_ENTRY_VECTOR_CTRL);
+ }
+=20
+-static int msix_setup_interrupts(struct pci_dev *dev, struct msix_entry *ent=
+ries,
+-				 int nvec, struct irq_affinity *affd)
+-{
+-	struct irq_affinity_desc *masks =3D NULL;
+-	int ret;
++DEFINE_FREE(free_msi_irqs, struct pci_dev *, if (_T) pci_free_msi_irqs(_T));
+=20
+-	if (affd)
+-		masks =3D irq_create_affinity_masks(nvec, affd);
++static int __msix_setup_interrupts(struct pci_dev *__dev, struct msix_entry =
+*entries,
++				   int nvec, struct irq_affinity_desc *masks)
++{
++	struct pci_dev *dev __free(free_msi_irqs) =3D __dev;
+=20
+-	msi_lock_descs(&dev->dev);
+-	ret =3D msix_setup_msi_descs(dev, entries, nvec, masks);
++	int ret =3D msix_setup_msi_descs(dev, entries, nvec, masks);
+ 	if (ret)
+-		goto out_free;
++		return ret;
+=20
+ 	ret =3D pci_msi_setup_msi_irqs(dev, nvec, PCI_CAP_ID_MSIX);
+ 	if (ret)
+-		goto out_free;
++		return ret;
+=20
+ 	/* Check if all MSI entries honor device restrictions */
+ 	ret =3D msi_verify_entries(dev);
+ 	if (ret)
+-		goto out_free;
++		return ret;
+=20
+ 	msix_update_entries(dev, entries);
+-	goto out_unlock;
++	retain_and_null_ptr(dev);
++	return 0;
++}
+=20
+-out_free:
+-	pci_free_msi_irqs(dev);
+-out_unlock:
+-	msi_unlock_descs(&dev->dev);
+-	kfree(masks);
+-	return ret;
++static int msix_setup_interrupts(struct pci_dev *dev, struct msix_entry *ent=
+ries,
++				 int nvec, struct irq_affinity *affd)
++{
++	struct irq_affinity_desc *masks __free(kfree) =3D
++		affd ? irq_create_affinity_masks(nvec, affd) : NULL;
++
++	guard(msi_descs_lock)(&dev->dev);
++	return __msix_setup_interrupts(dev, entries, nvec, masks);
+ }
+=20
+ /**
+@@ -870,13 +868,13 @@ void __pci_restore_msix_state(struct pci_dev *dev)
+=20
+ 	write_msg =3D arch_restore_msi_irqs(dev);
+=20
+-	msi_lock_descs(&dev->dev);
+-	msi_for_each_desc(entry, &dev->dev, MSI_DESC_ALL) {
+-		if (write_msg)
+-			__pci_write_msi_msg(entry, &entry->msg);
+-		pci_msix_write_vector_ctrl(entry, entry->pci.msix_ctrl);
++	scoped_guard (msi_descs_lock, &dev->dev) {
++		msi_for_each_desc(entry, &dev->dev, MSI_DESC_ALL) {
++			if (write_msg)
++				__pci_write_msi_msg(entry, &entry->msg);
++			pci_msix_write_vector_ctrl(entry, entry->pci.msix_ctrl);
++		}
+ 	}
+-	msi_unlock_descs(&dev->dev);
+=20
+ 	pci_msix_clear_and_set_ctrl(dev, PCI_MSIX_FLAGS_MASKALL, 0);
+ }
+@@ -915,6 +913,53 @@ void pci_free_msi_irqs(struct pci_dev *dev)
+ 	}
+ }
+=20
++#ifdef CONFIG_PCIE_TPH
++/**
++ * pci_msix_write_tph_tag - Update the TPH tag for a given MSI-X vector
++ * @pdev:	The PCIe device to update
++ * @index:	The MSI-X index to update
++ * @tag:	The tag to write
++ *
++ * Returns: 0 on success, error code on failure
++ */
++int pci_msix_write_tph_tag(struct pci_dev *pdev, unsigned int index, u16 tag)
++{
++	struct msi_desc *msi_desc;
++	struct irq_desc *irq_desc;
++	unsigned int virq;
++
++	if (!pdev->msix_enabled)
++		return -ENXIO;
++
++	guard(msi_descs_lock)(&pdev->dev);
++	virq =3D msi_get_virq(&pdev->dev, index);
++	if (!virq)
++		return -ENXIO;
++	/*
++	 * This is a horrible hack, but short of implementing a PCI
++	 * specific interrupt chip callback and a huge pile of
++	 * infrastructure, this is the minor nuissance. It provides the
++	 * protection against concurrent operations on this entry and keeps
++	 * the control word cache in sync.
++	 */
++	irq_desc =3D irq_to_desc(virq);
++	if (!irq_desc)
++		return -ENXIO;
++
++	guard(raw_spinlock_irq)(&irq_desc->lock);
++	msi_desc =3D irq_data_get_msi_desc(&irq_desc->irq_data);
++	if (!msi_desc || msi_desc->pci.msi_attrib.is_virtual)
++		return -ENXIO;
++
++	msi_desc->pci.msix_ctrl &=3D ~PCI_MSIX_ENTRY_CTRL_ST;
++	msi_desc->pci.msix_ctrl |=3D FIELD_PREP(PCI_MSIX_ENTRY_CTRL_ST, tag);
++	pci_msix_write_vector_ctrl(msi_desc, msi_desc->pci.msix_ctrl);
++	/* Flush the write */
++	readl(pci_msix_desc_addr(msi_desc));
++	return 0;
++}
++#endif
++
+ /* Misc. infrastructure */
+=20
+ struct pci_dev *msi_desc_to_pci_dev(struct msi_desc *desc)
+@@ -925,5 +970,5 @@ EXPORT_SYMBOL(msi_desc_to_pci_dev);
+=20
+ void pci_no_msi(void)
+ {
+-	pci_msi_enable =3D 0;
++	pci_msi_enable =3D false;
+ }
+diff --git a/drivers/pci/msi/msi.h b/drivers/pci/msi/msi.h
+index ee53cf079f4e..fc70b601e942 100644
+--- a/drivers/pci/msi/msi.h
++++ b/drivers/pci/msi/msi.h
+@@ -87,7 +87,7 @@ static inline __attribute_const__ u32 msi_multi_mask(struct=
+ msi_desc *desc)
+ void msix_prepare_msi_desc(struct pci_dev *dev, struct msi_desc *desc);
+=20
+ /* Subsystem variables */
+-extern int pci_msi_enable;
++extern bool pci_msi_enable;
+=20
+ /* MSI internal functions invoked from the public APIs */
+ void pci_msi_shutdown(struct pci_dev *dev);
+diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+index b81e99cd4b62..39f368d2f26d 100644
+--- a/drivers/pci/pci.h
++++ b/drivers/pci/pci.h
+@@ -1064,6 +1064,15 @@ int pcim_request_region_exclusive(struct pci_dev *pdev=
+, int bar,
+ 				  const char *name);
+ void pcim_release_region(struct pci_dev *pdev, int bar);
+=20
++#ifdef CONFIG_PCI_MSI
++int pci_msix_write_tph_tag(struct pci_dev *pdev, unsigned int index, u16 tag=
+);
++#else
++static inline int pci_msix_write_tph_tag(struct pci_dev *pdev, unsigned int =
+index, u16 tag)
++{
++	return -ENODEV;
++}
++#endif
++
+ /*
+  * Config Address for PCI Configuration Mechanism #1
+  *
+diff --git a/drivers/pci/tph.c b/drivers/pci/tph.c
+index 07de59ca2ebf..77fce5e1b830 100644
+--- a/drivers/pci/tph.c
++++ b/drivers/pci/tph.c
+@@ -204,48 +204,6 @@ static u8 get_rp_completer_type(struct pci_dev *pdev)
+ 	return FIELD_GET(PCI_EXP_DEVCAP2_TPH_COMP_MASK, reg);
+ }
+=20
+-/* Write ST to MSI-X vector control reg - Return 0 if OK, otherwise -errno */
+-static int write_tag_to_msix(struct pci_dev *pdev, int msix_idx, u16 tag)
+-{
+-#ifdef CONFIG_PCI_MSI
+-	struct msi_desc *msi_desc =3D NULL;
+-	void __iomem *vec_ctrl;
+-	u32 val;
+-	int err =3D 0;
 -
+-	msi_lock_descs(&pdev->dev);
+-
+-	/* Find the msi_desc entry with matching msix_idx */
+-	msi_for_each_desc(msi_desc, &pdev->dev, MSI_DESC_ASSOCIATED) {
+-		if (msi_desc->msi_index =3D=3D msix_idx)
+-			break;
+-	}
+-
+-	if (!msi_desc) {
+-		err =3D -ENXIO;
+-		goto err_out;
+-	}
+-
+-	/* Get the vector control register (offset 0xc) pointed by msix_idx */
+-	vec_ctrl =3D pdev->msix_base + msix_idx * PCI_MSIX_ENTRY_SIZE;
+-	vec_ctrl +=3D PCI_MSIX_ENTRY_VECTOR_CTRL;
+-
+-	val =3D readl(vec_ctrl);
+-	val &=3D ~PCI_MSIX_ENTRY_CTRL_ST;
+-	val |=3D FIELD_PREP(PCI_MSIX_ENTRY_CTRL_ST, tag);
+-	writel(val, vec_ctrl);
+-
+-	/* Read back to flush the update */
+-	val =3D readl(vec_ctrl);
+-
+-err_out:
+-	msi_unlock_descs(&pdev->dev);
 -	return err;
+-#else
+-	return -ENODEV;
+-#endif
+-}
+-
+ /* Write tag to ST table - Return 0 if OK, otherwise -errno */
+ static int write_tag_to_st_table(struct pci_dev *pdev, int index, u16 tag)
+ {
+@@ -346,7 +304,7 @@ int pcie_tph_set_st_entry(struct pci_dev *pdev, unsigned =
+int index, u16 tag)
+=20
+ 	switch (loc) {
+ 	case PCI_TPH_LOC_MSIX:
+-		err =3D write_tag_to_msix(pdev, index, tag);
++		err =3D pci_msix_write_tph_tag(pdev, index, tag);
+ 		break;
+ 	case PCI_TPH_LOC_CAP:
+ 		err =3D write_tag_to_st_table(pdev, index, tag);
+diff --git a/drivers/soc/ti/ti_sci_inta_msi.c b/drivers/soc/ti/ti_sci_inta_ms=
+i.c
+index c36364522157..193266f5e3f9 100644
+--- a/drivers/soc/ti/ti_sci_inta_msi.c
++++ b/drivers/soc/ti/ti_sci_inta_msi.c
+@@ -103,19 +103,15 @@ int ti_sci_inta_msi_domain_alloc_irqs(struct device *de=
+v,
+ 	if (ret)
+ 		return ret;
+=20
+-	msi_lock_descs(dev);
++	guard(msi_descs_lock)(dev);
+ 	nvec =3D ti_sci_inta_msi_alloc_descs(dev, res);
+-	if (nvec <=3D 0) {
+-		ret =3D nvec;
+-		goto unlock;
+-	}
++	if (nvec <=3D 0)
++		return nvec;
+=20
+ 	/* Use alloc ALL as it's unclear whether there are gaps in the indices */
+ 	ret =3D msi_domain_alloc_irqs_all_locked(dev, MSI_DEFAULT_DOMAIN, nvec);
+ 	if (ret)
+ 		dev_err(dev, "Failed to allocate IRQs %d\n", ret);
+-unlock:
+-	msi_unlock_descs(dev);
+ 	return ret;
+ }
+ EXPORT_SYMBOL_GPL(ti_sci_inta_msi_domain_alloc_irqs);
+diff --git a/drivers/ufs/host/ufs-qcom.c b/drivers/ufs/host/ufs-qcom.c
+index 1b37449fbffc..4c05b2dbe231 100644
+--- a/drivers/ufs/host/ufs-qcom.c
++++ b/drivers/ufs/host/ufs-qcom.c
+@@ -1806,25 +1806,38 @@ static void ufs_qcom_write_msi_msg(struct msi_desc *d=
+esc, struct msi_msg *msg)
+ 	ufshcd_mcq_config_esi(hba, msg);
+ }
+=20
++struct ufs_qcom_irq {
++	unsigned int		irq;
++	unsigned int		idx;
++	struct ufs_hba		*hba;
++};
++
+ static irqreturn_t ufs_qcom_mcq_esi_handler(int irq, void *data)
+ {
+-	struct msi_desc *desc =3D data;
+-	struct device *dev =3D msi_desc_to_dev(desc);
+-	struct ufs_hba *hba =3D dev_get_drvdata(dev);
+-	u32 id =3D desc->msi_index;
+-	struct ufs_hw_queue *hwq =3D &hba->uhq[id];
++	struct ufs_qcom_irq *qi =3D data;
++	struct ufs_hba *hba =3D qi->hba;
++	struct ufs_hw_queue *hwq =3D &hba->uhq[qi->idx];
+=20
+-	ufshcd_mcq_write_cqis(hba, 0x1, id);
++	ufshcd_mcq_write_cqis(hba, 0x1, qi->idx);
+ 	ufshcd_mcq_poll_cqe_lock(hba, hwq);
+=20
+ 	return IRQ_HANDLED;
+ }
+=20
++static void ufs_qcom_irq_free(struct ufs_qcom_irq *uqi)
++{
++	for (struct ufs_qcom_irq *q =3D uqi; q->irq; q++)
++		devm_free_irq(q->hba->dev, q->irq, q->hba);
++
++	platform_device_msi_free_irqs_all(uqi->hba->dev);
++	devm_kfree(uqi->hba->dev, uqi);
++}
++
++DEFINE_FREE(ufs_qcom_irq, struct ufs_qcom_irq *, if (_T) ufs_qcom_irq_free(_=
+T))
++
+ static int ufs_qcom_config_esi(struct ufs_hba *hba)
+ {
+ 	struct ufs_qcom_host *host =3D ufshcd_get_variant(hba);
+-	struct msi_desc *desc;
+-	struct msi_desc *failed_desc =3D NULL;
+ 	int nr_irqs, ret;
+=20
+ 	if (host->esi_enabled)
+@@ -1835,6 +1848,14 @@ static int ufs_qcom_config_esi(struct ufs_hba *hba)
+ 	 * 2. Poll queues do not need ESI.
+ 	 */
+ 	nr_irqs =3D hba->nr_hw_queues - hba->nr_queues[HCTX_TYPE_POLL];
++
++	struct ufs_qcom_irq *qi __free(ufs_qcom_irq) =3D
++		devm_kcalloc(hba->dev, nr_irqs, sizeof(*qi), GFP_KERNEL);
++	if (!qi)
++		return -ENOMEM;
++	/* Preset so __free() has a pointer to hba in all error paths */
++	qi[0].hba =3D hba;
++
+ 	ret =3D platform_device_msi_init_and_alloc_irqs(hba->dev, nr_irqs,
+ 						      ufs_qcom_write_msi_msg);
+ 	if (ret) {
+@@ -1842,41 +1863,31 @@ static int ufs_qcom_config_esi(struct ufs_hba *hba)
+ 		return ret;
+ 	}
+=20
+-	msi_lock_descs(hba->dev);
+-	msi_for_each_desc(desc, hba->dev, MSI_DESC_ALL) {
+-		ret =3D devm_request_irq(hba->dev, desc->irq,
+-				       ufs_qcom_mcq_esi_handler,
+-				       IRQF_SHARED, "qcom-mcq-esi", desc);
++	for (int idx =3D 0; idx < nr_irqs; idx++) {
++		qi[idx].irq =3D msi_get_virq(hba->dev, idx);
++		qi[idx].idx =3D idx;
++		qi[idx].hba =3D hba;
++
++		ret =3D devm_request_irq(hba->dev, qi[idx].irq, ufs_qcom_mcq_esi_handler,
++				       IRQF_SHARED, "qcom-mcq-esi", qi + idx);
+ 		if (ret) {
+ 			dev_err(hba->dev, "%s: Fail to request IRQ for %d, err =3D %d\n",
+-				__func__, desc->irq, ret);
+-			failed_desc =3D desc;
+-			break;
++				__func__, qi[idx].irq, ret);
++			qi[idx].irq =3D 0;
++			return ret;
+ 		}
+ 	}
+-	msi_unlock_descs(hba->dev);
+=20
+-	if (ret) {
+-		/* Rewind */
+-		msi_lock_descs(hba->dev);
+-		msi_for_each_desc(desc, hba->dev, MSI_DESC_ALL) {
+-			if (desc =3D=3D failed_desc)
+-				break;
+-			devm_free_irq(hba->dev, desc->irq, hba);
+-		}
+-		msi_unlock_descs(hba->dev);
+-		platform_device_msi_free_irqs_all(hba->dev);
+-	} else {
+-		if (host->hw_ver.major =3D=3D 6 && host->hw_ver.minor =3D=3D 0 &&
+-		    host->hw_ver.step =3D=3D 0)
+-			ufshcd_rmwl(hba, ESI_VEC_MASK,
+-				    FIELD_PREP(ESI_VEC_MASK, MAX_ESI_VEC - 1),
+-				    REG_UFS_CFG3);
+-		ufshcd_mcq_enable_esi(hba);
+-		host->esi_enabled =3D true;
+-	}
++	retain_and_null_ptr(qi);
+=20
+-	return ret;
++	if (host->hw_ver.major =3D=3D 6 && host->hw_ver.minor =3D=3D 0 &&
++	    host->hw_ver.step =3D=3D 0) {
++		ufshcd_rmwl(hba, ESI_VEC_MASK, FIELD_PREP(ESI_VEC_MASK, MAX_ESI_VEC - 1),
++			    REG_UFS_CFG3);
++	}
++	ufshcd_mcq_enable_esi(hba);
++	host->esi_enabled =3D true;
 +	return 0;
  }
 =20
- static void stm32_chip_suspend(struct stm32_exti_chip_data *chip_data,
-@@ -217,18 +213,16 @@ static void stm32_irq_suspend(struct irq_chip_generic *=
-gc)
- {
- 	struct stm32_exti_chip_data *chip_data =3D gc->private;
+ static u32 ufs_qcom_freq_to_gear_speed(struct ufs_hba *hba, unsigned long fr=
+eq)
+diff --git a/include/linux/cleanup.h b/include/linux/cleanup.h
+index 7e57047e1564..7093e1d08af0 100644
+--- a/include/linux/cleanup.h
++++ b/include/linux/cleanup.h
+@@ -216,6 +216,25 @@ const volatile void * __must_check_fn(const volatile voi=
+d *val)
 =20
--	irq_gc_lock(gc);
-+	guard(raw_spinlock)(&gc->lock);
- 	stm32_chip_suspend(chip_data, gc->wake_active);
--	irq_gc_unlock(gc);
- }
+ #define return_ptr(p)	return no_free_ptr(p)
 =20
- static void stm32_irq_resume(struct irq_chip_generic *gc)
- {
- 	struct stm32_exti_chip_data *chip_data =3D gc->private;
++/*
++ * Only for situations where an allocation is handed in to another function
++ * and consumed by that function on success.
++ *
++ *	struct foo *f __free(kfree) =3D kzalloc(sizeof(*f), GFP_KERNEL);
++ *
++ *	setup(f);
++ *	if (some_condition)
++ *		return -EINVAL;
++ *	....
++ *	ret =3D bar(f);
++ *	if (!ret)
++ *		retain_and_null_ptr(f);
++ *	return ret;
++ *
++ * After retain_and_null_ptr(f) the variable f is NULL and cannot be
++ * dereferenced anymore.
++ */
++#define retain_and_null_ptr(p)		((void)__get_and_null(p, NULL))
 =20
--	irq_gc_lock(gc);
-+	guard(raw_spinlock)(&gc->lock);
- 	stm32_chip_resume(chip_data, gc->mask_cache);
--	irq_gc_unlock(gc);
- }
+ /*
+  * DEFINE_CLASS(name, type, exit, init, init_args...):
+diff --git a/drivers/irqchip/irq-msi-lib.h b/include/linux/irqchip/irq-msi-li=
+b.h
+similarity index 84%
+rename from drivers/irqchip/irq-msi-lib.h
+rename to include/linux/irqchip/irq-msi-lib.h
+index 681ceabb7bc7..dd8d1d138544 100644
+--- a/drivers/irqchip/irq-msi-lib.h
++++ b/include/linux/irqchip/irq-msi-lib.h
+@@ -2,8 +2,8 @@
+ // Copyright (C) 2022 Linutronix GmbH
+ // Copyright (C) 2022 Intel
 =20
- static int stm32_exti_alloc(struct irq_domain *d, unsigned int virq,
-@@ -265,11 +259,8 @@ static void stm32_irq_ack(struct irq_data *d)
- 	struct stm32_exti_chip_data *chip_data =3D gc->private;
- 	const struct stm32_exti_bank *stm32_bank =3D chip_data->reg_bank;
+-#ifndef _DRIVERS_IRQCHIP_IRQ_MSI_LIB_H
+-#define _DRIVERS_IRQCHIP_IRQ_MSI_LIB_H
++#ifndef _IRQCHIP_IRQ_MSI_LIB_H
++#define _IRQCHIP_IRQ_MSI_LIB_H
 =20
--	irq_gc_lock(gc);
--
-+	guard(raw_spinlock)(&gc->lock);
- 	irq_reg_writel(gc, d->mask, stm32_bank->rpr_ofst);
--
--	irq_gc_unlock(gc);
- }
-=20
- static struct
-diff --git a/drivers/irqchip/irq-sunxi-nmi.c b/drivers/irqchip/irq-sunxi-nmi.c
-index 01b0d8321728..4c977ac10ddc 100644
---- a/drivers/irqchip/irq-sunxi-nmi.c
-+++ b/drivers/irqchip/irq-sunxi-nmi.c
-@@ -111,7 +111,7 @@ static int sunxi_sc_nmi_set_type(struct irq_data *data, u=
-nsigned int flow_type)
- 	unsigned int src_type;
- 	unsigned int i;
-=20
--	irq_gc_lock(gc);
-+	guard(raw_spinlock)(&gc->lock);
-=20
- 	switch (flow_type & IRQF_TRIGGER_MASK) {
- 	case IRQ_TYPE_EDGE_FALLING:
-@@ -128,9 +128,7 @@ static int sunxi_sc_nmi_set_type(struct irq_data *data, u=
-nsigned int flow_type)
- 		src_type =3D SUNXI_SRC_TYPE_LEVEL_LOW;
- 		break;
- 	default:
--		irq_gc_unlock(gc);
--		pr_err("Cannot assign multiple trigger modes to IRQ %d.\n",
--			data->irq);
-+		pr_err("Cannot assign multiple trigger modes to IRQ %d.\n", data->irq);
- 		return -EBADR;
- 	}
-=20
-@@ -145,9 +143,6 @@ static int sunxi_sc_nmi_set_type(struct irq_data *data, u=
-nsigned int flow_type)
- 	src_type_reg &=3D ~SUNXI_NMI_SRC_TYPE_MASK;
- 	src_type_reg |=3D src_type;
- 	sunxi_sc_nmi_write(gc, ctrl_off, src_type_reg);
--
--	irq_gc_unlock(gc);
--
- 	return IRQ_SET_MASK_OK;
- }
-=20
-diff --git a/drivers/irqchip/irq-tb10x.c b/drivers/irqchip/irq-tb10x.c
-index d59bfbe8c6d0..aa80944695e6 100644
---- a/drivers/irqchip/irq-tb10x.c
-+++ b/drivers/irqchip/irq-tb10x.c
-@@ -41,11 +41,9 @@ static inline u32 ab_irqctl_readreg(struct irq_chip_generi=
-c *gc, u32 reg)
- static int tb10x_irq_set_type(struct irq_data *data, unsigned int flow_type)
- {
- 	struct irq_chip_generic *gc =3D irq_data_get_irq_chip_data(data);
--	uint32_t im, mod, pol;
-+	uint32_t mod, pol, im =3D data->mask;
-=20
--	im =3D data->mask;
--
--	irq_gc_lock(gc);
-+	guard(raw_spinlock)(&gc->lock);
-=20
- 	mod =3D ab_irqctl_readreg(gc, AB_IRQCTL_SRC_MODE) | im;
- 	pol =3D ab_irqctl_readreg(gc, AB_IRQCTL_SRC_POLARITY) | im;
-@@ -67,9 +65,7 @@ static int tb10x_irq_set_type(struct irq_data *data, unsign=
-ed int flow_type)
- 	case IRQ_TYPE_EDGE_RISING:
- 		break;
- 	default:
--		irq_gc_unlock(gc);
--		pr_err("%s: Cannot assign multiple trigger modes to IRQ %d.\n",
--			__func__, data->irq);
-+		pr_err("%s: Cannot assign multiple trigger modes to IRQ %d.\n",	__func__, =
-data->irq);
- 		return -EBADR;
- 	}
-=20
-@@ -79,9 +75,6 @@ static int tb10x_irq_set_type(struct irq_data *data, unsign=
-ed int flow_type)
- 	ab_irqctl_writereg(gc, AB_IRQCTL_SRC_MODE, mod);
- 	ab_irqctl_writereg(gc, AB_IRQCTL_SRC_POLARITY, pol);
- 	ab_irqctl_writereg(gc, AB_IRQCTL_INT_STATUS, im);
--
--	irq_gc_unlock(gc);
--
- 	return IRQ_SET_MASK_OK;
- }
-=20
-diff --git a/drivers/irqchip/irq-vt8500.c b/drivers/irqchip/irq-vt8500.c
-index e17dd3a8c2d5..3b742590aec8 100644
---- a/drivers/irqchip/irq-vt8500.c
-+++ b/drivers/irqchip/irq-vt8500.c
-@@ -15,6 +15,7 @@
- #include <linux/io.h>
- #include <linux/irq.h>
- #include <linux/irqchip.h>
-+#include <linux/irqchip/chained_irq.h>
+ #include <linux/bits.h>
  #include <linux/irqdomain.h>
- #include <linux/interrupt.h>
- #include <linux/bitops.h>
-@@ -63,29 +64,28 @@ struct vt8500_irq_data {
- 	struct irq_domain	*domain;	/* Domain for this controller */
- };
+@@ -24,4 +24,4 @@ bool msi_lib_init_dev_msi_info(struct device *dev, struct i=
+rq_domain *domain,
+ 			       struct irq_domain *real_parent,
+ 			       struct msi_domain_info *info);
 =20
--/* Global variable for accessing io-mem addresses */
--static struct vt8500_irq_data intc[VT8500_INTC_MAX];
--static u32 active_cnt =3D 0;
-+/* Primary interrupt controller data */
-+static struct vt8500_irq_data *primary_intc;
+-#endif /* _DRIVERS_IRQCHIP_IRQ_MSI_LIB_H */
++#endif /* _IRQCHIP_IRQ_MSI_LIB_H */
+diff --git a/include/linux/irqdomain.h b/include/linux/irqdomain.h
+index bb7111105296..13cbacd1b5dc 100644
+--- a/include/linux/irqdomain.h
++++ b/include/linux/irqdomain.h
+@@ -231,6 +231,9 @@ enum {
+ 	/* Irq domain must destroy generic chips when removed */
+ 	IRQ_DOMAIN_FLAG_DESTROY_GC	=3D (1 << 10),
 =20
--static void vt8500_irq_mask(struct irq_data *d)
-+static void vt8500_irq_ack(struct irq_data *d)
- {
- 	struct vt8500_irq_data *priv =3D d->domain->host_data;
- 	void __iomem *base =3D priv->base;
- 	void __iomem *stat_reg =3D base + VT8500_ICIS + (d->hwirq < 32 ? 0 : 4);
--	u8 edge, dctr;
--	u32 status;
-+	u32 status =3D (1 << (d->hwirq & 0x1f));
++	/* Address and data pair is mutable when irq_set_affinity() */
++	IRQ_DOMAIN_FLAG_MSI_IMMUTABLE	=3D (1 << 11),
++
+ 	/*
+ 	 * Flags starting from IRQ_DOMAIN_FLAG_NONCORE are reserved
+ 	 * for implementation specific purposes and ignored by the
+@@ -281,6 +284,8 @@ static inline struct fwnode_handle *irq_domain_alloc_fwno=
+de(phys_addr_t *pa)
 =20
--	edge =3D readb(base + VT8500_ICDC + d->hwirq) & VT8500_EDGE;
--	if (edge) {
--		status =3D readl(stat_reg);
-+	writel(status, stat_reg);
+ void irq_domain_free_fwnode(struct fwnode_handle *fwnode);
+=20
++DEFINE_FREE(irq_domain_free_fwnode, struct fwnode_handle *, if (_T) irq_doma=
+in_free_fwnode(_T))
++
+ struct irq_domain_chip_generic_info;
+=20
+ /**
+@@ -691,6 +696,10 @@ static inline bool irq_domain_is_msi_device(struct irq_d=
+omain *domain)
+ 	return domain->flags & IRQ_DOMAIN_FLAG_MSI_DEVICE;
+ }
+=20
++static inline bool irq_domain_is_msi_immutable(struct irq_domain *domain)
++{
++	return domain->flags & IRQ_DOMAIN_FLAG_MSI_IMMUTABLE;
 +}
+ #else	/* CONFIG_IRQ_DOMAIN_HIERARCHY */
+ static inline int irq_domain_alloc_irqs(struct irq_domain *domain,
+ 			unsigned int nr_irqs, int node, void *arg)
+diff --git a/include/linux/msi.h b/include/linux/msi.h
+index 86e42742fd0f..6863540f4b71 100644
+--- a/include/linux/msi.h
++++ b/include/linux/msi.h
+@@ -229,8 +229,11 @@ struct msi_dev_domain {
 =20
--		status |=3D (1 << (d->hwirq & 0x1f));
--		writel(status, stat_reg);
--	} else {
--		dctr =3D readb(base + VT8500_ICDC + d->hwirq);
--		dctr &=3D ~VT8500_INT_ENABLE;
--		writeb(dctr, base + VT8500_ICDC + d->hwirq);
--	}
-+static void vt8500_irq_mask(struct irq_data *d)
-+{
-+	struct vt8500_irq_data *priv =3D d->domain->host_data;
-+	void __iomem *base =3D priv->base;
-+	u8 dctr;
+ int msi_setup_device_data(struct device *dev);
+=20
+-void msi_lock_descs(struct device *dev);
+-void msi_unlock_descs(struct device *dev);
++void __msi_lock_descs(struct device *dev);
++void __msi_unlock_descs(struct device *dev);
 +
-+	dctr =3D readb(base + VT8500_ICDC + d->hwirq);
-+	dctr &=3D ~VT8500_INT_ENABLE;
-+	writeb(dctr, base + VT8500_ICDC + d->hwirq);
- }
++DEFINE_LOCK_GUARD_1(msi_descs_lock, struct device, __msi_lock_descs(_T->lock=
+),
++		    __msi_unlock_descs(_T->lock));
 =20
- static void vt8500_irq_unmask(struct irq_data *d)
-@@ -130,11 +130,11 @@ static int vt8500_irq_set_type(struct irq_data *d, unsi=
-gned int flow_type)
- }
-=20
- static struct irq_chip vt8500_irq_chip =3D {
--	.name =3D "vt8500",
--	.irq_ack =3D vt8500_irq_mask,
--	.irq_mask =3D vt8500_irq_mask,
--	.irq_unmask =3D vt8500_irq_unmask,
--	.irq_set_type =3D vt8500_irq_set_type,
-+	.name		=3D "vt8500",
-+	.irq_ack	=3D vt8500_irq_ack,
-+	.irq_mask	=3D vt8500_irq_mask,
-+	.irq_unmask	=3D vt8500_irq_unmask,
-+	.irq_set_type	=3D vt8500_irq_set_type,
+ struct msi_desc *msi_domain_first_desc(struct device *dev, unsigned int domi=
+d,
+ 				       enum msi_desc_filter filter);
+@@ -420,6 +423,7 @@ struct msi_domain_info;
+  * @msi_init:		Domain specific init function for MSI interrupts
+  * @msi_free:		Domain specific function to free a MSI interrupts
+  * @msi_prepare:	Prepare the allocation of the interrupts in the domain
++ * @msi_teardown:	Reverse the effects of @msi_prepare
+  * @prepare_desc:	Optional function to prepare the allocated MSI descriptor
+  *			in the domain
+  * @set_desc:		Set the msi descriptor for an interrupt
+@@ -435,8 +439,9 @@ struct msi_domain_info;
+  * @get_hwirq, @msi_init and @msi_free are callbacks used by the underlying
+  * irqdomain.
+  *
+- * @msi_check, @msi_prepare, @prepare_desc and @set_desc are callbacks used =
+by the
+- * msi_domain_alloc/free_irqs*() variants.
++ * @msi_check, @msi_prepare, @msi_teardown, @prepare_desc and
++ * @set_desc are callbacks used by the msi_domain_alloc/free_irqs*()
++ * variants.
+  *
+  * @domain_alloc_irqs, @domain_free_irqs can be used to override the
+  * default allocation/free functions (__msi_domain_alloc/free_irqs). This
+@@ -458,6 +463,8 @@ struct msi_domain_ops {
+ 	int		(*msi_prepare)(struct irq_domain *domain,
+ 				       struct device *dev, int nvec,
+ 				       msi_alloc_info_t *arg);
++	void		(*msi_teardown)(struct irq_domain *domain,
++					msi_alloc_info_t *arg);
+ 	void		(*prepare_desc)(struct irq_domain *domain, msi_alloc_info_t *arg,
+ 					struct msi_desc *desc);
+ 	void		(*set_desc)(msi_alloc_info_t *arg,
+@@ -486,6 +493,7 @@ struct msi_domain_ops {
+  * @handler:		Optional: associated interrupt flow handler
+  * @handler_data:	Optional: associated interrupt flow handler data
+  * @handler_name:	Optional: associated interrupt flow handler name
++ * @alloc_data:		Optional: associated interrupt allocation data
+  * @data:		Optional: domain specific data
+  */
+ struct msi_domain_info {
+@@ -498,6 +506,7 @@ struct msi_domain_info {
+ 	irq_flow_handler_t		handler;
+ 	void				*handler_data;
+ 	const char			*handler_name;
++	msi_alloc_info_t		*alloc_data;
+ 	void				*data;
  };
 =20
- static void __init vt8500_init_irq_hw(void __iomem *base)
-@@ -163,82 +163,89 @@ static const struct irq_domain_ops vt8500_irq_domain_op=
-s =3D {
- 	.xlate =3D irq_domain_xlate_onecell,
+@@ -507,12 +516,14 @@ struct msi_domain_info {
+  * @chip:	Interrupt chip for this domain
+  * @ops:	MSI domain ops
+  * @info:	MSI domain info data
++ * @alloc_info:	MSI domain allocation data (architecture specific)
+  */
+ struct msi_domain_template {
+ 	char			name[48];
+ 	struct irq_chip		chip;
+ 	struct msi_domain_ops	ops;
+ 	struct msi_domain_info	info;
++	msi_alloc_info_t	alloc_info;
  };
 =20
-+static inline void vt8500_handle_irq_common(struct vt8500_irq_data *intc)
-+{
-+	unsigned long irqnr =3D readl_relaxed(intc->base) & 0x3F;
-+	unsigned long stat;
+ /*
+@@ -625,6 +636,10 @@ struct irq_domain *msi_create_irq_domain(struct fwnode_h=
+andle *fwnode,
+ 					 struct msi_domain_info *info,
+ 					 struct irq_domain *parent);
+=20
++struct irq_domain_info;
++struct irq_domain *msi_create_parent_irq_domain(struct irq_domain_info *info,
++						const struct msi_parent_ops *msi_parent_ops);
 +
-+	/*
-+	 * Highest Priority register default =3D 63, so check that this
-+	 * is a real interrupt by checking the status register
-+	 */
-+	if (irqnr =3D=3D 63) {
-+		stat =3D readl_relaxed(intc->base + VT8500_ICIS + 4);
-+		if (!(stat & BIT(31)))
-+			return;
+ bool msi_create_device_irq_domain(struct device *dev, unsigned int domid,
+ 				  const struct msi_domain_template *template,
+ 				  unsigned int hwsize, void *domain_data,
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 0e8e3fd77e96..f5e908a56498 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -1669,7 +1669,7 @@ void pci_disable_msi(struct pci_dev *dev);
+ int pci_msix_vec_count(struct pci_dev *dev);
+ void pci_disable_msix(struct pci_dev *dev);
+ void pci_restore_msi_state(struct pci_dev *dev);
+-int pci_msi_enabled(void);
++bool pci_msi_enabled(void);
+ int pci_enable_msi(struct pci_dev *dev);
+ int pci_enable_msix_range(struct pci_dev *dev, struct msix_entry *entries,
+ 			  int minvec, int maxvec);
+@@ -1702,7 +1702,7 @@ static inline void pci_disable_msi(struct pci_dev *dev)=
+ { }
+ static inline int pci_msix_vec_count(struct pci_dev *dev) { return -ENOSYS; }
+ static inline void pci_disable_msix(struct pci_dev *dev) { }
+ static inline void pci_restore_msi_state(struct pci_dev *dev) { }
+-static inline int pci_msi_enabled(void) { return 0; }
++static inline bool pci_msi_enabled(void) { return false; }
+ static inline int pci_enable_msi(struct pci_dev *dev)
+ { return -ENOSYS; }
+ static inline int pci_enable_msix_range(struct pci_dev *dev,
+diff --git a/kernel/irq/msi.c b/kernel/irq/msi.c
+index 5c8d43cdb0a3..4830b7575e0a 100644
+--- a/kernel/irq/msi.c
++++ b/kernel/irq/msi.c
+@@ -59,7 +59,8 @@ struct msi_ctrl {
+ static void msi_domain_free_locked(struct device *dev, struct msi_ctrl *ctrl=
+);
+ static unsigned int msi_domain_get_hwsize(struct device *dev, unsigned int d=
+omid);
+ static inline int msi_sysfs_create_group(struct device *dev);
+-
++static int msi_domain_prepare_irqs(struct irq_domain *domain, struct device =
+*dev,
++				   int nvec, msi_alloc_info_t *arg);
+=20
+ /**
+  * msi_alloc_desc - Allocate an initialized msi_desc
+@@ -343,26 +344,30 @@ int msi_setup_device_data(struct device *dev)
+ }
+=20
+ /**
+- * msi_lock_descs - Lock the MSI descriptor storage of a device
++ * __msi_lock_descs - Lock the MSI descriptor storage of a device
+  * @dev:	Device to operate on
++ *
++ * Internal function for guard(msi_descs_lock). Don't use in code.
+  */
+-void msi_lock_descs(struct device *dev)
++void __msi_lock_descs(struct device *dev)
+ {
+ 	mutex_lock(&dev->msi.data->mutex);
+ }
+-EXPORT_SYMBOL_GPL(msi_lock_descs);
++EXPORT_SYMBOL_GPL(__msi_lock_descs);
+=20
+ /**
+- * msi_unlock_descs - Unlock the MSI descriptor storage of a device
++ * __msi_unlock_descs - Unlock the MSI descriptor storage of a device
+  * @dev:	Device to operate on
++ *
++ * Internal function for guard(msi_descs_lock). Don't use in code.
+  */
+-void msi_unlock_descs(struct device *dev)
++void __msi_unlock_descs(struct device *dev)
+ {
+ 	/* Invalidate the index which was cached by the iterator */
+ 	dev->msi.data->__iter_idx =3D MSI_XA_MAX_INDEX;
+ 	mutex_unlock(&dev->msi.data->mutex);
+ }
+-EXPORT_SYMBOL_GPL(msi_unlock_descs);
++EXPORT_SYMBOL_GPL(__msi_unlock_descs);
+=20
+ static struct msi_desc *msi_find_desc(struct msi_device_data *md, unsigned i=
+nt domid,
+ 				      enum msi_desc_filter filter)
+@@ -448,7 +453,6 @@ EXPORT_SYMBOL_GPL(msi_next_desc);
+ unsigned int msi_domain_get_virq(struct device *dev, unsigned int domid, uns=
+igned int index)
+ {
+ 	struct msi_desc *desc;
+-	unsigned int ret =3D 0;
+ 	bool pcimsi =3D false;
+ 	struct xarray *xa;
+=20
+@@ -462,7 +466,7 @@ unsigned int msi_domain_get_virq(struct device *dev, unsi=
+gned int domid, unsigne
+ 	if (dev_is_pci(dev) && domid =3D=3D MSI_DEFAULT_DOMAIN)
+ 		pcimsi =3D to_pci_dev(dev)->msi_enabled;
+=20
+-	msi_lock_descs(dev);
++	guard(msi_descs_lock)(dev);
+ 	xa =3D &dev->msi.data->__domains[domid].store;
+ 	desc =3D xa_load(xa, pcimsi ? 0 : index);
+ 	if (desc && desc->irq) {
+@@ -471,16 +475,12 @@ unsigned int msi_domain_get_virq(struct device *dev, un=
+signed int domid, unsigne
+ 		 * PCI-MSIX and platform MSI use a descriptor per
+ 		 * interrupt.
+ 		 */
+-		if (pcimsi) {
+-			if (index < desc->nvec_used)
+-				ret =3D desc->irq + index;
+-		} else {
+-			ret =3D desc->irq;
+-		}
++		if (!pcimsi)
++			return desc->irq;
++		if (index < desc->nvec_used)
++			return desc->irq + index;
+ 	}
+-
+-	msi_unlock_descs(dev);
+-	return ret;
++	return 0;
+ }
+ EXPORT_SYMBOL_GPL(msi_domain_get_virq);
+=20
+@@ -796,6 +796,10 @@ static int msi_domain_ops_prepare(struct irq_domain *dom=
+ain, struct device *dev,
+ 	return 0;
+ }
+=20
++static void msi_domain_ops_teardown(struct irq_domain *domain, msi_alloc_inf=
+o_t *arg)
++{
++}
++
+ static void msi_domain_ops_set_desc(msi_alloc_info_t *arg,
+ 				    struct msi_desc *desc)
+ {
+@@ -821,6 +825,7 @@ static struct msi_domain_ops msi_domain_ops_default =3D {
+ 	.get_hwirq		=3D msi_domain_ops_get_hwirq,
+ 	.msi_init		=3D msi_domain_ops_init,
+ 	.msi_prepare		=3D msi_domain_ops_prepare,
++	.msi_teardown		=3D msi_domain_ops_teardown,
+ 	.set_desc		=3D msi_domain_ops_set_desc,
+ };
+=20
+@@ -842,6 +847,8 @@ static void msi_domain_update_dom_ops(struct msi_domain_i=
+nfo *info)
+ 		ops->msi_init =3D msi_domain_ops_default.msi_init;
+ 	if (ops->msi_prepare =3D=3D NULL)
+ 		ops->msi_prepare =3D msi_domain_ops_default.msi_prepare;
++	if (ops->msi_teardown =3D=3D NULL)
++		ops->msi_teardown =3D msi_domain_ops_default.msi_teardown;
+ 	if (ops->set_desc =3D=3D NULL)
+ 		ops->set_desc =3D msi_domain_ops_default.set_desc;
+ }
+@@ -904,6 +911,32 @@ struct irq_domain *msi_create_irq_domain(struct fwnode_h=
+andle *fwnode,
+ 	return __msi_create_irq_domain(fwnode, info, 0, parent);
+ }
+=20
++/**
++ * msi_create_parent_irq_domain - Create an MSI-parent interrupt domain
++ * @info:		MSI irqdomain creation info
++ * @msi_parent_ops:	MSI parent callbacks and configuration
++ *
++ * Return: pointer to the created &struct irq_domain or %NULL on failure
++ */
++struct irq_domain *msi_create_parent_irq_domain(struct irq_domain_info *info,
++						const struct msi_parent_ops *msi_parent_ops)
++{
++	struct irq_domain *d;
++
++	info->hwirq_max		=3D max(info->hwirq_max, info->size);
++	info->size		=3D info->hwirq_max;
++	info->domain_flags	|=3D IRQ_DOMAIN_FLAG_MSI_PARENT;
++	info->bus_token		=3D msi_parent_ops->bus_select_token;
++
++	d =3D irq_domain_instantiate(info);
++	if (IS_ERR(d))
++		return NULL;
++
++	d->msi_parent_ops =3D msi_parent_ops;
++	return d;
++}
++EXPORT_SYMBOL_GPL(msi_create_parent_irq_domain);
++
+ /**
+  * msi_parent_init_dev_msi_info - Delegate initialization of device MSI info=
+ down
+  *				  in the domain hierarchy
+@@ -998,9 +1031,8 @@ bool msi_create_device_irq_domain(struct device *dev, un=
+signed int domid,
+ 				  void *chip_data)
+ {
+ 	struct irq_domain *domain, *parent =3D dev->msi.domain;
+-	struct fwnode_handle *fwnode, *fwnalloced =3D NULL;
+-	struct msi_domain_template *bundle;
+ 	const struct msi_parent_ops *pops;
++	struct fwnode_handle *fwnode;
+=20
+ 	if (!irq_domain_is_msi_parent(parent))
+ 		return false;
+@@ -1008,7 +1040,8 @@ bool msi_create_device_irq_domain(struct device *dev, u=
+nsigned int domid,
+ 	if (domid >=3D MSI_MAX_DEVICE_IRQDOMAINS)
+ 		return false;
+=20
+-	bundle =3D kmemdup(template, sizeof(*bundle), GFP_KERNEL);
++	struct msi_domain_template *bundle __free(kfree) =3D
++		kmemdup(template, sizeof(*bundle), GFP_KERNEL);
+ 	if (!bundle)
+ 		return false;
+=20
+@@ -1017,6 +1050,7 @@ bool msi_create_device_irq_domain(struct device *dev, u=
+nsigned int domid,
+ 	bundle->info.ops =3D &bundle->ops;
+ 	bundle->info.data =3D domain_data;
+ 	bundle->info.chip_data =3D chip_data;
++	bundle->info.alloc_data =3D &bundle->alloc_info;
+=20
+ 	pops =3D parent->msi_parent_ops;
+ 	snprintf(bundle->name, sizeof(bundle->name), "%s%s-%s",
+@@ -1031,41 +1065,43 @@ bool msi_create_device_irq_domain(struct device *dev,=
+ unsigned int domid,
+ 	 * node as they are not guaranteed to have a fwnode. They are never
+ 	 * looked up and always handled in the context of the device.
+ 	 */
+-	if (bundle->info.flags & MSI_FLAG_USE_DEV_FWNODE)
+-		fwnode =3D dev->fwnode;
++	struct fwnode_handle *fwnode_alloced __free(irq_domain_free_fwnode) =3D NUL=
+L;
++
++	if (!(bundle->info.flags & MSI_FLAG_USE_DEV_FWNODE))
++		fwnode =3D fwnode_alloced =3D irq_domain_alloc_named_fwnode(bundle->name);
+ 	else
+-		fwnode =3D fwnalloced =3D irq_domain_alloc_named_fwnode(bundle->name);
++		fwnode =3D dev->fwnode;
+=20
+ 	if (!fwnode)
+-		goto free_bundle;
++		return false;
+=20
+ 	if (msi_setup_device_data(dev))
+-		goto free_fwnode;
+-
+-	msi_lock_descs(dev);
++		return false;
+=20
++	guard(msi_descs_lock)(dev);
+ 	if (WARN_ON_ONCE(msi_get_device_domain(dev, domid)))
+-		goto fail;
++		return false;
+=20
+ 	if (!pops->init_dev_msi_info(dev, parent, parent, &bundle->info))
+-		goto fail;
++		return false;
+=20
+ 	domain =3D __msi_create_irq_domain(fwnode, &bundle->info, IRQ_DOMAIN_FLAG_M=
+SI_DEVICE, parent);
+ 	if (!domain)
+-		goto fail;
++		return false;
+=20
+ 	domain->dev =3D dev;
+ 	dev->msi.data->__domains[domid].domain =3D domain;
+-	msi_unlock_descs(dev);
+-	return true;
+=20
+-fail:
+-	msi_unlock_descs(dev);
+-free_fwnode:
+-	irq_domain_free_fwnode(fwnalloced);
+-free_bundle:
+-	kfree(bundle);
+-	return false;
++	if (msi_domain_prepare_irqs(domain, dev, hwsize, &bundle->alloc_info)) {
++		dev->msi.data->__domains[domid].domain =3D NULL;
++		irq_domain_remove(domain);
++		return false;
 +	}
 +
-+	generic_handle_domain_irq(intc->domain, irqnr);
-+}
-+
- static void __exception_irq_entry vt8500_handle_irq(struct pt_regs *regs)
- {
--	u32 stat, i;
--	int irqnr;
--	void __iomem *base;
--
--	/* Loop through each active controller */
--	for (i=3D0; i<active_cnt; i++) {
--		base =3D intc[i].base;
--		irqnr =3D readl_relaxed(base) & 0x3F;
--		/*
--		  Highest Priority register default =3D 63, so check that this
--		  is a real interrupt by checking the status register
--		*/
--		if (irqnr =3D=3D 63) {
--			stat =3D readl_relaxed(base + VT8500_ICIS + 4);
--			if (!(stat & BIT(31)))
--				continue;
--		}
-+	vt8500_handle_irq_common(primary_intc);
-+}
++	/* @bundle and @fwnode_alloced are now in use. Prevent cleanup */
++	retain_and_null_ptr(bundle);
++	retain_and_null_ptr(fwnode_alloced);
++	return true;
+ }
 =20
--		generic_handle_domain_irq(intc[i].domain, irqnr);
--	}
-+static void vt8500_handle_irq_chained(struct irq_desc *desc)
+ /**
+@@ -1079,23 +1115,21 @@ void msi_remove_device_irq_domain(struct device *dev,=
+ unsigned int domid)
+ 	struct msi_domain_info *info;
+ 	struct irq_domain *domain;
+=20
+-	msi_lock_descs(dev);
+-
++	guard(msi_descs_lock)(dev);
+ 	domain =3D msi_get_device_domain(dev, domid);
+-
+ 	if (!domain || !irq_domain_is_msi_device(domain))
+-		goto unlock;
++		return;
+=20
+ 	dev->msi.data->__domains[domid].domain =3D NULL;
+ 	info =3D domain->host_data;
++
++	info->ops->msi_teardown(domain, info->alloc_data);
++
+ 	if (irq_domain_is_msi_device(domain))
+ 		fwnode =3D domain->fwnode;
+ 	irq_domain_remove(domain);
+ 	irq_domain_free_fwnode(fwnode);
+ 	kfree(container_of(info, struct msi_domain_template, info));
+-
+-unlock:
+-	msi_unlock_descs(dev);
+ }
+=20
+ /**
+@@ -1111,16 +1145,14 @@ bool msi_match_device_irq_domain(struct device *dev, =
+unsigned int domid,
+ {
+ 	struct msi_domain_info *info;
+ 	struct irq_domain *domain;
+-	bool ret =3D false;
+=20
+-	msi_lock_descs(dev);
++	guard(msi_descs_lock)(dev);
+ 	domain =3D msi_get_device_domain(dev, domid);
+ 	if (domain && irq_domain_is_msi_device(domain)) {
+ 		info =3D domain->host_data;
+-		ret =3D info->bus_token =3D=3D bus_token;
++		return info->bus_token =3D=3D bus_token;
+ 	}
+-	msi_unlock_descs(dev);
+-	return ret;
++	return false;
+ }
+=20
+ static int msi_domain_prepare_irqs(struct irq_domain *domain, struct device =
+*dev,
+@@ -1238,6 +1270,24 @@ static int msi_init_virq(struct irq_domain *domain, in=
+t virq, unsigned int vflag
+ 	return 0;
+ }
+=20
++static int populate_alloc_info(struct irq_domain *domain, struct device *dev,
++			       unsigned int nirqs, msi_alloc_info_t *arg)
 +{
-+	struct irq_domain *d =3D irq_desc_get_handler_data(desc);
-+	struct irq_chip *chip =3D irq_desc_get_chip(desc);
-+	struct vt8500_irq_data *intc =3D d->host_data;
++	struct msi_domain_info *info =3D domain->host_data;
 +
-+	chained_irq_enter(chip, desc);
-+	vt8500_handle_irq_common(intc);
-+	chained_irq_exit(chip, desc);
- }
-=20
- static int __init vt8500_irq_init(struct device_node *node,
- 				  struct device_node *parent)
- {
--	int irq, i;
--	struct device_node *np =3D node;
-+	struct vt8500_irq_data *intc;
-+	int irq, i, ret =3D 0;
-=20
--	if (active_cnt =3D=3D VT8500_INTC_MAX) {
--		pr_err("%s: Interrupt controllers > VT8500_INTC_MAX\n",
--								__func__);
--		goto out;
--	}
-+	intc =3D kzalloc(sizeof(*intc), GFP_KERNEL);
-+	if (!intc)
-+		return -ENOMEM;
-=20
--	intc[active_cnt].base =3D of_iomap(np, 0);
--	intc[active_cnt].domain =3D irq_domain_add_linear(node, 64,
--			&vt8500_irq_domain_ops,	&intc[active_cnt]);
--
--	if (!intc[active_cnt].base) {
-+	intc->base =3D of_iomap(node, 0);
-+	if (!intc->base) {
- 		pr_err("%s: Unable to map IO memory\n", __func__);
--		goto out;
-+		ret =3D -ENOMEM;
-+		goto err_free;
- 	}
-=20
--	if (!intc[active_cnt].domain) {
-+	intc->domain =3D irq_domain_create_linear(of_fwnode_handle(node), 64,
-+						&vt8500_irq_domain_ops, intc);
-+	if (!intc->domain) {
- 		pr_err("%s: Unable to add irq domain!\n", __func__);
--		goto out;
-+		ret =3D -ENOMEM;
-+		goto err_unmap;
- 	}
-=20
--	set_handle_irq(vt8500_handle_irq);
--
--	vt8500_init_irq_hw(intc[active_cnt].base);
-+	vt8500_init_irq_hw(intc->base);
-=20
- 	pr_info("vt8500-irq: Added interrupt controller\n");
-=20
--	active_cnt++;
--
--	/* check if this is a slaved controller */
--	if (of_irq_count(np) !=3D 0) {
--		/* check that we have the correct number of interrupts */
--		if (of_irq_count(np) !=3D 8) {
--			pr_err("%s: Incorrect IRQ map for slaved controller\n",
--					__func__);
--			return -EINVAL;
--		}
--
--		for (i =3D 0; i < 8; i++) {
--			irq =3D irq_of_parse_and_map(np, i);
--			enable_irq(irq);
-+	/* check if this is a chained controller */
-+	if (of_irq_count(node) !=3D 0) {
-+		for (i =3D 0; i < of_irq_count(node); i++) {
-+			irq =3D irq_of_parse_and_map(node, i);
-+			irq_set_chained_handler_and_data(irq, vt8500_handle_irq_chained,
-+							 intc);
- 		}
-=20
- 		pr_info("vt8500-irq: Enabled slave->parent interrupts\n");
-+	} else {
-+		primary_intc =3D intc;
-+		set_handle_irq(vt8500_handle_irq);
- 	}
--out:
- 	return 0;
++	/*
++	 * If the caller has provided a template alloc info, use that. Once
++	 * all users of msi_create_irq_domain() have been eliminated, this
++	 * should be the only source of allocation information, and the
++	 * prepare call below should be finally removed.
++	 */
++	if (!info->alloc_data)
++		return msi_domain_prepare_irqs(domain, dev, nirqs, arg);
 +
-+err_unmap:
-+	iounmap(intc->base);
-+err_free:
-+	kfree(intc);
-+	return ret;
- }
-=20
- IRQCHIP_DECLARE(vt8500_irq, "via,vt8500-intc", vt8500_irq_init);
-diff --git a/drivers/soc/dove/pmu.c b/drivers/soc/dove/pmu.c
-index 6202dbcd20a8..795802bb3e7d 100644
---- a/drivers/soc/dove/pmu.c
-+++ b/drivers/soc/dove/pmu.c
-@@ -257,10 +257,9 @@ static void pmu_irq_handler(struct irq_desc *desc)
- 	 * So, let's structure the code so that the window is as small as
- 	 * possible.
- 	 */
--	irq_gc_lock(gc);
-+	guard(raw_spinlock)(&gc->lock);
- 	done &=3D readl_relaxed(base + PMC_IRQ_CAUSE);
- 	writel_relaxed(done, base + PMC_IRQ_CAUSE);
--	irq_gc_unlock(gc);
- }
-=20
- static int __init dove_init_pmu_irq(struct pmu_data *pmu, int irq)
-diff --git a/include/linux/irq.h b/include/linux/irq.h
-index dd5df1e2d032..d896d3a471ec 100644
---- a/include/linux/irq.h
-+++ b/include/linux/irq.h
-@@ -1222,31 +1222,6 @@ static inline struct irq_chip_type *irq_data_get_chip_=
-type(struct irq_data *d)
-=20
- #define IRQ_MSK(n) (u32)((n) < 32 ? ((1 << (n)) - 1) : UINT_MAX)
-=20
--#ifdef CONFIG_SMP
--static inline void irq_gc_lock(struct irq_chip_generic *gc)
--{
--	raw_spin_lock(&gc->lock);
--}
--
--static inline void irq_gc_unlock(struct irq_chip_generic *gc)
--{
--	raw_spin_unlock(&gc->lock);
--}
--#else
--static inline void irq_gc_lock(struct irq_chip_generic *gc) { }
--static inline void irq_gc_unlock(struct irq_chip_generic *gc) { }
--#endif
--
--/*
-- * The irqsave variants are for usage in non interrupt code. Do not use
-- * them in irq_chip callbacks. Use irq_gc_lock() instead.
-- */
--#define irq_gc_lock_irqsave(gc, flags)	\
--	raw_spin_lock_irqsave(&(gc)->lock, flags)
--
--#define irq_gc_unlock_irqrestore(gc, flags)	\
--	raw_spin_unlock_irqrestore(&(gc)->lock, flags)
--
- static inline void irq_reg_writel(struct irq_chip_generic *gc,
- 				  u32 val, int reg_offset)
++	*arg =3D *info->alloc_data;
++	return 0;
++}
++
+ static int __msi_domain_alloc_irqs(struct device *dev, struct irq_domain *do=
+main,
+ 				   struct msi_ctrl *ctrl)
  {
-diff --git a/kernel/irq/generic-chip.c b/kernel/irq/generic-chip.c
-index c4a8bca5f2b0..bf59e37d650a 100644
---- a/kernel/irq/generic-chip.c
-+++ b/kernel/irq/generic-chip.c
-@@ -40,10 +40,9 @@ void irq_gc_mask_disable_reg(struct irq_data *d)
- 	struct irq_chip_type *ct =3D irq_data_get_chip_type(d);
- 	u32 mask =3D d->mask;
+@@ -1250,7 +1300,7 @@ static int __msi_domain_alloc_irqs(struct device *dev, =
+struct irq_domain *domain
+ 	unsigned long idx;
+ 	int i, ret, virq;
 =20
--	irq_gc_lock(gc);
-+	guard(raw_spinlock)(&gc->lock);
- 	irq_reg_writel(gc, mask, ct->regs.disable);
- 	*ct->mask_cache &=3D ~mask;
--	irq_gc_unlock(gc);
+-	ret =3D msi_domain_prepare_irqs(domain, dev, ctrl->nirqs, &arg);
++	ret =3D populate_alloc_info(domain, dev, ctrl->nirqs, &arg);
+ 	if (ret)
+ 		return ret;
+=20
+@@ -1391,12 +1441,9 @@ int msi_domain_alloc_irqs_range_locked(struct device *=
+dev, unsigned int domid,
+ int msi_domain_alloc_irqs_range(struct device *dev, unsigned int domid,
+ 				unsigned int first, unsigned int last)
+ {
+-	int ret;
+=20
+-	msi_lock_descs(dev);
+-	ret =3D msi_domain_alloc_irqs_range_locked(dev, domid, first, last);
+-	msi_unlock_descs(dev);
+-	return ret;
++	guard(msi_descs_lock)(dev);
++	return msi_domain_alloc_irqs_range_locked(dev, domid, first, last);
  }
- EXPORT_SYMBOL_GPL(irq_gc_mask_disable_reg);
+ EXPORT_SYMBOL_GPL(msi_domain_alloc_irqs_range);
 =20
-@@ -60,10 +59,9 @@ void irq_gc_mask_set_bit(struct irq_data *d)
- 	struct irq_chip_type *ct =3D irq_data_get_chip_type(d);
- 	u32 mask =3D d->mask;
-=20
--	irq_gc_lock(gc);
-+	guard(raw_spinlock)(&gc->lock);
- 	*ct->mask_cache |=3D mask;
- 	irq_reg_writel(gc, *ct->mask_cache, ct->regs.mask);
--	irq_gc_unlock(gc);
- }
- EXPORT_SYMBOL_GPL(irq_gc_mask_set_bit);
-=20
-@@ -80,10 +78,9 @@ void irq_gc_mask_clr_bit(struct irq_data *d)
- 	struct irq_chip_type *ct =3D irq_data_get_chip_type(d);
- 	u32 mask =3D d->mask;
-=20
--	irq_gc_lock(gc);
-+	guard(raw_spinlock)(&gc->lock);
- 	*ct->mask_cache &=3D ~mask;
- 	irq_reg_writel(gc, *ct->mask_cache, ct->regs.mask);
--	irq_gc_unlock(gc);
- }
- EXPORT_SYMBOL_GPL(irq_gc_mask_clr_bit);
-=20
-@@ -100,10 +97,9 @@ void irq_gc_unmask_enable_reg(struct irq_data *d)
- 	struct irq_chip_type *ct =3D irq_data_get_chip_type(d);
- 	u32 mask =3D d->mask;
-=20
--	irq_gc_lock(gc);
-+	guard(raw_spinlock)(&gc->lock);
- 	irq_reg_writel(gc, mask, ct->regs.enable);
- 	*ct->mask_cache |=3D mask;
--	irq_gc_unlock(gc);
- }
- EXPORT_SYMBOL_GPL(irq_gc_unmask_enable_reg);
-=20
-@@ -117,9 +113,8 @@ void irq_gc_ack_set_bit(struct irq_data *d)
- 	struct irq_chip_type *ct =3D irq_data_get_chip_type(d);
- 	u32 mask =3D d->mask;
-=20
--	irq_gc_lock(gc);
-+	guard(raw_spinlock)(&gc->lock);
- 	irq_reg_writel(gc, mask, ct->regs.ack);
--	irq_gc_unlock(gc);
- }
- EXPORT_SYMBOL_GPL(irq_gc_ack_set_bit);
-=20
-@@ -133,9 +128,8 @@ void irq_gc_ack_clr_bit(struct irq_data *d)
- 	struct irq_chip_type *ct =3D irq_data_get_chip_type(d);
- 	u32 mask =3D ~d->mask;
-=20
--	irq_gc_lock(gc);
-+	guard(raw_spinlock)(&gc->lock);
- 	irq_reg_writel(gc, mask, ct->regs.ack);
--	irq_gc_unlock(gc);
+@@ -1500,12 +1547,8 @@ struct msi_map msi_domain_alloc_irq_at(struct device *=
+dev, unsigned int domid, u
+ 				       const struct irq_affinity_desc *affdesc,
+ 				       union msi_instance_cookie *icookie)
+ {
+-	struct msi_map map;
+-
+-	msi_lock_descs(dev);
+-	map =3D __msi_domain_alloc_irq_at(dev, domid, index, affdesc, icookie);
+-	msi_unlock_descs(dev);
+-	return map;
++	guard(msi_descs_lock)(dev);
++	return __msi_domain_alloc_irq_at(dev, domid, index, affdesc, icookie);
  }
 =20
  /**
-@@ -156,11 +150,10 @@ void irq_gc_mask_disable_and_ack_set(struct irq_data *d)
- 	struct irq_chip_type *ct =3D irq_data_get_chip_type(d);
- 	u32 mask =3D d->mask;
+@@ -1542,13 +1585,11 @@ int msi_device_domain_alloc_wired(struct irq_domain *=
+domain, unsigned int hwirq,
 =20
--	irq_gc_lock(gc);
-+	guard(raw_spinlock)(&gc->lock);
- 	irq_reg_writel(gc, mask, ct->regs.disable);
- 	*ct->mask_cache &=3D ~mask;
- 	irq_reg_writel(gc, mask, ct->regs.ack);
--	irq_gc_unlock(gc);
- }
- EXPORT_SYMBOL_GPL(irq_gc_mask_disable_and_ack_set);
+ 	icookie.value =3D ((u64)type << 32) | hwirq;
 =20
-@@ -174,9 +167,8 @@ void irq_gc_eoi(struct irq_data *d)
- 	struct irq_chip_type *ct =3D irq_data_get_chip_type(d);
- 	u32 mask =3D d->mask;
-=20
--	irq_gc_lock(gc);
-+	guard(raw_spinlock)(&gc->lock);
- 	irq_reg_writel(gc, mask, ct->regs.eoi);
--	irq_gc_unlock(gc);
- }
-=20
- /**
-@@ -196,12 +188,11 @@ int irq_gc_set_wake(struct irq_data *d, unsigned int on)
- 	if (!(mask & gc->wake_enabled))
- 		return -EINVAL;
-=20
--	irq_gc_lock(gc);
-+	guard(raw_spinlock)(&gc->lock);
- 	if (on)
- 		gc->wake_active |=3D mask;
+-	msi_lock_descs(dev);
++	guard(msi_descs_lock)(dev);
+ 	if (WARN_ON_ONCE(msi_get_device_domain(dev, domid) !=3D domain))
+ 		map.index =3D -EINVAL;
  	else
- 		gc->wake_active &=3D ~mask;
--	irq_gc_unlock(gc);
- 	return 0;
+ 		map =3D __msi_domain_alloc_irq_at(dev, domid, MSI_ANY_INDEX, NULL, &icooki=
+e);
+-	msi_unlock_descs(dev);
+-
+ 	return map.index >=3D 0 ? map.virq : map.index;
  }
- EXPORT_SYMBOL_GPL(irq_gc_set_wake);
-@@ -288,7 +279,6 @@ int irq_domain_alloc_generic_chips(struct irq_domain *d,
+=20
+@@ -1641,9 +1682,8 @@ void msi_domain_free_irqs_range_locked(struct device *d=
+ev, unsigned int domid,
+ void msi_domain_free_irqs_range(struct device *dev, unsigned int domid,
+ 				unsigned int first, unsigned int last)
  {
- 	struct irq_domain_chip_generic *dgc;
- 	struct irq_chip_generic *gc;
--	unsigned long flags;
- 	int numchips, i;
- 	size_t dgc_sz;
- 	size_t gc_sz;
-@@ -340,9 +330,8 @@ int irq_domain_alloc_generic_chips(struct irq_domain *d,
- 				goto err;
- 		}
+-	msi_lock_descs(dev);
++	guard(msi_descs_lock)(dev);
+ 	msi_domain_free_irqs_range_locked(dev, domid, first, last);
+-	msi_unlock_descs(dev);
+ }
+ EXPORT_SYMBOL_GPL(msi_domain_free_irqs_all);
 =20
--		raw_spin_lock_irqsave(&gc_lock, flags);
--		list_add_tail(&gc->list, &gc_list);
--		raw_spin_unlock_irqrestore(&gc_lock, flags);
-+		scoped_guard (raw_spinlock_irqsave, &gc_lock)
-+			list_add_tail(&gc->list, &gc_list);
- 		/* Calc pointer to the next generic chip */
- 		tmp +=3D gc_sz;
- 	}
-@@ -459,7 +448,6 @@ int irq_map_generic_chip(struct irq_domain *d, unsigned i=
-nt virq,
- 	struct irq_chip_generic *gc;
- 	struct irq_chip_type *ct;
- 	struct irq_chip *chip;
--	unsigned long flags;
- 	int idx;
-=20
- 	gc =3D __irq_get_domain_generic_chip(d, hw_irq);
-@@ -479,9 +467,8 @@ int irq_map_generic_chip(struct irq_domain *d, unsigned i=
-nt virq,
-=20
- 	/* We only init the cache for the first mapping of a generic chip */
- 	if (!gc->installed) {
--		raw_spin_lock_irqsave(&gc->lock, flags);
-+		guard(raw_spinlock_irqsave)(&gc->lock);
- 		irq_gc_init_mask_cache(gc, dgc->gc_flags);
--		raw_spin_unlock_irqrestore(&gc->lock, flags);
- 	}
-=20
- 	/* Mark the interrupt as installed */
-@@ -548,9 +535,8 @@ void irq_setup_generic_chip(struct irq_chip_generic *gc, =
-u32 msk,
- 	struct irq_chip *chip =3D &ct->chip;
- 	unsigned int i;
-=20
--	raw_spin_lock(&gc_lock);
--	list_add_tail(&gc->list, &gc_list);
--	raw_spin_unlock(&gc_lock);
-+	scoped_guard (raw_spinlock, &gc_lock)
-+		list_add_tail(&gc->list, &gc_list);
-=20
- 	irq_gc_init_mask_cache(gc, flags);
-=20
-@@ -616,9 +602,8 @@ void irq_remove_generic_chip(struct irq_chip_generic *gc,=
- u32 msk,
+@@ -1673,9 +1713,8 @@ void msi_domain_free_irqs_all_locked(struct device *dev=
+, unsigned int domid)
+  */
+ void msi_domain_free_irqs_all(struct device *dev, unsigned int domid)
  {
- 	unsigned int i, virq;
+-	msi_lock_descs(dev);
++	guard(msi_descs_lock)(dev);
+ 	msi_domain_free_irqs_all_locked(dev, domid);
+-	msi_unlock_descs(dev);
+ }
 =20
--	raw_spin_lock(&gc_lock);
--	list_del(&gc->list);
--	raw_spin_unlock(&gc_lock);
-+	scoped_guard (raw_spinlock, &gc_lock)
-+		list_del(&gc->list);
+ /**
+@@ -1694,12 +1733,11 @@ void msi_device_domain_free_wired(struct irq_domain *=
+domain, unsigned int virq)
+ 	if (WARN_ON_ONCE(!dev || !desc || domain->bus_token !=3D DOMAIN_BUS_WIRED_T=
+O_MSI))
+ 		return;
 =20
- 	for (i =3D 0; msk; msk >>=3D 1, i++) {
- 		if (!(msk & 0x01))
+-	msi_lock_descs(dev);
+-	if (!WARN_ON_ONCE(msi_get_device_domain(dev, MSI_DEFAULT_DOMAIN) !=3D domai=
+n)) {
+-		msi_domain_free_irqs_range_locked(dev, MSI_DEFAULT_DOMAIN, desc->msi_index,
+-						  desc->msi_index);
+-	}
+-	msi_unlock_descs(dev);
++	guard(msi_descs_lock)(dev);
++	if (WARN_ON_ONCE(msi_get_device_domain(dev, MSI_DEFAULT_DOMAIN) !=3D domain=
+))
++		return;
++	msi_domain_free_irqs_range_locked(dev, MSI_DEFAULT_DOMAIN, desc->msi_index,
++					  desc->msi_index);
+ }
+=20
+ /**
 
