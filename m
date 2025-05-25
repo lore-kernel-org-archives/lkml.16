@@ -1,144 +1,111 @@
-Received: from smtp-fw-9105.amazon.com (smtp-fw-9105.amazon.com [207.171.188.204])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f176.google.com (mail-oi1-f176.google.com [209.85.167.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D01C23234;
-	Sun, 25 May 2025 07:00:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.171.188.204
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DB6CEADC
+	for <linux-kernel@vger.kernel.org>; Sun, 25 May 2025 07:02:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748156447; cv=none; b=Lo7BYPdjm5DRjN88oNUIPungbrVVsgtCse3RCjJGxF+1n2zuwpgUixjDIyi8cI/hL/7rWM4mdQU6fUgjdNVn8R9Gm8gQ/e/gDe0dPkNU9AZ6+i+JPRddVS9jDksJ4tQoQ9mQIKxMZr+OaFPxyITbQORBfkPDET4AzUWUWZmkdJ0=
+	t=1748156552; cv=none; b=mOelsUE4GBrIL0Kx368Wv1DFXV/ZQuBFPiyPJIePlrcA8zcBrpBC4lEn/LnWzVBf98K2qixmJdFt8UJc3IGdN8jMM6N/auhT+GKtIUYDgHB79oNHLamM7kh0MT0I1vS5ZF8hsiAJUsXU7tdfk64wcPjBHr+75OvwLXXEyKpRSuI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748156447; c=relaxed/simple;
-	bh=2jhL0QXKh1RgZslTy7iWdYSUV2nxJ8KPEdZsA78MxDY=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=FUHOPppNien1CqE+hK8coPNRtYHpERx4jiLMkr49O9DURdC+H7vcfWlwkzT4EZnGVCn6LNK4G1cJrC8mohUSZFvtFSj/YbDcWOftxiKLhItx5q03PvbYP9GP+2SPf2NYBna13q7m90TJW8abYfCglggU1/S2ZSWZW+5satDmvsQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b=HGrrwe/+; arc=none smtp.client-ip=207.171.188.204
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
+	s=arc-20240116; t=1748156552; c=relaxed/simple;
+	bh=xmVuJpzpAO9LBTZ0wqrziL7kSCWF8SNFJEq1vwbSKj8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=FpdZHGzZirAaWcpeRxKUTK+2EaL+Ne9cnSLsK15BXPoJ7Fyfw0+VL6rvxFvZ8uFB+dDdF3NZuQOLSfX9x1Th13aYpaufd4Kc83xx2j5VJGd2QFSYUmcSQk+hYS5/IIOhYv4J/OorVGnUElx8eTHOItCNaiP4+z7KwPEC0kcTtAk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=PTTLued5; arc=none smtp.client-ip=209.85.167.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b="HGrrwe/+"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PTTLued5"
+Received: by mail-oi1-f176.google.com with SMTP id 5614622812f47-40356cb3352so858214b6e.1
+        for <linux-kernel@vger.kernel.org>; Sun, 25 May 2025 00:02:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazoncorp2;
-  t=1748156446; x=1779692446;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=7IzcpyZ4IDscyT4tmmEwKrGhf7NMtKjFCxFauHO9w+Q=;
-  b=HGrrwe/+2xYqRDEg0CTvV6Av2cbRoxCIkqrAJuByoF0MbDv20teyeoxF
-   b7Ktv9tW0+tqlaQ92kEtiR6vRT18grMyhol82d/rmqeYzRVj0EqLscS89
-   ogKnIUyUcihryKMcDfSJN293ndcQpNOIcR+kYVirr2SLszAGiQHx1raaW
-   g5MjvhNwCAjA6JmtY2tYh5Z1aE0FtRiv8nJ2+ZWhzxwIKPSLfdIdWa3Qw
-   WQvmQ4fT7duTs+huJoTduCDa6Z0Z74pqf4ZksGaJd2qsWGEq5J1Vzh6A7
-   p9k409j/a1GsqgfKYeeICBoBdcy7FZGH4+zoilXgCQb8MkQ5eT5Ui1F2A
-   Q==;
-X-IronPort-AV: E=Sophos;i="6.15,312,1739836800"; 
-   d="scan'208";a="23483643"
-Received: from pdx4-co-svc-p1-lb2-vlan2.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.25.36.210])
-  by smtp-border-fw-9105.sea19.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 May 2025 07:00:40 +0000
-Received: from EX19MTAUWA001.ant.amazon.com [10.0.21.151:28949]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.18.109:2525] with esmtp (Farcaster)
- id f92c0e5a-4d75-408b-8fad-b9c4d97cac9a; Sun, 25 May 2025 07:00:40 +0000 (UTC)
-X-Farcaster-Flow-ID: f92c0e5a-4d75-408b-8fad-b9c4d97cac9a
-Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
- EX19MTAUWA001.ant.amazon.com (10.250.64.218) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Sun, 25 May 2025 07:00:39 +0000
-Received: from 6c7e67bfbae3.amazon.com (10.187.170.33) by
- EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Sun, 25 May 2025 07:00:36 +0000
-From: Kuniyuki Iwashima <kuniyu@amazon.com>
-To: <john.cs.hey@gmail.com>
-CC: <davem@davemloft.net>, <horms@kernel.org>, <kuba@kernel.org>,
-	<kuniyu@amazon.com>, <linux-kernel@vger.kernel.org>,
-	<netdev@vger.kernel.org>, <pabeni@redhat.com>, <willemb@google.com>
-Subject: Re: [Bug] "general protection fault in corrupted at " in Linux kernel v6.14 [sock_kmalloc() Null Pointer Dereference via CALIPSO NetLabel Processing in IPv6 SYN Request (IPv6 + SELinux + CALIPSO Path)]
-Date: Sun, 25 May 2025 00:00:25 -0700
-Message-ID: <20250525070028.79606-1-kuniyu@amazon.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <CAP=Rh=MvfhrGADy+-WJiftV2_WzMH4VEhEFmeT28qY+4yxNu4w@mail.gmail.com>
-References: <CAP=Rh=MvfhrGADy+-WJiftV2_WzMH4VEhEFmeT28qY+4yxNu4w@mail.gmail.com>
+        d=linaro.org; s=google; t=1748156549; x=1748761349; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=++2YpVIWSfdyU9wkP36ZaRD+uvghyqrOoMuB3yBAyQQ=;
+        b=PTTLued5VxluoQv5Wr4F7Q/TzluT9Kw1Yk4tFoI0uUpWnyapBoXktd4mHlTXwGdgkj
+         NrCSMmgw3ugN+42+j2oXr7PMZDlCxubplJ1mGW95tlJsJvhfRRPOJGngmj1C85O5T9Vy
+         KC8O75OfcYqGecdXNe8b9CKHPmi7tO5dcQVy8BUQoLHRmiQRuzKQC2DmxrOq/13luw9l
+         dlO1zBNWPGLbWnUw/VPthH7H5FVN7j1p5+5ntTCe8NGmT074kCTP+Je4RksblAAikVHr
+         G7vscD0y8W8P77NTXGtwMDuZLynuQtZwlHZJ04EULM5ujS0ahNh7SVFM4n3SAz/l7BA9
+         ATNg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748156549; x=1748761349;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=++2YpVIWSfdyU9wkP36ZaRD+uvghyqrOoMuB3yBAyQQ=;
+        b=eKKuDdpmllA2hscndY4uuICf1Ge1TLd/pa5q9P2vanJKcVCBqUFoZoOeLOsHE1NCoJ
+         XP+72h/O+VCwwt1WLxNq+BNJg+Gcuvp+iU3JMqcSM3Rlglcs8FDfeFSoJs8/QnIuLNPT
+         d5iRPRqJYM6+KbCt9z6gl5wDtPW91J1V2gSY3D+Hjh/dgzALdW5ffmJEwjWnocgODUta
+         kN1oZejv5n8p/5WZrhNRlyf8WuaXOjTwqrN67F65Lq4Vd0omye1meXcQKoflsnwiAzcf
+         +7fZLuvzPFooyhKG4Jh8XIrEa7v3D1+NIiWMhmfwavVoT3v5pz0bBzpqGpitZj4d6Drw
+         FdQw==
+X-Forwarded-Encrypted: i=1; AJvYcCXRORcTgfTQQirsnc9uVWfPVH0zJXh2QY2C4Gje+L/wxRUKWHeguCAFFENm/fZ3pNkqKKA7KtieC1EWYAQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzDeR+pSnO43Q7vAbhgOj1v7fq5jMRGtVhB1RJtGoOw5Q/3gxPc
+	hEw1Nc88HBsi6bSjfc2AOWHdRqJ4eHqz6ClXF1A9lmmag4HISZ3n7P24E9fAb5V8/WegZyEdpt/
+	qf8na36rHUX9G0R71UlPYmcl3cYroRkqdA5BgcLcykQ==
+X-Gm-Gg: ASbGncvZG1P2oXiN45KBeLZhhyDcEdhuZckGsH3+4aXJ8Q7xoVs3forWwMWXQvWV3n+
+	nA1hTIBay33373V19FK5gjFTEv/ZKakrfgVsyRCMJZVPNviHPG+1uHj9EkAg8sEsEDXgHy5EhZS
+	KJQZ8Nz7CYuwtUxyHU/lP1xUJYxqwgI7fM8aRVwGqDLejKyNL/Ou2HrvkPVEuIGxAYuA==
+X-Google-Smtp-Source: AGHT+IGr/xoVtnGmyX8qGFJo5xUSZHa6jevK9WgX6XTSiHo/5DgFtJ9gSQBs5D6r1l1zV6o1b9oFwpI2DMroSyKfCf4=
+X-Received: by 2002:a05:6808:1b85:b0:400:d71c:ca26 with SMTP id
+ 5614622812f47-4063cf85609mr5281162b6e.7.1748156549522; Sun, 25 May 2025
+ 00:02:29 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: EX19D038UWC001.ant.amazon.com (10.13.139.213) To
- EX19D004ANA001.ant.amazon.com (10.37.240.138)
+References: <20250524-b4-max77759-mfd-dts-v2-0-b479542eb97d@linaro.org> <20250524-b4-max77759-mfd-dts-v2-2-b479542eb97d@linaro.org>
+In-Reply-To: <20250524-b4-max77759-mfd-dts-v2-2-b479542eb97d@linaro.org>
+From: Peter Griffin <peter.griffin@linaro.org>
+Date: Sun, 25 May 2025 08:02:18 +0100
+X-Gm-Features: AX0GCFvvZm3ZpbAlMbK7Jst1a1IiZ6IBCab2RcTFflgx7AbbvRBIsrph-OCoOqE
+Message-ID: <CADrjBPqVJDBS1pYMhSy8L5sOEkA+UVKNc6N7oY9oiv_twUKt1A@mail.gmail.com>
+Subject: Re: [PATCH v2 2/4] arm64: dts: exynos: gs101-pixel-common: add Maxim
+ MAX77759 PMIC
+To: =?UTF-8?Q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	Tudor Ambarus <tudor.ambarus@linaro.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Alim Akhtar <alim.akhtar@samsung.com>, Will McVicker <willmcvicker@google.com>, 
+	kernel-team@android.com, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, 
+	devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: John <john.cs.hey@gmail.com>
-Date: Thu, 22 May 2025 23:41:23 +0800
-> Dear Linux Kernel Maintainers,
-> 
-> I hope this message finds you well.
-> 
-> I am writing to report a potential vulnerability I encountered during
-> testing of the Linux Kernel version v6.14.
-> 
-> Git Commit: 38fec10eb60d687e30c8c6b5420d86e8149f7557 (tag: v6.14)
-> 
-> Bug Location: 0010:sock_kmalloc+0x35/0x170 net/core/sock.c:2806
-> 
-> Bug report: https://hastebin.com/share/vewamacadi.bash
-> 
-> Complete log: https://hastebin.com/share/otoxiberok.perl
-> 
-> Entire kernel config: https://pastebin.com/MRWGr3nv
+On Sat, 24 May 2025 at 06:21, Andr=C3=A9 Draszik <andre.draszik@linaro.org>=
+ wrote:
+>
+> On Pixel 6 (and Pro), a MAX77759 companion PMIC for USB Type-C
+> applications is used, which contains four functional blocks (at
+> distinct I2C addresses):
+>   * top (including GPIO & NVMEM)
+>   * charger
+>   * fuel gauge
+>   * TCPCi
+>
+> This change adds the PMIC and the subnodes for the GPIO expander and
+> NVMEM, and defines the NVMEM layout.
+>
+> The NVMEM layout is declared such that it matches downstream's
+> open-coded configuration [1].
+>
+> Note:
+> The pinctrl nodes are kept sorted by the 'samsung,pins' property rather
+> than node name, as I think that makes it easier to look at and to add
+> new nodes unambiguously in the future. Its label is prefixed with 'if'
+> (for interface), because there are three PMICs in total in use on
+> Pixel 6 (Pro).
+>
+> Link: https://android.googlesource.com/kernel/google-modules/bms/+/96e729=
+a83817/max77759_maxq.c#67 [1]
+> Signed-off-by: Andr=C3=A9 Draszik <andre.draszik@linaro.org>
+>
+> ---
 
-Thanks for the report.
-
-
-> 
-> Root Cause Analysis:
-> A NULL pointer dereference occurs in sock_kmalloc() at
-> net/core/sock.c:2806 due to a missing check for the validity of the sk
-> pointer.
-> The function attempts to retrieve the associated network namespace
-> using sock_net(sk), which internally accesses sk->__sk_common.skc_net
-> via read_pnet().
-> However, in the specific code path triggered by an incoming IPv6 TCP
-> SYN packet with NetLabel/CALIPSO security attributes, the sk structure
-> is either NULL or uninitialized, resulting in a general protection
-> fault.
-
-calipso_req_{set,del}attr() fetches sk by sk_to_full_sk(req_to_sk(req)),
-but req->rsk_listener could be NULL in the SYN cookie case.
-
-Here we need to return 0 or an error to avoid the null-ptr-deref.
-0 should be avoided as it bypasses LSM, but returning an error
-means CALIPSO effectively disables SYN Cookie, but it will be ok
-given no user has reported the null-ptr-deref for a decade.
-
----8<---
-diff --git a/net/ipv6/calipso.c b/net/ipv6/calipso.c
-index 62618a058b8f..86c26316592b 100644
---- a/net/ipv6/calipso.c
-+++ b/net/ipv6/calipso.c
-@@ -1207,6 +1207,9 @@ static int calipso_req_setattr(struct request_sock *req,
- 	struct ipv6_opt_hdr *old, *new;
- 	struct sock *sk = sk_to_full_sk(req_to_sk(req));
- 
-+	if (!sk)
-+		return -ENOENT;
-+
- 	if (req_inet->ipv6_opt && req_inet->ipv6_opt->hopopt)
- 		old = req_inet->ipv6_opt->hopopt;
- 	else
-@@ -1247,6 +1250,9 @@ static void calipso_req_delattr(struct request_sock *req)
- 	struct ipv6_txoptions *txopts;
- 	struct sock *sk = sk_to_full_sk(req_to_sk(req));
- 
-+	if (!sk)
-+		return -ENOENT;
-+
- 	if (!req_inet->ipv6_opt || !req_inet->ipv6_opt->hopopt)
- 		return;
- 
----8<---
-
-
-
-> The vulnerability is triggered via the SELinux NetLabel connection
-> request hook and affects systems with IPv6 + SELinux + CALIPSO
-> enabled.
+Reviewed-by: Peter Griffin <peter.griffin@linaro.org>
