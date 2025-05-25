@@ -1,124 +1,106 @@
-Received: from smtp.smtpout.orange.fr (smtp-21.smtpout.orange.fr [80.12.242.21])
-	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC8462DCC03;
-	Sun, 25 May 2025 09:23:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BC151E493C;
+	Sun, 25 May 2025 09:23:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748164989; cv=none; b=Uqr7cn0VjDgb2IironCpgjaLvqo1QTtr+UyMBclhHDfrtBsFWCxssGNR11zywDOGDExmSMylIQAuL/OxoLFFtutCl5S4qpNbH2PXyJK89/UbpYdajxC9L+g48zPUfhJitSXVJ1XsBZzOmxEgkuhIPIciFpkCrS5SbcMlCRb6Ivg=
+	t=1748165023; cv=none; b=t+/fMcpvBOQTxCV4UoWrpmR2h8lsi4noeZx7G8zq72Dy6AbYk8/ajhwT9dx04z50LqOzwVVBkChUnOyx0Wcjo32dYAlQFrixfVPmf9nAyQeUD9CXIyIhQwW+YbPTkHKIjMBRHZXnHTH8ZlajwkU9Fn9S9u4+n4WHakD6s5nU2OM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748164989; c=relaxed/simple;
-	bh=uvHTxQ84Ysob1tsgW2B03xQqPXtMT7RwsE2x2QwnLoU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=A9iNmkHs9SjB5ATmrmdluSmLcPcjKVsDhYfoH7H6VruMk+EheZufZDRwPWmRaMwVOy6jfnnVTZJV7V9KPHyt9oyf33+uxkt+nCG7eBlUWyk6vTYHibYdmMaVTgEDrNEc/BIKnu1+WOfYmQmQUJdlWpICJDbbwabeDMiJ/iIKJ0k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=UV0MBtNN; arc=none smtp.client-ip=80.12.242.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	s=arc-20240116; t=1748165023; c=relaxed/simple;
+	bh=8xJ/4cJzkengF8ieK0oPHmswKBr0WzC4IkIOgHiz8OY=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=nnFJa5PLJOJy0uegTPa398ySi9tWC73Nvzh79thqfwokZQSH5kGunpwFUOS6ETg1ft5kS4nNrvm/tgp7GPfzJTq+5JMCNteQ91A2zwqAFbtzhAzz5oVHqhqKCnPOsQcmm69+xTDGlhnw0zb+1nKPcC0uLR8i/mApBXagcG3Brow=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MssJ1DTl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="UV0MBtNN"
-Received: from localhost.localdomain
- ([IPv6:2a01:cb10:785:b00:8347:f260:7456:7662])
-	by smtp.orange.fr with ESMTPA
-	id J7QBu3SUfgtceJ7QBuSZBl; Sun, 25 May 2025 11:13:35 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1748164415;
-	bh=CUMAhSXxdBVNza4s5knUWYkuEAmOJkwcH4eDMlwo1C8=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=UV0MBtNNbiyONMxMtKBia+gag2nRRiRAz6Jh/6+Ec6vto5IeYF8g/ZzNlgUcMgIXL
-	 8GwqCHoHjNQ5OFjYMfVqHL3qFCiB3EOLXK8ZykEelaRTyPGDY34VBcyRYI+YPV0okv
-	 3ccDcu17S39Bw27HWfdQbfLma06K8HyEv62k422+r4XxhIi81yyOtKY0JFXcJag8yy
-	 I9BfdmuRTBeFhCtgTuc187I15LRbFqM9aQFEEbRBCb9Sez7flF6Panw+0zVO59hC3w
-	 sHQq8ra2OBpLtieWAsZd3VOtPStmRd/HLw9nyIie5mACQF7ufbFtK8Uh/9ZW6Xrf/p
-	 InNq7mZQ58DwQ==
-X-ME-Helo: localhost.localdomain
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Sun, 25 May 2025 11:13:35 +0200
-X-ME-IP: 2a01:cb10:785:b00:8347:f260:7456:7662
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To: Ido Schimmel <idosch@nvidia.com>,
-	Petr Machata <petrm@nvidia.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>
-Cc: linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	netdev@vger.kernel.org
-Subject: [PATCH net-next] mlxsw: core_thermal: Constify struct thermal_zone_device_ops
-Date: Sun, 25 May 2025 11:13:17 +0200
-Message-ID: <4516676973f5adc1cdb76db1691c0f98b6fa6614.1748164348.git.christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MssJ1DTl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6AD81C4CEED;
+	Sun, 25 May 2025 09:23:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748165022;
+	bh=8xJ/4cJzkengF8ieK0oPHmswKBr0WzC4IkIOgHiz8OY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=MssJ1DTlorerzrvBZ0h4vsvrIEFfdcrfkqEUa2npxXjrdxEMK7wbDqdR5lHNfNcLD
+	 tu0B7WAPk+NpFWNPAreGfoyUJ8JJ9O2pvIkTJ9CfYSmibOjh/DGPYhGP067DDmnnzy
+	 yppRkwTZAED4PSUxIkMUbyeTWL1keMWrSPcSTanp/PrmuNHhK5p8QRusrfjBJhzvJv
+	 1793QewmP6CGsO0FjgNnWhIBD3WYK9SFox4uzhaV2eb3yfZBFY6cB7ooxROezwGjDb
+	 dnyXiZeM1qQKpNat8UKWUaOOV5FP+Yzo5E6Ff6BCxQW7BWAB0zyUANLZOWOTJikBuI
+	 jdvyzQ2bRHfiQ==
+Date: Sun, 25 May 2025 10:23:31 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Markus Burri <markus.burri@mt.com>
+Cc: linux-kernel@vger.kernel.org, Mahesh J Salgaonkar
+ <mahesh@linux.ibm.com>, "Oliver O'Halloran" <oohall@gmail.com>, Madhavan
+ Srinivasan <maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>,
+ Nicholas Piggin <npiggin@gmail.com>, Christophe Leroy
+ <christophe.leroy@csgroup.eu>, Naveen N Rao <naveen@kernel.org>, Jacek
+ Lawrynowicz <jacek.lawrynowicz@linux.intel.com>, Maciej Falkowski
+ <maciej.falkowski@linux.intel.com>, Oded Gabbay <ogabbay@kernel.org>, Linus
+ Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
+ Nuno Sa <nuno.sa@analog.com>, Olivier Moysan <olivier.moysan@foss.st.com>,
+ Lars-Peter Clausen <lars@metafoo.de>, linuxppc-dev@lists.ozlabs.org,
+ dri-devel@lists.freedesktop.org, linux-gpio@vger.kernel.org,
+ linux-iio@vger.kernel.org, Markus Burri <markus.burri@bbv.ch>
+Subject: Re: [PATCH v4 3/6] iio: fix potential out-of-bound write
+Message-ID: <20250525102331.46a4d778@jic23-huawei>
+In-Reply-To: <20250508130612.82270-4-markus.burri@mt.com>
+References: <20250508130612.82270-1-markus.burri@mt.com>
+	<20250508130612.82270-4-markus.burri@mt.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-'struct thermal_zone_device_ops' are not modified in this driver.
+On Thu,  8 May 2025 15:06:09 +0200
+Markus Burri <markus.burri@mt.com> wrote:
 
-Constifying these structures moves some data to a read-only section, so
-increases overall security, especially when the structure holds some
-function pointers.
+> The buffer is set to 20 characters. If a caller write more characters,
+> count is truncated to the max available space in "simple_write_to_buffer".
+> To protect from OoB access, check that the input size fit into buffer and
+> add a zero terminator after copy to the end of the copied data.
+> 
+> Signed-off-by: Markus Burri <markus.burri@mt.com>
+> ---
+Applied to the fixes-togreg branch of iio.git.
 
-While at it, also constify a struct thermal_zone_params.
+I'd still like some more eyes on this if anyone has time though as
+experience teaches me that subtle tweaks to string manipulation end
+conditions are easy places to make mistakes!
 
-On a x86_64, with allmodconfig:
-Before:
-======
-   text	   data	    bss	    dec	    hex	filename
-  24899	   8036	      0	  32935	   80a7	drivers/net/ethernet/mellanox/mlxsw/core_thermal.o
+I'll not be pushing out as non rebasing until I rebase on rc1 anyway
+so we have time.
 
-After:
-=====
-   text	   data	    bss	    dec	    hex	filename
-  25379	   7556	      0	  32935	   80a7	drivers/net/ethernet/mellanox/mlxsw/core_thermal.o
+Thanks,
 
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
----
-Compile tested only,
----
- drivers/net/ethernet/mellanox/mlxsw/core_thermal.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+Jonathan
 
-diff --git a/drivers/net/ethernet/mellanox/mlxsw/core_thermal.c b/drivers/net/ethernet/mellanox/mlxsw/core_thermal.c
-index e746cd9c68ed..eac9a14a6058 100644
---- a/drivers/net/ethernet/mellanox/mlxsw/core_thermal.c
-+++ b/drivers/net/ethernet/mellanox/mlxsw/core_thermal.c
-@@ -205,11 +205,11 @@ static int mlxsw_thermal_get_temp(struct thermal_zone_device *tzdev,
- 	return 0;
- }
- 
--static struct thermal_zone_params mlxsw_thermal_params = {
-+static const struct thermal_zone_params mlxsw_thermal_params = {
- 	.no_hwmon = true,
- };
- 
--static struct thermal_zone_device_ops mlxsw_thermal_ops = {
-+static const struct thermal_zone_device_ops mlxsw_thermal_ops = {
- 	.should_bind = mlxsw_thermal_should_bind,
- 	.get_temp = mlxsw_thermal_get_temp,
- };
-@@ -252,7 +252,7 @@ static int mlxsw_thermal_module_temp_get(struct thermal_zone_device *tzdev,
- 	return 0;
- }
- 
--static struct thermal_zone_device_ops mlxsw_thermal_module_ops = {
-+static const struct thermal_zone_device_ops mlxsw_thermal_module_ops = {
- 	.should_bind	= mlxsw_thermal_module_should_bind,
- 	.get_temp	= mlxsw_thermal_module_temp_get,
- };
-@@ -280,7 +280,7 @@ static int mlxsw_thermal_gearbox_temp_get(struct thermal_zone_device *tzdev,
- 	return 0;
- }
- 
--static struct thermal_zone_device_ops mlxsw_thermal_gearbox_ops = {
-+static const struct thermal_zone_device_ops mlxsw_thermal_gearbox_ops = {
- 	.should_bind	= mlxsw_thermal_module_should_bind,
- 	.get_temp	= mlxsw_thermal_gearbox_temp_get,
- };
--- 
-2.49.0
+>  drivers/iio/industrialio-core.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-core.c
+> index b9f4113ae5fc..ebf17ea5a5f9 100644
+> --- a/drivers/iio/industrialio-core.c
+> +++ b/drivers/iio/industrialio-core.c
+> @@ -410,12 +410,15 @@ static ssize_t iio_debugfs_write_reg(struct file *file,
+>  	char buf[80];
+>  	int ret;
+>  
+> +	if (count >= sizeof(buf))
+> +		return -EINVAL;
+> +
+>  	ret = simple_write_to_buffer(buf, sizeof(buf) - 1, ppos, userbuf,
+>  				     count);
+>  	if (ret < 0)
+>  		return ret;
+>  
+> -	buf[count] = '\0';
+> +	buf[ret] = '\0';
+>  
+>  	ret = sscanf(buf, "%i %i", &reg, &val);
+>  
 
