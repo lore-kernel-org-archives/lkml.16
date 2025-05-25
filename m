@@ -1,153 +1,102 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E2C61ACEDC;
-	Sun, 25 May 2025 21:00:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33C601AAA1A;
+	Sun, 25 May 2025 21:13:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748206805; cv=none; b=fQtBh7sEfXDrxd5IDwIin3hk5j9xNTUBw+OZBQ8t0pDn5LCQzZ/0L+uJ2pYBCVE97i3hmVd+Ubo1jdLye7vFcBcvvCYFlniy7+IYlIe98KxlE9/2D8z3DUID4JI1r5fgP05KYs8/XEUSeIGx6k63LQ8R7wzxdoHa0GnRMZQgz44=
+	t=1748207592; cv=none; b=SBsQw1W9/SOSX/C55oRIl+um7h1OAkdk6CkJ4/Gcbsh01+w5eXumc8O68CSoHGOcOpEp3RnK83J6NaQjKLJRoFUVXeYAriUoz9/qAiiueARMj3ivN3oRzYHctu36KQm2UMv7kPk+lLfMnedqde7WSDJvyHgx5dSlWAnMaV/eYFc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748206805; c=relaxed/simple;
-	bh=UVQpbghoGLikWoMYHWdmkTEFbU5Pl2j2w3h6WzBZe3k=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=qjLkIXhHoP2m27BdwxwKmSFjcKaUZDQ/L4CBIEMMcbKq2Cbi0yUk+8ZV/as2gBGwUhP84rXyLU3MbCJZOJkl61+DfsQzhA2vVqJYg8NhvqQc31TO2vmFfcAHbngxMfDhlZMTS+sBI75/yEpAk3EfEEl+PinOTJf8qJNjYnUYeMw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PPjh7MF4; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1748207592; c=relaxed/simple;
+	bh=yutOagRm7/jPjwci0FN1tltP5msoKbQLQUfg1GE+uf8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=K5DOVCFTBPeO4QvlUIBFG55h6lx/HxNzyBlOXiXoWiAB/XSxXIqeHX24apS/jEPDh7O+VzVwNZi8MGvAV3qrl/9/K7xkXHrgY/zSkAGlrPUjVTSPJeJj8sM75/DwIOJOAJKQ4Hoo1nDRCgW8kRONCwgCrOwBwQ49Bab3qIIyXPU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IkXUQ4HQ; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PPjh7MF4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748206805; x=1779742805;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=UVQpbghoGLikWoMYHWdmkTEFbU5Pl2j2w3h6WzBZe3k=;
-  b=PPjh7MF4xo0Cojl46fxxj/Az4PtjFWd3/ydLszN/PHQZQiuXHAD6LzEe
-   6hxamPzG3IhzqkT3Et93CAa4tO8TrFc6aL4KphhcbVzn4BQzIrwYzw4T9
-   K7WoB/Ao0av9Hr6pztk7vk7odh0CK/+pu90/QFLaSC8LiYIkuCO+1g/W8
-   tp9JX5hQOnSeEp9ozLyfv0ApuSGMQOjODmeXywcQVK9mwtXYkZe+p0qlL
-   GWjWPfzcSzumI/733TeI1bMkuB3lItNt5xYo0d7P+gL+FM+rDSM+G72WO
-   wn5PWEU60lDQQD3k513DSCKu6lHxWJooQHcRZ1z+bTHAkuT79EoM9F3Ui
-   w==;
-X-CSE-ConnectionGUID: CXbGm4IFQpSL4T9PlSypdQ==
-X-CSE-MsgGUID: QHq3J96VTq2BwP2kb7guwg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11444"; a="61537064"
-X-IronPort-AV: E=Sophos;i="6.15,314,1739865600"; 
-   d="scan'208";a="61537064"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 May 2025 14:00:04 -0700
-X-CSE-ConnectionGUID: P48Ki6zGSvew3cGfCCPR6Q==
-X-CSE-MsgGUID: jUfjBM/3RDWta28esQwJEw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,314,1739865600"; 
-   d="scan'208";a="172993775"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.99])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 May 2025 13:59:59 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Sun, 25 May 2025 23:59:55 +0300 (EEST)
-To: Suma Hegde <Suma.Hegde@amd.com>, Arnd Bergmann <arnd@kernel.org>
-cc: Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>, 
-    Hans de Goede <hdegoede@redhat.com>, Arnd Bergmann <arnd@arndb.de>, 
-    Carlos Bilbao <carlos.bilbao@kernel.org>, 
-    Yazen Ghannam <yazen.ghannam@amd.com>, 
-    "Borislav Petkov (AMD)" <bp@alien8.de>, 
-    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] platform/x86/amd/hsmp: fix building with
- CONFIG_HWMON=m
-In-Reply-To: <35537263-47cf-4cc3-9808-7a93361d3ba8@amd.com>
-Message-ID: <8123c1ca-f06c-8d42-7553-c0907580ef52@linux.intel.com>
-References: <20250522144422.2824083-1-arnd@kernel.org> <35537263-47cf-4cc3-9808-7a93361d3ba8@amd.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IkXUQ4HQ"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-231b7b21535so1021005ad.1;
+        Sun, 25 May 2025 14:13:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748207590; x=1748812390; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=XX4Ox7nGMplfoPZEHRnuA8sBW2s4IqgCV4sN1QmT1+Q=;
+        b=IkXUQ4HQAtZschaEaIqs+kC0Qy5rVU++2fMTw7m2ZiKCRTsG5xFv0UrHQCLnFUmMv9
+         sS7MuFQqJhU6+4hAityNwsVywUlqV3Lj6wB++D8SSe/SkeBpLnIq5SSW0bcP7CmhmnIn
+         WFTfLGen1uUmfy3/htqQJ8G3pN8SX9bY3RdH89MRIa1uStP+IniIa5sBBFzCr29rBX2o
+         wdJFgSaLLlX38LvBc0esxq/K5ZoCH93Q3rwO7pA1TtwFUujlqy3t3fxMXRDNS9CPPwhn
+         YcREFbII+v2sCq5EjuVF1Od1Hy6g2k/c1y1UDPfPAFluk2X7w8VFA4fZvYDr+ThO6Rvd
+         6CNQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748207590; x=1748812390;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=XX4Ox7nGMplfoPZEHRnuA8sBW2s4IqgCV4sN1QmT1+Q=;
+        b=UdkS1fM2Xv0wJx6aJrWfajhIEY73Lh4pqMLBZKTX1x5UqI21DHOGe06Y3acWgu5Y7K
+         /ayhfHDJWnOO+rmVx2ZRbBBnBGJtXdVg4EhturecreyLkTbe1QRENxMQiwInwTeByX0T
+         SiBfcsnq3fXVjPKIFKW/j2id+sR0McdcsHDrWgAsHaabevtOpxDJdOHCmFYFeb/0d9gr
+         bH1B47uYb/8tK6bztoe7DwC0P78tlOB6Z6mPuDWyQ1SNvEC0T8ZV257H1iTBaV21qWxm
+         VYQhxY7ZuBK+QzW25ylzDjZdEcEQbSwJeElGWER4x42/octs+CjtAt4muGAM0DUq6Ja1
+         v9bw==
+X-Forwarded-Encrypted: i=1; AJvYcCU3jIDi3ajPnhrp3xZV2sRTMr9ZyTNishOLexLn4aVts+1VoKn4bcBpSt+HLG8FX7oJpF3JPMQ5J6uGOV9UdK8=@vger.kernel.org, AJvYcCWpN7DQ82b5fbfJsHCCu2HGZ7sGK9zMCnnWyQ83Tl/k4cubN2B0sL40GlOP1+1kxinYBYUDN3kVKdglROQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxZkvkuA7aReF8zecoFDeZ/C5X/McjBg7P0hsbv5sTh01GP0xp/
+	mvRevQGUm5ggDQ/FDaH7xmuIBmHzG8GRJiMzkeE6NJKed7y4DTJxOFWu/pO//b6dYTwOZpGqEAE
+	3FGNArbLAiEzsBGuhFIiFYXi6dDJGMns=
+X-Gm-Gg: ASbGnctM3gAzXXrM0grnaz3zmUdvKCj1K6Iyl9BKZt6JBEzZxk7JKjIXQETzW2/Hdzh
+	wf63dUCdq71oHf5Kujt0CJ2CQBHDhmtMkmvPVPDBHU52LYpVcHOhAsaxDOZcji3fMuq7XvqL40z
+	GWlffeZ55sKvl4W3oC+bA64pnpu77rItE9
+X-Google-Smtp-Source: AGHT+IEfUYwvhLO0+MQrywuylW3sHqV8LRghvR/dDBShngF/P39+CL3M+a5Jusbe8qTBUzOuhXFa4dSPxQN6zgvf04k=
+X-Received: by 2002:a17:902:cf03:b0:21f:356:758f with SMTP id
+ d9443c01a7336-23414f2f960mr42912265ad.3.1748207590309; Sun, 25 May 2025
+ 14:13:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-96070654-1748206795=:933"
+References: <20250413005650.1745894-1-ojeda@kernel.org>
+In-Reply-To: <20250413005650.1745894-1-ojeda@kernel.org>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Sun, 25 May 2025 23:12:57 +0200
+X-Gm-Features: AX0GCFu4PPuuef2Ppk43U8NCIUkz-S7uTimHbFKJFw7xJySv4__UfxYhAvWU-hg
+Message-ID: <CANiq72kSsfBm1rKANrxyrcX=X0MvfJZKTYLGU-yRFaMzBTQ2Rw@mail.gmail.com>
+Subject: Re: [PATCH] rust: add C FFI types to the prelude
+To: Miguel Ojeda <ojeda@kernel.org>
+Cc: Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
+	Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, patches@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Sun, Apr 13, 2025 at 2:57=E2=80=AFAM Miguel Ojeda <ojeda@kernel.org> wro=
+te:
+>
+> Rust kernel code is supposed to use the custom mapping of C FFI types,
+> i.e. those from the `ffi` crate, rather than the ones coming from `core`.
+>
+> Thus, to minimize mistakes and to simplify the code everywhere, just
+> provide them in the `kernel` prelude and ask in the Coding Guidelines
+> to use them directly, i.e. as a single segment path.
+>
+> After this lands, we can start cleaning up the existing users.
+>
+> Ideally, we would use something like Clippy's `disallowed-types` to
+> prevent the use of the `core` ones, but that one sees through aliases.
+>
+> Link: https://lore.kernel.org/rust-for-linux/CANiq72kc4gzfieD-FjuWfELRDXX=
+D2vLgPv4wqk3nt4pjdPQ=3Dqg@mail.gmail.com/
+> Signed-off-by: Miguel Ojeda <ojeda@kernel.org>
 
---8323328-96070654-1748206795=:933
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+    [ Reworded content of the documentation to focus on how to use the
+      aliases first. - Miguel ]
 
-On Fri, 23 May 2025, Suma Hegde wrote:
-
-> Hi Arnd,
->=20
->=20
-> On 5/22/2025 8:08 PM, Arnd Bergmann wrote:
-> > Caution: This message originated from an External Source. Use proper ca=
-ution
-> > when opening attachments, clicking links, or responding.
-> >=20
-> >=20
-> > From: Arnd Bergmann <arnd@arndb.de>
-> >=20
-> > When CONFIG_HWMON is built as a loadable module, the HSMP drivers
-> > cannot be built-in:
-> >=20
-> > ERROR: modpost: "hsmp_create_sensor"
-> > [drivers/platform/x86/amd/hsmp/amd_hsmp.ko] undefined!
-> > ERROR: modpost: "hsmp_create_sensor"
-> > [drivers/platform/x86/amd/hsmp/hsmp_acpi.ko] undefined!
-> >=20
-> > Enforce that through the usual Kconfig dependnecy trick.
-> >=20
-> > Fixes: 92c025db52bb ("platform/x86/amd/hsmp: Report power via hwmon
-> > sensors")
-> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> > ---
-> >   drivers/platform/x86/amd/hsmp/Kconfig | 2 ++
-> >   1 file changed, 2 insertions(+)
-> >=20
-> > diff --git a/drivers/platform/x86/amd/hsmp/Kconfig
-> > b/drivers/platform/x86/amd/hsmp/Kconfig
-> > index d6f7a62d55b5..2911120792e8 100644
-> > --- a/drivers/platform/x86/amd/hsmp/Kconfig
-> > +++ b/drivers/platform/x86/amd/hsmp/Kconfig
-> > @@ -12,6 +12,7 @@ menu "AMD HSMP Driver"
-> >   config AMD_HSMP_ACPI
-> >          tristate "AMD HSMP ACPI device driver"
-> >          depends on ACPI
-> > +       depends on HWMON || !HWMON
->=20
->=20
-> Thanks for sending this fix.=C2=A0 I verified it.
->=20
-> Along with this=C2=A0 fix, I will change IS_REACHABLE() to IS_ENABLED() i=
-n hsmp.h
-> as its not necessary and send v2 of this patch.
->=20
-> -#if IS_REACHABLE(CONFIG_HWMON)
-> +#if IS_ENABLED(CONFIG_HWMON)
-> =C2=A0int hsmp_create_sensor(struct device *dev, u16 sock_ind);
-> =C2=A0#else
-> static inline int hsmp_create_sensor(struct device *dev, u16 sock_ind) {
-> return 0; }
-> #endif
->=20
-> >          select AMD_HSMP
-> >          help
-> >            Host System Management Port (HSMP) interface is a mailbox
-> > interface
-> > @@ -29,6 +30,7 @@ config AMD_HSMP_ACPI
-> >=20
-> >   config AMD_HSMP_PLAT
-> >          tristate "AMD HSMP platform device driver"
-> > +       depends on HWMON || !HWMON
-> >          select AMD_HSMP
-> >          help
-> >            Host System Management Port (HSMP) interface is a mailbox
-> > interface
-
-Hi,
-
-I've taken Arnd's patch now as the merge window is pressing in and this=20
-issue is disturbing build testing.
-
---=20
- i.
-
---8323328-96070654-1748206795=:933--
+Cheers,
+Miguel
