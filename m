@@ -1,118 +1,126 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4D281E5B64;
-	Sun, 25 May 2025 10:51:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1613D1F09B2;
+	Sun, 25 May 2025 10:51:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748170315; cv=none; b=FYQGaAKCPFTgvUOBSNfUxO5JSjVcKKs9RM38vVjnyqr83cNrGmfsjg60dVynDU3JbUxQBTayg7r10ZNI41HxlDElCy+54GGgNNHd/OHuxecnFr0WNeuXAFDRYXlPfV0+mtDEEQzfSHUiTzV81ye8DjsKiM/fpFrMTPeVmMov7+U=
+	t=1748170317; cv=none; b=g4ZYko5hfz1N0KbwksxldDNTa3u6V/svfanwyrcsCgvm5CaqlpQe+3MatV4c2CWUXRHRfUx5WEVZPzzEkwyHRb5QVjYL7VJt27gAfLZfiKJqC0qGzPa4eiDhwmVdAkqbOr+h1qgJ6Qj67u0IlvCOuU+hKsjWbipq4Ou0EeXU8H0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748170315; c=relaxed/simple;
-	bh=BTN2MNtrfCfkupbqHYhUYAsOcmK/hFrk0TQchHuVOI4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=NhmNryksdGfgKKsnPdraAhEmv1kg8cbHKMpUdtl8+R9zMq36BhbGhXwlGR8oPwCFEStS8yMo1TCHssvsGyaqduReka8/JtUNm2ha9wqU2bt0XtAXP6oLn0TqYxPH3E+XralV/NX/jeJKnPG3Bu4zQmWUte36D9Kzzj2n0GRN6KA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gGYCUPeC; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748170317; c=relaxed/simple;
+	bh=YRdfz6rN4mj76VNawYJERvMeJQ2IZtOLyrZVyy6oaew=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dS65XwvN1PuiLsNYmTbDLb02KNVyJs4WQ+UMrfhnguD/wLTHu2yryusvRNV32A38rbMe0TSrthK2JnfF6dZr93qYXBF5RBe32xh9yeVC/T/7RNQhRR1qgsXTAknOYTOkE24Q19262E/zEOuxL76aCJ/btk4FYZXPFsOkqj8Zrr0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qHwywFGI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gGYCUPeC"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-23449dde9ccso1288735ad.3;
-        Sun, 25 May 2025 03:51:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748170313; x=1748775113; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Bo5qTdWekZc+pL4KCI6n58JxkT8Fq7p0AQIuMCPdbDg=;
-        b=gGYCUPeCzBnToePkKU/qZkJi3Hj0PtKVQzy9nKLJJV7m1C5B1ZbwJsjboT3q0IJk9y
-         uLLtCc13BGJkf8AFWRarHD7MT+YukX325xnHbArB8Krtdf0IDqDID0CC0TYdG1gWJbOn
-         L1OGsLuIwuF0ThjRn6BZYi1xWN9S6HUEx2FB0nlA/aYsaQtlDdUM/BoEZOkBpAecTNWa
-         RVgM783zViZ07sGH3pPpNDHbvZuA0a/v3BrgXHF8gvdx+518lZAIbhtdRjWmgsqqTRgu
-         kLxTIq9apX0IMcCYxU+IMmwFjS6xKMYWuwW1FAlwLazkr1/Gz5qRLHIMAQx+6CtICQEZ
-         jRVw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748170313; x=1748775113;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Bo5qTdWekZc+pL4KCI6n58JxkT8Fq7p0AQIuMCPdbDg=;
-        b=ZyWvtLOvvznkv8WnzZK6Qw5y4h12I4LkY0d49zr9eTXur5/+0AMeNBaeBXzxKQMK9S
-         OFi0OvoVjwIvtKVXPpXHQ+LHB38HsrsZ1Wu3nMRuzQ2NuszRGu1dp6SfvfulY9WXFAPY
-         vzlt5YTXujnkNcVzhBm4Ma1Kknp9vPbx/syoJnccmRt17iM5D5cs01KMuGURHrW37jj+
-         UfpFVFaPVh61LKieIwRYyE6yJjR/V3HRq+hatMDZaVgOG4yt3ZVU0fodp/Lbip3zqorB
-         KeSYKdVmRQZNtsL58RbUJ1dNS94m/k66CYkSO4yGyfU6AwoMnnvFT1FJqQR7/lIP+a74
-         zxqg==
-X-Forwarded-Encrypted: i=1; AJvYcCUYfwXi5cW/ikO7zEeTrUHHmU74gQSBwcwCLlT3rS7M/73TZlEEo7JnSTchTJBcR2d7IjFP72yg6NmH5JOH@vger.kernel.org, AJvYcCW4HrDp4eucV70d3HCpz9G/MyKLxNR9NZJXSeRf3WfabwNa8KjwP+kxqRMB2A2d6L/QfDoEBqLnPykzUHgCPw==@vger.kernel.org, AJvYcCWHGV5yDihEOz39jaskGyq3gQtCUYFeE78zfNE9lNZvE/8pOPMCxsAHTOpRkaJrFFxSIHXs5YfHEnAu@vger.kernel.org
-X-Gm-Message-State: AOJu0YytYz4XfNtjb/pRyYNWQvwjkvKL5+YbttRZ3/3lwbNQ8MdXn11F
-	IbOAKyNgMCTN4K7QU2JtAviccRbR+bEUB/fbo5tR++fPBKNJfcKt0sjp
-X-Gm-Gg: ASbGnctfdbx1yTDgX7Q88iaadk6fPUMcMovp5xHI+WrMwe024hu9jTId1OUeuqptuD/
-	gd2NnwQItFyTNvbQ+tASssImeSBga61EMIOtovf5yiyQAo9QoYJcr9nwpRQP2Uc8Ml99ETwmu85
-	iAUO8cKfhGJLEtfTVDVMzLCm4hhCiE5zlnJIb4Ws3QEWh8gogL3v6CanlgXP8AroM/2M9WoAwME
-	i/Y/GxyaOocVilH1vR833f2AmRjjIDEyjZCnpUMGr5qkJ7KKuRP6wsngKLHzTxJxtcJItpEVssh
-	k9tY5F1qzU37R4Z2DNLw/8QsYgZcmWRmUSuFqPmy1qSr8kszSA==
-X-Google-Smtp-Source: AGHT+IEMaKSDD4fczj1RIxfDGO3S/3u5mprTQSOr0sWZhxUeOFAsoyS1ZLloG4n7aaopnUVmt4Fl1A==
-X-Received: by 2002:a17:902:e80e:b0:223:f408:c3f8 with SMTP id d9443c01a7336-23414f4b157mr73367815ad.14.1748170312889;
-        Sun, 25 May 2025 03:51:52 -0700 (PDT)
-Received: from nuvole.. ([144.202.86.13])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2340531be32sm30847255ad.28.2025.05.25.03.51.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 25 May 2025 03:51:52 -0700 (PDT)
-From: Pengyu Luo <mitltlatltl@gmail.com>
-To: konrad.dybcio@oss.qualcomm.com
-Cc: andersson@kernel.org,
-	conor+dt@kernel.org,
-	devicetree@vger.kernel.org,
-	konradybcio@kernel.org,
-	krzk+dt@kernel.org,
-	linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	mitltlatltl@gmail.com,
-	robh@kernel.org
-Subject: Re: [PATCH 2/2] arm64: dts: qcom: sm8650: Add support for Oneplus Pad Pro (caihong)
-Date: Sun, 25 May 2025 18:51:43 +0800
-Message-ID: <20250525105144.1328104-1-mitltlatltl@gmail.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <53e1127d-77fb-4bb7-a125-18d7afc0d843@oss.qualcomm.com>
-References: <53e1127d-77fb-4bb7-a125-18d7afc0d843@oss.qualcomm.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qHwywFGI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69624C4CEEA;
+	Sun, 25 May 2025 10:51:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748170316;
+	bh=YRdfz6rN4mj76VNawYJERvMeJQ2IZtOLyrZVyy6oaew=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=qHwywFGIJ8+pU3HV0IDi+sIlPYKDsVLMGoK+ICOQYtQQay1/5sTPlXYmx+lBeXNmw
+	 wOZx/Hrm2mPRENQ9m/SIPnCy2pbAqWdTND7s5eO3tUc0AHMTQesuY79BiHeQ/K8SFN
+	 7gngijEl3vDaNrEpf0KFzvDehEWUA5mIY/1uAkiU6NQyoWpUciHa1hdvdWalYAgcYI
+	 dsvGrlVQuT3zDqbrdjSlZB6CY9fwNXEuQxmmxftf4itsBgygV2NMmIztJzNtyRw84O
+	 /0qrEdG9z937KjtIrjjfZ3AIQToyeUM39DoydPxv8bjGc1+4qy1NjQZltkHX15hcUk
+	 wXtAyVdB5xJxg==
+Message-ID: <e462cdc4-7243-4cef-bd1d-a0ef551b3a87@kernel.org>
+Date: Sun, 25 May 2025 12:51:50 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] media: dt-bindings: mediatek: Constrain iommus
+To: Daniel Stone <daniel@fooishbar.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Chun-Kuang Hu <chunkuang.hu@kernel.org>,
+ Philipp Zabel <p.zabel@pengutronix.de>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Matthias Brugger
+ <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ dri-devel@lists.freedesktop.org, linux-mediatek@lists.infradead.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org
+References: <20250525051639.68753-2-krzysztof.kozlowski@linaro.org>
+ <CAPj87rMjAv-UphvFuQjop60o=wHrkfs4-XOM=JqH7f8Kk5dyVg@mail.gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <CAPj87rMjAv-UphvFuQjop60o=wHrkfs4-XOM=JqH7f8Kk5dyVg@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-On Thu, May 22, 2025 at 11:05 PM Konrad Dybcio <konrad.dybcio@oss.qualcomm.com> wrote:
-> On 5/21/25 10:37 AM, Pengyu Luo wrote:
-> > On Wed, May 21, 2025 at 5:54 AM Konrad Dybcio <konrad.dybcio@oss.qualcomm.com> wrote:
-> >> On 5/20/25 6:42 PM, Pengyu Luo wrote:
-> >>> The OnePlus Pad Pro is an Android tablet based on the Qualcomm SM8650
-> >>> platform. Its device codename is "caihong". This patch adds an initial
-> >>> devicetree for basic functionality.
->
-> [...]
->
-> >>> +&i2c2 {
-> >>> +     status = "okay";
-> >>> +
-> >>> +     /* secondary kinetic,ktz8866@11 */
-> >>
-> >> You can describe it, the driver sets some nonzero default brightness
-> >>
-> >
-> > But the backlight framework won't index them, which causes sysfs
-> > collision when the second instance is registering.
->
-> Have you talked to the backlight maintainers? This shouldn't be too
-> complex to figure out
+On 25/05/2025 12:48, Daniel Stone wrote:
+> On Sun, 25 May 2025 at 06:16, Krzysztof Kozlowski
+> <krzysztof.kozlowski@linaro.org> wrote:
+>> --- a/Documentation/devicetree/bindings/display/mediatek/mediatek,ovl-2l.yaml
+>> +++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,ovl-2l.yaml
+>> @@ -45,9 +45,8 @@ properties:
+>>        - description: OVL-2L Clock
+>>
+>>    iommus:
+>> -    description:
+>> -      This property should point to the respective IOMMU block with master port as argument,
+>> -      see Documentation/devicetree/bindings/iommu/mediatek,iommu.yaml for details.
+>> +    minItems: 1
+>> +    maxItems: 2
+> 
+> The comment removals are not documented in the commit message, and
+> it's not clear why removing information and references would be a good
+> thing.
+It's obvious, isn't? The consumer shall not define which provider has to
+use or how many cells provider has.
 
-Last time I tried to touch ktz8866 source, the reviewer advised me to
-add an backlight API to register the secondary devie. Since I am still
-working on the other parts when I am free, it remains unresolved. Now
-that you reminded me, then I tried to do it.
-
-https://lore.kernel.org/linux-fbdev/20250525104022.1326997-1-mitltlatltl@gmail.com/
-
-Best wishes,
-Pengyu
+Best regards,
+Krzysztof
