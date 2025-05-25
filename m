@@ -1,128 +1,263 @@
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from imap4.hz.codethink.co.uk (imap4.hz.codethink.co.uk [188.40.203.114])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 325CC2690FB
-	for <linux-kernel@vger.kernel.org>; Sun, 25 May 2025 19:26:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 578AF1459F7
+	for <linux-kernel@vger.kernel.org>; Sun, 25 May 2025 19:29:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.40.203.114
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748201183; cv=none; b=Bws7dlAPCnhlO7M548RAiX5AnR3xR0gkyj+wDmiM2OZuqPPzU/Whar0vazFfRE1S0PerrJhduyP6JHx7xYRRLatf1HrEvQhB1wqRG4jkXP3Ar88Lt8+cVpr3krMRCQ1F9rcbCTA4D15MRyaMIEbjug7eQoP9E65wpDn/06jlTZM=
+	t=1748201362; cv=none; b=g5VDepabfVpLDipO32TxfETNxHf6bK86hW2oqYhTksxr0foZUL/DK33cM9IwR7+UQ6CsZGjZ2Vs8Y/JA89sCBd5Y4UQ2ghT+ksjTBctqbHZXLIhXslel+rTrr6WnZZ/HiM+Z2jUs8RwM+ToPJ01ahx09nadjb3n3g3PQIXQDMag=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748201183; c=relaxed/simple;
-	bh=wf9mMF4piwylWLERQD6eu/HVFRIY7xIhB8VCk+ieFdQ=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=JPlE43Hrwn1V/LKfTq/IvsDgUFk/L7jMBpiyGtjUiKj8KB6kGLL8EoUD9rSHAA9f/9s5j0573jfMNuJhn6bbFKdujGZ/7kkwekqP832g7Va+tHyDPBVkR29ETGqjazsgIEHLp+JIz/JqeX2yKCZvJLX+tw/rGecbdkskRLUPdZQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=wrcDgDdl; arc=none smtp.client-ip=209.85.208.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1748201362; c=relaxed/simple;
+	bh=Axm+7r8Kc0NjsgD/OXoJ4BEfE9SdEOb30aAW9yJdywM=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=VQ+KyCmIllPtZ+Q3Csww/X8krL4skPTn91xzufgJXHwk2PBCdDZ+Q+Bum+aebJIs7xDPAzItiV09An1gJikrn46DiZJoxc73gDQ5xS797pYr0hup0OO5ynAHnysyGsbQj4obikl8j1llUwZpL72RmzA1f/NqeQSs2412EwccJoo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=codethink.co.uk; spf=pass smtp.mailfrom=codethink.co.uk; dkim=pass (2048-bit key) header.d=codethink.co.uk header.i=@codethink.co.uk header.b=op7V86hp; arc=none smtp.client-ip=188.40.203.114
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=codethink.co.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codethink.co.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wrcDgDdl"
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5f6f86580ecso347357a12.1
-        for <linux-kernel@vger.kernel.org>; Sun, 25 May 2025 12:26:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1748201179; x=1748805979; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=dB8Qgyau5a7VreD6df5S2eMKOiRWv79kx7XCROS4r/I=;
-        b=wrcDgDdlB77/8sVADWbFbOueNOJpY8qiY9wKfUIUQE9NoFavXjWdOUwgMoNiJBvPkO
-         z4h9OtgTl8ePEx26YoyUWKBz7o2+jSY0Uab/ZaQKF3ph1BoVatIHG6lMoI1s983uDVna
-         gMnNYvFGP4puFStd8Tpy6vNf3+YuGEW5MloIh8tX7Y08BMyZui4anXbaXe/oJlQsNfk6
-         MSqcEA9b4orMXeWaGEk2YLCRRWVhNk2GMNfN83gONhMThdzG2NzB+KXxwejg4t9LHwPT
-         aw2s2/pID65qzl/yXRZS+Y4cobkUsngQq3xn2x5xqlTPLGMJyBQovbq6Y3sGrqiMOxzZ
-         jpaw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748201179; x=1748805979;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=dB8Qgyau5a7VreD6df5S2eMKOiRWv79kx7XCROS4r/I=;
-        b=FUcrAq0P5Dq1Vm0kJl2OVrELnxYuoNqgn7NfcT21dJ67qKvvf4u5itkvPYqCoitvsv
-         pTVoodAoW2vLDSBWn8Lfthmh6/j6dG4Zjr/dbtDWI3t0J6chl+cSBSS7HbWqFSpnzUkT
-         6t9WQ7UU+cA15u9gcIELzkgZa2zIo7zWQke7lBD1ZkTEX30YB2BoBYSdut7Hq6nchXz+
-         DeiGT+EpGLV92eZgOdUY5L/50+wg1Qi9sMy/wY3llcCwH5Yf7YD/vPwCl7PuEwAhqD/x
-         iH0VD5moUp7E16Wt5cGl2pOoTX6fXI1mE7YG0ZRfvVIFhzacbMh6K/oWcS++razBt/z2
-         /l1A==
-X-Forwarded-Encrypted: i=1; AJvYcCWjcgY2ObcNNhbbdqB4KdluCt5S9gw3mWohGOGRDwUluTY7dSaF2S+PYYat4lJxWlUlYHcO4MVXFVPOpRk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yydwr7SBFSSmLDWpUovnmX+HF+2V2B4hKs3QWVTGrkT81+zrL25
-	47ao0DcM0HdcyqlB1RtBFckWJjsLsPlcYF+ujp3Vo8tLvJUTwcEpM2Pxpjmx4B9/6Lg=
-X-Gm-Gg: ASbGncvPswJSFjJNSoS0D++7QGkNugbzIhs5QWaxt91ckBiGoEjU2f3NK8W7Fi9WneU
-	PRiGXtcYIby06UwcTPPr2Opa/2kBbA9rWw2u0LblGpBcfujUr9CQYr5skAD3N1ZOzL7Wj/kOPdQ
-	09/44x51IJPsOM0ycznVZNMg+IZ0DYa7m+2LLmKqBSL4SyBNI5PmaTQpBtZeFjkDGTiV1VXvlaa
-	YpcMf/ilEFWwckUNFeeKRCnLIaa0mlQXTYofZNQfa6ZzBrDNfue0eZBO6v3BxvwxR3kOEQ6ZpOa
-	oMxw+UlfW6Jo+jAexFJPvx6L7zr2v8M4xznduvAyIgIqVoCLMa3RM+pt5BWFAyWnvw5rRQA=
-X-Google-Smtp-Source: AGHT+IFU6iw0nh+JfwxngddrMbaAdOgnyTVpsEnCYJPukcl1HAYkzxRla7dTLdaaFau0zKRt4TXHew==
-X-Received: by 2002:a17:906:8470:b0:ac7:4397:4345 with SMTP id a640c23a62f3a-ad85b11378bmr178652266b.6.1748201179389;
-        Sun, 25 May 2025 12:26:19 -0700 (PDT)
-Received: from [192.168.1.29] ([178.197.223.125])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad52d047738sm1578899866b.19.2025.05.25.12.26.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 25 May 2025 12:26:17 -0700 (PDT)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Date: Sun, 25 May 2025 21:26:05 +0200
-Subject: [PATCH 5/5] dmaengine: mmp: Fix again Wvoid-pointer-to-enum-cast
- warning
+	dkim=pass (2048-bit key) header.d=codethink.co.uk header.i=@codethink.co.uk header.b="op7V86hp"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=codethink.co.uk; s=imap4-20230908; h=Sender:MIME-Version:
+	Content-Transfer-Encoding:Content-Type:References:In-Reply-To:Date:Cc:To:From
+	:Subject:Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=1iRUDFGUOzoLMzhB6jIn1giipXv7IB2sCvufSfloeHs=; b=op7V86hpMOOf/gTiDSnx/R3Gm1
+	E3b/hbrIN1SI7s40iT5DwQlRzCDaLRXf6+ZB1fb7TgNRnr2rOpF7V85F4KNOIuhIVBaihhFQ0IpMR
+	/us3zmHe9ITwrstVDJtQTYBS97OvauhoGVD8WpaNr/x+ng0Pn/vNT2VFnrSGEENzTTUtY70BwZ7do
+	Nyk18mhIVIR37GVkL5Uyg+wkkB5ccehS74BdTtFiTrhe0uRNCEv/R6nRwxHZKZ/0cCUQZk4V4JoMt
+	V/tRj0ycBOzXsQuL+nMTWr/rkApJUnTYVwyKQ1V8SYNGa0HMA9ABlxdFpHj7EbkoiNP6riGYXb8/h
+	DN865SUA==;
+Received: from [213.55.187.158] (helo=[10.108.88.253])
+	by imap4.hz.codethink.co.uk with esmtpsa  (Exim 4.94.2 #2 (Debian))
+	id 1uJH1t-0027Eh-GI; Sun, 25 May 2025 20:29:06 +0100
+Message-ID: <c91a117401225290fbf0390f2ce78c3e0fb3b2d5.camel@codethink.co.uk>
+Subject: Re: SCHED_DEADLINE tasks missing their deadline with
+ SCHED_FLAG_RECLAIM jobs in the mix (using GRUB)
+From: Marcel Ziswiler <marcel.ziswiler@codethink.co.uk>
+To: luca abeni <luca.abeni@santannapisa.it>
+Cc: Juri Lelli <juri.lelli@redhat.com>, linux-kernel@vger.kernel.org, Ingo
+ Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Vineeth
+ Pillai	 <vineeth@bitbyteword.org>
+Date: Sun, 25 May 2025 21:29:05 +0200
+In-Reply-To: <20250523214603.043833e3@nowhere>
+References: <ce8469c4fb2f3e2ada74add22cce4bfe61fd5bab.camel@codethink.co.uk>
+		<aBTO3r6Py_emwf1Y@jlelli-thinkpadt14gen4.remote.csb>
+		<f532441d8b3cf35e7058305fd9cd3f2cbd3a9fac.camel@codethink.co.uk>
+		<20250507222549.183e0b4a@nowhere>
+		<92690eb9158c1019dc0945f8298800cad17cae05.camel@codethink.co.uk>
+	 <20250523214603.043833e3@nowhere>
+Organization: Codethink
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.1 (by Flathub.org) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250525-dma-fixes-v1-5-89d06dac9bcb@linaro.org>
-References: <20250525-dma-fixes-v1-0-89d06dac9bcb@linaro.org>
-In-Reply-To: <20250525-dma-fixes-v1-0-89d06dac9bcb@linaro.org>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
- Vinod Koul <vkoul@kernel.org>, 
- Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>, 
- Frank Li <Frank.Li@nxp.com>, Rob Herring <robh@kernel.org>
-Cc: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-arm-msm@vger.kernel.org, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1089;
- i=krzysztof.kozlowski@linaro.org; h=from:subject:message-id;
- bh=wf9mMF4piwylWLERQD6eu/HVFRIY7xIhB8VCk+ieFdQ=;
- b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBoM27QVOIFby5xrQ2vikjmTQ7sy/m4A+Dgt9+tq
- viv3z7R1WGJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCaDNu0AAKCRDBN2bmhouD
- 13XnEACJx5d0HBGfD5BYrQ/0oD8C7EAM3yTiKzycRx0rnOvdsj40fPEbcAEVzJWDBnzOojfNm6D
- lnrDDw49hqQIGOukFQsiJv/gZDfBaUJw7+Dmtv57AjMZ585U2DErn1tA2ts/l8KZ4G2m23X/eFK
- BBND/wfdmH4dlObFa99BwZ/25oozbvMPTm4vX/w99ss1IfuHu5ccWWTWWPRT7UhGKKEjaP0DKn9
- 52jsFGQqXwGXeXQlOeOhVZ/sRVW8qTABHRgDoNS8jnUAZc1JyimVR16JQTQYc+FhBXPvT+HC4Ds
- JTTxgv2cB8/KJSg3TD1yXecjPEC14rrhX9hLg7MwERfca5VtUOgATV/iRGO/6Yam/XNwHeCGm3a
- HWsKhm5Jor2ZFKDzphxNICY4Hlfn05hfbPz8CictbHrcbLFLQhvujVChlYOA+yzUUDcU8ZHuHuL
- wq9KcgowFM3M1pBICip1f6FPIIJ+1rvfFNIX+bWNvcsHECHzL7gStOswCNa/BGQS3OdLj9rTgOg
- hCJxryLHK7x3BkTmWdJkqhVkc+p0/4jjmtrZeYLpMo10JtVV8ocEAFD4b4sGYK6HIsWpXH0LHrf
- OD1yWyRuahfwIM4pACg81vcfiesVeEOYgsWaUrFbe34fn1tNlGZIA4rvem0fMjGYuiwCcc2wXaJ
- 6MtXrUj2ocfKrEQ==
-X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp;
- fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
+Sender: marcel.ziswiler@codethink.co.uk
 
-This was fixed and re-introduced.  'type' is an enum, thus cast of
-pointer on 64-bit compile test with W=1 causes:
+Hi Luca
 
-  mmp_tdma.c:644:9: error: cast to smaller integer type 'enum mmp_tdma_type' from 'const void *' [-Werror,-Wvoid-pointer-to-enum-cast]
+On Fri, 2025-05-23 at 21:46 +0200, luca abeni wrote:
+> Hi Marcel,
+>=20
+> sorry, but I have some additional questions to fully understand your
+> setup...
 
-Fixes: a67ba97dfb30 ("dmaengine: Use device_get_match_data()")
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
----
- drivers/dma/mmp_tdma.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+No Problem, I am happy to answer any questions :)
 
-diff --git a/drivers/dma/mmp_tdma.c b/drivers/dma/mmp_tdma.c
-index c8dc504510f1e325017ba4fa5e7aa72b019e3be4..b7fb843c67a6f247395296fc726f7b6cab7d223f 100644
---- a/drivers/dma/mmp_tdma.c
-+++ b/drivers/dma/mmp_tdma.c
-@@ -641,7 +641,7 @@ static int mmp_tdma_probe(struct platform_device *pdev)
- 	int chan_num = TDMA_CHANNEL_NUM;
- 	struct gen_pool *pool = NULL;
- 
--	type = (enum mmp_tdma_type)device_get_match_data(&pdev->dev);
-+	type = (kernel_ulong_t)device_get_match_data(&pdev->dev);
- 
- 	/* always have couple channels */
- 	tdev = devm_kzalloc(&pdev->dev, sizeof(*tdev), GFP_KERNEL);
+> On Mon, 19 May 2025 15:32:27 +0200
+> Marcel Ziswiler <marcel.ziswiler@codethink.co.uk> wrote:
+> [...]
+> > > just a quick question to better understand your setup (and check
+> > > where the issue comes from):
+> > > in the email below, you say that tasks are statically assigned to
+> > > cores; how did you do this? Did you use isolated cpusets,=C2=A0=20
+> >=20
+> > Yes, we use the cpuset controller from the cgroup-v2 APIs in the
+> > linux kernel in order to partition CPUs and memory nodes. In detail,
+> > we use the AllowedCPUs and AllowedMemoryNodes in systemd's slice
+> > configurations.
+>=20
+> How do you configure systemd? I am having troubles in reproducing your
+> AllowedCPUs configuration... This is an example of what I am trying:
+> 	sudo systemctl set-property --runtime custom-workload.slice AllowedCPUs=
+=3D1
+> 	sudo systemctl set-property --runtime init.scope AllowedCPUs=3D0,2,3
+> 	sudo systemctl set-property --runtime system.slice AllowedCPUs=3D0,2,3
+> 	sudo systemctl set-property --runtime user.slice AllowedCPUs=3D0,2,3
+> and then I try to run a SCHED_DEADLINE application with
+> 	sudo systemd-run --scope -p Slice=3Dcustom-workload.slice <application>
 
--- 
-2.45.2
+We just use a bunch of systemd configuration files as follows:
 
+[root@localhost ~]# cat /lib/systemd/system/monitor.slice
+# Copyright (C) 2024 Codethink Limited
+# SPDX-License-Identifier: GPL-2.0-only
+[Unit]
+Description=3DPrioritized slice for the safety monitor.
+Before=3Dslices.target
+
+[Slice]
+CPUWeight=3D1000
+AllowedCPUs=3D0
+MemoryAccounting=3Dtrue
+MemoryMin=3D10%
+ManagedOOMPreference=3Domit
+
+[Install]
+WantedBy=3Dslices.target
+
+[root@localhost ~]# cat /lib/systemd/system/safety1.slice
+# Copyright (C) 2024 Codethink Limited
+# SPDX-License-Identifier: GPL-2.0-only
+[Unit]
+Description=3DSlice for Safety case processes.
+Before=3Dslices.target
+
+[Slice]
+CPUWeight=3D1000
+AllowedCPUs=3D1
+MemoryAccounting=3Dtrue
+MemoryMin=3D10%
+ManagedOOMPreference=3Domit
+
+[Install]
+WantedBy=3Dslices.target
+
+[root@localhost ~]# cat /lib/systemd/system/safety2.slice
+# Copyright (C) 2024 Codethink Limited
+# SPDX-License-Identifier: GPL-2.0-only
+[Unit]
+Description=3DSlice for Safety case processes.
+Before=3Dslices.target
+
+[Slice]
+CPUWeight=3D1000
+AllowedCPUs=3D2
+MemoryAccounting=3Dtrue
+MemoryMin=3D10%
+ManagedOOMPreference=3Domit
+
+[Install]
+WantedBy=3Dslices.target
+
+[root@localhost ~]# cat /lib/systemd/system/safety3.slice
+# Copyright (C) 2024 Codethink Limited
+# SPDX-License-Identifier: GPL-2.0-only
+[Unit]
+Description=3DSlice for Safety case processes.
+Before=3Dslices.target
+
+[Slice]
+CPUWeight=3D1000
+AllowedCPUs=3D3
+MemoryAccounting=3Dtrue
+MemoryMin=3D10%
+ManagedOOMPreference=3Domit
+
+[Install]
+WantedBy=3Dslices.target
+
+[root@localhost ~]# cat /lib/systemd/system/system.slice=20
+# Copyright (C) 2024 Codethink Limited
+# SPDX-License-Identifier: GPL-2.0-only
+
+#
+# This slice will control all processes started by systemd by
+# default.
+#
+
+[Unit]
+Description=3DSystem Slice
+Documentation=3Dman:systemd.special(7)
+Before=3Dslices.target
+
+[Slice]
+CPUQuota=3D150%
+AllowedCPUs=3D0
+MemoryAccounting=3Dtrue
+MemoryMax=3D80%
+ManagedOOMSwap=3Dkill
+ManagedOOMMemoryPressure=3Dkill
+
+[root@localhost ~]# cat /lib/systemd/system/user.slice=20
+# Copyright (C) 2024 Codethink Limited
+# SPDX-License-Identifier: GPL-2.0-only
+
+#
+# This slice will control all processes started by systemd-logind
+#
+
+[Unit]
+Description=3DUser and Session Slice
+Documentation=3Dman:systemd.special(7)
+Before=3Dslices.target
+
+[Slice]
+CPUQuota=3D25%
+AllowedCPUs=3D0
+MemoryAccounting=3Dtrue
+MemoryMax=3D80%
+ManagedOOMSwap=3Dkill
+ManagedOOMMemoryPressure=3Dkill
+
+> However, this does not work because systemd is not creating an isolated
+> cpuset... So, the root domain still contains CPUs 0-3, and the
+> "custom-workload.slice" cpuset only has CPU 1. Hence, the check
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /*
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * =
+Don't allow tasks with an affinity mask smaller than
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * =
+the entire root_domain to become SCHED_DEADLINE. We
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * =
+will also fail if there's no bandwidth available.
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 */
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!cpu=
+mask_subset(span, p->cpus_ptr) ||
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 rq->rd->dl_bw.bw =3D=3D 0) {
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 retval =3D -EPERM;
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 goto unlock;
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
+> in sched_setsched() fails.
+>=20
+>=20
+> How are you configuring the cpusets?
+
+See above.
+
+> Also, which kernel version are you using?
+> (sorry if you already posted this information in previous emails and I am
+> missing something obvious)
+
+Not even sure, whether I explicitly mentioned that other than that we are a=
+lways running latest stable.
+
+Two months ago when we last run some extensive tests on this it was actuall=
+y v6.13.6.
+
+> 			Thanks,
+
+Thank you!
+
+> 				Luca
+
+Cheers
+
+Marcel
