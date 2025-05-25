@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8BA13C47B;
-	Sun, 25 May 2025 04:40:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C57E3C463;
+	Sun, 25 May 2025 04:43:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748148043; cv=none; b=m0HZjXgeHF+z8dACnGqcqDsGFFGLkM6cKAZ6O6LFYsUmzuyz1K2rjw+ENlMopQ4odXEEqKmrIOjtA3ZMmxYYnVlyAyrE8PaJrPjD6DX09QvbKZMrWFWCohWZlFfoFCSM71ZbrLHrMXEmyeElkYo9MsN7V7WcwHbmTF+kPQ4sKT4=
+	t=1748148202; cv=none; b=s6l3F3jQhFBelGUhW7gCImjGsCxYB+x6EG3O/pCNTAOLyKRxZbtbQsjT1FHJx1uAMK3Tm7pdM6s65DaebTzaouvSMuLOx48PWek+tUqQx3+5L5RGd4NZf5D1YMwxvNpz830MiJa756k5DkO1j7bZ8P6Oq/vzQBk0qUid5F2Wj1U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748148043; c=relaxed/simple;
-	bh=BhNumKIsshn+IsGT3h1G7uZv47vIQG78AnnCq4ZrKd8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=C2SVyESE2Euy4AV5Ze5p6ulG+8lRhpW1dOB9rcPBm79sZGRiYE6ONKZ6hzrfWIJOLed+gnbW/w4OpPHz9rQ5ZhGzeRD6y2SlofGFZqKX1zTNgKhQVMbnH3PH1QqdY9G1a7L+BEtmcjfhNn1ohVFJPO1ozYcoczT9jvvCfSpkaAk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WlaYEBjc; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748148202; c=relaxed/simple;
+	bh=Vl23nmn5ZU4x9QK4zJMpzs2bH2zMPD7ia/kQlfk9KsI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ksumiAnu8qRq0zcj+ZBLZ2PrKj0ROmYPIZIR9YW2CF99DXmHCXEIdA9s9a45leJfNbdxToIfhHlUA+DLcqBrNS/Eo4s44GWy8JjnNgELySITN7kfyULbzJwt6oCtakvhXx83k6V1Jos530a2vR6VN5F34IaZ0UVUTp0dgbJCOJo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RbMAR0X/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WlaYEBjc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 626D8C4CEEA;
-	Sun, 25 May 2025 04:40:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RbMAR0X/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30D58C4CEEA;
+	Sun, 25 May 2025 04:43:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748148043;
-	bh=BhNumKIsshn+IsGT3h1G7uZv47vIQG78AnnCq4ZrKd8=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=WlaYEBjcmOVMqeh5vG8FUGlHjb1J90CY7DF1SQkxoBRf/AOwFVqnlfZvV4JzRlBIP
-	 IBoe4Qxw4qK4zlSZOjpl7oDsnEOCjZCQMbrkSo6XfuE8Vz+kq8n8xsNdI2SXneUFfu
-	 pCX6t/+zQ7CSZjKlwgLuqj7i7xVqxIPHehAOKtGbSn3UCuty9q6SkKAET7l8ipxH6y
-	 kwbyype16/Y09E/K/ZLyzBc8Q2jeokQD504PvzSyI3Z4RFg6mK9iNYGLTuk6awAjHg
-	 jvuRRzqMIoliq4UPZfZCR0qRgW5Rw6HIhj8gpzhuPRaUWImGrA0j5CachM0xsp8NVq
-	 VekLkq9AZBqSw==
-Message-ID: <fa5aef76-272c-4c9d-b156-c71f3407e8d7@kernel.org>
-Date: Sun, 25 May 2025 06:40:35 +0200
+	s=k20201202; t=1748148201;
+	bh=Vl23nmn5ZU4x9QK4zJMpzs2bH2zMPD7ia/kQlfk9KsI=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=RbMAR0X/U2/VSDEADn8R9EYYHBLHCdka4GJdWcy+GZ8ENf1GzhijEWTwnuGuvAjsN
+	 PQDs0KrrgUxnFYUMjTpqo+jAAYweEXDlUXQ+6byHCBcg7RbXIR99F0TTRLFYLXd3h7
+	 A4mut6KHGuwYptVrpm7XkU6Wux/wjmaD3a3K//SUTjTgLF011cufk/wMzGjrT1dgOd
+	 7mifB0nc7k1eou5t2KHC/oVvyCKVWCrPE7DmeAgzbdXUyPtQRrZ+kcKZHLHQyBkig9
+	 7QfVAj4cr69UdfOSxKl9cmHEyaFrXSHIrHfeYVWEqddXvqW+J9CtLPvGrdRSTZDwb/
+	 nH2FxU9oRnl8A==
+Message-ID: <6277cbd5-d57d-404a-baef-e8d87a027e37@kernel.org>
+Date: Sun, 25 May 2025 06:43:17 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,28 +35,18 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/5] MAINTAINERS: Add entry for allegrodvt Gen 3 drivers
-To: Yassine Ouaissa <yassine.ouaissa@allegrodvt.com>,
- Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>,
+Subject: Re: [PATCH v2 1/2] dt-bindings: regulator: add pca9450: Add
+ regulator-allowed-modes
+To: Mark Brown <broonie@kernel.org>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh@kernel.org>,
  Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Michael Tretter <m.tretter@pengutronix.de>,
- Pengutronix Kernel Team <kernel@pengutronix.de>,
- Michal Simek <michal.simek@amd.com>,
- Neil Armstrong <neil.armstrong@linaro.org>, Heiko Stuebner
- <heiko@sntech.de>, Junhao Xie <bigfoot@classfun.cn>,
- =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>,
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- Kever Yang <kever.yang@rock-chips.com>, Hans Verkuil <hverkuil@xs4all.nl>,
- Joe Hattori <joe@pf.is.s.u-tokyo.ac.jp>,
- =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
- Gaosheng Cui <cuigaosheng1@huawei.com>,
- Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
- Wolfram Sang <wsa+renesas@sang-engineering.com>,
- Ricardo Ribalda <ribalda@chromium.org>, linux-media@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org
-References: <20250523134207.68481-1-yassine.ouaissa@allegrodvt.com>
- <20250523134207.68481-4-yassine.ouaissa@allegrodvt.com>
+ <conor+dt@kernel.org>, Robin Gong <yibin.gong@nxp.com>,
+ Martijn de Gouw <martijn.de.gouw@prodrive-technologies.com>,
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+References: <20250523131214.955970-1-martijn.de.gouw@prodrive-technologies.com>
+ <174801730004.578098.7742808995079543725.b4-ty@kernel.org>
+ <8ff817a3-c734-45de-afbd-5da9aecd4cbb@kernel.org>
+ <aDJKUl2l3l08LPDe@finisterre.sirena.org.uk>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -102,43 +92,32 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <20250523134207.68481-4-yassine.ouaissa@allegrodvt.com>
+In-Reply-To: <aDJKUl2l3l08LPDe@finisterre.sirena.org.uk>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 23/05/2025 15:41, Yassine Ouaissa wrote:
-> Add my self as maintainer of the allegrodvt Gen drivers
+On 25/05/2025 00:38, Mark Brown wrote:
+> On Sat, May 24, 2025 at 08:34:41AM +0200, Krzysztof Kozlowski wrote:
+>> On 23/05/2025 18:21, Mark Brown wrote:
 > 
-> Signed-off-by: Yassine Ouaissa <yassine.ouaissa@allegrodvt.com>
-> ---
->  MAINTAINERS | 1 +
->  1 file changed, 1 insertion(+)
+>>> [1/2] dt-bindings: regulator: add pca9450: Add regulator-allowed-modes
+>>>       commit: 0a4056a444c8d55beea470948c73befd6673aa6c
+>>> [2/2] regulator: pca9450: Add support for mode operations
+>>>       commit: 2616e5f4fe04eb25eb5cbabc0a3a2a374e14008e
 > 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index e59011a36e6b..9285bb2f43d9 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -802,6 +802,7 @@ F:	drivers/platform/x86/dell/alienware-wmi*
->  
->  ALLEGRO DVT VIDEO IP CORE DRIVER
->  M:	Michael Tretter <m.tretter@pengutronix.de>
-> +M:	Yassine OUAISSA <yassine.ouaissa@allegrodvt.com>
-I already disagreed. I commented on this and nothing improved. I
-provided arguments that you do not know the process, thus you need to
-first read the docs.
+>> Rob reported binding has failure (which also means binding was not
+>> tested). Can you drop the patch?
+> 
+> That seemed to just be due to v1 splitting the header with the constants
+> from the binding change (the issue was that the header wasn't there)
+> which should be fixed by this version?
 
-THEN you sent it again still not reading the docs and not learning
-anything here from previous comments.
+No, this v2:
 
-You sent four times the same version, ignoring review and not
-understanding basic versioning concept.
+https://lore.kernel.org/all/174801020316.1711348.10193654747801258488.robh@kernel.org/
 
-You need to first understand how the process works, what is a bug
-report, what is the review process, what is the reviewer's statement of
-oversight. I suggest sending several patches and contributions prior
-asking to be maintainer.
-
-So still disagree, but this is now disappointing: NAK
+I must admit after quick look I don't see the cause error, but
+nevertheless this should be address by someone, preferably author.
 
 Best regards,
 Krzysztof
