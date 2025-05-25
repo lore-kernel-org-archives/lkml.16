@@ -1,137 +1,178 @@
-Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [80.241.56.172])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7931C3FD4;
-	Sun, 25 May 2025 16:07:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70303322B
+	for <linux-kernel@vger.kernel.org>; Sun, 25 May 2025 16:09:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748189245; cv=none; b=IAzqQA3X9KUuBIWCeSUEubAopyCVv0cCHHsxN985G/zujKHjXJLFITujwZt2+Q22JsWaLBnSzeGnC0F3NHObKJyUqQufJPKcMttdj6zckq6H2oEBGcMTNGj1Ug47jdkVCRUbEIg3/TgrtsxQynVn/NG3IyUhfMa5jE/hHLW6wCo=
+	t=1748189359; cv=none; b=fWn2dBUeUbfeNVni4kwLlHnkRIlOp4ZCgdSgahE1g/E2kLiDaV30NN9+7Jdsq48YXRIzrZ2zD4sEd9UFXOjHUsy8J8Err40j/77bhUUm5OKGE0w1oUYFGDmbX2TV81v81UjmJjW2P2YpfIRT9Hf0QeBbWBrq4Pf2M95q/C4Xt2g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748189245; c=relaxed/simple;
-	bh=KZQ40oOS6DwwPvTfaWDOd0kE7VusIOBcIRg05+qw5vk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pci3bMDywhhZjaKwvroCOwbubxQDtk12UY4bZGMAS6aHcJKCCawHORMVvJmVtx9RfikL4/F+P30EHQR3zST2q3GuDuHJmVnOTeDgsoh4DQt5xUUc6tYQfvyz1GOrEXSi+1VcVZQ7Fg2GnCqjU88zGKxjNpNp9Y+NV1pcd/bGUc8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=LMl9xoOK; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=L0h/0n+z; arc=none smtp.client-ip=80.241.56.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
+	s=arc-20240116; t=1748189359; c=relaxed/simple;
+	bh=kqSBLo2TUYjqplGGeQuAnq+SUfmc5+e4mOcC63SH6IU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=I5/NznUfDaXYoBMjj9Wn99P5MH7kBM9ls2KhHkN9FbvrGPeKD47fWs/1Mp8eJIL99EPua++GueZDQGbYhPcdhi+E6VKgEJkUgVqdi2i5T3JfHW/cgOrEsUKgkVn0hAnpIvs9lHEwjZI6j5O0rROSMX4gFkbQ7xlJp4ivOjn7+/c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OuMfJZzL; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="LMl9xoOK";
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="L0h/0n+z"
-Received: from smtp202.mailbox.org (smtp202.mailbox.org [10.196.197.202])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4b53gs3Gq5z9t0p;
-	Sun, 25 May 2025 18:07:21 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1748189241;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OuMfJZzL"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1748189356;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=ge+Qb/J48yhxSaNKIMUsB1dyJ9dP97tIunM4dMdF9Q8=;
-	b=LMl9xoOK8qJZ0Hort6KN20Qm+Zk1irqjt9p3XD+85pQNYzoki/LKQVZ592GgsT7Zo+LNvV
-	YlrsBLPuzAPVZvSZllkLJsF3kGwzifwQ9HPxKzsqeJDKULQ8JgupYcv+FxGvP9whyUbrRx
-	YhJOl4g9OD5OtPsZTvpAwiHArgCO+UDNt5cTOT2f/H4JFpnC++vgiPiPKikHRObwsyfnUe
-	9KFsYDGG5s5WChJBSK0Hw6l1xh6ybdi4avqpUayyb8WxFOcQKbbTTwVbFE2KvA4QCW+h3R
-	Y9JWPshmrS+i6ZwCPsxhSxnm3IkY1T3YJ/e7UKGsrMxXc6Zn5B9jsoja6/pruQ==
-Message-ID: <cba4d5e0-b330-4af8-a96a-b501d523c6bb@mailbox.org>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1748189239;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ge+Qb/J48yhxSaNKIMUsB1dyJ9dP97tIunM4dMdF9Q8=;
-	b=L0h/0n+zQgE4ChgBIXOoQfkfgHoTosE9YXEwXesvgwbkact2WCUQTHTTJYMLHw6TMIzGxe
-	tpnsdwjFQnhwYcfuPo72eoWe9wz9rgDVtVBw1+0UaVX8J9lAw0lHlPR1l/fkp5X3Gw0Y/f
-	iSv31hUaAPjoIgRzmtHB/ygZWK61I7Tjh6Yjwx6Ulvw0y08aD+iy4EE+FJ/vVWq+RvtTYf
-	9bXlZTjzc48PBh+l+Hn+q7eNJ1IVhJI5E/KPDytBBsHUoXenDOXDKFcWK3bfGL9EIO2144
-	p+GNgNaxnXu23Xitj4f4OPBDy8qFAS66fqv1/HJTy5J0E2E6zu96WJQzpOKzhw==
-Date: Sun, 25 May 2025 18:07:14 +0200
+	bh=Ffg9JhgzHanSNKrxP494YLN43u46uvcV5a+ThPPvFto=;
+	b=OuMfJZzLIyMIL0Ms/aR9F3xVRT8f1D9m4SZZt71F98PFlhxRLB1nTUZX5jwm/TVHOu0BoD
+	k7IcScHwpmdZNDTSH4A7yuMHOb6+aMy/FidXFtyT35zK1BnWQYUvMdj+It48L+SxdHAhxU
+	a1yq2bOjEEVQVw5VaVNtfGvWxzxOFRU=
+Received: from mail-lj1-f200.google.com (mail-lj1-f200.google.com
+ [209.85.208.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-537-1CBaE8qFM7qs5bE-ZUZOrA-1; Sun, 25 May 2025 12:09:14 -0400
+X-MC-Unique: 1CBaE8qFM7qs5bE-ZUZOrA-1
+X-Mimecast-MFC-AGG-ID: 1CBaE8qFM7qs5bE-ZUZOrA_1748189353
+Received: by mail-lj1-f200.google.com with SMTP id 38308e7fff4ca-326ad1825c1so5148401fa.1
+        for <linux-kernel@vger.kernel.org>; Sun, 25 May 2025 09:09:14 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748189353; x=1748794153;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Ffg9JhgzHanSNKrxP494YLN43u46uvcV5a+ThPPvFto=;
+        b=iAXoCFamAOTci1tmoa3Q60dGl129vcuFDEpO71DngQIx7gL5zBDiW3wRyLW+0ZMhYR
+         DdEcO6g1uqC/V5fnnsaE0hJAjYbRsSs+dqckwpbkwuWX0tHQbOw3pm8b/cLeCnD8jBqL
+         qN/9BkM1afWTkKYBSo3OT1gXZFto5dDS3FPCiisp93d3+DUScT+GIdrKJkUPNWoQwWf7
+         1Cxp9bCraFcpW6tsodxah+M8v5wz7FP/dp/7YThXW8gBeoHB8SLS5KOg3Ln9ZsIYvbzC
+         elPia2xr6FwawiPQOxI7YjPRcSh+zv0ByeR1Rdy0jQj2q8NF688jBWq+y0gb24bqzWbX
+         QcxQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXrTI+ZzuAucbR/lCicxq+niLWgW18Qqxs+BP3i4GlK9sZzJ7nvZEba970m72ibTPwgSbDAgelt2/8kIfk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxRbo4LqU+Q+vez+KbuIScXz4LerJ5HVQVMdHOc00ulwEUG0GwI
+	INQr4bewSnoMVR+Im1yTIa9s2BLdnFd1yr4U2Ekam1HA47LoKtMbkVH02Mt195ZvVYZnPXWejM6
+	m0tU9OkW7mDDwKwqsa9KHEy87auBoEW/GzhEDjSoppg0WHJgLVlgeujHzDlUDcxK8bXanYqD5Q9
+	zR4QPbOutSaBSp/inZQlujvwt/cU+XXWdLmuUgPn1+
+X-Gm-Gg: ASbGncs5OVLXVmnnUd1ydlnBjwoP4mH2gePCPbEaVlEAjKN3sV7A5Fg36EA/uMFPqJS
+	TabK8b7LLT4meEWWYP11JjsVFHIWxeVuQrwjBrIDZgQqppFlTR0s/0JuuX4BlFwPu3XAUMg==
+X-Received: by 2002:a05:651c:e18:b0:328:fa4:a2eb with SMTP id 38308e7fff4ca-3295ba7ddb0mr12324571fa.39.1748189353200;
+        Sun, 25 May 2025 09:09:13 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGcMGdsaCrwFc0FE4fhxa7X5OhDthEmTx38a3YCrLf4RDx/KUvo9hT7sFPU4JxMsrINU29qCbhEO1FVbKqk+p8=
+X-Received: by 2002:a05:651c:e18:b0:328:fa4:a2eb with SMTP id
+ 38308e7fff4ca-3295ba7ddb0mr12324451fa.39.1748189352772; Sun, 25 May 2025
+ 09:09:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v2 1/4] dt-bindings: PCI: rcar-gen4-pci-host: Document
- optional aux clock
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Marek Vasut <marek.vasut+renesas@mailbox.org>,
- linux-arm-kernel@lists.infradead.org,
- =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>,
- Aradhya Bhatia <a-bhatia1@ti.com>, Bjorn Helgaas <bhelgaas@google.com>,
- Conor Dooley <conor+dt@kernel.org>,
- Geert Uytterhoeven <geert+renesas@glider.be>,
- Heiko Stuebner <heiko@sntech.de>, Junhao Xie <bigfoot@classfun.cn>,
- Kever Yang <kever.yang@rock-chips.com>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- Magnus Damm <magnus.damm@gmail.com>,
- Neil Armstrong <neil.armstrong@linaro.org>, Rob Herring <robh@kernel.org>,
- Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-pci@vger.kernel.org, linux-renesas-soc@vger.kernel.org
-References: <20250406144822.21784-1-marek.vasut+renesas@mailbox.org>
- <20250406144822.21784-2-marek.vasut+renesas@mailbox.org>
- <2ny7jhcp2g5ixo75donutncxnjdawzev3mw7cytvhbk6szl3ue@vixax5lwpycw>
- <84cc6341-a2c1-4e3c-8c9e-2bc6589c52a6@mailbox.org>
- <ne4injlr4nwvufjdg7uuisxwipqfwd5voohktnbjjvod5om3p3@eriso5cw77ov>
-Content-Language: en-US
-From: Marek Vasut <marek.vasut@mailbox.org>
-In-Reply-To: <ne4injlr4nwvufjdg7uuisxwipqfwd5voohktnbjjvod5om3p3@eriso5cw77ov>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-MBO-RS-META: oiqd5n1xyzdecnbzqfywr8eedrmc9mzg
-X-MBO-RS-ID: eacf1afced01bac336f
+References: <20250524061320.370630-1-yukuai1@huaweicloud.com> <20250524061320.370630-6-yukuai1@huaweicloud.com>
+In-Reply-To: <20250524061320.370630-6-yukuai1@huaweicloud.com>
+From: Xiao Ni <xni@redhat.com>
+Date: Mon, 26 May 2025 00:09:01 +0800
+X-Gm-Features: AX0GCFs-UktoFLyWjJuWuxOxD47dA6X-b3ziuvS_X48i_5D0P0nWevorFszf0Dw
+Message-ID: <CALTww2-WsVnfqCwA_8c9Wv993Bs6L=f78UbFLddufspns8pjMA@mail.gmail.com>
+Subject: Re: [PATCH 05/23] md/md-bitmap: remove parameter slot from bitmap_create()
+To: Yu Kuai <yukuai1@huaweicloud.com>
+Cc: hch@lst.de, colyli@kernel.org, song@kernel.org, yukuai3@huawei.com, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-raid@vger.kernel.org, yi.zhang@huawei.com, yangerkun@huawei.com, 
+	johnny.chenyi@huawei.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 5/15/25 1:57 PM, Manivannan Sadhasivam wrote:
-> On Mon, May 12, 2025 at 10:42:20PM +0200, Marek Vasut wrote:
->> On 5/9/25 9:37 PM, Manivannan Sadhasivam wrote:
->>> On Sun, Apr 06, 2025 at 04:45:21PM +0200, Marek Vasut wrote:
->>>> Document 'aux' clock which are used to supply the PCIe bus. This
->>>> is useful in case of a hardware setup, where the PCIe controller
->>>> input clock and the PCIe bus clock are supplied from the same
->>>> clock synthesiser, but from different differential clock outputs:
->>>
->>> How different is this clock from the 'reference clock'? I'm not sure what you
->>> mean by 'PCIe bus clock' here. AFAIK, endpoint only takes the reference clock
->>> and the binding already has 'ref' clock for that purpose. So I don't understand
->>> how this new clock is connected to the endpoint device.
->>
->> See the ASCII art below , CLK_DIF0 is 'ref' clock that feeds the controller
->> side, CLK_DIF1 is the bus (or 'aux') clock which feeds the bus (or endpoint)
->> side. Both clock come from the same clock synthesizer, but from two separate
->> clock outputs of the synthesizer.
->>
-> 
-> Okay. So separate refclks are suppplied to the host and endpoint here and no,
-> you should not call the other one as 'aux' clock, it is still the refclk. In
-> this case, you should describe the endpoint refclk in the PCIe bridge node:
-> 
-> 		pcie@... {
-> 			clock = <refclk_host>;
-> 			...
-> 
-> 			pcie@0 {
-> 				device_type = "pci";
-> 				reg = <0x0 0x0 0x0 0x0 0x0>;
-> 				bus-range = <0x01 0xff>;
-> 				clock = <refclk_ep>;
-> 				...
-> 			};
-> 		};
-> 
-> 
-> and use the pwrctrl driver PCI_PWRCTRL_SLOT to enable it. Right now, the slot
-> pwrctrl driver is not handling the refclk, but I can submit a patch for that.
-I posted a new series now, you are on CC, see
+On Sat, May 24, 2025 at 2:18=E2=80=AFPM Yu Kuai <yukuai1@huaweicloud.com> w=
+rote:
+>
+> From: Yu Kuai <yukuai3@huawei.com>
+>
+> All callers pass in '-1' for 'slot', hence it can be removed.
+>
+> Signed-off-by: Yu Kuai <yukuai3@huawei.com>
+> Reviewed-by: Christoph Hellwig <hch@lst.de>
+> ---
+>  drivers/md/md-bitmap.c | 6 +++---
+>  drivers/md/md-bitmap.h | 2 +-
+>  drivers/md/md.c        | 6 +++---
+>  3 files changed, 7 insertions(+), 7 deletions(-)
+>
+> diff --git a/drivers/md/md-bitmap.c b/drivers/md/md-bitmap.c
+> index 848626049dea..17d41a7b30ce 100644
+> --- a/drivers/md/md-bitmap.c
+> +++ b/drivers/md/md-bitmap.c
+> @@ -2185,9 +2185,9 @@ static struct bitmap *__bitmap_create(struct mddev =
+*mddev, int slot)
+>         return ERR_PTR(err);
+>  }
+>
+> -static int bitmap_create(struct mddev *mddev, int slot)
+> +static int bitmap_create(struct mddev *mddev)
+>  {
+> -       struct bitmap *bitmap =3D __bitmap_create(mddev, slot);
+> +       struct bitmap *bitmap =3D __bitmap_create(mddev, -1);
+>
+>         if (IS_ERR(bitmap))
+>                 return PTR_ERR(bitmap);
+> @@ -2649,7 +2649,7 @@ location_store(struct mddev *mddev, const char *buf=
+, size_t len)
+>                         }
+>
+>                         mddev->bitmap_info.offset =3D offset;
+> -                       rv =3D bitmap_create(mddev, -1);
+> +                       rv =3D bitmap_create(mddev);
+>                         if (rv)
+>                                 goto out;
+>
+> diff --git a/drivers/md/md-bitmap.h b/drivers/md/md-bitmap.h
+> index 4d804c07dbdd..2b99ddef7a41 100644
+> --- a/drivers/md/md-bitmap.h
+> +++ b/drivers/md/md-bitmap.h
+> @@ -77,7 +77,7 @@ struct bitmap_operations {
+>         struct md_submodule_head head;
+>
+>         bool (*enabled)(void *data);
+> -       int (*create)(struct mddev *mddev, int slot);
+> +       int (*create)(struct mddev *mddev);
+>         int (*resize)(struct mddev *mddev, sector_t blocks, int chunksize=
+);
+>
+>         int (*load)(struct mddev *mddev);
+> diff --git a/drivers/md/md.c b/drivers/md/md.c
+> index 466087cef4f9..311e52d5173d 100644
+> --- a/drivers/md/md.c
+> +++ b/drivers/md/md.c
+> @@ -6255,7 +6255,7 @@ int md_run(struct mddev *mddev)
+>         }
+>         if (err =3D=3D 0 && pers->sync_request && md_bitmap_registered(md=
+dev) &&
+>             (mddev->bitmap_info.file || mddev->bitmap_info.offset)) {
+> -               err =3D mddev->bitmap_ops->create(mddev, -1);
+> +               err =3D mddev->bitmap_ops->create(mddev);
+>                 if (err)
+>                         pr_warn("%s: failed to create bitmap (%d)\n",
+>                                 mdname(mddev), err);
+> @@ -7324,7 +7324,7 @@ static int set_bitmap_file(struct mddev *mddev, int=
+ fd)
+>         err =3D 0;
+>         if (mddev->pers) {
+>                 if (fd >=3D 0) {
+> -                       err =3D mddev->bitmap_ops->create(mddev, -1);
+> +                       err =3D mddev->bitmap_ops->create(mddev);
+>                         if (!err)
+>                                 err =3D mddev->bitmap_ops->load(mddev);
+>
+> @@ -7648,7 +7648,7 @@ static int update_array_info(struct mddev *mddev, m=
+du_array_info_t *info)
+>                                 mddev->bitmap_info.default_offset;
+>                         mddev->bitmap_info.space =3D
+>                                 mddev->bitmap_info.default_space;
+> -                       rv =3D mddev->bitmap_ops->create(mddev, -1);
+> +                       rv =3D mddev->bitmap_ops->create(mddev);
+>                         if (!rv)
+>                                 rv =3D mddev->bitmap_ops->load(mddev);
+>
+> --
+> 2.39.2
+>
 
-[PATCH 1/2] PCI/pwrctrl: Add optional slot clock to pwrctrl driver for 
-PCI slots
+Reviewed-by: Xiao Ni <xni@redhat.com>
 
-Thanks
