@@ -1,72 +1,108 @@
-Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAFDB4C6D
-	for <linux-kernel@vger.kernel.org>; Sun, 25 May 2025 01:24:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.70
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C7BFA29;
+	Sun, 25 May 2025 01:35:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748136246; cv=none; b=MU90rz8V1KD5BtMzZk5jqJ3giWH4METfOCxXbTJhNcFVp/K5qvJ/oXycXKh/7qw5l26EJWxQRgPhnhA+dntdb6EyQCS6reLVEglDyKmo0D46cZFN9jv9Yc9NPVPgy5FPjKRBnzVsfUdWZvkpvSaHQyroA4UQB+msfYSVy5Jj88s=
+	t=1748136959; cv=none; b=bqAOID6FggRLoQy3lt8S3NiVO+Y/22E56MAsk+IhZ+JfgVy0QwNXWh8+aoo1+QMDUZlHqDkiUvkzTGjluL0PxxUmjDMV1tD2+8eXpVOCkOMYC3yDRNk78mWg5mvzT7iQV1YGal29tbbKAKF5ORwDUcwsnXGa2fCNuyGVyzglj9A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748136246; c=relaxed/simple;
-	bh=onG8VeFQ8AV/wbstrcxgKfHBkTeEkdb6S3+pTmHdi48=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=a50C5RCYyp0GaQWBd1H3948yzUgkrX+7x8y1cFdUCZOWqyc+hhqhav/cJIdTT1qWtlLsKYTaYXMWoO3te/cCGq052plDEDMwmf4tcf9KP7Vfk5rQstcH64DY7OVs7uPJcRURBIY2AMYF3yJY+sNpoVn/Kbhsd8nRw7qFLlIoRec=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-86a3d964d9fso182825439f.0
-        for <linux-kernel@vger.kernel.org>; Sat, 24 May 2025 18:24:04 -0700 (PDT)
+	s=arc-20240116; t=1748136959; c=relaxed/simple;
+	bh=zbyLaa5CcyJotLNKfpFphcN7vmdqU8V+LDQtWmoml+w=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=PraE8yujMR8GyPn4HxI1/GgTY3cE4FUh5zbKvG0hpYNEmFeKycEJcC26AoPlrls4n286ZSjch0XZYpHQxhdNrWiWKe1irzLQcUywnNU2Auk0gbC0UllRZG4+6+/reffXeblDZuTEl1ZlMtd3MzXbROE7XTdzEUSNTVG5gHINOzE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gUVCukkH; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gUVCukkH"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-22c33677183so6479355ad.2;
+        Sat, 24 May 2025 18:35:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748136957; x=1748741757; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=JHcFUx2KptDGDf+v+qnJBWxtjQrbz7AXfJTKLalZ0Ro=;
+        b=gUVCukkHiXPVvGSDfLmWhVAbrAiJzgJKvVtAZMioc3hah2USxGSdCwRfzovqqLdT83
+         NT3Oc2BD+hRoxp5RtKF/JGETm/oXsa+Uk0343q4qgTPvsLKH5x1ofR5UpKavwWXvd2zt
+         8KrJNNU7dSogN8bPJgmhxjRIKtDg4f70qN7ciJCLgoE6XI/Mz5wGKJ4DUzgN8pfIYiRs
+         /CCW+MJ3WKugBpL68Gc+lkeaf94CTh1R29M3ZAeLhZ2l5suUoQYTb2XjeKuj8uApovBZ
+         2fpK9Tu2r4q+Vd18XiuCAxomdy4JG/MXdXc41veIJRtimznhzyDS6S/7dqceYoeaTjva
+         x5TQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748136244; x=1748741044;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
+        d=1e100.net; s=20230601; t=1748136957; x=1748741757;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=4425zsg7qisYpGq2AV1Mzzgb+/DjgOgWDwAfBXmv3QU=;
-        b=eHxbj+0zzkej4ayDuxS1NsW9UYqsa1HKqR9zvxgxo/JDqSki9ZY8U/ZDCylOO8T4ZH
-         YJuXV6hZnKUxxn/zwMsJ13k36eQSnszBrvmD6znsxEU5LObCCMifbGgONhw59R8vwpaS
-         aRFUIqCnVUagg/L3efgw3SVmi54TK8brzN7/h5ecnwTmwWInscjbdx2HFN4Bl9w3ActU
-         ToKSRU5jb4Y8UrsNB9wt3jJnil40PTsDXTlH/QzA0OdhjPmpM6sk9AauDtXn+ZxOcc3N
-         3aCwQBeuiev4yiC0c6ngSmenM/oMfAeT5dYQSMdc4dsGzUnIOuPNATRq0RijR+Q+l1By
-         cFKg==
-X-Forwarded-Encrypted: i=1; AJvYcCXUjmLhWkVJjfg41BLoAm5dNWuIbR7w1NitIZJF6l9Il0ccwp16+8vRXsgAgvApEHWulYDeeoUQd1GMk14=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyTmkL+nlgOD2EcMoUjea06rAdw+HcTtV0XFmGQuQqjBIOVfM1Z
-	PQx0WxbXqfYkOGmCeiGwjozV8oo4INHp9Jbv4Sf02m4VCVrt6/lQpTRpaaT1qolgYdEf0L7ryc3
-	8I+NKaKPQ0umog93TZsF40o/A12ujsB1UhQSHu4J1Ax5js5gC2QF+4+gYthI=
-X-Google-Smtp-Source: AGHT+IHZtGHNcyHqaQOgU8UUiK1DQzVBwD2cTq9zmRklzCK/JsjdfqqiEFZA1ZsdDoj6RisU173YjoWhs03aqLGvQupjLEOuRaMl
+        bh=JHcFUx2KptDGDf+v+qnJBWxtjQrbz7AXfJTKLalZ0Ro=;
+        b=kQuBb9NYndMIsxx10/Ilo0d2T/qhTf8fXX83FFrlUSClpplRGHIEaJvo7ZXnpvdhUl
+         VH3k9QRzAP8NpvIqH5vULMgwhepQJyWR0A6GfT+x767obp8uWcLV6zp1kBUJuZCDlEyc
+         WMIGM9XjtOfVIIyHAMSSoVty/jIpKOkJ3xG+tsFgUn2VQLOJcb3bpvJRGoFB29MmeyHv
+         XCV5rg+tB1AC0GQtt8V30OUeIDYoPXN5Sb18VO4se487xfMpPqC35OcjG2WI9pquKQgX
+         GV0RJBKpGW91woqSdKStNjC/Kv18kce0YRL1S71XJ3f0RmjN6UmE2ZPxjJatbgkcKpzE
+         v9dA==
+X-Forwarded-Encrypted: i=1; AJvYcCXJb6/zW3YuCMg28E/l5tW1lldAJH9tzzLsvVGxa5HJzukTDpIgNqfpFAw64o02Cp480cLOtDVjSNWI4Q==@vger.kernel.org
+X-Gm-Message-State: AOJu0YyHreQQ7PEQcYvrqqgzxinqVsCcxtGbX+680oFbaCgwN5Q89976
+	vgoI5cqV/VNaeyY6SZFzhnqFDSfefQj25KI7d5MC6DkOj8I4kk29soS2
+X-Gm-Gg: ASbGncsBubVUoua+TZ4MBY5BTmmdL9Bc1QTaSGNi5jYw7t9YxcH2K9XqZC4ybD4IC7E
+	q008Hsaa+nE8pzfKg0pRz5gYMaG21IDe9X5ceTH3eQqpMsqX4KZZen8erCZSeNn5DXXrfI7AhkK
+	orHBZVjSXy3z900Q5EVPtJs2Un/mvVv02grC3DFTTMK13jtV91pRvLkDCvLmP9/na0Lr19J+tQK
+	SrvCHgBPVQFrVo5P5caJN5ZuK0ZiykX+ClwC1Hs9K9rHIMdfFIowJcGtwVA8q4VSSKDSYFd8/De
+	QBUFWpJGXMvH0e7IAjOjXXdUHYXeCdA4OZgR3OsSi5icRyzo918k
+X-Google-Smtp-Source: AGHT+IEJWuOBngN9++zXJ+pb3meJ/mRb/Yz78nOz52ag1+86FmkZxGINCRfzR/o1hyN/UHd0y/Azbw==
+X-Received: by 2002:a17:903:1a67:b0:234:926:b4b6 with SMTP id d9443c01a7336-23414f3a89amr63922815ad.3.1748136956504;
+        Sat, 24 May 2025 18:35:56 -0700 (PDT)
+Received: from google.com ([2620:15c:9d:2:5778:6aed:151a:2d4a])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2344990db31sm318955ad.55.2025.05.24.18.35.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 24 May 2025 18:35:55 -0700 (PDT)
+Date: Sat, 24 May 2025 18:35:53 -0700
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
+Subject: [git pull] Input updates for v6.15-rc7
+Message-ID: <7ev4nuc6gsaaybykmdtf4xufcxl46jjzj6qfgtgx5vjm3eowm7@w7wtvau36a3u>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:4899:b0:867:93c:b77c with SMTP id
- ca18e2360f4ac-86cbb6c2322mr446743839f.5.1748136243808; Sat, 24 May 2025
- 18:24:03 -0700 (PDT)
-Date: Sat, 24 May 2025 18:24:03 -0700
-In-Reply-To: <20250525010238.2312-1-hdanton@sina.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <68327133.a70a0220.253bc2.007d.GAE@google.com>
-Subject: Re: [syzbot] [fs?] possible deadlock in input_inject_event
-From: syzbot <syzbot+79c403850e6816dc39cf@syzkaller.appspotmail.com>
-To: hdanton@sina.com, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Hello,
+Hi Linus,
 
-syzbot has tested the proposed patch and the reproducer did not trigger any issue:
+Please pull from:
 
-Reported-by: syzbot+79c403850e6816dc39cf@syzkaller.appspotmail.com
-Tested-by: syzbot+79c403850e6816dc39cf@syzkaller.appspotmail.com
+	git://git.kernel.org/pub/scm/linux/kernel/git/dtor/input.git tags/input-for-v6.15-rc7
 
-Tested on:
+to receive updates for the input subsystem. You will get:
 
-commit:         b1427432 Merge tag 'iommu-fixes-v6.15-rc7' of git://gi..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=10ff6170580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=9fd1c9848687d742
-dashboard link: https://syzkaller.appspot.com/bug?extid=79c403850e6816dc39cf
-compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=178f6170580000
+- even more Xbox controllers added to xpad driver: Turtle Beach Recon
+  Wired Controller, Turtle Beach Stealth Ultra, and PowerA Wired
+  Controller
 
-Note: testing is done by a robot and is best-effort only.
+- a fix to Synaptics RMI driver to not crash if controller reports
+  unsupported version of F34 (firmware flash) function.
+
+Changelog:
+---------
+
+Dmitry Torokhov (1):
+      Input: synaptics-rmi - fix crash with unsupported versions of F34
+
+Vicki Pfau (1):
+      Input: xpad - add more controllers
+
+Diffstat:
+--------
+
+ drivers/input/joystick/xpad.c |   3 +
+ drivers/input/rmi4/rmi_f34.c  | 135 ++++++++++++++++++++++++------------------
+ 2 files changed, 79 insertions(+), 59 deletions(-)
+
+Thanks.
+
+
+-- 
+Dmitry
