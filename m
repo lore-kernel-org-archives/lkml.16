@@ -1,260 +1,171 @@
-Received: from mail-io1-f79.google.com (mail-io1-f79.google.com [209.85.166.79])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2056.outbound.protection.outlook.com [40.107.94.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 473FD1DFF0
-	for <linux-kernel@vger.kernel.org>; Sun, 25 May 2025 18:12:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.79
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748196753; cv=none; b=aBN5Dr3zNlB70fUgetNrpwnwLVKH7X1cSdyBel/1mF5My2vwJf0PGEtlDujAy3P+NsEJig5loD4xphuqQtaYdrS5tz0YO2qqIFKCUWpIoxspOCkDcN83uGBM92jDT7BqN5FxwQaLGeUq2LQmjTZIuYD/Mpxu/XXMBezyuPXfBr0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748196753; c=relaxed/simple;
-	bh=7+EGeOVt+awA8Qcmt7sVYuFn7og25339P/5pfCYMyxU=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=aRB6qYHY+5JOdzbKkJkntrP0PSxhGGrztwpunTwTpnAde8I6JzY8U88ay35LX6/B2lqoAZjqLBillCh1o9noV0cLUNh3R9h4TXR9HmzK6VruzMwX3Fmlmykm9dthjylHXuIXnz7HdnZO6vS4ym2n11MY0306xgohU1Rk51hiiS4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.79
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f79.google.com with SMTP id ca18e2360f4ac-85b3827969dso121670539f.1
-        for <linux-kernel@vger.kernel.org>; Sun, 25 May 2025 11:12:31 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748196750; x=1748801550;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=MRBYuR7BxLAms86jXHfoRGLoHlwaE9ASiyST8p3It54=;
-        b=FtOUtk4HIk+iO1ksdHlg/VWumQrV2vbD7BevpA44kZFIt7ZqDb6+JJzGJT6NT/ZCBf
-         kNw8rn432DlWkfVRbW1lmVfcUrEnV76HlXL8x0sC+C2fTM1Z5hcTFxstZTkD+lkhjy8Z
-         rqychVQ12LqVWYh1hd+zkaHLUv/MLq5BJoJh6yfSk/0g2mVAPxdE4ipvfxrE36YxjpBK
-         /6kTGOyuh/CUfmKZ7I5m8Gn/BJigAaL1KDRYcU1v49a4/zmdFF+fRhKlHYrsF+OlsVrr
-         gHUBhVRw6zy9l8q0OP+JvWUExm1rwouzd2Hdlw0k7eFg0zCesO8sDRBug5hPzh9EgDfj
-         goSQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUKn1sCTzQWXJRizhzBDMYL3+Z0ubwRGIqe5IF5+CqMhT34y4Dzp43N68z0Kv0w0QXPamRin8K1jIIWLEY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwBpChriPtY0zDqlBj65YP4IeFYKBMi10gAiRMoBveEDaZ+P6OQ
-	Ddr12f1L1/bi/mg23JoEkpyvfBmXRKo8gDljMr/6RBvorK1STlS00AVGi2+AShIiWgO64805MZk
-	7roI0MbTzq6Vpr+LcXAWKtxyvdx+qY7cFSZJgjrZqyPvh8gIaqU2cv/DR2hk=
-X-Google-Smtp-Source: AGHT+IGnfpjg3acimNhLF8pGU9P7AUa06LdV5HiTgawkRXdgM1Hbd+V260vuzRS6p9LJFhh01p4F1b7GG9nX2ukgJRFYtwhM+2Ph
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 235133FE7;
+	Sun, 25 May 2025 18:20:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.56
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748197242; cv=fail; b=WKJ6B+vrcg6JIC32SoX//ePzKpqi7NSznnLVtvR4pf13EdE3gel8cf/r/F9M6uVW2Hh4EBVi+ddd6prEcedCPFLX7G9yOnWJbz6P2Wk8BHTpxYbbPPa7s+Zdzi4ff8I184qqq60pzueqZ8OlkfE4gWfJo0ly0g9aiXSRjp6I8HE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748197242; c=relaxed/simple;
+	bh=7BFMgi807I8aR/Q0oI7lVfE7L/MxJG2zd9sJGIaQcP4=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=KrV/am0MhetYRRhjv9ouElyZovLFzJGHlyUu5iq/TfxR2hbMDdJNXweL1OavYETelOYj3UHZpFBsovI73LSbgExaOHbgPAzjcj72zlcaH2VzVreL2j6nPKUVukXgs8cz5Dvu3YJkXLuX2G8dwnMMgHSlMDZwyo4PgtTQSgEkoV0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=a1Pa4WRB; arc=fail smtp.client-ip=40.107.94.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="a1Pa4WRB"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=imjPSX/+5WXWue8szjRdsXl4s7W0iwVWcHMS/DgNuGWPte0Pykfr1ae1Q5i6DJFOhulQWwgpEvuBWE5VAIp2gkAIDJEeVqta71tvCHT88YQCKmHctDn3LJTeIwTxbIBcRRMSDnzk2eTfxmz5cc6EQLRVIB6ZBytKVGSgRJW3JeG7tF2y7delzsv9z+6ZlGAfaOvh5A/T4W7zQrXrEysdgimap3tSrzqDtHtheO9RlqcGCUn+kFaFImef0b69NBp4u3xRhC6TYFFPZxMf+06jUxNpnFU3VmMNxMzImJcXGhLbGvrXHpyPvVs0yWc8Eus+zq6H0mFQo2LcvzCUtQXR3w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=vLozT0m5oG0y2rPgeuFNEVkCvTkafRvLZf0SWr6F9As=;
+ b=QzXM3GhPYEZD5wlXea0jRDfNpE0PlLuOfvzT0cd4RCkQWjumWB4HcXGZOjIZhqsrfiu8mpFLH6//HhvuNE6h52BR0CJJGl1x1PPe+pFt3lkaSKctHWtNePKkOPqCrQuP9tHYySvZv0eDoLFPxXQzMP5yTwo1trcKBR6FKHFVHt/EdPKh2jKMX/MqrHiIvrUWn3YVcnv8jn775R1gsSmiMNFhIaTFTSiH/xJcmGsOp2LI1lHt5j2fjrjf+TAdk+vgi+WeYV/9haiSH+6V7K10IiQ9W6uEloMl+WMt3wTRSa1MzNXWo6JuDr1UzwaSf8D5mI0cexOWmnAu5zPLJYlOcg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.117.160) smtp.rcpttodomain=kernel.org smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=vLozT0m5oG0y2rPgeuFNEVkCvTkafRvLZf0SWr6F9As=;
+ b=a1Pa4WRBWKg39ARaJBJ1zDjfQ0/Pp+3/ngVEA+RxUcJ8BabDiSxfju8sW/5HkAL2ybgctrUje/9n3VuMSo6HcS4NAIc+tQOeY8Yh1oLK09+6hHckvJ4V1vW02fZbqg3Wc4V4CGNYsTgWl258mZTX75MsS/kaLcWSfq8BaIOmd4d4Pq+jCxrarnGjGlzmh+tn7wSiJ8mhQ6RkQehOttveSk1ShWc0X7YBho9EIOet6LF/BuXmTTxRLYgHI3P/KmU2I2BA9H6zeubdCA1NjfhhBlsI6ReskT/VCdLTpDhdL68QukoJ7Ii+Z9cf4buztYtjQSEjhBBj8BMsS3daGPoFfg==
+Received: from BL0PR02CA0064.namprd02.prod.outlook.com (2603:10b6:207:3d::41)
+ by PH8PR12MB7327.namprd12.prod.outlook.com (2603:10b6:510:215::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8746.30; Sun, 25 May
+ 2025 18:20:37 +0000
+Received: from BN3PEPF0000B370.namprd21.prod.outlook.com
+ (2603:10b6:207:3d:cafe::2) by BL0PR02CA0064.outlook.office365.com
+ (2603:10b6:207:3d::41) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8769.19 via Frontend Transport; Sun,
+ 25 May 2025 18:20:36 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.117.160) by
+ BN3PEPF0000B370.mail.protection.outlook.com (10.167.243.167) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8813.0 via Frontend Transport; Sun, 25 May 2025 18:20:36 +0000
+Received: from rnnvmail202.nvidia.com (10.129.68.7) by mail.nvidia.com
+ (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Sun, 25 May
+ 2025 11:20:22 -0700
+Received: from rnnvmail205.nvidia.com (10.129.68.10) by rnnvmail202.nvidia.com
+ (10.129.68.7) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Sun, 25 May
+ 2025 11:20:22 -0700
+Received: from willie-obmc-builder.nvidia.com (10.127.8.10) by mail.nvidia.com
+ (10.129.68.10) with Microsoft SMTP Server id 15.2.1544.14 via Frontend
+ Transport; Sun, 25 May 2025 11:20:21 -0700
+From: Willie Thai <wthai@nvidia.com>
+To: <wthai@nvidia.com>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
+	<krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Joel Stanley
+	<joel@jms.id.au>, Andrew Jeffery <andrew@codeconstruct.com.au>
+CC: <devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-aspeed@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>, "Deepak
+ Kodihalli" <dkodihalli@nvidia.com>, Ed Tanous <etanous@nvidia.com>, Leo Huang
+	<leohu@nvidia.com>
+Subject: [PATCH 0/3] ARM: dts: aspeed: nvidia: Update DTS to support GB200NVL hardware
+Date: Sun, 25 May 2025 18:20:16 +0000
+Message-ID: <20250525-dts-v1-0-9ac63ad3bf15@nvidia.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:4011:b0:85b:3763:9551 with SMTP id
- ca18e2360f4ac-86cbb7f7928mr587337039f.7.1748196750433; Sun, 25 May 2025
- 11:12:30 -0700 (PDT)
-Date: Sun, 25 May 2025 11:12:30 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <68335d8e.a70a0220.253bc2.008b.GAE@google.com>
-Subject: [syzbot] [ext4?] KASAN: use-after-free Read in ext4_ext_insert_extent
-From: syzbot <syzbot+9db318d6167044609878@syzkaller.appspotmail.com>
-To: adilger.kernel@dilger.ca, linux-ext4@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com, tytso@mit.edu
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+X-Change-ID: 20250525-dts-8eca0cb6dfae
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1748196599; l=798; i=wthai@nvidia.com; s=20250525; h=from:subject:message-id; bh=7BFMgi807I8aR/Q0oI7lVfE7L/MxJG2zd9sJGIaQcP4=; b=gsmzAe/VzboOGPKZXVQwjg2IflCsMbGg27BfiL4oqQwy6KgvPj36/cfDgyfbzENgosciK2IRR ME5CAkplLDwALcAxV2KuyiT2w0LVEs5VTZ42tXYv8x1a8ED/IRa/OiA
+X-Developer-Key: i=wthai@nvidia.com; a=ed25519; pk=i/6dxnUqKdr7Z6GA0KECRkwz5HX4RCiodw0v6kB9fbs=
+Content-Transfer-Encoding: 8bit
+X-NV-OnPremToCloud: AnonymousSubmission
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN3PEPF0000B370:EE_|PH8PR12MB7327:EE_
+X-MS-Office365-Filtering-Correlation-Id: 89ebadae-7a2d-4515-56a2-08dd9bb8d89b
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700013|82310400026|1800799024|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?dXF1b1c4TGlDcFVocGNGSjhlU1NQWlRpVDlWSW1aUWJDdWJjbDVKcXZ6NmNF?=
+ =?utf-8?B?K3JNTmJPNG1JVUtqN3JZdHhZSitDY1VWSDUvYStzQmc5MTRxQXl6NEJCeVNq?=
+ =?utf-8?B?L0E1eGFkOUlWaTgyVWlyTzVuV1hKZ1V5RGNLOEwrekJEbVRTelhtYjVZTG94?=
+ =?utf-8?B?dmVxZDZldGwxVUlDVEx3MUNPUzYxTVFPYjk0WExxWlp3c2VBa3Nid0NIdDJU?=
+ =?utf-8?B?Z0ZwRnZaTFNBZHNYR09UT1JOVTFLMWMrcWoxL1BDRnIxaEI5WEM5UTlnVkN0?=
+ =?utf-8?B?NmRrMFV3MHN3VlpkTFpkQWtnSDZSY2U0ZkxOcXR2ZENjZGNNWTFJb1pHQ3V2?=
+ =?utf-8?B?K3F1QkZveEl0d1dUUXkvVWJaSzhaNjd5NWJKV0cweTNYNzFvbzhlcDRBWUtC?=
+ =?utf-8?B?ZTF1ajc4K2JwV0xzelEwZ3FUT1ZYWkFCaXdYdW9wWUdwWFQzYmxJcndKY0Zj?=
+ =?utf-8?B?TEk4STJsTktWaGEzK0tCdlVoT1loTlpBQWNZVmVqQkJsa3JmWU1UdEYrVUVK?=
+ =?utf-8?B?Mkp1UllwVE1LeGdubWtYcG1yK3VxNHJ0ZmpZSm1qakw4djdueHFNQ1RXeWkz?=
+ =?utf-8?B?MGhadEVPVFFUbHVnN2pobW5rWUptUXVBcG54UzB0anc3QU1TNUxRZTUzVWlu?=
+ =?utf-8?B?T3B0THkwMm01VnhnRXlvcytpUHV4bEhDR2picmR1R1N6SmJXK0FlRFVaNUNC?=
+ =?utf-8?B?dDhVS1gvMTZQWFFtYzRzTWxRS1ZuQkJwOVVBTDRLcElxc0xrSVNSVDNsaUlx?=
+ =?utf-8?B?YXNmbXZDQXlrbHBRK2JCME5OUFJNZkVveWJCV0N1eGRyelVBRCt6VlFIWVQ0?=
+ =?utf-8?B?UmFXYkdReWxGdkNGK3E1TE94aUVIV1I2bjBrd2V0VUUvY0xxbE5vd2k0TTJV?=
+ =?utf-8?B?V2NxNlh5S2VNNERwZHlzQ3JWYnovNzJMcEJRbmdHY29HRXVoZHQ5Z2ZBditk?=
+ =?utf-8?B?dGNsY1hLU3RoNEFYaDFxTS8zUUZub0padDNvSDJsWm4wQVFMRVYvYkxRWUQr?=
+ =?utf-8?B?S2RaUWQ0UXRGa1Z0QWpTTWRRVTRqQVFEdzU4YkJuWlZQSGJFZEFkaDNDVi9w?=
+ =?utf-8?B?dm9WQ0MxYXFIR3BnM2FuMmFuS0MyaDFBd0taTytxTG9qMDNqYzc5TkRwUGtU?=
+ =?utf-8?B?d01EbFlhNDhOdFQyYW1MNmsxUVo4ekowazNKWW96WDFMTytWR0VPRkFza0or?=
+ =?utf-8?B?ZHRuOW16ZHk0d0NDb2ZTNDIxMjVVSWFzR3poekp6cjFwWnBHTEdtUldxZlcx?=
+ =?utf-8?B?S0xvZ0hkT2xxaE1oZVRGUmFuZGlFU2l0L1VYUzR0UjRMRUczNkR2REFsbHox?=
+ =?utf-8?B?VkhoNktsM2ZRT1poSFlDazRiZy8yTmd0VjZPeDdiZURIU2gvKzQ1dHZDcnJr?=
+ =?utf-8?B?dkRWUGkzeUZ3b3E2bytsdDJ5UzFGZkc3SVMrSXc2UkkySjB0b0NvSjFPWWZk?=
+ =?utf-8?B?aW5Ca0VUNEs2aVBCUVFhT0pIeWtVYWhPUmRIOEh4Nlc3WVNCUkxvdUdOaGh0?=
+ =?utf-8?B?d0xHK2lsRmloMjdOUFNUeFRxUnRJUTgwYkcrQ01wdU0yRXNRdHpqUGQ1U0w3?=
+ =?utf-8?B?d3JxOFg1U1RRb2RyYlgrWGNWanhyZWlBd0xGR0JLdDN5blpwR2RhT3AvNWxT?=
+ =?utf-8?B?K2Z3Y1FnRnlrU0h4NUQ2bEpzWnB0eDVLZ3ovcTFYYVFvM0lqYXhvSUZycVRI?=
+ =?utf-8?B?RjVTam5BdWRYSnllQi9JV0t3cUgwU0JGU09tOGl0VDd2TSs1eWxkWFBQbDQ5?=
+ =?utf-8?B?R2MvQit5SUl5amx4OFFpd3UzTWdvelkrczFuMmtYZmRDTExYTHc0MTlyY2lu?=
+ =?utf-8?B?dGtBQ3JZN1F6akxIcDhwM01ONXRxRXpJK2JLKzBEdlFFZ1ZEa0RvZXY2RUp1?=
+ =?utf-8?B?SDV3SWo3YWxPWHdpZTdZQ3p4UHE3MXU3dEVEVDhvNG9NcXRKY3F1TVZRbEs0?=
+ =?utf-8?B?a1MxY3FTZGVab21qUHBvZkJQRU0wWmh5YmV5NjFnNkNNZGhVN3JMR1FNdy84?=
+ =?utf-8?B?ZjlOb0NqQUZ1T1RqcGJvTjByR1ErdWNyZlZwMmxuVm9TMmUvZDl1USt5VmZS?=
+ =?utf-8?Q?6n4INd?=
+X-Forefront-Antispam-Report:
+	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230040)(36860700013)(82310400026)(1800799024)(376014);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 May 2025 18:20:36.4690
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 89ebadae-7a2d-4515-56a2-08dd9bb8d89b
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BN3PEPF0000B370.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR12MB7327
 
-Hello,
+Update the DTS file for the GB200NVL hardware change.
 
-syzbot found the following issue on:
+Signed-off-by: Deepak Kodihalli <dkodihalli@nvidia.com>
+Signed-off-by: Ed Tanous <etanous@nvidia.com>
+Signed-off-by: Leo Huang <leohu@nvidia.com>
+Signed-off-by: Willie Thai <wthai@nvidia.com>
 
-HEAD commit:    d0c22de9995b Merge tag 'input-for-v6.15-rc7' of git://git...
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=15e00df4580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=a1de0d8596cea805
-dashboard link: https://syzkaller.appspot.com/bug?extid=9db318d6167044609878
-compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16931170580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=14683ad4580000
-
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/cf852e5656de/disk-d0c22de9.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/761933abe01b/vmlinux-d0c22de9.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/187857154891/bzImage-d0c22de9.xz
-mounted in repro: https://storage.googleapis.com/syzbot-assets/992dec4e0af9/mount_0.gz
-  fsck result: failed (log: https://syzkaller.appspot.com/x/fsck.log?x=151468e8580000)
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+9db318d6167044609878@syzkaller.appspotmail.com
-
-==================================================================
-BUG: KASAN: slab-use-after-free in ext4_ext_insert_extent+0x41b6/0x4af0 fs/ext4/extents.c:2084
-Read of size 4 at addr ffff88802db31c18 by task syz-executor706/7034
-
-CPU: 1 UID: 0 PID: 7034 Comm: syz-executor706 Not tainted 6.15.0-rc7-syzkaller-00152-gd0c22de9995b #0 PREEMPT(full) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
-Call Trace:
- <TASK>
- dump_stack_lvl+0x189/0x250 lib/dump_stack.c:120
- print_address_description mm/kasan/report.c:408 [inline]
- print_report+0xb4/0x290 mm/kasan/report.c:521
- kasan_report+0x118/0x150 mm/kasan/report.c:634
- ext4_ext_insert_extent+0x41b6/0x4af0 fs/ext4/extents.c:2084
- ext4_ext_map_blocks+0x179c/0x67c0 fs/ext4/extents.c:4400
- ext4_map_create_blocks fs/ext4/inode.c:520 [inline]
- ext4_map_blocks+0x807/0x1740 fs/ext4/inode.c:706
- _ext4_get_block+0x200/0x4c0 fs/ext4/inode.c:785
- ext4_get_block_unwritten+0x2e/0x100 fs/ext4/inode.c:818
- ext4_block_write_begin+0x543/0x1290 fs/ext4/inode.c:1067
- ext4_write_begin+0x6f6/0x12c0 fs/ext4/ext4_jbd2.h:-1
- ext4_da_write_begin+0x33a/0xa60 fs/ext4/inode.c:2932
- generic_perform_write+0x2c4/0x910 mm/filemap.c:4103
- ext4_buffered_write_iter+0xce/0x3a0 fs/ext4/file.c:299
- ext4_file_write_iter+0x298/0x1bc0 fs/ext4/file.c:-1
- new_sync_write fs/read_write.c:591 [inline]
- vfs_write+0x54b/0xa90 fs/read_write.c:684
- ksys_pwrite64 fs/read_write.c:791 [inline]
- __do_sys_pwrite64 fs/read_write.c:799 [inline]
- __se_sys_pwrite64 fs/read_write.c:796 [inline]
- __x64_sys_pwrite64+0x193/0x220 fs/read_write.c:796
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xf6/0x210 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f0078162e09
-Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 b1 18 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007f0078117218 EFLAGS: 00000246 ORIG_RAX: 0000000000000012
-RAX: ffffffffffffffda RBX: 00007f00781ea6c8 RCX: 00007f0078162e09
-RDX: 000000000000fdef RSI: 0000200000000140 RDI: 0000000000000004
-RBP: 00007f00781ea6c0 R08: 0000000000000000 R09: 0000000000000000
-R10: 000000000000fecc R11: 0000000000000246 R12: 00007f00781b7630
-R13: 0000200000000000 R14: 00002000000000c0 R15: 00007f00781b706b
- </TASK>
-
-Allocated by task 5844:
- kasan_save_stack mm/kasan/common.c:47 [inline]
- kasan_save_track+0x3e/0x80 mm/kasan/common.c:68
- unpoison_slab_object mm/kasan/common.c:319 [inline]
- __kasan_slab_alloc+0x6c/0x80 mm/kasan/common.c:345
- kasan_slab_alloc include/linux/kasan.h:250 [inline]
- slab_post_alloc_hook mm/slub.c:4147 [inline]
- slab_alloc_node mm/slub.c:4196 [inline]
- kmem_cache_alloc_noprof+0x1c1/0x3c0 mm/slub.c:4203
- getname_flags+0xb8/0x540 fs/namei.c:146
- getname include/linux/fs.h:2852 [inline]
- __do_sys_symlink fs/namei.c:4770 [inline]
- __se_sys_symlink fs/namei.c:4768 [inline]
- __x64_sys_symlink+0x6a/0x90 fs/namei.c:4768
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xf6/0x210 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-Freed by task 5844:
- kasan_save_stack mm/kasan/common.c:47 [inline]
- kasan_save_track+0x3e/0x80 mm/kasan/common.c:68
- kasan_save_free_info+0x46/0x50 mm/kasan/generic.c:576
- poison_slab_object mm/kasan/common.c:247 [inline]
- __kasan_slab_free+0x62/0x70 mm/kasan/common.c:264
- kasan_slab_free include/linux/kasan.h:233 [inline]
- slab_free_hook mm/slub.c:2380 [inline]
- slab_free mm/slub.c:4642 [inline]
- kmem_cache_free+0x192/0x3f0 mm/slub.c:4744
- do_symlinkat+0x39f/0x3f0 fs/namei.c:4757
- __do_sys_symlink fs/namei.c:4770 [inline]
- __se_sys_symlink fs/namei.c:4768 [inline]
- __x64_sys_symlink+0x7a/0x90 fs/namei.c:4768
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xf6/0x210 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-The buggy address belongs to the object at ffff88802db31100
- which belongs to the cache names_cache of size 4096
-The buggy address is located 2840 bytes inside of
- freed 4096-byte region [ffff88802db31100, ffff88802db32100)
-
-The buggy address belongs to the physical page:
-page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x2db30
-head: order:3 mapcount:0 entire_mapcount:0 nr_pages_mapped:0 pincount:0
-anon flags: 0xfff00000000040(head|node=0|zone=1|lastcpupid=0x7ff)
-page_type: f5(slab)
-raw: 00fff00000000040 ffff88801b2b8780 0000000000000000 dead000000000001
-raw: 0000000000000000 0000000000070007 00000000f5000000 0000000000000000
-head: 00fff00000000040 ffff88801b2b8780 0000000000000000 dead000000000001
-head: 0000000000000000 0000000000070007 00000000f5000000 0000000000000000
-head: 00fff00000000003 ffffea0000b6cc01 00000000ffffffff 00000000ffffffff
-head: ffffffffffffffff 0000000000000000 00000000ffffffff 0000000000000008
-page dumped because: kasan: bad access detected
-page_owner tracks the page as allocated
-page last allocated via order 3, migratetype Unmovable, gfp_mask 0xd20c0(__GFP_IO|__GFP_FS|__GFP_NOWARN|__GFP_NORETRY|__GFP_COMP|__GFP_NOMEMALLOC), pid 5844, tgid 5844 (udevd), ts 111781614645, free_ts 111672478666
- set_page_owner include/linux/page_owner.h:32 [inline]
- post_alloc_hook+0x1d8/0x230 mm/page_alloc.c:1714
- prep_new_page mm/page_alloc.c:1722 [inline]
- get_page_from_freelist+0x21c7/0x22a0 mm/page_alloc.c:3684
- __alloc_frozen_pages_noprof+0x181/0x370 mm/page_alloc.c:4966
- alloc_pages_mpol+0x232/0x4a0 mm/mempolicy.c:2301
- alloc_slab_page mm/slub.c:2450 [inline]
- allocate_slab+0x8a/0x3b0 mm/slub.c:2618
- new_slab mm/slub.c:2672 [inline]
- ___slab_alloc+0xbfc/0x1480 mm/slub.c:3858
- __slab_alloc mm/slub.c:3948 [inline]
- __slab_alloc_node mm/slub.c:4023 [inline]
- slab_alloc_node mm/slub.c:4184 [inline]
- kmem_cache_alloc_noprof+0x283/0x3c0 mm/slub.c:4203
- getname_flags+0xb8/0x540 fs/namei.c:146
- getname include/linux/fs.h:2852 [inline]
- __do_sys_symlink fs/namei.c:4770 [inline]
- __se_sys_symlink fs/namei.c:4768 [inline]
- __x64_sys_symlink+0x5d/0x90 fs/namei.c:4768
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xf6/0x210 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-page last free pid 5189 tgid 5189 stack trace:
- reset_page_owner include/linux/page_owner.h:25 [inline]
- free_pages_prepare mm/page_alloc.c:1258 [inline]
- __free_frozen_pages+0xb05/0xcd0 mm/page_alloc.c:2721
- discard_slab mm/slub.c:2716 [inline]
- __put_partials+0x161/0x1c0 mm/slub.c:3185
- put_cpu_partial+0x17c/0x250 mm/slub.c:3260
- __slab_free+0x2f7/0x400 mm/slub.c:4512
- qlink_free mm/kasan/quarantine.c:163 [inline]
- qlist_free_all+0x9a/0x140 mm/kasan/quarantine.c:179
- kasan_quarantine_reduce+0x148/0x160 mm/kasan/quarantine.c:286
- __kasan_slab_alloc+0x22/0x80 mm/kasan/common.c:329
- kasan_slab_alloc include/linux/kasan.h:250 [inline]
- slab_post_alloc_hook mm/slub.c:4147 [inline]
- slab_alloc_node mm/slub.c:4196 [inline]
- __do_kmalloc_node mm/slub.c:4326 [inline]
- __kmalloc_noprof+0x224/0x4f0 mm/slub.c:4339
- kmalloc_noprof include/linux/slab.h:909 [inline]
- tomoyo_realpath_from_path+0xe3/0x5d0 security/tomoyo/realpath.c:251
- tomoyo_get_realpath security/tomoyo/file.c:151 [inline]
- tomoyo_path_perm+0x213/0x4b0 security/tomoyo/file.c:822
- security_inode_getattr+0x12f/0x330 security/security.c:2377
- vfs_getattr fs/stat.c:256 [inline]
- vfs_fstat fs/stat.c:278 [inline]
- __do_sys_newfstat fs/stat.c:546 [inline]
- __se_sys_newfstat fs/stat.c:543 [inline]
- __x64_sys_newfstat+0xfe/0x200 fs/stat.c:543
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xf6/0x210 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-Memory state around the buggy address:
- ffff88802db31b00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- ffff88802db31b80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->ffff88802db31c00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                            ^
- ffff88802db31c80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- ffff88802db31d00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-==================================================================
-
-
+Signed-off-by: Willie Thai <wthai@nvidia.com>
 ---
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+Willie Thai (3):
+      ARM: dts: aspeed: nvidia: gb200nvl: Add VCC Supply
+      ARM: dts: aspeed: nvidia: gb200nvl: Enable i2c3 bus
+      ARM: dts: aspeed: nvidia: gb200nvl: Repurpose the HMC gpio pin
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+ .../dts/aspeed/aspeed-bmc-nvidia-gb200nvl-bmc.dts  | 39 ++++++++++++++++++++--
+ 1 file changed, 37 insertions(+), 2 deletions(-)
+---
+base-commit: 13c9c6eabf033ed4f369ad4d29bdc58ed4a411e3
+change-id: 20250525-dts-8eca0cb6dfae
 
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
+Best regards,
+-- 
+Willie Thai <wthai@nvidia.com>
 
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
