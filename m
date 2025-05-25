@@ -1,122 +1,265 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-178.mta0.migadu.com (out-178.mta0.migadu.com [91.218.175.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6CB9111A8;
-	Sun, 25 May 2025 14:16:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DAA2A937
+	for <linux-kernel@vger.kernel.org>; Sun, 25 May 2025 14:18:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748182603; cv=none; b=LQtSHAeq/v49MKP3B2V7HjK7/dewdI+/TlJX8wNVj510xaXx4kWzfLO2neVk1aDzxxqFFwhNh/v4rUM5i4+XKIqV6vUzXNGOgUZ5lSLs3eJ85Nm+8/H0CEJHwKdkncFLDLAWnIfFex4Ufih3St13l6MCyqMYfLuVWdBw9vG8zvc=
+	t=1748182686; cv=none; b=q/js7cU5DOdMA5P7OJBUB5PAhXhUS8q2AETXftR1bh10PYF7j7VcL32iE/hSRjP6fjtgOHdcn46jAJ5ptzE2fY+xvXqWLNvXMtR7hi7bpEktvau5eXW1BAweURrOFFvxaD1GhCXXR8Fu6ZdmlFcMwP1cZfmy69PZZwX5AF6Cq5g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748182603; c=relaxed/simple;
-	bh=sjlx9s4OvwdaAILZYcPuTEe/EYm/DOo0jp3Iv37PAz0=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Lyx56sI0rVPM0Fp9gGpfOVlxQgKg7CiauIWZxTHI/9sphmkjBjuNJDc0zmA9pPTuanhgptBEsyc25RQ7vlbx4mGuUj3eG6JjxAoCsa1QkgeyyCbA9Ol0iLNm+y3D/E0LeSlkRf/rkbDrHZ1AV1dQXu/R5ZrXzXkzgaxwXKTskIQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s9EgQMMn; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748182686; c=relaxed/simple;
+	bh=rT/1zF9t3ApJzwGv9UF2/4CCNSrhDvl14JYAnpUsA+k=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=EJ2ZnYPM6c7YqSme90kIpixhUaVYHVIaoBzYdb4YDoTdVe8lVnBexjtwEoQZXL5u0Ld1JTWXLWYsRQmLl9ab6WPUMR/70Q4fC86dcF3JVKjc9LS06xZOBThvjBZJuAY69K+Y4erM+TiEKiDt5nGyODzn8EpCNXZHy4UY3KIrtoQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=ahP5FpmE; arc=none smtp.client-ip=91.218.175.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s9EgQMMn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF88AC4CEEA;
-	Sun, 25 May 2025 14:16:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748182603;
-	bh=sjlx9s4OvwdaAILZYcPuTEe/EYm/DOo0jp3Iv37PAz0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=s9EgQMMnLSmBEnoXSl3hU5wMbvMwiqNdZwun9p5IT7DHzI/KWUgKzadCBu9Vj3hha
-	 No9pEzk1YKXEpNfNnFVAwbmPQPpDURn1dEj8soCtW33tTsRXkbyhKhk64oKECt5Vpz
-	 uTjmUugLbVYhvf3s4QOENbZ56YUmx/VPx/SDnZ04GJEzQomapxqrRREg68KQ25IoiI
-	 tWAqlnhmsDDEnZxAEz3Ww1Z9GgnlRvzj7m/5lvZbf+Kg5nm2CYFzmegtmpe0BIHIyM
-	 Yh1L2V6hV5Si86UKP7pIqtYAjzR5s1hgemqNgqqcBmuFUHxor9l0/jm5A/mKavuVxj
-	 wh0R3+t6QIMlw==
-Date: Sun, 25 May 2025 15:16:33 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Andreas Klinger <ak@it-klinger.de>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, robh@kernel.org,
- krzk+dt@kernel.org, conor+dt@kernel.org, lars@metafoo.de,
- javier.carrasco.cruz@gmail.com, mazziesaccount@gmail.com,
- arthur.becker@sentec.com, perdaniel.olsson@axis.com,
- mgonellabolduc@dimonoff.com, muditsharma.info@gmail.com,
- clamor95@gmail.com, emil.gedenryd@axis.com, devicetree@vger.kernel.org,
- linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 2/3] iio: light: add support for veml6046x00 RGBIR
- color sensor
-Message-ID: <20250525151633.18b82382@jic23-huawei>
-In-Reply-To: <aDLIHEj4lqlgargJ@mail.your-server.de>
-References: <20250519060804.80464-1-ak@it-klinger.de>
-	<20250519060804.80464-3-ak@it-klinger.de>
-	<aCsQKUwGeq4Ed4ai@smile.fi.intel.com>
-	<aDLIHEj4lqlgargJ@mail.your-server.de>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="ahP5FpmE"
+Message-ID: <621d1173-abe4-4eb7-9098-79b9a3e1c266@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1748182679;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ZMkRaioxqYyh6tp5UUGkklO/SWTZWWyfPj36Z74vxHo=;
+	b=ahP5FpmE3UVI+3dZHg1sgqpXK/ZBE0V6gXbBXHfiapRDiVbHCzseWciq5WfoaVW547E4XO
+	04qeo1ATCOWVAxZXdFdrR5RiUJcdx5JarbhOOzyljHZxu2ORmYr78LJ9zgg6ftsr+BuUac
+	3hEBEgpa+JPeXnVv7b8zogaWDaTsUnk=
+Date: Sun, 25 May 2025 16:17:56 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH for-next v3] RDMA/core: Avoid hmm_dma_map_alloc() for
+ virtual DMA devices
+To: Daisuke Matsuda <dskmtsd@gmail.com>, linux-kernel@vger.kernel.org,
+ linux-rdma@vger.kernel.org, leon@kernel.org, jgg@ziepe.ca,
+ zyjzyj2000@gmail.com
+Cc: hch@infradead.org
+References: <20250524144328.4361-1-dskmtsd@gmail.com>
+ <c8d6bfb6-570c-48b2-be62-188e11353c5a@linux.dev>
+ <b10304c8-c951-4ade-ad57-515df6bd4221@gmail.com>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Zhu Yanjun <yanjun.zhu@linux.dev>
+In-Reply-To: <b10304c8-c951-4ade-ad57-515df6bd4221@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Sun, 25 May 2025 09:34:52 +0200
-Andreas Klinger <ak@it-klinger.de> wrote:
-
-> Hi Andy,
+在 2025/5/25 8:03, Daisuke Matsuda 写道:
 > 
-> thanks for the review. I have a question and a comment below.
 > 
-> Andy Shevchenko <andriy.shevchenko@linux.intel.com> schrieb am Mo, 19. Mai 14:04:
-> > > +/*
-> > > + * veml6046x00_gain_pd - translation from gain index (used in the driver) to
-> > > + * gain (sensor) and PD
-> > > + * @gain_sen:	Gain used in the sensor as described in the datasheet of the
-> > > + *		sensor
-> > > + * @pd:		Photodiode size in the sensor  
-> > 
-> > This is made to look like kernel-doc, but it's not marked as a such, why?  
+> On 2025/05/25 14:22, Zhu Yanjun wrote:
+>> 在 2025/5/24 16:43, Daisuke Matsuda 写道:
+>>> Drivers such as rxe, which use virtual DMA, must not call into the DMA
+>>> mapping core since they lack physical DMA capabilities. Otherwise, a 
+>>> NULL
+>>> pointer dereference is observed as shown below. This patch ensures 
+>>> the RDMA
+>>> core handles virtual and physical DMA paths appropriately.
+>>>
+>>> This fixes the following kernel oops:
+>>>
+>>>   BUG: kernel NULL pointer dereference, address: 00000000000002fc
+>>>   #PF: supervisor read access in kernel mode
+>>>   #PF: error_code(0x0000) - not-present page
+>>>   PGD 1028eb067 P4D 1028eb067 PUD 105da0067 PMD 0
+>>>   Oops: Oops: 0000 [#1] SMP NOPTI
+>>>   CPU: 3 UID: 1000 PID: 1854 Comm: python3 Tainted: G        
+>>> W           6.15.0-rc1+ #11 PREEMPT(voluntary)
+>>>   Tainted: [W]=WARN
+>>>   Hardware name: Trigkey Key N/Key N, BIOS KEYN101 09/02/2024
+>>>   RIP: 0010:hmm_dma_map_alloc+0x25/0x100
+>>>   Code: 90 90 90 90 90 0f 1f 44 00 00 55 48 89 e5 41 57 41 56 49 89 
+>>> d6 49 c1 e6 0c 41 55 41 54 53 49 39 ce 0f 82 c6 00 00 00 49 89 fc 
+>>> <f6> 87 fc 02 00 00 20 0f 84 af 00 00 00 49 89 f5 48 89 d3 49 89 cf
+>>>   RSP: 0018:ffffd3d3420eb830 EFLAGS: 00010246
+>>>   RAX: 0000000000001000 RBX: ffff8b727c7f7400 RCX: 0000000000001000
+>>>   RDX: 0000000000000001 RSI: ffff8b727c7f74b0 RDI: 0000000000000000
+>>>   RBP: ffffd3d3420eb858 R08: 0000000000000000 R09: 0000000000000000
+>>>   R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
+>>>   R13: 00007262a622a000 R14: 0000000000001000 R15: ffff8b727c7f74b0
+>>>   FS:  00007262a62a1080(0000) GS:ffff8b762ac3e000(0000) 
+>>> knlGS:0000000000000000
+>>>   CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>>>   CR2: 00000000000002fc CR3: 000000010a1f0004 CR4: 0000000000f72ef0
+>>>   PKRU: 55555554
+>>>   Call Trace:
+>>>    <TASK>
+>>>    ib_init_umem_odp+0xb6/0x110 [ib_uverbs]
+>>>    ib_umem_odp_get+0xf0/0x150 [ib_uverbs]
+>>>    rxe_odp_mr_init_user+0x71/0x170 [rdma_rxe]
+>>>    rxe_reg_user_mr+0x217/0x2e0 [rdma_rxe]
+>>>    ib_uverbs_reg_mr+0x19e/0x2e0 [ib_uverbs]
+>>>    ib_uverbs_handler_UVERBS_METHOD_INVOKE_WRITE+0xd9/0x150 [ib_uverbs]
+>>>    ib_uverbs_cmd_verbs+0xd19/0xee0 [ib_uverbs]
+>>>    ? mmap_region+0x63/0xd0
+>>>    ? __pfx_ib_uverbs_handler_UVERBS_METHOD_INVOKE_WRITE+0x10/0x10 
+>>> [ib_uverbs]
+>>>    ib_uverbs_ioctl+0xba/0x130 [ib_uverbs]
+>>>    __x64_sys_ioctl+0xa4/0xe0
+>>>    x64_sys_call+0x1178/0x2660
+>>>    do_syscall_64+0x7e/0x170
+>>>    ? syscall_exit_to_user_mode+0x4e/0x250
+>>>    ? do_syscall_64+0x8a/0x170
+>>>    ? do_syscall_64+0x8a/0x170
+>>>    ? syscall_exit_to_user_mode+0x4e/0x250
+>>>    ? do_syscall_64+0x8a/0x170
+>>>    ? syscall_exit_to_user_mode+0x4e/0x250
+>>>    ? do_syscall_64+0x8a/0x170
+>>>    ? do_user_addr_fault+0x1d2/0x8d0
+>>>    ? irqentry_exit_to_user_mode+0x43/0x250
+>>>    ? irqentry_exit+0x43/0x50
+>>>    ? exc_page_fault+0x93/0x1d0
+>>>    entry_SYSCALL_64_after_hwframe+0x76/0x7e
+>>>   RIP: 0033:0x7262a6124ded
+>>>   Code: 04 25 28 00 00 00 48 89 45 c8 31 c0 48 8d 45 10 c7 45 b0 10 
+>>> 00 00 00 48 89 45 b8 48 8d 45 d0 48 89 45 c0 b8 10 00 00 00 0f 05 
+>>> <89> c2 3d 00 f0 ff ff 77 1a 48 8b 45 c8 64 48 2b 04 25 28 00 00 00
+>>>   RSP: 002b:00007fffd08c3960 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+>>>   RAX: ffffffffffffffda RBX: 00007fffd08c39f0 RCX: 00007262a6124ded
+>>>   RDX: 00007fffd08c3a10 RSI: 00000000c0181b01 RDI: 0000000000000007
+>>>   RBP: 00007fffd08c39b0 R08: 0000000014107820 R09: 00007fffd08c3b44
+>>>   R10: 000000000000000c R11: 0000000000000246 R12: 00007fffd08c3b44
+>>>   R13: 000000000000000c R14: 00007fffd08c3b58 R15: 0000000014107960
+>>>    </TASK>
+>>>
+>>> Fixes: 1efe8c0670d6 ("RDMA/core: Convert UMEM ODP DMA mapping to 
+>>> caching IOVA and page linkage")
+>>> Closes: https://lore.kernel.org/ 
+>>> all/3e8f343f-7d66-4f7a-9f08-3910623e322f@gmail.com/
+>>> Signed-off-by: Daisuke Matsuda <dskmtsd@gmail.com>
+>>
+>> I tried to apply this commit to the following rdma branch.
+>> But I failed. The error is as below:
+>>
+>> "
+>> Applying: RDMA/core: Avoid hmm_dma_map_alloc() for virtual DMA devices
+>> error: patch failed: drivers/infiniband/core/umem_odp.c:75
+>> error: drivers/infiniband/core/umem_odp.c: patch does not apply
+>> Patch failed at 0001 RDMA/core: Avoid hmm_dma_map_alloc() for virtual 
+>> DMA devices
+>> hint: Use 'git am --show-current-patch=diff' to see the failed patch
+>> When you have resolved this problem, run "git am --continue".
+>> If you prefer to skip this patch, run "git am --skip" instead.
+>> To restore the original branch and stop patching, run "git am --abort".
+>>
+>> "
+>>
+>> The remote branch is remotes/rdma/rdma-next
+>> The head commit is 3b6a1e410c7f RDMA/mlx5: Fix CC counters query for MPV
+>>
+>> I am not sure if I use the correct repository and branch or not.
 > 
-> I'll remove the '@'
+> Thank you for trying the patch.
+> 
+> The change is meant to be applied to 'for-next' branch,
+> which contains patches from the following series:
+> [PATCH v10 00/24] Provide a new two step DMA mapping API
+> https://lore.kernel.org/linux-rdma/cover.1745831017.git.leon@kernel.org/
+> 
+> cf. https://kernel.googlesource.com/pub/scm/linux/kernel/git/rdma/rdma/
 
-Better to make it kernel doc!  That is add /** and check for
-errors using scripts/kernel-doc 
+Exactly. With the above link and for-next branch, this commit can be 
+applied successfully.
 
+Thanks,
+
+Zhu Yanjun
 
 > 
-> ...
+> Thanks,
+> Daisuke
 > 
-> > > +	ret = regmap_clear_bits(data->regmap, VEML6046X00_REG_CONF0,
-> > > +							VEML6046X00_CONF0_ON_0);  
-> > 
-> > Something wrong with the indentation. Please, fix all places like this...
-> >   
-> > > +	if (ret) {
-> > > +		dev_err(dev, "Failed to set bit for power on %d\n", ret);
-> > > +		return ret;
-> > > +	}
-> > > +
-> > > +	return regmap_clear_bits(data->regmap, VEML6046X00_REG_CONF1,
-> > > +							VEML6046X00_CONF1_ON_1);  
-> > 
-> > ...or like this.
-> >   
-> > > +}  
-> 
-> I don't get the point what is wrong with the indentation. In the coding-style it
-> says the decendant line should be placed to the right.
-> Did i miss something?
-
-Where there are no other constraints it should be aligned under the first parameter
-on the line above.
-
-	return regmap_clear_bits(data->regmap, VEML6046X00_REG_CONF1,
-				 VEML6046X00_CONF1_ON_1);  
-
-This is one of those things that has never been added explicitly to the coding style
-doc because there lots of subtle corner cases where it isn't appropriate.
-But all significantly to the right usually means is 1 tab or more.
-Where possible most people prefer the above style.
-
-Jonathan
-
-> 
-> Best regards,
-> 
-> Andreas
+>>
+>> Best Regards,
+>> Zhu Yanjun
+>>
+>>> ---
+>>>   drivers/infiniband/core/device.c   | 17 +++++++++++++++++
+>>>   drivers/infiniband/core/umem_odp.c | 11 ++++++++---
+>>>   include/rdma/ib_verbs.h            |  4 ++++
+>>>   3 files changed, 29 insertions(+), 3 deletions(-)
+>>>
+>>> diff --git a/drivers/infiniband/core/device.c b/drivers/infiniband/ 
+>>> core/device.c
+>>> index b4e3e4beb7f4..abb8fed292c0 100644
+>>> --- a/drivers/infiniband/core/device.c
+>>> +++ b/drivers/infiniband/core/device.c
+>>> @@ -2864,6 +2864,23 @@ int ib_dma_virt_map_sg(struct ib_device *dev, 
+>>> struct scatterlist *sg, int nents)
+>>>       return nents;
+>>>   }
+>>>   EXPORT_SYMBOL(ib_dma_virt_map_sg);
+>>> +int ib_dma_virt_map_alloc(struct hmm_dma_map *map, size_t nr_entries,
+>>> +              size_t dma_entry_size)
+>>> +{
+>>> +    if (!(nr_entries * PAGE_SIZE / dma_entry_size))
+>>> +        return -EINVAL;
+>>> +
+>>> +    map->dma_entry_size = dma_entry_size;
+>>> +    map->pfn_list = kvcalloc(nr_entries, sizeof(*map->pfn_list),
+>>> +                 GFP_KERNEL | __GFP_NOWARN);
+>>> +    if (!map->pfn_list)
+>>> +        return -ENOMEM;
+>>> +
+>>> +    map->dma_list = NULL;
+>>> +
+>>> +    return 0;
+>>> +}
+>>> +EXPORT_SYMBOL(ib_dma_virt_map_alloc);
+>>>   #endif /* CONFIG_INFINIBAND_VIRT_DMA */
+>>>   static const struct rdma_nl_cbs 
+>>> ibnl_ls_cb_table[RDMA_NL_LS_NUM_OPS] = {
+>>> diff --git a/drivers/infiniband/core/umem_odp.c b/drivers/infiniband/ 
+>>> core/umem_odp.c
+>>> index 51d518989914..a5b17be0894a 100644
+>>> --- a/drivers/infiniband/core/umem_odp.c
+>>> +++ b/drivers/infiniband/core/umem_odp.c
+>>> @@ -75,9 +75,14 @@ static int ib_init_umem_odp(struct ib_umem_odp 
+>>> *umem_odp,
+>>>       if (unlikely(end < page_size))
+>>>           return -EOVERFLOW;
+>>> -    ret = hmm_dma_map_alloc(dev->dma_device, &umem_odp->map,
+>>> -                (end - start) >> PAGE_SHIFT,
+>>> -                1 << umem_odp->page_shift);
+>>> +    if (ib_uses_virt_dma(dev))
+>>> +        ret = ib_dma_virt_map_alloc(&umem_odp->map,
+>>> +                        (end - start) >> PAGE_SHIFT,
+>>> +                        1 << umem_odp->page_shift);
+>>> +    else
+>>> +        ret = hmm_dma_map_alloc(dev->dma_device, &umem_odp->map,
+>>> +                    (end - start) >> PAGE_SHIFT,
+>>> +                    1 << umem_odp->page_shift);
+>>>       if (ret)
+>>>           return ret;
+>>> diff --git a/include/rdma/ib_verbs.h b/include/rdma/ib_verbs.h
+>>> index b06a0ed81bdd..9ea41f288736 100644
+>>> --- a/include/rdma/ib_verbs.h
+>>> +++ b/include/rdma/ib_verbs.h
+>>> @@ -36,6 +36,7 @@
+>>>   #include <linux/irqflags.h>
+>>>   #include <linux/preempt.h>
+>>>   #include <linux/dim.h>
+>>> +#include <linux/hmm-dma.h>
+>>>   #include <uapi/rdma/ib_user_verbs.h>
+>>>   #include <rdma/rdma_counter.h>
+>>>   #include <rdma/restrack.h>
+>>> @@ -4221,6 +4222,9 @@ static inline void ib_dma_unmap_sg_attrs(struct 
+>>> ib_device *dev,
+>>>                      dma_attrs);
+>>>   }
+>>> +int ib_dma_virt_map_alloc(struct hmm_dma_map *map, size_t nr_entries,
+>>> +              size_t dma_entry_size);
+>>> +
+>>>   /**
+>>>    * ib_dma_map_sgtable_attrs - Map a scatter/gather table to DMA 
+>>> addresses
+>>>    * @dev: The device for which the DMA addresses are to be created
+>>
 > 
 
