@@ -1,76 +1,84 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DA5517B50F
-	for <linux-kernel@vger.kernel.org>; Sun, 25 May 2025 09:07:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 580456FC3;
+	Sun, 25 May 2025 09:10:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748164068; cv=none; b=pagOs8y8kyuRa+KNiF5EcJTA9oDbTVk2d377FxGPQajtwMv0T7SEEviOgrC/s1UDgheoHamv+594aQMSN8tFZOzsXMc1llPVGBO0B7OUB3VlvNk0ISdD4whTpqk2j+8FHl2TPCJe1VGS6Ph9vqIfZKQhzmlP5RkSZMpxyiHxZwI=
+	t=1748164223; cv=none; b=igG2JWUf7IL/wMT9gAE1CB/GGRdh8zshZX1/xRmQwwAgGRysvrGIPXCycf5dPAgdIteVyw/v7AFKOQa4SuJXkXh41pvbPqLuORxGNFsyzyM/0Obf3arGQ6KDQcOfvJdmilG8OsUbCKmxTRMvwbJGTLoxPLOoVqt7ZlCFtLrJZqk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748164068; c=relaxed/simple;
-	bh=POMmmRFrUmlLMNKS7Mh30KX4H2BGMaHfAENsIfkmQVc=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=VuKonsZwC5bwKSTgs4DJH+Bd5RUH9AQqkYJoBMWF9Tyo92f/0GzzgrJRgg5qIA8CCRHcSCrCQa7Jbr7Hc6GgY2ZGiDd8j5pp3o4RsSwNzP3xWGw4yaIuI1e5V+uM4I10JUvraIOBtkHZ/4bT4JW+fBqpS5ymGKjMWok2b9SOz8M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EVQbHgoc; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748164223; c=relaxed/simple;
+	bh=QRuaoCtlO2P0pS7B8Ua45WZbERtO2cz6gZIFrJ9hjuQ=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=YZ4rWEYMOC94GNM4l80en7F+mz2lgENz7SAGxj/C/dP6VV3fBkS5cskVCuRC1PTpNvwaI8PV4V7ujCs5FTLs44t47pzZLyLMmnR8KuvJEoTb6z9D44byHvrQ/PIppz3DYq1Q61PetGShtBO1BD820IKzfd/e8FAfzv4nbx1G59U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=CYudsmtO; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=wXiirkR9; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EVQbHgoc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA90EC4CEEA;
-	Sun, 25 May 2025 09:07:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748164067;
-	bh=POMmmRFrUmlLMNKS7Mh30KX4H2BGMaHfAENsIfkmQVc=;
-	h=Date:From:To:Cc:Subject:From;
-	b=EVQbHgocei1FRWGkMlTESOflisIneCwrXr/RSHvbkVH9jvf4YJvn6+utrwglp526T
-	 BqyVGGhDnTYfPqrIJR7uKIKOwKU30/+F/Xs8g+DadYyMYa2z32e3PKP2etRzrbPmPy
-	 ou+MP5y4fBpttd7kni0KWVd+YaL/8i5igyS+feogIbomE3npgdZjDsWSl+ABk6iGon
-	 zaoG3vS18T+dcxR/jsOUIW7y8DaSHrcRZrqFv8hz/CnLtWA2B3OwkeNGI8TEWZH2b9
-	 tD+c6/cQhMnMwhJTDjKaYZFtZMcOJa5PjxETrHNEdJCmKZLDDa+ZeV+H7DF5ywwIzs
-	 V2n6p25bKGglw==
-Date: Sun, 25 May 2025 11:07:43 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-kernel@vger.kernel.org, Peter Zijlstra <a.p.zijlstra@chello.nl>,
-	Josh Poimboeuf <jpoimboe@redhat.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Borislav Petkov <bp@alien8.de>,
-	Andrew Morton <akpm@linux-foundation.org>
-Subject: [GIT PULL] objtool changes for v6.16
-Message-ID: <aDLd3_9ofvEyYXb7@gmail.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="CYudsmtO";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="wXiirkR9"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1748164220;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=PA1nNfiCckNRb/TlfchDpOkUncHXQgZIdr5SpbxoUlc=;
+	b=CYudsmtOymWdUwkrxUzPdnDdz6qQ6JVrNcbZTCyjYYAY6QldJfq+fx4g/0h9yUz94vC79+
+	vJTqdNTDcJoqikApQ8cQjPyj2ydVo99DW0ISnwKDft0F/eaRkKuwCwmtgMCSk1rVj+rGZA
+	NTg0H8K+xklRaTrtCm1zTjplJwTdqONVJjj4I+TgRq6PJYCAoa18/qEi5wSJ1F/gs3zSh2
+	kPdCfdrp/ouD0ZMNeqz3YNuxdqPm5c2VTc1BKyqbwZlMixHZlh3Tr0HMRLj3kV0KbMKFfY
+	CcL5xsz7HtqJAdniSD6YkRaEFoKxvvMyj/Ju7HtnqZCOlO6ShtClOupwdeN8Pg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1748164220;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=PA1nNfiCckNRb/TlfchDpOkUncHXQgZIdr5SpbxoUlc=;
+	b=wXiirkR9aohDq2RQj+pZ1vWwaV58Ke/WH22qZylwHr2qwWhHyruAQigWR9A0JX9+vEIBb2
+	ke/eQgN3GNZWLoBQ==
+To: Markus Stockhausen <markus.stockhausen@gmx.de>,
+ tsbogend@alpha.franken.de, linux-mips@vger.kernel.org,
+ linux-kernel@vger.kernel.org, s.gottschall@dd-wrt.com
+Cc: Markus Stockhausen <markus.stockhausen@gmx.de>
+Subject: Re: [PATCH] irqchip/mips-gic: allow forced affinity for current cpu
+ during hotplug
+In-Reply-To: <20250523151542.3903598-1-markus.stockhausen@gmx.de>
+References: <20250523151542.3903598-1-markus.stockhausen@gmx.de>
+Date: Sun, 25 May 2025 11:10:19 +0200
+Message-ID: <87bjrhqcn8.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain
 
-Linus,
+On Fri, May 23 2025 at 11:15, Markus Stockhausen wrote:
+> +
+> +	if ((cpu >= NR_CPUS) && !force)
+> +		/* In normal mode allow only online CPUs. */
+>  		return -EINVAL;
+>  
+> +	if (cpu >= NR_CPUS) {
+> +		/* In force mode allow current not yet online CPU for hotplug handlers. */
+> +		cpu = cpumask_first(cpumask);
+> +		if (cpu != get_cpu())
+> +			return -EINVAL;
+> +	}
 
-Please pull the latest objtool/core Git tree from:
+This logic really makes my brain hurt. Why not doing the obvious:
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git objtool-core-2025-05-25
+	if (cpu >= NR_CPUS) {
+        	/* Sensible comment */	
+        	if (!force)
+                	return -EINVAL;
+                ...
+        }
 
-   # HEAD: 4ed9d82bf5b21d65e2f18249eec89a6a84df8f23 objtool: Speed up SHT_GROUP reindexing
+Hmm?
 
-objtool changes for v6.15:
+Thanks
 
- - Speed up SHT_GROUP reindexing (Josh Poimboeuf)
-
- - Fix up st_info in COMDAT group section (Rong Xu)
-
- Thanks,
-
-	Ingo
-
------------------->
-Josh Poimboeuf (1):
-      objtool: Speed up SHT_GROUP reindexing
-
-Rong Xu (1):
-      objtool: Fix up st_info in COMDAT group section
-
-
- tools/objtool/elf.c                 | 38 ++++++++++++++++++++++++++++++++++++-
- tools/objtool/include/objtool/elf.h |  1 +
- 2 files changed, 38 insertions(+), 1 deletion(-)
+        tglx
