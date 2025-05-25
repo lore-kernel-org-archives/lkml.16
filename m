@@ -1,168 +1,421 @@
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2076.outbound.protection.outlook.com [40.107.223.76])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3C4F1F3B87;
-	Sun, 25 May 2025 11:48:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.76
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748173708; cv=fail; b=FD4xSUjo8fdBzz3/dH2jk1xHwQNceQodw9bSqqJ4wV/v9EmThgJKDfo2AF+PcpVVD7zT+b7tgHVhWmkBjZc96ZbuZyIhmIfD00Zwzzg6cbHUpM501veY1MTZ/q+srg+OIt9v6PkhJvM4E/Ad1RyoYhsEOFug1EJ9hXMYB3UNxtU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748173708; c=relaxed/simple;
-	bh=ZXvORc40euWtYzoM9RV7uqqsUSV8PPlrNfUh/vBWv/c=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=mVmQJaIJol5hkvSCbJ7pZkP3dGarnAEk7IfQASGkpYj+GeOInJqk+d0qNX3RDqbIF/N6VdfiRWKu344sIPWRtbLZnvIzzpkXYpo/2V1nFUJQ4gH06avxNkBn/27hedYBy1wv9uIxZjB1IASoh7jC2P9pXRP44mk35TeQJcN+Wq8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=UmXlnpZo; arc=fail smtp.client-ip=40.107.223.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 739391F153A;
+	Sun, 25 May 2025 11:49:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748173749; cv=none; b=fJI1VdgKXIBf5A9JJcofGJDFbskQeHAsl2rbLyDeQlju7pDpjeTGmI7qb0WxGldtPeuSPqyawCPOTwuGfmxryJ7EfDNqCXY6NR6+aqB2+/LAXSyl3hxMNcDyDW4Tn9kWzxtg6FtI2IXDPYAjlRDnRkYPE8Y0r3A9spA1d+/0S60=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748173749; c=relaxed/simple;
+	bh=vmZvAnTbI4REH3iJUSPyeWOhaBBgHAufw1jfnjCgFr0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Oayvfdn80Xyzvh5AageL7ipfW4qITUfPHMWZZuPOT5IPun9MQePZ4DHv+lAv90sHVJ6KuvDuvkQLf/zz41XrY36DdCx08fQBjAXpr4VD5kvf59PQ1BVlddUiIS5sZZ8mIEotNHcyP9w+iagnOXMUVHaK/X/J26zFA4oPVq1yfr4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HFvK4JBW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="UmXlnpZo"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=cGdSEDn5cpaKlzLThVv3OzSKYKuwA+BHKyES0qi53pLExNBPaTH751bV+a9kInrBrj+HEADuXtS6a5N+C3XaKH08Jp4M/j4bmmMoxjMzetjUnWi3GbXPUQ6+k4oPb4Zwtdqx9sEWdLvhT/RXl79o7Ov7HpkW2KroaliMcZ8w/AGedy1p4o4YR293s8KZp6pNMCi1Qb3ra0QkHZxjJWjnUXSXhhtV0yeEmTghGTQ5MyPw5FFZIpT4zFUvVGHEjfMZdzcEWpgsDZLao3OLzmuxNlJQ5Z5iXxryTq2q7sF9PEw4db+dOYz3CsfY5QyQc4HMjV/C1vnRkUe9y9rb5/88pQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=h6CuLR25B3OMon9JGm6TJlO4e5OoklkNXXy1q9LE3yg=;
- b=mElgTPe1cDHBu2VxV7Q4oNIEHuuqqWgWr8On4hRGD6vySDDBMw5SskD3nZl2nFXfT9LiFacv43LKSJZ0QguWB0q3MIV+qyhF3+p2XALT+Ju3TH3HCPeV+AFV0AARUPWB5ej8fBBVZLLi834tjnE86OiZ2VjrY9qxHwhrMojqpmXXugw7BjoCp1jT1F78ysLiUhOGzOZv7/lsi3W+YIQjZ8CsUNl4cbSBZ7oSq+9P/bLnTRG6zvpJXnVlYTbAOv5m2yaWb/UR1TOA889swUrIPFHspAgW/Z+MHetZ6CGEhP4BbvmHMqbBXE+tokYyfYs4FCQXRo+RrWIMPizrR6tphA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.161) smtp.rcpttodomain=davemloft.net smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=h6CuLR25B3OMon9JGm6TJlO4e5OoklkNXXy1q9LE3yg=;
- b=UmXlnpZobIwL2rtI1Uv03cBp7/Lil7KeVZBk9DoP/TtXpl2s4th1sOWtbwvoAb2hAcESQrUwprYxzdDl1NurqvQonu04y10I7JA4TDr6I4E5vs9XHisygWZmRyOIr2EJmhePuxLDKbSx6D102gbnpDReV+yNIF3BoR/JHIV7yPCQ/os29sPOQeU23vsBzzB7zyAjLw17fzZyyu9vjBR4qMzCvt/rCekIlLymZtX5HqfJjCKKZGweEeO97HZa/jZEcrHf9+3hwdJZnfWokfQctTjTGdd0smkxzFHiJqO9GQmBZ6okn0Jp7WNbPcUDaUfMEokpxlkMYC8P1T4C06sl9g==
-Received: from MW4PR03CA0125.namprd03.prod.outlook.com (2603:10b6:303:8c::10)
- by IA0PR12MB7603.namprd12.prod.outlook.com (2603:10b6:208:439::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.21; Sun, 25 May
- 2025 11:48:21 +0000
-Received: from SJ1PEPF00002327.namprd03.prod.outlook.com
- (2603:10b6:303:8c:cafe::43) by MW4PR03CA0125.outlook.office365.com
- (2603:10b6:303:8c::10) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8769.19 via Frontend Transport; Sun,
- 25 May 2025 11:48:21 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.161) by
- SJ1PEPF00002327.mail.protection.outlook.com (10.167.242.90) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8769.18 via Frontend Transport; Sun, 25 May 2025 11:48:20 +0000
-Received: from rnnvmail204.nvidia.com (10.129.68.6) by mail.nvidia.com
- (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Sun, 25 May
- 2025 04:48:05 -0700
-Received: from rnnvmail203.nvidia.com (10.129.68.9) by rnnvmail204.nvidia.com
- (10.129.68.6) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Sun, 25 May
- 2025 04:48:05 -0700
-Received: from vdi.nvidia.com (10.127.8.10) by mail.nvidia.com (10.129.68.9)
- with Microsoft SMTP Server id 15.2.1544.14 via Frontend Transport; Sun, 25
- May 2025 04:48:01 -0700
-From: Tariq Toukan <tariqt@nvidia.com>
-To: "David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>, Eric Dumazet <edumazet@google.com>, "Andrew
- Lunn" <andrew+netdev@lunn.ch>
-CC: Saeed Mahameed <saeedm@nvidia.com>, Leon Romanovsky <leon@kernel.org>,
-	Tariq Toukan <tariqt@nvidia.com>, <netdev@vger.kernel.org>,
-	<linux-rdma@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Moshe Shemesh
-	<moshe@nvidia.com>, Mark Bloch <mbloch@nvidia.com>, Gal Pressman
-	<gal@nvidia.com>, Maor Gottlieb <maorg@nvidia.com>
-Subject: [PATCH net-next 1/2] net/mlx5: Warn when write combining is not supported
-Date: Sun, 25 May 2025 14:47:31 +0300
-Message-ID: <1748173652-1377161-2-git-send-email-tariqt@nvidia.com>
-X-Mailer: git-send-email 2.8.0
-In-Reply-To: <1748173652-1377161-1-git-send-email-tariqt@nvidia.com>
-References: <1748173652-1377161-1-git-send-email-tariqt@nvidia.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HFvK4JBW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E84F9C4CEEA;
+	Sun, 25 May 2025 11:49:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748173748;
+	bh=vmZvAnTbI4REH3iJUSPyeWOhaBBgHAufw1jfnjCgFr0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=HFvK4JBW0AVjqKcpmbCDREG5eFNX3tv7Zxny+go4h/8gv/fbcb9i2A7LPwZjP5iYz
+	 OC2lmIhmqCn6NCWcPUjqA4MaoVH4bjzHCdKX/xMSzb/S/rG7inAaJRpfal6R4M3leB
+	 KhRqif8LrmarWsRCFl3o5kGW/vY2MMQvVuYYTJ3wQZvg0WAfaKIewH9kVx+i3aH2fV
+	 iLTlIyV4p6lrnwke2d4EzVpOleswd4+1Fx+1o+5rqSXciRPph+6MMEMOXn+Iu0Bbxv
+	 l0cA8K/uSvJgbEkToGJpXoreh3Oe2mmq7TQVyklHE/hdHsgTZyCWz2sgL6+gpgqH/l
+	 if5HzlratbVNQ==
+Date: Sun, 25 May 2025 13:49:01 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Michal Wilczynski <m.wilczynski@samsung.com>
+Cc: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Drew Fustini <drew@pdp7.com>, Guo Ren <guoren@kernel.org>,
+	Fu Wei <wefu@redhat.com>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
+	rust-for-linux@vger.kernel.org, linux-riscv@lists.infradead.org,
+	devicetree@vger.kernel.org
+Subject: Re: [PATCH RFC 1/6] rust: Add basic PWM abstractions
+Message-ID: <aDMDrT7WIDc-yD0p@pollux.localdomain>
+References: <20250524-rust-next-pwm-working-fan-for-sending-v1-0-bdd2d5094ff7@samsung.com>
+ <CGME20250524211520eucas1p1378fbab27f4b1ae8808706c074fa217c@eucas1p1.samsung.com>
+ <20250524-rust-next-pwm-working-fan-for-sending-v1-1-bdd2d5094ff7@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-NV-OnPremToCloud: AnonymousSubmission
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ1PEPF00002327:EE_|IA0PR12MB7603:EE_
-X-MS-Office365-Filtering-Correlation-Id: 366fabd1-1bd0-47f7-a0cd-08dd9b820c33
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|1800799024|36860700013|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?e8ek54U0r4zpIQyvBckwPmqsOubD7wBK+bx/GYjAVwhutyMn9haZ46YZ3oQj?=
- =?us-ascii?Q?MUKbqDfV7BRBORkgJTD11/rnoTEIDY0ily5gcE2Mw238bKYshSyM13i4X12y?=
- =?us-ascii?Q?AtJJPuXK2GW7IdhvFjbPqKzLm8ZaJ9abvicLSVjs6Tfzb5L9wku/W6QU3dHc?=
- =?us-ascii?Q?2tEqp6js+eIUBBjLo1vB512qG8jWRtqn2MW+5J8F4R/jZWhofI+tSA3SEH1O?=
- =?us-ascii?Q?fx2LzSV+D2x3z7cW5uBoMiU1NEGTSIciyQqKayktC0oWKMFKFPfCKZoWDsfq?=
- =?us-ascii?Q?9hQKsT1W0xymF8TMtzU8hwH5jUzFtLFLKa//SiW8vn5n9444ou1SiowKVB+4?=
- =?us-ascii?Q?UXEMJXrgHcMsLjAyatP1mko8WJ3xOpf2TJWxdd2BOg4mBLhuZwkvOnJ/wm/p?=
- =?us-ascii?Q?uOdkfysCkLxVJ4t4CBNBcTru5tK+s0UiVs1lIYZqI4yZMKVzJzsf+JeAqJme?=
- =?us-ascii?Q?Wzx2EbNgWTKcFC1ghY8WGPkAYh5Fi3/PwGZqtbZPamSQQGQIAuPYmAwLo8Jg?=
- =?us-ascii?Q?OvwPaUJ9n4CphgWnFBwFAfBLHJmeHO+dypUi8hl01Ot+0uMUkTiToZWpsgDF?=
- =?us-ascii?Q?X4JcrOPz/pjDglPwSTsOXZx4JOMQT3dRLcBRU0zInzRabI2tniGfRFrOii9K?=
- =?us-ascii?Q?/skF12Wc/ERFcSgIBnXL/qMUzpv6SmoBWAcPoxFwpgKDudXPoN03pghYEJQp?=
- =?us-ascii?Q?3WXG1zg9991uylEATzGWBqSAeSY33kt+4opX1sGzxK1fTNiSadM72Pxsr6Fv?=
- =?us-ascii?Q?t3tcD6qU6xUTQwMrmtd6Y/caamOQxYAz5Aew3gQT3jxdIPpFgjwJ76TT5+we?=
- =?us-ascii?Q?UObns+qUY9WcaCU517QJzbzUQ9NaK/wa0eCbFy+MAlhR3mMoHbC+f5NgkRe9?=
- =?us-ascii?Q?fQIcq4k1hExeWoGjynfGMzkhurtNEnsREC2OWbkR2RrSaf0KkyT70w5z0UFS?=
- =?us-ascii?Q?3pgpSX8XrEoNOcXFt3n0kwHRHgpOj9u4nFEwNQhOyRvgptf75IYb0ynuUwx/?=
- =?us-ascii?Q?o6LaWBRKuYE5jkqw91k+GtGIl2rXcfDmHSf3jgsuSWTGR4LZy4fTs7UyVdG/?=
- =?us-ascii?Q?d4z/vHJojH3Go+hbDM1YNCsdXetTv5nyQbCpF1piuyEBW1HfCqcC6cWKpTbh?=
- =?us-ascii?Q?fyjmHMl/J7E6E33z0WOi0r9bMQv9j3XJ0SoWZ8UIpT7hNLdzFzIzOB757Z0G?=
- =?us-ascii?Q?LPyY39+udcvo2lliglmp/XDjW3MXuwxWT/FjuT/7FdSX5jBlsc/s14V6ipCZ?=
- =?us-ascii?Q?nLMFcBeEomvJov+N4Qas9bHEWGRDQlTgNUeeeiKfQEXv8VI7k7z3Q7dCjCNB?=
- =?us-ascii?Q?/ZLu/DrANU2NBwTCjqIS+mcYqeCUuDrUQTbU9I/TPQHSLcs+AtKp2cZCh0Hf?=
- =?us-ascii?Q?am9mml/MHpleWkeYGR/tvsoEx3PE5R92KyLIFL0uRg3WP1IHrymjxrxV7PEO?=
- =?us-ascii?Q?6srgZtN4bk50UgOuYH10g6YFlH5V/PDk06X1eOKNJKDqDHo7tkbdLrox98kJ?=
- =?us-ascii?Q?i5j7lbm2g6ME9pECVu9xEUBVcbZb5tgvHRhO?=
-X-Forefront-Antispam-Report:
-	CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(36860700013)(376014);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 May 2025 11:48:20.7434
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 366fabd1-1bd0-47f7-a0cd-08dd9b820c33
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SJ1PEPF00002327.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR12MB7603
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250524-rust-next-pwm-working-fan-for-sending-v1-1-bdd2d5094ff7@samsung.com>
 
-From: Maor Gottlieb <maorg@nvidia.com>
+Hi Michal,
 
-Warn if write combining is not supported, as it can impact latency.
-Add the warning message to be printed only when the driver actually
-run the test and detect unsupported state, rather than when
-inheriting parent's result for SFs.
+On Sat, May 24, 2025 at 11:14:55PM +0200, Michal Wilczynski wrote:
+> diff --git a/rust/kernel/pwm.rs b/rust/kernel/pwm.rs
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..357fda46faa99c4462149658951ec53bf9cc2d1e
+> --- /dev/null
+> +++ b/rust/kernel/pwm.rs
+> @@ -0,0 +1,376 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +// Copyright (c) 2025 Samsung Electronics Co., Ltd.
+> +// Author: Michal Wilczynski <m.wilczynski@samsung.com>
+> +
+> +//! PWM (Pulse Width Modulator) abstractions.
+> +//!
+> +//! This module provides safe Rust abstractions for working with the Linux
+> +//! kernel's PWM subsystem, leveraging types generated by `bindgen`
+> +//! from `<linux/pwm.h>` and `drivers/pwm/core.c`.
+> +
+> +use crate::{
+> +    bindings,
+> +    device::Device as CoreDevice,
 
-Signed-off-by: Maor Gottlieb <maorg@nvidia.com>
-Reviewed-by: Michael Guralnik <michaelgur@nvidia.com>
-Signed-off-by: Tariq Toukan <tariqt@nvidia.com>
----
- drivers/net/ethernet/mellanox/mlx5/core/wc.c | 3 +++
- 1 file changed, 3 insertions(+)
+I recommend referring the the base device as just device::Device, like we do it
+everywhere else where we have this name conflict.
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/wc.c b/drivers/net/ethernet/mellanox/mlx5/core/wc.c
-index 740b719e7072..2f0316616fa4 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/wc.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/wc.c
-@@ -378,6 +378,9 @@ static void mlx5_core_test_wc(struct mlx5_core_dev *mdev)
- 	mlx5_free_bfreg(mdev, &sq->bfreg);
- err_alloc_bfreg:
- 	kfree(sq);
-+
-+	if (mdev->wc_state == MLX5_WC_STATE_UNSUPPORTED)
-+		mlx5_core_warn(mdev, "Write combining is not supported\n");
- }
- 
- bool mlx5_wc_support_get(struct mlx5_core_dev *mdev)
--- 
-2.31.1
+I'm not a huge fan of such aliases, since it's confusing when looking at patches
+that do not have the alias as context later on.
 
+> +    error::*,
+> +    prelude::*,
+> +    str::CStr,
+> +    types::{ForeignOwnable, Opaque},
+> +};
+> +use core::marker::PhantomData;
+> +
+> +/// PWM polarity. Mirrors `enum pwm_polarity`.
+> +#[derive(Copy, Clone, Debug, PartialEq, Eq)]
+> +pub enum Polarity {
+> +    /// Normal polarity (duty cycle defines the high period of the signal)
+> +    Normal,
+> +    /// Inversed polarity (duty cycle defines the low period of the signal)
+> +    Inversed,
+> +}
+> +
+> +impl From<bindings::pwm_polarity> for Polarity {
+> +    fn from(polarity: bindings::pwm_polarity) -> Self {
+> +        match polarity {
+> +            bindings::pwm_polarity_PWM_POLARITY_NORMAL => Polarity::Normal,
+> +            bindings::pwm_polarity_PWM_POLARITY_INVERSED => Polarity::Inversed,
+> +            _ => {
+> +                pr_warn!(
+> +                    "Unknown pwm_polarity value {}, defaulting to Normal\n",
+> +                    polarity
+> +                );
+> +                Polarity::Normal
+
+Either Polarity::Normal is the correct thing to return in such a case, but then
+we do not need the pr_warn!(), or it is not, but then this should be a TryFrom
+impl instead.
+
+> +            }
+> +        }
+> +    }
+> +}
+> +
+> +impl From<Polarity> for bindings::pwm_polarity {
+> +    fn from(polarity: Polarity) -> Self {
+> +        match polarity {
+> +            Polarity::Normal => bindings::pwm_polarity_PWM_POLARITY_NORMAL,
+> +            Polarity::Inversed => bindings::pwm_polarity_PWM_POLARITY_INVERSED,
+> +        }
+> +    }
+> +}
+> +
+> +/// Wrapper for board-dependent PWM arguments (`struct pwm_args`).
+> +#[repr(transparent)]
+> +pub struct Args(Opaque<bindings::pwm_args>);
+> +
+> +impl Args {
+> +    /// Creates an `Args` wrapper from the C struct reference.
+> +    fn from_c_ref(c_args: &bindings::pwm_args) -> Self {
+
+I'd make this a pointer type instead, rather than having conversion to a
+reference at the caller's side.
+
+> +        // SAFETY: Pointer is valid, construct Opaque wrapper. We copy the data.
+> +        Args(Opaque::new(*c_args))
+> +    }
+> +
+> +    /// Returns the period of the PWM signal in nanoseconds.
+> +    pub fn period(&self) -> u64 {
+> +        // SAFETY: Reading from the valid pointer obtained by `get()`.
+
+Here and below, you should explain why this pointer is guaranteed to be valid
+instead.
+
+> +        unsafe { (*self.0.get()).period }
+> +    }
+> +
+> +    /// Returns the polarity of the PWM signal.
+> +    pub fn polarity(&self) -> Polarity {
+> +        // SAFETY: Reading from the valid pointer obtained by `get()`.
+> +        Polarity::from(unsafe { (*self.0.get()).polarity })
+> +    }
+> +}
+> +
+> +/// Wrapper for PWM state (`struct pwm_state`).
+> +#[repr(transparent)]
+> +pub struct State(Opaque<bindings::pwm_state>);
+> +
+> +impl State {
+> +    /// Creates a new zeroed `State`.
+> +    pub fn new() -> Self {
+> +        State(Opaque::new(bindings::pwm_state::default()))
+> +    }
+> +
+> +    /// Creates a `State` wrapper around a copy of a C `pwm_state`.
+> +    pub(crate) fn from_c(c_state: bindings::pwm_state) -> Self {
+> +        State(Opaque::new(c_state))
+> +    }
+
+You probably don't need Opaque here, given that you have instances of
+bindings::pwm_state already.
+
+> +
+> +    /// Creates a `State` wrapper around a reference to a C `pwm_state`.
+> +    fn from_c_ref(c_state: &bindings::pwm_state) -> &Self {
+> +        // SAFETY: Pointer is valid, lifetime tied to input ref. Cast pointer type.
+> +        unsafe { &*(c_state as *const bindings::pwm_state as *const Self) }
+> +    }
+> +
+> +    /// Gets the period of the PWM signal in nanoseconds.
+> +    pub fn period(&self) -> u64 {
+> +        unsafe { (*self.0.get()).period }
+
+This and all the methods below lack SAFETY comments, did you compile with
+CLIPPY=1? You should get lots of warnings reminding you to add them.
+
+<snip>
+
+> +
+> +/// Wrapper for a PWM device/channel (`struct pwm_device`).
+> +#[repr(transparent)]
+> +pub struct Device(Opaque<bindings::pwm_device>);
+> +
+> +impl Device {
+> +    pub(crate) unsafe fn from_ptr<'a>(ptr: *mut bindings::pwm_device) -> &'a mut Self {
+
+We usually call this kind of function as_ref(), it'd be nice to stick to that
+for consistency.
+
+> +        unsafe { &mut *ptr.cast::<Self>() }
+
+A mutable reference -- why?
+
+<snip>
+
+> +/// Wrapper for a PWM chip/controller (`struct pwm_chip`).
+> +#[repr(transparent)]
+> +pub struct Chip(Opaque<bindings::pwm_chip>);
+> +
+> +impl Chip {
+> +    /// Creates a `Chip` reference from a raw pointer. (Safety notes apply)
+> +    pub(crate) unsafe fn from_ptr<'a>(ptr: *mut bindings::pwm_chip) -> &'a mut Self {
+
+Same here, for the name...
+
+> +        unsafe { &mut *ptr.cast::<Self>() }
+
+and the mutability.
+
+> +    }
+> +
+> +    /// Returns a raw pointer to the underlying `pwm_chip`.
+> +    pub(crate) fn as_ptr(&self) -> *mut bindings::pwm_chip {
+> +        self.0.get()
+> +    }
+> +
+> +    /// Gets the number of PWM channels (hardware PWMs) on this chip.
+> +    pub fn npwm(&self) -> u32 {
+> +        unsafe { (*self.as_ptr()).npwm }
+> +    }
+> +
+> +    /// Returns `true` if the chip supports atomic operations for configuration.
+> +    pub fn is_atomic(&self) -> bool {
+> +        unsafe { (*self.as_ptr()).atomic }
+> +    }
+> +
+> +    /// Returns a reference to the embedded `struct device` abstraction (`CoreDevice`).
+> +    pub fn device(&self) -> &CoreDevice {
+> +        // SAFETY: `dev` field exists and points to the embedded device.
+> +        let dev_ptr = unsafe { &(*self.as_ptr()).dev as *const _ as *mut bindings::device };
+> +        unsafe { &*(dev_ptr as *mut CoreDevice) }
+
+Missing SAFETY comment, also please use cast() and cast_{const,mut}() instead.
+
+> +    }
+> +
+> +    /// Returns a reference to the parent device (`struct device`) of this PWM chip's device.
+> +    pub fn parent_device(&self) -> Option<&CoreDevice> {
+> +        // SAFETY: Accessing fields via assumed-valid pointer and bindgen layout.
+> +        let parent_ptr = unsafe { bindings::pwmchip_parent(self.as_ptr()) };
+> +        if parent_ptr.is_null() {
+> +            None
+> +        } else {
+> +            // SAFETY: Pointer is non-null, assume valid device managed by kernel.
+> +            Some(unsafe { &*(parent_ptr as *mut CoreDevice) })
+> +        }
+
+This can just be
+
+	self.device().parent() // [1]
+
+which lands through the DRM tree in the upcoming merge window.
+
+[1] https://gitlab.freedesktop.org/drm/kernel/-/blob/drm-next/rust/kernel/device.rs?ref_type=heads#L72
+
+> +    /// Gets the *typed* driver-specific data associated with this chip's embedded device.
+> +    pub fn get_drvdata<T: 'static>(&self) -> Option<&T> {
+
+I will soon send a patch series that adds drvdata accessors to the generic
+Device abstraction.
+
+Anyways, no need for you to wait for this.
+
+> +        let ptr = unsafe { bindings::pwmchip_get_drvdata(self.as_ptr()) };
+
+Obviously, the C side calls this pwmchip_get_drvdata() and dev_get_drvdata(),
+however, I suggest not to use get_drvdata() as a method name, since 'get' is
+used in the context of reference counting (get/put) instead, and hence may be
+confusing. Let's just name this drvdata().
+
+> +        if ptr.is_null() {
+> +            None
+> +        } else {
+> +            unsafe { Some(&*(ptr as *const T)) }
+> +        }
+> +    }
+> +
+> +    /// Sets the *typed* driver-specific data associated with this chip's embedded device.
+> +    pub fn set_drvdata<T: 'static + ForeignOwnable>(&mut self, data: T) {
+> +        unsafe { bindings::pwmchip_set_drvdata(self.as_ptr(), data.into_foreign() as _) }
+> +    }
+> +}
+> +
+> +/// Allocates a PWM chip structure using device resource management. Mirrors `devm_pwmchip_alloc`.
+> +pub fn devm_chip_alloc<'a>(
+
+This should be a function of pwm::Chip rather than standalone.
+
+> +    parent: &'a CoreDevice,
+
+Since you're using devres, this must be a bound device, i.e. the parameter must
+be &'a device::Device<device::Bound>, see also [2], which lands in the upcoming
+merge window through the driver-core tree.
+
+But I think this shouldn't use devm_pwmchip_alloc() anyways, see below.
+
+[2] https://git.kernel.org/pub/scm/linux/kernel/git/driver-core/driver-core.git/tree/rust/kernel/device.rs?h=driver-core-next#n237
+
+> +    npwm: u32,
+> +    sizeof_priv: usize,
+> +) -> Result<&'a mut Chip> {
+
+Besides the above, this solution seems a bit half-baked, since it means that you
+can only ever access the pwm::Chip as long as you have the &Device<Bound>,
+which, given that you call this function typically from probe(), not beyond the
+scope of probe().
+
+This is because you return a reference which you can't save in the driver's
+private data.
+
+Instead you should use pwmchip_alloc() instead and make this return a real
+instance of pwm::Chip and implement AlwaysRefCounted [3] for pwm::Chip.
+
+You can then store the pwm::Chip instance in the Driver's private data, which
+will only live until the driver is unbound, so it gives the same guarantees.
+
+[3] https://rust.docs.kernel.org/kernel/types/trait.AlwaysRefCounted.html
+
+> +    // SAFETY: `devm_pwmchip_alloc` called with valid args. Returns valid ptr or ERR_PTR.
+> +    let parent_ptr = parent as *const CoreDevice as *mut bindings::device;
+> +    let chip_ptr = unsafe { bindings::devm_pwmchip_alloc(parent_ptr, npwm, sizeof_priv) };
+> +    if unsafe { bindings::IS_ERR(chip_ptr as *const core::ffi::c_void) } {
+> +        let err = unsafe { bindings::PTR_ERR(chip_ptr as *const core::ffi::c_void) };
+> +        pr_err!("devm_pwmchip_alloc failed: {}\n", err);
+
+You have the parent device, please use dev_err!(). But I don't think this needs
+to error print at all.
+
+> +        Err(Error::from_errno(err as i32))
+> +    } else {
+> +        // SAFETY: `chip_ptr` valid, lifetime managed by `devm` tied to `parent`.
+> +        Ok(unsafe { &mut *(chip_ptr as *mut Chip) })
+> +    }
+> +}
+> +
+> +/// Registers a PWM chip with the PWM subsystem. Mirrors `__pwmchip_add`.
+> +pub fn chip_add(chip: &mut Chip, ops: &'static PwmOpsVTable) -> Result {
+> +    // SAFETY: Pointers are valid. `__pwmchip_add` requires ops to be set.
+> +    unsafe {
+> +        let chip_ptr = chip.as_ptr();
+> +        // Assign the ops pointer directly to the C struct field
+> +        (*chip_ptr).ops = ops.as_ptr();
+> +        to_result(bindings::__pwmchip_add(
+> +            chip_ptr,
+> +            core::ptr::null_mut()
+> +        ))
+> +    }
+> +}
+
+How do you ensure to unregister the chip, once it was registered through this
+function? I think this can cause UAF bugs. Instead you should wrap this in a
+'Registration' structure, like we do everywhere else, see for example [4].
+
+The structure should look like this:
+
+	pub struct Registration(ARef<Chip>);
+
+Registration::new() should register the chip and Registration::drop() should
+unregister the chip.
+
+[4] https://gitlab.freedesktop.org/drm/kernel/-/blob/drm-next/rust/kernel/drm/driver.rs?ref_type=heads#L121
+
+> +/// Registers a PWM chip using device resource management. Mirrors `__devm_pwmchip_add`.
+> +pub fn devm_chip_add(parent: &CoreDevice, chip: &mut Chip, ops: &'static PwmOpsVTable) -> Result {
+> +    // SAFETY: Pointers are valid. `__devm_pwmchip_add` requires ops to be set.
+> +    unsafe {
+> +        let chip_ptr = chip.as_ptr();
+> +        // Assign the ops pointer directly to the C struct field
+> +        (*chip_ptr).ops = ops.as_ptr();
+> +        let parent_ptr = parent as *const CoreDevice as *mut bindings::device;
+> +        to_result(bindings::__devm_pwmchip_add(
+> +            parent_ptr,
+> +            chip_ptr,
+> +            core::ptr::null_mut()
+> +        ))
+> +    }
+> +}
+
+This won't work anymore when creating a real pwm::Chip instance, since you can't
+guarantee that the pwm::Chip still exists when devres will clean this up.
+
+If you want devres to clean this up, you should make Registration::new() return
+a Result<Devres<Registration>> instance.
+
+This way the Registration keeps a reference to the pwm::Chip (giving the
+guarantee of no potential UAF), and the Devres container ensures to drop the
+Registration when the parent device is unbound internally.
+
+If you want the exact same semantics as your current devm_chip_add(), but
+without potential UAF, there is also Devres::new_foreign_owned() [5]. This way
+Registration::new() will only return a Result.
+
+[5] https://rust.docs.kernel.org/kernel/devres/struct.Devres.html#method.new_foreign_owned
